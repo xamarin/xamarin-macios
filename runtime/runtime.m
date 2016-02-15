@@ -194,6 +194,9 @@ struct Managed_NSObject {
 id
 xamarin_get_nsobject_handle (MonoObject *obj)
 {
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	struct Managed_NSObject *mobj = (struct Managed_NSObject *) obj;
 	return mobj->handle;
 }
@@ -201,6 +204,9 @@ xamarin_get_nsobject_handle (MonoObject *obj)
 void
 xamarin_set_nsobject_handle (MonoObject *obj, id handle)
 {
+	// COOP: Writing managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	struct Managed_NSObject *mobj = (struct Managed_NSObject *) obj;
 	mobj->handle  = handle;
 }
@@ -208,6 +214,9 @@ xamarin_set_nsobject_handle (MonoObject *obj, id handle)
 uint8_t
 xamarin_get_nsobject_flags (MonoObject *obj)
 {
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	struct Managed_NSObject *mobj = (struct Managed_NSObject *) obj;
 	return mobj->flags;
 }
@@ -215,6 +224,9 @@ xamarin_get_nsobject_flags (MonoObject *obj)
 void
 xamarin_set_nsobject_flags (MonoObject *obj, uint8_t flags)
 {
+	// COOP: Writing managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	struct Managed_NSObject *mobj = (struct Managed_NSObject *) obj;
 	mobj->flags = flags;
 }
@@ -222,6 +234,9 @@ xamarin_set_nsobject_flags (MonoObject *obj, uint8_t flags)
 MonoType *
 xamarin_get_parameter_type (MonoMethod *managed_method, int index)
 {
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	MonoMethodSignature *msig = mono_method_signature (managed_method);
 	void *iter = NULL;
 	MonoType *p = NULL;
@@ -235,6 +250,9 @@ xamarin_get_parameter_type (MonoMethod *managed_method, int index)
 MonoObject *
 xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type)
 {
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+
 	int32_t created;
 	return xamarin_get_nsobject_with_type_for_ptr_created (self, owns, type, &created);
 }
@@ -242,6 +260,9 @@ xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type)
 MonoObject *
 xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created)
 {
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	MonoObject *mobj = NULL;
 	uint32_t gchandle = 0;
 
@@ -249,9 +270,6 @@ xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *ty
 
 	if (self == NULL)
 		return NULL;
-	
-	if (mono_domain_get () == NULL)
-		mono_jit_thread_attach (NULL);
 
 	gchandle = xamarin_get_gchandle (self);
 
@@ -267,14 +285,14 @@ xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *ty
 MonoObject *
 xamarin_get_managed_object_for_ptr (id self)
 {
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	MonoObject *mobj = NULL;
 	uint32_t gchandle = 0;
 
 	if (self == NULL)
 		return NULL;
-
-	if (mono_domain_get () == NULL)
-		mono_jit_thread_attach (NULL);
 
 	gchandle = xamarin_get_gchandle (self);
 
@@ -290,6 +308,9 @@ xamarin_get_managed_object_for_ptr (id self)
 MonoObject *
 xamarin_get_managed_object_for_ptr_fast (id self)
 {
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	MonoObject *mobj = NULL;
 	uint32_t gchandle = 0;
 
@@ -312,7 +333,12 @@ xamarin_get_managed_object_for_ptr_fast (id self)
 
 void xamarin_framework_peer_lock ()
 {
+	// COOP: CHECK
+	MONO_ASSERT_GC_UNSAFE;
+	
+	MONO_BEGIN_GC_SAFE;
 	pthread_mutex_lock (&framework_peer_release_lock);
+	MONO_END_GC_SAFE;
 }
 
 void xamarin_framework_peer_unlock ()
@@ -323,19 +349,27 @@ void xamarin_framework_peer_unlock ()
 bool
 xamarin_is_class_nsobject (MonoClass *cls)
 {
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	return mono_class_is_subclass_of (cls, nsobject_class, false);
 }
 
 bool
 xamarin_is_class_inativeobject (MonoClass *cls)
 {
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	return mono_class_is_subclass_of (cls, inativeobject_class, true);
 }
 
 bool
 xamarin_is_class_array (MonoClass *cls)
 {
-	// return cls->type == MONO_TYPE_SZARRAY;
+	// COOP: Reading managed data, must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	return mono_class_is_subclass_of (cls, mono_get_array_class (), false);
 }
 
@@ -351,46 +385,82 @@ xamarin_is_class_array (MonoClass *cls)
 @end
 
 static inline int
-get_raw_gchandle (id self)
+get_raw_gchandle_safe (id self)
 {
+	// COOP: we call a selector, and that must only be done in SAFE mode.
+	MONO_ASSERT_GC_SAFE;
 	id<XamarinExtendedObject> xself = self;
 	return (int) [xself xamarinGetGCHandle];
+}
+
+static inline int
+get_raw_gchandle (id self)
+{
+	// COOP: we call a selector, and that must only be done in SAFE mode.
+	MONO_ASSERT_GC_UNSAFE;
+	
+	int rv;
+	MONO_BEGIN_GC_SAFE;
+	id<XamarinExtendedObject> xself = self;
+	rv = (int) [xself xamarinGetGCHandle];
+	MONO_END_GC_SAFE;
+	
+	return rv;
 }
 
 static inline void
 set_raw_gchandle (id self, int gc_handle)
 {
+	// COOP: we call a selector, and that must only be done in SAFE mode.
+	MONO_ASSERT_GC_UNSAFE;
+	
+	MONO_BEGIN_GC_SAFE;
 	id<XamarinExtendedObject> xself = self;
 	[xself xamarinSetGCHandle: gc_handle];
+	MONO_END_GC_SAFE;
 }
 
 static inline int
 get_gchandle (id self)
 {
+	// COOP: does not access managed memory: any mode
 	return get_raw_gchandle (self) & ~GCHANDLE_MASK;
 }
 
 int
 xamarin_get_gchandle (id self)
 {
+	// COOP: does not access managed memory: any mode
 	return get_gchandle (self);
 }
 
 int
 xamarin_get_gchandle_with_flags (id self)
 {
+	// COOP: does not access managed memory: any mode
 	return get_raw_gchandle (self);
 }
 
 bool
 xamarin_has_managed_ref (id self)
 {
+	// COOP: get_raw_gchandle requires UNSAFE mode, so this function requires it too.
 	return get_raw_gchandle (self) & MANAGED_REF_BIT;
+}
+
+bool
+xamarin_has_managed_ref_safe (id self)
+{
+	// COOP: variation of xamarin_has_managed_ref for SAFE mode.
+	return get_raw_gchandle_safe (self) & MANAGED_REF_BIT;
 }
 
 MonoException *
 xamarin_create_exception (const char *msg)
 {
+	// COOP: calls mono, needs to be in UNSAFE mode.
+	MONO_ASSERT_GC_UNSAFE;
+	
 	return (MonoException *) mono_exception_from_name_msg (mono_get_corlib (), "System", "Exception", msg);
 }
 
@@ -404,6 +474,9 @@ typedef struct {
 MonoMethod *
 xamarin_get_reflection_method_method (MonoReflectionMethod *method)
 {
+	// COOP: Reads managed memory, needs to be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	PublicMonoReflectionMethod *rm = (PublicMonoReflectionMethod *) method;
 	return rm->method;
 }
@@ -411,6 +484,9 @@ xamarin_get_reflection_method_method (MonoReflectionMethod *method)
 id
 xamarin_get_handle (MonoObject *obj)
 {
+	// COOP: Reads managed memory, needs to be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	MonoClass *klass;
 	id rv = nil;
 
@@ -439,6 +515,9 @@ xamarin_get_handle (MonoObject *obj)
 static void 
 verify_cast (MonoClass *to, MonoObject *obj, Class from_class, SEL sel, MonoMethod *method)
 {
+	// COOP: Reads managed memory, needs to be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	if (!to)
 		return;
 
@@ -464,6 +543,9 @@ verify_cast (MonoClass *to, MonoObject *obj, Class from_class, SEL sel, MonoMeth
 void
 xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *method)
 {
+	// COOP: Reads managed memory, needs to be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	if (obj != NULL) {
 #if DEBUG
 		verify_cast (mono_method_get_class (method), obj, [self class], sel, method);
@@ -506,6 +588,9 @@ xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *me
 void
 xamarin_verify_parameter (MonoObject *obj, SEL sel, id self, id arg, int index, MonoClass *expected, MonoMethod *method)
 {
+	// COOP: Reads managed memory, needs to be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 //	if (arg == NULL)
 //		return;
 //
@@ -536,6 +621,9 @@ xamarin_verify_parameter (MonoObject *obj, SEL sel, id self, id arg, int index, 
 void
 xamarin_check_objc_type (id obj, Class expected_class, SEL sel, id self, int index, MonoMethod *method)
 {
+	// COOP: Reads managed memory, needs to be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 //	if ([obj isKindOfClass:expected_class])
 //		return;
 //	
@@ -557,12 +645,18 @@ xamarin_check_objc_type (id obj, Class expected_class, SEL sel, id self, int ind
 char *
 xamarin_class_get_full_name (MonoClass *klass)
 {
+	// COOP: Reads managed memory, needs to be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	return xamarin_type_get_full_name (mono_class_get_type (klass));
 }
 
 char *
 xamarin_type_get_full_name (MonoType *type)
 {
+	// COOP: Reads managed memory, needs to be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	return xamarin_reflection_type_get_full_name (mono_type_get_object (mono_domain_get (), type));
 }
 
@@ -573,6 +667,9 @@ xamarin_type_get_full_name (MonoType *type)
 static void
 gc_register_toggleref (MonoObject *obj, id self, bool isCustomType)
 {
+	// COOP: This is an icall, at entry we're in unsafe mode. Managed memory is accessed, so we stay in unsafe mode.
+	MONO_ASSERT_GC_UNSAFE;
+
 #ifdef DEBUG_TOGGLEREF
 	id handle = xamarin_get_nsobject_handle (obj);
 
@@ -592,6 +689,7 @@ gc_register_toggleref (MonoObject *obj, id self, bool isCustomType)
 static MonoToggleRefStatus
 gc_toggleref_callback (MonoObject *object)
 {
+	// COOP: this is a callback called by the GC, so I assume the mode here doesn't matter
 	id handle = NULL;
 	MonoToggleRefStatus res;
 
@@ -643,6 +741,7 @@ typedef struct {
 static void
 gc_event_callback (MonoProfiler *prof, MonoGCEvent event, int generation)
 {
+	// COOP: this is a callback called by the GC, I believe the mode here doesn't matter.
 	switch (event) {
 	case MONO_GC_EVENT_PRE_STOP_WORLD:
 		pthread_mutex_lock (&framework_peer_release_lock);
@@ -660,6 +759,7 @@ gc_event_callback (MonoProfiler *prof, MonoGCEvent event, int generation)
 static void
 gc_enable_new_refcount (void)
 {
+	// COOP: this is executed at startup, I believe the mode here doesn't matter.
 	pthread_mutexattr_t attr;
 	pthread_mutexattr_init (&attr);
 	pthread_mutexattr_settype (&attr, PTHREAD_MUTEX_RECURSIVE);
@@ -678,6 +778,7 @@ gc_enable_new_refcount (void)
 static MonoClass *
 get_class_from_name (MonoImage* image, const char *nmspace, const char *name)
 {
+	// COOP: this is a convenience function executed only at startup, I believe the mode here doesn't matter.	
 	MonoClass *rv = mono_class_from_name (image, nmspace, name);
 	if (!rv)
 		xamarin_assertion_message ("Fatal error: failed to load the class '%s.%s'\n.", nmspace, name);
@@ -687,6 +788,7 @@ get_class_from_name (MonoImage* image, const char *nmspace, const char *name)
 bool
 xamarin_file_exists (const char *path)
 {
+	// COOP: no managed access: any mode
 	struct stat buffer;
 	return stat (path, &buffer) == 0;
 }
@@ -694,6 +796,7 @@ xamarin_file_exists (const char *path)
 MonoAssembly *
 xamarin_open_assembly (const char *name)
 {
+	// COOP: this is a function executed only at startup, I believe the mode here doesn't matter.
 	char path [1024];
 	MonoAssembly *assembly;
 	bool exists = false;
@@ -753,12 +856,14 @@ xamarin_open_assembly (const char *name)
 static void
 register_assembly (MonoAssembly *assembly)
 {
+	// COOP: this is a function executed only at startup, I believe the mode here doesn't matter.
 	xamarin_register_assembly (mono_assembly_get_object (mono_domain_get (), assembly));
 }
 
 MonoAssembly *
 xamarin_open_and_register (const char *aname)
 {
+	// COOP: this is a function executed only at startup, I believe the mode here doesn't matter.
 	MonoAssembly *assembly;
 
 	assembly = xamarin_open_assembly (aname);
@@ -771,6 +876,7 @@ xamarin_open_and_register (const char *aname)
 static gboolean 
 is_class_finalization_aware (MonoClass *cls)
 {
+	// COOP: This is a callback called by the GC, I believe the mode here doesn't matter.
 	gboolean rv = false;
 
 	if (nsobject_class)
@@ -784,6 +890,8 @@ is_class_finalization_aware (MonoClass *cls)
 static void 
 object_queued_for_finalization (MonoObject *object)
 {
+	// COOP: Although this is reading managed memory, it is a callback called by the GC, so I believe the mode here doesn't matter.
+	
 	/* This is called with the GC lock held, so it can only use signal-safe code */
 	struct Managed_NSObject *obj = (struct Managed_NSObject *) object;
 	//NSLog (@"In finalization response for %s.%s %p (handle: %p class_handle: %p flags: %i)\n", 
@@ -797,6 +905,7 @@ object_queued_for_finalization (MonoObject *object)
 void
 xamarin_add_registration_map (struct MTRegistrationMap *map)
 {
+	// COOP: no managed memory access: any mode
 	map->next = registration_data.map;
 	registration_data.map = map;
 	registration_data.total_count += map->map_count;
@@ -811,12 +920,16 @@ static XamarinUnhandledExceptionFunc unhandled_exception_func;
 void 
 xamarin_install_unhandled_exception_hook (XamarinUnhandledExceptionFunc func)
 {
+	// COOP: no managed memory access: any mode
 	unhandled_exception_func = func;	
 }
 
 static MonoObject *
 fetch_exception_property (MonoObject *obj, const char *name, bool is_virtual)
 {
+	// COOP: reading managed memory and executing managed code: must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	MonoMethod *get = NULL;
 	MonoMethod *get_virt = NULL;
 	MonoObject *exc = NULL;
@@ -840,6 +953,9 @@ fetch_exception_property (MonoObject *obj, const char *name, bool is_virtual)
 static char *
 fetch_exception_property_string (MonoObject *obj, const char *name, bool is_virtual)
 {
+	// COOP: reading managed memory and executing managed code: must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	MonoString *str = (MonoString *) fetch_exception_property (obj, name, is_virtual);
 	return str ? mono_string_to_utf8 (str) : NULL;
 }
@@ -847,6 +963,9 @@ fetch_exception_property_string (MonoObject *obj, const char *name, bool is_virt
 static void
 print_exception (MonoObject *exc, bool is_inner, NSMutableString *msg)
 {
+	// COOP: reading managed memory and executing managed code: must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	MonoClass *type = mono_object_get_class (exc);
 	char *type_name = xamarin_strdup_printf ("%s.%s", mono_class_get_namespace (type), mono_class_get_name (type));
 	char *trace = fetch_exception_property_string (exc, "get_StackTrace", true);
@@ -870,6 +989,9 @@ print_exception (MonoObject *exc, bool is_inner, NSMutableString *msg)
 static NSMutableString *
 print_all_exceptions (MonoObject *exc)
 {
+	// COOP: reading managed memory and executing managed code: must be in UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	NSMutableString *str = [[NSMutableString alloc] init];
 	// fetch the field, since the property might have been linked away.
 	int counter = 0;
@@ -900,12 +1022,9 @@ xamarin_unhandled_exception_handler (MonoObject *exc, gpointer user_data)
 static void
 exception_handler (NSException *exc)
 {
+	// COOP: not accessing managed memory: any mode
 	LOG (PRODUCT ": Received unhandled ObjectiveC exception: %@ %@", [exc name], [exc reason]);
 	
-	// This might happen on a thread we haven't heard about before
-	if (mono_domain_get () == NULL)
-		mono_jit_thread_attach (NULL);
-
 	xamarin_throw_ns_exception (exc);
 }
 
@@ -913,11 +1032,15 @@ exception_handler (NSException *exc)
 static void *
 pump_gc (void *context)
 {
+	// COOP: this runs on a separate thread, so I'm not sure what happens here.
+	//       We can make sure we're in safe mode while sleeping though.
 	mono_thread_attach (mono_get_root_domain ());
 
 	while (xamarin_gc_pump) {
 		mono_gc_collect (mono_gc_max_generation ());
+		MONO_BEGIN_GC_SAFE;
 		usleep (1000000);
+		MONO_END_GC_SAFE;
 	}
 	return NULL;
 }
@@ -926,6 +1049,7 @@ pump_gc (void *context)
 static void
 detect_product_assembly ()
 {
+	// COOP: Function only called at startup, I believe the mode here doesn't matter
 	if (!xamarin_detect_unified_build)
 		return;
 
@@ -952,6 +1076,7 @@ detect_product_assembly ()
 static void
 log_callback (const char *log_domain, const char *log_level, const char *message, mono_bool fatal, void *user_data)
 {
+	// COOP: Not accessing managed memory: any mode
 	NSLog (@"%s: %s", log_level, message);
 
 	if (fatal)
@@ -961,12 +1086,16 @@ log_callback (const char *log_domain, const char *log_level, const char *message
 static void
 print_callback (const char *string, mono_bool is_stdout)
 {
+	// COOP: Not accessing managed memory: any mode
 	NSLog (@"%s", string);
 }
 
 void
 xamarin_initialize ()
 {
+	// COOP: accessing managed memory: UNSAFE mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	MonoClass *runtime_class;
 	MonoAssembly *assembly = NULL;
 	MonoImage *image;
@@ -984,6 +1113,8 @@ xamarin_initialize ()
 #endif
 
 	xamarin_insert_dllmap ();
+
+	MONO_BEGIN_GC_UNSAFE;
 
 	mono_trace_set_log_handler (log_callback, NULL);
 	mono_trace_set_print_handler (print_callback);
@@ -1054,12 +1185,15 @@ xamarin_initialize ()
 #endif
 
 	gc_enable_new_refcount ();
+
+	MONO_END_GC_UNSAFE;
 }
 
 static char *x_bundle_path = NULL;
 const char *
 xamarin_get_bundle_path ()
 {
+	// COOP: only called at startup, so I believe the mode doesn't matter
 	if (x_bundle_path != NULL)
 		return x_bundle_path;
 
@@ -1090,6 +1224,7 @@ xamarin_get_bundle_path ()
 void
 xamarin_set_bundle_path (const char *path)
 {
+	// COOP: no managed memory access: any mode
 	free (x_bundle_path);
 	x_bundle_path = strdup (path);
 }
@@ -1097,6 +1232,7 @@ xamarin_set_bundle_path (const char *path)
 void
 xamarin_free (void *ptr)
 {
+	// COOP: no managed memory access: any mode
 	if (ptr)
 		free (ptr);
 }
@@ -1104,6 +1240,7 @@ xamarin_free (void *ptr)
 char *
 xamarin_strdup_printf (const char *msg, ...)
 {
+	// COOP: no managed memory access: any mode
 	va_list args;
 	char *formatted = NULL;
 
@@ -1117,6 +1254,7 @@ xamarin_strdup_printf (const char *msg, ...)
 void
 xamarin_assertion_message (const char *msg, ...)
 {
+	// COOP: no managed memory access: any mode.
 	va_list args;
 	char *formatted = NULL;
 
@@ -1133,6 +1271,7 @@ xamarin_assertion_message (const char *msg, ...)
 static const char *
 objc_skip_type (const char *type)
 {
+	// COOP: no managed memory access: any mode
 	switch (type [0]) {
 		case _C_ID:
 		case _C_CLASS:
@@ -1208,6 +1347,7 @@ objc_skip_type (const char *type)
 int
 xamarin_objc_type_size (const char *type)
 {
+	// COOP: no managed memory access: any mode
 	switch (type [0]) {
 		case _C_ID: return sizeof (id);
 		case _C_CLASS: return sizeof (Class);
@@ -1375,6 +1515,9 @@ xamarin_objc_type_size (const char *type)
 void
 xamarin_create_gchandle (id self, void *managed_object, int flags, bool force_weak)
 {
+	// COOP: reads managed memory: unsafe mode
+	MONO_ASSERT_GC_UNSAFE;
+	
 	// force_weak is to avoid calling retainCount unless needed, since some classes (UIWebView in iOS 5)
 	// will crash if retainCount is called before init. See bug #9261.
 	bool weak = force_weak || ([self retainCount] == 1);
@@ -1397,13 +1540,16 @@ xamarin_create_gchandle (id self, void *managed_object, int flags, bool force_we
 void
 xamarin_switch_gchandle (id self, bool to_weak)
 {
+	// COOP: reads managed memory: unsafe mode
+	MONO_ASSERT_GC_SAFE;
+	
 	int new_gchandle;
 	int old_gchandle;
 	int old_gchandle_raw;
 	MonoObject *managed_object;
 	int flags = MANAGED_REF_BIT;
 
-	old_gchandle_raw = get_raw_gchandle (self);
+	old_gchandle_raw = get_raw_gchandle_safe (self);
 	old_gchandle = old_gchandle_raw & ~GCHANDLE_MASK;
 	if (old_gchandle) {
 		bool is_weak = (old_gchandle_raw & GCHANDLE_WEAK) == GCHANDLE_WEAK;
@@ -1429,9 +1575,9 @@ xamarin_switch_gchandle (id self, bool to_weak)
 		return;
 	}
 
-	if (mono_domain_get () == NULL)
-		mono_jit_thread_attach (NULL);
 	
+	MONO_THREAD_ATTACH; // COOP: will switch to GC_UNSAFE
+
 	if (old_gchandle) {
 		managed_object = mono_gchandle_get_target (old_gchandle);
 	} else {
@@ -1451,6 +1597,8 @@ xamarin_switch_gchandle (id self, bool to_weak)
 	xamarin_set_nsobject_flags (managed_object, xamarin_get_nsobject_flags (managed_object) | NSObjectFlagsHasManagedRef);
 	set_raw_gchandle (self, new_gchandle | flags);
 
+	MONO_THREAD_DETACH; // COOP: this will switch to GC_SAFE
+
 #if defined(DEBUG_REF_COUNTING)
 	NSLog (@"Switched object %p to %s GCHandle = %d\n", self, to_weak ? "weak" : "strong", new_gchandle);
 #endif
@@ -1459,6 +1607,7 @@ xamarin_switch_gchandle (id self, bool to_weak)
 void
 xamarin_free_gchandle (id self, int gchandle)
 {
+	// COOP: no managed memory access, but calls mono function mono_gc_handle_free. Assuming that function can be called with any mode: this function can be called with any mode as well
 	if (gchandle) {
 #if defined(DEBUG_REF_COUNTING)
 		NSLog (@"\tGCHandle %i destroyed for object %p\n", gchandle, self);
@@ -1476,18 +1625,21 @@ xamarin_free_gchandle (id self, int gchandle)
 void
 xamarin_clear_gchandle (id self)
 {
+	// COOP: no managed memory access: any mode
 	set_raw_gchandle (self, 0);
 }
 
 void
 xamarin_set_gchandle (id self, int gchandle)
 {
+	// COOP: no managed memory access: any mode
 	set_raw_gchandle (self, gchandle);
 }
 
 static inline bool
 is_user_type (id self)
 {
+	// COOP: no managed memory access: any mode
 	return class_getInstanceMethod (object_getClass (self), @selector (xamarinSetGCHandle:)) != NULL;
 }
 
@@ -1495,6 +1647,7 @@ is_user_type (id self)
 int
 get_safe_retainCount (id self)
 {
+	// COOP: no managed memory access: any mode
 	if ([self isKindOfClass: [NSCalendar class]] ||
 		[self isKindOfClass: [NSInputStream class]] ||
 		[self isKindOfClass: [NSOutputStream class]]) {
@@ -1509,6 +1662,10 @@ get_safe_retainCount (id self)
 void
 xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 {
+	// COOP: This is an icall, so at entry we're in unsafe mode.
+	// COOP: we stay in unsafe mode (since we write to the managed memory) unless calling a selector (which must be done in safe mode)
+	MONO_ASSERT_GC_UNSAFE;
+	
 	bool user_type = is_user_type (self);
 	
 #if defined(DEBUG_REF_COUNTING)
@@ -1521,21 +1678,28 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 	if (user_type) {
 		/* clear MANAGED_REF_BIT */
 		set_raw_gchandle (self, get_raw_gchandle (self) & ~MANAGED_REF_BIT);
+		MONO_BEGIN_GC_SAFE;
 		[self release];
+		MONO_END_GC_SAFE;
 	} else {
 		// This lock is needed so that we can safely call retainCount in the toggleref callback.
 		xamarin_framework_peer_lock ();
 		/* If we're a wrapper type, we need to unregister here, since we won't enter the release trampoline */
 		xamarin_unregister_nsobject (self, managed_obj);
+		MONO_BEGIN_GC_SAFE;
 		[self release];
+		MONO_END_GC_SAFE;
 		xamarin_framework_peer_unlock ();
 	}
-
 }
 
 void
 xamarin_create_managed_ref (id self, gpointer managed_object, bool retain)
 {
+	// COOP: This is an icall, so at entry we're in unsafe mode.
+	// COOP: we stay in unsafe mode (since we write to the managed memory) unless calling a selector (which must be done in safe mode)
+	MONO_ASSERT_GC_UNSAFE;
+	
 	int gchandle;
 	bool user_type = is_user_type (self);
 	
@@ -1557,8 +1721,11 @@ xamarin_create_managed_ref (id self, gpointer managed_object, bool retain)
 		}
 	}
 
-	if (retain)
+	if (retain) {
+		MONO_BEGIN_GC_SAFE;
 		[self retain];
+		MONO_END_GC_SAFE;
+	}
 	mt_dummy_use (managed_object);
 }
 
@@ -1598,13 +1765,19 @@ static MonoReferenceQueue *block_wrapper_queue;
 static MonoObject *
 get_method_block_wrapper_creator (MonoMethod *method, int par)
 {
+	// COOP: accesses managed memory: unsafe mode.
+	MONO_ASSERT_GC_UNSAFE;
+	
 	MonoObject *res = NULL;
 	MethodAndPar mp, *nmp;
 	mp.method = method;
 	mp.par = par;
 
 	// NSLog (@"Looking up method and par (%x and %d)", (int) method, par);
+	MONO_BEGIN_GC_SAFE;
 	pthread_mutex_lock (&wrapper_hash_lock);
+	MONO_END_GC_SAFE;
+	
 	if (block_wrapper_queue == NULL)
 		block_wrapper_queue = mono_gc_reference_queue_new ((void(*)(void*))_Block_release);
 
@@ -1625,7 +1798,9 @@ get_method_block_wrapper_creator (MonoMethod *method, int par)
 	nmp = (MethodAndPar *) malloc (sizeof (MethodAndPar));
 	*nmp = mp;
 
+	MONO_BEGIN_GC_SAFE;
 	pthread_mutex_lock (&wrapper_hash_lock);
+	MONO_END_GC_SAFE;
 	mono_g_hash_table_insert (xamarin_wrapper_hash, nmp, res);
 	pthread_mutex_unlock (&wrapper_hash_lock);
 	return res;
@@ -1649,6 +1824,9 @@ get_method_block_wrapper_creator (MonoMethod *method, int par)
 int *
 xamarin_get_delegate_for_block_parameter (MonoMethod *method, int par, void *nativeBlock)
 {
+	// COOP: accesses managed memory: unsafe mode.
+	MONO_ASSERT_GC_UNSAFE;
+	
 	MonoObject *delegate;
 
 	if (nativeBlock == NULL)
@@ -1659,7 +1837,9 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, int par, void *nat
 
 	delegate = delegates.create_block_proxy (get_method_block_wrapper_creator (method, par), nativeBlock);
 
+	MONO_BEGIN_GC_SAFE;
 	pthread_mutex_lock (&wrapper_hash_lock);
+	MONO_END_GC_SAFE;
 	mono_gc_reference_queue_add (block_wrapper_queue, delegate, nativeBlock);
 	pthread_mutex_unlock (&wrapper_hash_lock);
 
@@ -1669,6 +1849,7 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, int par, void *nat
 id
 xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate)
 {
+	// COOP: accesses managed memory: unsafe mode.
 	return delegates.create_delegate_proxy ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), delegate);
 }
 
@@ -1686,6 +1867,7 @@ xamarin_get_use_sgen ()
 void
 xamarin_set_is_unified (bool value)
 {
+	// COOP: no managed memory access: any mode.
 	if (initialize_started)
 		xamarin_assertion_message ("Fatal error: xamarin_set_is_unified called after xamarin_initialize.\n");
 
@@ -1696,18 +1878,21 @@ xamarin_set_is_unified (bool value)
 bool
 xamarin_get_is_unified ()
 {
+	// COOP: no managed memory access: any mode.
 	return xamarin_use_new_assemblies;
 }
 
 void
 xamarin_set_gc_pump_enabled (bool value)
 {
+	// COOP: no managed memory access: any mode.
 	xamarin_gc_pump = value;
 }
 
 const char *
 xamarin_skip_encoding_flags (const char *encoding)
 {
+	// COOP: no managed memory access: any mode.
 	while (true) {
 		switch (*encoding) {
 		case 'r': // const
@@ -1907,6 +2092,7 @@ xamarin_insert_dllmap ()
 
 XamarinObject::~XamarinObject ()
 {
+	// COOP: no managed memory access: any mode.
 	xamarin_notify_dealloc (native_object, gc_handle & ~GCHANDLE_MASK);
 	native_object = NULL;
 	gc_handle = 0;
@@ -1923,6 +2109,7 @@ XamarinObject::~XamarinObject ()
 @implementation XamarinAssociatedObject 
 -(void) dealloc
 {
+	// COOP: no managed memory access: any mode.
 	xamarin_notify_dealloc (native_object, gc_handle & ~GCHANDLE_MASK);
 	native_object = NULL;
 	gc_handle = 0;
@@ -1946,6 +2133,7 @@ XamarinObject::~XamarinObject ()
 @implementation NSObject (NonXamarinObject)
 -(int) xamarinGetGCHandle
 {
+	// COOP: no managed memory access: any mode.
 	return 0;
 }
 @end

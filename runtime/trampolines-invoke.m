@@ -21,6 +21,16 @@
 void
 xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_func iterator, marshal_return_value_func marshal_return_value, void *context)
 {
+	// COOP: No managed data in input, but accesses managed data.
+	// COOP: FIXME: This method needs a lot of work when the runtime team
+	//       implements a handle api for mono objects.
+	//       Random notes:
+	//       * Must switch to SAFE mode when calling any external code.
+	//       * mono_runtime_invoke will have to change, since 'out/ref'
+	//         objects arguments are now put into the arg_ptrs array
+	//         (clearly not GC-safe upon return).
+	MONO_ASSERT_GC_SAFE;
+
 	MonoObject *exception = NULL;
 	MonoObject **exception_ptr = xamarin_marshal_managed_exception_mode == MarshalManagedExceptionModeDisable ? NULL : &exception;
 	bool is_static = (type & Tramp_Static) == Tramp_Static;
@@ -33,6 +43,8 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 			return;
 		}
 	}
+
+	MONO_BEGIN_GC_UNSAFE;
 
 	// pre-prolog
 	SList *dispose_list = NULL;
@@ -454,4 +466,6 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	}
 
 	xamarin_process_managed_exception (exception);
+	
+	MONO_END_GC_UNSAFE;
 }

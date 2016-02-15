@@ -86,6 +86,9 @@ monotouch_set_monodevelop_port (int port)
 void
 monotouch_start_debugging ()
 {
+	// COOP: this is at startup and doesn't access managed memory: safe mode.
+	MONO_ASSERT_GC_STARTING;
+	
 	bool debug_enabled = strcmp (connection_mode, "none");
 	if (xamarin_debug_mode) {
 		if (debug_enabled) {
@@ -111,7 +114,10 @@ monotouch_start_debugging ()
 		if (trace && *trace) {
 			if (!strncmp (trace, "--trace=", 8))
 				trace += 8;
+
+			MONO_BEGIN_GC_UNSAFE;
 			mono_jit_set_trace_options (trace);
+			MONO_END_GC_UNSAFE;
 		}
 	}
 }
@@ -119,6 +125,9 @@ monotouch_start_debugging ()
 void
 monotouch_start_profiling ()
 {
+	// COOP: at startup, should be in safe mode here. If that's not the case, we need to switch to safe mode when calling pthread_mutex_lock.
+	MONO_ASSERT_GC_STARTING;
+	
 	bool debug_enabled = strcmp (connection_mode, "none");
 	if (xamarin_debug_mode && debug_enabled) {
 		// wait for profiler configuration to finish
@@ -158,6 +167,9 @@ get_preference (NSArray *preferences, NSUserDefaults *defaults, NSString *lookup
 
 void monotouch_configure_debugging ()
 {
+	// COOP: this is at startup, before initializing the mono runtime, so we're in the STARTING mode. If that's not the case, at the very least we must transition to safe mode when calling pthread_mutex_lock.
+	MONO_ASSERT_GC_STARTING;
+	
 	// This method is invoked on a separate thread
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	NSString *bundle_path = [NSString stringWithUTF8String:xamarin_get_bundle_path ()];
@@ -336,6 +348,7 @@ void monotouch_configure_debugging ()
 
 	profiler_configured = true;
 	debugging_configured = true;
+	MONO_ASSERT_GC_STARTING;
 	pthread_mutex_lock (&mutex);
 	pthread_cond_signal (&cond);
 	pthread_mutex_unlock (&mutex);
@@ -345,7 +358,9 @@ void sdb_connect (const char *address)
 {
 	gboolean shaked;
 
+	MONO_BEGIN_GC_UNSAFE;
 	shaked = mono_debugger_agent_transport_handshake ();
+	MONO_END_GC_UNSAFE;
 	
 	if (!shaked)
 		NSLog (@PRODUCT ": Handshake error with IDE.");
@@ -402,6 +417,9 @@ int sdb_recv (void *buf, int len)
 
 int monotouch_connect_wifi (NSMutableArray *ips)
 {
+	// COOP: this is at startup and doesn't access managed memory, so we should be in safe mode here.
+	MONO_ASSERT_GC_STARTING;
+	
 	int listen_port = monodevelop_port;
 	unsigned char sockaddr[sizeof (struct sockaddr_in6)];
 	struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *) sockaddr;
@@ -584,6 +602,9 @@ int monotouch_connect_wifi (NSMutableArray *ips)
 
 int monotouch_connect_usb ()
 {
+	// COOP: this is at startup and doesn't access managed memory, so we should be in safe mode here.
+	MONO_ASSERT_GC_STARTING;
+	
 	int listen_port = monodevelop_port;
 	struct sockaddr_in listen_addr;
 	int listen_socket = -1;
@@ -734,6 +755,9 @@ monotouch_dump_objc_api (Class klass)
 void
 monotouch_load_debugger ()
 {
+	// COOP: this is at startup and doesn't access managed memory, so we should be in safe mode here.
+	MONO_ASSERT_GC_STARTING;
+	
 	// main thread only 
 	if (sdb_fd != -1) {
 		DebuggerTransport transport;
@@ -743,9 +767,13 @@ monotouch_load_debugger ()
 		transport.close2 = sdb_close2;
 		transport.send = sdb_send;
 		transport.recv = sdb_recv;
+
+		MONO_BEGIN_GC_UNSAFE;
 		mono_debugger_agent_register_transport (&transport);
 	
 		mono_debugger_agent_parse_options ("transport=custom_transport,address=dummy,embedding=1");
+		MONO_END_GC_UNSAFE;
+
 		LOG (PRODUCT ": Debugger loaded with custom transport (fd: %i)\n", sdb_fd);
 	} else {
 		LOG (PRODUCT ": Debugger not loaded (disabled).\n");
@@ -755,10 +783,16 @@ monotouch_load_debugger ()
 void
 monotouch_load_profiler ()
 {
+	// COOP: this is at startup and doesn't access managed memory, so we should be in safe mode here.
+	MONO_ASSERT_GC_STARTING;
+	
 	// TODO: make this generic enough for other profilers to work too
 	// Main thread only
 	if (profiler_description != NULL) {
+		MONO_BEGIN_GC_UNSAFE;
 		mono_profiler_load (profiler_description);
+		MONO_END_GC_UNSAFE;
+
 		LOG (PRODUCT ": Profiler loaded: %s\n", profiler_description);
 		free (profiler_description);
 		profiler_description = NULL;
@@ -772,6 +806,9 @@ monotouch_load_profiler ()
 bool
 monotouch_process_connection (int fd)
 {
+	// COOP: should be in safe mode here. If that's not the case, at the very least need to switch to safe mode when calling pthread_mutex_lock.
+	MONO_ASSERT_GC_STARTING;
+	
 	// make sure the fd/socket blocks on reads/writes
 	fcntl (fd, F_SETFL, fcntl (fd, F_GETFL, NULL) & ~O_NONBLOCK);
 
@@ -826,6 +863,7 @@ monotouch_process_connection (int fd)
 				use_fd = true;
 			}
 			debugging_configured = true;
+			MONO_ASSERT_GC_STARTING;
 			pthread_mutex_lock (&mutex);
 			pthread_cond_signal (&cond);
 			pthread_mutex_unlock (&mutex);
@@ -852,6 +890,7 @@ monotouch_process_connection (int fd)
 				profiler_description = strdup (prof);
 			}
 			profiler_configured = true;
+			MONO_ASSERT_GC_STARTING;
 			pthread_mutex_lock (&mutex);
 			pthread_cond_signal (&cond);
 			pthread_mutex_unlock (&mutex);
@@ -995,6 +1034,9 @@ int monotouch_debug_listen (int debug_port, int output_port)
 // FAILURE > 0
 int monotouch_debug_connect (NSMutableArray *ips, int debug_port, int output_port)
 {
+	// COOP: this is at startup and doesn't access managed memory, so we should be in safe mode here.
+	MONO_ASSERT_GC_STARTING;
+	
 	unsigned char sockaddr[sizeof (struct sockaddr_in6)];
 	struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *) sockaddr;
 	struct sockaddr_in *sin = (struct sockaddr_in *) sockaddr;
