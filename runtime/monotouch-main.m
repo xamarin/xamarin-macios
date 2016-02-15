@@ -254,6 +254,11 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 	setenv ("DYLD_BIND_AT_LAUNCH", "1", 1);
 	setenv ("MONO_REFLECTION_SERIALIZER", "yes", 1);
 
+#if TARGET_OS_WATCH
+	// watchOS can raise signals just fine...
+	// we might want to move this inside mono at some point.
+	signal (SIGPIPE, SIG_IGN);
+#endif
 
 #if TARGET_OS_WATCH || TARGET_OS_TV
 	mini_parse_debug_option ("explicit-null-checks");
