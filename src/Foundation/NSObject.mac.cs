@@ -99,26 +99,6 @@ namespace XamCore.Foundation {
 		public static readonly Assembly MonoMacAssembly = typeof (NSObject).Assembly;
 #endif
 
-		delegate void release_delegate (IntPtr handle, IntPtr managed_obj);
-		delegate void create_delegate (IntPtr handle, IntPtr obj, bool retain);
-
-		static release_delegate release_managed_ref;
-		static create_delegate create_managed_ref;
-
-		static void xamarin_release_managed_ref (IntPtr handle, IntPtr managed_obj)
-		{
-			if (release_managed_ref == null)
-				release_managed_ref = Runtime.LookupInternalFunction<release_delegate> ("xamarin_release_managed_ref");
-			release_managed_ref (handle, managed_obj);
-		}
-					
-		static void xamarin_create_managed_ref (IntPtr handle, IntPtr obj, bool retain)
-		{
-			if (create_managed_ref == null)
-				create_managed_ref = Runtime.LookupInternalFunction<create_delegate> ("xamarin_create_managed_ref");
-			create_managed_ref (handle, obj, retain);
-		}
-
 		static internal void OverrideRetainAndRelease (IntPtr @class)
 		{
 			Class.class_addMethod (@class, Selector.RetainHandle, Method.RetainTrampoline, "@@:");

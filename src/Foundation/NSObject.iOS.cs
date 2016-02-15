@@ -28,12 +28,6 @@ namespace XamCore.Foundation {
 		const string selAccessibilityIncrement = "accessibilityIncrement";
 		const string selAccessibilityScroll = "accessibilityScroll";
 #endif
-		[DllImport ("__Internal")]
-		static extern void xamarin_release_managed_ref (IntPtr handle, IntPtr managed_obj);
-
-		[DllImport ("__Internal")]
-		static extern void xamarin_create_managed_ref (IntPtr handle, IntPtr obj, bool retain);
-
 		public static NSObject Alloc (Class kls) {
 			var h = Messaging.IntPtr_objc_msgSend (kls.Handle, Selector.GetHandle (Selector.Alloc));
 			return new NSObject (h, true);

@@ -1014,6 +1014,9 @@ xamarin_initialize ()
 	inativeobject_class = get_class_from_name (image, objcruntime, "INativeObject");
 	nsobject_class = get_class_from_name (image, foundation, "NSObject");
 
+	mono_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::xamarin_release_managed_ref" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::xamarin_release_managed_ref", (const void *) xamarin_release_managed_ref);
+	mono_add_internal_call (xamarin_use_new_assemblies ? "Foundation.NSObject::xamarin_create_managed_ref" : PRODUCT_COMPAT_NAMESPACE ".Foundation.NSObject::xamarin_create_managed_ref", (const void *) xamarin_create_managed_ref);
+
 	runtime_initialize = mono_class_get_method_from_name (runtime_class, "Initialize", 1);
 
 	memset (&options, 0, sizeof (options));
@@ -1503,7 +1506,7 @@ get_safe_retainCount (id self)
 }
 #endif
 
-extern "C" void
+void
 xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 {
 	bool user_type = is_user_type (self);
