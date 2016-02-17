@@ -27,8 +27,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	bool is_ctor = type == Tramp_Ctor;
 
 	if (is_ctor) {
-		void *obj = xamarin_try_get_nsobject (self);
-		if (obj != NULL) {
+		if (xamarin_has_nsobject (self)) {
 			self = xamarin_invoke_objc_method_implementation (self, sel, (IMP) xamarin_ctor_trampoline);
 			marshal_return_value (context, "|", sizeof (id), self, NULL, false, NULL);
 			return;

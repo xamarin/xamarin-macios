@@ -3186,7 +3186,7 @@ namespace XamCore.Registrar {
 			body.Unindent ();
 			
 			if (isCtor) {
-				body.WriteLine ("if (xamarin_try_get_nsobject (self)) {");
+				body.WriteLine ("if (xamarin_has_nsobject (self)) {");
 				body.WriteLine ("*call_super = true;");
 				body.WriteLine ("return self;");
 				body.WriteLine ("}");

@@ -172,7 +172,7 @@ MonoObject*					xamarin_get_selector						(SEL ptr);
 Class						xamarin_get_class_handle					(MonoObject *obj);
 SEL							xamarin_get_selector_handle					(MonoObject *obj);
 MethodDescription			xamarin_get_method_for_selector				(Class cls, SEL sel);
-MonoObject*					xamarin_try_get_nsobject 					(id obj);
+bool						xamarin_has_nsobject 						(id obj);
 MonoObject*					xamarin_get_nsobject 						(id obj);
 id							xamarin_get_handle_for_inativeobject		(MonoObject *obj);
 void						xamarin_unregister_nsobject					(id native_obj, MonoObject *managed_obj);
