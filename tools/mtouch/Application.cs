@@ -723,7 +723,7 @@ namespace Xamarin.Bundler {
 			if (IsExtension && Platform == ApplePlatform.iOS && Driver.SDKVersion < new Version (8, 0))
 				throw new MonoTouchException (45, true, "--extension is only supported when using the iOS 8.0 (or later) SDK.");
 
-			if (IsExtension && Platform != ApplePlatform.iOS && Platform != ApplePlatform.WatchOS)
+			if (IsExtension && Platform != ApplePlatform.iOS && Platform != ApplePlatform.WatchOS && Platform != ApplePlatform.TVOS)
 				throw new MonoTouchException (72, true, "Extensions are not supported for the platform '{0}'.", Platform);
 
 			if (!IsExtension && Platform == ApplePlatform.WatchOS)
