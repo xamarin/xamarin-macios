@@ -1,0 +1,30 @@
+README.linker
+
+Q: Why some stuff is not linked out ?
+
+A: In most case this is because:
+	a) the BCL uses it internally
+	b) the mono runtime depends on the type, methods, class layout
+
+
+= mscorlib.dll =
+
+System.Security.PermissionSet
+	* Assembly has (3) fields of that type
+	* mscorlib.xml preserve all fields from Assembly (object-internals.h)
+	* code is "stubified" by the linker
+System.Security.Policy.ApplicationTrust: 
+	* Used as a field in AppDomainSetup;
+	* Field also exists in unmanaged code (domain-internals.h);
+	* mscorlib.xml preserve all fields from AppDomainSetup
+	* only the default .ctor remains and is stubified by the linker
+System.Security.Policy.Evidence
+	* Used by AppDomain.Load[Assembly]
+	* Used by Assembly.LoadWithPartialName overloads
+	* code is "stubified" by the linker
+
+
+= System.dll =
+
+System.Text.RegularExpressions.*
+	* Included because there is 2 regex in UriParser

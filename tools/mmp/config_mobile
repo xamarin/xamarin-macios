@@ -1,0 +1,14 @@
+<configuration>
+	<dllmap dll="i:cygwin1.dll" target="libc.dylib"/>
+	<dllmap dll="libc" target="libc.dylib"/>
+	<dllmap dll="i:msvcrt" target="libc.dylib"/>
+	<dllmap dll="i:msvcrt.dll" target="libc.dylib"/>
+	<dllmap dll="sqlite" target="libsqlite.0.dylib"/>
+	<dllmap dll="sqlite3" target="libsqlite3.0.dylib"/>
+	<dllmap dll="i:kernel32.dll">
+		<dllentry dll="__Internal" name="CopyMemory" target="mono_win32_compat_CopyMemory"/>
+		<dllentry dll="__Internal" name="FillMemory" target="mono_win32_compat_FillMemory"/>
+		<dllentry dll="__Internal" name="MoveMemory" target="mono_win32_compat_MoveMemory"/>
+		<dllentry dll="__Internal" name="ZeroMemory" target="mono_win32_compat_ZeroMemory"/>
+	</dllmap>
+</configuration>

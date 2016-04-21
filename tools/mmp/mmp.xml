@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<linker>
+    <assembly fullname="mscorlib">
+        <type fullname="Mono.Runtime" />
+    </assembly>
+    <assembly fullname="System">
+        <type fullname="System.UriTypeConverter" />
+        <type fullname="System.ComponentModel.BooleanConverter" />
+        <type fullname="System.ComponentModel.CollectionConverter" />
+        <type fullname="System.ComponentModel.EnumConverter" />
+        <type fullname="System.ComponentModel.StringConverter" />
+        <type fullname="System.ComponentModel.TimeSpanConverter" />
+        <type fullname="System.Diagnostics.SystemDiagnosticsSection" />
+        <type fullname="System.Net.Configuration.ConnectionManagementElementCollection" />
+        <type fullname="System.Net.Configuration.ConnectionManagementSection" />
+        <type fullname="System.Net.Configuration.DefaultProxySection" />
+        <type fullname="System.Net.Configuration.HttpWebRequestElement" />
+        <type fullname="System.Net.Configuration.Ipv6Element" />
+        <type fullname="System.Net.Configuration.NetSectionGroup" />
+        <type fullname="System.Net.Configuration.PerformanceCountersElement" />
+        <type fullname="System.Net.Configuration.ProxyElement" />
+        <type fullname="System.Net.Configuration.ServicePointManagerElement" />
+        <type fullname="System.Net.Configuration.SettingsSection" />
+        <type fullname="System.Net.Configuration.SocketElement" />
+        <type fullname="System.Net.Configuration.WebRequestModulesSection" />
+        <type fullname="System.Net.Configuration.WebRequestModuleElementCollection" />
+        <type fullname="System.Net.Configuration.WebRequestModuleElement" />
+        <type fullname="System.Net.Configuration.WebProxyScriptElement" />
+        <type fullname="System.Net.HttpRequestCreator" />
+        <type fullname="System.Net.FileWebRequestCreator" />
+        <type fullname="System.Net.FtpRequestCreator" />
+    </assembly>
+    <assembly fullname="System.Core">
+        <type fullname="System.Security.Cryptography.AesCryptoServiceProvider" />
+    </assembly>
+    <assembly fullname="System.Configuration">
+        <type fullname="System.Configuration.ExeConfigurationHost" />
+    </assembly>
+</linker>
