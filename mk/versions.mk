@@ -2,7 +2,7 @@
 # usage $(call CheckSubmoduleTemplate (mono,MONO,mono))
 
 define CheckSubmoduleTemplate
-#$(eval NEEDED_$(2)_VERSION:=$(shell git ls-tree HEAD --full-tree -- external/$(1) | awk -F' ' '{printf "%s",$$3}'))
+#$(eval NEEDED_$(2)_VERSION:=$(shell git --git-dir $(abspath $($(2)_PATH)/../..)/.git --work-tree $(abspath $($(2)_PATH)/../..) ls-tree HEAD --full-tree -- external/$(1) | awk -F' ' '{printf "%s",$$3}'))
 #$(eval $(2)_VERSION:=$$$$(shell cd $($(2)_PATH) 2>/dev/null && git rev-parse HEAD 2>/dev/null))
 
 check-$(1)::
@@ -42,7 +42,7 @@ ifneq ($$(IGNORE_$(2)_VERSION),)
 	@echo "*** Not resetting $(1) because IGNORE_$(2)_VERSION is set"
 else
 	@echo "*** git submodule update --init --recursive --force -- $(TOP)/external/$(1)"
-	@git submodule update --init --recursive --force -- $(TOP)/external/$(1)
+	cd $(abspath $($(2)_PATH)/../..) && git submodule update --init --recursive --force -- ./external/$(1)
 endif
 
 print-$(1)::
@@ -67,6 +67,8 @@ $(eval $(call CheckSubmoduleTemplate,NUnitLite,NUNITLITE))
 $(eval $(call CheckSubmoduleTemplate,opentk,OPENTK))
 $(eval $(call CheckSubmoduleTemplate,ModernHttpClient,MODERNHTTPCLIENT))
 $(eval $(call CheckSubmoduleTemplate,Xamarin.MacDev,XAMARIN_MACDEV))
+
+include $(TOP)/mk/xamarin.mk
 
 # some hackish reset-* targets to deal with what needs to happen in various parts of the build tree when you reset a module
 

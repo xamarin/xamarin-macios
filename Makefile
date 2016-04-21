@@ -177,3 +177,7 @@ fix-install-permissions:
 	sudo chown -R $(USER) /Library/Frameworks/Mono.framework/External/
 	sudo chown -R $(USER) /Library/Frameworks/Xamarin.iOS.framework
 	sudo chown -R $(USER) /Library/Frameworks/Xamarin.Mac.framework
+
+ifdef ENABLE_XAMARIN
+SUBDIRS += $(MACCORE_PATH)
+endif
