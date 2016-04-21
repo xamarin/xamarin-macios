@@ -55,6 +55,19 @@ check-versions:: check-$(1)
 print-versions:: print-$(1)
 endef
 
+
+$(shell rm -f .check-versions-failure)
+$(eval $(call CheckSubmoduleTemplate,llvm,LLVM))
+$(eval $(call CheckSubmoduleTemplate,mono,MONO))
+
+# some hackish reset-* targets to deal with what needs to happen in various parts of the build tree when you reset a module
+
+reset-mono::
+	$(Q) rm -f $(TOP)/.stamp-build* $(MONO_PATH)/configure
+
+reset-llvm::
+	$(Q) $(MAKE) -C $(TOP)/builds clean-llvm
+
 check-versions::
 	@if test -e .check-versions-failure; then  \
 		rm .check-versions-failure; \

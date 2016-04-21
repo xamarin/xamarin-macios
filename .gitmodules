@@ -1,0 +1,8 @@
+[submodule "external/llvm"]
+	path = external/llvm
+	url = git://github.com/mono/llvm.git
+	branch = master
+[submodule "external/mono"]
+	path = external/mono
+	url = git://github.com/mono/mono.git
+	branch = mono-4.5.0-branch

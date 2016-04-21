@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+export PATH="@FRAMEWORK_ROOT@/bin:$PATH"
+export MONO_CFG_DIR="@FRAMEWORK_ROOT@/etc"
+export MONO_PATH="@FRAMEWORK_ROOT@/lib/@ARCH@:@FRAMEWORK_ROOT@/lib/mono/Xamarin.Mac"
+
+"@MONO@" "$@"
