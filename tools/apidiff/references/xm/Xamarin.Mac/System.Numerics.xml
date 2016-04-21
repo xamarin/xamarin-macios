@@ -1,0 +1,1304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assemblies>
+  <assembly name="System.Numerics" version="2.0.5.0">
+    <attributes>
+      <attribute name="System.CLSCompliantAttribute">
+        <properties>
+          <property name="IsCompliant" value="True" />
+        </properties>
+      </attribute>
+      <attribute name="System.Diagnostics.DebuggableAttribute">
+        <properties>
+          <property name="IsJITTrackingEnabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="IsJITOptimizerDisabled" value="IgnoreSymbolStoreSequencePoints" />
+          <property name="DebuggingFlags" value="IgnoreSymbolStoreSequencePoints" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyCompanyAttribute">
+        <properties>
+          <property name="Company" value="Mono development team" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyCopyrightAttribute">
+        <properties>
+          <property name="Copyright" value="(c) Various Mono authors" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyDefaultAliasAttribute">
+        <properties>
+          <property name="DefaultAlias" value="System.Numerics.dll" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyDelaySignAttribute">
+        <properties>
+          <property name="DelaySign" value="True" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyDescriptionAttribute">
+        <properties>
+          <property name="Description" value="System.Numerics.dll" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyFileVersionAttribute">
+        <properties>
+          <property name="Version" value="4.0.50524.0" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyInformationalVersionAttribute">
+        <properties>
+          <property name="InformationalVersion" value="4.0.50524.0" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyKeyFileAttribute">
+        <properties>
+          <property name="KeyFile" value="../ecma.pub" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyProductAttribute">
+        <properties>
+          <property name="Product" value="Mono Common Language Infrastructure" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyTitleAttribute">
+        <properties>
+          <property name="Title" value="System.Numerics.dll" />
+        </properties>
+      </attribute>
+      <attribute name="System.Resources.NeutralResourcesLanguageAttribute">
+        <properties>
+          <property name="CultureName" value="en-US" />
+        </properties>
+      </attribute>
+      <attribute name="System.Resources.SatelliteContractVersionAttribute">
+        <properties>
+          <property name="Version" value="2.0.5.0" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute">
+        <properties>
+          <property name="WrapNonExceptionThrows" value="True" />
+        </properties>
+      </attribute>
+      <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
+        <properties>
+          <property name="Value" value="False" />
+        </properties>
+      </attribute>
+      <attribute name="System.Security.SecurityCriticalAttribute" />
+    </attributes>
+    <namespaces>
+      <namespace name="System.Numerics">
+        <classes>
+          <class name="BigInteger" type="struct" base="System.ValueType" sealed="true" serializable="true" charset="Ansi" layout="Sequential">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IComparable`1[System.Numerics.BigInteger]" />
+              <interface name="System.IEquatable`1[System.Numerics.BigInteger]" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.Byte[])" attrib="6278">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Decimal)" attrib="6278">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Decimal" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Double)" attrib="6278">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Double" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Int32)" attrib="6278">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Int64)" attrib="6278">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Int64" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Single)" attrib="6278">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Single" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.UInt32)" attrib="6278">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.UInt32" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.UInt64)" attrib="6278">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.UInt64" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="IsEven" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsEven()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsOne" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsOne()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsPowerOfTwo" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsPowerOfTwo()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsZero" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsZero()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="MinusOne" attrib="0" ptype="System.Numerics.BigInteger">
+                <methods>
+                  <method name="get_MinusOne()" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="One" attrib="0" ptype="System.Numerics.BigInteger">
+                <methods>
+                  <method name="get_One()" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Sign" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_Sign()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Zero" attrib="0" ptype="System.Numerics.BigInteger">
+                <methods>
+                  <method name="get_Zero()" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Abs(System.Numerics.BigInteger)" attrib="150" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="Add(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="150" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="Compare(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="150" static="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="CompareTo(System.Int64)" attrib="134" returntype="System.Int32">
+                <parameters>
+                  <parameter name="other" position="0" attrib="0" type="System.Int64" />
+                </parameters>
+              </method>
+              <method name="CompareTo(System.Numerics.BigInteger)" attrib="486" virtual="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="other" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="CompareTo(System.Object)" attrib="486" virtual="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="obj" position="0" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="CompareTo(System.UInt64)" attrib="134" returntype="System.Int32">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="other" position="0" attrib="0" type="System.UInt64" />
+                </parameters>
+              </method>
+              <method name="DivRem(System.Numerics.BigInteger, System.Numerics.BigInteger, out System.Numerics.BigInteger&amp;)" attrib="150" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="dividend" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="divisor" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="remainder" position="2" attrib="2" type="System.Numerics.BigInteger&amp;" direction="out" />
+                </parameters>
+              </method>
+              <method name="Divide(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="150" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="dividend" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="divisor" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="Equals(System.Int64)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="other" position="0" attrib="0" type="System.Int64" />
+                </parameters>
+              </method>
+              <method name="Equals(System.Numerics.BigInteger)" attrib="486" virtual="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="other" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="Equals(System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="obj" position="0" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="Equals(System.UInt64)" attrib="134" returntype="System.Boolean">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="other" position="0" attrib="0" type="System.UInt64" />
+                </parameters>
+              </method>
+              <method name="GetHashCode()" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+                <parameters />
+              </method>
+              <method name="GreatestCommonDivisor(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="150" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="Log(System.Numerics.BigInteger)" attrib="150" static="true" returntype="System.Double">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="Log(System.Numerics.BigInteger, System.Double)" attrib="150" static="true" returntype="System.Double">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="baseValue" position="1" attrib="0" type="System.Double" />
+                </parameters>
+              </method>
+              <method name="Log10(System.Numerics.BigInteger)" attrib="150" static="true" returntype="System.Double">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="Max(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="150" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="Min(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="150" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="ModPow(System.Numerics.BigInteger, System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="150" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="exponent" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="modulus" position="2" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="Multiply(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="150" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="Negate(System.Numerics.BigInteger)" attrib="150" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="Parse(System.String)" attrib="150" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="Parse(System.String, System.Globalization.NumberStyles)" attrib="150" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.String" />
+                  <parameter name="style" position="1" attrib="0" type="System.Globalization.NumberStyles" />
+                </parameters>
+              </method>
+              <method name="Parse(System.String, System.IFormatProvider)" attrib="150" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.String" />
+                  <parameter name="provider" position="1" attrib="0" type="System.IFormatProvider" />
+                </parameters>
+              </method>
+              <method name="Parse(System.String, System.Globalization.NumberStyles, System.IFormatProvider)" attrib="150" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.String" />
+                  <parameter name="style" position="1" attrib="0" type="System.Globalization.NumberStyles" />
+                  <parameter name="provider" position="2" attrib="0" type="System.IFormatProvider" />
+                </parameters>
+              </method>
+              <method name="Pow(System.Numerics.BigInteger, System.Int32)" attrib="150" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="exponent" position="1" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="Remainder(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="150" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="dividend" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="divisor" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="Subtract(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="150" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="ToByteArray()" attrib="134" returntype="System.Byte[]">
+                <parameters />
+              </method>
+              <method name="ToString()" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters />
+              </method>
+              <method name="ToString(System.IFormatProvider)" attrib="134" returntype="System.String">
+                <parameters>
+                  <parameter name="provider" position="0" attrib="0" type="System.IFormatProvider" />
+                </parameters>
+              </method>
+              <method name="ToString(System.String)" attrib="134" returntype="System.String">
+                <parameters>
+                  <parameter name="format" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="ToString(System.String, System.IFormatProvider)" attrib="486" virtual="true" returntype="System.String">
+                <parameters>
+                  <parameter name="format" position="0" attrib="0" type="System.String" />
+                  <parameter name="provider" position="1" attrib="0" type="System.IFormatProvider" />
+                </parameters>
+              </method>
+              <method name="TryParse(System.String, out System.Numerics.BigInteger&amp;)" attrib="150" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.String" />
+                  <parameter name="result" position="1" attrib="2" type="System.Numerics.BigInteger&amp;" direction="out" />
+                </parameters>
+              </method>
+              <method name="TryParse(System.String, System.Globalization.NumberStyles, System.IFormatProvider, out System.Numerics.BigInteger&amp;)" attrib="150" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.String" />
+                  <parameter name="style" position="1" attrib="0" type="System.Globalization.NumberStyles" />
+                  <parameter name="provider" position="2" attrib="0" type="System.IFormatProvider" />
+                  <parameter name="result" position="3" attrib="2" type="System.Numerics.BigInteger&amp;" direction="out" />
+                </parameters>
+              </method>
+              <method name="op_Addition(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_BitwiseAnd(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_BitwiseOr(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Decrement(System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Division(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="dividend" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="divisor" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Equality(System.Int64, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Int64" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Equality(System.Numerics.BigInteger, System.Int64)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Int64" />
+                </parameters>
+              </method>
+              <method name="op_Equality(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Equality(System.Numerics.BigInteger, System.UInt64)" attrib="2198" static="true" returntype="System.Boolean">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.UInt64" />
+                </parameters>
+              </method>
+              <method name="op_Equality(System.UInt64, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Boolean">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.UInt64" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_ExclusiveOr(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Explicit(System.Decimal)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Decimal" />
+                </parameters>
+              </method>
+              <method name="op_Explicit(System.Double)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Double" />
+                </parameters>
+              </method>
+              <method name="op_Explicit(System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Byte">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Explicit(System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Decimal">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Explicit(System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Double">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Explicit(System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Int16">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Explicit(System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Explicit(System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Int64">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Explicit(System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.SByte">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Explicit(System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Single">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Explicit(System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.UInt16">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Explicit(System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.UInt32">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Explicit(System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.UInt64">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Explicit(System.Single)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Single" />
+                </parameters>
+              </method>
+              <method name="op_GreaterThan(System.Int64, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Int64" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_GreaterThan(System.Numerics.BigInteger, System.Int64)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Int64" />
+                </parameters>
+              </method>
+              <method name="op_GreaterThan(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_GreaterThan(System.Numerics.BigInteger, System.UInt64)" attrib="2198" static="true" returntype="System.Boolean">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.UInt64" />
+                </parameters>
+              </method>
+              <method name="op_GreaterThan(System.UInt64, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Boolean">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.UInt64" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_GreaterThanOrEqual(System.Int64, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Int64" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_GreaterThanOrEqual(System.Numerics.BigInteger, System.Int64)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Int64" />
+                </parameters>
+              </method>
+              <method name="op_GreaterThanOrEqual(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_GreaterThanOrEqual(System.Numerics.BigInteger, System.UInt64)" attrib="2198" static="true" returntype="System.Boolean">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.UInt64" />
+                </parameters>
+              </method>
+              <method name="op_GreaterThanOrEqual(System.UInt64, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Boolean">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.UInt64" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Implicit(System.Byte)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Byte" />
+                </parameters>
+              </method>
+              <method name="op_Implicit(System.Int16)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Int16" />
+                </parameters>
+              </method>
+              <method name="op_Implicit(System.Int32)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="op_Implicit(System.Int64)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Int64" />
+                </parameters>
+              </method>
+              <method name="op_Implicit(System.SByte)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.SByte" />
+                </parameters>
+              </method>
+              <method name="op_Implicit(System.UInt16)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.UInt16" />
+                </parameters>
+              </method>
+              <method name="op_Implicit(System.UInt32)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.UInt32" />
+                </parameters>
+              </method>
+              <method name="op_Implicit(System.UInt64)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.UInt64" />
+                </parameters>
+              </method>
+              <method name="op_Increment(System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Inequality(System.Int64, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Int64" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Inequality(System.Numerics.BigInteger, System.Int64)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Int64" />
+                </parameters>
+              </method>
+              <method name="op_Inequality(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Inequality(System.Numerics.BigInteger, System.UInt64)" attrib="2198" static="true" returntype="System.Boolean">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.UInt64" />
+                </parameters>
+              </method>
+              <method name="op_Inequality(System.UInt64, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Boolean">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.UInt64" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_LeftShift(System.Numerics.BigInteger, System.Int32)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="shift" position="1" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="op_LessThan(System.Int64, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Int64" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_LessThan(System.Numerics.BigInteger, System.Int64)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Int64" />
+                </parameters>
+              </method>
+              <method name="op_LessThan(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_LessThan(System.Numerics.BigInteger, System.UInt64)" attrib="2198" static="true" returntype="System.Boolean">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.UInt64" />
+                </parameters>
+              </method>
+              <method name="op_LessThan(System.UInt64, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Boolean">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.UInt64" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_LessThanOrEqual(System.Int64, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Int64" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_LessThanOrEqual(System.Numerics.BigInteger, System.Int64)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Int64" />
+                </parameters>
+              </method>
+              <method name="op_LessThanOrEqual(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_LessThanOrEqual(System.Numerics.BigInteger, System.UInt64)" attrib="2198" static="true" returntype="System.Boolean">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.UInt64" />
+                </parameters>
+              </method>
+              <method name="op_LessThanOrEqual(System.UInt64, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Boolean">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.UInt64" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Modulus(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="dividend" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="divisor" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Multiply(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_OnesComplement(System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_RightShift(System.Numerics.BigInteger, System.Int32)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="shift" position="1" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="op_Subtraction(System.Numerics.BigInteger, System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_UnaryNegation(System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_UnaryPlus(System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Numerics.BigInteger">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="Complex" type="struct" base="System.ValueType" sealed="true" serializable="true" charset="Ansi" layout="Sequential">
+            <interfaces>
+              <interface name="System.IEquatable`1[System.Numerics.Complex]" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="ImaginaryOne" attrib="54" fieldtype="System.Numerics.Complex" />
+              <field name="One" attrib="54" fieldtype="System.Numerics.Complex" />
+              <field name="Zero" attrib="54" fieldtype="System.Numerics.Complex" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.Double, System.Double)" attrib="6278">
+                <parameters>
+                  <parameter name="real" position="0" attrib="0" type="System.Double" />
+                  <parameter name="imaginary" position="1" attrib="0" type="System.Double" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Imaginary" attrib="0" ptype="System.Double">
+                <methods>
+                  <method name="get_Imaginary()" attrib="2182" returntype="System.Double">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Magnitude" attrib="0" ptype="System.Double">
+                <methods>
+                  <method name="get_Magnitude()" attrib="2182" returntype="System.Double">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Phase" attrib="0" ptype="System.Double">
+                <methods>
+                  <method name="get_Phase()" attrib="2182" returntype="System.Double">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Real" attrib="0" ptype="System.Double">
+                <methods>
+                  <method name="get_Real()" attrib="2182" returntype="System.Double">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Abs(System.Numerics.Complex)" attrib="150" static="true" returntype="System.Double">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="Acos(System.Numerics.Complex)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="Add(System.Numerics.Complex, System.Numerics.Complex)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.Complex" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="Asin(System.Numerics.Complex)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="Atan(System.Numerics.Complex)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="Conjugate(System.Numerics.Complex)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="Cos(System.Numerics.Complex)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="Cosh(System.Numerics.Complex)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="Divide(System.Numerics.Complex, System.Numerics.Complex)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="dividend" position="0" attrib="0" type="System.Numerics.Complex" />
+                  <parameter name="divisor" position="1" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="Equals(System.Numerics.Complex)" attrib="486" virtual="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="Equals(System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="obj" position="0" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="Exp(System.Numerics.Complex)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="FromPolarCoordinates(System.Double, System.Double)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="magnitude" position="0" attrib="0" type="System.Double" />
+                  <parameter name="phase" position="1" attrib="0" type="System.Double" />
+                </parameters>
+              </method>
+              <method name="GetHashCode()" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+                <parameters />
+              </method>
+              <method name="Log(System.Numerics.Complex)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="Log(System.Numerics.Complex, System.Double)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                  <parameter name="baseValue" position="1" attrib="0" type="System.Double" />
+                </parameters>
+              </method>
+              <method name="Log10(System.Numerics.Complex)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="Multiply(System.Numerics.Complex, System.Numerics.Complex)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.Complex" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="Negate(System.Numerics.Complex)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="Pow(System.Numerics.Complex, System.Double)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                  <parameter name="power" position="1" attrib="0" type="System.Double" />
+                </parameters>
+              </method>
+              <method name="Pow(System.Numerics.Complex, System.Numerics.Complex)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                  <parameter name="power" position="1" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="Reciprocal(System.Numerics.Complex)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="Sin(System.Numerics.Complex)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="Sinh(System.Numerics.Complex)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="Sqrt(System.Numerics.Complex)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="Subtract(System.Numerics.Complex, System.Numerics.Complex)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.Complex" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="Tan(System.Numerics.Complex)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="Tanh(System.Numerics.Complex)" attrib="150" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="ToString()" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters />
+              </method>
+              <method name="ToString(System.IFormatProvider)" attrib="134" returntype="System.String">
+                <parameters>
+                  <parameter name="provider" position="0" attrib="0" type="System.IFormatProvider" />
+                </parameters>
+              </method>
+              <method name="ToString(System.String)" attrib="134" returntype="System.String">
+                <parameters>
+                  <parameter name="format" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="ToString(System.String, System.IFormatProvider)" attrib="486" virtual="true" returntype="System.String">
+                <parameters>
+                  <parameter name="format" position="0" attrib="0" type="System.String" />
+                  <parameter name="provider" position="1" attrib="0" type="System.IFormatProvider" />
+                </parameters>
+              </method>
+              <method name="op_Addition(System.Numerics.Complex, System.Numerics.Complex)" attrib="2198" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.Complex" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="op_Division(System.Numerics.Complex, System.Numerics.Complex)" attrib="2198" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.Complex" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="op_Equality(System.Numerics.Complex, System.Numerics.Complex)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.Complex" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="op_Explicit(System.Decimal)" attrib="2198" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Decimal" />
+                </parameters>
+              </method>
+              <method name="op_Explicit(System.Numerics.BigInteger)" attrib="2198" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.BigInteger" />
+                </parameters>
+              </method>
+              <method name="op_Implicit(System.Byte)" attrib="2198" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Byte" />
+                </parameters>
+              </method>
+              <method name="op_Implicit(System.Double)" attrib="2198" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Double" />
+                </parameters>
+              </method>
+              <method name="op_Implicit(System.Int16)" attrib="2198" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Int16" />
+                </parameters>
+              </method>
+              <method name="op_Implicit(System.Int32)" attrib="2198" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="op_Implicit(System.Int64)" attrib="2198" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Int64" />
+                </parameters>
+              </method>
+              <method name="op_Implicit(System.SByte)" attrib="2198" static="true" returntype="System.Numerics.Complex">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.SByte" />
+                </parameters>
+              </method>
+              <method name="op_Implicit(System.Single)" attrib="2198" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Single" />
+                </parameters>
+              </method>
+              <method name="op_Implicit(System.UInt16)" attrib="2198" static="true" returntype="System.Numerics.Complex">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.UInt16" />
+                </parameters>
+              </method>
+              <method name="op_Implicit(System.UInt32)" attrib="2198" static="true" returntype="System.Numerics.Complex">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.UInt32" />
+                </parameters>
+              </method>
+              <method name="op_Implicit(System.UInt64)" attrib="2198" static="true" returntype="System.Numerics.Complex">
+                <attributes>
+                  <attribute name="System.CLSCompliantAttribute">
+                    <properties>
+                      <property name="IsCompliant" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.UInt64" />
+                </parameters>
+              </method>
+              <method name="op_Inequality(System.Numerics.Complex, System.Numerics.Complex)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.Complex" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="op_Multiply(System.Numerics.Complex, System.Numerics.Complex)" attrib="2198" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.Complex" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="op_Subtraction(System.Numerics.Complex, System.Numerics.Complex)" attrib="2198" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Numerics.Complex" />
+                  <parameter name="right" position="1" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+              <method name="op_UnaryNegation(System.Numerics.Complex)" attrib="2198" static="true" returntype="System.Numerics.Complex">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Numerics.Complex" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+        </classes>
+      </namespace>
+    </namespaces>
+  </assembly>
+</assemblies>
