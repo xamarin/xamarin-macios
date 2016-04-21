@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EDB0E879-5AE6-4E2B-925D-F59023A6AA8D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Xamarin.iOS.Tasks</RootNamespace>
+    <AssemblyName>Xamarin.iOS.Tasks.Tests</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin</OutputPath>
+    <DefineConstants>DEBUG;MSBUILD_TESTS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build" />
+    <Reference Include="Microsoft.Build.Engine" />
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
+    <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj">
+      <Project>{CC3D9353-20C4-467A-8522-A9DED6F0C753}</Project>
+      <Name>Xamarin.MacDev</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Xamarin.MacDev.Tasks\Xamarin.MacDev.Tasks.csproj">
+      <Project>{534D7C5A-0E1C-4C58-9E48-21B1A98919EB}</Project>
+      <Name>Xamarin.MacDev.Tasks</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Xamarin.iOS.Tasks.Core\Xamarin.iOS.Tasks.Core.csproj">
+      <Project>{93E12FA0-089C-4BC8-840F-43CFBC7927C7}</Project>
+      <Name>Xamarin.iOS.Tasks.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Xamarin.iOS.Tasks\Xamarin.iOS.Tasks.csproj">
+      <Project>{44605724-8002-48E1-895F-7CB068099B6A}</Project>
+      <Name>Xamarin.iOS.Tasks</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.csproj">
+      <Project>{7B095849-6FDB-4BD2-9B59-569D81A1A809}</Project>
+      <Name>Xamarin.MacDev.Tasks.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="TaskTests\EnsureEmptyTasks.cs" />
+    <Compile Include="TaskTests\MTouchTaskTests.cs" />
+    <Compile Include="TaskTests\GetBundleNameTaskTests.cs" />
+    <Compile Include="TargetTests\TargetTests.cs" />
+    <Compile Include="TestHelpers\Logger.cs" />
+    <Compile Include="TestHelpers\TestBase.cs" />
+    <Compile Include="TestHelpers\TestEngine.cs" />
+    <Compile Include="TaskTests\DetectSdkLocationsTaskTests.cs" />
+    <Compile Include="TaskTests\BTouchTaskTest.cs" />
+    <Compile Include="ProjectsTests\Extensions\CustomKeyboard.cs" />
+    <Compile Include="ProjectsTests\Extensions\ExtensionTestBase.cs" />
+    <Compile Include="ProjectsTests\Extensions\Today.cs" />
+    <Compile Include="ProjectsTests\Extensions\Share.cs" />
+    <Compile Include="ProjectsTests\Extensions\PhotoEditing.cs" />
+    <Compile Include="ProjectsTests\Extensions\Action.cs" />
+    <Compile Include="ProjectsTests\Extensions\DocumentPicker.cs" />
+    <Compile Include="ProjectsTests\Extensions\WatchKit.cs" />
+    <Compile Include="ProjectsTests\XIProject.cs" />
+    <Compile Include="ProjectsTests\BindingProject.cs" />
+    <Compile Include="TaskTests\ParseMtouchExtraArgsTests.cs" />
+    <Compile Include="UtilityTests.cs" />
+    <Compile Include="ProjectsTests\ProjectWithFrameworks.cs" />
+    <Compile Include="ProjectsTests\NativeReferences.cs" />
+    <Compile Include="ProjectsTests\ProjectTest.cs" />
+    <Compile Include="ProjectsTests\Extensions\WatchKit2.cs" />
+    <Compile Include="..\..\..\tests\common\Configuration.cs">
+      <Link>Configuration.cs</Link>
+    </Compile>
+    <Compile Include="ProjectsTests\TVOS\MyTVApp.cs" />
+    <Compile Include="TaskTests\GeneratePlistTaskTests\GeneratePlistTaskTests_iOS.cs" />
+    <Compile Include="TaskTests\GeneratePlistTaskTests\GeneratePlistTaskTests_Core.cs" />
+    <Compile Include="TaskTests\GeneratePlistTaskTests\GeneratePlistTaskTests_iOS_AppExtension.cs" />
+    <Compile Include="TaskTests\GeneratePlistTaskTests\GeneratePlistTaskTests_watchOS_WatchKitApp.cs" />
+    <Compile Include="TaskTests\GeneratePlistTaskTests\GeneratePlistTaskTests_tvOS.cs" />
+    <Compile Include="TaskTests\SymbolStripTaskTests.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="ProjectsTests\" />
+    <Folder Include="ProjectsTests\Extensions\" />
+    <Folder Include="ProjectsTests\TVOS\" />
+    <Folder Include="TaskTests\GeneratePlistTaskTests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>

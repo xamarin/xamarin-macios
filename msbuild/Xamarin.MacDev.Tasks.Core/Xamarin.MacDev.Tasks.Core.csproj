@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7B095849-6FDB-4BD2-9B59-569D81A1A809}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Xamarin.MacDev.Tasks</RootNamespace>
+    <AssemblyName>Xamarin.MacDev.Tasks.Core</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;MONO_DATACONVERTER_PUBLIC</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>MONO_DATACONVERTER_PUBLIC</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Microsoft.Build.Engine" />
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Tasks.v4.0" />
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Mono.Posix" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj">
+      <Project>{CC3D9353-20C4-467A-8522-A9DED6F0C753}</Project>
+      <Name>Xamarin.MacDev</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tasks\ACToolTaskBase.cs" />
+    <Compile Include="Tasks\ArchiveTaskBase.cs" />
+    <Compile Include="Tasks\ArToolTaskBase.cs" />
+    <Compile Include="Tasks\BTouchTaskBase.cs" />
+    <Compile Include="Tasks\CodesignTaskBase.cs" />
+    <Compile Include="Tasks\CodesignVerifyTaskBase.cs" />
+    <Compile Include="Tasks\CompileAppManifestTaskBase.cs" />
+    <Compile Include="Tasks\ComputeBundleResourceOutputPathsTaskBase.cs" />
+    <Compile Include="Tasks\CollectBundleResourcesTaskBase.cs" />
+    <Compile Include="Tasks\CollectFrameworksBase.cs" />
+    <Compile Include="Tasks\CompileEntitlementsTaskBase.cs" />
+    <Compile Include="Tasks\CompileSceneKitAssetsTaskBase.cs" />
+    <Compile Include="Tasks\CreateAssetPackManifestTaskBase.cs" />
+    <Compile Include="Tasks\CreateEmbeddedResourcesTaskBase.cs" />
+    <Compile Include="Tasks\CreatePkgInfoTaskBase.cs" />
+    <Compile Include="Tasks\DetectSigningIdentityTaskBase.cs" />
+    <Compile Include="Tasks\DittoTaskBase.cs" />
+    <Compile Include="Tasks\DSymUtilTaskBase.cs" />
+    <Compile Include="Tasks\FindItemWithLogicalNameTaskBase.cs" />
+    <Compile Include="Tasks\GenerateBundleNameTaskBase.cs" />
+    <Compile Include="Tasks\GetNativeExecutableNameTaskBase.cs" />
+    <Compile Include="Tasks\GetPropertyListValueTaskBase.cs" />
+    <Compile Include="Tasks\IBToolTaskBase.cs" />
+    <Compile Include="Tasks\MetalLibTaskBase.cs" />
+    <Compile Include="Tasks\MetalTaskBase.cs" />
+    <Compile Include="Tasks\MoveTaskBase.cs" />
+    <Compile Include="Tasks\OptimizePropertyListTaskBase.cs" />
+    <Compile Include="Tasks\PackLibraryResourcesTaskBase.cs" />
+    <Compile Include="Tasks\PrepareNativeReferencesTaskBase.cs" />
+    <Compile Include="Tasks\ScnToolTaskBase.cs" />
+    <Compile Include="Tasks\ReadItemsFromFileBase.cs" />
+    <Compile Include="Tasks\WriteItemsToFileBase.cs" />
+    <Compile Include="Tasks\SmartCopyTaskBase.cs" />
+    <Compile Include="Tasks\SpotlightIndexerTaskBase.cs" />
+    <Compile Include="Tasks\SymbolStripTaskBase.cs" />
+    <Compile Include="Tasks\TextureAtlasTaskBase.cs" />
+    <Compile Include="Tasks\UnpackLibraryResourcesTaskBase.cs" />
+    <Compile Include="Tasks\XcodeCompilerToolTask.cs" />
+    <Compile Include="Tasks\XcodeToolTaskBase.cs" />
+    <Compile Include="Tasks\ZipTaskBase.cs" />
+    <Compile Include="AssetPackUtils.cs" />
+    <Compile Include="BundleResource.cs" />
+    <Compile Include="DataConverter.cs" />
+    <Compile Include="LinkTarget.cs" />
+    <Compile Include="LoggingExtensions.cs" />
+    <Compile Include="NativeReferenceKind.cs" />
+    <Compile Include="PathUtils.cs" />
+    <Compile Include="ProcessArgumentBuilder.cs" />
+    <Compile Include="ProcessUtils.cs" />
+    <Compile Include="StringParserService.cs" />
+    <Compile Include="PlatformFramework.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,87 @@
+<!--
+***********************************************************************************************
+Xamarin.ObjcBinding.Common.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+  created a backup copy.  Incorrect changes to this file will make it
+  impossible to load or build your projects from the command-line or the IDE.
+
+This file imports the version- and platform-specific targets for the project importing
+this file. This file also defines targets to produce an error if the specified targets
+file does not exist, but the project is built anyway (command-line or IDE build).
+
+Copyright (C) 2011 Xamarin Inc. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask TaskName="Xamarin.ObjcBinding.Tasks.AggressiveRemoveDir" AssemblyFile="Xamarin.ObjcBinding.Tasks.dll" />
+  <UsingTask TaskName="Xamarin.ObjcBinding.Tasks.AssignBundleResourceNames" AssemblyFile="Xamarin.ObjcBinding.Tasks.dll" />
+  <UsingTask TaskName="Xamarin.ObjcBinding.Tasks.CreateEmbeddedResources" AssemblyFile="Xamarin.ObjcBinding.Tasks.dll" />
+
+  <!-- Make our Build Actions show up in MonoDevelop -->
+  <ItemGroup>
+    <AvailableItemName Include="BundleResource" />
+    <AvailableItemName Include="ObjcBindingApiDefinition" />
+    <AvailableItemName Include="ObjcBindingCoreSource" />
+    <AvailableItemName Include="ObjcBindingNativeLibrary" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <GeneratedSourcesDirectory Condition="'$(GeneratedSourcesDirectory)' == ''">$(IntermediateOutputPath)ios</GeneratedSourcesDirectory>
+    <GeneratedSourcesDirectory Condition="'$(GeneratedSourcesDirectory)' != '' and !HasTrailingSlash ('$(GeneratedSourcesDirectory)')">$(GeneratedSourcesDirectory)\</GeneratedSourcesDirectory>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(OS)' == 'Unix'">
+    <MonoTouchSdkRoot Condition="'$(MonoTouchSdkRoot)' == '' And '$(MD_MTOUCH_SDK_ROOT)' != '' And Exists('$(MD_MTOUCH_SDK_ROOT)/bin')">$(MD_MTOUCH_SDK_ROOT)</MonoTouchSdkRoot>
+    <MonoTouchSdkRoot Condition="'$(MonoTouchSdkRoot)' == '' And '$(MD_MTOUCH_SDK_ROOT)' != '' And Exists('$(MD_MTOUCH_SDK_ROOT)/usr/bin')">$(MD_MTOUCH_SDK_ROOT)/usr</MonoTouchSdkRoot>
+    <MonoTouchSdkRoot Condition="'$(MonoTouchSdkRoot)' == '' And Exists('/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin')">/Library/Frameworks/Xamarin.iOS.framework/Versions/Current</MonoTouchSdkRoot>
+    <MonoTouchSdkRoot Condition="'$(MonoTouchSdkRoot)' == ''">/Developer/MonoTouch/usr</MonoTouchSdkRoot>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <_IPhoneResourcePrefix>$(IPhoneResourcePrefix)</_IPhoneResourcePrefix>
+    <_IPhoneResourcePrefix Condition="'$(_IPhoneResourcePrefix)' == ''">Resources</_IPhoneResourcePrefix>
+  </PropertyGroup>
+
+  <!-- Add our own pre-build steps -->
+  <PropertyGroup>
+    <BuildDependsOn>
+      _CreateGeneratedSourcesDir;
+      _CreateEmbeddedResources;
+      $(BuildDependsOn)
+    </BuildDependsOn>
+  </PropertyGroup>
+
+  <!-- Add our own Clean steps -->
+  <PropertyGroup>
+    <CleanDependsOn>
+      _CleanGeneratedSources;
+      $(CleanDependsOn)
+    </CleanDependsOn>
+  </PropertyGroup>
+
+  <!-- Create a directory to contain the generated sources -->
+  <Target Name="_CreateGeneratedSourcesDir">
+    <MakeDir Directories="$(GeneratedSourcesDirectory)" />
+  </Target>
+
+  <!-- Clean the generated sources -->
+  <Target Name="_CleanGeneratedSources">
+    <AggressiveRemoveDir Directories="$(GeneratedSourcesDirectory)" Condition="Exists ('$(GeneratedSourcesDirectory)')" />
+  </Target>
+
+  <Target Name="_AssignBundleResourceNames">
+    <AssignBundleResourceNames BundleResources="@(BundleResource)" ResourceDirectoryPrefixes="$(_IPhoneResourcePrefix)">
+      <Output ItemName="_BundleResourceWithName" TaskParameter="BundleResourcesWithNames" />
+    </AssignBundleResourceNames>
+  </Target>
+
+  <Target Name="_CreateEmbeddedResources" DependsOnTargets="_AssignBundleResourceNames">
+    <CreateEmbeddedResources BundleResourcesWithNames="@(_BundleResourceWithName)">
+      <Output ItemName="EmbeddedResource" TaskParameter="EmbeddedResources" />
+    </CreateEmbeddedResources>
+  </Target>
+
+</Project>

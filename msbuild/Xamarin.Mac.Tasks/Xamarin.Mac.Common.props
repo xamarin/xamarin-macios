@@ -1,0 +1,62 @@
+﻿<!--
+***********************************************************************************************
+Xamarin.Mac.Common.props
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+  created a backup copy.  Incorrect changes to this file will make it
+  impossible to load or build your projects from the command-line or the IDE.
+
+This file defines default properties for iOS projects.
+
+Copyright (C) 2013-2014 Xamarin. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props"
+			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props')"/>
+
+	<!-- This is used to determine whether Xamarin.Mac.Common.targets needs to import
+         Xamarin.Mac.Common.props itself, or whether it has been imported previously,
+         e.g. by the project itself. -->
+	<PropertyGroup>
+		<_XamarinCommonPropsHasBeenImported>true</_XamarinCommonPropsHasBeenImported>
+	</PropertyGroup>
+
+	<!-- When looking for related files to copy, look for Mono debugging files as well -->
+	<PropertyGroup>
+		<AllowedReferenceRelatedFileExtensions>
+			$(AllowedReferenceRelatedFileExtensions);
+			.dll.mdb;
+			.exe.mdb
+		</AllowedReferenceRelatedFileExtensions>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<EnableCodeSigning Condition="'$(EnableCodeSigning)' == ''">false</EnableCodeSigning>
+		<CodeSigningKey Condition="'$(CodeSigningKey)' == ''"></CodeSigningKey>
+		<CodeSignProvision Condition="'$(CodeSignProvision)' == ''"></CodeSignProvision>
+		<CodeSignEntitlements Condition="'$(CodeSignEntitlements)' == ''"></CodeSignEntitlements>
+		<CodeSignResourceRules Condition="'$(CodeSignResourceRules)' == ''"></CodeSignResourceRules>
+		<CodeSignExtraArgs Condition="'$(CodeSignExtraArgs)' == ''"></CodeSignExtraArgs>
+		<CreatePackage Condition="'$(CreatePackage)' == ''">false</CreatePackage>
+		<HttpClientHandler Condition="'$(HttpClientHandler)' == ''">HttpClientHandler</HttpClientHandler>
+		<EnablePackageSigning Condition="'$(EnablePackageSigning)' == ''">false</EnablePackageSigning>
+		<PackageSigningKey Condition="'$(PackageSigningKey)' == ''"></PackageSigningKey>
+		<ProductDefinition Condition="'$(ProductDefinition)' == ''"></ProductDefinition>
+		<PackagingExtraArgs Condition="'$(PackagingExtraArgs)' == ''"></PackagingExtraArgs>
+		<I18n Condition="'$(I18n)' == ''"></I18n>
+		<IncludeMonoRuntime Condition="'$(IncludeMonoRuntime)' == ''">true</IncludeMonoRuntime>
+		<MonoBundlingExtraArgs Condition="'$(MonoBundlingExtraArgs)' == ''"></MonoBundlingExtraArgs>
+		<TlsProvider Condition="'$(TlsProvider)' == ''">Default</TlsProvider>
+		<LinkMode Condition="'$(LinkMode)' == ''">None</LinkMode>
+		<XamMacArch Condition="'$(XamMacArch)' == ''">x86_64</XamMacArch>
+		<MonoMacResourcePrefix Condition="'$(MonoMacResourcePrefix)' == ''">Resources</MonoMacResourcePrefix>
+		<XamMacResourcePrefix Condition="'$(XamMacResourcePrefix)' == ''">$(MonoMacResourcePrefix)</XamMacResourcePrefix>
+	</PropertyGroup>
+
+	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props"
+			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props')"/>
+
+</Project>

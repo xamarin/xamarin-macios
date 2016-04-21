@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C8D98DC1-5122-4B10-A152-17196C7BD9AC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Xamarin.Mac.Tasks</RootNamespace>
+    <AssemblyName>Xamarin.Mac.Tasks</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Engine" />
+    <Reference Include="Microsoft.Build" />
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
+    <Reference Include="Microsoft.Build.Tasks.v4.0" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Compile Include="MsBuildTasks\CopyBase.cs" />
+    <Compile Include="MsBuildTasks\DeleteBase.cs" />
+    <Compile Include="MsBuildTasks\MakeDirBase.cs" />
+    <Compile Include="MsBuildTasks\RemoveDirBase.cs" />
+    <Compile Include="MsBuildTasks\TouchBase.cs" />
+    <Compile Include="MacOSXSdks.cs" />
+    <Compile Include="Tasks\ACTool.cs" />
+    <Compile Include="Tasks\BTouch.cs" />
+    <Compile Include="Tasks\CodesignVerify.cs" />
+    <Compile Include="Tasks\CompileAppManifest.cs" />
+    <Compile Include="Tasks\CompileEntitlements.cs" />
+    <Compile Include="Tasks\CompileSceneKitAssets.cs" />
+    <Compile Include="Tasks\CreateEmbeddedResources.cs" />
+    <Compile Include="Tasks\DetectSdkLocations.cs" />
+    <Compile Include="Tasks\DetectSigningIdentity.cs" />
+    <Compile Include="Tasks\EmbedProvisionProfile.cs" />
+    <Compile Include="Tasks\IBTool.cs" />
+    <Compile Include="Tasks\Metal.cs" />
+    <Compile Include="Tasks\MetalLib.cs" />
+    <Compile Include="Tasks\Mmp.cs" />
+    <Compile Include="Tasks\ScnTool.cs" />
+    <Compile Include="Tasks\TextureAtlas.cs" />
+    <Compile Include="Tasks\XamMacArch.cs" />
+    <Compile Include="Tasks\PrepareNativeReferences.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tasks\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj">
+      <Project>{CC3D9353-20C4-467A-8522-A9DED6F0C753}</Project>
+      <Name>Xamarin.MacDev</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Xamarin.MacDev.Tasks\Xamarin.MacDev.Tasks.csproj">
+      <Project>{534D7C5A-0E1C-4C58-9E48-21B1A98919EB}</Project>
+      <Name>Xamarin.MacDev.Tasks</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.csproj">
+      <Project>{7B095849-6FDB-4BD2-9B59-569D81A1A809}</Project>
+      <Name>Xamarin.MacDev.Tasks.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Xamarin.Mac.XM45.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Xamarin.Mac.Common.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Xamarin.Mac.CSharp.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Xamarin.Mac.FSharp.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Xamarin.Mac.Common.props">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Xamarin.Mac.ObjCBinding.Common.props">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Xamarin.Mac.ObjCBinding.Common.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Xamarin.Mac.ObjCBinding.CSharp.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,541 @@
+<!--
+***********************************************************************************************
+Xamarin.Mac.Common.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+  created a backup copy.  Incorrect changes to this file will make it
+  impossible to load or build your projects from the command-line or the IDE.
+
+This file imports the version- and platform-specific targets for the project importing
+this file. This file also defines targets to produce an error if the specified targets
+file does not exist, but the project is built anyway (command-line or IDE build).
+
+Copyright (C) 2014 Xamarin. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.ArTool" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.Codesign" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.CollectBundleResources" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreateInstallerPackage" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreatePkgInfo" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindItemWithLogicalName" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.PackLibraryResources" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.SmartCopy" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.UnpackLibraryResources" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
+
+	<UsingTask TaskName="Xamarin.Mac.Tasks.ACTool" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.Mac.Tasks.CodesignVerify" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.Mac.Tasks.CompileAppManifest" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.Mac.Tasks.CompileEntitlements" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.Mac.Tasks.CompileSceneKitAssets" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.Mac.Tasks.DetectSdkLocations" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.Mac.Tasks.DetectSigningIdentity" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.Mac.Tasks.EmbedProvisionProfile" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.Mac.Tasks.IBTool" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.Mac.Tasks.MetalLib" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.Mac.Tasks.Metal" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.Mac.Tasks.Mmp" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.Mac.Tasks.ScnTool" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.Mac.Tasks.TextureAtlas" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.props"
+			Condition="'$(_XamarinCommonPropsHasBeenImported)' != 'true'" />
+
+	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
+			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
+
+	<PropertyGroup Condition="'$(XamarinMacFrameworkRoot)' == ''">
+		<XamarinMacFrameworkRoot>/Library/Frameworks/Xamarin.Mac.framework/Versions/Current</XamarinMacFrameworkRoot>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(UseXamMacFullFramework)' != 'True'">
+		<AssemblySearchPaths>$(XamarinMacFrameworkRoot)/lib/reference/full;$(XamarinMacFrameworkRoot)/lib/mono;$(AssemblySearchPaths)</AssemblySearchPaths>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(UseXamMacFullFramework)' == 'True'">
+		<AssemblySearchPaths>$(XamarinMacFrameworkRoot)/lib/mono/4.5;$(AssemblySearchPaths)</AssemblySearchPaths>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<_CanOutputAppBundle>False</_CanOutputAppBundle>
+		<_CanOutputAppBundle Condition="'$(OutputType)' == 'Exe'">True</_CanOutputAppBundle>
+
+		<_CanArchive>False</_CanArchive>
+		<_CanArchive Condition="'$(OutputType)' == 'Exe'">True</_CanArchive>
+
+		<_PreparedResourceRules></_PreparedResourceRules>
+		<_AppBundleName>$(AssemblyName)</_AppBundleName>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<BuildDependsOn>
+			_CollectBundleResources;
+			_PackLibraryResources;
+			_UnpackLibraryResources;
+			$(BuildDependsOn);
+			_GenerateBundleName;
+			_CreateAppBundle;
+			Codesign;
+			_CreateInstaller;
+		</BuildDependsOn>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<CompileColladaAssetsDependsOn>
+			_CollectColladaAssets;
+			_CoreCompileColladaAssets
+		</CompileColladaAssetsDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_CompileColladaAssets" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CompileColladaAssetsDependsOn)" />
+
+	<PropertyGroup>
+		<CreateAppBundleDependsOn>
+			_DetectSigningIdentity;
+			_CopyContentToBundle;
+			_SmeltMetal;
+			_ForgeMetal;
+			_TemperMetal;
+			_CompileEntitlements;
+			_CompileAppManifest;
+			_CompileToNative;
+			_CreatePkgInfo;
+		</CreateAppBundleDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_CreateAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CreateAppBundleDependsOn)" />
+
+	<PropertyGroup>
+		<_CodesignAppBundleDependsOn>
+			_CreateAppBundle;
+			_EmbedProvisionProfile;
+			_CodesignNativeLibraries;
+		</_CodesignAppBundleDependsOn>
+
+		<CodesignDependsOn>
+			_CodesignAppBundle;
+			_CodesignVerify;
+		</CodesignDependsOn>
+	</PropertyGroup>
+
+	<Target Name="Codesign" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CodesignDependsOn)" />
+
+	<PropertyGroup>
+		<CleanDependsOn>
+			$(CleanDependsOn);
+			_CleanAppBundle;
+			_CleanIntermediateToolOutput;
+		</CleanDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_CleanAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
+		<RemoveDir Directories="$(_AppBundlePath)" />
+	</Target>
+
+	<Target Name="_CleanIntermediateToolOutput">
+		<RemoveDir Directories="$(IntermediateOutputPath)actool" />
+		<RemoveDir Directories="$(IntermediateOutputPath)ibtool" />
+		<RemoveDir Directories="$(IntermediateOutputPath)metal" />
+		<RemoveDir Directories="$(IntermediateOutputPath)scntool" />
+		<RemoveDir Directories="$(IntermediateOutputPath)TextureAtlas" />
+		<RemoveDir Directories="$(IntermediateOutputPath)" />
+	</Target>
+
+	<PropertyGroup>
+		<_CollectBundleResourcesDependsOn>
+			_CompileImageAssets;
+			_CompileInterfaceDefinitions;
+			_CompileSceneKitAssets;
+			_CompileColladaAssets;
+			_CompileTextureAtlases;
+			$(_CollectBundleResourcesDependsOn);
+		</_CollectBundleResourcesDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_CollectNativeLibraries" DependsOnTargets="_CompileToNative;_CopyContentToBundle">
+		<ItemGroup>
+			<_NativeLibrary Include="$(_AppBundlePath)**\*.dylib" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_CodesignNativeLibraries" Condition="'$(EnableCodeSigning)'" DependsOnTargets="_DetectSigningIdentity;_CollectNativeLibraries">
+		<Codesign
+			ToolExe="$(CodesignExe)"
+			ToolPath="$(CodesignPath)"
+			Condition="'@(_NativeLibrary)' != ''"
+			CodesignAllocate="$(_CodesignAllocate)"
+			Keychain="$(CodesignKeychain)"
+			Resource="%(_NativeLibrary.Identity)"
+			SigningKey="$(_CodeSigningKey)"
+			ExtraArgs="$(CodesignExtraArgs)"
+			>
+		</Codesign>
+	</Target>
+
+	<Target Name="_EmbedProvisionProfile" Condition="'$(_ProvisioningProfile)' != ''" DependsOnTargets="_GenerateBundleName"
+		Outputs="$(_AppBundlePath)Contents\embedded.provisionprofile">
+		<EmbedProvisionProfile
+			AppBundleDir="$(AppBundleDir)"
+			ProvisioningProfile="$(_ProvisioningProfile)"
+			>
+		</EmbedProvisionProfile>
+	</Target>
+	
+	<Target Name="_CompileEntitlements" Condition="'$(EnableCodeSigning)'" DependsOnTargets="_GenerateBundleName"
+		Outputs="$(IntermediateOutputPath)Entitlements.xcent">
+		<CompileEntitlements
+			AppBundleDir="$(AppBundleDir)"
+			AppIdentifier="$(_AppIdentifier)"
+			BundleIdentifier="$(_BundleIdentifier)"
+			Entitlements="$(CodeSignEntitlements)"
+			CompiledEntitlements="$(IntermediateOutputPath)Entitlements.xcent"
+			IsAppExtension="false"
+			ProvisioningProfile="$(_ProvisioningProfile)"
+			SdkVersion="$(MacOSXSdkVersion)"
+			SdkDevPath="$(_SdkDevPath)"
+			Debug="$(DebugSymbols)"
+			>
+		</CompileEntitlements>
+	</Target>
+
+	<Target Name="_CodesignAppBundle" Condition="'$(EnableCodeSigning)'" DependsOnTargets="$(_CodesignAppBundleDependsOn)">
+		<Codesign
+			ToolExe="$(CodesignExe)"
+			ToolPath="$(CodesignPath)"
+			CodesignAllocate="$(_CodesignAllocate)"
+			Keychain="$(CodesignKeychain)"
+			Entitlements="$(IntermediateOutputPath)Entitlements.xcent"
+			Resource="$(AppBundleDir)"
+			SigningKey="$(_CodeSigningKey)"
+			ExtraArgs="$(CodesignExtraArgs)"
+			>
+		</Codesign>
+	</Target>
+
+	<Target Name="_CodesignVerify" Condition="'$(EnableCodeSigning)'" DependsOnTargets="_CodesignAppBundle">
+		<CodesignVerify
+			ToolExe="$(CodesignExe)"
+			ToolPath="$(CodesignPath)"
+			CodesignAllocate="$(_CodesignAllocate)"
+			Resource="$(AppBundleDir)"
+		>
+		</CodesignVerify>
+	</Target>
+
+	<!-- TODO: check for duplicate items -->
+	<Target Name="_CopyContentToBundle"
+		Inputs="@(_BundleResourceWithLogicalName)"
+		Outputs="@(_BundleResourceWithLogicalName -> '$(_AppResourcesPath)%(LogicalName)')">
+		<SmartCopy
+			SourceFiles = "@(_BundleResourceWithLogicalName)"
+			DestinationFiles = "@(_BundleResourceWithLogicalName -> '$(_AppResourcesPath)%(LogicalName)')"/>
+	</Target>
+
+	<Target Name="_CollectBundleResources" DependsOnTargets="$(_CollectBundleResourcesDependsOn)">
+		<CollectBundleResources
+			BundleResources="@(Content);@(BundleResource)"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(XamMacResourcePrefix)">
+			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
+		</CollectBundleResources>
+	</Target>
+
+	<Target Name="_DetectAppManifest" Condition="'$(_CanOutputAppBundle)' == 'true'" >
+		<FindItemWithLogicalName
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(XamMacResourcePrefix)"
+			LogicalName="Info.plist"
+			Items="@(None)">
+			<Output TaskParameter="Item" PropertyName="_AppManifest" />
+		</FindItemWithLogicalName>
+		<FindItemWithLogicalName Condition="'$(_AppManifest)' == ''"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(XamMacResourcePrefix)"
+			LogicalName="Info.plist"
+			Items="@(BundleResource)">
+			<Output TaskParameter="Item" PropertyName="_AppManifest" />
+		</FindItemWithLogicalName>
+		<FindItemWithLogicalName Condition="'$(_AppManifest)' == ''"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(XamMacResourcePrefix)"
+			LogicalName="Info.plist"
+			Items="@(Content)">
+			<Output TaskParameter="Item" PropertyName="_AppManifest" />
+		</FindItemWithLogicalName>
+		<Error Condition="'$(_AppManifest)' == ''" Text="Info.plist not found."/>
+	</Target>
+
+	<Target Name="_SmeltMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(Metal)' != ''" DependsOnTargets="_DetectSdkLocations">
+		<Metal
+			IntermediateOutputPath="$(IntermediateOutputPath)"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(XamMacResourcePrefix)"
+			SdkDevPath="$(_SdkDevPath)"
+			SourceFile="%(Metal.Identity)">
+			<Output TaskParameter="OutputFile" ItemName="_SmeltedMetal" />
+		</Metal>
+	</Target>
+
+	<Target Name="_ForgeMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_SmeltedMetal)' != ''" DependsOnTargets="_SmeltMetal"
+		Inputs="@(_SmeltedMetal)" Outputs="$(IntermediateOutputPath)metal\default.metal-ar">
+		<ArTool
+			Items="@(_SmeltedMetal)"
+			Archive="$(IntermediateOutputPath)metal\default.metal-ar">
+		</ArTool>
+
+		<CreateItem Include="$(IntermediateOutputPath)metal\default.metal-ar">
+			<Output TaskParameter="Include" ItemName="_ForgedMetal" />
+		</CreateItem>
+	</Target>
+
+	<Target Name="_TemperMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_ForgedMetal)' != ''" DependsOnTargets="_ForgeMetal"
+		Inputs="@(_ForgedMetal)" Outputs="$(_AppBundlePath)default.metallib">
+		<MetalLib
+			Items="@(_ForgedMetal)"
+			SdkDevPath="$(_SdkDevPath)"
+			OutputLibrary="$(_AppBundlePath)Contents\Resources\default.metallib">
+		</MetalLib>
+
+		<CreateItem Include="$(_AppBundlePath)Contents\Resources\default.metallib">
+			<Output TaskParameter="Include" ItemName="_NativeLibrary" />
+		</CreateItem>
+	</Target>
+	
+	<Target Name="_CompileTextureAtlases" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_CoreCompileTextureAtlases" />
+
+	<Target Name="_CoreCompileTextureAtlases">
+		<TextureAtlas
+			ToolExe="$(TextureAtlasExe)"
+			ToolPath="$(TextureAtlasPath)"
+			AtlasTextures="@(AtlasTexture)"
+			IntermediateOutputPath="$(IntermediateOutputPath)"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(XamMacResourcePrefix)"
+			SdkDevPath="$(_SdkDevPath)"
+			SdkBinPath="$(_SdkBinPath)"
+			SdkUsrPath="$(_SdkUsrPath)">
+			<Output TaskParameter="BundleResources" ItemName="FileWrites" />
+			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
+		</TextureAtlas>
+	</Target>
+
+	<Target Name="_CreateInstaller" Condition="$(CreatePackage)" DependsOnTargets="Codesign">
+		<CreateInstallerPackage
+			OutputDirectory = "$(TargetDir)"
+			Name = "$(AssemblyName)"
+			AppManifest="$(_AppManifest)"
+			ProjectPath= "$(MSBuildProjectFullPath)"
+			AppBundleDir= "$(AppBundleDir)"
+			MainAssembly= "$(TargetPath)"
+			EnablePackageSigning = "$(EnablePackageSigning)"
+			ProductDefinition = "$(ProductDefinition)"
+			PackageSigningKey = "$(PackageSigningKey)"
+			PackagingExtraArgs = "$(PackagingExtraArgs)">
+		</CreateInstallerPackage>
+	</Target>
+
+	<Target Name="_PackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'false'" DependsOnTargets="_CollectBundleResources">
+		<PackLibraryResources
+			Prefix="xammac"
+			BundleResourcesWithLogicalNames="@(_BundleResourceWithLogicalName)">
+			<Output TaskParameter="EmbeddedResources" ItemName="EmbeddedResource" />
+		</PackLibraryResources>
+	</Target>
+
+	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="ResolveReferences;_CollectBundleResources">
+		<UnpackLibraryResources
+			Prefix="xammac"
+			NoOverwrite="@(_BundleResourceWithLogicalName)"
+			IntermediateOutputPath="$(IntermediateOutputPath)"
+			ReferencedLibraries="@(ResolvedFiles)">
+			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
+			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="FileWrites" />
+		</UnpackLibraryResources>
+	</Target>
+
+	<Target Name="_DetectSdkLocations">
+		<DetectSdkLocations SdkVersion="$(MacOSXSdkVersion)">
+			<Output TaskParameter="SdkVersion" PropertyName="MacOSXSdkVersion" />
+			<Output TaskParameter="SdkRoot" PropertyName="_SdkRoot" />
+			<Output TaskParameter="SdkBinPath" PropertyName="_SdkBinPath" />
+			<Output TaskParameter="SdkDevPath" PropertyName="_SdkDevPath" />
+			<Output TaskParameter="SdkUsrPath" PropertyName="_SdkUsrPath" />
+		</DetectSdkLocations>
+	</Target>
+
+	<Target Name="_DetectSigningIdentity">
+		<DetectSigningIdentity
+			AppBundleName="$(_AppBundleName)"
+			AppManifest="$(_AppManifest)"
+			Keychain="$(CodesignKeychain)"
+			RequireCodeSigning="$(EnableCodeSigning)"
+			SdkPlatform="MacOSX"
+			ProvisioningProfile="$(CodeSignProvision)"
+			SigningKey="$(CodeSigningKey)"
+			SdkIsSimulator="false"
+			>
+			<Output TaskParameter="DetectedAppId" PropertyName="_AppIdentifier" />
+			<Output TaskParameter="DetectedBundleId" PropertyName="_BundleIdentifier" />
+			<Output TaskParameter="DetectedCodeSigningKey" PropertyName="_CodeSigningKey" />
+			<Output TaskParameter="DetectedCodesignAllocate" PropertyName="_CodesignAllocate" />
+			<Output TaskParameter="DetectedProvisioningProfile" PropertyName="_ProvisioningProfile" />
+		</DetectSigningIdentity>
+	</Target>
+
+	<Target Name="_GenerateBundleName">
+		<PropertyGroup>
+			<AppBundleDir>$(OutputPath)$(_AppBundleName).app</AppBundleDir>
+			<_AppBundlePath>$(OutputPath)$(_AppBundleName).app\</_AppBundlePath>
+			<_AppResourcesPath>$(_AppBundlePath)Contents\Resources\</_AppResourcesPath>
+		</PropertyGroup>
+	</Target>
+
+	<Target Name="_CompileAppManifest"
+		DependsOnTargets="_DetectAppManifest;_GenerateBundleName;_DetectSigningIdentity"
+		Inputs="$(_AppManifest);@(_PartialAppManifest)"
+		Outputs="$(_AppBundlePath)Contents\Info.plist" >
+		<CompileAppManifest
+			AppBundleName="$(_AppBundleName)"
+			AppBundleDir="$(AppBundleDir)"
+			AppManifest="$(_AppManifest)"
+			Architecture="$(XamMacArch)"
+			AssemblyName="$(TargetName)"
+			BundleIdentifier="$(_BundleIdentifier)"
+			PartialAppManifests="@(_PartialAppManifest)" />
+	</Target>
+
+	<Target Name="_CompileToNative" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_GenerateBundleName;ResolveReferences;_CompileEntitlements;_CompileAppManifest"
+		Inputs="$(TargetDir)$(TargetFileName)"
+		Outputs="$(_AppBundlePath)Contents\MacOS\$(TargetFileName)">
+		<Mmp
+			FrameworkRoot="$(XamarinMacFrameworkRoot)"
+			OutputPath="$(OutputPath)"
+			ApplicationName="$(_AppBundleName)"
+			ApplicationAssembly="$(OutputPath)$(AssemblyName).exe"
+			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+			TargetFrameworkVersion="$(TargetFrameworkVersion)"
+			UseXamMacFullFramework="$(UseXamMacFullFramework)"
+			Architecture="$(XamMacArch)"
+			LinkMode="$(LinkMode)"
+			Debug="$(DebugSymbols)"
+			HttpClientHandler="$(HttpClientHandler)"
+			TLSProvider="$(TlsProvider)"
+			I18n="$(I18n)"
+			Profiling="$(Profiling)"
+			ExtraArguments="$(MonoBundlingExtraArgs)"
+			NativeReferences="%(NativeReference.FullPath)"
+			ExplicitReferences="@(ReferencePath)"
+			SdkRoot="$(_SdkDevPath)"
+			IntermediateOutputPath="$(IntermediateOutputPath)mmp-cache"
+			AppManifest="$(_AppManifest)"
+			SdkVersion="$(MacOSXSdkVersion)"
+			 />
+	</Target>
+
+	<Target Name="_CollectColladaAssets">
+		<CollectBundleResources
+			BundleResources="@(Collada)"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(XamMacResourcePrefix)">
+			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_ColladaAssetWithLogicalName" />
+		</CollectBundleResources>
+	</Target>
+
+	<Target Name="_CoreCompileColladaAssets"
+		DependsOnTargets="_CollectColladaAssets;_DetectSdkLocations"
+		Inputs="@(_ColladaAssetWithLogicalName)"
+		Outputs="$(IntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)"
+		>
+
+		<ScnTool
+			ToolExe="$(ScnToolExe)"
+			ToolPath="$(ScnToolPath)"
+			SdkRoot="$(_SdkRoot)"
+			SdkDevPath="$(_SdkDevPath)"
+			SdkVersion="$(MacOSXSdkVersion)"
+			IntermediateOutputPath="$(IntermediateOutputPath)"
+			InputScene="%(_ColladaAssetWithLogicalName.Identity)"
+			OutputScene="$(IntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)">
+		</ScnTool>
+
+		<CreateItem Include="$(IntermediateOutputPath)%(_ColladaAssetWithLogicalName.LogicalName)" AdditionalMetadata="LogicalName=%(_ColladaAssetWithLogicalName.LogicalName)">
+			<Output TaskParameter="Include" ItemName="_BundleResourceWithLogicalName" />
+		</CreateItem>
+	</Target>
+
+	<Target Name="_CompileImageAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_CoreCompileImageAssets" />
+
+	<Target Name="_CoreCompileImageAssets">
+		<ACTool
+			ToolExe="$(ACToolExe)"
+			ToolPath="$(ACToolPath)"
+			AppManifest="$(_AppManifest)"
+			ImageAssets="@(ImageAsset)"
+			OptimizePngs="false"
+			OutputPath="$(OutputPath)"
+			IntermediateOutputPath="$(IntermediateOutputPath)"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(XamMacResourcePrefix)"
+			SdkPlatform="MacOSX"
+			SdkDevPath="$(_SdkDevPath)"
+			SdkBinPath="$(_SdkBinPath)"
+			SdkUsrPath="$(_SdkUsrPath)"
+			SdkVersion="$(MacOSXSdkVersion)">
+			<Output TaskParameter="PartialAppManifest" ItemName="FileWrites" />
+			<Output TaskParameter="OutputManifests" ItemName="FileWrites" />
+			<Output TaskParameter="BundleResources" ItemName="FileWrites" />
+			<Output TaskParameter="PartialAppManifest" ItemName="_PartialAppManifest" />
+			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
+		</ACTool>
+	</Target>
+
+	<Target Name="_CompileSceneKitAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_CoreCompileSceneKitAssets" />
+
+	<Target Name="_CoreCompileSceneKitAssets">
+		<CompileSceneKitAssets
+			ToolExe="$(CopySceneKitAssetsExe)"
+			ToolPath="$(CopySceneKitAssetsPath)"
+			SceneKitAssets="@(SceneKitAsset)"
+			IntermediateOutputPath="$(IntermediateOutputPath)"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(XamMacResourcePrefix)"
+			SdkDevPath="$(_SdkDevPath)"
+			SdkRoot="$(_SdkRoot)"
+			SdkVersion="$(MacOSXSdkVersion)">
+			<Output TaskParameter="BundleResources" ItemName="FileWrites" />
+			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
+		</CompileSceneKitAssets>
+	</Target>
+
+	<Target Name="_CompileInterfaceDefinitions" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_CoreCompileInterfaceDefinitions" />
+
+	<Target Name="_CoreCompileInterfaceDefinitions">
+		<IBTool
+			ToolExe="$(IBToolExe)"
+			ToolPath="$(IBToolPath)"
+			AppManifest="$(_AppManifest)"
+			InterfaceDefinitions="@(InterfaceDefinition)"
+			IntermediateOutputPath="$(IntermediateOutputPath)"
+			SdkPlatform="MacOSX"
+			ProjectDir="$(MSBuildProjectDirectory)"
+			ResourcePrefix="$(XamMacResourcePrefix)"
+			SdkDevPath="$(_SdkDevPath)"
+			SdkBinPath="$(_SdkBinPath)"
+			SdkUsrPath="$(_SdkUsrPath)"
+			SdkRoot="$(_SdkRoot)"
+			SdkVersion="$(MacOSXSdkVersion)">
+			<Output TaskParameter="OutputManifests" ItemName="FileWrites" />
+			<Output TaskParameter="BundleResources" ItemName="FileWrites" />
+			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
+		</IBTool>
+	</Target>
+
+	<Target Name="_CreatePkgInfo" DependsOnTargets="_GenerateBundleName" Outputs="$(_AppBundlePath)Contents\PkgInfo">
+		<CreatePkgInfo OutputPath="$(_AppBundlePath)Contents\PkgInfo" />
+	</Target>
+
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.XM45.targets"
+		Condition="'$(UseXamMacFullFramework)' == 'True'"/>
+</Project>

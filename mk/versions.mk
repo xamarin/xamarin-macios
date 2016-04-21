@@ -66,6 +66,7 @@ $(eval $(call CheckSubmoduleTemplate,Touch.Unit,TOUCH_UNIT))
 $(eval $(call CheckSubmoduleTemplate,NUnitLite,NUNITLITE))
 $(eval $(call CheckSubmoduleTemplate,opentk,OPENTK))
 $(eval $(call CheckSubmoduleTemplate,ModernHttpClient,MODERNHTTPCLIENT))
+$(eval $(call CheckSubmoduleTemplate,Xamarin.MacDev,XAMARIN_MACDEV))
 
 # some hackish reset-* targets to deal with what needs to happen in various parts of the build tree when you reset a module
 

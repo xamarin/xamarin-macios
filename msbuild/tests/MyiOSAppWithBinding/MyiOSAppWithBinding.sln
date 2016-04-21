@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyiOSAppWithBinding", "MyiOSAppWithBinding.csproj", "{86767147-45A8-4EAD-AA63-6E160679A586}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyiOSFrameworkBinding", "..\MyiOSFrameworkBinding\MyiOSFrameworkBinding.csproj", "{CB22E620-41D9-4625-805E-0CE15D3A7286}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|iPhoneSimulator = Debug|iPhoneSimulator
+		Release|iPhone = Release|iPhone
+		Release|iPhoneSimulator = Release|iPhoneSimulator
+		Debug|iPhone = Debug|iPhone
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{86767147-45A8-4EAD-AA63-6E160679A586}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{86767147-45A8-4EAD-AA63-6E160679A586}.Debug|iPhone.Build.0 = Debug|iPhone
+		{86767147-45A8-4EAD-AA63-6E160679A586}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{86767147-45A8-4EAD-AA63-6E160679A586}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{86767147-45A8-4EAD-AA63-6E160679A586}.Release|iPhone.ActiveCfg = Release|iPhone
+		{86767147-45A8-4EAD-AA63-6E160679A586}.Release|iPhone.Build.0 = Release|iPhone
+		{86767147-45A8-4EAD-AA63-6E160679A586}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{86767147-45A8-4EAD-AA63-6E160679A586}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{CB22E620-41D9-4625-805E-0CE15D3A7286}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{CB22E620-41D9-4625-805E-0CE15D3A7286}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{CB22E620-41D9-4625-805E-0CE15D3A7286}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{CB22E620-41D9-4625-805E-0CE15D3A7286}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{CB22E620-41D9-4625-805E-0CE15D3A7286}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{CB22E620-41D9-4625-805E-0CE15D3A7286}.Release|iPhone.Build.0 = Release|Any CPU
+		{CB22E620-41D9-4625-805E-0CE15D3A7286}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{CB22E620-41D9-4625-805E-0CE15D3A7286}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

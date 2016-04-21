@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{534D7C5A-0E1C-4C58-9E48-21B1A98919EB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Xamarin.MacDev.Tasks</RootNamespace>
+    <AssemblyName>Xamarin.MacDev.Tasks</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;MONO_DATACONVERTER_PUBLIC</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>MONO_DATACONVERTER_PUBLIC</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Microsoft.Build.Engine" />
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Build.Tasks.v4.0" />
+    <Reference Include="Microsoft.Build.Utilities.v4.0" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" >
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj">
+      <Project>{CC3D9353-20C4-467A-8522-A9DED6F0C753}</Project>
+      <Name>Xamarin.MacDev</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.csproj">
+      <Project>{7B095849-6FDB-4BD2-9B59-569D81A1A809}</Project>
+      <Name>Xamarin.MacDev.Tasks.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tasks\ArTool.cs" />
+    <Compile Include="Tasks\Codesign.cs" />
+    <Compile Include="Tasks\CollectBundleResources.cs" />
+    <Compile Include="Tasks\ComputeBundleResourceOutputPaths.cs" />
+    <Compile Include="Tasks\CreateAssetPackManifest.cs" />
+    <Compile Include="Tasks\CreateInstallerPackage.cs" />
+    <Compile Include="Tasks\CreatePkgInfo.cs" />
+    <Compile Include="Tasks\Ditto.cs" />
+    <Compile Include="Tasks\DSymUtil.cs" />
+    <Compile Include="Tasks\FindItemWithLogicalName.cs" />
+    <Compile Include="Tasks\GenerateBundleName.cs" />
+    <Compile Include="Tasks\GetNativeExecutableName.cs" />
+    <Compile Include="Tasks\GetPropertyListValue.cs" />
+    <Compile Include="Tasks\Move.cs" />
+    <Compile Include="Tasks\PackLibraryResources.cs" />
+    <Compile Include="Tasks\SmartCopy.cs" />
+    <Compile Include="Tasks\SpotlightIndexer.cs" />
+    <Compile Include="Tasks\SymbolStrip.cs" />
+    <Compile Include="Tasks\UnpackLibraryResources.cs" />
+    <Compile Include="Tasks\WriteItemsToFile.cs" />
+    <Compile Include="Tasks\ReadItemsFromFile.cs" />
+    <Compile Include="Tasks\Zip.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,59 @@
+﻿<!--
+***********************************************************************************************
+Xamarin.Mac.XM45.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+  created a backup copy.  Incorrect changes to this file will make it
+  impossible to load or build your projects from the command-line or the IDE.
+
+This file imports the version- and platform-specific targets for the project importing
+this file. This file also defines targets to produce an error if the specified targets
+file does not exist, but the project is built anyway (command-line or IDE build).
+
+Copyright (C) 2015 Xamarin Inc. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<!-- These hacks will need to be rewritten if/when we move from xbuild to msbuild. Most likely to use FrameworkPathOverride, which should hopefully work.-->
+	<!-- This lets us bypass the standard MSBuild framework resolution and point to our copy. -->
+	<!-- Without this, we'll resolve System.dll and such from the system mono  -->
+	<PropertyGroup>
+		<AssemblySearchPaths>$([System.String]::Copy('$(AssemblySearchPaths)').Replace('{GAC}',''))</AssemblySearchPaths>
+	</PropertyGroup>
+
+	<Target Name="GetFrameworkPaths"
+                Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'"
+                DependsOnTargets="$(GetFrameworkPathsDependsOn)">
+                <CreateProperty Value="$(XamarinMacFrameworkRoot)/lib/mono/4.5/">
+                        <Output TaskParameter="Value" PropertyName="TargetFrameworkDirectory"/>
+                </CreateProperty>
+       </Target>
+
+	<!-- Also part of the GetFrameworkPaths hack. -->
+	<Target Name="GetReferenceAssemblyPaths" 
+		Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'"
+		DependsOnTargets="$(GetReferenceAssemblyPathsDependsOn)">
+
+		<ItemGroup Condition="'$(ImplicitlyExpandDesignTimeFacades)' == 'true'">
+			<DesignTimeFacadeDirectoryRoots Include="$(TargetFrameworkDirectory)" />
+			<DesignTimeFacadeDirectories Include="%(DesignTimeFacadeDirectoryRoots.Identity)\Facades\" Condition="Exists('%(DesignTimeFacadeDirectoryRoots.Identity)\Facades\')" />
+			<_DesignTimeFacadeAssemblies Include="%(DesignTimeFacadeDirectories.Identity)\*.dll"/>
+		</ItemGroup>
+
+		<PropertyGroup Condition="'@(DesignTimeFacadeDirectories)' != ''">
+			<TargetFrameworkDirectory>$(TargetFrameworkDirectory);@(DesignTimeFacadeDirectories)</TargetFrameworkDirectory>
+		</PropertyGroup>
+       	</Target>
+
+	<!-- This lets us bypass the standard MSBuild resolution of mscorlib, which always picks an incompatible system copy. -->
+        <Target Name="_AddCorlibReference" 
+		Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'"
+		DependsOnTargets="GetReferenceAssemblyPaths">
+                <ItemGroup>
+                        <_ExplicitReference Include="$(XamarinMacFrameworkRoot)/lib/mono/4.5/mscorlib.dll">
+                                <Private>false</Private>
+                        </_ExplicitReference>
+                </ItemGroup>
+	</Target>	
+</Project>

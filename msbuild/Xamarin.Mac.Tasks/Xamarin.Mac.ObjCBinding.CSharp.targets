@@ -1,0 +1,138 @@
+﻿<!--
+***********************************************************************************************
+Xamarin.Mac.ObjcBinding.CSharp.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+  created a backup copy.  Incorrect changes to this file will make it
+  impossible to load or build your projects from the command-line or the IDE.
+
+This file imports the version- and platform-specific targets for the project importing
+this file. This file also defines targets to produce an error if the specified targets
+file does not exist, but the project is built anyway (command-line or IDE build).
+
+Copyright (C) 2014 Xamarin Inc. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<UsingTask TaskName="Xamarin.Mac.Tasks.BTouch" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.Mac.Tasks.PrepareNativeReferences" AssemblyFile="Xamarin.Mac.Tasks.dll" />
+
+	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets"
+			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
+
+	<Import Project="Xamarin.Mac.ObjCBinding.CSharp.props"/>
+
+	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+	<Import Project="Xamarin.Mac.ObjCBinding.Common.targets" />
+
+	<PropertyGroup>
+		<_GeneratedSourcesFileList>$(GeneratedSourcesDir)\sources.list</_GeneratedSourcesFileList>
+
+		<!-- Add our own pre-build steps -->
+		<CompileDependsOn>
+			_GenerateBindings;
+			_PrepareNativeReferences;
+			_CollectGeneratedSources;
+			$(CompileDependsOn)
+		</CompileDependsOn>
+	</PropertyGroup>
+
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.XM45.targets"
+		Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'"/>
+
+	<!-- Override the CoreCompile Target to use btouch -->
+	<Target Name="_GenerateBindings"
+		Inputs="$(MSBuildAllProjects);@(ObjcBindingApiDefinition);@(ObjcBindingCoreSource);@(ReferencePath);@(ObjcBindingNativeLibrary)"
+		Outputs="$(_GeneratedSourcesFileList)">
+
+		<ItemGroup>
+			<BTouchReferencePath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
+		</ItemGroup>
+
+		<PropertyGroup>
+			<BTouchEmitDebugInformation>false</BTouchEmitDebugInformation>
+			<BTouchEmitDebugInformation Condition="'$(Debug)' != ''">true</BTouchEmitDebugInformation>
+		</PropertyGroup>
+
+		<Message Text="BTouchEmitDebugInformation: $(BTouchEmitDebugInformation)"/>
+
+		<BTouch
+			AdditionalLibPaths="$(AdditionalLibPaths)"
+			AllowUnsafeBlocks="$(AllowUnsafeBlocks)"
+			ApiDefinitions="@(ObjcBindingApiDefinition)"
+			BaseLibDll="$(BaseLibDllPath)"
+			CompilerPath="$(CscPath)"
+			CoreSources="@(ObjcBindingCoreSource)"
+			DefineConstants="$(DefineConstants)"
+			EmitDebugInformation="'$(Debug)' != ''"
+			GeneratedSourcesDir="$(GeneratedSourcesDir)"
+			GeneratedSourcesFileList="$(_GeneratedSourcesFileList)"
+			Namespace="$(Namespace)"
+			NoStdLib="$(NoStdLib)"
+			OutputAssembly="$(OutputAssembly)"
+			References="@(ReferencePath);@(BTouchReferencePath)"
+			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
+			FrameworkRoot="$(XamarinMacFrameworkRoot)"
+			BTouchToolPath="$(BTouchToolPath)"
+			BTouchToolExe="$(BTouchToolExe)">
+		</BTouch>
+	</Target>
+
+	<Target Name="_PrepareNativeReferences">
+		<PrepareNativeReferences
+			SessionId="$(BuildSessionId)"
+			IntermediateOutputPath="$(IntermediateOutputPath)"
+			NativeReferences="@(NativeReference)"
+		>
+			<Output ItemName="ManifestResourceWithNoCulture" TaskParameter="EmbeddedResources" />
+			<Output ItemName="_NativeFramework" TaskParameter="NativeFrameworks" />
+			<Output ItemName="Compile" TaskParameter="LinkWithAttributes" />
+		</PrepareNativeReferences>
+	</Target>
+
+	<Target Name="_CollectNativeFrameworkResources" Returns="@(_NativeFrameworkResource)" DependsOnTargets="_PrepareNativeReferences">
+		<CreateItem Include="@(_NativeFramework -> '%(Identity)\**\*.*')">
+			<Output ItemName="_NativeFrameworkResource" TaskParameter="Include" />
+		</CreateItem>
+	</Target>
+
+	<Target Name="_CompressFrameworks" Inputs="@(_NativeFrameworkResource)" Outputs="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)" DependsOnTargets="_CollectNativeFrameworkResources" >
+		<Zip
+			SessionId="$(BuildSessionId)"
+			ToolExe="$(ZipExe)"
+			ToolPath="$(ZipPath)"
+			Recursive="true"
+			Symlinks="true"
+			Sources="%(_NativeFramework.Identity)"
+			OutputFile="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)"
+			WorkingDirectory="%(_NativeFramework.FullPath)" >
+		</Zip>
+
+		<CreateItem Include="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)">
+			<Output TaskParameter="Include" ItemName="ManifestResourceWithNoCulture" />
+		</CreateItem>
+	</Target>
+
+	<Target Name="_CollectGeneratedSources" DependsOnTargets="_CompressFrameworks;_GenerateBindings">
+		<ReadLinesFromFile File="$(_GeneratedSourcesFileList)" >
+			<Output TaskParameter="Lines" ItemName="GeneratedSources" />
+		</ReadLinesFromFile>
+
+		<CreateItem Include="@(ObjcBindingCoreSource)">
+			<Output TaskParameter="Include" ItemName="Compile" />
+		</CreateItem>
+
+		<CreateItem Include="@(GeneratedSources)">
+			<Output TaskParameter="Include" ItemName="Compile" />
+		</CreateItem>
+
+		<CreateItem Include="@(ObjcBindingNativeLibrary)">
+			<Output TaskParameter="Include" ItemName="ManifestResourceWithNoCulture" />
+		</CreateItem>
+	</Target>
+
+	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
+			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
+</Project>

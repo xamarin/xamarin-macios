@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6095.4" systemVersion="13D43" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="J6p-g8-CHO">
+	<dependencies>
+		<plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6100.2" />
+	</dependencies>
+	<scenes>
+		<!-- View Controller-->
+		<scene sceneID="Q8I-MS-tKG">
+			<objects>
+				<viewController id="J6p-g8-CHO" customClass="DocumentPickerViewController" customModuleProvider="" sceneMemberID="viewController">
+					<layoutGuides>
+						<viewControllerLayoutGuide type="top" id="hST-wJ-eYy" />
+						<viewControllerLayoutGuide type="bottom" id="UQD-kz-Mfv" />
+					</layoutGuides>
+					<view key="view" contentMode="scaleToFill" id="Vdh-Gp-eV6">
+						<rect key="frame" x="0.0" y="0.0" width="350" height="400" />
+						<autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" />
+						<subviews>
+							<button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mym-YX-cEY">
+								<rect key="frame" x="137" y="185" width="76" height="30" />
+								<autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES" />
+								<state key="normal" title="Untitled.txt">
+									<color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite" />
+								</state>
+								<connections>
+									<action selector="OpenDocument:" destination="J6p-g8-CHO" eventType="touchUpInside" id="HtB-86-uWI" />
+								</connections>
+							</button>
+						</subviews>
+						<color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite" />
+					</view>
+					<freeformSimulatedSizeMetrics key="simulatedDestinationMetrics" />
+					<size key="freeformSize" width="350" height="400" />
+				</viewController>
+				<placeholder placeholderIdentifier="IBFirstResponder" id="UoZ-ya-W3e" userLabel="First Responder" sceneMemberID="firstResponder" />
+			</objects>
+			<point key="canvasLocation" x="-163" y="-156" />
+		</scene>
+	</scenes>
+	<simulatedMetricsContainer key="defaultSimulatedMetrics">
+		<simulatedStatusBarMetrics key="statusBar" />
+		<simulatedOrientationMetrics key="orientation" />
+		<simulatedScreenMetrics key="destination" />
+	</simulatedMetricsContainer>
+</document>
