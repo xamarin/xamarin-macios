@@ -1,0 +1,79 @@
+#!/bin/sh -e
+
+function show_help () {
+cat <<EOL
+Usage: configure [options]
+    -h, --help              Displays this help
+
+    --disable-mac           Disable most of the Mac-related parts.
+    --disable-ios           Disable most of the iOS-related parts.
+                            The iOS build depend on some parts of the Mac build, so
+                            a complete separation is not possible (neither desirable,
+                            some parts will always be enabled to catch common programmer
+                            errors causing build breaks).
+                            The main reasons for disabling either part is to have faster
+                            builds and disable the non-relevant tests.
+
+    --disable-strip:        If executables should be stripped or not.
+                            Disable to make it easier to debug executables using lldb.
+
+    --enable-ccache
+    --disable-ccache        Enable/disable ccache. Default: enabled if detected.
+
+    --enable-xamarin        Enable additional Xamarin-specific parts of the build.
+
+EOL
+}
+
+rm -f Make.config.local
+
+if test -z "$1"; then
+	echo "configure: all default values assumed."
+    exit 0
+fi
+
+while test x$1 != x; do
+	case $1 in
+	--disable-mac)
+		echo "INCLUDE_MAC=" >> Make.config.local
+		echo "Mac Build disabled (partially)"
+		shift
+		;;
+	--disable-ios)
+		echo "INCLUDE_IOS=" >> Make.config.local
+		echo "INCLUDE_WATCH=" >> Make.config.local
+		echo "INCLUDE_TVOS=" >> Make.config.local
+		echo "iOS Build disabled (partially)"
+		shift
+		;;
+	--disable-strip)
+		echo "DISABLE_STRIP=1" >> Make.config.local
+		shift
+		;;
+    --disable-ccache)
+        echo "ENABLE_CCACHE=" >> Make.config.local
+        shift
+        ;;
+    --enable-ccache)
+        if ! CCACHE=$(which ccache); then
+            echo "Could not find ccache"
+        else
+            echo "ENABLE_CCACHE=1" >> Make.config.local
+            echo "cache enabled"
+        fi
+        shift
+        ;;
+    --enable-xamarin)
+        echo "ENABLE_XAMARIN=1" >> Make.config.local
+        shift
+        ;;
+	--help|-h)
+		show_help
+		exit 0
+		;;
+	*)
+		echo Unknown configure argument $1 >&2
+		shift
+		;;
+	esac
+done
