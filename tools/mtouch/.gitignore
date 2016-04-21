@@ -1,0 +1,8 @@
+SdkVersions.cs
+*.a
+*.dylib
+*.dSYM
+*.registrar.*.m
+simlauncher-sgen
+simlauncher32-sgen
+simlauncher64-sgen

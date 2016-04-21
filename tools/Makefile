@@ -1,3 +1,3 @@
 TOP=..
-SUBDIRS=mmp
+SUBDIRS=mmp mtouch
 include $(TOP)/Make.config

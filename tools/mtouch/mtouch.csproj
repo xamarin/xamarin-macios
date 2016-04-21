@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A737EFCC-4348-4EB1-9C14-4FDC0975388D}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>mtouch</AssemblyName>
+    <RootNamespace>mtouch</RootNamespace>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;DEV;MONOTOUCH;MTOUCH;ARCH_32</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <NoWarn>436</NoWarn>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CreatePackage>false</CreatePackage>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <UseSGen>false</UseSGen>
+    <UseRefCounting>false</UseRefCounting>
+    <Profiling>false</Profiling>
+    <LinkMode>Full</LinkMode>
+    <XamMacArch>x86_64</XamMacArch>
+    <MonoBundlingExtraArgs>--linkskip Mono.Cecil.Mdb</MonoBundlingExtraArgs>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DefineConstants>DEBUG;DEV;MONOTOUCH;MTOUCH;ARCH_32</DefineConstants>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CreatePackage>false</CreatePackage>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <UseSGen>false</UseSGen>
+    <UseRefCounting>false</UseRefCounting>
+    <Profiling>false</Profiling>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+  <ItemGroup>
+    <Compile Include="AssemblyResolver.cs" />
+    <Compile Include="mtouch.cs" />
+    <Compile Include="..\..\external\mono\mcs\class\Mono.Options\Mono.Options\Options.cs">
+      <Link>Options.cs</Link>
+    </Compile>
+    <Compile Include="Tuning.cs" />
+    <Compile Include="error.cs" />
+    <Compile Include="..\..\src\build\ios\Constants.cs">
+      <Link>Constants.cs</Link>
+    </Compile>
+    <Compile Include="SdkVersions.cs" />
+    <Compile Include="..\common\cache.cs">
+      <Link>cache.cs</Link>
+    </Compile>
+    <Compile Include="Stripper.cs" />
+    <Compile Include="..\linker\MonoTouch.Tuner\Extensions.cs">
+      <Link>MonoTouch.Tuner\Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\MetadataReducerSubStep.cs">
+      <Link>MonoTouch.Tuner\MetadataReducerSubStep.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\MonoTouchMarkStep.cs">
+      <Link>MonoTouch.Tuner\MonoTouchMarkStep.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\MonoTouchProfile.cs">
+      <Link>MonoTouch.Tuner\MonoTouchProfile.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\OptimizeGeneratedCodeSubStep.cs">
+      <Link>MonoTouch.Tuner\OptimizeGeneratedCodeSubStep.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\PreserveCode.cs">
+      <Link>MonoTouch.Tuner\PreserveCode.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\RemoveAttributes.cs">
+      <Link>MonoTouch.Tuner\RemoveAttributes.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\RemoveCode.cs">
+      <Link>MonoTouch.Tuner\RemoveCode.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\RemoveMonoTouchResources.cs">
+      <Link>MonoTouch.Tuner\RemoveMonoTouchResources.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\MonoTouchTypeMap.cs">
+      <Link>MonoTouch.Tuner\MonoTouchTypeMap.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker\XApiReader.cs">
+      <Link>Mono.Linker\XApiReader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker\Annotations.cs">
+      <Link>Mono.Linker\Annotations.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker\LinkContext.cs">
+      <Link>Mono.Linker\LinkContext.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker\Pipeline.cs">
+      <Link>Mono.Linker\Pipeline.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker\AssemblyResolver.cs">
+      <Link>Mono.Linker\AssemblyResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker\IXApiVisitor.cs" />
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker\I18nAssemblies.cs">
+      <Link>Mono.Linker\I18nAssemblies.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker\AssemblyAction.cs">
+      <Link>Mono.Linker\AssemblyAction.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker\TypePreserve.cs">
+      <Link>Mono.Linker\TypePreserve.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker\MethodAction.cs">
+      <Link>Mono.Linker\MethodAction.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker.Steps\BaseStep.cs">
+      <Link>Mono.Linker.Steps\BaseStep.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker.Steps\BlacklistStep.cs">
+      <Link>Mono.Linker.Steps\BlacklistStep.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker.Steps\CleanStep.cs">
+      <Link>Mono.Linker.Steps\CleanStep.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker.Steps\IStep.cs" />
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker.Steps\LoadI18nAssemblies.cs">
+      <Link>Mono.Linker.Steps\LoadI18nAssemblies.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker.Steps\LoadReferencesStep.cs">
+      <Link>Mono.Linker.Steps\LoadReferencesStep.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker.Steps\MarkStep.cs">
+      <Link>Mono.Linker.Steps\MarkStep.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker.Steps\OutputStep.cs">
+      <Link>Mono.Linker.Steps\OutputStep.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker.Steps\ResolveFromAssemblyStep.cs">
+      <Link>Mono.Linker.Steps\ResolveFromAssemblyStep.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker.Steps\ResolveFromXApiStep.cs">
+      <Link>Mono.Linker.Steps\ResolveFromXApiStep.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker.Steps\ResolveFromXmlStep.cs">
+      <Link>Mono.Linker.Steps\ResolveFromXmlStep.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker.Steps\ResolveStep.cs">
+      <Link>Mono.Linker.Steps\ResolveStep.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker.Steps\SweepStep.cs">
+      <Link>Mono.Linker.Steps\SweepStep.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker.Steps\TypeMapStep.cs">
+      <Link>Mono.Linker.Steps\TypeMapStep.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\tuner\Mono.Tuner\ApplyPreserveAttributeBase.cs">
+      <Link>Mono.Tuner\ApplyPreserveAttributeBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\tuner\Mono.Tuner\RemoveAttributesBase.cs">
+      <Link>Mono.Tuner\RemoveAttributesBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\tuner\Mono.Tuner\PreserveSoapHttpClients.cs">
+      <Link>Mono.Tuner\PreserveSoapHttpClients.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\tuner\Mono.Tuner\Profile.cs">
+      <Link>Mono.Tuner\Profile.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\tuner\Mono.Tuner\CustomizeActions.cs">
+      <Link>Mono.Tuner\CustomizeActions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\tuner\Mono.Tuner\RemoveResources.cs">
+      <Link>Mono.Tuner\RemoveResources.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\tuner\Mono.Tuner\RemoveSecurity.cs">
+      <Link>Mono.Tuner\RemoveSecurity.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\tuner\Mono.Tuner\Extensions.cs">
+      <Link>Mono.Tuner\Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\tuner\Mono.Tuner\FixModuleFlags.cs">
+      <Link>Mono.Tuner\FixModuleFlags.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mcs\tools\tuner\Mono.Tuner\Dispatcher.cs">
+      <Link>Mono.Tuner\Dispatcher.cs</Link>
+    </Compile>
+    <Compile Include="OldStaticRegistrar.cs" />
+    <Compile Include="..\linker\MonoTouch.Tuner\MonoTouchSweepStep.cs">
+      <Link>MonoTouch.Tuner\MonoTouchSweepStep.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\ProcessExportedFields.cs">
+      <Link>MonoTouch.Tuner\ProcessExportedFields.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\RemoveExtraRegistrar.cs">
+      <Link>MonoTouch.Tuner\RemoveExtraRegistrar.cs</Link>
+    </Compile>
+    <Compile Include="Application.cs" />
+    <Compile Include="..\..\external\mono\mcs\tools\tuner\Mono.Tuner\CecilRocks.cs">
+      <Link>Mono.Tuner\CecilRocks.cs</Link>
+    </Compile>
+    <Compile Include="Target.cs" />
+    <Compile Include="..\linker\MobileProfile.cs">
+      <Link>Xamarin.Linker\MobileProfile.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\Registrar.cs">
+      <Link>Registrar.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
+      <Link>ErrorHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\BaseProfile.cs">
+      <Link>Xamarin.Linker\BaseProfile.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MarkNSObjects.cs">
+      <Link>Xamarin.Linker\MarkNSObjects.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\ObjCExtensions.cs">
+      <Link>Xamarin.Linker\ObjCExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\RemoveSelectors.cs">
+      <Link>Xamarin.Linker\RemoveSelectors.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\ApplyPreserveAttribute.cs">
+      <Link>Xamarin.Linker\ApplyPreserveAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\CoreMarkStep.cs">
+      <Link>Xamarin.Linker\CoreMarkStep.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\CoreRemoveAttributes.cs">
+      <Link>Xamarin.Linker\CoreRemoveAttributes.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MobileExtensions.cs">
+      <Link>Xamarin.Linker\MobileExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MobileMarkStep.cs">
+      <Link>Xamarin.Linker\MobileMarkStep.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MobileRemoveAttributes.cs">
+      <Link>Xamarin.Linker\MobileRemoveAttributes.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\CorePreserveCode.cs">
+      <Link>Xamarin.Linker\CorePreserveCode.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MobileSweepStep.cs">
+      <Link>Xamarin.Linker\MobileSweepStep.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\CoreOptimizeGeneratedCode.cs">
+      <Link>Xamarin.Linker\CoreOptimizeGeneratedCode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\NativeAttribute.cs">
+      <Link>external\maccore\NativeAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\CoreRemoveSecurity.cs">
+      <Link>Xamarin.Linker\CoreRemoveSecurity.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\CoreHttpMessageHandler.cs">
+      <Link>Xamarin.Linker\CoreHttpMessageHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\CoreTlsProviderStep.cs">
+      <Link>Xamarin.Linker\CoreTlsProviderStep.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MobileResolveMainAssemblyStep.cs">
+      <Link>Xamarin.Linker\MobileResolveMainAssemblyStep.cs</Link>
+    </Compile>
+    <Compile Include="..\common\Driver.cs">
+      <Link>common\Driver.cs</Link>
+    </Compile>
+    <Compile Include="..\common\TargetFramework.cs">
+      <Link>common\TargetFramework.cs</Link>
+    </Compile>
+    <Compile Include="..\common\StaticRegistrar.cs">
+      <Link>common\StaticRegistrar.cs</Link>
+    </Compile>
+    <Compile Include="..\common\MachO.cs">
+      <Link>common\MachO.cs</Link>
+    </Compile>
+    <Compile Include="..\common\Application.cs">
+      <Link>common\Application.cs</Link>
+    </Compile>
+    <Compile Include="..\common\Assembly.cs">
+      <Link>common\Assembly.cs</Link>
+    </Compile>
+    <Compile Include="..\common\Target.cs">
+      <Link>common\Target.cs</Link>
+    </Compile>
+    <Compile Include="..\common\Frameworks.cs">
+      <Link>common\Frameworks.cs</Link>
+    </Compile>
+    <Compile Include="..\common\CompilerFlags.cs">
+      <Link>common\CompilerFlags.cs</Link>
+    </Compile>
+    <Compile Include="Assembly.cs" />
+    <Compile Include="BitcodeConverter.cs" />
+    <Compile Include="..\..\src\ObjCRuntime\RuntimeOptions.cs">
+      <Link>common\RuntimeOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\PlatformAvailability2.cs">
+      <Link>common\PlatformAvailability2.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\Registrar.core.cs">
+      <Link>common\Registrar.core.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\SealerSubStep.cs">
+      <Link>MonoTouch.Tuner\SealerSubStep.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\ListExportedSymbols.cs">
+      <Link>MonoTouch.Tuner\ListExportedSymbols.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Xamarin.Mac">
+      <HintPath>..\..\src\build\mac\mobile-64\Xamarin.Mac.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Makefile" />
+    <None Include="monotouch-fixes.c" />
+    <None Include="simlauncher.m" />
+    <None Include="Info.plist" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Mono.Linker\" />
+    <Folder Include="Mono.Linker.Steps\" />
+    <Folder Include="Mono.Tuner\" />
+    <Folder Include="MonoTouch.Tuner\" />
+    <Folder Include="external\" />
+    <Folder Include="external\maccore\" />
+    <Folder Include="Xamarin.Linker\" />
+    <Folder Include="common\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\external\cecil\Mono.Cecil.csproj">
+      <Project>{D68133BD-1E63-496E-9EDE-4FBDBF77B486}</Project>
+      <Name>Mono.Cecil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\external\cecil\symbols\mdb\Mono.Cecil.Mdb.csproj">
+      <Project>{8559DD7F-A16F-46D0-A05A-9139FAEBA8FD}</Project>
+      <Name>Mono.Cecil.Mdb</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\linker\Descriptors\mscorlib.xml">
+      <Link>mscorlib.xml</Link>
+      <LogicalName>mscorlib.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Info.plist.tmpl">
+      <LogicalName>Info.plist.tmpl</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>
