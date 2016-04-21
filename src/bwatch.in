@@ -1,0 +1,3 @@
+#!/bin/sh
+MONO_PATH=@MONOTOUCH_PREFIX@/lib/mono/Xamarin.WatchOS @MONOTOUCH_PREFIX@/bin/bwatch-mono --debug @MONOTOUCH_PREFIX@/lib/bwatch/bwatch.exe "$@"
+

@@ -1,0 +1,9 @@
+prefix=${pcfiledir}/../..
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib/mono
+GacPackage=false
+
+Name: Xamarin.Mac
+Description: Xamarin.Mac
+Version: @PACKAGE_VERSION@
+Libs: -r:${libdir}/XamMac.dll

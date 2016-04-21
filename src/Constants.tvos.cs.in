@@ -1,0 +1,61 @@
+namespace ObjCRuntime {
+	public static partial class Constants {
+		public const string Version = "@VERSION@";
+		internal const string Revision = "@REVISION@";
+		public const string SdkVersion = "@TVOS_SDK_VERSION@";
+
+		public const string libSystemLibrary = "/usr/lib/libSystem.dylib";
+		public const string libcLibrary = "/usr/lib/libc.dylib";
+		public const string ObjectiveCLibrary = "/usr/lib/libobjc.dylib";
+		
+		// TVOS 9.0
+		internal const string CoreServicesLibrary = "/System/Library/Frameworks/MobileCoreServices.framework/MobileCoreServices";
+		public const string AccelerateImageLibrary = "/System/Library/Frameworks/Accelerate.framework/Frameworks/vImage.framework/vImage";
+		public const string AudioToolboxLibrary = "/System/Library/Frameworks/AudioToolbox.framework/AudioToolbox";
+		public const string AudioUnitLibrary = "/System/Library/Frameworks/AudioToolbox.framework/AudioToolbox";
+		public const string AVFoundationLibrary = "/System/Library/Frameworks/AVFoundation.framework/AVFoundation";
+		public const string AVKitLibrary = "/System/Library/Frameworks/AVKit.framework/AVKit";
+		public const string CFNetworkLibrary = "/System/Library/Frameworks/CFNetwork.framework/CFNetwork";
+		public const string CloudKitLibrary = "/System/Library/Frameworks/CloudKit.framework/CloudKit";
+		public const string CoreAnimationLibrary = "/System/Library/Frameworks/QuartzCore.framework/QuartzCore";
+		public const string CoreBluetoothLibrary = "/System/Library/Frameworks/CoreBluetooth.framework/CoreBluetooth";
+		public const string CoreDataLibrary = "/System/Library/Frameworks/CoreData.framework/CoreData";
+		public const string CoreFoundationLibrary = "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation";
+		public const string CoreGraphicsLibrary = "/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics";
+		public const string CoreImageLibrary = "/System/Library/Frameworks/CoreImage.framework/CoreImage";
+		public const string CoreLocationLibrary = "/System/Library/Frameworks/CoreLocation.framework/CoreLocation";
+		public const string CoreMediaLibrary = "/System/Library/Frameworks/CoreMedia.framework/CoreMedia";
+		public const string CoreSpotlightLibrary = "/System/Library/Frameworks/CoreSpotlight.framework/CoreSpotlight";
+		public const string CoreTextLibrary = "/System/Library/Frameworks/CoreText.framework/CoreText";
+		public const string CoreVideoLibrary = "/System/Library/Frameworks/CoreVideo.framework/CoreVideo";
+		public const string FoundationLibrary = "/System/Library/Frameworks/Foundation.framework/Foundation";
+		public const string GameControllerLibrary = "/System/Library/Frameworks/GameController.framework/GameController";
+		public const string GameKitLibrary = "/System/Library/Frameworks/GameKit.framework/GameKit";
+		public const string GameplayKitLibrary = "/System/Library/Frameworks/GameplayKit.framework/GameplayKit";
+		public const string GLKitLibrary = "/System/Library/Frameworks/GLKit.framework/GLKit";
+		public const string ImageIOLibrary = "/System/Library/Frameworks/ImageIO.framework/ImageIO";
+		public const string JavaScriptCoreLibrary = "/System/Library/Frameworks/JavaScriptCore.framework/JavaScriptCore";
+		public const string MediaAccessibilityLibrary = "/System/Library/Frameworks/MediaAccessibility.framework/MediaAccessibility";
+		public const string MediaPlayerLibrary = "/System/Library/Frameworks/MediaPlayer.framework/MediaPlayer";
+		public const string MediaToolboxLibrary = "/System/Library/Frameworks/MediaToolbox.framework/MediaToolbox";
+		public const string MetalKitLibrary = "/System/Library/Frameworks/MetalKit.framework/MetalKit";
+		public const string MetalLibrary = "/System/Library/Frameworks/Metal.framework/Metal";
+		public const string MetalPerformanceShadersLibrary = "/System/Library/Frameworks/MetalPerformanceShaders.framework/MetalPerformanceShaders";
+		public const string MobileCoreServicesLibrary = "/System/Library/Frameworks/MobileCoreServices.framework/MobileCoreServices";
+		public const string ModelIOLibrary = "/System/Library/Frameworks/ModelIO.framework/ModelIO";
+		public const string OpenGLESLibrary = "/System/Library/Frameworks/OpenGLES.framework/OpenGLES";
+		public const string PassKitLibrary = "/System/Library/Frameworks/PassKit.framework/PassKit";
+		public const string QuartzLibrary = "/System/Library/Frameworks/QuartzCore.framework/QuartzCore";
+		public const string SceneKitLibrary = "/System/Library/Frameworks/SceneKit.framework/SceneKit";
+		public const string SecurityLibrary = "/System/Library/Frameworks/Security.framework/Security";
+		public const string SpriteKitLibrary = "/System/Library/Frameworks/SpriteKit.framework/SpriteKit";
+		public const string StoreKitLibrary = "/System/Library/Frameworks/StoreKit.framework/StoreKit";
+		public const string SystemConfigurationLibrary = "/System/Library/Frameworks/SystemConfiguration.framework/SystemConfiguration";
+		public const string TVMLKitLibrary = "/System/Library/Frameworks/TVMLKit.framework/TVMLKit";
+		public const string TVServicesLibrary = "/System/Library/Frameworks/TVServices.framework/TVServices";
+		public const string UIKitLibrary = "/System/Library/Frameworks/UIKit.framework/UIKit";
+
+		// TVOS 9.2
+		public const string MapKitLibrary = "/System/Library/Frameworks/MapKit.framework/MapKit";
+	}
+}

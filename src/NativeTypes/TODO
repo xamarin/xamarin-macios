@@ -1,0 +1,31 @@
+- Determine namespace
+	+ No namespace
+	+ System
+	+ MonoTouch/MonoMac.Foundation
+
+- Implement extra interfaces?
+	+ Currently:
+		struct NSInteger : IComparable<NSInteger>, IEquatable<NSInteger>
+	+ Should we also add?
+		: IComparable<int>, IEquatable<int> ... on 32
+		: IComparable<long>, IEquatable<long> ... on 64
+
+- Verify constructors
+
+- Verify explicit/implicit
+
+- Add explicit/implicit?
+	+ explicit: CGPoint -> PointF
+	+ implicit: PointF -> CGPoint
+	...
+	This will take a dep on System.Drawing though
+
+- Remove implicit Rectangle->CGRect?
+
+- Drop some methods?
+	+ CGSize.ToRoundedCGSize
+	+ CGSize.ToSize (obsoleted for ToRoundedSize)
+	+ CGSize.ToCGPoint
+	+ CGSize.ToPointF (obsoleted for ToCGPoint)
+
+- Write tests

@@ -1,0 +1,10 @@
+To-do for certificates:
+
+	* Bind the SecItem types so we can use them with SecKey's dictionary for creating keypairs.
+
+SecImportExport.h
+SecPolicy.h - wraper only for now
+SecRandom.h
+SecTrust.h
+
+

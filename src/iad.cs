@@ -1,0 +1,291 @@
+//
+// AdLib bindings.
+//
+// Authors:
+//   Miguel de Icaza
+//
+// Copyright 2010, Novell, Inc.
+// Copyright 2011-2014 Xamarin Inc. All rights reserved.
+//
+using XamCore.ObjCRuntime;
+using XamCore.Foundation;
+using XamCore.CoreGraphics;
+using XamCore.UIKit;
+using XamCore.MediaPlayer;
+using System;
+using System.ComponentModel;
+using XamCore.AVKit;
+
+namespace XamCore.iAd {
+
+	[Since (4,0)]
+	[BaseType (typeof (UIView), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (ADBannerViewDelegate)})]
+	interface ADBannerView {
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frame);
+		
+		[Since (6,0)]
+		[Export ("adType")]
+		ADAdType AdType { get;  }
+
+		[Since (6,0)]
+		[Export ("initWithAdType:")]
+		IntPtr Constructor (ADAdType type);
+
+		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
+		NSObject WeakDelegate { get; set;  }
+
+		[Wrap ("WeakDelegate")]
+		[Protocolize]
+		ADBannerViewDelegate Delegate { get; set; }
+		
+		[Export ("bannerLoaded")]
+		bool BannerLoaded { [Bind ("isBannerLoaded")] get;  }
+
+		[NullAllowed] // by default this property is null
+		[Export ("advertisingSection", ArgumentSemantic.Copy)]
+		string AdvertisingSection { get; set;  }
+
+		[Export ("bannerViewActionInProgress")]
+		bool BannerViewActionInProgress { [Bind ("isBannerViewActionInProgress")] get;  }
+
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0)]
+		[NullAllowed] // by default this property is null
+		[Export ("requiredContentSizeIdentifiers", ArgumentSemantic.Copy)]
+		NSSet RequiredContentSizeIdentifiers { get; set;  }
+
+		[Export ("cancelBannerViewAction")]
+		void CancelBannerViewAction ();
+
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0)]
+		[NullAllowed] // by default this property is null
+		[Export ("currentContentSizeIdentifier", ArgumentSemantic.Copy)]
+		string CurrentContentSizeIdentifier { get; set; }
+
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_6_0)]
+		[Static, Export ("sizeFromBannerContentSizeIdentifier:")]
+		CGSize SizeFromContentSizeIdentifier (string sizeIdentifier);
+
+#if !XAMCORE_3_0
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_4_2)]
+		[Field ("ADBannerContentSizeIdentifier320x50")]
+		NSString SizeIdentifier320x50 { get; }
+
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_4_2)]
+		[Field ("ADBannerContentSizeIdentifier480x32")]
+		NSString SizeIdentifier480x32 { get; }
+#endif
+
+		[Availability (Introduced = Platform.iOS_4_2, Deprecated = Platform.iOS_6_0)]
+		[Field ("ADBannerContentSizeIdentifierLandscape")]
+		NSString SizeIdentifierLandscape { get; }
+
+		[Availability (Introduced = Platform.iOS_4_2, Deprecated = Platform.iOS_6_0)]
+		[Field ("ADBannerContentSizeIdentifierPortrait")]
+		NSString SizeIdentifierPortrait { get; }
+	}
+
+	[Since (4,0)]
+	[BaseType (typeof (NSObject))]
+	[Model]
+	[Protocol]
+	interface ADBannerViewDelegate {
+		[Export ("bannerViewDidLoadAd:")]
+		void AdLoaded (ADBannerView banner);
+
+		[Export ("bannerView:didFailToReceiveAdWithError:"), EventArgs ("AdError")]
+		void FailedToReceiveAd (ADBannerView banner, NSError error);
+
+		[Export ("bannerViewActionShouldBegin:willLeaveApplication:"), DelegateName ("AdAction"), DefaultValue (true)]
+		bool ActionShouldBegin (ADBannerView banner, bool willLeaveApplication);
+
+		[Export ("bannerViewActionDidFinish:")]
+		void ActionFinished (ADBannerView banner);
+
+		[Since (5,0)]
+		[Export ("bannerViewWillLoadAd:"), EventArgs ("EventArgs", true, true)]
+		void WillLoad (ADBannerView bannerView);
+	}
+
+	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (ADInterstitialAdDelegate)})]
+	interface ADInterstitialAd {
+		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
+		NSObject WeakDelegate { get; set; }
+
+		[Wrap ("WeakDelegate")]
+		[Protocolize]
+		ADInterstitialAdDelegate Delegate { get; set;  }
+
+		[Export ("loaded")]
+		bool Loaded { [Bind ("isLoaded")] get;  }
+
+		[Export ("actionInProgress")]
+		bool ActionInProgress { [Bind ("isActionInProgress")] get;  }
+
+		[Export ("cancelAction")]
+		void CancelAction ();
+
+		[Export ("presentInView:")]
+		bool PresentInView (UIView containerView);
+
+		[Export ("presentFromViewController:")]
+		[Availability (Introduced = Platform.iOS_4_3, Deprecated = Platform.iOS_7_0, Message = "Use extension method UIViewController.RequestInterstitialAdPresentation instead")]
+		void PresentFromViewController (UIViewController viewController);
+	}
+
+	[BaseType (typeof (NSObject))]
+	[Model]
+	[Protocol]
+	interface ADInterstitialAdDelegate {
+		[Abstract]
+		[Export ("interstitialAdDidUnload:")]
+		void AdUnloaded (ADInterstitialAd interstitialAd);
+
+		[Abstract]
+		[Export ("interstitialAd:didFailWithError:"), EventArgs ("ADError")]
+		void FailedToReceiveAd (ADInterstitialAd interstitialAd, NSError error);
+
+#if !XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("interstitialAdDidLoad:")]
+		void AdLoaded (ADInterstitialAd interstitialAd);
+
+#if !XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("interstitialAdActionShouldBegin:willLeaveApplication:"), DelegateName ("ADPredicate"), DefaultValue (true)]
+		bool ActionShouldBegin (ADInterstitialAd interstitialAd, bool willLeaveApplication);
+
+#if !XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("interstitialAdActionDidFinish:")]
+		void ActionFinished (ADInterstitialAd interstitialAd);
+
+		[Since (5,0)]
+		[Export ("interstitialAdWillLoad:"), EventArgs ("EventArgs", true, true)]
+		void WillLoad (ADInterstitialAd interstitialAd);
+	}
+
+	[Category, BaseType (typeof (MPMoviePlayerController))]
+	public partial interface IAdPreroll {
+
+#if XAMCORE_2_0
+		[Internal]
+#else
+		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
+#endif
+		[Since (7,0), Static, Export ("preparePrerollAds")]
+		void PreparePrerollAds ();
+
+		[Since (7,0), Export ("playPrerollAdWithCompletionHandler:")]
+#if XAMCORE_2_0
+		void PlayPrerollAd (Action<NSError> completionHandler);
+#else
+		void PlayPrerollAd (PlayPrerollAdCompletionHandler completionHandler);
+#endif
+
+		[iOS (8,0), Export ("cancelPreroll")]
+		void CancelPreroll ();
+	}
+
+#if !XAMCORE_2_0
+	public delegate void PlayPrerollAdCompletionHandler (NSError error);
+#endif
+
+	[Category, BaseType (typeof (UIViewController))]
+	public partial interface IAdAdditions {
+
+#if XAMCORE_2_0
+		[Internal]
+#else
+		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
+#endif
+		[Since (7,0), Static, Export ("prepareInterstitialAds")]
+		void PrepareInterstitialAds ();
+
+		[Since (7,0), Export ("interstitialPresentationPolicy")]
+		ADInterstitialPresentationPolicy GetInterstitialPresentationPolicy ();
+		
+		[Since (7,0), Export ("setInterstitialPresentationPolicy:")]
+		void SetInterstitialPresentationPolicy (ADInterstitialPresentationPolicy policy);
+
+		[Since (7,0), Export ("canDisplayBannerAds")]
+		bool GetCanDisplayBannerAds ();
+
+		[Since (7,0), Export ("setCanDisplayBannerAds:")]
+		void SetCanDisplayBannerAds (bool value);
+
+		[Since (7,0), Export ("originalContentView")]
+		UIView GetOriginalContentView ();
+
+		[Since (7,0), Export ("isPresentingFullScreenAd")]
+		bool PresentingFullScreenAd ();
+
+		[Since (7,0), Export ("isDisplayingBannerAd")]
+		bool DisplayingBannerAd ();
+
+		[Since (7,0), Export ("requestInterstitialAdPresentation")]
+		bool RequestInterstitialAdPresentation ();
+
+		[Since (7,0), Export ("shouldPresentInterstitialAd")]
+		bool ShouldPresentInterstitialAd ();
+	}
+
+	public delegate void ADConversionDetails (NSDate appPurchaseDate, NSDate iAdImpressionDate);
+	
+	[Since (7,1)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	public interface ADClient {
+		[Static]
+		[Export ("sharedClient")]
+		ADClient SharedClient { get; }
+
+		[Availability (Introduced = Platform.iOS_7_1, Deprecated = Platform.iOS_9_0, Message = "Replaced by RequestAttributionDetails")]
+		[Export ("determineAppInstallationAttributionWithCompletionHandler:")]
+		void DetermineAppInstallationAttribution (AttributedToiAdCompletionHandler completionHandler);
+
+		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0, Message = "Replaced by RequestAttributionDetails")]
+		[Export ("lookupAdConversionDetails:")]
+		[Async (ResultTypeName="ADClientConversionDetailsResult")]
+		void LookupAdConversionDetails (ADConversionDetails onCompleted);
+
+		[iOS (8,0)]
+		[Export ("addClientToSegments:replaceExisting:")]
+		void AddClientToSegments ([NullAllowed] string [] segmentIdentifiers, bool replaceExisting);
+
+		[iOS (9,0)]
+		[Export ("requestAttributionDetailsWithBlock:")]
+		void RequestAttributionDetails (Action<NSDictionary, NSError> completionHandler);
+
+		[iOS (9,0)]
+		[Field ("ADClientErrorDomain")]
+		NSString ErrorDomain { get; }
+	}
+
+	public delegate void AttributedToiAdCompletionHandler (bool attributedToiAd);
+
+	[Category]
+	[BaseType (typeof (AVPlayerViewController))]
+	interface iAdPreroll_AVPlayerViewController {
+		[iOS (8,0)]
+		[Static, Export ("preparePrerollAds")]
+#if XAMCORE_2_0
+		[Internal]
+#else
+		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
+#endif
+		void PreparePrerollAds ();
+
+		[iOS (8,0)]
+		[Export ("playPrerollAdWithCompletionHandler:")]
+		// [Async] - bug in generator
+		void PlayPrerollAd (Action<NSError> completionHandler);
+
+		[iOS (8,0)]
+		[Export ("cancelPreroll")]
+		void CancelPreroll ();
+	}
+}

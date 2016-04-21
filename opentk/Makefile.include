@@ -1,0 +1,100 @@
+
+MAC_OPENTK_SOURCES := $(shell grep "Compile Include" $(TOP)/OpenTK/OpenTK.csproj | sed 's/.*Include="//' | sed 's/".*//' | sed 's_\\_/_g' )
+MAC_OPENTK_FULL_SOURCES := $(shell grep "Compile Include" $(TOP)/OpenTK/OpenTK.csproj | grep -v "System.Drawing" | sed 's/.*Include="//' | sed 's/".*//' | sed 's_\\_/_g' )
+MAC_OPENTK_NET_4_5_SOURCES = \
+	$(MAC_OPENTK_SOURCES) \
+	$(SHARED_SYSTEM_DRAWING_SOURCES) \
+
+MAC_OPENTK_TARGETS = \
+	$(MAC_BUILD_DIR)/full-32/OpenTK.dll \
+	$(MAC_BUILD_DIR)/full-reference/OpenTK.dll \
+	$(MAC_BUILD_DIR)/mobile-32/OpenTK.dll \
+	$(MAC_BUILD_DIR)/mobile-reference/OpenTK.dll \
+	$(MAC_BUILD_DIR)/net_4_5/OpenTK.dll \
+	$(MAC_BUILD_DIR)/net_4_5-reference/OpenTK.dll
+
+# remove duplicates
+MAC_OPENTK_NET_4_5_SOURCES := $(sort $(MAC_OPENTK_NET_4_5_SOURCES))
+
+$(addprefix $(MAC_BUILD_DIR)/full-32/,OpenTK.dll): VARIANT = full-32
+$(addprefix $(MAC_BUILD_DIR)/mobile-32/,OpenTK.dll): VARIANT = mobile-32
+$(addprefix $(MAC_BUILD_DIR)/net_4_5/,OpenTK.dll): VARIANT = net_4_5
+
+$(addprefix $(MAC_BUILD_DIR)/full-%/,OpenTK.dll): XAMMAC = -r:$(MAC_BUILD_DIR)/$(VARIANT)/Xamarin.Mac.dll
+$(addprefix $(MAC_BUILD_DIR)/mobile-%/,OpenTK.dll): XAMMAC = -r:$(MAC_BUILD_DIR)/$(VARIANT)/Xamarin.Mac.dll
+$(addprefix $(MAC_BUILD_DIR)/net_4_5/,OpenTK.dll): XAMMAC = -r:$(MAC_BUILD_DIR)/full-32/Xamarin.Mac.dll
+
+$(MAC_BUILD_DIR)/mobile-32/OpenTK.dll: $(MAC_BUILD_DIR)/mobile/pmcs $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/mobile-32/Xamarin.Mac.dll
+	$(call Q_PROF_PMCS,mac/$(VARIANT)) PMCS_PROFILE=$(VARIANT) $(MAC_BUILD_DIR)/mobile/pmcs \
+		-out:$@ -target:library -debug:full -define:OPENTK_DLL -unsafe -nowarn:3021,612,618,1635 \
+		$(MAC_BOOTSTRAP_DEFINES),COREBUILD \
+		$(XAMMAC) \
+		 -keyfile:$(PRODUCT_KEY_PATH) \
+		$(MAC_OPENTK_SOURCES)
+
+$(MAC_BUILD_DIR)/full-32/OpenTK.dll: $(MAC_BUILD_DIR)/full/pmcs $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/full-32/Xamarin.Mac.dll
+	$(call Q_PROF_PMCS,mac/$(VARIANT)) PMCS_PROFILE=$(VARIANT) $(MAC_BUILD_DIR)/full/pmcs \
+		-out:$@ -target:library -debug:full -define:OPENTK_DLL -unsafe -nowarn:3021,612,618,1635 \
+		$(MAC_BOOTSTRAP_DEFINES),COREBUILD \
+		-r:System.Drawing $(XAMMAC) \
+		 -keyfile:$(PRODUCT_KEY_PATH) \
+		$(MAC_OPENTK_FULL_SOURCES)
+
+$(MAC_BUILD_DIR)/net_4_5/OpenTK.dll: $(MAC_BUILD_DIR)/full/pmcs $(MAC_OPENTK_SOURCES) $(MAC_BUILD_DIR)/full-32/Xamarin.Mac.dll
+	@mkdir -p $(MAC_BUILD_DIR)/net_4_5
+	$(call Q_PROF_PMCS,mac/$(VARIANT)) PMCS_PROFILE=full-64 $(MAC_BUILD_DIR)/full/pmcs \
+		-out:$@ -target:library -debug:full -define:OPENTK_DLL -unsafe -nowarn:3021,612,618,1635 \
+		$(MAC_BOOTSTRAP_DEFINES),COREBUILD \
+		 $(XAMMAC) \
+		 -keyfile:$(PRODUCT_KEY_PATH) \
+		$(MAC_OPENTK_NET_4_5_SOURCES)
+
+$(MAC_BUILD_DIR)/net_4_5-reference/OpenTK.dll: $(MAC_BUILD_DIR)/net_4_5/OpenTK.dll
+	@mkdir -p $(@D)
+	$(Q) cp $^ $@
+	$(Q) cp $^.mdb $@.mdb
+
+$(MAC_BUILD_DIR)/%-reference/OpenTK.dll: $(MAC_BUILD_DIR)/%-32/OpenTK.dll
+	@mkdir -p $(@D)
+	$(Q) cp $^ $@
+	$(Q) cp $^.mdb $@.mdb
+
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile/OpenTK.dll: $(MAC_BUILD_DIR)/mobile-reference/OpenTK.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile
+	$(Q) install -m 0755 $^ $@
+	$(Q) install -m 0644 $^.mdb $@.mdb
+
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile/OpenTK.dll $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile/OpenTK.dll: $(MAC_BUILD_DIR)/mobile-32/OpenTK.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile
+	$(Q) install -m 0755 $^ $@
+	$(Q) install -m 0644 $^.mdb $@.mdb
+
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full/OpenTK.dll: $(MAC_BUILD_DIR)/full-reference/OpenTK.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full
+	$(Q) install -m 0755 $^ $@
+	$(Q) install -m 0644 $^.mdb $@.mdb
+
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/net_4_5/OpenTK.dll: $(MAC_BUILD_DIR)/net_4_5-reference/OpenTK.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/net_4_5
+	$(Q) install -m 0755 $^ $@
+	$(Q) install -m 0644 $^.mdb $@.mdb
+
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full/OpenTK.dll $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full/OpenTK.dll: $(MAC_BUILD_DIR)/full-32/OpenTK.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full
+	$(Q) install -m 0755 $^ $@
+	$(Q) install -m 0644 $^.mdb $@.mdb
+
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/%: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac
+	$(Q) ln -sF ../../reference/mobile/$* $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/$*
+
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/%: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5
+	$(Q) ln -sF ../../reference/net_4_5/$* $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/$*
+
+MAC_TARGETS += \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile/OpenTK.dll     \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile/OpenTK.dll        \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile/OpenTK.dll          \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full/OpenTK.dll       \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full/OpenTK.dll          \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full/OpenTK.dll            \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/OpenTK.dll     \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/OpenTK.dll.mdb \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/net_4_5/OpenTK.dll       \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/OpenTK.dll     \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/OpenTK.dll.mdb \
+

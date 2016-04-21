@@ -1,0 +1,255 @@
+//
+// CIImage.cs: Extensions
+//
+// Copyright 2011-2015 Xamarin Inc.
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+using System;
+using XamCore.Foundation;
+using XamCore.CoreFoundation;
+using XamCore.CoreGraphics;
+using XamCore.ObjCRuntime;
+#if !MONOMAC
+using XamCore.UIKit;
+using XamCore.CoreVideo;
+#endif
+
+namespace XamCore.CoreImage {
+	public class CIAutoAdjustmentFilterOptions {
+
+		// The default value is true.
+		public bool? Enhance;
+
+		// The default value is true
+		public bool? RedEye;
+
+		public CIFeature [] Features;
+
+		public CIImageOrientation? ImageOrientation;
+
+		[iOS (8,0)]
+		public bool? AutoAdjustCrop;
+		[iOS (8,0)]
+		public bool? AutoAdjustLevel;
+		
+		internal NSDictionary ToDictionary ()
+		{
+			int n = 0;
+			if (Enhance.HasValue && Enhance.Value == false)
+				n++;
+			if (RedEye.HasValue && RedEye.Value == false)
+				n++;
+			if (ImageOrientation.HasValue)
+				n++;
+			if (Features != null && Features.Length != 0)
+				n++;
+			if (AutoAdjustCrop.HasValue && AutoAdjustCrop.Value == true)
+				n++;
+			if (AutoAdjustLevel.HasValue && AutoAdjustLevel.Value == true)
+				n++;
+			if (n == 0)
+				return null;
+			
+			NSMutableDictionary dict = new NSMutableDictionary ();
+
+			if (Enhance.HasValue && Enhance.Value == false){
+				dict.LowlevelSetObject (CFBoolean.False.Handle, CIImage.AutoAdjustEnhanceKey.Handle);
+			}
+			if (RedEye.HasValue && RedEye.Value == false){
+				dict.LowlevelSetObject (CFBoolean.False.Handle, CIImage.AutoAdjustRedEyeKey.Handle);
+			}
+			if (Features != null && Features.Length != 0){
+				dict.LowlevelSetObject (NSArray.FromObjects (Features), CIImage.AutoAdjustFeaturesKey.Handle);
+			}
+			if (ImageOrientation.HasValue){
+				dict.LowlevelSetObject (new NSNumber ((int)ImageOrientation.Value), global::XamCore.ImageIO.CGImageProperties.Orientation.Handle);
+			}
+			if (AutoAdjustCrop.HasValue && AutoAdjustCrop.Value == true){
+				dict.LowlevelSetObject (CFBoolean.True.Handle, CIImage.AutoAdjustCrop.Handle);
+			}
+			if (AutoAdjustLevel.HasValue && AutoAdjustLevel.Value == true){
+				dict.LowlevelSetObject (CFBoolean.True.Handle, CIImage.AutoAdjustLevel.Handle);
+			}
+			
+#if false
+			for (i = 0; i < n; i++){
+				Console.WriteLine ("{0} {1}-{2}", i, keys [i], values [i]);
+			}
+#endif
+			return dict;
+		}
+	}
+
+	public partial class CIImage {
+
+#if !MONOMAC && !XAMCORE_2_0
+		[Obsolete ("A CIImage cannot be created from a CGLayer on iOS (only OSX)")]
+		public CIImage (CGLayer layer)
+		{
+			throw new NotSupportedException ();
+		}
+
+		[Obsolete ("A CIImage cannot be created from a CGLayer on iOS (only OSX)")]
+		public CIImage (CGLayer layer, NSDictionary d)
+		{
+			throw new NotSupportedException ();
+		}
+
+		[Obsolete ("A CIImage cannot be created from a CGLayer on iOS (only OSX)")]
+		public CIImage (CGLayer layer, CIImageInitializationOptions options)
+		{
+			throw new NotSupportedException ();
+		}
+#endif
+
+		static CIFilter [] WrapFilters (NSArray filters)
+		{
+			if (filters == null)
+				return new CIFilter [0];
+
+			nuint count = filters.Count;
+			if (count == 0)
+				return new CIFilter [0];
+			var ret = new CIFilter [count];
+			for (nuint i = 0; i < count; i++){
+				IntPtr filterHandle = filters.ValueAt (i);
+				string filterName = CIFilter.GetFilterName (filterHandle);
+									 
+				ret [i] = CIFilter.FromName (filterName, filterHandle);
+			}
+			return ret;
+		}
+
+		public static CIImage FromCGImage (CGImage image, CGColorSpace colorSpace)
+		{
+			if (colorSpace == null)
+				throw new ArgumentNullException ("colorSpace");
+			
+			using (var arr = NSArray.FromIntPtrs (new IntPtr [] { colorSpace.Handle })){
+				using (var keys = NSArray.FromIntPtrs (new IntPtr [] { CIImageColorSpaceKey.Handle } )){
+					using (var dict = NSDictionary.FromObjectsAndKeysInternal (arr, keys)){
+						return FromCGImage (image, dict);
+					}
+				}
+			}
+		}
+
+		// Apple removed this API in iOS9 SDK
+		public CIFilter [] GetAutoAdjustmentFilters ()
+		{
+			return GetAutoAdjustmentFilters (null);
+		}
+		
+		public CIFilter [] GetAutoAdjustmentFilters (CIAutoAdjustmentFilterOptions options)
+		{
+			NSDictionary dict = options == null ? null : options.ToDictionary ();
+			return WrapFilters (_GetAutoAdjustmentFilters (dict));
+		}
+
+		public static implicit operator CIImage (CGImage image)
+		{
+			return FromCGImage (image);
+		}
+		
+		internal static int CIFormatToInt (CIFormat format)
+		{
+			switch (format) {
+			case CIFormat.ARGB8: return FormatARGB8;			
+			case CIFormat.RGBAh: return FormatRGBAh;
+#if MONOMAC
+			case CIFormat.RGBA16: return FormatRGBA16;
+			case CIFormat.RGBAf: return FormatRGBAf;
+#elif !XAMCORE_3_0
+			case CIFormat.BGRA8: return FormatBGRA8;
+			case CIFormat.RGBA8: return FormatRGBA8;
+#endif
+			case CIFormat.kRGBAf: return FormatRGBAf;
+			case CIFormat.kBGRA8: return FormatBGRA8;
+			case CIFormat.kRGBA8: return FormatRGBA8;
+			case CIFormat.ABGR8: return FormatABGR8;
+			case CIFormat.A8: return FormatA8;
+			case CIFormat.A16: return FormatA16;
+			case CIFormat.Ah: return FormatAh;
+			case CIFormat.Af: return FormatAf;
+			case CIFormat.R8: return FormatR8;
+			case CIFormat.R16: return FormatR16;
+			case CIFormat.Rh: return FormatRh;
+			case CIFormat.Rf: return FormatRf;
+			case CIFormat.RG8: return FormatRG8;
+			case CIFormat.RG16: return FormatRG16;
+			case CIFormat.RGh: return FormatRGh;
+			case CIFormat.RGf: return FormatRGf;
+			default:
+				throw new ArgumentOutOfRangeException ("format");
+			}
+		}
+
+		public static CIImage FromData (NSData bitmapData, nint bytesPerRow, CGSize size, CIFormat pixelFormat, CGColorSpace colorSpace)
+		{
+			return FromData (bitmapData, bytesPerRow, size, CIImage.CIFormatToInt (pixelFormat), colorSpace);
+		}
+
+		public static CIImage FromProvider (ICIImageProvider provider, nuint width, nuint height, CIFormat pixelFormat, CGColorSpace colorSpace, CIImageProviderOptions options)
+		{
+			return FromProvider (provider, width, height, CIImage.CIFormatToInt (pixelFormat), colorSpace, options == null ? null : options.Dictionary);
+		}
+
+		public CIImage (ICIImageProvider provider, nuint width, nuint height, CIFormat pixelFormat, CGColorSpace colorSpace, CIImageProviderOptions options)
+			: this (provider, width, height, CIImage.CIFormatToInt (pixelFormat), colorSpace, options == null ? null : options.Dictionary)
+		{
+		}
+	}
+
+	// convenience enum (fields are used) but also a `typedef int` -> CIImage.h
+        public enum CIFormat {
+		ARGB8 = 0,
+		RGBAh = 1,
+#if MONOMAC
+		RGBA16 = 2,
+		[Obsolete ("This value can not be shared across Mac/iOS binaries, future proof with kRGBAf instead")]
+		RGBAf  = 3,
+
+		// Please, do not add values into MonoMac/iOS without adding an explicit value
+#elif !XAMCORE_3_0
+		[Obsolete ("This value can not be shared across Mac/iOS binaries, future proof with kBGRA8 instead")]
+		BGRA8 = 2 ,
+		[Obsolete ("This value can not be shared across Mac/iOS binaries, future proof with kRGBA8 instead")]
+		RGBA8 = 3,
+		// Please, do not add values into MonoMac/iOS without adding an explicit value
+#endif
+		kRGBAf = 4,
+		kBGRA8 = 5,
+		kRGBA8 = 6,
+		ABGR8 = 7,
+		A8 = 11,
+		A16 = 12,
+		Ah = 13, 
+		Af = 14,
+		R8 = 15,
+		R16 = 16,
+		Rh = 17,
+		Rf = 18,
+		RG8 = 19, 
+		RG16 = 20,
+		RGh = 21,
+		RGf = 22
+	}
+}

@@ -1,0 +1,24 @@
+SHARED_SYSTEM_DRAWING_SOURCES =  \
+	$(MONO_PATH)/mcs/build/common/Locale.cs                            \
+	$(MONO_PATH)/mcs/class/System.Drawing/System.Drawing/Point.cs      \
+	$(MONO_PATH)/mcs/class/System.Drawing/System.Drawing/PointF.cs     \
+	$(MONO_PATH)/mcs/class/System.Drawing/System.Drawing/Rectangle.cs  \
+	$(MONO_PATH)/mcs/class/System.Drawing/System.Drawing/RectangleF.cs \
+	$(MONO_PATH)/mcs/class/System.Drawing/System.Drawing/Size.cs       \
+	$(MONO_PATH)/mcs/class/System.Drawing/System.Drawing/SizeF.cs      \
+
+IOS_SYSTEM_DRAWING_SOURCES = \
+	$(TOP)/sysdrawing-coregraphics/System.Drawing/Brush.cs \
+	$(TOP)/sysdrawing-coregraphics/System.Drawing/Color.cs \
+	$(TOP)/sysdrawing-coregraphics/System.Drawing/Graphics.cs \
+	$(TOP)/sysdrawing-coregraphics/System.Drawing/KnownColor.cs \
+	$(TOP)/sysdrawing-coregraphics/System.Drawing/KnownColors.cs \
+	$(TOP)/sysdrawing-coregraphics/System.Drawing/Pen.cs \
+	$(TOP)/sysdrawing-coregraphics/System.Drawing/SolidBrush.cs \
+	$(TOP)/sysdrawing-coregraphics/System.Drawing.Drawing2D/Matrix.cs \
+	$(TOP)/mono/mcs/class/System.Drawing/System.Drawing/ImageFormatConverter.cs \
+	$(TOP)/mono/mcs/class/System.Drawing/System.Drawing.Drawing2D/Blend.cs \
+	$(TOP)/mono/mcs/class/System.Drawing/System.Drawing.Drawing2D/ColorBlend.cs \
+	$(TOP)/mono/mcs/class/System.Drawing/System.Drawing.Drawing2D/CompostingMode.cs \
+	$(TOP)/mono/mcs/class/System.Drawing/System.Drawing.Drawing2D/MatrixOrder.cs \
+	$(TOP)/mono/mcs/class/System.Drawing/System.Drawing.Imaging/ImageFormat.cs \

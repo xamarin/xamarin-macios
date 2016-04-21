@@ -10,3 +10,27 @@
 	path = external/fsharp
 	url = git@github.com:fsharp/fsharp.git
 	branch = master
+[submodule "external/cecil"]
+	path = external/cecil
+	url = git@github.com:mono/cecil.git
+	branch = workaround-for-bug-24976
+[submodule "external/MonoTouch.Dialog"]
+	path = external/MonoTouch.Dialog
+	url = git@github.com:migueldeicaza/MonoTouch.Dialog.git
+	branch = master
+[submodule "external/Touch.Unit"]
+	path = external/Touch.Unit
+	url = git://github.com/spouliot/Touch.Unit.git
+	branch = master
+[submodule "external/NUnitLite"]
+	path = external/NUnitLite
+	url = git://github.com/spouliot/NUnitLite.git
+	branch = master
+[submodule "external/opentk"]
+	path = external/opentk
+	url = git://github.com/mono/opentk.git
+	branch = master
+[submodule "external/ModernHttpClient"]
+	path = external/ModernHttpClient
+	url = git@github.com:xamarin/ModernHttpClient.git
+	branch = master

@@ -1,0 +1,239 @@
+#if XAMCORE_2_0 || !MONOMAC
+//
+// API for the Metal framework
+//
+// Authors:
+//   Miguel de Icaza
+//
+// Copyrigh 2014, Xamarin Inc.
+//
+using System;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+
+using XamCore.Foundation;
+using XamCore.ModelIO;
+using XamCore.ObjCRuntime;
+
+namespace XamCore.Metal {
+
+	public struct MTLOrigin {
+		public nint X, Y, Z;
+		public MTLOrigin (nint x, nint y, nint z){
+			X = x;
+			Y = y;
+			Z = z;
+		}
+
+		public override string ToString ()
+		{
+			return String.Format ("({0},{1},{2})", X, Y, Z);
+		}
+	}
+
+	public struct MTLSize {
+		public nint Width, Height, Depth;
+		
+		public MTLSize (nint width, nint height, nint depth){
+			Width = width;
+			Height = height;
+			Depth = depth;
+		}
+	}
+
+#if !COREBUILD
+	public static class MTLVertexFormatExtensions {
+
+		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+		[DllImport (Constants.MetalKitLibrary)]
+		static extern /* MDLVertexFormat */ nuint MTKModelIOVertexFormatFromMetal (/* MTLVertexFormat */ nuint modelIODescriptor);
+
+		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+		public static MDLVertexFormat ToModelVertexFormat (this MTLVertexFormat vertexFormat)
+		{
+			nuint mdlVertexFormat = MTKModelIOVertexFormatFromMetal ((nuint)(ulong)vertexFormat);
+			return (MDLVertexFormat)(ulong)mdlVertexFormat;
+		}
+	}
+#endif
+
+	public struct MTLScissorRect {
+		public nuint X, Y, Width, Height;
+
+		public MTLScissorRect (nuint x, nuint y, nuint width, nuint height)
+		{
+			X = x;
+			Y = y;
+			Width = width;
+			Height = height;
+		}
+
+		public override string ToString ()
+		{
+			return String.Format ("({0},{1},{2},{3}", X, Y, Width, Height);
+		}
+	}
+
+	public struct MTLViewport {
+		public double OriginX, OriginY, Width, Height, ZNear, ZFar;
+		public MTLViewport (double originX, double originY, double width, double height, double znear, double zfar)
+		{
+			OriginX = originX;
+			OriginY = originY;
+			Width = width;
+			Height = height;
+			ZNear = znear;
+			ZFar = zfar;
+		}
+		
+		public override string ToString ()
+		{
+			return String.Format ("({0},{1},{2},{3} Znear={4} Zfar={5})", OriginX, OriginY, Width, Height, ZNear, ZFar);
+		}
+	}
+
+	public struct MTLClearColor {
+		public double Red, Green, Blue, Alpha;
+
+		public MTLClearColor (double red, double green, double blue, double alpha)
+		{
+			Red = red;
+			Green = green;
+			Blue = blue;
+			Alpha = alpha;
+		}
+	}
+
+	public struct MTLRegion {
+		public MTLOrigin Origin;
+		public MTLSize   Size;
+
+		public MTLRegion (MTLOrigin origin, MTLSize size)
+		{
+			Origin = origin;
+			Size = size;
+		}
+
+		public static MTLRegion Create1D (nuint x, nuint width)
+		{
+			return Create1D ((nint) x, (nint) width);
+		}
+
+		public static MTLRegion Create1D (nint x, nint width)
+		{
+			var region = new MTLRegion ();
+			region.Origin.X = x;
+			region.Origin.Y = 0;
+			region.Origin.Z = 0;
+			region.Size.Width = width;
+			region.Size.Height = 1;
+			region.Size.Depth = 1;
+			return region;
+		}
+
+		public static MTLRegion Create2D (nuint x, nuint y, nuint width, nuint height)
+		{
+			return Create2D ((nint) x, (nint) y, (nint) width, (nint) height);
+		}
+
+		public static MTLRegion Create2D (nint x, nint y, nint width, nint height)
+		{
+			var region = new MTLRegion ();
+			region.Origin.X = x;
+			region.Origin.Y = y;
+			region.Origin.Z = 0;
+			region.Size.Width = width;
+			region.Size.Height = height;
+			region.Size.Depth = 1;
+			return region;
+		}
+
+		public static MTLRegion Create3D (nuint x, nuint y, nuint z, nuint width, nuint height, nuint depth)
+		{
+			return Create3D ((nint) x, (nint) y, (nint) z, (nint) width, (nint) height, (nint) depth);
+		}
+
+		public static MTLRegion Create3D (nint x, nint y, nint z, nint width, nint height, nint depth)
+		{
+			var region = new MTLRegion ();
+			region.Origin.X = x;
+			region.Origin.Y = y;
+			region.Origin.Z = z;
+			region.Size.Width = width;
+			region.Size.Height = height;
+			region.Size.Depth = depth;
+			return region;
+		}
+	}
+	
+	[StructLayout (LayoutKind.Explicit)]
+	public struct MTLClearValue {
+		[FieldOffset (0)]
+		public MTLClearColor Color;
+		[FieldOffset (0)]
+		public double Depth;
+		[FieldOffset (0)]
+		public ulong Stencil;
+
+		public MTLClearValue (MTLClearColor color)
+		{
+			Depth = 0;
+			Stencil = 0;
+			Color = color;
+		}
+		
+		public MTLClearValue (double depth)
+		{
+			Color.Red = 0;
+			Stencil = 0;
+			
+			Depth = depth;
+			Color.Green = 0;
+			Color.Blue = 0;
+			Color.Alpha = 0;
+		}
+		
+		public MTLClearValue (ulong stencil)
+		{
+			Color.Red = 0;
+			Depth = 0;
+			
+			Stencil = stencil;
+			Color.Green = 0;
+			Color.Blue = 0;
+			Color.Alpha = 0;
+		}
+	}
+
+	public struct MTLDispatchThreadgroupsIndirectArguments {
+		public uint ThreadGroupsPerGrid1;
+		public uint ThreadGroupsPerGrid2;
+		public uint ThreadGroupsPerGrid3;
+	}
+
+	public struct MTLDrawPrimitivesIndirectArguments {
+		public uint VertexCount;
+		public uint InstanceCount;
+		public uint VertexStart;
+		public uint BaseInstance;
+	}
+
+	public struct MTLDrawIndexedPrimitivesIndirectArguments {
+		public uint IndexCount;
+		public uint InstanceCount;
+		public uint IndexStart;
+		public uint BaseVertex;
+		public uint BaseInstance;
+	}
+
+#if COREBUILD
+	// IMTLCommandBuffer and IMTLTexture visibility are needed for MPSCopyAllocator - but they are generated later
+
+	public partial interface IMTLCommandBuffer {
+	}
+
+	public partial interface IMTLTexture {
+	}
+#endif
+}
+#endif

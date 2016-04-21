@@ -1,0 +1,36 @@
+// Copyright 2015 Xamarin Inc.
+
+using System;
+using System.Runtime.InteropServices;
+
+using XamCore.CoreFoundation;
+using XamCore.CoreMedia;
+using XamCore.ObjCRuntime;
+
+namespace XamCore.MediaToolbox {
+
+	static public class MTFormatNames {
+
+		[iOS (9,0)][Mac (10,11)]
+		[DllImport (Constants.MediaToolboxLibrary)]
+		static extern /* CFStringRef CM_NULLABLE */ IntPtr MTCopyLocalizedNameForMediaType (
+			CMMediaType mediaType);
+
+		[iOS (9,0)][Mac (10,11)]
+		static public string GetLocalizedName (this CMMediaType mediaType)
+		{
+			return CFString.FetchString (MTCopyLocalizedNameForMediaType (mediaType));
+		}
+
+		[iOS (9,0)][Mac (10,11)]
+		[DllImport (Constants.MediaToolboxLibrary)]
+		static extern /* CFStringRef CM_NULLABLE */ IntPtr MTCopyLocalizedNameForMediaSubType (
+			CMMediaType mediaType, uint mediaSubType);
+
+		[iOS (9,0)][Mac (10,11)]
+		static public string GetLocalizedName (this CMMediaType mediaType, uint mediaSubType)
+		{
+			return CFString.FetchString (MTCopyLocalizedNameForMediaSubType (mediaType, mediaSubType));
+		}
+	}
+}

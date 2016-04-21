@@ -1,0 +1,50 @@
+//
+// iAd.cs: definitions
+//
+// Author:
+//   Miguel de Icaza
+//
+// Copyright 2011-2014, 2016 Xamarin Inc
+//
+
+using XamCore.ObjCRuntime;
+
+namespace XamCore.iAd {
+
+	// NSInteger -> ADBannerView.h
+	[Native]
+	[ErrorDomain ("ADErrorDomain")]
+	public enum ADError : nint {
+		Unknown,
+		ServerFailure,
+		LoadingThrottled,
+		InventoryUnavailable,
+		ConfigurationError,
+		BannerVisibleWithoutContent,
+		ApplicationInactive,
+		AdUnloaded,
+		AssetLoadFailure,
+	}
+
+	// NSInteger -> ADBannerView.h
+	[iOS (6,0)] 
+	[Native]
+	public enum ADAdType : nint {
+		Banner, MediumRectangle
+	}
+
+	// NSInteger -> UIViewControlleriAdAdditions.h
+	[Native]
+	public enum ADInterstitialPresentationPolicy : nint {
+		None = 0,
+		Automatic,
+		Manual,
+	}
+
+	[iOS (9,0)]
+	[Native]
+	public enum ADClientError : nint {
+		Unknown = 0,
+		LimitAdTracking = 1
+	}
+}

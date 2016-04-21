@@ -1,8 +1,13 @@
-Make.config.local
 Make.config.inc
+Make.config.local
 _ios-build
 _mac-build
+*.userprefs
+*.suo
 *.exe
 *.dll
 *.mdb
-
+bin
+obj
+packages
+~.pmcs*

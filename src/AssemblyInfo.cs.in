@@ -1,0 +1,17 @@
+//
+// AssemblyInfo.cs.in
+//
+// Authors:
+//   Aaron Bockover (abock@xamarin.com)
+//
+// Copyright 2014 Xamarin, Inc.
+
+using System.Reflection;
+using System.Runtime.CompilerServices;
+
+[assembly: AssemblyInformationalVersion ("@PACKAGE_VERSION_MAJOR@.@PACKAGE_VERSION_MINOR@.@PACKAGE_VERSION_REV@.@PACKAGE_VERSION_BUILD@; git-rev-head:@PACKAGE_HEAD_REV@; git-branch:@PACKAGE_HEAD_BRANCH@")]
+[assembly: AssemblyTitle ("@PRODUCT_NAME@")]
+[assembly: AssemblyProduct ("@PRODUCT_NAME@")]
+// FIXME: Probably need to add Copyright 2009-2011 Novell Inc.
+// [assembly: AssemblyCopyright ("Copyright 2011-2014 Xamarin Inc.")]
+[assembly: AssemblyCompany ("Xamarin Inc.")]
