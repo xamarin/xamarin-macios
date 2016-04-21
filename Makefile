@@ -107,6 +107,10 @@ endif
 # Common
 #
 
+.PHONY: check-system
+check-system:
+	@./system-dependencies.sh
+
 $(DIRECTORIES):
 	$(Q) mkdir -p $@
 
