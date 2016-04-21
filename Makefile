@@ -107,6 +107,12 @@ endif
 # Common
 #
 
+.PHONY: world
+world: check-system
+	@$(MAKE) reset-versions
+	@$(MAKE) all -j8
+	@$(MAKE) install -j8
+
 .PHONY: check-system
 check-system:
 	@./system-dependencies.sh
