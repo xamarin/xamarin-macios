@@ -59,6 +59,7 @@ endef
 $(shell rm -f .check-versions-failure)
 $(eval $(call CheckSubmoduleTemplate,llvm,LLVM))
 $(eval $(call CheckSubmoduleTemplate,mono,MONO))
+$(eval $(call CheckSubmoduleTemplate,fsharp,FSHARP))
 
 # some hackish reset-* targets to deal with what needs to happen in various parts of the build tree when you reset a module
 
@@ -67,6 +68,9 @@ reset-mono::
 
 reset-llvm::
 	$(Q) $(MAKE) -C $(TOP)/builds clean-llvm
+
+reset-fsharp::
+	$(Q) cd $(FSHARP_PATH) && git clean -xffdq
 
 check-versions::
 	@if test -e .check-versions-failure; then  \

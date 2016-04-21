@@ -6,3 +6,7 @@
 	path = external/mono
 	url = git://github.com/mono/mono.git
 	branch = mono-4.5.0-branch
+[submodule "external/fsharp"]
+	path = external/fsharp
+	url = git@github.com:fsharp/fsharp.git
+	branch = master
