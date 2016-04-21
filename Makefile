@@ -1,5 +1,5 @@
 TOP=.
-SUBDIRS=builds fsharp
+SUBDIRS=builds runtime fsharp
 include $(TOP)/Make.config
 include $(TOP)/mk/versions.mk
 

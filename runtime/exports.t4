@@ -1,0 +1,622 @@
+<# // vim: set filetype=cs :
+#>
+<#@ template language="C#" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#
+	var exports = new [] {
+		#region metadata/class.h
+
+		new Export ("MonoClass *", "mono_class_from_name",
+			"MonoImage *",  "image",
+			"const char *", "name_space",
+			"const char *", "name"
+		),
+
+		new Export ("MonoMethod *", "mono_class_get_method_from_name",
+			"MonoClass *", "klass",
+			"const char *", "name",
+			"int", "param_count"
+		),
+
+		new Export ("MonoClassField *", "mono_class_get_field_from_name",
+			"MonoClass *", "klass",
+			"const char *", "name"
+		),
+
+		new Export ("mono_bool", "mono_class_is_assignable_from",
+			"MonoClass *", "klass",
+			"MonoClass *", "oklass"
+		),
+
+		new Export ("MonoClass *", "mono_class_from_mono_type",
+			"MonoType *", "type"
+		),
+
+		new Export ("mono_bool", "mono_class_is_delegate",
+			"MonoClass *", "klass"
+		),
+
+		new Export ("MonoClass *", "mono_class_get_element_class",
+			"MonoClass *", "klass"
+		),
+
+		new Export ("const char *", "mono_class_get_namespace",
+			"MonoClass *", "klass"
+		),
+
+		new Export ("const char *", "mono_class_get_name",
+			"MonoClass *", "klass"
+		),
+
+		new Export ("MonoClass *", "mono_class_get_parent",
+			"MonoClass *", "klass"
+		),
+
+		new Export ("mono_bool", "mono_class_is_subclass_of",
+			"MonoClass *", "klass",
+			"MonoClass *", "klassc",
+			"mono_bool", "check_interfaces"
+		),
+
+		new Export ("mono_bool", "mono_class_is_valuetype",
+			"MonoClass *", "klass"
+		),
+
+		new Export ("mono_bool", "mono_class_is_enum",
+			"MonoClass *", "klass"
+		),
+
+		new Export ("int32_t", "mono_class_value_size",
+			"MonoClass *", "klass",
+			"uint32_t *", "align"
+		),
+
+		new Export ("MonoType *", "mono_class_get_type",
+			"MonoClass *", "klass"
+		),
+
+		#endregion
+
+		#region metadata/debug-helpers.h
+
+		new Export ("char *", "mono_method_full_name",
+			"MonoMethod *", "method",
+			"mono_bool", "signature"
+		),
+
+		#endregion
+
+		#region metadata/object.h
+
+		new Export ("MonoObject *", "mono_runtime_invoke",
+			"MonoMethod *",  "method",
+			"void *",        "obj",
+			"void **",       "params",
+			"MonoObject **", "exc"
+		),
+
+		new Export ("uint32_t", "mono_gchandle_new",
+			"MonoObject *", "obj",
+			"mono_bool", "pinned"
+		),
+
+		new Export ("MonoObject *", "mono_gchandle_get_target",
+			"uint32_t", "gchandle"
+		),
+
+		new Export ("void", "mono_gchandle_free",
+			"uint32_t", "gchandle"
+		),
+
+		new Export ("uint32_t", "mono_gchandle_new_weakref",
+			"MonoObject *", "obj",
+			"mono_bool", "track_resurrection"
+		),
+
+		new Export ("void", "mono_raise_exception",
+			"MonoException *", "ex"
+		),
+
+		new Export ("char*", "mono_array_addr_with_size",
+			"MonoArray *", "array",
+			"int", "size",
+			"uintptr_t", "idx"
+		),
+
+		new Export ("MonoString *", "mono_string_new",
+			"MonoDomain *", "domain",
+			"const char *", "text"
+		),
+
+		new Export ("MonoArray *", "mono_array_new",
+			"MonoDomain *", "domain",
+			"MonoClass *", "eclass",
+			"uintptr_t", "n"
+		),
+
+		new Export ("void *", "mono_object_unbox",
+			"MonoObject *", "obj"
+		),
+
+		new Export ("char *", "mono_string_to_utf8",
+			"MonoString *", "string_obj"
+		),
+
+		new Export ("MonoObject *", "mono_object_new",
+			"MonoDomain *", "domain",
+			"MonoClass *", "klass"
+		),
+
+		new Export ("uintptr_t", "mono_array_length",
+			"MonoArray *", "array"
+		),
+
+		new Export ("MonoObject *", "mono_object_isinst",
+			"MonoObject *", "obj",
+			"MonoClass *", "klass"
+		),
+
+		new Export ("MonoClass *", "mono_object_get_class",
+			"MonoObject *", "obj"
+		),
+
+		new Export ("MonoMethod *", "mono_object_get_virtual_method",
+			"MonoObject *", "obj",
+			"MonoMethod *", "method"
+		),
+
+		new Export ("void", "mono_field_get_value",
+			"MonoObject *", "obj",
+			"MonoClassField *", "field",
+			"void *", "value"
+		),
+
+		#endregion
+
+		#region metadata/profiler.h
+
+		new Export ("void", "mono_profiler_set_events",
+			"MonoProfileFlags", "events"
+		),
+
+		new Export ("void", "mono_profiler_install",
+			"MonoProfiler *", "prof",
+			"MonoProfileFunc", "shutdown_callback"
+		),
+
+		new Export ("void", "mono_profiler_install_thread",
+			"MonoProfileThreadFunc", "start",
+			"MonoProfileThreadFunc", "end"
+		),
+
+		new Export ("void", "mono_profiler_install_gc",
+			"MonoProfileGCFunc", "callback",
+			"MonoProfileGCResizeFunc", "heap_resize_callback"
+		),
+
+		new Export ("void", "mono_profiler_load",
+			"const char *", "desc"
+		),
+
+		#endregion
+
+		#region metadata/threads.h
+
+		new Export ("mono_bool", "mono_thread_is_foreign",
+			"MonoThread *", "thread"
+		),
+
+		new Export ("MonoThread * ", "mono_thread_current"),
+
+		new Export ("MonoThread *", "mono_thread_attach",
+			"MonoDomain *", "domain"
+		),
+
+		new Export ("void", "mono_thread_detach_if_exiting"),
+
+		#endregion
+
+		#region metadata/assembly.h
+
+		new Export ("void", "mono_set_assemblies_path",
+			"const char *", "path"
+		),
+
+		new Export ("MonoAssembly *", "mono_assembly_open",
+			"const char *",          "filename",
+			"MonoImageOpenStatus *", "status"
+		),
+
+		new Export ("MonoImage *", "mono_assembly_get_image",
+			"MonoAssembly *", "assembly"
+		),
+
+		new Export ("MonoAssemblyName *", "mono_assembly_name_new",
+			"const char *", "name"
+		),
+
+		new Export ("void", "mono_assembly_name_free",
+			"MonoAssemblyName *", "aname"
+		),
+
+		new Export ("MonoAssembly *", "mono_assembly_loaded",
+			"MonoAssemblyName *", "aname"
+		),
+
+		new Export ("void", "mono_register_machine_config",
+			"const char *", "config_xml"
+		),
+
+		new Export ("void", "mono_set_dirs",
+			"const char *", "assembly_dir",
+			"const char *", "config_dir"
+		),
+
+		new Export ("const char *", "mono_assembly_name_get_name",
+			"MonoAssemblyName *", "aname"
+		),
+
+		new Export ("const char *", "mono_assembly_name_get_culture",
+			"MonoAssemblyName *", "aname"
+		),
+
+		new Export ("void", "mono_install_assembly_preload_hook",
+			"MonoAssemblyPreLoadFunc", "func",
+			"void *", "user_data"
+		),
+
+		new Export ("MonoAssemblyName *", "mono_assembly_get_name",
+			"MonoAssembly *", "assembly"
+		),
+
+		#endregion
+
+		#region metadata/loader.h
+
+		new Export ("void", "mono_add_internal_call",
+			"const char *", "name",
+			"const void *", "method"
+		),
+
+		new Export ("MonoMethodSignature *", "mono_method_signature",
+			"MonoMethod *", "method"
+		),
+
+		new Export ("MonoClass *", "mono_method_get_class",
+			"MonoMethod *", "method"
+		),
+
+		#endregion
+
+		#region metadata/appdomain.h
+
+		new Export ("MonoDomain *", "mono_domain_get"),
+
+		new Export ("MonoClass *", "mono_get_intptr_class"),
+
+		new Export ("MonoClass *", "mono_get_string_class"),
+
+		new Export ("MonoImage *", "mono_get_corlib"),
+
+		new Export ("MonoClass *", "mono_get_array_class"),
+
+		new Export ("MonoClass *", "mono_get_exception_class"),
+
+		new Export ("MonoDomain *", "mono_get_root_domain"),
+
+		#endregion
+
+		#region metadata/reflection.h
+
+		new Export ("MonoReflectionAssembly *", "mono_assembly_get_object",
+			"MonoDomain *", "domain",
+			"MonoAssembly *", "assembly"
+		),
+
+		new Export ("MonoReflectionMethod *", "mono_method_get_object",
+			"MonoDomain *", "domain",
+			"MonoMethod *", "method",
+			"MonoClass *", "refclass"
+		),
+
+		new Export ("MonoReflectionType *", "mono_type_get_object",
+			"MonoDomain *", "domain",
+			"MonoType *", "type"
+		),
+
+		#endregion
+
+		#region metadata/metadata.h
+
+		new Export ("MonoType *", "mono_signature_get_params",
+			"MonoMethodSignature *", "sig",
+			"void **", "iter"
+		),
+
+		new Export ("mono_bool", "mono_type_is_byref", 
+			"MonoType *", "type"
+		),
+
+		new Export ("MonoType *", "mono_signature_get_return_type",
+			"MonoMethodSignature *", "sig"
+		),
+
+		#endregion
+
+		#region metadata/mono-debug.h
+
+		new Export ("void", "mono_debug_init",
+			"MonoDebugFormat", "format"
+		),
+
+		new Export ("void", "mono_gc_collect",
+			"int", "generation"
+		),
+
+		#endregion
+
+		#region metadata/mono-config.h
+
+		new Export ("void", "mono_config_parse_memory",
+			"const char *", "buffer"
+		),
+
+		#endregion
+
+		#region metadata/mono-gc.h
+
+		new Export ("int", "mono_gc_max_generation"),
+
+		#endregion
+
+		#region metadata/mono-hash.h
+
+		new Export ("MonoGHashTable *", "mono_g_hash_table_new_type",
+			"GHashFunc", "hash_func",
+			"GEqualFunc", "key_equal_func",
+			"MonoGHashGCType", "type"
+		),
+
+		new Export ("gpointer", "mono_g_hash_table_lookup",
+			"MonoGHashTable *", "hash",
+			"gconstpointer", "key"
+		),
+
+		new Export ("void", "mono_g_hash_table_insert",
+			"MonoGHashTable *", "hash",
+			"gpointer", "k",
+			"gpointer", "v"
+		),
+
+		#endregion
+
+		#region metadata/exception.h
+
+		new Export ("MonoException *", "mono_get_exception_execution_engine",
+			"const char *", "msg"
+		),
+
+		new Export ("MonoException *", "mono_exception_from_name_msg",
+			"MonoImage *", "image",
+			"const char *", "name_space",
+			"const char *", "name",
+			"const char *", "msg"
+		),
+
+		#endregion
+
+		#region metadata/gc-internal.h
+
+		new Export ("MonoReferenceQueue *", "mono_gc_reference_queue_new",
+			"mono_reference_queue_callback", "callback"
+		),
+
+		new Export ("void", "mono_gc_reference_queue_free",
+			"MonoReferenceQueue *", "queue"
+		),
+
+		new Export ("gboolean", "mono_gc_reference_queue_add",
+			"MonoReferenceQueue *", "queue",
+			"MonoObject *", "obj",
+			"void *", "user_data"
+		),
+
+		new Export ("void", "mono_gc_register_finalizer_callbacks",
+			"MonoGCFinalizerCallbacks *", "callbacks"
+		),
+		
+		#endregion
+
+		#region metadata/sgen-toggleref.h
+
+		new Export ("void", "mono_gc_toggleref_add",
+			"MonoObject *", "object",
+			"mono_bool", "strong_ref"
+		),
+
+		new Export ("void", "mono_gc_toggleref_register_callback",
+			"MonoToggleRefCallback", "process_toggleref"
+		),
+
+		#endregion
+
+		#region utils/mono-path.h
+
+		new Export ("gchar *", "mono_path_resolve_symlinks",
+			"const char *", "path"
+		),
+
+		#endregion
+
+		#region utils/mono-publib.h
+
+		new Export ("void", "mono_free",
+			"void *", "ptr"
+		),
+
+		#endregion
+
+		#region mini/jit.h
+
+		new Export ("char *", "mono_get_runtime_build_info"),
+
+		new Export ("MonoDomain *", "mono_jit_init_version",
+			"const char *", "root_domain_name",
+			"const char *", "runtime_version"
+		),
+
+		new Export ("int", "mono_jit_exec",
+			"MonoDomain *", "domain",
+			"MonoAssembly *", "assembly",
+			"int", "argc",
+			"const char**", "argv"
+		),
+
+		new Export ("void", "mono_jit_parse_options",
+			"int", "argc",
+			"char**", "argv"
+		),
+
+		new Export ("void", "mono_jit_set_aot_only",
+			"mono_bool", "aot_only"
+		),
+
+		new Export ("void", "mono_jit_set_aot_mode",
+			"MonoAotMode", "mode"
+		),
+
+		new Export ("void", "mono_set_signal_chaining",
+			"mono_bool", "chain_signals"
+		),
+
+		new Export ("void", "mono_jit_set_trace_options",
+			"const char *", "option"
+		),
+
+		#endregion
+
+		#region mini/mini.h
+
+		new Export ("MonoDomain *", "mono_jit_thread_attach",
+			"MonoDomain *", "domain"
+		),
+
+		new Export ("gboolean", "mono_exception_walk_trace",
+			"MonoException *", "exc",
+			"MonoExceptionFrameWalk", "func",
+			"gpointer", "user_data"
+		),
+
+		new Export ("void", "mono_install_unhandled_exception_hook",
+			"MonoUnhandledExceptionFunc", "func",
+			"gpointer", "user_data"
+		),
+
+		new Export ("int", "mono_main",
+			"int",     "argc",
+			"char **", "argv"
+		),
+
+		new Export (true, "void", "mono_install_load_aot_data_hook",
+			"MonoLoadAotDataFunc", "load_func",
+			"MonoFreeAotDataFunc", "free_func",
+			"gpointer", "user_data"
+		),
+
+		new Export (true, "gboolean", "mini_parse_debug_option",
+			"const char *", "option"
+		),
+
+		#endregion
+
+		#region utils/logger.h
+
+		new Export ("void", "mono_trace_set_log_handler",
+			"MonoLogCallback", "callback",
+			"void *", "user_data"
+		),
+
+		new Export ("void", "mono_trace_set_print_handler",
+			"MonoPrintCallback", "callback"
+		),
+
+		new Export ("void", "mono_trace_set_printerr_handler",
+			"MonoPrintCallback", "callback"
+		)
+
+		#endregion
+	};
+#><#+
+	class Arg
+	{
+		public string Type;
+		public string Name;
+	}
+
+	class Export
+	{
+		public string ReturnType;
+		public string EntryPoint;
+		public List<Arg> Arguments;
+		public bool Optional;
+
+		public Export (string returnType, string entryPoint, params string [] arguments)
+			: this (false, returnType, entryPoint, arguments)
+		{
+		}
+
+
+		public Export (bool optional, string returnType, string entryPoint, params string [] arguments)
+		{
+			ReturnType = returnType;
+			EntryPoint = entryPoint;
+			Optional = optional;
+
+			if (arguments == null || arguments.Length == 0)
+				return;
+
+			if (arguments.Length % 2 != 0)
+				throw new Exception ("Export arguments params must be an even " +
+					"number to form a set of (type, name) tuples");
+
+			Arguments = new List<Arg> ();
+			for (var i = 0; i < arguments.Length; i += 2)
+				Arguments.Add (new Arg {
+					Type = arguments [i],
+					Name = arguments [i + 1]
+				});
+		}
+
+		string FormatArgs (string empty, bool nameOnly)
+		{
+			if (Arguments == null || Arguments.Count == 0)
+				return empty;
+
+			var builder = new StringBuilder ();
+
+			foreach (var arg in Arguments) {
+				if (!nameOnly) {
+					builder.Append (arg.Type);
+					builder.Append (' ');
+				}
+			
+				builder.Append (arg.Name);
+				builder.Append (", ");
+			}
+
+			builder.Length -= 2;
+
+			return builder.ToString ();
+		}
+
+		public string ArgumentSignature {
+			get { return FormatArgs ("void", nameOnly: false); }
+		}
+
+		public string ArgumentNames {
+			get { return FormatArgs (String.Empty, nameOnly: true); }
+		}
+	}
+#>

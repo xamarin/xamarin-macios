@@ -1,0 +1,10 @@
+.libs
+zlib-helper.c
+delegates.inc
+Delegates.generated.cs
+delegates.h
+mono-runtime.m
+xamarin/mono-runtime.h
+app-main.m
+watchextension-main.m
+bindings-generated.m

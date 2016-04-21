@@ -1,0 +1,37 @@
+// vim: set filetype=c :
+//
+// delegates.m:
+//
+// Authors:
+//   Rolf Bjarne Kvinge <rolf@xamarin.com>
+//
+// Copyright 2013-2014 Xamarin Inc.
+//
+<#@ include file="delegates.t4" #>
+
+/*
+ * This file was generated from delegates.inc.t4, any modifications will be lost once this file is re-generated.
+ */
+
+#include "delegates.h"
+
+<# foreach (var d in delegates) { #>
+typedef <#= d.CReturnType #><#= d.AlignCReturnType #> (*func_<#= d.EntryPoint #>)<#= d.AlignEntryPoint #> (<#= d.CArgumentSignature #>);
+<# } #>
+
+struct Delegates {
+<# foreach (var d in delegates) { #>
+	func_<#= d.EntryPoint #><#= d.AlignEntryPoint #> <#= d.EntryPoint.Substring ("xamarin_".Length) #>;
+<# } #>
+};
+
+static struct Delegates delegates = { 0 };
+
+<# foreach (var d in delegates) { #>
+<#= d.CReturnType #>
+<#= d.EntryPoint #> (<#= d.CArgumentSignature #>)
+{
+	<# if (d.CReturnType != "void") { #>return <# } #>delegates.<#= d.EntryPoint.Substring ("xamarin_".Length) #> (<#= d.CArgumentNames #>);
+}
+
+<# } #>

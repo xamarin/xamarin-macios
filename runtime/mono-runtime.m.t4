@@ -1,0 +1,135 @@
+// vim: set filetype=c :
+//
+// mono-runtime.m: Header file to allow dynamic loading of Mono to
+// be transparent from code including the mono-runtime.h header.
+//
+// Authors:
+//   Rolf Bjarne Kvinge <rolf@xamarin.com>
+//   Aaron Bockover <abock@xamarin.com>
+//
+// Copyright 2013-2014 Xamarin Inc.
+//
+<#@ include file="exports.t4" #>
+
+#ifdef DYNAMIC_MONO_RUNTIME
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+#include <dlfcn.h>
+
+#include "xamarin/main.h"
+#include "xamarin/mono-runtime.h"
+#include "xamarin/runtime.h"
+
+<# foreach (var export in exports) { #>
+typedef <#= export.ReturnType #> (* <#= export.EntryPoint #>_def) (<#= export.ArgumentSignature #>);
+<# } #>
+
+<# foreach (var export in exports) { #>
+<#= export.EntryPoint #>_def <#= export.EntryPoint #>_func = NULL;
+<# } #>
+
+static char *
+_strdup_cat (const char *a, const char *b, int *total_length)
+{
+	int a_len, b_len;
+	char *result;
+
+	*total_length = 0;
+
+	if (a == NULL || b == NULL)
+		return NULL;
+
+	a_len = strlen (a);
+	b_len = strlen (b);
+	*total_length = a_len + b_len;
+	if (*total_length <= 0)
+		return NULL;
+
+	result = (char *)malloc (*total_length + 1);
+	memcpy (result, a, a_len);
+	memcpy (result + a_len, b, b_len);
+	result [*total_length] = 0;
+
+	return result;
+}
+
+char *
+xamarin_get_mono_runtime_build_info ()
+{
+	if (!mono_get_runtime_build_info_func)
+		return NULL;
+	return mono_get_runtime_build_info_func ();
+}
+
+static char xamarin_dynamic_runtime_initialized = 0;
+
+const char *
+xamarin_initialize_dynamic_runtime (const char *mono_runtime_prefix)
+{
+	if (xamarin_dynamic_runtime_initialized)
+		return NULL;
+
+	void *libmono = NULL;
+	const char *errmsg = NULL;
+
+	// Check if we already have mono available.
+	// RTLD_DEFAULT is the catch-all, but it's slow (according to the dlsym man page),
+	// so try MAIN_ONLY and SELF first to see if we can optimize a bit.
+	if (dlsym (RTLD_MAIN_ONLY, "mono_get_runtime_build_info")) {
+		libmono = RTLD_MAIN_ONLY;
+	} else if (dlsym (RTLD_SELF, "mono_get_runtime_build_info")) {
+		libmono = RTLD_SELF;
+	} else if (dlsym (RTLD_DEFAULT, "mono_get_runtime_build_info")) {
+		libmono = RTLD_DEFAULT;
+	} else if (mono_runtime_prefix != NULL) {
+		int dylib_length;
+		char *dylib = _strdup_cat (mono_runtime_prefix, "/lib/libmonosgen-2.0.dylib", &dylib_length);
+		if (dylib == NULL || dylib_length <= 0 || *dylib == 0)
+			return "Unable to construct path to Mono framework runtime library";
+
+		libmono = dlopen (dylib, RTLD_LAZY);
+		free (dylib);
+	}
+
+	if (libmono == NULL) {
+		const char *dlopen_err = dlerror ();
+		if (dlopen_err != NULL)
+			NSLog (@": dlopen error: %s", dlopen_err);
+		return "This application requires the Mono framework.";
+	}
+
+
+<# foreach (var export in exports) { #>
+	<#= export.EntryPoint #>_func = (<#= export.EntryPoint #>_def) dlsym (libmono, "<#= export.EntryPoint #>");
+<# if (!export.Optional) { #>
+	if (<#= export.EntryPoint #>_func == NULL) {
+		fprintf (stderr, "Could not load <#= export.EntryPoint #>\n");
+		errmsg = "Failed to load the Mono framework.";
+	}
+<# } #>
+
+<# } #>
+	xamarin_dynamic_runtime_initialized = 1;
+
+	return errmsg;
+}
+
+<# foreach (var export in exports) { #>
+MONO_API <#= export.ReturnType #>
+<#= export.EntryPoint #> (<#= export.ArgumentSignature #>)
+{
+<# if (export.Optional) { #>
+	if (<#= export.EntryPoint #>_func == NULL)
+		xamarin_assertion_message ("Could not load <#= export.EntryPoint #>\n");
+
+<# } #>
+	return <#= export.EntryPoint #>_func (<#= export.ArgumentNames #>);
+}
+
+<# } #>
+#else
+int fix_ranlib_warning_about_no_symbols;
+#endif /* DYNAMIC_MONO_RUNTIME */

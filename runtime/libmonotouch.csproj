@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8A5B637C-E4FF-4145-B887-9347020100F4}</ProjectGuid>
+    <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>monotouch</RootNamespace>
+    <AssemblyName>monotouch</AssemblyName>
+    <UseMSBuildEngine>True</UseMSBuildEngine>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>IPHONE;MINIMAL</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateDocumentation>True</GenerateDocumentation>
+    <NoWarn>3021,3014,3003</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
+  <PropertyGroup>
+    <CscToolExe>$(MSBuildProjectDirectory)\..\src\custom-make.sh</CscToolExe>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="Makefile" />
+    <None Include="zlib-helper.c" />
+    <None Include="xamarin\main.h" />
+    <None Include="xamarin\mono-runtime.h" />
+    <None Include="xamarin\runtime.h" />
+    <None Include="xamarin\trampolines.h" />
+    <None Include="xamarin\xamarin.h" />
+    <None Include="bindings.m" />
+    <None Include="Delegates.cs.t4" />
+    <None Include="delegates.h" />
+    <None Include="delegates.h.t4" />
+    <None Include="delegates.inc" />
+    <None Include="delegates.inc.t4" />
+    <None Include="delegates.t4" />
+    <None Include="exports.t4" />
+    <None Include="mono-runtime.h.t4" />
+    <None Include="mono-runtime.m" />
+    <None Include="mono-runtime.m.t4" />
+    <None Include="monotouch-debug.h" />
+    <None Include="monotouch-debug.m" />
+    <None Include="monotouch-main.m" />
+    <None Include="xamarin-support.m" />
+    <None Include="product.h" />
+    <None Include="README.md" />
+    <None Include="runtime-internal.h" />
+    <None Include="runtime.m" />
+    <None Include="shared.h" />
+    <None Include="shared.m" />
+    <None Include="trampolines.m" />
+    <None Include="Delegates.generated.cs" />
+    <None Include="trampolines-internal.h" />
+    <None Include="trampolines-invoke.m" />
+    <None Include="trampolines-x86_64-asm.s" />
+    <None Include="trampolines-x86_64.m" />
+    <None Include="extension-main.m" />
+    <None Include="slinked-list.h" />
+    <None Include="trampolines-x86_64.h" />
+    <None Include="monotouch-support.h" />
+    <None Include="bindings.h" />
+    <None Include="trampolines-i386-asm.s" />
+    <None Include="trampolines-i386.h" />
+    <None Include="trampolines-i386.m" />
+    <None Include="trampolines-varargs.h" />
+    <None Include="trampolines-varargs.m" />
+  </ItemGroup>
+</Project>

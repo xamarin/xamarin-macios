@@ -1,0 +1,241 @@
+// vim: set filetype=c :
+//
+// mono-runtime.h: Header file to allow dynamic loading of
+// Mono to be transparent from code including this header.
+//
+// Authors:
+//   Rolf Bjarne Kvinge <rolf@xamarin.com>
+//   Aaron Bockover <abock@xamarin.com>
+//
+// Copyright 2013-2014 Xamarin Inc.
+//
+<#@ include file="exports.t4" #>
+
+#ifndef __MONO_RUNTIME__
+#define __MONO_RUNTIME__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* This is copied from eglib's header files */
+typedef unsigned int   guint;
+typedef int32_t        gboolean;
+typedef int32_t        gint32;
+typedef uint32_t       guint32;
+typedef char           gchar;
+typedef void *         gpointer;
+typedef const void *   gconstpointer;
+typedef guint    (*GHashFunc)      (gconstpointer key);
+typedef gboolean (*GEqualFunc)     (gconstpointer a, gconstpointer b);
+
+#ifndef GPOINTER_TO_INT
+#define GPOINTER_TO_INT(p) ((int)  (long) (p))
+#endif
+
+#ifndef GINT_TO_POINTER
+#define GINT_TO_POINTER(i) ((void *) (long) (i))
+#endif
+
+#include <stdint.h>
+
+const char * xamarin_initialize_dynamic_runtime (const char *mono_runtime_prefix);
+char *xamarin_get_mono_runtime_build_info (); // returns NULL if libmono couldn't be found (mono_get_runtime_build_info doesn't exist).
+
+
+#ifdef DYNAMIC_MONO_RUNTIME
+<# foreach (var export in exports) { #>
+#define <#= export.EntryPoint #> <#= export.EntryPoint #>_impl
+<# } #>
+#endif
+
+/* This is copied from mono's header files */
+
+/* utils/mono-publib.h */
+#define MONO_API
+typedef int32_t	mono_bool;
+
+/* metadata/image.h */
+typedef struct _MonoAssembly MonoAssembly;
+typedef struct _MonoAssemblyName MonoAssemblyName;
+typedef struct _MonoImage MonoImage;
+
+typedef enum {
+	MONO_IMAGE_OK,
+	MONO_IMAGE_ERROR_ERRNO,
+	MONO_IMAGE_MISSING_ASSEMBLYREF,
+	MONO_IMAGE_IMAGE_INVALID
+} MonoImageOpenStatus;
+
+/* metadata/metadata.h */
+typedef struct _MonoClass MonoClass;
+typedef struct _MonoDomain MonoDomain;
+typedef struct _MonoMethod MonoMethod;
+typedef struct _MonoMethodSignature MonoMethodSignature;
+typedef struct _MonoType MonoType;
+
+/* metadata/class.h */
+typedef struct MonoVTable MonoVTable;
+
+typedef struct _MonoClassField MonoClassField;
+
+/* metadata/object.h */
+typedef struct _MonoString MonoString;
+typedef struct _MonoArray MonoArray;
+typedef struct _MonoReflectionMethod MonoReflectionMethod;
+typedef struct _MonoReflectionAssembly MonoReflectionAssembly;
+typedef struct _MonoReflectionType MonoReflectionType;
+typedef struct _MonoException MonoException;
+typedef struct _MonoThread MonoThread;
+typedef struct _MonoThreadsSync MonoThreadsSync;
+typedef struct {
+	MonoVTable *vtable;
+	MonoThreadsSync *synchronisation;
+} MonoObject;
+
+typedef struct _MonoReferenceQueue MonoReferenceQueue;
+typedef void (*mono_reference_queue_callback) (void *user_data);
+
+#define mono_array_addr(array,type,index) ((type*)(void*) mono_array_addr_with_size (array, sizeof (type), index))
+#define mono_array_get(array,type,index) ( *(type*)mono_array_addr ((array), type, (index)) )
+#define mono_array_set(array,type,index,value)	\
+	do {	\
+		type *__p = (type *) mono_array_addr ((array), type, (index));	\
+		*__p = (value);	\
+	} while (0)
+
+/* metadata/assembly.h */
+
+typedef MonoAssembly * (*MonoAssemblyPreLoadFunc) (MonoAssemblyName *aname, char **assemblies_path, void* user_data);
+
+/* metadata/profiler.h */
+typedef struct _MonoProfiler MonoProfiler;
+
+typedef enum {
+	MONO_PROFILE_NONE = 0,
+	MONO_PROFILE_APPDOMAIN_EVENTS = 1 << 0,
+	MONO_PROFILE_ASSEMBLY_EVENTS  = 1 << 1,
+	MONO_PROFILE_MODULE_EVENTS    = 1 << 2,
+	MONO_PROFILE_CLASS_EVENTS     = 1 << 3,
+	MONO_PROFILE_JIT_COMPILATION  = 1 << 4,
+	MONO_PROFILE_INLINING         = 1 << 5,
+	MONO_PROFILE_EXCEPTIONS       = 1 << 6,
+	MONO_PROFILE_ALLOCATIONS      = 1 << 7,
+	MONO_PROFILE_GC               = 1 << 8,
+	MONO_PROFILE_THREADS          = 1 << 9,
+	MONO_PROFILE_REMOTING         = 1 << 10,
+	MONO_PROFILE_TRANSITIONS      = 1 << 11,
+	MONO_PROFILE_ENTER_LEAVE      = 1 << 12,
+	MONO_PROFILE_COVERAGE         = 1 << 13,
+	MONO_PROFILE_INS_COVERAGE     = 1 << 14,
+	MONO_PROFILE_STATISTICAL      = 1 << 15,
+	MONO_PROFILE_METHOD_EVENTS    = 1 << 16,
+	MONO_PROFILE_MONITOR_EVENTS   = 1 << 17,
+	MONO_PROFILE_IOMAP_EVENTS     = 1 << 18, /* this should likely be removed, too */
+	MONO_PROFILE_GC_MOVES         = 1 << 19,
+	MONO_PROFILE_GC_ROOTS         = 1 << 20
+} MonoProfileFlags;
+
+typedef enum {
+	MONO_GC_EVENT_START,
+	MONO_GC_EVENT_MARK_START,
+	MONO_GC_EVENT_MARK_END,
+	MONO_GC_EVENT_RECLAIM_START,
+	MONO_GC_EVENT_RECLAIM_END,
+	MONO_GC_EVENT_END,
+	MONO_GC_EVENT_PRE_STOP_WORLD,
+	MONO_GC_EVENT_POST_STOP_WORLD,
+	MONO_GC_EVENT_PRE_START_WORLD,
+	MONO_GC_EVENT_POST_START_WORLD
+} MonoGCEvent;
+
+typedef void (*MonoProfileFunc) (MonoProfiler *prof);
+typedef void (*MonoProfileThreadFunc) (MonoProfiler *prof, uintptr_t tid);
+typedef void (*MonoProfileGCFunc)         (MonoProfiler *prof, MonoGCEvent event, int generation);
+typedef void (*MonoProfileGCResizeFunc)   (MonoProfiler *prof, int64_t new_size);
+
+/* metadata/mono-debug.h */
+
+typedef enum {
+	MONO_DEBUG_FORMAT_NONE,
+	MONO_DEBUG_FORMAT_MONO,
+	/* Deprecated, the mdb debugger is not longer supported. */
+	MONO_DEBUG_FORMAT_DEBUGGER
+} MonoDebugFormat;
+
+/* metadata/mini.h */
+typedef gboolean (*MonoExceptionFrameWalk)      (MonoMethod *method, gpointer ip, size_t native_offset, gboolean managed, gpointer user_data);
+typedef void  (*MonoUnhandledExceptionFunc)         (MonoObject *exc, gpointer user_data);
+
+typedef unsigned char* (*MonoLoadAotDataFunc)          (MonoAssembly *assembly, int size, gpointer user_data, void **out_handle);
+typedef void  (*MonoFreeAotDataFunc)          (MonoAssembly *assembly, int size, gpointer user_data, void *handle);
+
+/*
+ * From internal headers
+ */
+
+/* metadata/gc-internal.h */
+
+enum {
+   MONO_GC_FINALIZER_EXTENSION_VERSION = 1,
+};
+
+typedef struct {
+	int version;
+	gboolean (*is_class_finalization_aware) (MonoClass *klass);
+	void (*object_queued_for_finalization) (MonoObject *object);
+} MonoGCFinalizerCallbacks;
+
+/* metadata/sgen-toggleref.h */
+
+typedef enum {
+	MONO_TOGGLE_REF_DROP,
+	MONO_TOGGLE_REF_STRONG,
+	MONO_TOGGLE_REF_WEAK
+} MonoToggleRefStatus;
+
+typedef MonoToggleRefStatus (*MonoToggleRefCallback) (MonoObject *obj);
+
+/* metadata/mono-hash.h */
+
+typedef enum {
+	MONO_HASH_KEY_GC = 1,
+	MONO_HASH_VALUE_GC = 2,
+	MONO_HASH_KEY_VALUE_GC = MONO_HASH_KEY_GC | MONO_HASH_VALUE_GC,
+} MonoGHashGCType;
+
+typedef struct _MonoGHashTable MonoGHashTable;
+
+/* utils/mono-logger.h */
+
+typedef void (*MonoLogCallback) (const char *log_domain, const char *log_level, const char *message, mono_bool fatal, void *user_data);
+typedef void (*MonoPrintCallback) (const char *string, mono_bool is_stdout);
+
+/* mini/jit.h */
+typedef enum {
+	MONO_AOT_MODE_NONE,
+	MONO_AOT_MODE_NORMAL,
+	MONO_AOT_MODE_HYBRID,
+	MONO_AOT_MODE_FULL,
+	MONO_AOT_MODE_LLVMONLY
+} MonoAotMode;
+
+/* not in any header */
+
+void mono_gc_init_finalizer_thread ();
+
+/*
+ * The functions we want to expose
+ */
+
+<# foreach (var export in exports) { #>
+
+MONO_API <#= export.ReturnType #>
+<#= export.EntryPoint #> (<#= export.ArgumentSignature #>);
+<# } #>
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
+
+#endif /* __MONO_RUNTIME__ */

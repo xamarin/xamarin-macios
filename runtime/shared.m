@@ -1,0 +1,273 @@
+//
+// shared.m: Shared native code between Xamarin.iOS and Xamarin.Mac.
+// 
+// 
+// Authors:
+//   Rolf Bjarne Kvinge <rolf@xamarin.com>
+//
+// Copyright 2013 Xamarin Inc. 
+//
+
+#include <objc/objc.h>
+#include <objc/runtime.h>
+#include <objc/message.h>
+#include <pthread.h>
+
+#import <Foundation/Foundation.h>
+
+#include "xamarin/xamarin.h"
+#include "shared.h"
+
+/*
+ * XamarinNSThreadObject and xamarin_init_nsthread is a fix for a problem that
+ * occurs because NSThread will retain the 'object' argument to the
+ * initWithTarget:selector:object: selector, and release it using a tls dtor.
+ * The issue is that calling release on that object may end up in managed code,
+ * but calling the mono runtime from a tls dtor is not allowed.
+ *
+ * So we create a native wrapper object which is the object that ends up released
+ * on the tls dtor, and then it forwards the release of the managed object to
+ * the main thread.
+ * 
+ * Bug: https://bugzilla.xamarin.com/show_bug.cgi?id=13612
+ */
+
+@interface XamarinNSThreadObject : NSObject
+{
+	void *target;
+	SEL selector;
+	id argument;
+	bool is_direct_binding;
+}
+-(id) initWithData: (void *) targ selector:(SEL) sel argument:(id) arg is_direct_binding:(bool) is_direct;
+-(void) start: (id) arg;
+-(void) dealloc;
+@end
+
+@implementation XamarinNSThreadObject
+{
+}
+-(id) initWithData: (void *) targ selector:(SEL) sel argument:(id) arg is_direct_binding:(bool) is_direct;
+{
+	target = targ;
+	if (is_direct)
+		[((id) targ) retain];
+	selector = sel;
+	argument = [arg retain];
+	is_direct_binding = is_direct;
+	return self;
+}
+
+-(void) start: (id) arg;
+{
+	if (is_direct_binding) {
+		id (*invoke) (id, SEL, id) = (id (*)(id, SEL, id)) objc_msgSend;
+		invoke ((id) target, selector, argument);
+	} else {
+		id (*invoke) (struct objc_super *, SEL, id) = (id (*)(struct objc_super *, SEL, id)) objc_msgSendSuper;
+		invoke ((struct objc_super *) target, selector, argument);
+	}
+}
+
+-(void) dealloc;
+{
+	// Cast to void* so that ObjC doesn't do any funky retain/release
+	// on these objects when capturing them for the block, since we
+	// may be on a thread where we cannot end up in the mono runtime,
+	// and retain/release may do exactly that.
+	void *targ = (void *) (is_direct_binding ? target : nil);
+	void *arg = (void *) argument;
+	dispatch_async (dispatch_get_main_queue (), ^{
+		[((id) targ) release];
+		[((id) arg) release];
+	});
+	[super dealloc];
+}
+@end
+
+id
+xamarin_init_nsthread (id obj, bool is_direct, id target, SEL sel, id arg)
+{
+	XamarinNSThreadObject *wrap = [[[XamarinNSThreadObject alloc] initWithData: target selector: sel argument: arg is_direct_binding: is_direct] autorelease];
+	id (*invoke) (id, SEL, id, SEL, id) = (id (*)(id, SEL, id, SEL, id)) objc_msgSend;
+	return invoke (obj, @selector(initWithTarget:selector:object:), wrap, @selector(start:), nil);
+}
+
+/* Protecting the Cocoa Frameworks
+ *
+ * To let Cocoa know that you intend to use multiple threads, all you have
+ * to do is spawn a single thread using the NSThread class and let that
+ * thread immediately exit. Your thread entry point need not do anything.
+ * Just the act of spawning a thread using NSThread is enough to ensure that
+ * the locks needed by the Cocoa frameworks are put in place.
+ *
+ * Source: https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/Multithreading/CreatingThreads/CreatingThreads.html#//apple_ref/doc/uid/20000738-125024
+ *
+ * Ref: https://bugzilla.xamarin.com/show_bug.cgi?id=798
+ */
+
+@interface CocoaThreadInitializer : NSObject
+{
+	init_cocoa_func *the_func;
+}
+-(void) entryPoint: (NSObject *) obj;
+-(id) initWithFunc: (init_cocoa_func *) func;
+@end
+
+@implementation CocoaThreadInitializer
+{
+}
+-(void) entryPoint: (NSObject *) obj
+{
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	if (the_func != NULL)
+		the_func ();
+	[pool drain];
+}
+-(id) initWithFunc: (init_cocoa_func *) func;
+{
+	self = [super init];
+	if (self != nil) {
+		the_func = func;
+		[NSThread detachNewThreadSelector:@selector(entryPoint:) toTarget:self withObject:nil];
+	}
+	return self;
+}
+@end
+
+void
+initialize_cocoa_threads (init_cocoa_func *func)
+{
+	[[[CocoaThreadInitializer alloc] initWithFunc: func] autorelease];
+}
+
+/* Wrapping threads with NSAutoreleasePool
+ *
+ * We must create an NSAutoreleasePool for each thread, so users
+ * don't have to do it manually.
+ * 
+ * Use mono's profiling API to get notified for thread start/stop,
+ * and create a pool that spans the thread's entire lifetime.
+ */
+
+static CFMutableDictionaryRef xamarin_thread_hash = NULL;
+static pthread_mutex_t thread_hash_lock = PTHREAD_MUTEX_INITIALIZER;
+
+struct _MonoProfiler {
+	int dummy;
+};
+
+static MonoProfiler*
+create_thread_helper ()
+{
+	return (MonoProfiler *)malloc (sizeof (MonoProfiler));
+}
+
+static void
+xamarin_thread_start (void *user_data)
+{
+	NSAutoreleasePool *pool;
+
+	if (mono_thread_is_foreign (mono_thread_current ()))
+		return;
+
+	pool = [[NSAutoreleasePool alloc] init];
+
+	pthread_mutex_lock (&thread_hash_lock);
+
+	CFDictionarySetValue (xamarin_thread_hash, GINT_TO_POINTER (pthread_self ()), pool);
+
+	pthread_mutex_unlock (&thread_hash_lock);
+}
+	
+static void
+xamarin_thread_finish (void *user_data)
+{
+	NSAutoreleasePool *pool;
+
+	/* Don't drain the pool while holding the thread hash lock. */
+	pthread_mutex_lock (&thread_hash_lock);
+
+	pool = (NSAutoreleasePool *) CFDictionaryGetValue (xamarin_thread_hash, GINT_TO_POINTER (pthread_self ()));
+	if (pool)
+		CFDictionaryRemoveValue (xamarin_thread_hash, GINT_TO_POINTER (pthread_self ()));
+
+	pthread_mutex_unlock (&thread_hash_lock);
+
+	if (pool)
+		[pool release];
+}
+
+static void
+thread_start (MonoProfiler *prof, uintptr_t tid)
+{
+	xamarin_thread_start (NULL);
+}
+
+static void
+thread_end (MonoProfiler *prof, uintptr_t tid)
+{
+	xamarin_thread_finish (NULL);
+}
+
+void
+install_nsautoreleasepool_hooks ()
+{
+	xamarin_thread_hash = CFDictionaryCreateMutable (kCFAllocatorDefault, 0, NULL, NULL);
+
+	mono_profiler_install (create_thread_helper (), NULL);
+	mono_profiler_install_thread (thread_start, thread_end);
+	mono_profiler_set_events (MONO_PROFILE_THREADS);
+}
+	
+/* Threads & Blocks
+ * 
+ * At the moment we can't execute managed code in the dispose method for a block (the process may deadlock,
+ * depending on the thread the dispose method is called on).
+ * 
+ * ref: https://bugzilla.xamarin.com/show_bug.cgi?id=11286
+ * ref: https://bugzilla.xamarin.com/show_bug.cgi?id=14954
+ * 
+ */ 
+
+static void
+xamarin_dispose_helper (void *a)
+{
+	struct Block_literal *bl = (struct Block_literal *) a;
+	int handle = GPOINTER_TO_INT (bl->global_handle);
+	mono_gchandle_free (handle);
+	bl->global_handle = GINT_TO_POINTER (-1);
+	free (bl->descriptor); // allocated using Marshal.AllocHGlobal (if NSStackBlock) or malloc (if copied through xamarin_copy_helper).
+	bl->descriptor = NULL;
+}
+
+static void
+xamarin_copy_helper (void *dst, void *src)
+{
+	struct Block_literal *source = (struct Block_literal *) src;
+	struct Block_literal *target = (struct Block_literal *) dst;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wint-to-void-pointer-cast"
+	target->global_handle = GINT_TO_POINTER (mono_gchandle_new (mono_gchandle_get_target (GPOINTER_TO_INT (source->local_handle)), FALSE));
+#pragma clang diagnostic pop
+
+	int len = source->descriptor->xamarin_size;
+	target->descriptor = (struct Xamarin_block_descriptor *) malloc (len);
+	memcpy (target->descriptor, source->descriptor, len);
+}
+
+struct Xamarin_block_descriptor xamarin_block_descriptor = 
+{
+	0,
+	sizeof (struct Block_literal),
+	xamarin_copy_helper,
+	xamarin_dispose_helper,
+	NULL,
+	0,
+};
+
+struct Xamarin_block_descriptor *
+xamarin_get_block_descriptor ()
+{
+	return &xamarin_block_descriptor;
+}

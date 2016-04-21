@@ -1,0 +1,291 @@
+<# // vim: set filetype=cs :
+#>
+<#@ template language="C#" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#
+	var delegates = new XDelegates {
+		new XDelegate ("void", "void", "xamarin_register_nsobject",
+			"MonoObject *", "IntPtr", "managed_obj",
+			"id", "IntPtr", "native_obj"
+		) { WrappedManagedFunction = "RegisterNSObject" },
+
+		new XDelegate ("void", "void", "xamarin_register_assembly",
+			"MonoReflectionAssembly *", "IntPtr", "assembly"
+		) { WrappedManagedFunction = "RegisterAssembly" },
+
+		new XDelegate ("void", "void", "xamarin_throw_ns_exception",
+			"NSException *", "IntPtr", "exc"
+		) { WrappedManagedFunction = "ThrowNSException" },
+
+		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_block_wrapper_creator",
+			"MonoObject *", "IntPtr", "method",
+			"int", "int", "parameter"
+		) { WrappedManagedFunction = "GetBlockWrapperCreator" },
+
+		new XDelegate ("MonoObject *", "IntPtr", "xamarin_create_block_proxy",
+			"MonoObject *", "IntPtr", "method",
+			"void *", "IntPtr", "block"
+		) { WrappedManagedFunction = "CreateBlockProxy" },
+
+		new XDelegate ("id", "IntPtr", "xamarin_create_delegate_proxy",
+			"MonoObject *", "IntPtr", "method",
+			"MonoObject *", "IntPtr", "block"
+		) { WrappedManagedFunction = "CreateDelegateProxy" },
+
+		new XDelegate ("void", "void", "xamarin_register_entry_assembly",
+			"MonoReflectionAssembly *", "IntPtr", "assembly"
+		) { WrappedManagedFunction = "RegisterEntryAssembly" },
+
+		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_class",
+			"Class", "IntPtr", "ptr"
+		) { WrappedManagedFunction = "GetClass" },
+
+		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_selector",
+			"SEL", "IntPtr", "ptr"
+		) { WrappedManagedFunction = "GetSelector" },
+
+		new XDelegate ("Class", "IntPtr", "xamarin_get_class_handle",
+			"MonoObject *", "IntPtr", "obj"
+		) { WrappedManagedFunction = "GetClassHandle" },
+
+		new XDelegate ("SEL", "IntPtr", "xamarin_get_selector_handle",
+			"MonoObject *", "IntPtr", "obj"
+		) { WrappedManagedFunction = "GetSelectorHandle" },
+
+		new XDelegate ("MethodDescription", "UnmanagedMethodDescription", "xamarin_get_method_for_selector",
+			"Class", "IntPtr", "cls",
+			"SEL", "IntPtr", "sel"
+		) { WrappedManagedFunction = "GetMethodForSelector" },
+
+		new XDelegate ("MonoObject *", "IntPtr", "xamarin_try_get_nsobject",
+			"id", "IntPtr", "obj"
+		) { WrappedManagedFunction = "TryGetNSObjectWrapped" },
+
+		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_nsobject",
+			"id", "IntPtr", "obj"
+		) { WrappedManagedFunction = "GetNSObjectWrapped" },
+
+		new XDelegate ("id", "IntPtr", "xamarin_get_handle_for_inativeobject",
+			"MonoObject *", "IntPtr", "obj"
+		) { WrappedManagedFunction = "GetHandleForINativeObject" },
+
+		new XDelegate ("void", "void", "xamarin_unregister_nsobject",
+			"id", "IntPtr", "native_obj",
+			"MonoObject *", "IntPtr", "managed_obj"
+		) { WrappedManagedFunction = "UnregisterNSObject" },
+
+		new XDelegate ("MonoReflectionMethod *", "IntPtr", "xamarin_get_method_direct",
+			"const char *", "IntPtr", "typeptr",
+			"const char *", "IntPtr", "methodptr",
+			"int", "int", "paramCount",
+			"const char **", "IntPtr*", "paramptr"
+		) { WrappedManagedFunction = "GetMethodDirect" },
+
+		new XDelegate ("MonoReflectionMethod *", "IntPtr", "xamarin_get_generic_method_direct",
+			"MonoObject *", "IntPtr", "obj",
+			"const char *", "IntPtr", "typeptr",
+			"const char *", "IntPtr", "methodptr",
+			"int", "int", "paramCount",
+			"const char **", "IntPtr*", "paramptr"
+		) { WrappedManagedFunction = "GetGenericMethodDirect" },
+
+		new XDelegate ("MonoObject *", "IntPtr", "xamarin_try_get_or_construct_nsobject",
+			"id", "IntPtr", "obj"
+		) { WrappedManagedFunction = "TryGetOrConstructNSObjectWrapped" },
+
+		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_inative_object_dynamic",
+			"id", "IntPtr", "obj",
+			"bool", "bool", "owns",
+			"void *", "IntPtr", "type"
+		) { WrappedManagedFunction = "GetINativeObject_Dynamic" },
+
+		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_inative_object_static",
+			"id", "IntPtr", "obj",
+			"bool", "bool", "owns",
+			"const char *", "string", "type_name",
+			"const char *", "string", "iface_name"
+		) { WrappedManagedFunction = "GetINativeObject_Static" },
+
+		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_nsobject_with_type",
+			"id", "IntPtr", "obj",
+			"void *", "IntPtr", "type",
+			"int32_t *", "out bool", "created"
+		) { WrappedManagedFunction = "GetNSObjectWithType" },
+
+		new XDelegate ("void", "void", "xamarin_dispose",
+			"MonoObject *", "IntPtr", "mobj"
+		) { WrappedManagedFunction = "Dispose" },
+
+		new XDelegate ("bool", "bool", "xamarin_is_parameter_transient",
+			"MonoReflectionMethod *", "IntPtr", "method",
+			"int", "int", "parameter"
+		) { WrappedManagedFunction = "IsParameterTransient" },
+
+		new XDelegate ("bool", "bool", "xamarin_is_parameter_out",
+			"MonoReflectionMethod *", "IntPtr", "method",
+			"int", "int", "parameter"
+		) { WrappedManagedFunction = "IsParameterOut" },
+
+		new XDelegate ("MethodDescription", "UnmanagedMethodDescription", "xamarin_get_method_and_object_for_selector",
+			"Class", "IntPtr", "cls",
+			"SEL", "IntPtr", "sel",
+			"id", "IntPtr", "obj",
+			"MonoObject **", "ref IntPtr", "mthis"
+		) { WrappedManagedFunction = "GetMethodAndObjectForSelector" },
+
+		new XDelegate ("void", "void", "xamarin_throw_product_exception",
+			"int", "int", "code",
+			"const char *", "string", "message"
+		) { WrappedManagedFunction = "ThrowProductException" },
+
+		new XDelegate ("char *", "IntPtr", "xamarin_reflection_type_get_full_name",
+			"MonoReflectionType *", "IntPtr", "type"
+		) { WrappedManagedFunction = "TypeGetFullName" },
+
+		new XDelegate ("char *", "IntPtr", "xamarin_lookup_managed_type_name",
+			"Class", "IntPtr", "klass"
+		) { WrappedManagedFunction = "LookupManagedTypeName" },
+	};
+	delegates.CalculateLengths ();
+#><#+
+	class Arg
+	{
+		public string CType;
+		public string MType;
+		public string Name;
+	}
+
+	class XDelegates : List<XDelegate>
+	{
+		public void CalculateLengths ()
+		{
+			foreach (var x in this) {
+				MaxEntryPointLength = Math.Max (MaxEntryPointLength, x.EntryPoint.Length);
+				MaxCReturnTypeLength = Math.Max (MaxCReturnTypeLength, x.CReturnType.Length);
+				x.Delegates = this;
+			}
+		}
+
+		public int MaxEntryPointLength;
+		public int MaxCReturnTypeLength;
+	}
+
+	class XDelegate
+	{
+		public string CReturnType;
+		public string MReturnType;
+		public string EntryPoint;
+		public List<Arg> Arguments;
+		public string WrappedManagedFunction;
+
+		public XDelegates Delegates;
+
+		public XDelegate (string cReturnType, string mReturnType, string entryPoint, params string [] arguments)
+		{
+			CReturnType = cReturnType;
+			MReturnType = mReturnType;
+			EntryPoint = entryPoint;
+
+			if (arguments == null || arguments.Length == 0)
+				return;
+
+			if (arguments.Length % 3 != 0)
+				throw new Exception (string.Format ("Export arguments params must be a multiple of 3 to form a set of (c type, managed name, name) triples for {0}", entryPoint));
+
+			if (!entryPoint.StartsWith ("xamarin_"))
+				throw new Exception ("All entry points must start with 'xamarin_'");
+
+			Arguments = new List<Arg> ();
+			for (var i = 0; i < arguments.Length; i += 3)
+				Arguments.Add (new Arg {
+					CType = arguments [i],
+					MType = arguments [i + 1],
+					Name = arguments [i + 2]
+				});
+		}
+
+		public string SimpleEntryPoint {
+			get {
+				return EntryPoint.Substring ("xamarin_".Length);
+			}
+		}
+
+		public string AlignEntryPoint {
+			get {
+				return new string (' ', Delegates.MaxEntryPointLength - EntryPoint.Length);
+			}
+		}
+
+		public string AlignCReturnType {
+			get {
+				return new string (' ', Delegates.MaxCReturnTypeLength - CReturnType.Length);
+			}
+		}
+
+		string CFormatArgs (string empty, bool nameOnly)
+		{
+			if (Arguments == null || Arguments.Count == 0)
+				return empty;
+
+			var builder = new StringBuilder ();
+
+			foreach (var arg in Arguments) {
+				if (!nameOnly) {
+					builder.Append (arg.CType);
+					builder.Append (' ');
+				}
+			
+				builder.Append (arg.Name);
+				builder.Append (", ");
+			}
+
+			builder.Length -= 2;
+
+			return builder.ToString ();
+		}
+
+		string MFormatArgs (string empty, bool nameOnly)
+		{
+			if (Arguments == null || Arguments.Count == 0)
+				return empty;
+
+			var builder = new StringBuilder ();
+
+			foreach (var arg in Arguments) {
+				if (!nameOnly) {
+					builder.Append (arg.MType);
+					builder.Append (' ');
+				} else if (arg.MType.StartsWith ("out ")) {
+					builder.Append ("out ");
+				} else if (arg.MType.StartsWith ("ref ")) {
+					builder.Append ("ref ");
+				}
+			
+				builder.Append (arg.Name);
+				builder.Append (", ");
+			}
+
+			builder.Length -= 2;
+
+			return builder.ToString ();
+		}
+
+		public string CArgumentSignature {
+			get { return CFormatArgs ("void", nameOnly: false); }
+		}
+
+		public string CArgumentNames {
+			get { return CFormatArgs (String.Empty, nameOnly: true); }
+		}
+
+		public string MArgumentSignature {
+			get { return MFormatArgs ("", nameOnly: false); }
+		}
+
+		public string MArgumentNames {
+			get { return MFormatArgs (String.Empty, nameOnly: true); }
+		}
+	}
+#>

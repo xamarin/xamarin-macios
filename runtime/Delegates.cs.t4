@@ -1,0 +1,59 @@
+// vim: set filetype=c :
+//
+// Delegates.generated.cs:
+//
+// Authors:
+//   Rolf Bjarne Kvinge <rolf@xamarin.com>
+//
+// Copyright 2013-2014 Xamarin Inc.
+//
+
+/*
+ * This file was generated from Delegates.cs.t4, any modifications will be lost once this file is re-generated.
+ */
+
+<#@ include file="delegates.t4" #>
+#if !COREBUILD
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Runtime.InteropServices;
+
+using XamCore.Foundation;
+using XamCore.Registrar;
+
+namespace XamCore.ObjCRuntime {
+	public unsafe partial class Runtime {
+		
+<# foreach (var d in delegates) { #>
+		internal delegate <#= d.MReturnType #> <#= d.SimpleEntryPoint #>_delegate (<#= d.MArgumentSignature #>);
+<# } #>
+
+		internal struct Delegates {
+<# foreach (var d in delegates) { #>
+			public IntPtr <#= d.SimpleEntryPoint #>;
+<# } #>
+		}
+
+<# 		foreach (var d in delegates) { #>
+		[MonoPInvokeCallback (typeof (<#= d.SimpleEntryPoint #>_delegate))]
+		static <#= d.MReturnType #> <#= d.SimpleEntryPoint #> (<#= d.MArgumentSignature #>) 
+		{	
+<# if (string.IsNullOrEmpty (d.WrappedManagedFunction)) { #>
+			throw new NotImplementedException ();
+<# } else { #>
+			<# if (d.MReturnType != "void") { #>return <# } #><#=d.WrappedManagedFunction#> (<#=d.MArgumentNames#>);
+<# } #>
+		}
+
+<# } #>
+
+		static void RegisterDelegates (ref InitializationOptions options)
+		{
+<# foreach (var d in delegates) { #>
+			options.Delegates.<#= d.SimpleEntryPoint #> = GetFunctionPointer (new <#= d.SimpleEntryPoint #>_delegate (<#= d.SimpleEntryPoint #>));
+<# } #>
+		}
+	}
+}
+#endif

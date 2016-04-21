@@ -2,4 +2,7 @@ Make.config.local
 Make.config.inc
 _ios-build
 _mac-build
+*.exe
+*.dll
+*.mdb
 
