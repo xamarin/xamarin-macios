@@ -14,8 +14,8 @@ using Mono.Cecil;
 using Mono.Tuner;
 using Xamarin.Linker;
 
-using Foundation;
 using Xamarin.Utils;
+using Xamarin.MacDev;
 
 namespace Xamarin.Bundler {
 
@@ -294,13 +294,11 @@ namespace Xamarin.Bundler {
 					return null;
 
 				var info_plist = Path.Combine (AppDirectory, "Info.plist");
-				using (var plist = Driver.FromPList (info_plist)) {
-					using (var dict = plist ["NSExtension"] as NSDictionary) {
-						if (dict == null)
-							return null;
-						return (NSString) dict ["NSExtensionPointIdentifier"];
-					}
-				}
+				var plist = Driver.FromPList (info_plist);
+				var dict = plist.Get<PDictionary> ("NSExtension");
+				if (dict == null)
+					return null;
+				return dict.GetString ("NSExtensionPointIdentifier");
 			}
 		}
 
@@ -315,9 +313,8 @@ namespace Xamarin.Bundler {
 			if (!File.Exists (info_plist))
 				return null;
 
-			using (var plist = Driver.FromPList (info_plist)) {
-				return (NSString) plist [key];
-			}
+			var plist = Driver.FromPList (info_plist);
+			return plist.GetString (key);
 		}
 
 		public void SetDefaultAbi ()
@@ -1785,30 +1782,28 @@ namespace Xamarin.Bundler {
 			string sim_platform = Driver.PlatformDirectory;
 			string plist = Path.Combine (sim_platform, "Info.plist");
 
-			using (var dict = Driver.FromPList (plist))
-			using (var dp = (NSDictionary) dict ["DefaultProperties"]) {
-				if ((NSString) dp ["GCC_OBJC_LEGACY_DISPATCH"] == "YES")
+			var dict = Driver.FromPList (plist);
+			var dp = dict.Get<PDictionary> ("DefaultProperties");
+			if (dp.GetString ("GCC_OBJC_LEGACY_DISPATCH") == "YES")
 					flags.AddOtherFlag ("-fobjc-legacy-dispatch");
-				string objc_abi = (NSString) dp ["OBJC_ABI_VERSION"];
-				if (!String.IsNullOrWhiteSpace (objc_abi))
-					flags.AddOtherFlag ($"-fobjc-abi-version={objc_abi}");
-			}
+			string objc_abi = dp.GetString ("OBJC_ABI_VERSION");
+			if (!String.IsNullOrWhiteSpace (objc_abi))
+				flags.AddOtherFlag ($"-fobjc-abi-version={objc_abi}");
 			
 			plist = Path.Combine (Driver.FrameworkDirectory, "SDKSettings.plist");
 			string min_prefix = Driver.CompilerPath.Contains ("clang") ? Driver.TargetMinSdkName : "iphoneos";
-			using (var dict = Driver.FromPList (plist))
-			using (var dp = (NSDictionary) dict ["DefaultProperties"]) {
-				if (app.DeploymentTarget == new Version ()) {
-					string target = (NSString) dp ["IPHONEOS_DEPLOYMENT_TARGET"];
-					if (!String.IsNullOrWhiteSpace (target))
-						flags.AddOtherFlag ($"-m{min_prefix}-version-min={target}");
-				} else {
-					flags.AddOtherFlag ($"-m{min_prefix}-version-min={app.DeploymentTarget}");
-				}
-				string defines = (NSString) dp ["GCC_PRODUCT_TYPE_PREPROCESSOR_DEFINITIONS"];
-				if (!String.IsNullOrWhiteSpace (defines))
-					flags.AddDefine (defines.Replace (" ", String.Empty));
+			dict = Driver.FromPList (plist);
+			dp = dict.Get<PDictionary> ("DefaultProperties");
+			if (app.DeploymentTarget == new Version ()) {
+				string target = dp.GetString ("IPHONEOS_DEPLOYMENT_TARGET");
+				if (!String.IsNullOrWhiteSpace (target))
+					flags.AddOtherFlag ($"-m{min_prefix}-version-min={target}");
+			} else {
+				flags.AddOtherFlag ($"-m{min_prefix}-version-min={app.DeploymentTarget}");
 			}
+			string defines = dp.GetString ("GCC_PRODUCT_TYPE_PREPROCESSOR_DEFINITIONS");
+			if (!String.IsNullOrWhiteSpace (defines))
+				flags.AddDefine (defines.Replace (" ", String.Empty));
 		}
 		
 		void GetDeviceCompilerFlags (CompilerFlags flags, string ifile)

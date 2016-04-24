@@ -12,9 +12,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-using Foundation;
-using ObjCRuntime;
-
 using Xamarin.Bundler;
 
 #if MTOUCH
@@ -24,6 +21,8 @@ using ProductException=Xamarin.Bundler.MonoMacException;
 #endif
 
 using XamCore.Registrar;
+using XamCore.Foundation;
+using XamCore.ObjCRuntime;
 using Mono.Cecil;
 using Mono.Tuner;
 
@@ -1257,19 +1256,19 @@ namespace XamCore.Registrar {
 #if MTOUCH
 			switch (Driver.App.Platform) {
 			case Xamarin.Utils.ApplePlatform.iOS:
-				currentPlatform = global::ObjCRuntime.PlatformName.iOS;
+				currentPlatform = global::XamCore.ObjCRuntime.PlatformName.iOS;
 				break;
 			case Xamarin.Utils.ApplePlatform.TVOS:
-				currentPlatform = global::ObjCRuntime.PlatformName.TvOS;
+				currentPlatform = global::XamCore.ObjCRuntime.PlatformName.TvOS;
 				break;
 			case Xamarin.Utils.ApplePlatform.WatchOS:
-				currentPlatform = global::ObjCRuntime.PlatformName.WatchOS;
+				currentPlatform = global::XamCore.ObjCRuntime.PlatformName.WatchOS;
 				break;
 			default:
 				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", Driver.App.Platform);
 			}
 #else
-			currentPlatform = global::ObjCRuntime.PlatformName.MacOSX;
+			currentPlatform = global::XamCore.ObjCRuntime.PlatformName.MacOSX;
 #endif
 
 			foreach (var ca in attributes) {

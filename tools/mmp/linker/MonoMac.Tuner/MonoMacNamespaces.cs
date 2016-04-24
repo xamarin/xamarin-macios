@@ -9,7 +9,7 @@ using Mono.Linker.Steps;
 using Mono.Tuner;
 using Xamarin.Linker;
 
-using ObjCRuntime;
+using Xamarin.Bundler;
 
 namespace MonoMac.Tuner {
 

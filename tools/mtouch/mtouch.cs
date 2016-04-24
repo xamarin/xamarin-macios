@@ -61,13 +61,13 @@ using Mono.Cecil;
 using Mono.Cecil.Mdb;
 using Mono.Tuner;
 
-using Foundation;
-
 using MonoTouch.Tuner;
 using XamCore.Registrar;
 
 using Xamarin.Linker;
 using Xamarin.Utils;
+
+using Xamarin.MacDev;
 
 public enum OutputFormat {
 	Default,
@@ -246,7 +246,7 @@ namespace Xamarin.Bundler
 		public static string MonoTouchDirectory {
 			get {
 				if (mtouch_dir == null) {
-					mtouch_dir = Path.GetFullPath (GetFullPath () + "/../..");
+					mtouch_dir = Path.GetFullPath (GetFullPath () + "/../../..");
 #if DEV
 					// when launched from Xamarin Studio, mtouch is not in the final install location,
 					// so walk the directory hierarchy to find the root source directory.
@@ -401,10 +401,9 @@ namespace Xamarin.Bundler
 			var plist_path = Path.Combine (Path.GetDirectoryName (DeveloperDirectory), "version.plist");
 
 			if (File.Exists (plist_path)) {
-				using (var plist = FromPList (plist_path)) {
-					var version = (string) (NSString) plist ["CFBundleShortVersionString"];
-					xcode_version = new Version (version);
-				}
+				var plist = FromPList (plist_path);
+				var version = plist.GetString ("CFBundleShortVersionString");
+				xcode_version = new Version (version);
 			} else {
 				throw ErrorHelper.CreateError (58, "The Xcode.app '{0}' is invalid (the file '{1}' does not exist).", Path.GetDirectoryName (Path.GetDirectoryName (developer_directory)), plist_path);
 			}
@@ -915,11 +914,11 @@ namespace Xamarin.Bundler
 			IntPtr /* CFPropertyListFormat */ format,
 			IntPtr /* CFErrorRef */ error);
 
-		internal static NSDictionary FromPList (string name)
+		internal static PDictionary FromPList (string name)
 		{
 			if (!File.Exists (name))
 				throw new MonoTouchException (24, true, "Could not find required file '{0}'.", name);
-			return NSDictionary.FromFile (name);
+			return PDictionary.FromFile (name);
 		}
 
 		static int watch_level;
@@ -968,7 +967,6 @@ namespace Xamarin.Bundler
 		{
 			try {
 				Console.OutputEncoding = new UTF8Encoding (false, false);
-				AppKit.NSApplication.Init ();
 				return Main2 (args);
 			}
 			catch (Exception e) {
@@ -1511,7 +1509,7 @@ namespace Xamarin.Bundler
 		static string MlaunchPath {
 			get {
 				// check next to mtouch first
-				var path = Path.Combine (Path.GetDirectoryName (GetFullPath ()), "mlaunch");
+				var path = Path.Combine (MonoTouchDirectory, "bin", "mlaunch");
 				if (File.Exists (path))
 					return path;
 

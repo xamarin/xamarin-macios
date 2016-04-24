@@ -186,15 +186,10 @@ namespace Xamarin.Bundler {
 #endif
 
 
-#if DEV || MMP || MMP_TEST
 		internal static string GetFullPath ()
 		{
 			return System.Reflection.Assembly.GetExecutingAssembly ().Location;
 		}
-#else
-		[DllImport ("__Internal", EntryPoint="get_mtouch_full_path")]
-		internal extern static string GetFullPath ();
-#endif
 
 		static Version xcode_version;
 		public static Version XcodeVersion {

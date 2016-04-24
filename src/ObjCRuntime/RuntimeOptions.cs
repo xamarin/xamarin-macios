@@ -9,9 +9,9 @@ using Xamarin.Linker;
 using System.Net.Http;
 #endif
 
-#if XAMCORE_2_0 || MMP
+#if XAMCORE_2_0
 using Foundation;
-#elif MONOMAC
+#elif MONOMAC && !MMP
 using MonoMac.Foundation;
 #elif !MTOUCH && !MMP && !MMP_TEST
 using MonoTouch.Foundation;

@@ -6,7 +6,7 @@ using System.Linq;
 
 using Mono.Cecil;
 using MonoTouch.Tuner;
-using ObjCRuntime;
+using XamCore.ObjCRuntime;
 
 #if MONOTOUCH
 using PlatformException = Xamarin.Bundler.MonoTouchException;

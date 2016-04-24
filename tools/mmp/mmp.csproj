@@ -53,9 +53,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Web.Services" />
     <Reference Include="Mono.Security" />
-    <Reference Include="Xamarin.Mac">
-      <HintPath>..\..\src\build\mac\full-64\Xamarin.Mac.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="driver.cs">
@@ -306,6 +303,21 @@
     </Compile>
     <Compile Include="..\..\src\ObjCRuntime\RuntimeOptions.cs">
       <Link>external\RuntimeOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\Foundation\ConnectAttribute.cs">
+      <Link>external\ConnectAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\Foundation\ExportAttribute.cs">
+      <Link>external\ExportAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\ArgumentSemantic.cs">
+      <Link>external\ArgumentSemantic.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\LinkWithAttribute.cs">
+      <Link>external\LinkWithAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\PlatformAvailability2.cs">
+      <Link>external\PlatformAvailability2.cs</Link>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

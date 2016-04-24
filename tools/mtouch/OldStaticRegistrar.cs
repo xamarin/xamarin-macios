@@ -14,8 +14,8 @@ using Mono.Tuner;
 
 using MonoTouch;
 using Xamarin.Bundler;
-using ObjCRuntime;
 using XamCore.Registrar;
+using XamCore.ObjCRuntime;
 using Xamarin.Linker;
 
 namespace XamCore.Registrar {

@@ -17,8 +17,6 @@ using Mono.Tuner;
 using Mono.Linker;
 using Xamarin.Linker;
 
-using ObjCRuntime;
-
 using Xamarin.Utils;
 
 #if MONOTOUCH

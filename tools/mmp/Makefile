@@ -19,8 +19,6 @@ TOOLS_DIR=$(MONO_PATH)/mcs/tools
 LINKER_DIR=$(TOOLS_DIR)/linker
 TUNER_DIR=$(TOOLS_DIR)/tuner
 
-XAMMAC_DLL=$(TOP)/src/build/mac/full-64/Xamarin.Mac.dll
-
 linker_sources = \
 	$(LINKER_DIR)/Mono.Linker/Pipeline.cs				\
 	$(LINKER_DIR)/Mono.Linker/AssemblyResolver.cs			\
@@ -95,9 +93,6 @@ tuner_sources = \
 linker_resources = \
 	linker/Descriptors/mscorlib.xml
 
-output/mmp.exe: mmp.exe mmp.xml
-	$(call Q_1,LINK    ) monolinker -a mmp.exe -l none -c link -d $(BCL_LOCATION) -d $(dir $(XAMMAC_DLL)) -d $(dir $(MONO_CECIL_DLL)) -x mmp.xml
-
 mmp_sources = \
 	$(TOP)/tools/common/cache.cs    \
 	driver.cs 	\
@@ -118,37 +113,43 @@ mmp_sources = \
 	Application.cs \
 	$(TOP)/tools/common/Target.cs \
 	$(TOP)/tools/common/Application.cs \
-	$(TOP)/tools/common/Assembly.cs
+	$(TOP)/tools/common/Assembly.cs \
+	$(TOP)/src/Foundation/ConnectAttribute.cs \
+	$(TOP)/src/Foundation/ExportAttribute.cs \
+	$(TOP)/src/ObjCRuntime/ArgumentSemantic.cs \
+	$(TOP)/src/ObjCRuntime/LinkWithAttribute.cs \
+	$(TOP)/src/ObjCRuntime/PlatformAvailability2.cs \
 
 DEFINES = -d:MONOMAC -d:MMP $(APPLETLS_DEFINES)
 
-mmp.exe: Makefile $(XAMMAC_DLL) $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) $(mmp_sources) config config_mobile Info.plist.tmpl $(tuner_sources) $(linker_resources)
-	$(Q_MCS) $(SYSTEM_MCS) -unsafe -out:mmp.exe $(DEFINES) -r:$(XAMMAC_DLL) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:Mono.Security.dll  -resource:config -resource:config_mobile -resource:machine.4_5.config -resource:Info.plist.tmpl $(linker_resources:%=-resource:%) $(tuner_sources) $(mmp_sources)
-
-mmp: output/mmp.exe Makefile mmp.config mmp.machine.config machine.4_5.config mmp.xml
-	$(Q) rm -Rf temp-dir-$@
-	$(Q) mkdir -p temp-dir-$@
-	$(Q_MKBUNDLE) cd temp-dir-$@ && \
-		PATH="/usr/bin:$(PATH)" \
-		LD_LIBRARY_PATH=$(TOP)/../builds/mac64/support/.libs:$(LD_LIBRARY_PATH) \
-		CC="cc -arch x86_64 -framework CoreFoundation -liconv -framework AppKit -mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC)" \
-		AS="as -arch x86_64 -mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC)" \
-		$(SYSTEM_MKBUNDLE) -z --static ../output/mmp.exe ../output/*.dll --nodeps -c -o $@.stub.c -oo $@.helper.o --machine-config ../mmp.machine.config --config ../mmp.config
-	$(Q_CC) cd temp-dir-$@ && cc -mmacosx-version-min=$(MIN_OSX_VERSION_FOR_MAC) -arch x86_64 -o $@ `$(PKG_CONFIG) --cflags mono-2 glib-2.0` ../$(TOP)/builds/mac64/mono/mini/.libs/libmonosgen-2.0.a  $@.stub.c $@.helper.o -liconv -lz -framework IOKit -framework CoreFoundation -framework Foundation
-ifndef DISABLE_STRIP
-	$(Q_STRIP) cd temp-dir-$@ && strip -x -S $@
-endif
-	$(Q) cp temp-dir-$@/$@ .
-	@echo BUILD SUCCESSFULLY, file is ./$@;
+mmp.exe: Makefile $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) $(mmp_sources) config config_mobile Info.plist.tmpl $(tuner_sources) $(linker_resources)
+	$(Q_MCS) $(SYSTEM_MCS) -unsafe -out:mmp.exe $(DEFINES) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:Mono.Security.dll  -resource:config -resource:config_mobile -resource:machine.4_5.config -resource:Info.plist.tmpl $(linker_resources:%=-resource:%) $(tuner_sources) $(mmp_sources)
 
 MMP_TARGETS = \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mmp
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mmp \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/mmp.exe \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Mono.Cecil.dll \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Mono.Cecil.Mdb.dll \
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mmp: mmp | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
-	$(Q) cp $< $@
+MMP_DIRECTORIES = \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp \
 
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin:
-	$(Q) mkdir -p $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mmp: mmp.in | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
+	$(Q_GEN) sed 's!@XAMARIN_MAC_PREFIX@!$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR))!g' $< > $@
+	$(Q) chmod +x $@
+
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/mmp.exe: mmp.exe | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
+	$(Q) cp $<* $(dir $@)
+
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Mono.Cecil.dll: $(MONO_CECIL_DLL) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
+	$(Q) cp $<* $(dir $@)
+
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Mono.Cecil.Mdb.dll: $(MONO_CECIL_MDB_DLL) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
+	$(Q) cp $<* $(dir $@)
+
+$(MMP_DIRECTORIES):
+	$(Q) mkdir -p $@
 
 install-local:: $(MMP_TARGETS)
 all-local:: $(MMP_TARGETS)

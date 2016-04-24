@@ -1,0 +1,3 @@
+#!/bin/sh
+
+mono --debug @XAMARIN_MAC_PREFIX@/lib/mmp/mmp.exe "$@"

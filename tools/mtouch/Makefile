@@ -5,8 +5,6 @@ include $(TOP)/Make.config
 # in system headers show up.
 export CCACHE_CPP2=1
 
-GENDATA_SOURCES = gen-data.cs
-
 LINKER_DIR=../linker
 
 CECIL_DIR=$(CECIL_PATH)
@@ -126,6 +124,9 @@ MTOUCH_SOURCES = \
 	$(TOP)/tools/common/Assembly.cs \
 	$(TOP)/tools/common/Target.cs \
 	$(TOP)/tools/common/CompilerFlags.cs \
+	$(TOP)/src/Foundation/ExportAttribute.cs \
+	$(TOP)/src/Foundation/ConnectAttribute.cs \
+	$(XAMARIN_MACDEV_PATH)/Xamarin.MacDev/PListObject.cs \
 
 CECIL_CONFIG=net_4_0_Debug
 MONO_CECIL_DLL=$(CECIL_DIR)/bin/$(CECIL_CONFIG)/Mono.Cecil.dll
@@ -136,8 +137,6 @@ $(MONO_CECIL_DLL): $(CECIL_PATH)/Mono.Cecil.csproj
 
 $(MONO_CECIL_MDB_DLL): $(MONO_CECIL_DLL) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj
 	$(Q_XBUILD) cd $(CECIL_DIR) && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) symbols/mdb/Mono.Cecil.Mdb.csproj $(XBUILD_VERBOSITY)
-
-XAMARIN_MAC_DLL=$(TOP)/src/build/mac/mobile-64/Xamarin.Mac.dll
 
 SIMLAUNCHERS = simlauncher-sgen simlauncher32-sgen simlauncher64-sgen
 
@@ -282,14 +281,10 @@ $(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator86/lib/libmono
 $(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator86/lib/libmono-profiler-log.a -u _mono_profiler_startup -DXAMCORE_2_0 Xamarin.iOS.registrar.ios.a,sgen,86,32))
 $(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator64/lib/libmono-profiler-log.a -u _mono_profiler_startup -DXAMCORE_2_0 Xamarin.iOS.registrar.ios.a,sgen,64,64))
 
-# since we supply a custom runtime (64 bits) we need to ensure we have a match BCL (e.g. same corlib version) otherwise all kind of brokenness happens
-# note: in the past we used the system mono (32 bits) when mkbundl'ing - so we always had a matching runtime/BCL
-BCL_LOCATION=$(abspath $(MONO_DIR)/mcs/class/lib/net_4_x)
-
 IOS_DEFINES = -d:MONOTOUCH -d:MTOUCH $(APPLETLS_DEFINES)
 
-MTOUCH_COMPILE_DEPS = $(MTOUCH_SOURCES) $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) Makefile $(LINKER_RESOURCES) $(XAMARIN_MAC_DLL)
-MTOUCH_COMPILE_ARGS = -unsafe $(IOS_DEFINES) -resource:Info.plist.tmpl -r:$(XAMARIN_MAC_DLL) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) $(MTOUCH_SOURCES) -nowarn:0436 $(LINKER_RESOURCES:%=-resource:%)
+MTOUCH_COMPILE_DEPS = $(MTOUCH_SOURCES) $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) Makefile $(LINKER_RESOURCES)
+MTOUCH_COMPILE_ARGS = -unsafe $(IOS_DEFINES) -resource:Info.plist.tmpl -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) $(MTOUCH_SOURCES) -nowarn:0436 $(LINKER_RESOURCES:%=-resource:%)
 
 # bin/Debug/mtouch.exe is used from mtouch.csproj when debugging
 bin/Debug/mtouch.exe: $(MTOUCH_COMPILE_DEPS)
@@ -303,64 +298,10 @@ SdkVersions.cs: SdkVersions.cs.in Makefile $(TOP)/Make.config
 		-e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' \
 		$< > $@ 
 
-# obj/Makefile/mtouch.exe is what we build from the makefile (and end up releasing)
-obj/Makefile/mtouch.exe: $(MTOUCH_COMPILE_DEPS)
+# bin/Makefile/mtouch.exe is what we build from the makefile (and end up releasing)
+bin/Makefile/mtouch.exe: $(MTOUCH_COMPILE_DEPS)
 	$(Q) mkdir -p $(dir $@)
 	$(Q_MCS) $(SYSTEM_MCS) $(MTOUCH_COMPILE_ARGS) -out:$@
-
-MMP=$(TOP)/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/bin/mmp
-MTOUCH_APP=bin/Makefile/mtouch.app
-
-# build with mmp to use mmp's linker.
-$(MTOUCH_APP)/Contents/MacOS/mtouch: obj/Makefile/mtouch.exe $(MMP) Makefile $(MONO_PATH)/mcs/tools/linker/Descriptors/mscorlib.xml
-	@# make sure we start with a clean slate.
-	$(Q) rm -Rf $(MTOUCH_APP)
-	$(Q_GEN) $(MMP) \
-		$(if $(V),-v,-q) \
-		--cache obj/Makefile/mmp-cache \
-		/target-framework:Xamarin.Mac,v1.0 \
-		/arch:x86_64 \
-		/sgen \
-		-minos $(MIN_OSX_VERSION_FOR_IOS) \
-		$< \
-		-o $(dir $(MTOUCH_APP)) \
-		-a $(BCL_LOCATION)/Mono.Posix.dll \
-		-a $(MONO_CECIL_DLL) \
-		-a $(MONO_CECIL_MDB_DLL) \
-		--linkskip Mono.Cecil.Mdb \
-		--link_flags "support.c" \
-		 -xml $(MONO_PATH)/mcs/tools/linker/Descriptors/mscorlib.xml
-
-# then we mkbundle the assemblies linked by mmp
-bin/Makefile/mtouch: $(MTOUCH_APP)/Contents/MacOS/mtouch support.c mtouch.main.osx.mm $(TOP)/builds/install/mac64/lib/libmonosgen-2.0.a | bin/Makefile
-	$(Q) rm -Rf $@-mkbundle-temp-dir
-	$(Q) mkdir -p $@-mkbundle-temp-dir
-	$(Q_MKBUNDLE) cd $@-mkbundle-temp-dir && \
-		PATH="/usr/bin:$(PATH)" \
-		DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) \
-		LD_LIBRARY_PATH=$(abspath $(TOP)/builds/tools64/support/.libs):$(LD_LIBRARY_PATH) \
-		CC="cc -arch x86_64 -framework CoreFoundation -liconv -framework AppKit" \
-		AS="as -arch x86_64 -mmacosx-version-min=$(MIN_OSX_VERSION_FOR_IOS)" \
-		$(SYSTEM_MKBUNDLE) -z --static --nomain \
-			--config $(abspath mtouch.config) \
-			$(abspath $(wildcard $(MTOUCH_APP)/Contents/MonoBundle/*.dll) $(wildcard $(MTOUCH_APP)/Contents/MonoBundle/*.exe)) \
-			-c -o $(notdir $@).stub.c -oo $(notdir $@).helper.o --config-dir $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/etc/mono/ \
-			--machine-config $(abspath mtouch.machine.config)
-	$(Q_CC) cd $@-mkbundle-temp-dir && \
-		cc -mmacosx-version-min=$(MIN_OSX_VERSION_FOR_IOS) -arch x86_64 -Wall -Wno-unused-variable `$(PKG_CONFIG) --cflags mono-2 glib-2.0` \
-			-o $(abspath $@) \
-			$(notdir $@).stub.c $(notdir $@).helper.o \
-			$(abspath support.c) \
-			$(abspath mtouch.main.osx.mm) \
-			$(abspath $(TOP)/builds/install/mac64/lib/libmonosgen-2.0.a) \
-			-force_load $(abspath $(TOP)/runtime/.libs/mac/libxammac.a) \
-			-L/usr/lib -liconv -lz -framework IOKit -framework CoreFoundation -framework Foundation -framework AppKit
-ifndef DISABLE_STRIP
-	$(Q_STRIP) strip -x -S $@
-endif
-
-bin/Makefile:
-	$(Q) mkdir -p $@
 
 %.registrar.ios.m:     $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/%.dll     $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch 
 	$(Q_GEN) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(IOS_SDK_VERSION)   $< --registrar:static --target-framework Xamarin.iOS,v1.0    --abi i386,x86_64
@@ -391,10 +332,11 @@ bin/Makefile:
 
 TARGETS = \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch                                          \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/mtouch.exe                               \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.dll                           \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.Mdb.dll                       \
 	$(foreach launcher,$(SIMLAUNCHERS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/$(launcher)) \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/monotouch-fixes.dylib                           \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/etc/mono/assemblies/System/mtouch.config            \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/libMonoPosixHelper.dylib                        \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr/lib/Xamarin.iOS.registrar.a         \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr/lib/MonoTouch.Dialog-1.registrar.a  \
 #	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr/lib/MonoTouch.NUnitLite.registrar.a \
@@ -410,8 +352,10 @@ TARGETS +=	\
 endif
 
 TARGET_DIRS = \
+	bin/Makefile                                                 \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin                        \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib                        \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch                 \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/etc/mono/assemblies/System \
 	$(IOS_DESTDIR)$(MONOTOUCH_SIMULATOR_SDK)/usr/lib             \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib          \
@@ -420,8 +364,18 @@ TARGET_DIRS = \
 $(TARGET_DIRS):
 	$(Q) mkdir -p $@
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch: bin/Makefile/mtouch | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
-	$(Q) install -m 0755 $< $@
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/mtouch.exe: bin/Makefile/mtouch.exe | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch
+	$(Q) cp $<* $(dir $@)
+
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.dll: $(MONO_CECIL_DLL) | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch
+	$(Q) cp $<* $(dir $@)
+
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.Mdb.dll: $(MONO_CECIL_MDB_DLL) | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch
+	$(Q) cp $<* $(dir $@)
+
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch: mtouch.in | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
+	$(Q_GEN) sed 's!@MONOTOUCH_PREFIX@!$(abspath $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX))!g' $< > $@
+	$(Q) chmod +x $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/%: % | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin
 	$(Q) cp $< $@
@@ -429,19 +383,9 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/%: % | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/b
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/%: % | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib
 	$(Q) cp $< $@
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/etc/mono/assemblies/System/%: % | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/etc/mono/assemblies/System
-	$(Q) cp $< $@
-
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/monotouch-fixes.dylib: monotouch-fixes.dylib | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib
 	$(Q) cp $< $@
 	$(Q) install_name_tool -id $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/monotouch-fixes.dylib $@
-
-# mtouch requires libMonoPosixHelper.dylib to run
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/libMonoPosixHelper.dylib
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/libMonoPosixHelper.dylib: $(TOP)/builds/tools64/support/.libs/libMonoPosixHelper.dylib | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib
-	$(Q) cp $< $@
-	$(Q) install_name_tool -id @executable_path/../lib/libMonoPosixHelper.dylib $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_SIMULATOR_SDK)/usr/lib/%.registrar.a: %.registrar.ios.a | $(IOS_DESTDIR)$(MONOTOUCH_SIMULATOR_SDK)/usr/lib
 	$(Q) cp $< $@
@@ -458,9 +402,8 @@ all-local:: $(TARGETS)
 endif
 
 clean-local::
-	rm -f mtouch mtouch.exe gen-data.exe *.stamp temp.* 
+	rm -f bin obj
 	rm -f $(SIMLAUNCHERS)
-	rm -rf temp-dir-* *.dSYM
 	$(SYSTEM_XBUILD) /t:Clean /p:Configuration=$(CECIL_CONFIG) $(CECIL_PATH)/Mono.Cecil.csproj
 	$(SYSTEM_XBUILD) /t:Clean /p:Configuration=$(CECIL_CONFIG) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj
 

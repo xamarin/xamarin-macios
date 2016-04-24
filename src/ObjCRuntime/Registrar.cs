@@ -20,10 +20,8 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
 
-#if MTOUCH || MMP
-using Foundation;
-using ObjCRuntime;
-#endif
+using XamCore.Foundation;
+using XamCore.ObjCRuntime;
 
 #if MTOUCH || MMP
 using TAssembly=Mono.Cecil.AssemblyDefinition;
@@ -33,8 +31,6 @@ using TProperty=Mono.Cecil.PropertyDefinition;
 using TField=Mono.Cecil.FieldDefinition;
 using R=XamCore.Registrar.Registrar;
 #else
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
 using TAssembly=System.Reflection.Assembly;
 using TType=System.Type;
 using TMethod=System.Reflection.MethodBase;
@@ -2176,15 +2172,9 @@ namespace XamCore.Registrar {
 		}
 
 #if MTOUCH || MMP
-		[DllImport (Xamarin.Bundler.Constants.FoundationLibrary)]
-		extern static void NSLog (IntPtr format, IntPtr s);
-		internal static void NSLog (string format, params object[] args)
+		internal static void NSLog (string format, params object [] args)
 		{
-			var fmt = NSString.CreateNative ("%@");
-			var val = NSString.CreateNative (string.Format (format, args));
-			NSLog (fmt, val);
-			NSString.ReleaseNative (val);
-			NSString.ReleaseNative (fmt);
+			Console.WriteLine (format, args);
 		}
 #endif
 

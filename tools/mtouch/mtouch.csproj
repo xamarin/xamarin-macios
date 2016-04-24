@@ -3,37 +3,24 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A737EFCC-4348-4EB1-9C14-4FDC0975388D}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AssemblyName>mtouch</AssemblyName>
     <RootNamespace>mtouch</RootNamespace>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-    <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;DEV;MONOTOUCH;MTOUCH;ARCH_32</DefineConstants>
+    <DefineConstants>DEBUG;DEV;MONOTOUCH;MTOUCH</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <NoWarn>436</NoWarn>
-    <EnableCodeSigning>false</EnableCodeSigning>
-    <CreatePackage>false</CreatePackage>
-    <EnablePackageSigning>false</EnablePackageSigning>
-    <IncludeMonoRuntime>false</IncludeMonoRuntime>
-    <UseSGen>false</UseSGen>
-    <UseRefCounting>false</UseRefCounting>
-    <Profiling>false</Profiling>
-    <LinkMode>Full</LinkMode>
-    <XamMacArch>x86_64</XamMacArch>
-    <MonoBundlingExtraArgs>--linkskip Mono.Cecil.Mdb</MonoBundlingExtraArgs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -43,15 +30,8 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DefineConstants>DEBUG;DEV;MONOTOUCH;MTOUCH;ARCH_32</DefineConstants>
-    <EnableCodeSigning>false</EnableCodeSigning>
-    <CreatePackage>false</CreatePackage>
-    <EnablePackageSigning>false</EnablePackageSigning>
-    <IncludeMonoRuntime>false</IncludeMonoRuntime>
-    <UseSGen>false</UseSGen>
-    <UseRefCounting>false</UseRefCounting>
-    <Profiling>false</Profiling>
   </PropertyGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Compile Include="AssemblyResolver.cs" />
     <Compile Include="mtouch.cs" />
@@ -318,11 +298,23 @@
     <Compile Include="..\linker\MonoTouch.Tuner\ListExportedSymbols.cs">
       <Link>MonoTouch.Tuner\ListExportedSymbols.cs</Link>
     </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\ArgumentSemantic.cs">
+      <Link>external\maccore\ArgumentSemantic.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\Foundation\ExportAttribute.cs">
+      <Link>external\maccore\ExportAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\Foundation\ConnectAttribute.cs">
+      <Link>external\maccore\ConnectAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\LinkWithAttribute.cs">
+      <Link>external\maccore\LinkWithAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs">
+      <Link>external\maccore\PListObject.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Xamarin.Mac">
-      <HintPath>..\..\src\build\mac\mobile-64\Xamarin.Mac.dll</HintPath>
-    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System" />
     <Reference Include="System.Xml" />
@@ -331,7 +323,6 @@
     <None Include="Makefile" />
     <None Include="monotouch-fixes.c" />
     <None Include="simlauncher.m" />
-    <None Include="Info.plist" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Mono.Linker\" />

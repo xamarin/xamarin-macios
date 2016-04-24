@@ -3,7 +3,6 @@ using Xamarin.Linker;
 
 namespace MonoTouch.Tuner {
 
-	[Foundation.Preserve (AllMembers = true)]
 	public class MonoTouchProfile : MobileProfile {
 		string product_assembly;
 
