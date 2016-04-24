@@ -833,9 +833,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<CreateItem Include="@(_BundleResourceWithLogicalName)" Condition="'%(_BundleResourceWithLogicalName.Extension)' == '.png' And '%(_BundleResourceWithLogicalName.Optimize)' == 'true'">
 			<Output TaskParameter="Include" ItemName="_PngImage" />
 		</CreateItem>
-		<ItemGroup>
-			<FileWrites Include="$(DeviceSpecificIntermediateOutputPath)optimized\%(_PngImage.LogicalName)" />
-		</ItemGroup>
 	</Target>
 
 	<Target Name="_CoreOptimizePngImages"
@@ -851,6 +848,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SdkDevPath="$(_SdkDevPath)"
 			InputImages="@(_PngImage)"
 			OutputImages="@(_PngImage -> '$(DeviceSpecificIntermediateOutputPath)optimized\%(LogicalName)')">
+			<Output TaskParameter="OutputImages" ItemName="FileWrites" />
 		</OptimizeImage>
   </Target>
 
