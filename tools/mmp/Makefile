@@ -95,21 +95,8 @@ tuner_sources = \
 linker_resources = \
 	linker/Descriptors/mscorlib.xml
 
-monolinker_sources = \
-	$(linker_sources)				\
-	$(LINKER_DIR)/Mono.Linker/AssemblyInfo.cs	\
-	$(LINKER_DIR)/Mono.Linker/Driver.cs
-
-monolinker_resources = \
-	$(LINKER_DIR)/Descriptors/mscorlib.xml		\
-	$(LINKER_DIR)/Descriptors/System.xml		\
-	$(LINKER_DIR)/Descriptors/Mono.Posix.xml
-
-monolinker.exe: $(MONO_PATH)/mcs/tools/linker/Mono.Linker.csproj $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL)
-	$(Q_MCS) $(SYSTEM_MCS) -debug -out:monolinker.exe -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) $(monolinker_resources:%=-resource:%) $(monolinker_sources)
-
-output/mmp.exe: monolinker.exe mmp.exe mmp.xml
-	$(call Q_1,LINK    ) $(SYSTEM_MONO) --debug monolinker.exe -a mmp.exe -l none -c link -d $(BCL_LOCATION) -d $(dir $(XAMMAC_DLL)) -d $(dir $(MONO_CECIL_DLL)) -x mmp.xml
+output/mmp.exe: mmp.exe mmp.xml
+	$(call Q_1,LINK    ) monolinker -a mmp.exe -l none -c link -d $(BCL_LOCATION) -d $(dir $(XAMMAC_DLL)) -d $(dir $(MONO_CECIL_DLL)) -x mmp.xml
 
 mmp_sources = \
 	$(TOP)/tools/common/cache.cs    \
@@ -170,7 +157,7 @@ clean-local::
 	rm -f mmp mmp.exe mmp.exe.mdb mmp-uninstalled
 	rm -f mmp.stub.c mmp.helper.o
 	rm -f output/*
-	rm -f monolinker.exe* Mono.Touch.Common.dll*
+	rm -f Mono.Touch.Common.dll*
 	$(SYSTEM_XBUILD) /t:Clean /p:Configuration=$(CECIL_CONFIG) $(CECIL_PATH)/Mono.Cecil.csproj
 	$(SYSTEM_XBUILD) /t:Clean /p:Configuration=$(CECIL_CONFIG) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj
 
