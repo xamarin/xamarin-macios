@@ -43,7 +43,7 @@ This module is the main repository for both Xamarin.iOS and Xamarin.Mac.
 
 * You can also provision some of the dependencies with an included script:
 
-     $ ./system-dependencies.sh --provision-[xs|mono]
+        $ ./system-dependencies.sh --provision-[xs|mono]
 
 ## Quick build & install ##
 
