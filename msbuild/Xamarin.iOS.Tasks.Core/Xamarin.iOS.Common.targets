@@ -517,7 +517,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			ReferencedLibraries="@(ReferencePath);@(ReferenceDependencyPaths)">
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
-			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="FileWrites" />
 		</UnpackLibraryResources>
 	</Target>
 
@@ -1025,9 +1024,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SdkUsrPath="$(_SdkUsrPath)"
 			SdkPlatform="$(_SdkPlatform)"
 			SdkVersion="$(MtouchSdkVersion)">
-			<Output TaskParameter="PartialAppManifest" ItemName="FileWrites" />
-			<Output TaskParameter="OutputManifests" ItemName="FileWrites" />
-			<Output TaskParameter="BundleResources" ItemName="FileWrites" />
 			<Output TaskParameter="PartialAppManifest" ItemName="_PartialAppManifest" />
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
 
@@ -1087,7 +1083,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SdkDevPath="$(_SdkDevPath)"
 			SdkRoot="$(_SdkRoot)"
 			SdkVersion="$(MtouchSdkVersion)">
-			<Output TaskParameter="BundleResources" ItemName="FileWrites" />
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
 
 			<!-- Local items to be persisted to items files -->
@@ -1147,7 +1142,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SdkRoot="$(_SdkRoot)"
 			SdkPlatform="$(_SdkPlatform)"
 			SdkVersion="$(MtouchSdkVersion)">
-			<Output TaskParameter="BundleResources" ItemName="FileWrites" />
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
 
 			<!-- Local items to be persisted to items files -->
@@ -1204,7 +1198,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SdkDevPath="$(_SdkDevPath)"
 			SdkBinPath="$(_SdkBinPath)"
 			SdkUsrPath="$(_SdkUsrPath)">
-			<Output TaskParameter="BundleResources" ItemName="FileWrites" />
 			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
 
 			<!-- Local items to be persisted to items files -->
