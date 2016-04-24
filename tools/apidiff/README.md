@@ -11,7 +11,7 @@ The result should be added/committed to git so every future revisions can be com
     make update-tvos-refs    -j IOS_DESTDIR= IOS_INSTALL_VERSION=Current
     make update-mac-refs     -j MAC_DESTDIR= MAC_INSTALL_VERSION=Current
 
-You change change *_INSTALL_VERSION to other than Current if you have a different version
+You can change *_INSTALL_VERSION to other than Current if you have a different version
 installed (say you have XI 9.4.0.0 installed in /Library/Frameworks/Xamarin.iOS.framework/Versions/9.4.0.0,
 in which case you can do IOS_INSTALL_VERSION=9.4.0.0
 
