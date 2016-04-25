@@ -15,7 +15,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;DEV;MONOTOUCH;MTOUCH</DefineConstants>
+    <DefineConstants>MONOTOUCH;MTOUCH</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
@@ -29,25 +29,30 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <DefineConstants>DEBUG;DEV;MONOTOUCH;MTOUCH;ARCH_32</DefineConstants>
+    <DefineConstants>MONOTOUCH;MTOUCH</DefineConstants>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Compile Include="Application.cs" />
+    <Compile Include="Assembly.cs" />
     <Compile Include="AssemblyResolver.cs" />
+    <Compile Include="BitcodeConverter.cs" />
+    <Compile Include="error.cs" />
     <Compile Include="mtouch.cs" />
+    <Compile Include="OldStaticRegistrar.cs" />
+    <Compile Include="SdkVersions.cs" />
+    <Compile Include="Stripper.cs" />
+    <Compile Include="Target.cs" />
+    <Compile Include="Tuning.cs" />
     <Compile Include="..\..\external\mono\mcs\class\Mono.Options\Mono.Options\Options.cs">
       <Link>Options.cs</Link>
     </Compile>
-    <Compile Include="Tuning.cs" />
-    <Compile Include="error.cs" />
     <Compile Include="..\..\src\build\ios\Constants.cs">
-      <Link>Constants.cs</Link>
+      <Link>external\Constants.cs</Link>
     </Compile>
-    <Compile Include="SdkVersions.cs" />
     <Compile Include="..\common\cache.cs">
-      <Link>cache.cs</Link>
+      <Link>external\cache.cs</Link>
     </Compile>
-    <Compile Include="Stripper.cs" />
     <Compile Include="..\linker\MonoTouch.Tuner\Extensions.cs">
       <Link>MonoTouch.Tuner\Extensions.cs</Link>
     </Compile>
@@ -93,7 +98,9 @@
     <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker\AssemblyResolver.cs">
       <Link>Mono.Linker\AssemblyResolver.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker\IXApiVisitor.cs" />
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker\IXApiVisitor.cs">
+      <Link>Mono.Linker\IXApiVisitor.cs</Link>
+    </Compile>
     <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker\I18nAssemblies.cs">
       <Link>Mono.Linker\I18nAssemblies.cs</Link>
     </Compile>
@@ -115,7 +122,9 @@
     <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker.Steps\CleanStep.cs">
       <Link>Mono.Linker.Steps\CleanStep.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker.Steps\IStep.cs" />
+    <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker.Steps\IStep.cs">
+      <Link>Mono.Linker.Steps\IStep.cs</Link>
+    </Compile>
     <Compile Include="..\..\external\mono\mcs\tools\linker\Mono.Linker.Steps\LoadI18nAssemblies.cs">
       <Link>Mono.Linker.Steps\LoadI18nAssemblies.cs</Link>
     </Compile>
@@ -176,7 +185,6 @@
     <Compile Include="..\..\external\mono\mcs\tools\tuner\Mono.Tuner\Dispatcher.cs">
       <Link>Mono.Tuner\Dispatcher.cs</Link>
     </Compile>
-    <Compile Include="OldStaticRegistrar.cs" />
     <Compile Include="..\linker\MonoTouch.Tuner\MonoTouchSweepStep.cs">
       <Link>MonoTouch.Tuner\MonoTouchSweepStep.cs</Link>
     </Compile>
@@ -186,19 +194,11 @@
     <Compile Include="..\linker\MonoTouch.Tuner\RemoveExtraRegistrar.cs">
       <Link>MonoTouch.Tuner\RemoveExtraRegistrar.cs</Link>
     </Compile>
-    <Compile Include="Application.cs" />
     <Compile Include="..\..\external\mono\mcs\tools\tuner\Mono.Tuner\CecilRocks.cs">
       <Link>Mono.Tuner\CecilRocks.cs</Link>
     </Compile>
-    <Compile Include="Target.cs" />
     <Compile Include="..\linker\MobileProfile.cs">
       <Link>Xamarin.Linker\MobileProfile.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\ObjCRuntime\Registrar.cs">
-      <Link>Registrar.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
-      <Link>ErrorHelper.cs</Link>
     </Compile>
     <Compile Include="..\linker\BaseProfile.cs">
       <Link>Xamarin.Linker\BaseProfile.cs</Link>
@@ -255,42 +255,40 @@
       <Link>Xamarin.Linker\MobileResolveMainAssemblyStep.cs</Link>
     </Compile>
     <Compile Include="..\common\Driver.cs">
-      <Link>common\Driver.cs</Link>
+      <Link>external\Driver.cs</Link>
     </Compile>
     <Compile Include="..\common\TargetFramework.cs">
-      <Link>common\TargetFramework.cs</Link>
+      <Link>external\TargetFramework.cs</Link>
     </Compile>
     <Compile Include="..\common\StaticRegistrar.cs">
-      <Link>common\StaticRegistrar.cs</Link>
+      <Link>external\StaticRegistrar.cs</Link>
     </Compile>
     <Compile Include="..\common\MachO.cs">
-      <Link>common\MachO.cs</Link>
+      <Link>external\MachO.cs</Link>
     </Compile>
     <Compile Include="..\common\Application.cs">
-      <Link>common\Application.cs</Link>
+      <Link>external\Application.cs</Link>
     </Compile>
     <Compile Include="..\common\Assembly.cs">
-      <Link>common\Assembly.cs</Link>
+      <Link>external\Assembly.cs</Link>
     </Compile>
     <Compile Include="..\common\Target.cs">
-      <Link>common\Target.cs</Link>
+      <Link>external\Target.cs</Link>
     </Compile>
     <Compile Include="..\common\Frameworks.cs">
-      <Link>common\Frameworks.cs</Link>
+      <Link>external\Frameworks.cs</Link>
     </Compile>
     <Compile Include="..\common\CompilerFlags.cs">
-      <Link>common\CompilerFlags.cs</Link>
+      <Link>external\CompilerFlags.cs</Link>
     </Compile>
-    <Compile Include="Assembly.cs" />
-    <Compile Include="BitcodeConverter.cs" />
     <Compile Include="..\..\src\ObjCRuntime\RuntimeOptions.cs">
-      <Link>common\RuntimeOptions.cs</Link>
+      <Link>external\RuntimeOptions.cs</Link>
     </Compile>
     <Compile Include="..\..\src\ObjCRuntime\PlatformAvailability2.cs">
-      <Link>common\PlatformAvailability2.cs</Link>
+      <Link>external\PlatformAvailability2.cs</Link>
     </Compile>
     <Compile Include="..\..\src\ObjCRuntime\Registrar.core.cs">
-      <Link>common\Registrar.core.cs</Link>
+      <Link>external\Registrar.core.cs</Link>
     </Compile>
     <Compile Include="..\linker\MonoTouch.Tuner\SealerSubStep.cs">
       <Link>MonoTouch.Tuner\SealerSubStep.cs</Link>
@@ -313,6 +311,12 @@
     <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs">
       <Link>external\maccore\PListObject.cs</Link>
     </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\Registrar.cs">
+      <Link>external\Registrar.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
+      <Link>external\ErrorHelper.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
@@ -332,7 +336,6 @@
     <Folder Include="external\" />
     <Folder Include="external\maccore\" />
     <Folder Include="Xamarin.Linker\" />
-    <Folder Include="common\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\cecil\Mono.Cecil.csproj">
