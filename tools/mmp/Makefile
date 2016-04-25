@@ -151,8 +151,10 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Mono.Cecil.Mdb.dll: $(MONO_CE
 $(MMP_DIRECTORIES):
 	$(Q) mkdir -p $@
 
+ifdef INCLUDE_MAC
 install-local:: $(MMP_TARGETS)
 all-local:: $(MMP_TARGETS)
+endif
 
 clean-local::
 	rm -f mmp mmp.exe mmp.exe.mdb mmp-uninstalled

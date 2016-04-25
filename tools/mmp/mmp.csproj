@@ -15,7 +15,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;MONOMAC;DEV;MMP</DefineConstants>
+    <DefineConstants>MONOMAC;MMP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -37,7 +37,7 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ConsolePause>False</ConsolePause>
-    <DefineConstants>MONOMAC;DEV</DefineConstants>
+    <DefineConstants>MONOMAC;MMP</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <EnableCodeSigning>false</EnableCodeSigning>
     <CreatePackage>false</CreatePackage>
@@ -51,16 +51,14 @@
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web.Services" />
     <Reference Include="Mono.Security" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="driver.cs">
-    </Compile>
-    <Compile Include="resolver.cs">
-    </Compile>
-    <Compile Include="Tuning.cs">
-    </Compile>
+    <Compile Include="driver.cs" />
+    <Compile Include="resolver.cs" />
+    <Compile Include="Tuning.cs" />
+    <Compile Include="Assembly.cs" />
+    <Compile Include="error.cs" />
     <Compile Include="..\..\external\mono\mcs\tools\tuner\Mono.Tuner\ApplyPreserveAttributeBase.cs">
       <Link>Mono.Tuner\ApplyPreserveAttributeBase.cs</Link>
     </Compile>
@@ -175,8 +173,6 @@
     <Compile Include="..\..\external\mono\mcs\class\Mono.Options\Mono.Options\Options.cs">
       <Link>Options.cs</Link>
     </Compile>
-    <Compile Include="error.cs">
-    </Compile>
     <Compile Include="linker\MonoMac.Tuner\MonoMacMarkStep.cs">
       <Link>MonoMac.Tuner\MonoMacMarkStep.cs</Link>
     </Compile>
@@ -185,9 +181,6 @@
     </Compile>
     <Compile Include="linker\MonoMac.Tuner\MonoMacNamespaces.cs">
       <Link>MonoMac.Tuner\MonoMacNamespaces.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\build\mac\Constants.cs">
-      <Link>Constants.cs</Link>
     </Compile>
     <Compile Include="linker\MonoMac.Tuner\OptimizeGeneratedCodeSubStep.cs">
       <Link>MonoMac.Tuner\OptimizeGeneratedCodeSubStep.cs</Link>
@@ -200,18 +193,6 @@
     </Compile>
     <Compile Include="linker\MonoMac.Tuner\MacMobileProfile.cs">
       <Link>MonoMac.Tuner\MacMobileProfile.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
-      <Link>external\ErrorHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\common\cache.cs">
-      <Link>cache.cs</Link>
-    </Compile>
-    <Compile Include="..\..\src\ObjCRuntime\Registrar.cs">
-      <Link>external\Registrar.cs</Link>
-    </Compile>
-    <Compile Include="..\common\TargetFramework.cs">
-      <Link>TargetFramework.cs</Link>
     </Compile>
     <Compile Include="..\linker\BaseProfile.cs">
       <Link>Xamarin.Linker\BaseProfile.cs</Link>
@@ -255,8 +236,41 @@
     <Compile Include="..\linker\MobileSweepStep.cs">
       <Link>Xamarin.Linker\MobileSweepStep.cs</Link>
     </Compile>
+    <Compile Include="..\linker\CoreTlsProviderStep.cs">
+      <Link>Xamarin.Linker\CoreTlsProviderStep.cs</Link>
+    </Compile>
     <Compile Include="..\linker\CoreOptimizeGeneratedCode.cs">
       <Link>Xamarin.Linker\CoreOptimizeGeneratedCode.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\CoreRemoveSecurity.cs">
+      <Link>Xamarin.Linker\CoreRemoveSecurity.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\Extensions.cs">
+      <Link>MonoTouch.Tuner\Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\RemoveMonoTouchResources.cs">
+      <Link>MonoTouch.Tuner\RemoveMonoTouchResources.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\ListExportedSymbols.cs">
+      <Link>MonoTouch.Tuner\ListExportedSymbols.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\ProcessExportedFields.cs">
+      <Link>MonoTouch.Tuner\ProcessExportedFields.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\build\mac\Constants.cs">
+      <Link>external\Constants.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
+      <Link>external\ErrorHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\Registrar.cs">
+      <Link>external\Registrar.cs</Link>
+    </Compile>
+    <Compile Include="..\common\TargetFramework.cs">
+      <Link>external\TargetFramework.cs</Link>
+    </Compile>
+    <Compile Include="..\common\cache.cs">
+      <Link>external\cache.cs</Link>
     </Compile>
     <Compile Include="..\common\Driver.cs">
       <Link>external\Driver.cs</Link>
@@ -270,9 +284,6 @@
     <Compile Include="..\common\Frameworks.cs">
       <Link>external\Frameworks.cs</Link>
     </Compile>
-    <Compile Include="..\linker\CoreRemoveSecurity.cs">
-      <Link>Xamarin.Linker\CoreRemoveSecurity.cs</Link>
-    </Compile>
     <Compile Include="..\common\Application.cs">
       <Link>external\Application.cs</Link>
     </Compile>
@@ -282,24 +293,8 @@
     <Compile Include="..\common\Target.cs">
       <Link>external\Target.cs</Link>
     </Compile>
-    <Compile Include="..\linker\MonoTouch.Tuner\Extensions.cs">
-      <Link>external\Extensions.cs</Link>
-    </Compile>
-    <Compile Include="..\linker\MonoTouch.Tuner\RemoveMonoTouchResources.cs">
-      <Link>external\RemoveMonoTouchResources.cs</Link>
-    </Compile>
-    <Compile Include="..\linker\MonoTouch.Tuner\ListExportedSymbols.cs">
-      <Link>external\ListExportedSymbols.cs</Link>
-    </Compile>
-    <Compile Include="..\linker\MonoTouch.Tuner\ProcessExportedFields.cs">
-      <Link>external\ProcessExportedFields.cs</Link>
-    </Compile>
-    <Compile Include="Assembly.cs" />
     <Compile Include="..\..\src\ObjCRuntime\Registrar.core.cs">
       <Link>external\Registrar.core.cs</Link>
-    </Compile>
-    <Compile Include="..\linker\CoreTlsProviderStep.cs">
-      <Link>Xamarin.Linker\CoreTlsProviderStep.cs</Link>
     </Compile>
     <Compile Include="..\..\src\ObjCRuntime\RuntimeOptions.cs">
       <Link>external\RuntimeOptions.cs</Link>
