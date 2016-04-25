@@ -182,11 +182,6 @@ namespace Xamarin.iOS.Tasks
 
 				if (!plist.TryGetValue (ManifestKeys.UIRequiredDeviceCapabilities, out capabilities))
 					plist[ManifestKeys.UIRequiredDeviceCapabilities] = capabilities = new PArray ();
-
-				if (capabilities is PDictionary)
-					((PDictionary) capabilities).Add ("watch-companion", new PBoolean (true));
-				else
-					((PArray) capabilities).Add ("watch-companion");
 			}
 
 			plist.SetIfNotPresent (ManifestKeys.MinimumOSVersion, minimumOSVersion.ToString ());

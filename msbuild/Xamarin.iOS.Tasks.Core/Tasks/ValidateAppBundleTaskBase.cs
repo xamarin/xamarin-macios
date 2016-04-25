@@ -231,26 +231,6 @@ namespace Xamarin.iOS.Tasks
 										}
 									}
 								}
-
-								var uiRequiredDeviceCapabilitiesArray = extensionInfo.Get<PArray> ("UIRequiredDeviceCapabilities");
-								var uiRequiredDeviceCapabilitiesDict = extensionInfo.Get<PDictionary> ("UIRequiredDeviceCapabilities");
-								if (uiRequiredDeviceCapabilitiesArray != null) {
-									// check if it contains 'watch-companion'
-									bool found = false;
-									foreach (PString item in uiRequiredDeviceCapabilitiesArray) {
-										if (item.Value == "watch-companion") {
-											found = true;
-											break;
-										}
-									}
-									if (!found)
-										Log.LogError ("The Watch Extension '{0}' has an invalid Info.plist; the UIRequiredDeviceCapabilities array does not include 'watch-companion'.", extensionName);
-								} else if (uiRequiredDeviceCapabilitiesDict != null) {
-									if (!uiRequiredDeviceCapabilitiesDict.ContainsKey ("watch-companion"))
-										Log.LogError ("The Watch Extension '{0}' has an invalid Info.plist; the UIRequiredDeviceCapabilities dictionary does not include 'watch-companion'.", extensionName);
-								} else {
-									Log.LogError ("The Watch Extension '{0}' has an invalid Info.plist; no UIRequiredDeviceCapabilities element (with the 'watch-companion' value) found.", extensionName);
-								}
 								break;
 							default:
 								Log.LogWarning ("The App Extension '{0}' has an unrecognized NSExtensionPointIdentifier value ('{1}').", extensionName, nsExtensionPointIdentifier);
