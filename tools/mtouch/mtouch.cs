@@ -1343,6 +1343,7 @@ namespace Xamarin.Bundler
 				}
 			},
 			{ "tls-provider=", "Specify the default TLS provider", v => { tls_provider = v; }},
+			{ "xamarin-framework-directory=", "The framework directory", v => { mtouch_dir = v; }, true },
 		};
 
 			try {

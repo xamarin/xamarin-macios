@@ -303,22 +303,27 @@ bin/Makefile/mtouch.exe: $(MTOUCH_COMPILE_DEPS)
 	$(Q) mkdir -p $(dir $@)
 	$(Q_MCS) $(SYSTEM_MCS) $(MTOUCH_COMPILE_ARGS) -out:$@
 
-INSTALLED_MTOUCH = \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/mtouch.exe \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.dll \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.Mdb.dll \
+LOCAL_MTOUCH = \
+	bin/Makefile/mtouch.exe \
+	bin/Makefile/Mono.Cecil.dll \
+	bin/Makefile/Mono.Cecil.Mdb.dll \
 
-%.registrar.ios.m:     $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/%.dll     $(INSTALLED_MTOUCH)
-	$(Q_GEN) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(IOS_SDK_VERSION)   $< --registrar:static --target-framework Xamarin.iOS,v1.0    --abi i386,x86_64
+bin/Makefile/Mono.Cecil.dll: $(MONO_CECIL_DLL) | bin/Makefile
+	$(Q) cp $<* $(dir $@)
+
+bin/Makefile/Mono.Cecil.Mdb.dll: $(MONO_CECIL_MDB_DLL) | bin/Makefile
+	$(Q) cp $<* $(dir $@)
+
+%.registrar.ios.m:     $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/%.dll     $(LOCAL_MTOUCH)
+	$(Q_GEN) $(SYSTEM_MONO) --debug bin/Makefile/mtouch.exe --xamarin-framework-directory=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(IOS_SDK_VERSION)   $< --registrar:static --target-framework Xamarin.iOS,v1.0    --abi i386,x86_64
 	$(Q) touch $@
 
-%.registrar.watchos.m: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/%.dll $(INSTALLED_MTOUCH)
-	$(Q_GEN) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(WATCH_SDK_VERSION) $< --registrar:static --target-framework Xamarin.WatchOS,1.0 --abi i386
+%.registrar.watchos.m: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/%.dll $(LOCAL_MTOUCH)
+	$(Q_GEN) $(SYSTEM_MONO) --debug bin/Makefile/mtouch.exe --xamarin-framework-directory=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(WATCH_SDK_VERSION) $< --registrar:static --target-framework Xamarin.WatchOS,1.0 --abi i386
 	$(Q) touch $@
 
-%.registrar.tvos.m:    $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.dll    $(INSTALLED_MTOUCH)
-	$(Q_GEN) $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(TVOS_SDK_VERSION)  $< --registrar:static --target-framework Xamarin.TVOS,1.0    --abi x86_64
+%.registrar.tvos.m:    $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.dll    $(LOCAL_MTOUCH)
+	$(Q_GEN) $(SYSTEM_MONO) --debug bin/Makefile/mtouch.exe --xamarin-framework-directory=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(TVOS_SDK_VERSION)  $< --registrar:static --target-framework Xamarin.TVOS,1.0    --abi x86_64
 	$(Q) touch $@
 
 %.registrar.ios.a:        %.registrar.ios.i386.a %.registrar.ios.x86_64.a
