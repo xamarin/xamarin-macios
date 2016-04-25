@@ -316,7 +316,13 @@ clean-local::
 	@rm -rf $(BUILD_DESTDIR) .stamp-configure-*
 	@rm -f $(MONO_PATH)/configure
 
-$(MONO_PATH)/configure: $(MONO_PATH)/configure.ac Makefile
+ifdef DISABLE_BUILDS_MAKEFILE_DEP
+BUILDS_MAKEFILE_DEP =
+else
+BUILDS_MAKEFILE_DEP = Makefile
+endif
+
+$(MONO_PATH)/configure: $(MONO_PATH)/configure.ac $(BUILDS_MAKEFILE_DEP)
 	$(Q) ./wrap-autogen.sh $(MONO_PATH) mono $(XAMARIN_AUTOGEN_FLAGS)
 
 configure-mono:
