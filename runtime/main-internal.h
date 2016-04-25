@@ -15,6 +15,10 @@ extern "C" {
 	int main (int argc, char **argv);	
 #endif
 
+#ifdef TV_EXTENSION
+	int TVExtensionMain (int argc, char **argv);	
+#endif
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

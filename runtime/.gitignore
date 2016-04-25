@@ -7,4 +7,5 @@ mono-runtime.m
 xamarin/mono-runtime.h
 app-main.m
 watchextension-main.m
+tvextension-main.m
 bindings-generated.m

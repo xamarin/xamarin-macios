@@ -288,6 +288,12 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public bool IsTVExtension {
+			get {
+				return ExtensionIdentifier == "com.apple.tv-services";
+			}
+		}
+
 		public string ExtensionIdentifier {
 			get {
 				if (!IsExtension)

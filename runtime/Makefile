@@ -51,7 +51,7 @@ zlib-helper.c: $(MONO_PATH)/support/zlib-helper.c
 
 # our makefiles don't support building the same source file multiple times with different defines,
 # so just symlink extension-main.m to another file and compile that instead.
-app-main.m watchextension-main.m: extension-main.m
+app-main.m watchextension-main.m tvextension-main.m: extension-main.m
 	$(Q_LN) ln -fs $< $@
 
 #
@@ -68,6 +68,7 @@ MONOTOUCH_HEADERS =     \
 MONOTOUCH_LIBS =               \
 	libextension.a             \
 	libwatchextension.a        \
+	libtvextension.a           \
 	libapp.a                   \
 	libxamarin.a               \
 	libxamarin-debug.a         \
@@ -159,6 +160,7 @@ endif
 define LibTemplate
 $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/extension-main.$$(arch).o): EXTRA_DEFINES=-DEXTENSION
 $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/watchextension-main.$$(arch).o): EXTRA_DEFINES=-DWATCH_EXTENSION
+$$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/tvextension-main.$$(arch).o): EXTRA_DEFINES=-DTV_EXTENSION
 
 .libs/$(1)/libextension.%.a: .libs/$(1)/extension-main.%.o
 	$(Q) rm -f $$@
@@ -181,6 +183,14 @@ $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/watchextension-main.$$(arch).o
 	$$(call Q_2,AR,    [$1]) $(DEVICE_BIN_PATH)/ar cru $$@ $$^
 
 .libs/$(1)/libwatchextension.a: $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/libwatchextension.$$(arch).a)
+	$(Q) rm -f $$@
+	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
+
+.libs/$(1)/libtvextension.%.a: .libs/$(1)/tvextension-main.%.o
+	$(Q) rm -f $$@
+	$$(call Q_2,AR,    [$1]) $(DEVICE_BIN_PATH)/ar cru $$@ $$^
+
+.libs/$(1)/libtvextension.a: $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/libtvextension.$$(arch).a)
 	$(Q) rm -f $$@
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 

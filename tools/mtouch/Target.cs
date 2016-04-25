@@ -794,6 +794,8 @@ namespace Xamarin.Bundler
 			if (App.IsWatchExtension) {
 				mainlib = "libwatchextension.a";
 				compiler_flags.AddOtherFlag (" -e _xamarin_watchextension_main");
+			} else if (App.IsTVExtension) {
+				mainlib = "libtvextension.a";
 			} else if (App.IsExtension) {
 				mainlib = "libextension.a";
 			} else {
