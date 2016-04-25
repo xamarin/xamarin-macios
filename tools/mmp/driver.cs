@@ -807,23 +807,14 @@ namespace Xamarin.Bundler {
 
 		static string GetXamMacPrefix ()
 		{
-#if DEBUG
-			// inside XS mmp is executed by mono (not mkbundle) so the "normal" code returns the Mono path
-			return "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/";
-#else
+			var path = System.Reflection.Assembly.GetExecutingAssembly ().Location;
+
 			var envFrameworkPath = Environment.GetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH");
 			if (!String.IsNullOrEmpty (envFrameworkPath) && Directory.Exists (envFrameworkPath))
 				return envFrameworkPath;
 
-			var buffer = new byte [1024];
-			var buflen = (uint) buffer.Length;
-			if (_NSGetExecutablePath (buffer, ref buflen) != 0)
-				return null;
-
-			var path = System.Text.UTF8Encoding.UTF8.GetString (buffer, 0, (int) buflen);
 			path = GetRealPath (path);
-			return Path.GetDirectoryName (Path.GetDirectoryName (path));
-#endif
+			return Path.GetDirectoryName (Path.GetDirectoryName (Path.GetDirectoryName (path)));
 		}
 
 		public static string DriverBinDirectory {
