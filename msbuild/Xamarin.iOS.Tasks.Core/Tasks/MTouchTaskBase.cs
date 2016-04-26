@@ -101,6 +101,8 @@ namespace Xamarin.iOS.Tasks
 		[Required]
 		public bool IsAppExtension { get; set; }
 
+		public ITaskItem[] LinkDescriptions { get; set; }
+
 		[Required]
 		public bool LinkerDumpDependencies { get; set; }
 
@@ -415,6 +417,11 @@ namespace Xamarin.iOS.Tasks
 			if (IPhoneSdks.MonoTouch.SupportsGenericValueTypeSharing) {
 				if (!EnableGenericValueTypeSharing)
 					args.Add ("--gsharedvt=false");
+			}
+
+			if (LinkDescriptions != null) {
+				foreach (var desc in LinkDescriptions)
+					args.AddQuoted (string.Format ("--xml={0}", desc.ItemSpec));
 			}
 
 			if (EnableBitcode) {
