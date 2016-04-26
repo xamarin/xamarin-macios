@@ -1,5 +1,6 @@
 Make.config.inc
 Make.config.local
+configure.inc
 _ios-build
 _mac-build
 *.userprefs

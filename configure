@@ -25,7 +25,9 @@ Usage: configure [options]
 EOL
 }
 
-rm -f Make.config.local
+CONFIGURED_FILE=configure.inc
+
+rm -f $CONFIGURED_FILE
 
 if test -z "$1"; then
 	echo "configure: all default values assumed."
@@ -35,36 +37,36 @@ fi
 while test x$1 != x; do
 	case $1 in
 	--disable-mac)
-		echo "INCLUDE_MAC=" >> Make.config.local
+		echo "INCLUDE_MAC=" >> $CONFIGURED_FILE
 		echo "Mac Build disabled (partially)"
 		shift
 		;;
 	--disable-ios)
-		echo "INCLUDE_IOS=" >> Make.config.local
-		echo "INCLUDE_WATCH=" >> Make.config.local
-		echo "INCLUDE_TVOS=" >> Make.config.local
+		echo "INCLUDE_IOS=" >> $CONFIGURED_FILE
+		echo "INCLUDE_WATCH=" >> $CONFIGURED_FILE
+		echo "INCLUDE_TVOS=" >> $CONFIGURED_FILE
 		echo "iOS Build disabled (partially)"
 		shift
 		;;
 	--disable-strip)
-		echo "DISABLE_STRIP=1" >> Make.config.local
+		echo "DISABLE_STRIP=1" >> $CONFIGURED_FILE
 		shift
 		;;
     --disable-ccache)
-        echo "ENABLE_CCACHE=" >> Make.config.local
+        echo "ENABLE_CCACHE=" >> $CONFIGURED_FILE
         shift
         ;;
     --enable-ccache)
         if ! CCACHE=$(which ccache); then
             echo "Could not find ccache"
         else
-            echo "ENABLE_CCACHE=1" >> Make.config.local
+            echo "ENABLE_CCACHE=1" >> $CONFIGURED_FILE
             echo "cache enabled"
         fi
         shift
         ;;
     --enable-xamarin)
-        echo "ENABLE_XAMARIN=1" >> Make.config.local
+        echo "ENABLE_XAMARIN=1" >> $CONFIGURED_FILE
         shift
         ;;
 	--help|-h)
