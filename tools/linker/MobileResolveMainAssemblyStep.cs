@@ -27,6 +27,7 @@ namespace Xamarin.Linker.Steps {
 			// we have a watch extension which main project is a .dll and we have to tell the
 			// linker where to start (by marking the first, entry method)
 			Context.Resolver.CacheAssembly (assembly);
+			Context.SafeReadSymbols (assembly);
 
 			Annotations.Push (assembly);
 
