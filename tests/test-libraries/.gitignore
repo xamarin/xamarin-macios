@@ -1,0 +1,6 @@
+*.a
+*.o
+.libs
+libtest-ar.m
+libtest-object.m
+
