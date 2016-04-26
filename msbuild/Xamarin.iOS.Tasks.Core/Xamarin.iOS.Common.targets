@@ -1673,6 +1673,21 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)' And '$(_DistributionType)' == 'AdHoc' And Exists('$(_IntermediateODRDir)')" Files="$(_IpaAppBundleDir)AssetPackManifestTemplate.plist" />
 
+		<!-- Re-sign app bundle if the distribution type is AdHoc (this means the AssetPackManifest was added and the AssetPackManifestTemplate deleted) -->
+		<Codesign
+			SessionId="$(BuildSessionId)"
+			Condition="'$(MtouchTargetsEnabled)' And '$(_DistributionType)' == 'AdHoc' And Exists('$(_IntermediateODRDir)')"
+			ToolExe="$(CodesignExe)"
+			ToolPath="$(CodesignPath)"
+			CodesignAllocate="$(_CodesignAllocate)"
+			Keychain="$(CodesignKeychain)"
+			Entitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
+			ResourceRules="$(_PreparedResourceRules)"
+			Resource="$(_IpaAppBundleDir)"
+			SigningKey="$(_CodeSigningKey)"
+			ExtraArgs="$(CodesignExtraArgs)"
+			/>
+
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)' And '$(EmbedOnDemandResources)' == 'false'" Directories="$(_IpaOutputDir)OnDemandResources\" />
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)' And '$(EmbedOnDemandResources)' == 'false'" Directories="$(_IpaOutputDir)OnDemandResources\" />
 
