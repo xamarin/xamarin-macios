@@ -1613,6 +1613,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<_IntermediateODRDir Condition="'$(_DistributionType)' == 'AdHoc' And '$(EmbedOnDemandResources)' == 'false'">$(DeviceSpecificIntermediateOutputPath)OnDemandResourcesPackage\OnDemandResources\</_IntermediateODRDir>
 
 			<OnDemandResourcesUrl Condition="'$(_DistributionType)' == 'AdHoc' And '$(EmbedOnDemandResources)' == 'true'">OnDemandResources</OnDemandResourcesUrl>
+			
+			<IsStreamable>false</IsStreamable>
+			<IsStreamable Condition="$(EmbedOnDemandResources) == 'false'">true</IsStreamable>
 		</PropertyGroup>
 		
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)'" Directories="$(_IntermediateODRDir)" />
@@ -1668,12 +1671,12 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			TemplatePath="$(_IpaAppBundleDir)AssetPackManifestTemplate.plist"
 			OutputFile="$(_IpaAppBundleDir)AssetPackManifest.plist"
 			OnDemandResourceUrl="$(OnDemandResourcesUrl)"
-			IsStreamable="true"
+			IsStreamable="$(IsStreamable)"
 			/>
 
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)' And '$(_DistributionType)' == 'AdHoc' And Exists('$(_IntermediateODRDir)')" Files="$(_IpaAppBundleDir)AssetPackManifestTemplate.plist" />
 
-		<!-- Re-sign app bundle if the distribution type is AdHoc (this means the AssetPackManifest was added and the AssetPackManifestTemplate deleted) -->
+		<!-- Re-sign app bundle if anything changed inside of it -->
 		<Codesign
 			SessionId="$(BuildSessionId)"
 			Condition="'$(MtouchTargetsEnabled)' And '$(_DistributionType)' == 'AdHoc' And Exists('$(_IntermediateODRDir)')"
