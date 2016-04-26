@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E40B0B77-3467-4891-9117-7AF8F248E306}</ProjectGuid>
+    <ProjectTypeGuids>{F5B4F3BC-B597-4E2B-B552-EF5D8A32436F};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>bindingstest</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>bindings-framework-test</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\xamarin-macios\product.snk</AssemblyOriginatorKeyFile>
+    <TargetFrameworkIdentifier>MonoTouch</TargetFrameworkIdentifier>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;FRAMEWORK_TEST;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <DefineConstants>DO_NOT_REMOVE;FRAMEWORK_TEST</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <ConsolePause>False</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="monotouch" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ObjcBindingApiDefinition Include="ApiDefinition.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ObjcBindingCoreSource Include="StructsAndEnums.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Xamarin.ObjcBinding.CSharp.targets" />
+  <ItemGroup>
+    <ObjcBindingNativeFramework Include="..\..\..\xamarin-macios\tests\test-libraries\.libs\ios\XTest.framework">
+      <Link>XTest.framework</Link>
+    </ObjcBindingNativeFramework>
+    <ObjcBindingNativeFramework Include="..\..\..\xamarin-macios\tests\test-libraries\.libs\ios\XStaticObjectTest.framework">
+      <Link>XStaticObjectTest.framework</Link>
+    </ObjcBindingNativeFramework>
+    <ObjcBindingNativeFramework Include="..\..\..\xamarin-macios\tests\test-libraries\.libs\ios\XStaticArTest.framework">
+      <Link>XStaticArTest.framework</Link>
+    </ObjcBindingNativeFramework>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="XTest.framework.linkwith.cs">
+      <DependentUpon>XTest.framework</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\xamarin-macios\tests\test-libraries\libframework.m">
+      <Link>libframework.m</Link>
+    </None>
+    <None Include="..\..\..\xamarin-macios\tests\test-libraries\libframework.h">
+      <Link>libframework.h</Link>
+    </None>
+  </ItemGroup>
+  <Target Name="BeforeBuild" Inputs="..\..\..\xamarin-macios\tests\test-libraries\libframework.m" Outputs="..\..\..\xamarin-macios\tests\test-libraries\.libs\ios\XTest.framework ..\..\..\xamarin-macios\tests\test-libraries\.libs\ios\XSharedObjectTest.framework ..\..\..\xamarin-macios\tests\test-libraries\.libs\ios\XSharedARTest.framework">
+    <Exec Command="make -j8 -C ..\..\..\xamarin-macios\tests\test-libraries" />
+  </Target>
+</Project>
