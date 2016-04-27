@@ -320,6 +320,8 @@ namespace Xamarin.Bundler {
 				return null;
 
 			var plist = Driver.FromPList (info_plist);
+			if (!plist.ContainsKey (key))
+				return null;
 			return plist.GetString (key);
 		}
 
