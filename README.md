@@ -88,3 +88,7 @@ By default, everything required for both Xamarin.iOS and Xamarin.Mac will be bui
   to debug native executables using lldb.
 * --help: Show the help.
 
+## Contributing ##
+
+* We use [Mono's Coding Guidelines](http://www.mono-project.com/community/contributing/coding-guidelines/).
+* We use [Bugzilla](https://bugzilla.xamarin.com/newbug) to track issues.
