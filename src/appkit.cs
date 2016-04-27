@@ -8183,14 +8183,15 @@ namespace XamCore.AppKit {
 		[Export ("initWithContentsOfURL:")]
 		IntPtr Constructor (NSUrl url);
 
-		//[Export ("initByReferencingFile:")]
-		//IntPtr Constructor (string fileName);
 		//[Export ("initByReferencingURL:")]
 		//IntPtr Constructor (NSUrl url);
 
 		// FIXME: need IconRec
 		//[Export ("initWithIconRef:")]
 		//IntPtr Constructor (IconRef iconRef);
+
+		[Export ("initByReferencingFile:"), Internal]
+		IntPtr InitByReferencingFile (string name);
 
 		[Export ("initWithPasteboard:")]
 		IntPtr Constructor (NSPasteboard pasteboard);
