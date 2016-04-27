@@ -88,6 +88,14 @@ namespace XamCore.AppKit {
 			}
 		}
 
+		public NSImage (string fileName, bool lazy)
+		{
+			if (lazy)
+				Handle = InitByReferencingFile (fileName);
+			else
+				Handle = InitWithContentsOfFile (fileName);
+		}
+
 		public NSImage (NSData data, bool ignoresOrientation)
 		{
 			if (ignoresOrientation) {
