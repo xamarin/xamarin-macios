@@ -828,6 +828,9 @@ namespace XamCore.Foundation {
 
 		public IDisposable AddObserver (NSString key, NSKeyValueObservingOptions options, Action<NSObservedChange> observer)
 		{
+			if (observer == null)
+				throw new ArgumentNullException ("observer");
+
 			var o = new Observer (this, key, observer);
 			AddObserver (o, key, options, o.Handle);
 			return o;
