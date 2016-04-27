@@ -788,6 +788,9 @@ namespace XamCore.Foundation {
 			
 			public Observer (NSObject obj, NSString key, Action<NSObservedChange> cback)
 			{
+				if (cback == null)
+					throw new ArgumentNullException ("cback");
+
 				this.obj = new WeakReference (obj);
 				this.key = key;
 				this.cback = cback;
