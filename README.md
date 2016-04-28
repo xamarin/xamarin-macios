@@ -90,5 +90,15 @@ By default, everything required for both Xamarin.iOS and Xamarin.Mac will be bui
 
 ## Contributing ##
 
-* We use [Mono's Coding Guidelines](http://www.mono-project.com/community/contributing/coding-guidelines/).
-* We use [Bugzilla](https://bugzilla.xamarin.com/newbug) to track issues.
+### Mailing Lists
+
+To discuss this project, and participate in the design, we use the [macios-devel@lists.xamarin.com](http://lists.xamarin.com/mailman/listinfo/macios-devel) mailing list.   
+
+### Coding Guidelines
+
+We use [Mono's Coding Guidelines](http://www.mono-project.com/community/contributing/coding-guidelines/).
+
+### Reporting Bugs
+
+We use [Bugzilla](https://bugzilla.xamarin.com/newbug) to track issues.
+
