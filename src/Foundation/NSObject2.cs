@@ -786,11 +786,14 @@ namespace XamCore.Foundation {
 			Action<NSObservedChange> cback;
 			NSString key;
 			
-			public Observer (NSObject obj, NSString key, Action<NSObservedChange> cback)
+			public Observer (NSObject obj, NSString key, Action<NSObservedChange> observer)
 			{
+				if (observer == null)
+					throw new ArgumentNullException (nameof(observer));
+
 				this.obj = new WeakReference (obj);
 				this.key = key;
-				this.cback = cback;
+				this.cback = observer;
 				IsDirectBinding = false;
 			}
 
