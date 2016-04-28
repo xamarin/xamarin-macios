@@ -45,23 +45,31 @@ namespace Xamarin.Tests
 			}
 		}
 
-		static string FindConfigFile (string name)
+		static IEnumerable<string> FindConfigFiles (string name)
 		{
 			var dir = Environment.CurrentDirectory;
 			while (dir != "/") {
 				var file = Path.Combine (dir, name);
 				if (File.Exists (file))
-					return file;
+					yield return file;
+				file = Path.Combine (dir, "xamarin-macios", name);
+				if (File.Exists (file))
+					yield return file;
 				dir = Path.GetDirectoryName (dir);
 			}
-			return null;
 		}
 
 		static void ParseConfigFiles ()
 		{
-			ParseConfigFile (FindConfigFile ("test.config"));
-			ParseConfigFile (FindConfigFile ("Make.config.local"));
-			ParseConfigFile (FindConfigFile ("Make.config"));
+			ParseConfigFiles (FindConfigFiles ("test.config"));
+			ParseConfigFiles (FindConfigFiles ("Make.config.local"));
+			ParseConfigFiles (FindConfigFiles ("Make.config"));
+		}
+
+		static void ParseConfigFiles (IEnumerable<string> files)
+		{
+			foreach (var file in files)
+				ParseConfigFile (file);
 		}
 
 		static void ParseConfigFile (string file)
@@ -148,16 +156,16 @@ namespace Xamarin.Tests
 			Console.WriteLine ("  INCLUDE_WATCHOS={0}", include_watchos);
 		}
 
-		public static string MaccorePath {
+		public static string RootPath {
 			get {
 				var dir = Environment.CurrentDirectory;
-				var path = Path.Combine (dir, "maccore");
+				var path = Path.Combine (dir, "xamarin-macios");
 				while (!Directory.Exists (path) && path.Length > 3) {
 					dir = Path.GetDirectoryName (dir);
-					path = Path.Combine (dir, "maccore");
+					path = Path.Combine (dir, "xamarin-macios");
 				}
 				if (!Directory.Exists (path))
-					throw new Exception ("Could not find the maccore repo");
+					throw new Exception ("Could not find the xamarin-macios repo");
 				return path;
 			}
 		}
@@ -217,13 +225,13 @@ namespace Xamarin.Tests
 
 		public static string BinDirXI {
 			get {
-				return Path.Combine (MaccorePath, "_ios-build", "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin");
+				return Path.Combine (RootPath, "_ios-build", "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin");
 			}
 		}
 
 		public static string BinDirXM {
 			get {
-				return Path.Combine (MaccorePath, "_mac-build", "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current", "bin");
+				return Path.Combine (RootPath, "_mac-build", "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current", "bin");
 			}
 		}
 
