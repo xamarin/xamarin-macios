@@ -1613,6 +1613,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<_IntermediateODRDir Condition="'$(_DistributionType)' == 'AdHoc' And '$(EmbedOnDemandResources)' == 'false'">$(DeviceSpecificIntermediateOutputPath)OnDemandResourcesPackage\OnDemandResources\</_IntermediateODRDir>
 
 			<OnDemandResourcesUrl Condition="'$(_DistributionType)' == 'AdHoc' And '$(EmbedOnDemandResources)' == 'true'">OnDemandResources</OnDemandResourcesUrl>
+			
+			<IsStreamable>false</IsStreamable>
+			<IsStreamable Condition="$(EmbedOnDemandResources) == 'false'">true</IsStreamable>
 		</PropertyGroup>
 		
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)'" Directories="$(_IntermediateODRDir)" />
@@ -1650,7 +1653,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<!-- Sign assetpacks -->
 		<Codesign
 			SessionId="$(BuildSessionId)"
-			Condition="'$(MtouchTargetsEnabled)' And '@(_AssetPack)' != ''"
+			Condition="'$(MtouchTargetsEnabled)' And '@(_AssetPack)' != '' And '$(_DistributionType)' == 'AppStore'"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="$(_CodesignAllocate)"
@@ -1668,10 +1671,25 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			TemplatePath="$(_IpaAppBundleDir)AssetPackManifestTemplate.plist"
 			OutputFile="$(_IpaAppBundleDir)AssetPackManifest.plist"
 			OnDemandResourceUrl="$(OnDemandResourcesUrl)"
-			IsStreamable="true"
+			IsStreamable="$(IsStreamable)"
 			/>
 
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)' And '$(_DistributionType)' == 'AdHoc' And Exists('$(_IntermediateODRDir)')" Files="$(_IpaAppBundleDir)AssetPackManifestTemplate.plist" />
+
+		<!-- Re-sign app bundle if anything changed inside of it -->
+		<Codesign
+			SessionId="$(BuildSessionId)"
+			Condition="'$(MtouchTargetsEnabled)' And '$(_DistributionType)' == 'AdHoc' And Exists('$(_IntermediateODRDir)')"
+			ToolExe="$(CodesignExe)"
+			ToolPath="$(CodesignPath)"
+			CodesignAllocate="$(_CodesignAllocate)"
+			Keychain="$(CodesignKeychain)"
+			Entitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
+			ResourceRules="$(_PreparedResourceRules)"
+			Resource="$(_IpaAppBundleDir)"
+			SigningKey="$(_CodeSigningKey)"
+			ExtraArgs="$(CodesignExtraArgs)"
+			/>
 
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)' And '$(EmbedOnDemandResources)' == 'false'" Directories="$(_IpaOutputDir)OnDemandResources\" />
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(MtouchTargetsEnabled)' And '$(EmbedOnDemandResources)' == 'false'" Directories="$(_IpaOutputDir)OnDemandResources\" />
