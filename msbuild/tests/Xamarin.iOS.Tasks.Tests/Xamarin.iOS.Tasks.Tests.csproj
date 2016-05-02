@@ -92,7 +92,7 @@
     <Compile Include="..\..\..\tests\common\Configuration.cs">
       <Link>Configuration.cs</Link>
     </Compile>
-    <Compile Include="ProjectsTests\TVOS\MyTVApp.cs" />
+    <Compile Include="ProjectsTests\TVOS\TVApp.cs" />
     <Compile Include="TaskTests\GeneratePlistTaskTests\GeneratePlistTaskTests_iOS.cs" />
     <Compile Include="TaskTests\GeneratePlistTaskTests\GeneratePlistTaskTests_Core.cs" />
     <Compile Include="TaskTests\GeneratePlistTaskTests\GeneratePlistTaskTests_iOS_AppExtension.cs" />

@@ -83,6 +83,13 @@
       <DependentUpon>MySingleViewViewController.cs</DependentUpon>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MyTVServicesExtension\MyTVServicesExtension.csproj">
+      <IsAppExtension>true</IsAppExtension>
+      <Project>{0F124570-8B79-4593-B618-A90E51F339DF}</Project>
+      <Name>MyTVServicesExtension</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\TVOS\Xamarin.TVOS.CSharp.targets" />
   <ItemGroup>
     <InterfaceDefinition Include="MainStoryboard.storyboard" />
