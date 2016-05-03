@@ -25,5 +25,6 @@
 #endif
 
 void *xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *retval, bool retain, MonoMethod *method);
+MonoAssembly * xamarin_open_assembly (const char *name);
 
 #endif /* __RUNTIME_INTERNAL_H__ */

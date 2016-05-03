@@ -289,6 +289,7 @@ ALLOWED_UNDEFINED_SYMBOLS = _xamarin_enable_debug _xammac_setup
 
 MAC_LIBS =                   \
 	XamMacLauncher           \
+	libextension.a			 \
 	libxammac.a              \
 	libxammac-debug.a        \
 	libxammac.dylib          \
@@ -355,6 +356,21 @@ $(eval $(call ObjTemplate,i386,32))
 $(eval $(call ObjTemplate,x86_64,64))
 $(eval $(call ObjTemplate,i386,DEBUG32,-debug,-DDEBUG))
 $(eval $(call ObjTemplate,x86_64,DEBUG64,-debug,-DDEBUG))
+
+$(foreach arch,$(MAC_ARCHITECTURES),.libs/mac/extension-main.$(arch).o): EXTRA_DEFINES=-DEXTENSION
+
+.libs/mac/extension-main.%.o:
+	echo .libs/mac/extension-main.%.o:
+	rm -f $@
+	clang -c -DEXTENSION extension-main.m -arch $* -o $@
+
+.libs/mac/libextension.%.a: .libs/mac/extension-main.%.o
+	$(Q) rm -f $@
+	$(call Q_2,AR,    [mac]) $(DEVICE_BIN_PATH)/ar cru $@ $^
+
+.libs/mac/libextension.a: $(foreach arch,$(MAC_ARCHITECTURES),.libs/mac/libextension.$(arch).a)
+	$(Q) rm -f $@
+	$(call Q_2,LIPO,  [mac]) $(DEVICE_BIN_PATH)/lipo $^ -create -output $@
 
 .libs/mac/libxammac-debug.dylib: .libs/mac/libxammac-debug.x86_64.dylib .libs/mac/libxammac-debug.i386.dylib
 	$(call Q_2,LIPO,  [mac]) xcrun lipo -create $^ -o $@

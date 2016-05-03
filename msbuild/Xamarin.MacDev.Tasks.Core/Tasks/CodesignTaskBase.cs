@@ -28,6 +28,8 @@ namespace Xamarin.MacDev.Tasks
 
 		public string ExtraArgs { get; set; }
 
+		public bool IsAppExtension { get; set; }
+
 		#endregion
 
 		protected override string ToolName {
@@ -50,6 +52,10 @@ namespace Xamarin.MacDev.Tasks
 
 			args.Add ("-v");
 			args.Add ("--force");
+
+			if (IsAppExtension)
+				args.Add("--deep");
+			
 			args.Add ("--sign");
 			args.AddQuoted (SigningKey);
 
@@ -92,6 +98,7 @@ namespace Xamarin.MacDev.Tasks
 			Log.LogTaskProperty ("ResourceRules", ResourceRules);
 			Log.LogTaskProperty ("SigningKey", SigningKey);
 			Log.LogTaskProperty ("ExtraArgs", ExtraArgs);
+			Log.LogTaskProperty("IsAppExtension", IsAppExtension);
 
 			EnvironmentVariables = new string[] {
 				"CODESIGN_ALLOCATE=" + CodesignAllocate

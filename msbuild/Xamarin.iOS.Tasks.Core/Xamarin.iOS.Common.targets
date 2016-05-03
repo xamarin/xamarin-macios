@@ -1270,6 +1270,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_AssignAppExtensionConfiguration" Condition="'@(_AppExtensionReference)' != ''">
 		<!-- assign configs if building a solution file -->
+
 		<AssignProjectConfiguration
 			ProjectReferences = "@(_AppExtensionReference)"
 			SolutionConfigurationContents = "$(CurrentSolutionConfigurationContents)"
@@ -1377,6 +1378,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_AssignWatchAppConfiguration" Condition="'@(_WatchAppReference)' != ''">
 		<!-- assign configs if building a solution file -->
+
 		<AssignProjectConfiguration
 			ProjectReferences = "@(_WatchAppReference)"
 			SolutionConfigurationContents = "$(CurrentSolutionConfigurationContents)"

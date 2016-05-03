@@ -103,6 +103,8 @@ namespace Xamarin.Bundler {
 		static int verbose = 0;
 		public static bool Force;
 
+		static bool is_extension;
+
 		// This must be kept in sync with the system launcher's minimum mono version (in launcher/launcher-system.m)
 		static Version MinimumMonoVersion = new Version (4, 2, 0);
 		const string pkg_config = "/Library/Frameworks/Mono.framework/Commands/pkg-config";
@@ -278,6 +280,7 @@ namespace Xamarin.Bundler {
 				{ "custom_bundle_name=", "Specify a custom name for the MonoBundle folder.", v => custom_bundle_name = v, true }, // Hidden hack for "universal binaries"
 				{ "tls-provider=", "Specify the default TLS provider", v => { tls_provider = v; }},
 				{ "http-message-handler=", "Specify the default HTTP Message Handler", v => { http_message_provider = v; }},
+				{ "extension", "Specifies an app extension", v => is_extension = true },
 			};
 
 			IList<string> unprocessed;
@@ -484,6 +487,8 @@ namespace Xamarin.Bundler {
 
 			if (registrar == RegistrarMode.Default)
 				registrar = RegistrarMode.Dynamic;
+			if (is_extension)
+				registrar = RegistrarMode.Static;
 
 			if (no_executable) {
 				if (unprocessed.Count != 0) {
@@ -555,7 +560,7 @@ namespace Xamarin.Bundler {
 				GatherAssemblies ();
 				CheckReferences ();
 
-				if (!resolved_assemblies.Exists (f => Path.GetExtension (f).ToLower () == ".exe"))
+				if (!resolved_assemblies.Exists (f => Path.GetExtension (f).ToLower () == ".exe") && !is_extension)
 					throw new MonoMacException (79, true, "No executable was copied into the app bundle.  Please contact 'support@xamarin.com'", "");
 
 				// i18n must be dealed outside linking too (e.g. bug 11448)
@@ -1004,6 +1009,9 @@ namespace Xamarin.Bundler {
 					args.Append (Quote (finalLibPath)).Append (' ');
 				}
 
+				if (is_extension)
+					args.Append("-e _extension_main -framework NotificationCenter").Append(' ');
+
 				foreach (var f in BuildTarget.Frameworks)
 					args.Append ("-framework ").Append (f).Append (' ');
 				foreach (var f in BuildTarget.WeakFrameworks)
@@ -1372,7 +1380,8 @@ namespace Xamarin.Bundler {
 
 		/* Currently we clobber any existing files, perhaps we should error and have a -force flag */
 		static void CreateDirectoriesIfNeeded () {
-			App.AppDirectory = Path.Combine (output_dir, string.Format ("{0}.app", app_name));
+			App.AppDirectory = Path.Combine (output_dir, string.Format("{0}.{1}", app_name, is_extension ? "appex" : "app"));
+
 			contents_dir = Path.Combine (App.AppDirectory, "Contents");
 			macos_dir = Path.Combine (contents_dir, "MacOS");
 			frameworks_dir = Path.Combine (contents_dir, "Frameworks");

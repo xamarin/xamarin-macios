@@ -53,6 +53,8 @@ namespace Xamarin.Mac.Tasks
 		[Required]
 		public string SdkVersion { get; set; }
 
+		public bool IsAppExtension { get; set; }
+
 		public bool UseXamMacFullFramework { get; set; }
 
 		public string ApplicationName { get; set; }
@@ -163,8 +165,10 @@ namespace Xamarin.Mac.Tasks
 					args.AddQuoted ("/assembly:" + Path.GetFullPath (asm));
 			}
 
-			if (!string.IsNullOrEmpty (ApplicationAssembly))
-				args.AddQuoted (Path.GetFullPath (ApplicationAssembly));
+			if (!string.IsNullOrEmpty(ApplicationAssembly))
+			{
+				args.AddQuoted(Path.GetFullPath(ApplicationAssembly + (IsAppExtension ? ".dll" : ".exe")));
+			}
 
 			if (!string.IsNullOrWhiteSpace (ExtraArguments))
 				args.Add (ExtraArguments);
@@ -173,6 +177,9 @@ namespace Xamarin.Mac.Tasks
 				foreach (var nr in NativeReferences)
 					args.AddQuoted ("/native-reference:" + Path.GetFullPath (nr));
 			}
+				
+			if (IsAppExtension)
+				args.AddQuoted ("/extension");
 
 			args.Add ("/sdkroot");
 			args.AddQuoted (SdkRoot);
@@ -190,7 +197,7 @@ namespace Xamarin.Mac.Tasks
 		public override bool Execute ()
 		{
 			Log.LogTaskName ("Mmp");
-			Log.LogTaskProperty ("ApplicationAssembly", ApplicationAssembly);
+			Log.LogTaskProperty ("ApplicationAssembly", ApplicationAssembly + (IsAppExtension ? ".dll" : ".exe"));
 			Log.LogTaskProperty ("ApplicationName", ApplicationName);
 			Log.LogTaskProperty ("Architecture", Architecture);
 			Log.LogTaskProperty ("Debug", Debug);
@@ -210,6 +217,7 @@ namespace Xamarin.Mac.Tasks
 			Log.LogTaskProperty ("AppManifest", AppManifest);
 			Log.LogTaskProperty ("SdkVersion", SdkVersion);
 			Log.LogTaskProperty ("NativeReferences", NativeReferences);
+			Log.LogTaskProperty ("IsAppExtension", IsAppExtension);
 
 			return base.Execute ();
 		}

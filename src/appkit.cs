@@ -14775,6 +14775,10 @@ namespace XamCore.AppKit {
 		[Export ("storyboard", ArgumentSemantic.Strong)]
 		NSStoryboard Storyboard { get; }
 
+		[Mac (10,10)]
+		[Export ("presentViewControllerInWidget:")]
+		void PresentViewControllerInWidget (NSViewController viewController);
+
 //		Needs NSExtensionRequestHandling support
 //		[Mac (10,10)]
 //		[Export ("extensionContext", ArgumentSemantic.Strong)]

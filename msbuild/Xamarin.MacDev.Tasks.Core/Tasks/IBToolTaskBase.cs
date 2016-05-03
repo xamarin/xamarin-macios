@@ -23,6 +23,8 @@ namespace Xamarin.MacDev.Tasks
 		public bool IsWatchApp { get; set; }
 		public bool IsWatch2App { get; set; }
 
+		public bool IsAppExtension { get; set; }
+
 		public string SdkRoot { get; set; }
 
 		#endregion
@@ -168,6 +170,7 @@ namespace Xamarin.MacDev.Tasks
 			Log.LogTaskProperty ("IntermediateOutputPath", IntermediateOutputPath);
 			Log.LogTaskProperty ("IsWatchApp", IsWatchApp);
 			Log.LogTaskProperty ("IsWatch2App", IsWatch2App);
+			Log.LogTaskProperty ("IsAppExtension", IsAppExtension);
 			Log.LogTaskProperty ("ProjectDir", ProjectDir);
 			Log.LogTaskProperty ("ResourcePrefix", ResourcePrefix);
 			Log.LogTaskProperty ("SdkBinPath", SdkBinPath);
