@@ -18,6 +18,9 @@ namespace Xamarin.MacDev.Tasks
 		public string AppBundleName { get; set; }
 
 		[Required]
+		public bool IsAppExtension { get; set; }
+
+		[Required]
 		public string AppBundleDir { get; set; }
 
 		[Required]

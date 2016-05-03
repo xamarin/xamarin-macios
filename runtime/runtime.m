@@ -691,8 +691,8 @@ xamarin_file_exists (const char *path)
 	return stat (path, &buffer) == 0;
 }
 
-static MonoAssembly *
-open_assembly (const char *name)
+MonoAssembly *
+xamarin_open_assembly (const char *name)
 {
 	char path [1024];
 	MonoAssembly *assembly;
@@ -761,7 +761,7 @@ xamarin_open_and_register (const char *aname)
 {
 	MonoAssembly *assembly;
 
-	assembly = open_assembly (aname);
+	assembly = xamarin_open_assembly (aname);
 
 	register_assembly (assembly);
 	
@@ -1001,7 +1001,7 @@ xamarin_initialize ()
 
 	product_dll = xamarin_use_new_assemblies ? PRODUCT_DUAL_ASSEMBLY : PRODUCT_COMPAT_ASSEMBLY;
 
-	assembly = open_assembly (product_dll);
+	assembly = xamarin_open_assembly (product_dll);
 
 	if (!assembly)
 		xamarin_assertion_message ("Failed to load %s.", product_dll);
