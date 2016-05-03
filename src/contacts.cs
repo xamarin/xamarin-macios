@@ -414,7 +414,10 @@ namespace XamCore.Contacts {
 	}
 
 	public delegate void CNContactStoreRequestAccessHandler (bool granted, NSError error);
+#if !XAMCORE_4_0
 	public delegate void CNContactStoreEnumerateContactsHandler (CNContact contact, bool stop);
+#endif
+	public delegate void CNContactStoreListContactsHandler (CNContact contact, ref bool stop);
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
@@ -441,8 +444,15 @@ namespace XamCore.Contacts {
 		[Protected] // we cannot use ICNKeyDescriptor as Apple (and others) can adopt it from categories
 		NSObject GetUnifiedMeContact (NSArray keys, out NSError error);
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use the overload that takes CNContactStoreListContactsHandler instead")]
 		[Export ("enumerateContactsWithFetchRequest:error:usingBlock:")]
 		bool EnumerateContacts (CNContactFetchRequest fetchRequest, out NSError error, CNContactStoreEnumerateContactsHandler handler);
+
+		[Sealed] // We will introduce breaking changes anyways if XAMCORE_4_0 happens
+#endif
+		[Export ("enumerateContactsWithFetchRequest:error:usingBlock:")]
+		bool EnumerateContacts (CNContactFetchRequest fetchRequest, out NSError error, CNContactStoreListContactsHandler handler);
 
 		[Export ("groupsMatchingPredicate:error:")]
 		CNGroup [] GetGroups ([NullAllowed] NSPredicate predicate, out NSError error);
