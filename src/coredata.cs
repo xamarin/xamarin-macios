@@ -22,6 +22,16 @@ namespace XamCore.CoreData
 		InitialImportCompleted
 	}
 
+	[Native]
+	public enum NSSnapshotEventType : nuint_compat_int {
+		UndoInsertion = 1 << 1,
+		UndoDeletion = 1 << 2,
+		UndoUpdate = 1 << 3,
+		Rollback = 1 << 4,
+		Refresh = 1 << 5,
+		MergePolicy = 1 << 6
+	}
+
 	[BaseType (typeof (NSPersistentStore))]
 	// Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: NSMappedObjectStore must be initialized with initWithPersistentStoreCoordinator:configurationName:URL:options
 	[DisableDefaultCtor]
@@ -126,6 +136,9 @@ namespace XamCore.CoreData
 
 		[Export ("managedObjectClassName")]
 		string ManagedObjectClassName { get; set; }
+
+		[Export ("renamingIdentifier")]
+		string RenamingIdentifier { get; set; }
 
 		[NullAllowed] // by default this property is null
 		[Export ("name")]
@@ -253,11 +266,43 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSPropertyDescription))]
+	public interface NSExpressionDescription {
+
+		[Export ("expression")]
+		NSExpression Expression { get; set; }
+
+		[Export ("expressionResultType")]
+		NSAttributeType ResultType { get; set; }
+	}
+
+	[BaseType (typeof (NSPropertyDescription))]
 	public interface NSFetchedPropertyDescription {
 
 		[NullAllowed] // by default this property is null
 		[Export ("fetchRequest", ArgumentSemantic.Retain)]
 		NSFetchRequest FetchRequest { get; set; }
+	}
+
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSExpression))]
+	public interface NSFetchRequestExpression {
+
+		[Internal]
+		[DesignatedInitializer]
+		[Export ("initWithExpressionType:")]
+		IntPtr Constructor (NSExpressionType type);
+
+		[Static, Export ("expressionForFetch:context:countOnly:")]
+		NSFetchRequestExpression FromFetch (NSExpression fetch, NSExpression context, bool countOnly);
+
+		[Export ("requestExpression")]
+		NSExpression Request { get; }
+
+		[Export ("contextExpression")]
+		NSExpression Context { get; }
+
+		[Export ("countOnlyRequest")]
+		bool IsCountOnly { [Bind ("isCountOnlyRequest")] get;}
 	}
 
 	[BaseType (typeof (NSPersistentStoreRequest))]
@@ -547,6 +592,9 @@ namespace XamCore.CoreData
 
 		[Export ("isFault")]
 		bool IsFault { get; }
+
+		[Export ("faultingState")]
+		nuint FaultingState { get; }
 
 		[Export ("hasFaultForRelationshipNamed:")]
 		bool HasFaultForRelationshipNamed (string key);
@@ -925,6 +973,9 @@ namespace XamCore.CoreData
 
 		[Static, Export ("mappingModelFromBundles:forSourceModel:destinationModel:")]
 		NSMappingModel MappingModelFromBundles (NSBundle[] bundles, NSManagedObjectModel sourceModel, NSManagedObjectModel destinationModel);
+
+		[Static, Export ("inferredMappingModelForSourceModel:destinationModel:error:")]
+		NSMappingModel GetInferredMappingModel (NSManagedObjectModel source, NSManagedObjectModel destination, out NSError error);
 
 		[Export ("initWithContentsOfURL:")]
 		IntPtr Constructor (NSUrl url);
@@ -1450,6 +1501,9 @@ namespace XamCore.CoreData
 		[NullAllowed] // by default this property is null
 		[Export ("versionHashModifier")]
 		string VersionHashModifier { get; set; }
+
+		[Export ("renamingIdentifier")]
+		string RenamingIdentifier { get; set; }
 
 		// 5.0
 		[Since (5,0)]
