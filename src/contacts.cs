@@ -414,7 +414,7 @@ namespace XamCore.Contacts {
 	}
 
 	public delegate void CNContactStoreRequestAccessHandler (bool granted, NSError error);
-	public delegate void CNContactStoreEnumerateContactsHandler (CNContact contact, bool stop);
+	public delegate void CNContactStoreEnumerateContactsHandler (CNContact contact, ref bool stop);
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
