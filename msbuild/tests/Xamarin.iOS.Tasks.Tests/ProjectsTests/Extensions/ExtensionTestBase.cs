@@ -5,15 +5,27 @@ using NUnit.Framework;
 namespace Xamarin.iOS.Tasks
 {
 	public class ExtensionTestBase : TestBase {
+		public string BundlePath;
 		public string Platform;
 
 		public ExtensionTestBase (string platform) {
 			Platform = platform;
 		}
 
-		public void BuildExtension (string hostAppName, string extensionName, string platform, int expectedErrorCount = 0) 
+		public ExtensionTestBase (string bundlePath, string platform)
 		{
-			var mtouchPaths = SetupProjectPaths (hostAppName, "../", true, platform);
+			BundlePath = bundlePath;
+			Platform = platform;
+		}
+
+		public void BuildExtension (string hostAppName, string extensionName, string platform, int expectedErrorCount = 0)
+		{
+			BuildExtension (hostAppName, extensionName, platform, platform, expectedErrorCount);
+		}
+
+		public void BuildExtension (string hostAppName, string extensionName, string bundlePath, string platform, int expectedErrorCount = 0)
+		{
+			var mtouchPaths = SetupProjectPaths (hostAppName, "../", true, bundlePath);
 
 			var proj = SetupProject (Engine, mtouchPaths ["project_csprojpath"]);
 
@@ -22,7 +34,7 @@ namespace Xamarin.iOS.Tasks
 			Engine.GlobalProperties.SetProperty ("Platform", platform);
 
 			RunTarget (proj, "Clean");
-			Assert.IsFalse (Directory.Exists (AppBundlePath), "{1}: App bundle exists after cleanup: {0} ", AppBundlePath, platform);
+			Assert.IsFalse (Directory.Exists (AppBundlePath), "{1}: App bundle exists after cleanup: {0} ", AppBundlePath, bundlePath);
 		
 			proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
 			RunTarget (proj, "Build", expectedErrorCount);
@@ -30,7 +42,7 @@ namespace Xamarin.iOS.Tasks
 			if (expectedErrorCount > 0)
 				return;
 
-			Assert.IsTrue (Directory.Exists (AppBundlePath), "{1} App Bundle does not exist: {0} ", AppBundlePath, platform);
+			Assert.IsTrue (Directory.Exists (AppBundlePath), "{1} App Bundle does not exist: {0} ", AppBundlePath, bundlePath);
 
 			TestPList (AppBundlePath, new string[] {"CFBundleExecutable", "CFBundleVersion"});
 
@@ -41,13 +53,14 @@ namespace Xamarin.iOS.Tasks
 			TestFilesExists (AppBundlePath, ExpectedAppFiles);
 			TestFilesDoNotExist (AppBundlePath, UnexpectedAppFiles);
 
-			if (IsWatchOS) {
-				var coreFiles = platform == "iPhone" ? CoreAppFiles : CoreAppFiles.Union (new string [] { extensionName + ".dll", Path.GetFileNameWithoutExtension (extensionPath) }).ToArray ();
+			var coreFiles = platform == "iPhone" ? CoreAppFiles : CoreAppFiles.Union (new string [] { hostAppName + ".exe", hostAppName }).ToArray ();
+			if (IsTVOS)
+				TestFilesExists (platform == "iPhone" ? Path.Combine (AppBundlePath, ".monotouch-64") : AppBundlePath, coreFiles);
+			else if (IsWatchOS) {
+				coreFiles = platform == "iPhone" ? CoreAppFiles : CoreAppFiles.Union (new string [] { extensionName + ".dll", Path.GetFileNameWithoutExtension (extensionPath) }).ToArray ();
 				TestFilesExists (platform == "iPhone" ? Path.Combine (extensionPath, ".monotouch-32") : extensionPath, coreFiles);
-			} else {
-				var coreFiles = platform == "iPhone" ? CoreAppFiles : CoreAppFiles.Union (new string [] { hostAppName + ".exe", hostAppName }).ToArray ();
+			} else
 				TestFilesExists (platform == "iPhone" ? Path.Combine (AppBundlePath, ".monotouch-32") : AppBundlePath, coreFiles);
-			}
 		}
 
 		public void SetupPaths (string appName, string platform) 

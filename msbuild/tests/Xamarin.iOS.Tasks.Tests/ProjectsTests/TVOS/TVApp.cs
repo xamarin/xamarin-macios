@@ -4,16 +4,16 @@ namespace Xamarin.iOS.Tasks
 {
 	[TestFixture("TV", "iPhone")]
 	[TestFixture("TVSimulator", "iPhoneSimulator")]
-	public class MyTVAppTests : ProjectTest
+	public class TVAppTests : ExtensionTestBase
 	{
-		public MyTVAppTests(string bundlePath, string platform) : base(bundlePath, platform)
+		public TVAppTests (string bundlePath, string platform) : base(bundlePath, platform)
 		{
 		}
 
 		[Test]
 		public void BasicTest()
 		{
-			BuildProject("MyTVApp", BundlePath, Platform);
+			BuildExtension("MyTVApp", "MyTVServicesExtension", BundlePath, Platform);
 		}
 
 		public override string TargetFrameworkIdentifier {
