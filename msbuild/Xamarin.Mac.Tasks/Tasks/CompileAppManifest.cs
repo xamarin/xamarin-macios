@@ -29,6 +29,7 @@ namespace Xamarin.Mac.Tasks
 			Log.LogTaskProperty ("Architecture", Architecture);
 			Log.LogTaskProperty ("AssemblyName", AssemblyName);
 			Log.LogTaskProperty ("BundleIdentifier", BundleIdentifier);
+			Log.LogTaskProperty ("IsAppExtension", IsAppExtension);
 			Log.LogTaskProperty ("PartialAppManifests", PartialAppManifests);
 
 			try {
@@ -38,12 +39,15 @@ namespace Xamarin.Mac.Tasks
 				return false;
 			}
 
+			plist[ManifestKeys.CFBundleExecutable] = new PString (AssemblyName);
+
 			plist.SetIfNotPresent (ManifestKeys.CFBundleIdentifier, BundleIdentifier);
 			plist.SetIfNotPresent (ManifestKeys.CFBundleInfoDictionaryVersion, "6.0");
-			plist.SetIfNotPresent ("MonoBundleExecutable", AssemblyName + ".exe");
+			if (!IsAppExtension)
+				plist.SetIfNotPresent ("MonoBundleExecutable", AssemblyName + ".exe");
 			plist.SetIfNotPresent (ManifestKeys.CFBundleExecutable, AssemblyName);
 			plist.SetIfNotPresent (ManifestKeys.CFBundleName, AppBundleName);
-			plist.SetIfNotPresent (ManifestKeys.CFBundlePackageType, "APPL");
+			plist.SetIfNotPresent (ManifestKeys.CFBundlePackageType, IsAppExtension ? "XPC!" : "APPL");
 			plist.SetIfNotPresent (ManifestKeys.CFBundleSignature, "????");
 			plist.SetIfNotPresent (ManifestKeys.CFBundleVersion, "1.0");
 

@@ -7024,6 +7024,7 @@ namespace XamCore.AppKit {
 	}
 
 	[BaseType (typeof (NSObject))]
+	[ThreadSafe] // Not documented anywhere, but their Finder extension sample uses it on non-ui thread
 	[Dispose ("__mt_items_var = null;")]
 	public partial interface NSMenu : NSCoding, NSCopying {
 		[Export ("initWithTitle:")]
@@ -7220,6 +7221,7 @@ namespace XamCore.AppKit {
 	}
 
 	[BaseType (typeof (NSObject))]
+	[ThreadSafe] // Not documented anywhere, but their Finder extension sample uses it on non-ui thread
 	public interface NSMenuItem : NSCoding, NSCopying {
 		[Static]
 		[Export ("separatorItem")]
@@ -14631,7 +14633,11 @@ namespace XamCore.AppKit {
 	
 
 	[BaseType (typeof (NSResponder))]
-	public interface NSViewController : NSUserInterfaceItemIdentification, NSCoding, NSSeguePerforming {
+	public interface NSViewController : NSUserInterfaceItemIdentification, NSCoding, NSSeguePerforming
+#if XAMCORE_2_0
+	, NSExtensionRequestHandling 
+#endif
+	{
 		[Export ("initWithNibName:bundle:")]
 		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 
@@ -14775,26 +14781,31 @@ namespace XamCore.AppKit {
 		[Export ("storyboard", ArgumentSemantic.Strong)]
 		NSStoryboard Storyboard { get; }
 
-//		Needs NSExtensionRequestHandling support
-//		[Mac (10,10)]
-//		[Export ("extensionContext", ArgumentSemantic.Strong)]
-//		NSExtensionContext ExtensionContext { get; }
-//
-//		[Mac (10,10)]
-//		[Export ("sourceItemView", ArgumentSemantic.Strong)]
-//		NSView SourceItemView { get; set; }
-//
-//		[Mac (10,10)]
-//		[Export ("preferredScreenOrigin")]
-//		CGPoint PreferredScreenOrigin { get; set; }
-//
-//		[Mac (10,10)]
-//		[Export ("preferredMinimumSize")]
-//		CGSize PreferredMinimumSize { get; }
-//
-//		[Mac (10,10)]
-//		[Export ("preferredMaximumSize")]
-//		CGSize PreferredMaximumSize { get; }
+		[Mac (10,10)]
+		[Export ("presentViewControllerInWidget:")]
+		void PresentViewControllerInWidget (NSViewController viewController);
+
+#if XAMCORE_2_0
+		[Mac (10, 10, onlyOn64: true)]
+		[NullAllowed, Export ("extensionContext", ArgumentSemantic.Retain)]
+		NSExtensionContext ExtensionContext { get; }
+
+		[Mac (10, 10, onlyOn64: true)]
+		[NullAllowed, Export ("sourceItemView", ArgumentSemantic.Strong)]
+		NSView SourceItemView { get; set; }
+
+		[Mac (10, 10, onlyOn64: true)]
+		[Export ("preferredScreenOrigin", ArgumentSemantic.Assign)]
+		CGPoint PreferredScreenOrigin { get; set; }
+
+		[Mac (10, 10, onlyOn64: true)]
+		[Export ("preferredMinimumSize")]
+		CGSize PreferredMinimumSize { get; }
+
+		[Mac (10, 10, onlyOn64: true)]
+		[Export ("preferredMaximumSize")]
+		CGSize PreferredMaximumSize { get; }
+#endif
 	}
 
 	[Mac (10,10)]
