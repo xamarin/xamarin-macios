@@ -178,7 +178,25 @@ namespace XamCore.CoreMedia {
 		
 		public CMBlockBufferError CopyDataBytes (nuint offsetToData, nuint dataLength, IntPtr destination)
 		{
+			if (Handle == IntPtr.Zero)
+				throw new ObjectDisposedException ("BlockBuffer");
+
 			return CMBlockBufferCopyDataBytes (handle, offsetToData, dataLength, destination);
+		}
+
+		public CMBlockBufferError CopyDataBytes (nuint offsetToData, nuint dataLength, out byte [] destination)
+		{
+			if (Handle == IntPtr.Zero)
+				throw new ObjectDisposedException ("BlockBuffer");
+
+			destination = new byte [dataLength];
+			GCHandle destPinned = GCHandle.Alloc (destination, GCHandleType.Pinned);
+			IntPtr destPtr = destPinned.AddrOfPinnedObject ();
+			var error = CMBlockBufferCopyDataBytes (handle, offsetToData, dataLength, destPtr);
+			if (error != CMBlockBufferError.None)
+				destination = default (byte []);
+			destPinned.Free ();
+			return error;
 		}
 
 		[DllImport(Constants.CoreMediaLibrary)]
@@ -194,6 +212,21 @@ namespace XamCore.CoreMedia {
 				throw new ObjectDisposedException ("BlockBuffer");
 			
 			return CMBlockBufferReplaceDataBytes (sourceBytes, handle, offsetIntoDestination, dataLength);
+		}
+
+		public CMBlockBufferError ReplaceDataBytes (byte [] sourceBytes, nuint offsetIntoDestination)
+		{
+			if (Handle == IntPtr.Zero)
+				throw new ObjectDisposedException ("BlockBuffer");
+			if (Handle == IntPtr.Zero)
+				throw new ArgumentNullException (nameof (sourceBytes));
+
+			GCHandle replacePinned = GCHandle.Alloc (sourceBytes, GCHandleType.Pinned);
+			IntPtr replacePtr = replacePinned.AddrOfPinnedObject ();
+
+			var error = ReplaceDataBytes (replacePtr, offsetIntoDestination, (nuint) sourceBytes.Length);
+			replacePinned.Free ();
+			return error;
 		}
 
 		[DllImport(Constants.CoreMediaLibrary)]
@@ -307,6 +340,15 @@ namespace XamCore.CoreMedia {
 			return block;
 		}
 
+		public static CMBlockBuffer FromMemoryBlock (byte [] data, nuint offsetToData, CMBlockBufferFlags flags, out CMBlockBufferError error)
+		{
+			if (data == null)
+				throw new ArgumentNullException (nameof (data));
+
+			var allocator = new CMManagedArrayBlockAllocator (data);
+			return FromMemoryBlock (IntPtr.Zero, (uint) data.Length, allocator, offsetToData, (uint) data.Length, flags, out error);
+		}
+
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* OSStatus */ CMBlockBufferError CMBlockBufferCreateContiguous (
 			/* CFAllocatorRef */ IntPtr structureAllocator,
@@ -380,6 +422,17 @@ namespace XamCore.CoreMedia {
 				return CMBlockBufferAppendMemoryBlock (Handle, memoryBlock, blockLength, blockAllocator, IntPtr.Zero, offsetToData, dataLength, flags);
 			else
 				return CMBlockBufferAppendMemoryBlock (Handle, memoryBlock, blockLength, blockAllocator, ref customBlockSource.Cblock, offsetToData, dataLength, flags);
+		}
+
+		public CMBlockBufferError AppendMemoryBlock (byte [] data, nuint offsetToData, CMBlockBufferFlags flags)
+		{
+			if (Handle == IntPtr.Zero)
+				throw new ObjectDisposedException ("BlockBuffer");
+			if (data == null)
+				throw new ArgumentNullException (nameof (data));
+
+			var allocator = new CMManagedArrayBlockAllocator (data);
+			return AppendMemoryBlock (IntPtr.Zero, (uint) data.Length, allocator, offsetToData, (uint) data.Length, flags);
 		}
 	}
 }
