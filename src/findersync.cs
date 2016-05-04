@@ -3,6 +3,7 @@ using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 using XamCore.AppKit;
 
+#if XAMCORE_2_0
 namespace XamCore.FinderSync {
 	[Mac (10, 10, onlyOn64: true)]
 	[BaseType (typeof(NSExtensionContext))]
@@ -59,3 +60,4 @@ namespace XamCore.FinderSync {
 		string ToolbarItemToolTip { get; }
 	}	
 }
+#endif
