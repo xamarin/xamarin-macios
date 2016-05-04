@@ -171,6 +171,7 @@ NUNITLITE_SOURCES = \
 	$(NUNITLITE_PATH)/NUnitLite-1.0.0/src/framework/Extensibility/ISuiteBuilder.cs \
 	$(NUNITLITE_PATH)/NUnitLite-1.0.0/src/framework/Extensibility/ITestCaseBuilder.cs \
 	$(NUNITLITE_PATH)/NUnitLite-1.0.0/src/framework/Extensibility/ITestCaseProvider.cs \
+	$(NUNITLITE_PATH)/NUnitLite-1.0.0/src/framework/FinallyDelegate.cs \
 	$(NUNITLITE_PATH)/NUnitLite-1.0.0/src/framework/Internal/AssemblyHelper.cs \
 	$(NUNITLITE_PATH)/NUnitLite-1.0.0/src/framework/Internal/CultureDetector.cs \
 	$(NUNITLITE_PATH)/NUnitLite-1.0.0/src/framework/Internal/ExceptionHelper.cs \
