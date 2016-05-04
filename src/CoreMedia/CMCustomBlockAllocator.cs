@@ -90,5 +90,27 @@ namespace XamCore.CoreMedia {
 				gch.Free();
 		}
 	}
+
+	// This class is used internally by a couple of CMBlockBuffer methods
+	// that take a managed array as input parameter
+	internal class CMManagedArrayBlockAllocator : CMCustomBlockAllocator {
+
+		GCHandle dataHandle;
+		public CMManagedArrayBlockAllocator (byte [] data)
+		{
+			dataHandle = GCHandle.Alloc (data, GCHandleType.Pinned);
+		}
+
+		public override IntPtr Allocate (nuint sizeInBytes)
+		{
+			return dataHandle.AddrOfPinnedObject ();
+		}
+
+		public override void Free (IntPtr doomedMemoryBlock, nuint sizeInBytes)
+		{
+			if (dataHandle.IsAllocated)
+				dataHandle.Free ();
+		}
+	}
 }
 
