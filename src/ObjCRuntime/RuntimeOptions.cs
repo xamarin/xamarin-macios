@@ -141,15 +141,12 @@ namespace XamCore.ObjCRuntime {
 			var provider = options != null ? options.tls_provider : DefaultTlsProviderValue;
 			TypeDefinition type;
 			switch (provider) {
-			case LegacyTlsProviderValue:
-				// FIXME: For the moment, we can do the same as for "default" here - once we switch
-				//        to make appletls the default, we'll need to do something here.
 			case DefaultTlsProviderValue:
-				// We'll return null to let MonoTlsProviderFactory select the default provider.
-				type = module.GetType (Namespaces.Security + ".Tls.OldTlsProvider");
-				break;
 			case AppleTlsProviderValue:
 				type = module.GetType (Namespaces.Security + ".Tls.AppleTlsProvider");
+				break;
+			case LegacyTlsProviderValue:
+				type = module.GetType (Namespaces.Security + ".Tls.OldTlsProvider");
 				break;
 			default:
 				throw new InvalidOperationException (string.Format ("Unknown TlsProvider `{0}`.", provider));
@@ -223,10 +220,10 @@ namespace XamCore.ObjCRuntime {
 			switch (options.tls_provider) {
 			case null:
 			case DefaultTlsProviderValue:
-			case LegacyTlsProviderValue:
-				return new OldTlsProvider ();
 			case AppleTlsProviderValue:
 				return new AppleTlsProvider ();
+			case LegacyTlsProviderValue:
+				return new OldTlsProvider ();
 			default:
 				throw new InvalidOperationException (string.Format ("Invalid TLS Provider `{0}'.", options.tls_provider));
 			}
