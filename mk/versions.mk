@@ -65,7 +65,6 @@ $(eval $(call CheckSubmoduleTemplate,cecil,CECIL))
 $(eval $(call CheckSubmoduleTemplate,MonoTouch.Dialog,MONOTOUCH_DIALOG))
 $(eval $(call CheckSubmoduleTemplate,Touch.Unit,TOUCH_UNIT))
 $(eval $(call CheckSubmoduleTemplate,opentk,OPENTK))
-$(eval $(call CheckSubmoduleTemplate,ModernHttpClient,MODERNHTTPCLIENT))
 $(eval $(call CheckSubmoduleTemplate,Xamarin.MacDev,XAMARIN_MACDEV))
 $(eval $(call CheckSubmoduleTemplate,guiunit,GUI_UNIT))
 
