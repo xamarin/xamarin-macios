@@ -12,3 +12,4 @@ bin
 obj
 packages
 ~.pmcs*
+.DS_Store
