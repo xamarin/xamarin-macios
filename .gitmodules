@@ -34,3 +34,6 @@
 	path = external/Xamarin.MacDev
 	url = git@github.com:xamarin/Xamarin.MacDev
 	branch = master
+[submodule "external/guiunit"]
+	path = external/guiunit
+	url = https://github.com/mono/guiunit.git
