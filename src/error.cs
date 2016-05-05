@@ -56,6 +56,7 @@ using System.Collections.Generic;
 //		BI1039 The selector {0} on type {1} is found multiple times with different argument length {2} : {3}.
 //		BI1040 The selector {0} on type {1} is found multiple times with different argument out states on argument {2}.
 //		BI1041 The selector {0} on type {1} is found multiple times with different argument types on argument {2} - {3} : {4}.
+//		BI1042 Missing '[Field (LibraryName=value)]' for {field_pi.Name} (e.g."__Internal")
 //	BI11xx	warnings
 //		BI1101 Trying to use a string as a [Target]
 //		BI1102 Using the deprecated EventArgs for a delegate signature in {0}.{1}, please use DelegateName instead

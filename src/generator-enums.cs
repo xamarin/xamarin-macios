@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
@@ -96,8 +97,8 @@ public partial class Generator {
 				library_name = library_name.Substring (ns.Prefix.Length + 1);
 
 			// there might not be any other fields in the framework
-			if (!libraries.Contains (library_name))
-				libraries.Add (library_name);
+			if (!libraries.ContainsKey (library_name))
+				libraries.Add (library_name, null);
 		}
 
 		if (error != null) {
