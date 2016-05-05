@@ -1927,6 +1927,8 @@ WATCH_CROSS_CONFIGURE_FLAGS=$(CROSS_BASE_CONFIGURE_FLAGS)	\
 	--cache-file=../cross-watch.config.cache \
 	--target=armv7k-unknown-darwin \
 	--enable-gsharedvt \
+	--with-cooperative-gc=yes \
+	--with-cross-offsets=armv7k-apple-darwin.h
 
 WATCH_CONFIGURE_ENVIRONMENT = \
 	PATH="../llvm/usr/bin:$(PATH)" \
