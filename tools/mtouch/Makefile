@@ -413,7 +413,7 @@ all-local:: $(TARGETS)
 endif
 
 clean-local::
-	rm -f bin obj
+	rm -Rf bin obj
 	rm -f $(SIMLAUNCHERS)
 	$(SYSTEM_XBUILD) /t:Clean /p:Configuration=$(CECIL_CONFIG) $(CECIL_PATH)/Mono.Cecil.csproj
 	$(SYSTEM_XBUILD) /t:Clean /p:Configuration=$(CECIL_CONFIG) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj
