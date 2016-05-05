@@ -1485,7 +1485,7 @@ public partial class Generator : IMemberGatherer {
 	Dictionary<Type,TrampolineInfo> trampolines = new Dictionary<Type,TrampolineInfo> ();
 	Dictionary<Type,int> trampolines_generic_versions = new Dictionary<Type,int> ();
 	Dictionary<Type,Type> notification_event_arg_types = new Dictionary<Type,Type> ();
-	List <string> libraries = new List <string> ();
+	Dictionary<string, string> libraries = new Dictionary<string, string> (); // <LibraryName, libraryPath>
 
 	List<Tuple<string, ParameterInfo[]>> async_result_types = new List<Tuple <string, ParameterInfo[]>> ();
 	HashSet<string> async_result_types_emitted = new HashSet<string> ();
@@ -3004,7 +3004,30 @@ public partial class Generator : IMemberGatherer {
 			print ("}} /* class {0} */", ti.NativeInvokerName);
 		}
 	}
-	
+
+	// We need to check against the user using just UIKit (and friends) in the FieldAttribute
+	// so we need to reflect the libraries contained in our Constants class and do the mapping
+	// we will return the system library path if found
+	bool IsNotSystemLibrary (string library_name)
+	{
+		string library_path = null;
+		return TryGetLibraryPath (library_name, ref library_path);
+	}
+
+	bool TryGetLibraryPath (string library_name, ref string library_path)
+	{
+		var libSuffixedName = $"{library_name}Library";
+		var constType = typeof (
+#if XAMCORE_2_0
+		XamCore.ObjCRuntime.Constants);
+#else
+		XamCore.Constants);
+#endif
+		var field = constType.GetFields (BindingFlags.Public | BindingFlags.Static).FirstOrDefault (f => f.Name == libSuffixedName);
+		library_path = (string) field?.GetValue (null);
+		return library_path == null;
+	}
+
 	void GenerateLibraryHandles ()
 	{
 		sw = GetOutputStream ("ObjCRuntime", "Libraries");
@@ -3013,10 +3036,14 @@ public partial class Generator : IMemberGatherer {
 		print ("namespace {0} {{", ns.CoreObjCRuntime); indent++;
 		print ("[CompilerGenerated]");
 		print ("static partial class Libraries {"); indent++;
-		foreach (string library_name in libraries.OrderBy (v => v)) {
-			print ("static public class {0} {{", library_name); indent++;
+		foreach (var library_info in libraries.OrderBy (v => v.Key)) {
+			var library_name = library_info.Key;
+			var library_path = library_info.Value;
+			print ("static public class {0} {{", library_name.Replace (".", string.Empty)); indent++;
 			if (BindThirdPartyLibrary && library_name == "__Internal") {
 				print ("static public readonly IntPtr Handle = Dlfcn.dlopen (null, 0);");
+			} else if (BindThirdPartyLibrary && library_path != null && IsNotSystemLibrary (library_name)) {
+				print ($"static public readonly IntPtr Handle = Dlfcn.dlopen (\"{library_path}\", 0);");
 			} else {
 				print ("static public readonly IntPtr Handle = Dlfcn.dlopen (Constants.{0}Library, 0);", library_name);
 			}
@@ -6228,6 +6255,7 @@ public partial class Generator : IMemberGatherer {
 				foreach (var field_pi in field_exports.OrderBy (f => f.Name)) {
 					var fieldAttr = (FieldAttribute) field_pi.GetCustomAttributes (typeof (FieldAttribute), true) [0];
 					string library_name; 
+					string library_path = null;
 
 					if (fieldAttr.LibraryName != null){
 						// Remapped
@@ -6241,19 +6269,31 @@ public partial class Generator : IMemberGatherer {
 								library_name = CoreServicesMap;
 								break;
 							}
-						} 
+						} else {
+							// we get something in LibraryName from FieldAttribute so we asume
+							// it is a path to a library, so we save the path and change library name
+							// to a valid identifier if needed
+							library_path = library_name;
+							library_name = Path.GetFileName (library_name);
+							if (library_name.Contains ("."))
+								library_name = library_name.Replace (".", string.Empty);
+						}
+					} else if (BindThirdPartyLibrary) {
+						// User should provide a LibraryName
+						throw new BindingException (1042, true, $"Missing '[Field (LibraryName=value)]' for {field_pi.Name} (e.g.\"__Internal\")");
 					} else {
 						library_name = type.Namespace;
 						// note: not every binding namespace will start with ns.Prefix (e.g. MonoTouch.)
-						if (!String.IsNullOrEmpty (ns.Prefix) && library_name.StartsWith (ns.Prefix))
+						if (!String.IsNullOrEmpty (ns.Prefix) && library_name.StartsWith (ns.Prefix)) {
 							library_name = library_name.Substring (ns.Prefix.Length + 1);
+							library_name = library_name.Replace (".", string.Empty); // Remove dots from namespaces
+						}
 					}
 
-					if (!libraries.Contains (library_name)) {
-						libraries.Add (library_name);
-					}
+					if (!libraries.ContainsKey (library_name))
+						libraries.Add (library_name, library_path);
+
 					bool is_unified_internal = field_pi.IsUnifiedInternal ();
-					
 					string fieldTypeName = FormatType (field_pi.DeclaringType, field_pi.PropertyType);
 					// Value types we dont cache for now, to avoid Nullable<T>
 					if (!field_pi.PropertyType.IsValueType) {
@@ -6263,7 +6303,7 @@ public partial class Generator : IMemberGatherer {
 					}
 
 					PrintPreserveAttribute (field_pi);
-					print ("[Field (\"{0}\",  \"{1}\")]", fieldAttr.SymbolName, library_name);
+					print ("[Field (\"{0}\",  \"{1}\")]", fieldAttr.SymbolName, library_path ?? library_name);
 					PrintPlatformAttributes (field_pi);
 					if (Generator.HasAttribute (field_pi, typeof (AdvancedAttribute))){
 						print ("[EditorBrowsable (EditorBrowsableState.Advanced)]");
