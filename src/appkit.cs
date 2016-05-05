@@ -7024,6 +7024,7 @@ namespace XamCore.AppKit {
 	}
 
 	[BaseType (typeof (NSObject))]
+	[ThreadSafe] // Not documented anywhere, but their Finder extension sample uses it on non-ui thread
 	[Dispose ("__mt_items_var = null;")]
 	public partial interface NSMenu : NSCoding, NSCopying {
 		[Export ("initWithTitle:")]
@@ -7220,6 +7221,7 @@ namespace XamCore.AppKit {
 	}
 
 	[BaseType (typeof (NSObject))]
+	[ThreadSafe] // Not documented anywhere, but their Finder extension sample uses it on non-ui thread
 	public interface NSMenuItem : NSCoding, NSCopying {
 		[Static]
 		[Export ("separatorItem")]

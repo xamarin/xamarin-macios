@@ -34,7 +34,6 @@ namespace XamCore.FinderSync {
 
 	[Mac (10, 10, onlyOn64: true)]
 	[BaseType (typeof(NSObject))]
-	[Protocol, Model]
 	interface FIFinderSync : NSExtensionRequestHandling
 	{
 		[Export ("menuForMenuKind:")]
