@@ -33,9 +33,11 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 	<Target Name="Rebuild" Condition="'$(_InvalidConfigurationWarning)' != 'true'" DependsOnTargets="_VerifySigningEnabled;_GenerateBundleName;$(RebuildDependsOn)" Outputs="$(_AppExtensionBundlePath)" />
 
 	<Target Name="_VerifySigningEnabled" DependsOnTargets="_DetectSigningIdentity">
-		<Error Condition="'$(EnableCodeSigning)' != 'true'" Text="OS X extensions are required to be code signed." />
-		<Error Condition="'$(_CodeSigningKey)' == ''" Text="OS X extensions are required to be code signed." />
-		<Error Condition="'$(CodeSignEntitlements)' == ''" Text="OS X extensions must have entitlements with App Sandbox enabled." />
+		<PropertyGroup>
+			<EnableCodeSigning Condition="'$(EnableCodeSigning)' != 'true'">true</EnableCodeSigning>
+			<_CodeSigningKey Condition="'$(_CodeSigningKey)' == ''">-</_CodeSigningKey>
+			<CodeSignEntitlements Condition="'$(CodeSignEntitlements)' == ''">Entitlements.plist</CodeSignEntitlements>
+		</PropertyGroup>
 	</Target>
 
 	<Target Name="_GenerateBundleName" DependsOnTargets="_DetectSigningIdentity">
