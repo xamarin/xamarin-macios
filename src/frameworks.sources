@@ -1215,6 +1215,7 @@ UIKIT_SOURCES = \
 	UIKit/UIActionSheet.cs \
 	UIKit/UIActivityItemProvider.cs \
 	UIKit/UIActivityViewController.cs \
+	UIKit/UIAdaptivePresentationControllerDelegate.cs \
 	UIKit/UIAlertView.cs \
 	UIKit/UIAppearance.cs \
 	UIKit/UIApplication.cs \
@@ -1252,6 +1253,7 @@ UIKIT_SOURCES = \
 	UIKit/UIPickerView.cs \
 	UIKit/UIPopoverController.cs \
 	UIKit/UIPopoverPresentationController.cs \
+	UIKit/UIPopoverPresentationControllerDelegate.cs \
 	UIKit/UIPrint.cs \
 	UIKit/UIPushBehavior.cs \
 	UIKit/UIResponder.cs \
