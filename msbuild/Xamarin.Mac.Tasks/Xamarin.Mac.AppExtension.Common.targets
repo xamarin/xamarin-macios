@@ -29,10 +29,10 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 	
 	<!-- Override GetTargetPath, Build, and Rebuild -->
 	<Target Name="GetBundleTargetPath" DependsOnTargets="_GenerateBundleName;$(GetTargetPathDependsOn)" Outputs="@(_AppExtensionBundlePath)" />
-	<Target Name="Build"   Condition="'$(_InvalidConfigurationWarning)' != 'true'" DependsOnTargets="_VerifySigningEnabled;_GenerateBundleName;$(BuildDependsOn)" Outputs="$(_AppExtensionBundlePath)" />
-	<Target Name="Rebuild" Condition="'$(_InvalidConfigurationWarning)' != 'true'" DependsOnTargets="_VerifySigningEnabled;_GenerateBundleName;$(RebuildDependsOn)" Outputs="$(_AppExtensionBundlePath)" />
+	<Target Name="Build"   Condition="'$(_InvalidConfigurationWarning)' != 'true'" DependsOnTargets="_EnabledLocalSigning;_GenerateBundleName;$(BuildDependsOn)" Outputs="$(_AppExtensionBundlePath)" />
+	<Target Name="Rebuild" Condition="'$(_InvalidConfigurationWarning)' != 'true'" DependsOnTargets="_EnabledLocalSigning;_GenerateBundleName;$(RebuildDependsOn)" Outputs="$(_AppExtensionBundlePath)" />
 
-	<Target Name="_VerifySigningEnabled" DependsOnTargets="_DetectSigningIdentity">
+	<Target Name="_EnabledLocalSigning" DependsOnTargets="_DetectSigningIdentity">
 		<PropertyGroup>
 			<EnableCodeSigning Condition="'$(EnableCodeSigning)' != 'true'">true</EnableCodeSigning>
 			<_CodeSigningKey Condition="'$(_CodeSigningKey)' == ''">-</_CodeSigningKey>
