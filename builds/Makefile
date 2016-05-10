@@ -1357,11 +1357,12 @@ WATCHOS_FLAGS =                  \
 	-D_XOPEN_SOURCE              \
 	-DHAVE_LARGE_FILE_SUPPORT=1  \
 	$(DEVICE_BUILD_CFLAGS)       \
+	$(BITCODE_CFLAGS)
 
 WATCHOS_CPPFLAGS        = $(WATCHOS_FLAGS)
 WATCHOS_CFLAGS          = $(WATCHOS_FLAGS)
 WATCHOS_CXXFLAGS        = $(WATCHOS_FLAGS)
-WATCHOS_LDFLAGS         = -arch armv7k -Wl,-bitcode_bundle -framework CoreFoundation -lobjc
+WATCHOS_LDFLAGS         = -arch armv7k -Wl,-bitcode_bundle -framework CoreFoundation -lobjc $(BITCODE_LDFLAGS)
 WATCHOS_CONFIGURE_FLAGS =                        \
 	--build=i386-apple-darwin10                  \
 	--host=armv7k-apple-darwin10                 \
@@ -1388,7 +1389,7 @@ WATCHOS_CONFIGURE_FLAGS =                        \
 	--enable-native-types                        \
 	--enable-gsharedvt                           \
 	$(XAMARIN_CONFIGURE_FLAGS)          \
-	--with-bitcode=yes                           \
+	$(BITCODE_CONFIGURE_FLAGS)
 
 WATCHOS_ACVARS =                    \
 	mono_cv_uscore=yes              \
