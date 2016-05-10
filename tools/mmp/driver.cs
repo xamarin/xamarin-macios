@@ -807,11 +807,20 @@ namespace Xamarin.Bundler {
 
 		static string GetXamMacPrefix ()
 		{
-			var path = System.Reflection.Assembly.GetExecutingAssembly ().Location;
-
 			var envFrameworkPath = Environment.GetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH");
 			if (!String.IsNullOrEmpty (envFrameworkPath) && Directory.Exists (envFrameworkPath))
 				return envFrameworkPath;
+
+			var path = System.Reflection.Assembly.GetExecutingAssembly ().Location;
+
+#if DEBUG
+			var localPath = Path.GetDirectoryName (path);
+			while (localPath.Length > 1) {
+				if (Directory.Exists (Path.Combine (localPath, "_mac-build")))
+					return Path.Combine (localPath, "_mac-build", "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
+				localPath = Path.GetDirectoryName (localPath);
+			}
+#endif
 
 			path = GetRealPath (path);
 			return Path.GetDirectoryName (Path.GetDirectoryName (Path.GetDirectoryName (path)));
