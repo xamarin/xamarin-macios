@@ -123,7 +123,7 @@ namespace MonoMac.Tuner {
 		{
 			var pipeline = new Pipeline ();
 
-			pipeline.AppendStep (new LoadReferencesStep ());
+			pipeline.AppendStep (options.LinkMode == LinkMode.None ? new LoadOptionalReferencesStep () : new LoadReferencesStep ());
 
 			if (options.I18nAssemblies != I18nAssemblies.None)
 				pipeline.AppendStep (new LoadI18nAssemblies (options.I18nAssemblies));
@@ -240,4 +240,31 @@ namespace MonoMac.Tuner {
 			base.ProcessAssembly (assembly);
 		}
 	}
+
+	class LoadOptionalReferencesStep : LoadReferencesStep
+	{
+		HashSet<AssemblyNameDefinition> _references = new HashSet<AssemblyNameDefinition> ();
+
+		protected override void ProcessAssembly (AssemblyDefinition assembly)
+		{
+			ProcessReferences (assembly);
+		}
+
+		void ProcessReferences (AssemblyDefinition assembly)
+		{
+			if (_references.Contains (assembly.Name))
+				return;
+
+			_references.Add (assembly.Name);
+
+			foreach (AssemblyNameReference reference in assembly.MainModule.AssemblyReferences) {
+				try {
+					ProcessReferences (Context.Resolve (reference));
+				} catch (AssemblyResolutionException fnfe) {
+					ErrorHelper.Warning (2013, fnfe, "Failed to resolve the reference to \"{0}\", referenced in \"{1}\". The app will not include the referenced assembly, and may fail at runtime.", fnfe.AssemblyReference.FullName, assembly.Name.FullName);
+				}
+			}
+		}
+	}
+
 }
