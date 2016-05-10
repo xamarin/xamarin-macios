@@ -228,6 +228,19 @@ namespace XamCore.AudioToolbox {
 			return MusicSequenceGetTrackIndex (handle, track.Handle, out index);
 		}
 
+		[DllImport (Constants.AudioToolboxLibrary)]
+		extern static /* OSStatus */ MusicPlayerStatus MusicSequenceGetTempoTrack (/* MusicSequence */ IntPtr sequence, /* MusicTrack */ out IntPtr outTrack);
+
+		public MusicTrack GetTempoTrack ()
+		{
+			IntPtr outTrack;
+
+			if (MusicSequenceGetTempoTrack (handle, out outTrack) == MusicPlayerStatus.Success)
+				return new MusicTrack (this, outTrack, owns: false);
+			else
+				return null;
+		}
+
 #if IOS
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicSequenceSetMIDIEndpoint (/* MusicSequence */ IntPtr inSequence, MidiEndpointRef inEndpoint);
