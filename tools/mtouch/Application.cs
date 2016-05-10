@@ -376,7 +376,12 @@ namespace Xamarin.Bundler {
 				}
 				break;
 			case ApplePlatform.WatchOS:
-				validAbis.Add (IsDeviceBuild ? Abi.ARMv7k : Abi.i386);
+				if (IsDeviceBuild) {
+					validAbis.Add (Abi.ARMv7k);
+					validAbis.Add (Abi.ARMv7k | Abi.LLVM);
+				} else {
+					validAbis.Add (Abi.i386);
+				}
 				break;
 			case ApplePlatform.TVOS:
 				if (IsDeviceBuild) {
@@ -448,8 +453,11 @@ namespace Xamarin.Bundler {
 				case "armv7k":
 					value = Abi.ARMv7k;
 					break;
+				case "armv7k+llvm":
+					value = Abi.ARMv7k | Abi.LLVM;
+					break;
 				default:
-					throw new MonoTouchException (15, true, "Invalid ABI: {0}. Supported ABIs are: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, arm64 and arm64+llvm.", str);
+					throw new MonoTouchException (15, true, "Invalid ABI: {0}. Supported ABIs are: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, armv7k+llvm, arm64 and arm64+llvm.", str);
 				}
 
 				// merge this value with any existing ARMv? already specified.
