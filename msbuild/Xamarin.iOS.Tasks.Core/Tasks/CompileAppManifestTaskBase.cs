@@ -8,9 +8,11 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
+using System.Runtime.InteropServices;
 
 namespace Xamarin.iOS.Tasks
 {
+	[ClassInterface (ClassInterfaceType.None)]
 	public abstract class CompileAppManifestTaskBase : Xamarin.MacDev.Tasks.CompileAppManifestTaskBase
 	{
 		[Required]
@@ -204,6 +206,7 @@ namespace Xamarin.iOS.Tasks
 
 		void SetDeviceFamily (PDictionary plist)
 		{
+			Log.LogWarning ("SetDeviceFamily: {0}", Framework);
 			switch (Framework) {
 			case PlatformFramework.iOS:
 				SetIOSDeviceFamily (plist);
@@ -219,6 +222,7 @@ namespace Xamarin.iOS.Tasks
 
 		void SetIOSDeviceFamily (PDictionary plist)
 		{
+			Log.LogWarning ("SetIOSDeviceFamily: MinimumOSVersion = {0}, supportedDevices = {1}", minimumOSVersion, supportedDevices);
 			if (IsWatchApp) {
 				if (SdkIsSimulator) {
 					plist.SetUIDeviceFamily (IPhoneDeviceType.IPhone | IPhoneDeviceType.Watch);

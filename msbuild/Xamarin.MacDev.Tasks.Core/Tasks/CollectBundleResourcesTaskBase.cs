@@ -93,7 +93,7 @@ namespace Xamarin.MacDev.Tasks
 						if (string.IsNullOrEmpty (metadata))
 							metadata = item.GetMetadata ("OptimizeImage");
 
-						if (!string.IsNullOrEmpty (metadata) || !bool.TryParse (metadata, out optimize)) {
+						if (string.IsNullOrEmpty (metadata) || !bool.TryParse (metadata, out optimize)) {
 							switch (Path.GetExtension (item.ItemSpec).ToLowerInvariant ()) {
 							case ".plist": case ".strings": optimize = OptimizePropertyLists; break;
 							case ".png": optimize = OptimizePNGs; break;
