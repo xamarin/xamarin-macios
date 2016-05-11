@@ -196,6 +196,30 @@ namespace Xamarin.Bundler {
 			File.Move (source, target);
 		}
 
+		static void MoveIfDifferent (string path, string tmp)
+		{
+			// Don't read the entire file into memory, it can be quite big in certain cases.
+
+			bool move = false;
+
+			using (var fs1 = new FileStream (path, FileMode.Open, FileAccess.Read)) {
+				using (var fs2 = new FileStream (tmp, FileMode.Open, FileAccess.Read)) {
+					if (fs1.Length != fs2.Length) {
+						Log (3, "New file '{0}' has different length, writing new file.", path);
+						move = true;
+					} else {
+						move = !Cache.CompareStreams (fs1, fs2);
+					}
+				}
+			}
+
+			if (move) {
+				FileMove (tmp, path);
+			} else {
+				Log (3, "Target {0} is up-to-date.", path);
+			}
+		}
+
 		public static void WriteIfDifferent (string path, string contents)
 		{
 			var tmp = path + ".tmp";
@@ -207,29 +231,31 @@ namespace Xamarin.Bundler {
 					return;
 				}
 
-				// Don't read the entire file into memory, it can be quite big in certain cases.
-
-				bool move = false;
 				File.WriteAllText (tmp, contents);
-
-				using (var fs1 = new FileStream (path, FileMode.Open, FileAccess.Read)) {
-					using (var fs2 = new FileStream (tmp, FileMode.Open, FileAccess.Read)) {
-						if (fs1.Length != fs2.Length) {
-							Log (3, "New file '{0}' has different length, writing new file.", path);
-							move = true;
-						} else {
-							move = !Cache.CompareStreams (fs1, fs2);
-						}
-					}
-				}
-
-				if (move) {
-					FileMove (tmp, path);
-				} else {
-					Log (3, "Target {0} is up-to-date.", path);
-				}
+				MoveIfDifferent (path, tmp);
 			} catch (Exception e) {
 				File.WriteAllText (path, contents);
+				ErrorHelper.Warning (1014, e, "Failed to re-use cached version of '{0}': {1}.", path, e.Message);
+			} finally {
+				Application.TryDelete (tmp);
+			}
+		}
+
+		public static void WriteIfDifferent (string path, byte[] contents)
+		{
+			var tmp = path + ".tmp";
+
+			try {
+				if (!File.Exists (path)) {
+					File.WriteAllBytes (path, contents);
+					Log (3, "File '{0}' does not exist, creating it.", path);
+					return;
+				}
+
+				File.WriteAllBytes (tmp, contents);
+				MoveIfDifferent (path, tmp);
+			} catch (Exception e) {
+				File.WriteAllBytes (path, contents);
 				ErrorHelper.Warning (1014, e, "Failed to re-use cached version of '{0}': {1}.", path, e.Message);
 			} finally {
 				Application.TryDelete (tmp);
