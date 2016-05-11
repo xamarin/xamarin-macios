@@ -91,6 +91,7 @@ COMMON_SOURCES = 											\
 	$(TOP)/src/build/ios/Constants.cs						\
 	error.cs \
 	$(TOP)/src/ObjCRuntime/ErrorHelper.cs			\
+	$(TOP)/src/ObjCRuntime/ExceptionMode.cs			\
 	$(MONO_DIR)/mcs/class/Mono.Options/Mono.Options/Options.cs
 
 MTOUCH_SOURCES = \

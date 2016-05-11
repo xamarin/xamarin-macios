@@ -14,12 +14,59 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 using Xamarin.Utils;
+using XamCore.ObjCRuntime;
 
 namespace Xamarin.Bundler {
 	public partial class Driver {
 		static void AddSharedOptions (Mono.Options.OptionSet options)
 		{
 			options.Add ("coop:", "If the Coop GC should be used.", v => { App.EnableCoopGC = ParseBool (v, "coop"); }, hidden: true);
+			options.Add ("marshal-objectivec-exceptions:", v => {
+				switch (v) {
+				case "default":
+					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Default;
+					break;
+				case "unwindmanaged":
+				case "unwindmanagedcode":
+					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.UnwindManagedCode;
+					break;
+				case "throwmanaged":
+				case "throwmanagedexception":
+					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
+					break;
+				case "abort":
+					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Abort;
+					break;
+				case "disable":
+					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Disable;
+					break;
+				default:
+					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--marshal-objective-exceptions", "Invalid value: " + v);
+				}
+			});
+			options.Add ("marshal-managed-exceptions:", v => {
+				switch (v) {
+				case "default":
+					App.MarshalManagedExceptions = MarshalManagedExceptionMode.Default;
+					break;
+				case "unwindnative":
+				case "unwindnativecode":
+					App.MarshalManagedExceptions = MarshalManagedExceptionMode.UnwindNativeCode;
+					break;
+				case "throwobjectivec":
+				case "throwobjectivecexception":
+					App.MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
+					break;
+				case "abort":
+					App.MarshalManagedExceptions = MarshalManagedExceptionMode.Abort;
+					break;
+				case "disable":
+					App.MarshalManagedExceptions = MarshalManagedExceptionMode.Disable;
+					break;
+				default:
+					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--marshal-managed-exceptions", "Invalid value: " + v);
+				}
+			});
 		}
 
 #if MONOMAC

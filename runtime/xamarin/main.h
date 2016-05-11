@@ -19,6 +19,24 @@
 extern "C" {
 #endif
 
+/* This enum must always match the identical enum in src/ObjCRuntime/ExceptionMode.cs */
+enum MarshalObjectiveCExceptionMode : int {
+	MarshalObjectiveCExceptionModeDefault               = 0,
+	MarshalObjectiveCExceptionModeUnwindManagedCode     = 1,
+	MarshalObjectiveCExceptionModeThrowManagedException = 2,
+	MarshalObjectiveCExceptionModeAbort                 = 3,
+	MarshalObjectiveCExceptionModeDisable               = 4,
+};
+
+/* This enum must always match the identical enum in src/ObjCRuntime/ExceptionMode.cs */
+enum MarshalManagedExceptionMode : int {
+	MarshalManagedExceptionModeDefault                  = 0,
+	MarshalManagedExceptionModeUnwindNativeCode         = 1,
+	MarshalManagedExceptionModeThrowObjectiveCException = 2,
+	MarshalManagedExceptionModeAbort                    = 3,
+	MarshalManagedExceptionModeDisable                  = 4,
+};
+
 extern bool mono_use_llvm; // this is defined inside mono
 
 extern bool xamarin_use_new_assemblies;
@@ -32,6 +50,8 @@ extern int xamarin_log_level;
 extern const char *xamarin_executable_name;
 extern const char *xamarin_arch_name;
 extern bool xamarin_is_gc_coop;
+extern enum MarshalObjectiveCExceptionMode xamarin_marshal_objectivec_exception_mode;
+extern enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode;
 
 #ifdef MONOTOUCH
 extern NSString* xamarin_crashlytics_api_key;

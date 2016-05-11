@@ -263,6 +263,9 @@
     <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
       <Link>external\ErrorHelper.cs</Link>
     </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\ExceptionMode.cs">
+      <Link>external\ExceptionMode.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\ObjCRuntime\Registrar.cs">
       <Link>external\Registrar.cs</Link>
     </Compile>

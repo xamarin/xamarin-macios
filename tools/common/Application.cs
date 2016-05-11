@@ -9,6 +9,8 @@ using Mono.Cecil.Mdb;
 
 using Xamarin.Utils;
 
+using XamCore.ObjCRuntime;
+
 namespace Xamarin.Bundler {
 
 	[Flags]
@@ -44,6 +46,8 @@ namespace Xamarin.Bundler {
 		public Mono.Linker.I18nAssemblies I18n;
 
 		public bool? EnableCoopGC;
+		public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptions;
+		public MarshalManagedExceptionMode MarshalManagedExceptions;
 
 		public string PlatformName {
 			get {
@@ -338,6 +342,41 @@ namespace Xamarin.Bundler {
 
 			if (!EnableCoopGC.HasValue)
 				EnableCoopGC = Platform == ApplePlatform.WatchOS;
+
+			if (EnableCoopGC.Value) {
+				switch (MarshalObjectiveCExceptions) {
+				case MarshalObjectiveCExceptionMode.UnwindManagedCode:
+				case MarshalObjectiveCExceptionMode.Disable:
+					throw ErrorHelper.CreateError (89, "The option '{0}' cannot take the value '{1}' when the Coop GC is enabled.", "--marshal-objectivec-exceptions", MarshalObjectiveCExceptions.ToString ().ToLowerInvariant ());
+				}
+				switch (MarshalManagedExceptions) {
+				case MarshalManagedExceptionMode.UnwindNativeCode:
+				case MarshalManagedExceptionMode.Disable:
+					throw ErrorHelper.CreateError (89, "The option '{0}' cannot take the value '{1}' when the Coop GC is enabled.", "--marshal-managed-exceptions", MarshalManagedExceptions.ToString ().ToLowerInvariant ());
+				}
+			}
+
+
+			bool isSimulatorOrDesktopDebug = EnableDebug;
+#if MTOUCH
+			isSimulatorOrDesktopDebug &= IsSimulatorBuild;
+#endif
+
+			if (MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.Default) {
+				if (EnableCoopGC.Value) {
+					MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
+				} else {
+					MarshalObjectiveCExceptions = isSimulatorOrDesktopDebug ? MarshalObjectiveCExceptionMode.UnwindManagedCode : MarshalObjectiveCExceptionMode.Disable;
+				}
+			}
+
+			if (MarshalManagedExceptions == MarshalManagedExceptionMode.Default) {
+				if (EnableCoopGC.Value) {
+					MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
+				} else {
+					MarshalManagedExceptions = isSimulatorOrDesktopDebug ? MarshalManagedExceptionMode.UnwindNativeCode : MarshalManagedExceptionMode.Disable;
+				}
+			}
 		}
 	}
 }

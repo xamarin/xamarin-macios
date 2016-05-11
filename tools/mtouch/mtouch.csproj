@@ -317,6 +317,9 @@
     <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
       <Link>external\ErrorHelper.cs</Link>
     </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\ExceptionMode.cs">
+      <Link>external\ExceptionMode.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />

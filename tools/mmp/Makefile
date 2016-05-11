@@ -97,6 +97,7 @@ mmp_sources = \
 	$(TOP)/tools/common/cache.cs    \
 	driver.cs 	\
 	$(TOP)/src/ObjCRuntime/ErrorHelper.cs \
+	$(TOP)/src/ObjCRuntime/ExceptionMode.cs \
 	error.cs	\
 	resolver.cs	\
 	$(MONO_PATH)/mcs/class/Mono.Options/Mono.Options/Options.cs	\

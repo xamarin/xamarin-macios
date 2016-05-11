@@ -63,6 +63,7 @@ using Mono.Tuner;
 
 using MonoTouch.Tuner;
 using XamCore.Registrar;
+using XamCore.ObjCRuntime;
 
 using Xamarin.Linker;
 using Xamarin.Utils;
@@ -651,6 +652,8 @@ namespace Xamarin.Bundler
 					sw.WriteLine ("\tmono_use_llvm = {0};", enable_llvm ? "TRUE" : "FALSE");
 					sw.WriteLine ("\txamarin_log_level = {0};", verbose);
 					sw.WriteLine ("\txamarin_arch_name = \"{0}\";", abi.AsArchString ());
+					sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", app.MarshalManagedExceptions);
+					sw.WriteLine ("\txamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionMode{0};", app.MarshalObjectiveCExceptions);
 					if (app.EnableDebug)
 						sw.WriteLine ("\txamarin_debug_mode = TRUE;");
 					if (!string.IsNullOrEmpty (app.MonoGCParams))
@@ -905,6 +908,9 @@ namespace Xamarin.Bundler
 				return false;
 
 			if (app.Registrar == RegistrarMode.Static || app.Registrar == RegistrarMode.LegacyStatic || app.Registrar == RegistrarMode.LegacyDynamic)
+				return false;
+
+			if (app.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Default || app.Platform == ApplePlatform.WatchOS)
 				return false;
 
 			return true;

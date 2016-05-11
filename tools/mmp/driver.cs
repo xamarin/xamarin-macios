@@ -48,6 +48,7 @@ using Mono.Tuner;
 using MonoMac.Tuner;
 using Xamarin.Utils;
 using Xamarin.Linker;
+using XamCore.ObjCRuntime;
 
 namespace Xamarin.Bundler {
 	public enum RegistrarMode {
@@ -877,6 +878,8 @@ namespace Xamarin.Bundler {
 					sw.WriteLine ("\txamarin_custom_bundle_name = @\"" + custom_bundle_name + "\";");
 				}
 				sw.WriteLine ("\txamarin_use_il_registrar = {0};", registrar == RegistrarMode.IL ? "true" : "false");
+				sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", App.MarshalManagedExceptions);
+				sw.WriteLine ("\txamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionMode{0};", App.MarshalObjectiveCExceptions);
 				sw.WriteLine ();
 				if (Driver.registrar == RegistrarMode.Static)
 					sw.WriteLine ("\txamarin_create_classes ();");

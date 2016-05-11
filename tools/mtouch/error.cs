@@ -96,6 +96,7 @@ namespace Xamarin.Bundler {
 	//					MT0086  A target framework (--target-framework) must be specified when building for TVOS or WatchOS.
 	//		Warning		MT0087	<unused>
 	//					MT0088	Cannot disable the Coop GC for watchOS apps. Please remove the --coop:false argument to mtouch.
+	//					MT0089	The option '{0}' cannot take the value '{1}' when the Coop GC is enabled.
 	//					MT0091	This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker. 
 	//					MT0092	<used by Xamarin.Launcher> The option '{0}' is required.
 	//					MT0093	Could not find 'mlaunch'.
