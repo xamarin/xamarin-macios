@@ -22,6 +22,7 @@ void initialize_cocoa_threads (init_cocoa_func *func);
 
 void install_nsautoreleasepool_hooks ();
 id xamarin_init_nsthread (id obj, bool is_direct, id target, SEL sel, id arg);
+void xamarin_insert_dllmap ();
 
 /*
  * Block support

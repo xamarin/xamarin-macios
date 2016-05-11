@@ -6,6 +6,7 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 using MonoTouch.Tuner;
 
@@ -163,18 +164,28 @@ namespace Xamarin.Bundler
 				foreach (var ep in File.ReadAllLines (cache_location))
 					entry_points.Add (ep, null);
 			} else {
+				List<MethodDefinition> marshal_exception_pinvokes;
 				if (LinkContext == null) {
 					// This happens when using the simlauncher and the msbuild tasks asked for a list
 					// of symbols (--symbollist). In that case just produce an empty list, since the
 					// binary shouldn't end up stripped anyway.
 					entry_points = new Dictionary<string, MemberReference> ();
+					marshal_exception_pinvokes = new List<MethodDefinition> ();
 				} else {
 					entry_points = LinkContext.RequiredSymbols;
+					marshal_exception_pinvokes = LinkContext.MarshalExceptionPInvokes;
 				}
-
+				
 				// keep the debugging helper in debugging binaries only
 				if (App.EnableDebug && !App.EnableBitCode)
 					entry_points.Add ("mono_pmip", null);
+
+				if (App.IsSimulatorBuild) {
+					entry_points.Add ("xamarin_dyn_objc_msgSend", null);
+					entry_points.Add ("xamarin_dyn_objc_msgSendSuper", null);
+					entry_points.Add ("xamarin_dyn_objc_msgSend_stret", null);
+					entry_points.Add ("xamarin_dyn_objc_msgSendSuper_stret", null);
+				}
 
 				File.WriteAllText (cache_location, string.Join ("\n", entry_points.Keys.ToArray ()));
 			}
@@ -376,7 +387,13 @@ namespace Xamarin.Bundler
 				IsDualBuild = App.IsDualBuild,
 				Unified = App.IsUnified,
 				DumpDependencies = App.LinkerDumpDependencies,
-				RuntimeOptions = App.RuntimeOptions
+				RuntimeOptions = App.RuntimeOptions,
+				MarshalNativeExceptionsState = !App.RequiresPInvokeWrappers ? null : new PInvokeWrapperGenerator ()
+				{
+					SourcePath = Path.Combine (ArchDirectory, "pinvokes.m"),
+					HeaderPath = Path.Combine (ArchDirectory, "pinvokes.h"),
+					Registrar = (StaticRegistrar) StaticRegistrar,
+				},
 			};
 
 			MonoTouch.Tuner.Linker.Process (LinkerOptions, out link_context, out assemblies);
@@ -520,6 +537,8 @@ namespace Xamarin.Bundler
 			// * Linking
 			//   Copy assemblies to LinkDirectory
 			//   Link and save to PreBuildDirectory
+			//   If marshalling native exceptions:
+			//     * Generate/calculate P/Invoke wrappers and save to PreBuildDirectory
 			//   * Has resourced to be removed:
 			//     Remove resource and save to NoResDirectory
 			//     Copy to BuildDirectory. [Why not save directly to BuildDirectory? Because otherwise if we're rebuilding 
@@ -532,7 +551,10 @@ namespace Xamarin.Bundler
 			//   Strip managed code save to TargetDirectory (or just copy the file if stripping is disabled).
 			//
 			// * No linking
-			//   Copy assembly to PreBuildDirectory.
+			//   If marshalling native exceptions:
+			//     Generate/calculate P/Invoke wrappers and save to PreBuildDirectory.
+			//   If not marshalling native exceptions:
+			//     Copy assemblies to PreBuildDirectory
 			//   * Has resourced to be removed:
 			//     Remove resource and save to NoResDirectory
 			//     Copy to BuildDirectory.
@@ -591,6 +613,13 @@ namespace Xamarin.Bundler
 				Directory.CreateDirectory (TargetDirectory);
 
 			ManagedLink ();
+
+			if (App.RequiresPInvokeWrappers) {
+				// Write P/Invokes
+				var state = LinkerOptions.MarshalNativeExceptionsState;
+				state.End ();
+				RegistrarTask.Create (compile_tasks, Abis, this, state.SourcePath);
+			}
 
 			// Now the assemblies are in PreBuildDirectory.
 

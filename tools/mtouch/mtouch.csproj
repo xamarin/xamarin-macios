@@ -320,6 +320,9 @@
     <Compile Include="..\..\src\ObjCRuntime\ExceptionMode.cs">
       <Link>external\ExceptionMode.cs</Link>
     </Compile>
+    <Compile Include="..\common\PInvokeWrapperGenerator.cs">
+      <Link>common\PInvokeWrapperGenerator.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />

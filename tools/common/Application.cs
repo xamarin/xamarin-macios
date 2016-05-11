@@ -49,6 +49,19 @@ namespace Xamarin.Bundler {
 		public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptions;
 		public MarshalManagedExceptionMode MarshalManagedExceptions;
 
+		public bool RequiresPInvokeWrappers {
+			get {
+#if MTOUCH
+				if (IsSimulatorBuild)
+					return false;
+#else
+				if (Driver.Is64Bit)
+					return false;
+#endif
+				return MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.ThrowManagedException || MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.Abort;
+			}
+		}
+
 		public string PlatformName {
 			get {
 				switch (Platform) {

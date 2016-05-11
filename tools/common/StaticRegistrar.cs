@@ -3054,10 +3054,16 @@ namespace XamCore.Registrar {
 				invoke.AppendLine ("xamarin_set_nsobject_flags (mthis, flags);");
 			}
 
+			var marshal_exception = "NULL";
+			if (App.MarshalManagedExceptions != MarshalManagedExceptionMode.Disable) {
+				invoke.AppendLine ("MonoObject *exception = NULL;");
+				marshal_exception = "&exception";
+			}
+
 			if (!isVoid)
 				invoke.AppendFormat ("{0} retval = ", "MonoObject *");
 
-			invoke.AppendLine ("mono_runtime_invoke (managed_method, {0}, arg_ptrs, NULL);", isStatic ? "NULL" : "mthis");
+			invoke.AppendLine ("mono_runtime_invoke (managed_method, {0}, arg_ptrs, {1});", isStatic ? "NULL" : "mthis", marshal_exception);
 		
 			if (isCtor)
 				invoke.AppendLine ("xamarin_create_managed_ref (self, mthis, true);");
@@ -3252,6 +3258,9 @@ namespace XamCore.Registrar {
 			if (trace )
 				body.AppendLine (nslog_end);
 			
+			if (App.MarshalManagedExceptions != MarshalManagedExceptionMode.Disable)
+				body.WriteLine ("xamarin_process_managed_exception (exception);");
+
 			if (isCtor) {
 				body.WriteLine ("return self;");
 			} else if (isVoid) {
@@ -3368,6 +3377,132 @@ namespace XamCore.Registrar {
 					return false;
 				return Code == other.Code && Signature == other.Signature;
 			}
+		}
+
+		public void GeneratePInvokeWrappersStart (AutoIndentStringBuilder hdr, AutoIndentStringBuilder decls, AutoIndentStringBuilder mthds)
+		{
+			header = hdr;
+			declarations = decls;
+			methods = mthds;
+		}
+
+		public void GeneratePInvokeWrappersEnd ()
+		{
+			header = null;	
+			declarations = null;
+			methods = null;
+			namespaces.Clear ();
+			structures.Clear ();
+
+			FlushTrace ();
+		}
+
+		public void GeneratePInvokeWrapper (PInvokeWrapperGenerator state, MethodDefinition method)
+		{
+			var signatures = state.signatures;
+			var exceptions = state.exceptions;
+			var signature = state.signature;
+			var names = state.names;
+			var sb = state.sb;
+			var pinfo = method.PInvokeInfo;
+			var is_stret = pinfo.EntryPoint.EndsWith ("_stret");
+			var isVoid = method.ReturnType.FullName == "System.Void";
+			var descriptiveMethodName = method.DeclaringType.FullName + "." + method.Name;
+
+			signature.Clear ();
+
+			string native_return_type;
+			int first_parameter = 0;
+
+			if (is_stret) {
+				native_return_type = ToObjCParameterType (method.Parameters [0].ParameterType.GetElementType (), descriptiveMethodName, exceptions, method);
+				first_parameter = 1;
+			} else {
+				native_return_type = ToObjCParameterType (method.ReturnType, descriptiveMethodName, exceptions, method);
+			}
+
+			signature.Append (native_return_type);
+			signature.Append (" ");
+			signature.Append (pinfo.EntryPoint);
+			signature.Append (" (");
+			for (int i = 0; i < method.Parameters.Count; i++) {
+				if (i > 0)
+					signature.Append (", ");
+				signature.Append (ToObjCParameterType (method.Parameters[i].ParameterType, descriptiveMethodName, exceptions, method));
+			}
+			signature.Append (")");
+
+			string wrapperName;
+			if (!signatures.TryGetValue (signature.ToString (), out wrapperName)) {
+				var name = "xamarin_pinvoke_wrapper_" + method.Name;
+				var counter = 0;
+				while (names.Contains (name)) {
+					name = "xamarin_pinvoke_wrapper_" + method.Name + (++counter).ToString ();
+				}
+				names.Add (name);
+				signatures [signature.ToString ()] = wrapperName = name;
+
+				sb.WriteLine ("// EntryPoint: {0}", pinfo.EntryPoint);
+				sb.WriteLine ("// Managed method: {0}.{1}", method.DeclaringType.FullName, method.Name);
+				sb.WriteLine ("// Signature: {0}", signature.ToString ());
+
+				sb.Write ("typedef ");
+				sb.Write (native_return_type);
+				sb.Write ("(*func_");
+				sb.Write (name);
+				sb.Write (") (");
+				for (int i = first_parameter; i < method.Parameters.Count; i++) {
+					if (i > first_parameter)
+						sb.Write (", ");
+					sb.Write (ToObjCParameterType (method.Parameters[i].ParameterType, descriptiveMethodName, exceptions, method));
+					sb.Write (" ");
+					sb.Write (method.Parameters[i].Name);
+				}
+				sb.WriteLine (");");
+
+				sb.WriteLine (native_return_type);
+				sb.Write (name);
+				sb.Write (" (", method.Name);
+				for (int i = first_parameter; i < method.Parameters.Count; i++) {
+					if (i > first_parameter)
+						sb.Write (", ");
+					sb.Write (ToObjCParameterType (method.Parameters[i].ParameterType, descriptiveMethodName, exceptions, method));
+					sb.Write (" ");
+					sb.Write (method.Parameters [i].Name);
+				}
+				sb.WriteLine (")");
+				sb.WriteLine ("{");
+				sb.WriteLine ("@try {");
+				if (!isVoid || is_stret)
+					sb.Write ("return ");
+				sb.Write ("((func_{0}) {1}) (", name, pinfo.EntryPoint);
+				for (int i = first_parameter; i < method.Parameters.Count; i++) {
+					if (i > first_parameter)
+						sb.Write (", ");
+					sb.Write (method.Parameters [i].Name);
+				}
+				sb.WriteLine (");");
+				sb.WriteLine ("} @catch (NSException *exc) {");
+				sb.WriteLine ("xamarin_process_nsexception (exc);");
+				sb.WriteLine ("}");
+				sb.WriteLine ("}");
+				sb.WriteLine ();
+			} else {
+				Console.WriteLine ("Signature already processed: {0} for {1}.{2}", signature.ToString (), method.DeclaringType.FullName, method.Name);
+			}
+
+			// find the module reference to __Internal
+			ModuleReference mr = null;
+			foreach (var mref in method.Module.ModuleReferences) {
+				if (mref.Name == "__Internal") {
+					mr = mref;
+					break;
+				}
+			}
+			if (mr == null)
+				method.Module.ModuleReferences.Add (mr = new ModuleReference ("__Internal"));
+			pinfo.Module = mr;
+			pinfo.EntryPoint = wrapperName;
 		}
 
 		public void GenerateSingleAssembly (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly)

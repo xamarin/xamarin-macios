@@ -83,5 +83,19 @@
     <None Include="trampolines-i386.m" />
     <None Include="trampolines-varargs.h" />
     <None Include="trampolines-varargs.m" />
+    <None Include="trampolines-x86_64-objc_msgSendSuper.s" />
+    <None Include="trampolines-x86_64-objc_msgSend.s" />
+    <None Include="trampolines-x86_64-objc_msgSend-post.inc" />
+    <None Include="trampolines-x86_64-objc_msgSend-copyframe.inc" />
+    <None Include="trampolines-x86_64-objc_msgSend-pre.inc" />
+    <None Include="trampolines-x86_64-objc_msgSend_stret.s" />
+    <None Include="trampolines-x86_64-objc_msgSendSuper_stret.s" />
+    <None Include="trampolines-i386-objc_msgSend.s" />
+    <None Include="trampolines-i386-objc_msgSendSuper.s" />
+    <None Include="trampolines-i386-objc_msgSend_stret.s" />
+    <None Include="trampolines-i386-objc_msgSendSuper_stret.s" />
+    <None Include="trampolines-i386-objc_msgSend-copyframe.inc" />
+    <None Include="trampolines-i386-objc_msgSend-post.inc" />
+    <None Include="trampolines-i386-objc_msgSend-pre.inc" />
   </ItemGroup>
 </Project>

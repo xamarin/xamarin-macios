@@ -21,6 +21,8 @@
 void
 xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_func iterator, marshal_return_value_func marshal_return_value, void *context)
 {
+	MonoObject *exception = NULL;
+	MonoObject **exception_ptr = xamarin_marshal_managed_exception_mode == MarshalManagedExceptionModeDisable ? NULL : &exception;
 	bool is_static = (type & Tramp_Static) == Tramp_Static;
 	bool is_ctor = type == Tramp_Ctor;
 
@@ -353,7 +355,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 
 		xamarin_set_nsobject_handle (retval, self);
 		xamarin_set_nsobject_flags (retval, NSObjectFlagsNativeRef);
-		mono_runtime_invoke (method, retval, (void **) arg_ptrs, NULL);
+		mono_runtime_invoke (method, retval, (void **) arg_ptrs, exception_ptr);
 		xamarin_create_managed_ref (self, retval, true);
 
 		xamarin_register_nsobject (retval, self);
@@ -366,7 +368,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 		fprintf (stderr, "\n");
 #endif
 
-		retval = mono_runtime_invoke (method, mthis, (void **) arg_ptrs, NULL);
+		retval = mono_runtime_invoke (method, mthis, (void **) arg_ptrs, exception_ptr);
 
 #ifdef TRACE
 		fprintf (stderr, " called managed method with %i arguments: ", num_arg);
@@ -451,4 +453,6 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	} else if (*ret_type != 'v') {
 		marshal_return_value (context, ret_type, [sig methodReturnLength], retval, mono_signature_get_return_type (msig), (desc.semantic & ArgumentSemanticRetainReturnValue) != 0, method);
 	}
+
+	xamarin_process_managed_exception (exception);
 }

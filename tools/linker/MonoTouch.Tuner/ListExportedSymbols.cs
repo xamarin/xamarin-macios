@@ -5,6 +5,8 @@ using Mono.Cecil;
 using Mono.Linker;
 using Mono.Linker.Steps;
 using Mono.Tuner;
+
+using Xamarin.Bundler;
 using Xamarin.Linker;
 
 #if MONOMAC
@@ -17,6 +19,13 @@ namespace MonoTouch.Tuner
 {
 	public class ListExportedSymbols : BaseStep
 	{
+		PInvokeWrapperGenerator state;
+
+		internal ListExportedSymbols (PInvokeWrapperGenerator state)
+		{
+			this.state = state;
+		}
+
 		protected override void ProcessAssembly (AssemblyDefinition assembly)
 		{
 			base.ProcessAssembly (assembly);
@@ -55,8 +64,25 @@ namespace MonoTouch.Tuner
 
 		void ProcessMethod (MethodDefinition method)
 		{
-			if (method.IsPInvokeImpl && method.HasPInvokeInfo && method.PInvokeInfo.Module.Name == "__Internal")
-				((DerivedLinkContext) Context).RequiredSymbols[method.PInvokeInfo.EntryPoint] = method;
+			if (method.IsPInvokeImpl && method.HasPInvokeInfo) {
+				var pinfo = method.PInvokeInfo;
+				if (pinfo.Module.Name == "__Internal")
+					((DerivedLinkContext) Context).RequiredSymbols [pinfo.EntryPoint] = method;
+
+				if (state != null) {
+					switch (pinfo.EntryPoint) {
+					case "objc_msgSend":
+					case "objc_msgSendSuper":
+					case "objc_msgSend_stret":
+					case "objc_msgSendSuper_stret":
+					case "objc_msgSend_fpret":
+						state.ProcessMethod (method);
+						break;
+					default:
+						return;
+					}
+				}
+			}
 
 			if (MarkStep.IsPropertyMethod (method)) {
 				var property = MarkStep.GetProperty (method);

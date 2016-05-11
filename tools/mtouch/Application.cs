@@ -1706,7 +1706,7 @@ namespace Xamarin.Bundler {
 		public static void Create (List<BuildTask> tasks, Abi abi, Target target, string ifile)
 		{
 			var arch = abi.AsArchString ();
-			var ofile = Path.Combine (Cache.Location, "registrar." + arch + ".o");
+			var ofile = Path.Combine (Cache.Location, Path.GetFileNameWithoutExtension (ifile) + "." + arch + ".o");
 
 			if (!Application.IsUptodate (ifile, ofile)) {
 				tasks.Add (new RegistrarTask ()

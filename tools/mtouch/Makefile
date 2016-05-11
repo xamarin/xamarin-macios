@@ -110,6 +110,7 @@ MTOUCH_SOURCES = \
 	$(TOP)/tools/common/MachO.cs		\
 	mtouch.cs		\
 	OldStaticRegistrar.cs		\
+	$(TOP)/tools/common/PInvokeWrapperGenerator.cs	\
 	$(TOP)/tools/common/TargetFramework.cs	\
 	$(TOP)/tools/common/StaticRegistrar.cs	\
 	$(TOP)/src/ObjCRuntime/Registrar.core.cs	\

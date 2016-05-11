@@ -80,6 +80,7 @@ namespace Xamarin.Bundler {
 		static bool? profiling = false;
 		static bool? thread_check = null;
 		static string link_flags = null;
+		static LinkerOptions linker_options;
 
 		static bool arch_set = false;
 		static string arch = "i386";
@@ -604,6 +605,12 @@ namespace Xamarin.Bundler {
 				Watch (string.Format ("Linking (mode: '{0}')", App.LinkMode), 1);
 			}
 
+			if (App.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Disable && !App.RequiresPInvokeWrappers) {
+				internalSymbols.Add ("xamarin_dyn_objc_msgSend");
+				internalSymbols.Add ("xamarin_dyn_objc_msgSendSuper");
+				internalSymbols.Add ("xamarin_dyn_objc_msgSend_stret");
+				internalSymbols.Add ("xamarin_dyn_objc_msgSendSuper_stret");
+			}
 
 			CopyDependencies (native_libs);
 			Watch ("Copy Dependencies", 1);
@@ -1062,6 +1069,12 @@ namespace Xamarin.Bundler {
 				if (!string.IsNullOrEmpty (DeveloperDirectory))
 					args.Append ("-isysroot ").Append (Quote (Path.Combine (DeveloperDirectory, "Platforms", "MacOSX.platform", "Developer", "SDKs", "MacOSX" + sdk_version + ".sdk"))).Append (' ');
 
+				if (App.RequiresPInvokeWrappers) {
+					var state = linker_options.MarshalNativeExceptionsState;
+					state.End ();
+					args.Append (Quote (state.SourcePath)).Append (' ');
+				}
+
 				var main = Path.Combine (Cache.Location, "main.m");
 				File.WriteAllText (main, mainSource);
 				args.Append (Quote (main));
@@ -1153,7 +1166,15 @@ namespace Xamarin.Bundler {
 				// by default we keep the code to ensure we're executing on the UI thread (for UI code) for debug builds
 				// but this can be overridden to either (a) remove it from debug builds or (b) keep it in release builds
 				EnsureUIThread = thread_check.HasValue ? thread_check.Value : App.EnableDebug,
+				MarshalNativeExceptionsState = !App.RequiresPInvokeWrappers ? null : new PInvokeWrapperGenerator ()
+				{
+					SourcePath = Path.Combine (Cache.Location, "pinvokes.m"),
+					HeaderPath = Path.Combine (Cache.Location, "pinvokes.h"),
+					Registrar = (StaticRegistrar) BuildTarget.StaticRegistrar,
+				},
 			};
+
+			linker_options = options;
 
 			Mono.Linker.LinkContext context;
 			MonoMac.Tuner.Linker.Process (options, out context, out resolved_assemblies);

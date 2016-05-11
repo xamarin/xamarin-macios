@@ -102,6 +102,7 @@ mmp_sources = \
 	resolver.cs	\
 	$(MONO_PATH)/mcs/class/Mono.Options/Mono.Options/Options.cs	\
 	Tuning.cs \
+	$(TOP)/tools/common/PInvokeWrapperGenerator.cs	\
 	$(TOP)/tools/common/TargetFramework.cs \
 	$(TOP)/tools/common/Driver.cs \
 	$(TOP)/tools/common/Frameworks.cs \

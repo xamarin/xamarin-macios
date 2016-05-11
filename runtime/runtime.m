@@ -148,6 +148,8 @@ struct InitializationOptions {
 	struct Delegates Delegates;
 	struct Trampolines Trampolines;
 	RegistrationData* RegistrationData;
+	enum MarshalObjectiveCExceptionMode MarshalObjectiveCExceptionMode;
+	enum MarshalManagedExceptionMode MarshalManagedExceptionMode;
 };
 
 static struct Trampolines trampolines = {
@@ -981,6 +983,8 @@ xamarin_initialize ()
 	xamarin_initialize_dynamic_runtime (NULL);
 #endif
 
+	xamarin_insert_dllmap ();
+
 	mono_trace_set_log_handler (log_callback, NULL);
 	mono_trace_set_print_handler (print_callback);
 	mono_trace_set_printerr_handler (print_callback);
@@ -1024,6 +1028,8 @@ xamarin_initialize ()
 
 	options.Trampolines = trampolines;
 	options.RegistrationData = &registration_data;
+	options.MarshalObjectiveCExceptionMode = xamarin_marshal_objectivec_exception_mode;
+	options.MarshalManagedExceptionMode = xamarin_marshal_managed_exception_mode;
 
 	params [0] = &options;
 
@@ -1701,6 +1707,107 @@ xamarin_skip_encoding_flags (const char *encoding)
 	}
 }
 
+void
+xamarin_process_nsexception (NSException *ns_exception)
+{
+	MarshalObjectiveCExceptionMode mode;
+	XamarinGCHandle *exc_handle;
+
+	mode = xamarin_on_marshal_objectivec_exception (ns_exception);
+
+	if (mode == MarshalObjectiveCExceptionModeDefault)
+		mode = xamarin_is_gc_coop ? MarshalObjectiveCExceptionModeThrowManagedException : MarshalObjectiveCExceptionModeUnwindManagedCode;
+
+	switch (mode) {
+	case MarshalObjectiveCExceptionModeUnwindManagedCode:
+		if (xamarin_is_gc_coop)
+			xamarin_assertion_message ("Cannot unwind managed frames for Objective-C exceptions when using the COOP GC.");
+		@throw ns_exception;
+		break;
+	case MarshalObjectiveCExceptionModeThrowManagedException:
+		exc_handle = [[ns_exception userInfo] objectForKey: @"XamarinManagedExceptionHandle"];
+		if (exc_handle != NULL) {
+			int handle = [exc_handle getHandle];
+			MonoObject *exc = mono_gchandle_get_target (handle);
+			mono_set_pending_exception ((MonoException *) exc);
+		} else {
+			int handle = xamarin_create_ns_exception (ns_exception);
+			MonoObject *exc = mono_gchandle_get_target (handle);
+			mono_set_pending_exception ((MonoException *) exc);
+			mono_gchandle_free (handle);
+		}
+		break;
+	case MarshalObjectiveCExceptionModeAbort:
+	default:
+		xamarin_assertion_message ("Aborting due to unhandled Objective-C exception:\n%s\n", [[ns_exception description] UTF8String]);
+		break;
+	}
+}
+
+void
+xamarin_process_managed_exception (MonoObject *exception)
+{
+	if (exception == NULL)
+		return;
+
+	MarshalManagedExceptionMode mode;
+
+	int handle = mono_gchandle_new (exception, false);
+	mode = xamarin_on_marshal_managed_exception (handle);
+	mono_gchandle_free (handle);
+
+	if (mode == MarshalManagedExceptionModeDefault)
+		mode = xamarin_is_gc_coop ? MarshalManagedExceptionModeThrowObjectiveCException : MarshalManagedExceptionModeUnwindNativeCode;
+
+	switch (mode) {
+	case MarshalManagedExceptionModeUnwindNativeCode:
+		if (xamarin_is_gc_coop)
+			xamarin_assertion_message ("Cannot unwind native frames for managed exceptions when using the COOP GC.");
+		mono_raise_exception ((MonoException *) exception);
+		break;
+	case MarshalManagedExceptionModeThrowObjectiveCException: {
+		int handle = mono_gchandle_new (exception, false);
+		NSException *ns_exc = xamarin_unwrap_ns_exception (handle);
+		
+		if (ns_exc != NULL) {
+			mono_gchandle_free (handle);
+			@throw ns_exc;
+		} else {
+			NSString *name = [NSString stringWithUTF8String: xamarin_type_get_full_name (mono_class_get_type (mono_object_get_class (exception)))];
+			char *message = fetch_exception_property_string (exception, "get_Message", true);
+			NSString *reason = [NSString stringWithUTF8String: message];
+			mono_free (message);
+			NSDictionary *userInfo = [NSDictionary dictionaryWithObject: [XamarinGCHandle createWithHandle: handle] forKey: @"XamarinManagedExceptionHandle"];
+			@throw [[NSException alloc] initWithName: name reason: reason userInfo: userInfo];
+		}
+		break;
+	}
+	case MarshalManagedExceptionModeAbort:
+	default:
+		xamarin_assertion_message ("Aborting due to:\n%s\n", [print_all_exceptions (exception) UTF8String]);
+		break;
+	}
+}
+
+void
+xamarin_insert_dllmap ()
+{
+#if defined (__i386__) || defined (__x86_64__)
+	if (xamarin_marshal_objectivec_exception_mode == MarshalObjectiveCExceptionModeDisable)
+		return;
+#if DYNAMIC_MONO_RUNTIME
+	const char *lib = "libxammac.dylib";
+#else
+	const char *lib = "__Internal";
+#endif
+	mono_dllmap_insert (NULL, "/usr/lib/libobjc.dylib", "objc_msgSend",            lib, "xamarin_dyn_objc_msgSend");
+	mono_dllmap_insert (NULL, "/usr/lib/libobjc.dylib", "objc_msgSendSuper",       lib, "xamarin_dyn_objc_msgSendSuper");
+	mono_dllmap_insert (NULL, "/usr/lib/libobjc.dylib", "objc_msgSend_stret",      lib, "xamarin_dyn_objc_msgSend_stret");
+	mono_dllmap_insert (NULL, "/usr/lib/libobjc.dylib", "objc_msgSendSuper_stret", lib, "xamarin_dyn_objc_msgSendSuper_stret");
+	LOG (PRODUCT ": Added dllmap for objc_msgSend");
+#endif // defined (__i386__) || defined (__x86_64__)
+}
+
 /*
  * Object unregistration:
  *
@@ -1856,3 +1963,27 @@ xamarin_get_is_debug ()
 {
 	return xamarin_debug_mode;
 }
+
+/*
+ * XamarinGCHandle
+ */
+@implementation XamarinGCHandle
++(XamarinGCHandle *) createWithHandle: (int) h
+{
+	XamarinGCHandle *rv = [[XamarinGCHandle alloc] init];
+	rv->handle = h;
+	[rv autorelease];
+	return rv;
+}
+
+-(void) dealloc
+{
+	mono_gchandle_free (handle);
+	[super dealloc];
+}
+
+-(int) getHandle
+{
+	return handle;
+}
+@end

@@ -30,6 +30,7 @@ namespace MonoMac.Tuner {
 		public IList<string> ExtraDefinitions { get; set; }
 		public TargetFramework TargetFramework { get; set; }
 		public string Architecture { get; set; }
+		internal PInvokeWrapperGenerator MarshalNativeExceptionsState { get; set; }
 		internal RuntimeOptions RuntimeOptions { get; set; }
 
 		public static I18nAssemblies ParseI18nAssemblies (string i18n)
@@ -56,6 +57,7 @@ namespace MonoMac.Tuner {
 
 		Dictionary<string, List<MethodDefinition>> pinvokes = new Dictionary<string, List<MethodDefinition>> ();
 		public Dictionary<string, MemberReference> RequiredSymbols = new Dictionary<string, MemberReference> ();
+		List<MethodDefinition> marshal_exception_pinvokes;
 
 		public MonoMacLinkContext (Pipeline pipeline, AssemblyResolver resolver) : base (pipeline, resolver)
 		{
@@ -63,6 +65,14 @@ namespace MonoMac.Tuner {
 
 		public IDictionary<string, List<MethodDefinition>> PInvokeModules {
 			get { return pinvokes; }
+		}
+
+		public List<MethodDefinition> MarshalExceptionPInvokes {
+			get {
+				if (marshal_exception_pinvokes == null)
+					marshal_exception_pinvokes = new List<MethodDefinition> ();
+				return marshal_exception_pinvokes;
+			}
 		}
 	}
 
@@ -168,7 +178,7 @@ namespace MonoMac.Tuner {
 				pipeline.AppendStep (new RegenerateGuidStep ());
 			}
 
-			pipeline.AppendStep (new ListExportedSymbols ());
+			pipeline.AppendStep (new ListExportedSymbols (options.MarshalNativeExceptionsState));
 
 			pipeline.AppendStep (new OutputStep ());
 

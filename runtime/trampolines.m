@@ -123,7 +123,6 @@ xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *ret
 	}
 }
 
-#if defined (__i386__)
 int
 xamarin_get_frame_length (id self, SEL sel)
 {
@@ -131,7 +130,6 @@ xamarin_get_frame_length (id self, SEL sel)
 
 	return [sig frameLength];
 }
-#endif
 
 static inline void
 find_objc_method_implementation (struct objc_super *sup, id self, SEL sel, IMP xamarin_impl)
