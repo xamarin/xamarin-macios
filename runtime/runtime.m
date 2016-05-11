@@ -858,13 +858,13 @@ print_exception (MonoObject *exc, bool is_inner, NSMutableString *msg)
 	xamarin_free (type_name);
 }
 
-void
-xamarin_unhandled_exception_handler (MonoObject *exc, gpointer user_data)
+static NSMutableString *
+print_all_exceptions (MonoObject *exc)
 {
-	int counter = 0;
-	// fetch the field, since the property might have been linked away.
-	MonoClassField *inner_exception = mono_class_get_field_from_name (mono_object_get_class (exc), "inner_exception");
 	NSMutableString *str = [[NSMutableString alloc] init];
+	// fetch the field, since the property might have been linked away.
+	int counter = 0;
+	MonoClassField *inner_exception = mono_class_get_field_from_name (mono_object_get_class (exc), "inner_exception");
 
 	do {
 		print_exception (exc, counter > 0, str);
@@ -876,7 +876,14 @@ xamarin_unhandled_exception_handler (MonoObject *exc, gpointer user_data)
 		}
 	} while (counter++ < 10 && exc);
 
-	NSLog (@"%@", str);
+	[str autorelease];
+	return str;
+}
+
+void
+xamarin_unhandled_exception_handler (MonoObject *exc, gpointer user_data)
+{
+	NSLog (@"%@", print_all_exceptions (exc));
 
 	abort ();
 }
