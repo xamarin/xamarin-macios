@@ -280,6 +280,8 @@ namespace Xamarin.Bundler {
 				{ "http-message-handler=", "Specify the default HTTP Message Handler", v => { http_message_provider = v; }},
 			};
 
+			AddSharedOptions (os);
+
 			IList<string> unprocessed;
 			try {
 				unprocessed = os.Parse (args);
@@ -377,6 +379,8 @@ namespace Xamarin.Bundler {
 
 			if (!IsUnifiedMobile && tls_provider != null)
 				throw new MonoMacException (2011, true, "Selecting a TLS Provider is only supported in the Unified Mobile profile");
+
+			App.InitializeCommon ();
 
 			Log ("Xamarin.Mac {0}{1}", Constants.Version, verbose > 0 ? "." + Constants.Revision : string.Empty);
 

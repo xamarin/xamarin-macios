@@ -43,6 +43,8 @@ namespace Xamarin.Bundler {
 		public List<string> Definitions = new List<string> ();
 		public Mono.Linker.I18nAssemblies I18n;
 
+		public bool? EnableCoopGC;
+
 		public string PlatformName {
 			get {
 				switch (Platform) {
@@ -329,5 +331,13 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public void InitializeCommon ()
+		{
+			if (Platform == ApplePlatform.WatchOS && EnableCoopGC.HasValue && !EnableCoopGC.Value)
+				throw ErrorHelper.CreateError (88, "Cannot disable the Coop GC for watchOS apps. Please remove the --coop:false argument to mtouch.");
+
+			if (!EnableCoopGC.HasValue)
+				EnableCoopGC = Platform == ApplePlatform.WatchOS;
+		}
 	}
 }

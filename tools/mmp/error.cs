@@ -33,6 +33,7 @@ namespace Xamarin.Bundler {
 	//					MM0068	Invalid value for target framework: {0}.
 	//					MM0079	Internal Error - No executable was copied into the app bundle. Please contact 'support@xamarin.com'
 	//			Warning		MT0080  Disabling NewRefCount, --new-refcount:false, is deprecated.
+	//					MM0088	** Reserved mtouch **
 	// MM1xxx	file copy / symlinks (project related)
 	//			MM14xx	Product assemblies
 	//					MM1401	The required '{0}' assembly is missing from the references

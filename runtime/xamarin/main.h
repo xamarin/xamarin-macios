@@ -31,6 +31,7 @@ extern bool xamarin_compact_seq_points;
 extern int xamarin_log_level;
 extern const char *xamarin_executable_name;
 extern const char *xamarin_arch_name;
+extern bool xamarin_is_gc_coop;
 
 #ifdef MONOTOUCH
 extern NSString* xamarin_crashlytics_api_key;

@@ -847,6 +847,8 @@ namespace Xamarin.Bundler {
 
 			Namespaces.Initialize ();
 
+			InitializeCommon ();
+
 			Driver.Watch ("Resolve References", 1);
 		}
 		

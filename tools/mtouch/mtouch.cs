@@ -1350,6 +1350,8 @@ namespace Xamarin.Bundler
 			{ "xamarin-framework-directory=", "The framework directory", v => { mtouch_dir = v; }, true },
 		};
 
+			AddSharedOptions (os);
+
 			try {
 				assemblies = os.Parse (args);
 			}
