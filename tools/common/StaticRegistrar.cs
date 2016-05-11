@@ -498,45 +498,53 @@ namespace XamCore.Registrar {
 		}
 	}
 
-	class StaticRegistrar : Registrar {
-		bool is_simulator;
-		bool? is_64_bits;
+	public interface IStaticRegistrar
+	{
+		void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path);
+		void GenerateSingleAssembly (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly);
+		Mono.Linker.LinkContext LinkContext { get; set; }
+	}
+
+	class StaticRegistrar : Registrar, IStaticRegistrar {
+		public Application App { get; private set; }
+		public Target Target { get; private set; }
+		public bool IsSingleAssembly { get { return !string.IsNullOrEmpty (single_assembly); } }
+
 		string single_assembly;
 		IEnumerable<AssemblyDefinition> input_assemblies;
+		Mono.Linker.LinkContext link_context;
 		Dictionary<IMetadataTokenProvider, object> availability_annotations;
 
-		StaticRegistrar (Application app)
+		public Mono.Linker.LinkContext LinkContext {
+			get {
+				return link_context;
+			}
+			set {
+				link_context = value;
+				availability_annotations = link_context?.Annotations.GetCustomAnnotations ("Availability");
+			}
+		}
+
+		void Init (Application app)
 		{
+			this.App = app;
 			trace = !LaxMode && (app.RegistrarOptions & RegistrarOptions.Trace) == RegistrarOptions.Trace;
 		}
 
-		public StaticRegistrar (Application app, IEnumerable<AssemblyDefinition> assemblies, bool is_simulator, string single_assembly = null)
-			: this (app)
+		public StaticRegistrar (Application app)
 		{
-			this.is_simulator = is_simulator;
-			this.single_assembly = single_assembly;
-			this.input_assemblies = assemblies;
-
-			foreach (var assembly in assemblies)
-				RegisterAssembly (assembly);
+			Init (app);
 		}
 
-		public StaticRegistrar (Application app, IEnumerable<AssemblyDefinition> assemblies, bool is_simulator, bool is_64_bits, Mono.Linker.LinkContext link_context)
-			: this (app)
+		public StaticRegistrar (Target target)
 		{
-			this.is_simulator = is_simulator;
-			this.is_64_bits = is_64_bits;
-			this.input_assemblies = assemblies;
-
-			availability_annotations = link_context?.Annotations.GetCustomAnnotations ("Availability");
-
-			foreach (var assembly in assemblies)
-				RegisterAssembly (assembly);
+			Init (target.App);
+			this.Target = target;
 		}
 
 		protected override bool LaxMode {
 			get {
-				return !string.IsNullOrEmpty (single_assembly);
+				return IsSingleAssembly;
 			}
 		}
 
@@ -606,19 +614,27 @@ namespace XamCore.Registrar {
 			return SharedStatic.TryGetAttributeImpl (method, "System.Runtime.CompilerServices", "ExtensionAttribute", out attrib);
 		}
 
+#if MTOUCH
+		public bool IsSimulator {
+			get { return App.IsSimulatorBuild; }
+		}
+#endif
+
 		protected override bool IsSimulatorOrDesktop {
 			get {
 #if MONOMAC
 				return true;
 #else
-				return is_simulator;
+				return App.IsSimulatorBuild;
 #endif
 			}
 		}
 			
 		protected override bool Is64Bits {
 			get {
-				return is_64_bits.Value;
+				if (IsSingleAssembly)
+					throw new InvalidOperationException ("Can't emit size-specific code in single assembly mode.");
+				return Target.Is64Build;
 			}
 		}
 
@@ -1735,8 +1751,10 @@ namespace XamCore.Registrar {
 			case "CoreAudioKit":
 				// fatal error: 'CoreAudioKit/CoreAudioKit.h' file not found
 				// radar filed with Apple - but that framework / header is not yet shipped with the iOS SDK simulator
-				if (is_simulator)
+#if MTOUCH
+				if (IsSimulator)
 					return;
+#endif
 				goto default;
 			case "Metal":
 			case "MetalKit":
@@ -1744,7 +1762,7 @@ namespace XamCore.Registrar {
 				// #error Metal Simulator is currently unsupported
 				// this framework is _officially_ not available on the simulator (in iOS8)
 #if !MONOMAC
-				if (is_simulator)
+				if (IsSimulator)
 					return;
 #endif
 				goto default;
@@ -3352,24 +3370,23 @@ namespace XamCore.Registrar {
 			}
 		}
 
-#if MONOMAC
-		public static string Generate (Application app, IEnumerable<AssemblyDefinition> list, bool is_64_bits, Mono.Linker.LinkContext link_context)
+		public void GenerateSingleAssembly (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly)
 		{
-			return new StaticRegistrar (app, list, true, is_64_bits, link_context).Generate ();
-		}
-#else
-		public static string Generate (Application app, IEnumerable<AssemblyDefinition> list, bool simulator, bool is_64_bits, Mono.Linker.LinkContext link_context)
-		{
-			return new StaticRegistrar (app, list, simulator, is_64_bits, link_context).Generate ();
+			single_assembly = assembly;
+			Generate (assemblies, header_path, source_path);
 		}
 
-		public static string Generate (Application app, IEnumerable<AssemblyDefinition> list, bool simulator, string single_assembly = null)
+		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path)
 		{
-			return new StaticRegistrar (app, list, simulator, single_assembly).Generate ();
-		}
-#endif
+			this.input_assemblies = assemblies;
 
-		public string Generate ()
+			foreach (var assembly in assemblies)
+				RegisterAssembly (assembly);
+
+			Generate (header_path, source_path);
+		}
+
+		void Generate (string header_path, string source_path)
 		{
 			using (var sb = new AutoIndentStringBuilder ()) {
 				using (var hdr = new AutoIndentStringBuilder ()) {
@@ -3391,6 +3408,8 @@ namespace XamCore.Registrar {
 							declarations = decls;
 							methods = mthds;
 
+							mthds.WriteLine ($"#include \"{Path.GetFileName (header_path)}\"");
+
 							Specialize (sb);
 
 							header = null;	
@@ -3399,7 +3418,8 @@ namespace XamCore.Registrar {
 
 							FlushTrace ();
 
-							return hdr.ToString () + "\n" + decls.ToString () + "\n" + mthds.ToString () + "\n" + sb.ToString ();
+							Driver.WriteIfDifferent (header_path, hdr.ToString () + "\n" + decls.ToString () + "\n");
+							Driver.WriteIfDifferent (source_path, mthds.ToString () + "\n" + sb.ToString () + "\n");
 						}
 					}
 				}

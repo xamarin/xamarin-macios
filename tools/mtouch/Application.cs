@@ -7,6 +7,7 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 using MonoTouch.Tuner;
 
@@ -539,8 +540,11 @@ namespace Xamarin.Bundler {
 				}
 				break;
 			}
-			var registrar = XamCore.Registrar.StaticRegistrar.Generate (this, resolvedAssemblies, simulator: true, single_assembly: Path.GetFileNameWithoutExtension (RootAssembly));
-			Driver.WriteIfDifferent (registrar_m, registrar);
+
+			BuildTarget = BuildTarget.Simulator;
+
+			var registrar = new XamCore.Registrar.StaticRegistrar (this);
+			registrar.GenerateSingleAssembly (resolvedAssemblies, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly));
 		}
 
 		public void Build ()
@@ -878,6 +882,9 @@ namespace Xamarin.Bundler {
 					Registrar = RegistrarMode.LegacyDynamic;
 				}
 			}
+
+			foreach (var target in Targets)
+				target.SelectStaticRegistrar ();
 		}
 
 		// Select all abi from the list matching the specified mask.
@@ -1539,6 +1546,24 @@ namespace Xamarin.Bundler {
 		}
 	}
 
+	public class BuildTasks : List<BuildTask>
+	{
+		static void Execute (BuildTask v)
+		{
+			var next = v.Execute ();
+			if (next != null)
+				Parallel.ForEach (next, new ParallelOptions () { MaxDegreeOfParallelism = Environment.ProcessorCount }, Execute);
+		}
+
+		public void ExecuteInParallel ()
+		{
+			if (Count == 0)
+				return;
+			
+			Parallel.ForEach (this, new ParallelOptions () { MaxDegreeOfParallelism = Environment.ProcessorCount }, Execute);
+		}
+	}
+
 	public abstract class BuildTask
 	{
 		public IEnumerable<BuildTask> NextTasks;
@@ -1672,6 +1697,12 @@ namespace Xamarin.Bundler {
 	}
 
 	internal class RegistrarTask : CompileTask {
+		public static void Create (List<BuildTask> tasks, IEnumerable<Abi> abis, Target target, string ifile)
+		{
+			foreach (var abi in abis)
+				Create (tasks, abi, target, ifile);
+		}
+
 		public static void Create (List<BuildTask> tasks, Abi abi, Target target, string ifile)
 		{
 			var arch = abi.AsArchString ();

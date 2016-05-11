@@ -1726,25 +1726,6 @@ namespace Xamarin.Bundler
 			return false;
 		}
 
-		public static string RunRegistrar (Target target, List<Assembly> assemblies, string assemblies_path, string output_dir, bool old, bool is_64_bits, string out_file = null)
-		{
-			const string registrar_file = "registrar.m";
-
-			var resolvedAssemblies = assemblies.Select (asm => asm.AssemblyDefinition);
-			var output_file = out_file ?? Path.Combine (output_dir, registrar_file);
-			var code = string.Empty;
-
-			if (old) {
-				code = OldStaticRegistrar.Generate (resolvedAssemblies);
-			} else {
-				code = StaticRegistrar.Generate (app, resolvedAssemblies, target.App.IsSimulatorBuild, is_64_bits, target.LinkContext);
-			}
-
-			WriteIfDifferent (output_file, code);
-			
-			return output_file;
-		}
-
 		struct timespec {
 			public IntPtr tv_sec;
 			public IntPtr tv_nsec;

@@ -48,6 +48,7 @@ using Mono.Tuner;
 using MonoMac.Tuner;
 using Xamarin.Utils;
 using Xamarin.Linker;
+using XamCore.Registrar;
 using XamCore.ObjCRuntime;
 
 namespace Xamarin.Bundler {
@@ -579,6 +580,8 @@ namespace Xamarin.Bundler {
 
 			ExtractNativeLinkInfo ();
 
+			BuildTarget.StaticRegistrar = new StaticRegistrar (BuildTarget);
+
 			if (!no_executable) {
 				foreach (var nr in native_references) {
 					if (!native_libs.ContainsKey (nr))
@@ -927,9 +930,10 @@ namespace Xamarin.Bundler {
 
 			SetSDKVersion ();
 			if (registrar == RegistrarMode.Static) {
-				var code = XamCore.Registrar.StaticRegistrar.Generate (App, BuildTarget.Resolver.ResolverCache.Values, Is64Bit, BuildTarget.LinkContext);
 				registrarPath = Path.Combine (Cache.Location, "registrar.m");
-				File.WriteAllText (registrarPath, code);
+				var registrarH = Path.Combine (Cache.Location, "registrar.h");
+				BuildTarget.StaticRegistrar.LinkContext = BuildTarget.LinkContext;
+				BuildTarget.StaticRegistrar.Generate (BuildTarget.Resolver.ResolverCache.Values, registrarH, registrarPath);
 
 				var platform_assembly = BuildTarget.Resolver.ResolverCache.First ((v) => v.Value.Name.Name == XamCore.Registrar.Registrar.PlatformAssembly).Value;
 				Frameworks.Gather (platform_assembly, BuildTarget.Frameworks, BuildTarget.WeakFrameworks);
