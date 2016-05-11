@@ -8,6 +8,8 @@ namespace Xamarin.iOS.Tasks
 		public string BundlePath;
 		public string Platform;
 
+		public ExtensionTestBase () { }
+
 		public ExtensionTestBase (string platform) {
 			Platform = platform;
 		}
