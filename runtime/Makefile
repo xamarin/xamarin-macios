@@ -220,7 +220,8 @@ $(eval $(call LibTemplate,tvos,TVOS))
 define LibXamarinArchTemplate
 .libs/$(1)/libxamarin$(4).$(5).a: $$($(5)_$(1)$(3)_OBJECTS)
 	$$(Q) rm -f $$@
-	$$(call Q_2,AR,    [$1]) $(DEVICE_BIN_PATH)/ar cru $$@ $$^
+	$$(call Q_2,AR,    [$1]) $(DEVICE_BIN_PATH)/ar Scru $$@ $$^
+	$$(call Q_2,RANLIB,[$1]) $(DEVICE_BIN_PATH)/ranlib -no_warning_for_no_symbols -q $$@
 endef
 
 define LibXamarinTemplate
@@ -344,10 +345,10 @@ SYSTEM_LAUNCHER$(2)_OBJECTS = $$(foreach src,$$(MAC_SOURCES),.libs/mac/$$(basena
 	$$(call Q_2,LD,    [mac]) $(MAC_CLANG) -arch $(1) -dynamiclib $$(MAC_LDFLAGS) -Wl,-install_name,libxammac$(3).dylib -o $$@ $$^ $$(addprefix -Xlinker -U -Xlinker ,$$(ALLOWED_UNDEFINED_SYMBOLS))
 
 .libs/mac/libxammac$(3).$(1).a: $$(STATIC_LAUNCHER$(2)_OBJECTS)
-	$$(call Q_2,LIB,   [mac]) xcrun libtool -static -o $$@ $$^
+	$$(call Q_2,LIB,   [mac]) xcrun libtool -no_warning_for_no_symbols -static -o $$@ $$^
 
 .libs/mac/libxammac-system$(3).$(1).a: $$(SYSTEM_LAUNCHER$(2)_OBJECTS)
-	$$(call Q_2,LIB,   [mac]) xcrun libtool -static -o $$@ $$^
+	$$(call Q_2,LIB,   [mac]) xcrun libtool -no_warning_for_no_symbols -static -o $$@ $$^
 
 endef
 
