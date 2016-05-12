@@ -20,8 +20,8 @@ Lfunc_begin0:
 	# we need 64 bytes to store xmm0-3, and those 64 bytes need to be 16-byte aligned.
 	# we need 4 bytes to store the result for get_frame_length, which we store in %ebp-16
 	# then 4 more bytes for stack space for the call to get_frame_length (which takes 2 arguments)
-	subl	$92, %esp # to store xmm0-3
-	movaps	%xmm0, -24(%ebp)
-	movaps	%xmm1, -40(%ebp)
-	movaps	%xmm2, -56(%ebp)
-	movaps	%xmm3, -72(%ebp)
+	subl	$96, %esp # to store xmm0-3
+	movaps	%xmm0, -40(%ebp)
+	movaps	%xmm1, -56(%ebp)
+	movaps	%xmm2, -72(%ebp)
+	movaps	%xmm3, -88(%ebp)

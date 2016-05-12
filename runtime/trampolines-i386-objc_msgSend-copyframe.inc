@@ -47,7 +47,7 @@ L_start:
 	jmp L_start               # }
 L_end:
 
-	movaps	-24(%ebp), %xmm0
-	movaps	-40(%ebp), %xmm1
-	movaps	-56(%ebp), %xmm2
-	movaps	-72(%ebp), %xmm3
+	movaps	-40(%ebp), %xmm0
+	movaps	-56(%ebp), %xmm1
+	movaps	-72(%ebp), %xmm2
+	movaps	-88(%ebp), %xmm3

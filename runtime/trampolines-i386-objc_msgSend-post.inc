@@ -1,6 +1,6 @@
 ﻿Lafterinvoke:
 	addl	-16(%ebp), %esp
-	addl	$92, %esp
+	addl	$96, %esp
 	popl	%ebx
 	popl	%edi
 	popl	%esi
