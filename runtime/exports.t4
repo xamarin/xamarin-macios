@@ -220,7 +220,7 @@
 
 		#region metadata/object-internals.h
 
-		new Export ("void", "mono_set_pending_exception",
+		new Export (true, "void", "mono_set_pending_exception",
 			"MonoException *", "exc"
 		),
 
