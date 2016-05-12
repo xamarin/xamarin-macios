@@ -6,9 +6,6 @@
 //
 // Copyright 2012-2014 Xamarin Inc.
 //
-// MISSING:
-// MusicSequenceSetUserCallback
-//
 
 #if IOS || TVOS
 
@@ -29,6 +26,12 @@ using XamCore.AudioUnit;
 using MidiEndpointRef = System.Int32;
 
 namespace XamCore.AudioToolbox {
+
+#if !COREBUILD
+	public delegate void MusicSequenceUserCallback (MusicTrack track, double inEventTime, MusicEventUserData inEventData, double inStartSliceBeat, double inEndSliceBeat);
+
+	delegate void MusicSequenceUserCallbackProxy (/* void * */ IntPtr inClientData, /* MusicSequence* */ IntPtr inSequence, /* MusicTrack* */ IntPtr inTrack, /* MusicTimeStamp */ double inEventTime, /* MusicEventUserData* */ IntPtr inEventData, /* MusicTimeStamp */ double inStartSliceBeat, /* MusicTimeStamp */ double inEndSliceBeat);
+#endif
 
 	// MusicPlayer.h
 	public class MusicSequence : INativeObject
@@ -73,6 +76,10 @@ namespace XamCore.AudioToolbox {
 		protected virtual void Dispose (bool disposing)
 		{
 			if (handle != IntPtr.Zero){
+
+				// Remove native user callback
+				MusicSequenceSetUserCallback (handle, null, IntPtr.Zero);
+
 				DisposeMusicSequence (handle);
 				lock (sequenceMap){
 					sequenceMap.Remove (handle);
@@ -273,6 +280,33 @@ namespace XamCore.AudioToolbox {
 			if (MusicSequenceGetBeatsForSeconds (handle, seconds, out beats) == MusicPlayerStatus.Success)
 				return beats;
 			return 0;
+		}
+
+		[DllImport (Constants.AudioToolboxLibrary)]
+		extern static /* OSStatus */ MusicPlayerStatus MusicSequenceSetUserCallback (/* MusicSequence */ IntPtr inSequence, MusicSequenceUserCallbackProxy inCallback, /* void * */ IntPtr inClientData);
+
+		MusicSequenceUserCallback userCallback;
+
+		public void SetUserCallback (MusicSequenceUserCallback callback)
+		{
+			if (MusicSequenceSetUserCallback (handle, UserCallbackProxy, IntPtr.Zero) == MusicPlayerStatus.Success)
+				userCallback = callback;
+		}
+
+#if !MONOMAC
+		[MonoPInvokeCallback (typeof (MusicSequenceUserCallbackProxy))]
+#endif
+		static void UserCallbackProxy (IntPtr inClientData, IntPtr inSequence, IntPtr inTrack, double inEventTime, IntPtr inEventData, double inStartSliceBeat, double inEndSliceBeat)
+		{
+			var musicSequence = MusicSequence.Lookup (inSequence);
+			var callback = musicSequence.userCallback;
+
+			if (callback != null) {
+				var userEventData = new MusicEventUserData (inEventData);
+				var musicTrack = new MusicTrack (musicSequence, inTrack, false);
+
+				callback (musicTrack, inEventTime, userEventData, inStartSliceBeat, inEndSliceBeat);
+			}
 		}
 		
 		[DllImport (Constants.AudioToolboxLibrary)]
