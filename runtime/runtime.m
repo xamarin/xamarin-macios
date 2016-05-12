@@ -1807,7 +1807,7 @@ xamarin_process_managed_exception (MonoObject *exception)
 void
 xamarin_insert_dllmap ()
 {
-#if defined (__i386__) || defined (__x86_64__)
+#if defined (OBJC_ZEROCOST_EXCEPTIONS) && (defined (__i386__) || defined (__x86_64__))
 	if (xamarin_marshal_objectivec_exception_mode == MarshalObjectiveCExceptionModeDisable)
 		return;
 #if DYNAMIC_MONO_RUNTIME
