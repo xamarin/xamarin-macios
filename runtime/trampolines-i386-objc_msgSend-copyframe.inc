@@ -23,7 +23,7 @@
 	sall	$4,%eax
 	subl	%eax,%esp
 	# store the number somewhere so we can restore the stack pointer later
-	movl	%eax,-80(%ebp)
+	movl	%eax,-16(%ebp)
 	
 	# copy arguments from old location in the stack to new location in the stack
 	# %ecx will hold the amount of bytes left to copy
@@ -34,7 +34,7 @@
 	# (arguments smaller than 4 bytes are extended to 4 bytes according to
 	# http://developer.apple.com/library/mac/#documentation/DeveloperTools/Conceptual/LowLevelABI/130-IA-32_Function_Calling_Conventions/IA32.html#//apple_ref/doc/uid/TP40002492-SW4)
 	
-	movl	-80(%ebp),%ecx # ecx = frame_length
+	movl	-16(%ebp),%ecx # ecx = frame_length
 	leal	8(%ebp),%esi   # esi = address of first argument we got (buffer)
 	movl	%esp,%edi      # edi = address of the bottom of the stack
 
@@ -47,7 +47,7 @@ L_start:
 	jmp L_start               # }
 L_end:
 
-	movaps	-16(%ebp), %xmm0
-	movaps	-32(%ebp), %xmm1
-	movaps	-48(%ebp), %xmm2
-	movaps	-64(%ebp), %xmm3
+	movaps	-24(%ebp), %xmm0
+	movaps	-40(%ebp), %xmm1
+	movaps	-56(%ebp), %xmm2
+	movaps	-72(%ebp), %xmm3
