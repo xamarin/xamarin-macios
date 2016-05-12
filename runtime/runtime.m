@@ -1154,6 +1154,10 @@ objc_skip_type (const char *type)
 		case _C_PTR:
 			return objc_skip_type (++type);
 		case _C_BFLD:
+			type++;
+			while (*type && *type >= '0' && *type <= '9')
+				type++;
+			return type;
 		case _C_ATOM:
 		case _C_VECTOR:
 		case _C_CONST:
@@ -1222,6 +1226,17 @@ xamarin_objc_type_size (const char *type)
 		case _C_PTR: return sizeof (void *);
 		case _C_CHARPTR: return sizeof (char *);
 		case _C_BFLD: {
+			// Example: [NSDecimalNumberPlaceholder initWithDecimal:] = @28@0:4{?=b8b4b1b1b18[8S]}8
+			int bits = 0;
+			int bc = 1;
+			while (type [bc] >= '0' && type [bc] <= '9') {
+				bits = bits * 10 + (type [bc] - '0');
+				bc++;
+			}
+			if (bits % sizeof (void *) == 0)
+				return bits / sizeof (void *);
+			return 1 + (bits / sizeof (void *));
+		}
 		case _C_UNDEF:
 		case _C_ATOM:
 		case _C_VECTOR:

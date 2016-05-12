@@ -14,6 +14,7 @@
 
 #include <pthread.h>
 
+#include "product.h"
 #include "delegates.h"
 #include "xamarin/xamarin.h"
 #include "slinked-list.h"
@@ -123,12 +124,212 @@ xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *ret
 	}
 }
 
+static const char *
+get_method_description (Class cls, SEL sel)
+{
+	Protocol **protocols;
+	unsigned int p_count;
+	Class p_cls = cls;
+	struct objc_method_description desc;
+
+	while (p_cls) {
+		protocols = class_copyProtocolList (p_cls, &p_count);
+		for (unsigned int i = 0; i < p_count; i++) {
+			desc = protocol_getMethodDescription (protocols [i], sel, YES, !class_isMetaClass (p_cls));
+			if (desc.types != NULL) {
+				free (protocols);
+				return desc.types;
+			}
+		}
+		free (protocols);
+		p_cls = class_getSuperclass (p_cls);
+	}
+
+	Method method = class_getInstanceMethod (cls, sel);
+	if (!method)
+		return NULL;
+	struct objc_method_description* m_desc;
+	m_desc = method_getDescription (method);
+	return m_desc ? m_desc->types : NULL;
+}
+
+static int
+count_until (const char *desc, char start, char end)
+{
+	// Counts the number of characters until a certain character is found: 'end'
+	// If the 'start' character is found, nesting is assumed, and an additional
+	// 'end' character must be found before the function returns.
+	int i = 1;
+	int sub = 0;
+	while (*desc) {
+		if (start == *desc) {
+			sub++;
+		} else if (end == *desc) {
+			sub--;
+			if (sub == 0)
+				return i;
+		}
+		i++;
+		// This is not multi-byte safe...
+		desc++;
+	}
+
+	fprintf (stderr, PRODUCT ": Unexpected type encoding, did not find end character '%c' in '%s'.", end, desc);
+
+	return i;
+}
+
+static int
+get_type_description_length (const char *desc)
+{
+	int length = 0;
+	// This function returns the length of the first encoded type string in desc.
+	switch (desc [0]) {
+		case _C_ID:
+			if (desc [1] == '?') {
+				// Example: [AVAssetImageGenerator generateCGImagesAsynchronouslyForTimes:completionHandler:] = 'v16@0:4@8@?12'
+				length = 2;
+			} else {
+				length = 1;
+			}
+			break;
+		case _C_CLASS:
+		case _C_SEL:
+		case _C_CHR:
+		case _C_UCHR:
+		case _C_SHT:
+		case _C_USHT:
+		case _C_INT:
+		case _C_UINT:
+		case _C_LNG:
+		case _C_ULNG:
+		case _C_LNG_LNG:
+		case _C_ULNG_LNG:
+		case _C_FLT:
+		case _C_DBL:
+		case _C_BOOL:
+		case _C_VOID:
+		case _C_CHARPTR:
+			length = 1;
+			break;
+		case _C_PTR:
+			length = 1;
+
+			// handle broken encoding where simd types don't show up at all
+			// Example: [GKPath pathWithPoints:count:radius:cyclical:] = '@24@0:4^8L12f16c20'
+			// Here we assume that we're pointing to a simd type if we find
+			// a number (i.e. only get the size of what we're pointing to
+			// if the next character isn't a number).
+			if (desc [1] < '0' || desc [1] > '9')
+				length += get_type_description_length (desc + 1);
+			
+			break;
+		case _C_ARY_B:
+			length = count_until (desc, _C_ARY_B, _C_ARY_E);
+			break;
+		case _C_UNION_B:
+			length = count_until (desc, _C_UNION_B, _C_UNION_E);
+			break;
+		case _C_STRUCT_B:
+			length = count_until (desc, _C_STRUCT_B, _C_STRUCT_E);
+			break;
+		// The following are from table 6-2 here: https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
+		case 'r': // _C_CONST
+		case 'n':
+		case 'N':
+		case 'o':
+		case 'O':
+		case 'R':
+		case 'V':
+			 length = 1 + get_type_description_length (desc + 1);
+			 break;
+		case _C_BFLD:
+			length = 1;
+			break;
+		case _C_UNDEF:
+		case _C_ATOM:
+		case _C_VECTOR:
+			xamarin_assertion_message ("Unhandled type encoding: %s", desc);
+			break;
+		default:
+			xamarin_assertion_message ("Unsupported type encoding: %s", desc);
+			break;
+	}
+
+	// Every type encoding _may_ be followed by the stack frame offset for that type
+	while (desc [length] >= '0' && desc [length] <= '9')
+		length++;
+
+	return length;
+}
+
 int
 xamarin_get_frame_length (id self, SEL sel)
 {
-	NSMethodSignature *sig = [self methodSignatureForSelector: sel];
+	if (self == NULL)
+		return sizeof (void *) * 3; // we might be in objc_msgStret, in which case we'll need to copy three arguments.
 
-	return [sig frameLength];
+	// [NSDecimalNumber initWithDecimal:] has this descriptor: "@36@0:8{?=b8b4b1b1b18[8S]}16"
+	// which NSMethodSignature chokes on: NSInvalidArgumentException Reason: +[NSMethodSignature signatureWithObjCTypes:]: unsupported type encoding spec '{?}'
+	// So instead parse the description ourselves.
+
+	int length = 0;
+	Class cls = object_getClass (self);
+	const char *method_description = get_method_description (cls, sel);
+	const char *desc = method_description;
+	if (desc == NULL) {
+		// This happens with [[UITableViewCell appearance] backgroundColor]
+		@try {
+			NSMethodSignature *sig = [self methodSignatureForSelector: sel];
+			length = [sig frameLength];
+		} @catch (NSException *ex) {
+			length = sizeof (void *) * 64; // some high-ish number.
+			fprintf (stderr, PRODUCT ": Failed to calculate the frame size for the method [%s %s] (%s). Using a value of %i instead.\n", class_getName (cls), sel_getName (sel), [[ex description] UTF8String], length);
+		}
+	} else {
+		// The format of the method type encoding is described here: http://stackoverflow.com/a/11492151/183422
+		// the return type might have a number after it, which is the size of the argument frame
+		// first get this number (if it's there), and use it as a minimum value for the frame length
+		int rvlength = get_type_description_length (desc);
+		int min_length = 0;
+		if (rvlength > 0) {
+			const char *min_start = desc + rvlength;
+			// the number is at the end of the return type encoding, so find any numbers
+			// at the end of the type encoding.
+			while (min_start > desc && min_start [-1] >= '0' && min_start [-1] <= '9')
+				min_start--;
+			if (min_start < desc + rvlength) {
+				for (int i = 0; i < desc + rvlength - min_start; i++)
+					min_length = min_length * 10 + (min_start [i] - '0');
+			}
+		}
+
+		// fprintf (stderr, "Found desc '%s' for [%s %s] with min frame length %i\n", desc, class_getName (cls), sel_getName (sel), min_length);
+
+		// skip the return value.
+		desc += rvlength;
+		while (*desc) {
+			int tl = xamarin_objc_type_size (desc);
+			// round up to pointer size
+			if (tl % sizeof (void *) != 0)
+				tl += sizeof (void *) - (tl % sizeof (void *));
+			length += tl;
+			// fprintf (stderr, " argument=%s length=%i totallength=%i\n", desc, tl, length);
+			desc += get_type_description_length (desc);
+		}
+
+		if (min_length > length) {
+			// this might happen for methods that take simd types, since those arguments don't show up in the
+			// method signature encoding at all, but they're still added to the frame size.
+			// fprintf (stderr, " min length: %i is higher than calculated length: %i for [%s %s] with description %s\n", min_length, length, class_getName (cls), sel_getName (sel), method_description);
+			length = min_length;
+		}
+	}
+
+	// we can't detect varargs, so just add 16 more pointer sized arguments to be on the safe-ish side.
+	length += sizeof (void *) * 16;
+
+	return length;
 }
 
 static inline void
