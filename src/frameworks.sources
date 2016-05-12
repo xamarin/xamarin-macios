@@ -1463,7 +1463,7 @@ MAC_FRAMEWORKS =            \
 	CoreVideo               \
 	CoreWlan                \
 	EventKit                \
-	FinderSync				\
+	FinderSync		\
 	GameController          \
 	GameKit                 \
 	GameplayKit             \
@@ -1474,7 +1474,7 @@ MAC_FRAMEWORKS =            \
 	LocalAuthentication     \
 	MapKit                  \
 	MediaAccessibility      \
-	MediaLibrary 			\
+	MediaLibrary 		\
 	MediaToolbox            \
 	Metal                   \
 	MetalKit                \
@@ -1482,7 +1482,7 @@ MAC_FRAMEWORKS =            \
 	ModelIO                 \
 	MultipeerConnectivity	\
 	NetworkExtension        \
-	NotificationCenter 		\
+	NotificationCenter 	\
 	OpenGL                  \
 	PdfKit                  \
 	QTKit                   \
