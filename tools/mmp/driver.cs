@@ -605,7 +605,7 @@ namespace Xamarin.Bundler {
 				Watch (string.Format ("Linking (mode: '{0}')", App.LinkMode), 1);
 			}
 
-			if (App.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Disable && !App.RequiresPInvokeWrappers) {
+			if (App.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Disable && !App.RequiresPInvokeWrappers && BuildTarget.Is64Build) {
 				internalSymbols.Add ("xamarin_dyn_objc_msgSend");
 				internalSymbols.Add ("xamarin_dyn_objc_msgSendSuper");
 				internalSymbols.Add ("xamarin_dyn_objc_msgSend_stret");
