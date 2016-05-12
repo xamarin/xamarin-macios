@@ -1810,7 +1810,7 @@ xamarin_insert_dllmap ()
 #if defined (OBJC_ZEROCOST_EXCEPTIONS) && (defined (__i386__) || defined (__x86_64__))
 	if (xamarin_marshal_objectivec_exception_mode == MarshalObjectiveCExceptionModeDisable)
 		return;
-#if DYNAMIC_MONO_RUNTIME
+#if DYLIB
 	const char *lib = "libxammac.dylib";
 #else
 	const char *lib = "__Internal";
