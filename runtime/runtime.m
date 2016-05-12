@@ -1157,12 +1157,11 @@ objc_skip_type (const char *type)
 		case _C_ATOM:
 		case _C_VECTOR:
 		case _C_CONST:
-			assert (0);
 		case _C_ARY_E:
 		case _C_UNION_E:
 		case _C_STRUCT_E:
-			assert (0);
-
+			xamarin_assertion_message ("Unhandled type encoding: %s", type);
+			break;
 		case _C_ARY_B: {
 			do {
 				type++;
@@ -1193,10 +1192,10 @@ objc_skip_type (const char *type)
 
 			return ++type;
 		}
-
+		default:
+			xamarin_assertion_message ("Unsupported type encoding: %s", type);
+			break;
 	}
-
-	assert (0);
 }
 
 int
@@ -1218,13 +1217,16 @@ xamarin_objc_type_size (const char *type)
 		case _C_ULNG_LNG: return sizeof (unsigned long long);
 		case _C_FLT: return sizeof (float);
 		case _C_DBL: return sizeof (double);
-		case _C_BFLD: assert (0);
 		case _C_BOOL: return sizeof (BOOL);
 		case _C_VOID: return 0;
-		case _C_UNDEF: assert (0);
 		case _C_PTR: return sizeof (void *);
 		case _C_CHARPTR: return sizeof (char *);
-		case _C_ATOM: assert (0);
+		case _C_BFLD: {
+		case _C_UNDEF:
+		case _C_ATOM:
+		case _C_VECTOR:
+			xamarin_assertion_message ("Unhandled type encoding: %s", type);
+			break;
 		case _C_ARY_B: {
 			int size = 0;
 			int len = atoi (type+1);
@@ -1272,10 +1274,8 @@ xamarin_objc_type_size (const char *type)
 
 			return size;
 		}
-		case _C_VECTOR: assert (0);
-		case _C_CONST: assert (0);
 		// The following are from table 6-2 here: https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html
-		// case 'r': _C_CONST
+		case 'r': // _C_CONST
 		case 'n':
 		case 'N':
 		case 'o':
