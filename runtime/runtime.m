@@ -873,14 +873,14 @@ print_all_exceptions (MonoObject *exc)
 	NSMutableString *str = [[NSMutableString alloc] init];
 	// fetch the field, since the property might have been linked away.
 	int counter = 0;
-	MonoClassField *inner_exception = mono_class_get_field_from_name (mono_object_get_class (exc), "inner_exception");
+	MonoClassField *inner_exception = mono_class_get_field_from_name (mono_object_get_class (exc), "_innerException");
 
 	do {
 		print_exception (exc, counter > 0, str);
 		if (inner_exception) {
 			mono_field_get_value (exc, inner_exception, &exc);
 		} else {
-			LOG ("Could not find the field inner_exception in System.Exception\n");
+			LOG ("Could not find the field _innerException in System.Exception\n");
 			break;
 		}
 	} while (counter++ < 10 && exc);
