@@ -732,6 +732,15 @@ public class DefaultValueFromArgumentAttribute : Attribute {
 public class NoDefaultValueAttribute : Attribute {
 }
 
+// Attribute used to mark those methods that will be ignored when
+// generating C# events, there are several situations in which using
+// this attribute makes sense:
+// 1. when there are overloaded methods. This means that we can mark
+//    the default overload to be used in the events.
+// 2. whe some of the methods should not be exposed as events.
+public class IgnoredInDelegateAttribute : Attribute {
+}
+
 // Apply to strings parameters that are merely retained or assigned,
 // not copied this is an exception as it is advised in the coding
 // standard for Objective-C to avoid this, but a few properties do use
@@ -2711,7 +2720,7 @@ public partial class Generator : IMemberGatherer {
 					} else if (attr is AlphaAttribute) {
 						continue;
 #endif
-					} else if (attr is SealedAttribute || attr is EventArgsAttribute || attr is DelegateNameAttribute || attr is EventNameAttribute || attr is ObsoleteAttribute || attr is NewAttribute || attr is PostGetAttribute || attr is NullAllowedAttribute || attr is CheckDisposedAttribute || attr is SnippetAttribute || attr is AppearanceAttribute || attr is ThreadSafeAttribute || attr is AutoreleaseAttribute || attr is EditorBrowsableAttribute || attr is AdviceAttribute || attr is OverrideAttribute)
+					} else if (attr is SealedAttribute || attr is EventArgsAttribute || attr is DelegateNameAttribute || attr is EventNameAttribute || attr is IgnoredInDelegateAttribute || attr is ObsoleteAttribute || attr is NewAttribute || attr is PostGetAttribute || attr is NullAllowedAttribute || attr is CheckDisposedAttribute || attr is SnippetAttribute || attr is AppearanceAttribute || attr is ThreadSafeAttribute || attr is AutoreleaseAttribute || attr is EditorBrowsableAttribute || attr is AdviceAttribute || attr is OverrideAttribute)
 						continue;
 					else if (attr is MarshalNativeExceptionsAttribute)
 						continue;
@@ -6543,7 +6552,7 @@ public partial class Generator : IMemberGatherer {
 					string shouldOverrideDelegateString = isProtocolizedEventBacked ? "" : "override ";
 
 					foreach (var mi in dtype.GatherMethods ().OrderBy (m => m.Name)) {
-						if (ShouldSkipGeneration (mi))
+						if (ShouldSkipEventGeneration (mi))
 							continue;
 						
 						var pars = mi.GetParameters ();
@@ -6716,7 +6725,7 @@ public partial class Generator : IMemberGatherer {
 				// Now add the instance vars and event handlers
 				foreach (var dtype in bta.Events.OrderBy (d => d.Name)) {
 					foreach (var mi in dtype.GatherMethods ().OrderBy (m => m.Name)) {
-						if (ShouldSkipGeneration (mi))
+						if (ShouldSkipEventGeneration (mi))
 							continue;
 
 						string ensureArg = bta.KeepRefUntil == null ? "" : "this";
@@ -7069,7 +7078,7 @@ public partial class Generator : IMemberGatherer {
 		return currentTypeName;
 	}
 
-	bool ShouldSkipGeneration (MethodInfo mi)
+	bool ShouldSkipEventGeneration (MethodInfo mi)
 	{
 		// Skip property getter/setters
 		if (mi.IsSpecialName && (mi.Name.StartsWith ("get_") || mi.Name.StartsWith ("set_")))
@@ -7078,8 +7087,12 @@ public partial class Generator : IMemberGatherer {
 		if (mi.IsUnavailable ())
 			return true;
 
+		// Skip those methods marked to be ignored by the developer
+		var customAttrs = mi.GetCustomAttributes (true);
+		if (customAttrs.OfType<IgnoredInDelegateAttribute> ().Any ())
+			return true;
 #if !XAMCORE_2_0
-		if (mi.GetCustomAttributes (true).OfType<AlphaAttribute> ().Any ())
+		if (customAttrs.OfType<AlphaAttribute> ().Any ())
 			return true;
 #endif
 
