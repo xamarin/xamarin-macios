@@ -834,6 +834,10 @@ namespace Xamarin.Bundler
 						// framework specific processing
 						switch (framework.Name) {
 						case "CoreAudioKit":
+							// CoreAudioKit seems to be functional in the iOS 9 simulator.
+							if (app.IsSimulatorBuild && SDKVersion.Major < 9)
+								continue;
+							break;
 						case "Metal":
 						case "MetalKit":
 						case "MetalPerformanceShaders":
