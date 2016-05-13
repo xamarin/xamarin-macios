@@ -910,8 +910,14 @@ namespace Xamarin.Bundler
 			if (app.Registrar == RegistrarMode.Static || app.Registrar == RegistrarMode.LegacyStatic || app.Registrar == RegistrarMode.LegacyDynamic)
 				return false;
 
-			if (app.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Default || app.Platform == ApplePlatform.WatchOS)
+			// The default exception marshalling differs between release and debug mode, but we
+			// only have one simlauncher, so to use the simlauncher we'd have to chose either
+			// debug or release mode. Debug is more frequent, so make that the fast path.
+			if (!app.EnableDebug)
 				return false;
+
+			if (app.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.UnwindManagedCode)
+				return false; // UnwindManagedCode is the default for debug builds.
 
 			return true;
 		}

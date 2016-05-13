@@ -153,6 +153,10 @@ monotouch-fixes.dylib: monotouch-fixes.i386.dylib monotouch-fixes.x86_64.dylib
 
 # keep in sync with mtouch.cs (but keep current differences too)
 UNREFERENCED_SYMBOLS = 							\
+	_xamarin_dyn_objc_msgSend 					\
+	_xamarin_dyn_objc_msgSendSuper 				\
+	_xamarin_dyn_objc_msgSend_stret 			\
+	_xamarin_dyn_objc_msgSendSuper_stret 		\
 	_xamarin_init_nsthread						\
 	_xamarin_get_block_descriptor				\
 	_xamarin_get_locale_country_code			\
