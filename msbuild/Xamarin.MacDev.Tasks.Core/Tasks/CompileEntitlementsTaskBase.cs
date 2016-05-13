@@ -221,15 +221,10 @@ namespace Xamarin.MacDev.Tasks
 				    item.Key == "com.apple.developer.icloud-container-identifiers" ||
 				    item.Key == "com.apple.developer.icloud-container-environment" ||
 				    item.Key == "com.apple.developer.icloud-services") {
-					if (profile == null) {
-						Log.LogError (null, null, null, Entitlements, 0, 0, 0, 0, "iCloud entitlements such as '" + item.Key + "' require a Provisioning Profile.");
-						continue;
-					}
-
-					if (!profile.Entitlements.ContainsKey (item.Key)) {
-						Log.LogError (null, null, null, Entitlements, 0, 0, 0, 0, "The iCloud entitlement '" + item.Key + "' is not supported by the Provisioning Profile.");
-						continue;
-					}
+					if (profile == null)
+						Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, "iCloud entitlements such as '" + item.Key + "' require a Provisioning Profile.");
+					else if (!profile.Entitlements.ContainsKey (item.Key))
+						Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, "The iCloud entitlement '" + item.Key + "' is not supported by the Provisioning Profile.");
 				} else if (item.Key == ApplicationIdentifierKey) {
 					var str = value as PString;
 
