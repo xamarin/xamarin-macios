@@ -151,7 +151,6 @@ monotouch-fixes.x86_64.dylib: monotouch-fixes.c Makefile
 monotouch-fixes.dylib: monotouch-fixes.i386.dylib monotouch-fixes.x86_64.dylib
 	$(Q_LIPO) lipo -create -output $@ $^
 
-# keep in sync with mtouch.cs (but keep current differences too)
 UNREFERENCED_SYMBOLS = 							\
 	_xamarin_dyn_objc_msgSend 					\
 	_xamarin_dyn_objc_msgSendSuper 				\
