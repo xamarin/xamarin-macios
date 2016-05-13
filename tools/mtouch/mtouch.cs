@@ -1519,7 +1519,7 @@ namespace Xamarin.Bundler
 					return path;
 
 				// check inside XS
-				path = "/Applications/Xamarin Studio.app/Contents/MacOS/mlaunch";
+				path = "/Applications/Xamarin Studio.app/Contents/Resources/lib/monodevelop/AddIns/MonoDevelop.IPhone/mlaunch.app/Contents/MacOS/mlaunch";
 				if (File.Exists (path))
 					return path;
 
