@@ -37,3 +37,7 @@
 [submodule "external/guiunit"]
 	path = external/guiunit
 	url = ../../mono/guiunit.git
+[submodule "external/watch-mono"]
+	path = external/watch-mono
+	url = ../../mono/mono.git
+	branch = master
