@@ -13596,7 +13596,9 @@ namespace XamCore.UIKit {
 
 	[NoTV]
 	[iOS (8,0)]
-	[BaseType (typeof (UIPresentationController))]
+	[BaseType (typeof (UIPresentationController),
+		Delegates=new string [] {"WeakDelegate"},
+		Events=new Type [] { typeof (UIPopoverPresentationControllerDelegate) })]
 	[DisableDefaultCtor] // NSGenericException Reason: -[UIPopoverController init] is not a valid initializer. You must call -[UIPopoverController initWithContentViewController:]
 	public partial interface UIPopoverPresentationController {
 		// re-exposed from base class
@@ -13652,18 +13654,22 @@ namespace XamCore.UIKit {
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	public partial interface UIAdaptivePresentationControllerDelegate {
+		[IgnoredInDelegate]
 		[Export ("adaptivePresentationStyleForPresentationController:")]
 		UIModalPresentationStyle GetAdaptivePresentationStyle (UIPresentationController forPresentationController);
 	
-		[Export ("presentationController:viewControllerForAdaptivePresentationStyle:")]
+		[Export ("presentationController:viewControllerForAdaptivePresentationStyle:"), 
+			DelegateName ("UIAdaptivePresentationWithStyleRequested"), DefaultValue (null)]
 		UIViewController GetViewControllerForAdaptivePresentation (UIPresentationController controller, UIModalPresentationStyle style);
 
 		[iOS (8,3)]
-		[Export ("adaptivePresentationStyleForPresentationController:traitCollection:")]
+		[Export ("adaptivePresentationStyleForPresentationController:traitCollection:"),
+			DelegateName ("UIAdaptivePresentationStyleWithTraitsRequested"), DefaultValue (UIModalPresentationStyle.None)]
 		UIModalPresentationStyle GetAdaptivePresentationStyle (UIPresentationController controller, UITraitCollection traitCollection);
 
 		[iOS (8,3)]
-		[Export ("presentationController:willPresentWithAdaptiveStyle:transitionCoordinator:")]
+		[Export ("presentationController:willPresentWithAdaptiveStyle:transitionCoordinator:"),
+			EventName ("WillPresentController"), EventArgs ("UIWillPresentAdaptiveStyle")]
 		void WillPresent (UIPresentationController presentationController, UIModalPresentationStyle style, IUIViewControllerTransitionCoordinator transitionCoordinator);
 	}
 
@@ -13671,16 +13677,17 @@ namespace XamCore.UIKit {
 	[Protocol, Model]
 	[BaseType (typeof (UIAdaptivePresentationControllerDelegate))]
 	public partial interface UIPopoverPresentationControllerDelegate {
-		[Export ("prepareForPopoverPresentation:")]
+		[Export ("prepareForPopoverPresentation:"), EventName ("PrepareForPresentation")]
 		void PrepareForPopoverPresentation (UIPopoverPresentationController popoverPresentationController);
 		
-		[Export ("popoverPresentationControllerShouldDismissPopover:")]
+		[Export ("popoverPresentationControllerShouldDismissPopover:"), DelegateName ("ShouldDismiss"), DefaultValue (true)]
 		bool ShouldDismissPopover (UIPopoverPresentationController popoverPresentationController);
 
-		[Export ("popoverPresentationControllerDidDismissPopover:")]
+		[Export ("popoverPresentationControllerDidDismissPopover:"), EventName ("DidDismiss")]
 		void DidDismissPopover (UIPopoverPresentationController popoverPresentationController);
 		
-		[Export ("popoverPresentationController:willRepositionPopoverToRect:inView:")]
+		[Export ("popoverPresentationController:willRepositionPopoverToRect:inView:"),
+			EventName ("WillReposition"), EventArgs ("UIPopoverPresentationControllerReposition")]
 		void WillRepositionPopover (UIPopoverPresentationController popoverPresentationController, ref CGRect targetRect, ref UIView inView);
 	}
 	
