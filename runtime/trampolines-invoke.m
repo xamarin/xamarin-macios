@@ -29,7 +29,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	//       * mono_runtime_invoke will have to change, since 'out/ref'
 	//         objects arguments are now put into the arg_ptrs array
 	//         (clearly not GC-safe upon return).
-	MONO_ASSERT_GC_SAFE;
+	MONO_ASSERT_GC_SAFE_OR_DETACHED;
 
 	MonoObject *exception = NULL;
 	MonoObject **exception_ptr = xamarin_marshal_managed_exception_mode == MarshalManagedExceptionModeDisable ? NULL : &exception;

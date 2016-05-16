@@ -1541,7 +1541,7 @@ void
 xamarin_switch_gchandle (id self, bool to_weak)
 {
 	// COOP: reads managed memory: unsafe mode
-	MONO_ASSERT_GC_SAFE;
+	MONO_ASSERT_GC_SAFE_OR_DETACHED;
 	
 	int new_gchandle;
 	int old_gchandle;

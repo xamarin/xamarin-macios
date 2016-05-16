@@ -597,6 +597,10 @@
 		new Export ("void", "mono_threads_assert_gc_starting_region" ),
 	
 		#endregion
+
+		#region utils/mono-threads.h
+		new Export ("void*", "mono_thread_info_current_unchecked" ),
+		#endregion
 	};
 #><#+
 	class Arg

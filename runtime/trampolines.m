@@ -470,7 +470,7 @@ void
 xamarin_notify_dealloc (id self, int gchandle)
 {
 	// COOP: safe mode upon entry, switches to unsafe when acccessing managed memory.
-	MONO_ASSERT_GC_SAFE;
+	MONO_ASSERT_GC_SAFE_OR_DETACHED;
 	
 	/* This is needed because we call into managed code below (xamarin_unregister_nsobject) */
 	MONO_THREAD_ATTACH; // COOP: This will swith to GC_UNSAFE
