@@ -44,7 +44,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 		}
 	}
 
-	MONO_BEGIN_GC_UNSAFE;
+	MONO_THREAD_ATTACH; // COOP: This will swith to GC_UNSAFE
 
 	// pre-prolog
 	SList *dispose_list = NULL;
@@ -466,6 +466,6 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	}
 
 	xamarin_process_managed_exception (exception);
-	
-	MONO_END_GC_UNSAFE;
+
+	MONO_THREAD_DETACH; // COOP: This will switch to GC_SAFE
 }
