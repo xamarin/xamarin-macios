@@ -325,6 +325,9 @@ endif
 $(MONO_PATH)/configure: $(MONO_PATH)/configure.ac $(BUILDS_MAKEFILE_DEP)
 	$(Q) ./wrap-autogen.sh $(MONO_PATH) mono $(XAMARIN_AUTOGEN_FLAGS)
 
+$(WATCH_MONO_PATH)/configure: $(WATCH_MONO_PATH)/configure.ac $(BUILDS_MAKEFILE_DEP)
+	$(Q) ./wrap-autogen.sh $(WATCH_MONO_PATH) mono
+
 configure-mono:
 	rm -f $(MONO_PATH)/configure
 	$(MAKE) $(MONO_PATH)/configure
@@ -352,7 +355,7 @@ TOOLS64_LDFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
 
 TOOLS64_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
 			--with-monotouch_tv=yes \
-			--with-monotouch_watch=yes \
+			--with-monotouch_watch=no \
 			--prefix=$(BUILD_DESTDIR)/tools64 \
 			--enable-maintainer-mode \
 			--cache-file=../tools64.config.cache \
@@ -414,9 +417,6 @@ endif
 ifdef INCLUDE_TVOS
 	$(MAKE) $(TVOS_BCL_TARGETS)
 endif
-ifdef INCLUDE_WATCH
-	$(MAKE) $(WATCH_BCL_TARGETS)
-endif
 	$(MAKE) $(MAC_BCL_TARGETS)
 
 clean-tools64:
@@ -429,8 +429,81 @@ install-tools:: install-tools-watch
 endif
 ifdef INCLUDE_TVOS
 install-local:: install-tools-tvos
-install-tols:: install-tools-tvos
+install-tools:: install-tools-tvos
 endif
+
+#
+# Xamarin.WatchOS BCL assemblies
+#
+# We need to build the WatchOS BCL using the same mono checkout as we're using for the
+# corresponding Mono runtimes, which means we can't use the normal tools64 build
+#
+# Also we can't reuse the existing watchsimulator/targetwatch builds, since their
+# monos don't run (correctly) on desktop OSX.
+#
+# So we build an entire Mono just to build the WatchOS BCL.
+#
+
+WATCHBCL_CFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
+WATCHBCL_CXXFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
+WATCHBCL_LDFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
+
+WATCHBCL_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
+			--prefix=$(BUILD_DESTDIR)/watchbcl \
+			--enable-maintainer-mode \
+			--cache-file=../watchbcl.config.cache \
+			--with-glib=embedded \
+			--enable-minimal=com	\
+			--with-profile2=no \
+			--with-profile4=no \
+			--with-profile4_x=no \
+			--with-profile4_5=no \
+			--with-monotouch=no \
+			--with-monotouch_watch=yes \
+			--with-monotouch_tv=no \
+			--with-xammac=no \
+			--with-mcs-docs=no \
+			--disable-shared-handles \
+			--disable-nls \
+			--disable-iconv	\
+			--disable-boehm \
+			--enable-extension-module
+
+WATCHBCL_CONFIGURE_ENVIRONMENT = \
+	CFLAGS="$(WATCHBCL_CFLAGS)" \
+	CXXFLAGS="$(WATCHBCL_CXXFLAGS)" \
+	LDFLAGS="$(WATCHBCL_LDFLAGS)" \
+	CC="$(MAC_CC)" \
+	CXX="$(MAC_CXX)" \
+
+tools:: build-watchbcl install-tools-watch
+
+ifdef INCLUDE_WATCH
+setup:: setup-watchbcl
+build:: build-watchbcl
+clean-local:: clean-watchbcl
+endif
+
+watchbcl: build-watchbcl install-tools-watch
+
+setup-watchbcl: .stamp-configure-watchbcl
+
+.stamp-configure-watchbcl: $(WATCH_MONO_PATH)/configure
+	$(Q) $(WATCHBCL_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh watchbcl ../$(WATCH_MONO_PATH)/configure $(WATCHBCL_CONFIGURE_FLAGS)
+
+build-tools-bcl: build-watchbcl
+build-tools: build-watchbcl
+
+build-watchbcl: .stamp-build-watchbcl
+	$(MAKE) $(WATCH_BCL_TARGETS)
+
+.stamp-build-watchbcl: .stamp-configure-watchbcl .stamp-build-tools64
+	$(MAKE) -C watchbcl all EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
+	$(MAKE) -C watchbcl install EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
+	$(Q) touch $@
+
+clean-watchbcl:
+	rm -rf watchbcl .stamp-configure-watchbcl watchbcl.config.cache
 
 #
 # Xamarin.iOS/WatchOS/TVOS BCL assemblies
@@ -466,10 +539,13 @@ ios-facade-check:
 	$(Q) rm -f .$@*
 
 watch-facade-check:
+	@true
+
+disabled-watch-facade-check:
 	$(Q) rm -f .$@*
 	$(Q) echo $(WATCHOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
-	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/monotouch_watch/Facades | grep dll | sed 's/[.]dll//' | sort > .$@2
-	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_PATH)/mcs/class/lib/monotouch_watch/Facades" not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
+	$(Q) ls -1 $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/Facades | grep dll | sed 's/[.]dll//' | sort > .$@2
+	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/Facades" not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
 	$(Q) rm -f .$@*
 
 tvos-facade-check:
@@ -609,27 +685,27 @@ $(BUILD_DESTDIR)/ios/bcl/repl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_runtim
 	$(Q) cp $< $@
 	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
-$(BUILD_DESTDIR)/watchos/bcl/Facades/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch_watch/Facades/%.dll | $(BUILD_DESTDIR)/watchos/bcl/Facades
+$(BUILD_DESTDIR)/watchos/bcl/Facades/%.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/Facades/%.dll | $(BUILD_DESTDIR)/watchos/bcl/Facades
 	@# sign the Facade assembly
 	$(Q) cp $< $@
 	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
-$(BUILD_DESTDIR)/watchos/bcl/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch_watch/%.dll | $(BUILD_DESTDIR)/watchos/bcl
+$(BUILD_DESTDIR)/watchos/bcl/%.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/%.dll | $(BUILD_DESTDIR)/watchos/bcl
 	@# sign the BCL assembly
 	$(Q) cp $< $@
 	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
-$(BUILD_DESTDIR)/watchos/bcl/repl/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch_watch_runtime/%.dll | $(BUILD_DESTDIR)/watchos/bcl/repl
+$(BUILD_DESTDIR)/watchos/bcl/repl/%.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch_runtime/%.dll | $(BUILD_DESTDIR)/watchos/bcl/repl
 	@# sign the BCL assembly
 	$(Q) cp $< $@
 	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
-$(BUILD_DESTDIR)/watchos/bcl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_watch/%.mdb .stamp-build-tools64 | $(BUILD_DESTDIR)/watchos/bcl
+$(BUILD_DESTDIR)/watchos/bcl/%.mdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/%.mdb .stamp-build-watchbcl .stamp-build-tools64 | $(BUILD_DESTDIR)/watchos/bcl
 	@# mdb-rebase the mdb
 	$(Q) cp $< $@
 	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
-$(BUILD_DESTDIR)/watchos/bcl/repl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_watch_runtime/%.mdb .stamp-build-tools64 | $(BUILD_DESTDIR)/watchos/bcl/repl
+$(BUILD_DESTDIR)/watchos/bcl/repl/%.mdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch_runtime/%.mdb .stamp-build-watchbcl .stamp-build-tools64 | $(BUILD_DESTDIR)/watchos/bcl/repl
 	@# mdb-rebase the mdb
 	$(Q) cp $< $@
 	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
@@ -782,7 +858,7 @@ clean-iphonesimulator:: clean-$(2)
 
 $(eval SIM_TARGET_LIBMONOSGEN:=$(SIM_TARGET_LIBMONOSGEN) $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.a)
 $(eval SIM_TARGET_SHAREDMONOSGEN:=$(SIM_TARGET_SHAREDMONOSGEN) $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.dylib)
-$(eval SIM_TARGET_LIBLOGPROFILER:=$(SIM_TARGET_LIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.a)
+$(eval SIM_TARGET_LIBLOGPROFILER:=$(SIM_TARGET_LIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log-static.a)
 $(eval SIM_TARGET_SHAREDLIBLOGPROFILER:=$(SIM_TARGET_SHAREDLIBLOGPROFILER) $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib)
 
 $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib: $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.0.dylib | $(BUILD_DESTDIR)/$(2)/tmp-lib
@@ -919,8 +995,8 @@ endif
 
 setup-watchsimulator: .stamp-configure-watchsimulator
 
-.stamp-configure-watchsimulator: $(MONO_PATH)/configure
-	$(Q) $(WATCHSIMULATOR_ENVIRONMENT) ./wrap-configure.sh watchsimulator $(abspath $(MONO_PATH)/configure) $(WATCHSIMULATOR_CONFIGURE_FLAGS)
+.stamp-configure-watchsimulator: $(WATCH_MONO_PATH)/configure
+	$(Q) $(WATCHSIMULATOR_ENVIRONMENT) ./wrap-configure.sh watchsimulator $(abspath $(WATCH_MONO_PATH)/configure) $(WATCHSIMULATOR_CONFIGURE_FLAGS)
 
 build-watchsimulator: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
 build-watchsimulator: export PATH:="$(WATCHSIMULATOR_BIN_PATH):$(PATH)"
@@ -936,7 +1012,7 @@ clean-watchsimulator:
 
 WATCHSIMULATOR_LIBMONOSGEN          = $(BUILD_DESTDIR)/watchsimulator/lib/libmonosgen-2.0.a
 WATCHSIMULATOR_SHAREDMONOSGEN       = $(BUILD_DESTDIR)/watchsimulator/lib/libmonosgen-2.0.dylib
-WATCHSIMULATOR_LIBLOGPROFILER       = $(BUILD_DESTDIR)/watchsimulator/lib/libmono-profiler-log.a
+WATCHSIMULATOR_LIBLOGPROFILER       = $(BUILD_DESTDIR)/watchsimulator/lib/libmono-profiler-log-static.a
 WATCHSIMULATOR_SHAREDLIBLOGPROFILER = $(BUILD_DESTDIR)/watchsimulator/lib/libmono-profiler-log.0.dylib
 
 WATCHSIMULATOR_TARGETS = \
@@ -1072,7 +1148,7 @@ clean-tvsimulator:
 
 TVSIMULATOR_LIBMONOSGEN          = $(BUILD_DESTDIR)/tvsimulator/lib/libmonosgen-2.0.a
 TVSIMULATOR_SHAREDMONOSGEN       = $(BUILD_DESTDIR)/tvsimulator/lib/libmonosgen-2.0.dylib
-TVSIMULATOR_LIBLOGPROFILER       = $(BUILD_DESTDIR)/tvsimulator/lib/libmono-profiler-log.a
+TVSIMULATOR_LIBLOGPROFILER       = $(BUILD_DESTDIR)/tvsimulator/lib/libmono-profiler-log-static.a
 TVSIMULATOR_SHAREDLIBLOGPROFILER = $(BUILD_DESTDIR)/tvsimulator/lib/libmono-profiler-log.0.dylib
 
 TVSIMULATOR_TARGETS = \
@@ -1436,8 +1512,8 @@ endif
 
 setup-targetwatch: .stamp-configure-targetwatch
 
-.stamp-configure-targetwatch: $(MONO_PATH)/configure
-	$(Q) $(WATCHOS_ENVIRONMENT) ./wrap-configure.sh targetwatch $(abspath $(MONO_PATH)/configure) $(WATCHOS_CONFIGURE_FLAGS)
+.stamp-configure-targetwatch: $(WATCH_MONO_PATH)/configure
+	$(Q) $(WATCHOS_ENVIRONMENT) ./wrap-configure.sh targetwatch $(abspath $(WATCH_MONO_PATH)/configure) $(WATCHOS_CONFIGURE_FLAGS)
 
 build-targetwatch: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
 build-targetwatch: export PATH:="$(WATCHOS_BIN_PATH):$(PATH)"
@@ -1456,7 +1532,7 @@ clean-watchos: clean-targetwatch
 
 WATCHOS_TARGET_LIBMONOSGEN          = $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.a
 WATCHOS_TARGET_SHAREDMONOSGEN       = $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.dylib
-WATCHOS_TARGET_LIBLOGPROFILER       = $(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log.a
+WATCHOS_TARGET_LIBLOGPROFILER       = $(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log-static.a
 WATCHOS_TARGET_SHAREDLIBLOGPROFILER = $(BUILD_DESTDIR)/targetwatch/lib/libmono-profiler-log.0.dylib
 
 device:: watchos
@@ -1465,10 +1541,15 @@ WATCHOS_TARGETS =                                                             \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmonosgen-2.0.a            \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmonosgen-2.0.dylib        \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.a       \
-	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.dylib   \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono       \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Info.plist \
 
+# see https://github.com/mono/mono/commit/cfd9870f8345d2e3e6354e3deebced443809ee2f
+# I think it might still be possible to do this with bitcode, but more investigation
+# is needed, so just disable for now to make the build complete.
+WATCHOS_DISABLED_TARGETS = \
+	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.dylib   \
+	
 WATCHOS_DIRECTORIES = \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib                   \
@@ -1627,7 +1708,7 @@ clean-tvos: clean-targettv
 
 TVOS_TARGET_LIBMONOSGEN          = $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.a
 TVOS_TARGET_SHAREDMONOSGEN       = $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.dylib
-TVOS_TARGET_LIBLOGPROFILER       = $(BUILD_DESTDIR)/targettv/lib/libmono-profiler-log.a
+TVOS_TARGET_LIBLOGPROFILER       = $(BUILD_DESTDIR)/targettv/lib/libmono-profiler-log-static.a
 TVOS_TARGET_SHAREDLIBLOGPROFILER = $(BUILD_DESTDIR)/targettv/lib/libmono-profiler-log.0.dylib
 
 device:: tvos
@@ -1750,11 +1831,14 @@ install-llvm64: .stamp-build-llvm64 $(LLVM_TARGETS)
 llvm: setup-llvm build-llvm install-llvm
 llvm64: install-llvm64
 
-OFFSETS_TOOLPATH=$(MONO_PATH)/tools/offsets-tool
-$(OFFSETS_TOOLPATH)/.stamp-clone:
+$(MONO_PATH)/tools/offsets-tool/.stamp-clone $(WATCH_MONO_PATH)/tools/offsets-tool/.stamp-clone:
+	@echo Cloning for offsets-tool in $(dir $@)
 	$(Q) $(MAKE) -C $(dir $@) .stamp-clone
 
-$(OFFSETS_TOOLPATH)/MonoAotOffsetsDumper.exe: $(OFFSETS_TOOLPATH)/.stamp-clone $(wildcard $(OFFSETS_TOOLPATH)/*.cs)
+$(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(MONO_PATH)/tools/offsets-tool/.stamp-clone $(wildcard $(MONO_PATH)/tools/offsets-tool/*.cs)
+	$(Q) $(MAKE) -C $(dir $@) MonoAotOffsetsDumper.exe
+
+$(WATCH_MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(WATCH_MONO_PATH)/tools/offsets-tool/.stamp-clone $(wildcard $(WATCH_MONO_PATH)/tools/offsets-tool/*.cs)
 	$(Q) $(MAKE) -C $(dir $@) MonoAotOffsetsDumper.exe
 
 target7/mono/arch/arm/arm_dpimacros.h: setup-target7
@@ -1769,9 +1853,9 @@ targetwatch/mono/arch/arm/arm_dpimacros.h: setup-targetwatch
 #  $(2): output directory
 #  $(3): build
 define GenerateCrossOffsets
-$(3)/$(1).h: .stamp-configure-$(3) target7/mono/arch/arm/arm_dpimacros.h targetwatch/mono/arch/arm/arm_dpimacros.h $(OFFSETS_TOOLPATH)/.stamp-clone $(OFFSETS_TOOLPATH)/MonoAotOffsetsDumper.exe
-	$(Q) MONO_PATH=$(OFFSETS_TOOLPATH)/CppSharp \
-	$(SYSTEM_MONO) $(OFFSETS_TOOLPATH)/MonoAotOffsetsDumper.exe --abi $(1) --out $(2) --mono $(abspath $(MONO_PATH)) --maccore $(abspath $(TOP))
+$(3)/$(1).h: .stamp-configure-$(3) target7/mono/arch/arm/arm_dpimacros.h targetwatch/mono/arch/arm/arm_dpimacros.h $(4)/tools/offsets-tool/.stamp-clone $(4)/tools/offsets-tool/MonoAotOffsetsDumper.exe
+	$(Q) MONO_PATH=$(4)/tools/offsets-tool/CppSharp \
+	$(SYSTEM_MONO) $(4)/tools/offsets-tool/MonoAotOffsetsDumper.exe --abi $(1) --out $(2) --mono $(abspath $(4)) --maccore $(abspath $(TOP))
 endef
 
 CROSS_BASE_CFLAGS=-DMONOTOUCH $(CROSS_BUILD_CFLAGS) $(CCACHE_CFLAGS)
@@ -1831,7 +1915,7 @@ setup-cross: .stamp-configure-cross
 .stamp-configure-cross: $(MONO_PATH)/configure .stamp-build-llvm
 	$(Q) $(CROSS_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh cross $(abspath $(MONO_PATH)/configure) $(CROSS_CONFIGURE_FLAGS)
 
-$(eval $(call GenerateCrossOffsets,arm-apple-darwin10,$(TOP)/builds/cross/,cross))
+$(eval $(call GenerateCrossOffsets,arm-apple-darwin10,$(TOP)/builds/cross/,cross,$(MONO_PATH)))
 
 build-cross: setup-cross cross/arm-apple-darwin10.h
 	$(MAKE) -C cross/eglib
@@ -1899,7 +1983,7 @@ install-directories:
 .stamp-configure-cross64: $(MONO_PATH)/configure .stamp-build-llvm64
 	$(Q) $(CROSS64_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh cross64 $(abspath $(MONO_PATH)/configure) $(CROSS64_CONFIGURE_FLAGS)
 
-$(eval $(call GenerateCrossOffsets,aarch64-apple-darwin10,$(TOP)/builds/cross64/,cross64))
+$(eval $(call GenerateCrossOffsets,aarch64-apple-darwin10,$(TOP)/builds/cross64/,cross64,$(MONO_PATH)))
 
 build-cross64: setup-cross64 cross64/aarch64-apple-darwin10.h
 	$(MAKE) -C cross64/eglib
@@ -1955,12 +2039,12 @@ cross-watch: build-cross-watch install-cross-watch
 
 setup-cross-watch: .stamp-configure-cross-watch
 
-.stamp-configure-cross-watch: $(MONO_PATH)/configure .stamp-build-llvm
-	$(Q) $(WATCH_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh cross-watch $(abspath $(MONO_PATH)/configure) $(WATCH_CROSS_CONFIGURE_FLAGS)
+.stamp-configure-cross-watch: $(WATCH_MONO_PATH)/configure .stamp-build-llvm
+	$(Q) $(WATCH_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh cross-watch $(abspath $(WATCH_MONO_PATH)/configure) $(WATCH_CROSS_CONFIGURE_FLAGS)
 
 build-cross: setup-cross
 
-$(eval $(call GenerateCrossOffsets,armv7k-apple-darwin,$(TOP)/builds/cross-watch/,cross-watch))
+$(eval $(call GenerateCrossOffsets,armv7k-apple-darwin,$(TOP)/builds/cross-watch/,cross-watch,$(WATCH_MONO_PATH)))
 
 build-cross-watch: setup-cross-watch cross-watch/armv7k-apple-darwin.h
 	$(MAKE) -C cross-watch/eglib
@@ -2018,7 +2102,7 @@ setup-crosstv: .stamp-configure-crosstv
 .stamp-configure-crosstv: $(MONO_PATH)/configure .stamp-build-llvm64
 	$(Q) $(TV_CROSS_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh crosstv $(abspath $(MONO_PATH)/configure) $(TV_CROSS_CONFIGURE_FLAGS)
 
-$(eval $(call GenerateCrossOffsets,aarch64-apple-darwin10,$(TOP)/builds/crosstv/,crosstv))
+$(eval $(call GenerateCrossOffsets,aarch64-apple-darwin10,$(TOP)/builds/crosstv/,crosstv,$(MONO_PATH)))
 
 build-crosstv: setup-crosstv crosstv/aarch64-apple-darwin10.h
 	$(MAKE) -C crosstv/eglib
