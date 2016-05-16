@@ -35,7 +35,7 @@ bool xamarin_detect_unified_build = true;
 bool xamarin_detect_unified_build = false;
 #endif
 bool xamarin_use_new_assemblies = false;
-#if DEBUG && (defined (__i386__) || defined (__x86_64__))
+#if MONOTOUCH && DEBUG && (defined (__i386__) || defined (__x86_64__))
 bool xamarin_gc_pump = true;
 #else
 bool xamarin_gc_pump = false;
