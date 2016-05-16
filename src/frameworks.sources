@@ -623,6 +623,7 @@ FOUNDATION_SOURCES = \
 	Foundation/NSDirectoryEnumerator.cs \
 	Foundation/NSDistributedNotificationCenter.cs \
 	Foundation/NSErrorException.cs \
+	Foundation/NSExpression.cs \
 	Foundation/NSExtension.cs \
 	Foundation/NSFastEnumerationState.cs \
 	Foundation/NSFastEnumerator.cs \

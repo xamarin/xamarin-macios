@@ -3152,8 +3152,11 @@ namespace XamCore.Foundation
 		string[] CallStackSymbols { get; }
 	}
 
+#if !XAMCORE_4_0
+	[Obsolete("NSExpressionHandler is deprecated, please use FromFormat (string, NSObject[]) instead.")]
 	public delegate void NSExpressionHandler (NSObject evaluatedObject, NSExpression [] expressions, NSMutableDictionary context);
-	
+#endif
+	public delegate NSObject NSExpressionCallbackHandler (NSObject evaluatedObject, NSExpression [] expressions, NSMutableDictionary context);
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -predicateFormat cannot be sent to an abstract object of class NSExpression: Create a concrete instance!
 	[DisableDefaultCtor]
@@ -3173,9 +3176,18 @@ namespace XamCore.Foundation
 		[Static, Export ("expressionForFunction:arguments:")]
 		NSExpression FromFunction (string name, NSExpression[] parameters);
 
-		[Static, Export ("expressionWithFormat:argumentArray:")]
+		[Static, Export ("expressionWithFormat:")]
+		NSExpression FromFormat (string expressionFormat);
+
+#if !XAMCORE_4_0
+		[Obsolete("FromFormat (string, NSExpression[]) is deprecated, please use FromFormat (string, NSObject[]) instead.")]
+		[Sealed, Static, Export ("expressionWithFormat:argumentArray:")]
 		NSExpression FromFormat (string format, NSExpression [] parameters);
-		
+#endif
+
+		[Static, Export ("expressionWithFormat:argumentArray:")]
+		NSExpression FromFormat (string format, NSObject [] parameters);
+
 		//+ (NSExpression *)expressionForAggregate:(NSArray *)subexpressions; 
 		[Static, Export ("expressionForAggregate:")]
 		NSExpression FromAggregate (NSExpression [] subexpressions);
@@ -3196,8 +3208,14 @@ namespace XamCore.Foundation
 		[Static, Export ("expressionForFunction:selectorName:arguments:")]
 		NSExpression FromFunction (NSExpression target, string name, NSExpression[] parameters);
 
-		[Static, Export ("expressionForBlock:arguments:")]
+#if !XAMCORE_4_0
+		[Obsolete("FromFunction (NSExpressionHandler, NSExpression[]) is deprecated, please use FromFunction (NSExpressionCallbackHandler, NSExpression[]) instead.")]
+		[Sealed, Static, Export ("expressionForBlock:arguments:")]
 		NSExpression FromFunction (NSExpressionHandler target, NSExpression[] parameters);
+#endif
+
+		[Static, Export ("expressionForBlock:arguments:")]
+		NSExpression FromFunction (NSExpressionCallbackHandler target, NSExpression[] parameters);
 
 		[Since (7,0), Mavericks]
 		[Static]
@@ -3220,46 +3238,55 @@ namespace XamCore.Foundation
 		[Export ("expressionType")]
 		NSExpressionType ExpressionType { get; }
 
-		[Export ("constantValue")]
-		NSObject ConstantValue { get; }
+		[Sealed, Internal, Export ("expressionBlock")]
+		NSExpressionCallbackHandler _Block { get; }
 
-		[Export ("keyPath")]
-		string KeyPath { get; }
+		[Sealed, Internal, Export ("constantValue")]
+		NSObject _ConstantValue { get; }
 
-		[Export ("function")]
-		string Function { get; }
+		[Sealed, Internal, Export ("keyPath")]
+		string _KeyPath { get; }
 
-		[Export ("variable")]
-		string Variable { get; }
+		[Sealed, Internal, Export ("function")]
+		string _Function { get; }
 
-		[Export ("operand")]
-		NSExpression Operand { get; }
+		[Sealed, Internal, Export ("variable")]
+		string _Variable { get; }
 
-		[Export ("arguments")]
-		NSExpression[] Arguments { get; }
+		[Sealed, Internal, Export ("operand")]
+		NSExpression _Operand { get; }
 
-		[Export ("collection")]
-		NSObject Collection { get; }
+		[Sealed, Internal, Export ("arguments")]
+		NSExpression[] _Arguments { get; }
 
-		[Export ("predicate")]
-		NSPredicate Predicate { get; }
+		[Sealed, Internal, Export ("collection")]
+		NSObject _Collection { get; }
 
-		[Export ("leftExpression")]
-		NSExpression LeftExpression { get; }
+		[Sealed, Internal, Export ("predicate")]
+		NSPredicate _Predicate { get; }
 
-		[Export ("rightExpression")]
-		NSExpression RightExpression { get; }
+		[Sealed, Internal, Export ("leftExpression")]
+		NSExpression _LeftExpression { get; }
+
+		[Sealed, Internal, Export ("rightExpression")]
+		NSExpression _RightExpression { get; }
 
 		[Mac(10,11),iOS(9,0)]
-		[Export ("trueExpression")]
-		NSExpression TrueExpression { get; }
+		[Sealed, Internal, Export ("trueExpression")]
+		NSExpression _TrueExpression { get; }
 
 		[Mac(10,11),iOS(9,0)]
-		[Export ("falseExpression")]
-		NSExpression FalseExpression { get; }
+		[Sealed, Internal, Export ("falseExpression")]
+		NSExpression _FalseExpression { get; }
+		
+#if !XAMCORE_4_0
+		[Obsolete("ValueWithObject is deprecated, please use EvaluateWith instead.")]
+		[Sealed, Export ("expressionValueWithObject:context:")]
+		NSExpression ExpressionValueWithObject (NSObject object1, NSMutableDictionary context);
+#endif
 
 		[Export ("expressionValueWithObject:context:")]
-		NSExpression ExpressionValueWithObject (NSObject object1, NSMutableDictionary context);
+		NSObject EvaluateWith ([NullAllowed] NSObject obj, [NullAllowed] NSMutableDictionary context);
 	}
 
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
