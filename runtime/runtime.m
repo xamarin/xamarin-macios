@@ -1935,9 +1935,11 @@ xamarin_process_nsexception (NSException *ns_exception)
 			mono_set_pending_exception ((MonoException *) exc);
 		} else {
 			int handle = xamarin_create_ns_exception (ns_exception);
+			MONO_BEGIN_GC_UNSAFE;
 			MonoObject *exc = mono_gchandle_get_target (handle);
 			mono_set_pending_exception ((MonoException *) exc);
 			mono_gchandle_free (handle);
+			MONO_END_GC_UNSAFE;
 		}
 		break;
 	case MarshalObjectiveCExceptionModeAbort:
