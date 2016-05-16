@@ -1,6 +1,8 @@
 # Xamarin.iOS & Xamarin.Mac #
 
-This module is the main repository for both Xamarin.iOS and Xamarin.Mac.
+This module is the main repository for both **Xamarin.iOS** and **Xamarin.Mac**.
+
+These frameworks allow us to create native iOS, tvOS, watchOS and Mac applications using the same UI controls we would in Objective-C and Xcode, except with the flexibility and elegance of a modern language (C#), the power of the .NET Base Class Library (BCL), and two first-class IDEs&mdash;Xamarin Studio and Visual Studio&mdash;at our fingertips.
 
 ## Build requirements ##
 
