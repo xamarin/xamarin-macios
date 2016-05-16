@@ -1283,7 +1283,7 @@ namespace Xamarin.Bundler
 			{ "unsupported--enable-generics-in-registrar", "[Deprecated]", v => { enable_generic_nsobject = true; classic_only_arguments.Add ("--unsupported--enable-generics-in-registrar"); }, true },
 			{ "stderr=", "Redirect the standard error for the simulated application to the specified file [DEPRECATED]", v => { }, true },
 			{ "stdout=", "Redirect the standard output for the simulated application to the specified file [DEPRECATED]", v => { }, true },
-			{ "sdkroot=", "Specify the location of Apple SDKs, default to: '/Developer/'", v => sdk_root = v },
+			{ "sdkroot=", "Specify the location of Apple SDKs, default to 'xcode-select' value.", v => sdk_root = v },
 			{ "crashreporting-api-key=", "Specify the Crashlytics API key to use (which will also enable Crashlytics support). [Deprecated].", v =>
 				{
 					throw new MonoTouchException (16, true, "The option '{0}' has been deprecated.", "--crashreporting-api-key");
@@ -1519,7 +1519,7 @@ namespace Xamarin.Bundler
 					return path;
 
 				// check inside XS
-				path = "/Applications/Xamarin Studio.app/Contents/MacOS/mlaunch";
+				path = "/Applications/Xamarin Studio.app/Contents/Resources/lib/monodevelop/AddIns/MonoDevelop.IPhone/mlaunch.app/Contents/MacOS/mlaunch";
 				if (File.Exists (path))
 					return path;
 
