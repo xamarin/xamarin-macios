@@ -325,6 +325,9 @@ endif
 $(MONO_PATH)/configure: $(MONO_PATH)/configure.ac $(BUILDS_MAKEFILE_DEP)
 	$(Q) ./wrap-autogen.sh $(MONO_PATH) mono $(XAMARIN_AUTOGEN_FLAGS)
 
+$(WATCH_MONO_PATH)/configure: $(WATCH_MONO_PATH)/configure.ac $(BUILDS_MAKEFILE_DEP)
+	$(Q) ./wrap-autogen.sh $(WATCH_MONO_PATH) mono
+
 configure-mono:
 	rm -f $(MONO_PATH)/configure
 	$(MAKE) $(MONO_PATH)/configure
@@ -414,9 +417,6 @@ endif
 ifdef INCLUDE_TVOS
 	$(MAKE) $(TVOS_BCL_TARGETS)
 endif
-ifdef INCLUDE_WATCH
-	$(MAKE) $(WATCH_BCL_TARGETS)
-endif
 	$(MAKE) $(MAC_BCL_TARGETS)
 
 clean-tools64:
@@ -429,8 +429,81 @@ install-tools:: install-tools-watch
 endif
 ifdef INCLUDE_TVOS
 install-local:: install-tools-tvos
-install-tols:: install-tools-tvos
+install-tools:: install-tools-tvos
 endif
+
+#
+# Xamarin.WatchOS BCL assemblies
+#
+# We need to build the WatchOS BCL using the same mono checkout as we're using for the
+# corresponding Mono runtimes, which means we can't use the normal tools64 build
+#
+# Also we can't reuse the existing watchsimulator/targetwatch builds, since their
+# monos don't run (correctly) on desktop OSX.
+#
+# So we build an entire Mono just to build the WatchOS BCL.
+#
+
+WATCHBCL_CFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
+WATCHBCL_CXXFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
+WATCHBCL_LDFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
+
+WATCHBCL_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
+			--prefix=$(BUILD_DESTDIR)/watchbcl \
+			--enable-maintainer-mode \
+			--cache-file=../watchbcl.config.cache \
+			--with-glib=embedded \
+			--enable-minimal=com	\
+			--with-profile2=no \
+			--with-profile4=no \
+			--with-profile4_x=no \
+			--with-profile4_5=no \
+			--with-monotouch=no \
+			--with-monotouch_watch=yes \
+			--with-monotouch_tv=no \
+			--with-xammac=no \
+			--with-mcs-docs=no \
+			--disable-shared-handles \
+			--disable-nls \
+			--disable-iconv	\
+			--disable-boehm \
+			--enable-extension-module
+
+WATCHBCL_CONFIGURE_ENVIRONMENT = \
+	CFLAGS="$(WATCHBCL_CFLAGS)" \
+	CXXFLAGS="$(WATCHBCL_CXXFLAGS)" \
+	LDFLAGS="$(WATCHBCL_LDFLAGS)" \
+	CC="$(MAC_CC)" \
+	CXX="$(MAC_CXX)" \
+
+tools:: build-watchbcl install-tools-watch
+
+ifdef INCLUDE_WATCH
+setup:: setup-watchbcl
+build:: build-watchbcl
+clean-local:: clean-watchbcl
+endif
+
+watchbcl: build-watchbcl install-tools-watch
+
+setup-watchbcl: .stamp-configure-watchbcl
+
+.stamp-configure-watchbcl: $(WATCH_MONO_PATH)/configure
+	$(Q) $(WATCHBCL_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh watchbcl ../$(WATCH_MONO_PATH)/configure $(WATCHBCL_CONFIGURE_FLAGS)
+
+build-tools-bcl: build-watchbcl
+build-tools: build-watchbcl
+
+build-watchbcl: .stamp-build-watchbcl
+	$(MAKE) $(WATCH_BCL_TARGETS)
+
+.stamp-build-watchbcl: .stamp-configure-watchbcl
+	$(MAKE) -C watchbcl all EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
+	$(MAKE) -C watchbcl install EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
+	$(Q) touch $@
+
+clean-watchbcl:
+	rm -rf watchbcl .stamp-configure-watchbcl watchbcl.config.cache
 
 #
 # Xamarin.iOS/WatchOS/TVOS BCL assemblies
@@ -466,10 +539,13 @@ ios-facade-check:
 	$(Q) rm -f .$@*
 
 watch-facade-check:
+	@true
+
+disabled-watch-facade-check:
 	$(Q) rm -f .$@*
 	$(Q) echo $(WATCHOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
-	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/monotouch_watch/Facades | grep dll | sed 's/[.]dll//' | sort > .$@2
-	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_PATH)/mcs/class/lib/monotouch_watch/Facades" not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
+	$(Q) ls -1 $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/Facades | grep dll | sed 's/[.]dll//' | sort > .$@2
+	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/Facades" not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
 	$(Q) rm -f .$@*
 
 tvos-facade-check:
@@ -609,27 +685,27 @@ $(BUILD_DESTDIR)/ios/bcl/repl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_runtim
 	$(Q) cp $< $@
 	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
-$(BUILD_DESTDIR)/watchos/bcl/Facades/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch_watch/Facades/%.dll | $(BUILD_DESTDIR)/watchos/bcl/Facades
+$(BUILD_DESTDIR)/watchos/bcl/Facades/%.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/Facades/%.dll | $(BUILD_DESTDIR)/watchos/bcl/Facades
 	@# sign the Facade assembly
 	$(Q) cp $< $@
 	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
-$(BUILD_DESTDIR)/watchos/bcl/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch_watch/%.dll | $(BUILD_DESTDIR)/watchos/bcl
+$(BUILD_DESTDIR)/watchos/bcl/%.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/%.dll | $(BUILD_DESTDIR)/watchos/bcl
 	@# sign the BCL assembly
 	$(Q) cp $< $@
 	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
-$(BUILD_DESTDIR)/watchos/bcl/repl/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch_watch_runtime/%.dll | $(BUILD_DESTDIR)/watchos/bcl/repl
+$(BUILD_DESTDIR)/watchos/bcl/repl/%.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch_runtime/%.dll | $(BUILD_DESTDIR)/watchos/bcl/repl
 	@# sign the BCL assembly
 	$(Q) cp $< $@
 	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
-$(BUILD_DESTDIR)/watchos/bcl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_watch/%.mdb .stamp-build-tools64 | $(BUILD_DESTDIR)/watchos/bcl
+$(BUILD_DESTDIR)/watchos/bcl/%.mdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/%.mdb .stamp-build-watchbcl | $(BUILD_DESTDIR)/watchos/bcl
 	@# mdb-rebase the mdb
 	$(Q) cp $< $@
 	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
-$(BUILD_DESTDIR)/watchos/bcl/repl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_watch_runtime/%.mdb .stamp-build-tools64 | $(BUILD_DESTDIR)/watchos/bcl/repl
+$(BUILD_DESTDIR)/watchos/bcl/repl/%.mdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch_runtime/%.mdb .stamp-build-watchbcl | $(BUILD_DESTDIR)/watchos/bcl/repl
 	@# mdb-rebase the mdb
 	$(Q) cp $< $@
 	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
@@ -919,8 +995,8 @@ endif
 
 setup-watchsimulator: .stamp-configure-watchsimulator
 
-.stamp-configure-watchsimulator: $(MONO_PATH)/configure
-	$(Q) $(WATCHSIMULATOR_ENVIRONMENT) ./wrap-configure.sh watchsimulator $(abspath $(MONO_PATH)/configure) $(WATCHSIMULATOR_CONFIGURE_FLAGS)
+.stamp-configure-watchsimulator: $(WATCH_MONO_PATH)/configure
+	$(Q) $(WATCHSIMULATOR_ENVIRONMENT) ./wrap-configure.sh watchsimulator $(abspath $(WATCH_MONO_PATH)/configure) $(WATCHSIMULATOR_CONFIGURE_FLAGS)
 
 build-watchsimulator: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
 build-watchsimulator: export PATH:="$(WATCHSIMULATOR_BIN_PATH):$(PATH)"
@@ -1436,8 +1512,8 @@ endif
 
 setup-targetwatch: .stamp-configure-targetwatch
 
-.stamp-configure-targetwatch: $(MONO_PATH)/configure
-	$(Q) $(WATCHOS_ENVIRONMENT) ./wrap-configure.sh targetwatch $(abspath $(MONO_PATH)/configure) $(WATCHOS_CONFIGURE_FLAGS)
+.stamp-configure-targetwatch: $(WATCH_MONO_PATH)/configure
+	$(Q) $(WATCHOS_ENVIRONMENT) ./wrap-configure.sh targetwatch $(abspath $(WATCH_MONO_PATH)/configure) $(WATCHOS_CONFIGURE_FLAGS)
 
 build-targetwatch: export DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)
 build-targetwatch: export PATH:="$(WATCHOS_BIN_PATH):$(PATH)"
@@ -1955,8 +2031,8 @@ cross-watch: build-cross-watch install-cross-watch
 
 setup-cross-watch: .stamp-configure-cross-watch
 
-.stamp-configure-cross-watch: $(MONO_PATH)/configure .stamp-build-llvm
-	$(Q) $(WATCH_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh cross-watch $(abspath $(MONO_PATH)/configure) $(WATCH_CROSS_CONFIGURE_FLAGS)
+.stamp-configure-cross-watch: $(WATCH_MONO_PATH)/configure .stamp-build-llvm
+	$(Q) $(WATCH_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh cross-watch $(abspath $(WATCH_MONO_PATH)/configure) $(WATCH_CROSS_CONFIGURE_FLAGS)
 
 build-cross: setup-cross
 
