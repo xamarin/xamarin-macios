@@ -700,12 +700,12 @@ $(BUILD_DESTDIR)/watchos/bcl/repl/%.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monoto
 	$(Q) cp $< $@
 	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
-$(BUILD_DESTDIR)/watchos/bcl/%.mdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/%.mdb .stamp-build-watchbcl | $(BUILD_DESTDIR)/watchos/bcl
+$(BUILD_DESTDIR)/watchos/bcl/%.mdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/%.mdb .stamp-build-watchbcl .stamp-build-tools64 | $(BUILD_DESTDIR)/watchos/bcl
 	@# mdb-rebase the mdb
 	$(Q) cp $< $@
 	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
-$(BUILD_DESTDIR)/watchos/bcl/repl/%.mdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch_runtime/%.mdb .stamp-build-watchbcl | $(BUILD_DESTDIR)/watchos/bcl/repl
+$(BUILD_DESTDIR)/watchos/bcl/repl/%.mdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch_runtime/%.mdb .stamp-build-watchbcl .stamp-build-tools64 | $(BUILD_DESTDIR)/watchos/bcl/repl
 	@# mdb-rebase the mdb
 	$(Q) cp $< $@
 	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
@@ -1826,11 +1826,14 @@ install-llvm64: .stamp-build-llvm64 $(LLVM_TARGETS)
 llvm: setup-llvm build-llvm install-llvm
 llvm64: install-llvm64
 
-OFFSETS_TOOLPATH=$(MONO_PATH)/tools/offsets-tool
-$(OFFSETS_TOOLPATH)/.stamp-clone:
+$(MONO_PATH)/tools/offsets-tool/.stamp-clone $(WATCH_MONO_PATH)/tools/offsets-tool/.stamp-clone:
+	@echo Cloning for offsets-tool in $(dir $@)
 	$(Q) $(MAKE) -C $(dir $@) .stamp-clone
 
-$(OFFSETS_TOOLPATH)/MonoAotOffsetsDumper.exe: $(OFFSETS_TOOLPATH)/.stamp-clone $(wildcard $(OFFSETS_TOOLPATH)/*.cs)
+$(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(MONO_PATH)/tools/offsets-tool/.stamp-clone $(wildcard $(MONO_PATH)/tools/offsets-tool/*.cs)
+	$(Q) $(MAKE) -C $(dir $@) MonoAotOffsetsDumper.exe
+
+$(WATCH_MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(WATCH_MONO_PATH)/tools/offsets-tool/.stamp-clone $(wildcard $(WATCH_MONO_PATH)/tools/offsets-tool/*.cs)
 	$(Q) $(MAKE) -C $(dir $@) MonoAotOffsetsDumper.exe
 
 target7/mono/arch/arm/arm_dpimacros.h: setup-target7
@@ -1845,9 +1848,9 @@ targetwatch/mono/arch/arm/arm_dpimacros.h: setup-targetwatch
 #  $(2): output directory
 #  $(3): build
 define GenerateCrossOffsets
-$(3)/$(1).h: .stamp-configure-$(3) target7/mono/arch/arm/arm_dpimacros.h targetwatch/mono/arch/arm/arm_dpimacros.h $(OFFSETS_TOOLPATH)/.stamp-clone $(OFFSETS_TOOLPATH)/MonoAotOffsetsDumper.exe
-	$(Q) MONO_PATH=$(OFFSETS_TOOLPATH)/CppSharp \
-	$(SYSTEM_MONO) $(OFFSETS_TOOLPATH)/MonoAotOffsetsDumper.exe --abi $(1) --out $(2) --mono $(abspath $(MONO_PATH)) --maccore $(abspath $(TOP))
+$(3)/$(1).h: .stamp-configure-$(3) target7/mono/arch/arm/arm_dpimacros.h targetwatch/mono/arch/arm/arm_dpimacros.h $(4)/tools/offsets-tool/.stamp-clone $(4)/tools/offsets-tool/MonoAotOffsetsDumper.exe
+	$(Q) MONO_PATH=$(4)/tools/offsets-tool/CppSharp \
+	$(SYSTEM_MONO) $(4)/tools/offsets-tool/MonoAotOffsetsDumper.exe --abi $(1) --out $(2) --mono $(abspath $(4)) --maccore $(abspath $(TOP))
 endef
 
 CROSS_BASE_CFLAGS=-DMONOTOUCH $(CROSS_BUILD_CFLAGS) $(CCACHE_CFLAGS)
@@ -1907,7 +1910,7 @@ setup-cross: .stamp-configure-cross
 .stamp-configure-cross: $(MONO_PATH)/configure .stamp-build-llvm
 	$(Q) $(CROSS_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh cross $(abspath $(MONO_PATH)/configure) $(CROSS_CONFIGURE_FLAGS)
 
-$(eval $(call GenerateCrossOffsets,arm-apple-darwin10,$(TOP)/builds/cross/,cross))
+$(eval $(call GenerateCrossOffsets,arm-apple-darwin10,$(TOP)/builds/cross/,cross,$(MONO_PATH)))
 
 build-cross: setup-cross cross/arm-apple-darwin10.h
 	$(MAKE) -C cross/eglib
@@ -1975,7 +1978,7 @@ install-directories:
 .stamp-configure-cross64: $(MONO_PATH)/configure .stamp-build-llvm64
 	$(Q) $(CROSS64_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh cross64 $(abspath $(MONO_PATH)/configure) $(CROSS64_CONFIGURE_FLAGS)
 
-$(eval $(call GenerateCrossOffsets,aarch64-apple-darwin10,$(TOP)/builds/cross64/,cross64))
+$(eval $(call GenerateCrossOffsets,aarch64-apple-darwin10,$(TOP)/builds/cross64/,cross64,$(MONO_PATH)))
 
 build-cross64: setup-cross64 cross64/aarch64-apple-darwin10.h
 	$(MAKE) -C cross64/eglib
@@ -2036,7 +2039,7 @@ setup-cross-watch: .stamp-configure-cross-watch
 
 build-cross: setup-cross
 
-$(eval $(call GenerateCrossOffsets,armv7k-apple-darwin,$(TOP)/builds/cross-watch/,cross-watch))
+$(eval $(call GenerateCrossOffsets,armv7k-apple-darwin,$(TOP)/builds/cross-watch/,cross-watch,$(WATCH_MONO_PATH)))
 
 build-cross-watch: setup-cross-watch cross-watch/armv7k-apple-darwin.h
 	$(MAKE) -C cross-watch/eglib
@@ -2094,7 +2097,7 @@ setup-crosstv: .stamp-configure-crosstv
 .stamp-configure-crosstv: $(MONO_PATH)/configure .stamp-build-llvm64
 	$(Q) $(TV_CROSS_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh crosstv $(abspath $(MONO_PATH)/configure) $(TV_CROSS_CONFIGURE_FLAGS)
 
-$(eval $(call GenerateCrossOffsets,aarch64-apple-darwin10,$(TOP)/builds/crosstv/,crosstv))
+$(eval $(call GenerateCrossOffsets,aarch64-apple-darwin10,$(TOP)/builds/crosstv/,crosstv,$(MONO_PATH)))
 
 build-crosstv: setup-crosstv crosstv/aarch64-apple-darwin10.h
 	$(MAKE) -C crosstv/eglib
