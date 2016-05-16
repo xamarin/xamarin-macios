@@ -497,7 +497,7 @@ build-tools: build-watchbcl
 build-watchbcl: .stamp-build-watchbcl
 	$(MAKE) $(WATCH_BCL_TARGETS)
 
-.stamp-build-watchbcl: .stamp-configure-watchbcl
+.stamp-build-watchbcl: .stamp-configure-watchbcl .stamp-build-tools64
 	$(MAKE) -C watchbcl all EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
 	$(MAKE) -C watchbcl install EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
 	$(Q) touch $@
