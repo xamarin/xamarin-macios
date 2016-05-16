@@ -355,7 +355,7 @@ TOOLS64_LDFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
 
 TOOLS64_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
 			--with-monotouch_tv=yes \
-			--with-monotouch_watch=yes \
+			--with-monotouch_watch=no \
 			--prefix=$(BUILD_DESTDIR)/tools64 \
 			--enable-maintainer-mode \
 			--cache-file=../tools64.config.cache \
