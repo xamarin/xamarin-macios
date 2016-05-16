@@ -1501,7 +1501,7 @@ namespace Xamarin.BindingMethods.Generator
 			// @catch
 			if (func.MarshalExceptions) {
 				writer.WriteLine ("\t} @catch (NSException *e) {");
-				writer.WriteLine ("\t\txamarin_throw_ns_exception (e);");
+				writer.WriteLine ("\t\txamarin_process_nsexception (e);");
 				writer.WriteLine ("\t}");
 			}
 
@@ -1579,7 +1579,7 @@ namespace Xamarin.BindingMethods.Generator
 			// @catch
 			if (func.MarshalExceptions) {
 				writer.WriteLine ("\t} @catch (NSException *e) {");
-				writer.WriteLine ("\t\txamarin_throw_ns_exception (e);");
+				writer.WriteLine ("\t\txamarin_process_nsexception (e);");
 				writer.WriteLine ("\t}");
 			}
 				
@@ -1653,7 +1653,7 @@ namespace Xamarin.BindingMethods.Generator
 			// @catch
 			if (func.MarshalExceptions) {
 				writer.WriteLine ("\t} @catch (NSException *e) {");
-				writer.WriteLine ("\t\txamarin_throw_ns_exception (e);");
+				writer.WriteLine ("\t\txamarin_process_nsexception (e);");
 				writer.WriteLine ("\t}");
 			}
 
@@ -1727,7 +1727,7 @@ namespace Xamarin.BindingMethods.Generator
 			// @catch
 			if (func.MarshalExceptions) {
 				writer.WriteLine ("\t} @catch (NSException *e) {");
-				writer.WriteLine ("\t\txamarin_throw_ns_exception (e);");
+				writer.WriteLine ("\t\txamarin_process_nsexception (e);");
 				writer.WriteLine ("\t}");
 			}
 
