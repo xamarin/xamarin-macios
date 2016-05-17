@@ -1393,6 +1393,8 @@ SHARED_SOURCES = \
 	ObjCRuntime/Dlfcn.cs \
 	ObjCRuntime/DynamicRegistrar.cs \
 	ObjCRuntime/ErrorHelper.cs \
+	ObjCRuntime/Exceptions.cs \
+	ObjCRuntime/ExceptionMode.cs \
 	ObjCRuntime/IDynamicRegistrar.cs \
 	ObjCRuntime/Method.cs \
 	ObjCRuntime/MethodDescription.cs \

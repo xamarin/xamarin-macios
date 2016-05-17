@@ -16,9 +16,16 @@
 
 #if __x86_64__
 
+.subsections_via_symbols
+.text
+
 _xamarin_x86_64_common_trampoline:
+.cfi_startproc
 	pushq	%rbp
+.cfi_def_cfa_offset 16
+.cfi_offset %rbp, -16
 	movq	%rsp, %rbp
+.cfi_def_cfa_register %rbp
 	subq	$0xC0, %rsp	# allocate 192 bytes from the stack
 	# todo: verify alignment.
 	movq	%r11,   (%rsp)
@@ -52,6 +59,7 @@ _xamarin_x86_64_common_trampoline:
 	popq	%rbp
 		
 	ret
+.cfi_endproc
 
 #
 # trampolines

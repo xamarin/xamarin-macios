@@ -33,6 +33,7 @@ namespace MonoTouch.Tuner {
 		public bool IsDualBuild { get; set; }
 		public bool Unified { get; set; }
 		public bool DumpDependencies { get; set; }
+		internal PInvokeWrapperGenerator MarshalNativeExceptionsState { get; set; }
 		internal RuntimeOptions RuntimeOptions { get; set; }
 
 		public MonoTouchLinkContext LinkContext { get; set; }
@@ -183,7 +184,7 @@ namespace MonoTouch.Tuner {
 				pipeline.AppendStep (new FixModuleFlags ());
 			}
 
-			pipeline.AppendStep (new ListExportedSymbols ());
+			pipeline.AppendStep (new ListExportedSymbols (options.MarshalNativeExceptionsState));
 
 			pipeline.AppendStep (new OutputStep ());
 
@@ -228,12 +229,21 @@ namespace MonoTouch.Tuner {
 
 	public class MonoTouchLinkContext : LinkContext {
 		Dictionary<string, MemberReference> required_symbols;
+		List<MethodDefinition> marshal_exception_pinvokes;
 
 		public Dictionary<string, MemberReference> RequiredSymbols {
 			get {
 				if (required_symbols == null)
 					required_symbols = new Dictionary<string, MemberReference> ();
 				return required_symbols;
+			}
+		}
+
+		public List<MethodDefinition> MarshalExceptionPInvokes {
+			get {
+				if (marshal_exception_pinvokes == null)
+					marshal_exception_pinvokes = new List<MethodDefinition> ();
+				return marshal_exception_pinvokes;
 			}
 		}
 

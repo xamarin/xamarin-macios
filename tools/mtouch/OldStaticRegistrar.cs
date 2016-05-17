@@ -17,6 +17,7 @@ using Xamarin.Bundler;
 using XamCore.Registrar;
 using XamCore.ObjCRuntime;
 using Xamarin.Linker;
+using Mono.Linker;
 
 namespace XamCore.Registrar {
 
@@ -777,7 +778,7 @@ namespace XamCore.Registrar {
 		}
 	}
 
-	class OldStaticRegistrar {
+	class OldStaticRegistrar : IStaticRegistrar {
 		static StringBuilder headers = new StringBuilder ();
 		static StringBuilder structs = new StringBuilder ();
 		static bool verbose = false;
@@ -879,7 +880,12 @@ namespace XamCore.Registrar {
 		static HashSet<string> trampoline_names = new HashSet<string> ();
 		static HashSet<string> namespaces = new HashSet<string> ();
 		static HashSet<string> structures = new HashSet<string> ();
-		
+
+		public LinkContext LinkContext {
+			get { throw new NotImplementedException (); }
+			set { throw new NotImplementedException (); }
+		}
+
 		static void CheckNamespace (string ns)
 		{
 			if (!ns.StartsWith ("MonoTouch."))
@@ -1657,6 +1663,22 @@ namespace XamCore.Registrar {
 			sb.AppendLine ();
 			
 			method.SpecializedTrampoline = name;
+		}
+
+		public void GeneratePInvokeWrappers (List<MethodDefinition> marshal_exception_pinvokes, string header_path, string source_path)
+		{
+			throw new NotSupportedException ();
+		}
+
+		public void GenerateSingleAssembly (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string single_assembly)
+		{
+			throw new NotSupportedException ();
+		}
+
+		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path)
+		{
+			Driver.WriteIfDifferent (header_path, string.Empty);
+			Driver.WriteIfDifferent (source_path, Generate (assemblies));
 		}
 
 		public static string Generate (IEnumerable<AssemblyDefinition> assemblies)

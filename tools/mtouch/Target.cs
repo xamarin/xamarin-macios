@@ -6,6 +6,7 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 using MonoTouch.Tuner;
 
@@ -15,6 +16,8 @@ using Mono.Linker;
 using Xamarin.Linker;
 
 using Xamarin.Utils;
+
+using XamCore.Registrar;
 
 namespace Xamarin.Bundler
 {
@@ -45,6 +48,8 @@ namespace Xamarin.Bundler
 
 		// If any assemblies were updated (only set to false if the linker is disabled and no assemblies were modified).
 		bool any_assembly_updated = true;
+
+		BuildTasks compile_tasks = new BuildTasks ();
 
 		// If we didn't link the final executable because the existing binary is up-to-date.
 		public bool cached_executable; 
@@ -113,7 +118,7 @@ namespace Xamarin.Bundler
 		IEnumerable<AssemblyDefinition> GetAssemblies ()
 		{
 			if (App.LinkMode == LinkMode.None)
-				return Resolver.GetAssemblies ();
+				return ManifestResolver.GetAssemblies ();
 
 			List<AssemblyDefinition> assemblies = new List<AssemblyDefinition> ();
 			if (LinkContext == null) {
@@ -159,18 +164,28 @@ namespace Xamarin.Bundler
 				foreach (var ep in File.ReadAllLines (cache_location))
 					entry_points.Add (ep, null);
 			} else {
+				List<MethodDefinition> marshal_exception_pinvokes;
 				if (LinkContext == null) {
 					// This happens when using the simlauncher and the msbuild tasks asked for a list
 					// of symbols (--symbollist). In that case just produce an empty list, since the
 					// binary shouldn't end up stripped anyway.
 					entry_points = new Dictionary<string, MemberReference> ();
+					marshal_exception_pinvokes = new List<MethodDefinition> ();
 				} else {
 					entry_points = LinkContext.RequiredSymbols;
+					marshal_exception_pinvokes = LinkContext.MarshalExceptionPInvokes;
 				}
-
+				
 				// keep the debugging helper in debugging binaries only
 				if (App.EnableDebug && !App.EnableBitCode)
 					entry_points.Add ("mono_pmip", null);
+
+				if (App.IsSimulatorBuild) {
+					entry_points.Add ("xamarin_dyn_objc_msgSend", null);
+					entry_points.Add ("xamarin_dyn_objc_msgSendSuper", null);
+					entry_points.Add ("xamarin_dyn_objc_msgSend_stret", null);
+					entry_points.Add ("xamarin_dyn_objc_msgSendSuper_stret", null);
+				}
 
 				File.WriteAllText (cache_location, string.Join ("\n", entry_points.Keys.ToArray ()));
 			}
@@ -352,7 +367,7 @@ namespace Xamarin.Bundler
 			resolver.AddSearchDirectory (Resolver.RootDirectory);
 			resolver.AddSearchDirectory (Resolver.FrameworkDirectory);
 
-			var options = new LinkerOptions {
+			LinkerOptions = new LinkerOptions {
 				MainAssembly = Resolver.Load (main),
 				OutputDirectory = output_dir,
 				LinkMode = App.LinkMode,
@@ -372,10 +387,16 @@ namespace Xamarin.Bundler
 				IsDualBuild = App.IsDualBuild,
 				Unified = App.IsUnified,
 				DumpDependencies = App.LinkerDumpDependencies,
-				RuntimeOptions = App.RuntimeOptions
+				RuntimeOptions = App.RuntimeOptions,
+				MarshalNativeExceptionsState = !App.RequiresPInvokeWrappers ? null : new PInvokeWrapperGenerator ()
+				{
+					SourcePath = Path.Combine (ArchDirectory, "pinvokes.m"),
+					HeaderPath = Path.Combine (ArchDirectory, "pinvokes.h"),
+					Registrar = (StaticRegistrar) StaticRegistrar,
+				},
 			};
 
-			MonoTouch.Tuner.Linker.Process (options, out link_context, out assemblies);
+			MonoTouch.Tuner.Linker.Process (LinkerOptions, out link_context, out assemblies);
 
 			// reset resolver
 			foreach (var file in assemblies) {
@@ -516,6 +537,8 @@ namespace Xamarin.Bundler
 			// * Linking
 			//   Copy assemblies to LinkDirectory
 			//   Link and save to PreBuildDirectory
+			//   If marshalling native exceptions:
+			//     * Generate/calculate P/Invoke wrappers and save to PreBuildDirectory
 			//   * Has resourced to be removed:
 			//     Remove resource and save to NoResDirectory
 			//     Copy to BuildDirectory. [Why not save directly to BuildDirectory? Because otherwise if we're rebuilding 
@@ -528,7 +551,10 @@ namespace Xamarin.Bundler
 			//   Strip managed code save to TargetDirectory (or just copy the file if stripping is disabled).
 			//
 			// * No linking
-			//   Copy assembly to PreBuildDirectory.
+			//   If marshalling native exceptions:
+			//     Generate/calculate P/Invoke wrappers and save to PreBuildDirectory.
+			//   If not marshalling native exceptions:
+			//     Copy assemblies to PreBuildDirectory
 			//   * Has resourced to be removed:
 			//     Remove resource and save to NoResDirectory
 			//     Copy to BuildDirectory.
@@ -588,6 +614,13 @@ namespace Xamarin.Bundler
 
 			ManagedLink ();
 
+			if (App.RequiresPInvokeWrappers) {
+				// Write P/Invokes
+				var state = LinkerOptions.MarshalNativeExceptionsState;
+				state.End ();
+				RegistrarTask.Create (compile_tasks, Abis, this, state.SourcePath);
+			}
+
 			// Now the assemblies are in PreBuildDirectory.
 
 			//
@@ -621,22 +654,40 @@ namespace Xamarin.Bundler
 			Frameworks.ExceptWith (WeakFrameworks);
 		}
 
+		public void SelectStaticRegistrar ()
+		{
+			switch (App.Registrar) {
+			case RegistrarMode.LegacyStatic:
+			case RegistrarMode.Legacy:
+			case RegistrarMode.LegacyDynamic:
+				StaticRegistrar = new OldStaticRegistrar ();
+				break;
+			case RegistrarMode.Static:
+			case RegistrarMode.Dynamic:
+			case RegistrarMode.Default:
+				StaticRegistrar = new StaticRegistrar (this)
+				{
+					LinkContext = LinkContext,
+				};
+				break;
+			}
+		}
+
 		public void Compile ()
 		{
-			var tasks = new List<BuildTask> ();
-
 			// Compile the managed assemblies into object files or shared libraries
 			if (App.IsDeviceBuild) {
 				foreach (var a in Assemblies)
-					a.CreateCompilationTasks (tasks, BuildDirectory, Abis);
+					a.CreateCompilationTasks (compile_tasks, BuildDirectory, Abis);
 			}
 
 			// The static registrar.
 			List<string> registration_methods = null;
 			if (App.Registrar == RegistrarMode.Static || App.Registrar == RegistrarMode.LegacyStatic) {
 				var registrar_m = Path.Combine (ArchDirectory, "registrar.m");
-				if (!Application.IsUptodate (Assemblies.Select (v => v.FullPath), new string[] { registrar_m })) {
-					registrar_m = Driver.RunRegistrar (this, Assemblies, BuildDirectory, BuildDirectory, App.Registrar == RegistrarMode.LegacyStatic, Is64Build, registrar_m);
+				var registrar_h = Path.Combine (ArchDirectory, "registrar.h");
+				if (!Application.IsUptodate (Assemblies.Select (v => v.FullPath), new string[] { registrar_m, registrar_h })) {
+					StaticRegistrar.Generate (Assemblies.Select ((a) => a.AssemblyDefinition), registrar_h, registrar_m);
 					registration_methods = new List<string> ();
 					registration_methods.Add ("xamarin_create_classes");
 					Driver.Watch ("Registrar", 1);
@@ -644,8 +695,7 @@ namespace Xamarin.Bundler
 					Driver.Log (3, "Target '{0}' is up-to-date.", registrar_m);
 				}
 
-				foreach (var abi in Abis)
-					RegistrarTask.Create (tasks, abi, this, registrar_m);
+				RegistrarTask.Create (compile_tasks, Abis, this, registrar_m);
 			}
 
 			if (App.Registrar == RegistrarMode.Dynamic && App.IsSimulatorBuild && App.LinkMode == LinkMode.None && App.IsUnified) {
@@ -698,19 +748,10 @@ namespace Xamarin.Bundler
 
 			// The main method.
 			foreach (var abi in Abis)
-				MainTask.Create (tasks, this, abi, Assemblies, App.AssemblyName, registration_methods);
+				MainTask.Create (compile_tasks, this, abi, Assemblies, App.AssemblyName, registration_methods);
 
 			// Start compiling.
-			if (tasks.Count > 0) {
-				Action<BuildTask> action = null;
-				action = (v) => {
-					var next = v.Execute ();
-					if (next != null)
-						Parallel.ForEach (next, new ParallelOptions () { MaxDegreeOfParallelism = Environment.ProcessorCount }, action);
-				};
-
-				Parallel.ForEach (tasks, new ParallelOptions () { MaxDegreeOfParallelism = Environment.ProcessorCount }, action);
-			}
+			compile_tasks.ExecuteInParallel ();
 
 			if (App.FastDev) {
 				foreach (var a in Assemblies) {

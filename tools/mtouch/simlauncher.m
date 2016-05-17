@@ -22,6 +22,12 @@ void xamarin_setup_impl ()
 #else
 	xamarin_use_new_assemblies = FALSE;
 #endif
+	xamarin_marshal_managed_exception_mode = MarshalManagedExceptionModeDisable;
+#if DEBUG
+	xamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionModeUnwindManagedCode;
+#else
+	xamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionModeDisabled;
+#endif
 }
 
 int

@@ -111,6 +111,18 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 	-(bool) testBlocks;
 @end
 
+/*
+ * ObjC test class used for exception tests.
+ */
+@interface ObjCExceptionTest : NSObject {
+}
+	-(void) throwObjCException;
+	-(void) throwManagedException;
+	-(void) invokeManagedExceptionThrower;
+	-(void) invokeManagedExceptionThrowerAndRethrow;
+	-(void) invokeManagedExceptionThrowerAndCatch;
+@end
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

@@ -202,6 +202,25 @@ namespace Bindings.Test {
 
 		[Export ("testBlocks")]
 		bool TestBlocks ();
+
+	}
+
+	[BaseType (typeof (NSObject))]
+	interface ObjCExceptionTest {
+		[Export ("throwObjCException")]
+		void ThrowObjCException ();
+
+		[Export ("throwManagedException")]
+		void ThrowManagedException ();
+
+		[Export ("invokeManagedExceptionThrower")] 
+		void InvokeManagedExceptionThrower ();
+
+		[Export ("invokeManagedExceptionThrowerAndRethrow")] 
+		void InvokeManagedExceptionThrowerAndRethrow ();
+
+		[Export ("invokeManagedExceptionThrowerAndCatch")]
+		void InvokeManagedExceptionThrowerAndCatch ();	
 	}
 
 	[BaseType (typeof (NSObject))]

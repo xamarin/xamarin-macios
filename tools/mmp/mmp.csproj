@@ -263,6 +263,9 @@
     <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
       <Link>external\ErrorHelper.cs</Link>
     </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\ExceptionMode.cs">
+      <Link>external\ExceptionMode.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\ObjCRuntime\Registrar.cs">
       <Link>external\Registrar.cs</Link>
     </Compile>
@@ -313,6 +316,9 @@
     </Compile>
     <Compile Include="..\..\src\ObjCRuntime\PlatformAvailability2.cs">
       <Link>external\PlatformAvailability2.cs</Link>
+    </Compile>
+    <Compile Include="..\common\PInvokeWrapperGenerator.cs">
+      <Link>external\PInvokeWrapperGenerator.cs</Link>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

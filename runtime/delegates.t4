@@ -19,6 +19,14 @@
 			"NSException *", "IntPtr", "exc"
 		) { WrappedManagedFunction = "ThrowNSException" },
 
+		new XDelegate ("int", "int", "xamarin_create_ns_exception",
+			"NSException *", "IntPtr", "exc"
+		) { WrappedManagedFunction = "CreateNSException" },
+
+		new XDelegate ("NSException *", "IntPtr", "xamarin_unwrap_ns_exception",
+			"int", "int", "exc_handle"
+		) { WrappedManagedFunction = "UnwrapNSException" },
+
 		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_block_wrapper_creator",
 			"MonoObject *", "IntPtr", "method",
 			"int", "int", "parameter"
@@ -147,6 +155,14 @@
 		new XDelegate ("char *", "IntPtr", "xamarin_lookup_managed_type_name",
 			"Class", "IntPtr", "klass"
 		) { WrappedManagedFunction = "LookupManagedTypeName" },
+
+		new XDelegate ("MarshalManagedExceptionMode", "MarshalManagedExceptionMode", "xamarin_on_marshal_managed_exception",
+			"int", "int", "exception"
+		) { WrappedManagedFunction = "OnMarshalManagedException" },
+
+		new XDelegate ("MarshalObjectiveCExceptionMode", "MarshalObjectiveCExceptionMode", "xamarin_on_marshal_objectivec_exception",
+			"id", "IntPtr", "exception"
+		) { WrappedManagedFunction = "OnMarshalObjectiveCException" },
 	};
 	delegates.CalculateLengths ();
 #><#+

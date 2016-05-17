@@ -498,45 +498,53 @@ namespace XamCore.Registrar {
 		}
 	}
 
-	class StaticRegistrar : Registrar {
-		bool is_simulator;
-		bool? is_64_bits;
+	public interface IStaticRegistrar
+	{
+		void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path);
+		void GenerateSingleAssembly (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly);
+		Mono.Linker.LinkContext LinkContext { get; set; }
+	}
+
+	class StaticRegistrar : Registrar, IStaticRegistrar {
+		public Application App { get; private set; }
+		public Target Target { get; private set; }
+		public bool IsSingleAssembly { get { return !string.IsNullOrEmpty (single_assembly); } }
+
 		string single_assembly;
 		IEnumerable<AssemblyDefinition> input_assemblies;
+		Mono.Linker.LinkContext link_context;
 		Dictionary<IMetadataTokenProvider, object> availability_annotations;
 
-		StaticRegistrar (Application app)
+		public Mono.Linker.LinkContext LinkContext {
+			get {
+				return link_context;
+			}
+			set {
+				link_context = value;
+				availability_annotations = link_context?.Annotations.GetCustomAnnotations ("Availability");
+			}
+		}
+
+		void Init (Application app)
 		{
+			this.App = app;
 			trace = !LaxMode && (app.RegistrarOptions & RegistrarOptions.Trace) == RegistrarOptions.Trace;
 		}
 
-		public StaticRegistrar (Application app, IEnumerable<AssemblyDefinition> assemblies, bool is_simulator, string single_assembly = null)
-			: this (app)
+		public StaticRegistrar (Application app)
 		{
-			this.is_simulator = is_simulator;
-			this.single_assembly = single_assembly;
-			this.input_assemblies = assemblies;
-
-			foreach (var assembly in assemblies)
-				RegisterAssembly (assembly);
+			Init (app);
 		}
 
-		public StaticRegistrar (Application app, IEnumerable<AssemblyDefinition> assemblies, bool is_simulator, bool is_64_bits, Mono.Linker.LinkContext link_context)
-			: this (app)
+		public StaticRegistrar (Target target)
 		{
-			this.is_simulator = is_simulator;
-			this.is_64_bits = is_64_bits;
-			this.input_assemblies = assemblies;
-
-			availability_annotations = link_context?.Annotations.GetCustomAnnotations ("Availability");
-
-			foreach (var assembly in assemblies)
-				RegisterAssembly (assembly);
+			Init (target.App);
+			this.Target = target;
 		}
 
 		protected override bool LaxMode {
 			get {
-				return !string.IsNullOrEmpty (single_assembly);
+				return IsSingleAssembly;
 			}
 		}
 
@@ -606,19 +614,27 @@ namespace XamCore.Registrar {
 			return SharedStatic.TryGetAttributeImpl (method, "System.Runtime.CompilerServices", "ExtensionAttribute", out attrib);
 		}
 
+#if MTOUCH
+		public bool IsSimulator {
+			get { return App.IsSimulatorBuild; }
+		}
+#endif
+
 		protected override bool IsSimulatorOrDesktop {
 			get {
 #if MONOMAC
 				return true;
 #else
-				return is_simulator;
+				return App.IsSimulatorBuild;
 #endif
 			}
 		}
 			
 		protected override bool Is64Bits {
 			get {
-				return is_64_bits.Value;
+				if (IsSingleAssembly)
+					throw new InvalidOperationException ("Can't emit size-specific code in single assembly mode.");
+				return Target.Is64Build;
 			}
 		}
 
@@ -1735,8 +1751,10 @@ namespace XamCore.Registrar {
 			case "CoreAudioKit":
 				// fatal error: 'CoreAudioKit/CoreAudioKit.h' file not found
 				// radar filed with Apple - but that framework / header is not yet shipped with the iOS SDK simulator
-				if (is_simulator)
+#if MTOUCH
+				if (IsSimulator)
 					return;
+#endif
 				goto default;
 			case "Metal":
 			case "MetalKit":
@@ -1744,7 +1762,7 @@ namespace XamCore.Registrar {
 				// #error Metal Simulator is currently unsupported
 				// this framework is _officially_ not available on the simulator (in iOS8)
 #if !MONOMAC
-				if (is_simulator)
+				if (IsSimulator)
 					return;
 #endif
 				goto default;
@@ -3036,10 +3054,16 @@ namespace XamCore.Registrar {
 				invoke.AppendLine ("xamarin_set_nsobject_flags (mthis, flags);");
 			}
 
+			var marshal_exception = "NULL";
+			if (App.MarshalManagedExceptions != MarshalManagedExceptionMode.Disable) {
+				invoke.AppendLine ("MonoObject *exception = NULL;");
+				marshal_exception = "&exception";
+			}
+
 			if (!isVoid)
 				invoke.AppendFormat ("{0} retval = ", "MonoObject *");
 
-			invoke.AppendLine ("mono_runtime_invoke (managed_method, {0}, arg_ptrs, NULL);", isStatic ? "NULL" : "mthis");
+			invoke.AppendLine ("mono_runtime_invoke (managed_method, {0}, arg_ptrs, {1});", isStatic ? "NULL" : "mthis", marshal_exception);
 		
 			if (isCtor)
 				invoke.AppendLine ("xamarin_create_managed_ref (self, mthis, true);");
@@ -3234,6 +3258,9 @@ namespace XamCore.Registrar {
 			if (trace )
 				body.AppendLine (nslog_end);
 			
+			if (App.MarshalManagedExceptions != MarshalManagedExceptionMode.Disable)
+				body.WriteLine ("xamarin_process_managed_exception (exception);");
+
 			if (isCtor) {
 				body.WriteLine ("return self;");
 			} else if (isVoid) {
@@ -3352,24 +3379,149 @@ namespace XamCore.Registrar {
 			}
 		}
 
-#if MONOMAC
-		public static string Generate (Application app, IEnumerable<AssemblyDefinition> list, bool is_64_bits, Mono.Linker.LinkContext link_context)
+		public void GeneratePInvokeWrappersStart (AutoIndentStringBuilder hdr, AutoIndentStringBuilder decls, AutoIndentStringBuilder mthds)
 		{
-			return new StaticRegistrar (app, list, true, is_64_bits, link_context).Generate ();
-		}
-#else
-		public static string Generate (Application app, IEnumerable<AssemblyDefinition> list, bool simulator, bool is_64_bits, Mono.Linker.LinkContext link_context)
-		{
-			return new StaticRegistrar (app, list, simulator, is_64_bits, link_context).Generate ();
+			header = hdr;
+			declarations = decls;
+			methods = mthds;
 		}
 
-		public static string Generate (Application app, IEnumerable<AssemblyDefinition> list, bool simulator, string single_assembly = null)
+		public void GeneratePInvokeWrappersEnd ()
 		{
-			return new StaticRegistrar (app, list, simulator, single_assembly).Generate ();
-		}
-#endif
+			header = null;	
+			declarations = null;
+			methods = null;
+			namespaces.Clear ();
+			structures.Clear ();
 
-		public string Generate ()
+			FlushTrace ();
+		}
+
+		public void GeneratePInvokeWrapper (PInvokeWrapperGenerator state, MethodDefinition method)
+		{
+			var signatures = state.signatures;
+			var exceptions = state.exceptions;
+			var signature = state.signature;
+			var names = state.names;
+			var sb = state.sb;
+			var pinfo = method.PInvokeInfo;
+			var is_stret = pinfo.EntryPoint.EndsWith ("_stret");
+			var isVoid = method.ReturnType.FullName == "System.Void";
+			var descriptiveMethodName = method.DeclaringType.FullName + "." + method.Name;
+
+			signature.Clear ();
+
+			string native_return_type;
+			int first_parameter = 0;
+
+			if (is_stret) {
+				native_return_type = ToObjCParameterType (method.Parameters [0].ParameterType.GetElementType (), descriptiveMethodName, exceptions, method);
+				first_parameter = 1;
+			} else {
+				native_return_type = ToObjCParameterType (method.ReturnType, descriptiveMethodName, exceptions, method);
+			}
+
+			signature.Append (native_return_type);
+			signature.Append (" ");
+			signature.Append (pinfo.EntryPoint);
+			signature.Append (" (");
+			for (int i = 0; i < method.Parameters.Count; i++) {
+				if (i > 0)
+					signature.Append (", ");
+				signature.Append (ToObjCParameterType (method.Parameters[i].ParameterType, descriptiveMethodName, exceptions, method));
+			}
+			signature.Append (")");
+
+			string wrapperName;
+			if (!signatures.TryGetValue (signature.ToString (), out wrapperName)) {
+				var name = "xamarin_pinvoke_wrapper_" + method.Name;
+				var counter = 0;
+				while (names.Contains (name)) {
+					name = "xamarin_pinvoke_wrapper_" + method.Name + (++counter).ToString ();
+				}
+				names.Add (name);
+				signatures [signature.ToString ()] = wrapperName = name;
+
+				sb.WriteLine ("// EntryPoint: {0}", pinfo.EntryPoint);
+				sb.WriteLine ("// Managed method: {0}.{1}", method.DeclaringType.FullName, method.Name);
+				sb.WriteLine ("// Signature: {0}", signature.ToString ());
+
+				sb.Write ("typedef ");
+				sb.Write (native_return_type);
+				sb.Write ("(*func_");
+				sb.Write (name);
+				sb.Write (") (");
+				for (int i = first_parameter; i < method.Parameters.Count; i++) {
+					if (i > first_parameter)
+						sb.Write (", ");
+					sb.Write (ToObjCParameterType (method.Parameters[i].ParameterType, descriptiveMethodName, exceptions, method));
+					sb.Write (" ");
+					sb.Write (method.Parameters[i].Name);
+				}
+				sb.WriteLine (");");
+
+				sb.WriteLine (native_return_type);
+				sb.Write (name);
+				sb.Write (" (", method.Name);
+				for (int i = first_parameter; i < method.Parameters.Count; i++) {
+					if (i > first_parameter)
+						sb.Write (", ");
+					sb.Write (ToObjCParameterType (method.Parameters[i].ParameterType, descriptiveMethodName, exceptions, method));
+					sb.Write (" ");
+					sb.Write (method.Parameters [i].Name);
+				}
+				sb.WriteLine (")");
+				sb.WriteLine ("{");
+				sb.WriteLine ("@try {");
+				if (!isVoid || is_stret)
+					sb.Write ("return ");
+				sb.Write ("((func_{0}) {1}) (", name, pinfo.EntryPoint);
+				for (int i = first_parameter; i < method.Parameters.Count; i++) {
+					if (i > first_parameter)
+						sb.Write (", ");
+					sb.Write (method.Parameters [i].Name);
+				}
+				sb.WriteLine (");");
+				sb.WriteLine ("} @catch (NSException *exc) {");
+				sb.WriteLine ("xamarin_process_nsexception (exc);");
+				sb.WriteLine ("}");
+				sb.WriteLine ("}");
+				sb.WriteLine ();
+			} else {
+				Console.WriteLine ("Signature already processed: {0} for {1}.{2}", signature.ToString (), method.DeclaringType.FullName, method.Name);
+			}
+
+			// find the module reference to __Internal
+			ModuleReference mr = null;
+			foreach (var mref in method.Module.ModuleReferences) {
+				if (mref.Name == "__Internal") {
+					mr = mref;
+					break;
+				}
+			}
+			if (mr == null)
+				method.Module.ModuleReferences.Add (mr = new ModuleReference ("__Internal"));
+			pinfo.Module = mr;
+			pinfo.EntryPoint = wrapperName;
+		}
+
+		public void GenerateSingleAssembly (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path, string assembly)
+		{
+			single_assembly = assembly;
+			Generate (assemblies, header_path, source_path);
+		}
+
+		public void Generate (IEnumerable<AssemblyDefinition> assemblies, string header_path, string source_path)
+		{
+			this.input_assemblies = assemblies;
+
+			foreach (var assembly in assemblies)
+				RegisterAssembly (assembly);
+
+			Generate (header_path, source_path);
+		}
+
+		void Generate (string header_path, string source_path)
 		{
 			using (var sb = new AutoIndentStringBuilder ()) {
 				using (var hdr = new AutoIndentStringBuilder ()) {
@@ -3391,6 +3543,8 @@ namespace XamCore.Registrar {
 							declarations = decls;
 							methods = mthds;
 
+							mthds.WriteLine ($"#include \"{Path.GetFileName (header_path)}\"");
+
 							Specialize (sb);
 
 							header = null;	
@@ -3399,7 +3553,8 @@ namespace XamCore.Registrar {
 
 							FlushTrace ();
 
-							return hdr.ToString () + "\n" + decls.ToString () + "\n" + mthds.ToString () + "\n" + sb.ToString ();
+							Driver.WriteIfDifferent (header_path, hdr.ToString () + "\n" + decls.ToString () + "\n");
+							Driver.WriteIfDifferent (source_path, mthds.ToString () + "\n" + sb.ToString () + "\n");
 						}
 					}
 				}

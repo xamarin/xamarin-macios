@@ -18,6 +18,7 @@ using Mono.Linker;
 using Xamarin.Linker;
 
 using Xamarin.Utils;
+using XamCore.Registrar;
 
 #if MONOTOUCH
 using MonoTouch;
@@ -36,10 +37,18 @@ namespace Xamarin.Bundler {
 		public List<Assembly> Assemblies = new List<Assembly> ();
 
 		public PlatformLinkContext LinkContext;
+		public LinkerOptions LinkerOptions;
 		public PlatformResolver Resolver = new PlatformResolver ();
 
 		public HashSet<string> Frameworks = new HashSet<string> ();
 		public HashSet<string> WeakFrameworks = new HashSet<string> ();
+
+		public IStaticRegistrar StaticRegistrar { get; set; }
+
+#if MONOMAC
+		public bool Is32Build { get { return !Driver.Is64Bit; } }
+		public bool Is64Build { get { return Driver.Is64Bit; } }
+#endif
 
 		public Target (Application app)
 		{

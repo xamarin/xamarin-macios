@@ -9,6 +9,8 @@ using Mono.Cecil.Mdb;
 
 using Xamarin.Utils;
 
+using XamCore.ObjCRuntime;
+
 namespace Xamarin.Bundler {
 
 	[Flags]
@@ -42,6 +44,23 @@ namespace Xamarin.Bundler {
 		public List<string> LinkSkipped = new List<string> ();
 		public List<string> Definitions = new List<string> ();
 		public Mono.Linker.I18nAssemblies I18n;
+
+		public bool? EnableCoopGC;
+		public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptions;
+		public MarshalManagedExceptionMode MarshalManagedExceptions;
+
+		public bool RequiresPInvokeWrappers {
+			get {
+#if MTOUCH
+				if (IsSimulatorBuild)
+					return false;
+#else
+				if (Driver.Is64Bit)
+					return false;
+#endif
+				return MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.ThrowManagedException || MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.Abort;
+			}
+		}
 
 		public string PlatformName {
 			get {
@@ -329,5 +348,48 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public void InitializeCommon ()
+		{
+			if (Platform == ApplePlatform.WatchOS && EnableCoopGC.HasValue && !EnableCoopGC.Value)
+				throw ErrorHelper.CreateError (88, "The GC must be in cooperative mode for watchOS apps. Please remove the --coop:false argument to mtouch.");
+
+			if (!EnableCoopGC.HasValue)
+				EnableCoopGC = Platform == ApplePlatform.WatchOS;
+
+			if (EnableCoopGC.Value) {
+				switch (MarshalObjectiveCExceptions) {
+				case MarshalObjectiveCExceptionMode.UnwindManagedCode:
+				case MarshalObjectiveCExceptionMode.Disable:
+					throw ErrorHelper.CreateError (89, "The option '{0}' cannot take the value '{1}' when cooperative mode is enabled for the GC.", "--marshal-objectivec-exceptions", MarshalObjectiveCExceptions.ToString ().ToLowerInvariant ());
+				}
+				switch (MarshalManagedExceptions) {
+				case MarshalManagedExceptionMode.UnwindNativeCode:
+				case MarshalManagedExceptionMode.Disable:
+					throw ErrorHelper.CreateError (89, "The option '{0}' cannot take the value '{1}' when cooperative mode is enabled for the GC.", "--marshal-managed-exceptions", MarshalManagedExceptions.ToString ().ToLowerInvariant ());
+				}
+			}
+
+
+			bool isSimulatorOrDesktopDebug = EnableDebug;
+#if MTOUCH
+			isSimulatorOrDesktopDebug &= IsSimulatorBuild;
+#endif
+
+			if (MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.Default) {
+				if (EnableCoopGC.Value) {
+					MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
+				} else {
+					MarshalObjectiveCExceptions = isSimulatorOrDesktopDebug ? MarshalObjectiveCExceptionMode.UnwindManagedCode : MarshalObjectiveCExceptionMode.Disable;
+				}
+			}
+
+			if (MarshalManagedExceptions == MarshalManagedExceptionMode.Default) {
+				if (EnableCoopGC.Value) {
+					MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
+				} else {
+					MarshalManagedExceptions = isSimulatorOrDesktopDebug ? MarshalManagedExceptionMode.UnwindNativeCode : MarshalManagedExceptionMode.Disable;
+				}
+			}
+		}
 	}
 }

@@ -187,6 +187,42 @@ static UltimateMachine *shared;
 	}
 @end
 
+@implementation ObjCExceptionTest
+{
+}
+	-(void) throwObjCException
+	{
+		[NSException raise:@"Some exception" format:@"exception was thrown"];
+	}
+
+	-(void) throwManagedException
+	{
+		abort (); // this method should be overridden in managed code.
+	}
+
+	-(void) invokeManagedExceptionThrower
+	{
+		[self throwManagedException];	
+	}
+
+	-(void) invokeManagedExceptionThrowerAndRethrow
+	{
+		@try {
+			[self throwManagedException];			
+		} @catch (id exc) {
+			[NSException raise:@"Caught exception" format:@"exception was rethrown"];
+		}
+	}
+	-(void) invokeManagedExceptionThrowerAndCatch
+	{
+		@try {
+			[self throwManagedException];			
+		} @catch (id exc) {
+			// do nothing
+		}
+	}
+@end
+
 @interface CtorChaining1 : NSObject
 	@property BOOL initCalled;
 	@property BOOL initCallsInitCalled;

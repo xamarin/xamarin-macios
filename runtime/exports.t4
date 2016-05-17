@@ -218,6 +218,14 @@
 
 		#endregion
 
+		#region metadata/object-internals.h
+
+		new Export (true, "void", "mono_set_pending_exception",
+			"MonoException *", "exc"
+		),
+
+		#endregion
+
 		#region metadata/assembly.h
 
 		new Export ("void", "mono_set_assemblies_path",
@@ -286,6 +294,14 @@
 
 		new Export ("MonoClass *", "mono_method_get_class",
 			"MonoMethod *", "method"
+		),
+
+		new Export ("void", "mono_dllmap_insert",
+			"MonoImage *", "assembly",
+			"const char *", "dll",
+			"const char *", "func",
+			"const char *", "tdll",
+			"const char *", "tfunc"
 		),
 
 		#endregion

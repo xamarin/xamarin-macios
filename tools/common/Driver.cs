@@ -14,9 +14,61 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 using Xamarin.Utils;
+using XamCore.ObjCRuntime;
 
 namespace Xamarin.Bundler {
 	public partial class Driver {
+		static void AddSharedOptions (Mono.Options.OptionSet options)
+		{
+			options.Add ("coop:", "If the GC should run in cooperative mode.", v => { App.EnableCoopGC = ParseBool (v, "coop"); }, hidden: true);
+			options.Add ("marshal-objectivec-exceptions:", v => {
+				switch (v) {
+				case "default":
+					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Default;
+					break;
+				case "unwindmanaged":
+				case "unwindmanagedcode":
+					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.UnwindManagedCode;
+					break;
+				case "throwmanaged":
+				case "throwmanagedexception":
+					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
+					break;
+				case "abort":
+					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Abort;
+					break;
+				case "disable":
+					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Disable;
+					break;
+				default:
+					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--marshal-objective-exceptions", "Invalid value: " + v);
+				}
+			});
+			options.Add ("marshal-managed-exceptions:", v => {
+				switch (v) {
+				case "default":
+					App.MarshalManagedExceptions = MarshalManagedExceptionMode.Default;
+					break;
+				case "unwindnative":
+				case "unwindnativecode":
+					App.MarshalManagedExceptions = MarshalManagedExceptionMode.UnwindNativeCode;
+					break;
+				case "throwobjectivec":
+				case "throwobjectivecexception":
+					App.MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
+					break;
+				case "abort":
+					App.MarshalManagedExceptions = MarshalManagedExceptionMode.Abort;
+					break;
+				case "disable":
+					App.MarshalManagedExceptions = MarshalManagedExceptionMode.Disable;
+					break;
+				default:
+					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--marshal-managed-exceptions", "Invalid value: " + v);
+				}
+			});
+		}
+
 #if MONOMAC
 #pragma warning disable 0414
 		static string userTargetFramework = TargetFramework.Default.ToString ();
@@ -144,6 +196,30 @@ namespace Xamarin.Bundler {
 			File.Move (source, target);
 		}
 
+		static void MoveIfDifferent (string path, string tmp)
+		{
+			// Don't read the entire file into memory, it can be quite big in certain cases.
+
+			bool move = false;
+
+			using (var fs1 = new FileStream (path, FileMode.Open, FileAccess.Read)) {
+				using (var fs2 = new FileStream (tmp, FileMode.Open, FileAccess.Read)) {
+					if (fs1.Length != fs2.Length) {
+						Log (3, "New file '{0}' has different length, writing new file.", path);
+						move = true;
+					} else {
+						move = !Cache.CompareStreams (fs1, fs2);
+					}
+				}
+			}
+
+			if (move) {
+				FileMove (tmp, path);
+			} else {
+				Log (3, "Target {0} is up-to-date.", path);
+			}
+		}
+
 		public static void WriteIfDifferent (string path, string contents)
 		{
 			var tmp = path + ".tmp";
@@ -155,29 +231,31 @@ namespace Xamarin.Bundler {
 					return;
 				}
 
-				// Don't read the entire file into memory, it can be quite big in certain cases.
-
-				bool move = false;
 				File.WriteAllText (tmp, contents);
-
-				using (var fs1 = new FileStream (path, FileMode.Open, FileAccess.Read)) {
-					using (var fs2 = new FileStream (tmp, FileMode.Open, FileAccess.Read)) {
-						if (fs1.Length != fs2.Length) {
-							Log (3, "New file '{0}' has different length, writing new file.", path);
-							move = true;
-						} else {
-							move = !Cache.CompareStreams (fs1, fs2);
-						}
-					}
-				}
-
-				if (move) {
-					FileMove (tmp, path);
-				} else {
-					Log (3, "Target {0} is up-to-date.", path);
-				}
+				MoveIfDifferent (path, tmp);
 			} catch (Exception e) {
 				File.WriteAllText (path, contents);
+				ErrorHelper.Warning (1014, e, "Failed to re-use cached version of '{0}': {1}.", path, e.Message);
+			} finally {
+				Application.TryDelete (tmp);
+			}
+		}
+
+		public static void WriteIfDifferent (string path, byte[] contents)
+		{
+			var tmp = path + ".tmp";
+
+			try {
+				if (!File.Exists (path)) {
+					File.WriteAllBytes (path, contents);
+					Log (3, "File '{0}' does not exist, creating it.", path);
+					return;
+				}
+
+				File.WriteAllBytes (tmp, contents);
+				MoveIfDifferent (path, tmp);
+			} catch (Exception e) {
+				File.WriteAllBytes (path, contents);
 				ErrorHelper.Warning (1014, e, "Failed to re-use cached version of '{0}': {1}.", path, e.Message);
 			} finally {
 				Application.TryDelete (tmp);

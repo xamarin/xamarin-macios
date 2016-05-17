@@ -18,9 +18,16 @@
 
 #if __i386__
 
+.subsections_via_symbols
+.text
+
 _xamarin_i386_common_trampoline:
+.cfi_startproc
 	pushl	%ebp
+.cfi_def_cfa_offset 8
+.cfi_offset %ebp, -8
 	movl	%esp, %ebp
+.cfi_def_cfa_register %ebp
 
 	pushl	%esi # we use %esi as a pointer to our CallState struct. It's a preserved register, so we need to save it.
 
@@ -84,6 +91,8 @@ L_no_floating_point:
 
 L_double_stret_return:
 	retl $0x4
+
+.cfi_endproc
 
 #
 # trampolines

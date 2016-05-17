@@ -63,6 +63,7 @@ using Mono.Tuner;
 
 using MonoTouch.Tuner;
 using XamCore.Registrar;
+using XamCore.ObjCRuntime;
 
 using Xamarin.Linker;
 using Xamarin.Utils;
@@ -651,6 +652,8 @@ namespace Xamarin.Bundler
 					sw.WriteLine ("\tmono_use_llvm = {0};", enable_llvm ? "TRUE" : "FALSE");
 					sw.WriteLine ("\txamarin_log_level = {0};", verbose);
 					sw.WriteLine ("\txamarin_arch_name = \"{0}\";", abi.AsArchString ());
+					sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", app.MarshalManagedExceptions);
+					sw.WriteLine ("\txamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionMode{0};", app.MarshalObjectiveCExceptions);
 					if (app.EnableDebug)
 						sw.WriteLine ("\txamarin_debug_mode = TRUE;");
 					if (!string.IsNullOrEmpty (app.MonoGCParams))
@@ -906,6 +909,15 @@ namespace Xamarin.Bundler
 
 			if (app.Registrar == RegistrarMode.Static || app.Registrar == RegistrarMode.LegacyStatic || app.Registrar == RegistrarMode.LegacyDynamic)
 				return false;
+
+			// The default exception marshalling differs between release and debug mode, but we
+			// only have one simlauncher, so to use the simlauncher we'd have to chose either
+			// debug or release mode. Debug is more frequent, so make that the fast path.
+			if (!app.EnableDebug)
+				return false;
+
+			if (app.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.UnwindManagedCode)
+				return false; // UnwindManagedCode is the default for debug builds.
 
 			return true;
 		}
@@ -1350,6 +1362,8 @@ namespace Xamarin.Bundler
 			{ "xamarin-framework-directory=", "The framework directory", v => { mtouch_dir = v; }, true },
 		};
 
+			AddSharedOptions (os);
+
 			try {
 				assemblies = os.Parse (args);
 			}
@@ -1716,25 +1730,6 @@ namespace Xamarin.Bundler
 						return true;
 
 			return false;
-		}
-
-		public static string RunRegistrar (Target target, List<Assembly> assemblies, string assemblies_path, string output_dir, bool old, bool is_64_bits, string out_file = null)
-		{
-			const string registrar_file = "registrar.m";
-
-			var resolvedAssemblies = assemblies.Select (asm => asm.AssemblyDefinition);
-			var output_file = out_file ?? Path.Combine (output_dir, registrar_file);
-			var code = string.Empty;
-
-			if (old) {
-				code = OldStaticRegistrar.Generate (resolvedAssemblies);
-			} else {
-				code = StaticRegistrar.Generate (app, resolvedAssemblies, target.App.IsSimulatorBuild, is_64_bits, target.LinkContext);
-			}
-
-			WriteIfDifferent (output_file, code);
-			
-			return output_file;
 		}
 
 		struct timespec {

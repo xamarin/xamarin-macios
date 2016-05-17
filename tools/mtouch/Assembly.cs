@@ -153,7 +153,7 @@ namespace Xamarin.Bundler {
 
 		IEnumerable<BuildTask> CreateCompileTasks (string s, string asm_infile, string llvm_infile, Abi abi)
 		{
-			var compile_tasks = new List<BuildTask> ();
+			var compile_tasks = new BuildTasks ();
 			if (asm_infile != null) {
 				var task = CreateCompileTask (s, asm_infile, abi);
 				if (task != null)
@@ -372,7 +372,7 @@ namespace Xamarin.Bundler {
 			return symlink_failed;
 		}
 
-		public void CreateCompilationTasks (List<BuildTask> tasks, string build_dir, IEnumerable<Abi> abis)
+		public void CreateCompilationTasks (BuildTasks tasks, string build_dir, IEnumerable<Abi> abis)
 		{
 			var assembly = Path.Combine (build_dir, FileName);
 

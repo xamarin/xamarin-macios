@@ -48,6 +48,8 @@ using Mono.Tuner;
 using MonoMac.Tuner;
 using Xamarin.Utils;
 using Xamarin.Linker;
+using XamCore.Registrar;
+using XamCore.ObjCRuntime;
 
 namespace Xamarin.Bundler {
 	public enum RegistrarMode {
@@ -78,6 +80,7 @@ namespace Xamarin.Bundler {
 		static bool? profiling = false;
 		static bool? thread_check = null;
 		static string link_flags = null;
+		static LinkerOptions linker_options;
 
 		static bool arch_set = false;
 		static string arch = "i386";
@@ -280,6 +283,8 @@ namespace Xamarin.Bundler {
 				{ "http-message-handler=", "Specify the default HTTP Message Handler", v => { http_message_provider = v; }},
 			};
 
+			AddSharedOptions (os);
+
 			IList<string> unprocessed;
 			try {
 				unprocessed = os.Parse (args);
@@ -377,6 +382,8 @@ namespace Xamarin.Bundler {
 
 			if (!IsUnifiedMobile && tls_provider != null)
 				throw new MonoMacException (2011, true, "Selecting a TLS Provider is only supported in the Unified Mobile profile");
+
+			App.InitializeCommon ();
 
 			Log ("Xamarin.Mac {0}{1}", Constants.Version, verbose > 0 ? "." + Constants.Revision : string.Empty);
 
@@ -574,6 +581,8 @@ namespace Xamarin.Bundler {
 
 			ExtractNativeLinkInfo ();
 
+			BuildTarget.StaticRegistrar = new StaticRegistrar (BuildTarget);
+
 			if (!no_executable) {
 				foreach (var nr in native_references) {
 					if (!native_libs.ContainsKey (nr))
@@ -596,6 +605,12 @@ namespace Xamarin.Bundler {
 				Watch (string.Format ("Linking (mode: '{0}')", App.LinkMode), 1);
 			}
 
+			if (App.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Disable && !App.RequiresPInvokeWrappers && BuildTarget.Is64Build) {
+				internalSymbols.Add ("xamarin_dyn_objc_msgSend");
+				internalSymbols.Add ("xamarin_dyn_objc_msgSendSuper");
+				internalSymbols.Add ("xamarin_dyn_objc_msgSend_stret");
+				internalSymbols.Add ("xamarin_dyn_objc_msgSendSuper_stret");
+			}
 
 			CopyDependencies (native_libs);
 			Watch ("Copy Dependencies", 1);
@@ -873,6 +888,8 @@ namespace Xamarin.Bundler {
 					sw.WriteLine ("\txamarin_custom_bundle_name = @\"" + custom_bundle_name + "\";");
 				}
 				sw.WriteLine ("\txamarin_use_il_registrar = {0};", registrar == RegistrarMode.IL ? "true" : "false");
+				sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", App.MarshalManagedExceptions);
+				sw.WriteLine ("\txamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionMode{0};", App.MarshalObjectiveCExceptions);
 				sw.WriteLine ();
 				if (Driver.registrar == RegistrarMode.Static)
 					sw.WriteLine ("\txamarin_create_classes ();");
@@ -920,9 +937,10 @@ namespace Xamarin.Bundler {
 
 			SetSDKVersion ();
 			if (registrar == RegistrarMode.Static) {
-				var code = XamCore.Registrar.StaticRegistrar.Generate (App, BuildTarget.Resolver.ResolverCache.Values, Is64Bit, BuildTarget.LinkContext);
 				registrarPath = Path.Combine (Cache.Location, "registrar.m");
-				File.WriteAllText (registrarPath, code);
+				var registrarH = Path.Combine (Cache.Location, "registrar.h");
+				BuildTarget.StaticRegistrar.LinkContext = BuildTarget.LinkContext;
+				BuildTarget.StaticRegistrar.Generate (BuildTarget.Resolver.ResolverCache.Values, registrarH, registrarPath);
 
 				var platform_assembly = BuildTarget.Resolver.ResolverCache.First ((v) => v.Value.Name.Name == XamCore.Registrar.Registrar.PlatformAssembly).Value;
 				Frameworks.Gather (platform_assembly, BuildTarget.Frameworks, BuildTarget.WeakFrameworks);
@@ -1051,6 +1069,12 @@ namespace Xamarin.Bundler {
 				if (!string.IsNullOrEmpty (DeveloperDirectory))
 					args.Append ("-isysroot ").Append (Quote (Path.Combine (DeveloperDirectory, "Platforms", "MacOSX.platform", "Developer", "SDKs", "MacOSX" + sdk_version + ".sdk"))).Append (' ');
 
+				if (App.RequiresPInvokeWrappers) {
+					var state = linker_options.MarshalNativeExceptionsState;
+					state.End ();
+					args.Append (Quote (state.SourcePath)).Append (' ');
+				}
+
 				var main = Path.Combine (Cache.Location, "main.m");
 				File.WriteAllText (main, mainSource);
 				args.Append (Quote (main));
@@ -1142,7 +1166,15 @@ namespace Xamarin.Bundler {
 				// by default we keep the code to ensure we're executing on the UI thread (for UI code) for debug builds
 				// but this can be overridden to either (a) remove it from debug builds or (b) keep it in release builds
 				EnsureUIThread = thread_check.HasValue ? thread_check.Value : App.EnableDebug,
+				MarshalNativeExceptionsState = !App.RequiresPInvokeWrappers ? null : new PInvokeWrapperGenerator ()
+				{
+					SourcePath = Path.Combine (Cache.Location, "pinvokes.m"),
+					HeaderPath = Path.Combine (Cache.Location, "pinvokes.h"),
+					Registrar = (StaticRegistrar) BuildTarget.StaticRegistrar,
+				},
 			};
+
+			linker_options = options;
 
 			Mono.Linker.LinkContext context;
 			MonoMac.Tuner.Linker.Process (options, out context, out resolved_assemblies);

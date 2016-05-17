@@ -110,6 +110,8 @@ namespace XamCore.ObjCRuntime {
 			public Delegates Delegates;
 			public Trampolines Trampolines;
 			public RegistrationData *RegistrationData;
+			public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptionMode;
+			public MarshalManagedExceptionMode MarshalManagedExceptionMode;
 
 			public bool UseOldDynamicRegistrar {
 				get {
@@ -209,6 +211,9 @@ namespace XamCore.ObjCRuntime {
 			UseAutoreleasePoolInThreadPool = true;
 #endif
 
+			objc_exception_mode = options.MarshalObjectiveCExceptionMode;
+			managed_exception_mode = options.MarshalManagedExceptionMode;
+
 			initialized = true;
 #if PROFILE
 			Console.WriteLine ("Runtime.Initialize completed in {0} ms", watch.ElapsedMilliseconds);
@@ -233,6 +238,43 @@ namespace XamCore.ObjCRuntime {
 				return callback ();
 		}
 #endif
+
+		static MarshalObjectiveCExceptionMode objc_exception_mode;
+		static MarshalManagedExceptionMode managed_exception_mode;
+
+		public static event MarshalObjectiveCExceptionHandler MarshalObjectiveCException;
+		public static event MarshalManagedExceptionHandler MarshalManagedException;
+
+		static MarshalObjectiveCExceptionMode OnMarshalObjectiveCException (IntPtr exception_handle)
+		{
+			if (MarshalObjectiveCException != null) {
+				var exception = GetNSObject<NSException> (exception_handle);
+				var args = new MarshalObjectiveCExceptionEventArgs ()
+				{
+					Exception = exception,
+					ExceptionMode = objc_exception_mode,
+				};
+
+				MarshalObjectiveCException (null, args);
+				return args.ExceptionMode;
+			}
+			return objc_exception_mode;
+		}
+
+		static MarshalManagedExceptionMode OnMarshalManagedException (int exception_handle)
+		{
+			if (MarshalManagedException != null) {
+				var exception = GCHandle.FromIntPtr (new IntPtr (exception_handle)).Target as Exception;
+				var args = new MarshalManagedExceptionEventArgs ()
+				{
+					Exception = exception,
+					ExceptionMode = managed_exception_mode,
+				};
+				MarshalManagedException (null, args);
+				return args.ExceptionMode;
+			}
+			return managed_exception_mode;
+		}
 
 #if !COREBUILD && (XAMARIN_APPLETLS || XAMARIN_NO_TLS)
 		// This method is rewritten by the linker in CoreTlsProviderStep.
@@ -271,6 +313,32 @@ namespace XamCore.ObjCRuntime {
 #else
 			throw new MonoTouchException (new NSException (ns_exception));
 #endif
+		}
+
+		static int CreateNSException (IntPtr ns_exception)
+		{
+			Exception ex;
+#if MONOMAC
+			ex = new ObjCException (Runtime.GetNSObject<NSException> (ns_exception));
+#else
+			ex = new MonoTouchException (Runtime.GetNSObject<NSException> (ns_exception));
+#endif
+			return GCHandle.ToIntPtr (GCHandle.Alloc (ex)).ToInt32 ();
+		}
+
+		static IntPtr UnwrapNSException (int exc_handle)
+		{
+			var obj = GCHandle.FromIntPtr (new IntPtr (exc_handle)).Target;
+#if MONOMAC
+			var exc = obj as ObjCException;
+#else
+			var exc = obj as MonoTouchException;
+#endif
+			if (exc != null) {
+				return exc.NSException.DangerousRetain ().DangerousAutorelease ().Handle;
+			} else {
+				return IntPtr.Zero;
+			}
 		}
 
 		static IntPtr GetBlockWrapperCreator (IntPtr method, int parameter)
