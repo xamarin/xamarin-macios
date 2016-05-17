@@ -11368,15 +11368,20 @@ namespace XamCore.Foundation
 		bool IsValidForFormat (NSObject plist, NSPropertyListFormat format);
 	}
 
-	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
+#if XAMCORE_2_0 || !MONOMAC
+	public interface INSExtensionRequestHandling { }
+
+	[iOS (8,0)][Mac (10,10)] // Not defined in 32-bit
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	public interface NSExtensionRequestHandling {
 		[Abstract]
+		[Mac (10,10, onlyOn64 : true)] 
 		// @required - (void)beginRequestWithExtensionContext:(NSExtensionContext *)context;
 		[Export ("beginRequestWithExtensionContext:")]
 		void BeginRequestWithExtensionContext (NSExtensionContext context);
 	}
+#endif
 
 	[Protocol]
 	public interface NSLocking {

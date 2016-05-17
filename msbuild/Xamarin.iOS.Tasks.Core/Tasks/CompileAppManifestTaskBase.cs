@@ -17,9 +17,6 @@ namespace Xamarin.iOS.Tasks
 		public string DefaultSdkVersion { get; set; }
 
 		[Required]
-		public bool IsAppExtension { get; set; }
-
-		[Required]
 		public bool IsWatchApp { get; set; }
 
 		[Required]
