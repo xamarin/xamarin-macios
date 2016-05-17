@@ -20,7 +20,7 @@ namespace Xamarin.Bundler {
 	public partial class Driver {
 		static void AddSharedOptions (Mono.Options.OptionSet options)
 		{
-			options.Add ("coop:", "If the Coop GC should be used.", v => { App.EnableCoopGC = ParseBool (v, "coop"); }, hidden: true);
+			options.Add ("coop:", "If the GC should run in cooperative mode.", v => { App.EnableCoopGC = ParseBool (v, "coop"); }, hidden: true);
 			options.Add ("marshal-objectivec-exceptions:", v => {
 				switch (v) {
 				case "default":

@@ -351,7 +351,7 @@ namespace Xamarin.Bundler {
 		public void InitializeCommon ()
 		{
 			if (Platform == ApplePlatform.WatchOS && EnableCoopGC.HasValue && !EnableCoopGC.Value)
-				throw ErrorHelper.CreateError (88, "Cannot disable the Coop GC for watchOS apps. Please remove the --coop:false argument to mtouch.");
+				throw ErrorHelper.CreateError (88, "The GC must be in cooperative mode for watchOS apps. Please remove the --coop:false argument to mtouch.");
 
 			if (!EnableCoopGC.HasValue)
 				EnableCoopGC = Platform == ApplePlatform.WatchOS;
@@ -360,12 +360,12 @@ namespace Xamarin.Bundler {
 				switch (MarshalObjectiveCExceptions) {
 				case MarshalObjectiveCExceptionMode.UnwindManagedCode:
 				case MarshalObjectiveCExceptionMode.Disable:
-					throw ErrorHelper.CreateError (89, "The option '{0}' cannot take the value '{1}' when the Coop GC is enabled.", "--marshal-objectivec-exceptions", MarshalObjectiveCExceptions.ToString ().ToLowerInvariant ());
+					throw ErrorHelper.CreateError (89, "The option '{0}' cannot take the value '{1}' when cooperative mode is enabled for the GC.", "--marshal-objectivec-exceptions", MarshalObjectiveCExceptions.ToString ().ToLowerInvariant ());
 				}
 				switch (MarshalManagedExceptions) {
 				case MarshalManagedExceptionMode.UnwindNativeCode:
 				case MarshalManagedExceptionMode.Disable:
-					throw ErrorHelper.CreateError (89, "The option '{0}' cannot take the value '{1}' when the Coop GC is enabled.", "--marshal-managed-exceptions", MarshalManagedExceptions.ToString ().ToLowerInvariant ());
+					throw ErrorHelper.CreateError (89, "The option '{0}' cannot take the value '{1}' when cooperative mode is enabled for the GC.", "--marshal-managed-exceptions", MarshalManagedExceptions.ToString ().ToLowerInvariant ());
 				}
 			}
 

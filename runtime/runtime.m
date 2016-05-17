@@ -1736,7 +1736,7 @@ xamarin_process_nsexception (NSException *ns_exception)
 	switch (mode) {
 	case MarshalObjectiveCExceptionModeUnwindManagedCode:
 		if (xamarin_is_gc_coop)
-			xamarin_assertion_message ("Cannot unwind managed frames for Objective-C exceptions when using the COOP GC.");
+			xamarin_assertion_message ("Cannot unwind managed frames for Objective-C exceptions when the GC is in cooperative mode.");
 		@throw ns_exception;
 		break;
 	case MarshalObjectiveCExceptionModeThrowManagedException:
@@ -1777,7 +1777,7 @@ xamarin_process_managed_exception (MonoObject *exception)
 	switch (mode) {
 	case MarshalManagedExceptionModeUnwindNativeCode:
 		if (xamarin_is_gc_coop)
-			xamarin_assertion_message ("Cannot unwind native frames for managed exceptions when using the COOP GC.");
+			xamarin_assertion_message ("Cannot unwind native frames for managed exceptions when the GC is in cooperative mode.");
 		mono_raise_exception ((MonoException *) exception);
 		break;
 	case MarshalManagedExceptionModeThrowObjectiveCException: {
