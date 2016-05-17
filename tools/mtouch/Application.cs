@@ -220,7 +220,6 @@ namespace Xamarin.Bundler {
 
 			switch (Platform) {
 			case ApplePlatform.iOS:
-				return true;
 			case ApplePlatform.TVOS:
 			case ApplePlatform.WatchOS:
 				return false;
