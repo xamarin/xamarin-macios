@@ -132,13 +132,13 @@ namespace XamCore.AudioToolbox {
 
 		internal MusicEventUserData (IntPtr handle)
 		{
-			var buffer = new byte[sizeof(int)];
-			Marshal.Copy (handle, buffer, 0, sizeof(int));
-			int length = BitConverter.ToInt32 (buffer, 0);
+			if (handle == IntPtr.Zero)
+				throw new ArgumentNullException (nameof(handle));
 
-			var dataPtr = IntPtr.Add (handle, sizeof (int));
-			buffer = new byte[length];
-			Marshal.Copy (dataPtr, buffer, 0, length);
+			int length = Marshal.ReadInt32 (handle);
+
+			var buffer = new byte[length];
+			Marshal.Copy (handle + 4, buffer, 0, length);
 
 			len = length;
 			data = buffer;
