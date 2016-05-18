@@ -682,8 +682,11 @@ gc_register_toggleref (MonoObject *obj, id self, bool isCustomType)
 	mono_gc_toggleref_add (obj, TRUE);
 
 	// Make sure the GCHandle we have is a weak one for custom types.
-	if (isCustomType)
+	if (isCustomType) {
+		MONO_BEGIN_GC_SAFE;
 		xamarin_switch_gchandle (self, true);
+		MONO_END_GC_SAFE;
+	}
 }
 
 static MonoToggleRefStatus
