@@ -15,7 +15,7 @@ void           xamarin_start_wwan (const char *uri);
 const char *   xamarin_GetFolderPath (int folder);
 #endif
 
-#if defined (TARGET_OS_TV) && defined (__arm64__)
+#if defined (__arm64__)
 void objc_msgSend_stret (id self, SEL op, ...);
 void objc_msgSendSuper_stret (struct objc_super *super, SEL op, ...);
 #endif
