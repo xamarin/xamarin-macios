@@ -101,27 +101,38 @@ RUNTIME_$(2)_TARGETS_DIRS +=                                        \
 
 RUNTIME_$(2)_TARGETS +=                                                                                \
 	$$(foreach file,$$($(2)_LIBRARIES),$(IOS_DESTDIR)$$(XAMARIN_$(4)SIMULATOR_SDK)/usr/lib/$$(file))   \
-	$$(foreach file,$$($(2)_LIBRARIES),$(IOS_DESTDIR)$$(XAMARIN_$(5)OS_SDK)/usr/lib/$$(file))          \
 	$(foreach file,$(SHIPPED_HEADERS),$(IOS_DESTDIR)$$(XAMARIN_$(4)SIMULATOR_SDK)/usr/include/$(file)) \
+
+ifdef INCLUDE_DEVICE
+RUNTIME_$(2)_TARGETS +=                                                                                \
+	$$(foreach file,$$($(2)_LIBRARIES),$(IOS_DESTDIR)$$(XAMARIN_$(5)OS_SDK)/usr/lib/$$(file))          \
 	$(foreach file,$(SHIPPED_HEADERS),$(IOS_DESTDIR)$$(XAMARIN_$(5)OS_SDK)/usr/include/$(file))        \
+
+endif
 
 $(IOS_DESTDIR)$$(XAMARIN_$(4)SIMULATOR_SDK)/usr/lib/%.a: .libs/$(1)/%.a | $(IOS_DESTDIR)$$(XAMARIN_$(4)SIMULATOR_SDK)/usr/lib
 	$(Q) install -m 0644 $$< $$@
 
+ifdef INCLUDE_DEVICE
 $(IOS_DESTDIR)$$(XAMARIN_$(5)OS_SDK)/usr/lib/%.a: .libs/$(1)/%.a | $(IOS_DESTDIR)$$(XAMARIN_$(5)OS_SDK)/usr/lib
 	$(Q) install -m 0644 $$< $$@
+endif
 
 $(IOS_DESTDIR)$$(XAMARIN_$(4)SIMULATOR_SDK)/usr/lib/%.dylib: .libs/$(1)/%.dylib | $(IOS_DESTDIR)$$(XAMARIN_$(4)SIMULATOR_SDK)/usr/lib
 	$(Q) install -m 0644 $$< $$@
 
+ifdef INCLUDE_DEVICE
 $(IOS_DESTDIR)$$(XAMARIN_$(5)OS_SDK)/usr/lib/%.dylib: .libs/$(1)/%.dylib | $(IOS_DESTDIR)$$(XAMARIN_$(5)OS_SDK)/usr/lib
 	$(Q) install -m 0644 $$< $$@
+endif
 
 $(IOS_DESTDIR)$$(XAMARIN_$(4)SIMULATOR_SDK)/usr/include/%.h: %.h | $(IOS_DESTDIR)$$(XAMARIN_$(4)SIMULATOR_SDK)/usr/include/xamarin
 	$(Q) install -m 0644 $$< $$@
 
+ifdef INCLUDE_DEVICE
 $(IOS_DESTDIR)$$(XAMARIN_$(5)OS_SDK)/usr/include/%.h: %.h | $(IOS_DESTDIR)$$(XAMARIN_$(5)OS_SDK)/usr/include/xamarin
 	$(Q) install -m 0644 $$< $$@
+endif
 
 $$(RUNTIME_$(2)_TARGETS_DIRS):
 	$(Q) mkdir -p $$@
@@ -138,15 +149,27 @@ endef
 # 4: simulator variable name used in some places
 # 5: device variable name used in some places
 ifdef INCLUDE_IOS
+ifdef INCLUDE_DEVICE
 $(eval $(call PlatformTemplate,ios,IOS,armv7 armv7s arm64 x86 x86_64,IOS,IPHONE))
+else
+$(eval $(call PlatformTemplate,ios,IOS,                   x86 x86_64,IOS,IPHONE))
+endif
 endif
 
 ifdef INCLUDE_WATCH
+ifdef INCLUDE_DEVICE
 $(eval $(call PlatformTemplate,watchos,WATCHOS,armv7k x86,WATCH,WATCH))
+else
+$(eval $(call PlatformTemplate,watchos,WATCHOS,       x86,WATCH,WATCH))
+endif
 endif
 
 ifdef INCLUDE_TVOS
+ifdef INCLUDE_DEVICE
 $(eval $(call PlatformTemplate,tvos,TVOS,arm64 x86_64,TV,TV))
+else
+$(eval $(call PlatformTemplate,tvos,TVOS,      x86_64,TV,TV))
+endif
 endif
 
 #
