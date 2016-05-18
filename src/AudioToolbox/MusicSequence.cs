@@ -45,6 +45,10 @@ namespace XamCore.AudioToolbox {
 			this.handle = handle;
 		}
 
+		static Dictionary <IntPtr, MusicSequenceUserCallback> userCallbackHandles = new Dictionary <IntPtr, MusicSequenceUserCallback> ();
+
+		static MusicSequenceUserCallbackProxy userCallbackProxy = new MusicSequenceUserCallbackProxy (UserCallbackProxy);
+
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus NewMusicSequence (/* MusicSequence* */ out IntPtr outSequence);
 
@@ -76,6 +80,9 @@ namespace XamCore.AudioToolbox {
 		protected virtual void Dispose (bool disposing)
 		{
 			if (handle != IntPtr.Zero){
+
+				lock (userCallbackHandles)
+					userCallbackHandles.Remove (handle);
 
 				// Remove native user callback
 				MusicSequenceSetUserCallback (handle, null, IntPtr.Zero);
@@ -285,12 +292,16 @@ namespace XamCore.AudioToolbox {
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicSequenceSetUserCallback (/* MusicSequence */ IntPtr inSequence, MusicSequenceUserCallbackProxy inCallback, /* void * */ IntPtr inClientData);
 
-		MusicSequenceUserCallback userCallback;
-
 		public void SetUserCallback (MusicSequenceUserCallback callback)
 		{
-			if (MusicSequenceSetUserCallback (handle, UserCallbackProxy, IntPtr.Zero) == MusicPlayerStatus.Success)
-				userCallback = callback;
+			lock (userCallbackHandles) {
+				if (userCallbackHandles.ContainsKey (handle))
+					userCallbackHandles[handle] = callback;
+				else
+					userCallbackHandles.Add (handle, callback);
+			}
+
+			MusicSequenceSetUserCallback (handle, userCallbackProxy, IntPtr.Zero);
 		}
 
 #if !MONOMAC
@@ -298,14 +309,16 @@ namespace XamCore.AudioToolbox {
 #endif
 		static void UserCallbackProxy (IntPtr inClientData, IntPtr inSequence, IntPtr inTrack, double inEventTime, IntPtr inEventData, double inStartSliceBeat, double inEndSliceBeat)
 		{
-			var musicSequence = MusicSequence.Lookup (inSequence);
-			var callback = musicSequence.userCallback;
+			MusicSequenceUserCallback userCallback;
+			lock (userCallbackHandles)
+				userCallbackHandles.TryGetValue (inSequence, out userCallback);
 
-			if (callback != null) {
+			if (userCallback != null) {
 				var userEventData = new MusicEventUserData (inEventData);
+				var musicSequence = MusicSequence.Lookup (inSequence);
 				var musicTrack = new MusicTrack (musicSequence, inTrack, false);
 
-				callback (musicTrack, inEventTime, userEventData, inStartSliceBeat, inEndSliceBeat);
+				userCallback (musicTrack, inEventTime, userEventData, inStartSliceBeat, inEndSliceBeat);
 			}
 		}
 		
