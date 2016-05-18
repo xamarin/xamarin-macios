@@ -655,7 +655,7 @@ $(PREFIX)/lib/mono/Xamarin.TVOS/%.mdb: $(BUILD_DESTDIR)/tvos/bcl/%.mdb | $(PREFI
 $(PREFIX)/bin/btv-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
 	$(Q) install -s -m 0755 $< $@
 
-$(PREFIX)/bin/bwatch-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
+$(PREFIX)/bin/bwatch-mono: $(BUILD_DESTDIR)/watchbcl/bin/mono | $(PREFIX)/bin
 	$(Q) install -s -m 0755 $< $@
 
 # copy to temporary directory before signing / mdb-rebasing,
