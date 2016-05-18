@@ -101,7 +101,7 @@ xamarin_GetFolderPath (int folder)
 }
 #endif /* defined (MONOTOUCH) */
 
-#if TARGET_OS_TV && defined (__arm64__)
+#if defined (__arm64__)
 
 // there are no objc_msgSend[Super]_stret functions on ARM64 but the managed
 // code might have (e.g. linker is off) references to the symbol, which makes
