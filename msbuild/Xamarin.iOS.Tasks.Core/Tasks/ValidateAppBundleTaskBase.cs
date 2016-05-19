@@ -168,6 +168,7 @@ namespace Xamarin.iOS.Tasks
 							case "com.apple.Safari.content-blocker": // iOS
 							case "com.apple.Safari.sharedlinks-service": // iOS
 							case "com.apple.spotlight.index": // iOS
+							case "com.apple.AudioUnit-UI": // iOS
 							case "com.apple.tv-services": // tvOS
 								break;
 							case "com.apple.watchkit": // iOS8.2
