@@ -22,8 +22,6 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
          e.g. by the project itself. -->
 	<PropertyGroup>
 		<_XamarinAppExtensionCommonPropsHasBeenImported>true</_XamarinAppExtensionCommonPropsHasBeenImported>
-		<IsAppExtension>True</IsAppExtension>
-		<IsAppExtension Condition="'$(IsAppExtension)' == ''">True</IsAppExtension>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props"

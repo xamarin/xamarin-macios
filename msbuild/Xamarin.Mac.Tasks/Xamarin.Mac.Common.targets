@@ -141,6 +141,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			_CompileAppManifest;
 			_CompileToNative;
 			_CreatePkgInfo;
+			_CopyAppExtensionsToBundle;
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
 
@@ -609,7 +610,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		Condition="'$(UseXamMacFullFramework)' == 'True'"/>
 
 	<Target Name="_SeparateAppExtensionReferences" BeforeTargets="AssignProjectConfiguration" Condition="'$(IsAppExtension)' != 'true'">
-		<CreateItem Include="@(ProjectReference)" PreserveExistingMetadata="true" Condition="'%(ProjectReference.IsAppExtension)' == 'True'">
+		<CreateItem Include="@(ProjectReference)" PreserveExistingMetadata="true" Condition="'%(Identity)' != '' And '%(ProjectReference.IsAppExtension)' == 'true'">
 			<Output ItemName="_AppExtensionReference" TaskParameter="Include" />
 		</CreateItem>
 
@@ -621,6 +622,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_AssignAppExtensionConfiguration" Condition="'@(_AppExtensionReference)' != ''">
+		<Warning Text="_AssignAppExtensionConfiguration Reference: @(_AppExtensionReference)" />
 		<!-- assign configs if building a solution file -->
 		<AssignProjectConfiguration
 			ProjectReferences = "@(_AppExtensionReference)"
@@ -658,7 +660,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		     been built, so just get the target paths -->
 		<MSBuild
 			Projects="@(_AppExtensionReferenceWithConfigurationExistent)"
-			Targets="GetTargetPath"
+			Targets="GetBundleTargetPath"
 			Properties="%(_AppExtensionReferenceWithConfigurationExistent.SetConfiguration); %(_AppExtensionReferenceWithConfigurationExistent.SetPlatform)"
 			Condition="'@(_AppExtensionReferenceWithConfigurationExistent)' != '' and ('$(BuildingSolutionFile)' == 'true' or '$(BuildingInsideVisualStudio)' == 'true')">
 
@@ -674,7 +676,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			<Output TaskParameter="TargetOutputs" ItemName="_ResolvedAppExtensionReferences" Condition="'%(_AppExtensionReferenceWithConfigurationExistent.ReferenceOutputAssembly)' != 'false'"/>
 		</MSBuild>
 
-		<Warning Text="Referenced iOS App Extension Project %(_AppExtensionReferenceWithConfigurationNonExistent.Identity) not found, ignoring."
+		<Warning Text="Referenced Mac App Extension Project %(_AppExtensionReferenceWithConfigurationNonExistent.Identity) not found, ignoring."
 			 Condition="'@(_AppExtensionReferenceWithConfigurationNonExistent)' != ''"/>
 	</Target>
 </Project>
