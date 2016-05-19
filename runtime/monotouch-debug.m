@@ -381,10 +381,14 @@ void sdb_close2 (void)
 gboolean send_uninterrupted (int fd, const void *buf, int len)
 {
 	int res;
+
+	MONO_BEGIN_GC_SAFE;
 	
 	do {
 		res = send (fd, buf, len, 0);
 	} while (res == -1 && errno == EINTR);
+
+	MONO_END_GC_SAFE;
 
 	return res == len;
 }
@@ -395,11 +399,15 @@ int recv_uninterrupted (int fd, void *buf, int len)
 	int total = 0;
 	int flags = 0;
 
+	MONO_BEGIN_GC_SAFE;
+
 	do { 
 		res = recv (fd, (char *) buf + total, len - total, flags); 
 		if (res > 0)
 			total += res;
 	} while ((res > 0 && total < len) || (res == -1 && errno == EINTR));
+
+	MONO_END_GC_SAFE;
 
 	return total;
 }
