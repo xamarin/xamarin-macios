@@ -622,7 +622,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_AssignAppExtensionConfiguration" Condition="'@(_AppExtensionReference)' != ''">
-		<Warning Text="_AssignAppExtensionConfiguration Reference: @(_AppExtensionReference)" />
 		<!-- assign configs if building a solution file -->
 		<AssignProjectConfiguration
 			ProjectReferences = "@(_AppExtensionReference)"
