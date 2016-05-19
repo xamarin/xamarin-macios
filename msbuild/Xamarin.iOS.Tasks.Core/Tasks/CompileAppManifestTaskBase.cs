@@ -148,6 +148,7 @@ namespace Xamarin.iOS.Tasks
 			if (!plist.ContainsKey (ManifestKeys.CFBundleSupportedPlatforms))
 				plist[ManifestKeys.CFBundleSupportedPlatforms] = new PArray { SdkPlatform };
 			plist.SetIfNotPresent (ManifestKeys.CFBundleVersion, "1.0");
+			plist.SetIfNotPresent (ManifestKeys.CFBundleShortVersionString, plist.GetCFBundleVersion ());
 
 			if (!SdkIsSimulator) {
 				SetValue (plist, "DTCompiler", sdkSettings.DTCompiler);
