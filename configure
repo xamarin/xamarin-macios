@@ -14,6 +14,9 @@ Usage: configure [options]
                             The main reasons for disabling either part is to have faster
                             builds and disable the non-relevant tests.
 
+    --disable-ios-device    Disables all device-related parts from the iOS build.
+                            This can be used to speed up the build.
+
     --disable-strip:        If executables should be stripped or not.
                             Disable to make it easier to debug executables using lldb.
 
@@ -41,6 +44,10 @@ while test x$1 != x; do
 		echo "Mac Build disabled (partially)"
 		shift
 		;;
+    --disable-ios-device)
+        echo "INCLUDE_DEVICE=" >> $CONFIGURED_FILE
+        shift
+        ;;
 	--disable-ios)
 		echo "INCLUDE_IOS=" >> $CONFIGURED_FILE
 		echo "INCLUDE_WATCH=" >> $CONFIGURED_FILE

@@ -1,4 +1,4 @@
 #!/bin/bash -e
 
-./configure
+./configure --disable-ios-device
 time make world
