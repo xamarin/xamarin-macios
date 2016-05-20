@@ -115,9 +115,9 @@ monotouch_start_debugging ()
 			if (!strncmp (trace, "--trace=", 8))
 				trace += 8;
 
-			MONO_BEGIN_GC_UNSAFE;
+			MONO_ENTER_GC_UNSAFE;
 			mono_jit_set_trace_options (trace);
-			MONO_END_GC_UNSAFE;
+			MONO_EXIT_GC_UNSAFE;
 		}
 	}
 }
@@ -358,9 +358,9 @@ void sdb_connect (const char *address)
 {
 	gboolean shaked;
 
-	MONO_BEGIN_GC_UNSAFE;
+	MONO_ENTER_GC_UNSAFE;
 	shaked = mono_debugger_agent_transport_handshake ();
-	MONO_END_GC_UNSAFE;
+	MONO_EXIT_GC_UNSAFE;
 	
 	if (!shaked)
 		NSLog (@PRODUCT ": Handshake error with IDE.");
@@ -382,13 +382,13 @@ gboolean send_uninterrupted (int fd, const void *buf, int len)
 {
 	int res;
 
-	MONO_BEGIN_GC_SAFE;
+	MONO_ENTER_GC_SAFE;
 	
 	do {
 		res = send (fd, buf, len, 0);
 	} while (res == -1 && errno == EINTR);
 
-	MONO_END_GC_SAFE;
+	MONO_EXIT_GC_SAFE;
 
 	return res == len;
 }
@@ -399,7 +399,7 @@ int recv_uninterrupted (int fd, void *buf, int len)
 	int total = 0;
 	int flags = 0;
 
-	MONO_BEGIN_GC_SAFE;
+	MONO_ENTER_GC_SAFE;
 
 	do { 
 		res = recv (fd, (char *) buf + total, len - total, flags); 
@@ -407,7 +407,7 @@ int recv_uninterrupted (int fd, void *buf, int len)
 			total += res;
 	} while ((res > 0 && total < len) || (res == -1 && errno == EINTR));
 
-	MONO_END_GC_SAFE;
+	MONO_EXIT_GC_SAFE;
 
 	return total;
 }
@@ -776,11 +776,11 @@ monotouch_load_debugger ()
 		transport.send = sdb_send;
 		transport.recv = sdb_recv;
 
-		MONO_BEGIN_GC_UNSAFE;
+		MONO_ENTER_GC_UNSAFE;
 		mono_debugger_agent_register_transport (&transport);
 	
 		mono_debugger_agent_parse_options ("transport=custom_transport,address=dummy,embedding=1");
-		MONO_END_GC_UNSAFE;
+		MONO_EXIT_GC_UNSAFE;
 
 		LOG (PRODUCT ": Debugger loaded with custom transport (fd: %i)\n", sdb_fd);
 	} else {
@@ -797,9 +797,9 @@ monotouch_load_profiler ()
 	// TODO: make this generic enough for other profilers to work too
 	// Main thread only
 	if (profiler_description != NULL) {
-		MONO_BEGIN_GC_UNSAFE;
+		MONO_ENTER_GC_UNSAFE;
 		mono_profiler_load (profiler_description);
-		MONO_END_GC_UNSAFE;
+		MONO_EXIT_GC_UNSAFE;
 
 		LOG (PRODUCT ": Profiler loaded: %s\n", profiler_description);
 		free (profiler_description);

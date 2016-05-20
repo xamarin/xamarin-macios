@@ -462,9 +462,9 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 
 	int rv = 0;
 	if (is_extension) {
-		MONO_BEGIN_GC_SAFE;
+		MONO_ENTER_GC_SAFE;
 		rv = xamarin_extension_main (argc, argv);
-		MONO_END_GC_SAFE;
+		MONO_EXIT_GC_SAFE;
 	} else {
 		mono_jit_exec (mono_domain_get (), assembly, managed_argc, managed_argv);
 	}

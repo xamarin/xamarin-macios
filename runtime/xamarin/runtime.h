@@ -212,10 +212,10 @@ public:
 // Coop GC helper API
 #if !TARGET_OS_WATCH
 
-#define MONO_BEGIN_GC_UNSAFE
-#define MONO_END_GC_UNSAFE
-#define MONO_BEGIN_GC_SAFE
-#define MONO_END_GC_SAFE
+#define MONO_ENTER_GC_UNSAFE
+#define MONO_EXIT_GC_UNSAFE
+#define MONO_ENTER_GC_SAFE
+#define MONO_EXIT_GC_SAFE
 #define MONO_ASSERT_GC_SAFE
 #define MONO_ASSERT_GC_SAFE_OR_DETACHED
 #define MONO_ASSERT_GC_UNSAFE
@@ -223,21 +223,21 @@ public:
 
 #else
 
-#define MONO_BEGIN_GC_UNSAFE	\
+#define MONO_ENTER_GC_UNSAFE	\
 	do {	\
 		gpointer __dummy;	\
 		gpointer __gc_unsafe_cookie = mono_threads_enter_gc_unsafe_region (&__dummy)	\
 
-#define MONO_END_GC_UNSAFE	\
+#define MONO_EXIT_GC_UNSAFE	\
 		mono_threads_exit_gc_unsafe_region	(__gc_unsafe_cookie, &__dummy);	\
 	} while (0)
 
-#define MONO_BEGIN_GC_SAFE	\
+#define MONO_ENTER_GC_SAFE	\
 	do {	\
 		gpointer __dummy;	\
 		gpointer __gc_safe_cookie = mono_threads_enter_gc_safe_region (&__dummy)	\
 
-#define MONO_END_GC_SAFE	\
+#define MONO_EXIT_GC_SAFE	\
 		mono_threads_exit_gc_safe_region (__gc_safe_cookie, &__dummy);	\
 	} while (0)
 

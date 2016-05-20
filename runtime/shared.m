@@ -181,7 +181,7 @@ xamarin_thread_start (void *user_data)
 	if (mono_thread_is_foreign (mono_thread_current ()))
 		return;
 
-	MONO_BEGIN_GC_SAFE;
+	MONO_ENTER_GC_SAFE;
 
 	pool = [[NSAutoreleasePool alloc] init];
 
@@ -191,7 +191,7 @@ xamarin_thread_start (void *user_data)
 
 	pthread_mutex_unlock (&thread_hash_lock);
 
-	MONO_END_GC_SAFE;
+	MONO_EXIT_GC_SAFE;
 }
 	
 static void
@@ -200,7 +200,7 @@ xamarin_thread_finish (void *user_data)
 	// COOP: no managed memory access: any mode. Switching to safe mode since we're locking a mutex.
 	NSAutoreleasePool *pool;
 
-	MONO_BEGIN_GC_SAFE;
+	MONO_ENTER_GC_SAFE;
 
 	/* Don't drain the pool while holding the thread hash lock. */
 	pthread_mutex_lock (&thread_hash_lock);
@@ -214,7 +214,7 @@ xamarin_thread_finish (void *user_data)
 	if (pool)
 		[pool release];
 		
-	MONO_END_GC_SAFE;
+	MONO_EXIT_GC_SAFE;
 }
 
 static void

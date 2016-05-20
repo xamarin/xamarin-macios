@@ -336,9 +336,9 @@ void xamarin_framework_peer_lock ()
 	// COOP: CHECK
 	MONO_ASSERT_GC_UNSAFE;
 	
-	MONO_BEGIN_GC_SAFE;
+	MONO_ENTER_GC_SAFE;
 	pthread_mutex_lock (&framework_peer_release_lock);
-	MONO_END_GC_SAFE;
+	MONO_EXIT_GC_SAFE;
 }
 
 void xamarin_framework_peer_unlock ()
@@ -400,10 +400,10 @@ get_raw_gchandle (id self)
 	MONO_ASSERT_GC_UNSAFE;
 	
 	int rv;
-	MONO_BEGIN_GC_SAFE;
+	MONO_ENTER_GC_SAFE;
 	id<XamarinExtendedObject> xself = self;
 	rv = (int) [xself xamarinGetGCHandle];
-	MONO_END_GC_SAFE;
+	MONO_EXIT_GC_SAFE;
 	
 	return rv;
 }
@@ -414,10 +414,10 @@ set_raw_gchandle (id self, int gc_handle)
 	// COOP: we call a selector, and that must only be done in SAFE mode.
 	MONO_ASSERT_GC_UNSAFE;
 	
-	MONO_BEGIN_GC_SAFE;
+	MONO_ENTER_GC_SAFE;
 	id<XamarinExtendedObject> xself = self;
 	[xself xamarinSetGCHandle: gc_handle];
-	MONO_END_GC_SAFE;
+	MONO_EXIT_GC_SAFE;
 }
 
 static inline int
@@ -683,9 +683,9 @@ gc_register_toggleref (MonoObject *obj, id self, bool isCustomType)
 
 	// Make sure the GCHandle we have is a weak one for custom types.
 	if (isCustomType) {
-		MONO_BEGIN_GC_SAFE;
+		MONO_ENTER_GC_SAFE;
 		xamarin_switch_gchandle (self, true);
-		MONO_END_GC_SAFE;
+		MONO_EXIT_GC_SAFE;
 	}
 }
 
@@ -1041,9 +1041,9 @@ pump_gc (void *context)
 
 	while (xamarin_gc_pump) {
 		mono_gc_collect (mono_gc_max_generation ());
-		MONO_BEGIN_GC_SAFE;
+		MONO_ENTER_GC_SAFE;
 		usleep (1000000);
-		MONO_END_GC_SAFE;
+		MONO_EXIT_GC_SAFE;
 	}
 	return NULL;
 }
@@ -1117,7 +1117,7 @@ xamarin_initialize ()
 
 	xamarin_insert_dllmap ();
 
-	MONO_BEGIN_GC_UNSAFE;
+	MONO_ENTER_GC_UNSAFE;
 
 	mono_trace_set_log_handler (log_callback, NULL);
 	mono_trace_set_print_handler (print_callback);
@@ -1189,7 +1189,7 @@ xamarin_initialize ()
 
 	gc_enable_new_refcount ();
 
-	MONO_END_GC_UNSAFE;
+	MONO_EXIT_GC_UNSAFE;
 }
 
 static char *x_bundle_path = NULL;
@@ -1681,17 +1681,17 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 	if (user_type) {
 		/* clear MANAGED_REF_BIT */
 		set_raw_gchandle (self, get_raw_gchandle (self) & ~MANAGED_REF_BIT);
-		MONO_BEGIN_GC_SAFE;
+		MONO_ENTER_GC_SAFE;
 		[self release];
-		MONO_END_GC_SAFE;
+		MONO_EXIT_GC_SAFE;
 	} else {
 		// This lock is needed so that we can safely call retainCount in the toggleref callback.
 		xamarin_framework_peer_lock ();
 		/* If we're a wrapper type, we need to unregister here, since we won't enter the release trampoline */
 		xamarin_unregister_nsobject (self, managed_obj);
-		MONO_BEGIN_GC_SAFE;
+		MONO_ENTER_GC_SAFE;
 		[self release];
-		MONO_END_GC_SAFE;
+		MONO_EXIT_GC_SAFE;
 		xamarin_framework_peer_unlock ();
 	}
 }
@@ -1725,9 +1725,9 @@ xamarin_create_managed_ref (id self, gpointer managed_object, bool retain)
 	}
 
 	if (retain) {
-		MONO_BEGIN_GC_SAFE;
+		MONO_ENTER_GC_SAFE;
 		[self retain];
-		MONO_END_GC_SAFE;
+		MONO_EXIT_GC_SAFE;
 	}
 	mt_dummy_use (managed_object);
 }
@@ -1777,9 +1777,9 @@ get_method_block_wrapper_creator (MonoMethod *method, int par)
 	mp.par = par;
 
 	// NSLog (@"Looking up method and par (%x and %d)", (int) method, par);
-	MONO_BEGIN_GC_SAFE;
+	MONO_ENTER_GC_SAFE;
 	pthread_mutex_lock (&wrapper_hash_lock);
-	MONO_END_GC_SAFE;
+	MONO_EXIT_GC_SAFE;
 	
 	if (block_wrapper_queue == NULL)
 		block_wrapper_queue = mono_gc_reference_queue_new ((void(*)(void*))_Block_release);
@@ -1801,9 +1801,9 @@ get_method_block_wrapper_creator (MonoMethod *method, int par)
 	nmp = (MethodAndPar *) malloc (sizeof (MethodAndPar));
 	*nmp = mp;
 
-	MONO_BEGIN_GC_SAFE;
+	MONO_ENTER_GC_SAFE;
 	pthread_mutex_lock (&wrapper_hash_lock);
-	MONO_END_GC_SAFE;
+	MONO_EXIT_GC_SAFE;
 	mono_g_hash_table_insert (xamarin_wrapper_hash, nmp, res);
 	pthread_mutex_unlock (&wrapper_hash_lock);
 	return res;
@@ -1840,9 +1840,9 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, int par, void *nat
 
 	delegate = delegates.create_block_proxy (get_method_block_wrapper_creator (method, par), nativeBlock);
 
-	MONO_BEGIN_GC_SAFE;
+	MONO_ENTER_GC_SAFE;
 	pthread_mutex_lock (&wrapper_hash_lock);
-	MONO_END_GC_SAFE;
+	MONO_EXIT_GC_SAFE;
 	mono_gc_reference_queue_add (block_wrapper_queue, delegate, nativeBlock);
 	pthread_mutex_unlock (&wrapper_hash_lock);
 
@@ -1938,11 +1938,11 @@ xamarin_process_nsexception (NSException *ns_exception)
 			mono_set_pending_exception ((MonoException *) exc);
 		} else {
 			int handle = xamarin_create_ns_exception (ns_exception);
-			MONO_BEGIN_GC_UNSAFE;
+			MONO_ENTER_GC_UNSAFE;
 			MonoObject *exc = mono_gchandle_get_target (handle);
 			mono_set_pending_exception ((MonoException *) exc);
 			mono_gchandle_free (handle);
-			MONO_END_GC_UNSAFE;
+			MONO_EXIT_GC_UNSAFE;
 		}
 		break;
 	case MarshalObjectiveCExceptionModeAbort:
