@@ -1,5 +1,5 @@
 TOP=.
-SUBDIRS=builds runtime fsharp src tools msbuild
+SUBDIRS=builds runtime src tools msbuild
 include $(TOP)/Make.config
 include $(TOP)/mk/versions.mk
 
