@@ -294,12 +294,8 @@ namespace XamCore.AudioToolbox {
 
 		public void SetUserCallback (MusicSequenceUserCallback callback)
 		{
-			lock (userCallbackHandles) {
-				if (userCallbackHandles.ContainsKey (handle))
-					userCallbackHandles[handle] = callback;
-				else
-					userCallbackHandles.Add (handle, callback);
-			}
+			lock (userCallbackHandles)
+				userCallbackHandles [handle] = callback;
 
 			MusicSequenceSetUserCallback (handle, userCallbackProxy, IntPtr.Zero);
 		}
