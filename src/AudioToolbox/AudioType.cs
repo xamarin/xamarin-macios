@@ -690,7 +690,19 @@ namespace XamCore.AudioToolbox {
 		}
 	}
 #endif // !COREBUILD
-	
+
+	[StructLayout (LayoutKind.Sequential)]
+	public struct AudioChannelLayoutNative
+	{
+		public uint Tag;
+
+		public uint Bitmap;
+
+		public uint NumberChannelDescriptions;
+
+		public AudioChannelDescription[] Descriptions;
+	}
+
 	[DebuggerDisplay ("{Name}")]
 	public class AudioChannelLayout
 	{
@@ -709,6 +721,17 @@ namespace XamCore.AudioToolbox {
 			for (int i = 0; i < Channels.Length; i++){
 				Channels [i] = *(AudioChannelDescription *) (unchecked (((byte *) h) + p));
 				p += size;
+			}
+		}
+
+		public AudioChannelLayoutNative NativeStruct {
+			get {
+				return new AudioChannelLayoutNative {
+					Tag = (uint)AudioTag,
+					Bitmap = (uint)ChannelUsage,
+					NumberChannelDescriptions = Channels != null ? (uint)Channels.Length : 0,
+					Descriptions = Channels
+				};
 			}
 		}
 
