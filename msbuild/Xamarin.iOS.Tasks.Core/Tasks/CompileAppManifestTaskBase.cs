@@ -177,13 +177,6 @@ namespace Xamarin.iOS.Tasks
 
 			SetDeviceFamily (plist);
 
-			if (IsWatchExtension) {
-				PObject capabilities;
-
-				if (!plist.TryGetValue (ManifestKeys.UIRequiredDeviceCapabilities, out capabilities))
-					plist[ManifestKeys.UIRequiredDeviceCapabilities] = capabilities = new PArray ();
-			}
-
 			plist.SetIfNotPresent (ManifestKeys.MinimumOSVersion, minimumOSVersion.ToString ());
 
 			// Remove any Xamarin Studio specific keys
