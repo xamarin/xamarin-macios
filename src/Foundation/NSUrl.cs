@@ -142,6 +142,21 @@ namespace XamCore.Foundation {
 			return SetResourceValue (value, nsUrlResourceKey, out error);
 		}
 
+		public static bool operator == (NSUrl x, NSUrl y)
+		{
+			if ((object) x == (object) y) // If both are null, or both are same instance, return true.
+				return true;
+
+			if (((object) x == null) || ((object) y == null)) // If one is null, but not both, return false.
+				return false;
+
+			return x.Equals (y);
+		}
+
+		public static bool operator != (NSUrl x, NSUrl y)
+		{
+			return !(x == y);
+		}
 	}
 
 #if !XAMCORE_3_0
