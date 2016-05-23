@@ -3397,6 +3397,14 @@ namespace XamCore.Registrar {
 			FlushTrace ();
 		}
 
+		static string GetParamName (MethodDefinition method, int i)
+		{
+			var p = method.Parameters [i];
+			if (p.Name != null)
+				return p.Name;
+			return "__p__" + i.ToString ();
+		}
+
 		public void GeneratePInvokeWrapper (PInvokeWrapperGenerator state, MethodDefinition method)
 		{
 			var signatures = state.signatures;
@@ -3456,7 +3464,7 @@ namespace XamCore.Registrar {
 						sb.Write (", ");
 					sb.Write (ToObjCParameterType (method.Parameters[i].ParameterType, descriptiveMethodName, exceptions, method));
 					sb.Write (" ");
-					sb.Write (method.Parameters[i].Name);
+					sb.Write (GetParamName (method, i));
 				}
 				sb.WriteLine (");");
 
@@ -3468,7 +3476,7 @@ namespace XamCore.Registrar {
 						sb.Write (", ");
 					sb.Write (ToObjCParameterType (method.Parameters[i].ParameterType, descriptiveMethodName, exceptions, method));
 					sb.Write (" ");
-					sb.Write (method.Parameters [i].Name);
+					sb.Write (GetParamName (method, i));
 				}
 				sb.WriteLine (")");
 				sb.WriteLine ("{");
@@ -3479,7 +3487,7 @@ namespace XamCore.Registrar {
 				for (int i = first_parameter; i < method.Parameters.Count; i++) {
 					if (i > first_parameter)
 						sb.Write (", ");
-					sb.Write (method.Parameters [i].Name);
+					sb.Write (GetParamName (method, i));
 				}
 				sb.WriteLine (");");
 				sb.WriteLine ("} @catch (NSException *exc) {");
