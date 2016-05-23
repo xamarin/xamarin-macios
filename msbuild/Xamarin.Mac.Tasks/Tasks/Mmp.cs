@@ -57,6 +57,7 @@ namespace Xamarin.Mac.Tasks
 
 		public string ApplicationName { get; set; }
 		public string Architecture { get; set; }
+		public bool ArchiveSymbols { get; set; }
 		public string LinkMode { get; set; }
 		public bool Debug { get; set; }
 		public bool Profiling { get; set; }
@@ -116,6 +117,8 @@ namespace Xamarin.Mac.Tasks
 			else {
 				args.Add ("/arch:i386");
 			}
+
+			args.Add ("/msym:" + (ArchiveSymbols ? "yes" : "no"));
 
 			args.Add (string.Format ("--http-message-handler={0}", HttpClientHandler));
 
@@ -193,6 +196,7 @@ namespace Xamarin.Mac.Tasks
 			Log.LogTaskProperty ("ApplicationAssembly", ApplicationAssembly);
 			Log.LogTaskProperty ("ApplicationName", ApplicationName);
 			Log.LogTaskProperty ("Architecture", Architecture);
+			Log.LogTaskProperty ("ArchiveSymbols", ArchiveSymbols);
 			Log.LogTaskProperty ("Debug", Debug);
 			Log.LogTaskProperty ("ExplicitReferences", ExplicitReferences);
 			Log.LogTaskProperty ("ExtraArguments", ExtraArguments);

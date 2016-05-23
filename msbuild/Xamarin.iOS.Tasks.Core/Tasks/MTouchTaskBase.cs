@@ -67,6 +67,8 @@ namespace Xamarin.iOS.Tasks
 
 		public string Architectures { get; set; }
 
+		public bool ArchiveSymbols { get; set; }
+
 		[Required]
 		public string CompiledEntitlements { get; set; }
 
@@ -492,6 +494,8 @@ namespace Xamarin.iOS.Tasks
 			// don't have mtouch generate the dsyms...
 			args.Add ("--dsym=no");
 
+			args.Add ("--msym=" + (ArchiveSymbols ? "yes" : "no"));
+
 			var gcc = new GccOptions ();
 
 			if (!string.IsNullOrEmpty (ExtraArgs)) {
@@ -607,6 +611,7 @@ namespace Xamarin.iOS.Tasks
 			Log.LogTaskProperty ("AppExtensionReferences", AppExtensionReferences);
 			Log.LogTaskProperty ("AppManifest", AppManifest);
 			Log.LogTaskProperty ("Architectures", Architectures);
+			Log.LogTaskProperty ("ArchiveSymbols", ArchiveSymbols);
 			Log.LogTaskProperty ("BitcodeEnabled", EnableBitcode);
 			Log.LogTaskProperty ("CompiledEntitlements", CompiledEntitlements);
 			Log.LogTaskProperty ("Debug", Debug);

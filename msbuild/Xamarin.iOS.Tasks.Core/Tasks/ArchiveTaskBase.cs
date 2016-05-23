@@ -135,6 +135,10 @@ namespace Xamarin.iOS.Tasks
 				var appDestDir = Path.Combine (productsDir, "Applications", Path.GetFileName (AppBundleDir.ItemSpec));
 				Ditto (AppBundleDir.ItemSpec, appDestDir);
 
+				// Archive the mSYMs...
+				var msymsDestDir = Path.Combine (archiveDir, "mSYMs", Path.GetFileName (MSYMDir));
+				Ditto (MSYMDir, msymsDestDir);
+
 				// Archive the dSYMs...
 				var dsymsDestDir = Path.Combine (archiveDir, "dSYMs", Path.GetFileName (DSYMDir));
 				Ditto (DSYMDir, dsymsDestDir);

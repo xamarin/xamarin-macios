@@ -36,6 +36,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<PropertyGroup>
 		<IPhoneResourcePrefix Condition="'$(IPhoneResourcePrefix)' == ''">Resources</IPhoneResourcePrefix>
 
+		<MonoSymbolArchive Condition="'$(MonoSymbolArchive)' == ''">True</MonoSymbolArchive>
+
 		<MtouchDebug Condition="'$(MtouchDebug)' == ''">False</MtouchDebug>
 		<MtouchEnableGenericValueTypeSharing Condition="'$(MtouchEnableGenericValueTypeSharing)' == ''">True</MtouchEnableGenericValueTypeSharing>
 		<MtouchFastDev Condition="'$(MtouchFastDev)' == ''">False</MtouchFastDev>
