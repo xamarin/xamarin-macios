@@ -11381,6 +11381,16 @@ namespace XamCore.Foundation
 		[Export ("beginRequestWithExtensionContext:")]
 		void BeginRequestWithExtensionContext (NSExtensionContext context);
 	}
+#else
+	[iOS (8,0)][Mac (10,10, onlyOn64:true)] // Not defined in 32-bit
+	[Protocol, Model]
+	[BaseType (typeof (NSObject))]
+	public interface NSExtensionRequestHandling {
+		[Abstract]
+		// @required - (void)beginRequestWithExtensionContext:(NSExtensionContext *)context;
+		[Export ("beginRequestWithExtensionContext:")]
+		void BeginRequestWithExtensionContext (NSExtensionContext context);
+	}
 #endif
 
 	[Protocol]

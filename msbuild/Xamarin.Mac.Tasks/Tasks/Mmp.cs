@@ -165,9 +165,8 @@ namespace Xamarin.Mac.Tasks
 					args.AddQuoted ("/assembly:" + Path.GetFullPath (asm));
 			}
 
-			if (!string.IsNullOrEmpty(ApplicationAssembly))
-			{
-				args.AddQuoted(Path.GetFullPath(ApplicationAssembly + (IsAppExtension ? ".dll" : ".exe")));
+			if (!string.IsNullOrEmpty (ApplicationAssembly)) {
+				args.AddQuoted(Path.GetFullPath (ApplicationAssembly + (IsAppExtension ? ".dll" : ".exe")));
 			}
 
 			if (!string.IsNullOrWhiteSpace (ExtraArguments))

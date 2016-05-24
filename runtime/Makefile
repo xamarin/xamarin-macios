@@ -360,9 +360,8 @@ $(eval $(call ObjTemplate,x86_64,DEBUG64,-debug,-DDEBUG))
 $(foreach arch,$(MAC_ARCHITECTURES),.libs/mac/extension-main.$(arch).o): EXTRA_DEFINES=-DEXTENSION
 
 .libs/mac/extension-main.%.o:
-	echo .libs/mac/extension-main.%.o:
-	rm -f $@
-	clang -c -DEXTENSION extension-main.m -arch $* -o $@
+	$(Q) rm -f $@
+	$(call Q_2,CC,  [mac]) $(MAC_CLANG) -c -DEXTENSION extension-main.m -arch $* -o $@
 
 .libs/mac/libextension.%.a: .libs/mac/extension-main.%.o
 	$(Q) rm -f $@

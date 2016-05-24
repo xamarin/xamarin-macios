@@ -39,9 +39,6 @@ namespace Xamarin.Mac.Tasks
 				return false;
 			}
 
-			if (AssemblyName.IndexOf ('.') != AssemblyName.LastIndexOf ('.'))
-				LogAppManifestError ("The assembly name ({0}) cannot contain more than one dot.", AssemblyName);
-
 			plist[ManifestKeys.CFBundleExecutable] = new PString (AssemblyName);
 
 			plist.SetIfNotPresent (ManifestKeys.CFBundleIdentifier, BundleIdentifier);

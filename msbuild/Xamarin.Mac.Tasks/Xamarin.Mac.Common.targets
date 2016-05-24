@@ -55,20 +55,20 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<XamarinMacFrameworkRoot>/Library/Frameworks/Xamarin.Mac.framework/Versions/Current</XamarinMacFrameworkRoot>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(UseXamMacFullFramework)' != 'True'">
+	<PropertyGroup Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(UseXamMacFullFramework)' != 'true'">
 		<AssemblySearchPaths>$(XamarinMacFrameworkRoot)/lib/reference/full;$(XamarinMacFrameworkRoot)/lib/mono;$(AssemblySearchPaths)</AssemblySearchPaths>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(UseXamMacFullFramework)' == 'True'">
+	<PropertyGroup Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(UseXamMacFullFramework)' == 'true'">
 		<AssemblySearchPaths>$(XamarinMacFrameworkRoot)/lib/mono/4.5;$(AssemblySearchPaths)</AssemblySearchPaths>
 	</PropertyGroup>
 
 	<PropertyGroup>
 		<_CanOutputAppBundle>False</_CanOutputAppBundle>
-		<_CanOutputAppBundle Condition="'$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true'">True</_CanOutputAppBundle>
+		<_CanOutputAppBundle Condition="'$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true'">true</_CanOutputAppBundle>
 
 		<_CanArchive>False</_CanArchive>
-		<_CanArchive Condition="'$(OutputType)' == 'Exe'">True</_CanArchive>
+		<_CanArchive Condition="'$(OutputType)' == 'Exe'">true</_CanArchive>
 
 		<_PreparedResourceRules></_PreparedResourceRules>
 		<_AppBundleName>$(AssemblyName)</_AppBundleName>
@@ -607,7 +607,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	</Target>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.XM45.targets"
-		Condition="'$(UseXamMacFullFramework)' == 'True'"/>
+		Condition="'$(UseXamMacFullFramework)' == 'true'"/>
 
 	<Target Name="_SeparateAppExtensionReferences" BeforeTargets="AssignProjectConfiguration" Condition="'$(IsAppExtension)' != 'true'">
 		<CreateItem Include="@(ProjectReference)" PreserveExistingMetadata="true" Condition="'%(Identity)' != '' And '%(ProjectReference.IsAppExtension)' == 'true'">

@@ -98,7 +98,7 @@ namespace Xamarin.MacDev.Tasks
 			Log.LogTaskProperty ("ResourceRules", ResourceRules);
 			Log.LogTaskProperty ("SigningKey", SigningKey);
 			Log.LogTaskProperty ("ExtraArgs", ExtraArgs);
-			Log.LogTaskProperty("IsAppExtension", IsAppExtension);
+			Log.LogTaskProperty ("IsAppExtension", IsAppExtension);
 
 			EnvironmentVariables = new string[] {
 				"CODESIGN_ALLOCATE=" + CodesignAllocate

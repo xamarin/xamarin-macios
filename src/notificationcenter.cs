@@ -72,7 +72,6 @@ namespace XamCore.NotificationCenter {
 	interface NCWidgetListViewController
 	{
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
 		NCWidgetListViewDelegate Delegate { get; set; }
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
@@ -100,28 +99,30 @@ namespace XamCore.NotificationCenter {
 		nuint GetRow (NSViewController viewController);
 	}
 
+	public interface INCWidgetListViewDelegate {}
+
 	[Mac (10, 10)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface NCWidgetListViewDelegate
 	{
 		[Abstract]
-	[Export ("widgetList:viewControllerForRow:"), DelegateName ("NCWidgetListViewGetController"), DefaultValue (null)]
+		[Export ("widgetList:viewControllerForRow:"), DelegateName ("NCWidgetListViewGetController"), DefaultValue (null)]
 		NSViewController GetViewControllerForRow (NCWidgetListViewController list, nuint row);
 
-	[Export ("widgetListPerformAddAction:"), DelegateName ("NCWidgetListViewController")]
+		[Export ("widgetListPerformAddAction:"), DelegateName ("NCWidgetListViewController")]
 		void PerformAddAction (NCWidgetListViewController list);
 
-	[Export ("widgetList:shouldReorderRow:"), DelegateName ("NCWidgetListViewControllerShouldReorderRow"), DefaultValue (false)]
+		[Export ("widgetList:shouldReorderRow:"), DelegateName ("NCWidgetListViewControllerShouldReorderRow"), DefaultValue (false)]
 		bool ShouldReorderRow (NCWidgetListViewController list, nuint row);
 
-	[Export ("widgetList:didReorderRow:toRow:"), EventArgs ("NCWidgetListViewControllerDidReorder"), DefaultValue (false)]
+		[Export ("widgetList:didReorderRow:toRow:"), EventArgs ("NCWidgetListViewControllerDidReorder"), DefaultValue (false)]
 		void DidReorderRow (NCWidgetListViewController list, nuint row, nuint newIndex);
 
-	[Export ("widgetList:shouldRemoveRow:"), DelegateName ("NCWidgetListViewControllerShouldRemoveRow"), DefaultValue (false)]
+		[Export ("widgetList:shouldRemoveRow:"), DelegateName ("NCWidgetListViewControllerShouldRemoveRow"), DefaultValue (false)]
 		bool ShouldRemoveRow (NCWidgetListViewController list, nuint row);
 
-	[Export ("widgetList:didRemoveRow:"), EventArgs ("NCWidgetListViewControllerDidRemoveRow"), DefaultValue (false)]
+		[Export ("widgetList:didRemoveRow:"), EventArgs ("NCWidgetListViewControllerDidRemoveRow"), DefaultValue (false)]
 		void DidRemoveRow (NCWidgetListViewController list, nuint row);
 	}
 
@@ -130,7 +131,6 @@ namespace XamCore.NotificationCenter {
 	interface NCWidgetSearchViewController
 	{
 		[Wrap ("WeakDelegate")]
-		[Protocolize]
 		NCWidgetSearchViewDelegate Delegate { get; set; }
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
@@ -148,6 +148,8 @@ namespace XamCore.NotificationCenter {
 		[Export ("searchResultKeyPath")]
 		string SearchResultKeyPath { get; set; }
 	}
+
+	public interface INCWidgetSearchViewDelegate {}
 
 	[Mac (10,10)]
 	[Protocol, Model]

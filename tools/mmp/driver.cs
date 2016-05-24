@@ -489,7 +489,7 @@ namespace Xamarin.Bundler {
 				registrar = RegistrarMode.Dynamic;
 			if (is_extension)
 				registrar = RegistrarMode.Static;
-
+			
 			if (no_executable) {
 				if (unprocessed.Count != 0) {
 					var exceptions = new List<Exception> ();
@@ -560,7 +560,7 @@ namespace Xamarin.Bundler {
 				GatherAssemblies ();
 				CheckReferences ();
 
-				if (!resolved_assemblies.Exists (f => Path.GetExtension (f).ToLower () == ".exe") && !is_extension)
+				if (!is_extension && !resolved_assemblies.Exists (f => Path.GetExtension (f).ToLower () == ".exe"))
 					throw new MonoMacException (79, true, "No executable was copied into the app bundle.  Please contact 'support@xamarin.com'", "");
 
 				// i18n must be dealed outside linking too (e.g. bug 11448)
@@ -1010,7 +1010,7 @@ namespace Xamarin.Bundler {
 				}
 
 				if (is_extension)
-					args.Append("-e _extension_main -framework NotificationCenter").Append(' ');
+					args.Append ("-e _xamarin_mac_extension_main -framework NotificationCenter").Append(' ');
 
 				foreach (var f in BuildTarget.Frameworks)
 					args.Append ("-framework ").Append (f).Append (' ');

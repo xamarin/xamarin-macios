@@ -10,6 +10,7 @@
 #include "xamarin/launch.h"
 #include "launcher.h"
 #include "runtime-internal.h"
+#include "main-internal.h"
 
 #ifdef DYNAMIC_MONO_RUNTIME
 	#define DEFAULT_MONO_RUNTIME "/Library/Frameworks/Mono.framework/Versions/Current"
@@ -442,11 +443,14 @@ app_initialize (xamarin_initialize_data *data, bool is_extension)
         if (exeName == NULL)
             exeName = [[NSString stringWithUTF8String: data->basename] stringByAppendingString: @".exe"];
         
-        exePath = [[[NSString stringWithUTF8String: xamarin_get_bundle_path ()] stringByAppendingString: @"/"] stringByAppendingString: exeName];
-        
-        if (!xamarin_file_exists ([exePath UTF8String]))
-            exit_with_message ([[NSString stringWithFormat:@"Could not find the executable '%@'\n\nFull path: %@", exeName, exePath] UTF8String], data->basename, false);
-        
+        if (mkbundle) {
+            exePath = exeName;
+        } else {
+            exePath = [[[NSString stringWithUTF8String: xamarin_get_bundle_path ()] stringByAppendingString: @"/"] stringByAppendingString: exeName];
+
+            if (!xamarin_file_exists ([exePath UTF8String]))
+                exit_with_message ([[NSString stringWithFormat:@"Could not find the executable '%@'\n\nFull path: %@", exeName, exePath] UTF8String], data->basename, false);
+        }
         exe_path = strdup ([exePath UTF8String]);
     } else {
         
@@ -512,8 +516,6 @@ app_initialize (xamarin_initialize_data *data, bool is_extension)
 }
 
 #define __XAMARIN_MAC_RELAUNCH_APP__ "__XAMARIN_MAC_RELAUNCH_APP__"
-
-extern "C" int NSExtensionMain (int argc, char** argv);
 
 int xamarin_main (int argc, char **argv, bool is_extension)
 {
@@ -590,10 +592,10 @@ int xamarin_main (int argc, char **argv, bool is_extension)
 
 int main (int argc, char **argv)
 {
-	return xamarin_main (argc, argv, false);
+    return xamarin_main (argc, argv, false);
 }
 
-extern "C" int extension_main (int argc, char **argv)
+int xamarin_mac_extension_main (int argc, char **argv)
 {
 	return xamarin_main (argc, argv, true);
 }
