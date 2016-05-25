@@ -9,6 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Xamarin.MacDev.Tasks</RootNamespace>
     <AssemblyName>Xamarin.MacDev.Tasks</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,7 +39,7 @@
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
-    <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" >
+    <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
       <Private>True</Private>
     </Reference>
   </ItemGroup>
