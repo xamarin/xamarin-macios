@@ -73,9 +73,6 @@ namespace Xamarin.MacDev.Tasks
 
 			switch (Path.GetExtension (bundleName)) {
 			case ".storyboard":
-				if (IsWatchApp)
-					return Path.ChangeExtension (bundleName, ".plist");
-
 				return Path.ChangeExtension (bundleName, ".storyboardc");
 			case ".xib":
 				return Path.ChangeExtension (bundleName, ".nib");
@@ -228,10 +225,10 @@ namespace Xamarin.MacDev.Tasks
 				output.SetMetadata ("LogicalName", bundleName);
 				output.SetMetadata ("Optimize", "false");
 
-				if (Path.GetExtension (bundleName) != ".plist") {
-					// Don't include Watch storyboards that got compiled to plists
-					compiled.Add (output);
-				}
+				if (!string.IsNullOrEmpty (resourceTags))
+					output.SetMetadata ("ResourceTags", resourceTags);
+
+				compiled.Add (output);
 
 				if (UseCompilationDirectory) {
 					// Note: When using --compilation-directory, we need to specify the output path as the parent directory
@@ -239,9 +236,6 @@ namespace Xamarin.MacDev.Tasks
 					output.ItemSpec = Path.GetDirectoryName (output.ItemSpec);
 					output.SetMetadata ("LogicalName", Path.GetDirectoryName (bundleName));
 				}
-
-				if (!string.IsNullOrEmpty (resourceTags))
-					output.SetMetadata ("ResourceTags", resourceTags);
 
 				if (!ManifestExists (manifest.ItemSpec) || File.GetLastWriteTime (manifest.ItemSpec) < File.GetLastWriteTime (item.ItemSpec)) {
 					Directory.CreateDirectory (manifestDir);
