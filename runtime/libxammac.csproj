@@ -74,6 +74,7 @@
     <None Include="trampolines-varargs.h" />
     <None Include="trampolines-varargs.m" />
     <None Include="trampolines-invoke.m" />
+    <None Include="extension-main.m" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Delegates.generated.cs" />

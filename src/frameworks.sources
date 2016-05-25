@@ -570,6 +570,11 @@ EVENTKITUI_CORE_SOURCES = \
 EXTERNALACCESSORY_API_SOURCES = \
 	ExternalAccessory/EAEnums.cs \
 
+# FinderSync
+
+FINDERSYNC_CORE_SOURCES = \
+	FinderSync/Enums.cs \
+
 # Foundation
 
 FOUNDATION_CORE_SOURCES = \
@@ -1461,6 +1466,7 @@ MAC_FRAMEWORKS =            \
 	CoreVideo               \
 	CoreWlan                \
 	EventKit                \
+	FinderSync		\
 	GameController          \
 	GameKit                 \
 	GameplayKit             \
@@ -1479,6 +1485,7 @@ MAC_FRAMEWORKS =            \
 	ModelIO                 \
 	MultipeerConnectivity	\
 	NetworkExtension        \
+	NotificationCenter 	\
 	OpenGL                  \
 	PdfKit                  \
 	QTKit                   \
