@@ -1222,7 +1222,9 @@ namespace Xamarin.Bundler {
 					string libName = Path.GetFileName (linkWith);
 					string finalLibPath = Path.Combine (mmp_dir, libName);
 					Application.UpdateFile (linkWith, finalLibPath);
-					XcodeRun ("install_name_tool -id", string.Format ("{0} {1}", Quote("@executable_path/../" + BundleName + "/" + libName), finalLibPath));
+					int ret = XcodeRun ("install_name_tool -id", string.Format ("{0} {1}", Quote("@executable_path/../" + BundleName + "/" + libName), finalLibPath));
+					if (ret != 0)
+						throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
 					native_libraries_copied_in.Add (libName);
 				}
 			}
@@ -1249,7 +1251,9 @@ namespace Xamarin.Bundler {
 				// if required update the paths inside the .dylib that was copied
 				if (sb.Length > 0) {
 					sb.Append (' ').Append (Quote (library));
-					XcodeRun ("install_name_tool", sb.ToString ());
+					int ret = XcodeRun ("install_name_tool", sb.ToString ());
+					if (ret != 0)
+						throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
 					sb.Clear ();
 				}
 			}
@@ -1373,13 +1377,17 @@ namespace Xamarin.Bundler {
 				Console.WriteLine ("Dependency {0} was already at destination, skipping.", Path.GetFileName (real_src));
 			}
 			else {
-				File.Copy (real_src, dest, true);
+				// install_name_tool gets angry if you copy in a read only native library
+				CopyFileAndRemoveReadOnly (real_src, dest);
 			}
 
 			bool isStaticLib = real_src.EndsWith (".a");
 			if (native_references.Contains (real_src)) {
-				if (!isStaticLib)
-					XcodeRun ("install_name_tool -id", string.Format ("{0} {1}", Quote("@executable_path/../" + BundleName + "/" + name), dest));
+				if (!isStaticLib) {
+					int ret = XcodeRun ("install_name_tool -id", string.Format ("{0} {1}", Quote("@executable_path/../" + BundleName + "/" + name), dest));
+					if (ret != 0)
+						throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
+				}
 				native_libraries_copied_in.Add (name);
 			}
 
@@ -1483,13 +1491,22 @@ namespace Xamarin.Bundler {
 				resolved_assemblies.Add (Path.Combine (fx_dir, "I18N.West.dll"));
 		}
 
+		static void CopyFileAndRemoveReadOnly (string src, string dest) {
+			File.Copy (src, dest, true);
+
+			FileAttributes attrs = File.GetAttributes (dest);
+			if ((attrs & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+				File.SetAttributes (dest, attrs & ~FileAttributes.ReadOnly);
+		}
+
 		static void CopyAssemblies () {
 			foreach (string asm in resolved_assemblies) {
 				var mdbfile = string.Format ("{0}.mdb", asm);
 				var configfile = string.Format ("{0}.config", asm);
 				string filename = Path.GetFileName (asm);
 
-				File.Copy (asm, Path.Combine (mmp_dir, filename), true);
+				// The linker later gets angry if you copy in a read only assembly
+				CopyFileAndRemoveReadOnly (asm, Path.Combine (mmp_dir, filename));
 				if (verbose > 0)
 					Console.WriteLine ("Added assembly {0}", asm);
 

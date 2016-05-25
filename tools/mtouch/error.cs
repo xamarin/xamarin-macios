@@ -305,6 +305,7 @@ namespace Xamarin.Bundler {
 	//					MT5307  Failed to sign the executable. Please review the build log.
 	//					MT5308  ** reserved Xamarin.Mac **
 	//					MT5309  ** reserved Xamarin.Mac **
+	//					MT5310  ** reserved Xamarin.Mac **
 	// MT6xxx	mtouch internal tools
 	//			MT600x	Stripper
 	//					MT6001	Running version of Cecil doesn't support assembly stripping
