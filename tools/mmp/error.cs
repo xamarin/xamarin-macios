@@ -64,7 +64,7 @@ namespace Xamarin.Bundler {
 	//					MM2010	Unknown HttpMessageHandler `{0}`. Valid values are HttpClientHandler (default), CFNetworkHandler or NSUrlSessionHandler
 	//					MM2011  Unknown TLSProvider `{0}.  Valid values are default, legacy or appletls
 	//					MM2012   Only first {0} of {1} "Referenced by" warnings shown. ** This message related to 2009 **
-	//			Warning	MM2013	Failed to resolve the reference to "{0}", referenced in "{1}". The app will not include the referenced assembly, and may fail at runtime.
+	//					Warning	MM2013	Failed to resolve the reference to "{0}", referenced in "{1}". The app will not include the referenced assembly, and may fail at runtime.
 	// MM4xxx	code generation
 	// 			MM40xx	driver.m
 	//					MM4001	The main template could not be expansed to `{0}`.
@@ -96,6 +96,7 @@ namespace Xamarin.Bundler {
 	//					MM5306	Missing dependencies. Please install Xcode 'Command-Line Tools' component
 	//					MM5308  Xcode license agreement may not have been accepted.  Please launch Xcode.
 	//					MM5309	Native linking failed with error code 1.  Check build log for details.
+	//					MT5310  install_name_tool failed with an error code '{0}'. Check build log for details. 
 	// MM6xxx	mmp internal tools
 	// MM7xxx	reserved
 	// MM8xxx	runtime
