@@ -22,3 +22,5 @@ Makefile.inc
 *.stamp
 test.config
 mac-test-package
+.nuget
+
