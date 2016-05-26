@@ -189,7 +189,8 @@ extern void mono_gc_init_finalizer_thread (void);
 - (id) init
 {
 #if TARGET_OS_WATCH
-	fprintf (stderr, "Need to listen for memory warnings on the watch\n");
+	// I haven't found a way to listen for memory warnings on watchOS.
+	// fprintf (stderr, "Need to listen for memory warnings on the watch\n");
 #else
 	if (self = [super init]) {
 #if defined (__arm__) || defined(__aarch64__)
