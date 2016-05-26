@@ -10,9 +10,11 @@ using Xamarin.MacDev;
 
 namespace Xamarin.Mac.Tasks
 {
-	public class EmbedProvisionProfile : Task
+	public class EmbedProvisionProfileTaskBase : Task
 	{
 		#region Inputs
+
+		public string SessionId { get; set; }
 
 		[Required]
 		public string AppBundleDir { get; set; }

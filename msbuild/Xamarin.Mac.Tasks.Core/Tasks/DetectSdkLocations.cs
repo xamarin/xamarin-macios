@@ -10,9 +10,11 @@ using Xamarin.MacDev;
 
 namespace Xamarin.Mac.Tasks
 {
-	public class DetectSdkLocations : Task
+	public class DetectSdkLocationsTaskBase : Task
 	{
 		#region Inputs
+
+		public string SessionId { get; set; }
 
 		// This is also an input
 		[Output]

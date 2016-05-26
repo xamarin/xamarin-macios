@@ -17,11 +17,13 @@ using Xamarin.MacDev;
 
 namespace Xamarin.Mac.Tasks
 {
-	public class Mmp : ToolTask
+	public class MmpTaskBase : ToolTask
 	{
 		protected override string ToolName {
 			get { return "mmp"; }
 		}
+
+		public string SessionId { get; set; }
 
 		[Required]
 		public string FrameworkRoot { get; set; }

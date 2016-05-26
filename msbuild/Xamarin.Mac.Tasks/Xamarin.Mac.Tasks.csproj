@@ -43,10 +43,13 @@
     <Compile Include="Tasks\CompileEntitlements.cs" />
     <Compile Include="Tasks\CompileSceneKitAssets.cs" />
     <Compile Include="Tasks\CreateEmbeddedResources.cs" />
+    <Compile Include="Tasks\DetectSdkLocations.cs" />
     <Compile Include="Tasks\DetectSigningIdentity.cs" />
+    <Compile Include="Tasks\EmbedProvisionProfile.cs" />
     <Compile Include="Tasks\IBTool.cs" />
     <Compile Include="Tasks\Metal.cs" />
     <Compile Include="Tasks\MetalLib.cs" />
+    <Compile Include="Tasks\Mmp.cs" />
     <Compile Include="Tasks\ScnTool.cs" />
     <Compile Include="Tasks\TextureAtlas.cs" />
     <Compile Include="Tasks\PrepareNativeReferences.cs" />

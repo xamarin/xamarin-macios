@@ -76,7 +76,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<PropertyGroup>
 		<ImplicitlyExpandDesignTimeFacades>true</ImplicitlyExpandDesignTimeFacades>
-	
+
 		<ResolveReferencesDependsOn>
 			_SeparateAppExtensionReferences;
 			$(ResolveReferencesDependsOn);
@@ -202,6 +202,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_CodesignNativeLibraries" Condition="'$(EnableCodeSigning)'" DependsOnTargets="_DetectSigningIdentity;_CollectNativeLibraries">
 		<Codesign
+			SessionId="$(BuildSessionId)"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			Condition="'@(_NativeLibrary)' != ''"
@@ -218,15 +219,17 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<Target Name="_EmbedProvisionProfile" Condition="'$(_ProvisioningProfile)' != ''" DependsOnTargets="_GenerateBundleName"
 		Outputs="$(_AppBundlePath)Contents\embedded.provisionprofile">
 		<EmbedProvisionProfile
+			SessionId="$(BuildSessionId)"
 			AppBundleDir="$(AppBundleDir)"
 			ProvisioningProfile="$(_ProvisioningProfile)"
 			>
 		</EmbedProvisionProfile>
 	</Target>
-	
+
 	<Target Name="_CompileEntitlements" Condition="'$(EnableCodeSigning)'" DependsOnTargets="_GenerateBundleName"
 		Outputs="$(IntermediateOutputPath)Entitlements.xcent">
 		<CompileEntitlements
+			SessionId="$(BuildSessionId)"
 			AppBundleDir="$(AppBundleDir)"
 			AppIdentifier="$(_AppIdentifier)"
 			BundleIdentifier="$(_BundleIdentifier)"
@@ -243,6 +246,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_CodesignAppBundle" Condition="'$(EnableCodeSigning)'" DependsOnTargets="$(_CodesignAppBundleDependsOn)">
 		<Codesign
+			SessionId="$(BuildSessionId)"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="$(_CodesignAllocate)"
@@ -258,6 +262,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_CodesignVerify" Condition="'$(EnableCodeSigning)'" DependsOnTargets="_CodesignAppBundle">
 		<CodesignVerify
+			SessionId="$(BuildSessionId)"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="$(_CodesignAllocate)"
@@ -271,12 +276,14 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		Inputs="@(_BundleResourceWithLogicalName)"
 		Outputs="@(_BundleResourceWithLogicalName -> '$(_AppResourcesPath)%(LogicalName)')">
 		<SmartCopy
+			SessionId="$(BuildSessionId)"
 			SourceFiles = "@(_BundleResourceWithLogicalName)"
 			DestinationFiles = "@(_BundleResourceWithLogicalName -> '$(_AppResourcesPath)%(LogicalName)')"/>
 	</Target>
 
 	<Target Name="_CollectBundleResources" DependsOnTargets="$(_CollectBundleResourcesDependsOn)">
 		<CollectBundleResources
+			SessionId="$(BuildSessionId)"
 			BundleResources="@(Content);@(BundleResource)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(XamMacResourcePrefix)">
@@ -286,6 +293,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_DetectAppManifest" Condition="'$(_CanOutputAppBundle)' == 'true'" >
 		<FindItemWithLogicalName
+			SessionId="$(BuildSessionId)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(XamMacResourcePrefix)"
 			LogicalName="Info.plist"
@@ -293,6 +301,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			<Output TaskParameter="Item" PropertyName="_AppManifest" />
 		</FindItemWithLogicalName>
 		<FindItemWithLogicalName Condition="'$(_AppManifest)' == ''"
+			SessionId="$(BuildSessionId)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(XamMacResourcePrefix)"
 			LogicalName="Info.plist"
@@ -300,6 +309,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			<Output TaskParameter="Item" PropertyName="_AppManifest" />
 		</FindItemWithLogicalName>
 		<FindItemWithLogicalName Condition="'$(_AppManifest)' == ''"
+			SessionId="$(BuildSessionId)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(XamMacResourcePrefix)"
 			LogicalName="Info.plist"
@@ -311,6 +321,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_SmeltMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(Metal)' != ''" DependsOnTargets="_DetectSdkLocations">
 		<Metal
+			SessionId="$(BuildSessionId)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(XamMacResourcePrefix)"
@@ -323,6 +334,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<Target Name="_ForgeMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_SmeltedMetal)' != ''" DependsOnTargets="_SmeltMetal"
 		Inputs="@(_SmeltedMetal)" Outputs="$(IntermediateOutputPath)metal\default.metal-ar">
 		<ArTool
+			SessionId="$(BuildSessionId)"
 			Items="@(_SmeltedMetal)"
 			Archive="$(IntermediateOutputPath)metal\default.metal-ar">
 		</ArTool>
@@ -335,6 +347,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<Target Name="_TemperMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_ForgedMetal)' != ''" DependsOnTargets="_ForgeMetal"
 		Inputs="@(_ForgedMetal)" Outputs="$(_AppBundlePath)default.metallib">
 		<MetalLib
+			SessionId="$(BuildSessionId)"
 			Items="@(_ForgedMetal)"
 			SdkDevPath="$(_SdkDevPath)"
 			OutputLibrary="$(_AppBundlePath)Contents\Resources\default.metallib">
@@ -344,11 +357,12 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			<Output TaskParameter="Include" ItemName="_NativeLibrary" />
 		</CreateItem>
 	</Target>
-	
+
 	<Target Name="_CompileTextureAtlases" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_CoreCompileTextureAtlases" />
 
 	<Target Name="_CoreCompileTextureAtlases">
 		<TextureAtlas
+			SessionId="$(BuildSessionId)"
 			ToolExe="$(TextureAtlasExe)"
 			ToolPath="$(TextureAtlasPath)"
 			AtlasTextures="@(AtlasTexture)"
@@ -365,6 +379,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_CreateInstaller" Condition="$(CreatePackage)" DependsOnTargets="Codesign">
 		<CreateInstallerPackage
+			SessionId="$(BuildSessionId)"
 			OutputDirectory = "$(TargetDir)"
 			Name = "$(AssemblyName)"
 			AppManifest="$(_AppManifest)"
@@ -380,6 +395,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_PackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'false'" DependsOnTargets="_CollectBundleResources">
 		<PackLibraryResources
+			SessionId="$(BuildSessionId)"
 			Prefix="xammac"
 			BundleResourcesWithLogicalNames="@(_BundleResourceWithLogicalName)">
 			<Output TaskParameter="EmbeddedResources" ItemName="EmbeddedResource" />
@@ -388,6 +404,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="ResolveReferences;_CollectBundleResources">
 		<UnpackLibraryResources
+			SessionId="$(BuildSessionId)"
 			Prefix="xammac"
 			NoOverwrite="@(_BundleResourceWithLogicalName)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
@@ -398,7 +415,9 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_DetectSdkLocations">
-		<DetectSdkLocations SdkVersion="$(MacOSXSdkVersion)">
+		<DetectSdkLocations
+			SessionId="$(BuildSessionId)"
+			SdkVersion="$(MacOSXSdkVersion)">
 			<Output TaskParameter="SdkVersion" PropertyName="MacOSXSdkVersion" />
 			<Output TaskParameter="SdkRoot" PropertyName="_SdkRoot" />
 			<Output TaskParameter="SdkBinPath" PropertyName="_SdkBinPath" />
@@ -413,6 +432,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</PropertyGroup>
 
 		<DetectSigningIdentity
+			SessionId="$(BuildSessionId)"
 			AppBundleName="$(_AppBundleName)"
 			AppManifest="$(_AppManifest)"
 			Keychain="$(CodesignKeychain)"
@@ -443,6 +463,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		Inputs="$(_AppManifest);@(_PartialAppManifest)"
 		Outputs="$(_AppBundlePath)Contents\Info.plist" >
 		<CompileAppManifest
+			SessionId="$(BuildSessionId)"
 			AppBundleName="$(_AppBundleName)"
 			AppBundleDir="$(AppBundleDir)"
 			AppManifest="$(_AppManifest)"
@@ -457,6 +478,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		Inputs="$(TargetDir)$(TargetFileName)"
 		Outputs="$(_AppBundlePath)Contents\MacOS\$(TargetFileName)">
 		<Mmp
+			SessionId="$(BuildSessionId)"
 			FrameworkRoot="$(XamarinMacFrameworkRoot)"
 			OutputPath="$(OutputPath)"
 			ApplicationName="$(_AppBundleName)"
@@ -484,6 +506,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_CollectColladaAssets">
 		<CollectBundleResources
+			SessionId="$(BuildSessionId)"
 			BundleResources="@(Collada)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(XamMacResourcePrefix)">
@@ -498,6 +521,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		>
 
 		<ScnTool
+			SessionId="$(BuildSessionId)"
 			ToolExe="$(ScnToolExe)"
 			ToolPath="$(ScnToolPath)"
 			SdkRoot="$(_SdkRoot)"
@@ -517,6 +541,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_CoreCompileImageAssets">
 		<ACTool
+			SessionId="$(BuildSessionId)"
 			ToolExe="$(ACToolExe)"
 			ToolPath="$(ACToolPath)"
 			AppManifest="$(_AppManifest)"
@@ -543,6 +568,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_CoreCompileSceneKitAssets">
 		<CompileSceneKitAssets
+			SessionId="$(BuildSessionId)"
 			ToolExe="$(CopySceneKitAssetsExe)"
 			ToolPath="$(CopySceneKitAssetsPath)"
 			SceneKitAssets="@(SceneKitAsset)"
@@ -561,6 +587,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_CoreCompileInterfaceDefinitions">
 		<IBTool
+			SessionId="$(BuildSessionId)"
 			ToolExe="$(IBToolExe)"
 			ToolPath="$(IBToolPath)"
 			AppManifest="$(_AppManifest)"
@@ -644,7 +671,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		_AppExtensionReferenceWithConfigurationNonExistent: Projects non-existent on disk -->
 	<Target Name="_SplitAppExtensionReferencesByExistent" DependsOnTargets="_AssignAppExtensionConfiguration">
 		<CreateItem Include="@(_AppExtensionReferenceWithConfiguration)" Condition="'@(_AppExtensionReferenceWithConfiguration)' != ''">
-			<Output TaskParameter="Include" ItemName="_AppExtensionReferenceWithConfigurationExistent" 
+			<Output TaskParameter="Include" ItemName="_AppExtensionReferenceWithConfigurationExistent"
 				Condition="Exists ('%(_AppExtensionReferenceWithConfiguration.Identity)')"/>
 
 			<Output TaskParameter="Include" ItemName="_AppExtensionReferenceWithConfigurationNonExistent"
@@ -679,3 +706,4 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			 Condition="'@(_AppExtensionReferenceWithConfigurationNonExistent)' != ''"/>
 	</Target>
 </Project>
+
