@@ -258,15 +258,26 @@ public:
 
 #endif /* !TARGET_OS_WATCH */
 
+// Once we have one mono clone again the TARGET_OS_WATCH
+// should be removed (DYNAMIC_MONO_RUNTIME should still
+// be here though).
+#if TARGET_OS_WATCH || DYNAMIC_MONO_RUNTIME
 #define MONO_THREAD_ATTACH \
 	do { \
 		gpointer __thread_dummy; \
-		gpointer __thread_cookie = mono_jit_thread_attach (NULL, &__thread_dummy) \
+		gpointer __thread_cookie = mono_threads_attach_coop (NULL, &__thread_dummy) \
 
 #define MONO_THREAD_DETACH \
-		mono_jit_thread_detach (__thread_cookie, &__thread_dummy); \
+		mono_threads_detach_coop (__thread_cookie, &__thread_dummy); \
 	} while (0)
+#else
+#define MONO_THREAD_ATTACH \
+	do { \
+		mono_jit_thread_attach (NULL) \
 
+#define MONO_THREAD_DETACH \
+	} while (0)
+#endif
 
 #ifdef __cplusplus
 } /* extern "C" */

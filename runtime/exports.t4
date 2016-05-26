@@ -516,13 +516,7 @@
 		#region mini/mini.h
 
 		new Export ("void*", "mono_jit_thread_attach",
-			"MonoDomain *", "domain",
-			"void *", "dummy"
-		),
-
-		new Export ("void", "mono_jit_thread_detach",
-			"void *", "cookie",
-			"void *", "dummy"
+			"MonoDomain *", "domain"
 		),
 
 		new Export ("gboolean", "mono_exception_walk_trace",
@@ -600,6 +594,20 @@
 
 		#region utils/mono-threads.h
 		new Export ("void*", "mono_thread_info_current_unchecked" ),
+		#endregion
+
+		#region metadata/threads-types.h
+
+		new Export (true, "void *", "mono_threads_attach_coop",
+			"MonoDomain *", "domain",
+			"gpointer*", "dummy"
+		),
+
+		new Export (true, "void *", "mono_threads_detach_coop",
+			"gpointer", "cookie",
+			"gpointer*", "dummy"
+		),
+
 		#endregion
 	};
 #><#+
