@@ -271,6 +271,7 @@ NUNITLITE_SOURCES = \
 
 IOS_TOUCHUNIT_SOURCES = \
 	$(NUNITLITE_SOURCES) \
+	$(TOUCH_UNIT_PATH)/NUnitLite/TouchRunner/HttpTextWriter.cs \
 	$(TOUCH_UNIT_PATH)/NUnitLite/TouchRunner/Options.cs \
 	$(TOUCH_UNIT_PATH)/NUnitLite/TouchRunner/NUnitOutputTextWriter.cs \
 	$(TOUCH_UNIT_PATH)/NUnitLite/TouchRunner/TestCaseElement.cs \
@@ -289,6 +290,7 @@ TVOS_TOUCHUNIT_SOURCES = \
 
 WATCHOS_TOUCHUNIT_SOURCES = \
 	$(NUNITLITE_SOURCES) \
+	$(TOUCH_UNIT_PATH)/NUnitLite/TouchRunner/HttpTextWriter.cs \
 	$(TOUCH_UNIT_PATH)/NUnitLite/TouchRunner/Options.cs \
 	$(TOUCH_UNIT_PATH)/NUnitLite/TouchRunner/NUnitOutputTextWriter.cs \
 	$(TOUCH_UNIT_PATH)/NUnitLite/TouchRunner/TouchRunner.cs \
