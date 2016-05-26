@@ -1,0 +1,53 @@
+# UNLIKELY TO BE EVER FIXED
+
+# Foundation
+
+## does not exists in iOS (or watchOS) as a type - but some API refers to it (messy)
+!unknown-type! NSPortMessage bound
+
+## deprecated in 9.0 but still visible (for watchOS) from `NSDeprecatedKitAdditions (NSAttributedString)`
+## not part of tvOS and we provide the replacement selector with the same managed API
+!missing-selector! NSAttributedString::initWithFileURL:options:documentAttributes:error: not bound
+
+# Deprecated in iOS 9.0 (so watch 2.0) with an alternative (NSWritingDirectionFormatType in UIKit)
+# better not expose the deprecated enum since it's not available in tvOS either
+!missing-enum! NSTextWritingDirection not bound
+
+
+# UIKit
+
+## Implemented in managed code
+!missing-selector! UIColor::getHue:saturation:brightness:alpha: not bound
+!missing-selector! UIColor::getRed:green:blue:alpha: not bound
+!missing-field! UIEdgeInsetsZero not bound
+!missing-field! UIOffsetZero not bound
+
+## Not implemented (ctor signature conflict) but there's a static method available that does the job
+!missing-selector! UIColor::initWithHue:saturation:brightness:alpha: not bound
+
+## deprecated
+!missing-selector! UIImageDeprecated::leftCapWidth not bound
+!missing-selector! UIImageDeprecated::stretchableImageWithLeftCapWidth:topCapHeight: not bound
+!missing-selector! UIImageDeprecated::topCapHeight not bound
+
+
+# Apple internals (we do not expose them)
+
+!missing-field! _NSConstantStringClassReference not bound
+
+
+# Non-Apple
+
+## Xamarin (not Apple) type
+!unknown-type! CADisplayLinkTimeSource bound
+!unknown-type! InternalNSNotificationHandler bound
+
+## Xamarin generic collection subclasses
+!unknown-type! NSArray`1 bound
+!unknown-type! NSDictionary`2 bound
+!unknown-type! NSMutableArray`1 bound
+!unknown-type! NSMutableDictionary`2 bound
+!unknown-type! NSMutableOrderedSet`1 bound
+!unknown-type! NSMutableSet`1 bound
+!unknown-type! NSOrderedSet`1 bound
+!unknown-type! NSSet`1 bound

@@ -1,0 +1,76 @@
+//
+// JSContext Unit Tests
+//
+// Authors:
+//	Sebastien Pouliot  <sebastien@xamarin.com>
+//
+// Copyright 2013, 2015 Xamarin Inc.
+//
+
+#if !__WATCHOS__
+
+using System;
+#if XAMCORE_2_0
+using Foundation;
+using UIKit;
+using JavaScriptCore;
+#else
+using MonoTouch.Foundation;
+using MonoTouch.JavaScriptCore;
+using MonoTouch.UIKit;
+#endif
+using NUnit.Framework;
+
+namespace MonoTouchFixtures.JavascriptCore {
+
+	[TestFixture]
+	// we want the test to be availble if we use the linker
+	[Preserve (AllMembers = true)]
+	[TestFixture]
+	public class ContextTest {
+
+		[Test]
+		public void EvaluateScript ()
+		{
+			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
+				Assert.Ignore ("requires iOS7+");
+
+			using (var c = new JSContext ())
+			using (JSValue r = c.EvaluateScript ("function FourthyTwo () { return 42; }; FourthyTwo ()")) {
+				Assert.That (r.ToInt32 (), Is.EqualTo (42), "42");
+			}
+		}
+
+		[Test]
+		public void EvaluateScript_Param ()
+		{
+			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
+				Assert.Ignore ("requires iOS7+");
+
+			using (var context = new JSContext ())
+			using (JSValue script = context.EvaluateScript ("var square = function (x) { return x * x; }")) 
+			using (JSValue function = context [(NSString) "square"])
+			using (JSValue input = JSValue.From (2, context))
+			using (JSValue result = function.Call (input)) {
+				Assert.That (result.ToInt32 (), Is.EqualTo (4), "4");
+			}
+		}
+
+		[Test]
+		public void EvaluateScript_Context ()
+		{
+			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
+				Assert.Ignore ("requires iOS7+");
+
+			using (var context = new JSContext ())
+			using (JSValue value = context.EvaluateScript ("a = 3")) 
+			using (JSValue script = context.EvaluateScript ("var square = function (x) { return x * x; }")) 
+			using (JSValue function = context [(NSString) "square"])
+			using (JSValue result = function.Call (context [(NSString) "a"])) {
+				Assert.That (result.ToInt32 (), Is.EqualTo (9), "9");
+			}
+		}
+	}
+}
+
+#endif // !__WATCHOS__

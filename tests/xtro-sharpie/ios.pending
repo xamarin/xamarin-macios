@@ -1,0 +1,119 @@
+# iOS specific issues we need to look into
+
+# CoreMedia
+
+!missing-field! kCMMetadataKeySpace_HLSDateRange not bound
+
+
+# CoreVideo
+
+!missing-field! kCVOpenGLESTextureCacheMaximumTextureAgeKey not bound
+
+
+# GameplayKit
+
+## Apple introduced those types in Xcode 7.1 and removed them afterward !?!
+## they do work (intro tests checks them) but thy are not part of the header files
+!unknown-type! GKHybridStrategist bound
+!unknown-type! GKMonteCarloStrategist bound
+!unknown-type! GKQuadTree bound
+!unknown-type! GKQuadTreeNode bound
+
+
+# OpenGLES
+
+!missing-field! kEAGLColorFormatRGB565 not bound
+!missing-field! kEAGLColorFormatRGBA8 not bound
+!missing-field! kEAGLColorFormatSRGBA8 not bound
+!missing-field! kEAGLDrawablePropertyColorFormat not bound
+!missing-field! kEAGLDrawablePropertyRetainedBacking not bound
+
+
+# VideoToolbox
+
+## Apple headers bug, header file VTPixelTransferProperties.h not included by default (!TARGET_OS_IPHONE)
+## but API are mentioned as available (and our intro tests results concurs)
+!unknown-field! kVTDownsamplingMode_Average bound
+!unknown-field! kVTDownsamplingMode_Decimate bound
+!unknown-field! kVTPixelTransferPropertyKey_DestinationCleanAperture bound
+!unknown-field! kVTPixelTransferPropertyKey_DestinationPixelAspectRatio bound
+!unknown-field! kVTPixelTransferPropertyKey_DestinationYCbCrMatrix bound
+!unknown-field! kVTPixelTransferPropertyKey_DownsamplingMode bound
+!unknown-field! kVTPixelTransferPropertyKey_ScalingMode bound
+!unknown-field! kVTScalingMode_CropSourceToCleanAperture bound
+!unknown-field! kVTScalingMode_Letterbox bound
+!unknown-field! kVTScalingMode_Normal bound
+!unknown-field! kVTScalingMode_Trim bound
+
+
+# static methods in protocols are problematic
+!missing-selector! +UIViewControllerRestoration::viewControllerWithRestorationIdentifierPath:coder: not bound
+
+## added in iOS 8.0
+!missing-pinvoke! SecAddSharedWebCredential is not bound
+!missing-pinvoke! SecCreateSharedWebCredentialPassword is not bound
+!missing-pinvoke! SecRequestSharedWebCredential is not bound
+!missing-field! kSecSharedPassword not bound
+
+# the only member exists in OSX 10.11 - but there are empty protocols so it must be reported (and ignored)
+!missing-protocol! AVFragmentMinding not bound
+
+# Apple docs: This property is inherited from the UIView parent class. This class changes the default value of this property to NO.
+!missing-selector! UIImageView::isUserInteractionEnabled not bound
+!missing-selector! UIImageView::setUserInteractionEnabled: not bound
+!missing-selector! UILabel::isUserInteractionEnabled not bound
+!missing-selector! UILabel::setUserInteractionEnabled: not bound
+
+# added in iOS7 but there was another way to get this ending up with the same name
+# so current code works better (before 7.0) but can't be overridden (likely a good thing)
+!missing-selector! MPMediaEntity::persistentID not bound
+
+## UIBarButtonItem.Callback nested type, [UI|NS]*GestureRecognizer.Callback nested types
+!unknown-type! Callback bound
+
+## Implemented in managed code
+!missing-selector! UIColor::getHue:saturation:brightness:alpha: not bound
+!missing-selector! UIColor::getRed:green:blue:alpha: not bound
+
+
+# does not exists in iOS as a type - but some API refers to it (messy)
+!unknown-type! NSPortMessage bound
+
+# untyped enum but used as a NSInteger in the API, forcing us to use [Native]
+!unknown-native-enum! TWRequestMethod bound
+
+# unfortunate (but required for API compatibility) it also means one seems to be missing (same key)
+!duplicate-type-name! WKErrorCode enum exists as both WatchKit.WKErrorCode and WebKit.WKErrorCode
+!missing-enum! WKErrorCode not bound
+
+# Apple renamed it from UILineBreakMode and we kept the old name
+!missing-enum! NSLineBreakMode not bound
+
+# Apple renamed it from NSTextAlignment and we kept the old name
+!missing-enum! NSTextAlignment not bound
+
+
+# fixed in XAMCORE_4_0 - API break
+!incorrect-protocol-member! ADInterstitialAdDelegate::interstitialAdActionDidFinish: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! ADInterstitialAdDelegate::interstitialAdActionShouldBegin:willLeaveApplication: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! ADInterstitialAdDelegate::interstitialAdDidLoad: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! PKPaymentAuthorizationViewControllerDelegate::paymentAuthorizationViewControllerWillAuthorizePayment: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UIDocumentMenuDelegate::documentMenuWasCancelled: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UIDynamicAnimatorDelegate::dynamicAnimatorDidPause: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UIDynamicAnimatorDelegate::dynamicAnimatorWillResume: is OPTIONAL and should NOT be abstract
+
+
+# should we bother ?
+
+## *GetTypeID
+!missing-pinvoke! CVMetalTextureCacheGetTypeID is not bound
+!missing-pinvoke! CVMetalTextureGetTypeID is not bound
+!missing-pinvoke! CVOpenGLESTextureCacheGetTypeID is not bound
+!missing-pinvoke! CVOpenGLESTextureGetTypeID is not bound
+
+## availability macro says iOS 8.0 but constants are under a #if !TARGET_OS_IPHONE define.
+## introspection does not report them as missing...
+!unknown-field! kVTCompressionPropertyKey_UsingHardwareAcceleratedVideoEncoder bound
+!unknown-field! kVTDecompressionPropertyKey_UsingHardwareAcceleratedVideoDecoder bound
+!unknown-field! kVTVideoDecoderSpecification_EnableHardwareAcceleratedVideoDecoder bound
+!unknown-field! kVTVideoDecoderSpecification_RequireHardwareAcceleratedVideoDecoder bound

@@ -32,22 +32,22 @@ namespace Xamarin.Mac.Tests
 
 		class NSRunLoopIntegration : NSObject, IMainLoopIntegration
 		{
-			public void InitializeToolkit ()
+			public void InitializeToolkit()
 			{
 			}
 
-			public void RunMainLoop ()
+			public void RunMainLoop()
 			{
-			}
-			 
-			public void InvokeOnMainLoop (InvokerHelper helper)
-			{
-				NSApplication.SharedApplication.InvokeOnMainThread (helper.Invoke);
 			}
 
-			public void Shutdown ()
+			public void InvokeOnMainLoop(InvokerHelper helper)
 			{
-				Environment.Exit (TestRunner.ExitCode);
+				NSApplication.SharedApplication.InvokeOnMainThread(helper.Invoke);
+			}
+
+			public void Shutdown()
+			{
+				Environment.Exit(TestRunner.ExitCode);
 			}
 		}
 	}

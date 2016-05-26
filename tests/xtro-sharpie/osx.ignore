@@ -1,0 +1,46 @@
+
+# fixed in XAMCORE_3_0
+
+## 8a6099b8027fa8e1ad1e032c731c7f750619303e
+!duplicate-type-name! NSFileWrapperReadingOptions enum exists as both AppKit.NSFileWrapperReadingOptions and Foundation.NSFileWrapperReadingOptions
+!duplicate-type-name! NSWritingDirection enum exists as both AppKit.NSWritingDirection and Foundation.NSWritingDirection
+
+# Defined in NSObject (NSDeprecatedTextStorageDelegateInterface
+!extra-protocol-member! unexpected selector NSTextStorageDelegate::textStorageDidProcessEditing: found
+!extra-protocol-member! unexpected selector NSTextStorageDelegate::textStorageWillProcessEditing: found
+
+# Defined in NSControlTextEditingDelegate - NSTextFieldDelegate <NSControlTextEditingDelegate>
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:didFailToFormatString:errorDescription: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:didFailToValidatePartialString:errorDescription: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:isValidObject: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:textShouldBeginEditing: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:textShouldEndEditing: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:textView:completions:forPartialWordRange:indexOfSelectedItem: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::control:textView:doCommandBySelector: found
+
+# From header - This method is invoked when the user begins editing text in a control such as a text field or a form field. 
+# The control posts a NSControlTextDidBeginEditingNotification notification, and if the control’s delegate implements this method,
+# it is automatically registered to receive the notification.
+!extra-protocol-member! unexpected selector NSRuleEditorDelegate::controlTextDidBeginEditing: found
+!extra-protocol-member! unexpected selector NSRuleEditorDelegate::controlTextDidChange: found
+!extra-protocol-member! unexpected selector NSRuleEditorDelegate::controlTextDidEndEditing: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidBeginEditing: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidChange: found
+!extra-protocol-member! unexpected selector NSTextFieldDelegate::controlTextDidEndEditing: found
+
+# Defined in NSObject(NSDraggingSourceDeprecated)
+!extra-protocol-member! unexpected selector NSDraggingSource::draggingSourceOperationMaskForLocal: found
+!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:beganAt: found
+!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:endedAt:operation: found
+!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:movedTo: found
+!extra-protocol-member! unexpected selector NSDraggingSource::ignoreModifierKeysWhileDragging found
+!extra-protocol-member! unexpected selector NSDraggingSource::draggedImage:endedAt:deposited: found
+
+# Defined in NSObject(NSDraggingSourceDeprecated)
+!extra-protocol-member! unexpected selector NSDraggingSource::namesOfPromisedFilesDroppedAtDestination: found
+
+# Defined in NSObject(NSSavePanelDelegateDeprecated)
+!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:compareFilename:with:caseSensitive: found
+!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:directoryDidChange: found
+!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:isValidFilename: found
+!extra-protocol-member! unexpected selector NSOpenSavePanelDelegate::panel:shouldShowFilename: found
