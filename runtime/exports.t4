@@ -588,12 +588,12 @@
 
 		new Export ("void", "mono_threads_assert_gc_unsafe_region" ),
 
-		new Export ("void", "mono_threads_assert_gc_starting_region" ),
+		new Export (true, "void", "mono_threads_assert_gc_starting_region" ),
 	
 		#endregion
 
 		#region utils/mono-threads.h
-		new Export ("void*", "mono_thread_info_current_unchecked" ),
+		new Export (true, "void*", "mono_thread_info_current_unchecked" ),
 		#endregion
 
 		#region metadata/threads-types.h
