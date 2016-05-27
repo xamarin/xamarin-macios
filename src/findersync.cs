@@ -7,7 +7,7 @@ using XamCore.AppKit;
 namespace XamCore.FinderSync {
 	[Mac (10, 10, onlyOn64: true)]
 	[BaseType (typeof(NSExtensionContext))]
-	interface FIFinderSyncController
+	interface FIFinderSyncController : NSSecureCoding, NSCopying
 	{
 		[Static]
 		[Export("defaultController")]
@@ -34,6 +34,7 @@ namespace XamCore.FinderSync {
 
 	[Mac (10, 10, onlyOn64: true)]
 	[BaseType (typeof(NSObject))]
+	[Model, Protocol]
 	interface FIFinderSync : NSExtensionRequestHandling
 	{
 		[Export ("menuForMenuKind:")]
