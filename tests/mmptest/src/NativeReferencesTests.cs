@@ -18,7 +18,7 @@ namespace Xamarin.MMP.Tests
 			get
 			{
 				string rootDir = TI.FindRootDirectory ();
-				string buildLibPath = Path.Combine (rootDir, "../../maccore/tests/mmptest/bin/SimpleClass.dylib");
+				string buildLibPath = Path.Combine (rootDir, "mmptest/bin/SimpleClass.dylib");
 				Assert.IsTrue (File.Exists (buildLibPath), string.Format ("SimpleDylibPath missing? {0}", buildLibPath));
 				return buildLibPath;
 			}
@@ -29,7 +29,7 @@ namespace Xamarin.MMP.Tests
 			get
 			{
 				string rootDir = TI.FindRootDirectory ();
-				string buildLibPath = Path.Combine (rootDir, "../../maccore/tests/mmptest/bin/SimpleClassStatic.a");
+				string buildLibPath = Path.Combine (rootDir, "mmptest/bin/SimpleClassStatic.a");
 				Assert.IsTrue (File.Exists (buildLibPath), string.Format ("SimpleStaticPath missing? {0}", buildLibPath));
 				return buildLibPath;
 			}

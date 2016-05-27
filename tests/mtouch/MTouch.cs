@@ -2074,7 +2074,7 @@ class Test {
 			if (devices.Length == 0)
 				Assert.Ignore ("Could not find any connected devices.");
 
-			var projectDir = Path.Combine (Configuration.SourceRoot, "maccore", "tests", "link all");
+			var projectDir = Path.Combine (Configuration.SourceRoot, "xamarin-macios", "tests", "link all");
 			var project = Path.Combine (projectDir, "link all.csproj");
 			XBuild.Build (project, platform: "iPhone");
 			var appPath = Path.Combine (projectDir, "bin", "iPhone", "Debug", "link all.app");
@@ -2104,7 +2104,7 @@ class Test {
 			if (devices.Length == 0)
 				Assert.Ignore ("Could not find any connected watches.");
 
-			var projectDir = Path.Combine (Configuration.SourceRoot, "maccore", "msbuild", "tests", "MyWatch2Container");
+			var projectDir = Path.Combine (Configuration.SourceRoot, "xamarin-macios", "msbuild", "tests", "MyWatch2Container");
 			var project = Path.Combine (projectDir, "MyWatch2Container.csproj");
 			var containerPath = Path.Combine (projectDir, "bin", "iPhone", "Debug", "MyWatch2Container.app");
 			var appPath = Path.Combine (containerPath, "Watch", "MyWatchApp2.app");
