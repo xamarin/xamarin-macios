@@ -80,7 +80,7 @@
     <Compile Include="..\bindings\ApiSelectorTest.cs">
       <Link>ApiSelectorTest.cs</Link>
     </Compile>
-    <Compile Include="..\..\tools\util\EnvironmentVariable.cs">
+    <Compile Include="..\introspection\EnvironmentVariable.cs">
       <Link>EnvironmentVariable.cs</Link>
     </Compile>
     <Compile Include="..\bindings\ApiCoreImageFiltersTest.cs">
