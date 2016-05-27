@@ -14781,11 +14781,11 @@ namespace XamCore.AppKit {
 		[Export ("storyboard", ArgumentSemantic.Strong)]
 		NSStoryboard Storyboard { get; }
 
+#if XAMCORE_2_0
 		[Mac (10,10)]
 		[Export ("presentViewControllerInWidget:")]
 		void PresentViewControllerInWidget (NSViewController viewController);
 
-#if XAMCORE_2_0
 		[Mac (10, 10, onlyOn64: true)]
 		[NullAllowed, Export ("extensionContext", ArgumentSemantic.Retain)]
 		NSExtensionContext ExtensionContext { get; }

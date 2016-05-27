@@ -10,7 +10,7 @@ using XamCore.AppKit;
 #endif
 
 namespace XamCore.NotificationCenter {
-
+#if XAMCORE_2_0 || !MONOMAC
 	[iOS (8,0)][Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // not meant to be user created
@@ -168,5 +168,6 @@ namespace XamCore.NotificationCenter {
 		[Export ("widgetSearch:resultSelected:"), EventArgs ("NSWidgetSearchResultSelected"), DefaultValue (false)]
 		void ResultSelected (NCWidgetSearchViewController controller, NSObject obj);
 	}
+#endif
 #endif
 }
