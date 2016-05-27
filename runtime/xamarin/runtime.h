@@ -259,9 +259,9 @@ public:
 #endif /* !TARGET_OS_WATCH */
 
 // Once we have one mono clone again the TARGET_OS_WATCH
-// should be removed (DYNAMIC_MONO_RUNTIME should still
+// condition should be removed (DYNAMIC_MONO_RUNTIME should still
 // be here though).
-#if TARGET_OS_WATCH || DYNAMIC_MONO_RUNTIME
+#if TARGET_OS_WATCH && !defined (DYNAMIC_MONO_RUNTIME)
 #define MONO_THREAD_ATTACH \
 	do { \
 		gpointer __thread_dummy; \
