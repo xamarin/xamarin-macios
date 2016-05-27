@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{6E5405EC-1F68-4CD8-AD4B-E4CCFBE47977}</ProjectGuid>
+    <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>mmptest</RootNamespace>
+    <AssemblyName>mmptest</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
+    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\x86\Debug</OutputPath>
+    <DefineConstants>__UNIFIED__;DEBUG;XAMCORE_2_0;MONOMAC;MMP_TEST</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CodeSigningKey>Mac Developer</CodeSigningKey>
+    <CreatePackage>false</CreatePackage>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <UseSGen>true</UseSGen>
+    <UseRefCounting>true</UseRefCounting>
+    <Profiling>true</Profiling>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\x86\Release</OutputPath>
+    <DefineConstants>__UNIFIED__;XAMCORE_2_0;MONOMAC;MMP_TEST</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <EnableCodeSigning>true</EnableCodeSigning>
+    <CodeSigningKey>Developer ID Application</CodeSigningKey>
+    <CreatePackage>true</CreatePackage>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <IncludeMonoRuntime>true</IncludeMonoRuntime>
+    <UseSGen>true</UseSGen>
+    <UseRefCounting>true</UseRefCounting>
+    <LinkMode>SdkOnly</LinkMode>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.Mac" />
+    <Reference Include="GuiUnit">
+      <HintPath>..\..\..\xamarin-macios\external\guiunit\bin\xammac_mobile\GuiUnit.exe</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="src\ClassicTests.cs" />
+    <Compile Include="src\MMPTest.cs" />
+    <Compile Include="src\NativeReferencesTests.cs" />
+    <Compile Include="..\common\mac\MacTestMain.cs">
+      <Link>MacTestMain.cs</Link>
+    </Compile>
+    <Compile Include="..\common\mac\ProjectTestHelpers.cs">
+      <Link>ProjectTestHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\xamarin-macios\tests\common\Configuration.cs">
+      <Link>Configuration.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\xamarin-macios\src\ObjCRuntime\ErrorHelper.cs">
+      <Link>ErrorHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\xamarin-macios\src\ObjCRuntime\RuntimeException.cs">
+      <Link>RuntimeException.cs</Link>
+    </Compile>
+    <Compile Include="src\ExtensionTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\xamarin-macios\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">
+      <Project>{EACFD119-769E-4E6C-89B7-A6CE3757C431}</Project>
+      <Name>GuiUnit_xammac_mobile</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+  <Import Project="CustomBuildActions.targets" />
+</Project>

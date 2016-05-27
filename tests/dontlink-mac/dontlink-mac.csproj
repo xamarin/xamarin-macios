@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{FD385098-B3FD-4331-92BF-CC1F918E3334}</ProjectGuid>
+    <ProjectTypeGuids>{42C0BBD9-55CE-4FC1-8D90-A7348ABAFB23};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>dontlink</RootNamespace>
+    <AssemblyName>dontlink-mac</AssemblyName>
+    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\x86\Debug</OutputPath>
+    <DefineConstants>DEBUG;MONOMAC</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CodeSigningKey>Mac Developer</CodeSigningKey>
+    <CreatePackage>false</CreatePackage>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <UseSGen>false</UseSGen>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\x86\Release</OutputPath>
+    <DefineConstants>MONOMAC</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <EnableCodeSigning>true</EnableCodeSigning>
+    <CodeSigningKey>Developer ID Application</CodeSigningKey>
+    <CreatePackage>true</CreatePackage>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <IncludeMonoRuntime>true</IncludeMonoRuntime>
+    <UseSGen>false</UseSGen>
+    <LinkMode>SdkOnly</LinkMode>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="XamMac" />
+    <Reference Include="GuiUnit">
+      <HintPath>..\..\..\xamarin-macios\external\guiunit\bin\net_4_5\GuiUnit.exe</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+ <Compile Include="MacApiCtorInitTest.cs" />
+    <Compile Include="MacApiFieldTest.cs" />
+    <Compile Include="Mac.cs" />
+    <Compile Include="MacApiSelectorTest.cs" />
+    <Compile Include="MacApiProtocolTest.cs" />
+    <Compile Include="MacApiSignatureTest.cs" />
+    <Compile Include="..\bindings\CoreSelectorTest.cs">
+      <Link>CoreSelectorTest.cs</Link>
+    </Compile>
+    <Compile Include="..\bindings\ApiBaseTest.cs">
+      <Link>ApiBaseTest.cs</Link>
+    </Compile>
+    <Compile Include="..\bindings\ApiCtorInitTest.cs">
+      <Link>ApiCtorInitTest.cs</Link>
+    </Compile>
+    <Compile Include="..\bindings\ApiFieldTest.cs">
+      <Link>ApiFieldTest.cs</Link>
+    </Compile>
+    <Compile Include="..\bindings\ApiSelectorTest.cs">
+      <Link>ApiSelectorTest.cs</Link>
+    </Compile>
+    <Compile Include="..\introspection\EnvironmentVariable.cs">
+      <Link>EnvironmentVariable.cs</Link>
+    </Compile>
+    <Compile Include="..\bindings\ApiCoreImageFiltersTest.cs">
+      <Link>ApiCoreImageFiltersTest.cs</Link>
+    </Compile>
+    <Compile Include="..\bindings\ApiPInvokeTest.cs">
+      <Link>ApiPInvokeTest.cs</Link>
+    </Compile>
+    <Compile Include="..\bindings\ApiProtocolTest.cs">
+      <Link>ApiProtocolTest.cs</Link>
+    </Compile>
+    <Compile Include="..\bindings\ApiSignatureTest.cs">
+      <Link>ApiSignatureTest.cs</Link>
+    </Compile>
+    <Compile Include="..\bindings\ApiStructTest.cs">
+      <Link>ApiStructTest.cs</Link>
+    </Compile>
+    <Compile Include="..\bindings\PlatformInfo.cs">
+      <Link>PlatformInfo.cs</Link>
+    </Compile>
+    <Compile Include="MacCoreImageFiltersTest.cs" />
+    <Compile Include="..\bindings\ApiWeakPropertyTest.cs">
+      <Link>ApiWeakPropertyTest.cs</Link>
+    </Compile>
+    <Compile Include="MacApiPInvokeTest.cs" />
+    <Compile Include="MacApiWeakPropertyTest.cs" />
+    <Compile Include="..\common\mac\MacTestMain.cs">
+      <Link>MacTestMain.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>

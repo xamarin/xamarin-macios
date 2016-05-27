@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectTypeGuids>{810C163F-4746-4721-8B8E-88A3673A62EA};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{9B2BCC27-4807-4EF4-AA60-8D890AFAB9A5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>MobileBinding</RootNamespace>
+    <MacResourcePrefix>Resources</MacResourcePrefix>
+    <AssemblyName>MobileBinding</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Mobile-static\</OutputPath>
+    <BaseIntermediateOutputPath>../obj/Mobile-static/</BaseIntermediateOutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.Mac" />
+  </ItemGroup>
+  <ItemGroup>
+    <ObjcBindingApiDefinition Include="ApiDefinition.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ObjcBindingCoreSource Include="StructsAndEnums.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.ObjcBinding.CSharp.targets" />
+  <ItemGroup>
+    <ObjcBindingNativeLibrary Include="..\bin\SimpleClassStatic.a">
+      <Link>SimpleClassStatic.a</Link>
+    </ObjcBindingNativeLibrary>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="SimpleClassStatic.linkwith.cs">
+      <DependentUpon>SimpleClassStatic.a</DependentUpon>
+    </Compile>
+  </ItemGroup>
+</Project>

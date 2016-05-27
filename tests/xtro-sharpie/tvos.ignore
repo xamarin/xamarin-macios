@@ -1,0 +1,353 @@
+# AVFoundation
+
+## OSX only - but only the member is marked (not the protocol itself)
+!missing-protocol! AVFragmentMinding not bound
+
+## OSX only - category "AVFragmentedAsset (AVFragmentedAssetTrackInspection)" is not decorated 
+## but AVFragmentedAsset is only available on 10.11 (so it does not build)
+!missing-selector! AVFragmentedAsset::trackWithTrackID: not bound
+!missing-selector! AVFragmentedAsset::tracksWithMediaCharacteristic: not bound
+!missing-selector! AVFragmentedAsset::tracksWithMediaType: not bound
+
+
+# CloudKit
+
+## shown as available in iOS 9.3 in tvOS header files (from Xcode 7.3) so normally available in tvOS 9.2 
+## In reality the selectors only answer in the simulator, not on AppleTV devices
+!missing-selector! CKContainer::fetchAllLongLivedOperationIDsWithCompletionHandler: not bound
+!missing-selector! CKContainer::fetchLongLivedOperationWithID:completionHandler: not bound
+
+
+# CoreImage
+
+## Apple bug (mac only) - https://trello.com/c/kpksFWto/6-22524785-coreimage-headers-discrepancies
+!missing-selector! CIKernel::setROISelector: not bound
+
+
+# Foundation
+
+## does not exists in iOS (or watchOS) as a type - but some API refers to it (messy)
+!unknown-type! NSPortMessage bound
+
+## shown as available in iOS 9.3 in tvOS header files (from Xcode 7.3) so normally available in tvOS 9.2 
+## In reality it's only available in the simulator, not on AppleTV devices (all fields are null)
+!missing-field! NSUbiquitousUserDefaultsCompletedInitialSyncNotification not bound
+!missing-field! NSUbiquitousUserDefaultsDidChangeAccountsNotification not bound
+!missing-field! NSUserDefaultsSizeLimitExceededNotification not bound
+
+
+# GameKit
+
+## all members are not available so the protocol is empty
+## however this is confusing because some protocols have no members (so it can't just be ignored)
+!missing-protocol! GKFriendRequestComposeViewControllerDelegate not bound
+!missing-protocol! GKSavedGameListener not bound
+
+## GKSession is not in the tvOS API but the GKSessionDelegate is not marked
+## looks like mistakes as the API is not used anywhere else
+## easier to add later, if needed, than remove
+!missing-protocol! GKSessionDelegate not bound
+!missing-selector! GKSessionDelegate::session:connectionWithPeerFailed:withError: not bound
+!missing-selector! GKSessionDelegate::session:didFailWithError: not bound
+!missing-selector! GKSessionDelegate::session:didReceiveConnectionRequestFromPeer: not bound
+!missing-selector! GKSessionDelegate::session:peer:didChangeState: not bound
+
+## GKVoiceChatService is not in tvOS so nothing uses GKVoiceChatClient
+!missing-protocol! GKVoiceChatClient not bound
+!missing-selector! GKVoiceChatClient::participantID not bound
+!missing-selector! GKVoiceChatClient::voiceChatService:didNotStartWithParticipantID:error: not bound
+!missing-selector! GKVoiceChatClient::voiceChatService:didReceiveInvitationFromParticipantID:callID: not bound
+!missing-selector! GKVoiceChatClient::voiceChatService:didStartWithParticipantID: not bound
+!missing-selector! GKVoiceChatClient::voiceChatService:didStopWithParticipantID:error: not bound
+!missing-selector! GKVoiceChatClient::voiceChatService:sendData:toParticipantID: not bound
+!missing-selector! GKVoiceChatClient::voiceChatService:sendRealTimeData:toParticipantID: not bound
+
+
+# MediaPlayer
+
+## the "owner" type MPMediaEntity is marked with __TVOS_PROHIBITED
+## but in reality fields' parents are not the type (DeclContext)
+## so the xtro tests cannot know they are not really available
+!missing-field! MPMediaEntityPropertyPersistentID not bound
+
+## the "owner" type MPMediaItem is marked with __TVOS_PROHIBITED
+!missing-field! MPMediaItemPropertyAlbumArtist not bound
+!missing-field! MPMediaItemPropertyAlbumArtistPersistentID not bound
+!missing-field! MPMediaItemPropertyAlbumPersistentID not bound
+!missing-field! MPMediaItemPropertyAlbumTitle not bound
+!missing-field! MPMediaItemPropertyAlbumTrackCount not bound
+!missing-field! MPMediaItemPropertyAlbumTrackNumber not bound
+!missing-field! MPMediaItemPropertyArtist not bound
+!missing-field! MPMediaItemPropertyArtistPersistentID not bound
+!missing-field! MPMediaItemPropertyArtwork not bound
+!missing-field! MPMediaItemPropertyAssetURL not bound
+!missing-field! MPMediaItemPropertyBeatsPerMinute not bound
+!missing-field! MPMediaItemPropertyBookmarkTime not bound
+!missing-field! MPMediaItemPropertyComments not bound
+!missing-field! MPMediaItemPropertyComposer not bound
+!missing-field! MPMediaItemPropertyComposerPersistentID not bound
+!missing-field! MPMediaItemPropertyDiscCount not bound
+!missing-field! MPMediaItemPropertyDiscNumber not bound
+!missing-field! MPMediaItemPropertyGenre not bound
+!missing-field! MPMediaItemPropertyGenrePersistentID not bound
+!missing-field! MPMediaItemPropertyHasProtectedAsset not bound
+!missing-field! MPMediaItemPropertyIsCloudItem not bound
+!missing-field! MPMediaItemPropertyIsCompilation not bound
+!missing-field! MPMediaItemPropertyLastPlayedDate not bound
+!missing-field! MPMediaItemPropertyLyrics not bound
+!missing-field! MPMediaItemPropertyMediaType not bound
+!missing-field! MPMediaItemPropertyPersistentID not bound
+!missing-field! MPMediaItemPropertyPlayCount not bound
+!missing-field! MPMediaItemPropertyPlaybackDuration not bound
+!missing-field! MPMediaItemPropertyPodcastPersistentID not bound
+!missing-field! MPMediaItemPropertyPodcastTitle not bound
+!missing-field! MPMediaItemPropertyRating not bound
+!missing-field! MPMediaItemPropertyReleaseDate not bound
+!missing-field! MPMediaItemPropertySkipCount not bound
+!missing-field! MPMediaItemPropertyTitle not bound
+!missing-field! MPMediaItemPropertyUserGrouping not bound
+
+## shown as available in iOS 9.3 in tvOS header files (from Xcode 7.3) so normally available in tvOS 9.2 
+## In reality it's only available in the simulator, not on AppleTV devices (all fields are null)
+!missing-field! MPMediaPlaylistPropertyAuthorDisplayName not bound
+!missing-field! MPMediaPlaylistPropertyDescriptionText not bound
+
+
+## the enum is only used in API marked with __TVOS_PROHIBITED
+!missing-enum! MPMediaLibraryAuthorizationStatus not bound
+
+## in tvOS 9.2 MPContentItem is not marked with __TVOS_PROHIBITED anymore
+## however it expose a type that is still marked with __TVOS_PROHIBITED !?!
+## and it's also not used by other, available, API 
+## we're not risking it into our public API until Apple replies to the radar
+## https://trello.com/c/2gxuFbeS/38-24982126-mpmediaitemartwork-is-not-available-on-tvos-9-3b5
+!missing-type! MPContentItem not bound
+!missing-selector! MPContentItem::artwork not bound
+!missing-selector! MPContentItem::identifier not bound
+!missing-selector! MPContentItem::initWithIdentifier: not bound
+!missing-selector! MPContentItem::isContainer not bound
+!missing-selector! MPContentItem::isPlayable not bound
+!missing-selector! MPContentItem::playbackProgress not bound
+!missing-selector! MPContentItem::setArtwork: not bound
+!missing-selector! MPContentItem::setContainer: not bound
+!missing-selector! MPContentItem::setPlayable: not bound
+!missing-selector! MPContentItem::setPlaybackProgress: not bound
+!missing-selector! MPContentItem::setSubtitle: not bound
+!missing-selector! MPContentItem::setTitle: not bound
+!missing-selector! MPContentItem::subtitle not bound
+!missing-selector! MPContentItem::title not bound
+
+
+## Deprecated in iOS 9.0 (in favor of AVKit) and the related type 
+## MPMoviePlayerController is marked with __TVOS_PROHIBITED
+!missing-field! MPMovieDurationAvailableNotification not bound
+!missing-field! MPMovieMediaTypesAvailableNotification not bound
+!missing-field! MPMovieNaturalSizeAvailableNotification not bound
+!missing-field! MPMoviePlayerDidEnterFullscreenNotification not bound
+!missing-field! MPMoviePlayerDidExitFullscreenNotification not bound
+!missing-field! MPMoviePlayerFullscreenAnimationCurveUserInfoKey not bound
+!missing-field! MPMoviePlayerFullscreenAnimationDurationUserInfoKey not bound
+!missing-field! MPMoviePlayerIsAirPlayVideoActiveDidChangeNotification not bound
+!missing-field! MPMoviePlayerLoadStateDidChangeNotification not bound
+!missing-field! MPMoviePlayerNowPlayingMovieDidChangeNotification not bound
+!missing-field! MPMoviePlayerPlaybackDidFinishNotification not bound
+!missing-field! MPMoviePlayerPlaybackDidFinishReasonUserInfoKey not bound
+!missing-field! MPMoviePlayerPlaybackStateDidChangeNotification not bound
+!missing-field! MPMoviePlayerReadyForDisplayDidChangeNotification not bound
+!missing-field! MPMoviePlayerScalingModeDidChangeNotification not bound
+!missing-field! MPMoviePlayerThumbnailErrorKey not bound
+!missing-field! MPMoviePlayerThumbnailImageKey not bound
+!missing-field! MPMoviePlayerThumbnailImageRequestDidFinishNotification not bound
+!missing-field! MPMoviePlayerThumbnailTimeKey not bound
+!missing-field! MPMoviePlayerTimedMetadataKeyDataType not bound
+!missing-field! MPMoviePlayerTimedMetadataKeyInfo not bound
+!missing-field! MPMoviePlayerTimedMetadataKeyLanguageCode not bound
+!missing-field! MPMoviePlayerTimedMetadataKeyMIMEType not bound
+!missing-field! MPMoviePlayerTimedMetadataKeyName not bound
+!missing-field! MPMoviePlayerTimedMetadataUpdatedNotification not bound
+!missing-field! MPMoviePlayerTimedMetadataUserInfoKey not bound
+!missing-field! MPMoviePlayerWillEnterFullscreenNotification not bound
+!missing-field! MPMoviePlayerWillExitFullscreenNotification not bound
+!missing-field! MPMovieSourceTypeAvailableNotification not bound
+
+
+# StoreKit
+
+## SKStoreProductViewController is not in tvOS and the only member of the delegate is not either
+## but the delegate itself is not marked (so it's reported as missing)
+!missing-protocol! SKStoreProductViewControllerDelegate not bound
+
+
+# UIKit
+
+## Apple renamed it from UILineBreakMode and we kept the old name
+!missing-enum! NSLineBreakMode not bound
+!unknown-native-enum! UILineBreakMode bound
+
+## Apple renamed it from NSTextAlignment and we kept the old name
+!missing-enum! NSTextAlignment not bound
+!unknown-native-enum! UITextAlignment bound
+
+## headers uses a NSInteger, we provide an enum
+!unknown-native-enum! UITextDirection bound
+
+## UIBarButtonItem.Callback nested type, [UI|NS]*GestureRecognizer.Callback nested types
+!unknown-type! Callback bound
+
+## Implemented in managed code
+!missing-selector! UIColor::getHue:saturation:brightness:alpha: not bound
+!missing-selector! UIColor::getRed:green:blue:alpha: not bound
+
+## the UIActivityItemSource protocol is not marked as unavailable but all it's members use
+## UIActivityViewController which is not allowed on tvOS
+!missing-protocol! UIActivityItemSource not bound
+!missing-selector! UIActivityItemSource::activityViewController:dataTypeIdentifierForActivityType: not bound
+!missing-selector! UIActivityItemSource::activityViewController:itemForActivityType: not bound
+!missing-selector! UIActivityItemSource::activityViewController:subjectForActivityType: not bound
+!missing-selector! UIActivityItemSource::activityViewController:thumbnailImageForActivityType:suggestedSize: not bound
+!missing-selector! UIActivityItemSource::activityViewControllerPlaceholderItem: not bound
+
+## HACK (as documented in uikit.cs)
+!incorrect-protocol-member! UITextInputTraits::setAutocapitalizationType: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::setAutocorrectionType: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::setEnablesReturnKeyAutomatically: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::setKeyboardAppearance: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::setKeyboardType: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::setReturnKeyType: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::setSecureTextEntry: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::setSpellCheckingType: is OPTIONAL and should NOT be abstract
+
+## We only define tintColor on UIView, not on the subclasses (not needed for us)
+!missing-selector! UIButton::setTintColor: not bound
+!missing-selector! UIButton::tintColor not bound
+!missing-selector! UIImageView::setTintColor: not bound
+!missing-selector! UIImageView::tintColor not bound
+!missing-selector! UINavigationBar::setTintColor: not bound
+!missing-selector! UINavigationBar::tintColor not bound
+!missing-selector! UISearchBar::setTintColor: not bound
+!missing-selector! UISearchBar::tintColor not bound
+!missing-selector! UISegmentedControl::setTintColor: not bound
+!missing-selector! UISegmentedControl::tintColor not bound
+!missing-selector! UITabBar::setTintColor: not bound
+!missing-selector! UITabBar::tintColor not bound
+!missing-selector! UITableViewHeaderFooterView::setTintColor: not bound
+!missing-selector! UITableViewHeaderFooterView::tintColor not bound
+
+
+# OpenTK
+
+## never been exposed in XI either
+!missing-pinvoke! CVOpenGLESTextureCacheGetTypeID is not bound
+!missing-pinvoke! CVOpenGLESTextureGetTypeID is not bound
+
+## duplicates by design
+!duplicate-type-name! ActiveAttribType enum exists as both OpenTK.Graphics.ES30.ActiveAttribType and OpenTK.Graphics.ES20.ActiveAttribType
+!duplicate-type-name! ActiveUniformType enum exists as both OpenTK.Graphics.ES30.ActiveUniformType and OpenTK.Graphics.ES20.ActiveUniformType
+!duplicate-type-name! All enum exists as both OpenTK.Graphics.ES20.All and OpenTK.Graphics.ES11.All
+!duplicate-type-name! All enum exists as both OpenTK.Graphics.ES30.All and OpenTK.Graphics.ES11.All
+!duplicate-type-name! BeginMode enum exists as both OpenTK.Graphics.ES20.BeginMode and OpenTK.Graphics.ES11.BeginMode
+!duplicate-type-name! BeginMode enum exists as both OpenTK.Graphics.ES30.BeginMode and OpenTK.Graphics.ES11.BeginMode
+!duplicate-type-name! BlendEquationMode enum exists as both OpenTK.Graphics.ES30.BlendEquationMode and OpenTK.Graphics.ES20.BlendEquationMode
+!duplicate-type-name! BlendEquationSeparate enum exists as both OpenTK.Graphics.ES30.BlendEquationSeparate and OpenTK.Graphics.ES20.BlendEquationSeparate
+!duplicate-type-name! BlendSubtract enum exists as both OpenTK.Graphics.ES30.BlendSubtract and OpenTK.Graphics.ES20.BlendSubtract
+!duplicate-type-name! BlendingFactorDest enum exists as both OpenTK.Graphics.ES20.BlendingFactorDest and OpenTK.Graphics.ES11.BlendingFactorDest
+!duplicate-type-name! BlendingFactorDest enum exists as both OpenTK.Graphics.ES30.BlendingFactorDest and OpenTK.Graphics.ES11.BlendingFactorDest
+!duplicate-type-name! BlendingFactorSrc enum exists as both OpenTK.Graphics.ES20.BlendingFactorSrc and OpenTK.Graphics.ES11.BlendingFactorSrc
+!duplicate-type-name! BlendingFactorSrc enum exists as both OpenTK.Graphics.ES30.BlendingFactorSrc and OpenTK.Graphics.ES11.BlendingFactorSrc
+!duplicate-type-name! Boolean enum exists as both OpenTK.Graphics.ES20.Boolean and OpenTK.Graphics.ES11.Boolean
+!duplicate-type-name! Boolean enum exists as both OpenTK.Graphics.ES30.Boolean and OpenTK.Graphics.ES11.Boolean
+!duplicate-type-name! BufferObjects enum exists as both OpenTK.Graphics.ES20.BufferObjects and OpenTK.Graphics.ES11.BufferObjects
+!duplicate-type-name! BufferObjects enum exists as both OpenTK.Graphics.ES30.BufferObjects and OpenTK.Graphics.ES11.BufferObjects
+!duplicate-type-name! BufferParameterName enum exists as both OpenTK.Graphics.ES30.BufferParameterName and OpenTK.Graphics.ES20.BufferParameterName
+!duplicate-type-name! BufferTarget enum exists as both OpenTK.Graphics.ES30.BufferTarget and OpenTK.Graphics.ES20.BufferTarget
+!duplicate-type-name! BufferUsage enum exists as both OpenTK.Graphics.ES30.BufferUsage and OpenTK.Graphics.ES20.BufferUsage
+!duplicate-type-name! ClearBufferMask enum exists as both OpenTK.Graphics.ES20.ClearBufferMask and OpenTK.Graphics.ES11.ClearBufferMask
+!duplicate-type-name! ClearBufferMask enum exists as both OpenTK.Graphics.ES30.ClearBufferMask and OpenTK.Graphics.ES11.ClearBufferMask
+!duplicate-type-name! CullFaceMode enum exists as both OpenTK.Graphics.ES20.CullFaceMode and OpenTK.Graphics.ES11.CullFaceMode
+!duplicate-type-name! CullFaceMode enum exists as both OpenTK.Graphics.ES30.CullFaceMode and OpenTK.Graphics.ES11.CullFaceMode
+!duplicate-type-name! DataType enum exists as both OpenTK.Graphics.ES20.DataType and OpenTK.Graphics.ES11.DataType
+!duplicate-type-name! DataType enum exists as both OpenTK.Graphics.ES30.DataType and OpenTK.Graphics.ES11.DataType
+!duplicate-type-name! DepthFunction enum exists as both OpenTK.Graphics.ES30.DepthFunction and OpenTK.Graphics.ES20.DepthFunction
+!duplicate-type-name! DrawElementsType enum exists as both OpenTK.Graphics.ES30.DrawElementsType and OpenTK.Graphics.ES20.DrawElementsType
+!duplicate-type-name! EnableCap enum exists as both OpenTK.Graphics.ES20.EnableCap and OpenTK.Graphics.ES11.EnableCap
+!duplicate-type-name! EnableCap enum exists as both OpenTK.Graphics.ES30.EnableCap and OpenTK.Graphics.ES11.EnableCap
+!duplicate-type-name! ErrorCode enum exists as both OpenTK.Graphics.ES20.ErrorCode and OpenTK.Graphics.ES11.ErrorCode
+!duplicate-type-name! ErrorCode enum exists as both OpenTK.Graphics.ES30.ErrorCode and OpenTK.Graphics.ES11.ErrorCode
+!duplicate-type-name! FramebufferErrorCode enum exists as both OpenTK.Graphics.ES30.FramebufferErrorCode and OpenTK.Graphics.ES20.FramebufferErrorCode
+!duplicate-type-name! FramebufferObject enum exists as both OpenTK.Graphics.ES30.FramebufferObject and OpenTK.Graphics.ES20.FramebufferObject
+!duplicate-type-name! FramebufferParameterName enum exists as both OpenTK.Graphics.ES30.FramebufferParameterName and OpenTK.Graphics.ES20.FramebufferParameterName
+!duplicate-type-name! FramebufferSlot enum exists as both OpenTK.Graphics.ES30.FramebufferSlot and OpenTK.Graphics.ES20.FramebufferSlot
+!duplicate-type-name! FramebufferTarget enum exists as both OpenTK.Graphics.ES30.FramebufferTarget and OpenTK.Graphics.ES20.FramebufferTarget
+!duplicate-type-name! FrontFaceDirection enum exists as both OpenTK.Graphics.ES20.FrontFaceDirection and OpenTK.Graphics.ES11.FrontFaceDirection
+!duplicate-type-name! FrontFaceDirection enum exists as both OpenTK.Graphics.ES30.FrontFaceDirection and OpenTK.Graphics.ES11.FrontFaceDirection
+!duplicate-type-name! GetPName enum exists as both OpenTK.Graphics.ES20.GetPName and OpenTK.Graphics.ES11.GetPName
+!duplicate-type-name! GetPName enum exists as both OpenTK.Graphics.ES30.GetPName and OpenTK.Graphics.ES11.GetPName
+!duplicate-type-name! GetTextureParameter enum exists as both OpenTK.Graphics.ES20.GetTextureParameter and OpenTK.Graphics.ES11.GetTextureParameter
+!duplicate-type-name! GetTextureParameter enum exists as both OpenTK.Graphics.ES30.GetTextureParameter and OpenTK.Graphics.ES11.GetTextureParameter
+!duplicate-type-name! HintMode enum exists as both OpenTK.Graphics.ES20.HintMode and OpenTK.Graphics.ES11.HintMode
+!duplicate-type-name! HintMode enum exists as both OpenTK.Graphics.ES30.HintMode and OpenTK.Graphics.ES11.HintMode
+!duplicate-type-name! HintTarget enum exists as both OpenTK.Graphics.ES20.HintTarget and OpenTK.Graphics.ES11.HintTarget
+!duplicate-type-name! HintTarget enum exists as both OpenTK.Graphics.ES30.HintTarget and OpenTK.Graphics.ES11.HintTarget
+!duplicate-type-name! OpenGlEsCoreVersions enum exists as both OpenTK.Graphics.ES20.OpenGlEsCoreVersions and OpenTK.Graphics.ES11.OpenGlEsCoreVersions
+!duplicate-type-name! OpenGlEsCoreVersions enum exists as both OpenTK.Graphics.ES30.OpenGlEsCoreVersions and OpenTK.Graphics.ES11.OpenGlEsCoreVersions
+!duplicate-type-name! OpenGlescoreVersions enum exists as both OpenTK.Graphics.ES20.OpenGlescoreVersions and OpenTK.Graphics.ES11.OpenGlescoreVersions
+!duplicate-type-name! PixelFormat enum exists as both OpenTK.Graphics.ES20.PixelFormat and OpenTK.Graphics.ES11.PixelFormat
+!duplicate-type-name! PixelFormat enum exists as both OpenTK.Graphics.ES30.PixelFormat and OpenTK.Graphics.ES11.PixelFormat
+!duplicate-type-name! PixelInternalFormat enum exists as both OpenTK.Graphics.ES20.PixelInternalFormat and OpenTK.Graphics.ES11.PixelInternalFormat
+!duplicate-type-name! PixelInternalFormat enum exists as both OpenTK.Graphics.ES30.PixelInternalFormat and OpenTK.Graphics.ES11.PixelInternalFormat
+!duplicate-type-name! PixelStoreParameter enum exists as both OpenTK.Graphics.ES20.PixelStoreParameter and OpenTK.Graphics.ES11.PixelStoreParameter
+!duplicate-type-name! PixelStoreParameter enum exists as both OpenTK.Graphics.ES30.PixelStoreParameter and OpenTK.Graphics.ES11.PixelStoreParameter
+!duplicate-type-name! PixelType enum exists as both OpenTK.Graphics.ES20.PixelType and OpenTK.Graphics.ES11.PixelType
+!duplicate-type-name! PixelType enum exists as both OpenTK.Graphics.ES30.PixelType and OpenTK.Graphics.ES11.PixelType
+!duplicate-type-name! ProgramParameter enum exists as both OpenTK.Graphics.ES30.ProgramParameter and OpenTK.Graphics.ES20.ProgramParameter
+!duplicate-type-name! ReadFormat enum exists as both OpenTK.Graphics.ES30.ReadFormat and OpenTK.Graphics.ES20.ReadFormat
+!duplicate-type-name! RenderbufferInternalFormat enum exists as both OpenTK.Graphics.ES30.RenderbufferInternalFormat and OpenTK.Graphics.ES20.RenderbufferInternalFormat
+!duplicate-type-name! RenderbufferParameterName enum exists as both OpenTK.Graphics.ES30.RenderbufferParameterName and OpenTK.Graphics.ES20.RenderbufferParameterName
+!duplicate-type-name! RenderbufferTarget enum exists as both OpenTK.Graphics.ES30.RenderbufferTarget and OpenTK.Graphics.ES20.RenderbufferTarget
+!duplicate-type-name! SeparateBlendFunctions enum exists as both OpenTK.Graphics.ES30.SeparateBlendFunctions and OpenTK.Graphics.ES20.SeparateBlendFunctions
+!duplicate-type-name! ShaderBinary enum exists as both OpenTK.Graphics.ES30.ShaderBinary and OpenTK.Graphics.ES20.ShaderBinary
+!duplicate-type-name! ShaderBinaryFormat enum exists as both OpenTK.Graphics.ES30.ShaderBinaryFormat and OpenTK.Graphics.ES20.ShaderBinaryFormat
+!duplicate-type-name! ShaderParameter enum exists as both OpenTK.Graphics.ES30.ShaderParameter and OpenTK.Graphics.ES20.ShaderParameter
+!duplicate-type-name! ShaderPrecision enum exists as both OpenTK.Graphics.ES30.ShaderPrecision and OpenTK.Graphics.ES20.ShaderPrecision
+!duplicate-type-name! ShaderPrecisionSpecifiedTypes enum exists as both OpenTK.Graphics.ES30.ShaderPrecisionSpecifiedTypes and OpenTK.Graphics.ES20.ShaderPrecisionSpecifiedTypes
+!duplicate-type-name! ShaderSource enum exists as both OpenTK.Graphics.ES30.ShaderSource and OpenTK.Graphics.ES20.ShaderSource
+!duplicate-type-name! ShaderType enum exists as both OpenTK.Graphics.ES30.ShaderType and OpenTK.Graphics.ES20.ShaderType
+!duplicate-type-name! Shaders enum exists as both OpenTK.Graphics.ES30.Shaders and OpenTK.Graphics.ES20.Shaders
+!duplicate-type-name! StencilFunction enum exists as both OpenTK.Graphics.ES30.StencilFunction and OpenTK.Graphics.ES20.StencilFunction
+!duplicate-type-name! StencilOp enum exists as both OpenTK.Graphics.ES20.StencilOp and OpenTK.Graphics.ES11.StencilOp
+!duplicate-type-name! StencilOp enum exists as both OpenTK.Graphics.ES30.StencilOp and OpenTK.Graphics.ES11.StencilOp
+!duplicate-type-name! StringName enum exists as both OpenTK.Graphics.ES20.StringName and OpenTK.Graphics.ES11.StringName
+!duplicate-type-name! StringName enum exists as both OpenTK.Graphics.ES30.StringName and OpenTK.Graphics.ES11.StringName
+!duplicate-type-name! TextureMagFilter enum exists as both OpenTK.Graphics.ES20.TextureMagFilter and OpenTK.Graphics.ES11.TextureMagFilter
+!duplicate-type-name! TextureMagFilter enum exists as both OpenTK.Graphics.ES30.TextureMagFilter and OpenTK.Graphics.ES11.TextureMagFilter
+!duplicate-type-name! TextureMinFilter enum exists as both OpenTK.Graphics.ES20.TextureMinFilter and OpenTK.Graphics.ES11.TextureMinFilter
+!duplicate-type-name! TextureMinFilter enum exists as both OpenTK.Graphics.ES30.TextureMinFilter and OpenTK.Graphics.ES11.TextureMinFilter
+!duplicate-type-name! TextureParameterName enum exists as both OpenTK.Graphics.ES20.TextureParameterName and OpenTK.Graphics.ES11.TextureParameterName
+!duplicate-type-name! TextureParameterName enum exists as both OpenTK.Graphics.ES30.TextureParameterName and OpenTK.Graphics.ES11.TextureParameterName
+!duplicate-type-name! TextureTarget enum exists as both OpenTK.Graphics.ES30.TextureTarget and OpenTK.Graphics.ES20.TextureTarget
+!duplicate-type-name! TextureUnit enum exists as both OpenTK.Graphics.ES20.TextureUnit and OpenTK.Graphics.ES11.TextureUnit
+!duplicate-type-name! TextureUnit enum exists as both OpenTK.Graphics.ES30.TextureUnit and OpenTK.Graphics.ES11.TextureUnit
+!duplicate-type-name! TextureWrapMode enum exists as both OpenTK.Graphics.ES20.TextureWrapMode and OpenTK.Graphics.ES11.TextureWrapMode
+!duplicate-type-name! TextureWrapMode enum exists as both OpenTK.Graphics.ES30.TextureWrapMode and OpenTK.Graphics.ES11.TextureWrapMode
+!duplicate-type-name! UniformTypes enum exists as both OpenTK.Graphics.ES30.UniformTypes and OpenTK.Graphics.ES20.UniformTypes
+!duplicate-type-name! Unknown enum exists as both OpenTK.Graphics.ES20.Unknown and OpenTK.Graphics.ES11.Unknown
+!duplicate-type-name! Unknown enum exists as both OpenTK.Graphics.ES30.Unknown and OpenTK.Graphics.ES11.Unknown
+!duplicate-type-name! VertexArrays enum exists as both OpenTK.Graphics.ES30.VertexArrays and OpenTK.Graphics.ES20.VertexArrays
+!duplicate-type-name! VertexAttribParameter enum exists as both OpenTK.Graphics.ES30.VertexAttribParameter and OpenTK.Graphics.ES20.VertexAttribParameter
+!duplicate-type-name! VertexAttribPointerParameter enum exists as both OpenTK.Graphics.ES30.VertexAttribPointerParameter and OpenTK.Graphics.ES20.VertexAttribPointerParameter
+!duplicate-type-name! VertexAttribPointerType enum exists as both OpenTK.Graphics.ES30.VertexAttribPointerType and OpenTK.Graphics.ES20.VertexAttribPointerType
+
+
+# Security
+
+## added in iOS 8.0
+!missing-pinvoke! SecAddSharedWebCredential is not bound
+!missing-pinvoke! SecCreateSharedWebCredentialPassword is not bound
+!missing-pinvoke! SecRequestSharedWebCredential is not bound
+!missing-field! kSecSharedPassword not bound
+
+
+# Non-Apple
+
+## Xamarin (not Apple) type
+!unknown-type! CADisplayLinkTimeSource bound

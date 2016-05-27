@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E1F53F80-8399-499B-8017-C414B9CD263B}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>xharness</RootNamespace>
+    <AssemblyName>xharness</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>.</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <Commandlineparameters>--verbose --configure --autoconf --rootdir ../</Commandlineparameters>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>true</Externalconsole>
+    <OutputPath>bin\Release</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\..\..\xamarin-macios\external\mono\mcs\class\Mono.Options\Mono.Options\Options.cs">
+      <Link>Options.cs</Link>
+    </Compile>
+    <Compile Include="Harness.cs" />
+    <Compile Include="ProjectFileExtensions.cs" />
+    <Compile Include="PListExtensions.cs" />
+    <Compile Include="WatchOSTarget.cs" />
+    <Compile Include="TVOSTarget.cs" />
+    <Compile Include="Target.cs" />
+    <Compile Include="UnifiedTarget.cs" />
+    <Compile Include="ClassicTarget.cs" />
+    <Compile Include="AppRunner.cs" />
+    <Compile Include="..\..\..\xamarin-macios\tools\mtouch\SdkVersions.cs">
+      <Link>SdkVersions.cs</Link>
+    </Compile>
+    <Compile Include="SimpleTcpListener.cs" />
+    <Compile Include="BCLTarget.cs" />
+    <Compile Include="DeviceLogCapturer.cs" />
+    <Compile Include="XProcess.cs" />
+    <Compile Include="MakefileGenerator.cs" />
+    <Compile Include="SolutionGenerator.cs" />
+    <Compile Include="MacClassicTarget.cs" />
+    <Compile Include="MacUnifiedTarget.cs" />
+    <Compile Include="MacTarget.cs" />
+    <Compile Include="SimpleHttpListener.cs" />
+    <Compile Include="SimpleListener.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>
