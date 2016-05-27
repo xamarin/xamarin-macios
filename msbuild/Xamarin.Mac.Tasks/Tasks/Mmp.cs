@@ -57,7 +57,7 @@ namespace Xamarin.Mac.Tasks
 
 		public string ApplicationName { get; set; }
 		public string Architecture { get; set; }
-		public bool ArchiveSymbols { get; set; }
+		public string ArchiveSymbols { get; set; }
 		public string LinkMode { get; set; }
 		public bool Debug { get; set; }
 		public bool Profiling { get; set; }
@@ -77,12 +77,13 @@ namespace Xamarin.Mac.Tasks
 		protected override bool ValidateParameters ()
 		{
 			XamMacArch arch;
-			return Enum.TryParse<XamMacArch> (Architecture, true, out arch);
+			return Enum.TryParse (Architecture, true, out arch);
 		}
 
 		protected override string GenerateCommandLineCommands ()
 		{
 			var args = new ProcessArgumentBuilder ();
+			bool msym;
 
 			args.Add ("/verbose");
 
@@ -102,7 +103,7 @@ namespace Xamarin.Mac.Tasks
 
 			if (TargetFrameworkIdentifier == "Xamarin.Mac" || UseXamMacFullFramework) {
 				XamMacArch arch;
-				if (!Enum.TryParse<XamMacArch> (Architecture, true, out arch))
+				if (!Enum.TryParse (Architecture, true, out arch))
 					arch = XamMacArch.Default;
 
 				if (arch == XamMacArch.Default)
@@ -118,7 +119,8 @@ namespace Xamarin.Mac.Tasks
 				args.Add ("/arch:i386");
 			}
 
-			args.Add ("/msym:" + (ArchiveSymbols ? "yes" : "no"));
+			if (!string.IsNullOrEmpty (ArchiveSymbols) && bool.TryParse (ArchiveSymbols.Trim (), out msym))
+				args.Add ("--msym:" + (msym ? "yes" : "no"));
 
 			args.Add (string.Format ("--http-message-handler={0}", HttpClientHandler));
 
@@ -147,7 +149,7 @@ namespace Xamarin.Mac.Tasks
 			if (Profiling)
 				args.Add ("/profiling");
 
-			switch ((LinkMode ?? String.Empty).ToLower ()) {
+			switch ((LinkMode ?? string.Empty).ToLower ()) {
 			case "full":
 				break;
 			case "sdkonly":

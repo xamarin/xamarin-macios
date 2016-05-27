@@ -34,7 +34,6 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<MonoSymbolArchive Condition="'$(MonoSymbolArchive)' == ''">False</MonoSymbolArchive>
 		<EnableCodeSigning Condition="'$(EnableCodeSigning)' == ''">false</EnableCodeSigning>
 		<CodeSigningKey Condition="'$(CodeSigningKey)' == ''"></CodeSigningKey>
 		<CodeSignProvision Condition="'$(CodeSignProvision)' == ''"></CodeSignProvision>
