@@ -517,14 +517,14 @@ namespace XamCore.ObjCRuntime {
 			return Registrar.GetMethodDescription (Class.Lookup (cls), sel);
 		}
 
-		static IntPtr TryGetNSObjectWrapped (IntPtr ptr)
-		{
-			return ObjectWrapper.Convert (TryGetNSObject (ptr));
-		}
-
 		static IntPtr GetNSObjectWrapped (IntPtr ptr)
 		{
 			return ObjectWrapper.Convert (TryGetNSObject (ptr, true));
+		}
+
+		static bool HasNSObject (IntPtr ptr)
+		{
+			return TryGetNSObject (ptr) != null;
 		}
 
 		static IntPtr GetHandleForINativeObject (IntPtr ptr)

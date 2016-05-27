@@ -76,6 +76,11 @@ while test x$1 != x; do
         echo "ENABLE_XAMARIN=1" >> $CONFIGURED_FILE
         shift
         ;;
+	--enable-bitcode-on-ios)
+		# Private option
+		echo "ENABLE_BITCODE_ON_IOS=1" >> $CONFIGURED_FILE
+		shift
+		;;
 	--help|-h)
 		show_help
 		exit 0

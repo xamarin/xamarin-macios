@@ -33,6 +33,7 @@ const char *monotouch_dll = NULL; // NULL = try Xamarin.iOS.dll first, then mono
 static unsigned char *
 xamarin_load_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void **out_handle)
 {
+	// COOP: This is a callback called by the AOT runtime, I believe we don't have to change the GC mode here (even though it accesses managed memory).
 	*out_handle = NULL;
 	
 	const char *name = mono_assembly_name_get_name (mono_assembly_get_name (assembly));
@@ -73,6 +74,7 @@ xamarin_load_aot_data (MonoAssembly *assembly, int size, gpointer user_data, voi
 static void
 xamarin_free_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void *handle)
 {
+	// COOP: This is a callback called by the AOT runtime, I belive we don't have to change the GC mode here.
 	munmap (handle, size);
 }
 
@@ -82,6 +84,7 @@ This hook avoids the gazillion of filesystem probes we do as part of assembly lo
 MonoAssembly*
 assembly_preload_hook (MonoAssemblyName *aname, char **assemblies_path, void* user_data)
 {
+	// COOP: This is a callback called by the AOT runtime, I belive we don't have to change the GC mode here.
 	char filename [1024];
 	char path [1024];
 	const char *name = mono_assembly_name_get_name (aname);
@@ -205,6 +208,7 @@ extern void mono_gc_init_finalizer_thread (void);
 
 - (void) start
 {
+	// COOP: ?
 #if defined (__arm__) || defined(__aarch64__)
 	mono_gc_init_finalizer_thread ();
 #endif
@@ -212,6 +216,7 @@ extern void mono_gc_init_finalizer_thread (void);
 
 - (void) memoryWarning: (NSNotification *) sender
 {
+	// COOP: ?
 	mono_gc_collect (mono_gc_max_generation ());
 }
 
@@ -224,6 +229,7 @@ extern void mono_gc_init_finalizer_thread (void);
 int
 xamarin_main (int argc, char *argv[], bool is_extension)
 {
+	// COOP: ?
 	// + 1 for the initial "monotouch" +1 for the final NULL = +2.
 	// This is not an exact number (it will most likely be lower, since there
 	// are other arguments besides --app-arg), but it's a guaranteed and bound
@@ -254,6 +260,11 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 	setenv ("DYLD_BIND_AT_LAUNCH", "1", 1);
 	setenv ("MONO_REFLECTION_SERIALIZER", "yes", 1);
 
+#if TARGET_OS_WATCH
+	// watchOS can raise signals just fine...
+	// we might want to move this inside mono at some point.
+	signal (SIGPIPE, SIG_IGN);
+#endif
 
 #if TARGET_OS_WATCH || TARGET_OS_TV
 	mini_parse_debug_option ("explicit-null-checks");
@@ -449,11 +460,14 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 
 	DEBUG_LAUNCH_TIME_PRINT ("Total initialization time");
 
+	int rv = 0;
 	if (is_extension) {
-		return xamarin_extension_main (argc, argv);
+		MONO_ENTER_GC_SAFE;
+		rv = xamarin_extension_main (argc, argv);
+		MONO_EXIT_GC_SAFE;
 	} else {
 		mono_jit_exec (mono_domain_get (), assembly, managed_argc, managed_argv);
 	}
 	
-	return 0;
+	return rv;
 }

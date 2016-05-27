@@ -67,13 +67,13 @@
 			"SEL", "IntPtr", "sel"
 		) { WrappedManagedFunction = "GetMethodForSelector" },
 
-		new XDelegate ("MonoObject *", "IntPtr", "xamarin_try_get_nsobject",
-			"id", "IntPtr", "obj"
-		) { WrappedManagedFunction = "TryGetNSObjectWrapped" },
-
 		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_nsobject",
 			"id", "IntPtr", "obj"
 		) { WrappedManagedFunction = "GetNSObjectWrapped" },
+
+		new XDelegate ("bool", "bool", "xamarin_has_nsobject",
+			"id", "IntPtr", "obj"
+		) { WrappedManagedFunction = "HasNSObject" },
 
 		new XDelegate ("id", "IntPtr", "xamarin_get_handle_for_inativeobject",
 			"MonoObject *", "IntPtr", "obj"
