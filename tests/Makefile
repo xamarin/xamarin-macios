@@ -182,6 +182,7 @@ test-ios-tasks:
 	@[[ -z "$$BUILD_REPOSITORY" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt $(NUNIT_MSBUILD_DIR)/TestResults_Xamarin.iOS.Tasks.Tests.xml > $(TOP)/tests/index.html && echo "@MonkeyWrench: AddFile: $$PWD/index.html" )
 	@if test -e $(NUNIT_MSBUILD_DIR)/.failed-stamp; then rm $(NUNIT_MSBUILD_DIR)/.failed-stamp; exit 1; fi
 
+ifdef ENABLE_XAMARIN
 ifdef INCLUDE_IOS
 qa-test-dependencies.zip:
 	@$(MAKE) build-test-libraries
@@ -209,6 +210,10 @@ endif
 else
 qa-test-dependencies.zip:
 	@echo Not enabled
+endif
+else
+qa-test-dependencies.zip:
+	@echo Xamarin build not enabled
 endif
 
 ifdef INCLUDE_MAC
