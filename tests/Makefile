@@ -297,10 +297,14 @@ endif
 	cd $(TOP)/msbuild && git clean -xfdq
 
 wrench-docs:
+ifdef ENABLE_XAMARIN
 ifdef INCLUDE_IOS
-	$(MAKE) -C .. update-docs
+	$(MAKE) -C $(MACCORE_PATH) update-docs
 else
 	@echo "iOS tests have been disabled [$@]"
+endif
+else
+	@echo "Docs have been disabled [$@]"
 endif
 
 # the wrenchhelper-* targets are generated.
