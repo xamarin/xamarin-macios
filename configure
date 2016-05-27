@@ -37,6 +37,8 @@ if test -z "$1"; then
     exit 0
 fi
 
+echo "# Configure arguments: $*" >> $CONFIGURED_FILE
+
 while test x$1 != x; do
 	case $1 in
 	--disable-mac)
