@@ -1379,11 +1379,15 @@ install-local:: install-iphoneos
 endif
 endif
 
+ifndef ENABLE_BITCODE_ON_IOS
+LIBMONO_PROFILER_IPHONEOS_DYLIB=$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-profiler-log.dylib
+endif
+
 IPHONEOS_TARGETS = \
 	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmonosgen-2.0.a                                  \
 	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmonosgen-2.0.dylib                              \
 	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-profiler-log.a                             \
-	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-profiler-log.dylib                         \
+	$(LIBMONO_PROFILER_IPHONEOS_DYLIB)														\
 	$(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework/Mono                            \
 	$(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework/Info.plist                      \
 
@@ -1725,11 +1729,15 @@ TVOS_TARGET_SHAREDLIBLOGPROFILER = $(BUILD_DESTDIR)/targettv/lib/libmono-profile
 
 device:: tvos
 
+ifndef ENABLE_BITCODE_ON_IOS
+LIBMONO_PROFILER_TVOS_DYLIB=$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.dylib
+endif
+
 TVOS_TARGETS =                                                             \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmonosgen-2.0.a            \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmonosgen-2.0.dylib        \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.a       \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.dylib   \
+	$(LIBMONO_PROFILER_TVOS_DYLIB)											\
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono       \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Info.plist \
 
