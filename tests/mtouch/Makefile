@@ -8,7 +8,7 @@ export MSBuildExtensionsPath=$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/Ex
 
 check: run-tests
 
-NUNIT_MSBUILD_DIR=$(MACCORE_PATH)/tests/packages/NUnit.Runners.2.6.4/tools/lib
+NUNIT_MSBUILD_DIR=$(TOP)/tests/packages/NUnit.Runners.2.6.4/tools/lib
 
 all-local::
 	$(MAKE) dependencies
@@ -16,7 +16,7 @@ all-local::
 
 run-tests: test.config
 	rm -f .failed-stamp
-	cd $(NUNIT_MSBUILD_DIR) && $(SYSTEM_MONO) ../nunit-console.exe $(abspath $(MACCORE_PATH)/tests/mtouch/bin/Debug/mtouch.dll) -xml=$(abspath $(CURDIR)/TestResult.xml) -noshadow $(TEST_FIXTURE) -labels -nodots || touch .failed-stamp
+	cd $(NUNIT_MSBUILD_DIR) && $(SYSTEM_MONO) ../nunit-console.exe $(abspath $(TOP)/tests/mtouch/bin/Debug/mtouch.dll) -xml=$(abspath $(CURDIR)/TestResult.xml) -noshadow $(TEST_FIXTURE) -labels -nodots || touch .failed-stamp
 	@# Create an html file and tell MonkeyWrench to upload it (if we're running there)
 	@[[ -z "$$BUILD_REPOSITORY" ]] || \
 		( xsltproc $(TOP)/tests/HtmlTransform.xslt TestResult.xml  > index.html && \
@@ -24,7 +24,7 @@ run-tests: test.config
 	@[[ ! -e .failed-stamp ]] 
 
 build:
-	$(Q) $(SYSTEM_MONO) /Library/Frameworks//Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore $(MACCORE_PATH)/tests/tests.sln
+	$(Q) $(SYSTEM_MONO) /Library/Frameworks//Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore $(TOP)/tests/tests.sln
 	$(SYSTEM_XBUILD) mtouch.csproj $(XBUILD_VERBOSITY)
 	$(Q) rm -f .failed-stamp
 
