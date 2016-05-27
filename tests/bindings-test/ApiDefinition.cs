@@ -203,6 +203,9 @@ namespace Bindings.Test {
 		[Export ("testBlocks")]
 		bool TestBlocks ();
 
+		[Export ("idAsIntPtr:")]
+		void IdAsIntPtr (IntPtr id);
+
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -234,6 +237,15 @@ namespace Bindings.Test {
 
 		[Export ("initCallsInit:")]
 		IntPtr Constructor (int value);
+	}
+
+	[BaseType (typeof (NSObject))]
+	[Model]
+	[Protocol]
+	interface ObjCProtocolTest
+	{
+		[Export ("idAsIntPtr:")]
+		void IdAsIntPtr (IntPtr p1);
 	}
 }
 

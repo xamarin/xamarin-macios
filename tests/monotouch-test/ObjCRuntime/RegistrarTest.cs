@@ -1822,6 +1822,23 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 		}
 
+		[Test]
+		public void IdAsIntPtrTest ()
+		{
+			using (var obj = new IdAsIntPtrClass ()) {
+				Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("idAsIntPtr:"), IntPtr.Zero);
+			}
+		}
+
+		public class IdAsIntPtrClass : ObjCProtocolTest
+		{
+			[Export ("idAsIntPtr:")]
+			public new void IdAsIntPtr (IntPtr id)
+			{
+				Assert.AreEqual (IntPtr.Zero, id, "Zero");
+			}
+		}
+
 #if !__TVOS__ && !__WATCHOS__
 		class Test24970 : UIApplicationDelegate {
 			// This method uses the [Transient] attribute.
