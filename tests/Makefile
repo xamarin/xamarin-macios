@@ -24,7 +24,11 @@ export XAMMAC_FRAMEWORK_PATH=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.frame
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 
 ifneq ($(RELEASE),)
+ifneq ($(BITCODE),)
+CONFIG=Release-bitcode
+else
 CONFIG=Release
+endif
 else
 CONFIG=Debug
 endif

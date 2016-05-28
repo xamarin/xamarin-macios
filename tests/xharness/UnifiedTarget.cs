@@ -48,7 +48,10 @@ namespace xharness
 
 		public override string DeviceArchitectures {
 			get {
-				return "ARMv7, ARM64";
+				if (SupportsBitcode)
+					return "ARM64";
+				else
+					return "ARMv7, ARM64";
 			}
 		}
 
