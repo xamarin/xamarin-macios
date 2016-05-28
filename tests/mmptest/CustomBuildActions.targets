@@ -5,7 +5,7 @@
 	    <CreateAppBundleDependsOn>$(CreateAppBundleDependsOn);CreateNativeLibs</CreateAppBundleDependsOn>
 	</PropertyGroup>
 
-	<Target Name="CreateNativeLibs" Inputs="../common/mac/SimpleClass.m" Outputs="bin/SimpleClass.dylib;bin/SimpleClassStatic.a">
-		<Exec Command="make bin/SimpleClass.dylib bin/SimpleClassStatic.a"/>
+	<Target Name="CreateNativeLibs" Inputs="../common/mac/SimpleClass.m" Outputs="../mac-binding-project/bin/SimpleClassDylib.dylib;../mac-binding-project/bin/SimpleClassStatic.a">
+		<Exec Command="make bin/SimpleClassDylib.dylib bin/SimpleClassStatic.a" WorkingDirectory="../mac-binding-project/"/>
 	</Target>
 </Project>
