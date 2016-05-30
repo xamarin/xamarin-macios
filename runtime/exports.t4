@@ -566,27 +566,27 @@
 
 		#region utils/mono-threads-api.h
 
-		new Export ("void*", "mono_threads_enter_gc_unsafe_region",
+		new Export (true, "void*", "mono_threads_enter_gc_unsafe_region",
 			"void **", "stackdata"
 		),
 
-		new Export ("void", "mono_threads_exit_gc_unsafe_region",
+		new Export (true, "void", "mono_threads_exit_gc_unsafe_region",
 			"void *", "cookie",
 			"void **", "stackdata"
 		),
 
-		new Export ("void*", "mono_threads_enter_gc_safe_region",
+		new Export (true, "void*", "mono_threads_enter_gc_safe_region",
 			"void **", "stackdata"
 		),
 
-		new Export ("void", "mono_threads_exit_gc_safe_region",
+		new Export (true, "void", "mono_threads_exit_gc_safe_region",
 			"void *", "cookie",
 			"void **", "stackdata"
 		),
 
-		new Export ("void", "mono_threads_assert_gc_safe_region" ),
+		new Export (true, "void", "mono_threads_assert_gc_safe_region" ),
 
-		new Export ("void", "mono_threads_assert_gc_unsafe_region" ),
+		new Export (true, "void", "mono_threads_assert_gc_unsafe_region" ),
 
 		new Export (true, "void", "mono_threads_assert_gc_starting_region" ),
 	
