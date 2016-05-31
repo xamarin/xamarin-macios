@@ -21635,6 +21635,919 @@ namespace XamCore.AppKit {
 		[Mac (10, 11)]
 		[Field ("NSAccessibilityListItemLevelTextAttribute")]
 		NSString ListItemLevelTextAttribute { get; }
+
+		[Field ("NSAccessibilityRoleAttribute")]
+		NSString RoleAttribute { get; }
+
+		[Field ("NSAccessibilityRoleDescriptionAttribute")]
+		NSString RoleDescriptionAttribute { get; }
+
+		[Field ("NSAccessibilitySubroleAttribute")]
+		NSString SubroleAttribute { get; }
+
+		[Field ("NSAccessibilityHelpAttribute")]
+		NSString HelpAttribute { get; }
+
+		[Field ("NSAccessibilityValueAttribute")]
+		NSString ValueAttribute { get; }
+
+		[Field ("NSAccessibilityMinValueAttribute")]
+		NSString MinValueAttribute { get; }
+
+		[Field ("NSAccessibilityMaxValueAttribute")]
+		NSString MaxValueAttribute { get; }
+
+		[Field ("NSAccessibilityEnabledAttribute")]
+		NSString EnabledAttribute { get; }
+
+		[Field ("NSAccessibilityFocusedAttribute")]
+		NSString FocusedAttribute { get; }
+
+		[Field ("NSAccessibilityParentAttribute")]
+		NSString ParentAttribute { get; }
+
+		[Field ("NSAccessibilityChildrenAttribute")]
+		NSString ChildrenAttribute { get; }
+
+		[Field ("NSAccessibilityWindowAttribute")]
+		NSString WindowAttribute { get; }
+
+		[Field ("NSAccessibilityTopLevelUIElementAttribute")]
+		NSString ToplevelUIElementAttribute { get; }
+
+		[Field ("NSAccessibilitySelectedChildrenAttribute")]
+		NSString SelectedChildrenAttribute { get; }
+
+		[Field ("NSAccessibilityVisibleChildrenAttribute")]
+		NSString VisibleChildrenAttribute { get; }
+
+		[Field ("NSAccessibilityPositionAttribute")]
+		NSString PositionAttribute { get; }
+
+		[Field ("NSAccessibilitySizeAttribute")]
+		NSString SizeAttribute { get; }
+
+		[Field ("NSAccessibilityContentsAttribute")]
+		NSString ContentsAttribute { get; }
+
+		[Field ("NSAccessibilityTitleAttribute")]
+		NSString TitleAttribute { get; }
+
+		[Field ("NSAccessibilityDescriptionAttribute")]
+		NSString DescriptionAttribute { get; }
+
+		[Field ("NSAccessibilityShownMenuAttribute")]
+		NSString ShownMenuAttribute { get; }
+
+		[Mac (10, 5)]
+		[Field ("NSAccessibilityValueDescriptionAttribute")]
+		NSString ValueDescriptionAttribute { get; }
+
+		[Field ("NSAccessibilityPreviousContentsAttribute")]
+		NSString PreviousContentsAttribute { get; }
+
+		[Field ("NSAccessibilityNextContentsAttribute")]
+		NSString NextContentsAttribute { get; }
+
+		[Field ("NSAccessibilityHeaderAttribute")]
+		NSString HeaderAttribute { get; }
+
+		[Field ("NSAccessibilityEditedAttribute")]
+		NSString EditedAttribute { get; }
+
+		[Field ("NSAccessibilityTabsAttribute")]
+		NSString TabsAttribute { get; }
+
+		[Field ("NSAccessibilityHorizontalScrollBarAttribute")]
+		NSString HorizontalScrollBarAttribute { get; }
+
+		[Field ("NSAccessibilityVerticalScrollBarAttribute")]
+		NSString VerticalScrollBarAttribute { get; }
+
+		[Field ("NSAccessibilityOverflowButtonAttribute")]
+		NSString OverflowButtonAttribute { get; }
+
+		[Field ("NSAccessibilityIncrementButtonAttribute")]
+		NSString IncrementButtonAttribute { get; }
+
+		[Field ("NSAccessibilityDecrementButtonAttribute")]
+		NSString DecrementButtonAttribute { get; }
+
+		[Field ("NSAccessibilityFilenameAttribute")]
+		NSString FilenameAttribute { get; }
+
+		[Field ("NSAccessibilityExpandedAttribute")]
+		NSString ExpandedAttribute { get; }
+
+		[Field ("NSAccessibilitySelectedAttribute")]
+		NSString SelectedAttribute { get; }
+
+		[Field ("NSAccessibilitySplittersAttribute")]
+		NSString SplittersAttribute { get; }
+
+		[Field ("NSAccessibilityDocumentAttribute")]
+		NSString DocumentAttribute { get; }
+
+		[Field ("NSAccessibilityActivationPointAttribute")]
+		NSString ActivationPointAttribute { get; }
+
+		[Field ("NSAccessibilityURLAttribute")]
+		NSString URLAttribute { get; }
+
+		[Field ("NSAccessibilityIndexAttribute")]
+		NSString IndexAttribute { get; }
+
+		[Field ("NSAccessibilityRowCountAttribute")]
+		NSString RowCountAttribute { get; }
+
+		[Field ("NSAccessibilityColumnCountAttribute")]
+		NSString ColumnCountAttribute { get; }
+
+		[Field ("NSAccessibilityOrderedByRowAttribute")]
+		NSString OrderedByRowAttribute { get; }
+
+		[Field ("NSAccessibilityWarningValueAttribute")]
+		NSString WarningValueAttribute { get; }
+
+		[Field ("NSAccessibilityCriticalValueAttribute")]
+		NSString CriticalValueAttribute { get; }
+
+		[Field ("NSAccessibilityPlaceholderValueAttribute")]
+		NSString PlaceholderValueAttribute { get; }
+
+		[Mac (10, 9)]
+		[Field ("NSAccessibilityContainsProtectedContentAttribute")]
+		NSString ContainsProtectedContentAttribute { get; }
+
+		[Field ("NSAccessibilityTitleUIElementAttribute")]
+		NSString TitleUIAttribute { get; }
+
+		[Field ("NSAccessibilityServesAsTitleForUIElementsAttribute")]
+		NSString ServesAsTitleForUIElementsAttribute { get; }
+
+		[Field ("NSAccessibilityLinkedUIElementsAttribute")]
+		NSString LinkedUIElementsAttribute { get; }
+
+		[Field ("NSAccessibilitySelectedTextAttribute")]
+		NSString SelectedTextAttribute { get; }
+
+		[Field ("NSAccessibilitySelectedTextRangeAttribute")]
+		NSString SelectedTextRangeAttribute { get; }
+
+		[Field ("NSAccessibilityNumberOfCharactersAttribute")]
+		NSString NumberOfCharactersAttribute { get; }
+
+		[Field ("NSAccessibilityVisibleCharacterRangeAttribute")]
+		NSString VisibleCharacterRangeAttribute { get; }
+
+		[Field ("NSAccessibilitySharedTextUIElementsAttribute")]
+		NSString SharedTextUIElementsAttribute { get; }
+
+		[Field ("NSAccessibilitySharedCharacterRangeAttribute")]
+		NSString SharedCharacterRangeAttribute { get; }
+
+		[Field ("NSAccessibilityInsertionPointLineNumberAttribute")]
+		NSString InsertionPointLineNumberAttribute { get; }
+
+		[Mac (10, 5)]
+		[Field ("NSAccessibilitySelectedTextRangesAttribute")]
+		NSString SelectedTextRangesAttribute { get; }
+
+		[Field ("NSAccessibilityLineForIndexParameterizedAttribute")]
+		NSString LineForIndexParameterizedAttribute { get; }
+
+		[Field ("NSAccessibilityRangeForLineParameterizedAttribute")]
+		NSString RangeForLineParameterizedAttribute { get; }
+
+		[Field ("NSAccessibilityStringForRangeParameterizedAttribute")]
+		NSString StringForRangeParameterizeAttribute { get; }
+
+		[Field ("NSAccessibilityRangeForPositionParameterizedAttribute")]
+		NSString RangeForPositionParameterizedAttribute { get; }
+
+		[Field ("NSAccessibilityRangeForIndexParameterizedAttribute")]
+		NSString RangeForIndexParameterizedAttribute { get; }
+
+		[Field ("NSAccessibilityBoundsForRangeParameterizedAttribute")]
+		NSString BoundsForRangeParameterizedAttribute { get; }
+
+		[Field ("NSAccessibilityRTFForRangeParameterizedAttribute")]
+		NSString RTFForRangeParameterizedAttribute { get; }
+
+		[Field ("NSAccessibilityStyleRangeForIndexParameterizedAttribute")]
+		NSString StyleRangeForIndexParameterizedAttribute { get; }
+
+		[Field ("NSAccessibilityAttributedStringForRangeParameterizedAttribute")]
+		NSString AttributedStringForRangeParameterizedAttribute { get; }
+
+		[Field ("NSAccessibilityFontTextAttribute")]
+		NSString FontTextAttribute { get; }
+
+		[Field ("NSAccessibilityForegroundColorTextAttribute")]
+		NSString ForegroundColorTextAttribute { get; }
+
+		[Field ("NSAccessibilityBackgroundColorTextAttribute")]
+		NSString BackgroundColorTextAttribute { get; }
+
+		[Field ("NSAccessibilityUnderlineColorTextAttribute")]
+		NSString UnderlineColorTextAttribute { get; }
+
+		[Field ("NSAccessibilityStrikethroughColorTextAttribute")]
+		NSString StrikethroughColorTextAttribute { get; }
+
+		[Field ("NSAccessibilityUnderlineTextAttribute")]
+		NSString UnderlineTextAttribute { get; }
+
+		[Field ("NSAccessibilitySuperscriptTextAttribute")]
+		NSString SuperscriptTextAttribute { get; }
+
+		[Field ("NSAccessibilityStrikethroughTextAttribute")]
+		NSString StrikethroughTextAttribute { get; }
+
+		[Field ("NSAccessibilityShadowTextAttribute")]
+		NSString ShadowTextAttribute { get; }
+
+		[Field ("NSAccessibilityAttachmentTextAttribute")]
+		NSString AttachmentTextAttribute { get; }
+
+		[Field ("NSAccessibilityLinkTextAttribute")]
+		NSString LinkTextAttribute { get; }
+
+		[Mac (10, 7)]
+		[Field ("NSAccessibilityAutocorrectedTextAttribute")]
+		NSString AutocorrectedAttribute { get; }
+
+		[Field ("NSAccessibilityMisspelledTextAttribute")]
+		NSString MisspelledTextAttribute { get; }
+
+		[Mac (10, 4)]
+		[Field ("NSAccessibilityMarkedMisspelledTextAttribute")]
+		NSString MarkedMisspelledTextAttribute { get; }	
+
+		[Field ("NSAccessibilityMainAttribute")]
+		NSString MainAttribute { get; }
+
+		[Field ("NSAccessibilityMinimizedAttribute")]
+		NSString MinimizedAttribute { get; }
+
+		[Field ("NSAccessibilityCloseButtonAttribute")]
+		NSString CloseButtonAttribute { get; }
+
+		[Field ("NSAccessibilityZoomButtonAttribute")]
+		NSString ZoomButtonAttribute { get; }
+
+		[Field ("NSAccessibilityMinimizeButtonAttribute")]
+		NSString MinimizeButtonAttribute { get; }
+
+		[Field ("NSAccessibilityToolbarButtonAttribute")]
+		NSString ToolbarButtonAttribute { get; }
+
+		[Field ("NSAccessibilityProxyAttribute")]
+		NSString ProxyAttribute { get; }
+
+		[Field ("NSAccessibilityGrowAreaAttribute")]
+		NSString GrowAreaAttribute { get; }
+
+		[Field ("NSAccessibilityModalAttribute")]
+		NSString ModalAttribute { get; }
+
+		[Field ("NSAccessibilityDefaultButtonAttribute")]
+		NSString DefaultButtonAttribute { get; }
+
+		[Field ("NSAccessibilityCancelButtonAttribute")]
+		NSString CancelButtonAttribute { get; }
+
+		[Mac (10,7)]
+		[Field ("NSAccessibilityFullScreenButtonAttribute")]
+		NSString FullScreenButtonAttribute { get; }
+
+		[Field ("NSAccessibilityMenuBarAttribute")]
+		NSString MenuBarAttribute { get; }
+
+		[Field ("NSAccessibilityWindowsAttribute")]
+		NSString WindowsAttribute { get; }
+
+		[Field ("NSAccessibilityFrontmostAttribute")]
+		NSString FrontmostAttribute { get; }
+
+		[Field ("NSAccessibilityHiddenAttribute")]
+		NSString HiddenAttribute { get; }
+
+		[Field ("NSAccessibilityMainWindowAttribute")]
+		NSString MainWindowAttribute { get; }
+
+		[Field ("NSAccessibilityFocusedWindowAttribute")]
+		NSString FocusedWindowAttribute { get; }
+
+		[Field ("NSAccessibilityFocusedUIElementAttribute")]
+		NSString FocusedUIElementAttribute { get; }
+
+		[Mac (10, 8)]
+		[Field ("NSAccessibilityExtrasMenuBarAttribute")]
+		NSString ExtrasMenuBarAttribute { get; }
+
+		[Field ("NSAccessibilityColumnTitlesAttribute")]
+		NSString ColumnTitlesAttribute { get; }
+
+		[Field ("NSAccessibilitySearchButtonAttribute")]
+		NSString SearchButtonAttribute { get; }
+
+		[Field ("NSAccessibilitySearchMenuAttribute")]
+		NSString SearchMenuAttribute { get; }
+
+		[Field ("NSAccessibilityClearButtonAttribute")]
+		NSString ClearButtonAttribute { get; }
+
+		[Field ("NSAccessibilityRowsAttribute")]
+		NSString RowsAttribute { get; }
+
+		[Field ("NSAccessibilityVisibleRowsAttribute")]
+		NSString VisibleRowsAttribute { get; }
+
+		[Field ("NSAccessibilitySelectedRowsAttribute")]
+		NSString SelectedRowsAttribute { get; }
+
+		[Field ("NSAccessibilityColumnsAttribute")]
+		NSString ColumnsAttribute { get; }
+
+		[Field ("NSAccessibilityVisibleColumnsAttribute")]
+		NSString VisibleColumnsAttribute { get; }
+
+		[Field ("NSAccessibilitySelectedColumnsAttribute")]
+		NSString SelectedColumnsAttribute { get; }
+
+		[Field ("NSAccessibilitySortDirectionAttribute")]
+		NSString SortDirectionAttribute { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilitySelectedCellsAttribute")]
+		NSString SelectedCellsAttribute { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityVisibleCellsAttribute")]
+		NSString VisibleCellsAttribute { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityRowHeaderUIElementsAttribute")]
+		NSString RowHeaderUIElementsAttribute { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityColumnHeaderUIElementsAttribute")]
+		NSString ColumnHeaderUIElementsAttribute { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityCellForColumnAndRowParameterizedAttribute")]
+		NSString CellForColumnAndRowParameterizedAttribute { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityRowIndexRangeAttribute")]
+		NSString RowIndexRangeAttribute { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityColumnIndexRangeAttribute")]
+		NSString ColumnIndexRangeAttribute { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityHoriztonalUnitsAttribute")]
+		NSString HorizontalUnitsAttribute { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityVerticalUnitsAttribute")]
+		NSString VerticalUnitsAttribute { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityHorizontalUnitDescriptionAttribute")]
+		NSString HorizontalUnitDescriptionAttribute { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityVerticalUnitDescriptionAttribute")]
+		NSString VerticalUnitDescriptionAttribute { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityLayoutPointForScreenPointParameterizedAttribute")]
+		NSString LayoutPointForScreenPointParameterizedAttribute { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityLayoutSizeForScreenSizeParameterizedAttribute")]
+		NSString LayoutSizeForScreenSizeParameterizedAttribute { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityScreenPointForLayoutPointParameterizedAttribute")]
+		NSString ScreenPointForLayoutPointParameterizedAttribute { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityScreenSizeForLayoutSizeParameterizedAttribute")]
+		NSString ScreenSizeForLayoutSizeParameterizedAttribute { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityHandlesAttribute")]
+		NSString HandlesAttribute { get; }
+
+		[Field ("NSAccessibilityDisclosingAttribute")]
+		NSString DisclosingAttribute { get; }
+
+		[Field ("NSAccessibilityDisclosedRowsAttribute")]
+		NSString DisclosedRowsAttribute { get; }
+
+		[Field ("NSAccessibilityDisclosedByRowsAttribute")]
+		NSString DisclosedByRowsAttribute { get; }
+
+		[Field ("NSAccessibilityDisclosureLevelAttribute")]
+		NSString DisclosureLevelAttribute { get; }
+
+		[Field ("NSAccessibilityAllowedValuesAttribute")]
+		NSString AllowedValuesAttribute { get; }
+
+		[Field ("NSAccessibilityLabelUIElementsAttribute")]
+		NSString LabelUIElementsAttribute { get; }
+
+		[Field ("NSAccessibilityLabelValueAttribute")]
+		NSString LabelValueAttribute { get; }
+
+		[Mac (10, 1)]
+		[Obsolete]
+		[Field ("NSAccessibilityMatteHoleAttribute")]
+		NSString MatteHoleAttribute { get; }
+
+		[Mac (10, 1)]
+		[Obsolete]
+		[Field ("NSAccessibilityMatteContentUIElementAttribute")]
+		NSString MatteContentUIElementAttribute { get; }
+
+		[Field ("NSAccessibilityMarkerUIElementsAttribute")]
+		NSString MarkerUIElementsAttribute { get; }
+
+		[Field ("NSAccessibilityMarkerValuesAttribute")]
+		NSString MarkerValuesAttribute { get; }
+
+		[Field ("NSAccessibilityMarkerGroupUIElementAttribute")]
+		NSString MarkerGroupUIElementAttribute { get; }
+
+		[Field ("NSAccessibilityUnitsAttribute")]
+		NSString UnitsAttribute { get; }
+
+		[Field ("NSAccessibilityUnitDescriptionAttribute")]
+		NSString UnitDescriptionAttribute { get; }
+
+		[Field ("NSAccessibilityMarkerTypeAttribute")]
+		NSString MarkerTypeAttribute { get; }
+
+		[Field ("NSAccessibilityMarkerTypeDescriptionAttribute")]
+		NSString MarkerTypeDescriptionAttribute { get; }
+
+		[Mac (10, 7)]
+		[Field ("NSAccessibilityIdentifierAttribute")]
+		NSString IdentifierAttribute { get; }
+	}
+
+	[Static]
+	public interface NSAccessibilityFontKeys {
+		[Field ("NSAccessibilityFontNameKey")]
+		NSString FontNameKey { get; }
+
+		[Field ("NSAccessibilityFontFamilyKey")]
+		NSString FontFamilyKey { get; }
+
+		[Field ("NSAccessibilityVisibleNameKey")]
+		NSString VisibleNameKey { get; }
+
+		[Field ("NSAccessibilityFontSizeKey")]
+		NSString FontSizeKey { get; }
+	}
+
+	[Static]
+	public interface NSAccessibilityRoles {
+		[Field ("NSAccessibilityUnknownRole")]
+		NSString UnknownRole { get; }
+
+		[Field ("NSAccessibilityButtonRole")]
+		NSString ButtonRole { get; }
+
+		[Field ("NSAccessibilityRadioButtonRole")]
+		NSString RadioButtonRole { get; }
+
+		[Field ("NSAccessibilityCheckBoxRole")]
+		NSString CheckBoxRole { get; }
+
+		[Field ("NSAccessibilitySliderRole")]
+		NSString SliderRole { get; }
+
+		[Field ("NSAccessibilityTabGroupRole")]
+		NSString TabGroupRole { get; }
+
+		[Field ("NSAccessibilityTextFieldRole")]
+		NSString TextFieldRole { get; }
+
+		[Field ("NSAccessibilityStaticTextRole")]
+		NSString StaticTextRole { get; }
+
+		[Field ("NSAccessibilityTextAreaRole")]
+		NSString TextAreaRole { get; }
+
+		[Field ("NSAccessibilityScrollAreaRole")]
+		NSString ScrollAreaRole { get; }
+
+		[Field ("NSAccessibilityPopUpButtonRole")]
+		NSString PopUpButtonRole { get; }
+
+		[Field ("NSAccessibilityMenuButtonRole")]
+		NSString MenuButtonRole { get; }
+
+		[Field ("NSAccessibilityTableRole")]
+		NSString TableRole { get; }
+
+		[Field ("NSAccessibilityApplicationRole")]
+		NSString ApplicationRole { get; }
+
+		[Field ("NSAccessibilityGroupRole")]
+		NSString GroupRole { get; }
+
+		[Field ("NSAccessibilityRadioGroupRole")]
+		NSString RadioGroupRole { get; }
+
+		[Field ("NSAccessibilityListRole")]
+		NSString ListRole { get; }
+
+		[Field ("NSAccessibilityScrollBarRole")]
+		NSString ScrollBarRole { get; }
+
+		[Field ("NSAccessibilityValueIndicatorRole")]
+		NSString ValueIndicatorRole { get; }
+
+		[Field ("NSAccessibilityImageRole")]
+		NSString ImageRole { get; }
+
+		[Field ("NSAccessibilityMenuBarRole")]
+		NSString MenuRole { get; }
+
+		[Field ("NSAccessibilityMenuItemRole")]
+		NSString MenuItemRole { get; }
+
+		[Field ("NSAccessibilityColumnRole")]
+		NSString ColumnRole { get; }
+
+		[Field ("NSAccessibilityRowRole")]
+		NSString RowRole { get; }
+
+		[Field ("NSAccessibilityToolbarRole")]
+		NSString ToolbarRole { get; }
+
+		[Field ("NSAccessibilityBusyIndicatorRole")]
+		NSString BusyIndicatorRole { get; }
+
+		[Field ("NSAccessibilityProgressIndicatorRole")]
+		NSString ProgressIndicatorRole { get; }
+
+		[Field ("NSAccessibilityWindowRole")]
+		NSString WindowRole { get; }
+
+		[Field ("NSAccessibilityDrawerRole")]
+		NSString DrawerRole { get; }
+
+		[Field ("NSAccessibilitySystemWideRole")]
+		NSString SystemWideRole { get; }
+
+		[Field ("NSAccessibilityOutlineRole")]
+		NSString OutlineRole { get; }
+
+		[Field ("NSAccessibilityIncrementorRole")]
+		NSString IncrementorRole { get; }
+
+		[Field ("NSAccessibilityBrowserRole")]
+		NSString BrowserRole { get; }
+
+		[Field ("NSAccessibilityComboBoxRole")]
+		NSString ComboBoxRole { get; }
+
+		[Field ("NSAccessibilitySplitGroupRole")]
+		NSString SplitGroupRole { get; }
+
+		[Field ("NSAccessibilitySplitterRole")]
+		NSString SplitterRole { get; }
+
+		[Field ("NSAccessibilityColorWellRole")]
+		NSString ColorWellRole { get; }
+
+		[Field ("NSAccessibilityGrowAreaRole")]
+		NSString GrowAreaRole { get; }
+
+		[Field ("NSAccessibilitySheetRole")]
+		NSString SheetRole { get; }
+
+		[Field ("NSAccessibilityHelpTagRole")]
+		NSString HelpTagRole { get; }
+
+		[Field ("NSAccessibilityMatteRole")]
+		NSString MatteRole { get; }
+
+		[Field ("NSAccessibilityRulerRole")]
+		NSString RulerRole { get; }
+
+		[Field ("NSAccessibilityRulerMarkerRole")]
+		NSString RulerMarkerRole { get; }
+
+		[Field ("NSAccessibilityLinkRole")]
+		NSString LinkRole { get; }
+
+		[Mac (10, 5)]
+		[Field ("NSAccessibilityDisclosureTriangleRole")]
+		NSString DisclosureTriangleRole { get; }
+
+		[Mac (10, 5)]
+		[Field ("NSAccessibilityGridRole")]
+		NSString GridRole { get; }
+
+		[Field ("NSAccessibilityRelevanceIndicatorRole")]
+		NSString RelevanceIndicatorRole { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityLevelIndicatorRole")]
+		NSString LevelIndicatorRole { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityCellRole")]
+		NSString CellRole { get; }
+
+		[Mac (10, 7)]
+		[Field ("NSAccessibilityPopoverRole")]
+		NSString PopoverRole { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityLayoutAreaRole")]
+		NSString LayoutAreaRole { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityLayoutItemRole")]
+		NSString LayoutItemRole { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityHandleRole")]
+		NSString HandleRole { get; }
+	}
+
+	[Static]
+	public interface NSAccessibilitySubroles {
+		[Field ("NSAccessibilityUnknownSubrole")]
+		NSString UnknownSubrole { get; }
+
+		[Field ("NSAccessibilityCloseButtonSubrole")]
+		NSString CloseButtonSubrole { get; }
+
+		[Field ("NSAccessibilityZoomButtonSubrole")]
+		NSString ZoomButtonSubrole { get; }
+
+		[Field ("NSAccessibilityMinimizeButtonSubrole")]
+		NSString MinimizeButtonSubrole { get; }
+
+		[Field ("NSAccessibilityToolbarButtonSubrole")]
+		NSString ToolbarButtonSubrole { get; }
+
+		[Field ("NSAccessibilityTableRowSubrole")]
+		NSString TableRowSubrole { get; }
+
+		[Field ("NSAccessibilityOutlineRowSubrole")]
+		NSString OutlineRowSubrole { get; }
+
+		[Field ("NSAccessibilitySecureTextFieldSubrole")]
+		NSString SecureTextFieldSubrole { get; }
+
+		[Field ("NSAccessibilityStandardWindowSubrole")]
+		NSString StandardWindowSubrole { get; }
+
+		[Field ("NSAccessibilityDialogSubrole")]
+		NSString DialogSubrole { get; }
+
+		[Field ("NSAccessibilitySystemDialogSubrole")]
+		NSString SystemDialogSubrole { get; }
+
+		[Field ("NSAccessibilityFloatingWindowSubrole")]
+		NSString FloatingWindowSubrole { get; }
+
+		[Field ("NSAccessibilitySystemFloatingWindowSubrole")]
+		NSString SystemFloatingWindowSubrole { get; }
+
+		[Field ("NSAccessibilityIncrementArrowSubrole")]
+		NSString IncrementArrowSubrole { get; }
+
+		[Field ("NSAccessibilityDecrementArrowSubrole")]
+		NSString DecrementArrowSubrole { get; }
+
+		[Field ("NSAccessibilityIncrementPageSubrole")]
+		NSString IncrementPageSubrole { get; }
+
+		[Field ("NSAccessibilityDecrementPageSubrole")]
+		NSString DecrementPageSubrole { get; }
+
+		[Field ("NSAccessibilitySearchFieldSubrole")]
+		NSString SearchFieldSubrole { get; }
+
+		[Field ("NSAccessibilityTextAttachmentSubrole")]
+		NSString TextAttachmentSubrole { get; }
+
+		[Field ("NSAccessibilityTextLinkSubrole")]
+		NSString TextLinkSubrole { get; }
+
+		[Mac (10, 5)]
+		[Field ("NSAccessibilityTimelineSubrole")]
+		NSString TimelineSubrole { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilitySortButtonSubrole")]
+		NSString SortButtonSubrole { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityRatingIndicatorSubrole")]
+		NSString RatingIndicatorSubrole { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityContentListSubrole")]
+		NSString ContentListSubrole { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityDefinitionListSubrole")]
+		NSString DefinitionListSubrole { get; }
+
+		[Mac (10, 7)]
+		[Field ("NSAccessibilityFullscreenButtonSubrole")]
+		NSString FullscreenButtonSubrole { get; }
+
+		[Mac (10, 9)]
+		[Field ("NSAccessibilityToggleSubrole")]
+		NSString ToggleSubrole { get; }
+
+		[Mac (10, 9)]
+		[Field ("NSAccessibilitySwitchSubrole")]
+		NSString SwitchSubrole { get; }
+
+		[Mac (10, 9)]
+		[Field ("NSAccessibilityDescriptionListSubrole")]
+		NSString DescriptionListSubrole { get; }
+	}
+
+	[Static]
+	public interface NSAccessibilityNotifications {
+		[Field ("NSAccessibilityMainWindowChangedNotification")]
+		NSString MainWindowChangedNotification { get; }
+
+		[Field ("NSAccessibilityFocusedWindowChangedNotification")]
+		NSString FocusedWindowChangedNotification { get; }
+
+		[Field ("NSAccessibilityUIElementChangedNotification")]
+		NSString UIElementChangedNotification { get; }
+
+		[Field ("NSAccessibilityApplicationActivatedNotification")]
+		NSString ApplicationActivatedNotification { get; }
+
+		[Field ("NSAccessibilityApplicationDeactivatedNotification")]
+		NSString ApplicationDeactivatedNotification { get; }
+
+		[Field ("NSAccessibilityApplicationHiddenNotification")]
+		NSString ApplicationHiddenNotification { get; }
+
+		[Field ("NSAccessibilityApplicationShownNotification")]
+		NSString ApplicationShownNotification { get; }
+
+		[Field ("NSAccessibilityWindowCreatedNotification")]
+		NSString WindowCreatedNotification { get; }
+
+		[Field ("NSAccessibilityWindowMovedNotification")]
+		NSString WindowMovedNotification { get; }
+
+		[Field ("NSAccessibilityWindowResizedNotification")]
+		NSString WindowResizedNotification { get; }
+
+		[Field ("NSAccessibilityWindowMiniaturizedNotification")]
+		NSString WindowMiniaturizedNotification { get; }
+
+		[Field ("NSAccessibilityWindowDeminiaturizedNotification")]
+		NSString WindowDeminiaturizedNotification { get; }
+
+		[Field ("NSAccessibilityDrawerCreatedNotification")]
+		NSString DrawerCreatedNotification { get; }
+
+		[Field ("NSAccessibilitySheetCreatedNotification")]
+		NSString SheetCreatedNotification { get; }
+
+		[Field ("NSAccessibilityUIElementDestroyedNotification")]
+		NSString UIElementDestroyedNotification { get; }
+
+		[Field ("NSAccessibilityValueChangedNotification")]
+		NSString ValueChangedNotification { get; }
+
+		[Field ("NSAccessibilityTitleChangedNotification")]
+		NSString TitleChangedNotification { get; }
+
+		[Field ("NSAccessibilityResizedNotification")]
+		NSString ResizedNotification { get; }
+
+		[Field ("NSAccessibilityMovedNotification")]
+		NSString MovedNotification { get; }
+
+		[Field ("NSAccessibilityCreatedNotification")]
+		NSString CreatedNotification { get; }
+
+		[Mac (10, 9)]
+		[Field ("NSAccessibilityLayoutChangedNotification")]
+		NSString LayoutChangedNotification { get; }
+
+		[Field ("NSAccessibilityHelpTagCreatedNotification")]
+		NSString HelpTagCreatedNotification { get; }
+
+		[Field ("NSAccessibilitySelectedTextChangedNotification")]
+		NSString SelectedTextChangedNotification { get; }
+
+		[Field ("NSAccessibilityRowCountChangedNotification")]
+		NSString RowCountChangedNotification { get; }
+
+		[Field ("NSAccessibilitySelectedChildrenChangedNotification")]
+		NSString SelectedChildrenChangedNotification { get; }
+
+		[Field ("NSAccessibilitySelectedRowsChangedNotification")]
+		NSString SelectedRowsChangedNotification { get; }
+
+		[Field ("NSAccessibilitySelectedColumnsChangedNotification")]
+		NSString SelectedColumnsChangedNotification { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityRowExpandedNotification")]
+		NSString RowExpandedNotification { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityRowCollapsedNotification")]
+		NSString RowCollapsedNotification { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilitySelectedCellsChangedNotification")]
+		NSString SelectedCellsChangedNotification { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilityUnitsChangedNotification")]
+		NSString UnitsChangedNotification { get; }
+
+		[Mac (10, 6)]
+		[Field ("NSAccessibilitySelectedChildrenMovedNotification")]
+		NSString SelectedChildrenMovedNotification { get; }
+
+		[Mac (10, 7)]
+		[Field ("NSAccessibilityAnnouncementRequestedNotification")]
+		NSString AnnouncementRequestedNotification { get; }
+	}
+
+	[Static]
+	public interface NSWorkspaceAccessibilityNotifications {
+		[Mac (10, 10)]
+		[Field ("NSWorkspaceAccessibilityDisplayOptionsDidChangeNotification")]
+		NSString DisplayOptionsDidChangeNotification { get; }
+	}
+
+	[Static]
+	public interface NSAccessibilityNotificationUserInfoKeys {
+		[Field ("NSAccessibilityUIElementsKey")]
+		NSString UIElementsKey { get; }
+
+		[Field ("NSAccessibilityPriorityKey")]
+		NSString PriorityKey { get; }
+
+		[Field ("NSAccessibilityAnnouncementKey")]
+		NSString AnnouncementKey { get; }
+	}
+
+	[Static]
+	public interface NSAccessibilityActions {
+		[Field ("NSAccessibilityPressAction")]
+		NSString PressAction { get; }
+
+		[Field ("NSAccessibilityIncrementAction")]
+		NSString IncrementAction { get; }
+
+		[Field ("NSAccessibilityDecrementAction")]
+		NSString DecrementAction { get; }
+
+		[Field ("NSAccessibilityConfirmAction")]
+		NSString ConfirmAction { get; }
+
+		[Field ("NSAccessibilityPickAction")]
+		NSString PickAction { get; }
+
+		[Field ("NSAccessibilityCancelAction")]
+		NSString CancelAction { get; }
+
+		[Field ("NSAccessibilityRaiseAction")]
+		NSString RaiseAction { get; }
+
+		[Field ("NSAccessibilityShowMenuAction")]
+		NSString ShowMenu { get; }
+
+		[Field ("NSAccessibilityDeleteAction")]
+		NSString DeleteAction { get; }
+
+		[Mac (10,9)]
+		[Field ("NSAccessibilityShowAlternateUIAction")]
+		NSString ShowAlternateUIAction { get; }
+
+		[Mac (10,9)]
+		[Field ("NSAccessibilityShowDefaultUIAction")]
+		NSString ShowDefaultUIAction { get; }
 	}
 
 	[Mac (10,10)]
@@ -21889,5 +22802,80 @@ namespace XamCore.AppKit {
 	public interface NSAccessibilityLayoutItem : NSAccessibilityGroup {
 		[Export ("setAccessibilityFrame:")]
 		void SetAccessibilityFrame (CGRect frame);
+	}
+
+	[Protocol, BaseType (typeof (NSObject))]
+	public interface NSObjectAccessibilityExtensions {
+		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
+		[Export ("accessibilityAttributeNames:")]
+		NSArray AccessibilityAttributeNames { get; }
+
+		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
+		[Export ("accessibilityAttributeValue:")]
+		NSObject GetAccessibilityValue (NSString attribute);
+
+		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
+		[Export ("accessibilityIsAttributeSettable:")]
+		bool IsAccessibilityAttributeSettable (NSString attribute);
+
+		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
+		[Export ("accessibilitySetValue:forAttribute:")]
+		void SetAccessibilityValue (NSString attribute, NSObject value);
+
+		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
+		[Export ("accessibilityParameterizedAttributeNames")]
+		NSArray AccessibilityParameterizedAttributeNames { get; }
+
+		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
+		[Export ("accessibilityAttributeValue:forParameter:")]
+		NSObject GetAccessibilityValue (NSString attribute, NSObject parameter);
+
+		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
+		[Export ("accessibilityActionNames")]
+		NSArray AccessibilityActionNames { get; }
+
+		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
+		[Export ("accessibilityActionDescription:")]
+		NSString GetAccessibilityActionDescription (NSString action);
+
+		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
+		[Export ("accessibilityPerformAction:")]
+		void AccessibilityPerformAction (NSString action);
+
+		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
+		[Export ("accessibilityIsIgnored")]
+		bool AccessibilityIsIgnored { get; }
+
+		[Export ("accessibilityHitTest:")]
+		NSObject GetAccessibilityHitTest (CGPoint point);
+
+		[Export ("getAccessibilityFocusedUIElement")]
+		NSObject GetAccessibilityFocusedUIElement ();
+
+		[Export ("accessibilityIndexOfChild:")]
+		nuint GetAccessibilityIndexOfChild (NSObject child);
+
+		[Export ("accessibilityArrayAttributeCount:")]
+		nuint GetAccessibilityArrayAttributeCount (NSString attribute);
+
+		[Export ("accessibilityArrayAttributeValues:index:maxCount:")]
+		NSObject[] GetAccessibilityArrayAttributeValues (NSString attribute, nuint index, nuint maxCount);
+
+		[Mac (10,9)]
+		[Export ("accessibilityNotifiesWhenDestroyed")]
+		bool AccessibilityNotifiesWhenDestroyed { get; }
+	}
+
+	[Mac (10, 10)]
+	[Protocol, BaseType (typeof (NSWorkspace))]
+	public interface NSWorkspaceAccessibilityExtensions {
+		[Export ("accessibilityDisplayShouldIncreaseContract")]
+		bool AccessibilityDisplayShouldIncreaseContract { get; }
+
+		[Export ("accessibilityDisplayShouldDifferentiateWithoutColor")]
+		bool AccessibilityDisplayShouldDifferentiateWithoutColor { get; }
+
+		[Export ("accessibilityDisplayShouldReduceTransparency")]
+		bool AccessibilityDisplayShouldReduceTransparency { get; }
 	}
 }
