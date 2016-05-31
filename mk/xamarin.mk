@@ -85,7 +85,7 @@ DEPENDENCY_DIRECTORIES += $($(2)_PATH)
 endef
 
 $(MACCORE_PATH):
-	$(Q) $(MAKE) reset-maccore
+	$(Q) git clone --recursive $(MACCORE_MODULE) $(MACCORE_PATH)
 
 $(eval $(call CheckVersionTemplate,maccore,MACCORE))
 -include $(MACCORE_PATH)/mk/versions.mk
