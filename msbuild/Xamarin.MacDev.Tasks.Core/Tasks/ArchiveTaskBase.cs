@@ -47,6 +47,10 @@ namespace Xamarin.MacDev.Tasks
 			get { return AppBundleDir.ItemSpec + ".dSYM"; }
 		}
 
+		protected string MSYMDir {
+			get { return AppBundleDir.ItemSpec + ".mSYM"; }
+		}
+
 		protected string XcodeArchivesDir {
 			get {
 				var home = Environment.GetFolderPath (Environment.SpecialFolder.Personal);

@@ -487,6 +487,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			TargetFrameworkVersion="$(TargetFrameworkVersion)"
 			UseXamMacFullFramework="$(UseXamMacFullFramework)"
 			Architecture="$(XamMacArch)"
+			ArchiveSymbols="$(MonoSymbolArchive)"
 			LinkMode="$(LinkMode)"
 			Debug="$(DebugSymbols)"
 			HttpClientHandler="$(HttpClientHandler)"
