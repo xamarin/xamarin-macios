@@ -819,7 +819,13 @@ namespace Xamarin.Bundler
 			compiler_flags.AddOtherFlag ("-lz");
 			compiler_flags.AddOtherFlag ("-liconv");
 
+			bool need_libcpp = false;
 			if (App.EnableBitCode)
+				need_libcpp = true;
+#if ENABLE_BITCODE_ON_IOS
+			need_libcpp = true;
+#endif
+			if (need_libcpp)
 				compiler_flags.AddOtherFlag ("-lc++");
 
 			// allow the native linker to remove unused symbols (if the caller was removed by the managed linker)

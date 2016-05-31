@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9A1177F5-16E6-45DE-AA69-DC9924EC39B8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>MTouchTests</RootNamespace>
+    <AssemblyName>mtouch</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <DebugSymbols>True</DebugSymbols>
+    <DefineConstants>MONOTOUCH</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Posix" />
+    <Reference Include="System.Xml" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MTouch.cs" />
+    <Compile Include="RegistrarTest.cs" />
+    <Compile Include="..\common\AssertHelpers.cs">
+      <Link>AssertHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\common\ExecutionHelper.cs">
+      <Link>ExecutionHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\xamarin-macios\tests\common\Configuration.cs">
+      <Link>Configuration.cs</Link>
+    </Compile>
+    <Compile Include="MiscTests.cs" />
+    <Compile Include="..\..\..\xamarin-macios\tools\linker\MobileProfile.cs">
+      <Link>MobileProfile.cs</Link>
+    </Compile>
+    <Compile Include="SdkTest.cs" />
+    <Compile Include="MTouchTool.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <None Include="README" />
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>

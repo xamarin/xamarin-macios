@@ -288,8 +288,12 @@ $(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator64/lib/libmono
 
 IOS_DEFINES = -d:MONOTOUCH -d:MTOUCH $(APPLETLS_DEFINES)
 
+ifdef ENABLE_BITCODE_ON_IOS
+MTOUCH_DEFINES= -define:ENABLE_BITCODE_ON_IOS
+endif
+
 MTOUCH_COMPILE_DEPS = $(MTOUCH_SOURCES) $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) Makefile $(LINKER_RESOURCES)
-MTOUCH_COMPILE_ARGS = -unsafe $(IOS_DEFINES) -resource:Info.plist.tmpl -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) $(MTOUCH_SOURCES) -nowarn:0436 $(LINKER_RESOURCES:%=-resource:%)
+MTOUCH_COMPILE_ARGS = -unsafe $(IOS_DEFINES) -resource:Info.plist.tmpl -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) $(MTOUCH_SOURCES) -nowarn:0436 $(LINKER_RESOURCES:%=-resource:%) $(MTOUCH_DEFINES)
 
 # bin/Debug/mtouch.exe is used from mtouch.csproj when debugging
 bin/Debug/mtouch.exe: $(MTOUCH_COMPILE_DEPS)

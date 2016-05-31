@@ -1,0 +1,3 @@
+*/*.csproj
+*/*.sln
+*.exe

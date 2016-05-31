@@ -961,6 +961,10 @@ WATCHSIMULATOR_CONFIGURE_FLAGS =                \
 	--enable-native-types                       \
 	$(XAMARIN_CONFIGURE_FLAGS)         \
 
+# FIXME: remove --with-checked-build=yes when we've stabilized a bit.
+WATCHSIMULATOR_CONFIGURE_FLAGS += \
+	--enable-checked-build=gc                    \
+
 WATCHSIMULATOR_ACVARS =  \
 	ac_cv_func_system=no \
 	ac_cv_func_pthread_kill=no \
@@ -1375,11 +1379,15 @@ install-local:: install-iphoneos
 endif
 endif
 
+ifndef ENABLE_BITCODE_ON_IOS
+LIBMONO_PROFILER_IPHONEOS_DYLIB=$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-profiler-log.dylib
+endif
+
 IPHONEOS_TARGETS = \
 	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmonosgen-2.0.a                                  \
 	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmonosgen-2.0.dylib                              \
 	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-profiler-log.a                             \
-	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-profiler-log.dylib                         \
+	$(LIBMONO_PROFILER_IPHONEOS_DYLIB)														\
 	$(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework/Mono                            \
 	$(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework/Info.plist                      \
 
@@ -1555,7 +1563,7 @@ WATCHOS_TARGETS =                                                             \
 # is needed, so just disable for now to make the build complete.
 WATCHOS_DISABLED_TARGETS = \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.dylib   \
-	
+
 WATCHOS_DIRECTORIES = \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib                   \
@@ -1721,11 +1729,13 @@ TVOS_TARGET_SHAREDLIBLOGPROFILER = $(BUILD_DESTDIR)/targettv/lib/libmono-profile
 
 device:: tvos
 
+# See WATCHOS_DISABLED_TARGETS
+TVOS_DISABLED_TARGETS=$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.dylib
+
 TVOS_TARGETS =                                                             \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmonosgen-2.0.a            \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmonosgen-2.0.dylib        \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.a       \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.dylib   \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono       \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Info.plist \
 

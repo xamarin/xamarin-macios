@@ -175,6 +175,7 @@ MAC_BINDING_TARGETS =
 
 MAC_TASK_ASSEMBLIES =         \
 	Xamarin.Mac.Tasks         \
+	Xamarin.Mac.Tasks.Core    \
 	Xamarin.MacDev.Tasks      \
 	Xamarin.MacDev.Tasks.Core \
 

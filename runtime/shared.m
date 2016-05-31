@@ -17,6 +17,7 @@
 
 #include "xamarin/xamarin.h"
 #include "shared.h"
+#include "runtime-internal.h"
 
 /*
  * XamarinNSThreadObject and xamarin_init_nsthread is a fix for a problem that
@@ -49,6 +50,7 @@
 }
 -(id) initWithData: (void *) targ selector:(SEL) sel argument:(id) arg is_direct_binding:(bool) is_direct;
 {
+	// COOP: no managed memory access: any mode.
 	target = targ;
 	if (is_direct)
 		[((id) targ) retain];
@@ -60,6 +62,7 @@
 
 -(void) start: (id) arg;
 {
+	// COOP: no managed memory access: any mode.
 	if (is_direct_binding) {
 		id (*invoke) (id, SEL, id) = (id (*)(id, SEL, id)) objc_msgSend;
 		invoke ((id) target, selector, argument);
@@ -71,6 +74,7 @@
 
 -(void) dealloc;
 {
+	// COOP: no managed memory access: any mode.
 	// Cast to void* so that ObjC doesn't do any funky retain/release
 	// on these objects when capturing them for the block, since we
 	// may be on a thread where we cannot end up in the mono runtime,
@@ -88,6 +92,7 @@
 id
 xamarin_init_nsthread (id obj, bool is_direct, id target, SEL sel, id arg)
 {
+	// COOP: no managed memory access: any mode.
 	XamarinNSThreadObject *wrap = [[[XamarinNSThreadObject alloc] initWithData: target selector: sel argument: arg is_direct_binding: is_direct] autorelease];
 	id (*invoke) (id, SEL, id, SEL, id) = (id (*)(id, SEL, id, SEL, id)) objc_msgSend;
 	return invoke (obj, @selector(initWithTarget:selector:object:), wrap, @selector(start:), nil);
@@ -119,6 +124,7 @@ xamarin_init_nsthread (id obj, bool is_direct, id target, SEL sel, id arg)
 }
 -(void) entryPoint: (NSObject *) obj
 {
+	// COOP: no managed memory access: any mode.
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	if (the_func != NULL)
 		the_func ();
@@ -126,6 +132,7 @@ xamarin_init_nsthread (id obj, bool is_direct, id target, SEL sel, id arg)
 }
 -(id) initWithFunc: (init_cocoa_func *) func;
 {
+	// COOP: no managed memory access: any mode.
 	self = [super init];
 	if (self != nil) {
 		the_func = func;
@@ -138,6 +145,7 @@ xamarin_init_nsthread (id obj, bool is_direct, id target, SEL sel, id arg)
 void
 initialize_cocoa_threads (init_cocoa_func *func)
 {
+	// COOP: no managed memory access: any mode.
 	[[[CocoaThreadInitializer alloc] initWithFunc: func] autorelease];
 }
 
@@ -160,16 +168,20 @@ struct _MonoProfiler {
 static MonoProfiler*
 create_thread_helper ()
 {
+	// COOP: no managed memory access: any mode.
 	return (MonoProfiler *)malloc (sizeof (MonoProfiler));
 }
 
 static void
 xamarin_thread_start (void *user_data)
 {
+	// COOP: no managed memory access: any mode. Switching to safe mode since we're locking a mutex.
 	NSAutoreleasePool *pool;
 
 	if (mono_thread_is_foreign (mono_thread_current ()))
 		return;
+
+	MONO_ENTER_GC_SAFE;
 
 	pool = [[NSAutoreleasePool alloc] init];
 
@@ -178,12 +190,17 @@ xamarin_thread_start (void *user_data)
 	CFDictionarySetValue (xamarin_thread_hash, GINT_TO_POINTER (pthread_self ()), pool);
 
 	pthread_mutex_unlock (&thread_hash_lock);
+
+	MONO_EXIT_GC_SAFE;
 }
 	
 static void
 xamarin_thread_finish (void *user_data)
 {
+	// COOP: no managed memory access: any mode. Switching to safe mode since we're locking a mutex.
 	NSAutoreleasePool *pool;
+
+	MONO_ENTER_GC_SAFE;
 
 	/* Don't drain the pool while holding the thread hash lock. */
 	pthread_mutex_lock (&thread_hash_lock);
@@ -196,23 +213,28 @@ xamarin_thread_finish (void *user_data)
 
 	if (pool)
 		[pool release];
+		
+	MONO_EXIT_GC_SAFE;
 }
 
 static void
 thread_start (MonoProfiler *prof, uintptr_t tid)
 {
+	// COOP: no managed memory access: any mode.
 	xamarin_thread_start (NULL);
 }
 
 static void
 thread_end (MonoProfiler *prof, uintptr_t tid)
 {
+	// COOP: no managed memory access: any mode.
 	xamarin_thread_finish (NULL);
 }
 
 void
 install_nsautoreleasepool_hooks ()
 {
+	// COOP: executed at startup (and no managed memory access): any mode.
 	xamarin_thread_hash = CFDictionaryCreateMutable (kCFAllocatorDefault, 0, NULL, NULL);
 
 	mono_profiler_install (create_thread_helper (), NULL);
@@ -233,6 +255,8 @@ install_nsautoreleasepool_hooks ()
 static void
 xamarin_dispose_helper (void *a)
 {
+	// COOP: this method is executed by the ObjC runtime when a block must be freed.
+	// COOP: it does not touch any managed memory (except to free a gchandle), so any mode goes.
 	struct Block_literal *bl = (struct Block_literal *) a;
 	int handle = GPOINTER_TO_INT (bl->global_handle);
 	mono_gchandle_free (handle);
@@ -244,6 +268,8 @@ xamarin_dispose_helper (void *a)
 static void
 xamarin_copy_helper (void *dst, void *src)
 {
+	// COOP: this method is executed by the ObjC runtime when a block must be copied.
+	// COOP: it does not touch any managed memory (except to allocate a gchandle), so any mode goes.
 	struct Block_literal *source = (struct Block_literal *) src;
 	struct Block_literal *target = (struct Block_literal *) dst;
 #pragma clang diagnostic push
@@ -269,5 +295,6 @@ struct Xamarin_block_descriptor xamarin_block_descriptor =
 struct Xamarin_block_descriptor *
 xamarin_get_block_descriptor ()
 {
+	// COOP: no managed memory access: any mode.
 	return &xamarin_block_descriptor;
 }

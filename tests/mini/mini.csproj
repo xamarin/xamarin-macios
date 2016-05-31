@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5BDBB8B4-5D6B-43E8-9664-C4D5CA3C9B11}</ProjectGuid>
+    <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>mini</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>mini</AssemblyName>
+    <DefineConstants>DEBUG;MOBILE;</DefineConstants>
+    <additionalargs>-unsafe</additionalargs>
+    <TargetFrameworkIdentifier>MonoTouch</TargetFrameworkIdentifier>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <MtouchLink>None</MtouchLink>
+    <MtouchDebug>true</MtouchDebug>
+    <MtouchI18n>
+    </MtouchI18n>
+    <MtouchArch>i386</MtouchArch>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <MtouchLink>None</MtouchLink>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhone\Debug</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <MtouchDebug>true</MtouchDebug>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchI18n>
+    </MtouchI18n>
+    <MtouchArch>ARMv7</MtouchArch>
+    <MtouchExtraArgs>--nostrip --nosymbolstrip: --aot-options=-O=float32</MtouchExtraArgs>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhone\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <MtouchExtraArgs>--nostrip --nosymbolstrip: --aot-options=-O=float32</MtouchExtraArgs>
+    <MtouchArch>ARMv7</MtouchArch>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="monotouch" />
+    <Reference Include="MonoTouch.NUnitLite" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Main.cs" />
+    <Compile Include="AppDelegate.cs" />
+    <Compile Include="..\..\external\mono\mono\mini\arrays.cs">
+      <Link>arrays.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mono\mini\basic-calls.cs">
+      <Link>basic-calls.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mono\mini\basic-float.cs">
+      <Link>basic-float.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mono\mini\basic-long.cs">
+      <Link>basic-long.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mono\mini\basic-math.cs">
+      <Link>basic-math.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mono\mini\basic.cs">
+      <Link>basic.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mono\mini\TestDriver.cs">
+      <Link>TestDriver.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mono\mini\generics.cs">
+      <Link>generics.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mono\mini\gshared.cs">
+      <Link>gshared.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mono\mini\objects.cs">
+      <Link>objects.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mono\mini\exceptions.cs">
+      <Link>exceptions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\external\mono\mono\mini\aot-tests.cs">
+      <Link>aot-tests.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
+</Project>

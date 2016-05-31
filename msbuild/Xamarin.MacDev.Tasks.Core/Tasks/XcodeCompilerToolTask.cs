@@ -14,6 +14,7 @@ namespace Xamarin.MacDev.Tasks
 {
 	public abstract class XcodeCompilerToolTask : Task
 	{
+		protected bool Link { get; set; }
 		IList<string> prefixes;
 		string toolExe;
 
@@ -36,8 +37,6 @@ namespace Xamarin.MacDev.Tasks
 
 		[Required]
 		public string SdkPlatform { get; set; }
-
-		public bool Link { get; set; }
 
 		string sdkDevPath;
 		public string SdkDevPath {

@@ -1,0 +1,610 @@
+//
+// Test the generated API selectors against typos or non-existing cases
+//
+// Authors:
+//	Sebastien Pouliot  <sebastien@xamarin.com>
+//
+// Copyright 2012-2013 Xamarin Inc. All rights reserved.
+//
+
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+#if XAMCORE_2_0
+using Foundation;
+using ObjCRuntime;
+using UIKit;
+#if !__TVOS__
+using WatchConnectivity;
+#endif
+#else
+using MonoTouch.Foundation;
+using MonoTouch.ObjCRuntime;
+using MonoTouch.UIKit;
+using MonoTouch.WatchConnectivity;
+#endif
+using NUnit.Framework;
+
+using TouchUnit.Bindings;
+
+namespace MonoTouchFixtures {
+
+	[TestFixture]
+	// we want the tests to be available because we use the linker
+	[Preserve (AllMembers = true)]
+	public class iOSApiSelectorTest : CoreSelectorTest {
+
+		public iOSApiSelectorTest ()
+		{
+			ContinueOnFailure = true;
+			//LogProgress = true;
+		}
+
+		protected override bool Skip (Type type)
+		{
+			switch (type.Namespace) {
+			// they don't answer on the simulator (Apple implementation does not work) but fine on devices
+			case "GameController":
+			case "MonoTouch.GameController":
+				return Runtime.Arch == Arch.SIMULATOR;
+
+			case "CoreAudioKit":
+			case "MonoTouch.CoreAudioKit":
+			case "Metal":
+			case "MonoTouch.Metal":
+				// they works with iOS9 beta 4 (but won't work on older simulators)
+				if ((Runtime.Arch == Arch.SIMULATOR) && !CheckiOSOrTVOSSystemVersion (9,0))
+					return true;
+				break;
+			case "MetalKit":
+			case "MonoTouch.MetalKit":
+			case "MetalPerformanceShaders":
+			case "MonoTouch.MetalPerformanceShaders":
+				if (Runtime.Arch == Arch.SIMULATOR)
+					return true;
+				break;
+
+			// Apple does not ship a PushKit for every arch on some devices :(
+//			case "PushKit":
+//			case "MonoTouch.PushKit":
+//				if (Runtime.Arch == Arch.DEVICE)
+//					return true;
+//				break;
+#if !__TVOS__
+			case "WatchConnectivity":
+			case "MonoTouch.WatchConnectivity":
+				if (!WCSession.IsSupported)
+					return true;
+				break;
+#endif // !__TVOS__
+			}
+
+			switch (type.Name) {
+			// abstract superclass
+			case "UIBarItem":
+				return true;
+
+			// does not answer to anything ?
+			case "UILocalNotification":
+				return true;
+
+			// Metal is not available on the (iOS8) simulator
+			case "CAMetalLayer":
+				return (Runtime.Arch == Arch.SIMULATOR);
+
+			default:
+				return base.Skip (type);
+			}
+		}
+
+		protected override bool CheckResponse (bool value, Type actualType, MethodBase method, ref string name)
+		{
+			if (value)
+				return true;
+
+			var declaredType = method.DeclaringType;
+
+			switch (declaredType.Name) {
+			case "NSUrlSession":
+				switch (name) {
+				case "delegateQueue":
+				case "sessionDescription":
+				case "setSessionDescription:":
+				case "delegate":
+					// does not respond anymore but the properties works (see monotouch-test)
+					if (CheckiOSOrTVOSSystemVersion (9, 0))
+						return true;
+					break;
+				}
+				break;
+			case "NSUrlSessionTask":
+				switch (name) {
+				case "countOfBytesExpectedToReceive":
+				case "countOfBytesExpectedToSend":
+				case "countOfBytesReceived":
+				case "countOfBytesSent":
+				case "currentRequest":
+				case "error":
+				case "originalRequest":
+				case "response":
+				case "state":
+				case "taskDescription":
+				case "setTaskDescription:":
+				case "taskIdentifier":
+					// does not respond anymore but the properties works (see monotouch-test)
+					if (CheckiOSOrTVOSSystemVersion (9, 0))
+						return true;
+					break;
+				}
+				break;
+			case "NSUrlSessionConfiguration":
+			case "NSUrlSessionStreamTask":
+				// does not respond anymore but the properties works (see monotouch-test for a partial list)
+				if (CheckiOSOrTVOSSystemVersion (9, 0))
+					return true;
+				break;
+
+			case "AVAssetDownloadTask":
+				switch (name) {
+				case "currentRequest":
+				case "originalRequest":
+				case "response":
+					if (CheckiOSOrTVOSSystemVersion (9, 0))
+						return true;
+					break;
+				}
+				break;
+			case "CMSensorRecorder":
+				switch (name) {
+				// breaking change from Apple in iOS 9.3 betas
+				// https://trello.com/c/kqlEkPbG/30-24508290-cmsensorrecorder-breaking-change-re-opening-24231250
+				// https://trello.com/c/pKLOLjVJ/29-24231250-coremotion-api-removal-without-deprecation
+				case "accelerometerDataFromDate:toDate:":
+				case "recordAccelerometerForDuration:":
+					if (!CheckiOSOrTVOSSystemVersion (9, 3))
+						return true;
+					break;
+				}
+				break;
+			}
+
+			switch (name) {
+			// UIResponderStandardEditActions - stuffed inside UIResponder
+			case "cut:":
+			case "copy:":
+			case "paste:":
+			case "delete:":
+			case "select:":
+			case "selectAll:":
+			// A subclass of UIResponder typically implements this method...
+			case "toggleBoldface:":
+			case "toggleItalics:":
+			case "toggleUnderline:":
+				if (declaredType.Name == "UIResponder")
+					return true;
+				break;
+			case "makeTextWritingDirectionLeftToRight:":
+			case "makeTextWritingDirectionRightToLeft:":
+				// MonoTouch.AddressBookUI.ABNewPersonViewController
+				// MonoTouch.AddressBookUI.ABPeoplePickerNavigationController
+				// MonoTouch.AddressBookUI.ABPersonViewController
+				if (declaredType.Name == "UIResponder")
+					return true;
+				break;
+#if !XAMCORE_2_0
+			case "enableInputClicksWhenVisible":
+				// defined in UIInputViewAudioFeedback protocol
+				// meant to be added (not part of iOS) in custom UIView and defined (by default) by MonoTouch
+				if (declaredType.Name == "UIView")
+					return true;
+				break;
+			case "subtitle":
+				// exists because of MKAnnotation protocol
+				if (declaredType.Name == "MKPlacemark")
+					return true;
+				break;
+			case "setCoordinate:":
+				// exists because of MKAnnotation protocol
+				if (declaredType.Name == "MKShape" || declaredType.Name == "MKPlacemark")
+					return true;
+				break;
+			case "intersectsMapRect:":
+				// optional method of a protocol MKTileOverlay implements.
+				if (declaredType.Name == "MKTileOverlay")
+					return true;
+				break;
+#endif
+			case "autocapitalizationType":
+			case "setAutocapitalizationType:":
+			case "autocorrectionType":
+			case "setAutocorrectionType:":
+			case "keyboardType":
+			case "setKeyboardType:":
+			case "spellCheckingType":
+			case "setSpellCheckingType:":
+				// UITextInputTraits and UITextInputProtocol
+				if (declaredType.Name == "UITextField" || declaredType.Name == "UITextView")
+					return true;
+				if (CheckiOSOrTVOSSystemVersion (7,1) && declaredType.Name == "UISearchBar")
+					return true;
+				break;
+			case "keyboardAppearance":
+			case "setKeyboardAppearance:":
+			case "returnKeyType":
+			case "setReturnKeyType:":
+			case "enablesReturnKeyAutomatically":
+			case "setEnablesReturnKeyAutomatically:":
+			case "isSecureTextEntry":
+			case "setSecureTextEntry:":
+				// UITextInputTraits and UITextInput Protocol
+				switch (declaredType.Name) {
+				case "UITextField":
+				case "UITextView":
+				case "UISearchBar":
+					return true;
+				}
+				break;
+			case "textStylingAtPosition:inDirection:":
+			case "positionWithinRange:atCharacterOffset:":
+			case "characterOffsetOfPosition:withinRange:":
+			case "shouldChangeTextInRange:replacementText:":
+				// UITextInputTraits and UITextInputProtocol
+				if (declaredType.Name == "UITextField" || declaredType.Name == "UITextView")
+					return true;
+				// ignore UISearchBar before iOS8 - it did not really implement UITextInput
+				if (declaredType.Name == "UISearchBar" && !CheckiOSSystemVersion (8,0))
+					return true;
+				break;
+			case "dictationRecognitionFailed":
+			case "dictationRecordingDidEnd":
+			case "insertDictationResult:":
+				// iOS 5.1 and not every device (or simulator)
+				if (declaredType.Name == "UITextField" || declaredType.Name == "UITextView")
+					return true;
+				break;
+			// special case: see http://developer.apple.com/library/ios/#documentation/GLkit/Reference/GLKViewController_ClassRef/Reference/Reference.html
+			case "update":
+				if (declaredType.Name == "GLKViewController")
+					return true;
+				break;
+			case "thumbnailImageAtTime:timeOption:":
+			case "requestThumbnailImagesAtTimes:timeOption:":
+			case "cancelAllThumbnailImageRequests":
+			case "accessLog":
+			case "errorLog":
+			case "timedMetadata":
+				if (declaredType.Name == "MPMoviePlayerController")
+					return true;
+				break;
+			// deprecated (removed in iOS 3.2)
+			case "backgroundColor":
+			case "setBackgroundColor:":
+			case "movieControlMode":
+			case "setMovieControlMode:":
+				if (declaredType.Name == "MPMoviePlayerController")
+					return true;
+				break;
+			case "skipToNextItem":
+			case "skipToBeginning":
+			case "skipToPreviousItem":
+			case "setNowPlayingItem:":
+				if (actualType.Name == "MPMusicPlayerController")
+					return true;
+				break;
+			// deprecated (according to docs) but actually removed (test) in iOS 6
+			case "useApplicationAudioSession":
+			case "setUseApplicationAudioSession:":
+				if (declaredType.Name == "MPMoviePlayerController")
+					return CheckiOSSystemVersion (6,0);
+				break;
+
+			// iOS6 - headers says readwrite but they do not respond
+			case "setUUID:":
+			case "setIsPrimary:":
+				if (declaredType.Name == "CBMutableService")
+					return CheckiOSSystemVersion (6, 0);
+				if (declaredType.Name == "CBMutableCharacteristic")
+					return CheckiOSSystemVersion (9, 0);
+				break;
+
+			// documented since 4.0 - but does not answer on an iPad1 with 5.1.1
+			case "isAdjustingFocus":
+				if (declaredType.Name == "AVCaptureDevice")
+					return true;
+				break;
+
+			// GameKit: documented since 4.1 - but does not answer
+			case "alias":
+				if (declaredType.Name == "GKPlayer")
+					return true;
+				break;
+			case "playerID":
+				switch (declaredType.Name) {
+				case "GKPlayer":
+				case "GKScore":
+				case "GKTurnBasedParticipant": // iOS 5
+					return true;
+				}
+				break;
+			case "category":
+			case "setCategory:":
+			case "date":
+			case "formattedValue":
+			case "rank":
+			case "value":
+			case "setValue:":
+			case "context": // iOS5
+			case "setContext:": // iOS5
+				if (declaredType.Name == "GKScore")
+					return true;
+				break;
+			case "isUnderage":
+				if (declaredType.Name == "GKLocalPlayer")
+					return true;
+				break;
+			case "identifier":
+				if (declaredType.Name == "GKAchievement" || declaredType.Name == "GKAchievementDescription")
+					return true;
+				break;
+			case "setIdentifier:":
+			case "percentComplete":
+			case "setPercentComplete:":
+			case "lastReportedDate":
+			case "setLastReportedDate:":
+				if (declaredType.Name == "GKAchievement")
+					return true;
+				break;
+			case "achievedDescription":
+			case "isHidden":
+			case "maximumPoints":
+			case "title":
+			case "unachievedDescription":
+				if (declaredType.Name == "GKAchievementDescription")
+					return true;
+				break;
+			// 5.0
+			case "lastTurnDate":
+			case "matchOutcome":
+			case "setMatchOutcome:":
+				if (declaredType.Name == "GKTurnBasedParticipant")
+					return true;
+				break;
+			case "creationDate":
+			case "matchData":
+			case "message":
+			case "setMessage:":
+				if (declaredType.Name == "GKTurnBasedMatch")
+					return true;
+				break;
+
+			// iOS6 - protocols for UICollectionView
+			case "numberOfSectionsInCollectionView:":
+			case "collectionView:viewForSupplementaryElementOfKind:atIndexPath:":
+			case "collectionView:shouldHighlightItemAtIndexPath:":
+			case "collectionView:didHighlightItemAtIndexPath:":
+			case "collectionView:didUnhighlightItemAtIndexPath:":
+			case "collectionView:shouldSelectItemAtIndexPath:":
+			case "collectionView:shouldDeselectItemAtIndexPath:":
+			case "collectionView:didSelectItemAtIndexPath:":
+			case "collectionView:didDeselectItemAtIndexPath:":
+			case "collectionView:didEndDisplayingCell:forItemAtIndexPath:":
+			case "collectionView:didEndDisplayingSupplementaryView:forElementOfKind:atIndexPath:":
+			case "collectionView:shouldShowMenuForItemAtIndexPath:":
+			case "collectionView:canPerformAction:forItemAtIndexPath:withSender:":
+			case "collectionView:performAction:forItemAtIndexPath:withSender:":
+			// which also inherits from UIScrollViewDelegate
+			case "scrollViewDidScroll:":
+			case "scrollViewWillBeginDragging:":
+			case "scrollViewDidEndDragging:willDecelerate:":
+			case "scrollViewWillBeginDecelerating:":
+			case "scrollViewDidEndDecelerating:":
+			case "scrollViewDidEndScrollingAnimation:":
+			case "viewForZoomingInScrollView:":
+			case "scrollViewShouldScrollToTop:":
+			case "scrollViewDidScrollToTop:":
+			case "scrollViewDidEndZooming:withView:atScale:":
+			case "scrollViewDidZoom:":
+			case "scrollViewWillBeginZooming:withView:":
+			case "scrollViewWillEndDragging:withVelocity:targetContentOffset:":
+				if (declaredType.Name == "UICollectionViewController")
+					return CheckiOSOrTVOSSystemVersion (6,0);
+				break;
+
+			// failing (check why)
+			case "initialLayoutAttributesForInsertedItemAtIndexPath:":
+			case "initialLayoutAttributesForInsertedSupplementaryElementOfKind:atIndexPath:":
+			case "finalLayoutAttributesForDeletedItemAtIndexPath:":
+			case "finalLayoutAttributesForDeletedSupplementaryElementOfKind:atIndexPath:":
+				if (declaredType.Name == "UICollectionViewLayout")
+					return CheckiOSSystemVersion (6,0);
+				break;
+
+			// This is implemented by internal concrete classes of NSFileHandle
+			case "readInBackgroundAndNotify":
+			case "readInBackgroundAndNotifyForModes:":
+			case "readToEndOfFileInBackgroundAndNotifyForModes:":
+			case "readToEndOfFileInBackgroundAndNotify":
+			case "acceptConnectionInBackgroundAndNotifyForModes:":
+			case "acceptConnectionInBackgroundAndNotify":
+			case "waitForDataInBackgroundAndNotifyForModes:":
+			case "waitForDataInBackgroundAndNotify":
+				if (declaredType.Name == "NSFileHandle")
+					return true;
+				break;
+
+			// UITableViewController conforms to both UITableViewDelegate and UITableViewDataSource
+			case "tableView:canEditRowAtIndexPath:":
+			case "tableView:canMoveRowAtIndexPath:":
+			case "sectionIndexTitlesForTableView:":
+			case "tableView:sectionForSectionIndexTitle:atIndex:":
+			case "tableView:commitEditingStyle:forRowAtIndexPath:":
+			case "tableView:moveRowAtIndexPath:toIndexPath:":
+			case "tableView:willDisplayCell:forRowAtIndexPath:":
+			case "tableView:accessoryTypeForRowWithIndexPath:":
+			case "tableView:accessoryButtonTappedForRowWithIndexPath:":
+			case "tableView:willSelectRowAtIndexPath:":
+			case "tableView:willDeselectRowAtIndexPath:":
+			case "tableView:didSelectRowAtIndexPath:":
+			case "tableView:didDeselectRowAtIndexPath:":
+			case "tableView:editingStyleForRowAtIndexPath:":
+			case "tableView:titleForDeleteConfirmationButtonForRowAtIndexPath:":
+			case "tableView:shouldIndentWhileEditingRowAtIndexPath:":
+			case "tableView:targetIndexPathForMoveFromRowAtIndexPath:toProposedIndexPath:":
+			case "tableView:shouldShowMenuForRowAtIndexPath:":
+			case "tableView:canPerformAction:forRowAtIndexPath:withSender:":
+			case "tableView:performAction:forRowAtIndexPath:withSender:":
+			case "tableView:willDisplayHeaderView:forSection:":
+			case "tableView:willDisplayFooterView:forSection:":
+			case "tableView:didEndDisplayingCell:forRowAtIndexPath:":
+			case "tableView:didEndDisplayingHeaderView:forSection:":
+			case "tableView:didEndDisplayingFooterView:forSection:":
+			case "tableView:shouldHighlightRowAtIndexPath:":
+			case "tableView:didHighlightRowAtIndexPath:":
+			case "tableView:didUnhighlightRowAtIndexPath:":
+			// iOS7
+			case "tableView:estimatedHeightForRowAtIndexPath:":
+			case "tableView:estimatedHeightForHeaderInSection:":
+			case "tableView:estimatedHeightForFooterInSection:":
+			// iOS 8
+			case "tableView:editActionsForRowAtIndexPath:":
+				if (declaredType.Name == "UITableViewController")
+					return true;
+				break;
+
+			// iOS7 beta issue ? remains in beta 5 / sim
+			// MCSession documents the cancelConnectPeer: selector but it does not answer
+			case "cancelConnectPeer:":
+			// CBCharacteristic documents the selector but does not respond
+			case "subscribedCentrals":
+			// UIPrintFormatter header attributedText says the API is not approved yet - and it does not respond
+			case "attributedText":
+			case "setAttributedText:":
+			// UISplitViewController
+			case "splitViewControllerSupportedInterfaceOrientations:":
+			case "splitViewControllerPreferredInterfaceOrientationForPresentation:":
+				return true;
+
+			case "color":
+			case "setColor:":
+			case "font":
+			case "setFont:":
+			case "text":
+			case "setText:":
+			case "textAlignment":
+			case "setTextAlignment:":
+				// iOS7 GM a "no text" instance does not answer to the selector (but you can call them)
+				if (declaredType.Name == "UISimpleTextPrintFormatter")
+					return true;
+				break;
+
+			case "copyWithZone:":
+				switch (declaredType.Name) {
+				// not conforming to NSCopying in 5.1 SDK
+				case "UIFont":
+					return !CheckiOSSystemVersion (6,0);
+				// not conforming to NSCopying before 7.0 SDK
+				case "CBPeripheral": 
+					return !CheckiOSSystemVersion (7,0);
+				// not conforming to NSCopying before 8.0 SDK
+				case "AVMetadataFaceObject": 
+					return !CheckiOSSystemVersion (8,0);
+				// not conforming to NSCopying before 8.2 SDK
+				case "HKUnit": 
+					return !CheckiOSSystemVersion (8,2);
+				case "HKBiologicalSexObject":
+				case "HKBloodTypeObject":
+					return !CheckiOSSystemVersion (9,0);
+				}
+				break;
+
+			// on iOS8.0 this does not work on the simulator (but works on devices)
+			case "language":
+				if (declaredType.Name == "AVSpeechSynthesisVoice" && CheckiOSSystemVersion (8,0) && Runtime.Arch == Arch.SIMULATOR)
+					return true;
+				break;
+
+			// new, optional members of UIDynamicItem protocol in iOS9
+			case "collisionBoundingPath":
+			case "collisionBoundsType":
+				switch (declaredType.Name) {
+				case "UICollectionViewLayoutAttributes":
+				case "UIView":
+				case "UIDynamicItemGroup":
+					return true;
+				}
+				break;
+
+			// SceneKit integration with Metal is not working on simulators (at least for iOS9 beta 5)
+			case "currentRenderCommandEncoder":
+			case "colorPixelFormat":
+			case "commandQueue":
+			case "depthPixelFormat":
+			case "device":
+			case "stencilPixelFormat":
+				switch (declaredType.Name) {
+				case "SCNRenderer":
+				case "SCNView":
+					return Runtime.Arch == Arch.SIMULATOR;
+				}
+				break;
+
+#if XAMCORE_2_0
+			// some types adopted NS[Secure]Coding after the type was added
+			// and for unified that's something we generate automatically (so we can't put [iOS] on them)
+			case "encodeWithCoder:":
+				switch (declaredType.Name) {
+				// UITextInputMode was added in 4.2 but conformed to NSSecureCoding only from 7.0+ 
+				case "UITextInputMode":
+					return !CheckiOSSystemVersion (7,0);
+				// iOS9
+				case "HKBiologicalSexObject":
+				case "HKBloodTypeObject":
+					return !CheckiOSSystemVersion (9,0);
+				}
+				break;
+#else
+			// that was a binding mistake - the API should not have been exposed (not in the header file)
+			// we'll ignore them for compat - but won't provide them in the new assemblies
+			case "backgroundImageForBarMetrics:":
+			case "setBackgroundImage:forBarMetrics:":
+				if (declaredType.Name == "UISearchBar" && CheckiOSSystemVersion (8,0))
+					return true;
+				break;
+#endif
+			}
+
+			return base.CheckResponse (value, actualType, method, ref name);
+		}
+
+		protected override bool CheckStaticResponse (bool value, Type actualType, Type declaredType, ref string name)
+		{
+			switch (name) {
+			// new API in iOS9 beta 5 but is does not respond when queried - https://bugzilla.xamarin.com/show_bug.cgi?id=33431
+			case "geometrySourceWithBuffer:vertexFormat:semantic:vertexCount:dataOffset:dataStride:":
+				switch (declaredType.Name) {
+				case "SCNGeometrySource":
+					return true;
+				}
+				break;
+			}
+			return base.CheckStaticResponse (value, actualType, declaredType, ref name);
+		}
+
+		static List<NSObject> do_not_dispose = new List<NSObject> ();
+		
+		protected override void Dispose (NSObject obj, Type type)
+		{
+			switch (type.Name) {
+			// this crash the application after test completed their execution so we keep them alive
+			case "GKFriendRequestComposeViewController":
+			case "PKAddPassesViewController":
+			case "SKView":
+				do_not_dispose.Add (obj);
+				break;
+			default:
+				base.Dispose (obj, type);
+				break;
+			}
+		}
+	}
+}

@@ -6,9 +6,12 @@
 extern "C" {
 #endif
 
-#ifdef EXTENSION
+//#ifdef EXTENSION
 	int NSExtensionMain (int argc, char** argv);
+#ifdef MONOMAC
+    int xamarin_mac_extension_main (int argc, char **argv);
 #endif
+//#endif
 
 #ifdef WATCH_EXTENSION
 // WatchKit.framework defines a main function.

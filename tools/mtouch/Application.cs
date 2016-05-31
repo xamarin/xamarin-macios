@@ -742,6 +742,11 @@ namespace Xamarin.Bundler {
 			if (!IsExtension && Platform == ApplePlatform.WatchOS)
 				throw new MonoTouchException (77, true, "WatchOS projects must be extensions.");
 		
+#if ENABLE_BITCODE_ON_IOS
+			if (Platform == ApplePlatform.iOS)
+				DeploymentTarget = new Version (9, 0);
+#endif
+
 			if (DeploymentTarget == null) {
 				DeploymentTarget = Xamarin.SdkVersions.GetVersion (Platform);
 			} else if (DeploymentTarget < Xamarin.SdkVersions.GetMinVersion (Platform)) {

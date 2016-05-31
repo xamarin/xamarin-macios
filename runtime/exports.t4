@@ -515,7 +515,7 @@
 
 		#region mini/mini.h
 
-		new Export ("MonoDomain *", "mono_jit_thread_attach",
+		new Export ("void*", "mono_jit_thread_attach",
 			"MonoDomain *", "domain"
 		),
 
@@ -560,7 +560,53 @@
 
 		new Export ("void", "mono_trace_set_printerr_handler",
 			"MonoPrintCallback", "callback"
-		)
+		),
+
+		#endregion
+
+		#region utils/mono-threads-api.h
+
+		new Export (true, "void*", "mono_threads_enter_gc_unsafe_region",
+			"void **", "stackdata"
+		),
+
+		new Export (true, "void", "mono_threads_exit_gc_unsafe_region",
+			"void *", "cookie",
+			"void **", "stackdata"
+		),
+
+		new Export (true, "void*", "mono_threads_enter_gc_safe_region",
+			"void **", "stackdata"
+		),
+
+		new Export (true, "void", "mono_threads_exit_gc_safe_region",
+			"void *", "cookie",
+			"void **", "stackdata"
+		),
+
+		new Export (true, "void", "mono_threads_assert_gc_safe_region" ),
+
+		new Export (true, "void", "mono_threads_assert_gc_unsafe_region" ),
+
+		new Export (true, "void", "mono_threads_assert_gc_starting_region" ),
+	
+		#endregion
+
+		#region utils/mono-threads.h
+		new Export (true, "void*", "mono_thread_info_current_unchecked" ),
+		#endregion
+
+		#region metadata/threads-types.h
+
+		new Export (true, "void *", "mono_threads_attach_coop",
+			"MonoDomain *", "domain",
+			"gpointer*", "dummy"
+		),
+
+		new Export (true, "void *", "mono_threads_detach_coop",
+			"gpointer", "cookie",
+			"gpointer*", "dummy"
+		),
 
 		#endregion
 	};

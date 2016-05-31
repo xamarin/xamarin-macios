@@ -1,5 +1,5 @@
 ifdef ENABLE_XAMARIN
-NEEDED_MACCORE_VERSION := 853f553129bf7966525b357740b9eee3b7129031
+NEEDED_MACCORE_VERSION := 8d9ddad4e2b8a2d7d53b0c0ad20cff2a0b85abda
 NEEDED_MACCORE_BRANCH := master
 
 MACCORE_DIRECTORY := maccore
@@ -84,13 +84,10 @@ DEPENDENCY_DIRECTORIES += $($(2)_PATH)
 
 endef
 
-builds/.stamp-cloned-maccore:
-	@# we need to touch the stamp first, otherwise we'll 
-	@# go into an infinite loop when we re-launch make.
-	@touch $@
-	$(Q) $(MAKE) reset-maccore || rm -f $@
+$(MACCORE_PATH):
+	$(Q) git clone --recursive $(MACCORE_MODULE) $(MACCORE_PATH)
 
 $(eval $(call CheckVersionTemplate,maccore,MACCORE))
 -include $(MACCORE_PATH)/mk/versions.mk
-$(MACCORE_PATH)/mk/versions.mk: | builds/.stamp-cloned-maccore
+$(MACCORE_PATH)/mk/versions.mk: | $(MACCORE_PATH)
 endif

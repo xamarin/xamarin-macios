@@ -290,7 +290,13 @@ namespace Xamarin.iOS.Tasks
 		public void RunTarget (Project project, string target, int expectedErrorCount = 0)
 		{
 			Engine.BuildProject (project, new [] { target }, new Hashtable { {"Platform", "iPhone"} }, BuildSettings.None);
-			Assert.AreEqual (expectedErrorCount, Engine.Logger.ErrorEvents.Count, "#RunTarget-ErrorCount");
+			if (expectedErrorCount != Engine.Logger.ErrorEvents.Count) {
+				string messages = string.Empty;
+				if (Engine.Logger.ErrorEvents.Count > 0) {
+					messages = "\n\t" + string.Join ("\n\t", Engine.Logger.ErrorEvents.Select ((v) => v.Message).ToArray ());
+				}
+				Assert.AreEqual (expectedErrorCount, Engine.Logger.ErrorEvents.Count, "#RunTarget-ErrorCount" + messages);
+			}
 		}
 
 		public void RunTarget_WithErrors (Project project, string target)

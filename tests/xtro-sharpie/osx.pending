@@ -1,0 +1,130 @@
+# OSX specific issues we want to ignore
+
+
+# OSX only - API not exposed in XI even if it's in the header files
+!missing-selector! NEVPNProtocol::identityReference is not bound
+!missing-selector! NEVPNProtocol::setIdentityReference: is not bound
+
+# https://bugzilla.xamarin.com/show_bug.cgi?id=30717 
+!duplicate-register! _NSDatePickerCellDelegate exists as both AppKit.NSDatePickerCell/_NSDatePickerCellDelegate and AppKit.NSDatePicker/_NSDatePickerCellDelegate
+
+
+# should we bother ?
+
+## *GetTypeID
+!missing-pinvoke! AXObserverGetTypeID is not bound
+!missing-pinvoke! AXUIElementGetTypeID is not bound
+!missing-pinvoke! AXValueGetTypeID is not bound
+!missing-pinvoke! CFUserNotificationGetTypeID is not bound
+!missing-pinvoke! CFXMLNodeGetTypeID is not bound
+!missing-pinvoke! CFXMLParserGetTypeID is not bound
+!missing-pinvoke! CGDisplayModeGetTypeID is not bound
+!missing-pinvoke! CGDisplayStreamGetTypeID is not bound
+!missing-pinvoke! CGDisplayStreamUpdateGetTypeID is not bound
+!missing-pinvoke! CGEventGetTypeID is not bound
+!missing-pinvoke! CGEventSourceGetTypeID is not bound
+!missing-pinvoke! CGPSConverterGetTypeID is not bound
+!missing-pinvoke! CMSDecoderGetTypeID is not bound
+!missing-pinvoke! CMSEncoderGetTypeID is not bound
+!missing-pinvoke! CSIdentityAuthorityGetTypeID is not bound
+!missing-pinvoke! CSIdentityGetTypeID is not bound
+!missing-pinvoke! CSIdentityQueryGetTypeID is not bound
+!missing-pinvoke! CVDisplayLinkGetTypeID is not bound
+!missing-pinvoke! CVOpenGLBufferGetTypeID is not bound
+!missing-pinvoke! CVOpenGLBufferPoolGetTypeID is not bound
+!missing-pinvoke! CVOpenGLTextureCacheGetTypeID is not bound
+!missing-pinvoke! CVOpenGLTextureGetTypeID is not bound
+!missing-pinvoke! ColorSyncCMMGetTypeID is not bound
+!missing-pinvoke! ColorSyncProfileGetTypeID is not bound
+!missing-pinvoke! ColorSyncTransformGetTypeID is not bound
+!missing-pinvoke! DAApprovalSessionGetTypeID is not bound
+!missing-pinvoke! DADiskGetTypeID is not bound
+!missing-pinvoke! DASessionGetTypeID is not bound
+!missing-pinvoke! DRBurnGetTypeID is not bound
+!missing-pinvoke! DRBurnSessionGetTypeID is not bound
+!missing-pinvoke! DRCDTextBlockGetTypeID is not bound
+!missing-pinvoke! DRDeviceGetTypeID is not bound
+!missing-pinvoke! DREraseGetTypeID is not bound
+!missing-pinvoke! DREraseSessionGetTypeID is not bound
+!missing-pinvoke! DRFileGetTypeID is not bound
+!missing-pinvoke! DRFolderGetTypeID is not bound
+!missing-pinvoke! DRNotificationCenterGetTypeID is not bound
+!missing-pinvoke! DRTrackGetTypeID is not bound
+!missing-pinvoke! FSFileOperationGetTypeID is not bound
+!missing-pinvoke! FSFileSecurityGetTypeID is not bound
+!missing-pinvoke! HIShapeGetTypeID is not bound
+!missing-pinvoke! IOHIDDeviceGetTypeID is not bound
+!missing-pinvoke! IOHIDElementGetTypeID is not bound
+!missing-pinvoke! IOHIDManagerGetTypeID is not bound
+!missing-pinvoke! IOHIDQueueGetTypeID is not bound
+!missing-pinvoke! IOHIDTransactionGetTypeID is not bound
+!missing-pinvoke! IOHIDValueGetTypeID is not bound
+!missing-pinvoke! IOSurfaceGetTypeID is not bound
+!missing-pinvoke! InkStrokeGetTypeID is not bound
+!missing-pinvoke! InkTextGetTypeID is not bound
+!missing-pinvoke! LSMMapGetTypeID is not bound
+!missing-pinvoke! LSMResultGetTypeID is not bound
+!missing-pinvoke! LSMTextGetTypeID is not bound
+!missing-pinvoke! LSSharedFileListGetTypeID is not bound
+!missing-pinvoke! LSSharedFileListItemGetTypeID is not bound
+!missing-pinvoke! MDItemGetTypeID is not bound
+!missing-pinvoke! MDLabelGetTypeID is not bound
+!missing-pinvoke! MDQueryGetTypeID is not bound
+!missing-pinvoke! ODContextGetTypeID is not bound
+!missing-pinvoke! ODNodeGetTypeID is not bound
+!missing-pinvoke! ODQueryGetTypeID is not bound
+!missing-pinvoke! ODRecordGetTypeID is not bound
+!missing-pinvoke! ODSessionGetTypeID is not bound
+!missing-pinvoke! PasteboardGetTypeID is not bound
+!missing-pinvoke! QLPreviewRequestGetTypeID is not bound
+!missing-pinvoke! QLThumbnailGetTypeID is not bound
+!missing-pinvoke! QLThumbnailRequestGetTypeID is not bound
+!missing-pinvoke! SCBondStatusGetTypeID is not bound
+!missing-pinvoke! SCDynamicStoreGetTypeID is not bound
+!missing-pinvoke! SCNetworkConnectionGetTypeID is not bound
+!missing-pinvoke! SCNetworkInterfaceGetTypeID is not bound
+!missing-pinvoke! SCNetworkProtocolGetTypeID is not bound
+!missing-pinvoke! SCNetworkServiceGetTypeID is not bound
+!missing-pinvoke! SCNetworkSetGetTypeID is not bound
+!missing-pinvoke! SCPreferencesGetTypeID is not bound
+!missing-pinvoke! SKDocumentGetTypeID is not bound
+!missing-pinvoke! SKIndexDocumentIteratorGetTypeID is not bound
+!missing-pinvoke! SKIndexGetTypeID is not bound
+!missing-pinvoke! SKSearchGetTypeID is not bound
+!missing-pinvoke! SKSearchGroupGetTypeID is not bound
+!missing-pinvoke! SKSearchResultsGetTypeID is not bound
+!missing-pinvoke! SKSummaryGetTypeID is not bound
+!missing-pinvoke! SecACLGetTypeID is not bound
+!missing-pinvoke! SecAccessGetTypeID is not bound
+!missing-pinvoke! SecCodeGetTypeID is not bound
+!missing-pinvoke! SecDecryptTransformGetTypeID is not bound
+!missing-pinvoke! SecDigestTransformGetTypeID is not bound
+!missing-pinvoke! SecEncryptTransformGetTypeID is not bound
+!missing-pinvoke! SecGroupTransformGetTypeID is not bound
+!missing-pinvoke! SecIdentitySearchGetTypeID is not bound
+!missing-pinvoke! SecKeychainGetTypeID is not bound
+!missing-pinvoke! SecKeychainItemGetTypeID is not bound
+!missing-pinvoke! SecKeychainSearchGetTypeID is not bound
+!missing-pinvoke! SecPolicySearchGetTypeID is not bound
+!missing-pinvoke! SecRequirementGetTypeID is not bound
+!missing-pinvoke! SecStaticCodeGetTypeID is not bound
+!missing-pinvoke! SecTaskGetTypeID is not bound
+!missing-pinvoke! SecTransformGetTypeID is not bound
+!missing-pinvoke! SecTrustedApplicationGetTypeID is not bound
+!missing-pinvoke! TISInputSourceGetTypeID is not bound
+!missing-pinvoke! TranslationGetTypeID is not bound
+!missing-pinvoke! VTPixelTransferSessionGetTypeID is not bound
+!missing-pinvoke! WSMethodInvocationGetTypeID is not bound
+!missing-pinvoke! WSProtocolHandlerGetTypeID is not bound
+
+# Used to remove hard to kill delegate API until XAMCORE_4_0
+!extra-protocol-member! unexpected selector CBPeripheralDelegate::xamarin:selector:removed: found
+!extra-protocol-member! unexpected selector GKMatchDelegate::xamarin:selector:removed: found
+!extra-protocol-member! unexpected selector NSGestureRecognizerDelegate::xamarinselector:removed: found
+!extra-protocol-member! unexpected selector NSPasteboardReading::xamarinselector:removed: found
+!extra-protocol-member! unexpected selector NSApplicationDelegate::orderFrontStandardAboutPanel: found
+!extra-protocol-member! unexpected selector NSApplicationDelegate::orderFrontStandardAboutPanelWithOptions: found
+!extra-protocol-member! unexpected selector NSApplicationDelegate::readSelectionFromPasteboard: found
+!extra-protocol-member! unexpected selector NSApplicationDelegate::registerServicesMenuSendTypes:returnTypes: found
+!extra-protocol-member! unexpected selector NSApplicationDelegate::writeSelectionToPasteboard:types: found
+

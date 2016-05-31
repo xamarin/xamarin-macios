@@ -477,7 +477,7 @@ namespace Xamarin.iOS.Tasks
 				}
 
 				if (architectures.HasFlag (TargetArchitecture.ARMv7k))
-					abi += (abi.Length > 0 ? "," : "") + "armv7k";
+					abi += (abi.Length > 0 ? "," : "") + "armv7k" + llvm;
 
 				if (string.IsNullOrEmpty (abi))
 					abi = "armv7" + llvm + thumb;

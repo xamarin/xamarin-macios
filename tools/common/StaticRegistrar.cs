@@ -1626,6 +1626,7 @@ namespace XamCore.Registrar {
 		AutoIndentStringBuilder setup_call_stack = new AutoIndentStringBuilder ();
 		AutoIndentStringBuilder setup_return = new AutoIndentStringBuilder ();
 		AutoIndentStringBuilder body = new AutoIndentStringBuilder ();
+		AutoIndentStringBuilder body_setup = new AutoIndentStringBuilder ();
 		
 		HashSet<string> trampoline_names = new HashSet<string> ();
 		HashSet<string> namespaces = new HashSet<string> ();
@@ -2606,6 +2607,7 @@ namespace XamCore.Registrar {
 			invoke.Clear ();
 			setup_call_stack.Clear ();
 			body.Clear ();
+			body_setup.Clear ();
 			setup_return.Clear ();
 			
 			counter++;
@@ -2614,6 +2616,7 @@ namespace XamCore.Registrar {
 
 			var indent = merge_bodies ? sb.Indentation : sb.Indentation + 1;
 			body.Indentation = indent;
+			body_setup.Indentation = indent;
 			copyback.Indentation = indent;
 			invoke.Indentation = indent;
 			setup_call_stack.Indentation = indent;
@@ -3070,7 +3073,7 @@ namespace XamCore.Registrar {
 			
 			// prepare the return value
 			if (!isVoid) {
-				setup_return.AppendLine ("{0} res;", rettype);
+				body_setup.AppendLine ("{0} res;", rettype);
 				var isArray = returntype is ArrayType;
 				var type = returntype.Resolve () ?? returntype;
 				var retain = method.RetainReturnValue;
@@ -3163,6 +3166,10 @@ namespace XamCore.Registrar {
 				}
 			}
 			
+			body.WriteLine (body_setup);
+			body.WriteLine ("MONO_ASSERT_GC_SAFE;");
+			body.WriteLine ("MONO_THREAD_ATTACH;"); // COOP: this will switch to GC_UNSAFE
+
 			// Write out everything
 			if (merge_bodies) {
 				body.WriteLine ("MonoMethod *managed_method = *managed_method_ptr;");
@@ -3180,13 +3187,8 @@ namespace XamCore.Registrar {
 			if (!isStatic || isInstanceCategory)
 				body.WriteLine ("MonoObject *mthis;");
 			
-			body.WriteLine ("if (mono_domain_get () == NULL)");
-			body.Indent ();
-			body.WriteLine ("mono_jit_thread_attach (NULL);");
-			body.Unindent ();
-			
 			if (isCtor) {
-				body.WriteLine ("if (xamarin_try_get_nsobject (self)) {");
+				body.WriteLine ("if (xamarin_has_nsobject (self)) {");
 				body.WriteLine ("*call_super = true;");
 				body.WriteLine ("return self;");
 				body.WriteLine ("}");
@@ -3260,6 +3262,8 @@ namespace XamCore.Registrar {
 			
 			if (App.MarshalManagedExceptions != MarshalManagedExceptionMode.Disable)
 				body.WriteLine ("xamarin_process_managed_exception (exception);");
+
+			body.WriteLine ("MONO_THREAD_DETACH;"); // COOP: this will switch to GC_SAFE
 
 			if (isCtor) {
 				body.WriteLine ("return self;");
@@ -3397,6 +3401,14 @@ namespace XamCore.Registrar {
 			FlushTrace ();
 		}
 
+		static string GetParamName (MethodDefinition method, int i)
+		{
+			var p = method.Parameters [i];
+			if (p.Name != null)
+				return p.Name;
+			return "__p__" + i.ToString ();
+		}
+
 		public void GeneratePInvokeWrapper (PInvokeWrapperGenerator state, MethodDefinition method)
 		{
 			var signatures = state.signatures;
@@ -3456,7 +3468,7 @@ namespace XamCore.Registrar {
 						sb.Write (", ");
 					sb.Write (ToObjCParameterType (method.Parameters[i].ParameterType, descriptiveMethodName, exceptions, method));
 					sb.Write (" ");
-					sb.Write (method.Parameters[i].Name);
+					sb.Write (GetParamName (method, i));
 				}
 				sb.WriteLine (");");
 
@@ -3468,7 +3480,7 @@ namespace XamCore.Registrar {
 						sb.Write (", ");
 					sb.Write (ToObjCParameterType (method.Parameters[i].ParameterType, descriptiveMethodName, exceptions, method));
 					sb.Write (" ");
-					sb.Write (method.Parameters [i].Name);
+					sb.Write (GetParamName (method, i));
 				}
 				sb.WriteLine (")");
 				sb.WriteLine ("{");
@@ -3479,7 +3491,7 @@ namespace XamCore.Registrar {
 				for (int i = first_parameter; i < method.Parameters.Count; i++) {
 					if (i > first_parameter)
 						sb.Write (", ");
-					sb.Write (method.Parameters [i].Name);
+					sb.Write (GetParamName (method, i));
 				}
 				sb.WriteLine (");");
 				sb.WriteLine ("} @catch (NSException *exc) {");
@@ -3488,7 +3500,7 @@ namespace XamCore.Registrar {
 				sb.WriteLine ("}");
 				sb.WriteLine ();
 			} else {
-				Console.WriteLine ("Signature already processed: {0} for {1}.{2}", signature.ToString (), method.DeclaringType.FullName, method.Name);
+				// Console.WriteLine ("Signature already processed: {0} for {1}.{2}", signature.ToString (), method.DeclaringType.FullName, method.Name);
 			}
 
 			// find the module reference to __Internal

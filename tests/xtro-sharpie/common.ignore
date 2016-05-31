@@ -1,0 +1,54 @@
+# AVFoundation
+
+# We only bind "finished" as we cannot use [Bind] here as it would break compatibility with iOS 6.x
+# `isFinished` was only added in iOS 7.0 SDK and cannot be called in earlier versions
+!missing-selector! AVAssetResourceLoadingRequest::isFinished not bound
+
+# it's already defined in the base class, it's fine even if it returns mutable tracks in this case 
+!missing-selector! AVMutableComposition::tracks not bound
+
+# AVVideoCompositionInstruction is both a class and a protocol - so we have duplicate entries
+# and right now only implement the type (protocol can't have the same name anyway)
+!missing-selector! AVVideoCompositionInstruction::enablePostProcessing not bound
+!missing-selector! AVVideoCompositionInstruction::passthroughTrackID not bound
+!missing-selector! AVVideoCompositionInstruction::requiredSourceTrackIDs not bound
+!missing-selector! AVVideoCompositionInstruction::timeRange not bound
+
+
+# CoreGraphics
+
+## deprecated (as the name indicates) and not exposed
+!missing-enum! CGGlyphDeprecatedEnum not bound
+
+
+# CoreSpotlight
+
+## low value (should use OS version for any checks)
+!missing-field! CoreSpotlightVersionNumber not bound
+!missing-field! CoreSpotlightVersionString not bound
+
+
+# Foundation
+
+## native long is same size as int (.net long is long long)
+!missing-selector! NSNumber::initWithLong: not bound
+!missing-selector! NSNumber::initWithUnsignedLong: not bound
+
+
+# GameKit
+
+## All GKSessionError values were deprecated in iOS7 and we never bound then (no point in adding it now)
+!missing-field! GKSessionErrorDomain not bound
+
+
+# ModelIO
+
+## we only export the overload that expose an NSError
+!missing-selector! MDLAsset::exportAssetToURL: not bound
+
+
+# UIKit
+
+## no point in having p/invoke calls that can be implement with a type cast (byte vs nint)
+!missing-pinvoke! NSTextAlignmentFromCTTextAlignment is not bound
+!missing-pinvoke! NSTextAlignmentToCTTextAlignment is not bound

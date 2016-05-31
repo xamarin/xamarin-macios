@@ -9,6 +9,8 @@
 #include "xamarin/xamarin.h"
 #include "xamarin/launch.h"
 #include "launcher.h"
+#include "runtime-internal.h"
+#include "main-internal.h"
 
 #ifdef DYNAMIC_MONO_RUNTIME
 	#define DEFAULT_MONO_RUNTIME "/Library/Frameworks/Mono.framework/Versions/Current"
@@ -353,7 +355,7 @@ update_environment (xamarin_initialize_data *data)
 }
 
 static void
-app_initialize (xamarin_initialize_data *data)
+app_initialize (xamarin_initialize_data *data, bool is_extension)
 {
 	// The launch code here is publicly documented in xamarin/launch.h
 	// The numbers in the comments refer to numbers in xamarin/launch.h.
@@ -429,28 +431,47 @@ app_initialize (xamarin_initialize_data *data)
 	mono_version = mono_get_runtime_build_info ();
 	if (!check_mono_version (mono_version, [minVersion UTF8String]))
 		exit_with_message ([[NSString stringWithFormat:@"This application requires the Mono framework version %@ or newer.", minVersion] UTF8String], data->basename, true);
-
 	// 6) Find the executable. The name is: [...]
-	NSString *exeName = NULL;
-	NSString *exePath;
-	if (plist != NULL)
-		exeName = (NSString *) [plist objectForKey:@"MonoBundleExecutable"];
-	else
-		fprintf (stderr, PRODUCT ": Could not find Info.plist in the bundle.\n");
+	if (!is_extension) {
+		NSString *exeName = NULL;
+		NSString *exePath;
+		if (plist != NULL)
+			exeName = (NSString *) [plist objectForKey:@"MonoBundleExecutable"];
+		else
+			fprintf (stderr, PRODUCT ": Could not find Info.plist in the bundle.\n");
 
-	if (exeName == NULL)
-		exeName = [[NSString stringWithUTF8String: data->basename] stringByAppendingString: @".exe"];
-	
-	if (mkbundle) {
-		exePath = exeName;
-	} else {
-		exePath = [[[NSString stringWithUTF8String: xamarin_get_bundle_path ()] stringByAppendingString: @"/"] stringByAppendingString: exeName];
+		if (exeName == NULL)
+			exeName = [[NSString stringWithUTF8String: data->basename] stringByAppendingString: @".exe"];
 
-		if (!xamarin_file_exists ([exePath UTF8String]))
-			exit_with_message ([[NSString stringWithFormat:@"Could not find the executable '%@'\n\nFull path: %@", exeName, exePath] UTF8String], data->basename, false);
+		if (mkbundle) {
+			exePath = exeName;
+		} else {
+			exePath = [[[NSString stringWithUTF8String: xamarin_get_bundle_path ()] stringByAppendingString: @"/"] stringByAppendingString: exeName];
+
+			if (!xamarin_file_exists ([exePath UTF8String]))
+				exit_with_message ([[NSString stringWithFormat:@"Could not find the executable '%@'\n\nFull path: %@", exeName, exePath] UTF8String], data->basename, false);
+			}
+			exe_path = strdup ([exePath UTF8String]);
+		 } else {
+
+		mono_jit_init_version ("EmbeddedXamarinMac", "v4.0.0.0");
+
+		MonoAssembly *assembly = xamarin_open_assembly ("Xamarin.Mac.dll");
+		if (!assembly)
+			xamarin_assertion_message ("Failed to load %s.", "Xamarin.Mac.dll");
+
+		MonoImage *image = mono_assembly_get_image (assembly);
+
+		MonoClass *app_class = mono_class_from_name (image, "AppKit", "NSApplication");
+		if (!app_class)
+			xamarin_assertion_message ("Fatal error: failed to load the NSApplication class");
+
+		MonoMethod *initialize = mono_class_get_method_from_name (app_class, "Init", 0);
+		if (!initialize)
+			xamarin_assertion_message ("Fatal error: failed to load the NSApplication init method");
+
+		mono_runtime_invoke (initialize, NULL, NULL, NULL);
 	}
-
-	exe_path = strdup ([exePath UTF8String]);
 
 	// 7a) [If not embedding] Parse the system Mono's config file ($monodir/etc/mono/config).
 	// 7b) [If embedding] Parse $appdir/Contents/MonoBundle/machine.config and $appdir/Contents/MonoBundle/config
@@ -499,7 +520,7 @@ app_initialize (xamarin_initialize_data *data)
 
 #define __XAMARIN_MAC_RELAUNCH_APP__ "__XAMARIN_MAC_RELAUNCH_APP__"
 
-int main (int argc, char **argv)
+int xamarin_main (int argc, char **argv, bool is_extension)
 {
 	xamarin_initialize_data data = { 0 };
 
@@ -521,7 +542,7 @@ int main (int argc, char **argv)
 		if (data.is_relaunch)
 			unsetenv (__XAMARIN_MAC_RELAUNCH_APP__);
 
-		app_initialize (&data);
+		app_initialize (&data, is_extension);
 
 		if (data.exit)
 			return data.exit_code;
@@ -559,10 +580,24 @@ int main (int argc, char **argv)
 			*ptr++ = argv [i];
 		*ptr = NULL;
 
-		rv = mono_main (new_argc, new_argv);
+		if (is_extension) {
+			rv = NSExtensionMain (new_argc, new_argv);
+		} else {
+			rv = mono_main (new_argc, new_argv);
+		}
 
 		free (new_argv);
 	}
 
 	return rv;
+}
+
+int main (int argc, char **argv)
+{
+	return xamarin_main (argc, argv, false);
+}
+
+int xamarin_mac_extension_main (int argc, char **argv)
+{
+	return xamarin_main (argc, argv, true);
 }
