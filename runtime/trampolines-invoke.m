@@ -238,16 +238,17 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 				}
 				case _C_ID: {
 					id id_arg = (id) arg;
-					if (!id_arg) {
+					MonoClass *p_klass = mono_class_from_mono_type (p);
+					if (p_klass == mono_get_intptr_class ()) {
+						arg_frame [ofs] = id_arg;
+						arg_ptrs [i + mofs] = &arg_frame [frameofs];
+						LOGZ (" argument %i is IntPtr: %p\n", i + 1, id_arg);
+						break;
+					} else if (!id_arg) {
 						arg_ptrs [i + mofs] = NULL;
 						break;
 					} else {
-						MonoClass *p_klass = mono_class_from_mono_type (p);
-						if (p_klass == mono_get_intptr_class ()) {
-							arg_frame [ofs] = id_arg;
-							arg_ptrs [i + mofs] = &arg_frame [frameofs];
-							LOGZ (" argument %i is IntPtr: %p\n", i + 1, id_arg);
-						} else if (p_klass == mono_get_string_class ()) {
+						if (p_klass == mono_get_string_class ()) {
 							NSString *str = (NSString *) id_arg;
 							arg_ptrs [i + mofs] = mono_string_new (mono_domain_get (), [str UTF8String]);
 							LOGZ (" argument %i is NSString: %p = %s\n", i + 1, id_arg, [str UTF8String]);
