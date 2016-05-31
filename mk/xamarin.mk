@@ -84,13 +84,10 @@ DEPENDENCY_DIRECTORIES += $($(2)_PATH)
 
 endef
 
-builds/.stamp-cloned-maccore:
-	@# we need to touch the stamp first, otherwise we'll 
-	@# go into an infinite loop when we re-launch make.
-	@touch $@
-	$(Q) $(MAKE) reset-maccore || rm -f $@
+$(MACCORE_PATH):
+	$(Q) $(MAKE) reset-maccore
 
 $(eval $(call CheckVersionTemplate,maccore,MACCORE))
 -include $(MACCORE_PATH)/mk/versions.mk
-$(MACCORE_PATH)/mk/versions.mk: | builds/.stamp-cloned-maccore
+$(MACCORE_PATH)/mk/versions.mk: | $(MACCORE_PATH)
 endif
