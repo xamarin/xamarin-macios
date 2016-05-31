@@ -60,6 +60,7 @@ namespace Xamarin.Mac.Tasks
 		public bool UseXamMacFullFramework { get; set; }
 
 		public string ApplicationName { get; set; }
+		public string ArchiveSymbols { get; set; }
 		public string Architecture { get; set; }
 		public string LinkMode { get; set; }
 		public bool Debug { get; set; }
@@ -86,6 +87,7 @@ namespace Xamarin.Mac.Tasks
 		protected override string GenerateCommandLineCommands ()
 		{
 			var args = new ProcessArgumentBuilder ();
+			bool msym;
 
 			args.Add ("/verbose");
 
@@ -120,6 +122,9 @@ namespace Xamarin.Mac.Tasks
 			else {
 				args.Add ("/arch:i386");
 			}
+
+			if (!string.IsNullOrEmpty (ArchiveSymbols) && bool.TryParse (ArchiveSymbols.Trim (), out msym))
+				args.Add ("--msym:" + (msym ? "yes" : "no"));
 
 			args.Add (string.Format ("--http-message-handler={0}", HttpClientHandler));
 
@@ -201,6 +206,7 @@ namespace Xamarin.Mac.Tasks
 			Log.LogTaskProperty ("ApplicationAssembly", ApplicationAssembly + (IsAppExtension ? ".dll" : ".exe"));
 			Log.LogTaskProperty ("ApplicationName", ApplicationName);
 			Log.LogTaskProperty ("Architecture", Architecture);
+			Log.LogTaskProperty ("ArchiveSymbols", ArchiveSymbols);
 			Log.LogTaskProperty ("Debug", Debug);
 			Log.LogTaskProperty ("ExplicitReferences", ExplicitReferences);
 			Log.LogTaskProperty ("ExtraArguments", ExtraArguments);
