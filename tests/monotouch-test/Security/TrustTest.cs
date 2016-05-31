@@ -269,9 +269,15 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (CFGetRetainCount (trust.Handle), Is.EqualTo ((nint) 1), "RetainCount(trust)");
 				Assert.That (CFGetRetainCount (policy.Handle), Is.EqualTo ((nint) 2), "RetainCount(policy)");
 				// the system was able to construct the chain based on the single certificate
+#if __WATCHOS__
+				Assert.That (Evaluate (trust), Is.EqualTo (SecTrustResult.RecoverableTrustFailure), "Evaluate");
+				// Evalute must be called prior to Count (Apple documentation)
+				Assert.That (trust.Count, Is.EqualTo (1), "Count");
+#else
 				Assert.That (Evaluate (trust), Is.EqualTo (SecTrustResult.Unspecified), "Evaluate");
 				// Evalute must be called prior to Count (Apple documentation)
 				Assert.That (trust.Count, Is.EqualTo (3), "Count");
+#endif
 
 				using (NSData data = trust.GetExceptions ()) {
 					Assert.That (CFGetRetainCount (data.Handle), Is.EqualTo ((nint) 1), "RetainCount(data)");
