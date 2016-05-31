@@ -32,7 +32,7 @@ namespace MonoTouchFixtures.Foundation {
 			TestRuntime.AssertXcodeVersion (5, 0);
 			
 			NSUrlSession session = NSUrlSession.SharedSession;
-
+			NSUrlSessionConfiguration.DefaultSessionConfiguration.TimeoutIntervalForRequest = 15; // seconds
 			var url = new NSUrl ("http://www.xamarin.com");
 			var tmpfile = Path.GetTempFileName ();
 			File.WriteAllText (tmpfile, "TMPFILE");
