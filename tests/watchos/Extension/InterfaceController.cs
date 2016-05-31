@@ -75,6 +75,8 @@ namespace monotouchtestWatchKitExtension
 			BeginInvokeOnMainThread (() => {
 				runner.Run ();
 
+				cmdRun.SetEnabled (true);
+				lblStatus.SetText ("Done");
 				BeginInvokeOnMainThread (RenderResults);
 			});
 		}
