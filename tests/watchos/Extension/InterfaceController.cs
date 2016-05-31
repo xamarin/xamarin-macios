@@ -15,6 +15,7 @@ namespace monotouchtestWatchKitExtension
 	public partial class InterfaceController : WKInterfaceController
 	{
 		WatchOSRunner runner;
+		bool running;
 
 		[Action ("runTests:")]
 		partial void RunTests (NSObject obj);
@@ -70,6 +71,11 @@ namespace monotouchtestWatchKitExtension
 
 		void RunTests ()
 		{
+			if (running) {
+				Console.WriteLine ("Already running");
+				return;
+			}
+			running = true;
 			cmdRun.SetEnabled (false);
 			lblStatus.SetText ("Running");
 			BeginInvokeOnMainThread (() => {
@@ -78,6 +84,7 @@ namespace monotouchtestWatchKitExtension
 				cmdRun.SetEnabled (true);
 				lblStatus.SetText ("Done");
 				BeginInvokeOnMainThread (RenderResults);
+				running = false;
 			});
 		}
 
