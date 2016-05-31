@@ -29,10 +29,9 @@ namespace MonoTouchFixtures.PassKit {
 		[Test]
 		public void Constructor ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6, 0))
-				Assert.Inconclusive ("PassKit is new in 6.0");
+			TestRuntime.AssertXcodeVersion (4, 5);
 
-			if (TestRuntime.CheckSystemAndSDKVersion (8, 0)) {
+			if (TestRuntime.CheckXcodeVersion (6, 0)) {
 				Assert.DoesNotThrow (() => new PKObject ());
 			} else {
 				Assert.Throws<Exception> (() => new PKObject ());

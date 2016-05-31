@@ -87,7 +87,7 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void DatagramDefaults ()
 		{
-			nint dsize = TestRuntime.CheckSystemAndSDKVersion (8, 0) ? 1327 : 1387;
+			nint dsize = TestRuntime.CheckXcodeVersion (6, 0) ? 1327 : 1387;
 			using (var ssl = new SslContext (SslProtocolSide.Client, SslConnectionType.Datagram)) {
 				Assert.That (ssl.BufferedReadSize, Is.EqualTo ((nint) 0), "BufferedReadSize");
 				Assert.Null (ssl.Connection, "Connection");

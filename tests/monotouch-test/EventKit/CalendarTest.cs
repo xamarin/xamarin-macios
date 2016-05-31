@@ -43,7 +43,7 @@ namespace MonoTouchFixtures.EventKit {
 			Assert.NotNull (c.CalendarIdentifier, "CalendarIdentifier");
 			Assert.Null (c.CGColor, "CGColor");
 
-			if (TestRuntime.CheckSystemAndSDKVersion (6, 0)) {
+			if (TestRuntime.CheckXcodeVersion (4, 5)) {
 				// default value changed for iOS 6.0 beta 1
 				Assert.False (c.Immutable, "Immutable");
 				// new in 6.0
@@ -62,7 +62,7 @@ namespace MonoTouchFixtures.EventKit {
 		[Test]
 		public void FromEventStoreWithReminder ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
+			if (!TestRuntime.CheckXcodeVersion (4, 5))
 				Assert.Inconclusive ("+[EKCalendar calendarForEntityType:eventStore:]: unrecognized selector before 6.0");
 
 			var c = EKCalendar.Create (EKEntityType.Reminder, new EKEventStore ());

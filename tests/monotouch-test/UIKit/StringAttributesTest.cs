@@ -38,8 +38,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void RetainCount ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("Requires iOS 6+");
+			TestRuntime.AssertXcodeVersion (4, 5);
 
 			var sa = new UIStringAttributes ();
 
@@ -86,8 +85,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void RetainCount_7 ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Inconclusive ("Requires iOS 7+");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			var sa = new UIStringAttributes ();
 			sa.Expansion = 0.0f;

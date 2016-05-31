@@ -2238,8 +2238,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void GenericAPI ()
 		{
-			if (!TestRuntime.CheckiOSSystemVersion (9, 0))
-				Assert.Inconclusive ("Contacts is iOS9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 
 			using (var contact = new CNMutableContact ()) {
 				var dt = new NSDateComponents () {

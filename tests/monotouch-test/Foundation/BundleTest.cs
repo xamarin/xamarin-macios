@@ -132,7 +132,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void AppStoreReceiptURL ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
+			if (!TestRuntime.CheckXcodeVersion (5, 0))
 				Assert.Inconclusive ("Requires iOS7 or later");
 
 			// on iOS8 device this now ends with "/StoreKit/sandboxReceipt" 

@@ -29,8 +29,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void CreateDataTaskAsync ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Inconclusive ("requires iOS7");
+			TestRuntime.AssertXcodeVersion (5, 0);
 			
 			NSUrlSession session = NSUrlSession.SharedSession;
 
@@ -98,8 +97,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void DownloadDataAsync ()
 		{
-			if (!TestRuntime.CheckiOSSystemVersion (7, 0))
-				Assert.Inconclusive ("NSUrlSession is iOS7+");
+			TestRuntime.AssertXcodeVersion (5, 0);
 			
 			bool completed = false;
 			int failed_iteration = -1;
@@ -128,8 +126,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void SharedSession ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Inconclusive ("requires iOS7");
+			TestRuntime.AssertXcodeVersion (5, 0);
 			
 			// in iOS9 those selectors do not respond - but they do work (forwarded to __NSURLSessionLocal type ?)
 			// * delegateQueue, sessionDescription, setSessionDescription:, delegate

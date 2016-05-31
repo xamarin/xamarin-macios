@@ -30,8 +30,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void BackgroundSessionConfiguration ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Inconclusive ("requires iOS7");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			// https://trello.com/c/F6cyUBFU/70-simple-background-transfer-bo-pang-block-by-an-system-invalidcastexception-in-nsurlsessionconfiguration-backgroundsessionconfigu
 			using (var session = NSUrlSessionConfiguration.BackgroundSessionConfiguration ("id")) {
@@ -42,8 +41,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Default_Properties ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Inconclusive ("requires iOS7");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			var config = NSUrlSessionConfiguration.DefaultSessionConfiguration;
 
@@ -88,7 +86,7 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.False (config.SessionSendsLaunchEvents, "sessionSendsLaunchEvents");
 			config.SessionSendsLaunchEvents = config.SessionSendsLaunchEvents; // setSessionSendsLaunchEvents:
 
-			if (TestRuntime.CheckiOSSystemVersion (8,0)) {
+			if (TestRuntime.CheckXcodeVersion (6, 0)) {
 				Assert.Null (config.SharedContainerIdentifier, "sharedContainerIdentifier");
 				config.SharedContainerIdentifier = config.SharedContainerIdentifier; // setSharedContainerIdentifier:
 			}
@@ -111,7 +109,7 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.NotNull (config.URLCredentialStorage, "URLCredentialStorage");
 			config.URLCredentialStorage = config.URLCredentialStorage; // setURLCredentialStorage:
 
-			if (TestRuntime.CheckiOSSystemVersion (8,0)) {
+			if (TestRuntime.CheckXcodeVersion (6, 0)) {
 				Assert.NotNull (config.WeakProtocolClasses, "protocolClasses");
 			} else {
 				Assert.Null (config.WeakProtocolClasses, "protocolClasses");

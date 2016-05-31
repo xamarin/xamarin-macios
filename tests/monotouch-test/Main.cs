@@ -56,16 +56,160 @@ class TestRuntime
 		return new Version (major, minor, build);
 	}
 
+	public static void AssertXcodeVersion (int major, int minor)
+	{
+		if (CheckXcodeVersion (major, minor))
+			return;
+
+		NUnit.Framework.Assert.Ignore ("Requires the platform version shipped with Xcode {0}.{1}", major, minor);
+	}
+
+	public static bool CheckXcodeVersion (int major, int minor)
+	{
+		switch (major) {
+		case 7:
+			switch (minor) {
+			case 0:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (2, 0);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (9, 0);
+#elif __IOS__
+				return CheckiOSSystemVersion (9, 0);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 1:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (2, 0);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (9, 0);
+#elif __IOS__
+				return CheckiOSSystemVersion (9, 1);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 2:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (2, 1);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (9, 1);
+#elif __IOS__
+				return CheckiOSSystemVersion (9, 2);
+#else
+				throw new NotImplementedException ();
+#endif
+			case 3:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (2, 2);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (9, 2);
+#elif __IOS__
+				return CheckiOSSystemVersion (9, 3);
+#else
+				throw new NotImplementedException ();
+#endif
+			default:
+				throw new NotImplementedException ();
+			}
+		case 6:
+#if __IOS__
+			// nothing
+#elif __TVOS__ || __WATCHOS__
+			return true;
+#else
+			throw new NotImplementedException ();
+#endif
+			switch (minor) {
+			case 0:
+				return CheckiOSSystemVersion (8, 0);
+			case 1:
+				return CheckiOSSystemVersion (8, 1);
+			case 2:
+				return CheckiOSSystemVersion (8, 2);
+			case 3:
+				return CheckiOSSystemVersion (8, 3);
+			default:
+				throw new NotImplementedException ();
+			}
+		case 5:
+#if __IOS__
+			// nothing
+#elif __TVOS__ || __WATCHOS__
+			return true;
+#else
+			throw new NotImplementedException ();
+#endif
+			switch (minor) {
+			case 0:
+				return CheckiOSSystemVersion (7, 0);
+			case 1:
+				return CheckiOSSystemVersion (7, 1);
+			default:
+				throw new NotImplementedException ();
+			}
+		case 4:
+#if __IOS__
+			// nothing
+#elif __TVOS__ || __WATCHOS__
+			return true;
+#else
+			throw new NotImplementedException ();
+#endif
+			switch (minor) {
+			case 5:
+				return CheckiOSSystemVersion (6, 0);
+			default:
+				throw new NotImplementedException ();
+			}
+		default:
+			throw new NotImplementedException ();
+		}
+	}
+
 	// This method returns true if:
 	// system version >= specified version
 	// AND
 	// sdk version >= specified version
-	public static bool CheckiOSSystemVersion (int major, int minor)
+	public static bool CheckiOSSystemVersion (int major, int minor, bool throwIfOtherPlatform = true)
+	{
+#if __IOS__
+		return UIDevice.CurrentDevice.CheckSystemVersion (major, minor);
+#else
+		if (throwIfOtherPlatform)
+			throw new Exception ("Can't get iOS System version on other platforms.");
+		return true;
+#endif
+	}
+
+	// This method returns true if:
+	// system version >= specified version
+	// AND
+	// sdk version >= specified version
+	public static bool ChecktvOSSystemVersion (int major, int minor, bool throwIfOtherPlatform = true)
+	{
+#if __TVOS__
+		return UIDevice.CurrentDevice.CheckSystemVersion (major, minor);
+#else
+		if (throwIfOtherPlatform)
+			throw new Exception ("Can't get tvOS System version on other platforms.");
+		return true;
+#endif
+	}
+
+	// This method returns true if:
+	// system version >= specified version
+	// AND
+	// sdk version >= specified version
+	public static bool CheckWatchOSSystemVersion (int major, int minor, bool throwIfOtherPlatform = true)
 	{
 #if __WATCHOS__
-		throw new Exception ("Can't get iOS System version on WatchOS.");
+		return WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (major, minor);
 #else
-		return UIDevice.CurrentDevice.CheckSystemVersion (major, minor);
+		if (throwIfOtherPlatform)
+			throw new Exception ("Can't get watchOS System version on iOS/tvOS.");
+		// This is both iOS and tvOS
+		return true;
 #endif
 	}
 
