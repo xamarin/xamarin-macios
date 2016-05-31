@@ -421,6 +421,7 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 
 	mono_set_signal_chaining (TRUE);
 	mono_install_unhandled_exception_hook (xamarin_unhandled_exception_handler, NULL);
+	mono_install_ftnptr_eh_callback (xamarin_ftnptr_exception_handler);
 
 	mono_jit_init_version ("MonoTouch", "mobile");
 	/*

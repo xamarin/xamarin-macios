@@ -116,6 +116,7 @@ void			xamarin_framework_peer_unlock ();
 bool			xamarin_file_exists (const char *path);
 MonoAssembly *	xamarin_open_and_register (const char *path);
 void			xamarin_unhandled_exception_handler (MonoObject *exc, gpointer user_data);
+void			xamarin_ftnptr_exception_handler (guint32 gchandle);
 void			xamarin_create_classes ();
 const char *	xamarin_skip_encoding_flags (const char *encoding);
 void			xamarin_add_registration_map (struct MTRegistrationMap *map);

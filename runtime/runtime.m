@@ -1015,6 +1015,14 @@ print_all_exceptions (MonoObject *exc)
 }
 
 void
+xamarin_ftnptr_exception_handler (guint32 gchandle)
+{
+	MonoObject *exc = mono_gchandle_get_target (gchandle);
+	mono_gchandle_free (gchandle);
+	xamarin_process_managed_exception (exc);
+}
+
+void
 xamarin_unhandled_exception_handler (MonoObject *exc, gpointer user_data)
 {
 	NSLog (@"%@", print_all_exceptions (exc));

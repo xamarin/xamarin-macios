@@ -609,6 +609,14 @@
 		),
 
 		#endregion
+
+		#region metadata/marshal.h
+
+		new Export (true, "void", "mono_install_ftnptr_eh_callback",
+			"MonoFtnPtrEHCallback", "callback"
+		),
+
+		#endregion
 	};
 #><#+
 	class Arg
