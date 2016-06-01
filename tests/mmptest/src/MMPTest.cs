@@ -287,11 +287,12 @@ namespace Xamarin.MMP.Tests
 				// build b.dll
 				sb.Clear ();
 				string assemblyPath = string.Format ("{0}/b.dll", tmpDir);
-				sb.AppendFormat ("-target:library -out:{0} {1}/b.cs", assemblyPath, tmpDir);
+				sb.AppendFormat ("-target:library -debug -out:{0} {1}/b.cs", assemblyPath, tmpDir);
 				File.WriteAllText (Path.Combine (tmpDir, "b.cs"), "public class B { }");
 				TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mcs", sb, "b");
 
 				File.SetAttributes (assemblyPath, FileAttributes.ReadOnly);
+				File.SetAttributes (assemblyPath + ".mdb", FileAttributes.ReadOnly);
 
 				// build project referencing a.dll
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir)
