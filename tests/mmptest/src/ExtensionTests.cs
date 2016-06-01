@@ -15,6 +15,9 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void TodayExtension_SmokeTest ()
 		{
+			if (!PlatformHelpers.CheckSystemVersion (10, 10))
+				return;
+
 			RunMMPTest (tmpDir =>
 			{
 				string testPath = Path.Combine (TI.FindSourceDirectory (), @"Today/TodayExtensionTest.csproj");
@@ -25,6 +28,9 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void FinderExtension_SmokeTest ()
 		{
+			if (!PlatformHelpers.CheckSystemVersion (10, 10))
+				return;
+
 			RunMMPTest (tmpDir =>
 			{
 				string testPath = Path.Combine (TI.FindSourceDirectory (), @"Finder/FinderExtensionTest.csproj");
@@ -35,6 +41,9 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void ShareExtension_SmokeTest ()
 		{
+			if (!PlatformHelpers.CheckSystemVersion (10, 10))
+				return;
+
 			RunMMPTest (tmpDir =>
 			{
 				string testPath = Path.Combine (TI.FindSourceDirectory (), @"Share/ShareExtensionTest.csproj");

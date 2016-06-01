@@ -22807,7 +22807,7 @@ namespace XamCore.AppKit {
 	[Protocol, BaseType (typeof (NSObject))]
 	public interface NSObjectAccessibilityExtensions {
 		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
-		[Export ("accessibilityAttributeNames:")]
+		[Export ("accessibilityAttributeNames")]
 		NSArray AccessibilityAttributeNames { get; }
 
 		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
