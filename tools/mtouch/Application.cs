@@ -855,6 +855,23 @@ namespace Xamarin.Bundler {
 
 			Namespaces.Initialize ();
 
+			var hasBitcodeCapableRuntime = false;
+			switch (Platform) {
+			case ApplePlatform.iOS:
+#if ENABLE_BITCODE_ON_IOS
+				hasBitcodeCapableRuntime = true;
+#endif
+				break;
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				hasBitcodeCapableRuntime = true;
+				break;
+			}
+			if (hasBitcodeCapableRuntime && EnableProfiling && FastDev) {
+				ErrorHelper.Warning (94, "Both profiling (--profiling) and incremental builds (--fastdev) is not supported when building for {0}. Incremental builds have ben disabled.", PlatformName);
+				FastDev = false;
+			}
+
 			InitializeCommon ();
 
 			Driver.Watch ("Resolve References", 1);
