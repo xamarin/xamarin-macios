@@ -750,9 +750,9 @@ namespace Xamarin.Bundler {
 			if (DeploymentTarget == null) {
 				DeploymentTarget = Xamarin.SdkVersions.GetVersion (Platform);
 			} else if (DeploymentTarget < Xamarin.SdkVersions.GetMinVersion (Platform)) {
-				throw new MonoTouchException (73, true, "Xamarin.iOS {0} does not support a deployment target of {1} (the minimum is {2}). Please select a newer deployment target in your project's Info.plist.", Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (Platform));
+				throw new MonoTouchException (73, true, "Xamarin.iOS {0} does not support a deployment target of {1} for {3} (the minimum is {2}). Please select a newer deployment target in your project's Info.plist.", Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (Platform), PlatformName);
 			} else if (DeploymentTarget > Xamarin.SdkVersions.GetVersion (Platform)) {
-				throw new MonoTouchException (74, true, "Xamarin.iOS {0} does not support a deployment target of {1} (the maximum is {2}). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.iOS.", Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (Platform));
+				throw new MonoTouchException (74, true, "Xamarin.iOS {0} does not support a deployment target of {1} for {3} (the maximum is {2}). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.iOS.", Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (Platform), PlatformName);
 			}
 
 			if (Platform == ApplePlatform.iOS && FastDev && DeploymentTarget.Major < 7) {

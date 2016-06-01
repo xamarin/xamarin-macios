@@ -323,15 +323,15 @@ namespace MTouchTests
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
 					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 3.1 --abi=armv7s,arm64 {1} -debug -r:" + Configuration.XamarinIOSDll, app, exe)),
-					"Xamarin.iOS .* using framework:.*\nerror MT0073: Xamarin.iOS .* does not support a deployment target of 3.1 .the minimum is 5.1.1.. Please select a newer deployment target in your project's Info.plist.\n");
+					"Xamarin.iOS .* using framework:.*\nerror MT0073: Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 5.1.1.. Please select a newer deployment target in your project's Info.plist.\n");
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
 					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 3.1 --abi=armv7s {1} -debug -r:" + Configuration.XamarinIOSDll, app, exe)),
-					"Xamarin.iOS .* using framework:.*\nerror MT0073: Xamarin.iOS .* does not support a deployment target of 3.1 .the minimum is 5.1.1.. Please select a newer deployment target in your project's Info.plist.\n");
+					"Xamarin.iOS .* using framework:.*\nerror MT0073: Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 5.1.1.. Please select a newer deployment target in your project's Info.plist.\n");
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
 					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 5.1 --abi=arm64 {1} -debug -r:" + Configuration.XamarinIOSDll, app, exe)),
-					"Xamarin.iOS .* using framework:.*\nerror MT0073: Xamarin.iOS .* does not support a deployment target of 5.1 .the minimum is 5.1.1.. Please select a newer deployment target in your project's Info.plist.\n");
+					"Xamarin.iOS .* using framework:.*\nerror MT0073: Xamarin.iOS .* does not support a deployment target of 5.1 for iOS .the minimum is 5.1.1.. Please select a newer deployment target in your project's Info.plist.\n");
 
 				// No exception here.
 				ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 5.1.1 --abi=arm64 {1} -debug -r:" + Configuration.XamarinIOSDll, app, exe));
@@ -353,7 +353,7 @@ namespace MTouchTests
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
 					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 400.0.0 --abi=armv7s,arm64 {1} -debug -r:" + Configuration.XamarinIOSDll, app, exe)),
-					string.Format ("Xamarin.iOS .* using framework:.*\nerror MT0074: Xamarin.iOS .* does not support a deployment target of 400.0.0 .the maximum is " + Configuration.sdk_version + ".. Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.iOS.\n", Configuration.sdk_version));
+					string.Format ("Xamarin.iOS .* using framework:.*\nerror MT0074: Xamarin.iOS .* does not support a deployment target of 400.0.0 for iOS .the maximum is " + Configuration.sdk_version + ".. Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.iOS.\n", Configuration.sdk_version));
 			} finally {
 				Directory.Delete (testDir, true);
 			}
