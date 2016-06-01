@@ -16,7 +16,7 @@ all-local::
 
 run-tests: test.config
 	rm -f .failed-stamp
-	cd $(NUNIT_MSBUILD_DIR) && $(SYSTEM_MONO) ../nunit-console.exe $(abspath $(TOP)/tests/mtouch/bin/Debug/mtouch.dll) -xml=$(abspath $(CURDIR)/TestResult.xml) -noshadow $(TEST_FIXTURE) -labels -nodots || touch .failed-stamp
+	cd $(NUNIT_MSBUILD_DIR) && $(SYSTEM_MONO) ../nunit-console.exe $(abspath $(TOP)/tests/mtouch/bin/Debug/mtouch.dll) -xml=$(abspath $(CURDIR)/TestResult.xml) -noshadow $(TEST_FIXTURE) -labels -nodots || touch $(CURDIR)/.failed-stamp
 	@# Create an html file and tell MonkeyWrench to upload it (if we're running there)
 	@[[ -z "$$BUILD_REPOSITORY" ]] || \
 		( xsltproc $(TOP)/tests/HtmlTransform.xslt TestResult.xml  > index.html && \
