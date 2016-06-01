@@ -1082,14 +1082,16 @@ namespace Xamarin.Bundler {
 
 				var libprofiler_target = Path.Combine (AppDirectory, "libmono-profiler-log.dylib");
 				var libprofiler_source = Path.Combine (libdir, "libmono-profiler-log.dylib");
-				Application.UpdateFile (libprofiler_source, libprofiler_target);
+				if (EnableProfiling)
+					Application.UpdateFile (libprofiler_source, libprofiler_target);
 
 				// Copy libXamarin.dylib to the app
 				var libxamarin_target = Path.Combine (AppDirectory, LibXamarin);
 				Application.UpdateFile (Path.Combine (Driver.MonoTouchLibDirectory, LibXamarin), libxamarin_target);
 
 				if (UseMonoFramework.Value) {
-					Driver.XcodeRun ("install_name_tool", "-change @executable_path/libmonosgen-2.0.dylib @rpath/Mono.framework/Mono " + Driver.Quote (libprofiler_target));
+					if (EnableProfiling)
+						Driver.XcodeRun ("install_name_tool", "-change @executable_path/libmonosgen-2.0.dylib @rpath/Mono.framework/Mono " + Driver.Quote (libprofiler_target));
 					Driver.XcodeRun ("install_name_tool", "-change @executable_path/libmonosgen-2.0.dylib @rpath/Mono.framework/Mono " + Driver.Quote (libxamarin_target));
 				}
 			}
