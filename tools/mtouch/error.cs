@@ -76,7 +76,7 @@ namespace Xamarin.Bundler {
 	//					MT0066	Invalid build registrar assembly: {0}
 	//					MT0067	Invalid registrar: {0}
 	//					MT0068	Invalid value for target framework: {0}.
-	//					MT0069	The app directory '{0}' does not exist.
+	//					MT0069	<unused, can be reused>
 	//					MT0070	Invalid target framework: {0}. Valid target frameworks are: {1}.
 	//					MT0071	Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.
 	//					MT0072	Extensions are not supported for the platform '{0}'.
