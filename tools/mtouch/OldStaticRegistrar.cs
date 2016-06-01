@@ -1618,7 +1618,7 @@ namespace XamCore.Registrar {
 			sb.Append ("\t\tmono_jit_thread_attach (NULL);\n");
 			
 			if (isCtor) {
-				sb.AppendLine ("\tif (xamarin_try_get_nsobject (self))");
+				sb.AppendLine ("\tif (xamarin_has_nsobject (self))");
 				sb.AppendLine ("\t\treturn self;");
 			}
 			
