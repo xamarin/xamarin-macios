@@ -198,7 +198,7 @@ namespace MTouchTests
 		{
 			Asserts.Throws<TestExecutionException> (() =>
 				ExecutionHelper.Execute (TestTarget.ToolPath, "--abi invalid-arm"),
-				"error MT0015: Invalid ABI: invalid-arm. Supported ABIs are: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, arm64 and arm64+llvm.\n");
+				"error MT0015: Invalid ABI: invalid-arm. Supported ABIs are: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, armv7k+llvm, arm64 and arm64+llvm.\n");
 		}
 
 		[Test]
@@ -235,7 +235,6 @@ namespace MTouchTests
 					"error MT0016: The option '--displayname' has been deprecated.\n" +
 					"error MT0016: The option '--mainnib' has been deprecated.\n" +
 					"error MT0016: The option '--certificate' has been deprecated.\n" +
-					"error MT0016: The option '--enable-background-fetch' has been deprecated.\n" +
 					"error MT0016: The option '--llvm' has been deprecated.\n" +
 					"error MT0016: The option '--thumb' has been deprecated.\n" +
 					"error MT0016: The option '--armv7' has been deprecated.\n" +
@@ -258,7 +257,6 @@ namespace MTouchTests
 					"warning MT0016: The option '--displayname' has been deprecated.\n" +
 					"warning MT0016: The option '--mainnib' has been deprecated.\n" +
 					"warning MT0016: The option '--certificate' has been deprecated.\n" +
-					"warning MT0016: The option '--enable-background-fetch' has been deprecated.\n" +
 					"warning MT0016: The option '--llvm' has been deprecated.\n" +
 					"warning MT0016: The option '--thumb' has been deprecated.\n" +
 					"warning MT0016: The option '--armv7' has been deprecated.\n" +
@@ -1207,7 +1205,7 @@ namespace MTouchTests
 
 				mtouch.Abi = "armv6";
 				Assert.AreEqual (1, mtouch.Execute (MTouchTests.MTouchAction.BuildDev));
-				mtouch.AssertError ("MT", 15, "Invalid ABI: armv6. Supported ABIs are: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, arm64 and arm64+llvm.");
+				mtouch.AssertError ("MT", 15, "Invalid ABI: armv6. Supported ABIs are: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, armv7k+llvm, arm64 and arm64+llvm.");
 
 				mtouch.Abi = "armv7";
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim));
@@ -1272,7 +1270,7 @@ namespace MTouchTests
 
 				mtouch.Abi = "armv6";
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildDev));
-				mtouch.AssertError ("MT", 15, "Invalid ABI: armv6. Supported ABIs are: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, arm64 and arm64+llvm.");
+				mtouch.AssertError ("MT", 15, "Invalid ABI: armv6. Supported ABIs are: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, armv7k+llvm, arm64 and arm64+llvm.");
 
 				mtouch.Abi = "armv7";
 				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim));
