@@ -18,7 +18,7 @@ namespace Xamarin.MMP.Tests
 			get
 			{
 				string rootDir = TI.FindRootDirectory ();
-				string buildLibPath = Path.Combine (rootDir, "../tests/mmptest/bin/SimpleClass.dylib");
+				string buildLibPath = Path.Combine (rootDir, "../tests/mac-binding-project/bin/SimpleClassDylib.dylib");
 				Assert.IsTrue (File.Exists (buildLibPath), string.Format ("SimpleDylibPath missing? {0}", buildLibPath));
 				return buildLibPath;
 			}
@@ -29,7 +29,7 @@ namespace Xamarin.MMP.Tests
 			get
 			{
 				string rootDir = TI.FindRootDirectory ();
-				string buildLibPath = Path.Combine (rootDir, "../tests/mmptest/bin/SimpleClassStatic.a");
+				string buildLibPath = Path.Combine (rootDir, "../tests/mac-binding-project/bin/SimpleClassStatic.a");
 				Assert.IsTrue (File.Exists (buildLibPath), string.Format ("SimpleStaticPath missing? {0}", buildLibPath));
 				return buildLibPath;
 			}
@@ -46,7 +46,7 @@ namespace Xamarin.MMP.Tests
 				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - System", "libsqlite3.0.dylib", true);
 
 				test.ItemGroup = string.Format (NativeReferenceTemplate, Path.GetFullPath (SimpleDylibPath), "Dynamic");
-				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - Local", "SimpleClass.dylib", true);
+				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - Local", "SimpleClassDylib.dylib", true);
 
 				test.ItemGroup = string.Format (NativeReferenceTemplate, Path.GetFullPath (SimpleStaticPath), "Static");
 				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - Static", null, true);

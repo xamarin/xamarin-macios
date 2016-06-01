@@ -19,7 +19,7 @@ namespace MobileTestApp
 		static void Main (string[] args)
 		{
 #pragma warning disable 0219		
-			var v = ObjCRuntime.Dlfcn.dlopen (GetCurrentExecutingDirectory () + "/SimpleClass.dylib", 0);
+			var v = ObjCRuntime.Dlfcn.dlopen (GetCurrentExecutingDirectory () + "/SimpleClassDylib.dylib", 0);
 #pragma warning restore 0219
 
 			NSApplication.Init ();
