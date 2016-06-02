@@ -2274,6 +2274,14 @@ public partial class Generator : IMemberGatherer {
 		if (!t.IsValueType || t.IsEnum || assembly)
 			return false;
 
+#if WATCH
+		// According to clang watchOS passes arguments bigger than 16 bytes by reference.
+		// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5248-L5250
+		// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5542-L5543
+		if (GetValueTypeSize (t, false) <= 16)
+			return false;
+#endif
+
 		return true;
 	}
 
