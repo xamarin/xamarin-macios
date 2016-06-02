@@ -41,6 +41,7 @@ namespace Xamarin.Linker {
 			// New TLS Code
 			"Mono.Security.Providers.NewSystemSource",
 			"Mono.Security.Providers.OldTls",
+			"Mono.Security.Providers.NewTls",
 			"Mono.Security.Providers.DotNet",
 			// Facades assemblies (PCL)
 			"Microsoft.Win32.Primitives",
