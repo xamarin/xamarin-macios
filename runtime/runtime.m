@@ -248,17 +248,17 @@ xamarin_get_parameter_type (MonoMethod *managed_method, int index)
 }
 
 MonoObject *
-xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type)
+xamarin_get_nsobject_with_type_for_ptr (id self, bool owns, MonoType* type, guint32 *exception_gchandle)
 {
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 
 	int32_t created;
-	return xamarin_get_nsobject_with_type_for_ptr_created (self, owns, type, &created);
+	return xamarin_get_nsobject_with_type_for_ptr_created (self, owns, type, &created, exception_gchandle);
 }
 
 MonoObject *
-xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created)
+xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *type, int32_t *created, guint32 *exception_gchandle)
 {
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
@@ -279,11 +279,11 @@ xamarin_get_nsobject_with_type_for_ptr_created (id self, bool owns, MonoType *ty
 			return mobj;
 	}
 
-	return xamarin_get_nsobject_with_type (self, mono_type_get_object (mono_domain_get (), type), created);
+	return xamarin_get_nsobject_with_type (self, mono_type_get_object (mono_domain_get (), type), created, exception_gchandle);
 }
 
 MonoObject *
-xamarin_get_managed_object_for_ptr (id self)
+xamarin_get_managed_object_for_ptr (id self, guint32 *exception_gchandle)
 {
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
@@ -297,7 +297,7 @@ xamarin_get_managed_object_for_ptr (id self)
 	gchandle = xamarin_get_gchandle (self);
 
 	if (gchandle == 0) {
-		mobj = (MonoObject *) xamarin_try_get_or_construct_nsobject (self);
+		mobj = (MonoObject *) xamarin_try_get_or_construct_nsobject (self, exception_gchandle);
 	} else {
 		mobj = mono_gchandle_get_target (gchandle);
 	}
@@ -306,7 +306,7 @@ xamarin_get_managed_object_for_ptr (id self)
 }
 
 MonoObject *
-xamarin_get_managed_object_for_ptr_fast (id self)
+xamarin_get_managed_object_for_ptr_fast (id self, guint32 *exception_gchandle)
 {
 	// COOP: Reading managed data, must be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
@@ -317,13 +317,13 @@ xamarin_get_managed_object_for_ptr_fast (id self)
 	gchandle = xamarin_get_gchandle (self);
 
 	if (gchandle == 0) {
-		mobj = (MonoObject *) xamarin_try_get_or_construct_nsobject (self);
+		mobj = (MonoObject *) xamarin_try_get_or_construct_nsobject (self, exception_gchandle);
 	} else {
 		mobj = mono_gchandle_get_target (gchandle);
 #if DEBUG
 		if (self != xamarin_get_nsobject_handle (mobj)) {
 			xamarin_assertion_message ("Internal consistency error, please file a bug (http://bugzilla.xamarin.com). Additional data: found managed object %p=%p (%s) in native object %p (%s).\n",
-				mobj, xamarin_get_nsobject_handle (mobj), xamarin_class_get_full_name (mono_object_get_class (mobj)), self, object_getClassName (self));
+				mobj, xamarin_get_nsobject_handle (mobj), xamarin_class_get_full_name (mono_object_get_class (mobj), exception_gchandle), self, object_getClassName (self));
 		}
 #endif
 	}
@@ -482,7 +482,7 @@ xamarin_get_reflection_method_method (MonoReflectionMethod *method)
 }
 
 id
-xamarin_get_handle (MonoObject *obj)
+xamarin_get_handle (MonoObject *obj, guint32 *exception_gchandle)
 {
 	// COOP: Reads managed memory, needs to be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
@@ -498,14 +498,14 @@ xamarin_get_handle (MonoObject *obj)
 	if (xamarin_is_class_nsobject (klass)) {
 		rv = xamarin_get_nsobject_handle (obj);
 	} else if (xamarin_is_class_inativeobject (klass)) {
-		rv = xamarin_get_handle_for_inativeobject (obj);
+		rv = xamarin_get_handle_for_inativeobject (obj, exception_gchandle);
 	} else {
 		char *msg = xamarin_strdup_printf ("Unable to marshal from %s.%s to an Objective-C object. "
 									"The managed class must either inherit from NSObject or implement INativeObject.",
 									mono_class_get_namespace (klass), mono_class_get_name (klass));
 		MonoException *exc = mono_get_exception_execution_engine (msg);
 		xamarin_free (msg);
-		mono_raise_exception (exc);
+		*exception_gchandle = mono_gchandle_new ((MonoObject *) exc, FALSE);
 	}
 	
 	return rv;
@@ -513,7 +513,7 @@ xamarin_get_handle (MonoObject *obj)
 
 #if DEBUG
 static void 
-verify_cast (MonoClass *to, MonoObject *obj, Class from_class, SEL sel, MonoMethod *method)
+verify_cast (MonoClass *to, MonoObject *obj, Class from_class, SEL sel, MonoMethod *method, guint32 *exception_gchandle)
 {
 	// COOP: Reads managed memory, needs to be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
@@ -524,8 +524,8 @@ verify_cast (MonoClass *to, MonoObject *obj, Class from_class, SEL sel, MonoMeth
 	if (mono_object_isinst (obj, to) == NULL) {
 		MonoClass *from = mono_object_get_class (obj);
 		char *method_full_name = mono_method_full_name (method, TRUE);
-		char *from_name = xamarin_class_get_full_name (from);
-		char *to_name = xamarin_class_get_full_name (to);
+		char *from_name = xamarin_class_get_full_name (from, exception_gchandle);
+		char *to_name = xamarin_class_get_full_name (to, exception_gchandle);
 		char *msg = xamarin_strdup_printf ("Unable to cast object of type '%s' (Objective-C type: '%s') to type '%s'.\n"
 		"Additional information:\n"
 		"\tSelector: %s\n"
@@ -535,20 +535,20 @@ verify_cast (MonoClass *to, MonoObject *obj, Class from_class, SEL sel, MonoMeth
 		mono_free (to_name);
 		xamarin_free (msg);
 		mono_free (method_full_name);
-		mono_raise_exception (mono_ex);
+		*exception_gchandle = mono_gchandle_new ((MonoObject *) mono_ex, FALSE);
 	}
 }
 #endif
 
 void
-xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *method)
+xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *method, guint32 *exception_gchandle)
 {
 	// COOP: Reads managed memory, needs to be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
 	if (obj != NULL) {
 #if DEBUG
-		verify_cast (mono_method_get_class (method), obj, [self class], sel, method);
+		verify_cast (mono_method_get_class (method), obj, [self class], sel, method, exception_gchandle);
 #endif
 		return;
 	}
@@ -562,13 +562,15 @@ xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *me
 	"\tMethod: %s\n";
 	
 	char *method_full_name = mono_method_full_name (method, TRUE);
-	char *type_name = xamarin_lookup_managed_type_name ([self class]);
-	char *msg = xamarin_strdup_printf (m, self, object_getClassName (self), type_name, sel_getName (sel), method_full_name);
-	MonoException *mex = xamarin_create_exception (msg);
-	xamarin_free (msg);
+	char *type_name = xamarin_lookup_managed_type_name ([self class], exception_gchandle);
+	if (*exception_gchandle == 0) {
+		char *msg = xamarin_strdup_printf (m, self, object_getClassName (self), type_name, sel_getName (sel), method_full_name);
+		MonoException *mex = xamarin_create_exception (msg);
+		xamarin_free (msg);
+		*exception_gchandle = mono_gchandle_new ((MonoObject *) mex, FALSE);
+	}
 	mono_free (type_name);
 	mono_free (method_full_name);
-	mono_raise_exception (mex);
 }
 
 #if DEBUG
@@ -643,21 +645,21 @@ xamarin_check_objc_type (id obj, Class expected_class, SEL sel, id self, int ind
 #endif
 
 char *
-xamarin_class_get_full_name (MonoClass *klass)
+xamarin_class_get_full_name (MonoClass *klass, guint32 *exception_gchandle)
 {
 	// COOP: Reads managed memory, needs to be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
-	return xamarin_type_get_full_name (mono_class_get_type (klass));
+	return xamarin_type_get_full_name (mono_class_get_type (klass), exception_gchandle);
 }
 
 char *
-xamarin_type_get_full_name (MonoType *type)
+xamarin_type_get_full_name (MonoType *type, guint32 *exception_gchandle)
 {
 	// COOP: Reads managed memory, needs to be in UNSAFE mode
 	MONO_ASSERT_GC_UNSAFE;
 	
-	return xamarin_reflection_type_get_full_name (mono_type_get_object (mono_domain_get (), type));
+	return xamarin_reflection_type_get_full_name (mono_type_get_object (mono_domain_get (), type), exception_gchandle);
 }
 
 /*
@@ -856,22 +858,23 @@ xamarin_open_assembly (const char *name)
 	return assembly;
 }
 
-static void
-register_assembly (MonoAssembly *assembly)
+static bool
+register_assembly (MonoAssembly *assembly, guint32 *exception_gchandle)
 {
 	// COOP: this is a function executed only at startup, I believe the mode here doesn't matter.
-	xamarin_register_assembly (mono_assembly_get_object (mono_domain_get (), assembly));
+	xamarin_register_assembly (mono_assembly_get_object (mono_domain_get (), assembly), exception_gchandle);
+	return *exception_gchandle == 0;
 }
 
 MonoAssembly *
-xamarin_open_and_register (const char *aname)
+xamarin_open_and_register (const char *aname, guint32 *exception_gchandle)
 {
 	// COOP: this is a function executed only at startup, I believe the mode here doesn't matter.
 	MonoAssembly *assembly;
 
 	assembly = xamarin_open_assembly (aname);
 
-	register_assembly (assembly);
+	register_assembly (assembly, exception_gchandle);
 	
 	return assembly;
 }
@@ -1017,9 +1020,18 @@ print_all_exceptions (MonoObject *exc)
 void
 xamarin_ftnptr_exception_handler (guint32 gchandle)
 {
+	xamarin_process_managed_exception_gchandle (gchandle);
+}
+
+void
+xamarin_process_managed_exception_gchandle (guint32 gchandle)
+{
+	if (gchandle == 0)
+		return;
+
 	MonoObject *exc = mono_gchandle_get_target (gchandle);
 	mono_gchandle_free (gchandle);
-	xamarin_process_managed_exception (exc);
+	xamarin_process_managed_exception (exc);	
 }
 
 void
@@ -1033,9 +1045,14 @@ xamarin_unhandled_exception_handler (MonoObject *exc, gpointer user_data)
 static void
 exception_handler (NSException *exc)
 {
-	// COOP: not accessing managed memory: any mode
+	// COOP: We won't get here in coop-mode, because we don't set the uncaught objc exception handler in that case.
 	LOG (PRODUCT ": Received unhandled ObjectiveC exception: %@ %@", [exc name], [exc reason]);
-	
+
+	if (xamarin_is_gc_coop) {
+		NSLog (@"Uncaught Objective-C exception: %@", exc);
+		assert (false); // Re-throwing the Objective-C exception will probably just end up with infinite recursion
+	}
+
 	xamarin_throw_ns_exception (exc);
 }
 
@@ -1114,6 +1131,8 @@ xamarin_initialize ()
 	struct InitializationOptions options;
 	void* params[2];
 	const char *product_dll = NULL;
+	guint32 exception_gchandle = 0;
+	MonoObject *exc = NULL;
 
 	initialize_started = TRUE;
 
@@ -1139,7 +1158,13 @@ xamarin_initialize ()
 	gc_callbacks.object_queued_for_finalization = object_queued_for_finalization;
 	mono_gc_register_finalizer_callbacks (&gc_callbacks);
 
-	NSSetUncaughtExceptionHandler (exception_handler);
+	if (xamarin_is_gc_coop) {
+		// There should be no such thing as an unhandled ObjC exception
+		// when running the GC in cooperative mode, and if we run into it,
+		// it's a bug somewhere, in which case we must fix it.
+	} else {
+		NSSetUncaughtExceptionHandler (exception_handler);
+	}
 
 	product_dll = xamarin_use_new_assemblies ? PRODUCT_DUAL_ASSEMBLY : PRODUCT_COMPAT_ASSEMBLY;
 
@@ -1178,11 +1203,16 @@ xamarin_initialize ()
 
 	params [0] = &options;
 
-	mono_runtime_invoke (runtime_initialize, NULL, params, NULL);
+	mono_runtime_invoke (runtime_initialize, NULL, params, &exc);
+
+	if (exc)
+		xamarin_process_managed_exception (exc);
 
 	delegates = options.Delegates;
 			
-	register_assembly (assembly);
+	if (!register_assembly (assembly, &exception_gchandle))
+		xamarin_process_managed_exception_gchandle (exception_gchandle);
+
 	install_nsautoreleasepool_hooks ();
 
 #if defined (DEBUG)
@@ -1554,6 +1584,7 @@ xamarin_switch_gchandle (id self, bool to_weak)
 	// COOP: reads managed memory: unsafe mode
 	MONO_ASSERT_GC_SAFE_OR_DETACHED;
 	
+	guint32 exception_gchandle = 0;
 	int new_gchandle;
 	int old_gchandle;
 	int old_gchandle_raw;
@@ -1592,27 +1623,31 @@ xamarin_switch_gchandle (id self, bool to_weak)
 	if (old_gchandle) {
 		managed_object = mono_gchandle_get_target (old_gchandle);
 	} else {
-		managed_object = xamarin_get_managed_object_for_ptr (self);
+		managed_object = xamarin_get_managed_object_for_ptr (self, &exception_gchandle);
 	}
 	
-	if (to_weak) {
-		new_gchandle = mono_gchandle_new_weakref (managed_object, TRUE);
-		flags |= GCHANDLE_WEAK;
-	} else {
-		new_gchandle = mono_gchandle_new (managed_object, FALSE);
+	if (exception_gchandle == 0) {
+		if (to_weak) {
+			new_gchandle = mono_gchandle_new_weakref (managed_object, TRUE);
+			flags |= GCHANDLE_WEAK;
+		} else {
+			new_gchandle = mono_gchandle_new (managed_object, FALSE);
+		}
+		
+		if (old_gchandle)
+			mono_gchandle_free (old_gchandle);
+		
+		xamarin_set_nsobject_flags (managed_object, xamarin_get_nsobject_flags (managed_object) | NSObjectFlagsHasManagedRef);
+		set_raw_gchandle (self, new_gchandle | flags);
 	}
-	
-	if (old_gchandle)
-		mono_gchandle_free (old_gchandle);
-	
-	xamarin_set_nsobject_flags (managed_object, xamarin_get_nsobject_flags (managed_object) | NSObjectFlagsHasManagedRef);
-	set_raw_gchandle (self, new_gchandle | flags);
 
 	MONO_THREAD_DETACH; // COOP: this will switch to GC_SAFE
 
 #if defined(DEBUG_REF_COUNTING)
 	NSLog (@"Switched object %p to %s GCHandle = %d\n", self, to_weak ? "weak" : "strong", new_gchandle);
 #endif
+
+	xamarin_process_managed_exception_gchandle (exception_gchandle);
 }
 
 void
@@ -1678,6 +1713,7 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 	MONO_ASSERT_GC_UNSAFE;
 	
 	bool user_type = is_user_type (self);
+	guint32 exception_gchandle = 0;
 	
 #if defined(DEBUG_REF_COUNTING)
 	NSLog (@"monotouch_release_managed_ref (%s Handle=%p) retainCount=%d; HasManagedRef=%i GCHandle=%i IsUserType=%i\n", 
@@ -1696,12 +1732,14 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 		// This lock is needed so that we can safely call retainCount in the toggleref callback.
 		xamarin_framework_peer_lock ();
 		/* If we're a wrapper type, we need to unregister here, since we won't enter the release trampoline */
-		xamarin_unregister_nsobject (self, managed_obj);
+		xamarin_unregister_nsobject (self, managed_obj, &exception_gchandle);
 		MONO_ENTER_GC_SAFE;
 		[self release];
 		MONO_EXIT_GC_SAFE;
 		xamarin_framework_peer_unlock ();
 	}
+
+	xamarin_process_managed_exception_gchandle (exception_gchandle);
 }
 
 void
@@ -1774,7 +1812,7 @@ static MonoReferenceQueue *block_wrapper_queue;
  * create the method
  */
 static MonoObject *
-get_method_block_wrapper_creator (MonoMethod *method, int par)
+get_method_block_wrapper_creator (MonoMethod *method, int par, guint32 *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
 	MONO_ASSERT_GC_UNSAFE;
@@ -1803,7 +1841,9 @@ get_method_block_wrapper_creator (MonoMethod *method, int par)
 		return res;
 	}
 
-	res = xamarin_get_block_wrapper_creator ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), par);
+	res = xamarin_get_block_wrapper_creator ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), par, exception_gchandle);
+	if (*exception_gchandle != 0)
+		return NULL;
 	// NSLog (@"New value: %x", (int) res);
 
 	nmp = (MethodAndPar *) malloc (sizeof (MethodAndPar));
@@ -1833,7 +1873,7 @@ get_method_block_wrapper_creator (MonoMethod *method, int par)
  * Returns: the instantiated delegate.
  */
 int *
-xamarin_get_delegate_for_block_parameter (MonoMethod *method, int par, void *nativeBlock)
+xamarin_get_delegate_for_block_parameter (MonoMethod *method, int par, void *nativeBlock, guint32 *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
 	MONO_ASSERT_GC_UNSAFE;
@@ -1843,10 +1883,18 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, int par, void *nat
 	if (nativeBlock == NULL)
 		return NULL;
 
+	MonoObject *obj = get_method_block_wrapper_creator (method, par, exception_gchandle);
+	if (*exception_gchandle != 0)
+		return NULL;
+
 	/* retain or copy (if it's a stack block) the block */
 	nativeBlock = _Block_copy (nativeBlock);
 
-	delegate = delegates.create_block_proxy (get_method_block_wrapper_creator (method, par), nativeBlock);
+	delegate = delegates.create_block_proxy (obj, nativeBlock, exception_gchandle);
+	if (*exception_gchandle != 0) {
+		_Block_release (nativeBlock);
+		return NULL;
+	}
 
 	MONO_ENTER_GC_SAFE;
 	pthread_mutex_lock (&wrapper_hash_lock);
@@ -1858,10 +1906,10 @@ xamarin_get_delegate_for_block_parameter (MonoMethod *method, int par, void *nat
 }
 
 id
-xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate)
+xamarin_get_block_for_delegate (MonoMethod *method, MonoObject *delegate, guint32 *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
-	return delegates.create_delegate_proxy ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), delegate);
+	return delegates.create_delegate_proxy ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), delegate, exception_gchandle);
 }
 
 void
@@ -1931,10 +1979,17 @@ void
 xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault)
 {
 	XamarinGCHandle *exc_handle;
-
+	guint32 exception_gchandle = 0;
 	MarshalObjectiveCExceptionMode mode;
 
-	mode = xamarin_on_marshal_objectivec_exception (ns_exception, throwManagedAsDefault);
+	mode = xamarin_on_marshal_objectivec_exception (ns_exception, throwManagedAsDefault, &exception_gchandle);
+
+	if (exception_gchandle != 0) {
+		NSLog (@PRODUCT ": Got an exception while executing the MarshalObjectiveCException event (this exception will be ignored):");
+		NSLog (@"%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
+		mono_gchandle_free (exception_gchandle);
+		exception_gchandle = 0;
+	}
 
 	if (mode == MarshalObjectiveCExceptionModeDefault)
 		mode = xamarin_is_gc_coop ? MarshalObjectiveCExceptionModeThrowManagedException : MarshalObjectiveCExceptionModeUnwindManagedCode;
@@ -1952,7 +2007,13 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 			MonoObject *exc = mono_gchandle_get_target (handle);
 			mono_set_pending_exception ((MonoException *) exc);
 		} else {
-			int handle = xamarin_create_ns_exception (ns_exception);
+			int handle = xamarin_create_ns_exception (ns_exception, &exception_gchandle);
+			if (exception_gchandle != 0) {
+				NSLog (@PRODUCT ": Got an exception while creating a managed NSException wrapper (will throw this exception instead):");
+				NSLog (@"%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
+				handle = exception_gchandle;
+				exception_gchandle = 0;
+			}
 			MONO_ENTER_GC_UNSAFE;
 			MonoObject *exc = mono_gchandle_get_target (handle);
 			mono_set_pending_exception ((MonoException *) exc);
@@ -1974,15 +2035,25 @@ xamarin_process_managed_exception (MonoObject *exception)
 		return;
 
 	MarshalManagedExceptionMode mode;
+	guint32 exception_gchandle = 0;
 
 	int handle = mono_gchandle_new (exception, false);
-	mode = xamarin_on_marshal_managed_exception (handle);
+	mode = xamarin_on_marshal_managed_exception (handle, &exception_gchandle);
 	mono_gchandle_free (handle);
+
+	if (exception_gchandle != 0) {
+		NSLog (@PRODUCT ": Got an exception while executing the MarshalManagedCException event (this exception will be ignored):");
+		NSLog (@"%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
+		mono_gchandle_free (exception_gchandle);
+		exception_gchandle = 0;
+		mode = MarshalManagedExceptionModeDefault;
+	}
 
 	if (mode == MarshalManagedExceptionModeDefault)
 		mode = xamarin_is_gc_coop ? MarshalManagedExceptionModeThrowObjectiveCException : MarshalManagedExceptionModeUnwindNativeCode;
 
 	switch (mode) {
+	case MarshalManagedExceptionModeDisable:
 	case MarshalManagedExceptionModeUnwindNativeCode:
 		if (xamarin_is_gc_coop)
 			xamarin_assertion_message ("Cannot unwind native frames for managed exceptions when the GC is in cooperative mode.");
@@ -1990,17 +2061,48 @@ xamarin_process_managed_exception (MonoObject *exception)
 		break;
 	case MarshalManagedExceptionModeThrowObjectiveCException: {
 		int handle = mono_gchandle_new (exception, false);
-		NSException *ns_exc = xamarin_unwrap_ns_exception (handle);
+		NSException *ns_exc = xamarin_unwrap_ns_exception (handle, &exception_gchandle);
 		
+		if (exception_gchandle != 0) {
+			NSLog (@PRODUCT ": Got an exception while unwrapping a managed NSException wrapper (this exception will be ignored):");
+			NSLog (@"%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
+			mono_gchandle_free (exception_gchandle);
+			exception_gchandle = 0;
+			ns_exc = NULL;
+		}
+
 		if (ns_exc != NULL) {
 			mono_gchandle_free (handle);
 			@throw ns_exc;
 		} else {
-			NSString *name = [NSString stringWithUTF8String: xamarin_type_get_full_name (mono_class_get_type (mono_object_get_class (exception)))];
+			// Strangely enough the thread might be detached, if xamarin_process_managed_exception was called from
+			// xamarin_ftnptr_exception_handler for an exception that occurred in a reverse delegate that
+			// was called on a detached thread, since in that case the native-to-managed wrapper will have
+			// returned the thread to a detached state after calling the managed function.
+			NSString *name;
+			NSString *reason;
+			NSDictionary *userInfo;
+			const char *fullname;
+			MONO_THREAD_ATTACH; // COOP: will switch to GC_UNSAFE
+			
+			fullname = xamarin_type_get_full_name (mono_class_get_type (mono_object_get_class (exception)), &exception_gchandle);
+			if (exception_gchandle != 0) {
+				NSLog (@PRODUCT ": Got an exception when trying to get the typename for an exception (this exception will be ignored):");
+				NSLog (@"%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
+				mono_gchandle_free (exception_gchandle);
+				exception_gchandle = 0;
+				fullname = "Unknown";
+			}
+
+			name = [NSString stringWithUTF8String: fullname];
+
 			char *message = fetch_exception_property_string (exception, "get_Message", true);
-			NSString *reason = [NSString stringWithUTF8String: message];
+			reason = [NSString stringWithUTF8String: message];
 			mono_free (message);
-			NSDictionary *userInfo = [NSDictionary dictionaryWithObject: [XamarinGCHandle createWithHandle: handle] forKey: @"XamarinManagedExceptionHandle"];
+			userInfo = [NSDictionary dictionaryWithObject: [XamarinGCHandle createWithHandle: handle] forKey: @"XamarinManagedExceptionHandle"];
+			
+			MONO_THREAD_DETACH; // COOP: this will switch to GC_SAFE
+			
 			@throw [[NSException alloc] initWithName: name reason: reason userInfo: userInfo];
 		}
 		break;
@@ -2009,6 +2111,18 @@ xamarin_process_managed_exception (MonoObject *exception)
 	default:
 		xamarin_assertion_message ("Aborting due to:\n%s\n", [print_all_exceptions (exception) UTF8String]);
 		break;
+	}
+}
+
+void
+xamarin_throw_product_exception (int code, const char *message)
+{
+	guint32 exception_gchandle = 0;
+	guint32 handle = xamarin_create_product_exception_for_error (code, message, &exception_gchandle);
+	if (exception_gchandle != 0) {
+		xamarin_process_managed_exception_gchandle (exception_gchandle);
+	} else {
+		xamarin_process_managed_exception_gchandle (handle);
 	}
 }
 

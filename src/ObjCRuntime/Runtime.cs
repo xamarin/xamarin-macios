@@ -633,9 +633,10 @@ namespace XamCore.ObjCRuntime {
 			return Registrar.GetMethodDescriptionAndObject (Class.Lookup (klass), sel, obj, ref mthis);
 		}
 
-		static void ThrowProductException (int code, string msg)
+		static int CreateProductException (int code, string msg)
 		{
-			throw ErrorHelper.CreateError (code, msg);
+			var ex = ErrorHelper.CreateError (code, msg);
+			return GCHandle.ToIntPtr (GCHandle.Alloc (ex, GCHandleType.Normal)).ToInt32 ();
 		}
 
 		static IntPtr TypeGetFullName (IntPtr type) 

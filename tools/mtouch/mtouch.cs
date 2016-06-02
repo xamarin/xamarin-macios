@@ -584,6 +584,7 @@ namespace Xamarin.Bundler
 			var register_assemblies = new StringBuilder ();
 			var enable_llvm = (abi & Abi.LLVM) != 0;
 
+			register_assemblies.AppendLine ("\tguint32 exception_gchandle = 0;");
 			foreach (var s in assemblies) {
 				if ((abi & Abi.SimulatorArchMask) == 0) {
 					var info = s.AssemblyDefinition.Name.Name;
@@ -592,8 +593,10 @@ namespace Xamarin.Bundler
 					assembly_aot_modules.Append ("\tmono_aot_register_module (mono_aot_module_").Append (info).AppendLine ("_info);");
 				}
 				string sname = s.FileName;
-				if (assembly_name != sname && IsBoundAssembly (s))
-					register_assemblies.Append ("\txamarin_open_and_register (\"").Append (sname).Append ("\");").AppendLine ();
+				if (assembly_name != sname && IsBoundAssembly (s)) {
+					register_assemblies.Append ("\txamarin_open_and_register (\"").Append (sname).Append ("\", &exception_gchandle);").AppendLine ();
+					register_assemblies.AppendLine ("\txamarin_process_managed_exception_gchandle (exception_gchandle);");
+				}
 			}
 
 			try {

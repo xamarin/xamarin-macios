@@ -25,12 +25,12 @@
 #define LOGZ(...) ;
 #endif
 
-static void
-throw_mt_exception (char *msg)
+static guint32
+create_mt_exception (char *msg)
 {
 	MonoException *ex = xamarin_create_exception (msg);
 	xamarin_free (msg);
-	mono_raise_exception (ex);
+	return mono_gchandle_new ((MonoObject *) ex, FALSE);
 }
 
 #ifdef TRACE
@@ -46,7 +46,7 @@ dump_state (struct CallState *state)
 #endif
 
 static void
-param_iter_next (enum IteratorAction action, void *context, const char *type, size_t size, void *target)
+param_iter_next (enum IteratorAction action, void *context, const char *type, size_t size, void *target, guint32 *exception_gchandle)
 {
 	struct ParamIterator *it = (struct ParamIterator *) context;
 	struct CallState *state = it->state;
@@ -89,7 +89,7 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 }
 
 static void
-marshal_return_value (void *context, const char *type, size_t size, void *vvalue, MonoType *mtype, bool retain, MonoMethod *method)
+marshal_return_value (void *context, const char *type, size_t size, void *vvalue, MonoType *mtype, bool retain, MonoMethod *method, guint32 *exception_gchandle)
 {
 	MonoObject *value = (MonoObject *) vvalue;
 	struct ParamIterator *it = (struct ParamIterator *) context;
@@ -121,7 +121,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 			state->longlong_ret = 0;
 			memcpy (&state->longlong_ret + 8 - size, mono_object_unbox (value), size);
 		} else {
-			throw_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal struct return type %s (size: %i)\n", type, (int) size));
+			*exception_gchandle = create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal struct return type %s (size: %i)\n", type, (int) size));
 		}
 		break;
 	}
@@ -157,7 +157,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 			break;
 		}
 
-		state->ptr_ret = xamarin_marshal_return_value (mtype, type, value, retain, method);
+		state->ptr_ret = xamarin_marshal_return_value (mtype, type, value, retain, method, exception_gchandle);
 		break;
 	case _C_VOID:
 		break;
@@ -166,7 +166,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 		if (size == sizeof (void *)) {
 			state->ptr_ret = value;
 		} else {
-			throw_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal return type %s (size: %i)\n", type, (int) size));
+			*exception_gchandle = create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal return type %s (size: %i)\n", type, (int) size));
 		}
 		break;
 	}
