@@ -1657,7 +1657,7 @@ public class TestApp {
 				output = ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot {2} --nosign --dev {0} -sdk {3} --force --abi=armv7,armv7s {1} -debug", app, exe, Configuration.xcode_root, Configuration.sdk_version));
 				Asserts.DoesNotContain ("ld: warning:", output, "#a");
 
-				output = ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot {2} --nosign --dev {0} -sdk {3} --force --abi=armv7        {1} -debug --gcc_flags={4}", app, exe, Configuration.xcode_root, Configuration.sdk_version, Quote (Path.Combine (Configuration.SourceRoot, "xamarin-maciostools/tests/test-libraries/.libs/ios/libtest.armv7s.a"))));
+				output = ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot {2} --nosign --dev {0} -sdk {3} --force --abi=armv7        {1} -debug --gcc_flags={4}", app, exe, Configuration.xcode_root, Configuration.sdk_version, Quote (Path.Combine (Configuration.SourceRoot, "xamarin-macios/tests/test-libraries/.libs/ios/libtest.armv7s.a"))));
 				Asserts.Contains ("libtest.armv7s.a, file was built for archive which is not the architecture being linked (armv7)", output, "#b");
 			} finally {
 				Directory.Delete (testDir, true);
