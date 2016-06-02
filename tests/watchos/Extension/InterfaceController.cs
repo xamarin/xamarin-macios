@@ -38,6 +38,18 @@ namespace monotouchtestWatchKitExtension
 		[Outlet ("cmdRun")]
 		WatchKit.WKInterfaceButton cmdRun { get; set; }
 
+		static InterfaceController ()
+		{
+			ObjCRuntime.Runtime.MarshalManagedException += (object sender, ObjCRuntime.MarshalManagedExceptionEventArgs args) =>
+			{
+				Console.WriteLine ("Managed exception: {0}", args.Exception);
+			};
+			ObjCRuntime.Runtime.MarshalObjectiveCException += (object sender, ObjCRuntime.MarshalObjectiveCExceptionEventArgs args) =>
+			{
+				Console.WriteLine ("Objective-C exception: {0}", args.Exception);
+			};
+		}
+
 		public InterfaceController (IntPtr handle) : base (handle)
 		{
 		}
