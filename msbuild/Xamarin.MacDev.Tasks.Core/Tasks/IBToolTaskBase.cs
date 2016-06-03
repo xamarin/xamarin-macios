@@ -37,6 +37,10 @@ namespace Xamarin.MacDev.Tasks
 
 		protected abstract bool AutoActivateCustomFonts { get; }
 
+		protected override bool UseCompilationDirectory {
+			get { return AppleSdkSettings.XcodeVersion >= new Version (6, 3); }
+		}
+
 		protected bool CanLinkStoryboards {
 			get { return AppleSdkSettings.XcodeVersion.Major >= 7; }
 		}
