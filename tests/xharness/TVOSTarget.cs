@@ -90,7 +90,7 @@ namespace xharness
 		{
 			base.ProcessProject ();
 
-			var srcDirectory = Path.Combine (Harness.RootDirectory, "..", "..", "xamarin-macios", "src");
+			var srcDirectory = Path.Combine (Harness.RootDirectory, "..", "src");
 
 			var mt_dialog_project_path = Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.Dialog-1.tvos.csproj"));
 			string project_guid;

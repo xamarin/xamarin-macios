@@ -1,4 +1,4 @@
-TOP=../../../xamarin-macios
+TOP=../..
 include $(TOP)/Make.config
 
 ALL_TESTS=select-native-compiler bug-13945 bug-35786

@@ -53,7 +53,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.Mac" />
     <Reference Include="GuiUnit">
-      <HintPath>..\..\..\xamarin-macios\external\guiunit\bin\xammac_mobile\GuiUnit.exe</HintPath>
+      <HintPath>..\..\external\guiunit\bin\xammac_mobile\GuiUnit.exe</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -70,13 +70,13 @@
     <Compile Include="..\common\mac\ProjectTestHelpers.cs">
       <Link>ProjectTestHelpers.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\xamarin-macios\tests\common\Configuration.cs">
+    <Compile Include="..\..\tests\common\Configuration.cs">
       <Link>Configuration.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\xamarin-macios\src\ObjCRuntime\ErrorHelper.cs">
+    <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
       <Link>ErrorHelper.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\xamarin-macios\src\ObjCRuntime\RuntimeException.cs">
+    <Compile Include="..\..\src\ObjCRuntime\RuntimeException.cs">
       <Link>RuntimeException.cs</Link>
     </Compile>
     <Compile Include="src\ExtensionTests.cs" />
@@ -85,7 +85,7 @@
     <None Include="Info.plist" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\xamarin-macios\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">
+    <ProjectReference Include="..\..\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">
       <Project>{EACFD119-769E-4E6C-89B7-A6CE3757C431}</Project>
       <Name>GuiUnit_xammac_mobile</Name>
     </ProjectReference>

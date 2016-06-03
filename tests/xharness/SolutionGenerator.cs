@@ -55,7 +55,7 @@ namespace xharness
 		{
 			var folders = new StringBuilder ();
 
-			var srcDirectory = Path.Combine (harness.RootDirectory, "..", "..", "xamarin-macios", "src");
+			var srcDirectory = Path.Combine (harness.RootDirectory, "..", "src");
 			var sln_path = exeTarget == null ? Path.Combine (harness.RootDirectory, "tests-" + infix + ".sln") : Path.Combine (Path.GetDirectoryName (exeTarget.ProjectPath), Path.GetFileNameWithoutExtension (exeTarget.ProjectPath) + ".sln");
 
 			using (var writer = new StringWriter ()) {

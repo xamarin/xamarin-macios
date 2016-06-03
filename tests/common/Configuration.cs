@@ -52,9 +52,6 @@ namespace Xamarin.Tests
 				var file = Path.Combine (dir, name);
 				if (File.Exists (file))
 					yield return file;
-				file = Path.Combine (dir, "xamarin-macios", name);
-				if (File.Exists (file))
-					yield return file;
 				dir = Path.GetDirectoryName (dir);
 			}
 		}
@@ -159,11 +156,12 @@ namespace Xamarin.Tests
 		public static string RootPath {
 			get {
 				var dir = Environment.CurrentDirectory;
-				var path = Path.Combine (dir, "xamarin-macios");
+				var path = Path.Combine (dir, ".git");
 				while (!Directory.Exists (path) && path.Length > 3) {
 					dir = Path.GetDirectoryName (dir);
-					path = Path.Combine (dir, "xamarin-macios");
+					path = Path.Combine (dir, ".git");
 				}
+				path = Path.GetDirectoryName (path);
 				if (!Directory.Exists (path))
 					throw new Exception ("Could not find the xamarin-macios repo");
 				return path;
@@ -175,9 +173,9 @@ namespace Xamarin.Tests
 				// might need tweaking.
 				if (mt_src_root == null)
 #if MONOMAC
-					mt_src_root = Path.GetFullPath (Path.Combine (Environment.CurrentDirectory, "../../../.."));
+					mt_src_root = Path.GetFullPath (Path.Combine (Environment.CurrentDirectory, "../../.."));
 #else
-					mt_src_root = Path.GetFullPath (Path.Combine (Environment.CurrentDirectory, "../../../../.."));
+					mt_src_root = Path.GetFullPath (Path.Combine (Environment.CurrentDirectory, "../../../.."));
 #endif
 				return mt_src_root;
 			}

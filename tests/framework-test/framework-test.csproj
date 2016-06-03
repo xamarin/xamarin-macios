@@ -99,7 +99,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\..\..\xamarin-macios\tests\bindings-framework-test\bindings-framework-test.csproj">
+    <ProjectReference Include="..\..\tests\bindings-framework-test\bindings-framework-test.csproj">
       <Project>{E40B0B77-3467-4891-9117-7AF8F248E306}</Project>
       <Name>bindings-framework-test</Name>
     </ProjectReference>

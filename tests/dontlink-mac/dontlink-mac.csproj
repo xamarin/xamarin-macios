@@ -52,7 +52,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="XamMac" />
     <Reference Include="GuiUnit">
-      <HintPath>..\..\..\xamarin-macios\external\guiunit\bin\net_4_5\GuiUnit.exe</HintPath>
+      <HintPath>..\..\external\guiunit\bin\net_4_5\GuiUnit.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -12,7 +12,7 @@
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>bindings-framework-test</AssemblyName>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\..\xamarin-macios\product.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\product.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkIdentifier>MonoTouch</TargetFrameworkIdentifier>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -51,13 +51,13 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Xamarin.ObjcBinding.CSharp.targets" />
   <ItemGroup>
-    <ObjcBindingNativeFramework Include="..\..\..\xamarin-macios\tests\test-libraries\.libs\ios\XTest.framework">
+    <ObjcBindingNativeFramework Include="..\..\tests\test-libraries\.libs\ios\XTest.framework">
       <Link>XTest.framework</Link>
     </ObjcBindingNativeFramework>
-    <ObjcBindingNativeFramework Include="..\..\..\xamarin-macios\tests\test-libraries\.libs\ios\XStaticObjectTest.framework">
+    <ObjcBindingNativeFramework Include="..\..\tests\test-libraries\.libs\ios\XStaticObjectTest.framework">
       <Link>XStaticObjectTest.framework</Link>
     </ObjcBindingNativeFramework>
-    <ObjcBindingNativeFramework Include="..\..\..\xamarin-macios\tests\test-libraries\.libs\ios\XStaticArTest.framework">
+    <ObjcBindingNativeFramework Include="..\..\tests\test-libraries\.libs\ios\XStaticArTest.framework">
       <Link>XStaticArTest.framework</Link>
     </ObjcBindingNativeFramework>
   </ItemGroup>
@@ -67,14 +67,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\xamarin-macios\tests\test-libraries\libframework.m">
+    <None Include="..\..\tests\test-libraries\libframework.m">
       <Link>libframework.m</Link>
     </None>
-    <None Include="..\..\..\xamarin-macios\tests\test-libraries\libframework.h">
+    <None Include="..\..\tests\test-libraries\libframework.h">
       <Link>libframework.h</Link>
     </None>
   </ItemGroup>
-  <Target Name="BeforeBuild" Inputs="..\..\..\xamarin-macios\tests\test-libraries\libframework.m" Outputs="..\..\..\xamarin-macios\tests\test-libraries\.libs\ios\XTest.framework ..\..\..\xamarin-macios\tests\test-libraries\.libs\ios\XSharedObjectTest.framework ..\..\..\xamarin-macios\tests\test-libraries\.libs\ios\XSharedARTest.framework">
-    <Exec Command="make -j8 -C ..\..\..\xamarin-macios\tests\test-libraries" />
+  <Target Name="BeforeBuild" Inputs="..\..\tests\test-libraries\libframework.m" Outputs="..\..\tests\test-libraries\.libs\ios\XTest.framework ..\..\tests\test-libraries\.libs\ios\XSharedObjectTest.framework ..\..\tests\test-libraries\.libs\ios\XSharedARTest.framework">
+    <Exec Command="make -j8 -C ..\..\tests\test-libraries" />
   </Target>
 </Project>

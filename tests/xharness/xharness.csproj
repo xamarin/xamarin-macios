@@ -37,7 +37,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="..\..\..\xamarin-macios\external\mono\mcs\class\Mono.Options\Mono.Options\Options.cs">
+    <Compile Include="..\..\external\mono\mcs\class\Mono.Options\Mono.Options\Options.cs">
       <Link>Options.cs</Link>
     </Compile>
     <Compile Include="Harness.cs" />
@@ -49,7 +49,7 @@
     <Compile Include="UnifiedTarget.cs" />
     <Compile Include="ClassicTarget.cs" />
     <Compile Include="AppRunner.cs" />
-    <Compile Include="..\..\..\xamarin-macios\tools\mtouch\SdkVersions.cs">
+    <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
     </Compile>
     <Compile Include="SimpleTcpListener.cs" />

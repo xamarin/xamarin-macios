@@ -737,7 +737,7 @@ namespace MTouchTests
 
 		static string BindingsLibrary {
 			get {
-				return Path.Combine (Configuration.SourceRoot, "xamarin-macios/tests/bindings-test/bin/Debug/bindings-test.dll");
+				return Path.Combine (Configuration.SourceRoot, "tests/bindings-test/bin/Debug/bindings-test.dll");
 			}
 		}
 
@@ -746,13 +746,13 @@ namespace MTouchTests
 			string fn;
 
 			if (profile == Profile.Classic) {
-				fn = Path.Combine (Configuration.SourceRoot, "xamarin-macios", "tests", "bindings-test", "bin", GetConfiguration (profile), "bindings-test.dll");
+				fn = Path.Combine (Configuration.SourceRoot, "tests", "bindings-test", "bin", GetConfiguration (profile), "bindings-test.dll");
 			} else {
-				fn = Path.Combine (Configuration.SourceRoot, "xamarin-macios", "tests", "bindings-test", "bin", "Any CPU", GetConfiguration (profile), "bindings-test.dll");
+				fn = Path.Combine (Configuration.SourceRoot, "tests", "bindings-test", "bin", "Any CPU", GetConfiguration (profile), "bindings-test.dll");
 			}
 
 			if (!File.Exists (fn)) {
-				var csproj = Path.Combine (Configuration.SourceRoot, "xamarin-macios", "tests", "bindings-test", "bindings-test" + GetProjectSuffix (profile) + ".csproj");
+				var csproj = Path.Combine (Configuration.SourceRoot, "tests", "bindings-test", "bindings-test" + GetProjectSuffix (profile) + ".csproj");
 				XBuild.Build (csproj, platform: "AnyCPU");
 			}
 
@@ -1657,7 +1657,7 @@ public class TestApp {
 				output = ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot {2} --nosign --dev {0} -sdk {3} --force --abi=armv7,armv7s {1} -debug", app, exe, Configuration.xcode_root, Configuration.sdk_version));
 				Asserts.DoesNotContain ("ld: warning:", output, "#a");
 
-				output = ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot {2} --nosign --dev {0} -sdk {3} --force --abi=armv7        {1} -debug --gcc_flags={4}", app, exe, Configuration.xcode_root, Configuration.sdk_version, Quote (Path.Combine (Configuration.SourceRoot, "xamarin-macios/tests/test-libraries/.libs/ios/libtest.armv7s.a"))));
+				output = ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot {2} --nosign --dev {0} -sdk {3} --force --abi=armv7        {1} -debug --gcc_flags={4}", app, exe, Configuration.xcode_root, Configuration.sdk_version, Quote (Path.Combine (Configuration.SourceRoot, "tests/test-libraries/.libs/ios/libtest.armv7s.a"))));
 				Asserts.Contains ("libtest.armv7s.a, file was built for archive which is not the architecture being linked (armv7)", output, "#b");
 			} finally {
 				Directory.Delete (testDir, true);
@@ -2072,7 +2072,7 @@ class Test {
 			if (devices.Length == 0)
 				Assert.Ignore ("Could not find any connected devices.");
 
-			var projectDir = Path.Combine (Configuration.SourceRoot, "xamarin-macios", "tests", "link all");
+			var projectDir = Path.Combine (Configuration.SourceRoot, "tests", "link all");
 			var project = Path.Combine (projectDir, "link all.csproj");
 			XBuild.Build (project, platform: "iPhone");
 			var appPath = Path.Combine (projectDir, "bin", "iPhone", "Debug", "link all.app");
@@ -2102,7 +2102,7 @@ class Test {
 			if (devices.Length == 0)
 				Assert.Ignore ("Could not find any connected watches.");
 
-			var projectDir = Path.Combine (Configuration.SourceRoot, "xamarin-macios", "msbuild", "tests", "MyWatch2Container");
+			var projectDir = Path.Combine (Configuration.SourceRoot, "msbuild", "tests", "MyWatch2Container");
 			var project = Path.Combine (projectDir, "MyWatch2Container.csproj");
 			var containerPath = Path.Combine (projectDir, "bin", "iPhone", "Debug", "MyWatch2Container.app");
 			var appPath = Path.Combine (containerPath, "Watch", "MyWatchApp2.app");

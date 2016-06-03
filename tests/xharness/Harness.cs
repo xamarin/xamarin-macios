@@ -148,7 +148,7 @@ namespace xharness
 			// BclTests.AddRange (bcl_suites);
 
 			ParseConfigFiles ();
-			var src_root = Path.Combine (Path.GetDirectoryName (Path.GetDirectoryName (Path.GetDirectoryName (RootDirectory))), "xamarin-macios");
+			var src_root = Path.Combine (Path.GetDirectoryName (Path.GetDirectoryName (RootDirectory)));
 			MONO_PATH = Path.GetFullPath (Path.Combine (src_root, "mono"));
 		}
 
@@ -177,8 +177,8 @@ namespace xharness
 			WatchOSExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "watchos/Extension"));
 
 			ParseConfigFiles ();
-			var src_root = Path.GetDirectoryName (Path.GetDirectoryName (RootDirectory));
-			MONO_PATH = Path.GetFullPath (Path.Combine (src_root, "xamarin-macios", "external", "mono"));
+			var src_root = Path.GetDirectoryName (RootDirectory);
+			MONO_PATH = Path.GetFullPath (Path.Combine (src_root, "external", "mono"));
 			WATCH_MONO_PATH = make_config ["WATCH_MONO_PATH"];
 			TVOS_MONO_PATH = MONO_PATH;
 			INCLUDE_WATCH = make_config.ContainsKey ("INCLUDE_WATCH") && !string.IsNullOrEmpty (make_config ["INCLUDE_WATCH"]);
@@ -190,9 +190,6 @@ namespace xharness
 			var dir = Environment.CurrentDirectory;
 			while (dir != "/") {
 				var file = Path.Combine (dir, name);
-				if (File.Exists (file))
-					yield return file;
-				file = Path.Combine (dir, "xamarin-macios", name);
 				if (File.Exists (file))
 					yield return file;
 				dir = Path.GetDirectoryName (dir);

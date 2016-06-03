@@ -11,7 +11,7 @@
     <RootNamespace>monotouchtest</RootNamespace>
     <AssemblyName>monotouchtest</AssemblyName>
     <SignAssembly>True</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\..\xamarin-macios\product.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\product.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkIdentifier>MonoTouch</TargetFrameworkIdentifier>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
@@ -328,22 +328,22 @@
     <Compile Include="UIKit\StringAttributesTest.cs" />
     <Compile Include="CoreImage\FilterTest.cs" />
     <Compile Include="iAd\ViewControllerExtensionsTest.cs" />
-    <Compile Include="..\..\..\xamarin-macios\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestPoint.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestPoint.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestPoint.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\xamarin-macios\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestPointF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestPointF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestPointF.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\xamarin-macios\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestRectangle.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestRectangle.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestRectangle.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\xamarin-macios\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestRectangleF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestRectangleF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestRectangleF.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\xamarin-macios\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestSize.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestSize.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestSize.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\xamarin-macios\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestSizeF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestSizeF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestSizeF.cs</Link>
     </Compile>
     <Compile Include="Foundation\MutableDataTest.cs" />
@@ -611,7 +611,7 @@
       <Project>{676F527D-3352-42EA-9DE2-181C45003568}</Project>
       <Name>EmbeddedResources</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\xamarin-macios\tests\bindings-test\bindings-test.csproj">
+    <ProjectReference Include="..\..\tests\bindings-test\bindings-test.csproj">
       <Project>{D6667423-EDD8-4B50-9D98-1AC5D8A8A4EA}</Project>
       <Name>bindings-test</Name>
     </ProjectReference>
