@@ -55,7 +55,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "framework-test", "framework
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xharness", "xharness\xharness.csproj", "{E1F53F80-8399-499B-8017-C414B9CD263B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoTouch.NUnitLite", "..\..\xamarin-macios\src\MonoTouch.NUnitLite.csproj", "{E1F334C3-8F77-46C9-A28B-A8E9BAEA9FE5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoTouch.NUnitLite", "..\src\MonoTouch.NUnitLite.csproj", "{E1F334C3-8F77-46C9-A28B-A8E9BAEA9FE5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bindings-framework-test", "bindings-framework-test\bindings-framework-test.csproj", "{E40B0B77-3467-4891-9117-7AF8F248E306}"
 EndProject

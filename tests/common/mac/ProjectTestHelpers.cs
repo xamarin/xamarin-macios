@@ -333,11 +333,11 @@ namespace TestCase
 		public static string FindRootDirectory ()
 		{
 			var current = Environment.CurrentDirectory;
-			while (!Directory.Exists (Path.Combine (current, "xamarin-macios", "_mac-build")) && current.Length > 1)
+			while (!Directory.Exists (Path.Combine (current, "_mac-build")) && current.Length > 1)
 				current = Path.GetDirectoryName (current);
 			if (current.Length <= 1)
 				throw new DirectoryNotFoundException (string.Format ("Could not find the root directory starting from {0}", Environment.CurrentDirectory));
-			return Path.GetFullPath (Path.Combine (current, "xamarin-macios", "_mac-build"));
+			return Path.GetFullPath (Path.Combine (current, "_mac-build"));
 		}
 
 		static string GenerateOuputCommand (string tmpDir, Guid guid)

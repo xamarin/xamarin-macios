@@ -1,4 +1,4 @@
-TOP=../../../xamarin-macios
+TOP=../..
 
 include $(TOP)/Make.config
 

@@ -13,7 +13,7 @@
     <AssemblyName>bindings-test</AssemblyName>
     <TargetFrameworkIdentifier>MonoTouch</TargetFrameworkIdentifier>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\..\xamarin-macios\product.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\product.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>True</DebugSymbols>
@@ -53,7 +53,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Xamarin.ObjcBinding.CSharp.targets" />
   <ItemGroup>
-    <ObjcBindingNativeLibrary Include="..\..\..\xamarin-macios\tests\test-libraries\.libs\ios\libtest.a">
+    <ObjcBindingNativeLibrary Include="..\..\tests\test-libraries\.libs\ios\libtest.a">
       <Link>libtest.a</Link>
     </ObjcBindingNativeLibrary>
   </ItemGroup>
@@ -67,14 +67,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\xamarin-macios\tests\test-libraries\libtest.m">
+    <None Include="..\..\tests\test-libraries\libtest.m">
       <Link>libtest.m</Link>
     </None>
-    <None Include="..\..\..\xamarin-macios\tests\test-libraries\libtest.h">
+    <None Include="..\..\tests\test-libraries\libtest.h">
       <Link>libtest.h</Link>
     </None>
   </ItemGroup>
-  <Target Name="BeforeBuild" Inputs="..\..\..\xamarin-macios\tests\test-libraries\libtest.m" Outputs="..\..\..\xamarin-macios\tests\test-libraries\.libs\ios\libtest.a">
-    <Exec Command="make -j8 -C ..\..\..\xamarin-macios\tests\test-libraries" />
+  <Target Name="BeforeBuild" Inputs="..\..\tests\test-libraries\libtest.m" Outputs="..\..\tests\test-libraries\.libs\ios\libtest.a">
+    <Exec Command="make -j8 -C ..\..\tests\test-libraries" />
   </Target>
 </Project>

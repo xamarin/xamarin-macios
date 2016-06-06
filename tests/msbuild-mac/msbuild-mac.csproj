@@ -54,7 +54,7 @@
     <Reference Include="Xamarin.Mac" />
     <Reference Include="System.Xml" />
     <Reference Include="GuiUnit">
-      <HintPath>..\..\..\xamarin-macios\external\guiunit\bin\net_4_5\GuiUnit.exe</HintPath>
+      <HintPath>..\..\external\guiunit\bin\net_4_5\GuiUnit.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -71,13 +71,13 @@
     <Compile Include="..\common\mac\ProjectTestHelpers.cs">
       <Link>ProjectTestHelpers.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\xamarin-macios\tests\common\Configuration.cs">
+    <Compile Include="..\..\tests\common\Configuration.cs">
       <Link>Configuration.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\xamarin-macios\src\ObjCRuntime\ErrorHelper.cs">
+    <Compile Include="..\..\src\ObjCRuntime\ErrorHelper.cs">
       <Link>ErrorHelper.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\xamarin-macios\src\ObjCRuntime\RuntimeException.cs">
+    <Compile Include="..\..\src\ObjCRuntime\RuntimeException.cs">
       <Link>RuntimeException.cs</Link>
     </Compile>
   </ItemGroup>

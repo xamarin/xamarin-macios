@@ -36,11 +36,11 @@
     <Compile Include="..\common\ExecutionHelper.cs">
       <Link>ExecutionHelper.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\xamarin-macios\tests\common\Configuration.cs">
+    <Compile Include="..\..\tests\common\Configuration.cs">
       <Link>Configuration.cs</Link>
     </Compile>
     <Compile Include="MiscTests.cs" />
-    <Compile Include="..\..\..\xamarin-macios\tools\linker\MobileProfile.cs">
+    <Compile Include="..\..\tools\linker\MobileProfile.cs">
       <Link>MobileProfile.cs</Link>
     </Compile>
     <Compile Include="SdkTest.cs" />

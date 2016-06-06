@@ -1,4 +1,4 @@
-TOP = ../../xamarin-macios
+TOP = ..
 
 ifdef INCLUDE_MAC
 SUBDIRS += no-mmp

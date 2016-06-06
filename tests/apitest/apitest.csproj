@@ -52,7 +52,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="XamMac" />
     <Reference Include="GuiUnit">
-      <HintPath>..\..\..\xamarin-macios\external\guiunit\bin\net_4_5\GuiUnit.exe</HintPath>
+      <HintPath>..\..\external\guiunit\bin\net_4_5\GuiUnit.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -135,7 +135,7 @@
     <Compile Include="..\api-shared\ObjCRuntime\RegistrarTest.cs">
       <Link>shared\ObjCRuntime\RegistrarTest.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\xamarin-macios\tests\api-shared\ObjCRuntime\Registrar.cs">
+    <Compile Include="..\..\tests\api-shared\ObjCRuntime\Registrar.cs">
       <Link>shared\ObjCRuntime\Registrar.cs</Link>
     </Compile>
     <Compile Include="..\api-shared\CoreFoundation\CFNotificationCenterTest.cs">

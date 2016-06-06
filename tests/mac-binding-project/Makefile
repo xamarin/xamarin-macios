@@ -1,4 +1,4 @@
-TOP=../../../xamarin-macios
+TOP=../..
 include $(TOP)/Make.config
 
 export MD_APPLE_SDK_ROOT=$(shell dirname `dirname $(XCODE_DEVELOPER_ROOT)`)

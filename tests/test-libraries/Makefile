@@ -1,4 +1,4 @@
-TOP=../../../xamarin-macios
+TOP=../..
 include $(TOP)/Make.config
 
 # without this many compiler warnings about unused functions and variables
