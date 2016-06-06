@@ -57,6 +57,10 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		<IsAppExtension Condition="'$(IsAppExtension)' == ''">False</IsAppExtension>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<MtouchTargetsEnabled>true</MtouchTargetsEnabled>
+	</PropertyGroup>
+
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props')"/>
 
