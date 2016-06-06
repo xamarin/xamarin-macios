@@ -1,5 +1,5 @@
 TOP=.
-SUBDIRS=builds runtime fsharp src tools msbuild tests
+SUBDIRS=builds runtime fsharp src tools msbuild
 include $(TOP)/Make.config
 include $(TOP)/mk/versions.mk
 
@@ -185,3 +185,5 @@ fix-install-permissions:
 ifdef ENABLE_XAMARIN
 SUBDIRS += $(MACCORE_PATH)
 endif
+
+SUBDIRS += tests
