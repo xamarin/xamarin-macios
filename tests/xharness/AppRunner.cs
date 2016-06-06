@@ -59,6 +59,9 @@ namespace xharness
 		string SymbolicateCrashReport (string report)
 		{
 			var symbolicatecrash = Path.Combine (Harness.XcodeRoot, "Contents/SharedFrameworks/DTDeviceKitBase.framework/Versions/A/Resources/symbolicatecrash");
+			if (!File.Exists (symbolicatecrash))
+				symbolicatecrash = Path.Combine (Harness.XcodeRoot, "Contents/SharedFrameworks/DVTFoundation.framework/Versions/A/Resources/symbolicatecrash");
+			
 			if (!File.Exists (symbolicatecrash)) {
 				Harness.Log ("Can't symbolicate {0} because the symbolicatecrash script {1} does not exist", report, symbolicatecrash);
 				return report;
