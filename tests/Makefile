@@ -65,6 +65,7 @@ test.config: Makefile $(TOP)/Make.config
 	@echo "IOS_DESTDIR=$(abspath $(IOS_DESTDIR))" >> $@
 	@echo "MAC_DESTDIR=$(abspath $(MAC_DESTDIR))" >> $@
 	@echo "WATCH_MONO_PATH=$(abspath $(WATCH_MONO_PATH))" >> $@
+	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
 
 clean-local::
 	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhoneSimulator /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests.sln
@@ -348,3 +349,5 @@ else
 	@echo "iOS tests have been disabled [$@]"
 endif
 
+jenkins: xharness/xharness.exe
+	$(Q) $(SYSTEM_MONO) --debug $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT)
