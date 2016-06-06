@@ -1431,6 +1431,13 @@ namespace Xamarin.BindingMethods.Generator
 			writer.WriteLine ("#endif");
 		}
 
+		static void WriteCatchHandler (StringWriter writer)
+		{
+			writer.WriteLine ("\t} @catch (NSException *e) {");
+			writer.WriteLine ("\t\txamarin_process_nsexception_using_mode (e, true);");
+			writer.WriteLine ("\t}");
+		}
+
 		static void Write_objc_msgSend (StringWriter writer, FunctionData func)
 		{
 			// func name
@@ -1499,11 +1506,8 @@ namespace Xamarin.BindingMethods.Generator
 			}
 
 			// @catch
-			if (func.MarshalExceptions) {
-				writer.WriteLine ("\t} @catch (NSException *e) {");
-				writer.WriteLine ("\t\txamarin_process_nsexception (e);");
-				writer.WriteLine ("\t}");
-			}
+			if (func.MarshalExceptions)
+				WriteCatchHandler (writer);
 
 			writer.WriteLine ("}");
 			writer.WriteLine ();
@@ -1577,11 +1581,8 @@ namespace Xamarin.BindingMethods.Generator
 			}
 
 			// @catch
-			if (func.MarshalExceptions) {
-				writer.WriteLine ("\t} @catch (NSException *e) {");
-				writer.WriteLine ("\t\txamarin_process_nsexception (e);");
-				writer.WriteLine ("\t}");
-			}
+			if (func.MarshalExceptions)
+				WriteCatchHandler (writer);
 				
 			writer.WriteLine ("}");
 			writer.WriteLine ();
@@ -1651,11 +1652,8 @@ namespace Xamarin.BindingMethods.Generator
 			}
 
 			// @catch
-			if (func.MarshalExceptions) {
-				writer.WriteLine ("\t} @catch (NSException *e) {");
-				writer.WriteLine ("\t\txamarin_process_nsexception (e);");
-				writer.WriteLine ("\t}");
-			}
+			if (func.MarshalExceptions)
+				WriteCatchHandler (writer);
 
 			writer.WriteLine ("}");
 			writer.WriteLine ();
@@ -1725,11 +1723,8 @@ namespace Xamarin.BindingMethods.Generator
 			}
 
 			// @catch
-			if (func.MarshalExceptions) {
-				writer.WriteLine ("\t} @catch (NSException *e) {");
-				writer.WriteLine ("\t\txamarin_process_nsexception (e);");
-				writer.WriteLine ("\t}");
-			}
+			if (func.MarshalExceptions)
+				WriteCatchHandler (writer);
 
 			writer.WriteLine ("}");
 			writer.WriteLine ();
