@@ -1916,14 +1916,21 @@ xamarin_skip_encoding_flags (const char *encoding)
 void
 xamarin_process_nsexception (NSException *ns_exception)
 {
-	MarshalObjectiveCExceptionMode mode;
+	xamarin_process_nsexception_using_mode (ns_exception, false);
+}
+
+void
+xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault)
+{
 	XamarinGCHandle *exc_handle;
 
-	mode = xamarin_on_marshal_objectivec_exception (ns_exception);
+	MarshalObjectiveCExceptionMode mode;
+
+	mode = xamarin_on_marshal_objectivec_exception (ns_exception, throwManagedAsDefault);
 
 	if (mode == MarshalObjectiveCExceptionModeDefault)
 		mode = xamarin_is_gc_coop ? MarshalObjectiveCExceptionModeThrowManagedException : MarshalObjectiveCExceptionModeUnwindManagedCode;
-
+	
 	switch (mode) {
 	case MarshalObjectiveCExceptionModeUnwindManagedCode:
 		if (xamarin_is_gc_coop)

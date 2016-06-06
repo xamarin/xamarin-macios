@@ -161,7 +161,8 @@
 		) { WrappedManagedFunction = "OnMarshalManagedException" },
 
 		new XDelegate ("MarshalObjectiveCExceptionMode", "MarshalObjectiveCExceptionMode", "xamarin_on_marshal_objectivec_exception",
-			"id", "IntPtr", "exception"
+			"id", "IntPtr", "exception",
+			"bool", "bool", "throwManagedAsDefault"
 		) { WrappedManagedFunction = "OnMarshalObjectiveCException" },
 	};
 	delegates.CalculateLengths ();

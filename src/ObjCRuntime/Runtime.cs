@@ -245,14 +245,17 @@ namespace XamCore.ObjCRuntime {
 		public static event MarshalObjectiveCExceptionHandler MarshalObjectiveCException;
 		public static event MarshalManagedExceptionHandler MarshalManagedException;
 
-		static MarshalObjectiveCExceptionMode OnMarshalObjectiveCException (IntPtr exception_handle)
+		static MarshalObjectiveCExceptionMode OnMarshalObjectiveCException (IntPtr exception_handle, bool throwManagedAsDefault)
 		{
+			if (throwManagedAsDefault && MarshalObjectiveCException == null)
+				return MarshalObjectiveCExceptionMode.ThrowManagedException;
+			
 			if (MarshalObjectiveCException != null) {
 				var exception = GetNSObject<NSException> (exception_handle);
 				var args = new MarshalObjectiveCExceptionEventArgs ()
 				{
 					Exception = exception,
-					ExceptionMode = objc_exception_mode,
+					ExceptionMode = throwManagedAsDefault ? MarshalObjectiveCExceptionMode.ThrowManagedException : objc_exception_mode,
 				};
 
 				MarshalObjectiveCException (null, args);
