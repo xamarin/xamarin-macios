@@ -788,7 +788,12 @@ namespace xharness
 			HashSet<string> rv;
 
 			if (simulator) {
-				rv = new HashSet<string> (Directory.EnumerateFiles (Path.Combine (Environment.GetEnvironmentVariable ("HOME"), "Library", "Logs", "DiagnosticReports")));
+				var dir = Path.Combine (Environment.GetEnvironmentVariable ("HOME"), "Library", "Logs", "DiagnosticReports");
+				if (Directory.Exists (dir)) {
+					rv = new HashSet<string> (Directory.EnumerateFiles (dir));
+				} else {
+					rv = new HashSet<string> ();
+				}
 			} else {
 				var tmp = Path.GetTempFileName ();
 				if (ExecuteCommand (Harness.MlaunchPath, "--list-crash-reports=" + tmp + " --sdkroot " + Harness.XcodeRoot, true)) {
