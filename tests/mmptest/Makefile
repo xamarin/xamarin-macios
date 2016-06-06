@@ -11,7 +11,7 @@ ifneq ($(SKIP_REGRESSION), 1)
 endif
 
 bin/x86/Debug/mmptest.app:
-	xbuild mmptest.csproj
+	$(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) mmptest.csproj
 
 run:: bin/ bin/x86/Debug/mmptest.app
 	bin/x86/Debug/mmptest.app/Contents/MacOS/mmptest

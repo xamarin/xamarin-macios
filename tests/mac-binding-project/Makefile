@@ -21,45 +21,45 @@ bin/SimpleClassStatic.a: obj/SimpleClass.o
 	$(Q) xcrun libtool -static obj/SimpleClass.o -o bin/SimpleClassStatic.a
 
 bin/Mobile-dynamic/MobileBinding.dll: bin/SimpleClassDylib.dylib
-	$(Q) xbuild MobileBinding/MobileBinding_dynamic.csproj /verbosity:quiet /nologo
+	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_dynamic.csproj
 
 bin/Mobile-dynamic-newstyle/MobileBinding.dll: bin/SimpleClassDylib.dylib
-	$(Q) xbuild MobileBinding/MobileBinding_dynamic_newstyle.csproj /verbosity:quiet /nologo
+	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_dynamic_newstyle.csproj
 
 bin/Mobile-dynamic-spaces/Mobile\ Binding.dll: bin/SimpleClass\ Dylib.dylib
-	$(Q) xbuild MobileBinding/MobileBinding_dynamic_spaces.csproj /verbosity:quiet /nologo
+	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_dynamic_spaces.csproj
 
 bin/Mobile-static/MobileBinding.dll: bin/SimpleClassStatic.a
-	$(Q) xbuild MobileBinding/MobileBinding_static.csproj /verbosity:quiet /nologo
+	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_static.csproj
 
 bin/Mobile-static-newstyle/MobileBinding.dll: bin/SimpleClassStatic.a
-	$(Q) xbuild MobileBinding/MobileBinding_static_newstyle.csproj /verbosity:quiet /nologo
+	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_static_newstyle.csproj
 
 
 bin/Mobile-framework/MobileBinding.dll:
-	$(Q) xbuild MobileBinding/MobileBinding_framework.csproj /verbosity:quiet /nologo
+	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_framework.csproj
 
 
 bin/MobileTest-static/MobileTestApp.app: bin/Mobile-static/MobileBinding.dll
-	$(Q) xbuild MobileTestApp/MobileTestApp_static.csproj /verbosity:quiet /nologo
+	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_static.csproj
 
 bin/MobileTest-static-newstyle/MobileTestApp.app: bin/Mobile-static-newstyle/MobileBinding.dll
-	$(Q) xbuild MobileTestApp/MobileTestApp_static_newstyle.csproj /verbosity:quiet /nologo
+	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_static_newstyle.csproj
 
 bin/MobileTest-withLinker/MobileTestApp.app: bin/Mobile-static/MobileBinding.dll
-	$(Q) xbuild MobileTestApp/MobileTestApp_WithLinker.csproj /verbosity:quiet /nologo
+	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_WithLinker.csproj
 
 bin/MobileTest-dynamic/MobileTestApp.app: bin/Mobile-dynamic/MobileBinding.dll
-	$(Q) xbuild MobileTestApp/MobileTestApp_dynamic.csproj /verbosity:quiet /nologo
+	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_dynamic.csproj
 
 bin/MobileTest-dynamic-newstyle/MobileTestApp.app: bin/Mobile-dynamic-newstyle/MobileBinding.dll
-	$(Q) xbuild MobileTestApp/MobileTestApp_dynamic_newstyle.csproj /verbosity:quiet /nologo
+	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_dynamic_newstyle.csproj
 
 bin/MobileTest-dynamic-spaces/MobileTestApp.app: bin/Mobile-dynamic-spaces/Mobile\ Binding.dll
-	$(Q) xbuild MobileTestApp/MobileTestApp_dynamic_spaces.csproj /verbosity:quiet /nologo
+	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_dynamic_spaces.csproj
 
 bin/MobileTest-framework/MobileTestApp.app: bin/Mobile-framework/MobileBinding.dll
-	$(Q) xbuild MobileTestApp/MobileTestApp_framework.csproj /verbosity:quiet /nologo
+	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileTestApp/MobileTestApp_framework.csproj
 
 
 
