@@ -291,6 +291,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			if ((IntPtr.Size == 8) && TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("NSString retainCount is nuint.MaxValue, so we won't collect them");
 			
+#if __WATCHOS__
+			if (Runtime.Arch == Arch.DEVICE)
+				Assert.Ignore ("This test uses too much memory for the watch.");
+#endif
+
 			NSDictionary dict = null;
 
 			var thread = new Thread (() => {
@@ -498,6 +503,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[TestCase (typeof (ResurrectedObjectsDisposedTestClass))]
 		public void ResurrectedObjectsDisposedTest (Type type)
 		{
+#if __WATCHOS__
+			if (Runtime.Arch == Arch.DEVICE)
+				Assert.Ignore ("This test uses too much memory for the watch.");
+#endif
+
 			var invokerClassHandle = Class.GetHandle (typeof (ResurrectedObjectsDisposedTestClass));
 
 			// Create a number of native objects with no managed wrappers.
