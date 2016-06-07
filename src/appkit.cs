@@ -22849,7 +22849,7 @@ namespace XamCore.AppKit {
 		NSObject GetAccessibilityHitTest (CGPoint point);
 
 		[Export ("accessibilityFocusedUIElement")]
-		NSObject AccessibilityFocusedUIElement ();
+		NSObject GetAccessibilityFocusedUIElement ();
 
 		[Export ("accessibilityIndexOfChild:")]
 		nuint GetAccessibilityIndexOfChild (NSObject child);
