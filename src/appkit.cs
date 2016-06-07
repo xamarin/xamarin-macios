@@ -22369,7 +22369,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10, 7)]
 		[Field ("NSAccessibilityFullScreenButtonSubrole")]
-		NSString FullscreenButtonSubrole { get; }
+		NSString FullScreenButtonSubrole { get; }
 
 		[Mac (10, 9)]
 		[Field ("NSAccessibilityToggleSubrole")]
