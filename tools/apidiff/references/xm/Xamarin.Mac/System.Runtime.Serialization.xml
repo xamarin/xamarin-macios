@@ -114,6 +114,34 @@
               </constructor>
             </constructors>
             <properties>
+              <property name="IsItemNameSetExplicitly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsItemNameSetExplicitly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsKeyNameSetExplicitly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsKeyNameSetExplicitly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsNameSetExplicitly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsNameSetExplicitly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsNamespaceSetExplicitly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsNamespaceSetExplicitly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
               <property name="IsReference" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_IsReference()" attrib="2182" returntype="System.Boolean">
@@ -123,6 +151,20 @@
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.Boolean" />
                     </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IsReferenceSetExplicitly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsReferenceSetExplicitly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsValueNameSetExplicitly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsValueNameSetExplicitly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
                   </method>
                 </methods>
               </property>
@@ -243,6 +285,20 @@
               </constructor>
             </constructors>
             <properties>
+              <property name="IsNameSetExplicitly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsNameSetExplicitly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsNamespaceSetExplicitly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsNamespaceSetExplicitly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
               <property name="IsReference" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_IsReference()" attrib="2182" returntype="System.Boolean">
@@ -252,6 +308,13 @@
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.Boolean" />
                     </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IsReferenceSetExplicitly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsReferenceSetExplicitly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
                   </method>
                 </methods>
               </property>
@@ -756,6 +819,13 @@
                   </method>
                 </methods>
               </property>
+              <property name="IsNameSetExplicitly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsNameSetExplicitly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
               <property name="IsRequired" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_IsRequired()" attrib="2182" returntype="System.Boolean">
@@ -865,6 +935,13 @@
               </constructor>
             </constructors>
             <properties>
+              <property name="IsValueSetExplicitly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsValueSetExplicitly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
               <property name="Value" attrib="0" ptype="System.String">
                 <methods>
                   <method name="get_Value()" attrib="2182" returntype="System.String">

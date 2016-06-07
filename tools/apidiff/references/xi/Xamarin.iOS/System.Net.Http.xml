@@ -993,7 +993,6 @@
           </class>
           <class name="HttpRequestException" type="class" base="System.Exception" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -1362,6 +1361,72 @@
                   <parameter name="content" position="0" attrib="0" type="System.Net.Http.HttpContent" />
                   <parameter name="name" position="1" attrib="0" type="System.String" />
                   <parameter name="fileName" position="2" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="NSUrlSessionHandler" type="class" base="System.Net.Http.HttpMessageHandler" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="AllowAutoRedirect" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_AllowAutoRedirect()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_AllowAutoRedirect(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Credentials" attrib="0" ptype="System.Net.ICredentials">
+                <methods>
+                  <method name="get_Credentials()" attrib="2182" returntype="System.Net.ICredentials">
+                    <parameters />
+                  </method>
+                  <method name="set_Credentials(System.Net.ICredentials)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Net.ICredentials" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="DisableCaching" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_DisableCaching()" attrib="2182" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_DisableCaching(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="SendAsync(System.Net.Http.HttpRequestMessage, System.Threading.CancellationToken)" attrib="197" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task`1[System.Net.Http.HttpResponseMessage]">
+                <attributes>
+                  <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
+                  <attribute name="System.Runtime.CompilerServices.AsyncStateMachineAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="request" position="0" attrib="0" type="System.Net.Http.HttpRequestMessage" />
+                  <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
               </method>
             </methods>

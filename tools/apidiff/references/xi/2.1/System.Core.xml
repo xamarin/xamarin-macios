@@ -1358,6 +1358,7 @@
             <interfaces>
               <interface name="System.Collections.Generic.ICollection`1[T]" />
               <interface name="System.Collections.Generic.IEnumerable`1[T]" />
+              <interface name="System.Collections.Generic.IReadOnlyCollection`1[T]" />
               <interface name="System.Collections.Generic.ISet`1[T]" />
               <interface name="System.Collections.IEnumerable" />
               <interface name="System.Runtime.Serialization.IDeserializationCallback" />
@@ -9652,6 +9653,10 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Linq.Expressions.IArgumentProvider" />
+              <interface name="System.Linq.Expressions.IDynamicExpression" />
+            </interfaces>
             <properties>
               <property name="Arguments" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.Expression]">
                 <methods>
@@ -9669,7 +9674,7 @@
               </property>
               <property name="DelegateType" attrib="0" ptype="System.Type">
                 <methods>
-                  <method name="get_DelegateType()" attrib="2182" returntype="System.Type">
+                  <method name="get_DelegateType()" attrib="2534" virtual="true" returntype="System.Type">
                     <parameters />
                   </method>
                 </methods>
@@ -9821,6 +9826,9 @@
             </methods>
           </class>
           <class name="ElementInit" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Linq.Expressions.IArgumentProvider" />
+            </interfaces>
             <properties>
               <property name="AddMethod" attrib="0" ptype="System.Reflection.MethodInfo">
                 <methods>
@@ -12540,6 +12548,48 @@
               <field name="Return" attrib="32854" fieldtype="System.Linq.Expressions.GotoExpressionKind" value="1" />
             </fields>
           </class>
+          <class name="IArgumentProvider" type="interface" abstract="true" charset="Ansi" layout="Auto">
+            <properties>
+              <property name="ArgumentCount" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_ArgumentCount()" attrib="3526" abstract="true" virtual="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="GetArgument(System.Int32)" attrib="1478" abstract="true" virtual="true" returntype="System.Linq.Expressions.Expression">
+                <parameters>
+                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="IDynamicExpression" type="interface" abstract="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Linq.Expressions.IArgumentProvider" />
+            </interfaces>
+            <properties>
+              <property name="DelegateType" attrib="0" ptype="System.Type">
+                <methods>
+                  <method name="get_DelegateType()" attrib="3526" abstract="true" virtual="true" returntype="System.Type">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="CreateCallSite()" attrib="1478" abstract="true" virtual="true" returntype="System.Object">
+                <parameters />
+              </method>
+              <method name="Rewrite(System.Linq.Expressions.Expression[])" attrib="1478" abstract="true" virtual="true" returntype="System.Linq.Expressions.Expression">
+                <parameters>
+                  <parameter name="args" position="0" attrib="0" type="System.Linq.Expressions.Expression[]" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
           <class name="IndexExpression" type="class" base="System.Linq.Expressions.Expression" sealed="true" charset="Ansi" layout="Auto">
             <attributes>
               <attribute name="System.Diagnostics.DebuggerTypeProxyAttribute">
@@ -12548,6 +12598,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Linq.Expressions.IArgumentProvider" />
+            </interfaces>
             <properties>
               <property name="Arguments" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.Expression]">
                 <methods>
@@ -12607,6 +12660,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Linq.Expressions.IArgumentProvider" />
+            </interfaces>
             <properties>
               <property name="Arguments" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.Expression]">
                 <methods>
@@ -13136,6 +13192,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Linq.Expressions.IArgumentProvider" />
+            </interfaces>
             <properties>
               <property name="Arguments" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.Expression]">
                 <methods>
@@ -13232,6 +13291,9 @@
                 </properties>
               </attribute>
             </attributes>
+            <interfaces>
+              <interface name="System.Linq.Expressions.IArgumentProvider" />
+            </interfaces>
             <properties>
               <property name="Arguments" attrib="0" ptype="System.Collections.ObjectModel.ReadOnlyCollection`1[System.Linq.Expressions.Expression]">
                 <methods>
@@ -14501,6 +14563,138 @@
               </method>
               <method name="GenerateKey()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
                 <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="ECDiffieHellmanPublicKey" type="class" base="System.Object" abstract="true" serializable="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.Byte[])" attrib="6276">
+                <parameters>
+                  <parameter name="keyBlob" position="0" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="Dispose()" attrib="486" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Dispose(System.Boolean)" attrib="452" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="ToByteArray()" attrib="454" virtual="true" returntype="System.Byte[]">
+                <parameters />
+              </method>
+              <method name="ToXmlString()" attrib="1478" abstract="true" virtual="true" returntype="System.String">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="ECDsa" type="class" base="System.Security.Cryptography.AsymmetricAlgorithm" abstract="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6276">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="KeyExchangeAlgorithm" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_KeyExchangeAlgorithm()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="SignatureAlgorithm" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_SignatureAlgorithm()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Create()" attrib="150" static="true" returntype="System.Security.Cryptography.ECDsa">
+                <parameters />
+              </method>
+              <method name="Create(System.String)" attrib="150" static="true" returntype="System.Security.Cryptography.ECDsa">
+                <parameters>
+                  <parameter name="algorithm" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="HashData(System.IO.Stream, System.Security.Cryptography.HashAlgorithmName)" attrib="452" virtual="true" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="data" position="0" attrib="0" type="System.IO.Stream" />
+                  <parameter name="hashAlgorithm" position="1" attrib="0" type="System.Security.Cryptography.HashAlgorithmName" />
+                </parameters>
+              </method>
+              <method name="HashData(System.Byte[], System.Int32, System.Int32, System.Security.Cryptography.HashAlgorithmName)" attrib="452" virtual="true" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="data" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="hashAlgorithm" position="3" attrib="0" type="System.Security.Cryptography.HashAlgorithmName" />
+                </parameters>
+              </method>
+              <method name="SignData(System.Byte[], System.Security.Cryptography.HashAlgorithmName)" attrib="454" virtual="true" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="data" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="hashAlgorithm" position="1" attrib="0" type="System.Security.Cryptography.HashAlgorithmName" />
+                </parameters>
+              </method>
+              <method name="SignData(System.IO.Stream, System.Security.Cryptography.HashAlgorithmName)" attrib="454" virtual="true" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="data" position="0" attrib="0" type="System.IO.Stream" />
+                  <parameter name="hashAlgorithm" position="1" attrib="0" type="System.Security.Cryptography.HashAlgorithmName" />
+                </parameters>
+              </method>
+              <method name="SignData(System.Byte[], System.Int32, System.Int32, System.Security.Cryptography.HashAlgorithmName)" attrib="454" virtual="true" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="data" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="hashAlgorithm" position="3" attrib="0" type="System.Security.Cryptography.HashAlgorithmName" />
+                </parameters>
+              </method>
+              <method name="SignHash(System.Byte[])" attrib="1478" abstract="true" virtual="true" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="hash" position="0" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+              <method name="VerifyData(System.Byte[], System.Byte[], System.Security.Cryptography.HashAlgorithmName)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="data" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="signature" position="1" attrib="0" type="System.Byte[]" />
+                  <parameter name="hashAlgorithm" position="2" attrib="0" type="System.Security.Cryptography.HashAlgorithmName" />
+                </parameters>
+              </method>
+              <method name="VerifyData(System.IO.Stream, System.Byte[], System.Security.Cryptography.HashAlgorithmName)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="data" position="0" attrib="0" type="System.IO.Stream" />
+                  <parameter name="signature" position="1" attrib="0" type="System.Byte[]" />
+                  <parameter name="hashAlgorithm" position="2" attrib="0" type="System.Security.Cryptography.HashAlgorithmName" />
+                </parameters>
+              </method>
+              <method name="VerifyData(System.Byte[], System.Int32, System.Int32, System.Byte[], System.Security.Cryptography.HashAlgorithmName)" attrib="454" virtual="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="data" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="signature" position="3" attrib="0" type="System.Byte[]" />
+                  <parameter name="hashAlgorithm" position="4" attrib="0" type="System.Security.Cryptography.HashAlgorithmName" />
+                </parameters>
+              </method>
+              <method name="VerifyHash(System.Byte[], System.Byte[])" attrib="1478" abstract="true" virtual="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="hash" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="signature" position="1" attrib="0" type="System.Byte[]" />
+                </parameters>
               </method>
             </methods>
           </class>
