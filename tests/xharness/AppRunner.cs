@@ -224,10 +224,10 @@ namespace xharness
 				foreach (var service in sim_services) {
 					if (delete_first && !ExecuteCommand ("sqlite3", string.Format ("{0} \"DELETE FROM access WHERE service = '{1}' and client ='{2}';\"", TCC_db, service, bundle_identifier), true, output_verbosity_level: 1)) {
 						failure = true;
-					} else {
-						if (!ExecuteCommand ("sqlite3", string.Format ("{0} \"INSERT INTO access VALUES('{1}','{2}',0,1,0,NULL,NULL);\"", TCC_db, service, bundle_identifier), true, output_verbosity_level: 1)) {
-							failure = true;
-						}
+					}
+
+					if (!failure && !ExecuteCommand ("sqlite3", string.Format ("{0} \"INSERT INTO access VALUES('{1}','{2}',0,1,0,NULL,NULL);\"", TCC_db, service, bundle_identifier), true, output_verbosity_level: 1)) {
+						failure = true;
 					}
 				}
 				if (failure) {
@@ -245,11 +245,11 @@ namespace xharness
 			}
 		}
 
-		void PrepareSimulator ()
+		public void PrepareSimulator ()
 		{
 			if (SkipSimulatorSetup) {
-				Harness.Log (0, "Simulator setup skipped.");
 				AgreeToPrompts (false);
+				Harness.Log (0, "Simulator setup skipped.");
 				return;
 			}
 			
@@ -308,8 +308,13 @@ namespace xharness
 			}
 		}
 
-		void Initialize ()
+		bool initialized;
+		public void Initialize ()
 		{
+			if (initialized)
+				return;
+			initialized = true;
+
 			var csproj = new XmlDocument ();
 			csproj.LoadWithoutNetworkAccess (ProjectFile);
 			appName = csproj.GetAssemblyName ();
@@ -817,8 +822,12 @@ namespace xharness
 				ExecuteCommand ("killall", "-9 \"" + k + "\"", true, output_verbosity_level: 1);
 		}
 
+		static bool shown_simulator_list;
 		void ShowSimulatorList ()
 		{
+			if (shown_simulator_list)
+				return;
+			shown_simulator_list = true;
 			if (Harness.Verbosity > 0)
 				ExecuteXcodeCommand ("simctl", "list", ignore_errors: true, timeout: TimeSpan.FromSeconds (10));
 		}
