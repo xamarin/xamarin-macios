@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 using XamCore.AppKit;
@@ -30,12 +30,8 @@ namespace XamCore.FinderSync {
 	}
 
 	[Mac (10, 10, onlyOn64: true)]
-	interface IFIFinderSync { }
-
-	[Mac (10, 10, onlyOn64: true)]
-	[BaseType (typeof(NSObject))]
-	[Model, Protocol]
-	interface FIFinderSync : NSExtensionRequestHandling
+	[Protocol (Name = "FIFinderSync")]
+	interface FIFinderSyncProtocol
 	{
 		[Export ("menuForMenuKind:")]
 		[return: NullAllowed]
@@ -59,5 +55,11 @@ namespace XamCore.FinderSync {
 		[Export ("toolbarItemToolTip")]
 		string ToolbarItemToolTip { get; }
 	}	
+
+	[Mac (10, 10, onlyOn64: true)]
+	[BaseType (typeof(NSObject))]
+	interface FIFinderSync : NSExtensionRequestHandling, FIFinderSyncProtocol
+	{
+	}
 }
 #endif
