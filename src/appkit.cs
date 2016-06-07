@@ -22008,7 +22008,7 @@ namespace XamCore.AppKit {
 		NSString ColumnIndexRangeAttribute { get; }
 
 		[Mac (10, 6)]
-		[Field ("NSAccessibilityHoriztonalUnitsAttribute")]
+		[Field ("NSAccessibilityHorizontalUnitsAttribute")]
 		NSString HorizontalUnitsAttribute { get; }
 
 		[Mac (10, 6)]
@@ -22049,7 +22049,7 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityDisclosedRowsAttribute")]
 		NSString DisclosedRowsAttribute { get; }
 
-		[Field ("NSAccessibilityDisclosedByRowsAttribute")]
+		[Field ("NSAccessibilityDisclosedByRowAttribute")]
 		NSString DisclosedByRowsAttribute { get; }
 
 		[Field ("NSAccessibilityDisclosureLevelAttribute")]
@@ -22368,7 +22368,7 @@ namespace XamCore.AppKit {
 		NSString DefinitionListSubrole { get; }
 
 		[Mac (10, 7)]
-		[Field ("NSAccessibilityFullscreenButtonSubrole")]
+		[Field ("NSAccessibilityFullScreenButtonSubrole")]
 		NSString FullscreenButtonSubrole { get; }
 
 		[Mac (10, 9)]
@@ -22392,8 +22392,8 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityFocusedWindowChangedNotification")]
 		NSString FocusedWindowChangedNotification { get; }
 
-		[Field ("NSAccessibilityUIElementChangedNotification")]
-		NSString UIElementChangedNotification { get; }
+		[Field ("NSAccessibilityFocusedUIElementChangedNotification")]
+		NSString UIElementFocusedChangedNotification { get; }
 
 		[Field ("NSAccessibilityApplicationActivatedNotification")]
 		NSString ApplicationActivatedNotification { get; }
@@ -22804,11 +22804,13 @@ namespace XamCore.AppKit {
 		void SetAccessibilityFrame (CGRect frame);
 	}
 
-	[Protocol, BaseType (typeof (NSObject))]
-	public interface NSObjectAccessibilityExtensions {
+	[BaseType (typeof (NSView))]
+	[Category]
+	public interface NSObjectAccessibilityViewExtensions {
+		// Please note the neary copy in NSObjectAccessibilityCellExtensions and update there as well
 		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
 		[Export ("accessibilityAttributeNames")]
-		NSArray AccessibilityAttributeNames { get; }
+		NSArray GetAccessibilityAttributeNames ();
 
 		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
 		[Export ("accessibilityAttributeValue:")]
@@ -22824,7 +22826,7 @@ namespace XamCore.AppKit {
 
 		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
 		[Export ("accessibilityParameterizedAttributeNames")]
-		NSArray AccessibilityParameterizedAttributeNames { get; }
+		NSArray GetAccessibilityParameterizedAttributeNames ();
 
 		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
 		[Export ("accessibilityAttributeValue:forParameter:")]
@@ -22832,7 +22834,7 @@ namespace XamCore.AppKit {
 
 		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
 		[Export ("accessibilityActionNames")]
-		NSArray AccessibilityActionNames { get; }
+		NSArray GetAccessibilityActionNames ();
 
 		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
 		[Export ("accessibilityActionDescription:")]
@@ -22844,7 +22846,7 @@ namespace XamCore.AppKit {
 
 		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
 		[Export ("accessibilityIsIgnored")]
-		bool AccessibilityIsIgnored { get; }
+		bool GetAccessibilityIsIgnored ();
 
 		[Export ("accessibilityHitTest:")]
 		NSObject GetAccessibilityHitTest (CGPoint point);
@@ -22863,19 +22865,85 @@ namespace XamCore.AppKit {
 
 		[Mac (10,9)]
 		[Export ("accessibilityNotifiesWhenDestroyed")]
-		bool AccessibilityNotifiesWhenDestroyed { get; }
+		bool GetAccessibilityNotifiesWhenDestroyed ();
+	}
+
+
+	[BaseType (typeof (NSCell))]
+	[Category]
+	public interface NSObjectAccessibilityCellExtensions {
+		// Please note the neary copy in NSObjectAccessibilityViewExtensions and update there as well
+		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
+		[Export ("accessibilityAttributeNames")]
+		NSArray GetAccessibilityAttributeNames ();
+
+		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
+		[Export ("accessibilityAttributeValue:")]
+		NSObject GetAccessibilityValue (NSString attribute);
+
+		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
+		[Export ("accessibilityIsAttributeSettable:")]
+		bool IsAccessibilityAttributeSettable (NSString attribute);
+
+		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
+		[Export ("accessibilitySetValue:forAttribute:")]
+		void SetAccessibilityValue (NSString attribute, NSObject value);
+
+		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
+		[Export ("accessibilityParameterizedAttributeNames")]
+		NSArray GetAccessibilityParameterizedAttributeNames ();
+
+		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
+		[Export ("accessibilityAttributeValue:forParameter:")]
+		NSObject GetAccessibilityValue (NSString attribute, NSObject parameter);
+
+		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
+		[Export ("accessibilityActionNames")]
+		NSArray GetAccessibilityActionNames ();
+
+		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
+		[Export ("accessibilityActionDescription:")]
+		NSString GetAccessibilityActionDescription (NSString action);
+
+		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
+		[Export ("accessibilityPerformAction:")]
+		void AccessibilityPerformAction (NSString action);
+
+		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
+		[Export ("accessibilityIsIgnored")]
+		bool GetAccessibilityIsIgnored ();
+
+		[Export ("accessibilityHitTest:")]
+		NSObject GetAccessibilityHitTest (CGPoint point);
+
+		[Export ("getAccessibilityFocusedUIElement")]
+		NSObject GetAccessibilityFocusedUIElement ();
+
+		[Export ("accessibilityIndexOfChild:")]
+		nuint GetAccessibilityIndexOfChild (NSObject child);
+
+		[Export ("accessibilityArrayAttributeCount:")]
+		nuint GetAccessibilityArrayAttributeCount (NSString attribute);
+
+		[Export ("accessibilityArrayAttributeValues:index:maxCount:")]
+		NSObject[] GetAccessibilityArrayAttributeValues (NSString attribute, nuint index, nuint maxCount);
+
+		[Mac (10,9)]
+		[Export ("accessibilityNotifiesWhenDestroyed")]
+		bool GetAccessibilityNotifiesWhenDestroyed ();
 	}
 
 	[Mac (10, 10)]
-	[Protocol, BaseType (typeof (NSWorkspace))]
+	[BaseType (typeof (NSWorkspace))]
+	[Category]
 	public interface NSWorkspaceAccessibilityExtensions {
 		[Export ("accessibilityDisplayShouldIncreaseContract")]
-		bool AccessibilityDisplayShouldIncreaseContract { get; }
+		bool GetAccessibilityDisplayShouldIncreaseContract ();
 
 		[Export ("accessibilityDisplayShouldDifferentiateWithoutColor")]
-		bool AccessibilityDisplayShouldDifferentiateWithoutColor { get; }
+		bool GetAccessibilityDisplayShouldDifferentiateWithoutColor ();
 
 		[Export ("accessibilityDisplayShouldReduceTransparency")]
-		bool AccessibilityDisplayShouldReduceTransparency { get; }
+		bool GetAccessibilityDisplayShouldReduceTransparency ();
 	}
 }
