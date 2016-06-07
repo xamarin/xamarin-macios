@@ -18,11 +18,11 @@ cp -p Makefile-mac.inc $DIR/tests
 cp -p common.mk $DIR/tests
 cp -p Makefile $DIR/tests
 cp -p ../Make.config $DIR
-mkdir -p $DIR/../xamarin-macios/mk
-cp -p ../Make.config $DIR/../xamarin-macios
-cp -p ../mk/subdirs.mk $DIR/../xamarin-macios/mk
-cp -p ../mk/rules.mk $DIR/../xamarin-macios/mk
-cp -p ../mk/quiet.mk $DIR/../xamarin-macios/mk
+mkdir -p $DIR/mk
+cp -p ../Make.config $DIR
+cp -p ../mk/subdirs.mk $DIR/mk
+cp -p ../mk/rules.mk $DIR/mk
+cp -p ../mk/quiet.mk $DIR/mk
 
 # 7za compresses better, because there are many duplicated files
 cd mac-test-package && zip -r ../mac-test-package.zip *
