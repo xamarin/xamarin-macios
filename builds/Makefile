@@ -163,7 +163,6 @@ $(2)_CONFIGURE_FLAGS = \
 	--enable-maintainer-mode \
 	--with-glib=embedded \
 	--with-mcs-docs=no \
-	--disable-shared-handles \
 	--disable-nls \
 	--disable-iconv \
 	--disable-mcs-build \
@@ -366,7 +365,6 @@ TOOLS64_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
 			--with-monotouch=yes \
 			--with-xammac=yes \
 			--with-mcs-docs=no \
-			--disable-shared-handles \
 			--disable-nls \
 			--disable-iconv	\
 			--disable-boehm \
@@ -462,7 +460,6 @@ WATCHBCL_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
 			--with-monotouch_tv=no \
 			--with-xammac=no \
 			--with-mcs-docs=no \
-			--disable-shared-handles \
 			--disable-nls \
 			--disable-iconv	\
 			--disable-boehm \
@@ -812,7 +809,6 @@ $(eval SIM$(2)_CONFIGURE_FLAGS=	--host=$(1)-apple-darwin10 \
 			--disable-mcs-build \
 			--disable-nls \
 			--disable-iconv \
-			--disable-shared-handles	\
 			--disable-boehm \
 			--disable-executables \
 			--disable-visibility-hidden	\
@@ -954,7 +950,6 @@ WATCHSIMULATOR_CONFIGURE_FLAGS =                \
 	--disable-mcs-build                         \
 	--disable-nls                               \
 	--disable-iconv                             \
-	--disable-shared-handles                    \
 	--disable-visibility-hidden	                \
 	$(XAMARIN_CONFIGURE_FLAGS)         \
 
@@ -1092,7 +1087,6 @@ TVSIMULATOR_CONFIGURE_FLAGS =                         \
 	--disable-mcs-build                               \
 	--disable-nls                                     \
 	--disable-iconv                                   \
-	--disable-shared-handles                          \
 	--disable-visibility-hidden	                      \
 	$(XAMARIN_CONFIGURE_FLAGS)               \
 
@@ -1228,13 +1222,11 @@ $(eval $(2)_CONFIGURE_FLAGS=--build=i386-apple-darwin10 \
 			--without-ikvm-native \
 			--with-tls=pthread \
 			--without-sigaltstack \
-			--with-lazy-gc-thread-creation=yes	\
 			--enable-icall-export \
 			--disable-icall-tables \
 			--disable-executables \
 			--disable-nls \
 			--disable-iconv \
-			--disable-shared-handles	\
 			--disable-visibility-hidden	\
 			--disable-boehm \
 			--enable-dtrace=no \
@@ -1460,13 +1452,11 @@ WATCHOS_CONFIGURE_FLAGS =                        \
 	--without-ikvm-native                        \
 	--with-tls=pthread                           \
 	--without-sigaltstack                        \
-	--with-lazy-gc-thread-creation=yes           \
 	--enable-icall-export                        \
 	--disable-icall-tables                       \
 	--disable-executables                        \
 	--disable-nls                                \
 	--disable-iconv                              \
-	--disable-shared-handles                     \
 	--disable-visibility-hidden	                 \
 	$(XAMARIN_CONFIGURE_FLAGS)          \
 	$(BITCODE_CONFIGURE_FLAGS)
@@ -1633,13 +1623,11 @@ TVOS_CONFIGURE_FLAGS =                           \
 	--without-ikvm-native                        \
 	--with-tls=pthread                           \
 	--without-sigaltstack                        \
-	--with-lazy-gc-thread-creation=yes           \
 	--enable-icall-export                        \
 	--disable-icall-tables						 \
 	--disable-executables                        \
 	--disable-nls                                \
 	--disable-iconv                              \
-	--disable-shared-handles                     \
 	--disable-visibility-hidden	                 \
 	--enable-extension-module                    \
 	--enable-dtrace=no                           \
