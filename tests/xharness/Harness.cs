@@ -41,7 +41,7 @@ namespace xharness
 
 		// Configure
 		public bool AutoConf { get; set; }
-		public bool Mac { get; set; }		
+		public bool Mac { get; set; }
 		public string WatchOSContainerTemplate { get; set; }
 		public string WatchOSAppTemplate { get; set; }
 		public string WatchOSExtensionTemplate { get; set; }
@@ -81,18 +81,23 @@ namespace xharness
 			}
 		}
 
+		string mlaunch;
 		public string MlaunchPath {
 			get {
-				var path = Path.GetFullPath (Path.Combine (Path.GetDirectoryName (Path.GetDirectoryName (RootDirectory)), "maccore", "tools", "mlaunch", "mlaunch"));
-				if (!File.Exists (path)) {
-					Log ("Could not find mlaunch locally ({0}), will try in Xamarin Studio.app.", path);
-					path = "/Applications/Xamarin Studio.app/Contents/Resources/lib/monodevelop/AddIns/MonoDevelop.IPhone/mlaunch.app/Contents/MacOS/mlaunch";
+				if (mlaunch == null) {
+					var path = Path.GetFullPath (Path.Combine (Path.GetDirectoryName (Path.GetDirectoryName (RootDirectory)), "maccore", "tools", "mlaunch", "mlaunch"));
+					if (!File.Exists (path)) {
+						Log ("Could not find mlaunch locally ({0}), will try in Xamarin Studio.app.", path);
+						path = "/Applications/Xamarin Studio.app/Contents/Resources/lib/monodevelop/AddIns/MonoDevelop.IPhone/mlaunch.app/Contents/MacOS/mlaunch";
+					}
+
+					if (!File.Exists (path))
+						throw new FileNotFoundException (string.Format ("Could not find mlaunch: {0}", path));
+
+					mlaunch = path;
 				}
 
-				if (!File.Exists (path))
-					throw new FileNotFoundException (string.Format ("Could not find mlaunch: {0}", path));
-				
-				return path;
+				return mlaunch;
 			}
 		}
 

@@ -23,7 +23,7 @@ namespace xharness
 
 		List<TestTask> Tasks = new List<TestTask> ();
 
-		internal static Resource DesktopResource = new Resource { Name = "Desktop" };
+		internal static Resource DesktopResource = new Resource ("Desktop", Environment.ProcessorCount);
 
 		async Task<IEnumerable<RunSimulatorTask>> CreateRunSimulatorTaskAsync (XBuildTask buildTask)
 		{
@@ -155,12 +155,12 @@ namespace xharness
 				return "maroon";
 			else if (tests.Any ((v) => v.Failed))
 				return "red";
-			else if (tests.Any ((v) => v.ExecutionResult == TestExecutingResult.TimedOut))
+			else if (tests.Any ((v) => v.TimedOut))
 				return "purple";
 			else if (tests.Any ((v) => v.ExecutionState == TestExecutionState.Running))
 				return "blue";
 			else if (tests.Any ((v) => v.ExecutionState == TestExecutionState.NotStarted))
-				return "gray";
+				return "black";
 			else
 				return "black";
 		}
@@ -169,7 +169,11 @@ namespace xharness
 		{
 			switch (test.ExecutionState) {
 			case TestExecutionState.NotStarted:
-				return "gray";
+				return "black";
+			case TestExecutionState.Building:
+				return "darkblue";
+			case TestExecutionState.Built:
+				return "lime";
 			case TestExecutionState.Running:
 				return "blue";
 			case TestExecutionState.Finished:
@@ -184,6 +188,8 @@ namespace xharness
 					return "green";
 				case TestExecutingResult.TimedOut:
 					return "purple";
+				case TestExecutingResult.BuildFailure:
+					return "darkred";
 				case TestExecutingResult.None: // shouldn't happen
 				default:
 					return "pink";
@@ -256,13 +262,14 @@ function toggleLogVisibility (logName)
 							} else {
 								state = test.ExecutionState.ToString ();
 							}
-							if (test.ExecutionState != TestExecutionState.NotStarted) {
+							//if (test.ExecutionState != TestExecutionState.NotStarted) {
 								var log_id = id_counter++;
 								writer.WriteLine ("{0} (<span style='color: {3}'>{1}</span>) <a id='button_{2}' href=\"javascript: toggleLogVisibility ('{2}');\">Show details</a><br />", test.Mode, state, log_id, GetTestColor (test));
 								writer.WriteLine ("<div id='logs_{0}' style='display: none; padding-bottom: 10px; padding-top: 10px; padding-left: 20px;'>", log_id);
 								writer.WriteLine ("Duration: {0} <br />", test.Duration);
-								if (test.Logs.Count > 0) {
-									foreach (var log in test.Logs) {
+								var logs = test.AggregatedLogs;
+								if (logs.Count () > 0) {
+									foreach (var log in logs) {
 										writer.WriteLine ("<a href='{0}' type='text/plain'>{1}</a><br />", log.Path.Substring (LogDirectory.Length + 1), log.Description);
 										if (log.Description == "Test log") {
 											var summary = string.Empty;
@@ -298,9 +305,9 @@ function toggleLogVisibility (logName)
 									writer.WriteLine ("No logs<br />");
 								}
 								writer.WriteLine ("</div>");
-							} else {
-								writer.WriteLine ("{0} ({1}) <br />", test.Mode, state);
-							}
+							//} else {
+							//	writer.WriteLine ("{0} ({1}) <br />", test.Mode, state);
+							//}
 						}
 					}
 					writer.WriteLine ("</body>");
@@ -332,6 +339,8 @@ function toggleLogVisibility (logName)
 		public bool Succeeded { get { return ExecutionResult == TestExecutingResult.Succeeded; } }
 		public bool Failed { get { return ExecutionResult == TestExecutingResult.Failed; } }
 		public bool Crashed { get { return ExecutionResult == TestExecutingResult.Crashed; } }
+		public bool TimedOut { get { return ExecutionResult == TestExecutingResult.TimedOut; } }
+		public bool BuildFailure { get { return ExecutionResult == TestExecutingResult.BuildFailure; } }
 
 		public virtual string Mode { get; set; }
 
@@ -368,24 +377,29 @@ function toggleLogVisibility (logName)
 		public LogFiles Logs = new LogFiles ();
 		public List<Resource> Resources = new List<Resource> ();
 
+		public virtual IEnumerable<LogFile> AggregatedLogs {
+			get {
+				return Logs;
+			}
+		}
+
 		public string LogDirectory {
 			get {
 				return Path.Combine (Jenkins.LogDirectory, TestName);
 			}
 		}
 
-		public async Task RunAsync ()
+		Task build_task;
+		async Task RunInternalAsync ()
 		{
-			if (ExecutionState == TestExecutionState.Finished)
-				return;
-
 			ExecutionState = TestExecutionState.Running;
 
 			Jenkins.GenerateReport ();
 
 			duration.Start ();
 
-			await ExecuteAsync ();
+			build_task = ExecuteAsync ();
+			await build_task;
 
 			duration.Stop ();
 
@@ -394,6 +408,13 @@ function toggleLogVisibility (logName)
 				throw new Exception ("Result not set!");
 
 			Jenkins.GenerateReport ();
+		}
+
+		public Task RunAsync ()
+		{
+			if (build_task == null)
+				build_task = RunInternalAsync ();
+			return build_task;
 		}
 
 		protected abstract Task ExecuteAsync ();
@@ -409,19 +430,21 @@ function toggleLogVisibility (logName)
 
 		protected override async Task ExecuteAsync ()
 		{
-			using (var xbuild = new Process ()) {
-				xbuild.StartInfo.FileName = "xbuild";
-				xbuild.StartInfo.Arguments = $"/verbosity:diagnostic /p:Platform={ProjectPlatform} /p:Configuration={ProjectConfiguration} {Harness.Quote (ProjectFile)}";
-				Harness.Log ("Building {0} ({1})", TestName, Mode);
-				var log = Logs.Create (LogDirectory, "build-" + Platform + ".txt", "Build log");
-				log.WriteLine ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
-				if (Harness.DryRun) {
-					Harness.Log ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
-				} else {
-					await xbuild.RunAsync (log.Path, true);
-					ExecutionResult = xbuild.ExitCode == 0 ? TestExecutingResult.Succeeded : TestExecutingResult.Failed;
+			using (var resource = await Jenkins.DesktopResource.AcquireConcurrentAsync ()) {
+				using (var xbuild = new Process ()) {
+					xbuild.StartInfo.FileName = "xbuild";
+					xbuild.StartInfo.Arguments = $"/verbosity:diagnostic /p:Platform={ProjectPlatform} /p:Configuration={ProjectConfiguration} {Harness.Quote (ProjectFile)}";
+					Harness.Log ("Building {0} ({1})", TestName, Mode);
+					var log = Logs.Create (LogDirectory, "build-" + Platform + ".txt", "Build log");
+					log.WriteLine ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
+					if (Harness.DryRun) {
+						Harness.Log ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
+					} else {
+						await xbuild.RunAsync (log.Path, true);
+						ExecutionResult = xbuild.ExitCode == 0 ? TestExecutingResult.Succeeded : TestExecutingResult.Failed;
+					}
+					Harness.Log ("Built {0} ({1})", TestName, Mode);
 				}
-				Harness.Log ("Built {0} ({1})", TestName, Mode);
 			}
 		}
 
@@ -435,8 +458,27 @@ function toggleLogVisibility (logName)
 	{
 		public SimDevice Device;
 		public XBuildTask BuildTask;
-		public bool SkipSetupAndCleanup;
 		public string AppRunnerTarget;
+
+		AppRunner runner;
+
+		public async Task BuildAsync ()
+		{
+			ExecutionState = TestExecutionState.Building;
+			await BuildTask.RunAsync ();
+			if (BuildTask.ExecutionResult == TestExecutingResult.Succeeded) {
+				ExecutionState = TestExecutionState.Built;
+			} else {
+				ExecutionState = TestExecutionState.Finished;
+				ExecutionResult = TestExecutingResult.BuildFailure;
+			}
+		}
+
+		public override IEnumerable<LogFile> AggregatedLogs {
+			get {
+				return base.AggregatedLogs.Union (BuildTask.Logs);
+			}
+		}
 
 		public override string Mode {
 			get {
@@ -476,31 +518,39 @@ function toggleLogVisibility (logName)
 			}
 		}
 
-		protected override async Task ExecuteAsync ()
+		public Task PrepareSimulatorAsync (bool initialize)
+		{
+			if (BuildTask.ExecutionResult != TestExecutingResult.Succeeded)
+				return Task.FromResult (true);
+			
+			runner = new AppRunner ()
+			{
+				Harness = Harness,
+				ProjectFile = ProjectFile,
+				SkipSimulatorSetup = !initialize,
+				SkipSimulatorCleanup = !initialize,
+				Target = AppRunnerTarget,
+				LogDirectory = LogDirectory,
+			};
+			runner.Simulators = new SimDevice [] { Device };
+			runner.Initialize ();
+			runner.PrepareSimulator ();
+
+			return Task.FromResult (true);
+		}
+
+		protected override Task ExecuteAsync ()
 		{
 			Harness.Log ("Running simulator '{0}' ({2}) for {1}", Device.Name, ProjectFile, Jenkins.Simulators.SupportedRuntimes.Where ((v) => v.Identifier == Device.SimRuntime).First ().Name);
-			await BuildTask.RunAsync ();
 
-			Logs.AddRange (BuildTask.Logs);
-
-			if (!BuildTask.Succeeded) {
-				ExecutionResult = TestExecutingResult.Failed;
-				return;
+			if (BuildTask.ExecutionResult != TestExecutingResult.Succeeded) {
+				ExecutionResult = TestExecutingResult.BuildFailure;
+				return Task.FromResult (true);
 			}
-
+		
 			if (Harness.DryRun) {
 				Harness.Log ("<running app in simulator>");
 			} else {
-				var runner = new AppRunner ()
-				{
-					Harness = Harness,
-					ProjectFile = ProjectFile,
-					SkipSimulatorSetup = SkipSetupAndCleanup,
-					SkipSimulatorCleanup = SkipSetupAndCleanup,
-					Target = AppRunnerTarget,
-					LogDirectory = LogDirectory,
-				};
-				runner.Simulators = new SimDevice [] { Device };
 				try {
 					runner.Run ();
 					ExecutionResult = runner.Result;
@@ -513,6 +563,8 @@ function toggleLogVisibility (logName)
 
 			foreach (var log in Logs)
 				Console.WriteLine ("Log: {0}: {1}", log.Description, log.Path);
+
+			return Task.FromResult (true);
 		}
 
 		public override void WriteReport (StreamWriter writer)
@@ -534,6 +586,13 @@ function toggleLogVisibility (logName)
 
 		public IEnumerable<RunSimulatorTask> Tasks;
 
+		// Due to parallelization this isn't the same as the sum of the duration for all the build tasks.
+		Stopwatch build_timer = new Stopwatch ();
+		public TimeSpan BuildDuration { get { return build_timer.Elapsed; } }
+
+		Stopwatch run_timer = new Stopwatch ();
+		public TimeSpan RunDuration { get { return run_timer.Elapsed; } }
+
 		public AggregatedRunSimulatorTask (IEnumerable<RunSimulatorTask> tasks)
 		{
 			this.Tasks = tasks;
@@ -541,14 +600,27 @@ function toggleLogVisibility (logName)
 
 		protected override async Task ExecuteAsync ()
 		{
-			using (var desktop = await Jenkins.DesktopResource.AcquireAsync ()) {
+			// First build everything. This is required for the run simulator
+			// task to properly configure the simulator.
+			build_timer.Start ();
+			await Task.WhenAll (Tasks.Select ((v) => v.BuildAsync ()).Distinct ());
+			build_timer.Stop ();
+
+			using (var desktop = await Jenkins.DesktopResource.AcquireExclusiveAsync ()) {
 				Harness.Log ("Preparing simulator: {0}", Device.Name);
+				// We need to set the dialog permissions for all the apps
+				// before launching the simulator, because once launched
+				// the simulator caches the values in-memory.
 				bool first = true;
 				foreach (var task in Tasks) {
-					task.SkipSetupAndCleanup = !first;
+					await task.PrepareSimulatorAsync (first);
 					first = false;
-					await task.RunAsync ();
 				}
+
+				run_timer.Start ();
+				foreach (var task in Tasks)
+					await task.RunAsync ();
+				run_timer.Stop ();
 			}
 
 			ExecutionResult = Tasks.Any ((v) => !v.Succeeded) ? TestExecutingResult.Failed : TestExecutingResult.Succeeded;
@@ -572,19 +644,43 @@ function toggleLogVisibility (logName)
 	{
 		public string Name;
 		ConcurrentQueue<TaskCompletionSource<IDisposable>> queue = new ConcurrentQueue<TaskCompletionSource<IDisposable>> ();
+		ConcurrentQueue<TaskCompletionSource<IDisposable>> exclusive_queue = new ConcurrentQueue<TaskCompletionSource<IDisposable>> ();
 		int users;
-		int max_users = 1;
+		int max_concurrent_users = 1;
+		bool exclusive;
 
-		public Task<IDisposable> AcquireAsync ()
+
+		public Resource (string name, int max_concurrent_users = 1)
+		{
+			this.Name = name;
+			this.max_concurrent_users = max_concurrent_users;
+		}
+
+		public Task<IDisposable> AcquireConcurrentAsync ()
 		{
 			lock (queue) {
-				if (users == max_users) {
+				if (!exclusive && users < max_concurrent_users) {
+					users++;
+					return Task.FromResult<IDisposable> (new AcquiredResource (this));
+				} else {
 					var tcs = new TaskCompletionSource<IDisposable> (new AcquiredResource (this));
 					queue.Enqueue (tcs);
 					return tcs.Task;
-				} else {
+				}
+			}
+		}
+
+		public Task<IDisposable> AcquireExclusiveAsync ()
+		{
+			lock (queue) {
+				if (users == 0) {
 					users++;
+					exclusive = true;
 					return Task.FromResult<IDisposable> (new AcquiredResource (this));
+				} else {
+					var tcs = new TaskCompletionSource<IDisposable> (new AcquiredResource (this));
+					exclusive_queue.Enqueue (tcs);
+					return tcs.Task;
 				}
 			}
 		}
@@ -595,8 +691,15 @@ function toggleLogVisibility (logName)
 
 			lock (queue) {
 				users--;
-				if (queue.TryDequeue (out tcs))
+				exclusive = false;
+				if (queue.TryDequeue (out tcs)) {
+					users++;
 					tcs.SetResult ((IDisposable) tcs.Task.AsyncState);
+				} else if (users == 0 && exclusive_queue.TryDequeue (out tcs)) {
+					users++;
+					exclusive = true;
+					tcs.SetResult ((IDisposable) tcs.Task.AsyncState);
+				}
 			}
 		}
 
@@ -627,6 +730,8 @@ function toggleLogVisibility (logName)
 	public enum TestExecutionState
 	{
 		NotStarted,
+		Building,
+		Built,
 		Running,
 		Finished,
 	}
@@ -639,6 +744,7 @@ function toggleLogVisibility (logName)
 		Failed,
 		TimedOut,
 		HarnessException,
+		BuildFailure,
 	}
 }
 
