@@ -2088,7 +2088,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[BaseType (typeof (NSObject))]
-	public interface NSCell : NSUserInterfaceItemIdentification, NSCoding, NSCopying, NSAccessibilityElement, NSAccessibility, NSObjectAccessibilityViewExtensions {
+	public interface NSCell : NSUserInterfaceItemIdentification, NSCoding, NSCopying, NSAccessibilityElement, NSAccessibility, NSObjectAccessibilityExtensions {
 		[Static, Export ("prefersTrackingUntilMouseUp")]
 		bool PrefersTrackingUntilMouseUp { get; }
 	
@@ -13727,7 +13727,7 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSResponder))]
 	[Dispose ("__mt_tracking_var = null;")]
-	public partial interface NSView : NSDraggingDestination, NSAnimatablePropertyContainer, NSUserInterfaceItemIdentification, NSAppearanceCustomization, NSAccessibilityElement, NSAccessibility, NSObjectAccessibilityViewExtensions {
+	public partial interface NSView : NSDraggingDestination, NSAnimatablePropertyContainer, NSUserInterfaceItemIdentification, NSAppearanceCustomization, NSAccessibilityElement, NSAccessibility, NSObjectAccessibilityExtensions {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
@@ -22804,8 +22804,7 @@ namespace XamCore.AppKit {
 		void SetAccessibilityFrame (CGRect frame);
 	}
 
-	public interface NSObjectAccessibilityViewExtensions {
-		// Please note the neary copy in NSObjectAccessibilityCellExtensions and update there as well
+	public interface NSObjectAccessibilityExtensions {
 		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
 		[Export ("accessibilityAttributeNames")]
 		NSArray AccessibilityAttributeNames { get; }
