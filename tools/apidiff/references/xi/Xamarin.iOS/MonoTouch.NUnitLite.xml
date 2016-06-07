@@ -76,7 +76,6 @@
         <classes>
           <class name="OptionException" type="class" base="System.Exception" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -244,9 +243,9 @@
               <interface name="System.IDisposable" />
             </interfaces>
             <constructors>
-              <constructor name=".ctor(MonoTouch.NUnit.UI.TouchRunner, System.IO.TextWriter, NUnitLite.Runner.OutputWriter)" attrib="6278">
+              <constructor name=".ctor(MonoTouch.NUnit.UI.BaseTouchRunner, System.IO.TextWriter, NUnitLite.Runner.OutputWriter)" attrib="6278">
                 <parameters>
-                  <parameter name="runner" position="0" attrib="0" type="MonoTouch.NUnit.UI.TouchRunner" />
+                  <parameter name="runner" position="0" attrib="0" type="MonoTouch.NUnit.UI.BaseTouchRunner" />
                   <parameter name="baseWriter" position="1" attrib="0" type="System.IO.TextWriter" />
                   <parameter name="xmlWriter" position="2" attrib="0" type="NUnitLite.Runner.OutputWriter" />
                 </parameters>
@@ -270,9 +269,9 @@
                   </method>
                 </methods>
               </property>
-              <property name="Runner" attrib="0" ptype="MonoTouch.NUnit.UI.TouchRunner">
+              <property name="Runner" attrib="0" ptype="MonoTouch.NUnit.UI.BaseTouchRunner">
                 <methods>
-                  <method name="get_Runner()" attrib="2182" returntype="MonoTouch.NUnit.UI.TouchRunner">
+                  <method name="get_Runner()" attrib="2182" returntype="MonoTouch.NUnit.UI.BaseTouchRunner">
                     <attributes>
                       <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
                     </attributes>
@@ -391,6 +390,226 @@
       </namespace>
       <namespace name="MonoTouch.NUnit.UI">
         <classes>
+          <class name="BaseTouchRunner" type="class" base="System.Object" abstract="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="NUnit.Framework.Api.ITestListener" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6276">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="AutoStart" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_AutoStart()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_AutoStart(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="FailedCount" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_FailedCount()" attrib="2182" returntype="System.Int32">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Filter" attrib="0" ptype="NUnit.Framework.Api.ITestFilter">
+                <methods>
+                  <method name="get_Filter()" attrib="2182" returntype="NUnit.Framework.Api.ITestFilter">
+                    <parameters />
+                  </method>
+                  <method name="set_Filter(NUnit.Framework.Api.ITestFilter)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="NUnit.Framework.Api.ITestFilter" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IgnoredCount" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_IgnoredCount()" attrib="2182" returntype="System.Int32">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="InconclusiveCount" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_InconclusiveCount()" attrib="2182" returntype="System.Int32">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="LoadedTest" attrib="0" ptype="NUnit.Framework.Api.ITest">
+                <methods>
+                  <method name="get_LoadedTest()" attrib="2182" returntype="NUnit.Framework.Api.ITest">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="PassedCount" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_PassedCount()" attrib="2182" returntype="System.Int32">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Result" attrib="0" ptype="NUnit.Framework.Internal.TestResult">
+                <methods>
+                  <method name="get_Result()" attrib="2182" returntype="NUnit.Framework.Internal.TestResult">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_Result(NUnit.Framework.Internal.TestResult)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="NUnit.Framework.Internal.TestResult" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Suite" attrib="0" ptype="NUnit.Framework.Internal.TestSuite">
+                <methods>
+                  <method name="get_Suite()" attrib="2182" returntype="NUnit.Framework.Internal.TestSuite">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="TerminateAfterExecution" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_TerminateAfterExecution()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_TerminateAfterExecution(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="TestCount" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_TestCount()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Writer" attrib="0" ptype="System.IO.TextWriter">
+                <methods>
+                  <method name="get_Writer()" attrib="2182" returntype="System.IO.TextWriter">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_Writer(System.IO.TextWriter)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.IO.TextWriter" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Add(System.Reflection.Assembly)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="assembly" position="0" attrib="0" type="System.Reflection.Assembly" />
+                </parameters>
+              </method>
+              <method name="Add(System.Reflection.Assembly, System.Collections.Generic.IList`1[System.String])" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="assembly" position="0" attrib="0" type="System.Reflection.Assembly" />
+                  <parameter name="fixtures" position="1" attrib="0" type="System.Collections.Generic.IList`1[System.String]" />
+                </parameters>
+              </method>
+              <method name="AutoRun()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="CloseWriter()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="ExecuteOnMainThread(System.Action)" attrib="1476" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="action" position="0" attrib="0" type="System.Action" />
+                </parameters>
+              </method>
+              <method name="Load(System.Reflection.Assembly, System.Collections.IDictionary)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="assembly" position="0" attrib="0" type="System.Reflection.Assembly" />
+                  <parameter name="settings" position="1" attrib="0" type="System.Collections.IDictionary" />
+                </parameters>
+              </method>
+              <method name="Load(System.String, System.Collections.IDictionary)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="assemblyName" position="0" attrib="0" type="System.String" />
+                  <parameter name="settings" position="1" attrib="0" type="System.Collections.IDictionary" />
+                </parameters>
+              </method>
+              <method name="LoadSync()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="OpenWriter(System.String)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="Run()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Run(NUnit.Framework.Internal.Test)" attrib="134" returntype="NUnit.Framework.Internal.TestResult">
+                <parameters>
+                  <parameter name="test" position="0" attrib="0" type="NUnit.Framework.Internal.Test" />
+                </parameters>
+              </method>
+              <method name="TerminateWithSuccess()" attrib="452" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="TestFinished(NUnit.Framework.Api.ITestResult)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="r" position="0" attrib="0" type="NUnit.Framework.Api.ITestResult" />
+                </parameters>
+              </method>
+              <method name="TestOutput(NUnit.Framework.Api.TestOutput)" attrib="486" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="testOutput" position="0" attrib="0" type="NUnit.Framework.Api.TestOutput" />
+                </parameters>
+              </method>
+              <method name="TestStarted(NUnit.Framework.Api.ITest)" attrib="486" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="test" position="0" attrib="0" type="NUnit.Framework.Api.ITest" />
+                </parameters>
+              </method>
+              <method name="WriteDeviceInformation(System.IO.TextWriter)" attrib="1476" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="writer" position="0" attrib="0" type="System.IO.TextWriter" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
           <class name="TouchOptions" type="class" base="System.Object" charset="Ansi" layout="Auto">
             <fields>
               <field name="Current" attrib="22" fieldtype="MonoTouch.NUnit.UI.TouchOptions" />
@@ -496,7 +715,7 @@
               </method>
             </methods>
           </class>
-          <class name="TouchRunner" type="class" base="System.Object" charset="Ansi" layout="Auto">
+          <class name="TouchRunner" type="class" base="MonoTouch.NUnit.UI.BaseTouchRunner" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="NUnit.Framework.Api.ITestListener" />
             </interfaces>
@@ -515,37 +734,6 @@
               </constructor>
             </constructors>
             <properties>
-              <property name="AutoStart" attrib="0" ptype="System.Boolean">
-                <methods>
-                  <method name="get_AutoStart()" attrib="2182" returntype="System.Boolean">
-                    <parameters />
-                  </method>
-                  <method name="set_AutoStart(System.Boolean)" attrib="2182" returntype="System.Void">
-                    <parameters>
-                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
-                    </parameters>
-                  </method>
-                </methods>
-              </property>
-              <property name="Filter" attrib="0" ptype="NUnit.Framework.Api.ITestFilter">
-                <methods>
-                  <method name="get_Filter()" attrib="2182" returntype="NUnit.Framework.Api.ITestFilter">
-                    <parameters />
-                  </method>
-                  <method name="set_Filter(NUnit.Framework.Api.ITestFilter)" attrib="2182" returntype="System.Void">
-                    <parameters>
-                      <parameter name="value" position="0" attrib="0" type="NUnit.Framework.Api.ITestFilter" />
-                    </parameters>
-                  </method>
-                </methods>
-              </property>
-              <property name="LoadedTest" attrib="0" ptype="NUnit.Framework.Api.ITest">
-                <methods>
-                  <method name="get_LoadedTest()" attrib="2182" returntype="NUnit.Framework.Api.ITest">
-                    <parameters />
-                  </method>
-                </methods>
-              </property>
               <property name="NavigationController" attrib="0" ptype="UIKit.UINavigationController">
                 <attributes>
                   <attribute name="System.CLSCompliantAttribute">
@@ -560,69 +748,12 @@
                   </method>
                 </methods>
               </property>
-              <property name="Result" attrib="0" ptype="NUnit.Framework.Internal.TestResult">
-                <methods>
-                  <method name="get_Result()" attrib="2182" returntype="NUnit.Framework.Internal.TestResult">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
-                    <parameters />
-                  </method>
-                  <method name="set_Result(NUnit.Framework.Internal.TestResult)" attrib="2182" returntype="System.Void">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
-                    <parameters>
-                      <parameter name="value" position="0" attrib="0" type="NUnit.Framework.Internal.TestResult" />
-                    </parameters>
-                  </method>
-                </methods>
-              </property>
-              <property name="TerminateAfterExecution" attrib="0" ptype="System.Boolean">
-                <methods>
-                  <method name="get_TerminateAfterExecution()" attrib="2182" returntype="System.Boolean">
-                    <parameters />
-                  </method>
-                  <method name="set_TerminateAfterExecution(System.Boolean)" attrib="2182" returntype="System.Void">
-                    <parameters>
-                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
-                    </parameters>
-                  </method>
-                </methods>
-              </property>
-              <property name="Writer" attrib="0" ptype="System.IO.TextWriter">
-                <methods>
-                  <method name="get_Writer()" attrib="2182" returntype="System.IO.TextWriter">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
-                    <parameters />
-                  </method>
-                  <method name="set_Writer(System.IO.TextWriter)" attrib="2182" returntype="System.Void">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
-                    <parameters>
-                      <parameter name="value" position="0" attrib="0" type="System.IO.TextWriter" />
-                    </parameters>
-                  </method>
-                </methods>
-              </property>
             </properties>
             <methods>
-              <method name="Add(System.Reflection.Assembly)" attrib="134" returntype="System.Void">
+              <method name="ExecuteOnMainThread(System.Action)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="assembly" position="0" attrib="0" type="System.Reflection.Assembly" />
+                  <parameter name="action" position="0" attrib="0" type="System.Action" />
                 </parameters>
-              </method>
-              <method name="Add(System.Reflection.Assembly, System.Collections.Generic.IList`1[System.String])" attrib="134" returntype="System.Void">
-                <parameters>
-                  <parameter name="assembly" position="0" attrib="0" type="System.Reflection.Assembly" />
-                  <parameter name="fixtures" position="1" attrib="0" type="System.Collections.Generic.IList`1[System.String]" />
-                </parameters>
-              </method>
-              <method name="CloseWriter()" attrib="134" returntype="System.Void">
-                <parameters />
               </method>
               <method name="GetViewController()" attrib="134" returntype="UIKit.UIViewController">
                 <attributes>
@@ -634,46 +765,22 @@
                 </attributes>
                 <parameters />
               </method>
-              <method name="Load(System.Reflection.Assembly, System.Collections.IDictionary)" attrib="134" returntype="System.Boolean">
-                <parameters>
-                  <parameter name="assembly" position="0" attrib="0" type="System.Reflection.Assembly" />
-                  <parameter name="settings" position="1" attrib="0" type="System.Collections.IDictionary" />
-                </parameters>
-              </method>
-              <method name="Load(System.String, System.Collections.IDictionary)" attrib="134" returntype="System.Boolean">
-                <parameters>
-                  <parameter name="assemblyName" position="0" attrib="0" type="System.String" />
-                  <parameter name="settings" position="1" attrib="0" type="System.Collections.IDictionary" />
-                </parameters>
-              </method>
-              <method name="OpenWriter(System.String)" attrib="134" returntype="System.Boolean">
-                <parameters>
-                  <parameter name="message" position="0" attrib="0" type="System.String" />
-                </parameters>
-              </method>
-              <method name="Run(NUnit.Framework.Internal.Test)" attrib="134" returntype="NUnit.Framework.Internal.TestResult">
-                <parameters>
-                  <parameter name="test" position="0" attrib="0" type="NUnit.Framework.Internal.Test" />
-                </parameters>
-              </method>
               <method name="Show(NUnit.Framework.Internal.TestSuite)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="suite" position="0" attrib="0" type="NUnit.Framework.Internal.TestSuite" />
                 </parameters>
               </method>
-              <method name="TestFinished(NUnit.Framework.Api.ITestResult)" attrib="486" virtual="true" returntype="System.Void">
+              <method name="TerminateWithSuccess()" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="TestFinished(NUnit.Framework.Api.ITestResult)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
                 <parameters>
                   <parameter name="r" position="0" attrib="0" type="NUnit.Framework.Api.ITestResult" />
                 </parameters>
               </method>
-              <method name="TestOutput(NUnit.Framework.Api.TestOutput)" attrib="486" virtual="true" returntype="System.Void">
+              <method name="WriteDeviceInformation(System.IO.TextWriter)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="testOutput" position="0" attrib="0" type="NUnit.Framework.Api.TestOutput" />
-                </parameters>
-              </method>
-              <method name="TestStarted(NUnit.Framework.Api.ITest)" attrib="486" virtual="true" returntype="System.Void">
-                <parameters>
-                  <parameter name="test" position="0" attrib="0" type="NUnit.Framework.Api.ITest" />
+                  <parameter name="writer" position="0" attrib="0" type="System.IO.TextWriter" />
                 </parameters>
               </method>
             </methods>
@@ -1935,7 +2042,6 @@
           </class>
           <class name="AssertionException" type="class" base="System.Exception" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -2263,7 +2369,6 @@
             </attributes>
             <interfaces>
               <interface name="NUnit.Framework.Internal.IApplyToTest" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <fields>
               <field name="categoryName" attrib="4" fieldtype="System.String" />
@@ -2307,7 +2412,6 @@
             </attributes>
             <interfaces>
               <interface name="NUnit.Framework.Internal.IApplyToTest" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
@@ -2346,7 +2450,6 @@
             </attributes>
             <interfaces>
               <interface name="NUnit.Framework.Internal.IApplyToTest" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
@@ -2377,9 +2480,6 @@
             </methods>
           </class>
           <class name="DataAttribute" type="class" base="NUnit.Framework.NUnitAttribute" abstract="true" charset="Ansi" layout="Auto">
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -2396,9 +2496,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -2415,9 +2512,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -2434,9 +2528,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -2455,7 +2546,6 @@
             </attributes>
             <interfaces>
               <interface name="NUnit.Framework.Internal.IApplyToTest" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
@@ -2475,9 +2565,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -2599,7 +2686,6 @@
             </attributes>
             <interfaces>
               <interface name="NUnit.Framework.Internal.IApplyToTest" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
@@ -2764,7 +2850,6 @@
             </attributes>
             <interfaces>
               <interface name="NUnit.Framework.Internal.IApplyToTest" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
@@ -2786,7 +2871,6 @@
           </class>
           <class name="IgnoreException" type="class" base="System.Exception" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -2810,9 +2894,6 @@
             </constructors>
           </class>
           <class name="IncludeExcludeAttribute" type="class" base="NUnit.Framework.NUnitAttribute" abstract="true" charset="Ansi" layout="Auto">
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -2864,7 +2945,6 @@
           </class>
           <class name="InconclusiveException" type="class" base="System.Exception" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -3167,7 +3247,6 @@
             <interfaces>
               <interface name="NUnit.Framework.Internal.Commands.ICommandDecorator" />
               <interface name="NUnit.Framework.Internal.IApplyToTest" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <constructors>
               <constructor name=".ctor(System.Int32)" attrib="6278">
@@ -3191,9 +3270,6 @@
             </fields>
           </class>
           <class name="NUnitAttribute" type="class" base="System.Attribute" abstract="true" charset="Ansi" layout="Auto">
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -3212,7 +3288,6 @@
             </attributes>
             <interfaces>
               <interface name="NUnit.Framework.Internal.IApplyToTest" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
@@ -3232,7 +3307,6 @@
             </attributes>
             <interfaces>
               <interface name="NUnit.Framework.Internal.IApplyToTest" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
@@ -3262,9 +3336,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -3281,9 +3352,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -3302,7 +3370,6 @@
             </attributes>
             <interfaces>
               <interface name="NUnit.Framework.Internal.IApplyToTest" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6276">
@@ -3352,7 +3419,6 @@
           <class name="RandomAttribute" type="class" base="NUnit.Framework.ValuesAttribute" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="NUnit.Framework.Api.IParameterDataSource" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <constructors>
               <constructor name=".ctor(System.Int32)" attrib="6278">
@@ -3386,7 +3452,6 @@
           <class name="RangeAttribute" type="class" base="NUnit.Framework.ValuesAttribute" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="NUnit.Framework.Api.IParameterDataSource" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <constructors>
               <constructor name=".ctor(System.Int32, System.Int32)" attrib="6278">
@@ -3437,7 +3502,6 @@
             </attributes>
             <interfaces>
               <interface name="NUnit.Framework.Internal.IApplyToTest" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
@@ -3458,7 +3522,6 @@
             <interfaces>
               <interface name="NUnit.Framework.Internal.IApplyToContext" />
               <interface name="NUnit.Framework.Internal.IApplyToTest" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
@@ -3481,7 +3544,6 @@
             <interfaces>
               <interface name="NUnit.Framework.Internal.IApplyToContext" />
               <interface name="NUnit.Framework.Internal.IApplyToTest" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
@@ -3501,9 +3563,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -3522,7 +3581,6 @@
           </class>
           <class name="SuccessException" type="class" base="System.Exception" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -3555,9 +3613,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -3576,7 +3631,6 @@
             </attributes>
             <interfaces>
               <interface name="NUnit.Framework.Internal.IApplyToTest" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
@@ -3618,7 +3672,6 @@
             <interfaces>
               <interface name="NUnit.Framework.Api.ITestCaseData" />
               <interface name="NUnit.Framework.Api.ITestCaseSource" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <constructors>
               <constructor name=".ctor(System.Object)" attrib="6278">
@@ -4082,7 +4135,6 @@
             </attributes>
             <interfaces>
               <interface name="NUnit.Framework.Api.ITestCaseSource" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
@@ -4299,7 +4351,6 @@
             </attributes>
             <interfaces>
               <interface name="NUnit.Framework.Internal.IApplyToTest" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
@@ -4409,9 +4460,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -4428,9 +4476,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -4447,9 +4492,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -4544,7 +4586,6 @@
             <interfaces>
               <interface name="NUnit.Framework.Internal.IApplyToContext" />
               <interface name="NUnit.Framework.Internal.IApplyToTest" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <constructors>
               <constructor name=".ctor(System.Int32)" attrib="6278">
@@ -4566,7 +4607,6 @@
             </attributes>
             <interfaces>
               <interface name="NUnit.Framework.Api.IParameterDataSource" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
@@ -4617,7 +4657,6 @@
             </attributes>
             <interfaces>
               <interface name="NUnit.Framework.Api.IParameterDataSource" />
-              <interface name="System.Runtime.InteropServices._Attribute" />
             </interfaces>
             <fields>
               <field name="data" attrib="4" fieldtype="System.Object[]" />
@@ -9813,7 +9852,6 @@
           </class>
           <class name="InvalidTestFixtureException" type="class" base="System.Exception" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>
@@ -9861,7 +9899,6 @@
           </class>
           <class name="NUnitException" type="class" base="System.Exception" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
-              <interface name="System.Runtime.InteropServices._Exception" />
               <interface name="System.Runtime.Serialization.ISerializable" />
             </interfaces>
             <constructors>

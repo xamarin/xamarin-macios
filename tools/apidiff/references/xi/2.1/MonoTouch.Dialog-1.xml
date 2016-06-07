@@ -71,9 +71,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <fields>
               <field name="Alignment" attrib="6" fieldtype="MonoTouch.UIKit.UITextAlignment" />
             </fields>
@@ -384,9 +381,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <fields>
               <field name="Caption" attrib="6" fieldtype="System.String" />
             </fields>
@@ -407,9 +401,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -468,9 +459,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -1072,9 +1060,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <fields>
               <field name="AutocapitalizationType" attrib="6" fieldtype="MonoTouch.UIKit.UITextAutocapitalizationType" />
               <field name="AutocorrectionType" attrib="6" fieldtype="MonoTouch.UIKit.UITextAutocorrectionType" />
@@ -1514,9 +1499,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -1742,6 +1724,24 @@
               </constructor>
             </constructors>
             <properties>
+              <property name="DateKind" attrib="0" ptype="System.DateTimeKind">
+                <methods>
+                  <method name="get_DateKind()" attrib="2198" static="true" returntype="System.DateTimeKind">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_DateKind(System.DateTimeKind)" attrib="2198" static="true" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.DateTimeKind" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
               <property name="Item" attrib="0" ptype="MonoTouch.Dialog.Element" params="System.String">
                 <methods>
                   <method name="get_Item(System.String)" attrib="2182" returntype="MonoTouch.Dialog.Element">
@@ -2127,9 +2127,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -2183,9 +2180,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <fields>
               <field name="Method" attrib="6" fieldtype="System.String" />
             </fields>
@@ -2283,9 +2277,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
@@ -2367,9 +2358,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <fields>
               <field name="Target" attrib="6" fieldtype="System.String" />
             </fields>
@@ -2382,9 +2370,6 @@
             </constructors>
           </class>
           <class name="RangeAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <fields>
               <field name="High" attrib="6" fieldtype="System.Single" />
               <field name="Low" attrib="6" fieldtype="System.Single" />
@@ -2917,9 +2902,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <fields>
               <field name="Caption" attrib="6" fieldtype="System.String" />
               <field name="Footer" attrib="6" fieldtype="System.String" />
@@ -2950,9 +2932,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
@@ -3187,9 +3166,6 @@
                 </properties>
               </attribute>
             </attributes>
-            <interfaces>
-              <interface name="System.Runtime.InteropServices._Attribute" />
-            </interfaces>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />

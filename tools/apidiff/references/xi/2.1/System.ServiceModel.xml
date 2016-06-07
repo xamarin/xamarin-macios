@@ -296,7 +296,6 @@
                 </parameters>
               </method>
               <method name="Remove(T)" attrib="486" virtual="true" returntype="System.Boolean">
-                <attributes />
                 <parameters>
                   <parameter name="item" position="0" attrib="0" type="T" />
                 </parameters>

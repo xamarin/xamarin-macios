@@ -562,13 +562,6 @@
                 </parameters>
               </method>
               <method name="WriteContentTo(System.Xml.XmlWriter)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
-                <attributes>
-                  <attribute name="System.Runtime.TargetedPatchingOptOutAttribute">
-                    <properties>
-                      <property name="Reason" value="Performance critical to inline across NGen image boundaries" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <parameters>
                   <parameter name="w" position="0" attrib="0" type="System.Xml.XmlWriter" />
                 </parameters>
@@ -714,6 +707,13 @@
                   </method>
                 </methods>
               </property>
+              <property name="PreviousText" attrib="0" ptype="System.Xml.XmlNode">
+                <methods>
+                  <method name="get_PreviousText()" attrib="2246" virtual="true" is-override="true" returntype="System.Xml.XmlNode">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
             </properties>
             <methods>
               <method name="CloneNode(System.Boolean)" attrib="198" virtual="true" is-override="true" returntype="System.Xml.XmlNode">
@@ -751,13 +751,6 @@
               <property name="Data" attrib="0" ptype="System.String">
                 <methods>
                   <method name="get_Data()" attrib="2502" virtual="true" returntype="System.String">
-                    <attributes>
-                      <attribute name="System.Runtime.TargetedPatchingOptOutAttribute">
-                        <properties>
-                          <property name="Reason" value="Performance critical to inline across NGen image boundaries" />
-                        </properties>
-                      </attribute>
-                    </attributes>
                     <parameters />
                   </method>
                   <method name="set_Data(System.String)" attrib="2502" virtual="true" returntype="System.Void">
@@ -1576,13 +1569,6 @@
                 </parameters>
               </method>
               <method name="CreateAttribute(System.String, System.String)" attrib="134" returntype="System.Xml.XmlAttribute">
-                <attributes>
-                  <attribute name="System.Runtime.TargetedPatchingOptOutAttribute">
-                    <properties>
-                      <property name="Reason" value="Performance critical to inline across NGen image boundaries" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <parameters>
                   <parameter name="qualifiedName" position="0" attrib="0" type="System.String" />
                   <parameter name="namespaceURI" position="1" attrib="0" type="System.String" />
@@ -2588,13 +2574,6 @@
               <property name="Count" attrib="0" ptype="System.Int32">
                 <methods>
                   <method name="get_Count()" attrib="2502" virtual="true" returntype="System.Int32">
-                    <attributes>
-                      <attribute name="System.Runtime.TargetedPatchingOptOutAttribute">
-                        <properties>
-                          <property name="Reason" value="Performance critical to inline across NGen image boundaries" />
-                        </properties>
-                      </attribute>
-                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -2765,13 +2744,6 @@
               <property name="FirstChild" attrib="0" ptype="System.Xml.XmlNode">
                 <methods>
                   <method name="get_FirstChild()" attrib="2502" virtual="true" returntype="System.Xml.XmlNode">
-                    <attributes>
-                      <attribute name="System.Runtime.TargetedPatchingOptOutAttribute">
-                        <properties>
-                          <property name="Reason" value="Performance critical to inline across NGen image boundaries" />
-                        </properties>
-                      </attribute>
-                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -2810,13 +2782,6 @@
               <property name="IsReadOnly" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_IsReadOnly()" attrib="2502" virtual="true" returntype="System.Boolean">
-                    <attributes>
-                      <attribute name="System.Runtime.TargetedPatchingOptOutAttribute">
-                        <properties>
-                          <property name="Reason" value="Performance critical to inline across NGen image boundaries" />
-                        </properties>
-                      </attribute>
-                    </attributes>
                     <parameters />
                   </method>
                 </methods>
@@ -2922,6 +2887,13 @@
                   </method>
                 </methods>
               </property>
+              <property name="PreviousText" attrib="0" ptype="System.Xml.XmlNode">
+                <methods>
+                  <method name="get_PreviousText()" attrib="2502" virtual="true" returntype="System.Xml.XmlNode">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
               <property name="SchemaInfo" attrib="0" ptype="System.Xml.Schema.IXmlSchemaInfo">
                 <methods>
                   <method name="get_SchemaInfo()" attrib="2502" virtual="true" returntype="System.Xml.Schema.IXmlSchemaInfo">
@@ -2993,13 +2965,6 @@
                 </parameters>
               </method>
               <method name="RemoveAll()" attrib="454" virtual="true" returntype="System.Void">
-                <attributes>
-                  <attribute name="System.Runtime.TargetedPatchingOptOutAttribute">
-                    <properties>
-                      <property name="Reason" value="Performance critical to inline across NGen image boundaries" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <parameters />
               </method>
               <method name="RemoveChild(System.Xml.XmlNode)" attrib="454" virtual="true" returntype="System.Xml.XmlNode">
@@ -5137,6 +5102,13 @@
                   </method>
                 </methods>
               </property>
+              <property name="PreviousText" attrib="0" ptype="System.Xml.XmlNode">
+                <methods>
+                  <method name="get_PreviousText()" attrib="2246" virtual="true" is-override="true" returntype="System.Xml.XmlNode">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
               <property name="Value" attrib="0" ptype="System.String">
                 <methods>
                   <method name="get_Value()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
@@ -5219,6 +5191,13 @@
               <property name="ParentNode" attrib="0" ptype="System.Xml.XmlNode">
                 <methods>
                   <method name="get_ParentNode()" attrib="2246" virtual="true" is-override="true" returntype="System.Xml.XmlNode">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="PreviousText" attrib="0" ptype="System.Xml.XmlNode">
+                <methods>
+                  <method name="get_PreviousText()" attrib="2246" virtual="true" is-override="true" returntype="System.Xml.XmlNode">
                     <parameters />
                   </method>
                 </methods>
@@ -6501,6 +6480,13 @@
                   </method>
                 </methods>
               </property>
+              <property name="PreviousText" attrib="0" ptype="System.Xml.XmlNode">
+                <methods>
+                  <method name="get_PreviousText()" attrib="2246" virtual="true" is-override="true" returntype="System.Xml.XmlNode">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
               <property name="Value" attrib="0" ptype="System.String">
                 <methods>
                   <method name="get_Value()" attrib="2246" virtual="true" is-override="true" returntype="System.String">
@@ -6656,13 +6642,6 @@
                 </parameters>
               </method>
               <method name="WriteAttributeString(System.String, System.String, System.String)" attrib="134" returntype="System.Void">
-                <attributes>
-                  <attribute name="System.Runtime.TargetedPatchingOptOutAttribute">
-                    <properties>
-                      <property name="Reason" value="Performance critical to inline across NGen image boundaries" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <parameters>
                   <parameter name="localName" position="0" attrib="0" type="System.String" />
                   <parameter name="ns" position="1" attrib="0" type="System.String" />
@@ -6678,13 +6657,6 @@
                 </parameters>
               </method>
               <method name="WriteAttributeStringAsync(System.String, System.String, System.String, System.String)" attrib="134" returntype="System.Threading.Tasks.Task">
-                <attributes>
-                  <attribute name="System.Runtime.TargetedPatchingOptOutAttribute">
-                    <properties>
-                      <property name="Reason" value="Performance critical to inline across NGen image boundaries" />
-                    </properties>
-                  </attribute>
-                </attributes>
                 <parameters>
                   <parameter name="prefix" position="0" attrib="0" type="System.String" />
                   <parameter name="localName" position="1" attrib="0" type="System.String" />
