@@ -166,7 +166,6 @@ $(2)_CONFIGURE_FLAGS = \
 	--disable-shared-handles \
 	--disable-nls \
 	--disable-iconv \
-	--enable-native-types \
 	--disable-mcs-build \
 	--disable-boehm \
 	$(XAMARIN_CONFIGURE_FLAGS) \
@@ -817,7 +816,6 @@ $(eval SIM$(2)_CONFIGURE_FLAGS=	--host=$(1)-apple-darwin10 \
 			--disable-boehm \
 			--disable-executables \
 			--disable-visibility-hidden	\
-			--enable-native-types \
 			$(XAMARIN_CONFIGURE_FLAGS) \
 			)
 
@@ -958,7 +956,6 @@ WATCHSIMULATOR_CONFIGURE_FLAGS =                \
 	--disable-iconv                             \
 	--disable-shared-handles                    \
 	--disable-visibility-hidden	                \
-	--enable-native-types                       \
 	$(XAMARIN_CONFIGURE_FLAGS)         \
 
 # FIXME: remove --with-checked-build=yes when we've stabilized a bit.
@@ -1097,7 +1094,6 @@ TVSIMULATOR_CONFIGURE_FLAGS =                         \
 	--disable-iconv                                   \
 	--disable-shared-handles                          \
 	--disable-visibility-hidden	                      \
-	--enable-native-types                             \
 	$(XAMARIN_CONFIGURE_FLAGS)               \
 
 TVSIMULATOR_ACVARS =  \
@@ -1241,8 +1237,6 @@ $(eval $(2)_CONFIGURE_FLAGS=--build=i386-apple-darwin10 \
 			--disable-shared-handles	\
 			--disable-visibility-hidden	\
 			--disable-boehm \
-			--enable-native-types \
-			--enable-gsharedvt \
 			--enable-dtrace=no \
 			$(IOS_BITCODE_CONFIGURE_FLAGS) \
 			$(XAMARIN_CONFIGURE_FLAGS) \
@@ -1474,8 +1468,6 @@ WATCHOS_CONFIGURE_FLAGS =                        \
 	--disable-iconv                              \
 	--disable-shared-handles                     \
 	--disable-visibility-hidden	                 \
-	--enable-native-types                        \
-	--enable-gsharedvt                           \
 	$(XAMARIN_CONFIGURE_FLAGS)          \
 	$(BITCODE_CONFIGURE_FLAGS)
 
@@ -1649,8 +1641,6 @@ TVOS_CONFIGURE_FLAGS =                           \
 	--disable-iconv                              \
 	--disable-shared-handles                     \
 	--disable-visibility-hidden	                 \
-	--enable-native-types                        \
-	--enable-gsharedvt                           \
 	--enable-extension-module                    \
 	--enable-dtrace=no                           \
 	$(BITCODE_CONFIGURE_FLAGS)					 \
@@ -1891,9 +1881,7 @@ CROSS_BASE_CONFIGURE_FLAGS= \
 			--disable-iconv \
 			--disable-libraries	\
 			--enable-extension-module \
-			--enable-gsharedvt \
-			--disable-boehm \
-			--enable-native-types
+			--disable-boehm
 
 #
 # 32 bit cross compiler
@@ -2035,7 +2023,6 @@ WATCH_CROSS_CONFIGURE_FLAGS=$(CROSS_BASE_CONFIGURE_FLAGS)	\
 	--build=i386-apple-darwin10 \
 	--cache-file=../cross-watch.config.cache \
 	--target=armv7k-unknown-darwin \
-	--enable-gsharedvt \
 	--with-cooperative-gc=yes \
 	--with-cross-offsets=armv7k-apple-darwin.h
 
@@ -2101,7 +2088,6 @@ TV_CROSS_CONFIGURE_FLAGS=$(CROSS_BASE_CONFIGURE_FLAGS)	\
 	--prefix=$(BUILD_DESTDIR)/crosstv \
 	--cache-file=../crosstv.config.cache \
 	--target=aarch64-unknown-darwin \
-	--enable-gsharedvt \
 
 TV_CROSS_CONFIGURE_ENVIRONMENT = \
 	$(Q) PATH="../llvm64/usr/bin:$(PATH)" \
