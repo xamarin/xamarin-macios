@@ -2088,7 +2088,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[BaseType (typeof (NSObject))]
-	public interface NSCell : NSUserInterfaceItemIdentification, NSCoding, NSCopying, NSAccessibilityElement, NSAccessibility {
+	public interface NSCell : NSUserInterfaceItemIdentification, NSCoding, NSCopying, NSAccessibilityElement, NSAccessibility, NSObjectAccessibilityViewExtensions {
 		[Static, Export ("prefersTrackingUntilMouseUp")]
 		bool PrefersTrackingUntilMouseUp { get; }
 	
@@ -13727,7 +13727,7 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSResponder))]
 	[Dispose ("__mt_tracking_var = null;")]
-	public partial interface NSView : NSDraggingDestination, NSAnimatablePropertyContainer, NSUserInterfaceItemIdentification, NSAppearanceCustomization, NSAccessibilityElement, NSAccessibility {
+	public partial interface NSView : NSDraggingDestination, NSAnimatablePropertyContainer, NSUserInterfaceItemIdentification, NSAppearanceCustomization, NSAccessibilityElement, NSAccessibility, NSObjectAccessibilityViewExtensions {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
@@ -18941,7 +18941,7 @@ namespace XamCore.AppKit {
 	public delegate void NSWorkspaceUrlHandler (NSDictionary newUrls, NSError error);
 	
 	[BaseType (typeof (NSObject))]
-	public interface NSWorkspace {
+	public interface NSWorkspace : NSWorkspaceAccessibilityExtensions {
 		[Static]
 		[Export ("sharedWorkspace"), ThreadSafe]
 		NSWorkspace SharedWorkspace { get; }
@@ -22050,7 +22050,7 @@ namespace XamCore.AppKit {
 		NSString DisclosedRowsAttribute { get; }
 
 		[Field ("NSAccessibilityDisclosedByRowAttribute")]
-		NSString DisclosedByRowsAttribute { get; }
+		NSString DisclosedByRowAttribute { get; }
 
 		[Field ("NSAccessibilityDisclosureLevelAttribute")]
 		NSString DisclosureLevelAttribute { get; }
@@ -22804,13 +22804,11 @@ namespace XamCore.AppKit {
 		void SetAccessibilityFrame (CGRect frame);
 	}
 
-	[BaseType (typeof (NSView))]
-	[Category]
 	public interface NSObjectAccessibilityViewExtensions {
 		// Please note the neary copy in NSObjectAccessibilityCellExtensions and update there as well
 		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
 		[Export ("accessibilityAttributeNames")]
-		NSArray GetAccessibilityAttributeNames ();
+		NSArray AccessibilityAttributeNames { get; }
 
 		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
 		[Export ("accessibilityAttributeValue:")]
@@ -22826,7 +22824,7 @@ namespace XamCore.AppKit {
 
 		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
 		[Export ("accessibilityParameterizedAttributeNames")]
-		NSArray GetAccessibilityParameterizedAttributeNames ();
+		NSArray AccessibilityParameterizedAttributeNames { get; }
 
 		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
 		[Export ("accessibilityAttributeValue:forParameter:")]
@@ -22834,7 +22832,7 @@ namespace XamCore.AppKit {
 
 		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
 		[Export ("accessibilityActionNames")]
-		NSArray GetAccessibilityActionNames ();
+		NSArray AccessibilityActionNames { get; }
 
 		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
 		[Export ("accessibilityActionDescription:")]
@@ -22846,13 +22844,13 @@ namespace XamCore.AppKit {
 
 		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
 		[Export ("accessibilityIsIgnored")]
-		bool GetAccessibilityIsIgnored ();
+		bool AccessibilityIsIgnored { get; }
 
 		[Export ("accessibilityHitTest:")]
 		NSObject GetAccessibilityHitTest (CGPoint point);
 
-		[Export ("getAccessibilityFocusedUIElement")]
-		NSObject GetAccessibilityFocusedUIElement ();
+		[Export ("accessibilityFocusedUIElement")]
+		NSObject AccessibilityFocusedUIElement { get; }
 
 		[Export ("accessibilityIndexOfChild:")]
 		nuint GetAccessibilityIndexOfChild (NSObject child);
@@ -22865,85 +22863,18 @@ namespace XamCore.AppKit {
 
 		[Mac (10,9)]
 		[Export ("accessibilityNotifiesWhenDestroyed")]
-		bool GetAccessibilityNotifiesWhenDestroyed ();
-	}
-
-
-	[BaseType (typeof (NSCell))]
-	[Category]
-	public interface NSObjectAccessibilityCellExtensions {
-		// Please note the neary copy in NSObjectAccessibilityViewExtensions and update there as well
-		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
-		[Export ("accessibilityAttributeNames")]
-		NSArray GetAccessibilityAttributeNames ();
-
-		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
-		[Export ("accessibilityAttributeValue:")]
-		NSObject GetAccessibilityValue (NSString attribute);
-
-		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
-		[Export ("accessibilityIsAttributeSettable:")]
-		bool IsAccessibilityAttributeSettable (NSString attribute);
-
-		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
-		[Export ("accessibilitySetValue:forAttribute:")]
-		void SetAccessibilityValue (NSString attribute, NSObject value);
-
-		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
-		[Export ("accessibilityParameterizedAttributeNames")]
-		NSArray GetAccessibilityParameterizedAttributeNames ();
-
-		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
-		[Export ("accessibilityAttributeValue:forParameter:")]
-		NSObject GetAccessibilityValue (NSString attribute, NSObject parameter);
-
-		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
-		[Export ("accessibilityActionNames")]
-		NSArray GetAccessibilityActionNames ();
-
-		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
-		[Export ("accessibilityActionDescription:")]
-		NSString GetAccessibilityActionDescription (NSString action);
-
-		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
-		[Export ("accessibilityPerformAction:")]
-		void AccessibilityPerformAction (NSString action);
-
-		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
-		[Export ("accessibilityIsIgnored")]
-		bool GetAccessibilityIsIgnored ();
-
-		[Export ("accessibilityHitTest:")]
-		NSObject GetAccessibilityHitTest (CGPoint point);
-
-		[Export ("getAccessibilityFocusedUIElement")]
-		NSObject GetAccessibilityFocusedUIElement ();
-
-		[Export ("accessibilityIndexOfChild:")]
-		nuint GetAccessibilityIndexOfChild (NSObject child);
-
-		[Export ("accessibilityArrayAttributeCount:")]
-		nuint GetAccessibilityArrayAttributeCount (NSString attribute);
-
-		[Export ("accessibilityArrayAttributeValues:index:maxCount:")]
-		NSObject[] GetAccessibilityArrayAttributeValues (NSString attribute, nuint index, nuint maxCount);
-
-		[Mac (10,9)]
-		[Export ("accessibilityNotifiesWhenDestroyed")]
-		bool GetAccessibilityNotifiesWhenDestroyed ();
+		bool AccessibilityNotifiesWhenDestroyed { get; }
 	}
 
 	[Mac (10, 10)]
-	[BaseType (typeof (NSWorkspace))]
-	[Category]
 	public interface NSWorkspaceAccessibilityExtensions {
-		[Export ("accessibilityDisplayShouldIncreaseContract")]
-		bool GetAccessibilityDisplayShouldIncreaseContract ();
+		[Export ("accessibilityDisplayShouldIncreaseContrast")]
+		bool AccessibilityDisplayShouldIncreaseContrast { get; }
 
 		[Export ("accessibilityDisplayShouldDifferentiateWithoutColor")]
-		bool GetAccessibilityDisplayShouldDifferentiateWithoutColor ();
+		bool AccessibilityDisplayShouldDifferentiateWithoutColor { get; }
 
 		[Export ("accessibilityDisplayShouldReduceTransparency")]
-		bool GetAccessibilityDisplayShouldReduceTransparency ();
+		bool AccessibilityDisplayShouldReduceTransparency { get; }
 	}
 }
