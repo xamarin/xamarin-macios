@@ -245,8 +245,13 @@ namespace xharness
 			}
 		}
 
+		bool simulator_prepared;
 		public void PrepareSimulator ()
 		{
+			if (simulator_prepared)
+				return;
+			simulator_prepared = true;
+
 			if (SkipSimulatorSetup) {
 				AgreeToPrompts (false);
 				Harness.Log (0, "Simulator setup skipped.");
