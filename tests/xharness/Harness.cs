@@ -155,7 +155,7 @@ namespace xharness
 
 		void AutoConfigure ()
 		{
-			var test_suites = new string [] { "monotouch-test", "dont link", "link sdk", "link all", "framework-test", "mini" };
+			var test_suites = new string [] { "monotouch-test", "framework-test", "mini" };
 			var library_projects = new string [] { "BundledResources", "EmbeddedResources", "bindings-test", "bindings-framework-test" };
 			var fsharp_test_suites = new string [] { "fsharp" };
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
@@ -171,6 +171,9 @@ namespace xharness
 			foreach (var p in bcl_suites)
 				TestProjects.Add (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + ".csproj")));
 			TestProjects.Add (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj")));
+			TestProjects.Add (Path.GetFullPath (Path.Combine (RootDirectory, "linker-ios", "dont link", "dont link.csproj")));
+			TestProjects.Add (Path.GetFullPath (Path.Combine (RootDirectory, "linker-ios", "link all", "link all.csproj")));
+			TestProjects.Add (Path.GetFullPath (Path.Combine (RootDirectory, "linker-ios", "link sdk", "link sdk.csproj")));
 			BclTests.AddRange (bcl_suites);
 
 			WatchOSContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "watchos/Container"));
