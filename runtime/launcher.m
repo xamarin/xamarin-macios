@@ -587,12 +587,12 @@ int xamarin_main (int argc, char **argv, bool is_extension)
 
 			typedef int (*extension_main)(int argc, char * argv[]);
 
-			extension_main extensionMain = (extension_main)dlsym (libExtensionHandle, "NSExtensionMain");
+			extension_main extensionMain = (extension_main) dlsym (libExtensionHandle, "NSExtensionMain");
 
 			if (extensionMain == nil)
 				exit_with_message ("Unable to load NSExtensionMain", data.basename, false);
 
-			rv =  (*extensionMain) (new_argc, new_argv);
+			rv = (*extensionMain) (new_argc, new_argv);
 			dlclose (libExtensionHandle);
 		} else {
 			rv = mono_main (new_argc, new_argv);
