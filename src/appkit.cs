@@ -2088,7 +2088,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[BaseType (typeof (NSObject))]
-	public interface NSCell : NSUserInterfaceItemIdentification, NSCoding, NSCopying, NSAccessibilityElement, NSAccessibility {
+	public interface NSCell : NSUserInterfaceItemIdentification, NSCoding, NSCopying, NSAccessibilityElement, NSAccessibility, NSObjectAccessibilityExtensions {
 		[Static, Export ("prefersTrackingUntilMouseUp")]
 		bool PrefersTrackingUntilMouseUp { get; }
 	
@@ -13727,7 +13727,7 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSResponder))]
 	[Dispose ("__mt_tracking_var = null;")]
-	public partial interface NSView : NSDraggingDestination, NSAnimatablePropertyContainer, NSUserInterfaceItemIdentification, NSAppearanceCustomization, NSAccessibilityElement, NSAccessibility {
+	public partial interface NSView : NSDraggingDestination, NSAnimatablePropertyContainer, NSUserInterfaceItemIdentification, NSAppearanceCustomization, NSAccessibilityElement, NSAccessibility, NSObjectAccessibilityExtensions {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
@@ -18941,7 +18941,7 @@ namespace XamCore.AppKit {
 	public delegate void NSWorkspaceUrlHandler (NSDictionary newUrls, NSError error);
 	
 	[BaseType (typeof (NSObject))]
-	public interface NSWorkspace {
+	public interface NSWorkspace : NSWorkspaceAccessibilityExtensions {
 		[Static]
 		[Export ("sharedWorkspace"), ThreadSafe]
 		NSWorkspace SharedWorkspace { get; }
@@ -22008,7 +22008,7 @@ namespace XamCore.AppKit {
 		NSString ColumnIndexRangeAttribute { get; }
 
 		[Mac (10, 6)]
-		[Field ("NSAccessibilityHoriztonalUnitsAttribute")]
+		[Field ("NSAccessibilityHorizontalUnitsAttribute")]
 		NSString HorizontalUnitsAttribute { get; }
 
 		[Mac (10, 6)]
@@ -22049,8 +22049,8 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityDisclosedRowsAttribute")]
 		NSString DisclosedRowsAttribute { get; }
 
-		[Field ("NSAccessibilityDisclosedByRowsAttribute")]
-		NSString DisclosedByRowsAttribute { get; }
+		[Field ("NSAccessibilityDisclosedByRowAttribute")]
+		NSString DisclosedByRowAttribute { get; }
 
 		[Field ("NSAccessibilityDisclosureLevelAttribute")]
 		NSString DisclosureLevelAttribute { get; }
@@ -22368,8 +22368,8 @@ namespace XamCore.AppKit {
 		NSString DefinitionListSubrole { get; }
 
 		[Mac (10, 7)]
-		[Field ("NSAccessibilityFullscreenButtonSubrole")]
-		NSString FullscreenButtonSubrole { get; }
+		[Field ("NSAccessibilityFullScreenButtonSubrole")]
+		NSString FullScreenButtonSubrole { get; }
 
 		[Mac (10, 9)]
 		[Field ("NSAccessibilityToggleSubrole")]
@@ -22392,8 +22392,8 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityFocusedWindowChangedNotification")]
 		NSString FocusedWindowChangedNotification { get; }
 
-		[Field ("NSAccessibilityUIElementChangedNotification")]
-		NSString UIElementChangedNotification { get; }
+		[Field ("NSAccessibilityFocusedUIElementChangedNotification")]
+		NSString UIElementFocusedChangedNotification { get; }
 
 		[Field ("NSAccessibilityApplicationActivatedNotification")]
 		NSString ApplicationActivatedNotification { get; }
@@ -22804,7 +22804,6 @@ namespace XamCore.AppKit {
 		void SetAccessibilityFrame (CGRect frame);
 	}
 
-	[Protocol, BaseType (typeof (NSObject))]
 	public interface NSObjectAccessibilityExtensions {
 		[Availability (Obsoleted = Platform.Mac_10_10, Message = "Use the NSAccessibility protocol methods instead")]
 		[Export ("accessibilityAttributeNames")]
@@ -22849,7 +22848,7 @@ namespace XamCore.AppKit {
 		[Export ("accessibilityHitTest:")]
 		NSObject GetAccessibilityHitTest (CGPoint point);
 
-		[Export ("getAccessibilityFocusedUIElement")]
+		[Export ("accessibilityFocusedUIElement")]
 		NSObject GetAccessibilityFocusedUIElement ();
 
 		[Export ("accessibilityIndexOfChild:")]
@@ -22867,10 +22866,9 @@ namespace XamCore.AppKit {
 	}
 
 	[Mac (10, 10)]
-	[Protocol, BaseType (typeof (NSWorkspace))]
 	public interface NSWorkspaceAccessibilityExtensions {
-		[Export ("accessibilityDisplayShouldIncreaseContract")]
-		bool AccessibilityDisplayShouldIncreaseContract { get; }
+		[Export ("accessibilityDisplayShouldIncreaseContrast")]
+		bool AccessibilityDisplayShouldIncreaseContrast { get; }
 
 		[Export ("accessibilityDisplayShouldDifferentiateWithoutColor")]
 		bool AccessibilityDisplayShouldDifferentiateWithoutColor { get; }
