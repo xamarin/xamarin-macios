@@ -61,6 +61,7 @@ namespace Xamarin.Linker {
 				case "Xamarin.MacDev":
 				case "Xamarin.MacDev.Tasks":
 				case "Xamarin.MacDev.Tasks.Core":
+				case "Xamarin.Analysis.Tasks":
 					// other stuff that is not part of the SDK but shipped in the same 2.1 directory
 					if (path != ClassicPath)
 						Assert.Fail (aname);
