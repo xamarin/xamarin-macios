@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "monotouch-test", "monotouch-test\monotouch-test.csproj", "{AC6D070F-2ED4-4701-B701-81915B931D1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dont link", "dont link\dont link.csproj", "{208744BD-504E-47D7-9A98-1CF02454A6DA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dont link", "linker-ios\dont link\dont link.csproj", "{208744BD-504E-47D7-9A98-1CF02454A6DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link sdk", "link sdk\link sdk.csproj", "{C47F8F72-A7CA-4149-AA7D-BC4814803EF3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link sdk", "linker-ios\link sdk\link sdk.csproj", "{C47F8F72-A7CA-4149-AA7D-BC4814803EF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link all", "link all\link all.csproj", "{370CC763-EDC3-41DA-A21A-D4C82CABEFE4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "link all", "linker-ios\link all\link all.csproj", "{370CC763-EDC3-41DA-A21A-D4C82CABEFE4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mtouch", "mtouch\mtouch.csproj", "{9A1177F5-16E6-45DE-AA69-DC9924EC39B8}"
 EndProject
