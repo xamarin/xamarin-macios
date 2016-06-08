@@ -43,16 +43,51 @@ namespace XamCore.Security.Tls
 			Complete = false;
 		}
 
+		public override string ToString ()
+		{
+			return string.Format ("[BufferOffsetSize: {0} {1}]", Offset, Size);
+		}
+	}
+
+	class BufferOffsetSize2 : BufferOffsetSize
+	{
+		public readonly int InitialSize;
+
+		public BufferOffsetSize2 (int size)
+			: base (new byte [size], 0, 0)
+		{
+			InitialSize = size;
+		}
+
 		public void Reset ()
 		{
 			Offset = Size = 0;
 			TotalBytes = 0;
+			Buffer = new byte [InitialSize];
 			Complete = false;
 		}
 
-		public override string ToString ()
+		public void MakeRoom (int size)
 		{
-			return string.Format ("[BufferOffsetSize: {0} {1}]", Offset, Size);
+			if (Remaining >= size)
+				return;
+
+			int missing = size - Remaining;
+			if (Offset == 0 && Size == 0) {
+				Buffer = new byte [size];
+				return;
+			}
+
+			var buffer = new byte [Buffer.Length + missing];
+			Buffer.CopyTo (buffer, 0);
+			Buffer = buffer;
+		}
+
+		public void AppendData (byte[] buffer, int offset, int size)
+		{
+			MakeRoom (size);
+			System.Buffer.BlockCopy (buffer, offset, Buffer, EndOffset, size);
+			Size += size;
 		}
 	}
 
@@ -79,6 +114,9 @@ namespace XamCore.Security.Tls
 		AsyncOperation Operation;
 		int Status;
 
+		public readonly int ID = ++next_id;
+		static int next_id;
+
 		public readonly LazyAsyncResult UserAsyncResult;
 
 		public AsyncProtocolRequest (MobileAuthenticatedStream parent, LazyAsyncResult lazyResult, BufferOffsetSize userBuffer = null)
@@ -98,16 +136,28 @@ namespace XamCore.Security.Tls
 			return false;
 		}
 
+		[SD.Conditional ("MARTIN_DEBUG")]
+		protected void Debug (string message, params object[] args)
+		{
+			Parent.Debug ("AsyncProtocolRequest({0}:{1}): {2}", Parent.ID, ID, string.Format (message, args));
+		}
+
 		internal void RequestRead (int size)
 		{
 			var oldStatus = (AsyncOperationStatus)Interlocked.CompareExchange (ref Status, (int)AsyncOperationStatus.WantRead, (int)AsyncOperationStatus.Running);
-			Parent.Debug ("RequestRead: {0} {1}", oldStatus, size);
+			Debug ("RequestRead: {0} {1}", oldStatus, size);
 			if (oldStatus == AsyncOperationStatus.Running)
 				RequestedSize = size;
 			else if (oldStatus == AsyncOperationStatus.WantRead)
 				RequestedSize += size;
 			else if (oldStatus != AsyncOperationStatus.WantWrite)
 				throw new InvalidOperationException ();
+		}
+
+		internal void ResetRead ()
+		{
+			var oldStatus = (AsyncOperationStatus)Interlocked.CompareExchange (ref Status, (int)AsyncOperationStatus.Complete, (int)AsyncOperationStatus.WantRead);
+			Debug ("ResetRead: {0} {1}", oldStatus, Status);
 		}
 
 		internal void RequestWrite ()
@@ -121,6 +171,7 @@ namespace XamCore.Security.Tls
 
 		internal void StartOperation (AsyncOperation operation)
 		{
+			Debug ("Start Operation: {0} {1}", Status, operation);
 			if (Interlocked.CompareExchange (ref Status, (int)AsyncOperationStatus.Initialize, (int)AsyncOperationStatus.NotStarted) != (int)AsyncOperationStatus.NotStarted)
 				throw new InvalidOperationException ();
 
@@ -154,12 +205,12 @@ namespace XamCore.Security.Tls
 			do {
 				status = (AsyncOperationStatus)Interlocked.Exchange (ref Status, (int)AsyncOperationStatus.Running);
 
-				Parent.Debug ("ProcessOperation: {0}", status);
+				Debug ("ProcessOperation: {0}", status);
 
 				status = ProcessOperation (status);
 
 				var oldStatus = (AsyncOperationStatus)Interlocked.CompareExchange (ref Status, (int)status, (int)AsyncOperationStatus.Running);
-				Parent.Debug ("ProcessOperation done: {0} -> {1}", oldStatus, status);
+				Debug ("ProcessOperation done: {0} -> {1}", oldStatus, status);
 
 				if (oldStatus != AsyncOperationStatus.Running) {
 					if (status == oldStatus || status == AsyncOperationStatus.Continue || status == AsyncOperationStatus.Complete)
@@ -178,9 +229,9 @@ namespace XamCore.Security.Tls
 				else if (RequestedSize == 0)
 					return AsyncOperationStatus.Continue;
 
-				Parent.Debug ("ProcessOperation - read inner: {0}", RequestedSize);
+				Debug ("ProcessOperation - read inner: {0}", RequestedSize);
 				var ret = Parent.InnerRead (RequestedSize);
-				Parent.Debug ("ProcessOperation - read inner done: {0} - {1}", RequestedSize, ret);
+				Debug ("ProcessOperation - read inner done: {0} - {1}", RequestedSize, ret);
 
 				if (ret < 0)
 					return AsyncOperationStatus.ReadDone;
@@ -195,14 +246,14 @@ namespace XamCore.Security.Tls
 				Parent.InnerWrite ();
 				return AsyncOperationStatus.Continue;
 			} else if (status == AsyncOperationStatus.Initialize || status == AsyncOperationStatus.Continue) {
-				Parent.Debug ("ProcessOperation - continue");
+				Debug ("ProcessOperation - continue");
 				status = Operation (this, status);
-				Parent.Debug ("ProcessOperation - continue done: {0}", status);
+				Debug ("ProcessOperation - continue done: {0}", status);
 				return status;
 			} else if (status == AsyncOperationStatus.ReadDone) {
-				Parent.Debug ("ProcessOperation - read done");
+				Debug ("ProcessOperation - read done");
 				status = Operation (this, status);
-				Parent.Debug ("ProcessOperation - read done: {0}", status);
+				Debug ("ProcessOperation - read done: {0}", status);
 				return status;
 			}
 
@@ -211,4 +262,3 @@ namespace XamCore.Security.Tls
 	}
 }
 #endif
-

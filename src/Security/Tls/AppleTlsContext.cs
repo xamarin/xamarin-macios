@@ -67,8 +67,6 @@ namespace XamCore.Security.Tls
 		bool closedGraceful;
 		int pendingIO;
 
-		byte[] readBuffer;
-		byte[] writeBuffer;
 		Exception lastException;
 
 		public AppleTlsContext (
@@ -91,10 +89,6 @@ namespace XamCore.Security.Tls
 			connectionId = GCHandle.ToIntPtr (handle);
 			readFunc = NativeReadCallback;
 			writeFunc = NativeWriteCallback;
-
-			// a bit higher than the default maximum fragment size
-			readBuffer = new byte [16384];
-			writeBuffer = new byte [16384];
 
 			certificateValidator = CertificateValidationHelper.GetDefaultValidator (settings, provider);
 
@@ -135,7 +129,7 @@ namespace XamCore.Security.Tls
 		[SD.Conditional ("MARTIN_DEBUG")]
 		protected void Debug (string message, params object[] args)
 		{
-			Console.Error.WriteLine ("MobileTlsStream: {0}", string.Format (message, args));
+			Console.Error.WriteLine ("MobileTlsStream({0}): {1}", parent.ID, string.Format (message, args));
 		}
 
 		void CheckStatusAndThrow (SslStatus status, params SslStatus[] acceptable)
@@ -773,23 +767,27 @@ namespace XamCore.Security.Tls
 			if (closed || disposed || parent == null)
 				return SslStatus.ClosedAbort;
 
-			// SSL state prevents multiple simultaneous reads (internal MAC would break)
-			// so it's possible to reuse a single buffer (not re-allocate one each time)
-			var len = (int)System.Math.Min (dataLength, readBuffer.Length);
-			var originalLength = (int)dataLength;
+			var len = (int)dataLength;
+			var readBuffer = new byte [len];
+
+			Debug ("NativeReadCallback: {0} {1}", dataLength, len);
 
 			bool wantMore;
 			var ret = parent.InternalRead (readBuffer, 0, len, out wantMore);
 			dataLength = ret;
+
+			Debug ("NativeReadCallback #1: {0} - {1} {2}", len, ret, wantMore);
 
 			if (ret < 0)
 				return SslStatus.ClosedAbort;
 
 			Marshal.Copy (readBuffer, 0, data, ret);
 
-			if (wantMore || len < originalLength) {
+			if (ret > 0)
+				return SslStatus.Success;
+			else if (wantMore)
 				return SslStatus.WouldBlock;
-			} else if (ret == 0) {
+			else if (ret == 0) {
 				closedGraceful = true;
 				return SslStatus.ClosedGraceful;
 			} else {
@@ -802,19 +800,18 @@ namespace XamCore.Security.Tls
 			if (closed || disposed || parent == null)
 				return SslStatus.ClosedAbort;
 
-			var len = (int)System.Math.Min (dataLength, writeBuffer.Length);
+			var len = (int)dataLength;
+			var writeBuffer = new byte [len];
+
 			Marshal.Copy (data, writeBuffer, 0, len);
 
-			bool wantMore;
-			var ret = parent.InternalWrite (writeBuffer, 0, len, out wantMore);
-			dataLength = len;
+			Debug ("NativeWriteCallback: {0}", len);
 
-			if (ret < 0)
-				return SslStatus.ClosedAbort;
-			else if (ret == 0)
-				return SslStatus.ClosedGraceful;
+			var ok = parent.InternalWrite (writeBuffer, 0, len);
 
-			return wantMore ? SslStatus.WouldBlock : SslStatus.Success;
+			Debug ("NativeWriteCallback done: {0} {1}", len, ok);
+
+			return ok ? SslStatus.Success : SslStatus.ClosedAbort;
 		}
 
 		[DllImport (Constants.SecurityLibrary)]
@@ -836,7 +833,7 @@ namespace XamCore.Security.Tls
 				fixed (byte *d = &buffer [offset])
 					status = SSLRead (Handle, d, count, out processed);
 
-				Debug ("Read done: {0} {1}", status, processed);
+				Debug ("Read done: {0} {1} {2}", status, count, processed);
 
 				if (closedGraceful && (status == SslStatus.ClosedAbort || status == SslStatus.ClosedGraceful)) {
 					/*
@@ -872,8 +869,8 @@ namespace XamCore.Security.Tls
 			lastException = null;
 
 			try {
-				nint processed;
-				SslStatus status;
+				SslStatus status = SslStatus.ClosedAbort;
+				nint processed =  -1;
 
 				fixed (byte *d = &buffer [offset])
 					status = SSLWrite (Handle, d, count, out processed);
@@ -881,6 +878,7 @@ namespace XamCore.Security.Tls
 				Debug ("Write done: {0} {1}", status, processed);
 
 				CheckStatusAndThrow (status, SslStatus.WouldBlock);
+
 				wantMore = status == SslStatus.WouldBlock;
 				return (int)processed;
 			} finally {
@@ -957,5 +955,4 @@ namespace XamCore.Security.Tls
 		#endregion
 	}
 }
-
 #endif
