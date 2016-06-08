@@ -306,5 +306,23 @@ namespace Xamarin.MMP.Tests
 				TI.BuildUnifiedExecutable (test, shouldFail: false);
 			});
 		}
+
+		[Test]
+		public void UnsafeGACResolutionOptions_AllowsWindowsBaseResolution ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir)
+				{
+					XM45 = true,
+					TestCode = "System.Console.WriteLine (typeof (System.Windows.DependencyObject));",
+					References = "<Reference Include=\"WindowsBase\" />"
+				};
+
+				TI.TestUnifiedExecutable (test, shouldFail : true);
+
+				test.CSProjConfig = "<MonoBundlingExtraArgs>--allow-unsafe-gac-resolution</MonoBundlingExtraArgs>";
+				TI.TestUnifiedExecutable (test, shouldFail : false);
+			});
+		}
 	}
 }
