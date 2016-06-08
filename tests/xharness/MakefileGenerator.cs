@@ -112,16 +112,21 @@ namespace xharness
 						allTargetNames.Add (MakeMacClassicTargetName (target, MacTargetNameType.Build));
 						allTargetCleanNames.Add (MakeMacClassicTargetName (target, MacTargetNameType.Clean));
 
+						// mdtool can only find referenced projects if the referenced
+						// projects are included in the solution. This requires us to
+						// build the solution (if it exists), not the project.
+						var slnPath = Path.ChangeExtension (target.ProjectPath, "sln");
+						var fileToBuild = File.Exists (slnPath) ? slnPath : target.ProjectPath;
 						writer.WriteTarget (MakeMacClassicTargetName (target, MacTargetNameType.Build), "$(GUI_UNIT_PATH)/bin/net_4_5/GuiUnit.exe");
-						writer.WriteLine ("\t$(Q) $(MDTOOL) build {0}", target.ProjectPath);
+						writer.WriteLine ("\t$(Q) $(MDTOOL) build {0}", fileToBuild);
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacClassicTargetName (target, MacTargetNameType.Clean), "");
-						writer.WriteLine ("\t$(Q) $(MDTOOL) build -t:clean {0}", target.ProjectPath);
+						writer.WriteLine ("\t$(Q) $(MDTOOL) build -t:clean {0}", fileToBuild);
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacClassicTargetName (target, MacTargetNameType.Exec), "");
-						writer.WriteLine ("\t$(Q) ./{0}/bin/x86/Debug/{0}.app/Contents/MacOS/{0}", make_escaped_name);
+						writer.WriteLine ("\t$(Q) {0}/bin/x86/Debug/{1}.app/Contents/MacOS/{1}", Path.GetDirectoryName (target.ProjectPath), make_escaped_name);
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacClassicTargetName (target, MacTargetNameType.Run), "");
@@ -144,7 +149,7 @@ namespace xharness
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Exec), "");
-						writer.WriteLine ("\t$(Q) ./{0}/bin/x86/Debug{1}/{0}.app/Contents/MacOS/{0}", make_escaped_name, target.Suffix);
+						writer.WriteLine ("\t$(Q) {2}/bin/x86/Debug{1}/{0}.app/Contents/MacOS/{0}", make_escaped_name, target.Suffix, Path.GetDirectoryName (target.ProjectPath));
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Run), "");

@@ -61,6 +61,11 @@ namespace xharness
 
 		public string LanguageGuid { get { return IsFSharp ? FSharpGuid : CSharpGuid; } }
 
+		protected virtual bool FixProjectReference (string name)
+		{
+			return true;
+		}
+
 		protected virtual void ProcessProject ()
 		{
 			if (SupportsBitcode) {
@@ -84,7 +89,7 @@ namespace xharness
 			foreach (var k in newProperties.Keys)
 				inputProject.SetTopLevelPropertyGroupValue (k, newProperties[k]);	
 
-			inputProject.FixProjectReferences (Suffix);
+			inputProject.FixProjectReferences (Suffix, FixProjectReference);
 			inputProject.SetAssemblyReference ("OpenTK", "OpenTK-1.0");
 			inputProject.SetProjectTypeGuids (IsBindingProject ? BindingsProjectTypeGuids : ProjectTypeGuids);
 			inputProject.SetImport ("$(MSBuildExtensionsPath)\\Xamarin\\" + (IsBindingProject ? BindingsImports : Imports));
@@ -142,6 +147,8 @@ namespace xharness
 		{
 			targetDirectory = Path.GetDirectoryName (TemplateProjectPath);
 			Name = Path.GetFileName (targetDirectory);
+			if (string.Equals (Name, "ios", StringComparison.OrdinalIgnoreCase) || string.Equals (Name, "mac", StringComparison.OrdinalIgnoreCase))
+				Name = Path.GetFileName (Path.GetDirectoryName (targetDirectory));
 
 			ProjectPath = Path.Combine (targetDirectory, Path.GetFileNameWithoutExtension (TemplateProjectPath) + ProjectFileSuffix + "." + ProjectFileExtension);
 

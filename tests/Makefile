@@ -291,6 +291,10 @@ wrench-mac-binding-project:
 	cd mac-binding-project && $(MAKE)
 	cd mac-binding-project && git clean -xfdq
 
+wrench-mac-introspection:
+	$(Q) $(MAKE) run-mac-introspection
+	$(Q) $(MAKE) clean-mac-introspection
+
 else
 wrench-mac-%:
 	@echo "Mac tests have been disabled [$@]"
