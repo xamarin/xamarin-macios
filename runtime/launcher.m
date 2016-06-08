@@ -581,7 +581,19 @@ int xamarin_main (int argc, char **argv, bool is_extension)
 		*ptr = NULL;
 
 		if (is_extension) {
-			rv = NSExtensionMain (new_argc, new_argv);
+			void * libExtensionHandle = dlopen ("/usr/lib/libextension.dylib", RTLD_LAZY);
+			if (libExtensionHandle == nil)
+				exit_with_message ("Unable to load libextension.dylib", data.basename, false);
+
+			typedef int (*extension_main)(int argc, char * argv[]);
+
+			extension_main extensionMain = (extension_main) dlsym (libExtensionHandle, "NSExtensionMain");
+
+			if (extensionMain == nil)
+				exit_with_message ("Unable to load NSExtensionMain", data.basename, false);
+
+			rv = (*extensionMain) (new_argc, new_argv);
+			dlclose (libExtensionHandle);
 		} else {
 			rv = mono_main (new_argc, new_argv);
 		}
