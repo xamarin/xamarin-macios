@@ -142,6 +142,8 @@ namespace xharness
 		{
 			targetDirectory = Path.GetDirectoryName (TemplateProjectPath);
 			Name = Path.GetFileName (targetDirectory);
+			if (string.Equals (Name, "ios", StringComparison.OrdinalIgnoreCase) || string.Equals (Name, "mac", StringComparison.OrdinalIgnoreCase))
+				Name = Path.GetFileName (Path.GetDirectoryName (targetDirectory));
 
 			ProjectPath = Path.Combine (targetDirectory, Path.GetFileNameWithoutExtension (TemplateProjectPath) + ProjectFileSuffix + "." + ProjectFileExtension);
 
