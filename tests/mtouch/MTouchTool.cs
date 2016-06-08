@@ -14,6 +14,7 @@ namespace MTouchTests
 		None,
 		BuildDev,
 		BuildSim,
+		LaunchSim,
 	}
 
 	enum MTouchLinker
@@ -65,6 +66,7 @@ namespace MTouchTests
 		public string Abi;
 		public string AppPath;
 		public string Cache;
+		public string Device; // --device
 		public MTouchLinker Linker;
 		public bool? NoFastSim;
 		public MTouchRegistrar Registrar;
@@ -133,6 +135,12 @@ namespace MTouchTests
 				if (AppPath == null)
 					throw new Exception ("No AppPath specified.");
 				sb.Append (" --sim ").Append (MTouch.Quote (AppPath));
+				break;
+			case MTouchAction.LaunchSim:
+				isDevice = false;
+				if (AppPath == null)
+					throw new Exception ("No AppPath specified.");
+				sb.Append (" --launchsim ").Append (MTouch.Quote (AppPath));
 				break;
 			default:
 				throw new NotImplementedException ();
@@ -265,6 +273,9 @@ namespace MTouchTests
 
 			if (!string.IsNullOrEmpty (Cache))
 				sb.Append (" --cache ").Append (MTouch.Quote (Cache));
+
+			if (!string.IsNullOrEmpty (Device))
+				sb.Append (" --device:").Append (MTouch.Quote (Device));
 
 			return sb.ToString ();
 		}

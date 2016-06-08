@@ -1780,38 +1780,74 @@ public class TestApp {
 		[Test]
 		public void MT1202 ()
 		{
-			Asserts.Throws<TestExecutionException> (() => ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("--launchsim /tmp --device=:vX; -sdkroot {0}", Configuration.xcode_root)), "error MT1202: Invalid simulator configuration: :vX;\n");
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.AppPath = "/tmp";
+				mtouch.Device = ":vX;";
+				Assert.AreEqual (1, mtouch.Execute (MTouchAction.LaunchSim), "launch");
+				mtouch.HasError ("MT", 1202, "Invalid simulator configuration: :vX;");
+			}
 		}
 
 		[Test]
 		public void MT1203 ()
 		{
-			Asserts.Throws<TestExecutionException> (() => ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("--launchsim /tmp --device=:v2;a -sdkroot {0}", Configuration.xcode_root)), "error MT1203: Invalid simulator specification: a\n");
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.AppPath = "/tmp";
+				mtouch.Device = ":v2;a";
+				Assert.AreEqual (1, mtouch.Execute (MTouchAction.LaunchSim), "launch");
+				mtouch.HasError ("MT", 1203, "Invalid simulator specification: a");
+			}
 		}
 
 		[Test]
 		public void MT1204 ()
 		{
-			Asserts.Throws<TestExecutionException> (() => ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("--launchsim /tmp --device=:v2; -sdkroot {0}", Configuration.xcode_root)), "error MT1204: Invalid simulator specification '': runtime not specified.\n");
-			Asserts.Throws<TestExecutionException> (() => ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("--launchsim /tmp --device=:v2;devicetype=1 -sdkroot {0}", Configuration.xcode_root)), "error MT1204: Invalid simulator specification 'devicetype=1': runtime not specified.\n");
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.AppPath = "/tmp";
+				mtouch.Device = ":v2;";
+				Assert.AreEqual (1, mtouch.Execute (MTouchAction.LaunchSim), "launch");
+				mtouch.HasError ("MT", 1204, "Invalid simulator specification '': runtime not specified.");
+			}
+
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.AppPath = "/tmp";
+				mtouch.Device = ":v2;devicetype=1";
+				Assert.AreEqual (1, mtouch.Execute (MTouchAction.LaunchSim), "launch");
+				mtouch.HasError ("MT", 1204, "Invalid simulator specification 'devicetype=1': runtime not specified.");
+			}
 		}
 
 		[Test]
 		public void MT1205 ()
 		{
-			Asserts.Throws<TestExecutionException> (() => ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("--launchsim /tmp --device=:v2;runtime=1 -sdkroot {0}", Configuration.xcode_root)), "error MT1205: Invalid simulator specification 'runtime=1': device type not specified.\n");
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.AppPath = "/tmp";
+				mtouch.Device = ":v2;runtime=1";
+				Assert.AreEqual (1, mtouch.Execute (MTouchAction.LaunchSim), "launch");
+				mtouch.HasError ("MT", 1205, "Invalid simulator specification 'runtime=1': device type not specified.");
+			}
 		}
 
 		[Test]
 		public void MT1206 ()
 		{
-			Asserts.Throws<TestExecutionException> (() => ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("--launchsim /tmp --device=:v2;runtime=1,devicetype=2 -sdkroot {0}", Configuration.xcode_root)), "error MT1206: Could not find the simulator runtime '1'.\n");
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.AppPath = "/tmp";
+				mtouch.Device = ":v2;runtime=1,devicetype=2";
+				Assert.AreEqual (1, mtouch.Execute (MTouchAction.LaunchSim), "launch");
+				mtouch.HasError ("MT", 1206, "Could not find the simulator runtime '1'.");
+			}
 		}
 
 		[Test]
 		public void MT1207 ()
 		{
-			Asserts.Throws<TestExecutionException> (() => ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("--launchsim /tmp --device=:v2;runtime=com.apple.CoreSimulator.SimRuntime.iOS-" + Configuration.sdk_version.Replace ('.', '-') + ",devicetype=2 -sdkroot {0}", Configuration.xcode_root)), "error MT1207: Could not find the simulator device type '2'.\n");
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.AppPath = "/tmp";
+				mtouch.Device = ":v2;runtime=com.apple.CoreSimulator.SimRuntime.iOS-" + Configuration.sdk_version.Replace ('.', '-') + ",devicetype=2";
+				Assert.AreEqual (1, mtouch.Execute (MTouchAction.LaunchSim), "launch");
+				mtouch.HasError ("MT", 1207, "Could not find the simulator device type '2'.");
+			}
 		}
 
 		// I don't know which --runtime values would cause MT1208, I always end up with MT1215 instead
@@ -1821,7 +1857,12 @@ public class TestApp {
 		[Test]
 		public void MT1210 ()
 		{
-			Asserts.Throws<TestExecutionException> (() => ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("--launchsim /tmp --device=:v2;a=1 -sdkroot {0}", Configuration.xcode_root)), "error MT1210: Invalid simulator specification: 'a=1', unknown key 'a'\n");
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.AppPath = "/tmp";
+				mtouch.Device = ":v2;a=1";
+				Assert.AreEqual (1, mtouch.Execute (MTouchAction.LaunchSim), "launch");
+				mtouch.HasError ("MT", 1210, "Invalid simulator specification: 'a=1', unknown key 'a'");
+			}
 		}
 
 		[Test]
@@ -1839,7 +1880,12 @@ public class TestApp {
 		[Test]
 		public void MT1216 ()
 		{
-			Asserts.Throws<TestExecutionException> (() => ExecutionHelper.Execute (TestTarget.ToolPath, "--sdkroot " + Configuration.xcode_root + " --launchsim /tmp --device=:v2;udid=unknown"), "error MT1216: Could not find the simulator UDID 'unknown'.\n");
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.AppPath = "/tmp";
+				mtouch.Device = ":v2;udid=unknown";
+				Assert.AreEqual (1, mtouch.Execute (MTouchAction.LaunchSim), "launch");
+				mtouch.HasError ("MT", 1216, "Could not find the simulator UDID 'unknown'.");
+			}
 		}
 
 		[Test]
