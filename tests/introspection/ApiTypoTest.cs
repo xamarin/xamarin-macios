@@ -26,10 +26,18 @@ using System.Reflection;
 using System.Text;
 using NUnit.Framework;
 #if XAMCORE_2_0
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 using Foundation;
 #else
+#if MONOMAC
+using MonoMac.AppKit;
+#else
 using MonoTouch.UIKit;
+#endif
 using MonoTouch.Foundation;
 #endif
 

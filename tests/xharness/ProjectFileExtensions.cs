@@ -321,12 +321,15 @@ namespace xharness
 			return imports [0].Attributes ["Project"].Value;
 		}
 
-		public static void FixProjectReferences (this XmlDocument csproj, string suffix)
+		public static void FixProjectReferences (this XmlDocument csproj, string suffix, Func<string, bool> fixCallback = null)
 		{
 			var nodes = csproj.SelectNodes ("/*/*/*[local-name() = 'ProjectReference']");
 			if (nodes.Count == 0)
 				return;
 			foreach (XmlNode n in nodes) {
+				var name = n ["Name"].InnerText;
+				if (fixCallback != null && !fixCallback (name))
+					continue;
 				var include = n.Attributes ["Include"];
 				include.Value = include.Value.Replace (".csproj", suffix + ".csproj");
 				include.Value = include.Value.Replace (".fsproj", suffix + ".fsproj");
