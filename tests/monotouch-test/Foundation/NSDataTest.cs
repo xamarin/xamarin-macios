@@ -129,6 +129,12 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Https ()
 		{
+#if __WATCHOS__
+			if (global::ObjCRuntime.Runtime.Arch == global::ObjCRuntime.Arch.DEVICE) {
+				// This error is returned: Error: The file “robots.txt” couldn’t be opened. The file “robots.txt” couldn’t be opened.
+				Assert.Ignore ("NSData.FromUrl doesn't seem to work in watchOS");
+			}
+#endif
 			using (var url = new NSUrl ("https://blog.xamarin.com/robots.txt"))
 			using (var x = NSData.FromUrl (url)) {
 				Assert.That ((x != null) && (x.Length > 0));
