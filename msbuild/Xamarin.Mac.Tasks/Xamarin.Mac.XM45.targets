@@ -18,7 +18,7 @@ Copyright (C) 2015 Xamarin Inc. All rights reserved.
 	<!-- These hacks will need to be rewritten if/when we move from xbuild to msbuild. Most likely to use FrameworkPathOverride, which should hopefully work.-->
 	<!-- This lets us bypass the standard MSBuild framework resolution and point to our copy. -->
 	<!-- Without this, we'll resolve System.dll and such from the system mono  -->
-	<PropertyGroup Condition="!$(MonoBundlingExtraArgs.Contains('--allow_unsafe_gac_resolution'))" >
+	<PropertyGroup Condition="!$(MonoBundlingExtraArgs.Contains('--allow-unsafe-gac-resolution'))" >
 		<AssemblySearchPaths>$([System.String]::Copy('$(AssemblySearchPaths)').Replace('{GAC}',''))</AssemblySearchPaths>
 	</PropertyGroup>
 
