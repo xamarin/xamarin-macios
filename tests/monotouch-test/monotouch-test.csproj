@@ -532,6 +532,9 @@
     <Compile Include="ObjCRuntime\ExceptionsTest.cs" />
     <Compile Include="Foundation\NSExpressionTest.cs" />
     <Compile Include="CoreGraphics\RectTest.cs" />
+    <Compile Include="..\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
