@@ -230,6 +230,11 @@ namespace Introspection {
 				if (exportAttribute == null)
 					continue;
 				string name = exportAttribute.Selector;
+
+				if (exportAttribute.IsVariadic) {
+					VariadicChecks (m);
+					continue;
+				}
 				
 				if (Skip (t, m, name))
 					continue;
@@ -242,6 +247,13 @@ namespace Introspection {
 				} else {
 					IntrospectionTest (m, methodinfo, t, class_ptr, ref n);
 				}
+			}
+		}
+
+		void VariadicChecks (MethodBase m)
+		{
+			if (m.IsPublic || m.IsFamily || m.IsFamilyOrAssembly) {
+				AddErrorLine ("Function '{0}.{1}' is exposed and variadic. Variadic methods need custom marshaling, and must not be exposed directly.", m.DeclaringType.FullName, m.Name);
 			}
 		}
 
