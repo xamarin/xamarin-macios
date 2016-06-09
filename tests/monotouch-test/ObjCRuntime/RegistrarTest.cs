@@ -2444,16 +2444,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		class Bug41319 : NSObject, INSCoding
+		class Bug41319 : NSObject
 		{
 			[Export ("initWithCoder:")]
 			public Bug41319 (NSCoder coder)
 			{
-			}
-
-			public override void EncodeTo (NSCoder coder)
-			{
-				base.EncodeTo (coder);
 			}
 		}
 
