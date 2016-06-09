@@ -164,5 +164,14 @@ namespace XamCore.Foundation {
 				return _Operand;
 			}
 		}
+		
+#if !XAMCORE_4_0
+		[Obsolete("ValueWithObject is deprecated, please use EvaluateWith instead.")]
+		public virtual NSExpression ExpressionValueWithObject (NSObject obj, NSMutableDictionary context) {
+			var result = EvaluateWith (obj, context);
+			// if it can be casted, do return an NSEXpression else null
+			return result as NSExpression;
+		}
+#endif
 	}
 }
