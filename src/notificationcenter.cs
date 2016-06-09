@@ -72,6 +72,7 @@ namespace XamCore.NotificationCenter {
 	interface NCWidgetListViewController
 	{
 		[Wrap ("WeakDelegate")]
+		[Protocolize]
 		NCWidgetListViewDelegate Delegate { get; set; }
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
@@ -131,6 +132,7 @@ namespace XamCore.NotificationCenter {
 	interface NCWidgetSearchViewController
 	{
 		[Wrap ("WeakDelegate")]
+		[Protocolize]
 		NCWidgetSearchViewDelegate Delegate { get; set; }
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
