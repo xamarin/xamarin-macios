@@ -133,7 +133,7 @@ namespace xharness
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacClassicTargetName (target, MacTargetNameType.Clean), "");
-						writer.WriteLine ("\t$(Q) $(MDTOOL) build -t:clean {0}", fileToBuild);
+						writer.WriteLine ("\t$(Q) $(MDTOOL) build -t:Clean {0}", fileToBuild);
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacClassicTargetName (target, MacTargetNameType.Exec), "");
