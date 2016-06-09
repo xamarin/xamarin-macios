@@ -39,12 +39,12 @@
  *   0(%rbp): previous %rbp value
  */
 
-static void
-throw_mt_exception (char *msg)
+static guint32
+create_mt_exception (char *msg)
 {
 	MonoException *ex = xamarin_create_exception (msg);
 	xamarin_free (msg);
-	mono_raise_exception (ex);
+	return mono_gchandle_new ((MonoObject *) ex, FALSE);
 }
 
 static size_t
@@ -105,7 +105,7 @@ skip_type_name (const char *ptr)
 }
 
 static int
-param_read_primitive (struct ParamIterator *it, const char **type_ptr, void *target, size_t total_size)
+param_read_primitive (struct ParamIterator *it, const char **type_ptr, void *target, size_t total_size, guint32 *exception_gchandle)
 {
 	// COOP: does not access managed memory: any mode.
 	char type = **type_ptr;
@@ -222,7 +222,7 @@ param_read_primitive (struct ParamIterator *it, const char **type_ptr, void *tar
 			LOGZ ("0x%x = %u = '%c'\n", (int) * (uint8_t *) target, (int) * (uint8_t *) target, (char) * (uint8_t *) target);
 			break;
 		default:
-			throw_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal parameter type %c (size: %i): invalid size.\n", type, (int) size));
+			*exception_gchandle = create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal parameter type %c (size: %i): invalid size.\n", type, (int) size));
 			return 0;
 		}
 
@@ -232,7 +232,7 @@ param_read_primitive (struct ParamIterator *it, const char **type_ptr, void *tar
 }
 
 static void
-param_iter_next (enum IteratorAction action, void *context, const char *type, size_t size, void *target)
+param_iter_next (enum IteratorAction action, void *context, const char *type, size_t size, void *target, guint32 *exception_gchandle)
 {
 	// COOP: does not access managed memory: any mode.
 	struct ParamIterator *it = (struct ParamIterator *) context;
@@ -282,7 +282,9 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 		if (*t == 0)
 			break;
 
-		int c = param_read_primitive (it, &t, targ, size);
+		int c = param_read_primitive (it, &t, targ, size, exception_gchandle);
+		if (*exception_gchandle != 0)
+			return;
 		if (targ != NULL)
 			targ += c;
 	} while (*++t);
@@ -296,7 +298,7 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 }
 
 static void
-marshal_return_value (void *context, const char *type, size_t size, void *vvalue, MonoType *mtype, bool retain, MonoMethod *method)
+marshal_return_value (void *context, const char *type, size_t size, void *vvalue, MonoType *mtype, bool retain, MonoMethod *method, guint32 *exception_gchandle)
 {
 	// COOP: accessing managed memory (as input), so must be in unsafe mode.
 	MONO_ASSERT_GC_UNSAFE;
@@ -397,7 +399,8 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 			while (true) {
 				if (*t == 0) {
 					if (stores >= 2 && acc > 0) {
-						throw_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal return type %s (size: %i): more than 2 64-bit values found.\n", type, (int) size));
+						*exception_gchandle = create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal return type %s (size: %i): more than 2 64-bit values found.\n", type, (int) size));
+						return;
 					} else if (stores < 2) {
 						*reg_ptr = v [stores];
 					}
@@ -430,8 +433,10 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 					acc = s;
 				}
 
-				if (stores >= 2)
-					throw_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal return type %s (size: %i): more than 2 64-bit values found.\n", type, (int) size));
+				if (stores >= 2) {
+					*exception_gchandle = create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal return type %s (size: %i): more than 2 64-bit values found.\n", type, (int) size));
+					return;
+				}
 
 				// Write the current value to the correct register.
 				*reg_ptr = v [stores++];
@@ -461,7 +466,8 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 			// Passed in memory. %rdi points to caller-allocated memory.
 			memcpy ((void *) it->state->rdi, mono_object_unbox (value), size);
 		} else {
-			throw_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal struct return type %s (size: %i)\n", type, (int) size));
+			*exception_gchandle = create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal struct return type %s (size: %i)\n", type, (int) size));
+			return;
 		}
 		break;
 	// For primitive types we get a pointer to the actual value
@@ -496,7 +502,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 			break;
 		}
 
-		it->state->rax = (uint64_t) xamarin_marshal_return_value (mtype, type, value, retain, method);
+		it->state->rax = (uint64_t) xamarin_marshal_return_value (mtype, type, value, retain, method, exception_gchandle);
 		break;
 	case _C_VOID:
 		break;
@@ -505,7 +511,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 		if (size == 8) {
 			it->state->rax = (uint64_t) value;
 		} else {
-			throw_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal return type %s (size: %i)\n", type, (int) size));
+			*exception_gchandle = create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal return type %s (size: %i)\n", type, (int) size));
 		}
 		break;
 	}

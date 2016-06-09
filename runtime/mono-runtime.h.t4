@@ -220,6 +220,10 @@ typedef enum {
 	MONO_AOT_MODE_LLVMONLY
 } MonoAotMode;
 
+/* metadata/marshal.h */
+
+typedef void (*MonoFtnPtrEHCallback) (guint32 gchandle);
+
 /* not in any header */
 
 void mono_gc_init_finalizer_thread ();

@@ -250,6 +250,7 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 	DEBUG_LAUNCH_TIME_PRINT ("MonoTouch setup time");
 
 	MonoAssembly *assembly;
+	guint32 exception_gchandle = 0;
 	
 	const char *c_bundle_path = xamarin_get_bundle_path ();
 
@@ -421,6 +422,7 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 
 	mono_set_signal_chaining (TRUE);
 	mono_install_unhandled_exception_hook (xamarin_unhandled_exception_handler, NULL);
+	mono_install_ftnptr_eh_callback (xamarin_ftnptr_exception_handler);
 
 	mono_jit_init_version ("MonoTouch", "mobile");
 	/*
@@ -435,21 +437,29 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 
 #if defined (__arm__) || defined(__aarch64__)
 	xamarin_register_assemblies ();
-	assembly = xamarin_open_and_register (xamarin_executable_name);
+	assembly = xamarin_open_and_register (xamarin_executable_name, &exception_gchandle);
+	if (exception_gchandle != 0)
+		xamarin_process_managed_exception_gchandle (exception_gchandle);
 #else
 	if (xamarin_executable_name) {
-		assembly = xamarin_open_and_register (xamarin_executable_name);
+		assembly = xamarin_open_and_register (xamarin_executable_name, &exception_gchandle);
+		if (exception_gchandle != 0)
+			xamarin_process_managed_exception_gchandle (exception_gchandle);
 	} else {
 		const char *last_slash = strrchr (argv [0], '/');
 		const char *basename = last_slash ? last_slash + 1 : argv [0];
 		char *aname = xamarin_strdup_printf ("%s.exe", basename);
 
-		assembly = xamarin_open_and_register (aname);
-
+		assembly = xamarin_open_and_register (aname, &exception_gchandle);
 		xamarin_free (aname);
+
+		if (exception_gchandle != 0)
+			xamarin_process_managed_exception_gchandle (exception_gchandle);
 	}
 
-	xamarin_register_entry_assembly (mono_assembly_get_object (mono_domain_get (), assembly));
+	xamarin_register_entry_assembly (mono_assembly_get_object (mono_domain_get (), assembly), &exception_gchandle);
+	if (exception_gchandle != 0)
+		xamarin_process_managed_exception_gchandle (exception_gchandle);
 #endif
 
 	DEBUG_LAUNCH_TIME_PRINT ("\tAssembly register time");

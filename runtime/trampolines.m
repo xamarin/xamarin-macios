@@ -36,7 +36,7 @@ x_init_mutex ()
 }
 
 void *
-xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *retval, bool retain, MonoMethod *method)
+xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *retval, bool retain, MonoMethod *method, guint32 *exception_gchandle)
 {
 	// COOP: accesses managed memory: unsafe mode.
 	MONO_ASSERT_GC_UNSAFE;
@@ -44,15 +44,15 @@ xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *ret
 	/* Any changes in this method probably need to be reflected in the static registrar as well */
 	switch (type [0]) {
 		case _C_CLASS:
-			return xamarin_get_class_handle (retval);
+			return xamarin_get_class_handle (retval, exception_gchandle);
 
 		case _C_SEL:
-			return xamarin_get_selector_handle (retval);
+			return xamarin_get_selector_handle (retval, exception_gchandle);
 
 		case _C_PTR: {
 			MonoClass *klass = mono_class_from_mono_type (mtype);
 			if (mono_class_is_delegate (klass)) {
-				return xamarin_get_block_for_delegate (method, retval);
+				return xamarin_get_block_for_delegate (method, retval, exception_gchandle);
 			} else {
 				return *(void **) mono_object_unbox (retval);
 			}
@@ -89,7 +89,9 @@ xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *ret
 
 						v = sv;
 					} else {
-						v = xamarin_get_handle (value);
+						v = xamarin_get_handle (value, exception_gchandle);
+						if (*exception_gchandle != 0)
+							 return NULL;
 					}
 					buf[i] = v;
 				}
@@ -103,7 +105,9 @@ xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *ret
 				
 				return (void *) arr;
 			} else if (xamarin_is_class_nsobject (r_klass)) {
-				id i = xamarin_get_handle (retval);
+				id i = xamarin_get_handle (retval, exception_gchandle);
+				if (*exception_gchandle != 0)
+					return NULL;
 
 				xamarin_framework_peer_lock ();
 				[i retain];
@@ -114,7 +118,7 @@ xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *ret
 				mt_dummy_use (retval);
 				return i;
 			} else if (xamarin_is_class_inativeobject (r_klass)) {
-				return xamarin_get_handle_for_inativeobject (retval);
+				return xamarin_get_handle_for_inativeobject (retval, exception_gchandle);
 			} else {
 				xamarin_assertion_message ("Don't know how to marshal a return value of type '%s.%s'. Please file a bug with a test case at http://bugzilla.xamarin.com\n", mono_class_get_namespace (r_klass), mono_class_get_name (r_klass)); 
 			}
@@ -469,6 +473,8 @@ xamarin_release_trampoline (id self, SEL sel)
 void
 xamarin_notify_dealloc (id self, int gchandle)
 {
+	guint32 exception_gchandle = 0;
+
 	// COOP: safe mode upon entry, switches to unsafe when acccessing managed memory.
 	MONO_ASSERT_GC_SAFE_OR_DETACHED;
 	
@@ -481,9 +487,11 @@ xamarin_notify_dealloc (id self, int gchandle)
 	NSLog (@"xamarin_notify_dealloc (%p, %i) target: %p\n", self, gchandle, mobj);
 #endif
 	xamarin_free_gchandle (self, gchandle);
-	xamarin_unregister_nsobject (self, mobj);
+	xamarin_unregister_nsobject (self, mobj, &exception_gchandle);
 
 	MONO_THREAD_DETACH; // COOP: This will switch to GC_SAFE
+
+	xamarin_process_managed_exception_gchandle (exception_gchandle);
 
 	mono_thread_detach_if_exiting ();
 }

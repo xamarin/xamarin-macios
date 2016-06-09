@@ -37,7 +37,26 @@ namespace XamCore.ObjCRuntime {
 
 <# 		foreach (var d in delegates) { #>
 		[MonoPInvokeCallback (typeof (<#= d.SimpleEntryPoint #>_delegate))]
-		static <#= d.MReturnType #> <#= d.SimpleEntryPoint #> (<#= d.MArgumentSignature #>) 
+		static <#= d.MReturnType #> <#= d.SimpleEntryPoint #> (<#= d.MArgumentSignature #>)
+<# if (d.ExceptionHandling) { #>
+		{	
+			exception_gchandle = 0;
+			try {
+<# if (string.IsNullOrEmpty (d.WrappedManagedFunction)) { #>
+				throw new NotImplementedException ();
+<# } else { #>
+				<# if (d.MReturnType != "void") { #>return <# } #><#=d.WrappedManagedFunction#> (<#=d.MArgumentNames#>);
+<# } #>
+			} catch (Exception ex) {
+				var handle = GCHandle.Alloc (ex, GCHandleType.Normal);
+				exception_gchandle = GCHandle.ToIntPtr (handle).ToInt32 ();
+<# if (d.SimpleEntryPoint == "get_nsobject_with_type") { #>				created = false;
+<# } #>
+<# if (d.MReturnType != "void") { #>				return default (<#= d.MReturnType #>);
+<# } #>
+			}
+		}
+<# } else { #>
 		{	
 <# if (string.IsNullOrEmpty (d.WrappedManagedFunction)) { #>
 			throw new NotImplementedException ();
@@ -45,6 +64,7 @@ namespace XamCore.ObjCRuntime {
 			<# if (d.MReturnType != "void") { #>return <# } #><#=d.WrappedManagedFunction#> (<#=d.MArgumentNames#>);
 <# } #>
 		}
+<# } #>
 
 <# } #>
 

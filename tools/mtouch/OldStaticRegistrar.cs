@@ -1310,11 +1310,11 @@ namespace XamCore.Registrar {
 					break;
 				case "MonoTouch.ObjCRuntime.Selector":
 					if (isOut) {
-						setup_call_stack.AppendFormat ("\tvoid *a{0} = *p{0} ? xamarin_get_selector (*p{0}) : NULL;\n", i);
+						setup_call_stack.AppendFormat ("\tvoid *a{0} = *p{0} ? xamarin_get_selector_old (*p{0}) : NULL;\n", i);
 						setup_call_stack.AppendFormat ("\targ_ptrs [{0}] = &a{0};\n", i);
 						copyback.AppendFormat ("\t*p{0} = a{0};\n", i);
 					} else {
-						setup_call_stack.AppendFormat ("\targ_ptrs [{0}] = p{0} ? xamarin_get_selector (p{0}) : NULL;\n", i);
+						setup_call_stack.AppendFormat ("\targ_ptrs [{0}] = p{0} ? xamarin_get_selector_old (p{0}) : NULL;\n", i);
 					}
 					break;
 				case "MonoTouch.ObjCRuntime.Class":
@@ -1366,7 +1366,7 @@ namespace XamCore.Registrar {
 	//							setup_call_stack.AppendFormat ("\t\t\t\tmobj{0} = get_managed_object_for_ptr_fast (nobj, false);\n", i);
 	//							setup_call_stack.AppendFormat ("\t\t\t\txamarin_verify_parameter (mobj{0}, sel, self, nobj, {0}, e_class, method_{1});\n", i, counter);
 	//						} else {
-								setup_call_stack.AppendFormat ("\t\t\t\tmobj{0} = xamarin_get_nsobject_with_type_for_ptr (nobj, false, p_class);\n", i);
+								setup_call_stack.AppendFormat ("\t\t\t\tmobj{0} = xamarin_get_nsobject_with_type_for_ptr_old (nobj, false, p_class);\n", i);
 	//						}
 							setup_call_stack.AppendFormat ("\t\t\t}}\n");
 							setup_call_stack.AppendFormat ("\t\t\tmono_array_set (marr, MonoObject *, j, mobj{0});\n", i);
@@ -1387,7 +1387,7 @@ namespace XamCore.Registrar {
 	//							setup_call_stack.AppendFormat ("\t\t\tmobj{0} = get_managed_object_for_ptr_fast (nsobj{0}, false);\n", i);
 	//							setup_call_stack.AppendFormat ("\t\t\txamarin_verify_parameter (mobj{0}, sel, self, nsobj{0}, {0}, NULL, method_{1});\n", i, counter);
 	//						} else {
-								setup_call_stack.AppendFormat ("\t\t\tmobj{0} = xamarin_get_nsobject_with_type_for_ptr (nsobj{0}, false, xamarin_get_parameter_type (method_{1}, {0}));\n", i, counter);
+								setup_call_stack.AppendFormat ("\t\t\tmobj{0} = xamarin_get_nsobject_with_type_for_ptr_old (nsobj{0}, false, xamarin_get_parameter_type (method_{1}, {0}));\n", i, counter);
 	//						}
 							setup_call_stack.AppendFormat ("\t\t}}\n");
 							// argument semantics?
@@ -1409,14 +1409,14 @@ namespace XamCore.Registrar {
 	//							setup_call_stack.AppendFormat ("\t\t\tmobj{0} = get_managed_object_for_ptr_fast (nsobj{0}, false);\n", i);
 	//							setup_call_stack.AppendFormat ("\t\t\txamarin_verify_parameter (mobj{0}, sel, self, nsobj{0}, {0}, NULL, method_{1});\n", i, counter);
 	//						} else {
-								setup_call_stack.AppendFormat ("\t\t\tmobj{0} = xamarin_get_nsobject_with_type_for_ptr_created (nsobj{0}, false, xamarin_get_parameter_type (method_{1}, {0}), &created{0});\n", i, counter);
+								setup_call_stack.AppendFormat ("\t\t\tmobj{0} = xamarin_get_nsobject_with_type_for_ptr_created_old (nsobj{0}, false, xamarin_get_parameter_type (method_{1}, {0}), &created{0});\n", i, counter);
 	//						}
 							setup_call_stack.AppendFormat ("\t\t}}\n");
 							setup_call_stack.AppendFormat ("\t\targ_ptrs [{0}] = mobj{0};\n", i);
 
 							if (SharedStatic.HasAttribute (paramBase, Registrar.ObjCRuntime, TypeSystemDescriptor.TransientAttribute)) {
 								copyback.AppendFormat ("\t\tif (created{0})\n", i);
-								copyback.AppendFormat ("\t\t\txamarin_dispose (mobj{0});\n", i);
+								copyback.AppendFormat ("\t\t\txamarin_dispose_old (mobj{0});\n", i);
 							}
 						}
 					} else if (SharedStatic.IsNativeObject (td)) {
@@ -1447,20 +1447,20 @@ namespace XamCore.Registrar {
 						if (isOut) {
 							setup_call_stack.AppendFormat ("\tMonoObject *inobj{0};\n", i);
 							if (td.IsInterface) {
-								setup_call_stack.AppendFormat ("\tinobj{0} = xamarin_get_inative_object_static (*p{0}, false, \"{1}\", \"{2}\");\n", i, TypeSystemDescriptor.GetAssemblyQualifiedName (nativeObjType), TypeSystemDescriptor.GetAssemblyQualifiedName (td));
+								setup_call_stack.AppendFormat ("\tinobj{0} = xamarin_get_inative_object_static_old (*p{0}, false, \"{1}\", \"{2}\");\n", i, TypeSystemDescriptor.GetAssemblyQualifiedName (nativeObjType), TypeSystemDescriptor.GetAssemblyQualifiedName (td));
 							} else {
-								setup_call_stack.AppendFormat ("\tinobj{0} = xamarin_get_inative_object_dynamic (*p{0}, false, mono_type_get_object (mono_domain_get (), type{0}));\n", i);
+								setup_call_stack.AppendFormat ("\tinobj{0} = xamarin_get_inative_object_dynamic_old (*p{0}, false, mono_type_get_object (mono_domain_get (), type{0}));\n", i);
 							}
 							setup_call_stack.AppendFormat ("\targ_ptrs [{0}] = &inobj{0};\n", i);
 							copyback.AppendFormat ("\tid handle{0} = nil;\n", i);
 							copyback.AppendFormat ("\tif (inobj{0} != NULL)\n", i);
-							copyback.AppendFormat ("\t\thandle{0} = xamarin_get_handle_for_inativeobject (inobj{0});\n", i);
+							copyback.AppendFormat ("\t\thandle{0} = xamarin_get_handle_for_inativeobject_old (inobj{0});\n", i);
 							copyback.AppendFormat ("\t*p{0} = (id) handle{0};\n", i);
 						} else {
 							if (td.IsInterface) {
-								setup_call_stack.AppendFormat ("\targ_ptrs [{0}] = xamarin_get_inative_object_static (p{0}, false, \"{1}\", \"{2}\");\n", i, TypeSystemDescriptor.GetAssemblyQualifiedName (nativeObjType), TypeSystemDescriptor.GetAssemblyQualifiedName (td));
+								setup_call_stack.AppendFormat ("\targ_ptrs [{0}] = xamarin_get_inative_object_static_old (p{0}, false, \"{1}\", \"{2}\");\n", i, TypeSystemDescriptor.GetAssemblyQualifiedName (nativeObjType), TypeSystemDescriptor.GetAssemblyQualifiedName (td));
 							} else {
-								setup_call_stack.AppendFormat ("\targ_ptrs [{0}] = xamarin_get_inative_object_dynamic (p{0}, false, mono_type_get_object (mono_domain_get (), type{0}));\n", i);
+								setup_call_stack.AppendFormat ("\targ_ptrs [{0}] = xamarin_get_inative_object_dynamic_old (p{0}, false, mono_type_get_object (mono_domain_get (), type{0}));\n", i);
 							}
 
 						}
@@ -1477,7 +1477,7 @@ namespace XamCore.Registrar {
 							                              type.FullName, descriptiveMethodName);
 						} else {
 							// Bug #4858 (also related: #4718)
-							setup_call_stack.AppendFormat ("\tif (p{0})\n\t\targ_ptrs [{0}] = (void*) xamarin_get_delegate_for_block_parameter (method_{1}, {0}, p{0});\n", i, counter);
+							setup_call_stack.AppendFormat ("\tif (p{0})\n\t\targ_ptrs [{0}] = (void*) xamarin_get_delegate_for_block_parameter_old (method_{1}, {0}, p{0});\n", i, counter);
 							setup_call_stack.AppendFormat ("\telse\n\t\targ_ptrs [{0}] = NULL;\n", i);
 						}
 					} else {
@@ -1564,7 +1564,7 @@ namespace XamCore.Registrar {
 							setup_return.AppendFormat ("\t\tres = xamarin_get_selector_handle (retval);\n");
 							break;
 						case "MonoTouch.ObjCRuntime.Class":
-							setup_return.AppendFormat ("\t\tres = xamarin_get_class_handle (retval);\n");
+							setup_return.AppendFormat ("\t\tres = xamarin_get_class_handle_old (retval);\n");
 							break;
 						case "System.String":
 							// This should always be an NSString and never char*
@@ -1585,7 +1585,7 @@ namespace XamCore.Registrar {
 								setup_return.AppendFormat ("\t\tres = retobj;\n");
 							} else if (SharedStatic.IsNativeObject (type)) {
 								setup_return.AppendFormat ("\t\tid retobj;\n");
-								setup_return.AppendFormat ("\t\tretobj = xamarin_get_handle_for_inativeobject (retval);\n");
+								setup_return.AppendFormat ("\t\tretobj = xamarin_get_handle_for_inativeobject_old (retval);\n");
 								setup_return.AppendFormat ("\t\t[retobj retain];\n");
 								if (!retain)
 									setup_return.AppendFormat ("\t\t[retobj autorelease];\n");
@@ -1618,13 +1618,13 @@ namespace XamCore.Registrar {
 			sb.Append ("\t\tmono_jit_thread_attach (NULL);\n");
 			
 			if (isCtor) {
-				sb.AppendLine ("\tif (xamarin_has_nsobject (self))");
+				sb.AppendLine ("\tif (xamarin_has_nsobject_old (self))");
 				sb.AppendLine ("\t\treturn self;");
 			}
 			
 			// no locking should be required here, it doesn't matter if we overwrite the field (it'll be the same value).
 			sb.AppendFormat ("\tif (!method_{0})\n", counter);
-			sb.AppendFormat ("\t\tmethod_{0} = xamarin_get_reflection_method_method (xamarin_get_method_for_selector ([self class], sel).method);\n", counter);
+			sb.AppendFormat ("\t\tmethod_{0} = xamarin_get_reflection_method_method (xamarin_get_method_for_selector_old ([self class], sel).method);\n", counter);
 				
 			if (!isStatic && !isCtor) {
 				sb.AppendLine ("\t\tmthis = NULL;");
@@ -1633,7 +1633,7 @@ namespace XamCore.Registrar {
 	//				sb.AppendLine ("\t\t\tmthis = get_managed_object_for_ptr_fast (self, false);");
 	//				sb.AppendFormat ("\t\t\tcheck_for_gced_object (mthis, sel, self, method_{0});\n", counter);
 	//			} else {
-					sb.AppendFormat ("\t\t\tmthis = xamarin_get_nsobject_with_type_for_ptr (self, false, mono_class_get_type (mono_method_get_class (method_{0})));\n", counter);
+					sb.AppendFormat ("\t\t\tmthis = xamarin_get_nsobject_with_type_for_ptr_old (self, false, mono_class_get_type (mono_method_get_class (method_{0})));\n", counter);
 	//			}
 				sb.AppendLine ("\t\t}");
 			}
@@ -1714,6 +1714,107 @@ namespace XamCore.Registrar {
 			sb.AppendLine ("#include <objc/runtime.h>");
 			sb.AppendLine ("#include <UIKit/UIKit.h>");
 			sb.AppendLine (headers.ToString ());
+
+			sb.AppendLine (@"
+static bool
+xamarin_has_nsobject_old (id obj)
+{
+	guint32 exception_gchandle = 0;
+	bool rv = xamarin_has_nsobject (obj, &exception_gchandle);
+	xamarin_process_managed_exception_gchandle (exception_gchandle);
+	return rv;
+}
+
+static MethodDescription
+xamarin_get_method_for_selector_old (Class cls, SEL sel)
+{
+	guint32 exception_gchandle = 0;
+	MethodDescription rv = xamarin_get_method_for_selector (cls, sel, &exception_gchandle);
+	xamarin_process_managed_exception_gchandle (exception_gchandle);
+	return rv;
+}
+
+static MonoObject *
+xamarin_get_nsobject_with_type_for_ptr_old (id self, bool owns, MonoType* type)
+{
+	guint32 exception_gchandle = 0;
+	MonoObject *rv = xamarin_get_nsobject_with_type_for_ptr (self, owns, type, &exception_gchandle);
+	xamarin_process_managed_exception_gchandle (exception_gchandle);
+	return rv;
+}
+
+static MonoObject *
+xamarin_get_nsobject_with_type_for_ptr_created_old (id self, bool owns, MonoType *type, int32_t *created)
+{
+	guint32 exception_gchandle = 0;
+	MonoObject *rv = xamarin_get_nsobject_with_type_for_ptr_created (self, owns, type, created, &exception_gchandle);
+	xamarin_process_managed_exception_gchandle (exception_gchandle);
+	return rv;
+}
+
+static MonoObject *
+xamarin_get_selector_old (SEL ptr)
+{
+	guint32 exception_gchandle = 0;
+	MonoObject *rv = xamarin_get_selector (ptr, &exception_gchandle);
+	xamarin_process_managed_exception_gchandle (exception_gchandle);
+	return rv;
+}
+
+static id
+xamarin_get_handle_for_inativeobject_old (MonoObject * obj)
+{
+	guint32 exception_gchandle = 0;
+	id rv = xamarin_get_handle_for_inativeobject (obj, &exception_gchandle);
+	xamarin_process_managed_exception_gchandle (exception_gchandle);
+	return rv;
+}
+
+static MonoObject *
+xamarin_get_inative_object_static_old (id obj, bool owns, const char * type_name, const char * iface_name)
+{
+	guint32 exception_gchandle = 0;
+	MonoObject *rv = xamarin_get_inative_object_static (obj, owns, type_name, iface_name, &exception_gchandle);
+	xamarin_process_managed_exception_gchandle (exception_gchandle);
+	return rv;
+}
+
+static int *
+xamarin_get_delegate_for_block_parameter_old (MonoMethod *method, int par, void *nativeBlock)
+{
+	guint32 exception_gchandle = 0;
+	int *rv = xamarin_get_delegate_for_block_parameter (method, par, nativeBlock, &exception_gchandle);
+	xamarin_process_managed_exception_gchandle (exception_gchandle);
+	return rv;
+}
+
+static Class
+xamarin_get_class_handle_old (MonoObject * obj)
+{
+	guint32 exception_gchandle = 0;
+	Class rv = xamarin_get_class_handle (obj, &exception_gchandle);
+	xamarin_process_managed_exception_gchandle (exception_gchandle);
+	return rv;
+}
+
+static MonoObject*
+xamarin_get_inative_object_dynamic_old (id obj, bool owns, void *type)
+{
+	guint32 exception_gchandle = 0;
+	MonoObject *rv = xamarin_get_inative_object_dynamic (obj, owns, type, &exception_gchandle);
+	xamarin_process_managed_exception_gchandle (exception_gchandle);
+	return rv;
+}
+
+static void
+xamarin_dispose_old (MonoObject *mobj)
+{
+	guint32 exception_gchandle = 0;
+	xamarin_dispose (mobj, &exception_gchandle);
+	xamarin_process_managed_exception_gchandle (exception_gchandle);
+}
+");
+
 			sb.AppendLine (structs.ToString ());
 			sb.AppendLine (specialized_trampolines.ToString ());
 			sb.AppendLine ();
