@@ -1722,7 +1722,7 @@ public class TestApp {
 				var exe = CompileTestAppExecutable (testDir);
 				var cache = Path.Combine (testDir, "mtouch-cache");
 
-				var args = string.Format ("-sdkroot " + Configuration.xcode_root + " --nosign --nolink --sim {0} -sdk " + Configuration.sdk_version + " --abi=i386 {1} --cache={2} --r:{3}", app, exe, cache, Configuration.MonoTouchDll);
+				var args = string.Format ("-sdkroot " + Configuration.xcode_root + " --debug --nosign --nolink --sim {0} -sdk " + Configuration.sdk_version + " --abi=i386 {1} --cache={2} --r:{3}", app, exe, cache, Configuration.MonoTouchDll);
 				Asserts.ThrowsPattern<TestExecutionException> (() => ExecutionHelper.Execute (TestTarget.ToolPath, args, hide_output: false), 
 					"Xamarin.iOS .* using framework:.*\nerror MT1015: Failed to create the executable '.*/testApp.app/testApp': .*/testApp.app/testApp is a directory\n");
 			} finally {
