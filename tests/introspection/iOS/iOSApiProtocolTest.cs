@@ -157,6 +157,42 @@ namespace Introspection {
 				case "WCSessionFile":
 				case "WCSessionFileTransfer":
 					return true;
+#if __WATCHOS__
+				case "CLKComplicationTemplate":
+				case "CLKComplicationTemplateCircularSmallRingImage":
+				case "CLKComplicationTemplateCircularSmallRingText":
+				case "CLKComplicationTemplateCircularSmallSimpleImage":
+				case "CLKComplicationTemplateCircularSmallSimpleText":
+				case "CLKComplicationTemplateCircularSmallStackImage":
+				case "CLKComplicationTemplateCircularSmallStackText":
+				case "CLKComplicationTemplateModularLargeColumns":
+				case "CLKComplicationTemplateModularLargeStandardBody":
+				case "CLKComplicationTemplateModularLargeTable":
+				case "CLKComplicationTemplateModularLargeTallBody":
+				case "CLKComplicationTemplateModularSmallColumnsText":
+				case "CLKComplicationTemplateModularSmallRingImage":
+				case "CLKComplicationTemplateModularSmallRingText":
+				case "CLKComplication":
+				case "CLKComplicationTemplateModularSmallSimpleImage":
+				case "CLKTextProvider":
+				case "CLKComplicationTemplateModularSmallSimpleText":
+				case "CLKTimeIntervalTextProvider":
+				case "CLKComplicationTemplateModularSmallStackImage":
+				case "CLKTimeTextProvider":
+				case "CLKComplicationTemplateModularSmallStackText":
+				case "CLKComplicationTemplateUtilitarianLargeFlat":
+				case "CLKComplicationTemplateUtilitarianSmallFlat":
+				case "CLKComplicationTemplateUtilitarianSmallRingImage":
+				case "CLKComplicationTemplateUtilitarianSmallRingText":
+				case "CLKComplicationTemplateUtilitarianSmallSquare":
+				case "CLKComplicationTimelineEntry":
+				case "CLKDateTextProvider":
+				case "CLKImageProvider":
+				case "CLKRelativeDateTextProvider":
+				case "CLKSimpleTextProvider":
+				case "WKAlertAction":
+					return true;
+#endif
 				}
 				break;
 			case "NSSecureCoding":
@@ -198,6 +234,42 @@ namespace Introspection {
 				case "WCSessionFile":
 				case "WCSessionFileTransfer":
 					return true;
+#if __WATCHOS__
+				case "CLKComplicationTemplate":
+				case "CLKComplicationTemplateCircularSmallRingImage":
+				case "CLKComplicationTemplateCircularSmallRingText":
+				case "CLKComplicationTemplateCircularSmallSimpleImage":
+				case "CLKComplicationTemplateCircularSmallSimpleText":
+				case "CLKComplicationTemplateCircularSmallStackImage":
+				case "CLKComplicationTemplateCircularSmallStackText":
+				case "CLKComplicationTemplateModularLargeColumns":
+				case "CLKComplicationTemplateModularLargeStandardBody":
+				case "CLKComplicationTemplateModularLargeTable":
+				case "CLKComplicationTemplateModularLargeTallBody":
+				case "CLKComplicationTemplateModularSmallColumnsText":
+				case "CLKComplicationTemplateModularSmallRingImage":
+				case "CLKComplicationTemplateModularSmallRingText":
+				case "CLKComplicationTemplateModularSmallSimpleImage":
+				case "CLKComplicationTemplateModularSmallSimpleText":
+				case "CLKComplicationTemplateModularSmallStackImage":
+				case "CLKComplicationTemplateModularSmallStackText":
+				case "CLKComplicationTemplateUtilitarianLargeFlat":
+				case "CLKComplicationTemplateUtilitarianSmallFlat":
+				case "CLKComplicationTemplateUtilitarianSmallRingImage":
+				case "CLKComplicationTemplateUtilitarianSmallRingText":
+				case "CLKComplicationTemplateUtilitarianSmallSquare":
+				case "CLKComplicationTimelineEntry":
+				case "CLKDateTextProvider":
+				case "CLKImageProvider":
+				case "CLKRelativeDateTextProvider":
+				case "CLKSimpleTextProvider":
+				case "CLKTextProvider":
+				case "CLKTimeIntervalTextProvider":
+				case "CLKTimeTextProvider":
+				case "CLKComplication":
+				case "WKAlertAction":
+					return true;
+#endif
 				}
 				break;
 			case "NSCopying":
@@ -222,6 +294,10 @@ namespace Introspection {
 				case "HKSample":
 				case "HKWorkout":
 					return true;
+#if __WATCHOS__
+				case "CLKComplicationTimelineEntry":
+					return true;
+#endif
 				}
 				break;
 			case "UIAccessibilityIdentification":
