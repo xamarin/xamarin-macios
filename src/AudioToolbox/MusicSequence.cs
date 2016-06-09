@@ -6,9 +6,6 @@
 //
 // Copyright 2012-2014 Xamarin Inc.
 //
-// MISSING:
-// MusicSequenceSetUserCallback
-//
 
 #if IOS || TVOS
 
@@ -30,6 +27,12 @@ using MidiEndpointRef = System.Int32;
 
 namespace XamCore.AudioToolbox {
 
+#if !COREBUILD
+	public delegate void MusicSequenceUserCallback (MusicTrack track, double inEventTime, MusicEventUserData inEventData, double inStartSliceBeat, double inEndSliceBeat);
+
+	delegate void MusicSequenceUserCallbackProxy (/* void * */ IntPtr inClientData, /* MusicSequence* */ IntPtr inSequence, /* MusicTrack* */ IntPtr inTrack, /* MusicTimeStamp */ double inEventTime, /* MusicEventUserData* */ IntPtr inEventData, /* MusicTimeStamp */ double inStartSliceBeat, /* MusicTimeStamp */ double inEndSliceBeat);
+#endif
+
 	// MusicPlayer.h
 	public class MusicSequence : INativeObject
 #if !COREBUILD
@@ -41,6 +44,10 @@ namespace XamCore.AudioToolbox {
 		internal MusicSequence (IntPtr handle) {
 			this.handle = handle;
 		}
+
+		static Dictionary <IntPtr, MusicSequenceUserCallback> userCallbackHandles = new Dictionary <IntPtr, MusicSequenceUserCallback> ();
+
+		static MusicSequenceUserCallbackProxy userCallbackProxy = new MusicSequenceUserCallbackProxy (UserCallbackProxy);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus NewMusicSequence (/* MusicSequence* */ out IntPtr outSequence);
@@ -73,6 +80,13 @@ namespace XamCore.AudioToolbox {
 		protected virtual void Dispose (bool disposing)
 		{
 			if (handle != IntPtr.Zero){
+
+				lock (userCallbackHandles)
+					userCallbackHandles.Remove (handle);
+
+				// Remove native user callback
+				MusicSequenceSetUserCallback (handle, null, IntPtr.Zero);
+
 				DisposeMusicSequence (handle);
 				lock (sequenceMap){
 					sequenceMap.Remove (handle);
@@ -273,6 +287,35 @@ namespace XamCore.AudioToolbox {
 			if (MusicSequenceGetBeatsForSeconds (handle, seconds, out beats) == MusicPlayerStatus.Success)
 				return beats;
 			return 0;
+		}
+
+		[DllImport (Constants.AudioToolboxLibrary)]
+		extern static /* OSStatus */ MusicPlayerStatus MusicSequenceSetUserCallback (/* MusicSequence */ IntPtr inSequence, MusicSequenceUserCallbackProxy inCallback, /* void * */ IntPtr inClientData);
+
+		public void SetUserCallback (MusicSequenceUserCallback callback)
+		{
+			lock (userCallbackHandles)
+				userCallbackHandles [handle] = callback;
+
+			MusicSequenceSetUserCallback (handle, userCallbackProxy, IntPtr.Zero);
+		}
+
+#if !MONOMAC
+		[MonoPInvokeCallback (typeof (MusicSequenceUserCallbackProxy))]
+#endif
+		static void UserCallbackProxy (IntPtr inClientData, IntPtr inSequence, IntPtr inTrack, double inEventTime, IntPtr inEventData, double inStartSliceBeat, double inEndSliceBeat)
+		{
+			MusicSequenceUserCallback userCallback;
+			lock (userCallbackHandles)
+				userCallbackHandles.TryGetValue (inSequence, out userCallback);
+
+			if (userCallback != null) {
+				var userEventData = new MusicEventUserData (inEventData);
+				var musicSequence = MusicSequence.Lookup (inSequence);
+				var musicTrack = new MusicTrack (musicSequence, inTrack, false);
+
+				userCallback (musicTrack, inEventTime, userEventData, inStartSliceBeat, inEndSliceBeat);
+			}
 		}
 		
 		[DllImport (Constants.AudioToolboxLibrary)]
