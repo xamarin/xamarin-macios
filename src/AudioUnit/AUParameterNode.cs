@@ -11,7 +11,7 @@ namespace XamCore.AudioUnit
 			if (observer == null)
 				throw new ArgumentNullException ("observer");
 
-			IntPtr observerToken = _TokenByAddingParameterObserver (observer);
+			IntPtr observerToken = TokenByAddingParameterObserver (observer);
 
 			return new AUParameterObserverToken {
 				ObserverToken = observerToken
@@ -23,7 +23,7 @@ namespace XamCore.AudioUnit
 			if (observer == null)
 				throw new ArgumentNullException ("observer");
 
-			IntPtr observerToken = _TokenByAddingParameterRecordingObserver (observer);
+			IntPtr observerToken = TokenByAddingParameterRecordingObserver (observer);
 
 			return new AUParameterObserverToken {
 				ObserverToken = observerToken
@@ -32,7 +32,7 @@ namespace XamCore.AudioUnit
 
 		public void RemoveParameterObserver (AUParameterObserverToken token)
 		{
-			_RemoveParameterObserver (token.ObserverToken);
+			RemoveParameterObserver (token.ObserverToken);
 		}
 	}
 }

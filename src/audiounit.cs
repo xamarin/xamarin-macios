@@ -47,8 +47,14 @@ namespace XamCore.AudioUnit {
 // 	AUAudioTODO - We need testing for these bindings
 // 	delegate void AUScheduleMidiEventBlock (AUEventSampleTime eventSampleTime, byte cable, nint length, ref byte midiBytes);
 // 	delegate bool AUHostMusicalContextBlock (ref double currentTempo, ref double timeSignatureNumerator, ref nint timeSignatureDenominator, ref double currentBeatPosition, ref nint sampleOffsetToNextBeat, ref double currentMeasureDownbeatPosition);
+#if !XAMCORE_4_0
+	[Advice ("The signature will change in the future to return a string")]
+	delegate NSString
+#else
+	delegate string
+#endif
+	AUImplementorStringFromValueCallback (AUParameter param, ref float? value);
 
-	delegate string AUImplementorStringFromValueCallback (AUParameter param, ref float? value);
 	delegate string AUImplementorDisplayNameWithLengthCallback (AUParameterNode node, nint desiredLength);
 	delegate void AUParameterRecordingObserver (nint numberOfEvents, ref AURecordedParameterEvent events);
 	delegate void AUInputHandler (ref AudioUnitRenderActionFlags actionFlags, ref AudioTimeStamp timestamp, uint frameCount, nint inputBusNumber);
@@ -389,12 +395,22 @@ namespace XamCore.AudioUnit {
 		float Value { get; set; }
 
 		// -(void)setValue:(AUValue)value originator:(AUParameterObserverToken __nullable)originator;
-		[Internal][Sealed][Export ("setValue:originator:")]
-		void _SetValue (float value, IntPtr originator);
+#if XAMCORE_4_0 // undo breaking change introduced in xamarin/maccore @ 1f207bd3f3df363cb5a74e59b93acd8eb6e1fec2
+		[Internal][Sealed]
+#else
+		[Obsolete ("Use the AUParameterObserverToken overload")]
+#endif
+		[Export ("setValue:originator:")]
+		void SetValue (float value, IntPtr originator);
 
 		// -(void)setValue:(AUValue)value originator:(AUParameterObserverToken __nullable)originator atHostTime:(uint64_t)hostTime;
-		[Internal][Sealed][Export ("setValue:originator:atHostTime:")]
-		void _SetValue (float value, IntPtr originator, ulong hostTime);
+#if XAMCORE_4_0 // undo breaking change introduced in xamarin/maccore @ 1f207bd3f3df363cb5a74e59b93acd8eb6e1fec2
+		[Internal][Sealed]
+#else
+		[Obsolete ("Use the AUParameterObserverToken overload")]
+#endif
+		[Export ("setValue:originator:atHostTime:")]
+		void SetValue (float value, IntPtr originator, ulong hostTime);
 
 		// -(NSString * __nonnull)stringFromValue:(const AUValue * __nullable)value;
 		[Export ("stringFromValue:")]
@@ -424,12 +440,22 @@ namespace XamCore.AudioUnit {
 		string GetDisplayName (nint maximumLength);
 
 		// -(AUParameterObserverToken __nonnull)tokenByAddingParameterObserver:(AUParameterObserver __nonnull)observer;
-		[Internal][Sealed][Export ("tokenByAddingParameterObserver:")]
-		/* void * */ IntPtr _TokenByAddingParameterObserver (AUParameterObserver observer);
+#if XAMCORE_4_0 // undo breaking change introduced in xamarin/maccore @ 1f207bd3f3df363cb5a74e59b93acd8eb6e1fec2
+		[Internal][Sealed]
+#else
+		[Obsolete ("Use the CreateTokenByAddingParameterObserver instead")]
+#endif
+		[Export ("tokenByAddingParameterObserver:")]
+		/* void * */ IntPtr TokenByAddingParameterObserver (AUParameterObserver observer);
 
  		// -(AUParameterObserverToken __nonnull)tokenByAddingParameterRecordingObserver:(AUParameterRecordingObserver __nonnull)observer;
-		[Internal][Sealed][Export ("tokenByAddingParameterRecordingObserver:")]
- 		/* void * */ IntPtr _TokenByAddingParameterRecordingObserver (AUParameterRecordingObserver observer);
+#if XAMCORE_4_0 // undo breaking change introduced in xamarin/maccore @ 1f207bd3f3df363cb5a74e59b93acd8eb6e1fec2
+		[Internal][Sealed]
+#else
+		[Obsolete ("Use the CreateTokenByAddingParameterRecordingObserver instead")]
+#endif
+		[Export ("tokenByAddingParameterRecordingObserver:")]
+		/* void * */ IntPtr TokenByAddingParameterRecordingObserver (AUParameterRecordingObserver observer);
 
 		[Export ("implementorValueObserver", ArgumentSemantic.Copy)]
 		AUImplementorValueObserver ImplementorValueObserver { get; set; }
@@ -441,10 +467,15 @@ namespace XamCore.AudioUnit {
  		AUImplementorValueFromStringCallback ImplementorValueFromStringCallback { get; set; }
 
  		// -(void)removeParameterObserver:(AUParameterObserverToken __nonnull)token;
-		[Internal][Sealed][Export ("removeParameterObserver:")]
-		void _RemoveParameterObserver (/* void * */ IntPtr token);
+#if XAMCORE_4_0 // undo breaking change introduced in xamarin/maccore @ 1f207bd3f3df363cb5a74e59b93acd8eb6e1fec2
+		[Internal][Sealed]
+#else
+		[Obsolete ("Use the AUParameterObserverToken overload")]
+#endif
+		[Export ("removeParameterObserver:")]
+		void RemoveParameterObserver (/* void * */ IntPtr token);
 
-		[Export ("implementorStringFromValueCallback", ArgumentSemantic.Copy)]
+		[Export ("implementorStringFromValueCallback", ArgumentSemantic.Copy),]
 		AUImplementorStringFromValueCallback ImplementorStringFromValueCallback { get; set; }
 
 		[Export ("implementorDisplayNameWithLengthCallback", ArgumentSemantic.Copy)]
