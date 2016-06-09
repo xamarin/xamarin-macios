@@ -3339,23 +3339,27 @@ namespace XamCore.Registrar {
 					sb.Write (", &call_super");
 				sb.WriteLine (");");
 				if (isCtor) {
-					sb.WriteLine ("if (call_super)");
-					sb.Indent ();
-					sb.Write ("rv = [super");
-					var split = method.Selector.Split (':');
-					if (split.Length == 1) {
-						sb.Append (" ");
-						sb.Append (split [0]);
-					} else {
-						for (int i = 0; i < split.Length - 1; i++) {
-							sb.Append (" ");
-							sb.Append (split [i]);
-							sb.Append (":");
-							sb.AppendFormat ("p{0}", i);
-						}
+					sb.WriteLine ("if (call_super && rv) {");
+					sb.Write ("struct objc_super super = {  rv, [").Write (method.DeclaringType.SuperType.ExportedName).WriteLine (" class] };");
+					sb.Write ("rv = ((id (*)(objc_super*, SEL");
+
+					if (method.Parameters != null) {
+						for (int i = 0; i < method.Parameters.Length; i++)
+							sb.Append (", ").Append (ToObjCParameterType (method.Parameters [i], method.DescriptiveMethodName, exceptions, method.Method));
 					}
-					sb.WriteLine ("];");
-					sb.Unindent ();
+					if (method.IsVariadic)
+						sb.Append (", ...");
+				
+					sb.Write (")) objc_msgSendSuper) (&super, @selector (");
+					sb.Write (method.Selector);
+					sb.Write (")");
+					var split = method.Selector.Split (':');
+					for (int i = 0; i < split.Length - 1; i++) {
+						sb.Append (", ");
+						sb.AppendFormat ("p{0}", i);
+					}
+					sb.WriteLine (");");
+					sb.WriteLine ("}");
 					sb.WriteLine ("return rv;");
 				}
 				sb.WriteLine ("}");
@@ -3550,6 +3554,7 @@ namespace XamCore.Registrar {
 							hdr.WriteLine ("#include <xamarin/xamarin.h>");
 							hdr.WriteLine ("#include <objc/objc.h>");
 							hdr.WriteLine ("#include <objc/runtime.h>");
+							hdr.WriteLine ("#include <objc/message.h>");
 
 							header = hdr;
 							declarations = decls;
