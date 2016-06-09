@@ -68,6 +68,7 @@ namespace XamCore.ClockKit {
 	}
 
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // Default constructor not allowed for ClockKit.CLKComplicationServer : Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: You cannot alloc/init new instances of CLKComplicationServer. Use +sharedInstance.
 	interface CLKComplicationServer {
 
 		[Field ("CLKComplicationServerActiveComplicationsDidChangeNotification")]
