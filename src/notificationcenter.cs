@@ -71,11 +71,8 @@ namespace XamCore.NotificationCenter {
 	[BaseType (typeof(NSViewController), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NCWidgetListViewDelegate)})]
 	interface NCWidgetListViewController
 	{
-		[Wrap ("WeakDelegate")]
-		NCWidgetListViewDelegate Delegate { get; set; }
-
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
-		NSObject WeakDelegate { get; set; }
+		INCWidgetListViewDelegate Delegate { get; set; }
 
 		[Export ("contents", ArgumentSemantic.Copy)]
 		NSViewController[] Contents { get; set; }
@@ -130,11 +127,8 @@ namespace XamCore.NotificationCenter {
 	[BaseType (typeof(NSViewController), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NCWidgetSearchViewDelegate)})]
 	interface NCWidgetSearchViewController
 	{
-		[Wrap ("WeakDelegate")]
-		NCWidgetSearchViewDelegate Delegate { get; set; }
-
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
-		NSObject WeakDelegate { get; set; }
+		INCWidgetSearchViewDelegate Delegate { get; set; }
 
 		[Export ("searchResults", ArgumentSemantic.Copy)]
 		NSObject[] SearchResults { get; set; }
