@@ -76,6 +76,17 @@ namespace xharness
 			}
 		}
 
+		static string CreateRelativePath (string path, string relative_to)
+		{
+			if (path.StartsWith (relative_to, StringComparison.Ordinal)) {
+				var rv = path.Substring (relative_to.Length);
+				if (relative_to [relative_to.Length - 1] != Path.PathSeparator)
+					rv = rv.Substring (1);
+				return rv;
+			}
+			return path;
+		}
+
 		public static void CreateMacMakefile (Harness harness, IEnumerable<MacTarget> targets)
 		{
 			var makefile = Path.Combine (harness.RootDirectory, "Makefile-mac.inc");
@@ -126,7 +137,7 @@ namespace xharness
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacClassicTargetName (target, MacTargetNameType.Exec), "");
-						writer.WriteLine ("\t$(Q) {0}/bin/x86/Debug/{1}.app/Contents/MacOS/{1}", Path.GetDirectoryName (target.ProjectPath), make_escaped_name);
+						writer.WriteLine ("\t$(Q) {0}/bin/x86/Debug/{1}.app/Contents/MacOS/{1}", CreateRelativePath (Path.GetDirectoryName (target.ProjectPath), Path.GetDirectoryName (makefile)), make_escaped_name);
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacClassicTargetName (target, MacTargetNameType.Run), "");
@@ -149,7 +160,7 @@ namespace xharness
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Exec), "");
-						writer.WriteLine ("\t$(Q) {2}/bin/x86/Debug{1}/{0}.app/Contents/MacOS/{0}", make_escaped_name, target.Suffix, Path.GetDirectoryName (target.ProjectPath));
+						writer.WriteLine ("\t$(Q) {2}/bin/x86/Debug{1}/{0}.app/Contents/MacOS/{0}", make_escaped_name, target.Suffix, CreateRelativePath (Path.GetDirectoryName (target.ProjectPath), Path.GetDirectoryName (makefile)));
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Run), "");
