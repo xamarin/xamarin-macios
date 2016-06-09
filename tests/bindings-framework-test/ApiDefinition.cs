@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 
 #if __UNIFIED__
 using ObjCRuntime;
