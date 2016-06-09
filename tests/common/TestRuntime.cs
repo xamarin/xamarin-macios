@@ -141,6 +141,8 @@ partial class TestRuntime
 			switch (minor) {
 			case 5:
 				return CheckiOSSystemVersion (6, 0);
+			case 6:
+				return CheckiOSSystemVersion (6, 1);
 			default:
 				throw new NotImplementedException ();
 			}

@@ -140,7 +140,7 @@ namespace Introspection {
 			case "EKSpan":
 			case "EKRecurrenceFrequency":
 			case "EKEventAvailability":
-				if (!IsOSX11OrIOS9)
+				if (!TestRuntime.CheckXcodeVersion (7, 0))
 					return 4;
 				break;
 			case "MDLAxisAlignedBoundingBox":
@@ -670,7 +670,7 @@ namespace Introspection {
 				case "EventKit.EKSpan":
 				case "EventKit.EKAlarmType":
 				// EventKit.EK* enums are anonymous enums in 10.10 and iOS 8, but an NSInteger in 10.11 and iOS 9.
-					if (IsOSX11OrIOS9)
+					if (TestRuntime.CheckXcodeVersion (7, 0))
 						goto default;
 					return true;
 				default:
