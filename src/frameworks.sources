@@ -1351,9 +1351,8 @@ WKWEBKIT_SOURCES = \
 APPLETLS_SOURCES = \
 	Security/Tls/AppleTlsContext.cs \
 	Security/Tls/AppleTlsProvider.cs \
+	Security/Tls/AppleTlsStream.cs \
 	Security/Tls/MobileCertificateHelper.cs \
-	Security/Tls/AsyncProtocolRequest.cs \
-	Security/Tls/MobileAuthenticatedStream.cs \
 	Security/Tls/OldTlsProvider.cs \
 
 #
