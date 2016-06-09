@@ -23,12 +23,12 @@ namespace XamCore.AudioUnit
 
 		public void SetValue (float value, AUParameterObserverToken originator)
 		{
-			_SetValue (value, originator.ObserverToken);
+			SetValue (value, originator.ObserverToken);
 		}
 
 		public void SetValue (float value, AUParameterObserverToken originator, ulong hostTime)
 		{
-			_SetValue (value, originator.ObserverToken, hostTime);
+			SetValue (value, originator.ObserverToken, hostTime);
 		}
 	}
 #endif

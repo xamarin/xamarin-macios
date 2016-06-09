@@ -108,7 +108,7 @@ namespace monotouchtest {
 						$"Passed AUParameter was incorrect. Expected {parameter.Identifier} but was {param.Identifier}");
 
 					implementorCallbackInvoked = true;
-					return value.ToString ();
+					return (NSString)value.ToString ();
 				});
 
 				var str = parameter.GetString (floatValue);
