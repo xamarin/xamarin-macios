@@ -9,6 +9,7 @@
 const char *
 xamarin_get_locale_country_code ()
 {
+	// COOP: no managed memory access: any mode.
 	NSLocale *locale = [NSLocale currentLocale];
 	NSString *cc = [locale objectForKey: NSLocaleCountryCode];
 	return strdup ([cc UTF8String]);
@@ -17,12 +18,14 @@ xamarin_get_locale_country_code ()
 void
 xamarin_log (const unsigned short *unicodeMessage)
 {
+	// COOP: no managed memory access: any mode.
 	NSLog (@"%S", unicodeMessage); 
 }
 
 void*
 xamarin_timezone_get_data (const char *name, int *size)
 {
+	// COOP: no managed memory access: any mode.
 	NSTimeZone *tz = nil;
 	if (name) {
 		NSString *n = [[NSString alloc] initWithUTF8String: name];
@@ -42,6 +45,7 @@ xamarin_timezone_get_data (const char *name, int *size)
 char**
 xamarin_timezone_get_names (int *count)
 {
+	// COOP: no managed memory access: any mode.
 	NSArray *array = [NSTimeZone knownTimeZoneNames];
 	*count = array.count;
 	char** result = (char**) malloc (sizeof (char*) * (*count));
@@ -56,6 +60,7 @@ xamarin_timezone_get_names (int *count)
 void
 xamarin_start_wwan (const char *uri)
 {
+	// COOP: no managed memory access: any mode.
 #if defined(__i386__) || defined (__x86_64__)
 	return;
 #else
@@ -93,6 +98,7 @@ xamarin_start_wwan (const char *uri)
 const char *
 xamarin_GetFolderPath (int folder)
 {
+	// COOP: no managed memory access: any mode.
 	// NSUInteger-based enum (and we do not want corlib exposed to 32/64 bits differences)
 	NSSearchPathDirectory dd = (NSSearchPathDirectory) folder;
 	NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:dd inDomains:NSUserDomainMask] lastObject];

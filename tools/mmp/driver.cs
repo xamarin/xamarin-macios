@@ -106,6 +106,8 @@ namespace Xamarin.Bundler {
 		static int verbose = 0;
 		public static bool Force;
 
+		static bool is_extension;
+
 		// This must be kept in sync with the system launcher's minimum mono version (in launcher/launcher-system.m)
 		static Version MinimumMonoVersion = new Version (4, 2, 0);
 		const string pkg_config = "/Library/Frameworks/Mono.framework/Commands/pkg-config";
@@ -281,6 +283,8 @@ namespace Xamarin.Bundler {
 				{ "custom_bundle_name=", "Specify a custom name for the MonoBundle folder.", v => custom_bundle_name = v, true }, // Hidden hack for "universal binaries"
 				{ "tls-provider=", "Specify the default TLS provider", v => { tls_provider = v; }},
 				{ "http-message-handler=", "Specify the default HTTP Message Handler", v => { http_message_provider = v; }},
+				{ "extension", "Specifies an app extension", v => is_extension = true },
+				{ "allow-unsafe-gac-resolution", "Allow MSBuild to resolve from the System GAC", v => {} , true }, // Used in Xamarin.Mac.XM45.targets and must be ignored here. Hidden since it is a total hack. If you can use it, you don't need support
 			};
 
 			AddSharedOptions (os);
@@ -491,7 +495,9 @@ namespace Xamarin.Bundler {
 
 			if (registrar == RegistrarMode.Default)
 				registrar = RegistrarMode.Dynamic;
-
+			if (is_extension)
+				registrar = RegistrarMode.Static;
+			
 			if (no_executable) {
 				if (unprocessed.Count != 0) {
 					var exceptions = new List<Exception> ();
@@ -562,7 +568,7 @@ namespace Xamarin.Bundler {
 				GatherAssemblies ();
 				CheckReferences ();
 
-				if (!resolved_assemblies.Exists (f => Path.GetExtension (f).ToLower () == ".exe"))
+				if (!is_extension && !resolved_assemblies.Exists (f => Path.GetExtension (f).ToLower () == ".exe"))
 					throw new MonoMacException (79, true, "No executable was copied into the app bundle.  Please contact 'support@xamarin.com'", "");
 
 				// i18n must be dealed outside linking too (e.g. bug 11448)
@@ -1031,6 +1037,9 @@ namespace Xamarin.Bundler {
 					args.Append (Quote (finalLibPath)).Append (' ');
 				}
 
+				if (is_extension)
+					args.Append ("-e _xamarin_mac_extension_main -framework NotificationCenter").Append(' ');
+
 				foreach (var f in BuildTarget.Frameworks)
 					args.Append ("-framework ").Append (f).Append (' ');
 				foreach (var f in BuildTarget.WeakFrameworks)
@@ -1222,7 +1231,9 @@ namespace Xamarin.Bundler {
 					string libName = Path.GetFileName (linkWith);
 					string finalLibPath = Path.Combine (mmp_dir, libName);
 					Application.UpdateFile (linkWith, finalLibPath);
-					XcodeRun ("install_name_tool -id", string.Format ("{0} {1}", Quote("@executable_path/../" + BundleName + "/" + libName), finalLibPath));
+					int ret = XcodeRun ("install_name_tool -id", string.Format ("{0} {1}", Quote("@executable_path/../" + BundleName + "/" + libName), Quote (finalLibPath)));
+					if (ret != 0)
+						throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
 					native_libraries_copied_in.Add (libName);
 				}
 			}
@@ -1249,7 +1260,9 @@ namespace Xamarin.Bundler {
 				// if required update the paths inside the .dylib that was copied
 				if (sb.Length > 0) {
 					sb.Append (' ').Append (Quote (library));
-					XcodeRun ("install_name_tool", sb.ToString ());
+					int ret = XcodeRun ("install_name_tool", sb.ToString ());
+					if (ret != 0)
+						throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
 					sb.Clear ();
 				}
 			}
@@ -1373,13 +1386,17 @@ namespace Xamarin.Bundler {
 				Console.WriteLine ("Dependency {0} was already at destination, skipping.", Path.GetFileName (real_src));
 			}
 			else {
-				File.Copy (real_src, dest, true);
+				// install_name_tool gets angry if you copy in a read only native library
+				CopyFileAndRemoveReadOnly (real_src, dest);
 			}
 
 			bool isStaticLib = real_src.EndsWith (".a");
 			if (native_references.Contains (real_src)) {
-				if (!isStaticLib)
-					XcodeRun ("install_name_tool -id", string.Format ("{0} {1}", Quote("@executable_path/../" + BundleName + "/" + name), dest));
+				if (!isStaticLib) {
+					int ret = XcodeRun ("install_name_tool -id", string.Format ("{0} {1}", Quote("@executable_path/../" + BundleName + "/" + name), Quote(dest)));
+					if (ret != 0)
+						throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
+				}
 				native_libraries_copied_in.Add (name);
 			}
 
@@ -1413,7 +1430,8 @@ namespace Xamarin.Bundler {
 
 		/* Currently we clobber any existing files, perhaps we should error and have a -force flag */
 		static void CreateDirectoriesIfNeeded () {
-			App.AppDirectory = Path.Combine (output_dir, string.Format ("{0}.app", app_name));
+			App.AppDirectory = Path.Combine (output_dir, string.Format("{0}.{1}", app_name, is_extension ? "appex" : "app"));
+
 			contents_dir = Path.Combine (App.AppDirectory, "Contents");
 			macos_dir = Path.Combine (contents_dir, "MacOS");
 			frameworks_dir = Path.Combine (contents_dir, "Frameworks");
@@ -1483,13 +1501,22 @@ namespace Xamarin.Bundler {
 				resolved_assemblies.Add (Path.Combine (fx_dir, "I18N.West.dll"));
 		}
 
+		static void CopyFileAndRemoveReadOnly (string src, string dest) {
+			File.Copy (src, dest, true);
+
+			FileAttributes attrs = File.GetAttributes (dest);
+			if ((attrs & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+				File.SetAttributes (dest, attrs & ~FileAttributes.ReadOnly);
+		}
+
 		static void CopyAssemblies () {
 			foreach (string asm in resolved_assemblies) {
 				var mdbfile = string.Format ("{0}.mdb", asm);
 				var configfile = string.Format ("{0}.config", asm);
 				string filename = Path.GetFileName (asm);
 
-				File.Copy (asm, Path.Combine (mmp_dir, filename), true);
+				// The linker later gets angry if you copy in a read only assembly
+				CopyFileAndRemoveReadOnly (asm, Path.Combine (mmp_dir, filename));
 				if (verbose > 0)
 					Console.WriteLine ("Added assembly {0}", asm);
 

@@ -3181,7 +3181,7 @@ namespace XamCore.Foundation
 
 #if !XAMCORE_4_0
 		[Obsolete("FromFormat (string, NSExpression[]) is deprecated, please use FromFormat (string, NSObject[]) instead.")]
-		[Sealed, Static, Export ("expressionWithFormat:argumentArray:")]
+		[Static, Export ("expressionWithFormat:argumentArray:")]
 		NSExpression FromFormat (string format, NSExpression [] parameters);
 #endif
 
@@ -3210,7 +3210,7 @@ namespace XamCore.Foundation
 
 #if !XAMCORE_4_0
 		[Obsolete("FromFunction (NSExpressionHandler, NSExpression[]) is deprecated, please use FromFunction (NSExpressionCallbackHandler, NSExpression[]) instead.")]
-		[Sealed, Static, Export ("expressionForBlock:arguments:")]
+		[Static, Export ("expressionForBlock:arguments:")]
 		NSExpression FromFunction (NSExpressionHandler target, NSExpression[] parameters);
 #endif
 
@@ -3279,12 +3279,6 @@ namespace XamCore.Foundation
 		[Sealed, Internal, Export ("falseExpression")]
 		NSExpression _FalseExpression { get; }
 		
-#if !XAMCORE_4_0
-		[Obsolete("ValueWithObject is deprecated, please use EvaluateWith instead.")]
-		[Sealed, Export ("expressionValueWithObject:context:")]
-		NSExpression ExpressionValueWithObject (NSObject object1, NSMutableDictionary context);
-#endif
-
 		[Export ("expressionValueWithObject:context:")]
 		NSObject EvaluateWith ([NullAllowed] NSObject obj, [NullAllowed] NSMutableDictionary context);
 	}
@@ -11395,7 +11389,21 @@ namespace XamCore.Foundation
 		bool IsValidForFormat (NSObject plist, NSPropertyListFormat format);
 	}
 
-	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
+#if XAMCORE_2_0 || !MONOMAC
+	public interface INSExtensionRequestHandling { }
+
+	[iOS (8,0)][Mac (10,10)] // Not defined in 32-bit
+	[Protocol, Model]
+	[BaseType (typeof (NSObject))]
+	public interface NSExtensionRequestHandling {
+		[Abstract]
+		[Mac (10,10, onlyOn64 : true)] 
+		// @required - (void)beginRequestWithExtensionContext:(NSExtensionContext *)context;
+		[Export ("beginRequestWithExtensionContext:")]
+		void BeginRequestWithExtensionContext (NSExtensionContext context);
+	}
+#else
+	[iOS (8,0)][Mac (10,10, onlyOn64:true)] // Not defined in 32-bit
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	public interface NSExtensionRequestHandling {
@@ -11404,6 +11412,7 @@ namespace XamCore.Foundation
 		[Export ("beginRequestWithExtensionContext:")]
 		void BeginRequestWithExtensionContext (NSExtensionContext context);
 	}
+#endif
 
 	[Protocol]
 	public interface NSLocking {

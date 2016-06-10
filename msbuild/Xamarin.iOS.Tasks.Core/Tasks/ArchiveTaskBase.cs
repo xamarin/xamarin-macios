@@ -76,9 +76,18 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			var dsymDir = appex.ItemSpec + ".dSYM";
-			var destDir = Path.Combine (archiveDir, "dSYMs", Path.GetFileName (dsymDir));
 
-			Ditto (dsymDir, destDir);
+			if (Directory.Exists (dsymDir)) {
+				var destDir = Path.Combine (archiveDir, "dSYMs", Path.GetFileName (dsymDir));
+				Ditto (dsymDir, destDir);
+			}
+
+			var msymDir = appex.ItemSpec + ".mSYM";
+
+			if (Directory.Exists (msymDir)) {
+				var destDir = Path.Combine (archiveDir, "mSYMs", Path.GetFileName (msymDir));
+				Ditto (msymDir, destDir);
+			}
 		}
 
 		void AddIconPaths (PArray icons, PArray iconFiles, string productsDir)
@@ -136,8 +145,16 @@ namespace Xamarin.iOS.Tasks
 				Ditto (AppBundleDir.ItemSpec, appDestDir);
 
 				// Archive the dSYMs...
-				var dsymsDestDir = Path.Combine (archiveDir, "dSYMs", Path.GetFileName (DSYMDir));
-				Ditto (DSYMDir, dsymsDestDir);
+				if (Directory.Exists (DSYMDir)) {
+					var destDir = Path.Combine (archiveDir, "dSYMs", Path.GetFileName (DSYMDir));
+					Ditto (DSYMDir, destDir);
+				}
+
+				// Archive the mSYMs...
+				if (Directory.Exists (MSYMDir)) {
+					var destDir = Path.Combine (archiveDir, "mSYMs", Path.GetFileName (MSYMDir));
+					Ditto (MSYMDir, destDir);
+				}
 
 				// Archive the Bitcode symbol maps
 				var bcSymbolMaps = Directory.GetFiles (Path.GetDirectoryName (DSYMDir), "*.bcsymbolmap");

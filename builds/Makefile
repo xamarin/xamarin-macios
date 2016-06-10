@@ -163,10 +163,8 @@ $(2)_CONFIGURE_FLAGS = \
 	--enable-maintainer-mode \
 	--with-glib=embedded \
 	--with-mcs-docs=no \
-	--disable-shared-handles \
 	--disable-nls \
 	--disable-iconv \
-	--enable-native-types \
 	--disable-mcs-build \
 	--disable-boehm \
 	$(XAMARIN_CONFIGURE_FLAGS) \
@@ -367,7 +365,6 @@ TOOLS64_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
 			--with-monotouch=yes \
 			--with-xammac=yes \
 			--with-mcs-docs=no \
-			--disable-shared-handles \
 			--disable-nls \
 			--disable-iconv	\
 			--disable-boehm \
@@ -463,7 +460,6 @@ WATCHBCL_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
 			--with-monotouch_tv=no \
 			--with-xammac=no \
 			--with-mcs-docs=no \
-			--disable-shared-handles \
 			--disable-nls \
 			--disable-iconv	\
 			--disable-boehm \
@@ -813,11 +809,9 @@ $(eval SIM$(2)_CONFIGURE_FLAGS=	--host=$(1)-apple-darwin10 \
 			--disable-mcs-build \
 			--disable-nls \
 			--disable-iconv \
-			--disable-shared-handles	\
 			--disable-boehm \
 			--disable-executables \
 			--disable-visibility-hidden	\
-			--enable-native-types \
 			$(XAMARIN_CONFIGURE_FLAGS) \
 			)
 
@@ -956,10 +950,12 @@ WATCHSIMULATOR_CONFIGURE_FLAGS =                \
 	--disable-mcs-build                         \
 	--disable-nls                               \
 	--disable-iconv                             \
-	--disable-shared-handles                    \
 	--disable-visibility-hidden	                \
-	--enable-native-types                       \
 	$(XAMARIN_CONFIGURE_FLAGS)         \
+
+# FIXME: remove --with-checked-build=yes when we've stabilized a bit.
+WATCHSIMULATOR_CONFIGURE_FLAGS += \
+	--enable-checked-build=gc                    \
 
 WATCHSIMULATOR_ACVARS =  \
 	ac_cv_func_system=no \
@@ -1091,9 +1087,7 @@ TVSIMULATOR_CONFIGURE_FLAGS =                         \
 	--disable-mcs-build                               \
 	--disable-nls                                     \
 	--disable-iconv                                   \
-	--disable-shared-handles                          \
 	--disable-visibility-hidden	                      \
-	--enable-native-types                             \
 	$(XAMARIN_CONFIGURE_FLAGS)               \
 
 TVSIMULATOR_ACVARS =  \
@@ -1228,17 +1222,13 @@ $(eval $(2)_CONFIGURE_FLAGS=--build=i386-apple-darwin10 \
 			--without-ikvm-native \
 			--with-tls=pthread \
 			--without-sigaltstack \
-			--with-lazy-gc-thread-creation=yes	\
 			--enable-icall-export \
 			--disable-icall-tables \
 			--disable-executables \
 			--disable-nls \
 			--disable-iconv \
-			--disable-shared-handles	\
 			--disable-visibility-hidden	\
 			--disable-boehm \
-			--enable-native-types \
-			--enable-gsharedvt \
 			--enable-dtrace=no \
 			$(IOS_BITCODE_CONFIGURE_FLAGS) \
 			$(XAMARIN_CONFIGURE_FLAGS) \
@@ -1375,11 +1365,15 @@ install-local:: install-iphoneos
 endif
 endif
 
+ifndef ENABLE_BITCODE_ON_IOS
+LIBMONO_PROFILER_IPHONEOS_DYLIB=$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-profiler-log.dylib
+endif
+
 IPHONEOS_TARGETS = \
 	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmonosgen-2.0.a                                  \
 	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmonosgen-2.0.dylib                              \
 	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-profiler-log.a                             \
-	$(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-profiler-log.dylib                         \
+	$(LIBMONO_PROFILER_IPHONEOS_DYLIB)														\
 	$(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework/Mono                            \
 	$(IOS_DESTDIR)$(IPHONEOS_SDK)/Frameworks/Mono.framework/Info.plist                      \
 
@@ -1458,16 +1452,12 @@ WATCHOS_CONFIGURE_FLAGS =                        \
 	--without-ikvm-native                        \
 	--with-tls=pthread                           \
 	--without-sigaltstack                        \
-	--with-lazy-gc-thread-creation=yes           \
 	--enable-icall-export                        \
 	--disable-icall-tables                       \
 	--disable-executables                        \
 	--disable-nls                                \
 	--disable-iconv                              \
-	--disable-shared-handles                     \
 	--disable-visibility-hidden	                 \
-	--enable-native-types                        \
-	--enable-gsharedvt                           \
 	$(XAMARIN_CONFIGURE_FLAGS)          \
 	$(BITCODE_CONFIGURE_FLAGS)
 
@@ -1555,7 +1545,7 @@ WATCHOS_TARGETS =                                                             \
 # is needed, so just disable for now to make the build complete.
 WATCHOS_DISABLED_TARGETS = \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.dylib   \
-	
+
 WATCHOS_DIRECTORIES = \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework \
 	$(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib                   \
@@ -1633,16 +1623,12 @@ TVOS_CONFIGURE_FLAGS =                           \
 	--without-ikvm-native                        \
 	--with-tls=pthread                           \
 	--without-sigaltstack                        \
-	--with-lazy-gc-thread-creation=yes           \
 	--enable-icall-export                        \
 	--disable-icall-tables						 \
 	--disable-executables                        \
 	--disable-nls                                \
 	--disable-iconv                              \
-	--disable-shared-handles                     \
 	--disable-visibility-hidden	                 \
-	--enable-native-types                        \
-	--enable-gsharedvt                           \
 	--enable-extension-module                    \
 	--enable-dtrace=no                           \
 	$(BITCODE_CONFIGURE_FLAGS)					 \
@@ -1721,11 +1707,13 @@ TVOS_TARGET_SHAREDLIBLOGPROFILER = $(BUILD_DESTDIR)/targettv/lib/libmono-profile
 
 device:: tvos
 
+# See WATCHOS_DISABLED_TARGETS
+TVOS_DISABLED_TARGETS=$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.dylib
+
 TVOS_TARGETS =                                                             \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmonosgen-2.0.a            \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmonosgen-2.0.dylib        \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.a       \
-	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.dylib   \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Mono       \
 	$(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/Frameworks/Mono.framework/Info.plist \
 
@@ -1881,9 +1869,7 @@ CROSS_BASE_CONFIGURE_FLAGS= \
 			--disable-iconv \
 			--disable-libraries	\
 			--enable-extension-module \
-			--enable-gsharedvt \
-			--disable-boehm \
-			--enable-native-types
+			--disable-boehm
 
 #
 # 32 bit cross compiler
@@ -2025,7 +2011,6 @@ WATCH_CROSS_CONFIGURE_FLAGS=$(CROSS_BASE_CONFIGURE_FLAGS)	\
 	--build=i386-apple-darwin10 \
 	--cache-file=../cross-watch.config.cache \
 	--target=armv7k-unknown-darwin \
-	--enable-gsharedvt \
 	--with-cooperative-gc=yes \
 	--with-cross-offsets=armv7k-apple-darwin.h
 
@@ -2091,7 +2076,6 @@ TV_CROSS_CONFIGURE_FLAGS=$(CROSS_BASE_CONFIGURE_FLAGS)	\
 	--prefix=$(BUILD_DESTDIR)/crosstv \
 	--cache-file=../crosstv.config.cache \
 	--target=aarch64-unknown-darwin \
-	--enable-gsharedvt \
 
 TV_CROSS_CONFIGURE_ENVIRONMENT = \
 	$(Q) PATH="../llvm64/usr/bin:$(PATH)" \

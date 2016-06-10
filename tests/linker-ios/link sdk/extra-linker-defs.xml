@@ -1,0 +1,14 @@
+<linker>
+    <!-- see LinkExtraDefsTest unit tests -->
+	<assembly fullname="mscorlib">
+		<type fullname="System.Security.HostSecurityManager" />
+    </assembly>
+	<assembly fullname="System">
+		<type fullname="System.Net.Mime.ContentType" >
+			<method name="ParseValue" />
+		</type>
+    </assembly>
+	<assembly fullname="MonoTouch"> <!--- actually a typo, it's monotouch, but we're now case insensitive -->
+		<type fullname="MonoTouch.CoreBluetooth.CBUUID" preserve="field" />
+    </assembly>
+</linker>

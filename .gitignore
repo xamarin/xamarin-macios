@@ -13,3 +13,5 @@ obj
 packages
 ~.pmcs*
 .DS_Store
+jenkins-results
+

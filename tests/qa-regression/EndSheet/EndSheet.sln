@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EndSheet", "EndSheet.csproj", "{986B23BB-04F7-4950-BEA0-B0AF85D6AFB5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+		AppStore|x86 = AppStore|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{986B23BB-04F7-4950-BEA0-B0AF85D6AFB5}.AppStore|x86.ActiveCfg = AppStore|x86
+		{986B23BB-04F7-4950-BEA0-B0AF85D6AFB5}.AppStore|x86.Build.0 = AppStore|x86
+		{986B23BB-04F7-4950-BEA0-B0AF85D6AFB5}.Debug|x86.ActiveCfg = Debug|x86
+		{986B23BB-04F7-4950-BEA0-B0AF85D6AFB5}.Debug|x86.Build.0 = Debug|x86
+		{986B23BB-04F7-4950-BEA0-B0AF85D6AFB5}.Release|x86.ActiveCfg = Release|x86
+		{986B23BB-04F7-4950-BEA0-B0AF85D6AFB5}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = EndSheet.csproj
+	EndGlobalSection
+EndGlobal

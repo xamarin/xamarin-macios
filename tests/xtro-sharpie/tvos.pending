@@ -1,0 +1,116 @@
+# AVFoundation
+
+## there's no *Capture* possibility on AppleTV - looks like an Apple mistake
+!missing-field! AVCaptureExposureDurationCurrent not bound
+!missing-field! AVCaptureExposureTargetBiasCurrent not bound
+!missing-field! AVCaptureISOCurrent not bound
+!missing-field! AVCaptureLensPositionCurrent not bound
+!missing-field! AVCaptureMaxAvailableTorchLevel not bound
+!missing-field! AVCaptureWhiteBalanceGainsCurrent not bound
+
+## inside AVPlayerViewControllerDeprecated
+!missing-selector! AVPlayerItem::externalSubtitleOptionLanguages not bound
+!missing-selector! AVPlayerItem::selectedExternalSubtitleOptionLanguage not bound
+!missing-selector! AVPlayerItem::setExternalSubtitleOptionLanguages: not bound
+!missing-selector! AVPlayerItem::setSelectedExternalSubtitleOptionLanguage: not bound
+
+## AVAudioPlayer INTERRUPTION NOTIFICATIONS ARE DEPRECATED - Use AVAudioSession instead. 
+
+### deprecated in iOS8
+!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
+
+### deprecated in iOS6, replaced by above
+!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions: not found
+
+
+# CloudKit
+
+## Apple added the API / headers but they are not included by default (so xtro do not have it)
+!unknown-type! CKFetchWebAuthTokenOperation bound
+
+
+# CoreMedia
+
+## kCMFormatDescription* are not bound for iOS either (common.unclassified)
+!missing-field! kCMFormatDescriptionYCbCrMatrix_DCI_P3 not bound
+!missing-field! kCMFormatDescriptionYCbCrMatrix_P3_D65 not bound
+
+
+# GameplayKit
+
+## Xcode 7.1 added those types - but they are not in Xcode 7.2 SDK ??? Apple merge conflict
+!unknown-type! GKHybridStrategist bound
+!unknown-type! GKMonteCarloStrategist bound
+!unknown-type! GKQuadTree bound
+!unknown-type! GKQuadTreeNode bound
+
+
+# UIKit
+
+## Apple docs: This property is inherited from the UIView parent class. This class changes the default value of this property to NO.
+!missing-selector! UIImageView::isUserInteractionEnabled not bound
+!missing-selector! UIImageView::setUserInteractionEnabled: not bound
+!missing-selector! UILabel::isUserInteractionEnabled not bound
+!missing-selector! UILabel::setUserInteractionEnabled: not bound
+
+## headers are unclear (added in iOS9.1) but Apple web documentation does not show those members
+## and several only make sense for the stylus touches
+!missing-selector! UITouch::altitudeAngle not bound
+!missing-selector! UITouch::azimuthAngleInView: not bound
+!missing-selector! UITouch::azimuthUnitVectorInView: not bound
+!missing-selector! UITouch::estimatedProperties not bound
+!missing-selector! UITouch::estimatedPropertiesExpectingUpdates not bound
+!missing-selector! UITouch::estimationUpdateIndex not bound
+!missing-selector! UITouch::preciseLocationInView: not bound
+!missing-selector! UITouch::precisePreviousLocationInView: not bound
+
+## confusing header wrt categories, defined in: UIAdaptivePresentations (UIViewController)
+## UIPopoverPresentationController, the returned type, is not available in tvOS
+!missing-selector! UIViewController::popoverPresentationController not bound
+
+## property not decorated as unavailable but
+## UIPinchGestureRecognizer, the returned type, is not available in tvOS
+!missing-selector! UIScrollView::pinchGestureRecognizer not bound
+
+## the signature use UILexicon which is not part of tvOS
+!missing-selector! UIInputViewController::requestSupplementaryLexiconWithCompletion: not bound
+
+## the [Sealed] attributes removes the [Export] one so it seems missing (but it's not)
+!missing-selector! UIGestureRecognizer::ignorePress:forEvent: not bound
+
+## UIAccessibilityContainer is an informal protocol 
+## that we bound as a protocol but is (objc encoding) a category
+!missing-selector! NSObject::accessibilityElementAtIndex: not bound
+!missing-selector! NSObject::accessibilityElements not bound
+!missing-selector! NSObject::indexOfAccessibilityElement: not bound
+!missing-selector! NSObject::setAccessibilityElements: not bound
+
+## It's a ObjC Category / .NET static type so it's assumed the selector is for an instance
+## and as it's a really static (both ways). That fails at xtro verification (can't know it's
+## static). That's weird construct with managed helper method (so it looks ok)
+!missing-selector! +NSAttributedString::attributedStringWithAttachment: not bound
+
+## fixed in XAMCORE_4_0 - API break
+!incorrect-protocol-member! UIDynamicAnimatorDelegate::dynamicAnimatorDidPause: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UIDynamicAnimatorDelegate::dynamicAnimatorWillResume: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UILayoutSupport::bottomAnchor is REQUIRED and should be abstract
+!incorrect-protocol-member! UILayoutSupport::heightAnchor is REQUIRED and should be abstract
+!incorrect-protocol-member! UILayoutSupport::topAnchor is REQUIRED and should be abstract
+
+## it's technically optional but there's no point in adopting the protocol if you do not provide the implemenation
+!incorrect-protocol-member! UIInputViewAudioFeedback::enableInputClicksWhenVisible is OPTIONAL and should NOT be abstract
+
+## static method cannot be overriden "normally" they must be re-exposed with [Export]
+!incorrect-protocol-member! +UIPopoverBackgroundViewMethods::arrowBase is REQUIRED and should be abstract
+!incorrect-protocol-member! +UIPopoverBackgroundViewMethods::arrowHeight is REQUIRED and should be abstract
+!incorrect-protocol-member! +UIPopoverBackgroundViewMethods::contentViewInsets is REQUIRED and should be abstract
+
+## hack to get them inlined into UITextView and UITextField
+!incorrect-protocol-member! UITextInputTraits::autocapitalizationType is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::autocorrectionType is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::enablesReturnKeyAutomatically is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::isSecureTextEntry is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::keyboardAppearance is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::keyboardType is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::returnKeyType is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::spellCheckingType is OPTIONAL and should NOT be abstract

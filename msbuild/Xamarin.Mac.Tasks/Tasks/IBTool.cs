@@ -8,10 +8,6 @@ namespace Xamarin.Mac.Tasks {
 			get { return false; }
 		}
 
-		protected override bool UseCompilationDirectory {
-			get { return false; }
-		}
-
 		protected override string MinimumDeploymentTargetKey {
 			get { return ManifestKeys.LSMinimumSystemVersion; }
 		}

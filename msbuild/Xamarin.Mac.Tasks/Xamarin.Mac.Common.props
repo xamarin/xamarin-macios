@@ -54,6 +54,11 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		<XamMacArch Condition="'$(XamMacArch)' == ''">x86_64</XamMacArch>
 		<MonoMacResourcePrefix Condition="'$(MonoMacResourcePrefix)' == ''">Resources</MonoMacResourcePrefix>
 		<XamMacResourcePrefix Condition="'$(XamMacResourcePrefix)' == ''">$(MonoMacResourcePrefix)</XamMacResourcePrefix>
+		<IsAppExtension Condition="'$(IsAppExtension)' == ''">False</IsAppExtension>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<MacTargetsEnabled>true</MacTargetsEnabled>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props"

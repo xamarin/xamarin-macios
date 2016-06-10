@@ -251,3 +251,9 @@ endif
 ifdef INCLUDE_MAC
 	$(MAKE) verify-reference-assemblies-mac -j8
 endif
+
+jenkins-api-diff:
+	-$(MAKE) wrench-api-diff
+	$(Q) mkdir -p $(JENKINS_RESULTS_DIRECTORY)/api-diff
+	$(Q) cp *.html $(JENKINS_RESULTS_DIRECTORY)/api-diff
+	$(Q) cp -R diff $(JENKINS_RESULTS_DIRECTORY)/api-diff

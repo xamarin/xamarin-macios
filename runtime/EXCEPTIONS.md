@@ -74,6 +74,16 @@ exceptions that reaches native code. There are a few sources:
    notified when the mono runtime detects this case:
    https://github.com/mono/mono/pull/2948
 
+3. When we call any managed code from our runtime. This occurs
+   quite frequently when Objective-C calls a selector with a
+   managed information.
+
+   In all cases we must handle exceptions properly - this is
+   done by having the managed delegates in our runtime catch
+   all exceptions, and returning a GCHandle with the caught
+   exception. Then the caller must check if any exceptions
+   were thrown, and decide how to handle it appropriately.
+
 Objective-C exception marshaling
 --------------------------------
 

@@ -1,0 +1,7 @@
+.libs
+*.exe
+*.dll
+*.a
+*.m
+TheApp.app*
+cache*

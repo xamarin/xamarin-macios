@@ -742,12 +742,17 @@ namespace Xamarin.Bundler {
 			if (!IsExtension && Platform == ApplePlatform.WatchOS)
 				throw new MonoTouchException (77, true, "WatchOS projects must be extensions.");
 		
+#if ENABLE_BITCODE_ON_IOS
+			if (Platform == ApplePlatform.iOS)
+				DeploymentTarget = new Version (9, 0);
+#endif
+
 			if (DeploymentTarget == null) {
 				DeploymentTarget = Xamarin.SdkVersions.GetVersion (Platform);
 			} else if (DeploymentTarget < Xamarin.SdkVersions.GetMinVersion (Platform)) {
-				throw new MonoTouchException (73, true, "Xamarin.iOS {0} does not support a deployment target of {1} (the minimum is {2}). Please select a newer deployment target in your project's Info.plist.", Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (Platform));
+				throw new MonoTouchException (73, true, "Xamarin.iOS {0} does not support a deployment target of {1} for {3} (the minimum is {2}). Please select a newer deployment target in your project's Info.plist.", Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetMinVersion (Platform), PlatformName);
 			} else if (DeploymentTarget > Xamarin.SdkVersions.GetVersion (Platform)) {
-				throw new MonoTouchException (74, true, "Xamarin.iOS {0} does not support a deployment target of {1} (the maximum is {2}). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.iOS.", Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (Platform));
+				throw new MonoTouchException (74, true, "Xamarin.iOS {0} does not support a deployment target of {1} for {3} (the maximum is {2}). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.iOS.", Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (Platform), PlatformName);
 			}
 
 			if (Platform == ApplePlatform.iOS && FastDev && DeploymentTarget.Major < 7) {
@@ -849,6 +854,23 @@ namespace Xamarin.Bundler {
 				throw ErrorHelper.CreateError (91, "This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker.", PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode);
 
 			Namespaces.Initialize ();
+
+			var hasBitcodeCapableRuntime = false;
+			switch (Platform) {
+			case ApplePlatform.iOS:
+#if ENABLE_BITCODE_ON_IOS
+				hasBitcodeCapableRuntime = true;
+#endif
+				break;
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				hasBitcodeCapableRuntime = true;
+				break;
+			}
+			if (hasBitcodeCapableRuntime && EnableProfiling && FastDev) {
+				ErrorHelper.Warning (94, "Both profiling (--profiling) and incremental builds (--fastdev) is not supported when building for {0}. Incremental builds have ben disabled.", PlatformName);
+				FastDev = false;
+			}
 
 			InitializeCommon ();
 
@@ -1060,14 +1082,16 @@ namespace Xamarin.Bundler {
 
 				var libprofiler_target = Path.Combine (AppDirectory, "libmono-profiler-log.dylib");
 				var libprofiler_source = Path.Combine (libdir, "libmono-profiler-log.dylib");
-				Application.UpdateFile (libprofiler_source, libprofiler_target);
+				if (EnableProfiling)
+					Application.UpdateFile (libprofiler_source, libprofiler_target);
 
 				// Copy libXamarin.dylib to the app
 				var libxamarin_target = Path.Combine (AppDirectory, LibXamarin);
 				Application.UpdateFile (Path.Combine (Driver.MonoTouchLibDirectory, LibXamarin), libxamarin_target);
 
 				if (UseMonoFramework.Value) {
-					Driver.XcodeRun ("install_name_tool", "-change @executable_path/libmonosgen-2.0.dylib @rpath/Mono.framework/Mono " + Driver.Quote (libprofiler_target));
+					if (EnableProfiling)
+						Driver.XcodeRun ("install_name_tool", "-change @executable_path/libmonosgen-2.0.dylib @rpath/Mono.framework/Mono " + Driver.Quote (libprofiler_target));
 					Driver.XcodeRun ("install_name_tool", "-change @executable_path/libmonosgen-2.0.dylib @rpath/Mono.framework/Mono " + Driver.Quote (libxamarin_target));
 				}
 			}

@@ -32,8 +32,9 @@ namespace XamCore.Security.Tls
 		AsyncProtocolRequest asyncHandshakeRequest;
 		AsyncProtocolRequest asyncReadRequest;
 		AsyncProtocolRequest asyncWriteRequest;
-		BufferOffsetSize readBuffer;
-		BufferOffsetSize writeBuffer;
+		BufferOffsetSize2 readBuffer;
+		BufferOffsetSize2 writeBuffer;
+
 		object ioLock = new object ();
 		int closeRequested;
 
@@ -45,8 +46,8 @@ namespace XamCore.Security.Tls
 			Settings = settings;
 			Provider = provider;
 
-			readBuffer = new BufferOffsetSize (new byte [16384], 0, 0);
-			writeBuffer = new BufferOffsetSize (new byte [16384], 0, 0);
+			readBuffer = new BufferOffsetSize2 (16834);
+			writeBuffer = new BufferOffsetSize2 (16384);
 		}
 
 		public MonoTlsSettings Settings {
@@ -285,7 +286,7 @@ namespace XamCore.Security.Tls
 			ProcessReadOrWrite (ref asyncWriteRequest, ref writeBuffer, ProcessWrite, new BufferOffsetSize (buffer, offset, count), null);
 		}
 
-		IAsyncResult BeginReadOrWrite (ref AsyncProtocolRequest nestedRequest, ref BufferOffsetSize internalBuffer, AsyncOperation operation, BufferOffsetSize userBuffer, AsyncCallback asyncCallback, object asyncState)
+		IAsyncResult BeginReadOrWrite (ref AsyncProtocolRequest nestedRequest, ref BufferOffsetSize2 internalBuffer, AsyncOperation operation, BufferOffsetSize userBuffer, AsyncCallback asyncCallback, object asyncState)
 		{
 			LazyAsyncResult lazyResult = new LazyAsyncResult (this, asyncState, asyncCallback);
 			ProcessReadOrWrite (ref nestedRequest, ref internalBuffer, operation, userBuffer, lazyResult);
@@ -318,7 +319,7 @@ namespace XamCore.Security.Tls
 			return lazyResult.Result;
 		}
 
-		int ProcessReadOrWrite (ref AsyncProtocolRequest nestedRequest, ref BufferOffsetSize internalBuffer, AsyncOperation operation, BufferOffsetSize userBuffer, LazyAsyncResult lazyResult)
+		int ProcessReadOrWrite (ref AsyncProtocolRequest nestedRequest, ref BufferOffsetSize2 internalBuffer, AsyncOperation operation, BufferOffsetSize userBuffer, LazyAsyncResult lazyResult)
 		{
 			if (userBuffer == null || userBuffer.Buffer == null)
 				throw new ArgumentNullException ("buffer");
@@ -336,7 +337,7 @@ namespace XamCore.Security.Tls
 			return StartOperation (ref nestedRequest, ref internalBuffer, operation, asyncRequest, name);
 		}
 
-		int StartOperation (ref AsyncProtocolRequest nestedRequest, ref BufferOffsetSize internalBuffer, AsyncOperation operation, AsyncProtocolRequest asyncRequest, string name)
+		int StartOperation (ref AsyncProtocolRequest nestedRequest, ref BufferOffsetSize2 internalBuffer, AsyncOperation operation, AsyncProtocolRequest asyncRequest, string name)
 		{
 			if (Interlocked.CompareExchange (ref nestedRequest, asyncRequest, null) != null)
 				throw new InvalidOperationException ("Invalid nested call.");
@@ -392,6 +393,8 @@ namespace XamCore.Security.Tls
 			if (asyncRequest == null)
 				throw new InvalidOperationException ();
 
+			Debug ("InternalRead: {0} {1} {2}", internalBuffer, offset, size);
+
 			/*
 			 * One of Apple's native functions wants to read 'size' bytes of data.
 			 *
@@ -404,6 +407,7 @@ namespace XamCore.Security.Tls
 			 * native function again.
 			 */
 			if (internalBuffer.Size == 0 && !internalBuffer.Complete) {
+				Debug ("InternalRead #1: {0} {1}", internalBuffer.Offset, internalBuffer.TotalBytes);
 				internalBuffer.Offset = internalBuffer.Size = 0;
 				asyncRequest.RequestRead (size);
 				wantMore = true;
@@ -429,22 +433,23 @@ namespace XamCore.Security.Tls
 		/*
 		 * We may get called from SSLWrite(), SSLHandshake() or SSLClose().
 		 */
-		internal int InternalWrite (byte[] buffer, int offset, int size, out bool wantMore)
+		internal bool InternalWrite (byte[] buffer, int offset, int size)
 		{
 			try {
 				Debug ("InternalWrite: {0} {1}", offset, size);
 				var asyncRequest = asyncHandshakeRequest ?? asyncWriteRequest;
-				return InternalWrite (asyncRequest, writeBuffer, buffer, offset, size, out wantMore);
+				return InternalWrite (asyncRequest, writeBuffer, buffer, offset, size);
 			} catch (Exception ex) {
 				Debug ("InternalWrite failed: {0}", ex);
 				SetException_internal (ex);
-				wantMore = false;
-				return -1;
+				return false;
 			}
 		}
 
-		int InternalWrite (AsyncProtocolRequest asyncRequest, BufferOffsetSize internalBuffer, byte[] buffer, int offset, int size, out bool wantMore)
+		bool InternalWrite (AsyncProtocolRequest asyncRequest, BufferOffsetSize2 internalBuffer, byte[] buffer, int offset, int size)
 		{
+			Debug ("InternalWrite: {0} {1} {2} {3}", asyncRequest != null, internalBuffer, offset, size);
+
 			if (asyncRequest == null) {
 				/*
 				 * The only situation where 'asyncRequest' could possibly be 'null' is when we're called
@@ -453,10 +458,8 @@ namespace XamCore.Security.Tls
 				 * buffer, so we just save it in there and after SSLClose() returns, the final call to
 				 * InternalFlush() - just before closing the underlying stream - will send it out.
 				 */
-				if (lastException != null) {
-					wantMore = false;
-					return -1;
-				}
+				if (lastException != null)
+					return false;
 
 				if (Interlocked.Exchange (ref closeRequested, 1) == 0)
 					internalBuffer.Reset ();
@@ -467,21 +470,10 @@ namespace XamCore.Security.Tls
 			/*
 			 * Normal write - can be either SSLWrite() or SSLHandshake().
 			 *
-			 * Copy as much of the data into the internal buffer and only return SslStatus.WouldBlock when
-			 * it's full.
-			 *
+			 * It is important that we always accept all the data and queue it.
 			 */
-			if (internalBuffer.Remaining == 0) {
-				// Internal buffer is full, so we must actually write all the data now.
-				asyncRequest.RequestWrite ();
-				wantMore = true;
-				return 0;
-			}
 
-			var len = Math.Min (internalBuffer.Remaining, size);
-			Buffer.BlockCopy (buffer, offset, internalBuffer.Buffer, internalBuffer.EndOffset, len);
-			internalBuffer.Size += len;
-			wantMore = len < size;
+			internalBuffer.AppendData (buffer, offset, size);
 
 			/*
 			 * Calling 'asyncRequest.RequestWrite()' here ensures that ProcessWrite() is called next
@@ -501,7 +493,7 @@ namespace XamCore.Security.Tls
 			if (asyncRequest != null)
 				asyncRequest.RequestWrite ();
 
-			return len;
+			return true;
 		}
 
 		#endregion
@@ -615,9 +607,12 @@ namespace XamCore.Security.Tls
 			asyncRequest.UserBuffer.Offset += ret;
 			asyncRequest.UserBuffer.Size -= ret;
 
-			if (wantMore)
+			Debug ("Process Read - read user done #1: {0} - {1} {2}", asyncRequest.UserBuffer, asyncRequest.CurrentSize, wantMore);
+
+			if (wantMore && asyncRequest.CurrentSize == 0)
 				return AsyncOperationStatus.WantRead;
 
+			asyncRequest.ResetRead ();
 			asyncRequest.UserResult = asyncRequest.CurrentSize;
 			return AsyncOperationStatus.Complete;
 		}

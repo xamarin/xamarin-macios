@@ -245,14 +245,17 @@ namespace XamCore.ObjCRuntime {
 		public static event MarshalObjectiveCExceptionHandler MarshalObjectiveCException;
 		public static event MarshalManagedExceptionHandler MarshalManagedException;
 
-		static MarshalObjectiveCExceptionMode OnMarshalObjectiveCException (IntPtr exception_handle)
+		static MarshalObjectiveCExceptionMode OnMarshalObjectiveCException (IntPtr exception_handle, bool throwManagedAsDefault)
 		{
+			if (throwManagedAsDefault && MarshalObjectiveCException == null)
+				return MarshalObjectiveCExceptionMode.ThrowManagedException;
+			
 			if (MarshalObjectiveCException != null) {
 				var exception = GetNSObject<NSException> (exception_handle);
 				var args = new MarshalObjectiveCExceptionEventArgs ()
 				{
 					Exception = exception,
-					ExceptionMode = objc_exception_mode,
+					ExceptionMode = throwManagedAsDefault ? MarshalObjectiveCExceptionMode.ThrowManagedException : objc_exception_mode,
 				};
 
 				MarshalObjectiveCException (null, args);
@@ -517,14 +520,14 @@ namespace XamCore.ObjCRuntime {
 			return Registrar.GetMethodDescription (Class.Lookup (cls), sel);
 		}
 
-		static IntPtr TryGetNSObjectWrapped (IntPtr ptr)
-		{
-			return ObjectWrapper.Convert (TryGetNSObject (ptr));
-		}
-
 		static IntPtr GetNSObjectWrapped (IntPtr ptr)
 		{
 			return ObjectWrapper.Convert (TryGetNSObject (ptr, true));
+		}
+
+		static bool HasNSObject (IntPtr ptr)
+		{
+			return TryGetNSObject (ptr) != null;
 		}
 
 		static IntPtr GetHandleForINativeObject (IntPtr ptr)
@@ -630,9 +633,10 @@ namespace XamCore.ObjCRuntime {
 			return Registrar.GetMethodDescriptionAndObject (Class.Lookup (klass), sel, obj, ref mthis);
 		}
 
-		static void ThrowProductException (int code, string msg)
+		static int CreateProductException (int code, string msg)
 		{
-			throw ErrorHelper.CreateError (code, msg);
+			var ex = ErrorHelper.CreateError (code, msg);
+			return GCHandle.ToIntPtr (GCHandle.Alloc (ex, GCHandleType.Normal)).ToInt32 ();
 		}
 
 		static IntPtr TypeGetFullName (IntPtr type) 

@@ -38716,6 +38716,13 @@
             </fields>
           </class>
           <class name="Point" type="struct" base="System.ValueType" sealed="true" serializable="true" charset="Ansi" layout="Sequential">
+            <attributes>
+              <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
+                <properties>
+                  <property name="Value" value="True" />
+                </properties>
+              </attribute>
+            </attributes>
             <fields>
               <field name="Empty" attrib="54" fieldtype="System.Drawing.Point" />
             </fields>
@@ -38739,6 +38746,13 @@
             </constructors>
             <properties>
               <property name="IsEmpty" attrib="0" ptype="System.Boolean">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <methods>
                   <method name="get_IsEmpty()" attrib="2182" returntype="System.Boolean">
                     <parameters />
@@ -38857,6 +38871,13 @@
             </methods>
           </class>
           <class name="PointF" type="struct" base="System.ValueType" sealed="true" serializable="true" charset="Ansi" layout="Sequential">
+            <attributes>
+              <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
+                <properties>
+                  <property name="Value" value="True" />
+                </properties>
+              </attribute>
+            </attributes>
             <fields>
               <field name="Empty" attrib="54" fieldtype="System.Drawing.PointF" />
             </fields>
@@ -38870,6 +38891,13 @@
             </constructors>
             <properties>
               <property name="IsEmpty" attrib="0" ptype="System.Boolean">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <methods>
                   <method name="get_IsEmpty()" attrib="2182" returntype="System.Boolean">
                     <parameters />
@@ -38976,6 +39004,13 @@
             </methods>
           </class>
           <class name="Rectangle" type="struct" base="System.ValueType" sealed="true" serializable="true" charset="Ansi" layout="Sequential">
+            <attributes>
+              <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
+                <properties>
+                  <property name="Value" value="True" />
+                </properties>
+              </attribute>
+            </attributes>
             <fields>
               <field name="Empty" attrib="54" fieldtype="System.Drawing.Rectangle" />
             </fields>
@@ -38997,6 +39032,13 @@
             </constructors>
             <properties>
               <property name="Bottom" attrib="0" ptype="System.Int32">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <methods>
                   <method name="get_Bottom()" attrib="2182" returntype="System.Int32">
                     <parameters />
@@ -39016,6 +39058,13 @@
                 </methods>
               </property>
               <property name="IsEmpty" attrib="0" ptype="System.Boolean">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <methods>
                   <method name="get_IsEmpty()" attrib="2182" returntype="System.Boolean">
                     <parameters />
@@ -39023,6 +39072,13 @@
                 </methods>
               </property>
               <property name="Left" attrib="0" ptype="System.Int32">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <methods>
                   <method name="get_Left()" attrib="2182" returntype="System.Int32">
                     <parameters />
@@ -39030,6 +39086,13 @@
                 </methods>
               </property>
               <property name="Location" attrib="0" ptype="System.Drawing.Point">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <methods>
                   <method name="get_Location()" attrib="2182" returntype="System.Drawing.Point">
                     <parameters />
@@ -39042,6 +39105,13 @@
                 </methods>
               </property>
               <property name="Right" attrib="0" ptype="System.Int32">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <methods>
                   <method name="get_Right()" attrib="2182" returntype="System.Int32">
                     <parameters />
@@ -39049,6 +39119,13 @@
                 </methods>
               </property>
               <property name="Size" attrib="0" ptype="System.Drawing.Size">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <methods>
                   <method name="get_Size()" attrib="2182" returntype="System.Drawing.Size">
                     <parameters />
@@ -39061,6 +39138,13 @@
                 </methods>
               </property>
               <property name="Top" attrib="0" ptype="System.Int32">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <methods>
                   <method name="get_Top()" attrib="2182" returntype="System.Int32">
                     <parameters />
@@ -39242,6 +39326,13 @@
             </constructors>
             <properties>
               <property name="Bottom" attrib="0" ptype="System.Single">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <methods>
                   <method name="get_Bottom()" attrib="2182" returntype="System.Single">
                     <parameters />
@@ -39261,6 +39352,13 @@
                 </methods>
               </property>
               <property name="IsEmpty" attrib="0" ptype="System.Boolean">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <methods>
                   <method name="get_IsEmpty()" attrib="2182" returntype="System.Boolean">
                     <parameters />
@@ -39268,6 +39366,13 @@
                 </methods>
               </property>
               <property name="Left" attrib="0" ptype="System.Single">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <methods>
                   <method name="get_Left()" attrib="2182" returntype="System.Single">
                     <parameters />
@@ -39275,6 +39380,13 @@
                 </methods>
               </property>
               <property name="Location" attrib="0" ptype="System.Drawing.PointF">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <methods>
                   <method name="get_Location()" attrib="2182" returntype="System.Drawing.PointF">
                     <parameters />
@@ -39287,6 +39399,13 @@
                 </methods>
               </property>
               <property name="Right" attrib="0" ptype="System.Single">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <methods>
                   <method name="get_Right()" attrib="2182" returntype="System.Single">
                     <parameters />
@@ -39294,6 +39413,13 @@
                 </methods>
               </property>
               <property name="Size" attrib="0" ptype="System.Drawing.SizeF">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <methods>
                   <method name="get_Size()" attrib="2182" returntype="System.Drawing.SizeF">
                     <parameters />
@@ -39306,6 +39432,13 @@
                 </methods>
               </property>
               <property name="Top" attrib="0" ptype="System.Single">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <methods>
                   <method name="get_Top()" attrib="2182" returntype="System.Single">
                     <parameters />
@@ -39456,6 +39589,13 @@
             </methods>
           </class>
           <class name="Size" type="struct" base="System.ValueType" sealed="true" serializable="true" charset="Ansi" layout="Sequential">
+            <attributes>
+              <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
+                <properties>
+                  <property name="Value" value="True" />
+                </properties>
+              </attribute>
+            </attributes>
             <fields>
               <field name="Empty" attrib="54" fieldtype="System.Drawing.Size" />
             </fields>
@@ -39486,6 +39626,13 @@
                 </methods>
               </property>
               <property name="IsEmpty" attrib="0" ptype="System.Boolean">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <methods>
                   <method name="get_IsEmpty()" attrib="2182" returntype="System.Boolean">
                     <parameters />
@@ -39581,6 +39728,13 @@
             </methods>
           </class>
           <class name="SizeF" type="struct" base="System.ValueType" sealed="true" serializable="true" charset="Ansi" layout="Sequential">
+            <attributes>
+              <attribute name="System.Runtime.InteropServices.ComVisibleAttribute">
+                <properties>
+                  <property name="Value" value="True" />
+                </properties>
+              </attribute>
+            </attributes>
             <fields>
               <field name="Empty" attrib="54" fieldtype="System.Drawing.SizeF" />
             </fields>
@@ -39616,6 +39770,13 @@
                 </methods>
               </property>
               <property name="IsEmpty" attrib="0" ptype="System.Boolean">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
                 <methods>
                   <method name="get_IsEmpty()" attrib="2182" returntype="System.Boolean">
                     <parameters />

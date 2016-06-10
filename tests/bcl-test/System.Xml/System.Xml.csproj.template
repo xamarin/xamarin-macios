@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{93268FFB-571C-4402-8899-027A7778D2C0}</ProjectGuid>
+    <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>BCL.Tests</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>SystemXmlTests</AssemblyName>
+    <NoWarn>67,168,169,219,414,612,618,649,672</NoWarn>
+    <TargetFrameworkIdentifier>MonoTouch</TargetFrameworkIdentifier>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
+    <DefineConstants>DEBUG;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchDebug>True</MtouchDebug>
+    <MtouchLink>None</MtouchLink>
+    <ConsolePause>False</ConsolePause>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchArch>i386</MtouchArch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Release</OutputPath>
+    <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <MtouchLink>None</MtouchLink>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchArch>i386</MtouchArch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\iPhone\Debug</OutputPath>
+    <DefineConstants>DEBUG;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchDebug>True</MtouchDebug>
+    <ConsolePause>False</ConsolePause>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchArch>ARMv7</MtouchArch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhone\Release</OutputPath>
+    <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE</DefineConstants>
+    <MtouchArch>ARMv7</MtouchArch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhone\Ad-Hoc</OutputPath>
+    <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <CodesignKey>iPhone Distribution</CodesignKey>
+    <BuildIpa>True</BuildIpa>
+    <CodesignProvision>Automatic:AdHoc</CodesignProvision>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchArch>ARMv7</MtouchArch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhone\AppStore</OutputPath>
+    <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <CodesignProvision>Automatic:AppStore</CodesignProvision>
+    <CodesignKey>iPhone Distribution</CodesignKey>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchArch>ARMv7</MtouchArch>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="monotouch" />
+    <Reference Include="MonoTouch.NUnitLite" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Main.cs">
+      <Link>Main.cs</Link>
+    </Compile>  
+    <Compile Include="..\AppDelegate.cs">
+      <Link>AppDelegate.cs</Link>
+    </Compile>  
+  </ItemGroup>
+  <ItemGroup>
+#FILES#
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
+  <ItemGroup>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\1.xsd">
+      <Link>Test\XmlFiles\xsd\1.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\2.xsd">
+      <Link>Test\XmlFiles\xsd\2.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\3.xsd">
+      <Link>Test\XmlFiles\xsd\3.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\336625.xsd">
+      <Link>Test\XmlFiles\xsd\336625.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\358408.xsd">
+      <Link>Test\XmlFiles\xsd\358408.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\361818-2.xsd">
+      <Link>Test\XmlFiles\xsd\361818-2.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\361818-3.xsd">
+      <Link>Test\XmlFiles\xsd\361818-3.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\361818.xsd">
+      <Link>Test\XmlFiles\xsd\361818.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\376395.xml">
+      <Link>Test\XmlFiles\xsd\376395.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\376395.xsd">
+      <Link>Test\XmlFiles\xsd\376395.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\4.xsd">
+      <Link>Test\XmlFiles\xsd\4.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\422581.xml">
+      <Link>Test\XmlFiles\xsd\422581.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\422581.xsd">
+      <Link>Test\XmlFiles\xsd\422581.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\5.xsd">
+      <Link>Test\XmlFiles\xsd\5.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\584664a.xml">
+      <Link>Test\XmlFiles\xsd\584664a.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\584664a.xsd">
+      <Link>Test\XmlFiles\xsd\584664a.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\584664b.xml">
+      <Link>Test\XmlFiles\xsd\584664b.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\584664b.xsd">
+      <Link>Test\XmlFiles\xsd\584664b.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\6.xsd">
+      <Link>Test\XmlFiles\xsd\6.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\670945-1.xsd">
+      <Link>Test\XmlFiles\xsd\670945-1.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\670945-2.xsd">
+      <Link>Test\XmlFiles\xsd\670945-2.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\77687.xsd">
+      <Link>Test\XmlFiles\xsd\77687.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\77687inc.xsd">
+      <Link>Test\XmlFiles\xsd\77687inc.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\78985.xml">
+      <Link>Test\XmlFiles\xsd\78985.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\78985.xsd">
+      <Link>Test\XmlFiles\xsd\78985.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\79650.xsd">
+      <Link>Test\XmlFiles\xsd\79650.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\81360.xsd">
+      <Link>Test\XmlFiles\xsd\81360.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\81360inc1.xsd">
+      <Link>Test\XmlFiles\xsd\81360inc1.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\81360inc2.xsd">
+      <Link>Test\XmlFiles\xsd\81360inc2.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\82010.xml">
+      <Link>Test\XmlFiles\xsd\82010.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\82010.xsd">
+      <Link>Test\XmlFiles\xsd\82010.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\82078.xsd">
+      <Link>Test\XmlFiles\xsd\82078.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\datatypesTest.xsd">
+      <Link>Test\XmlFiles\xsd\datatypesTest.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\extension-attr-redefine-1.xsd">
+      <Link>Test\XmlFiles\xsd\extension-attr-redefine-1.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\extension-attr-redefine-2.xsd">
+      <Link>Test\XmlFiles\xsd\extension-attr-redefine-2.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\extension-attr-redefine-3.xsd">
+      <Link>Test\XmlFiles\xsd\extension-attr-redefine-3.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\import-subst-dbr-base.xsd">
+      <Link>Test\XmlFiles\xsd\import-subst-dbr-base.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\import-subst-dbr-ext.xsd">
+      <Link>Test\XmlFiles\xsd\import-subst-dbr-ext.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\importNamespaceTest.xsd">
+      <Link>Test\XmlFiles\xsd\importNamespaceTest.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\importNamespaceTest2.xsd">
+      <Link>Test\XmlFiles\xsd\importNamespaceTest2.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\importedNamespace.xsd">
+      <Link>Test\XmlFiles\xsd\importedNamespace.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\importedNamespace2.xsd">
+      <Link>Test\XmlFiles\xsd\importedNamespace2.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\inter-inc-1.xsd">
+      <Link>Test\XmlFiles\xsd\inter-inc-1.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\inter-inc-2.xsd">
+      <Link>Test\XmlFiles\xsd\inter-inc-2.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\multi-schemaLocation.xml">
+      <Link>Test\XmlFiles\xsd\multi-schemaLocation.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\resolveUriSchema.xsd">
+      <Link>Test\XmlFiles\xsd\resolveUriSchema.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\x-net-config-schema.xsd">
+      <Link>Test\XmlFiles\xsd\x-net-config-schema.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\x-net-config-storage-factory-provider-schema.xsd">
+      <Link>Test\XmlFiles\xsd\x-net-config-storage-factory-provider-schema.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\xml.xsd">
+      <Link>Test\XmlFiles\xsd\xml.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsd\xsdimporttest.xml">
+      <Link>Test\XmlFiles\xsd\xsdimporttest.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsl\316238-1.xsl">
+      <Link>Test\XmlFiles\xsl\316238-1.xsl</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsl\316238-2.xsl">
+      <Link>Test\XmlFiles\xsl\316238-2.xsl</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsl\325482.xml">
+      <Link>Test\XmlFiles\xsl\325482.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsl\325482.xsl">
+      <Link>Test\XmlFiles\xsl\325482.xsl</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsl\391424.xml">
+      <Link>Test\XmlFiles\xsl\391424.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsl\391424.xsl">
+      <Link>Test\XmlFiles\xsl\391424.xsl</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsl\82493.xml">
+      <Link>Test\XmlFiles\xsl\82493.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsl\82493.xsl">
+      <Link>Test\XmlFiles\xsl\82493.xsl</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsl\91834.xml">
+      <Link>Test\XmlFiles\xsl\91834.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsl\91834.xsl">
+      <Link>Test\XmlFiles\xsl\91834.xsl</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsl\91834a.xml">
+      <Link>Test\XmlFiles\xsl\91834a.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsl\current-in-select.ref">
+      <Link>Test\XmlFiles\xsl\current-in-select.ref</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsl\current-in-select.xml">
+      <Link>Test\XmlFiles\xsl\current-in-select.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsl\current-in-select.xsl">
+      <Link>Test\XmlFiles\xsl\current-in-select.xsl</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsl\empty.xsl">
+      <Link>Test\XmlFiles\xsl\empty.xsl</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsl\stripspace.xml">
+      <Link>Test\XmlFiles\xsl\stripspace.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\xsl\stripspace.xsl">
+      <Link>Test\XmlFiles\xsl\stripspace.xsl</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\XsdValidation\1.xsd">
+      <Link>Test\XmlFiles\XsdValidation\1.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\XsdValidation\2.xsd">
+      <Link>Test\XmlFiles\XsdValidation\2.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\XsdValidation\3.xsd">
+      <Link>Test\XmlFiles\XsdValidation\3.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\XsdValidation\4.xsd">
+      <Link>Test\XmlFiles\XsdValidation\4.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\496192.xml">
+      <Link>Test\XmlFiles\496192.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\496192.xsd">
+      <Link>Test\XmlFiles\496192.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\595947.xsd">
+      <Link>Test\XmlFiles\595947.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\676993.xml">
+      <Link>Test\XmlFiles\676993.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\676993.xsd">
+      <Link>Test\XmlFiles\676993.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\76102.xml">
+      <Link>Test\XmlFiles\76102.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\79683.dtd">
+      <Link>Test\XmlFiles\79683.dtd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\literal-data.xml">
+      <Link>Test\XmlFiles\literal-data.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\nested-dtd-test.dtd">
+      <Link>Test\XmlFiles\nested-dtd-test.dtd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\nested-dtd-test.xml">
+      <Link>Test\XmlFiles\nested-dtd-test.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\nested-included.dtd">
+      <Link>Test\XmlFiles\nested-included.dtd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\XmlFiles\simple.xml">
+      <Link>Test\XmlFiles\simple.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\System.Xml\nist_dom\files\noDTDXMLfile.xml">
+      <Link>Test\System.Xml\nist_dom\files\noDTDXMLfile.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\System.Xml\nist_dom\files\otherDoc.xml">
+      <Link>Test\System.Xml\nist_dom\files\otherDoc.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\System.Xml\nist_dom\files\staff.dtd">
+      <Link>Test\System.Xml\nist_dom\files\staff.dtd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\System.Xml\nist_dom\files\staff.html">
+      <Link>Test\System.Xml\nist_dom\files\staff.html</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.XML\Test\System.Xml\nist_dom\files\staff.xml">
+      <Link>Test\System.Xml\nist_dom\files\staff.xml</Link>
+    </Content>
+  </ItemGroup>
+</Project>

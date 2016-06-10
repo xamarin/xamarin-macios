@@ -19,6 +19,7 @@
 #include "xamarin/xamarin.h"
 #include "slinked-list.h"
 #include "trampolines-internal.h"
+#include "runtime-internal.h"
 //#define DEBUG_REF_COUNTING
 
 static pthread_mutex_t refcount_mutex;
@@ -35,20 +36,23 @@ x_init_mutex ()
 }
 
 void *
-xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *retval, bool retain, MonoMethod *method)
+xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *retval, bool retain, MonoMethod *method, guint32 *exception_gchandle)
 {
+	// COOP: accesses managed memory: unsafe mode.
+	MONO_ASSERT_GC_UNSAFE;
+	
 	/* Any changes in this method probably need to be reflected in the static registrar as well */
 	switch (type [0]) {
 		case _C_CLASS:
-			return xamarin_get_class_handle (retval);
+			return xamarin_get_class_handle (retval, exception_gchandle);
 
 		case _C_SEL:
-			return xamarin_get_selector_handle (retval);
+			return xamarin_get_selector_handle (retval, exception_gchandle);
 
 		case _C_PTR: {
 			MonoClass *klass = mono_class_from_mono_type (mtype);
 			if (mono_class_is_delegate (klass)) {
-				return xamarin_get_block_for_delegate (method, retval);
+				return xamarin_get_block_for_delegate (method, retval, exception_gchandle);
 			} else {
 				return *(void **) mono_object_unbox (retval);
 			}
@@ -85,7 +89,9 @@ xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *ret
 
 						v = sv;
 					} else {
-						v = xamarin_get_handle (value);
+						v = xamarin_get_handle (value, exception_gchandle);
+						if (*exception_gchandle != 0)
+							 return NULL;
 					}
 					buf[i] = v;
 				}
@@ -99,7 +105,9 @@ xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *ret
 				
 				return (void *) arr;
 			} else if (xamarin_is_class_nsobject (r_klass)) {
-				id i = xamarin_get_handle (retval);
+				id i = xamarin_get_handle (retval, exception_gchandle);
+				if (*exception_gchandle != 0)
+					return NULL;
 
 				xamarin_framework_peer_lock ();
 				[i retain];
@@ -110,7 +118,7 @@ xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *ret
 				mt_dummy_use (retval);
 				return i;
 			} else if (xamarin_is_class_inativeobject (r_klass)) {
-				return xamarin_get_handle_for_inativeobject (retval);
+				return xamarin_get_handle_for_inativeobject (retval, exception_gchandle);
 			} else {
 				xamarin_assertion_message ("Don't know how to marshal a return value of type '%s.%s'. Please file a bug with a test case at http://bugzilla.xamarin.com\n", mono_class_get_namespace (r_klass), mono_class_get_name (r_klass)); 
 			}
@@ -335,6 +343,7 @@ xamarin_get_frame_length (id self, SEL sel)
 static inline void
 find_objc_method_implementation (struct objc_super *sup, id self, SEL sel, IMP xamarin_impl)
 {
+	// COOP: does not access managed memory: any mode
 	Class klass = object_getClass (self);
 	Class sklass = class_getSuperclass (klass);
 
@@ -356,6 +365,7 @@ find_objc_method_implementation (struct objc_super *sup, id self, SEL sel, IMP x
 id
 xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_impl)
 {
+	// COOP: does not access managed memory: any mode
 	struct objc_super sup;
 	find_objc_method_implementation (&sup, self, sel, xamarin_impl);
 	return objc_msgSendSuper (&sup, sel);
@@ -365,6 +375,7 @@ xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_impl)
 id
 xamarin_copyWithZone_trampoline1 (id self, SEL sel, NSZone *zone)
 {
+	// COOP: does not access managed memory: any mode
 	// This is for subclasses that themselves do not implement Copy (NSZone)
 
 	id rv;
@@ -395,6 +406,7 @@ xamarin_copyWithZone_trampoline1 (id self, SEL sel, NSZone *zone)
 id
 xamarin_copyWithZone_trampoline2 (id self, SEL sel, NSZone *zone)
 {
+	// COOP: does not access managed memory: any mode
 	// This is for subclasses that already implement Copy (NSZone)
 
 	id rv;
@@ -424,6 +436,9 @@ xamarin_copyWithZone_trampoline2 (id self, SEL sel, NSZone *zone)
 void
 xamarin_release_trampoline (id self, SEL sel)
 {
+	// COOP: does not access managed memory: any mode, but it assumes safe mode upon entry (it takes locks, and doesn't switch to safe mode).
+	MONO_ASSERT_GC_SAFE;
+	
 	int ref_count;
 	bool detach = false;
 
@@ -441,7 +456,7 @@ xamarin_release_trampoline (id self, SEL sel)
 	 * This happens if managed code will end up holding the only ref.
 	 */
 
-	if (ref_count == 2 && xamarin_has_managed_ref (self)) {
+	if (ref_count == 2 && xamarin_has_managed_ref_safe (self)) {
 		xamarin_switch_gchandle (self, true /* weak */);
 		detach = true;
 	}
@@ -458,23 +473,35 @@ xamarin_release_trampoline (id self, SEL sel)
 void
 xamarin_notify_dealloc (id self, int gchandle)
 {
-	if (mono_domain_get () == NULL) {
-		/* This is needed because we call into managed code below (xamarin_unregister_nsobject) */
-		mono_jit_thread_attach (NULL);
-	}
+	guint32 exception_gchandle = 0;
+
+	// COOP: safe mode upon entry, switches to unsafe when acccessing managed memory.
+	MONO_ASSERT_GC_SAFE_OR_DETACHED;
+	
+	/* This is needed because we call into managed code below (xamarin_unregister_nsobject) */
+	MONO_THREAD_ATTACH; // COOP: This will swith to GC_UNSAFE
+
 	/* Object is about to die. Unregister it and free any gchandles we may have */
 	MonoObject *mobj = mono_gchandle_get_target (gchandle);
 #if defined(DEBUG_REF_COUNTING)
 	NSLog (@"xamarin_notify_dealloc (%p, %i) target: %p\n", self, gchandle, mobj);
 #endif
 	xamarin_free_gchandle (self, gchandle);
-	xamarin_unregister_nsobject (self, mobj);
+	xamarin_unregister_nsobject (self, mobj, &exception_gchandle);
+
+	MONO_THREAD_DETACH; // COOP: This will switch to GC_SAFE
+
+	xamarin_process_managed_exception_gchandle (exception_gchandle);
+
 	mono_thread_detach_if_exiting ();
 }
 
 id
 xamarin_retain_trampoline (id self, SEL sel)
 {
+	// COOP: safe mode upon entry, switches to unsafe when acccessing managed memory.
+	MONO_ASSERT_GC_SAFE;
+
 	pthread_mutex_lock (&refcount_mutex);
 
 #if defined(DEBUG_REF_COUNTING)
@@ -518,6 +545,10 @@ static const char *associated_key = "x"; // the string value doesn't matter, onl
 void
 xamarin_set_gchandle_trampoline (id self, SEL sel, int gc_handle)
 {
+	// COOP: Called by ObjC (when the setGCHandle: selector is called on an object).
+	// COOP: Safe mode upon entry, and doesn't access managed memory, so no need to change.
+	MONO_ASSERT_GC_SAFE;
+	
 	/* This is for types registered using the dynamic registrar */
 	XamarinAssociatedObject *obj;
 	obj = objc_getAssociatedObject (self, associated_key);
@@ -546,6 +577,10 @@ xamarin_set_gchandle_trampoline (id self, SEL sel, int gc_handle)
 int
 xamarin_get_gchandle_trampoline (id self, SEL sel)
 {
+	// COOP: Called by ObjC (when the getGCHandle selector is called on an object).
+	// COOP: Safe mode upon entry, and doesn't access managed memory, so no need to switch.
+	MONO_ASSERT_GC_SAFE;
+	
 	/* This is for types registered using the dynamic registrar */
 	int gc_handle = 0;
 	pthread_mutex_lock (&gchandle_hash_lock);

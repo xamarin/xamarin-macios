@@ -17,7 +17,10 @@
 
 		new XDelegate ("void", "void", "xamarin_throw_ns_exception",
 			"NSException *", "IntPtr", "exc"
-		) { WrappedManagedFunction = "ThrowNSException" },
+		) {
+			WrappedManagedFunction = "ThrowNSException",
+			ExceptionHandling = false,
+		},
 
 		new XDelegate ("int", "int", "xamarin_create_ns_exception",
 			"NSException *", "IntPtr", "exc"
@@ -67,13 +70,13 @@
 			"SEL", "IntPtr", "sel"
 		) { WrappedManagedFunction = "GetMethodForSelector" },
 
-		new XDelegate ("MonoObject *", "IntPtr", "xamarin_try_get_nsobject",
-			"id", "IntPtr", "obj"
-		) { WrappedManagedFunction = "TryGetNSObjectWrapped" },
-
 		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_nsobject",
 			"id", "IntPtr", "obj"
 		) { WrappedManagedFunction = "GetNSObjectWrapped" },
+
+		new XDelegate ("bool", "bool", "xamarin_has_nsobject",
+			"id", "IntPtr", "obj"
+		) { WrappedManagedFunction = "HasNSObject" },
 
 		new XDelegate ("id", "IntPtr", "xamarin_get_handle_for_inativeobject",
 			"MonoObject *", "IntPtr", "obj"
@@ -143,10 +146,10 @@
 			"MonoObject **", "ref IntPtr", "mthis"
 		) { WrappedManagedFunction = "GetMethodAndObjectForSelector" },
 
-		new XDelegate ("void", "void", "xamarin_throw_product_exception",
+		new XDelegate ("guint32", "int", "xamarin_create_product_exception_for_error",
 			"int", "int", "code",
 			"const char *", "string", "message"
-		) { WrappedManagedFunction = "ThrowProductException" },
+		) { WrappedManagedFunction = "CreateProductException" },
 
 		new XDelegate ("char *", "IntPtr", "xamarin_reflection_type_get_full_name",
 			"MonoReflectionType *", "IntPtr", "type"
@@ -161,7 +164,8 @@
 		) { WrappedManagedFunction = "OnMarshalManagedException" },
 
 		new XDelegate ("MarshalObjectiveCExceptionMode", "MarshalObjectiveCExceptionMode", "xamarin_on_marshal_objectivec_exception",
-			"id", "IntPtr", "exception"
+			"id", "IntPtr", "exception",
+			"bool", "bool", "throwManagedAsDefault"
 		) { WrappedManagedFunction = "OnMarshalObjectiveCException" },
 	};
 	delegates.CalculateLengths ();
@@ -195,6 +199,7 @@
 		public string EntryPoint;
 		public List<Arg> Arguments;
 		public string WrappedManagedFunction;
+		public bool ExceptionHandling = true;
 
 		public XDelegates Delegates;
 
@@ -259,6 +264,14 @@
 
 			builder.Length -= 2;
 
+			if (ExceptionHandling) {
+				if (nameOnly) {
+					builder.Append (", exception_gchandle");
+				} else {
+					builder.Append (", guint32 *exception_gchandle");
+				}
+			}
+
 			return builder.ToString ();
 		}
 
@@ -284,6 +297,14 @@
 			}
 
 			builder.Length -= 2;
+
+			if (ExceptionHandling) {
+				if (nameOnly) {
+					// nothing to do
+				} else {
+					builder.Append (", out int exception_gchandle");
+				}
+			}
 
 			return builder.ToString ();
 		}

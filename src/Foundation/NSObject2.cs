@@ -142,6 +142,12 @@ namespace XamCore.Foundation {
 		[MethodImplAttribute (MethodImplOptions.InternalCall)]
 		extern static void RegisterToggleRef (NSObject obj, IntPtr handle, bool isCustomType);
 
+		[MethodImplAttribute (MethodImplOptions.InternalCall)]
+		static extern void xamarin_release_managed_ref (IntPtr handle, NSObject managed_obj);
+
+		[MethodImplAttribute (MethodImplOptions.InternalCall)]
+		static extern void xamarin_create_managed_ref (IntPtr handle, NSObject obj, bool retain);
+
 #if !XAMCORE_3_0
 		public static bool IsNewRefcountEnabled ()
 		{
@@ -194,12 +200,12 @@ namespace XamCore.Foundation {
 
 		void CreateManagedRef (bool retain)
 		{
-			xamarin_create_managed_ref (handle, ObjectWrapper.Convert (this), retain);
+			xamarin_create_managed_ref (handle, this, retain);
 		}
 
 		void ReleaseManagedRef ()
 		{
-			xamarin_release_managed_ref (handle, ObjectWrapper.Convert (this));
+			xamarin_release_managed_ref (handle, this);
 		}
 
 #if !XAMCORE_2_0

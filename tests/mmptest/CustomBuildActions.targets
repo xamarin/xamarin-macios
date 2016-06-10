@@ -1,0 +1,11 @@
+<!-- All msbuild target logic needs to be inside a project tag -->
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup>
+	    <CreateAppBundleDependsOn>$(CreateAppBundleDependsOn);CreateNativeLibs</CreateAppBundleDependsOn>
+	</PropertyGroup>
+
+	<Target Name="CreateNativeLibs" Inputs="../common/mac/SimpleClass.m" Outputs="../mac-binding-project/bin/SimpleClassDylib.dylib;../mac-binding-project/bin/SimpleClassStatic.a">
+		<Exec Command="make bin/SimpleClassDylib.dylib bin/SimpleClassStatic.a" WorkingDirectory="../mac-binding-project/"/>
+	</Target>
+</Project>

@@ -155,6 +155,10 @@ endif
 endif
 
 install-system: install-system-ios install-system-mac
+	$(Q) $(MAKE) install-symlinks MAC_DESTDIR=/ MAC_INSTALL_VERSION=Current IOS_DESTDIR=/ IOS_INSTALL_VERSION=Current -C msbuild V=$(V)
+ifdef ENABLE_XAMARIN
+	$(Q) $(MAKE) install-symlinks MAC_DESTDIR=/ MAC_INSTALL_VERSION=Current IOS_DESTDIR=/ IOS_INSTALL_VERSION=Current -C $(MACCORE_PATH) V=$(V)
+endif
 
 install-system-ios:
 	@if ! test -s "$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo"; then echo "The Xamarin.iOS build seems incomplete. Did you run \"make install\"?"; exit 1; fi
@@ -181,3 +185,5 @@ fix-install-permissions:
 ifdef ENABLE_XAMARIN
 SUBDIRS += $(MACCORE_PATH)
 endif
+
+SUBDIRS += tests

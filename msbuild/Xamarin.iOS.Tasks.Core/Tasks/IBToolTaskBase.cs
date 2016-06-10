@@ -10,10 +10,6 @@ namespace Xamarin.iOS.Tasks {
 			get { return true; }
 		}
 
-		protected override bool UseCompilationDirectory {
-			get { return AppleSdkSettings.XcodeVersion >= new Version (6, 3); }
-		}
-
 		protected override string MinimumDeploymentTargetKey {
 			get { return ManifestKeys.MinimumOSVersion; }
 		}

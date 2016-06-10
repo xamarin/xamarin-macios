@@ -760,7 +760,10 @@
 		</type>
 
 		<!-- domain.c: mono_defaults.mono_method_message_class -->
-		<type fullname="System.Runtime.Remoting.Messaging.MonoMethodMessage" preserve="fields" />
+		<type fullname="System.Runtime.Remoting.Messaging.MonoMethodMessage" preserve="fields">
+			<!-- object.c: mono_message_init -->
+			<method name="InitMessage" />
+		</type>
 
 		<!-- domain.c: mono_defaults.real_proxy_class -->
 		<type fullname="System.Runtime.Remoting.Proxies.RealProxy" >

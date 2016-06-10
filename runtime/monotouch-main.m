@@ -33,6 +33,7 @@ const char *monotouch_dll = NULL; // NULL = try Xamarin.iOS.dll first, then mono
 static unsigned char *
 xamarin_load_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void **out_handle)
 {
+	// COOP: This is a callback called by the AOT runtime, I believe we don't have to change the GC mode here (even though it accesses managed memory).
 	*out_handle = NULL;
 	
 	const char *name = mono_assembly_name_get_name (mono_assembly_get_name (assembly));
@@ -73,6 +74,7 @@ xamarin_load_aot_data (MonoAssembly *assembly, int size, gpointer user_data, voi
 static void
 xamarin_free_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void *handle)
 {
+	// COOP: This is a callback called by the AOT runtime, I belive we don't have to change the GC mode here.
 	munmap (handle, size);
 }
 
@@ -82,6 +84,7 @@ This hook avoids the gazillion of filesystem probes we do as part of assembly lo
 MonoAssembly*
 assembly_preload_hook (MonoAssemblyName *aname, char **assemblies_path, void* user_data)
 {
+	// COOP: This is a callback called by the AOT runtime, I belive we don't have to change the GC mode here.
 	char filename [1024];
 	char path [1024];
 	const char *name = mono_assembly_name_get_name (aname);
@@ -189,7 +192,8 @@ extern void mono_gc_init_finalizer_thread (void);
 - (id) init
 {
 #if TARGET_OS_WATCH
-	fprintf (stderr, "Need to listen for memory warnings on the watch\n");
+	// I haven't found a way to listen for memory warnings on watchOS.
+	// fprintf (stderr, "Need to listen for memory warnings on the watch\n");
 #else
 	if (self = [super init]) {
 #if defined (__arm__) || defined(__aarch64__)
@@ -204,6 +208,7 @@ extern void mono_gc_init_finalizer_thread (void);
 
 - (void) start
 {
+	// COOP: ?
 #if defined (__arm__) || defined(__aarch64__)
 	mono_gc_init_finalizer_thread ();
 #endif
@@ -211,6 +216,7 @@ extern void mono_gc_init_finalizer_thread (void);
 
 - (void) memoryWarning: (NSNotification *) sender
 {
+	// COOP: ?
 	mono_gc_collect (mono_gc_max_generation ());
 }
 
@@ -223,6 +229,7 @@ extern void mono_gc_init_finalizer_thread (void);
 int
 xamarin_main (int argc, char *argv[], bool is_extension)
 {
+	// COOP: ?
 	// + 1 for the initial "monotouch" +1 for the final NULL = +2.
 	// This is not an exact number (it will most likely be lower, since there
 	// are other arguments besides --app-arg), but it's a guaranteed and bound
@@ -243,6 +250,7 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 	DEBUG_LAUNCH_TIME_PRINT ("MonoTouch setup time");
 
 	MonoAssembly *assembly;
+	guint32 exception_gchandle = 0;
 	
 	const char *c_bundle_path = xamarin_get_bundle_path ();
 
@@ -253,6 +261,11 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 	setenv ("DYLD_BIND_AT_LAUNCH", "1", 1);
 	setenv ("MONO_REFLECTION_SERIALIZER", "yes", 1);
 
+#if TARGET_OS_WATCH
+	// watchOS can raise signals just fine...
+	// we might want to move this inside mono at some point.
+	signal (SIGPIPE, SIG_IGN);
+#endif
 
 #if TARGET_OS_WATCH || TARGET_OS_TV
 	mini_parse_debug_option ("explicit-null-checks");
@@ -409,6 +422,7 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 
 	mono_set_signal_chaining (TRUE);
 	mono_install_unhandled_exception_hook (xamarin_unhandled_exception_handler, NULL);
+	mono_install_ftnptr_eh_callback (xamarin_ftnptr_exception_handler);
 
 	mono_jit_init_version ("MonoTouch", "mobile");
 	/*
@@ -423,21 +437,29 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 
 #if defined (__arm__) || defined(__aarch64__)
 	xamarin_register_assemblies ();
-	assembly = xamarin_open_and_register (xamarin_executable_name);
+	assembly = xamarin_open_and_register (xamarin_executable_name, &exception_gchandle);
+	if (exception_gchandle != 0)
+		xamarin_process_managed_exception_gchandle (exception_gchandle);
 #else
 	if (xamarin_executable_name) {
-		assembly = xamarin_open_and_register (xamarin_executable_name);
+		assembly = xamarin_open_and_register (xamarin_executable_name, &exception_gchandle);
+		if (exception_gchandle != 0)
+			xamarin_process_managed_exception_gchandle (exception_gchandle);
 	} else {
 		const char *last_slash = strrchr (argv [0], '/');
 		const char *basename = last_slash ? last_slash + 1 : argv [0];
 		char *aname = xamarin_strdup_printf ("%s.exe", basename);
 
-		assembly = xamarin_open_and_register (aname);
-
+		assembly = xamarin_open_and_register (aname, &exception_gchandle);
 		xamarin_free (aname);
+
+		if (exception_gchandle != 0)
+			xamarin_process_managed_exception_gchandle (exception_gchandle);
 	}
 
-	xamarin_register_entry_assembly (mono_assembly_get_object (mono_domain_get (), assembly));
+	xamarin_register_entry_assembly (mono_assembly_get_object (mono_domain_get (), assembly), &exception_gchandle);
+	if (exception_gchandle != 0)
+		xamarin_process_managed_exception_gchandle (exception_gchandle);
 #endif
 
 	DEBUG_LAUNCH_TIME_PRINT ("\tAssembly register time");
@@ -448,11 +470,14 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 
 	DEBUG_LAUNCH_TIME_PRINT ("Total initialization time");
 
+	int rv = 0;
 	if (is_extension) {
-		return xamarin_extension_main (argc, argv);
+		MONO_ENTER_GC_SAFE;
+		rv = xamarin_extension_main (argc, argv);
+		MONO_EXIT_GC_SAFE;
 	} else {
 		mono_jit_exec (mono_domain_get (), assembly, managed_argc, managed_argv);
 	}
 	
-	return 0;
+	return rv;
 }

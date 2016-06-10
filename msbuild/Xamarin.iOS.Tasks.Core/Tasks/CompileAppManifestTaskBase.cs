@@ -17,9 +17,6 @@ namespace Xamarin.iOS.Tasks
 		public string DefaultSdkVersion { get; set; }
 
 		[Required]
-		public bool IsAppExtension { get; set; }
-
-		[Required]
 		public bool IsWatchApp { get; set; }
 
 		[Required]
@@ -151,6 +148,7 @@ namespace Xamarin.iOS.Tasks
 			if (!plist.ContainsKey (ManifestKeys.CFBundleSupportedPlatforms))
 				plist[ManifestKeys.CFBundleSupportedPlatforms] = new PArray { SdkPlatform };
 			plist.SetIfNotPresent (ManifestKeys.CFBundleVersion, "1.0");
+			plist.SetIfNotPresent (ManifestKeys.CFBundleShortVersionString, plist.GetCFBundleVersion ());
 
 			if (!SdkIsSimulator) {
 				SetValue (plist, "DTCompiler", sdkSettings.DTCompiler);
@@ -176,13 +174,6 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			SetDeviceFamily (plist);
-
-			if (IsWatchExtension) {
-				PObject capabilities;
-
-				if (!plist.TryGetValue (ManifestKeys.UIRequiredDeviceCapabilities, out capabilities))
-					plist[ManifestKeys.UIRequiredDeviceCapabilities] = capabilities = new PArray ();
-			}
 
 			plist.SetIfNotPresent (ManifestKeys.MinimumOSVersion, minimumOSVersion.ToString ());
 

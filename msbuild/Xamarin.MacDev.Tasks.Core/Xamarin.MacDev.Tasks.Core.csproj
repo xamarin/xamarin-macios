@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,6 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Xamarin.MacDev.Tasks</RootNamespace>
     <AssemblyName>Xamarin.MacDev.Tasks.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,10 +40,10 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="Mono.Posix" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj">
@@ -66,6 +67,7 @@
     <Compile Include="Tasks\CompileSceneKitAssetsTaskBase.cs" />
     <Compile Include="Tasks\CreateAssetPackManifestTaskBase.cs" />
     <Compile Include="Tasks\CreateEmbeddedResourcesTaskBase.cs" />
+    <Compile Include="Tasks\CreateInstallerPackageTaskBase.cs" />
     <Compile Include="Tasks\CreatePkgInfoTaskBase.cs" />
     <Compile Include="Tasks\DetectSigningIdentityTaskBase.cs" />
     <Compile Include="Tasks\DittoTaskBase.cs" />
@@ -104,8 +106,8 @@
     <Compile Include="StringParserService.cs" />
     <Compile Include="PlatformFramework.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

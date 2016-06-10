@@ -67,6 +67,8 @@ namespace Xamarin.iOS.Tasks
 
 		public string Architectures { get; set; }
 
+		public string ArchiveSymbols { get; set; }
+
 		[Required]
 		public string CompiledEntitlements { get; set; }
 
@@ -339,6 +341,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			var args = new ProcessArgumentBuilder ();
 			TargetArchitecture architectures;
+			bool msym;
 
 			if (string.IsNullOrEmpty (Architectures) || !Enum.TryParse (Architectures, out architectures))
 				architectures = TargetArchitecture.Default;
@@ -474,7 +477,7 @@ namespace Xamarin.iOS.Tasks
 				}
 
 				if (architectures.HasFlag (TargetArchitecture.ARMv7k))
-					abi += (abi.Length > 0 ? "," : "") + "armv7k";
+					abi += (abi.Length > 0 ? "," : "") + "armv7k" + llvm;
 
 				if (string.IsNullOrEmpty (abi))
 					abi = "armv7" + llvm + thumb;
@@ -491,6 +494,9 @@ namespace Xamarin.iOS.Tasks
 
 			// don't have mtouch generate the dsyms...
 			args.Add ("--dsym=no");
+
+			if (!string.IsNullOrEmpty (ArchiveSymbols) && bool.TryParse (ArchiveSymbols.Trim (), out msym))
+				args.Add ("--msym=" + (msym ? "yes" : "no"));
 
 			var gcc = new GccOptions ();
 
@@ -607,6 +613,7 @@ namespace Xamarin.iOS.Tasks
 			Log.LogTaskProperty ("AppExtensionReferences", AppExtensionReferences);
 			Log.LogTaskProperty ("AppManifest", AppManifest);
 			Log.LogTaskProperty ("Architectures", Architectures);
+			Log.LogTaskProperty ("ArchiveSymbols", ArchiveSymbols);
 			Log.LogTaskProperty ("BitcodeEnabled", EnableBitcode);
 			Log.LogTaskProperty ("CompiledEntitlements", CompiledEntitlements);
 			Log.LogTaskProperty ("Debug", Debug);

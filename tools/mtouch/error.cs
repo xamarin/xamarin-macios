@@ -76,7 +76,7 @@ namespace Xamarin.Bundler {
 	//					MT0066	Invalid build registrar assembly: {0}
 	//					MT0067	Invalid registrar: {0}
 	//					MT0068	Invalid value for target framework: {0}.
-	//					MT0069	The app directory '{0}' does not exist.
+	//					MT0069	<unused, can be reused>
 	//					MT0070	Invalid target framework: {0}. Valid target frameworks are: {1}.
 	//					MT0071	Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.
 	//					MT0072	Extensions are not supported for the platform '{0}'.
@@ -100,6 +100,7 @@ namespace Xamarin.Bundler {
 	//					MT0091	This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker. 
 	//					MT0092	<used by Xamarin.Launcher> The option '{0}' is required.
 	//					MT0093	Could not find 'mlaunch'.
+	//		Warning		MT0094	Both profiling (--profiling) and incremental builds (--fastdev) is not supported when building for {0}. Incremental builds have ben disabled.
 	// MT1xxx	file copy / symlinks (project related)
 	//			MT10xx	installer.cs / mtouch.cs
 	//					MT1001	Could not find an application at the specified directory: {0}
@@ -305,6 +306,7 @@ namespace Xamarin.Bundler {
 	//					MT5307  Failed to sign the executable. Please review the build log.
 	//					MT5308  ** reserved Xamarin.Mac **
 	//					MT5309  ** reserved Xamarin.Mac **
+	//					MT5310  ** reserved Xamarin.Mac **
 	// MT6xxx	mtouch internal tools
 	//			MT600x	Stripper
 	//					MT6001	Running version of Cecil doesn't support assembly stripping

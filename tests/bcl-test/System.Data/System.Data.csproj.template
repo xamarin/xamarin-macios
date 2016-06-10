@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BEF0140A-A6A6-4074-B55F-03856A6B5862}</ProjectGuid>
+    <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>BCL.Tests</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>SystemDataTests</AssemblyName>
+    <NoWarn>67,168,169,219,414,612,618,649,672</NoWarn>
+    <TargetFrameworkIdentifier>MonoTouch</TargetFrameworkIdentifier>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
+    <DefineConstants>DEBUG;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchDebug>True</MtouchDebug>
+    <MtouchLink>None</MtouchLink>
+    <ConsolePause>False</ConsolePause>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchArch>i386</MtouchArch>
+    <MtouchI18n>west</MtouchI18n>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Release</OutputPath>
+    <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <MtouchLink>None</MtouchLink>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchArch>i386</MtouchArch>
+    <MtouchI18n>west</MtouchI18n>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\iPhone\Debug</OutputPath>
+    <DefineConstants>DEBUG;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchDebug>True</MtouchDebug>
+    <ConsolePause>False</ConsolePause>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchArch>ARMv7</MtouchArch>
+    <MtouchI18n>west</MtouchI18n>    
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhone\Release</OutputPath>
+    <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE</DefineConstants>
+    <MtouchArch>ARMv7</MtouchArch>
+    <MtouchI18n>west</MtouchI18n>    
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhone\Ad-Hoc</OutputPath>
+    <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <CodesignKey>iPhone Distribution</CodesignKey>
+    <BuildIpa>True</BuildIpa>
+    <CodesignProvision>Automatic:AdHoc</CodesignProvision>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchArch>ARMv7</MtouchArch>
+    <MtouchI18n>west</MtouchI18n>    
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhone\AppStore</OutputPath>
+    <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <CodesignProvision>Automatic:AppStore</CodesignProvision>
+    <CodesignKey>iPhone Distribution</CodesignKey>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchArch>ARMv7</MtouchArch>
+    <MtouchI18n>west</MtouchI18n>    
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="monotouch" />
+    <Reference Include="MonoTouch.NUnitLite" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Main.cs">
+      <Link>Main.cs</Link>
+    </Compile>  
+    <Compile Include="..\AppDelegate.cs">
+      <Link>AppDelegate.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\Assert.cs">
+      <Link>Assert.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+#FILES#
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
+  <ItemGroup>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\binserialize\BS-tb1.bin">
+      <Link>Test\System.Data\binserialize\BS-tb1.bin</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\binserialize\BS-tb2.bin">
+      <Link>Test\System.Data\binserialize\BS-tb2.bin</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\binserialize\BS-tb3.bin">
+      <Link>Test\System.Data\binserialize\BS-tb3.bin</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\binserialize\BS-tb4.bin">
+      <Link>Test\System.Data\binserialize\BS-tb4.bin</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\binserialize\BS-tb5.bin">
+      <Link>Test\System.Data\binserialize\BS-tb5.bin</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\store.xsd">
+      <Link>Test\System.Data\store.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\store2.xsd">
+      <Link>Test\System.Data\store2.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\store3.xsd">
+      <Link>Test\System.Data\store3.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\store4.xsd">
+      <Link>Test\System.Data\store4.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\b582732.xml">
+      <Link>Test\System.Data\schemas\b582732.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\bug77248.xsd">
+      <Link>Test\System.Data\schemas\bug77248.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\Items.xsd">
+      <Link>Test\System.Data\schemas\Items.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test001.xsd">
+      <Link>Test\System.Data\schemas\test001.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test002.xsd">
+      <Link>Test\System.Data\schemas\test002.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test003.xsd">
+      <Link>Test\System.Data\schemas\test003.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test004.xsd">
+      <Link>Test\System.Data\schemas\test004.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test005.xsd">
+      <Link>Test\System.Data\schemas\test005.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test006.xsd">
+      <Link>Test\System.Data\schemas\test006.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test007.xsd">
+      <Link>Test\System.Data\schemas\test007.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test008.xsd">
+      <Link>Test\System.Data\schemas\test008.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test009.xsd">
+      <Link>Test\System.Data\schemas\test009.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test010.xsd">
+      <Link>Test\System.Data\schemas\test010.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test011.xsd">
+      <Link>Test\System.Data\schemas\test011.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test012.xsd">
+      <Link>Test\System.Data\schemas\test012.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test013.xsd">
+      <Link>Test\System.Data\schemas\test013.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test014.xsd">
+      <Link>Test\System.Data\schemas\test014.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test015.xsd">
+      <Link>Test\System.Data\schemas\test015.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test016.xsd">
+      <Link>Test\System.Data\schemas\test016.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test017.xsd">
+      <Link>Test\System.Data\schemas\test017.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test101.xsd">
+      <Link>Test\System.Data\schemas\test101.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test102.xsd">
+      <Link>Test\System.Data\schemas\test102.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test103.xsd">
+      <Link>Test\System.Data\schemas\test103.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\region.xml">
+      <Link>Test\System.Data\region.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\own_schema.xsd">
+      <Link>Test\System.Data\own_schema.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\own_schema1.xsd">
+      <Link>Test\System.Data\own_schema1.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\own_schema2.xsd">
+      <Link>Test\System.Data\own_schema2.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\TypedDataSet.xml">
+      <Link>Test\System.Data\TypedDataSet.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Xml\region.xml">
+      <Link>Test\System.Xml\region.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Xml\region.xsd">
+      <Link>Test\System.Xml\region.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Xml\store.xsd">
+      <Link>Test\System.Xml\store.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\Mono.Data.SqlExpressions\dateComparisonTest.xml">
+      <Link>Test\Mono.Data.SqlExpressions\dateComparisonTest.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\TestMerge1.xml">
+      <Link>Test\System.Data\TestMerge1.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Xml\2books.xml">
+      <Link>Test\System.Xml\2books.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\TestReadXmlSchema1.xml">
+      <Link>Test\System.Data\TestReadXmlSchema1.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\TestReadXml1.xml">
+      <Link>Test\System.Data\TestReadXml1.xml</Link>
+    </Content>
+  </ItemGroup>
+</Project>

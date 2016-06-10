@@ -185,6 +185,11 @@ static UltimateMachine *shared;
 
 		return true;
 	}
+
+	-(void) idAsIntPtr: (id)p1
+	{
+		// Nothing to do here.
+	}
 @end
 
 @implementation ObjCExceptionTest
@@ -239,5 +244,12 @@ static UltimateMachine *shared;
 {
 	self.initCallsInitCalled = YES;
 	return [self init];
+}
+@end
+
+@implementation ObjCProtocolClassTest
+-(void) idAsIntPtr: (id)p1
+{
+	// Do nothing
 }
 @end

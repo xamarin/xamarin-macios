@@ -70,6 +70,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.iOS.Tasks.ValidateAppBundleTask" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.WriteAssetPackManifest" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 
+	<UsingTask TaskName="Microsoft.Build.Tasks.Exec" AssemblyFile="Xamarin.iOS.Tasks.dll"/>
 	<UsingTask TaskName="Microsoft.Build.Tasks.Copy" AssemblyFile="Xamarin.iOS.Tasks.dll"/>
 	<UsingTask TaskName="Microsoft.Build.Tasks.MakeDir" AssemblyFile="Xamarin.iOS.Tasks.dll"/>
 	<UsingTask TaskName="Microsoft.Build.Tasks.RemoveDir" AssemblyFile="Xamarin.iOS.Tasks.dll"/>
@@ -353,6 +354,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Directories="$(DeviceSpecificIntermediateOutputPath)actool;
 					$(DeviceSpecificIntermediateOutputPath)assetpacks;
 					$(DeviceSpecificIntermediateOutputPath)ibtool;
+					$(DeviceSpecificIntermediateOutputPath)ibtool-link;
 					$(DeviceSpecificIntermediateOutputPath)ibtool-manifests;
 					$(DeviceSpecificIntermediateOutputPath)ipa;
 					$(DeviceSpecificIntermediateOutputPath)metal;
@@ -717,6 +719,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			UseThumb="$(MtouchUseThumb)"
 			EnableBitcode="$(MtouchEnableBitcode)"
 			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
+			ArchiveSymbols="$(MonoSymbolArchive)"
 			Verbosity="$(MtouchVerbosity)"
 			>
 			<Output TaskParameter="CompiledArchitectures" PropertyName="_CompiledArchitectures" />

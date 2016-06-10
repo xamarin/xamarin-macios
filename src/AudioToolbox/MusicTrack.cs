@@ -129,6 +129,20 @@ namespace XamCore.AudioToolbox {
 
 	public class MusicEventUserData : MidiRawData {
 		public MusicEventUserData () {}
+
+		internal MusicEventUserData (IntPtr handle)
+		{
+			if (handle == IntPtr.Zero)
+				throw new ArgumentNullException (nameof (handle));
+
+			int length = Marshal.ReadInt32 (handle);
+
+			var buffer = new byte [length];
+			Marshal.Copy (handle + 4, buffer, 0, length);
+
+			len = length;
+			data = buffer;
+		}
 	}
 
 	//

@@ -96,6 +96,7 @@ namespace Xamarin.Bundler {
 	//					MM5306	Missing dependencies. Please install Xcode 'Command-Line Tools' component
 	//					MM5308  Xcode license agreement may not have been accepted.  Please launch Xcode.
 	//					MM5309	Native linking failed with error code 1.  Check build log for details.
+	//					MT5310  install_name_tool failed with an error code '{0}'. Check build log for details. 
 	// MM6xxx	mmp internal tools
 	// MM7xxx	reserved
 	// MM8xxx	runtime
