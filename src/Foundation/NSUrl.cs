@@ -142,6 +142,19 @@ namespace XamCore.Foundation {
 			return SetResourceValue (value, nsUrlResourceKey, out error);
 		}
 
+		public int Port
+		{
+			get
+			{
+				var number = this.PortNumber;
+
+				if (number == null)
+					return -1;
+
+				return (int)number;
+			}
+		}
+
 		public static bool operator == (NSUrl x, NSUrl y)
 		{
 			if ((object) x == (object) y) // If both are null, or both are same instance, return true.
