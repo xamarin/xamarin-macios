@@ -61,7 +61,6 @@
     <Compile Include="Tasks\CollectBundleResources.cs" />
     <Compile Include="Tasks\ComputeBundleResourceOutputPaths.cs" />
     <Compile Include="Tasks\CreateAssetPackManifest.cs" />
-    <Compile Include="Tasks\CreateInstallerPackage.cs" />
     <Compile Include="Tasks\CreatePkgInfo.cs" />
     <Compile Include="Tasks\Ditto.cs" />
     <Compile Include="Tasks\DSymUtil.cs" />
