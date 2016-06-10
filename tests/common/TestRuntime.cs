@@ -28,6 +28,9 @@ partial class TestRuntime
 	[DllImport ("/usr/lib/system/libdyld.dylib")]
 	static extern int dyld_get_program_sdk_version ();
 
+	[DllImport ("/usr/lib/libobjc.dylib", EntryPoint = "objc_msgSend")]
+	static extern IntPtr IntPtr_objc_msgSend (IntPtr receiver, IntPtr selector);
+
 	public const string BuildVersion_iOS9_GM = "13A340";
 
 	public static string GetiOSBuildVersion ()
@@ -37,7 +40,7 @@ partial class TestRuntime
 #elif MONOMAC
 		throw new Exception ("Can't get iOS Build version on OSX.");
 #else
-		return NSString.FromHandle (Messaging.IntPtr_objc_msgSend (UIDevice.CurrentDevice.Handle, Selector.GetHandle ("buildVersion")));
+		return NSString.FromHandle (IntPtr_objc_msgSend (UIDevice.CurrentDevice.Handle, Selector.GetHandle ("buildVersion")));
 #endif
 	}
 
