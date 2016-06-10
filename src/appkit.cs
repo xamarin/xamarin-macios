@@ -406,7 +406,7 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSResponder), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSApplicationDelegate) })]
 	[DisableDefaultCtor] // An uncaught exception was raised: Creating more than one Application
-	public interface NSApplication : NSAccessibilityElement, NSAccessibility {
+	public interface NSApplication : NSAccessibilityElementProtocol, NSAccessibility {
 		[Export ("sharedApplication"), Static, ThreadSafe]
 		NSApplication SharedApplication { get; }
 	
@@ -2088,7 +2088,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[BaseType (typeof (NSObject))]
-	public interface NSCell : NSUserInterfaceItemIdentification, NSCoding, NSCopying, NSAccessibilityElement, NSAccessibility, NSObjectAccessibilityExtensions {
+	public interface NSCell : NSUserInterfaceItemIdentification, NSCoding, NSCopying, NSAccessibilityElementProtocol, NSAccessibility, NSObjectAccessibilityExtensions {
 		[Static, Export ("prefersTrackingUntilMouseUp")]
 		bool PrefersTrackingUntilMouseUp { get; }
 	
@@ -5496,7 +5496,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[BaseType (typeof (NSResponder), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSDrawerDelegate)})]
-	public partial interface NSDrawer : NSAccessibilityElement, NSAccessibility {
+	public partial interface NSDrawer : NSAccessibilityElementProtocol, NSAccessibility {
 		[Export ("initWithContentSize:preferredEdge:")]
 		IntPtr Constructor (CGSize contentSize, NSRectEdge edge);
 
@@ -10618,7 +10618,7 @@ namespace XamCore.AppKit {
 	}
 
 	[BaseType (typeof (NSResponder))]
-	interface NSPopover : NSAccessibilityElement, NSAccessibility {
+	interface NSPopover : NSAccessibilityElementProtocol, NSAccessibility {
 		[Export ("appearance", ArgumentSemantic.Retain)]
 		NSPopoverAppearance Appearance { get; set;  }
 
@@ -13727,7 +13727,7 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSResponder))]
 	[Dispose ("__mt_tracking_var = null;")]
-	public partial interface NSView : NSDraggingDestination, NSAnimatablePropertyContainer, NSUserInterfaceItemIdentification, NSAppearanceCustomization, NSAccessibilityElement, NSAccessibility, NSObjectAccessibilityExtensions {
+	public partial interface NSView : NSDraggingDestination, NSAnimatablePropertyContainer, NSUserInterfaceItemIdentification, NSAppearanceCustomization, NSAccessibilityElementProtocol, NSAccessibility, NSObjectAccessibilityExtensions {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
@@ -17800,7 +17800,7 @@ namespace XamCore.AppKit {
 	public delegate void NSWindowTrackEventsMatchingCompletionHandler (NSEvent evt, ref bool stop);
 	
 	[BaseType (typeof (NSResponder), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSWindowDelegate)})]
-	public partial interface NSWindow : NSAnimatablePropertyContainer, NSUserInterfaceItemIdentification, NSAppearanceCustomization, NSAccessibilityElement, NSAccessibility {
+	public partial interface NSWindow : NSAnimatablePropertyContainer, NSUserInterfaceItemIdentification, NSAppearanceCustomization, NSAccessibilityElementProtocol, NSAccessibility {
 		[Static, Export ("frameRectForContentRect:styleMask:")]
 		CGRect FrameRectFor (CGRect contectRect, NSWindowStyle styleMask);
 	
@@ -21614,6 +21614,19 @@ namespace XamCore.AppKit {
 		bool IsAccessibilitySelectorAllowed (Selector selector);
 	}
 
+	[Mac (10, 10)]
+	[BaseType (typeof (NSObject))]
+	public interface NSAccessibilityElement : NSAccessibility {
+		[Export ("accessibilityAddChildElement:")]
+		void AccessibilityAddChildElement (NSAccessibilityElement childElement);
+
+		[Static, Export ("accessibilityElementWithRole:frame:label:parent:")]
+		NSObject CreateElement (NSString role, CGRect frame, NSString label, NSObject parent);
+
+		[Export ("accessibilityFrameInParentSpace")]
+		CGRect AccessibilityFrameInParentSpace { get; set; }
+	}
+
 	[Static]
 	partial interface NSAccessibilityAttributes {
 		[Mac (10, 10)]
@@ -22551,8 +22564,8 @@ namespace XamCore.AppKit {
 	}
 
 	[Mac (10,10)]
-	[Protocol]
-	public interface NSAccessibilityElement {
+	[Protocol (Name = "NSAccessibilityElement")] // exists both as a type and a protocol in ObjC, Swift uses NSAccessibilityElementProtocol
+	public interface NSAccessibilityElementProtocol {
 		[Abstract]
 		[Export ("accessibilityFrame")]
 		CGRect AccessibilityFrame { get; }
@@ -22570,12 +22583,12 @@ namespace XamCore.AppKit {
 
 	[Mac (10,10)]
 	[Protocol]
-	public interface NSAccessibilityGroup : NSAccessibilityElement {
+	public interface NSAccessibilityGroup : NSAccessibilityElementProtocol {
 	}
 
 	[Mac (10,10)]
 	[Protocol]
-	public interface NSAccessibilityButton : NSAccessibilityElement {
+	public interface NSAccessibilityButton : NSAccessibilityElementProtocol {
 		[Abstract]
 		[NullAllowed, Export ("accessibilityLabel")]
 		string AccessibilityLabel { get; }
@@ -22609,7 +22622,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,10)]
 	[Protocol]
-	public interface NSAccessibilityStaticText : NSAccessibilityElement {
+	public interface NSAccessibilityStaticText : NSAccessibilityElementProtocol {
 		[Abstract]
 		[NullAllowed, Export ("accessibilityValue")]
 		string AccessibilityValue { get; }
@@ -22653,7 +22666,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,10)]
 	[Protocol]
-	public interface NSAccessibilityStepper : NSAccessibilityElement {
+	public interface NSAccessibilityStepper : NSAccessibilityElementProtocol {
 		[Abstract]
 		[NullAllowed, Export ("accessibilityLabel")]
 		string AccessibilityLabel { get; }
@@ -22672,7 +22685,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,10)]
 	[Protocol]
-	public interface NSAccessibilitySlider : NSAccessibilityElement {
+	public interface NSAccessibilitySlider : NSAccessibilityElementProtocol {
 		[Abstract]
 		[NullAllowed, Export ("accessibilityLabel")]
 		string AccessibilityLabel { get; }
@@ -22692,7 +22705,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,10)]
 	[Protocol]
-	public interface NSAccessibilityImage : NSAccessibilityElement {
+	public interface NSAccessibilityImage : NSAccessibilityElementProtocol {
 		[Abstract]
 		[NullAllowed, Export ("accessibilityLabel")]
 		string AccessibilityLabel { get; }
@@ -22700,7 +22713,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,10)]
 	[Protocol]
-	public interface NSAccessibilityContainsTransientUI : NSAccessibilityElement {
+	public interface NSAccessibilityContainsTransientUI : NSAccessibilityElementProtocol {
 		[Abstract]
 		[Export ("accessibilityPerformShowAlternateUI")]
 		bool AccessibilityPerformShowAlternateUI ();
