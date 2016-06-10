@@ -86,7 +86,7 @@ partial class TestRuntime
 		NUnit.Framework.Assert.Ignore ("Requires the platform version shipped with Xcode {0}.{1}", major, minor);
 	}
 
-	public static bool CheckXcodeVersion (int major, int minor)
+	public static bool CheckXcodeVersion (int major, int minor, int build = 0)
 	{
 		switch (major) {
 		case 7:
@@ -98,6 +98,8 @@ partial class TestRuntime
 				return ChecktvOSSystemVersion (9, 0);
 #elif __IOS__
 				return CheckiOSSystemVersion (9, 0);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 11, 0);
 #else
 				throw new NotImplementedException ();
 #endif
@@ -108,6 +110,8 @@ partial class TestRuntime
 				return ChecktvOSSystemVersion (9, 0);
 #elif __IOS__
 				return CheckiOSSystemVersion (9, 1);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 11, 0 /* yep */);
 #else
 				throw new NotImplementedException ();
 #endif
@@ -118,6 +122,8 @@ partial class TestRuntime
 				return ChecktvOSSystemVersion (9, 1);
 #elif __IOS__
 				return CheckiOSSystemVersion (9, 2);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 11, 2);
 #else
 				throw new NotImplementedException ();
 #endif
@@ -128,6 +134,8 @@ partial class TestRuntime
 				return ChecktvOSSystemVersion (9, 2);
 #elif __IOS__
 				return CheckiOSSystemVersion (9, 3);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 11, 4);
 #else
 				throw new NotImplementedException ();
 #endif
@@ -150,6 +158,19 @@ partial class TestRuntime
 			}
 #elif __TVOS__ || __WATCHOS__
 			return true;
+#elif MONOMAC
+			switch (minor) {
+			case 0:
+				return CheckMacSystemVersion (10, 9, 0);
+			case 1:
+				return CheckMacSystemVersion (10, 10, 0);
+			case 2:
+				return CheckMacSystemVersion (10, 10, 0);
+			case 3:
+				return CheckMacSystemVersion (10, 10, 0);
+			default:
+				throw new NotImplementedException ();
+			}
 #else
 			throw new NotImplementedException ();
 #endif
@@ -165,6 +186,16 @@ partial class TestRuntime
 			}
 #elif __TVOS__ || __WATCHOS__
 			return true;
+#elif MONOMAC
+			switch (minor) {
+			case 0:
+				// Xcode 5.0.1 ships OSX 10.9 SDK
+				return CheckMacSystemVersion (10, build > 0 ? 9 : 8, 0);
+			case 1:
+				return CheckMacSystemVersion (10, 9, 0);
+			default:
+				throw new NotImplementedException ();
+			}
 #else
 			throw new NotImplementedException ();
 #endif
@@ -180,6 +211,14 @@ partial class TestRuntime
 			}
 #elif __TVOS__ || __WATCHOS__
 			return true;
+#elif MONOMAC
+			switch (minor) {
+			case 5:
+			case 6:
+				return CheckMacSystemVersion (10, 8, 0);
+			default:
+				throw new NotImplementedException ();
+			}
 #else
 			throw new NotImplementedException ();
 #endif
@@ -230,6 +269,17 @@ partial class TestRuntime
 		if (throwIfOtherPlatform)
 			throw new Exception ("Can't get watchOS System version on iOS/tvOS.");
 		// This is both iOS and tvOS
+		return true;
+#endif
+	}
+
+	public static bool CheckMacSystemVersion (int major, int minor, int build = 0, bool throwIfOtherPlatform = true)
+	{
+#if MONOMAC
+		return OSXVersion >= new Version (major, minor, build);
+#else
+		if (throwIfOtherPlatform)
+			throw new Exception ("Can't get iOS System version on other platforms.");
 		return true;
 #endif
 	}
