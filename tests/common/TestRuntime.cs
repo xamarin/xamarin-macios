@@ -5,12 +5,22 @@ using System.Runtime.InteropServices;
 
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 using ObjCRuntime;
+#else
+#if MONOMAC
+using MonoMac.ObjCRuntime;
+using MonoMac.Foundation;
+using MonoMac.AppKit;
 #else
 using MonoTouch.ObjCRuntime;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
+#endif
 #endif
 
 partial class TestRuntime
@@ -24,10 +34,37 @@ partial class TestRuntime
 	{
 #if __WATCHOS__
 		throw new Exception ("Can't get iOS Build version on watchOS.");
+#elif MONOMAC
+		throw new Exception ("Can't get iOS Build version on OSX.");
 #else
 		return NSString.FromHandle (Messaging.IntPtr_objc_msgSend (UIDevice.CurrentDevice.Handle, Selector.GetHandle ("buildVersion")));
 #endif
 	}
+
+#if MONOMAC
+	const int sys1 = 1937339185;
+	const int sys2 = 1937339186;
+	const int sys3 = 1937339187;
+
+	// Deprecated in OSX 10.8 - but no good alternative is (yet) available
+	[System.Runtime.InteropServices.DllImport ("/System/Library/Frameworks/Carbon.framework/Versions/Current/Carbon")]
+	static extern int Gestalt (int selector, out int result);
+
+	static Version version;
+
+	public static Version OSXVersion {
+		get {
+			if (version == null) {
+				int major, minor, build;
+				Gestalt (sys1, out major);
+				Gestalt (sys2, out minor);
+				Gestalt (sys3, out build);
+				version = new Version (major, minor, build);
+			}
+			return version;
+		}
+	}
+#endif
 
 	public static Version GetSDKVersion ()
 	{
@@ -205,6 +242,9 @@ partial class TestRuntime
 	{
 #if __WATCHOS__
 		throw new Exception ("Can't get iOS System/SDK version on WatchOS.");
+#elif MONOMAC
+		if (OSXVersion < new Version (major, minor))
+			return false;
 #else
 		if (!UIDevice.CurrentDevice.CheckSystemVersion (major, minor))
 			return false;
@@ -219,7 +259,7 @@ partial class TestRuntime
 	{
 #if __WATCHOS__
 		throw new Exception ("Can't get iOS SDK version on WatchOS.");
-#else
+#elif !MONOMAC
 		if (Runtime.Arch == Arch.SIMULATOR || !UIDevice.CurrentDevice.CheckSystemVersion (6, 0)) {
 			// dyld_get_program_sdk_version was introduced with iOS 6.0, so don't do the SDK check on older deviecs.
 			return true; // dyld_get_program_sdk_version doesn't return what we're looking for on the mac.
