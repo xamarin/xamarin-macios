@@ -133,12 +133,6 @@ partial class TestRuntime
 			}
 		case 6:
 #if __IOS__
-			// nothing
-#elif __TVOS__ || __WATCHOS__
-			return true;
-#else
-			throw new NotImplementedException ();
-#endif
 			switch (minor) {
 			case 0:
 				return CheckiOSSystemVersion (8, 0);
@@ -151,14 +145,13 @@ partial class TestRuntime
 			default:
 				throw new NotImplementedException ();
 			}
-		case 5:
-#if __IOS__
-			// nothing
 #elif __TVOS__ || __WATCHOS__
 			return true;
 #else
 			throw new NotImplementedException ();
 #endif
+		case 5:
+#if __IOS__
 			switch (minor) {
 			case 0:
 				return CheckiOSSystemVersion (7, 0);
@@ -167,14 +160,13 @@ partial class TestRuntime
 			default:
 				throw new NotImplementedException ();
 			}
-		case 4:
-#if __IOS__
-			// nothing
 #elif __TVOS__ || __WATCHOS__
 			return true;
 #else
 			throw new NotImplementedException ();
 #endif
+		case 4:
+#if __IOS__
 			switch (minor) {
 			case 5:
 				return CheckiOSSystemVersion (6, 0);
@@ -183,6 +175,11 @@ partial class TestRuntime
 			default:
 				throw new NotImplementedException ();
 			}
+#elif __TVOS__ || __WATCHOS__
+			return true;
+#else
+			throw new NotImplementedException ();
+#endif
 		default:
 			throw new NotImplementedException ();
 		}
