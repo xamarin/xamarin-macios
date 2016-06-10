@@ -67,7 +67,7 @@
     <Compile Include="Tasks\CompileSceneKitAssetsTaskBase.cs" />
     <Compile Include="Tasks\CreateAssetPackManifestTaskBase.cs" />
     <Compile Include="Tasks\CreateEmbeddedResourcesTaskBase.cs" />
-    <Compile Include="Tasks\CreateInstallerPackage.cs" />
+    <Compile Include="Tasks\CreateInstallerPackageTaskBase.cs" />
     <Compile Include="Tasks\CreatePkgInfoTaskBase.cs" />
     <Compile Include="Tasks\DetectSigningIdentityTaskBase.cs" />
     <Compile Include="Tasks\DittoTaskBase.cs" />

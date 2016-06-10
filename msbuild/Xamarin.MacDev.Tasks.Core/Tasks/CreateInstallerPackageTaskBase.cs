@@ -12,9 +12,11 @@ using Xamarin.MacDev;
 
 namespace Xamarin.MacDev.Tasks
 {
-	public class CreateInstallerPackage : ToolTask
+	public class CreateInstallerPackageTaskBase : ToolTask
 	{
 		#region Inputs
+		public string SessionId { get; set; }
+
 		[Required]
 		public string OutputDirectory { get; set; }
 
