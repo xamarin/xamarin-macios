@@ -33,6 +33,7 @@ using System.Runtime.InteropServices;
 #if !COREBUILD
 using XamCore.CoreFoundation;
 using XamCore.ObjCRuntime;
+using XamCore.Foundation;
 #endif
 
 namespace XamCore.Foundation {
@@ -211,6 +212,20 @@ namespace XamCore.Foundation {
 			Dictionary.TryGetValue (key, out value);
 			return value as NSDictionary;
 		}
+		
+#if XAMCORE_2_0
+		protected NSDictionary <TKey, TValue> GetNSDictionary <TKey, TValue> (NSString key)
+			where TKey : class, INativeObject
+			where TValue : class, INativeObject
+		{
+			if (key == null)
+				throw new ArgumentNullException ("key");
+
+			NSObject value;
+			Dictionary.TryGetValue (key, out value);
+			return value as NSDictionary <TKey, TValue>;
+		}
+#endif
 
 		protected T GetStrongDictionary<T> (NSString key) where T : DictionaryContainer
 		{
