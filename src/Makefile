@@ -731,10 +731,6 @@ WATCH_EXTRA_SYSTEM_NET_HTTP_FILES = \
 	$(abspath $(TOP)/src/Foundation/NSUrlSessionHandler.cs) \
 	$(abspath $(TOP)/src/ObjCRuntime/RuntimeOptions.cs) \
 
-# There are no extra source code for System.Net.Http.dll yet,
-# since there's no CFNetwork on WatchOS. Eventually NSUrlSessionHandler
-# code will be included here.
-
 # build (into custom LIBRARY_SUBDIR)
 $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/reference/System.Net.Http.dll: $(WATCH_EXTRA_SYSTEM_NET_HTTP_FILES) $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/System.Net.Http.dll $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll
 	$(call Q_PROF_MCS,watch) $(MAKE) $(if $(V),,-s) -C $(WATCH_MONO_PATH)/mcs/class/System.Net.Http PROFILE=monotouch_watch LIBRARY_SUBDIR=reference EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(WATCH_BUILD_DIR)/reference/Xamarin.WatchOS.dll) $(WATCH_EXTRA_SYSTEM_NET_HTTP_FILES) -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:XAMARIN_MODERN -D:SYSTEM_NET_HTTP -D:UNIFIED"
@@ -939,10 +935,6 @@ TVOS_EXTRA_SYSTEM_NET_HTTP_FILES = \
 	$(abspath $(MONO_PATH)/mcs/class/System.Net.Http/HttpClientEx.cs) \
 	$(abspath $(TOP)/src/Foundation/NSUrlSessionHandler.cs) \
 	$(abspath $(TOP)/src/ObjCRuntime/RuntimeOptions.cs) \
-
-# There are no extra source code for System.Net.Http.dll yet,
-# since there's no CFNetwork on TVOS. Eventually NSUrlSessionHandler
-# code will be included here.
 
 # build (into custom LIBRARY_SUBDIR)
 $(MONO_PATH)/mcs/class/lib/monotouch_tv/reference/System.Net.Http.dll: $(TVOS_EXTRA_SYSTEM_NET_HTTP_FILES) $(MONO_PATH)/mcs/class/lib/monotouch_tv/System.Net.Http.dll $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll
