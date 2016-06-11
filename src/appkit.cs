@@ -22865,6 +22865,7 @@ namespace XamCore.AppKit {
 		NSObject[] GetAccessibilityArrayAttributeValues (NSString attribute, nuint index, nuint maxCount);
 
 		[Mac (10,9)]
+		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
 		[Export ("accessibilityNotifiesWhenDestroyed")]
 		bool AccessibilityNotifiesWhenDestroyed { get; }
 	}
