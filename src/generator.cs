@@ -3181,8 +3181,14 @@ public partial class Generator : IMemberGatherer {
 						} else if (pi.PropertyType == typeof (string)){
 							getter = "GetStringValue ({0})";
 							setter = "SetStringValue ({0}, value)";
-						} else if (pi.PropertyType.Name == "NSDictionary"){
-							getter = "GetNSDictionary ({0})";
+						} else if (pi.PropertyType.Name.StartsWith ("NSDictionary")){
+							if (pi.PropertyType.IsGenericType) {
+								var genericParameters = pi.PropertyType.GetGenericArguments ();
+								// we want to keep {0} for later yet add the params for the template.
+								getter = $"GetNSDictionary <{FormatType (dictType, genericParameters [0])}, {FormatType (dictType, genericParameters [1])}> " + "({0})";  
+							} else {
+								getter = "GetNSDictionary ({0})";
+							}
 							setter = "SetNativeValue ({0}, value)";
 						} else if (IsDictionaryContainerType (pi.PropertyType) || pi.GetCustomAttributes (typeof (StrongDictionaryAttribute), true).Length > 0 ) {
 							var strType = pi.PropertyType.Name;
