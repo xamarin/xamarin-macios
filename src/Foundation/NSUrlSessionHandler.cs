@@ -110,12 +110,24 @@ namespace Foundation {
 			base.Dispose (disposing);
 		}
 
+		bool disableCaching;
+
+		public bool DisableCaching {
+			get {
+				return disableCaching;
+			}
+			set {
+				EnsureModifiability ();
+				disableCaching = value;
+			}
+		}
+
 		private string GetHeaderSeparator (string name)
 		{
-			if (headerSeparators.ContainsKey (name))
-				return headerSeparators [name];
-
-			return ",";
+			string value;
+			if (!headerSeparators.TryGetValue (name, out value))
+			    value = ",";
+			return value;
 		}
 
 		private async Task<NSUrlRequest> CreateRequest (HttpRequestMessage request)
@@ -130,7 +142,7 @@ namespace Foundation {
 
 			var nsrequest = new NSMutableUrlRequest {
 				AllowsCellularAccess = true,
-				CachePolicy = NSUrlRequestCachePolicy.UseProtocolCachePolicy,
+				CachePolicy = DisableCaching ? NSUrlRequestCachePolicy.ReloadIgnoringCacheData : NSUrlRequestCachePolicy.UseProtocolCachePolicy,
 				HttpMethod = request.Method.ToString ().ToUpperInvariant (),
 				Url = NSUrl.FromString (request.RequestUri.AbsoluteUri),
 				Headers = headers.Aggregate (new NSMutableDictionary (), (acc, x) => {
@@ -300,14 +312,29 @@ namespace Foundation {
 
 			public override void WillCacheResponse (NSUrlSession session, NSUrlSessionDataTask dataTask, NSCachedUrlResponse proposedResponse, Action<NSCachedUrlResponse> completionHandler)
 			{
-				// never cache
-				completionHandler (null);
+				completionHandler (sessionHandler.DisableCaching ? null : proposedResponse);
 			}
 
 			public override void WillPerformHttpRedirection (NSUrlSession session, NSUrlSessionTask task, NSHttpUrlResponse response, NSUrlRequest newRequest, Action<NSUrlRequest> completionHandler)
 			{
-				// never redirect
-				completionHandler (null);
+				completionHandler (sessionHandler.AllowAutoRedirect ? newRequest : null);
+			}
+
+			public override void DidReceiveChallenge(NSUrlSession session, NSUrlSessionTask task, NSUrlAuthenticationChallenge challenge, Action<NSUrlSessionAuthChallengeDisposition, NSUrlCredential> completionHandler)
+			{
+				if (challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodNTLM) {
+					if (sessionHandler.Credentials != null) {
+						var credentialsToUse = sessionHandler.Credentials as NetworkCredential;
+						if (credentialsToUse == null) {
+							var uri = GetInflightData (task).Request.RequestUri;
+							credentialsToUse = sessionHandler.Credentials.GetCredential (uri, "NTLM");
+						}
+						var credential = new NSUrlCredential (credentialsToUse.UserName, credentialsToUse.Password, NSUrlCredentialPersistence.ForSession);
+						completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
+					}
+					return;
+				}
+				completionHandler (NSUrlSessionAuthChallengeDisposition.PerformDefaultHandling, challenge.ProposedCredential);
 			}
 		}
 
