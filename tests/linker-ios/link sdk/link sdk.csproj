@@ -26,6 +26,7 @@
     </MtouchI18n>
     <MtouchExtraArgs>-v -v -disable-thread-check -xml=${ProjectDir}/extra-linker-defs.xml</MtouchExtraArgs>
     <MtouchArch>i386</MtouchArch>
+    <MtouchLink>SdkOnly</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -112,6 +113,7 @@
     <Compile Include="DllImportTest.cs" />
     <Compile Include="LocaleTest.cs" />
     <Compile Include="ReflectionTest.cs" />
+    <Compile Include="HttpClientHandlerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\BundledResources\BundledResources.csproj">
