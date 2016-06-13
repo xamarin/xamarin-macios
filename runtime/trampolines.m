@@ -343,7 +343,9 @@ xamarin_get_frame_length (id self, SEL sel)
 static inline void
 find_objc_method_implementation (struct objc_super *sup, id self, SEL sel, IMP xamarin_impl)
 {
-	// COOP: does not access managed memory: any mode
+	// COOP: calls ObjC function
+	MONO_ASSERT_GC_SAFE;
+
 	Class klass = object_getClass (self);
 	Class sklass = class_getSuperclass (klass);
 
@@ -365,7 +367,9 @@ find_objc_method_implementation (struct objc_super *sup, id self, SEL sel, IMP x
 id
 xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_impl)
 {
-	// COOP: does not access managed memory: any mode
+	// COOP: calls ObjC function
+	MONO_ASSERT_GC_SAFE;
+
 	struct objc_super sup;
 	find_objc_method_implementation (&sup, self, sel, xamarin_impl);
 	return objc_msgSendSuper (&sup, sel);
@@ -376,6 +380,8 @@ id
 xamarin_copyWithZone_trampoline1 (id self, SEL sel, NSZone *zone)
 {
 	// COOP: does not access managed memory: any mode
+	MONO_ASSERT_GC_SAFE;
+
 	// This is for subclasses that themselves do not implement Copy (NSZone)
 
 	id rv;
@@ -437,12 +443,12 @@ void
 xamarin_release_trampoline (id self, SEL sel)
 {
 	// COOP: does not access managed memory: any mode, but it assumes safe mode upon entry (it takes locks, and doesn't switch to safe mode).
-	MONO_ASSERT_GC_SAFE;
-	
+	MONO_THREAD_ATTACH;
+
 	int ref_count;
 	bool detach = false;
 
-	pthread_mutex_lock (&refcount_mutex);
+	pthread_mutex_lock_coop (&refcount_mutex);
 
 	ref_count = [self retainCount];
 
@@ -456,7 +462,7 @@ xamarin_release_trampoline (id self, SEL sel)
 	 * This happens if managed code will end up holding the only ref.
 	 */
 
-	if (ref_count == 2 && xamarin_has_managed_ref_safe (self)) {
+	if (ref_count == 2 && xamarin_has_managed_ref (self)) {
 		xamarin_switch_gchandle (self, true /* weak */);
 		detach = true;
 	}
@@ -464,10 +470,16 @@ xamarin_release_trampoline (id self, SEL sel)
 	pthread_mutex_unlock (&refcount_mutex);
 
 	/* Invoke the real retain method */
+	MONO_ENTER_GC_SAFE;
 	xamarin_invoke_objc_method_implementation (self, sel, (IMP) xamarin_release_trampoline);
+	MONO_EXIT_GC_SAFE;
 
-	if (detach)
-		mono_thread_detach_if_exiting ();
+	if (detach && mono_thread_detach_if_exiting ()) {
+		// we do not exit the GC unsafe region as the thread is already detached
+		return;
+	}
+
+	MONO_THREAD_DETACH;
 }
 
 void
@@ -476,8 +488,7 @@ xamarin_notify_dealloc (id self, int gchandle)
 	guint32 exception_gchandle = 0;
 
 	// COOP: safe mode upon entry, switches to unsafe when acccessing managed memory.
-	MONO_ASSERT_GC_SAFE_OR_DETACHED;
-	
+
 	/* This is needed because we call into managed code below (xamarin_unregister_nsobject) */
 	MONO_THREAD_ATTACH; // COOP: This will swith to GC_UNSAFE
 
@@ -489,20 +500,24 @@ xamarin_notify_dealloc (id self, int gchandle)
 	xamarin_free_gchandle (self, gchandle);
 	xamarin_unregister_nsobject (self, mobj, &exception_gchandle);
 
-	MONO_THREAD_DETACH; // COOP: This will switch to GC_SAFE
-
 	xamarin_process_managed_exception_gchandle (exception_gchandle);
 
-	mono_thread_detach_if_exiting ();
+	if (mono_thread_detach_if_exiting ()) {
+		// we do not detach as the thread is already detached
+		return;
+	}
+
+	MONO_THREAD_DETACH;
 }
 
 id
 xamarin_retain_trampoline (id self, SEL sel)
 {
 	// COOP: safe mode upon entry, switches to unsafe when acccessing managed memory.
-	MONO_ASSERT_GC_SAFE;
 
-	pthread_mutex_lock (&refcount_mutex);
+	MONO_THREAD_ATTACH;
+
+	pthread_mutex_lock_coop (&refcount_mutex);
 
 #if defined(DEBUG_REF_COUNTING)
 	int ref_count = [self retainCount];
@@ -521,12 +536,16 @@ xamarin_retain_trampoline (id self, SEL sel)
 	pthread_mutex_unlock (&refcount_mutex);
 
 	/* Invoke the real retain method */
+	MONO_ENTER_GC_SAFE;
 	self = xamarin_invoke_objc_method_implementation (self, sel, (IMP) xamarin_retain_trampoline);
+	MONO_EXIT_GC_SAFE;
 	
 #if defined(DEBUG_REF_COUNTING)
 	NSLog (@"xamarin_retain_trampoline  (%s Handle=%p) initial retainCount=%d; new retainCount=%d HadManagedRef=%i HasManagedRef=%i old GCHandle=%i new GCHandle=%i\n", 
 		class_getName ([self class]), self, ref_count, (int) [self retainCount], had_managed_ref, xamarin_has_managed_ref (self), pre_gchandle, xamarin_get_gchandle (self));
 #endif
+
+	MONO_THREAD_DETACH;
 
 	return self;
 }

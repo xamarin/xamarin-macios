@@ -521,7 +521,7 @@ void
 xamarin_arch_trampoline (struct CallState *state)
 {
 	// COOP: called from ObjC, and does not access managed memory.
-	MONO_ASSERT_GC_SAFE;
+	MONO_ASSERT_GC_SAFE_OR_DETACHED;
 
 	enum TrampolineType type = (enum TrampolineType) state->type;
 	bool is_stret = (type & Tramp_Stret) == Tramp_Stret;

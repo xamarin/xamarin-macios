@@ -123,7 +123,6 @@ const char *	xamarin_skip_encoding_flags (const char *encoding);
 void			xamarin_add_registration_map (struct MTRegistrationMap *map);
 
 bool			xamarin_has_managed_ref (id self);
-bool			xamarin_has_managed_ref_safe (id self);
 void			xamarin_switch_gchandle (id self, bool to_weak);
 int				xamarin_get_gchandle (id self);
 void			xamarin_free_gchandle (id self, int gchandle);
