@@ -70,7 +70,7 @@
     <Compile Include="Tasks\DetectSdkLocationsTaskBase.cs" />
     <Compile Include="Tasks\DetectSigningIdentityTaskBase.cs" />
     <Compile Include="Tasks\EmbedMobileProvisionTaskBase.cs" />
-    <Compile Include="Tasks\FindWatchAppBundleTaskBase.cs" />
+    <Compile Include="Tasks\FindWatchOS1AppExtensionBundleTaskBase.cs" />
     <Compile Include="Tasks\GetPropertyValueTaskBase.cs" />
     <Compile Include="Tasks\IBToolTaskBase.cs" />
     <Compile Include="Tasks\MetalLibTaskBase.cs" />
@@ -87,6 +87,7 @@
     <Compile Include="Tasks\CollectAssetPacksTaskBase.cs" />
     <Compile Include="Tasks\CreateAssetPackTaskBase.cs" />
     <Compile Include="Tasks\WriteAssetPackManifestTaskBase.cs" />
+    <Compile Include="Tasks\FindWatchOS2AppBundleTaskBase.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
