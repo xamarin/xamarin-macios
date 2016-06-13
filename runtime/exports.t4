@@ -214,7 +214,7 @@
 			"MonoDomain *", "domain"
 		),
 
-		new Export ("void", "mono_thread_detach_if_exiting"),
+		new Export ("mono_bool", "mono_thread_detach_if_exiting"),
 
 		#endregion
 
