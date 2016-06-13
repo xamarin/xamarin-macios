@@ -195,7 +195,7 @@ namespace XamCore.AppKit {
 			case NSImageName.MobileMe:
 				return ImageNamed (NSImageNameMobileMe);
 			case NSImageName.ShareTemplate:
-				return ImageNamed(NSImageNameShareTemplate);
+				return ImageNamed (NSImageNameShareTemplate);
 			}
 
 			throw new ArgumentException ("Invalid enum value", "name");

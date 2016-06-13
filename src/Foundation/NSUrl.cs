@@ -142,16 +142,9 @@ namespace XamCore.Foundation {
 			return SetResourceValue (value, nsUrlResourceKey, out error);
 		}
 
-		public int Port
-		{
-			get
-			{
-				var number = this.PortNumber;
-
-				if (number == null)
-					return -1;
-
-				return (int)number;
+		public int Port {
+			get {
+				return (int) (this.PortNumber ?? -1);
 			}
 		}
 
