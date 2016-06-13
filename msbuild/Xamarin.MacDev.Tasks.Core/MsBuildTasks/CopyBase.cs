@@ -1,6 +1,6 @@
 ﻿namespace Microsoft.Build.Tasks
 {
-	public abstract class MakeDirBase : Microsoft.Build.Tasks.MakeDir
+	public abstract class CopyBase : Copy
 	{
 		public string SessionId { get; set; }
 	}

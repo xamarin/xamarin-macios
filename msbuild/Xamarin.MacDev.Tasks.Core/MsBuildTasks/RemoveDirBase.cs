@@ -1,6 +1,6 @@
 namespace Microsoft.Build.Tasks
 {
-	public abstract class RemoveDirBase : Microsoft.Build.Tasks.RemoveDir
+	public abstract class RemoveDirBase : RemoveDir
 	{
 		public string SessionId { get; set; }
 	}

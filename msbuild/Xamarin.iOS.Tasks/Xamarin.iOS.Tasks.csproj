@@ -32,12 +32,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="MsBuildTasks\Copy.cs" />
-    <Compile Include="MsBuildTasks\Exec.cs" />
-    <Compile Include="MsBuildTasks\Delete.cs" />
-    <Compile Include="MsBuildTasks\MakeDir.cs" />
-    <Compile Include="MsBuildTasks\RemoveDir.cs" />
-    <Compile Include="MsBuildTasks\Touch.cs" />
     <Compile Include="Tasks\ACTool.cs" />
     <Compile Include="Tasks\Archive.cs" />
     <Compile Include="Tasks\BTouch.cs" />

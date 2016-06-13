@@ -31,11 +31,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="MsBuildTasks\CopyBase.cs" />
-    <Compile Include="MsBuildTasks\DeleteBase.cs" />
-    <Compile Include="MsBuildTasks\MakeDirBase.cs" />
-    <Compile Include="MsBuildTasks\RemoveDirBase.cs" />
-    <Compile Include="MsBuildTasks\TouchBase.cs" />
     <Compile Include="Tasks\ACTool.cs" />
     <Compile Include="Tasks\BTouch.cs" />
     <Compile Include="Tasks\CodesignVerify.cs" />

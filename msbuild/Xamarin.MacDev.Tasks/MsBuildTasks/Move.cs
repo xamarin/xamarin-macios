@@ -1,6 +1,6 @@
 ﻿namespace Microsoft.Build.Tasks
 {
-    public class Move : MoveTaskBase
+	public class Move : MoveTaskBase
 	{
 	}
 }

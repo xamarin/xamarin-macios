@@ -2,6 +2,6 @@
 {
 	public abstract class MoveTaskBase : Move
 	{
-        public string SessionId { get; set; }
-    }
+		public string SessionId { get; set; }
+	}
 }

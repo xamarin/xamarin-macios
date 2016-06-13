@@ -1,6 +1,6 @@
 ﻿namespace Microsoft.Build.Tasks
 {
-	public class MakeDirBase : Microsoft.Build.Tasks.MakeDir
+	public abstract class TouchBase : Touch
 	{
 		public string SessionId { get; set; }
 	}
