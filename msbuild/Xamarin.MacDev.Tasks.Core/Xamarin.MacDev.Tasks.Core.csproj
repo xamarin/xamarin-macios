@@ -52,6 +52,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <!-- XBuild does not define the MSBuildRuntimeVersion property. -->
+    <Compile Include="MsBuildTasks\MoveTaskBase.cs" Condition="'$(MSBuildRuntimeVersion)' != ''" />
+    <Compile Include="MsBuildTasks\XBuildMoveTaskBase.cs" Condition="'$(MSBuildRuntimeVersion)' == ''" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tasks\ACToolTaskBase.cs" />
     <Compile Include="Tasks\ArchiveTaskBase.cs" />
@@ -79,7 +84,6 @@
     <Compile Include="Tasks\IBToolTaskBase.cs" />
     <Compile Include="Tasks\MetalLibTaskBase.cs" />
     <Compile Include="Tasks\MetalTaskBase.cs" />
-    <Compile Include="Tasks\MoveTaskBase.cs" />
     <Compile Include="Tasks\OptimizePropertyListTaskBase.cs" />
     <Compile Include="Tasks\PackLibraryResourcesTaskBase.cs" />
     <Compile Include="Tasks\PrepareNativeReferencesTaskBase.cs" />
