@@ -50,6 +50,8 @@ namespace xharness
 		public string TVOS_MONO_PATH { get; set; } // Use same name as in Makefiles, so that a grep finds it.
 		public bool INCLUDE_WATCH { get; set; }
 		public string JENKINS_RESULTS_DIRECTORY { get; set; } // Use same name as in Makefiles, so that a grep finds it.
+		public string MAC_DESTDIR { get; set; }
+		public string IOS_DESTDIR { get; set; }
 
 		// Run
 		public string Target { get; set; }
@@ -143,6 +145,8 @@ namespace xharness
 			TVOS_MONO_PATH = MONO_PATH;
 			INCLUDE_WATCH = make_config.ContainsKey ("INCLUDE_WATCH") && !string.IsNullOrEmpty (make_config ["INCLUDE_WATCH"]);
 			JENKINS_RESULTS_DIRECTORY = make_config ["JENKINS_RESULTS_DIRECTORY"];
+			MAC_DESTDIR = make_config ["MAC_DESTDIR"];
+			IOS_DESTDIR = make_config ["IOS_DESTDIR"];
 		}
 		 
 		void AutoConfigureMac ()

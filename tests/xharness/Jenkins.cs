@@ -615,6 +615,32 @@ function toggleContainerVisibility (containerName)
 					args.Append (Harness.Quote (ProjectFile));
 					xbuild.StartInfo.Arguments = args.ToString ();
 					Harness.Log ("Building {0} ({1})", TestName, Mode);
+					switch (Platform) {
+					case TestPlatform.iOS_Classic:
+					case TestPlatform.iOS_Unified:
+					case TestPlatform.iOS_Unified32:
+					case TestPlatform.iOS_Unified64:
+					case TestPlatform.tvOS:
+					case TestPlatform.watchOS:
+						xbuild.StartInfo.EnvironmentVariables.Add ("MD_APPLE_SDK_ROOT", Harness.XcodeRoot);
+						xbuild.StartInfo.EnvironmentVariables.Add ("MD_MTOUCH_SDK_ROOT", Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current"));
+						xbuild.StartInfo.EnvironmentVariables.Add ("XBUILD_FRAMEWORK_FOLDERS_PATH", Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frramework"));
+						xbuild.StartInfo.EnvironmentVariables.Add ("MSBuildExtensionsPath", Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild"));
+						break;
+					case TestPlatform.Mac:
+					case TestPlatform.Mac_Classic:
+					case TestPlatform.Mac_Unified:
+					case TestPlatform.Mac_UnifiedXM45:
+						xbuild.StartInfo.EnvironmentVariables.Add ("MD_APPLE_SDK_ROOT", Harness.XcodeRoot);
+						xbuild.StartInfo.EnvironmentVariables.Add ("XBUILD_FRAMEWORK_FOLDERS_PATH", Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frramework"));
+						xbuild.StartInfo.EnvironmentVariables.Add ("MSBuildExtensionsPath", Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild"));
+						xbuild.StartInfo.EnvironmentVariables.Add ("XamarinMacFrameworkRoot", Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current"));
+						xbuild.StartInfo.EnvironmentVariables.Add ("XAMMAC_FRAMEWORK_PATH", Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current"));
+						break;
+					default:
+						throw new NotImplementedException ();
+						                 
+					}
 					var log = Logs.Create (LogDirectory, "build-" + Platform + ".txt", "Build log");
 					log.WriteLine ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
 					if (Harness.DryRun) {
