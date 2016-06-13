@@ -63,7 +63,7 @@ namespace xharness
 							  Where ((SimDevice v) => v.SimRuntime == latestwatchOSRuntime.Identifier && v.SimDeviceType == watchOSDeviceType.Identifier).
 							  Where ((SimDevice v) => Simulators.AvailableDevicePairs.Any ((pair) => pair.Gizmo == v.UDID)). // filter to watch devices that exists in a device pair
 							  First ();
-				runtasks.Add (new RunSimulatorTask (buildTask, device) { Platform = TestPlatform.watchOS });
+				runtasks.Add (new RunSimulatorTask (buildTask, device) { Platform = TestPlatform.watchOS, ExecutionResult = TestExecutingResult.Ignored });
 			} else {
 				var latestiOSRuntime =
 					Simulators.SupportedRuntimes.
@@ -170,6 +170,12 @@ namespace xharness
 					Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45"));
 				}
 			}
+
+
+			foreach (var task in runSimulatorTasks) {
+				if (task.TestName == "framework-test")
+					task.ExecutionResult = TestExecutingResult.Ignored;
+			}
 		}
 
 		static MacExecuteTask CloneExecuteTask (MacExecuteTask task, TestPlatform platform, string suffix)
@@ -241,6 +247,8 @@ namespace xharness
 				return "blue";
 			else if (tests.Any ((v) => v.NotStarted))
 				return "black";
+			else if (tests.Any ((v) => v.Ignored))
+				return "gray";
 			else
 				return "black";
 		}
@@ -270,6 +278,8 @@ namespace xharness
 					return "red";
 				} else if (test.Succeeded) {
 					return "green";
+				} else if (test.Ignored) {
+					return "gray";
 				} else {
 					return "pink";
 				}
@@ -475,7 +485,7 @@ function toggleContainerVisibility (containerName)
 			get {
 				return execution_result;
 			}
-			protected set {
+			set {
 				execution_result = value;
 				Jenkins.GenerateReport ();
 			}
@@ -491,6 +501,7 @@ function toggleContainerVisibility (containerName)
 
 		public bool Succeeded { get { return (ExecutionResult & TestExecutingResult.Succeeded) == TestExecutingResult.Succeeded; } }
 		public bool Failed { get { return (ExecutionResult & TestExecutingResult.Failed) == TestExecutingResult.Failed; } }
+		public bool Ignored { get { return (ExecutionResult & TestExecutingResult.Ignored) == TestExecutingResult.Ignored; } }
 
 		public bool Crashed { get { return (ExecutionResult & TestExecutingResult.Crashed) == TestExecutingResult.Crashed; } }
 		public bool TimedOut { get { return (ExecutionResult & TestExecutingResult.TimedOut) == TestExecutingResult.TimedOut; } }
@@ -714,6 +725,8 @@ function toggleContainerVisibility (containerName)
 
 		public async Task BuildAsync ()
 		{
+			if (Finished)
+				return;
 			ExecutionResult |= TestExecutingResult.Building;
 			await BuildTask.RunAsync ();
 			if (BuildTask.Succeeded) {
@@ -993,6 +1006,7 @@ function toggleContainerVisibility (containerName)
 		// Finished results
 		Succeeded        =  0x100 + Finished,
 		Failed           =  0x200 + Finished,
+		Ignored          =  0x400 + Finished,
 
 		// Finished & Failed results
 		Crashed          = 0x1000 + Failed,
