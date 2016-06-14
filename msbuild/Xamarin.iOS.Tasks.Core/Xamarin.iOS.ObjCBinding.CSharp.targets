@@ -100,7 +100,7 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 	<Target Name="_CompressNativeFrameworkResources" Inputs="@(_NativeFrameworkResource)" Outputs="$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)" DependsOnTargets="_CollectNativeFrameworkResources" > 
 		<Zip
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(ZipExe)"
 			ToolPath="$(ZipPath)"
 			Recursive="true"
@@ -125,7 +125,7 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 	<Target Name="_CompressObjCBindingNativeFrameworkResources" Inputs="@(_ObjCBindingNativeFrameworkResource)" Outputs="$(IntermediateOutputPath)%(ObjCBindingNativeFramework.Filename)%(ObjCBindingNativeFramework.Extension)" DependsOnTargets="_CollectObjCBindingNativeFrameworkResources" > 
 		<Zip
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(ZipExe)"
 			ToolPath="$(ZipPath)"
 			Recursive="true"

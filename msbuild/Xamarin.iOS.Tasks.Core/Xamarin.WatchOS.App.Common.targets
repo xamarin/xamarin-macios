@@ -53,7 +53,7 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 
 	<Target Name="_ResolveNativeWatchApp" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName">
 		<ResolveNativeWatchApp
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			SdkVersion="$(MtouchSdkVersion)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
@@ -75,25 +75,25 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 		Outputs="$(_NativeExecutable);$(_AppBundlePath)_WatchKitStub\WK">
 		<Ditto
 			SessionId="$(BuildSessionId)"
-			Condition="$(IsMacEnabled)"
+			Condition="'$(IsMacEnabled)'"
 			ToolExe="$(DittoExe)"
 			ToolPath="$(DittoPath)"
 			Source="$(_NativeWatchApp)"
 			Destination="$(_AppBundlePath)$(AssemblyName)"
 		/>
 
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)'" Directories="$(_AppBundlePath)_WatchKitStub" />
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_AppBundlePath)_WatchKitStub" />
 
 		<Ditto
 			SessionId="$(BuildSessionId)"
-			Condition="$(IsMacEnabled)"
+			Condition="'$(IsMacEnabled)'"
 			ToolExe="$(DittoExe)"
 			ToolPath="$(DittoPath)"
 			Source="$(_NativeWatchApp)"
 			Destination="$(_AppBundlePath)_WatchKitStub\WK"
 		/>
 
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)'" Directories="$(AppBundleDir).dSYM" />
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir).dSYM" />
 	</Target>
 
 	<Target Name="CopyFilesToOutputDirectory" />

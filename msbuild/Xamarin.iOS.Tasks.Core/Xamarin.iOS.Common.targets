@@ -326,32 +326,32 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="CreateIpa" Condition="'$(_CanArchive)' == 'true'" DependsOnTargets="$(CreateIpaDependsOn)" />
 
 	<Target Name="_CleanAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)'" Directories="$(_AppBundlePath)" />
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_AppBundlePath)" />
 	</Target>
 
 	<Target Name="_CleanUploaded" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)'" Files="$(DeviceSpecificOutputPath).uploaded" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath).uploaded" />
 	</Target>
 
 	<Target Name="_CleanDebugSymbols" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)'" Directories="$(AppBundleDir).dSYM" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)'" Files="$(DeviceSpecificOutputPath)*.bcsymbolmap" />
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir).dSYM" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)*.bcsymbolmap" />
 	</Target>
 
 	<Target Name="_CleanITunesArtwork" Condition="'$(_CanArchive)' == 'true'">
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)'" Files="$(DeviceSpecificOutputPath)iTunesMetadata.plist;$(DeviceSpecificOutputPath)iTunesArtwork@2x;$(DeviceSpecificOutputPath)iTunesArtwork" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)iTunesMetadata.plist;$(DeviceSpecificOutputPath)iTunesArtwork@2x;$(DeviceSpecificOutputPath)iTunesArtwork" />
 	</Target>
 	
 	<Target Name="_CleanDeviceSpecificOutput" Condition="'$(_CanOutputAppBundle)' == 'true'">
 		<RemoveDir SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			Directories="$(IntermediateOutputPath)build-*;
 					$(OutputPath)build-*" />
 	</Target>
 
 	<Target Name="_CleanIntermediateToolOutput">
 		<RemoveDir SessionId="$(BuildSessionId)" 
-			Condition="'$(IsMacEnabled)'" 
+			Condition="'$(IsMacEnabled)' == 'true'" 
 			Directories="$(DeviceSpecificIntermediateOutputPath)actool;
 					$(DeviceSpecificIntermediateOutputPath)assetpacks;
 					$(DeviceSpecificIntermediateOutputPath)ibtool;
@@ -364,7 +364,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 					$(DeviceSpecificIntermediateOutputPath)TextureAtlas;
 					$(DeviceSpecificIntermediateOutputPath)mtouch-cache;
 					$(DeviceSpecificIntermediateOutputPath)" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)'" Files="$(DeviceSpecificOutputPath)*.ipa" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)*.ipa" />
 	</Target>
 
 	<PropertyGroup>
@@ -381,7 +381,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_ComputeBundleResourceOutputPaths" DependsOnTargets="_CollectBundleResources;_GenerateBundleName;_DetectSigningIdentity">
 		<ComputeBundleResourceOutputPaths
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleDir="$(AppBundleDir)"
 			BundleIdentifier="$(_BundleIdentifier)"
 			BundleResources="@(_BundleResourceWithLogicalName)"
@@ -397,7 +397,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		Outputs = "@(_BundleResourceWithOutputPath -> '%(OutputPath)')" >
 		<SmartCopy
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			SourceFiles = "@(_BundleResourceWithOutputPath)"
 			DestinationFiles = "@(_BundleResourceWithOutputPath -> '%(OutputPath)')"
 		/>
@@ -406,7 +406,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_CreateAssetPackManifest" DependsOnTargets="_CopyResourcesToBundle">
 		<CreateAssetPackManifest
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleDir="$(AppBundleDir)"
 			InitialInstallTags="$(OnDemandResourcesInitialInstallTags)"
 			PrefetchOrder="$(OnDemandResourcesPrefetchOrder)"
@@ -417,7 +417,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_CollectBundleResources" DependsOnTargets="$(_CollectBundleResourcesDependsOn)">
 		<CollectBundleResources
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			OptimizePropertyLists="$(OptimizePropertyLists)"
 			OptimizePNGs="$(OptimizePNGs)"
 			BundleResources="@(Content);@(BundleResource)"
@@ -462,7 +462,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<Metal
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(IPhoneResourcePrefix)"
@@ -476,7 +476,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		Inputs="@(_SmeltedMetal)" Outputs="$(DeviceSpeficicIntermediateOutputPath)metal\default.metal-ar">
 		<ArTool
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			Items="@(_SmeltedMetal)"
 			Archive="$(DeviceSpecificIntermediateOutputPath)metal\default.metal-ar">
 		</ArTool>
@@ -490,7 +490,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		Inputs="@(_ForgedMetal)" Outputs="$(_AppBundlePath)default.metallib">
 		<MetalLib
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			Items="@(_ForgedMetal)"
 			SdkDevPath="$(_SdkDevPath)"
 			OutputLibrary="$(_AppBundlePath)default.metallib">
@@ -504,7 +504,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_PackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'false'" DependsOnTargets="_CollectBundleResources">
 		<PackLibraryResources
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			Prefix="monotouch"
 			BundleResourcesWithLogicalNames="@(_BundleResourceWithLogicalName)">
 			<Output TaskParameter="EmbeddedResources" ItemName="EmbeddedResource" />
@@ -514,7 +514,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="ResolveReferences;_CollectBundleResources">
 		<UnpackLibraryResources
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			Prefix="monotouch"
 			NoOverwrite="@(_BundleResourceWithLogicalName)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
@@ -526,7 +526,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_DetectSdkLocations" DependsOnTargets="_ComputeTargetArchitectures">
 		<DetectSdkLocations
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			SdkVersion="$(MtouchSdkVersion)"
 			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
 			TargetArchitectures="$(TargetArchitectures)"
@@ -545,7 +545,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_DetectSigningIdentity" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations">
 		<DetectSigningIdentity
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleName="$(_AppBundleName)"
 			AppManifest="$(_AppManifest)"
 			Keychain="$(CodesignKeychain)"
@@ -587,7 +587,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		Outputs="$(_AppBundlePath)Info.plist" >
 		<CompileAppManifest
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleName="$(_AppBundleName)"
 			AppBundleDir="$(AppBundleDir)"
 			AppManifest="$(_AppManifest)"
@@ -606,8 +606,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			>
 		</CompileAppManifest>
 
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)'" Directories="$(AppBundleDir).dSYM" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)'" Files="$(DeviceSpecificOutputPath)*.bcsymbolmap" />
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir).dSYM" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)*.bcsymbolmap" />
 	</Target>
 
 	<Target Name="_CompileITunesMetadata" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'"
@@ -616,7 +616,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		Outputs="$(DeviceSPecificOutputPath)iTunesMetadata.plist" >
 		<CompileITunesMetadata
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleDir="$(AppBundleDir)"
 			ITunesMetadata="@(ITunesMetadata)"
 			OutputPath="$(DeviceSpecificOutputPath)iTunesMetadata.plist"
@@ -626,7 +626,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_CollectITunesArtwork" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'">
 		<CollectITunesArtwork
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			ITunesArtwork="@(ITunesArtwork)"
 			>
 			<Output TaskParameter="ITunesArtworkWithLogicalNames" ItemName="_ITunesArtworkWithLogicalName"/>
@@ -638,7 +638,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		Inputs="@(_ITunesArtworkWithLogicalName)" Outputs="$(DeviceSpecificOutputPath)%(_ITunesArtworkWithLogicalName.LogicalName)">
 		<Copy
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			SourceFiles="@(_ITunesArtworkWithLogicalName)"
 			DestinationFiles="$(DeviceSpecificOutputPath)%(_ITunesArtworkWithLogicalName.LogicalName)"
 		/>
@@ -647,7 +647,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_GetNativeExecutableName" DependsOnTargets="_DetectAppManifest;_GenerateBundleName;_CompileAppManifest">
 		<GetNativeExecutableName
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			AppManifest="$(_AppBundlePath)Info.plist"
 			>
 			<Output TaskParameter="ExecutableName" PropertyName="_ExecutableName" />
@@ -681,7 +681,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<MTouch
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(MtouchExe)"
 			ToolPath="$(MtouchPath)"
 			AppBundleDir="$(AppBundleDir)"
@@ -727,8 +727,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<Output TaskParameter="NativeLibraries" ItemName="_NativeLibrary" />
 		</MTouch>
 
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)'" Directories="$(AppBundleDir).dSYM" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)'" Files="$(DeviceSpecificOutputPath)*.bcsymbolmap" />
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir).dSYM" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)*.bcsymbolmap" />
 	</Target>
 
 	<Target Name="_GenerateFrameworkDebugSymbols" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsWatchApp)' != 'true'" DependsOnTargets="_CompileToNative;_CollectFrameworks"
@@ -739,7 +739,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<!-- run dsymutil on embedded frameworks -->
 		<DSymUtil
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleDir="$(AppBundleDir)"
 			Architectures=""
 			DSymDir="$(AppBundleDir)\..\%(_Frameworks.Filename).framework.dSYM"
@@ -812,7 +812,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		Outputs="$(_AppBundlePath)Settings.bundle\Root.plist" >
 		<CreateDebugSettings
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleDir="$(AppBundleDir)"
 			DebuggerPort="$(IOSDebuggerPort)"
 			>
@@ -824,7 +824,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		Outputs="$(_AppBundlePath)MonoTouchDebugConfiguration.txt" >
 		<CreateDebugConfiguration
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleDir="$(AppBundleDir)"
 			DebugOverWiFi="$(IOSDebugOverWiFi)"
 			DebuggerHosts="$(IOSDebuggerHosts)"
@@ -847,7 +847,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<OptimizeImage
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(PngCrushExe)"
 			ToolPath="$(PngCrushPath)"
 			SdkDevPath="$(_SdkDevPath)"
@@ -884,7 +884,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<OptimizePropertyList
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(PlUtilExe)"
 			ToolPath="$(PlUtilPath)"
 			Input="%(_PropertyList.Identity)"
@@ -919,7 +919,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<OptimizePropertyList
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(PlUtilExe)"
 			ToolPath="$(PlUtilPath)"
 			Input="%(_LocalizationFile.Identity)"
@@ -955,7 +955,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<ScnTool
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(ScnToolExe)"
 			ToolPath="$(ScnToolPath)"
 			SdkRoot="$(_SdkRoot)"
@@ -1076,7 +1076,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<CompileSceneKitAssets
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(CopySceneKitAssetsExe)"
 			ToolPath="$(CopySceneKitAssetsPath)"
 			SceneKitAssets="@(SceneKitAsset)"
@@ -1129,7 +1129,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		
 		<IBTool
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(IBToolExe)"
 			ToolPath="$(IBToolPath)"
 			AppManifest="$(_AppManifest)"
@@ -1191,7 +1191,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<TextureAtlas
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(TextureAtlasExe)"
 			ToolPath="$(TextureAtlasPath)"
 			AtlasTextures="@(AtlasTexture)"
@@ -1215,14 +1215,14 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_CreatePkgInfo" Condition="'$(IsAppExtension)' == 'false'" DependsOnTargets="_GenerateBundleName" Outputs="$(_AppBundlePath)PkgInfo">
-		<CreatePkgInfo SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)'" OutputPath="$(_AppBundlePath)PkgInfo" />
+		<CreatePkgInfo SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" OutputPath="$(_AppBundlePath)PkgInfo" />
 	</Target>
 
 	<Target Name="_EmbedMobileProvision" DependsOnTargets="_GenerateBundleName;_DetectSigningIdentity"
 		Outputs="$(_AppBundlePath)embedded.mobileprovision">
 		<EmbedMobileProvision
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleDir="$(AppBundleDir)"
 			ProvisioningProfile="$(_ProvisioningProfile)"
 			>
@@ -1233,7 +1233,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		Outputs="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent">
 		<CompileEntitlements
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleDir="$(AppBundleDir)"
 			AppIdentifier="$(_AppIdentifier)"
 			BundleIdentifier="$(_BundleIdentifier)"
@@ -1334,7 +1334,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_DetectBundleIdentifier" DependsOnTargets="_DetectAppManifest">
 		<DetectBundleIdentifier
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleName="$(_AppBundleName)"
 			AppManifest="$(_AppManifest)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
@@ -1359,7 +1359,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_ValidateAppBundle" Condition="'$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_DetectSdkLocations">
 		<ValidateAppBundleTask
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			AppBundlePath="$(_AppBundlePath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
@@ -1467,7 +1467,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_CollectFrameworks" Condition="'$(_IsContainerApp)' == 'true'" DependsOnTargets="_CompileToNative">
 		<CollectFrameworks
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundlePath="$(_AppBundlePath)"
 			>
 
@@ -1508,7 +1508,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_CodesignAppBundle" Condition="'$(_RequireCodeSigning)' == 'true'" DependsOnTargets="$(_CodesignAppBundleDependsOn)">
 		<Codesign
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="$(_CodesignAllocate)"
@@ -1531,7 +1531,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_CodesignVerify" Condition="'$(_RequireCodeSigning)' == 'true'" DependsOnTargets="_CodesignAppBundle">
 		<CodesignVerify
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="$(_CodesignAllocate)"
@@ -1541,9 +1541,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_CoreCreateIpa" Condition="'$(BuildIpa)' == 'true'" DependsOnTargets="$(Codesign)">
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)'" Directories="$(DeviceSpecificIntermediateOutputPath)ipa" />
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(DeviceSpecificIntermediateOutputPath)ipa" />
 
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)'" Directories="$(DeviceSpecificIntermediateOutputPath)ipa\Payload" />
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(DeviceSpecificIntermediateOutputPath)ipa\Payload" />
 
 		<PropertyGroup>
 			<_IpaAppBundleDir>$(DeviceSpecificIntermediateOutputPath)ipa\Payload\$(_AppBundleName).app\</_IpaAppBundleDir>
@@ -1552,7 +1552,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<!-- Clone the compiled app bundle into the IPA's Payload directory... -->
 		<Ditto
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(DittoExe)"
 			ToolPath="$(DittoPath)"
 			Source="$(AppBundleDir)"
@@ -1591,7 +1591,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<CollectITunesSourceFiles
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			OutputPath="$(DeviceSpecificOutputPath)"
 			>
 			<Output TaskParameter="ITunesSourceFiles" ItemName="_ITunesSourceFile"/>
@@ -1638,7 +1638,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<IsStreamable Condition="$(EmbedOnDemandResources) == 'false'">true</IsStreamable>
 		</PropertyGroup>
 		
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)'" Directories="$(_IntermediateODRDir)" />
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_IntermediateODRDir)" />
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' And Exists('$(DeviceSpecificOutputPath)OnDemandResources\')" Directories="$(_IntermediateODRDir)" />
 
 		<!-- Clone the compiled assetpack bundle... -->
@@ -1732,12 +1732,12 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_ZipIpa" Condition="'$(BuildIpa)' == 'true'">
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)'" Directories="$(_IpaOutputPath)" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)'" Files="$(_IpaOutputDir)$(IpaPackageName)" />
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_IpaOutputPath)" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(_IpaOutputDir)$(IpaPackageName)" />
 
 		<Zip
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(ZipExe)"
 			ToolPath="$(ZipPath)"
 			Recursive="true"
@@ -1759,7 +1759,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<Archive
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)'"
+			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleDir="$(AppBundleDir)"
 			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
 			ITunesSourceFiles="@(_ITunesSourceFile)"
