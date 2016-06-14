@@ -138,6 +138,7 @@ namespace Introspection
 			"Dpad", // Directional pad (D-pad)
 			"Droste",
 			"Dtls",
+			"Dtmf", // DTMF
 			"dy",
 			"Ebu",
 			"Ecc",

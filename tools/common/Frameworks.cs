@@ -217,6 +217,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "MetalPerformanceShaders", "MetalPerformanceShaders", 9 },
 					{ "GameplayKit", "GameplayKit", 9 },
 					{ "HealthKitUI", "HealthKitUI", 9,3 },
+
+					{ "CallKit", "CallKit", 10 },
 				};
 			}
 			return ios_frameworks;

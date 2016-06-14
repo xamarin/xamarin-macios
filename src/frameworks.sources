@@ -255,6 +255,11 @@ AVKIT_API_SOURCES = \
 AVKIT_SOURCES = \
 	AVKit/AVPlayerViewController.cs \
 
+# CallKit
+
+CALLKIT_SOURCES = \
+	CallKit/CXProvider.cs \
+
 # ClockKit
 
 CLOCKKIT_CORE_SOURCES = \
@@ -1520,6 +1525,7 @@ IOS_FRAMEWORKS =         \
 	AssetsLibrary \
 	AudioToolbox \
 	AudioUnit \
+	CallKit \
 	CFNetwork \
 	CloudKit \
 	Contacts \

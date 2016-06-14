@@ -156,6 +156,11 @@ namespace Introspection {
 				case "MKMapSnapshotOptions":
 				case "WCSessionFile":
 				case "WCSessionFileTransfer":
+				// iOS10
+				case "CXCall":
+				case "CXCallDirectoryExtensionContext":
+				case "CXCallUpdate":
+				case "CXProviderConfiguration":
 					return true;
 				}
 				break;
@@ -197,6 +202,11 @@ namespace Introspection {
 				case "NSTextTab":
 				case "WCSessionFile":
 				case "WCSessionFileTransfer":
+				// iOS10
+				case "CXCall":
+				case "CXCallDirectoryExtensionContext":
+				case "CXCallUpdate":
+				case "CXProviderConfiguration":
 					return true;
 				}
 				break;
@@ -221,6 +231,8 @@ namespace Introspection {
 				case "HKQuantitySample":
 				case "HKSample":
 				case "HKWorkout":
+				// iOS10
+				case "CXCallDirectoryExtensionContext":
 					return true;
 				}
 				break;
