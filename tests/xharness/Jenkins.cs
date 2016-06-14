@@ -144,16 +144,20 @@ namespace xharness
 				if (!project.IsExecutableProject)
 					continue;
 
-				var build = new XBuildTask ()
-				{
-					Platform = project.GenerateVariations ? TestPlatform.Mac_Classic : TestPlatform.Mac,
-					Jenkins = this,
-					ProjectFile = project.Path,
-					ProjectConfiguration = "Debug",
-					ProjectPlatform = "x86",
-					SpecifyPlatform = false,
-					SpecifyConfiguration = false,
-				};
+				BuildToolTask build;
+				if (project.GenerateVariations) {
+					build = new MdtoolTask ();
+					build.Platform = TestPlatform.Mac_Classic;
+				} else {
+					build = new XBuildTask ();
+					build.Platform = TestPlatform.Mac;
+				}
+				build.Jenkins = this;
+				build.ProjectFile = project.Path;
+				build.ProjectConfiguration = "Debug";
+				build.ProjectPlatform = "x86";
+				build.SpecifyPlatform = false;
+				build.SpecifyConfiguration = false;
 				var exec = new MacExecuteTask ()
 				{
 					Platform = build.Platform,
@@ -591,7 +595,7 @@ function toggleContainerVisibility (containerName)
 		}
 	}
 
-	class XBuildTask : TestTask
+	abstract class BuildToolTask : TestTask
 	{
 		public bool SpecifyPlatform = true;
 		public bool SpecifyConfiguration = true;
@@ -601,6 +605,77 @@ function toggleContainerVisibility (containerName)
 			set { throw new NotSupportedException (); }
 		}
 
+		protected void SetEnvironmentVariables (Process process)
+		{
+			switch (Platform) {
+			case TestPlatform.iOS_Classic:
+			case TestPlatform.iOS_Unified:
+			case TestPlatform.iOS_Unified32:
+			case TestPlatform.iOS_Unified64:
+			case TestPlatform.tvOS:
+			case TestPlatform.watchOS:
+				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = Harness.XcodeRoot;
+				process.StartInfo.EnvironmentVariables ["MD_MTOUCH_SDK_ROOT"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current");
+				process.StartInfo.EnvironmentVariables ["XBUILD_FRAMEWORK_FOLDERS_PATH"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
+				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
+				break;
+			case TestPlatform.Mac:
+			case TestPlatform.Mac_Classic:
+			case TestPlatform.Mac_Unified:
+			case TestPlatform.Mac_UnifiedXM45:
+				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = Harness.XcodeRoot;
+				process.StartInfo.EnvironmentVariables ["XBUILD_FRAMEWORK_FOLDERS_PATH"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
+				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
+				process.StartInfo.EnvironmentVariables ["XamarinMacFrameworkRoot"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
+				process.StartInfo.EnvironmentVariables ["XAMMAC_FRAMEWORK_PATH"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
+				break;
+			default:
+				throw new NotImplementedException ();
+			}
+		}
+
+	}
+
+	class MdtoolTask : BuildToolTask
+	{
+		protected override async Task ExecuteAsync ()
+		{
+			using (var resource = await Jenkins.DesktopResource.AcquireConcurrentAsync ()) {
+				using (var xbuild = new Process ()) {
+					xbuild.StartInfo.FileName = "mdtool";
+					var args = new StringBuilder ();
+					args.Append ("build ");
+					var sln = Path.ChangeExtension (ProjectFile, "sln");
+					args.Append (Harness.Quote (File.Exists (sln) ? sln : ProjectFile));
+					xbuild.StartInfo.Arguments = args.ToString ();
+					Harness.Log ("Building {0} ({1})", TestName, Mode);
+					SetEnvironmentVariables (xbuild);
+					var log = Logs.Create (LogDirectory, "build-" + Platform + ".txt", "Build log");
+					foreach (string key in xbuild.StartInfo.EnvironmentVariables.Keys)
+						log.WriteLine ("{0}={1}", key, xbuild.StartInfo.EnvironmentVariables [key]);
+					log.WriteLine ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
+					if (Harness.DryRun) {
+						Harness.Log ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
+					} else {
+						try {
+							await xbuild.RunAsync (log.Path, true, TimeSpan.FromMinutes (5));
+							ExecutionResult = xbuild.ExitCode == 0 ? TestExecutingResult.Succeeded : TestExecutingResult.Failed;
+						} catch (TimeoutException e) {
+							log.WriteLine ("Build timed out after {0} seconds.", e.Timeout.TotalSeconds);
+							ExecutionResult = TestExecutingResult.TimedOut;
+						} catch (Exception e) {
+							log.WriteLine ("Harness exception: {0}", e);
+							ExecutionResult = TestExecutingResult.HarnessException;
+						}
+					}
+					Harness.Log ("Built {0} ({1})", TestName, Mode);
+				}
+			}
+		}
+	}
+
+	class XBuildTask : BuildToolTask
+	{
 		protected override async Task ExecuteAsync ()
 		{
 			using (var resource = await Jenkins.DesktopResource.AcquireConcurrentAsync ()) {
@@ -615,33 +690,10 @@ function toggleContainerVisibility (containerName)
 					args.Append (Harness.Quote (ProjectFile));
 					xbuild.StartInfo.Arguments = args.ToString ();
 					Harness.Log ("Building {0} ({1})", TestName, Mode);
-					switch (Platform) {
-					case TestPlatform.iOS_Classic:
-					case TestPlatform.iOS_Unified:
-					case TestPlatform.iOS_Unified32:
-					case TestPlatform.iOS_Unified64:
-					case TestPlatform.tvOS:
-					case TestPlatform.watchOS:
-						xbuild.StartInfo.EnvironmentVariables.Add ("MD_APPLE_SDK_ROOT", Harness.XcodeRoot);
-						xbuild.StartInfo.EnvironmentVariables.Add ("MD_MTOUCH_SDK_ROOT", Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current"));
-						xbuild.StartInfo.EnvironmentVariables.Add ("XBUILD_FRAMEWORK_FOLDERS_PATH", Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frramework"));
-						xbuild.StartInfo.EnvironmentVariables.Add ("MSBuildExtensionsPath", Path.Combine (Harness.IOS_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild"));
-						break;
-					case TestPlatform.Mac:
-					case TestPlatform.Mac_Classic:
-					case TestPlatform.Mac_Unified:
-					case TestPlatform.Mac_UnifiedXM45:
-						xbuild.StartInfo.EnvironmentVariables.Add ("MD_APPLE_SDK_ROOT", Harness.XcodeRoot);
-						xbuild.StartInfo.EnvironmentVariables.Add ("XBUILD_FRAMEWORK_FOLDERS_PATH", Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frramework"));
-						xbuild.StartInfo.EnvironmentVariables.Add ("MSBuildExtensionsPath", Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild"));
-						xbuild.StartInfo.EnvironmentVariables.Add ("XamarinMacFrameworkRoot", Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current"));
-						xbuild.StartInfo.EnvironmentVariables.Add ("XAMMAC_FRAMEWORK_PATH", Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current"));
-						break;
-					default:
-						throw new NotImplementedException ();
-						                 
-					}
+					SetEnvironmentVariables (xbuild);
 					var log = Logs.Create (LogDirectory, "build-" + Platform + ".txt", "Build log");
+					foreach (string key in xbuild.StartInfo.EnvironmentVariables.Keys)
+						log.WriteLine ("{0}={1}", key, xbuild.StartInfo.EnvironmentVariables [key]);
 					log.WriteLine ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
 					if (Harness.DryRun) {
 						Harness.Log ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
@@ -689,7 +741,7 @@ function toggleContainerVisibility (containerName)
 	class MacExecuteTask : MacTask
 	{
 		public string Path;
-		public XBuildTask BuildTask;
+		public BuildToolTask BuildTask;
 
 		public override IEnumerable<LogFile> AggregatedLogs {
 			get {
@@ -712,7 +764,16 @@ function toggleContainerVisibility (containerName)
 			var name = System.IO.Path.GetFileName (projectDir);
 			if (string.Equals ("mac", name, StringComparison.OrdinalIgnoreCase))
 				name = System.IO.Path.GetFileName (System.IO.Path.GetDirectoryName (projectDir));
-			Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), "bin", BuildTask.ProjectPlatform, BuildTask.ProjectConfiguration, name + ".app", "Contents", "MacOS", name);
+			var suffix = string.Empty;
+			switch (Platform) {
+			case TestPlatform.Mac_Unified:
+				suffix = "-unified";
+				break;
+			case TestPlatform.Mac_UnifiedXM45:
+				suffix = "-unifiedXM45";
+				break;
+			}
+			Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), "bin", BuildTask.ProjectPlatform, BuildTask.ProjectConfiguration + suffix, name + ".app", "Contents", "MacOS", name);
 
 			using (var resource = await Jenkins.DesktopResource.AcquireConcurrentAsync ()) {
 				using (var proc = new Process ()) {
