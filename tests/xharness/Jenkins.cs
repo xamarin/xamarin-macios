@@ -873,7 +873,10 @@ function toggleContainerVisibility (containerName)
 
 		public Task PrepareSimulatorAsync (bool initialize)
 		{
-			if (BuildTask.ExecutionResult != TestExecutingResult.Succeeded) {
+			if (Finished)
+				return Task.FromResult (true);
+			
+			if (!BuildTask.Succeeded) {
 				ExecutionResult = TestExecutingResult.BuildFailure;
 				return Task.FromResult (true);
 			}
