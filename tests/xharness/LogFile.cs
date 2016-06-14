@@ -8,16 +8,24 @@ namespace xharness
 		public string Description;
 		public string Path;
 
+		void Write (string value)
+		{
+			lock (this) {
+				using (var str = new FileStream (Path, FileMode.Append, FileAccess.Write, FileShare.Read)) {
+					using (var writer = new StreamWriter (str))
+						writer.Write (value);
+				}
+			}
+		}
+
 		public void WriteLine (string value)
 		{
-			lock (this)
-				File.AppendAllText (Path, value + "\n");
+			Write (value + "\n");
 		}
 
 		public void WriteLine (string format, params object [] args)
 		{
-			lock (this)
-				File.AppendAllText (Path, string.Format (format, args) + "\n");
+			Write (string.Format (format, args) + "\n");
 		}
 	}
 
