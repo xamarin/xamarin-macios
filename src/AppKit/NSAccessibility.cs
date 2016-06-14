@@ -218,6 +218,7 @@ namespace XamCore.AppKit
 			return NSArray.ArrayFromHandle<NSObject> (handle);
 		}
 
+		[Mac (10, 9)]
 		[DllImport (Constants.AppKitLibrary)]
 		static extern bool NSAccessibilitySetMayContainProtectedContent (bool flag);
 
