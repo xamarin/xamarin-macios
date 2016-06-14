@@ -21748,7 +21748,7 @@ namespace XamCore.AppKit {
 		[Field ("NSAccessibilityDocumentAttribute")]
 		NSString DocumentAttribute { get; }
 
-		[Mac (10, 10)]
+		[Introduced (PlatformName.MacOSX, 10, 10)]
 		[Field ("NSAccessibilityActivationPointAttribute")]
 		NSString ActivationPointAttribute { get; }
 
@@ -22503,11 +22503,11 @@ namespace XamCore.AppKit {
 
 	[Static]
 	public interface NSAccessibilityNotificationUserInfoKeys {
-		[Mac (10, 9)]
+		[Introduced (PlatformName.MacOSX, 10, 9)]
 		[Field ("NSAccessibilityUIElementsKey")]
 		NSString UIElementsKey { get; }
 
-		[Mac (10, 9)]
+		[Introduced (PlatformName.MacOSX, 10, 9)]
 		[Field ("NSAccessibilityPriorityKey")]
 		NSString PriorityKey { get; }
 
