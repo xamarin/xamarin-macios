@@ -642,7 +642,7 @@ function toggleContainerVisibility (containerName)
 		{
 			using (var resource = await Jenkins.DesktopResource.AcquireConcurrentAsync ()) {
 				using (var xbuild = new Process ()) {
-					xbuild.StartInfo.FileName = "mdtool";
+					xbuild.StartInfo.FileName = "/Applications/Xamarin Studio.app/Contents/MacOS/mdtool";
 					var args = new StringBuilder ();
 					args.Append ("build ");
 					var sln = Path.ChangeExtension (ProjectFile, "sln");
