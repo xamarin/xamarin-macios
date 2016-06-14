@@ -200,6 +200,8 @@ namespace XamCore.CoreGraphics {
 		{                    
 			IntPtr imageRef = CGWindowListCreateImage(bounds, CGWindowListOption.IncludingWindow, (uint)windownumber,
 								  CGWindowImageOption.Default);
+			if (imageRef == IntPtr.Zero)
+				return null;
 			return new CGImage(imageRef, true);                              
 		}
 #elif !WATCH
