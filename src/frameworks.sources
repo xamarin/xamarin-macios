@@ -1582,6 +1582,7 @@ IOS_FRAMEWORKS =         \
 	SceneKit \
 	Security \
 	Social \
+	Speech \
 	SpriteKit \
 	StoreKit \
 	SystemConfiguration \
