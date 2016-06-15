@@ -114,7 +114,7 @@ namespace xharness
 			var sims = new Simulators ();
 			Task.Run (async () =>
 			{
-				await sims.LoadAsync ();
+				await sims.LoadAsync (Logs.Create (LogDirectory, "simulator-list.log", "Simulator list"));
 			}).Wait ();
 
 			var devices = sims.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == simulator_runtime && v.SimDeviceType == simulator_devicetype);
