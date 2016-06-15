@@ -83,14 +83,44 @@ namespace xharness
 			}
 		}
 
+		string DownloadMlaunch ()
+		{
+			// Just hardcode this for now. We should be able to switch to a shipped version of XS soon.
+			var mlaunch_url = "https://files.xamarin.com/~rolf/mlaunch-9d097ff4457cfc9943a91a4e17c07b09a7743625";
+			var mlaunch_path = Path.Combine (Path.GetTempPath (), Path.GetFileName (mlaunch_url), "mlaunch");
+			if (File.Exists (mlaunch_path))
+				return mlaunch_path;
+			try {
+				Log ("Downloading mlaunch...");
+				Directory.CreateDirectory (Path.GetDirectoryName (mlaunch_path));
+				var wc = new System.Net.WebClient ();
+				wc.DownloadFile (mlaunch_url, mlaunch_path + ".tmp");
+				new Mono.Unix.UnixFileInfo (mlaunch_path + ".tmp").FileAccessPermissions |= Mono.Unix.FileAccessPermissions.UserExecute;
+				File.Delete (mlaunch_path);
+				File.Move (mlaunch_path + ".tmp", mlaunch_path);
+				Log ("Downloaded mlaunch.");
+			} catch (Exception e) {
+				Log ("Could not download mlaunch: {0}", e);
+			}
+			return mlaunch_path;
+		}
+
 		string mlaunch;
 		public string MlaunchPath {
 			get {
 				if (mlaunch == null) {
 					var path = Path.GetFullPath (Path.Combine (Path.GetDirectoryName (Path.GetDirectoryName (RootDirectory)), "maccore", "tools", "mlaunch", "mlaunch"));
 					if (!File.Exists (path)) {
-						Log ("Could not find mlaunch locally ({0}), will try in Xamarin Studio.app.", path);
-						path = "/Applications/Xamarin Studio.app/Contents/Resources/lib/monodevelop/AddIns/MonoDevelop.IPhone/mlaunch.app/Contents/MacOS/mlaunch";
+						Log ("Could not find mlaunch locally ({0}), will try downloading it.", path);
+						try {
+							path = DownloadMlaunch ();
+						} catch (Exception e) {
+							Log ("Could not download mlaunch: {0}", e);
+						}
+						if (!File.Exists (path)) {
+							Log ("Will try in Xamarin Studio.app.", path);
+							path = "/Applications/Xamarin Studio.app/Contents/Resources/lib/monodevelop/AddIns/MonoDevelop.IPhone/mlaunch.app/Contents/MacOS/mlaunch";
+						}
 					}
 
 					if (!File.Exists (path))
