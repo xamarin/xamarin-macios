@@ -111,7 +111,9 @@ namespace xharness
 				throw new Exception (string.Format ("Unknown simulator target: {0}", Harness.Target));
 			}
 
-			var sims = new Simulators ();
+			var sims = new Simulators () {
+				Harness = Harness,
+			};
 			Task.Run (async () =>
 			{
 				await sims.LoadAsync (Logs.Create (LogDirectory, "simulator-list.log", "Simulator list"));
