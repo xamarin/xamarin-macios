@@ -13,6 +13,7 @@ namespace xharness
 	{
 		public Harness Harness;
 		public bool IncludeClassic;
+		public bool IncludeBcl;
 
 		public string LogDirectory {
 			get {
@@ -93,6 +94,9 @@ namespace xharness
 
 			foreach (var project in Harness.IOSTestProjects) {
 				if (!project.IsExecutableProject)
+					continue;
+
+				if (!IncludeBcl && project.Path.Contains ("bcl-test"))
 					continue;
 
 				var build = new XBuildTask ()
