@@ -5181,7 +5181,7 @@ namespace XamCore.UIKit {
 	{
 		[Static]
 		[Export ("defaultFormat")]
-		UIGraphicsRendererFormat DefaultFormat ();
+		UIGraphicsRendererFormat DefaultFormat { get; }
 	
 		[Export ("bounds")]
 		CGRect Bounds { get; }
@@ -5192,7 +5192,7 @@ namespace XamCore.UIKit {
 	interface UIGraphicsRendererContext
 	{
 		[Export ("CGContext")]
-		unsafe CGContext CGContext { get; }
+		CGContext CGContext { get; }
 	
 		[Export ("format")]
 		UIGraphicsRendererFormat Format { get; }
@@ -5308,13 +5308,13 @@ namespace XamCore.UIKit {
 		void BeginPage (CGRect bounds, NSDictionary<NSString, NSObject> pageInfo);
 
 		[Export ("setURL:forRect:")]
-		void SetURL (NSUrl url, CGRect rect);
+		void SetUrl (NSUrl url, CGRect rect);
 
 		[Export ("addDestinationWithName:atPoint:")]
-		void AddDestinationWithName (string name, CGPoint point);
+		void AddDestination (string name, CGPoint point);
 
 		[Export ("setDestinationWithName:forRect:")]
-		void SetDestinationWithName (string name, CGRect rect);
+		void SetDestination (string name, CGRect rect);
 	}
 
 
