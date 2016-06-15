@@ -152,6 +152,15 @@ namespace XamCore.UIKit {
 			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
 		}
 
+#if !WATCH
+		[Availability (Introduced = Platform.iOS_7_0)]
+		public static UIFont GetPreferredFontForTextStyle (NSString uiFontTextStyle, UITraitCollection traitCollection)
+		{
+			var ptr = _GetPreferredFontForTextStyle (uiFontTextStyle, traitCollection);
+			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
+		}
+#endif
+
 		[Availability (Introduced = Platform.iOS_7_0)]
 		public static UIFont FromDescriptor (UIFontDescriptor descriptor, nfloat pointSize)
 		{

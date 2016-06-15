@@ -28,7 +28,7 @@ namespace XamCore.WatchKit {
 		// in the framework). Removing from the API to make this build for now.
 		public UIContentSizeCategory PreferredContentSizeCategory {
 			get {
-				return _UIContentSizeCategory.ToEnum (_PreferredContentSizeCategory);
+				return UIContentSizeCategoryExtensions.GetValue (_PreferredContentSizeCategory);
 			}
 		}
 #endif
