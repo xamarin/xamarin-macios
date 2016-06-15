@@ -101,6 +101,9 @@ namespace xharness
 
 		async Task PopulateTasksAsync ()
 		{
+			// Missing:
+			// api-diff
+			// msbuild tests
 			var runSimulatorTasks = new List<RunSimulatorTask> ();
 
 			foreach (var project in Harness.IOSTestProjects) {
