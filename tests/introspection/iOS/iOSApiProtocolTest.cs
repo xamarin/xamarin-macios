@@ -163,6 +163,8 @@ namespace Introspection {
 				case "CXProviderConfiguration":
 				case "SFContentBlockerState":
 				case "SFSafariViewControllerConfiguration":
+				case "VSAccountMetadata":
+				case "VSAccountMetadataRequest":
 					return true;
 				}
 				break;
@@ -211,6 +213,8 @@ namespace Introspection {
 				case "CXProviderConfiguration":
 				case "SFContentBlockerState":
 				case "SFSafariViewControllerConfiguration":
+				case "VSAccountMetadata":
+				case "VSAccountMetadataRequest":
 					return true;
 				}
 				break;
@@ -235,11 +239,11 @@ namespace Introspection {
 				case "HKQuantitySample":
 				case "HKSample":
 				case "HKWorkout":
-				// iOS10
-				case "CXCallDirectoryExtensionContext":
-					return true;
 				// iOS 10
+				case "CXCallDirectoryExtensionContext":
 				case "SFSafariViewControllerConfiguration":
+				case "VSAccountMetadata":
+				case "VSAccountMetadataRequest":
 					return true;
 				}
 				break;

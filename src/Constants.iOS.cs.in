@@ -99,5 +99,6 @@ namespace MonoTouch {
 		// iOS 10.0
 		public const string CallKitLibrary = "/System/Library/Frameworks/CallKit.framework/CallKit";
 		public const string SpeechLibrary = "/System/Library/Frameworks/Speech.framework/";
+		public const string VideoSubscriberAccountLibrary = "/System/Library/Frameworks/VideoSubscriberAccount.framework/VideoSubscriberAccount";
 	}
 }

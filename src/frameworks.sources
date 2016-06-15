@@ -1292,6 +1292,11 @@ UIKIT_SOURCES = \
 	UIKit/UIViewControllerTransitionCoordinatorContext.cs \
 	UIKit/UIWindow.cs \
 
+# VideoSubscriberAccount
+
+VIDEOSUBSCRIBERACCOUNT_SOURCES = \
+	VideoSubscriberAccount/VSAccountManager.cs \
+
 # VideoToolbox
 
 VIDEOTOOLBOX_CORE_SOURCES = \
@@ -1589,6 +1594,7 @@ IOS_FRAMEWORKS =         \
 	Twitter \
 	UIKit \
 	VideoToolbox \
+	VideoSubscriberAccount \
 	WatchConnectivity \
 	WatchKit \
 	WKWebKit \
@@ -1659,6 +1665,7 @@ TVOS_FRAMEWORKS =           \
 	TVMLKit                 \
 	TVServices				\
 	UIKit                   \
+	VideoSubscriberAccount  \
 
 #
 # Compute the SOURCES variables.
