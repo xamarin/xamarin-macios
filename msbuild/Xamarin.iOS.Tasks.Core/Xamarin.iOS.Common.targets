@@ -54,7 +54,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.iOS.Tasks.DetectSdkLocations" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.DetectSigningIdentity" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.EmbedMobileProvision" AssemblyFile="Xamarin.iOS.Tasks.dll" />
-	<UsingTask TaskName="Xamarin.iOS.Tasks.FindWatchAppBundle" AssemblyFile="Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.iOS.Tasks.FindWatchOS1AppExtensionBundle" AssemblyFile="Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.iOS.Tasks.FindWatchOS2AppBundle" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.IBTool" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.MetalLib" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.Metal" AssemblyFile="Xamarin.iOS.Tasks.dll" />
@@ -1558,19 +1559,34 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Destination="$(_IpaAppBundleDir)"
 		/>
 
-		<FindWatchAppBundle
+		<FindWatchOS1AppExtensionBundle
 			SessionId="$(BuildSessionId)"
 			Condition="'$(MtouchTargetsEnabled)' And '@(_ResolvedAppExtensionReferences)' != ''"
 			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
 			>
-			<Output TaskParameter="WatchAppBundle" PropertyName="_WatchAppBundle"/>
-		</FindWatchAppBundle>
+			<Output TaskParameter="WatchOS1AppExtensionBundle" PropertyName="_WatchOS1AppExtensionBundle"/>
+		</FindWatchOS1AppExtensionBundle>
 
 		<Copy
 			SessionId="$(BuildSessionId)"
-			Condition="'$(MtouchTargetsEnabled)' And '$(_WatchAppBundle)' != ''"
-			SourceFiles="$(_WatchAppBundle)\_WatchKitStub\WK"
+			Condition="'$(MtouchTargetsEnabled)' And '$(_WatchOS1AppExtensionBundle)' != ''"
+			SourceFiles="$(_WatchOS1AppExtensionBundle)\_WatchKitStub\WK"
 			DestinationFolder="$(DeviceSpecificIntermediateOutputPath)ipa\WatchKitSupport"
+		/>
+
+		<FindWatchOS2AppBundle
+			SessionId="$(BuildSessionId)"
+			Condition="'$(MtouchTargetsEnabled)' And '@(_ResolvedWatchAppReferences)' != ''"
+			WatchAppReferences="@(_ResolvedWatchAppReferences)"
+			>
+			<Output TaskParameter="WatchOS2AppBundle" PropertyName="_WatchOS2AppBundle"/>
+		</FindWatchOS2AppBundle>
+
+		<Copy
+			SessionId="$(BuildSessionId)"
+			Condition="'$(MtouchTargetsEnabled)' And '$(_WatchOS2AppBundle)' != ''"
+			SourceFiles="$(_WatchOS2AppBundle)\_WatchKitStub\WK"
+			DestinationFolder="$(DeviceSpecificIntermediateOutputPath)ipa\WatchKitSupport2"
 		/>
 
 		<CollectITunesSourceFiles
@@ -1591,6 +1607,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<ItemGroup>
 			<_IpaPackageSource Include="$(DeviceSpecificIntermediateOutputPath)ipa\Payload" />
 			<_IpaPackageSource Include="$(DeviceSpecificIntermediateOutputPath)ipa\WatchKitSupport" Condition="Exists ('$(DeviceSpecificIntermediateOutputPath)ipa\WatchKitSupport\WK')" />
+			<_IpaPackageSource Include="$(DeviceSpecificIntermediateOutputPath)ipa\WatchKitSupport2" Condition="Exists ('$(DeviceSpecificIntermediateOutputPath)ipa\WatchKitSupport2\WK')" />
 			<_IpaPackageSource Include="$(DeviceSpecificIntermediateOutputPath)ipa\iTunesMetadata.plist" Condition="'$(IpaIncludeArtwork)' == 'true' And Exists ('$(DeviceSpecificIntermediateOutputPath)ipa\iTunesMetadata.plist')" />
 			<_IpaPackageSource Include="$(DeviceSpecificIntermediateOutputPath)ipa\iTunesArtwork@2x" Condition="'$(IpaIncludeArtwork)' == 'true' And Exists ('$(DeviceSpecificIntermediateOutputPath)ipa\iTunesArtwork@2x')" />
 			<_IpaPackageSource Include="$(DeviceSpecificIntermediateOutputPath)ipa\iTunesArtwork" Condition="'$(IpaIncludeArtwork)' == 'true' And Exists ('$(DeviceSpecificIntermediateOutputPath)ipa\iTunesArtwork')" />
