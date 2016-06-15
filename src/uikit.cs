@@ -5175,6 +5175,164 @@ namespace XamCore.UIKit {
 		bool ShouldReceivePress (UIGestureRecognizer gestureRecognizer, UIPress press);
 	}
 
+	[iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	interface UIGraphicsRendererFormat : NSCopying
+	{
+		[Static]
+		[Export ("defaultFormat")]
+		UIGraphicsRendererFormat DefaultFormat { get; }
+	
+		[Export ("bounds")]
+		CGRect Bounds { get; }
+	}
+
+	[iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	interface UIGraphicsRendererContext
+	{
+		[Export ("CGContext")]
+		CGContext CGContext { get; }
+	
+		[Export ("format")]
+		UIGraphicsRendererFormat Format { get; }
+	
+		[Export ("fillRect:")]
+		void FillRect (CGRect rect);
+	
+		[Export ("fillRect:blendMode:")]
+		void FillRect (CGRect rect, CGBlendMode blendMode);
+	
+		[Export ("strokeRect:")]
+		void StrokeRect (CGRect rect);
+	
+		[Export ("strokeRect:blendMode:")]
+		void StrokeRect (CGRect rect, CGBlendMode blendMode);
+	
+		[Export ("clipToRect:")]
+		void ClipToRect (CGRect rect);
+	}
+
+	[iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	interface UIGraphicsRenderer
+	{
+		[Export ("initWithBounds:")]
+		IntPtr Constructor (CGRect bounds);
+	
+		[Export ("initWithBounds:format:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (CGRect bounds, UIGraphicsRendererFormat format);
+	
+		[Export ("format")]
+		UIGraphicsRendererFormat Format { get; }
+	
+		[Export ("allowsImageOutput")]
+		bool AllowsImageOutput { get; }
+	}
+			
+	// Not worth it, Action<UIGraphicsImageRendererContext> conveys more data
+	//delegate void UIGraphicsImageDrawingActions (UIGraphicsImageRendererContext context);
+
+	[iOS (10,0)]
+	[BaseType (typeof(UIGraphicsRendererFormat))]
+	interface UIGraphicsImageRendererFormat
+	{
+		[Export ("scale")]
+		nfloat Scale { get; set; }
+
+		[Export ("opaque")]
+		bool Opaque { get; set; }
+
+		[Export ("prefersExtendedRange")]
+		bool PrefersExtendedRange { get; set; }
+	}
+
+	[iOS (10,0)]
+	[BaseType (typeof(UIGraphicsRendererContext))]
+	interface UIGraphicsImageRendererContext
+	{
+		[Export ("currentImage")]
+		UIImage CurrentImage { get; }
+	}
+
+	[iOS (10,0)]
+	[BaseType (typeof(UIGraphicsRenderer))]
+	interface UIGraphicsImageRenderer
+	{
+		[Export ("initWithSize:")]
+		IntPtr Constructor (CGSize size);
+
+		[Export ("initWithSize:format:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (CGSize size, UIGraphicsImageRendererFormat format);
+
+		[Export ("initWithBounds:format:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (CGRect bounds, UIGraphicsImageRendererFormat format);
+
+		[Export ("imageWithActions:")]
+		UIImage CreateImage (Action<UIGraphicsImageRendererContext> actions);
+		
+		[Export ("PNGDataWithActions:")]
+		NSData CreatePng (Action<UIGraphicsImageRendererContext> actions);
+		
+		[Export ("JPEGDataWithCompressionQuality:actions:")]
+		NSData CreateJpeg (nfloat compressionQuality, Action<UIGraphicsImageRendererContext> actions);
+	}
+
+	// Not worth it, Action<UIGraphicsImageRendererContext> conveys more data
+	//delegate void UIGraphicsPdfDrawingActions (UIGraphicsPdfRendererContext context);
+	// Action<UIGraphicsPdfRendererContext>
+
+	[iOS (10,0)]
+	[BaseType (typeof(UIGraphicsRendererFormat))]
+	interface UIGraphicsPdfRendererFormat
+	{
+		[Export ("documentInfo", ArgumentSemantic.Copy)]
+		// TODO: add strongly typed binding
+		NSDictionary<NSString, NSObject> DocumentInfo { get; set; }
+	}
+
+	[iOS (10,0)]
+	[BaseType (typeof(UIGraphicsRendererContext))]
+	interface UIGraphicsPdfRendererContext
+	{
+		[Export ("pdfContextBounds")]
+		CGRect PdfContextBounds { get; }
+
+		[Export ("beginPage")]
+		void BeginPage ();
+
+		[Export ("beginPageWithBounds:pageInfo:")]
+		void BeginPage (CGRect bounds, NSDictionary<NSString, NSObject> pageInfo);
+
+		[Export ("setURL:forRect:")]
+		void SetUrl (NSUrl url, CGRect rect);
+
+		[Export ("addDestinationWithName:atPoint:")]
+		void AddDestination (string name, CGPoint point);
+
+		[Export ("setDestinationWithName:forRect:")]
+		void SetDestination (string name, CGRect rect);
+	}
+
+
+	[iOS (10,0)]
+	[BaseType (typeof(UIGraphicsRenderer))]
+	interface UIGraphicsPdfRenderer
+	{
+		[Export ("initWithBounds:format:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (CGRect bounds, UIGraphicsPdfRendererFormat format);
+
+		[Export ("writePDFToURL:withActions:error:")]
+		bool WritePdf (NSUrl url, Action<UIGraphicsPdfRendererContext> actions, out NSError error);
+
+		[Export ("PDFDataWithActions:")]
+		NSData CreatePdf (Action<UIGraphicsPdfRendererContext> actions);
+	}
+
 	[BaseType (typeof (UIDynamicBehavior))]
 	[Since (7,0)]
 	interface UIGravityBehavior {
