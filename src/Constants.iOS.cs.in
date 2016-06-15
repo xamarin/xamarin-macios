@@ -98,5 +98,6 @@ namespace MonoTouch {
 		public const string HealthKitUILibrary = "/System/Library/Frameworks/HealthKitUI.framework/HealthKit";
 		// iOS 10.0
 		public const string CallKitLibrary = "/System/Library/Frameworks/CallKit.framework/CallKit";
+		public const string SpeechLibrary = "/System/Library/Frameworks/Speech.framework/";
 	}
 }
