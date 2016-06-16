@@ -401,8 +401,12 @@ function toggleContainerVisibility (containerName)
 					//}
 
 					foreach (var group in allTasks.GroupBy ((TestTask v) => v.TestName)) {
-						var firstResult = group.First ().ExecutionResult;
-						var identicalResults = group.All ((v) => v.ExecutionResult == firstResult);
+						// Create a collection of all non-ignored tests in the group (unless all tests were ignored).
+						var relevantGroup = group.Where ((v) => v.ExecutionResult != TestExecutingResult.Ignored);
+						if (!relevantGroup.Any ())
+							relevantGroup = group;
+						var firstResult = relevantGroup.First ().ExecutionResult;
+						var identicalResults = relevantGroup.All ((v) => v.ExecutionResult == firstResult);
 						var defaultHide = !group.Any ((v) => v.Failed);
 						writer.WriteLine ("<h2 id='test_{1}'>{0} (<span style='color: {2}'>{4}</span>) <small><a id='button_container_{1}' href=\"javascript: toggleContainerVisibility ('{1}');\">{3}</a></small> </h2>", 
 						                  group.Key, group.Key.Replace (' ', '-'), GetTestColor (group), defaultHide ? "Show" : "Hide", identicalResults ? firstResult.ToString () : "multiple results");
