@@ -892,6 +892,13 @@ function toggleContainerVisibility (containerName)
 			}
 		}
 
+		public Task CleanupSimulatorAsync ()
+		{
+			if (runner != null)
+				runner.KillEverything ();
+			return Task.FromResult (true);
+		}
+
 		public Task PrepareSimulatorAsync (bool initialize)
 		{
 			if (Finished)
@@ -907,7 +914,7 @@ function toggleContainerVisibility (containerName)
 				Harness = Harness,
 				ProjectFile = ProjectFile,
 				SkipSimulatorSetup = !initialize,
-				SkipSimulatorCleanup = !initialize,
+				SkipSimulatorCleanup = true,
 				Target = AppRunnerTarget,
 				LogDirectory = LogDirectory,
 			};
@@ -990,6 +997,9 @@ function toggleContainerVisibility (containerName)
 				run_timer.Start ();
 				foreach (var task in Tasks)
 					await task.RunAsync ();
+
+				await Tasks.Last ().CleanupSimulatorAsync ();
+
 				run_timer.Stop ();
 			}
 
