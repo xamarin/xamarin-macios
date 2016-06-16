@@ -16,6 +16,8 @@ namespace xharness
 		public bool IncludeBcl;
 		public bool IncludeMac = true;
 		public bool IncludeiOS = true;
+		public bool IncludetvOS = true;
+		public bool IncludewatchOS = true;
 
 		public LogFiles Logs = new LogFiles ();
 		LogFile SimulatorLoadLog;
@@ -107,7 +109,7 @@ namespace xharness
 			// api-diff
 			// msbuild tests
 
-			if (IncludeiOS) {
+			if (IncludeiOS || IncludetvOS || IncludewatchOS) {
 				var runSimulatorTasks = new List<RunSimulatorTask> ();
 
 				foreach (var project in Harness.IOSTestProjects) {
@@ -124,30 +126,24 @@ namespace xharness
 						ProjectPlatform = "iPhoneSimulator",
 						Platform = TestPlatform.iOS_Classic,
 					};
-					if (IncludeClassic)
+					if (IncludeClassic && IncludeiOS)
 						runSimulatorTasks.AddRange (await CreateRunSimulatorTaskAsync (build));
 
-					var suffixes = new string [] { "-unified", "-tvos", "-watchos" };
-					foreach (var suffix in suffixes) {
+					var suffixes = new List<Tuple<string, TestPlatform>> ();
+					if (IncludeiOS)
+						suffixes.Add (new Tuple<string, TestPlatform> ("-unified", TestPlatform.iOS_Unified));
+					if (IncludetvOS)
+						suffixes.Add (new Tuple<string, TestPlatform> ("-tvos", TestPlatform.tvOS));
+					if (IncludewatchOS)
+						suffixes.Add (new Tuple<string, TestPlatform> ("-watchos", TestPlatform.watchOS));
+					foreach (var pair in suffixes) {
 						var derived = new XBuildTask () {
 							Jenkins = this,
-							ProjectFile = AddSuffixToPath (project.Path, suffix),
+							ProjectFile = AddSuffixToPath (project.Path, pair.Item1),
 							ProjectConfiguration = build.ProjectConfiguration,
 							ProjectPlatform = build.ProjectPlatform,
+							Platform = pair.Item2,
 						};
-						switch (suffix) {
-						case "-unified":
-							derived.Platform = TestPlatform.iOS_Unified;
-							break;
-						case "-tvos":
-							derived.Platform = TestPlatform.tvOS;
-							break;
-						case "-watchos":
-							derived.Platform = TestPlatform.watchOS;
-							break;
-						default:
-							throw new NotImplementedException ();
-						}
 						runSimulatorTasks.AddRange (await CreateRunSimulatorTaskAsync (derived));
 					}
 				}
@@ -192,7 +188,8 @@ namespace xharness
 						ProjectConfiguration = build.ProjectConfiguration,
 						ProjectPlatform = build.ProjectPlatform,
 					};
-					Tasks.Add (exec);
+					if (IncludeClassic)
+						Tasks.Add (exec);
 
 					if (project.GenerateVariations) {
 						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified, "-unified"));
