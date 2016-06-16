@@ -58,8 +58,8 @@ namespace Introspection {
 
 		protected ApiBaseTest ()
 		{
-			LogProgress = true;
-			ContinueOnFailure = true;
+			//LogProgress = true;
+			//ContinueOnFailure = true;
 		}
 
 		protected void AddErrorLine (string line)
