@@ -191,6 +191,9 @@ function install_specific_xcode () {
 		sudo $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -license accept
 	fi
 
+	log "Executing 'sudo xcode-select -s $XCODE_DEVELOPER_ROOT'"
+	sudo xcode-select -s $XCODE_DEVELOPER_ROOT
+
 	ok "Xcode $XCODE_VERSION provisioned"
 }
 
