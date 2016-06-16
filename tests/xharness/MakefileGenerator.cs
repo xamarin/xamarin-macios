@@ -369,15 +369,15 @@ namespace xharness
 						// exec sim project target
 						if (target.IsMultiArchitecture) {
 							writer.WriteTarget ("exec{0}-sim64-{1}", "$(UNIT_SERVER)", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-simulator-64 --sdkroot $(XCODE_DEVELOPER_ROOT) --logdirectory \"$(abspath $(CURDIR))\\logs\\$@\" --configuration $(CONFIG)", target.ProjectPath, target.Platform); 
+							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-simulator-64 --sdkroot $(XCODE_DEVELOPER_ROOT) --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --configuration $(CONFIG)", target.ProjectPath, target.Platform); 
 							writer.WriteLine ();
 
 							writer.WriteTarget ("exec{0}-sim32-{1}", "$(UNIT_SERVER)", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-simulator-32 --sdkroot $(XCODE_DEVELOPER_ROOT) --logdirectory \"$(abspath $(CURDIR))\\logs\\$@\" --configuration $(CONFIG)", target.ProjectPath, target.Platform); 
+							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-simulator-32 --sdkroot $(XCODE_DEVELOPER_ROOT) --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --configuration $(CONFIG)", target.ProjectPath, target.Platform); 
 							writer.WriteLine ();
 						} else {
 							writer.WriteTarget ("exec{0}-sim{2}-{1}", "$(UNIT_SERVER)", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-simulator --sdkroot $(XCODE_DEVELOPER_ROOT) --logdirectory \"$(abspath $(CURDIR))\\logs\\$@\" --configuration $(CONFIG)", target.ProjectPath, target.Platform); 
+							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-simulator --sdkroot $(XCODE_DEVELOPER_ROOT) --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --configuration $(CONFIG)", target.ProjectPath, target.Platform); 
 							writer.WriteLine ();
 						}
 
