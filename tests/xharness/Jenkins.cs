@@ -435,7 +435,7 @@ function toggleContainerVisibility (containerName)
 											} else {
 												summary = "No test log (yet).";
 											}
-											if (summary != null)
+											if (!string.IsNullOrEmpty (summary))
 												writer.WriteLine ("<span style='padding-left: 15px;'>{0}</span><br />", summary);
 										} catch (Exception ex) {
 											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", System.Web.HttpUtility.HtmlEncode (ex.Message));
