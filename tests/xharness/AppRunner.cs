@@ -96,7 +96,7 @@ namespace xharness
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
 				break;
 			case "ios-simulator":
-				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.iPhone-4s";
+				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.iPhone-5";
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
 				break;
 			case "tvos-simulator":
