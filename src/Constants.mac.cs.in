@@ -117,5 +117,7 @@ namespace MonoMac {
 		public const string CoreAudioKitLibrary = "/System/Library/Frameworks/CoreAudioKit.framework/CoreAudioKit";
 		public const string MediaToolboxLibrary = "/System/Library/Frameworks/MediaToolbox.framework/MediaToolbox";
 		public const string MediaLibraryLibrary = "/System/Library/Frameworks/MediaLibrary.framework/MediaLibrary";
+
+		public const string SafariServicesLibrary = "/System/Library/Frameworks/SafariServices.framework/SafariServices";
 	}
 }
