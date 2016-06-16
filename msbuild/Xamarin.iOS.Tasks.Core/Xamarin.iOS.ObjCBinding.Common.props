@@ -26,7 +26,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<!-- This is used to determine if VS is connected to mac. -->
 	<PropertyGroup>
-		<MtouchTargetsEnabled>true</MtouchTargetsEnabled>
+		<IsMacEnabled>true</IsMacEnabled>
+		<MtouchTargetsEnabled>$(IsMacEnabled)</MtouchTargetsEnabled>
 	</PropertyGroup>
 
 	<!-- When looking for related files to copy, look for Mono debugging files as well -->
