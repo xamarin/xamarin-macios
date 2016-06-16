@@ -209,6 +209,10 @@ namespace Introspection {
 			case "NEAppProxyUdpFlow":
 				do_not_dispose.Add (obj);
 				break;
+			// iOS 10 beta 1 - crash when disposed
+			case "CLBeacon":
+				do_not_dispose.Add (obj);
+				break;
 			default:
 				base.Dispose (obj, type);
 				break;
@@ -279,14 +283,19 @@ namespace Introspection {
 				if (CheckiOSOrTVOSSystemVersion (6,0))
 					return;
 				break;
-			// crash (when asking `description`) under iOS5 (only) simulator
-			case "NSUrlConnection":
-				return;
 			// iOS 9 beta 1 - crash when called
 			case "WKFrameInfo":
 			case "WKNavigation":
 			case "WKNavigationAction":
 				if (CheckiOSSystemVersion (9,0))
+					return;
+				break;
+			// new iOS 10 beta 1 - crash when calling `description` selector
+			case "AVAudioSessionDataSourceDescription":
+			case "AVAudioSessionPortDescription":
+			case "CLBeacon":
+			case "CLCircularRegion":
+				if (CheckiOSSystemVersion (10, 0))
 					return;
 				break;
 			default:
