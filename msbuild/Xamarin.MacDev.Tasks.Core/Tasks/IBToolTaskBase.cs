@@ -126,6 +126,34 @@ namespace Xamarin.MacDev.Tasks
 			return path.Substring (0, dot);
 		}
 
+		IEnumerable<ITaskItem> GetCompilationDirectoryOutput (ITaskItem expected)
+		{
+			var name = Path.GetFileNameWithoutExtension (expected.ItemSpec);
+			var extension = Path.GetExtension (expected.ItemSpec);
+			var dir = Path.GetDirectoryName (expected.ItemSpec);
+			var nibDir = expected.GetMetadata ("LogicalName");
+
+			foreach (var target in GetTargetDevices (plist)) {
+				var fileName = name + "~" + target + extension;
+				var path = Path.Combine (dir, fileName);
+
+				if (!Directory.Exists (path))
+					continue;
+
+				var logicalName = !string.IsNullOrEmpty (nibDir) ? Path.Combine (nibDir, fileName) : fileName;
+				var item = new TaskItem (path);
+				expected.CopyMetadataTo (item);
+				item.SetMetadata ("LogicalName", logicalName);
+
+				yield return item;
+			}
+
+			if (Directory.Exists (expected.ItemSpec))
+				yield return expected;
+
+			yield break;
+		}
+
 		IEnumerable<ITaskItem> GetCompiledBundleResources (ITaskItem output)
 		{
 			if (IsWatchApp && !UseCompilationDirectory) {
@@ -216,8 +244,8 @@ namespace Xamarin.MacDev.Tasks
 				var manifest = new TaskItem (Path.Combine (ibtoolManifestDir, bundleName));
 				var manifestDir = Path.GetDirectoryName (manifest.ItemSpec);
 				var resourceTags = item.GetMetadata ("ResourceTags");
+				ITaskItem expected, output;
 				string rpath, outputDir;
-				ITaskItem output;
 				int rc;
 
 				if (!File.Exists (item.ItemSpec)) {
@@ -227,21 +255,21 @@ namespace Xamarin.MacDev.Tasks
 
 				rpath = Path.Combine (ibtoolOutputDir, bundleName);
 				outputDir = Path.GetDirectoryName (rpath);
-				output = new TaskItem (rpath);
+				expected = new TaskItem (rpath);
 
-				output.SetMetadata ("LogicalName", bundleName);
-				output.SetMetadata ("Optimize", "false");
+				expected.SetMetadata ("LogicalName", bundleName);
+				expected.SetMetadata ("Optimize", "false");
 
 				if (!string.IsNullOrEmpty (resourceTags))
-					output.SetMetadata ("ResourceTags", resourceTags);
-
-				compiled.Add (output);
+					expected.SetMetadata ("ResourceTags", resourceTags);
 
 				if (UseCompilationDirectory) {
 					// Note: When using --compilation-directory, we need to specify the output path as the parent directory
-					output = new TaskItem (output);
+					output = new TaskItem (expected);
 					output.ItemSpec = Path.GetDirectoryName (output.ItemSpec);
 					output.SetMetadata ("LogicalName", Path.GetDirectoryName (bundleName));
+				} else {
+					output = expected;
 				}
 
 				if (!ManifestExists (manifest.ItemSpec) || File.GetLastWriteTime (manifest.ItemSpec) < File.GetLastWriteTime (item.ItemSpec)) {
@@ -280,7 +308,9 @@ namespace Xamarin.MacDev.Tasks
 					continue;
 				}
 
-				if (!UseCompilationDirectory)
+				if (UseCompilationDirectory)
+					compiled.AddRange (GetCompilationDirectoryOutput (expected));
+				else
 					bundleResources.AddRange (GetCompiledBundleResources (output));
 
 				outputManifests.Add (manifest);
