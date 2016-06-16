@@ -56,6 +56,12 @@ namespace Introspection {
 
 		StringBuilder error_output = new StringBuilder ();
 
+		protected ApiBaseTest ()
+		{
+			LogProgress = true;
+			ContinueOnFailure = true;
+		}
+
 		protected void AddErrorLine (string line)
 		{
 			error_output.AppendLine (line);
