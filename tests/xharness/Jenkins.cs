@@ -910,8 +910,8 @@ function toggleContainerVisibility (containerName)
 			{
 				Harness = Harness,
 				ProjectFile = ProjectFile,
-				SkipSimulatorSetup = !initialize,
-				SkipSimulatorCleanup = true,
+				SkipSimulatorSetup = !initialize && this.Platform != TestPlatform.tvOS,
+				SkipSimulatorCleanup = true && this.Platform != TestPlatform.tvOS,
 				Target = AppRunnerTarget,
 				LogDirectory = LogDirectory,
 			};
