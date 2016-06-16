@@ -409,7 +409,7 @@ function toggleContainerVisibility (containerName)
 						var identicalResults = relevantGroup.All ((v) => v.ExecutionResult == firstResult);
 						var defaultHide = !group.Any ((v) => v.Failed);
 						writer.WriteLine ("<h2 id='test_{1}'>{0} (<span style='color: {2}'>{4}</span>) <small><a id='button_container_{1}' href=\"javascript: toggleContainerVisibility ('{1}');\">{3}</a></small> </h2>", 
-						                  group.Key, group.Key.Replace (' ', '-'), GetTestColor (group), defaultHide ? "Show" : "Hide", identicalResults ? firstResult.ToString () : "multiple results");
+						                  group.Key, group.Key.Replace (' ', '-'), GetTestColor (relevantGroup), defaultHide ? "Show" : "Hide", identicalResults ? firstResult.ToString () : "multiple results");
 						writer.WriteLine ("<div id='test_container_{0}' style='display: {1}'>", group.Key.Replace (' ', '-'), defaultHide ? "none" : "block");
 						foreach (var test in group) {
 							string state;
