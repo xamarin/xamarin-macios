@@ -538,17 +538,13 @@ namespace XamCore.Security {
 		}
 
 		[iOS(9,0)][Mac (10,11)]
-		//[Availability (Deprecated = Platform.iOS_9_2 | Platform.Mac_10_11)]
-		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLSetSessionStrengthPolicy (/* SSLContextRef */ IntPtr context, SslSessionStrengthPolicy policyStrength);
-
-		[iOS(9,0)][Mac (10,11)]
 		// TODO: Headers say /* Deprecated, does nothing */ but we are not completly sure about it since there is no deprecation macro
 		// Plus they added new members to SslSessionStrengthPolicy enum opened radar://23379052 https://trello.com/c/NbdTLVD3
-		//[Availability (Deprecated = Platform.iOS_9_2 | Platform.Mac_10_11, Message = "SetSessionStrengthPolicy is not available anymore")]
+		// Xcode 8 beta 1: the P/Invoke was removed completely.
+		[Availability (Deprecated = Platform.iOS_9_2 | Platform.Mac_10_11, Unavailable = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "SetSessionStrengthPolicy is not available anymore")]
 		public SslStatus SetSessionStrengthPolicy (SslSessionStrengthPolicy policyStrength)
 		{
-			return SSLSetSessionStrengthPolicy (Handle, policyStrength);
+			throw new NotSupportedException ("SetSessionStrengthPolicy is not available anymore");
 		}
 	}
 }
