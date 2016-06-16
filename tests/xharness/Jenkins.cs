@@ -14,6 +14,8 @@ namespace xharness
 		public Harness Harness;
 		public bool IncludeClassic;
 		public bool IncludeBcl;
+		public bool IncludeMac = true;
+		public bool IncludeiOS = true;
 
 		public LogFiles Logs = new LogFiles ();
 		LogFile SimulatorLoadLog;
@@ -104,99 +106,99 @@ namespace xharness
 			// Missing:
 			// api-diff
 			// msbuild tests
-			var runSimulatorTasks = new List<RunSimulatorTask> ();
 
-			foreach (var project in Harness.IOSTestProjects) {
-				if (!project.IsExecutableProject)
-					continue;
+			if (IncludeiOS) {
+				var runSimulatorTasks = new List<RunSimulatorTask> ();
 
-				if (!IncludeBcl && project.Path.Contains ("bcl-test"))
-					continue;
+				foreach (var project in Harness.IOSTestProjects) {
+					if (!project.IsExecutableProject)
+						continue;
 
-				var build = new XBuildTask ()
-				{
-					Jenkins = this,
-					ProjectFile = project.Path,
-					ProjectConfiguration = "Debug",
-					ProjectPlatform = "iPhoneSimulator",
-					Platform = TestPlatform.iOS_Classic,
-				};
-				if (IncludeClassic)
-					runSimulatorTasks.AddRange (await CreateRunSimulatorTaskAsync (build));
+					if (!IncludeBcl && project.Path.Contains ("bcl-test"))
+						continue;
 
-				var suffixes = new string [] { "-unified", "-tvos", "-watchos" };
-				foreach (var suffix in suffixes) {
-					var derived = new XBuildTask ()
-					{
+					var build = new XBuildTask () {
 						Jenkins = this,
-						ProjectFile = AddSuffixToPath (project.Path, suffix),
+						ProjectFile = project.Path,
+						ProjectConfiguration = "Debug",
+						ProjectPlatform = "iPhoneSimulator",
+						Platform = TestPlatform.iOS_Classic,
+					};
+					if (IncludeClassic)
+						runSimulatorTasks.AddRange (await CreateRunSimulatorTaskAsync (build));
+
+					var suffixes = new string [] { "-unified", "-tvos", "-watchos" };
+					foreach (var suffix in suffixes) {
+						var derived = new XBuildTask () {
+							Jenkins = this,
+							ProjectFile = AddSuffixToPath (project.Path, suffix),
+							ProjectConfiguration = build.ProjectConfiguration,
+							ProjectPlatform = build.ProjectPlatform,
+						};
+						switch (suffix) {
+						case "-unified":
+							derived.Platform = TestPlatform.iOS_Unified;
+							break;
+						case "-tvos":
+							derived.Platform = TestPlatform.tvOS;
+							break;
+						case "-watchos":
+							derived.Platform = TestPlatform.watchOS;
+							break;
+						default:
+							throw new NotImplementedException ();
+						}
+						runSimulatorTasks.AddRange (await CreateRunSimulatorTaskAsync (derived));
+					}
+				}
+
+				foreach (var taskGroup in runSimulatorTasks.GroupBy ((RunSimulatorTask task) => task.Device)) {
+					Tasks.Add (new AggregatedRunSimulatorTask (taskGroup) {
+						Jenkins = this,
+						Device = taskGroup.Key,
+					});
+				}
+
+				foreach (var task in runSimulatorTasks) {
+					if (task.TestName == "framework-test")
+						task.ExecutionResult = TestExecutingResult.Ignored;
+				}
+			}
+
+			if (IncludeMac) {
+				foreach (var project in Harness.MacTestProjects) {
+					if (!project.IsExecutableProject)
+						continue;
+
+					BuildToolTask build;
+					if (project.GenerateVariations) {
+						build = new MdtoolTask ();
+						build.Platform = TestPlatform.Mac_Classic;
+					} else {
+						build = new XBuildTask ();
+						build.Platform = TestPlatform.Mac;
+					}
+					build.Jenkins = this;
+					build.ProjectFile = project.Path;
+					build.ProjectConfiguration = "Debug";
+					build.ProjectPlatform = "x86";
+					build.SpecifyPlatform = false;
+					build.SpecifyConfiguration = false;
+					var exec = new MacExecuteTask () {
+						Platform = build.Platform,
+						Jenkins = this,
+						BuildTask = build,
+						ProjectFile = build.ProjectFile,
 						ProjectConfiguration = build.ProjectConfiguration,
 						ProjectPlatform = build.ProjectPlatform,
 					};
-					switch (suffix) {
-					case "-unified":
-						derived.Platform = TestPlatform.iOS_Unified;
-						break;
-					case "-tvos":
-						derived.Platform = TestPlatform.tvOS;
-						break;
-					case "-watchos":
-						derived.Platform = TestPlatform.watchOS;
-						break;
-					default:
-						throw new NotImplementedException ();
+					Tasks.Add (exec);
+
+					if (project.GenerateVariations) {
+						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified, "-unified"));
+						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45"));
 					}
-					runSimulatorTasks.AddRange (await CreateRunSimulatorTaskAsync (derived));
 				}
-			}
-
-			foreach (var taskGroup in runSimulatorTasks.GroupBy ((RunSimulatorTask task) => task.Device)) {
-				Tasks.Add (new AggregatedRunSimulatorTask (taskGroup)
-				{
-					Jenkins = this,
-					Device = taskGroup.Key,
-				});
-			}
-
-			foreach (var project in Harness.MacTestProjects) {
-				if (!project.IsExecutableProject)
-					continue;
-
-				BuildToolTask build;
-				if (project.GenerateVariations) {
-					build = new MdtoolTask ();
-					build.Platform = TestPlatform.Mac_Classic;
-				} else {
-					build = new XBuildTask ();
-					build.Platform = TestPlatform.Mac;
-				}
-				build.Jenkins = this;
-				build.ProjectFile = project.Path;
-				build.ProjectConfiguration = "Debug";
-				build.ProjectPlatform = "x86";
-				build.SpecifyPlatform = false;
-				build.SpecifyConfiguration = false;
-				var exec = new MacExecuteTask ()
-				{
-					Platform = build.Platform,
-					Jenkins = this,
-					BuildTask = build,
-					ProjectFile = build.ProjectFile,
-					ProjectConfiguration = build.ProjectConfiguration,
-					ProjectPlatform = build.ProjectPlatform,
-				};
-				Tasks.Add (exec);
-
-				if (project.GenerateVariations) {
-					Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified, "-unified"));
-					Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45"));
-				}
-			}
-
-
-			foreach (var task in runSimulatorTasks) {
-				if (task.TestName == "framework-test")
-					task.ExecutionResult = TestExecutingResult.Ignored;
 			}
 		}
 
