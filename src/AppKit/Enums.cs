@@ -2455,4 +2455,11 @@ namespace XamCore.AppKit {
 		ParagraphBreak = (1 << 4),
 		ContainerBreak = (1 << 5)
 	}
+
+	[Mac (10,12)]
+	[Native]
+	public enum NSWindowListOptions : nint
+	{
+		NSWindowListOrderedFrontToBack = (1 << 0)
+	}
 }

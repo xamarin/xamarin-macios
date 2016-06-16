@@ -299,7 +299,7 @@ namespace XamCore.AppKit {
 		[Export ("alertStyle")]
 		NSAlertStyle AlertStyle { get; set; }
 	
-		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
@@ -418,6 +418,7 @@ namespace XamCore.AppKit {
 		NSApplicationDelegate Delegate { get; set; }
 	
 		[Export ("context")]
+		[Availability (Deprecated = Platform.Mac_10_12, Message = "This method always returns nil. If you need access to the current drawing context, use NSGraphicsContext.CurrentContext inside of a draw operation.")]
 		NSGraphicsContext Context { get; }
 	
 		[Export ("hide:")]
@@ -533,6 +534,7 @@ namespace XamCore.AppKit {
 		void PreventWindowOrdering ();
 	
 		[Export ("makeWindowsPerform:inOrder:")]
+		[Availability (Deprecated = Platform.Mac_10_12, Message = "Use EnumerateWindows instead.")]
 		NSWindow MakeWindowsPerform (Selector aSelector, bool inOrder);
 	
 		[Export ("windows")]
@@ -744,6 +746,10 @@ namespace XamCore.AppKit {
 		[Export ("orderFrontStandardAboutPanelWithOptions:")]
 		void OrderFrontStandardAboutPanelWithOptions (NSDictionary optionsDictionary);
 #endif
+
+		[Mac (10,12)]
+		[Export ("enumerateWindowsWithOptions:usingBlock:")]
+		unsafe void EnumerateWindows (NSWindowListOptions options, Action<NSWindow, /*bool* */ IntPtr> block);
 	}
 
 	public delegate void ContinueUserActivityRestorationHandler (NSObject [] restorableObjects);
@@ -884,6 +890,11 @@ namespace XamCore.AppKit {
 		[Export ("application:didUpdateUserActivity:"), EventArgs ("NSApplicationUpdatedUserActivity"), DefaultValue (false)]
 		void UpdatedUserActivity (NSApplication application, NSUserActivity userActivity);
 #endif
+
+		//TODO - Waiting on CloudKit binding
+		//[Mac (10,12)]
+		//[Export ("application:userAcceptedCloudKitShareWithMetadata:")]
+		//void UserAcceptedCloudKitShare (NSApplication application, CKShareMetadata metadata);
 	}
 		
 	[BaseType (typeof (NSObjectController))]
@@ -18622,7 +18633,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,10)]
 	[BaseType (typeof (NSViewController))]
-	public interface NSTitlebarAccessoryViewController {
+	public interface NSTitlebarAccessoryViewController : NSAnimationDelegate, NSAnimatablePropertyContainer {
 		[Export ("layoutAttribute")]
 		NSLayoutAttribute LayoutAttribute { get; set; }
 
@@ -20887,8 +20898,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,10)]
 	[Protocol]
-	public interface NSAccessibility
-	{
+	public interface NSAccessibility {
 		[Mac (10, 10)]
 		[Abstract]
 		[Export ("accessibilityFrame", ArgumentSemantic.Assign)]
@@ -21612,6 +21622,11 @@ namespace XamCore.AppKit {
 		[Abstract]
 		[Export ("isAccessibilitySelectorAllowed:")]
 		bool IsAccessibilitySelectorAllowed (Selector selector);
+
+		[Mac (10, 12)]
+		[Abstract]
+		[Export ("accessibilityRequired")]
+		bool AccessibilityRequired { [Bind ("isAccessibilityRequired")] get; set; }
 	}
 
 	[Mac (10, 10)]
@@ -22111,6 +22126,14 @@ namespace XamCore.AppKit {
 		[Mac (10, 7)]
 		[Field ("NSAccessibilityIdentifierAttribute")]
 		NSString IdentifierAttribute { get; }
+
+		[Mac (10, 12)]
+		[Field ("NSAccessibilityRequiredAttribute")]
+		NSString NSAccessibilityRequiredAttribute { get; }
+
+		[Mac (10, 12)]
+		[Field ("NSAccessibilityTextAlignmentAttribute")]
+		NSString NSAccessibilityTextAlignmentAttribute { get; }
 	}
 
 	[Static]
@@ -22296,6 +22319,10 @@ namespace XamCore.AppKit {
 		[Mac (10, 6)]
 		[Field ("NSAccessibilityHandleRole")]
 		NSString HandleRole { get; }
+
+		[Mac (10, 12)]
+		[Field ("NSAccessibilityMenuBarItemRole")]
+		NSString NSAccessibilityMenuBarItemRole { get; }
 	}
 
 	[Static]
@@ -22888,5 +22915,13 @@ namespace XamCore.AppKit {
 
 		[Export ("accessibilityDisplayShouldReduceTransparency")]
 		bool AccessibilityDisplayShouldReduceTransparency { get; }
+
+		[Mac (10, 12)]
+		[Export ("accessibilityDisplayShouldInvertColors")]
+		bool AccessibilityDisplayShouldInvertColors { get; }
+
+		[Mac (10, 12)]
+		[Export ("accessibilityDisplayShouldReduceMotion")]
+		bool AccessibilityDisplayShouldReduceMotion { get; }
 	}
 }
