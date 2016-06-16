@@ -111,10 +111,12 @@ namespace xharness
 				throw new Exception (string.Format ("Unknown simulator target: {0}", Harness.Target));
 			}
 
-			var sims = new Simulators ();
+			var sims = new Simulators () {
+				Harness = Harness,
+			};
 			Task.Run (async () =>
 			{
-				await sims.LoadAsync ();
+				await sims.LoadAsync (Logs.Create (LogDirectory, "simulator-list.log", "Simulator list"));
 			}).Wait ();
 
 			var devices = sims.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == simulator_runtime && v.SimDeviceType == simulator_devicetype);
@@ -142,6 +144,8 @@ namespace xharness
 					candidate = data;
 				}
 			}
+			if (candidate == null)
+				throw new Exception ($"Could not find simulator for runtime={simulator_runtime} and device type={simulator_devicetype}.");
 			if (simulators == null)
 				simulators = new SimDevice [] { candidate };
 

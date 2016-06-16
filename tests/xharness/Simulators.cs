@@ -16,7 +16,7 @@ namespace xharness
 		public List<SimDevice> AvailableDevices = new List<SimDevice> ();
 		public List<SimDevicePair> AvailableDevicePairs = new List<SimDevicePair> ();
 
-		public async Task LoadAsync ()
+		public async Task LoadAsync (LogFile log)
 		{
 			if (SupportedRuntimes.Count > 0)
 				return;
@@ -26,8 +26,10 @@ namespace xharness
 				using (var process = new Process ()) {
 					process.StartInfo.FileName = Harness.MlaunchPath;
 					process.StartInfo.Arguments = string.Format ("--sdkroot {0} --listsim {1}", Harness.XcodeRoot, tmpfile);
-					await process.RunAsync ("/dev/null", false);
-
+					log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
+					await process.RunAsync (log.Path, false);
+					log.WriteLine ("Result:");
+					log.WriteLine (File.ReadAllText (tmpfile));
 					var simulator_data = new XmlDocument ();
 					simulator_data.LoadWithoutNetworkAccess (tmpfile);
 					foreach (XmlNode sim in simulator_data.SelectNodes ("/MTouch/Simulator/SupportedRuntimes/SimRuntime")) {

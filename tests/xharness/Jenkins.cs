@@ -15,6 +15,9 @@ namespace xharness
 		public bool IncludeClassic;
 		public bool IncludeBcl;
 
+		public LogFiles Logs = new LogFiles ();
+		LogFile SimulatorLoadLog;
+
 		public string LogDirectory {
 			get {
 				return Path.Combine (Harness.JENKINS_RESULTS_DIRECTORY, "tests");
@@ -31,7 +34,15 @@ namespace xharness
 			var runtasks = new List<RunSimulatorTask> ();
 
 			Simulators.Harness = Harness;
-			await Simulators.LoadAsync ();
+			if (SimulatorLoadLog == null)
+				SimulatorLoadLog = Logs.Create (LogDirectory, "simulator-list.log", "Simulator Listing");
+			try {
+				await Simulators.LoadAsync (SimulatorLoadLog);
+			} catch (Exception e) {
+				SimulatorLoadLog.WriteLine ("Failed to load simulators:");
+				SimulatorLoadLog.WriteLine (e.ToString ());
+				return runtasks;
+			}
 
 			var fn = Path.GetFileNameWithoutExtension (buildTask.ProjectFile);
 			if (fn.EndsWith ("-tvos", StringComparison.Ordinal)) {
@@ -90,6 +101,9 @@ namespace xharness
 
 		async Task PopulateTasksAsync ()
 		{
+			// Missing:
+			// api-diff
+			// msbuild tests
 			var runSimulatorTasks = new List<RunSimulatorTask> ();
 
 			foreach (var project in Harness.IOSTestProjects) {
@@ -216,11 +230,7 @@ namespace xharness
 		{
 			try {
 				Directory.CreateDirectory (LogDirectory);
-				Harness.HarnessLog = new LogFile ()
-				{
-					Description = "Harness log",
-					Path = Path.Combine (LogDirectory, "Harness.log"),
-				};
+				Harness.HarnessLog = Logs.Create (LogDirectory, "Harness.log", "Harness log");
 				Task.Run (async () =>
 				{
 					await PopulateTasksAsync ();
@@ -332,7 +342,8 @@ function toggleContainerVisibility (containerName)
 					writer.WriteLine ("<body>");
 					writer.WriteLine ("<h1>Test results</h1>");
 
-					writer.WriteLine ("<a href='{0}'>Harness log</a> <br />", Harness.HarnessLog.Path.Substring (LogDirectory.Length + 1));
+					foreach (var log in Logs)
+						writer.WriteLine ("<a href='{0}' type='text/plain'>{1}</a><br />", log.Path.Substring (LogDirectory.Length + 1), log.Description);
 
 					var allSimulatorTasks = new List<RunSimulatorTask> ();
 					var allExecuteTasks = new List<MacExecuteTask> ();
