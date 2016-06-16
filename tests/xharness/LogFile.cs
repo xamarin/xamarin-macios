@@ -27,6 +27,11 @@ namespace xharness
 		{
 			Write (string.Format (format, args) + "\n");
 		}
+
+		public override string ToString ()
+		{
+			return Description;
+		}
 	}
 
 	public class LogFiles : List<LogFile>
