@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace xharness
@@ -8,7 +9,7 @@ namespace xharness
 		public string Description;
 		public string Path;
 
-		void Write (string value)
+		protected virtual void Write (string value)
 		{
 			lock (this) {
 				using (var str = new FileStream (Path, FileMode.Append, FileAccess.Write, FileShare.Read)) {
@@ -53,6 +54,49 @@ namespace xharness
 			}
 
 			return rv;
+		}
+	}
+
+	public class CaptureLog : LogFile
+	{
+		public string CapturePath { get; private set; }
+
+		long startLength;
+
+		public CaptureLog (string capture_path)
+		{
+			CapturePath = capture_path;
+		}
+
+		public void StartCapture ()
+		{
+			if (File.Exists (CapturePath))
+				startLength = new FileInfo (CapturePath).Length;
+		}
+
+		public void StopCapture ()
+		{
+			var endLength = new FileInfo (CapturePath).Length;
+			var length = (int) (endLength - startLength);
+
+			using (var reader = new FileStream (CapturePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
+				using (var writer = new FileStream (Path, FileMode.Create, FileAccess.Write, FileShare.Read)) {
+					var buffer = new byte [4096];
+					reader.Position = startLength;
+					while (length > 0) {
+						int read = reader.Read (buffer, 0, Math.Min (buffer.Length, length));
+						if (read > 0) {
+							writer.Write (buffer, 0, read);
+							length -= read;
+						}
+					}
+				}
+			}
+		}
+
+		protected override void Write (string value)
+		{
+			throw new InvalidOperationException ();
 		}
 	}
 }

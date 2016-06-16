@@ -500,6 +500,25 @@ namespace xharness
 			bool timed_out = false;
 
 			if (isSimulator) {
+				var systemLogs = new List<CaptureLog> ();
+				foreach (var sim in simulators) {
+					// Upload the system log
+					if (File.Exists (sim.SystemLog)) {
+						Harness.Log ("System log for the '{1}' simulator is: {0}", sim.SystemLog, sim.Name);
+						bool isCompanion = sim != simulator;
+
+						var log = new CaptureLog (sim.SystemLog) {
+							Path = Path.Combine (LogDirectory, sim.UDID + ".log"),
+							Description = isCompanion ? "System log (companion)" : "System log",
+						};
+						log.StartCapture ();
+						Logs.Add (log);
+						systemLogs.Add (log);
+						Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", log.Path);
+					}
+				}
+
+
 				FindSimulator ();
 
 				Harness.Log ("*** Executing {0}/{1} in the simulator ***", appName, mode);
@@ -599,6 +618,10 @@ namespace xharness
 
 				// cleanup after us
 				CleanupSimulator ();
+
+				foreach (var log in systemLogs)
+					log.StopCapture ();
+				
 			} else {
 				FindDevice ();
 
@@ -740,21 +763,7 @@ namespace xharness
 
 			if (!success.HasValue)
 				success = false;
-
-			if (isSimulator) {
-				foreach (var sim in simulators) {
-					// Upload the system log
-					if (File.Exists (sim.SystemLog)) {
-						Harness.Log (success.Value ? 1 : 0, "System log for the '{1}' simulator is: {0}", sim.SystemLog, sim.Name);
-						bool isCompanion = sim != simulator;
-
-						var log = Logs.Create (LogDirectory, sim.UDID + ".log", isCompanion ? "System log (companion)" : "System log");
-						File.Copy (sim.SystemLog, log.Path, true);
-						Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", log.Path);
-					}
-				}
-			}
-
+			
 			if (success.Value) {
 				Result = TestExecutingResult.Succeeded;
 			} else if (timed_out) {
