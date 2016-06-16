@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace xharness
@@ -15,7 +16,7 @@ namespace xharness
 		public Harness Harness;
 		public string ProjectFile;
 
-		XmlDocument simulator_data;
+		public TestExecutingResult Result { get; private set; }
 
 		string appName;
 		string appPath;
@@ -27,64 +28,65 @@ namespace xharness
 		string device_name;
 		string companion_device_name;
 
-		class IData {
-			public XmlNode Node;
-             
-			public string udid { get { return Node.Attributes ["UDID"].Value; } }
-		}
-
-		class SimulatorData : IData {
-			public string datapath { get { return Node.SelectSingleNode ("DataPath").InnerText; } }
-			public string logpath { get { return Node.SelectSingleNode ("LogPath").InnerText; } }
-			public string devicetype { get { return Node.SelectSingleNode ("SimDeviceType").InnerText; } }
-			public string runtime { get { return Node.SelectSingleNode ("SimRuntime").InnerText; } }
-			public string system_log { get { return Path.Combine (logpath, "system.log"); } }
-			public string name { get { return Node.Attributes ["Name"].Value; } }
-		}
-
-		class DeviceData : IData {
-			public string DeviceIdentifier { get { return Node.SelectSingleNode ("DeviceIdentifier")?.InnerText; } }
-			public string DeviceClass { get { return Node.SelectSingleNode ("DeviceClass")?.InnerText; } }
-			public string CompanionIdentifier { get { return Node.SelectSingleNode ("CompanionIdentifier")?.InnerText; } }
-			public string Name { get { return Node.SelectSingleNode ("Name")?.InnerText; } }
-		}
-
 		// For watch apps we end up with 2 simulators, the watch simulator (the main one), and the iphone simulator (the companion one).
-		SimulatorData[] simulators;
-		SimulatorData simulator { get { return simulators [0]; } }
-		SimulatorData companion_simulator { get { return simulators.Length == 2 ? simulators [1] : null; } }
+		SimDevice[] simulators;
+		SimDevice simulator { get { return simulators [0]; } }
+		SimDevice companion_simulator { get { return simulators.Length == 2 ? simulators [1] : null; } }
+
+		string target;
+		public string Target {
+			get { return target ?? Harness.Target; }
+			set { target = value; }
+		}
+
+		string log_directory;
+		public string LogDirectory {
+			get { return log_directory ?? Harness.LogDirectory; }
+			set { log_directory = value; }
+		}
+
+		public LogFiles Logs = new LogFiles ();
+
+		public SimDevice [] Simulators {
+			get { return simulators; }
+			set { simulators = value; }
+		}
 
 		string mode;
 
-		string SymbolicateCrashReport (string report)
+		LogFile SymbolicateCrashReport (LogFile report)
 		{
 			var symbolicatecrash = Path.Combine (Harness.XcodeRoot, "Contents/SharedFrameworks/DTDeviceKitBase.framework/Versions/A/Resources/symbolicatecrash");
 			if (!File.Exists (symbolicatecrash))
 				symbolicatecrash = Path.Combine (Harness.XcodeRoot, "Contents/SharedFrameworks/DVTFoundation.framework/Versions/A/Resources/symbolicatecrash");
 			
 			if (!File.Exists (symbolicatecrash)) {
-				Harness.Log ("Can't symbolicate {0} because the symbolicatecrash script {1} does not exist", report, symbolicatecrash);
+				Harness.Log ("Can't symbolicate {0} because the symbolicatecrash script {1} does not exist", report.Path, symbolicatecrash);
 				return report;
 			}
 
 			var output = new StringBuilder ();
-			if (ExecuteCommand (symbolicatecrash, "\"" + report + "\"", true, captured_output: output, environment_variables: new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (Harness.XcodeRoot, "Contents", "Developer") }})) {
-				File.WriteAllText (report + ".symbolicated", output.ToString ());
-				Harness.Log ("Symbolicated {0} successfully.", report);
-				return report + ".symbolicated";
+			if (ExecuteCommand (symbolicatecrash, "\"" + report.Path + "\"", true, captured_output: output, environment_variables: new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (Harness.XcodeRoot, "Contents", "Developer") }})) {
+				var rv = Logs.Create (LogDirectory, report.Path + ".symbolicated", "Symbolicated crash report: " + Path.GetFileName (report.Path));
+				File.WriteAllText (rv.Path, output.ToString ());
+				Harness.Log ("Symbolicated {0} successfully.", report.Path);
+				return rv;
 			}
 
-			Harness.Log ("Failed to symbolicate {0}:\n{1}", report, output.ToString ());
+			Harness.Log ("Failed to symbolicate {0}:\n{1}", report.Path, output.ToString ());
 
 			return report;
 		}
 
 		void FindSimulator ()
 		{
+			if (simulators != null)
+				return;
+			
 			string simulator_devicetype;
 			string simulator_runtime;
 
-			switch (Harness.Target) {
+			switch (Target) {
 			case "ios-simulator-32":
 				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.iPhone-5";
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
@@ -108,51 +110,51 @@ namespace xharness
 			default:
 				throw new Exception (string.Format ("Unknown simulator target: {0}", Harness.Target));
 			}
-				
-			var tmpfile = Path.GetTempFileName ();
-			try {
-				ExecuteCommand (Harness.MlaunchPath, string.Format ("--sdkroot {0} --listsim {1}", Harness.XcodeRoot, tmpfile), output_verbosity_level: 1);
-				simulator_data = new XmlDocument ();
-				simulator_data.LoadWithoutNetworkAccess (tmpfile);
-				SimulatorData candidate = null;
-				simulators = null;
-				foreach (XmlNode sim in simulator_data.SelectNodes ("/MTouch/Simulator/AvailableDevices/SimDevice")) {
-					var data = new SimulatorData { Node = sim };
-					if (data.runtime == simulator_runtime && data.devicetype == simulator_devicetype) {
-						var udid = data.udid;
-						var secondaryData = (SimulatorData) null;
-						var nodeCompanion = simulator_data.SelectSingleNode ("/MTouch/Simulator/AvailableDevicePairs/SimDevicePair/Companion[text() = '" + udid + "']");
-						var nodeGizmo = simulator_data.SelectSingleNode ("/MTouch/Simulator/AvailableDevicePairs/SimDevicePair/Gizmo[text() = '" + udid + "']");
 
-						if (nodeCompanion != null) {
-							var gizmo_udid = nodeCompanion.ParentNode.SelectSingleNode ("Gizmo").InnerText;
-							var node =  simulator_data.SelectSingleNode ("/MTouch/Simulator/AvailableDevices/SimDevice[@UDID = '" + gizmo_udid + "']");
-							secondaryData = new SimulatorData () { Node = node };
-						} else if (nodeGizmo != null) {
-							var companion_udid = nodeGizmo.ParentNode.SelectSingleNode ("Companion").InnerText;
-							var node = simulator_data.SelectSingleNode ("/MTouch/Simulator/AvailableDevices/SimDevice[@UDID = '" + companion_udid + "']");
-							secondaryData = new SimulatorData () { Node = node };
-						}
-						if (secondaryData != null) {
-							simulators = new SimulatorData[] { data, secondaryData };
-							break;
-						} else {
-							candidate = data;
-						}
-					}
+			var sims = new Simulators () {
+				Harness = Harness,
+			};
+			Task.Run (async () =>
+			{
+				await sims.LoadAsync (Logs.Create (LogDirectory, "simulator-list.log", "Simulator list"));
+			}).Wait ();
+
+			var devices = sims.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == simulator_runtime && v.SimDeviceType == simulator_devicetype);
+			SimDevice candidate = null;
+			simulators = null;
+			foreach (var device in devices) {
+				var data = device;
+				var secondaryData = (SimDevice) null;
+				var nodeCompanions = sims.AvailableDevicePairs.Where ((SimDevicePair v) => v.Companion == device.UDID);
+				var nodeGizmos = sims.AvailableDevicePairs.Where ((SimDevicePair v) => v.Gizmo == device.UDID);
+
+				if (nodeCompanions.Any ()) {
+					var gizmo_udid = nodeCompanions.First ().Gizmo;
+					var node = sims.AvailableDevices.Where ((SimDevice v) => v.UDID == gizmo_udid);
+					secondaryData = node.First ();
+				} else if (nodeGizmos.Any ()) {
+					var companion_udid = nodeGizmos.First ().Companion;
+					var node = sims.AvailableDevices.Where ((SimDevice v) => v.UDID == companion_udid);
+					secondaryData = node.First ();
 				}
-				if (simulators == null)
-					simulators = new SimulatorData[] { candidate };
-			} finally {
-				File.Delete (tmpfile);
+				if (secondaryData != null) {
+					simulators = new SimDevice [] { data, secondaryData };
+					break;
+				} else {
+					candidate = data;
+				}
 			}
+			if (candidate == null)
+				throw new Exception ($"Could not find simulator for runtime={simulator_runtime} and device type={simulator_devicetype}.");
+			if (simulators == null)
+				simulators = new SimDevice [] { candidate };
 
 			if (simulators == null)
 				throw new Exception ("Could not find simulator");
 
-			Harness.Log (1, "Found simulator: {0} {1}", simulators [0].name, simulators [0].udid);
+			Harness.Log (1, "Found simulator: {0} {1}", simulators [0].Name, simulators [0].UDID);
 			if (simulators.Length > 1)
-				Harness.Log (1, "Found companion simulator: {0} {1}", simulators [1].name, simulators [1].udid);
+				Harness.Log (1, "Found companion simulator: {0} {1}", simulators [1].Name, simulators [1].UDID);
 		}
 
 		void FindDevice ()
@@ -163,63 +165,99 @@ namespace xharness
 			device_name = Environment.GetEnvironmentVariable ("DEVICE_NAME");
 			if (!string.IsNullOrEmpty (device_name))
 				return;
-			
-			var tmpfile = Path.GetTempFileName ();
-			try {
-				ExecuteCommand (Harness.MlaunchPath, string.Format ("--sdkroot {0} --listdev={1} --output-format=xml", Harness.XcodeRoot, tmpfile), output_verbosity_level: 1);
-				var doc = new XmlDocument ();
-				doc.LoadWithoutNetworkAccess (tmpfile);
-				var nodes = new List<DeviceData> ();
-				foreach (XmlNode dev in doc.SelectNodes ("/MTouch/Device")) {
-					nodes.Add (new DeviceData { Node = dev });
-				}
 
-				if (nodes.Count == 0)
-					throw new Exception ("No devices connected");
+			var devs = new Devices ();
+			Task.Run (async () =>
+			{
+				await devs.LoadAsync ();
+			}).Wait ();
 
-				string [] deviceClasses;
-				switch (mode) {
-				case "ios":
-					deviceClasses = new string [] { "iPhone", "iPad" };
-					break;
-				case "watchos":
-					deviceClasses = new string [] { "Watch" };
-					break;
-				case "tvos":
-					deviceClasses = new string [] { "AppleTV" }; // Untested
-					break;
-				default:
-					throw new Exception ($"unknown mode: {mode}");
-				}
+			string [] deviceClasses;
+			switch (mode) {
+			case "ios":
+				deviceClasses = new string [] { "iPhone", "iPad" };
+				break;
+			case "watchos":
+				deviceClasses = new string [] { "Watch" };
+				break;
+			case "tvos":
+				deviceClasses = new string [] { "AppleTV" }; // Untested
+				break;
+			default:
+				throw new Exception ($"unknown mode: {mode}");
+			}
 
-				var selected = nodes.Where ((v) => deviceClasses.Contains (v.DeviceClass));
-				DeviceData selected_data;
-				if (selected.Count () == 0) {
-					throw new Exception ($"Could not find any applicable devices with device class(es): {string.Join (", ", deviceClasses)}");
-				} else if (selected.Count () > 1) {
-					selected_data = selected.First ();
-					Harness.Log ("Found {0} devices for device class(es) {1}: {2}. Selected: '{3}'", selected.Count (), string.Join (", ", deviceClasses), string.Join (", ", selected.Select ((v) => v.Name).ToArray ()), selected_data.Name);
-				} else {
-					selected_data = selected.First ();
-				}
-				device_name = selected_data.Name;
+			var selected = devs.ConnectedDevices.Where ((v) => deviceClasses.Contains (v.DeviceClass));
+			Device selected_data;
+			if (selected.Count () == 0) {
+				throw new Exception ($"Could not find any applicable devices with device class(es): {string.Join (", ", deviceClasses)}");
+			} else if (selected.Count () > 1) {
+				selected_data = selected.First ();
+				Harness.Log ("Found {0} devices for device class(es) {1}: {2}. Selected: '{3}'", selected.Count (), string.Join (", ", deviceClasses), string.Join (", ", selected.Select ((v) => v.Name).ToArray ()), selected_data.Name);
+			} else {
+				selected_data = selected.First ();
+			}
+			device_name = selected_data.Name;
 
-				if (mode == "watchos") {
-					var companion = nodes.Where ((v) => v.DeviceIdentifier == selected_data.CompanionIdentifier);
-					if (companion.Count () == 0)
-						throw new Exception ($"Could not find the companion device for '{selected_data.Name}'");
-					else if (companion.Count () > 1)
-						Harness.Log ("Found {0} companion devices for {1}?!?", companion.Count (), selected_data.Name);
-					companion_device_name = companion.First ().Name;
-				}
-			} finally {
-				File.Delete (tmpfile);
+			if (mode == "watchos") {
+				var companion = devs.ConnectedDevices.Where ((v) => v.DeviceIdentifier == selected_data.CompanionIdentifier);
+				if (companion.Count () == 0)
+					throw new Exception ($"Could not find the companion device for '{selected_data.Name}'");
+				else if (companion.Count () > 1)
+					Harness.Log ("Found {0} companion devices for {1}?!?", companion.Count (), selected_data.Name);
+				companion_device_name = companion.First ().Name;
 			}
 		}
 
-		void PrepareSimulator ()
+		public void AgreeToPrompts (bool delete_first = true)
 		{
+			var TCC_db = Path.Combine (simulator.DataPath, "data", "Library", "TCC", "TCC.db");
+			var sim_services = new string [] {
+					"kTCCServiceAddressBook",
+					"kTCCServicePhotos",
+					"kTCCServiceUbiquity",
+					"kTCCServiceWillow"
+				};
+
+			var failure = false;
+			var tcc_edit_timeout = 5;
+			var watch = new Stopwatch ();
+			watch.Start ();
+			do {
+				failure = false;
+				foreach (var service in sim_services) {
+					if (delete_first && !ExecuteCommand ("sqlite3", string.Format ("{0} \"DELETE FROM access WHERE service = '{1}' and client ='{2}';\"", TCC_db, service, bundle_identifier), true, output_verbosity_level: 1)) {
+						failure = true;
+					}
+
+					if (!failure && !ExecuteCommand ("sqlite3", string.Format ("{0} \"INSERT INTO access VALUES('{1}','{2}',0,1,0,NULL,NULL);\"", TCC_db, service, bundle_identifier), true, output_verbosity_level: 1)) {
+						failure = true;
+					}
+				}
+				if (failure) {
+					if (watch.Elapsed.TotalSeconds > tcc_edit_timeout)
+						break;
+					Harness.Log ("Failed to edit TCC.db, trying again in 1 second... ", (int) (tcc_edit_timeout - watch.Elapsed.TotalSeconds));
+					Thread.Sleep (TimeSpan.FromSeconds (1));
+				}
+			} while (failure);
+
+			if (failure) {
+				Harness.Log ("Failed to edit TCC.db, the test run might hang due to permission request dialogs");
+			} else {
+				Harness.Log ("Successfully edited TCC.db");
+			}
+		}
+
+		bool simulator_prepared;
+		public void PrepareSimulator ()
+		{
+			if (simulator_prepared)
+				return;
+			simulator_prepared = true;
+
 			if (SkipSimulatorSetup) {
+				AgreeToPrompts (false);
 				Harness.Log (0, "Simulator setup skipped.");
 				return;
 			}
@@ -231,7 +269,7 @@ namespace xharness
 			// We only fixup TCC.db on the main simulator.
 
 			foreach (var sim in simulators) {
-				var udid = sim.udid;
+				var udid = sim.UDID;
 				// erase the simulator (make sure the device isn't running first)
 				ExecuteXcodeCommand ("simctl", "shutdown " + udid, true, output_verbosity_level: 1, timeout: TimeSpan.FromMinutes (1));
 				ExecuteXcodeCommand ("simctl", "erase " + udid, true, output_verbosity_level: 1, timeout: TimeSpan.FromMinutes (1));
@@ -242,14 +280,14 @@ namespace xharness
 			}
 
 			// Edit the permissions to prevent dialog boxes in the test app
-			var TCC_db = Path.Combine (simulator.datapath, "data", "Library", "TCC", "TCC.db");
+			var TCC_db = Path.Combine (simulator.DataPath, "data", "Library", "TCC", "TCC.db");
 			if (!File.Exists (TCC_db)) {
 				Harness.Log ("Opening simulator to create TCC.db");
 				var simulator_app = Path.Combine (Harness.XcodeRoot, "Contents", "Developer", "Applications", "Simulator.app");
 				if (!Directory.Exists (simulator_app))
 					simulator_app = Path.Combine (Harness.XcodeRoot, "Contents", "Developer", "Applications", "iOS Simulator.app");
 
-				ExecuteCommand ("open", "-a \"" + simulator_app + "\" --args -CurrentDeviceUDID " + simulator.udid, output_verbosity_level: 1);
+				ExecuteCommand ("open", "-a \"" + simulator_app + "\" --args -CurrentDeviceUDID " + simulator.UDID, output_verbosity_level: 1);
 
 				var tcc_creation_timeout = 60;
 				var watch = new Stopwatch ();
@@ -261,60 +299,31 @@ namespace xharness
 			}
 
 			if (File.Exists (TCC_db)) {
-				var sim_services = new string [] {
-					"kTCCServiceAddressBook",
-					"kTCCServicePhotos",
-					"kTCCServiceUbiquity",
-					"kTCCServiceWillow"
-				};
-
-				var failure = false;
-				var tcc_edit_timeout = 5;
-				var watch = new Stopwatch ();
-				watch.Start ();
-				do {
-					failure = false;
-					foreach (var service in sim_services) {
-						if (!ExecuteCommand ("sqlite3", string.Format ("{0} \"DELETE FROM access WHERE service = '{1}' and client ='{2}';\"", TCC_db, service, bundle_identifier), true, output_verbosity_level: 1)) {
-							failure = true;
-						} else {
-							if (!ExecuteCommand ("sqlite3", string.Format ("{0} \"INSERT INTO access VALUES('{1}','{2}',0,1,0,NULL,NULL);\"", TCC_db, service, bundle_identifier), true, output_verbosity_level: 1)) {
-								failure = true;
-							}
-						}
-					}
-					if (failure) {
-						if (watch.Elapsed.TotalSeconds > tcc_edit_timeout)
-							break;
-						Harness.Log ("Failed to edit TCC.db, trying again in 1 second... ", (int) (tcc_edit_timeout - watch.Elapsed.TotalSeconds));
-						Thread.Sleep (TimeSpan.FromSeconds (1));
-					}
-				} while (failure);
-
-				if (failure) {
-					Harness.Log ("Failed to edit TCC.db, the test run might hang due to permission request dialogs");
-				} else {
-					Harness.Log ("Successfully edited TCC.db");
-				}
+				AgreeToPrompts (true);
 			} else {
-				Harness.Log ("No TCC.db found for the simulator {0} (SimRuntime={1} and SimDeviceType={1})", simulator.udid, simulator.runtime, simulator.devicetype);
-			}
-				
-			foreach (var sim in simulators) {
-				if (!File.Exists (sim.system_log)) {
-					Harness.Log ("No system log found for SimRuntime={0} and SimDeviceType={1}", sim.runtime, sim.devicetype);
-				} else {
-					File.WriteAllText (sim.system_log, string.Format (" *** This log file was cleared out by Xamarin.iOS's test run at {0} **** \n", DateTime.Now.ToString ()));
-				}
+				Harness.Log ("No TCC.db found for the simulator {0} (SimRuntime={1} and SimDeviceType={1})", simulator.UDID, simulator.SimRuntime, simulator.SimDeviceType);
 			}
 
 			KillEverything ();
 
-			ExecuteXcodeCommand ("simctl", "shutdown " + simulator.udid, true, output_verbosity_level: 1, timeout: TimeSpan.FromMinutes (1));
+			foreach (var sim in simulators) {
+				ExecuteXcodeCommand ("simctl", "shutdown " + sim.UDID, true, output_verbosity_level: 1, timeout: TimeSpan.FromMinutes (1));
+
+				if (!File.Exists (sim.SystemLog)) {
+					Harness.Log ("No system log found for SimRuntime={0} and SimDeviceType={1}", sim.SimRuntime, sim.SimDeviceType);
+				} else {
+					File.WriteAllText (sim.SystemLog, string.Format (" *** This log file was cleared out by Xamarin.iOS's test run at {0} **** \n", DateTime.Now.ToString ()));
+				}
+			}
 		}
 
-		void Initialize ()
+		bool initialized;
+		public void Initialize ()
 		{
+			if (initialized)
+				return;
+			initialized = true;
+
 			var csproj = new XmlDocument ();
 			csproj.LoadWithoutNetworkAccess (ProjectFile);
 			appName = csproj.GetAssemblyName ();
@@ -323,7 +332,7 @@ namespace xharness
 			info_plist.LoadWithoutNetworkAccess (Path.Combine (Path.GetDirectoryName (ProjectFile), info_plist_path));
 			bundle_identifier = info_plist.GetCFBundleIdentifier ();
 
-			switch (Harness.Target) {
+			switch (Target) {
 			case "ios-simulator-32":
 				mode = "sim32";
 				platform = "iPhoneSimulator";
@@ -407,16 +416,31 @@ namespace xharness
 			return success ? 0 : 1;
 		}
 
-		bool SkipSimulatorSetup {
+		bool skip_simulator_setup;
+		public bool SkipSimulatorSetup {
 			get {
-				return !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("SKIP_SIMULATOR_SETUP"));
+				return skip_simulator_setup || !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("SKIP_SIMULATOR_SETUP"));
+			}
+			set {
+				skip_simulator_setup = value;
+			}
+		}
+
+		bool skip_simulator_cleanup;
+		public bool SkipSimulatorCleanup {
+			get {
+				return skip_simulator_cleanup || !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("SKIP_SIMULATOR_CLEANUP"));
+			}
+			set {
+				skip_simulator_cleanup = value;
 			}
 		}
 
 		public int Run ()
 		{
 			HashSet<string> start_crashes = null;
-			string device_system_log = null;
+			LogFile device_system_log = null;
+			LogFile listener_log = null;
 
 			Initialize ();
 
@@ -462,17 +486,14 @@ namespace xharness
 			default:
 				throw new NotImplementedException ();
 			}
-			listener.LogPath = Path.GetDirectoryName (Harness.LogFile);
-			listener.LogFile = Path.GetFileName (Harness.LogFile);
+			listener_log = Logs.Create (LogDirectory, string.Format ("test-{0:yyyyMMdd_HHmmss}.log", DateTime.Now), "Test log");
+			listener.LogPath = listener_log.Path;
 			listener.AutoExit = true;
 			listener.Address = System.Net.IPAddress.Any;
 			listener.Initialize ();
 
 			args.AppendFormat (" -argument=-app-arg:-hostport:{0}", listener.Port);
 			args.AppendFormat (" -setenv=NUNIT_HOSTPORT={0}", listener.Port);
-
-			if (File.Exists (Harness.LogFile))
-				File.Delete (Harness.LogFile);
 
 			bool? success = null;
 			bool timed_out = false;
@@ -486,7 +507,7 @@ namespace xharness
 
 				args.Append (" --launchsim");
 				args.AppendFormat (" \"{0}\" ", launchAppPath);
-				args.Append (" --device=:v2:udid=").Append (simulator.udid).Append (" ");
+				args.Append (" --device=:v2:udid=").Append (simulator.UDID).Append (" ");
 
 				start_crashes = CreateCrashReportsSnapshot (true);
 
@@ -572,6 +593,9 @@ namespace xharness
 
 				listener.Cancel ();
 
+				var run_log = Logs.Create (LogDirectory, string.Format ("launch-{0:yyyyMMdd_HHmmss}.log", DateTime.Now), "Launch log");
+				File.WriteAllText (run_log.Path, proc.ReadCurrentOutput ());
+
 				// cleanup after us
 				KillEverything ();
 			} else {
@@ -584,10 +608,10 @@ namespace xharness
 				
 				AddDeviceName (args);
 
-				device_system_log = Harness.LogFile + ".device.log";
+				device_system_log = Logs.Create (LogDirectory, "device.log", "Device log");
 				var logdev = new DeviceLogCapturer () {
 					Harness =  Harness,
-					LogPath = device_system_log,
+					LogPath = device_system_log.Path,
 					DeviceName = device_name,
 				};
 				logdev.StartCapture ();
@@ -609,10 +633,10 @@ namespace xharness
 				logdev.StopCapture ();
 
 				// Upload the system log
-				if (File.Exists (device_system_log)) {
-					Harness.Log (1, "A capture of the device log is: {0}", device_system_log);
+				if (File.Exists (device_system_log.Path)) {
+					Harness.Log (1, "A capture of the device log is: {0}", device_system_log.Path);
 					if (Harness.InWrench)
-						Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", Path.GetFullPath (device_system_log));
+						Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", device_system_log.Path);
 				}
 			}
 
@@ -620,12 +644,12 @@ namespace xharness
 
 			// check the final status
 			var crashed = false;
-			if (File.Exists (Harness.LogFile)) {
-				Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", Path.GetFullPath (Harness.LogFile));
-				var log = File.ReadAllText (Harness.LogFile);
+			if (File.Exists (listener_log.Path)) {
+				Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", listener_log.Path);
+				var log = File.ReadAllText (listener_log.Path);
 				if (log.Contains ("Tests run")) {
 					var tests_run = string.Empty;
-					var log_lines = File.ReadAllLines (Harness.LogFile);
+					var log_lines = File.ReadAllLines (listener_log.Path);
 					var failed = false;
 					foreach (var line in log_lines) {
 						if (line.Contains ("Tests run:")) {
@@ -672,25 +696,33 @@ namespace xharness
 				end_crashes.ExceptWith (start_crashes);
 				if (end_crashes.Count > 0) {
 					Harness.Log ("Found {0} new crash report(s)", end_crashes.Count);
-					if (!isSimulator) {
+					List<LogFile> crash_reports;
+					if (isSimulator) {
+						crash_reports = new List<LogFile> (end_crashes.Count);
+						foreach (var path in end_crashes) {
+							var report = Logs.Create (LogDirectory, Path.GetFileName (path), "Crash report: " + Path.GetFileName (path));
+							File.Copy (path, report.Path, true);
+							crash_reports.Add (report);
+						}
+					} else {
 						// Download crash reports from the device. We put them in the project directory so that they're automatically deleted on wrench
 						// (if we put them in /tmp, they'd never be deleted).
-						var downloaded_crash_reports = new HashSet<string> ();
+						var downloaded_crash_reports = new List<LogFile> ();
 						foreach (var file in end_crashes) {
-							var crash_report_target = Path.Combine (Path.GetDirectoryName (ProjectFile), Path.GetFileName (file));
-							if (ExecuteCommand (Harness.MlaunchPath, "--download-crash-report=" + file + " --download-crash-report-to=" + crash_report_target + " --sdkroot " + Harness.XcodeRoot)) {
-								Harness.Log ("Downloaded crash report {0} to {1}", file, crash_report_target);
+							var crash_report_target = Logs.Create (LogDirectory, Path.GetFileName (file), "Crash report: " + Path.GetFileName (file));
+							if (ExecuteCommand (Harness.MlaunchPath, "--download-crash-report=" + file + " --download-crash-report-to=" + crash_report_target.Path + " --sdkroot " + Harness.XcodeRoot)) {
+								Harness.Log ("Downloaded crash report {0} to {1}", file, crash_report_target.Path);
 								crash_report_target = SymbolicateCrashReport (crash_report_target);
 								downloaded_crash_reports.Add (crash_report_target);
 							} else {
 								Harness.Log ("Could not download crash report {0}", file);
 							}
 						}
-						end_crashes = downloaded_crash_reports;
+						crash_reports = downloaded_crash_reports;
 					}
-					foreach (var cp in end_crashes) {
-						Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", Path.GetFullPath (cp));
-						Harness.Log ("    {0}", cp);
+					foreach (var cp in crash_reports) {
+						Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", cp.Path);
+						Harness.Log ("    {0}", cp.Path);
 					}
 					crash_report_search_done = true;
 				} else if (!crashed && !timed_out) {
@@ -711,15 +743,25 @@ namespace xharness
 			if (isSimulator) {
 				foreach (var sim in simulators) {
 					// Upload the system log
-					if (File.Exists (sim.system_log)) {
-						Harness.Log (success.Value ? 1 : 0, "System log for the '{1}' simulator is: {0}", sim.system_log, sim.name);
-						if (Harness.InWrench) {
-							var syslog = Harness.LogFile + (sim == simulator ? ".system.log" : ".companion.system.log");
-							File.Copy (sim.system_log, syslog, true);
-							Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", Path.GetFullPath (syslog));
-						}
+					if (File.Exists (sim.SystemLog)) {
+						Harness.Log (success.Value ? 1 : 0, "System log for the '{1}' simulator is: {0}", sim.SystemLog, sim.Name);
+						bool isCompanion = sim != simulator;
+
+						var log = Logs.Create (LogDirectory, sim.UDID + ".log", isCompanion ? "System log (companion)" : "System log");
+						File.Copy (sim.SystemLog, log.Path, true);
+						Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", log.Path);
 					}
 				}
+			}
+
+			if (success.Value) {
+				Result = TestExecutingResult.Succeeded;
+			} else if (timed_out) {
+				Result = TestExecutingResult.TimedOut;
+			} else if (crashed) {
+				Result = TestExecutingResult.Crashed;
+			} else {
+				Result = TestExecutingResult.Failed;
 			}
 
 			return success.Value ? 0 : 1;
@@ -760,7 +802,12 @@ namespace xharness
 			HashSet<string> rv;
 
 			if (simulator) {
-				rv = new HashSet<string> (Directory.EnumerateFiles (Path.Combine (Environment.GetEnvironmentVariable ("HOME"), "Library", "Logs", "DiagnosticReports")));
+				var dir = Path.Combine (Environment.GetEnvironmentVariable ("HOME"), "Library", "Logs", "DiagnosticReports");
+				if (Directory.Exists (dir)) {
+					rv = new HashSet<string> (Directory.EnumerateFiles (dir));
+				} else {
+					rv = new HashSet<string> ();
+				}
 			} else {
 				var tmp = Path.GetTempFileName ();
 				if (ExecuteCommand (Harness.MlaunchPath, "--list-crash-reports=" + tmp + " --sdkroot " + Harness.XcodeRoot, true)) {
@@ -776,13 +823,20 @@ namespace xharness
 
 		void KillEverything ()
 		{
+			if (SkipSimulatorCleanup)
+				return;
+			
 			var to_kill = new string [] { "iPhone Simulator", "iOS Simulator", "Simulator", "Simulator (Watch)", "com.apple.CoreSimulator.CoreSimulatorService" };
 			foreach (var k in to_kill)
 				ExecuteCommand ("killall", "-9 \"" + k + "\"", true, output_verbosity_level: 1);
 		}
 
+		static bool shown_simulator_list;
 		void ShowSimulatorList ()
 		{
+			if (shown_simulator_list)
+				return;
+			shown_simulator_list = true;
 			if (Harness.Verbosity > 0)
 				ExecuteXcodeCommand ("simctl", "list", ignore_errors: true, timeout: TimeSpan.FromSeconds (10));
 		}
