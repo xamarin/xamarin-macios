@@ -599,7 +599,7 @@ namespace xharness
 				File.WriteAllText (run_log.Path, proc.ReadCurrentOutput ());
 
 				// cleanup after us
-				KillEverything ();
+				CleanupSimulator ();
 			} else {
 				FindDevice ();
 
@@ -823,11 +823,16 @@ namespace xharness
 			return rv;
 		}
 
-		void KillEverything ()
+		void CleanupSimulator ()
 		{
 			if (SkipSimulatorCleanup)
 				return;
-			
+
+			KillEverything ();
+		}
+
+		public void KillEverything ()
+		{
 			var to_kill = new string [] { "iPhone Simulator", "iOS Simulator", "Simulator", "Simulator (Watch)", "com.apple.CoreSimulator.CoreSimulatorService" };
 			foreach (var k in to_kill)
 				ExecuteCommand ("killall", "-9 \"" + k + "\"", true, output_verbosity_level: 1);
