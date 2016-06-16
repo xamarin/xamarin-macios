@@ -89,7 +89,7 @@ namespace xharness
 					runtasks.Add (new RunSimulatorTask (buildTask, Simulators.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == latestiOSRuntime.Identifier && v.SimDeviceType == "com.apple.CoreSimulator.SimDeviceType.iPhone-5").First ()) { Platform = TestPlatform.iOS_Unified32 });
 					runtasks.Add (new RunSimulatorTask (buildTask, Simulators.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == latestiOSRuntime.Identifier && v.SimDeviceType == "com.apple.CoreSimulator.SimDeviceType.iPhone-6s").First ()) { Platform = TestPlatform.iOS_Unified64 });
 				} else {
-					runtasks.Add (new RunSimulatorTask (buildTask, Simulators.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == latestiOSRuntime.Identifier && v.SimDeviceType == "com.apple.CoreSimulator.SimDeviceType.iPhone-4s").First ()) { Platform = TestPlatform.iOS_Classic });
+					runtasks.Add (new RunSimulatorTask (buildTask, Simulators.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == latestiOSRuntime.Identifier && v.SimDeviceType == "com.apple.CoreSimulator.SimDeviceType.iPhone-5").First ()) { Platform = TestPlatform.iOS_Classic });
 				}
 			}
 
