@@ -1839,6 +1839,14 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSCell))]
 	public interface NSBrowserCell {
+		[Export ("initTextCell:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string @string);
+
+		[Export ("initImageCell:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] NSImage image);
+
 		[Static]
 		[Export ("branchImage")]
 		NSImage BranchImage { get; }
@@ -1877,7 +1885,7 @@ namespace XamCore.AppKit {
 		IntPtr Constructor (string aString);
 	
 		[Export ("initImageCell:")]
-		IntPtr Constructor (NSImage  image);
+		IntPtr Constructor (NSImage image);
 
 		[Export ("title")]
 		string Title { get; set; }
@@ -1956,6 +1964,7 @@ namespace XamCore.AppKit {
 		string AlternateMnemonic { get; [Bind ("setAlternateTitleWithMnemonic:")] set; }
 	
 		[Export ("setGradientType:")]
+		[Availability (Deprecated = Platform.Mac_10_12, Message = "The gradientType property is unused, and setting it has no effect.")]
 		void SetGradientType (NSGradientType type);
 	
 		[Export ("imageDimsWhenDisabled")]
@@ -1991,6 +2000,31 @@ namespace XamCore.AppKit {
 	public interface NSButton : NSAccessibilityButton {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
+
+		[Mac (10,12)]
+		[Static]
+		[Export ("buttonWithTitle:image:target:action:")]
+		NSButton ButtonWithTitle (string title, NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Mac (10,12)]
+		[Static]
+		[Export ("buttonWithTitle:target:action:")]
+		NSButton ButtonWithTitle (string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Mac (10,12)]
+		[Static]
+		[Export ("buttonWithImage:target:action:")]
+		NSButton ButtonWithImage (NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Mac (10,12)]
+		[Static]
+		[Export ("checkboxWithTitle:target:action:")]
+		NSButton CheckboxWithTitle (string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Mac (10,12)]
+		[Static]
+		[Export ("radioButtonWithTitle:target:action:")]
+		NSButton RadioButtonWithTitle (string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Export ("title")]
 		string Title { get; set; } 

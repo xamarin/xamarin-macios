@@ -973,6 +973,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
+	[Availability (Deprecated = Platform.Mac_10_12, Message = "The gradientType property is unused, and setting it has no effect.")]
 	public enum NSGradientType : nuint_compat_int {
 		None,
 		ConcaveWeak,
@@ -2458,8 +2459,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12)]
 	[Native]
-	public enum NSWindowListOptions : nint
-	{
+	public enum NSWindowListOptions : nint {
 		NSWindowListOrderedFrontToBack = (1 << 0)
 	}
 }

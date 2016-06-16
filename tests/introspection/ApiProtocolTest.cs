@@ -113,6 +113,13 @@ namespace Introspection {
 					return true; // skip
 				}
 				break;
+			case "NSAnimationDelegate":
+			case "NSAnimatablePropertyContainer":
+				switch (type.Name) {
+				case "NSTitlebarAccessoryViewController":
+					return true; 
+				}
+				break;
 			}
 			return false;
 		}

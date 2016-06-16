@@ -136,6 +136,15 @@ namespace MonoMacFixtures {
 			case "NSDraggingInfo":
 				return true; // We have to keep the type to maintain backwards compatibility.
 #endif
+			case "NSAnimationDelegate":
+			case "NSAnimatablePropertyContainer":
+				switch (type.Name) {
+				case "NSTitlebarAccessoryViewController":
+					if (!Mac.CheckSystemVersion (10, 12))
+						return true; 
+					break;
+				}
+				break;
 			}
 
 			switch (type.Name) {
@@ -150,6 +159,7 @@ namespace MonoMacFixtures {
 			case "MonoMac.SceneKit":
 			case "SceneKit":
 				return IntPtr.Size == 4; // 64bits should be fine
+
 			}
 
 			return base.Skip (type, protocolName);
