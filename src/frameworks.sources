@@ -488,6 +488,7 @@ CORESPOTLIGHT_API_SOURCES = \
 	CoreSpotlight/CSEnums.cs \
 	
 CORESPOTLIGHT_SOURCES = \
+	CoreSpotlight/CSCompat.cs \
 	CoreSpotlight/CSSearchableIndex.cs \
 	CoreSpotlight/CSSearchableItemAttributeSet.cs \
 

@@ -167,6 +167,7 @@ namespace XamCore.CoreSpotlight {
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // NSInvalidArgumentException Reason: You must call -[CSCustomAttributeKey initWithKeyName...]
 	public interface CSCustomAttributeKey : NSCopying, NSSecureCoding {
 
 		[Export ("initWithKeyName:")]
