@@ -516,8 +516,10 @@ namespace XamCore.GameplayKit {
 		Vector2i GridPosition { 
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get; 
-			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+#if !XAMCORE_4_0
+			[NotImplemented]
 			set; 
+#endif
 		}
 
 		[Static]
