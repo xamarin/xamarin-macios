@@ -1010,10 +1010,6 @@ namespace XamCore.GameplayKit {
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor] // crash (endless recursion)
 	interface GKQuadTree {
-		[Static]
-		[Export ("quadTreeWithMinPosition:maxPosition:minCellSize:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		GKQuadTree QuadTreeWithMinPosition (Vector2 min, Vector2 max, float minCellSize);
 
 		[Export ("initWithMinPosition:maxPosition:minCellSize:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
