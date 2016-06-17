@@ -29,11 +29,12 @@ namespace XamCore.SafariServices {
 	[iOS (9,0)][Mac (10,12)]
 	[BaseType (typeof (NSObject))]
 	interface SFContentBlockerManager {
+		[Async]
 		[Static, Export ("reloadContentBlockerWithIdentifier:completionHandler:")]
 		void ReloadContentBlocker (string identifier, [NullAllowed] Action<NSError> completionHandler);
 
 		[iOS (10,0)]
-		[Static]
+		[Static][Async]
 		[Export ("getStateOfContentBlockerWithIdentifier:completionHandler:")]
 		void GetStateOfContentBlocker (string identifier, Action<SFContentBlockerState, NSError> completionHandler);
 	}
@@ -79,7 +80,7 @@ namespace XamCore.SafariServices {
 		[PostGet ("NibBundle")]
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Please use initWithURL:configuration:")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Please use SFSafariViewController (NSUrl url)")]
 		[Export ("initWithURL:entersReaderIfAvailable:")]
 		IntPtr Constructor (NSUrl url, bool entersReaderIfAvailable);
 
@@ -89,7 +90,7 @@ namespace XamCore.SafariServices {
 		[iOS (10,0)]
 		[Export ("initWithURL:configuration:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl URL, SFSafariViewControllerConfiguration configuration);
+		IntPtr Constructor (NSUrl url, SFSafariViewControllerConfiguration configuration);
 
 		[NullAllowed] // by default this property is null
 		[Export ("delegate", ArgumentSemantic.Assign)]
@@ -124,11 +125,11 @@ namespace XamCore.SafariServices {
 	[DisableDefaultCtor]
 	interface SFSafariApplication
 	{
-		[Static]
+		[Static][Async]
 		[Export ("getActiveWindowWithCompletionHandler:")]
 		void GetActiveWindow (Action<SFSafariWindow> completionHandler);
 
-		[Static]
+		[Static][Async]
 		[Export ("openWindowWithURL:completionHandler:")]
 		void OpenWindow (NSUrl url, [NullAllowed] Action<SFSafariWindow> completionHandler);
 
@@ -148,12 +149,13 @@ namespace XamCore.SafariServices {
 		[Export ("reload")]
 		void Reload ();
 
+		[Async]
 		[Export ("getPagePropertiesWithCompletionHandler:")]
 		void GetPageProperties (Action<SFSafariPageProperties> completionHandler);
 	}
 
 	[Mac (10,12)]
-	[Protocol, Model]
+	[Protocol]
 	[BaseType (typeof(NSObject))]
 	interface SFSafariExtensionHandling
 	{
@@ -163,6 +165,7 @@ namespace XamCore.SafariServices {
 		[Export ("toolbarItemClickedInWindow:")]
 		void ToolbarItemClicked (SFSafariWindow window);
 
+		[Async (ResultTypeName="SFValidationResult")]
 		[Export ("validateToolbarItemInWindow:validationHandler:")]
 		void ValidateToolbarItem (SFSafariWindow window, Action<bool, NSString> validationHandler);
 
@@ -201,12 +204,15 @@ namespace XamCore.SafariServices {
 	[DisableDefaultCtor]
 	interface SFSafariTab
 	{
+		[Async]
 		[Export ("getActivePageWithCompletionHandler:")]
 		void GetActivePage (Action<SFSafariPage> completionHandler);
 
+		[Async]
 		[Export ("getPagesWithCompletionHandler:")]
 		void GetPages (Action<SFSafariPage[]> completionHandler);
 
+		[Async]
 		[Export ("activateWithCompletionHandler:")]
 		void Activate ([NullAllowed] Action completionHandler);
 	}
@@ -225,12 +231,15 @@ namespace XamCore.SafariServices {
 	[DisableDefaultCtor]
 	interface SFSafariWindow
 	{
+		[Async]
 		[Export ("getActiveTabWithCompletionHandler:")]
 		void GetActiveTab (Action<SFSafariTab> completionHandler);
 
+		[Async]
 		[Export ("openTabWithURL:makeActiveIfPossible:completionHandler:")]
 		void OpenTab (NSUrl url, bool activateTab, [NullAllowed] Action<SFSafariTab> completionHandler);
 
+		[Async]
 		[Export ("getToolbarItemWithCompletionHandler:")]
 		void GetToolbarItem (Action<SFSafariToolbarItem> completionHandler);
 	}
@@ -245,14 +254,6 @@ namespace XamCore.SafariServices {
 	[BaseType (typeof(NSObject))]
 	interface SFSafariExtensionHandler : NSExtensionRequestHandling, SFSafariExtensionHandling
 	{
-	}
-
-	[Static]
-	partial interface SFContentBlocker
-	{
-		[Mac (10, 12)]
-		[Field ("SFContentBlockerErrorDomain")]
-		NSString ErrorDomain { get; }
 	}
 #endif
 }
