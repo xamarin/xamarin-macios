@@ -471,8 +471,8 @@ namespace XamCore.CoreGraphics
 
 		public void Inflate (nfloat x, nfloat y)
 		{
-			x -= x;
-			y -= y;
+			this.x -= x;
+			this.y -= y;
 			width += x * 2;
 			height += y * 2;
 		}

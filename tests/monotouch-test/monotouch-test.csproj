@@ -531,6 +531,7 @@
     <Compile Include="CoreAudioKit\AUViewController.cs" />
     <Compile Include="ObjCRuntime\ExceptionsTest.cs" />
     <Compile Include="Foundation\NSExpressionTest.cs" />
+    <Compile Include="CoreGraphics\RectTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
