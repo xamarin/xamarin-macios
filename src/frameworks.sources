@@ -725,6 +725,7 @@ GAMEKIT_SOURCES = \
 
 GAMEPLAYKIT_SOURCES = \
 	GameplayKit/GKBehavior.cs \
+	GameplayKit/GKCompat.cs \
 	GameplayKit/GKComponentSystem.cs \
 	GameplayKit/GKEntity.cs \
 	GameplayKit/GKGameModel.cs \
