@@ -13400,6 +13400,18 @@ namespace XamCore.AppKit {
 		[Mac (10,10)]
 		[Export ("button", ArgumentSemantic.Retain)]
 		NSStatusBarButton Button { get; }
+
+		[Mac (10, 12)]
+		[Export ("behavior", ArgumentSemantic.Assign)]
+		NSStatusItemBehavior Behavior { get; set; }
+
+		[Mac (10, 12)]
+		[Export ("visible")]
+		bool Visible { [Bind ("isVisible")] get; set; }
+
+		[Mac (10, 12)]
+		[Export ("autosaveName")]
+		string AutosaveName { get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -14811,7 +14823,7 @@ namespace XamCore.AppKit {
 		void ViewDidLayout ();
 
 		[Mac (10,10)]
-		[Export ("presentedViewControllers", ArgumentSemantic.UnsafeUnretained)]
+		[Export ("presentedViewControllers", ArgumentSemantic.Assign)]
 		NSViewController [] PresentedViewControllers { get; }
 
 		[Mac (10,10)]
@@ -15545,6 +15557,10 @@ namespace XamCore.AppKit {
 		[Mac (10,11)]
 		[Export ("rowActionsVisible")]
 		bool RowActionsVisible { get; set; }
+
+		[Mac (10,12)]
+		[Export ("userInterfaceLayoutDirection")]
+		NSUserInterfaceLayoutDirection UserInterfaceLayoutDirection { get; set; }
 	} 
 	
 	[BaseType (typeof (NSObject))]
@@ -16497,6 +16513,26 @@ namespace XamCore.AppKit {
 		[Mac (10,11)]
 		[Export ("allowsDefaultTighteningForTruncation")]
 		bool AllowsDefaultTighteningForTruncation { get; set; }
+
+		[Mac (10,12)]
+		[Static]
+		[Export ("labelWithString:")]
+		NSTextField LabelWithString (string stringValue);
+
+		[Mac (10,12)]
+		[Static]
+		[Export ("wrappingLabelWithString:")]
+		NSTextField WrappingLabelWithString (string stringValue);
+
+		[Mac (10,12)]
+		[Static]
+		[Export ("labelWithAttributedString:")]
+		NSTextField LabelWithAttributedString (NSAttributedString attributedStringValue);
+
+		[Mac (10,12)]
+		[Static]
+		[Export ("textFieldWithString:")]
+		NSTextField TextFieldWithString ([NullAllowed] string stringValue);
 	}
 
 	[BaseType (typeof (NSTextField))]
@@ -16608,9 +16644,28 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSObject))]
 	public partial interface NSTextInputContext {
+		[Export ("initWithClient:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSTextInputClient client);
+
 		[Static]
 		[Export ("currentInputContext")]
 		NSTextInputContext CurrentInputContext { get; }
+
+		[Export ("client")]
+		NSTextInputClient Client { get; }
+
+		[Export ("acceptsGlyphInfo")]
+		bool AcceptsGlyphInfo { get; set; }
+
+		[NullAllowed, Export ("keyboardInputSources")]
+		string[] KeyboardInputSources { get; }
+
+		[NullAllowed, Export ("selectedKeyboardInputSource")]
+		string SelectedKeyboardInputSource { get; set; }
+
+		[NullAllowed, Export ("allowedInputSourceLocales", ArgumentSemantic.Copy)]
+		string[] AllowedInputSourceLocales { get; set; }
 
 		[Export ("activate")]
 		void Activate ();
@@ -18763,6 +18818,10 @@ namespace XamCore.AppKit {
 
 		[Export ("viewWillMoveToWindow:")]
 		void ViewWillMove (NSWindow newWindow);
+
+		[Mac (10, 12)]
+		[Export ("emphasized")]
+		bool Emphasized { [Bind ("isEmphasized")] get; set; }
 	}
 	
 	public delegate void NSWindowCompletionHandler (NSWindow window, NSError error);
@@ -20354,6 +20413,54 @@ namespace XamCore.AppKit {
 		[Lion, Field ("NSWindowDidChangeBackingPropertiesNotification")]
 		[Notification (typeof (NSWindowBackingPropertiesEventArgs))]
 		NSString DidChangeBackingPropertiesNotification { get; }
+
+		[Mac (10, 12)]
+		[Export ("allowsAutomaticWindowTabbing")]
+		bool AllowsAutomaticWindowTabbing { get; set; }
+
+		[Mac (10, 12)]
+		[Export ("userTabbingPreference")]
+		NSWindowUserTabbingPreference UserTabbingPreference { get; }
+
+		[Mac (10, 12)]
+		[Export ("tabbingMode", ArgumentSemantic.Assign)]
+		NSWindowTabbingMode TabbingMode { get; set; }
+
+		[Mac (10, 12)]
+		[Export ("tabbingIdentifier")]
+		string TabbingIdentifier { get; set; }
+
+		[Mac (10,12)]
+		[Export ("selectNextTab:")]
+		void SelectNextTab ([NullAllowed] NSObject sender);
+
+		[Mac (10,12)]
+		[Export ("selectPreviousTab:")]
+		void SelectPreviousTab ([NullAllowed] NSObject sender);
+
+		[Mac (10,12)]
+		[Export ("moveTabToNewWindow:")]
+		void MoveTabToNewWindow ([NullAllowed] NSObject sender);
+
+		[Mac (10,12)]
+		[Export ("mergeAllWindows:")]
+		void MergeAllWindows ([NullAllowed] NSObject sender);
+
+		[Mac (10,12)]
+		[Export ("toggleTabBar:")]
+		void ToggleTabBar ([NullAllowed] NSObject sender);
+
+		[Mac (10, 12)]
+		[NullAllowed, Export ("tabbedWindows", ArgumentSemantic.Copy)]
+		NSWindow[] TabbedWindows { get; }
+
+		[Mac (10,12)]
+		[Export ("addTabbedWindow:ordered:")]
+		void AddTabbedWindow (NSWindow window, NSWindowOrderingMode ordered);
+
+		[Mac (10, 12)]
+		[Export ("windowTitlebarLayoutDirection")]
+		NSUserInterfaceLayoutDirection WindowTitlebarLayoutDirection { get; }
 	}
 
 	public partial interface NSPrintOperation {

@@ -862,6 +862,7 @@ namespace XamCore.AppKit {
 		IgnoresCycle = 1 << 6,
 		FullScreenPrimary = 1 << 7,
 		FullScreenAuxiliary = 1 << 8,
+		FullScreenNone = 1 << 9,
 		[Mac (10, 11)] FullScreenAllowsTiling = 1 << 11,
 		[Mac (10, 11)] FullScreenDisallowsTiling = 1 << 12
 	}
@@ -881,7 +882,9 @@ namespace XamCore.AppKit {
 
 	[Native]
 	public enum NSWindowButton : nuint_compat_int {
-		CloseButton, MiniaturizeButton, ZoomButton, ToolbarButton, DocumentIconButton, DocumentVersionsButton = 6, FullScreenButton
+		CloseButton, MiniaturizeButton, ZoomButton, ToolbarButton, DocumentIconButton, DocumentVersionsButton = 6, 
+		[Availability (Deprecated = Platform.Mac_10_12, Message = "The standard window button for NSWindowFullScreenButton is always nil; use NSWindowZoomButton instead")]
+		FullScreenButton
 	}
 
 	[Flags]
@@ -2399,7 +2402,18 @@ namespace XamCore.AppKit {
 		AppearanceBased,
 		Light,
 		Dark,
-		Titlebar
+		Titlebar,
+		Selection,
+		[Mac (10,11)]
+		Menu,
+		[Mac (10,11)]
+		Popover,
+		[Mac (10,11)]
+		Sidebar,
+		[Mac (10,11)]
+		MediumLight,
+		[Mac (10,11)]
+		UltraDark,
 	}
 
 	[Native]
@@ -2492,5 +2506,31 @@ namespace XamCore.AppKit {
 	[Native]
 	public enum NSWindowListOptions : nint {
 		NSWindowListOrderedFrontToBack = (1 << 0)
+	}
+
+	[Mac (10,12)]
+	[Native]
+	public enum NSStatusItemBehavior : nuint
+	{
+		RemovalAllowed = (1 << 1),
+		TerminationOnRemoval = (1 << 2)
+	}
+
+	[Mac (10,12)]
+	[Native]
+	public enum NSWindowTabbingMode : nint
+	{
+		Automatic,
+		Preferred,
+		Disallowed
+	}
+
+	[Mac (10,12)]
+	[Native]
+	public enum NSWindowUserTabbingPreference : nint
+	{
+		Manual,
+		Always,
+		InFullScreen
 	}
 }
