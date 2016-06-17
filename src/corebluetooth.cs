@@ -148,6 +148,73 @@ namespace XamCore.CoreBluetooth {
 #endif
 	}
 
+	[StrongDictionary ("AdvertisementDataKeys")]
+	interface AdvertisementData {
+		string LocalName { get; set; }
+		NSData ManufacturerData { get; set; }
+		
+#if XAMCORE_2_0
+		NSDictionary <CBUUID, NSData> ServiceData { get; set; }
+#else
+		NSDictionary ServiceData { get; set; }
+#endif
+		CBUUID [] ServiceUuids { get; set; }
+		CBUUID [] OverflowServiceUuids { get; set; }
+		NSNumber TxPowerLevel { get; set; }
+		bool IsConnectable { get; set; }
+		CBUUID [] SolicitedServiceUuids { get; set; }
+	}
+
+	[Static, Internal]
+	interface AdvertisementDataKeys {
+		[Field ("CBAdvertisementDataLocalNameKey")]
+		NSString LocalNameKey { get; }
+
+		[Field ("CBAdvertisementDataManufacturerDataKey")]
+		NSString ManufacturerDataKey { get; }
+
+		[Field ("CBAdvertisementDataServiceDataKey")]
+		NSString ServiceDataKey { get; }
+
+		[Field ("CBAdvertisementDataServiceUUIDsKey")]
+		NSString ServiceUuidsKey { get; }
+
+		[Field ("CBAdvertisementDataOverflowServiceUUIDsKey")]
+		NSString OverflowServiceUuidsKey { get; }
+
+		[Field ("CBAdvertisementDataTxPowerLevelKey")]
+		NSString TxPowerLevelKey { get; }
+
+		[Field ("CBAdvertisementDataIsConnectable")]
+		NSString IsConnectableKey { get; }
+
+		[Field ("CBAdvertisementDataSolicitedServiceUUIDsKey")]
+		NSString SolicitedServiceUuidsKey { get; }
+	}
+
+	[StrongDictionary ("PeripheralScanningOptionsKeys")]
+	interface PeripheralScanningOptions { }
+
+
+	[StrongDictionary ("RestoredStateKeys")]
+	interface RestoredState {
+		CBPeripheral [] Peripherals { get; set; }
+		CBPeripheral [] ScanServices { get; set; }
+		PeripheralScanningOptions ScanOptions { get; set; }
+	}
+
+	[Static, Internal]
+	interface RestoredStateKeys {
+		[Field ("CBCentralManagerRestoredStatePeripheralsKey")]
+		NSString PeripheralsKey { get; }
+
+		[Field ("CBCentralManagerRestoredStateScanServicesKey")]
+		NSString ScanServicesKey { get; }
+
+		[Field ("CBCentralManagerRestoredStateScanOptionsKey")]
+		NSString ScanOptionsKey { get; }
+	}
+
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
