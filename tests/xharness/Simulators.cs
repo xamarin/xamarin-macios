@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -16,7 +17,7 @@ namespace xharness
 		public List<SimDevice> AvailableDevices = new List<SimDevice> ();
 		public List<SimDevicePair> AvailableDevicePairs = new List<SimDevicePair> ();
 
-		public async Task LoadAsync (LogFile log)
+		public async Task LoadAsync (Log log)
 		{
 			if (SupportedRuntimes.Count > 0)
 				return;
@@ -27,7 +28,7 @@ namespace xharness
 					process.StartInfo.FileName = Harness.MlaunchPath;
 					process.StartInfo.Arguments = string.Format ("--sdkroot {0} --listsim {1}", Harness.XcodeRoot, tmpfile);
 					log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
-					await process.RunAsync (log.Path, false);
+					await process.RunAsync (log, false);
 					log.WriteLine ("Result:");
 					log.WriteLine (File.ReadAllText (tmpfile));
 					var simulator_data = new XmlDocument ();
@@ -54,6 +55,7 @@ namespace xharness
 					foreach (XmlNode sim in simulator_data.SelectNodes ("/MTouch/Simulator/AvailableDevices/SimDevice")) {
 						AvailableDevices.Add (new SimDevice ()
 						{
+							Harness = Harness,
 							Name = sim.Attributes ["Name"].Value,
 							UDID = sim.Attributes ["UDID"].Value,
 							SimRuntime = sim.SelectSingleNode ("SimRuntime").InnerText,
@@ -105,6 +107,134 @@ namespace xharness
 		public string LogPath;
 
 		public string SystemLog { get { return Path.Combine (LogPath, "system.log"); } }
+
+		public Harness Harness;
+
+		public bool IsWatchSimulator { get { return SimRuntime.StartsWith ("com.apple.CoreSimulator.SimRuntime.watchOS", StringComparison.Ordinal); } }
+
+		public async Task EraseAsync (Log log)
+		{
+			// here we don't care if execution fails.
+			// erase the simulator (make sure the device isn't running first)
+			await Harness.ExecuteXcodeCommandAsync ("simctl", "shutdown " + UDID, log, TimeSpan.FromMinutes (1));
+			await Harness.ExecuteXcodeCommandAsync ("simctl", "erase " + UDID, log, TimeSpan.FromMinutes (1));
+
+			// boot & shutdown to make sure it actually works
+			await Harness.ExecuteXcodeCommandAsync ("simctl", "boot " + UDID, log, TimeSpan.FromMinutes (1));
+			await Harness.ExecuteXcodeCommandAsync ("simctl", "shutdown " + UDID, log, TimeSpan.FromMinutes (1));
+		}
+
+		public async Task ShutdownAsync (Log log)
+		{
+			await Harness.ExecuteXcodeCommandAsync ("simctl", "shutdown " + UDID, log, TimeSpan.FromMinutes (1));
+		}
+
+		public static Task KillEverythingAsync (Log log)
+		{
+			var to_kill = new string [] { "iPhone Simulator", "iOS Simulator", "Simulator", "Simulator (Watch)", "com.apple.CoreSimulator.CoreSimulatorService" };
+
+			return ProcessHelper.ExecuteCommandAsync ("killall", "-9 " + string.Join (" ", to_kill.Select ((v) => Harness.Quote (v)).ToArray ()), log, TimeSpan.FromSeconds (10));
+		}
+
+		public async Task AgreeToPromptsAsync (Log log, params string[] bundle_identifiers)
+		{
+			if (bundle_identifiers == null || bundle_identifiers.Length == 0) {
+				log.WriteLine ("No bundle identifiers given when requested permission editing.");
+				return;
+			}
+
+			var TCC_db = Path.Combine (DataPath, "data", "Library", "TCC", "TCC.db");
+			var sim_services = new string [] {
+					"kTCCServiceAddressBook",
+					"kTCCServicePhotos",
+					"kTCCServiceMediaLibrary",
+					"kTCCServiceUbiquity",
+					"kTCCServiceWillow"
+				};
+
+			var failure = false;
+			var tcc_edit_timeout = 5;
+			var watch = new Stopwatch ();
+			watch.Start ();
+
+			do {
+				failure = false;
+				foreach (var bundle_identifier in bundle_identifiers) {
+					foreach (var service in sim_services) {
+						var sql = string.Format ("{0} \"INSERT INTO access VALUES('{1}','{2}',0,1,0,NULL,NULL);\"", TCC_db, service, bundle_identifier);
+						var rv = await ProcessHelper.ExecuteCommandAsync ("sqlite3", sql, log, TimeSpan.FromSeconds (5));
+						if (!rv.Succeeded) {
+							failure = true;
+							break;
+						}
+					}
+					if (failure) {
+						if (watch.Elapsed.TotalSeconds > tcc_edit_timeout)
+							break;
+						log.WriteLine ("Failed to edit TCC.db, trying again in 1 second... ", (int) (tcc_edit_timeout - watch.Elapsed.TotalSeconds));
+						await Task.Delay (TimeSpan.FromSeconds (1));
+					}
+				}
+			} while (failure);
+
+			if (failure) {
+				log.WriteLine ("Failed to edit TCC.db, the test run might hang due to permission request dialogs");
+			} else {
+				log.WriteLine ("Successfully edited TCC.db");
+			}
+		}
+
+		async Task OpenSimulator (Log log)
+		{
+			string simulator_app;
+
+			if (IsWatchSimulator) {
+				simulator_app = Path.Combine (Harness.XcodeRoot, "Contents", "Developer", "Applications", "Simulator (Watch).app");
+			} else {
+				simulator_app = Path.Combine (Harness.XcodeRoot, "Contents", "Developer", "Applications", "Simulator.app");
+				if (!Directory.Exists (simulator_app))
+					simulator_app = Path.Combine (Harness.XcodeRoot, "Contents", "Developer", "Applications", "iOS Simulator.app");
+			}
+
+			await ProcessHelper.ExecuteCommandAsync ("open", "-a " + Harness.Quote (simulator_app) + " --args -CurrentDeviceUDID " + UDID, log, TimeSpan.FromSeconds (15));
+		}
+
+		public async Task PrepareSimulatorAsync (Log log, params string[] bundle_identifiers)
+		{
+			// Kill all existing processes
+			await KillEverythingAsync (log);
+
+			// We shutdown and erase all simulators.
+			await EraseAsync (log);
+
+			// Edit the permissions to prevent dialog boxes in the test app
+			var TCC_db = Path.Combine (DataPath, "data", "Library", "TCC", "TCC.db");
+			if (!File.Exists (TCC_db)) {
+				log.WriteLine ("Opening simulator to create TCC.db");
+				await OpenSimulator (log);
+
+				var tcc_creation_timeout = 60;
+				var watch = new Stopwatch ();
+				watch.Start ();
+				while (!File.Exists (TCC_db) && watch.Elapsed.TotalSeconds < tcc_creation_timeout) {
+					log.WriteLine ("Waiting for simulator to create TCC.db... {0}", (int)(tcc_creation_timeout - watch.Elapsed.TotalSeconds));
+					await Task.Delay (TimeSpan.FromSeconds (0.250));
+				}
+			}
+
+			if (File.Exists (TCC_db)) {
+				await AgreeToPromptsAsync (log, bundle_identifiers);
+			} else {
+				log.WriteLine ("No TCC.db found for the simulator {0} (SimRuntime={1} and SimDeviceType={1})", UDID, SimRuntime, SimDeviceType);
+			}
+
+			// Make sure we're in a clean state
+			await KillEverythingAsync (log);
+
+			// Make 100% sure we're shutdown
+			await ShutdownAsync (log);
+		}
+
 	}
 
 	public class SimDevicePair
@@ -120,7 +250,7 @@ namespace xharness
 
 		public List<Device> ConnectedDevices = new List<Device> ();
 
-		public async Task LoadAsync ()
+		public async Task LoadAsync (Log log)
 		{
 			if (ConnectedDevices.Count > 0)
 				return;
@@ -130,7 +260,7 @@ namespace xharness
 				using (var process = new Process ()) {
 					process.StartInfo.FileName = Harness.MlaunchPath;
 					process.StartInfo.Arguments = string.Format ("--sdkroot {0} --listdev={1} --output-format=xml", Harness.XcodeRoot, tmpfile);
-					await process.RunAsync (tmpfile, false);
+					await process.RunAsync (log, false);
 
 					var doc = new XmlDocument ();
 					doc.LoadWithoutNetworkAccess (tmpfile);
