@@ -1495,6 +1495,7 @@ MAC_FRAMEWORKS =            \
 	QuartzComposer          \
 	QuickLook               \
 	QuickLookUI             \
+	SafariServices          \
 	SceneKit                \
 	ScriptingBridge         \
 	SearchKit               \
