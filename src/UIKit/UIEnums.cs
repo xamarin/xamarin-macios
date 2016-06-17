@@ -1871,4 +1871,13 @@ namespace XamCore.UIKit {
 		Dark
 	}
 
+	[iOS (10,0)]
+	[Native]
+	public enum UITextItemInteraction : nint
+	{
+		InvokeDefaultAction,
+		PresentActions,
+		Preview
+	}
+	
 }
