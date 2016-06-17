@@ -2805,6 +2805,14 @@ namespace XamCore.AppKit {
 		[Mac (10,11)] // Not marked as 10.11 in the header files, but didn't exist previously
 		[Export ("deselectAll:")]
 		void DeselectAll ([NullAllowed] NSObject sender);
+
+		[Mac (10, 12)]
+		[Export ("backgroundViewScrollsWithContent")]
+		bool BackgroundViewScrollsWithContent { get; set; }
+
+		[Mac (10,12)]
+		[Export ("toggleSectionCollapse:")]
+		void ToggleSectionCollapse (NSObject sender);
 	}
 
 	// @protocol NSCollectionViewDataSource <NSObject>
@@ -3276,6 +3284,26 @@ namespace XamCore.AppKit {
 
 		[Export ("sectionInset", ArgumentSemantic.Assign)]
 		NSEdgeInsets SectionInset { get; set; }
+
+		[Mac (10, 12)]
+		[Export ("sectionHeadersPinToVisibleBounds")]
+		bool SectionHeadersPinToVisibleBounds { get; set; }
+
+		[Mac (10, 12)]
+		[Export ("sectionFootersPinToVisibleBounds")]
+		bool SectionFootersPinToVisibleBounds { get; set; }
+
+		[Mac (10,12)]
+		[Export ("sectionAtIndexIsCollapsed:")]
+		bool SectionAtIndexIsCollapsed (nuint sectionIndex);
+
+		[Mac (10,12)]
+		[Export ("collapseSectionAtIndex:")]
+		void CollapseSectionAtIndex (nuint sectionIndex);
+
+		[Mac (10,12)]
+		[Export ("expandSectionAtIndex:")]
+		void ExpandSectionAtIndex (nuint sectionIndex);
 	}
 
 	[Mac (10,11)]
@@ -3732,7 +3760,16 @@ namespace XamCore.AppKit {
 		[Mac (10,10)]
 		[Static, Export ("quaternaryLabelColor")]
 		NSColor QuaternaryLabelColor { get; }
-		
+
+		[Mac (10,12)]
+		[Static]
+		[Export ("colorWithDisplayP3Red:green:blue:alpha:")]
+		NSColor ColorWithDisplayP3Red (nfloat red, nfloat green, nfloat blue, nfloat alpha);
+
+		[Mac (10,12)]
+		[Static]
+		[Export ("colorWithColorSpace:hue:saturation:brightness:alpha:")]
+		NSColor ColorWithColorSpace (NSColorSpace space, nfloat hue, nfloat saturation, nfloat brightness, nfloat alpha);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -3935,6 +3972,21 @@ namespace XamCore.AppKit {
 		[Static]
 		[Export ("availableColorSpacesWithModel:")]
 		NSColorSpace [] AvailableColorSpacesWithModel (NSColorSpaceModel model);
+
+		[Mac (10, 12)]
+		[Static]
+		[Export ("extendedSRGBColorSpace")]
+		NSColorSpace ExtendedSRGBColorSpace { get; }
+
+		[Mac (10, 12)]
+		[Static]
+		[Export ("extendedGenericGamma22GrayColorSpace")]
+		NSColorSpace ExtendedGenericGamma22GrayColorSpace { get; }
+
+		[Mac (10, 12)]
+		[Static]
+		[Export ("displayP3ColorSpace")]
+		NSColorSpace DisplayP3ColorSpace { get; }
 
 		[Field ("NSCalibratedWhiteColorSpace")]
 		NSString CalibratedWhite { get; }
@@ -4539,6 +4591,7 @@ namespace XamCore.AppKit {
 		[Export ("initWithImage:hotSpot:")]
 		IntPtr Constructor (NSImage newImage, CGPoint aPoint);
 
+		[Availability (Deprecated = Platform.Mac_10_12, Message = "Color hints are ignored. Use NSCursor (NSImage newImage, CGPoint aPoint) instead")]
 		[Export ("initWithImage:foregroundColorHint:backgroundColorHint:hotSpot:")]
 		IntPtr Constructor (NSImage newImage, NSColor fg, NSColor bg, CGPoint hotSpot);
 
@@ -5315,6 +5368,7 @@ namespace XamCore.AppKit {
 		NSDraggingImageComponent FromKey (string key);
 
 		[Export ("initWithKey:")]
+		[DesignatedInitializer]
 		IntPtr Constructor (string key);
 
 		[Field ("NSDraggingImageComponentIconKey")]
@@ -5338,6 +5392,7 @@ namespace XamCore.AppKit {
 		NSDraggingImageComponent [] ImageComponents { get;  }
 
 		[Export ("initWithPasteboardWriter:")]
+		[DesignatedInitializer]
 		IntPtr Constructor (INSPasteboardWriting pasteboardWriter);
 
 		[Export ("setImageComponentsProvider:")]
@@ -6630,6 +6685,7 @@ namespace XamCore.AppKit {
 		[Export ("windowNumber")]
 		nint WindowNumber { get; }
 
+		[Availability (Deprecated = Platform.Mac_10_12, Message = "This method always returns nil. If you need access to the current drawing context, use NSGraphicsContext.CurrentContext inside of a draw operation.")]
 		[Export ("context")]
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		NSGraphicsContext Context { get; }
@@ -21661,6 +21717,14 @@ namespace XamCore.AppKit {
 		[Abstract]
 		[Export ("accessibilityRequired")]
 		bool AccessibilityRequired { [Bind ("isAccessibilityRequired")] get; set; }
+	}
+
+	[Protocol]
+	interface NSCollectionViewSectionHeaderView : NSCollectionViewElement
+	{
+		[Mac (10, 12)]
+		[NullAllowed, Export ("sectionCollapseButton", ArgumentSemantic.Assign)]
+		NSButton SectionCollapseButton { get; set; }
 	}
 
 	[Mac (10, 10)]
