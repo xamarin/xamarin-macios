@@ -23022,4 +23022,59 @@ namespace XamCore.AppKit {
 		[Export ("accessibilityDisplayShouldReduceMotion")]
 		bool AccessibilityDisplayShouldReduceMotion { get; }
 	}
+
+	[Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	interface NSFilePromiseProvider : NSPasteboardWriting
+	{
+		[Export ("fileType")]
+		string FileType { get; set; }
+
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		NSFilePromiseProviderDelegate Delegate { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; set; }
+
+		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
+		NSObject UserInfo { get; set; }
+
+		[Export ("initWithFileType:delegate:")]
+		IntPtr Constructor (string fileType, NSFilePromiseProviderDelegate @delegate);
+	}
+
+	[Mac (10,12)]
+	[Protocol]
+	[BaseType (typeof(NSObject))]
+	interface NSFilePromiseProviderDelegate
+	{
+		[Abstract]
+		[Export ("filePromiseProvider:fileNameForDestination:")]
+		string FilePromiseProvider (NSFilePromiseProvider filePromiseProvider, NSUrl destinationURL);
+
+		[Export ("filePromiseProvider:writePromiseToURL:completionHandler:")]
+		void FilePromiseProvider (NSFilePromiseProvider filePromiseProvider, NSUrl url, Action<NSError> completionHandler);
+
+		[Export ("promiseOperationQueueForFilePromiseProvider:")]
+		NSOperationQueue PromiseOperationQueueForFilePromiseProvider (NSFilePromiseProvider filePromiseProvider);
+	}
+
+	[Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	interface NSFilePromiseReceiver : NSPasteboardReading
+	{
+		[Static]
+		[Export ("readableDraggedTypes")]
+		string[] ReadableDraggedTypes { get; }
+
+		[Export ("fileTypes", ArgumentSemantic.Copy)]
+		string[] FileTypes { get; }
+
+		[Export ("fileNames", ArgumentSemantic.Copy)]
+		string[] FileNames { get; }
+
+		[Export ("receivePromisedFilesAtDestination:options:operationQueue:reader:")]
+		void ReceivePromisedFilesAtDestination (NSUrl destinationDir, NSDictionary options, NSOperationQueue operationQueue, Action<NSUrl, NSError> reader);
+	}
 }
