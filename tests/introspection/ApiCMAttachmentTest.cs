@@ -229,6 +229,7 @@ namespace Introspection {
 			case "MidiDevice":
 			case "MidiEndpoint":
 			case "ABMultiValue":
+			case "ABMutableMultiValue":
 				return true;
 			default:
  				return false;
