@@ -104,36 +104,10 @@ namespace XamCore.UIKit {
 	}
 
 #if !WATCH
-	internal partial class _UIContentSizeCategory {
-		public static UIContentSizeCategory ToEnum (NSString key)
-		{
-			if (key == null)
-				return UIContentSizeCategory.Medium;
-			
-			var kh = key.Handle;
-			
-			if (kh == ExtraSmall.Handle)
-				return UIContentSizeCategory.ExtraSmall;
-			if (kh == Small.Handle)
-				return UIContentSizeCategory.Small;
-			if (kh == Large.Handle)
-				return UIContentSizeCategory.Large;
-			if (kh == ExtraLarge.Handle)
-				return UIContentSizeCategory.ExtraLarge;
-			if (kh == ExtraExtraLarge.Handle)
-				return UIContentSizeCategory.ExtraExtraLarge;
-			if (kh == ExtraExtraExtraLarge.Handle)
-				return UIContentSizeCategory.ExtraExtraExtraLarge;
-
-			// Do not compare to Medium, it is the fallback
-			return UIContentSizeCategory.Medium;
-		}
-	}
-	
 	public partial class UIContentSizeCategoryChangedEventArgs {
 		public UIContentSizeCategory NewValue {
 			get {
-				return _UIContentSizeCategory.ToEnum (WeakNewValue);
+				return UIContentSizeCategoryExtensions.GetValue (WeakNewValue);
 			}
 		}
 	}

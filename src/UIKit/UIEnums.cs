@@ -474,6 +474,7 @@ namespace XamCore.UIKit {
 	public enum UIKeyboardType : nint {
 		Default,
 		ASCIICapable,
+		AsciiCapable = ASCIICapable,
 		NumbersAndPunctuation,
 		Url,
 		NumberPad,
@@ -482,7 +483,8 @@ namespace XamCore.UIKit {
 		EmailAddress,
 		DecimalPad,
 		Twitter,
-		WebSearch
+		WebSearch,
+		AsciiCapableNumberPad
 	} 
 
 	// NSInteger -> UISegmentedControl.h
@@ -1349,12 +1351,6 @@ namespace XamCore.UIKit {
 		None, Push, Pop
 	}
 
-	// that's a convenience enum that maps to UIContentSizeCategoryXXX which are NSString
-	[NoWatch]
-	public enum UIContentSizeCategory {
-		ExtraSmall, Small, Medium, Large, ExtraLarge, ExtraExtraLarge, ExtraExtraExtraLarge
-	}
-
 	// NSInteger -> NSLayoutManager.h
 	[Native]
 	[NoWatch]
@@ -1614,7 +1610,10 @@ namespace XamCore.UIKit {
 	[NoWatch]
 	[iOS (8,0)]
 	public enum UIBlurEffectStyle : nint {
-		ExtraLight, Light, Dark
+		ExtraLight, Light, Dark,
+		// Notice: value 3 is skipped
+		Regular = 4,
+		Prominent = 5,
 	}
 
 	[Native]
@@ -1844,4 +1843,32 @@ namespace XamCore.UIKit {
 		Default,
 		Custom
 	}
+
+	[iOS (10,0)]
+	[Native]
+	public enum UIDisplayGamut : nint
+	{
+		Unspecified = -1,
+		Srgb,
+		P3
+	}
+
+	[iOS (10,0)]
+	[Native]
+	public enum UITraitEnvironmentLayoutDirection : nint
+	{
+		Unspecified = -1,
+		LeftToRight = UIUserInterfaceLayoutDirection.LeftToRight,
+		RightToLeft = UIUserInterfaceLayoutDirection.RightToLeft
+	}
+
+	[TV (10,0), NoWatch, NoiOS]
+	[Native]
+	public enum UIUserInterfaceStyle : nint
+	{
+		Unspecified,
+		Light,
+		Dark
+	}
+
 }
