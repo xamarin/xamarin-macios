@@ -542,9 +542,11 @@ namespace XamCore.Security {
 		// Plus they added new members to SslSessionStrengthPolicy enum opened radar://23379052 https://trello.com/c/NbdTLVD3
 		// Xcode 8 beta 1: the P/Invoke was removed completely.
 		[Availability (Deprecated = Platform.iOS_9_2 | Platform.Mac_10_11, Unavailable = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "SetSessionStrengthPolicy is not available anymore")]
+		[Obsolete ("SetSessionStrengthPolicy is not available anymore.")]
 		public SslStatus SetSessionStrengthPolicy (SslSessionStrengthPolicy policyStrength)
 		{
-			throw new NotSupportedException ("SetSessionStrengthPolicy is not available anymore");
+			Console.WriteLine ("SetSessionStrengthPolicy is not available anymore.");
+			return SslStatus.Success;
 		}
 	}
 }
