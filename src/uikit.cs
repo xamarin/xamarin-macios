@@ -5287,6 +5287,7 @@ namespace XamCore.UIKit {
 
 	[iOS (10,0)]
 	[BaseType (typeof(UIGraphicsRendererFormat))]
+	[DisableDefaultCtor] // returns nil
 	interface UIGraphicsPdfRendererFormat
 	{
 		[Export ("documentInfo", ArgumentSemantic.Copy)]
@@ -5296,6 +5297,7 @@ namespace XamCore.UIKit {
 
 	[iOS (10,0)]
 	[BaseType (typeof(UIGraphicsRendererContext))]
+	[DisableDefaultCtor] // returns nil
 	interface UIGraphicsPdfRendererContext
 	{
 		[Export ("pdfContextBounds")]
@@ -5320,6 +5322,7 @@ namespace XamCore.UIKit {
 
 	[iOS (10,0)]
 	[BaseType (typeof(UIGraphicsRenderer))]
+	[DisableDefaultCtor] // returns nil
 	interface UIGraphicsPdfRenderer
 	{
 		[Export ("initWithBounds:format:")]
@@ -8407,6 +8410,7 @@ namespace XamCore.UIKit {
 	
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // NSInvalidArgumentException Reason: Don't call -[UIPresentationController init].
 	public partial interface UIPresentationController : UIAppearanceContainer, UITraitEnvironment, UIContentContainer, UIFocusEnvironment {
 		[Export ("initWithPresentedViewController:presentingViewController:")]
 		IntPtr Constructor (UIViewController presentedViewController, [NullAllowed] UIViewController presentingViewController);
