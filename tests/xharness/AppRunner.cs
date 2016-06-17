@@ -45,38 +45,26 @@ namespace xharness
 			set { log_directory = value; }
 		}
 
-		public LogFiles Logs = new LogFiles ();
+		Log main_log;
+		public Logs Logs = new Logs ();
+
+		public Log MainLog {
+			get { return main_log; }
+			set { main_log = value; }
+		}
 
 		public SimDevice [] Simulators {
 			get { return simulators; }
 			set { simulators = value; }
 		}
 
-		string mode;
-
-		LogFile SymbolicateCrashReport (LogFile report)
-		{
-			var symbolicatecrash = Path.Combine (Harness.XcodeRoot, "Contents/SharedFrameworks/DTDeviceKitBase.framework/Versions/A/Resources/symbolicatecrash");
-			if (!File.Exists (symbolicatecrash))
-				symbolicatecrash = Path.Combine (Harness.XcodeRoot, "Contents/SharedFrameworks/DVTFoundation.framework/Versions/A/Resources/symbolicatecrash");
-			
-			if (!File.Exists (symbolicatecrash)) {
-				Harness.Log ("Can't symbolicate {0} because the symbolicatecrash script {1} does not exist", report.Path, symbolicatecrash);
-				return report;
+		public string BundleIdentifier {
+			get {
+				return bundle_identifier;
 			}
-
-			var output = new StringBuilder ();
-			if (ExecuteCommand (symbolicatecrash, "\"" + report.Path + "\"", true, captured_output: output, environment_variables: new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (Harness.XcodeRoot, "Contents", "Developer") }})) {
-				var rv = Logs.Create (LogDirectory, report.Path + ".symbolicated", "Symbolicated crash report: " + Path.GetFileName (report.Path));
-				File.WriteAllText (rv.Path, output.ToString ());
-				Harness.Log ("Symbolicated {0} successfully.", report.Path);
-				return rv;
-			}
-
-			Harness.Log ("Failed to symbolicate {0}:\n{1}", report.Path, output.ToString ());
-
-			return report;
 		}
+
+		string mode;
 
 		void FindSimulator ()
 		{
@@ -116,7 +104,7 @@ namespace xharness
 			};
 			Task.Run (async () =>
 			{
-				await sims.LoadAsync (Logs.Create (LogDirectory, "simulator-list.log", "Simulator list"));
+				await sims.LoadAsync (Logs.CreateStream (LogDirectory, "simulator-list.log", "Simulator list"));
 			}).Wait ();
 
 			var devices = sims.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == simulator_runtime && v.SimDeviceType == simulator_devicetype);
@@ -153,9 +141,9 @@ namespace xharness
 			if (simulators == null)
 				throw new Exception ("Could not find simulator");
 
-			Harness.Log (1, "Found simulator: {0} {1}", simulators [0].Name, simulators [0].UDID);
+			main_log.WriteLine ("Found simulator: {0} {1}", simulators [0].Name, simulators [0].UDID);
 			if (simulators.Length > 1)
-				Harness.Log (1, "Found companion simulator: {0} {1}", simulators [1].Name, simulators [1].UDID);
+				main_log.WriteLine ("Found companion simulator: {0} {1}", simulators [1].Name, simulators [1].UDID);
 		}
 
 		void FindDevice ()
@@ -167,10 +155,12 @@ namespace xharness
 			if (!string.IsNullOrEmpty (device_name))
 				return;
 
-			var devs = new Devices ();
+			var devs = new Devices () {
+				Harness = Harness,
+			};
 			Task.Run (async () =>
 			{
-				await devs.LoadAsync ();
+				await devs.LoadAsync (main_log);
 			}).Wait ();
 
 			string [] deviceClasses;
@@ -194,7 +184,7 @@ namespace xharness
 				throw new Exception ($"Could not find any applicable devices with device class(es): {string.Join (", ", deviceClasses)}");
 			} else if (selected.Count () > 1) {
 				selected_data = selected.First ();
-				Harness.Log ("Found {0} devices for device class(es) {1}: {2}. Selected: '{3}'", selected.Count (), string.Join (", ", deviceClasses), string.Join (", ", selected.Select ((v) => v.Name).ToArray ()), selected_data.Name);
+				main_log.WriteLine ("Found {0} devices for device class(es) {1}: {2}. Selected: '{3}'", selected.Count (), string.Join (", ", deviceClasses), string.Join (", ", selected.Select ((v) => v.Name).ToArray ()), selected_data.Name);
 			} else {
 				selected_data = selected.First ();
 			}
@@ -205,117 +195,8 @@ namespace xharness
 				if (companion.Count () == 0)
 					throw new Exception ($"Could not find the companion device for '{selected_data.Name}'");
 				else if (companion.Count () > 1)
-					Harness.Log ("Found {0} companion devices for {1}?!?", companion.Count (), selected_data.Name);
+					main_log.WriteLine ("Found {0} companion devices for {1}?!?", companion.Count (), selected_data.Name);
 				companion_device_name = companion.First ().Name;
-			}
-		}
-
-		public void AgreeToPrompts (bool delete_first = true)
-		{
-			var TCC_db = Path.Combine (simulator.DataPath, "data", "Library", "TCC", "TCC.db");
-			var sim_services = new string [] {
-					"kTCCServiceAddressBook",
-					"kTCCServicePhotos",
-					"kTCCServiceMediaLibrary",
-					"kTCCServiceUbiquity",
-					"kTCCServiceWillow"
-				};
-
-			var failure = false;
-			var tcc_edit_timeout = 5;
-			var watch = new Stopwatch ();
-			watch.Start ();
-			do {
-				failure = false;
-				foreach (var service in sim_services) {
-					if (delete_first && !ExecuteCommand ("sqlite3", string.Format ("{0} \"DELETE FROM access WHERE service = '{1}' and client ='{2}';\"", TCC_db, service, bundle_identifier), true, output_verbosity_level: 1)) {
-						failure = true;
-					}
-
-					if (!failure && !ExecuteCommand ("sqlite3", string.Format ("{0} \"INSERT INTO access VALUES('{1}','{2}',0,1,0,NULL,NULL);\"", TCC_db, service, bundle_identifier), true, output_verbosity_level: 1)) {
-						failure = true;
-					}
-				}
-				if (failure) {
-					if (watch.Elapsed.TotalSeconds > tcc_edit_timeout)
-						break;
-					Harness.Log ("Failed to edit TCC.db, trying again in 1 second... ", (int) (tcc_edit_timeout - watch.Elapsed.TotalSeconds));
-					Thread.Sleep (TimeSpan.FromSeconds (1));
-				}
-			} while (failure);
-
-			if (failure) {
-				Harness.Log ("Failed to edit TCC.db, the test run might hang due to permission request dialogs");
-			} else {
-				Harness.Log ("Successfully edited TCC.db");
-			}
-		}
-
-		bool simulator_prepared;
-		public void PrepareSimulator ()
-		{
-			if (simulator_prepared)
-				return;
-			simulator_prepared = true;
-
-			if (SkipSimulatorSetup) {
-				AgreeToPrompts (false);
-				Harness.Log (0, "Simulator setup skipped.");
-				return;
-			}
-			
-			KillEverything ();
-			ShowSimulatorList ();
-
-			// We shutdown and erase all simulators.
-			// We only fixup TCC.db on the main simulator.
-
-			foreach (var sim in simulators) {
-				var udid = sim.UDID;
-				// erase the simulator (make sure the device isn't running first)
-				ExecuteXcodeCommand ("simctl", "shutdown " + udid, true, output_verbosity_level: 1, timeout: TimeSpan.FromMinutes (1));
-				ExecuteXcodeCommand ("simctl", "erase " + udid, true, output_verbosity_level: 1, timeout: TimeSpan.FromMinutes (1));
-
-				// boot & shutdown to make sure it actually works
-				ExecuteXcodeCommand ("simctl", "boot " + udid, true, output_verbosity_level: 1, timeout: TimeSpan.FromMinutes (1));
-				ExecuteXcodeCommand ("simctl", "shutdown " + udid, true, output_verbosity_level: 1, timeout: TimeSpan.FromMinutes (1));
-			}
-
-			// Edit the permissions to prevent dialog boxes in the test app
-			var TCC_db = Path.Combine (simulator.DataPath, "data", "Library", "TCC", "TCC.db");
-			if (!File.Exists (TCC_db)) {
-				Harness.Log ("Opening simulator to create TCC.db");
-				var simulator_app = Path.Combine (Harness.XcodeRoot, "Contents", "Developer", "Applications", "Simulator.app");
-				if (!Directory.Exists (simulator_app))
-					simulator_app = Path.Combine (Harness.XcodeRoot, "Contents", "Developer", "Applications", "iOS Simulator.app");
-
-				ExecuteCommand ("open", "-a \"" + simulator_app + "\" --args -CurrentDeviceUDID " + simulator.UDID, output_verbosity_level: 1);
-
-				var tcc_creation_timeout = 60;
-				var watch = new Stopwatch ();
-				watch.Start ();
-				while (!File.Exists (TCC_db) && watch.Elapsed.TotalSeconds < tcc_creation_timeout) {
-					Harness.Log ("Waiting for simulator to create TCC.db... {0}", (int) (tcc_creation_timeout - watch.Elapsed.TotalSeconds));
-					Thread.Sleep (TimeSpan.FromSeconds (1));
-				}
-			}
-
-			if (File.Exists (TCC_db)) {
-				AgreeToPrompts (true);
-			} else {
-				Harness.Log ("No TCC.db found for the simulator {0} (SimRuntime={1} and SimDeviceType={1})", simulator.UDID, simulator.SimRuntime, simulator.SimDeviceType);
-			}
-
-			KillEverything ();
-
-			foreach (var sim in simulators) {
-				ExecuteXcodeCommand ("simctl", "shutdown " + sim.UDID, true, output_verbosity_level: 1, timeout: TimeSpan.FromMinutes (1));
-
-				if (!File.Exists (sim.SystemLog)) {
-					Harness.Log ("No system log found for SimRuntime={0} and SimDeviceType={1}", sim.SimRuntime, sim.SimDeviceType);
-				} else {
-					File.WriteAllText (sim.SystemLog, string.Format (" *** This log file was cleared out by Xamarin.iOS's test run at {0} **** \n", DateTime.Now.ToString ()));
-				}
 			}
 		}
 
@@ -390,7 +271,7 @@ namespace xharness
 			}
 		}
 
-		public int Install ()
+		public int Install (Log log)
 		{
 			Initialize ();
 
@@ -414,35 +295,26 @@ namespace xharness
 			if (mode == "watchos")
 				args.Append (" --device ios,watchos");
 
-			var success = ExecuteCommand (Harness.MlaunchPath, args.ToString ());
-			return success ? 0 : 1;
+			var rv = ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), log, TimeSpan.FromHours (1)).Result;
+			return rv.Succeeded ? 0 : 1;
 		}
 
-		bool skip_simulator_setup;
-		public bool SkipSimulatorSetup {
+		bool ensure_clean_simulator_state = true;
+		public bool EnsureCleanSimulatorState {
 			get {
-				return skip_simulator_setup || !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("SKIP_SIMULATOR_SETUP"));
+				return ensure_clean_simulator_state || !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("SKIP_SIMULATOR_SETUP"));
 			}
 			set {
-				skip_simulator_setup = value;
+				ensure_clean_simulator_state = value;
 			}
 		}
 
-		bool skip_simulator_cleanup;
-		public bool SkipSimulatorCleanup {
-			get {
-				return skip_simulator_cleanup || !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("SKIP_SIMULATOR_CLEANUP"));
-			}
-			set {
-				skip_simulator_cleanup = value;
-			}
-		}
-
-		public int Run ()
+		public async Task<int> RunAsync ()
 		{
 			HashSet<string> start_crashes = null;
-			LogFile device_system_log = null;
-			LogFile listener_log = null;
+			LogStream device_system_log = null;
+			LogStream listener_log = null;
+			Log run_log = main_log;
 
 			Initialize ();
 
@@ -488,8 +360,8 @@ namespace xharness
 			default:
 				throw new NotImplementedException ();
 			}
-			listener_log = Logs.Create (LogDirectory, string.Format ("test-{0:yyyyMMdd_HHmmss}.log", DateTime.Now), "Test log");
-			listener.LogPath = listener_log.Path;
+			listener_log = Logs.CreateStream (LogDirectory, string.Format ("test-{0:yyyyMMdd_HHmmss}.log", DateTime.Now), "Test log");
+			listener.Log = listener_log;
 			listener.AutoExit = true;
 			listener.Address = System.Net.IPAddress.Any;
 			listener.Initialize ();
@@ -501,124 +373,92 @@ namespace xharness
 			bool timed_out = false;
 
 			if (isSimulator) {
+				FindSimulator ();
+
 				var systemLogs = new List<CaptureLog> ();
 				foreach (var sim in simulators) {
 					// Upload the system log
-					if (File.Exists (sim.SystemLog)) {
-						Harness.Log ("System log for the '{1}' simulator is: {0}", sim.SystemLog, sim.Name);
-						bool isCompanion = sim != simulator;
+					main_log.WriteLine ("System log for the '{1}' simulator is: {0}", sim.SystemLog, sim.Name);
+					bool isCompanion = sim != simulator;
 
-						var log = new CaptureLog (sim.SystemLog) {
-							Path = Path.Combine (LogDirectory, sim.UDID + ".log"),
-							Description = isCompanion ? "System log (companion)" : "System log",
-						};
-						log.StartCapture ();
-						Logs.Add (log);
-						systemLogs.Add (log);
-						Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", log.Path);
-					}
+					var log = new CaptureLog (sim.SystemLog) {
+						Path = Path.Combine (LogDirectory, sim.UDID + ".log"),
+						Description = isCompanion ? "System log (companion)" : "System log",
+					};
+					log.StartCapture ();
+					Logs.Add (log);
+					systemLogs.Add (log);
+					Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", log.Path);
 				}
 
+				main_log.WriteLine ("*** Executing {0}/{1} in the simulator ***", appName, mode);
 
-				FindSimulator ();
-
-				Harness.Log ("*** Executing {0}/{1} in the simulator ***", appName, mode);
-
-				PrepareSimulator ();
+				if (EnsureCleanSimulatorState) {
+					foreach (var sim in simulators)
+						await sim.PrepareSimulatorAsync (main_log, bundle_identifier);
+				}
 
 				args.Append (" --launchsim");
 				args.AppendFormat (" \"{0}\" ", launchAppPath);
 				args.Append (" --device=:v2:udid=").Append (simulator.UDID).Append (" ");
 
-				start_crashes = CreateCrashReportsSnapshot (true);
+				start_crashes = await Harness.CreateCrashReportsSnapshotAsync (main_log, true);
 
 				listener.StartAsync ();
-				Harness.Log ("Starting test run");
-				var proc = new XProcess () {
-					Harness = Harness,
-					FileName = Harness.MlaunchPath,
-					Arguments = args.ToString (),
-					VerbosityLevel = 0,
-				};
-				proc.Start ();
+				main_log.WriteLine ("Starting test run");
 
-				var launchState = 0; // 0: launching, 1: launch timed out, 2: run timed out, 3: completed
-				var launchMutex = new Mutex ();
-				var runCompleted = new ManualResetEvent (false);
+				var cancellation_source = new CancellationTokenSource ();
 				ThreadPool.QueueUserWorkItem ((v) => {
 					if (!listener.WaitForConnection (TimeSpan.FromMinutes (Harness.LaunchTimeout))) {
-						lock (launchMutex) {
-							if (launchState == 0) {
-								launchState = 1;
-								runCompleted.Set ();
-							}
-						}
-						Harness.Log ("Test launch timed out after {0} minute(s).", Harness.LaunchTimeout);
+						cancellation_source.Cancel ();
+						main_log.WriteLine ("Test launch timed out after {0} minute(s).", Harness.LaunchTimeout);
 					} else {
-						Harness.Log ("Test run started");
+						main_log.WriteLine ("Test run started");
 					}
 				});
-				ThreadPool.QueueUserWorkItem ((v) => {
-					var rv = proc.WaitForExit (TimeSpan.FromMinutes (Harness.Timeout));
-
-					lock (launchMutex) {
-						if (launchState == 0)
-							launchState = rv ? 3 : 2;
-						runCompleted.Set ();
-					}
-
-					if (rv) {
-						Harness.Log ("Test run completed");
-					} else {
-						Harness.Log ("Test run timed out after {0} minute(s).", Harness.Timeout);
-					}
-				});
-
-				runCompleted.WaitOne ();
-									
-				switch (launchState) {
-				case 1:
-				case 2:
-					success = false;
+				var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), run_log, TimeSpan.FromMinutes (Harness.Timeout), cancellation_token: cancellation_source.Token);
+				if (result.TimedOut) {
 					timed_out = true;
+					success = false;
+					main_log.WriteLine ("Test run timed out after {0} minute(s).", Harness.Timeout);
+				} else if (result.Succeeded) {
+					main_log.WriteLine ("Test run completed");
+					success = true;
+				} else {
+					main_log.WriteLine ("Test run failed");
+					success = false;
+				}
 
+				if (!success.Value) {
 					// find pid
 					var pid = -1;
-					var output = proc.ReadCurrentOutput ();
-					foreach (var line in output.ToString ().Split ('\n')) {
-						if (line.StartsWith ("Application launched. PID = ", StringComparison.Ordinal)) {
-							var pidstr = line.Substring ("Application launched. PID = ".Length);
-							if (!int.TryParse (pidstr, out pid))
-								Harness.Log ("Could not parse pid: {0}", pidstr);
-						} else if (line.Contains ("Xamarin.Hosting: Launched ") && line.Contains (" with pid ")) {
-							var pidstr = line.Substring (line.LastIndexOf (' '));
-							if (!int.TryParse (pidstr, out pid))
-								Harness.Log ("Could not parse pid: {0}", pidstr);
+					using (var reader = run_log.GetReader ()) {
+						while (!reader.EndOfStream) {
+							var line = reader.ReadLine ();
+							if (line.StartsWith ("Application launched. PID = ", StringComparison.Ordinal)) {
+								var pidstr = line.Substring ("Application launched. PID = ".Length);
+								if (!int.TryParse (pidstr, out pid))
+									main_log.WriteLine ("Could not parse pid: {0}", pidstr);
+							} else if (line.Contains ("Xamarin.Hosting: Launched ") && line.Contains (" with pid ")) {
+								var pidstr = line.Substring (line.LastIndexOf (' '));
+								if (!int.TryParse (pidstr, out pid))
+									main_log.WriteLine ("Could not parse pid: {0}", pidstr);
+							}
 						}
 					}
 					if (pid > 0) {
-						KillPid (proc, pid, TimeSpan.FromSeconds (5), TimeSpan.FromMinutes (launchState == 1 ? Harness.LaunchTimeout : Harness.Timeout), launchState == 1 ? "Launch" : "Completion");
+						var launchTimedout = cancellation_source.IsCancellationRequested;
+						await KillPidAsync (main_log, pid, TimeSpan.FromSeconds (5), TimeSpan.FromMinutes (launchTimedout ? Harness.LaunchTimeout : Harness.Timeout), launchTimedout ? "Launch" : "Completion");
 					} else {
-						Harness.Log ("Could not find pid in mtouch output.");
+						main_log.WriteLine ("Could not find pid in mtouch output.");
 					}
-					// kill mtouch too
-					kill (proc.Id, 9);
-					break;
-				case 3:
-					// Success!
-					break;
-				case 0: // shouldn't happen ever
-				default:
-					throw new Exception ($"Invalid launch state: {launchState}");
 				}
 
 				listener.Cancel ();
 
-				var run_log = Logs.Create (LogDirectory, string.Format ("launch-{0:yyyyMMdd_HHmmss}.log", DateTime.Now), "Launch log");
-				File.WriteAllText (run_log.Path, proc.ReadCurrentOutput ());
-
 				// cleanup after us
-				CleanupSimulator ();
+				if (EnsureCleanSimulatorState)
+					await SimDevice.KillEverythingAsync (main_log);
 
 				foreach (var log in systemLogs)
 					log.StopCapture ();
@@ -626,30 +466,31 @@ namespace xharness
 			} else {
 				FindDevice ();
 
-				Harness.Log ("*** Executing {0}/{1} on device ***", appName, mode);
+				main_log.WriteLine ("*** Executing {0}/{1} on device ***", appName, mode);
 
 				args.Append (" --launchdev");
 				args.AppendFormat (" \"{0}\" ", launchAppPath);
 				
 				AddDeviceName (args);
 
-				device_system_log = Logs.Create (LogDirectory, "device.log", "Device log");
+				device_system_log = Logs.CreateStream (LogDirectory, "device.log", "Device log");
 				var logdev = new DeviceLogCapturer () {
 					Harness =  Harness,
-					LogPath = device_system_log.Path,
+					Log = device_system_log,
 					DeviceName = device_name,
 				};
 				logdev.StartCapture ();
 
-				start_crashes = CreateCrashReportsSnapshot (false);
+				start_crashes = await Harness.CreateCrashReportsSnapshotAsync (main_log, false);
 
 				listener.StartAsync ();
-				Harness.Log ("Starting test run");
-				ExecuteCommand (Harness.MlaunchPath, args.ToString ());
+				main_log.WriteLine ("Starting test run");
+				// This will not wait for app completion
+				await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), main_log, TimeSpan.FromMinutes (1));
 				if (listener.WaitForCompletion (TimeSpan.FromMinutes (Harness.Timeout))) {
-					Harness.Log ("Test run completed");
+					main_log.WriteLine ("Test run completed");
 				} else {
-					Harness.Log ("Test run did not complete in {0} minutes.", Harness.Timeout);
+					main_log.WriteLine ("Test run did not complete in {0} minutes.", Harness.Timeout);
 					listener.Cancel ();
 					success = false;
 					timed_out = true;
@@ -658,10 +499,10 @@ namespace xharness
 				logdev.StopCapture ();
 
 				// Upload the system log
-				if (File.Exists (device_system_log.Path)) {
-					Harness.Log (1, "A capture of the device log is: {0}", device_system_log.Path);
+				if (File.Exists (device_system_log.FullPath)) {
+					main_log.WriteLine ("A capture of the device log is: {0}", device_system_log.FullPath);
 					if (Harness.InWrench)
-						Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", device_system_log.Path);
+						Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", device_system_log.FullPath);
 				}
 			}
 
@@ -669,12 +510,14 @@ namespace xharness
 
 			// check the final status
 			var crashed = false;
-			if (File.Exists (listener_log.Path)) {
-				Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", listener_log.Path);
-				var log = File.ReadAllText (listener_log.Path);
+			if (File.Exists (listener_log.FullPath)) {
+				Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", listener_log.FullPath);
+				string log;
+				using (var reader = listener_log.GetReader ())
+					log = reader.ReadToEnd ();
 				if (log.Contains ("Tests run")) {
 					var tests_run = string.Empty;
-					var log_lines = File.ReadAllLines (listener_log.Path);
+					var log_lines = log.Split ('\n');
 					var failed = false;
 					foreach (var line in log_lines) {
 						if (line.Contains ("Tests run:")) {
@@ -689,25 +532,26 @@ namespace xharness
 
 					if (failed) {
 						Harness.LogWrench ("@MonkeyWrench: AddSummary: <b>{0} failed: {1}</b><br/>", mode, tests_run);
-						Harness.Log ("Test run failed");
+						main_log.WriteLine ("Test run failed");
+						success = false;
 					} else {
 						Harness.LogWrench ("@MonkeyWrench: AddSummary: {0} succeeded: {1}<br/>", mode, tests_run);
-						Harness.Log ("Test run succeeded");
+						main_log.WriteLine ("Test run succeeded");
 						success = true;
 					}
 				} else if (timed_out) {
 					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} timed out</i></b><br/>", mode);
 				} else {
 					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed</i></b><br/>", mode);
-					Harness.Log ("Test run crashed");
+					main_log.WriteLine ("Test run crashed");
 					crashed = true;
 				}
 			} else if (timed_out) {
 				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} never launched</i></b><br/>", mode);
-				Harness.Log ("Test run never launched");
+				main_log.WriteLine ("Test run never launched");
 			} else {
 				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed at startup (no log)</i></b><br/>", mode);
-				Harness.Log ("Test run crashed before it started (no log file produced)");
+				main_log.WriteLine ("Test run crashed before it started (no log file produced)");
 				crashed = true;
 			}
 				
@@ -717,37 +561,39 @@ namespace xharness
 			var watch = new Stopwatch ();
 			watch.Start ();
 			do {
-				var end_crashes = CreateCrashReportsSnapshot (isSimulator);
+				var end_crashes = await Harness.CreateCrashReportsSnapshotAsync (main_log, isSimulator);
 				end_crashes.ExceptWith (start_crashes);
 				if (end_crashes.Count > 0) {
-					Harness.Log ("Found {0} new crash report(s)", end_crashes.Count);
+					main_log.WriteLine ("Found {0} new crash report(s)", end_crashes.Count);
 					List<LogFile> crash_reports;
 					if (isSimulator) {
 						crash_reports = new List<LogFile> (end_crashes.Count);
 						foreach (var path in end_crashes) {
-							var report = Logs.Create (LogDirectory, Path.GetFileName (path), "Crash report: " + Path.GetFileName (path));
-							File.Copy (path, report.Path, true);
-							crash_reports.Add (report);
+							var logPath = Path.Combine (LogDirectory, Path.GetFileName (path));
+							File.Copy (path, logPath, true);
+							crash_reports.Add (Logs.CreateFile ("Crash report: " + Path.GetFileName (path), logPath));
 						}
 					} else {
 						// Download crash reports from the device. We put them in the project directory so that they're automatically deleted on wrench
 						// (if we put them in /tmp, they'd never be deleted).
 						var downloaded_crash_reports = new List<LogFile> ();
 						foreach (var file in end_crashes) {
-							var crash_report_target = Logs.Create (LogDirectory, Path.GetFileName (file), "Crash report: " + Path.GetFileName (file));
-							if (ExecuteCommand (Harness.MlaunchPath, "--download-crash-report=" + file + " --download-crash-report-to=" + crash_report_target.Path + " --sdkroot " + Harness.XcodeRoot)) {
-								Harness.Log ("Downloaded crash report {0} to {1}", file, crash_report_target.Path);
-								crash_report_target = SymbolicateCrashReport (crash_report_target);
+							var crash_report_target = Logs.CreateFile ("Crash report: " + Path.GetFileName (file), Path.Combine (LogDirectory, Path.GetFileName (file)));
+							var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, "--download-crash-report=" + file + " --download-crash-report-to=" + crash_report_target.Path + " --sdkroot " + Harness.XcodeRoot, main_log, TimeSpan.FromMinutes (1));
+							if (result.Succeeded) {
+								main_log.WriteLine ("Downloaded crash report {0} to {1}", file, crash_report_target.Path);
+								crash_report_target = await Harness.SymbolicateCrashReportAsync (main_log, crash_report_target);
+								Logs.Add (crash_report_target);
 								downloaded_crash_reports.Add (crash_report_target);
 							} else {
-								Harness.Log ("Could not download crash report {0}", file);
+								main_log.WriteLine ("Could not download crash report {0}", file);
 							}
 						}
 						crash_reports = downloaded_crash_reports;
 					}
 					foreach (var cp in crash_reports) {
 						Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", cp.Path);
-						Harness.Log ("    {0}", cp.Path);
+						main_log.WriteLine ("    {0}", cp.Path);
 					}
 					crash_report_search_done = true;
 				} else if (!crashed && !timed_out) {
@@ -756,7 +602,7 @@ namespace xharness
 					if (watch.Elapsed.TotalSeconds > crash_report_search_timeout) {
 						crash_report_search_done = true;
 					} else {
-						Harness.Log ("No crash reports, waiting a second to see if the crash report service just didn't complete in time ({0})", (int) (crash_report_search_timeout - watch.Elapsed.TotalSeconds));
+						main_log.WriteLine ("No crash reports, waiting a second to see if the crash report service just didn't complete in time ({0})", (int) (crash_report_search_timeout - watch.Elapsed.TotalSeconds));
 						Thread.Sleep (TimeSpan.FromSeconds (1));
 					}
 				}
@@ -765,12 +611,12 @@ namespace xharness
 			if (!success.HasValue)
 				success = false;
 			
-			if (success.Value) {
-				Result = TestExecutingResult.Succeeded;
-			} else if (timed_out) {
+			if (timed_out) {
 				Result = TestExecutingResult.TimedOut;
 			} else if (crashed) {
 				Result = TestExecutingResult.Crashed;
+			} else if (success.Value) {
+				Result = TestExecutingResult.Succeeded;
 			} else {
 				Result = TestExecutingResult.Failed;
 			}
@@ -794,137 +640,20 @@ namespace xharness
 		[DllImport ("/usr/lib/libc.dylib")]
 		static extern void kill (int pid, int sig);
 
-		void KillPid (XProcess proc, int pid, TimeSpan kill_separation, TimeSpan timeout, string type)
+		async Task KillPidAsync (Log log, int pid, TimeSpan kill_separation, TimeSpan timeout, string type)
 		{
-			Harness.Log ("{2} timeout ({1} s) reached, will now send SIGQUIT to the app (PID: {0})", pid, timeout.TotalSeconds, type);
+			log.WriteLine ("{2} timeout ({1} s) reached, will now send SIGQUIT to the app (PID: {0})", pid, timeout.TotalSeconds, type);
 			kill (pid, 3 /* SIGQUIT */); // print managed stack traces.
-			if (!proc.WaitForExit (kill_separation /* wait for at most 5 seconds to see if something happens */)) {
-				Harness.Log ("{2} timeout ({1} s) reached, will now send SIGABRT to the app (PID: {0})", pid, timeout.TotalSeconds, type);
-				kill (pid, 6 /* SIGABRT */); // print native stack traces.
-				if (!proc.WaitForExit (kill_separation /* wait another 5 seconds */)) {
-					Harness.Log ("{2} timeout ({1} s) reached, will now send SIGKILL to the app (PID: {0})", pid, timeout.TotalSeconds, type);
-					kill (pid, 9 /* SIGKILL */); // terminate unconditionally.
-				}
-			}
-		}
-
-		HashSet<string> CreateCrashReportsSnapshot (bool simulator)
-		{
-			HashSet<string> rv;
-
-			if (simulator) {
-				var dir = Path.Combine (Environment.GetEnvironmentVariable ("HOME"), "Library", "Logs", "DiagnosticReports");
-				if (Directory.Exists (dir)) {
-					rv = new HashSet<string> (Directory.EnumerateFiles (dir));
-				} else {
-					rv = new HashSet<string> ();
-				}
-			} else {
-				var tmp = Path.GetTempFileName ();
-				if (ExecuteCommand (Harness.MlaunchPath, "--list-crash-reports=" + tmp + " --sdkroot " + Harness.XcodeRoot, true)) {
-					rv = new HashSet<string> (File.ReadAllLines (tmp));
-				} else {
-					rv = new HashSet<string> ();
-				}
-				File.Delete (tmp);
-			}
-
-			return rv;
-		}
-
-		void CleanupSimulator ()
-		{
-			if (SkipSimulatorCleanup)
+			if (await ProcessHelper.PollForExitAsync (pid, kill_separation /* wait for at most 5 seconds to see if something happens */))
 				return;
-
-			KillEverything ();
-		}
-
-		public void KillEverything ()
-		{
-			var to_kill = new string [] { "iPhone Simulator", "iOS Simulator", "Simulator", "Simulator (Watch)", "com.apple.CoreSimulator.CoreSimulatorService" };
-			foreach (var k in to_kill)
-				ExecuteCommand ("killall", "-9 \"" + k + "\"", true, output_verbosity_level: 1);
-		}
-
-		static bool shown_simulator_list;
-		void ShowSimulatorList ()
-		{
-			if (shown_simulator_list)
+			
+			log.WriteLine ("{2} timeout ({1} s) reached, will now send SIGABRT to the app (PID: {0})", pid, timeout.TotalSeconds, type);
+			kill (pid, 6 /* SIGABRT */); // print native stack traces.
+			if (await ProcessHelper.PollForExitAsync (pid, kill_separation /* wait another 5 seconds */))
 				return;
-			shown_simulator_list = true;
-			if (Harness.Verbosity > 0)
-				ExecuteXcodeCommand ("simctl", "list", ignore_errors: true, timeout: TimeSpan.FromSeconds (10));
-		}
-
-		bool ExecuteXcodeCommand (string executable, string args, bool ignore_errors = false, int output_verbosity_level = 1, TimeSpan? timeout = null)
-		{
-			return ExecuteCommand (Path.Combine (Harness.XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, ignore_errors, output_verbosity_level, timeout: timeout);
-		}
-
-		bool ExecuteCommand (string filename, string args, bool ignore_errors = false, int output_verbosity_level = 1, StringBuilder captured_output = null, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null)
-		{
-			int exitcode;
-			return ExecuteCommand (filename, args, out exitcode, ignore_errors, output_verbosity_level, captured_output, timeout, environment_variables);
-		}
-
-		bool ExecuteCommand (string filename, string args, out int exitcode, bool ignore_errors = false, int output_verbosity_level = 1, StringBuilder captured_output = null, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null)
-		{
-			if (captured_output == null)
-				captured_output = new StringBuilder ();
-			var streamEnds = new CountdownEvent (2);
-			using (var p = new Process ()) {
-				p.StartInfo.FileName = filename;
-				p.StartInfo.Arguments = args;
-				p.StartInfo.UseShellExecute = false;
-				p.StartInfo.RedirectStandardOutput = true;
-				p.StartInfo.RedirectStandardError = true;
-				if (environment_variables != null) {
-					foreach (var kvp in environment_variables)
-						p.StartInfo.EnvironmentVariables.Add (kvp.Key, kvp.Value);
-				}
-				p.OutputDataReceived += (object sender, DataReceivedEventArgs e) => 
-				{
-					if (e.Data == null) {
-						streamEnds.Signal ();
-					} else {
-						lock (captured_output) {
-							captured_output.AppendLine (e.Data);
-							Harness.Log (output_verbosity_level, e.Data);
-						}
-					}
-				};
-				p.ErrorDataReceived += (object sender, DataReceivedEventArgs e) => 
-				{
-					if (e.Data == null) {
-						streamEnds.Signal ();
-					} else {
-						lock (captured_output) {
-							captured_output.AppendLine (e.Data);
-							Harness.Log (output_verbosity_level, e.Data);
-						}
-					}
-				};
-				Harness.Log (output_verbosity_level, "{0} {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
-				p.Start ();
-				p.BeginOutputReadLine ();
-				p.BeginErrorReadLine ();
-				if (p.WaitForExit (!timeout.HasValue ? int.MaxValue : (int) timeout.Value.TotalMilliseconds )) {
-					streamEnds.Wait ();
-					exitcode = p.ExitCode;
-					if (p.ExitCode != 0 && !ignore_errors)
-						throw new Exception (string.Format ("Failed to execute {0}:\n{1}", filename, captured_output.ToString ()));
-					return p.ExitCode == 0;
-				} else  {
-					if (!ignore_errors)
-						throw new Exception (string.Format ("Execution of {0} timed out after {2} minutes:\n{1}", filename, captured_output.ToString (), timeout.Value.TotalMinutes));
-					else
-						Harness.Log ("Execution of {0} timed out after {2} minutes:\n{1}", filename, captured_output.ToString (), timeout.Value.TotalMinutes);
-					exitcode = 0;
-					kill (p.Id, 9);
-					return false;
-				}
-			}
+			
+			log.WriteLine ("{2} timeout ({1} s) reached, will now send SIGKILL to the app (PID: {0})", pid, timeout.TotalSeconds, type);
+			kill (pid, 9 /* SIGKILL */); // terminate unconditionally.
 		}
 	}
 }

@@ -57,7 +57,6 @@
     <Compile Include="SimpleTcpListener.cs" />
     <Compile Include="BCLTarget.cs" />
     <Compile Include="DeviceLogCapturer.cs" />
-    <Compile Include="XProcess.cs" />
     <Compile Include="MakefileGenerator.cs" />
     <Compile Include="SolutionGenerator.cs" />
     <Compile Include="MacClassicTarget.cs" />
@@ -69,7 +68,7 @@
     <Compile Include="Process_Extensions.cs" />
     <Compile Include="Simulators.cs" />
     <Compile Include="TestProject.cs" />
-    <Compile Include="LogFile.cs" />
+    <Compile Include="Log.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
