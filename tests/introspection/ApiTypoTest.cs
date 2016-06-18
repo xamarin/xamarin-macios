@@ -258,6 +258,7 @@ namespace Introspection
 			"Rpn", // acronym
 			"Rssi",
 			"Rtsp",
+			"Saml", // acronym
 			"Scn",
 			"Sdk",
 			"Sdtv", // acronym: Standard Definition Tele Vision

@@ -57,5 +57,8 @@ namespace ObjCRuntime {
 
 		// TVOS 9.2
 		public const string MapKitLibrary = "/System/Library/Frameworks/MapKit.framework/MapKit";
+
+		// TVOS 10.0
+		public const string VideoSubscriberAccountLibrary = "/System/Library/Frameworks/VideoSubscriberAccount.framework/VideoSubscriberAccount";
 	}
 }

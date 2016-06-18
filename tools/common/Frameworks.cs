@@ -220,6 +220,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "CallKit", "CallKit", 10 },
 					{ "Speech", "Speech", 10 },
+					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
 				};
 			}
 			return ios_frameworks;
@@ -304,6 +305,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "TVMLKit", "TVMLKit", 9 },
 					{ "TVServices", "TVServices", 9 },
 					{ "UIKit", "UIKit", 9 },
+
+					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
 				};
 			}
 			return tvos_frameworks;
