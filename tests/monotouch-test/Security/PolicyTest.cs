@@ -137,17 +137,17 @@ namespace MonoTouchFixtures.Security {
 			}
 		}
 
-		void CreatePolicy (NSString oid)
+		void CreatePolicy (NSString oid, NSString propertyOid = null)
 		{
 			string name = oid + ".";
 			using (var policy = SecPolicy.CreatePolicy (oid, null)) {
 				Assert.That (CFGetRetainCount (policy.Handle), Is.EqualTo ((nint) 1), name + "RetainCount");
-				Assert.That (policy.GetProperties ().Values [0], Is.EqualTo (oid), name + "SecPolicyOid");
+				Assert.That (policy.GetProperties ().Values [0], Is.EqualTo (propertyOid ?? oid), name + "SecPolicyOid");
 			}
 		}
 
 		[Test]
-		public void CreatWellKnownPolicies ()
+		public void CreateWellKnownPolicies ()
 		{
 			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
 				Assert.Inconclusive ("requires iOS7");
@@ -159,7 +159,8 @@ namespace MonoTouchFixtures.Security {
 			// CreatePolicy (SecPolicyIdentifier.AppleEAP);
 			CreatePolicy (SecPolicyIdentifier.AppleIPsec);
 			CreatePolicy (SecPolicyIdentifier.AppleCodeSigning);
-			CreatePolicy (SecPolicyIdentifier.AppleIDValidation);
+			var oid = UIDevice.CurrentDevice.CheckSystemVersion (10, 0) ? "1.2.840.113635.100.1.61" : null; 
+			CreatePolicy (SecPolicyIdentifier.AppleIDValidation, (NSString) oid);
 			// invalid handle ? not yet supported ?!?
 			// CreatePolicy (SecPolicyIdentifier.AppleTimeStamping);
 			CreatePolicy (SecPolicyIdentifier.AppleRevocation);
