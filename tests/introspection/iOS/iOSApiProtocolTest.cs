@@ -156,6 +156,9 @@ namespace Introspection {
 				case "MKMapSnapshotOptions":
 				case "WCSessionFile":
 				case "WCSessionFileTransfer":
+				// iOS 10
+				case "SFContentBlockerState":
+				case "SFSafariViewControllerConfiguration":
 					return true;
 				}
 				break;
@@ -197,6 +200,9 @@ namespace Introspection {
 				case "NSTextTab":
 				case "WCSessionFile":
 				case "WCSessionFileTransfer":
+				// iOS 10
+				case "SFContentBlockerState":
+				case "SFSafariViewControllerConfiguration":
 					return true;
 				}
 				break;
@@ -221,6 +227,9 @@ namespace Introspection {
 				case "HKQuantitySample":
 				case "HKSample":
 				case "HKWorkout":
+					return true;
+				// iOS 10
+				case "SFSafariViewControllerConfiguration":
 					return true;
 				}
 				break;
