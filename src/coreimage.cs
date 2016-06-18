@@ -3839,4 +3839,85 @@ namespace XamCore.CoreImage {
 		[CoreImageFilterProperty ("inputRadius")]
 		float Radius { get; set; }
 	}
+
+	[CoreImageFilter]
+	[iOS (10,0)]
+	[Mac (10,12)]
+	[BaseType (typeof (CIFilter))]
+	interface CIClamp {
+
+		[CoreImageFilterProperty ("inputExtent")]
+		CIVector Extent { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (10,0)]
+	[Mac (10,12)]
+	[BaseType (typeof (CIFilter))]
+	interface CIHueSaturationValueGradient {
+
+		[CoreImageFilterProperty ("inputColorSpace")]
+		CGColorSpace ColorSpace { get; set; }
+
+		[CoreImageFilterProperty ("inputDither")]
+		float Dither { get; set; }
+
+		[CoreImageFilterProperty ("inputValue")]
+		float Value { get; set; }
+
+		[CoreImageFilterProperty ("inputRadius")]
+		float Radius { get; set; }
+
+		[CoreImageFilterProperty ("inputSoftness")]
+		float Softness { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (10,0)]
+	[Mac (10,12)]
+	[BaseType (typeof (CIFilter))]
+	interface CINinePartStretched {
+
+		[CoreImageFilterProperty ("inputGrowAmount")]
+		CIVector GrowAmount { get; set; }
+
+		[CoreImageFilterProperty ("inputBreakpoint0")]
+		CIVector Breakpoint0 { get; set; }
+
+		[CoreImageFilterProperty ("inputBreakpoint1")]
+		CIVector Breakpoint1 { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (10,0)]
+	[Mac (10,12)]
+	[BaseType (typeof (CIFilter))]
+	interface CINinePartTiled {
+
+		[CoreImageFilterProperty ("inputGrowAmount")]
+		CIVector GrowAmount { get; set; }
+
+		[CoreImageFilterProperty ("inputBreakpoint0")]
+		CIVector Breakpoint0 { get; set; }
+
+		[CoreImageFilterProperty ("inputFlipYTiles")]
+		bool FlipYTiles { get; set; }
+
+		[CoreImageFilterProperty ("inputBreakpoint1")]
+		CIVector Breakpoint1 { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (10,0)]
+	[Mac (10,12)] // filter says 10.11 but it fails when I run it on El Capitan
+	[BaseType (typeof (CIFilter))]
+	interface CIThermal {
+	}
+
+	[CoreImageFilter]
+	[iOS (10,0)]
+	[Mac (10,12)] // filter says 10.11 but it fails when I run it on El Capitan
+	[BaseType (typeof (CIFilter))]
+	interface CIXRay {
+	}
 }
