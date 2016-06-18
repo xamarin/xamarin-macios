@@ -8,6 +8,7 @@ namespace xharness
 	public abstract class Log : IDisposable
 	{
 		public string Description;
+		public bool Timestamp;
 
 		protected Log ()
 		{
@@ -20,7 +21,7 @@ namespace xharness
 
 		public abstract string FullPath { get; }
 
-		protected abstract void Write (string value);
+		protected abstract void WriteImpl (string value);
 
 		public virtual StreamReader GetReader ()
 		{
@@ -30,6 +31,13 @@ namespace xharness
 		public virtual TextWriter GetWriter ()
 		{
 			throw new NotSupportedException ();
+		}
+
+		public void Write (string value)
+		{
+			if (Timestamp)
+				value = DateTime.Now.ToString ("HH:mm:ss.fffffff") + " " + value;
+			WriteImpl (value);
 		}
 
 		public void WriteLine (string value)
@@ -45,6 +53,10 @@ namespace xharness
 		public override string ToString ()
 		{
 			return Description;
+		}
+
+		public virtual void Flush ()
+		{
 		}
 
 #region IDisposable Support
@@ -70,7 +82,7 @@ namespace xharness
 			Path = path;
 		}
 
-		protected override void Write (string value)
+		protected override void WriteImpl (string value)
 		{
 			lock (this) {
 				using (var str = new FileStream (Path, FileMode.Append, FileAccess.Write, FileShare.Read)) {
@@ -139,7 +151,7 @@ namespace xharness
 			fs = new FileStream (path, FileMode.Create, FileAccess.Write, FileShare.Read);
 		}
 
-		protected override void Write (string value)
+		protected override void WriteImpl (string value)
 		{
 			var w = GetWriter ();
 			w.Write (value);
@@ -188,7 +200,7 @@ namespace xharness
 
 	public class ConsoleLog : Log
 	{
-		protected override void Write (string value)
+		protected override void WriteImpl (string value)
 		{
 			Console.Write (value);
 		}
@@ -210,7 +222,8 @@ namespace xharness
 		public string CapturePath { get; private set; }
 		public string Path { get; set; }
 
-		long startLength;
+		long startPosition;
+		long endPosition;
 
 		public CaptureLog (string capture_path)
 		{
@@ -220,30 +233,65 @@ namespace xharness
 		public void StartCapture ()
 		{
 			if (File.Exists (CapturePath))
-				startLength = new FileInfo (CapturePath).Length;
+				startPosition = new FileInfo (CapturePath).Length;
 		}
 
 		public void StopCapture ()
 		{
-			var endLength = new FileInfo (CapturePath).Length;
-			var length = (int) (endLength - startLength);
+			endPosition = new FileInfo (CapturePath).Length;
+
+			Capture ();
+		}
+
+		void Capture ()
+		{
+			if (startPosition == 0)
+				return;
+			
+			var currentEndPosition = endPosition;
+			if (currentEndPosition == 0)
+				currentEndPosition = new FileInfo (CapturePath).Length;
+			
+			var length = (int) (currentEndPosition - startPosition);
+			var currentLength = new FileInfo (CapturePath).Length;
+			var capturedLength = 0L;
+
+			if (File.Exists (Path))
+				capturedLength = new FileInfo (Path).Length;
+
+			// capture 1k more data than when we stopped, since the system log
+			// is cached in memory and flushed once in a while (so when the app
+			// requests the system log to be captured, it's usually not complete).
+			var availableLength = currentLength - startPosition;
+			if (availableLength <= capturedLength)
+				return; // We've captured before, and nothing new as added since last time.
+
+			// Capture at most 1k more
+			availableLength = Math.Min (availableLength, length + 1024);
 
 			using (var reader = new FileStream (CapturePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
 				using (var writer = new FileStream (Path, FileMode.Create, FileAccess.Write, FileShare.Read)) {
 					var buffer = new byte [4096];
-					reader.Position = startLength;
-					while (length > 0) {
+					reader.Position = startPosition;
+					while (availableLength > 0) {
 						int read = reader.Read (buffer, 0, Math.Min (buffer.Length, length));
 						if (read > 0) {
 							writer.Write (buffer, 0, read);
-							length -= read;
+							availableLength -= read;
 						}
 					}
 				}
 			}
 		}
 
-		protected override void Write (string value)
+		public override void Flush ()
+		{
+			base.Flush ();
+
+			Capture ();
+		}
+
+		protected override void WriteImpl (string value)
 		{
 			throw new InvalidOperationException ();
 		}

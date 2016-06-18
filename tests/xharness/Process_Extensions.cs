@@ -135,12 +135,12 @@ namespace xharness
 			process.BeginErrorReadLine ();
 			process.BeginOutputReadLine ();
 
-			if (cancellation_token.HasValue) {
-				cancellation_token.Value.Register (() => {
-					if (exit_completion.TrySetCanceled ())
-						ProcessHelper.kill (process.Id, 9);
-				});
-			}
+			cancellation_token?.Register (() => {
+				if (!exit_completion.Task.IsCompleted) {
+					StderrStream.WriteLine ($"Execution was cancelled.");
+					ProcessHelper.kill (process.Id, 9);
+				}
+			});
 
 			new Thread (() =>
 			{
