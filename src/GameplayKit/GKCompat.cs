@@ -15,6 +15,14 @@ namespace XamCore.GameplayKit {
 			return new GKQuadTree (min, max, minCellSize);
 		}
 	}
+
+	public partial class GKQuadTreeNode {
+
+		[Obsolete ("Valid instance of this type cannot be directly created")]
+		public GKQuadTreeNode ()
+		{
+		}
+	}
 }
 
 #endif
