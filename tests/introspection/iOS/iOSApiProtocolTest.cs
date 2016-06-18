@@ -161,6 +161,8 @@ namespace Introspection {
 				case "CXCallDirectoryExtensionContext":
 				case "CXCallUpdate":
 				case "CXProviderConfiguration":
+				case "SFContentBlockerState":
+				case "SFSafariViewControllerConfiguration":
 					return true;
 				}
 				break;
@@ -207,6 +209,8 @@ namespace Introspection {
 				case "CXCallDirectoryExtensionContext":
 				case "CXCallUpdate":
 				case "CXProviderConfiguration":
+				case "SFContentBlockerState":
+				case "SFSafariViewControllerConfiguration":
 					return true;
 				}
 				break;
@@ -233,6 +237,9 @@ namespace Introspection {
 				case "HKWorkout":
 				// iOS10
 				case "CXCallDirectoryExtensionContext":
+					return true;
+				// iOS 10
+				case "SFSafariViewControllerConfiguration":
 					return true;
 				}
 				break;
