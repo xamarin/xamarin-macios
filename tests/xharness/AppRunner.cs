@@ -216,6 +216,7 @@ namespace xharness
 			var sim_services = new string [] {
 					"kTCCServiceAddressBook",
 					"kTCCServicePhotos",
+					"kTCCServiceMediaLibrary",
 					"kTCCServiceUbiquity",
 					"kTCCServiceWillow"
 				};
