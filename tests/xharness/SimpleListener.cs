@@ -15,7 +15,8 @@ namespace xharness
 
 		public IPAddress Address { get; set; }
 		public int Port { get; set; }
-		public LogStream Log { get; set; }
+		public Log Log { get; set; }
+		public LogStream TestLog { get; set; }
 		public bool AutoExit { get; set; }
 
 		public abstract void Initialize ();
@@ -30,7 +31,7 @@ namespace xharness
 
 		protected void Connected (string remote)
 		{
-			Console.WriteLine ("Connection from {0} saving logs to {1}", remote, Log.FullPath);
+			Log.WriteLine ("Connection from {0} saving logs to {1}", remote, TestLog.FullPath);
 			connected.Set ();
 
 			if (output_stream != null) {
@@ -38,7 +39,7 @@ namespace xharness
 				output_stream.Dispose ();
 			}
 
-			var fs = Log.FileStream;
+			var fs = TestLog.FileStream;
 			// a few extra bits of data only available from this side
 			string header = String.Format ("[Local Date/Time:\t{1}]{0}[Remote Address:\t{2}]{0}",
 				Environment.NewLine, DateTime.Now, remote);

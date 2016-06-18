@@ -238,6 +238,8 @@ namespace xharness
 			try {
 				Directory.CreateDirectory (LogDirectory);
 				Harness.HarnessLog = MainLog = Logs.CreateStream (LogDirectory, "Harness.log", "Harness log");
+				Harness.HarnessLog.Timestamp = true;
+
 				Task.Run (async () =>
 				{
 					await PopulateTasksAsync ();
@@ -416,6 +418,7 @@ function toggleContainerVisibility (containerName)
 							var logs = test.AggregatedLogs;
 							if (logs.Count () > 0) {
 								foreach (var log in logs) {
+									log.Flush ();
 									writer.WriteLine ("<a href='{0}' type='text/plain'>{1}</a><br />", log.FullPath.Substring (LogDirectory.Length + 1), log.Description);
 									if (log.Description == "Test log") {
 										var summary = string.Empty;
