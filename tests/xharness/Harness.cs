@@ -69,7 +69,7 @@ namespace xharness
 
 		public Harness ()
 		{
-			LaunchTimeout = InWrench ? 1 : 120;
+			LaunchTimeout = InWrench ? 3 : 120;
 		}
 
 		public string XcodeRoot {
