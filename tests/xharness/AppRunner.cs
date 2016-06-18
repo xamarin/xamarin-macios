@@ -360,7 +360,8 @@ namespace xharness
 				throw new NotImplementedException ();
 			}
 			listener_log = Logs.CreateStream (LogDirectory, string.Format ("test-{0:yyyyMMdd_HHmmss}.log", DateTime.Now), "Test log");
-			listener.Log = listener_log;
+			listener.TestLog = listener_log;
+			listener.Log = main_log;
 			listener.AutoExit = true;
 			listener.Address = System.Net.IPAddress.Any;
 			listener.Initialize ();
