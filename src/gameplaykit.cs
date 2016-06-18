@@ -1003,7 +1003,7 @@ namespace XamCore.GameplayKit {
 	[NoMac]
 	[iOS (9,1)][TV (9,0)]
 	[BaseType (typeof (NSObject))]
-	// [DisableDefaultCtor] // <quote>Used as a hint for faster removal via [GKQuadTree removeData:WithNode:]</quote>
+	[DisableDefaultCtor] // <quote>Used as a hint for faster removal via [GKQuadTree removeData:WithNode:]</quote>
 	interface GKQuadTreeNode {
 	}
 
