@@ -61,4 +61,22 @@ namespace XamCore.AVFoundation {
 		}
 	}
 #endif
+
+#if !XAMCORE_4_0
+	partial class AVAudioChannelLayout {
+
+		[Obsolete ("Valid instance of this type cannot be directly created")]
+		public AVAudioChannelLayout ()
+		{
+		}
+	}
+
+	partial class AVAudioConnectionPoint {
+
+		[Obsolete ("Valid instance of this type cannot be directly created")]
+		public AVAudioConnectionPoint ()
+		{
+		}
+	}
+#endif
 }
