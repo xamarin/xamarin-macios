@@ -284,6 +284,7 @@ namespace Introspection
 			"Subcardioid",
 			"Subentities",
 			"Subheadline",
+			"Sublocality",
 			"Submesh",
 			"Submeshes",
 			"Subpixel",
