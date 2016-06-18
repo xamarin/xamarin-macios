@@ -6149,7 +6149,6 @@ namespace XamCore.UIKit {
 	
 	[iOS (10,0)]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
 	public interface UIRefreshControlHosting
 	{
 		[NoTV]
@@ -10632,7 +10631,6 @@ namespace XamCore.UIKit {
 	public interface IUITableViewDataSourcePrefetching {}
 	[iOS (10,0)]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
 	public interface UITableViewDataSourcePrefetching
 	{
 		[Abstract]
