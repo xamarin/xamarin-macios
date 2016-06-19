@@ -45,7 +45,8 @@ namespace MonoTouchFixtures.Contacts {
 			// the output is opaque and an internal type
 			// note: this is not very robust - but I want to know if this changes during the next betas
 			Assert.True (keys.Description.StartsWith ("<CNAggregateKeyDescriptor:", StringComparison.Ordinal), "type");
-			Assert.True (keys.Description.Contains ("kind=Formatter style: 1002"), "kind");
+			Assert.True (keys.Description.Contains (" kind=Formatter "), "kind");
+			Assert.True (keys.Description.Contains (" style: 100"), "style"); // 1002 before iOS 10, 1003 after
 		}
 
 		[Test]
