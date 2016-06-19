@@ -118,6 +118,13 @@ namespace MonoMacFixtures {
 				// NSViewController started implementing NSUserInterfaceItemIdentification in 10.10
 				if (!Mac.CheckSystemVersion (10, 10) && (type == typeof(NSViewController) || type.IsSubclassOf (typeof (NSViewController))))
 					return true;
+				switch (type.Name) {
+				case "NSMenu":
+				case "NSMenuItem":
+					if (!Mac.CheckSystemVersion (10, 12))
+						return true;
+					break;
+				}
 
 				break;
 			case "NSMenuDelegate":
@@ -142,6 +149,17 @@ namespace MonoMacFixtures {
 				case "NSTitlebarAccessoryViewController":
 					if (!Mac.CheckSystemVersion (10, 12))
 						return true; 
+					break;
+				}
+				break;
+
+			case "NSAccessibility":
+			case "NSAccessibilityElement":
+				switch (type.Name) {
+				case "NSMenu":
+				case "NSMenuItem":
+					if (!Mac.CheckSystemVersion (10, 12))
+						return true;
 					break;
 				}
 				break;

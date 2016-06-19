@@ -113,7 +113,12 @@ namespace Introspection {
 				// NSViewController started implementing NSUserInterfaceItemIdentification in 10.10
 				if (!Mac.CheckSystemVersion (10, 10) && (type == typeof(NSViewController) || type.IsSubclassOf (typeof (NSViewController))))
 					return true;
-
+				switch (type.Name) {
+				case "NSMenuItem":
+					if (!Mac.CheckSystemVersion (10, 12))
+						return true;
+					break;
+				}
 				break;
 			case "NSMenuDelegate":
 				switch (type.Name) {
@@ -131,6 +136,16 @@ namespace Introspection {
 			case "NSDraggingInfo":
 				return true; // We have to keep the type to maintain backwards compatibility.
 #endif
+			case "NSAccessibility":
+			case "NSAccessibilityElement":
+				switch (type.Name) {
+				case "NSMenu":
+				case "NSMenuItem":
+				if (!Mac.CheckSystemVersion (10, 12))
+				return true;
+				break;
+				}
+			break;
 			}
 
 			switch (type.Name) {

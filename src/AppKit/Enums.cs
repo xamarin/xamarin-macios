@@ -1699,7 +1699,9 @@ namespace XamCore.AppKit {
 		Below,
 		Above,
 		Left,
-		Right
+		Right,
+		Leading = Left,
+		Trailing = Right
 	}
 	
 	[Native]
@@ -2340,7 +2342,8 @@ namespace XamCore.AppKit {
 		PostImageOnFlickr,
 		PostVideoOnVimeo,
 		PostVideoOnYouku,
-		PostVideoOnTudou
+		PostVideoOnTudou,
+		CloudSharing
 	}
 
 	[Flags]
@@ -2533,4 +2536,50 @@ namespace XamCore.AppKit {
 		Always,
 		InFullScreen
 	}
+
+
+	[Mac (10, 12)]
+	[Native]
+	public enum NSGridCellPlacement : nint
+	{
+		Inherited = 0,
+		None,
+		Leading,
+		Top = Leading,
+		Trailing,
+		Bottom = Trailing,
+		Center,
+		Fill
+	}
+
+	[Mac (10, 12)]
+	[Native]
+	public enum NSGridRowAlignment : nint
+	{
+		Inherited = 0,
+		None,
+		FirstBaseline,
+		LastBaseline
+	}
+
+	[Mac (10, 12)]
+	[Native]
+	public enum NSImageLayoutDirection : nint
+	{
+		Unspecified = -1,
+		LeftToRight = 2,
+		RightToLeft = 3
+	}
+
+	[Mac (10, 12)]
+	[Native][Flags]
+	public enum NSCloudKitSharingServiceOptions : nuint
+	{
+		Standard = 0,
+		AllowPublic = 1 << 0,
+		AllowPrivate = 1 << 1,
+		AllowReadOnly = 1 << 4,
+		AllowReadWrite = 1 << 5
+	}
+
 }

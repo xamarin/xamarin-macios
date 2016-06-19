@@ -38,6 +38,7 @@ using XamCore.CoreGraphics;
 #if !WATCH
 using XamCore.CoreMedia;
 using XamCore.SceneKit;
+using XamCore.CloudKit;
 #endif
 using XamCore.Security;
 #if IOS
@@ -8569,6 +8570,14 @@ namespace XamCore.Foundation
 		[Export ("preferredPresentationSize")]
 		CGSize PreferredPresentationSize { get; }
 #endif
+
+		//[Mac (10,12)][Async]
+		//[Export ("registerCloudKitShareWithPreparationHandler:")]
+		//void RegisterCloudKitShare (Action<Action<CKShare, CKContainer, NSError>> preparationHandler);
+
+		//[Mac (10,12)]
+		//[Export ("registerCloudKitShare:container:")]
+		//void RegisterCloudKitShare (CKShare share, CKContainer container);
 	}
 
 #if XAMCORE_2_0
