@@ -219,6 +219,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "HealthKitUI", "HealthKitUI", 9,3 },
 
 					{ "CallKit", "CallKit", 10 },
+					{ "Messages", "Messages", 10 },
 					{ "Speech", "Speech", 10 },
 					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
 				};

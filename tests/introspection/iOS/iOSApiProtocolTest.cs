@@ -161,6 +161,8 @@ namespace Introspection {
 				case "CXCallDirectoryExtensionContext":
 				case "CXCallUpdate":
 				case "CXProviderConfiguration":
+				case "MSMessageTemplateLayout":
+				case "MSSession":
 				case "SFContentBlockerState":
 				case "SFSafariViewControllerConfiguration":
 				case "VSAccountMetadata":
@@ -211,6 +213,8 @@ namespace Introspection {
 				case "CXCallDirectoryExtensionContext":
 				case "CXCallUpdate":
 				case "CXProviderConfiguration":
+				case "MSMessageTemplateLayout":
+				case "MSSession":
 				case "SFContentBlockerState":
 				case "SFSafariViewControllerConfiguration":
 				case "VSAccountMetadata":

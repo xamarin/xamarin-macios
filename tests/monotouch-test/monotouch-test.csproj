@@ -532,6 +532,7 @@
     <Compile Include="ObjCRuntime\ExceptionsTest.cs" />
     <Compile Include="Foundation\NSExpressionTest.cs" />
     <Compile Include="CoreGraphics\RectTest.cs" />
+    <Compile Include="Messages\MSMessageTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
@@ -592,6 +593,7 @@
     <Folder Include="MetalPerformanceShaders\" />
     <Folder Include="CoreMidi\" />
     <Folder Include="CoreAudioKit\" />
+    <Folder Include="Messages\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />
