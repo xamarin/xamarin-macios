@@ -21408,7 +21408,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,10)]
 	[Protocol]
-	public interface NSAccessibility 
+	public interface NSAccessibility
 	{
 		[Mac (10, 10)]
 		[Abstract]
