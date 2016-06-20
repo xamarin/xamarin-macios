@@ -2063,6 +2063,101 @@ namespace XamCore.UIKit {
 #endif
 	}
 
+	interface IUIViewAnimating {}
+
+	[iOS(10,0)]
+	[Protocol]
+	[BaseType (typeof(NSObject))]
+	interface UIViewAnimating
+	{
+		[Abstract]
+		[Export ("state")]
+		UIViewAnimatingState State { get; }
+
+		[Abstract]
+		[Export ("running")]
+		bool Running { [Bind ("isRunning")] get; }
+
+		[Abstract]
+		[Export ("reversed")]
+		bool Reversed { [Bind ("isReversed")] get; set; }
+
+		[Abstract]
+		[Export ("fractionComplete")]
+		nfloat FractionComplete { get; set; }
+
+		[Abstract]
+		[Export ("startAnimation")]
+		void StartAnimation ();
+
+		[Abstract]
+		[Export ("pauseAnimation")]
+		void PauseAnimation ();
+
+		[Abstract]
+		[Export ("stopAnimation:")]
+		void StopAnimation (bool withoutFinishing);
+
+		[Abstract]
+		[Export ("finishAnimationAtPosition:")]
+		void FinishAnimationAtPosition (UIViewAnimatingPosition finalPosition);
+	}
+
+	interface IUIViewImplicitlyAnimating {}
+	[iOS(10,0)]
+	[Protocol, Model]
+	interface UIViewImplicitlyAnimating : UIViewAnimating
+	{
+		[Export ("addAnimations:delayFactor:")]
+		void AddAnimations (Action animation, nfloat delayFactor);
+	
+		[Export ("addAnimations:")]
+		void AddAnimations (Action animation);
+	
+		[Export ("addCompletion:")]
+		void AddCompletion (Action<UIViewAnimatingPosition> completion);
+	
+		[Export ("continueAnimationWithTimingParameters:durationFactor:")]
+		void ContinueAnimationWithTimingParameters ([NullAllowed] IUITimingCurveProvider parameters, nfloat durationFactor);
+	}
+		
+	[iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	interface UIViewPropertyAnimator : UIViewImplicitlyAnimating, NSCopying
+	{
+		[NullAllowed, Export ("timingParameters", ArgumentSemantic.Copy)]
+		IUITimingCurveProvider TimingParameters { get; }
+	
+		[Export ("duration")]
+		double Duration { get; }
+	
+		[Export ("userInteractionEnabled")]
+		bool UserInteractionEnabled { [Bind ("isUserInteractionEnabled")] get; set; }
+	
+		[Export ("interruptible")]
+		bool Interruptible { [Bind ("isInterruptible")] get; set; }
+	
+		[Export ("initWithDuration:timingParameters:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (double duration, IUITimingCurveProvider parameters);
+	
+		[Export ("initWithDuration:curve:animations:")]
+		IntPtr Constructor (double duration, UIViewAnimationCurve curve, [NullAllowed] Action animations);
+	
+		[Export ("initWithDuration:controlPoint1:controlPoint2:animations:")]
+		IntPtr Constructor (double duration, CGPoint point1, CGPoint point2, Action animations);
+	
+		[Export ("initWithDuration:dampingRatio:animations:")]
+		IntPtr Constructor (double duration, nfloat ratio, [NullAllowed] Action animations);
+	
+		[Static]
+		[Export ("runningPropertyAnimatorWithDuration:delay:options:animations:completion:")]
+		UIViewPropertyAnimator CreateRunningProperty (double duration, double delay, UIViewAnimationOptions options, [NullAllowed] Action animations, [NullAllowed] Action<UIViewAnimatingPosition> completion);
+	
+		[Export ("continueAnimationWithTimingParameters:durationFactor:")]
+		void ContinueAnimation ([NullAllowed] IUITimingCurveProvider timingParameters, nfloat durationFactor);
+	}
+	
 	public interface IUIViewControllerPreviewing {}
 	[Protocol]
 	[iOS (9,0)]
@@ -2790,6 +2885,16 @@ namespace XamCore.UIKit {
 		nfloat FrictionTorque { get; set; }
 	}
 
+	[iOS (10,0)]
+	[Protocol]
+	[BaseType (typeof(NSObject))]
+	public interface UIContentSizeCategoryAdjusting
+	{
+		[Abstract]
+		[Export ("adjustsFontForContentSizeCategory")]
+		bool AdjustsFontForContentSizeCategory { get; set; }
+	}
+
 	interface UIContentSizeCategoryChangedEventArgs {
 		[Export ("UIContentSizeCategoryNewValueKey")]
 		NSString WeakNewValue { get; }
@@ -3510,8 +3615,32 @@ namespace XamCore.UIKit {
 		[iOS (9,0)] // added in Xcode 7.1 / iOS 9.1 SDK
 		[Export ("remembersLastFocusedIndexPath")]
 		bool RemembersLastFocusedIndexPath { get; set; }
+
+		[iOS (10, 0)]
+		[NullAllowed, Export ("prefetchDataSource", ArgumentSemantic.Weak)]
+		IUICollectionViewDataSourcePrefetching PrefetchDataSource { get; set; }
+
+		[iOS (10, 0)]
+		[Export ("prefetchingEnabled")]
+		bool PrefetchingEnabled { [Bind ("isPrefetchingEnabled")] get; set; }
 	}
 
+	interface IUICollectionViewDataSourcePrefetching {}
+	
+	[Protocol]
+	[BaseType (typeof(NSObject))]
+	interface UICollectionViewDataSourcePrefetching
+	{
+		[iOS (10,0)]
+		[Abstract]
+		[Export ("collectionView:prefetchItemsAtIndexPaths:")]
+		void PrefetchItems (UICollectionView collectionView, NSIndexPath[] indexPaths);
+	
+		[iOS (10,0)]
+		[Export ("collectionView:cancelPrefetchingForItemsAtIndexPaths:")]
+		void CancelPrefetching (UICollectionView collectionView, NSIndexPath[] indexPaths);
+	}
+		
 	//
 	// Combined version of UICollectionViewDataSource, UICollectionViewDelegate
 	//
@@ -3752,7 +3881,11 @@ namespace XamCore.UIKit {
 
 		[iOS (9,0)]
 		[Export ("sectionFootersPinToVisibleBounds")]
-		bool SectionFootersPinToVisibleBounds { get; set; }		
+		bool SectionFootersPinToVisibleBounds { get; set; }
+
+		[iOS (10, 0)]
+		[Field ("UICollectionViewFlowLayoutAutomaticSize")]
+		CGSize UICollectionViewFlowLayoutAutomaticSize { get; }
 	}
 
 	[Since (6,0)]
@@ -4440,6 +4573,7 @@ namespace XamCore.UIKit {
 		[iOS (8,0)]
 		[Field ("NSUserActivityDocumentURLKey")]
 		NSString UserActivityDocumentUrlKey { get; }
+
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -5274,7 +5408,7 @@ namespace XamCore.UIKit {
 
 	[iOS (10,0)]
 	[BaseType (typeof(UIGraphicsRendererFormat))]
-	interface UIGraphicsImageRendererFormat
+	public interface UIGraphicsImageRendererFormat
 	{
 		[Export ("scale")]
 		nfloat Scale { get; set; }
@@ -5985,6 +6119,7 @@ namespace XamCore.UIKit {
 	[NoTV]
 	[Since (4,0)]
 	[BaseType (typeof (NSObject))]
+	[Availability (Deprecated = Platform.iOS_10_0, Message = "Soft deprecated in iOS 10, use UserNotifications.UNNotificationRequest instead")]
 	public interface UILocalNotification : NSCoding, NSCopying {
 		[Export ("fireDate", ArgumentSemantic.Copy)]
 		[NullAllowed]
@@ -6504,7 +6639,13 @@ namespace XamCore.UIKit {
 
 		[iOS (9,0)]
 		[Export ("flipsForRightToLeftLayoutDirection")]
-		bool FlipsForRightToLeftLayoutDirection { get; }		
+		bool FlipsForRightToLeftLayoutDirection { get; }
+
+#if !WATCH
+		[iOS (10, 0)]
+		[Export ("imageRendererFormat")]
+		UIGraphicsImageRendererFormat ImageRendererFormat { get; }
+#endif
 	}
 
 #if !WATCH
@@ -6998,7 +7139,7 @@ namespace XamCore.UIKit {
 	}
 	
 	[BaseType (typeof (UIView))]
-	public interface UILabel {
+	public interface UILabel : UIContentSizeCategoryAdjusting {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
@@ -7640,6 +7781,7 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		// [Appearance] rdar://22818366
+		[Appearance]
 		[Export ("barStyle", ArgumentSemantic.Assign)]
 		UIBarStyle BarStyle { get; set; }
 
@@ -8304,6 +8446,26 @@ namespace XamCore.UIKit {
 		[NullAllowed]
 		[Export ("colors", ArgumentSemantic.Copy)]
 		UIColor [] Colors { get; set; }
+
+		[iOS (10,0)]
+		[Export ("setItems:options:")]
+		void SetItems (NSDictionary<NSString, NSObject>[] items, NSDictionary<NSString, NSObject> options);
+		
+		[NoWatch, NoTV, iOS (10, 0)]
+		[Export ("hasStrings")]
+		bool HasStrings { get; }
+
+		[NoWatch, NoTV, iOS (10, 0)]
+		[Export ("hasURLs")]
+		bool HasURLs { get; }
+
+		[NoWatch, NoTV, iOS (10, 0)]
+		[Export ("hasImages")]
+		bool HasImages { get; }
+		
+		[NoWatch, NoTV, iOS (10, 0)]
+		[Export ("hasColors")]
+		bool HasColors { get; }
 	}
 
 	[NoTV]
@@ -11585,6 +11747,23 @@ namespace XamCore.UIKit {
 		UIToolbarDelegate Delegate { get; set; }
 	}
 
+	public interface IUITimingCurveProvider {}
+	[Protocol]
+	interface UITimingCurveProvider : NSCoding, NSCopying
+	{
+		[Abstract]
+		[Export ("timingCurveType")]
+		UITimingCurveType TimingCurveType { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("cubicTimingParameters")]
+		UICubicTimingParameters CubicTimingParameters { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("springTimingParameters")]
+		UISpringTimingParameters SpringTimingParameters { get; }
+	}
+
 	[NoTV]
 	[BaseType (typeof (UIBarPositioningDelegate))]
 	[Model]
@@ -14572,6 +14751,25 @@ namespace XamCore.UIKit {
 		UIMotionEffect [] MotionEffects { get; set; }
 	}
 
+	[iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	interface UISpringTimingParameters : UITimingCurveProvider
+	{
+		[Export ("initialVelocity")]
+		CGVector InitialVelocity { get; }
+
+		[Export ("initWithDampingRatio:initialVelocity:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (nfloat ratio, CGVector velocity);
+
+		[Export ("initWithMass:stiffness:damping:initialVelocity:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (nfloat mass, nfloat stiffness, nfloat damping, CGVector velocity);
+
+		[Export ("initWithDampingRatio:")]
+		IntPtr Constructor (nfloat ratio);
+	}
+		
 	[NoTV]
 	[Category, BaseType (typeof (NSString))]
 	interface UIStringDrawing {
@@ -14748,6 +14946,10 @@ namespace XamCore.UIKit {
 		[NullAllowed] // by default this property is null
 		[Export ("primaryLanguage")]
 		string PrimaryLanguage { get; set; }
+
+		[iOS (10,0)]
+		[Export ("handleInputModeListFromView:withEvent:")]
+		void HandleInputModeList (UIView fromView, UIEvent withEvent);
 	}
 
 	[NoWatch]
@@ -14766,6 +14968,13 @@ namespace XamCore.UIKit {
 		[Abstract]
 		[Export ("adjustTextPositionByCharacterOffset:")]
 		void AdjustTextPositionByCharacterOffset (nint offset);		
+
+		// Another abstract that was introduced on this released, breaking ABI
+		// Radar: 26867207
+		//[Abstract]
+		[iOS (10, 0)]
+		[NullAllowed, Export ("documentInputMode")]
+		UITextInputMode DocumentInputMode { get; }
 	}
 
 	[NoWatch]
@@ -15178,6 +15387,28 @@ namespace XamCore.UIKit {
 		NSIndexPath NextFocusedIndexPath { [return: NullAllowed] get; }
 	}
 
+	[iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	interface UICubicTimingParameters : UITimingCurveProvider
+	{
+		[Export ("animationCurve")]
+		UIViewAnimationCurve AnimationCurve { get; }
+
+		[Export ("controlPoint1")]
+		CGPoint ControlPoint1 { get; }
+
+		[Export ("controlPoint2")]
+		CGPoint ControlPoint2 { get; }
+
+		[Export ("initWithAnimationCurve:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (UIViewAnimationCurve curve);
+
+		[Export ("initWithControlPoint1:controlPoint2:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (CGPoint point1, CGPoint point2);
+	}
+		
 	[NoWatch]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]

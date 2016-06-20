@@ -751,13 +751,20 @@ namespace XamCore.UIKit {
 	[Flags]
 	[NoTV][NoWatch]
 	public enum UIDataDetectorType : nuint {
-		PhoneNumber   = 1 << 0,
-		Link          = 1 << 1,
+		PhoneNumber            = 1 << 0,
+		Link                   = 1 << 1,
 
 		[iOS (4,0)]
-		Address       = 1 << 2,
+		Address                = 1 << 2,
 		[iOS (4,0)]
-		CalendarEvent = 1 << 3,
+		CalendarEvent          = 1 << 3,
+
+		[iOS (10,0)]
+		ShipmentTrackingNumber = 1 << 4,
+		[iOS (10,0)]
+		FlightNumber           = 1 << 5,
+		[iOS (10,0)]
+		LookupSuggestion       = 1 << 6,
 
 		None          = 0,
 #if XAMCORE_2_0
@@ -1878,6 +1885,34 @@ namespace XamCore.UIKit {
 		InvokeDefaultAction,
 		PresentActions,
 		Preview
+	}
+
+	[iOS (10,0)]
+	[Native]
+	public enum UIViewAnimatingState : nint
+	{
+		Inactive,
+		Active,
+		Stopped
+	}
+
+	[iOS (10,0)]
+	[Native]
+	public enum UIViewAnimatingPosition : nint
+	{
+		End,
+		Start,
+		Current
+	}
+
+	[iOS (10,0)]
+	[Native]
+	public enum UITimingCurveType : nint
+	{
+		Builtin,
+		Cubic,
+		Spring,
+		Composed
 	}
 	
 }
