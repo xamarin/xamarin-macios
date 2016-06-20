@@ -113,6 +113,7 @@ namespace Introspection {
 				// NSViewController started implementing NSUserInterfaceItemIdentification in 10.10
 				if (!Mac.CheckSystemVersion (10, 10) && (type == typeof(NSViewController) || type.IsSubclassOf (typeof (NSViewController))))
 					return true;
+
 				switch (type.Name) {
 				case "NSMenuItem":
 					if (!Mac.CheckSystemVersion (10, 12))

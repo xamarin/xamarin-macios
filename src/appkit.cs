@@ -3760,7 +3760,7 @@ namespace XamCore.AppKit {
 		[Mac (10,10)]
 		[Static, Export ("quaternaryLabelColor")]
 		NSColor QuaternaryLabelColor { get; }
-
+		
 		[Mac (10,12)]
 		[Static]
 		[Export ("colorWithDisplayP3Red:green:blue:alpha:")]
@@ -13116,7 +13116,7 @@ namespace XamCore.AppKit {
 		[Mac (10,9)]
 		[Static, Export ("isAutomaticDashSubstitutionEnabled")]
 		bool IsAutomaticDashSubstitutionEnabled ();
-
+		
 		[Mac (10, 12)]
 		[Static]
 		[Export ("isAutomaticCapitalizationEnabled")]
@@ -21408,7 +21408,8 @@ namespace XamCore.AppKit {
 
 	[Mac (10,10)]
 	[Protocol]
-	public interface NSAccessibility {
+	public interface NSAccessibility 
+	{
 		[Mac (10, 10)]
 		[Abstract]
 		[Export ("accessibilityFrame", ArgumentSemantic.Assign)]

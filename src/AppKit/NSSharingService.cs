@@ -54,7 +54,7 @@ namespace XamCore.AppKit
 
 			case NSSharingServiceName.PostVideoOnTudou:
 				return NSSharingService.GetSharingService(NSSharingServiceNamePostVideoOnTudou);
-
+			
 			case NSSharingServiceName.CloudSharing:
 				return NSSharingService.GetSharingService (NSSharingServiceNameCloudSharing);
 			default:
