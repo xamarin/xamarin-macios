@@ -315,7 +315,7 @@ namespace Xamarin.MMP.Tests
 				{
 					XM45 = true,
 					TestCode = "System.Console.WriteLine (typeof (System.Windows.DependencyObject));",
-					References = "<Reference Include=\"WindowsBase\" />"
+					References = "<Reference Include=\"WindowsBase\" /><Reference Include=\"System.Xaml\" />"
 				};
 
 				TI.TestUnifiedExecutable (test, shouldFail : true);
