@@ -52,10 +52,7 @@ namespace MonoTouchFixtures.Contacts {
 				Assert.AreEqual (string.Empty, contact.GivenName, "GivenName");
 				Assert.AreNotEqual (string.Empty, contact.Identifier, "Identifier");
 				Assert.IsNull (contact.ImageData, "ImageData");
-				if (UIDevice.CurrentDevice.CheckSystemVersion (10, 0))
-					Assert.IsTrue (contact.ImageDataAvailable, "ImageDataAvailable");
-				else
-					Assert.IsFalse (contact.ImageDataAvailable, "ImageDataAvailable");
+				Assert.IsFalse (contact.ImageDataAvailable, "ImageDataAvailable");
 				Assert.AreEqual (0, contact.InstantMessageAddresses.Length, "InstantMessageAddresses");
 				Assert.AreEqual (string.Empty, contact.JobTitle, "JobTitle");
 				Assert.AreEqual (string.Empty, contact.MiddleName, "MiddleName");
@@ -112,8 +109,10 @@ namespace MonoTouchFixtures.Contacts {
 				Assert.AreNotEqual (string.Empty, contact.Identifier, "Identifier");
 
 				contact.ImageData = new NSData ();
-				Assert.IsNotNull (contact.ImageData, "ImageData");
-				Assert.IsFalse (contact.ImageDataAvailable, "ImageDataAvailable");
+				Assert.IsNotNull (contact.ImageData, "ImageData-2");
+				// iOS 10 (beta 1) fixed this bug (if not null then it's available)
+				var avail = UIDevice.CurrentDevice.CheckSystemVersion (10,0);
+				Assert.That (contact.ImageDataAvailable, Is.EqualTo (avail), "ImageDataAvailable-2");
 
 				contact.InstantMessageAddresses = new CNLabeledValue<CNInstantMessageAddress> [] {
 					new CNLabeledValue<CNInstantMessageAddress> ("label", new CNInstantMessageAddress ("user", "service")),
