@@ -40,6 +40,7 @@ namespace LinkSdk.Net.Http {
 			}
 		}
 
+#if !__WATCHOS__
 		[Test]
 		public void CFNetwork ()
 		{
@@ -50,6 +51,7 @@ namespace LinkSdk.Net.Http {
 				Assert.False (handler.UseSystemProxy, "UseSystemProxy");
 			}
 		}
+#endif
 
 		[Test]
 		public void NSUrlSession ()
