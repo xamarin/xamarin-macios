@@ -137,7 +137,7 @@ namespace Xamarin.MacDev.Tasks
 				var fileName = name + "~" + target + extension;
 				var path = Path.Combine (dir, fileName);
 
-				if (!Directory.Exists (path))
+				if (!Directory.Exists (path) && !File.Exists (path))
 					continue;
 
 				var logicalName = !string.IsNullOrEmpty (nibDir) ? Path.Combine (nibDir, fileName) : fileName;
@@ -148,7 +148,7 @@ namespace Xamarin.MacDev.Tasks
 				yield return item;
 			}
 
-			if (Directory.Exists (expected.ItemSpec))
+			if (Directory.Exists (expected.ItemSpec) || File.Exists (expected.ItemSpec))
 				yield return expected;
 
 			yield break;
