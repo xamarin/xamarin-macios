@@ -4600,8 +4600,9 @@ namespace XamCore.Foundation
 		[Export ("setResourceValue:forKey:error:"), Internal]
 		bool SetResourceValue (NSObject value, NSString key, out NSError error);
 		
-		//[Export ("port")]
-		//NSNumber Port { get;}
+		[Export ("port"), Internal]
+		[NullAllowed]
+		NSNumber PortNumber { get; }
 
 		[Field ("NSURLNameKey")]
 		NSString NameKey { get; }

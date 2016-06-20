@@ -8496,6 +8496,10 @@ namespace XamCore.AppKit {
 		[Internal, Field ("NSImageNameMobileMe")]
 		NSString NSImageNameMobileMe { get; }
 
+		[Mac (10, 8)]
+		[Internal, Field ("NSImageNameShareTemplate")]
+		NSString NSImageNameShareTemplate { get; }
+
 		[Mac (10,7)]
 		[Export ("recommendedLayerContentsScale:")]
 		nfloat GetRecommendedLayerContentsScale (nfloat preferredContentsScale);
@@ -22877,6 +22881,7 @@ namespace XamCore.AppKit {
 		NSObject[] GetAccessibilityArrayAttributeValues (NSString attribute, nuint index, nuint maxCount);
 
 		[Mac (10,9)]
+		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
 		[Export ("accessibilityNotifiesWhenDestroyed")]
 		bool AccessibilityNotifiesWhenDestroyed { get; }
 	}

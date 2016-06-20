@@ -68,7 +68,8 @@ namespace XamCore.AppKit {
 		MenuOnStateTemplate,
 		MenuMixedStateTemplate,
 		UserGuest,
-		MobileMe
+		MobileMe,
+		ShareTemplate
 	}
 
 	public partial class NSImage {
@@ -193,6 +194,8 @@ namespace XamCore.AppKit {
 				return ImageNamed (NSImageNameUserGuest);
 			case NSImageName.MobileMe:
 				return ImageNamed (NSImageNameMobileMe);
+			case NSImageName.ShareTemplate:
+				return ImageNamed (NSImageNameShareTemplate);
 			}
 
 			throw new ArgumentException ("Invalid enum value", "name");
