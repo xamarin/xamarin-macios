@@ -90,7 +90,7 @@ namespace MonoTouchFixtures.ImageIO {
 				Assert.That (tag.Namespace.ToString (), Is.EqualTo ("http://ns.adobe.com/exif/1.0/"), "Namespace");
 				Assert.That (tag.Prefix.ToString (), Is.EqualTo ("exif"), "Prefix");
 				Assert.That (tag.Type, Is.EqualTo (CGImageMetadataType.ArrayOrdered), "Type");
-				Assert.That (tag.Value, Is.TypeOf<NSMutableArray> (), "Value");
+				Assert.That (tag.Value, Is.TypeOf<NSArray> (), "Value");
 				Assert.Null (tag.GetQualifiers (), "GetQualifiers");
 			}
 		}

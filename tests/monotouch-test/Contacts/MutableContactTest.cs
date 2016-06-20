@@ -52,7 +52,10 @@ namespace MonoTouchFixtures.Contacts {
 				Assert.AreEqual (string.Empty, contact.GivenName, "GivenName");
 				Assert.AreNotEqual (string.Empty, contact.Identifier, "Identifier");
 				Assert.IsNull (contact.ImageData, "ImageData");
-				Assert.IsFalse (contact.ImageDataAvailable, "ImageDataAvailable");
+				if (UIDevice.CurrentDevice.CheckSystemVersion (10, 0))
+					Assert.IsTrue (contact.ImageDataAvailable, "ImageDataAvailable");
+				else
+					Assert.IsFalse (contact.ImageDataAvailable, "ImageDataAvailable");
 				Assert.AreEqual (0, contact.InstantMessageAddresses.Length, "InstantMessageAddresses");
 				Assert.AreEqual (string.Empty, contact.JobTitle, "JobTitle");
 				Assert.AreEqual (string.Empty, contact.MiddleName, "MiddleName");
