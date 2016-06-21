@@ -2703,6 +2703,9 @@ namespace XamCore.Foundation
 		[Export ("setAttributes:range:")]
 		void LowLevelSetAttributes (IntPtr dictionaryAttrsHandle, NSRange range);
 
+		[Export ("mutableString", ArgumentSemantic.Retain)]
+		NSMutableString MutableString { get; }
+
 		[Export ("addAttribute:value:range:")]
 		void AddAttribute (NSString attributeName, NSObject value, NSRange range);
 
