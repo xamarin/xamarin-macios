@@ -27,6 +27,7 @@ using System.Text;
 using NUnit.Framework;
 using Xamarin.Utils;
 using System.Linq;
+using Xamarin.Tests;
 
 #if XAMCORE_2_0
 using Foundation;

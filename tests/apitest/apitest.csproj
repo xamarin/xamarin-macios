@@ -141,7 +141,7 @@
     <Compile Include="..\api-shared\CoreFoundation\CFNotificationCenterTest.cs">
       <Link>src\CoreFoundation\CFNotificationCenterTest.cs</Link>
     </Compile>
-    <Compile Include="..\bindings\PlatformInfo.cs">
+    <Compile Include="..\common\PlatformInfo.cs">
       <Link>shared\PlatformInfo.cs</Link>
     </Compile>
     <Compile Include="..\common\mac\MacTestMain.cs">
