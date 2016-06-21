@@ -9,7 +9,7 @@ using Xamarin.MacDev;
 
 namespace Xamarin.iOS.Tasks
 {
-	public abstract class FindWatchAppBundleTaskBase : Task
+	public abstract class FindWatchOS1AppExtensionBundleTaskBase : Task
 	{
 		#region Inputs
 
@@ -23,7 +23,7 @@ namespace Xamarin.iOS.Tasks
 		#region Outputs
 
 		[Output]
-		public string WatchAppBundle { get; set; }
+		public string WatchOS1AppExtensionBundle { get; set; }
 
 		#endregion
 
@@ -31,7 +31,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			var pwd = PathUtils.ResolveSymbolicLink (Environment.CurrentDirectory);
 
-			Log.LogTaskName ("FindWatchAppBundle");
+			Log.LogTaskName ("FindWatchOS1AppExtensionBundle");
 			Log.LogTaskProperty ("AppExtensionReferences", AppExtensionReferences);
 
 			for (int i = 0; i < AppExtensionReferences.Length; i++) {
@@ -68,7 +68,7 @@ namespace Xamarin.iOS.Tasks
 					if (bundleIdentifier.Value != expectedBundleIdentifier.Value)
 						continue;
 					
-					WatchAppBundle = PathUtils.AbsoluteToRelative (pwd, PathUtils.ResolveSymbolicLink (bundle));
+					WatchOS1AppExtensionBundle = PathUtils.AbsoluteToRelative (pwd, PathUtils.ResolveSymbolicLink (bundle));
 
 					return true;
 				}

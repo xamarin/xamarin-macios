@@ -58,7 +58,7 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<MacTargetsEnabled>true</MacTargetsEnabled>
+		<IsMacEnabled>true</IsMacEnabled>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props"

@@ -33,19 +33,9 @@ using XamCore.ObjCRuntime;
 
 namespace XamCore.CoreBluetooth {
 
-	public class PeripheralScanningOptions : DictionaryContainer
+	public partial class PeripheralScanningOptions
 	{
 #if !COREBUILD
-		public PeripheralScanningOptions ()
-			: base (new NSMutableDictionary ())
-		{
-		}
-
-		public PeripheralScanningOptions (NSDictionary dictionary)
-			: base (dictionary)
-		{
-		}
-
 		public bool AllowDuplicatesKey {
 			get {
 				var value = GetBoolValue (CBCentralManager.ScanOptionAllowDuplicatesKey);
@@ -58,4 +48,3 @@ namespace XamCore.CoreBluetooth {
 #endif
 	}
 }
-
