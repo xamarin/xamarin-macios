@@ -240,7 +240,7 @@ namespace xharness
 					tasks.Add (task.RunAsync ());
 				Task.WaitAll (tasks.ToArray ());
 				GenerateReport ();
-				return Tasks.Any ((v) => v.ExecutionResult == TestExecutingResult.Failed || v.ExecutionResult == TestExecutingResult.Crashed) ? 1 : 0;
+				return Tasks.Any ((v) => v.Failed) ? 1 : 0;
 			} catch (Exception ex) {
 				Harness.Log ("Unexpected exception: {0}", ex);
 				return 2;
