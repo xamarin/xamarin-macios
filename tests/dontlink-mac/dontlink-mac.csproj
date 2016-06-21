@@ -59,7 +59,6 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
- <Compile Include="MacApiCtorInitTest.cs" />
     <Compile Include="MacApiFieldTest.cs" />
     <Compile Include="MacApiSelectorTest.cs" />
     <Compile Include="MacApiProtocolTest.cs" />
