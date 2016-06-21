@@ -282,6 +282,7 @@ namespace Introspection
 			"Stateful",
 			"Stateright",
 			"Subbeat",
+			"Subcaption",
 			"Subcardioid",
 			"Subentities",
 			"Subheadline",
