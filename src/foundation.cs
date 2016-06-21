@@ -8571,6 +8571,7 @@ namespace XamCore.Foundation
 		CGSize PreferredPresentationSize { get; }
 #endif
 
+		// TODO - Needs CloudKit bound
 		//[Mac (10,12)][Async]
 		//[Export ("registerCloudKitShareWithPreparationHandler:")]
 		//void RegisterCloudKitShare (Action<Action<CKShare, CKContainer, NSError>> preparationHandler);

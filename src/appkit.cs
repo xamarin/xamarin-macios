@@ -418,7 +418,7 @@ namespace XamCore.AppKit {
 		NSApplicationDelegate Delegate { get; set; }
 	
 		[Export ("context")]
-		[Availability (Deprecated = Platform.Mac_10_12, Message = "This method always returns nil. If you need access to the current drawing context, use NSGraphicsContext.CurrentContext inside of a draw operation.")]
+		[Availability (Deprecated = Platform.Mac_10_12, Message = "This method always returns null. If you need access to the current drawing context, use NSGraphicsContext.CurrentContext inside of a draw operation.")]
 		NSGraphicsContext Context { get; }
 	
 		[Export ("hide:")]
@@ -749,9 +749,10 @@ namespace XamCore.AppKit {
 
 		[Mac (10,12)]
 		[Export ("enumerateWindowsWithOptions:usingBlock:")]
-		unsafe void EnumerateWindows (NSWindowListOptions options, Action<NSWindow, /*bool* */ IntPtr> block);
+		void EnumerateWindows (NSWindowListOptions options, NSApplicationEnumerateWindowsHandler block);
 	}
 
+	public delegate void NSApplicationEnumerateWindowsHandler (NSWindow window, ref bool stop);
 	public delegate void ContinueUserActivityRestorationHandler (NSObject [] restorableObjects);
 	
 	[BaseType (typeof (NSObject))]
@@ -1841,7 +1842,7 @@ namespace XamCore.AppKit {
 	public interface NSBrowserCell {
 		[Export ("initTextCell:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string @string);
+		IntPtr Constructor (string str);
 
 		[Export ("initImageCell:")]
 		[DesignatedInitializer]
@@ -1964,7 +1965,7 @@ namespace XamCore.AppKit {
 		string AlternateMnemonic { get; [Bind ("setAlternateTitleWithMnemonic:")] set; }
 	
 		[Export ("setGradientType:")]
-		[Availability (Deprecated = Platform.Mac_10_12, Message = "The gradientType property is unused, and setting it has no effect.")]
+		[Availability (Deprecated = Platform.Mac_10_12, Message = "The GradientType property is unused, and setting it has no effect.")]
 		void SetGradientType (NSGradientType type);
 	
 		[Export ("imageDimsWhenDisabled")]
@@ -2004,27 +2005,27 @@ namespace XamCore.AppKit {
 		[Mac (10,12)]
 		[Static]
 		[Export ("buttonWithTitle:image:target:action:")]
-		NSButton ButtonWithTitle (string title, NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSButton CreateButton (string title, NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Mac (10,12)]
 		[Static]
 		[Export ("buttonWithTitle:target:action:")]
-		NSButton ButtonWithTitle (string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSButton CreateButton (string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Mac (10,12)]
 		[Static]
 		[Export ("buttonWithImage:target:action:")]
-		NSButton ButtonWithImage (NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSButton CreateButton (NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Mac (10,12)]
 		[Static]
 		[Export ("checkboxWithTitle:target:action:")]
-		NSButton CheckboxWithTitle (string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSButton CreateCheckbox (string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Mac (10,12)]
 		[Static]
 		[Export ("radioButtonWithTitle:target:action:")]
-		NSButton RadioButtonWithTitle (string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSButton CreateRadioButton (string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Export ("title")]
 		string Title { get; set; } 
@@ -3764,12 +3765,12 @@ namespace XamCore.AppKit {
 		[Mac (10,12)]
 		[Static]
 		[Export ("colorWithDisplayP3Red:green:blue:alpha:")]
-		NSColor ColorWithDisplayP3Red (nfloat red, nfloat green, nfloat blue, nfloat alpha);
+		NSColor FromDisplayP3 (nfloat red, nfloat green, nfloat blue, nfloat alpha);
 
 		[Mac (10,12)]
 		[Static]
 		[Export ("colorWithColorSpace:hue:saturation:brightness:alpha:")]
-		NSColor ColorWithColorSpace (NSColorSpace space, nfloat hue, nfloat saturation, nfloat brightness, nfloat alpha);
+		NSColor FromColor (NSColorSpace space, nfloat hue, nfloat saturation, nfloat brightness, nfloat alpha);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -3976,7 +3977,7 @@ namespace XamCore.AppKit {
 		[Mac (10, 12)]
 		[Static]
 		[Export ("extendedSRGBColorSpace")]
-		NSColorSpace ExtendedSRGBColorSpace { get; }
+		NSColorSpace ExtendedSRgbColorSpace { get; }
 
 		[Mac (10, 12)]
 		[Static]
@@ -6869,7 +6870,7 @@ namespace XamCore.AppKit {
 		[Export ("windowNumber")]
 		nint WindowNumber { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_12, Message = "This method always returns nil. If you need access to the current drawing context, use NSGraphicsContext.CurrentContext inside of a draw operation.")]
+		[Availability (Deprecated = Platform.Mac_10_12, Message = "This method always returns null. If you need access to the current drawing context, use NSGraphicsContext.CurrentContext inside of a draw operation.")]
 		[Export ("context")]
 		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		NSGraphicsContext Context { get; }
@@ -8974,7 +8975,7 @@ namespace XamCore.AppKit {
 	[Static]
 	public partial interface NSImageHint {
 		[Field ("NSImageHintCTM")]
-		NSString CTM { get; }
+		NSString Ctm { get; }
 
 		[Field ("NSImageHintInterpolation")]
 		NSString Interpolation { get; }
@@ -9673,7 +9674,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10,12)]
 		[Export ("constraintsAffectingLayoutForOrientation:")]
-		NSLayoutConstraint[] GetConstraints (NSLayoutConstraintOrientation orientation);
+		NSLayoutConstraint [] GetConstraintsAffectingLayout (NSLayoutConstraintOrientation orientation);
 	}
 
 	public delegate void NSTextLayoutEnumerateLineFragments (CGRect rect, CGRect usedRectangle, NSTextContainer textContainer, NSRange glyphRange, out bool stop);
@@ -11806,7 +11807,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10,12)]
 		[Export ("newWindowForTab:")]
-		void NewWindowForTab ([NullAllowed] NSObject sender);
+		void GetNewWindowForTab ([NullAllowed] NSObject sender);
 	}
 
 	[Mac (10,10)]
@@ -12558,14 +12559,15 @@ namespace XamCore.AppKit {
 
 		[Mac (10,12)]
 		[Static]
+		[Internal]
 		[Export ("segmentedControlWithLabels:trackingMode:target:action:")]
-		NSSegmentedControl FromLabels (string[] labels, NSSegmentSwitchTracking trackingMode, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSSegmentedControl _FromLabels (string[] labels, NSSegmentSwitchTracking trackingMode, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Mac (10,12)]
 		[Static]
+		[Internal]
 		[Export ("segmentedControlWithImages:trackingMode:target:action:")]
-		NSSegmentedControl FromImages (NSImage[] images, NSSegmentSwitchTracking trackingMode, [NullAllowed] NSObject target, [NullAllowed] Selector action);
-
+		NSSegmentedControl _FromImages (NSImage[] images, NSSegmentSwitchTracking trackingMode, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 	}
 	
 	[BaseType (typeof (NSActionCell))]
@@ -13129,7 +13131,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10,12)]
 		[Export ("preventsAutocorrectionBeforeString:language:")]
-		bool PreventsAutocorrection (string aString, [NullAllowed] string language);
+		bool PreventsAutocorrectionBefore (string aString, [NullAllowed] string language);
 	}
 
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSSoundDelegate) })]
@@ -16791,22 +16793,22 @@ namespace XamCore.AppKit {
 		[Mac (10,12)]
 		[Static]
 		[Export ("labelWithString:")]
-		NSTextField LabelWithString (string stringValue);
+		NSTextField CreateLabel(string stringValue);
 
 		[Mac (10,12)]
 		[Static]
 		[Export ("wrappingLabelWithString:")]
-		NSTextField WrappingLabelWithString (string stringValue);
+		NSTextField CreateWrappingLabel (string stringValue);
 
 		[Mac (10,12)]
 		[Static]
 		[Export ("labelWithAttributedString:")]
-		NSTextField LabelWithAttributedString (NSAttributedString attributedStringValue);
+		NSTextField CreateLabel (NSAttributedString attributedStringValue);
 
 		[Mac (10,12)]
 		[Static]
 		[Export ("textFieldWithString:")]
-		NSTextField TextFieldWithString ([NullAllowed] string stringValue);
+		NSTextField CreateTextField ([NullAllowed] string stringValue);
 	}
 
 	[BaseType (typeof (NSTextField))]
@@ -16916,11 +16918,13 @@ namespace XamCore.AppKit {
 		bool EchosBullets { get; set; }
 	}  
 
+	public interface INSTextInputClient {}
+
 	[BaseType (typeof (NSObject))]
 	public partial interface NSTextInputContext {
 		[Export ("initWithClient:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSTextInputClient client);
+		IntPtr Constructor (INSTextInputClient client);
 
 		[Static]
 		[Export ("currentInputContext")]
@@ -20145,7 +20149,7 @@ namespace XamCore.AppKit {
 	
 		[Export ("anchoringViewForSharingService:showRelativeToRect:preferredEdge:"), DelegateName ("NSSharingServiceAnchoringViewForSharingService"), DefaultValue (null)]
 		[return: NullAllowed]
-		NSView AnchoringViewForSharingService (NSSharingService sharingService, ref CGRect positioningRect, ref NSRectEdge preferredEdge);
+		NSView CreateAnchoringView (NSSharingService sharingService, ref CGRect positioningRect, ref NSRectEdge preferredEdge);
 	}
 
 	public interface INSSharingServiceDelegate {}
@@ -20161,6 +20165,7 @@ namespace XamCore.AppKit {
 		[Export ("optionsForSharingService:shareProvider:")]
 		NSCloudKitSharingServiceOptions Options (NSSharingService cloudKitSharingService, NSItemProvider provider);
 
+		// TODO - Add when CloudKit bindings are done
 		//[Export ("sharingService:didSaveShare:")]
 		//void Saved (NSSharingService sharingService, CKShare share);
 
@@ -20879,16 +20884,17 @@ namespace XamCore.AppKit {
 
 		[Mac (10, 12)]
 		[Field ("NSTextCheckingSelectedRangeKey")]
-		NSString NSTextCheckingSelectedRangeKey { get; }
+		NSString TextCheckingSelectedRangeKey { get; }
 
 		[Mac (10, 12)]
 		[Field ("NSSpellCheckerDidChangeAutomaticCapitalizationNotification")]
-		NSString NSSpellCheckerDidChangeAutomaticCapitalizationNotification { get; }
+		[Notification]
+		NSString DidChangeAutomaticCapitalizationNotification { get; }
 
-		// extern const NSNotificationName _Nonnull NSSpellCheckerDidChangeAutomaticPeriodSubstitutionNotification __attribute__((availability(macosx, introduced=10_12)));
 		[Mac (10, 12)]
 		[Field ("NSSpellCheckerDidChangeAutomaticPeriodSubstitutionNotification")]
-		NSString NSSpellCheckerDidChangeAutomaticPeriodSubstitutionNotification { get; }
+		[Notification]
+		NSString DidChangeAutomaticPeriodSubstitutionNotification { get; }
 	}
 
 	public partial interface NSTextViewDidChangeSelectionEventArgs {
@@ -22648,11 +22654,11 @@ namespace XamCore.AppKit {
 
 		[Mac (10, 12)]
 		[Field ("NSAccessibilityRequiredAttribute")]
-		NSString NSAccessibilityRequiredAttribute { get; }
+		NSString RequiredAttribute { get; }
 
 		[Mac (10, 12)]
 		[Field ("NSAccessibilityTextAlignmentAttribute")]
-		NSString NSAccessibilityTextAlignmentAttribute { get; }
+		NSString TextAlignmentAttribute { get; }
 	}
 
 	[Static]
@@ -22841,7 +22847,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10, 12)]
 		[Field ("NSAccessibilityMenuBarItemRole")]
-		NSString NSAccessibilityMenuBarItemRole { get; }
+		NSString MenuBarItemRole { get; }
 	}
 
 	[Static]
@@ -23443,6 +23449,8 @@ namespace XamCore.AppKit {
 		[Export ("accessibilityDisplayShouldReduceMotion")]
 		bool AccessibilityDisplayShouldReduceMotion { get; }
 	}
+	
+	public interface INSFilePromiseProviderDelegate {}
 
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
@@ -23453,6 +23461,7 @@ namespace XamCore.AppKit {
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
+		[Protocolize]
 		NSFilePromiseProviderDelegate Delegate { get; set; }
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
@@ -23462,7 +23471,7 @@ namespace XamCore.AppKit {
 		NSObject UserInfo { get; set; }
 
 		[Export ("initWithFileType:delegate:")]
-		IntPtr Constructor (string fileType, NSFilePromiseProviderDelegate @delegate);
+		IntPtr Constructor (string fileType, INSFilePromiseProviderDelegate @delegate);
 	}
 
 	[Mac (10,12)]
@@ -23472,13 +23481,13 @@ namespace XamCore.AppKit {
 	{
 		[Abstract]
 		[Export ("filePromiseProvider:fileNameForDestination:")]
-		string FilePromiseProvider (NSFilePromiseProvider filePromiseProvider, NSUrl destinationURL);
+		string GetFileNameForDestination (NSFilePromiseProvider filePromiseProvider, NSUrl destinationUrl);
 
 		[Export ("filePromiseProvider:writePromiseToURL:completionHandler:")]
-		void FilePromiseProvider (NSFilePromiseProvider filePromiseProvider, NSUrl url, Action<NSError> completionHandler);
+		void WritePromiseToUrl (NSFilePromiseProvider filePromiseProvider, NSUrl url, Action<NSError> completionHandler);
 
 		[Export ("promiseOperationQueueForFilePromiseProvider:")]
-		NSOperationQueue PromiseOperationQueueForFilePromiseProvider (NSFilePromiseProvider filePromiseProvider);
+		NSOperationQueue GetPromiseOperationQueue (NSFilePromiseProvider filePromiseProvider);
 	}
 
 	[Mac (10,12)]
@@ -23496,6 +23505,6 @@ namespace XamCore.AppKit {
 		string[] FileNames { get; }
 
 		[Export ("receivePromisedFilesAtDestination:options:operationQueue:reader:")]
-		void ReceivePromisedFilesAtDestination (NSUrl destinationDir, NSDictionary options, NSOperationQueue operationQueue, Action<NSUrl, NSError> reader);
+		void ReceivePromisedFiles (NSUrl destinationDir, NSDictionary options, NSOperationQueue operationQueue, Action<NSUrl, NSError> reader);
 	}
 }

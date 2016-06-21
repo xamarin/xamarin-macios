@@ -883,7 +883,7 @@ namespace XamCore.AppKit {
 	[Native]
 	public enum NSWindowButton : nuint_compat_int {
 		CloseButton, MiniaturizeButton, ZoomButton, ToolbarButton, DocumentIconButton, DocumentVersionsButton = 6, 
-		[Availability (Deprecated = Platform.Mac_10_12, Message = "The standard window button for NSWindowFullScreenButton is always nil; use NSWindowZoomButton instead")]
+		[Availability (Deprecated = Platform.Mac_10_12, Message = "The standard window button for FullScreenButton is always null; use ZoomButton instead")]
 		FullScreenButton
 	}
 
@@ -976,7 +976,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
-	[Availability (Deprecated = Platform.Mac_10_12, Message = "The gradientType property is unused, and setting it has no effect.")]
+	[Availability (Deprecated = Platform.Mac_10_12, Message = "The GradientType property is unused, and setting it has no effect.")]
 	public enum NSGradientType : nuint_compat_int {
 		None,
 		ConcaveWeak,
@@ -2508,7 +2508,7 @@ namespace XamCore.AppKit {
 	[Mac (10,12)]
 	[Native]
 	public enum NSWindowListOptions : nint {
-		NSWindowListOrderedFrontToBack = (1 << 0)
+		OrderedFrontToBack = (1 << 0)
 	}
 
 	[Mac (10,12)]
