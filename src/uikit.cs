@@ -5324,8 +5324,7 @@ namespace XamCore.UIKit {
 	// Action<UIGraphicsPdfRendererContext>
 
 	[iOS (10,0)]
-	[BaseType (typeof(UIGraphicsRendererFormat))]
-	[DisableDefaultCtor] // returns nil
+	[BaseType (typeof (UIGraphicsRendererFormat), Name="UIGraphicsPDFRendererFormat")]
 	interface UIGraphicsPdfRendererFormat
 	{
 		[Export ("documentInfo", ArgumentSemantic.Copy)]
@@ -5334,8 +5333,7 @@ namespace XamCore.UIKit {
 	}
 
 	[iOS (10,0)]
-	[BaseType (typeof(UIGraphicsRendererContext))]
-	[DisableDefaultCtor] // returns nil
+	[BaseType (typeof (UIGraphicsRendererContext), Name="UIGraphicsPDFRendererContext")]
 	interface UIGraphicsPdfRendererContext
 	{
 		[Export ("pdfContextBounds")]
@@ -5359,8 +5357,7 @@ namespace XamCore.UIKit {
 
 
 	[iOS (10,0)]
-	[BaseType (typeof(UIGraphicsRenderer))]
-	[DisableDefaultCtor] // returns nil
+	[BaseType (typeof (UIGraphicsRenderer), Name = "UIGraphicsPDFRenderer")]
 	interface UIGraphicsPdfRenderer
 	{
 		[Export ("initWithBounds:format:")]
