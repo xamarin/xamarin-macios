@@ -3149,6 +3149,22 @@ public partial class Generator : IMemberGatherer {
 						} else if (fetchType == typeof (nuint)){
 							getter = "{1} GetNUIntValue ({0})";
 							setter = "SetNumberValue ({0}, {1}value)";
+#if XAMCORE_2_0
+						} else if (fetchType == typeof (CGRect)){
+							getter = "{1} GetCGRectValue ({0})";
+							setter = "SetCGRectValue ({0}, {1}value)";
+						} else if (fetchType == typeof (CGSize)){
+							getter = "{1} GetCGSizeValue ({0})";
+							setter = "SetCGSizeValue ({0}, {1}value)";
+						} else if (fetchType == typeof (CGPoint)){
+							getter = "{1} GetCGPointValue ({0})";
+							setter = "SetCGPointValue ({0}, {1}value)";
+#endif // XAMCORE_2_0
+#if !WATCH
+						} else if (fetchType == typeof (CMTime)){
+							getter = "{1} GetCMTimeValue ({0})";
+							setter = "SetCMTimeValue ({0}, {1}value)";
+#endif // !WATCH
 						} else {
 							throw new BindingException (1031, true,
 										    "Limitation: can not automatically create strongly typed dictionary for " +
