@@ -2004,28 +2004,33 @@ namespace XamCore.AppKit {
 
 		[Mac (10,12)]
 		[Static]
+		[Internal]
 		[Export ("buttonWithTitle:image:target:action:")]
-		NSButton CreateButton (string title, NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSButton _CreateButton (string title, NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Mac (10,12)]
 		[Static]
+		[Internal]
 		[Export ("buttonWithTitle:target:action:")]
-		NSButton CreateButton (string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSButton _CreateButton (string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Mac (10,12)]
 		[Static]
+		[Internal]
 		[Export ("buttonWithImage:target:action:")]
-		NSButton CreateButton (NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSButton _CreateButton (NSImage image, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Mac (10,12)]
 		[Static]
+		[Internal]
 		[Export ("checkboxWithTitle:target:action:")]
-		NSButton CreateCheckbox (string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSButton _CreateCheckbox (string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Mac (10,12)]
 		[Static]
+		[Internal]
 		[Export ("radioButtonWithTitle:target:action:")]
-		NSButton CreateRadioButton (string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSButton _CreateRadioButton (string title, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Export ("title")]
 		string Title { get; set; } 
@@ -12732,13 +12737,15 @@ namespace XamCore.AppKit {
 
 		[Mac (10,12)]
 		[Static]
+		[Internal]
 		[Export ("sliderWithTarget:action:")]
-		NSSlider FromTarget ([NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSSlider _FromTarget ([NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Mac (10,12)]
 		[Static]
+		[Internal]
 		[Export ("sliderWithValue:minValue:maxValue:target:action:")]
-		NSSlider FromValue (double value, double minValue, double maxValue, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSSlider _FromValue (double value, double minValue, double maxValue, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 	}
 	
 	[BaseType (typeof (NSActionCell))]
@@ -16924,7 +16931,7 @@ namespace XamCore.AppKit {
 	public partial interface NSTextInputContext {
 		[Export ("initWithClient:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INSTextInputClient client);
+		IntPtr Constructor ([Protocolize]NSTextInputClient client);
 
 		[Static]
 		[Export ("currentInputContext")]

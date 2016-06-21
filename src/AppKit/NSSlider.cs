@@ -31,55 +31,23 @@ using XamCore.Foundation;
 
 namespace XamCore.AppKit {
 
-	public partial class NSButton {
+	public partial class NSSlider {
 		NSActionDispatcher dispatcher;
 
-		public new NSButtonCell Cell {
-			get { return (NSButtonCell)base.Cell; }
-			set { base.Cell = value; }
-		}
-
 		[Mac (10,12)]
-		public static NSButton CreateButton (string title, NSImage image, NSAction action)
+		public static NSSlider FromTarget (NSAction action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
-			var control = _CreateButton (title, image, dispatcher, NSActionDispatcher.Selector);
+			var control = _FromTarget (dispatcher, NSActionDispatcher.Selector);
 			control.dispatcher = dispatcher;
 			return control;
 		}
 
 		[Mac (10,12)]
-		public static NSButton CreateButton (string title, NSAction action)
+		public static NSSlider FromValue (double value, double minValue, double maxValue, NSAction action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
-			var control = _CreateButton (title, dispatcher, NSActionDispatcher.Selector);
-			control.dispatcher = dispatcher;
-			return control;
-		}
-
-		[Mac (10,12)]
-		public static NSButton CreateButton (NSImage image, NSAction action)
-		{
-			var dispatcher = new NSActionDispatcher (action);
-			var control = _CreateButton (image, dispatcher, NSActionDispatcher.Selector);
-			control.dispatcher = dispatcher;
-			return control;
-		}
-
-		[Mac (10,12)]
-		public static NSButton CreateCheckbox (string title, NSAction action)
-		{
-			var dispatcher = new NSActionDispatcher (action);
-			var control = _CreateCheckbox (title, dispatcher, NSActionDispatcher.Selector);
-			control.dispatcher = dispatcher;
-			return control;
-		}
-
-		[Mac (10,12)]
-		public static NSButton CreateRadioButton (string title, NSAction action)
-		{
-			var dispatcher = new NSActionDispatcher (action);
-			var control = _CreateRadioButton (title, dispatcher, NSActionDispatcher.Selector);
+			var control = _FromValue (value, minValue, maxValue, dispatcher, NSActionDispatcher.Selector);
 			control.dispatcher = dispatcher;
 			return control;
 		}
