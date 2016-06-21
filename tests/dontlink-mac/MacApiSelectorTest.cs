@@ -21,6 +21,7 @@ using MonoMac.ObjCRuntime;
 
 using NUnit.Framework;
 using TouchUnit.Bindings;
+using Xamarin.Tests;
 
 namespace MonoMacFixtures {
 	

@@ -5,13 +5,12 @@
 //	Sebastien Pouliot  <sebastien@xamarin.com>
 //  Aaron Bockover <abock@xamarin.com>
 //
-// Copyright 2012-2016 Xamarin Inc. All rights reserved.
+// Copyright 2012-2015 Xamarin Inc. All rights reserved.
 //
 
 using System;
 
-namespace Introspection {
-
+namespace Xamarin.Tests {
 	public static class Mac {
 		public static readonly Version Version_10_7 = new Version (10, 7);
 		public static readonly Version Version_10_8 = new Version (10, 8);

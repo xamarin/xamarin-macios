@@ -26,6 +26,7 @@ using System.Reflection;
 
 using NUnit.Framework;
 using TouchUnit.Bindings;
+using Xamarin.Tests;
 
 #if XAMCORE_2_0
 using CoreImage;

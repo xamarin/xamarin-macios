@@ -11,6 +11,7 @@ using System;
 using System.Reflection;
 
 using NUnit.Framework;
+using Xamarin.Tests;
 
 #if XAMCORE_2_0
 using Foundation;
