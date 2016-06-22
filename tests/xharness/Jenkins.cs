@@ -409,6 +409,7 @@ function toggleContainerVisibility (containerName)
 						var firstResult = relevantGroup.First ().ExecutionResult;
 						var identicalResults = relevantGroup.All ((v) => v.ExecutionResult == firstResult);
 						var defaultHide = !group.Any ((v) => v.Failed);
+						var singleTask = group.Count () == 1;
 						writer.WriteLine ("<h2 id='test_{1}'>{0} (<span style='color: {2}'>{4}</span>) <small><a id='button_container_{1}' href=\"javascript: toggleContainerVisibility ('{1}');\">{3}</a></small> </h2>", 
 						                  group.Key, group.Key.Replace (' ', '-'), GetTestColor (relevantGroup), defaultHide ? "Show" : "Hide", identicalResults ? firstResult.ToString () : "multiple results");
 						writer.WriteLine ("<div id='test_container_{0}' style='display: {1}'>", group.Key.Replace (' ', '-'), defaultHide ? "none" : "block");
@@ -416,8 +417,10 @@ function toggleContainerVisibility (containerName)
 							string state;
 							state = test.ExecutionResult.ToString ();
 							var log_id = id_counter++;
-							writer.WriteLine ("{0} (<span style='color: {3}'>{1}</span>) <a id='button_{2}' href=\"javascript: toggleLogVisibility ('{2}');\">Show details</a><br />", test.Mode, state, log_id, GetTestColor (test));
-							writer.WriteLine ("<div id='logs_{0}' style='display: none; padding-bottom: 10px; padding-top: 10px; padding-left: 20px;'>", log_id);
+							if (!singleTask) {
+								writer.WriteLine ("{0} (<span style='color: {3}'>{1}</span>) <a id='button_{2}' href=\"javascript: toggleLogVisibility ('{2}');\">Show details</a><br />", test.Mode, state, log_id, GetTestColor (test));
+								writer.WriteLine ("<div id='logs_{0}' style='display: none; padding-bottom: 10px; padding-top: 10px; padding-left: 20px;'>", log_id);
+							}
 							writer.WriteLine ("Duration: {0} <br />", test.Duration);
 							var logs = test.AggregatedLogs;
 							if (logs.Count () > 0) {
