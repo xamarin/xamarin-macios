@@ -796,6 +796,7 @@ namespace XamCore.WatchKit {
 
 	[Watch (2,2), NoiOS]
 	[BaseType (typeof(WKInterfaceObject))]
+	[DisableDefaultCtor] // The super class' init method is unavailable.
 	interface WKInterfaceActivityRing
 	{
 		[Export ("setActivitySummary:animated:")]
@@ -803,6 +804,7 @@ namespace XamCore.WatchKit {
 	}
 
 	[BaseType (typeof (WKInterfaceObject))]
+	[DisableDefaultCtor] // The super class' init method is unavailable.
 	interface WKInterfaceMovie {
 		[Export ("setMovieURL:")]
 		void SetMovieUrl (NSUrl url);
@@ -818,6 +820,7 @@ namespace XamCore.WatchKit {
 	}
 
 	[BaseType (typeof (WKInterfaceObject))]
+	[DisableDefaultCtor] // The super class' init method is unavailable.
 	interface WKInterfacePicker {
 		[Export ("focus")]
 		void Focus ();
