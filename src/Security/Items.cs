@@ -761,7 +761,7 @@ namespace XamCore.Security {
 #if MONOMAC
 			queryDict = NSMutableDictionary.LowlevelFromObjectAndKey (kind, SecClass.SecClassKey);
 #elif WATCH
-			throw new NotImplementedException (); // need to figure this out.
+			queryDict = NSMutableDictionary.LowlevelFromObjectAndKey (kind, SecClass.SecClassKey);
 #else
 			// Apple changed/fixed this in iOS7 (not the only change, see comments above)
 			// test suite has a test case that needs to work on both pre-7.0 and post-7.0
