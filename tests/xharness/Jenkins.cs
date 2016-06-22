@@ -20,6 +20,7 @@ namespace xharness
 		public bool IncludetvOS = true;
 		public bool IncludewatchOS = true;
 		public bool IncludeMmpTest;
+		public bool IncludeiOSMSBuild = true;
 
 		public Logs Logs = new Logs ();
 		public Log MainLog;
@@ -168,6 +169,28 @@ namespace xharness
 					if (task.TestName == "framework-test")
 						task.ExecutionResult = TestExecutingResult.Ignored;
 				}
+			}
+
+			if (IncludeiOSMSBuild) {
+				var build = new XBuildTask ()
+				{
+					Jenkins = this,
+					ProjectFile = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln")),
+					SpecifyPlatform = false,
+					SpecifyConfiguration = false,
+					Platform = TestPlatform.iOS,
+				};
+				var nunitExecution = new NUnitExecuteTask ()
+				{
+					Jenkins = this,
+					BuildTask = build,
+					TestLibrary = Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "bin", "Xamarin.iOS.Tasks.Tests.dll"),
+					TestExecutable = Path.Combine (Harness.RootDirectory, "..", "msbuild", "packages", "NUnit.Runners.2.6.4", "tools", "nunit-console.exe"),
+					WorkingDirectory = Path.Combine (Harness.RootDirectory, "..", "msbuild", 	"packages", "NUnit.Runners.2.6.4", "tools", "lib"),
+					Platform = TestPlatform.iOS,
+					TestName = "MSBuild tests - iOS",
+				};
+				Tasks.Add (nunitExecution);
 			}
 
 			if (IncludeMac) {
@@ -360,6 +383,7 @@ function toggleContainerVisibility (containerName)
 
 					var allSimulatorTasks = new List<RunSimulatorTask> ();
 					var allExecuteTasks = new List<MacExecuteTask> ();
+					var allNUnitTasks = new List<NUnitExecuteTask> ();
 					foreach (var task in Tasks) {
 						var aggregated = task as AggregatedRunSimulatorTask;
 						if (aggregated != null) {
@@ -373,12 +397,20 @@ function toggleContainerVisibility (containerName)
 							continue;
 						}
 
+						var nunit = task as NUnitExecuteTask;
+						if (nunit != null) {
+							allNUnitTasks.Add (nunit);
+							continue;
+						}
+
+
 						throw new NotImplementedException ();
 					}
 
 					var allTasks = new List<TestTask> ();
 					allTasks.AddRange (allExecuteTasks);
 					allTasks.AddRange (allSimulatorTasks);
+					allTasks.AddRange (allNUnitTasks);
 
 					var failedTests = allTasks.Where ((v) => v.Failed);
 					var stillInProgress = allTasks.Any ((v) => v.InProgress);
@@ -527,8 +559,12 @@ function toggleContainerVisibility (containerName)
 
 		public virtual string Mode { get; set; }
 
+		string test_name;
 		public virtual string TestName {
 			get {
+				if (test_name != null)
+					return test_name;
+				
 				var rv = Path.GetFileNameWithoutExtension (ProjectFile);
 				switch (Platform) {
 				case TestPlatform.Mac:
@@ -549,6 +585,9 @@ function toggleContainerVisibility (containerName)
 						return rv;
 					}
 				}
+			}
+			set {
+				test_name = value;
 			}
 		}
 
@@ -606,21 +645,11 @@ function toggleContainerVisibility (containerName)
 		{
 			return ExecutionResult.ToString ();
 		}
-	}
-
-	abstract class BuildToolTask : TestTask
-	{
-		public bool SpecifyPlatform = true;
-		public bool SpecifyConfiguration = true;
-
-		public override string Mode {
-			get { return Platform.ToString (); }
-			set { throw new NotSupportedException (); }
-		}
 
 		protected void SetEnvironmentVariables (Process process)
 		{
 			switch (Platform) {
+			case TestPlatform.iOS:
 			case TestPlatform.iOS_Classic:
 			case TestPlatform.iOS_Unified:
 			case TestPlatform.iOS_Unified32:
@@ -646,8 +675,18 @@ function toggleContainerVisibility (containerName)
 				throw new NotImplementedException ();
 			}
 		}
-
 	}
+
+	abstract class BuildToolTask : TestTask
+	{
+		public bool SpecifyPlatform = true;
+		public bool SpecifyConfiguration = true;
+
+		public override string Mode {
+			get { return Platform.ToString (); }
+			set { throw new NotSupportedException (); }
+		}
+}
 
 	class MdtoolTask : BuildToolTask
 	{
@@ -729,6 +768,104 @@ function toggleContainerVisibility (containerName)
 						}
 					}
 					Jenkins.MainLog.WriteLine ("Built {0} ({1})", TestName, Mode);
+				}
+			}
+		}
+	}
+
+
+	class NUnitExecuteTask : TestTask
+	{
+		public XBuildTask BuildTask;
+		public string TestLibrary;
+		public string TestExecutable;
+		public string WorkingDirectory;
+		public bool ProduceHtmlReport = true;
+
+		public override IEnumerable<Log> AggregatedLogs {
+			get {
+				return base.AggregatedLogs.Union (BuildTask.Logs);
+			}
+		}
+
+		public override string Mode {
+			get {
+				return "NUnit";
+			}
+			set {
+				throw new NotSupportedException ();
+			}
+		}
+
+		protected override async Task ExecuteAsync ()
+		{
+			ExecutionResult = TestExecutingResult.Building;
+			await BuildTask.RunAsync ();
+			if (!BuildTask.Succeeded) {
+				ExecutionResult = TestExecutingResult.BuildFailure;
+				return;
+			}
+
+			ExecutionResult = TestExecutingResult.Built;
+
+			using (var resource = await Jenkins.DesktopResource.AcquireConcurrentAsync ()) {
+				var xmlLog = Logs.CreateFile ("XML log", Path.Combine (LogDirectory, "log.xml"));
+				var log = Logs.CreateStream (LogDirectory, "execute.txt", "Execution log");
+				using (var proc = new Process ()) {
+
+					proc.StartInfo.WorkingDirectory = WorkingDirectory;
+					proc.StartInfo.FileName = "/Library/Frameworks/Mono.framework/Commands/mono";
+					var args = new StringBuilder ();
+					args.Append (Harness.Quote (Path.GetFullPath (TestExecutable))).Append (' ');
+					args.Append (Harness.Quote (Path.GetFullPath (TestLibrary))).Append (' ');
+					args.Append ("-xml=" + Harness.Quote (xmlLog.FullPath)).Append (' ');
+					args.Append ("-labels ");
+					proc.StartInfo.Arguments = args.ToString ();
+					SetEnvironmentVariables (proc);
+					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
+					if (!Harness.DryRun) {
+						ExecutionResult = TestExecutingResult.Running;
+						try {
+							var timeout = TimeSpan.FromMinutes (10);
+							var result = await proc.RunAsync (log, true, timeout);
+							if (result.TimedOut) {
+								log.WriteLine ("Execution timed out after {0} seconds.", timeout.TotalSeconds);
+								ExecutionResult = TestExecutingResult.TimedOut;
+							} else if (result.Succeeded) {
+								ExecutionResult = TestExecutingResult.Succeeded;
+							} else {
+								ExecutionResult = TestExecutingResult.Failed;
+							}
+						} catch (Exception e) {
+							log.WriteLine (e.ToString ());
+							ExecutionResult = TestExecutingResult.HarnessException;
+						}
+					}
+					Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);
+				}
+
+				if (ProduceHtmlReport) {
+					try {
+						var output = Logs.CreateStream (LogDirectory, "Log.html", "HTML log");
+						using (var srt = new StringReader (File.ReadAllText (Path.Combine (Harness.RootDirectory, "HtmlTransform.xslt")))) {
+							using (var sri = xmlLog.GetReader ()) {
+								using (var xrt = System.Xml.XmlReader.Create (srt)) {
+									using (var xri = System.Xml.XmlReader.Create (sri)) {
+										var xslt = new System.Xml.Xsl.XslCompiledTransform ();
+										xslt.Load (xrt);
+										using (var sw = output.GetWriter ()) {
+											using (var xwo = System.Xml.XmlWriter.Create (sw, xslt.OutputSettings)) // use OutputSettings of xsl, so it can be output as HTML
+											{
+												xslt.Transform (xri, xwo);
+											}
+										}
+									}
+								}
+							}
+						}
+					} catch (Exception e) {
+						log.WriteLine ("Failed to produce HTML report: {0}", e);
+					}
 				}
 			}
 		}
@@ -1105,7 +1242,7 @@ function toggleContainerVisibility (containerName)
 	public enum TestPlatform
 	{
 		None,
-
+		iOS,
 		iOS_Classic,
 		iOS_Unified,
 		iOS_Unified32,
