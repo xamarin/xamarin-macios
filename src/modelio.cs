@@ -391,6 +391,9 @@ namespace XamCore.ModelIO {
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
+	// TODO: NSCopying defined but copyWithZone doesn't work
+	// filled radar://26939747 with Apple
+	// https://trello.com/c/6aIzLH4a
 	interface MDLMaterialProperty : MDLNamed
 	{
 		[DesignatedInitializer]
@@ -1171,8 +1174,12 @@ namespace XamCore.ModelIO {
 
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	interface MDLTransform : MDLTransformComponent
-	{
+	#if !MONOMAC
+	interface MDLTransform : MDLTransformComponent, NSCopying {
+	#else
+	interface MDLTransform : MDLTransformComponent {
+	#endif
+
 		[Export ("initWithTransformComponent:")]
 		IntPtr Constructor (IMDLTransformComponent component);
 

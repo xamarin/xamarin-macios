@@ -954,7 +954,7 @@ namespace XamCore.Foundation
 
 	[Since (3,2)]
 	[BaseType (typeof (NSObject))]
-	public interface NSCharacterSet : NSCoding, NSMutableCopying {
+	public interface NSCharacterSet : NSSecureCoding, NSMutableCopying {
 		[Static, Export ("alphanumericCharacterSet")]
 		NSCharacterSet Alphanumerics {get;}
 

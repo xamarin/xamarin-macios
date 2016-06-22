@@ -243,6 +243,7 @@ namespace Introspection {
 				case "HKQuantitySample":
 				case "HKSample":
 				case "HKWorkout":
+				case "PKPaymentMethod":
 				// iOS 10
 				case "CXCallDirectoryExtensionContext":
 				case "SFSafariViewControllerConfiguration":
