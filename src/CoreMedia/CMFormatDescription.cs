@@ -420,11 +420,11 @@ namespace XamCore.CoreMedia {
 			out bool outItalic, 
 			out bool outUnderline, 
 			out nfloat outFontSize, 
-			out nfloat[] outColorComponents);
+			nfloat[] outColorComponents);
 
-		public void GetTextDefaultStyle (out ushort outLocalFontId, out bool outBold, out bool outItalic, out bool outUnderline, out nfloat outFontSize, out nfloat[] outColorComponents)
+		public void GetTextDefaultStyle (out ushort outLocalFontId, out bool outBold, out bool outItalic, out bool outUnderline, out nfloat outFontSize, nfloat[] outColorComponents)
 		{
-			var error = CMTextFormatDescriptionGetDefaultStyle (handle, out outLocalFontId, out outBold, out outItalic, out outUnderline, out outFontSize, out outColorComponents);
+			var error = CMTextFormatDescriptionGetDefaultStyle (handle, out outLocalFontId, out outBold, out outItalic, out outUnderline, out outFontSize, outColorComponents);
 			if (error != CMFormatDescriptionError.None)
 				throw new ArgumentException (error.ToString ());
 		}
@@ -465,7 +465,7 @@ namespace XamCore.CoreMedia {
 		[DllImport (Constants.CoreMediaLibrary)]
 		static unsafe extern /* OSStatus */ CMFormatDescriptionError CMAudioFormatDescriptionCreate (
 			/* CFAllocatorRef */ IntPtr allocator, 
-			ref AudioStreamBasicDescription asbd,
+			ref AudioStreamBasicDescription description,
 			nuint layoutSize, 
 			/* AudioChannelLayout* */ IntPtr layout, 
 			nuint magicCookieSize, 
@@ -519,7 +519,7 @@ namespace XamCore.CoreMedia {
 			get {
 				var ret = CMAudioFormatDescriptionGetStreamBasicDescription (handle);
 				if (ret != IntPtr.Zero) {
-						return *((AudioStreamBasicDescription*)ret);
+					return *((AudioStreamBasicDescription*)ret);
 				}
 				return null;
 			}
