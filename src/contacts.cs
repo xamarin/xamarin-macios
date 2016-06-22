@@ -273,7 +273,7 @@ namespace XamCore.Contacts {
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // using init raises an exception according to docs
-	public interface CNContactFetchRequest {
+	public interface CNContactFetchRequest : NSSecureCoding {
 
 		[DesignatedInitializer]
 		[Export ("initWithKeysToFetch:")]

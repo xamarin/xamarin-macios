@@ -87,7 +87,7 @@ namespace XamCore.GameplayKit {
 	// https://bugzilla.xamarin.com/show_bug.cgi?id=4391
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	interface GKBehavior {
+	interface GKBehavior : NSCopying {
 		
 		[Export ("goalCount")]
 		nint GoalCount { get; }
@@ -136,7 +136,7 @@ namespace XamCore.GameplayKit {
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[Abstract]
-	interface GKComponent : NSCopying {
+	interface GKComponent : NSCopying, NSCoding {
 
 		[NullAllowed]
 		[Export ("entity", ArgumentSemantic.Weak)]
@@ -189,7 +189,7 @@ namespace XamCore.GameplayKit {
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	interface GKEntity : NSCopying {
+	interface GKEntity : NSCopying, NSCoding {
 		
 		[Static]
 		[Export ("entity")]
@@ -346,7 +346,7 @@ namespace XamCore.GameplayKit {
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	interface GKGraph {
+	interface GKGraph : NSCopying, NSCoding {
 		
 		[NullAllowed]
 		[Export ("nodes")]
@@ -459,7 +459,7 @@ namespace XamCore.GameplayKit {
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	interface GKGraphNode {
+	interface GKGraphNode : NSCoding {
 		
 		[Export ("connectedNodes")]
 		GKGraphNode [] ConnectedNodes { get; }
@@ -594,7 +594,7 @@ namespace XamCore.GameplayKit {
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (GKObstacle))]
-	interface GKPolygonObstacle {
+	interface GKPolygonObstacle : NSCoding {
 
 		[Export ("vertexCount")]
 		nuint VertexCount { get; }

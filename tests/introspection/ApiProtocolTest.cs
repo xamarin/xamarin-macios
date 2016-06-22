@@ -73,6 +73,10 @@ namespace Introspection {
 				case "GKScore":
 				// new in iOS8 and 10.0
 				case "NSExtensionContext":
+				// TODO: NSCopying defined but copyWithZone doesn't work
+				// filled radar://26939747 with Apple
+				// https://trello.com/c/6aIzLH4a
+				case "MDLMaterialProperty":
 					return true; // skip
 				}
 				break;
@@ -89,6 +93,8 @@ namespace Introspection {
 				// new in iOS8 and 10.0
 				case "NSExtensionContext":
 				case "NSItemProvider":
+				// iOS9 / 10.11
+				case "CNSaveRequest":
 					// undocumented
 					return true;
 				}
@@ -109,6 +115,7 @@ namespace Introspection {
 				case "NSMutableParagraphStyle": //17770106
 					return true; // skip
 				// iOS9 / 10.11
+				case "CNSaveRequest":
 				case "NSPersonNameComponentsFormatter":
 					return true; // skip
 				}
