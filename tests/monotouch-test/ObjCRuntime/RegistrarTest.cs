@@ -1334,7 +1334,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			var cl = new Class (typeof (TestTypeEncodingsClass));
 			var sig = Runtime.GetNSObject<NSMethodSignature> (Messaging.IntPtr_objc_msgSend_IntPtr (cl.Handle, Selector.GetHandle ("methodSignatureForSelector:"), Selector.GetHandle ("foo::::::::::::::::")));
 			var boolEncoding = IntPtr.Size == 8 ? "B" : "c";
-			var exp = new string [] { "@", ":", "^v", "C", "c", "c", "s", "S", "i", "I", "q", "Q", "f", "d", boolEncoding, "@", ":", "#" };
+			var exp = new string [] { "@", ":", "^v", "C", "c", "s", "s", "S", "i", "I", "q", "Q", "f", "d", boolEncoding, "@", ":", "#" };
 
 			Assert.AreEqual (exp.Length, sig.NumberOfArguments, "NumberOfArguments");
 //			for (uint i = 0; i < exp.Length; i++) {
