@@ -32,7 +32,7 @@ namespace xharness
 
 			try {
 				do {
-					Console.WriteLine ("Test log server listening on: {0}:{1}", Address, Port);
+					Log.WriteLine ("Test log server listening on: {0}:{1}", Address, Port);
 					using (TcpClient client = server.AcceptTcpClient ()) {
 						processed = Processing (client);
 					}
