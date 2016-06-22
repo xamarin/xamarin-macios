@@ -2067,7 +2067,6 @@ namespace XamCore.UIKit {
 
 	[iOS(10,0)]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
 	interface UIViewAnimating
 	{
 		[Abstract]
@@ -2105,7 +2104,7 @@ namespace XamCore.UIKit {
 
 	interface IUIViewImplicitlyAnimating {}
 	[iOS(10,0)]
-	[Protocol, Model]
+	[Protocol]
 	interface UIViewImplicitlyAnimating : UIViewAnimating
 	{
 		[Export ("addAnimations:delayFactor:")]
@@ -2118,7 +2117,7 @@ namespace XamCore.UIKit {
 		void AddCompletion (Action<UIViewAnimatingPosition> completion);
 	
 		[Export ("continueAnimationWithTimingParameters:durationFactor:")]
-		void ContinueAnimationWithTimingParameters ([NullAllowed] IUITimingCurveProvider parameters, nfloat durationFactor);
+		void ContinueAnimation ([NullAllowed] IUITimingCurveProvider parameters, nfloat durationFactor);
 	}
 		
 	[iOS (10,0)]
