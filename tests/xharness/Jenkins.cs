@@ -19,6 +19,7 @@ namespace xharness
 		public bool IncludeiOS = true;
 		public bool IncludetvOS = true;
 		public bool IncludewatchOS = true;
+		public bool IncludeMmpTest;
 
 		public Logs Logs = new Logs ();
 		public Log MainLog;
@@ -172,6 +173,9 @@ namespace xharness
 			if (IncludeMac) {
 				foreach (var project in Harness.MacTestProjects) {
 					if (!project.IsExecutableProject)
+						continue;
+
+					if (!IncludeMmpTest && project.Path.Contains ("mmptest"))
 						continue;
 
 					BuildToolTask build;
