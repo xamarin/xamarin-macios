@@ -1293,6 +1293,12 @@ UIKIT_SOURCES = \
 	UIKit/UIViewControllerTransitionCoordinatorContext.cs \
 	UIKit/UIWindow.cs \
 
+# UserNotifications
+
+USERNOTIFICATIONS_SOURCES = \
+	UserNotifications/UNNotificationAttachment.cs \
+	UserNotifications/UNNotificationResponse.cs \
+
 # VideoSubscriberAccount
 
 VIDEOSUBSCRIBERACCOUNT_SOURCES = \
@@ -1595,6 +1601,7 @@ IOS_FRAMEWORKS =         \
 	SystemConfiguration \
 	Twitter \
 	UIKit \
+	UserNotifications \
 	VideoToolbox \
 	VideoSubscriberAccount \
 	WatchConnectivity \
@@ -1620,6 +1627,7 @@ WATCHOS_FRAMEWORKS =        \
 	PassKit                 \
 	Security                \
 	UIKit                   \
+	UserNotifications       \
 	WatchConnectivity       \
 	WatchKit                \
 
@@ -1668,6 +1676,7 @@ TVOS_FRAMEWORKS =           \
 	TVMLKit                 \
 	TVServices				\
 	UIKit                   \
+	UserNotifications       \
 	VideoSubscriberAccount  \
 
 #
