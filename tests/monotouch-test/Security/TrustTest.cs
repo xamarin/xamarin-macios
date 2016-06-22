@@ -224,10 +224,15 @@ namespace MonoTouchFixtures.Security {
 			using (var trust = new SecTrust (certs, policy)) {
 				// that certificate stopped being valid on September 30th, 2013 so we validate it with a date earlier than that
 				trust.SetVerifyDate (new DateTime (635108745218945450, DateTimeKind.Utc));
+
+				SecTrustResult trust_result = SecTrustResult.Unspecified;
+				if (TestRuntime.CheckiOSSystemVersion (10, 0))
+					trust_result = SecTrustResult.FatalTrustFailure;
 				// iOS9 is not fully happy with the basic constraints: `SecTrustEvaluate  [root AnchorTrusted BasicContraints]`
-				var ios9 = TestRuntime.CheckiOSSystemVersion (9,0);
-				var result = Evaluate (trust, ios9);
-				Assert.That (result, Is.EqualTo (ios9 ? SecTrustResult.RecoverableTrustFailure : SecTrustResult.Unspecified), "Evaluate");
+				else if (TestRuntime.CheckiOSSystemVersion (9, 0))
+					trust_result = SecTrustResult.RecoverableTrustFailure;
+				var result = Evaluate (trust, true);
+				Assert.That (result, Is.EqualTo (trust_result), "Evaluate");
 
 				// Evalute must be called prior to Count (Apple documentation)
 				Assert.That (trust.Count, Is.EqualTo (3), "Count");
@@ -247,7 +252,7 @@ namespace MonoTouchFixtures.Security {
 				}
 
 				if (TestRuntime.CheckSystemAndSDKVersion (7, 0)) {
-					Assert.That (trust.GetTrustResult (), Is.EqualTo (ios9 ? SecTrustResult.RecoverableTrustFailure : SecTrustResult.Unspecified), "GetTrustResult");
+					Assert.That (trust.GetTrustResult (), Is.EqualTo (trust_result), "GetTrustResult");
 
 					trust.SetAnchorCertificates (certs);
 					Assert.That (trust.GetCustomAnchorCertificates ().Length, Is.EqualTo (certs.Count), "GetCustomAnchorCertificates");

@@ -62,12 +62,6 @@ namespace MonoTouchFixtures.AddressBookUI {
 				if (!UIDevice.CurrentDevice.CheckSystemVersion (8,2))
 					return;
 
-				// iOS 10 beta 1 also differs (country not specified)
-				if (UIDevice.CurrentDevice.CheckSystemVersion (10, 0)) {
-					Assert.That (s.Length, Is.EqualTo (expected.Length), "no country");
-					return;
-				}
-
 				Assert.That (s [expected.Length], Is.EqualTo ('\n'), "newline");
 				Assert.That (s.Length > expected.Length + 1, "country");
 			}
