@@ -1051,7 +1051,11 @@ namespace XamCore.NetworkExtension {
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[Abstract]
+	#if !MONOMAC
 	interface NWEndpoint : NSSecureCoding, NSCopying {
+	#else
+	interface NWEndpoint {
+	#endif
 	}
 	
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]

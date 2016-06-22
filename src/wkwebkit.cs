@@ -159,7 +159,11 @@ namespace XamCore.WebKit
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
+	#if !MONOMAC
 	interface WKPreferences : NSCoding {
+	#else
+	interface WKPreferences {
+	#endif
 		[Export ("minimumFontSize")]
 		nfloat MinimumFontSize { get; set; }
 
@@ -263,8 +267,12 @@ namespace XamCore.WebKit
 	
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	interface WKWebsiteDataStore : NSCoding
-	{
+	#if !MONOMAC
+	interface WKWebsiteDataStore : NSCoding {
+	#else
+	interface WKWebsiteDataStore {
+	#endif
+
 		[Static]
 		[Export ("defaultDataStore")]
 		WKWebsiteDataStore DefaultDataStore { get; }
@@ -316,7 +324,11 @@ namespace XamCore.WebKit
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
+	#if !MONOMAC
 	interface WKUserContentController : NSCoding {
+	#else
+	interface WKUserContentController {
+	#endif
 
 		[Export ("userScripts")]
 		WKUserScript [] UserScripts { get; }
@@ -496,7 +508,11 @@ namespace XamCore.WebKit
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
+	#if !MONOMAC
 	interface WKWebViewConfiguration : NSCopying, NSCoding {
+	#else
+	interface WKWebViewConfiguration : NSCopying {
+	#endif
 
 		[Export ("processPool", ArgumentSemantic.Retain)]
 		WKProcessPool ProcessPool { get; set; }
@@ -549,7 +565,11 @@ namespace XamCore.WebKit
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
+	#if !MONOMAC
 	interface WKProcessPool : NSCoding {
+	#else
+	interface WKProcessPool {
+	#endif
 		// as of Mac 10.10, iOS 8.0 Beta 2,
 		// this interface is completely empty
 	}

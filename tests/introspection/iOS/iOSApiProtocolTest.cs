@@ -154,10 +154,6 @@ namespace Introspection {
 				case "AVMutableComposition":
 				case "AVCompositionTrackSegment":
 				case "MKMapSnapshotOptions":
-				case "NSLayoutAnchor`1":
-				case "NSLayoutDimension":
-				case "NSLayoutXAxisAnchor":
-				case "NSLayoutYAxisAnchor":
 				case "WCSessionFile":
 				case "WCSessionFileTransfer":
 				// iOS10
@@ -247,10 +243,6 @@ namespace Introspection {
 				case "HKQuantitySample":
 				case "HKSample":
 				case "HKWorkout":
-				case "NSLayoutAnchor`1":
-				case "NSLayoutDimension":
-				case "NSLayoutXAxisAnchor":
-				case "NSLayoutYAxisAnchor":
 				case "PKPaymentMethod":
 				// iOS 10
 				case "CXCallDirectoryExtensionContext":
