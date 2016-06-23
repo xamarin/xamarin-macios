@@ -2066,7 +2066,7 @@ namespace XamCore.Registrar {
 			case "System.IntPtr": return "^v";
 			case "System.SByte": return "c";
 			case "System.Byte": return "C";
-			case "System.Char": return "c";
+			case "System.Char": return "s";
 			case "System.Int16": return "s";
 			case "System.UInt16": return "S";
 			case "System.Int32": return "i";

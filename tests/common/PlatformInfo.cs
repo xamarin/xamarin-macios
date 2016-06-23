@@ -27,7 +27,7 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 #endif
 
-namespace TouchUnit.Bindings
+namespace Xamarin.Tests 
 {
 	public sealed class PlatformInfo
 	{

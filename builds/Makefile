@@ -917,7 +917,7 @@ install-iphonesimulator:: $(IPHONESIMULATOR_TARGETS)
 # Watch simulator build
 #
 
-WATCHSIMULATOR_SDK      = $(XCODE_DEVELOPER_ROOT)/Platforms/WatchSimulator.platform/Developer/SDKs/WatchSimulator.sdk
+WATCHSIMULATOR_SDK      = $(SIMULATORWATCH_SDK)
 WATCHSIMULATOR_BIN_PATH = $(XCODE_DEVELOPER_ROOT)/Platforms/WatchSimulator.platform/Developer/usr/bin
 WATCHSIMULATOR_CC       = $(IOS_CC)
 
@@ -1053,7 +1053,7 @@ install-watchsimulator: $(WATCHSIMULATOR_TARGETS)
 # TV simulator build
 #
 
-TVSIMULATOR_SDK      = $(XCODE_DEVELOPER_ROOT)/Platforms/AppleTVSimulator.platform/Developer/SDKs/AppleTVSimulator.sdk
+TVSIMULATOR_SDK      = $(SIMULATORTV_SDK)
 TVSIMULATOR_BIN_PATH = $(XCODE_DEVELOPER_ROOT)/Platforms/AppleTVSimulator.platform/Developer/usr/bin
 TVSIMULATOR_CC       = $(IOS_CC)
 TVOS_BIN_PATH        = $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin
@@ -1192,9 +1192,8 @@ install-tvsimulator: $(TVSIMULATOR_TARGETS)
 # we end up with a sizeof-compatible built (since all current arms are 32b)
 #
 
-PLATFORM_ROOT=$(XCODE_DEVELOPER_ROOT)/Platforms/iPhoneOS.platform
 PLATFORM_BIN=$(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin
-PLATFORM_SDK=$(PLATFORM_ROOT)/Developer/SDKs/iPhoneOS${IOS_SDK_VERSION}.sdk/
+PLATFORM_SDK=$(DEVICE_SDK)
 
 # usage $(call PlatformBuildTemplate (armv7,target7,<platform suffix>,<configure flags>,<unused>))
 
@@ -1409,7 +1408,7 @@ install-iphoneos:: $(IPHONEOS_TARGETS)
 # Watch device build
 # 
 
-WATCHOS_SDK      = $(XCODE_DEVELOPER_ROOT)/Platforms/WatchOS.platform/Developer/SDKs/WatchOS.sdk
+WATCHOS_SDK      = $(DEVICEWATCH_SDK)
 WATCHOS_BIN_PATH = $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin
 WATCHOS_CC       = $(IOS_CC)
 
@@ -1580,7 +1579,7 @@ install-watchos: $(WATCHOS_TARGETS)
 # TV device build
 # 
 
-TVOS_SDK      = $(XCODE_DEVELOPER_ROOT)/Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS.sdk
+TVOS_SDK      = $(DEVICETV_SDK)
 TVOS_BIN_PATH = $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin
 TVOS_CC       = $(IOS_CC)
 

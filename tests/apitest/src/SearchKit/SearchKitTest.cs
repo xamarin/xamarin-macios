@@ -12,7 +12,7 @@ namespace apitest {
 
 	[TestFixture]
 	public class SearchKitTests {
-		string path = "/tmp/my.index";
+		string path = $"/tmp/mmptest-my-{System.Diagnostics.Process.GetCurrentProcess ().Id}.index";
 
 		[SetUp]
 		public void Setup ()
@@ -21,6 +21,13 @@ namespace apitest {
 			if (File.Exists (path))
 				File.Delete (path);
 			
+		}
+
+		[TearDown]
+		public void TearDown ()
+		{
+			if (File.Exists (path))
+				File.Delete (path);
 		}
 
 		[Test]

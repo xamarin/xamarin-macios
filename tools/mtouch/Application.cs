@@ -233,6 +233,11 @@ namespace Xamarin.Bundler {
 				// Configure sgen to use a small nursery
 				if (IsTodayExtension) {
 					return "nursery-size=512k,soft-heap-limit=8m";
+				} else if (Platform == ApplePlatform.WatchOS) {
+					// A bit test shows different behavior
+					// Sometimes apps are killed with ~100mb allocated,
+					// but I've seen apps allocate up to 240+mb as well
+					return "nursery-size=512k,soft-heap-limit=8m";
 				} else {
 					return "nursery-size=512k";
 				}

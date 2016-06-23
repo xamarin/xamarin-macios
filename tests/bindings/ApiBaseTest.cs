@@ -27,6 +27,7 @@ using System.Text;
 using NUnit.Framework;
 using Xamarin.Utils;
 using System.Linq;
+using Xamarin.Tests;
 
 #if XAMCORE_2_0
 using Foundation;
@@ -220,7 +221,7 @@ namespace TouchUnit.Bindings {
 		protected bool IsOSX11OrIOS9 {
 			get {
 #if MONOMAC
-				return MonoMacFixtures.Mac.IsElCapitanOrHigher;
+				return Mac.IsElCapitanOrHigher;
 #elif __WATCHOS__
 				return false;
 #else
