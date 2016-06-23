@@ -275,8 +275,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_CreateDebugConfiguration;
 			_CreatePkgInfo;
 			_CopyAppExtensionsToBundle;
-			_CopyWatchAppsToBundle;
-			_CopyWatch2AppsToBundle;
+			_CopyWatchOS1AppsToBundle;
+			_CopyWatchOS2AppsToBundle;
 			_GenerateDebugSymbols;
 			_ValidateAppBundle;
 		</CreateAppBundleDependsOn>
@@ -1442,7 +1442,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</PropertyGroup>
 	</Target>
 
-	<Target Name="_CopyWatchAppsToBundle" Condition="'$(IsAppExtension)' == 'true'" DependsOnTargets="_ResolveWatchAppReferences">
+	<Target Name="_CopyWatchOS1AppsToBundle" Condition="'$(IsAppExtension)' == 'true'" DependsOnTargets="_ResolveWatchAppReferences">
 		<Ditto
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' And '@(_ResolvedWatchAppReferences)' != '' And '%(_ResolvedWatchAppReferences.Identity)' != ''"
@@ -1453,7 +1453,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="_CopyWatch2AppsToBundle" Condition="'$(OutputType)' == 'Exe'" DependsOnTargets="_ResolveWatchAppReferences">
+	<Target Name="_CopyWatchOS2AppsToBundle" Condition="'$(OutputType)' == 'Exe'" DependsOnTargets="_ResolveWatchAppReferences">
 		<Ditto
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' And '@(_ResolvedWatchAppReferences)' != '' And '%(_ResolvedWatchAppReferences.Identity)' != ''"
@@ -1767,6 +1767,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ProjectName="$(MSBuildProjectName)"
 			SolutionPath="$(SolutionPath)"
 			SigningKey="$(_CodeSigningKey)"
+			WatchAppReferences="@(_ResolvedWatchAppReferences)"
 			>
 			<Output TaskParameter="ArchiveDir" PropertyName="ArchiveDir"/>
 		</Archive>
