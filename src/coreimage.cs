@@ -481,15 +481,199 @@ namespace XamCore.CoreImage {
 
 		// CIRAWFilter (CIFilter)
 
-		[iOS (10,0)][Mac (10,12)]
+		[iOS (10,0)]
 		[Static]
 		[Export ("filterWithImageURL:options:")]
 		CIFilter CreateRawFilter (NSUrl url, NSDictionary options);
 
-		[iOS (10,0)][Mac (10,12)]
+		[iOS (10,0)]
 		[Static]
 		[Export ("filterWithImageData:options:")]
 		CIFilter CreateRawFilter (NSData data, NSDictionary options);
+	}
+
+	[Static]
+	[Internal]
+	interface CIRawFilterKeys {
+		[iOS (10,0)]
+		[Field ("kCIInputAllowDraftModeKey")]
+		NSString AllowDraftModeKey { get; }
+
+		[iOS (10,0)]
+		[Field ("kCIInputDecoderVersionKey")]
+		NSString VersionKey { get; }
+
+		[iOS (10,0)]
+		[Field ("kCISupportedDecoderVersionsKey")]
+		NSString SupportedDecoderVersionsKey { get; }
+
+		[iOS (10,0)]
+		[Field ("kCIInputBoostKey")]
+		NSString BoostKey { get; }
+
+		[iOS (10,0)]
+		[Field ("kCIInputBoostShadowAmountKey")]
+		NSString BoostShadowAmountKey { get; }
+
+		[iOS (10,0)]
+		[Field ("kCIInputNeutralChromaticityXKey")]
+		NSString NeutralChromaticityXKey { get; }
+
+		[iOS (10,0)]
+		[Field ("kCIInputNeutralChromaticityYKey")]
+		NSString NeutralChromaticityYKey { get; }
+
+		[iOS (10,0)]
+		[Field ("kCIInputNeutralTemperatureKey")]
+		NSString NeutralTemperatureKey { get; }
+
+		[iOS (10,0)]
+		[Field ("kCIInputNeutralTintKey")]
+		NSString NeutralTintKey { get; }
+
+		[iOS (10,0)]
+		[Field ("kCIInputNeutralLocationKey")]
+		NSString NeutralLocationKey { get; }
+
+		[iOS (10,0)]
+		[Field ("kCIInputScaleFactorKey")]
+		NSString ScaleFactorKey { get; }
+
+		[iOS (10,0)]
+		[Field ("kCIInputIgnoreImageOrientationKey")]
+		NSString IgnoreImageOrientationKey { get; }
+
+		[iOS (10,0)]
+		[Field ("kCIInputImageOrientationKey")]
+		NSString ImageOrientationKey { get; }
+
+		[iOS (10,0)]
+		[Field ("kCIInputEnableSharpeningKey")]
+		NSString EnableSharpeningKey { get; }
+
+		[iOS (10,0)]
+		[Field ("kCIInputEnableChromaticNoiseTrackingKey")]
+		NSString EnableChromaticNoiseTrackingKey { get; }
+
+		[iOS (10,0)]
+		[Field ("kCIInputNoiseReductionAmountKey")]
+		NSString NoiseReductionAmountKey { get; }
+
+		[iOS (10,0)][Mac (10,10)]
+		[Field ("kCIInputEnableVendorLensCorrectionKey")]
+		NSString EnableVendorLensCorrectionKey { get; }
+
+		[iOS (10,0)][Mac (10,10)]
+		[Field ("kCIInputLuminanceNoiseReductionAmountKey")]
+		NSString LuminanceNoiseReductionAmountKey { get; }
+
+		[iOS (10,0)][Mac (10,10)]
+		[Field ("kCIInputColorNoiseReductionAmountKey")]
+		NSString ColorNoiseReductionAmountKey { get; }
+
+		[iOS (10,0)][Mac (10,10)]
+		[Field ("kCIInputNoiseReductionSharpnessAmountKey")]
+		NSString NoiseReductionSharpnessAmountKey { get; }
+
+		[iOS (10,0)][Mac (10,10)]
+		[Field ("kCIInputNoiseReductionContrastAmountKey")]
+		NSString NoiseReductionContrastAmountKey { get; }
+
+		[iOS (10,0)][Mac (10,10)]
+		[Field ("kCIInputNoiseReductionDetailAmountKey")]
+		NSString NoiseReductionDetailAmountKey { get; }
+
+		[iOS (10,0)]
+		[Field ("kCIInputLinearSpaceFilter")]
+		NSString LinearSpaceFilterKey { get; }
+
+		[iOS (10,0)]
+		[Field ("kCIOutputNativeSizeKey")]
+		NSString OutputNativeSizeKey { get; }
+
+		[iOS (10,0)]
+		[Field ("kCIActiveKeys")]
+		NSString ActiveKeysKey { get; }
+	}
+
+	[StrongDictionary ("CIRawFilterKeys")]
+	interface CIRawFilterOptions {
+
+		[iOS (10,0)]
+		bool AllowDraftMode { get; set; }
+
+		[iOS (10,0)]
+		string Version { get; set; }
+
+		[iOS (10,0)]
+		NSDictionary[] SupportedDecoderVersions { get; set; }
+
+		[iOS (10,0)]
+		float Boost { get; set; }
+
+		[iOS (10,0)]
+		float BoostShadowAmount { get; set; }
+
+		[iOS (10,0)]
+		float NeutralChromaticityX { get; set; }
+
+		[iOS (10,0)]
+		float NeutralChromaticityY { get; set; }
+
+		[iOS (10,0)]
+		float NeutralTemperature { get; set; }
+
+		[iOS (10,0)]
+		float NeutralTint { get; set; }
+
+		[iOS (10,0)]
+		CIVector NeutralLocation { get; set; }
+
+		[iOS (10,0)]
+		float ScaleFactor { get; set; }
+
+		[iOS (10,0)]
+		bool IgnoreImageOrientation { get; set; }
+
+		[iOS (10,0)]
+		int ImageOrientation { get; set; }
+
+		[iOS (10,0)]
+		bool EnableSharpening { get; set; }
+
+		[iOS (10,0)]
+		bool EnableChromaticNoiseTracking { get; set; }
+
+		[iOS (10,0)]
+		double NoiseReductionAmount { get; set; }
+
+		[iOS (10,0)][Mac (10,10)]
+		bool EnableVendorLensCorrection { get; set; }
+
+		[iOS (10,0)][Mac (10,10)]
+		double LuminanceNoiseReductionAmount { get; set; }
+
+		[iOS (10,0)][Mac (10,10)]
+		double ColorNoiseReductionAmount { get; set; }
+
+		[iOS (10,0)][Mac (10,10)]
+		double NoiseReductionSharpnessAmount { get; set; }
+
+		[iOS (10,0)][Mac (10,10)]
+		double NoiseReductionContrastAmount { get; set; }
+
+		[iOS (10,0)][Mac (10,10)]
+		[Field ("kCIInputNoiseReductionDetailAmountKey")]
+		double NoiseReductionDetailAmount { get; set; }
+
+		[iOS (10,0)]
+		CIFilter LinearSpaceFilter { get; set; }
+
+		[iOS (10,0)]
+		CIVector OutputNativeSize { get; set; }
+
+		[iOS (10,0)]
+		NSSet ActiveKeys { get; }
 	}
 
 	[Since (5,0)]
