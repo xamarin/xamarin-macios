@@ -726,7 +726,10 @@ namespace XamCore.TVMLKit {
 		string AutoHighlightIdentifier { get; }
 
 		[Export ("disabled")]
-		bool Disabled { [Bind ("isDisabled")] get; set; }
+		bool Disabled {
+			[Bind ("isDisabled")] get;
+			[NotImplemented] set; // made read-only in 10.0
+		}
 
 		[Export ("updateType")]
 		TVElementUpdateType UpdateType { get; }

@@ -295,7 +295,7 @@ namespace Introspection {
 			case "AVAudioSessionPortDescription":
 			case "CLBeacon":
 			case "CLCircularRegion":
-				if (CheckiOSSystemVersion (10, 0))
+				if (CheckiOSOrTVOSSystemVersion (10, 0))
 					return;
 				break;
 			default:
