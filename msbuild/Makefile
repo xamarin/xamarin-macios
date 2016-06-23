@@ -334,7 +334,7 @@ all-local:: $(MSBUILD_PRODUCTS) test-xml
 
 .build-stamp: $(ALL_SOURCES)
 	$(Q) $(SYSTEM_MONO) /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe sources list
-	$(Q) $(SYSTEM_MONO) /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore -Verbosity detailed
+	$(Q) $(SYSTEM_MONO) /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore
 	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY)
 	$(Q) touch $@
 
