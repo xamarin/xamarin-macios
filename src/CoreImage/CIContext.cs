@@ -124,15 +124,13 @@ namespace XamCore.CoreImage {
 	public partial class CIContext {
 
 		public CIContext (CIContextOptions options) :
-			this (options == null ? null : options.Dictionary)
+			this (options?.Dictionary)
 		{
 		}
 
 		public static CIContext FromContext (CGContext ctx, CIContextOptions options)
 		{
-			NSDictionary dict = options == null ? null : options.Dictionary;
-
-			return FromContext (ctx, dict);
+			return FromContext (ctx, options?.Dictionary);
 		}
 		
 		public static CIContext FromContext (CGContext ctx)
@@ -167,7 +165,7 @@ namespace XamCore.CoreImage {
 #else
 		public static CIContext FromOptions (CIContextOptions options)
 		{
-			return FromOptions (options == null ? null : options.Dictionary);
+			return FromOptions (options?.Dictionary);
 		}
 		
 		public CGImage CreateCGImage (CIImage image, CGRect fromRect, CIFormat ciImageFormat, CGColorSpace colorSpace)
