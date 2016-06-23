@@ -316,6 +316,7 @@ namespace Introspection
 			"Undecodable",
 			"Underrun",
 			"Unorm",
+			"Unpremultiplying",
 			"Unprepare",
 			"Unproject",
 			"Uterance",
