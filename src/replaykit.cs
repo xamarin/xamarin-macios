@@ -182,6 +182,7 @@ namespace XamCore.ReplayKit {
 		[Export ("clipDuration")]
 		double ClipDuration { get; set; }
 
+		// TODO review, once API documentation is available, if we can provide an easier to use strongdictionary
 		[NullAllowed, Export ("videoCompressionProperties", ArgumentSemantic.Strong)]
 		NSDictionary<NSNumber, INSSecureCoding> VideoCompressionProperties { get; set; }
 	}
