@@ -23,5 +23,15 @@ namespace XamCore.ReplayKit {
 		InsufficientStorage = -5805,
 		Interrupted = -5806,
 		ContentResize = -5807,
+		BroadcastInvalidSession = -5808,
+		SystemDormancy = -5809,
+	}
+
+	[NoiOS]
+	[TV (10,0)]
+	[Native]
+	public enum RPPreviewViewControllerMode : nint {
+		Preview,
+		Share
 	}
 }

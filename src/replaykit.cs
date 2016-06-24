@@ -23,6 +23,10 @@ namespace XamCore.ReplayKit {
 
 		[Export ("previewControllerDelegate", ArgumentSemantic.Weak)][NullAllowed]
 		IRPPreviewViewControllerDelegate PreviewControllerDelegate { get; set; }
+
+		[TV (10, 0), NoiOS]
+		[Export ("mode", ArgumentSemantic.Assign)]
+		RPPreviewViewControllerMode Mode { get; set; }
 	}
 
 	interface IRPPreviewViewControllerDelegate { }
@@ -35,6 +39,7 @@ namespace XamCore.ReplayKit {
 		[Export ("previewControllerDidFinish:")]
 		void DidFinish (RPPreviewViewController previewController);
 
+		[NoTV]
 		[Export ("previewController:didFinishWithActivityTypes:")]
 		void DidFinish (RPPreviewViewController previewController, NSSet<NSString> activityTypes);
 	}
@@ -48,9 +53,15 @@ namespace XamCore.ReplayKit {
 		[Export ("sharedRecorder")]
 		RPScreenRecorder SharedRecorder { get; }
 
+		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use StartRecording(Action<NSError>)")]
 		[Async]
 		[Export ("startRecordingWithMicrophoneEnabled:handler:")]
 		void StartRecording (bool microphoneEnabled, [NullAllowed] Action<NSError> handler);
+
+		[iOS (10,0)]
+		[Async]
+		[Export ("startRecordingWithHandler:")]
+		void StartRecording ([NullAllowed] Action<NSError> handler);
 
 		[Async]
 		[Export ("stopRecordingWithHandler:")]
@@ -66,11 +77,23 @@ namespace XamCore.ReplayKit {
 		[Export ("recording", ArgumentSemantic.Assign)]
 		bool Recording { [Bind ("isRecording")] get; }
 
+		[NoTV]
 		[Export ("microphoneEnabled", ArgumentSemantic.Assign)]
-		bool MicrophoneEnabled { [Bind ("isMicrophoneEnabled")] get; }
+		bool MicrophoneEnabled {
+			[Bind ("isMicrophoneEnabled")] get;
+			[iOS (10,0)] set;
+		}
 
 		[Export ("available", ArgumentSemantic.Assign)]
 		bool Available { [Bind ("isAvailable")] get; }
+
+		[NoTV, iOS (10,0)]
+		[Export ("cameraEnabled")]
+		bool CameraEnabled { [Bind ("isCameraEnabled")] get; set; }
+
+		[NoTV, iOS (10,0)]
+		[NullAllowed, Export ("cameraPreviewView")]
+		UIView CameraPreviewView { get; }
 	}
 
 	interface IRPScreenRecorderDelegate { }
@@ -86,5 +109,104 @@ namespace XamCore.ReplayKit {
 		[Export ("screenRecorderDidChangeAvailability:")]
 		void DidChangeAvailability (RPScreenRecorder screenRecorder);
 	}
-}
 
+	[iOS (10,0)]
+	[BaseType (typeof (UIViewController))]
+	interface RPBroadcastActivityViewController {
+		// inlined
+		[Export ("initWithNibName:bundle:")]
+		[PostGet ("NibBundle")]
+		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+
+		[Static]
+		[Async]
+		[Export ("loadBroadcastActivityViewControllerWithHandler:")]
+		void LoadBroadcastActivityViewController (Action<RPBroadcastActivityViewController, NSError> handler);
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		IRPBroadcastActivityViewControllerDelegate Delegate { get; set; }
+	}
+
+	interface IRPBroadcastActivityViewControllerDelegate {}
+
+	[iOS (10,0)]
+	[Protocol, Model]
+	[BaseType (typeof (NSObject))]
+	interface RPBroadcastActivityViewControllerDelegate {
+		[Abstract]
+		[Export ("broadcastActivityViewController:didFinishWithBroadcastController:error:")]
+		void DidFinish (RPBroadcastActivityViewController broadcastActivityViewController, [NullAllowed] RPBroadcastController broadcastController, [NullAllowed] NSError error);
+	}
+
+	[iOS (10,0)]
+	[BaseType (typeof (NSObject))]
+	interface RPBroadcastController {
+		[Export ("broadcasting")]
+		bool Broadcasting { [Bind ("isBroadcasting")] get; }
+
+		[Export ("broadcastURL")]
+		NSUrl BroadcastUrl { get; }
+
+		[NullAllowed, Export ("broadcastControllerDelegate", ArgumentSemantic.Weak)]
+		IRPBroadcastControllerDelegate BroadcastControllerDelegate { get; set; }
+
+		[Async]
+		[Export ("startBroadcastWithHandler:")]
+		void StartBroadcast (Action<NSError> handler);
+
+		[Export ("pauseBroadcast")]
+		void PauseBroadcast ();
+
+		[Export ("resumeBroadcast")]
+		void ResumeBroadcast ();
+
+		[Async]
+		[Export ("finishBroadcastWithHandler:")]
+		void FinishBroadcast (Action<NSError> handler);
+	}
+
+	interface IRPBroadcastControllerDelegate {}
+
+	[iOS (10,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface RPBroadcastControllerDelegate {
+		[Abstract]
+		[Export ("broadcastController:didFinishWithError:")]
+		void DidFinish (RPBroadcastController broadcastController, [NullAllowed] NSError error);
+	}
+
+	[iOS (10,0)]
+	[BaseType (typeof (NSObject))]
+	interface RPBroadcastConfiguration : NSCoding, NSSecureCoding {
+		[Export ("clipDuration")]
+		double ClipDuration { get; set; }
+
+		// TODO review, once API documentation is available, if we can provide an easier to use strongdictionary
+		[NullAllowed, Export ("videoCompressionProperties", ArgumentSemantic.Strong)]
+		NSDictionary<NSNumber, INSSecureCoding> VideoCompressionProperties { get; set; }
+	}
+
+	delegate void LoadBroadcastingHandler (string bundleID, string displayName, UIImage appIcon);
+
+	[iOS (10,0)]
+	[Category]
+	[BaseType (typeof (NSExtensionContext))]
+	interface NSExtensionContext_RPBroadcastExtension {
+		[Export ("loadBroadcastingApplicationInfoWithCompletion:")]
+		void LoadBroadcastingApplicationInfo (LoadBroadcastingHandler handler);
+
+		[Export ("completeRequestWithBroadcastURL:broadcastConfiguration:serviceInfo:")]
+		void CompleteRequest (NSUrl broadcastUrl, RPBroadcastConfiguration broadcastConfiguration, [NullAllowed] NSDictionary<NSString, INSCoding> serviceInfo);
+	}
+
+	[iOS (10,0)]
+	[BaseType (typeof (NSObject))]
+	interface RPBroadcastMovieClipHandler : NSExtensionRequestHandling {
+		[Export ("processMovieClipWithURL:serviceInfo:finished:")]
+		void ProcessMovieClip ([NullAllowed] NSUrl movieClipUrl, [NullAllowed] NSDictionary<NSString, NSObject> serviceInfo, bool finished);
+
+		[Export ("finishedProcessingMovieClipWithUpdatedBroadcastConfiguration:error:")]
+		void FinishedProcessingMovieClip ([NullAllowed] RPBroadcastConfiguration broadcastConfiguration, [NullAllowed] NSError error);
+	}
+}
