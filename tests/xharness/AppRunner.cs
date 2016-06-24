@@ -144,10 +144,11 @@ namespace xharness
 					candidate = data;
 				}
 			}
-			if (candidate == null)
-				throw new Exception ($"Could not find simulator for runtime={simulator_runtime} and device type={simulator_devicetype}.");
-			if (simulators == null)
+			if (simulators == null) {
+				if (candidate == null)
+					throw new Exception ($"Could not find simulator for runtime={simulator_runtime} and device type={simulator_devicetype}.");
 				simulators = new SimDevice [] { candidate };
+			}
 
 			if (simulators == null)
 				throw new Exception ("Could not find simulator");
