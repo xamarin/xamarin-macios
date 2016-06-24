@@ -2107,12 +2107,16 @@ class Test {
 		[Test]
 		public void ListDev ()
 		{
+			Assert.Ignore ("This functionality has been migrated to mlaunch, and the test needs to be updated accordingly.");
+
 			ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("--listdev --sdkroot {0}", Configuration.xcode_root));
 		}
 
 		[Test]
 		public void LaunchOnDevice ()
 		{
+			Assert.Ignore ("This functionality has been migrated to mlaunch, and the test needs to be updated accordingly.");
+
 			var mtouch = new MTouchTool ();
 			var devices = mtouch.FindAvailableDevices (new string [] { "iPad", "iPhone" }).ToArray ();
 			if (devices.Length == 0)
@@ -2142,6 +2146,8 @@ class Test {
 		[Test]
 		public void LaunchOnWatchDevice ()
 		{
+			Assert.Ignore ("This functionality has been migrated to mlaunch, and the test needs to be updated accordingly.");
+
 			var mtouch = new MTouchTool ();
 			mtouch.Verbosity = 2;
 			var devices = mtouch.FindAvailableDevices (new string [] { "Watch" }).ToArray ();
