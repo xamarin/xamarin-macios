@@ -20,6 +20,12 @@
 !unknown-native-enum! GKPeerPickerConnectionType bound
 
 
+# ReplayKit
+
+## only used on tvOS but exposed in iOS 10 SDK
+!missing-enum! RPPreviewViewControllerMode not bound
+
+
 # UIKit
 
 ## typedef is used (no value) in UITextInput.h: typedef NSInteger UITextDirection
