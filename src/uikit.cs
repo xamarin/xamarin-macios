@@ -2886,7 +2886,6 @@ namespace XamCore.UIKit {
 
 	[iOS (10,0)]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
 	public interface UIContentSizeCategoryAdjusting
 	{
 		[Abstract]
@@ -3627,7 +3626,6 @@ namespace XamCore.UIKit {
 	interface IUICollectionViewDataSourcePrefetching {}
 	
 	[Protocol]
-	[BaseType (typeof(NSObject))]
 	interface UICollectionViewDataSourcePrefetching
 	{
 		[iOS (10,0)]

@@ -299,7 +299,7 @@ namespace Introspection {
 
 					var klass = new Class (t);
 					if (klass.Handle == IntPtr.Zero) {
-						AddErrorLine ("Could not load {0}", t.FullName);
+						AddErrorLine ("[FAIL] Could not load {0}", t.FullName);
 					} else if (t.IsPublic && !ConformTo (klass.Handle, protocol)) {
 						// note: some internal types, e.g. like UIAppearance subclasses, return false (and there's not much value in changing this)
 						ReportError ("Type {0} (native: {1}) does not conform {2}", t.FullName, klass.Name, protocolName);
