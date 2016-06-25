@@ -119,7 +119,7 @@ namespace XamCore.CloudKit {
 
 		[Export ("performQuery:inZoneWithID:completionHandler:")]
 		[Async]
-		void PerformQuery (CKQuery query, CKRecordZoneID zoneId, Action<CKRecord[], NSError> completionHandler);
+		void PerformQuery (CKQuery query, [NullAllowed] CKRecordZoneID zoneId, Action<CKRecord[], NSError> completionHandler);
 
 		[Export ("fetchAllRecordZonesWithCompletionHandler:")]
 		[Async]
@@ -298,7 +298,7 @@ namespace XamCore.CloudKit {
 	interface CKFetchRecordChangesOperation {
 
 		[Export ("initWithRecordZoneID:previousServerChangeToken:")]
-		IntPtr Constructor (CKRecordZoneID recordZoneID, CKServerChangeToken previousServerChangeToken);
+		IntPtr Constructor (CKRecordZoneID recordZoneID, [NullAllowed] CKServerChangeToken previousServerChangeToken);
 
 		[NullAllowed] // by default this property is null
 		[Export ("recordZoneID", ArgumentSemantic.Copy)]
