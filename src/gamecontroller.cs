@@ -256,7 +256,8 @@ namespace XamCore.GameController {
 		[Export ("extendedGamepad", ArgumentSemantic.Retain)]
 		GCExtendedGamepad ExtendedGamepad { get; }
 
-		[NoMac][NoiOS]
+		[NoMac]
+		[iOS (10,0)]
 		[NullAllowed, Export ("microGamepad", ArgumentSemantic.Retain)]
 		GCMicroGamepad MicroGamepad { get; }
 
@@ -310,11 +311,13 @@ namespace XamCore.GameController {
 		Vector3d RotationRate { get; }
 	}
 
-	[NoiOS][NoMac]
+	[NoMac]
+	[iOS (10,0)]
 	[TV (9,0)]
 	public delegate void GCMicroGamepadValueChangedHandler (GCMicroGamepad gamepad, GCControllerElement element);
 
-	[NoiOS][NoMac]
+	[NoMac]
+	[iOS (10,0)]
 	[TV (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -344,7 +347,8 @@ namespace XamCore.GameController {
 		bool AllowsRotation { get; set; }
 	}
 
-	[NoiOS][NoMac]
+	[NoMac]
+	[iOS (10,0)]
 	[TV (9,0)]
 	[BaseType (typeof (GCMicroGamepad))]
 	public interface GCMicroGamepadSnapshot {
@@ -358,8 +362,9 @@ namespace XamCore.GameController {
 		IntPtr Constructor (GCController controller, NSData data);
 	}
 
-#if TVOS
-	[NoiOS][NoMac]
+#if !MONOMAC
+	[NoMac]
+	[iOS (10,0)]
 	[TV (9,0)]
 	[BaseType (typeof (UIViewController))]
 	interface GCEventViewController {
