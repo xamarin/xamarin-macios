@@ -1,6 +1,6 @@
 ﻿// Copyright 2015 Xamarin Inc.
 
-#if TVOS
+#if IOS || TVOS
 
 using System;
 using System.Runtime.InteropServices;
@@ -51,4 +51,4 @@ namespace XamCore.GameController {
 	}
 }
 
-#endif // TVOS
+#endif // IOS || TVOS
