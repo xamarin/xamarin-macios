@@ -166,6 +166,10 @@ namespace XamCore.CoreVideo {
 		[Field ("kCVImageBufferTransferFunction_ITU_R_2020")]
 		NSString TransferFunction_ITU_R_2020 { get; }
 
+		[iOS (10,0)][Mac (10,12)]
+		[Field ("kCVImageBufferTransferFunction_SMPTE_ST_428_1")]
+		NSString TransferFunction_SMPTE_ST_428_1 { get; }
+
 		[Field ("kCVImageBufferChromaLocationTopFieldKey")]
 		NSString ChromaLocationTopFieldKey { get; }
 

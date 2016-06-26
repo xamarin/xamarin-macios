@@ -41,6 +41,12 @@ namespace MonoTouchFixtures.CoreVideo {
 		{
 			Assert.That (FourCC ((int) CVPixelFormatType.OneComponent8), Is.EqualTo ("L008"), "OneComponent8");
 			Assert.That (FourCC ((int) CVPixelFormatType.TwoComponent8), Is.EqualTo ("2C08"), "TwoComponent8");
+
+			Assert.That (FourCC ((int)CVPixelFormatType.CV30RbgaLePackedWideGamut), Is.EqualTo ("w30r"), "CV30RbgaLePackedWideGamut");
+			Assert.That (FourCC ((int)CVPixelFormatType.CV14BayerGrbg), Is.EqualTo ("grb4"), "CV14Bayer_Grbg");
+			Assert.That (FourCC ((int)CVPixelFormatType.CV14BayerRggb), Is.EqualTo ("rgg4"), "CV14Bayer_Rggb");
+			Assert.That (FourCC ((int)CVPixelFormatType.CV14BayerBggr), Is.EqualTo ("bgg4"), "CV14Bayer_Bggr");
+			Assert.That (FourCC ((int)CVPixelFormatType.CV14BayerGbrg), Is.EqualTo ("gbr4"), "CV14Bayer_Gbrg");
 		}
 	}
 }

@@ -84,6 +84,7 @@ namespace XamCore.CoreVideo {
 		WouldExceedAllocationThreshold = -6689,
 		PoolAllocationFailed = -6690,
 		InvalidPoolAttributes = -6691,
+		Retry = -6692,
 		Last = -6699,
 	}
 
@@ -140,6 +141,12 @@ namespace XamCore.CoreVideo {
 		TwoComponent32Float = 0x32433066, // '2C0f'
 		CV64RGBAHalf		= 0x52476841, // 'RGhA'
 		CV128RGBAFloat		= 0x52476641, // 'RGfA'
+		// iOS 10
+		CV30RbgaLePackedWideGamut = 0x77333072, // 'w30r'
+		CV14BayerGrbg = 0x67726234, // 'grb4',
+		CV14BayerRggb = 0x72676734, // 'rgg4',
+		CV14BayerBggr = 0x62676734, // 'bgg4',
+		CV14BayerGbrg = 0x67627234, // 'gbr4',
 	}
 
 	// uint64_t -> CVBase.h
