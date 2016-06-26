@@ -1,5 +1,12 @@
 # iOS specific issues we need to look into
 
+
+# CallKit
+
+## Deprecated in xcode8 beta1: "Use -[CXAction fulfill] instead"
+!missing-selector! CXCallAction::fulfillWithResponse: not bound
+
+
 # CoreMedia
 
 !missing-field! kCMMetadataKeySpace_HLSDateRange not bound
@@ -13,11 +20,16 @@
 # GameplayKit
 
 ## Apple introduced those types in Xcode 7.1 and removed them afterward !?!
-## they do work (intro tests checks them) but thy are not part of the header files
+## they do work (intro tests checks them) but they are not part of the header files
 !unknown-type! GKHybridStrategist bound
 !unknown-type! GKMonteCarloStrategist bound
 !unknown-type! GKQuadTree bound
 !unknown-type! GKQuadTreeNode bound
+
+
+# Speech
+## iOS 10 beta 1 - use a non-public type in the signature https://trello.com/c/s6s6YKua
+!missing-selector! SFSpeechRecognizer::prepareWithRequest: not bound
 
 
 # OpenGLES
@@ -27,6 +39,12 @@
 !missing-field! kEAGLColorFormatSRGBA8 not bound
 !missing-field! kEAGLDrawablePropertyColorFormat not bound
 !missing-field! kEAGLDrawablePropertyRetainedBacking not bound
+
+
+# Quicklook
+
+## fixed for XAMCORE_4_0
+!incorrect-protocol-member! QLPreviewItem::previewItemTitle is OPTIONAL and should NOT be abstract
 
 
 # VideoToolbox
