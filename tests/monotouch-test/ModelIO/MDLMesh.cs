@@ -112,7 +112,11 @@ namespace MonoTouchFixtures.ModelIO {
 
 			using (var obj = MDLMesh.CreatePlane (V2, V2i, MDLGeometryType.Triangles, null)) {
 				Assert.IsNotNull (obj, "obj");
-				Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (1.5f, 0, 1.5f), MinBounds = new Vector3 (-1.5f, 0, -1.5f) }, obj.BoundingBox, "BoundingBox");
+				if (TestRuntime.CheckiOSSystemVersion (10, 0)) {
+					Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (1.5f, 0, 0), MinBounds = new Vector3 (-1.5f, 0, 0) }, obj.BoundingBox, "BoundingBox");
+				} else {
+					Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (1.5f, 0, 1.5f), MinBounds = new Vector3 (-1.5f, 0, -1.5f) }, obj.BoundingBox, "BoundingBox");
+				}
 				Assert.AreEqual (1, obj.Submeshes.Count, "Submeshes Count");
 				Assert.AreEqual (1, obj.VertexBuffers.Length, "VertexBuffers Count");
 				Assert.AreEqual (16, obj.VertexCount, "VertexCount");
@@ -144,7 +148,11 @@ namespace MonoTouchFixtures.ModelIO {
 
 			using (var obj = MDLMesh.CreateCylindroid (1, V2, 3, 1, MDLGeometryType.Triangles, true, null)) {
 				Assert.IsNotNull (obj, "obj");
-				Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (1f, 0.5f, 1f), MinBounds = new Vector3 (-0.866025388f, -0.5f, -0.866025388f) }, obj.BoundingBox, "BoundingBox");
+				if (TestRuntime.CheckiOSSystemVersion (10, 0)) {
+					Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.866025448f, 0.5f, 1f), MinBounds = new Vector3 (-0.866025388f, -0.5f, -0.5f) }, obj.BoundingBox, "BoundingBox");
+				} else {
+					Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (1f, 0.5f, 1f), MinBounds = new Vector3 (-0.866025388f, -0.5f, -0.866025388f) }, obj.BoundingBox, "BoundingBox");
+				}
 				Assert.AreEqual (1, obj.Submeshes.Count, "Submeshes Count");
 				Assert.AreEqual (1, obj.VertexBuffers.Length, "VertexBuffers Count");
 				Assert.AreEqual (18, obj.VertexCount, "VertexCount");
@@ -160,7 +168,11 @@ namespace MonoTouchFixtures.ModelIO {
 
 			using (var obj = MDLMesh.CreateEllipticalCone (5, V2, 3, 1, MDLGeometryType.Triangles, true, null)) {
 				Assert.IsNotNull (obj, "obj");
-				Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.866025448f, 0f, 1f), MinBounds = new Vector3 (-0.866025388f, -5f, -0.50000006f) }, obj.BoundingBox, "BoundingBox");
+				if (TestRuntime.CheckiOSSystemVersion (10, 0)) {
+					Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.866025448f, 0f, 1f), MinBounds = new Vector3 (-0.866025388f, -25f, -0.50000006f) }, obj.BoundingBox, "BoundingBox");
+				} else {
+					Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.866025448f, 0f, 1f), MinBounds = new Vector3 (-0.866025388f, -5f, -0.50000006f) }, obj.BoundingBox, "BoundingBox");
+				}
 				Assert.AreEqual (1, obj.Submeshes.Count, "Submeshes Count");
 				Assert.AreEqual (1, obj.VertexBuffers.Length, "VertexBuffers Count");
 				Assert.AreEqual (13, obj.VertexCount, "VertexCount");
