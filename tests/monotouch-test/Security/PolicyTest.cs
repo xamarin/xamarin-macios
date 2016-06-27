@@ -51,7 +51,7 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (policy.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 				Assert.That (CFGetRetainCount (policy.Handle), Is.EqualTo ((nint) 1), "RetainCount");
 
-				if (TestRuntime.CheckSystemAndSDKVersion (7,0)) {
+				if (TestRuntime.CheckXcodeVersion (5, 0)) {
 					using (var properties = policy.GetProperties ()) {
 						Assert.That (properties.Handle, Is.Not.EqualTo (IntPtr.Zero), "Properties.Handle");
 						Assert.That (CFGetRetainCount (properties.Handle), Is.EqualTo ((nint) 1), "Properties.RetainCount");
@@ -69,7 +69,7 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (policy.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 				Assert.That (CFGetRetainCount (policy.Handle), Is.EqualTo ((nint) 1), "RetainCount");
 
-				if (TestRuntime.CheckSystemAndSDKVersion (7,0)) {
+				if (TestRuntime.CheckXcodeVersion (5, 0)) {
 					using (var properties = policy.GetProperties ()) {
 						Assert.That (properties.Handle, Is.Not.EqualTo (IntPtr.Zero), "Properties.Handle");
 						Assert.That (CFGetRetainCount (properties.Handle), Is.EqualTo ((nint) 1), "Properties.RetainCount");
@@ -88,7 +88,7 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (policy.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 				Assert.That (CFGetRetainCount (policy.Handle), Is.EqualTo ((nint) 1), "RetainCount");
 
-				if (TestRuntime.CheckSystemAndSDKVersion (7,0)) {
+				if (TestRuntime.CheckXcodeVersion (5, 0)) {
 					using (var properties = policy.GetProperties ()) {
 						Assert.That (properties.Handle, Is.Not.EqualTo (IntPtr.Zero), "Properties.Handle");
 						Assert.That (CFGetRetainCount (properties.Handle), Is.EqualTo ((nint) 1), "Properties.RetainCount");
@@ -107,7 +107,7 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (policy.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 				Assert.That (CFGetRetainCount (policy.Handle), Is.EqualTo ((nint) 1), "RetainCount");
 
-				if (TestRuntime.CheckSystemAndSDKVersion (7,0)) {
+				if (TestRuntime.CheckXcodeVersion (5, 0)) {
 					using (var properties = policy.GetProperties ()) {
 						Assert.That (properties.Handle, Is.Not.EqualTo (IntPtr.Zero), "Properties.Handle");
 						Assert.That (CFGetRetainCount (properties.Handle), Is.EqualTo ((nint) 1), "Properties.RetainCount");
@@ -121,8 +121,7 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void RevocationPolicy ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Inconclusive ("requires iOS7");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			using (var policy = SecPolicy.CreateRevocationPolicy (SecRevocation.UseAnyAvailableMethod | SecRevocation.RequirePositiveResponse)) {
 				Assert.That (policy.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
@@ -149,8 +148,7 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void CreatWellKnownPolicies ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Inconclusive ("requires iOS7");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			CreatePolicy (SecPolicyIdentifier.AppleX509Basic);
 			CreatePolicy (SecPolicyIdentifier.AppleSSL);
@@ -168,8 +166,7 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void CreateUnknownPolicy ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Inconclusive ("requires iOS7");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			using (var oid = new NSString ("1.2.3.4")) {
 				Assert.Throws<ArgumentException> (delegate {

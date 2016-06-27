@@ -170,8 +170,7 @@ namespace MonoTouchFixtures.ImageIO {
 		[Test]
 		public void CopyMetadata ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("Only on iOS7+");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			using (var imageSource = CGImageSource.FromUrl (NSUrl.FromFilename (filename))) {
 				CGImageOptions options = new CGImageOptions () { ShouldCacheImmediately = true };
@@ -184,8 +183,7 @@ namespace MonoTouchFixtures.ImageIO {
 		[Test]
 		public void RemoveCache ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("Only on iOS7+");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			using (var imageSource = CGImageSource.FromUrl (NSUrl.FromFilename (filename))) {
 				imageSource.RemoveCache (0);

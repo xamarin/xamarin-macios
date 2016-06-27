@@ -87,7 +87,7 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void DatagramDefaults ()
 		{
-			nint dsize = TestRuntime.CheckSystemAndSDKVersion (8, 0) ? 1327 : 1387;
+			nint dsize = TestRuntime.CheckXcodeVersion (6, 0) ? 1327 : 1387;
 			using (var ssl = new SslContext (SslProtocolSide.Client, SslConnectionType.Datagram)) {
 				Assert.That (ssl.BufferedReadSize, Is.EqualTo ((nint) 0), "BufferedReadSize");
 				Assert.Null (ssl.Connection, "Connection");
@@ -148,6 +148,8 @@ namespace MonoTouchFixtures.Security {
 			Assert.That (ssl_client_ciphers, Is.EqualTo (ssl_server_ciphers), "same");
 		}
 
+#if !__WATCHOS__
+		// This test uses sockets (TcpClient), which doesn't work on watchOS.
 		[Test]
 		public void Tls12 ()
 		{
@@ -192,5 +194,6 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (s, Is.StringStarting ("HTTP/1.0 302 Found").Or.StringStarting ("HTTP/1.0 200 OK"), "response");
 			}
 		}
+#endif // !__WATCHOS__
 	}
 }

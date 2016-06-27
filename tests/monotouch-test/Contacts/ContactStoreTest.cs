@@ -32,8 +32,7 @@ namespace MonoTouchFixtures.Contacts {
 		[SetUp]
 		public void MinimumSdkCheck ()
 		{
-			if (!TestRuntime.CheckiOSSystemVersion (9,0))
-				Assert.Inconclusive ("Requires 9.0+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 		}
 
 		[Test]

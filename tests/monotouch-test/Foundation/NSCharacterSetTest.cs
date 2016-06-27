@@ -27,8 +27,7 @@ namespace MonoTouchFixtures.Foundation
 	{
 		static void RequiresIos8 ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Inconclusive ("Requires iOS8+");
+			TestRuntime.AssertXcodeVersion (6, 0);
 		}
 
 		[Test]

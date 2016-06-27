@@ -122,8 +122,7 @@ namespace MonoTouchFixtures.ImageIO {
 		[Test]
 		public void AddImageAndMetadata ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("Requires iOS 7+");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png");
 			using (NSMutableData destData = new NSMutableData ())
@@ -142,8 +141,7 @@ namespace MonoTouchFixtures.ImageIO {
 		[Test]
 		public void CopyImageSource ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("Requires iOS 7+");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			using (NSData data = NSData.FromFile ("xamarin2.png"))
 			using (var source = CGImageSource.FromData (data))

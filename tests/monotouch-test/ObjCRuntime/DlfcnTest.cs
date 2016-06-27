@@ -31,7 +31,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			IntPtr handle = Dlfcn.dlopen ("/usr/lib/libSystem.dylib", 0);
 			Assert.That (handle, Is.Not.EqualTo (IntPtr.Zero), "dlopen");
 			var err = Dlfcn.dlclose (handle);
-			if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckiOSSystemVersion (9,0)) {
+			if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (7, 0)) {
 				// Apple is doing some funky stuff with dlopen... this condition is to track if this change during betas
 				Assert.That (err, Is.EqualTo (-1), "dlclose");
 			} else {

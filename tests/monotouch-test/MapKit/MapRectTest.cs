@@ -112,7 +112,7 @@ namespace MonoTouchFixtures.MapKit {
 			Assert.True (remainder.IsNull, "IsNull");
 			
 			rect = new MKMapRect (-90, -90, 90, 90);
-			Assert.That (rect.Spans180thMeridian, Is.EqualTo (!TestRuntime.CheckiOSSystemVersion (7,1)), rect.ToString ());
+			Assert.That (rect.Spans180thMeridian, Is.EqualTo (!TestRuntime.CheckXcodeVersion (5, 1)), rect.ToString ());
 			remainder = rect.Remainder ();
 			Assert.That (remainder.ToString (), Is.EqualTo (@"{{268435366, -90}, {90, 90}}"), "remainder");
 		}

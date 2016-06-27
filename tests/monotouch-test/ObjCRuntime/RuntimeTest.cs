@@ -117,8 +117,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void GetNSObject_Different_Class ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-			    Assert.Inconclusive ("Requires iOS7 or later");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			IntPtr class_ptr = Class.GetHandle ("SKPhysicsBody");
 			SizeF size = new SizeF (3, 2);
@@ -136,8 +135,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void GetNSObject_Posing_Class ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Inconclusive ("NSUrlSession requires iOS7+");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			NSUrlSession session = NSUrlSession.SharedSession;
 			using (var request = new NSUrlRequest (new NSUrl ("http://www.example.com"))) {
@@ -290,9 +288,14 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void FinalizationRaceCondition ()
 		{
-			if ((IntPtr.Size == 8) && TestRuntime.CheckiOSSystemVersion (9,0))
+			if ((IntPtr.Size == 8) && TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("NSString retainCount is nuint.MaxValue, so we won't collect them");
 			
+#if __WATCHOS__
+			if (Runtime.Arch == Arch.DEVICE)
+				Assert.Ignore ("This test uses too much memory for the watch.");
+#endif
+
 			NSDictionary dict = null;
 
 			var thread = new Thread (() => {
@@ -500,6 +503,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[TestCase (typeof (ResurrectedObjectsDisposedTestClass))]
 		public void ResurrectedObjectsDisposedTest (Type type)
 		{
+#if __WATCHOS__
+			if (Runtime.Arch == Arch.DEVICE)
+				Assert.Ignore ("This test uses too much memory for the watch.");
+#endif
+
 			var invokerClassHandle = Class.GetHandle (typeof (ResurrectedObjectsDisposedTestClass));
 
 			// Create a number of native objects with no managed wrappers.

@@ -46,7 +46,7 @@ namespace Introspection {
 			case "Metal":
 			case "MonoTouch.Metal":
 				// they works with iOS9 beta 4 (but won't work on older simulators)
-				if ((Runtime.Arch == Arch.SIMULATOR) && !CheckiOSSystemVersion (9,0))
+				if ((Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (7, 0))
 					return true;
 				break;
 			case "MetalKit":
@@ -83,13 +83,13 @@ namespace Introspection {
 			case "ExifLensMake":
 			case "ExifLensModel":
 			case "ExifLensSerialNumber":
-				return !CheckiOSOrTVOSSystemVersion (6,1);
+				return !TestRuntime.CheckXcodeVersion (4, 6);
 
 			// ImageIO: new in iOS 8 but returns nil (at least in beta 1) seems fixed in iOS9
 			case "PNGLoopCount":
 			case "PNGDelayTime":
 			case "PNGUnclampedDelayTime":
-				return !CheckiOSOrTVOSSystemVersion (9,0);
+				return !TestRuntime.CheckXcodeVersion (7, 0);
 
 			// CoreServices.CFHTTPMessage - document in 10.9 but returns null
 			case "_AuthenticationSchemeOAuth1":

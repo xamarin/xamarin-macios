@@ -28,6 +28,13 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Indexer ()
 		{
+#if __WATCHOS__
+			// Looks like NSUbiquitousKeyValueStore doesn't work on watchOS:
+			// http://stackoverflow.com/questions/37412775/nsubiquitouskeyvaluestore-is-unavailable-watchos-2
+			// https://forums.developer.apple.com/thread/47564
+			Assert.Ignore ("Doesn't work on watchOS");
+#endif
+
 			using (var store = new NSUbiquitousKeyValueStore ()) {
 				using (var key = new NSString ("key")) {
 					using (var value = new NSString ("value")) {

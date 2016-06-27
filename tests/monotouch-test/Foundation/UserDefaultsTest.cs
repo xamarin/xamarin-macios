@@ -70,8 +70,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Ctor_SuiteName ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Ignore ("Requires iOS7");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			// initWithSuiteName:
 			using (var ud = new NSUserDefaults ("suitename", NSUserDefaultsType.SuiteName)) {

@@ -57,7 +57,7 @@ namespace Introspection {
 					return true;
 
 				// Requires iOS 8.2 or later in 32-bit mode
-				if (!CheckiOSSystemVersion (8, 2) && IntPtr.Size == 4)
+				if (!TestRuntime.CheckXcodeVersion (6, 2) && IntPtr.Size == 4)
 					return true;
 
 				break;
@@ -75,7 +75,7 @@ namespace Introspection {
 			case "MonoTouch.CoreAudioKit":
 			case "CoreAudioKit":
 				// they works with iOS9 beta 4 (but won't work on older simulators)
-				if ((Runtime.Arch == Arch.SIMULATOR) && !CheckiOSOrTVOSSystemVersion (9,0))
+				if ((Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (7, 0))
 					return true;
 				break;
 
@@ -117,7 +117,7 @@ namespace Introspection {
 				case "GKLocalPlayer":
 					// NSSecureCoding is still undocumented, for iOS, and neither is NSCoding for OSX
 					// and it did not respond before 6.0 (when NSSecureCoding was introduced)
-					return !CheckiOSOrTVOSSystemVersion (6,0);
+					return !TestRuntime.CheckXcodeVersion (4, 5);
 				case "UITableViewDataSource":
 					// this is a *protocol( and we do not want to force people to conform to (an
 					// undocumented "requirement") NSCoding - as ObjC do not have to do this
@@ -157,6 +157,42 @@ namespace Introspection {
 				case "WCSessionFile":
 				case "WCSessionFileTransfer":
 					return true;
+#if __WATCHOS__
+				case "CLKComplicationTemplate":
+				case "CLKComplicationTemplateCircularSmallRingImage":
+				case "CLKComplicationTemplateCircularSmallRingText":
+				case "CLKComplicationTemplateCircularSmallSimpleImage":
+				case "CLKComplicationTemplateCircularSmallSimpleText":
+				case "CLKComplicationTemplateCircularSmallStackImage":
+				case "CLKComplicationTemplateCircularSmallStackText":
+				case "CLKComplicationTemplateModularLargeColumns":
+				case "CLKComplicationTemplateModularLargeStandardBody":
+				case "CLKComplicationTemplateModularLargeTable":
+				case "CLKComplicationTemplateModularLargeTallBody":
+				case "CLKComplicationTemplateModularSmallColumnsText":
+				case "CLKComplicationTemplateModularSmallRingImage":
+				case "CLKComplicationTemplateModularSmallRingText":
+				case "CLKComplication":
+				case "CLKComplicationTemplateModularSmallSimpleImage":
+				case "CLKTextProvider":
+				case "CLKComplicationTemplateModularSmallSimpleText":
+				case "CLKTimeIntervalTextProvider":
+				case "CLKComplicationTemplateModularSmallStackImage":
+				case "CLKTimeTextProvider":
+				case "CLKComplicationTemplateModularSmallStackText":
+				case "CLKComplicationTemplateUtilitarianLargeFlat":
+				case "CLKComplicationTemplateUtilitarianSmallFlat":
+				case "CLKComplicationTemplateUtilitarianSmallRingImage":
+				case "CLKComplicationTemplateUtilitarianSmallRingText":
+				case "CLKComplicationTemplateUtilitarianSmallSquare":
+				case "CLKComplicationTimelineEntry":
+				case "CLKDateTextProvider":
+				case "CLKImageProvider":
+				case "CLKRelativeDateTextProvider":
+				case "CLKSimpleTextProvider":
+				case "WKAlertAction":
+					return true;
+#endif
 				}
 				break;
 			case "NSSecureCoding":
@@ -198,6 +234,42 @@ namespace Introspection {
 				case "WCSessionFile":
 				case "WCSessionFileTransfer":
 					return true;
+#if __WATCHOS__
+				case "CLKComplicationTemplate":
+				case "CLKComplicationTemplateCircularSmallRingImage":
+				case "CLKComplicationTemplateCircularSmallRingText":
+				case "CLKComplicationTemplateCircularSmallSimpleImage":
+				case "CLKComplicationTemplateCircularSmallSimpleText":
+				case "CLKComplicationTemplateCircularSmallStackImage":
+				case "CLKComplicationTemplateCircularSmallStackText":
+				case "CLKComplicationTemplateModularLargeColumns":
+				case "CLKComplicationTemplateModularLargeStandardBody":
+				case "CLKComplicationTemplateModularLargeTable":
+				case "CLKComplicationTemplateModularLargeTallBody":
+				case "CLKComplicationTemplateModularSmallColumnsText":
+				case "CLKComplicationTemplateModularSmallRingImage":
+				case "CLKComplicationTemplateModularSmallRingText":
+				case "CLKComplicationTemplateModularSmallSimpleImage":
+				case "CLKComplicationTemplateModularSmallSimpleText":
+				case "CLKComplicationTemplateModularSmallStackImage":
+				case "CLKComplicationTemplateModularSmallStackText":
+				case "CLKComplicationTemplateUtilitarianLargeFlat":
+				case "CLKComplicationTemplateUtilitarianSmallFlat":
+				case "CLKComplicationTemplateUtilitarianSmallRingImage":
+				case "CLKComplicationTemplateUtilitarianSmallRingText":
+				case "CLKComplicationTemplateUtilitarianSmallSquare":
+				case "CLKComplicationTimelineEntry":
+				case "CLKDateTextProvider":
+				case "CLKImageProvider":
+				case "CLKRelativeDateTextProvider":
+				case "CLKSimpleTextProvider":
+				case "CLKTextProvider":
+				case "CLKTimeIntervalTextProvider":
+				case "CLKTimeTextProvider":
+				case "CLKComplication":
+				case "WKAlertAction":
+					return true;
+#endif
 				}
 				break;
 			case "NSCopying":
@@ -222,6 +294,10 @@ namespace Introspection {
 				case "HKSample":
 				case "HKWorkout":
 					return true;
+#if __WATCHOS__
+				case "CLKComplicationTimelineEntry":
+					return true;
+#endif
 				}
 				break;
 			case "UIAccessibilityIdentification":
@@ -244,7 +320,7 @@ namespace Introspection {
 				break;
 			case "UITextInputTraits":
 				// UISearchBar conformance fails before 7.1 - reference bug #33333
-				if ((type.Name == "UISearchBar") && !CheckiOSOrTVOSSystemVersion (7,1))
+				if ((type.Name == "UISearchBar") && !TestRuntime.CheckXcodeVersion (5, 1))
 					return true;
 				break;
 #if !XAMCORE_3_0
@@ -258,7 +334,7 @@ namespace Introspection {
 			case "GKSavedGameListener":
 				switch (type.Name) {
 				case "GKLocalPlayerListener": // 37180
-					return !CheckiOSOrTVOSSystemVersion (8, 0);
+					return !TestRuntime.CheckXcodeVersion (6, 0);
 				}
 				break;
 			}
@@ -268,8 +344,7 @@ namespace Introspection {
 		[Test]
 		public override void SecureCoding ()
 		{
-			if (!CheckiOSOrTVOSSystemVersion (6,0))
-				Assert.Inconclusive ("Requires iOS 6+");
+			TestRuntime.AssertXcodeVersion (4, 5);
 
 			base.SecureCoding ();
 		}
@@ -277,8 +352,7 @@ namespace Introspection {
 		[Test]
 		public override void SupportsSecureCoding ()
 		{
-			if (!CheckiOSOrTVOSSystemVersion (6,0))
-				Assert.Inconclusive ("Requires iOS 6+");
+			TestRuntime.AssertXcodeVersion (4, 5);
 
 			base.SupportsSecureCoding ();
 		}

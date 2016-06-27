@@ -29,7 +29,7 @@ namespace MonoTouchFixtures.Security {
 
 			// prior to iOS7 you had to deal without the class
 			using (var dict = rec.ToDictionary ()) {
-				if (TestRuntime.CheckSystemAndSDKVersion (7,0))
+				if (TestRuntime.CheckXcodeVersion (5, 0))
 					Assert.That (dict ["class"].ToString (), Is.EqualTo ("idnt"), "idnt");
 				else
 					Assert.Null (dict ["class"], "idnt");
@@ -73,7 +73,7 @@ namespace MonoTouchFixtures.Security {
 				Assert.AreSame (rec.MatchIssuers [0], data, "MatchIssuers [0]");
 			}
 
-			if (!TestRuntime.CheckiOSSystemVersion (9,0))
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				return;
 			Assert.That (rec.AuthenticationUI, Is.EqualTo (SecAuthenticationUI.NotSet), "AuthenticationUI-get");
 			rec.AuthenticationUI = SecAuthenticationUI.Allow;

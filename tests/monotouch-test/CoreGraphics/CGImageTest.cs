@@ -37,7 +37,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			using (var ui = new UIImage (img, 1.0f, UIImageOrientation.Up)) {
 				Assert.IsNotNull (ui.CGImage, "CGImage");
 
-				if (TestRuntime.CheckiOSSystemVersion (9,0))
+				if (TestRuntime.CheckXcodeVersion (7, 0))
 					Assert.That (img.UTType.ToString (), Is.EqualTo ("public.png"), "UTType");
 			}
 		}
