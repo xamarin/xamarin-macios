@@ -1614,12 +1614,18 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</ItemGroup>
 
 		<PropertyGroup>
-			<_IpaOutputPath>$(DeviceSpecificOutputPath)$(_AppBundleName) $([System.DateTime]::Now.ToString('yyyy-MM-dd HH-mm-ss'))</_IpaOutputPath>
-			<_IpaOutputDir>$(_IpaOutputPath)\</_IpaOutputDir>
+			<!-- Calculate an IPA package directory path if not already defined by the developer. -->
+			<!--<IpaPackageDir Condition="'$(IpaPackageDir)' == ''">$([System.Environment]::GetEnvironmentVariable('IPA_PACKAGE_DIR'))</IpaPackageDir>-->
+			<IpaPackageDir Condition="'$(IpaPackageDir)' == ''">$(DeviceSpecificOutputPath)$(_AppBundleName) $([System.DateTime]::Now.ToString('yyyy-MM-dd HH-mm-ss'))</IpaPackageDir>
+
+			<!-- Calculate an IPA package name if not already defined by the developer. -->
+			<!--<IpaPackageName Condition="'$(IpaPackageName)' == ''">$([System.Environment]::GetEnvironmentVariable('IPA_PACKAGE_NAME'))</IpaPackageName>-->
 			<IpaPackageName Condition="'$(IpaPackageName)' != '' And !$(IpaPackageName.EndsWith ('.ipa', StringComparison.OrdinalIgnoreCase))">$(IpaPackageName).ipa</IpaPackageName>
 			<IpaPackageName Condition="'$(IpaPackageName)' == ''">$(_AppBundleName).ipa</IpaPackageName>
 
-			<IpaPackagePath>$(_IpaOutputDir)$(IpaPackageName)</IpaPackagePath>
+			<!-- Calculate the full path of the IPA package if not already defined by the developer. -->
+			<!--<IpaPackagePath Condition="'$(IpaPackagePath)' == ''">$([System.Environment]::GetEnvironmentVariable('IPA_PACKAGE_PATH'))</IpaPackagePath>-->
+			<IpaPackagePath Condition="'$(IpaPackagePath)' == ''">$(IpaPackageDir)\$(IpaPackageName)</IpaPackagePath>
 		</PropertyGroup>
 	</Target>
 	
