@@ -50,6 +50,7 @@ namespace MonoTouchFixtures.Contacts {
 				// but it's in the default simulator build
 				if (Runtime.Arch == Arch.SIMULATOR) {
 					Assert.That (contacts.Length, Is.EqualTo (1), "Length");
+					identifier = contacts [0].Identifier;
 				}
 			}
 
