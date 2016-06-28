@@ -165,7 +165,6 @@
     <Compile Include="AddressBook\AddressBookTest.cs" />
     <Compile Include="CoreMedia\CMTimeTests.cs" />
     <Compile Include="UIKit\UIDocumentTest.cs" />
-    <Compile Include="CoreVideo\PixelFormatTypeTest.cs" />
     <Compile Include="UIKit\SplitViewControllerTest.cs" />
     <Compile Include="Foundation\UrlTest.cs" />
     <Compile Include="UIKit\DictationPhrase.cs" />

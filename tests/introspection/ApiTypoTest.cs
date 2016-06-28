@@ -89,6 +89,7 @@ namespace Introspection
 			"Blinn",
 			"Blit",
 			"Bokeh",
+			"Bggr", // acronym for Blue, Green, Green, Red 
 			"Bsln",
 			"Bssid",
 			"Bzip",
@@ -157,8 +158,10 @@ namespace Introspection
 			"Ftps",
 			"Func",
 			"Gadu",
+			"Gbrg",	// acronym for Green-Blue-Reg-Green
 			"Geocoder",
 			"Gpp",
+			"Grbg", // acronym for Green-Red-Blue-Green
 			"Hdmi",
 			"Hdr",
 			"Hevc", // CMVideoCodecType / High Efficiency Video Coding
@@ -252,6 +255,7 @@ namespace Introspection
 			"Requestwith",
 			"Rgb",
 			"Rgba",
+			"Rggb", // acronym for Red, Green, Green, Blue
 			"Roi",
 			"Romm", // acronym: Reference Output Medium Metric
 			"Rpa",
