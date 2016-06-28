@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace xharness
@@ -20,7 +23,7 @@ namespace xharness
 	{
 		public HarnessAction Action { get; set; }
 		public int Verbosity { get; set; }
-		public LogFile HarnessLog { get; set; }
+		public Log HarnessLog { get; set; }
 
 		// This is the maccore/tests directory.
 		string root_directory;
@@ -66,7 +69,7 @@ namespace xharness
 
 		public Harness ()
 		{
-			LaunchTimeout = InWrench ? 1 : 120;
+			LaunchTimeout = InWrench ? 3 : 120;
 		}
 
 		public string XcodeRoot {
@@ -83,18 +86,56 @@ namespace xharness
 			}
 		}
 
+		string DownloadMlaunch ()
+		{
+			// Just hardcode this for now. We should be able to switch to a shipped version of XS soon.
+			var mlaunch_url = "https://files.xamarin.com/~rolf/mlaunch-9d097ff4457cfc9943a91a4e17c07b09a7743625";
+			var mlaunch_path = Path.Combine (Path.GetTempPath (), Path.GetFileName (mlaunch_url), "mlaunch");
+			if (File.Exists (mlaunch_path))
+				return mlaunch_path;
+			try {
+				Log ("Downloading mlaunch...");
+				Directory.CreateDirectory (Path.GetDirectoryName (mlaunch_path));
+				var wc = new System.Net.WebClient ();
+				wc.DownloadFile (mlaunch_url, mlaunch_path + ".tmp");
+				new Mono.Unix.UnixFileInfo (mlaunch_path + ".tmp").FileAccessPermissions |= Mono.Unix.FileAccessPermissions.UserExecute;
+				File.Delete (mlaunch_path);
+				File.Move (mlaunch_path + ".tmp", mlaunch_path);
+				Log ("Downloaded mlaunch.");
+			} catch (Exception e) {
+				Log ("Could not download mlaunch: {0}", e);
+			}
+			return mlaunch_path;
+		}
+
 		string mlaunch;
 		public string MlaunchPath {
 			get {
 				if (mlaunch == null) {
-					var path = Path.GetFullPath (Path.Combine (Path.GetDirectoryName (Path.GetDirectoryName (RootDirectory)), "maccore", "tools", "mlaunch", "mlaunch"));
+					var dir = Path.GetFullPath (RootDirectory);
+					while (dir.Length > 3) {
+						var filename = Path.GetFullPath (Path.Combine (dir, "maccore", "tools", "mlaunch", "mlaunch"));
+						if (File.Exists (filename))
+							return mlaunch = filename;
+						dir = Path.GetDirectoryName (dir);
+					}
+
+					string path = string.Empty;
+					Log ("Could not find mlaunch locally, will try downloading it.");
+					try {
+						path = DownloadMlaunch ();
+					} catch (Exception e) {
+						Log ("Could not download mlaunch: {0}", e);
+					}
 					if (!File.Exists (path)) {
-						Log ("Could not find mlaunch locally ({0}), will try in Xamarin Studio.app.", path);
+						Log ("Will try in Xamarin Studio.app.", path);
 						path = "/Applications/Xamarin Studio.app/Contents/Resources/lib/monodevelop/AddIns/MonoDevelop.IPhone/mlaunch.app/Contents/MacOS/mlaunch";
 					}
 
 					if (!File.Exists (path))
 						throw new FileNotFoundException (string.Format ("Could not find mlaunch: {0}", path));
+
+					Log ("Found mlaunch: {0}", path);
 
 					mlaunch = path;
 				}
@@ -366,12 +407,16 @@ namespace xharness
 
 		public int Install ()
 		{
+			if (HarnessLog == null)
+				HarnessLog = new ConsoleLog ();
+			
 			foreach (var project in IOSTestProjects) {
 				var runner = new AppRunner () {
 					Harness = this,
 					ProjectFile = project.Path,
+					MainLog = HarnessLog,
 				};
-				var rv = runner.Install ();
+				var rv = runner.Install (HarnessLog);
 				if (rv != 0)
 					return rv;
 			}
@@ -380,12 +425,16 @@ namespace xharness
 
 		public int Run ()
 		{
+			if (HarnessLog == null)
+				HarnessLog = new ConsoleLog ();
+			
 			foreach (var project in IOSTestProjects) {
 				var runner = new AppRunner () {
 					Harness = this,
 					ProjectFile = project.Path,
+					MainLog = HarnessLog,
 				};
-				var rv = runner.Run ();
+				var rv = runner.RunAsync ().Result;
 				if (rv != 0)
 					return rv;
 			}
@@ -546,6 +595,66 @@ namespace xharness
 					disable_watchos_on_wrench = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("DISABLE_WATCH_ON_WRENCH"));
 				return disable_watchos_on_wrench.Value;
 			}
+		}
+
+		public Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, string args, TextWriter output, TimeSpan timeout)
+		{
+			return ProcessHelper.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, output, timeout: timeout);
+		}
+
+		public Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, string args, Log log, TimeSpan timeout)
+		{
+			return ProcessHelper.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, log.GetWriter () , timeout: timeout);
+		}
+
+		public async Task ShowSimulatorList (LogStream log)
+		{
+			await ExecuteXcodeCommandAsync ("simctl", "list", log.GetWriter (), TimeSpan.FromSeconds (10));
+		}
+
+		public async Task<LogFile> SymbolicateCrashReportAsync (Log log, LogFile report)
+		{
+			var symbolicatecrash = Path.Combine (XcodeRoot, "Contents/SharedFrameworks/DTDeviceKitBase.framework/Versions/A/Resources/symbolicatecrash");
+			if (!File.Exists (symbolicatecrash))
+				symbolicatecrash = Path.Combine (XcodeRoot, "Contents/SharedFrameworks/DVTFoundation.framework/Versions/A/Resources/symbolicatecrash");
+
+			if (!File.Exists (symbolicatecrash)) {
+				log.WriteLine ("Can't symbolicate {0} because the symbolicatecrash script {1} does not exist", report.Path, symbolicatecrash);
+				return report;
+			}
+
+			var symbolicated = new LogFile ("Symbolicated crash report", report.Path + ".symbolicated");
+			var environment = new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (XcodeRoot, "Contents", "Developer") } };
+			var rv = await ProcessHelper.ExecuteCommandAsync (symbolicatecrash, Quote (report.Path), symbolicated, TimeSpan.FromMinutes (1), environment);
+			if (rv.Succeeded) {;
+				log.WriteLine ("Symbolicated {0} successfully.", report.Path);
+				return symbolicated;
+			} else {
+				log.WriteLine ("Failed to symbolicate {0}.", report.Path);
+				return report;
+			}
+		}
+
+		public async Task<HashSet<string>> CreateCrashReportsSnapshotAsync (Log log, bool simulator)
+		{
+			var rv = new HashSet<string> ();
+
+			if (simulator) {
+				var dir = Path.Combine (Environment.GetEnvironmentVariable ("HOME"), "Library", "Logs", "DiagnosticReports");
+				if (Directory.Exists (dir))
+					rv.UnionWith (Directory.EnumerateFiles (dir));
+			} else {
+				var tmp = Path.GetTempFileName ();
+				try {
+					var result = await ProcessHelper.ExecuteCommandAsync (MlaunchPath, "--list-crash-reports=" + tmp + " --sdkroot " + XcodeRoot, log, TimeSpan.FromMinutes (1));
+					if (result.Succeeded)
+						rv.UnionWith (File.ReadAllLines (tmp));
+				} finally {
+					File.Delete (tmp);
+				}
+			}
+
+			return rv;
 		}
 	}
 }
