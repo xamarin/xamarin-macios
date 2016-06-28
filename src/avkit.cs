@@ -127,6 +127,11 @@ namespace XamCore.AVKit {
 		[Export ("allowsPictureInPicturePlayback")]
 		bool AllowsPictureInPicturePlayback { get; set; }
 
+		[NoTV]
+		[iOS (10,0)]
+		[Export ("updatesNowPlayingInfoCenter")]
+		bool UpdatesNowPlayingInfoCenter { get; set; }
+
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		[Protocolize]
