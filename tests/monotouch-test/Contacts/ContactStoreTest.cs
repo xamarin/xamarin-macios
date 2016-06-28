@@ -50,7 +50,7 @@ namespace MonoTouchFixtures.Contacts {
 				var contacts = store.GetUnifiedContacts (predicate, fetchKeys, out error);
 				// we can't be sure what's on devices, so check there's no error is the only thing we do
 				// but it's in the default simulator build (but not the watchOS simulator)
-#if !MONOMAC
+#if !MONOMAC && !__WATCHOS__
 				if ((error == null) && (Runtime.Arch == Arch.SIMULATOR)) {
 					Assert.That (contacts.Length, Is.EqualTo (1), "Length");
 					identifier = contacts [0].Identifier;
