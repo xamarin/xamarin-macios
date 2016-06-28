@@ -32,8 +32,7 @@ namespace MonoTouchFixtures.Foundation {
 			TestRuntime.AssertXcodeVersion (5, 0);
 			
 			NSUrlSession session = NSUrlSession.SharedSession;
-			NSUrlSessionConfiguration.DefaultSessionConfiguration.TimeoutIntervalForRequest = 15; // seconds
-			var url = new NSUrl ("http://www.xamarin.com");
+			var url = new NSUrl ("https://www.xamarin.com");
 			var tmpfile = Path.GetTempFileName ();
 			File.WriteAllText (tmpfile, "TMPFILE");
 			var file_url = NSUrl.FromFilename (tmpfile);
@@ -74,7 +73,9 @@ namespace MonoTouchFixtures.Foundation {
 			completed = false;
 			Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
 				try {
-					await session.CreateUploadTaskAsync (request, file_url);
+					var uploadRequest = new NSMutableUrlRequest (url);
+					uploadRequest.HttpMethod = "POST";
+					await session.CreateUploadTaskAsync (uploadRequest, file_url);
 				} catch /* (Exception ex) */ {
 //					Console.WriteLine ("Ex: {0}", ex);
 				} finally {
@@ -85,7 +86,9 @@ namespace MonoTouchFixtures.Foundation {
 			completed = false;
 			Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (timeout), async () => {
 				try {
-					await session.CreateUploadTaskAsync (request, file_data);
+					var uploadRequest = new NSMutableUrlRequest (url);
+					uploadRequest.HttpMethod = "POST";
+					await session.CreateUploadTaskAsync (uploadRequest, file_data);
 				} catch /* (Exception ex) */ {
 //					Console.WriteLine ("Ex: {0}", ex);
 				} finally {
