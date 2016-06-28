@@ -58,7 +58,7 @@ namespace Introspection {
 			case "Metal":
 			case "MonoTouch.Metal":
 				// they works with iOS9 beta 4 (but won't work on older simulators)
-				if ((Runtime.Arch == Arch.SIMULATOR) && !CheckiOSOrTVOSSystemVersion (9,0))
+				if ((Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (7, 0))
 					return true;
 				break;
 #if !__WATCHOS__
@@ -69,7 +69,7 @@ namespace Introspection {
 				if (Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				// some devices don't support metal and that crash some API that does not check that, e.g. #33153
-				if (!CheckiOSOrTVOSSystemVersion (9,0) || (MTLDevice.SystemDefault == null))
+				if (!TestRuntime.CheckXcodeVersion (7, 0) || (MTLDevice.SystemDefault == null))
 					return true;
 				break;
 #endif // !__WATCHOS__
@@ -125,7 +125,7 @@ namespace Introspection {
 				// technically available since 4.1 - however it got a new base class in 6.0
 				// and that new base class GKGameCenterViewController did not exists before 6.0
 				// which makes the type unusable in 5.x, ref: https://gist.github.com/spouliot/271b6230a3aa2b58bc6e
-				return !CheckiOSSystemVersion (6,0);
+				return !TestRuntime.CheckXcodeVersion (4, 5);
 
 			// mistake - we should not have exposed those default ctor and now we must live with them
 			case "GCControllerElement":
@@ -160,7 +160,7 @@ namespace Introspection {
 			// Started with iOS8 on simulator (always) but it looks like it can happen on devices too
 			// NSInvalidArgumentException Use initWithAccessibilityContainer:
 			case "UIAccessibilityElement":
-				return CheckiOSSystemVersion (8,0);
+				return TestRuntime.CheckXcodeVersion (6, 0);
 #endif
 			// in 8.2 beta 1 this crash the app (simulator) without giving any details in the logs
 			case "WKUserNotificationInterfaceController":
@@ -251,7 +251,7 @@ namespace Introspection {
 					return;
 				// iOS9 - the instance was "kind of valid" before
 				case "PKPaymentAuthorizationViewController":
-					if (CheckiOSSystemVersion (9,0))
+					if (TestRuntime.CheckXcodeVersion (7, 0))
 						return;
 					break;
 				}
@@ -280,14 +280,14 @@ namespace Introspection {
 			case "AVAssetResourceLoadingRequest":
 			case "GKScoreChallenge": // Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -[GKScoreChallenge challengeID]: unrecognized selector sent to instance 0x18acc340
 			case "GKAchievementChallenge": // Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -[GKAchievementChallenge challengeID]: unrecognized selector sent to instance 0x160f4840
-				if (CheckiOSOrTVOSSystemVersion (6,0))
+				if (TestRuntime.CheckXcodeVersion (4, 5))
 					return;
 				break;
 			// iOS 9 beta 1 - crash when called
 			case "WKFrameInfo":
 			case "WKNavigation":
 			case "WKNavigationAction":
-				if (CheckiOSSystemVersion (9,0))
+				if (TestRuntime.CheckXcodeVersion (7, 0))
 					return;
 				break;
 			// new iOS 10 beta 1 - crash when calling `description` selector
@@ -310,7 +310,7 @@ namespace Introspection {
 			switch (obj.GetType ().Name) {
 			case "NSString":
 				// according to bots `isKindOf (null)` returns true before iOS 8, ref: #36726
-				if (!CheckiOSOrTVOSSystemVersion (8, 0))
+				if (!TestRuntime.CheckXcodeVersion (6, 0))
 					return;
 				break;
 			}

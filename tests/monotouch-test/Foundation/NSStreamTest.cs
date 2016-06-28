@@ -40,8 +40,16 @@ namespace MonoTouchFixtures.Foundation {
 
 		}
 
+#if !__WATCHOS__
 		TcpListener FindPort (out int port)
 		{
+			// This does not work well on watchOS:
+			// The request to start the tcp listener will fail, but
+			// at the same time leave a file descriptor (the socket) open
+			// until the TcpListener is collected by the GC.
+			// Since we create 3000 TcpListeners here, we end up using
+			// up all the available file descriptors, causing trouble
+			// for later tests.
 			for (port = 3000; port < 6000; port++) {
 				var listener = new TcpListener (IPAddress.Any, port);
 				try {
@@ -53,7 +61,6 @@ namespace MonoTouchFixtures.Foundation {
 			return null;
 		}
 
-#if !__WATCHOS__
 		[Test]
 		public void ConnectToHost ()
 		{
@@ -83,7 +90,6 @@ namespace MonoTouchFixtures.Foundation {
 			read.Close ();
 			write.Close ();
 		}
-#endif // !__WATCHOS__
 
 		[Test]
 		public void ConnectToPeer ()
@@ -128,6 +134,7 @@ namespace MonoTouchFixtures.Foundation {
 			}
 			client.Close ();
 		}
+#endif // !__WATCHOS__
 	}
 }
 

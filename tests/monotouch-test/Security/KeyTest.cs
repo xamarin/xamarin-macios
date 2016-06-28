@@ -226,7 +226,7 @@ namespace MonoTouchFixtures.Security {
 				record.KeySizeInBits = 16384; 
 				Assert.That (SecKey.GenerateKeyPair (record.ToDictionary (), out public_key, out private_key), Is.EqualTo (SecStatusCode.Param), "16384");
 				record.KeySizeInBits = 8192; 
-				if (TestRuntime.CheckiOSSystemVersion (9, 0)) {
+				if (TestRuntime.CheckXcodeVersion (7, 0)) {
 					// It seems iOS 9 supports 8192, but it takes a long time to generate (~40 seconds on my iPad Air 2), so skip it.
 //					Assert.That (SecKey.GenerateKeyPair (record.ToDictionary (), out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "8192");
 				} else {

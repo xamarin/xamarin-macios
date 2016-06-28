@@ -51,7 +51,7 @@ namespace MonoTouchFixtures.Security {
 				Assert.True (code == SecStatusCode.DuplicateItem || code == SecStatusCode.Success);
 			}
 
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
+			if (!TestRuntime.CheckXcodeVersion (5, 0))
 				Assert.Inconclusive ("QueryAsConcreteType does not work before iOS7");
 
 			using (SecRecord rec = new SecRecord (SecKind.Identity)) {

@@ -29,8 +29,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Constructors ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("NSUUID is new in 6.0");
+			TestRuntime.AssertXcodeVersion (4, 5);
 
 			var uuid = new NSUuid (new byte [] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 });
 			Assert.That (uuid, Is.Not.EqualTo (null), "constructed");
@@ -45,8 +44,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void ConstructorFailures ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("NSUUID is new in 6.0");
+			TestRuntime.AssertXcodeVersion (4, 5);
 			
 			try {
 				var uuid = new NSUuid ((byte[]) null);

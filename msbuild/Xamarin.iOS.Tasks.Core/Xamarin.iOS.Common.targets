@@ -84,6 +84,15 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets" 
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
 
+	<!-- *** Code Analysis Setup *** -->
+
+	<PropertyGroup>
+		<XamarinAnalysisTargetsFile Condition="Exists ('$(MSBuildThisFileDirectory)Xamarin.iOS.Analysis.targets')">$(MSBuildThisFileDirectory)Xamarin.iOS.Analysis.targets</XamarinAnalysisTargetsFile>
+	</PropertyGroup>
+
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Analysis.targets"
+			Condition="Exists('$(MSBuildThisFileDirectory)Xamarin.Analysis.targets')" />
+
 	<PropertyGroup>
 		<!-- Switching to a new property allows us to potentially switch from iPhone to simulator builds
 			 dynamically based on the user's selection when starting the project. This allows us to 
@@ -275,8 +284,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_CreateDebugConfiguration;
 			_CreatePkgInfo;
 			_CopyAppExtensionsToBundle;
-			_CopyWatchAppsToBundle;
-			_CopyWatch2AppsToBundle;
+			_CopyWatchOS1AppsToBundle;
+			_CopyWatchOS2AppsToBundle;
 			_GenerateDebugSymbols;
 			_ValidateAppBundle;
 		</CreateAppBundleDependsOn>
@@ -1442,7 +1451,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</PropertyGroup>
 	</Target>
 
-	<Target Name="_CopyWatchAppsToBundle" Condition="'$(IsAppExtension)' == 'true'" DependsOnTargets="_ResolveWatchAppReferences">
+	<Target Name="_CopyWatchOS1AppsToBundle" Condition="'$(IsAppExtension)' == 'true'" DependsOnTargets="_ResolveWatchAppReferences">
 		<Ditto
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' And '@(_ResolvedWatchAppReferences)' != '' And '%(_ResolvedWatchAppReferences.Identity)' != ''"
@@ -1453,7 +1462,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="_CopyWatch2AppsToBundle" Condition="'$(OutputType)' == 'Exe'" DependsOnTargets="_ResolveWatchAppReferences">
+	<Target Name="_CopyWatchOS2AppsToBundle" Condition="'$(OutputType)' == 'Exe'" DependsOnTargets="_ResolveWatchAppReferences">
 		<Ditto
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' And '@(_ResolvedWatchAppReferences)' != '' And '%(_ResolvedWatchAppReferences.Identity)' != ''"
@@ -1614,12 +1623,18 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</ItemGroup>
 
 		<PropertyGroup>
-			<_IpaOutputPath>$(DeviceSpecificOutputPath)$(_AppBundleName) $([System.DateTime]::Now.ToString('yyyy-MM-dd HH-mm-ss'))</_IpaOutputPath>
-			<_IpaOutputDir>$(_IpaOutputPath)\</_IpaOutputDir>
+			<!-- Calculate an IPA package directory path if not already defined by the developer. -->
+			<!--<IpaPackageDir Condition="'$(IpaPackageDir)' == ''">$([System.Environment]::GetEnvironmentVariable('IPA_PACKAGE_DIR'))</IpaPackageDir>-->
+			<IpaPackageDir Condition="'$(IpaPackageDir)' == ''">$(DeviceSpecificOutputPath)$(_AppBundleName) $([System.DateTime]::Now.ToString('yyyy-MM-dd HH-mm-ss'))</IpaPackageDir>
+
+			<!-- Calculate an IPA package name if not already defined by the developer. -->
+			<!--<IpaPackageName Condition="'$(IpaPackageName)' == ''">$([System.Environment]::GetEnvironmentVariable('IPA_PACKAGE_NAME'))</IpaPackageName>-->
 			<IpaPackageName Condition="'$(IpaPackageName)' != '' And !$(IpaPackageName.EndsWith ('.ipa', StringComparison.OrdinalIgnoreCase))">$(IpaPackageName).ipa</IpaPackageName>
 			<IpaPackageName Condition="'$(IpaPackageName)' == ''">$(_AppBundleName).ipa</IpaPackageName>
 
-			<IpaPackagePath>$(_IpaOutputDir)$(IpaPackageName)</IpaPackagePath>
+			<!-- Calculate the full path of the IPA package if not already defined by the developer. -->
+			<!--<IpaPackagePath Condition="'$(IpaPackagePath)' == ''">$([System.Environment]::GetEnvironmentVariable('IPA_PACKAGE_PATH'))</IpaPackagePath>-->
+			<IpaPackagePath Condition="'$(IpaPackagePath)' == ''">$(IpaPackageDir)\$(IpaPackageName)</IpaPackagePath>
 		</PropertyGroup>
 	</Target>
 	
@@ -1767,6 +1782,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ProjectName="$(MSBuildProjectName)"
 			SolutionPath="$(SolutionPath)"
 			SigningKey="$(_CodeSigningKey)"
+			WatchAppReferences="@(_ResolvedWatchAppReferences)"
 			>
 			<Output TaskParameter="ArchiveDir" PropertyName="ArchiveDir"/>
 		</Archive>

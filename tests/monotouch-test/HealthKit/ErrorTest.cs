@@ -32,8 +32,7 @@ namespace MonoTouchFixtures.HealthKit {
 		public void Domain ()
 		{
 			// the enum exists but we can't load the domain before iOS8
-			if (!TestRuntime.CheckSystemAndSDKVersion (8,0))
-				Assert.Inconclusive ("Requires iOS8+");
+			TestRuntime.AssertXcodeVersion (6, 0);
 		
 			Assert.That (HKErrorCode.NoError.GetDomain ().ToString (), Is.EqualTo ("com.apple.healthkit"), "Domain");
 		}

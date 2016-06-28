@@ -42,7 +42,7 @@ namespace Introspection {
 			// EventKit.EK* enums are anonymous enums in 10.10 and iOS 8, but an NSInteger in 10.11 and iOS 9.
 			case "EKCalendarChooserSelectionStyle":
 			case "EKCalendarChooserDisplayStyle":
-				if (!IsOSX11OrIOS9)
+				if (!TestRuntime.CheckXcodeVersion (7, 0))
 					return 4;
 				break;
 			}
@@ -64,7 +64,7 @@ namespace Introspection {
 				// (they used to return `bool`)
 				case "beginAppearanceTransition:animated:":
 				case "endAppearanceTransition":
-					if (!CheckiOSOrTVOSSystemVersion (6,0))
+					if (!TestRuntime.CheckXcodeVersion (4, 5))
 						return true;
 					break;
 				}
@@ -74,12 +74,12 @@ namespace Introspection {
 				// sadly, and even with a bug report with a few exchanges, this was not fixed before iOS8 GM :-(
 				// 64bits application for iOS 7.x will be uncommon so we prefer to be forward compatible
 				if (selector == "status")
-					return !CheckiOSSystemVersion (8,0);
+					return !TestRuntime.CheckXcodeVersion (6, 0);
 				break;
 			case "CMMotionManager":
 				// iOS 8.3 changed CMMotionManager from 4 to 8 bytes on 64bits CPU and we have to follow that breaking
 				// change unless Apple revert that before final. [radar 20295259]
-				if ((IntPtr.Size == 4) || CheckiOSSystemVersion (8,3))
+				if ((IntPtr.Size == 4) || TestRuntime.CheckXcodeVersion (6, 3))
 					return false;
 				// which means iOS 8.2 (and earlier can't match)
 				switch (selector) {
@@ -140,7 +140,7 @@ namespace Introspection {
 				case "MonoTouch.EventKitUI.EKCalendarChooserDisplayStyle":
 				case "EventKitUI.EKCalendarChooserSelectionStyle":
 				case "EventKitUI.EKCalendarChooserDisplayStyle":
-					return (IntPtr.Size == 4) || !IsOSX11OrIOS9;
+					return (IntPtr.Size == 4) || !TestRuntime.CheckXcodeVersion (7, 0);
 				case "System.UInt32":
 					// numberOfTouchesRequired was signed before iOS6, unsigned since then
 					return true;

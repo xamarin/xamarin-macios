@@ -44,6 +44,30 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
+		public void FromObjectsAndKeysGenericTest ()
+		{
+			var keys = new [] {
+				new NSString ("Key1"),
+				new NSString ("Key2"),
+				new NSString ("Key3"),
+				new NSString ("Key4"),
+				new NSString ("Key5"),
+			};
+			var values = new [] {
+				NSNumber.FromByte (0x1),
+				NSNumber.FromFloat (8.5f),
+				NSNumber.FromDouble (10.5),
+				NSNumber.FromInt32 (42),
+				NSNumber.FromBoolean (true),
+			};
+
+			var dict = NSMutableDictionary<NSString, NSNumber>.FromObjectsAndKeys (values, keys, values.Length);
+			Assert.AreEqual (dict.Count, 5, "count");
+			for (int i = 0; i < values.Length; i++)
+				Assert.AreEqual (dict [keys [i]], values [i], $"key lookup, Iteration: {i}");
+		}
+
+		[Test]
 		public void KeyValue_Autorelease ()
 		{
 			using (var k = new NSString ("keyz")) 

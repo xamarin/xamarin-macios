@@ -14,6 +14,8 @@ namespace Xamarin.iOS.Tasks
 	{
 		public ITaskItem[] AppExtensionReferences { get; set; }
 
+		public ITaskItem[] WatchAppReferences { get; set; }
+
 		static bool IsWatchAppExtension (ITaskItem appex, PDictionary plist, out string watchAppBundleDir)
 		{
 			PString expectedBundleIdentifier, bundleIdentifier, extensionPoint;
@@ -90,6 +92,31 @@ namespace Xamarin.iOS.Tasks
 			}
 		}
 
+		void ArchiveWatchApp (ITaskItem watchApp, string archiveDir)
+		{
+			var wk = Path.Combine (watchApp.ItemSpec, "_WatchKitStub", "WK");
+			var supportDir = Path.Combine (archiveDir, "WatchKitSupport2");
+
+			if (File.Exists (wk) && !Directory.Exists (supportDir)) {
+				Directory.CreateDirectory (supportDir);
+				File.Copy (wk, Path.Combine (supportDir, "WK"), true);
+			}
+
+			var dsymDir = watchApp.ItemSpec + ".dSYM";
+
+			if (Directory.Exists (dsymDir)) {
+				var destDir = Path.Combine (archiveDir, "dSYMs", Path.GetFileName (dsymDir));
+				Ditto (dsymDir, destDir);
+			}
+
+			var msymDir = watchApp.ItemSpec + ".mSYM";
+
+			if (Directory.Exists (msymDir)) {
+				var destDir = Path.Combine (archiveDir, "mSYMs", Path.GetFileName (msymDir));
+				Ditto (msymDir, destDir);
+			}
+		}
+
 		void AddIconPaths (PArray icons, PArray iconFiles, string productsDir)
 		{
 			foreach (var icon in iconFiles.Cast<PString> ().Where (p => p.Value != null)) {
@@ -126,6 +153,7 @@ namespace Xamarin.iOS.Tasks
 			Log.LogTaskProperty ("ProjectName", ProjectName);
 			Log.LogTaskProperty ("SigningKey", SigningKey);
 			Log.LogTaskProperty ("SolutionPath", SolutionPath);
+			Log.LogTaskProperty ("WatchAppReferences", WatchAppReferences);
 
 			var archiveDir = CreateArchiveDirectory ();
 
@@ -168,9 +196,15 @@ namespace Xamarin.iOS.Tasks
 				}
 
 				if (AppExtensionReferences != null) {
-					// Archive the dSYMs for each of the referenced App Extensions as well...
+					// Archive the dSYMs, mSYMs, etc for each of the referenced App Extensions as well...
 					for (int i = 0; i < AppExtensionReferences.Length; i++)
 						ArchiveAppExtension (AppExtensionReferences[i], archiveDir);
+				}
+
+				if (WatchAppReferences != null) {
+					// Archive the dSYMs, mSYMs, etc for each of the referenced WatchOS2 Apps as well...
+					for (int i = 0; i < WatchAppReferences.Length; i++)
+						ArchiveWatchApp(WatchAppReferences[i], archiveDir);
 				}
 
 				if (ITunesSourceFiles != null) {
