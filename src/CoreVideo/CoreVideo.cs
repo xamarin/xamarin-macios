@@ -142,7 +142,7 @@ namespace XamCore.CoreVideo {
 		CV64RGBAHalf		= 0x52476841, // 'RGhA'
 		CV128RGBAFloat		= 0x52476641, // 'RGfA'
 		// iOS 10
-		CV30RbgaLePackedWideGamut = 0x77333072, // 'w30r'
+		CV30RgbLePackedWideGamut = 0x77333072, // 'w30r'
 		CV14BayerGrbg = 0x67726234, // 'grb4',
 		CV14BayerRggb = 0x72676734, // 'rgg4',
 		CV14BayerBggr = 0x62676734, // 'bgg4',
