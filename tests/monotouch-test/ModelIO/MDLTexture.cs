@@ -39,8 +39,7 @@ namespace MonoTouchFixtures.ModelIO {
 		[TestFixtureSetUp]
 		public void Setup ()
 		{
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (9, 0))
-				Assert.Ignore ("Requires iOS9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 
 			if (Runtime.Arch == Arch.SIMULATOR && IntPtr.Size == 4) {
 				// There's a bug in the i386 version of objc_msgSend where it doesn't preserve SIMD arguments
@@ -82,7 +81,7 @@ namespace MonoTouchFixtures.ModelIO {
 
 			using (var obj = new MDLTexture ()) {
 				using (var txt = MDLTexture.CreateIrradianceTextureCube (obj, "name", V2)) {
-					if (TestRuntime.CheckiOSSystemVersion (10, 0)) {
+					if (TestRuntime.CheckXcodeVersion (8, 0)) {
 						Assert.IsNull (txt, "Is Null"); // this is probably because the arguments to CreateIrradianceTextureCube are invalid, but I haven't been able to figure out valid values.
 					} else {
 						Assert.IsNotNull (txt, "Ain't Null");
@@ -103,7 +102,7 @@ namespace MonoTouchFixtures.ModelIO {
 
 			using (var obj = new MDLTexture ()) {
 				using (var txt = MDLTexture.CreateIrradianceTextureCube (obj, "name", V2, 0.1234f)) {
-					if (TestRuntime.CheckiOSSystemVersion (10, 0)) {
+					if (TestRuntime.CheckXcodeVersion (8, 0)) {
 						Assert.IsNull (txt, "Is Null"); // this is probably because the arguments to CreateIrradianceTextureCube are invalid, but I haven't been able to figure out valid values.
 					} else {
 						Assert.IsNotNull (txt, "Ain't Null");

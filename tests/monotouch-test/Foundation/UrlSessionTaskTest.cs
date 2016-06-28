@@ -28,8 +28,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Properties ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Inconclusive ("requires iOS7");
+			TestRuntime.AssertXcodeVersion (5, 0);
 			
 			using (var ur = new NSUrlRequest ())
 			using (var task = NSUrlSession.SharedSession.CreateDownloadTask (ur)) {

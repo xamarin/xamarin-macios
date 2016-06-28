@@ -122,7 +122,7 @@ namespace MonoTouchFixtures.MobileCoreServices {
 
 			Assert.NotNull (UTType.InkText, "InkText");
 
-			if (TestRuntime.CheckiOSSystemVersion (9, 0))
+			if (TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.NotNull (UTType.SwiftSource, "SwiftSource");
 		}
 

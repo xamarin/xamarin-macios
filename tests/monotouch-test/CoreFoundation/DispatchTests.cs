@@ -115,7 +115,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void Default ()
 		{
-			var qname = TestRuntime.CheckSystemAndSDKVersion (8, 0) ? "com.apple.root.default-qos" : "com.apple.root.default-priority";
+			var qname = TestRuntime.CheckiOSSystemVersion (8, 0, false) ? "com.apple.root.default-qos" : "com.apple.root.default-priority";
 			Assert.That (DispatchQueue.DefaultGlobalQueue.Label, Is.EqualTo (qname), "Default");
 		}
 
@@ -165,7 +165,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void GetGlobalQueue_Priority ()
 		{
 			string qdefault, qlow, qhigh;
-			if (TestRuntime.CheckSystemAndSDKVersion (8, 0)) {
+			if (TestRuntime.CheckiOSSystemVersion (8, 0, false)) {
 				qdefault = "com.apple.root.default-qos";
 				qlow = "com.apple.root.utility-qos";
 				qhigh = "com.apple.root.user-initiated-qos";

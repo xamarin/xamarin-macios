@@ -30,8 +30,7 @@ namespace MonoTouchFixtures.PassKit {
 		[Test]
 		public void Defaults ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("PassKit is new in 6.0");
+			TestRuntime.AssertXcodeVersion (4, 5);
 
 			using (PKPass pass = new PKPass ()) {
 				Assert.Null (pass.AuthenticationToken, "AuthenticationToken");
@@ -63,8 +62,7 @@ namespace MonoTouchFixtures.PassKit {
 		[Test]
 		public void BoardingPass ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("PassKit is new in 6.0");
+			TestRuntime.AssertXcodeVersion (4, 5);
 
 			using (var pass = GetBoardingPass ()) {
 				Assert.That (pass.AuthenticationToken, Is.EqualTo ("vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc"), "AuthenticationToken");
@@ -78,7 +76,7 @@ namespace MonoTouchFixtures.PassKit {
 
 				Assert.That (pass.OrganizationName, Is.EqualTo ("Skyport Airways"), "OrganizationName");
 				Assert.That (pass.PassTypeIdentifier, Is.EqualTo ("pass.com.apple.devpubs.example"), "PassTypeIdentifier");
-				if (TestRuntime.CheckSystemAndSDKVersion (7, 0))
+				if (TestRuntime.CheckXcodeVersion (5, 0))
 					Assert.That (pass.PassUrl.AbsoluteString, Is.EqualTo ("shoebox://card/1UuiGnfwxHgd0G0bIuPYPNpeRX8="), "PassUrl");
 				else
 					Assert.Null (pass.PassUrl, "PassUrl");
@@ -91,8 +89,7 @@ namespace MonoTouchFixtures.PassKit {
 		[Test]
 		public void Fields ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("PassKit is new in 6.0");
+			TestRuntime.AssertXcodeVersion (4, 5);
 
 			Assert.That (PKPass.ErrorDomain.ToString (), Is.EqualTo ("PKPassKitErrorDomain"), "ErrorDomain");
 		}

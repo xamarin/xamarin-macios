@@ -39,13 +39,21 @@ namespace MonoTouchFixtures.EventKit {
 			EKEventStore store = new EKEventStore ();
 			var c = EKCalendar.FromEventStore (store);
 			// defaults
+#if __WATCHOS__
+			Assert.False (c.AllowsContentModifications, "AllowsContentModifications");
+#else
 			Assert.True (c.AllowsContentModifications, "AllowsContentModifications");
+#endif
 			Assert.NotNull (c.CalendarIdentifier, "CalendarIdentifier");
 			Assert.Null (c.CGColor, "CGColor");
 
-			if (TestRuntime.CheckSystemAndSDKVersion (6, 0)) {
+			if (TestRuntime.CheckXcodeVersion (4, 5)) {
 				// default value changed for iOS 6.0 beta 1
+#if __WATCHOS__
+				Assert.True (c.Immutable, "Immutable");
+#else
 				Assert.False (c.Immutable, "Immutable");
+#endif
 				// new in 6.0
 				Assert.AreEqual (EKEntityMask.Event, c.AllowedEntityTypes, "AllowedEntityTypes");
 			} else {
@@ -62,16 +70,24 @@ namespace MonoTouchFixtures.EventKit {
 		[Test]
 		public void FromEventStoreWithReminder ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
+			if (!TestRuntime.CheckXcodeVersion (4, 5))
 				Assert.Inconclusive ("+[EKCalendar calendarForEntityType:eventStore:]: unrecognized selector before 6.0");
 
 			var c = EKCalendar.Create (EKEntityType.Reminder, new EKEventStore ());
 			// defaults
+#if __WATCHOS__
+			Assert.False (c.AllowsContentModifications, "AllowsContentModifications");
+#else
 			Assert.True (c.AllowsContentModifications, "AllowsContentModifications");
+#endif
 			Assert.NotNull (c.CalendarIdentifier, "CalendarIdentifier");
 			Assert.Null (c.CGColor, "CGColor");
 
+#if __WATCHOS__
+			Assert.True (c.Immutable, "Immutable");
+#else
 			Assert.False (c.Immutable, "Immutable");
+#endif
 			Assert.Null (c.Source, "Source");
 			Assert.False (c.Subscribed, "Subscribed");
 			Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.None), "SupportedEventAvailabilities");

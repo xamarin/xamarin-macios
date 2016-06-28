@@ -31,102 +31,19 @@ namespace monotouchtest
 	}
 }
 
-class TestRuntime
+partial class TestRuntime
 {
-	[DllImport ("/usr/lib/system/libdyld.dylib")]
-	static extern int dyld_get_program_sdk_version ();
-
-	public const string BuildVersion_iOS9_GM = "13A340";
-
-	public static string GetiOSBuildVersion ()
-	{
-#if __WATCHOS__
-		throw new Exception ("Can't get iOS Build version on watchOS.");
-#else
-		return NSString.FromHandle (Messaging.IntPtr_objc_msgSend (UIDevice.CurrentDevice.Handle, Selector.GetHandle ("buildVersion")));
-#endif
-	}
-
-	public static Version GetSDKVersion ()
-	{
-		var v = dyld_get_program_sdk_version ();
-		var major = v >> 16;
-		var minor = (v >> 8) & 0xFF;
-		var build = v & 0xFF;
-		return new Version (major, minor, build);
-	}
-
-	// This method returns true if:
-	// system version >= specified version
-	// AND
-	// sdk version >= specified version
-	public static bool CheckiOSSystemVersion (int major, int minor)
-	{
-#if __WATCHOS__
-		throw new Exception ("Can't get iOS System version on WatchOS.");
-#else
-		return UIDevice.CurrentDevice.CheckSystemVersion (major, minor);
-#endif
-	}
-
-	// This method returns true if:
-	// system version >= specified version
-	// AND
-	// sdk version >= specified version
-	public static bool CheckSystemAndSDKVersion (int major, int minor)
-	{
-#if __WATCHOS__
-		throw new Exception ("Can't get iOS System/SDK version on WatchOS.");
-#else
-		if (!UIDevice.CurrentDevice.CheckSystemVersion (major, minor))
-			return false;
-#endif
-
-		// Check if the SDK version we're built includes the version we're checking for
-		// We don't want to execute iOS7 tests on an iOS7 device when built with the iOS6 SDK.
-		return CheckSDKVersion (major, minor);
-	}
-
-	public static bool CheckSDKVersion (int major, int minor)
-	{
-#if __WATCHOS__
-		throw new Exception ("Can't get iOS SDK version on WatchOS.");
-#else
-		if (Runtime.Arch == Arch.SIMULATOR || !UIDevice.CurrentDevice.CheckSystemVersion (6, 0)) {
-			// dyld_get_program_sdk_version was introduced with iOS 6.0, so don't do the SDK check on older deviecs.
-			return true; // dyld_get_program_sdk_version doesn't return what we're looking for on the mac.
-		}
-#endif
-
-		var sdk = GetSDKVersion ();
-		if (sdk.Major > major)
-			return true;
-		if (sdk.Major == major && sdk.Minor >= minor)
-			return true;
-		return false;
-	}
-
-	public static void IgnoreOnTVOS ()
-	{
-#if __TVOS__
-		NUnit.Framework.Assert.Ignore ("This test is disabled on TVOS.");
-#endif
-	}
-
-	public static bool IsTVOS {
-		get {
-#if __TVOS__
-			return true;
-#else
-			return false;
-#endif
-		}
-	}
-
 	public static bool RunAsync (DateTime timeout, Action action, Func<bool> check_completed)
 	{
 #if __WATCHOS__
-		throw new NotImplementedException ("TestRuntime.RunAsync");
+		NSTimer.CreateScheduledTimer (0.01, (v) => action ());
+		do {
+			if (timeout < DateTime.Now)
+				return false;
+			NSRunLoop.Main.RunUntil (NSDate.Now.AddSeconds (0.1));
+		} while (!check_completed ());
+
+		return true;
 #else
 		return MonoTouchFixtures.AppDelegate.RunAsync (timeout, action, check_completed);
 #endif

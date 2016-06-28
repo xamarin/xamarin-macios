@@ -24,8 +24,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void SetValueEnumArray ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
-				Assert.Inconclusive ("Request iOS8+");
+			TestRuntime.AssertXcodeVersion (6, 0);
 
 			var encodings = new NSStringEncoding [] { NSStringEncoding.ISOLatin1, NSStringEncoding.ISOLatin2 };
 			var edo = new EncodingDetectionOptions () {

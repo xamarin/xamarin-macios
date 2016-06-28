@@ -223,55 +223,5 @@ namespace Introspection {
 
 			return Path.Combine (prefix, libname + ".framework", libname); 
 		}
-
-		protected bool IsOSX11OrIOS9 {
-			get {
-#if MONOMAC
-				return Mac.IsElCapitanOrHigher;
-#elif __WATCHOS__
-				return false;
-#else
-				return UIDevice.CurrentDevice.CheckSystemVersion (9, 0);
-#endif
-			}
-		}
-
-		protected bool CheckiOSSystemVersion (int major, int minor)
-		{
-#if __IOS__
-			return UIDevice.CurrentDevice.CheckSystemVersion (major, minor);		
-#else
-			throw new InvalidOperationException ("Can only check iOS system version on iOS.");
-#endif
-		}
-
-		// This only works for API introduced in the same numeric version in both iOS and tvOS.
-		protected bool CheckiOSOrTVOSSystemVersion (int major, int minor)
-		{
-#if __IOS__ || __TVOS__
-			return UIDevice.CurrentDevice.CheckSystemVersion (major, minor);		
-#else
-			throw new InvalidOperationException ("Can only check iOS or tvOS system version on iOS or tvOS.");
-#endif
-		}
-
-		protected bool CheckWatchOSSystemVersion (int major, int minor)
-		{
-#if __WATCHOS__
-			throw new NotImplementedException ();
-//			return UIDevice.CurrentDevice.CheckSystemVersion (major, minor);		
-#else
-			throw new InvalidOperationException ("Can only check watchOS system version on watchOS.");
-#endif
-		}
-
-		protected bool CheckTVOSSystemVersion (int major, int minor)
-		{
-#if __TVOS__
-			return UIDevice.CurrentDevice.CheckSystemVersion (major, minor);		
-#else
-			throw new InvalidOperationException ("Can only check tvOS system version on tvOS.");
-#endif
-		}
 	}
 }

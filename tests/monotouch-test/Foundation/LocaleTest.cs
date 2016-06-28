@@ -33,8 +33,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void FromLocaleIdentifier ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Inconclusive ("Requires iOS7 or later");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			string ident = NSLocale.CurrentLocale.Identifier;
 			Assert.That (NSLocale.FromLocaleIdentifier (ident).Identifier, Is.EqualTo (ident), "FromLocaleIdentifier");

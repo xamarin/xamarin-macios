@@ -38,7 +38,7 @@ namespace MonoTouchFixtures.CoreLocation {
 			try {
 				string field = "kCLErrorUserInfoAlternateRegionKey";
 				var p = Dlfcn.dlsym (lib, field);
-				if (TestRuntime.CheckiOSSystemVersion (7,1))
+				if (TestRuntime.CheckXcodeVersion (5,1))
 					Assert.That (p, Is.Not.EqualTo (IntPtr.Zero), field);
 				else
 					Assert.That (p, Is.EqualTo (IntPtr.Zero), field);

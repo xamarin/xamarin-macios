@@ -140,7 +140,7 @@ namespace Introspection {
 			case "EKSpan":
 			case "EKRecurrenceFrequency":
 			case "EKEventAvailability":
-				if (!IsOSX11OrIOS9)
+				if (!TestRuntime.CheckXcodeVersion (7, 0))
 					return 4;
 				break;
 			case "MDLAxisAlignedBoundingBox":
@@ -230,6 +230,11 @@ namespace Introspection {
 				if (exportAttribute == null)
 					continue;
 				string name = exportAttribute.Selector;
+
+				if (exportAttribute.IsVariadic) {
+					VariadicChecks (m);
+					continue;
+				}
 				
 				if (Skip (t, m, name))
 					continue;
@@ -242,6 +247,13 @@ namespace Introspection {
 				} else {
 					IntrospectionTest (m, methodinfo, t, class_ptr, ref n);
 				}
+			}
+		}
+
+		void VariadicChecks (MethodBase m)
+		{
+			if (m.IsPublic || m.IsFamily || m.IsFamilyOrAssembly) {
+				AddErrorLine ("Function '{0}.{1}' is exposed and variadic. Variadic methods need custom marshaling, and must not be exposed directly.", m.DeclaringType.FullName, m.Name);
 			}
 		}
 
@@ -670,7 +682,7 @@ namespace Introspection {
 				case "EventKit.EKSpan":
 				case "EventKit.EKAlarmType":
 				// EventKit.EK* enums are anonymous enums in 10.10 and iOS 8, but an NSInteger in 10.11 and iOS 9.
-					if (IsOSX11OrIOS9)
+					if (TestRuntime.CheckXcodeVersion (7, 0))
 						goto default;
 					return true;
 				default:

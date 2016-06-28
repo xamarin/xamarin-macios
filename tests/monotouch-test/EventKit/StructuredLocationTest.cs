@@ -32,7 +32,7 @@ namespace MonoTouchFixtures.EventKit {
 		[Test]
 		public void DefaultValues ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
+			if (!TestRuntime.CheckXcodeVersion (4, 5))
 				Assert.Inconclusive ("EKStructuredLocation is new in 6.0");
 
 			var sl = new EKStructuredLocation ();
@@ -44,7 +44,7 @@ namespace MonoTouchFixtures.EventKit {
 		[Test]
 		public void FromTitle ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
+			if (!TestRuntime.CheckXcodeVersion (4, 5))
 				Assert.Inconclusive ("EKStructuredLocation is new in 6.0");
 
 			var sl = EKStructuredLocation.FromTitle ("my title");

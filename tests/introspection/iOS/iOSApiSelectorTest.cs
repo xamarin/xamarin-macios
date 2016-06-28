@@ -51,7 +51,7 @@ namespace Introspection {
 			case "Metal":
 			case "MonoTouch.Metal":
 				// they works with iOS9 beta 4 (but won't work on older simulators)
-				if ((Runtime.Arch == Arch.SIMULATOR) && !CheckiOSOrTVOSSystemVersion (9,0))
+				if ((Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (7, 0))
 					return true;
 				break;
 			case "MetalKit":
@@ -110,7 +110,7 @@ namespace Introspection {
 				case "setSessionDescription:":
 				case "delegate":
 					// does not respond anymore but the properties works (see monotouch-test)
-					if (CheckiOSOrTVOSSystemVersion (9, 0))
+					if (TestRuntime.CheckXcodeVersion (7, 0))
 						return true;
 					break;
 				}
@@ -130,7 +130,7 @@ namespace Introspection {
 				case "setTaskDescription:":
 				case "taskIdentifier":
 					// does not respond anymore but the properties works (see monotouch-test)
-					if (CheckiOSOrTVOSSystemVersion (9, 0))
+					if (TestRuntime.CheckXcodeVersion (7, 0))
 						return true;
 					break;
 				}
@@ -138,7 +138,7 @@ namespace Introspection {
 			case "NSUrlSessionConfiguration":
 			case "NSUrlSessionStreamTask":
 				// does not respond anymore but the properties works (see monotouch-test for a partial list)
-				if (CheckiOSOrTVOSSystemVersion (9, 0))
+				if (TestRuntime.CheckXcodeVersion (7, 0))
 					return true;
 				break;
 
@@ -147,7 +147,7 @@ namespace Introspection {
 				case "currentRequest":
 				case "originalRequest":
 				case "response":
-					if (CheckiOSOrTVOSSystemVersion (9, 0))
+					if (TestRuntime.CheckXcodeVersion (7, 0))
 						return true;
 					break;
 				}
@@ -159,7 +159,7 @@ namespace Introspection {
 				// https://trello.com/c/pKLOLjVJ/29-24231250-coremotion-api-removal-without-deprecation
 				case "accelerometerDataFromDate:toDate:":
 				case "recordAccelerometerForDuration:":
-					if (!CheckiOSOrTVOSSystemVersion (9, 3))
+					if (!TestRuntime.CheckXcodeVersion (7, 3))
 						return true;
 					break;
 				}
@@ -223,7 +223,7 @@ namespace Introspection {
 				// UITextInputTraits and UITextInputProtocol
 				if (declaredType.Name == "UITextField" || declaredType.Name == "UITextView")
 					return true;
-				if (CheckiOSOrTVOSSystemVersion (7,1) && declaredType.Name == "UISearchBar")
+				if (TestRuntime.CheckXcodeVersion (5, 1) && declaredType.Name == "UISearchBar")
 					return true;
 				break;
 			case "keyboardAppearance":
@@ -250,7 +250,7 @@ namespace Introspection {
 				if (declaredType.Name == "UITextField" || declaredType.Name == "UITextView")
 					return true;
 				// ignore UISearchBar before iOS8 - it did not really implement UITextInput
-				if (declaredType.Name == "UISearchBar" && !CheckiOSSystemVersion (8,0))
+				if (declaredType.Name == "UISearchBar" && !TestRuntime.CheckXcodeVersion (6, 0))
 					return true;
 				break;
 			case "dictationRecognitionFailed":
@@ -293,16 +293,16 @@ namespace Introspection {
 			case "useApplicationAudioSession":
 			case "setUseApplicationAudioSession:":
 				if (declaredType.Name == "MPMoviePlayerController")
-					return CheckiOSSystemVersion (6,0);
+					return TestRuntime.CheckXcodeVersion (4, 5);
 				break;
 
 			// iOS6 - headers says readwrite but they do not respond
 			case "setUUID:":
 			case "setIsPrimary:":
 				if (declaredType.Name == "CBMutableService")
-					return CheckiOSSystemVersion (6, 0);
+					return TestRuntime.CheckXcodeVersion (4, 5);
 				if (declaredType.Name == "CBMutableCharacteristic")
-					return CheckiOSSystemVersion (9, 0);
+					return TestRuntime.CheckXcodeVersion (7, 0);
 				break;
 
 			// documented since 4.0 - but does not answer on an iPad1 with 5.1.1
@@ -405,7 +405,7 @@ namespace Introspection {
 			case "scrollViewWillBeginZooming:withView:":
 			case "scrollViewWillEndDragging:withVelocity:targetContentOffset:":
 				if (declaredType.Name == "UICollectionViewController")
-					return CheckiOSOrTVOSSystemVersion (6,0);
+					return TestRuntime.CheckXcodeVersion (4, 5);
 				break;
 
 			// failing (check why)
@@ -414,7 +414,7 @@ namespace Introspection {
 			case "finalLayoutAttributesForDeletedItemAtIndexPath:":
 			case "finalLayoutAttributesForDeletedSupplementaryElementOfKind:atIndexPath:":
 				if (declaredType.Name == "UICollectionViewLayout")
-					return CheckiOSSystemVersion (6,0);
+					return TestRuntime.CheckXcodeVersion (4, 5);
 				break;
 
 			// This is implemented by internal concrete classes of NSFileHandle
@@ -499,25 +499,25 @@ namespace Introspection {
 				switch (declaredType.Name) {
 				// not conforming to NSCopying in 5.1 SDK
 				case "UIFont":
-					return !CheckiOSSystemVersion (6,0);
+					return !TestRuntime.CheckXcodeVersion (4, 5);
 				// not conforming to NSCopying before 7.0 SDK
 				case "CBPeripheral": 
-					return !CheckiOSSystemVersion (7,0);
+					return !TestRuntime.CheckXcodeVersion (5, 0);
 				// not conforming to NSCopying before 8.0 SDK
 				case "AVMetadataFaceObject": 
-					return !CheckiOSSystemVersion (8,0);
+					return !TestRuntime.CheckXcodeVersion (6, 0);
 				// not conforming to NSCopying before 8.2 SDK
 				case "HKUnit": 
-					return !CheckiOSSystemVersion (8,2);
+					return !TestRuntime.CheckXcodeVersion (6, 2);
 				case "HKBiologicalSexObject":
 				case "HKBloodTypeObject":
-					return !CheckiOSSystemVersion (9,0);
+					return !TestRuntime.CheckXcodeVersion (7, 0);
 				}
 				break;
 
 			// on iOS8.0 this does not work on the simulator (but works on devices)
 			case "language":
-				if (declaredType.Name == "AVSpeechSynthesisVoice" && CheckiOSSystemVersion (8,0) && Runtime.Arch == Arch.SIMULATOR)
+				if (declaredType.Name == "AVSpeechSynthesisVoice" && TestRuntime.CheckXcodeVersion (6, 0) && Runtime.Arch == Arch.SIMULATOR)
 					return true;
 				break;
 
@@ -553,11 +553,11 @@ namespace Introspection {
 				switch (declaredType.Name) {
 				// UITextInputMode was added in 4.2 but conformed to NSSecureCoding only from 7.0+ 
 				case "UITextInputMode":
-					return !CheckiOSSystemVersion (7,0);
+					return !TestRuntime.CheckXcodeVersion (5, 0);
 				// iOS9
 				case "HKBiologicalSexObject":
 				case "HKBloodTypeObject":
-					return !CheckiOSSystemVersion (9,0);
+					return !TestRuntime.CheckXcodeVersion (7, 0);
 				}
 				break;
 #else
@@ -565,7 +565,7 @@ namespace Introspection {
 			// we'll ignore them for compat - but won't provide them in the new assemblies
 			case "backgroundImageForBarMetrics:":
 			case "setBackgroundImage:forBarMetrics:":
-				if (declaredType.Name == "UISearchBar" && CheckiOSSystemVersion (8,0))
+				if (declaredType.Name == "UISearchBar" && TestRuntime.CheckXcodeVersion (6, 0))
 					return true;
 				break;
 #endif

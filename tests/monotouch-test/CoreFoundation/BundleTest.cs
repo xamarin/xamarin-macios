@@ -19,6 +19,12 @@ namespace MonoTouchFixtures.CoreFoundation {
 	[Preserve (AllMembers = true)]
 	public class BundleTest {
 
+#if __WATCHOS__
+		const string ExpectedAppName = "monotouchtest.appex";
+#else
+		const string ExpectedAppName = "monotouchtest.app";
+#endif
+
 		[Test]
 		public void TestGetAll ()
 		{
@@ -67,7 +73,12 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void TestGetMain ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.AreEqual ("com.xamarin.monotouch-test", main.Identifier);
+#if __WATCHOS__
+			var expectedBundleId = "com.xamarin.monotouch-test.watchkitapp.watchkitextension";
+#else
+			var expectedBundleId = "com.xamarin.monotouch-test";
+#endif
+			Assert.AreEqual (expectedBundleId, main.Identifier);
 			Assert.IsTrue (main.HasLoadedExecutable);
 		}
 
@@ -82,7 +93,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void TestExecutableUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That(main.ExecutableUrl.ToString (), Contains.Substring ("monotouchtest.app/monotouchtest"));
+			Assert.That(main.ExecutableUrl.ToString (), Contains.Substring (ExpectedAppName + "/monotouchtest"));
 		}
 
 		[Test]
@@ -96,7 +107,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void TestResourcesDirectoryUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That(main.ResourcesDirectoryUrl.ToString (), Contains.Substring ("monotouchtest.app/"));
+			Assert.That(main.ResourcesDirectoryUrl.ToString (), Contains.Substring (ExpectedAppName + "/"));
 		}
 
 		[Test]
@@ -117,7 +128,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void TestSupportFilesDirectoryUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That(main.SupportFilesDirectoryUrl.ToString (), Contains.Substring ("monotouchtest.app/"));
+			Assert.That(main.SupportFilesDirectoryUrl.ToString (), Contains.Substring (ExpectedAppName + "/"));
 		}
 
 		[Test]
@@ -131,7 +142,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void TestUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That(main.Url.ToString (), Contains.Substring ("monotouchtest.app/"));
+			Assert.That(main.Url.ToString (), Contains.Substring (ExpectedAppName + "/"));
 		}
 
 		[Test]

@@ -29,20 +29,12 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Fields ()
 		{
-			// new in 5.1
-			if (!TestRuntime.CheckSystemAndSDKVersion (5, 1))
-				return;
-			
 			Assert.That (NSUrl.IsExcludedFromBackupKey.ToString (), Is.EqualTo ("NSURLIsExcludedFromBackupKey"), "IsExcludedFromBackupKey");
 		}
 		
 		[Test]
 		public void IsExcludedFromBackupKey ()
 		{
-			// new in 5.1
-			if (!TestRuntime.CheckSystemAndSDKVersion (5, 1))
-				return;
-			
 			// NOTE: this test was failing with either NullReferenceException or InvalidCastException
 			// when we used CFBoolean as a NSObject (i.e. CFBoolean.TrueObject). The test order execution
 			// was important to track this down

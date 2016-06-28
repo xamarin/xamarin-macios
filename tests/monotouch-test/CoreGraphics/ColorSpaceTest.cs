@@ -62,7 +62,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 				// not indexed so no color table
 				Assert.That (cs.GetColorTable ().Length, Is.EqualTo (0), "GetColorTable");
 
-				if (TestRuntime.CheckSystemAndSDKVersion (7, 0))
+				if (TestRuntime.CheckXcodeVersion (5, 0))
 					Assert.Null (cs.GetICCProfile (), "GetICCProfile");
 			}
 		}
@@ -77,7 +77,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 				// not indexed so no color table
 				Assert.That (cs.GetColorTable ().Length, Is.EqualTo (0), "GetColorTable");
 
-				if (TestRuntime.CheckSystemAndSDKVersion (7, 0))
+				if (TestRuntime.CheckXcodeVersion (5, 0))
 					Assert.Null (cs.GetICCProfile (), "GetICCProfile");
 			}
 		}
@@ -92,7 +92,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 				// not indexed so no color table
 				Assert.That (cs.GetColorTable ().Length, Is.EqualTo (0), "GetColorTable");
 
-				if (TestRuntime.CheckSystemAndSDKVersion (7, 0))
+				if (TestRuntime.CheckXcodeVersion (5, 0))
 					Assert.Null (cs.GetICCProfile (), "GetICCProfile");
 			}
 		}
@@ -116,7 +116,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 				var new_table = cs.GetColorTable ();
 				Assert.That (table, Is.EqualTo (new_table), "GetColorTable");
 
-				if (TestRuntime.CheckSystemAndSDKVersion (7, 0))
+				if (TestRuntime.CheckXcodeVersion (5, 0))
 					Assert.Null (cs.GetICCProfile (), "GetICCProfile");
 			}
 		}
@@ -136,7 +136,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 				// not indexed so no color table
 				Assert.That (cs.GetColorTable ().Length, Is.EqualTo (0), "GetColorTable");
 
-				if (TestRuntime.CheckSystemAndSDKVersion (7, 0)) {
+				if (TestRuntime.CheckXcodeVersion (5, 0)) {
 					using (var icc_profile = cs.GetICCProfile ())
 						Assert.That (icc_profile.Length, Is.EqualTo (3284), "GetICCProfile");
 				}

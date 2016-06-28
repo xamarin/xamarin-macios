@@ -31,8 +31,7 @@ namespace MonoTouchFixtures.HealthKit {
 		[Test]
 		public void EnumValues_22351 ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8,0))
-				Assert.Inconclusive ("Requires iOS8+");
+			TestRuntime.AssertXcodeVersion (6, 0);
 
 			foreach (HKCategoryTypeIdentifier value in Enum.GetValues (typeof (HKCategoryTypeIdentifier))) {
 
@@ -40,7 +39,7 @@ namespace MonoTouchFixtures.HealthKit {
 				case HKCategoryTypeIdentifier.SleepAnalysis:
 					break;
 				default:
-					if (!TestRuntime.CheckiOSSystemVersion (9, 0))
+					if (!TestRuntime.CheckXcodeVersion (7, 0))
 						continue;
 					break;
 				}

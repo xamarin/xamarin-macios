@@ -38,8 +38,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void TestDescriptors ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("requires iOS7+");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			var font = UIFont.BoldSystemFontOfSize (80);
 			var descriptor = font.FontDescriptor;
@@ -103,7 +102,7 @@ namespace MonoTouchFixtures.UIKit {
 			f2 = f2.WithSize (12);
 			SemiFactory_25511 (f1, f2, "WithSize");
 
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
+			if (!TestRuntime.CheckXcodeVersion (5, 0))
 				return;
 
 			using (var name = new NSString ("UICTFontTextStyleBody")) {
@@ -121,8 +120,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Properties ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
-				Assert.Ignore ("requires iOS7+");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			var f1 = UIFont.PreferredBody;
 			// the same instance will be returned (from an iOS cache)
@@ -155,7 +153,7 @@ namespace MonoTouchFixtures.UIKit {
 		public void NullFonts ()
 		{
 			var invalidFontName = new NSString ("Invalid Font Name");
-			if (TestRuntime.CheckiOSSystemVersion (7, 0)) {
+			if (TestRuntime.CheckXcodeVersion (5, 0)) {
 				Assert.IsNotNull (UIFont.GetPreferredFontForTextStyle (invalidFontName), "GetPreferredFontForTextStyle");
 				Assert.IsNotNull (UIFont.FromDescriptor (new UIFontDescriptor (), -2), "FromDescriptor (,)");
 			}
@@ -164,7 +162,7 @@ namespace MonoTouchFixtures.UIKit {
 
 			Assert.IsNotNull (UIFont.SystemFontOfSize (-3), "SystemFontOfSize()");
 
-			if (TestRuntime.CheckiOSSystemVersion (8, 2)) {
+			if (TestRuntime.CheckXcodeVersion (6, 2)) {
 				Assert.IsNotNull (UIFont.SystemFontOfSize (0, UIFontWeight.Regular), "SystemFontOfSize (nfloat, UIFontWeight)");
 				Assert.IsNotNull (UIFont.SystemFontOfSize (0, (nfloat) 0), "SystemFontOfSize (nfloat, nfloat)");
 			}

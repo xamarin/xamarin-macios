@@ -147,7 +147,28 @@ namespace XamCore.Foundation {
 			return Runtime.GetNSObject<NSDictionary<TKey,TValue>> (_FromObjectsAndKeysInternal (objects.Handle, keys.Handle));
 		}
 
-		public static NSDictionary<TKey,TValue> FromObjectsAndKeys (TKey [] objects, TValue [] keys)
+		public static NSDictionary<TKey, TValue> FromObjectsAndKeys (TValue [] objects, TKey [] keys, nint count)
+		{
+			if (objects == null)
+				throw new ArgumentNullException (nameof (objects));
+			if (keys == null)
+				throw new ArgumentNullException (nameof (keys));
+			if (objects.Length != keys.Length)
+				throw new ArgumentException (nameof (objects) + " and " + nameof (keys) + " arrays have different sizes");
+			if (count < 1 || objects.Length < count)
+				throw new ArgumentException (nameof (count));
+
+			using (var no = NSArray.FromNativeObjects (objects, count))
+			using (var nk = NSArray.FromNativeObjects (keys, count))
+				return GenericFromObjectsAndKeysInternal (no, nk);
+		}
+
+#if XAMCORE_4_0
+		public static NSDictionary<TKey, TValue> FromObjectsAndKeys (TValue [] objects, TKey [] keys)
+#else
+		[Obsolete ("TKey and TValue are inversed and won't work unless both types are identical. Use the generic overload that takes a count parameter instead")]
+		public static NSDictionary<TKey, TValue> FromObjectsAndKeys (TKey [] objects, TValue [] keys)
+#endif
 		{
 			if (objects == null)
 				throw new ArgumentNullException (nameof (objects));
