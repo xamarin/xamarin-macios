@@ -16,6 +16,7 @@ type InterfaceController (handle: IntPtr) =
     inherit WKInterfaceController (handle)
 
     let mutable runner = Unchecked.defaultof<WatchOSRunner>
+    let mutable running = false
 
     [<Outlet ("lblStatus")>]
     member val lblStatus = Unchecked.defaultof<WKInterfaceLabel> with get, set
@@ -48,6 +49,8 @@ type InterfaceController (handle: IntPtr) =
                 this.RenderResults ()
                 this.cmdRun.SetEnabled (true)
                 this.cmdRun.SetHidden (false)
+
+                runner.AutoRun ()
             )
         )
         |> ignore
@@ -66,15 +69,22 @@ type InterfaceController (handle: IntPtr) =
         this.lblInconclusive.SetText (String.Format ("Inconclusive: {0}/{1} {2}%", runner.InconclusiveCount, runner.TestCount, 100 * runner.InconclusiveCount / runner.TestCount))
 
     member this.RunTests () = 
-        this.cmdRun.SetEnabled (false)
-        this.lblStatus.SetText ("Running")
-        this.BeginInvokeOnMainThread (fun v ->
-            runner.Run ()
-            this.BeginInvokeOnMainThread (fun x ->
-                this.RenderResults ()
+        if running then
+            printf "Already running"
+        else
+            let running = true
+            this.cmdRun.SetEnabled (false)
+            this.lblStatus.SetText ("Running")
+            this.BeginInvokeOnMainThread (fun v ->
+                runner.Run ()
+                this.lblStatus.SetText ("Done")
+                let running = false
+                this.BeginInvokeOnMainThread (fun x ->
+                    this.RenderResults ()
+                )
             )
-        )
 
+    [<Action ("runTests:")>]
     member this.RunTests (obj: NSObject) =
         this.RunTests ()
 
