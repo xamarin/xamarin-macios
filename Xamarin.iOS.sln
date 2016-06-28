@@ -29,7 +29,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bindings-generator", "runti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "generator", "src\generator.csproj", "{5FC1B67F-2F54-478D-8C76-2BD21AF8E3C7}"
 EndProject
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
