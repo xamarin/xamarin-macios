@@ -10,13 +10,11 @@ namespace Xamarin.iOS.Tasks
 
 		public ProjectTest (string platform) {
 			Platform = platform;
-			AssertValidDeviceBuild (platform);
 		}
 
 		public ProjectTest (string bundlePath, string platform) {
 			BundlePath = bundlePath;
 			Platform = platform;
-			AssertValidDeviceBuild (platform);
 		}
 
 		public void SetupPaths (string appName, string platform) 
@@ -29,6 +27,7 @@ namespace Xamarin.iOS.Tasks
 		[SetUp]
 		public override void Setup () 
 		{
+			AssertValidDeviceBuild (Platform);
 			SetupEngine ();
 		}
 
