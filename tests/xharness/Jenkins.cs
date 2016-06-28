@@ -997,7 +997,7 @@ function toggleContainerVisibility (containerName)
 					await task.PrepareSimulatorAsync ();
 
 				foreach (var dev in Devices)
-					await dev.PrepareSimulatorAsync (Jenkins.MainLog, Tasks.Where ((v) => !v.Ignored).Select ((v) => v.BundleIdentifier).ToArray ());
+					await dev.PrepareSimulatorAsync (Jenkins.MainLog, Tasks.Where ((v) => !v.Ignored && !v.Failed).Select ((v) => v.BundleIdentifier).ToArray ());
 				
 				foreach (var task in Tasks)
 					await task.RunAsync ();
