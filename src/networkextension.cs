@@ -624,6 +624,10 @@ namespace XamCore.NetworkExtension {
 	
 		[NullAllowed, Export ("defaultPath")]
 		NWPath DefaultPath { get; }
+
+		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[Export ("displayMessage:completionHandler:")]
+		void DisplayMessage (string message, Action<bool> completionHandler);
 	}
 
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
@@ -837,6 +841,10 @@ namespace XamCore.NetworkExtension {
 
 		[Export ("stopVPNTunnel")]
 		void StopVpnTunnel ();
+
+		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[Export ("manager")]
+		NEVpnManager Manager { get; }
 
 		[Notification]
 		[Field ("NEVPNStatusDidChangeNotification")]

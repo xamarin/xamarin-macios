@@ -68,7 +68,8 @@ namespace XamCore.NetworkExtension {
 	[iOS (8,0)][Mac (10,10)]
 	[Native]
 	public enum NEVpnIke2DiffieHellman : nint {
-		Group0 = 0,
+		Invalid = 0,
+		Group0 = Invalid,
 		Group1 = 1,
 		Group2 = 2,
 		Group5 = 5,
