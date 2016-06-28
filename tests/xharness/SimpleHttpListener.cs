@@ -9,7 +9,7 @@ namespace xharness
 	public class SimpleHttpListener : SimpleListener
 	{
 		HttpListener server;
-		bool connected;
+		bool connected_once;
 
 		public override void Initialize ()
 		{
@@ -78,8 +78,8 @@ namespace xharness
 
 			switch (request.RawUrl) {
 			case "/Start":
-				if (!connected) {
-					connected = true;
+				if (!connected_once) {
+					connected_once = true;
 					Connected (request.RemoteEndPoint.ToString ());
 				}
 				break;
