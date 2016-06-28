@@ -36,6 +36,7 @@ namespace Xamarin.Tests
 		public static bool include_mac;
 		public static bool include_tvos;
 		public static bool include_watchos;
+		public static bool include_device;
 
 		// This is /Library/Frameworks/Xamarin.iOS.framework/Versions/Current if running
 		// against a system XI, otherwise it's the <git checkout>/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current directory.
@@ -50,6 +51,9 @@ namespace Xamarin.Tests
 			var dir = Environment.CurrentDirectory;
 			while (dir != "/") {
 				var file = Path.Combine (dir, name);
+				if (File.Exists (file))
+					yield return file;
+				file = Path.Combine (dir, "tests", name); // when running the msbuild tests.
 				if (File.Exists (file))
 					yield return file;
 				dir = Path.GetDirectoryName (dir);
@@ -111,6 +115,7 @@ namespace Xamarin.Tests
 			include_mac = !string.IsNullOrEmpty (GetVariable ("INCLUDE_MAC", ""));
 			include_tvos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_TVOS", ""));
 			include_watchos = !string.IsNullOrEmpty (GetVariable ("INCLUDE_WATCH", ""));
+			include_device = !string.IsNullOrEmpty (GetVariable ("INCLUDE_DEVICE", ""));
 
 			var version_plist = Path.Combine (xcode_root, "..", "version.plist");
 			if (File.Exists (version_plist)) {

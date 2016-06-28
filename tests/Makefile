@@ -66,6 +66,7 @@ test.config: Makefile $(TOP)/Make.config
 	@echo "MAC_DESTDIR=$(abspath $(MAC_DESTDIR))" >> $@
 	@echo "WATCH_MONO_PATH=$(abspath $(WATCH_MONO_PATH))" >> $@
 	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
+	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
 
 clean-local::
 	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhoneSimulator /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests.sln
