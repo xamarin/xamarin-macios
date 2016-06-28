@@ -26,8 +26,10 @@ namespace XamCore.NetworkExtension {
 		[Export ("metaData")]
 		NEFlowMetaData MetaData { get; }
 
+#if !XAMCORE_4_0
 		[Field ("NEAppProxyErrorDomain")]
 		NSString ErrorDomain { get; }
+#endif
 	}
 	
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
@@ -285,8 +287,10 @@ namespace XamCore.NetworkExtension {
 		[Notification]
 		NSString ConfigurationDidChangeNotification { get; }
 
+#if !XAMCORE_4_0
 		[Field ("NEFilterErrorDomain")]
 		NSString ErrorDomain { get; }
+#endif
 	}
 
 #if !MONOMAC
@@ -741,8 +745,10 @@ namespace XamCore.NetworkExtension {
 		[Export ("routingMethod")]
 		NETunnelProviderRoutingMethod RoutingMethod { get; }
 
+#if !XAMCORE_4_0
 		[Field ("NETunnelProviderErrorDomain")]
 		NSString ErrorDomain { get; }
+#endif
 	}
 
 	
@@ -796,8 +802,10 @@ namespace XamCore.NetworkExtension {
 		// - (void)setAuthorization:(AuthorizationRef)authorization NS_AVAILABLE(10_10, NA);
 #endif
 
+#if !XAMCORE_4_0
 		[Field ("NEVPNErrorDomain")]
 		NSString ErrorDomain { get; }
+#endif
 
 		[Notification]
 		[Field ("NEVPNConfigurationChangeNotification")]
