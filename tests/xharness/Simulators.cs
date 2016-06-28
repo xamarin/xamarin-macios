@@ -163,8 +163,10 @@ namespace xharness
 					var sql = new System.Text.StringBuilder ();
 					sql.Append (Harness.Quote (TCC_db));
 					sql.Append (" \"");
-					foreach (var service in sim_services)
+					foreach (var service in sim_services) {
 						sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL);", service, bundle_identifier);
+						sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL);", service, bundle_identifier + ".watchkitapp");
+					}
 					sql.Append ("\"");
 					var rv = await ProcessHelper.ExecuteCommandAsync ("sqlite3", sql.ToString (), log, TimeSpan.FromSeconds (5));
 					if (!rv.Succeeded)
