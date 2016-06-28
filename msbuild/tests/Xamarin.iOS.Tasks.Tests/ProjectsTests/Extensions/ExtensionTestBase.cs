@@ -12,12 +12,14 @@ namespace Xamarin.iOS.Tasks
 
 		public ExtensionTestBase (string platform) {
 			Platform = platform;
+			AssertValidDeviceBuild (platform);
 		}
 
 		public ExtensionTestBase (string bundlePath, string platform)
 		{
 			BundlePath = bundlePath;
 			Platform = platform;
+			AssertValidDeviceBuild (platform);
 		}
 
 		public void BuildExtension (string hostAppName, string extensionName, string platform, int expectedErrorCount = 0)
