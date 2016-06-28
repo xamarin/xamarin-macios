@@ -27,8 +27,8 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 
 		<DefineConstants>__UNIFIED__;__MOBILE__;__WATCHOS__;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
-	<Import Project="Xamarin.WatchOS.AppExtension.Common.targets" />
 	<Import Project="$(FSharpTargets)" />
+	<Import Project="Xamarin.WatchOS.AppExtension.Common.targets" />
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
