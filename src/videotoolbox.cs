@@ -1009,23 +1009,25 @@ namespace XamCore.VideoToolbox {
 
 		// DestinationColorPrimaries
 
-#if MONOMAC
+		[iOS (10,0)]
 		[Mac (10,8)]
 		[Field ("kVTPixelTransferPropertyKey_DestinationColorPrimaries")]
 		NSString DestinationColorPrimaries { get; }
 
 		// DestinationColorPrimaries
 
+		[iOS (10,0)]
 		[Mac (10,8)]
 		[Field ("kVTPixelTransferPropertyKey_DestinationTransferFunction")]
 		NSString DestinationTransferFunction { get; }
 
 		// DestinationICCProfile
 
+		[iOS (10,0)]
 		[Mac (10,8)]
 		[Field ("kVTPixelTransferPropertyKey_DestinationICCProfile")]
 		NSString DestinationICCProfile { get; }
-#endif
+
 		// DestinationYCbCrMatrix
 
 		[Mac (10,8), iOS (9,0)]
