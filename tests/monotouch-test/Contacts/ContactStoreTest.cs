@@ -51,6 +51,7 @@ namespace MonoTouchFixtures.Contacts {
 #if !__WATCHOS__
 				if (Runtime.Arch == Arch.SIMULATOR) {
 					Assert.That (contacts.Length, Is.EqualTo (1), "Length");
+					identifier = contacts [0].Identifier;
 				}
 #endif
 			}
