@@ -3234,7 +3234,7 @@ namespace XamCore.Registrar {
 				body.WriteLine ("if (exception_gchandle != 0) goto exception_handling;");
 				body.WriteLine ("if (has_nsobject) {");
 				body.WriteLine ("*call_super = true;");
-				body.WriteLine ("return self;");
+				body.WriteLine ("goto exception_handling;");
 				body.WriteLine ("}");
 			}
 
