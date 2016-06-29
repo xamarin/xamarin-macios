@@ -311,7 +311,7 @@ namespace xharness
 
 		public async Task<int> RunAsync ()
 		{
-			HashSet<string> start_crashes = null;
+			CrashReportSnapshot crash_reports = new CrashReportSnapshot () { Device = !isSimulator, Harness = Harness, Log = main_log, Logs = Logs, LogDirectory = LogDirectory };
 			LogStream device_system_log = null;
 			LogStream listener_log = null;
 			Log run_log = main_log;
@@ -403,7 +403,7 @@ namespace xharness
 				args.AppendFormat (" \"{0}\" ", launchAppPath);
 				args.Append (" --device=:v2:udid=").Append (simulator.UDID).Append (" ");
 
-				start_crashes = await Harness.CreateCrashReportsSnapshotAsync (main_log, true);
+				await crash_reports.StartCaptureAsync ();
 
 				listener.StartAsync ();
 				main_log.WriteLine ("Starting test run");
@@ -482,7 +482,7 @@ namespace xharness
 				};
 				logdev.StartCapture ();
 
-				start_crashes = await Harness.CreateCrashReportsSnapshotAsync (main_log, false);
+				await crash_reports.StartCaptureAsync ();
 
 				listener.StartAsync ();
 				main_log.WriteLine ("Starting test run");
@@ -556,62 +556,11 @@ namespace xharness
 				crashed = true;
 			}
 				
-			// Check for crash reports
-			var crash_report_search_done = false;
-			var crash_report_search_timeout = 5;
-			var watch = new Stopwatch ();
-			watch.Start ();
-			do {
-				var end_crashes = await Harness.CreateCrashReportsSnapshotAsync (main_log, isSimulator);
-				end_crashes.ExceptWith (start_crashes);
-				if (end_crashes.Count > 0) {
-					main_log.WriteLine ("Found {0} new crash report(s)", end_crashes.Count);
-					List<LogFile> crash_reports;
-					if (isSimulator) {
-						crash_reports = new List<LogFile> (end_crashes.Count);
-						foreach (var path in end_crashes) {
-							var logPath = Path.Combine (LogDirectory, Path.GetFileName (path));
-							File.Copy (path, logPath, true);
-							crash_reports.Add (Logs.CreateFile ("Crash report: " + Path.GetFileName (path), logPath));
-						}
-					} else {
-						// Download crash reports from the device. We put them in the project directory so that they're automatically deleted on wrench
-						// (if we put them in /tmp, they'd never be deleted).
-						var downloaded_crash_reports = new List<LogFile> ();
-						foreach (var file in end_crashes) {
-							var crash_report_target = Logs.CreateFile ("Crash report: " + Path.GetFileName (file), Path.Combine (LogDirectory, Path.GetFileName (file)));
-							var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, "--download-crash-report=" + file + " --download-crash-report-to=" + crash_report_target.Path + " --sdkroot " + Harness.XcodeRoot, main_log, TimeSpan.FromMinutes (1));
-							if (result.Succeeded) {
-								main_log.WriteLine ("Downloaded crash report {0} to {1}", file, crash_report_target.Path);
-								crash_report_target = await Harness.SymbolicateCrashReportAsync (main_log, crash_report_target);
-								Logs.Add (crash_report_target);
-								downloaded_crash_reports.Add (crash_report_target);
-							} else {
-								main_log.WriteLine ("Could not download crash report {0}", file);
-							}
-						}
-						crash_reports = downloaded_crash_reports;
-					}
-					foreach (var cp in crash_reports) {
-						Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", cp.Path);
-						main_log.WriteLine ("    {0}", cp.Path);
-					}
-					crash_report_search_done = true;
-				} else if (!crashed && !timed_out) {
-					crash_report_search_done = true;
-				} else {
-					if (watch.Elapsed.TotalSeconds > crash_report_search_timeout) {
-						crash_report_search_done = true;
-					} else {
-						main_log.WriteLine ("No crash reports, waiting a second to see if the crash report service just didn't complete in time ({0})", (int) (crash_report_search_timeout - watch.Elapsed.TotalSeconds));
-						Thread.Sleep (TimeSpan.FromSeconds (1));
-					}
-				}
-			} while (!crash_report_search_done);
-
 			if (!success.HasValue)
 				success = false;
-			
+
+			await crash_reports.EndCaptureAsync (TimeSpan.FromSeconds (success.Value ? 0 : 5));
+
 			if (timed_out) {
 				Result = TestExecutingResult.TimedOut;
 			} else if (crashed) {

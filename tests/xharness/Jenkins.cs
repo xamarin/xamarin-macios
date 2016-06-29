@@ -939,8 +939,13 @@ function toggleContainerVisibility (containerName)
 					log.WriteLine ("{0} {1}", proc.StartInfo.FileName, proc.StartInfo.Arguments);
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
+
+						var snapshot = new CrashReportSnapshot () { Device = false, Harness = Harness, Log = log, Logs = Logs, LogDirectory = LogDirectory };
+						await snapshot.StartCaptureAsync ();
+
 						try {
 							var timeout = TimeSpan.FromMinutes (10);
+
 							var result = await proc.RunAsync (log, true, timeout);
 							if (result.TimedOut) {
 								log.WriteLine ("Execution timed out after {0} seconds.", timeout.TotalSeconds);
@@ -954,6 +959,8 @@ function toggleContainerVisibility (containerName)
 							log.WriteLine (e.ToString ());
 							ExecutionResult = TestExecutingResult.HarnessException;
 						}
+
+						await snapshot.EndCaptureAsync (TimeSpan.FromSeconds (Succeeded ? 0 : 5));
 					}
 					Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);
 				}
