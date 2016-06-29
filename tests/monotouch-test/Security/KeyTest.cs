@@ -170,7 +170,7 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (public_key.RawVerify (SecPadding.PKCS1SHA1, hash, sign), Is.EqualTo (SecStatusCode.Success), "RawVerify");
 
 				var empty = new byte [0];
-				if (UIDevice.CurrentDevice.CheckSystemVersion (10, 0)) {
+				if (TestRuntime.CheckXcodeVersion (8, 0)) {
 					Assert.That (private_key.RawSign (SecPadding.PKCS1SHA1, empty, out sign), Is.EqualTo (SecStatusCode.Success), "RawSign-empty");
 					Assert.That (public_key.RawVerify (SecPadding.PKCS1SHA1, empty, empty), Is.EqualTo (SecStatusCode.Success), "RawVerify-empty");
 				} else {
@@ -203,7 +203,7 @@ namespace MonoTouchFixtures.Security {
 				var empty = new byte [0];
 				// there does not seem to be a length-check on PKCS1, likely because not knowning the hash algorithm makes it harder
 				Assert.That (private_key.RawSign (SecPadding.PKCS1, empty, out sign), Is.EqualTo (SecStatusCode.Success), "RawSign-empty");
-				if (UIDevice.CurrentDevice.CheckSystemVersion (10, 0)) {
+				if (TestRuntime.CheckXcodeVersion (8, 0)) {
 					Assert.That (public_key.RawVerify (SecPadding.PKCS1, empty, empty), Is.EqualTo (SecStatusCode.Success), "RawVerify-empty");
 				} else {
 					// but that does not work at verification time
