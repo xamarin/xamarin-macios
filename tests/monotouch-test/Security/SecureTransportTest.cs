@@ -55,7 +55,7 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (ssl.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 				Assert.That (ssl.MaxDatagramRecordSize, Is.EqualTo ((nint) 0), "MaxDatagramRecordSize");
 				Assert.That (ssl.MaxProtocol, Is.EqualTo (SslProtocol.Tls_1_2), "MaxProtocol");
-				if (UIDevice.CurrentDevice.CheckSystemVersion (10, 0))
+				if (TestRuntime.CheckXcodeVersion (8, 0))
 					Assert.That (ssl.MinProtocol, Is.EqualTo (SslProtocol.Tls_1_0), "MinProtocol");
 				else
 					Assert.That (ssl.MinProtocol, Is.EqualTo (SslProtocol.Ssl_3_0), "MinProtocol");

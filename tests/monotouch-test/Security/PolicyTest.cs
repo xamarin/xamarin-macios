@@ -157,7 +157,7 @@ namespace MonoTouchFixtures.Security {
 			// CreatePolicy (SecPolicyIdentifier.AppleEAP);
 			CreatePolicy (SecPolicyIdentifier.AppleIPsec);
 			CreatePolicy (SecPolicyIdentifier.AppleCodeSigning);
-			var oid = UIDevice.CurrentDevice.CheckSystemVersion (10, 0) ? "1.2.840.113635.100.1.61" : null; 
+			var oid = TestRuntime.CheckXcodeVersion (8, 0) ? "1.2.840.113635.100.1.61" : null; 
 			CreatePolicy (SecPolicyIdentifier.AppleIDValidation, (NSString) oid);
 			// invalid handle ? not yet supported ?!?
 			// CreatePolicy (SecPolicyIdentifier.AppleTimeStamping);
