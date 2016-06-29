@@ -86,6 +86,7 @@ namespace XamCore.MapKit {
 	[TV (9,2)]
 	[Mac (10,9, onlyOn64 : true)]
 	interface MKAnnotationView {
+		[DesignatedInitializer]
 		[Export ("initWithAnnotation:reuseIdentifier:")]
 		[PostGet ("Annotation")]
 #if XAMCORE_2_0
@@ -329,6 +330,11 @@ namespace XamCore.MapKit {
 		[iOS (9,0)][Mac (10,11)]
 		[Field ("MKLaunchOptionsDirectionsModeTransit"), Internal]
 		NSString MKLaunchOptionsDirectionsModeTransit { get; }
+
+		[NoTV]
+		[iOS (10,0)][Mac (10,12)][Watch (3,0)]
+		[Field ("MKLaunchOptionsDirectionsModeDefault"), Internal]
+		NSString MKLaunchOptionsDirectionsModeDefault { get; }
 
 		[Export ("timeZone")]
 		[iOS (9,0), Mac(10,11)]
@@ -1794,5 +1800,16 @@ namespace XamCore.MapKit {
 
 #endif // !WATCH
 
+	[Category]
+	[BaseType (typeof (NSUserActivity))]
+	interface NSUserActivity_MKMapItem {
+		[Watch (3,0)][TV (10,0)][iOS (10,0)][Mac (10,12)]
+		[Export ("mapItem")]
+		MKMapItem GetMapItem ();
+
+		[Watch (3,0)][TV (10,0)][iOS (10,0)][Mac (10,12)]
+		[Export ("setMapItem:")]
+		void SetMapItem (MKMapItem item);
+	}
 }
 #endif // XAMCORE_2_0 || !MONOMAC
