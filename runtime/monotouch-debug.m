@@ -382,13 +382,9 @@ gboolean send_uninterrupted (int fd, const void *buf, int len)
 {
 	int res;
 
-	MONO_ENTER_GC_SAFE;
-	
 	do {
 		res = send (fd, buf, len, 0);
 	} while (res == -1 && errno == EINTR);
-
-	MONO_EXIT_GC_SAFE;
 
 	return res == len;
 }
@@ -399,28 +395,44 @@ int recv_uninterrupted (int fd, void *buf, int len)
 	int total = 0;
 	int flags = 0;
 
-	MONO_ENTER_GC_SAFE;
-
 	do { 
 		res = recv (fd, (char *) buf + total, len - total, flags); 
 		if (res > 0)
 			total += res;
 	} while ((res > 0 && total < len) || (res == -1 && errno == EINTR));
 
-	MONO_EXIT_GC_SAFE;
-
 	return total;
 }
 
 gboolean sdb_send (void *buf, int len)
 {
-	return send_uninterrupted (sdb_fd, buf, len); 
+	gboolean rv;
+
+	if (debugging_configured) {
+		MONO_ENTER_GC_SAFE;
+		rv = send_uninterrupted (sdb_fd, buf, len);
+		MONO_EXIT_GC_SAFE;
+	} else {
+		rv = send_uninterrupted (sdb_fd, buf, len);
+	}
+
+	return rv;
 }
 
 
 int sdb_recv (void *buf, int len)
 {
-	return recv_uninterrupted (sdb_fd, buf, len);
+	int rv;
+
+	if (debugging_configured) {
+		MONO_ENTER_GC_SAFE;
+		rv = recv_uninterrupted (sdb_fd, buf, len);
+		MONO_EXIT_GC_SAFE;
+	} else {
+		rv = recv_uninterrupted (sdb_fd, buf, len);
+	}
+
+	return rv;
 }
 
 int monotouch_connect_wifi (NSMutableArray *ips)
@@ -776,11 +788,9 @@ monotouch_load_debugger ()
 		transport.send = sdb_send;
 		transport.recv = sdb_recv;
 
-		MONO_ENTER_GC_UNSAFE;
 		mono_debugger_agent_register_transport (&transport);
 	
 		mono_debugger_agent_parse_options ("transport=custom_transport,address=dummy,embedding=1");
-		MONO_EXIT_GC_UNSAFE;
 
 		LOG (PRODUCT ": Debugger loaded with custom transport (fd: %i)\n", sdb_fd);
 	} else {
@@ -797,9 +807,7 @@ monotouch_load_profiler ()
 	// TODO: make this generic enough for other profilers to work too
 	// Main thread only
 	if (profiler_description != NULL) {
-		MONO_ENTER_GC_UNSAFE;
 		mono_profiler_load (profiler_description);
-		MONO_EXIT_GC_UNSAFE;
 
 		LOG (PRODUCT ": Profiler loaded: %s\n", profiler_description);
 		free (profiler_description);
