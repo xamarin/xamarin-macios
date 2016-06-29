@@ -1150,7 +1150,11 @@ function toggleContainerVisibility (containerName)
 				run_timer.Stop ();
 			}
 
-			ExecutionResult = Tasks.Any ((v) => !v.Succeeded) ? TestExecutingResult.Failed : TestExecutingResult.Succeeded;
+			if (Tasks.All ((v) => v.Ignored)) {
+				ExecutionResult = TestExecutingResult.Ignored;
+			} else {
+				ExecutionResult = Tasks.Any ((v) => v.Failed) ? TestExecutingResult.Failed : TestExecutingResult.Succeeded;
+			}
 		}
 	}
 
