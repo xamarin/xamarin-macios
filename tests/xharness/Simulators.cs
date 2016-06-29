@@ -160,14 +160,17 @@ namespace xharness
 			do {
 				failure = false;
 				foreach (var bundle_identifier in bundle_identifiers) {
+					var sql = new System.Text.StringBuilder ();
+					sql.Append (Harness.Quote (TCC_db));
+					sql.Append (" \"");
 					foreach (var service in sim_services) {
-						var sql = string.Format ("{0} \"INSERT INTO access VALUES('{1}','{2}',0,1,0,NULL,NULL);\"", TCC_db, service, bundle_identifier);
-						var rv = await ProcessHelper.ExecuteCommandAsync ("sqlite3", sql, log, TimeSpan.FromSeconds (5));
-						if (!rv.Succeeded) {
-							failure = true;
-							break;
-						}
+						sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL);", service, bundle_identifier);
+						sql.AppendFormat ("INSERT INTO access VALUES('{0}','{1}',0,1,0,NULL,NULL);", service, bundle_identifier + ".watchkitapp");
 					}
+					sql.Append ("\"");
+					var rv = await ProcessHelper.ExecuteCommandAsync ("sqlite3", sql.ToString (), log, TimeSpan.FromSeconds (5));
+					if (!rv.Succeeded)
+						failure = true;
 					if (failure) {
 						if (watch.Elapsed.TotalSeconds > tcc_edit_timeout)
 							break;
