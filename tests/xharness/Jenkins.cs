@@ -89,7 +89,7 @@ namespace xharness
 				var companion =
 					Simulators.AvailableDevices.
 							  FirstOrDefault ((SimDevice v) => pair.Companion == v.UDID);
-				runtasks.Add (new RunSimulatorTask (buildTask, device, companion) { Platform = TestPlatform.watchOS, ExecutionResult = TestExecutingResult.Ignored });
+				runtasks.Add (new RunSimulatorTask (buildTask, device, companion) { Platform = TestPlatform.watchOS });
 			} else {
 				var latestiOSRuntime =
 					Simulators.SupportedRuntimes.
