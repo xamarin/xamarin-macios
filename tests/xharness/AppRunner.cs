@@ -302,7 +302,7 @@ namespace xharness
 		bool ensure_clean_simulator_state = true;
 		public bool EnsureCleanSimulatorState {
 			get {
-				return ensure_clean_simulator_state || !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("SKIP_SIMULATOR_SETUP"));
+				return ensure_clean_simulator_state && string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("SKIP_SIMULATOR_SETUP"));
 			}
 			set {
 				ensure_clean_simulator_state = value;

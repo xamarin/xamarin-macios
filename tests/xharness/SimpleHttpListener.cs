@@ -9,6 +9,7 @@ namespace xharness
 	public class SimpleHttpListener : SimpleListener
 	{
 		HttpListener server;
+		bool connected_once;
 
 		public override void Initialize ()
 		{
@@ -77,14 +78,19 @@ namespace xharness
 
 			switch (request.RawUrl) {
 			case "/Start":
-				Connected (request.RemoteEndPoint.ToString ());
+				if (!connected_once) {
+					connected_once = true;
+					Connected (request.RemoteEndPoint.ToString ());
+				}
 				break;
 			case "/Finish":
-				using (var writer = new StreamWriter (OutputStream)) {
-					writer.Write (data);
-					writer.Flush ();
+				if (!finished) {
+					using (var writer = new StreamWriter (OutputStream)) {
+						writer.Write (data);
+						writer.Flush ();
+					}
+					finished = true;
 				}
-				finished = true;
 				break;
 			default:
 				Log.WriteLine ("Unknown upload url: {0}", request.RawUrl);
