@@ -18,9 +18,22 @@ namespace XamCore.UIKit {
 		// https://trello.com/c/iQpXOxCd/227-category-and-static-methods-selectors
 		// note: we cannot reuse the same method name - as it would break compilation of existing apps
 		[iOS (8,0)]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use CreatePrimaryVibrancyEffectForNotificationCenter")]
 		static public UIVibrancyEffect CreateForNotificationCenter ()
 		{
 			return (null as UIVibrancyEffect).NotificationCenterVibrancyEffect ();
+		}
+
+		[iOS (10,0)]
+		static public UIVibrancyEffect CreatePrimaryVibrancyEffectForNotificationCenter ()
+		{
+			return (null as UIVibrancyEffect).GetWidgetPrimaryVibrancyEffect ();
+		}
+
+		[iOS (10,0)]
+		static public UIVibrancyEffect CreateSecondaryVibrancyEffectForNotificationCenter ()
+		{
+			return (null as UIVibrancyEffect).GetWidgetSecondaryVibrancyEffect ();
 		}
 #endif // IOS
 	}
