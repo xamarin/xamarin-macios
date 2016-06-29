@@ -1,6 +1,8 @@
+using XamCore.CoreGraphics;
 using XamCore.CoreLocation;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
+using XamCore.UIKit;
 using System;
 using System.ComponentModel;
 
@@ -13,7 +15,6 @@ namespace XamCore.HomeKit {
 		NSString HMErrorDomain { get; }
 	}
 
-	[Watch (2,0)]
 	[TV (10,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject), Delegates=new string[] {"WeakDelegate"}, Events=new Type[] {typeof(HMHomeManagerDelegate)})]
@@ -52,7 +53,6 @@ namespace XamCore.HomeKit {
 		void RemoveHome (HMHome home, Action<NSError> completion);
 	}
 
-	[Watch (2,0)]
 	[TV (10,0)]
 	[iOS (8,0)]
 	[Model, Protocol]
@@ -137,7 +137,7 @@ namespace XamCore.HomeKit {
 
 		[Watch (3,0), TV (10,0), iOS (10,0)]
 		[NullAllowed, Export ("cameraProfiles", ArgumentSemantic.Copy)]
-		HMCameraProfile[] CameraProfiles { get; }
+		HMCameraProfile [] CameraProfiles { get; }
 	}
 
 	[iOS (8,0)]
@@ -770,7 +770,6 @@ namespace XamCore.HomeKit {
 #endif
 	}
 
-	[Watch (2,0)]
 	[TV (10,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor]
@@ -1630,13 +1629,19 @@ namespace XamCore.HomeKit {
 		void UpdateRegion (CLRegion region, Action<NSError> completion);
 	}
 
-	[NoWatch, TV (10,0), iOS (10,0)]
+	#if !WATCH
+	[TV (10,0), iOS (10,0)]
 	[BaseType (typeof(UIView))]
 	interface HMCameraView
 	{
+		// inlined ctor
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frame);
+
 		[NullAllowed, Export ("cameraSource", ArgumentSemantic.Strong)]
 		HMCameraSource CameraSource { get; set; }
 	}
+	#endif
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[BaseType (typeof(NSObject))]
@@ -1645,7 +1650,7 @@ namespace XamCore.HomeKit {
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[BaseType (typeof(HMAccessoryProfile))]
 	[DisableDefaultCtor]
-	interface HMCameraProfile
+	public interface HMCameraProfile
 	{
 		[NullAllowed, Export ("streamControl", ArgumentSemantic.Strong)]
 		HMCameraStreamControl StreamControl { get; }
@@ -1669,14 +1674,10 @@ namespace XamCore.HomeKit {
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[BaseType (typeof(HMCameraControl))]
-	interface HMCameraStreamControl
+	public interface HMCameraStreamControl
 	{
-		[Wrap ("WeakDelegate")]
-		[NullAllowed]
-		HMCameraStreamControlDelegate Delegate { get; set; }
-
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
-		NSObject WeakDelegate { get; set; }
+		IHMCameraStreamControlDelegate Delegate { get; set; }
 
 		[Export ("streamState", ArgumentSemantic.Assign)]
 		HMCameraStreamState StreamState { get; }
@@ -1690,6 +1691,8 @@ namespace XamCore.HomeKit {
 		[Export ("stopStream")]
 		void StopStream ();
 	}
+
+	public interface IHMCameraStreamControlDelegate {}
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[Protocol, Model]
@@ -1705,7 +1708,7 @@ namespace XamCore.HomeKit {
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[BaseType (typeof(HMCameraSource))]
-	interface HMCameraStream
+	public interface HMCameraStream
 	{
 		[Export ("audioStreamSetting", ArgumentSemantic.Assign)]
 		HMCameraAudioStreamSetting AudioStreamSetting { get; set; }
@@ -1713,14 +1716,10 @@ namespace XamCore.HomeKit {
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[BaseType (typeof(HMCameraControl))]
-	interface HMCameraSnapshotControl
+	public interface HMCameraSnapshotControl
 	{
-		[Wrap ("WeakDelegate")]
-		[NullAllowed]
-		HMCameraSnapshotControlDelegate Delegate { get; set; }
-
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
-		NSObject WeakDelegate { get; set; }
+		IHMCameraSnapshotControlDelegate Delegate { get; set; }
 
 		[NullAllowed, Export ("mostRecentSnapshot", ArgumentSemantic.Strong)]
 		HMCameraSnapshot MostRecentSnapshot { get; }
@@ -1729,10 +1728,12 @@ namespace XamCore.HomeKit {
 		void TakeSnapshot ();
 	}
 
+	public interface IHMCameraSnapshotControlDelegate {}
+
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
-	interface HMCameraSnapshotControlDelegate
+	public interface HMCameraSnapshotControlDelegate
 	{
 		[Export ("cameraSnapshotControl:didTakeSnapshot:error:")]
 		void DidTakeSnapshot (HMCameraSnapshotControl cameraSnapshotControl, [NullAllowed] HMCameraSnapshot snapshot, [NullAllowed] NSError error);
@@ -1740,7 +1741,7 @@ namespace XamCore.HomeKit {
 
 	[iOS (10,0)]
 	[BaseType (typeof(HMCameraSource))]
-	interface HMCameraSnapshot
+	public interface HMCameraSnapshot
 	{
 		[Export ("captureDate", ArgumentSemantic.Copy)]
 		NSDate CaptureDate { get; }
@@ -1749,7 +1750,7 @@ namespace XamCore.HomeKit {
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[BaseType (typeof(HMCameraControl))]
 	[DisableDefaultCtor]
-	interface HMCameraSettingsControl
+	public interface HMCameraSettingsControl
 	{
 		[NullAllowed, Export ("nightVision", ArgumentSemantic.Strong)]
 		HMCharacteristic NightVision { get; }
@@ -1782,7 +1783,7 @@ namespace XamCore.HomeKit {
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[BaseType (typeof(HMCameraControl))]
 	[DisableDefaultCtor]
-	interface HMCameraAudioControl
+	public interface HMCameraAudioControl
 	{
 		[NullAllowed, Export ("mute", ArgumentSemantic.Strong)]
 		HMCharacteristic Mute { get; }

@@ -288,6 +288,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "GameController", "GameController", 9 },
 					{ "GameKit", "GameKit", 9 },
 					{ "GameplayKit", "GameplayKit", 9 },
+					{ "HomeKit", "HomeKit", 10 },
 					{ "ImageIO", "ImageIO", 9 },
 					{ "JavaScriptCore", "JavaScriptCore", 9 },
 					{ "MediaAccessibility", "MediaAccessibility", 9 },

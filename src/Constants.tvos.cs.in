@@ -33,6 +33,7 @@ namespace ObjCRuntime {
 		public const string GameKitLibrary = "/System/Library/Frameworks/GameKit.framework/GameKit";
 		public const string GameplayKitLibrary = "/System/Library/Frameworks/GameplayKit.framework/GameplayKit";
 		public const string GLKitLibrary = "/System/Library/Frameworks/GLKit.framework/GLKit";
+		public const string HomeKitLibrary = "/System/Library/Frameworks/HomeKit.framework/HomeKit";
 		public const string ImageIOLibrary = "/System/Library/Frameworks/ImageIO.framework/ImageIO";
 		public const string JavaScriptCoreLibrary = "/System/Library/Frameworks/JavaScriptCore.framework/JavaScriptCore";
 		public const string MediaAccessibilityLibrary = "/System/Library/Frameworks/MediaAccessibility.framework/MediaAccessibility";

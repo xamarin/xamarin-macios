@@ -208,17 +208,29 @@ namespace XamCore.HomeKit {
 		TargetPosition,
 		[iOS (9,0)]
 		TargetVerticalTilt,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
 		StreamingStatus,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
 		SupportedVideoStreamConfiguration,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
 		SupportedAudioStreamConfiguration,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
 		SupportedRtpConfiguration,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
 		SelectedStreamConfiguration,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
 		Volume,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
 		Mute,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
 		NightVision,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
 		OpticalZoom,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
 		DigitalZoom,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
 		ImageRotation,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
 		ImageMirroring,
 	}
 
@@ -234,7 +246,9 @@ namespace XamCore.HomeKit {
 		Seconds,
 		[iOS (9,3)][Watch(2,2)]
 		Lux,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
 		PartsPerMillion,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
 		MicrogramsPerCubicMeter,
 	}
 
@@ -288,9 +302,13 @@ namespace XamCore.HomeKit {
 		Window,
 		[iOS (9,0)]
 		WindowCovering,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
 		CameraRtpStreamManagement,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
 		CameraControl,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
 		Microphone,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
 		Speaker,
 	}
 
@@ -498,6 +516,8 @@ namespace XamCore.HomeKit {
 		HomeDeparture,
 		HomeArrival,
 		UserDefined,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		TriggerOwned,
 	}
 
 	[iOS (9,0)]
@@ -520,7 +540,9 @@ namespace XamCore.HomeKit {
 		Window,
 		WindowCovering,
 		GarageDoorOpener = DoorOpener,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
 		RangeExtender,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
 		IPCamera,
 	}
 
