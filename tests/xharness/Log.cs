@@ -107,7 +107,7 @@ namespace xharness
 
 		public override TextWriter GetWriter ()
 		{
-			return writer ?? (writer = new StreamWriter (new FileStream (Path, FileMode.Open, FileAccess.Write, FileShare.Read)));
+			return writer ?? (writer = new StreamWriter (new FileStream (Path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read)));
 		}
 
 		protected override void Dispose (bool disposing)
