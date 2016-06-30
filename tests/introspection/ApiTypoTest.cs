@@ -261,6 +261,7 @@ namespace Introspection
 			"Rpa",
 			"Rpn", // acronym
 			"Rssi",
+			"Rtp",
 			"Rtsp",
 			"Saml", // acronym
 			"Scn",

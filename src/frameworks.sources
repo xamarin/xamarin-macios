@@ -1646,6 +1646,7 @@ TVOS_FRAMEWORKS =           \
 	GameController          \
 	GameKit                 \
 	GameplayKit             \
+	HomeKit                 \
 	ImageIO                 \
 	JavaScriptCore          \
 	MapKit                  \
