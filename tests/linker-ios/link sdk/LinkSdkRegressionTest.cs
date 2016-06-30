@@ -650,6 +650,9 @@ namespace LinkSdk {
 		[Test]
 		public void WebClient_SSL_Leak ()
 		{
+#if __WATCHOS__
+			Assert.Ignore ("WatchOS doesn't support BSD sockets, which our network stack currently requires.");
+#endif
 			WebClient wc = new WebClient ();
 			// note: needs to be executed under Instrument to verify it does not leak
 			string s = wc.DownloadString ("https://developers.google.com");
