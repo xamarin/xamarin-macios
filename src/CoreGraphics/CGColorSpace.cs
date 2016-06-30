@@ -4,7 +4,7 @@
 // Authors: Mono Team
 //     
 // Copyright 2009 Novell, Inc
-// Copyright 2011-2014 Xamarin Inc
+// Copyright 2011-2014,2016 Xamarin Inc
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -30,6 +30,7 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
+using XamCore.CoreFoundation;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 
@@ -377,6 +378,50 @@ namespace XamCore.CoreGraphics {
 		{
 			IntPtr ptr = CGColorSpaceCopyICCProfile (handle);
 			return (ptr == IntPtr.Zero) ? null : new NSData (ptr, true);
+		}
+
+		[iOS (10,0)][Mac (10,12)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern /* CFDataRef* */ IntPtr CGColorSpaceCopyICCData (/* CGColorSpaceRef */ IntPtr space);
+
+		[iOS (10,0)][Mac (10,12)]
+		public NSData GetIccData ()
+		{
+			IntPtr ptr = CGColorSpaceCopyICCData (handle);
+			return (ptr == IntPtr.Zero) ? null : new NSData (ptr, true);
+		}
+
+		[iOS (10,0)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern unsafe /* CFStringRef* */ IntPtr CGColorSpaceCopyName (/* CGColorSpaceRef */ IntPtr space);
+
+		[iOS (10,0)]
+		public string Name {
+			get {
+				return CFString.FetchString (CGColorSpaceCopyName (handle));
+			}
+		}
+
+		[iOS (10,0)][Mac (10,12)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern bool CGColorSpaceIsWideGamutRGB (/* CGColorSpaceRef */ IntPtr space);
+
+		[iOS (10,0)][Mac (10,12)]
+		public bool IsWideGamutRgb {
+			get {
+				return CGColorSpaceIsWideGamutRGB (handle);
+			}
+		}
+
+		[iOS (10,0)][Mac (10,12)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern bool CGColorSpaceSupportsOutput (/* CGColorSpaceRef */ IntPtr space);
+
+		[iOS (10,0)][Mac (10,12)]
+		public bool SupportsOutput {
+			get {
+				return CGColorSpaceSupportsOutput (handle);
+			}
 		}
 #endif // !COREBUILD
 	}

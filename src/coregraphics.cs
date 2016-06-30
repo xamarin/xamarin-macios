@@ -86,7 +86,7 @@ namespace XamCore.CoreGraphics {
 		[Field ("kCGColorSpaceGenericCMYK")]
 		NSString GenericCmyk { get; }
 
-		[iOS (9,3)][Mac(10,11)] // Docs say 10,10 but radar 25396312:
+		[iOS (9,3)][Mac(10,11,2)]
 		[TV (9,2)]
 		[Field ("kCGColorSpaceDisplayP3")]
 		NSString DisplayP3 { get; }
@@ -128,7 +128,30 @@ namespace XamCore.CoreGraphics {
 		[TV (9,2)]
 		[Field ("kCGColorSpaceDCIP3")]
 		NSString Dcip3 { get; }
-		
+
+		[iOS (10,0)][Mac (10,12)]
+		[Field ("kCGColorSpaceExtendedSRGB")]
+		NSString ExtendedSrgb { get; }
+
+		[iOS (10,0)][Mac (10,12)]
+		[Field ("kCGColorSpaceLinearSRGB")]
+		NSString LinearSrgb { get; }
+
+		[iOS (10,0)][Mac (10,12)]
+		[Field ("kCGColorSpaceExtendedLinearSRGB")]
+		NSString ExtendedLinearSrgb { get; }
+
+		[iOS (10,0)][Mac (10,12)]
+		[Field ("kCGColorSpaceExtendedGray")]
+		NSString ExtendedGray { get; }
+
+		[iOS (10,0)][Mac (10,12)]
+		[Field ("kCGColorSpaceLinearGray")]
+		NSString LinearGray { get; }
+
+		[iOS (10,0)][Mac (10,12)]
+		[Field ("kCGColorSpaceExtendedLinearGray")]
+		NSString ExtendedLinearGray { get; }
 
 #if MONOMAC
 		[Obsolete ("Now accessible as GenericCmyk")]
