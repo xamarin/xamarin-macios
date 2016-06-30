@@ -905,7 +905,7 @@ namespace LinkSdk {
 			path = TestFolder (Environment.SpecialFolder.UserProfile, readOnly: device);
 			if (Runtime.Arch == Arch.DEVICE) {
 #if __WATCHOS__
-				Assert.True (path.StartsWith ("/private/var/mobile/Containers/Data/Application/", StringComparison.Ordinal), "Containers-ios8");
+				Assert.That (path, Is.StringStarting ("/private/var/mobile/Containers/Data/PluginKitPlugin/"), "Containers-ios8");
 #else
 				if (UIDevice.CurrentDevice.CheckSystemVersion (8, 0))
 					Assert.True (path.StartsWith ("/private/var/mobile/Containers/Data/Application/", StringComparison.Ordinal), "Containers-ios8");
