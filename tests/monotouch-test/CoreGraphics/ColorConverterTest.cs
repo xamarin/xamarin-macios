@@ -30,7 +30,8 @@ namespace MonoTouchFixtures.CoreGraphics
 		{
 			TestRuntime.AssertXcodeVersion (7, 3);
 
-			Assert.Throws<ArgumentNullException> (() => new CGColorConverter (null, null), "null");
+			Assert.Throws<ArgumentNullException> (() => new CGColorConverter (null, (CGColorSpace) null), "null");
+			Assert.Throws<ArgumentNullException> (() => new CGColorConverter (null, (CGColorConverterTriple[]) null), "null-2");
 			Assert.Throws<ArgumentNullException> (() => new CGColorConverter (null, new CGColorConverterTriple [0]), "empty");
 		}
 
@@ -99,11 +100,10 @@ namespace MonoTouchFixtures.CoreGraphics
 			Assert.Throws<ArgumentException> (() => new CGColorConverter (null, new CGColorConverterTriple [4]));
 		}
 
-#if false
 		[Test]
 		public void CreateSimple ()
 		{
-			TestRuntime.AssertXcodeVersion (7, 3);
+			TestRuntime.AssertXcodeVersion (8,0);
 
 			using (var from = CGColorSpace.CreateGenericGray ())
 			using (var to = CGColorSpace.CreateGenericRgb ())
@@ -118,7 +118,7 @@ namespace MonoTouchFixtures.CoreGraphics
 		[Test]
 		public void CreateSimple_GetINativeObject ()
 		{
-			TestRuntime.AssertXcodeVersion (7, 3);
+			TestRuntime.AssertXcodeVersion (8,0);
 
 			using (var from = CGColorSpace.CreateGenericGray ())
 			using (var to = CGColorSpace.CreateGenericRgb ()) {
@@ -133,7 +133,7 @@ namespace MonoTouchFixtures.CoreGraphics
 		[Test]
 		public void CreateSimple_DeviceColorSpace ()
 		{
-			TestRuntime.AssertXcodeVersion (7, 3);
+			TestRuntime.AssertXcodeVersion (8,0);
 
 			// Requirements: CG color spaces must be calibrated
 			// (no Device{Gray,RGB,CMYK}, Indexed or DeviceN).
@@ -143,7 +143,6 @@ namespace MonoTouchFixtures.CoreGraphics
 				Assert.Throws<Exception> (() => new CGColorConverter (from, to));
 			}
 		}
-#endif
 	}
 }
 
