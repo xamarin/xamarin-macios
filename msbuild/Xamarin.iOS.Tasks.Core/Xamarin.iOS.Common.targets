@@ -1623,6 +1623,10 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</ItemGroup>
 
 		<PropertyGroup>
+			<!-- Calculate IpaPackageDir and IpaPackageName based on IpaPackagePath, if defined. -->
+			<IpaPackageDir Condition="'$(IpaPackagePath)' != ''">$([System.Path]::GetDirectoryName('$(IpaPackagePath)'))</IpaPackageDir>
+			<IpaPackageName Condition="'$(IpaPackagePath)' != ''">$([System.Path]::GetFileName('$(IpaPackagePath)'))</IpaPackageName>
+			
 			<!-- Calculate an IPA package directory path if not already defined by the developer. -->
 			<!--<IpaPackageDir Condition="'$(IpaPackageDir)' == ''">$([System.Environment]::GetEnvironmentVariable('IPA_PACKAGE_DIR'))</IpaPackageDir>-->
 			<IpaPackageDir Condition="'$(IpaPackageDir)' == ''">$(DeviceSpecificOutputPath)$(_AppBundleName) $([System.DateTime]::Now.ToString('yyyy-MM-dd HH-mm-ss'))</IpaPackageDir>
@@ -1748,7 +1752,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_ZipIpa" Condition="'$(BuildIpa)' == 'true'">
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(IpaPackageDir)" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(IpaPackageDir)\$(IpaPackageName)" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(IpaPackagePath)" />
 
 		<Zip
 			SessionId="$(BuildSessionId)"
