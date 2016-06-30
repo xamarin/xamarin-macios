@@ -4,8 +4,8 @@
 	branch = master
 [submodule "external/mono"]
 	path = external/mono
-	url = ../../mono/mono.git
-	branch = mono-4.5.0-branch
+	url = git://github.com/alexrp/mono.git
+	branch = mono-4.5.1-branch
 [submodule "external/fsharp"]
 	path = external/fsharp
 	url = ../../fsharp/fsharp.git
@@ -39,5 +39,5 @@
 	url = ../../mono/guiunit.git
 [submodule "external/watch-mono"]
 	path = external/watch-mono
-	url = ../../mono/mono.git
+	url = git://github.com/alexrp/mono.git
 	branch = master
