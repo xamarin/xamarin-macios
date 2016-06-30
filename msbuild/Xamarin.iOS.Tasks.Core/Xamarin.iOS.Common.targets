@@ -1726,8 +1726,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ExtraArgs="$(CodesignExtraArgs)"
 			/>
 
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' And '$(EmbedOnDemandResources)' == 'false'" Directories="$(_IpaOutputDir)OnDemandResources\" />
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' And '$(EmbedOnDemandResources)' == 'false'" Directories="$(_IpaOutputDir)OnDemandResources\" />
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' And '$(EmbedOnDemandResources)' == 'false'" Directories="$(IpaPackageDir)\OnDemandResources\" />
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' And '$(EmbedOnDemandResources)' == 'false'" Directories="$(IpaPackageDir)\OnDemandResources\" />
 
 		<CreateAssetPack
 			SessionId="$(BuildSessionId)"
@@ -1735,20 +1735,20 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ToolExe="$(ZipExe)"
 			ToolPath="$(ZipPath)"
 			Source="%(_AssetPack.Identity)"
-			OutputFile="$(_IpaOutputDir)OnDemandResources\%(_AssetPack.DirectoryName)"
+			OutputFile="$(IpaPackageDir)OnDemandResources\%(_AssetPack.DirectoryName)"
 			/>
 
 		<Copy
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' And '$(EmbedOnDemandResources)' == 'false'"
 			SourceFiles="$(_IpaAppBundleDir)AssetPackManifest.plist"
-			DestinationFolder="$(_IpaOutputDir)OnDemandResources\"
+			DestinationFolder="$(IpaPackageDir)\OnDemandResources\"
 			/>
 	</Target>
 
 	<Target Name="_ZipIpa" Condition="'$(BuildIpa)' == 'true'">
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_IpaOutputPath)" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(_IpaOutputDir)$(IpaPackageName)" />
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(IpaPackageDir)" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(IpaPackageDir)\$(IpaPackageName)" />
 
 		<Zip
 			SessionId="$(BuildSessionId)"
