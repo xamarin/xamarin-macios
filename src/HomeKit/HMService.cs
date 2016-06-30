@@ -147,7 +147,7 @@ namespace XamCore.HomeKit {
 			}
 		}
 
-#if !WATCH
+#if !WATCH && !TVOS
 		public void UpdateAssociatedServiceType (HMServiceType serviceType, Action<NSError> completion)
 		{
 			UpdateAssociatedServiceType (GetName (serviceType), completion);
