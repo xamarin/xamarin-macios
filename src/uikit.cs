@@ -1247,6 +1247,10 @@ namespace XamCore.UIKit {
 		long TraitCausesPageTurn { get; }
 
 
+		[iOS (10,0)]
+		[Field ("UIAccessibilityTraitTabBar")]
+		long TraitTabBar { get; }
+	
 		[Since (6,0)]
 		[Field ("UIAccessibilityAnnouncementDidFinishNotification")]
 		[Notification (typeof (UIAccessibilityAnnouncementFinishedEventArgs))]
@@ -1416,6 +1420,16 @@ namespace XamCore.UIKit {
 		[iOS (9, 0)]
 		[Field ("UIAccessibilityNotificationVoiceOverIdentifier")]
 		NSString NotificationVoiceOverIdentifier { get; }
+
+		[iOS (10,0)]
+		[Notification]
+		[Field ("UIAccessibilityHearingDevicePairedEarDidChangeNotification")]
+		NSString HearingDevicePairedEarDidChangeNotification { get; }
+
+		[iOS (10,0)]
+		[Notification]
+		[Field ("UIAccessibilityAssistiveTouchStatusDidChangeNotification")]
+		NSString AssistiveTouchStatusDidChangeNotification { get; }
 	}
 
 	interface UIAccessibilityAnnouncementFinishedEventArgs {
@@ -1467,6 +1481,58 @@ namespace XamCore.UIKit {
 	    Selector Selector { get; set; }
 	}
 
+	delegate UIAccessibilityCustomRotorItemResult UIAccessibilityCustomRotorSearch (UIAccessibilityCustomRotorSearchPredicate predicate);
+	
+	[iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	interface UIAccessibilityCustomRotor
+	{
+		[Export ("initWithName:itemSearchBlock:")]
+		IntPtr Constructor (string name, UIAccessibilityCustomRotorSearch itemSearchBlock);
+	
+		[Export ("name")]
+		string Name { get; set; }
+	
+		[Export ("itemSearchBlock", ArgumentSemantic.Copy)]
+		UIAccessibilityCustomRotorSearch ItemSearchBlock { get; set; }
+	}
+
+#if TODO
+	[Category]
+	[BaseType (typeof(NSObject))]
+	interface NSObject_UIAccessibilityCustomRotor
+	{
+		[iOS (10, 0)]
+		[NullAllowed, Export ("accessibilityCustomRotors", ArgumentSemantic.Retain)]
+		UIAccessibilityCustomRotor[] AccessibilityCustomRotors { get; set; }
+	}
+#endif
+	
+	[iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	interface UIAccessibilityCustomRotorItemResult
+	{
+		[Export ("initWithTargetElement:targetRange:")]
+		IntPtr Constructor (NSObject targetElement, [NullAllowed] UITextRange targetRange);
+	
+		[NullAllowed, Export ("targetElement", ArgumentSemantic.Weak)]
+		NSObject TargetElement { get; set; }
+	
+		[NullAllowed, Export ("targetRange", ArgumentSemantic.Retain)]
+		UITextRange TargetRange { get; set; }
+	}
+	
+	[iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	interface UIAccessibilityCustomRotorSearchPredicate
+	{
+		[Export ("currentItem", ArgumentSemantic.Retain)]
+		UIAccessibilityCustomRotorItemResult CurrentItem { get; set; }
+	
+		[Export ("searchDirection", ArgumentSemantic.Assign)]
+		UIAccessibilityCustomRotorDirection SearchDirection { get; set; }
+	}
+	
 	[BaseType (typeof (NSObject))]
 #if XAMCORE_2_0
 	// only happens on the simulator (not devices) on iOS8 (still make sense)
@@ -1500,6 +1566,10 @@ namespace XamCore.UIKit {
 
 		[Export ("accessibilityTraits", ArgumentSemantic.UnsafeUnretained)]
 		ulong AccessibilityTraits { get; set; }
+
+		[iOS (10, 0)]
+		[Export ("accessibilityFrameInContainerSpace", ArgumentSemantic.Assign)]
+		CGRect AccessibilityFrameInContainerSpace { get; set; }
 	}
 
 	public interface UIAccessibilityFocus {
@@ -15070,6 +15140,7 @@ namespace XamCore.UIKit {
 
 	interface IUIAccessibilityIdentification {}
 
+	[Availability (Deprecated = Platform.iOS_10_0, Message = "Soft deprecated in iOS 10, use UserNotifications.UNNotificationSettings")]
 	[NoWatch]
 	[NoTV]
 	[iOS (8,0)]
@@ -15099,6 +15170,7 @@ namespace XamCore.UIKit {
 		UIUserNotificationAction [] GetActionsForContext (UIUserNotificationActionContext context);
 	}
 
+	[Availability (Deprecated = Platform.iOS_10_0, Message = "Soft deprecated in iOS 10, use UserNotifications.UNNotificationAction or UserNotifications.UNTextInputNotificationAction")]
 	[NoWatch]
 	[NoTV]
 	[iOS (8,0)]
@@ -15113,6 +15185,7 @@ namespace XamCore.UIKit {
 		void SetActions (UIUserNotificationAction [] actions, UIUserNotificationActionContext context);
 	}
 
+	[Availability (Deprecated = Platform.iOS_10_0, Message = "Soft deprecated in iOS 10, use UserNotifications.UNNotificationAction or UserNotifications.UNTextInputNotificationAction")]
 	[NoWatch]
 	[NoTV]
 	[iOS (8,0)]
@@ -15154,6 +15227,7 @@ namespace XamCore.UIKit {
 #else
 	[Watch (2,0)]
 	[Static]
+	[Availability (Deprecated = Platform.iOS_10_0, Message = "Soft deprecated in iOS 10, use UserNotifications.UNNotificationAction or UserNotifications.UNTextInputNotificationAction")]
 	interface UIUserNotificationAction {
 		// note: defined twice, where watchOS is defined it says it's not in iOS, the other one (for iOS 9) says it's not in tvOS
 		[Field ("UIUserNotificationActionResponseTypedTextKey")]
@@ -15161,6 +15235,7 @@ namespace XamCore.UIKit {
 	}
 #endif
 
+	[Availability (Deprecated = Platform.iOS_10_0, Message = "Soft deprecated in iOS 10, use UserNotifications.UNNotificationAction or UserNotifications.UNTextInputNotificationAction")]
 	[NoWatch]
 	[NoTV]
 	[iOS (8,0)]
@@ -15494,6 +15569,58 @@ namespace XamCore.UIKit {
 		NSSet<UIPress> GetPresses (UIGestureRecognizer gesture);
 	}
 
+	[NoWatch, NoTV, iOS (10,0)]
+	[BaseType (typeof(NSObject), Delegates=new string [] {"Delegate"}, Events=new Type [] { typeof (UIPreviewInteractionDelegate)})]
+	[DisableDefaultCtor]
+	interface UIPreviewInteraction
+	{
+		[Export ("initWithView:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (UIView view);
+	
+		[NullAllowed, Export ("view", ArgumentSemantic.Weak)]
+		UIView View { get; }
+	
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		UIPreviewInteractionDelegate Delegate { get; set; }
+	
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; set; }
+	
+		[Export ("locationInCoordinateSpace:")]
+		CGPoint LocationInCoordinateSpace ([NullAllowed] UICoordinateSpace coordinateSpace);
+	
+		[Export ("cancelInteraction")]
+		void CancelInteraction ();
+	}
+	
+	[Protocol]
+	[BaseType (typeof(NSObject))]
+	interface UIPreviewInteractionDelegate
+	{
+		[NoWatch, NoTV, iOS (10,0)]
+		[Abstract]
+		[Export ("previewInteraction:didUpdatePreviewTransition:ended:")]
+		[EventArgs ("NSPreviewInteractionPreviewUpdate")]
+		void DidUpdatePreviewTransition (UIPreviewInteraction previewInteraction, nfloat transitionProgress, bool ended);
+	
+		[NoWatch, NoTV, iOS (10,0)]
+		[Abstract]
+		[Export ("previewInteractionDidCancel:")]
+		void DidCancel (UIPreviewInteraction previewInteraction);
+	
+		[NoWatch, NoTV, iOS (10,0)]
+		[Export ("previewInteractionShouldBegin:")]
+		[DelegateName ("Func<UIPreviewInteraction,bool>"), DefaultValue(true)]
+		bool ShouldBegin (UIPreviewInteraction previewInteraction);
+	
+		[NoWatch, NoTV, iOS (10,0)]
+		[Export ("previewInteraction:didUpdateCommitTransition:ended:")]
+		[EventArgs ("NSPreviewInteractionPreviewUpdate")]
+		void DidUpdateCommit (UIPreviewInteraction previewInteraction, nfloat transitionProgress, bool ended);
+	}
+	
 	[NoWatch]
 	[iOS (9,0)]
 	[BaseType (typeof (UIFocusUpdateContext))]
