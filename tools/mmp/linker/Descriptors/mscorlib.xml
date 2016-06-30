@@ -773,9 +773,12 @@
 			<method name="GetAppDomainTarget" />
 		</type>
 
-		<!-- domain.c: mono_defaults.transparent_proxy_class / removed with DISABLE_REMOTING
-		<type fullname="System.Runtime.Remoting.Proxies.TransparentProxy" />
-		-->
+		<!-- domain.c: mono_defaults.transparent_proxy_class -->
+		<type fullname="System.Runtime.Remoting.Proxies.TransparentProxy">
+			<!-- remoting.c: mono_marshal_get_ldfld_wrapper -->
+			<method name="LoadRemoteFieldNew" />
+		</type>
+
 
         <type fullname="System.Runtime.Remoting.RemotingServices">
             <method name="SerializeCallData" />
