@@ -627,8 +627,23 @@ namespace Xamarin.Bundler
 							sw.WriteLine ("();");
 						}
 					}
+
+					// Burn in a reference to the profiling symbol so that the native linker doesn't remove it
+					// On iOS we can pass -u to the native linker, but that doesn't work on tvOS, where
+					// we're building with bitcode (even when bitcode is disabled, we still build with the
+					// bitcode marker, which makes the linker reject -u).
+					if (App.EnableProfiling) {
+						sw.WriteLine ("extern \"C\" { void mono_profiler_startup_log (); }");
+						sw.WriteLine ("typedef void (*xamarin_profiler_symbol_def)();");
+						sw.WriteLine ("extern xamarin_profiler_symbol_def xamarin_profiler_symbol;");
+						sw.WriteLine ("xamarin_profiler_symbol_def xamarin_profiler_symbol = NULL;");
+					}
+
 					sw.WriteLine ("void xamarin_setup_impl ()");
 					sw.WriteLine ("{");
+
+					if (App.EnableProfiling)
+						sw.WriteLine ("\txamarin_profiler_symbol = mono_profiler_startup_log;");
 
 					if (App.EnableLLVMOnlyBitCode)
 						sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_LLVMONLY);");
