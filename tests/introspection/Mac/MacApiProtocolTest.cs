@@ -143,11 +143,18 @@ namespace Introspection {
 				switch (type.Name) {
 				case "NSMenu":
 				case "NSMenuItem":
-				if (!Mac.CheckSystemVersion (10, 12))
-				return true;
+					if (!Mac.CheckSystemVersion (10, 12))
+						return true;
 				break;
 				}
 			break;
+			case "NSAnimationDelegate":
+			case "NSAnimatablePropertyContainer":
+				switch (type.Name) {
+				case "NSTitlebarAccessoryViewController":
+					return true; 
+				}
+				break;
 			}
 
 			switch (type.Name) {
