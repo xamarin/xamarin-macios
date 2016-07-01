@@ -34,9 +34,17 @@ namespace XamCore.CoreBluetooth {
 #endif
 	}
 
+	[iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface CBManager {
+		[Export ("state", ArgumentSemantic.Assign)]
+		CBManagerState State { get; }
+	}
+
 	[Since (5,0)]
 	[Lion]
-	[BaseType (typeof (NSObject), Delegates=new[] {"WeakDelegate"}, Events = new[] { typeof (CBCentralManagerDelegate)})]
+	[BaseType (typeof (CBManager), Delegates=new[] {"WeakDelegate"}, Events = new[] { typeof (CBCentralManagerDelegate)})]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
 	interface CBCentralManager {
 		[Export ("state")]
@@ -420,7 +428,7 @@ namespace XamCore.CoreBluetooth {
 		[Export ("services", ArgumentSemantic.Retain)]
 		CBService [] Services { get;  }
 
-		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
@@ -665,6 +673,9 @@ namespace XamCore.CoreBluetooth {
 		[Field ("CBUUIDCharacteristicAggregateFormatString")]
 		NSString CharacteristicAggregateFormatString { get; }
 
+		[Field ("CBUUIDCharacteristicValidRangeString")]
+		NSString CharacteristicValidRangeString { get; }
+
 #if !XAMCORE_3_0
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Obsoleted (PlatformName.iOS, 9, 0)]
@@ -752,8 +763,7 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	[Since (6, 0), Mac(10,9)]
-	[BaseType (typeof (NSObject), Delegates=new[] { "WeakDelegate" }, Events=new[] { typeof (CBPeripheralManagerDelegate) })]
-	[DisableDefaultCtor]
+	[BaseType (typeof (CBManager), Delegates=new[] { "WeakDelegate" }, Events=new[] { typeof (CBPeripheralManagerDelegate) })]
 	interface CBPeripheralManager {
 		[NoTV]
 		[Export ("initWithDelegate:queue:")]
@@ -773,14 +783,17 @@ namespace XamCore.CoreBluetooth {
 		[Protocolize]
 		CBPeripheralManagerDelegate Delegate { get; set; }
 
-		[Export ("delegate", ArgumentSemantic.Assign)]
+		[Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 
 		[Export ("isAdvertising")]
 		bool Advertising { get; }
 
+#if XAMCORE_4_0
+		// Removed in iOS 10 – Breaking change.
 		[Export ("state")]
 		CBPeripheralManagerState State { get; }
+#endif
 
 		[Export ("addService:")]
 		void AddService (CBMutableService service);

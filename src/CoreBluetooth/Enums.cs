@@ -13,9 +13,9 @@ using XamCore.ObjCRuntime;
 
 namespace XamCore.CoreBluetooth {
 
-	// NSInteger -> CBCentralManager.h
+	[iOS (10,0)]
 	[Native]
-	public enum CBCentralManagerState : nint {
+	public enum CBManagerState : nint {
 		Unknown = 0,
 		Resetting,
 		Unsupported,
@@ -24,15 +24,30 @@ namespace XamCore.CoreBluetooth {
 		PoweredOn
 	}
 
+	// NSInteger -> CBCentralManager.h
+	[Introduced (PlatformName.iOS, 5, 0, message: "Use CBManagerState instead")]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use CBManagerState instead")]
+	[Native]
+	public enum CBCentralManagerState : nint {
+		Unknown = CBManagerState.Unknown,
+		Resetting = CBManagerState.Resetting,
+		Unsupported = CBManagerState.Unsupported,
+		Unauthorized = CBManagerState.Unauthorized,
+		PoweredOff = CBManagerState.PoweredOff,
+		PoweredOn = CBManagerState.PoweredOn
+	}
+
 	// NSInteger -> CBPeripheralManager.h
+	[Introduced (PlatformName.iOS, 6, 0, message: "Use CBManagerState instead")]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use CBManagerState instead")]
 	[Native]
 	public enum CBPeripheralManagerState : nint {
-		Unknown = 0,
-		Resetting,
-		Unsupported,
-		Unauthorized,
-		PoweredOff,
-		PoweredOn
+		Unknown = CBManagerState.Unknown,
+		Resetting = CBManagerState.Resetting,
+		Unsupported = CBManagerState.Unsupported,
+		Unauthorized = CBManagerState.Unauthorized,
+		PoweredOff = CBManagerState.PoweredOff,
+		PoweredOn = CBManagerState.PoweredOn
 	}
 
 	// NSInteger -> CBPeripheralManager.h
