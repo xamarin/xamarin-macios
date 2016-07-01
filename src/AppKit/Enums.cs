@@ -862,6 +862,7 @@ namespace XamCore.AppKit {
 		IgnoresCycle = 1 << 6,
 		FullScreenPrimary = 1 << 7,
 		FullScreenAuxiliary = 1 << 8,
+		FullScreenNone = 1 << 9,
 		[Mac (10, 11)] FullScreenAllowsTiling = 1 << 11,
 		[Mac (10, 11)] FullScreenDisallowsTiling = 1 << 12
 	}
@@ -881,7 +882,9 @@ namespace XamCore.AppKit {
 
 	[Native]
 	public enum NSWindowButton : nuint_compat_int {
-		CloseButton, MiniaturizeButton, ZoomButton, ToolbarButton, DocumentIconButton, DocumentVersionsButton = 6, FullScreenButton
+		CloseButton, MiniaturizeButton, ZoomButton, ToolbarButton, DocumentIconButton, DocumentVersionsButton = 6, 
+		[Availability (Deprecated = Platform.Mac_10_12, Message = "The standard window button for FullScreenButton is always null; use ZoomButton instead")]
+		FullScreenButton
 	}
 
 	[Flags]
@@ -973,6 +976,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
+	[Availability (Deprecated = Platform.Mac_10_12, Message = "The GradientType property is unused, and setting it has no effect.")]
 	public enum NSGradientType : nuint_compat_int {
 		None,
 		ConcaveWeak,
@@ -1007,6 +1011,37 @@ namespace XamCore.AppKit {
 		PlusDarker,
 		Highlight,
 		PlusLighter,
+
+		[Mac (10, 10)]
+		Multiply,
+		[Mac (10, 10)]
+		Screen,
+		[Mac (10, 10)]
+		Overlay,
+		[Mac (10, 10)]
+		Darken,
+		[Mac (10, 10)]
+		Lighten,
+		[Mac (10, 10)]
+		ColorDodge,
+		[Mac (10, 10)]
+		ColorBurn,
+		[Mac (10, 10)]
+		SoftLight,
+		[Mac (10, 10)]
+		HardLight,
+		[Mac (10, 10)]
+		Difference,
+		[Mac (10, 10)]
+		Exclusion,
+		[Mac (10, 10)]
+		Hue,
+		[Mac (10, 10)]
+		Saturation,
+		[Mac (10, 10)]
+		Color,
+		[Mac (10, 10)]
+		Luminosity
 	}
 
 	[Native]
@@ -1664,7 +1699,9 @@ namespace XamCore.AppKit {
 		Below,
 		Above,
 		Left,
-		Right
+		Right,
+		Leading = Left,
+		Trailing = Right
 	}
 	
 	[Native]
@@ -2305,7 +2342,8 @@ namespace XamCore.AppKit {
 		PostImageOnFlickr,
 		PostVideoOnVimeo,
 		PostVideoOnYouku,
-		PostVideoOnTudou
+		PostVideoOnTudou,
+		CloudSharing
 	}
 
 	[Flags]
@@ -2367,7 +2405,18 @@ namespace XamCore.AppKit {
 		AppearanceBased,
 		Light,
 		Dark,
-		Titlebar
+		Titlebar,
+		Selection,
+		[Mac (10,11)]
+		Menu,
+		[Mac (10,11)]
+		Popover,
+		[Mac (10,11)]
+		Sidebar,
+		[Mac (10,11)]
+		MediumLight,
+		[Mac (10,11)]
+		UltraDark,
 	}
 
 	[Native]
@@ -2455,4 +2504,82 @@ namespace XamCore.AppKit {
 		ParagraphBreak = (1 << 4),
 		ContainerBreak = (1 << 5)
 	}
+
+	[Mac (10,12)]
+	[Native]
+	public enum NSWindowListOptions : nint {
+		OrderedFrontToBack = (1 << 0)
+	}
+
+	[Mac (10,12)]
+	[Native]
+	public enum NSStatusItemBehavior : nuint
+	{
+		RemovalAllowed = (1 << 1),
+		TerminationOnRemoval = (1 << 2)
+	}
+
+	[Mac (10,12)]
+	[Native]
+	public enum NSWindowTabbingMode : nint
+	{
+		Automatic,
+		Preferred,
+		Disallowed
+	}
+
+	[Mac (10,12)]
+	[Native]
+	public enum NSWindowUserTabbingPreference : nint
+	{
+		Manual,
+		Always,
+		InFullScreen
+	}
+
+
+	[Mac (10, 12)]
+	[Native]
+	public enum NSGridCellPlacement : nint
+	{
+		Inherited = 0,
+		None,
+		Leading,
+		Top = Leading,
+		Trailing,
+		Bottom = Trailing,
+		Center,
+		Fill
+	}
+
+	[Mac (10, 12)]
+	[Native]
+	public enum NSGridRowAlignment : nint
+	{
+		Inherited = 0,
+		None,
+		FirstBaseline,
+		LastBaseline
+	}
+
+	[Mac (10, 12)]
+	[Native]
+	public enum NSImageLayoutDirection : nint
+	{
+		Unspecified = -1,
+		LeftToRight = 2,
+		RightToLeft = 3
+	}
+
+	[Mac (10, 12)]
+	[Native][Flags]
+	public enum NSCloudKitSharingServiceOptions : nuint
+	{
+		Standard = 0,
+		AllowPublic = 1 << 0,
+		AllowPrivate = 1 << 1,
+		AllowReadOnly = 1 << 4,
+		AllowReadWrite = 1 << 5
+	}
+
 }

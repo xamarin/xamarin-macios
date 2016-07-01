@@ -115,6 +115,12 @@ namespace Introspection {
 				if (!Mac.CheckSystemVersion (10, 10) && (type == typeof(NSViewController) || type.IsSubclassOf (typeof (NSViewController))))
 					return true;
 
+				switch (type.Name) {
+				case "NSMenuItem":
+					if (!Mac.CheckSystemVersion (10, 12))
+						return true;
+					break;
+				}
 				break;
 			case "NSMenuDelegate":
 				switch (type.Name) {
@@ -132,6 +138,23 @@ namespace Introspection {
 			case "NSDraggingInfo":
 				return true; // We have to keep the type to maintain backwards compatibility.
 #endif
+			case "NSAccessibility":
+			case "NSAccessibilityElement":
+				switch (type.Name) {
+				case "NSMenu":
+				case "NSMenuItem":
+					if (!Mac.CheckSystemVersion (10, 12))
+						return true;
+				break;
+				}
+			break;
+			case "NSAnimationDelegate":
+			case "NSAnimatablePropertyContainer":
+				switch (type.Name) {
+				case "NSTitlebarAccessoryViewController":
+					return true; 
+				}
+				break;
 			}
 
 			switch (type.Name) {

@@ -123,6 +123,7 @@ APPKIT_SOURCES = \
 	AppKit/NSScreen.cs \
 	AppKit/NSSegmentedControl.cs \
 	AppKit/NSSharingService.cs \
+	AppKit/NSSlider.cs \
 	AppKit/NSSound.cs \
 	AppKit/NSSpeechSynthesizer.cs \
 	AppKit/NSSpellChecker.cs \
