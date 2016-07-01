@@ -18,6 +18,8 @@ cp -p Makefile-mac.inc $DIR/tests
 cp -p common.mk $DIR/tests
 cp -p Makefile $DIR/tests
 cp -p ../Make.config $DIR
+mkdir -p $DIR/tests/common/mac
+cp -pR common/mac/ $DIR/tests/common/mac/
 mkdir -p $DIR/mk
 cp -p ../Make.config $DIR
 cp -p ../mk/subdirs.mk $DIR/mk
