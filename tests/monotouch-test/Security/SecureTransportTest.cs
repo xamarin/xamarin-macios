@@ -15,10 +15,12 @@ using System.Threading;
 using Foundation;
 using Security;
 using ObjCRuntime;
+using UIKit;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.Security;
 using MonoTouch.ObjCRuntime;
+using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
@@ -53,7 +55,10 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (ssl.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 				Assert.That (ssl.MaxDatagramRecordSize, Is.EqualTo ((nint) 0), "MaxDatagramRecordSize");
 				Assert.That (ssl.MaxProtocol, Is.EqualTo (SslProtocol.Tls_1_2), "MaxProtocol");
-				Assert.That (ssl.MinProtocol, Is.EqualTo (SslProtocol.Ssl_3_0), "MinProtocol");
+				if (TestRuntime.CheckXcodeVersion (8, 0))
+					Assert.That (ssl.MinProtocol, Is.EqualTo (SslProtocol.Tls_1_0), "MinProtocol");
+				else
+					Assert.That (ssl.MinProtocol, Is.EqualTo (SslProtocol.Ssl_3_0), "MinProtocol");
 				Assert.That (ssl.NegotiatedCipher, Is.EqualTo (SslCipherSuite.SSL_NULL_WITH_NULL_NULL), "NegotiatedCipher");
 				Assert.That (ssl.NegotiatedProtocol, Is.EqualTo (SslProtocol.Unknown), "NegotiatedProtocol");
 
@@ -87,7 +92,7 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void DatagramDefaults ()
 		{
-			nint dsize = TestRuntime.CheckSystemAndSDKVersion (8, 0) ? 1327 : 1387;
+			nint dsize = TestRuntime.CheckXcodeVersion (6, 0) ? 1327 : 1387;
 			using (var ssl = new SslContext (SslProtocolSide.Client, SslConnectionType.Datagram)) {
 				Assert.That (ssl.BufferedReadSize, Is.EqualTo ((nint) 0), "BufferedReadSize");
 				Assert.Null (ssl.Connection, "Connection");
@@ -148,6 +153,8 @@ namespace MonoTouchFixtures.Security {
 			Assert.That (ssl_client_ciphers, Is.EqualTo (ssl_server_ciphers), "same");
 		}
 
+#if !__WATCHOS__
+		// This test uses sockets (TcpClient), which doesn't work on watchOS.
 		[Test]
 		public void Tls12 ()
 		{
@@ -192,5 +199,6 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (s, Is.StringStarting ("HTTP/1.0 302 Found").Or.StringStarting ("HTTP/1.0 200 OK"), "response");
 			}
 		}
+#endif // !__WATCHOS__
 	}
 }

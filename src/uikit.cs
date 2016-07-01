@@ -33,12 +33,13 @@ namespace XamCore.UIKit {
 	[Native]
 	[Flags]
 	public enum UIFocusHeading : nuint {
+		None = 0,
 		Up = 1 << 0,
 		Down = 1 << 1,
 		Left = 1 << 2,
 		Right = 1 << 3,
 		Next = 1 << 4,
-		Previous = 1 << 5
+		Previous = 1 << 5,
 	}
 
 	[Native] // NSInteger -> UIApplication.h
@@ -209,7 +210,7 @@ namespace XamCore.UIKit {
 	[iOS (9,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor] // Handle is nil
-	interface NSLayoutAnchor<AnchorType>
+	public interface NSLayoutAnchor<AnchorType>
 	{
 		[Export ("constraintEqualToAnchor:")]
 		NSLayoutConstraint ConstraintEqualTo (NSLayoutAnchor<AnchorType> anchor);
@@ -330,7 +331,18 @@ namespace XamCore.UIKit {
 
 		[iOS (8,0)]
 		[Static, Export ("deactivateConstraints:")]
-		void DeactivateConstraints (NSLayoutConstraint [] constraints);		
+		void DeactivateConstraints (NSLayoutConstraint [] constraints);
+
+#if XAMCORE_2_0
+		[iOS (10, 0)]
+		[Export ("firstAnchor", ArgumentSemantic.Copy)]
+		[Internal]
+		IntPtr _FirstAnchor<AnchorType> ();
+	
+		[iOS (10, 0)]
+		[NullAllowed, Export ("secondAnchor", ArgumentSemantic.Copy)]
+		IntPtr _SecondAnchor<AnchorType> ();
+#endif
 	}
 
 	[NoWatch]
@@ -495,7 +507,7 @@ namespace XamCore.UIKit {
 
 	[Since (7,0)]
 	[BaseType (typeof (NSObject))]
-	interface NSTextTab : NSCoding, NSCopying {
+	interface NSTextTab : NSCoding, NSCopying, NSSecureCoding {
 
 		[DesignatedInitializer]
 		[Export ("initWithTextAlignment:location:options:")]
@@ -985,11 +997,11 @@ namespace XamCore.UIKit {
 		[Export ("lineFragmentUsedRectForGlyphAtIndex:effectiveRange:withoutAdditionalLayout:")]
 		CGRect GetLineFragmentUsedRect (nuint glyphIndex, out NSRange effectiveGlyphRange, bool withoutAdditionalLayout);
 
-		[iOS (9,0)]
+		[iOS (7,0)]
 		[Export ("CGGlyphAtIndex:isValidIndex:")]
 		unsafe ushort GetGlyph (nuint glyphIndex, ref bool isValidIndex);
 	
-		[iOS (9,0)]
+		[iOS (7,0)]
 		[Export ("CGGlyphAtIndex:")]
 		ushort GetGlyph (nuint glyphIndex);
 		
@@ -2051,6 +2063,100 @@ namespace XamCore.UIKit {
 #endif
 	}
 
+	interface IUIViewAnimating {}
+
+	[iOS(10,0)]
+	[Protocol]
+	interface UIViewAnimating
+	{
+		[Abstract]
+		[Export ("state")]
+		UIViewAnimatingState State { get; }
+
+		[Abstract]
+		[Export ("running")]
+		bool Running { [Bind ("isRunning")] get; }
+
+		[Abstract]
+		[Export ("reversed")]
+		bool Reversed { [Bind ("isReversed")] get; set; }
+
+		[Abstract]
+		[Export ("fractionComplete")]
+		nfloat FractionComplete { get; set; }
+
+		[Abstract]
+		[Export ("startAnimation")]
+		void StartAnimation ();
+
+		[Abstract]
+		[Export ("pauseAnimation")]
+		void PauseAnimation ();
+
+		[Abstract]
+		[Export ("stopAnimation:")]
+		void StopAnimation (bool withoutFinishing);
+
+		[Abstract]
+		[Export ("finishAnimationAtPosition:")]
+		void FinishAnimationAtPosition (UIViewAnimatingPosition finalPosition);
+	}
+
+	interface IUIViewImplicitlyAnimating {}
+	[iOS(10,0)]
+	[Protocol]
+	interface UIViewImplicitlyAnimating : UIViewAnimating
+	{
+		[Export ("addAnimations:delayFactor:")]
+		void AddAnimations (Action animation, nfloat delayFactor);
+	
+		[Export ("addAnimations:")]
+		void AddAnimations (Action animation);
+	
+		[Export ("addCompletion:")]
+		void AddCompletion (Action<UIViewAnimatingPosition> completion);
+	
+		[Export ("continueAnimationWithTimingParameters:durationFactor:")]
+		void ContinueAnimation ([NullAllowed] IUITimingCurveProvider parameters, nfloat durationFactor);
+	}
+		
+	[iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	interface UIViewPropertyAnimator : UIViewImplicitlyAnimating, NSCopying
+	{
+		[NullAllowed, Export ("timingParameters", ArgumentSemantic.Copy)]
+		IUITimingCurveProvider TimingParameters { get; }
+	
+		[Export ("duration")]
+		double Duration { get; }
+	
+		[Export ("userInteractionEnabled")]
+		bool UserInteractionEnabled { [Bind ("isUserInteractionEnabled")] get; set; }
+	
+		[Export ("interruptible")]
+		bool Interruptible { [Bind ("isInterruptible")] get; set; }
+	
+		[Export ("initWithDuration:timingParameters:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (double duration, IUITimingCurveProvider parameters);
+	
+		[Export ("initWithDuration:curve:animations:")]
+		IntPtr Constructor (double duration, UIViewAnimationCurve curve, [NullAllowed] Action animations);
+	
+		[Export ("initWithDuration:controlPoint1:controlPoint2:animations:")]
+		IntPtr Constructor (double duration, CGPoint point1, CGPoint point2, Action animations);
+	
+		[Export ("initWithDuration:dampingRatio:animations:")]
+		IntPtr Constructor (double duration, nfloat ratio, [NullAllowed] Action animations);
+	
+		[Static]
+		[Export ("runningPropertyAnimatorWithDuration:delay:options:animations:completion:")]
+		UIViewPropertyAnimator CreateRunningProperty (double duration, double delay, UIViewAnimationOptions options, [NullAllowed] Action animations, [NullAllowed] Action<UIViewAnimatingPosition> completion);
+	
+		[Export ("continueAnimationWithTimingParameters:durationFactor:")]
+		void ContinueAnimation ([NullAllowed] IUITimingCurveProvider timingParameters, nfloat durationFactor);
+	}
+	
 	public interface IUIViewControllerPreviewing {}
 	[Protocol]
 	[iOS (9,0)]
@@ -2187,6 +2293,11 @@ namespace XamCore.UIKit {
 
 		[Export ("openURL:")]
 		bool OpenUrl (NSUrl url);
+
+		[iOS (10,0)]
+		[Export ("openURL:options:completionHandler:")]
+		void OpenUrl (NSUrl url, NSDictionary<NSString, NSObject> options, [NullAllowed] Action<bool> completion);
+		
 
 		[Export ("canOpenURL:")]
 		bool CanOpenUrl ([NullAllowed] NSUrl url);
@@ -2614,6 +2725,7 @@ namespace XamCore.UIKit {
 		[iOS (9,0)]
 		[NullAllowed, Export ("shortcutItems", ArgumentSemantic.Copy)]
 		UIApplicationShortcutItem[] ShortcutItems { get; set; }
+
 	}
 
 	[NoTV]
@@ -2772,50 +2884,59 @@ namespace XamCore.UIKit {
 		nfloat FrictionTorque { get; set; }
 	}
 
+	[iOS (10,0)]
+	[Protocol]
+	public interface UIContentSizeCategoryAdjusting
+	{
+		[Abstract]
+		[Export ("adjustsFontForContentSizeCategory")]
+		bool AdjustsFontForContentSizeCategory { get; set; }
+	}
+
 	interface UIContentSizeCategoryChangedEventArgs {
 		[Export ("UIContentSizeCategoryNewValueKey")]
 		NSString WeakNewValue { get; }
 	}
 
 	[Since (7,0)]
-	[Internal, Static]
-	interface _UIContentSizeCategory {
+	[Static]
+	[NoWatch]
+	public enum UIContentSizeCategory {
 		[Field ("UIContentSizeCategoryExtraSmall")]
-		NSString ExtraSmall { get; }
+		ExtraSmall,
 		
 		[Field ("UIContentSizeCategorySmall")]
-		NSString Small { get; }
+		Small,
 
 		[Field ("UIContentSizeCategoryMedium")]
-		NSString Medium { get; }
+		Medium,
 
 		[Field ("UIContentSizeCategoryLarge")]
-		NSString Large { get; }
+		Large,
 
 		[Field ("UIContentSizeCategoryExtraLarge")]
-		NSString ExtraLarge { get; }
+		ExtraLarge,
 		
 		[Field ("UIContentSizeCategoryExtraExtraLarge")]
-		NSString ExtraExtraLarge { get; }
+		ExtraExtraLarge,
 		
 		[Field ("UIContentSizeCategoryExtraExtraExtraLarge")]
-		NSString ExtraExtraExtraLarge { get; }
-
+		ExtraExtraExtraLarge,
 
 		[Field ("UIContentSizeCategoryAccessibilityMedium")]
-		NSString AccessibilityMedium { get; }
+		AccessibilityMedium,
 		
 		[Field ("UIContentSizeCategoryAccessibilityLarge")]
-		NSString AccessibilityLarge { get; }
+		AccessibilityLarge,
 		
 		[Field ("UIContentSizeCategoryAccessibilityExtraLarge")]
-		NSString AccessibilityExtraLarge { get; }
+		AccessibilityExtraLarge,
 		
 		[Field ("UIContentSizeCategoryAccessibilityExtraExtraLarge")]
-		NSString AccessibilityExtraExtraLarge { get; }
+		AccessibilityExtraExtraLarge,
 		
 		[Field ("UIContentSizeCategoryAccessibilityExtraExtraExtraLarge")]
-		NSString AccessibilityExtraExtraExtraLarge { get; }
+		AccessibilityExtraExtraExtraLarge
 	}
 
 	public interface IUICoordinateSpace {}
@@ -3492,8 +3613,31 @@ namespace XamCore.UIKit {
 		[iOS (9,0)] // added in Xcode 7.1 / iOS 9.1 SDK
 		[Export ("remembersLastFocusedIndexPath")]
 		bool RemembersLastFocusedIndexPath { get; set; }
+
+		[iOS (10, 0)]
+		[NullAllowed, Export ("prefetchDataSource", ArgumentSemantic.Weak)]
+		IUICollectionViewDataSourcePrefetching PrefetchDataSource { get; set; }
+
+		[iOS (10, 0)]
+		[Export ("prefetchingEnabled")]
+		bool PrefetchingEnabled { [Bind ("isPrefetchingEnabled")] get; set; }
 	}
 
+	interface IUICollectionViewDataSourcePrefetching {}
+	
+	[Protocol]
+	interface UICollectionViewDataSourcePrefetching
+	{
+		[iOS (10,0)]
+		[Abstract]
+		[Export ("collectionView:prefetchItemsAtIndexPaths:")]
+		void PrefetchItems (UICollectionView collectionView, NSIndexPath[] indexPaths);
+	
+		[iOS (10,0)]
+		[Export ("collectionView:cancelPrefetchingForItemsAtIndexPaths:")]
+		void CancelPrefetching (UICollectionView collectionView, NSIndexPath[] indexPaths);
+	}
+		
 	//
 	// Combined version of UICollectionViewDataSource, UICollectionViewDelegate
 	//
@@ -3734,7 +3878,11 @@ namespace XamCore.UIKit {
 
 		[iOS (9,0)]
 		[Export ("sectionFootersPinToVisibleBounds")]
-		bool SectionFootersPinToVisibleBounds { get; set; }		
+		bool SectionFootersPinToVisibleBounds { get; set; }
+
+		[iOS (10, 0)]
+		[Field ("UICollectionViewFlowLayoutAutomaticSize")]
+		CGSize UICollectionViewFlowLayoutAutomaticSize { get; }
 	}
 
 	[Since (6,0)]
@@ -4077,6 +4225,11 @@ namespace XamCore.UIKit {
 		[Export ("colorWithCGColor:")][Static]
 		UIColor FromCGColor (CGColor color);
 
+		[iOS (10,0)]
+		[Static]
+		[Export ("colorWithDisplayP3Red:green:blue:alpha:")]
+		UIColor FromDisplayP3 (nfloat red, nfloat green, nfloat blue, nfloat alpha);
+
 		[Export ("colorWithPatternImage:")][Static]
 		UIColor FromPatternImage (UIImage image);
 
@@ -4417,6 +4570,7 @@ namespace XamCore.UIKit {
 		[iOS (8,0)]
 		[Field ("NSUserActivityDocumentURLKey")]
 		NSString UserActivityDocumentUrlKey { get; }
+
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -4829,6 +4983,14 @@ namespace XamCore.UIKit {
 		[Internal] // bug 25511
 		IntPtr _GetPreferredFontForTextStyle (NSString uiFontTextStyle);
 
+#if !WATCH
+		[iOS (10,0)]
+		[Static]
+		[Export ("preferredFontForTextStyle:compatibleWithTraitCollection:")]
+		[Internal]
+		IntPtr _GetPreferredFontForTextStyle (NSString uiFontTextStyle, [NullAllowed] UITraitCollection traitCollection);
+#endif
+	
 		[Since (7,0)]
 		[Internal, Field ("UIFontTextStyleHeadline")]
 		NSString TextStyleHeadline { get; }
@@ -4913,6 +5075,13 @@ namespace XamCore.UIKit {
 	
 		[Static, Export ("preferredFontDescriptorWithTextStyle:")]
 		UIFontDescriptor GetPreferredDescriptorForTextStyle (NSString uiFontTextStyle);
+
+#if !WATCH
+		[iOS (10,0)]
+		[Static]
+		[Export ("preferredFontDescriptorWithTextStyle:compatibleWithTraitCollection:")]
+		UIFontDescriptor GetPreferredDescriptorForTextStyle (NSString uiFontTextStyle, [NullAllowed] UITraitCollection traitCollection);
+#endif
 	
 		[DesignatedInitializer]
 		[Export ("initWithFontAttributes:")]
@@ -5175,6 +5344,164 @@ namespace XamCore.UIKit {
 		bool ShouldReceivePress (UIGestureRecognizer gestureRecognizer, UIPress press);
 	}
 
+	[iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	interface UIGraphicsRendererFormat : NSCopying
+	{
+		[Static]
+		[Export ("defaultFormat")]
+		UIGraphicsRendererFormat DefaultFormat { get; }
+	
+		[Export ("bounds")]
+		CGRect Bounds { get; }
+	}
+
+	[iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	interface UIGraphicsRendererContext
+	{
+		[Export ("CGContext")]
+		CGContext CGContext { get; }
+	
+		[Export ("format")]
+		UIGraphicsRendererFormat Format { get; }
+	
+		[Export ("fillRect:")]
+		void FillRect (CGRect rect);
+	
+		[Export ("fillRect:blendMode:")]
+		void FillRect (CGRect rect, CGBlendMode blendMode);
+	
+		[Export ("strokeRect:")]
+		void StrokeRect (CGRect rect);
+	
+		[Export ("strokeRect:blendMode:")]
+		void StrokeRect (CGRect rect, CGBlendMode blendMode);
+	
+		[Export ("clipToRect:")]
+		void ClipToRect (CGRect rect);
+	}
+
+	[iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	interface UIGraphicsRenderer
+	{
+		[Export ("initWithBounds:")]
+		IntPtr Constructor (CGRect bounds);
+	
+		[Export ("initWithBounds:format:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (CGRect bounds, UIGraphicsRendererFormat format);
+	
+		[Export ("format")]
+		UIGraphicsRendererFormat Format { get; }
+	
+		[Export ("allowsImageOutput")]
+		bool AllowsImageOutput { get; }
+	}
+			
+	// Not worth it, Action<UIGraphicsImageRendererContext> conveys more data
+	//delegate void UIGraphicsImageDrawingActions (UIGraphicsImageRendererContext context);
+
+	[iOS (10,0)]
+	[BaseType (typeof(UIGraphicsRendererFormat))]
+	public interface UIGraphicsImageRendererFormat
+	{
+		[Export ("scale")]
+		nfloat Scale { get; set; }
+
+		[Export ("opaque")]
+		bool Opaque { get; set; }
+
+		[Export ("prefersExtendedRange")]
+		bool PrefersExtendedRange { get; set; }
+	}
+
+	[iOS (10,0)]
+	[BaseType (typeof(UIGraphicsRendererContext))]
+	interface UIGraphicsImageRendererContext
+	{
+		[Export ("currentImage")]
+		UIImage CurrentImage { get; }
+	}
+
+	[iOS (10,0)]
+	[BaseType (typeof(UIGraphicsRenderer))]
+	interface UIGraphicsImageRenderer
+	{
+		[Export ("initWithSize:")]
+		IntPtr Constructor (CGSize size);
+
+		[Export ("initWithSize:format:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (CGSize size, UIGraphicsImageRendererFormat format);
+
+		[Export ("initWithBounds:format:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (CGRect bounds, UIGraphicsImageRendererFormat format);
+
+		[Export ("imageWithActions:")]
+		UIImage CreateImage (Action<UIGraphicsImageRendererContext> actions);
+		
+		[Export ("PNGDataWithActions:")]
+		NSData CreatePng (Action<UIGraphicsImageRendererContext> actions);
+		
+		[Export ("JPEGDataWithCompressionQuality:actions:")]
+		NSData CreateJpeg (nfloat compressionQuality, Action<UIGraphicsImageRendererContext> actions);
+	}
+
+	// Not worth it, Action<UIGraphicsImageRendererContext> conveys more data
+	//delegate void UIGraphicsPdfDrawingActions (UIGraphicsPdfRendererContext context);
+	// Action<UIGraphicsPdfRendererContext>
+
+	[iOS (10,0)]
+	[BaseType (typeof (UIGraphicsRendererFormat), Name="UIGraphicsPDFRendererFormat")]
+	interface UIGraphicsPdfRendererFormat
+	{
+		[Export ("documentInfo", ArgumentSemantic.Copy)]
+		// TODO: add strongly typed binding
+		NSDictionary<NSString, NSObject> DocumentInfo { get; set; }
+	}
+
+	[iOS (10,0)]
+	[BaseType (typeof (UIGraphicsRendererContext), Name="UIGraphicsPDFRendererContext")]
+	interface UIGraphicsPdfRendererContext
+	{
+		[Export ("pdfContextBounds")]
+		CGRect PdfContextBounds { get; }
+
+		[Export ("beginPage")]
+		void BeginPage ();
+
+		[Export ("beginPageWithBounds:pageInfo:")]
+		void BeginPage (CGRect bounds, NSDictionary<NSString, NSObject> pageInfo);
+
+		[Export ("setURL:forRect:")]
+		void SetUrl (NSUrl url, CGRect rect);
+
+		[Export ("addDestinationWithName:atPoint:")]
+		void AddDestination (string name, CGPoint point);
+
+		[Export ("setDestinationWithName:forRect:")]
+		void SetDestination (string name, CGRect rect);
+	}
+
+
+	[iOS (10,0)]
+	[BaseType (typeof (UIGraphicsRenderer), Name = "UIGraphicsPDFRenderer")]
+	interface UIGraphicsPdfRenderer
+	{
+		[Export ("initWithBounds:format:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (CGRect bounds, UIGraphicsPdfRendererFormat format);
+
+		[Export ("writePDFToURL:withActions:error:")]
+		bool WritePdf (NSUrl url, Action<UIGraphicsPdfRendererContext> actions, out NSError error);
+
+		[Export ("PDFDataWithActions:")]
+		NSData CreatePdf (Action<UIGraphicsPdfRendererContext> actions);
+	}
+
 	[BaseType (typeof (UIDynamicBehavior))]
 	[Since (7,0)]
 	interface UIGravityBehavior {
@@ -5244,6 +5571,10 @@ namespace XamCore.UIKit {
 		[Since (5,0)]
 		[Export ("spellCheckingType")]
 		UITextSpellCheckingType SpellCheckingType { get; set; }
+
+		[iOS (10, 0)]
+		[Export ("textContentType")]
+		NSString TextContentType { get; set; }
 	}
 
 	interface UIKeyboardEventArgs {
@@ -5782,6 +6113,7 @@ namespace XamCore.UIKit {
 	[NoTV]
 	[Since (4,0)]
 	[BaseType (typeof (NSObject))]
+	[Availability (Deprecated = Platform.iOS_10_0, Message = "Soft deprecated in iOS 10, use UserNotifications.UNNotificationRequest instead")]
 	public interface UILocalNotification : NSCoding, NSCopying {
 		[Export ("fireDate", ArgumentSemantic.Copy)]
 		[NullAllowed]
@@ -5942,6 +6274,18 @@ namespace XamCore.UIKit {
 		void EndRefreshing ();
 	}
 
+	interface IUIRefreshControlHosting {}
+	
+	[iOS (10,0)]
+	[Protocol]
+	public interface UIRefreshControlHosting
+	{
+		[NoTV]
+		[Abstract]
+		[NullAllowed, Export ("refreshControl", ArgumentSemantic.Strong)]
+		UIRefreshControl RefreshControl { get; set; }
+	}
+		
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	interface UIRegion : NSCopying, NSCoding {
@@ -6288,7 +6632,13 @@ namespace XamCore.UIKit {
 
 		[iOS (9,0)]
 		[Export ("flipsForRightToLeftLayoutDirection")]
-		bool FlipsForRightToLeftLayoutDirection { get; }		
+		bool FlipsForRightToLeftLayoutDirection { get; }
+
+#if !WATCH
+		[iOS (10, 0)]
+		[Export ("imageRendererFormat")]
+		UIGraphicsImageRendererFormat ImageRendererFormat { get; }
+#endif
 	}
 
 #if !WATCH
@@ -6782,7 +7132,7 @@ namespace XamCore.UIKit {
 	}
 	
 	[BaseType (typeof (UIView))]
-	public interface UILabel {
+	public interface UILabel : UIContentSizeCategoryAdjusting {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
@@ -7424,6 +7774,7 @@ namespace XamCore.UIKit {
 
 		[NoTV]
 		// [Appearance] rdar://22818366
+		[Appearance]
 		[Export ("barStyle", ArgumentSemantic.Assign)]
 		UIBarStyle BarStyle { get; set; }
 
@@ -8088,6 +8439,26 @@ namespace XamCore.UIKit {
 		[NullAllowed]
 		[Export ("colors", ArgumentSemantic.Copy)]
 		UIColor [] Colors { get; set; }
+
+		[iOS (10,0)]
+		[Export ("setItems:options:")]
+		void SetItems (NSDictionary<NSString, NSObject>[] items, NSDictionary<NSString, NSObject> options);
+		
+		[NoWatch, NoTV, iOS (10, 0)]
+		[Export ("hasStrings")]
+		bool HasStrings { get; }
+
+		[NoWatch, NoTV, iOS (10, 0)]
+		[Export ("hasURLs")]
+		bool HasURLs { get; }
+
+		[NoWatch, NoTV, iOS (10, 0)]
+		[Export ("hasImages")]
+		bool HasImages { get; }
+		
+		[NoWatch, NoTV, iOS (10, 0)]
+		[Export ("hasColors")]
+		bool HasColors { get; }
 	}
 
 	[NoTV]
@@ -8249,6 +8620,7 @@ namespace XamCore.UIKit {
 	
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // NSInvalidArgumentException Reason: Don't call -[UIPresentationController init].
 	public partial interface UIPresentationController : UIAppearanceContainer, UITraitEnvironment, UIContentContainer, UIFocusEnvironment {
 		[Export ("initWithPresentedViewController:presentingViewController:")]
 		IntPtr Constructor (UIViewController presentedViewController, [NullAllowed] UIViewController presentingViewController);
@@ -8775,10 +9147,14 @@ namespace XamCore.UIKit {
 		[iOS (9,0)] // added in Xcode 7.1 / iOS 9.1 SDK
 		[Export ("supportsFocus")]
 		bool SupportsFocus { get; }
+
+		[iOS (10, 0)]
+		[NullAllowed, Export ("focusedItem", ArgumentSemantic.Weak)]
+		IUIFocusItem FocusedItem { get; }
 	}
 
 	[BaseType (typeof (UIView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UIScrollViewDelegate)})]
-	public interface UIScrollView {
+	public interface UIScrollView : UIRefreshControlHosting {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
@@ -9909,6 +10285,9 @@ namespace XamCore.UIKit {
 		[Export ("translucent")]
 		bool Translucent { [Bind ("isTranslucent")] get; set; }
 
+		[iOS (10, 0)]
+		[NullAllowed, Export ("unselectedItemTintColor", ArgumentSemantic.Copy)]
+		UIColor UnselectedItemTintColor { get; set; }
 	}
 
 	[BaseType (typeof (UIViewController), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UITabBarControllerDelegate)})]
@@ -10088,6 +10467,28 @@ namespace XamCore.UIKit {
 		[Since (7,0)]
 		[Export ("selectedImage", ArgumentSemantic.Retain)][NullAllowed]
 		UIImage SelectedImage { get; set; }
+
+		[iOS (10, 0)]
+		[NullAllowed, Export ("badgeColor", ArgumentSemantic.Copy)]
+		UIColor BadgeColor { get; set; }
+
+		[iOS (10,0)]
+		[Export ("setBadgeTextAttributes:forState:")]
+		[Internal]
+		void SetBadgeTextAttributes ([NullAllowed] NSDictionary textAttributes, UIControlState state);
+
+		[iOS (10,0)]
+		[Wrap ("SetBadgeTextAttributes (textAttributes == null ? null : textAttributes.Dictionary, state)")]
+		void SetBadgeTextAttributes (UIStringAttributes textAttributes, UIControlState state);
+
+		[iOS (10,0)]
+		[Export ("badgeTextAttributesForState:")]
+		[Internal]
+		NSDictionary<NSString, NSObject> _GetBadgeTextAttributes (UIControlState state);
+
+		[iOS (10,0)]
+		[Wrap ("new UIStringAttributes (_GetBadgeTextAttributes(state))")]
+		UIStringAttributes GetBadgeTextAttributes (UIControlState state);
 	}
 	
 	[BaseType (typeof(UIScrollView))]
@@ -10376,8 +10777,26 @@ namespace XamCore.UIKit {
 		[iOS (9,0)] // added in Xcode 7.1 / iOS 9.1 SDK
 		[Export ("remembersLastFocusedIndexPath")]
 		bool RemembersLastFocusedIndexPath { get; set; }
+
+		[iOS (10, 0)]
+		[NullAllowed, Export ("prefetchDataSource", ArgumentSemantic.Weak)]
+		IUITableViewDataSourcePrefetching PrefetchDataSource { get; set; }
+		
 	}
 
+	public interface IUITableViewDataSourcePrefetching {}
+	[iOS (10,0)]
+	[Protocol]
+	public interface UITableViewDataSourcePrefetching
+	{
+		[Abstract]
+		[Export ("tableView:prefetchRowsAtIndexPaths:")]
+		void PrefetchRows (UITableView tableView, NSIndexPath[] indexPaths);
+	
+		[Export ("tableView:cancelPrefetchingForRowsAtIndexPaths:")]
+		void CancelPrefetching (UITableView tableView, NSIndexPath[] indexPaths);
+	}
+		
 	//
 	// This mixed both the UITableViewDataSource and UITableViewDelegate in a single class
 	//
@@ -10676,7 +11095,7 @@ namespace XamCore.UIKit {
 	}
 
 	[BaseType (typeof (UIViewController))]
-	public interface UITableViewController : UITableViewDataSource, UITableViewDelegate {
+	public interface UITableViewController : UITableViewDataSource, UITableViewDelegate, UIRefreshControlHosting {
 		[DesignatedInitializer]
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
@@ -10692,12 +11111,6 @@ namespace XamCore.UIKit {
 		[Since (3,2)]
 		[Export ("clearsSelectionOnViewWillAppear")]
 		bool ClearsSelectionOnViewWillAppear { get; set; }
-
-		[NoTV]
-		[Since(6,0)]
-		[Export ("refreshControl", ArgumentSemantic.Retain)]
-		[NullAllowed]
-		UIRefreshControl RefreshControl { get; set;  }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -11324,6 +11737,23 @@ namespace XamCore.UIKit {
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
 		UIToolbarDelegate Delegate { get; set; }
+	}
+
+	public interface IUITimingCurveProvider {}
+	[Protocol]
+	interface UITimingCurveProvider : NSCoding, NSCopying
+	{
+		[Abstract]
+		[Export ("timingCurveType")]
+		UITimingCurveType TimingCurveType { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("cubicTimingParameters")]
+		UICubicTimingParameters CubicTimingParameters { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("springTimingParameters")]
+		UISpringTimingParameters SpringTimingParameters { get; }
 	}
 
 	[NoTV]
@@ -12690,6 +13120,10 @@ namespace XamCore.UIKit {
 
 		[Field ("UIViewControllerHierarchyInconsistencyException")]
 		NSString HierarchyInconsistencyException { get; }
+
+		[iOS (10, 0)]
+		[Export ("restoresFocusAfterTransition")]
+		bool RestoresFocusAfterTransition { get; set; }
 	}
 
 	[Since (7,0)]
@@ -12783,43 +13217,71 @@ namespace XamCore.UIKit {
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	public partial interface UITraitCollection : NSCopying, NSSecureCoding {
-	    [Export ("userInterfaceIdiom")]
-	    UIUserInterfaceIdiom UserInterfaceIdiom { get; }
-	
-	    [Export ("displayScale")]
-	    nfloat DisplayScale { get; }
-	
-	    [Export ("horizontalSizeClass")]
-	    UIUserInterfaceSizeClass HorizontalSizeClass { get; }
-	
-	    [Export ("verticalSizeClass")]
-	    UIUserInterfaceSizeClass VerticalSizeClass { get; }
-	
-	    [Export ("containsTraitsInCollection:")]
-	    bool Contains (UITraitCollection trait);
-	
-	    [Static, Export ("traitCollectionWithTraitsFromCollections:")]
-	    UITraitCollection FromTraitsFromCollections (UITraitCollection [] traitCollections);
-	
-	    [Static, Export ("traitCollectionWithUserInterfaceIdiom:")]
-	    UITraitCollection FromUserInterfaceIdiom (UIUserInterfaceIdiom idiom);
-	
-	    [Static, Export ("traitCollectionWithDisplayScale:")]
-	    UITraitCollection FromDisplayScale (nfloat scale);
-	
-	    [Static, Export ("traitCollectionWithHorizontalSizeClass:")]
-	    UITraitCollection FromHorizontalSizeClass (UIUserInterfaceSizeClass horizontalSizeClass);
-	
-	    [Static, Export ("traitCollectionWithVerticalSizeClass:")]
-	    UITraitCollection FromVerticalSizeClass (UIUserInterfaceSizeClass verticalSizeClass);
+		[Export ("userInterfaceIdiom")]
+		UIUserInterfaceIdiom UserInterfaceIdiom { get; }
 
-	    [iOS (9,0)]
-	    [Static, Export ("traitCollectionWithForceTouchCapability:")]
-	    UITraitCollection FromForceTouchCapability (UIForceTouchCapability capability);
-		    
-	    [iOS (9,0)]
-	    [Export ("forceTouchCapability")]
-	    UIForceTouchCapability ForceTouchCapability { get; }
+		[Export ("displayScale")]
+		nfloat DisplayScale { get; }
+
+		[Export ("horizontalSizeClass")]
+		UIUserInterfaceSizeClass HorizontalSizeClass { get; }
+
+		[Export ("verticalSizeClass")]
+		UIUserInterfaceSizeClass VerticalSizeClass { get; }
+
+		[Export ("containsTraitsInCollection:")]
+		bool Contains (UITraitCollection trait);
+
+		[Static, Export ("traitCollectionWithTraitsFromCollections:")]
+		UITraitCollection FromTraitsFromCollections (UITraitCollection [] traitCollections);
+
+		[Static, Export ("traitCollectionWithUserInterfaceIdiom:")]
+		UITraitCollection FromUserInterfaceIdiom (UIUserInterfaceIdiom idiom);
+
+		[Static, Export ("traitCollectionWithDisplayScale:")]
+		UITraitCollection FromDisplayScale (nfloat scale);
+
+		[Static, Export ("traitCollectionWithHorizontalSizeClass:")]
+		UITraitCollection FromHorizontalSizeClass (UIUserInterfaceSizeClass horizontalSizeClass);
+
+		[Static, Export ("traitCollectionWithVerticalSizeClass:")]
+		UITraitCollection FromVerticalSizeClass (UIUserInterfaceSizeClass verticalSizeClass);
+
+		[iOS (9,0)]
+		[Static, Export ("traitCollectionWithForceTouchCapability:")]
+		UITraitCollection FromForceTouchCapability (UIForceTouchCapability capability);
+
+		[iOS (10,0)]
+		[Static]
+		[Export ("traitCollectionWithDisplayGamut:")]
+		UITraitCollection FromDisplayGamut (UIDisplayGamut displayGamut);
+		
+		[iOS (10,0)]
+		[Static]
+		[Export ("traitCollectionWithLayoutDirection:")]
+		UITraitCollection FromLayoutDirection (UITraitEnvironmentLayoutDirection layoutDirection);
+
+		[iOS (10,0)]
+		[Static]
+		[Export ("traitCollectionWithPreferredContentSizeCategory:")]
+		[Internal]
+		UITraitCollection FromPreferredContentSizeCategory (NSString preferredContentSizeCategory);
+		
+		[iOS (9,0)]
+		[Export ("forceTouchCapability")]
+		UIForceTouchCapability ForceTouchCapability { get; }
+
+		[iOS (10, 0)]
+		[Export ("displayGamut")]
+		UIDisplayGamut DisplayGamut { get; }
+
+		[iOS (10, 0)]
+		[Export ("preferredContentSizeCategory")]
+		string PreferredContentSizeCategory { get; }
+
+		[iOS (10, 0)]
+		[Export ("layoutDirection")]
+		UITraitEnvironmentLayoutDirection LayoutDirection { get; }
 	}
 	
 	[Since (7,0)]
@@ -13181,6 +13643,79 @@ namespace XamCore.UIKit {
 		string AvailableLangauges { get; }
 	}
 
+	[Static]
+	[iOS (10,0)]
+	interface UITextContentType {
+		[Field ("UITextContentTypeName")]
+		NSString Name { get; } 
+
+		[Field ("UITextContentTypeNamePrefix")]
+                NSString NamePrefix { get; } 
+
+		[Field ("UITextContentTypeGivenName")]
+		NSString GivenName { get; } 
+
+		[Field ("UITextContentTypeMiddleName")]
+                NSString MiddleName { get; } 
+
+		[Field ("UITextContentTypeFamilyName")]
+                NSString FamilyName { get; } 
+
+		[Field ("UITextContentTypeNameSuffix")]
+                NSString NameSuffix { get; } 
+
+		[Field ("UITextContentTypeNickname")]
+		NSString Nickname { get; } 
+
+		[Field ("UITextContentTypeJobTitle")]
+		NSString JobTitle { get; } 
+
+		[Field ("UITextContentTypeOrganizationName")]
+		NSString OrganizationName { get; } 
+
+		[Field ("UITextContentTypeLocation")]
+		NSString Location { get; } 
+
+		[Field ("UITextContentTypeFullStreetAddress")]
+		NSString FullStreetAddress { get; } 
+
+		[Field ("UITextContentTypeStreetAddressLine1")]
+		NSString StreetAddressLine1 { get; } 
+
+		[Field ("UITextContentTypeStreetAddressLine2")]
+		NSString StreetAddressLine2 { get; } 
+
+		[Field ("UITextContentTypeAddressCity")]
+		NSString AddressCity { get; } 
+
+		[Field ("UITextContentTypeAddressState")]
+		NSString AddressState { get; } 
+
+		[Field ("UITextContentTypeAddressCityAndState")]
+		NSString AddressCityAndState { get; } 
+
+		[Field ("UITextContentTypeSublocality")]
+		NSString Sublocality { get; } 
+
+		[Field ("UITextContentTypeCountryName")]
+		NSString CountryName { get; } 
+
+		[Field ("UITextContentTypePostalCode")]
+                NSString PostalCode { get; } 
+
+		[Field ("UITextContentTypeTelephoneNumber")]
+		NSString TelephoneNumber { get; } 
+
+		[Field ("UITextContentTypeEmailAddress")]
+		NSString EmailAddress { get; } 
+
+		[Field ("UITextContentTypeURL")]
+		NSString Url { get; } 
+
+		[Field ("UITextContentTypeCreditCardNumber")]
+		NSString CreditCardNumber { get; } 
+	}
+	
 	[Since (3,2)]
 	[BaseType (typeof (UIViewController), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UISplitViewControllerDelegate)})]
 	public interface UISplitViewController {
@@ -14208,6 +14743,25 @@ namespace XamCore.UIKit {
 		UIMotionEffect [] MotionEffects { get; set; }
 	}
 
+	[iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	interface UISpringTimingParameters : UITimingCurveProvider
+	{
+		[Export ("initialVelocity")]
+		CGVector InitialVelocity { get; }
+
+		[Export ("initWithDampingRatio:initialVelocity:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (nfloat ratio, CGVector velocity);
+
+		[Export ("initWithMass:stiffness:damping:initialVelocity:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (nfloat mass, nfloat stiffness, nfloat damping, CGVector velocity);
+
+		[Export ("initWithDampingRatio:")]
+		IntPtr Constructor (nfloat ratio);
+	}
+		
 	[NoTV]
 	[Category, BaseType (typeof (NSString))]
 	interface UIStringDrawing {
@@ -14384,6 +14938,10 @@ namespace XamCore.UIKit {
 		[NullAllowed] // by default this property is null
 		[Export ("primaryLanguage")]
 		string PrimaryLanguage { get; set; }
+
+		[iOS (10,0)]
+		[Export ("handleInputModeListFromView:withEvent:")]
+		void HandleInputModeList (UIView fromView, UIEvent withEvent);
 	}
 
 	[NoWatch]
@@ -14402,6 +14960,13 @@ namespace XamCore.UIKit {
 		[Abstract]
 		[Export ("adjustTextPositionByCharacterOffset:")]
 		void AdjustTextPositionByCharacterOffset (nint offset);		
+
+		// Another abstract that was introduced on this released, breaking ABI
+		// Radar: 26867207
+		//[Abstract]
+		[iOS (10, 0)]
+		[NullAllowed, Export ("documentInputMode")]
+		UITextInputMode DocumentInputMode { get; }
 	}
 
 	[NoWatch]
@@ -14814,6 +15379,28 @@ namespace XamCore.UIKit {
 		NSIndexPath NextFocusedIndexPath { [return: NullAllowed] get; }
 	}
 
+	[iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	interface UICubicTimingParameters : UITimingCurveProvider
+	{
+		[Export ("animationCurve")]
+		UIViewAnimationCurve AnimationCurve { get; }
+
+		[Export ("controlPoint1")]
+		CGPoint ControlPoint1 { get; }
+
+		[Export ("controlPoint2")]
+		CGPoint ControlPoint2 { get; }
+
+		[Export ("initWithAnimationCurve:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (UIViewAnimationCurve curve);
+
+		[Export ("initWithControlPoint1:controlPoint2:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (CGPoint point1, CGPoint point2);
+	}
+		
 	[NoWatch]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
@@ -14829,10 +15416,25 @@ namespace XamCore.UIKit {
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 
+		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use PreferredFocusEnvironments instead")]
 		[NullAllowed, Export ("preferredFocusedView", ArgumentSemantic.Weak)]
 		UIView PreferredFocusedView { get; set; }
+
+		[iOS (10, 0)]
+		[Export ("preferredFocusEnvironments", ArgumentSemantic.Copy)]
+		IUIFocusEnvironment[] PreferredFocusEnvironments { get; set; }
 	}
 
+	public interface IUIFocusItem {}
+	[iOS (10,0)]
+	[Protocol]
+	public interface UIFocusItem : UIFocusEnvironment
+	{
+		[Abstract]
+		[Export ("canBecomeFocused")]
+		bool CanBecomeFocused { get; }
+	}
+		
 	[NoWatch]
 	[iOS (9,0)]
 	[BaseType (typeof(NSObject))]
@@ -14845,6 +15447,14 @@ namespace XamCore.UIKit {
 
 		[Export ("focusHeading", ArgumentSemantic.Assign)]
 		UIFocusHeading FocusHeading { get; }
+
+		[iOS (10, 0)]
+		[NullAllowed, Export ("previouslyFocusedItem", ArgumentSemantic.Weak)]
+		IUIFocusItem PreviouslyFocusedItem { get; }
+
+		[iOS (10, 0)]
+		[NullAllowed, Export ("nextFocusedItem", ArgumentSemantic.Weak)]
+		IUIFocusItem NextFocusedItem { get; }
 	}
 
 	[NoWatch]
@@ -14896,12 +15506,14 @@ namespace XamCore.UIKit {
 		NSIndexPath NextFocusedIndexPath { [return: NullAllowed] get; }
 	}
 
+	public interface IUIFocusEnvironment {}
 	[NoWatch]
 	[iOS (9,0)]
 	[Protocol]
 	public interface UIFocusEnvironment {
 		[Abstract]
 		[NullAllowed, Export ("preferredFocusedView", ArgumentSemantic.Weak)]
+		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use PreferredFocusEnvironments instead")]
 		UIView PreferredFocusedView { get; }
 
 		[Abstract]
@@ -14919,6 +15531,15 @@ namespace XamCore.UIKit {
 		[Abstract]
 		[Export ("didUpdateFocusInContext:withAnimationCoordinator:")]
 		void DidUpdateFocus (UIFocusUpdateContext context, UIFocusAnimationCoordinator coordinator);
+
+		//
+		// FIXME: declared as a @required, but this breaks compatibility
+		// Radar: 26825293
+		//
+		[iOS (10, 0)]
+		[Export ("preferredFocusEnvironments", ArgumentSemantic.Copy)]
+		IUIFocusEnvironment[] PreferredFocusEnvironments { get; set; }
+		
 	}
 #endif // !WATCH
 

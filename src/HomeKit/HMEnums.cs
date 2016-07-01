@@ -208,7 +208,30 @@ namespace XamCore.HomeKit {
 		TargetPosition,
 		[iOS (9,0)]
 		TargetVerticalTilt,
-
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		StreamingStatus,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		SupportedVideoStreamConfiguration,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		SupportedAudioStreamConfiguration,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		SupportedRtpConfiguration,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		SelectedStreamConfiguration,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		Volume,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		Mute,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		NightVision,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		OpticalZoom,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		DigitalZoom,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		ImageRotation,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		ImageMirroring,
 	}
 
 	// conveniance enum (ObjC uses NSString)
@@ -223,6 +246,10 @@ namespace XamCore.HomeKit {
 		Seconds,
 		[iOS (9,3)][Watch(2,2)]
 		Lux,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		PartsPerMillion,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		MicrogramsPerCubicMeter,
 	}
 
 	// conveniance enum (ObjC uses NSString)
@@ -275,6 +302,14 @@ namespace XamCore.HomeKit {
 		Window,
 		[iOS (9,0)]
 		WindowCovering,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		CameraRtpStreamManagement,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		CameraControl,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		Microphone,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		Speaker,
 	}
 
 	// conveniance enum (ObjC uses NSString)
@@ -388,6 +423,90 @@ namespace XamCore.HomeKit {
 		Disarm
 	}
 
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[Native]
+	public enum HMCharacteristicValueBatteryStatus : nint {
+		Normal = 0,
+		Low
+	}
+
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[Native]
+	public enum HMCharacteristicValueJammedStatus : nint {
+		None = 0,
+		Jammed
+	}
+
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[Native]
+	public enum HMCharacteristicValueTamperedStatus : nint {
+		None = 0,
+		Tampered
+	}
+
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[Native]
+	public enum HMCharacteristicValueLeakStatus : nint {
+		None = 0,
+		Detected
+	}
+
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[Native]
+	public enum HMCharacteristicValueSmokeDetectionStatus : nint {
+		None = 0,
+		Detected
+	}
+
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[Native]
+	public enum HMCharacteristicValueChargingState : nint {
+		None = 0,
+		InProgress
+	}
+
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[Native]
+	public enum HMCharacteristicValueContactState : nint {
+		None = 0,
+		Detected
+	}
+
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[Native]
+	public enum HMCharacteristicValueStatusFault : nint {
+		NoFault = 0,
+		GeneralFault
+	}
+
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[Native]
+	public enum HMCharacteristicValueCarbonMonoxideDetectionStatus : nint {
+		NotDetected = 0,
+		Detected
+	}
+
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[Native]
+	public enum HMCharacteristicValueCarbonDioxideDetectionStatus : nint {
+		NotDetected = 0,
+		Detected
+	}
+
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[Native]
+	public enum HMCharacteristicValueOccupancyStatus : nint {
+		NotOccupied = 0,
+		Occupied
+	}
+
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[Native]
+	public enum HMCharacteristicValueSecuritySystemAlarmType : nint {
+		NoAlarm = 0,
+		Unknown
+	}
+
 	// conveniance enum (ObjC uses NSString)
 	[iOS (9,0)]
 	public enum HMActionSetType {
@@ -397,6 +516,8 @@ namespace XamCore.HomeKit {
 		HomeDeparture,
 		HomeArrival,
 		UserDefined,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		TriggerOwned,
 	}
 
 	[iOS (9,0)]
@@ -408,6 +529,7 @@ namespace XamCore.HomeKit {
 		Door,
 		DoorLock,
 		Fan,
+		[Obsolete ("Use GarageDoorOpener instead")]
 		DoorOpener,
 		Lightbulb,
 		Outlet,
@@ -417,6 +539,11 @@ namespace XamCore.HomeKit {
 		Thermostat,
 		Window,
 		WindowCovering,
+		GarageDoorOpener = DoorOpener,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		RangeExtender,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		IPCamera,
 	}
 
 	[iOS (9,0)]
@@ -435,5 +562,24 @@ namespace XamCore.HomeKit {
 		Fair,
 		Inferior,
 		Poor
+	}
+
+	[iOS (10,0)]
+	[Native]
+	public enum HMCameraStreamState : nuint
+	{
+		Starting = 1,
+		Streaming = 2,
+		Stopping = 3,
+		NotStreaming = 4
+	}
+
+	[iOS (10,0)]
+	[Native]
+	public enum HMCameraAudioStreamSetting : nuint
+	{
+		Muted = 1,
+		IncomingAudioAllowed = 2,
+		BidirectionalAudioAllowed = 3
 	}
 }

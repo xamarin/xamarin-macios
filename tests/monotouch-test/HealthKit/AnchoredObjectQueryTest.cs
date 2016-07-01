@@ -37,8 +37,7 @@ namespace MonoTouchFixtures.HealthKit {
 		[Test]
 		public void NoAnchor ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8,0))
-				Assert.Inconclusive ("Requires iOS8+");
+			TestRuntime.AssertXcodeVersion (6, 0);
 
 			using (var t = HKObjectType.GetCategoryType (HKCategoryTypeIdentifierKey.SleepAnalysis))
 			using (var aoq = new HKAnchoredObjectQuery (t, null, HKAnchoredObjectQuery.NoAnchor, 0, delegate (HKAnchoredObjectQuery query, HKSample[] results, nuint newAnchor, NSError error) {

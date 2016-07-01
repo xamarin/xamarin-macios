@@ -20,9 +20,9 @@ public static class Asserts
 
 	public static void AreEqual (Vector3 expected, Vector3 actual, string message)
 	{
-		Assert.AreEqual (expected.X, actual.X, message + " (X)");
-		Assert.AreEqual (expected.Y, actual.Y, message + " (Y)");
-		Assert.AreEqual (expected.Z, actual.Z, message + " (Z)");
+		Assert.AreEqual (expected.X, actual.X, 0.001, message + " (X)");
+		Assert.AreEqual (expected.Y, actual.Y, 0.001, message + " (Y)");
+		Assert.AreEqual (expected.Z, actual.Z, 0.001, message + " (Z)");
 	}
 
 	public static void AreEqual (Vector4 expected, Vector4 actual, string message)

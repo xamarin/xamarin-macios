@@ -23,8 +23,8 @@ namespace XamCore.HomeKit {
 					return HMAccessoryCategoryType.DoorLock;
 				if (s == HMAccessoryCategoryTypesInternal.Fan)
 					return HMAccessoryCategoryType.Fan;
-				if (s == HMAccessoryCategoryTypesInternal.DoorOpener)
-					return HMAccessoryCategoryType.DoorOpener;
+				if (s == HMAccessoryCategoryTypesInternal.GarageDoorOpener)
+					return HMAccessoryCategoryType.GarageDoorOpener;
 				if (s == HMAccessoryCategoryTypesInternal.Lightbulb)
 					return HMAccessoryCategoryType.Lightbulb;
 				if (s == HMAccessoryCategoryTypesInternal.Outlet)
@@ -41,6 +41,12 @@ namespace XamCore.HomeKit {
 					return HMAccessoryCategoryType.Window;
 				if (s == HMAccessoryCategoryTypesInternal.WindowCovering)
 					return HMAccessoryCategoryType.WindowCovering;
+				// iOS 9.3
+				if (s == HMAccessoryCategoryTypesInternal.RangeExtender)
+					return HMAccessoryCategoryType.RangeExtender;
+				// iOS 10.0
+				if (s == HMAccessoryCategoryTypesInternal.IPCamera)
+					return HMAccessoryCategoryType.IPCamera;
 				return HMAccessoryCategoryType.Other;
 			}
 		}

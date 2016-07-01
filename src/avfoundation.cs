@@ -473,6 +473,7 @@ namespace XamCore.AVFoundation {
 
 	[iOS (8,0)][Mac (10,10)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // fails (nil handle on iOS 10)
 	interface AVAudioChannelLayout : NSSecureCoding {
 		[Export ("initWithLayoutTag:")]
 		IntPtr Constructor (/* UInt32 */ uint layoutTag);
@@ -523,6 +524,7 @@ namespace XamCore.AVFoundation {
 
 	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor] // fails (nil handle on iOS 10)
 	interface AVAudioConnectionPoint
 	{
 		[Export ("initWithNode:bus:")]

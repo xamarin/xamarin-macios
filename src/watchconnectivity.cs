@@ -95,6 +95,14 @@ namespace XamCore.WatchConnectivity {
 		[Watch (2,2)][iOS (9, 3)]
 		[Export ("activationState")]
 		WCSessionActivationState ActivationState { get; }
+
+		[Watch (3,0)][iOS (10,0)]
+		[Export ("hasContentPending")]
+		bool HasContentPending { get; }
+
+		[NoWatch][iOS (10,0)]
+		[Export ("remainingComplicationUserInfoTransfers")]
+		nuint RemainingComplicationUserInfoTransfers { get; }
 	}
 
 	interface IWCSessionDelegate { }
@@ -139,14 +147,23 @@ namespace XamCore.WatchConnectivity {
 		[Export ("session:didReceiveFile:")]
 		void DidReceiveFile (WCSession session, WCSessionFile file);
 
+#if XAMCORE_4_0
+		[Abstract] // OS 10 beta 1 SDK made this required
+#endif
 		[Watch (2,2)][iOS (9,3)]
 		[Export ("session:activationDidCompleteWithState:error:")]
 		void ActivationDidComplete (WCSession session, WCSessionActivationState activationState, [NullAllowed] NSError error);
 
+#if XAMCORE_4_0
+		[Abstract] // OS 10 beta 1 SDK made this required
+#endif
 		[NoWatch][iOS (9,3)]
 		[Export ("sessionDidBecomeInactive:")]
 		void DidBecomeInactive (WCSession session);
 
+#if XAMCORE_4_0
+		[Abstract] // OS 10 beta 1 SDK made this required
+#endif
 		[NoWatch][iOS (9,3)]
 		[Export ("sessionDidDeactivate:")]
 		void DidDeactivate (WCSession session);

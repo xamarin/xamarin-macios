@@ -70,6 +70,15 @@ namespace XamCore.HomeKit {
 					return HMServiceType.Window;
 				if (s == HMServiceTypeInternal.WindowCovering)
 					return HMServiceType.WindowCovering;
+				// iOS 10
+				if (s == HMServiceTypeInternal.CameraRtpStreamManagement)
+					return HMServiceType.CameraRtpStreamManagement;
+				if (s == HMServiceTypeInternal.CameraControl)
+					return HMServiceType.CameraControl;
+				if (s == HMServiceTypeInternal.Microphone)
+					return HMServiceType.Microphone;
+				if (s == HMServiceTypeInternal.Speaker)
+					return HMServiceType.Speaker;
 
 				return HMServiceType.None;
 			}
@@ -138,7 +147,7 @@ namespace XamCore.HomeKit {
 			}
 		}
 
-#if !WATCH
+#if !WATCH && !TVOS
 		public void UpdateAssociatedServiceType (HMServiceType serviceType, Action<NSError> completion)
 		{
 			UpdateAssociatedServiceType (GetName (serviceType), completion);

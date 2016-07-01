@@ -78,6 +78,7 @@ namespace Extrospection {
 			case "int64_t":
 			case "uint64_t":
 			case "unsigned long long":
+			case "CVOptionFlags": // uint64_t
 				native_size = 8;
 				break;
 			case "UInt16":

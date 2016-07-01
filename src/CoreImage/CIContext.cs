@@ -27,6 +27,7 @@
 using XamCore.Foundation;
 using XamCore.CoreGraphics;
 using XamCore.CoreFoundation;
+using XamCore.ObjCRuntime;
 #if !MONOMAC
 using XamCore.Metal;
 using XamCore.OpenGLES;
@@ -73,26 +74,20 @@ namespace XamCore.CoreImage {
 
 		public int? CIImageFormat {
 			get {
-				return GetInt32Value (CIContext.WorkingFormat);
+				return GetInt32Value (CIContext.WorkingFormatField);
 			}
 			set {
-				SetNumberValue (CIContext.WorkingFormat, value);
+				SetNumberValue (CIContext.WorkingFormatField, value);
 			}
 		}
 
-		[Advice ("Not available on OSX")]
+		[Mac (10,12)]
 		public bool? PriorityRequestLow {
 			get {
-#if MONOMAC
-				return false;
-#else
 				return GetBoolValue (CIContext.PriorityRequestLow);
-#endif
 			}
 			set {
-#if !MONOMAC
 				SetBooleanValue (CIContext.PriorityRequestLow, value);
-#endif
 			}
 		}
 
@@ -104,14 +99,38 @@ namespace XamCore.CoreImage {
 				SetBooleanValue (CIContext.HighQualityDownsample, value);
 			}
 		}
+
+		[iOS (7,0)]
+		public bool? OutputPremultiplied {
+			get {
+				return GetBoolValue (CIContext.OutputPremultiplied);
+			}
+			set {
+				SetBooleanValue (CIContext.OutputPremultiplied, value);
+			}
+		}
+
+		[iOS (10,0)][Mac (10,12)]
+		public bool? CacheIntermediates {
+			get {
+				return GetBoolValue (CIContext.CacheIntermediates);
+			}
+			set {
+				SetBooleanValue (CIContext.CacheIntermediates, value);
+			}
+		}
 	}
 	
 	public partial class CIContext {
+
+		public CIContext (CIContextOptions options) :
+			this (options?.Dictionary)
+		{
+		}
+
 		public static CIContext FromContext (CGContext ctx, CIContextOptions options)
 		{
-			NSDictionary dict = options == null ? null : options.Dictionary;
-
-			return FromContext (ctx, dict);
+			return FromContext (ctx, options?.Dictionary);
 		}
 		
 		public static CIContext FromContext (CGContext ctx)
@@ -138,6 +157,7 @@ namespace XamCore.CoreImage {
 #endif
 
 #if MONOMAC
+		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		public CGLayer CreateCGLayer (CGSize size)
 		{
 			return CreateCGLayer (size, null);
@@ -145,7 +165,7 @@ namespace XamCore.CoreImage {
 #else
 		public static CIContext FromOptions (CIContextOptions options)
 		{
-			return FromOptions (options == null ? null : options.Dictionary);
+			return FromOptions (options?.Dictionary);
 		}
 		
 		public CGImage CreateCGImage (CIImage image, CGRect fromRect, CIFormat ciImageFormat, CGColorSpace colorSpace)

@@ -28,18 +28,17 @@ namespace MonoTouchFixtures.CoreGraphics
 		[Test]
 		public void CreateNone ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9,3))
-				Assert.Ignore ("requires iOS 9.3+");
+			TestRuntime.AssertXcodeVersion (7, 3);
 
-			Assert.Throws<ArgumentNullException> (() => new CGColorConverter (null, null), "null");
+			Assert.Throws<ArgumentNullException> (() => new CGColorConverter (null, (CGColorSpace) null), "null");
+			Assert.Throws<ArgumentNullException> (() => new CGColorConverter (null, (CGColorConverterTriple[]) null), "null-2");
 			Assert.Throws<ArgumentNullException> (() => new CGColorConverter (null, new CGColorConverterTriple [0]), "empty");
 		}
 
 		[Test]
 		public void CreateSingle ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9,3))
-				Assert.Ignore ("requires iOS 9.3+");
+			TestRuntime.AssertXcodeVersion (7, 3);
 
 			var triple = new CGColorConverterTriple () {
 				Space = CGColorSpace.CreateGenericRgb (),
@@ -55,8 +54,7 @@ namespace MonoTouchFixtures.CoreGraphics
 		[Test]
 		public void CreateDual ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9,3))
-				Assert.Ignore ("requires iOS 9.3+");
+			TestRuntime.AssertXcodeVersion (7, 3);
 
 			var triple = new CGColorConverterTriple () {
 				Space = CGColorSpace.CreateGenericRgb (),
@@ -72,8 +70,7 @@ namespace MonoTouchFixtures.CoreGraphics
 		[Test]
 		public void CreateMax ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9,3))
-				Assert.Ignore ("requires iOS 9.3+");
+			TestRuntime.AssertXcodeVersion (7, 3);
 
 			var first = new CGColorConverterTriple () {
 				Space = CGColorSpace.CreateGenericRgb (),
@@ -99,17 +96,14 @@ namespace MonoTouchFixtures.CoreGraphics
 		[Test]
 		public void CreateTooMany ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9,3))
-				Assert.Ignore ("requires iOS 9.3+");
+			TestRuntime.AssertXcodeVersion (7, 3);
 			Assert.Throws<ArgumentException> (() => new CGColorConverter (null, new CGColorConverterTriple [4]));
 		}
 
-#if false
 		[Test]
 		public void CreateSimple ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9,3))
-				Assert.Ignore ("requires iOS 9.3+");
+			TestRuntime.AssertXcodeVersion (8,0);
 
 			using (var from = CGColorSpace.CreateGenericGray ())
 			using (var to = CGColorSpace.CreateGenericRgb ())
@@ -124,8 +118,7 @@ namespace MonoTouchFixtures.CoreGraphics
 		[Test]
 		public void CreateSimple_GetINativeObject ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9,3))
-				Assert.Ignore ("requires iOS 9.3+");
+			TestRuntime.AssertXcodeVersion (8,0);
 
 			using (var from = CGColorSpace.CreateGenericGray ())
 			using (var to = CGColorSpace.CreateGenericRgb ()) {
@@ -140,8 +133,7 @@ namespace MonoTouchFixtures.CoreGraphics
 		[Test]
 		public void CreateSimple_DeviceColorSpace ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (9,3))
-				Assert.Ignore ("requires iOS 9.3+");
+			TestRuntime.AssertXcodeVersion (8,0);
 
 			// Requirements: CG color spaces must be calibrated
 			// (no Device{Gray,RGB,CMYK}, Indexed or DeviceN).
@@ -151,7 +143,6 @@ namespace MonoTouchFixtures.CoreGraphics
 				Assert.Throws<Exception> (() => new CGColorConverter (from, to));
 			}
 		}
-#endif
 	}
 }
 

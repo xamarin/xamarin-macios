@@ -1,3 +1,9 @@
+# GameController
+
+## other CGMicroGamepad API are not available on OSX (looks like a mistake)
+!missing-pinvoke! GCMicroGamepadSnapShotDataV100FromNSData is not bound
+!missing-pinvoke! NSDataFromGCMicroGamepadSnapShotDataV100 is not bound
+
 
 # fixed in XAMCORE_3_0
 

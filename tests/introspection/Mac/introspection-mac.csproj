@@ -56,7 +56,6 @@
   <ItemGroup>
  <Compile Include="MacApiCtorInitTest.cs" />
     <Compile Include="MacApiFieldTest.cs" />
-    <Compile Include="Mac.cs" />
     <Compile Include="MacApiSelectorTest.cs" />
     <Compile Include="MacApiProtocolTest.cs" />
     <Compile Include="MacApiSignatureTest.cs" />
@@ -105,11 +104,17 @@
     <Compile Include="..\EnvironmentVariable.cs">
       <Link>EnvironmentVariable.cs</Link>
     </Compile>
-    <Compile Include="..\PlatformInfo.cs">
+    <Compile Include="..\..\common\PlatformInfo.cs">
       <Link>PlatformInfo.cs</Link>
     </Compile>
     <Compile Include="..\..\common\mac\MacTestMain.cs">
       <Link>MacTestMain.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\mac\Mac.cs">
+      <Link>Mac.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

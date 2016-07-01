@@ -20,7 +20,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-    <Commandlineparameters>--verbose --configure --autoconf --rootdir ../</Commandlineparameters>
+    <Commandlineparameters>--verbose --jenkins --autoconf --rootdir ../ --sdkroot /Applications/Xcode8-beta1.app</Commandlineparameters>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -33,6 +33,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Web" />
+    <Reference Include="Mono.Posix" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -55,7 +57,6 @@
     <Compile Include="SimpleTcpListener.cs" />
     <Compile Include="BCLTarget.cs" />
     <Compile Include="DeviceLogCapturer.cs" />
-    <Compile Include="XProcess.cs" />
     <Compile Include="MakefileGenerator.cs" />
     <Compile Include="SolutionGenerator.cs" />
     <Compile Include="MacClassicTarget.cs" />
@@ -63,6 +64,11 @@
     <Compile Include="MacTarget.cs" />
     <Compile Include="SimpleHttpListener.cs" />
     <Compile Include="SimpleListener.cs" />
+    <Compile Include="Jenkins.cs" />
+    <Compile Include="Process_Extensions.cs" />
+    <Compile Include="Simulators.cs" />
+    <Compile Include="TestProject.cs" />
+    <Compile Include="Log.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

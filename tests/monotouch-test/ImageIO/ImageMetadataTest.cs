@@ -35,8 +35,7 @@ namespace MonoTouchFixtures.ImageIO {
 		[Test]
 		public void Defaults ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Ignore ("Requires iOS 7+");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			Assert.Throws<ArgumentNullException> (delegate { new CGImageMetadata (null); }, "null");
 

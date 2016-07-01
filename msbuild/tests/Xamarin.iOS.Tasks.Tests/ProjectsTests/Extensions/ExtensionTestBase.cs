@@ -75,6 +75,7 @@ namespace Xamarin.iOS.Tasks
 		[SetUp]
 		public override void Setup () 
 		{
+			AssertValidDeviceBuild (Platform);
 			SetupEngine ();
 		}
 	}

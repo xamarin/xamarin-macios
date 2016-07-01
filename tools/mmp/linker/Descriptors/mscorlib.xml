@@ -616,6 +616,8 @@
 			<method name="StaticGetterAdapterFrame" />
 		</type>
 		<type fullname="System.Reflection.ParameterInfo" preserve="fields" />
+		<!-- reflection.c: ves_icall_get_parameter_info -->
+		<type fullname="System.Reflection.MonoParameterInfo" preserve="fields" />
 
 		<type fullname="System.Reflection.Emit.AssemblyBuilder" preserve="fields">
 			<method name="AddPermissionRequests" />

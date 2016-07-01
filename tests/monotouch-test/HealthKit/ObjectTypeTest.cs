@@ -37,8 +37,7 @@ namespace MonoTouchFixtures.HealthKit {
 		[Test]
 		public void Workout ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8,0))
-				Assert.Inconclusive ("Requires iOS8+");
+			TestRuntime.AssertXcodeVersion (6, 0);
 
 			using (var t = HKObjectType.GetWorkoutType ()) {
 				Assert.That (t.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");

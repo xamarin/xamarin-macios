@@ -15,6 +15,7 @@ namespace monotouchtestWatchKitExtension
 	public partial class InterfaceController : WKInterfaceController
 	{
 		WatchOSRunner runner;
+		bool running;
 
 		[Action ("runTests:")]
 		partial void RunTests (NSObject obj);
@@ -36,6 +37,18 @@ namespace monotouchtestWatchKitExtension
 
 		[Outlet ("cmdRun")]
 		WatchKit.WKInterfaceButton cmdRun { get; set; }
+
+		static InterfaceController ()
+		{
+			ObjCRuntime.Runtime.MarshalManagedException += (object sender, ObjCRuntime.MarshalManagedExceptionEventArgs args) =>
+			{
+				Console.WriteLine ("Managed exception: {0}", args.Exception);
+			};
+			ObjCRuntime.Runtime.MarshalObjectiveCException += (object sender, ObjCRuntime.MarshalObjectiveCExceptionEventArgs args) =>
+			{
+				Console.WriteLine ("Objective-C exception: {0}", args.Exception);
+			};
+		}
 
 		public InterfaceController (IntPtr handle) : base (handle)
 		{
@@ -70,12 +83,20 @@ namespace monotouchtestWatchKitExtension
 
 		void RunTests ()
 		{
+			if (running) {
+				Console.WriteLine ("Already running");
+				return;
+			}
+			running = true;
 			cmdRun.SetEnabled (false);
 			lblStatus.SetText ("Running");
 			BeginInvokeOnMainThread (() => {
 				runner.Run ();
 
+				cmdRun.SetEnabled (true);
+				lblStatus.SetText ("Done");
 				BeginInvokeOnMainThread (RenderResults);
+				running = false;
 			});
 		}
 

@@ -34,8 +34,7 @@ namespace MonoTouchFixtures.Contacts {
 		[SetUp]
 		public void MinimumSdkCheck ()
 		{
-			if (!TestRuntime.CheckiOSSystemVersion (9,0))
-				Assert.Inconclusive ("Requires 9.0+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 		}
 
 		[Test]
@@ -109,8 +108,10 @@ namespace MonoTouchFixtures.Contacts {
 				Assert.AreNotEqual (string.Empty, contact.Identifier, "Identifier");
 
 				contact.ImageData = new NSData ();
-				Assert.IsNotNull (contact.ImageData, "ImageData");
-				Assert.IsFalse (contact.ImageDataAvailable, "ImageDataAvailable");
+				Assert.IsNotNull (contact.ImageData, "ImageData-2");
+				// iOS 10 (beta 1) fixed this bug (if not null then it's available)
+				var avail = TestRuntime.CheckXcodeVersion (8, 0);
+				Assert.That (contact.ImageDataAvailable, Is.EqualTo (avail), "ImageDataAvailable-2");
 
 				contact.InstantMessageAddresses = new CNLabeledValue<CNInstantMessageAddress> [] {
 					new CNLabeledValue<CNInstantMessageAddress> ("label", new CNInstantMessageAddress ("user", "service")),

@@ -89,6 +89,7 @@ namespace Introspection
 			"Blinn",
 			"Blit",
 			"Bokeh",
+			"Bggr", // acronym for Blue, Green, Green, Red 
 			"Bsln",
 			"Bssid",
 			"Bzip",
@@ -138,6 +139,7 @@ namespace Introspection
 			"Dpad", // Directional pad (D-pad)
 			"Droste",
 			"Dtls",
+			"Dtmf", // DTMF
 			"dy",
 			"Ebu",
 			"Ecc",
@@ -156,8 +158,10 @@ namespace Introspection
 			"Ftps",
 			"Func",
 			"Gadu",
+			"Gbrg",	// acronym for Green-Blue-Reg-Green
 			"Geocoder",
 			"Gpp",
+			"Grbg", // acronym for Green-Red-Blue-Green
 			"Hdmi",
 			"Hdr",
 			"Hevc", // CMVideoCodecType / High Efficiency Video Coding
@@ -251,12 +255,15 @@ namespace Introspection
 			"Requestwith",
 			"Rgb",
 			"Rgba",
+			"Rggb", // acronym for Red, Green, Green, Blue
 			"Roi",
 			"Romm", // acronym: Reference Output Medium Metric
 			"Rpa",
 			"Rpn", // acronym
 			"Rssi",
+			"Rtp",
 			"Rtsp",
+			"Saml", // acronym
 			"Scn",
 			"Sdk",
 			"Sdtv", // acronym: Standard Definition Tele Vision
@@ -280,9 +287,11 @@ namespace Introspection
 			"Stateful",
 			"Stateright",
 			"Subbeat",
+			"Subcaption",
 			"Subcardioid",
 			"Subentities",
 			"Subheadline",
+			"Sublocality",
 			"Submesh",
 			"Submeshes",
 			"Subpixel",
@@ -312,6 +321,7 @@ namespace Introspection
 			"Undecodable",
 			"Underrun",
 			"Unorm",
+			"Unpremultiplying",
 			"Unprepare",
 			"Unproject",
 			"Uterance",

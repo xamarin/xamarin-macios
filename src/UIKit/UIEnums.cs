@@ -474,6 +474,7 @@ namespace XamCore.UIKit {
 	public enum UIKeyboardType : nint {
 		Default,
 		ASCIICapable,
+		AsciiCapable = ASCIICapable,
 		NumbersAndPunctuation,
 		Url,
 		NumberPad,
@@ -482,7 +483,8 @@ namespace XamCore.UIKit {
 		EmailAddress,
 		DecimalPad,
 		Twitter,
-		WebSearch
+		WebSearch,
+		AsciiCapableNumberPad
 	} 
 
 	// NSInteger -> UISegmentedControl.h
@@ -749,13 +751,20 @@ namespace XamCore.UIKit {
 	[Flags]
 	[NoTV][NoWatch]
 	public enum UIDataDetectorType : nuint {
-		PhoneNumber   = 1 << 0,
-		Link          = 1 << 1,
+		PhoneNumber            = 1 << 0,
+		Link                   = 1 << 1,
 
 		[iOS (4,0)]
-		Address       = 1 << 2,
+		Address                = 1 << 2,
 		[iOS (4,0)]
-		CalendarEvent = 1 << 3,
+		CalendarEvent          = 1 << 3,
+
+		[iOS (10,0)]
+		ShipmentTrackingNumber = 1 << 4,
+		[iOS (10,0)]
+		FlightNumber           = 1 << 5,
+		[iOS (10,0)]
+		LookupSuggestion       = 1 << 6,
 
 		None          = 0,
 #if XAMCORE_2_0
@@ -1349,12 +1358,6 @@ namespace XamCore.UIKit {
 		None, Push, Pop
 	}
 
-	// that's a convenience enum that maps to UIContentSizeCategoryXXX which are NSString
-	[NoWatch]
-	public enum UIContentSizeCategory {
-		ExtraSmall, Small, Medium, Large, ExtraLarge, ExtraExtraLarge, ExtraExtraExtraLarge
-	}
-
 	// NSInteger -> NSLayoutManager.h
 	[Native]
 	[NoWatch]
@@ -1614,7 +1617,10 @@ namespace XamCore.UIKit {
 	[NoWatch]
 	[iOS (8,0)]
 	public enum UIBlurEffectStyle : nint {
-		ExtraLight, Light, Dark
+		ExtraLight, Light, Dark,
+		// Notice: value 3 is skipped
+		Regular = 4,
+		Prominent = 5,
 	}
 
 	[Native]
@@ -1844,4 +1850,69 @@ namespace XamCore.UIKit {
 		Default,
 		Custom
 	}
+
+	[iOS (10,0)]
+	[Native]
+	public enum UIDisplayGamut : nint
+	{
+		Unspecified = -1,
+		Srgb,
+		P3
+	}
+
+	[iOS (10,0)]
+	[Native]
+	public enum UITraitEnvironmentLayoutDirection : nint
+	{
+		Unspecified = -1,
+		LeftToRight = UIUserInterfaceLayoutDirection.LeftToRight,
+		RightToLeft = UIUserInterfaceLayoutDirection.RightToLeft
+	}
+
+	[TV (10,0), NoWatch, NoiOS]
+	[Native]
+	public enum UIUserInterfaceStyle : nint
+	{
+		Unspecified,
+		Light,
+		Dark
+	}
+
+	[iOS (10,0)]
+	[Native]
+	public enum UITextItemInteraction : nint
+	{
+		InvokeDefaultAction,
+		PresentActions,
+		Preview
+	}
+
+	[iOS (10,0)]
+	[Native]
+	public enum UIViewAnimatingState : nint
+	{
+		Inactive,
+		Active,
+		Stopped
+	}
+
+	[iOS (10,0)]
+	[Native]
+	public enum UIViewAnimatingPosition : nint
+	{
+		End,
+		Start,
+		Current
+	}
+
+	[iOS (10,0)]
+	[Native]
+	public enum UITimingCurveType : nint
+	{
+		Builtin,
+		Cubic,
+		Spring,
+		Composed
+	}
+	
 }

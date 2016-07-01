@@ -158,7 +158,6 @@ namespace XamCore.ExternalAccessory {
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(EAWiFiUnconfiguredAccessoryBrowserDelegate)})]
 	interface EAWiFiUnconfiguredAccessoryBrowser {
 
-		[DesignatedInitializer]
 		[Export ("initWithDelegate:queue:")]
 		IntPtr Constructor ([NullAllowed] IEAWiFiUnconfiguredAccessoryBrowserDelegate accessoryBrowserDelegate, [NullAllowed] DispatchQueue queue);
 

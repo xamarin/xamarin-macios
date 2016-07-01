@@ -602,13 +602,13 @@ namespace XamCore.CoreLocation {
 		[Export ("peripheralDataWithMeasuredPower:")]
 		NSMutableDictionary GetPeripheralData ([NullAllowed] NSNumber measuredPower);
 
-		[Export ("proximityUUID", ArgumentSemantic.Strong)]
+		[Export ("proximityUUID", ArgumentSemantic.Copy)]
 		NSUuid ProximityUuid { get; }
 
-		[Export ("major", ArgumentSemantic.Strong)]
+		[Export ("major", ArgumentSemantic.Copy)]
 		NSNumber Major { get; }
 
-		[Export ("minor", ArgumentSemantic.Strong)]
+		[Export ("minor", ArgumentSemantic.Copy)]
 		NSNumber Minor { get; }
 
 		[Export ("notifyEntryStateOnDisplay", ArgumentSemantic.Assign)]
@@ -619,13 +619,13 @@ namespace XamCore.CoreLocation {
 	[Since (7,0), BaseType (typeof (NSObject))]
 	public partial interface CLBeacon : NSCopying, NSSecureCoding {
 
-		[Export ("proximityUUID", ArgumentSemantic.Strong)]
+		[Export ("proximityUUID", ArgumentSemantic.Copy)]
 		NSUuid ProximityUuid { get; }
 
-		[Export ("major", ArgumentSemantic.Strong)]
+		[Export ("major", ArgumentSemantic.Copy)]
 		NSNumber Major { get; }
 
-		[Export ("minor", ArgumentSemantic.Strong)]
+		[Export ("minor", ArgumentSemantic.Copy)]
 		NSNumber Minor { get; }
 
 		[Export ("proximity")]

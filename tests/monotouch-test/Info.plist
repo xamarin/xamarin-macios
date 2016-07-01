@@ -7,7 +7,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.xamarin.monotouch-test</string>
 	<key>MinimumOSVersion</key>
-	<string>5.1.1</string>
+	<string>6.0</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>

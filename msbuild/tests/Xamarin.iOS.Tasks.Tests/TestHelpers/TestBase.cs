@@ -304,6 +304,12 @@ namespace Xamarin.iOS.Tasks
 			Engine.BuildProject (project, new [] { target }, new Hashtable (), BuildSettings.None);
 			Assert.IsTrue (Engine.Logger.ErrorEvents.Count > 0, "#RunTarget-HasExpectedErrors");
 		}
+
+		protected void AssertValidDeviceBuild (string platform)
+		{
+			if (!Xamarin.Tests.Configuration.include_device && platform == "iPhone")
+				Assert.Ignore ("This build does not include device support.");
+		}
 	}
 
 	public class ProjectPaths : Dictionary<string, string> {

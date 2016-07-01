@@ -321,18 +321,18 @@ namespace MTouchTests
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
 					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 3.1 --abi=armv7s,arm64 {1} -debug -r:" + Configuration.XamarinIOSDll, app, exe)),
-					"Xamarin.iOS .* using framework:.*\nerror MT0073: Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 5.1.1.. Please select a newer deployment target in your project's Info.plist.\n");
+					"Xamarin.iOS .* using framework:.*\nerror MT0073: Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 6.0.. Please select a newer deployment target in your project's Info.plist.\n");
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
 					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 3.1 --abi=armv7s {1} -debug -r:" + Configuration.XamarinIOSDll, app, exe)),
-					"Xamarin.iOS .* using framework:.*\nerror MT0073: Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 5.1.1.. Please select a newer deployment target in your project's Info.plist.\n");
+					"Xamarin.iOS .* using framework:.*\nerror MT0073: Xamarin.iOS .* does not support a deployment target of 3.1 for iOS .the minimum is 6.0.. Please select a newer deployment target in your project's Info.plist.\n");
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
 					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 5.1 --abi=arm64 {1} -debug -r:" + Configuration.XamarinIOSDll, app, exe)),
-					"Xamarin.iOS .* using framework:.*\nerror MT0073: Xamarin.iOS .* does not support a deployment target of 5.1 for iOS .the minimum is 5.1.1.. Please select a newer deployment target in your project's Info.plist.\n");
+					"Xamarin.iOS .* using framework:.*\nerror MT0073: Xamarin.iOS .* does not support a deployment target of 5.1 for iOS .the minimum is 6.0.. Please select a newer deployment target in your project's Info.plist.\n");
 
 				// No exception here.
-				ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 5.1.1 --abi=arm64 {1} -debug -r:" + Configuration.XamarinIOSDll, app, exe));
+				ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 6.0 --abi=arm64 {1} -debug -r:" + Configuration.XamarinIOSDll, app, exe));
 
 			} finally {
 				Directory.Delete (testDir, true);
@@ -367,7 +367,7 @@ namespace MTouchTests
 			try {
 				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.Unified);
 
-				Asserts.ThrowsPattern<TestExecutionException> (() => ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 5.1.1 --abi=armv7s {1} -debug -r:{2} --crashreporting-api-key APIKEY", app, exe, Configuration.XamarinIOSDll), hide_output: false),
+				Asserts.ThrowsPattern<TestExecutionException> (() => ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 6.0 --abi=armv7s {1} -debug -r:{2} --crashreporting-api-key APIKEY", app, exe, Configuration.XamarinIOSDll), hide_output: false),
 					"error MT0016: The option '--crashreporting-api-key' has been deprecated.");
 			} finally {
 				Directory.Delete (testDir, true);
@@ -456,23 +456,23 @@ namespace MTouchTests
 				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.Unified);
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --registrar:oldstatic --targetver 5.1.1 --abi=arm64 {1} -debug -r:{2} ", app, exe, Configuration.XamarinIOSDll)),
+					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --registrar:oldstatic --targetver 6.0 --abi=arm64 {1} -debug -r:{2} ", app, exe, Configuration.XamarinIOSDll)),
 					"Xamarin.iOS .* using framework:.*\nerror MT0038: The legacy registrars [(]--registrar:legacy|legacystatic|legacydynamic[)] are not supported with the Unified API.\n");
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk " + Configuration.sdk_version + " --registrar:olddynamic --targetver 5.1.1 --abi=x86_64 {1} -debug -r:{2}", app, exe, Configuration.XamarinIOSDll)),
+					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk " + Configuration.sdk_version + " --registrar:olddynamic --targetver 6.0 --abi=x86_64 {1} -debug -r:{2}", app, exe, Configuration.XamarinIOSDll)),
 					"Xamarin.iOS .* using framework:.*\nerror MT0038: The legacy registrars [(]--registrar:legacy|legacystatic|legacydynamic[)] are not supported with the Unified API.\n");
 					
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk " + Configuration.sdk_version + " --registrar:legacy --targetver 5.1.1 --abi=x86_64 {1} -debug -r:{2}", app, exe, Configuration.XamarinIOSDll)),
+					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk " + Configuration.sdk_version + " --registrar:legacy --targetver 6.0 --abi=x86_64 {1} -debug -r:{2}", app, exe, Configuration.XamarinIOSDll)),
 					"Xamarin.iOS .* using framework:.*\nerror MT0038: The legacy registrars [(]--registrar:legacy|legacystatic|legacydynamic[)] are not supported with the Unified API.\n");
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk " + Configuration.sdk_version + " --registrar:legacystatic --targetver 5.1.1 --abi=x86_64 {1} -debug -r:{2}", app, exe, Configuration.XamarinIOSDll)),
+					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk " + Configuration.sdk_version + " --registrar:legacystatic --targetver 6.0 --abi=x86_64 {1} -debug -r:{2}", app, exe, Configuration.XamarinIOSDll)),
 					"Xamarin.iOS .* using framework:.*\nerror MT0038: The legacy registrars [(]--registrar:legacy|legacystatic|legacydynamic[)] are not supported with the Unified API.\n");
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk " + Configuration.sdk_version + " --registrar:legacydynamic --targetver 5.1.1 --abi=x86_64 {1} -debug -r:{2}", app, exe, Configuration.XamarinIOSDll)),
+					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk " + Configuration.sdk_version + " --registrar:legacydynamic --targetver 6.0 --abi=x86_64 {1} -debug -r:{2}", app, exe, Configuration.XamarinIOSDll)),
 					"Xamarin.iOS .* using framework:.*\nerror MT0038: The legacy registrars [(]--registrar:legacy|legacystatic|legacydynamic[)] are not supported with the Unified API.\n");
 			} finally {
 				Directory.Delete (testDir, true);
@@ -491,7 +491,7 @@ namespace MTouchTests
 			if (Directory.Exists (Configuration.xcode5_root)) {
 				Asserts.ThrowsPattern<TestExecutionException> (() => {
 					ExecutionHelper.Execute (TestTarget.ToolPath, "-sdkroot /Applications/Xcode511.app/Contents/Developer -sim /tmp/foo");
-				}, "error MT0051: Xamarin.iOS .* requires Xcode 6.0 or later. The current Xcode version [(]found in " + Configuration.xcode5_root + "[)] is 5.1.1");
+				}, "error MT0051: Xamarin.iOS .* requires Xcode 6.0 or later. The current Xcode version [(]found in " + Configuration.xcode5_root + "[)] is 6.0");
 			}
 		}
 
@@ -712,7 +712,7 @@ namespace MTouchTests
 	<key>CFBundleIdentifier</key>
 	<string>com.xamarin.extensiontest</string>
 	<key>MinimumOSVersion</key>
-	<string>5.1.1</string>
+	<string>6.0</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
@@ -1339,7 +1339,7 @@ namespace MTouchTests
 				var code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (UIKit.UIWindow).ToString ()); } }";
 				var exe = CompileTestAppExecutable (testDir, code: code, profile: MTouch.Profile.Unified);
 				var bin = Path.Combine (app, Path.GetFileNameWithoutExtension (exe));
-				var common_args = string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk " + Configuration.sdk_version + " --targetver 5.1.1 --abi=i386 {1} -debug -gcc_flags -Wl,-w ", app, exe);
+				var common_args = string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk " + Configuration.sdk_version + " --targetver 6.0 --abi=i386 {1} -debug -gcc_flags -Wl,-w ", app, exe);
 				var newstyle_args = common_args + "-r:" + Configuration.XamarinIOSDll;
 				ExecutionHelper.Execute (TestTarget.ToolPath, newstyle_args);
 				VerifyGC (bin, false, "dual/default");
@@ -2107,12 +2107,16 @@ class Test {
 		[Test]
 		public void ListDev ()
 		{
+			Assert.Ignore ("This functionality has been migrated to mlaunch, and the test needs to be updated accordingly.");
+
 			ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("--listdev --sdkroot {0}", Configuration.xcode_root));
 		}
 
 		[Test]
 		public void LaunchOnDevice ()
 		{
+			Assert.Ignore ("This functionality has been migrated to mlaunch, and the test needs to be updated accordingly.");
+
 			var mtouch = new MTouchTool ();
 			var devices = mtouch.FindAvailableDevices (new string [] { "iPad", "iPhone" }).ToArray ();
 			if (devices.Length == 0)
@@ -2142,6 +2146,8 @@ class Test {
 		[Test]
 		public void LaunchOnWatchDevice ()
 		{
+			Assert.Ignore ("This functionality has been migrated to mlaunch, and the test needs to be updated accordingly.");
+
 			var mtouch = new MTouchTool ();
 			mtouch.Verbosity = 2;
 			var devices = mtouch.FindAvailableDevices (new string [] { "Watch" }).ToArray ();

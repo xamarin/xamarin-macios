@@ -31,6 +31,12 @@
 !missing-selector! UIImageDeprecated::topCapHeight not bound
 
 
+# WatchConnectivity
+
+## It was _upgraded_ to required in iOS 10 beta 1
+!incorrect-protocol-member! WCSessionDelegate::session:activationDidCompleteWithState:error: is REQUIRED and should be abstract
+
+
 # Apple internals (we do not expose them)
 
 !missing-field! _NSConstantStringClassReference not bound

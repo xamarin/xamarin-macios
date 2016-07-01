@@ -32,8 +32,7 @@ namespace MonoTouchFixtures.Contacts {
 		[SetUp]
 		public void MinimumSdkCheck ()
 		{
-			if (!TestRuntime.CheckiOSSystemVersion (9,0))
-				Assert.Inconclusive ("Requires 9.0+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 		}
 
 		[Test]
@@ -48,10 +47,13 @@ namespace MonoTouchFixtures.Contacts {
 				var contacts = store.GetUnifiedContacts (predicate, fetchKeys, out error);
 				// we can't be sure what's on devices, so check there's no error is the only thing we do
 				Assert.Null (error, "error");
-				// but it's in the default simulator build
+				// but it's in the default simulator build (but not the watchOS simulator)
+#if !__WATCHOS__
 				if (Runtime.Arch == Arch.SIMULATOR) {
 					Assert.That (contacts.Length, Is.EqualTo (1), "Length");
+					identifier = contacts [0].Identifier;
 				}
+#endif
 			}
 
 			// if we can't find the previous contact then we don't have an identifier for the GetUnifiedContact API

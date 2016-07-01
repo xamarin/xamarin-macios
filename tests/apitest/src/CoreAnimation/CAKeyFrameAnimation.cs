@@ -29,13 +29,15 @@ namespace Xamarin.Mac.Tests
 			NSNumber arrayNumber = (NSNumber)keyFrameAni.Values[0];
 			Assert.AreEqual (5, arrayNumber.Int32Value);
 
-			CGRect frame = new CGRect (10, 10, 0, 0);
-			CGImage image = CGImage.ScreenImage (0, frame);
-
-			keyFrameAni.SetValues (new CGImage [] {image, image});
-			Assert.AreEqual (2, keyFrameAni.Values.Length);
-			CGImage arrayImage = (CGImage)keyFrameAni.GetValuesAs<CGImage> ()[1];
-			Assert.AreEqual (image.Handle, arrayImage.Handle);
+			CGRect frame = new CGRect (10, 10, 10, 10);
+			using (var provider = new CGDataProvider (new byte [(int) frame.Width * (int) frame.Height * 4 ])) {
+				using (var image = new CGImage ((int) frame.Width, (int) frame.Height, 8, 32, (int) frame.Width * 4, CGColorSpace.CreateDeviceRGB (), CGBitmapFlags.None, provider, null, false, CGColorRenderingIntent.Default)) {
+					keyFrameAni.SetValues (new CGImage [] {image, image});
+					Assert.AreEqual (2, keyFrameAni.Values.Length);
+					CGImage arrayImage = (CGImage)keyFrameAni.GetValuesAs<CGImage> ()[1];
+					Assert.AreEqual (image.Handle, arrayImage.Handle);
+				}
+			}
 		}
 	}
 }

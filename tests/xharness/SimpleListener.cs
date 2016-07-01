@@ -15,19 +15,13 @@ namespace xharness
 
 		public IPAddress Address { get; set; }
 		public int Port { get; set; }
-		public string LogPath { get; set; }
-		public string LogFile { get; set; } = DateTime.UtcNow.Ticks.ToString () + ".log";
+		public Log Log { get; set; }
+		public LogStream TestLog { get; set; }
 		public bool AutoExit { get; set; }
 
 		public abstract void Initialize ();
 		protected abstract void Start ();
 		protected abstract void Stop ();
-
-		public string LogFilePath {
-			get {
-				return Path.Combine (LogPath, LogFile);
-			}
-		}
 
 		public FileStream OutputStream {
 			get {
@@ -37,7 +31,7 @@ namespace xharness
 
 		protected void Connected (string remote)
 		{
-			Console.WriteLine ("Connection from {0} saving logs to {1}", remote, LogFilePath);
+			Log.WriteLine ("Connection from {0} saving logs to {1}", remote, TestLog.FullPath);
 			connected.Set ();
 
 			if (output_stream != null) {
@@ -45,7 +39,7 @@ namespace xharness
 				output_stream.Dispose ();
 			}
 
-			var fs = new FileStream (LogFilePath, FileMode.Create, FileAccess.Write, FileShare.Read);
+			var fs = TestLog.FileStream;
 			// a few extra bits of data only available from this side
 			string header = String.Format ("[Local Date/Time:\t{1}]{0}[Remote Address:\t{2}]{0}",
 				Environment.NewLine, DateTime.Now, remote);

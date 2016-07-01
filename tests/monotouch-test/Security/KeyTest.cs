@@ -170,8 +170,13 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (public_key.RawVerify (SecPadding.PKCS1SHA1, hash, sign), Is.EqualTo (SecStatusCode.Success), "RawVerify");
 
 				var empty = new byte [0];
-				Assert.That (private_key.RawSign (SecPadding.PKCS1SHA1, empty, out sign), Is.EqualTo (SecStatusCode.Param), "RawSign-empty");
-				Assert.That (public_key.RawVerify (SecPadding.PKCS1SHA1, empty, empty), Is.EqualTo (SecStatusCode.Param), "RawVerify-empty");
+				if (TestRuntime.CheckXcodeVersion (8, 0)) {
+					Assert.That (private_key.RawSign (SecPadding.PKCS1SHA1, empty, out sign), Is.EqualTo (SecStatusCode.Success), "RawSign-empty");
+					Assert.That (public_key.RawVerify (SecPadding.PKCS1SHA1, empty, empty), Is.EqualTo (SecStatusCode.Success), "RawVerify-empty");
+				} else {
+					Assert.That (private_key.RawSign (SecPadding.PKCS1SHA1, empty, out sign), Is.EqualTo (SecStatusCode.Param), "RawSign-empty");
+					Assert.That (public_key.RawVerify (SecPadding.PKCS1SHA1, empty, empty), Is.EqualTo (SecStatusCode.Param), "RawVerify-empty");
+				}
 
 				private_key.Dispose ();
 				public_key.Dispose ();
@@ -198,8 +203,12 @@ namespace MonoTouchFixtures.Security {
 				var empty = new byte [0];
 				// there does not seem to be a length-check on PKCS1, likely because not knowning the hash algorithm makes it harder
 				Assert.That (private_key.RawSign (SecPadding.PKCS1, empty, out sign), Is.EqualTo (SecStatusCode.Success), "RawSign-empty");
-				// but that does not work at verification time
-				Assert.That (public_key.RawVerify (SecPadding.PKCS1, empty, empty), Is.EqualTo ((SecStatusCode)(-9809)), "RawVerify-empty");
+				if (TestRuntime.CheckXcodeVersion (8, 0)) {
+					Assert.That (public_key.RawVerify (SecPadding.PKCS1, empty, empty), Is.EqualTo (SecStatusCode.Success), "RawVerify-empty");
+				} else {
+					// but that does not work at verification time
+					Assert.That (public_key.RawVerify (SecPadding.PKCS1, empty, empty), Is.EqualTo ((SecStatusCode)(-9809)), "RawVerify-empty");
+				}
 
 				private_key.Dispose ();
 				public_key.Dispose ();
@@ -217,7 +226,7 @@ namespace MonoTouchFixtures.Security {
 				record.KeySizeInBits = 16384; 
 				Assert.That (SecKey.GenerateKeyPair (record.ToDictionary (), out public_key, out private_key), Is.EqualTo (SecStatusCode.Param), "16384");
 				record.KeySizeInBits = 8192; 
-				if (TestRuntime.CheckiOSSystemVersion (9, 0)) {
+				if (TestRuntime.CheckXcodeVersion (7, 0)) {
 					// It seems iOS 9 supports 8192, but it takes a long time to generate (~40 seconds on my iPad Air 2), so skip it.
 //					Assert.That (SecKey.GenerateKeyPair (record.ToDictionary (), out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "8192");
 				} else {

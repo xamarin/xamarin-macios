@@ -110,21 +110,25 @@ namespace XamCore.CoreGraphics {
 				throw new Exception ("Failed to create CGColorConverter");
 		}
 
-#if false
-		// Apple has not yet (beta 3) provided this API for devices (only works on simulator)
+		// Added in 9.3 but it only works on simulator (not devices). Fixed in iOS 10 beta 1
 		// https://trello.com/c/Rwko9Wef/37-24734681-cgcolorconvertercreatesimple-is-missing-for-device-builds
-
+		[iOS (10,0)]
 		[DllImport(Constants.CoreGraphicsLibrary)]
 		extern static IntPtr CGColorConverterCreateSimple (/* __nullable CGColorSpaceRef */ IntPtr from, /* __nullable CGColorSpaceRef */ IntPtr to);
 
+		[iOS (10,0)]
 		public CGColorConverter (CGColorSpace from, CGColorSpace to)
 		{
-			handle = CGColorConverterCreateSimple (NativeObjectHelper.GetHandle (from), NativeObjectHelper.GetHandle (to));
+			// API accept null arguments but returns null, which we can't use
+			if (from == null)
+				throw new ArgumentNullException (nameof (from));
+			if (from == to)
+				throw new ArgumentNullException (nameof (to));
+			handle = CGColorConverterCreateSimple (from.Handle, to.Handle);
 
 			if (handle == IntPtr.Zero)
 				throw new Exception ("Failed to create CGColorConverter");
 		}
-#endif
 
 		~CGColorConverter ()
 		{

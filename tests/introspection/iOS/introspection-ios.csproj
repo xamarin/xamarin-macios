@@ -156,8 +156,11 @@
     <Compile Include="..\EnvironmentVariable.cs">
       <Link>EnvironmentVariable.cs</Link>
     </Compile>
-    <Compile Include="..\PlatformInfo.cs">
+    <Compile Include="..\..\common\PlatformInfo.cs">
       <Link>PlatformInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

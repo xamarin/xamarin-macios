@@ -23,6 +23,8 @@ namespace XamCore.HomeKit {
 					return HMActionSetType.HomeArrival;
 				if (s == HMActionSetTypesInternal.UserDefined)
 					return HMActionSetType.UserDefined;
+				if (s == HMActionSetTypesInternal.TriggerOwned)
+					return HMActionSetType.TriggerOwned;
 				return HMActionSetType.Unknown;
 			}
 		}

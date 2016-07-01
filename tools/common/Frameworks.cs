@@ -217,6 +217,11 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "MetalPerformanceShaders", "MetalPerformanceShaders", 9 },
 					{ "GameplayKit", "GameplayKit", 9 },
 					{ "HealthKitUI", "HealthKitUI", 9,3 },
+
+					{ "CallKit", "CallKit", 10 },
+					{ "Messages", "Messages", 10 },
+					{ "Speech", "Speech", 10 },
+					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
 				};
 			}
 			return ios_frameworks;
@@ -283,6 +288,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "GameController", "GameController", 9 },
 					{ "GameKit", "GameKit", 9 },
 					{ "GameplayKit", "GameplayKit", 9 },
+					{ "HomeKit", "HomeKit", 10 },
 					{ "ImageIO", "ImageIO", 9 },
 					{ "JavaScriptCore", "JavaScriptCore", 9 },
 					{ "MediaAccessibility", "MediaAccessibility", 9 },
@@ -301,6 +307,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "TVMLKit", "TVMLKit", 9 },
 					{ "TVServices", "TVServices", 9 },
 					{ "UIKit", "UIKit", 9 },
+
+					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
 				};
 			}
 			return tvos_frameworks;

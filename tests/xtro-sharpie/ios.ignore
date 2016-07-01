@@ -20,6 +20,12 @@
 !unknown-native-enum! GKPeerPickerConnectionType bound
 
 
+# ReplayKit
+
+## only used on tvOS but exposed in iOS 10 SDK
+!missing-enum! RPPreviewViewControllerMode not bound
+
+
 # UIKit
 
 ## typedef is used (no value) in UITextInput.h: typedef NSInteger UITextDirection
@@ -51,6 +57,15 @@
 !missing-selector! UITableViewHeaderFooterView::tintColor not bound
 !missing-selector! UIToolbar::setTintColor: not bound
 !missing-selector! UIToolbar::tintColor not bound
+
+
+# WatchConnectivity
+
+## They were _upgraded_ to required in iOS 10 beta 1
+!incorrect-protocol-member! WCSessionDelegate::session:activationDidCompleteWithState:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! WCSessionDelegate::sessionDidBecomeInactive: is REQUIRED and should be abstract
+!incorrect-protocol-member! WCSessionDelegate::sessionDidDeactivate: is REQUIRED and should be abstract
+
 
 ## methods are [Sealed] so we can't reflect the selector
 ### Docs: This method is intended to be called, not overridden.

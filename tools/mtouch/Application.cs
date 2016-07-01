@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Xml.Linq;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -232,6 +233,11 @@ namespace Xamarin.Bundler {
 			get {
 				// Configure sgen to use a small nursery
 				if (IsTodayExtension) {
+					return "nursery-size=512k,soft-heap-limit=8m";
+				} else if (Platform == ApplePlatform.WatchOS) {
+					// A bit test shows different behavior
+					// Sometimes apps are killed with ~100mb allocated,
+					// but I've seen apps allocate up to 240+mb as well
 					return "nursery-size=512k,soft-heap-limit=8m";
 				} else {
 					return "nursery-size=512k";
@@ -789,7 +795,7 @@ namespace Xamarin.Bundler {
 			}
 
 			if (!enable_msym.HasValue)
-				enable_msym = false; // Disable by default for C7 // !EnableDebug && IsDeviceBuild;
+				enable_msym = !EnableDebug && IsDeviceBuild;
 
 			if (!UseMonoFramework.HasValue && DeploymentTarget >= new Version (8, 0)) {
 				if (IsExtension) {
@@ -1330,16 +1336,78 @@ namespace Xamarin.Bundler {
 			};
 		}
 
+		// return the ids found in a macho file
+		List<Guid> GetUuids (MachOFile file)
+		{
+			var result = new List<Guid> ();
+			foreach (var cmd in file.load_commands) {
+				if (cmd is UuidCommand) {
+					var uuidCmd = cmd as UuidCommand;
+					result.Add (new Guid (uuidCmd.uuid));
+				}
+			}
+			return result;
+		}
+
+		// This method generates the manifest that is required by the symbolication in order to be able to debug the application, 
+		// The following is an example of the manifest to be generated:
+		// <mono-debug version=”1”>
+		//	<app-id>com.foo.bar</app-id>
+		//	<build-date>datetime</build-date>
+		//	<build-id>build-id</build-id>
+		//	<build-id>build-id</build-id>
+		// </mono-debug>
+		// where:
+		// 
+		// app-id: iOS/Android/Mac app/package ID. Currently for verification and user info only but in future may be used to find symbols automatically.
+		// build-date: Local time in DateTime “O” format. For user info only.
+		// build-id: The build UUID. Needed for HockeyApp to find the mSYM folder matching the app build. There may be more than one, as in the case of iOS multi-arch.
+		void GenerateMSymManifest (Target target, string target_directory)
+		{
+			var manifestPath = Path.Combine (target_directory, "manifest.xml");
+			if (String.IsNullOrEmpty (target_directory))
+				throw new ArgumentNullException (nameof (target_directory));
+			var root = new XElement ("mono-debug",
+				new XAttribute("version", 1),
+				new XElement ("app-id", BundleId),
+				new XElement ("build-date", DateTime.Now.ToString ("O")));
+				
+			var file = MachO.Read (target.Executable);
+			
+			if (file is MachO) {
+				var mfile = file as MachOFile;
+				var uuids = GetUuids (mfile);
+				foreach (var str in uuids) {
+					root.Add (new XElement ("build-id", str));
+				}
+			} else if (file is IEnumerable<MachOFile>) {
+				var ffile = file as IEnumerable<MachOFile>;
+				foreach (var fentry in ffile) {
+					var uuids = GetUuids (fentry);
+					foreach (var str in uuids) {
+						root.Add (new XElement ("build-id", str));
+					}
+				}
+				
+			} else {
+				// do not write a manifest
+				return;
+			}
+
+			// Write only if we need to update the manifest
+			Driver.WriteIfDifferent (manifestPath, root.ToString ());
+		}
+
 		public void BuildMSymDirectory ()
 		{
 			if (!EnableMSym)
 				return;
 
-			var msym_directory = string.Format ("{0}.msym", AppDirectory);
+			var target_directory = string.Format ("{0}.msym", AppDirectory);
 			foreach (var target in Targets) {
-				var target_directory = Path.Combine (msym_directory, target.Is32Build ? "32" : "64");
 				if (!Directory.Exists (target_directory))
 					Directory.CreateDirectory (target_directory);
+				GenerateMSymManifest (target, target_directory);
 				foreach (var asm in target.Assemblies) {
 					var msym_file = asm.FileName + ".msym";
 					var src = Path.Combine (target.BuildDirectory, msym_file);
@@ -1895,7 +1963,7 @@ namespace Xamarin.Bundler {
 			if (!App.EnableMarkerOnlyBitCode)
 				flags.AddOtherFlag ("-read_only_relocs suppress");
 			flags.LinkWithMono ();
-			flags.AddOtherFlag ($"-install_name @executable_path/{install_name}");
+			flags.AddOtherFlag ("-install_name " + Driver.Quote ($"@executable_path/{install_name}"));
 			flags.AddOtherFlag ("-fapplication-extension"); // fixes this: warning MT5203: Native linking warning: warning: linking against dylib not safe for use in application extensions: [..]/actionextension.dll.arm64.dylib
 		}
 		
@@ -1962,4 +2030,3 @@ namespace Xamarin.Bundler {
 		}
 	}
 }
-

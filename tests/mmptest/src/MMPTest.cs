@@ -310,19 +310,30 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void UnsafeGACResolutionOptions_AllowsWindowsBaseResolution ()
 		{
-			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir)
-				{
-					XM45 = true,
-					TestCode = "System.Console.WriteLine (typeof (System.Windows.DependencyObject));",
-					References = "<Reference Include=\"WindowsBase\" />"
-				};
-
-				TI.TestUnifiedExecutable (test, shouldFail : true);
-
-				test.CSProjConfig = "<MonoBundlingExtraArgs>--allow-unsafe-gac-resolution</MonoBundlingExtraArgs>";
-				TI.TestUnifiedExecutable (test, shouldFail : false);
+			RunMMPTest (tmpDir =>
+			{
+				UnsafeGACTestCore (tmpDir, true);
+				UnsafeGACTestCore (tmpDir, false);
 			});
 		}
-	}
+
+		static void UnsafeGACTestCore (string tmpDir, bool useFullProfile)
+		{
+			TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir)
+			{
+				XM45 = useFullProfile,
+				TestCode = "System.Console.WriteLine (typeof (System.Windows.DependencyObject));",
+				References = "<Reference Include=\"WindowsBase\" /><Reference Include=\"System.Xaml\" />"
+			};
+
+			TI.TestUnifiedExecutable (test, shouldFail: true);
+
+			// Mobile will fail terribly due to mismatch BCL, no need to see if this works. Just testing that Mobile fails
+			if (useFullProfile)
+			{
+				test.CSProjConfig = "<MonoBundlingExtraArgs>--allow-unsafe-gac-resolution</MonoBundlingExtraArgs>";
+				TI.TestUnifiedExecutable (test, shouldFail: false);
+			}
+		}
+}
 }

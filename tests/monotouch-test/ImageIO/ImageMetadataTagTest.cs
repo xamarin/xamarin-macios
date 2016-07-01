@@ -47,8 +47,7 @@ namespace MonoTouchFixtures.ImageIO {
 		[Test]
 		public void Ctor_NSString ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Ignore ("Requires iOS 7+");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			using (var value = new NSString ("value"))
 			using (var tag = new CGImageMetadataTag (nspace, prefix, name, CGImageMetadataType.Default, value)) {
@@ -64,8 +63,7 @@ namespace MonoTouchFixtures.ImageIO {
 		[Test]
 		public void Ctor_NSNumber ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Ignore ("Requires iOS 7+");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			using (var value = NSNumber.FromByte (255))
 			using (var tag = new CGImageMetadataTag (nspace, prefix, name, CGImageMetadataType.Default, value)) {
@@ -81,8 +79,7 @@ namespace MonoTouchFixtures.ImageIO {
 		[Test]
 		public void Ctor_NSArray ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Ignore ("Requires iOS 7+");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			using (var value = NSArray.FromNSObjects (nspace, prefix, name))
 			using (var tag = new CGImageMetadataTag (nspace, prefix, name, CGImageMetadataType.Default, value)) {
@@ -90,7 +87,7 @@ namespace MonoTouchFixtures.ImageIO {
 				Assert.That (tag.Namespace.ToString (), Is.EqualTo ("http://ns.adobe.com/exif/1.0/"), "Namespace");
 				Assert.That (tag.Prefix.ToString (), Is.EqualTo ("exif"), "Prefix");
 				Assert.That (tag.Type, Is.EqualTo (CGImageMetadataType.ArrayOrdered), "Type");
-				Assert.That (tag.Value, Is.TypeOf<NSMutableArray> (), "Value");
+				Assert.That (tag.Value, Is.TypeOf<NSArray> (), "Value");
 				Assert.Null (tag.GetQualifiers (), "GetQualifiers");
 			}
 		}
@@ -98,8 +95,7 @@ namespace MonoTouchFixtures.ImageIO {
 		[Test]
 		public void Ctor_NSDictionary ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Ignore ("Requires iOS 7+");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			using (var value = NSDictionary.FromObjectAndKey (name, prefix))
 			using (var tag = new CGImageMetadataTag (nspace, prefix, name, CGImageMetadataType.Default, value)) {
@@ -115,8 +111,7 @@ namespace MonoTouchFixtures.ImageIO {
 		[Test]
 		public void Ctor_Bool_True ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Ignore ("Requires iOS 7+");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			using (var tag = new CGImageMetadataTag (nspace, prefix, name, CGImageMetadataType.Default, true)) {
 				Assert.That (CFGetRetainCount (tag.Handle), Is.EqualTo (1), "RetainCount");
@@ -133,8 +128,7 @@ namespace MonoTouchFixtures.ImageIO {
 		[Test]
 		public void Ctor_Bool_False ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Ignore ("Requires iOS 7+");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
 			var rc = name.RetainCount;
 			using (var tag = new CGImageMetadataTag (nspace, prefix, name,  CGImageMetadataType.Default, false)) {

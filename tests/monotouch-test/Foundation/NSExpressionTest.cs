@@ -9,11 +9,12 @@ using MonoTouch.Foundation;
 #endif
 using NUnit.Framework;
 
+[assembly: Preserve (typeof (NSExpression), AllMembers = true)]
+
 namespace MonoTouchFixtures.Foundation
 {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	[assembly: Preserve (typeof (NSExpression))]
 	public class NSExpressionTest
 	{
 		List<string> properties = new List<string> { "Block", "ConstantValue", "KeyPath",  "Function", 

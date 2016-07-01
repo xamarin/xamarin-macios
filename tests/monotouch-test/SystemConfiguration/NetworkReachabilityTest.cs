@@ -50,10 +50,13 @@ namespace MonoTouchFixtures.SystemConfiguration {
 				NetworkReachabilityFlags flags;
 
 				Assert.IsTrue (nr.TryGetFlags (out flags), "#1");
-				var expected = NetworkReachabilityFlags.Reachable | NetworkReachabilityFlags.IsLocalAddress;
-				if (UIDevice.CurrentDevice.CheckSystemVersion (9, 0))
-					expected |= NetworkReachabilityFlags.IsDirect; // make sense
-				Assert.That (flags, Is.EqualTo (expected), "#1 Reachable");
+
+				// inconsistent results across different iOS versions
+				// < 9.0 -> Reachable | IsLocalAddress
+				// 9.x -> Reachable | IsLocalAddress | IsDirect
+				// 10.0 -> Reachable
+				// so we're only checking the (most important) Reachable flag
+				Assert.True ((flags & NetworkReachabilityFlags.Reachable) != 0, "Reachable");
 			}
 
 			using (var nr = new NetworkReachability (new IPAddress (new byte[] { 10, 99, 99, 99 })))

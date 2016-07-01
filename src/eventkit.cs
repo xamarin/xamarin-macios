@@ -85,7 +85,7 @@ namespace XamCore.EventKit {
 		[Export ("lastModifiedDate")]
 		NSDate LastModifiedDate { get;  }
 
-		[Export ("creationDate")]
+		[NullAllowed, Export ("creationDate", ArgumentSemantic.Strong)]
 		NSDate CreationDate { get;  }
 
 		[NullAllowed] // by default this property is null

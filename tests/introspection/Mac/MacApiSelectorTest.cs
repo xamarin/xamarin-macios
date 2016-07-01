@@ -20,6 +20,7 @@ using MonoMac.ObjCRuntime;
 #endif
 
 using NUnit.Framework;
+using Xamarin.Tests;
 
 namespace Introspection {
 	

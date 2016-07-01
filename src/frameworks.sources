@@ -256,6 +256,11 @@ AVKIT_API_SOURCES = \
 AVKIT_SOURCES = \
 	AVKit/AVPlayerViewController.cs \
 
+# CallKit
+
+CALLKIT_SOURCES = \
+	CallKit/CXProvider.cs \
+
 # ClockKit
 
 CLOCKKIT_CORE_SOURCES = \
@@ -489,6 +494,7 @@ CORESPOTLIGHT_API_SOURCES = \
 	CoreSpotlight/CSEnums.cs \
 	
 CORESPOTLIGHT_SOURCES = \
+	CoreSpotlight/CSCompat.cs \
 	CoreSpotlight/CSSearchableIndex.cs \
 	CoreSpotlight/CSSearchableItemAttributeSet.cs \
 
@@ -726,6 +732,7 @@ GAMEKIT_SOURCES = \
 
 GAMEPLAYKIT_SOURCES = \
 	GameplayKit/GKBehavior.cs \
+	GameplayKit/GKCompat.cs \
 	GameplayKit/GKComponentSystem.cs \
 	GameplayKit/GKEntity.cs \
 	GameplayKit/GKGameModel.cs \
@@ -1277,6 +1284,7 @@ UIKIT_SOURCES = \
 	UIKit/UITextAttributes.cs \
 	UIKit/UITextField.cs \
 	UIKit/UITextView.cs \
+	UIKit/UITraitCollection.cs \
 	UIKit/UIToolbar.cs \
 	UIKit/UIVibrancyEffect.cs \
 	UIKit/UIVideo.cs \
@@ -1284,6 +1292,11 @@ UIKIT_SOURCES = \
 	UIKit/UIViewController.cs \
 	UIKit/UIViewControllerTransitionCoordinatorContext.cs \
 	UIKit/UIWindow.cs \
+
+# VideoSubscriberAccount
+
+VIDEOSUBSCRIBERACCOUNT_SOURCES = \
+	VideoSubscriberAccount/VSAccountManager.cs \
 
 # VideoToolbox
 
@@ -1493,6 +1506,7 @@ MAC_FRAMEWORKS =            \
 	QuartzComposer          \
 	QuickLook               \
 	QuickLookUI             \
+	SafariServices          \
 	SceneKit                \
 	ScriptingBridge         \
 	SearchKit               \
@@ -1517,6 +1531,7 @@ IOS_FRAMEWORKS =         \
 	AssetsLibrary \
 	AudioToolbox \
 	AudioUnit \
+	CallKit \
 	CFNetwork \
 	CloudKit \
 	Contacts \
@@ -1552,6 +1567,7 @@ IOS_FRAMEWORKS =         \
 	MediaAccessibility \
 	MediaPlayer \
 	MediaToolbox \
+	Messages \
 	MessageUI \
 	Metal \
 	MetalKit \
@@ -1573,12 +1589,14 @@ IOS_FRAMEWORKS =         \
 	SceneKit \
 	Security \
 	Social \
+	Speech \
 	SpriteKit \
 	StoreKit \
 	SystemConfiguration \
 	Twitter \
 	UIKit \
 	VideoToolbox \
+	VideoSubscriberAccount \
 	WatchConnectivity \
 	WatchKit \
 	WKWebKit \
@@ -1629,6 +1647,7 @@ TVOS_FRAMEWORKS =           \
 	GameController          \
 	GameKit                 \
 	GameplayKit             \
+	HomeKit                 \
 	ImageIO                 \
 	JavaScriptCore          \
 	MapKit                  \
@@ -1649,6 +1668,7 @@ TVOS_FRAMEWORKS =           \
 	TVMLKit                 \
 	TVServices				\
 	UIKit                   \
+	VideoSubscriberAccount  \
 
 #
 # Compute the SOURCES variables.

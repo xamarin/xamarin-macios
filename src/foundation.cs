@@ -955,7 +955,7 @@ namespace XamCore.Foundation
 
 	[Since (3,2)]
 	[BaseType (typeof (NSObject))]
-	public interface NSCharacterSet : NSCoding, NSMutableCopying {
+	public interface NSCharacterSet : NSSecureCoding, NSMutableCopying {
 		[Static, Export ("alphanumericCharacterSet")]
 		NSCharacterSet Alphanumerics {get;}
 
@@ -2703,6 +2703,9 @@ namespace XamCore.Foundation
 
 		[Export ("setAttributes:range:")]
 		void LowLevelSetAttributes (IntPtr dictionaryAttrsHandle, NSRange range);
+
+		[Export ("mutableString", ArgumentSemantic.Retain)]
+		NSMutableString MutableString { get; }
 
 		[Export ("addAttribute:value:range:")]
 		void AddAttribute (NSString attributeName, NSObject value, NSRange range);
@@ -4601,8 +4604,9 @@ namespace XamCore.Foundation
 		[Export ("setResourceValue:forKey:error:"), Internal]
 		bool SetResourceValue (NSObject value, NSString key, out NSError error);
 		
-		//[Export ("port")]
-		//NSNumber Port { get;}
+		[Export ("port"), Internal]
+		[NullAllowed]
+		NSNumber PortNumber { get; }
 
 		[Field ("NSURLNameKey")]
 		NSString NameKey { get; }

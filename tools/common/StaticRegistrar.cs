@@ -432,7 +432,7 @@ namespace XamCore.Registrar {
 			case "System.IntPtr": return "void *";
 			case "System.SByte": return "unsigned char";
 			case "System.Byte": return "signed char";
-			case "System.Char": return "signed char";
+			case "System.Char": return "signed short";
 			case "System.Int16": return "short";
 			case "System.UInt16": return "unsigned short";
 			case "System.Int32": return "int";
@@ -572,7 +572,7 @@ namespace XamCore.Registrar {
 		public static int GetValueTypeSize (TypeDefinition type, bool is_64_bits)
 		{
 			switch (type.FullName) {
-				case "System.Char":
+				case "System.Char": return 2;
 				case "System.Boolean":
 				case "System.SByte":
 				case "System.Byte": return 1;
@@ -1811,8 +1811,8 @@ namespace XamCore.Registrar {
 		{
 			switch (structure.FullName) {
 			case "System.Char":
-				name.Append ('c');
-				body.AppendLine ("char v{0};", size);
+				name.Append ('s');
+				body.AppendLine ("short v{0};", size);
 				size += 1;
 				break;
 			case "System.Boolean": // map managed 'bool' to ObjC BOOL
@@ -1941,7 +1941,7 @@ namespace XamCore.Registrar {
 			case "System.IntPtr": return "void *";
 			case "System.SByte": return "signed char";
 			case "System.Byte": return "unsigned char";
-			case "System.Char": return "signed char";
+			case "System.Char": return "signed short";
 			case "System.Int16": return "short";
 			case "System.UInt16": return "unsigned short";
 			case "System.Int32": return "int";

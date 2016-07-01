@@ -68,4 +68,14 @@ namespace XamCore.UIKit {
 		}
 	}
 #endif
+
+#if !XAMCORE_4_0
+	public partial class UIPresentationController {
+
+		[Obsolete ("Removed in iOS10. Use .ctor(UIViewController,UIViewController)")]
+		public UIPresentationController ()
+		{
+		}
+	}
+#endif
 }

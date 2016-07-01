@@ -7,6 +7,7 @@ using MonoMac.Foundation;
 #endif
 
 using NUnit.Framework;
+using Xamarin.Tests;
 
 namespace Introspection {
 

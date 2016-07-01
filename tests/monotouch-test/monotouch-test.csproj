@@ -165,7 +165,6 @@
     <Compile Include="AddressBook\AddressBookTest.cs" />
     <Compile Include="CoreMedia\CMTimeTests.cs" />
     <Compile Include="UIKit\UIDocumentTest.cs" />
-    <Compile Include="CoreVideo\PixelFormatTypeTest.cs" />
     <Compile Include="UIKit\SplitViewControllerTest.cs" />
     <Compile Include="Foundation\UrlTest.cs" />
     <Compile Include="UIKit\DictationPhrase.cs" />
@@ -531,6 +530,11 @@
     <Compile Include="CoreAudioKit\AUViewController.cs" />
     <Compile Include="ObjCRuntime\ExceptionsTest.cs" />
     <Compile Include="Foundation\NSExpressionTest.cs" />
+    <Compile Include="CoreGraphics\RectTest.cs" />
+    <Compile Include="Messages\MSMessageTest.cs" />
+    <Compile Include="..\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
@@ -591,6 +595,7 @@
     <Folder Include="MetalPerformanceShaders\" />
     <Folder Include="CoreMidi\" />
     <Folder Include="CoreAudioKit\" />
+    <Folder Include="Messages\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />

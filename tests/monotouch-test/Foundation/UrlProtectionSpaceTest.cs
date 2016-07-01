@@ -59,7 +59,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void Https ()
 		{
 			using (var ps = new NSUrlProtectionSpace ("mail.google.com", 443, NSUrlProtectionSpace.HTTPS, null, NSUrlProtectionSpace.AuthenticationMethodHTTPBasic)) {
-				if (TestRuntime.CheckiOSSystemVersion (9, 0)) {
+				if (TestRuntime.CheckXcodeVersion (7, 0)) {
 					Assert.That (ps.AuthenticationMethod, Is.EqualTo ("NSURLAuthenticationMethodHTTPBasic"), "AuthenticationMethod");
 				} else {
 					Assert.That (ps.AuthenticationMethod, Is.EqualTo ("NSURLAuthenticationMethodDefault"), "AuthenticationMethod");
