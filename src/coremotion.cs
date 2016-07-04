@@ -284,6 +284,10 @@ namespace XamCore.CoreMotion {
 		[NullAllowed]
 		[Export ("currentCadence")]
 		NSNumber CurrentCadence { get; }
+
+		[iOS (10,0)]
+		[NullAllowed, Export ("averageActivePace")]
+		NSNumber AverageActivePace { get; }
 	}
 
 	[iOS (8,0)]
@@ -307,6 +311,7 @@ namespace XamCore.CoreMotion {
 		void QueryPedometerData (NSDate start, NSDate end, Action<CMPedometerData,NSError> handler);
 
 		[Export ("startPedometerUpdatesFromDate:withHandler:")]
+		[Async]
 		void StartPedometerUpdates (NSDate start, Action<CMPedometerData,NSError> handler);
 
 		[Export ("stopPedometerUpdates")]
@@ -321,6 +326,20 @@ namespace XamCore.CoreMotion {
 		[Static]
 		[Export ("isCadenceAvailable")]
 		bool IsCadenceAvailable { get; }
+
+		[Watch (3,0)][iOS (10,0)]
+		[Static]
+		[Export ("isPedometerEventTrackingAvailable")]
+		bool IsPedometerEventTrackingAvailable { get; }
+
+		[Watch (3,0)][iOS (10,0)]
+		[Async]
+		[Export ("startPedometerEventUpdatesWithHandler:")]
+		void StartPedometerEventUpdates (Action<CMPedometerEvent,NSError> handler);
+
+		[Watch (3,0)][iOS (10,0)]
+		[Export ("stopPedometerEventUpdates")]
+		void StopPedometerEventUpdates ();
 	}
 
 	[Since (7,0)]
@@ -397,10 +416,30 @@ namespace XamCore.CoreMotion {
 		bool IsRelativeAltitudeAvailable { get; }
 
 		[Export ("startRelativeAltitudeUpdatesToQueue:withHandler:")]
+		[Async]
 		void StartRelativeAltitudeUpdates (NSOperationQueue queue, Action<CMAltitudeData,NSError> handler);
 
 		[Export ("stopRelativeAltitudeUpdates")]
 		void StopRelativeAltitudeUpdates ();
+
+		[NoWatch][iOS (10,0)]
+		[Static]
+		[Export ("isSignificantElevationAvailable")]
+		bool IsSignificantElevationAvailable { get; }
+
+		[NoWatch][iOS (10,0)]
+		[Async]
+		[Export ("startSignificantElevationUpdatesWithHandler:")]
+		void StartSignificantElevationUpdates (Action<CMSignificantElevationSample,NSError> handler);
+
+		[NoWatch][iOS (10,0)]
+		[Export ("stopSignificantElevationUpdates")]
+		void StopSignificantElevationUpdates ();
+
+		[NoWatch][iOS (10,0)]
+		[Async]
+		[Export ("querySignificantElevationChangeFromDate:toDate:withHandler:")]
+		void QuerySignificantElevationChange (NSDate fromDate, NSDate toDate, Action<CMSignificantElevationSample,NSError> handler);
 	}
 
 	[iOS (9,0)]
@@ -431,8 +470,39 @@ namespace XamCore.CoreMotion {
 		[Export ("recordAccelerometerForDuration:")]
 		void RecordAccelerometer (double duration);
 	}
-	
+
+	[Watch (3,0)][NoTV][iOS (10,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // instances exposed from delegate
+	interface CMSignificantElevationSample : NSCopying, NSSecureCoding {
+		[Export ("startDate")]
+		NSDate StartDate { get; }
+
+		[Export ("endDate")]
+		NSDate EndDate { get; }
+
+		[Export ("elevationAscended")]
+		NSNumber ElevationAscended { get; }
+
+		[Export ("elevationDescended")]
+		NSNumber ElevationDescended { get; }
+	}
+
+	[Watch (3,0)][NoTV][iOS (10,0)]
+	[Native]
+	public enum CMPedometerEventType : nint {
+		Pause,
+		Resume
+	}
+
+	[Watch (3,0)][NoTV][iOS (10,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // instances exposed from delegate
+	interface CMPedometerEvent : NSSecureCoding, NSCopying {
+		[Export ("date")]
+		NSDate Date { get; }
+
+		[Export ("type")]
+		CMPedometerEventType Type { get; }
+	}
 }
-
-
-
