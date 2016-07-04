@@ -799,10 +799,12 @@ namespace XamCore.CoreBluetooth {
 		[PostGet ("WeakDelegate")]
 		IntPtr Constructor ([Protocolize] CBPeripheralManagerDelegate peripheralDelegate, [NullAllowed] DispatchQueue queue, [NullAllowed] NSDictionary options);
 
+		[NullAllowed]
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
 		CBPeripheralManagerDelegate Delegate { get; set; }
 
+		[NullAllowed]
 		[Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 
