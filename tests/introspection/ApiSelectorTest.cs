@@ -96,6 +96,12 @@ namespace Introspection {
 			// AVAudioChannelLayout and AVAudioFormat started conforming to NSSecureCoding in OSX 10.11 and iOS 9
 			case "AVAudioChannelLayout":
 			case "AVAudioFormat":
+			// NSSecureCoding added in iOS 10 / macOS 10.12
+			case "WKPreferences":
+			case "WKUserContentController":
+			case "WKProcessPool":
+			case "WKWebViewConfiguration":
+			case "WKWebsiteDataStore":
 				switch (selectorName) {
 				case "encodeWithCoder:":
 					return true;
