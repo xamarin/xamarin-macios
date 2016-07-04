@@ -84,7 +84,7 @@ namespace XamCore.NotificationCenter {
 		void SetWidgetLargestAvailableDisplayMode (NCWidgetDisplayMode mode);
 
 		[iOS (10,0)]
-		[Export ("widgetActiveDisplayMode", ArgumentSemantic.Assign)]
+		[Export ("widgetActiveDisplayMode")]
 		NCWidgetDisplayMode GetWidgetActiveDisplayMode ();
 
 		[iOS (10,0)]
