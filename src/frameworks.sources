@@ -1602,6 +1602,7 @@ IOS_FRAMEWORKS =         \
 	Twitter \
 	UIKit \
 	UserNotifications \
+	UserNotificationsUI \
 	VideoToolbox \
 	VideoSubscriberAccount \
 	WatchConnectivity \

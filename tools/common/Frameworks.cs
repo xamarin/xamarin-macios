@@ -223,6 +223,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "Speech", "Speech", 10 },
 					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
 					{ "UserNotifications", "UserNotifications", 10 },
+					{ "UserNotificationsUI", "UserNotificationsUI", 10 },
 				};
 			}
 			return ios_frameworks;
