@@ -931,8 +931,10 @@ MULTIPEERCONNECTIVITY_SOURCES = \
 
 # NetworkExtension
 
-NETWORKEXTENSION_CORE_SOURCES = \
+NETWORKEXTENSION_API_SOURCES = \
 	NetworkExtension/NEEnums.cs \
+
+NETWORKEXTENSION_CORE_SOURCES = \
 	NetworkExtension/NEHotspotHelperOptions.cs \
 	NetworkExtension/NEVpnConnectionStartOptions.cs \
 

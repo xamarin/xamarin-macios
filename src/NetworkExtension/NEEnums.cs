@@ -3,6 +3,7 @@ using XamCore.ObjCRuntime;
 namespace XamCore.NetworkExtension {
 
 	[iOS (8,0)][Mac (10,10)]
+	[ErrorDomain ("NEVPNErrorDomain")]
 	[Native]
 	public enum NEVpnError : nint {
 		ConfigurationInvalid = 1,
@@ -67,7 +68,8 @@ namespace XamCore.NetworkExtension {
 	[iOS (8,0)][Mac (10,10)]
 	[Native]
 	public enum NEVpnIke2DiffieHellman : nint {
-		Group0 = 0,
+		Invalid = 0,
+		Group0 = Invalid,
 		Group1 = 1,
 		Group2 = 2,
 		Group5 = 5,
@@ -118,6 +120,7 @@ namespace XamCore.NetworkExtension {
 
 	// in Xcode7 SDK but marked as 8.0
 	[iOS (8,0)]
+	[ErrorDomain ("NEFilterErrorDomain")]
 	[Native]
 	public enum NEFilterManagerError : nint {
 		None = 0,
@@ -128,6 +131,7 @@ namespace XamCore.NetworkExtension {
 	}
 
 	[iOS (9,0)]
+	[ErrorDomain ("NETunnelProviderErrorDomain")]
 	[Native]
 	public enum NETunnelProviderError : nint {
 		None = 0,
@@ -137,6 +141,7 @@ namespace XamCore.NetworkExtension {
 	}
 
 	[iOS (9,0)]
+	[ErrorDomain ("NEAppProxyErrorDomain")]
 	[Native]
 	public enum NEAppProxyFlowError : nint {
 		None = 0,
