@@ -17,4 +17,11 @@ namespace XamCore.NotificationCenter {
 		NoData,
 		Failed
 	}
+
+	[iOS (10,0)][NoMac]
+	[Native]
+	public enum NCWidgetDisplayMode : nint {
+		Compact,
+		Expanded
+	}
 }
