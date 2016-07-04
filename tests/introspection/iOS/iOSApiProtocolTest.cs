@@ -328,6 +328,12 @@ namespace Introspection {
 #endif
 				}
 				break;
+			case "NSMutableCopying":
+				switch (type.Name) {
+				case "UNNotificationSound":
+					return true;
+				}
+				break;
 			case "UIAccessibilityIdentification":
 				// UIView satisfy the contract - but return false for conformance (and so does all it's subclasses)
 				return true;

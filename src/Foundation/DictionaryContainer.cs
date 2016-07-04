@@ -34,6 +34,10 @@ using System.Runtime.InteropServices;
 using XamCore.CoreFoundation;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
+using XamCore.CoreGraphics;
+#if !WATCH
+using XamCore.CoreMedia;
+#endif // !WATCH
 #endif
 
 namespace XamCore.Foundation {
@@ -271,7 +275,48 @@ namespace XamCore.Foundation {
 				return CFString.FetchString (CFDictionary.GetValue (Dictionary.Handle, str.handle));
 			}
 		}
+#if XAMCORE_2_0
+		protected CGRect? GetCGRectValue (NSString key)
+		{
+			var dictValue = GetNSDictionary (key);
+			CGRect value;
+			if (!CGRect.TryParse (dictValue, out value))
+				return null;
 
+			return value;
+		}
+
+		protected CGSize? GetCGSizeValue (NSString key)
+		{
+			var dictValue = GetNSDictionary (key);
+			CGSize value;
+			if (!CGSize.TryParse (dictValue, out value))
+				return null;
+
+			return value;
+		}
+
+		protected CGPoint? GetCGPointValue (NSString key)
+		{
+			var dictValue = GetNSDictionary (key);
+			CGPoint value;
+			if (!CGPoint.TryParse (dictValue, out value))
+				return null;
+
+			return value;
+		}
+#endif // XAMCORE_2_0
+#if !WATCH
+		protected CMTime? GetCMTimeValue (NSString key)
+		{
+			var dictValue = GetNSDictionary (key);
+			var value = CMTime.FromDictionary (dictValue);
+			if (value.IsInvalid)
+				return null;
+
+			return value;
+		}
+#endif // !WATCH
 		bool NullCheckAndRemoveKey (NSString key, bool removeEntry)
 		{
 			if (key == null)
@@ -397,6 +442,36 @@ namespace XamCore.Foundation {
 
 			((NSMutableDictionary) Dictionary).Remove (key);
 		}
+
+		#region Sets structs values
+
+#if XAMCORE_2_0
+		protected void SetCGRectValue (NSString key, CGRect? value)
+		{
+			if (NullCheckAndRemoveKey (key, !value.HasValue))
+				Dictionary [key] = value.Value.ToDictionary ();
+		}
+
+		protected void SetCGSizeValue (NSString key, CGSize? value)
+		{
+			if (NullCheckAndRemoveKey (key, !value.HasValue))
+				Dictionary [key] = value.Value.ToDictionary ();
+		}
+
+		protected void SetCGPointValue (NSString key, CGPoint? value)
+		{
+			if (NullCheckAndRemoveKey (key, !value.HasValue))
+				Dictionary [key] = value.Value.ToDictionary ();
+		}
+#endif // XAMCORE_2_0
+#if !WATCH
+		protected void SetCMTimeValue (NSString key, CMTime? value)
+		{
+			if (NullCheckAndRemoveKey (key, !value.HasValue))
+				Dictionary [key] = value.Value.ToDictionary ();
+		}
+#endif //!WATCH
+		#endregion
 #endif
 	}
 

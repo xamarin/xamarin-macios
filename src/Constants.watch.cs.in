@@ -31,5 +31,8 @@ namespace ObjCRuntime {
 		public const string UIKitLibrary = "/System/Library/Frameworks/UIKit.framework/UIKit";
 		public const string WatchConnectivityLibrary = "/System/Library/Frameworks/WatchConnectivity.framework/WatchConnectivity";
 		public const string WatchKitLibrary = "/System/Library/Frameworks/WatchKit.framework/WatchKit";
+
+		// WatchOS 3.0
+		public const string UserNotificationsLibrary = "/System/Library/Frameworks/UserNotifications.framework/UserNotifications";
 	}
 }

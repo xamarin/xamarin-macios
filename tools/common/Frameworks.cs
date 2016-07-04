@@ -222,6 +222,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "Messages", "Messages", 10 },
 					{ "Speech", "Speech", 10 },
 					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
+					{ "UserNotifications", "UserNotifications", 10 },
+					{ "UserNotificationsUI", "UserNotificationsUI", 10 },
 				};
 			}
 			return ios_frameworks;
@@ -254,6 +256,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "UIKit", "UIKit", 2 },
 					{ "WatchConnectivity", "WatchConnectivity", 2 },
 					{ "WatchKit", "WatchKit", 2 },
+
+					{ "UserNotifications", "UserNotifications", 3 },
 				};
 			}
 			return watch_frameworks;
@@ -309,6 +313,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "UIKit", "UIKit", 9 },
 
 					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
+					{ "UserNotifications", "UserNotifications", 10 },
 				};
 			}
 			return tvos_frameworks;
