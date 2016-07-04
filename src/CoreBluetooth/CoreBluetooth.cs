@@ -116,7 +116,7 @@ namespace XamCore.CoreBluetooth {
 #if !MONOMAC && !XAMCORE_4_0
 	public partial class CBCentralManager {
 
-		public CBCentralManagerState State {
+		public virtual CBCentralManagerState State {
 			get {
 				return (CBCentralManagerState)base.State;
 			}
@@ -125,7 +125,7 @@ namespace XamCore.CoreBluetooth {
 
 	public partial class CBPeripheralManager {
 
-		public CBPeripheralManagerState State {
+		public virtual CBPeripheralManagerState State {
 			get {
 				return (CBPeripheralManagerState)base.State;
 			}

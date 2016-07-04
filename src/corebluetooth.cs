@@ -34,7 +34,7 @@ namespace XamCore.CoreBluetooth {
 #endif
 	}
 
-	[iOS (10,0)]
+	[iOS (10,0)][NoMac]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface CBManager {
