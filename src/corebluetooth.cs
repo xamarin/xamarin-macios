@@ -44,11 +44,21 @@ namespace XamCore.CoreBluetooth {
 
 	[Since (5,0)]
 	[Lion]
-	[BaseType (typeof (CBManager), Delegates=new[] {"WeakDelegate"}, Events = new[] { typeof (CBCentralManagerDelegate)})]
+	[BaseType (
+#if MONOMAC
+	typeof (NSObject)
+#else
+	typeof (CBManager)
+#endif
+	, Delegates=new[] {"WeakDelegate"}, Events = new[] { typeof (CBCentralManagerDelegate)})]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
 	interface CBCentralManager {
+#if MONOMAC
+		// Removed in iOS 10 – The selector now exists in the base type.
+		// Note: macOS doesn't inherit from CBManager.
 		[Export ("state")]
 		CBCentralManagerState State { get;  }
+#endif
 
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -673,7 +683,11 @@ namespace XamCore.CoreBluetooth {
 		[Field ("CBUUIDCharacteristicAggregateFormatString")]
 		NSString CharacteristicAggregateFormatString { get; }
 
+#if !MONOMAC // Filled radar://27160443 – Trello: https://trello.com/c/oqB27JA6
 		[Field ("CBUUIDCharacteristicValidRangeString")]
+#else
+		[Field ("CBUUIDValidRangeString")]
+#endif
 		NSString CharacteristicValidRangeString { get; }
 
 #if !XAMCORE_3_0
@@ -763,7 +777,13 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	[Since (6, 0), Mac(10,9)]
-	[BaseType (typeof (CBManager), Delegates=new[] { "WeakDelegate" }, Events=new[] { typeof (CBPeripheralManagerDelegate) })]
+	[BaseType (
+#if MONOMAC
+	typeof (NSObject)
+#else
+	typeof (CBManager)
+#endif
+	, Delegates=new[] { "WeakDelegate" }, Events=new[] { typeof (CBPeripheralManagerDelegate) })]
 	interface CBPeripheralManager {
 		[NoTV]
 		[Export ("initWithDelegate:queue:")]
@@ -789,8 +809,9 @@ namespace XamCore.CoreBluetooth {
 		[Export ("isAdvertising")]
 		bool Advertising { get; }
 
-#if XAMCORE_4_0
-		// Removed in iOS 10 – Breaking change.
+#if MONOMAC
+		// Removed in iOS 10 – The selector now exists in the base type.
+		// Note: macOS doesn't inherit from CBManager.
 		[Export ("state")]
 		CBPeripheralManagerState State { get; }
 #endif
