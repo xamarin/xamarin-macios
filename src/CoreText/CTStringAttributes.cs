@@ -79,6 +79,7 @@ namespace XamCore.CoreText {
 		public static readonly NSString KerningAdjustment;
 		public static readonly NSString LigatureFormation;
 		public static readonly NSString ForegroundColor;
+		public static readonly NSString BackgroundColor;
 		public static readonly NSString ParagraphStyle;
 		public static readonly NSString StrokeWidth;
 		public static readonly NSString StrokeColor;
@@ -86,6 +87,7 @@ namespace XamCore.CoreText {
 		public static readonly NSString Superscript;
 		public static readonly NSString UnderlineColor;
 		public static readonly NSString VerticalForms;
+		public static readonly NSString HorizontalInVerticalForms;
 		public static readonly NSString GlyphInfo;
 		public static readonly NSString CharacterShape;
 		public static readonly NSString RunDelegate;
@@ -106,6 +108,7 @@ namespace XamCore.CoreText {
 				KerningAdjustment           = Dlfcn.GetStringConstant (handle, "kCTKernAttributeName");
 				LigatureFormation           = Dlfcn.GetStringConstant (handle, "kCTLigatureAttributeName");
 				ForegroundColor             = Dlfcn.GetStringConstant (handle, "kCTForegroundColorAttributeName");
+				BackgroundColor             = Dlfcn.GetStringConstant (handle, "kCTBackgroundColorAttributeName");
 				ParagraphStyle              = Dlfcn.GetStringConstant (handle, "kCTParagraphStyleAttributeName");
 				StrokeWidth                 = Dlfcn.GetStringConstant (handle, "kCTStrokeWidthAttributeName");
 				StrokeColor                 = Dlfcn.GetStringConstant (handle, "kCTStrokeColorAttributeName");
@@ -113,6 +116,7 @@ namespace XamCore.CoreText {
 				Superscript                 = Dlfcn.GetStringConstant (handle, "kCTSuperscriptAttributeName");
 				UnderlineColor              = Dlfcn.GetStringConstant (handle, "kCTUnderlineColorAttributeName");
 				VerticalForms               = Dlfcn.GetStringConstant (handle, "kCTVerticalFormsAttributeName");
+				HorizontalInVerticalForms   = Dlfcn.GetStringConstant (handle, "kCTHorizontalInVerticalFormsAttributeName");
 				GlyphInfo                   = Dlfcn.GetStringConstant (handle, "kCTGlyphInfoAttributeName");
 				CharacterShape              = Dlfcn.GetStringConstant (handle, "kCTCharacterShapeAttributeName");
 				RunDelegate                 = Dlfcn.GetStringConstant (handle, "kCTRunDelegateAttributeName");
@@ -191,6 +195,15 @@ namespace XamCore.CoreText {
 				return h == IntPtr.Zero ? null : new CGColor (h);
 			}
 			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.ForegroundColor, value);}
+		}
+
+		[iOS (10,0)][Mac(10,12)]
+		public CGColor BackgroundColor {
+			get {
+				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.BackgroundColor.Handle);
+				return h == IntPtr.Zero ? null : new CGColor (h);
+			}
+			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.BackgroundColor, value);}
 		}
 
 		public CTParagraphStyle ParagraphStyle {
@@ -279,6 +292,12 @@ namespace XamCore.CoreText {
 				CFMutableDictionary.SetValue (Dictionary.Handle,
 						CTStringAttributeKey.VerticalForms.Handle, value);
 			}
+		}
+
+		[iOS (10,0)][Mac(10,12)]
+		public int? HorizontalInVerticalForms {
+			get {return Adapter.GetInt32Value (Dictionary, CTStringAttributeKey.HorizontalInVerticalForms);}
+			set {Adapter.SetValue (Dictionary, CTStringAttributeKey.HorizontalInVerticalForms, value);}
 		}
 
 		public CTGlyphInfo GlyphInfo {
