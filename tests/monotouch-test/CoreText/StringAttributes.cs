@@ -75,6 +75,22 @@ namespace MonoTouchFixtures.CoreText
 
 			UIGraphics.EndImageContext ();
 		}
+
+		[Test]
+		public void BackgroundColor ()
+		{
+			var sa = new CTStringAttributes ();
+			Assert.DoesNotThrow (() => { sa.BackgroundColor = UIColor.Blue.CGColor; }, "#0");
+			Assert.DoesNotThrow (() => { var x = sa.BackgroundColor; }, "#1");
+		}
+
+		[Test]
+		public void HorizontalInVerticalForms ()
+		{
+			var sa = new CTStringAttributes ();
+			Assert.DoesNotThrow (() => { sa.HorizontalInVerticalForms = 1; }, "#0");
+			Assert.DoesNotThrow (() => { var x = sa.HorizontalInVerticalForms; }, "#1");
+		}
 	}
 }
 
