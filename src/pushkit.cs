@@ -44,6 +44,7 @@ namespace XamCore.PushKit
 		[Export ("pushTokenForType:")]
 		NSData PushToken (string type);
 
+		[DesignatedInitializer]
 		[Export ("initWithQueue:")]
 		IntPtr Constructor (DispatchQueue queue);
 	}
