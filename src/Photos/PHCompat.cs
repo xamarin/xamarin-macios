@@ -1,6 +1,6 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 
-#if !XAMCORE_3_0
+#if !XAMCORE_3_0 && !MONOMAC
 
 using System;
 

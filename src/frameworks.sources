@@ -1023,7 +1023,7 @@ PDFKIT_SOURCES = \
 
 # Photos
 
-PHOTOS_CORE_SOURCES = \
+PHOTOS_API_SOURCES = \
 	Photos/Enums.cs \
 
 PHOTOS_SOURCES = \
