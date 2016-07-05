@@ -178,6 +178,27 @@ namespace MonoTouchFixtures.CoreGraphics {
 		}
 
 		[Test]
+		public void Disposed ()
+		{
+			if (!TestRuntime.CheckXcodeVersion (8, 0))
+				Assert.Ignore ("Requires iOS 10+");
+			
+			var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.ExtendedSrgb);
+			cs.Dispose ();
+
+			Assert.That (cs.Components, Is.EqualTo ((nint)0), "0");
+			Assert.That (cs.Model, Is.EqualTo (CGColorSpaceModel.Unknown), "Unknown");
+			Assert.Null (cs.GetBaseColorSpace (), "GetBaseColorSpace");
+			Assert.That (cs.GetColorTable ().Length, Is.EqualTo (0), "GetColorTable");
+			Assert.Null (cs.GetICCProfile (), "GetICCProfile");
+			Assert.Null (cs.Name, "Name");
+			Assert.False (cs.IsWideGamutRgb, "IsWideGamutRgb");
+			Assert.False (cs.SupportsOutput, "SupportsOutput");
+			Assert.Null (cs.GetIccData (), "GetIccData");
+			// IOW all safe to call with a `nil` handle
+		}
+
+		[Test]
 		public void CreateICCProfile ()
 		{
 			// of all the .icc profiles I have on my Mac then only one I found working is
