@@ -6094,6 +6094,7 @@ namespace XamCore.AppKit {
 
 	[Lion]
 	[BaseType (typeof (NSFontCollection))]
+	[DisableDefaultCtor]
 	interface NSMutableFontCollection {
 		[Export ("setQueryDescriptors:")]
 		void SetQueryDescriptors (NSFontDescriptor [] descriptors);
@@ -6734,6 +6735,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface NSGridRow : NSCoding
 	{
 		[NullAllowed, Export ("gridView", ArgumentSemantic.Weak)]
@@ -6769,6 +6771,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface NSGridColumn : NSCoding
 	{
 		[NullAllowed, Export ("gridView", ArgumentSemantic.Weak)]
@@ -6801,6 +6804,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface NSGridCell : NSCoding
 	{
 		[Export ("contentView", ArgumentSemantic.Strong)]
@@ -16997,6 +17001,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[BaseType (typeof (NSTextBlock))]
+	[DisableDefaultCtor]
 	public interface NSTextTableBlock {
 		[Export ("initWithTable:startingRow:rowSpan:startingColumn:columnSpan:")]
 		IntPtr Constructor (NSTextTable table, nint row, nint rowSpan, nint col, nint colSpan);
