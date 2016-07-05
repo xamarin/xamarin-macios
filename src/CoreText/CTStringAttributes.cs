@@ -197,13 +197,20 @@ namespace XamCore.CoreText {
 			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.ForegroundColor, value);}
 		}
 
-		[iOS (10,0)][Mac(10,12)]
+		[iOS (10,0)][Mac (10,12)]
 		public CGColor BackgroundColor {
 			get {
-				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.BackgroundColor.Handle);
+				var h = IntPtr.Zero;
+				var x = CTStringAttributeKey.BackgroundColor;
+				if (x != null)
+					h = CFDictionary.GetValue (Dictionary.Handle, x.Handle);
 				return h == IntPtr.Zero ? null : new CGColor (h);
 			}
-			set {Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.BackgroundColor, value);}
+			set {
+				var x = CTStringAttributeKey.BackgroundColor;
+				if (x != null)
+					Adapter.SetNativeValue (Dictionary, x, value);
+			}
 		}
 
 		public CTParagraphStyle ParagraphStyle {
@@ -294,10 +301,17 @@ namespace XamCore.CoreText {
 			}
 		}
 
-		[iOS (10,0)][Mac(10,12)]
+		[iOS (10,0)][Mac (10,12)]
 		public int? HorizontalInVerticalForms {
-			get {return Adapter.GetInt32Value (Dictionary, CTStringAttributeKey.HorizontalInVerticalForms);}
-			set {Adapter.SetValue (Dictionary, CTStringAttributeKey.HorizontalInVerticalForms, value);}
+			get {
+				var x = CTStringAttributeKey.HorizontalInVerticalForms;
+				return x != null ? Adapter.GetInt32Value (Dictionary, x) : null;
+			}
+			set {
+				var x = CTStringAttributeKey.HorizontalInVerticalForms;
+				if (x != null)
+					Adapter.SetValue (Dictionary, x, value);
+			}
 		}
 
 		public CTGlyphInfo GlyphInfo {
