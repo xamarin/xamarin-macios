@@ -1510,6 +1510,7 @@ MAC_FRAMEWORKS =            \
 	NotificationCenter 	\
 	OpenGL                  \
 	PdfKit                  \
+	Photos                  \
 	QTKit                   \
 	QuartzComposer          \
 	QuickLook               \
@@ -1671,6 +1672,7 @@ TVOS_FRAMEWORKS =           \
 	MobileCoreServices      \
 	ModelIO                 \
 	OpenGLES                \
+	Photos                  \
 	SceneKit                \
 	Security                \
 	SpriteKit               \
