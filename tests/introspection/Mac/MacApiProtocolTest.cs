@@ -44,6 +44,13 @@ namespace Introspection {
 				case "AVCompositionTrackSegment": // Not declared in header file
 				case "MKMapSnapshotOptions": // Not declared in header file
 				case "NSTextTab": // Not declared in header file
+				case "NSTextList": // Not declared in header file
+				case "SFSafariPage": // Not declared in header file
+				case "SFSafariPageProperties": // Not declared in header file
+				case "SFSafariTab": // Not declared in header file
+				case "SFSafariToolbarItem": // Not declared in header file
+				case "SFSafariWindow": // Not declared in header file
+				case "SFContentBlockerState": // Not declared in header file
 					return true;
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
@@ -98,6 +105,12 @@ namespace Introspection {
 				case "AVMutableComposition": // Not declared in header file
 				case "AVCompositionTrackSegment": // Not declared in header file
 				case "MKMapSnapshotOptions": // Not declared in header file
+				case "SFContentBlockerState": // Not declared in header file
+				case "SFSafariPage": // Not declared in header file
+				case "SFSafariPageProperties": // Not declared in header file
+				case "SFSafariTab": // Not declared in header file
+				case "SFSafariToolbarItem": // Not declared in header file
+				case "SFSafariWindow": // Not declared in header file
 					return true;
 				}
 				break;
@@ -161,6 +174,8 @@ namespace Introspection {
 #if !XAMCORE_3_0
 			case "NSRemoteSavePanel":
 			case "NSRemoteOpenPanel":
+			case "NSFilePromiseProviderDelegate": // In header but not in binary so far
+			case "SFSafariExtensionHandling": // In header but not in binary so far
 				return true; // These two classes don't show up in any documentation.
 #endif
 			}

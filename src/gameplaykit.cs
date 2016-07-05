@@ -87,11 +87,7 @@ namespace XamCore.GameplayKit {
 	// https://bugzilla.xamarin.com/show_bug.cgi?id=4391
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	#if !MONOMAC
 	interface GKBehavior : NSCopying {
-	#else
-	interface GKBehavior {
-	#endif
 		
 		[Export ("goalCount")]
 		nint GoalCount { get; }
@@ -140,11 +136,7 @@ namespace XamCore.GameplayKit {
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[Abstract]
-	#if !MONOMAC
 	interface GKComponent : NSCopying, NSCoding {
-	#else
-	interface GKComponent : NSCopying {
-	#endif
 
 		[NullAllowed]
 		[Export ("entity", ArgumentSemantic.Weak)]
@@ -197,11 +189,7 @@ namespace XamCore.GameplayKit {
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	#if !MONOMAC
 	interface GKEntity : NSCopying, NSCoding {
-	#else
-	interface GKEntity : NSCopying {
-	#endif
 		
 		[Static]
 		[Export ("entity")]
@@ -358,11 +346,7 @@ namespace XamCore.GameplayKit {
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	#if !MONOMAC
 	interface GKGraph : NSCopying, NSCoding {
-	#else
-	interface GKGraph {
-	#endif
 		
 		[NullAllowed]
 		[Export ("nodes")]
@@ -475,11 +459,7 @@ namespace XamCore.GameplayKit {
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	#if !MONOMAC
 	interface GKGraphNode : NSCoding {
-	#else
-	interface GKGraphNode {
-	#endif
 		
 		[Export ("connectedNodes")]
 		GKGraphNode [] ConnectedNodes { get; }
@@ -555,10 +535,7 @@ namespace XamCore.GameplayKit {
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject), Name = "GKMinmaxStrategist")]
-#if !MONOMAC
 	interface GKMinMaxStrategist : GKStrategist {
-#else
-	interface GKMinMaxStrategist {
 		// GKStrategist protocol is not yet available
 		[NullAllowed]
 		[Export ("gameModel", ArgumentSemantic.Retain)]
@@ -567,7 +544,7 @@ namespace XamCore.GameplayKit {
 		[NullAllowed]
 		[Export ("randomSource", ArgumentSemantic.Retain)]
 		IGKRandom RandomSource { get; set; }
-#endif		
+
 		[Export ("maxLookAheadDepth", ArgumentSemantic.Assign)]
 		nint MaxLookAheadDepth { get; set; }
 
@@ -614,11 +591,7 @@ namespace XamCore.GameplayKit {
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (GKObstacle))]
-	#if !MONOMAC
 	interface GKPolygonObstacle : NSCoding {
-	#else
-	interface GKPolygonObstacle {
-	#endif
 
 		[Export ("vertexCount")]
 		nuint VertexCount { get; }
