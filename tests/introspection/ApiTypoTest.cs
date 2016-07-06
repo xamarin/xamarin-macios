@@ -203,6 +203,7 @@ namespace Introspection
 			"Lowlevel",
 			"Matchingcoalesce",
 			"Metacharacters",
+			"Mimap",
 			"Minification",
 			"Mobike", // acronym
 			"Morpher",
