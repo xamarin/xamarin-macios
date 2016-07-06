@@ -16,7 +16,7 @@ namespace XamCore.Photos
 {
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10, 12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface PHAdjustmentData : NSCoding, NSSecureCoding {
 
@@ -632,7 +632,7 @@ namespace XamCore.Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface PHContentEditingInput {
 
@@ -681,7 +681,7 @@ namespace XamCore.Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface PHContentEditingOutput : NSCoding, NSSecureCoding {
 
@@ -1005,7 +1005,7 @@ namespace XamCore.Photos
 
 	[iOS (9,1)]
 	[TV (10,0)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	public interface PHLivePhoto : NSSecureCoding, NSCopying
 	{
@@ -1061,7 +1061,7 @@ namespace XamCore.Photos
 
 	[iOS (10,0)]
 	[TV (10,0)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NS_UNAVAILABLE
 	interface PHLivePhotoEditingContext {
@@ -1105,7 +1105,7 @@ namespace XamCore.Photos
 
 	[iOS (10,0)]
 	[TV (10,0)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Protocol]
 	interface PHLivePhotoFrame {
 		[Abstract]
@@ -1128,7 +1128,7 @@ namespace XamCore.Photos
 #if false // returns null on iOS 10 beta 1
 	[iOS (10,0)]
 	[TV (10,0)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Static]
 	interface PHLivePhotoEditingOption {
 		[Field ("PHLivePhotoShouldRenderAtPlaybackTime")]

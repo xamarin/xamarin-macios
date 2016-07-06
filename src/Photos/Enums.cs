@@ -7,7 +7,7 @@ namespace XamCore.Photos
 	// NSInteger -> PHImageManager.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	public enum PHImageContentMode : nint {
 		AspectFit = 0,
@@ -73,7 +73,7 @@ namespace XamCore.Photos
 	// NSInteger -> PhotosTypes.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	public enum PHCollectionListType : nint {
 		MomentList  = 1,
@@ -83,7 +83,7 @@ namespace XamCore.Photos
 
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	public enum PHCollectionListSubtype : nint {
 		MomentListCluster = 1,
@@ -111,7 +111,7 @@ namespace XamCore.Photos
 	// NSUInteger -> PhotosTypes.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	public enum PHCollectionEditOperation : nint {
 		None             = 0,
@@ -127,7 +127,7 @@ namespace XamCore.Photos
 	// NSInteger -> PhotosTypes.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	public enum PHAssetCollectionType : nint {
 		Album      = 1,
@@ -138,7 +138,7 @@ namespace XamCore.Photos
 	// NSInteger -> PhotosTypes.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	public enum PHAssetCollectionSubtype : nint {
 		AlbumRegular         = 2,
@@ -172,7 +172,7 @@ namespace XamCore.Photos
 	// NSUInteger -> PhotosTypes.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	public enum PHAssetEditOperation : nint {
 		None       = 0,
@@ -184,7 +184,7 @@ namespace XamCore.Photos
 	// NSInteger -> PhotosTypes.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	public enum PHAssetMediaType : nint {
 		Unknown = 0,
@@ -196,7 +196,7 @@ namespace XamCore.Photos
 	// NSUInteger -> PhotosTypes.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	[Flags]
 	public enum PHAssetMediaSubtype : nuint {
@@ -214,7 +214,7 @@ namespace XamCore.Photos
 	// NSUInteger -> PhotosTypes.h
 	[iOS (8,0)]
 	[TV (10,0)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	[Flags]
 	public enum PHAssetBurstSelectionType : nuint {
@@ -232,7 +232,7 @@ namespace XamCore.Photos
 	}
 
 	[iOS (9,0)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[Native]
 	public enum PHAssetResourceType : nint
@@ -250,7 +250,7 @@ namespace XamCore.Photos
 
 	[iOS (9,0)]
 	[TV (10,0)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	public enum PHAssetSourceType : nuint
 	{
@@ -262,7 +262,7 @@ namespace XamCore.Photos
 
 	[iOS (10,0)]
 	[TV (10,0)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	public enum PHLivePhotoFrameType : nint {
 		Photo,

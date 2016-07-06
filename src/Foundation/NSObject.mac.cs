@@ -92,6 +92,7 @@ namespace XamCore.Foundation {
 		static IntPtr ml = Dlfcn.dlopen (Constants.MetalKitLibrary, 1);
 		static IntPtr io = Dlfcn.dlopen (Constants.ModelIOLibrary, 1);
 		static IntPtr nc = Dlfcn.dlopen (Constants.NotificationCenterLibrary, 1);
+		static IntPtr pl = Dlfcn.dlopen (Constants.PhotosLibrary, 1);
 #endif
 
 #if !XAMCORE_4_0
