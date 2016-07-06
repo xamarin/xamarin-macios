@@ -510,6 +510,7 @@ namespace XamCore.CoreAnimation {
 		NSString OnOrderOut { get; }
 
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[Internal]
 		[Export ("contentsFormat")]
 		NSString _ContentsFormat { get; set; }
 
@@ -857,7 +858,7 @@ namespace XamCore.CoreAnimation {
 		[Export ("drawLayer:inContext:"), EventArgs ("CALayerDrawEventArgs")]
 		void DrawLayer (CALayer layer, CGContext context);
 
-		[Watch (3,0), TV (10,0), Mac (10,12), iOS (10,0)]
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 		[Export ("layerWillDraw:")]
 		void WillDrawLayer (CALayer layer);
 
@@ -1647,7 +1648,7 @@ namespace XamCore.CoreAnimation {
 		[Field ("kCAEmitterBehaviorAttractor")]
 		NSString Attractor { get; }			
 
-		[iOS (10,0)]
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 		[Field ("kCAEmitterBehaviorSimpleAttractor")]
 		NSString SimpleAttractor { get; }
 
