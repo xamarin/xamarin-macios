@@ -163,13 +163,38 @@ namespace XamCore.CoreAnimation {
 		[Export ("paused")]
 		bool Paused { [Bind ("isPaused")] get; set; }
 	
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use PreferredFrameRate property")]
+		[Deprecated (PlatformName.TvOS, 10,0, message: "Use PreferredFrameRate property")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use PreferredFrameRate property")]
 		[Export ("frameInterval")]
 		nint FrameInterval { get; set;  }
 
 		[Export ("duration")]
 		double Duration { get; }
+
+		[Watch (3,0)][TV (10,0)][iOS (10,0)]
+		[Export ("targetTimestamp")]
+		double TargetTimestamp { get; }
+
+		[Watch (3,0)][TV (10,0)][iOS (10,0)]
+		[Export ("preferredFrameRate")]
+		float PreferredFrameRate { get; set; }
+
+		[Watch (3,0)][TV (10,0)][iOS (10,0)]
+		[Export ("preferredFramesPerSecond")]
+		nint PreferredFramesPerSecond { get; set; }
 	}
 #endif
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	enum CAContentsFormat {
+		[Field ("kCAContentsFormatGray8Uint")]
+		Gray8Uint,
+		[Field ("kCAContentsFormatRGBA8Uint")]
+		Rgba8Uint,
+		[Field ("kCAContentsFormatRGBA16Float")]
+		Rgba16Float,
+	}
 
 	[BaseType (typeof (NSObject))]
 	[Dispose ("OnDispose ();")]
@@ -483,6 +508,11 @@ namespace XamCore.CoreAnimation {
 
 		[Field ("kCAOnOrderOut")]
 		NSString OnOrderOut { get; }
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[Internal]
+		[Export ("contentsFormat")]
+		NSString _ContentsFormat { get; set; }
 
 		[Export ("visibleRect")]
 		CGRect VisibleRect { get;  }
@@ -820,13 +850,17 @@ namespace XamCore.CoreAnimation {
 
 	[BaseType (typeof (NSObject))]
 	[Model]
-	[Protocol (IsInformal = true)]
+	[Protocol] // not informal as of iOS 10+
 	public interface CALayerDelegate {
 		[Export ("displayLayer:")]
 		void DisplayLayer (CALayer layer);
 
 		[Export ("drawLayer:inContext:"), EventArgs ("CALayerDrawEventArgs")]
 		void DrawLayer (CALayer layer, CGContext context);
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[Export ("layerWillDraw:")]
+		void WillDrawLayer (CALayer layer);
 
 		[Export ("layoutSublayersOfLayer:")]
 		void LayoutSublayersOfLayer (CALayer layer);
@@ -960,7 +994,8 @@ namespace XamCore.CoreAnimation {
 
 		#endregion
 	}
-	
+
+	[Protocol] // since iOS10
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Synthetic]
@@ -1612,6 +1647,10 @@ namespace XamCore.CoreAnimation {
 
 		[Field ("kCAEmitterBehaviorAttractor")]
 		NSString Attractor { get; }			
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[Field ("kCAEmitterBehaviorSimpleAttractor")]
+		NSString SimpleAttractor { get; }
 
 		[Field ("kCAEmitterBehaviorColorOverLife")]
 		NSString ColorOverLife { get; }			
