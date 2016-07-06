@@ -89,7 +89,7 @@ namespace xharness
 		string DownloadMlaunch ()
 		{
 			// Just hardcode this for now. We should be able to switch to a shipped version of XS soon.
-			var mlaunch_url = "https://files.xamarin.com/~rolf/mlaunch-9d097ff4457cfc9943a91a4e17c07b09a7743625";
+			var mlaunch_url = "https://bosstoragemirror.blob.core.windows.net/public-builder/mlaunch";
 			var mlaunch_path = Path.Combine (Path.GetTempPath (), Path.GetFileName (mlaunch_url), "mlaunch");
 			if (File.Exists (mlaunch_path))
 				return mlaunch_path;
