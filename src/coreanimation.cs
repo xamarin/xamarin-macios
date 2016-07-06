@@ -163,9 +163,9 @@ namespace XamCore.CoreAnimation {
 		[Export ("paused")]
 		bool Paused { [Bind ("isPaused")] get; set; }
 	
-		[Deprecated (PlatformName.iOS, 10,0, message: "use preferredFrameRate")]
-		[Deprecated (PlatformName.TvOS, 10,0, message: "use preferredFrameRate")]
-		[Deprecated (PlatformName.WatchOS, 3,0, message: "use preferredFrameRate")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use PreferredFrameRate property")]
+		[Deprecated (PlatformName.TvOS, 10,0, message: "Use PreferredFrameRate property")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use PreferredFrameRate property")]
 		[Export ("frameInterval")]
 		nint FrameInterval { get; set;  }
 
@@ -850,7 +850,7 @@ namespace XamCore.CoreAnimation {
 
 	[BaseType (typeof (NSObject))]
 	[Model]
-	[Protocol] // not information as of iOS 10+
+	[Protocol] // not informal as of iOS 10+
 	public interface CALayerDelegate {
 		[Export ("displayLayer:")]
 		void DisplayLayer (CALayer layer);
