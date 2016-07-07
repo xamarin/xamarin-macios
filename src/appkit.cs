@@ -12679,7 +12679,7 @@ namespace XamCore.AppKit {
 		IntPtr Constructor (CGRect frameRect);
 
 		[Export ("isVertical")]
-		nint IsVertical { get; /* [Mac (10, 12)] set; -- Radar 27222357 */ }
+		nint IsVertical { get; /* FIXME: [Mac (10, 12)] set; -- Radar 27222357 */ }
 
 		[Export ("acceptsFirstMouse:")]
 		bool AcceptsFirstMouse (NSEvent theEvent);
@@ -12770,7 +12770,7 @@ namespace XamCore.AppKit {
 		bool PrefersTrackingUntilMouseUp ();
 
 		[Export ("isVertical")]
-		nint IsVertical { get; /* [Mac (10, 12)] set; -- Radar 27222357 */ }
+		nint IsVertical { get; /* FIXME: [Mac (10, 12)] set; -- Radar 27222357 */ }
 
 		[Export ("knobRectFlipped:")]
 		CGRect KnobRectFlipped (bool flipped);
