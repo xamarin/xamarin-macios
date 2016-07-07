@@ -403,7 +403,7 @@ namespace XamCore.NetworkExtension {
 		
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	interface NEFlowMetaData
+	interface NEFlowMetaData : NSCopying, NSSecureCoding
 	{
 		[Export ("sourceAppUniqueIdentifier")]
 		NSData SourceAppUniqueIdentifier { get; }

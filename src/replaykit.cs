@@ -147,9 +147,6 @@ namespace XamCore.ReplayKit {
 		[Export ("broadcastURL")]
 		NSUrl BroadcastUrl { get; }
 
-		[NullAllowed, Export ("broadcastControllerDelegate", ArgumentSemantic.Weak)]
-		IRPBroadcastControllerDelegate BroadcastControllerDelegate { get; set; }
-
 		[Async]
 		[Export ("startBroadcastWithHandler:")]
 		void StartBroadcast (Action<NSError> handler);
@@ -198,15 +195,5 @@ namespace XamCore.ReplayKit {
 
 		[Export ("completeRequestWithBroadcastURL:broadcastConfiguration:serviceInfo:")]
 		void CompleteRequest (NSUrl broadcastUrl, RPBroadcastConfiguration broadcastConfiguration, [NullAllowed] NSDictionary<NSString, INSCoding> serviceInfo);
-	}
-
-	[iOS (10,0)]
-	[BaseType (typeof (NSObject))]
-	interface RPBroadcastMovieClipHandler : NSExtensionRequestHandling {
-		[Export ("processMovieClipWithURL:serviceInfo:finished:")]
-		void ProcessMovieClip ([NullAllowed] NSUrl movieClipUrl, [NullAllowed] NSDictionary<NSString, NSObject> serviceInfo, bool finished);
-
-		[Export ("finishedProcessingMovieClipWithUpdatedBroadcastConfiguration:error:")]
-		void FinishedProcessingMovieClip ([NullAllowed] RPBroadcastConfiguration broadcastConfiguration, [NullAllowed] NSError error);
 	}
 }
