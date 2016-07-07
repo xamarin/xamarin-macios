@@ -114,6 +114,14 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			// Xcode 8 beta 2
+			case "NEFlowMetaData":
+				switch (selectorName) {
+				case "copyWithZone:":
+				case "encodeWithCoder:":
+					return true;
+				}
+				break;
 			}
 #endif
 			// This ctors needs to be manually bound
