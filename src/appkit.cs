@@ -1840,10 +1840,12 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSCell))]
 	public interface NSBrowserCell {
+		[Mac (10,12)]
 		[Export ("initTextCell:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (string str);
 
+		[Mac (10,12)]
 		[Export ("initImageCell:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] NSImage image);
