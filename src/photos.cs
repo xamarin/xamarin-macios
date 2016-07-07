@@ -1125,7 +1125,8 @@ namespace XamCore.Photos
 		nfloat RenderScale { get; }
 	}
 
-#if false // returns null on iOS 10 beta 1
+	// TODO returns null on iOS 10 beta 1, check again later to see if/when it gets implemented
+#if false
 	[iOS (10,0)]
 	[TV (10,0)]
 	[Mac (10,12, onlyOn64 : true)]
