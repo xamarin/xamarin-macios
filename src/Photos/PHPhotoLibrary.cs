@@ -6,6 +6,9 @@
 //
 // Copyright 2014 Xamarin Inc
 //
+
+#if !MONOMAC
+
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 using System;
@@ -47,3 +50,4 @@ namespace XamCore.Photos
 	}
 }
 
+#endif

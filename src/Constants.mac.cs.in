@@ -119,5 +119,8 @@ namespace MonoMac {
 		public const string MediaLibraryLibrary = "/System/Library/Frameworks/MediaLibrary.framework/MediaLibrary";
 
 		public const string SafariServicesLibrary = "/System/Library/Frameworks/SafariServices.framework/SafariServices";
+		
+		// macOS 10.12
+		public const string PhotosLibrary = "/System/Library/Frameworks/Photos.framework/Photos";
 	}
 }

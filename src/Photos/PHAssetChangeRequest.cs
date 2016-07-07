@@ -1,3 +1,5 @@
+#if !MONOMAC
+
 using System;
 
 namespace XamCore.Photos {
@@ -12,3 +14,5 @@ namespace XamCore.Photos {
 #endif
 	}
 }
+
+#endif

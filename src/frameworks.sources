@@ -1023,7 +1023,7 @@ PDFKIT_SOURCES = \
 
 # Photos
 
-PHOTOS_CORE_SOURCES = \
+PHOTOS_API_SOURCES = \
 	Photos/Enums.cs \
 
 PHOTOS_SOURCES = \
@@ -1510,6 +1510,7 @@ MAC_FRAMEWORKS =            \
 	NotificationCenter 	\
 	OpenGL                  \
 	PdfKit                  \
+	Photos                  \
 	QTKit                   \
 	QuartzComposer          \
 	QuickLook               \
@@ -1671,6 +1672,7 @@ TVOS_FRAMEWORKS =           \
 	MobileCoreServices      \
 	ModelIO                 \
 	OpenGLES                \
+	Photos                  \
 	SceneKit                \
 	Security                \
 	SpriteKit               \

@@ -6,6 +6,8 @@ namespace XamCore.Photos
 {
 	// NSInteger -> PHImageManager.h
 	[iOS (8,0)]
+	[TV (10,0)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	public enum PHImageContentMode : nint {
 		AspectFit = 0,
@@ -15,6 +17,8 @@ namespace XamCore.Photos
 
 	// NSInteger -> PHImageManager.h
 	[iOS (8,0)]
+	[TV (10,0)]
+	[NoMac]
 	[Native]
 	public enum PHImageRequestOptionsVersion : nint {
 		Current = 0,
@@ -24,6 +28,8 @@ namespace XamCore.Photos
 
 	// NSInteger -> PHImageManager.h
 	[iOS (8,0)]
+	[TV (10,0)]
+	[NoMac]
 	[Native]
 	public enum PHImageRequestOptionsDeliveryMode : nint {
 		Opportunistic = 0,
@@ -33,6 +39,8 @@ namespace XamCore.Photos
 
 	// NSInteger -> PHImageManager.h
 	[iOS (8,0)]
+	[TV (10,0)]
+	[NoMac]
 	[Native]
 	public enum PHImageRequestOptionsResizeMode : nint {
 		None = 0,
@@ -42,6 +50,8 @@ namespace XamCore.Photos
 
 	// NSInteger -> PHImageManager.h
 	[iOS (8,0)]
+	[TV (10,0)]
+	[NoMac]
 	[Native]
 	public enum PHVideoRequestOptionsVersion : nint {
 		Current = 0,
@@ -50,6 +60,8 @@ namespace XamCore.Photos
 
 	// NSInteger -> PHImageManager.h
 	[iOS (8,0)]
+	[TV (10,0)]
+	[NoMac]
 	[Native]
 	public enum PHVideoRequestOptionsDeliveryMode : nint {
 		Automatic = 0,
@@ -60,6 +72,8 @@ namespace XamCore.Photos
 
 	// NSInteger -> PhotosTypes.h
 	[iOS (8,0)]
+	[TV (10,0)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	public enum PHCollectionListType : nint {
 		MomentList  = 1,
@@ -67,6 +81,9 @@ namespace XamCore.Photos
 		SmartFolder = 3
 	}
 
+	[iOS (8,0)]
+	[TV (10,0)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	public enum PHCollectionListSubtype : nint {
 		MomentListCluster = 1,
@@ -93,6 +110,8 @@ namespace XamCore.Photos
 
 	// NSUInteger -> PhotosTypes.h
 	[iOS (8,0)]
+	[TV (10,0)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	public enum PHCollectionEditOperation : nint {
 		None             = 0,
@@ -107,6 +126,8 @@ namespace XamCore.Photos
 
 	// NSInteger -> PhotosTypes.h
 	[iOS (8,0)]
+	[TV (10,0)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	public enum PHAssetCollectionType : nint {
 		Album      = 1,
@@ -116,6 +137,8 @@ namespace XamCore.Photos
 
 	// NSInteger -> PhotosTypes.h
 	[iOS (8,0)]
+	[TV (10,0)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	public enum PHAssetCollectionSubtype : nint {
 		AlbumRegular         = 2,
@@ -148,6 +171,8 @@ namespace XamCore.Photos
 
 	// NSUInteger -> PhotosTypes.h
 	[iOS (8,0)]
+	[TV (10,0)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	public enum PHAssetEditOperation : nint {
 		None       = 0,
@@ -158,6 +183,8 @@ namespace XamCore.Photos
 
 	// NSInteger -> PhotosTypes.h
 	[iOS (8,0)]
+	[TV (10,0)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	public enum PHAssetMediaType : nint {
 		Unknown = 0,
@@ -168,6 +195,8 @@ namespace XamCore.Photos
 
 	// NSUInteger -> PhotosTypes.h
 	[iOS (8,0)]
+	[TV (10,0)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	[Flags]
 	public enum PHAssetMediaSubtype : nuint {
@@ -184,6 +213,8 @@ namespace XamCore.Photos
 
 	// NSUInteger -> PhotosTypes.h
 	[iOS (8,0)]
+	[TV (10,0)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	[Flags]
 	public enum PHAssetBurstSelectionType : nuint {
@@ -192,12 +223,17 @@ namespace XamCore.Photos
 		UserPick = (1 << 1)
 	}
 
+	[iOS (8,0)]
+	[TV (10,0)]
+	[NoMac]
 	[Native]
 	public enum PHAuthorizationStatus : nint {
 		NotDetermined, Restricted, Denied, Authorized
 	}
 
 	[iOS (9,0)]
+	[Mac (10,12, onlyOn64 : true)]
+	[TV (10,0)]
 	[Native]
 	public enum PHAssetResourceType : nint
 	{
@@ -213,6 +249,8 @@ namespace XamCore.Photos
 	}
 
 	[iOS (9,0)]
+	[TV (10,0)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Native]
 	public enum PHAssetSourceType : nuint
 	{
@@ -220,5 +258,14 @@ namespace XamCore.Photos
 		UserLibrary = (1 << 0),
 		CloudShared = (1 << 1),
 		iTunesSynced = (1 << 2)
+	}
+
+	[iOS (10,0)]
+	[TV (10,0)]
+	[Mac (10,12, onlyOn64 : true)]
+	[Native]
+	public enum PHLivePhotoFrameType : nint {
+		Photo,
+		Video
 	}
 }

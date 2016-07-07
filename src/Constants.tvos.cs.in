@@ -60,6 +60,7 @@ namespace ObjCRuntime {
 		public const string MapKitLibrary = "/System/Library/Frameworks/MapKit.framework/MapKit";
 
 		// TVOS 10.0
+		public const string PhotosLibrary = "/System/Library/Frameworks/Photos.framework/Photos";
 		public const string VideoSubscriberAccountLibrary = "/System/Library/Frameworks/VideoSubscriberAccount.framework/VideoSubscriberAccount";
 		public const string UserNotificationsLibrary = "/System/Library/Frameworks/UserNotifications.framework/UserNotifications";
 	}
