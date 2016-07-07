@@ -161,7 +161,7 @@ namespace XamCore.MultipeerConnectivity {
 		string ServiceType { get; }
 	}
 
-	public delegate void MCNearbyServiceAdvertiserInvitationHandler (bool accept, MCSession session);
+	public delegate void MCNearbyServiceAdvertiserInvitationHandler (bool accept, [NullAllowed] MCSession session);
 
 	[Since (7,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
