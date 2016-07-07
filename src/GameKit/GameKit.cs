@@ -130,23 +130,28 @@ namespace XamCore.GameKit {
 		PlayerPhotoFailure = 26,  // iOS 8.0
 		UbiquityContainerUnavailable = 27, // iOS 8.0
 #endif
+		[iOS (10,0)][Mac (10,12)][TV (10,0)]
 		MatchNotConnected = 28,
+		[iOS (10,0)][Mac (10,12)][TV (10,0)]
 		GameSessionRequestInvalid = 29,
 	}
 
 	[Native]
+	[iOS (10,0)][Mac (10,12)][TV (10,0)]
 	public enum GKConnectionState : nint {
 		NotConnected,
 		Connected,
 	}
 
 	[Native]
+	[iOS (10,0)][Mac (10,12)][TV (10,0)]
 	public enum GKTransportType : nint {
 		Unreliable,
 		Reliable,
 	}
 
 	[Native]
+	[iOS (10,0)][Mac (10,12)][TV (10,0)]
 	public enum GKGameSessionErrorCode : nint {
 		Unknown = 1,
 		NotAuthenticated = 2,

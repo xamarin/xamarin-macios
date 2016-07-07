@@ -2187,7 +2187,7 @@ namespace XamCore.GameKit {
 		void WantsToQuitMatch (GKPlayer player, GKTurnBasedMatch match);
 	}
 
-	[iOS (10,0)][Mac (10,12)]
+	[iOS (10,0)][Mac (10,12)][TV (10,0)]
 	[BaseType (typeof(NSObject))]
 	interface GKGameSession
 	{
@@ -2215,49 +2215,63 @@ namespace XamCore.GameKit {
 		[Export ("badgedPlayers")]
 		GKCloudPlayer[] BadgedPlayers { get; }
 
+		[Async]
 		[Static]
 		[Export ("createSessionInContainer:withTitle:maxConnectedPlayers:completionHandler:")]
 		void CreateSession (string containerName, string title, nint maxPlayers, Action<GKGameSession, NSError> completionHandler);
 
+		[Async]
 		[Static]
 		[Export ("loadSessionsInContainer:completionHandler:")]
 		void LoadSessions (string containerName, Action<GKGameSession[], NSError> completionHandler);
 
+		[Async]
 		[Static]
 		[Export ("loadSessionWithIdentifier:completionHandler:")]
 		void LoadSession (string identifier, Action<GKGameSession, NSError> completionHandler);
 
+		[Async]
 		[Static]
 		[Export ("removeSessionWithIdentifier:completionHandler:")]
 		void RemoveSession (string identifier, Action<NSError> completionHandler);
 
+		[Async]
 		[Export ("getShareURLWithCompletionHandler:")]
 		void GetShareUrl (Action<NSUrl, NSError> completionHandler);
 
+		[Async]
 		[Export ("loadDataWithCompletionHandler:")]
 		void LoadData (Action<NSData, NSError> completionHandler);
 
+		[Async]
 		[Export ("saveData:completionHandler:")]
 		void SaveData (NSData data, Action<NSData, NSError> completionHandler);
 
+		[Async]
 		[Export ("setConnectionState:completionHandler:")]
 		void SetConnectionState (GKConnectionState state, Action<NSError> completionHandler);
 
 		[Export ("playersWithConnectionState:")]
 		GKCloudPlayer[] GetPlayers (GKConnectionState state);
 
+		[Async]
 		[Export ("sendData:withTransportType:completionHandler:")]
 		void SendData (NSData data, GKTransportType transport, Action<NSError> completionHandler);
 
+		[Async]
 		[Export ("sendMessageWithLocalizedFormatKey:arguments:data:toPlayers:badgePlayers:completionHandler:")]
 		void SendMessage (string key, string[] arguments, NSData data, GKCloudPlayer[] players, bool badgePlayers, Action<NSError> completionHandler);
 
+		[Async]
 		[Export ("clearBadgeForPlayers:completionHandler:")]
 		void ClearBadge (GKCloudPlayer[] players, Action<NSError> completionHandler);
 
-		[Static]
-		[Export ("acceptShareURL:handler:")]
-		void AcceptShareUrl (NSUrl url, Action<NSError> handler);
+		//FIXME: Comment from header files:
+		//Remove after we get <rdar://problem/24623538> Game Center needs a way of defining an XPC interface for daemons
+		//[Async]
+		//[Static]
+		//[Export ("acceptShareURL:handler:")]
+		//void AcceptShareUrl (NSUrl url, Action<NSError> handler);
 
 		[Static]
 		[Export ("addEventListener:")]
@@ -2270,9 +2284,8 @@ namespace XamCore.GameKit {
 
 	interface IGKGameSessionEventListener {}
 
-	[iOS (10,0)][Mac (10,12)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[iOS (10,0)][Mac (10,12)][TV (10,0)]
+	[Protocol]
 	interface GKGameSessionEventListener
 	{
 		[Export ("session:didAddPlayer:")]
@@ -2302,6 +2315,10 @@ namespace XamCore.GameKit {
 	[BaseType (typeof(UIViewController))]
 	interface GKGameSessionSharingViewController
 	{
+		// inlined ctor
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+
 		[Export ("session", ArgumentSemantic.Strong)]
 		GKGameSession Session { get; }
 
