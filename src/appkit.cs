@@ -16947,7 +16947,7 @@ namespace XamCore.AppKit {
 		NSTextInputContext CurrentInputContext { get; }
 
 		[Export ("client")]
-		NSTextInputClient Client { get; }
+		INSTextInputClient Client { get; }
 
 		[Export ("acceptsGlyphInfo")]
 		bool AcceptsGlyphInfo { get; set; }

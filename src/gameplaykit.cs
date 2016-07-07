@@ -536,15 +536,6 @@ namespace XamCore.GameplayKit {
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject), Name = "GKMinmaxStrategist")]
 	interface GKMinMaxStrategist : GKStrategist {
-		// GKStrategist protocol is not yet available
-		[NullAllowed]
-		[Export ("gameModel", ArgumentSemantic.Retain)]
-		IGKGameModel GameModel { get; set; }
-
-		[NullAllowed]
-		[Export ("randomSource", ArgumentSemantic.Retain)]
-		IGKRandom RandomSource { get; set; }
-
 		[Export ("maxLookAheadDepth", ArgumentSemantic.Assign)]
 		nint MaxLookAheadDepth { get; set; }
 
