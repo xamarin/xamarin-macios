@@ -9277,6 +9277,10 @@ namespace XamCore.UIKit {
 		[TV (9,0)]
 		[Export ("directionalPressGestureRecognizer")]
 		UIGestureRecognizer DirectionalPressGestureRecognizer { get; }
+
+		[NoTV][iOS (10,0)]
+		[NullAllowed, Export ("refreshControl", ArgumentSemantic.Strong)]
+		UIRefreshControl RefreshControl { get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -11099,6 +11103,10 @@ namespace XamCore.UIKit {
 		[Since (3,2)]
 		[Export ("clearsSelectionOnViewWillAppear")]
 		bool ClearsSelectionOnViewWillAppear { get; set; }
+
+		[NoTV][iOS (6,0)]
+		[NullAllowed, Export ("refreshControl", ArgumentSemantic.Strong)]
+		UIRefreshControl RefreshControl { get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]
