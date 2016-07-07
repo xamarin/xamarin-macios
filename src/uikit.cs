@@ -6274,18 +6274,6 @@ namespace XamCore.UIKit {
 		void EndRefreshing ();
 	}
 
-	interface IUIRefreshControlHosting {}
-	
-	[iOS (10,0)]
-	[Protocol]
-	public interface UIRefreshControlHosting
-	{
-		[NoTV]
-		[Abstract]
-		[NullAllowed, Export ("refreshControl", ArgumentSemantic.Strong)]
-		UIRefreshControl RefreshControl { get; set; }
-	}
-		
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	interface UIRegion : NSCopying, NSCoding {
@@ -9154,7 +9142,7 @@ namespace XamCore.UIKit {
 	}
 
 	[BaseType (typeof (UIView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UIScrollViewDelegate)})]
-	public interface UIScrollView : UIRefreshControlHosting {
+	public interface UIScrollView {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
@@ -9289,6 +9277,10 @@ namespace XamCore.UIKit {
 		[TV (9,0)]
 		[Export ("directionalPressGestureRecognizer")]
 		UIGestureRecognizer DirectionalPressGestureRecognizer { get; }
+
+		[NoTV][iOS (10,0)]
+		[NullAllowed, Export ("refreshControl", ArgumentSemantic.Strong)]
+		UIRefreshControl RefreshControl { get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -11095,7 +11087,7 @@ namespace XamCore.UIKit {
 	}
 
 	[BaseType (typeof (UIViewController))]
-	public interface UITableViewController : UITableViewDataSource, UITableViewDelegate, UIRefreshControlHosting {
+	public interface UITableViewController : UITableViewDataSource, UITableViewDelegate {
 		[DesignatedInitializer]
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
@@ -11111,6 +11103,10 @@ namespace XamCore.UIKit {
 		[Since (3,2)]
 		[Export ("clearsSelectionOnViewWillAppear")]
 		bool ClearsSelectionOnViewWillAppear { get; set; }
+
+		[NoTV][iOS (6,0)]
+		[NullAllowed, Export ("refreshControl", ArgumentSemantic.Strong)]
+		UIRefreshControl RefreshControl { get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]

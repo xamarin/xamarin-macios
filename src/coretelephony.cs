@@ -92,6 +92,7 @@ namespace XamCore.CoreTelephony {
 
 	[BaseType (typeof (NSObject))]
 	[Since (4,0)]
+	[DisableDefaultCtor] // FIXME: SIGILL in iOS 10 beta 2
 	interface CTCallCenter {
 		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use CallKit")]
 		[NullAllowed] // by default this property is null
