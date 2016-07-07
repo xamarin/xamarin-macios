@@ -103,6 +103,8 @@ namespace Introspection {
 				case "NSLayoutDimension":
 				case "NSLayoutXAxisAnchor":
 				case "NSLayoutYAxisAnchor":
+				case "GKCloudPlayer":
+				case "GKGameSession":
 					// undocumented
 					return true;
 				}
@@ -125,6 +127,8 @@ namespace Introspection {
 				// iOS9 / 10.11
 				case "CNSaveRequest":
 				case "NSPersonNameComponentsFormatter":
+				case "GKCloudPlayer":
+				case "GKGameSession":
 					return true; // skip
 				}
 				break;
