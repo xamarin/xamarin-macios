@@ -6811,6 +6811,7 @@ namespace XamCore.AppKit {
 		NSView ContentView { get; set; }
 
 		[Export ("emptyContentView", ArgumentSemantic.Strong)]
+		[Static]
 		NSView EmptyContentView { get; }
 
 		[NullAllowed, Export ("row", ArgumentSemantic.Weak)]
@@ -20736,10 +20737,12 @@ namespace XamCore.AppKit {
 		NSString DidChangeBackingPropertiesNotification { get; }
 
 		[Mac (10, 12)]
+		[Static]
 		[Export ("allowsAutomaticWindowTabbing")]
 		bool AllowsAutomaticWindowTabbing { get; set; }
 
 		[Mac (10, 12)]
+		[Static]
 		[Export ("userTabbingPreference")]
 		NSWindowUserTabbingPreference UserTabbingPreference { get; }
 
