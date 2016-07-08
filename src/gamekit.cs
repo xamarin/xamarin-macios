@@ -2266,13 +2266,6 @@ namespace XamCore.GameKit {
 		[Export ("clearBadgeForPlayers:completionHandler:")]
 		void ClearBadge (GKCloudPlayer[] players, Action<NSError> completionHandler);
 
-		//FIXME: Comment from header files:
-		//Remove after we get <rdar://problem/24623538> Game Center needs a way of defining an XPC interface for daemons
-		//[Async]
-		//[Static]
-		//[Export ("acceptShareURL:handler:")]
-		//void AcceptShareUrl (NSUrl url, Action<NSError> handler);
-
 		[Static]
 		[Export ("addEventListener:")]
 		void AddEventListener (IGKGameSessionEventListener listener);
