@@ -128,8 +128,39 @@ namespace XamCore.GameKit {
 #else
 		InvitationsDisabled = 25, // iOS 7.0
 		PlayerPhotoFailure = 26,  // iOS 8.0
-		UbiquityContainerUnavailable = 27 // iOS 8.0
+		UbiquityContainerUnavailable = 27, // iOS 8.0
 #endif
+		MatchNotConnected = 28,
+		GameSessionRequestInvalid = 29,
+	}
+
+	[Native]
+	[iOS (10,0)][Mac (10,12)][TV (10,0)]
+	public enum GKConnectionState : nint {
+		NotConnected,
+		Connected,
+	}
+
+	[Native]
+	[iOS (10,0)][Mac (10,12)][TV (10,0)]
+	public enum GKTransportType : nint {
+		Unreliable,
+		Reliable,
+	}
+
+	[Native]
+	public enum GKGameSessionErrorCode : nint {
+		Unknown = 1,
+		NotAuthenticated = 2,
+		SessionOutOfDate = 3,
+		SessionNotShared = 4,
+		ConnectionCancelledByUser = 5,
+		CouldNotConnectToSession = 6,
+		SessionHasMaxConnectedPlayers = 7,
+		SendDataNotConnected = 8,
+		SendDataNoRecipients = 9,
+		SendDataNotReachable = 10,
+		SendRateLimitReached = 11,
 	}
 
 	// NSInteger -> GKMatch.h

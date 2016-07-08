@@ -413,8 +413,28 @@ namespace XamCore.GameKit {
 	}
 #endif
 
+	[iOS (10,0)][Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	interface GKBasePlayer
+	{
+		[NullAllowed, Export ("playerID", ArgumentSemantic.Retain)]
+		string PlayerID { get; }
+
+		[NullAllowed, Export ("displayName")]
+		string DisplayName { get; }
+	}
+
+	[iOS (10,0)][Mac (10,12)]
+	[BaseType (typeof(GKBasePlayer))]
+	interface GKCloudPlayer
+	{
+		[Static]
+		[Export ("getCurrentSignedInPlayer:")]
+		void GetCurrentSignedInPlayer (Action<GKCloudPlayer, NSError> handler);
+	}
+
 	[Since (4,2)]
-	[BaseType (typeof (NSObject))]
+	[BaseType (typeof (GKBasePlayer))]
 	// note: NSSecureCoding conformity is undocumented - but since it's a runtime check (on ObjC) we still need it
 	interface GKPlayer : NSSecureCoding {
 		[Export ("playerID", ArgumentSemantic.Retain)]
@@ -486,10 +506,12 @@ namespace XamCore.GameKit {
 		[Export ("playerID", ArgumentSemantic.Retain)]
 		string Player { get;  }
 
+		[NullAllowed]
 		[iOS (8,0)][Mac (10,10)]
 		[Export ("player", ArgumentSemantic.Retain)]
 		GKPlayer GamePlayer { get; }
 #else
+		[NullAllowed]
 		[iOS (8,0)][Mac (10,10)]
 		[Export ("player", ArgumentSemantic.Retain)]
 		GKPlayer Player { get; }
@@ -1313,6 +1335,7 @@ namespace XamCore.GameKit {
 		[Async]
 		void ReportAchievements (GKAchievement[] achievements, [NullAllowed] GKChallenge[] challenges, [NullAllowed] Action<NSError> completionHandler);
 
+		[NullAllowed]
 		[iOS (8,0), Mac (10,10)]
 		[Export ("player", ArgumentSemantic.Retain)]
 		GKPlayer Player { get; }
@@ -2163,4 +2186,152 @@ namespace XamCore.GameKit {
 		[Export ("player:wantsToQuitMatch:")]
 		void WantsToQuitMatch (GKPlayer player, GKTurnBasedMatch match);
 	}
+
+	[iOS (10,0)][Mac (10,12)][TV (10,0)]
+	[BaseType (typeof(NSObject))]
+	interface GKGameSession
+	{
+		[Export ("identifier")]
+		string Identifier { get; }
+
+		[Export ("title")]
+		string Title { get; }
+
+		[Export ("owner")]
+		GKCloudPlayer Owner { get; }
+
+		[Export ("players")]
+		GKCloudPlayer[] Players { get; }
+
+		[Export ("lastModifiedDate")]
+		NSDate LastModifiedDate { get; }
+
+		[Export ("lastModifiedPlayer")]
+		GKCloudPlayer LastModifiedPlayer { get; }
+
+		[Export ("maxNumberOfConnectedPlayers")]
+		nint MaxNumberOfConnectedPlayers { get; }
+
+		[Export ("badgedPlayers")]
+		GKCloudPlayer[] BadgedPlayers { get; }
+
+		[Async]
+		[Static]
+		[Export ("createSessionInContainer:withTitle:maxConnectedPlayers:completionHandler:")]
+		void CreateSession (string containerName, string title, nint maxPlayers, Action<GKGameSession, NSError> completionHandler);
+
+		[Async]
+		[Static]
+		[Export ("loadSessionsInContainer:completionHandler:")]
+		void LoadSessions (string containerName, Action<GKGameSession[], NSError> completionHandler);
+
+		[Async]
+		[Static]
+		[Export ("loadSessionWithIdentifier:completionHandler:")]
+		void LoadSession (string identifier, Action<GKGameSession, NSError> completionHandler);
+
+		[Async]
+		[Static]
+		[Export ("removeSessionWithIdentifier:completionHandler:")]
+		void RemoveSession (string identifier, Action<NSError> completionHandler);
+
+		[Async]
+		[Export ("getShareURLWithCompletionHandler:")]
+		void GetShareUrl (Action<NSUrl, NSError> completionHandler);
+
+		[Async]
+		[Export ("loadDataWithCompletionHandler:")]
+		void LoadData (Action<NSData, NSError> completionHandler);
+
+		[Async]
+		[Export ("saveData:completionHandler:")]
+		void SaveData (NSData data, Action<NSData, NSError> completionHandler);
+
+		[Async]
+		[Export ("setConnectionState:completionHandler:")]
+		void SetConnectionState (GKConnectionState state, Action<NSError> completionHandler);
+
+		[Export ("playersWithConnectionState:")]
+		GKCloudPlayer[] GetPlayers (GKConnectionState state);
+
+		[Async]
+		[Export ("sendData:withTransportType:completionHandler:")]
+		void SendData (NSData data, GKTransportType transport, Action<NSError> completionHandler);
+
+		[Async]
+		[Export ("sendMessageWithLocalizedFormatKey:arguments:data:toPlayers:badgePlayers:completionHandler:")]
+		void SendMessage (string key, string[] arguments, NSData data, GKCloudPlayer[] players, bool badgePlayers, Action<NSError> completionHandler);
+
+		[Async]
+		[Export ("clearBadgeForPlayers:completionHandler:")]
+		void ClearBadge (GKCloudPlayer[] players, Action<NSError> completionHandler);
+
+		[Static]
+		[Export ("addEventListener:")]
+		void AddEventListener (IGKGameSessionEventListener listener);
+
+		[Static]
+		[Export ("removeEventListener:")]
+		void RemoveEventListener (IGKGameSessionEventListener listener);
+	}
+
+	interface IGKGameSessionEventListener {}
+
+	[iOS (10,0)][Mac (10,12)][TV (10,0)]
+	[Protocol]
+	interface GKGameSessionEventListener
+	{
+		[Export ("session:didAddPlayer:")]
+		void DidAddPlayer (GKGameSession session, GKCloudPlayer player);
+
+		[Export ("session:didRemovePlayer:")]
+		void DidRemovePlayer (GKGameSession session, GKCloudPlayer player);
+
+		[Export ("session:player:didChangeConnectionState:")]
+		void DidChangeConnectionState (GKGameSession session, GKCloudPlayer player, GKConnectionState newState);
+
+		[Export ("session:player:didSaveData:")]
+		void DidSaveData (GKGameSession session, GKCloudPlayer player, NSData data);
+
+		[Export ("session:didReceiveData:fromPlayer:")]
+		void DidReceiveData (GKGameSession session, NSData data, GKCloudPlayer player);
+
+		[Export ("session:didReceiveMessage:withData:fromPlayer:")]
+		void DidReceiveMessage (GKGameSession session, string message, NSData data, GKCloudPlayer player);
+
+		[Export ("player:requestedSessionWithPlayers:")]
+		void RequestedSession (GKCloudPlayer player, GKCloudPlayer[] players);
+	}
+
+#if !MONOMAC
+	[NoiOS][TV (10,0)]
+	[BaseType (typeof(UIViewController))]
+	interface GKGameSessionSharingViewController
+	{
+		// inlined ctor
+		[Export ("initWithNibName:bundle:")]
+		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+
+		[Export ("session", ArgumentSemantic.Strong)]
+		GKGameSession Session { get; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		IGKGameSessionSharingViewControllerDelegate Delegate { get; set; }
+
+		[Export ("initWithSession:")]
+		IntPtr Constructor (GKGameSession session);
+	}
+
+	interface IGKGameSessionSharingViewControllerDelegate {}
+
+	[NoiOS][TV (10,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface GKGameSessionSharingViewControllerDelegate
+	{
+		[Abstract]
+		[Export ("sharingViewController:didFinishWithError:")]
+		void DidFinish (GKGameSessionSharingViewController viewController, NSError error);
+	}
+#endif
 }
