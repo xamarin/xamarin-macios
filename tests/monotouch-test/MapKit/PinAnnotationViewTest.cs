@@ -61,7 +61,7 @@ namespace MonoTouchFixtures.MapKit {
 					return;
 				Assert.That (av.PinColor, Is.EqualTo (MKPinAnnotationColor.Red), "PinColor");
 				if (UIDevice.CurrentDevice.CheckSystemVersion (10,0))
-					Assert.That (av.PinTintColor, Is.EqualTo (UIColor.FromRGBA (255, 59, 48, 255)), "PinTintColor");
+					Assert.That (av.PinTintColor.ToString (), Is.EqualTo (UIColor.FromRGBA (255, 59, 48, 255).ToString ()), "PinTintColor");
 				else
 					Assert.Null (av.PinTintColor, "PinTintColor"); // differs from the other init call
 			}
