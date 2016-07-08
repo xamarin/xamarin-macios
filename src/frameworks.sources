@@ -1655,6 +1655,7 @@ TVOS_FRAMEWORKS =           \
 	CoreSpotlight			\
 	CoreText                \
 	CoreVideo               \
+	ExternalAccessory       \
 	GLKit                   \
 	GameController          \
 	GameKit                 \
@@ -1671,8 +1672,10 @@ TVOS_FRAMEWORKS =           \
 	MetalPerformanceShaders \
 	MobileCoreServices      \
 	ModelIO                 \
+	MultipeerConnectivity   \
 	OpenGLES                \
 	Photos                  \
+	ReplayKit               \
 	SceneKit                \
 	Security                \
 	SpriteKit               \
