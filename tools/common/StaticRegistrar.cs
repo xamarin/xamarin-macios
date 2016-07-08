@@ -1782,6 +1782,13 @@ namespace XamCore.Registrar {
 				header.WriteLine ("#import <WatchKit/WatchKit.h>");
 				namespaces.Add ("UIKit");
 				return;
+#if MTOUCH
+			case "ExternalAccessory":
+				// as of Xcode 8 beta 2 the tvOS SDK does not ship headers for the simulator
+				if (IsSimulator && (Driver.App.Platform == Xamarin.Utils.ApplePlatform.TVOS))
+					return;
+				goto default;
+#endif
 			default:
 				h = string.Format ("<{0}/{0}.h>", ns);
 				break;
