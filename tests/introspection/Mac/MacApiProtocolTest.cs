@@ -177,6 +177,8 @@ namespace Introspection {
 #if !XAMCORE_3_0
 			case "NSRemoteSavePanel":
 			case "NSRemoteOpenPanel":
+			case "NSFilePromiseProviderDelegate": // We do not want Model - https://trello.com/c/9JANewiM/607-apiprotocoltest-generalcase-assumes-every-protocol-has-model
+			case "SFSafariExtensionHandling": // We do not want Model
 				return true; // These two classes don't show up in any documentation.
 #endif
 			}

@@ -23501,7 +23501,6 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12)]
 	[Protocol]
-	[Model]
 	[BaseType (typeof(NSObject))]
 	interface NSFilePromiseProviderDelegate
 	{
