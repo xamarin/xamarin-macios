@@ -1840,10 +1840,12 @@ namespace XamCore.AppKit {
 
 	[BaseType (typeof (NSCell))]
 	public interface NSBrowserCell {
+		[Mac (10,12)]
 		[Export ("initTextCell:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (string str);
 
+		[Mac (10,12)]
 		[Export ("initImageCell:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] NSImage image);
@@ -6094,6 +6096,7 @@ namespace XamCore.AppKit {
 
 	[Lion]
 	[BaseType (typeof (NSFontCollection))]
+	[DisableDefaultCtor]
 	interface NSMutableFontCollection {
 		[Export ("setQueryDescriptors:")]
 		void SetQueryDescriptors (NSFontDescriptor [] descriptors);
@@ -6734,6 +6737,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface NSGridRow : NSCoding
 	{
 		[NullAllowed, Export ("gridView", ArgumentSemantic.Weak)]
@@ -6769,6 +6773,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface NSGridColumn : NSCoding
 	{
 		[NullAllowed, Export ("gridView", ArgumentSemantic.Weak)]
@@ -6801,12 +6806,14 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface NSGridCell : NSCoding
 	{
 		[Export ("contentView", ArgumentSemantic.Strong)]
 		NSView ContentView { get; set; }
 
 		[Export ("emptyContentView", ArgumentSemantic.Strong)]
+		[Static]
 		NSView EmptyContentView { get; }
 
 		[NullAllowed, Export ("row", ArgumentSemantic.Weak)]
@@ -12674,7 +12681,7 @@ namespace XamCore.AppKit {
 		IntPtr Constructor (CGRect frameRect);
 
 		[Export ("isVertical")]
-		nint IsVertical { get; [Mac (10, 12)] set; }
+		nint IsVertical { get; /* FIXME: [Mac (10, 12)] set; -- Radar 27222357 */ }
 
 		[Export ("acceptsFirstMouse:")]
 		bool AcceptsFirstMouse (NSEvent theEvent);
@@ -12765,7 +12772,7 @@ namespace XamCore.AppKit {
 		bool PrefersTrackingUntilMouseUp ();
 
 		[Export ("isVertical")]
-		nint IsVertical { get; [Mac (10,12)] set; }
+		nint IsVertical { get; /* FIXME: [Mac (10, 12)] set; -- Radar 27222357 */ }
 
 		[Export ("knobRectFlipped:")]
 		CGRect KnobRectFlipped (bool flipped);
@@ -16942,7 +16949,7 @@ namespace XamCore.AppKit {
 		NSTextInputContext CurrentInputContext { get; }
 
 		[Export ("client")]
-		NSTextInputClient Client { get; }
+		INSTextInputClient Client { get; }
 
 		[Export ("acceptsGlyphInfo")]
 		bool AcceptsGlyphInfo { get; set; }
@@ -16997,6 +17004,7 @@ namespace XamCore.AppKit {
 	}
 	
 	[BaseType (typeof (NSTextBlock))]
+	[DisableDefaultCtor]
 	public interface NSTextTableBlock {
 		[Export ("initWithTable:startingRow:rowSpan:startingColumn:columnSpan:")]
 		IntPtr Constructor (NSTextTable table, nint row, nint rowSpan, nint col, nint colSpan);
@@ -20731,10 +20739,12 @@ namespace XamCore.AppKit {
 		NSString DidChangeBackingPropertiesNotification { get; }
 
 		[Mac (10, 12)]
+		[Static]
 		[Export ("allowsAutomaticWindowTabbing")]
 		bool AllowsAutomaticWindowTabbing { get; set; }
 
 		[Mac (10, 12)]
+		[Static]
 		[Export ("userTabbingPreference")]
 		NSWindowUserTabbingPreference UserTabbingPreference { get; }
 

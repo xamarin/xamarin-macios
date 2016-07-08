@@ -283,6 +283,16 @@ namespace Introspection {
 			case "MonoMac.AppKit":
 			case "AppKit":
 				switch (type.Name) {
+				case "NSMenu":
+				case "NSMenuItem":
+					switch (selectorName) {
+					case "accessibilityAddChildElement:":
+					case "accessibilityElementWithRole:frame:label:parent:":
+						// Defined in header NSAccessibilityElement.h for NSAccessibilityElement which they implement, in theory
+						return true;
+					}
+					break;
+
 #if !XAMCORE_3_0		// These should be not be marked [Abstract] but can't fix w/o breaking change...
 				case "NSScrollView":
 				case "NSTextView":
@@ -323,6 +333,8 @@ namespace Introspection {
 						if (!Mac.CheckSystemVersion (10, 8))
 							return true;
 						break;
+					case "newWindowForTab:": // Cocoa checks to see if implemented in responder chain - " A plus button on tabbed windows will only be shown if this method exists in the responder chain."
+						return true;
 					}
 					break;
 				case "NSViewController":

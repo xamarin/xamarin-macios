@@ -123,6 +123,11 @@ namespace Introspection {
 				// Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: 'Caller did not provide an activityType, and this process does not have a NSUserActivityTypes in its Info.plist.
 				// but since it looks like the constructor is usable with the proper Info.plist, we can't remove it.
 				return true;
+			case "MonoMac.AppKit.NSTextTableBlock":
+			case "AppKit.NSTextTableBlock":
+			case "MonoMac.AppKit.NSMutableFontCollection":
+			case "AppKit.NSMutableFontCollection":
+				return true; // Crashes in 10.12
 			}
 
 			switch (type.Namespace) {

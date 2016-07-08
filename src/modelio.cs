@@ -1174,11 +1174,7 @@ namespace XamCore.ModelIO {
 
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	#if !MONOMAC
 	interface MDLTransform : MDLTransformComponent, NSCopying {
-	#else
-	interface MDLTransform : MDLTransformComponent {
-	#endif
 
 		[Export ("initWithTransformComponent:")]
 		IntPtr Constructor (IMDLTransformComponent component);
