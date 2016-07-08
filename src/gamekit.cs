@@ -673,8 +673,13 @@ namespace XamCore.GameKit {
 		void Authenticate ([NullAllowed] GKNotificationHandler handler);
 #endif
 
+		[iOS (10,0)][Mac (10,12)]
+		[Async]
+		[Export ("loadRecentPlayersWithCompletionHandler:")]
+		void LoadRecentPlayers ([NullAllowed] Action<GKPlayer[], NSError> completionHandler);
+
 		[NoTV]
-		[Availability (Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use LoadFriendPlayers(..) instead")]
+		[Availability (Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use LoadRecentPlayers(..) instead")]
 		[Export ("loadFriendsWithCompletionHandler:")]
 		[Async]
 		void LoadFriends ([NullAllowed] GKFriendsHandler handler);
@@ -2298,9 +2303,6 @@ namespace XamCore.GameKit {
 
 		[Export ("session:didReceiveMessage:withData:fromPlayer:")]
 		void DidReceiveMessage (GKGameSession session, string message, NSData data, GKCloudPlayer player);
-
-		[Export ("player:requestedSessionWithPlayers:")]
-		void RequestedSession (GKCloudPlayer player, GKCloudPlayer[] players);
 	}
 
 #if !MONOMAC
