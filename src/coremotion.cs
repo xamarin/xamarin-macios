@@ -421,25 +421,6 @@ namespace XamCore.CoreMotion {
 
 		[Export ("stopRelativeAltitudeUpdates")]
 		void StopRelativeAltitudeUpdates ();
-
-		[NoWatch][iOS (10,0)]
-		[Static]
-		[Export ("isSignificantElevationAvailable")]
-		bool IsSignificantElevationAvailable { get; }
-
-		[NoWatch][iOS (10,0)]
-		[Async]
-		[Export ("startSignificantElevationUpdatesWithHandler:")]
-		void StartSignificantElevationUpdates (Action<CMSignificantElevationSample,NSError> handler);
-
-		[NoWatch][iOS (10,0)]
-		[Export ("stopSignificantElevationUpdates")]
-		void StopSignificantElevationUpdates ();
-
-		[NoWatch][iOS (10,0)]
-		[Async]
-		[Export ("querySignificantElevationChangeFromDate:toDate:withHandler:")]
-		void QuerySignificantElevationChange (NSDate fromDate, NSDate toDate, Action<CMSignificantElevationSample,NSError> handler);
 	}
 
 	[iOS (9,0)]
@@ -469,23 +450,6 @@ namespace XamCore.CoreMotion {
 		[iOS (9,3)] // Apple changed the selector in 9.3 and removed the old one
 		[Export ("recordAccelerometerForDuration:")]
 		void RecordAccelerometer (double duration);
-	}
-
-	[Watch (3,0)][NoTV][iOS (10,0)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor] // instances exposed from delegate
-	interface CMSignificantElevationSample : NSCopying, NSSecureCoding {
-		[Export ("startDate")]
-		NSDate StartDate { get; }
-
-		[Export ("endDate")]
-		NSDate EndDate { get; }
-
-		[Export ("elevationAscended")]
-		NSNumber ElevationAscended { get; }
-
-		[Export ("elevationDescended")]
-		NSNumber ElevationDescended { get; }
 	}
 
 	[Watch (3,0)][NoTV][iOS (10,0)]
