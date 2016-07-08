@@ -34,4 +34,12 @@ namespace XamCore.ReplayKit {
 		Preview,
 		Share
 	}
+
+	[Native]
+	[iOS (10,0)]
+	public enum RPSampleBufferType : nint {
+		Video = 1,
+		AudioApp,
+		AudioMic
+	}
 }
