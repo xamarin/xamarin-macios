@@ -8,6 +8,7 @@
 //
 
 using System;
+using XamCore.CoreMedia;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 using XamCore.UIKit;
@@ -144,8 +145,20 @@ namespace XamCore.ReplayKit {
 		[Export ("broadcasting")]
 		bool Broadcasting { [Bind ("isBroadcasting")] get; }
 
+		[Export ("paused")]
+		bool Paused { [Bind ("isPaused")] get; }
+
 		[Export ("broadcastURL")]
 		NSUrl BroadcastUrl { get; }
+
+		[NullAllowed, Export ("serviceInfo")]
+		NSDictionary<NSString, INSCoding> ServiceInfo { get; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		IRPBroadcastControllerDelegate Delegate { get; set; }
+
+		[Export ("broadcastExtensionBundleID")]
+		string BroadcastExtensionBundleID { get; }
 
 		[Async]
 		[Export ("startBroadcastWithHandler:")]
@@ -171,6 +184,10 @@ namespace XamCore.ReplayKit {
 		[Abstract]
 		[Export ("broadcastController:didFinishWithError:")]
 		void DidFinish (RPBroadcastController broadcastController, [NullAllowed] NSError error);
+
+		[Abstract]
+		[Export ("broadcastController:didUpdateServiceInfo:")]
+		void DidUpdateServiceInfo (RPBroadcastController broadcastController, NSDictionary<NSString, NSCoding> serviceInfo);
 	}
 
 	[iOS (10,0)]
@@ -193,7 +210,43 @@ namespace XamCore.ReplayKit {
 		[Export ("loadBroadcastingApplicationInfoWithCompletion:")]
 		void LoadBroadcastingApplicationInfo (LoadBroadcastingHandler handler);
 
-		[Export ("completeRequestWithBroadcastURL:broadcastConfiguration:serviceInfo:")]
-		void CompleteRequest (NSUrl broadcastUrl, RPBroadcastConfiguration broadcastConfiguration, [NullAllowed] NSDictionary<NSString, INSCoding> serviceInfo);
+		[Export ("completeRequestWithBroadcastURL:broadcastConfiguration:setupInfo:")]
+		void CompleteRequest (NSUrl broadcastURL, RPBroadcastConfiguration broadcastConfiguration, [NullAllowed] NSDictionary<NSString, NSCoding> setupInfo);
+	}
+
+	[iOS (10,0)]
+	[BaseType (typeof (NSObject))]
+	interface RPBroadcastHandler : NSExtensionRequestHandling {
+		[Export ("updateServiceInfo:")]
+		void UpdateServiceInfo (NSDictionary<NSString, INSCoding> serviceInfo);
+	}
+
+	[iOS (10,0)]
+	[BaseType (typeof (RPBroadcastHandler))]
+	interface RPBroadcastMP4ClipHandler {
+		[Export ("processMP4ClipWithURL:setupInfo:finished:")]
+		void ProcessMP4Clip ([NullAllowed] NSUrl mp4ClipURL, [NullAllowed] NSDictionary<NSString, NSObject> setupInfo, bool finished);
+
+		[Export ("finishedProcessingMP4ClipWithUpdatedBroadcastConfiguration:error:")]
+		void FinishedProcessingMP4Clip ([NullAllowed] RPBroadcastConfiguration broadcastConfiguration, [NullAllowed] NSError error);
+	}
+
+	[iOS (10,0)]
+	[BaseType (typeof (RPBroadcastHandler))]
+	interface RPBroadcastSampleHandler {
+		[Export ("broadcastStartedWithSetupInfo:")]
+		void BroadcastStarted ([NullAllowed] NSDictionary<NSString, NSObject> setupInfo);
+
+		[Export ("broadcastPaused")]
+		void BroadcastPaused ();
+
+		[Export ("broadcastResumed")]
+		void BroadcastResumed ();
+
+		[Export ("broadcastFinished")]
+		void BroadcastFinished ();
+
+		[Export ("processSampleBuffer:withType:")]
+		void ProcessSampleBuffer (CMSampleBuffer sampleBuffer, RPSampleBufferType sampleBufferType);
 	}
 }
