@@ -1005,9 +1005,15 @@ namespace XamCore.Photos
 
 	[iOS (9,1)]
 	[TV (10,0)]
+#if MONOMAC
+	[DisableDefaultCtor] // NS_UNAVAILABLE
+#endif
 	[Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	public interface PHLivePhoto : NSSecureCoding, NSCopying
+	public interface PHLivePhoto
+#if !MONOMAC
+	: NSSecureCoding, NSCopying
+#endif
 	{
 		[Export ("size")]
 		CGSize Size { get; }
@@ -1016,11 +1022,11 @@ namespace XamCore.Photos
 		[Static]
 		[Export ("requestLivePhotoWithResourceFileURLs:placeholderImage:targetSize:contentMode:resultHandler:")]
 		int RequestLivePhoto (NSUrl[] fileUrls, [NullAllowed] UIImage image, CGSize targetSize, PHImageContentMode contentMode, Action<PHLivePhoto, NSDictionary> resultHandler);
-#endif
 
 		[Static]
 		[Export ("cancelLivePhotoRequestWithRequestID:")]
 		void CancelLivePhotoRequest (int requestID);
+#endif
 	}
 
 	[iOS (9,1)]

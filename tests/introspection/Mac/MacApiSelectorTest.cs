@@ -116,6 +116,20 @@ namespace Introspection {
 				return true;
 			
 			switch (selectorName) {
+			case "encodeWithCoder:":
+				switch (type.Name) {
+				case "CNContactFetchRequest":
+				case "NWEndpoint":
+				case "GKEntity":
+				case "GKPolygonObstacle":
+				case "GKComponent":
+				case "GKGraph":
+				case "GKGraphNode":
+					if (!Mac.CheckSystemVersion (10, 12)) // NSCoding was added in 10.12
+						return true;
+					break;
+				}
+				break;
 			case "accessibilityNotifiesWhenDestroyed":
 				// The header declares this on an NSObject category but 
 				// it doesn't even respondsToSelector on NSView/NSCell...
@@ -155,8 +169,19 @@ namespace Introspection {
 				break;
 			// some types had NSCopying added after they were first introduced
 			case "copyWithZone:":
-				if (type.Name == "CBPeripheral" && !Mac.CheckSystemVersion (10, 9))
-					return true;
+				switch (type.Name) {
+				case "MDLTransform":
+				case "NWEndpoint":
+				case "GKBehavior":
+				case "GKGraph":
+					if (!Mac.CheckSystemVersion (10, 12)) // NSCopying was added in 10.12
+						return true;
+					break;
+				case "CBPeripheral":
+					if (!Mac.CheckSystemVersion (10, 9))
+						return true;
+					break;
+				}
 				break;
 			case "readingOptionsForType:pasteboard:":
 			case "writingOptionsForType:pasteboard:":
