@@ -64,10 +64,6 @@ namespace XamCore.CoreLocation {
 
 		[Export ("timestamp", ArgumentSemantic.Copy)]
 		NSDate Timestamp { get;  }
-
-		[Export ("description")]
-		string Description ();
-	
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -101,9 +97,6 @@ namespace XamCore.CoreLocation {
 		[Export ("initWithCoordinate:altitude:horizontalAccuracy:verticalAccuracy:timestamp:")]
 		IntPtr Constructor (CLLocationCoordinate2D coordinate, double altitude, double hAccuracy, double vAccuracy, NSDate timestamp);
 
-		[Export ("description")]
-		string Description ();
-	
 #if !XAMCORE_2_0
 		[Export ("getDistanceFrom:")]
 		[Availability (Deprecated = Platform.iOS_3_2, Message = "Use DistanceFrom instead")]
@@ -179,7 +172,9 @@ namespace XamCore.CoreLocation {
 		[Export ("location", ArgumentSemantic.Copy)]
 		CLLocation Location { get;  }
 	
-		[NoWatch][NoTV]
+		 // __WATCHOS_PROHIBITED removed in Xcode 8.0 beta 2, assuming it's valid for 3.0+
+		[Watch (3,0)]
+		[NoTV]
 		[Export ("startUpdatingLocation")]
 		void StartUpdatingLocation ();
 	

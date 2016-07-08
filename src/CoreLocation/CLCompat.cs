@@ -14,6 +14,26 @@ namespace XamCore.CoreLocation {
 		{
 		}
 	}
+
+#if !XAMCORE_4_0
+	public partial class CLHeading {
+
+		[Obsolete ("Use the Description property from NSObject")]
+		public new virtual string Description ()
+		{
+			return base.Description;
+		}
+	}
+
+	public partial class CLLocation {
+
+		[Obsolete ("Use the Description property from NSObject")]
+		public new virtual string Description ()
+		{
+			return base.Description;
+		}
+	}
+#endif
 }
 
 #endif
