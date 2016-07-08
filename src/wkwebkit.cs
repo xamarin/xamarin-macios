@@ -499,12 +499,18 @@ namespace XamCore.WebKit
 		string CustomUserAgent { get; set; }
 
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use ServerTrust property")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use ServerTrust property")]
 		[Export ("certificateChain", ArgumentSemantic.Copy)]
 		SecCertificate[] CertificateChain { get; }
 
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		[Export ("allowsLinkPreview")]
 		bool AllowsLinkPreview { get; set; }
+
+		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[NullAllowed, Export ("serverTrust")]
+		SecTrust ServerTrust { get; }
 	}
 
 	public delegate void WKJavascriptEvaluationResult (NSObject result, NSError error);
