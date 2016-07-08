@@ -34,6 +34,20 @@ namespace XamCore.Messages {
 		Large
 	}
 
+	[Native]
+	public enum MSMessageErrorCode : nint
+	{
+		FileNotFound = 1,
+		FileUnreadable,
+		ImproperFileType,
+		ImproperFileUrl,
+		StickerFileImproperPath,
+		StickerFileImproperFileAttributes,
+		StickerFileImproperFileSize,
+		StickerFileImproperFileFormat,
+		UrlExceedsMaxSize,
+	}
+
 	[iOS (10,0)]
 	[BaseType (typeof(UIViewController))]
 	interface MSMessagesAppViewController
@@ -101,9 +115,9 @@ namespace XamCore.Messages {
 		[NullAllowed, Export ("selectedMessage")]
 		MSMessage SelectedMessage { get; }
 
-		[Export ("insertMessage:localizedChangeDescription:completionHandler:")]
+		[Export ("insertMessage:completionHandler:")]
 		[Async]
-		void InsertMessage (MSMessage message, [NullAllowed] string changeDescription, [NullAllowed] Action<NSError> completionHandler);
+		void InsertMessage (MSMessage message, [NullAllowed] Action<NSError> completionHandler);
 
 		[Export ("insertSticker:completionHandler:")]
 		[Async]
@@ -143,6 +157,9 @@ namespace XamCore.Messages {
 
 		[NullAllowed, Export ("accessibilityLabel")]
 		string AccessibilityLabel { get; set; }
+
+		[NullAllowed, Export ("summaryText")]
+		string SummaryText { get; set; }
 
 		[NullAllowed, Export ("error", ArgumentSemantic.Copy)]
 		NSError Error { get; set; }
@@ -262,6 +279,15 @@ namespace XamCore.Messages {
 
 		[NullAllowed, Export ("dataSource", ArgumentSemantic.Weak)]
 		IMSStickerBrowserViewDataSource DataSource { get; set; }
+
+		[Export ("contentOffset", ArgumentSemantic.Assign)]
+		CGPoint ContentOffset { get; set; }
+
+		[Export ("contentInset", ArgumentSemantic.Assign)]
+		UIEdgeInsets ContentInset { get; set; }
+
+		[Export ("setContentOffset:animated:")]
+		void SetContentOffset (CGPoint contentOffset, bool animated);
 
 		[Export ("reloadData")]
 		void ReloadData ();
