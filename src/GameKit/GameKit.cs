@@ -152,15 +152,18 @@ namespace XamCore.GameKit {
 	public enum GKGameSessionErrorCode : nint {
 		Unknown = 1,
 		NotAuthenticated = 2,
-		SessionOutOfDate = 3,
+		SessionConflict = 3,
 		SessionNotShared = 4,
 		ConnectionCancelledByUser = 5,
-		CouldNotConnectToSession = 6,
+		ConnectionFailed = 6,
 		SessionHasMaxConnectedPlayers = 7,
 		SendDataNotConnected = 8,
 		SendDataNoRecipients = 9,
 		SendDataNotReachable = 10,
 		SendRateLimitReached = 11,
+		BadContainer = 12,
+		CloudQuotaExceeded = 13,
+		NetworkFailure = 14,
 	}
 
 	// NSInteger -> GKMatch.h
