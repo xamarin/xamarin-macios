@@ -157,6 +157,8 @@ namespace XamCore.HomeKit {
 				// iOS 10.0
 				if (s == HMCharacteristicTypeInternal.StreamingStatus)
 					return HMCharacteristicType.StreamingStatus;
+				if (s == HMCharacteristicTypeInternal.SetupStreamEndpoint)
+					return HMCharacteristicType.SetupStreamEndpoint;
 				if (s == HMCharacteristicTypeInternal.SupportedVideoStreamConfiguration)
 					return HMCharacteristicType.SupportedVideoStreamConfiguration;
 				if (s == HMCharacteristicTypeInternal.SupportedAudioStreamConfiguration)

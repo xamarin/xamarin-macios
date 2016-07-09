@@ -636,6 +636,10 @@ namespace XamCore.HomeKit {
 		NSString StreamingStatus { get; }
 
 		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Field ("HMCharacteristicTypeSetupStreamEndpoint")]
+		NSString SetupStreamEndpoint { get; }
+
+		[Watch (3,0), TV (10,0), iOS (10,0)]
 		[Field ("HMCharacteristicTypeSupportedVideoStreamConfiguration")]
 		NSString SupportedVideoStreamConfiguration { get; }
 
@@ -1150,6 +1154,10 @@ namespace XamCore.HomeKit {
 		[iOS (9,0)]
 		[Field ("HMServiceTypeDoor")]
 		NSString Door { get; }
+
+		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Field ("HMServiceTypeDoorbell")]
+		NSString Doorbell { get; }
 
 		[iOS (9,0)]
 		[Field ("HMServiceTypeHumiditySensor")]
@@ -1753,15 +1761,22 @@ namespace XamCore.HomeKit {
 		void DidStartStream (HMCameraStreamControl cameraStreamControl);
 
 		[Export ("cameraStreamControl:didStopStreamWithError:")]
-		void DidStopStream (HMCameraStreamControl cameraStreamControl, NSError error);
+		void DidStopStream (HMCameraStreamControl cameraStreamControl, [NullAllowed] NSError error);
 	}
 
+	// TODO: Type still available for tvOS even if everything in it is __TVOS_PROHIBITED.
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[BaseType (typeof(HMCameraSource))]
 	public interface HMCameraStream
 	{
+		[NoTV]
 		[Export ("audioStreamSetting", ArgumentSemantic.Assign)]
-		HMCameraAudioStreamSetting AudioStreamSetting { get; set; }
+		HMCameraAudioStreamSetting AudioStreamSetting { get; }
+
+		[NoTV]
+		[Async]
+		[Export ("updateAudioStreamSetting:completionHandler:")]
+		void UpdateAudioStreamSetting (HMCameraAudioStreamSetting audioStreamSetting, Action<NSError> completion);
 	}
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]

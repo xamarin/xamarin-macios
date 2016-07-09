@@ -94,6 +94,10 @@ namespace XamCore.HomeKit {
 		NotAuthorizedForLocationServices		= 85,
 		// iOS 9.3
 		ReferToUserManual						= 86,
+		// iOS 10.0
+		InvalidOrMissingAuthorizationData       = 87,
+		BridgedAccessoryNotReachable            = 88,
+		NotAuthorizedForMicrophoneAccess        = 89,
 	}
 
 	
@@ -211,6 +215,8 @@ namespace XamCore.HomeKit {
 		[iOS (10,0), Watch (3,0), TV (10,0)]
 		StreamingStatus,
 		[iOS (10,0), Watch (3,0), TV (10,0)]
+		SetupStreamEndpoint,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
 		SupportedVideoStreamConfiguration,
 		[iOS (10,0), Watch (3,0), TV (10,0)]
 		SupportedAudioStreamConfiguration,
@@ -310,6 +316,8 @@ namespace XamCore.HomeKit {
 		Microphone,
 		[iOS (10,0), Watch (3,0), TV (10,0)]
 		Speaker,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		Doorbell,
 	}
 
 	// conveniance enum (ObjC uses NSString)

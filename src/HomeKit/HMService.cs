@@ -46,6 +46,8 @@ namespace XamCore.HomeKit {
 					return HMServiceType.ContactSensor;
 				if (s == HMServiceTypeInternal.Door)
 					return HMServiceType.Door;
+				if (s == HMServiceTypeInternal.Doorbell)
+					return HMServiceType.Doorbell;
 				if (s == HMServiceTypeInternal.HumiditySensor)
 					return HMServiceType.HumiditySensor;
 				if (s == HMServiceTypeInternal.LeakSensor)
