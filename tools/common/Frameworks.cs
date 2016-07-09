@@ -314,7 +314,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "MapKit", "MapKit", 9, 2 },
 
-					{ "ExternalAccessory", "ExternalAccessory", 10 },
+					//{ "ExternalAccessory", "ExternalAccessory", 10 },
 					{ "MultipeerConnectivity", 10 },
 					{ "ReplayKit", "ReplayKit", 10 },
 					{ "UserNotifications", "UserNotifications", 10 },
