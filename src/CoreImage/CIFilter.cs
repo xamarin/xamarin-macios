@@ -640,18 +640,6 @@ namespace XamCore.CoreImage {
 				return false;
 			}
 		}
-
-		[iOS (10,0)]
-		static public CIFilter CreateRawFilter (NSUrl url, CIRawFilterOptions options)
-		{
-			return CreateRawFilter (url, options?.Dictionary);
-		}
-
-		[iOS (10,0)]
-		static public CIFilter CreateRawFilter (NSData data, CIRawFilterOptions options)
-		{
-			return CreateRawFilter (data, options?.Dictionary);
-		}
 	}
 
 #if MONOMAC && !XAMCORE_3_0

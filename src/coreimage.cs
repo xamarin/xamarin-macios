@@ -488,8 +488,28 @@ namespace XamCore.CoreImage {
 
 		[iOS (10,0)]
 		[Static]
+		[Wrap ("CreateRawFilter (url, options?.Dictionary)")]
+		CIFilter CreateRawFilter (NSUrl url, CIRawFilterOptions options);
+
+		[iOS (10,0)]
+		[Static]
 		[Export ("filterWithImageData:options:")]
 		CIFilter CreateRawFilter (NSData data, NSDictionary options);
+
+		[iOS (10,0)]
+		[Static]
+		[Wrap ("CreateRawFilter (data, options?.Dictionary)")]
+		CIFilter CreateRawFilter (NSData data, CIRawFilterOptions options);
+
+		[iOS (10,0)][Mac (10,12)]
+		[Static]
+		[Export ("filterWithCVPixelBuffer:properties:options:")]
+		CIFilter CreateRawFilter (CVPixelBuffer pixelBuffer, NSDictionary properties, NSDictionary options);
+
+		[iOS (10,0)][Mac (10,12)]
+		[Static]
+		[Wrap ("CreateRawFilter (pixelBuffer, properties, options?.Dictionary)")]
+		CIFilter CreateRawFilter (CVPixelBuffer pixelBuffer, NSDictionary properties, CIRawFilterOptions options);
 	}
 
 	[Static]
@@ -597,7 +617,7 @@ namespace XamCore.CoreImage {
 	}
 
 	[StrongDictionary ("CIRawFilterKeys")]
-	interface CIRawFilterOptions {
+	public interface CIRawFilterOptions {
 
 		[iOS (10,0)]
 		bool AllowDraftMode { get; set; }
@@ -1577,13 +1597,6 @@ namespace XamCore.CoreImage {
 		[iOS (10,0)][Mac (10,12)]
 		[NullAllowed, Export ("CGImage")]
 		CGImage CGImage { get; }
-
-		// CIImage_CIImageProcessor
-
-		[iOS (10,0)][Mac (10,12)]
-		[Export ("imageWithExtent:processorDescription:argumentDigest:inputFormat:outputFormat:options:roiCallback:processor:")]
-		[return: NullAllowed]
-		CIImage Process (CGRect extent, string description, ulong argumentDigest, CIFormat inputFormat, CIFormat outputFormat, [NullAllowed] NSDictionary<NSString, NSObject> options, Func<CGRect, CGRect> roiCallback, Action<ICIImageProcessorInput, ICIImageProcessorOutput> processor);
 	}
 
 	public interface ICIImageProcessorInput {}
@@ -1853,7 +1866,7 @@ namespace XamCore.CoreImage {
 	[BaseType (typeof (NSObject))]
 	[Since (5,0)]
 	[DisableDefaultCtor]
-	interface CIVector : NSSecureCoding, NSCopying {
+	public interface CIVector : NSSecureCoding, NSCopying {
 		[Static, Internal, Export ("vectorWithValues:count:")]
 		CIVector _FromValues (IntPtr values, nint count);
 
@@ -2192,6 +2205,36 @@ namespace XamCore.CoreImage {
 		CIFeature[] SubFeatures { get; }
 	}
 #endif
+
+	[iOS (10,0)][Mac (10,12)]
+	[BaseType (typeof (NSObject))]
+	interface CIImageProcessorKernel {
+		[Static]
+		[Export ("processWithInputs:arguments:output:error:")]
+		bool Process ([NullAllowed] ICIImageProcessorInput[] inputs, [NullAllowed] NSDictionary<NSString, NSObject> arguments, ICIImageProcessorOutput output, out NSError error);
+
+		[Static]
+		[Export ("roiForInput:arguments:outputRect:")]
+		CGRect GetRegionOfInterest (int input, [NullAllowed] NSDictionary<NSString, NSObject> arguments, CGRect outputRect);
+
+		[Static]
+		[Export ("formatForInputAtIndex:")]
+		CIFormat GetFormat (int input);
+
+		[Static]
+		[Export ("outputFormat")]
+		CIFormat OutputFormat { get; }
+
+		[Static]
+		[Export ("synchronizeInputs")]
+		bool SynchronizeInputs { get; }
+
+		[Static]
+		[Export ("applyWithExtent:inputs:arguments:error:")]
+		[return: NullAllowed]
+		CIImage Apply (CGRect extent, [NullAllowed] CIImage[] inputs, [NullAllowed] NSDictionary<NSString, NSObject> args, out NSError error);
+	}
+
 	[CoreImageFilter]
 	[iOS (8,0)]
 	[Mac (10,10)]
