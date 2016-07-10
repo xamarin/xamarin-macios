@@ -68,7 +68,9 @@ namespace XamCore.TVMLKit {
 		None,
 		Subtree,
 		Children,
-		Self
+		Self,
+		[TV (10,0)]
+		Styles,
 	}
 
 	[TV (9,0)]
@@ -643,6 +645,10 @@ namespace XamCore.TVMLKit {
 		[Export ("margin")]
 		UIEdgeInsets Margin { get; }
 
+		[TV (10,0)]
+		[Export ("focusMargin")]
+		UIEdgeInsets FocusMargin { get; }
+
 		[Export ("maxHeight")]
 		nfloat MaxHeight { get; }
 
@@ -728,7 +734,7 @@ namespace XamCore.TVMLKit {
 		[Export ("disabled")]
 		bool Disabled {
 			[Bind ("isDisabled")] get;
-			[NotImplemented] set; // made read-only in 10.0
+			set;
 		}
 
 		[Export ("updateType")]
@@ -776,6 +782,11 @@ namespace XamCore.TVMLKit {
 		[Export ("imageForResource:")]
 		[return: NullAllowed]
 		UIImage GetImageForResource (string resourceName);
+
+		[TV (10,0)]
+		[Export ("collectionViewCellClassForElement:")]
+		[return: NullAllowed]
+		Class GetCollectionViewCellClass (TVViewElement element);
 	}
 
 	interface ITVInterfaceCreating {}
