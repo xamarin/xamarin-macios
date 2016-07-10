@@ -33,6 +33,11 @@ namespace ObjCRuntime {
 		public const string WatchKitLibrary = "/System/Library/Frameworks/WatchKit.framework/WatchKit";
 
 		// WatchOS 3.0
+		public const string AVFoundationLibrary = "/System/Library/Frameworks/AVFoundation.framework/AVFoundation";
+		public const string CloudKitLibrary = "/System/Library/Frameworks/CloudKit.framework/CloudKit";
+		public const string GameKitLibrary = "/System/Library/Frameworks/GameKit.framework/GameKit";
+		public const string SceneKitLibrary = "/System/Library/Frameworks/SceneKit.framework/SceneKit";
+		public const string SpriteKitLibrary = "/System/Library/Frameworks/SpriteKit.framework/SpriteKit";
 		public const string UserNotificationsLibrary = "/System/Library/Frameworks/UserNotifications.framework/UserNotifications";
 	}
 }

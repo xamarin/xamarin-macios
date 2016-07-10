@@ -1618,6 +1618,7 @@ IOS_FRAMEWORKS =         \
 WATCHOS_FRAMEWORKS =        \
 	$(COMMON_FRAMEWORKS)    \
 	ClockKit                \
+	CloudKit                \
 	Contacts                \
 	CoreData                \
 	CoreGraphics            \
