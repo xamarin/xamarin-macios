@@ -17,9 +17,22 @@ namespace XamCore.SafariServices {
 		UrlSchemeNotAllowed = 1
 	}
 
+	[iOS (9,0)]
+	[Deprecated (PlatformName.iOS, 10,0, message: "Use SFErrorCode enum")]
 	[Native]
 	[ErrorDomain ("SFContentBlockerErrorDomain")]
 	public enum SFContentBlockerErrorCode : nint {
+		Ok = 0,
+		NoExtensionFound = 1,
+		NoAttachmentFound = 2,
+		LoadingInterrupted = 3
+	}
+
+	[iOS (10,0)]
+	[Native]
+	[ErrorDomain ("SFErrorDomain")]
+	public enum SFErrorCode : nint
+	{
 		Ok = 0,
 		NoExtensionFound = 1,
 		NoAttachmentFound = 2,
