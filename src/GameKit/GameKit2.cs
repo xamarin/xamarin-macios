@@ -327,7 +327,7 @@ namespace XamCore.GameKit {
 	}
 
 	public partial class GKMatch {
-#if !TVOS
+#if !XAMCORE_3_0
 		// Compatbility with the broken API, it is deprecated, so that is good.
 		public virtual bool SendData (NSData data, string [] players, GKMatchSendDataMode mode, NSError error)
 		{
