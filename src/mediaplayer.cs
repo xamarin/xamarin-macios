@@ -159,6 +159,11 @@ namespace XamCore.MediaPlayer {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString ArtworkProperty { get; }
 
+		[iOS (7,0)]
+		[Field ("MPMediaItemPropertyIsExplicit")]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		NSString IsExplicitProperty { get; }
+
 		[Since (3,0)]
 		[Field ("MPMediaItemPropertyLyrics")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -235,20 +240,28 @@ namespace XamCore.MediaPlayer {
 		NSString HasProtectedAssetProperty { get; }
 	}
 
-	[NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	public interface MPMediaItemArtwork {
+		[iOS (10,0)]
+		[Export ("initWithBoundsSize:requestHandler:")]
 		[DesignatedInitializer]
+		IntPtr Constructor (CGSize boundsSize, Func<CGSize, UIImage> requestHandler);
+
+		[Introduced (PlatformName.iOS, 5, 0)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Export ("initWithImage:")]
 		IntPtr Constructor (UIImage image);
 		
 		[Export ("imageWithSize:")]
+		[return: NullAllowed]
 		UIImage ImageWithSize (CGSize size);
 
 		[Export ("bounds")]
 		CGRect Bounds { get; }
 
+		[Introduced (PlatformName.iOS, 3, 0)]
+		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Export ("imageCropRect")]
 		CGRect ImageCropRectangle { get; }
 	}
@@ -1272,6 +1285,30 @@ namespace XamCore.MediaPlayer {
 		[Internal]
 		[Field ("MPNowPlayingInfoPropertyCurrentLanguageOptions")]
 		NSString PropertyCurrentLanguageOptions { get; }
+
+		[iOS (9,3)]
+		[Field ("MPNowPlayingInfoCollectionIdentifier")]
+		NSString PropertyCollectionIdentifier { get; }
+
+		[iOS (10,0)]
+		[Field ("MPNowPlayingInfoPropertyExternalContentIdentifier")]
+		NSString PropertyExternalContentIdentifier { get; }
+
+		[iOS (10,0)]
+		[Field ("MPNowPlayingInfoPropertyExternalUserProfileIdentifier")]
+		NSString PropertyExternalUserProfileIdentifier { get; }
+
+		[iOS (10,0)]
+		[Field ("MPNowPlayingInfoPropertyPlaybackProgress")]
+		NSString PropertyPlaybackProgress { get; }
+
+		[iOS (10,0)]
+		[Field ("MPNowPlayingInfoPropertyMediaType")]
+		NSString PropertyMediaType { get; }
+
+		[iOS (10,0)]
+		[Field ("MPNowPlayingInfoPropertyIsLiveStream")]
+		NSString PropertyIsLiveStream { get; }
 	}
 
 	[NoTV] // This type was made available in tvOS but MPMediaItemArtwork is still restricted radar://24982126 https://trello.com/c/2gxuFbeS
@@ -1298,6 +1335,14 @@ namespace XamCore.MediaPlayer {
 
 		[Export ("title")]
 		string Title { get; set; }
+
+		[iOS (10,0)]
+		[Export ("streamingContent")]
+		bool StreamingContent { [Bind ("isStreamingContent")] get; set; }
+
+		[iOS (10,0)]
+		[Export ("explicitContent")]
+		bool ExplicitContent { [Bind ("isExplicitContent")] get; set; }
 
 		[Export ("container")]
 		bool Container { [Bind ("isContainer")] get; set; }

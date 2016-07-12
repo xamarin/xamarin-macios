@@ -264,4 +264,13 @@ namespace XamCore.MediaPlayer {
 		Authorized
 	}
 
+	[iOS (10,0)]
+	[Native]
+	public enum MPNowPlayingInfoMediaType : nuint
+	{
+		None = 0,
+		Audio,
+		Video
+	}
+
 }
