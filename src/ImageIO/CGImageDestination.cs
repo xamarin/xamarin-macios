@@ -66,6 +66,9 @@ namespace XamCore.ImageIO {
 		[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
 		public bool ShouldExcludeGPS { get; set; }
 
+		[iOS (9,3)][Mac (10,12)]
+		public bool OptimizeColorForSharing { get; set; }
+
 		internal NSMutableDictionary ToDictionary ()
 		{
 			var dict = new NSMutableDictionary ();
@@ -107,6 +110,9 @@ namespace XamCore.ImageIO {
 			// new in iOS 8 and 10.10 - default is false
 			if (ShouldExcludeGPS && (kShouldExcludeGPS != IntPtr.Zero))
 				dict.LowlevelSetObject (CFBoolean.True.Handle, kShouldExcludeGPS);
+
+			if (OptimizeColorForSharing && (kOptimizeColorForSharing != IntPtr.Zero))
+				dict.LowlevelSetObject (CFBoolean.True.Handle, kOptimizeColorForSharing);
 
 			return dict;
 		}
