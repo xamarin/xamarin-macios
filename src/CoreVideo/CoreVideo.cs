@@ -38,10 +38,14 @@ namespace XamCore.CoreVideo {
 		ShouldPropagate       = 1,
 	}
 
-	// untyped enum -> CVPixelBuffer.h
-	// note: used as a CVOptionFlags uint64_t (CVBase.h) in the API
 	[Flags]
+#if XAMCORE_4_0
+	public enum CVPixelBufferLock : ulong {
+#else
+	// before iOS10 beta 2 this was an untyped enum -> CVPixelBuffer.h
+	// note: used as a CVOptionFlags uint64_t (CVBase.h) in the API
 	public enum CVPixelBufferLock : uint_compat_int {
+#endif
 		None = 0x00000000,
 		ReadOnly = 0x00000001,
 	}	
@@ -184,8 +188,11 @@ namespace XamCore.CoreVideo {
 	}
 
 	[Flags]
-	[Native]
-	public enum CVTimeStampFlags : nint {
+#if XAMCORE_2_0
+	public enum CVTimeStampFlags : ulong {
+#else
+	public enum CVTimeStampFlags {
+#endif
 		VideoTimeValid              = (1 << 0),
 		HostTimeValid               = (1 << 1),
 		SMPTETimeValid              = (1 << 2),
