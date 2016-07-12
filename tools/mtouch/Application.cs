@@ -874,7 +874,7 @@ namespace Xamarin.Bundler {
 				break;
 			}
 			if (hasBitcodeCapableRuntime && EnableProfiling && FastDev) {
-				ErrorHelper.Warning (94, "Both profiling (--profiling) and incremental builds (--fastdev) is not supported when building for {0}. Incremental builds have ben disabled.", PlatformName);
+				ErrorHelper.Warning (94, "Both profiling (--profiling) and incremental builds (--fastdev) are currently not supported when building for {0}, and incremental builds have been disabled (this will be fixed in a future release).", PlatformName);
 				FastDev = false;
 			}
 
