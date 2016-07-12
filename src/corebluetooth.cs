@@ -684,6 +684,7 @@ namespace XamCore.CoreBluetooth {
 		NSString CharacteristicAggregateFormatString { get; }
 
 #if !MONOMAC // Filled radar://27160443 – Trello: https://trello.com/c/oqB27JA6
+		[iOS (10,0)]
 		[Field ("CBUUIDCharacteristicValidRangeString")]
 #else
 		[Field ("CBUUIDValidRangeString")]
