@@ -103,5 +103,6 @@ namespace MonoTouch {
 		public const string VideoSubscriberAccountLibrary = "/System/Library/Frameworks/VideoSubscriberAccount.framework/VideoSubscriberAccount";
 		public const string UserNotificationsLibrary = "/System/Library/Frameworks/UserNotifications.framework/UserNotifications";
 		public const string UserNotificationsUILibrary = "/System/Library/Frameworks/UserNotificationsUI.framework/UserNotificationsUI";
+		public const string IntentsLibrary = "/System/Library/Frameworks/Intents.framework/Intents";
 	}
 }
