@@ -2058,12 +2058,13 @@ namespace XamCore.Registrar {
 				sb.Append (' ');
 				sb.Append (split [0]);
 			} else {
+				var indexOffset = method.IsCategoryInstance ? 1 : 0;
 				for (int i = 0; i < split.Length - 1; i++) {
 					sb.Append (' ');
 					sb.Append (split [i]);
 					sb.Append (':');
 					sb.Append ('(');
-					sb.Append (ToObjCParameterType (method.Parameters [i], method.DescriptiveMethodName, exceptions, method.Method));
+					sb.Append (ToObjCParameterType (method.Parameters [i + indexOffset], method.DescriptiveMethodName, exceptions, method.Method));
 					sb.Append (')');
 					sb.AppendFormat ("p{0}", i);
 				}
