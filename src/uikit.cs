@@ -2888,6 +2888,7 @@ namespace XamCore.UIKit {
 	[Protocol]
 	public interface UIContentSizeCategoryAdjusting
 	{
+		[iOS (10,0)]
 		[Abstract]
 		[Export ("adjustsFontForContentSizeCategory")]
 		bool AdjustsFontForContentSizeCategory { get; set; }

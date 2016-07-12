@@ -97,6 +97,11 @@ namespace Introspection {
 			case "AVAudioChannelLayout":
 			case "AVAudioFormat":
 			// NSSecureCoding added in iOS 10 / macOS 10.12
+			case "CNContactFetchRequest":
+			case "GKEntity":
+			case "GKPolygonObstacle":
+			case "GKComponent":
+			case "GKGraphNode":
 			case "WKPreferences":
 			case "WKUserContentController":
 			case "WKProcessPool":
@@ -109,13 +114,18 @@ namespace Introspection {
 				break;
 			// SKTransition started conforming to NSCopying in OSX 10.11 and iOS 9
 			case "SKTransition":
+			// iOS 10 beta 2
+			case "GKBehavior":
+			case "MDLTransform":
 				switch (selectorName) {
 				case "copyWithZone:":
 					return true;
 				}
 				break;
 			// Xcode 8 beta 2
+			case "GKGraph":
 			case "NEFlowMetaData":
+			case "NWEndpoint":
 				switch (selectorName) {
 				case "copyWithZone:":
 				case "encodeWithCoder:":
