@@ -7391,11 +7391,11 @@ public partial class Generator : IMemberGatherer {
 			return "void";
 
 		string ns = t.Namespace;
-		if (NamespaceManager.ImplicitNamespaces.Contains (ns)) {
+		if (NamespaceManager.ImplicitNamespaces.Contains (ns) || t.IsGenericType) {
 			var targs = t.GetGenericArguments ();
 			if (targs.Length == 0)
 				return t.Name;
-			return RemoveArity (t.Name) + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (null, l)).ToArray ()) + ">";
+			return $"global::{t.Namespace}." + RemoveArity (t.Name) + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (null, l)).ToArray ()) + ">";
 		}
 		if (NamespaceManager.NamespacesThatConflictWithTypes.Contains (NamespaceManager.Get(ns)))
 			return "global::" + t.FullName;
