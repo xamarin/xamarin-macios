@@ -40,5 +40,11 @@
 	<true/>
 	<key>CFBundleName</key>
 	<string>MonoTouchTest</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Testing tastes</string>
+	<key>NSHomeKitUsageDescription</key>
+	<string>Testing roofs</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Testing lens</string>
 </dict>
 </plist>
