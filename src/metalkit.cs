@@ -165,13 +165,13 @@ namespace XamCore.MetalKit {
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		[Field ("MTKTextureLoaderOptionOrigin")]
-		NSString OptionOriginKey { get; }
+		NSString OriginKey { get; }
 	}
 
 	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	enum MTKTextureLoaderCubeLayout {
 		[Field ("MTKTextureLoaderCubeLayoutVertical")]
-		LayoutVertical,
+		Vertical,
 	}
 
 	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]

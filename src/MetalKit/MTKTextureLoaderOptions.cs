@@ -82,16 +82,16 @@ namespace XamCore.MetalKit {
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		public MTKTextureLoaderOrigin? Origin {
 			get {
-				var val = GetNSStringValue (MTKTextureLoaderKeys.OptionOriginKey);
+				var val = GetNSStringValue (MTKTextureLoaderKeys.OriginKey);
 				if (val == null)
 					return null;
 				return MTKTextureLoaderOriginExtensions.GetValue (val);
 			}
 			set {
 				if (value.HasValue)
-					SetStringValue (MTKTextureLoaderKeys.OptionOriginKey, value.Value.GetConstant ());
+					SetStringValue (MTKTextureLoaderKeys.OriginKey, value.Value.GetConstant ());
 				else
-					RemoveValue (MTKTextureLoaderKeys.OptionOriginKey);
+					RemoveValue (MTKTextureLoaderKeys.OriginKey);
 			}
 		}
 	}
