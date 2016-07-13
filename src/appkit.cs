@@ -12703,7 +12703,7 @@ namespace XamCore.AppKit {
 #else
 		nint
 #endif
-		IsVertical { [Bind ("isVertical")]get; [Mac (10, 12)] set; }
+		IsVertical { [Bind ("isVertical")] get; [Mac (10, 12)] set; }
 
 		[Export ("acceptsFirstMouse:")]
 		bool AcceptsFirstMouse (NSEvent theEvent);
@@ -12800,7 +12800,7 @@ namespace XamCore.AppKit {
 #else
 		nint
 #endif
-		IsVertical { [Bind ("isVertical")]get; [Mac (10, 12)] set; }
+		IsVertical { [Bind ("isVertical")] get; [Mac (10, 12)] set; }
 
 		[Export ("knobRectFlipped:")]
 		CGRect KnobRectFlipped (bool flipped);
