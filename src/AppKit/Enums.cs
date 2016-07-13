@@ -2590,7 +2590,7 @@ namespace XamCore.AppKit {
 	[Native]
 	public enum NSDisplayGamut : nint
 	{
-		SRGB = 1,
+		Srgb = 1,
 		P3,
 	}
 
