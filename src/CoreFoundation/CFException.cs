@@ -105,11 +105,11 @@ namespace XamCore.CoreFoundation {
 				throw new ArgumentException ("cfErrorHandle must not be null.", "cfErrorHandle");
 
 			var e = new CFException (
-					ToString (CFErrorCopyDescription (cfErrorHandle)),
+					CFString.FetchString (CFErrorCopyDescription (cfErrorHandle), releaseHandle: true),
 					(NSString) Runtime.GetNSObject (CFErrorGetDomain (cfErrorHandle)),
 					CFErrorGetCode (cfErrorHandle),
-					ToString (CFErrorCopyFailureReason (cfErrorHandle)),
-					ToString (CFErrorCopyRecoverySuggestion (cfErrorHandle)));
+					CFString.FetchString (CFErrorCopyFailureReason (cfErrorHandle), releaseHandle: true),
+					CFString.FetchString (CFErrorCopyRecoverySuggestion (cfErrorHandle), releaseHandle: true));
 
 			var cfUserInfo = CFErrorCopyUserInfo (cfErrorHandle);
 			if (cfUserInfo != IntPtr.Zero) {
@@ -127,19 +127,6 @@ namespace XamCore.CoreFoundation {
 		public NSString Domain {get; private set;}
 		public string FailureReason {get; private set;}
 		public string RecoverySuggestion {get; private set;}
-
-		static string ToString (IntPtr cfStringRef)
-		{
-			return ToString (cfStringRef, true);
-		}
-
-		static string ToString (IntPtr cfStringRef, bool release)
-		{
-			var r = CFString.FetchString (cfStringRef);
-			if (release && (cfStringRef != IntPtr.Zero))
-				CFObject.CFRelease (cfStringRef);
-			return r;
-		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern IntPtr CFErrorCopyDescription (IntPtr err);
