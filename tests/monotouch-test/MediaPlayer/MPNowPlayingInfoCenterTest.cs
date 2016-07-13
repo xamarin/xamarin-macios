@@ -1,6 +1,6 @@
 ﻿// Copyright 2016 Xamarin Inc. All rights reserved
 
-#if !__TVOS__
+#if !__TVOS__ && !__WATCHOS__
 
 using System;
 using System.Drawing;
@@ -43,7 +43,6 @@ namespace MonoTouchFixtures.MediaPlayer
 					PlaybackQueueCount = 10,
 					ChapterNumber = 1,
 					ChapterCount = 10,
-					IsLiveStream = false,
 					AvailableLanguageOptions = new MPNowPlayingInfoLanguageOptionGroup [] { languageOptionGroup },
 					CurrentLanguageOptions = new MPNowPlayingInfoLanguageOption [] { new MPNowPlayingInfoLanguageOption (MPNowPlayingInfoLanguageOptionType.Audible, "en", null, "English", "en") },
 					CollectionIdentifier = "Collection",
@@ -51,6 +50,7 @@ namespace MonoTouchFixtures.MediaPlayer
 					ExternalUserProfileIdentifier = "ExternalUserProfile",
 					PlaybackProgress = 0.5f,
 					MediaType = MPNowPlayingInfoMediaType.Audio,
+					IsLiveStream = false,
 
 					//MPMediaItem
 					AlbumTitle = "AlbumTitle",
@@ -76,21 +76,31 @@ namespace MonoTouchFixtures.MediaPlayer
 				dc.NowPlaying = NowPlayingInfo; // internal NSDictionary ToDictionary ()
 				var np = dc.NowPlaying; // internal MPNowPlayingInfo (NSDictionary source)
 
+				var v8_0 = TestRuntime.CheckSystemAndSDKVersion (8, 0);
+				var v9_0 = TestRuntime.CheckSystemAndSDKVersion (9, 0);
+				var v10_0 = TestRuntime.CheckSystemAndSDKVersion (10, 0);
+
 				Assert.IsInstanceOfType (typeof (double), np.ElapsedPlaybackTime, "#1");
 				Assert.IsInstanceOfType (typeof (double), np.PlaybackRate, "#2");
-				Assert.IsInstanceOfType (typeof (double), np.DefaultPlaybackRate, "#3");
+				if (v8_0)
+					Assert.IsInstanceOfType (typeof (double), np.DefaultPlaybackRate, "#3");
 				Assert.IsInstanceOfType (typeof (int), np.PlaybackQueueIndex, "#4");
 				Assert.IsInstanceOfType (typeof (int), np.PlaybackQueueCount, "#5");
 				Assert.IsInstanceOfType (typeof (int), np.ChapterNumber, "#6");
 				Assert.IsInstanceOfType (typeof (int), np.ChapterCount, "#7");
-				Assert.IsInstanceOfType (typeof (bool), np.IsLiveStream, "#8");
-				Assert.IsInstanceOfType (typeof (MPNowPlayingInfoLanguageOptionGroup []), np.AvailableLanguageOptions, "#9");
-				Assert.IsInstanceOfType (typeof (MPNowPlayingInfoLanguageOption []), np.CurrentLanguageOptions, "#10");
-				Assert.IsInstanceOfType (typeof (string), (object)np.CollectionIdentifier, "#11");
-				Assert.IsInstanceOfType (typeof (string), (object)np.ExternalContentIdentifier, "#12");
-				Assert.IsInstanceOfType (typeof (string), (object)np.ExternalUserProfileIdentifier, "#13");
-				Assert.IsInstanceOfType (typeof (float), np.PlaybackProgress, "#14");
-				Assert.IsInstanceOfType (typeof (MPNowPlayingInfoMediaType), np.MediaType, "#15");
+
+				if (v9_0) {
+					Assert.IsInstanceOfType (typeof (MPNowPlayingInfoLanguageOptionGroup []), np.AvailableLanguageOptions, "#8");
+					Assert.IsInstanceOfType (typeof (MPNowPlayingInfoLanguageOption []), np.CurrentLanguageOptions, "#9");
+				}
+				if (v10_0) {
+					Assert.IsInstanceOfType (typeof (string), (object)np.CollectionIdentifier, "#10");
+					Assert.IsInstanceOfType (typeof (string), (object)np.ExternalContentIdentifier, "#11");
+					Assert.IsInstanceOfType (typeof (string), (object)np.ExternalUserProfileIdentifier, "#12");
+					Assert.IsInstanceOfType (typeof (float), np.PlaybackProgress, "#13");
+					Assert.IsInstanceOfType (typeof (MPNowPlayingInfoMediaType), np.MediaType, "#14");
+					Assert.IsInstanceOfType (typeof (bool), np.IsLiveStream, "#15");
+				}
 
 				Assert.IsInstanceOfType (typeof (string), (object)np.AlbumTitle, "#16");
 				Assert.IsInstanceOfType (typeof (int), np.AlbumTrackCount, "#17");
@@ -109,4 +119,4 @@ namespace MonoTouchFixtures.MediaPlayer
 	}
 }
 
-#endif // !__TVOS__
+#endif // !__TVOS__ && !__WATCHOS__

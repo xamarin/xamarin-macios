@@ -248,7 +248,6 @@ namespace XamCore.MediaPlayer {
 		[DesignatedInitializer]
 		IntPtr Constructor (CGSize boundsSize, Func<CGSize, UIImage> requestHandler);
 
-		[Introduced (PlatformName.iOS, 5, 0)]
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Export ("initWithImage:")]
 		IntPtr Constructor (UIImage image);
@@ -260,7 +259,6 @@ namespace XamCore.MediaPlayer {
 		[Export ("bounds")]
 		CGRect Bounds { get; }
 
-		[Introduced (PlatformName.iOS, 3, 0)]
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Export ("imageCropRect")]
 		CGRect ImageCropRectangle { get; }
@@ -1286,7 +1284,7 @@ namespace XamCore.MediaPlayer {
 		[Field ("MPNowPlayingInfoPropertyCurrentLanguageOptions")]
 		NSString PropertyCurrentLanguageOptions { get; }
 
-		[iOS (9,3)]
+		[iOS (10,0)]
 		[Field ("MPNowPlayingInfoCollectionIdentifier")]
 		NSString PropertyCollectionIdentifier { get; }
 
