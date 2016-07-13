@@ -2594,4 +2594,23 @@ namespace XamCore.AppKit {
 		P3,
 	}
 
+	[Mac (10, 12)]
+	[Native]
+	public enum NSTabPosition : nuint
+	{
+		None = 0,
+		Top,
+		Left,
+		Bottom,
+		Right,
+	}
+
+	[Mac (10, 12)]
+	[Native]
+	public enum NSTabViewBorderType : nuint
+	{
+		None = 0,
+		Line,
+		Bezel,
+	}
 }

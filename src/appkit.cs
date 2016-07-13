@@ -16314,6 +16314,14 @@ namespace XamCore.AppKit {
 
 		[Export ("indexOfTabViewItemWithIdentifier:")]
 		nint IndexOf (NSObject identifier);
+
+		[Mac (10, 12)]
+		[Export ("tabPosition")]
+		NSTabPosition TabPosition { get; set; }
+
+		[Mac (10, 12)]
+		[Export ("tabViewBorderType")]
+		NSTabViewBorderType BorderType { get; set; }
 	}
 
 	[Mac (10,10)]
