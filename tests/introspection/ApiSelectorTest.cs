@@ -132,6 +132,14 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			// now conforms to MDLName
+			case "MTKMeshBuffer":
+				switch (selectorName) {
+				case "name":
+				case "setName:":
+					return true;
+				}
+				break;
 			}
 #endif
 			// This ctors needs to be manually bound
