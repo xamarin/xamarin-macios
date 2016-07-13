@@ -19133,7 +19133,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10,12)]
 		[Export ("hidden")]
-		bool IsHidden { [Bind ("isHidden")]get; set; }
+		bool IsHidden { [Bind ("isHidden")] get; set; }
 	}
 
 	[Mac (10,10)]
