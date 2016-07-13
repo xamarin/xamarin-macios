@@ -267,6 +267,10 @@ namespace XamCore.AppKit {
 		ImageBelow,
 		ImageAbove,
 		ImageOverlaps,
+		[Mac (10,12)]
+		ImageLeading,
+		[Mac (10,12)]
+		ImageTrailing,
 	}
 	
 	[Native]
@@ -2580,6 +2584,14 @@ namespace XamCore.AppKit {
 		AllowPrivate = 1 << 1,
 		AllowReadOnly = 1 << 4,
 		AllowReadWrite = 1 << 5
+	}
+
+	[Mac (10, 12)]
+	[Native]
+	public enum NSDisplayGamut : nint
+	{
+		SRGB = 1,
+		P3,
 	}
 
 }
