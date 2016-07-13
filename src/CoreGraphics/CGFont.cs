@@ -139,20 +139,12 @@ namespace XamCore.CoreGraphics {
 			}
 		}
 
-		string GetNullableString (IntPtr handle)
-		{
-			if (handle == IntPtr.Zero)
-				return null;
-			using (var s = new CFString (handle, true))
-				return (string) s;
-		}
-
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CFStringRef __nullable */ IntPtr CGFontCopyPostScriptName (/* CGFontRef __nullable */ IntPtr font);
 
 		public string PostScriptName {
 			get {
-				return GetNullableString (CGFontCopyPostScriptName (handle));
+				return CFString.FetchString (CGFontCopyPostScriptName (handle));
 			}
 		}
 		
@@ -161,7 +153,7 @@ namespace XamCore.CoreGraphics {
 
 		public string FullName {
 			get {
-				return GetNullableString (CGFontCopyFullName (handle));
+				return CFString.FetchString (CGFontCopyFullName (handle));
 			}
 		}
 		
@@ -266,7 +258,7 @@ namespace XamCore.CoreGraphics {
 
 		public string GlyphNameForGlyph (ushort glyph)
 		{
-			return GetNullableString (CGFontCopyGlyphNameForGlyph (handle, glyph));
+			return CFString.FetchString (CGFontCopyGlyphNameForGlyph (handle, glyph));
 		}
 		
 		//[DllImport (Constants.CoreGraphicsLibrary)]

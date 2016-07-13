@@ -635,11 +635,11 @@ namespace xharness
 			}
 		}
 
-		public async Task<HashSet<string>> CreateCrashReportsSnapshotAsync (Log log, bool simulator)
+		public async Task<HashSet<string>> CreateCrashReportsSnapshotAsync (Log log, bool simulatorOrDesktop)
 		{
 			var rv = new HashSet<string> ();
 
-			if (simulator) {
+			if (simulatorOrDesktop) {
 				var dir = Path.Combine (Environment.GetEnvironmentVariable ("HOME"), "Library", "Logs", "DiagnosticReports");
 				if (Directory.Exists (dir))
 					rv.UnionWith (Directory.EnumerateFiles (dir));
@@ -655,6 +655,78 @@ namespace xharness
 			}
 
 			return rv;
+		}
+	}
+
+	public class CrashReportSnapshot
+	{
+		public Harness Harness { get; set; }
+		public Log Log { get; set; }
+		public Logs Logs { get; set; }
+		public string LogDirectory { get; set; }
+		public bool Device { get; set; }
+
+		public HashSet<string> InitialSet { get; private set; }
+		public IEnumerable<string> Reports { get; private set; }
+
+		public async Task StartCaptureAsync ()
+		{
+			InitialSet = await Harness.CreateCrashReportsSnapshotAsync (Log, !Device);
+		}
+
+		public async Task EndCaptureAsync (TimeSpan timeout)
+		{
+			// Check for crash reports
+			var crash_report_search_done = false;
+			var crash_report_search_timeout = timeout.TotalSeconds;
+			var watch = new Stopwatch ();
+			watch.Start ();
+			do {
+				var end_crashes = await Harness.CreateCrashReportsSnapshotAsync (Log, !Device);
+				end_crashes.ExceptWith (InitialSet);
+				Reports = end_crashes;
+				if (end_crashes.Count > 0) {
+					Log.WriteLine ("Found {0} new crash report(s)", end_crashes.Count);
+					List<LogFile> crash_reports;
+					if (!Device) {
+						crash_reports = new List<LogFile> (end_crashes.Count);
+						foreach (var path in end_crashes) {
+							var logPath = Path.Combine (LogDirectory, Path.GetFileName (path));
+							File.Copy (path, logPath, true);
+							crash_reports.Add (Logs.CreateFile ("Crash report: " + Path.GetFileName (path), logPath));
+						}
+					} else {
+						// Download crash reports from the device. We put them in the project directory so that they're automatically deleted on wrench
+						// (if we put them in /tmp, they'd never be deleted).
+						var downloaded_crash_reports = new List<LogFile> ();
+						foreach (var file in end_crashes) {
+							var crash_report_target = Logs.CreateFile ("Crash report: " + Path.GetFileName (file), Path.Combine (LogDirectory, Path.GetFileName (file)));
+							var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, "--download-crash-report=" + file + " --download-crash-report-to=" + crash_report_target.Path + " --sdkroot " + Harness.XcodeRoot, Log, TimeSpan.FromMinutes (1));
+							if (result.Succeeded) {
+								Log.WriteLine ("Downloaded crash report {0} to {1}", file, crash_report_target.Path);
+								crash_report_target = await Harness.SymbolicateCrashReportAsync (Log, crash_report_target);
+								Logs.Add (crash_report_target);
+								downloaded_crash_reports.Add (crash_report_target);
+							} else {
+								Log.WriteLine ("Could not download crash report {0}", file);
+							}
+						}
+						crash_reports = downloaded_crash_reports;
+					}
+					foreach (var cp in crash_reports) {
+						Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", cp.Path);
+						Log.WriteLine ("    {0}", cp.Path);
+					}
+					crash_report_search_done = true;
+				} else {
+					if (watch.Elapsed.TotalSeconds > crash_report_search_timeout) {
+						crash_report_search_done = true;
+					} else {
+						Log.WriteLine ("No crash reports, waiting a second to see if the crash report service just didn't complete in time ({0})", (int) (crash_report_search_timeout - watch.Elapsed.TotalSeconds));
+						Thread.Sleep (TimeSpan.FromSeconds (1));
+					}
+				}
+			} while (!crash_report_search_done);
 		}
 	}
 }

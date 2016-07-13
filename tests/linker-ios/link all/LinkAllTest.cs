@@ -160,6 +160,9 @@ namespace LinkAll {
 		[Test]
 		public void TrustUsingOldPolicy ()
 		{
+#if __WATCHOS__
+			Assert.Ignore ("WatchOS doesn't support BSD sockets, which our network stack currently requires.");
+#endif
 			// Three similar tests exists in dontlink, linkall and linksdk to test 3 different cases
 			// untrusted, custom ICertificatePolicy and ServerCertificateValidationCallback without
 			// having caching issues (in S.Net or the SSL handshake cache)

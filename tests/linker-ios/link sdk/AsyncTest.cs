@@ -22,6 +22,9 @@ namespace LinkSdk {
 		[Test]
 		public void Bug12221 ()
 		{
+#if __WATCHOS__
+			Assert.Ignore ("WatchOS doesn't support BSD sockets, which our network stack currently requires.");
+#endif
 			LoadCategories ().Wait ();
 		}
 	}

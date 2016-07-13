@@ -4072,6 +4072,9 @@ namespace XamCore.Foundation
 
 	[Since (5,0)]
 	[BaseType (typeof (NSObject))]
+#if WATCH
+	[DisableDefaultCtor] // "NSUbiquitousKeyValueStore is unavailable" is printed to the log.
+#endif
 	interface NSUbiquitousKeyValueStore {
 		[Static]
 		[Export ("defaultStore")]

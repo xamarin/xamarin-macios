@@ -89,7 +89,7 @@ namespace xharness
 				var companion =
 					Simulators.AvailableDevices.
 							  FirstOrDefault ((SimDevice v) => pair.Companion == v.UDID);
-				runtasks.Add (new RunSimulatorTask (buildTask, device, companion) { Platform = TestPlatform.watchOS, ExecutionResult = TestExecutingResult.Ignored });
+				runtasks.Add (new RunSimulatorTask (buildTask, device, companion) { Platform = TestPlatform.watchOS });
 			} else {
 				var latestiOSRuntime =
 					Simulators.SupportedRuntimes.
@@ -276,7 +276,7 @@ namespace xharness
 					tasks.Add (task.RunAsync ());
 				Task.WaitAll (tasks.ToArray ());
 				GenerateReport ();
-				return Tasks.Any ((v) => v.ExecutionResult == TestExecutingResult.Failed || v.ExecutionResult == TestExecutingResult.Crashed) ? 1 : 0;
+				return Tasks.Any ((v) => v.Failed) ? 1 : 0;
 			} catch (Exception ex) {
 				MainLog.WriteLine ("Unexpected exception: {0}", ex);
 				return 2;
@@ -939,8 +939,13 @@ function toggleContainerVisibility (containerName)
 					log.WriteLine ("{0} {1}", proc.StartInfo.FileName, proc.StartInfo.Arguments);
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
+
+						var snapshot = new CrashReportSnapshot () { Device = false, Harness = Harness, Log = log, Logs = Logs, LogDirectory = LogDirectory };
+						await snapshot.StartCaptureAsync ();
+
 						try {
 							var timeout = TimeSpan.FromMinutes (10);
+
 							var result = await proc.RunAsync (log, true, timeout);
 							if (result.TimedOut) {
 								log.WriteLine ("Execution timed out after {0} seconds.", timeout.TotalSeconds);
@@ -954,6 +959,8 @@ function toggleContainerVisibility (containerName)
 							log.WriteLine (e.ToString ());
 							ExecutionResult = TestExecutingResult.HarnessException;
 						}
+
+						await snapshot.EndCaptureAsync (TimeSpan.FromSeconds (Succeeded ? 0 : 5));
 					}
 					Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);
 				}
@@ -1150,7 +1157,11 @@ function toggleContainerVisibility (containerName)
 				run_timer.Stop ();
 			}
 
-			ExecutionResult = Tasks.Any ((v) => !v.Succeeded) ? TestExecutingResult.Failed : TestExecutingResult.Succeeded;
+			if (Tasks.All ((v) => v.Ignored)) {
+				ExecutionResult = TestExecutingResult.Ignored;
+			} else {
+				ExecutionResult = Tasks.Any ((v) => v.Failed) ? TestExecutingResult.Failed : TestExecutingResult.Succeeded;
+			}
 		}
 	}
 
