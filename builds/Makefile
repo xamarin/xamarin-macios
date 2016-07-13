@@ -236,6 +236,9 @@ $(MAC_DIRECTORIES) $(BUILD_DESTDIR):
 	$(Q) mkdir -p $@
 
 mac-facade-check:
+	@true
+	
+disabled-mac-facade-check:
 	$(Q) rm -f .$@*
 	$(Q) echo $(MAC_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
 	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/xammac_net_4_5/Facades | grep dll | sort > .$@2
@@ -528,6 +531,9 @@ TVOS_REPL_ASSEMBLIES = $(IOS_REPL_ASSEMBLIES)
 WATCHOS_REPL_ASSEMBLIES = $(IOS_REPL_ASSEMBLIES)
 
 ios-facade-check:
+	@true
+
+disabled-ios-facade-check:
 	$(Q) rm -f .$@*
 	$(Q) echo $(IOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
 	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/monotouch/Facades | grep dll | sed 's/[.]dll//' | sort > .$@2
@@ -545,6 +551,9 @@ disabled-watch-facade-check:
 	$(Q) rm -f .$@*
 
 tvos-facade-check:
+	@true
+	
+disabled-tvos-facade-check:
 	$(Q) rm -f .$@*
 	$(Q) echo $(TVOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
 	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/monotouch_tv/Facades | grep dll | sed 's/[.]dll//' | sort > .$@2
