@@ -1273,9 +1273,11 @@ namespace XamCore.NetworkExtension {
 	[iOS (9,0)]
 	[BaseType (typeof (NEFilterFlow))]
 	interface NEFilterSocketFlow {
+		[NullAllowed]
 		[Export ("remoteEndpoint")]
 		NWEndpoint RemoteEndpoint { get; }
 
+		[NullAllowed]
 		[Export ("localEndpoint")]
 		NWEndpoint LocalEndpoint { get; }
 
@@ -1318,6 +1320,15 @@ namespace XamCore.NetworkExtension {
 
 		[Export ("writePackets:withProtocols:")]
 		bool WritePackets (NSData[] packets, NSNumber[] protocols);
+
+		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[Async]
+		[Export ("readPacketObjectsWithCompletionHandler:")]
+		void ReadPacketObjects (Action<NEPacket[]> completionHandler);
+
+		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[Export ("writePacketObjects:")]
+		bool WritePacketObjects (NEPacket[] packets);
 	}
 
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
@@ -1366,6 +1377,22 @@ namespace XamCore.NetworkExtension {
 
 		[Export ("sendProviderMessage:returnError:responseHandler:")]
 		bool SendProviderMessage (NSData messageData, [NullAllowed] out NSError error, [NullAllowed] Action<NSData> responseHandler);
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12, onlyOn64 : true)][iOS (10,0)]
+	[BaseType (typeof (NSObject))]
+	interface NEPacket : NSCopying, NSSecureCoding {
+		[Export ("initWithData:protocolFamily:")]
+		IntPtr Constructor (NSData data, /* sa_family_t */ byte protocolFamily);
+
+		[Export ("data", ArgumentSemantic.Copy)]
+		NSData Data { get; }
+
+		[Export ("protocolFamily")]
+		byte ProtocolFamily { get; }
+
+		[NullAllowed, Export ("metadata")]
+		NEFlowMetaData Metadata { get; }
 	}
 }
 #endif
