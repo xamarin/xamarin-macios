@@ -132,6 +132,19 @@ namespace Introspection {
 					return true; // skip
 				}
 				break;
+			// conformance added in Xcode 8 (iOS 10 / macOS 10.12)
+			case "MDLNamed":
+				switch (type.Name) {
+				case "MTKMeshBuffer":
+					return true;
+				}
+				break;
+			case "CALayerDelegate":
+				switch (type.Name) {
+				case "MTKView":
+					return true;
+				}
+				break;
 			}
 			return false;
 		}

@@ -22,11 +22,11 @@ namespace XamCore.Metal {
 			return Runtime.GetNSObject<MTLVertexDescriptor> (MTKMetalVertexDescriptorFromModelIO (descriptor.Handle));
 		}
 
-		[iOS (10,0)]
+		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		[DllImport (Constants.MetalKitLibrary)]
 		static extern /* MTLVertexDescriptor __nonnull */ IntPtr MTKMetalVertexDescriptorFromModelIOWithError (/* MDLVertexDescriptor __nonnull */ IntPtr modelIODescriptor, out IntPtr error);
 
-		[iOS (10,0)]
+		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		public static MTLVertexDescriptor FromModelIO (MDLVertexDescriptor descriptor, out NSError error)
 		{
 			if (descriptor == null)
