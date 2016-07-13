@@ -7625,7 +7625,7 @@ namespace XamCore.AppKit {
 		NSView View { get; set; }
 
 		[Export ("hidden")]
-		bool Hidden { [Bind ("isHidden")]get; set; }
+		bool Hidden { [Bind ("isHidden")] get; set; }
 
 		[Export ("toolTip")]
 		string ToolTip { get; set; }
@@ -23553,7 +23553,7 @@ namespace XamCore.AppKit {
 		string GetFileNameForDestination (NSFilePromiseProvider filePromiseProvider, NSUrl destinationUrl);
 
 		[Export ("filePromiseProvider:writePromiseToURL:completionHandler:")]
-		void WritePromiseToUrl (NSFilePromiseProvider filePromiseProvider, NSUrl url, [NullAllowed]Action<NSError> completionHandler);
+		void WritePromiseToUrl (NSFilePromiseProvider filePromiseProvider, NSUrl url, [NullAllowed] Action<NSError> completionHandler);
 
 		[Export ("promiseOperationQueueForFilePromiseProvider:")]
 		NSOperationQueue GetPromiseOperationQueue (NSFilePromiseProvider filePromiseProvider);
