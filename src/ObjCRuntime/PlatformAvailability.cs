@@ -85,6 +85,7 @@ namespace XamCore.ObjCRuntime
 		Mac_10_10_3 = 0x000a0a0300000000,
 		Mac_10_11   = 0x000a0b0000000000,
 		Mac_10_11_3 = 0x000a0b0300000000,
+		Mac_10_12   = 0x000a0c0000000000,
 			
 		// NOTE: Update PlatformHelper.IsValid when adding a version
 
@@ -130,6 +131,7 @@ namespace XamCore.ObjCRuntime
 			case Platform.Mac_10_10:
 			case Platform.Mac_10_10_3:
 			case Platform.Mac_10_11:
+			case Platform.Mac_10_12:
 				break;
 			default:
 				return false;

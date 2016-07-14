@@ -19,6 +19,9 @@ namespace Xamarin.Mac.Tests
 		[Test]
 		public void NSSlider_VertialTests()
 		{
+			if (PlatformHelper.ToMacVersion (PlatformHelper.GetHostApiPlatform ()) < Platform.Mac_10_12)
+				return;
+
 			NSSlider slider = new NSSlider ();
 			var isVert = slider.IsVertical;
 #if XAMCORE_4_0
