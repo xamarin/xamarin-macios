@@ -584,6 +584,18 @@ namespace Introspection {
 					return true;
 				}
 				break;
+#if __WATCHOS__
+			case "fetchAllRecordZonesOperation":
+			case "fetchCurrentUserRecordOperation":
+			case "notificationFromRemoteNotificationDictionary:":
+			case "containerWithIdentifier:":
+			case "defaultContainer":
+			case "defaultRecordZone":
+				// needs investigation, seems all class selectors from CloudKit don't answer
+				if (declaredType.Namespace == "CloudKit")
+					return true;
+				break;
+#endif
 			}
 			return base.CheckStaticResponse (value, actualType, declaredType, ref name);
 		}
