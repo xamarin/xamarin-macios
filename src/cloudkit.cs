@@ -64,15 +64,18 @@ namespace XamCore.CloudKit {
 		[Async]
 		void FetchUserRecordId (Action<CKRecordID, NSError> completionHandler);
 
+		[NoWatch]
 		[NoTV]
 		[Export ("discoverAllContactUserInfosWithCompletionHandler:")]
 		[Async]
 		void DiscoverAllContactUserInfos (Action<CKDiscoveredUserInfo[], NSError> completionHandler);
 
+		[NoWatch]
 		[Export ("discoverUserInfoWithEmailAddress:completionHandler:")]
 		[Async]
 		void DiscoverUserInfo (string email, Action<CKDiscoveredUserInfo, NSError> completionHandler);
 
+		[NoWatch]
 		[Export ("discoverUserInfoWithUserRecordID:completionHandler:")]
 		[Async]
 		void DiscoverUserInfo (CKRecordID userRecordId, Action<CKDiscoveredUserInfo, NSError> completionHandler);
@@ -163,6 +166,7 @@ namespace XamCore.CloudKit {
 		CKDatabase Database { get; set; }
 	}
 
+	[NoWatch]
 	[NoTV]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (CKOperation))]
@@ -173,6 +177,7 @@ namespace XamCore.CloudKit {
 	}
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface CKDiscoveredUserInfo : NSCoding, NSCopying, NSSecureCoding {
 
@@ -201,6 +206,7 @@ namespace XamCore.CloudKit {
 	delegate void CKDiscoverUserInfosCompletionHandler (NSDictionary emailsToUserInfos, NSDictionary userRecordIdsToUserInfos, NSError operationError);
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[NoWatch]
 	[BaseType (typeof (CKOperation))]
 	interface CKDiscoverUserInfosOperation {
 
@@ -251,6 +257,8 @@ namespace XamCore.CloudKit {
 	}
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[Watch (3,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (CKOperation))]
 	interface CKFetchNotificationChangesOperation {
 		[Export ("initWithPreviousServerChangeToken:")]
@@ -294,6 +302,7 @@ namespace XamCore.CloudKit {
 	delegate void CKFetchRecordChangesHandler (CKServerChangeToken serverChangeToken, NSData clientChangeTokenData, NSError operationError);
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[NoWatch]
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKFetchRecordChangesOperation {
 
@@ -346,6 +355,8 @@ namespace XamCore.CloudKit {
 	delegate void CKFetchRecordsCompletedHandler (NSDictionary recordsByRecordId, NSError error);
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[Watch (3,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKFetchRecordsOperation {
 
@@ -393,6 +404,8 @@ namespace XamCore.CloudKit {
 	delegate void CKRecordZoneCompleteHandler (NSDictionary recordZonesByZoneId, NSError operationError);
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[Watch (3,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKFetchRecordZonesOperation {
 		[Export ("initWithRecordZoneIDs:")]
@@ -419,6 +432,7 @@ namespace XamCore.CloudKit {
 	delegate void CKFetchSubscriptionsCompleteHandler (NSDictionary subscriptionsBySubscriptionId, NSError operationError);
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[NoWatch]
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKFetchSubscriptionsOperation {
 
@@ -443,6 +457,8 @@ namespace XamCore.CloudKit {
 	}
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[Watch (3,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSSortDescriptor))]
 	interface CKLocationSortDescriptor : NSSecureCoding {
 		[DesignatedInitializer]
@@ -477,6 +493,8 @@ namespace XamCore.CloudKit {
 	}
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[Watch (3,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (CKOperation))]
 	interface CKModifyBadgeOperation {
 
@@ -499,6 +517,8 @@ namespace XamCore.CloudKit {
 	delegate void CKModifyRecordsOperationHandler (CKRecord [] savedRecords, CKRecordID [] deletedRecordIds, NSError operationError);
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[Watch (3,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKModifyRecordsOperation {
 
@@ -553,6 +573,8 @@ namespace XamCore.CloudKit {
 	delegate void CKModifyRecordZonesHandler (CKRecordZone [] savedRecordZones, CKRecordZoneID [] deletedRecordZoneIds, NSError operationError);
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[Watch (3,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKModifyRecordZonesOperation {
 
@@ -580,6 +602,7 @@ namespace XamCore.CloudKit {
 	delegate void CKModifySubscriptionsHandler (CKSubscription [] savedSubscriptions, string [] deletedSubscriptionIds, NSError operationError);
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[NoWatch]
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKModifySubscriptionsOperation {
 
@@ -605,6 +628,8 @@ namespace XamCore.CloudKit {
 	}
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[Watch (3,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface CKNotificationID : NSCopying, NSSecureCoding, NSCoding {
 
@@ -753,6 +778,8 @@ namespace XamCore.CloudKit {
 	}
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[Watch (3,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKQueryOperation {
 
@@ -897,6 +924,8 @@ namespace XamCore.CloudKit {
 	}
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[Watch (3,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface CKRecordZone : NSSecureCoding, NSCopying {
 
@@ -989,6 +1018,7 @@ namespace XamCore.CloudKit {
 		[Export ("subscriptionOptions", ArgumentSemantic.UnsafeUnretained)]
 		CKSubscriptionOptions SubscriptionOptions { get; }
 
+		[NoWatch]
 		[Export ("notificationInfo", ArgumentSemantic.Copy)]
 		CKNotificationInfo NotificationInfo { get; set; }
 
@@ -997,6 +1027,7 @@ namespace XamCore.CloudKit {
 	}
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface CKNotificationInfo : NSSecureCoding, NSCopying, NSCoding {
 
@@ -1060,6 +1091,8 @@ namespace XamCore.CloudKit {
 
 	[iOS (9,2), Mac (10,11,2, onlyOn64 : true)]
 	[TV (9,1)]
+	[Watch (3,0)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKFetchWebAuthTokenOperation {
 
