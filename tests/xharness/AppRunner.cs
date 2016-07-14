@@ -413,6 +413,7 @@ namespace xharness
 					if (!listener.WaitForConnection (TimeSpan.FromMinutes (Harness.LaunchTimeout))) {
 						cancellation_source.Cancel ();
 						main_log.WriteLine ("Test launch timed out after {0} minute(s).", Harness.LaunchTimeout);
+						timed_out = true;
 					} else {
 						main_log.WriteLine ("Test run started");
 					}
