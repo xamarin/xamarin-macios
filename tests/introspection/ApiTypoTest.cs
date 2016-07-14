@@ -254,6 +254,7 @@ namespace Introspection
 			"Reinvite",
 			"Replayable",
 			"Requestwith",
+			"Ridesharing",
 			"Rgb",
 			"Rgba",
 			"Rggb", // acronym for Red, Green, Green, Blue
@@ -321,6 +322,7 @@ namespace Introspection
 			"Unconfigured",
 			"Undecodable",
 			"Underrun",
+			"Unflagged",
 			"Unorm",
 			"Unpremultiplying",
 			"Unprepare",

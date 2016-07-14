@@ -124,6 +124,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "Metal", 10, 11 },
 					{ "MetalKit", 10, 11 },
 					{ "ModelIO", 10, 11 },
+
+					{ "Intents", 10, 12 },
 				};
 			}
 			return mac_frameworks;
@@ -224,6 +226,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
 					{ "UserNotifications", "UserNotifications", 10 },
 					{ "UserNotificationsUI", "UserNotificationsUI", 10 },
+					{ "Intents", "Intents", 10 },
 				};
 			}
 			return ios_frameworks;

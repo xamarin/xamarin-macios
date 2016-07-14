@@ -173,6 +173,13 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "INPriceRange":
+				switch (selectorName) {
+				case "initWithMaximumPrice:currencyCode:":
+				case "initWithMinimumPrice:currencyCode:":
+					return true;
+				}
+				break;
 			}
 
 			// old binding mistake

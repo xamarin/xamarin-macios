@@ -804,6 +804,12 @@ IMAGEIO_SOURCES = \
 IMAGEKIT_CORE_SOURCES = \
 	ImageKit/Enums.cs \
 
+# Intents
+
+INTENTS_SOURCES = \
+	Intents/INIntentResolutionResult.cs \
+	Intents/INPriceRange.cs \
+
 # JavaScriptCore
 
 JAVASCRIPTCORE_SOURCES = \
@@ -1497,6 +1503,7 @@ MAC_FRAMEWORKS =            \
 	GLKit                   \
 	ImageIO                 \
 	ImageKit                \
+	Intents                 \
 	JavaScriptCore          \
 	LocalAuthentication     \
 	MapKit                  \
@@ -1572,6 +1579,7 @@ IOS_FRAMEWORKS =         \
 	HealthKitUI \
 	HomeKit \
 	ImageIO \
+	Intents \
 	JavaScriptCore \
 	LocalAuthentication \
 	MapKit \
