@@ -262,7 +262,8 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework VideoSubscriberAccount	\
 	-weak_framework UserNotifications		\
 	-weak_framework UserNotificationsUI		\
-	-weak_framework Intents
+	-weak_framework Intents					\
+	-weak_framework IntentsUI
 
 # note: there _was_ no CoreAudioKit.framework or Metal.framework for the simulator (before recent iOS9 betas)
 # note 2: there's no GameKit, in iOS 9 (beta 3 at least), you're supposed to reference GameCenter instead (looks fixed in beta 4)

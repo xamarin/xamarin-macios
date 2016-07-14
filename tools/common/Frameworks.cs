@@ -227,6 +227,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "UserNotifications", "UserNotifications", 10 },
 					{ "UserNotificationsUI", "UserNotificationsUI", 10 },
 					{ "Intents", "Intents", 10 },
+					{ "IntentsUI", "IntentsUI", 10 },
 				};
 			}
 			return ios_frameworks;
