@@ -71,6 +71,8 @@ namespace MonoTouchFixtures.MediaPlayer {
 					Assert.DoesNotThrow (() => dummy = i.SkipCount, "SkipCount");
 					Assert.DoesNotThrow (() => dummy = i.Title, "Title");
 					Assert.DoesNotThrow (() => dummy = i.UserGrouping, "UserGrouping");
+					Assert.DoesNotThrow (() => dummy = i.HasProtectedAsset, "HasProtectedAsset");
+					Assert.DoesNotThrow (() => dummy = i.IsExplicitItem, "IsExplicitItem");
 				}
 			}
 		}
