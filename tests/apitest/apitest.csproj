@@ -74,6 +74,7 @@
     <Compile Include="src\AppKit\NSPathControl.cs" />
     <Compile Include="src\AppKit\NSPathControlItem.cs" />
     <Compile Include="src\AppKit\NSSearchField.cs" />
+    <Compile Include="src\AppKit\NSSlider.cs" />
     <Compile Include="src\AppKit\NSSplitViewController.cs" />
     <Compile Include="src\AppKit\NSSplitViewItem.cs" />
     <Compile Include="src\AppKit\NSStackView.cs" />

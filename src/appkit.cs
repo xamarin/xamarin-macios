@@ -894,8 +894,8 @@ namespace XamCore.AppKit {
 
 		//TODO - Waiting on CloudKit binding
 		//[Mac (10,12)]
-		//[Export ("application:userAcceptedCloudKitShareWithMetadata:")]
-		//void UserAcceptedCloudKitShare (NSApplication application, CKShareMetadata metadata);
+		//[Export ("application:userDidAcceptCloudKitShareWithMetadata:")]
+		//void UserDidAcceptedCloudKitShare (NSApplication application, CKShareMetadata metadata);
 	}
 		
 	[BaseType (typeof (NSObjectController))]
@@ -1422,6 +1422,7 @@ namespace XamCore.AppKit {
 		bool Transparent { [Bind ("isTransparent")] get; set; }
 
 		[Export ("setTitleWithMnemonic:")]
+		[Availability (Deprecated = Platform.Mac_10_8, Message = "Mnemonics are deprecated in 10.8. Historically they have not done anything. For compatability, this method still sets the Title with the ampersand stripped from it.")]
 		void SetTitleWithMnemonic (string stringWithMnemonic);
 
 		[Export ("borderWidth")]
@@ -1960,10 +1961,12 @@ namespace XamCore.AppKit {
 		[Export ("drawBezelWithFrame:inView:")]
 		void DrawBezelWithFrame (CGRect frame, NSView controlView);
 
+		[Availability (Deprecated = Platform.Mac_10_8, Message = "This method no longer does anything and should not be called.")]
 		[Export ("alternateMnemonicLocation")]
 		nint AlternateMnemonicLocation { get; set; }
 	
 		[Export ("alternateMnemonic")]
+		[Availability (Deprecated = Platform.Mac_10_8, Message = "This method still will set Title with the ampersand stripped from the value, but does nothing else. Set the Title directly.")]
 		string AlternateMnemonic { get; [Bind ("setAlternateTitleWithMnemonic:")] set; }
 	
 		[Export ("setGradientType:")]
@@ -2079,6 +2082,7 @@ namespace XamCore.AppKit {
 		[Export ("performKeyEquivalent:")]
 		bool PerformKeyEquivalent (NSEvent  key);
 
+		[Availability (Deprecated = Platform.Mac_10_8, Message = "On 10.8, this method still will set the Title with the ampersand stripped from stringWithAmpersand, but does nothing else. Set the Title directly.")]
 		[Export ("setTitleWithMnemonic:")]
 		void SetTitleWithMnemonic (string mnemonic);
 
@@ -2117,6 +2121,10 @@ namespace XamCore.AppKit {
 		[Mac (10,10,3)]
 		[Export ("maxAcceleratorLevel")]
 		nint MaxAcceleratorLevel { get; set; }
+
+		[Mac (10,12)]
+		[Export ("imageHugsTitle")]
+		bool ImageHugsTitle { get; set; }
 	}
 	
 	[BaseType (typeof (NSImageRep))]
@@ -2394,12 +2402,15 @@ namespace XamCore.AppKit {
 		[Export ("showsFirstResponder")]
 		bool ShowsFirstResponder { get; set; }
 
+		[Availability (Deprecated = Platform.Mac_10_8, Message = "In 10.8 and higher, all the Mnemonic methods are deprecated. On MacOS they have typically not been used.")]
 		[Export ("mnemonicLocation")]
 		nint MnemonicLocation { get; set; }
 	
+		[Availability (Deprecated = Platform.Mac_10_8, Message = "In 10.8 and higher, all the Mnemonic methods are deprecated. On MacOS they have typically not been used.")]
 		[Export ("mnemonic")]
 		string Mnemonic { get; }
 	
+		[Availability (Deprecated = Platform.Mac_10_8, Message = "In 10.8 and higher, all the Mnemonic methods are deprecated. On MacOS they have typically not been used.")]
 		[Export ("setTitleWithMnemonic:")]
 		void SetTitleWithMnemonic (string  stringWithAmpersand);
 	
@@ -6507,6 +6518,7 @@ namespace XamCore.AppKit {
 		[Export ("titleBaseWritingDirection")]
 		NSWritingDirection TitleBaseWritingDirection { get; set; }
 
+		[Availability (Deprecated = Platform.Mac_10_8, Message = "Deprecated in 10.8 and higher. Set Title instead")]
 		[Export ("setTitleWithMnemonic:")]
 		void SetTitleWithMnemonic (string  stringWithAmpersand);
 		
@@ -7613,7 +7625,7 @@ namespace XamCore.AppKit {
 		NSView View { get; set; }
 
 		[Export ("hidden")]
-		bool Hidden { [Bind ("isHidden")]get; set; }
+		bool Hidden { [Bind ("isHidden")] get; set; }
 
 		[Export ("toolTip")]
 		string ToolTip { get; set; }
@@ -12124,6 +12136,10 @@ namespace XamCore.AppKit {
 		[Mac (10,9)]
 		[Static, Export ("screensHaveSeparateSpaces")]
 		bool ScreensHaveSeparateSpaces ();
+
+		[Mac (10,12)]
+		[Export ("canRepresentDisplayGamut:")]
+		bool CanRepresentDisplayGamut (NSDisplayGamut displayGamut);
 	}
 
 	[BaseType (typeof (NSControl))]
@@ -12680,8 +12696,14 @@ namespace XamCore.AppKit {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frameRect);
 
-		[Export ("isVertical")]
-		nint IsVertical { get; /* FIXME: [Mac (10, 12)] set; -- Radar 27222357 */ }
+		[Export ("vertical")]
+		// Radar 27222357
+#if XAMCORE_4_0
+		bool
+#else
+		nint
+#endif
+		IsVertical { [Bind ("isVertical")] get; [Mac (10, 12)] set; }
 
 		[Export ("acceptsFirstMouse:")]
 		bool AcceptsFirstMouse (NSEvent theEvent);
@@ -12771,8 +12793,14 @@ namespace XamCore.AppKit {
 		[Export ("prefersTrackingUntilMouseUp")]
 		bool PrefersTrackingUntilMouseUp ();
 
-		[Export ("isVertical")]
-		nint IsVertical { get; /* FIXME: [Mac (10, 12)] set; -- Radar 27222357 */ }
+		[Export ("vertical")]
+		// Radar 27222357
+#if XAMCORE_4_0
+		bool
+#else
+		nint
+#endif
+		IsVertical { [Bind ("isVertical")] get; [Mac (10, 12)] set; }
 
 		[Export ("knobRectFlipped:")]
 		CGRect KnobRectFlipped (bool flipped);
@@ -16286,6 +16314,14 @@ namespace XamCore.AppKit {
 
 		[Export ("indexOfTabViewItemWithIdentifier:")]
 		nint IndexOf (NSObject identifier);
+
+		[Mac (10, 12)]
+		[Export ("tabPosition")]
+		NSTabPosition TabPosition { get; set; }
+
+		[Mac (10, 12)]
+		[Export ("tabViewBorderType")]
+		NSTabViewBorderType BorderType { get; set; }
 	}
 
 	[Mac (10,10)]
@@ -19071,6 +19107,10 @@ namespace XamCore.AppKit {
 		[Mac (10,11)]
 		[Export ("performWindowDragWithEvent:")]
 		void PerformWindowDrag(NSEvent theEvent);
+
+		[Mac (10,12)]
+		[Export ("canRepresentDisplayGamut:")]
+		bool CanRepresentDisplayGamut (NSDisplayGamut displayGamut);
 	}
 
 	[Mac (10,10)]
@@ -19090,6 +19130,10 @@ namespace XamCore.AppKit {
 
 		[Export ("viewDidDisappear")]
 		void ViewDidDisappear ();
+
+		[Mac (10,12)]
+		[Export ("hidden")]
+		bool IsHidden { [Bind ("isHidden")] get; set; }
 	}
 
 	[Mac (10,10)]
@@ -23509,7 +23553,7 @@ namespace XamCore.AppKit {
 		string GetFileNameForDestination (NSFilePromiseProvider filePromiseProvider, NSUrl destinationUrl);
 
 		[Export ("filePromiseProvider:writePromiseToURL:completionHandler:")]
-		void WritePromiseToUrl (NSFilePromiseProvider filePromiseProvider, NSUrl url, Action<NSError> completionHandler);
+		void WritePromiseToUrl (NSFilePromiseProvider filePromiseProvider, NSUrl url, [NullAllowed] Action<NSError> completionHandler);
 
 		[Export ("promiseOperationQueueForFilePromiseProvider:")]
 		NSOperationQueue GetPromiseOperationQueue (NSFilePromiseProvider filePromiseProvider);
