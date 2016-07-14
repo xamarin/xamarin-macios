@@ -1360,7 +1360,11 @@ namespace XamCore.MediaPlayer {
 		[Abstract]
 #endif
 		[Export ("contentItemAtIndexPath:")]
+#if XAMCORE_4_0
+		MPContentItem GetContentItem (NSIndexPath indexPath);
+#else
 		MPContentItem ContentItem (NSIndexPath indexPath);
+#endif
 
 		[Export ("beginLoadingChildItemsAtIndexPath:completionHandler:")]
 		void BeginLoadingChildItems (NSIndexPath indexPath, Action<NSError> completionHandler);
@@ -1373,6 +1377,11 @@ namespace XamCore.MediaPlayer {
 #endif
 		[Export ("numberOfChildItemsAtIndexPath:")]
 		nint NumberOfChildItems (NSIndexPath indexPath);
+
+		[iOS (10,0)]
+		[Async]
+		[Export ("contentItemForIdentifier:completionHandler:")]
+		void GetContentItem (string identifier, Action<MPContentItem, NSError> completionHandler);
 	}
 
 	interface IMPPlayableContentDataSource {
@@ -1392,8 +1401,13 @@ namespace XamCore.MediaPlayer {
 		void ContextUpdated (MPPlayableContentManager contentManager, MPPlayableContentManagerContext context);
 
 		[iOS (9,0)]
+		[Deprecated (PlatformName.iOS, 9, 3, message: "Use InitializePlaybackQueue (MPPlayableContentManager, MPContentItem[], Action<NSError>) instead")]
 		[Export ("playableContentManager:initializePlaybackQueueWithCompletionHandler:")]
 		void InitializePlaybackQueue (MPPlayableContentManager contentManager, Action<NSError> completionHandler);
+
+		[iOS (9,3)]
+		[Export ("playableContentManager:initializePlaybackQueueWithContentItems:completionHandler:")]
+		void InitializePlaybackQueue (MPPlayableContentManager contentManager, [NullAllowed] MPContentItem[] contentItems, Action<NSError> completionHandler);
 	}
 
 	[NoTV]
@@ -1432,6 +1446,10 @@ namespace XamCore.MediaPlayer {
 		[iOS (8,4)]
 		[Export ("context")]
 		MPPlayableContentManagerContext Context { get; }
+
+		[iOS (10,0)]
+		[Export ("nowPlayingIdentifiers", ArgumentSemantic.Strong)]
+		string[] NowPlayingIdentifiers { get; set; }
 	}
 
 	[NoTV]
@@ -1487,6 +1505,24 @@ namespace XamCore.MediaPlayer {
 		NSNumber[] SupportedPlaybackRates { get; set; }
 	}
 
+	[iOS (8,0)]
+	[BaseType (typeof(MPRemoteCommand))]
+	[DisableDefaultCtor] // NSGenericException Reason: MPChangeShuffleModeCommand cannot be initialized externally.
+	interface MPChangeShuffleModeCommand
+	{
+		[Export ("currentShuffleType", ArgumentSemantic.Assign)]
+		MPShuffleType CurrentShuffleType { get; set; }
+	}
+
+	[iOS (8,0)]
+	[BaseType (typeof(MPRemoteCommand))]
+	[DisableDefaultCtor] // NSGenericException Reason: MPChangeRepeatModeCommand cannot be initialized externally.
+	interface MPChangeRepeatModeCommand
+	{
+		[Export ("currentRepeatType", ArgumentSemantic.Assign)]
+		MPRepeatType CurrentRepeatType { get; set; }
+	}
+
 	[Since (7,1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPFeedbackCommands cannot be initialized externally.
@@ -1529,6 +1565,7 @@ namespace XamCore.MediaPlayer {
 
 	[Since (7,1)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface MPRemoteCommandCenter {
 
 		[Static]
@@ -1540,6 +1577,12 @@ namespace XamCore.MediaPlayer {
 
 		[Export ("changePlaybackRateCommand")]
 		MPChangePlaybackRateCommand ChangePlaybackRateCommand { get; }
+
+		[Export ("changeRepeatModeCommand")]
+		MPChangeRepeatModeCommand ChangeRepeatModeCommand { get; }
+
+		[Export ("changeShuffleModeCommand")]
+		MPChangeShuffleModeCommand ChangeShuffleModeCommand { get; }
 
 		[Export ("dislikeCommand")]
 		MPFeedbackCommand DislikeCommand { get; }
@@ -1656,6 +1699,36 @@ namespace XamCore.MediaPlayer {
 	interface MPChangeLanguageOptionCommandEvent {
 		[Export ("languageOption")]
 		MPNowPlayingInfoLanguageOption LanguageOption { get; }
+
+		[iOS (10,0)]
+		[Export ("setting")]
+		MPChangeLanguageOptionSetting Setting { get; }
+	}
+
+	[iOS (8,0)]
+	[BaseType (typeof(MPRemoteCommandEvent))]
+	[DisableDefaultCtor] // NSGenericException Reason: MPChangeShuffleModeCommandEvent cannot be initialized externally.
+	interface MPChangeShuffleModeCommandEvent
+	{
+		[Export ("shuffleType")]
+		MPShuffleType ShuffleType { get; }
+
+		[iOS (10,0)]
+		[Export ("preservesShuffleMode")]
+		bool PreservesShuffleMode { get; }
+	}
+
+	[iOS (8,0)]
+	[BaseType (typeof(MPRemoteCommandEvent))]
+	[DisableDefaultCtor] // NSGenericException Reason: MPChangeRepeatModeCommandEvent cannot be initialized externally.
+	interface MPChangeRepeatModeCommandEvent
+	{
+		[Export ("repeatType")]
+		MPRepeatType RepeatType { get; }
+
+		[iOS (10,0)]
+		[Export ("preservesRepeatMode")]
+		bool PreservesRepeatMode { get; }
 	}
 
 	[iOS (9,0)]

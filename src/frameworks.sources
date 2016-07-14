@@ -860,6 +860,7 @@ MEDIAPLAYER_SOURCES = \
 	MediaPlayer/MPMoviePlayerController.cs \
 	MediaPlayer/MPNowPlayingInfoCenter.cs \
 	MediaPlayer/MPPlayableContentDelegate.cs \
+	MediaPlayer/MPRemoteCommandCenter.cs \
 	MediaPlayer/MPSkipIntervalCommand.cs \
 	MediaPlayer/MPVolumeSettings.cs \
 
