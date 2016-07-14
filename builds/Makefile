@@ -99,7 +99,7 @@ FACADE_SUBDIRS_MK = $(MONO_PATH)/mcs/class/Facades/subdirs.make
 # File does not exist before checking out mono
 -include $(FACADE_SUBDIRS_MK)
 
-MAC_FACADE_ASSEMBLY_NAMES = $(xammac_PARALLEL_SUBDIRS)
+MAC_FACADE_ASSEMBLY_NAMES = $(xammac_PARALLEL_SUBDIRS) $(xammac_SUBDIRS)
 
 MAC_4_5_ADDITIONAL_ASSEMBLY_NAMES = \
 	Mono.Messaging \
@@ -116,7 +116,7 @@ MAC_4_5_ADDITIONAL_ASSEMBLY_NAMES = \
 
 MAC_4_5_ASSEMBLY_NAMES = $(MAC_ASSEMBLY_NAMES) $(MAC_4_5_ADDITIONAL_ASSEMBLY_NAMES)
 
-MAC_4_5_FACADE_ASSEMBLY_NAMES = $(MAC_FACADE_ASSEMBLY_NAMES)
+MAC_4_5_FACADE_ASSEMBLY_NAMES = $(xammac_net_4_5_PARALLEL_SUBDIRS) $(xammac_net_4_5_SUBDIRS)
 
 MAC_ASSEMBLIES = $(addsuffix .dll,$(MAC_ASSEMBLY_NAMES))
 MAC_FACADE_ASSEMBLIES = $(addsuffix .dll,$(MAC_FACADE_ASSEMBLY_NAMES))
@@ -240,7 +240,7 @@ $(MAC_DIRECTORIES) $(BUILD_DESTDIR):
 
 mac-facade-check:
 	$(Q) rm -f .$@*
-	$(Q) echo $(MAC_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
+	$(Q) echo $(MAC_4_5_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
 	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/xammac_net_4_5/Facades | grep dll | sort > .$@2
 	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_PATH)/mcs/class/lib/xammac_net_4_5/Facades " not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
 	$(Q) rm -f .$@*
@@ -523,7 +523,7 @@ IOS_ASSEMBLIES = I18N.CJK I18N.MidEast I18N.Other I18N.Rare I18N.West I18N Mono.
 
 IOS_REPL_ASSEMBLIES = mscorlib System System.Core System.Xml Mono.CSharp
 
-IOS_FACADE_ASSEMBLIES = $(monotouch_PARALLEL_SUBDIRS)
+IOS_FACADE_ASSEMBLIES = $(monotouch_PARALLEL_SUBDIRS) $(monotouch_SUBDIRS)
 
 # TVOS/WATCHOS BCL is built from a different mono branch and the assembly list might differ across time
 TVOS_ASSEMBLIES = $(IOS_ASSEMBLIES)
