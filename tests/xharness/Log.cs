@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
+using System.Text;
 
 namespace xharness
 {
@@ -200,8 +201,11 @@ namespace xharness
 
 	public class ConsoleLog : Log
 	{
+		StringBuilder captured = new StringBuilder ();
+
 		protected override void WriteImpl (string value)
 		{
+			captured.Append (value);
 			Console.Write (value);
 		}
 
@@ -214,6 +218,12 @@ namespace xharness
 		public override TextWriter GetWriter ()
 		{
 			return Console.Out;
+		}
+
+		public override StreamReader GetReader ()
+		{
+			var str = new MemoryStream (System.Text.Encoding.UTF8.GetBytes (captured.ToString ()));
+			return new StreamReader (str, System.Text.Encoding.UTF8, false);
 		}
 	}
 
