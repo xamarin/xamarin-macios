@@ -2453,6 +2453,17 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
+#if !XAMCORE_2_0
+		class Bug42454 : NSUrlProtocol
+		{
+			[Export ("initWithRequest:cachedResponse:client:")]
+			public Bug42454 (NSUrlRequest request, NSCachedUrlResponse response, NSUrlProtocolClient client)
+			{
+				throw new NotImplementedException ();
+			}
+		}
+#endif
+
 #if debug_code
 		static void DumpClass (Type type)
 		{
