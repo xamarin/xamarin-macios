@@ -2492,6 +2492,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #endif
 	}
 
+#if !__WATCHOS__
 	[Category (typeof (CALayer))]
 	static class CALayerColorsHelpers
 	{
@@ -2501,4 +2502,5 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			self.BorderColor = borderColor.CGColor;
 		}
 	}
+#endif // !__WATCHOS__
 }
