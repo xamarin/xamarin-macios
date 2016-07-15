@@ -807,6 +807,7 @@ IMAGEKIT_CORE_SOURCES = \
 # Intents
 
 INTENTS_SOURCES = \
+	Intents/INImage.cs \
 	Intents/INIntentResolutionResult.cs \
 	Intents/INPriceRange.cs \
 
@@ -1580,6 +1581,7 @@ IOS_FRAMEWORKS =         \
 	HomeKit \
 	ImageIO \
 	Intents \
+	IntentsUI \
 	JavaScriptCore \
 	LocalAuthentication \
 	MapKit \

@@ -104,5 +104,6 @@ namespace MonoTouch {
 		public const string UserNotificationsLibrary = "/System/Library/Frameworks/UserNotifications.framework/UserNotifications";
 		public const string UserNotificationsUILibrary = "/System/Library/Frameworks/UserNotificationsUI.framework/UserNotificationsUI";
 		public const string IntentsLibrary = "/System/Library/Frameworks/Intents.framework/Intents";
+		public const string IntentsUILibrary = "/System/Library/Frameworks/IntentsUI.framework/IntentsUI";
 	}
 }
