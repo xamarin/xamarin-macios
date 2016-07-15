@@ -23,7 +23,7 @@ namespace MonoTouchFixtures.MediaPlayer
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class MPNowPlayingInfoCenterTest
+	public class NowPlayingInfoCenterTest
 	{
 		MPNowPlayingInfo NowPlayingInfo;
 

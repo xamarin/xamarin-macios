@@ -216,6 +216,31 @@ namespace XamCore.MediaPlayer {
 
 	public delegate void MPMediaItemEnumerator (string property, NSObject value, ref bool stop);
 
+	[Native]
+	public enum MPShuffleType : nint
+	{
+		Off,
+		Items,
+		Collections
+	}
+
+	[Native]
+	public enum MPRepeatType : nint
+	{
+		Off,
+		One,
+		All
+	}
+
+	[iOS (10,0)]
+	[Native]
+	public enum MPChangeLanguageOptionSetting : nint
+	{
+		None,
+		NowPlayingItemOnly,
+		Permanent
+	}
+
 	// NSInteger -> MPRemoteCommand.h
 	[Native]
 	[iOS (7,1)]

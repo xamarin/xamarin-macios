@@ -36,6 +36,8 @@ namespace MonoTouchFixtures.MediaPlayer {
 			MPRemoteCommandCenter shared = MPRemoteCommandCenter.Shared;
 			Assert.NotNull (shared.BookmarkCommand, "BookmarkCommand");
 			Assert.NotNull (shared.ChangePlaybackRateCommand, "ChangePlaybackRateCommand");
+			Assert.NotNull (shared.ChangeRepeatModeCommand, "ChangeRepeatModeCommand");
+			Assert.NotNull (shared.ChangeShuffleModeCommand, "ChangeShuffleModeCommand");
 			Assert.NotNull (shared.DislikeCommand, "DislikeCommand");
 			Assert.NotNull (shared.LikeCommand, "LikeCommand");
 			Assert.NotNull (shared.NextTrackCommand, "NextTrackCommand");
