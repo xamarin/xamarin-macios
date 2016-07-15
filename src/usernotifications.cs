@@ -14,9 +14,9 @@ using XamCore.CoreGraphics;
 
 #if !WATCH
 using XamCore.CoreMedia;
+#endif
 #if !TV
 using XamCore.CoreLocation;
-#endif
 #endif
 
 namespace XamCore.UserNotifications {
@@ -373,7 +373,6 @@ namespace XamCore.UserNotifications {
 		[Export ("title")]
 		string Title { get; set; }
 
-		[Unavailable (PlatformName.TvOS)]
 		[Export ("userInfo", ArgumentSemantic.Copy)]
 		NSDictionary UserInfo { get; set; }
 	}
@@ -516,8 +515,8 @@ namespace XamCore.UserNotifications {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Unavailable (PlatformName.TvOS)]
-	[Unavailable (PlatformName.WatchOS)]
+	[Introduced (PlatformName.TvOS, 10, 0)]
+	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[BaseType (typeof (UNNotificationTrigger))]
 	[DisableDefaultCtor] // Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: use subclasses
 	interface UNPushNotificationTrigger {
@@ -560,10 +559,10 @@ namespace XamCore.UserNotifications {
 		NSDate NextTriggerDate { get; }
 	}
 
-#if !TV && !WATCH
+#if !TV
 	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[Unavailable (PlatformName.TvOS)]
-	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (UNNotificationTrigger))]
 	[DisableDefaultCtor]
 	interface UNLocationNotificationTrigger {
@@ -571,6 +570,7 @@ namespace XamCore.UserNotifications {
 		[Export ("region", ArgumentSemantic.Copy)]
 		CLRegion Region { get; }
 
+		[Unavailable (PlatformName.WatchOS)]
 		[Static]
 		[Export ("triggerWithRegion:repeats:")]
 		UNLocationNotificationTrigger Trigger (CLRegion region, bool repeats);
