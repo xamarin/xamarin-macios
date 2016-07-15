@@ -11823,6 +11823,100 @@ namespace XamCore.Foundation
 		nint UnderlineByWordMaskAttributeName { get; }
 	}
 
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSObject))]
+	interface NSDateInterval : NSCopying, NSSecureCoding {
+		[Export ("startDate", ArgumentSemantic.Copy)]
+		NSDate StartDate { get; }
+
+		[Export ("endDate", ArgumentSemantic.Copy)]
+		NSDate EndDate { get; }
+
+		[Export ("duration")]
+		double Duration { get; }
+
+		[Export ("initWithStartDate:duration:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSDate startDate, double duration);
+
+		[Export ("initWithStartDate:endDate:")]
+		IntPtr Constructor (NSDate startDate, NSDate endDate);
+
+		[Export ("compare:")]
+		NSComparisonResult Compare (NSDateInterval dateInterval);
+
+		[Export ("isEqualToDateInterval:")]
+		bool IsEqualTo (NSDateInterval dateInterval);
+
+		[Export ("intersectsDateInterval:")]
+		bool Intersects (NSDateInterval dateInterval);
+
+		[Export ("intersectionWithDateInterval:")]
+		[return: NullAllowed]
+		NSDateInterval GetIntersection (NSDateInterval dateInterval);
+
+		[Export ("containsDate:")]
+		bool ContainsDate (NSDate date);
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSObject))]
+	interface NSUnit : NSCopying, NSSecureCoding {
+		[Export ("symbol")]
+		string Symbol { get; }
+
+		[Export ("initWithSymbol:")]
+		IntPtr Constructor (string symbol);
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSObject))]
+	interface NSUnitConverter {
+		[Export ("baseUnitValueFromValue:")]
+		double GetBaseUnitValue (double value);
+
+		[Export ("valueFromBaseUnitValue:")]
+		double GetValue (double baseUnitValue);
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSUnit))]
+	[DisableDefaultCtor] // there's a designated initializer
+	interface NSDimension : NSSecureCoding {
+		[Export ("converter", ArgumentSemantic.Copy)]
+		NSUnitConverter Converter { get; }
+
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSDimension))]
+	[DisableDefaultCtor] // base type has a designated initializer
+	interface NSUnitTemperature : NSSecureCoding {
+		// inline from base type
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+
+		[Static]
+		[Export ("kelvin", ArgumentSemantic.Copy)]
+		NSUnitTemperature Kelvin { get; }
+
+		[Static]
+		[Export ("celsius", ArgumentSemantic.Copy)]
+		NSUnitTemperature Celsius { get; }
+
+		[Static]
+		[Export ("fahrenheit", ArgumentSemantic.Copy)]
+		NSUnitTemperature Fahrenheit { get; }
+	}
+
 #if MONOMAC
 	partial interface NSFileManager {
 

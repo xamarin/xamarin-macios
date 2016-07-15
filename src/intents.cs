@@ -1474,9 +1474,8 @@ namespace XamCore.Intents {
 		[Export ("direction", ArgumentSemantic.Assign)]
 		INInteractionDirection Direction { get; set; }
 
-		// FIXME: NSDateInterval needs to be bound! New type
-		//[NullAllowed, Export ("dateInterval", ArgumentSemantic.Copy)]
-		//NSDateInterval DateInterval { get; set; }
+		[NullAllowed, Export ("dateInterval", ArgumentSemantic.Copy)]
+		NSDateInterval DateInterval { get; set; }
 
 		[Export ("identifier")]
 		string Identifier { get; set; }
@@ -3656,13 +3655,12 @@ namespace XamCore.Intents {
 	[DisableDefaultCtor]
 	interface INTemperature : NSCopying, NSSecureCoding {
 
-		// FIXME: Bind NSUnitTemperature new type
-		//[Export ("initWithUnit:value:")]
-		//[DesignatedInitializer]
-		//IntPtr Constructor (NSUnitTemperature unit, NSNumber value);
+		[Export ("initWithUnit:value:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSUnitTemperature unit, NSNumber value);
 
-		//[NullAllowed, Export ("unit", ArgumentSemantic.Copy)]
-		//NSUnitTemperature Unit { get; }
+		[NullAllowed, Export ("unit", ArgumentSemantic.Copy)]
+		NSUnitTemperature Unit { get; }
 
 		[NullAllowed, Export ("value", ArgumentSemantic.Copy)]
 		NSNumber Value { get; }
