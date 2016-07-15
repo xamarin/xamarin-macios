@@ -3,7 +3,7 @@ TOP=../..
 include $(TOP)/Make.config
 
 # a 64bits mono is required because of the clang requirement
-MONO ?= /opt/mono/bin/mono --debug
+MONO ?= mono64 --debug
 
 all-local:: run-ios run-osx run-watchos run-tvos classify
 	
