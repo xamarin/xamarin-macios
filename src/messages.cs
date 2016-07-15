@@ -35,6 +35,7 @@ namespace XamCore.Messages {
 	}
 
 	[Native]
+	[ErrorDomain ("MSMessagesErrorDomain")]
 	public enum MSMessageErrorCode : nint
 	{
 		FileNotFound = 1,
@@ -295,7 +296,7 @@ namespace XamCore.Messages {
 
 	[iOS (10,0)]
 	[BaseType (typeof(UIViewController))]
-	interface MSStickerBrowserViewController : IMSStickerBrowserViewDataSource
+	interface MSStickerBrowserViewController : MSStickerBrowserViewDataSource
 	{
 		[Export ("initWithStickerSize:")]
 		[DesignatedInitializer]
