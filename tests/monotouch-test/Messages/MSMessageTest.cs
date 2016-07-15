@@ -26,6 +26,11 @@ namespace MonoTouchFixtures.Messages
 	[Preserve (AllMembers = true)]
 	public class MSMessageTest
 	{
+		[SetUp]
+		public void MinimumSdkCheck ()
+		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+		}
 
 		[Test]
 		public void InitWithSession ()
