@@ -42,72 +42,56 @@ namespace MonoTouchFixtures.CoreText {
 		[Test]
 		public void CTFontCreateWithNameAndOptions ()
 		{
-			// Apple documents CTFontCreateWithNameAndOptions as availble since 3.2 but it does not work before 7.0 (e.g. 6.1)
-			// it seems to be a known issue, http://stackoverflow.com/q/4419283 but I still left feedback to Apple to fix it
-			try {
-				using (var font = new CTFont ("HoeflerText-Regular", 10, CTFontOptions.Default)) {
-					Assert.That (font.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
-				}
-			}
-			catch (EntryPointNotFoundException) {
-				Assert.True (!UIDevice.CurrentDevice.CheckSystemVersion (7, 0), "< iOS 7.0");
+			TestRuntime.AssertXcodeVersion (5,0);
+
+			using (var font = new CTFont ("HoeflerText-Regular", 10, CTFontOptions.Default)) {
+				Assert.That (font.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 			}
 		}
 
 		[Test]
 		public void CTFontCreateWithFontDescriptorAndOptions ()
 		{
-			// Apple documents CTFontCreateWithFontDescriptorAndOptions as availble since 3.2 but it does not work before 7.0 (e.g. 6.1)
-			// it seems to be a known issue, http://stackoverflow.com/q/4419283 but I still left feedback to Apple to fix it
-			try {
-				CTFontDescriptorAttributes fda = new CTFontDescriptorAttributes () {
-					FamilyName = "Courier",
-					StyleName = "Bold",
-					Size = 16.0f
-				};
-				using (var fd = new CTFontDescriptor (fda))
-				using (var font = new CTFont (fd, 10, CTFontOptions.Default)) {
-					Assert.That (font.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
-				}
-			}
-			catch (EntryPointNotFoundException) {
-				Assert.True (!UIDevice.CurrentDevice.CheckSystemVersion (7, 0), "< iOS 7.0");
+			TestRuntime.AssertXcodeVersion (5,0);
+
+			CTFontDescriptorAttributes fda = new CTFontDescriptorAttributes () {
+				FamilyName = "Courier",
+				StyleName = "Bold",
+				Size = 16.0f
+			};
+			using (var fd = new CTFontDescriptor (fda))
+			using (var font = new CTFont (fd, 10, CTFontOptions.Default)) {
+				Assert.That (font.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 			}
 		}
 
 		[Test]
 		public void GetCascadeList ()
 		{
-			try {
-				using (var font = new CTFont ("HoeflerText-Regular", 10, CTFontOptions.Default)) {
-					Assert.NotNull (font.GetDefaultCascadeList (null), "null");
-				}
-			}
-			catch (EntryPointNotFoundException) {
-				Assert.True (!UIDevice.CurrentDevice.CheckSystemVersion (7, 0), "< iOS 7.0");
+			TestRuntime.AssertXcodeVersion (5,0);
+
+			using (var font = new CTFont ("HoeflerText-Regular", 10, CTFontOptions.Default)) {
+				Assert.NotNull (font.GetDefaultCascadeList (null), "null");
 			}
 		}
 
 		[Test]
 		public void GetLocalizedName ()
 		{
-			try {
-				using (var font = new CTFont ("HoeflerText-Regular", 10, CTFontOptions.Default)) {
-					Assert.NotNull (font.GetLocalizedName (CTFontNameKey.Copyright), "1");
+			TestRuntime.AssertXcodeVersion (5, 0);
 
-					// We need to check if we are using english as our main language since this is the known case
-					// that the following code works. It fails with spanish for example but it is a false positive
-					// because the localized name for this font Full option does not have a spanish representation
-					var language = NSLocale.PreferredLanguages [0];
-					if (language == "en") {
-						string str;
-						Assert.NotNull (font.GetLocalizedName (CTFontNameKey.Full, out str), "2");
-						Assert.NotNull (str, "out str");
-					}
+			using (var font = new CTFont ("HoeflerText-Regular", 10, CTFontOptions.Default)) {
+				Assert.NotNull (font.GetLocalizedName (CTFontNameKey.Copyright), "1");
+
+				// We need to check if we are using english as our main language since this is the known case
+				// that the following code works. It fails with spanish for example but it is a false positive
+				// because the localized name for this font Full option does not have a spanish representation
+				var language = NSLocale.PreferredLanguages [0];
+				if (language == "en") {
+					string str;
+					Assert.NotNull (font.GetLocalizedName (CTFontNameKey.Full, out str), "2");
+					Assert.NotNull (str, "out str");
 				}
-			}
-			catch (EntryPointNotFoundException) {
-				Assert.True (!UIDevice.CurrentDevice.CheckSystemVersion (7, 0), "< iOS 7.0");
 			}
 		}
 

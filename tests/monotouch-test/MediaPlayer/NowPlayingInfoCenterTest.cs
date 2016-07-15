@@ -27,11 +27,19 @@ namespace MonoTouchFixtures.MediaPlayer
 	{
 		MPNowPlayingInfo NowPlayingInfo;
 
+		bool v8_0 = TestRuntime.CheckSystemAndSDKVersion (8, 0);
+		bool v9_0 = TestRuntime.CheckSystemAndSDKVersion (9, 0);
+		bool v10_0 = TestRuntime.CheckSystemAndSDKVersion (10, 0);
+
 		[SetUp]
 		public void SetUp ()
 		{
-			var languageOption = new MPNowPlayingInfoLanguageOption (MPNowPlayingInfoLanguageOptionType.Audible, "en", null, "English", "en");
-			var languageOptionGroup = new MPNowPlayingInfoLanguageOptionGroup (new MPNowPlayingInfoLanguageOption [] { languageOption }, languageOption, false);
+			MPNowPlayingInfoLanguageOption languageOption = null;
+			MPNowPlayingInfoLanguageOptionGroup languageOptionGroup = null;
+			if (v9_0) {
+				languageOption = new MPNowPlayingInfoLanguageOption (MPNowPlayingInfoLanguageOptionType.Audible, "en", null, "English", "en");
+				languageOptionGroup = new MPNowPlayingInfoLanguageOptionGroup (new MPNowPlayingInfoLanguageOption [] { languageOption }, languageOption, false);
+			}
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png");
 			using (var img = UIImage.FromFile (file)) {
 				NowPlayingInfo = new MPNowPlayingInfo {
@@ -43,8 +51,8 @@ namespace MonoTouchFixtures.MediaPlayer
 					PlaybackQueueCount = 10,
 					ChapterNumber = 1,
 					ChapterCount = 10,
-					AvailableLanguageOptions = new MPNowPlayingInfoLanguageOptionGroup [] { languageOptionGroup },
-					CurrentLanguageOptions = new MPNowPlayingInfoLanguageOption [] { new MPNowPlayingInfoLanguageOption (MPNowPlayingInfoLanguageOptionType.Audible, "en", null, "English", "en") },
+					AvailableLanguageOptions = v9_0 ? new MPNowPlayingInfoLanguageOptionGroup [] { languageOptionGroup } : null,
+					CurrentLanguageOptions = v9_0 ? new MPNowPlayingInfoLanguageOption [] { new MPNowPlayingInfoLanguageOption (MPNowPlayingInfoLanguageOptionType.Audible, "en", null, "English", "en") } : null,
 					CollectionIdentifier = "Collection",
 					ExternalContentIdentifier = "ExternalContent",
 					ExternalUserProfileIdentifier = "ExternalUserProfile",
@@ -75,10 +83,6 @@ namespace MonoTouchFixtures.MediaPlayer
 			using (var dc = MPNowPlayingInfoCenter.DefaultCenter) {
 				dc.NowPlaying = NowPlayingInfo; // internal NSDictionary ToDictionary ()
 				var np = dc.NowPlaying; // internal MPNowPlayingInfo (NSDictionary source)
-
-				var v8_0 = TestRuntime.CheckSystemAndSDKVersion (8, 0);
-				var v9_0 = TestRuntime.CheckSystemAndSDKVersion (9, 0);
-				var v10_0 = TestRuntime.CheckSystemAndSDKVersion (10, 0);
 
 				Assert.IsInstanceOfType (typeof (double), np.ElapsedPlaybackTime, "#1");
 				Assert.IsInstanceOfType (typeof (double), np.PlaybackRate, "#2");
