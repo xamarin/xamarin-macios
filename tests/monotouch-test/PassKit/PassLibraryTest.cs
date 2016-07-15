@@ -27,6 +27,7 @@ namespace MonoTouchFixtures.PassKit {
 	[Preserve (AllMembers = true)]
 	public class PassLibraryTest {
 
+#if !__WATCHOS__ // hangs on watchOS 3 beta 2 simulator
 		[Test]
 		public void Defaults ()
 		{
@@ -59,7 +60,8 @@ namespace MonoTouchFixtures.PassKit {
 				library.Remove (pass);
 			}
 		}
-
+#endif
+		
 		[Test]
 		public void Fields ()
 		{
