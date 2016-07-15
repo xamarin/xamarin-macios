@@ -54,9 +54,6 @@ namespace XamCore.Speech {
 		[Export ("shouldReportPartialResults", ArgumentSemantic.Assign)]
 		bool ShouldReportPartialResults { get; set; }
 
-		[Export ("detectMultipleUtterances", ArgumentSemantic.Assign)]
-		bool DetectMultipleUtterances { get; set; }
-
 		[Export ("contextualStrings", ArgumentSemantic.Copy)]
 		string [] ContextualStrings { get; set; }
 
@@ -129,15 +126,6 @@ namespace XamCore.Speech {
 
 		[NullAllowed, Export ("error", ArgumentSemantic.Copy)]
 		NSError Error { get; }
-
-		[Export ("powerAvailable")]
-		bool PowerAvailable { [Bind ("isPowerAvailable")] get; }
-
-		[Export ("peakPower")]
-		float PeakPower { get; }
-
-		[Export ("averagePower")]
-		float AveragePower { get; }
 	}
 
 	interface ISFSpeechRecognitionTaskDelegate { }
@@ -164,9 +152,6 @@ namespace XamCore.Speech {
 
 		[Export ("speechRecognitionTask:didFinishSuccessfully:")]
 		void DidFinishSuccessfully (SFSpeechRecognitionTask task, bool successfully);
-
-		[Export ("speechRecognitionTask:didRecordAudioPCMBuffer:")]
-		void DidRecordAudioPcmBuffer (SFSpeechRecognitionTask task, AVAudioPcmBuffer audioPcmBuffer);
 	}
 
 	interface ISFSpeechRecognizerDelegate { }
@@ -203,9 +188,6 @@ namespace XamCore.Speech {
 		[Export ("available")]
 		bool Available { [Bind ("isAvailable")] get; }
 
-		[Export ("availableForRecordingRecognition")]
-		bool AvailableForRecordingRecognition { [Bind ("isAvailableForRecordingRecognition")] get; }
-
 		[Export ("locale", ArgumentSemantic.Copy)]
 		NSLocale Locale { get; }
 
@@ -214,11 +196,6 @@ namespace XamCore.Speech {
 
 		[Export ("defaultTaskHint", ArgumentSemantic.Assign)]
 		SFSpeechRecognitionTaskHint DefaultTaskHint { get; set; }
-
-		// FIXME: SFSpeechRecordingRecognitionRequest is not in the public api
-		// filled radar://26799291 https://trello.com/c/s6s6YKua
-		//[Export ("prepareWithRequest:")]
-		//void Prepare (SFSpeechRecordingRecognitionRequest request);
 
 		[Async]
 		[Export ("recognitionTaskWithRequest:resultHandler:")]
