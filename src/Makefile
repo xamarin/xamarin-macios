@@ -532,13 +532,7 @@ $(MONO_PATH)/mcs/class/lib/xammac/reference_Facades/System.Drawing.Primitives.dl
 $(MAC_BUILD_DIR)/mobile/Facades/System.Drawing.Primitives.dll: $(MONO_PATH)/mcs/class/lib/xammac/reference_Facades/System.Drawing.Primitives.dll $(MAC_BUILD_DIR)/mobile/Facades 
 	$(Q) cp $< $@
 
-$(MONO_PATH)/mcs/class/lib/xammac_net_4_5/reference_Facades/System.Drawing.Primitives.dll: $(MAC_BUILD_DIR)/full-reference/Xamarin.Mac.dll
-	$(call Q_PROF_MCS,xammac_net_4_5) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/Facades/System.Drawing.Primitives PROFILE=xammac_net_4_5 LIBRARY_SUBDIR=reference_Facades EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(MAC_BUILD_DIR)/full-reference/Xamarin.Mac.dll)"
-
-$(MAC_BUILD_DIR)/full/Facades/System.Drawing.Primitives.dll: $(MONO_PATH)/mcs/class/lib/xammac_net_4_5/reference_Facades/System.Drawing.Primitives.dll $(MAC_BUILD_DIR)/full/Facades 
-	$(Q) cp $< $@
-
-.SECONDARY: $(MAC_BUILD_DIR)/mobile/Facades/System.Drawing.Primitives.dll $(MAC_BUILD_DIR)/full/Facades/System.Drawing.Primitives.dll
+.SECONDARY: $(MAC_BUILD_DIR)/mobile/Facades/System.Drawing.Primitives.dll
 
 
 $(MAC_BUILD_DIR)/compat/XamMac.CFNetwork.dll: $(MAC_CFNETWORK_SOURCES) $(MAC_BUILD_DIR)/compat/XamMac.dll $(SN_KEY)
@@ -558,9 +552,8 @@ MAC_VARIANTS_TARGETS = \
 	$(MAC_BUILD_DIR)/full-64/Xamarin.Mac.dll \
 	$(MAC_BUILD_DIR)/mobile-reference/Xamarin.Mac.dll \
 	$(MAC_BUILD_DIR)/full-reference/Xamarin.Mac.dll \
-	$(MAC_BUILD_DIR)/compat/XamMac.CFNetwork.dll \
 	$(MAC_BUILD_DIR)/mobile/Facades/System.Drawing.Primitives.dll \
-	$(MAC_BUILD_DIR)/full/Facades/System.Drawing.Primitives.dll \
+	$(MAC_BUILD_DIR)/compat/XamMac.CFNetwork.dll
 
 INSTALL_TARGETS+=install-mac
 ALL_TARGETS+=all-mac
@@ -569,7 +562,6 @@ MAC_TARGETS_DIRS += \
 	$(MAC_BUILD_DIR)/mobile \
 	$(MAC_BUILD_DIR)/mobile/Facades \
 	$(MAC_BUILD_DIR)/full \
-	$(MAC_BUILD_DIR)/full/Facades \
 	$(MAC_BUILD_DIR)/compat \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile      \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full        \
@@ -608,7 +600,6 @@ MAC_TARGETS += \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/Version                                  \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/xammac.pc                  \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Facades/System.Drawing.Primitives.dll          \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Facades/System.Drawing.Primitives.dll          \
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMac.dll: $(MAC_BUILD_DIR)/compat/XamMac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono
 	$(Q) install -m 0755 $< $@
