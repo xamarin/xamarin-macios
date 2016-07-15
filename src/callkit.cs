@@ -69,8 +69,9 @@ namespace XamCore.CallKit {
 		UnknownCallProvider = 2,
 		EmptyTransaction = 3,
 		UnknownCallUuid = 4,
-		InvalidAction = 5,
-		MaximumCallGroupsReached = 6
+		CallUuidAlreadyExists = 5,
+		InvalidAction = 6,
+		MaximumCallGroupsReached = 7
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -82,9 +83,10 @@ namespace XamCore.CallKit {
 		NoExtensionFound = 1,
 		NoAttachmentFound = 2,
 		LoadingInterrupted = 3,
-		ParsingFailed = 4,
-		MaximumEntriesExceeded = 5,
-		ExtensionDisabled = 6
+		EntriesOutOfOrder = 4,
+		DuplicateEntries = 5,
+		MaximumEntriesExceeded = 6,
+		ExtensionDisabled = 7
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -103,6 +105,35 @@ namespace XamCore.CallKit {
 		Failed = 1,
 		RemoteEnded = 2,
 		Unanswered = 3
+	}
+
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.MacOSX, 10, 12)]
+	[Native]
+	public enum CXHandleType : nint {
+		Generic = 1,
+		PhoneNumber = 2,
+		EmailAddress = 3
+	}
+
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.MacOSX, 10, 12)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CXHandle : NSCopying, NSSecureCoding {
+
+		[Export ("type")]
+		CXHandleType Type { get; }
+
+		[Export ("value")]
+		string Value { get; }
+
+		[Export ("initWithType:value:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (CXHandleType type, string value);
+
+		[Export ("isEqualToHandle:")]
+		bool IsEqual (CXHandle handle);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -134,7 +165,7 @@ namespace XamCore.CallKit {
 
 		[Export ("initWithCallUUID:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUUID);
+		IntPtr Constructor (NSUuid callUuid);
 
 		[Export ("fulfillWithDateConnected:")]
 		void Fulfill (NSDate dateConnected);
@@ -160,6 +191,9 @@ namespace XamCore.CallKit {
 
 		[Export ("hasEnded")]
 		bool HasEnded { get; }
+
+		[Export ("isEqualToCall:")]
+		bool IsEqual (CXCall call);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -173,12 +207,7 @@ namespace XamCore.CallKit {
 
 		[Export ("initWithCallUUID:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUUID);
-
-		// FIXME: Deprecated in xcode8 beta1: "Use -[CXAction fulfill] instead"
-		// Check if we should expose it later or if it gets removed from the header
-		//[Export ("fulfillWithResponse:")]
-		//void FulfillWithResponse ([NullAllowed] CXCallActionResponse response);
+		IntPtr Constructor (NSUuid callUuid);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -271,8 +300,8 @@ namespace XamCore.CallKit {
 	[BaseType (typeof (NSObject))]
 	interface CXCallUpdate : NSCopying {
 
-		[NullAllowed, Export ("callerIdentifier")]
-		string CallerIdentifier { get; set; }
+		[NullAllowed, Export ("remoteHandle", ArgumentSemantic.Copy)]
+		CXHandle RemoteHandle { get; set; }
 
 		[NullAllowed, Export ("localizedCallerName")]
 		string LocalizedCallerName { get; set; }
@@ -298,7 +327,7 @@ namespace XamCore.CallKit {
 
 		[Export ("initWithCallUUID:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUUID);
+		IntPtr Constructor (NSUuid callUuid);
 
 		[Export ("fulfillWithDateEnded:")]
 		void Fulfill (NSDate dateEnded);
@@ -310,9 +339,9 @@ namespace XamCore.CallKit {
 	[BaseType (typeof (CXCallAction), Name = "CXPlayDTMFCallAction")]
 	interface CXPlayDtmfCallAction {
 
-		[Export ("initWithCallUUID:")]
+		[Export ("initWithCallUUID:digits:type:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUUID);
+		IntPtr Constructor (NSUuid callUuid, string digits, CXPlayDtmfCallActionType type);
 
 		[Export ("digits")]
 		string Digits { get; set; }
@@ -329,6 +358,7 @@ namespace XamCore.CallKit {
 	[BaseType (typeof (NSObject))]
 	interface CXProviderDelegate {
 
+		[Abstract]
 		[Export ("providerDidReset:")]
 		void DidReset (CXProvider provider);
 
@@ -437,6 +467,10 @@ namespace XamCore.CallKit {
 		[NullAllowed, Export ("ringtoneSound", ArgumentSemantic.Strong)]
 		string RingtoneSound { get; set; }
 
+		[Advice ("Squared image 40x40 points")]
+		[NullAllowed, Export ("iconMaskImageData", ArgumentSemantic.Strong)]
+		NSData IconMaskImageData { get; set; }
+
 		[Export ("maximumCallGroups")]
 		nuint MaximumCallGroups { get; set; }
 
@@ -445,6 +479,9 @@ namespace XamCore.CallKit {
 
 		[Export ("supportsVideo")]
 		bool SupportsVideo { get; set; }
+
+		[Export ("supportedHandleTypes", ArgumentSemantic.Copy)]
+		NSSet<NSNumber> SupportedHandleTypes { get; set; }
 
 		[Export ("initWithLocalizedName:")]
 		IntPtr Constructor (string localizedName);
@@ -456,9 +493,9 @@ namespace XamCore.CallKit {
 	[DisableDefaultCtor]
 	interface CXSetGroupCallAction {
 
-		[Export ("initWithCallUUID:")]
+		[Export ("initWithCallUUID:callUUIDToGroupWith:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUUID);
+		IntPtr Constructor (NSUuid callUuid, [NullAllowed] NSUuid callUuidToGroupWith);
 
 		[NullAllowed, Export ("callUUIDToGroupWith", ArgumentSemantic.Assign)]
 		NSUuid CallUuidToGroupWith { get; set; }
@@ -470,9 +507,9 @@ namespace XamCore.CallKit {
 	[BaseType (typeof (CXCallAction))]
 	interface CXSetHeldCallAction {
 
-		[Export ("initWithCallUUID:")]
+		[Export ("initWithCallUUID:onHold:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUUID);
+		IntPtr Constructor (NSUuid callUuid, bool onHold);
 
 		[Export ("onHold")]
 		bool OnHold { [Bind ("isOnHold")] get; set; }
@@ -484,9 +521,9 @@ namespace XamCore.CallKit {
 	[DisableDefaultCtor]
 	interface CXSetMutedCallAction {
 
-		[Export ("initWithCallUUID:")]
+		[Export ("initWithCallUUID:muted:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUUID);
+		IntPtr Constructor (NSUuid callUuid, bool muted);
 
 		[Export ("muted")]
 		bool Muted { [Bind ("isMuted")] get; set; }
@@ -498,13 +535,12 @@ namespace XamCore.CallKit {
 	[BaseType (typeof (CXCallAction))]
 	interface CXStartCallAction {
 
-		[Export ("initWithCallUUID:")]
+		[Export ("initWithCallUUID:handle:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUuid callUUID);
+		IntPtr Constructor (NSUuid callUuid, CXHandle callHandle);
 
-		// FIXME: Apple header annotates this as TODO improve name? we sould check later
-		[Export ("destination")]
-		string Destination { get; set; }
+		[Export ("handle", ArgumentSemantic.Copy)]
+		CXHandle CallHandle { get; set; }
 
 		[NullAllowed, Export ("contactIdentifier")]
 		string ContactIdentifier { get; set; }
