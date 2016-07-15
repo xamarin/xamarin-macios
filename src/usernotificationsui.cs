@@ -23,8 +23,8 @@ namespace XamCore.UserNotificationsUI {
 	[Native]
 	public enum UNMediaPlayPauseButtonType : nuint {
 		None,
-		Audio,
-		Movie
+		Default,
+		Overlay
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
