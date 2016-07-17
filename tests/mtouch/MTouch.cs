@@ -165,11 +165,20 @@ namespace MTouchTests
 				} else {
 					Assert.AreEqual (has_mdb, File.Exists (Path.Combine (appDir, ".monotouch-32", "mscorlib.dll.mdb")), "#mdb");
 				}
-				if (is_sim) {
-					Assert.AreEqual (has_msym, File.Exists (Path.Combine (msymDir, "mscorlib.dll.msym")), "#msym");
-				} else {
-					Assert.AreEqual (has_msym, File.Exists (Path.Combine (msymDir, "32", "mscorlib.dll.msym")), "#msym");
-				}
+
+				if (has_msym) {
+					// assert that we do have the msym in one of the subdirs. We do not know the AOTID so we
+					// get all present files in the subdirs.
+					var dirInfo = new DirectoryInfo (msymDir);
+					var subDirs = dirInfo.GetDirectories ();
+					var msymFiles = new List<string> ();
+					foreach (var dir in subDirs) {
+						foreach (var f in dir.GetFiles ()) {
+							msymFiles.Add (f.Name);
+						}
+					}
+					Assert.AreEqual (has_msym, msymFiles.Contains ("mscorlib.dll.msym"));
+				} 
 			} finally {
 				Directory.Delete (testDir, true);
 			}
