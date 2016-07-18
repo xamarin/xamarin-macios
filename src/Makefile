@@ -197,6 +197,22 @@ $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll.mdb: $(IOS_BUILD_DIR)/reference/Xamar
 	$(Q) cp $< $<.mdb .
 
 #
+# System.Drawing.Primitives special handling as it has dependency on monotouch.dll/Xamarin.iOS.dll
+# hence we cannot built it as part of Mono BCL
+#
+
+$(MONO_PATH)/mcs/class/lib/monotouch/compat_Facades/System.Drawing.Primitives.dll: $(IOS_BUILD_DIR)/compat/monotouch.dll
+	$(call Q_PROF_MCS,ios/compat) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/Facades/System.Drawing.Primitives PROFILE=monotouch LIBRARY_SUBDIR=compat_Facades    EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(IOS_BUILD_DIR)/compat/monotouch.dll)"
+
+$(MONO_PATH)/mcs/class/lib/monotouch/reference_Facades/System.Drawing.Primitives.dll: $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll
+	$(call Q_PROF_MCS,ios/unified) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/Facades/System.Drawing.Primitives PROFILE=monotouch LIBRARY_SUBDIR=reference_Facades EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll)"
+
+$(IOS_BUILD_DIR)/%/Facades/System.Drawing.Primitives.dll: $(MONO_PATH)/mcs/class/lib/monotouch/%_Facades/System.Drawing.Primitives.dll | $(IOS_BUILD_DIR)/compat/Facades $(IOS_BUILD_DIR)/reference/Facades
+	$(Q) cp $< $@
+
+.SECONDARY: $(IOS_BUILD_DIR)/reference/Facades/System.Drawing.Primitives.dll $(IOS_BUILD_DIR)/compat/Facades/System.Drawing.Primitives.dll
+
+#
 # System.Net.Http is special
 #
 # System.Net.Http has a 2-step build process:
@@ -255,7 +271,9 @@ clean-local::
 IOS_TARGETS_DIRS += \
 	$(IOS_BUILD_DIR)                                           \
 	$(IOS_BUILD_DIR)/compat                                    \
+	$(IOS_BUILD_DIR)/compat/Facades                            \
 	$(IOS_BUILD_DIR)/reference                                 \
+	$(IOS_BUILD_DIR)/reference/Facades                         \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin                      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/share/doc/MonoTouch      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS     \
@@ -278,6 +296,7 @@ IOS_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/System.Net.Http.dll.mdb         \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/monotouch.dll                   \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/monotouch.dll.mdb               \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades/System.Drawing.Primitives.dll     \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/OpenTK.dll                      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/OpenTK.dll.mdb                  \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/OpenTK.dll.config               \
@@ -290,6 +309,7 @@ IOS_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/MonoTouch.NUnitLite.dll.mdb     \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll         \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll.mdb     \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Facades/System.Drawing.Primitives.dll     \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/MonoTouch.Dialog-1.dll  \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/MonoTouch.Dialog-1.dll.mdb  \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/MonoTouch.NUnitLite.dll \
@@ -307,6 +327,9 @@ IOS_TARGETS += \
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/%.dll: $(IOS_BUILD_DIR)/compat/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
 	$(Q) install -m 0755 $< $@
 
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades/%.dll: $(IOS_BUILD_DIR)/compat/Facades/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades
+	$(Q) install -m 0755 $< $@
+
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/%.mdb: $(IOS_BUILD_DIR)/compat/%.mdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
 	$(Q) install -m 0644 $< $@
 
@@ -318,6 +341,9 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/share/doc/MonoTouch/%: api-diffs/% | $(IOS_DES
 
 # reference assemblies, this is just for compilation with XS
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/%.dll: $(IOS_BUILD_DIR)/reference/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS
+	$(Q) install -m 0755 $< $@
+
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Facades/%.dll: $(IOS_BUILD_DIR)/reference/Facades/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/Facades
 	$(Q) install -m 0755 $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/%.mdb: $(IOS_BUILD_DIR)/reference/%.mdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS
@@ -497,6 +523,18 @@ $(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/%-64/Xamarin.Mac.
 	$(Q) cp $^ $@
 	$(Q) cp $^.mdb $@.mdb
 
+# System.Drawing.Primitives.dll is special
+
+
+$(MONO_PATH)/mcs/class/lib/xammac/reference_Facades/System.Drawing.Primitives.dll: $(MAC_BUILD_DIR)/mobile-reference/Xamarin.Mac.dll
+	$(call Q_PROF_MCS,xammac) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/Facades/System.Drawing.Primitives PROFILE=xammac LIBRARY_SUBDIR=reference_Facades EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(MAC_BUILD_DIR)/mobile-reference/Xamarin.Mac.dll)"
+
+$(MAC_BUILD_DIR)/mobile/Facades/System.Drawing.Primitives.dll: $(MONO_PATH)/mcs/class/lib/xammac/reference_Facades/System.Drawing.Primitives.dll $(MAC_BUILD_DIR)/mobile/Facades 
+	$(Q) cp $< $@
+
+.SECONDARY: $(MAC_BUILD_DIR)/mobile/Facades/System.Drawing.Primitives.dll
+
+
 $(MAC_BUILD_DIR)/compat/XamMac.CFNetwork.dll: $(MAC_CFNETWORK_SOURCES) $(MAC_BUILD_DIR)/compat/XamMac.dll $(SN_KEY)
 	$(call Q_PROF_PMCS,mac/compat) PMCS_PROFILE=compat-mac $(MAC_BUILD_DIR)/compat/pmcs -sdk:4.5 -out:$@ -target:library -debug \
 		$(MAC_COMMON_DEFINES) \
@@ -514,6 +552,7 @@ MAC_VARIANTS_TARGETS = \
 	$(MAC_BUILD_DIR)/full-64/Xamarin.Mac.dll \
 	$(MAC_BUILD_DIR)/mobile-reference/Xamarin.Mac.dll \
 	$(MAC_BUILD_DIR)/full-reference/Xamarin.Mac.dll \
+	$(MAC_BUILD_DIR)/mobile/Facades/System.Drawing.Primitives.dll \
 	$(MAC_BUILD_DIR)/compat/XamMac.CFNetwork.dll
 
 INSTALL_TARGETS+=install-mac
@@ -521,6 +560,7 @@ ALL_TARGETS+=all-mac
 
 MAC_TARGETS_DIRS += \
 	$(MAC_BUILD_DIR)/mobile \
+	$(MAC_BUILD_DIR)/mobile/Facades \
 	$(MAC_BUILD_DIR)/full \
 	$(MAC_BUILD_DIR)/compat \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile      \
@@ -559,6 +599,7 @@ MAC_TARGETS += \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pmcs/profiles/unified                \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/Version                                  \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/xammac.pc                  \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Facades/System.Drawing.Primitives.dll          \
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMac.dll: $(MAC_BUILD_DIR)/compat/XamMac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono
 	$(Q) install -m 0755 $< $@
@@ -937,6 +978,16 @@ $(TVOS_BUILD_DIR)/reference/MonoTouch.Dialog-1.dll: $(TVOS_BUILD_DIR)/reference/
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		$(MONOTOUCH_DIALOG_SOURCES) $(MONOTOUCH_DIALOG_RESOURCES)
 
+# System.Drawing.Primitives.dll is special
+
+$(MONO_PATH)/mcs/class/lib/monotouch_tv/reference_Facades/System.Drawing.Primitives.dll: $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll
+	$(call Q_PROF_MCS,tvos) $(MAKE) $(if $(V),,-s) -C $(MONO_PATH)/mcs/class/Facades/System.Drawing.Primitives PROFILE=monotouch_tv LIBRARY_SUBDIR=reference_Facades EXTRA_LIB_MCS_FLAGS="-r:$(abspath $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll)"
+
+$(TVOS_BUILD_DIR)/%/Facades/System.Drawing.Primitives.dll: $(MONO_PATH)/mcs/class/lib/monotouch_tv/%_Facades/System.Drawing.Primitives.dll | $(TVOS_BUILD_DIR)/reference/Facades
+	$(Q) cp $< $@
+
+.SECONDARY: $(IOS_BUILD_DIR)/reference/Facades/System.Drawing.Primitives.dll
+
 # System.Net.Http.dll is special. See comment in src/Makefile
 
 TVOS_EXTRA_SYSTEM_NET_HTTP_FILES = \
@@ -993,8 +1044,10 @@ TVOS_TARGETS_DIRS +=                                          \
 	$(TVOS_BUILD_DIR)/tvos                                    \
 	$(TVOS_BUILD_DIR)/tvos-64                                 \
 	$(TVOS_BUILD_DIR)/reference                               \
+	$(TVOS_BUILD_DIR)/reference/Facades                       \
 	$(TVOS_BUILD_DIR)/NativeTypes                             \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS   \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Facades \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/share/doc/Xamarin.TVOS  \
 
 TVOS_TARGETS += \
@@ -1005,6 +1058,7 @@ TVOS_TARGETS += \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll.mdb         \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.TVOS.dll                        \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.TVOS.dll.mdb                    \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Facades/System.Drawing.Primitives.dll          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/System.Net.Http.dll          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/System.Net.Http.dll.mdb      \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll               \
@@ -1017,6 +1071,9 @@ TVOS_TARGETS += \
 
 # reference assemblies, this is just for compilation with XS
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.dll: $(TVOS_BUILD_DIR)/reference/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS
+	$(Q) install -m 0755 $< $@
+
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Facades/%.dll: $(TVOS_BUILD_DIR)/reference/Facades/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/Facades
 	$(Q) install -m 0755 $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.mdb: $(TVOS_BUILD_DIR)/reference/%.mdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS
