@@ -260,7 +260,7 @@ namespace XamCore.Messages {
 
 		[Abstract]
 		[Export ("stickerBrowserView:stickerAtIndex:")]
-		MSSticker GetStickerBrowserView (MSStickerBrowserView stickerBrowserView, nint index);
+		MSSticker GetSticker (MSStickerBrowserView stickerBrowserView, nint index);
 	}
 
 	[iOS (10,0)]
