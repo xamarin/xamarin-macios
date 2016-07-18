@@ -528,8 +528,10 @@ namespace Xamarin.Bundler
 			if (!app.UseDlsym (filename))
 				args.Append ("direct-pinvoke,");
 
-			if (app.EnableMSym)
-				args.Append ("gen-seq-points-file,");
+			if (app.EnableMSym) {
+				var msymdir = Quote (Path.Combine (outputDir, $"{fname}.aotid.msym"));
+				args.Append ($"msym-dir={msymdir},");
+			}
 
 			if (enable_llvm)
 				args.Append ("llvm-path=").Append (MonoTouchDirectory).Append ("/LLVM/bin/,");

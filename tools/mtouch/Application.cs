@@ -1398,6 +1398,16 @@ namespace Xamarin.Bundler {
 			Driver.WriteIfDifferent (manifestPath, root.ToString ());
 		}
 
+		void CopyAssemblyData (Assembly asm, string targetDir)
+		{
+			var mvid = asm.AssemblyDefinition.MainModule.Mvid.ToString ().ToUpperInvariant ();
+			var assemblyDir = Path.Combine (targetDir, mvid);
+			if (!Directory.Exists (assemblyDir))
+				Directory.CreateDirectory (assemblyDir);
+			asm.CopyToDirectory (assemblyDir, reload: false, only_copy: true);
+			asm.CopyMSymToDirectory (targetDir);
+		}
+
 		public void BuildMSymDirectory ()
 		{
 			if (!EnableMSym)
@@ -1409,11 +1419,7 @@ namespace Xamarin.Bundler {
 					Directory.CreateDirectory (target_directory);
 				GenerateMSymManifest (target, target_directory);
 				foreach (var asm in target.Assemblies) {
-					var msym_file = asm.FileName + ".msym";
-					var src = Path.Combine (target.BuildDirectory, msym_file);
-					if (File.Exists (src))
-						UpdateFile (src, Path.Combine (target_directory, msym_file));
-					asm.CopyToDirectory (target_directory, reload: false, only_copy: true);
+					CopyAssemblyData (asm, target_directory);
 				}
 			}
 		}
