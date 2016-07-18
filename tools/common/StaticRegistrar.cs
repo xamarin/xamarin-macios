@@ -2058,12 +2058,13 @@ namespace XamCore.Registrar {
 				sb.Append (' ');
 				sb.Append (split [0]);
 			} else {
+				var indexOffset = method.IsCategoryInstance ? 1 : 0;
 				for (int i = 0; i < split.Length - 1; i++) {
 					sb.Append (' ');
 					sb.Append (split [i]);
 					sb.Append (':');
 					sb.Append ('(');
-					sb.Append (ToObjCParameterType (method.Parameters [i], method.DescriptiveMethodName, exceptions, method.Method));
+					sb.Append (ToObjCParameterType (method.Parameters [i + indexOffset], method.DescriptiveMethodName, exceptions, method.Method));
 					sb.Append (')');
 					sb.AppendFormat ("p{0}", i);
 				}
@@ -2272,11 +2273,16 @@ namespace XamCore.Registrar {
 				var class_name = EncodeNonAsciiCharacters (@class.ExportedName);
 				var is_protocol = @class.IsProtocol;
 				if (@class.IsCategory) {
-					sb.Write ("@interface {0} ({1})", EncodeNonAsciiCharacters (@class.BaseType.ExportedName), @class.CategoryName);
+					var exportedName = EncodeNonAsciiCharacters (@class.BaseType.ExportedName);
+					sb.Write ("@interface {0} ({1})", exportedName, @class.CategoryName);
+					declarations.AppendFormat ("@class {0};\n", exportedName);
 				} else if (is_protocol) {
-					sb.Write ("@protocol ").Write (EncodeNonAsciiCharacters (@class.ProtocolName));
+					var exportedName = EncodeNonAsciiCharacters (@class.ProtocolName);
+					sb.Write ("@protocol ").Write (exportedName);
+					declarations.AppendFormat ("@protocol {0};\n", exportedName);
 				} else {
 					sb.Write ("@interface {0} : {1}", class_name, EncodeNonAsciiCharacters (@class.SuperType.ExportedName));
+					declarations.AppendFormat ("@class {0};\n", class_name);
 				}
 				bool any_protocols = false;
 				ObjCType tp = @class;

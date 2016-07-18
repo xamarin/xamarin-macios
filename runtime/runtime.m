@@ -1359,6 +1359,10 @@ objc_skip_type (const char *type)
 			return ++type;
 		}
 		case _C_UNION_B: {
+			do {
+				type++;
+			} while (*type != '=');
+
 			type ++;
 			do {
 				type = objc_skip_type (type);
@@ -1441,6 +1445,10 @@ xamarin_objc_type_size (const char *type)
 		}
 		case _C_UNION_B: {
 			int size = 0;
+
+			do {
+				type++;
+			} while (*type != '=');
 
 			++type;
 

@@ -47,10 +47,12 @@ using Bindings.Test;
 using RectangleF=CoreGraphics.CGRect;
 using SizeF=CoreGraphics.CGSize;
 using PointF=CoreGraphics.CGPoint;
+using CategoryAttribute=ObjCRuntime.CategoryAttribute;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
+using CategoryAttribute=MonoTouch.ObjCRuntime.CategoryAttribute;
 #endif
 
 using XamarinTests.ObjCRuntime;
@@ -2451,6 +2453,17 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
+#if !XAMCORE_2_0
+		class Bug42454 : NSUrlProtocol
+		{
+			[Export ("initWithRequest:cachedResponse:client:")]
+			public Bug42454 (NSUrlRequest request, NSCachedUrlResponse response, NSUrlProtocolClient client)
+			{
+				throw new NotImplementedException ();
+			}
+		}
+#endif
+
 #if debug_code
 		static void DumpClass (Type type)
 		{
@@ -2489,4 +2502,16 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		static extern IntPtr method_getName (IntPtr method);
 #endif
 	}
+
+#if !__WATCHOS__
+	[Category (typeof (CALayer))]
+	static class CALayerColorsHelpers
+	{
+		[Export ("setBorderUIColor:")]
+		static void BorderUIColor (this CALayer self, UIColor borderColor)
+		{
+			self.BorderColor = borderColor.CGColor;
+		}
+	}
+#endif // !__WATCHOS__
 }
