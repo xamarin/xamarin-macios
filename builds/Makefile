@@ -90,7 +90,11 @@ MAC_ASSEMBLY_NAMES = \
 	System.Xml.Serialization \
 	System.Xml \
 	System \
-	$(TLS_PROVIDER_ASSEMBLY_NAMES)
+	$(TLS_PROVIDER_ASSEMBLY_NAMES) \
+	System.Net.Http \
+	System.Runtime.InteropServices.RuntimeInformation \
+	System.Reflection.Context	\
+	System.Net.Http.WinHttpHandler
 
 FACADE_SUBDIRS_MK = $(MONO_PATH)/mcs/class/Facades/subdirs.make
 # File does not exist before checking out mono
@@ -512,6 +516,10 @@ IOS_ASSEMBLIES = I18N.CJK I18N.MidEast I18N.Other I18N.Rare I18N.West I18N Mono.
 	System.ServiceModel.Internals \
 	System.Numerics System.IO.Compression System.IO.Compression.FileSystem \
 	System.ComponentModel.DataAnnotations System.ComponentModel.Composition \
+	System.Net.Http System.Net.Http.WebRequest System.Net.Http.WinHttpHandler \
+	System.Numerics.Vectors System.Reflection.Context System.Reflection.DispatchProxy \
+	System.Runtime.InteropServices.RuntimeInformation System.Security \
+	System.Xml System.Xml.XPath.XmlDocument \
 	System.Windows System.Xml.Serialization System.Net Mono.Dynamic.Interpreter \
 	Microsoft.CSharp Mono.CSharp $(TLS_PROVIDER_ASSEMBLY_NAMES)
 
