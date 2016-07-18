@@ -104,6 +104,7 @@ namespace XamCore.GameKit {
 		bool Visible { [Bind ("isVisible")] get; }
 	}
 
+	[NoWatch] // only exposed thru GKVoiceChatService (not in 3.0)
 	[NoTV]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -132,6 +133,7 @@ namespace XamCore.GameKit {
 		void ReceivedInvitation (GKVoiceChatService voiceChatService, string participantID, nint callID);
 	}
 
+	[NoWatch] // deprecated in 2.0 (but framework not added before 3.0)
 	[NoTV]
 	[BaseType (typeof (NSObject))]
 	[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0, Message = "Use GKVoiceChat instead")]
@@ -195,6 +197,7 @@ namespace XamCore.GameKit {
 	}
 
 	[NoTV]
+	[NoWatch] // only exposed thru GKSession (not in 3.0)
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -213,6 +216,7 @@ namespace XamCore.GameKit {
 	}
 
 	[NoTV]
+	[NoWatch] // deprecated in 2.0 (but framework not added before 3.0)
 	[BaseType (typeof (NSObject))]
 	[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use MultipeerConnectivity.MCSession instead")]
 	interface GKSession {
@@ -296,7 +300,8 @@ namespace XamCore.GameKit {
 		string [] PeersWithConnectionState (GKPeerConnectionState state);
 	}
 #endif
-	  
+
+	[Watch (3,0)]
 	[iOS (4,2), Mac (10, 8)]
 	[BaseType (typeof (NSObject))]
 	interface GKLeaderboard {
@@ -309,6 +314,7 @@ namespace XamCore.GameKit {
 		[Export ("maxRange", ArgumentSemantic.Assign)]
 		nint MaxRange { get; }
 
+		[NoWatch] // deprecated in 2.0 (but framework not added before 3.0)
 		[NoTV]
 		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use Identifier instead")]
 		[NullAllowed] // by default this property is null
@@ -327,6 +333,7 @@ namespace XamCore.GameKit {
 		[Export ("localPlayerScore", ArgumentSemantic.Retain)]
 		GKScore LocalPlayerScore { get;  }
 
+		[NoWatch] // deprecated in 2.0 (but framework not added before 3.0)
 		[Availability (Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use ctor (GKPlayer [] players) instead")]
 		[Export ("initWithPlayerIDs:")]
 		IntPtr Constructor ([NullAllowed] string [] players);
@@ -336,6 +343,7 @@ namespace XamCore.GameKit {
 		void LoadScores ([NullAllowed] GKScoresLoadedHandler scoresLoadedHandler);
 
 		[NoTV]
+		[NoWatch] // deprecated in 2.0 (but framework not added before 3.0)
 		[Availability (Deprecated = Platform.iOS_6_0 | Platform.Mac_10_9, Message = "Use LoadLeaderboards instead")]
 		[Static]
 		[Export ("loadCategoriesWithCompletionHandler:")]
@@ -343,6 +351,7 @@ namespace XamCore.GameKit {
 		void LoadCategories ([NullAllowed] GKCategoryHandler categoryHandler);
 
 		[NoTV]
+		[NoWatch] // deprecated in 2.0 (but framework not added before 3.0)
 		[Static]
 		[Since (5,0)]
 		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use SetDefaultLeaderboard on GKLocalPlayer instead")]
@@ -387,6 +396,7 @@ namespace XamCore.GameKit {
 	}
 
 #if !MONOMAC
+	[Watch (3,0)]
 	[Since (7,0)]
 	[BaseType (typeof (NSObject))]
 	interface GKLeaderboardSet : NSCoding, NSSecureCoding {
@@ -417,6 +427,7 @@ namespace XamCore.GameKit {
 	}
 #endif
 
+	[Watch (3,0)]
 	[iOS (10,0)][Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	interface GKBasePlayer
@@ -428,6 +439,7 @@ namespace XamCore.GameKit {
 		string DisplayName { get; }
 	}
 
+	[Watch (3,0)]
 	[iOS (10,0)][Mac (10,12)]
 	[BaseType (typeof(GKBasePlayer))]
 	interface GKCloudPlayer
@@ -437,6 +449,7 @@ namespace XamCore.GameKit {
 		void GetCurrentSignedInPlayer (Action<GKCloudPlayer, NSError> handler);
 	}
 
+	[Watch (3,0)]
 	[Since (4,2)]
 	[BaseType (typeof (GKBasePlayer))]
 	// note: NSSecureCoding conformity is undocumented - but since it's a runtime check (on ObjC) we still need it
@@ -448,6 +461,7 @@ namespace XamCore.GameKit {
 		string Alias { get;  }
 
 		[NoTV]
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use GKLocalPlayer.LoadFriendPlayers instead")]
 		[Export ("isFriend")]
 		bool IsFriend { get;  }
@@ -472,19 +486,23 @@ namespace XamCore.GameKit {
 		string DisplayName { get; }
 #endif
 
+		[NoWatch]
 		[Availability (Introduced = Platform.iOS_9_0 | Platform.Mac_10_11)]
 		[Static]
 		[Export ("anonymousGuestPlayerWithIdentifier:")]
 		GKPlayer GetAnonymousGuestPlayer (string guestIdentifier);
 
+		[NoWatch]
 		[Availability (Introduced = Platform.iOS_9_0 | Platform.Mac_10_11)]
 		[Export ("guestIdentifier")]
 		string GuestIdentifier { get; }
 	}
 
+	[Watch (3,0)]
 	[Since (4,1)]
 	[BaseType (typeof (NSObject))]
 	interface GKScore : NSSecureCoding {
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use InitWithLeaderboardIdentifier instead")]
 		[Internal][NullAllowed]
 		[Export ("initWithCategory:")]
@@ -495,6 +513,7 @@ namespace XamCore.GameKit {
 		IntPtr Constructor (string identifier, GKPlayer player);
 
 #if !MONOMAC
+		[NoWatch]
 		[Since (7,0)]
 		[Export ("initWithLeaderboardIdentifier:forPlayer:")]
 		IntPtr Constructor (string identifier, string playerID);
@@ -506,6 +525,7 @@ namespace XamCore.GameKit {
 #endif
 
 #if !XAMCORE_2_0
+		[NoWatch]
 		// [Availability (Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use Player instead")] - Unlike rest of deprecations we are just ripping out due to poor naming
 		[Export ("playerID", ArgumentSemantic.Retain)]
 		string Player { get;  }
@@ -533,6 +553,7 @@ namespace XamCore.GameKit {
 		[Export ("formattedValue", ArgumentSemantic.Copy)]
 		string FormattedValue { get;  }
 
+		[NoWatch]
 		[NoTV]
 		[Availability (Introduced = Platform.iOS_4_1 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use LeaderboardIdentifier instead")]
 		[NullAllowed] // by default this property is null
@@ -544,6 +565,7 @@ namespace XamCore.GameKit {
 		string category { get; set;  }
 #endif
 
+		[NoWatch]
 		[NoTV]
 		[Availability (Introduced = Platform.iOS_4_1 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use ReportScores instead")]
 		[Export ("reportScoreWithCompletionHandler:")]
@@ -652,6 +674,7 @@ namespace XamCore.GameKit {
 		GKLeaderboardTimeScope TimeScope { get; set; }
 	}
 
+	[Watch (3,0)]
 	[Since (4,2)]
 	[MountainLion]
 	[BaseType (typeof (GKPlayer))]
@@ -659,6 +682,7 @@ namespace XamCore.GameKit {
 		[Export ("authenticated")]
 		bool Authenticated { [Bind ("isAuthenticated")] get;  }
 
+		[NoWatch]
 		[NoTV]
 		[Availability (Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use LoadFriendPlayers instead and collect the friends from the invoked callback")]
 		[Export ("friends", ArgumentSemantic.Retain)]
@@ -671,6 +695,7 @@ namespace XamCore.GameKit {
 		bool IsUnderage { get; }
 
 		[NoTV]
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_6_0 | Platform.Mac_10_8, Message = "Set the AuthenticationHandler instead")]
 		[Export ("authenticateWithCompletionHandler:")]
 		[Async]
@@ -686,6 +711,7 @@ namespace XamCore.GameKit {
 		void LoadRecentPlayers ([NullAllowed] Action<GKPlayer[], NSError> completionHandler);
 
 		[NoTV]
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use LoadRecentPlayers(..) instead")]
 		[Export ("loadFriendsWithCompletionHandler:")]
 		[Async]
@@ -695,16 +721,16 @@ namespace XamCore.GameKit {
 		[Notification]
 		NSString AuthenticationDidChangeNotificationName { get; }
 
-#if !MONOMAC
-		[NoWatch]
-		[iOS (6,0)]
 		[NullAllowed] // by default this property is null
 		[Export ("authenticateHandler", ArgumentSemantic.Copy)]
+#if WATCH
+		[Watch (3,0)]
+		Action<NSError> AuthenticateHandler { get; set; }
+#elif !MONOMAC
+		[iOS (6,0)]
 		Action<UIViewController, NSError> AuthenticateHandler { get; set; }
 #else
 		[Mac (10,9)]
-		[NullAllowed] // by default this property is null
-		[Export ("authenticateHandler", ArgumentSemantic.Copy)]
 		Action<NSViewController, NSError> AuthenticateHandler { get; set; }
 #endif
 
@@ -719,6 +745,7 @@ namespace XamCore.GameKit {
 		void SetDefaultLeaderboardIdentifier (string leaderboardIdentifier, [NullAllowed] Action<NSError> completionHandler);
 
 		[NoTV]
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use LoadDefaultLeaderboardIdentifier(..) instead")]
 		[Since (6,0)]
 		[Export ("loadDefaultLeaderboardCategoryIDWithCompletionHandler:")]
@@ -726,6 +753,7 @@ namespace XamCore.GameKit {
 		void LoadDefaultLeaderboardCategoryID ([NullAllowed] Action<string, NSError> completionHandler);
 
 		[NoTV]
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use SetDefaultLeaderboardIdentifier(..) instead")]
 		[iOS (6,0), Mac (10,8)]
 		[Export ("setDefaultLeaderboardCategoryID:completionHandler:")]
@@ -995,6 +1023,7 @@ namespace XamCore.GameKit {
 		void SetMuteStatus (GKPlayer player, bool isMuted);
 	}
 
+	[Watch (3,0)]
 	[BaseType (typeof (NSObject))]
 	interface GKMatchRequest {
 		[Export ("minPlayers", ArgumentSemantic.Assign)]
@@ -1010,6 +1039,7 @@ namespace XamCore.GameKit {
 		uint PlayerAttributes { get; set;  } /* uint32_t */
 
 		[NoTV]
+		[NoWatch]
 		[NullAllowed] // by default this property is null
 		[Export ("playersToInvite", ArgumentSemantic.Retain)]
 		string [] PlayersToInvite { get; set;  }
@@ -1026,6 +1056,7 @@ namespace XamCore.GameKit {
 #endif
 
 		[NoTV]
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use RecipientResponseHandler instead")]
 		[Since (6,0)]
 		[NullAllowed] // by default this property is null
