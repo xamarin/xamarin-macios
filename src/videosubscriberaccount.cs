@@ -20,22 +20,23 @@ namespace XamCore.VideoSubscriberAccount {
 	[Unavailable (PlatformName.WatchOS)]
 	[ErrorDomain ("VSErrorDomain")]
 	public enum VSErrorCode : nint {
-		AccessNotGranted,
-		UnsupportedProvider,
-		UserCancelled,
-		ServiceTemporarilyUnavailable,
-		ProviderRejected
+		AccessNotGranted = 0,
+		UnsupportedProvider = 1,
+		UserCancelled = 2,
+		ServiceTemporarilyUnavailable = 3,
+		ProviderRejected = 4,
+		InvalidVerificationToken = 5
 	}
 
 	[Native]
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Introduced (PlatformName.TvOS, 10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
-	public enum VSAccountAccessStatus : nuint {
-		NotDetermined,
-		Restricted,
-		Denied,
-		Granted
+	public enum VSAccountAccessStatus : nint {
+		NotDetermined = 0,
+		Restricted = 1,
+		Denied = 2,
+		Granted = 3
 	}
 
 	interface IVSAccountManagerDelegate { }
@@ -117,6 +118,9 @@ namespace XamCore.VideoSubscriberAccount {
 		[NullAllowed, Export ("authenticationExpirationDate", ArgumentSemantic.Copy)]
 		NSDate AuthenticationExpirationDate { get; }
 
+		[NullAllowed, Export ("verificationData", ArgumentSemantic.Copy)]
+		NSData VerificationData { get; }
+
 		[NullAllowed, Export ("SAMLAttributeQueryResponse")]
 		string SamlAttributeQueryResponse { get; }
 	}
@@ -142,8 +146,14 @@ namespace XamCore.VideoSubscriberAccount {
 		[Export ("includeAuthenticationExpirationDate")]
 		bool IncludeAuthenticationExpirationDate { get; set; }
 
+		[NullAllowed, Export ("localizedVideoTitle")]
+		string LocalizedVideoTitle { get; set; }
+
 		[Export ("interruptionAllowed")]
 		bool InterruptionAllowed { [Bind ("isInterruptionAllowed")] get; set; }
+
+		[Export ("forceAuthentication")]
+		bool ForceAuthentication { get; set; }
 
 		[Export ("attributeNames", ArgumentSemantic.Copy)]
 		string [] AttributeNames { get; set; }
