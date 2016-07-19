@@ -49,6 +49,8 @@ namespace XamCore.Intents {
 		Received
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INCancelWorkoutIntentResponseCode : nint {
 		Unspecified = 0,
@@ -103,6 +105,8 @@ namespace XamCore.Intents {
 		ThirdRow
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[Native]
 	public enum INConditionalOperator : nint {
 		All = 0,
@@ -110,6 +114,8 @@ namespace XamCore.Intents {
 		None
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INEndWorkoutIntentResponseCode : nint {
 		Unspecified = 0,
@@ -147,6 +153,8 @@ namespace XamCore.Intents {
 		Failure
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INGetRideStatusIntentResponseCode : nint {
 		Unspecified = 0,
@@ -169,11 +177,13 @@ namespace XamCore.Intents {
 		Unspecified
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[Native]
 	[ErrorDomain ("INIntentErrorDomain")]
 	public enum INIntentErrorCode : nint {
 		InteractionOperationNotSupported = 1900,
-		AddingInteraction = 1901,
+		DonatingInteraction = 1901,
 		DeletingAllInteractions = 1902,
 		DeletingInteractionWithIdentifiers = 1903,
 		DeletingInteractionWithGroupIdentifier = 1904,
@@ -181,7 +191,8 @@ namespace XamCore.Intents {
 		RestrictedIntentsNotSupportedByExtension = 2002,
 		NoHandlerProvidedForIntent = 2003,
 		InvalidIntentName = 2004,
-		RequestTimedOut = 3001
+		RequestTimedOut = 3001,
+		InvalidUserVocabularyFileLocation = 4000
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -206,6 +217,8 @@ namespace XamCore.Intents {
 		Incoming
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INListRideOptionsIntentResponseCode : nint {
 		Unspecified = 0,
@@ -238,6 +251,8 @@ namespace XamCore.Intents {
 		Unflagged = (1 << 3)
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INPauseWorkoutIntentResponseCode : nint {
 		Unspecified = 0,
@@ -248,6 +263,8 @@ namespace XamCore.Intents {
 		FailureNoMatchingWorkout
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INPaymentMethodType : nint {
 		Unknown = 0,
@@ -330,6 +347,8 @@ namespace XamCore.Intents {
 		Highest
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INRequestPaymentIntentResponseCode : nint {
 		Unspecified = 0,
@@ -340,6 +359,8 @@ namespace XamCore.Intents {
 		FailureRequiringAppLaunch
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INRequestRideIntentResponseCode : nint {
 		Unspecified = 0,
@@ -363,6 +384,8 @@ namespace XamCore.Intents {
 		Denied
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INResumeWorkoutIntentResponseCode : nint {
 		Unspecified = 0,
@@ -384,6 +407,8 @@ namespace XamCore.Intents {
 		Pickup
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INSaveProfileInCarIntentResponseCode : nint {
 		Unspecified = 0,
@@ -394,6 +419,8 @@ namespace XamCore.Intents {
 		FailureRequiringAppLaunch
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[Native]
 	public enum INSearchCallHistoryIntentResponseCode : nint {
 		Unspecified = 0,
@@ -403,6 +430,8 @@ namespace XamCore.Intents {
 		FailureRequiringAppLaunch
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[Native]
 	public enum INSearchForMessagesIntentResponseCode : nint {
 		Unspecified = 0,
@@ -414,6 +443,8 @@ namespace XamCore.Intents {
 		FailureMessageServiceNotAvailable
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INSearchForPhotosIntentResponseCode : nint {
 		Unspecified = 0,
@@ -423,6 +454,8 @@ namespace XamCore.Intents {
 		FailureRequiringAppLaunch
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[Native]
 	public enum INSendMessageIntentResponseCode : nint {
 		Unspecified = 0,
@@ -433,6 +466,8 @@ namespace XamCore.Intents {
 		FailureRequiringAppLaunch
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INSendPaymentIntentResponseCode : nint {
 		Unspecified = 0,
@@ -443,6 +478,8 @@ namespace XamCore.Intents {
 		FailureRequiringAppLaunch
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INSetAudioSourceInCarIntentResponseCode : nint {
 		Unspecified = 0,
@@ -453,6 +490,8 @@ namespace XamCore.Intents {
 		FailureRequiringAppLaunch
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INSetClimateSettingsInCarIntentResponseCode : nint {
 		Unspecified = 0,
@@ -463,6 +502,8 @@ namespace XamCore.Intents {
 		FailureRequiringAppLaunch
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INSetDefrosterSettingsInCarIntentResponseCode : nint {
 		Unspecified = 0,
@@ -473,6 +514,8 @@ namespace XamCore.Intents {
 		FailureRequiringAppLaunch
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[Native]
 	public enum INSetMessageAttributeIntentResponseCode : nint {
 		Unspecified = 0,
@@ -485,6 +528,8 @@ namespace XamCore.Intents {
 		FailureMessageAttributeNotSet
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INSetProfileInCarIntentResponseCode : nint {
 		Unspecified = 0,
@@ -495,6 +540,8 @@ namespace XamCore.Intents {
 		FailureRequiringAppLaunch
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INSetRadioStationIntentResponseCode : nint {
 		Unspecified = 0,
@@ -506,6 +553,8 @@ namespace XamCore.Intents {
 		FailureNotSubscribed
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INSetSeatSettingsInCarIntentResponseCode : nint {
 		Unspecified = 0,
@@ -516,6 +565,8 @@ namespace XamCore.Intents {
 		FailureRequiringAppLaunch
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INSiriAuthorizationStatus : nint {
 		NotDetermined = 0,
@@ -524,6 +575,8 @@ namespace XamCore.Intents {
 		Authorized
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[Native]
 	public enum INStartAudioCallIntentResponseCode : nint {
 		Unspecified = 0,
@@ -533,6 +586,8 @@ namespace XamCore.Intents {
 		FailureRequiringAppLaunch
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INStartPhotoPlaybackIntentResponseCode : nint {
 		Unspecified = 0,
@@ -542,6 +597,8 @@ namespace XamCore.Intents {
 		FailureRequiringAppLaunch
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[Native]
 	public enum INStartVideoCallIntentResponseCode : nint {
 		Unspecified = 0,
@@ -551,6 +608,8 @@ namespace XamCore.Intents {
 		FailureRequiringAppLaunch
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INStartWorkoutIntentResponseCode : nint {
 		Unspecified = 0,
@@ -562,6 +621,8 @@ namespace XamCore.Intents {
 		FailureNoMatchingWorkout
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INVocabularyStringType : nint {
 		ContactName = 1,
@@ -579,7 +640,7 @@ namespace XamCore.Intents {
 		Meter,
 		Foot,
 		Mile,
-		Yards,
+		Yard,
 		Second,
 		Minute,
 		Hour,
@@ -594,62 +655,119 @@ namespace XamCore.Intents {
 		Indoor
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[Native]
-	public enum INPersonHandleType : nint
-	{
+	public enum INPersonHandleType : nint {
 		Unknown = 0,
 		EmailAddress,
 		PhoneNumber
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
+	[Native]
+	public enum INRestaurantMarketingPreferencesContactMethod : nint {
+		Undefined = 0,
+		Email
+	}
+
+	[Introduced (PlatformName.iOS, 10, 0)]
 	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
-	public enum INIntentIdentifier
-	{
+	public enum INIntentIdentifier {
 		[Field ("INStartAudioCallIntentIdentifier")]
 		StartAudioCall,
+
 		[Field ("INStartVideoCallIntentIdentifier")]
 		StartVideoCall,
+
 		[Field ("INSearchCallHistoryIntentIdentifier")]
 		SearchCallHistory,
+
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INSetAudioSourceInCarIntentIdentifier")]
 		SetAudioSourceInCar,
+
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INSetClimateSettingsInCarIntentIdentifier")]
 		SetClimateSettingsInCar,
+
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INSetDefrosterSettingsInCarIntentIdentifier")]
 		SetDefrosterSettingsInCar,
+
+		[Unavailable (PlatformName.MacOSX)]
+		[Field ("INSetSeatSettingsInCarIntentIdentifier")]
+		SetSeatSettingsInCar,
+
+		[Unavailable (PlatformName.MacOSX)]
+		[Field ("INSetProfileInCarIntentIdentifier")]
+		SetProfileInCar,
+
+		[Unavailable (PlatformName.MacOSX)]
+		[Field ("INSaveProfileInCarIntentIdentifier")]
+		SaveProfileInCar,
+
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INStartWorkoutIntentIdentifier")]
 		StartWorkout,
+
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INPauseWorkoutIntentIdentifier")]
 		PauseWorkout,
+
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INEndWorkoutIntentIdentifier")]
 		EndWorkout,
+
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INCancelWorkoutIntentIdentifier")]
 		CancelWorkout,
+
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INResumeWorkoutIntentIdentifier")]
 		ResumeWorkout,
+
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INSetRadioStationIntentIdentifier")]
 		SetRadioStation,
+
 		[Field ("INSendMessageIntentIdentifier")]
 		SendMessage,
+
 		[Field ("INSearchForMessagesIntentIdentifier")]
 		SearchForMessages,
+
 		[Field ("INSetMessageAttributeIntentIdentifier")]
 		SetMessageAttribute,
+
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INSendPaymentIntentIdentifier")]
 		SendPayment,
+
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INRequestPaymentIntentIdentifier")]
 		RequestPayment,
+
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INSearchForPhotosIntentIdentifier")]
 		SearchForPhotos,
+
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INStartPhotoPlaybackIntentIdentifier")]
 		StartPhotoPlayback,
+
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INListRideOptionsIntentIdentifier")]
 		ListRideOptions,
+
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INRequestRideIntentIdentifier")]
 		RequestRide,
+
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INGetRideStatusIntentIdentifier")]
-		GetRideStatus,
+		GetRideStatus
 	}
 
 	// End of enums
@@ -673,6 +791,9 @@ namespace XamCore.Intents {
 
 		[Export ("restaurant", ArgumentSemantic.Copy)]
 		INRestaurant Restaurant { get; set; }
+
+		[NullAllowed, Export ("restaurantMarketingPreferences", ArgumentSemantic.Copy)]
+		INRestaurantMarketingPreferences RestaurantMarketingPreferences { get; set; }
 
 		[Export ("bookingDate", ArgumentSemantic.Copy)]
 		NSDate BookingDate { get; set; }
@@ -737,7 +858,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INBooleanResolutionResult {
@@ -886,7 +1007,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INCurrencyAmount : NSCopying, NSSecureCoding {
@@ -903,7 +1024,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INCurrencyAmountResolutionResult {
@@ -926,7 +1047,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INDateComponentsRange : NSCopying, NSSecureCoding {
@@ -943,7 +1064,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INDateComponentsRangeResolutionResult {
@@ -1002,6 +1123,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Protocol]
 	interface INPhotosDomainHandling : INSearchForPhotosIntentHandling, INStartPhotoPlaybackIntentHandling {
 	}
@@ -1013,7 +1135,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INDoubleResolutionResult {
@@ -1131,6 +1253,9 @@ namespace XamCore.Intents {
 
 		[Export ("providerImage", ArgumentSemantic.Copy)]
 		INImage ProviderImage { get; set; }
+
+		[NullAllowed, Export ("restaurantMarketingPreferences", ArgumentSemantic.Copy)]
+		INRestaurantMarketingPreferences RestaurantMarketingPreferences { get; set; }
 
 		[Export ("initWithDefaultPartySize:defaultBookingDate:code:userActivity:")]
 		[DesignatedInitializer]
@@ -1356,7 +1481,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INImage : NSCopying, NSSecureCoding {
@@ -1375,7 +1500,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INIntegerResolutionResult {
@@ -1390,7 +1515,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[BaseType (typeof (NSObject))]
 	interface INIntent : NSCopying, NSSecureCoding {
 
@@ -1404,7 +1529,7 @@ namespace XamCore.Intents {
 	interface INIntentResolutionResult<ObjectType> : INIntentResolutionResult { }
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INIntentResolutionResult {
@@ -1423,7 +1548,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[BaseType (typeof (NSObject))]
 	interface INIntentResponse : NSCopying, NSSecureCoding {
 
@@ -1432,7 +1557,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INInteraction : NSSecureCoding, NSCopying {
@@ -1544,7 +1669,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INMessage : NSCopying, NSSecureCoding {
@@ -1644,7 +1769,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INPaymentMethod : NSCopying, NSSecureCoding {
@@ -1659,12 +1784,15 @@ namespace XamCore.Intents {
 		[NullAllowed, Export ("name")]
 		string Name { get; }
 
+		[NullAllowed, Export ("identificationHint")]
+		string IdentificationHint { get; }
+
 		[NullAllowed, Export ("icon", ArgumentSemantic.Copy)]
 		INImage Icon { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INPaymentRecord : NSCopying, NSSecureCoding {
@@ -1693,7 +1821,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INPerson : NSCopying, NSSecureCoding, INSpeakable {
@@ -1701,10 +1829,6 @@ namespace XamCore.Intents {
 		[Export ("initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string contactIdentifier, [NullAllowed] string customIdentifier);
-
-		//[Deprecated (PlatformName.iOS, 10, 0, message: "Use personHandle instead")]
-		//[NullAllowed, Export ("handle")]
-		//string Handle { get; }
 
 		[NullAllowed, Export ("personHandle", ArgumentSemantic.Copy)]
 		INPersonHandle PersonHandle { get; }
@@ -1737,7 +1861,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INPersonHandle : NSCopying, NSSecureCoding {
@@ -1754,7 +1878,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INPersonResolutionResult {
@@ -1792,7 +1916,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INPlacemarkResolutionResult {
@@ -1815,7 +1939,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (NSObject))]
 	interface INPreferences {
 
@@ -1834,7 +1958,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INPriceRange : NSCopying, NSSecureCoding {
@@ -2109,6 +2233,29 @@ namespace XamCore.Intents {
 
 		[Export ("phoneNumberEditable")]
 		bool PhoneNumberEditable { get; set; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface INRestaurantMarketingPreferences : NSSecureCoding, NSCopying {
+
+		[Export ("initWithContactMethod:guestHasOptedInToMarketing:localizedDescriptionForMarketingEnabled:localizedDescriptionForMarketingNotEnabled:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (INRestaurantMarketingPreferencesContactMethod contactMethod, bool guestHasOptedInToMarketing, string localizedDescriptionForMarketingEnabled, [NullAllowed] string localizedDescriptionForMarketingNotEnabled);
+
+		[Export ("contactMethod")]
+		INRestaurantMarketingPreferencesContactMethod ContactMethod { get; }
+
+		[Export ("guestHasOptedInToMarketing")]
+		bool GuestHasOptedInToMarketing { get; set; }
+
+		[Export ("localizedDescriptionForMarketingEnabled")]
+		string LocalizedDescriptionForMarketingEnabled { get; }
+
+		[NullAllowed, Export ("localizedDescriptionForMarketingNotEnabled")]
+		string LocalizedDescriptionForMarketingNotEnabled { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2422,6 +2569,9 @@ namespace XamCore.Intents {
 		[NullAllowed, Export ("estimatedDropOffDate", ArgumentSemantic.Copy)]
 		NSDate EstimatedDropOffDate { get; set; }
 
+		[NullAllowed, Export ("estimatedPickupEndDate", ArgumentSemantic.Copy)]
+		NSDate EstimatedPickupEndDate { get; set; }
+
 		[NullAllowed, Export ("pickupLocation", ArgumentSemantic.Copy)]
 		CLPlacemark PickupLocation { get; set; }
 
@@ -2680,7 +2830,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (INIntent))]
 	interface INSearchForPhotosIntent {
 
@@ -2717,7 +2867,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[Protocol]
 	interface INSearchForPhotosIntentHandling {
 
@@ -2751,7 +2901,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INSearchForPhotosIntentResponse {
@@ -3338,7 +3488,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[Protocol]
 	interface INSpeakable {
 
@@ -3356,7 +3506,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INSpeakableString : INSpeakable {
@@ -3367,7 +3517,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INSpeakableStringResolutionResult {
@@ -3429,7 +3579,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (INIntent))]
 	interface INStartPhotoPlaybackIntent {
 
@@ -3466,7 +3616,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[Protocol]
 	interface INStartPhotoPlaybackIntentHandling {
 
@@ -3500,7 +3650,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INStartPhotoPlaybackIntentResponse {
@@ -3627,7 +3777,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INStringResolutionResult {
 
@@ -3645,7 +3795,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INTemperature : NSCopying, NSSecureCoding {
@@ -3662,7 +3812,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INTemperatureResolutionResult {
 
@@ -3703,7 +3853,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INVocabulary {
@@ -3750,7 +3900,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[Category]
 	[BaseType (typeof (NSUserActivity))]
 	interface NSUserActivity_IntentsAdditions {
