@@ -33,7 +33,9 @@ namespace XamCore.UserNotifications {
 		AttachmentInvalidFileSize,
 		AttachmentNotInDataStore,
 		AttachmentMoveIntoDataStoreFailed,
-		AttachmentCorrupt
+		AttachmentCorrupt,
+		NotificationInvalidNoDate = 1400,
+		NotificationInvalidNoContent
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -282,8 +284,8 @@ namespace XamCore.UserNotifications {
 		UNNotificationCategoryOptions Options { get; }
 
 		[Static]
-		[Export ("categoryWithIdentifier:actions:minimalActions:intentIdentifiers:options:")]
-		UNNotificationCategory FromIdentifier (string identifier, UNNotificationAction [] actions, UNNotificationAction [] minimalActions, string [] intentIdentifiers, UNNotificationCategoryOptions options);
+		[Export ("categoryWithIdentifier:actions:intentIdentifiers:options:")]
+		UNNotificationCategory FromIdentifier (string identifier, UNNotificationAction [] actions, string [] intentIdentifiers, UNNotificationCategoryOptions options);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -603,6 +605,9 @@ namespace XamCore.UserNotifications {
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		IUNUserNotificationCenterDelegate Delegate { get; set; }
+
+		[Export ("supportsContentExtensions")]
+		bool SupportsContentExtensions { get; }
 
 		[Static]
 		[Export ("currentNotificationCenter")]
