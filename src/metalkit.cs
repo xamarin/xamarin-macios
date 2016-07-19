@@ -11,13 +11,6 @@ using OpenTK;
 
 namespace XamCore.MetalKit {
 
-	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
-	[Native]
-	public enum MTKDisplayGamut : nuint {
-		Srgb = 0,
-		DisplayP3 = 1
-	}
-
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[Static]
 	interface MTKModel {
@@ -278,11 +271,11 @@ namespace XamCore.MetalKit {
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		[Export ("newTextureWithName:scaleFactor:displayGamut:bundle:options:completionHandler:")]
-		void FromName (string name, nfloat scaleFactor, MTKDisplayGamut displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary options, MTKTextureLoaderCallback completionHandler);
+		void FromName (string name, nfloat scaleFactor, CGColorSpace displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary options, MTKTextureLoaderCallback completionHandler);
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		[Wrap ("FromName (name, scaleFactor, displayGamut, bundle, options == null ? null : options.Dictionary, completionHandler)")]
-		void FromName (string name, nfloat scaleFactor, MTKDisplayGamut displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderCallback completionHandler);
+		void FromName (string name, nfloat scaleFactor, CGColorSpace displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderCallback completionHandler);
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		[Export ("newTexturesWithNames:scaleFactor:bundle:options:completionHandler:")]
@@ -294,20 +287,20 @@ namespace XamCore.MetalKit {
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		[Export ("newTexturesWithNames:scaleFactor:displayGamut:bundle:options:completionHandler:")]
-		void FromNames (string[] names, nfloat scaleFactor, MTKDisplayGamut displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary options, MTKTextureLoaderArrayCallback completionHandler);
+		void FromNames (string[] names, nfloat scaleFactor, CGColorSpace displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary options, MTKTextureLoaderArrayCallback completionHandler);
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		[Wrap ("FromNames (names, scaleFactor, displayGamut, bundle, options == null ? null : options.Dictionary, completionHandler)")]
-		void FromNames (string[] names, nfloat scaleFactor, MTKDisplayGamut displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderArrayCallback completionHandler);
+		void FromNames (string[] names, nfloat scaleFactor, CGColorSpace displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderArrayCallback completionHandler);
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		[Export ("newTextureWithName:scaleFactor:displayGamut:bundle:options:error:")]
 		[return: NullAllowed]
-		IMTLTexture FromName (string name, nfloat scaleFactor, MTKDisplayGamut displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary options, out NSError error);
+		IMTLTexture FromName (string name, nfloat scaleFactor, CGColorSpace displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary options, out NSError error);
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		[Wrap ("FromName (name, scaleFactor, displayGamut, bundle, options == null ? null : options.Dictionary, out error)")]
-		void FromName (string name, nfloat scaleFactor, MTKDisplayGamut displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] MTKTextureLoaderOptions options, out NSError error);
+		void FromName (string name, nfloat scaleFactor, CGColorSpace displayGamut, [NullAllowed] NSBundle bundle, [NullAllowed] MTKTextureLoaderOptions options, out NSError error);
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		[Export ("newTextureWithMDLTexture:options:completionHandler:")]
