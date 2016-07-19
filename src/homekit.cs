@@ -1804,7 +1804,7 @@ namespace XamCore.HomeKit {
 		void DidTakeSnapshot (HMCameraSnapshotControl cameraSnapshotControl, [NullAllowed] HMCameraSnapshot snapshot, [NullAllowed] NSError error);
 	}
 
-	[iOS (10,0)]
+	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[BaseType (typeof(HMCameraSource))]
 	public interface HMCameraSnapshot
 	{
