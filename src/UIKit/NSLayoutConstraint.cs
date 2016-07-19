@@ -25,13 +25,13 @@ namespace XamCore.UIKit {
 		[iOS (10, 0)]
 		public NSLayoutAnchor<AnchorType> FirstAnchor<AnchorType> () where AnchorType : NSObject
 		{
-			return  Runtime.GetNSObject<NSLayoutAnchor<AnchorType>> (_FirstAnchor ());
+			return Runtime.GetNSObject<NSLayoutAnchor<AnchorType>> (_FirstAnchor ());
 		}
 
 		[iOS (10, 0)]
 		public NSLayoutAnchor<AnchorType> SecondAnchor<AnchorType> () where AnchorType : NSObject
 		{
-			return  Runtime.GetNSObject<NSLayoutAnchor<AnchorType>> (_SecondAnchor ());
+			return Runtime.GetNSObject<NSLayoutAnchor<AnchorType>> (_SecondAnchor ());
 		}
 	}
 }
