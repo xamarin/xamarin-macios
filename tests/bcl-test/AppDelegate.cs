@@ -14,6 +14,16 @@ using NUnit.Framework.Internal.Filters;
 
 #if !__WATCHOS__
 
+public static partial class TestLoader
+{
+	static partial void AddTestAssembliesImpl (BaseTouchRunner runner);
+
+	public static void AddTestAssemblies (BaseTouchRunner runner)
+	{
+		AddTestAssembliesImpl (runner);
+	}
+}
+
 namespace BCL.Tests
 {
 	// The UIApplicationDelegate for the application. This class is responsible for launching the 
@@ -42,6 +52,7 @@ namespace BCL.Tests
 
 			// register every tests included in the main application/assembly
 			runner.Add (System.Reflection.Assembly.GetExecutingAssembly ());
+			TestLoader.AddTestAssemblies (runner);
 
 			window.RootViewController = new UINavigationController (runner.GetViewController ());
 			
