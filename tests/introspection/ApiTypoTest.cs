@@ -328,6 +328,7 @@ namespace Introspection
 			"Unprepare",
 			"Unproject",
 			"Uterance",
+			"Unentitled",
 			"Utf",
 			"Uti",
 			"Varispeed",
