@@ -13,25 +13,10 @@ using XamCore.CoreFoundation;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
-// FIXME: This Api is supposed to be available on macOS 10.12
-// per apple headers but it uses types that are only available
-// in iOS filled radar://26786260 with apple
-// https://trello.com/c/afWXDZ3A
-#if !MONOMAC || XAMCORE_2_0
+#if XAMCORE_2_0
 namespace XamCore.CallKit {
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
-	[Native]
-	public enum CXAuthorizationStatus : nint {
-		NotDetermined = 0,
-		Restricted = 1,
-		Denied = 2,
-		Authorized = 3
-	}
-
-	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[Native]
 	public enum CXCallDirectoryEnabledStatus : nint {
 		Unknown = 0,
@@ -40,7 +25,6 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[ErrorDomain ("CXErrorDomain")]
 	[Native]
 	public enum CXErrorCode : nint {
@@ -48,24 +32,22 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[ErrorDomain ("CXErrorDomainIncomingCall")]
 	[Native]
 	public enum CXErrorCodeIncomingCallError : nint {
 		Unknown = 0,
-		NotAuthorized = 1,
+		Unentitled = 1,
 		CallUuidAlreadyExists = 2,
 		FilteredByDoNotDisturb = 3,
 		FilteredByBlockList = 4
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[ErrorDomain ("CXErrorDomainRequestTransaction")]
 	[Native]
 	public enum CXErrorCodeRequestTransactionError : nint {
 		Unknown = 0,
-		NotAuthorized = 1,
+		Unentitled = 1,
 		UnknownCallProvider = 2,
 		EmptyTransaction = 3,
 		UnknownCallUuid = 4,
@@ -75,22 +57,19 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[ErrorDomain ("CXErrorDomainCallDirectoryManager")]
 	[Native]
 	public enum CXErrorCodeCallDirectoryManagerError : nint {
 		Unknown = 0,
 		NoExtensionFound = 1,
-		NoAttachmentFound = 2,
-		LoadingInterrupted = 3,
-		EntriesOutOfOrder = 4,
-		DuplicateEntries = 5,
-		MaximumEntriesExceeded = 6,
-		ExtensionDisabled = 7
+		LoadingInterrupted = 2,
+		EntriesOutOfOrder = 3,
+		DuplicateEntries = 4,
+		MaximumEntriesExceeded = 5,
+		ExtensionDisabled = 6
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[Native]
 	public enum CXPlayDtmfCallActionType : nint {
 		SingleTone = 1,
@@ -99,7 +78,6 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[Native]
 	public enum CXCallEndedReason : nint {
 		Failed = 1,
@@ -108,7 +86,6 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[Native]
 	public enum CXHandleType : nint {
 		Generic = 1,
@@ -117,7 +94,6 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CXHandle : NSCopying, NSSecureCoding {
@@ -137,7 +113,6 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[BaseType (typeof (NSObject))]
 	interface CXAction : NSCopying, NSSecureCoding {
 
@@ -158,7 +133,6 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[BaseType (typeof (CXCallAction))]
 	[DisableDefaultCtor]
 	interface CXAnswerCallAction {
@@ -172,7 +146,6 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CXCall {
@@ -197,7 +170,6 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[BaseType (typeof (CXAction))]
 	[DisableDefaultCtor]
 	interface CXCallAction {
@@ -211,7 +183,6 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[BaseType (typeof (NSObject))]
 	interface CXCallController {
 
@@ -228,7 +199,6 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[BaseType (typeof (NSExtensionContext))]
 	interface CXCallDirectoryExtensionContext {
 
@@ -244,7 +214,6 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[BaseType (typeof (NSObject))]
 	interface CXCallDirectoryManager {
 
@@ -262,7 +231,6 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[BaseType (typeof (NSObject))]
 	interface CXCallDirectoryProvider {
 
@@ -273,7 +241,6 @@ namespace XamCore.CallKit {
 	interface ICXCallObserverDelegate { }
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface CXCallObserverDelegate {
@@ -284,7 +251,6 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[BaseType (typeof (NSObject))]
 	interface CXCallObserver {
 
@@ -296,7 +262,6 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[BaseType (typeof (NSObject))]
 	interface CXCallUpdate : NSCopying {
 
@@ -317,10 +282,12 @@ namespace XamCore.CallKit {
 
 		[Export ("supportsDTMF", ArgumentSemantic.Assign)]
 		bool SupportsDtmf { get; set; }
+
+		[Export ("hasVideo")]
+		bool HasVideo { get; set; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CXCallAction))]
 	interface CXEndCallAction {
@@ -334,7 +301,6 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CXCallAction), Name = "CXPlayDTMFCallAction")]
 	interface CXPlayDtmfCallAction {
@@ -354,7 +320,6 @@ namespace XamCore.CallKit {
 
 	[Protocol, Model]
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[BaseType (typeof (NSObject))]
 	interface CXProviderDelegate {
 
@@ -392,29 +357,17 @@ namespace XamCore.CallKit {
 		[Export ("provider:timedOutPerformingAction:")]
 		void TimedOutPerformingAction (CXProvider provider, CXAction action);
 
-		// FIXME: Header says this is available on macOS 10.12 but AVAudioSession is iOS only radar reported
-		// https://trello.com/c/afWXDZ3A
-#if !MONOMAC
 		[Export ("provider:didActivateAudioSession:")]
 		void DidActivateAudioSession (CXProvider provider, AVAudioSession audioSession);
 
 		[Export ("provider:didDeactivateAudioSession:")]
 		void DidDeactivateAudioSession (CXProvider provider, AVAudioSession audioSession);
-#endif
-
-		[Export ("provider:didChangeAuthorizationStatus:")]
-		void DidChangeAuthorizationStatus (CXProvider provider, CXAuthorizationStatus authorizationStatus);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CXProvider {
-
-		[Static]
-		[Export ("authorizationStatus")]
-		CXAuthorizationStatus AuthorizationStatus { get; }
 
 		[Export ("initWithConfiguration:")]
 		[DesignatedInitializer]
@@ -422,9 +375,6 @@ namespace XamCore.CallKit {
 
 		[Export ("setDelegate:queue:")]
 		void SetDelegate ([NullAllowed] ICXProviderDelegate aDelegate, [NullAllowed] DispatchQueue queue);
-
-		[Export ("requestAuthorization")]
-		void RequestAuthorization ();
 
 		[Async]
 		[Export ("reportNewIncomingCallWithUUID:update:completion:")]
@@ -456,7 +406,6 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CXProviderConfiguration : NSCopying {
@@ -488,7 +437,6 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[BaseType (typeof (CXCallAction))]
 	[DisableDefaultCtor]
 	interface CXSetGroupCallAction {
@@ -502,7 +450,6 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CXCallAction))]
 	interface CXSetHeldCallAction {
@@ -516,7 +463,6 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[BaseType (typeof (CXCallAction))]
 	[DisableDefaultCtor]
 	interface CXSetMutedCallAction {
@@ -530,7 +476,6 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CXCallAction))]
 	interface CXStartCallAction {
@@ -550,7 +495,6 @@ namespace XamCore.CallKit {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12)]
 	[BaseType (typeof (NSObject))]
 	interface CXTransaction : NSCopying, NSSecureCoding {
 
@@ -567,4 +511,4 @@ namespace XamCore.CallKit {
 		void AddAction (CXAction action);
 	}
 }
-#endif // !MONOMAC || XAMCORE_2_0
+#endif // XAMCORE_2_0

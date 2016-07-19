@@ -11,7 +11,7 @@ using System;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
-#if !MONOMAC || XAMCORE_2_0
+#if XAMCORE_2_0
 namespace XamCore.CallKit {
 	public partial class CXProvider {
 
@@ -21,4 +21,4 @@ namespace XamCore.CallKit {
 		}
 	}
 }
-#endif // !MONOMAC || XAMCORE_2_0
+#endif // XAMCORE_2_0
