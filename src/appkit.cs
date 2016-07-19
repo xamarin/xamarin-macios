@@ -2125,6 +2125,10 @@ namespace XamCore.AppKit {
 		[Mac (10,12)]
 		[Export ("imageHugsTitle")]
 		bool ImageHugsTitle { get; set; }
+
+		[Mac (10,5)]
+		[Export ("imageScaling")]
+		NSImageScale ImageScaling { get; set; }
 	}
 	
 	[BaseType (typeof (NSImageRep))]
@@ -5245,6 +5249,15 @@ namespace XamCore.AppKit {
 		[Export ("restoreUserActivityState:")]
 		void RestoreUserActivityState (NSUserActivity userActivity);
 #endif
+
+		[Mac (10,12)]
+		[Export ("browsingVersions")]
+		bool IsBrowsingVersions { [Bind ("isBrowsingVersions")] get; set; }
+
+
+		[Mac (10,12)]
+		[Export ("stopBrowsingVersionsWithCompletionHandler:")]
+		void StopBrowsingVersions (Action completionHandler);
 	}
 
 	public delegate void OpenDocumentCompletionHandler (NSDocument document, bool documentWasAlreadyOpen, NSError error);
@@ -16223,6 +16236,11 @@ namespace XamCore.AppKit {
 
 		[Export ("title", ArgumentSemantic.Copy)]
 		string Title { get; set; }
+
+		[Mac (10,12)]
+		[Export ("image", ArgumentSemantic.Strong)]
+		[NullAllowed]
+		NSImage Image { get; set; }
 
 		[Export ("backgroundColor", ArgumentSemantic.Copy)]
 		NSColor BackgroundColor { get; set; }
