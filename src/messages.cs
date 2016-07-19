@@ -42,7 +42,6 @@ namespace XamCore.Messages {
 		FileUnreadable,
 		ImproperFileType,
 		ImproperFileUrl,
-		StickerFileImproperPath,
 		StickerFileImproperFileAttributes,
 		StickerFileImproperFileSize,
 		StickerFileImproperFileFormat,
