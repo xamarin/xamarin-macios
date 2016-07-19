@@ -19,7 +19,7 @@ namespace XamCore.MediaToolbox {
 		[iOS (9,0)][Mac (10,11)]
 		static public string GetLocalizedName (this CMMediaType mediaType)
 		{
-			return CFString.FetchString (MTCopyLocalizedNameForMediaType (mediaType));
+			return CFString.FetchString (MTCopyLocalizedNameForMediaType (mediaType), releaseHandle: true);
 		}
 
 		[iOS (9,0)][Mac (10,11)]
@@ -30,7 +30,7 @@ namespace XamCore.MediaToolbox {
 		[iOS (9,0)][Mac (10,11)]
 		static public string GetLocalizedName (this CMMediaType mediaType, uint mediaSubType)
 		{
-			return CFString.FetchString (MTCopyLocalizedNameForMediaSubType (mediaType, mediaSubType));
+			return CFString.FetchString (MTCopyLocalizedNameForMediaSubType (mediaType, mediaSubType), releaseHandle: true);
 		}
 	}
 }
