@@ -81,6 +81,8 @@ namespace Introspection {
 				case "NSLayoutDimension":
 				case "NSLayoutXAxisAnchor":
 				case "NSLayoutYAxisAnchor":
+				// iOS 10 beta 3
+				case "GKCloudPlayer":
 					return true; // skip
 				}
 				break;

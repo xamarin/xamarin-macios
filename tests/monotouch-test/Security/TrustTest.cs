@@ -208,7 +208,7 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (trust.Count, Is.EqualTo (ios9 ? 2 : 3), "Count");
 
 				using (SecKey pkey = trust.GetPublicKey ()) {
-					Assert.That (CFGetRetainCount (pkey.Handle), Is.EqualTo ((nint) 2), "RetainCount(pkey)");
+					Assert.That (CFGetRetainCount (pkey.Handle), Is.GreaterThan ((nint) 1), "RetainCount(pkey)");
 				}
 			}
 		}
@@ -309,7 +309,7 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (trust.Count, Is.EqualTo (3), "Count");
 
 				using (SecKey pkey = trust.GetPublicKey ()) {
-					Assert.That (CFGetRetainCount (pkey.Handle), Is.EqualTo ((nint) 2), "RetainCount(pkey)");
+					Assert.That (CFGetRetainCount (pkey.Handle), Is.GreaterThan ((nint) 1), "RetainCount(pkey)");
 				}
 			}
 		}

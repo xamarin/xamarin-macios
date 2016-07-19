@@ -429,8 +429,8 @@ namespace XamCore.GameKit {
 	interface GKCloudPlayer
 	{
 		[Static]
-		[Export ("getCurrentSignedInPlayer:")]
-		void GetCurrentSignedInPlayer (Action<GKCloudPlayer, NSError> handler);
+		[Export ("getCurrentSignedInPlayerForContainer:completionHandler:")]
+		void GetCurrentSignedInPlayer ([NullAllowed] string containerName, Action<GKCloudPlayer, NSError> handler);
 	}
 
 	[Since (4,2)]

@@ -612,13 +612,6 @@ namespace XamCore.WebKit
 		NSNumber height { get; }
 	}
 
-	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
-	[BaseType (typeof (NSObject))]
-	interface WKElementInfo : NSCopying {
-		[Export ("linkURL")]
-		NSUrl LinkUrl { get; }
-	}
-
 #if !MONOMAC
 	interface IWKPreviewActionItem {}
 
@@ -647,9 +640,8 @@ namespace XamCore.WebKit
 		NSString Share { get; }
 	}
 
-	// @interface WKPreviewElementInfo : WKElementInfo
 	[iOS (10,0)][NoMac]
-	[BaseType (typeof (WKElementInfo))]
-	interface WKPreviewElementInfo {
+	[BaseType (typeof (NSObject))]
+	interface WKPreviewElementInfo : NSCopying {
 	}
 }

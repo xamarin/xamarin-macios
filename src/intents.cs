@@ -618,8 +618,6 @@ namespace XamCore.Intents {
 		SetClimateSettingsInCar,
 		[Field ("INSetDefrosterSettingsInCarIntentIdentifier")]
 		SetDefrosterSettingsInCar,
-		[Field ("INSetSeatTemperatureInCarIntentIdentifier")]
-		SetSeatTemperatureInCar,
 		[Field ("INStartWorkoutIntentIdentifier")]
 		StartWorkout,
 		[Field ("INPauseWorkoutIntentIdentifier")]
@@ -1651,9 +1649,9 @@ namespace XamCore.Intents {
 	[DisableDefaultCtor]
 	interface INPaymentMethod : NSCopying, NSSecureCoding {
 
-		[Export ("initWithType:name:icon:")]
+		[Export ("initWithType:name:identificationHint:icon:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (INPaymentMethodType type, [NullAllowed] string name, [NullAllowed] INImage icon);
+		IntPtr Constructor (INPaymentMethodType type, [NullAllowed] string name, [NullAllowed] string identificationHint, [NullAllowed] INImage icon);
 
 		[Export ("type", ArgumentSemantic.Assign)]
 		INPaymentMethodType Type { get; }
@@ -2344,9 +2342,6 @@ namespace XamCore.Intents {
 
 		[Export ("name")]
 		string Name { get; set; }
-
-		[NullAllowed, Export ("subtitle")]
-		string Subtitle { get; set; }
 
 		[Export ("estimatedPickupDate", ArgumentSemantic.Copy)]
 		NSDate EstimatedPickupDate { get; set; }
