@@ -144,7 +144,7 @@ namespace XamCore.CoreGraphics {
 
 		public string PostScriptName {
 			get {
-				return CFString.FetchString (CGFontCopyPostScriptName (handle));
+				return CFString.FetchString (CGFontCopyPostScriptName (handle), releaseHandle: true);
 			}
 		}
 		
@@ -153,7 +153,7 @@ namespace XamCore.CoreGraphics {
 
 		public string FullName {
 			get {
-				return CFString.FetchString (CGFontCopyFullName (handle));
+				return CFString.FetchString (CGFontCopyFullName (handle), releaseHandle: true);
 			}
 		}
 		
@@ -258,7 +258,7 @@ namespace XamCore.CoreGraphics {
 
 		public string GlyphNameForGlyph (ushort glyph)
 		{
-			return CFString.FetchString (CGFontCopyGlyphNameForGlyph (handle, glyph));
+			return CFString.FetchString (CGFontCopyGlyphNameForGlyph (handle, glyph), releaseHandle: true);
 		}
 		
 		//[DllImport (Constants.CoreGraphicsLibrary)]

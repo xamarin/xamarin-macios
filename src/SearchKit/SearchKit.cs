@@ -679,35 +679,25 @@ namespace XamCore.SearchKit
 
 		[DllImport (Constants.SearchKitLibrary)]
 		extern static IntPtr /*NSString*/  SKSummaryCopyParagraphSummaryString (IntPtr summary, nint maxParagraphs);
-		
-		static string ReturnString (IntPtr newStringHandle)
-		{
-			if (newStringHandle == IntPtr.Zero)
-				return null;
-			var ret =  CFString.FetchString (newStringHandle);
-			CFObject.CFRelease (newStringHandle);
-			return ret;
-					
-		}
-		
+
 		public string GetSentence (nint idx)
 		{
-			return ReturnString (SKSummaryCopySentenceAtIndex (handle, idx));
+			return CFString.FetchString (SKSummaryCopySentenceAtIndex (handle, idx), releaseHandle: true);
 		}
 
 		public string GetParagraph (nint idx)
 		{
-			return ReturnString (SKSummaryCopyParagraphAtIndex (handle, idx));
+			return CFString.FetchString (SKSummaryCopyParagraphAtIndex (handle, idx), releaseHandle: true);
 		}
 
 		public string GetSentenceSummary (nint maxSentences)
 		{
-			return ReturnString (SKSummaryCopySentenceSummaryString (handle, maxSentences));
+			return CFString.FetchString (SKSummaryCopySentenceSummaryString (handle, maxSentences), releaseHandle: true);
 		}
 
 		public string GetParagraphSummary (nint maxParagraphs)
 		{
-			return ReturnString (SKSummaryCopyParagraphSummaryString (handle, maxParagraphs));
+			return CFString.FetchString (SKSummaryCopyParagraphSummaryString (handle, maxParagraphs), releaseHandle: true);
 		}
 		
 	}
