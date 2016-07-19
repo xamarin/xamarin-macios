@@ -181,11 +181,9 @@ namespace XamCore.ReplayKit {
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface RPBroadcastControllerDelegate {
-		[Abstract]
 		[Export ("broadcastController:didFinishWithError:")]
 		void DidFinish (RPBroadcastController broadcastController, [NullAllowed] NSError error);
 
-		[Abstract]
 		[Export ("broadcastController:didUpdateServiceInfo:")]
 		void DidUpdateServiceInfo (RPBroadcastController broadcastController, NSDictionary<NSString, NSCoding> serviceInfo);
 	}
