@@ -311,12 +311,14 @@ namespace xharness
 
 		public async Task<int> RunAsync ()
 		{
-			CrashReportSnapshot crash_reports = new CrashReportSnapshot () { Device = !isSimulator, Harness = Harness, Log = main_log, Logs = Logs, LogDirectory = LogDirectory };
+			CrashReportSnapshot crash_reports;
 			LogStream device_system_log = null;
 			LogStream listener_log = null;
 			Log run_log = main_log;
 
 			Initialize ();
+
+			crash_reports = new CrashReportSnapshot () { Device = !isSimulator, Harness = Harness, Log = main_log, Logs = Logs, LogDirectory = LogDirectory };
 
 			var args = new StringBuilder ();
 			if (!string.IsNullOrEmpty (Harness.XcodeRoot))
