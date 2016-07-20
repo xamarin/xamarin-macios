@@ -643,5 +643,7 @@ namespace XamCore.WebKit
 	[iOS (10,0)][NoMac]
 	[BaseType (typeof (NSObject))]
 	interface WKPreviewElementInfo : NSCopying {
+		[NullAllowed, Export ("linkURL")]
+		NSUrl LinkUrl { get; }
 	}
 }
