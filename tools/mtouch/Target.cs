@@ -698,7 +698,11 @@ namespace Xamarin.Bundler
 				RegistrarTask.Create (compile_tasks, Abis, this, registrar_m);
 			}
 
-			if (App.Registrar == RegistrarMode.Dynamic && App.IsSimulatorBuild && App.LinkMode == LinkMode.None && App.IsUnified) {
+			// HACK: Xcode 8 beta do not ship with headers for the simulators got
+			// * ExternalAccessory (tvOS) 
+			// * GameKit (watchOS) simulators
+			bool platform = (App.Platform == ApplePlatform.iOS);
+			if (platform && App.Registrar == RegistrarMode.Dynamic && App.IsSimulatorBuild && App.LinkMode == LinkMode.None && App.IsUnified) {
 				if (registration_methods == null)
 					registration_methods = new List<string> ();
 

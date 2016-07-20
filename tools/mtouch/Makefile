@@ -371,12 +371,12 @@ TARGETS = \
 #	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr/lib/MonoTouch.NUnitLite.registrar.a \
 
 ifdef INCLUDE_WATCH
-TARGETS += $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/Xamarin.WatchOS.registrar.a
+#TARGETS += $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/Xamarin.WatchOS.registrar.a
 endif
 
 ifdef INCLUDE_TVOS
 TARGETS +=	\
-	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/Xamarin.TVOS.registrar.a       \
+#	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/Xamarin.TVOS.registrar.a       \
 #	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/MonoTouch.Dialog-1.registrar.a
 endif
 
