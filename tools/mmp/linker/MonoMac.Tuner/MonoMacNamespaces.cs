@@ -1,4 +1,5 @@
 // Copyright 2012-2013 Xamarin Inc. All rights reserved.
+//#define DEBUG
 using System;
 using System.Collections.Generic;
 
@@ -112,6 +113,122 @@ namespace MonoMac.Tuner {
 				case Constants.GameKitLibrary:
 					// no sample
 					remove_dlopen = !namespaces.Contains (Namespaces.GameKit);
+					break;
+//				case Constants.GameControllerLibrary:
+					// no sample
+//					remove_dlopen = !namespaces.Contains (Namespaces.GameController);
+//					break;
+				case Constants.JavaScriptCoreLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.JavaScriptCore);
+					break;
+				case Constants.CoreAudioKitLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.CoreAudioKit);
+					break;
+				case Constants.InputMethodKitLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.InputMethodKit);
+					break;
+				case Constants.OpenALLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.OpenAL);
+					break;
+				case Constants.MediaAccessibilityLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.MediaAccessibility);
+					break;
+				case Constants.CoreMidiLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.CoreMIDI);
+					break;
+				case Constants.MediaLibraryLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.MediaLibrary);
+					break;
+				case Constants.GLKitLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.GLKit);
+					break;
+				case Constants.SpriteKitLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.SpriteKit);
+					break;
+				case Constants.CloudKitLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.CloudKit);
+					break;
+				case Constants.LocalAuthenticationLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.LocalAuthentication);
+					break;
+				case Constants.AccountsLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.Accounts);
+					break;
+				case Constants.ContactsLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.Contacts);
+					break;
+				case Constants.ContactsUILibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.ContactsUI);
+					break;
+				case Constants.MapKitLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.MapKit);
+					break;
+				case Constants.EventKitLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.EventKit);
+					break;
+				case Constants.SocialLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.Social);
+					break;
+				case Constants.AVKitLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.AVKit);
+					break;
+				case Constants.VideoToolboxLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.VideoToolbox);
+					break;
+				case Constants.GameplayKitLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.GameplayKit);
+					break;
+				case Constants.NetworkExtensionLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.NetworkExtension);
+					break;
+				case Constants.MultipeerConnectivityLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.MultipeerConnectivity);
+					break;
+				case Constants.MetalKitLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.MetalKit);
+					break;
+				case Constants.ModelIOLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.ModelIO);
+					break;
+				case Constants.IOBluetoothLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.IOBluetooth);
+					break;
+				case Constants.IOBluetoothUILibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.IOBluetoothUI);
+					break;
+				case Constants.FinderSyncLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.FinderSync);
+					break;
+				case Constants.NotificationCenterLibrary:
+					// no sample
+					remove_dlopen = !namespaces.Contains (Namespaces.NotificationCenter);
 					break;
 				case Constants.SceneKitLibrary:
 					// no sample
