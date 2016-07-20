@@ -1494,11 +1494,13 @@ namespace XamCore.GameKit {
 
 #if MONOMAC
 	[Mac (10,8)]
+	[Deprecated (PlatformName.MacOSX, 10, 12)]
 	[BaseType (typeof (NSViewController), Events=new Type [] { typeof (GKFriendRequestComposeViewControllerDelegate)}, Delegates=new string[] {"WeakComposeViewDelegate"})]
 	interface GKFriendRequestComposeViewController 
 #else
 	[NoTV]
 	[Since (4,2)]
+	[Deprecated (PlatformName.iOS, 10, 0)]
 	[BaseType (typeof (UINavigationController), Events=new Type [] { typeof (GKFriendRequestComposeViewControllerDelegate)}, Delegates=new string[] {"WeakComposeViewDelegate"})]
 	interface GKFriendRequestComposeViewController : UIAppearance
 #endif
@@ -1538,6 +1540,8 @@ namespace XamCore.GameKit {
 	[Model]
 	[Protocol]
 	interface GKFriendRequestComposeViewControllerDelegate {
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Abstract]
 		[Export ("friendRequestComposeViewControllerDidFinish:")]
 		void DidFinish (GKFriendRequestComposeViewController viewController);
@@ -2223,12 +2227,12 @@ namespace XamCore.GameKit {
 		[Async]
 		[Static]
 		[Export ("createSessionInContainer:withTitle:maxConnectedPlayers:completionHandler:")]
-		void CreateSession (string containerName, string title, nint maxPlayers, Action<GKGameSession, NSError> completionHandler);
+		void CreateSession ([NullAllowed] string containerName, string title, nint maxPlayers, Action<GKGameSession, NSError> completionHandler);
 
 		[Async]
 		[Static]
 		[Export ("loadSessionsInContainer:completionHandler:")]
-		void LoadSessions (string containerName, Action<GKGameSession[], NSError> completionHandler);
+		void LoadSessions ([NullAllowed] string containerName, Action<GKGameSession[], NSError> completionHandler);
 
 		[Async]
 		[Static]
@@ -2333,7 +2337,7 @@ namespace XamCore.GameKit {
 	{
 		[Abstract]
 		[Export ("sharingViewController:didFinishWithError:")]
-		void DidFinish (GKGameSessionSharingViewController viewController, NSError error);
+		void DidFinish (GKGameSessionSharingViewController viewController, [NullAllowed] NSError error);
 	}
 #endif
 }

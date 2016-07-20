@@ -149,6 +149,7 @@ namespace XamCore.GameKit {
 	}
 
 	[Native]
+	[ErrorDomain ("GKGameSessionErrorDomain")]
 	public enum GKGameSessionErrorCode : nint {
 		Unknown = 1,
 		NotAuthenticated = 2,
@@ -164,6 +165,8 @@ namespace XamCore.GameKit {
 		BadContainer = 12,
 		CloudQuotaExceeded = 13,
 		NetworkFailure = 14,
+		CloudDriveDisabled = 15,
+		InvalidSession = 16,
 	}
 
 	// NSInteger -> GKMatch.h
