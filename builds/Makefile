@@ -93,6 +93,7 @@ MAC_ASSEMBLY_NAMES = \
 	$(TLS_PROVIDER_ASSEMBLY_NAMES) \
 	System.Runtime.InteropServices.RuntimeInformation \
 	System.Reflection.Context	\
+	System.Security \
 	System.Net.Http.WinHttpHandler
 
 FACADE_SUBDIRS_MK = $(MONO_PATH)/mcs/class/Facades/subdirs.make
@@ -111,8 +112,7 @@ MAC_4_5_ADDITIONAL_ASSEMBLY_NAMES = \
 	System.IdentityModel \
 	System.IdentityModel.Selectors \
 	System.Messaging \
-	System.Runtime.Serialization.Formatters.Soap \
-	System.Security
+	System.Runtime.Serialization.Formatters.Soap
 
 MAC_4_5_ASSEMBLY_NAMES = $(MAC_ASSEMBLY_NAMES) $(MAC_4_5_ADDITIONAL_ASSEMBLY_NAMES)
 
