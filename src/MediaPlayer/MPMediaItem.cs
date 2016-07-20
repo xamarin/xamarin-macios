@@ -285,6 +285,13 @@ namespace XamCore.MediaPlayer {
 				return Int32ForProperty (IsExplicitProperty) != 0;
 			}
 		}
+
+		[iOS (10,0)]
+		public NSDate DateAdded {
+			get {
+				return (ValueForProperty (DateAddedProperty) as NSDate);
+			}
+		}
 	}
 }
 

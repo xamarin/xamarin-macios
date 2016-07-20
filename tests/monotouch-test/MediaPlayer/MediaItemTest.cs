@@ -75,8 +75,10 @@ namespace MonoTouchFixtures.MediaPlayer {
 					Assert.DoesNotThrow (() => dummy = i.UserGrouping, "UserGrouping");
 					if (nine_dot_two)
 						Assert.DoesNotThrow (() => dummy = i.HasProtectedAsset, "HasProtectedAsset");
-					if (ten_dot_oh)
+					if (ten_dot_oh) {
 						Assert.DoesNotThrow (() => dummy = i.IsExplicitItem, "IsExplicitItem");
+						Assert.DoesNotThrow (() => dummy = i.DateAdded, "DateAdded");
+					}
 				}
 			}
 		}
