@@ -18,15 +18,14 @@ namespace XamCore.GameKit {
 
 #if !MONOMAC
 
-#if !TVOS
 	// NSUInteger -> GKPeerPickerController.h
+	[NoTV][NoWatch]
 	[Native]
 	[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0)]
 	public enum GKPeerPickerConnectionType : nuint_compat_int {
 		Online = 1 << 0,
 		Nearby = 1 << 1
 	}
-#endif
 
 	// untyped enum -> GKPublicConstants.h
 	[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0)]
@@ -234,6 +233,7 @@ namespace XamCore.GameKit {
 	}
 
 	// NSInteger -> GKGameCenterViewController.h
+	[NoWatch]
 	[Native]
 	public enum GKGameCenterViewControllerState : nint {
 		Default = -1,

@@ -14,6 +14,29 @@
 !missing-enum! NSTextWritingDirection not bound
 
 
+# GameKit
+
+## All members of the protocol sare not available on watchOS (but the protocols are not decorated)
+!missing-protocol! GKChallengeListener not bound
+!missing-protocol! GKInviteEventListener not bound
+
+## members marked as deprecated in watchOS 2.0 (even if the framework was not available before 3.0)
+!missing-protocol-member! GKTurnBasedEventListener::player:didRequestMatchWithPlayers: not found
+!missing-selector! GKAchievement::reportAchievementWithCompletionHandler: not bound
+!missing-selector! GKMatch::chooseBestHostPlayerWithCompletionHandler: not bound
+!missing-selector! GKMatch::playerIDs not bound
+!missing-selector! GKMatch::sendData:toPlayers:withDataMode:error: not bound
+!missing-selector! GKMatchmaker::cancelInviteToPlayer: not bound
+!missing-selector! GKMatchmaker::findPlayersForHostedMatchRequest:withCompletionHandler: not bound
+!missing-selector! GKMatchmaker::inviteHandler not bound
+!missing-selector! GKMatchmaker::setInviteHandler: not bound
+!missing-selector! GKMatchmaker::startBrowsingForNearbyPlayersWithReachableHandler: not bound
+!missing-selector! GKVoiceChat::playerIDs not bound
+!missing-selector! GKVoiceChat::playerStateUpdateHandler not bound
+!missing-selector! GKVoiceChat::setMute:forPlayer: not bound
+!missing-selector! GKVoiceChat::setPlayerStateUpdateHandler: not bound
+
+
 # UIKit
 
 ## Implemented in managed code
