@@ -238,6 +238,11 @@ namespace XamCore.MediaPlayer {
 		[Field ("MPMediaItemPropertyHasProtectedAsset")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString HasProtectedAssetProperty { get; }
+
+		[iOS (10, 0)]
+		[Field ("MPMediaItemPropertyDateAdded")]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		NSString DateAddedProperty { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
