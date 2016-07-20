@@ -114,10 +114,10 @@ namespace MonoMac.Tuner {
 					// no sample
 					remove_dlopen = !namespaces.Contains (Namespaces.GameKit);
 					break;
-//				case Constants.GameControllerLibrary:
+				case Constants.GameControllerLibrary:
 					// no sample
-//					remove_dlopen = !namespaces.Contains (Namespaces.GameController);
-//					break;
+					remove_dlopen = !namespaces.Contains (Namespaces.GameController);
+					break;
 				case Constants.JavaScriptCoreLibrary:
 					// no sample
 					remove_dlopen = !namespaces.Contains (Namespaces.JavaScriptCore);
