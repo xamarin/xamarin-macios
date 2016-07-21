@@ -94,6 +94,7 @@ namespace XamCore.Foundation {
 		static IntPtr io = Dlfcn.dlopen (Constants.ModelIOLibrary, 1);
 		static IntPtr nc = Dlfcn.dlopen (Constants.NotificationCenterLibrary, 1);
 #endif
+		// ** IF YOU ADD ITEMS HERE PLEASE UPDATE linker/ObjCExtensions.cs and mmp/linker/MonoMac.Tuner/MonoMacNamespaces.cs
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms")]
