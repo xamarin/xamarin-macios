@@ -61,6 +61,8 @@ namespace XamCore.Intents {
 		FailureNoMatchingWorkout
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INCarAirCirculationMode bound
 	[Native]
 	public enum INCarAirCirculationMode : nint {
 		Unknown = 0,
@@ -68,6 +70,8 @@ namespace XamCore.Intents {
 		RecirculateAir
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INCarAudioSource bound
 	[Native]
 	public enum INCarAudioSource : nint {
 		Unknown = 0,
@@ -82,6 +86,8 @@ namespace XamCore.Intents {
 		HardDrive
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INCarDefroster bound
 	[Native]
 	public enum INCarDefroster : nint {
 		Unknown = 0,
@@ -89,6 +95,8 @@ namespace XamCore.Intents {
 		Rear
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INCarSeat bound
 	[Native]
 	public enum INCarSeat : nint {
 		Unknown = 0,
@@ -277,6 +285,8 @@ namespace XamCore.Intents {
 		Store
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INPaymentStatus : nint {
 		Unknown = 0,
@@ -292,6 +302,8 @@ namespace XamCore.Intents {
 		InstantMessageAddress
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INPhotoAttributeOptions bound
 	[Native]
 	[Flags]
 	public enum INPhotoAttributeOptions : nuint {
@@ -321,6 +333,8 @@ namespace XamCore.Intents {
 		ProcessFilter = (1 << 23)
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INRadioType bound
 	[Native]
 	public enum INRadioType : nint {
 		Unknown = 0,
@@ -396,6 +410,8 @@ namespace XamCore.Intents {
 		FailureNoMatchingWorkout
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INRidePhase : nint {
 		Unknown = 0,
@@ -633,6 +649,8 @@ namespace XamCore.Intents {
 		CarProfileName = 300
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INWorkoutGoalUnitType bound
 	[Native]
 	public enum INWorkoutGoalUnitType : nint {
 		Unknown = 0,
@@ -648,6 +666,8 @@ namespace XamCore.Intents {
 		KiloCalorie
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-native-enum! INWorkoutLocationType bound
 	[Native]
 	public enum INWorkoutLocationType : nint {
 		Unknown = 0,
@@ -947,7 +967,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INCarAirCirculationModeResolutionResult bound
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INCarAirCirculationModeResolutionResult {
@@ -962,7 +982,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INCarAudioSourceResolutionResult bound
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INCarAudioSourceResolutionResult {
@@ -977,7 +997,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INCarDefrosterResolutionResult bound
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INCarDefrosterResolutionResult {
@@ -992,7 +1012,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INCarSeatResolutionResult bound
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INCarSeatResolutionResult {
@@ -1901,7 +1921,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INPhotoAttributeOptionsResolutionResult bound
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INPhotoAttributeOptionsResolutionResult {
@@ -1989,7 +2009,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INRadioTypeResolutionResult bound
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INRadioTypeResolutionResult {
@@ -2440,7 +2460,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INRideDriver bound
 	[BaseType (typeof (INPerson))]
 	interface INRideDriver : NSCopying, NSSecureCoding {
 
@@ -3872,7 +3892,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INWorkoutGoalUnitTypeResolutionResult bound
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INWorkoutGoalUnitTypeResolutionResult {
 
@@ -3886,7 +3906,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INWorkoutLocationTypeResolutionResult bound
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INWorkoutLocationTypeResolutionResult {
 
