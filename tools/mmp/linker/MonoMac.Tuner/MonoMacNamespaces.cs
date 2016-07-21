@@ -99,11 +99,13 @@ namespace MonoMac.Tuner {
 				if (NamespaceMapping.TryGetValue (ins.Operand as string, out targetNamespace)) {
 					remove_dlopen = !namespaces.Contains (targetNamespace);
 				}
+#if DEBUG
 				else {
 					string libname = ins.Operand as string;
 					if (libname.StartsWith ("/", StringComparison.Ordinal))
 						Console.WriteLine ("Unprocessed library / namespace {0}", libname);
 				}
+#endif
 
 				if (remove_dlopen) {
 					FieldDefinition f = Nop (ins);
