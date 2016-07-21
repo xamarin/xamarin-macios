@@ -1,4 +1,4 @@
-#if !MONOMAC && !WATCH
+#if IOS
 
 using System;
 using System.ComponentModel;
