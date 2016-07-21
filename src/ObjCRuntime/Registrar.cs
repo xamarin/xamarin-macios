@@ -2207,6 +2207,7 @@ namespace XamCore.Registrar {
 #if DEV
 				Console.WriteLine (trace.ToString ());
 #endif
+				trace.Clear ();
 			}
 		}
 
