@@ -42,6 +42,7 @@ namespace XamCore.Foundation {
 		// note: the linker will remove the unrequired `dlopen` calls
 		// Used to force the loading of AppKit and Foundation
 		// ** DO NOT rename the fields as mmp's linker can remove them when not required **
+		// ** IF YOU ADD ITEMS HERE PLEASE UPDATE linker/ObjCExtensions.cs and mmp/linker/MonoMac.Tuner/MonoMacNamespaces.cs
 		static IntPtr fl = Dlfcn.dlopen (Constants.FoundationLibrary, 1);
 		static IntPtr al = Dlfcn.dlopen (Constants.AppKitLibrary, 1);
 		static IntPtr ab = Dlfcn.dlopen (Constants.AddressBookLibrary, 1);
@@ -93,6 +94,7 @@ namespace XamCore.Foundation {
 		static IntPtr io = Dlfcn.dlopen (Constants.ModelIOLibrary, 1);
 		static IntPtr nc = Dlfcn.dlopen (Constants.NotificationCenterLibrary, 1);
 #endif
+		// ** IF YOU ADD ITEMS HERE PLEASE UPDATE linker/ObjCExtensions.cs and mmp/linker/MonoMac.Tuner/MonoMacNamespaces.cs
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use PlatformAssembly for easier code sharing across platforms")]
