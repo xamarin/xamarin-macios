@@ -45,6 +45,15 @@
 !unknown-type! GKQuadTreeNode bound
 
 
+# Security
+
+## Xcode 8 beta (tvOS 10) marked them with __TVOS_UNAVAILABLE so we'll not expose them in 9.x
+!missing-pinvoke! SecAddSharedWebCredential is not bound
+!missing-pinvoke! SecCreateSharedWebCredentialPassword is not bound
+!missing-pinvoke! SecRequestSharedWebCredential is not bound
+!missing-field! kSecSharedPassword not bound
+
+
 # UIKit
 
 ## Apple docs: This property is inherited from the UIView parent class. This class changes the default value of this property to NO.
