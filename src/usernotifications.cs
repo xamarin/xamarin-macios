@@ -62,15 +62,6 @@ namespace XamCore.UserNotifications {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.WatchOS, 3, 0)]
-	[Unavailable (PlatformName.TvOS)]
-	[Native]
-	public enum UNActionIdentifier : nint {
-		Default,
-		Dismiss
-	}
-
-	[Introduced (PlatformName.iOS, 10, 0)]
 	[Introduced (PlatformName.TvOS, 10, 0)]
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[Native]
@@ -403,24 +394,29 @@ namespace XamCore.UserNotifications {
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[Unavailable (PlatformName.TvOS)]
+	[Static]
+	interface UNNotificationActionIdentifier {
+
+		[Field ("UNNotificationDefaultActionIdentifier")]
+		NSString Default { get; }
+
+		[Field ("UNNotificationDismissActionIdentifier")]
+		NSString Dismiss { get; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.WatchOS, 3, 0)]
+	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UNNotificationResponse : NSCopying, NSSecureCoding {
 
-		[Internal]
-		[Field ("UNNotificationDefaultActionIdentifier")]
-		NSString DefaultActionIdentifier { get; }
-
-		[Internal]
-		[Field ("UNNotificationDismissActionIdentifier")]
-		NSString DismissActionIdentifier { get; }
-
 		[Export ("notification", ArgumentSemantic.Copy)]
 		UNNotification Notification { get; }
 
-		[Internal] // Replaced with typed ActionIdentifier
+		[Advice ("Check against UNNotificationActionIdentifier or your custom registered identifier")]
 		[Export ("actionIdentifier")]
-		NSString _ActionIdentifier { get; }
+		NSString ActionIdentifier { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]

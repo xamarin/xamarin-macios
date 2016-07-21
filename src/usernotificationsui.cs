@@ -21,7 +21,7 @@ namespace XamCore.UserNotificationsUI {
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
 	[Native]
-	public enum UNMediaPlayPauseButtonType : nuint {
+	public enum UNNotificationContentExtensionMediaPlayPauseButtonType : nuint {
 		None,
 		Default,
 		Overlay
@@ -32,7 +32,7 @@ namespace XamCore.UserNotificationsUI {
 	[Unavailable (PlatformName.WatchOS)]
 	[Unavailable (PlatformName.TvOS)]
 	[Native]
-	public enum UNResponseOption : nuint {
+	public enum UNNotificationContentExtensionResponseOption : nuint {
 		DoNotDismiss,
 		Dismiss,
 		DismissAndForwardAction
@@ -52,10 +52,10 @@ namespace XamCore.UserNotificationsUI {
 		void DidReceiveNotification (UNNotification notification);
 
 		[Export ("didReceiveNotificationResponse:completionHandler:")]
-		void DidReceiveNotificationResponse (UNNotificationResponse response, Action<UNResponseOption> completion);
+		void DidReceiveNotificationResponse (UNNotificationResponse response, Action<UNNotificationContentExtensionResponseOption> completion);
 
 		[Export ("mediaPlayPauseButtonType", ArgumentSemantic.Assign)]
-		UNMediaPlayPauseButtonType MediaPlayPauseButtonType { get; }
+		UNNotificationContentExtensionMediaPlayPauseButtonType MediaPlayPauseButtonType { get; }
 
 		[Export ("mediaPlayPauseButtonFrame", ArgumentSemantic.Assign)]
 		CGRect MediaPlayPauseButtonFrame { get; }
