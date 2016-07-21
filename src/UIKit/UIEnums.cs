@@ -203,13 +203,37 @@ namespace XamCore.UIKit {
 	// NSInteger -> UIImage.h
 	[Native]
 	public enum UIImageOrientation : nint {
+		/// <summary>
+		/// Normal
+		/// </summary>
 		Up,
+		/// <summary>
+		/// 80 deg rotation 
+		/// </summary>
 		Down,
-		Left, 
+		/// <summary>
+		/// 90 deg CW
+		/// </summary>
+		Left,
+		/// <summary>
+		/// 90 deg CCW 
+		/// </summary>
 		Right,
+		/// <summary>
+		/// as above but image mirrored along
+		/// </summary>
 		UpMirrored,
+		/// <summary>
+		/// horizontal flip 
+		/// </summary>
 		DownMirrored,
+		/// <summary>
+		/// vertical flip 
+		/// </summary>
 		LeftMirrored,
+		/// <summary>
+		/// vertical flip 
+		/// </summary>
 		RightMirrored,
 	}
 	
