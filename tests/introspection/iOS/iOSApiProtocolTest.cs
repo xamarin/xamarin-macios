@@ -202,6 +202,14 @@ namespace Introspection {
 				case "CLKRelativeDateTextProvider":
 				case "CLKSimpleTextProvider":
 				case "WKAlertAction":
+				// watchOS 3
+				case "CLKComplicationTemplateExtraLargeSimpleImage":
+				case "CLKComplicationTemplateExtraLargeSimpleText":
+				case "CLKComplicationTemplateExtraLargeStackImage":
+				case "CLKComplicationTemplateExtraLargeStackText":
+				case "CLKComplicationTemplateExtraLargeColumnsText":
+				case "CLKComplicationTemplateExtraLargeRingImage":
+				case "CLKComplicationTemplateExtraLargeRingText":
 					return true;
 #endif
 				}
@@ -290,6 +298,14 @@ namespace Introspection {
 				case "CLKTimeTextProvider":
 				case "CLKComplication":
 				case "WKAlertAction":
+				// watchOS 3
+				case "CLKComplicationTemplateExtraLargeSimpleImage":
+				case "CLKComplicationTemplateExtraLargeSimpleText":
+				case "CLKComplicationTemplateExtraLargeStackImage":
+				case "CLKComplicationTemplateExtraLargeStackText":
+				case "CLKComplicationTemplateExtraLargeColumnsText":
+				case "CLKComplicationTemplateExtraLargeRingImage":
+				case "CLKComplicationTemplateExtraLargeRingText":
 					return true;
 #endif
 				}

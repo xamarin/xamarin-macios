@@ -62,9 +62,13 @@ namespace XamCore.ClockKit {
 		[Export ("requestedUpdateBudgetExhausted")]
 		void RequestedUpdateBudgetExhausted ();
 
-		[Abstract]
+		// this was @required in watchOS 2.x but is now deprecated and downgraded to @optional in watchOS 3 (betas)
 		[Export ("getPlaceholderTemplateForComplication:withHandler:")]
 		void GetPlaceholderTemplate (CLKComplication complication, Action<CLKComplicationTemplate> handler);
+
+		[Watch (3,0)]
+		[Export ("getLocalizableSampleTemplateForComplication:withHandler:")]
+		void GetLocalizableSampleTemplate (CLKComplication complication, Action<CLKComplicationTemplate> handler);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -396,6 +400,101 @@ namespace XamCore.ClockKit {
 		CLKTextProvider Line2TextProvider { get; set; }
 	}
 
+	[Watch (3,0)]
+	[BaseType (typeof (CLKComplicationTemplate))]
+	interface CLKComplicationTemplateExtraLargeSimpleText {
+		
+		[Export ("textProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider TextProvider { get; set; }
+	}
+
+	[Watch (3,0)]
+	[BaseType (typeof (CLKComplicationTemplate))]
+	interface CLKComplicationTemplateExtraLargeSimpleImage {
+		
+		[Export ("imageProvider", ArgumentSemantic.Copy)]
+		CLKImageProvider ImageProvider { get; set; }
+	}
+
+	[Watch (3,0)]
+	[BaseType (typeof (CLKComplicationTemplate))]
+	interface CLKComplicationTemplateExtraLargeRingText {
+		
+		[Export ("textProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider TextProvider { get; set; }
+
+		[Export ("fillFraction")]
+		float FillFraction { get; set; }
+
+		[Export ("ringStyle", ArgumentSemantic.Assign)]
+		CLKComplicationRingStyle RingStyle { get; set; }
+	}
+
+	[Watch (3,0)]
+	[BaseType (typeof (CLKComplicationTemplate))]
+	interface CLKComplicationTemplateExtraLargeRingImage {
+		
+		[Export ("imageProvider", ArgumentSemantic.Copy)]
+		CLKImageProvider ImageProvider { get; set; }
+
+		[Export ("fillFraction")]
+		float FillFraction { get; set; }
+
+		[Export ("ringStyle", ArgumentSemantic.Assign)]
+		CLKComplicationRingStyle RingStyle { get; set; }
+	}
+
+	[Watch (3,0)]
+	[BaseType (typeof (CLKComplicationTemplate))]
+	interface CLKComplicationTemplateExtraLargeStackText {
+		
+		[Export ("line1TextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider Line1TextProvider { get; set; }
+
+		[Export ("line2TextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider Line2TextProvider { get; set; }
+
+		[Export ("highlightLine2")]
+		bool HighlightLine2 { get; set; }
+	}
+
+	[Watch (3,0)]
+	[BaseType (typeof (CLKComplicationTemplate))]
+	interface CLKComplicationTemplateExtraLargeStackImage {
+		
+		[Export ("line1ImageProvider", ArgumentSemantic.Copy)]
+		CLKImageProvider Line1ImageProvider { get; set; }
+
+		[Export ("line2TextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider Line2TextProvider { get; set; }
+
+		[Export ("highlightLine2")]
+		bool HighlightLine2 { get; set; }
+	}
+
+	[Watch (3,0)]
+	[BaseType (typeof (CLKComplicationTemplate))]
+	interface CLKComplicationTemplateExtraLargeColumnsText {
+		
+		[Export ("row1Column1TextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider Row1Column1TextProvider { get; set; }
+
+		[Export ("row1Column2TextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider Row1Column2TextProvider { get; set; }
+
+		[Export ("row2Column1TextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider Row2Column1TextProvider { get; set; }
+
+		[Export ("row2Column2TextProvider", ArgumentSemantic.Copy)]
+		CLKTextProvider Row2Column2TextProvider { get; set; }
+
+		[Export ("column2Alignment", ArgumentSemantic.Assign)]
+		CLKComplicationColumnAlignment Column2Alignment { get; set; }
+
+		[Export ("highlightColumn2")]
+		bool HighlightColumn2 { get; set; }
+	}
+
 	[BaseType (typeof (NSObject))]
 	interface CLKComplicationTimelineEntry {
 
@@ -455,6 +554,25 @@ namespace XamCore.ClockKit {
 
 		[Export ("tintColor", ArgumentSemantic.Assign)]
 		UIColor TintColor { get; set; }
+
+		// Localizable (CLKTextProvider)
+		// but static methods are not great candidates for extensions methods
+		// so they are inlined inside the actual type
+
+		[Watch (3,0)]
+		[Static]
+		[Export ("localizableTextProviderWithStringsFileTextKey:")]
+		CLKTextProvider CreateLocalizable (string textKey);
+
+		[Watch (3,0)]
+		[Static]
+		[Export ("localizableTextProviderWithStringsFileTextKey:shortTextKey:")]
+		CLKTextProvider CreateLocalizable (string textKey, [NullAllowed] string shortTextKey);
+
+		[Watch (3,0)]
+		[Static]
+		[Export ("localizableTextProviderWithStringsFileFormatKey:textProviders:")]
+		CLKTextProvider CreateLocalizable (string formatKey, CLKTextProvider[] textProviders);
 	}
 
 	[BaseType (typeof (CLKTextProvider))]
