@@ -13,6 +13,7 @@ namespace Extrospection {
 		// the original name can be lost and, if not registered (e.g. enums), might not be available
 		static Dictionary<string,string> map = new Dictionary<string, string> () {
 			{ "CFURLPathStyle", "CFUrlPathStyle" },
+			{ "CXPlayDTMFCallActionType", "CXPlayDtmfCallActionType" },
 			{ "EABluetoothAccessoryPickerErrorCode", "EABluetoothAccessoryPickerError" },
 			{ "EKCalendarEventAvailabilityMask", "EKCalendarEventAvailability" },
 			{ "GKErrorCode", "GKError" },

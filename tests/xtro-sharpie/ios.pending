@@ -6,6 +6,9 @@
 ## Deprecated in xcode8 beta1: "Use -[CXAction fulfill] instead"
 !missing-selector! CXCallAction::fulfillWithResponse: not bound
 
+## Deprecated in xcode8 beta3: "Authorization is no longer required"
+!missing-enum! CXAuthorizationStatus not bound
+!missing-selector! +CXProvider::authorizationStatus not bound
 
 # CoreMedia
 
