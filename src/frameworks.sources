@@ -1309,7 +1309,6 @@ UIKIT_SOURCES = \
 
 USERNOTIFICATIONS_SOURCES = \
 	UserNotifications/UNNotificationAttachment.cs \
-	UserNotifications/UNNotificationResponse.cs \
 
 # VideoSubscriberAccount
 
