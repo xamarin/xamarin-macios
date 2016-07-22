@@ -70,6 +70,7 @@ namespace XamCore.Foundation {
 		static IntPtr ma = Dlfcn.dlopen (Constants.MediaAccessibilityLibrary, 1);
 		static IntPtr mi = Dlfcn.dlopen (Constants.CoreMidiLibrary, 1);
 #if XAMCORE_2_0 && ARCH_64
+		static IntPtr it = Dlfcn.dlopen (Constants.IntentsLibrary, 1);
 		static IntPtr me = Dlfcn.dlopen (Constants.MediaLibraryLibrary, 1);
 		static IntPtr gl = Dlfcn.dlopen (Constants.GLKitLibrary, 1);
 		static IntPtr sp = Dlfcn.dlopen (Constants.SpriteKitLibrary, 1);

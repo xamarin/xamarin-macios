@@ -675,12 +675,15 @@ namespace XamCore.Intents {
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	public enum INIntentIdentifier {
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INStartAudioCallIntentIdentifier")]
 		StartAudioCall,
 
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INStartVideoCallIntentIdentifier")]
 		StartVideoCall,
 
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INSearchCallHistoryIntentIdentifier")]
 		SearchCallHistory,
 
@@ -732,12 +735,15 @@ namespace XamCore.Intents {
 		[Field ("INSetRadioStationIntentIdentifier")]
 		SetRadioStation,
 
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INSendMessageIntentIdentifier")]
 		SendMessage,
 
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INSearchForMessagesIntentIdentifier")]
 		SearchForMessages,
 
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INSetMessageAttributeIntentIdentifier")]
 		SetMessageAttribute,
 
@@ -1522,6 +1528,7 @@ namespace XamCore.Intents {
 		[NullAllowed, Export ("identifier")]
 		NSString IdentifierString { get; }
 
+		[Unavailable (PlatformName.MacOSX)]
 		[Wrap ("INIntentIdentifierExtensions.GetValue (IdentifierString)")]
 		INIntentIdentifier? Identifier { get; }
 	}

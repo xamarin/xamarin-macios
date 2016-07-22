@@ -5251,8 +5251,8 @@ namespace XamCore.AppKit {
 #endif
 
 		[Mac (10,12)]
-		[Export ("browsingVersions")]
-		bool IsBrowsingVersions { [Bind ("isBrowsingVersions")] get; set; }
+		[Export ("isBrowsingVersions")] 
+		bool IsBrowsingVersions { get; }
 
 
 		[Mac (10,12)]
