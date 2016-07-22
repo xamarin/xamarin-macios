@@ -1667,6 +1667,7 @@ TVOS_FRAMEWORKS =           \
 	CoreSpotlight			\
 	CoreText                \
 	CoreVideo               \
+	ExternalAccessory       \
 	GLKit                   \
 	GameController          \
 	GameplayKit             \
