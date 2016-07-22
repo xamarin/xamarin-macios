@@ -1788,6 +1788,11 @@ namespace XamCore.Registrar {
 				header.WriteLine ("#import <WatchKit/WatchKit.h>");
 				namespaces.Add ("UIKit");
 				return;
+#if MMP
+			case "QTKit":
+				if (Driver.SDKVersion >= new Version (10,12))
+					return; // 10.12 removed the header files for QTKit
+#endif
 			default:
 				h = string.Format ("<{0}/{0}.h>", ns);
 				break;
