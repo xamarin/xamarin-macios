@@ -695,12 +695,15 @@ namespace XamCore.Intents {
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	public enum INIntentIdentifier {
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INStartAudioCallIntentIdentifier")]
 		StartAudioCall,
 
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INStartVideoCallIntentIdentifier")]
 		StartVideoCall,
 
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INSearchCallHistoryIntentIdentifier")]
 		SearchCallHistory,
 
@@ -752,12 +755,15 @@ namespace XamCore.Intents {
 		[Field ("INSetRadioStationIntentIdentifier")]
 		SetRadioStation,
 
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INSendMessageIntentIdentifier")]
 		SendMessage,
 
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INSearchForMessagesIntentIdentifier")]
 		SearchForMessages,
 
+		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INSetMessageAttributeIntentIdentifier")]
 		SetMessageAttribute,
 
@@ -893,7 +899,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INCallCapabilityOptionsResolutionResult {
@@ -909,7 +915,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INCallRecordTypeResolutionResult {
@@ -1131,7 +1137,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Protocol]
 	interface INMessagesDomainHandling : INSendMessageIntentHandling, INSearchForMessagesIntentHandling, INSetMessageAttributeIntentHandling {
 	}
@@ -1213,7 +1219,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[Protocol]
 	interface INIntentHandlerProviding {
 
@@ -1224,7 +1230,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (NSObject))]
 	interface INExtension : INIntentHandlerProviding {
 	}
@@ -1542,6 +1548,7 @@ namespace XamCore.Intents {
 		[NullAllowed, Export ("identifier")]
 		NSString IdentifierString { get; }
 
+		[Unavailable (PlatformName.MacOSX)]
 		[Wrap ("INIntentIdentifierExtensions.GetValue (IdentifierString)")]
 		INIntentIdentifier? Identifier { get; }
 	}
@@ -2024,7 +2031,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INRelativeReferenceResolutionResult {
@@ -2039,7 +2046,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INRelativeSettingResolutionResult {
@@ -3264,7 +3271,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
+	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (INIntent))]
 	interface INSetMessageAttributeIntent {
 
@@ -3280,7 +3287,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Protocol]
 	interface INSetMessageAttributeIntentHandling {
 
@@ -3299,7 +3306,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
+	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (INIntentResponse))]
 	[DisableDefaultCtor]
 	interface INSetMessageAttributeIntentResponse {

@@ -171,6 +171,8 @@ namespace Introspection {
 		protected override void CheckToString (NSObject obj)
 		{
 			switch (obj.GetType ().FullName) {
+			// Crashes on 10.12
+			case "Contacts.CNContainer":
 			// native crash calling MonoMac.Foundation.NSObject.get_Description ()
 			case "WebKit.WKNavigationAction":
 			case "WebKit.WKFrameInfo": //  EXC_BAD_ACCESS (code=1, address=0x0)
