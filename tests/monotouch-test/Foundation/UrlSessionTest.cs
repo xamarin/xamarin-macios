@@ -108,25 +108,32 @@ namespace MonoTouchFixtures.Foundation {
 			
 			bool completed = false;
 			int failed_iteration = -1;
+			Exception ex = null;
 
 			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
-				for (int i = 0; i < 5; i++) {
-					// Use the default configuration so we can make use of the shared cookie storage.
-					var session = NSUrlSession.FromConfiguration (NSUrlSessionConfiguration.DefaultSessionConfiguration);
+				try {
+					for (int i = 0; i < 5; i++) {
+						// Use the default configuration so we can make use of the shared cookie storage.
+						var session = NSUrlSession.FromConfiguration (NSUrlSessionConfiguration.DefaultSessionConfiguration);
 
-					var downloadUri = new Uri ("https://google.com");
-					var downloadResponse = await session.CreateDownloadTaskAsync (downloadUri);
+						var downloadUri = new Uri ("https://google.com");
+						var downloadResponse = await session.CreateDownloadTaskAsync (downloadUri);
 
-					var tempLocation = downloadResponse.Location;
-					if (!File.Exists (tempLocation.Path)) {
-						Console.WriteLine ("#{1} {0} does not exists", tempLocation, i);
-						failed_iteration = i;
-						break;
+						var tempLocation = downloadResponse.Location;
+						if (!File.Exists (tempLocation.Path)) {
+							Console.WriteLine ("#{1} {0} does not exists", tempLocation, i);
+							failed_iteration = i;
+							break;
+						}
 					}
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					completed = true;
 				}
-				completed = true;
 			}, () => completed);
 
+			Assert.IsNull (ex, "Exception");
 			Assert.AreEqual (-1, failed_iteration, "Failed");
 		}
 
