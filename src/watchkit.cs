@@ -12,6 +12,7 @@ using XamCore.Foundation;
 using XamCore.CoreGraphics;
 using XamCore.CoreLocation;
 using XamCore.HealthKit;
+using XamCore.HomeKit;
 using XamCore.PassKit;
 using XamCore.UIKit;
 using XamCore.MapKit;
@@ -861,10 +862,9 @@ namespace XamCore.WatchKit {
 		[Export ("handleBackgroundTasks:")]
 		void HandleBackgroundTasks (NSSet<WKRefreshBackgroundTask> backgroundTasks);
 
-		// FIXME HKWorkoutConfiguration not yet bound
-		//[Watch (3,0)]
-		//[Export ("handleWorkoutConfiguration:")]
-		//void HandleWorkoutConfiguration (HKWorkoutConfiguration workoutConfiguration);
+		[Watch (3,0)]
+		[Export ("handleWorkoutConfiguration:")]
+		void HandleWorkoutConfiguration (HKWorkoutConfiguration workoutConfiguration);
 	}
 
 	[Watch (2,2), NoiOS]
@@ -1143,7 +1143,6 @@ namespace XamCore.WatchKit {
 		CGPoint VelocityInObject { get; }
 	}
 
-#if false // FIXME HomeKit not yet enabled on platform
 	[Watch (3,0)][NoiOS]
 	[BaseType (typeof (WKInterfaceObject))]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
@@ -1152,7 +1151,6 @@ namespace XamCore.WatchKit {
 		[Export ("setCameraSource:")]
 		void SetCameraSource ([NullAllowed] HMCameraSource cameraSource);
 	}
-#endif
 
 	[Watch (3,0)][NoiOS]
 	[BaseType (typeof (WKInterfaceObject))]
