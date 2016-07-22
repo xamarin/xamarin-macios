@@ -23528,13 +23528,8 @@ namespace XamCore.AppKit {
 		[Export ("fileType")]
 		string FileType { get; set; }
 
-		[Wrap ("WeakDelegate")]
-		[NullAllowed]
-		[Protocolize]
-		NSFilePromiseProviderDelegate Delegate { get; set; }
-
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
-		NSObject WeakDelegate { get; set; }
+		INSFilePromiseProviderDelegate Delegate { get; set; }
 
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
 		NSObject UserInfo { get; set; }
@@ -23545,7 +23540,6 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12)]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
 	interface NSFilePromiseProviderDelegate
 	{
 		[Abstract]
