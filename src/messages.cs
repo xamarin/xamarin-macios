@@ -208,9 +208,8 @@ namespace XamCore.Messages {
 	[DisableDefaultCtor]
 	interface MSSticker
 	{
-		[Export ("initWithContentsOfFileURL:localizedDescription:error:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl fileUrl, string localizedDescription, [NullAllowed] out NSError error);
+		[Static, Export ("initWithContentsOfFileURL:localizedDescription:error:")]
+		MSSticker Create (NSUrl fileUrl, string localizedDescription, [NullAllowed] out NSError error);
 
 		[Export ("imageFileURL", ArgumentSemantic.Strong)]
 		NSUrl ImageFileUrl { get; }
