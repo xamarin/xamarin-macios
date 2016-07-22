@@ -18,7 +18,7 @@ using XamCore.AppKit;
 #endif
 
 namespace XamCore.SafariServices {
-	[Mac (10,12)][iOS (10,0)]
+	[Mac (10,12, onlyOn64: true)][iOS (10,0)]
 	[BaseType (typeof(NSObject))]
 	interface SFContentBlockerState
 	{
@@ -26,7 +26,7 @@ namespace XamCore.SafariServices {
 		bool Enabled { [Bind ("isEnabled")] get; }
 	}
 
-	[iOS (9,0)][Mac (10,12)]
+	[iOS (9,0)][Mac (10,12, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	interface SFContentBlockerManager {
 		[Async]
@@ -120,7 +120,7 @@ namespace XamCore.SafariServices {
 		void DidCompleteInitialLoad (SFSafariViewController controller, bool didLoadSuccessfully);
 	}
 #else
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64: true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface SFSafariApplication
@@ -138,7 +138,7 @@ namespace XamCore.SafariServices {
 		void SetToolbarItemsNeedUpdate ();
 	}
 
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface SFSafariPage
@@ -154,7 +154,7 @@ namespace XamCore.SafariServices {
 		void GetPageProperties (Action<SFSafariPageProperties> completionHandler);
 	}
 
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[Protocol]
 	[BaseType (typeof(NSObject))]
 	interface SFSafariExtensionHandling
@@ -182,7 +182,7 @@ namespace XamCore.SafariServices {
 		SFSafariExtensionViewController PopoverViewController { get; }
 	}
 
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64: true)]
 	[BaseType (typeof(NSObject))]
 	interface SFSafariPageProperties
 	{
@@ -199,7 +199,7 @@ namespace XamCore.SafariServices {
 		bool Active { [Bind ("isActive")] get; }
 	}
 
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64: true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface SFSafariTab
@@ -217,7 +217,7 @@ namespace XamCore.SafariServices {
 		void Activate ([NullAllowed] Action completionHandler);
 	}
 
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64: true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface SFSafariToolbarItem
@@ -226,7 +226,7 @@ namespace XamCore.SafariServices {
 		void SetEnabled (bool enabled, [NullAllowed] string badgeText);
 	}
 
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64: true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface SFSafariWindow
@@ -244,7 +244,7 @@ namespace XamCore.SafariServices {
 		void GetToolbarItem (Action<SFSafariToolbarItem> completionHandler);
 	}
 
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64: true)]
 	[BaseType (typeof(NSViewController))]
 	interface SFSafariExtensionViewController
 	{
