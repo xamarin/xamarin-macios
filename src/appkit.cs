@@ -5257,6 +5257,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10,12)]
 		[Export ("stopBrowsingVersionsWithCompletionHandler:")]
+		[Async]
 		void StopBrowsingVersions (Action completionHandler);
 	}
 
