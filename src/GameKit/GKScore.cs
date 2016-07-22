@@ -54,10 +54,14 @@ namespace XamCore.GameKit {
 			if (categoryOrIdentifier == null)
 				throw new ArgumentNullException ("categoryOrIdentifier");
 
+#if WATCH
+			Handle = InitWithLeaderboardIdentifier (categoryOrIdentifier);
+#else
 			if (UIDevice.CurrentDevice.CheckSystemVersion (7, 0))
 				Handle = InitWithLeaderboardIdentifier (categoryOrIdentifier);
 			else
 				Handle = InitWithCategory (categoryOrIdentifier);
+#endif
 		}
 
 #if !XAMCORE_2_0
