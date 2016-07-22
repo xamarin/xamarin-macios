@@ -1742,18 +1742,10 @@ namespace XamCore.CoreText {
 #endregion
 
 #region Font Names
-		static string GetStringAndRelease (IntPtr cfStringRef)
-		{
-			if (cfStringRef == IntPtr.Zero)
-				return null;
-			using (var s = new CFString (cfStringRef, true))
-				return s;
-		}
-
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCopyPostScriptName (IntPtr font);
 		public string PostScriptName {
-			get {return GetStringAndRelease (CTFontCopyPostScriptName (handle));}
+			get { return CFString.FetchString (CTFontCopyPostScriptName (handle), releaseHandle: true); }
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
@@ -1761,7 +1753,7 @@ namespace XamCore.CoreText {
 			/* CTFontRef __nonnull */ IntPtr font);
 		
 		public string FamilyName {
-			get {return GetStringAndRelease (CTFontCopyFamilyName (handle));}
+			get { return CFString.FetchString (CTFontCopyFamilyName (handle), releaseHandle: true); }
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
@@ -1769,7 +1761,7 @@ namespace XamCore.CoreText {
 			/* CTFontRef __nonnull */ IntPtr font);
 		
 		public string FullName {
-			get {return GetStringAndRelease (CTFontCopyFullName (handle));}
+			get { return CFString.FetchString (CTFontCopyFullName (handle), releaseHandle: true); }
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
@@ -1777,14 +1769,14 @@ namespace XamCore.CoreText {
 			/* CTFontRef __nonnull */ IntPtr font);
 		
 		public string DisplayName {
-			get {return GetStringAndRelease (CTFontCopyDisplayName (handle));}
+			get { return CFString.FetchString (CTFontCopyDisplayName (handle), releaseHandle: true); }
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCopyName (IntPtr font, IntPtr nameKey);
 		public string GetName (CTFontNameKey nameKey)
 		{
-			return GetStringAndRelease (CTFontCopyName (handle, CTFontNameKeyId.ToId (nameKey).Handle));
+			return CFString.FetchString (CTFontCopyName (handle, CTFontNameKeyId.ToId (nameKey).Handle), releaseHandle: true);
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
@@ -1799,8 +1791,8 @@ namespace XamCore.CoreText {
 		public string GetLocalizedName (CTFontNameKey nameKey, out string actualLanguage)
 		{
 			IntPtr actual;
-			var ret = GetStringAndRelease (CTFontCopyLocalizedName (handle, CTFontNameKeyId.ToId (nameKey).Handle, out actual));
-			actualLanguage = GetStringAndRelease (actual);
+			var ret = CFString.FetchString (CTFontCopyLocalizedName (handle, CTFontNameKeyId.ToId (nameKey).Handle, out actual), releaseHandle: true);
+			actualLanguage = CFString.FetchString (actual, releaseHandle: true);
 			return ret;
 		}
 #endregion

@@ -165,4 +165,48 @@ namespace XamCore.WatchKit {
 		ForceLeftToRight,
 		ForceRightToLeft
 	}
+
+	[Watch (3,0)][NoiOS]
+	[Native]
+	public enum WKApplicationState : nint {
+		Active,
+		Inactive,
+		Background
+	}
+
+	[Watch (3,0)][NoiOS]
+	[Native]
+	public enum WKGestureRecognizerState : nint {
+		Possible,
+		Began,
+		Changed,
+		Ended,
+		Cancelled,
+		Failed,
+		Recognized
+	}
+
+	[Watch (3,0)][NoiOS]
+	[Native]
+	[Flags]
+	public enum WKSwipeGestureRecognizerDirection : nuint {
+		Right = 1 << 0,
+		Left = 1 << 1,
+		Up = 1 << 2,
+		Down = 1 << 3
+	}
+
+	[Watch (3,0)][NoiOS]
+	[Native]
+	public enum WKInterfaceDeviceWristLocation : nint {
+		Left,
+		Right
+	}
+
+	[Watch (3,0)][NoiOS]
+	[Native]
+	public enum WKInterfaceDeviceCrownOrientation : nint {
+		Left,
+		Right
+	}
 }

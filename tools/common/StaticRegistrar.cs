@@ -1773,6 +1773,12 @@ namespace XamCore.Registrar {
 					return;
 #endif
 				goto default;
+			case "GameKit":
+#if !MONOMAC
+				if (IsSimulator && Driver.App.Platform == Xamarin.Utils.ApplePlatform.WatchOS)
+					return; // No headers provided for watchOS/simulator.
+#endif
+				goto default;
 			case "WatchKit":
 				// There's a bug in Xcode 7 beta 2 headers where the build fails with
 				// ObjC++ files if WatchKit.h is included before UIKit.h (radar 21651022).

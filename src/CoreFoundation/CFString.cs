@@ -180,6 +180,7 @@ namespace XamCore.CoreFoundation {
 				CFObject.CFRetain (handle);
 		}
 
+		// to be used when an API like CF*Get* returns a CFString
 		internal static string FetchString (IntPtr handle)
 		{
 			if (handle == IntPtr.Zero)
@@ -205,7 +206,16 @@ namespace XamCore.CoreFoundation {
 
 			return str;
 		}
-		
+
+		// to be used when an API like CF*Copy* returns a CFString
+		internal static string FetchString (IntPtr handle, bool releaseHandle)
+		{
+			var s = FetchString (handle);
+			if (releaseHandle && (handle != IntPtr.Zero))
+				CFObject.CFRelease (handle);
+			return s;
+		}
+
 		public static implicit operator string (CFString x)
 		{
 			if (x.str == null)

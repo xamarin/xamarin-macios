@@ -138,10 +138,7 @@ namespace XamCore.Security {
 				if (handle == IntPtr.Zero)
 					throw new ObjectDisposedException ("SecCertificate");
 				
-				IntPtr cfstr = SecCertificateCopySubjectSummary (handle);
-				string ret = CFString.FetchString (cfstr);
-				CFObject.CFRelease (cfstr);
-				return ret;
+				return CFString.FetchString (SecCertificateCopySubjectSummary (handle), releaseHandle: true);
 			}
 		}
 

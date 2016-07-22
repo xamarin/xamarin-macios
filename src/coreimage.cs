@@ -527,6 +527,10 @@ namespace XamCore.CoreImage {
 		[Field ("kCISupportedDecoderVersionsKey")]
 		NSString SupportedDecoderVersionsKey { get; }
 
+		[iOS (10,0)][Mac (10,12)]
+		[Field ("kCIInputBaselineExposureKey")]
+		NSString BaselineExposureKey { get; }
+
 		[iOS (10,0)]
 		[Field ("kCIInputBoostKey")]
 		NSString BoostKey { get; }
@@ -534,6 +538,10 @@ namespace XamCore.CoreImage {
 		[iOS (10,0)]
 		[Field ("kCIInputBoostShadowAmountKey")]
 		NSString BoostShadowAmountKey { get; }
+
+		[iOS (10,0)][Mac (10,12)]
+		[Field ("kCIInputDisableGamutMapKey")]
+		NSString DisableGamutMapKey { get; }
 
 		[iOS (10,0)]
 		[Field ("kCIInputNeutralChromaticityXKey")]
@@ -628,11 +636,17 @@ namespace XamCore.CoreImage {
 		[iOS (10,0)]
 		NSDictionary[] SupportedDecoderVersions { get; set; }
 
+		[iOS (10,0)][Mac (10,12)]
+		float BaselineExposure { get; set; }
+
 		[iOS (10,0)]
 		float Boost { get; set; }
 
 		[iOS (10,0)]
 		float BoostShadowAmount { get; set; }
+
+		[iOS (10,0)][Mac (10,12)]
+		bool DisableGamutMap { get; set; }
 
 		[iOS (10,0)]
 		float NeutralChromaticityX { get; set; }

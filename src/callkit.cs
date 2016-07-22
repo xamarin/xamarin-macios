@@ -232,9 +232,17 @@ namespace XamCore.CallKit {
 
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[BaseType (typeof (NSObject))]
-	interface CXCallDirectoryProvider {
+	interface CXCallDirectoryProvider : NSExtensionRequestHandling {
 
-		[Export ("beginRequestWithExtensionContext:")]
+		// HACK: Wrapped since this will come from INSExtensionRequestHandling protocol
+		// and we avoid exporting the same selector twice
+		// From NSExtensionRequestHandling.h:
+		// 	- (void)beginRequestWithExtensionContext:(NSExtensionContext *)context;
+		// From CXCallDirectoryProvider.h:
+		// 	- (void)beginRequestWithExtensionContext:(CXCallDirectoryExtensionContext *)context;
+		// CXCallDirectoryExtensionContext is a subclass of NSExtensionContext so
+		// not an issue and we give it a better name
+		[Wrap ("BeginRequestWithExtensionContext (context)")]
 		void BeginRequest (CXCallDirectoryExtensionContext context);
 	}
 

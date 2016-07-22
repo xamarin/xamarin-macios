@@ -341,6 +341,7 @@ namespace XamCore.UIKit {
 	
 		[iOS (10, 0)]
 		[NullAllowed, Export ("secondAnchor", ArgumentSemantic.Copy)]
+		[Internal]
 		IntPtr _SecondAnchor<AnchorType> ();
 #endif
 	}

@@ -102,6 +102,11 @@ namespace XamCore.MetalKit {
 
 		[Export ("draw")]
 		void Draw ();
+
+		[NoiOS][NoTV]
+		[Mac (10,12)]
+		[NullAllowed, Export ("colorspace", ArgumentSemantic.Assign)]
+		CGColorSpace ColorSpace { get; set; }
 	}
 
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]

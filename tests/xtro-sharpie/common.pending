@@ -467,3 +467,11 @@
 !unknown-pinvoke! sel_isMapped bound
 !unknown-pinvoke! sel_registerName bound
 !unknown-pinvoke! uname bound
+
+# Intents
+
+## NS_DEPRECATED(10_12, 10_12, 10_0, 10_0) / Designated init instead
+!missing-selector! INPerson::handle not bound
+!missing-selector! INPerson::initWithHandle:displayName:contactIdentifier: not bound
+!missing-selector! INPerson::initWithHandle:nameComponents:contactIdentifier: not bound
+!missing-selector! INPerson::initWithHandle:nameComponents:displayName:image:contactIdentifier: not bound

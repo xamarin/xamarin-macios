@@ -156,7 +156,6 @@ namespace XamCore.SafariServices {
 
 	[Mac (10,12, onlyOn64 : true)]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
 	interface SFSafariExtensionHandling
 	{
 		[Export ("messageReceivedWithName:fromPage:userInfo:")]

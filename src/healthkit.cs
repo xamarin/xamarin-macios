@@ -33,7 +33,7 @@ namespace XamCore.HealthKit {
 		UserExitedWorkoutSession,
 	}
 
-	[NoiOS]
+	[iOS (10,0)]
 	[Watch (2,0)]
 	[Native]
 	public enum HKWorkoutSessionLocationType : nint {
@@ -1742,5 +1742,16 @@ namespace XamCore.HealthKit {
 	[BaseType (typeof (HKObjectType))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKActivitySummaryType
 	public interface HKActivitySummaryType {
+	}
+
+	[Watch (3,0)][iOS (10,0)]
+	[BaseType (typeof (NSObject))]
+	interface HKWorkoutConfiguration : NSCopying, NSSecureCoding {
+
+		[Export ("activityType", ArgumentSemantic.Assign)]
+		HKWorkoutActivityType ActivityType { get; set; }
+
+		[Export ("locationType", ArgumentSemantic.Assign)]
+		HKWorkoutSessionLocationType LocationType { get; set; }
 	}
 }

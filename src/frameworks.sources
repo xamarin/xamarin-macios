@@ -1309,7 +1309,6 @@ UIKIT_SOURCES = \
 
 USERNOTIFICATIONS_SOURCES = \
 	UserNotifications/UNNotificationAttachment.cs \
-	UserNotifications/UNNotificationResponse.cs \
 
 # VideoSubscriberAccount
 
@@ -1466,9 +1465,10 @@ SHARED_SOURCES = \
 # wkwebkit.cs (webkit.cs is already used for Mac bindings)
 #
 
-COMMON_FRAMEWORKS =      \
-	CoreFoundation       \
-	Foundation           \
+COMMON_FRAMEWORKS =         \
+	CoreFoundation          \
+	Foundation              \
+	GameKit                 \
 
 MAC_FRAMEWORKS =            \
 	$(COMMON_FRAMEWORKS)    \
@@ -1500,7 +1500,6 @@ MAC_FRAMEWORKS =            \
 	EventKit                \
 	FinderSync		\
 	GameController          \
-	GameKit                 \
 	GameplayKit             \
 	GLKit                   \
 	ImageIO                 \
@@ -1575,7 +1574,6 @@ IOS_FRAMEWORKS =         \
 	ExternalAccessory \
 	GLKit \
 	GameController \
-	GameKit \
 	GameplayKit \
 	HealthKit \
 	HealthKitUI \
@@ -1671,7 +1669,6 @@ TVOS_FRAMEWORKS =           \
 	CoreVideo               \
 	GLKit                   \
 	GameController          \
-	GameKit                 \
 	GameplayKit             \
 	HomeKit                 \
 	ImageIO                 \

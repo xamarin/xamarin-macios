@@ -338,15 +338,6 @@
 !duplicate-type-name! VertexAttribPointerType enum exists as both OpenTK.Graphics.ES30.VertexAttribPointerType and OpenTK.Graphics.ES20.VertexAttribPointerType
 
 
-# Security
-
-## added in iOS 8.0
-!missing-pinvoke! SecAddSharedWebCredential is not bound
-!missing-pinvoke! SecCreateSharedWebCredentialPassword is not bound
-!missing-pinvoke! SecRequestSharedWebCredential is not bound
-!missing-field! kSecSharedPassword not bound
-
-
 # Non-Apple
 
 ## Xamarin (not Apple) type

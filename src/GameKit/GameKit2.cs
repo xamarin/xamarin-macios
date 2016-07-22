@@ -14,7 +14,7 @@ using XamCore.Foundation;
 using XamCore.CoreFoundation;
 
 namespace XamCore.GameKit {
-#if !MONOMAC && !TVOS
+#if !MONOMAC && !TVOS && !WATCH
 	public class GKDataReceivedEventArgs : EventArgs {
 		public GKDataReceivedEventArgs (NSData data, string peer, GKSession session)
 		{
@@ -61,7 +61,7 @@ namespace XamCore.GameKit {
 	}
 #endif
 
-#if !TVOS
+#if !TVOS && !WATCH
 	public partial class GKSession {
 #if !XAMCORE_2_0
 		public bool SendData (NSData data, string [] peers, GKSendDataMode mode, out NSError error)
@@ -327,7 +327,7 @@ namespace XamCore.GameKit {
 	}
 
 	public partial class GKMatch {
-#if !TVOS
+#if !XAMCORE_3_0
 		// Compatbility with the broken API, it is deprecated, so that is good.
 		public virtual bool SendData (NSData data, string [] players, GKMatchSendDataMode mode, NSError error)
 		{

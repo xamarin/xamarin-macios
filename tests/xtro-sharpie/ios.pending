@@ -6,6 +6,9 @@
 ## Deprecated in xcode8 beta1: "Use -[CXAction fulfill] instead"
 !missing-selector! CXCallAction::fulfillWithResponse: not bound
 
+## Deprecated in xcode8 beta3: "Authorization is no longer required"
+!missing-enum! CXAuthorizationStatus not bound
+!missing-selector! +CXProvider::authorizationStatus not bound
 
 # CoreMedia
 
@@ -67,11 +70,6 @@
 # static methods in protocols are problematic
 !missing-selector! +UIViewControllerRestoration::viewControllerWithRestorationIdentifierPath:coder: not bound
 
-## added in iOS 8.0
-!missing-pinvoke! SecAddSharedWebCredential is not bound
-!missing-pinvoke! SecCreateSharedWebCredentialPassword is not bound
-!missing-pinvoke! SecRequestSharedWebCredential is not bound
-!missing-field! kSecSharedPassword not bound
 
 # the only member exists in OSX 10.11 - but there are empty protocols so it must be reported (and ignored)
 !missing-protocol! AVFragmentMinding not bound
@@ -135,3 +133,11 @@
 !unknown-field! kVTDecompressionPropertyKey_UsingHardwareAcceleratedVideoDecoder bound
 !unknown-field! kVTVideoDecoderSpecification_EnableHardwareAcceleratedVideoDecoder bound
 !unknown-field! kVTVideoDecoderSpecification_RequireHardwareAcceleratedVideoDecoder bound
+
+# Intents API iOS 10
+
+## Deprecated in Xcode 8 beta NS_DEPRECATED(10_12, 10_12, 10_0, 10_0) / pragma mark - Deprecated
+!missing-selector! INRideDriver::initWithHandle:displayName:image:rating:phoneNumber: not bound
+!missing-selector! INRideDriver::initWithHandle:nameComponents:image:rating:phoneNumber: not bound
+!missing-selector! INRideOption::identifier not bound
+!missing-selector! INRideOption::setIdentifier: not bound

@@ -80,11 +80,13 @@ namespace XamCore.CoreLocation {
 		[Export ("verticalAccuracy")]
 		double VerticalAccuracy { get;  }
 	
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (3,0)] // __WATCHOS_PROHIBITED removed in Xcode 8 beta 3
 		[Export ("course")]
 		double Course { get;  }
 	
-		[NoWatch][NoTV]
+		[NoTV]
+		[Watch (3,0)] // __WATCHOS_PROHIBITED removed in Xcode 8 beta 3
 		[Export ("speed")]
 		double Speed { get;  }
 

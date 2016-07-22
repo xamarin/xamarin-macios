@@ -44,6 +44,22 @@
 !unknown-type! GKQuadTree bound
 !unknown-type! GKQuadTreeNode bound
 
+# UserNotifications
+
+## While these keys are present in the SDK, the class that uses them UNNotificationAttachment is __TVOS_PROHIBITED
+!missing-field! UNNotificationAttachmentOptionsThumbnailClippingRectKey not bound
+!missing-field! UNNotificationAttachmentOptionsThumbnailHiddenKey not bound
+!missing-field! UNNotificationAttachmentOptionsThumbnailTimeKey not bound
+!missing-field! UNNotificationAttachmentOptionsTypeHintKey not bound
+
+# Security
+
+## Xcode 8 beta (tvOS 10) marked them with __TVOS_UNAVAILABLE so we'll not expose them in 9.x
+!missing-pinvoke! SecAddSharedWebCredential is not bound
+!missing-pinvoke! SecCreateSharedWebCredentialPassword is not bound
+!missing-pinvoke! SecRequestSharedWebCredential is not bound
+!missing-field! kSecSharedPassword not bound
+
 
 # UIKit
 

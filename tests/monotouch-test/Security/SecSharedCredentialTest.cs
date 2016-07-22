@@ -1,4 +1,4 @@
-#if !__WATCHOS__
+#if __IOS__
 using System;
 using System.Threading;
 
@@ -139,4 +139,4 @@ namespace MonoTouchFixtures.Security {
 
  	}
 }
-#endif // !__WATCHOS__
+#endif // __IOS__

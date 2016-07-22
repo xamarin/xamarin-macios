@@ -83,6 +83,7 @@ namespace XamCore.Security {
 	
 	[Static]
 	[Since (8,0), NoMac, NoWatch]
+	[NoTV] // removed in tvOS 10
 	interface SecSharedCredential {
 		[Field ("kSecSharedPassword")]
 		NSString SharedPassword { get; }

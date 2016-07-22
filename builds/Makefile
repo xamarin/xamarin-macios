@@ -90,7 +90,11 @@ MAC_ASSEMBLY_NAMES = \
 	System.Xml.Serialization \
 	System.Xml \
 	System \
-	$(TLS_PROVIDER_ASSEMBLY_NAMES)
+	$(TLS_PROVIDER_ASSEMBLY_NAMES) \
+	System.Runtime.InteropServices.RuntimeInformation \
+	System.Reflection.Context	\
+	System.Security \
+	System.Net.Http.WinHttpHandler
 
 FACADE_SUBDIRS_MK = $(MONO_PATH)/mcs/class/Facades/subdirs.make
 # File does not exist before checking out mono
@@ -108,8 +112,7 @@ MAC_4_5_ADDITIONAL_ASSEMBLY_NAMES = \
 	System.IdentityModel \
 	System.IdentityModel.Selectors \
 	System.Messaging \
-	System.Runtime.Serialization.Formatters.Soap \
-	System.Security
+	System.Runtime.Serialization.Formatters.Soap
 
 MAC_4_5_ASSEMBLY_NAMES = $(MAC_ASSEMBLY_NAMES) $(MAC_4_5_ADDITIONAL_ASSEMBLY_NAMES)
 
@@ -512,6 +515,9 @@ IOS_ASSEMBLIES = I18N.CJK I18N.MidEast I18N.Other I18N.Rare I18N.West I18N Mono.
 	System.ServiceModel.Internals \
 	System.Numerics System.IO.Compression System.IO.Compression.FileSystem \
 	System.ComponentModel.DataAnnotations System.ComponentModel.Composition \
+	System.Net.Http.WinHttpHandler \
+	System.Numerics.Vectors System.Reflection.Context System.Reflection.DispatchProxy \
+	System.Runtime.InteropServices.RuntimeInformation System.Security System.Xml.XPath.XmlDocument \
 	System.Windows System.Xml.Serialization System.Net Mono.Dynamic.Interpreter \
 	Microsoft.CSharp Mono.CSharp $(TLS_PROVIDER_ASSEMBLY_NAMES)
 

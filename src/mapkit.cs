@@ -17,6 +17,9 @@ using XamCore.CoreLocation;
 #if !MONOMAC
 using XamCore.UIKit;
 #endif
+#if !TVOS && XAMCORE_2_0
+using Contacts;
+#endif
 using System;
 
 #if MONOMAC
@@ -840,6 +843,18 @@ namespace XamCore.MapKit {
 		[Wrap ("this (coordinate, addressDictionary == null ? null : addressDictionary.Dictionary)")]
 		IntPtr Constructor (CLLocationCoordinate2D coordinate, MKPlacemarkAddress addressDictionary);
 #endif // !MONOMAC && !WATCH
+
+		[Watch (3,0)][TV (10,0)][iOS (10,0)]
+		[NoMac]
+		[Export ("initWithCoordinate:")]
+		IntPtr Constructor (CLLocationCoordinate2D coordinate);
+
+#if !TVOS && !MONOMAC && XAMCORE_2_0
+		[Watch (3,0)][iOS (10,0)]
+		[NoTV][NoMac]
+		[Export ("initWithCoordinate:postalAddress:")]
+		IntPtr Constructor (CLLocationCoordinate2D coordinate, CNPostalAddress postalAddress);
+#endif
 	
 		[Export ("countryCode")]
 		string CountryCode { get; }
