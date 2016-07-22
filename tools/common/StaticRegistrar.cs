@@ -1787,6 +1787,12 @@ namespace XamCore.Registrar {
 				header.WriteLine ("#import <WatchKit/WatchKit.h>");
 				namespaces.Add ("UIKit");
 				return;
+			case "ExternalAccessory":
+#if !MONOMAC
+				if (IsSimulator && Driver.App.Platform == Xamarin.Utils.ApplePlatform.TVOS)
+					return; // No headers provided for AppleTV/simulator.
+#endif
+				goto default;
 			default:
 				h = string.Format ("<{0}/{0}.h>", ns);
 				break;
@@ -2153,6 +2159,24 @@ namespace XamCore.Registrar {
 			return sb != null ? sb.ToString () : value;
 		}
 
+		static bool IsExternalAccessoryType (ObjCType type)
+		{
+			var ns = type.Type.Namespace;
+
+			var t = type.Type;
+			while (string.IsNullOrEmpty (ns) && t.DeclaringType != null) {
+				t = t.DeclaringType;
+				ns = t.Namespace;
+			}
+
+			switch (ns) {
+			case "ExternalAccessory":
+				return true;
+			default:
+				return false;
+			}
+		}
+
 		static bool IsMetalType (ObjCType type)
 		{
 			var ns = type.Type.Namespace;
@@ -2197,6 +2221,9 @@ namespace XamCore.Registrar {
 
 				if (isPlatformType && IsSimulatorOrDesktop && IsMetalType (@class))
 					continue; // Metal isn't supported in the simulator.
+
+				if (IsSimulatorOrDesktop && Driver.App.Platform == Xamarin.Utils.ApplePlatform.TVOS && IsExternalAccessoryType (@class))
+					continue; // ExternalAccessory's headers aren't available for tvOS/Simulator.
 #endif
 				
 				if (@class.IsFakeProtocol)
