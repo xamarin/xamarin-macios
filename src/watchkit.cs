@@ -1146,6 +1146,7 @@ namespace XamCore.WatchKit {
 #if false // FIXME HomeKit not yet enabled on platform
 	[Watch (3,0)][NoiOS]
 	[BaseType (typeof (WKInterfaceObject))]
+	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	interface WKInterfaceHMCamera {
 
 		[Export ("setCameraSource:")]
@@ -1155,6 +1156,7 @@ namespace XamCore.WatchKit {
 
 	[Watch (3,0)][NoiOS]
 	[BaseType (typeof (WKInterfaceObject))]
+	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	interface WKInterfaceInlineMovie {
 
 		[Export ("setMovieURL:")]
@@ -1184,12 +1186,14 @@ namespace XamCore.WatchKit {
 
 	[Watch (3,0)][NoiOS]
 	[BaseType (typeof (WKInterfaceObject))]
+	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	interface WKInterfacePaymentButton {
 	}
 
 #if false // FIXME SceneKit not yet enabled on platform
 	[Watch (3,0)][NoiOS]
 	[BaseType (typeof (WKInterfaceObject))]
+	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	interface WKInterfaceSCNScene : ISCNSceneRenderer {
 
 		[NullAllowed, Export ("scene", ArgumentSemantic.Retain)]
@@ -1208,6 +1212,7 @@ namespace XamCore.WatchKit {
 #if false // FIXME SpriteKit not yet enabled on platform
 	[Watch (3,0)][NoiOS]
 	[BaseType (typeof (WKInterfaceObject))]
+	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
 	interface WKInterfaceSKScene {
 
 		[Export ("paused")]

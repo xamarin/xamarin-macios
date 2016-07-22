@@ -188,6 +188,7 @@ namespace XamCore.WatchKit {
 
 	[Watch (3,0)][NoiOS]
 	[Native]
+	[Flags]
 	public enum WKSwipeGestureRecognizerDirection : nuint {
 		Right = 1 << 0,
 		Left = 1 << 1,
