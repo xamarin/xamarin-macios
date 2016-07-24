@@ -12,6 +12,7 @@ using XamCore.UIKit;
 
 namespace XamCore.ExternalAccessory {
 
+	[TV (10,0)]
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(EAAccessoryDelegate)})]
 	// Objective-C exception thrown.  Name: EAAccessoryInitException Reason: -init not supported. EAAccessoryManager is responsible for creating all objects.
 	[DisableDefaultCtor]
@@ -55,6 +56,7 @@ namespace XamCore.ExternalAccessory {
 		string DockType { get; }
 	}
 
+	[TV (10,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -63,6 +65,7 @@ namespace XamCore.ExternalAccessory {
 		void Disconnected (EAAccessory accessory);
 	}
 
+	[TV (10,0)]
 	interface EAAccessoryEventArgs {
 		[Export ("EAAccessoryKey")]
 		EAAccessory Accessory { get; }
@@ -72,6 +75,7 @@ namespace XamCore.ExternalAccessory {
 		EAAccessory Selected { get; }
 	}
 	
+	[TV (10,0)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: EAAccessoryManagerInitException Reason: -init is not supported. Use +sharedAccessoryManager.
 	[DisableDefaultCtor]
@@ -109,6 +113,7 @@ namespace XamCore.ExternalAccessory {
 		void ShowBluetoothAccessoryPicker ([NullAllowed] NSPredicate predicate, [NullAllowed] Action<NSError> completion);
 	}
 
+	[TV (10,0)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: EASessionInitException Reason: -init not supported. use -initWithAccessory:forProtocol.
 	[DisableDefaultCtor]
@@ -129,6 +134,7 @@ namespace XamCore.ExternalAccessory {
 		NSOutputStream OutputStream { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface EAWiFiUnconfiguredAccessory {
@@ -153,17 +159,25 @@ namespace XamCore.ExternalAccessory {
 
 
 	public interface IEAWiFiUnconfiguredAccessoryBrowserDelegate {}
-	
+
+	[TV (10,0)]
 	[iOS (8,0)]
+#if TVOS
+	[BaseType (typeof (NSObject))]
+#else
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(EAWiFiUnconfiguredAccessoryBrowserDelegate)})]
+#endif
 	interface EAWiFiUnconfiguredAccessoryBrowser {
 
+		[NoTV]
 		[Export ("initWithDelegate:queue:")]
 		IntPtr Constructor ([NullAllowed] IEAWiFiUnconfiguredAccessoryBrowserDelegate accessoryBrowserDelegate, [NullAllowed] DispatchQueue queue);
 
+		[NoTV] // no member is available
 		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
+		[NoTV] // no member is available
 		[Wrap ("WeakDelegate")][NullAllowed]
 		[Protocolize]
 		EAWiFiUnconfiguredAccessoryBrowserDelegate Delegate { get; set; }
@@ -171,17 +185,21 @@ namespace XamCore.ExternalAccessory {
 		[Export ("unconfiguredAccessories", ArgumentSemantic.Copy)]
 		NSSet UnconfiguredAccessories { get; }
 
+		[NoTV]
 		[Export ("startSearchingForUnconfiguredAccessoriesMatchingPredicate:")]
 		void StartSearchingForUnconfiguredAccessories ([NullAllowed] NSPredicate predicate);
 
+		[NoTV]
 		[Export ("stopSearchingForUnconfiguredAccessories")]
 		void StopSearchingForUnconfiguredAccessories ();
 
+		[NoTV]
 		[iOS (8,0)]
 		[Export ("configureAccessory:withConfigurationUIOnViewController:")]
 		void ConfigureAccessory (EAWiFiUnconfiguredAccessory accessory, UIViewController viewController);
 	}
 
+	[NoTV] // no member is available
 	[iOS (8,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]

@@ -36,6 +36,14 @@
 !missing-field! kCMFormatDescriptionYCbCrMatrix_P3_D65 not bound
 
 
+# ExternalAccessory
+
+## delegate is empty (nothing is available on tvOS) so we hide it (and the code that get/set it)
+!missing-protocol! EAWiFiUnconfiguredAccessoryBrowserDelegate not bound
+!missing-selector! EAWiFiUnconfiguredAccessoryBrowser::delegate not bound
+!missing-selector! EAWiFiUnconfiguredAccessoryBrowser::setDelegate: not bound
+
+
 # GameplayKit
 
 ## Xcode 7.1 added those types - but they are not in Xcode 7.2 SDK ??? Apple merge conflict
