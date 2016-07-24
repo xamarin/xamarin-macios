@@ -19,6 +19,7 @@ using XamCore.UIKit;
 
 namespace XamCore.MultipeerConnectivity {
 
+	[TV (10,0)]
 	[Since (7,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[MCPeerID init]: unrecognized selector sent to instance 0x7d721090
@@ -34,6 +35,7 @@ namespace XamCore.MultipeerConnectivity {
 
 	public delegate void MCSessionNearbyConnectionDataForPeerCompletionHandler (NSData connectionData, NSError error);
 
+	[TV (10,0)]
 	[Since (7,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash when calling `description` selector
@@ -100,6 +102,7 @@ namespace XamCore.MultipeerConnectivity {
 		#endregion
 	}
 
+	[TV (10,0)]
 	[Since (7,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -129,6 +132,7 @@ namespace XamCore.MultipeerConnectivity {
 		bool DidReceiveCertificate (MCSession session, [NullAllowed] SecCertificate[] certificate, MCPeerID peerID, Action<bool> certificateHandler);
 	}
 
+	[TV (10,0)]
 	[Since (7,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException -[MCNearbyServiceAdvertiser init]: unrecognized selector sent to instance 0x19195e50
@@ -163,6 +167,7 @@ namespace XamCore.MultipeerConnectivity {
 
 	public delegate void MCNearbyServiceAdvertiserInvitationHandler (bool accept, [NullAllowed] MCSession session);
 
+	[TV (10,0)]
 	[Since (7,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -179,6 +184,7 @@ namespace XamCore.MultipeerConnectivity {
 		void DidNotStartAdvertisingPeer (MCNearbyServiceAdvertiser advertiser, NSError error);
 	}
 
+	[TV (10,0)]
 	[Since (7,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException -[MCNearbyServiceBrowser init]: unrecognized selector sent to instance 0x15519a70
@@ -211,6 +217,7 @@ namespace XamCore.MultipeerConnectivity {
 		string ServiceType { get; }
 	}
 
+	[TV (10,0)]
 	[Since (7,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -242,6 +249,7 @@ namespace XamCore.MultipeerConnectivity {
 	[Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSViewController))]
 #else
+	[TV (10,0)]
 	[Since (7,0)]
 	[BaseType (typeof (UIViewController))]
 #endif
@@ -278,6 +286,7 @@ namespace XamCore.MultipeerConnectivity {
 		MCSession Session { get; }
 	}
 
+	[TV (10,0)]
 	[Since (7,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -302,6 +311,7 @@ namespace XamCore.MultipeerConnectivity {
 		bool ShouldPresentNearbyPeer (MCBrowserViewController browserViewController, MCPeerID peerID, [NullAllowed] NSDictionary info);
 	}
 
+	[TV (10,0)]
 	[Since (7,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[MCAdvertiserAssistant init]: unrecognized selector sent to instance 0x7ea7fa40
@@ -334,6 +344,7 @@ namespace XamCore.MultipeerConnectivity {
 		void Stop ();
 	}
 
+	[TV (10,0)]
 	[Since (7,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[Model]

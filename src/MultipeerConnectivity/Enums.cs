@@ -5,13 +5,15 @@
 //   Aaron Bockover (abock@xamarin.com)
 //   Sebastien Pouliot  <sebastien@xamarin.com>
 //
-// Copyright 2013-2014 Xamarin, Inc.
+// Copyright 2013-2014, 2016 Xamarin, Inc.
+
 #if XAMCORE_2_0 || !MONOMAC // MultipeerConnectivity is 64-bit only on OS X
 using XamCore.ObjCRuntime;
 
 namespace XamCore.MultipeerConnectivity {
 
 	// NSInteger -> MCSession.h
+	[TV (10,0)]
 	[iOS (7,0)]
 	[Native]
 	public enum MCSessionSendDataMode : nint {
@@ -20,6 +22,7 @@ namespace XamCore.MultipeerConnectivity {
 	}
 
 	// NSInteger -> MCSession.h
+	[TV (10,0)]
 	[iOS (7,0)]
 	[Native]
 	public enum MCSessionState : nint {
@@ -29,6 +32,7 @@ namespace XamCore.MultipeerConnectivity {
 	}
 
 	// NSInteger -> MCSession.h
+	[TV (10,0)]
 	[iOS (7,0)]
 	[Native]
 	public enum MCEncryptionPreference : nint {
@@ -38,6 +42,7 @@ namespace XamCore.MultipeerConnectivity {
 	}
 
 	// NSInteger -> MCError.h
+	[TV (10,0)]
 	[iOS (7,0)]
 	[Native]
 	[ErrorDomain ("MCErrorDomain")]
