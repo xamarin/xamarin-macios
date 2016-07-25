@@ -982,7 +982,6 @@ namespace XamCore.HomeKit {
 		[Export ("manageUsersWithCompletionHandler:")]
 		void ManageUsers (Action<NSError> completion);
 
-		[NoTV]
 		[iOS (9,0)]
 		[Export ("homeAccessControlForUser:")]
 		HMHomeAccessControl GetHomeAccessControl (HMUser user);
@@ -1553,6 +1552,10 @@ namespace XamCore.HomeKit {
 		[Field ("HMAccessoryCategoryTypeThermostat")]
 		NSString Thermostat { get; }
 
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		[Field ("HMAccessoryCategoryTypeVideoDoorbell")]
+		NSString VideoDoorbell { get; }
+
 		[Field ("HMAccessoryCategoryTypeWindow")]
 		NSString Window { get; }
 
@@ -1600,7 +1603,6 @@ namespace XamCore.HomeKit {
 		[NoTV]
 		[NoWatch]
 		[Export ("initWithName:events:predicate:")]
-		[DesignatedInitializer]
 		IntPtr Constructor (string name, HMEvent[] events, [NullAllowed] NSPredicate predicate);
 
 		[Export ("events", ArgumentSemantic.Copy)]
