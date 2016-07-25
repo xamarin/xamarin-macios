@@ -16,6 +16,7 @@ using XamCore.UIKit;
 namespace XamCore.ReplayKit {
 
 	[iOS (9,0)]
+	[TV (10,0)]
 	[BaseType (typeof (UIViewController))]
 	interface RPPreviewViewController {
 		[Export ("initWithNibName:bundle:")]
@@ -33,6 +34,7 @@ namespace XamCore.ReplayKit {
 	interface IRPPreviewViewControllerDelegate { }
 
 	[iOS (9,0)]
+	[TV (10,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface RPPreviewViewControllerDelegate {
@@ -46,6 +48,7 @@ namespace XamCore.ReplayKit {
 	}
 
 	[iOS (9,0)]
+	[TV (10,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface RPScreenRecorder {
@@ -100,6 +103,7 @@ namespace XamCore.ReplayKit {
 	interface IRPScreenRecorderDelegate { }
 
 	[iOS (9,0)]
+	[TV (10,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface RPScreenRecorderDelegate {
@@ -112,6 +116,7 @@ namespace XamCore.ReplayKit {
 	}
 
 	[iOS (10,0)]
+	[TV (10,0)]
 	[BaseType (typeof (UIViewController))]
 	interface RPBroadcastActivityViewController {
 		// inlined
@@ -131,6 +136,7 @@ namespace XamCore.ReplayKit {
 	interface IRPBroadcastActivityViewControllerDelegate {}
 
 	[iOS (10,0)]
+	[TV (10,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface RPBroadcastActivityViewControllerDelegate {
@@ -140,6 +146,7 @@ namespace XamCore.ReplayKit {
 	}
 
 	[iOS (10,0)]
+	[TV (10,0)]
 	[BaseType (typeof (NSObject))]
 	interface RPBroadcastController {
 		[Export ("broadcasting")]
@@ -178,6 +185,7 @@ namespace XamCore.ReplayKit {
 	interface IRPBroadcastControllerDelegate {}
 
 	[iOS (10,0)]
+	[TV (10,0)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface RPBroadcastControllerDelegate {
@@ -189,6 +197,7 @@ namespace XamCore.ReplayKit {
 	}
 
 	[iOS (10,0)]
+	[TV (10,0)]
 	[BaseType (typeof (NSObject))]
 	interface RPBroadcastConfiguration : NSCoding, NSSecureCoding {
 		[Export ("clipDuration")]
@@ -202,6 +211,7 @@ namespace XamCore.ReplayKit {
 	delegate void LoadBroadcastingHandler (string bundleID, string displayName, UIImage appIcon);
 
 	[iOS (10,0)]
+	[TV (10,0)]
 	[Category]
 	[BaseType (typeof (NSExtensionContext))]
 	interface NSExtensionContext_RPBroadcastExtension {
@@ -213,6 +223,7 @@ namespace XamCore.ReplayKit {
 	}
 
 	[iOS (10,0)]
+	[TV (10,0)]
 	[BaseType (typeof (NSObject))]
 	interface RPBroadcastHandler : NSExtensionRequestHandling {
 		[Export ("updateServiceInfo:")]
@@ -220,6 +231,7 @@ namespace XamCore.ReplayKit {
 	}
 
 	[iOS (10,0)]
+	[TV (10,0)]
 	[BaseType (typeof (RPBroadcastHandler))]
 	interface RPBroadcastMP4ClipHandler {
 		[Export ("processMP4ClipWithURL:setupInfo:finished:")]
@@ -230,6 +242,7 @@ namespace XamCore.ReplayKit {
 	}
 
 	[iOS (10,0)]
+	[TV (10,0)]
 	[BaseType (typeof (RPBroadcastHandler))]
 	interface RPBroadcastSampleHandler {
 		[Export ("broadcastStartedWithSetupInfo:")]
