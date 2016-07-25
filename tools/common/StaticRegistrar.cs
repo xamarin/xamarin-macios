@@ -1695,7 +1695,12 @@ namespace XamCore.Registrar {
 			// Strip off the 'MonoTouch.' prefix
 			if (!IsDualBuild)
 				ns = type.Namespace.Substring (ns.IndexOf ('.') + 1);
+			
+			CheckNamespace (ns, exceptions);
+		}
 
+		void CheckNamespace (string ns, List<Exception> exceptions)
+		{
 			if (string.IsNullOrEmpty (ns))
 				return;
 
@@ -1964,9 +1969,15 @@ namespace XamCore.Registrar {
 			case "System.Double": return "double";
 			case "System.Boolean": return "BOOL"; // map managed 'bool' to ObjC BOOL = unsigned char
 			case "System.Void": return "void";
-			case "System.nint": return "NSInteger";
-			case "System.nuint": return "NSUInteger";
-			case "System.nfloat": return "CGFloat";
+			case "System.nint":
+				CheckNamespace ("Foundation", exceptions);
+				return "NSInteger";
+			case "System.nuint":
+				CheckNamespace ("Foundation", exceptions);
+				return "NSUInteger";
+			case "System.nfloat":
+				CheckNamespace ("CoreGraphics", exceptions);
+				return "CGFloat";
 			case "System.DateTime":
 				throw ErrorHelper.CreateError (4102, "The registrar found an invalid type `{0}` in signature for method `{2}`. Use `{1}` instead.", "System.DateTime", IsDualBuild ? "Foundation.NSDate" : CompatNamespace + ".Foundation.NSDate", descriptiveMethodName);
 			case "ObjCRuntime.Selector":
