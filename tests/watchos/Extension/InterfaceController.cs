@@ -64,7 +64,7 @@ namespace monotouchtestWatchKitExtension
 		void LoadTests ()
 		{
 			runner = new WatchOSRunner ();
-			runner.Filter = new NotFilter (new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingInterpreter").Filter);
+			runner.Filter = new NotFilter (new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingInterpreter,RequiresBSDSockets").Filter);
 			runner.Add (GetType ().Assembly);
 			ThreadPool.QueueUserWorkItem ((v) =>
 			{
