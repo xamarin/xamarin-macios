@@ -552,6 +552,8 @@ namespace XamCore.HomeKit {
 		RangeExtender,
 		[iOS (10,0), Watch (3,0), TV (10,0)]
 		IPCamera,
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		VideoDoorbell,
 	}
 
 	[iOS (9,0)]

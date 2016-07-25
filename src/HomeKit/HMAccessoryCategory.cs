@@ -47,6 +47,8 @@ namespace XamCore.HomeKit {
 				// iOS 10.0
 				if (s == HMAccessoryCategoryTypesInternal.IPCamera)
 					return HMAccessoryCategoryType.IPCamera;
+				if (s == HMAccessoryCategoryTypesInternal.VideoDoorbell)
+					return HMAccessoryCategoryType.VideoDoorbell;
 				return HMAccessoryCategoryType.Other;
 			}
 		}
