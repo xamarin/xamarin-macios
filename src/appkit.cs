@@ -18708,6 +18708,7 @@ namespace XamCore.AppKit {
 		bool ShouldCascadeWindows  { get; set; }
 	
 		[Export ("document")]
+		[NullAllowed]
 		NSDocument Document { get; set; }
 	
 		[Export ("setDocumentEdited:")]
