@@ -11,6 +11,8 @@ using XamCore.UIKit;
 
 namespace XamCore.ReplayKit {
 
+	[iOS (9,0)]
+	[TV (10,0)]
 	[Native]
 	[ErrorDomain ("RPRecordingErrorDomain")]
 	public enum RPRecordingError : nint {
@@ -37,6 +39,7 @@ namespace XamCore.ReplayKit {
 
 	[Native]
 	[iOS (10,0)]
+	[TV (10,0)]
 	public enum RPSampleBufferType : nint {
 		Video = 1,
 		AudioApp,

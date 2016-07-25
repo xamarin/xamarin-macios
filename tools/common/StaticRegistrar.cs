@@ -1695,7 +1695,12 @@ namespace XamCore.Registrar {
 			// Strip off the 'MonoTouch.' prefix
 			if (!IsDualBuild)
 				ns = type.Namespace.Substring (ns.IndexOf ('.') + 1);
+			
+			CheckNamespace (ns, exceptions);
+		}
 
+		void CheckNamespace (string ns, List<Exception> exceptions)
+		{
 			if (string.IsNullOrEmpty (ns))
 				return;
 
@@ -1788,11 +1793,18 @@ namespace XamCore.Registrar {
 				header.WriteLine ("#import <WatchKit/WatchKit.h>");
 				namespaces.Add ("UIKit");
 				return;
-#if MMP
 			case "QTKit":
+#if MONOMAC
 				if (Driver.SDKVersion >= new Version (10,12))
 					return; // 10.12 removed the header files for QTKit
 #endif
+				goto default;
+			case "ExternalAccessory":
+#if !MONOMAC
+				if (IsSimulator && Driver.App.Platform == Xamarin.Utils.ApplePlatform.TVOS)
+					return; // No headers provided for AppleTV/simulator.
+#endif
+				goto default;
 			default:
 				h = string.Format ("<{0}/{0}.h>", ns);
 				break;
@@ -1963,9 +1975,15 @@ namespace XamCore.Registrar {
 			case "System.Double": return "double";
 			case "System.Boolean": return "BOOL"; // map managed 'bool' to ObjC BOOL = unsigned char
 			case "System.Void": return "void";
-			case "System.nint": return "NSInteger";
-			case "System.nuint": return "NSUInteger";
-			case "System.nfloat": return "CGFloat";
+			case "System.nint":
+				CheckNamespace ("Foundation", exceptions);
+				return "NSInteger";
+			case "System.nuint":
+				CheckNamespace ("Foundation", exceptions);
+				return "NSUInteger";
+			case "System.nfloat":
+				CheckNamespace ("CoreGraphics", exceptions);
+				return "CGFloat";
 			case "System.DateTime":
 				throw ErrorHelper.CreateError (4102, "The registrar found an invalid type `{0}` in signature for method `{2}`. Use `{1}` instead.", "System.DateTime", IsDualBuild ? "Foundation.NSDate" : CompatNamespace + ".Foundation.NSDate", descriptiveMethodName);
 			case "ObjCRuntime.Selector":
@@ -2153,6 +2171,24 @@ namespace XamCore.Registrar {
 			return sb != null ? sb.ToString () : value;
 		}
 
+		static bool IsExternalAccessoryType (ObjCType type)
+		{
+			var ns = type.Type.Namespace;
+
+			var t = type.Type;
+			while (string.IsNullOrEmpty (ns) && t.DeclaringType != null) {
+				t = t.DeclaringType;
+				ns = t.Namespace;
+			}
+
+			switch (ns) {
+			case "ExternalAccessory":
+				return true;
+			default:
+				return false;
+			}
+		}
+
 		static bool IsMetalType (ObjCType type)
 		{
 			var ns = type.Type.Namespace;
@@ -2197,6 +2233,9 @@ namespace XamCore.Registrar {
 
 				if (isPlatformType && IsSimulatorOrDesktop && IsMetalType (@class))
 					continue; // Metal isn't supported in the simulator.
+
+				if (IsSimulatorOrDesktop && Driver.App.Platform == Xamarin.Utils.ApplePlatform.TVOS && IsExternalAccessoryType (@class))
+					continue; // ExternalAccessory's headers aren't available for tvOS/Simulator.
 #endif
 				
 				if (@class.IsFakeProtocol)
