@@ -49,6 +49,12 @@
 !missing-selector! NSURLSession::getTasksWithCompletionHandler: not bound
 
 
+# Photos
+
+## xcode 8 beta 1-3 defines it but it does not exists in the binaries
+common.unclassified:!missing-field! PHLivePhotoShouldRenderAtPlaybackTime not bound
+
+
 # SpriteKit
 
 ## https://bugzilla.xamarin.com/show_bug.cgi?id=34946
