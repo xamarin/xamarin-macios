@@ -5612,11 +5612,11 @@ namespace XamCore.AppKit {
 
 		[Static]
 		[Export ("setUserFont:")]
-		void SetUserFont (NSFont aFont);
+		void SetUserFont ([NullAllowed] NSFont aFont);
 
 		[Static]
 		[Export ("setUserFixedPitchFont:")]
-		void SetUserFixedPitchFont (NSFont aFont);
+		void SetUserFixedPitchFont ([NullAllowed] NSFont aFont);
 
 		[Static]
 		[Export ("systemFontOfSize:")]
