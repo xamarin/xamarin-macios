@@ -264,6 +264,9 @@ namespace xharness
 
 				// build/[install/]run targets for specific test projects.
 				foreach (var target in allTargets) {
+					if (!target.IsExe)
+						continue;
+					
 					var make_escaped_suffix = "-" + target.Platform.Replace (" ", "\\ ");
 					var make_escaped_name = target.Name.Replace (" ", "\\ ");
 
@@ -302,99 +305,97 @@ namespace xharness
 					writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhoneSimulator\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 					writer.WriteLine ();
 
-					if (target.IsExe) {
-						// run sim project target
+					// run sim project target
+					if (target.IsMultiArchitecture) {
+						writer.WriteTarget ("run{0}-sim{2}-{1}", string.Empty, make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						writer.WriteLine ("\t$(Q) rm -f \".$@-failure.stamp\"");
+						writer.WriteLine ("\t$(Q) $(MAKE) build{0}-sim{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-sim32-{1} || echo \"exec{0}-sim32-{1} failed\" >> \".$@-failure.stamp\"", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-sim64-{1} || echo \"exec{0}-sim64-{1} failed\" >> \".$@-failure.stamp\"", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) if test -e \".$@-failure.stamp\"; then cat \".$@-failure.stamp\"; rm \".$@-failure.stamp\"; exit 1; fi");
+						writer.WriteLine ();
+
+						writer.WriteTarget ("run{0}-sim32-{1}", string.Empty, make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(MAKE) build{0}-sim{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-sim32-{1}", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ();
+
+						writer.WriteTarget ("run{0}-sim64-{1}", string.Empty, make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(MAKE) build{0}-sim{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-sim64-{1}", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ();
+					} else {
+						writer.WriteTarget ("run{0}-sim{2}-{1}", string.Empty, make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						writer.WriteLine ("\t$(Q) $(MAKE) build{0}-sim{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-sim{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						writer.WriteLine ();
+					}
+
+					if (target.IsBCLProject && target.IsExe) {
+						writer.WriteTarget ("run{0}-bcl-sim{2}-{1}", "run{0}-sim{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						writer.WriteLine ("\t$(Q) echo Run succeeded"); // This is important, otherwise we'll end up executing the catch-all run-% target
+						writer.WriteLine ();
+
 						if (target.IsMultiArchitecture) {
-							writer.WriteTarget ("run{0}-sim{2}-{1}", string.Empty, make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-							writer.WriteLine ("\t$(Q) rm -f \".$@-failure.stamp\"");
-							writer.WriteLine ("\t$(Q) $(MAKE) build{0}-sim{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-							writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-sim32-{1} || echo \"exec{0}-sim32-{1} failed\" >> \".$@-failure.stamp\"", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-sim64-{1} || echo \"exec{0}-sim64-{1} failed\" >> \".$@-failure.stamp\"", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) if test -e \".$@-failure.stamp\"; then cat \".$@-failure.stamp\"; rm \".$@-failure.stamp\"; exit 1; fi");
-							writer.WriteLine ();
-
-							writer.WriteTarget ("run{0}-sim32-{1}", string.Empty, make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) $(MAKE) build{0}-sim{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-							writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-sim32-{1}", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ();
-
-							writer.WriteTarget ("run{0}-sim64-{1}", string.Empty, make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) $(MAKE) build{0}-sim{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-							writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-sim64-{1}", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ();
-						} else {
-							writer.WriteTarget ("run{0}-sim{2}-{1}", string.Empty, make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-							writer.WriteLine ("\t$(Q) $(MAKE) build{0}-sim{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-							writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-sim{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-							writer.WriteLine ();
-						}
-
-						if (target.IsBCLProject) {
-							writer.WriteTarget ("run{0}-bcl-sim{2}-{1}", "run{0}-sim{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+							writer.WriteTarget ("run{0}-bcl-sim32-{1}", "run{0}-sim32-{1}", make_escaped_suffix, make_escaped_name);
 							writer.WriteLine ("\t$(Q) echo Run succeeded"); // This is important, otherwise we'll end up executing the catch-all run-% target
 							writer.WriteLine ();
 
-							if (target.IsMultiArchitecture) {
-								writer.WriteTarget ("run{0}-bcl-sim32-{1}", "run{0}-sim32-{1}", make_escaped_suffix, make_escaped_name);
-								writer.WriteLine ("\t$(Q) echo Run succeeded"); // This is important, otherwise we'll end up executing the catch-all run-% target
-								writer.WriteLine ();
-
-								writer.WriteTarget ("run{0}-bcl-sim64-{1}", "run{0}-sim64-{1}", make_escaped_suffix, make_escaped_name);
-								writer.WriteLine ("\t$(Q) echo Run succeeded"); // This is important, otherwise we'll end up executing the catch-all run-% target
-								writer.WriteLine ();
-							}
-						}
-
-						if (target is ClassicTarget) {
-							// target that runs both Classic+Unified
-							writer.WriteTarget ("run{0}-sim-{1}", string.Empty, make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) rm -f \".$@-failure.stamp\"");
-							writer.WriteLine ("\t$(Q) $(MAKE) build{0}-simclassic-{1} build{0}-simunified-{1}", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-simclassic-{1} || echo \"exec{0}-simclassic-{1} failed\" >> \".$@-failure.stamp\"", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-sim32-{1} || echo \"exec{0}-sim32-{1} failed\" >> \".$@-failure.stamp\"", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-sim64-{1} || echo \"exec{0}-sim64-{1} failed\" >> \".$@-failure.stamp\"", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) if test -e \".$@-failure.stamp\"; then cat \".$@-failure.stamp\"; rm \".$@-failure.stamp\"; exit 1; fi");
-							writer.WriteLine ();
-
-							// compat targets for finger memory
-							writer.WriteTarget ("run-simcompat-{1}", "run-ios-simclassic-{1}", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) echo Run succeeded"); // This is important, otherwise we'll end up executing the catch-all run-% target
-							writer.WriteLine ();
-
-							writer.WriteTarget ("run-simdual-{1}", "run-ios-simunified-{1}", make_escaped_suffix, make_escaped_name);
+							writer.WriteTarget ("run{0}-bcl-sim64-{1}", "run{0}-sim64-{1}", make_escaped_suffix, make_escaped_name);
 							writer.WriteLine ("\t$(Q) echo Run succeeded"); // This is important, otherwise we'll end up executing the catch-all run-% target
 							writer.WriteLine ();
 						}
+					}
 
-						// exec sim project target
+					if (target is ClassicTarget) {
+						// target that runs both Classic+Unified
+						writer.WriteTarget ("run{0}-sim-{1}", string.Empty, make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) rm -f \".$@-failure.stamp\"");
+						writer.WriteLine ("\t$(Q) $(MAKE) build{0}-simclassic-{1} build{0}-simunified-{1}", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-simclassic-{1} || echo \"exec{0}-simclassic-{1} failed\" >> \".$@-failure.stamp\"", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-sim32-{1} || echo \"exec{0}-sim32-{1} failed\" >> \".$@-failure.stamp\"", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-sim64-{1} || echo \"exec{0}-sim64-{1} failed\" >> \".$@-failure.stamp\"", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) if test -e \".$@-failure.stamp\"; then cat \".$@-failure.stamp\"; rm \".$@-failure.stamp\"; exit 1; fi");
+						writer.WriteLine ();
+
+						// compat targets for finger memory
+						writer.WriteTarget ("run-simcompat-{1}", "run-ios-simclassic-{1}", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) echo Run succeeded"); // This is important, otherwise we'll end up executing the catch-all run-% target
+						writer.WriteLine ();
+
+						writer.WriteTarget ("run-simdual-{1}", "run-ios-simunified-{1}", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) echo Run succeeded"); // This is important, otherwise we'll end up executing the catch-all run-% target
+						writer.WriteLine ();
+					}
+
+					// exec sim project target
+					if (target.IsMultiArchitecture) {
+						writer.WriteTarget ("exec{0}-sim64-{1}", "$(UNIT_SERVER)", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-simulator-64 --sdkroot $(XCODE_DEVELOPER_ROOT) --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --configuration $(CONFIG)", target.ProjectPath, target.Platform); 
+						writer.WriteLine ();
+
+						writer.WriteTarget ("exec{0}-sim32-{1}", "$(UNIT_SERVER)", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-simulator-32 --sdkroot $(XCODE_DEVELOPER_ROOT) --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --configuration $(CONFIG)", target.ProjectPath, target.Platform); 
+						writer.WriteLine ();
+					} else {
+						writer.WriteTarget ("exec{0}-sim{2}-{1}", "$(UNIT_SERVER)", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-simulator --sdkroot $(XCODE_DEVELOPER_ROOT) --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --configuration $(CONFIG)", target.ProjectPath, target.Platform); 
+						writer.WriteLine ();
+					}
+
+					if (target.IsBCLProject && target.IsExe) {
+						writer.WriteTarget ("exec{0}-bcl-sim{2}-{1}", "exec{0}-sim-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						writer.WriteLine ("\t$(Q) echo Exec succeeded"); // This is important, otherwise we'll end up executing the catch-all exec-% target
+						writer.WriteLine ();
+
 						if (target.IsMultiArchitecture) {
-							writer.WriteTarget ("exec{0}-sim64-{1}", "$(UNIT_SERVER)", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-simulator-64 --sdkroot $(XCODE_DEVELOPER_ROOT) --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --configuration $(CONFIG)", target.ProjectPath, target.Platform); 
-							writer.WriteLine ();
-
-							writer.WriteTarget ("exec{0}-sim32-{1}", "$(UNIT_SERVER)", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-simulator-32 --sdkroot $(XCODE_DEVELOPER_ROOT) --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --configuration $(CONFIG)", target.ProjectPath, target.Platform); 
-							writer.WriteLine ();
-						} else {
-							writer.WriteTarget ("exec{0}-sim{2}-{1}", "$(UNIT_SERVER)", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-simulator --sdkroot $(XCODE_DEVELOPER_ROOT) --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --configuration $(CONFIG)", target.ProjectPath, target.Platform); 
-							writer.WriteLine ();
-						}
-
-						if (target.IsBCLProject) {
-							writer.WriteTarget ("exec{0}-bcl-sim{2}-{1}", "exec{0}-sim-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+							writer.WriteTarget ("exec{0}-bcl-sim32-{1}", "exec{0}-sim32-{1}", make_escaped_suffix, make_escaped_name);
 							writer.WriteLine ("\t$(Q) echo Exec succeeded"); // This is important, otherwise we'll end up executing the catch-all exec-% target
 							writer.WriteLine ();
 
-							if (target.IsMultiArchitecture) {
-								writer.WriteTarget ("exec{0}-bcl-sim32-{1}", "exec{0}-sim32-{1}", make_escaped_suffix, make_escaped_name);
-								writer.WriteLine ("\t$(Q) echo Exec succeeded"); // This is important, otherwise we'll end up executing the catch-all exec-% target
-								writer.WriteLine ();
-
-								writer.WriteTarget ("exec{0}-bcl-sim64-{1}", "exec{0}-sim64-{1}", make_escaped_suffix, make_escaped_name);
-								writer.WriteLine ("\t$(Q) echo Exec succeeded"); // This is important, otherwise we'll end up executing the catch-all exec-% target
-								writer.WriteLine ();
-							}
+							writer.WriteTarget ("exec{0}-bcl-sim64-{1}", "exec{0}-sim64-{1}", make_escaped_suffix, make_escaped_name);
+							writer.WriteLine ("\t$(Q) echo Exec succeeded"); // This is important, otherwise we'll end up executing the catch-all exec-% target
+							writer.WriteLine ();
 						}
 					}
 
@@ -425,65 +426,63 @@ namespace xharness
 					writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhone\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 					writer.WriteLine ();
 
-					if (target.IsExe) {
-						// install dev project target
-						if (target.IsBCLProject) {
-							writer.WriteTarget ("install{0}-bcl-dev{2}-{1}", "install{0}-dev-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-							writer.WriteLine ("\t$(Q) echo Install succeeded"); // This is important, otherwise we'll end up executing the catch-all install-% target
-							writer.WriteLine ();
-						}
-						writer.WriteTarget ("install{0}-dev{2}-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --install \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG)", target.ProjectPath, target.Platform);
+					// install dev project target
+					if (target.IsBCLProject) {
+						writer.WriteTarget ("install{0}-bcl-dev{2}-{1}", "install{0}-dev-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						writer.WriteLine ("\t$(Q) echo Install succeeded"); // This is important, otherwise we'll end up executing the catch-all install-% target
+						writer.WriteLine ();
+					}
+					writer.WriteTarget ("install{0}-dev{2}-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+					writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --install \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG)", target.ProjectPath, target.Platform);
+					writer.WriteLine ();
+
+					// run dev project target
+					if (target.IsBCLProject) {
+						writer.WriteTarget ("run{0}-bcl-dev{2}-{1}", "run{0}-dev-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						writer.WriteLine ("\t$(Q) echo Run succeeded"); // This is important, otherwise we'll end up executing the catch-all run-% target
+						writer.WriteLine ();
+					}
+					writer.WriteTarget ("run{0}-dev{2}-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+					writer.WriteLine ("\t$(Q) $(MAKE) build{0}-dev{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+					writer.WriteLine ("\t$(Q) $(MAKE) install{0}-dev{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+					writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-dev{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+					writer.WriteLine ();
+
+					// exec dev project target
+					if (target.IsBCLProject) {
+						writer.WriteTarget ("exec{0}-bcl-dev{2}-{1}", "exec{0}-dev{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						writer.WriteLine ("\t$(Q) echo Exec succeeded"); // This is important, otherwise we'll end up executing the catch-all run-% target
+						writer.WriteLine ();
+					}
+					writer.WriteTarget ("exec{0}-dev{2}-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+					writer.WriteLine ("\t$(Q) rm -f \"$@.log\"");
+					writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG)", target.ProjectPath, target.Platform);
+					writer.WriteLine ();
+
+					if (target is ClassicTarget) {
+						// target that runs both Classic+Unified
+						writer.WriteTarget ("run{0}-dev-{1}", string.Empty, make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) rm -f \".$@-failure.stamp\"");
+						writer.WriteLine ("\t$(Q) $(MAKE) build{0}-devclassic-{1} build{0}-devunified-{1}", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(MAKE) install{0}-devclassic-{1}", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-devclassic-{1} || echo \"exec{0}-devclassic-{1} failed\" >> \".$@-failure.stamp\"", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(MAKE) install{0}-devunified-{1}", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-devunified-{1} || echo \"exec{0}-devunified-{1} failed\" >> \".$@-failure.stamp\"", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) if test -e \".$@-failure.stamp\"; then cat \".$@-failure.stamp\"; rm \".$@-failure.stamp\"; exit 1; fi");
 						writer.WriteLine ();
 
-						// run dev project target
-						if (target.IsBCLProject) {
-							writer.WriteTarget ("run{0}-bcl-dev{2}-{1}", "run{0}-dev-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-							writer.WriteLine ("\t$(Q) echo Run succeeded"); // This is important, otherwise we'll end up executing the catch-all run-% target
-							writer.WriteLine ();
-						}
-						writer.WriteTarget ("run{0}-dev{2}-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-						writer.WriteLine ("\t$(Q) $(MAKE) build{0}-dev{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-						writer.WriteLine ("\t$(Q) $(MAKE) install{0}-dev{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-						writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-dev{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						// compat targets for finger memory
+						writer.WriteTarget ("run-devcompat-{1}", "run-ios-devclassic-{1}", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) echo Run succeeded"); // This is important, otherwise we'll end up executing the catch-all run-% target
 						writer.WriteLine ();
 
-						// exec dev project target
-						if (target.IsBCLProject) {
-							writer.WriteTarget ("exec{0}-bcl-dev{2}-{1}", "exec{0}-dev{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-							writer.WriteLine ("\t$(Q) echo Exec succeeded"); // This is important, otherwise we'll end up executing the catch-all run-% target
-							writer.WriteLine ();
-						}
-						writer.WriteTarget ("exec{0}-dev{2}-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-						writer.WriteLine ("\t$(Q) rm -f \"$@.log\"");
-						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG)", target.ProjectPath, target.Platform);
+						writer.WriteTarget ("run-devdual-{1}", "run-ios-devunified-{1}", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) echo Run succeeded"); // This is important, otherwise we'll end up executing the catch-all run-% target
 						writer.WriteLine ();
-
-						if (target is ClassicTarget) {
-							// target that runs both Classic+Unified
-							writer.WriteTarget ("run{0}-dev-{1}", string.Empty, make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) rm -f \".$@-failure.stamp\"");
-							writer.WriteLine ("\t$(Q) $(MAKE) build{0}-devclassic-{1} build{0}-devunified-{1}", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) $(MAKE) install{0}-devclassic-{1}", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-devclassic-{1} || echo \"exec{0}-devclassic-{1} failed\" >> \".$@-failure.stamp\"", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) $(MAKE) install{0}-devunified-{1}", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-devunified-{1} || echo \"exec{0}-devunified-{1} failed\" >> \".$@-failure.stamp\"", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) if test -e \".$@-failure.stamp\"; then cat \".$@-failure.stamp\"; rm \".$@-failure.stamp\"; exit 1; fi");
-							writer.WriteLine ();
-
-							// compat targets for finger memory
-							writer.WriteTarget ("run-devcompat-{1}", "run-ios-devclassic-{1}", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) echo Run succeeded"); // This is important, otherwise we'll end up executing the catch-all run-% target
-							writer.WriteLine ();
-
-							writer.WriteTarget ("run-devdual-{1}", "run-ios-devunified-{1}", make_escaped_suffix, make_escaped_name);
-							writer.WriteLine ("\t$(Q) echo Run succeeded"); // This is important, otherwise we'll end up executing the catch-all run-% target
-							writer.WriteLine ();
-						}
 					}
 
 					// targets that does both sim and device
-					if (target.IsExe && !(target is UnifiedTarget) /* exclude Unified so that we don't end up duplicating these targets */) {
+					if (!(target is UnifiedTarget) /* exclude Unified so that we don't end up duplicating these targets */) {
 						// build target
 						writer.WriteTarget ("build{0}-{1}", "build{0}-dev-{1} build{0}-sim-{1}", make_escaped_suffix, make_escaped_name);
 						writer.WriteLine ("\t$(Q) echo Build succeeded"); // This is important, otherwise we'll end up executing the catch-all build-% target
@@ -570,6 +569,8 @@ namespace xharness
 				// targets that run all platforms
 				writer.WriteLine ();
 				foreach (var target in classic_targets) {
+					if (!target.IsExe)
+						continue;
 					var make_escaped_name = target.Name.Replace (" ", "\\ ");
 
 					writer.WriteTarget ("build-sim-{0}", "build-ios-simclassic-{0} build-ios-simunified-{0} build-tvos-sim-{0} build-watchos-sim-{0}", make_escaped_name);
