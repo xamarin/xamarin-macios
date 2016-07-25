@@ -170,7 +170,6 @@ namespace xharness
 					Harness = this,
 					MonoPath = MONO_PATH,
 					WatchMonoPath = WATCH_MONO_PATH,
-					TVOSMonoPath = TVOS_MONO_PATH,
 					TestName = bclTest,
 				};
 				target.Convert ();
