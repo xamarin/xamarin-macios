@@ -10,7 +10,6 @@ namespace xharness
 		public Harness Harness;
 		public string MonoPath; // MONO_PATH
 		public string WatchMonoPath; // WATCH_MONO_PATH
-		public string TVOSMonoPath; // TVOS_MONO_PATH
 		public string TestName;
 
 		static readonly Dictionary<string, string[]> ignored_tests =  new Dictionary<string, string[]> { 
@@ -48,8 +47,6 @@ namespace xharness
 			var main_test_files = File.ReadAllLines (main_test_sources);
 			var watch_test_sources = Path.Combine (WatchMonoPath, "mcs", "class", testName, testName + "_test.dll.sources");
 			var watch_test_files = File.ReadAllLines (watch_test_sources);
-			var tvos_test_sources = Path.Combine (TVOSMonoPath, "mcs", "class", testName, testName + "_test.dll.sources");
-			var tvos_test_files = File.ReadAllLines (tvos_test_sources);
 			var template_path = Path.Combine (Harness.RootDirectory, "bcl-test", TestName, TestName + ".csproj.template");
 			var csproj_input = File.ReadAllText (template_path);
 			var project_path = Path.Combine (Harness.RootDirectory, "bcl-test", TestName, TestName + ".csproj");
@@ -65,7 +62,7 @@ namespace xharness
 				if (IsNotSupported (main_test_sources, s))
 					continue;
 
-				sb.AppendFormat ("    <Compile Include=\"{0}\\Test\\{1}\" Condition=\"'$(TargetFrameworkIdentifier)' == 'MonoTouch' Or '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'\">\r\n", files_path, s.Replace ("/", "\\").Trim ());
+				sb.AppendFormat ("    <Compile Include=\"{0}\\Test\\{1}\" Condition=\"'$(TargetFrameworkIdentifier)' == 'MonoTouch' Or '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS' Or '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'\">\r\n", files_path, s.Replace ("/", "\\").Trim ());
 
 				var link_path = Path.GetDirectoryName (s);
 				if (string.IsNullOrEmpty (link_path) || link_path [0] == '.')
@@ -95,24 +92,7 @@ namespace xharness
 				sb.AppendFormat ("    </Compile>\r\n");
 			}
 
-			var tvos_files_path = Path.GetDirectoryName (tvos_test_sources).Replace ("/", "\\");
-			foreach (var s in tvos_test_files) {
-				if (string.IsNullOrEmpty (s))
-					continue;
 
-				if (IsNotSupported (tvos_test_sources, s))
-					continue;
-
-				sb.AppendFormat ("    <Compile Include=\"{0}\\Test\\{1}\" Condition=\"'$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'\">\r\n", tvos_files_path, s.Replace ("/", "\\").Trim ());
-
-				var link_path = Path.GetDirectoryName (s);
-				if (string.IsNullOrEmpty (link_path) || link_path [0] == '.')
-					sb.AppendFormat ("      <Link>{0}</Link>\r\n", Path.GetFileName (s));
-				else
-					sb.AppendFormat ("      <Link>{0}\\{1}</Link>\r\n", link_path, Path.GetFileName (s));
-
-				sb.AppendFormat ("    </Compile>\r\n");
-			}
 
 			Harness.Save (csproj_input.Replace ("#FILES#", sb.ToString ()), csproj_output);
 		}
