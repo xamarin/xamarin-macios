@@ -1793,6 +1793,12 @@ namespace XamCore.Registrar {
 				header.WriteLine ("#import <WatchKit/WatchKit.h>");
 				namespaces.Add ("UIKit");
 				return;
+			case "QTKit":
+#if MONOMAC
+				if (Driver.SDKVersion >= new Version (10,12))
+					return; // 10.12 removed the header files for QTKit
+#endif
+				goto default;
 			case "ExternalAccessory":
 #if !MONOMAC
 				if (IsSimulator && Driver.App.Platform == Xamarin.Utils.ApplePlatform.TVOS)
