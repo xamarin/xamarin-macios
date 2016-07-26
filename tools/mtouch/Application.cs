@@ -221,6 +221,7 @@ namespace Xamarin.Bundler {
 
 			switch (Platform) {
 			case ApplePlatform.iOS:
+				return !Profile.IsSdkAssembly (Path.GetFileNameWithoutExtension (assembly));
 			case ApplePlatform.TVOS:
 			case ApplePlatform.WatchOS:
 				return false;
