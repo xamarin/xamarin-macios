@@ -170,6 +170,16 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "SKNode":
+				switch (name) {
+				case "didUpdateFocusInContext:withAnimationCoordinator:":
+				case "setNeedsFocusUpdate":
+				case "shouldUpdateFocusInContext:":
+				case "updateFocusIfNeeded":
+				case "preferredFocusedView":
+					return true;
+				}
+				break;
 			}
 
 			switch (name) {

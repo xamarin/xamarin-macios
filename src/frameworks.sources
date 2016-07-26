@@ -1175,6 +1175,7 @@ SPRITEKIT_SOURCES = \
 	SpriteKit/SKNode.cs \
 	SpriteKit/SKFieldNode.cs \
 	SpriteKit/SKShapeNode.cs \
+	SpriteKit/SKUniform.cs \
 	SpriteKit/SKVideoNode.cs \
 
 # StoreKit

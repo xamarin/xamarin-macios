@@ -107,4 +107,80 @@ namespace XamCore.SpriteKit {
 		OldestFirst,
 		DontCare,
 	}
+
+	[iOS (9,0)][Mac (10,11)]
+	[Native]
+	public enum SKAttributeType : nint
+	{
+		None = 0,
+		Float = 1,
+		VectorFloat2 = 2,
+		VectorFloat3 = 3,
+		VectorFloat4 = 4,
+		HalfFloat = 5,
+		VectorHalfFloat2 = 6,
+		VectorHalfFloat3 = 7,
+		VectorHalfFloat4 = 8,
+	}
+
+	[iOS (10,0)][Mac (10,12)]
+	[Native]
+	public enum SKTileDefinitionRotation : nuint
+	{
+		Angle0 = 0,
+		Angle90,
+		Angle180,
+		Angle270,
+	}
+
+	[iOS (10,0)][Mac (10,12)]
+	[Native]
+	public enum SKTileSetType : nuint
+	{
+		Grid,
+		Isometric,
+		HexagonalFlat,
+		HexagonalPointy,
+	}
+
+	[iOS (10,0)][Mac (10,12)]
+	[Native]
+	public enum SKTileAdjacencyMask : nuint
+	{
+		Up = 1 << 0,
+		UpperRight = 1 << 1,
+		Right = 1 << 2,
+		LowerRight = 1 << 3,
+		Down = 1 << 4,
+		LowerLeft = 1 << 5,
+		Left = 1 << 6,
+		UpperLeft = 1 << 7,
+		All = Up | UpperRight | Right | LowerRight | Down | LowerLeft | Left | UpperLeft,
+		HexFlatUp = 1 << 0,
+		HexFlatUpperRight = 1 << 1,
+		HexFlatLowerRight = 1 << 2,
+		HexFlatDown = 1 << 3,
+		HexFlatLowerLeft = 1 << 4,
+		HexFlatUpperLeft = 1 << 5,
+		HexFlatAll = HexFlatUp | HexFlatUpperRight | HexFlatLowerRight | HexFlatDown | HexFlatLowerLeft | HexFlatUpperLeft,
+		HexPointyUpperLeft = 1 << 0,
+		HexPointyUpperRight = 1 << 1,
+		HexPointyRight = 1 << 2,
+		HexPointyLowerRight = 1 << 3,
+		HexPointyLowerLeft = 1 << 4,
+		HexPointyLeft = 1 << 5,
+		HexPointyAll = HexPointyUpperLeft | HexPointyUpperRight | HexPointyRight | HexPointyLowerRight | HexPointyLowerLeft | HexPointyLeft,
+		UpEdge = Right | LowerRight | Down | LowerLeft | Left,
+		UpperRightEdge = Down | LowerLeft | Left,
+		RightEdge = Down | LowerLeft | Left | UpperLeft | Up,
+		LowerRightEdge = Left | UpperLeft | Up,
+		DownEdge = Up | UpperRight | Right | Left | UpperLeft,
+		LowerLeftEdge = Up | UpperRight | Right,
+		LeftEdge = Up | UpperRight | Right | LowerRight | Down,
+		UpperLeftEdge = Right | LowerRight | Down,
+		UpperRightCorner = Up | UpperRight | Right | LowerRight | Down | Left | UpperLeft,
+		LowerRightCorner = Up | UpperRight | Right | LowerRight | Down | LowerLeft | Left,
+		LowerLeftCorner = Up | Right | LowerRight | Down | LowerLeft | Left | UpperLeft,
+		UpperLeftCorner = Up | UpperRight | Right | Down | LowerLeft | Left | UpperLeft,
+	}
 }

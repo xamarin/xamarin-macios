@@ -387,6 +387,27 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (6, 0);
 				}
 				break;
+
+			case "UIFocusEnvironment":
+				switch (type.Name) {
+				case "SK3DNode":
+				case "SKAudioNode":
+				case "SKCameraNode":
+				case "SKCropNode":
+				case "SKEffectNode":
+				case "SKEmitterNode":
+				case "SKFieldNode":
+				case "SKLabelNode":
+				case "SKLightNode":
+				case "SKNode":
+				case "SKReferenceNode":
+				case "SKScene":
+				case "SKShapeNode":
+				case "SKVideoNode":
+				case "SKSpriteNode":
+					return true;
+				}
+				break;
 			}
 			return base.Skip (type, protocolName);
 		}
