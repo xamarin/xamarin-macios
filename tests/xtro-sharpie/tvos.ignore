@@ -62,6 +62,9 @@
 !missing-selector! GKVoiceChatClient::voiceChatService:sendData:toParticipantID: not bound
 !missing-selector! GKVoiceChatClient::voiceChatService:sendRealTimeData:toParticipantID: not bound
 
+## type is not available in tvOS but it's defined multiple times in the headers (so it gets picked up without the __TVOS_UNAVAILABLE)
+!missing-selector! GKFriendRequestComposeViewController::addRecipientPlayers: not bound
+
 
 # MediaPlayer
 
