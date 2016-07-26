@@ -262,6 +262,7 @@ namespace Introspection
 			"Romm", // acronym: Reference Output Medium Metric
 			"Rpa",
 			"Rpn", // acronym
+			"Rsa", // Rivest, Shamir and Adleman
 			"Rssi",
 			"Rtp",
 			"Rtsp",
