@@ -32,21 +32,21 @@
 
 # HomeKit
 
-# This was added and deprecated at the same time recommending the use of UpdateAudioStreamSetting.
-# We decided not to bind it, as it could be that Apple is just keeping it around because it's needed
-# somewhere else.
+## This was added and deprecated at the same time recommending the use of UpdateAudioStreamSetting.
+## We decided not to bind it, as it could be that Apple is just keeping it around because it's needed
+## somewhere else.
 !missing-selector! HMCameraStream::setAudioStreamSetting: not bound
 
 
 # Messages
 
-# No enum to attach the domain with.
+## No enum to attach the domain with.
 !missing-field! MSStickersErrorDomain not bound
 
 
 # MessageUI
 
-# [Native] available on XAMCORE_4_0
+## [Native] available on XAMCORE_4_0
 !missing-enum-native! MFMailComposeErrorCode
 !missing-enum-native! MFMailComposeResult
 !missing-enum-native! MessageComposeResult
