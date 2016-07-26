@@ -23,7 +23,7 @@ namespace XamCore.PhotosUI
 
 		[Abstract]
 		[Export ("finishContentEditingWithCompletionHandler:")]
-		void FinishContentEditing (Action<PHContentEditingOutput> completionHandler);
+		void FinishContentEditing ([NullAllowed] Action<PHContentEditingOutput> completionHandler);
 
 		[Abstract]
 		[Export ("cancelContentEditing")]
