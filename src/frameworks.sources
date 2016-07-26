@@ -1020,7 +1020,7 @@ OPENGLES_SOURCES = \
 
 # PassKit
 
-PASSKIT_CORE_SOURCES = \
+PASSKIT_API_SOURCES = \
 	PassKit/PKEnums.cs \
 
 # PdfKit
