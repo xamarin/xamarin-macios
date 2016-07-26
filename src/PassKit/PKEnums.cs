@@ -51,7 +51,7 @@ namespace XamCore.PassKit {
 		// Any = ~0
 	}
 
-#if !WATCH
+	[Watch (3,0)]
 	[Native]
 	public enum PKPaymentAuthorizationStatus : nint {
 		Success,
@@ -66,14 +66,13 @@ namespace XamCore.PassKit {
 		[iOS (9,2)]
 		PinLockout
 	}
-#endif
 
 	[Native]
 	public enum PKPaymentPassActivationState : nuint {
 		Activated, RequiresActivation, Activating, Suspended, Deactivated
 	}
 
-#if !WATCH
+	[Watch (3,0)]
 	[Native]
 	public enum PKMerchantCapability : nuint {
 		ThreeDS = 1 << 0,
@@ -82,6 +81,7 @@ namespace XamCore.PassKit {
 		Debit = 1 << 3
 	}
 
+	[Watch (3,0)]
 	[Native]
 	[Flags]
 	public enum PKAddressField : nuint {
@@ -94,6 +94,7 @@ namespace XamCore.PassKit {
 		All = PostalAddress|Phone|Email|Name
 	}
 
+	[NoWatch]
 	[iOS (8,3)]
 	[Native]
 	public enum PKPaymentButtonStyle : nint {
@@ -102,6 +103,7 @@ namespace XamCore.PassKit {
 		Black,
 	}
 
+	[NoWatch]
 	[iOS (8,3)]
 	[Native]
 	public enum PKPaymentButtonType : nint {
@@ -109,8 +111,11 @@ namespace XamCore.PassKit {
 		Buy,
 		[iOS (9,0)]
 		SetUp,
+		[iOS (10,0)]
+		InStore,
 	}
 
+	[Watch (3,0)]
 	[iOS (8,3)]
 	[Native]
 	public enum PKShippingType : nuint {
@@ -120,6 +125,7 @@ namespace XamCore.PassKit {
 		ServicePickup,
 	}
 
+	[NoWatch]
 	[iOS (9,0)]
 	[Native]
 	public enum PKAddPaymentPassError : nint
@@ -129,6 +135,7 @@ namespace XamCore.PassKit {
 		SystemCancelled
 	}
 
+	[NoWatch]
 	[iOS (9,0)]
 	[Native]
 	public enum PKAutomaticPassPresentationSuppressionResult : nuint
@@ -140,6 +147,7 @@ namespace XamCore.PassKit {
 		Success
 	}
 
+	[Watch (3,0)]
 	[iOS (9,0)]
 	[Native]
 	public enum PKPaymentMethodType : nuint
@@ -150,7 +158,8 @@ namespace XamCore.PassKit {
 		Prepaid,
 		Store
 	}
-	
+
+	[Watch (3,0)]
 	[iOS (9,0)]
 	[Native]
 	public enum PKPaymentSummaryItemType : nuint
@@ -159,11 +168,11 @@ namespace XamCore.PassKit {
 		Pending
 	}
 
+	[NoWatch]
 	[iOS (9,0)]
 	[Native]
 	public enum PKAddPassButtonStyle : nint {
 		Black = 0,
 		Outline
 	}
-#endif
 }
