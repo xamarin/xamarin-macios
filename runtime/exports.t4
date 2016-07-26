@@ -322,6 +322,12 @@
 
 		new Export ("MonoDomain *", "mono_get_root_domain"),
 
+		new Export ("void", "mono_domain_set_config", 
+			"MonoDomain *", "domain",
+			"const char *", "base_dir",
+			"const char *", "config_file_name"
+		),
+
 		#endregion
 
 		#region metadata/reflection.h
