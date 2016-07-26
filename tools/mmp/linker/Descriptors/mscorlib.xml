@@ -777,6 +777,8 @@
 		<type fullname="System.Runtime.Remoting.Proxies.TransparentProxy">
 			<!-- remoting.c: mono_marshal_get_ldfld_wrapper -->
 			<method name="LoadRemoteFieldNew" />
+			<!-- remoting.c: mono_marshal_get_stfld_wrapper -->
+			<method name="StoreRemoteField" />
 		</type>
 
 
