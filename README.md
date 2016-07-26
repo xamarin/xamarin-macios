@@ -96,6 +96,11 @@ By default, everything required for both Xamarin.iOS and Xamarin.Mac will be bui
 
 To discuss this project, and participate in the design, we use the [macios-devel@lists.xamarin.com](http://lists.xamarin.com/mailman/listinfo/macios-devel) mailing list.   
 
+### Chat
+
+There is also a gitter chat room that can be used to discuss this project, and participate in the design: 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/xamarin/xamarin-macios?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ### Coding Guidelines
 
 We use [Mono's Coding Guidelines](http://www.mono-project.com/community/contributing/coding-guidelines/).
