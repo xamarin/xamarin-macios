@@ -472,6 +472,14 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 
 	int rv = 0;
 	if (is_extension) {
+		char base_dir [1024];
+		char config_file_name [1024];
+
+		snprintf (base_dir, sizeof (base_dir), "%s/" ARCH_SUBDIR, xamarin_get_bundle_path ());
+		snprintf (config_file_name, sizeof (config_file_name), "%s/%s.config", base_dir, xamarin_executable_name); // xamarin_executable_name should never be NULL for extensions.
+
+		mono_domain_set_config (mono_domain_get (), base_dir, config_file_name);
+
 		MONO_ENTER_GC_SAFE;
 		rv = xamarin_extension_main (argc, argv);
 		MONO_EXIT_GC_SAFE;
