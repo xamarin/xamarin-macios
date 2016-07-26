@@ -1645,7 +1645,17 @@ xamarin_switch_gchandle (id self, bool to_weak)
 		if (old_gchandle)
 			mono_gchandle_free (old_gchandle);
 		
-		xamarin_set_nsobject_flags (managed_object, xamarin_get_nsobject_flags (managed_object) | NSObjectFlagsHasManagedRef);
+		if (managed_object) {
+			// It's possible to not have a managed object if:
+			// 1. Objective-C holds a weak reference to the native object (and no other strong references)
+			//    - in which case the original (old) gchandle would be a weak one.
+			// 2. Managed code does not reference the managed object.
+			// 3. The GC ran and collected the managed object, but the main thread has not gotten
+			//    around to release the native object yet.
+			// If all these conditions hold, then the original gchandle will point to
+			// null, because the target would be collected.
+			xamarin_set_nsobject_flags (managed_object, xamarin_get_nsobject_flags (managed_object) | NSObjectFlagsHasManagedRef);
+		}
 		set_raw_gchandle (self, new_gchandle | flags);
 	}
 
