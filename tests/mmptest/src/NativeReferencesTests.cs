@@ -53,6 +53,11 @@ namespace Xamarin.MMP.Tests
 
 				test.ItemGroup = string.Format (NativeReferenceTemplate, "/Library/Frameworks/iTunesLibrary.framework", "Framework");
 				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - Framework", null, true);
+				Assert.True (Directory.Exists (Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/Frameworks/iTunesLibrary.framework")));
+
+				string binaryPath = Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MacOS/UnifiedExample");
+				string otoolText = TI.RunAndAssert ("/usr/bin/otool", new StringBuilder ("-l " + binaryPath), "Unified_WithNativeReferences_InMainProjectWorks - rpath");
+				Assert.True (otoolText.Contains ("path @loader_path/../Frameworks"));
 			});
 		}
 

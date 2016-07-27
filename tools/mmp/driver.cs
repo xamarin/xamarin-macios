@@ -100,6 +100,7 @@ namespace Xamarin.Bundler {
 		static string http_message_provider;
 
 		static string BundleName { get { return custom_bundle_name != null ? custom_bundle_name : "MonoBundle"; } }
+		static string AppPath { get { return Path.Combine (macos_dir, app_name); } }
 
 		static string icon;
 		static string certificate_name;
@@ -107,6 +108,7 @@ namespace Xamarin.Bundler {
 		public static bool Force;
 
 		static bool is_extension;
+		static bool frameworks_copied_to_bundle_dir;	// Have we copied any frameworks to Foo.app/Contents/Frameworks?
 
 		// This must be kept in sync with the system launcher's minimum mono version (in launcher/launcher-system.m)
 		static Version MinimumMonoVersion = new Version (4, 2, 0);
@@ -632,6 +634,11 @@ namespace Xamarin.Bundler {
 				// if not then the compilation really failed
 				throw new MonoMacException (5103, true, String.Format ("Failed to compile. Error code - {0}. Please file a bug report at http://bugzilla.xamarin.com", ret));
 			}
+			if (frameworks_copied_to_bundle_dir) {
+				int install_ret = XcodeRun ("install_name_tool", string.Format ("{0} -add_rpath @loader_path/../Frameworks", Quote (AppPath)));
+				if (install_ret != 0)
+					throw new MonoMacException (5310, true, "install_name_tool failed with an error code '{0}'. Check build log for details.", ret);
+			}
 			
 			if (generate_plist)
 				GeneratePList ();
@@ -926,6 +933,7 @@ namespace Xamarin.Bundler {
 
 			CreateDirectoryIfNeeded (frameworks_dir);
 			Application.UpdateDirectory (framework, frameworks_dir);
+			frameworks_copied_to_bundle_dir = true;
 		}
 
 		static int Compile (IEnumerable<string> internalSymbols)
@@ -1052,7 +1060,7 @@ namespace Xamarin.Bundler {
 				if (no_executable || linkWithRequiresForceLoad)
 					args.Append ("-force_load "); // make sure nothing is stripped away if we don't have a root assembly, since anything can end up being used.
 				args.Append (Quote (libxammac)).Append (' ');
-				args.Append ("-o ").Append (Quote (Path.Combine (macos_dir, app_name))).Append (' ');
+				args.Append ("-o ").Append (Quote (AppPath)).Append (' ');
 				args.Append (cflags).Append (' ');
 				if (embed_mono) {
 					var libmono = "libmonosgen-2.0.a";
