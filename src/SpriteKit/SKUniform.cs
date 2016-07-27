@@ -42,9 +42,9 @@ namespace XamCore.SpriteKit {
 		public SKUniform (string name, Vector2 value)
 		{
 			if (CheckSystemVersion ())
-				Handle = InitWithNameVectorFloat2 (name, value);
+				InitializeHandle (InitWithNameVectorFloat2 (name, value), "initWithName:vectorFloat2:");
 			else
-				Handle = InitWithNameFloatVector2 (name, value);
+				InitializeHandle (InitWithNameFloatVector2 (name, value), "initWithName:floatVector2:");
 		}
 
 		// Apple deprecated initWithName:floatVector3: in macOS10.12/iOS10.0
@@ -53,9 +53,9 @@ namespace XamCore.SpriteKit {
 		public SKUniform (string name, Vector3 value)
 		{
 			if (CheckSystemVersion ())
-				Handle = InitWithNameVectorFloat3 (name, value);
+				InitializeHandle (InitWithNameVectorFloat3 (name, value), "initWithName:vectorFloat3:");
 			else
-				Handle = InitWithNameFloatVector3 (name, value);
+				InitializeHandle (InitWithNameFloatVector3 (name, value), "initWithName:floatVector3:");
 		}
 
 		// Apple deprecated initWithName:floatVector4: in macOS10.12/iOS10.0
@@ -64,9 +64,9 @@ namespace XamCore.SpriteKit {
 		public SKUniform (string name, Vector4 value)
 		{
 			if (CheckSystemVersion ())
-				Handle = InitWithNameVectorFloat4 (name, value);
+				InitializeHandle (InitWithNameVectorFloat4 (name, value), "initWithName:vectorFloat4:");
 			else
-				Handle = InitWithNameFloatVector4 (name, value);
+				InitializeHandle (InitWithNameFloatVector4 (name, value), "initWithName:floatVector4:");
 		}
 
 		// Apple deprecated initWithName:floatMatrix2: in macOS10.12/iOS10.0
@@ -75,9 +75,9 @@ namespace XamCore.SpriteKit {
 		public SKUniform (string name, Matrix2 value)
 		{
 			if (CheckSystemVersion ())
-				Handle = InitWithNameMatrixFloat2x2 (name, value);
+				InitializeHandle (InitWithNameMatrixFloat2x2 (name, value), "initWithName:matrixFloat2x2:");
 			else
-				Handle = InitWithNameFloatMatrix2 (name, value);
+				InitializeHandle (InitWithNameFloatMatrix2 (name, value), "initWithName:floatMatrix2:");
 		}
 
 		// Apple deprecated initWithName:floatMatrix3: in macOS10.12/iOS10.0
@@ -86,9 +86,9 @@ namespace XamCore.SpriteKit {
 		public SKUniform (string name, Matrix3 value)
 		{
 			if (CheckSystemVersion ())
-				Handle = InitWithNameMatrixFloat3x3 (name, value);
+				InitializeHandle (InitWithNameMatrixFloat3x3 (name, value), "initWithName:matrixFloat3x3:");
 			else
-				Handle = InitWithNameFloatMatrix3 (name, value);
+				InitializeHandle (InitWithNameFloatMatrix3 (name, value), "initWithName:floatMatrix3:");
 		}
 
 		// Apple deprecated initWithName:floatMatrix4: in macOS10.12/iOS10.0
@@ -97,9 +97,9 @@ namespace XamCore.SpriteKit {
 		public SKUniform (string name, Matrix4 value)
 		{
 			if (CheckSystemVersion ())
-				Handle = InitWithNameMatrixFloat4x4 (name, value);
+				InitializeHandle (InitWithNameMatrixFloat4x4 (name, value), "initWithName:matrixFloat4x4:");
 			else
-				Handle = InitWithNameFloatMatrix4 (name, value);
+				InitializeHandle (InitWithNameFloatMatrix4 (name, value), "initWithName:floatMatrix4:");
 		}
 
 		// Apple deprecated floatVector2Value in macOS10.12/iOS10.0

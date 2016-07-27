@@ -272,7 +272,7 @@ namespace XamCore.SpriteKit {
 		[Export ("obstaclesFromNodePhysicsBodies:")]
 		GKPolygonObstacle[] ObstaclesFromNodePhysicsBodies (SKNode[] nodes);
 
-		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
+		// Moved from SpriteKit to GameplayKit header in iOS 10 beta 1
 		[iOS (9,0),Mac(10,11)]
 		[Static]
 		[Export ("obstaclesFromSpriteTextures:accuracy:")]
@@ -2869,8 +2869,7 @@ namespace XamCore.SpriteKit {
 	interface SKWarpGeometry : NSCopying, NSCoding {}
 
 	[iOS (10,0)][Mac (10,12)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[Protocol]
 	interface SKWarpable
 	{
 		[Abstract]
