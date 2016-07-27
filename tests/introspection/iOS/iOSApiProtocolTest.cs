@@ -405,7 +405,7 @@ namespace Introspection {
 				case "SKShapeNode":
 				case "SKVideoNode":
 				case "SKSpriteNode":
-					return true;
+					return !TestRuntime.CheckXcodeVersion (8,0);
 				}
 				break;
 			}

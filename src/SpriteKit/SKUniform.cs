@@ -22,13 +22,18 @@ using Matrix4 = global::OpenTK.Matrix4;
 namespace XamCore.SpriteKit {
 	public partial class SKUniform {
 
+		static bool? versionCheck = null;
+
 		static bool CheckSystemVersion ()
 		{
+			if (!versionCheck.HasValue) {
 #if MONOMAC
-			return PlatformHelper.CheckSystemVersion (10, 12);
+				versionCheck = PlatformHelper.CheckSystemVersion (10, 12);
 #else
-			return XamCore.UIKit.UIDevice.CurrentDevice.CheckSystemVersion (10, 0);
-#endif // MONOMAC
+				versionCheck = XamCore.UIKit.UIDevice.CurrentDevice.CheckSystemVersion (10, 0);
+#endif
+			}
+			return versionCheck.Value;
 		}
 
 		// Apple deprecated initWithName:floatVector2: in macOS10.12/iOS10.0

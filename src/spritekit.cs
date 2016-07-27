@@ -100,11 +100,11 @@ namespace XamCore.SpriteKit {
 	[Mac (10,9, onlyOn64 : true)]
 	[BaseType (typeof (NSResponder))]
 	partial interface SKNode : NSCoding, NSCopying {
-#elif IOS
+#elif IOS || TV
 	[Since (7,0)]
 	[BaseType (typeof (UIResponder))]
 	partial interface SKNode : NSCoding, NSCopying, UIFocusItem {
-#else
+#else // WATCHOS
 	[BaseType (typeof (NSObject))]
 	partial interface SKNode : NSCoding, NSCopying {
 #endif
@@ -260,13 +260,13 @@ namespace XamCore.SpriteKit {
 		[Export ("moveToParent:")]
 		void MoveToParent (SKNode parent);
 
-		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
+		// Moved from SpriteKit to GameplayKit header in iOS 10 beta 1
 		[iOS (9,0),Mac(10,11)]
 		[Static]
 		[Export ("obstaclesFromNodeBounds:")]
 		GKPolygonObstacle[] ObstaclesFromNodeBounds (SKNode[] nodes);
 		
-		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
+		// Moved from SpriteKit to GameplayKit header in iOS 10 beta 1
 		[iOS (9,0),Mac(10,11)]
 		[Static]
 		[Export ("obstaclesFromNodePhysicsBodies:")]
@@ -301,15 +301,14 @@ namespace XamCore.SpriteKit {
 		CGPoint LocationInNode (SKNode node);
 	}
 #else
+	[NoWatch]
 	[Since (7,0)]
 	[Category, BaseType (typeof (UITouch))]
 	partial interface SKNodeTouches_UITouch {
 
-		[NoWatch]
 		[Export ("locationInNode:")]
 		CGPoint LocationInNode (SKNode node);
 
-		[NoWatch]
 		[Export ("previousLocationInNode:")]
 		CGPoint PreviousLocationInNode (SKNode node);
 	}
@@ -2561,6 +2560,7 @@ namespace XamCore.SpriteKit {
 
 	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface SKAttribute : NSCoding
 	{
 		[Static]
@@ -2868,8 +2868,6 @@ namespace XamCore.SpriteKit {
 	[BaseType (typeof(NSObject))]
 	interface SKWarpGeometry : NSCopying, NSCoding {}
 
-	interface ISKWarpable {}
-
 	[iOS (10,0)][Mac (10,12)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
@@ -2890,7 +2888,7 @@ namespace XamCore.SpriteKit {
 	{
 		[Static]
 		[Export ("grid")]
-		SKWarpGeometryGrid Grid ();
+		SKWarpGeometryGrid GetGrid ();
 
 		[Static]
 		[Export ("gridWithColumns:rows:")]

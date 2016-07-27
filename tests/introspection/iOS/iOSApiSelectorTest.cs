@@ -177,7 +177,9 @@ namespace Introspection {
 				case "shouldUpdateFocusInContext:":
 				case "updateFocusIfNeeded":
 				case "preferredFocusedView":
-					return true;
+					if (!TestRuntime.CheckXcodeVersion (8, 0))
+						return true;
+					break;
 				}
 				break;
 			}
