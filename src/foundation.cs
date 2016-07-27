@@ -956,10 +956,10 @@ namespace XamCore.Foundation
 	[Since (3,2)]
 	[BaseType (typeof (NSObject))]
 	public interface NSCharacterSet : NSSecureCoding, NSMutableCopying {
-		[Static, Export ("alphanumericCharacterSet")]
+		[Static, Export ("alphanumericCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet Alphanumerics {get;}
 
-		[Static, Export ("capitalizedLetterCharacterSet")]
+		[Static, Export ("capitalizedLetterCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet Capitalized {get;}
 
 		// TODO/FIXME: constructor?
@@ -976,43 +976,43 @@ namespace XamCore.Foundation
 		[Static, Export ("characterSetWithRange:")]
 		NSCharacterSet FromRange (NSRange aRange);
 
-		[Static, Export ("controlCharacterSet")]
+		[Static, Export ("controlCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet Controls {get;}
 
-		[Static, Export ("decimalDigitCharacterSet")]
+		[Static, Export ("decimalDigitCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet DecimalDigits {get;}
 
-		[Static, Export ("decomposableCharacterSet")]
+		[Static, Export ("decomposableCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet Decomposables {get;}
 
-		[Static, Export ("illegalCharacterSet")]
+		[Static, Export ("illegalCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet Illegals {get;}
 
-		[Static, Export ("letterCharacterSet")]
+		[Static, Export ("letterCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet Letters {get;}
 
-		[Static, Export ("lowercaseLetterCharacterSet")]
+		[Static, Export ("lowercaseLetterCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet LowercaseLetters {get;}
 
-		[Static, Export ("newlineCharacterSet")]
+		[Static, Export ("newlineCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet Newlines {get;}
 
-		[Static, Export ("nonBaseCharacterSet")]
+		[Static, Export ("nonBaseCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet Marks {get;}
 
-		[Static, Export ("punctuationCharacterSet")]
+		[Static, Export ("punctuationCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet Punctuation {get;}
 
-		[Static, Export ("symbolCharacterSet")]
+		[Static, Export ("symbolCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet Symbols {get;}
 
-		[Static, Export ("uppercaseLetterCharacterSet")]
+		[Static, Export ("uppercaseLetterCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet UppercaseLetters {get;}
 
-		[Static, Export ("whitespaceAndNewlineCharacterSet")]
+		[Static, Export ("whitespaceAndNewlineCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet WhitespaceAndNewlines {get;}
 
-		[Static, Export ("whitespaceCharacterSet")]
+		[Static, Export ("whitespaceCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet Whitespaces {get;}
 
 		[Export ("bitmapRepresentation")]
@@ -1276,6 +1276,14 @@ namespace XamCore.Foundation
 
 		[Export ("systemVersion")]
 		uint SystemVersion { get; }
+
+		[iOS (9,0)][Mac (10,11)]
+		[Export ("decodingFailurePolicy")]
+		NSDecodingFailurePolicy DecodingFailurePolicy { get; }
+
+		[iOS (9,0)][Mac (10,11)]
+		[NullAllowed, Export ("error", ArgumentSemantic.Copy)]
+		NSError Error { get; }
 	}
 	
 	[BaseType (typeof (NSPredicate))]
@@ -1734,7 +1742,7 @@ namespace XamCore.Foundation
 		NSFormattingContext FormattingContext { get; set; }
 
 		[Export ("stringForObjectValue:")]
-		string StringForObjectValue (NSObject obj);
+		string StringForObjectValue ([NullAllowed] NSObject obj);
 
 		[Export ("stringFromDateComponents:")]
 		string StringFromDateComponents (NSDateComponents components);
@@ -1776,6 +1784,11 @@ namespace XamCore.Foundation
 
 		[Export ("stringFromDate:toDate:")]
 		string StringFromDate (NSDate fromDate, NSDate toDate);
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[Export ("stringFromDateInterval:")]
+		[return: NullAllowed]
+		string ToString (NSDateInterval dateInterval);
 	}
 
 	[iOS (8,0)][Mac(10,10)]
@@ -2066,7 +2079,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject))]
 	public interface NSFormatter : NSCoding, NSCopying {
 		[Export ("stringForObjectValue:")]
-		string StringFor (NSObject value);
+		string StringFor ([NullAllowed] NSObject value);
 
 		// - (NSAttributedString *)attributedStringForObjectValue:(id)obj withDefaultAttributes:(NSDictionary *)attrs;
 
@@ -9747,19 +9760,19 @@ namespace XamCore.Foundation
 		[Export ("decimalValue")]
 		NSDecimal NSDecimalValue { get; }
 
-		[Export ("zero")][Static]
+		[Export ("zero", ArgumentSemantic.Copy)][Static]
 		NSDecimalNumber Zero { get; }
 
-		[Export ("one")][Static]
+		[Export ("one", ArgumentSemantic.Copy)][Static]
 		NSDecimalNumber One { get; }
 		
-		[Export ("minimumDecimalNumber")][Static]
+		[Export ("minimumDecimalNumber", ArgumentSemantic.Copy)][Static]
 		NSDecimalNumber MinValue { get; }
 		
-		[Export ("maximumDecimalNumber")][Static]
+		[Export ("maximumDecimalNumber", ArgumentSemantic.Copy)][Static]
 		NSDecimalNumber MaxValue { get; }
 
-		[Export ("notANumber")][Static]
+		[Export ("notANumber", ArgumentSemantic.Copy)][Static]
 		NSDecimalNumber NaN { get; }
 
 		//
@@ -9809,7 +9822,7 @@ namespace XamCore.Foundation
 		[Override]
 		nint Compare (NSNumber other);
 
-		[Export ("defaultBehavior")][Static]
+		[Export ("defaultBehavior", ArgumentSemantic.Strong)][Static]
 		NSObject DefaultBehavior { get; set; }
 
 		[Export ("doubleValue")]
@@ -10779,6 +10792,24 @@ namespace XamCore.Foundation
 
 		[Export ("fileManager:shouldProceedAfterError:removingItemAtPath:")]
 		bool ShouldProceedAfterErrorRemovingItem (NSFileManager fileManager, NSError error, string path);
+	}
+
+	[Category]
+	[BaseType (typeof (NSFileManager))]
+	interface NSFileManager_NSUserInformation {
+
+		[NoWatch][NoTV][NoiOS][Mac (10, 12)]
+		[Export ("homeDirectoryForCurrentUser")]
+		NSUrl GetHomeDirectoryForCurrentUser ();
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[Export ("temporaryDirectory")]
+		NSUrl GetTemporaryDirectory ();
+
+		[NoWatch][NoTV][NoiOS][Mac (10, 12)]
+		[Export ("homeDirectoryForUser:")]
+		[return: NullAllowed]
+		NSUrl GetHomeDirectory (string userName);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -11880,6 +11911,24 @@ namespace XamCore.Foundation
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSUnitConverter))]
+	interface NSUnitConverterLinear : NSSecureCoding {
+
+		[Export ("coefficient")]
+		double Coefficient { get; }
+
+		[Export ("constant")]
+		double Constant { get; }
+
+		[Export ("initWithCoefficient:")]
+		IntPtr Constructor (double coefficient);
+
+		[Export ("initWithCoefficient:constant:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (double coefficient, double constant);
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSUnit))]
 	[DisableDefaultCtor] // there's a designated initializer
 	interface NSDimension : NSSecureCoding {
@@ -12774,4 +12823,919 @@ namespace XamCore.Foundation
 		NSAttributedString RichTextSource { get; }
 	}
 #endif // MONOMAC
+
+	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
+	[BaseType (typeof (NSFormatter), Name = "NSISO8601DateFormatter")]
+	interface NSIso8601DateFormatter : NSSecureCoding {
+
+		[Export ("timeZone", ArgumentSemantic.Copy)]
+		NSTimeZone TimeZone { get; set; }
+
+		[Export ("formatOptions", ArgumentSemantic.Assign)]
+		NSIso8601DateFormatOptions FormatOptions { get; set; }
+
+		[Export ("stringFromDate:")]
+		string ToString (NSDate date);
+
+		[Export ("dateFromString:")]
+		NSDate ToDate (string @string);
+
+		[Static]
+		[Export ("stringFromDate:timeZone:formatOptions:")]
+		string Format (NSDate date, NSTimeZone timeZone, NSIso8601DateFormatOptions formatOptions);
+	}
+	
+	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
+	[BaseType (typeof (NSObject), Name = "NSURLSessionTaskTransactionMetrics")]
+	interface NSUrlSessionTaskTransactionMetrics {
+
+		[Export ("request", ArgumentSemantic.Copy)]
+		NSUrlRequest Request { get; }
+
+		[NullAllowed, Export ("response", ArgumentSemantic.Copy)]
+		NSUrlResponse Response { get; }
+
+		[NullAllowed, Export ("fetchStartDate", ArgumentSemantic.Copy)]
+		NSDate FetchStartDate { get; }
+
+		[NullAllowed, Export ("domainLookupStartDate", ArgumentSemantic.Copy)]
+		NSDate DomainLookupStartDate { get; }
+
+		[NullAllowed, Export ("domainLookupEndDate", ArgumentSemantic.Copy)]
+		NSDate DomainLookupEndDate { get; }
+
+		[NullAllowed, Export ("connectStartDate", ArgumentSemantic.Copy)]
+		NSDate ConnectStartDate { get; }
+
+		[NullAllowed, Export ("secureConnectionStartDate", ArgumentSemantic.Copy)]
+		NSDate SecureConnectionStartDate { get; }
+
+		[NullAllowed, Export ("secureConnectionEndDate", ArgumentSemantic.Copy)]
+		NSDate SecureConnectionEndDate { get; }
+
+		[NullAllowed, Export ("connectEndDate", ArgumentSemantic.Copy)]
+		NSDate ConnectEndDate { get; }
+
+		[NullAllowed, Export ("requestStartDate", ArgumentSemantic.Copy)]
+		NSDate RequestStartDate { get; }
+
+		[NullAllowed, Export ("requestEndDate", ArgumentSemantic.Copy)]
+		NSDate RequestEndDate { get; }
+
+		[NullAllowed, Export ("responseStartDate", ArgumentSemantic.Copy)]
+		NSDate ResponseStartDate { get; }
+
+		[NullAllowed, Export ("responseEndDate", ArgumentSemantic.Copy)]
+		NSDate ResponseEndDate { get; }
+
+		[NullAllowed, Export ("networkProtocolName")]
+		string NetworkProtocolName { get; }
+
+		[Export ("proxyConnection")]
+		bool ProxyConnection { [Bind ("isProxyConnection")] get; }
+
+		[Export ("reusedConnection")]
+		bool ReusedConnection { [Bind ("isReusedConnection")] get; }
+
+		[Export ("resourceFetchType", ArgumentSemantic.Assign)]
+		NSUrlSessionTaskMetricsResourceFetchType ResourceFetchType { get; }
+	}
+
+	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
+	[BaseType (typeof (NSObject), Name = "NSURLSessionTaskMetrics")]
+	interface NSUrlSessionTaskMetrics {
+
+		[Export ("transactionMetrics", ArgumentSemantic.Copy)]
+		NSUrlSessionTaskTransactionMetrics[] TransactionMetrics { get; }
+
+		[Export ("taskInterval", ArgumentSemantic.Copy)]
+		NSDateInterval TaskInterval { get; }
+
+		[Export ("redirectCount")]
+		nuint RedirectCount { get; }
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSDimension))]
+	interface NSUnitAcceleration : NSSecureCoding {
+		// inline from base type
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+
+		[Static]
+		[Export ("metersPerSecondSquared", ArgumentSemantic.Copy)]
+		NSUnitAcceleration MetersPerSecondSquared { get; }
+
+		[Static]
+		[Export ("gravity", ArgumentSemantic.Copy)]
+		NSUnitAcceleration Gravity { get; }
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSDimension))]
+	interface NSUnitAngle : NSSecureCoding {
+		// inline from base type
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+
+		[Static]
+		[Export ("degrees", ArgumentSemantic.Copy)]
+		NSUnitAngle Degrees { get; }
+
+		[Static]
+		[Export ("arcMinutes", ArgumentSemantic.Copy)]
+		NSUnitAngle ArcMinutes { get; }
+
+		[Static]
+		[Export ("arcSeconds", ArgumentSemantic.Copy)]
+		NSUnitAngle ArcSeconds { get; }
+
+		[Static]
+		[Export ("radians", ArgumentSemantic.Copy)]
+		NSUnitAngle Radians { get; }
+
+		[Static]
+		[Export ("gradians", ArgumentSemantic.Copy)]
+		NSUnitAngle Gradians { get; }
+
+		[Static]
+		[Export ("revolutions", ArgumentSemantic.Copy)]
+		NSUnitAngle Revolutions { get; }
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSDimension))]
+	interface NSUnitArea : NSSecureCoding {
+		// inline from base type
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+
+		[Static]
+		[Export ("squareMegameters", ArgumentSemantic.Copy)]
+		NSUnitArea SquareMegameters { get; }
+
+		[Static]
+		[Export ("squareKilometers", ArgumentSemantic.Copy)]
+		NSUnitArea SquareKilometers { get; }
+
+		[Static]
+		[Export ("squareMeters", ArgumentSemantic.Copy)]
+		NSUnitArea SquareMeters { get; }
+
+		[Static]
+		[Export ("squareCentimeters", ArgumentSemantic.Copy)]
+		NSUnitArea SquareCentimeters { get; }
+
+		[Static]
+		[Export ("squareMillimeters", ArgumentSemantic.Copy)]
+		NSUnitArea SquareMillimeters { get; }
+
+		[Static]
+		[Export ("squareMicrometers", ArgumentSemantic.Copy)]
+		NSUnitArea SquareMicrometers { get; }
+
+		[Static]
+		[Export ("squareNanometers", ArgumentSemantic.Copy)]
+		NSUnitArea SquareNanometers { get; }
+
+		[Static]
+		[Export ("squareInches", ArgumentSemantic.Copy)]
+		NSUnitArea SquareInches { get; }
+
+		[Static]
+		[Export ("squareFeet", ArgumentSemantic.Copy)]
+		NSUnitArea SquareFeet { get; }
+
+		[Static]
+		[Export ("squareYards", ArgumentSemantic.Copy)]
+		NSUnitArea SquareYards { get; }
+
+		[Static]
+		[Export ("squareMiles", ArgumentSemantic.Copy)]
+		NSUnitArea SquareMiles { get; }
+
+		[Static]
+		[Export ("acres", ArgumentSemantic.Copy)]
+		NSUnitArea Acres { get; }
+
+		[Static]
+		[Export ("ares", ArgumentSemantic.Copy)]
+		NSUnitArea Ares { get; }
+
+		[Static]
+		[Export ("hectares", ArgumentSemantic.Copy)]
+		NSUnitArea Hectares { get; }
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSDimension))]
+	interface NSUnitConcentrationMass : NSSecureCoding {
+		// inline from base type
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+
+		[Static]
+		[Export ("gramsPerLiter", ArgumentSemantic.Copy)]
+		NSUnitConcentrationMass GramsPerLiter { get; }
+
+		[Static]
+		[Export ("milligramsPerDeciliter", ArgumentSemantic.Copy)]
+		NSUnitConcentrationMass MilligramsPerDeciliter { get; }
+
+		[Static]
+		[Export ("millimolesPerLiterWithGramsPerMole:")]
+		NSUnitConcentrationMass GetMillimolesPerLiter (double gramsPerMole);
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSDimension))]
+	interface NSUnitDispersion : NSSecureCoding {
+		// inline from base type
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+
+		[Static]
+		[Export ("partsPerMillion", ArgumentSemantic.Copy)]
+		NSUnitDispersion PartsPerMillion { get; }
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSDimension))]
+	interface NSUnitDuration : NSSecureCoding {
+		// inline from base type
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+
+		[Static]
+		[Export ("seconds", ArgumentSemantic.Copy)]
+		NSUnitDuration Seconds { get; }
+
+		[Static]
+		[Export ("minutes", ArgumentSemantic.Copy)]
+		NSUnitDuration Minutes { get; }
+
+		[Static]
+		[Export ("hours", ArgumentSemantic.Copy)]
+		NSUnitDuration Hours { get; }
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSDimension))]
+	interface NSUnitElectricCharge : INSSecureCoding {
+		// inline from base type
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+
+		[Static]
+		[Export ("coulombs", ArgumentSemantic.Copy)]
+		NSUnitElectricCharge Coulombs { get; }
+
+		[Static]
+		[Export ("megaampereHours", ArgumentSemantic.Copy)]
+		NSUnitElectricCharge MegaampereHours { get; }
+
+		[Static]
+		[Export ("kiloampereHours", ArgumentSemantic.Copy)]
+		NSUnitElectricCharge KiloampereHours { get; }
+
+		[Static]
+		[Export ("ampereHours", ArgumentSemantic.Copy)]
+		NSUnitElectricCharge AmpereHours { get; }
+
+		[Static]
+		[Export ("milliampereHours", ArgumentSemantic.Copy)]
+		NSUnitElectricCharge MilliampereHours { get; }
+
+		[Static]
+		[Export ("microampereHours", ArgumentSemantic.Copy)]
+		NSUnitElectricCharge MicroampereHours { get; }
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSDimension))]
+	interface NSUnitElectricCurrent : NSSecureCoding {
+		// inline from base type
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+
+		[Static]
+		[Export ("megaamperes", ArgumentSemantic.Copy)]
+		NSUnitElectricCurrent Megaamperes { get; }
+
+		[Static]
+		[Export ("kiloamperes", ArgumentSemantic.Copy)]
+		NSUnitElectricCurrent Kiloamperes { get; }
+
+		[Static]
+		[Export ("amperes", ArgumentSemantic.Copy)]
+		NSUnitElectricCurrent Amperes { get; }
+
+		[Static]
+		[Export ("milliamperes", ArgumentSemantic.Copy)]
+		NSUnitElectricCurrent Milliamperes { get; }
+
+		[Static]
+		[Export ("microamperes", ArgumentSemantic.Copy)]
+		NSUnitElectricCurrent Microamperes { get; }
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSDimension))]
+	interface NSUnitElectricPotentialDifference : NSSecureCoding {
+		// inline from base type
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+		
+		[Static]
+		[Export ("megavolts", ArgumentSemantic.Copy)]
+		NSUnitElectricPotentialDifference Megavolts { get; }
+
+		[Static]
+		[Export ("kilovolts", ArgumentSemantic.Copy)]
+		NSUnitElectricPotentialDifference Kilovolts { get; }
+
+		[Static]
+		[Export ("volts", ArgumentSemantic.Copy)]
+		NSUnitElectricPotentialDifference Volts { get; }
+
+		[Static]
+		[Export ("millivolts", ArgumentSemantic.Copy)]
+		NSUnitElectricPotentialDifference Millivolts { get; }
+
+		[Static]
+		[Export ("microvolts", ArgumentSemantic.Copy)]
+		NSUnitElectricPotentialDifference Microvolts { get; }
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSDimension))]
+	interface NSUnitElectricResistance : NSSecureCoding {
+		// inline from base type
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+
+		[Static]
+		[Export ("megaohms", ArgumentSemantic.Copy)]
+		NSUnitElectricResistance Megaohms { get; }
+
+		[Static]
+		[Export ("kiloohms", ArgumentSemantic.Copy)]
+		NSUnitElectricResistance Kiloohms { get; }
+
+		[Static]
+		[Export ("ohms", ArgumentSemantic.Copy)]
+		NSUnitElectricResistance Ohms { get; }
+
+		[Static]
+		[Export ("milliohms", ArgumentSemantic.Copy)]
+		NSUnitElectricResistance Milliohms { get; }
+
+		[Static]
+		[Export ("microohms", ArgumentSemantic.Copy)]
+		NSUnitElectricResistance Microohms { get; }
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSDimension))]
+	interface NSUnitEnergy : NSSecureCoding {
+		// inline from base type
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+
+		[Static]
+		[Export ("kilojoules", ArgumentSemantic.Copy)]
+		NSUnitEnergy Kilojoules { get; }
+
+		[Static]
+		[Export ("joules", ArgumentSemantic.Copy)]
+		NSUnitEnergy Joules { get; }
+
+		[Static]
+		[Export ("kilocalories", ArgumentSemantic.Copy)]
+		NSUnitEnergy Kilocalories { get; }
+
+		[Static]
+		[Export ("calories", ArgumentSemantic.Copy)]
+		NSUnitEnergy Calories { get; }
+
+		[Static]
+		[Export ("kilowattHours", ArgumentSemantic.Copy)]
+		NSUnitEnergy KilowattHours { get; }
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSDimension))]
+	interface NSUnitFrequency : NSSecureCoding {
+		// inline from base type
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+
+		[Static]
+		[Export ("terahertz", ArgumentSemantic.Copy)]
+		NSUnitFrequency Terahertz { get; }
+
+		[Static]
+		[Export ("gigahertz", ArgumentSemantic.Copy)]
+		NSUnitFrequency Gigahertz { get; }
+
+		[Static]
+		[Export ("megahertz", ArgumentSemantic.Copy)]
+		NSUnitFrequency Megahertz { get; }
+
+		[Static]
+		[Export ("kilohertz", ArgumentSemantic.Copy)]
+		NSUnitFrequency Kilohertz { get; }
+
+		[Static]
+		[Export ("hertz", ArgumentSemantic.Copy)]
+		NSUnitFrequency Hertz { get; }
+
+		[Static]
+		[Export ("millihertz", ArgumentSemantic.Copy)]
+		NSUnitFrequency Millihertz { get; }
+
+		[Static]
+		[Export ("microhertz", ArgumentSemantic.Copy)]
+		NSUnitFrequency Microhertz { get; }
+
+		[Static]
+		[Export ("nanohertz", ArgumentSemantic.Copy)]
+		NSUnitFrequency Nanohertz { get; }
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSDimension))]
+	interface NSUnitFuelEfficiency : NSSecureCoding {
+		// inline from base type
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+
+		[Static]
+		[Export ("litersPer100Kilometers", ArgumentSemantic.Copy)]
+		NSUnitFuelEfficiency LitersPer100Kilometers { get; }
+
+		[Static]
+		[Export ("milesPerImperialGallon", ArgumentSemantic.Copy)]
+		NSUnitFuelEfficiency MilesPerImperialGallon { get; }
+
+		[Static]
+		[Export ("milesPerGallon", ArgumentSemantic.Copy)]
+		NSUnitFuelEfficiency MilesPerGallon { get; }
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSDimension))]
+	interface NSUnitLength : NSSecureCoding {
+		// inline from base type
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+
+		[Static]
+		[Export ("megameters", ArgumentSemantic.Copy)]
+		NSUnitLength Megameters { get; }
+
+		[Static]
+		[Export ("kilometers", ArgumentSemantic.Copy)]
+		NSUnitLength Kilometers { get; }
+
+		[Static]
+		[Export ("hectometers", ArgumentSemantic.Copy)]
+		NSUnitLength Hectometers { get; }
+
+		[Static]
+		[Export ("decameters", ArgumentSemantic.Copy)]
+		NSUnitLength Decameters { get; }
+
+		[Static]
+		[Export ("meters", ArgumentSemantic.Copy)]
+		NSUnitLength Meters { get; }
+
+		[Static]
+		[Export ("decimeters", ArgumentSemantic.Copy)]
+		NSUnitLength Decimeters { get; }
+
+		[Static]
+		[Export ("centimeters", ArgumentSemantic.Copy)]
+		NSUnitLength Centimeters { get; }
+
+		[Static]
+		[Export ("millimeters", ArgumentSemantic.Copy)]
+		NSUnitLength Millimeters { get; }
+
+		[Static]
+		[Export ("micrometers", ArgumentSemantic.Copy)]
+		NSUnitLength Micrometers { get; }
+
+		[Static]
+		[Export ("nanometers", ArgumentSemantic.Copy)]
+		NSUnitLength Nanometers { get; }
+
+		[Static]
+		[Export ("picometers", ArgumentSemantic.Copy)]
+		NSUnitLength Picometers { get; }
+
+		[Static]
+		[Export ("inches", ArgumentSemantic.Copy)]
+		NSUnitLength Inches { get; }
+
+		[Static]
+		[Export ("feet", ArgumentSemantic.Copy)]
+		NSUnitLength Feet { get; }
+
+		[Static]
+		[Export ("yards", ArgumentSemantic.Copy)]
+		NSUnitLength Yards { get; }
+
+		[Static]
+		[Export ("miles", ArgumentSemantic.Copy)]
+		NSUnitLength Miles { get; }
+
+		[Static]
+		[Export ("scandinavianMiles", ArgumentSemantic.Copy)]
+		NSUnitLength ScandinavianMiles { get; }
+
+		[Static]
+		[Export ("lightyears", ArgumentSemantic.Copy)]
+		NSUnitLength Lightyears { get; }
+
+		[Static]
+		[Export ("nauticalMiles", ArgumentSemantic.Copy)]
+		NSUnitLength NauticalMiles { get; }
+
+		[Static]
+		[Export ("fathoms", ArgumentSemantic.Copy)]
+		NSUnitLength Fathoms { get; }
+
+		[Static]
+		[Export ("furlongs", ArgumentSemantic.Copy)]
+		NSUnitLength Furlongs { get; }
+
+		[Static]
+		[Export ("astronomicalUnits", ArgumentSemantic.Copy)]
+		NSUnitLength AstronomicalUnits { get; }
+
+		[Static]
+		[Export ("parsecs", ArgumentSemantic.Copy)]
+		NSUnitLength Parsecs { get; }
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSDimension))]
+	interface NSUnitIlluminance : NSSecureCoding {
+		// inline from base type
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+
+		[Static]
+		[Export ("lux", ArgumentSemantic.Copy)]
+		NSUnitIlluminance Lux { get; }
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSDimension))]
+	interface NSUnitMass : NSSecureCoding {
+		// inline from base type
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+
+		[Static]
+		[Export ("kilograms", ArgumentSemantic.Copy)]
+		NSUnitMass Kilograms { get; }
+
+		[Static]
+		[Export ("grams", ArgumentSemantic.Copy)]
+		NSUnitMass Grams { get; }
+
+		[Static]
+		[Export ("decigrams", ArgumentSemantic.Copy)]
+		NSUnitMass Decigrams { get; }
+
+		[Static]
+		[Export ("centigrams", ArgumentSemantic.Copy)]
+		NSUnitMass Centigrams { get; }
+
+		[Static]
+		[Export ("milligrams", ArgumentSemantic.Copy)]
+		NSUnitMass Milligrams { get; }
+
+		[Static]
+		[Export ("micrograms", ArgumentSemantic.Copy)]
+		NSUnitMass Micrograms { get; }
+
+		[Static]
+		[Export ("nanograms", ArgumentSemantic.Copy)]
+		NSUnitMass Nanograms { get; }
+
+		[Static]
+		[Export ("picograms", ArgumentSemantic.Copy)]
+		NSUnitMass Picograms { get; }
+
+		[Static]
+		[Export ("ounces", ArgumentSemantic.Copy)]
+		NSUnitMass Ounces { get; }
+
+		[Static]
+		[Export ("poundsMass", ArgumentSemantic.Copy)]
+		NSUnitMass PoundsMass { get; }
+
+		[Static]
+		[Export ("stones", ArgumentSemantic.Copy)]
+		NSUnitMass Stones { get; }
+
+		[Static]
+		[Export ("metricTons", ArgumentSemantic.Copy)]
+		NSUnitMass MetricTons { get; }
+
+		[Static]
+		[Export ("shortTons", ArgumentSemantic.Copy)]
+		NSUnitMass ShortTons { get; }
+
+		[Static]
+		[Export ("carats", ArgumentSemantic.Copy)]
+		NSUnitMass Carats { get; }
+
+		[Static]
+		[Export ("ouncesTroy", ArgumentSemantic.Copy)]
+		NSUnitMass OuncesTroy { get; }
+
+		[Static]
+		[Export ("slugs", ArgumentSemantic.Copy)]
+		NSUnitMass Slugs { get; }
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSDimension))]
+	interface NSUnitPower : NSSecureCoding {
+		// inline from base type
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+
+		[Static]
+		[Export ("terawatts", ArgumentSemantic.Copy)]
+		NSUnitPower Terawatts { get; }
+
+		[Static]
+		[Export ("gigawatts", ArgumentSemantic.Copy)]
+		NSUnitPower Gigawatts { get; }
+
+		[Static]
+		[Export ("megawatts", ArgumentSemantic.Copy)]
+		NSUnitPower Megawatts { get; }
+
+		[Static]
+		[Export ("kilowatts", ArgumentSemantic.Copy)]
+		NSUnitPower Kilowatts { get; }
+
+		[Static]
+		[Export ("watts", ArgumentSemantic.Copy)]
+		NSUnitPower Watts { get; }
+
+		[Static]
+		[Export ("milliwatts", ArgumentSemantic.Copy)]
+		NSUnitPower Milliwatts { get; }
+
+		[Static]
+		[Export ("microwatts", ArgumentSemantic.Copy)]
+		NSUnitPower Microwatts { get; }
+
+		[Static]
+		[Export ("nanowatts", ArgumentSemantic.Copy)]
+		NSUnitPower Nanowatts { get; }
+
+		[Static]
+		[Export ("picowatts", ArgumentSemantic.Copy)]
+		NSUnitPower Picowatts { get; }
+
+		[Static]
+		[Export ("femtowatts", ArgumentSemantic.Copy)]
+		NSUnitPower Femtowatts { get; }
+
+		[Static]
+		[Export ("horsepower", ArgumentSemantic.Copy)]
+		NSUnitPower Horsepower { get; }
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSDimension))]
+	interface NSUnitPressure : NSSecureCoding {
+		// inline from base type
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+
+		[Static]
+		[Export ("newtonsPerMetersSquared", ArgumentSemantic.Copy)]
+		NSUnitPressure NewtonsPerMetersSquared { get; }
+
+		[Static]
+		[Export ("gigapascals", ArgumentSemantic.Copy)]
+		NSUnitPressure Gigapascals { get; }
+
+		[Static]
+		[Export ("megapascals", ArgumentSemantic.Copy)]
+		NSUnitPressure Megapascals { get; }
+
+		[Static]
+		[Export ("kilopascals", ArgumentSemantic.Copy)]
+		NSUnitPressure Kilopascals { get; }
+
+		[Static]
+		[Export ("hectopascals", ArgumentSemantic.Copy)]
+		NSUnitPressure Hectopascals { get; }
+
+		[Static]
+		[Export ("inchesOfMercury", ArgumentSemantic.Copy)]
+		NSUnitPressure InchesOfMercury { get; }
+
+		[Static]
+		[Export ("bars", ArgumentSemantic.Copy)]
+		NSUnitPressure Bars { get; }
+
+		[Static]
+		[Export ("millibars", ArgumentSemantic.Copy)]
+		NSUnitPressure Millibars { get; }
+
+		[Static]
+		[Export ("millimetersOfMercury", ArgumentSemantic.Copy)]
+		NSUnitPressure MillimetersOfMercury { get; }
+
+		[Static]
+		[Export ("poundsForcePerSquareInch", ArgumentSemantic.Copy)]
+		NSUnitPressure PoundsForcePerSquareInch { get; }
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSDimension))]
+	interface NSUnitSpeed : NSSecureCoding {
+		// inline from base type
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+
+		[Static]
+		[Export ("metersPerSecond", ArgumentSemantic.Copy)]
+		NSUnitSpeed MetersPerSecond { get; }
+
+		[Static]
+		[Export ("kilometersPerHour", ArgumentSemantic.Copy)]
+		NSUnitSpeed KilometersPerHour { get; }
+
+		[Static]
+		[Export ("milesPerHour", ArgumentSemantic.Copy)]
+		NSUnitSpeed MilesPerHour { get; }
+
+		[Static]
+		[Export ("knots", ArgumentSemantic.Copy)]
+		NSUnitSpeed Knots { get; }
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSDimension))]
+	interface NSUnitVolume : NSSecureCoding {
+		// inline from base type
+		[Export ("initWithSymbol:converter:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string symbol, NSUnitConverter converter);
+
+		[Static]
+		[Export ("megaliters", ArgumentSemantic.Copy)]
+		NSUnitVolume Megaliters { get; }
+
+		[Static]
+		[Export ("kiloliters", ArgumentSemantic.Copy)]
+		NSUnitVolume Kiloliters { get; }
+
+		[Static]
+		[Export ("liters", ArgumentSemantic.Copy)]
+		NSUnitVolume Liters { get; }
+
+		[Static]
+		[Export ("deciliters", ArgumentSemantic.Copy)]
+		NSUnitVolume Deciliters { get; }
+
+		[Static]
+		[Export ("centiliters", ArgumentSemantic.Copy)]
+		NSUnitVolume Centiliters { get; }
+
+		[Static]
+		[Export ("milliliters", ArgumentSemantic.Copy)]
+		NSUnitVolume Milliliters { get; }
+
+		[Static]
+		[Export ("cubicKilometers", ArgumentSemantic.Copy)]
+		NSUnitVolume CubicKilometers { get; }
+
+		[Static]
+		[Export ("cubicMeters", ArgumentSemantic.Copy)]
+		NSUnitVolume CubicMeters { get; }
+
+		[Static]
+		[Export ("cubicDecimeters", ArgumentSemantic.Copy)]
+		NSUnitVolume CubicDecimeters { get; }
+
+		[Static]
+		[Export ("cubicCentimeters", ArgumentSemantic.Copy)]
+		NSUnitVolume CubicCentimeters { get; }
+
+		[Static]
+		[Export ("cubicMillimeters", ArgumentSemantic.Copy)]
+		NSUnitVolume CubicMillimeters { get; }
+
+		[Static]
+		[Export ("cubicInches", ArgumentSemantic.Copy)]
+		NSUnitVolume CubicInches { get; }
+
+		[Static]
+		[Export ("cubicFeet", ArgumentSemantic.Copy)]
+		NSUnitVolume CubicFeet { get; }
+
+		[Static]
+		[Export ("cubicYards", ArgumentSemantic.Copy)]
+		NSUnitVolume CubicYards { get; }
+
+		[Static]
+		[Export ("cubicMiles", ArgumentSemantic.Copy)]
+		NSUnitVolume CubicMiles { get; }
+
+		[Static]
+		[Export ("acreFeet", ArgumentSemantic.Copy)]
+		NSUnitVolume AcreFeet { get; }
+
+		[Static]
+		[Export ("bushels", ArgumentSemantic.Copy)]
+		NSUnitVolume Bushels { get; }
+
+		[Static]
+		[Export ("teaspoons", ArgumentSemantic.Copy)]
+		NSUnitVolume Teaspoons { get; }
+
+		[Static]
+		[Export ("tablespoons", ArgumentSemantic.Copy)]
+		NSUnitVolume Tablespoons { get; }
+
+		[Static]
+		[Export ("fluidOunces", ArgumentSemantic.Copy)]
+		NSUnitVolume FluidOunces { get; }
+
+		[Static]
+		[Export ("cups", ArgumentSemantic.Copy)]
+		NSUnitVolume Cups { get; }
+
+		[Static]
+		[Export ("pints", ArgumentSemantic.Copy)]
+		NSUnitVolume Pints { get; }
+
+		[Static]
+		[Export ("quarts", ArgumentSemantic.Copy)]
+		NSUnitVolume Quarts { get; }
+
+		[Static]
+		[Export ("gallons", ArgumentSemantic.Copy)]
+		NSUnitVolume Gallons { get; }
+
+		[Static]
+		[Export ("imperialTeaspoons", ArgumentSemantic.Copy)]
+		NSUnitVolume ImperialTeaspoons { get; }
+
+		[Static]
+		[Export ("imperialTablespoons", ArgumentSemantic.Copy)]
+		NSUnitVolume ImperialTablespoons { get; }
+
+		[Static]
+		[Export ("imperialFluidOunces", ArgumentSemantic.Copy)]
+		NSUnitVolume ImperialFluidOunces { get; }
+
+		[Static]
+		[Export ("imperialPints", ArgumentSemantic.Copy)]
+		NSUnitVolume ImperialPints { get; }
+
+		[Static]
+		[Export ("imperialQuarts", ArgumentSemantic.Copy)]
+		NSUnitVolume ImperialQuarts { get; }
+
+		[Static]
+		[Export ("imperialGallons", ArgumentSemantic.Copy)]
+		NSUnitVolume ImperialGallons { get; }
+
+		[Static]
+		[Export ("metricCups", ArgumentSemantic.Copy)]
+		NSUnitVolume MetricCups { get; }
+	}
 }
