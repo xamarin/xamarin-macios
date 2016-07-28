@@ -191,17 +191,17 @@ extern void mono_gc_init_finalizer_thread (void);
 @implementation XamarinGCSupport
 - (id) init
 {
-#if TARGET_OS_WATCH
-	// I haven't found a way to listen for memory warnings on watchOS.
-	// fprintf (stderr, "Need to listen for memory warnings on the watch\n");
-#else
 	if (self = [super init]) {
 #if defined (__arm__) || defined(__aarch64__)
 		[self start];
 #endif
+#if TARGET_OS_WATCH
+		// I haven't found a way to listen for memory warnings on watchOS.
+		// fprintf (stderr, "Need to listen for memory warnings on the watch\n");
+#else
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(memoryWarning:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+#endif
 	}
-#endif /* TARGET_OS_WATCH */
 
 	return self;
 }
