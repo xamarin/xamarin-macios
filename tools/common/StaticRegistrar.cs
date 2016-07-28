@@ -3650,6 +3650,22 @@ namespace XamCore.Registrar {
 			}
 
 		}
+
+		protected override bool SkipRegisterAssembly (AssemblyDefinition assembly)
+		{
+			if (assembly.HasCustomAttributes) {
+				foreach (var ca in assembly.CustomAttributes) {
+					var t = ca.AttributeType.Resolve ();
+					while (t != null) {
+						if (t.Is ("ObjCRuntime", "DelayedRegistrationAttribute"))
+							return true;
+						t = t.BaseType?.Resolve ();
+					}
+				}
+			}
+
+			return base.SkipRegisterAssembly (assembly);
+		}
 	}
 
 	// Replicate a few attribute types here, with TypeDefinition instead of Type
