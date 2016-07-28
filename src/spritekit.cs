@@ -1535,6 +1535,7 @@ namespace XamCore.SpriteKit {
 		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("initWithName:vectorFloat2:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr InitWithNameVectorFloat2 (string name, Vector2 value);
 
 		[Internal]
@@ -1545,6 +1546,7 @@ namespace XamCore.SpriteKit {
 		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("initWithName:vectorFloat3:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr InitWithNameVectorFloat3 (string name, Vector3 value);
 
 		[Internal]
@@ -1555,6 +1557,7 @@ namespace XamCore.SpriteKit {
 		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("initWithName:vectorFloat4:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr InitWithNameVectorFloat4 (string name, Vector4 value);
 
 		[Internal]
@@ -1565,6 +1568,7 @@ namespace XamCore.SpriteKit {
 		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("initWithName:matrixFloat2x2:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr InitWithNameMatrixFloat2x2 (string name, Matrix2 value);
 
 		[Internal]
@@ -1575,6 +1579,7 @@ namespace XamCore.SpriteKit {
 		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("initWithName:matrixFloat3x3:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr InitWithNameMatrixFloat3x3 (string name, Matrix3 value);
 
 		[Internal]
@@ -1585,6 +1590,7 @@ namespace XamCore.SpriteKit {
 		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("initWithName:matrixFloat4x4:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr InitWithNameMatrixFloat4x4 (string name, Matrix4 value);
 
 		[Export ("name")]
@@ -1607,7 +1613,10 @@ namespace XamCore.SpriteKit {
 		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("vectorFloat2Value", ArgumentSemantic.Assign)]
-		Vector2 _VectorFloat2Value { get; set; }
+		Vector2 _VectorFloat2Value {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
 
 		[Internal]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
@@ -1617,7 +1626,10 @@ namespace XamCore.SpriteKit {
 		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("vectorFloat3Value", ArgumentSemantic.Assign)]
-		Vector3 _VectorFloat3Value { get; set; }
+		Vector3 _VectorFloat3Value {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
 
 		[Internal]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
@@ -1627,7 +1639,10 @@ namespace XamCore.SpriteKit {
 		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("vectorFloat4Value", ArgumentSemantic.Assign)]
-		Vector4 _VectorFloat4Value { get; set; }
+		Vector4 _VectorFloat4Value {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
 
 		[Internal]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
@@ -1637,7 +1652,10 @@ namespace XamCore.SpriteKit {
 		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("matrixFloat2x2Value", ArgumentSemantic.Assign)]
-		Matrix2 _MatrixFloat2x2Value { get; set; }
+		Matrix2 _MatrixFloat2x2Value {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
 
 		[Internal]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
@@ -1647,7 +1665,10 @@ namespace XamCore.SpriteKit {
 		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("matrixFloat3x3Value", ArgumentSemantic.Assign)]
-		Matrix3 _MatrixFloat3x3Value { get; set; }
+		Matrix3 _MatrixFloat3x3Value {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
 
 		[Internal]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
@@ -1657,7 +1678,10 @@ namespace XamCore.SpriteKit {
 		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("matrixFloat4x4Value", ArgumentSemantic.Assign)]
-		Matrix4 _MatrixFloat4x4Value { get; set; }
+		Matrix4 _MatrixFloat4x4Value {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
 
 #if false
 	// Do we really need these static factory methods, instead of the nice construcotrs we have in C#?
@@ -1675,31 +1699,37 @@ namespace XamCore.SpriteKit {
 		[iOS (10,0)][Mac (10,12)]
 		[Static]
 		[Export ("uniformWithName:vectorFloat2:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, Vector2 value);
 
 		[iOS (10,0)][Mac (10,12)]
 		[Static]
 		[Export ("uniformWithName:vectorFloat3:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, Vector3 value);
 
 		[iOS (10,0)][Mac (10,12)]
 		[Static]
 		[Export ("uniformWithName:vectorFloat4:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, Vector4 value);
 
 		[iOS (10,0)][Mac (10,12)]
 		[Static]
 		[Export ("uniformWithName:matrixFloat2x2:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, Matrix2 value);
 
 		[iOS (10,0)][Mac (10,12)]
 		[Static]
 		[Export ("uniformWithName:matrixFloat3x3:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, Matrix3 value);
 
 		[iOS (10,0)][Mac (10,12)]
 		[Static]
 		[Export ("uniformWithName:matrixFloat4x4:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, Matrix4 value);
 #endif
 	}
@@ -2588,27 +2618,39 @@ namespace XamCore.SpriteKit {
 
 		[Static]
 		[Export ("valueWithVectorFloat2:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKAttributeValue Create (Vector2 value);
 
 		[Static]
 		[Export ("valueWithVectorFloat3:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKAttributeValue Create (Vector3 value);
 
 		[Static]
 		[Export ("valueWithVectorFloat4:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKAttributeValue Create (Vector4 value);
 
 		[Export ("floatValue")]
 		float FloatValue { get; set; }
 
 		[Export ("vectorFloat2Value", ArgumentSemantic.Assign)]
-		Vector2 VectorFloat2Value { get; set; }
+		Vector2 VectorFloat2Value {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
 
 		[Export ("vectorFloat3Value", ArgumentSemantic.Assign)]
-		Vector3 VectorFloat3Value { get; set; }
+		Vector3 VectorFloat3Value {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
 
 		[Export ("vectorFloat4Value", ArgumentSemantic.Assign)]
-		Vector4 VectorFloat4Value { get; set; }
+		Vector4 VectorFloat4Value {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
 	}
 
 	[iOS (10,0)][Mac (10,12)]
@@ -2895,10 +2937,12 @@ namespace XamCore.SpriteKit {
 
 		[Static]
 		[Export ("gridWithColumns:rows:sourcePositions:destPositions:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKWarpGeometryGrid Create (nint cols, nint rows, [NullAllowed] Vector2 sourcePositions, [NullAllowed] Vector2 destPositions);
 
-		[Export ("initWithColumns:rows:sourcePositions:destPositions:")]
 		[DesignatedInitializer]
+		[Export ("initWithColumns:rows:sourcePositions:destPositions:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor (nint cols, nint rows, [NullAllowed] Vector2 sourcePositions, [NullAllowed] Vector2 destPositions);
 
 		[Export ("numberOfColumns")]
@@ -2911,15 +2955,19 @@ namespace XamCore.SpriteKit {
 		nint VertexCount { get; }
 
 		[Export ("sourcePositionAtIndex:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		Vector2 GetSourcePosition (nint index);
 
 		[Export ("destPositionAtIndex:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		Vector2 GetDestPosition (nint index);
 
 		[Export ("gridByReplacingSourcePositions:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKWarpGeometryGrid GridByReplacingSourcePositions (Vector2 sourcePositions);
 
 		[Export ("gridByReplacingDestPositions:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKWarpGeometryGrid GridByReplacingDestPositions (Vector2 destPositions);
 	}
 }
