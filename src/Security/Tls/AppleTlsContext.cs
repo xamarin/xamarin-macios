@@ -173,10 +173,14 @@ namespace XamCore.Security.Tls
 			SetSessionOption (SslSessionOption.BreakOnServerAuth, true);
 
 			if (IsServer) {
-				serverIdentity = MobileCertificateHelper.GetIdentity (LocalServerCertificate);
+				SecCertificate[] intermediateCerts;
+				serverIdentity = MobileCertificateHelper.GetIdentity (LocalServerCertificate, out intermediateCerts);
 				if (serverIdentity == null)
 					throw new SSA.AuthenticationException ("Unable to get server certificate from keychain.");
-				SetCertificate (serverIdentity, new SecCertificate [0]);
+
+				SetCertificate (serverIdentity, intermediateCerts);
+				for (int i = 0; i < intermediateCerts.Length; i++)
+					intermediateCerts [i].Dispose ();
 			}
 		}
 
