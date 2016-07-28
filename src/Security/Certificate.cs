@@ -93,7 +93,7 @@ namespace XamCore.Security {
 			 * Using 'XAMARIN_APPLETLS' as a conditional because 'XAMCORE_2_0' is
 			 * defined for tvos and watch, which have a recent-enough runtime.
 			 */
-			handle = certificate.Handle;
+			handle = certificate.Impl.GetNativeAppleCertificate ();
 			if (handle != IntPtr.Zero) {
 				CFObject.CFRetain (handle);
 				return;
@@ -105,13 +105,28 @@ namespace XamCore.Security {
 			}
 		}
 
+#if XAMARIN_APPLETLS
+		internal SecCertificate (X509CertificateImpl impl)
+		{
+			handle = impl.GetNativeAppleCertificate ();
+			if (handle != IntPtr.Zero) {
+				CFObject.CFRetain (handle);
+				return;
+			}
+
+			using (NSData cert = NSData.FromArray (impl.GetRawCertData ())) {
+				Initialize (cert);
+			}
+		}
+#endif
+
 		public SecCertificate (X509Certificate2 certificate)
 		{
 			if (certificate == null)
 				throw new ArgumentNullException ("certificate");
 
 #if XAMARIN_APPLETLS
-			handle = certificate.Handle;
+			handle = certificate.Impl.GetNativeAppleCertificate ();
 			if (handle != IntPtr.Zero) {
 				CFObject.CFRetain (handle);
 				return;
