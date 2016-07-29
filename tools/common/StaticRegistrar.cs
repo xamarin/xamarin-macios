@@ -2172,7 +2172,7 @@ namespace XamCore.Registrar {
 			return sb != null ? sb.ToString () : value;
 		}
 
-		static bool IsExternalAccessoryType (ObjCType type)
+		static bool IsTypeCore (ObjCType type, string nsToMatch)
 		{
 			var ns = type.Type.Namespace;
 
@@ -2182,31 +2182,13 @@ namespace XamCore.Registrar {
 				ns = t.Namespace;
 			}
 
-			switch (ns) {
-			case "ExternalAccessory":
-				return true;
-			default:
-				return false;
-			}
+			return ns == nsToMatch;
 		}
 
-		static bool IsQTKitType (ObjCType type)
-		{
-			var ns = type.Type.Namespace;
-
-			var t = type.Type;
-			while (string.IsNullOrEmpty (ns) && t.DeclaringType != null) {
-				t = t.DeclaringType;
-				ns = t.Namespace;
-			}
-
-			switch (ns) {
-			case "QTKit":
-				return true;
-			default:
-				return false;
-			}
-		}
+		static bool IsExternalAccessoryType (ObjCType type) => IsTypeCore (type, "ExternalAccessory");
+		static bool IsQTKitType (ObjCType type) => IsTypeCore (type, "QTKit");
+		static bool IsMapKitType (ObjCType type) => IsTypeCore (type, "MapKit");
+		static bool IsIntentsType (ObjCType type) => IsTypeCore (type, "Intents");
 
 		static bool IsMetalType (ObjCType type)
 		{
@@ -2258,6 +2240,11 @@ namespace XamCore.Registrar {
 #else
 				if (IsQTKitType (@class) && GetSDKVersion () >= new Version (10,12))
 					continue; // QTKit header was removed in 10.12 SDK
+
+				// These are 64-bit frameworks that extend NSExtensionContext / NSUserActivity, which you can't do
+				// if the header doesn't declare them. So hack it away, since they are useless in 64-bit anyway
+				if (!Is64Bits && (IsMapKitType (@class) || IsIntentsType (@class)))
+					continue;
 #endif
 
 				
@@ -3689,6 +3676,14 @@ namespace XamCore.Registrar {
 							hdr.WriteLine ("#include <objc/objc.h>");
 							hdr.WriteLine ("#include <objc/runtime.h>");
 							hdr.WriteLine ("#include <objc/message.h>");
+
+#if MONOMAC
+							// 32-bit header files do not define these types
+							if (!Is64Bits) {
+								hdr.WriteLine ("@class NSExtensionContext;");
+								hdr.WriteLine ("@class NSUserActivity;");
+							}
+#endif
 
 							header = hdr;
 							declarations = decls;
