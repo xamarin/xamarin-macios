@@ -998,6 +998,8 @@ namespace Xamarin.Bundler {
 					args.Append ("-g ");
 				args.Append ("-mmacosx-version-min=").Append (minos.ToString ()).Append (' ');
 				args.Append ("-arch ").Append (arch).Append (' ');
+				if (arch == "x86_64")
+					args.Append ("-fobjc-runtime=macosx ");
 				foreach (var assembly in BuildTarget.Assemblies) {
 					if (assembly.LinkWith != null) {
 						foreach (var linkWith in assembly.LinkWith) {

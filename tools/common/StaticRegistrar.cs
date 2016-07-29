@@ -1713,8 +1713,9 @@ namespace XamCore.Registrar {
 			switch (ns) {
 #if MMP
 			case "CoreBluetooth":
-				h = "<IOBluetooth/IOBluetooth.h>";
-				break;
+				header.WriteLine ("#import <IOBluetooth/IOBluetooth.h>");
+				header.WriteLine ("#import <CoreBluetooth/CoreBluetooth.h>");
+				return;
 			case "CoreImage":
 				h = "<QuartzCore/QuartzCore.h>";
 				break;
@@ -2189,6 +2190,24 @@ namespace XamCore.Registrar {
 			}
 		}
 
+		static bool IsQTKitType (ObjCType type)
+		{
+			var ns = type.Type.Namespace;
+
+			var t = type.Type;
+			while (string.IsNullOrEmpty (ns) && t.DeclaringType != null) {
+				t = t.DeclaringType;
+				ns = t.Namespace;
+			}
+
+			switch (ns) {
+			case "QTKit":
+				return true;
+			default:
+				return false;
+			}
+		}
+
 		static bool IsMetalType (ObjCType type)
 		{
 			var ns = type.Type.Namespace;
@@ -2228,15 +2247,19 @@ namespace XamCore.Registrar {
 				if (!string.IsNullOrEmpty (single_assembly) && single_assembly != @class.Type.Module.Assembly.Name.Name)
 					continue;
 
-#if !MONOMAC
 				var isPlatformType = IsPlatformType (@class.Type);
+#if !MONOMAC
 
 				if (isPlatformType && IsSimulatorOrDesktop && IsMetalType (@class))
 					continue; // Metal isn't supported in the simulator.
 
 				if (IsSimulatorOrDesktop && Driver.App.Platform == Xamarin.Utils.ApplePlatform.TVOS && IsExternalAccessoryType (@class))
 					continue; // ExternalAccessory's headers aren't available for tvOS/Simulator.
+#else
+				if (IsQTKitType (@class) && GetSDKVersion () >= new Version (10,12))
+					continue; // QTKit header was removed in 10.12 SDK
 #endif
+
 				
 				if (@class.IsFakeProtocol)
 					continue;

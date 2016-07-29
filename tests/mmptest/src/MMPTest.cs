@@ -71,7 +71,16 @@ namespace Xamarin.MMP.Tests
 				return;
 
 			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs>" };
+				// First in 64-bit
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>" };
+				// Mobile
+				TI.TestUnifiedExecutable (test);
+				// XM45
+				test.XM45 = true;
+				TI.TestUnifiedExecutable (test);
+
+				// Now 32-bit
+				test.CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>i386</XamMacArch>";
 				// Mobile
 				TI.TestUnifiedExecutable (test);
 				// XM45
