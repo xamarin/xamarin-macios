@@ -2925,6 +2925,7 @@ namespace XamCore.SpriteKit {
 
 	[iOS (10,0)][Mac (10,12)]
 	[BaseType (typeof(SKWarpGeometry))]
+	[DisableDefaultCtor]
 	interface SKWarpGeometryGrid : NSCoding
 	{
 		[Static]

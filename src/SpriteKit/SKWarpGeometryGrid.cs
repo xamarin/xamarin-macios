@@ -83,7 +83,7 @@ namespace XamCore.SpriteKit
 			dpGch.Free ();
 		}
 
-		public SKWarpGeometryGrid GridByReplacingSourcePositions (Vector2 [] sourcePositions)
+		public SKWarpGeometryGrid GetGridByReplacingSourcePositions (Vector2 [] sourcePositions)
 		{
 			if (sourcePositions == null)
 				throw new ArgumentNullException ("sourcePositions");
@@ -98,7 +98,7 @@ namespace XamCore.SpriteKit
 			return grid;
 		}
 
-		public SKWarpGeometryGrid GridByReplacingDestPositions (Vector2 [] destPositions)
+		public SKWarpGeometryGrid GetGridByReplacingDestPositions (Vector2 [] destPositions)
 		{
 			if (destPositions == null)
 				throw new ArgumentNullException ("destPositions");
