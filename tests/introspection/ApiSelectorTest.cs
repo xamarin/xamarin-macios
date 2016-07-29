@@ -201,6 +201,12 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "SKWarpGeometryGrid":
+				switch (selectorName) {
+				case "initWithColumns:rows:sourcePositions:destPositions:":
+					return true;
+				}
+				break;
 			case "INPriceRange":
 				switch (selectorName) {
 				case "initWithMaximumPrice:currencyCode:":

@@ -2935,15 +2935,15 @@ namespace XamCore.SpriteKit {
 		[Export ("gridWithColumns:rows:")]
 		SKWarpGeometryGrid Create (nint cols, nint rows);
 
+		[Internal]
 		[Static]
 		[Export ("gridWithColumns:rows:sourcePositions:destPositions:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		SKWarpGeometryGrid Create (nint cols, nint rows, [NullAllowed] Vector2 sourcePositions, [NullAllowed] Vector2 destPositions);
+		SKWarpGeometryGrid GridWithColumns (nint cols, nint rows, [NullAllowed] IntPtr sourcePositions, [NullAllowed] IntPtr destPositions);
 
+		[Internal]
 		[DesignatedInitializer]
 		[Export ("initWithColumns:rows:sourcePositions:destPositions:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (nint cols, nint rows, [NullAllowed] Vector2 sourcePositions, [NullAllowed] Vector2 destPositions);
+		IntPtr InitWithColumns (nint cols, nint rows, [NullAllowed] IntPtr sourcePositions, [NullAllowed] IntPtr destPositions);
 
 		[Export ("numberOfColumns")]
 		nint NumberOfColumns { get; }
@@ -2962,13 +2962,13 @@ namespace XamCore.SpriteKit {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		Vector2 GetDestPosition (nint index);
 
+		[Internal]
 		[Export ("gridByReplacingSourcePositions:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		SKWarpGeometryGrid GridByReplacingSourcePositions (Vector2 sourcePositions);
+		SKWarpGeometryGrid _GridByReplacingSourcePositions (IntPtr sourcePositions);
 
+		[Internal]
 		[Export ("gridByReplacingDestPositions:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		SKWarpGeometryGrid GridByReplacingDestPositions (Vector2 destPositions);
+		SKWarpGeometryGrid _GridByReplacingDestPositions (IntPtr destPositions);
 	}
 }
 #endif
