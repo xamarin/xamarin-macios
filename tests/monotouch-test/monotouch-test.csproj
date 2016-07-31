@@ -538,6 +538,8 @@
     <Compile Include="MediaPlayer\NowPlayingInfoCenterTest.cs" />
     <Compile Include="Foundation\UrlSessionTaskMetricsTest.cs" />
     <Compile Include="Foundation\UrlSessionTaskTransactionMetricsTest.cs" />
+    <Compile Include="SpriteKit\WarpGeometryGridTest.cs" />
+    <Compile Include="SpriteKit\UniformTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
