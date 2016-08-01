@@ -294,7 +294,7 @@ wrench-mac-binding-project:
 	cd mac-binding-project && git clean -xfdq
 
 wrench-mac-introspection:
-	$(Q) API_TEST_LOG_PROGRESS=1 $(MAKE) run-mac-introspection
+	$(Q) $(MAKE) run-mac-introspection
 	$(Q) $(MAKE) clean-mac-introspection
 
 else
