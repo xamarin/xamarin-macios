@@ -347,7 +347,7 @@ update_environment (xamarin_initialize_data *data)
 		NSString *appBundleID = [[NSBundle mainBundle] bundleIdentifier];
 		NSURL *appSupport = [appSupportDirectories objectAtIndex: 0];
 		if (appSupport != nil && appBundleID != nil) {
-			NSURL *appDirectory = [appSupport URLByAppendingPathComponent:appBundleID];
+			NSURL *appDirectory = [appSupport URLByAppendingPathComponent:appBundleID isDirectory: YES];
 			setenv ("MONO_REGISTRY_PATH", [[appDirectory path] UTF8String], 1);
 		}
 	}
