@@ -1953,7 +1953,7 @@ namespace Xamarin.BindingMethods.Generator
 				RequireMarshal = true,
 				IsARMStret = true,
 				IsX86Stret = true,
-				IsX64Stret = true,
+				IsX64Stret = false,
 			};
 			public static TypeData Matrix3f = new TypeData {
 				ManagedType = "Matrix3",
