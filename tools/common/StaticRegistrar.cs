@@ -2188,6 +2188,8 @@ namespace XamCore.Registrar {
 
 		static bool IsExternalAccessoryType (ObjCType type) => IsTypeCore (type, "ExternalAccessory");
 		static bool IsQTKitType (ObjCType type) => IsTypeCore (type, "QTKit");
+		static bool IsMapKitType (ObjCType type) => IsTypeCore (type, "MapKit");
+		static bool IsIntentsType (ObjCType type) => IsTypeCore (type, "Intents");
 
 		static bool IsMetalType (ObjCType type)
 		{
@@ -2247,6 +2249,11 @@ namespace XamCore.Registrar {
 
 				if (IsQTKitType (@class) && GetSDKVersion () >= new Version (10,12))
 					continue; // QTKit header was removed in 10.12 SDK
+
+				// These are 64-bit frameworks that extend NSExtensionContext / NSUserActivity, which you can't do
+				// if the header doesn't declare them. So hack it away, since they are useless in 64-bit anyway
+				if (!Is64Bits && (IsMapKitType (@class) || IsIntentsType (@class)))
+					continue;
 #endif
 
 				
