@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using Xamarin.Bundler;
@@ -2238,6 +2239,14 @@ namespace XamCore.Registrar {
 				if (IsSimulatorOrDesktop && Driver.App.Platform == Xamarin.Utils.ApplePlatform.TVOS && IsExternalAccessoryType (@class))
 					continue; // ExternalAccessory's headers aren't available for tvOS/Simulator.
 #else
+				// Don't register 64-bit only API on 32-bit XM
+				if (!Is64Bits)
+				{
+					var attributes = GetAvailabilityAttributes (@class.Type); // Can return null list
+					if (attributes != null && attributes.Any (x => x.Architecture == PlatformArchitecture.Arch64))
+						continue;
+				}
+
 				if (IsQTKitType (@class) && GetSDKVersion () >= new Version (10,12))
 					continue; // QTKit header was removed in 10.12 SDK
 
@@ -3676,14 +3685,6 @@ namespace XamCore.Registrar {
 							hdr.WriteLine ("#include <objc/objc.h>");
 							hdr.WriteLine ("#include <objc/runtime.h>");
 							hdr.WriteLine ("#include <objc/message.h>");
-
-#if MONOMAC
-							// 32-bit header files do not define these types
-							if (!Is64Bits) {
-								hdr.WriteLine ("@class NSExtensionContext;");
-								hdr.WriteLine ("@class NSUserActivity;");
-							}
-#endif
 
 							header = hdr;
 							declarations = decls;
