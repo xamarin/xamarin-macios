@@ -278,6 +278,7 @@ CLOUDKIT_SOURCES = \
 	CloudKit/CKRecord.cs \
 	CloudKit/CKRecordID.cs \
 	CloudKit/CKRecordZoneID.cs \
+	CloudKit/CKUserIdentityLookupInfo.cs \
 
 # CFNetwork
 
