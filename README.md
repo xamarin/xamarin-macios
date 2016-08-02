@@ -6,7 +6,7 @@ These frameworks allow us to create native iOS, tvOS, watchOS and Mac applicatio
 
 ### Continuous Builds ###
 
-You can download the continuous builds of this repository are [available](https://jenkins.mono-project.com/view/Xamarin.MaciOS/job/xamarin-macios-builds/).
+You can download continuous builds of our main development branches from [our wiki page](https://github.com/xamarin/xamarin-macios/wiki#continuous-builds).
 
 ## Build requirements ##
 
