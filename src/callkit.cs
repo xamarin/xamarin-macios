@@ -211,6 +211,21 @@ namespace XamCore.CallKit {
 		[Async]
 		[Export ("completeRequestWithCompletionHandler:")]
 		void CompleteRequest ([NullAllowed] Action<bool> completion);
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		ICXCallDirectoryExtensionContextDelegate Delegate { get; set; }
+	}
+
+	interface ICXCallDirectoryExtensionContextDelegate {}
+
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Protocol][Model]
+	[BaseType (typeof (NSObject))]
+	interface CXCallDirectoryExtensionContextDelegate {
+
+		[Abstract]
+		[Export ("requestFailedForExtensionContext:withError:")]
+		void RequestFailed (CXCallDirectoryExtensionContext extensionContext, NSError error);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -425,8 +440,8 @@ namespace XamCore.CallKit {
 		string RingtoneSound { get; set; }
 
 		[Advice ("Squared image 40x40 points")]
-		[NullAllowed, Export ("iconMaskImageData", ArgumentSemantic.Strong)]
-		NSData IconMaskImageData { get; set; }
+		[NullAllowed, Export ("iconTemplateImageData", ArgumentSemantic.Copy)]
+		NSData IconTemplateImageData { get; set; }
 
 		[Export ("maximumCallGroups")]
 		nuint MaximumCallGroups { get; set; }
@@ -488,6 +503,8 @@ namespace XamCore.CallKit {
 	[BaseType (typeof (CXCallAction))]
 	interface CXStartCallAction {
 
+		// initWithCallUUID: explicitly marked with NS_UNAVAILABLE
+
 		[Export ("initWithCallUUID:handle:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (NSUuid callUuid, CXHandle callHandle);
@@ -498,13 +515,24 @@ namespace XamCore.CallKit {
 		[NullAllowed, Export ("contactIdentifier")]
 		string ContactIdentifier { get; set; }
 
+		[Export ("video")]
+		bool Video { [Bind ("isVideo")] get; set; }
+
 		[Export ("fulfillWithDateStarted:")]
 		void Fulfill (NSDate dateStarted);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // there's a designated initializer that does not accept null
 	interface CXTransaction : NSCopying, NSSecureCoding {
+
+		[Export ("initWithActions:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (CXAction[] actions);
+
+		[Export ("initWithAction:")]
+		IntPtr Constructor (CXAction action);
 
 		[Export ("UUID", ArgumentSemantic.Copy)]
 		NSUuid Uuid { get; }

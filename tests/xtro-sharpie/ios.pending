@@ -3,12 +3,10 @@
 
 # CallKit
 
-## Deprecated in xcode8 beta1: "Use -[CXAction fulfill] instead"
-!missing-selector! CXCallAction::fulfillWithResponse: not bound
+## +@property (nonatomic, strong, nullable) NSData *iconMaskImageData API_DEPRECATED_WITH_REPLACEMENT("iconTemplateImageData", ios(10.0, 10.0)); // Note: will be removed in a future beta SDK
+!missing-selector! CXProviderConfiguration::iconMaskImageData not bound
+!missing-selector! CXProviderConfiguration::setIconMaskImageData: not bound
 
-## Deprecated in xcode8 beta3: "Authorization is no longer required"
-!missing-enum! CXAuthorizationStatus not bound
-!missing-selector! +CXProvider::authorizationStatus not bound
 
 # CoreMedia
 
