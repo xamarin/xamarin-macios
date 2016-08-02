@@ -1534,7 +1534,7 @@ namespace XamCore.HealthKit {
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface HKWorkoutEvent : NSSecureCoding {
+	public interface HKWorkoutEvent : NSSecureCoding, NSCopying {
 		[Export ("type")]
 		HKWorkoutEventType Type { get; }
 

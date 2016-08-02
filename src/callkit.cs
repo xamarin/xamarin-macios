@@ -203,10 +203,10 @@ namespace XamCore.CallKit {
 	interface CXCallDirectoryExtensionContext {
 
 		[Export ("addBlockingEntryWithNextSequentialPhoneNumber:")]
-		void AddBlockingEntry (string nextSequentialPhoneNumber);
+		void AddBlockingEntry (/* CXCallDirectoryPhoneNumber -> int64_t */ long phoneNumber);
 
 		[Export ("addIdentificationEntryWithNextSequentialPhoneNumber:label:")]
-		void AddIdentificationEntry (string nextSequentialPhoneNumber, string label);
+		void AddIdentificationEntry (/* CXCallDirectoryPhoneNumber -> int64_t */ long phoneNumber, string label);
 
 		[Async]
 		[Export ("completeRequestWithCompletionHandler:")]

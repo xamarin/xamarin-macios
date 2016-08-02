@@ -61,17 +61,6 @@ namespace XamCore.SafariServices {
 		NSString ErrorDomain { get; }
 	}
 
-	[iOS (10,0)]
-	[BaseType (typeof(NSObject))]
-	interface SFSafariViewControllerConfiguration
-	{
-		[Export ("entersReaderIfAvailable")]
-		bool EntersReaderIfAvailable { get; set; }
-
-		[Export ("preferredBarTintColor", ArgumentSemantic.Assign)]
-		UIColor PreferredBarTintColor { get; set; }
-	}
-	
 	[iOS (9,0)]
 	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor] // NSGenericException Reason: Misuse of SFSafariViewController interface. Use initWithURL:entersReaderIfAvailable:
@@ -80,17 +69,11 @@ namespace XamCore.SafariServices {
 		[PostGet ("NibBundle")]
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Please use SFSafariViewController (NSUrl url)")]
 		[Export ("initWithURL:entersReaderIfAvailable:")]
 		IntPtr Constructor (NSUrl url, bool entersReaderIfAvailable);
 
 		[Export ("initWithURL:")]
 		IntPtr Constructor (NSUrl url);
-
-		[iOS (10,0)]
-		[Export ("initWithURL:configuration:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl url, SFSafariViewControllerConfiguration configuration);
 
 		[NullAllowed] // by default this property is null
 		[Export ("delegate", ArgumentSemantic.Assign)]
@@ -101,8 +84,12 @@ namespace XamCore.SafariServices {
 		SFSafariViewControllerDelegate Delegate { get; set; }
 
 		[iOS (10, 0)]
-		[Export ("configuration", ArgumentSemantic.Copy)]
-		SFSafariViewControllerConfiguration Configuration { get; }
+		[Export ("preferredBarTintColor", ArgumentSemantic.Assign)]
+		UIColor PreferredBarTintColor { get; set; }
+
+		[iOS (10, 0)]
+		[Export ("preferredControlTintColor", ArgumentSemantic.Assign)]
+		UIColor PreferredControlTintColor { get; set; }
 	}
 
 	[iOS (9,0)]
