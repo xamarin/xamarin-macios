@@ -2026,6 +2026,11 @@ namespace XamCore.CoreImage {
 		[Field ("CIDetectorMinFeatureSize"), Internal]
 		NSString MinFeatureSize { get; }
 
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[Field ("CIDetectorMaxFeatureCount"), Internal]
+		NSString MaxFeatureCount { get; }
+
 		[Since (7,0), Mavericks]
 		[Field ("CIDetectorEyeBlink"), Internal]
 		NSString EyeBlink { get; }

@@ -2,12 +2,13 @@
 // Authors:
 //   Sebastien Pouliot  <sebastien@xamarin.com>
 //
-// Copyright 2013 Xamarin, Inc.
+// Copyright 2013, 2016 Xamarin, Inc.
 //
 
 using System;
 using System.Collections.Generic;
 using XamCore.Foundation;
+using XamCore.ObjCRuntime;
 
 namespace XamCore.CoreImage {
 
@@ -15,6 +16,10 @@ namespace XamCore.CoreImage {
 
 		public FaceDetectorAccuracy? Accuracy { get; set; }
 		public float? MinFeatureSize { get; set; }
+
+		[iOS (10,0)][Mac (10,12)]
+		public int? MaxFeatureCount { get; set; }
+
 		public bool? TrackingEnabled { get; set; }
 		public bool? EyeBlink { get; set; }
 		public bool? Smile { get; set; }
@@ -29,9 +34,9 @@ namespace XamCore.CoreImage {
 		
 		internal NSDictionary ToDictionary ()
 		{
-			// We have now 10 possible keys so begining with 5 *might* be optimal
-			List<NSObject> keys = new List<NSObject> (5);
-			List<NSObject> values = new List<NSObject> (5);
+			// We now have 11 possible keys so begining with 6 *might* be optimal
+			List<NSObject> keys = new List<NSObject> (6);
+			List<NSObject> values = new List<NSObject> (6);
 
 			if (CIDetector.Accuracy != null) {
 				keys.Add (CIDetector.Accuracy);
@@ -84,6 +89,11 @@ namespace XamCore.CoreImage {
 			if (CIDetector.ImageOrientation != null && ImageOrientation != null) {
 				keys.Add (CIDetector.ImageOrientation);
 				values.Add (new NSNumber ((int) ImageOrientation.Value));
+			}
+
+			if (CIDetector.MaxFeatureCount != null && MaxFeatureCount != null) {
+				keys.Add (CIDetector.MaxFeatureCount);
+				values.Add (new NSNumber ((int) MaxFeatureCount.Value));
 			}
 
 			return NSDictionary.FromObjectsAndKeys (values.ToArray (), keys.ToArray ());
