@@ -317,7 +317,7 @@ namespace XamCore.CoreSpotlight {
 		[Export ("importantDates")]
 		NSDate [] ImportantDates { get; set; }
 
-		[Export ("allDay")]
+		[Export ("allDay", ArgumentSemantic.Strong)]
 		[NullAllowed]
 		NSNumber AllDay { get; set; }
 
@@ -945,10 +945,10 @@ namespace XamCore.CoreSpotlight {
 
 		// CSActionExtras
 
-		[NullAllowed, Export ("supportsPhoneCall", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("supportsPhoneCall", ArgumentSemantic.Strong)]
 		NSNumber SupportsPhoneCall { get; set; }
 
-		[NullAllowed, Export ("supportsNavigation", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("supportsNavigation", ArgumentSemantic.Strong)]
 		NSNumber SupportsNavigation { get; set; }
 
 		// CSContainment
@@ -962,7 +962,7 @@ namespace XamCore.CoreSpotlight {
 		[NullAllowed, Export ("containerIdentifier")]
 		string ContainerIdentifier { get; set; }
 
-		[NullAllowed, Export ("containerOrder", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("containerOrder", ArgumentSemantic.Strong)]
 		NSNumber ContainerOrder { get; set; }
 
 		// CSCustomAttributes
