@@ -818,9 +818,6 @@ namespace XamCore.Intents {
 		[Export ("restaurant", ArgumentSemantic.Copy)]
 		INRestaurant Restaurant { get; set; }
 
-		[NullAllowed, Export ("restaurantMarketingPreferences", ArgumentSemantic.Copy)]
-		INRestaurantMarketingPreferences RestaurantMarketingPreferences { get; set; }
-
 		[Export ("bookingDate", ArgumentSemantic.Copy)]
 		NSDate BookingDate { get; set; }
 
@@ -1280,9 +1277,6 @@ namespace XamCore.Intents {
 		[Export ("providerImage", ArgumentSemantic.Copy)]
 		INImage ProviderImage { get; set; }
 
-		[NullAllowed, Export ("restaurantMarketingPreferences", ArgumentSemantic.Copy)]
-		INRestaurantMarketingPreferences RestaurantMarketingPreferences { get; set; }
-
 		[Export ("initWithDefaultPartySize:defaultBookingDate:code:userActivity:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (nuint defaultPartySize, NSDate defaultBookingDate, INGetAvailableRestaurantReservationBookingDefaultsIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
@@ -1687,9 +1681,6 @@ namespace XamCore.Intents {
 
 		[NullAllowed, Export ("paymentMethods", ArgumentSemantic.Copy)]
 		INPaymentMethod [] PaymentMethods { get; set; }
-
-		[NullAllowed, Export ("supportsApplePayForPayment", ArgumentSemantic.Copy)]
-		NSNumber SupportsApplePayForPayment { get; set; }
 
 		[NullAllowed, Export ("expirationDate", ArgumentSemantic.Copy)]
 		NSDate ExpirationDate { get; set; }
@@ -2123,10 +2114,6 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntent))]
 	interface INRequestRideIntent {
 
-		[Export ("initWithPickupLocation:dropOffLocation:rideOptionName:partySize:paymentMethodName:usesApplePayForPayment:")]
-		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] CLPlacemark pickupLocation, [NullAllowed] CLPlacemark dropOffLocation, [NullAllowed] INSpeakableString rideOptionName, [NullAllowed] NSNumber partySize, [NullAllowed] INSpeakableString paymentMethodName, [NullAllowed] NSNumber usesApplePayForPayment);
-
 		[NullAllowed, Export ("pickupLocation", ArgumentSemantic.Copy)]
 		CLPlacemark PickupLocation { get; }
 
@@ -2138,12 +2125,6 @@ namespace XamCore.Intents {
 
 		[NullAllowed, Export ("partySize", ArgumentSemantic.Copy)]
 		NSNumber PartySize { get; }
-
-		[NullAllowed, Export ("paymentMethodName", ArgumentSemantic.Copy)]
-		INSpeakableString PaymentMethodName { get; }
-
-		[NullAllowed, Export ("usesApplePayForPayment", ArgumentSemantic.Copy)]
-		NSNumber UsesApplePayForPayment { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
