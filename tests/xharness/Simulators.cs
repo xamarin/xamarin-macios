@@ -28,7 +28,9 @@ namespace xharness
 					process.StartInfo.FileName = Harness.MlaunchPath;
 					process.StartInfo.Arguments = string.Format ("--sdkroot {0} --listsim {1}", Harness.XcodeRoot, tmpfile);
 					log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
-					await process.RunAsync (log, false);
+					var rv = await process.RunAsync (log, false);
+					if (!rv.Succeeded)
+						throw new Exception ("Failed to list simulators.");
 					log.WriteLine ("Result:");
 					log.WriteLine (File.ReadAllText (tmpfile));
 					var simulator_data = new XmlDocument ();
