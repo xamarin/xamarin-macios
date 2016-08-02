@@ -75,9 +75,7 @@ namespace XamCore.IntentsUI {
 		[Export ("displaysMessage")]
 		bool DisplaysMessage { get; }
 
-		// FIXME: The selector name is correct according to Headers
-		// but it has a typo Transcation so Apple might fix it in a future release
-		[Export ("displaysPaymentTranscation")]
+		[Export ("displaysPaymentTransaction")]
 		bool DisplaysPaymentTransaction { get; }
 	}
 }
