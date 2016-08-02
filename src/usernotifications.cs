@@ -155,7 +155,7 @@ namespace XamCore.UserNotifications {
 		[Export ("title")]
 		string Title { get; }
 
-		[Export ("options", ArgumentSemantic.Assign)]
+		[Export ("options")]
 		UNNotificationActionOptions Options { get; }
 
 		[Static]
@@ -265,13 +265,10 @@ namespace XamCore.UserNotifications {
 		[Export ("actions", ArgumentSemantic.Copy)]
 		UNNotificationAction [] Actions { get; }
 
-		[Export ("minimalActions", ArgumentSemantic.Copy)]
-		UNNotificationAction [] MinimalActions { get; }
-
 		[Export ("intentIdentifiers", ArgumentSemantic.Copy)]
 		string [] IntentIdentifiers { get; }
 
-		[Export ("options", ArgumentSemantic.Assign)]
+		[Export ("options")]
 		UNNotificationCategoryOptions Options { get; }
 
 		[Static]
@@ -449,38 +446,38 @@ namespace XamCore.UserNotifications {
 	[DisableDefaultCtor]
 	interface UNNotificationSettings : NSCopying, NSSecureCoding {
 
-		[Export ("authorizationStatus", ArgumentSemantic.Assign)]
+		[Export ("authorizationStatus")]
 		UNAuthorizationStatus AuthorizationStatus { get; }
 
 		[Unavailable (PlatformName.TvOS)]
-		[Export ("soundSetting", ArgumentSemantic.Assign)]
+		[Export ("soundSetting")]
 		UNNotificationSetting SoundSetting { get; }
 
 		[Unavailable (PlatformName.WatchOS)]
-		[Export ("badgeSetting", ArgumentSemantic.Assign)]
+		[Export ("badgeSetting")]
 		UNNotificationSetting BadgeSetting { get; }
 
 		[Unavailable (PlatformName.TvOS)]
-		[Export ("alertSetting", ArgumentSemantic.Assign)]
+		[Export ("alertSetting")]
 		UNNotificationSetting AlertSetting { get; }
 
 		[Unavailable (PlatformName.TvOS)]
-		[Export ("notificationCenterSetting", ArgumentSemantic.Assign)]
+		[Export ("notificationCenterSetting")]
 		UNNotificationSetting NotificationCenterSetting { get; }
 
 		[Unavailable (PlatformName.TvOS)]
 		[Unavailable (PlatformName.WatchOS)]
-		[Export ("lockScreenSetting", ArgumentSemantic.Assign)]
+		[Export ("lockScreenSetting")]
 		UNNotificationSetting LockScreenSetting { get; }
 
 		[Unavailable (PlatformName.TvOS)]
 		[Unavailable (PlatformName.WatchOS)]
-		[Export ("carPlaySetting", ArgumentSemantic.Assign)]
+		[Export ("carPlaySetting")]
 		UNNotificationSetting CarPlaySetting { get; }
 
 		[Unavailable (PlatformName.TvOS)]
 		[Unavailable (PlatformName.WatchOS)]
-		[Export ("alertStyle", ArgumentSemantic.Assign)]
+		[Export ("alertStyle")]
 		UNAlertStyle AlertStyle { get; }
 	}
 
