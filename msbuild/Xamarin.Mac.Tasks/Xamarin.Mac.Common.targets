@@ -435,8 +435,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<Target Name="_DetectSdkLocations">
 		<DetectSdkLocations
 			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			SdkVersion="$(MacOSXSdkVersion)">
+			SessionId="$(BuildSessionId)">
 			<Output TaskParameter="SdkVersion" PropertyName="MacOSXSdkVersion" />
 			<Output TaskParameter="SdkRoot" PropertyName="_SdkRoot" />
 			<Output TaskParameter="SdkBinPath" PropertyName="_SdkBinPath" />
