@@ -536,6 +536,8 @@
       <Link>TestRuntime.cs</Link>
     </Compile>
     <Compile Include="MediaPlayer\NowPlayingInfoCenterTest.cs" />
+    <Compile Include="Foundation\UrlSessionTaskMetricsTest.cs" />
+    <Compile Include="Foundation\UrlSessionTaskTransactionMetricsTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>

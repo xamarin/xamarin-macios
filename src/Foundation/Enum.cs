@@ -976,7 +976,9 @@ namespace XamCore.Foundation  {
 		Abbreviated,
 		Short,
 		Full,
-		SpellOut
+		SpellOut,
+		[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
+		Brief,
 	}
 
 	[Native]
@@ -1204,4 +1206,39 @@ namespace XamCore.Foundation  {
 		WithoutUI = 1 << 1
 	}
 #endif
+
+	[iOS (9,0)][Mac (10,11)]
+	[Native]
+	public enum NSDecodingFailurePolicy : nint {
+		RaiseException,
+		SetErrorAndReturn
+	}
+
+	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
+	[Native]
+	[Flags]
+	public enum NSIso8601DateFormatOptions : nuint {
+		Year = 1 << 0,
+		Month = 1 << 1,
+		WeekOfYear = 1 << 2,
+		Day = 1 << 4,
+		Time = 1 << 5,
+		TimeZone = 1 << 6,
+		SpaceBetweenDateAndTime = 1 << 7,
+		DashSeparatorInDate = 1 << 8,
+		ColonSeparatorInTime = 1 << 9,
+		ColonSeparatorInTimeZone = 1 << 10,
+		FullDate = Year | Month | Day | DashSeparatorInDate,
+		FullTime = Time | ColonSeparatorInTime | TimeZone | ColonSeparatorInTimeZone,
+		InternetDateTime = FullDate | FullTime,
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[Native]
+	public enum NSUrlSessionTaskMetricsResourceFetchType : nint {
+		Unknown,
+		NetworkLoad,
+		ServerPush,
+		LocalCache
+	}
 }

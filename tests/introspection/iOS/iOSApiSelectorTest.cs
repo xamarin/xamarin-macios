@@ -141,6 +141,12 @@ namespace Introspection {
 				if (TestRuntime.CheckXcodeVersion (7, 0))
 					return true;
 				break;
+			case "NSUrlSessionTaskMetrics":
+			case "NSUrlSessionTaskTransactionMetrics":
+				// does not respond but the properties works (see monotouch-test for a partial list)
+				if (TestRuntime.CheckXcodeVersion (8, 0))
+					return true;
+				break;
 
 			case "AVAssetDownloadTask":
 				switch (name) {
