@@ -1004,9 +1004,6 @@ namespace XamCore.WatchKit {
 	[Watch (3,0)][NoiOS]
 	[BaseType (typeof (WKRefreshBackgroundTask))]
 	interface WKApplicationRefreshBackgroundTask {
-
-		[Export ("setTaskCompleted")]
-		void SetTaskCompleted ();
 	}
 
 	[Watch (3,0)][NoiOS]
@@ -1021,22 +1018,16 @@ namespace XamCore.WatchKit {
 	}
 
 	[Watch (3,0)][NoiOS]
-	[BaseType (typeof (WKRefreshBackgroundTask))]
-	interface WKURLSessionRefreshBackgroundTask {
+	[BaseType (typeof (WKRefreshBackgroundTask), Name = "WKURLSessionRefreshBackgroundTask")]
+	interface WKUrlSessionRefreshBackgroundTask {
 
 		[Export ("sessionIdentifier")]
 		string SessionIdentifier { get; }
-
-		[Export ("setTaskCompleted")]
-		void SetTaskCompleted ();
 	}
 
 	[Watch (3,0)][NoiOS]
 	[BaseType (typeof (WKRefreshBackgroundTask))]
 	interface WKWatchConnectivityRefreshBackgroundTask {
-
-		[Export ("setTaskCompleted")]
-		void SetTaskCompleted ();
 	}
 
 	[Watch (3,0)][NoiOS]
