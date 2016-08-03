@@ -573,6 +573,11 @@ namespace XamCore.WebKit
 		[iOS (10,0)][Mac (10,12, only64: true)]
 		[Export ("mediaTypesRequiringUserActionForPlayback", ArgumentSemantic.Assign)]
 		WKAudiovisualMediaTypes MediaTypesRequiringUserActionForPlayback { get; set; }
+
+		[iOS (10,0)]
+		[NoMac]
+		[Export ("ignoresViewportScaleLimits")]
+		bool IgnoresViewportScaleLimits { get; set; }
 	}
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
