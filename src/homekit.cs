@@ -6,6 +6,10 @@ using XamCore.UIKit;
 using System;
 using System.ComponentModel;
 
+#if WATCH
+interface UIView {}
+#endif
+
 namespace XamCore.HomeKit {
 
 	[iOS (8,0)]
@@ -1689,7 +1693,7 @@ namespace XamCore.HomeKit {
 		void UpdateRegion (CLRegion region, Action<NSError> completion);
 	}
 
-	#if !WATCH
+	[NoWatch]
 	[TV (10,0), iOS (10,0)]
 	[BaseType (typeof(UIView))]
 	interface HMCameraView
@@ -1701,9 +1705,9 @@ namespace XamCore.HomeKit {
 		[NullAllowed, Export ("cameraSource", ArgumentSemantic.Strong)]
 		HMCameraSource CameraSource { get; set; }
 	}
-	#endif
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[Abstract] // documented as such in header file
 	[BaseType (typeof(NSObject))]
 	interface HMCameraSource {}
 
