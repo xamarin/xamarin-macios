@@ -1244,6 +1244,151 @@ namespace Xamarin.BindingMethods.Generator
 				}
 			);
 
+			// Required for SpriteKit
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, Matrix2)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.Matrix2f },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, Matrix3)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.Matrix3f },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, Matrix4)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.Matrix4f },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, Vector3)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.Vector3 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, Vector4)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.Vector4 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (Vector4)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Vector4 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (nint, nint, Vector2, Vector2)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.NInt },
+						new ParameterData { TypeData = Types.NInt },
+						new ParameterData { TypeData = Types.Vector2 },
+						new ParameterData { TypeData = Types.Vector2 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // Matrix2 func ()",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.Matrix2f,
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // Matrix3 func ()",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.Matrix3f,
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // Vector2 func (nint)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.Vector2,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.NInt },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (Matrix2)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Matrix2f },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (Matrix3)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Matrix3f },
+					},
+				}
+			);
+
 			// We must expand functions with native types to their actual type as well.
 			for (int i = data.Count - 1; i >= 0; i--) {
 				if (!data [i].HasNativeType)
@@ -1289,6 +1434,19 @@ namespace Xamarin.BindingMethods.Generator
 				} else {
 					goto default;
 				}
+				break;
+			case "Matrix2":
+				writer.WriteLine ("\tfor (int i = 0; i < 2; i++) {");
+				writer.WriteLine ("\t\t{0}.columns [i].a = {1}.columns [i] [0];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t\t{0}.columns [i].b = {1}.columns [i] [1];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t}");
+				break;
+			case "Matrix3":
+				writer.WriteLine ("\tfor (int i = 0; i < 3; i++) {");
+				writer.WriteLine ("\t\t{0}.columns [i].a = {1}.columns [i] [0];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t\t{0}.columns [i].b = {1}.columns [i] [1];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t\t{0}.columns [i].c = {1}.columns [i] [2];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t}");
 				break;
 			case "Matrix4":
 				writer.WriteLine ("\tfor (int i = 0; i < 4; i++) {");
@@ -1339,6 +1497,19 @@ namespace Xamarin.BindingMethods.Generator
 				} else {
 					goto default;
 				}
+				break;
+			case "Matrix2":
+				writer.WriteLine ("\tfor (int i = 0; i < 2; i++) {");
+				writer.WriteLine ("\t\t{0}.columns [i][0] = {1}.columns [i].a;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t\t{0}.columns [i][1] = {1}.columns [i].b;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t}");
+				break;
+			case "Matrix3":
+				writer.WriteLine ("\tfor (int i = 0; i < 3; i++) {");
+				writer.WriteLine ("\t\t{0}.columns [i][0] = {1}.columns [i].a;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t\t{0}.columns [i][1] = {1}.columns [i].b;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t\t{0}.columns [i][2] = {1}.columns [i].c;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t}");
 				break;
 			case "Matrix4":
 				writer.WriteLine ("\tfor (int i = 0; i < 4; i++) {");
@@ -1774,6 +1945,24 @@ namespace Xamarin.BindingMethods.Generator
 				NativeType = "vector_int4",
 				NativeWrapperType = "struct Vector4i",
 				RequireMarshal = true,
+			};
+			public static TypeData Matrix2f = new TypeData {
+				ManagedType = "Matrix2",
+				NativeType = "matrix_float2x2",
+				NativeWrapperType = "struct Matrix2f",
+				RequireMarshal = true,
+				IsARMStret = true,
+				IsX86Stret = true,
+				IsX64Stret = false,
+			};
+			public static TypeData Matrix3f = new TypeData {
+				ManagedType = "Matrix3",
+				NativeType = "matrix_float3x3",
+				NativeWrapperType = "struct Matrix3f",
+				RequireMarshal = true,
+				IsARMStret = true,
+				IsX86Stret = true,
+				IsX64Stret = true,
 			};
 			public static TypeData Matrix4f = new TypeData {
 				ManagedType = "Matrix4",

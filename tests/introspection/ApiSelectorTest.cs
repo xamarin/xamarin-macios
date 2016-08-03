@@ -162,6 +162,34 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			// Conform to SKWarpable
+			case "SKEffectNode":
+			case "SKSpriteNode":
+				switch (selectorName) {
+				case "setSubdivisionLevels:":
+				case "setWarpGeometry:":
+					return true;
+				}
+				break;
+			case "SKUniform":
+				switch (selectorName) {
+				// New selectors
+				case "initWithName:vectorFloat2:":
+				case "initWithName:vectorFloat3:":
+				case "initWithName:vectorFloat4:":
+				case "initWithName:matrixFloat2x2:":
+				case "initWithName:matrixFloat3x3:":
+				case "initWithName:matrixFloat4x4:":
+				// Old selectors
+				case "initWithName:floatVector2:":
+				case "initWithName:floatVector3:":
+				case "initWithName:floatVector4:":
+				case "initWithName:floatMatrix2:":
+				case "initWithName:floatMatrix3:":
+				case "initWithName:floatMatrix4:":
+					return true;
+				}
+				break;
 			case "SKVideoNode":
 				switch (selectorName) {
 				case "initWithFileNamed:":
@@ -170,6 +198,12 @@ namespace Introspection {
 				case "initWithVideoURL:":
 				case "videoNodeWithFileNamed:":
 				case "videoNodeWithURL:":
+					return true;
+				}
+				break;
+			case "SKWarpGeometryGrid":
+				switch (selectorName) {
+				case "initWithColumns:rows:sourcePositions:destPositions:":
 					return true;
 				}
 				break;

@@ -19,9 +19,11 @@ namespace XamCore.SpriteKit {
 		{
 #if MONOMAC
 			return PlatformHelper.CheckSystemVersion (10, 10);
-#else
+#elif TVOS || IOS
 			return XamCore.UIKit.UIDevice.CurrentDevice.CheckSystemVersion (8, 0);
-#endif // MONOMAC
+#else
+			#error Unknown platform
+#endif
 		}
 
 		// Apple deprecated videoNodeWithVideoFileNamed: in 10.10/8.0

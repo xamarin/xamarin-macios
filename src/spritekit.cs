@@ -99,11 +99,15 @@ namespace XamCore.SpriteKit {
 #if MONOMAC
 	[Mac (10,9, onlyOn64 : true)]
 	[BaseType (typeof (NSResponder))]
-#else
+	partial interface SKNode : NSCoding, NSCopying {
+#elif IOS || TV
 	[Since (7,0)]
 	[BaseType (typeof (UIResponder))]
-#endif
+	partial interface SKNode : NSCoding, NSCopying, UIFocusItem {
+#else // WATCHOS
+	[BaseType (typeof (NSObject))]
 	partial interface SKNode : NSCoding, NSCopying {
+#endif
 		[Static, Export ("node")]
 		SKNode Create ();
 
@@ -256,20 +260,36 @@ namespace XamCore.SpriteKit {
 		[Export ("moveToParent:")]
 		void MoveToParent (SKNode parent);
 
+		// Moved from SpriteKit to GameplayKit header in iOS 10 beta 1
 		[iOS (9,0),Mac(10,11)]
 		[Static]
 		[Export ("obstaclesFromNodeBounds:")]
 		GKPolygonObstacle[] ObstaclesFromNodeBounds (SKNode[] nodes);
 		
+		// Moved from SpriteKit to GameplayKit header in iOS 10 beta 1
 		[iOS (9,0),Mac(10,11)]
 		[Static]
 		[Export ("obstaclesFromNodePhysicsBodies:")]
 		GKPolygonObstacle[] ObstaclesFromNodePhysicsBodies (SKNode[] nodes);
 
+		// Moved from SpriteKit to GameplayKit header in iOS 10 beta 1
 		[iOS (9,0),Mac(10,11)]
 		[Static]
 		[Export ("obstaclesFromSpriteTextures:accuracy:")]
 		GKPolygonObstacle[] ObstaclesFromSpriteTextures (SKNode[] sprites, float accuracy);
+
+		[iOS (9,0),Mac(10,11)]
+		[Export ("attributeValues", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
+
+		[iOS (9,0),Mac(10,11)]
+		[Export ("valueForAttributeNamed:")]
+		[return: NullAllowed]
+		SKAttributeValue GetValue (string key);
+
+		[iOS (9,0),Mac(10,11)]
+		[Export ("setValue:forAttributeNamed:")]
+		void SetValue (SKAttributeValue value, string key);
 	}
 
 #if MONOMAC
@@ -281,6 +301,7 @@ namespace XamCore.SpriteKit {
 		CGPoint LocationInNode (SKNode node);
 	}
 #else
+	[NoWatch]
 	[Since (7,0)]
 	[Category, BaseType (typeof (UITouch))]
 	partial interface SKNodeTouches_UITouch {
@@ -296,8 +317,9 @@ namespace XamCore.SpriteKit {
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (SKNode))]
-	partial interface SKEffectNode {
+	partial interface SKEffectNode : SKWarpable {
 
+		[NoWatch]
 		[NullAllowed] // by default this property is null
 		[Export ("filter", ArgumentSemantic.Retain)]
 		CIFilter Filter { get; set; }
@@ -410,6 +432,10 @@ namespace XamCore.SpriteKit {
 		[Static, Export ("sceneWithSize:")]
 		SKScene FromSize (CGSize size);
 
+		[iOS (10,0)][Mac (10,12)]
+		[Export ("sceneDidLoad")]
+		void SceneDidLoad ();
+
 		[Export ("size")]
 		CGSize Size { get; set; }
 
@@ -425,9 +451,11 @@ namespace XamCore.SpriteKit {
 		[Export ("physicsWorld")]
 		SKPhysicsWorld PhysicsWorld { get; }
 
+		[NoWatch]
 		[Export ("convertPointFromView:")]
 		CGPoint ConvertPointFromView (CGPoint point);
 
+		[NoWatch]
 		[Export ("convertPointToView:")]
 		CGPoint ConvertPointToView (CGPoint point);
 
@@ -443,9 +471,11 @@ namespace XamCore.SpriteKit {
 		[Export ("didSimulatePhysics")]
 		void DidSimulatePhysics ();
 
+		[NoWatch]
 		[Export ("didMoveToView:")]
 		void DidMoveToView (SKView view);
 
+		[NoWatch]
 		[Export ("willMoveFromView:")]
 		void WillMoveFromView (SKView view);
 
@@ -461,7 +491,7 @@ namespace XamCore.SpriteKit {
 		void DidFinishUpdate ();
 
 		[iOS (8,0), Mac(10,10)]
-		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set;}
 
 		[iOS (8,0), Mac(10,10)]
@@ -469,6 +499,7 @@ namespace XamCore.SpriteKit {
 		[Protocolize]
 		SKSceneDelegate Delegate { get; set; }
 		
+		[NoWatch]
 		[iOS (9,0),Mac(10,11)]
 		[Export ("audioEngine", ArgumentSemantic.Retain)]
 		AVAudioEngine AudioEngine { get; }
@@ -541,12 +572,16 @@ namespace XamCore.SpriteKit {
 
 		[Export ("removeUniformNamed:")]
 		void RemoveUniform (string uniforName);
+
+		[iOS (9,0)][Mac (10,11)]
+		[Export ("attributes", ArgumentSemantic.Copy)]
+		SKAttribute[] Attributes { get; set; }
 	}
 
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (SKNode))]
-	partial interface SKSpriteNode {
+	partial interface SKSpriteNode : SKWarpable {
 
 		[Static, Export ("spriteNodeWithTexture:size:")]
 		SKSpriteNode FromTexture ([NullAllowed] SKTexture texture, CGSize size);
@@ -630,6 +665,10 @@ namespace XamCore.SpriteKit {
 		[iOS (8,0), Mac (10,10)]
 		[Export ("shader", ArgumentSemantic.Retain), NullAllowed]
 		SKShader Shader { get; set; }		
+
+		[iOS (10,0), Mac (10,12)]
+		[Export ("scaleToSize:")]
+		void ScaleTo (CGSize size);
 	}
 
 	[Mac (10,9, onlyOn64 : true)]
@@ -1090,6 +1129,7 @@ namespace XamCore.SpriteKit {
 	[BaseType (typeof (SKNode))]
 	partial interface SKVideoNode {
 
+		[NoWatch]
 		[Static, Export ("videoNodeWithAVPlayer:")]
 		SKVideoNode FromPlayer (AVPlayer player);
 
@@ -1105,6 +1145,7 @@ namespace XamCore.SpriteKit {
 		[Static, Export ("videoNodeWithURL:"), Internal]
 		SKVideoNode VideoNodeWithURL (NSUrl videoURL);
 
+		[NoWatch]
 		[DesignatedInitializer]
 		[Export ("initWithAVPlayer:")]
 		IntPtr Constructor (AVPlayer player);
@@ -1186,6 +1227,7 @@ namespace XamCore.SpriteKit {
 		SKNode MaskNode { get; set; }
 	}
 
+	[NoWatch]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (UIView))]
@@ -1262,6 +1304,25 @@ namespace XamCore.SpriteKit {
 		[iOS (8,0), Mac (10,10)]
 		[Export ("textureFromNode:crop:")]
 		SKTexture TextureFromNode (SKNode node, CGRect crop);
+
+		[iOS (10,0)][Mac (10,12)]
+		[Export ("preferredFramesPerSecond")]
+		nint PreferredFramesPerSecond { get; set; }
+
+		[iOS (10,0)][Mac (10,12)]
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		ISKViewDelegate Delegate { get; set; }
+	}
+
+	interface ISKViewDelegate {}
+
+	[iOS (10,0)][Mac (10,12)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface SKViewDelegate
+	{
+		[Export ("view:shouldRenderAtTime:")]
+		bool ShouldRender (SKView view, double time);
 	}
 
 	[Mac (10,9, onlyOn64 : true)]
@@ -1309,6 +1370,7 @@ namespace XamCore.SpriteKit {
 		[Static, Export ("doorwayWithDuration:")]
 		SKTransition DoorwayWithDuration (double sec);
 
+		[NoWatch]
 		[Static, Export ("transitionWithCIFilter:duration:")]
 		SKTransition TransitionWithCIFilter (CIFilter filter, double sec);
 
@@ -1343,6 +1405,7 @@ namespace XamCore.SpriteKit {
 		[Static, Export ("textureWithData:size:rowLength:alignment:")]
 		SKTexture FromData (NSData pixelData, CGSize size, uint /* unsigned int*/ rowLength, uint /* unsigned int */ alignment);
 
+		[NoWatch]
 		[Export ("textureByApplyingCIFilter:")]
 		SKTexture TextureByApplyingCIFilter (CIFilter filter);
 
@@ -1464,23 +1527,71 @@ namespace XamCore.SpriteKit {
 		[Export ("initWithName:float:")]
 		IntPtr Constructor (string name, float /* float, not CGFloat */ value);
 
+		[Internal]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatVector2:")]
-		IntPtr Constructor (string name, Vector2 value);
+		IntPtr InitWithNameFloatVector2 (string name, Vector2 value);
 
+		[Internal]
+		[iOS (10,0)][Mac (10,12)]
+		[Export ("initWithName:vectorFloat2:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr InitWithNameVectorFloat2 (string name, Vector2 value);
+
+		[Internal]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatVector3:")]
-		IntPtr Constructor (string name, Vector3 value);
+		IntPtr InitWithNameFloatVector3 (string name, Vector3 value);
 
+		[Internal]
+		[iOS (10,0)][Mac (10,12)]
+		[Export ("initWithName:vectorFloat3:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr InitWithNameVectorFloat3 (string name, Vector3 value);
+
+		[Internal]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatVector4:")]
-		IntPtr Constructor (string name, Vector4 value);
+		IntPtr InitWithNameFloatVector4 (string name, Vector4 value);
 
+		[Internal]
+		[iOS (10,0)][Mac (10,12)]
+		[Export ("initWithName:vectorFloat4:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr InitWithNameVectorFloat4 (string name, Vector4 value);
+
+		[Internal]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatMatrix2:")]
-		IntPtr Constructor (string name, Matrix2 value);
+		IntPtr InitWithNameFloatMatrix2 (string name, Matrix2 value);
 
+		[Internal]
+		[iOS (10,0)][Mac (10,12)]
+		[Export ("initWithName:matrixFloat2x2:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr InitWithNameMatrixFloat2x2 (string name, Matrix2 value);
+
+		[Internal]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatMatrix3:")]
-		IntPtr Constructor (string name, Matrix3 value);
+		IntPtr InitWithNameFloatMatrix3 (string name, Matrix3 value);
 
+		[Internal]
+		[iOS (10,0)][Mac (10,12)]
+		[Export ("initWithName:matrixFloat3x3:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr InitWithNameMatrixFloat3x3 (string name, Matrix3 value);
+
+		[Internal]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatMatrix4:")]
-		IntPtr Constructor (string name, Matrix4 value);
+		IntPtr InitWithNameFloatMatrix4 (string name, Matrix4 value);
+
+		[Internal]
+		[iOS (10,0)][Mac (10,12)]
+		[Export ("initWithName:matrixFloat4x4:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr InitWithNameMatrixFloat4x4 (string name, Matrix4 value);
 
 		[Export ("name")]
 		string Name { get; }
@@ -1494,23 +1605,83 @@ namespace XamCore.SpriteKit {
 		[Export ("floatValue")]
 		float FloatValue { get; set; } /* float, not CGFloat */
 
+		[Internal]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("floatVector2Value")]
-		Vector2 FloatVector2Value { get; set; }
+		Vector2 _FloatVector2Value { get; set; }
 
+		[Internal]
+		[iOS (10,0)][Mac (10,12)]
+		[Export ("vectorFloat2Value", ArgumentSemantic.Assign)]
+		Vector2 _VectorFloat2Value {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
+
+		[Internal]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("floatVector3Value")]
-		Vector3 FloatVector3Value { get; set; }
+		Vector3 _FloatVector3Value { get; set; }
 
+		[Internal]
+		[iOS (10,0)][Mac (10,12)]
+		[Export ("vectorFloat3Value", ArgumentSemantic.Assign)]
+		Vector3 _VectorFloat3Value {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
+
+		[Internal]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("floatVector4Value")]
-		Vector4 FloatVector4Value { get; set; }
+		Vector4 _FloatVector4Value { get; set; }
 
+		[Internal]
+		[iOS (10,0)][Mac (10,12)]
+		[Export ("vectorFloat4Value", ArgumentSemantic.Assign)]
+		Vector4 _VectorFloat4Value {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
+
+		[Internal]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("floatMatrix2Value")]
-		Matrix2 FloatMatrix2Value { get; set; }
+		Matrix2 _FloatMatrix2Value { get; set; }
 
+		[Internal]
+		[iOS (10,0)][Mac (10,12)]
+		[Export ("matrixFloat2x2Value", ArgumentSemantic.Assign)]
+		Matrix2 _MatrixFloat2x2Value {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
+
+		[Internal]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("floatMatrix3Value")]
-		Matrix3 FloatMatrix3Value { get; set; }
+		Matrix3 _FloatMatrix3Value { get; set; }
 
+		[Internal]
+		[iOS (10,0)][Mac (10,12)]
+		[Export ("matrixFloat3x3Value", ArgumentSemantic.Assign)]
+		Matrix3 _MatrixFloat3x3Value {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
+
+		[Internal]
+		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("floatMatrix4Value")]
-		Matrix4 FloatMatrix4Value { get; set; }
+		Matrix4 _FloatMatrix4Value { get; set; }
+
+		[Internal]
+		[iOS (10,0)][Mac (10,12)]
+		[Export ("matrixFloat4x4Value", ArgumentSemantic.Assign)]
+		Matrix4 _MatrixFloat4x4Value {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
 
 #if false
 	// Do we really need these static factory methods, instead of the nice construcotrs we have in C#?
@@ -1520,28 +1691,46 @@ namespace XamCore.SpriteKit {
 		SKUniform Create (string name);
 
 		[Static, Export ("uniformWithName:texture:")]
-		SKUniform Create (string name, SKTexture texture);
+		SKUniform Create (string name, [NullAllowed] SKTexture texture);
 
 		[Static, Export ("uniformWithName:float:")]
 		SKUniform Create (string name, float /* float, not CGFloat */ value);
 
-		[Static, Export ("uniformWithName:floatVector2:")]
-		SKUniform Create (string name, GLKVector2 value);
+		[iOS (10,0)][Mac (10,12)]
+		[Static]
+		[Export ("uniformWithName:vectorFloat2:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		SKUniform Create (string name, Vector2 value);
 
-		[Static, Export ("uniformWithName:floatVector3:")]
-		SKUniform Create (string name, GLKVector3 value);
+		[iOS (10,0)][Mac (10,12)]
+		[Static]
+		[Export ("uniformWithName:vectorFloat3:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		SKUniform Create (string name, Vector3 value);
 
-		[Static, Export ("uniformWithName:floatVector4:")]
-		SKUniform Create (string name, GLKVector4 value);
+		[iOS (10,0)][Mac (10,12)]
+		[Static]
+		[Export ("uniformWithName:vectorFloat4:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		SKUniform Create (string name, Vector4 value);
 
-		[Static, Export ("uniformWithName:floatMatrix2:")]
-		SKUniform Create (string name, GLKMatrix2 value);
+		[iOS (10,0)][Mac (10,12)]
+		[Static]
+		[Export ("uniformWithName:matrixFloat2x2:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		SKUniform Create (string name, Matrix2 value);
 
-		[Static, Export ("uniformWithName:floatMatrix3:")]
-		SKUniform Create (string name, GLKMatrix3 value);
+		[iOS (10,0)][Mac (10,12)]
+		[Static]
+		[Export ("uniformWithName:matrixFloat3x3:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		SKUniform Create (string name, Matrix3 value);
 
-		[Static, Export ("uniformWithName:floatMatrix4:")]
-		SKUniform Create (string name, GLKMatrix4 value);
+		[iOS (10,0)][Mac (10,12)]
+		[Static]
+		[Export ("uniformWithName:matrixFloat4x4:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		SKUniform Create (string name, Matrix4 value);
 #endif
 	}
 
@@ -1619,6 +1808,11 @@ namespace XamCore.SpriteKit {
 
 		[Static, Export ("scaleYTo:duration:")]
 		SKAction ScaleYTo (nfloat scale, double sec);
+
+		[iOS (10,0)][Mac (10,12)]
+		[Static]
+		[Export ("scaleToSize:duration:")]
+		SKAction ScaleTo (CGSize size, double sec);
 
 		[Static, Export ("sequence:")]
 		SKAction Sequence ([Params] SKAction [] actions);
@@ -1930,6 +2124,26 @@ namespace XamCore.SpriteKit {
 		[Static]
 		[Export ("changeOcclusionBy:duration:")]
 		SKAction CreateChangeOcclusionBy (float by, double duration);
+
+		// SKAction_SKWarpable
+
+		[iOS (10,0)][Mac (10,12)]
+		[Static]
+		[Export ("warpTo:duration:")]
+		[return: NullAllowed]
+		SKAction WarpTo (SKWarpGeometry warp, double duration);
+
+		[iOS (10,0)][Mac (10,12)]
+		[Static]
+		[Export ("animateWithWarps:times:")]
+		[return: NullAllowed]
+		SKAction Animate (SKWarpGeometry[] warps, NSNumber[] times);
+
+		[iOS (10,0)][Mac (10,12)]
+		[Static]
+		[Export ("animateWithWarps:times:restore:")]
+		[return: NullAllowed]
+		SKAction Animate (SKWarpGeometry[] warps, NSNumber[] times, bool restore);
 	}
 
 	[Mac (10,9, onlyOn64 : true)]
@@ -2309,6 +2523,7 @@ namespace XamCore.SpriteKit {
 		SKRange CreateUnlimited ();
 	}
 
+	[NoWatch]
 	[iOS (9,0)]
 	[Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (SKNode))]
@@ -2371,6 +2586,390 @@ namespace XamCore.SpriteKit {
 
 		[Export ("resolveReferenceNode")]
 		void Resolve ();
+	}
+
+	[iOS (9,0)][Mac (10,11)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface SKAttribute : NSCoding
+	{
+		[Static]
+		[Export ("attributeWithName:type:")]
+		SKAttribute Create (string name, SKAttributeType type);
+
+		[Export ("initWithName:type:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string name, SKAttributeType type);
+
+		[Export ("name")]
+		string Name { get; }
+
+		[Export ("type")]
+		SKAttributeType Type { get; }
+	}
+
+	[iOS (9,0)][Mac (10,11)]
+	[BaseType (typeof(NSObject))]
+	interface SKAttributeValue : NSCoding
+	{
+		[Static]
+		[Export ("valueWithFloat:")]
+		SKAttributeValue Create (float value);
+
+		[Static]
+		[Export ("valueWithVectorFloat2:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		SKAttributeValue Create (Vector2 value);
+
+		[Static]
+		[Export ("valueWithVectorFloat3:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		SKAttributeValue Create (Vector3 value);
+
+		[Static]
+		[Export ("valueWithVectorFloat4:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		SKAttributeValue Create (Vector4 value);
+
+		[Export ("floatValue")]
+		float FloatValue { get; set; }
+
+		[Export ("vectorFloat2Value", ArgumentSemantic.Assign)]
+		Vector2 VectorFloat2Value {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
+
+		[Export ("vectorFloat3Value", ArgumentSemantic.Assign)]
+		Vector3 VectorFloat3Value {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
+
+		[Export ("vectorFloat4Value", ArgumentSemantic.Assign)]
+		Vector4 VectorFloat4Value {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
+		}
+	}
+
+	[iOS (10,0)][Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface SKTileDefinition : NSCopying, NSCoding
+	{
+		[Static]
+		[Export ("tileDefinitionWithTexture:")]
+		SKTileDefinition Create (SKTexture texture);
+
+		[Static]
+		[Export ("tileDefinitionWithTexture:size:")]
+		SKTileDefinition Create (SKTexture texture, CGSize size);
+
+		[Static]
+		[Export ("tileDefinitionWithTexture:normalTexture:size:")]
+		SKTileDefinition Create (SKTexture texture, SKTexture normalTexture, CGSize size);
+
+		[Static]
+		[Export ("tileDefinitionWithTextures:size:timePerFrame:")]
+		SKTileDefinition Create (SKTexture[] textures, CGSize size, nfloat timePerFrame);
+
+		[Static]
+		[Export ("tileDefinitionWithTextures:normalTextures:size:timePerFrame:")]
+		SKTileDefinition Create (SKTexture[] textures, SKTexture[] normalTextures, CGSize size, nfloat timePerFrame);
+
+		[Export ("initWithTexture:")]
+		IntPtr Constructor (SKTexture texture);
+
+		[Export ("initWithTexture:size:")]
+		IntPtr Constructor (SKTexture texture, CGSize size);
+
+		[Export ("initWithTexture:normalTexture:size:")]
+		IntPtr Constructor (SKTexture texture, SKTexture normalTexture, CGSize size);
+
+		[Export ("initWithTextures:size:timePerFrame:")]
+		IntPtr Constructor (SKTexture[] textures, CGSize size, nfloat timePerFrame);
+
+		[Export ("initWithTextures:normalTextures:size:timePerFrame:")]
+		IntPtr Constructor (SKTexture[] textures, SKTexture[] normalTextures, CGSize size, nfloat timePerFrame);
+
+		[Export ("textures", ArgumentSemantic.Copy)]
+		SKTexture[] Textures { get; set; }
+
+		[Export ("normalTextures", ArgumentSemantic.Copy)]
+		SKTexture[] NormalTextures { get; set; }
+
+		[NullAllowed, Export ("userData", ArgumentSemantic.Retain)]
+		NSMutableDictionary UserData { get; set; }
+
+		[NullAllowed, Export ("name")]
+		string Name { get; set; }
+
+		[Export ("size", ArgumentSemantic.Assign)]
+		CGSize Size { get; set; }
+
+		[Export ("timePerFrame")]
+		nfloat TimePerFrame { get; set; }
+
+		[Export ("placementWeight")]
+		nuint PlacementWeight { get; set; }
+
+		[Export ("rotation", ArgumentSemantic.Assign)]
+		SKTileDefinitionRotation Rotation { get; set; }
+
+		[Export ("flipVertically")]
+		bool FlipVertically { get; set; }
+
+		[Export ("flipHorizontally")]
+		bool FlipHorizontally { get; set; }
+	}
+
+	[iOS (10,0)][Mac (10,12)]
+	[BaseType (typeof(SKNode))]
+	interface SKTileMapNode : NSCopying, NSCoding
+	{
+		[Static]
+		[Export ("tileMapNodeWithTileSet:columns:rows:tileSize:")]
+		SKTileMapNode Create (SKTileSet tileSet, nuint columns, nuint rows, CGSize tileSize);
+
+		[Static]
+		[Export ("tileMapNodeWithTileSet:columns:rows:tileSize:fillWithTileGroup:")]
+		SKTileMapNode Create (SKTileSet tileSet, nuint columns, nuint rows, CGSize tileSize, SKTileGroup tileGroup);
+
+		[Static]
+		[Export ("tileMapNodeWithTileSet:columns:rows:tileSize:tileGroupLayout:")]
+		SKTileMapNode Create (SKTileSet tileSet, nuint columns, nuint rows, CGSize tileSize, SKTileGroup[] tileGroupLayout);
+
+		[Export ("initWithTileSet:columns:rows:tileSize:")]
+		IntPtr Constructor (SKTileSet tileSet, nuint columns, nuint rows, CGSize tileSize);
+
+		[Export ("initWithTileSet:columns:rows:tileSize:fillWithTileGroup:")]
+		IntPtr Constructor (SKTileSet tileSet, nuint columns, nuint rows, CGSize tileSize, SKTileGroup tileGroup);
+
+		[Export ("initWithTileSet:columns:rows:tileSize:tileGroupLayout:")]
+		IntPtr Constructor (SKTileSet tileSet, nuint columns, nuint rows, CGSize tileSize, SKTileGroup[] tileGroupLayout);
+
+		[Export ("numberOfColumns")]
+		nuint NumberOfColumns { get; set; }
+
+		[Export ("numberOfRows")]
+		nuint NumberOfRows { get; set; }
+
+		[Export ("tileSize", ArgumentSemantic.Assign)]
+		CGSize TileSize { get; set; }
+
+		[Export ("mapSize")]
+		CGSize MapSize { get; }
+
+		[Export ("tileSet", ArgumentSemantic.Assign)]
+		SKTileSet TileSet { get; set; }
+
+		[Export ("colorBlendFactor")]
+		nfloat ColorBlendFactor { get; set; }
+
+		[Export ("color", ArgumentSemantic.Retain)]
+		UIColor Color { get; set; }
+
+		[Export ("blendMode", ArgumentSemantic.Assign)]
+		SKBlendMode BlendMode { get; set; }
+
+		[Export ("anchorPoint", ArgumentSemantic.Assign)]
+		CGPoint AnchorPoint { get; set; }
+
+		[NullAllowed, Export ("shader", ArgumentSemantic.Retain)]
+		SKShader Shader { get; set; }
+
+		[Export ("lightingBitMask")]
+		uint LightingBitMask { get; set; }
+
+		[Export ("enableAutomapping")]
+		bool EnableAutomapping { get; set; }
+
+		[Export ("fillWithTileGroup:")]
+		void Fill ([NullAllowed] SKTileGroup tileGroup);
+
+		[Export ("tileDefinitionAtColumn:row:")]
+		[return: NullAllowed]
+		SKTileDefinition GetTileDefinition (nuint column, nuint row);
+
+		[Export ("tileGroupAtColumn:row:")]
+		[return: NullAllowed]
+		SKTileGroup GetTileGroup (nuint column, nuint row);
+
+		[Export ("setTileGroup:forColumn:row:")]
+		void SetTileGroup ([NullAllowed] SKTileGroup tileGroup, nuint column, nuint row);
+
+		[Export ("setTileGroup:andTileDefinition:forColumn:row:")]
+		void SetTileGroup (SKTileGroup tileGroup, SKTileDefinition tileDefinition, nuint column, nuint row);
+
+		[Export ("tileColumnIndexFromPosition:")]
+		nuint GetTileColumnIndex (CGPoint position);
+
+		[Export ("tileRowIndexFromPosition:")]
+		nuint GetTileRowIndex (CGPoint position);
+
+		[Export ("centerOfTileAtColumn:row:")]
+		CGPoint GetCenterOfTile (nuint column, nuint row);
+	}
+
+	[iOS (10,0)][Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	interface SKTileSet : NSCopying, NSCoding
+	{
+		[Static]
+		[Export ("tileSetWithTileGroups:")]
+		SKTileSet Create (SKTileGroup[] tileGroups);
+
+		[Static]
+		[Export ("tileSetWithTileGroups:tileSetType:")]
+		SKTileSet Create (SKTileGroup[] tileGroups, SKTileSetType tileSetType);
+
+		[Export ("initWithTileGroups:")]
+		IntPtr Constructor (SKTileGroup[] tileGroups);
+
+		[Export ("initWithTileGroups:tileSetType:")]
+		IntPtr Constructor (SKTileGroup[] tileGroups, SKTileSetType tileSetType);
+
+		[Static]
+		[Export ("tileSetNamed:")]
+		[return: NullAllowed]
+		SKTileSet FromName (string name);
+
+		[Static]
+		[Export ("tileSetFromURL:")]
+		[return: NullAllowed]
+		SKTileSet FromUrl (NSUrl url);
+
+		[Export ("tileGroups", ArgumentSemantic.Copy)]
+		SKTileGroup[] TileGroups { get; set; }
+
+		[NullAllowed, Export ("name")]
+		string Name { get; set; }
+
+		[Export ("type", ArgumentSemantic.Assign)]
+		SKTileSetType Type { get; set; }
+
+		[NullAllowed, Export ("defaultTileGroup", ArgumentSemantic.Assign)]
+		SKTileGroup DefaultTileGroup { get; set; }
+
+		[Export ("defaultTileSize", ArgumentSemantic.Assign)]
+		CGSize DefaultTileSize { get; set; }
+	}
+
+	[iOS (10,0)][Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	interface SKTileGroup : NSCopying, NSCoding
+	{
+		[Static]
+		[Export ("tileGroupWithTileDefinition:")]
+		SKTileGroup Create (SKTileDefinition tileDefinition);
+
+		[Static]
+		[Export ("tileGroupWithRules:")]
+		SKTileGroup Create (SKTileGroupRule[] rules);
+
+		[Static]
+		[Export ("emptyTileGroup")]
+		SKTileGroup CreateEmpty ();
+
+		[Export ("initWithTileDefinition:")]
+		IntPtr Constructor (SKTileDefinition tileDefinition);
+
+		[Export ("initWithRules:")]
+		IntPtr Constructor (SKTileGroupRule[] rules);
+
+		[Export ("rules", ArgumentSemantic.Copy)]
+		SKTileGroupRule[] Rules { get; set; }
+
+		[NullAllowed, Export ("name")]
+		string Name { get; set; }
+	}
+
+	[iOS (10,0)][Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	interface SKTileGroupRule : NSCopying, NSCoding
+	{
+		[Static]
+		[Export ("tileGroupRuleWithAdjacency:tileDefinitions:")]
+		SKTileGroupRule Create (SKTileAdjacencyMask adjacency, SKTileDefinition[] tileDefinitions);
+
+		[Export ("initWithAdjacency:tileDefinitions:")]
+		IntPtr Constructor (SKTileAdjacencyMask adjacency, SKTileDefinition[] tileDefinitions);
+
+		[Export ("adjacency", ArgumentSemantic.Assign)]
+		SKTileAdjacencyMask Adjacency { get; set; }
+
+		[Export ("tileDefinitions", ArgumentSemantic.Copy)]
+		SKTileDefinition[] TileDefinitions { get; set; }
+
+		[NullAllowed, Export ("name")]
+		string Name { get; set; }
+	}
+
+	[iOS (10,0)][Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	interface SKWarpGeometry : NSCopying, NSCoding {}
+
+	[iOS (10,0)][Mac (10,12)]
+	[Protocol]
+	interface SKWarpable
+	{
+		[Abstract]
+		[NullAllowed, Export ("warpGeometry", ArgumentSemantic.Assign)]
+		SKWarpGeometry WarpGeometry { get; set; }
+
+		[Abstract]
+		[Export ("subdivisionLevels")]
+		nint SubdivisionLevels { get; set; }
+	}
+
+	[iOS (10,0)][Mac (10,12)]
+	[BaseType (typeof(SKWarpGeometry))]
+	[DisableDefaultCtor]
+	interface SKWarpGeometryGrid : NSCoding
+	{
+		[Static]
+		[Export ("grid")]
+		SKWarpGeometryGrid GetGrid ();
+
+		[Static]
+		[Export ("gridWithColumns:rows:")]
+		SKWarpGeometryGrid Create (nint cols, nint rows);
+
+		[Internal]
+		[Static]
+		[Export ("gridWithColumns:rows:sourcePositions:destPositions:")]
+		SKWarpGeometryGrid GridWithColumns (nint cols, nint rows, [NullAllowed] IntPtr sourcePositions, [NullAllowed] IntPtr destPositions);
+
+		[Internal]
+		[DesignatedInitializer]
+		[Export ("initWithColumns:rows:sourcePositions:destPositions:")]
+		IntPtr InitWithColumns (nint cols, nint rows, [NullAllowed] IntPtr sourcePositions, [NullAllowed] IntPtr destPositions);
+
+		[Export ("numberOfColumns")]
+		nint NumberOfColumns { get; }
+
+		[Export ("numberOfRows")]
+		nint NumberOfRows { get; }
+
+		[Export ("vertexCount")]
+		nint VertexCount { get; }
+
+		[Export ("sourcePositionAtIndex:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		Vector2 GetSourcePosition (nint index);
+
+		[Export ("destPositionAtIndex:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		Vector2 GetDestPosition (nint index);
+
+		[Internal]
+		[Export ("gridByReplacingSourcePositions:")]
+		SKWarpGeometryGrid _GridByReplacingSourcePositions (IntPtr sourcePositions);
+
+		[Internal]
+		[Export ("gridByReplacingDestPositions:")]
+		SKWarpGeometryGrid _GridByReplacingDestPositions (IntPtr destPositions);
 	}
 }
 #endif

@@ -170,6 +170,18 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "SKNode":
+				switch (name) {
+				case "didUpdateFocusInContext:withAnimationCoordinator:":
+				case "setNeedsFocusUpdate":
+				case "shouldUpdateFocusInContext:":
+				case "updateFocusIfNeeded":
+				case "preferredFocusedView":
+					if (!TestRuntime.CheckXcodeVersion (8, 0))
+						return true;
+					break;
+				}
+				break;
 			}
 
 			switch (name) {
