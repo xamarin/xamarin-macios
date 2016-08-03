@@ -24,8 +24,7 @@ namespace MonoTouchFixtures.SpriteKit
 		[TestFixtureSetUp]
 		public void Setup ()
 		{
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (10, 0))
-				Assert.Ignore ("Requires iOS10+");
+			TestRuntime.AssertXcodeVersion (8, 0);
 
 			if (Runtime.Arch == Arch.SIMULATOR && IntPtr.Size == 4) {
 				// There's a bug in the i386 version of objc_msgSend where it doesn't preserve SIMD arguments

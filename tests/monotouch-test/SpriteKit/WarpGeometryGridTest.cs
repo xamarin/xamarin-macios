@@ -25,8 +25,7 @@ namespace MonoTouchFixtures.SpriteKit
 		[Test]
 		public void SKWarpGeometryGridTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (10, 0))
-				Assert.Ignore ("Ignoring SKWarpGeometryGrid tests: Requires iOS10+");
+			TestRuntime.AssertXcodeVersion (8, 0);
 
 			var grid = new SKWarpGeometryGrid (1, 1, points, points);
 			Assert.NotNull (grid, "new SKWarpGeometryGrid () should not return null");
@@ -35,8 +34,7 @@ namespace MonoTouchFixtures.SpriteKit
 		[Test]
 		public void CreateTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (10, 0))
-				Assert.Ignore ("Ignoring SKWarpGeometryGrid tests: Requires iOS10+");
+			TestRuntime.AssertXcodeVersion (8, 0);
 
 			var grid = SKWarpGeometryGrid.Create (1, 1, points, points);
 			Assert.NotNull (grid, "SKWarpGeometryGrid.Create should not return null");
@@ -45,8 +43,7 @@ namespace MonoTouchFixtures.SpriteKit
 		[Test]
 		public void GetGridByReplacingSourcePositionsTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (10, 0))
-				Assert.Ignore ("Ignoring SKWarpGeometryGrid tests: Requires iOS10+");
+			TestRuntime.AssertXcodeVersion (8, 0);
 
 			using (var grid = SKWarpGeometryGrid.GetGrid ()) {
 				var r = grid.GetGridByReplacingSourcePositions (points);
@@ -57,8 +54,7 @@ namespace MonoTouchFixtures.SpriteKit
 		[Test]
 		public void GetGridByReplacingDestPositionsTest ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (10, 0))
-				Assert.Ignore ("Ignoring SKWarpGeometryGrid tests: Requires iOS10+");
+			TestRuntime.AssertXcodeVersion (8, 0);
 
 			using (var grid = SKWarpGeometryGrid.GetGrid ()) {
 				var r = grid.GetGridByReplacingDestPositions (points);

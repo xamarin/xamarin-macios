@@ -87,6 +87,9 @@ namespace XamCore.SpriteKit
 		{
 			if (sourcePositions == null)
 				throw new ArgumentNullException ("sourcePositions");
+			// TODO: Verify this assumption when/if doc is updated or headers changed in newer betas.
+			if (sourcePositions.Length < ((NumberOfColumns + 1) * (NumberOfRows + 1)))
+				throw new InvalidOperationException ("sourcePositions should have a minimum lenght of (NumberOfColumns + 1) * (NumberOfRows + 1)");
 
 			var gch = GCHandle.Alloc (sourcePositions, GCHandleType.Pinned);
 			var ptr = gch.AddrOfPinnedObject ();
@@ -102,6 +105,9 @@ namespace XamCore.SpriteKit
 		{
 			if (destPositions == null)
 				throw new ArgumentNullException ("destPositions");
+			// TODO: Verify this assumption when/if doc is updated or headers changed in newer betas.
+			if (destPositions.Length < ((NumberOfColumns + 1) * (NumberOfRows + 1)))
+				throw new InvalidOperationException ("destPositions should have a minimum lenght of (NumberOfColumns + 1) * (NumberOfRows + 1)");
 
 			var gch = GCHandle.Alloc (destPositions, GCHandleType.Pinned);
 			var ptr = gch.AddrOfPinnedObject ();

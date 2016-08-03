@@ -29,8 +29,10 @@ namespace XamCore.SpriteKit {
 			if (!versionCheck.HasValue) {
 #if MONOMAC
 				versionCheck = PlatformHelper.CheckSystemVersion (10, 12);
-#else
+#elif TVOS || IOS
 				versionCheck = XamCore.UIKit.UIDevice.CurrentDevice.CheckSystemVersion (10, 0);
+#else
+				#error Unknown platform
 #endif
 			}
 			return versionCheck.Value;
