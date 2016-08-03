@@ -16,12 +16,6 @@ namespace Xamarin.Mac.Tasks
 
 		public string SessionId { get; set; }
 
-		// This is also an input
-		[Output]
-		public string SdkVersion {
-			get; set;
-		}
-
 		public string XamarinSdkRoot {
 			get; set;
 		}
@@ -50,12 +44,16 @@ namespace Xamarin.Mac.Tasks
 			get; set;
 		}
 
+		[Output]
+		public string SdkVersion {
+			get; set;
+		}
+
 		#endregion Outputs
 
 		public override bool Execute ()
 		{
 			Log.LogTaskName ("DetectSdkLocations");
-			Log.LogTaskProperty ("SdkVersion", SdkVersion);
 			Log.LogTaskProperty ("XamarinSdkRoot", XamarinSdkRoot);
 
 			EnsureAppleSdkRoot ();
@@ -67,27 +65,10 @@ namespace Xamarin.Mac.Tasks
 
 		void EnsureSdkPath ()
 		{
-			MacOSXSdkVersion requestedSdkVersion;
-			if (string.IsNullOrEmpty (SdkVersion)) {
-				requestedSdkVersion = MacOSXSdkVersion.UseDefault;
-			} else if (!MacOSXSdkVersion.TryParse (SdkVersion, out requestedSdkVersion)) {
-				Log.LogError ("Could not parse the SDK version '{0}'", SdkVersion);
-				return;
-			}
-
-			var sdkVersion = requestedSdkVersion.ResolveIfDefault (MacOSXSdks.Native);
+			var sdkVersion = MacOSXSdkVersion.GetDefault (MacOSXSdks.Native);
 			if (!MacOSXSdks.Native.SdkIsInstalled (sdkVersion)) {
-				sdkVersion = MacOSXSdks.Native.GetClosestInstalledSdk (sdkVersion);
-
-				if (sdkVersion.IsUseDefault || !MacOSXSdks.Native.SdkIsInstalled (sdkVersion)) {
-					if (requestedSdkVersion.IsUseDefault) {
-						Log.LogError ("The Apple MacOSX SDK is not installed.");
-					} else {
-						Log.LogError ("The MacOSX SDK version '{0}' is not installed, and no newer version was found.", requestedSdkVersion.ToString ());
-					}
-					return;
-				}
-				Log.LogWarning ("The MacOSX SDK version '{0}' is not installed. Using newer version '{1}' instead'.", requestedSdkVersion, sdkVersion);
+				Log.LogError ("The Apple MacOSX SDK is not installed.");
+				return;
 			}
 
 			SdkVersion = sdkVersion.ToString ();
