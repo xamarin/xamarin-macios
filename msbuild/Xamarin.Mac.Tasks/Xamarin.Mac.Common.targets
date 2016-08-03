@@ -65,7 +65,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<!-- Do not resolve from the GAC under any circumstances in Mobile or XM45 -->
 	<PropertyGroup Condition="(('$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(UseXamMacFullFramework)' == 'true') Or '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac') And !$(MonoBundlingExtraArgs.Contains('--allow-unsafe-gac-resolution'))" >
-		<AssemblySearchPaths>$([System.String]::Copy('$(AssemblySearchPaths)').Replace('{GAC}',''))</AssemblySearchPaths>
+		<AssemblySearchPaths>$(AssemblySearchPaths).Replace('{GAC}','').Split(';')</AssemblySearchPaths>
 	</PropertyGroup>
 
 	<PropertyGroup>
