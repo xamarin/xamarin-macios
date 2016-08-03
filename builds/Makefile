@@ -1363,6 +1363,7 @@ ifdef INCLUDE_DEVICE
 iphoneos:: setup-iphoneos build-iphoneos install-iphoneos
 device:: iphoneos
 clean-device: clean-iphoneos
+install-device: install-iphoneos
 
 # this needs to be here because the normal usage of this makefile is "make all install", but nothing actually lists the -iphoneos targets as dependencies.
 ifdef INCLUDE_IOS
