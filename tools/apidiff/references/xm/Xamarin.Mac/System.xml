@@ -157,6 +157,52 @@
       </attribute>
     </attributes>
     <namespaces>
+      <namespace name="Microsoft.Win32.SafeHandles">
+        <classes>
+          <class name="SafeProcessHandle" type="class" base="Microsoft.Win32.SafeHandles.SafeHandleZeroOrMinusOneIsInvalid" sealed="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.Security.SuppressUnmanagedCodeSecurityAttribute" />
+            </attributes>
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.IntPtr, System.Boolean)" attrib="22662">
+                <parameters>
+                  <parameter name="existingHandle" position="0" attrib="0" type="System.IntPtr" />
+                  <parameter name="ownsHandle" position="1" attrib="0" type="System.Boolean" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="ReleaseHandle()" attrib="196" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="SafeX509ChainHandle" type="class" base="System.Runtime.InteropServices.SafeHandle" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <properties>
+              <property name="IsInvalid" attrib="0" ptype="System.Boolean">
+                <attributes />
+                <methods>
+                  <method name="get_IsInvalid()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="ReleaseHandle()" attrib="196" virtual="true" is-override="true" returntype="System.Boolean">
+                <attributes />
+                <parameters />
+              </method>
+            </methods>
+          </class>
+        </classes>
+      </namespace>
       <namespace name="Mono.Security.Interface">
         <classes>
           <class name="Alert" type="class" base="System.Object" charset="Ansi" layout="Auto">
@@ -23638,6 +23684,261 @@
       </namespace>
       <namespace name="System.IO">
         <classes>
+          <class name="ErrorEventArgs" type="class" base="System.EventArgs" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor(System.Exception)" attrib="6278">
+                <parameters>
+                  <parameter name="exception" position="0" attrib="0" type="System.Exception" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="GetException()" attrib="454" virtual="true" returntype="System.Exception">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="ErrorEventHandler" type="delegate" base="System.MulticastDelegate" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.ICloneable" />
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.Object, System.IntPtr)" attrib="6278">
+                <parameters>
+                  <parameter name="object" position="0" attrib="0" type="System.Object" />
+                  <parameter name="method" position="1" attrib="0" type="System.IntPtr" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="BeginInvoke(System.Object, System.IO.ErrorEventArgs, System.AsyncCallback, System.Object)" attrib="454" virtual="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="sender" position="0" attrib="0" type="System.Object" />
+                  <parameter name="e" position="1" attrib="0" type="System.IO.ErrorEventArgs" />
+                  <parameter name="callback" position="2" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="object" position="3" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="EndInvoke(System.IAsyncResult)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="Invoke(System.Object, System.IO.ErrorEventArgs)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="sender" position="0" attrib="0" type="System.Object" />
+                  <parameter name="e" position="1" attrib="0" type="System.IO.ErrorEventArgs" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="FileSystemEventArgs" type="class" base="System.EventArgs" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor(System.IO.WatcherChangeTypes, System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="changeType" position="0" attrib="0" type="System.IO.WatcherChangeTypes" />
+                  <parameter name="directory" position="1" attrib="0" type="System.String" />
+                  <parameter name="name" position="2" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="ChangeType" attrib="0" ptype="System.IO.WatcherChangeTypes">
+                <methods>
+                  <method name="get_ChangeType()" attrib="2182" returntype="System.IO.WatcherChangeTypes">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="FullPath" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_FullPath()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Name" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Name()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="FileSystemEventHandler" type="delegate" base="System.MulticastDelegate" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.ICloneable" />
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.Object, System.IntPtr)" attrib="6278">
+                <parameters>
+                  <parameter name="object" position="0" attrib="0" type="System.Object" />
+                  <parameter name="method" position="1" attrib="0" type="System.IntPtr" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="BeginInvoke(System.Object, System.IO.FileSystemEventArgs, System.AsyncCallback, System.Object)" attrib="454" virtual="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="sender" position="0" attrib="0" type="System.Object" />
+                  <parameter name="e" position="1" attrib="0" type="System.IO.FileSystemEventArgs" />
+                  <parameter name="callback" position="2" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="object" position="3" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="EndInvoke(System.IAsyncResult)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="Invoke(System.Object, System.IO.FileSystemEventArgs)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="sender" position="0" attrib="0" type="System.Object" />
+                  <parameter name="e" position="1" attrib="0" type="System.IO.FileSystemEventArgs" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="FileSystemWatcher" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="path" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="path" position="0" attrib="0" type="System.String" />
+                  <parameter name="filter" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="EnableRaisingEvents" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_EnableRaisingEvents()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_EnableRaisingEvents(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Filter" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Filter()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Filter(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IncludeSubdirectories" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IncludeSubdirectories()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_IncludeSubdirectories(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="InternalBufferSize" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_InternalBufferSize()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_InternalBufferSize(System.Int32)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="NotifyFilter" attrib="0" ptype="System.IO.NotifyFilters">
+                <methods>
+                  <method name="get_NotifyFilter()" attrib="2182" returntype="System.IO.NotifyFilters">
+                    <parameters />
+                  </method>
+                  <method name="set_NotifyFilter(System.IO.NotifyFilters)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.IO.NotifyFilters" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Path" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Path()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Path(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <events>
+              <event name="Changed" attrib="0" eventtype="System.IO.FileSystemEventHandler" />
+              <event name="Created" attrib="0" eventtype="System.IO.FileSystemEventHandler" />
+              <event name="Deleted" attrib="0" eventtype="System.IO.FileSystemEventHandler" />
+              <event name="Error" attrib="0" eventtype="System.IO.ErrorEventHandler" />
+              <event name="Renamed" attrib="0" eventtype="System.IO.RenamedEventHandler" />
+            </events>
+            <methods>
+              <method name="OnChanged(System.IO.FileSystemEventArgs)" attrib="132" returntype="System.Void">
+                <parameters>
+                  <parameter name="e" position="0" attrib="0" type="System.IO.FileSystemEventArgs" />
+                </parameters>
+              </method>
+              <method name="OnCreated(System.IO.FileSystemEventArgs)" attrib="132" returntype="System.Void">
+                <parameters>
+                  <parameter name="e" position="0" attrib="0" type="System.IO.FileSystemEventArgs" />
+                </parameters>
+              </method>
+              <method name="OnDeleted(System.IO.FileSystemEventArgs)" attrib="132" returntype="System.Void">
+                <parameters>
+                  <parameter name="e" position="0" attrib="0" type="System.IO.FileSystemEventArgs" />
+                </parameters>
+              </method>
+              <method name="OnError(System.IO.ErrorEventArgs)" attrib="132" returntype="System.Void">
+                <parameters>
+                  <parameter name="e" position="0" attrib="0" type="System.IO.ErrorEventArgs" />
+                </parameters>
+              </method>
+              <method name="OnRenamed(System.IO.RenamedEventArgs)" attrib="132" returntype="System.Void">
+                <parameters>
+                  <parameter name="e" position="0" attrib="0" type="System.IO.RenamedEventArgs" />
+                </parameters>
+              </method>
+              <method name="WaitForChanged(System.IO.WatcherChangeTypes)" attrib="134" returntype="System.IO.WaitForChangedResult">
+                <parameters>
+                  <parameter name="changeType" position="0" attrib="0" type="System.IO.WatcherChangeTypes" />
+                </parameters>
+              </method>
+              <method name="WaitForChanged(System.IO.WatcherChangeTypes, System.Int32)" attrib="134" returntype="System.IO.WaitForChangedResult">
+                <parameters>
+                  <parameter name="changeType" position="0" attrib="0" type="System.IO.WatcherChangeTypes" />
+                  <parameter name="timeout" position="1" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
           <class name="InternalBufferOverflowException" type="class" base="System.SystemException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="System.Runtime.Serialization.ISerializable" />
@@ -23685,6 +23986,158 @@
                 </parameters>
               </constructor>
             </constructors>
+          </class>
+          <class name="NotifyFilters" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <attributes>
+              <attribute name="System.FlagsAttribute" />
+            </attributes>
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Attributes" attrib="32854" fieldtype="System.IO.NotifyFilters" value="4" />
+              <field name="CreationTime" attrib="32854" fieldtype="System.IO.NotifyFilters" value="64" />
+              <field name="DirectoryName" attrib="32854" fieldtype="System.IO.NotifyFilters" value="2" />
+              <field name="FileName" attrib="32854" fieldtype="System.IO.NotifyFilters" value="1" />
+              <field name="LastAccess" attrib="32854" fieldtype="System.IO.NotifyFilters" value="32" />
+              <field name="LastWrite" attrib="32854" fieldtype="System.IO.NotifyFilters" value="16" />
+              <field name="Security" attrib="32854" fieldtype="System.IO.NotifyFilters" value="256" />
+              <field name="Size" attrib="32854" fieldtype="System.IO.NotifyFilters" value="8" />
+            </fields>
+          </class>
+          <class name="RenamedEventArgs" type="class" base="System.IO.FileSystemEventArgs" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor(System.IO.WatcherChangeTypes, System.String, System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="changeType" position="0" attrib="0" type="System.IO.WatcherChangeTypes" />
+                  <parameter name="directory" position="1" attrib="0" type="System.String" />
+                  <parameter name="name" position="2" attrib="0" type="System.String" />
+                  <parameter name="oldName" position="3" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="OldFullPath" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_OldFullPath()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="OldName" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_OldName()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="RenamedEventHandler" type="delegate" base="System.MulticastDelegate" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.ICloneable" />
+              <interface name="System.Runtime.Serialization.ISerializable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.Object, System.IntPtr)" attrib="6278">
+                <parameters>
+                  <parameter name="object" position="0" attrib="0" type="System.Object" />
+                  <parameter name="method" position="1" attrib="0" type="System.IntPtr" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="BeginInvoke(System.Object, System.IO.RenamedEventArgs, System.AsyncCallback, System.Object)" attrib="454" virtual="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="sender" position="0" attrib="0" type="System.Object" />
+                  <parameter name="e" position="1" attrib="0" type="System.IO.RenamedEventArgs" />
+                  <parameter name="callback" position="2" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="object" position="3" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="EndInvoke(System.IAsyncResult)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="Invoke(System.Object, System.IO.RenamedEventArgs)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="sender" position="0" attrib="0" type="System.Object" />
+                  <parameter name="e" position="1" attrib="0" type="System.IO.RenamedEventArgs" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="WaitForChangedResult" type="struct" base="System.ValueType" sealed="true" charset="Ansi" layout="Sequential">
+            <properties>
+              <property name="ChangeType" attrib="0" ptype="System.IO.WatcherChangeTypes">
+                <methods>
+                  <method name="get_ChangeType()" attrib="2182" returntype="System.IO.WatcherChangeTypes">
+                    <parameters />
+                  </method>
+                  <method name="set_ChangeType(System.IO.WatcherChangeTypes)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.IO.WatcherChangeTypes" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Name" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Name()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Name(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="OldName" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_OldName()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_OldName(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="TimedOut" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_TimedOut()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_TimedOut(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="WatcherChangeTypes" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <attributes>
+              <attribute name="System.FlagsAttribute" />
+            </attributes>
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="All" attrib="32854" fieldtype="System.IO.WatcherChangeTypes" value="15" />
+              <field name="Changed" attrib="32854" fieldtype="System.IO.WatcherChangeTypes" value="4" />
+              <field name="Created" attrib="32854" fieldtype="System.IO.WatcherChangeTypes" value="1" />
+              <field name="Deleted" attrib="32854" fieldtype="System.IO.WatcherChangeTypes" value="2" />
+              <field name="Renamed" attrib="32854" fieldtype="System.IO.WatcherChangeTypes" value="8" />
+            </fields>
           </class>
         </classes>
       </namespace>
@@ -39930,13 +40383,13 @@
               <interface name="System.IFormattable" />
             </interfaces>
             <fields>
-              <field name="Empty" attrib="32854" fieldtype="System.Net.WebSockets.WebSocketCloseStatus" value="1004" />
+              <field name="Empty" attrib="32854" fieldtype="System.Net.WebSockets.WebSocketCloseStatus" value="1005" />
               <field name="EndpointUnavailable" attrib="32854" fieldtype="System.Net.WebSockets.WebSocketCloseStatus" value="1001" />
               <field name="InternalServerError" attrib="32854" fieldtype="System.Net.WebSockets.WebSocketCloseStatus" value="1011" />
               <field name="InvalidMessageType" attrib="32854" fieldtype="System.Net.WebSockets.WebSocketCloseStatus" value="1003" />
               <field name="InvalidPayloadData" attrib="32854" fieldtype="System.Net.WebSockets.WebSocketCloseStatus" value="1007" />
               <field name="MandatoryExtension" attrib="32854" fieldtype="System.Net.WebSockets.WebSocketCloseStatus" value="1010" />
-              <field name="MessageTooBig" attrib="32854" fieldtype="System.Net.WebSockets.WebSocketCloseStatus" value="1004" />
+              <field name="MessageTooBig" attrib="32854" fieldtype="System.Net.WebSockets.WebSocketCloseStatus" value="1009" />
               <field name="NormalClosure" attrib="32854" fieldtype="System.Net.WebSockets.WebSocketCloseStatus" value="1000" />
               <field name="PolicyViolation" attrib="32854" fieldtype="System.Net.WebSockets.WebSocketCloseStatus" value="1008" />
               <field name="ProtocolError" attrib="32854" fieldtype="System.Net.WebSockets.WebSocketCloseStatus" value="1002" />
@@ -40339,6 +40792,280 @@
                 <parameters />
               </method>
             </methods>
+          </class>
+        </classes>
+      </namespace>
+      <namespace name="System.Runtime.InteropServices.ComTypes">
+        <classes>
+          <class name="ADVF" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <attributes>
+              <attribute name="System.FlagsAttribute" />
+            </attributes>
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="ADVFCACHE_FORCEBUILTIN" attrib="32854" fieldtype="System.Runtime.InteropServices.ComTypes.ADVF" value="16" />
+              <field name="ADVFCACHE_NOHANDLER" attrib="32854" fieldtype="System.Runtime.InteropServices.ComTypes.ADVF" value="8" />
+              <field name="ADVFCACHE_ONSAVE" attrib="32854" fieldtype="System.Runtime.InteropServices.ComTypes.ADVF" value="32" />
+              <field name="ADVF_DATAONSTOP" attrib="32854" fieldtype="System.Runtime.InteropServices.ComTypes.ADVF" value="64" />
+              <field name="ADVF_NODATA" attrib="32854" fieldtype="System.Runtime.InteropServices.ComTypes.ADVF" value="1" />
+              <field name="ADVF_ONLYONCE" attrib="32854" fieldtype="System.Runtime.InteropServices.ComTypes.ADVF" value="4" />
+              <field name="ADVF_PRIMEFIRST" attrib="32854" fieldtype="System.Runtime.InteropServices.ComTypes.ADVF" value="2" />
+            </fields>
+          </class>
+          <class name="DATADIR" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="DATADIR_GET" attrib="32854" fieldtype="System.Runtime.InteropServices.ComTypes.DATADIR" value="1" />
+              <field name="DATADIR_SET" attrib="32854" fieldtype="System.Runtime.InteropServices.ComTypes.DATADIR" value="2" />
+            </fields>
+          </class>
+          <class name="DVASPECT" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <attributes>
+              <attribute name="System.FlagsAttribute" />
+            </attributes>
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="DVASPECT_CONTENT" attrib="32854" fieldtype="System.Runtime.InteropServices.ComTypes.DVASPECT" value="1" />
+              <field name="DVASPECT_DOCPRINT" attrib="32854" fieldtype="System.Runtime.InteropServices.ComTypes.DVASPECT" value="8" />
+              <field name="DVASPECT_ICON" attrib="32854" fieldtype="System.Runtime.InteropServices.ComTypes.DVASPECT" value="4" />
+              <field name="DVASPECT_THUMBNAIL" attrib="32854" fieldtype="System.Runtime.InteropServices.ComTypes.DVASPECT" value="2" />
+            </fields>
+          </class>
+          <class name="FORMATETC" type="struct" base="System.ValueType" sealed="true" charset="Ansi" layout="Sequential">
+            <fields>
+              <field name="cfFormat" attrib="4102" fieldtype="System.Int16" />
+              <field name="dwAspect" attrib="4102" fieldtype="System.Runtime.InteropServices.ComTypes.DVASPECT" />
+              <field name="lindex" attrib="6" fieldtype="System.Int32" />
+              <field name="ptd" attrib="6" fieldtype="System.IntPtr" />
+              <field name="tymed" attrib="4102" fieldtype="System.Runtime.InteropServices.ComTypes.TYMED" />
+            </fields>
+          </class>
+          <class name="IAdviseSink" type="interface" abstract="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.Runtime.InteropServices.GuidAttribute">
+                <properties>
+                  <property name="Value" value="0000010F-0000-0000-C000-000000000046" />
+                </properties>
+              </attribute>
+              <attribute name="System.Runtime.InteropServices.InterfaceTypeAttribute">
+                <properties>
+                  <property name="Value" value="InterfaceIsIUnknown" />
+                </properties>
+              </attribute>
+            </attributes>
+            <methods>
+              <method name="OnClose()" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="OnDataChange(in System.Runtime.InteropServices.ComTypes.FORMATETC&amp;, in System.Runtime.InteropServices.ComTypes.STGMEDIUM&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="format" position="0" attrib="1" type="System.Runtime.InteropServices.ComTypes.FORMATETC&amp;" direction="ref" />
+                  <parameter name="stgmedium" position="1" attrib="1" type="System.Runtime.InteropServices.ComTypes.STGMEDIUM&amp;" direction="ref" />
+                </parameters>
+              </method>
+              <method name="OnRename(System.Runtime.InteropServices.ComTypes.IMoniker)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="moniker" position="0" attrib="0" type="System.Runtime.InteropServices.ComTypes.IMoniker" />
+                </parameters>
+              </method>
+              <method name="OnSave()" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="OnViewChange(System.Int32, System.Int32)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="aspect" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="index" position="1" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="IDataObject" type="interface" abstract="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.Runtime.InteropServices.GuidAttribute">
+                <properties>
+                  <property name="Value" value="0000010E-0000-0000-C000-000000000046" />
+                </properties>
+              </attribute>
+              <attribute name="System.Runtime.InteropServices.InterfaceTypeAttribute">
+                <properties>
+                  <property name="Value" value="InterfaceIsIUnknown" />
+                </properties>
+              </attribute>
+            </attributes>
+            <methods>
+              <method name="DAdvise(in System.Runtime.InteropServices.ComTypes.FORMATETC&amp;, System.Runtime.InteropServices.ComTypes.ADVF, System.Runtime.InteropServices.ComTypes.IAdviseSink, out System.Int32&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="pFormatetc" position="0" attrib="1" type="System.Runtime.InteropServices.ComTypes.FORMATETC&amp;" direction="ref" />
+                  <parameter name="advf" position="1" attrib="0" type="System.Runtime.InteropServices.ComTypes.ADVF" />
+                  <parameter name="adviseSink" position="2" attrib="0" type="System.Runtime.InteropServices.ComTypes.IAdviseSink" />
+                  <parameter name="connection" position="3" attrib="2" type="System.Int32&amp;" direction="out" />
+                </parameters>
+              </method>
+              <method name="DUnadvise(System.Int32)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="connection" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="EnumDAdvise(out System.Runtime.InteropServices.ComTypes.IEnumSTATDATA&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="enumAdvise" position="0" attrib="2" type="System.Runtime.InteropServices.ComTypes.IEnumSTATDATA&amp;" direction="out" />
+                </parameters>
+              </method>
+              <method name="EnumFormatEtc(System.Runtime.InteropServices.ComTypes.DATADIR)" attrib="1478" abstract="true" virtual="true" returntype="System.Runtime.InteropServices.ComTypes.IEnumFORMATETC">
+                <parameters>
+                  <parameter name="direction" position="0" attrib="0" type="System.Runtime.InteropServices.ComTypes.DATADIR" />
+                </parameters>
+              </method>
+              <method name="GetCanonicalFormatEtc(in System.Runtime.InteropServices.ComTypes.FORMATETC&amp;, out System.Runtime.InteropServices.ComTypes.FORMATETC&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="formatIn" position="0" attrib="1" type="System.Runtime.InteropServices.ComTypes.FORMATETC&amp;" direction="ref" />
+                  <parameter name="formatOut" position="1" attrib="2" type="System.Runtime.InteropServices.ComTypes.FORMATETC&amp;" direction="out" />
+                </parameters>
+              </method>
+              <method name="GetData(in System.Runtime.InteropServices.ComTypes.FORMATETC&amp;, out System.Runtime.InteropServices.ComTypes.STGMEDIUM&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="format" position="0" attrib="1" type="System.Runtime.InteropServices.ComTypes.FORMATETC&amp;" direction="ref" />
+                  <parameter name="medium" position="1" attrib="2" type="System.Runtime.InteropServices.ComTypes.STGMEDIUM&amp;" direction="out" />
+                </parameters>
+              </method>
+              <method name="GetDataHere(in System.Runtime.InteropServices.ComTypes.FORMATETC&amp;, System.Runtime.InteropServices.ComTypes.STGMEDIUM&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="format" position="0" attrib="1" type="System.Runtime.InteropServices.ComTypes.FORMATETC&amp;" direction="ref" />
+                  <parameter name="medium" position="1" attrib="0" type="System.Runtime.InteropServices.ComTypes.STGMEDIUM&amp;" direction="ref" />
+                </parameters>
+              </method>
+              <method name="QueryGetData(in System.Runtime.InteropServices.ComTypes.FORMATETC&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="format" position="0" attrib="1" type="System.Runtime.InteropServices.ComTypes.FORMATETC&amp;" direction="ref" />
+                </parameters>
+              </method>
+              <method name="SetData(in System.Runtime.InteropServices.ComTypes.FORMATETC&amp;, in System.Runtime.InteropServices.ComTypes.STGMEDIUM&amp;, System.Boolean)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="formatIn" position="0" attrib="1" type="System.Runtime.InteropServices.ComTypes.FORMATETC&amp;" direction="ref" />
+                  <parameter name="medium" position="1" attrib="1" type="System.Runtime.InteropServices.ComTypes.STGMEDIUM&amp;" direction="ref" />
+                  <parameter name="release" position="2" attrib="8192" type="System.Boolean" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="IEnumFORMATETC" type="interface" abstract="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.Runtime.InteropServices.GuidAttribute">
+                <properties>
+                  <property name="Value" value="00000103-0000-0000-C000-000000000046" />
+                </properties>
+              </attribute>
+              <attribute name="System.Runtime.InteropServices.InterfaceTypeAttribute">
+                <properties>
+                  <property name="Value" value="InterfaceIsIUnknown" />
+                </properties>
+              </attribute>
+            </attributes>
+            <methods>
+              <method name="Clone(out System.Runtime.InteropServices.ComTypes.IEnumFORMATETC&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="newEnum" position="0" attrib="2" type="System.Runtime.InteropServices.ComTypes.IEnumFORMATETC&amp;" direction="out" />
+                </parameters>
+              </method>
+              <method name="Next(System.Int32, out System.Runtime.InteropServices.ComTypes.FORMATETC[], out System.Int32[])" attrib="1478" abstract="true" virtual="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="celt" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="rgelt" position="1" attrib="8194" type="System.Runtime.InteropServices.ComTypes.FORMATETC[]" />
+                  <parameter name="pceltFetched" position="2" attrib="8194" type="System.Int32[]" />
+                </parameters>
+              </method>
+              <method name="Reset()" attrib="1478" abstract="true" virtual="true" returntype="System.Int32">
+                <parameters />
+              </method>
+              <method name="Skip(System.Int32)" attrib="1478" abstract="true" virtual="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="celt" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="IEnumSTATDATA" type="interface" abstract="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.Runtime.InteropServices.GuidAttribute">
+                <properties>
+                  <property name="Value" value="00000103-0000-0000-C000-000000000046" />
+                </properties>
+              </attribute>
+              <attribute name="System.Runtime.InteropServices.InterfaceTypeAttribute">
+                <properties>
+                  <property name="Value" value="InterfaceIsIUnknown" />
+                </properties>
+              </attribute>
+            </attributes>
+            <methods>
+              <method name="Clone(out System.Runtime.InteropServices.ComTypes.IEnumSTATDATA&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="newEnum" position="0" attrib="2" type="System.Runtime.InteropServices.ComTypes.IEnumSTATDATA&amp;" direction="out" />
+                </parameters>
+              </method>
+              <method name="Next(System.Int32, out System.Runtime.InteropServices.ComTypes.STATDATA[], out System.Int32[])" attrib="1478" abstract="true" virtual="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="celt" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="rgelt" position="1" attrib="8194" type="System.Runtime.InteropServices.ComTypes.STATDATA[]" />
+                  <parameter name="pceltFetched" position="2" attrib="8194" type="System.Int32[]" />
+                </parameters>
+              </method>
+              <method name="Reset()" attrib="1478" abstract="true" virtual="true" returntype="System.Int32">
+                <parameters />
+              </method>
+              <method name="Skip(System.Int32)" attrib="1478" abstract="true" virtual="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="celt" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="STATDATA" type="struct" base="System.ValueType" sealed="true" charset="Ansi" layout="Sequential">
+            <fields>
+              <field name="advSink" attrib="6" fieldtype="System.Runtime.InteropServices.ComTypes.IAdviseSink" />
+              <field name="advf" attrib="6" fieldtype="System.Runtime.InteropServices.ComTypes.ADVF" />
+              <field name="connection" attrib="6" fieldtype="System.Int32" />
+              <field name="formatetc" attrib="6" fieldtype="System.Runtime.InteropServices.ComTypes.FORMATETC" />
+            </fields>
+          </class>
+          <class name="STGMEDIUM" type="struct" base="System.ValueType" sealed="true" charset="Ansi" layout="Sequential">
+            <fields>
+              <field name="pUnkForRelease" attrib="4102" fieldtype="System.Object" />
+              <field name="tymed" attrib="6" fieldtype="System.Runtime.InteropServices.ComTypes.TYMED" />
+              <field name="unionmember" attrib="6" fieldtype="System.IntPtr" />
+            </fields>
+          </class>
+          <class name="TYMED" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <attributes>
+              <attribute name="System.FlagsAttribute" />
+            </attributes>
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="TYMED_ENHMF" attrib="32854" fieldtype="System.Runtime.InteropServices.ComTypes.TYMED" value="64" />
+              <field name="TYMED_FILE" attrib="32854" fieldtype="System.Runtime.InteropServices.ComTypes.TYMED" value="2" />
+              <field name="TYMED_GDI" attrib="32854" fieldtype="System.Runtime.InteropServices.ComTypes.TYMED" value="16" />
+              <field name="TYMED_HGLOBAL" attrib="32854" fieldtype="System.Runtime.InteropServices.ComTypes.TYMED" value="1" />
+              <field name="TYMED_ISTORAGE" attrib="32854" fieldtype="System.Runtime.InteropServices.ComTypes.TYMED" value="8" />
+              <field name="TYMED_ISTREAM" attrib="32854" fieldtype="System.Runtime.InteropServices.ComTypes.TYMED" value="4" />
+              <field name="TYMED_MFPICT" attrib="32854" fieldtype="System.Runtime.InteropServices.ComTypes.TYMED" value="32" />
+              <field name="TYMED_NULL" attrib="32854" fieldtype="System.Runtime.InteropServices.ComTypes.TYMED" value="0" />
+            </fields>
           </class>
         </classes>
       </namespace>
@@ -40798,8 +41525,8 @@
               <interface name="System.IFormattable" />
             </interfaces>
             <fields>
-              <field name="Endpoint" attrib="32854" fieldtype="System.Security.Authentication.ExtendedProtection.ChannelBindingKind" value="2" />
-              <field name="Unique" attrib="32854" fieldtype="System.Security.Authentication.ExtendedProtection.ChannelBindingKind" value="1" />
+              <field name="Endpoint" attrib="32854" fieldtype="System.Security.Authentication.ExtendedProtection.ChannelBindingKind" value="26" />
+              <field name="Unique" attrib="32854" fieldtype="System.Security.Authentication.ExtendedProtection.ChannelBindingKind" value="25" />
               <field name="Unknown" attrib="32854" fieldtype="System.Security.Authentication.ExtendedProtection.ChannelBindingKind" value="0" />
             </fields>
           </class>

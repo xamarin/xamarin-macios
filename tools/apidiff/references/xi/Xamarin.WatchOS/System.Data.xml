@@ -15216,6 +15216,30 @@
                   </method>
                 </methods>
               </property>
+              <property name="TransparentNetworkIPResolution" attrib="0" ptype="System.Boolean">
+                <attributes>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute">
+                    <properties>
+                      <property name="DisplayNameValue" value="TransparentNetworkIPResolution" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.RefreshPropertiesAttribute">
+                    <properties>
+                      <property name="RefreshProperties" value="All" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_TransparentNetworkIPResolution()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_TransparentNetworkIPResolution(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
               <property name="TrustServerCertificate" attrib="0" ptype="System.Boolean">
                 <attributes>
                   <attribute name="System.ComponentModel.DisplayNameAttribute">
