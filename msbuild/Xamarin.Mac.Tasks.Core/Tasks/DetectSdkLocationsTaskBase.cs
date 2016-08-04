@@ -67,7 +67,7 @@ namespace Xamarin.Mac.Tasks
 		{
 			var sdkVersion = MacOSXSdkVersion.GetDefault (MacOSXSdks.Native);
 			if (!MacOSXSdks.Native.SdkIsInstalled (sdkVersion)) {
-				Log.LogError ("The Apple Mac OS X SDK is not installed.");
+				Log.LogError ("The Apple macOS SDK is not installed.");
 				return;
 			}
 
@@ -75,11 +75,11 @@ namespace Xamarin.Mac.Tasks
 
 			SdkRoot = MacOSXSdks.Native.GetSdkPath (sdkVersion);
 			if (string.IsNullOrEmpty (SdkRoot))
-				Log.LogError ("Could not locate the Mac OS X '{0}' SDK at path '{1}'", SdkVersion, SdkRoot);
+				Log.LogError ("Could not locate the macOS '{0}' SDK at path '{1}'", SdkVersion, SdkRoot);
 
 			SdkUsrPath = DirExists ("SDK usr directory", Path.Combine (MacOSXSdks.Native.DeveloperRoot, "usr"));
 			if (string.IsNullOrEmpty (SdkUsrPath))
-				Log.LogError ("Could not locate the Mac OS X '{0}' SDK usr path at '{1}'", SdkVersion, SdkRoot);
+				Log.LogError ("Could not locate the macOS '{0}' SDK usr path at '{1}'", SdkVersion, SdkRoot);
 
 			SdkBinPath = DirExists ("SDK bin directory", Path.Combine (SdkUsrPath, "bin"));
 			if (string.IsNullOrEmpty (SdkBinPath))
