@@ -224,6 +224,9 @@
               <method name="Open()" attrib="134" returntype="System.IO.Stream">
                 <parameters />
               </method>
+              <method name="ToString()" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters />
+              </method>
             </methods>
           </class>
           <class name="ZipArchiveMode" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
