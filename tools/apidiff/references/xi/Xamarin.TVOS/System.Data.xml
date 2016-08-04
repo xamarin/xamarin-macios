@@ -182,7 +182,7 @@
                 <methods>
                   <method name="get_Item(System.Int32)" attrib="2534" virtual="true" returntype="System.Object">
                     <parameters>
-                      <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                      <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                     </parameters>
                   </method>
                 </methods>
@@ -191,7 +191,7 @@
                 <methods>
                   <method name="get_Item(System.String)" attrib="2534" virtual="true" returntype="System.Object">
                     <parameters>
-                      <parameter name="index" position="0" attrib="0" type="System.String" />
+                      <parameter name="name" position="0" attrib="0" type="System.String" />
                     </parameters>
                   </method>
                 </methods>
@@ -200,95 +200,95 @@
             <methods>
               <method name="GetBoolean(System.Int32)" attrib="486" virtual="true" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="GetByte(System.Int32)" attrib="486" virtual="true" returntype="System.Byte">
                 <parameters>
-                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="GetBytes(System.Int32, System.Int64, System.Byte[], System.Int32, System.Int32)" attrib="486" virtual="true" returntype="System.Int64">
                 <parameters>
-                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                   <parameter name="fieldOffset" position="1" attrib="0" type="System.Int64" />
                   <parameter name="buffer" position="2" attrib="0" type="System.Byte[]" />
-                  <parameter name="bufferoffset" position="3" attrib="0" type="System.Int32" />
+                  <parameter name="bufferOffset" position="3" attrib="0" type="System.Int32" />
                   <parameter name="length" position="4" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="GetChar(System.Int32)" attrib="486" virtual="true" returntype="System.Char">
                 <parameters>
-                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="GetChars(System.Int32, System.Int64, System.Char[], System.Int32, System.Int32)" attrib="486" virtual="true" returntype="System.Int64">
                 <parameters>
-                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
-                  <parameter name="fieldoffset" position="1" attrib="0" type="System.Int64" />
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="fieldOffset" position="1" attrib="0" type="System.Int64" />
                   <parameter name="buffer" position="2" attrib="0" type="System.Char[]" />
-                  <parameter name="bufferoffset" position="3" attrib="0" type="System.Int32" />
+                  <parameter name="bufferOffset" position="3" attrib="0" type="System.Int32" />
                   <parameter name="length" position="4" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="GetData(System.Int32)" attrib="486" virtual="true" returntype="System.Data.IDataReader">
                 <parameters>
-                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="GetDataTypeName(System.Int32)" attrib="486" virtual="true" returntype="System.String">
                 <parameters>
-                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="GetDateTime(System.Int32)" attrib="486" virtual="true" returntype="System.DateTime">
                 <parameters>
-                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="GetDecimal(System.Int32)" attrib="486" virtual="true" returntype="System.Decimal">
                 <parameters>
-                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="GetDouble(System.Int32)" attrib="486" virtual="true" returntype="System.Double">
                 <parameters>
-                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="GetFieldType(System.Int32)" attrib="486" virtual="true" returntype="System.Type">
                 <parameters>
-                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="GetFloat(System.Int32)" attrib="486" virtual="true" returntype="System.Single">
                 <parameters>
-                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="GetGuid(System.Int32)" attrib="486" virtual="true" returntype="System.Guid">
                 <parameters>
-                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="GetInt16(System.Int32)" attrib="486" virtual="true" returntype="System.Int16">
                 <parameters>
-                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="GetInt32(System.Int32)" attrib="486" virtual="true" returntype="System.Int32">
                 <parameters>
-                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="GetInt64(System.Int32)" attrib="486" virtual="true" returntype="System.Int64">
                 <parameters>
-                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="GetName(System.Int32)" attrib="486" virtual="true" returntype="System.String">
                 <parameters>
-                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="GetOrdinal(System.String)" attrib="486" virtual="true" returntype="System.Int32">
@@ -298,12 +298,12 @@
               </method>
               <method name="GetString(System.Int32)" attrib="486" virtual="true" returntype="System.String">
                 <parameters>
-                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="GetValue(System.Int32)" attrib="486" virtual="true" returntype="System.Object">
                 <parameters>
-                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="GetValues(System.Object[])" attrib="486" virtual="true" returntype="System.Int32">
@@ -313,7 +313,7 @@
               </method>
               <method name="IsDBNull(System.Int32)" attrib="486" virtual="true" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
             </methods>
@@ -15212,6 +15212,30 @@
                   <method name="set_TransactionBinding(System.String)" attrib="2182" returntype="System.Void">
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="TransparentNetworkIPResolution" attrib="0" ptype="System.Boolean">
+                <attributes>
+                  <attribute name="System.ComponentModel.DisplayNameAttribute">
+                    <properties>
+                      <property name="DisplayNameValue" value="TransparentNetworkIPResolution" />
+                    </properties>
+                  </attribute>
+                  <attribute name="System.ComponentModel.RefreshPropertiesAttribute">
+                    <properties>
+                      <property name="RefreshProperties" value="All" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_TransparentNetworkIPResolution()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_TransparentNetworkIPResolution(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
                     </parameters>
                   </method>
                 </methods>

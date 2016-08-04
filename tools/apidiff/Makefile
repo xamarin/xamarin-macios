@@ -189,7 +189,7 @@ update-watchos-refs: $(WATCHOS_REFS)
 update-ios-refs: $(IOS_REFS)
 update-mac-refs: $(MAC_REFS)
 
-update-refs: $(WATCHOS_REFS) $(IOS_REFS) $(MAC_REFS)
+update-refs: $(WATCHOS_REFS) $(TVOS_REFS) $(IOS_REFS) $(MAC_REFS)
 
 # targets to verify that the 32-bit and 64-bit assemblies have identical API.
 
