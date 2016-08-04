@@ -30,7 +30,9 @@ namespace XamCore.SceneKit {
 		Triangles,
 		TriangleStrip,
 		Line,
-		Point
+		Point,
+		[TV (10,0), Mac (10,12), iOS (10,0)]
+		Polygon
 	}
 
 	[Availability (Platform.Mac_10_8 | Platform.iOS_8_0)]
@@ -315,5 +317,12 @@ namespace XamCore.SceneKit {
 		Frame = 0,
 		Node = 1,
 		Shadable = 2,
+	}
+
+	[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+	[Native]
+	public enum SCNMovabilityHint : nint {
+		Fixed,
+		Movable
 	}
 }

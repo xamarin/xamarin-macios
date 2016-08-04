@@ -127,6 +127,11 @@ namespace XamCore.ModelIO {
 		[Static]
 		[Export ("assetWithSCNScene:")]
 		MDLAsset FromScene (SCNScene scene);
+
+		[iOS (10, 0), Mac (10, 12)]
+		[Static]
+		[Export ("assetWithSCNScene:bufferAllocator:")]
+		MDLAsset FromScene (SCNScene scene, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 	}
 
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
@@ -591,6 +596,10 @@ namespace XamCore.ModelIO {
 		[Export ("meshWithSCNGeometry:")]
 		MDLMesh FromGeometry (SCNGeometry geometry);
 
+		[iOS (10, 0), Mac (10, 12)]
+		[Static]
+		[Export ("meshWithSCNGeometry:bufferAllocator:")]
+		MDLMesh FromGeometry (SCNGeometry geometry, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 	}
 
 	interface IMDLMeshBuffer {}
@@ -766,7 +775,11 @@ namespace XamCore.ModelIO {
 		[Static]
 		[Export ("objectWithSCNNode:")]
 		MDLObject FromNode (SCNNode node);
-		
+
+		[iOS (10,0), Mac (10,12)]
+		[Static]
+		[Export ("objectWithSCNNode:bufferAllocator:")]
+		MDLObject FromNode (SCNNode node, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 	}
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
@@ -1055,6 +1068,11 @@ namespace XamCore.ModelIO {
 		[Static]
 		[Export ("submeshWithSCNGeometryElement:")]
 		MDLSubmesh FromGeometryElement (SCNGeometryElement element);
+
+		[iOS (10, 0), Mac (10, 12)]
+		[Static]
+		[Export ("submeshWithSCNGeometryElement:bufferAllocator:")]
+		MDLSubmesh FromGeometryElement (SCNGeometryElement element, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 	}
 
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]

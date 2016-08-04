@@ -56,6 +56,7 @@ namespace Extrospection {
 			{ "RPRecordingErrorCode", "RPRecordingError" },
 			{ "SKErrorCode", "SKError" },
 			{ "SSReadingListErrorCode", "SSReadingListError" },
+			{ "SCNRenderingAPI", "SCNRenderingApi" },
 			{ "UIDataDetectorTypes", "UIDataDetectorType" },
 			{ "UIControlEvents", "UIControlEvent" },
 			{ "UITableViewCellAccessoryType", "UITableViewCellAccessory" },
