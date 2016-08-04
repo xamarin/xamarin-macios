@@ -183,7 +183,7 @@ namespace XamCore.SpriteKit {
 		// Apple deprecated floatMatrix3Value in macOS10.12/iOS10.0
 		// and made available matrixFloat3x3Value so we invoke
 		// the right one at runtime depending on which OS version we are running
-		public Matrix3 FloatMatrix3Value
+		public virtual Matrix3 FloatMatrix3Value
 		{
 			get {
 				if (CheckSystemVersion ())
@@ -202,7 +202,7 @@ namespace XamCore.SpriteKit {
 		// Apple deprecated floatMatrix4Value in macOS10.12/iOS10.0
 		// and made available matrixFloat4x4Value so we invoke
 		// the right one at runtime depending on which OS version we are running
-		public Matrix4 FloatMatrix4Value
+		public virtual Matrix4 FloatMatrix4Value
 		{
 			get {
 				if (CheckSystemVersion ())
