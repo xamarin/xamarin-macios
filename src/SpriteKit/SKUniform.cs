@@ -18,7 +18,7 @@ using Matrix2 = global::OpenTK.Matrix2;
 using Matrix3 = global::OpenTK.Matrix3;
 using Matrix4 = global::OpenTK.Matrix4;
 
-#if XAMCORE_2_0 || !MONOMAC
+#if (XAMCORE_2_0 || !MONOMAC) && !WATCH
 namespace XamCore.SpriteKit {
 	public partial class SKUniform {
 

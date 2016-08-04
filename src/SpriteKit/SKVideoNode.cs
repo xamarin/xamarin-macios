@@ -11,7 +11,7 @@ using System;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
-#if XAMCORE_2_0 || !MONOMAC
+#if (XAMCORE_2_0 || !MONOMAC) && !WATCH
 namespace XamCore.SpriteKit {
 	public partial class SKVideoNode : SKNode {
 
