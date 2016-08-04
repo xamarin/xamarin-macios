@@ -680,6 +680,8 @@ WATCH_BMONO = MONO_PATH=$(WATCH_LIBDIR)/repl $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/b
 WATCHOS_EXTRA_CORE_SOURCES = \
     $(WATCH_BUILD_DIR)/Constants.cs    \
     $(WATCH_BUILD_DIR)/AssemblyInfo.cs \
+    $(IOS_OPENTK_1_0_CORE_SOURCES)     \
+    CoreVideo/CVPixelFormatType.cs     \
 
 WATCHOS_CORE_SOURCES +=           \
     $(WATCHOS_EXTRA_CORE_SOURCES) \

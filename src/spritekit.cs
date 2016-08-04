@@ -9,16 +9,21 @@
 using System;
 using System.ComponentModel;
 
+#if !WATCH
 using XamCore.AVFoundation;
+using XamCore.CoreImage;
+using XamCore.GameplayKit;
+#endif
+
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 using XamCore.CoreFoundation;
 using XamCore.CoreGraphics;
-using XamCore.CoreImage;
-using XamCore.GLKit;
-using XamCore.SceneKit;
 using XamCore.CoreVideo;
-using XamCore.GameplayKit;
+
+#if !WATCH // FIXME: scenekit not yet enabled
+using XamCore.SceneKit;
+#endif
 
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
@@ -26,8 +31,7 @@ using Matrix2 = global::OpenTK.Matrix2;
 using Matrix3 = global::OpenTK.Matrix3;
 using Matrix4 = global::OpenTK.Matrix4;
 using Vector4 = global::OpenTK.Vector4;
-using Quaternion = global::OpenTK.Quaternion;
-using MathHelper = global::OpenTK.MathHelper;
+
 #if MONOMAC
 using XamCore.AppKit;
 using UIColor = global::XamCore.AppKit.NSColor;
@@ -36,15 +40,26 @@ using UIView = global::XamCore.AppKit.NSView;
 using pfloat = System.nfloat;
 #else
 using XamCore.UIKit;
-using UIView = global::XamCore.UIKit.UIView;
 using pfloat = System.Single;
+#if !WATCH
+using UIView = global::XamCore.UIKit.UIView;
+#endif
 #endif
 
 namespace XamCore.SpriteKit {
 
+#if WATCH
+	// stubs to limit the number of preprocessor directives in the source file
+	interface AVPlayer {}
+	interface CIFilter {}
+	interface GKPolygonObstacle {}
+	interface UIView {}
+#endif
+
 	delegate void SKNodeChildEnumeratorHandler (SKNode node, out bool stop);
 	delegate void SKActionTimingFunction (float /* float, not CGFloat */ time);
-	
+
+	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (SKNode))]
 	interface SK3DNode {
@@ -55,6 +70,7 @@ namespace XamCore.SpriteKit {
 		[Export ("viewportSize")]
 		CGSize ViewportSize { get; set; }
 
+#if !WATCH // FIXME SceneKit not yet enabled on watch profile
 		[NullAllowed] // by default this property is null
 		[Export ("scnScene", ArgumentSemantic.Retain)]
 		SCNScene ScnScene { get; set; }
@@ -84,6 +100,7 @@ namespace XamCore.SpriteKit {
 
 		[Wrap ("HitTest (thePoint, options == null ? null : options.Dictionary)")]
 		SCNHitTestResult [] HitTest (CGPoint thePoint, SCNHitTestOptions options);
+#endif
 
 		[Export ("projectPoint:")]
 		/* vector_float3 */
@@ -96,6 +113,7 @@ namespace XamCore.SpriteKit {
 		Vector3 UnprojectPoint (Vector3 point);
 	}
 
+
 #if MONOMAC
 	[Mac (10,9, onlyOn64 : true)]
 	[BaseType (typeof (NSResponder))]
@@ -105,6 +123,7 @@ namespace XamCore.SpriteKit {
 	[BaseType (typeof (UIResponder))]
 	partial interface SKNode : NSCoding, NSCopying, UIFocusItem {
 #else // WATCHOS
+	[Watch (3,0)]
 	[BaseType (typeof (NSObject))]
 	partial interface SKNode : NSCoding, NSCopying {
 #endif
@@ -261,18 +280,21 @@ namespace XamCore.SpriteKit {
 		void MoveToParent (SKNode parent);
 
 		// Moved from SpriteKit to GameplayKit header in iOS 10 beta 1
+		[NoWatch]
 		[iOS (9,0),Mac(10,11)]
 		[Static]
 		[Export ("obstaclesFromNodeBounds:")]
 		GKPolygonObstacle[] ObstaclesFromNodeBounds (SKNode[] nodes);
 		
 		// Moved from SpriteKit to GameplayKit header in iOS 10 beta 1
+		[NoWatch]
 		[iOS (9,0),Mac(10,11)]
 		[Static]
 		[Export ("obstaclesFromNodePhysicsBodies:")]
 		GKPolygonObstacle[] ObstaclesFromNodePhysicsBodies (SKNode[] nodes);
 
 		// Moved from SpriteKit to GameplayKit header in iOS 10 beta 1
+		[NoWatch]
 		[iOS (9,0),Mac(10,11)]
 		[Static]
 		[Export ("obstaclesFromSpriteTextures:accuracy:")]
@@ -300,7 +322,7 @@ namespace XamCore.SpriteKit {
 		[Export ("locationInNode:")]
 		CGPoint LocationInNode (SKNode node);
 	}
-#else
+#elif !WATCH
 	[NoWatch]
 	[Since (7,0)]
 	[Category, BaseType (typeof (UITouch))]
@@ -314,6 +336,7 @@ namespace XamCore.SpriteKit {
 	}
 #endif
 
+	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (SKNode))]
@@ -344,6 +367,7 @@ namespace XamCore.SpriteKit {
 
 	delegate Vector3 SKFieldForceEvaluator (/* vector_float3 */ Vector4 position, /* vector_float3 */ Vector4 velocity, float /* float, not CGFloat */ mass, float /* float, not CGFloat */ charge, double time);
 		
+	[Watch (3,0)]
 	[iOS (8,0), Mac(10,10, onlyOn64 : true)]
 	[BaseType (typeof (SKNode))]
 	interface SKFieldNode {
@@ -422,6 +446,7 @@ namespace XamCore.SpriteKit {
 		SKFieldNode CreateCustomField (SKFieldForceEvaluator evaluator);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (SKEffectNode))]
@@ -459,6 +484,7 @@ namespace XamCore.SpriteKit {
 		[Export ("convertPointToView:")]
 		CGPoint ConvertPointToView (CGPoint point);
 
+		[NoWatch]
 		[Export ("view", ArgumentSemantic.Weak)]
 		SKView View { get; }
 
@@ -498,11 +524,12 @@ namespace XamCore.SpriteKit {
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
 		SKSceneDelegate Delegate { get; set; }
-		
-		[NoWatch]
+
+#if !WATCH // FIXME AVFoundation not yet enabled
 		[iOS (9,0),Mac(10,11)]
 		[Export ("audioEngine", ArgumentSemantic.Retain)]
 		AVAudioEngine AudioEngine { get; }
+#endif
 
 		[iOS (9,0), Mac(10,11)]
 		[NullAllowed, Export ("camera", ArgumentSemantic.Weak)]
@@ -513,6 +540,7 @@ namespace XamCore.SpriteKit {
 		SKNode Listener { get; set; }
 	}
 
+	[Watch (3,0)]
 	[iOS (8,0), Mac(10,10, onlyOn64 : true)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -533,6 +561,7 @@ namespace XamCore.SpriteKit {
 		void DidFinishUpdate (SKScene scene);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,10, onlyOn64 : true)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
@@ -578,6 +607,7 @@ namespace XamCore.SpriteKit {
 		SKAttribute[] Attributes { get; set; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (SKNode))]
@@ -671,6 +701,7 @@ namespace XamCore.SpriteKit {
 		void ScaleTo (CGSize size);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (NSObject))]
@@ -721,6 +752,7 @@ namespace XamCore.SpriteKit {
 		SKRepeatMode RepeatMode { get; set; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (SKNode))]
@@ -892,6 +924,7 @@ namespace XamCore.SpriteKit {
 		SKParticleRenderOrder ParticleRenderOrder { get; set; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (SKNode))]
@@ -1009,6 +1042,7 @@ namespace XamCore.SpriteKit {
 		nfloat LineLength { get; }
 	}
 
+	[Watch (3,0)]
 	[iOS (8,0), Mac(10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface SKReachConstraints : NSCoding {
@@ -1023,6 +1057,7 @@ namespace XamCore.SpriteKit {
 		nfloat UpperAngleLimit { get; set; }
 	}
 
+	[Watch (3,0)]
 	[iOS(8,0), Mac(10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface SKRegion : NSCopying, NSCoding {
@@ -1057,6 +1092,7 @@ namespace XamCore.SpriteKit {
 		bool ContainsPoint (CGPoint point);
 	}
 
+	[Watch (3,0)]
 	[Since (7,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[BaseType (typeof (SKNode))]
@@ -1102,6 +1138,7 @@ namespace XamCore.SpriteKit {
 		SKBlendMode BlendMode { get; set; }
 	}
 
+	[Watch (3,0)]
 	[iOS (8,0), Mac(10,10, onlyOn64 : true)]
 	[BaseType (typeof (SKNode))]
 	interface SKLightNode {
@@ -1124,6 +1161,7 @@ namespace XamCore.SpriteKit {
 		uint CategoryBitMask { get; set; } /* uint32_t */
 	}
 
+	[NoWatch]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (SKNode))]
@@ -1175,6 +1213,7 @@ namespace XamCore.SpriteKit {
 		CGPoint AnchorPoint { get; set; }
 	}
 
+	[Watch (3,0)]
 	[iOS (8,0)]
 	[Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
@@ -1217,6 +1256,7 @@ namespace XamCore.SpriteKit {
 		SKConstraint CreateOrientToPoint (CGPoint point, SKNode node, SKRange radians);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (SKNode))]
@@ -1316,6 +1356,7 @@ namespace XamCore.SpriteKit {
 
 	interface ISKViewDelegate {}
 
+	[NoWatch]
 	[iOS (10,0)][Mac (10,12)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
@@ -1325,6 +1366,7 @@ namespace XamCore.SpriteKit {
 		bool ShouldRender (SKView view, double time);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (NSObject))]
@@ -1381,6 +1423,7 @@ namespace XamCore.SpriteKit {
 		bool PausesOutgoingScene { get; set; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (NSObject))]
@@ -1459,6 +1502,7 @@ namespace XamCore.SpriteKit {
 
 	delegate void SKTextureModify (IntPtr pixelData, nuint lengthInBytes);
 		
+	[Watch (3,0)]
 	[iOS (8,0), Mac(10,10, onlyOn64 : true)]
 	[BaseType (typeof (SKTexture))]
 	[DisableDefaultCtor] // cannot be created (like SKTexture) by calling `init`
@@ -1478,6 +1522,7 @@ namespace XamCore.SpriteKit {
 
 	delegate void SKTextureAtlasLoadCallback (NSError error, SKTextureAtlas foundAtlases);
 		
+	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (NSObject))]
@@ -1514,6 +1559,7 @@ namespace XamCore.SpriteKit {
 		
 	}
 
+	[Watch (3,0)]
 	[Mac (10,10, onlyOn64 : true)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
@@ -1528,70 +1574,100 @@ namespace XamCore.SpriteKit {
 		IntPtr Constructor (string name, float /* float, not CGFloat */ value);
 
 		[Internal]
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatVector2:")]
 		IntPtr InitWithNameFloatVector2 (string name, Vector2 value);
 
-		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("initWithName:vectorFloat2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+#if WATCH
+		IntPtr Constructor (string name, Vector2 value);
+#else
+		[Internal]
 		IntPtr InitWithNameVectorFloat2 (string name, Vector2 value);
+#endif
 
 		[Internal]
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatVector3:")]
 		IntPtr InitWithNameFloatVector3 (string name, Vector3 value);
 
-		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("initWithName:vectorFloat3:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr InitWithNameVectorFloat3 (string name, Vector3 value);
-
+#if WATCH
+		IntPtr Constructor (string name, Vector3 value);
+#else
 		[Internal]
+		IntPtr InitWithNameVectorFloat3 (string name, Vector3 value);
+#endif
+		
+		[Internal]
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatVector4:")]
 		IntPtr InitWithNameFloatVector4 (string name, Vector4 value);
 
-		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("initWithName:vectorFloat4:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+#if WATCH
+		IntPtr Constructor (string name, Vector4 value);
+#else
+		[Internal]
 		IntPtr InitWithNameVectorFloat4 (string name, Vector4 value);
+#endif
 
 		[Internal]
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatMatrix2:")]
 		IntPtr InitWithNameFloatMatrix2 (string name, Matrix2 value);
 
-		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("initWithName:matrixFloat2x2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+#if WATCH
+		IntPtr Constructor (string name, Matrix2 value);
+#else
+		[Internal]
 		IntPtr InitWithNameMatrixFloat2x2 (string name, Matrix2 value);
+#endif
 
 		[Internal]
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatMatrix3:")]
 		IntPtr InitWithNameFloatMatrix3 (string name, Matrix3 value);
 
-		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("initWithName:matrixFloat3x3:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+#if WATCH
+		IntPtr Constructor (string name, Matrix3 value);
+#else
+		[Internal]
 		IntPtr InitWithNameMatrixFloat3x3 (string name, Matrix3 value);
+#endif
 
 		[Internal]
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("initWithName:floatMatrix4:")]
 		IntPtr InitWithNameFloatMatrix4 (string name, Matrix4 value);
 
-		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("initWithName:matrixFloat4x4:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+#if WATCH
+		IntPtr Constructor (string name, Matrix4 value);
+#else
+		[Internal]
 		IntPtr InitWithNameMatrixFloat4x4 (string name, Matrix4 value);
+#endif
 
 		[Export ("name")]
 		string Name { get; }
@@ -1606,79 +1682,109 @@ namespace XamCore.SpriteKit {
 		float FloatValue { get; set; } /* float, not CGFloat */
 
 		[Internal]
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("floatVector2Value")]
 		Vector2 _FloatVector2Value { get; set; }
 
-		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("vectorFloat2Value", ArgumentSemantic.Assign)]
+#if WATCH
+		Vector2 FloatVector2Value {
+#else
+		[Internal]
 		Vector2 _VectorFloat2Value {
+#endif
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
 		[Internal]
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("floatVector3Value")]
 		Vector3 _FloatVector3Value { get; set; }
 
-		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("vectorFloat3Value", ArgumentSemantic.Assign)]
+#if WATCH
+		Vector3 FloatVector3Value {
+#else
+		[Internal]
 		Vector3 _VectorFloat3Value {
+#endif
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
 		[Internal]
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("floatVector4Value")]
 		Vector4 _FloatVector4Value { get; set; }
 
-		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("vectorFloat4Value", ArgumentSemantic.Assign)]
+#if WATCH
+		Vector4 FloatVector4Value {
+#else
+		[Internal]
 		Vector4 _VectorFloat4Value {
+#endif
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
 		[Internal]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
+		[NoWatch]
 		[Export ("floatMatrix2Value")]
 		Matrix2 _FloatMatrix2Value { get; set; }
 
-		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("matrixFloat2x2Value", ArgumentSemantic.Assign)]
+#if WATCH
+		Matrix2 FloatMatrix2x2Value {
+#else
+		[Internal]
 		Matrix2 _MatrixFloat2x2Value {
+#endif
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
 		[Internal]
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("floatMatrix3Value")]
 		Matrix3 _FloatMatrix3Value { get; set; }
 
-		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("matrixFloat3x3Value", ArgumentSemantic.Assign)]
+#if WATCH
+		Matrix3 FloatMatrix3x3Value {
+#else
+		[Internal]
 		Matrix3 _MatrixFloat3x3Value {
+#endif
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
 		[Internal]
+		[NoWatch]
 		[Availability (Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12)]
 		[Export ("floatMatrix4Value")]
 		Matrix4 _FloatMatrix4Value { get; set; }
 
-		[Internal]
 		[iOS (10,0)][Mac (10,12)]
 		[Export ("matrixFloat4x4Value", ArgumentSemantic.Assign)]
+#if WATCH
+		Matrix4 FloatMatrix4x4Value {
+#else
+		[Internal]
 		Matrix4 _MatrixFloat4x4Value {
+#endif
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
@@ -1736,6 +1842,7 @@ namespace XamCore.SpriteKit {
 
 	delegate void SKActionDurationHandler (SKNode node, nfloat elapsedTime);
 
+	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (NSObject))]
@@ -2127,18 +2234,21 @@ namespace XamCore.SpriteKit {
 
 		// SKAction_SKWarpable
 
+		[NoWatch]
 		[iOS (10,0)][Mac (10,12)]
 		[Static]
 		[Export ("warpTo:duration:")]
 		[return: NullAllowed]
 		SKAction WarpTo (SKWarpGeometry warp, double duration);
 
+		[NoWatch]
 		[iOS (10,0)][Mac (10,12)]
 		[Static]
 		[Export ("animateWithWarps:times:")]
 		[return: NullAllowed]
 		SKAction Animate (SKWarpGeometry[] warps, NSNumber[] times);
 
+		[NoWatch]
 		[iOS (10,0)][Mac (10,12)]
 		[Static]
 		[Export ("animateWithWarps:times:restore:")]
@@ -2146,6 +2256,7 @@ namespace XamCore.SpriteKit {
 		SKAction Animate (SKWarpGeometry[] warps, NSNumber[] times, bool restore);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[DisableDefaultCtor] // see https://bugzilla.xamarin.com/show_bug.cgi?id=14502
@@ -2287,6 +2398,7 @@ namespace XamCore.SpriteKit {
 		bool Pinned { get; set; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (NSObject))]
@@ -2311,6 +2423,7 @@ namespace XamCore.SpriteKit {
 		
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (NSObject))]
@@ -2328,6 +2441,7 @@ namespace XamCore.SpriteKit {
 	delegate void SKPhysicsWorldBodiesEnumeratorHandler (SKPhysicsBody body, out bool stop);
 	delegate void SKPhysicsWorldBodiesAlongRayStartEnumeratorHandler (SKPhysicsBody body, CGPoint point, CGVector normal, out bool stop);
 
+	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (NSObject),
@@ -2385,6 +2499,7 @@ namespace XamCore.SpriteKit {
 		Vector3 SampleFields (/* vector_float3 */ Vector3 position);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (NSObject))]
@@ -2406,6 +2521,7 @@ namespace XamCore.SpriteKit {
 		nfloat ReactionTorque { get; }		
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (SKPhysicsJoint))]
@@ -2432,6 +2548,7 @@ namespace XamCore.SpriteKit {
 		nfloat RotationSpeed { get; set; }		
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (SKPhysicsJoint))]
@@ -2448,6 +2565,7 @@ namespace XamCore.SpriteKit {
 		nfloat Frequency { get; set; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (SKPhysicsJoint))]
@@ -2458,6 +2576,7 @@ namespace XamCore.SpriteKit {
 		SKPhysicsJointFixed Create (SKPhysicsBody bodyA, SKPhysicsBody bodyB, CGPoint anchor);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (SKPhysicsJoint))]
@@ -2477,6 +2596,7 @@ namespace XamCore.SpriteKit {
 		nfloat UpperDistanceLimit { get; set; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (SKPhysicsJoint))]
@@ -2490,6 +2610,7 @@ namespace XamCore.SpriteKit {
 		SKPhysicsJointLimit Create (SKPhysicsBody bodyA, SKPhysicsBody bodyB, CGPoint anchorA, CGPoint anchorB);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,10, onlyOn64 : true)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
@@ -2523,12 +2644,13 @@ namespace XamCore.SpriteKit {
 		SKRange CreateUnlimited ();
 	}
 
-	[NoWatch]
+	[Watch (3,0)]
 	[iOS (9,0)]
 	[Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (SKNode))]
 	[DisableDefaultCtor]
 	interface SKAudioNode : NSCoding {
+#if !WATCH // FIXME AVFoundation not yet enabled on watch profile
 		[Export ("initWithAVAudioNode:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] AVAudioNode node);
@@ -2541,6 +2663,7 @@ namespace XamCore.SpriteKit {
 
 		[NullAllowed, Export ("avAudioNode", ArgumentSemantic.Retain)]
 		AVAudioNode AvAudioNode { get; set; }
+#endif
 
 		[Export ("autoplayLooped")]
 		bool AutoplayLooped { get; set; }
@@ -2549,6 +2672,7 @@ namespace XamCore.SpriteKit {
 		bool Positional { [Bind ("isPositional")] get; set; }
 	}
 
+	[Watch (3,0)]
 	[iOS (9,0)]
 	[Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (SKNode))]
@@ -2560,6 +2684,7 @@ namespace XamCore.SpriteKit {
 		NSSet<SKNode> ContainedNodeSet { get; }
 	}
 
+	[Watch (3,0)]
 	[iOS (9,0)]
 	[Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (SKNode))]
@@ -2653,6 +2778,7 @@ namespace XamCore.SpriteKit {
 		}
 	}
 
+	[Watch (3,0)]
 	[iOS (10,0)][Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -2724,6 +2850,7 @@ namespace XamCore.SpriteKit {
 		bool FlipHorizontally { get; set; }
 	}
 
+	[Watch (3,0)]
 	[iOS (10,0)][Mac (10,12)]
 	[BaseType (typeof(SKNode))]
 	interface SKTileMapNode : NSCopying, NSCoding
@@ -2812,6 +2939,7 @@ namespace XamCore.SpriteKit {
 		CGPoint GetCenterOfTile (nuint column, nuint row);
 	}
 
+	[Watch (3,0)]
 	[iOS (10,0)][Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	interface SKTileSet : NSCopying, NSCoding
@@ -2856,6 +2984,7 @@ namespace XamCore.SpriteKit {
 		CGSize DefaultTileSize { get; set; }
 	}
 
+	[Watch (3,0)]
 	[iOS (10,0)][Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	interface SKTileGroup : NSCopying, NSCoding
@@ -2885,6 +3014,7 @@ namespace XamCore.SpriteKit {
 		string Name { get; set; }
 	}
 
+	[Watch (3,0)]
 	[iOS (10,0)][Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	interface SKTileGroupRule : NSCopying, NSCoding
@@ -2906,10 +3036,12 @@ namespace XamCore.SpriteKit {
 		string Name { get; set; }
 	}
 
+	[Watch (3,0)]
 	[iOS (10,0)][Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	interface SKWarpGeometry : NSCopying, NSCoding {}
 
+	[Watch (3,0)]
 	[iOS (10,0)][Mac (10,12)]
 	[Protocol]
 	interface SKWarpable
@@ -2923,6 +3055,7 @@ namespace XamCore.SpriteKit {
 		nint SubdivisionLevels { get; set; }
 	}
 
+	[Watch (3,0)]
 	[iOS (10,0)][Mac (10,12)]
 	[BaseType (typeof(SKWarpGeometry))]
 	[DisableDefaultCtor]

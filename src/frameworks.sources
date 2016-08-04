@@ -538,6 +538,7 @@ CORETELEPHONY_CORE_SOURCES = \
 
 COREVIDEO_CORE_SOURCES = \
 	CoreVideo/CoreVideo.cs \
+	CoreVideo/CVPixelFormatType.cs \
 	CoreVideo/CVBuffer.cs \
 	CoreVideo/CVImageBuffer.cs \
 	CoreVideo/CVPixelBuffer.cs \
@@ -1471,6 +1472,7 @@ COMMON_FRAMEWORKS =         \
 	CoreFoundation          \
 	Foundation              \
 	GameKit                 \
+	SpriteKit               \
 
 MAC_FRAMEWORKS =            \
 	$(COMMON_FRAMEWORKS)    \
@@ -1533,7 +1535,6 @@ MAC_FRAMEWORKS =            \
 	SearchKit               \
 	Security                \
 	Social                  \
-	SpriteKit               \
 	StoreKit                \
 	SystemConfiguration     \
 	VideoToolbox            \
@@ -1612,7 +1613,6 @@ IOS_FRAMEWORKS =         \
 	Security \
 	Social \
 	Speech \
-	SpriteKit \
 	StoreKit \
 	SystemConfiguration \
 	Twitter \
@@ -1691,7 +1691,6 @@ TVOS_FRAMEWORKS =           \
 	ReplayKit               \
 	SceneKit                \
 	Security                \
-	SpriteKit               \
 	StoreKit                \
 	SystemConfiguration     \
 	TVMLKit                 \
