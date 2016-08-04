@@ -14628,9 +14628,66 @@
                   <parameter name="algorithm" position="0" attrib="0" type="System.String" />
                 </parameters>
               </method>
+              <method name="HashData(System.IO.Stream, System.Security.Cryptography.HashAlgorithmName)" attrib="452" virtual="true" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="data" position="0" attrib="0" type="System.IO.Stream" />
+                  <parameter name="hashAlgorithm" position="1" attrib="0" type="System.Security.Cryptography.HashAlgorithmName" />
+                </parameters>
+              </method>
+              <method name="HashData(System.Byte[], System.Int32, System.Int32, System.Security.Cryptography.HashAlgorithmName)" attrib="452" virtual="true" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="data" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="hashAlgorithm" position="3" attrib="0" type="System.Security.Cryptography.HashAlgorithmName" />
+                </parameters>
+              </method>
+              <method name="SignData(System.Byte[], System.Security.Cryptography.HashAlgorithmName)" attrib="454" virtual="true" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="data" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="hashAlgorithm" position="1" attrib="0" type="System.Security.Cryptography.HashAlgorithmName" />
+                </parameters>
+              </method>
+              <method name="SignData(System.IO.Stream, System.Security.Cryptography.HashAlgorithmName)" attrib="454" virtual="true" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="data" position="0" attrib="0" type="System.IO.Stream" />
+                  <parameter name="hashAlgorithm" position="1" attrib="0" type="System.Security.Cryptography.HashAlgorithmName" />
+                </parameters>
+              </method>
+              <method name="SignData(System.Byte[], System.Int32, System.Int32, System.Security.Cryptography.HashAlgorithmName)" attrib="454" virtual="true" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="data" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="hashAlgorithm" position="3" attrib="0" type="System.Security.Cryptography.HashAlgorithmName" />
+                </parameters>
+              </method>
               <method name="SignHash(System.Byte[])" attrib="1478" abstract="true" virtual="true" returntype="System.Byte[]">
                 <parameters>
                   <parameter name="hash" position="0" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+              <method name="VerifyData(System.Byte[], System.Byte[], System.Security.Cryptography.HashAlgorithmName)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="data" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="signature" position="1" attrib="0" type="System.Byte[]" />
+                  <parameter name="hashAlgorithm" position="2" attrib="0" type="System.Security.Cryptography.HashAlgorithmName" />
+                </parameters>
+              </method>
+              <method name="VerifyData(System.IO.Stream, System.Byte[], System.Security.Cryptography.HashAlgorithmName)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="data" position="0" attrib="0" type="System.IO.Stream" />
+                  <parameter name="signature" position="1" attrib="0" type="System.Byte[]" />
+                  <parameter name="hashAlgorithm" position="2" attrib="0" type="System.Security.Cryptography.HashAlgorithmName" />
+                </parameters>
+              </method>
+              <method name="VerifyData(System.Byte[], System.Int32, System.Int32, System.Byte[], System.Security.Cryptography.HashAlgorithmName)" attrib="454" virtual="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="data" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="signature" position="3" attrib="0" type="System.Byte[]" />
+                  <parameter name="hashAlgorithm" position="4" attrib="0" type="System.Security.Cryptography.HashAlgorithmName" />
                 </parameters>
               </method>
               <method name="VerifyHash(System.Byte[], System.Byte[])" attrib="1478" abstract="true" virtual="true" returntype="System.Boolean">

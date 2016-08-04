@@ -16,6 +16,7 @@
 
 		<FSharpTargets Condition="Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets')">$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets</FSharpTargets>
 		<FSharpTargets Condition="Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')">$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets</FSharpTargets>
+		<FSharpTargets Condition="'$(FSharpTargets)' == '' And Exists('$(MSBuildFrameworkToolsPath32)\Microsoft.FSharp.Targets')">$(MSBuildFrameworkToolsPath32)\Microsoft.FSharp.Targets</FSharpTargets>
 		<FSharpTargets Condition="'$(FSharpTargets)' == ''">$(MSBuildBinPath)\Microsoft.FSharp.Targets</FSharpTargets>
 
 	</PropertyGroup>

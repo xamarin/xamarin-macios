@@ -1258,6 +1258,24 @@
               </constructor>
             </constructors>
             <properties>
+              <property name="MatchTimeoutInMilliseconds" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_MatchTimeoutInMilliseconds()" attrib="2182" returntype="System.Int32">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_MatchTimeoutInMilliseconds(System.Int32)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
               <property name="Pattern" attrib="0" ptype="System.String">
                 <methods>
                   <method name="get_Pattern()" attrib="2182" returntype="System.String">
