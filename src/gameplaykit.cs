@@ -515,7 +515,11 @@ namespace XamCore.GameplayKit {
 		[Export ("gridPosition", ArgumentSemantic.Assign)]
 		Vector2i GridPosition { 
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			get; 
+			get;
+#if !XAMCORE_2_0
+			// classic expose the xamarin_simd__void_objc_msgSend[Super]_Vector2i so it's a breaking change not to include the attribute
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+#endif
 #if !XAMCORE_4_0
 			[NotImplemented]
 			set; 
