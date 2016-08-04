@@ -464,7 +464,7 @@ namespace Foundation {
 						}
 					}
 
-					await Task.Delay (50);
+					await Task.Delay(50).ConfigureAwait(false);
 				}
 
 				// try to throw again before read
