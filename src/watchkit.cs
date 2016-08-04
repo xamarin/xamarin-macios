@@ -14,6 +14,7 @@ using XamCore.CoreLocation;
 using XamCore.HealthKit;
 using XamCore.HomeKit;
 using XamCore.PassKit;
+using XamCore.SpriteKit;
 using XamCore.UIKit;
 using XamCore.MapKit;
 using XamCore.UserNotifications;
@@ -1198,7 +1199,6 @@ namespace XamCore.WatchKit {
 	}
 #endif
 
-#if false // FIXME SpriteKit not yet enabled on platform
 	[Watch (3,0)][NoiOS]
 	[BaseType (typeof (WKInterfaceObject))]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
@@ -1223,10 +1223,8 @@ namespace XamCore.WatchKit {
 		[return: NullAllowed]
 		SKTexture CreateTexture (SKNode node);
 
-		// -(SKTexture * _Nullable)textureFromNode:(SKNode * _Nonnull)node crop:(CGRect)crop;
 		[Export ("textureFromNode:crop:")]
 		[return: NullAllowed]
 		SKTexture CreateTexture (SKNode node, CGRect crop);
 	}
-#endif
 }
