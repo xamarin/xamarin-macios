@@ -17,6 +17,7 @@ using Vector4 = global::OpenTK.Vector4;
 
 namespace XamCore.SceneKit {
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_8 | Platform.iOS_8_0)]
 	[Native] // untyped enum (SceneKitTypes.h) but described as the value of `code` for `NSError` which is an NSInteger
 	[ErrorDomain ("SCNErrorDomain")]
@@ -24,6 +25,7 @@ namespace XamCore.SceneKit {
 		ProgramCompilationError = 1,
 	}
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_8 | Platform.iOS_8_0)]
 	[Native]
 	public enum SCNGeometryPrimitiveType : nint {
@@ -35,6 +37,7 @@ namespace XamCore.SceneKit {
 		Polygon
 	}
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_8 | Platform.iOS_8_0)]
 	[Native]
 	public enum SCNTransparencyMode : nint {
@@ -42,12 +45,14 @@ namespace XamCore.SceneKit {
 		RgbZero
 	}
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_8 | Platform.iOS_8_0)]
 	[Native]
 	public enum SCNCullMode : nint {
 		Back, Front
 	}
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_8 | Platform.iOS_8_0)]
 	[Native]
 	public enum SCNFilterMode : nint {
@@ -56,6 +61,7 @@ namespace XamCore.SceneKit {
 		Linear
 	}
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_8 | Platform.iOS_8_0)]
 	[Native]
 	public enum SCNWrapMode : nint {
@@ -66,6 +72,7 @@ namespace XamCore.SceneKit {
 		Mirror
 	}
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_8 | Platform.iOS_8_0)]
 	[Native]
 	public enum SCNSceneSourceStatus : nint {
@@ -76,6 +83,7 @@ namespace XamCore.SceneKit {
 		Complete = 16
 	}
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_9 | Platform.iOS_8_0)]
 	[Native]
 	public enum SCNChamferMode : nint {
@@ -84,6 +92,7 @@ namespace XamCore.SceneKit {
 		Back
 	}
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_9 | Platform.iOS_8_0)]
 	[Native]
 	public enum SCNMorpherCalculationMode : nint {
@@ -91,6 +100,7 @@ namespace XamCore.SceneKit {
 		Additive
 	}
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_10 | Platform.iOS_8_0)]
 	[Native]
 	public enum SCNActionTimingMode : nint {
@@ -100,6 +110,7 @@ namespace XamCore.SceneKit {
 		EaseInEaseOut
 	}
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_10 | Platform.iOS_8_0)]
 	[Native]
 	public enum SCNShadowMode : nint {
@@ -108,6 +119,7 @@ namespace XamCore.SceneKit {
 		Modulated
 	}
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_10 | Platform.iOS_8_0)]
 	[Native]
 	public enum SCNPhysicsBodyType : nint {
@@ -116,6 +128,7 @@ namespace XamCore.SceneKit {
 		Kinematic
 	}
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_10 | Platform.iOS_8_0)]
 	[Native]
 	public enum SCNPhysicsFieldScope : nint {
@@ -123,6 +136,7 @@ namespace XamCore.SceneKit {
 		OutsideExtent
 	}
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_10 | Platform.iOS_8_0)]
 	[Native]
 	public enum SCNParticleSortingMode : nint {
@@ -133,6 +147,7 @@ namespace XamCore.SceneKit {
 		YoungestFirst
 	}
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_10 | Platform.iOS_8_0)]
 	[Native]
 	public enum SCNParticleBlendMode : nint {
@@ -144,6 +159,7 @@ namespace XamCore.SceneKit {
 		Replace
 	}
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_10 | Platform.iOS_8_0)]
 	[Native]
 	public enum SCNParticleOrientationMode : nint {
@@ -153,6 +169,7 @@ namespace XamCore.SceneKit {
 		BillboardYAligned
 	}
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_10 | Platform.iOS_8_0)]
 	[Native]
 	public enum SCNParticleBirthLocation : nint {
@@ -161,6 +178,7 @@ namespace XamCore.SceneKit {
 		Vertex
 	}
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_10 | Platform.iOS_8_0)]
 	[Native]
 	public enum SCNParticleBirthDirection : nint {
@@ -169,6 +187,7 @@ namespace XamCore.SceneKit {
 		Random
 	}
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_10 | Platform.iOS_8_0)]
 	[Native]
 	public enum SCNParticleImageSequenceAnimationMode : nint {
@@ -177,6 +196,7 @@ namespace XamCore.SceneKit {
 		AutoReverse
 	}
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_10 | Platform.iOS_8_0)]
 	[Native]
 	public enum SCNParticleInputMode : nint {
@@ -185,6 +205,7 @@ namespace XamCore.SceneKit {
 		OverOtherProperty
 	}
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_10 | Platform.iOS_8_0)]
 	[Native]
 	public enum SCNParticleModifierStage : nint {
@@ -194,6 +215,7 @@ namespace XamCore.SceneKit {
 		PostCollision
 	}
 
+	[Watch (3,0)]
 	[Availability (Platform.Mac_10_10 | Platform.iOS_8_0)]
 	[Native]
 	public enum SCNParticleEvent : nint {
@@ -231,6 +253,7 @@ namespace XamCore.SceneKit {
 		Any, Closest, All, 
 	}
 
+	[Watch (3,0)]
 	[Native]
 	public enum SCNAntialiasingMode : nuint {
 		None,
@@ -242,6 +265,7 @@ namespace XamCore.SceneKit {
 #endif
 	}
 
+	[Watch (3,0)]
 	[Native]
 	public enum SCNPhysicsCollisionCategory : nuint {
 		None	= 0,
@@ -254,6 +278,7 @@ namespace XamCore.SceneKit {
 #endif
 	}
 
+	[Watch (3,0)]
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
 	public enum SCNBillboardAxis : nuint {
@@ -263,6 +288,7 @@ namespace XamCore.SceneKit {
 		All = (X | Y | Z)
 	}
 
+	[Watch (3,0)]
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
 	public enum SCNReferenceLoadingPolicy : nint {
@@ -270,6 +296,7 @@ namespace XamCore.SceneKit {
 		OnDemand = 1
 	}
 
+	[Watch (3,0)]
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
 	public enum SCNBlendMode : nint
@@ -282,6 +309,7 @@ namespace XamCore.SceneKit {
 		Replace = 5
 	}
 
+	[Watch (3,0)]
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
 	[Flags]
@@ -296,6 +324,7 @@ namespace XamCore.SceneKit {
 		ShowWireframe = 1 << 5
 	}
 
+	[Watch (3,0)]
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
 	public enum SCNRenderingApi : nuint
@@ -310,6 +339,7 @@ namespace XamCore.SceneKit {
 #endif
 	}
 
+	[Watch (3,0)]
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
 	public enum SCNBufferFrequency : nint
@@ -319,6 +349,7 @@ namespace XamCore.SceneKit {
 		Shadable = 2,
 	}
 
+	[Watch (3,0)]
 	[TV (10, 0), Mac (10, 12), iOS (10, 0)]
 	[Native]
 	public enum SCNMovabilityHint : nint {
