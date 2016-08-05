@@ -202,6 +202,15 @@ void monotouch_configure_debugging ()
 	NSString *monodevelop_host;
 	NSString *monotouch_debug_enabled;
 
+	if (!strcmp (connection_mode, "default")) {
+		char *evar = getenv ("__XAMARIN_DEBUG_MODE__");
+		if (evar && *evar) {
+			connection_mode = evar;
+			LOG (PRODUCT ": Found debug mode %s in environment variables\n", connection_mode);
+			unsetenv ("__XAMARIN_DEBUG_MODE__");
+		}
+	}
+	
 	if (!strcmp (connection_mode, "none")) {
 		// nothing to do
 		return;
