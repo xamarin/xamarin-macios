@@ -9,6 +9,16 @@ using Foundation;
 using NUnit.Framework.Internal.Filters;
 using MonoTouch.NUnit.UI;
 
+public static partial class TestLoader
+{
+	static partial void AddTestAssembliesImpl (BaseTouchRunner runner);
+
+	public static void AddTestAssemblies (BaseTouchRunner runner)
+	{
+		AddTestAssembliesImpl (runner);
+	}
+}
+
 namespace monotouchtestWatchKitExtension
 {
 	[Register ("InterfaceController")]
@@ -66,6 +76,7 @@ namespace monotouchtestWatchKitExtension
 			runner = new WatchOSRunner ();
 			runner.Filter = new NotFilter (new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingInterpreter").Filter);
 			runner.Add (GetType ().Assembly);
+			TestLoader.AddTestAssemblies (runner);
 			ThreadPool.QueueUserWorkItem ((v) =>
 			{
 				runner.LoadSync ();

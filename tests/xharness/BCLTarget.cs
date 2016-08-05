@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace xharness
@@ -40,61 +41,110 @@ namespace xharness
 		{
 		}
 
+		void Process (string test_sources, IEnumerable<string> test_files, string condition, StringBuilder [] sb, int split_count)
+		{
+			test_files = test_files.Where ((v) => !string.IsNullOrEmpty (v));
+
+			// Split the directories of the test files into 'split_count' number of chunks
+			var files_path = Path.GetDirectoryName (test_sources).Replace ("/", "\\");
+			var test_dirs = test_files.Select ((arg) =>
+			{
+				return Path.GetDirectoryName (arg);
+			}).Distinct ().OrderBy ((dir) => dir).ToArray ();
+			var split_dirs = new HashSet<string> [sb.Length];
+			var consumed_count = 0;
+			for (int i = 0; i < split_count; i++) {
+				split_dirs [i] = new HashSet<string> (test_dirs.Skip (consumed_count).Take (test_dirs.Count () / split_count));
+				consumed_count += split_dirs [i].Count;
+			}
+			split_dirs [split_count] = new HashSet<string> ();
+
+			// Hardcode some logic to make sure things continue to build when split in multiple assemblies.
+
+			// The tests for System.Collections.Concurrent, System.Threading and System.Threading.Tasks
+			// have code that depend on eachother, so put those directories in the same chunk.
+			var concurrent = split_dirs.FirstOrDefault ((v) => v.Contains ("System.Collections.Concurrent"));
+			if (concurrent != null) {
+				foreach (var dirs in split_dirs) {
+					if (concurrent == dirs) {
+						dirs.Add ("System.Threading");
+						dirs.Add ("System.Threading.Tasks");
+					} else {
+						dirs.Remove ("System.Threading");
+						dirs.Remove ("System.Threading.Tasks");
+					}
+				}
+			}
+
+			// System.Resources have tests that depend on resources being the same assembly as
+			// the executing test, so just put those tests in the main assembly.
+			var resources = split_dirs.FirstOrDefault ((v) => v.Contains ("System.Resources"));
+			if (resources != null) {
+				resources.Remove ("System.Resources");
+				split_dirs [split_count].Add ("System.Resources");
+			}
+
+			// There are also System.Reflection tests that depend on GetExecutingAssembly and
+			// expect it to be an executable assembly, so leave those in the main project as well.
+			var reflection = split_dirs.FirstOrDefault ((v) => v.Contains ("System.Reflection"));
+			if (reflection != null) {
+				reflection.Remove ("System.Reflection");
+				split_dirs [split_count].Add ("System.Reflection");
+			}
+
+			// Put each file in the corresponding project, depending on the directory for that file.
+			foreach (var s in test_files) {
+				if (string.IsNullOrEmpty (s))
+					continue;
+
+				if (IsNotSupported (test_sources, s))
+					continue;
+
+				var dir = Path.GetDirectoryName (s);
+				var idx = Array.FindIndex (split_dirs, (v) => v.Contains (dir));
+
+				sb [idx].AppendFormat ("    <Compile Include=\"{0}\\Test\\{1}\" Condition=\"{2}\">\r\n", files_path, s.Replace ("/", "\\").Trim (), condition);
+
+				var link_path = Path.GetDirectoryName (s);
+				if (string.IsNullOrEmpty (link_path) || link_path [0] == '.')
+					sb [idx].AppendFormat ("      <Link>{0}</Link>\r\n", Path.GetFileName (s));
+				else
+					sb [idx].AppendFormat ("      <Link>{0}\\{1}</Link>\r\n", link_path, Path.GetFileName (s));
+
+				sb [idx].AppendFormat ("    </Compile>\r\n");
+			}
+		}
+
 		public void Convert ()
 		{
 			var testName = TestName == "mscorlib" ? "corlib" : TestName;
 			var main_test_sources = Path.Combine (MonoPath, "mcs", "class", testName, testName + "_test.dll.sources");
 			var main_test_files = File.ReadAllLines (main_test_sources);
 			var watch_test_sources = Path.Combine (WatchMonoPath, "mcs", "class", testName, testName + "_test.dll.sources");
-			var watch_test_files = File.ReadAllLines (watch_test_sources);
+			var watch_test_files = File.ReadAllLines (watch_test_sources).Where ((arg) => !string.IsNullOrEmpty (arg));
 			var template_path = Path.Combine (Harness.RootDirectory, "bcl-test", TestName, TestName + ".csproj.template");
 			var csproj_input = File.ReadAllText (template_path);
 			var project_path = Path.Combine (Harness.RootDirectory, "bcl-test", TestName, TestName + ".csproj");
 			var csproj_output = project_path;
 
-			var sb = new StringBuilder ();
+			var split_count = testName == "corlib" ? 2 : 1; // split corlib tests into two (library) projects, it won't build for watchOS/device otherwise (the test assembly ends up getting too big).
+			var sb = new StringBuilder [split_count + 1]; // the last one is for the main project
+			for (int i = 0; i < split_count + 1; i++)
+				sb [i] = new StringBuilder ();
 
-			var files_path = Path.GetDirectoryName (main_test_sources).Replace ("/", "\\");
-			foreach (var s in main_test_files) {
-				if (string.IsNullOrEmpty (s))
-					continue;
+			Process (main_test_sources, main_test_files, "'$(TargetFrameworkIdentifier)' == 'MonoTouch' Or '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS' Or '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'", sb, split_count);
+			Process (watch_test_sources, watch_test_files, "'$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'", sb, split_count);
 
-				if (IsNotSupported (main_test_sources, s))
-					continue;
-
-				sb.AppendFormat ("    <Compile Include=\"{0}\\Test\\{1}\" Condition=\"'$(TargetFrameworkIdentifier)' == 'MonoTouch' Or '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS' Or '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'\">\r\n", files_path, s.Replace ("/", "\\").Trim ());
-
-				var link_path = Path.GetDirectoryName (s);
-				if (string.IsNullOrEmpty (link_path) || link_path [0] == '.')
-					sb.AppendFormat ("      <Link>{0}</Link>\r\n", Path.GetFileName (s));
-				else
-					sb.AppendFormat ("      <Link>{0}\\{1}</Link>\r\n", link_path, Path.GetFileName (s));
-
-				sb.AppendFormat ("    </Compile>\r\n");
+			if (split_count > 1) {
+				var split_template = File.ReadAllText (Path.Combine (Harness.RootDirectory, "bcl-test", TestName, TestName + "-split.csproj.template"));
+				for (int i = 0; i < split_count; i++) {
+					var split_output = Path.Combine (Harness.RootDirectory, "bcl-test", TestName, TestName + "-" + i + ".csproj");
+					Harness.Save (split_template.Replace ("#SPLIT#", (i + 1).ToString ()).Replace ("#FILES#", sb [i].ToString ()), split_output);
+				}
+				Harness.Save (csproj_input.Replace ("#FILES#", sb [sb.Length - 1].ToString ()), csproj_output);
+			} else {
+				Harness.Save (csproj_input.Replace ("#FILES#", sb [0].ToString ()), csproj_output);
 			}
-
-			var watch_files_path = Path.GetDirectoryName (watch_test_sources).Replace ("/", "\\");
-			foreach (var s in watch_test_files) {
-				if (string.IsNullOrEmpty (s))
-					continue;
-
-				if (IsNotSupported (watch_test_sources, s))
-					continue;
-
-				sb.AppendFormat ("    <Compile Include=\"{0}\\Test\\{1}\" Condition=\"'$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'\">\r\n", watch_files_path, s.Replace ("/", "\\").Trim ());
-
-				var link_path = Path.GetDirectoryName (s);
-				if (string.IsNullOrEmpty (link_path) || link_path [0] == '.')
-					sb.AppendFormat ("      <Link>{0}</Link>\r\n", Path.GetFileName (s));
-				else
-					sb.AppendFormat ("      <Link>{0}\\{1}</Link>\r\n", link_path, Path.GetFileName (s));
-
-				sb.AppendFormat ("    </Compile>\r\n");
-			}
-
-
-
-			Harness.Save (csproj_input.Replace ("#FILES#", sb.ToString ()), csproj_output);
 		}
 
 		bool IsNotSupported (string sourcesFile, string path)
