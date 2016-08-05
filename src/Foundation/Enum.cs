@@ -870,7 +870,9 @@ namespace XamCore.Foundation  {
 		VoIP,
 		Video,
 		Background,
-		Voice
+		Voice,
+		[Mac (10,12)][iOS (10,0)][Watch (3,0)][TV (10,0)]
+		CallSignaling = 11,
 	}
 
 	[Flags]
@@ -1241,4 +1243,14 @@ namespace XamCore.Foundation  {
 		ServerPush,
 		LocalCache
 	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[Native]
+	[Flags]
+	public enum NSMeasurementFormatterUnitOptions : nuint {
+		ProvidedUnit = (1 << 0),
+		NaturalScale = (1 << 1),
+		TemperatureWithoutUnit = (1 << 2)
+	}
+
 }
