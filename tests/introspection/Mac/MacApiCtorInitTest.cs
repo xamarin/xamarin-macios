@@ -231,6 +231,8 @@ namespace Introspection {
 			case "Accounts.ACAccountType":
 			case "MonoMac.CoreData.NSPersistentStoreCoordinator":
 			case "CoreData.NSPersistentStoreCoordinator":
+			case "AppKit.NSColorPanel":
+			case "MonoMac.AppKit.NSColorPanel":
 				do_not_dispose.Add (obj);
 				break;
 			// 10.11
