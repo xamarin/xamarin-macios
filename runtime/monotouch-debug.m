@@ -94,7 +94,20 @@ monotouch_start_debugging ()
 		if (debug_enabled) {
 			// wait for debug configuration to finish
 			gettimeofday(&wait_tv, NULL);
-			wait_ts.tv_sec = wait_tv.tv_sec + 2;
+
+			int timeout;
+#if TARGET_OS_WATCH && !TARGET_OS_SIMULATOR
+			// When debugging on a watch device, we ensure that a native debugger is attached as well
+			// (since otherwise the launch sequence takes so long that watchOS kills us).
+			// Ensuring that a native debugger is attached when debugging also makes it possible
+			// to not wait at all when a native debugger is not attached, which would otherwise
+			// slow down every debug launch. And *that* allows us to wait for as long as we wish
+			// when debugging.
+			timeout = 3600;
+#else
+			timeout = 2;
+#endif
+			wait_ts.tv_sec = wait_tv.tv_sec + timeout;
 			wait_ts.tv_nsec = wait_tv.tv_usec * 1000;
 			
 			pthread_mutex_lock (&mutex);
@@ -194,6 +207,15 @@ void monotouch_configure_debugging ()
 	} else {
 		debug_enabled = [defaults boolForKey:@"__monotouch_debug_enabled"];
 	}
+
+#if TARGET_OS_WATCH && !TARGET_OS_SIMULATOR
+	if (debug_enabled) {
+		if (!xamarin_is_native_debugger_attached ()) {
+			LOG (PRODUCT ": Debugging was disabled for watchOS because no native debugger is attached.");
+			debug_enabled = false;
+		}
+	}
+#endif
 
 	//        We get the IPs of the dev machine + one port (monodevelop_port).
 	//        We start up a thread (using the same thread that we have to start up
@@ -1234,6 +1256,53 @@ int monotouch_debug_connect (NSMutableArray *ips, int debug_port, int output_por
 	
 	return 0;
 }
+
+#if TARGET_OS_WATCH && !TARGET_OS_SIMULATOR
+#include <sys/param.h>
+extern "C" {
+// from sys/proc_info.h
+// this header is not present for device architectures (none of them), but the
+// function is still available on device, so still use it. It's obviously not public
+// API, but then again this is just for debugging purposes and only included
+// in debug builds, so it will not be shipped to the App Store.
+#define PROC_PIDT_SHORTBSDINFO 13
+#define PROC_FLAG_TRACED        2
+struct proc_bsdshortinfo {
+	uint32_t  pbsi_pid;
+	uint32_t  pbsi_ppid;
+	uint32_t  pbsi_pgid;
+	uint32_t  pbsi_status;
+	char      pbsi_comm [MAXCOMLEN];
+	uint32_t  pbsi_flags;
+	uid_t     pbsi_uid;
+	gid_t     pbsi_gid;
+	uid_t     pbsi_ruid;
+	gid_t     pbsi_rgid;
+	uid_t     pbsi_svuid;
+	gid_t     pbsi_svgid;
+	uint32_t  pbsi_rfu;
+};
+int proc_pidinfo(int pid, int flavor, uint64_t arg, void *buffer, int buffersize);
+}
+
+bool
+xamarin_is_native_debugger_attached ()
+{
+	struct proc_bsdshortinfo info;
+	int rv = proc_pidinfo (getpid (), PROC_PIDT_SHORTBSDINFO, 0, (void *) &info, sizeof (info));
+	// I couldn't find any documentation for the return value for proc_pidinfo,
+	// but it seems to always be the size of the proc_bsdshortinfo struct, so
+	// only accept any output if that's the case. We do not want to think that
+	// the debugger is attached when it really isn't, since then the app would
+	// just be killed upon launch by watchOS when hitting the launch watchdog.
+	if (rv != sizeof (info)) {
+		LOG (PRODUCT ": Couldn't get process info to determine whether a native debugger is attached (%i: %s)", errno, strerror (errno));
+		return false;
+	}
+
+	return info.pbsi_flags & PROC_FLAG_TRACED;
+}
+#endif /* TARGET_OS_WATCH && !TARGET_OS_SIMULATOR */
 
 #else
 int fix_ranlib_warning_about_no_symbols_v2;
