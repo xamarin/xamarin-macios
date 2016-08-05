@@ -39,11 +39,8 @@ namespace monotouchtestWatchKitExtension
 		[Outlet ("lblFailed")]
 		WatchKit.WKInterfaceLabel lblFailed { get; set; }
 
-		[Outlet ("lblIgnored")]
-		WatchKit.WKInterfaceLabel lblIgnored { get; set; }
-
-		[Outlet ("lblInconclusive")]
-		WatchKit.WKInterfaceLabel lblInconclusive { get; set; }
+		[Outlet ("lblIgnInc")]
+		WatchKit.WKInterfaceLabel lblIgnInc { get; set; }
 
 		[Outlet ("cmdRun")]
 		WatchKit.WKInterfaceButton cmdRun { get; set; }
@@ -106,17 +103,32 @@ namespace monotouchtestWatchKitExtension
 
 				cmdRun.SetEnabled (true);
 				lblStatus.SetText ("Done");
-				BeginInvokeOnMainThread (RenderResults);
 				running = false;
+				RenderResults ();
 			});
 		}
 
 		void RenderResults ()
 		{
-			lblSuccess.SetText (string.Format ("Passed: {0}/{1} {2}%", runner.PassedCount, runner.TestCount, 100 * runner.PassedCount / runner.TestCount));
-			lblFailed.SetText (string.Format ("Failed: {0}/{1} {2}%", runner.FailedCount, runner.TestCount, 100 * runner.FailedCount / runner.TestCount));
-			lblIgnored.SetText (string.Format ("Ignored: {0}/{1} {2}%", runner.IgnoredCount, runner.TestCount, 100 * runner.IgnoredCount / runner.TestCount));
-			lblInconclusive.SetText (string.Format ("Inconclusive: {0}/{1} {2}%", runner.InconclusiveCount, runner.TestCount, 100 * runner.InconclusiveCount / runner.TestCount));
+			if (runner.TestCount == 0)
+				return;
+
+			lblSuccess.SetText (string.Format ("P: {0}/{1} {2}%", runner.PassedCount, runner.TestCount, 100 * runner.PassedCount / runner.TestCount));
+			lblFailed.SetText (string.Format ("F: {0}/{1} {2}%", runner.FailedCount, runner.TestCount, 100 * runner.FailedCount / runner.TestCount));
+			lblIgnInc.SetText (string.Format ("I: {0}/{1} {2}%", (runner.IgnoredCount + runner.InconclusiveCount), runner.TestCount, 100 * (runner.IgnoredCount + runner.InconclusiveCount) / runner.TestCount));
+
+			if (running == false && runner.PassedCount > 0) {
+				if (runner.FailedCount == 0) {
+					lblSuccess.SetTextColor (UIKit.UIColor.Green);
+					lblStatus.SetTextColor (UIKit.UIColor.Green);
+					lblStatus.SetText ("Success");
+				}
+				if (runner.FailedCount > 0) {
+					lblFailed.SetTextColor (UIKit.UIColor.Red);
+					lblStatus.SetTextColor (UIKit.UIColor.Red);
+					lblStatus.SetText ("Failed");
+				}
+			}
 		}
 
 		partial void RunTests (NSObject obj)
