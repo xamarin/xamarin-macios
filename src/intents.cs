@@ -212,8 +212,7 @@ namespace XamCore.Intents {
 		InProgress,
 		Success,
 		Failure,
-		DeferredToApplication,
-		Done = Success
+		DeferredToApplication
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -282,7 +281,8 @@ namespace XamCore.Intents {
 		Debit,
 		Credit,
 		Prepaid,
-		Store
+		Store,
+		ApplePay
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -370,7 +370,12 @@ namespace XamCore.Intents {
 		InProgress,
 		Success,
 		Failure,
-		FailureRequiringAppLaunch
+		FailureRequiringAppLaunch,
+		FailureCredentialsUnverified,
+		FailurePaymentsAmountBelowMinimum,
+		FailurePaymentsAmountAboveMaximum,
+		FailurePaymentsCurrencyUnsupported,
+		FailureNoBankAccount
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -479,7 +484,8 @@ namespace XamCore.Intents {
 		InProgress,
 		Success,
 		Failure,
-		FailureRequiringAppLaunch
+		FailureRequiringAppLaunch,
+		FailureMessageServiceNotAvailable
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -491,7 +497,13 @@ namespace XamCore.Intents {
 		InProgress,
 		Success,
 		Failure,
-		FailureRequiringAppLaunch
+		FailureRequiringAppLaunch,
+		FailureCredentialsUnverified,
+		FailurePaymentsAmountBelowMinimum,
+		FailurePaymentsAmountAboveMaximum,
+		FailurePaymentsCurrencyUnsupported,
+		FailureInsufficientFunds,
+		FailureNoBankAccount
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -685,14 +697,6 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Unavailable (PlatformName.MacOSX)]
-	[Native]
-	public enum INRestaurantMarketingPreferencesContactMethod : nint {
-		Undefined = 0,
-		Email
-	}
-
-	[Introduced (PlatformName.iOS, 10, 0)]
 	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	public enum INIntentIdentifier {
 		[Unavailable (PlatformName.MacOSX)]
@@ -818,8 +822,8 @@ namespace XamCore.Intents {
 		[Export ("restaurant", ArgumentSemantic.Copy)]
 		INRestaurant Restaurant { get; set; }
 
-		[Export ("bookingDate", ArgumentSemantic.Copy)]
-		NSDate BookingDate { get; set; }
+		[Export ("bookingDateComponents", ArgumentSemantic.Copy)]
+		NSDateComponents BookingDateComponents { get; set; }
 
 		[Export ("partySize")]
 		nuint PartySize { get; set; }
@@ -844,25 +848,25 @@ namespace XamCore.Intents {
 
 		[Abstract]
 		[Export ("handleBookRestaurantReservation:completion:")]
-		void HandleBookRestaurantReservation (INBookRestaurantReservationIntent bookingIntent, Action<INBookRestaurantReservationIntentResponse> completion);
+		void HandleBookRestaurantReservation (INBookRestaurantReservationIntent intent, Action<INBookRestaurantReservationIntentResponse> completion);
 
 		[Export ("confirmBookRestaurantReservation:completion:")]
-		void ConfirmBookRestaurantReservation (INBookRestaurantReservationIntent bookingIntent, Action<INBookRestaurantReservationIntentResponse> completion);
+		void ConfirmBookRestaurantReservation (INBookRestaurantReservationIntent intent, Action<INBookRestaurantReservationIntentResponse> completion);
 
-		[Export ("resolveRestaurantForBookRestaurantReservation:completion:")]
-		void ResolveRestaurant (INBookRestaurantReservationIntent bookingIntent, Action<INIntentResolutionResult<INRestaurant>> completion);
+		[Export ("resolveRestaurantForBookRestaurantReservation:withCompletion:")]
+		void ResolveRestaurant (INBookRestaurantReservationIntent intent, Action<INRestaurantResolutionResult> completion);
 
-		[Export ("resolveBookingDateForBookRestaurantReservation:completion:")]
-		void ResolveBookingDate (INBookRestaurantReservationIntent bookingIntent, Action<INIntentResolutionResult<NSDate>> completion);
+		[Export ("resolveBookingDateComponentsForBookRestaurantReservation:withCompletion:")]
+		void ResolveBookingDate (INBookRestaurantReservationIntent intent, Action<INDateComponentsResolutionResult> completion);
 
-		[Export ("resolvePartySizeForBookRestaurantReservation:completion:")]
-		void ResolvePartySize (INBookRestaurantReservationIntent bookingIntent, Action<INIntentResolutionResult<NSNumber>> completion);
+		[Export ("resolvePartySizeForBookRestaurantReservation:withCompletion:")]
+		void ResolvePartySize (INBookRestaurantReservationIntent intent, Action<INIntegerResolutionResult> completion);
 
-		[Export ("resolveGuestForBookRestaurantReservation:completion:")]
-		void ResolveGuest (INBookRestaurantReservationIntent bookingIntent, Action<INIntentResolutionResult<INRestaurantGuest>> completion);
+		[Export ("resolveGuestForBookRestaurantReservation:withCompletion:")]
+		void ResolveGuest (INBookRestaurantReservationIntent intent, Action<INRestaurantGuestResolutionResult> completion);
 
-		[Export ("resolveGuestProvidedSpecialRequestTextForBookRestaurantReservation:completion:")]
-		void ResolveGuestProvidedSpecialRequest (INBookRestaurantReservationIntent bookingIntent, Action<INIntentResolutionResult<NSString>> completion);
+		[Export ("resolveGuestProvidedSpecialRequestTextForBookRestaurantReservation:withCompletion:")]
+		void ResolveGuestProvidedSpecialRequest (INBookRestaurantReservationIntent intent, Action<INStringResolutionResult> completion);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -893,22 +897,6 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INBooleanResolutionResult GetConfirmationRequired ([NullAllowed] NSNumber valueToConfirm);
-	}
-
-	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
-	[BaseType (typeof (INIntentResolutionResult))]
-	[DisableDefaultCtor]
-	interface INCallCapabilityOptionsResolutionResult {
-
-		[Static]
-		[Export ("successWithResolvedValue:")]
-		INCallCapabilityOptionsResolutionResult GetSuccess (INCallCapabilityOptions resolvedValue);
-
-
-		[Static]
-		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INCallCapabilityOptionsResolutionResult GetConfirmationRequired (INCallCapabilityOptions valueToConfirm);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1063,10 +1051,6 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithCurrencyAmountToConfirm:")]
 		INCurrencyAmountResolutionResult GetConfirmationRequired ([NullAllowed] INCurrencyAmount currencyAmountToConfirm);
-
-		[Static]
-		[Export ("needsMoreDetailsForCurrencyAmount:")]
-		INCurrencyAmountResolutionResult GetNeedsMoreDetails (INCurrencyAmount currencyAmountToComplete);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1103,10 +1087,6 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithDateComponentsRangeToConfirm:")]
 		INDateComponentsRangeResolutionResult GetConfirmationRequired ([NullAllowed] INDateComponentsRange dateComponentsRangeToConfirm);
-
-		[Static]
-		[Export ("needsMoreDetailsForDateComponentsRange:")]
-		INDateComponentsRangeResolutionResult GetNeedsMoreDetails (INDateComponentsRange dateComponentsRangeToComplete);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1170,6 +1150,25 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INDoubleResolutionResult GetConfirmationRequired ([NullAllowed] NSNumber valueToConfirm);
+	}
+
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (INIntentResolutionResult))]
+	interface INDateComponentsResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedDateComponents:")]
+		INDateComponentsResolutionResult GetSuccess (NSDateComponents resolvedDateComponents);
+
+		[Static]
+		[Export ("disambiguationWithDateComponentsToDisambiguate:")]
+		INDateComponentsResolutionResult GetDisambiguation (NSDateComponents [] componentsToDisambiguate);
+
+		[Static]
+		[Export ("confirmationRequiredWithDateComponentsToConfirm:")]
+		INDateComponentsResolutionResult GetConfirmationRequired ([NullAllowed] NSDateComponents componentsToConfirm);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1248,13 +1247,13 @@ namespace XamCore.Intents {
 
 		[Abstract]
 		[Export ("handleGetAvailableRestaurantReservationBookingDefaults:completion:")]
-		void HandleAvailableRestaurantReservationBookingDefaults (INGetAvailableRestaurantReservationBookingDefaultsIntent bookingDefaultsIntent, Action<INGetAvailableRestaurantReservationBookingDefaultsIntentResponse> completion);
+		void HandleAvailableRestaurantReservationBookingDefaults (INGetAvailableRestaurantReservationBookingDefaultsIntent intent, Action<INGetAvailableRestaurantReservationBookingDefaultsIntentResponse> completion);
 
 		[Export ("confirmGetAvailableRestaurantReservationBookingDefaults:completion:")]
-		void ConfirmAvailableRestaurantReservationBookingDefaults (INGetAvailableRestaurantReservationBookingDefaultsIntent bookingDefaultsIntent, Action<INGetAvailableRestaurantReservationBookingDefaultsIntentResponse> completion);
+		void ConfirmAvailableRestaurantReservationBookingDefaults (INGetAvailableRestaurantReservationBookingDefaultsIntent intent, Action<INGetAvailableRestaurantReservationBookingDefaultsIntentResponse> completion);
 
-		[Export ("resolveRestaurantForGetAvailableRestaurantReservationBookingDefaults:completion:")]
-		void ResolveAvailableRestaurantReservationBookingDefaults (INGetAvailableRestaurantReservationBookingDefaultsIntent bookingIntent, Action<INIntentResolutionResult<INRestaurant>> completion);
+		[Export ("resolveRestaurantForGetAvailableRestaurantReservationBookingDefaults:withCompletion:")]
+		void ResolveAvailableRestaurantReservationBookingDefaults (INGetAvailableRestaurantReservationBookingDefaultsIntent intent, Action<INRestaurantResolutionResult> completion);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1296,8 +1295,8 @@ namespace XamCore.Intents {
 		[Export ("partySize")]
 		nuint PartySize { get; set; }
 
-		[NullAllowed, Export ("preferredBookingDate", ArgumentSemantic.Copy)]
-		NSDate PreferredBookingDate { get; set; }
+		[NullAllowed, Export ("preferredBookingDateComponents", ArgumentSemantic.Copy)]
+		NSDateComponents PreferredBookingDateComponents { get; set; }
 
 		[NullAllowed, Export ("maximumNumberOfResults", ArgumentSemantic.Copy)]
 		NSNumber MaximumNumberOfResults { get; set; }
@@ -1316,19 +1315,19 @@ namespace XamCore.Intents {
 
 		[Abstract]
 		[Export ("handleGetAvailableRestaurantReservationBookings:completion:")]
-		void HandleAvailableRestaurantReservationBookings (INGetAvailableRestaurantReservationBookingsIntent showBookingsIntent, Action<INGetAvailableRestaurantReservationBookingsIntentResponse> completion);
+		void HandleAvailableRestaurantReservationBookings (INGetAvailableRestaurantReservationBookingsIntent intent, Action<INGetAvailableRestaurantReservationBookingsIntentResponse> completion);
 
 		[Export ("confirmGetAvailableRestaurantReservationBookings:completion:")]
-		void ConfirmAvailableRestaurantReservationBookings (INGetAvailableRestaurantReservationBookingsIntent showBookingsIntent, Action<INGetAvailableRestaurantReservationBookingsIntentResponse> completion);
+		void ConfirmAvailableRestaurantReservationBookings (INGetAvailableRestaurantReservationBookingsIntent intent, Action<INGetAvailableRestaurantReservationBookingsIntentResponse> completion);
 
-		[Export ("resolveRestaurantForGetAvailableRestaurantReservationBookings:completion:")]
-		void ResolveAvailableRestaurantReservationBookings (INGetAvailableRestaurantReservationBookingsIntent showBookingsIntent, Action<INIntentResolutionResult<INRestaurant>> completion);
+		[Export ("resolveRestaurantForGetAvailableRestaurantReservationBookings:withCompletion:")]
+		void ResolveAvailableRestaurantReservationBookings (INGetAvailableRestaurantReservationBookingsIntent intent, Action<INRestaurantResolutionResult> completion);
 
-		[Export ("resolvePartySizeForGetAvailableRestaurantReservationBookings:completion:")]
-		void ResolvePartySizeAvailableRestaurantReservationBookings (INGetAvailableRestaurantReservationBookingsIntent showBookingsIntent, Action<INIntentResolutionResult<NSNumber>> completion);
-		
-		[Export ("resolvePreferredBookingDateForGetAvailableRestaurantReservationBookings:completion:")]
-		void ResolvePreferredBookingDateAvailableRestaurantReservationBookings (INGetAvailableRestaurantReservationBookingsIntent showBookingsIntent, Action<INIntentResolutionResult<NSDate>> completion);
+		[Export ("resolvePartySizeForGetAvailableRestaurantReservationBookings:withCompletion:")]
+		void ResolvePartySizeAvailableRestaurantReservationBookings (INGetAvailableRestaurantReservationBookingsIntent intent, Action<INIntegerResolutionResult> completion);
+
+		[Export ("resolvePreferredBookingDateComponentsForGetAvailableRestaurantReservationBookings:withCompletion:")]
+		void ResolvePreferredBookingDateAvailableRestaurantReservationBookings (INGetAvailableRestaurantReservationBookingsIntent intent, Action<INDateComponentsResolutionResult> completion);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1369,7 +1368,7 @@ namespace XamCore.Intents {
 
 		[Abstract]
 		[Export ("handleGetRestaurantGuest:completion:")]
-		void HandleRestaurantGuest (INGetRestaurantGuestIntent guestIntent, Action<INGetRestaurantGuestIntentResponse> completion);
+		void HandleRestaurantGuest (INGetRestaurantGuestIntent intent, Action<INGetRestaurantGuestIntentResponse> completion);
 
 		[Export ("confirmGetRestaurantGuest:completion:")]
 		void ConfirmRestaurantGuest (INGetRestaurantGuestIntent guestIntent, Action<INGetRestaurantGuestIntentResponse> completion);
@@ -1475,13 +1474,13 @@ namespace XamCore.Intents {
 
 		[Abstract]
 		[Export ("handleGetUserCurrentRestaurantReservationBookings:completion:")]
-		void HandleUserCurrentRestaurantReservationBookings (INGetUserCurrentRestaurantReservationBookingsIntent showCurrentBookingsIntent, Action<INGetUserCurrentRestaurantReservationBookingsIntentResponse> completion);
+		void HandleUserCurrentRestaurantReservationBookings (INGetUserCurrentRestaurantReservationBookingsIntent intent, Action<INGetUserCurrentRestaurantReservationBookingsIntentResponse> completion);
 
 		[Export ("confirmGetUserCurrentRestaurantReservationBookings:completion:")]
-		void ConfirmUserCurrentRestaurantReservationBookings (INGetUserCurrentRestaurantReservationBookingsIntent showCurrentBookingsIntent, Action<INGetUserCurrentRestaurantReservationBookingsIntentResponse> completion);
+		void ConfirmUserCurrentRestaurantReservationBookings (INGetUserCurrentRestaurantReservationBookingsIntent intent, Action<INGetUserCurrentRestaurantReservationBookingsIntentResponse> completion);
 
-		[Export ("resolveRestaurantForGetUserCurrentRestaurantReservationBookings:completion:")]
-		void ResolveUserCurrentRestaurantReservationBookings (INGetUserCurrentRestaurantReservationBookingsIntent showCurrentBookingsIntent, Action<INIntentResolutionResult<INRestaurant>> completion);
+		[Export ("resolveRestaurantForGetUserCurrentRestaurantReservationBookings:withCompletion:")]
+		void ResolveUserCurrentRestaurantReservationBookings (INGetUserCurrentRestaurantReservationBookingsIntent intent, Action<INRestaurantResolutionResult> completion);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1807,6 +1806,10 @@ namespace XamCore.Intents {
 
 		[NullAllowed, Export ("icon", ArgumentSemantic.Copy)]
 		INImage Icon { get; }
+
+		[Static]
+		[Export ("applePayPaymentMethod")]
+		INPaymentMethod ApplePayPaymentMethod { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1815,8 +1818,11 @@ namespace XamCore.Intents {
 	[DisableDefaultCtor]
 	interface INPaymentRecord : NSCopying, NSSecureCoding {
 
-		[Export ("initWithPayee:payer:currencyAmount:paymentMethod:note:status:")]
+		[Export ("initWithPayee:payer:currencyAmount:paymentMethod:note:status:feeAmount:")]
 		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] INPerson payee, [NullAllowed] INPerson payer, [NullAllowed] INCurrencyAmount currencyAmount, [NullAllowed] INPaymentMethod paymentMethod, [NullAllowed] string note, INPaymentStatus status, [NullAllowed] INCurrencyAmount feeAmount);
+
+		[Export ("initWithPayee:payer:currencyAmount:paymentMethod:note:status:")]
 		IntPtr Constructor ([NullAllowed] INPerson payee, [NullAllowed] INPerson payer, [NullAllowed] INCurrencyAmount currencyAmount, [NullAllowed] INPaymentMethod paymentMethod, [NullAllowed] string note, INPaymentStatus status);
 
 		[NullAllowed, Export ("payee", ArgumentSemantic.Copy)]
@@ -1836,6 +1842,9 @@ namespace XamCore.Intents {
 
 		[Export ("status", ArgumentSemantic.Assign)]
 		INPaymentStatus Status { get; }
+
+		[NullAllowed, Export ("feeAmount", ArgumentSemantic.Copy)]
+		INCurrencyAmount FeeAmount { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1912,25 +1921,6 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithPersonToConfirm:")]
 		INPersonResolutionResult GetConfirmationRequired ([NullAllowed] INPerson personToConfirm);
-
-		[Static]
-		[Export ("needsMoreDetailsForPerson:")]
-		INPersonResolutionResult GetNeedsMoreDetails (INPerson personToComplete);
-	}
-
-	[Introduced (PlatformName.iOS, 10, 0)]
-	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INPhotoAttributeOptionsResolutionResult bound
-	[BaseType (typeof (INIntentResolutionResult))]
-	[DisableDefaultCtor]
-	interface INPhotoAttributeOptionsResolutionResult {
-
-		[Static]
-		[Export ("successWithResolvedValue:")]
-		INPhotoAttributeOptionsResolutionResult GetSuccess (INPhotoAttributeOptions resolvedValue);
-
-		[Static]
-		[Export ("confirmationRequiredWithValueToConfirm:")]
-		INPhotoAttributeOptionsResolutionResult GetConfirmationRequired (INPhotoAttributeOptions valueToConfirm);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1950,10 +1940,6 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithPlacemarkToConfirm:")]
 		INPlacemarkResolutionResult GetConfirmationRequired ([NullAllowed] CLPlacemark placemarkToConfirm);
-
-		[Static]
-		[Export ("needsMoreDetailsForPlacemark:")]
-		INPlacemarkResolutionResult GetNeedsMoreDetails (CLPlacemark placemarkToComplete);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2114,6 +2100,10 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntent))]
 	interface INRequestRideIntent {
 
+		[Export ("initWithPickupLocation:dropOffLocation:rideOptionName:partySize:paymentMethod:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] CLPlacemark pickupLocation, [NullAllowed] CLPlacemark dropOffLocation, [NullAllowed] INSpeakableString rideOptionName, [NullAllowed] NSNumber partySize, [NullAllowed] INPaymentMethod paymentMethod);
+
 		[NullAllowed, Export ("pickupLocation", ArgumentSemantic.Copy)]
 		CLPlacemark PickupLocation { get; }
 
@@ -2125,6 +2115,9 @@ namespace XamCore.Intents {
 
 		[NullAllowed, Export ("partySize", ArgumentSemantic.Copy)]
 		NSNumber PartySize { get; }
+
+		[NullAllowed, Export ("paymentMethod", ArgumentSemantic.Copy)]
+		INPaymentMethod PaymentMethod { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2150,12 +2143,6 @@ namespace XamCore.Intents {
 
 		[Export ("resolvePartySizeForRequestRide:withCompletion:")]
 		void ResolvePartySize (INRequestRideIntent intent, Action<INIntegerResolutionResult> completion);
-
-		[Export ("resolvePaymentMethodNameForRequestRide:withCompletion:")]
-		void ResolvePaymentMethodName (INRequestRideIntent intent, Action<INSpeakableStringResolutionResult> completion);
-
-		[Export ("resolveUsesApplePayForPaymentForRequestRide:withCompletion:")]
-		void ResolveUsesApplePayForPayment (INRequestRideIntent intent, Action<INBooleanResolutionResult> completion);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2245,25 +2232,21 @@ namespace XamCore.Intents {
 
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
-	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface INRestaurantMarketingPreferences : NSSecureCoding, NSCopying {
+	[BaseType (typeof (INIntentResolutionResult))]
+	interface INRestaurantGuestResolutionResult {
 
-		[Export ("initWithContactMethod:guestHasOptedInToMarketing:localizedDescriptionForMarketingEnabled:localizedDescriptionForMarketingNotEnabled:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (INRestaurantMarketingPreferencesContactMethod contactMethod, bool guestHasOptedInToMarketing, string localizedDescriptionForMarketingEnabled, [NullAllowed] string localizedDescriptionForMarketingNotEnabled);
+		[Static]
+		[Export ("successWithResolvedRestaurantGuest:")]
+		INRestaurantGuestResolutionResult GetSuccess (INRestaurantGuest resolvedRestaurantGuest);
 
-		[Export ("contactMethod")]
-		INRestaurantMarketingPreferencesContactMethod ContactMethod { get; }
+		[Static]
+		[Export ("disambiguationWithRestaurantGuestsToDisambiguate:")]
+		INRestaurantGuestResolutionResult GetDisambiguation (INRestaurantGuest [] restaurantGuestsToDisambiguate);
 
-		[Export ("guestHasOptedInToMarketing")]
-		bool GuestHasOptedInToMarketing { get; set; }
-
-		[Export ("localizedDescriptionForMarketingEnabled")]
-		string LocalizedDescriptionForMarketingEnabled { get; }
-
-		[NullAllowed, Export ("localizedDescriptionForMarketingNotEnabled")]
-		string LocalizedDescriptionForMarketingNotEnabled { get; }
+		[Static]
+		[Export ("confirmationRequiredWithRestaurantGuestToConfirm:")]
+		INRestaurantGuestResolutionResult GetConfirmationRequired ([NullAllowed] INRestaurantGuest restaurantGuestToConfirm);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2353,6 +2336,25 @@ namespace XamCore.Intents {
 
 		[Export ("dateStatusModified", ArgumentSemantic.Assign)]
 		NSDate DateStatusModified { get; set; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (INIntentResolutionResult))]
+	interface INRestaurantResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedRestaurant:")]
+		INRestaurantResolutionResult GetSuccess (INRestaurant resolvedRestaurant);
+
+		[Static]
+		[Export ("disambiguationWithRestaurantsToDisambiguate:")]
+		INRestaurantResolutionResult GetDisambiguation (INRestaurant [] restaurantsToDisambiguate);
+
+		[Static]
+		[Export ("confirmationRequiredWithRestaurantToConfirm:")]
+		INRestaurantResolutionResult GetConfirmationRequired ([NullAllowed] INRestaurant restaurantToConfirm);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2651,9 +2653,6 @@ namespace XamCore.Intents {
 
 		[Export ("resolveProfileNumberForSaveProfileInCar:withCompletion:")]
 		void ResolveProfileNumber (INSaveProfileInCarIntent intent, Action<INIntegerResolutionResult> completion);
-
-		[Export ("resolveProfileLabelForSaveProfileInCar:withCompletion:")]
-		void ResolveProfileLabel (INSaveProfileInCarIntent intent, Action<INStringResolutionResult> completion);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2712,9 +2711,6 @@ namespace XamCore.Intents {
 
 		[Export ("resolveRecipientForSearchCallHistory:withCompletion:")]
 		void ResolveRecipient (INSearchCallHistoryIntent intent, Action<INPersonResolutionResult> completion);
-
-		[Export ("resolveCallCapabilitiesForSearchCallHistory:withCompletion:")]
-		void ResolveCallCapabilities (INSearchCallHistoryIntent intent, Action<INCallCapabilityOptionsResolutionResult> completion);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2801,9 +2797,6 @@ namespace XamCore.Intents {
 		[Export ("resolveSendersForSearchForMessages:withCompletion:")]
 		void ResolveSenders (INSearchForMessagesIntent intent, Action<INPersonResolutionResult []> completion);
 
-		[Export ("resolveSearchTermsForSearchForMessages:withCompletion:")]
-		void ResolveSearchTerms (INSearchForMessagesIntent intent, Action<INStringResolutionResult []> completion);
-
 		[Export ("resolveAttributesForSearchForMessages:withCompletion:")]
 		void ResolveAttributes (INSearchForMessagesIntent intent, Action<INMessageAttributeOptionsResolutionResult> completion);
 
@@ -2812,9 +2805,6 @@ namespace XamCore.Intents {
 
 		[Export ("resolveIdentifiersForSearchForMessages:withCompletion:")]
 		void ResolveIdentifiers (INSearchForMessagesIntent intent, Action<INStringResolutionResult []> completion);
-
-		[Export ("resolveNotificationIdentifiersForSearchForMessages:withCompletion:")]
-		void ResolveNotificationIdentifiers (INSearchForMessagesIntent intent, Action<INStringResolutionResult []> completion);
 
 		[Export ("resolveGroupNamesForSearchForMessages:withCompletion:")]
 		void ResolveGroupNames (INSearchForMessagesIntent intent, Action<INStringResolutionResult []> completion);
@@ -2895,15 +2885,6 @@ namespace XamCore.Intents {
 		[Export ("resolveAlbumNameForSearchForPhotos:withCompletion:")]
 		void ResolveAlbumName (INSearchForPhotosIntent intent, Action<INStringResolutionResult> completion);
 
-		[Export ("resolveSearchTermsForSearchForPhotos:withCompletion:")]
-		void ResolveSearchTerms (INSearchForPhotosIntent intent, Action<INStringResolutionResult []> completion);
-
-		[Export ("resolveIncludedAttributesForSearchForPhotos:withCompletion:")]
-		void ResolveIncludedAttributes (INSearchForPhotosIntent intent, Action<INPhotoAttributeOptionsResolutionResult> completion);
-
-		[Export ("resolveExcludedAttributesForSearchForPhotos:withCompletion:")]
-		void ResolveExcludedAttributes (INSearchForPhotosIntent intent, Action<INPhotoAttributeOptionsResolutionResult> completion);
-
 		[Export ("resolvePeopleInPhotoForSearchForPhotos:withCompletion:")]
 		void ResolvePeopleInPhoto (INSearchForPhotosIntent intent, Action<INPersonResolutionResult []> completion);
 	}
@@ -2970,12 +2951,6 @@ namespace XamCore.Intents {
 
 		[Export ("resolveGroupNameForSendMessage:withCompletion:")]
 		void ResolveGroupName (INSendMessageIntent intent, Action<INStringResolutionResult> completion);
-
-		[Export ("resolveServiceNameForSendMessage:withCompletion:")]
-		void ResolveServiceName (INSendMessageIntent intent, Action<INStringResolutionResult> completion);
-
-		[Export ("resolveSenderForSendMessage:withCompletion:")]
-		void ResolveSender (INSendMessageIntent intent, Action<INPersonResolutionResult> completion);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -3104,9 +3079,10 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSetClimateSettingsInCarIntent {
 
-		[Export ("initWithEnableFan:enableAirConditioner:enableClimateControl:enableAutoMode:airCirculationMode:fanSpeedIndex:fanSpeedPercentage:relativeFanSpeedSetting:temperature:relativeTemperatureSetting:climateZone:")]
-		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSNumber enableFan, [NullAllowed] NSNumber enableAirConditioner, [NullAllowed] NSNumber enableClimateControl, [NullAllowed] NSNumber enableAutoMode, INCarAirCirculationMode airCirculationMode, [NullAllowed] NSNumber fanSpeedIndex, [NullAllowed] NSNumber fanSpeedPercentage, INRelativeSetting relativeFanSpeedSetting, [NullAllowed] INTemperature temperature, INRelativeSetting relativeTemperatureSetting, INCarSeat climateZone);
+		// TODO: We need to bind NSMeasurement<T> in order to enable this
+		//[Export ("initWithEnableFan:enableAirConditioner:enableClimateControl:enableAutoMode:airCirculationMode:fanSpeedIndex:fanSpeedPercentage:relativeFanSpeedSetting:temperature:relativeTemperatureSetting:climateZone:")]
+		//[DesignatedInitializer]
+		//IntPtr Constructor ([NullAllowed] NSNumber enableFan, [NullAllowed] NSNumber enableAirConditioner, [NullAllowed] NSNumber enableClimateControl, [NullAllowed] NSNumber enableAutoMode, INCarAirCirculationMode airCirculationMode, [NullAllowed] NSNumber fanSpeedIndex, [NullAllowed] NSNumber fanSpeedPercentage, INRelativeSetting relativeFanSpeedSetting, [NullAllowed] NSMeasurement<NSUnitTemperature> temperature, INRelativeSetting relativeTemperatureSetting, INCarSeat climateZone);
 
 		[NullAllowed, Export ("enableFan", ArgumentSemantic.Copy)]
 		NSNumber EnableFan { get; }
@@ -3132,8 +3108,9 @@ namespace XamCore.Intents {
 		[Export ("relativeFanSpeedSetting", ArgumentSemantic.Assign)]
 		INRelativeSetting RelativeFanSpeedSetting { get; }
 
-		[NullAllowed, Export ("temperature", ArgumentSemantic.Copy)]
-		INTemperature Temperature { get; }
+		// TODO: We need to bind NSMeasurement<T> in order to enable this
+		//[NullAllowed, Export ("temperature", ArgumentSemantic.Copy)]
+		//NSMeasurement<NSUnitTemperature> Temperature { get; }
 
 		[Export ("relativeTemperatureSetting", ArgumentSemantic.Assign)]
 		INRelativeSetting RelativeTemperatureSetting { get; }
@@ -3333,9 +3310,6 @@ namespace XamCore.Intents {
 
 		[Export ("resolveProfileNumberForSetProfileInCar:withCompletion:")]
 		void ResolveProfileNumber (INSetProfileInCarIntent intent, Action<INIntegerResolutionResult> completion);
-
-		[Export ("resolveProfileLabelForSetProfileInCar:withCompletion:")]
-		void ResolveProfileLabel (INSetProfileInCarIntent intent, Action<INStringResolutionResult> completion);
 
 		[Export ("resolveDefaultProfileForSetProfileInCar:withCompletion:")]
 		void ResolveDefaultProfile (INSetProfileInCarIntent intent, Action<INBooleanResolutionResult> completion);
@@ -3644,15 +3618,6 @@ namespace XamCore.Intents {
 		[Export ("resolveAlbumNameForStartPhotoPlayback:withCompletion:")]
 		void ResolveAlbumName (INStartPhotoPlaybackIntent intent, Action<INStringResolutionResult> completion);
 
-		[Export ("resolveSearchTermsForStartPhotoPlayback:withCompletion:")]
-		void ResolveSearchTerms (INStartPhotoPlaybackIntent intent, Action<INStringResolutionResult []> completion);
-
-		[Export ("resolveIncludedAttributesForStartPhotoPlayback:withCompletion:")]
-		void ResolveIncludedAttributes (INStartPhotoPlaybackIntent intent, Action<INPhotoAttributeOptionsResolutionResult> completion);
-
-		[Export ("resolveExcludedAttributesForStartPhotoPlayback:withCompletion:")]
-		void ResolveExcludedAttributes (INStartPhotoPlaybackIntent intent, Action<INPhotoAttributeOptionsResolutionResult> completion);
-
 		[Export ("resolvePeopleInPhotoForStartPhotoPlayback:withCompletion:")]
 		void ResolvePeopleInPhoto (INStartPhotoPlaybackIntent intent, Action<INPersonResolutionResult []> completion);
 	}
@@ -3786,6 +3751,7 @@ namespace XamCore.Intents {
 
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INStringResolutionResult {
 
@@ -3804,41 +3770,22 @@ namespace XamCore.Intents {
 
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
-	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface INTemperature : NSCopying, NSSecureCoding {
-
-		[Export ("initWithUnit:value:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (NSUnitTemperature unit, NSNumber value);
-
-		[NullAllowed, Export ("unit", ArgumentSemantic.Copy)]
-		NSUnitTemperature Unit { get; }
-
-		[NullAllowed, Export ("value", ArgumentSemantic.Copy)]
-		NSNumber Value { get; }
-	}
-
-	[Introduced (PlatformName.iOS, 10, 0)]
-	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INTemperatureResolutionResult {
 
-		[Static]
-		[Export ("successWithResolvedTemperature:")]
-		INTemperatureResolutionResult GetSuccess (INTemperature resolvedTemperature);
+		// TODO: we need to bind NSMeasurement<T> in order to enable this
+		//[Static]
+		//[Export ("successWithResolvedTemperature:")]
+		//INTemperatureResolutionResult GetSuccess (NSMeasurement<NSUnitTemperature> resolvedTemperature);
 
-		[Static]
-		[Export ("disambiguationWithTemperaturesToDisambiguate:")]
-		INTemperatureResolutionResult GetDisambiguation (INTemperature [] temperaturesToDisambiguate);
+		//[Static]
+		//[Export ("disambiguationWithTemperaturesToDisambiguate:")]
+		//INTemperatureResolutionResult GetDisambiguation (NSMeasurement<NSUnitTemperature> [] temperaturesToDisambiguate);
 
-		[Static]
-		[Export ("confirmationRequiredWithTemperatureToConfirm:")]
-		INTemperatureResolutionResult GetConfirmationRequired ([NullAllowed] INTemperature temperatureToConfirm);
-
-		[Static]
-		[Export ("needsMoreDetailsForTemperature:")]
-		INTemperatureResolutionResult GetNeedsMoreDetails (INTemperature temperatureToComplete);
+		//[Static]
+		//[Export ("confirmationRequiredWithTemperatureToConfirm:")]
+		//INTemperatureResolutionResult GetConfirmationRequired ([NullAllowed] NSMeasurement<NSUnitTemperature> temperatureToConfirm);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -3881,6 +3828,7 @@ namespace XamCore.Intents {
 
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INWorkoutGoalUnitTypeResolutionResult bound
+	[DisableDefaultCtor]
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INWorkoutGoalUnitTypeResolutionResult {
 
@@ -3895,6 +3843,7 @@ namespace XamCore.Intents {
 
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INWorkoutLocationTypeResolutionResult bound
+	[DisableDefaultCtor]
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INWorkoutLocationTypeResolutionResult {
 
