@@ -50,12 +50,19 @@ int output_port;
 int debug_port; 
 char *debug_host = NULL;
 
+enum DebuggingMode
+{
+	DebuggingModeNone,
+	DebuggingModeUsb,
+	DebuggingModeWifi,
+};
+
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 static bool debugging_configured = false;
 static bool profiler_configured = false;
 static bool config_timedout = false;
-static bool usb_debugging = false;  
+static DebuggingMode debugging_mode = DebuggingModeWifi;
 static const char *connection_mode = "default"; // this is set from the cmd line, can be either 'usb', 'wifi' or 'none'
 
 int monotouch_connect_usb ();
@@ -333,7 +340,7 @@ void monotouch_configure_debugging ()
 					}
 				} else if (!strncmp ("USB Debugging: ", line, 15) && (connection_mode == NULL || !strcmp (connection_mode, "default"))) {
 #if defined(__arm__) || defined(__aarch64__)
-					usb_debugging = !strncmp ("USB Debugging: 1", line, 16);
+					debugging_mode = !strncmp ("USB Debugging: 1", line, 16) ? DebuggingModeUsb : DebuggingModeWifi;
 #endif
 				} else if (!strncmp ("Port: ", line, 6) && monodevelop_port == -1) {
 					monodevelop_port = strtol (line + 6, NULL, 10);
@@ -350,19 +357,19 @@ void monotouch_configure_debugging ()
 		// connection_mode is set from the command line, and will override any other setting
 		if (connection_mode != NULL) {
 			if (!strcmp (connection_mode, "usb")) {
-				usb_debugging = true;
+				debugging_mode = DebuggingModeUsb;
 			} else if (!strcmp (connection_mode, "wifi")) {
-				usb_debugging = false;
+				debugging_mode = DebuggingModeWifi;
 			}
 		}
 
 		if (monodevelop_port <= 0) {
 			LOG (PRODUCT ": Invalid IDE Port: %i\n", monodevelop_port);
 		} else {
-			LOG (PRODUCT ": IDE Port: %i Transport: %s\n", monodevelop_port, usb_debugging ? "USB" : "WiFi");
-			if (usb_debugging) {
+			LOG (PRODUCT ": IDE Port: %i Transport: %s\n", monodevelop_port, debugging_mode == DebuggingModeUsb ? "USB" : "WiFi");
+			if (debugging_mode == DebuggingModeUsb) {
 				rv = monotouch_connect_usb ();
-			} else {
+			} else if (debugging_mode == DebuggingModeWifi) {
 				rv = monotouch_connect_wifi (hosts);
 			} 
 		}
