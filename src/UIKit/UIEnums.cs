@@ -1914,5 +1914,21 @@ namespace XamCore.UIKit {
 		Spring,
 		Composed
 	}
-	
+
+	[iOS(10,0)]
+	[Native]
+	public enum UIAccessibilityHearingDeviceEar : nuint {
+		None = 0,
+		Left = 1 << 1,
+		Right = 1 << 2,
+		Both = Left | Right
+	}
+
+	[iOS(10,0)]
+	[Native]
+	public enum UIAccessibilityCustomRotorDirection : nint
+	{
+		Previous,
+		Next
+	}
 }
