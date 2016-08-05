@@ -11,7 +11,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+#if !WATCH
 using XamCore.CoreAnimation;
+#endif
 using XamCore.Foundation;
 
 namespace XamCore.SceneKit
@@ -42,6 +44,7 @@ namespace XamCore.SceneKit
 			return GetEnumerator ();
 		}
 
+#if !WATCH
 		public void AddAnimation (CAAnimation animation, string key)
 		{
 			if (key == null) {
@@ -128,5 +131,7 @@ namespace XamCore.SceneKit
 			EnumerateChildNodes (predHandler);
 		}
 #endif
+
+#endif // !WATCH
 	}
 }

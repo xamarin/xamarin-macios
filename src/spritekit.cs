@@ -20,10 +20,7 @@ using XamCore.Foundation;
 using XamCore.CoreFoundation;
 using XamCore.CoreGraphics;
 using XamCore.CoreVideo;
-
-#if !WATCH // FIXME: scenekit not yet enabled
 using XamCore.SceneKit;
-#endif
 
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
@@ -70,7 +67,6 @@ namespace XamCore.SpriteKit {
 		[Export ("viewportSize")]
 		CGSize ViewportSize { get; set; }
 
-#if !WATCH // FIXME SceneKit not yet enabled on watch profile
 		[NullAllowed] // by default this property is null
 		[Export ("scnScene", ArgumentSemantic.Retain)]
 		SCNScene ScnScene { get; set; }
@@ -100,7 +96,6 @@ namespace XamCore.SpriteKit {
 
 		[Wrap ("HitTest (thePoint, options == null ? null : options.Dictionary)")]
 		SCNHitTestResult [] HitTest (CGPoint thePoint, SCNHitTestOptions options);
-#endif
 
 		[Export ("projectPoint:")]
 		/* vector_float3 */

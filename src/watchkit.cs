@@ -15,6 +15,7 @@ using XamCore.HealthKit;
 using XamCore.HomeKit;
 using XamCore.PassKit;
 using XamCore.SpriteKit;
+using XamCore.SceneKit;
 using XamCore.UIKit;
 using XamCore.MapKit;
 using XamCore.UserNotifications;
@@ -1180,15 +1181,12 @@ namespace XamCore.WatchKit {
 	interface WKInterfacePaymentButton {
 	}
 
-#if false // FIXME SceneKit not yet enabled on platform
 	[Watch (3,0)][NoiOS]
 	[BaseType (typeof (WKInterfaceObject))]
 	[DisableDefaultCtor] // Do not subclass or create instances of this class yourself. -> Handle is nil if init is called
-	interface WKInterfaceSCNScene : ISCNSceneRenderer {
+	interface WKInterfaceSCNScene : SCNSceneRenderer {
 
-		[NullAllowed, Export ("scene", ArgumentSemantic.Retain)]
-		SCNScene Scene { get; set; }
-
+		[Export ("snapshot")]
 		UIImage GetSnapshot ();
 
 		[Export ("preferredFramesPerSecond")]
@@ -1197,7 +1195,6 @@ namespace XamCore.WatchKit {
 		[Export ("antialiasingMode", ArgumentSemantic.Assign)]
 		SCNAntialiasingMode AntialiasingMode { get; set; }
 	}
-#endif
 
 	[Watch (3,0)][NoiOS]
 	[BaseType (typeof (WKInterfaceObject))]
