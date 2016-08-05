@@ -11,6 +11,9 @@
 
 #ifdef DEBUG
 
+//#define LOG_HTTP(...) do { NSLog (@ __VA_ARGS__); } while (0);
+#define LOG_HTTP(...)
+
 #include <UIKit/UIKit.h>
 
 #include <zlib.h>
@@ -32,6 +35,7 @@
 #include <objc/objc.h>
 #include <objc/runtime.h>
 #include <sys/shm.h>
+#include <libkern/OSAtomic.h>
 
 #include "xamarin/xamarin.h"
 #include "runtime-internal.h"
@@ -55,6 +59,7 @@ enum DebuggingMode
 	DebuggingModeNone,
 	DebuggingModeUsb,
 	DebuggingModeWifi,
+	DebuggingModeHttp,
 };
 
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -63,10 +68,11 @@ static bool debugging_configured = false;
 static bool profiler_configured = false;
 static bool config_timedout = false;
 static DebuggingMode debugging_mode = DebuggingModeWifi;
-static const char *connection_mode = "default"; // this is set from the cmd line, can be either 'usb', 'wifi' or 'none'
+static const char *connection_mode = "default"; // this is set from the cmd line, can be either 'usb', 'wifi', 'http' or 'none'
 
 int monotouch_connect_usb ();
 int monotouch_connect_wifi (NSMutableArray *hosts);
+int xamarin_connect_http (NSMutableArray *hosts);
 int monotouch_debug_listen (int debug_port, int output_port);
 int monotouch_debug_connect (NSMutableArray *hosts, int debug_port, int output_port);
 void monotouch_configure_debugging ();
@@ -77,6 +83,272 @@ bool monotouch_process_connection (int fd);
 static struct timeval wait_tv;
 static struct timespec wait_ts;
 
+static NSURLSessionConfiguration *http_session_config = NULL;
+static volatile int http_connect_counter = 0;
+
+/*
+ * XamarinHttpConnection
+ */
+
+/*
+ * Debugging over http
+ *
+ * The watchOS device has limited networking support; in particular
+ * it does not allow inbound/output network connections using 'bind'
+ * (kernel-level sandbox restrictions).
+ *
+ * This means that we can't use BSD sockets to connect to the debugger
+ * in the IDE on the desktop. Instead we create an http tunnel that
+ * knows how to convert socket send/recv data into http requests on
+ * both sides.
+ *
+ * To avoid touching existing (and working) code as much as possible,
+ * the following is done:
+ *
+ * A pair of socket is created in the process (since this is not
+ * inbound/output networking it's apparently allowed) using socketpair.
+ * One of those sockets is given to mono/sdb, and for mono/sdb no
+ * code changes are required. Then we create read/write threads for the
+ * other socket that transforms recv/send calls into http requests.
+ *
+ * A complication is that there doesn't seem to be a way to create
+ * a streaming http upload using NSUrlSession, the data to upload
+ * must be known when creating the request. This means that we need
+ * to create a new http request for every write on the socket done
+ * by mono/sdb.
+ *
+ * * The only API (that I could find) that implements 
+ *   a streaming upload is [NSURLSession uploadTaskWithStreamedRequest:].
+ *   However that API uses an NSInputStream to fetch the data, and
+ *   there is no built-in way in the API to create a streaming NSInputStream,
+ *   you have to provide an existing file or NSData. It is technically
+ *   possible to subclass NSInputStream (using private API), and this works
+ *   fine on iOS, but not on watchOS (NSInputStreams are really CFReadStreams
+ *   in disguise, and watchOS casts the NSInputStream to a CFReadStream and
+ *   pokes directly into CFReadSTream fields, thus accessing
+ *   random memory). There is CFStreamCreatePairWithSocket, which creates
+ *   a CFReadStream from a socket (which we could in theory connect directly
+ *   to one of the in-process sockets we got), but it doesn't work 
+ *   on watchOS (it works fine on iOS) - no data is ever read from the
+ *   socket.
+ *
+ * The process goes as follows:
+ * 
+ * a) The IDE listens for connections on a port on the desktop
+ *    (for the IDE this is exactly the same as the WiFi debug mode).
+ *    and asks mlaunch to launch the app on the watch, passing
+ *    the port as an argument + environment variable.
+ * b) mlaunch will intervene, and create the desktop side of the
+ *    http tunnel. This involves a different port, so mlaunch
+ *    will change the arguments/environment variables that are
+ *    passed to the app to reflect the different port. mlaunch
+ *    will also enable the 'http' mode.
+ * c) The app will launch on device, and create the app side of
+ *    the http tunnel.
+ * c) When the app connects to the IDE, an HTTP GET request is sent.
+ *    This request is kept open, and will stream/download data as
+ *    it's written to the socket on the desktop by the IDE.
+ *    The request includes the PID, so that mlaunch can ignore
+ *    requests from other processes (it seems watchOS sends the
+ *    requests from a different process, because the desktop can
+ *    receive requests way after a process has terminated, which
+ *    also means a lingering request from an earlier process would
+ *    confuse the IDE if mlaunch didn't filter them out). The GET 
+ *    request also contains a monotonically increasing ID.
+ * d) When the app sends sends data to the IDE, a HTTP POST request is
+ *    sent. The full data for the post has to be provided when the
+ *    request is sent, which means that we'll send a HTTP POST request
+ *    every time the app calls 'send' on the app's socket. The request
+ *    includes the PID and the ID from the corresponding GET request,
+ *    so that mlaunch can match multiple POST requests to the correct
+ *    GET request. The request also includes a monotonically increasing
+ *    upload-id, so that mlaunch can order them properly, because http
+ *    requests may not reach the desktop in the same order they were sent.
+ *
+ */
+
+@interface XamarinHttpConnection : NSObject<NSURLSessionDelegate> {
+	NSURLSession *http_session;
+	int http_sockets[2];
+	volatile int http_send_counter;
+}
+	@property void (^completion_handler)(bool);
+	@property (copy) NSString* ip;
+	@property int id;
+
+	-(int) fileDescriptor;
+	-(int) localDescriptor;
+	-(void) reportCompletion: (bool) success;
+
+	-(void) connect: (NSString *) ip port: (int) port completionHandler: (void (^)(bool)) completionHandler;
+	-(void) sendData: (void *) buffer length: (int) length;
+
+	/* NSURLSessionDelegate */
+	-(void) URLSession:(NSURLSession *)session didBecomeInvalidWithError:(NSError *)error;
+	-(void) URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler;
+
+	/* NSURLSessionDataDelegate */
+	-(void) URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler;
+	-(void) URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data;
+
+	/* NSURLSessionTaskDelegate */
+	-(void) URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error;
+@end
+
+static void *
+xamarin_http_send (void *c)
+{
+	XamarinHttpConnection *connection = (XamarinHttpConnection *) c;
+	@autoreleasepool {
+		int fd = connection.localDescriptor;
+		void* buf [1024];
+		do {
+			LOG_HTTP ("%i http send reading to send data to fd=%i", connection.id, fd);
+			errno = 0;
+			int rv = read (fd, buf, 1024);
+			LOG_HTTP ("%i http send read %i bytes from fd=%i; %i=%s", connection.id, rv, fd, errno, strerror (errno));
+			if (rv > 0) {
+				[connection sendData: buf length: rv];
+			} else if (rv == -1) {
+				if (errno == EINTR)
+					continue;
+				LOG_HTTP ("%i http send: %i => %s", connection.id, errno, strerror (errno));
+				break;
+			} else {
+				LOG_HTTP ("%i http send: eof", connection.id);
+				break;
+			}
+		} while (true);
+		LOG_HTTP ("%i http send done", connection.id);
+	}
+	return NULL;
+}
+
+@implementation XamarinHttpConnection
+-(void) reportCompletion: (bool) success
+{
+	LOG_HTTP ("%i reportCompletion (%i) completion_handler: %p", self.id, success, self.completion_handler);
+	if (self.completion_handler) {
+		self.completion_handler (success);
+		self.completion_handler = NULL; // don't call more than once.
+	}
+}
+
+
+-(int) fileDescriptor
+{
+	return http_sockets [0];	
+}
+
+-(int) localDescriptor
+{
+	return http_sockets [1];
+}
+
+-(void) connect: (NSString *) ip port: (int) port completionHandler: (void (^)(bool)) completionHandler
+{
+	LOG_HTTP ("Connecting to: %@:%i", ip, port);
+
+	self.completion_handler = completionHandler;
+	self.id = ++http_connect_counter;
+
+	int rv = socketpair (PF_LOCAL, SOCK_STREAM, 0, http_sockets);
+	if (rv != 0) {
+		[self reportCompletion: false];
+		return;
+	}
+
+	LOG_HTTP ("%i Created socket pair: %i, %i", self.id, http_sockets [0], http_sockets [1]);
+
+	pthread_t thr;
+	pthread_create (&thr, NULL, xamarin_http_send, self);
+	pthread_detach (thr);
+
+	if (http_session_config == NULL) {
+		http_session_config = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+		http_session_config.allowsCellularAccess = NO; // debugging data should never go over cellular
+		http_session_config.networkServiceType = NSURLNetworkServiceTypeVoIP; // not quite right, but this will wake up the app for incoming network traffic
+		http_session_config.timeoutIntervalForRequest = 3600; // 1 hour
+		http_session_config.requestCachePolicy = NSURLRequestReloadIgnoringLocalCacheData; // do not cache anything
+		http_session_config.HTTPMaximumConnectionsPerHost = 20;
+	}
+
+	http_session = [NSURLSession sessionWithConfiguration: http_session_config delegate: self delegateQueue: NULL];
+
+	NSURL *downloadURL = [NSURL URLWithString: [NSString stringWithFormat: @"http://%@:%i/download?pid=%i&id=%i", self.ip, monodevelop_port, getpid (), self.id]];
+	NSURLSessionDataTask *downloadTask = [http_session dataTaskWithURL: downloadURL];
+	[downloadTask resume];
+
+	LOG_HTTP ("%i Connected to: %@:%i downloadTask: %@", self.id, ip, port, [[downloadTask currentRequest] URL]);
+}
+
+-(void) sendData: (void *) buffer length: (int) length
+{
+	int c = OSAtomicIncrement32Barrier (&http_send_counter);
+
+	NSURL *uploadURL = [NSURL URLWithString: [NSString stringWithFormat: @"http://%@:%i/upload?pid=%i&id=%i&upload-id=%i", self.ip, monodevelop_port, getpid (), self.id, c]];
+	LOG_HTTP ("%i sendData length: %i url: %@", self.id, length, uploadURL);
+	NSMutableURLRequest *uploadRequest = [[[NSMutableURLRequest alloc] initWithURL: uploadURL] autorelease];
+	uploadRequest.HTTPMethod = @"POST";
+	NSURLSessionUploadTask *uploadTask = [http_session uploadTaskWithRequest: uploadRequest fromData: [NSData dataWithBytes: buffer length: length]];
+	[uploadTask resume];
+}
+
+/* NSURLSessionDataDelegate */
+-(void) URLSession: (NSURLSession *) session didBecomeInvalidWithError: (NSError *) error
+{
+	NSLog (@PRODUCT ": Connection to the debugger failed (id: %i didBecomeInvalidWithError: %@).", self.id, error);
+	[self reportCompletion: false];
+}
+
+-(void) URLSession: (NSURLSession *) session didReceiveChallenge: (NSURLAuthenticationChallenge *) challenge completionHandler: (void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential)) completionHandler
+{
+	LOG_HTTP ("%i didReceiveChallenge", self.id);
+}
+
+-(void) URLSession: (NSURLSession *) session dataTask: (NSURLSessionDataTask *) dataTask didReceiveResponse: (NSURLResponse *) response completionHandler: (void (^)(NSURLSessionResponseDisposition disposition)) completionHandler
+{
+	LOG_HTTP ("%i didReceiveResponse: task: %@ url: %@", self.id, dataTask, [[dataTask originalRequest] URL]);
+	completionHandler (NSURLSessionResponseAllow);
+	[self reportCompletion: true];
+}
+
+-(void) URLSession: (NSURLSession *) session dataTask: (NSURLSessionDataTask *) dataTask didReceiveData: (NSData *) data
+{
+	// We got data from the IDE.
+	LOG_HTTP ("%i didReceiveData length: %li %@", self.id, (unsigned long) [data length], data);
+
+	[data enumerateByteRangesUsingBlock: ^(const void *bytes, NSRange byteRange, BOOL *stop) {
+		int fd = self.localDescriptor;
+		int wr;
+		NSUInteger total = byteRange.length;
+		NSUInteger left = total;
+		while (left > 0) {
+			do {
+				wr = write (fd, bytes, left);
+			} while (wr == -1 && errno == EINTR);
+			if (wr > 0) {
+				left -= wr;
+				LOG_HTTP ("%i didReceiveData wrote %i/%lu bytes to %i; %lu bytes left", self.id, wr, (unsigned long) total, fd, (unsigned long) left);
+			} else if (wr == 0) {
+				LOG_HTTP ("%i didReceiveData no data written.", self.id);
+			} else {
+				LOG_HTTP ("%i didReceiveData error occured: %i = %s", self.id, errno, strerror (errno));
+				break;
+			}
+		}
+	}];
+}
+
+-(void) URLSession: (NSURLSession *) session task: (NSURLSessionTask *) task didCompleteWithError: (NSError *) error
+{
+	if (error) {
+		NSLog (@PRODUCT ": Connection to the debugger failed (id: %i didCompleteWithError: %@ task: %@ url: %@)", self.id, error, task, [[task originalRequest] URL]);
+	} else {
+		LOG_HTTP ("%i didCompleteWithError: SUCCESS task: %@ url: %@", self.id, task, [[task originalRequest] URL]);
+	}
+}
+@end /* XamarinHttpConnection */
 
 void
 monotouch_set_connection_mode (const char *mode)
@@ -369,18 +641,22 @@ void monotouch_configure_debugging ()
 				debugging_mode = DebuggingModeUsb;
 			} else if (!strcmp (connection_mode, "wifi")) {
 				debugging_mode = DebuggingModeWifi;
+			} else if (!strcmp (connection_mode, "http")) {
+				debugging_mode = DebuggingModeHttp;
 			}
 		}
 
 		if (monodevelop_port <= 0) {
 			LOG (PRODUCT ": Invalid IDE Port: %i\n", monodevelop_port);
 		} else {
-			LOG (PRODUCT ": IDE Port: %i Transport: %s\n", monodevelop_port, debugging_mode == DebuggingModeUsb ? "USB" : "WiFi");
+			LOG (PRODUCT ": IDE Port: %i Transport: %s\n", monodevelop_port, debugging_mode == DebuggingModeHttp ? "HTTP" : (debugging_mode == DebuggingModeUsb ? "USB" : "WiFi"));
 			if (debugging_mode == DebuggingModeUsb) {
 				rv = monotouch_connect_usb ();
 			} else if (debugging_mode == DebuggingModeWifi) {
 				rv = monotouch_connect_wifi (hosts);
-			} 
+			} else if (debugging_mode == DebuggingModeHttp) {
+				rv = xamarin_connect_http (hosts);
+			}
 		}
 	}
 
@@ -471,6 +747,70 @@ int sdb_recv (void *buf, int len)
 	}
 
 	return rv;
+}
+
+static XamarinHttpConnection *connected_connection = NULL;
+static NSString *connected_ip = NULL;
+static pthread_cond_t connected_event = PTHREAD_COND_INITIALIZER;
+static pthread_mutex_t connected_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+int
+xamarin_connect_http (NSMutableArray *ips)
+{
+	// COOP: this is at startup and doesn't access managed memory, so we should be in safe mode here.
+	MONO_ASSERT_GC_STARTING;
+	
+	int ip_count = [ips count];
+	NSMutableArray<XamarinHttpConnection *> *connections = NULL;
+
+	if (ip_count == 0) {
+		NSLog (@PRODUCT ": No IPs to connect to.");
+		return 2;
+	}
+	
+	NSLog (@PRODUCT ": Connecting to %i IPs.", ip_count);
+
+	connections = [[[NSMutableArray<XamarinHttpConnection *> alloc] init] autorelease];
+
+	do {
+		pthread_mutex_lock (&connected_mutex);
+		if (connected_connection != NULL) {
+			LOG_HTTP ("Will reconnect");
+			// We've already made sure one IP works, no need to try the others again.
+			[ips removeAllObjects];
+			[ips addObject: connected_ip];
+			connected_connection = NULL;
+		}
+		pthread_mutex_unlock (&connected_mutex);
+
+		for (int i = 0; i < [ips count]; i++) {
+			XamarinHttpConnection *connection = [[[XamarinHttpConnection alloc] init] autorelease];
+			connection.ip = [ips objectAtIndex: i];
+			[connections addObject: connection];
+			[connection connect: [ips objectAtIndex: i] port: monodevelop_port completionHandler: ^void (bool success)
+			{
+				LOG_HTTP ("Connected: %@: %i", connection, success);
+				if (success) {
+					pthread_mutex_lock (&connected_mutex);
+					if (connected_connection == NULL) {
+						connected_ip = [connection ip];
+						connected_connection = connection;
+						pthread_cond_signal (&connected_event);
+					}
+					pthread_mutex_unlock (&connected_mutex);
+				}
+			}];
+		}
+
+		LOG_HTTP ("Will wait for connections");
+		pthread_mutex_lock (&connected_mutex);
+		while (connected_connection == NULL)
+			pthread_cond_wait (&connected_event, &connected_mutex);
+		pthread_mutex_unlock (&connected_mutex);
+		LOG_HTTP ("Connection received fd: %i", connected_connection.fileDescriptor);
+	} while (monotouch_process_connection (connected_connection.fileDescriptor));
+
+	return 0;
 }
 
 int monotouch_connect_wifi (NSMutableArray *ips)
