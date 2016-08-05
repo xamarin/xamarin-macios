@@ -454,9 +454,43 @@ namespace xharness
 						writer.WriteLine ("\t$(Q) echo Exec succeeded"); // This is important, otherwise we'll end up executing the catch-all run-% target
 						writer.WriteLine ();
 					}
-					writer.WriteTarget ("exec{0}-dev{2}-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-					writer.WriteLine ("\t$(Q) rm -f \"$@.log\"");
-					writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG)", target.ProjectPath, target.Platform);
+					var chunks = new List<string> ();
+					if (target is WatchOSTarget && target.IsBCLProject) {
+						if (target.Name == "mscorlib") {
+							for (int i = (int) 'A'; i <= (int) 'Z'; i++) {
+								chunks.Add (((char) i).ToString () + ((char) i).ToString ());
+							}
+						} else if (target.Name == "System") {
+							chunks.Add ("AE");
+							chunks.Add ("FJ");
+							chunks.Add ("KR");
+							chunks.Add ("ST");
+							chunks.Add ("UZ");
+						}
+					}
+					if (chunks.Count > 0) {
+						var chunked_targets = new List<string> ();
+						foreach (var chunk in chunks) {
+							var chunk_name = chunk [0] == chunk [1] ? chunk [0].ToString () : chunk;
+							chunk_name = chunk_name.ToLowerInvariant ();
+							var target_name = string.Format ("exec{0}-dev{2}-{1}-{3}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix, chunk_name);
+							writer.WriteTarget (target_name, "xharness/xharness.exe");
+							writer.WriteLine ("\t@echo Executing subset: {0}-{1}", chunk [0], chunk [1]);
+							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG) --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --setenv:NUNIT_FILTER_START={2} --setenv:NUNIT_FILTER_END={3}", target.ProjectPath, target.Platform, chunk [0], chunk [1]);
+							writer.WriteLine ();
+							writer.WriteTarget ("run{0}-dev{2}-{1}-{3}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix, chunk_name);
+							writer.WriteLine ("\t$(Q) $(MAKE) build{0}-dev{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+							writer.WriteLine ("\t$(Q) $(MAKE) install{0}-dev{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+							writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-dev{2}-{1}-{3}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix, chunk_name);
+							writer.WriteLine ();
+							chunked_targets.Add (target_name);
+						}
+						writer.WriteTarget ("exec{0}-dev{2}-{1}", string.Join (" ", chunked_targets), make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						writer.WriteLine ("\t@echo Chunked tests {0} succeeded.", target.Name);
+					} else {
+						writer.WriteTarget ("exec{0}-dev{2}-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG) --logdirectory \"$(abspath $(CURDIR))/logs/$@\"", target.ProjectPath, target.Platform);
+					}
 					writer.WriteLine ();
 
 					if (target is ClassicTarget) {

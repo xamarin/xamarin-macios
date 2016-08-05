@@ -71,7 +71,15 @@ namespace monotouchtestWatchKitExtension
 		void LoadTests ()
 		{
 			runner = new WatchOSRunner ();
-			runner.Filter = new NotFilter (new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingInterpreter,RequiresBSDSockets").Filter);
+			var categoryFilter = new NotFilter (new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingInterpreter,RequiresBSDSockets").Filter);
+			if (!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("NUNIT_FILTER_START"))) {
+				var firstChar = Environment.GetEnvironmentVariable ("NUNIT_FILTER_START") [0];
+				var lastChar = Environment.GetEnvironmentVariable ("NUNIT_FILTER_END") [0];
+				var nameFilter = new NameStartsWithFilter () { FirstChar = firstChar, LastChar = lastChar };
+				runner.Filter = new AndFilter (categoryFilter, nameFilter);
+			} else {
+				runner.Filter = categoryFilter;
+			}
 			runner.Add (GetType ().Assembly);
 			TestLoader.AddTestAssemblies (runner);
 			ThreadPool.QueueUserWorkItem ((v) =>
@@ -138,3 +146,34 @@ namespace monotouchtestWatchKitExtension
 	}
 }
 
+class NameStartsWithFilter : NUnit.Framework.Internal.TestFilter
+{
+	public char FirstChar;
+	public char LastChar;
+
+	public override bool Match (NUnit.Framework.Api.ITest test)
+	{
+		if (test is NUnit.Framework.Internal.TestAssembly)
+			return true;
+
+		var method = test as NUnit.Framework.Internal.TestMethod;
+		if (method != null)
+			return Match (method.Parent);
+		
+		var name = !string.IsNullOrEmpty (test.Name) ? test.Name : test.FullName;
+		bool rv;
+		if (string.IsNullOrEmpty (name)) {
+			rv = true;
+		} else {
+			var z = Char.ToUpperInvariant (name [0]);
+			rv = z >= Char.ToUpperInvariant (FirstChar) && z <= Char.ToUpperInvariant (LastChar);
+		}
+
+		return rv;
+	}
+
+	public override bool Pass (NUnit.Framework.Api.ITest test)
+	{
+		return Match (test);
+	}
+}

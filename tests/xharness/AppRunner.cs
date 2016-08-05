@@ -372,6 +372,9 @@ namespace xharness
 			args.AppendFormat (" -argument=-app-arg:-hostport:{0}", listener.Port);
 			args.AppendFormat (" -setenv=NUNIT_HOSTPORT={0}", listener.Port);
 
+			foreach (var kvp in Harness.EnvironmentVariables)
+				args.AppendFormat (" -setenv={0}={1}", kvp.Key, kvp.Value);
+
 			bool? success = null;
 			bool timed_out = false;
 
