@@ -174,6 +174,7 @@ namespace Introspection
 			"Hls",
 			"Hrtf", // acronym used in AUSpatializationAlgorithm
 			"Hvxc", // MPEG4ObjectID
+			"Ies",
 			"Icq",
 			"Identd",
 			"Imagefor",
@@ -217,6 +218,7 @@ namespace Introspection
 			"Megaohms",
 			"Megapascals",
 			"Metacharacters",
+			"Metalness",
 			"Microampere",
 			"Microamperes",
 			"Microohms",
