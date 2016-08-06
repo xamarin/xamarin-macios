@@ -83,6 +83,15 @@ namespace Introspection {
 				case "NSLayoutYAxisAnchor":
 				// iOS 10 beta 3
 				case "GKCloudPlayer":
+				// iOS 10 : test throw because of generic usage
+				case "NSMeasurement`1":
+					return true; // skip
+				}
+				break;
+			case "NSMutableCopying":
+				switch (type.Name) {
+				// iOS 10 : test throw because of generic usage
+				case "NSMeasurement`1":
 					return true; // skip
 				}
 				break;
@@ -107,7 +116,8 @@ namespace Introspection {
 				case "NSLayoutYAxisAnchor":
 				case "GKCloudPlayer":
 				case "GKGameSession":
-					// undocumented
+				// iOS 10 : test throw because of generic usage
+				case "NSMeasurement`1":
 					return true;
 				}
 				break;
@@ -131,6 +141,8 @@ namespace Introspection {
 				case "NSPersonNameComponentsFormatter":
 				case "GKCloudPlayer":
 				case "GKGameSession":
+				// iOS 10 : test throw because of generic usage
+				case "NSMeasurement`1":
 					return true; // skip
 				}
 				break;

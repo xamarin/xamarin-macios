@@ -13758,7 +13758,7 @@ namespace XamCore.Foundation
 		IntPtr Constructor (double doubleValue, NSUnit unit);
 
 		[Export ("canBeConvertedToUnit:")]
-		bool CanBeConvertedToUnit (NSUnit unit);
+		bool CanBeConvertedTo (NSUnit unit);
 
 		[Export ("measurementByConvertingToUnit:")]
 		NSMeasurement<UnitType> GetMeasurementByConverting (NSUnit unit);
