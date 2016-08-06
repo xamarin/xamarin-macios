@@ -316,8 +316,28 @@ namespace XamCore.UIKit {
 				return UIAccessibilityIsSpeakScreenEnabled ();
 			}
 		}
-		
+
+		[DllImport (Constants.UIKitLibrary)]
+		static extern bool UIAccessibilityIsAssistiveTouchRunning ();
+		[iOS (10,0)]
+		public static bool IsAssistiveTouchRunning {
+			get {
+				return UIAccessibilityIsAssistiveTouchRunning ();
+			}
+		}
+
+		[DllImport (Constants.UIKitLibrary)]
+		static extern nuint UIAccessibilityHearingDevicePairedEar ();
+
+		[iOS (10,0)]
+		public static UIAccessibilityHearingDeviceEar HearingDevicePairedEar {
+			get {
+				return (UIAccessibilityHearingDeviceEar)(ulong) UIAccessibilityHearingDevicePairedEar ();
+			}
+		}
 	}
+
+
 }
 
 #endif // !WATCH
