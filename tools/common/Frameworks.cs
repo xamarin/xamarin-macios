@@ -262,6 +262,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "WatchKit", "WatchKit", 2 },
 
 					{ "GameKit", "GameKit", 3 },
+					{ "SceneKit", "SceneKit", 3 },
+					{ "SpriteKit", "SpriteKit", 3 },
 					{ "UserNotifications", "UserNotifications", 3 },
 				};
 			}

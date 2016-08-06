@@ -1472,6 +1472,7 @@ COMMON_FRAMEWORKS =         \
 	CoreFoundation          \
 	Foundation              \
 	GameKit                 \
+	SceneKit                \
 	SpriteKit               \
 
 MAC_FRAMEWORKS =            \
@@ -1530,7 +1531,6 @@ MAC_FRAMEWORKS =            \
 	QuickLook               \
 	QuickLookUI             \
 	SafariServices          \
-	SceneKit                \
 	ScriptingBridge         \
 	SearchKit               \
 	Security                \
@@ -1609,7 +1609,6 @@ IOS_FRAMEWORKS =         \
 	QuickLook \
 	ReplayKit \
 	SafariServices \
-	SceneKit \
 	Security \
 	Social \
 	Speech \
@@ -1689,7 +1688,6 @@ TVOS_FRAMEWORKS =           \
 	OpenGLES                \
 	Photos                  \
 	ReplayKit               \
-	SceneKit                \
 	Security                \
 	StoreKit                \
 	SystemConfiguration     \

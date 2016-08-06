@@ -1,3 +1,5 @@
+#if !WATCH
+
 using System;
 using XamCore.ObjCRuntime;
 
@@ -22,3 +24,5 @@ namespace XamCore.SceneKit
 		}
 	}
 }
+
+#endif

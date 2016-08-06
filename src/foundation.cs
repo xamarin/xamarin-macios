@@ -37,9 +37,9 @@ using XamCore.Foundation;
 using XamCore.CoreGraphics;
 #if !WATCH
 using XamCore.CoreMedia;
-using XamCore.SceneKit;
 using XamCore.CloudKit;
 #endif
+using XamCore.SceneKit;
 using XamCore.Security;
 #if IOS
 using XamCore.CoreSpotlight;
@@ -9232,7 +9232,6 @@ namespace XamCore.Foundation
 		XamCore.CoreAnimation.CATransform3D CATransform3DValue { get; }
 #endif
 
-#if !WATCH
 		#region SceneKit Additions
 
 		[Mac (10,8), iOS (8,0)]
@@ -9260,7 +9259,6 @@ namespace XamCore.Foundation
 		SCNMatrix4 SCNMatrix4Value { get; }
 
 		#endregion
-#endif
 	}
 
 	[BaseType (typeof (NSObject))]

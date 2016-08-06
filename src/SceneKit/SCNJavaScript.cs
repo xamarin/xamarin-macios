@@ -7,6 +7,8 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 
+#if (XAMCORE_2_0 || !MONOMAC) && !WATCH
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -15,7 +17,6 @@ using XamCore.JavaScriptCore;
 
 namespace XamCore.SceneKit
 {
-#if XAMCORE_2_0 || !MONOMAC
 	[Availability (Platform.Mac_10_10 | Platform.iOS_8_0)]
 	public static class SCNJavaScript
 	{
@@ -30,5 +31,6 @@ namespace XamCore.SceneKit
 			SCNExportJavaScriptModule (context.Handle);
 		}
 	}
-#endif
 }
+
+#endif

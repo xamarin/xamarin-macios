@@ -1409,6 +1409,7 @@ public class NamespaceManager
 			Get ("Foundation"),
 			Get ("ObjCRuntime"),
 			Get ("CoreGraphics"),
+			Get ("SceneKit"),
 #if !WATCH
 			Get ("AudioUnit"),
 			Get ("CoreAnimation"),
@@ -1418,7 +1419,6 @@ public class NamespaceManager
 			Get ("CoreVideo"),
 			Get ("CoreMedia"),
 			Get ("Security"),
-			Get ("SceneKit"),
 			Get ("AVFoundation"),
 #endif
 #if MONOMAC

@@ -15,6 +15,25 @@
 !missing-selector! HMCameraStream::setAudioStreamSetting: not bound
 
 
+# SceneKit
+
+## CoreAnimation (CAAAnimation) is not in available watchOS 3
+!missing-type! SCNAnimationEvent not bound
+!missing-selector! SCNParticlePropertyController::animation not bound
+!missing-selector! SCNParticlePropertyController::setAnimation: not bound
+!missing-protocol-member! SCNAnimatable::addAnimation:forKey: not found
+!missing-protocol-member! SCNAnimatable::animationForKey: not found
+
+## JavaScriptCore is not available in watchOS 3
+!missing-pinvoke! SCNExportJavaScriptModule is not bound
+
+## SCNNodeRenderer is not available on watchOS 3
+!missing-protocol! SCNNodeRendererDelegate not bound
+!missing-selector! SCNNode::rendererDelegate not bound
+!missing-selector! SCNNode::setRendererDelegate: not bound
+!missing-selector! SCNTechnique::handleBindingOfSymbol:usingBlock: not bound
+
+
 # UIKit
 
 ## Apple renamed it from UILineBreakMode and we kept the old name
