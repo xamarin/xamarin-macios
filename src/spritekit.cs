@@ -113,7 +113,7 @@ namespace XamCore.SpriteKit {
 	[Mac (10,9, onlyOn64 : true)]
 	[BaseType (typeof (NSResponder))]
 	partial interface SKNode : NSCoding, NSCopying {
-#elif IOS || TV
+#elif IOS || TVOS
 	[Since (7,0)]
 	[BaseType (typeof (UIResponder))]
 	partial interface SKNode : NSCoding, NSCopying, UIFocusItem {
