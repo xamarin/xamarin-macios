@@ -13742,8 +13742,9 @@ namespace XamCore.Foundation
 	[iOS (10,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface NSMeasurement<UnitType> : NSCopying, NSSecureCoding 
-		where UnitType : NSUnit {
+	interface NSMeasurement<UnitType> : NSCopying, NSSecureCoding {
+// FIXME pending generator fix
+//		where UnitType : NSUnit {
 
 		[Export ("unit", ArgumentSemantic.Copy)]
 		NSUnit Unit { get; }
