@@ -3577,15 +3577,15 @@ namespace XamCore.Foundation
 	[DisableDefaultCtor]
 	public interface NSLocale : NSSecureCoding, NSCopying {
 		[Static]
-		[Export ("systemLocale")]
+		[Export ("systemLocale", ArgumentSemantic.Copy)]
 		NSLocale SystemLocale { get; }
 
 		[Static]
-		[Export ("currentLocale")]
+		[Export ("currentLocale", ArgumentSemantic.Copy)]
 		NSLocale CurrentLocale { get; }
 
 		[Static]
-		[Export ("autoupdatingCurrentLocale")]
+		[Export ("autoupdatingCurrentLocale", ArgumentSemantic.Strong)]
 		NSLocale AutoUpdatingCurrentLocale { get; }
 		
 		[DesignatedInitializer]
@@ -3595,22 +3595,22 @@ namespace XamCore.Foundation
 		[Export ("localeIdentifier")]
 		string LocaleIdentifier { get; }
 
-		[Export ("availableLocaleIdentifiers")][Static]
+		[Export ("availableLocaleIdentifiers", ArgumentSemantic.Copy)][Static]
 		string [] AvailableLocaleIdentifiers { get; }
 
-		[Export ("ISOLanguageCodes")][Static]
+		[Export ("ISOLanguageCodes", ArgumentSemantic.Copy)][Static]
 		string [] ISOLanguageCodes { get; }
 
-		[Export ("ISOCurrencyCodes")][Static]
+		[Export ("ISOCurrencyCodes", ArgumentSemantic.Copy)][Static]
 		string [] ISOCurrencyCodes { get; }
 
-		[Export ("ISOCountryCodes")][Static]
+		[Export ("ISOCountryCodes", ArgumentSemantic.Copy)][Static]
 		string [] ISOCountryCodes { get; }
 
-		[Export ("commonISOCurrencyCodes")][Static]
+		[Export ("commonISOCurrencyCodes", ArgumentSemantic.Copy)][Static]
 		string [] CommonISOCurrencyCodes { get; }
 
-		[Export ("preferredLanguages")][Static]
+		[Export ("preferredLanguages", ArgumentSemantic.Copy)][Static]
 		string [] PreferredLanguages { get; }
 
 		[Export ("componentsFromLocaleIdentifier:")][Static]
@@ -4185,8 +4185,10 @@ namespace XamCore.Foundation
 
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // .objc_class_name_NSUserActivity", referenced from '' not found
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // xcode 8 beta 4 marks it as API_DEPRECATED
 	public partial interface NSUserActivity {
 	
+		[DesignatedInitializer]
 		[Export ("initWithActivityType:")]
 #if XAMCORE_2_0
 		IntPtr Constructor (string activityType);
@@ -4304,7 +4306,7 @@ namespace XamCore.Foundation
 		void SetURL ([NullAllowed] NSUrl url, string defaultName);
 
 		[Static]
-		[Export ("standardUserDefaults")]
+		[Export ("standardUserDefaults", ArgumentSemantic.Strong)]
 		NSUserDefaults StandardUserDefaults { get; }
 	
 		[Static]
@@ -5694,7 +5696,7 @@ namespace XamCore.Foundation
 #endif
 	public partial interface NSUrlSession {
 	
-		[Static, Export ("sharedSession")]
+		[Static, Export ("sharedSession", ArgumentSemantic.Strong)]
 		NSUrlSession SharedSession { get; }
 	
 		[Static, Export ("sessionWithConfiguration:")]
@@ -5990,10 +5992,10 @@ namespace XamCore.Foundation
 #endif
 	public partial interface NSUrlSessionConfiguration : NSCopying {
 	
-		[Static, Export ("defaultSessionConfiguration")]
+		[Static, Export ("defaultSessionConfiguration", ArgumentSemantic.Strong)]
 		NSUrlSessionConfiguration DefaultSessionConfiguration { get; }
 	
-		[Static, Export ("ephemeralSessionConfiguration")]
+		[Static, Export ("ephemeralSessionConfiguration", ArgumentSemantic.Strong)]
 		NSUrlSessionConfiguration EphemeralSessionConfiguration { get; }
 	
 		[Static, Export ("backgroundSessionConfiguration:")]
@@ -7611,11 +7613,11 @@ namespace XamCore.Foundation
 		void WaitUntilAllOperationsAreFinished ();
 
 		[Static]
-		[Export ("currentQueue")]
+		[Export ("currentQueue", ArgumentSemantic.Strong)]
 		NSOperationQueue CurrentQueue { get; }
 
 		[Static]
-		[Export ("mainQueue")]
+		[Export ("mainQueue", ArgumentSemantic.Strong)]
 		NSOperationQueue MainQueue { get; }
 
 		//Detected properties
@@ -8035,7 +8037,7 @@ namespace XamCore.Foundation
 	// NSHTTPCookieStorage implements a singleton object -> use SharedStorage since 'init' returns NIL
 	[DisableDefaultCtor]
 	public interface NSHttpCookieStorage {
-		[Export ("sharedHTTPCookieStorage"), Static]
+		[Export ("sharedHTTPCookieStorage", ArgumentSemantic.Strong), Static]
 		NSHttpCookieStorage SharedStorage { get; }
 
 		[Export ("cookies")]
@@ -8925,7 +8927,7 @@ namespace XamCore.Foundation
 
 	[BaseType (typeof (NSObject))]
 	public interface NSNotificationCenter {
-		[Static][Export ("defaultCenter")]
+		[Static][Export ("defaultCenter", ArgumentSemantic.Strong)]
 		NSNotificationCenter DefaultCenter { get; }
 	
 		[Export ("addObserver:selector:name:object:")]
@@ -9025,7 +9027,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject))]
 	public interface NSNotificationQueue {
 		[Static][IsThreadStatic]
-		[Export ("defaultQueue")]
+		[Export ("defaultQueue", ArgumentSemantic.Strong)]
 		NSNotificationQueue DefaultQueue { get; }
 
 		[DesignatedInitializer]
@@ -10018,7 +10020,7 @@ namespace XamCore.Foundation
 
 	[BaseType (typeof (NSObject))]
 	public interface NSProcessInfo {
-		[Export ("processInfo")][Static]
+		[Export ("processInfo", ArgumentSemantic.Strong)][Static]
 		NSProcessInfo ProcessInfo { get; }
 
 		[Export ("arguments")]
@@ -10337,7 +10339,7 @@ namespace XamCore.Foundation
 		void RemoveFilePresenter ([Protocolize] NSFilePresenter filePresenter);
 
 		[Static]
-		[Export ("filePresenters")]
+		[Export ("filePresenters", ArgumentSemantic.Copy)]
 		[Protocolize]
 		NSFilePresenter [] FilePresenters { get; }
 
@@ -10515,7 +10517,7 @@ namespace XamCore.Foundation
 		[Field("NSFileSystemFreeNodes")]
 		NSString SystemFreeNodes { get; }
 
-		[Static, Export ("defaultManager")]
+		[Static, Export ("defaultManager", ArgumentSemantic.Strong)]
 		NSFileManager DefaultManager { get; }
 
 		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
@@ -13736,4 +13738,57 @@ namespace XamCore.Foundation
 		[Export ("metricCups", ArgumentSemantic.Copy)]
 		NSUnitVolume MetricCups { get; }
 	}
+
+	[iOS (10,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSMeasurement<UnitType> : NSCopying, NSSecureCoding 
+		where UnitType : NSUnit {
+
+		[Export ("unit", ArgumentSemantic.Copy)]
+		NSUnit Unit { get; }
+
+		[Export ("doubleValue")]
+		double DoubleValue { get; }
+
+		[Export ("initWithDoubleValue:unit:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (double doubleValue, NSUnit unit);
+
+		[Export ("canBeConvertedToUnit:")]
+		bool CanBeConvertedTo (NSUnit unit);
+
+		[Export ("measurementByConvertingToUnit:")]
+		NSMeasurement<UnitType> GetMeasurementByConverting (NSUnit unit);
+
+		[Export ("measurementByAddingMeasurement:")]
+		NSMeasurement<UnitType> GetMeasurementByAdding (NSMeasurement<UnitType> measurement);
+
+		[Export ("measurementBySubtractingMeasurement:")]
+		NSMeasurement<UnitType> GetMeasurementBySubtracting (NSMeasurement<UnitType> measurement);
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[BaseType (typeof (NSFormatter))]
+	interface NSMeasurementFormatter : NSSecureCoding {
+
+		[Export ("unitOptions", ArgumentSemantic.Assign)]
+		NSMeasurementFormatterUnitOptions UnitOptions { get; set; }
+
+		[Export ("unitStyle", ArgumentSemantic.Assign)]
+		NSFormattingUnitStyle UnitStyle { get; set; }
+
+		[Export ("locale", ArgumentSemantic.Copy)]
+		NSLocale Locale { get; set; }
+
+		[Export ("numberFormatter", ArgumentSemantic.Copy)]
+		NSNumberFormatter NumberFormatter { get; set; }
+
+		[Export ("stringFromMeasurement:")]
+		string ToString (NSMeasurement<NSUnit> measurement);
+
+		[Export ("stringFromUnit:")]
+		string ToString (NSUnit unit);
+	}
+
 }
