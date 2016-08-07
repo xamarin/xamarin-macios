@@ -11,12 +11,10 @@ using System;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 using XamCore.CoreGraphics;
+using XamCore.CoreLocation;
 
 #if !WATCH
 using XamCore.CoreMedia;
-#endif
-#if !TV
-using XamCore.CoreLocation;
 #endif
 
 namespace XamCore.UserNotifications {
@@ -554,7 +552,6 @@ namespace XamCore.UserNotifications {
 		NSDate NextTriggerDate { get; }
 	}
 
-#if !TV
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[Unavailable (PlatformName.TvOS)]
@@ -570,7 +567,6 @@ namespace XamCore.UserNotifications {
 		[Export ("triggerWithRegion:repeats:")]
 		UNLocationNotificationTrigger Trigger (CLRegion region, bool repeats);
 	}
-#endif
 
 	interface IUNUserNotificationCenterDelegate { }
 
