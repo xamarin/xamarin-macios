@@ -3079,10 +3079,9 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSetClimateSettingsInCarIntent {
 
-		// TODO: We need to bind NSMeasurement<T> in order to enable this
-		//[Export ("initWithEnableFan:enableAirConditioner:enableClimateControl:enableAutoMode:airCirculationMode:fanSpeedIndex:fanSpeedPercentage:relativeFanSpeedSetting:temperature:relativeTemperatureSetting:climateZone:")]
-		//[DesignatedInitializer]
-		//IntPtr Constructor ([NullAllowed] NSNumber enableFan, [NullAllowed] NSNumber enableAirConditioner, [NullAllowed] NSNumber enableClimateControl, [NullAllowed] NSNumber enableAutoMode, INCarAirCirculationMode airCirculationMode, [NullAllowed] NSNumber fanSpeedIndex, [NullAllowed] NSNumber fanSpeedPercentage, INRelativeSetting relativeFanSpeedSetting, [NullAllowed] NSMeasurement<NSUnitTemperature> temperature, INRelativeSetting relativeTemperatureSetting, INCarSeat climateZone);
+		[Export ("initWithEnableFan:enableAirConditioner:enableClimateControl:enableAutoMode:airCirculationMode:fanSpeedIndex:fanSpeedPercentage:relativeFanSpeedSetting:temperature:relativeTemperatureSetting:climateZone:")]
+		[DesignatedInitializer]
+		IntPtr Constructor ([NullAllowed] NSNumber enableFan, [NullAllowed] NSNumber enableAirConditioner, [NullAllowed] NSNumber enableClimateControl, [NullAllowed] NSNumber enableAutoMode, INCarAirCirculationMode airCirculationMode, [NullAllowed] NSNumber fanSpeedIndex, [NullAllowed] NSNumber fanSpeedPercentage, INRelativeSetting relativeFanSpeedSetting, [NullAllowed] NSMeasurement<NSUnitTemperature> temperature, INRelativeSetting relativeTemperatureSetting, INCarSeat climateZone);
 
 		[NullAllowed, Export ("enableFan", ArgumentSemantic.Copy)]
 		NSNumber EnableFan { get; }
@@ -3108,9 +3107,8 @@ namespace XamCore.Intents {
 		[Export ("relativeFanSpeedSetting", ArgumentSemantic.Assign)]
 		INRelativeSetting RelativeFanSpeedSetting { get; }
 
-		// TODO: We need to bind NSMeasurement<T> in order to enable this
-		//[NullAllowed, Export ("temperature", ArgumentSemantic.Copy)]
-		//NSMeasurement<NSUnitTemperature> Temperature { get; }
+		[NullAllowed, Export ("temperature", ArgumentSemantic.Copy)]
+		NSMeasurement<NSUnitTemperature> Temperature { get; }
 
 		[Export ("relativeTemperatureSetting", ArgumentSemantic.Assign)]
 		INRelativeSetting RelativeTemperatureSetting { get; }
@@ -3774,18 +3772,17 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntentResolutionResult))]
 	interface INTemperatureResolutionResult {
 
-		// TODO: we need to bind NSMeasurement<T> in order to enable this
-		//[Static]
-		//[Export ("successWithResolvedTemperature:")]
-		//INTemperatureResolutionResult GetSuccess (NSMeasurement<NSUnitTemperature> resolvedTemperature);
+		[Static]
+		[Export ("successWithResolvedTemperature:")]
+		INTemperatureResolutionResult GetSuccess (NSMeasurement<NSUnitTemperature> resolvedTemperature);
 
-		//[Static]
-		//[Export ("disambiguationWithTemperaturesToDisambiguate:")]
-		//INTemperatureResolutionResult GetDisambiguation (NSMeasurement<NSUnitTemperature> [] temperaturesToDisambiguate);
+		[Static]
+		[Export ("disambiguationWithTemperaturesToDisambiguate:")]
+		INTemperatureResolutionResult GetDisambiguation (NSMeasurement<NSUnitTemperature> [] temperaturesToDisambiguate);
 
-		//[Static]
-		//[Export ("confirmationRequiredWithTemperatureToConfirm:")]
-		//INTemperatureResolutionResult GetConfirmationRequired ([NullAllowed] NSMeasurement<NSUnitTemperature> temperatureToConfirm);
+		[Static]
+		[Export ("confirmationRequiredWithTemperatureToConfirm:")]
+		INTemperatureResolutionResult GetConfirmationRequired ([NullAllowed] NSMeasurement<NSUnitTemperature> temperatureToConfirm);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
