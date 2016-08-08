@@ -13742,10 +13742,13 @@ namespace XamCore.Foundation
 	[iOS (10,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
+#if !XAMCORE_2_0
+	interface NSMeasurement : NSCopying, NSSecureCoding {
+#else
 	interface NSMeasurement<UnitType> : NSCopying, NSSecureCoding {
 // FIXME pending generator fix
 //		where UnitType : NSUnit {
-
+#endif
 		[Export ("unit", ArgumentSemantic.Copy)]
 		NSUnit Unit { get; }
 
@@ -13759,6 +13762,7 @@ namespace XamCore.Foundation
 		[Export ("canBeConvertedToUnit:")]
 		bool CanBeConvertedTo (NSUnit unit);
 
+#if XAMCORE_2_0
 		[Export ("measurementByConvertingToUnit:")]
 		NSMeasurement<UnitType> GetMeasurementByConverting (NSUnit unit);
 
@@ -13767,6 +13771,7 @@ namespace XamCore.Foundation
 
 		[Export ("measurementBySubtractingMeasurement:")]
 		NSMeasurement<UnitType> GetMeasurementBySubtracting (NSMeasurement<UnitType> measurement);
+#endif
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13785,8 +13790,10 @@ namespace XamCore.Foundation
 		[Export ("numberFormatter", ArgumentSemantic.Copy)]
 		NSNumberFormatter NumberFormatter { get; set; }
 
+#if XAMCORE_2_0
 		[Export ("stringFromMeasurement:")]
 		string ToString (NSMeasurement<NSUnit> measurement);
+#endif
 
 		[Export ("stringFromUnit:")]
 		string ToString (NSUnit unit);
