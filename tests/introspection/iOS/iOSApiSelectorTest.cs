@@ -172,12 +172,9 @@ namespace Introspection {
 				break;
 			case "SKNode":
 				switch (name) {
-				case "didUpdateFocusInContext:withAnimationCoordinator:":
-				case "setNeedsFocusUpdate":
-				case "shouldUpdateFocusInContext:":
-				case "updateFocusIfNeeded":
+				// skip for tvOS 10+
 				case "preferredFocusedView":
-					if (!TestRuntime.CheckXcodeVersion (8, 0))
+					if (TestRuntime.CheckXcodeVersion (8, 0))
 						return true;
 					break;
 				}

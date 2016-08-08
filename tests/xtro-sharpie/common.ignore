@@ -52,3 +52,6 @@
 ## no point in having p/invoke calls that can be implement with a type cast (byte vs nint)
 !missing-pinvoke! NSTextAlignmentFromCTTextAlignment is not bound
 !missing-pinvoke! NSTextAlignmentToCTTextAlignment is not bound
+
+## this was (pre iOS10) a required member that was deprecated and made optional
+!incorrect-protocol-member! UIFocusEnvironment::preferredFocusedView is OPTIONAL and should NOT be abstract

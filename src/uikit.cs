@@ -15633,6 +15633,9 @@ namespace XamCore.UIKit {
 	[iOS (9,0)]
 	[Protocol]
 	public interface UIFocusEnvironment {
+		// Apple moved this member to @optional since they deprecated it
+		// but that's a breaking change for us, so it remains [Abstract]
+		// and we need to teach the intro and xtro tests about it
 		[Abstract]
 		[NullAllowed, Export ("preferredFocusedView", ArgumentSemantic.Weak)]
 		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use PreferredFocusEnvironments instead")]
