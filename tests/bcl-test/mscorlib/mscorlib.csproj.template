@@ -115,7 +115,8 @@
     </Compile>  
     <Compile Include="..\AppDelegate.cs">
       <Link>AppDelegate.cs</Link>
-    </Compile>  
+    </Compile>
+    <Compile Include="TestLoader.cs" />
   </ItemGroup>
   <ItemGroup>
 #FILES#
@@ -135,4 +136,14 @@
       <LogicalName>Resources.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>  
+  <ItemGroup>
+    <ProjectReference Include="mscorlib-0.csproj">
+      <Project>{6f47c092-2f85-43d6-1111-e687426f6bf3}</Project>
+      <Name>mscorlibtests0</Name>
+    </ProjectReference>
+    <ProjectReference Include="mscorlib-1.csproj">
+      <Project>{6f47c092-2f85-43d6-2222-e687426f6bf3}</Project>
+      <Name>mscorlibtests1</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

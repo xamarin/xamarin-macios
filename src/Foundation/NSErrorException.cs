@@ -31,6 +31,8 @@ namespace XamCore.Foundation {
 
 		public NSErrorException (NSError error)
 		{
+			if (error == null)
+				throw new ArgumentNullException (nameof(error));
 			this.error = error;
 		}
 		
