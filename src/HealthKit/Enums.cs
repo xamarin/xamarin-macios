@@ -6,6 +6,7 @@ using System;
 namespace XamCore.HealthKit
 {
 	// NSInteger -> HKDefines.h
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[Native]
 	public enum HKUpdateFrequency : nint {
@@ -16,6 +17,7 @@ namespace XamCore.HealthKit
 	}
 
 	// NSInteger -> HKDefines.h
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[Native]
 	public enum HKAuthorizationStatus : nint {
@@ -25,6 +27,7 @@ namespace XamCore.HealthKit
 	}
 
 	// NSInteger -> HKDefines.h
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[Native]
 	public enum HKBiologicalSex : nint {
@@ -36,6 +39,7 @@ namespace XamCore.HealthKit
 	}
 
 	// NSInteger -> HKDefines.h
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[Native]
 	public enum HKBloodType : nint {
@@ -51,6 +55,7 @@ namespace XamCore.HealthKit
 	}
 
 	// NSInteger -> HKMetadata.h
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[Native]
 	public enum HKBodyTemperatureSensorLocation : nint {
@@ -69,6 +74,7 @@ namespace XamCore.HealthKit
 	}
 
 	// NSInteger -> HKMetadata.h
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[Native]
 	public enum HKHeartRateSensorLocation : nint {
@@ -82,6 +88,7 @@ namespace XamCore.HealthKit
 	}
 
 	// NSInteger -> HKObjectType.h
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[Native]
 	public enum HKQuantityAggregationStyle : nint {
@@ -90,14 +97,18 @@ namespace XamCore.HealthKit
 	}
 
 	// NSInteger -> HKObjectType.h
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[Native]
 	public enum HKCategoryValueSleepAnalysis : nint {
 		InBed,
-		Asleep
+		Asleep,
+		[Watch (3,0), iOS (10,0)]
+		Awake,
 	}
 
 	// NSUInteger -> HKQuery.h
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[Native]
 	[Flags]
@@ -108,6 +119,7 @@ namespace XamCore.HealthKit
 	}
 
 	// NSUInteger -> HKStatistics.h
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[Native]
 	[Flags]
@@ -121,6 +133,7 @@ namespace XamCore.HealthKit
 	}
 
 	// NSInteger -> HKUnit.h
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[Native]
 	public enum HKMetricPrefix : nint {
@@ -140,6 +153,7 @@ namespace XamCore.HealthKit
 	}
 
 	// Convenience enum, ObjC uses NSString
+	[Watch (2,0)]
 	[iOS (8,0)]
 	public enum HKQuantityTypeIdentifier {
 		BodyMassIndex,
@@ -215,9 +229,17 @@ namespace XamCore.HealthKit
 		DietaryWater,
 		[iOS (9,0)]
 		UVExposure,
+		ElectrodermalActivity,
+		[iOS (9,3), Watch (2,2)]
+		AppleExerciseTime,
+		[iOS (10,0), Watch (3,0)]
+		DistanceWheelchair,
+		[iOS (10,0), Watch (3,0)]
+		PushCount,
 	}
 
 	// Convenience enum, ObjC uses NSString
+	[Watch (2,0)]
 	[iOS (8,0)]
 	public enum HKCategoryTypeIdentifier {
 		SleepAnalysis,
@@ -232,10 +254,13 @@ namespace XamCore.HealthKit
 		[iOS (9,0)]
 		IntermenstrualBleeding,
 		[iOS (9,0)]
-		SexualActivity
+		SexualActivity,
+		[iOS (10,0), Watch (3,0)]
+		MindfulSession,
 	}
 
 	// Convenience enum, ObjC uses NSString
+	[Watch (2,0)]
 	[iOS (8,0)]
 	public enum HKCharacteristicTypeIdentifier {
 		BiologicalSex,
@@ -243,9 +268,25 @@ namespace XamCore.HealthKit
 		DateOfBirth,
 		[iOS (9,0)]
 		FitzpatrickSkinType,
+		[iOS (10,0), Watch (3,0)]
+		WheelchairUse,
+	}
+
+	// Convenience enum, ObjC uses NSString
+	[Watch (2,0), iOS (8,0)]
+	public enum HKCorrelationTypeIdentifier {
+		BloodPressure,
+		Food,
+	}
+
+	// Convenience enum, ObjC uses NSString
+	[Watch (3,0), iOS (10,0)]
+	public enum HKDocumentTypeIdentifier {
+		Cda,
 	}
 
 	[Native]
+	[Watch (2,0)]
 	[iOS (8,0)]
 	public enum HKWorkoutActivityType : nuint {
 		AmericanFootball = 1,
@@ -262,6 +303,8 @@ namespace XamCore.HealthKit
 		Curling,
 		Cycling,
 		Dance,
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use HKWorkoutActivityType.Dance, HKWorkoutActivityType.Barre, or HKWorkoutActivityType.Pilates")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use HKWorkoutActivityType.Dance, HKWorkoutActivityType.Barre, or HKWorkoutActivityType.Pilates")]
 		DanceInspiredTraining,
 		Elliptical,
 		EquestrianSports,
@@ -305,23 +348,62 @@ namespace XamCore.HealthKit
 		WaterSports,
 		Wrestling,
 		Yoga,
+		[iOS (10,0), Watch (3,0)]
+		Barre,
+		[iOS (10,0), Watch (3,0)]
+		CoreTraining,
+		[iOS (10,0), Watch (3,0)]
+		CrossCountrySkiing,
+		[iOS (10,0), Watch (3,0)]
+		DownhillSkiing,
+		[iOS (10,0), Watch (3,0)]
+		Flexibility,
+		[iOS (10,0), Watch (3,0)]
+		HighIntensityIntervalTraining,
+		[iOS (10,0), Watch (3,0)]
+		JumpRope,
+		[iOS (10,0), Watch (3,0)]
+		Kickboxing,
+		[iOS (10,0), Watch (3,0)]
+		Pilates,
+		[iOS (10,0), Watch (3,0)]
+		Snowboarding,
+		[iOS (10,0), Watch (3,0)]
+		Stairs,
+		[iOS (10,0), Watch (3,0)]
+		StepTraining,
+		[iOS (10,0), Watch (3,0)]
+		WheelchairWalkPace,
+		[iOS (10,0), Watch (3,0)]
+		WheelchairRunPace,
 		[iOS (8,2)]
 		Other = 3000
 	}
 
 	[Native]
+	[Watch (2,0)]
 	[iOS (8,0)]
 	public enum HKWorkoutEventType : nint {
 		Pause = 1,
-		Resume
+		Resume,
+		[iOS (10,0), Watch (3,0)]
+		Lap,
+		[iOS (10,0), Watch (3,0)]
+		Marker,
+		[iOS (10,0), Watch (3,0)]
+		MotionPaused,
+		[iOS (10,0), Watch (3,0)]
+		MotionResumed,
 	}
 
+	[Watch (2,0)]
 	[iOS (9,0)]
 	[Native]
 	public enum HKCategoryValue : nint {
 		NotApplicable = 0
 	}
 
+	[Watch (2,0)]
 	[iOS (9,0)]
 	[Native]
 	public enum HKCategoryValueCervicalMucusQuality : nint {
@@ -333,6 +415,7 @@ namespace XamCore.HealthKit
 		EggWhite
 	}
 
+	[Watch (2,0)]
 	[iOS (9,0)]
 	[Native]
 	public enum HKCategoryValueMenstrualFlow : nint {
@@ -343,6 +426,7 @@ namespace XamCore.HealthKit
 		Heavy
 	}
 
+	[Watch (2,0)]
 	[iOS (9,0)]
 	[Native]
 	public enum HKCategoryValueOvulationTestResult : nint {
@@ -352,6 +436,7 @@ namespace XamCore.HealthKit
 		Indeterminate
 	}
 
+	[Watch (2,0)]
 	[iOS (9,0)]
 	[Native]
 	public enum HKCategoryValueAppleStandHour : nint {
@@ -359,6 +444,7 @@ namespace XamCore.HealthKit
 		Idle
 	}
 
+	[Watch (2,0)]
 	[iOS (9,0)]
 	[Native]
 	public enum HKFitzpatrickSkinType : nint {
@@ -369,5 +455,46 @@ namespace XamCore.HealthKit
 		IV,
 		V,
 		VI
+	}
+
+	[Watch (3,0), iOS (10,0)]
+	[Native]
+	public enum HKWheelchairUse : nint {
+		NotSet = 0,
+		No,
+		Yes,
+	}
+
+	[Watch (3,0), iOS (10,0)]
+	[Native]
+	public enum HKWeatherCondition : nint {
+		None = 0,
+		Clear,
+		Fair,
+		PartlyCloudy,
+		MostlyCloudy,
+		Cloudy,
+		Foggy,
+		Haze,
+		Windy,
+		Blustery,
+		Smoky,
+		Dust,
+		Snow,
+		Hail,
+		Sleet,
+		FreezingDrizzle,
+		FreezingRain,
+		MixedRainAndHail,
+		MixedRainAndSnow,
+		MixedRainAndSleet,
+		MixedSnowAndSleet,
+		Drizzle,
+		ScatteredShowers,
+		Showers,
+		Thunderstorms,
+		TropicalStorm,
+		Hurricane,
+		Tornado,
 	}
 }
