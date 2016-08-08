@@ -2619,7 +2619,7 @@ namespace XamCore.AppKit {
 		//NSImage DraggingImage (NSIndexSet itemIndexes, NSEvent evt, NSPointPointer dragImageOffset);
 
 		//Detected properties
-		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 		
 		[Wrap ("WeakDelegate")]
@@ -3837,6 +3837,10 @@ namespace XamCore.AppKit {
 
 		[Export ("removeFile")]
 		void RemoveFile ();
+
+		[Mac (10,11)]
+		[Export ("writeToURL:error:")]
+		bool WriteToURL ([NullAllowed] NSUrl url, [NullAllowed] out NSError errPtr);
 	}
 
 	[BaseType (typeof (NSPanel))]
@@ -11012,7 +11016,7 @@ namespace XamCore.AppKit {
 		[Export ("positioningRect")]
 		CGRect PositioningRect { get; set;  }
 
-		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
@@ -13528,7 +13532,7 @@ namespace XamCore.AppKit {
 	[Mac (10,9)]
 	[BaseType (typeof (NSView))]
 	public interface NSStackView {
-		[Export ("delegate", ArgumentSemantic.UnsafeUnretained)][NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
@@ -17750,6 +17754,10 @@ namespace XamCore.AppKit {
 		[Export ("toggleQuickLookPreviewPanel:")]
 		void ToggleQuickLookPreviewPanel (NSObject sender);
 
+		[Mac (10, 12)]
+		[Static]
+		[Export ("StronglyReferencesTextStoragestronglyReferencesTextStorage")]
+		bool StronglyReferencesTextStorage { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -18031,6 +18039,14 @@ namespace XamCore.AppKit {
 		[Mac (10,10)]
 		[Export ("allowsExtensionItems")]
 		bool AllowsExtensionItems { get; set; }
+
+		[Mac (10,11)]
+		[Field ("NSToolbarToggleSidebarItemIdentifier")]
+		NSString NSToolbarToggleSidebarItemIdentifier { get; }
+
+		[Mac (10,12)]
+		[Field ("NSToolbarCloudSharingItemIdentifier")]
+		NSString NSToolbarCloudSharingItemIdentifier { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -23589,4 +23605,15 @@ namespace XamCore.AppKit {
 		[Export ("receivePromisedFilesAtDestination:options:operationQueue:reader:")]
 		void ReceivePromisedFiles (NSUrl destinationDir, NSDictionary options, NSOperationQueue operationQueue, Action<NSUrl, NSError> reader);
 	}
+
+	//TODO - Waiting on CloudKit binding
+	//[Protocol]
+	//[Mac (10,12)]
+	//interface NSCloudSharingValidation
+	//{
+	//	[Abstract]
+	//	[Export ("cloudShareForUserInterfaceItem:")]
+	//	[return: NullAllowed]
+	//	CKShare CloudShareForUserInterfaceItem (NSValidatedUserInterfaceItem item);
+	//}
 }

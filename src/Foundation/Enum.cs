@@ -367,6 +367,23 @@ namespace XamCore.Foundation  {
 		BundleOnDemandResourceOutOfSpaceError = 4992,
 		BundleOnDemandResourceExceededMaximumSizeError = 4993,
 		BundleOnDemandResourceInvalidTagError = 4994,
+
+		[Mac (10,12)]
+		CloudSharingNetworkFailureError = 5120,
+		[Mac (10,12)]
+		CloudSharingQuotaExceededError = 5121,
+		[Mac (10,12)]
+		CloudSharingTooManyParticipantsError = 5122,
+		[Mac (10,12)]
+		CloudSharingConflictError = 5123,
+		[Mac (10,12)]
+		CloudSharingNoPermissionError = 5124,
+		[Mac (10,12)]
+		CloudSharingOtherError = 5375,
+		[Mac (10,12)]
+		CloudSharingErrorMinimum = 5120,
+		[Mac (10,12)]
+		CloudSharingErrorMaximum = 5375,
 	}
 	
 	// note: Make sure names are identical/consistent with CFNetworkErrors.*
