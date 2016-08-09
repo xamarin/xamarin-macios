@@ -64,7 +64,8 @@ namespace Xamarin.Bundler {
 	//					MM2010	Unknown HttpMessageHandler `{0}`. Valid values are HttpClientHandler (default), CFNetworkHandler or NSUrlSessionHandler
 	//					MM2011  Unknown TLSProvider `{0}.  Valid values are default, legacy or appletls
 	//					MM2012   Only first {0} of {1} "Referenced by" warnings shown. ** This message related to 2009 **
-	//			Warning	MM2013	Failed to resolve the reference to "{0}", referenced in "{1}". The app will not include the referenced assembly, and may fail at runtime.
+	//				Warning	MM2013	Failed to resolve the reference to "{0}", referenced in "{1}". The app will not include the referenced assembly, and may fail at runtime.
+	//				Warning	MT2014	Xamarin.Mac Extensions do not support linking. Request for linking will be ignored.
 	// MM4xxx	code generation
 	// 			MM40xx	driver.m
 	//					MM4001	The main template could not be expansed to `{0}`.
