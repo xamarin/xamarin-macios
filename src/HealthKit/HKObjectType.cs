@@ -44,6 +44,9 @@ namespace XamCore.HealthKit
 			case HKQuantityTypeIdentifier.DistanceCycling:
 				return HKQuantityTypeIdentifierKey.DistanceCycling;
 
+			case HKQuantityTypeIdentifier.DistanceWheelchair:
+				return HKQuantityTypeIdentifierKey.DistanceWheelchair;
+
 			case HKQuantityTypeIdentifier.BasalEnergyBurned:
 				return HKQuantityTypeIdentifierKey.BasalEnergyBurned;				
 
@@ -55,6 +58,12 @@ namespace XamCore.HealthKit
 
 			case HKQuantityTypeIdentifier.NikeFuel:
 				return HKQuantityTypeIdentifierKey.NikeFuel;				
+
+			case HKQuantityTypeIdentifier.AppleExerciseTime:
+				return HKQuantityTypeIdentifierKey.AppleExerciseTime;
+
+			case HKQuantityTypeIdentifier.PushCount:
+				return HKQuantityTypeIdentifierKey.PushCount;
 
 		// Blood
 			case HKQuantityTypeIdentifier.OxygenSaturation:
@@ -87,6 +96,9 @@ namespace XamCore.HealthKit
 
 			case HKQuantityTypeIdentifier.NumberOfTimesFallen:
 				return HKQuantityTypeIdentifierKey.NumberOfTimesFallen;				
+
+			case HKQuantityTypeIdentifier.ElectrodermalActivity:
+				return HKQuantityTypeIdentifierKey.ElectrodermalActivity;
 
 			case HKQuantityTypeIdentifier.InhalerUsage:
 				return HKQuantityTypeIdentifierKey.InhalerUsage;				
@@ -248,6 +260,8 @@ namespace XamCore.HealthKit
 				return HKCategoryTypeIdentifierKey.IntermenstrualBleeding;
 			case HKCategoryTypeIdentifier.SexualActivity:
 				return HKCategoryTypeIdentifierKey.SexualActivity;
+			case HKCategoryTypeIdentifier.MindfulSession:
+				return HKCategoryTypeIdentifierKey.MindfulSession;
 			}
 			return null;
 		}
@@ -270,6 +284,8 @@ namespace XamCore.HealthKit
 				return HKCharacteristicTypeIdentifierKey.DateOfBirth;
 			case HKCharacteristicTypeIdentifier.FitzpatrickSkinType:
 				return HKCharacteristicTypeIdentifierKey.FitzpatrickSkinType;
+			case HKCharacteristicTypeIdentifier.WheelchairUse:
+				return HKCharacteristicTypeIdentifierKey.WheelchairUse;
 			}
 			return null;
 		}
@@ -277,6 +293,31 @@ namespace XamCore.HealthKit
 		public static HKCharacteristicType Create (HKCharacteristicTypeIdentifier kind)
 		{
 			return HKObjectType.GetCharacteristicType (ToKey (kind));
+		}
+	}
+
+	public partial class HKCorrelationType {
+		static internal NSString ToKey (HKCorrelationTypeIdentifier kind)
+		{
+			switch (kind) {
+			case HKCorrelationTypeIdentifier.BloodPressure:
+				return HKCorrelationTypeKey.IdentifierBloodPressure;
+			case HKCorrelationTypeIdentifier.Food:
+				return HKCorrelationTypeKey.IdentifierFood;
+			}
+			return null;
+		}
+
+		public static HKCorrelationType Create (HKCorrelationTypeIdentifier kind)
+		{
+			return HKObjectType.GetCorrelationType (ToKey (kind));
+		}
+	}
+
+	public partial class HKDocumentType {
+		public static HKDocumentType Create (HKDocumentTypeIdentifier kind)
+		{
+			return HKObjectType._GetDocumentType (kind.GetConstant ());
 		}
 	}
 	

@@ -98,6 +98,7 @@ namespace Introspection
 			"Caf", // acronym: Core Audio Format
 			"Cancellable",
 			"Cavlc",
+			"Cda", // acronym: Clinical Document Architecture
 			"Celp", // MPEG4ObjectID
 			"Characterteristic",
 			"Chromaticities",

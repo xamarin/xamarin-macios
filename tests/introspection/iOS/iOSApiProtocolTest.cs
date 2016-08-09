@@ -334,6 +334,8 @@ namespace Introspection {
 				case "PKPaymentMethod":
 				// iOS 10
 				case "CXCallDirectoryExtensionContext":
+				case "HKDocumentSample":
+				case "HKCdaDocumentSample":
 				case "SFSafariViewControllerConfiguration":
 				case "VSAccountMetadata":
 				case "VSAccountMetadataRequest":
