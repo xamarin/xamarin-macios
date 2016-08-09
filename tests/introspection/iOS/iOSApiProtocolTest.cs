@@ -335,7 +335,7 @@ namespace Introspection {
 				// iOS 10
 				case "CXCallDirectoryExtensionContext":
 				case "HKDocumentSample":
-				case "HKCDADocumentSample":
+				case "HKCdaDocumentSample":
 				case "SFSafariViewControllerConfiguration":
 				case "VSAccountMetadata":
 				case "VSAccountMetadataRequest":

@@ -173,7 +173,7 @@ namespace XamCore.HealthKit {
 
 	[Watch (3,0), iOS (10,0)]
 	[Static]
-	public interface HKDetailedCDAErrors {
+	public interface HKDetailedCdaErrors {
 		[Field ("HKDetailedCDAValidationErrorKey")]
 		NSString ValidationErrorKey { get; }
 	}
@@ -218,26 +218,26 @@ namespace XamCore.HealthKit {
 	}
 
 	[NoWatch, iOS (10,0)]
-	[BaseType (typeof(HKDocumentSample))]
+	[BaseType (typeof(HKDocumentSample), Name = "HKCDADocumentSample")]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKCDADocumentSample
-	interface HKCDADocumentSample
+	interface HKCdaDocumentSample
 	{
 		[NullAllowed, Export ("document")]
-		HKCDADocument Document { get; }
+		HKCdaDocument Document { get; }
 
 		[NoWatch]
 		[Static]
 		[Export ("CDADocumentSampleWithData:startDate:endDate:metadata:validationError:")]
 		[return: NullAllowed]
-		HKCDADocumentSample Create (NSData documentData, NSDate startDate, NSDate endDate, [NullAllowed] NSDictionary metadata, out NSError validationError);
+		HKCdaDocumentSample Create (NSData documentData, NSDate startDate, NSDate endDate, [NullAllowed] NSDictionary metadata, out NSError validationError);
 
 		[Static, Wrap ("Create (documentData, startDate, endDate, metadata != null ? metadata.Dictionary : null, out validationError)")]
-		HKCDADocumentSample Create (NSData documentData, NSDate startDate, NSDate endDate, HKMetadata metadata, out NSError validationError);
+		HKCdaDocumentSample Create (NSData documentData, NSDate startDate, NSDate endDate, HKMetadata metadata, out NSError validationError);
 	}
 
 	[Watch (3,0), iOS (10,0)]
-	[BaseType (typeof(NSObject))]
-	interface HKCDADocument
+	[BaseType (typeof(NSObject), Name = "HKCDADocument")]
+	interface HKCdaDocument
 	{
 		[NullAllowed, Export ("documentData", ArgumentSemantic.Copy)]
 		NSData DocumentData { get; }
