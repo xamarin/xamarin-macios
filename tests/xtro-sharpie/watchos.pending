@@ -7,6 +7,15 @@
 !missing-protocol-conformance! CMSensorDataList should conform to NSFastEnumeration
 
 
+# HealthKit
+
+## deprecated API (removed in same version it was added)
+!missing-selector! HKAnchoredObjectQuery::initWithType:predicate:anchor:limit:completionHandler: not bound
+
+## type marked as iOS only - but exposed in new watchOS API -> rdar #27767007 https://trello.com/c/4soJeYEr
+!unknown-type! HKDocumentType bound
+
+
 # HomeKit
 
 ## This was added and deprecated at the same time recommending the use of UpdateAudioStreamSetting.
