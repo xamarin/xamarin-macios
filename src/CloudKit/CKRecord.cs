@@ -1,4 +1,4 @@
-﻿using XamCore.ObjCRuntime;
+using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 using System;
 using System.Collections;

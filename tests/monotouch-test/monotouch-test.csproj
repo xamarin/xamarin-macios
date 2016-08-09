@@ -540,6 +540,19 @@
     <Compile Include="Foundation\UrlSessionTaskTransactionMetricsTest.cs" />
     <Compile Include="SpriteKit\WarpGeometryGridTest.cs" />
     <Compile Include="SpriteKit\UniformTest.cs" />
+    <Compile Include="CloudKit\CKDiscoverUserInfosOperationTest.cs" />
+    <Compile Include="CloudKit\CKFetchRecordChangesOperationTest.cs" />
+    <Compile Include="CloudKit\CKFetchSubscriptionsOperationTest.cs" />
+    <Compile Include="CloudKit\CKFetchNotificationChangesOperationTest.cs" />
+    <Compile Include="CloudKit\CKFetchRecordZonesOperationTest.cs" />
+    <Compile Include="CloudKit\CKFetchRecordsOperationTest.cs" />
+    <Compile Include="CloudKit\CKMarkNotificationsReadOperationTest.cs" />
+    <Compile Include="CloudKit\CKModifyBadgeOperationTest.cs" />
+    <Compile Include="CloudKit\CKModifyRecordZonesOperationTest.cs" />
+    <Compile Include="CloudKit\CKModifyRecordsOperationTest.cs" />
+    <Compile Include="CloudKit\CKModifySubscriptionsOperationTest.cs" />
+    <Compile Include="CloudKit\CKQueryOperationTest.cs" />
+    <Compile Include="CloudKit\CKUserIdentityLookupInfoTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
@@ -601,6 +614,7 @@
     <Folder Include="CoreMidi\" />
     <Folder Include="CoreAudioKit\" />
     <Folder Include="Messages\" />
+    <Folder Include="CloudKit\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />

@@ -214,6 +214,16 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "CKUserIdentityLookupInfo":
+				switch (selectorName) {
+				case "initWithEmailAddress:":
+				case "initWithPhoneNumber:":
+				case "lookupInfosWithRecordIDs:": // FAILs on watch yet we do have a unittest for it
+				case "lookupInfosWithEmails:": // FAILs on watch yet we do have a unittest for it
+				case "lookupInfosWithPhoneNumbers:": // FAILs on watch yet we do have a unittest for it
+					return true;
+				}
+				break;
 			}
 
 			// old binding mistake

@@ -219,6 +219,7 @@ namespace Introspection
 			"Megapascals",
 			"Metacharacters",
 			"Metalness",
+			"Metadatas",
 			"Microampere",
 			"Microamperes",
 			"Microohms",

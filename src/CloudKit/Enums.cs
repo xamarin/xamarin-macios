@@ -71,6 +71,11 @@ namespace XamCore.CloudKit
 		ZoneNotFound = 26,
 		LimitExceeded  = 27,
 		UserDeletedZone = 28,
+		[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12)] TooManyParticipants = 29,
+		[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12)] AlreadyShared = 30,
+		[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12)] ReferenceViolation = 31,
+		[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12)] ManagedAccountRestricted = 32,
+		[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12)] ParticipantMayNeedVerification = 33,
 	}
 
 	// NSInteger -> CKModifyRecordsOperation.h
@@ -90,7 +95,8 @@ namespace XamCore.CloudKit
 	public enum CKNotificationType : nint {
 		Query = 1,
 		RecordZone = 2,
-		ReadNotification = 3
+		ReadNotification = 3,
+		[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12)] Database = 4,
 	}
 
 	// NSInteger -> CKNotification.h
@@ -110,7 +116,8 @@ namespace XamCore.CloudKit
 	[Native]
 	public enum CKRecordZoneCapabilities : nuint {
 		FetchChanges = 1 << 0,
-		Atomic = 1 << 1
+		Atomic = 1 << 1,
+		[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12)] Sharing = 1 << 2,
 	}
 
 	// NSUInteger -> CKReference.h
@@ -128,12 +135,13 @@ namespace XamCore.CloudKit
 	[Native]
 	public enum CKSubscriptionType : nint {
 		Query = 1,
-		RecordZone = 2
+		RecordZone = 2,
+		[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12)] Database = 3,
 	}
 
 	// NSInteger -> CKSubscription.h
-	[iOS (8,0)]
-	[Availability (Platform.Mac_10_10)]
+	
+	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use CKQuerySubscriptionOptions instead")]
 	[Flags]
 	[Native]
 	public enum CKSubscriptionOptions : nuint {
@@ -142,6 +150,53 @@ namespace XamCore.CloudKit
 		FiresOnRecordDeletion = 1 << 2,
 		FiresOnce = 1 << 3,
 	}
+	
+	[iOS (10,0), Mac (10,12)]
+	[Native]
+	public enum CKDatabaseScope : nint
+	{
+		Public = 1,
+		Private,
+		Shared,
+	}
+	
+	[iOS (10,0), Mac (10,12)]
+	[Native]
+	public enum CKShareParticipantAcceptanceStatus : nint
+	{
+		Unknown,
+		Pending,
+		Accepted,
+		Removed,
+	}
 
+	[iOS (10,0), Mac (10,12)]
+	[Native]
+	public enum CKShareParticipantPermission : nint
+	{
+		Unknown,
+		None,
+		ReadOnly,
+		ReadWrite,
+	}
+
+	[iOS (10,10), Mac (10,12)]
+	[Native]
+	public enum CKShareParticipantType : nint
+	{
+		Unknown = 0,
+		Owner = 1,
+		PrivateUser = 3,
+		PublicUser = 4,
+	}
+	
+	[iOS (10,0), Mac(10,12)]
+	[Native]
+	public enum CKQuerySubscriptionOptions : nuint
+	{
+		RecordCreation = 1 << 0,
+		RecordUpdate = 1 << 1,
+		RecordDeletion = 1 << 2,
+		FiresOnce = 1 << 3,
+	}
 }
-
