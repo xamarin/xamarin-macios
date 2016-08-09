@@ -66,9 +66,15 @@ namespace Xamarin.iOS.Tasks
 			Log.LogTaskProperty ("TargetiOSDevice", TargetiOSDevice);
 
 			switch (PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier)) {
-			case PlatformFramework.WatchOS: targetOperatingSystem = "watchOS"; break;
-			case PlatformFramework.TVOS: targetOperatingSystem = "tvOS"; break;
-			default: targetOperatingSystem = "iOS"; break;
+			case PlatformFramework.WatchOS:
+				targetOperatingSystem = "watchOS";
+				break;
+			case PlatformFramework.TVOS:
+				targetOperatingSystem = "tvOS";
+				break;
+			default:
+				targetOperatingSystem = "iOS";
+				break;
 			}
 
 			if (!Enum.TryParse (Architectures, out architectures)) {
@@ -101,7 +107,7 @@ namespace Xamarin.iOS.Tasks
 				return false;
 			}
 
-			if (os.Value == targetOperatingSystem) {
+			if (os.Value != targetOperatingSystem) {
 				// user is building the solution for another Apple device, do not build this project for a specific device
 				DeviceSpecificIntermediateOutputPath = IntermediateOutputPath;
 				DeviceSpecificOutputPath = OutputPath;
