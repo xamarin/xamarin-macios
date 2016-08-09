@@ -23,6 +23,7 @@ using MonoTouch.ObjCRuntime;
 
 namespace XamCore.AVFoundation {
 
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AVAudio3DVectorOrientation {
 #if !COREBUILD
 		public Vector3 Forward, Up;
@@ -67,6 +68,7 @@ namespace XamCore.AVFoundation {
 #endif
 	}
 	
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AVAudio3DAngularOrientation {
 
 		public float Yaw, Pitch, Roll;
@@ -109,6 +111,7 @@ namespace XamCore.AVFoundation {
 		}
 	}
 
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptureWhiteBalanceGains {
 		public float RedGain, GreenGain, BlueGain;
 
@@ -118,13 +121,46 @@ namespace XamCore.AVFoundation {
 			GreenGain = greenGain;
 			BlueGain = blueGain;
 		}
-		
+
 		public override string ToString ()
 		{
 			return String.Format ("(RedGain={0},GreenGain={1},BlueGain={2})", RedGain, GreenGain, BlueGain);
 		}
+
+		public static bool operator ==(AVCaptureWhiteBalanceGains left, AVCaptureWhiteBalanceGains right)
+		{
+			return (left.RedGain == right.RedGain &&
+				left.GreenGain == right.GreenGain &&
+				left.BlueGain == right.BlueGain);
+		}
+
+		public static bool operator !=(AVCaptureWhiteBalanceGains left, AVCaptureWhiteBalanceGains right)
+		{
+			return (left.RedGain != right.RedGain ||
+				left.GreenGain != right.GreenGain ||
+				left.BlueGain != right.BlueGain);
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (!(obj is AVCaptureWhiteBalanceGains))
+				return false;
+
+			return this.Equals((AVCaptureWhiteBalanceGains)obj);
+		}
+
+		public bool Equals(AVCaptureWhiteBalanceGains other)
+		{
+			return this == other;
+		}
+
+		public override int GetHashCode ()
+		{
+			return RedGain.GetHashCode () ^ GreenGain.GetHashCode () ^ BlueGain.GetHashCode ();
+		}
 	}
 
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptureWhiteBalanceChromaticityValues {
 		public float X, Y;
 
@@ -138,8 +174,37 @@ namespace XamCore.AVFoundation {
 		{
 			return String.Format ("({0},{1})", X, Y);
 		}
+
+		public static bool operator ==(AVCaptureWhiteBalanceChromaticityValues left, AVCaptureWhiteBalanceChromaticityValues right)
+		{
+			return left.X == right.X && left.Y == right.Y;
+		}
+
+		public static bool operator !=(AVCaptureWhiteBalanceChromaticityValues left, AVCaptureWhiteBalanceChromaticityValues right)
+		{
+			return left.X != right.X || left.Y != right.Y;
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (!(obj is AVCaptureWhiteBalanceChromaticityValues))
+				return false;
+
+			return this.Equals((AVCaptureWhiteBalanceChromaticityValues)obj);
+		}
+
+		public bool Equals(AVCaptureWhiteBalanceChromaticityValues other)
+		{
+			return this == other;
+		}
+
+		public override int GetHashCode ()
+		{
+			return X.GetHashCode () ^ Y.GetHashCode ();
+		}
 	}
 
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptureWhiteBalanceTemperatureAndTintValues {
 		public float Temperature, Tint;
 
@@ -151,6 +216,35 @@ namespace XamCore.AVFoundation {
 		public override string ToString ()
 		{
 			return String.Format ("(Temperature={0},Tint={1})", Temperature, Tint);
+		}
+
+		public static bool operator ==(AVCaptureWhiteBalanceTemperatureAndTintValues left, AVCaptureWhiteBalanceTemperatureAndTintValues right)
+		{
+			return left.Temperature == right.Temperature && left.Tint == right.Tint;
+		}
+
+		public static bool operator !=(AVCaptureWhiteBalanceTemperatureAndTintValues left, AVCaptureWhiteBalanceTemperatureAndTintValues right)
+		{
+			return left.Temperature != right.Temperature || left.Tint != right.Tint;
+			
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (!(obj is AVCaptureWhiteBalanceTemperatureAndTintValues))
+				return false;
+			
+			return this.Equals((AVCaptureWhiteBalanceTemperatureAndTintValues)obj);
+		}
+
+		public bool Equals(AVCaptureWhiteBalanceTemperatureAndTintValues other)
+		{
+			return this == other;
+		}
+
+		public override int GetHashCode ()
+		{
+			return Temperature.GetHashCode () ^ Tint.GetHashCode ();
 		}
 	}
 
