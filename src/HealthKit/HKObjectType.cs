@@ -315,18 +315,9 @@ namespace XamCore.HealthKit
 	}
 
 	public partial class HKDocumentType {
-		static internal NSString ToKey (HKDocumentTypeIdentifier kind)
-		{
-			switch (kind) {
-			case HKDocumentTypeIdentifier.Cda:
-				return HKDocumentTypeIdentifierKey.Cda;
-			}
-			return null;
-		}
-
 		public static HKDocumentType Create (HKDocumentTypeIdentifier kind)
 		{
-			return HKObjectType._GetDocumentType (ToKey (kind));
+			return HKObjectType._GetDocumentType (kind.GetConstant ());
 		}
 	}
 	

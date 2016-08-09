@@ -16,6 +16,12 @@ using System.ComponentModel;
 
 namespace XamCore.HealthKit {
 
+	[Watch (3,0), iOS (10,0)]
+	public enum HKDocumentTypeIdentifier {
+		[Field ("HKDocumentTypeIdentifierCDA")]
+		Cda,
+	}
+
 	// NSInteger -> HKDefines.h
 	[Watch (2,0)]
 	[iOS (8,0)]
@@ -669,8 +675,9 @@ namespace XamCore.HealthKit {
 
 #if XAMCORE_4_0
 		[Internal]
-#endif
+#else
 		[Obsolete ("Use HKQuantityType.Create (HKQuantityTypeIdentifier)")]
+#endif
 		[Static]
 		[Export ("quantityTypeForIdentifier:")]
 		[return: NullAllowed]
@@ -678,8 +685,9 @@ namespace XamCore.HealthKit {
 
 #if XAMCORE_4_0
 		[Internal]
-#endif
+#else
 		[Obsolete ("Use HKCategoryType.Create (HKCategoryTypeIdentifier)")]
+#endif
 		[Static]
 		[Export ("categoryTypeForIdentifier:")]
 		[return: NullAllowed]
@@ -687,8 +695,9 @@ namespace XamCore.HealthKit {
 
 #if XAMCORE_4_0
 		[Internal]
-#endif
+#else
 		[Obsolete ("Use HKCharacteristicType.Create (HKCharacteristicTypeIdentifier)")]
+#endif
 		[Static]
 		[Export ("characteristicTypeForIdentifier:")]
 		[return: NullAllowed]
@@ -696,8 +705,9 @@ namespace XamCore.HealthKit {
 
 #if XAMCORE_4_0
 		[Internal]
-#endif
+#else
 		[Obsolete ("Use HKCorrelationType.Create (HKCorrelationTypeIdentifier)")]
+#endif
 		[Static, Export ("correlationTypeForIdentifier:")]
 		[return: NullAllowed]
 		HKCorrelationType GetCorrelationType (NSString hkCorrelationTypeIdentifier);
@@ -1365,16 +1375,6 @@ namespace XamCore.HealthKit {
 		
 		[Field ("HKCorrelationTypeIdentifierFood")]
 		NSString IdentifierFood { get; }
-
-		// If you add fields, add them to the enum too.
-	}
-
-	[Watch (3,0), iOS (10,0)]
-	[Internal]
-	[Static]
-	public interface HKDocumentTypeIdentifierKey {
-		[Field ("HKDocumentTypeIdentifierCDA")]
-		NSString Cda { get; }
 
 		// If you add fields, add them to the enum too.
 	}

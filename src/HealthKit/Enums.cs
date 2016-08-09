@@ -279,12 +279,6 @@ namespace XamCore.HealthKit
 		Food,
 	}
 
-	// Convenience enum, ObjC uses NSString
-	[Watch (3,0), iOS (10,0)]
-	public enum HKDocumentTypeIdentifier {
-		Cda,
-	}
-
 	[Native]
 	[Watch (2,0)]
 	[iOS (8,0)]
