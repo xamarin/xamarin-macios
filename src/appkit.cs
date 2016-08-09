@@ -3840,7 +3840,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10,11)]
 		[Export ("writeToURL:error:")]
-		bool WriteToURL ([NullAllowed] NSUrl url, [NullAllowed] out NSError errPtr);
+		bool WriteToUrl ([NullAllowed] NSUrl url, [NullAllowed] out NSError error);
 	}
 
 	[BaseType (typeof (NSPanel))]
@@ -23614,6 +23614,6 @@ namespace XamCore.AppKit {
 	//	[Abstract]
 	//	[Export ("cloudShareForUserInterfaceItem:")]
 	//	[return: NullAllowed]
-	//	CKShare CloudShareForUserInterfaceItem (NSValidatedUserInterfaceItem item);
+	//	CKShare GetCloudShare (NSValidatedUserInterfaceItem item);
 	//}
 }

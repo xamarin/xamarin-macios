@@ -3710,7 +3710,7 @@ namespace XamCore.Foundation
 		[Watch (3,0), TV (10,0), Mac (10,12), iOS (10,0)]
 		[Export ("localizedStringForCalendarIdentifier:")]
 		[return: NullAllowed]
-		string LocalizedStringForCalendarIdentifier (NSString calendarIdentifier);
+		string GetLocalizedString (NSString calendarIdentifier);
 	}
 
 	public delegate void NSMatchEnumerator (NSTextCheckingResult result, NSMatchingFlags flags, ref bool stop);
