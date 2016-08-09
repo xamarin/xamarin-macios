@@ -82,7 +82,9 @@ namespace XamCore.CallKit {
 	public enum CXCallEndedReason : nint {
 		Failed = 1,
 		RemoteEnded = 2,
-		Unanswered = 3
+		Unanswered = 3,
+		AnsweredElsewhere = 4,
+		DeclinedElsewhere = 5
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
