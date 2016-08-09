@@ -1688,6 +1688,7 @@ TVOS_FRAMEWORKS =           \
 	MultipeerConnectivity   \
 	OpenGLES                \
 	Photos                  \
+	PhotosUI                \
 	ReplayKit               \
 	Security                \
 	StoreKit                \
