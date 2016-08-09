@@ -6,6 +6,7 @@ using System;
 namespace XamCore.CloudKit
 {
 	// NSInteger -> CKContainer.h
+	[Watch (3,0)]
 	[iOS (8,0)]
 	[Availability (Platform.Mac_10_10)]
 	[Native]
@@ -17,6 +18,7 @@ namespace XamCore.CloudKit
 	}
 
 	// NSUInteger -> CKContainer.h
+	[Watch (3,0)]
 	[iOS (8,0)]
 	[Availability (Platform.Mac_10_10)]
 	[Native]
@@ -26,6 +28,7 @@ namespace XamCore.CloudKit
 	}
 
 	// NSInteger -> CKContainer.h
+	[Watch (3,0)]
 	[iOS (8,0)]
 	[Availability (Platform.Mac_10_10)]
 	[Native]
@@ -37,6 +40,7 @@ namespace XamCore.CloudKit
 	}
 
 	// NSInteger -> CKError.h
+	[Watch (3,0)]
 	[iOS (8,0)]
 	[Availability (Platform.Mac_10_10)]
 	[Native]
@@ -71,14 +75,15 @@ namespace XamCore.CloudKit
 		ZoneNotFound = 26,
 		LimitExceeded  = 27,
 		UserDeletedZone = 28,
-		[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12)] TooManyParticipants = 29,
-		[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12)] AlreadyShared = 30,
-		[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12)] ReferenceViolation = 31,
-		[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12)] ManagedAccountRestricted = 32,
-		[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12)] ParticipantMayNeedVerification = 33,
+		[iOS (10,0), TV (10,0), Mac (10,12)] TooManyParticipants = 29,
+		[iOS (10,0), TV (10,0), Mac (10,12)] AlreadyShared = 30,
+		[iOS (10,0), TV (10,0), Mac (10,12)] ReferenceViolation = 31,
+		[iOS (10,0), TV (10,0), Mac (10,12)] ManagedAccountRestricted = 32,
+		[iOS (10,0), TV (10,0), Mac (10,12)] ParticipantMayNeedVerification = 33,
 	}
 
 	// NSInteger -> CKModifyRecordsOperation.h
+	[Watch (3,0)]
 	[iOS (8,0)]
 	[Availability (Platform.Mac_10_10)]
 	[Native]
@@ -89,6 +94,7 @@ namespace XamCore.CloudKit
 	}
 
 	// NSInteger -> CKNotification.h
+	[Watch (3,0)]
 	[iOS (8,0)]
 	[Availability (Platform.Mac_10_10)]
 	[Native]
@@ -100,6 +106,7 @@ namespace XamCore.CloudKit
 	}
 
 	// NSInteger -> CKNotification.h
+	[Watch (3,0)]
 	[iOS (8,0)]
 	[Availability (Platform.Mac_10_10)]
 	[Native]
@@ -110,6 +117,7 @@ namespace XamCore.CloudKit
 	}
 
 	// NSUInteger -> CKRecordZone.h
+	[Watch (3,0)]
 	[iOS (8,0)]
 	[Availability (Platform.Mac_10_10)]
 	[Flags]
@@ -121,6 +129,7 @@ namespace XamCore.CloudKit
 	}
 
 	// NSUInteger -> CKReference.h
+	[Watch (3,0)]
 	[iOS (8,0)]
 	[Availability (Platform.Mac_10_10)]
 	[Native]
@@ -130,6 +139,7 @@ namespace XamCore.CloudKit
 	}
 
 	// NSInteger -> CKSubscription.h
+	[NoWatch]
 	[iOS (8,0)]
 	[Availability (Platform.Mac_10_10)]
 	[Native]
@@ -140,7 +150,8 @@ namespace XamCore.CloudKit
 	}
 
 	// NSInteger -> CKSubscription.h
-	
+
+	[NoWatch]
 	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use CKQuerySubscriptionOptions instead")]
 	[Flags]
 	[Native]
@@ -151,6 +162,7 @@ namespace XamCore.CloudKit
 		FiresOnce = 1 << 3,
 	}
 	
+	[Watch (3,0)]
 	[iOS (10,0), Mac (10,12)]
 	[Native]
 	public enum CKDatabaseScope : nint
@@ -160,6 +172,7 @@ namespace XamCore.CloudKit
 		Shared,
 	}
 	
+	[Watch (3,0)]
 	[iOS (10,0), Mac (10,12)]
 	[Native]
 	public enum CKShareParticipantAcceptanceStatus : nint
@@ -170,6 +183,7 @@ namespace XamCore.CloudKit
 		Removed,
 	}
 
+	[Watch (3,0)]
 	[iOS (10,0), Mac (10,12)]
 	[Native]
 	public enum CKShareParticipantPermission : nint
@@ -180,6 +194,7 @@ namespace XamCore.CloudKit
 		ReadWrite,
 	}
 
+	[Watch (3,0)]
 	[iOS (10,10), Mac (10,12)]
 	[Native]
 	public enum CKShareParticipantType : nint
@@ -189,7 +204,8 @@ namespace XamCore.CloudKit
 		PrivateUser = 3,
 		PublicUser = 4,
 	}
-	
+
+	[NoWatch]
 	[iOS (10,0), Mac(10,12)]
 	[Native]
 	public enum CKQuerySubscriptionOptions : nuint
