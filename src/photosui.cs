@@ -7,6 +7,7 @@ using System;
 
 namespace XamCore.PhotosUI
 {
+	[NoTV]
 	[iOS (8,0)]
 	[Protocol]
 	[Model]
@@ -34,6 +35,7 @@ namespace XamCore.PhotosUI
 		bool ShouldShowCancelConfirmation { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (9,1)]
 	[BaseType (typeof (UIView))]
 	interface PHLivePhotoView {
@@ -70,6 +72,7 @@ namespace XamCore.PhotosUI
 		void StopPlayback ();
 	}
 
+	[TV (10,0)]
 	[iOS (9,1)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
