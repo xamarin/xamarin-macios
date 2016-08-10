@@ -3702,6 +3702,15 @@ namespace XamCore.Foundation
 		
 		[Internal, Field ("NSLocaleAlternateQuotationEndDelimiterKey")]
 		NSString _AlternateQuotationEndDelimiterKey { get; }
+
+		[Watch (3, 0), TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("calendarIdentifier")]
+		NSString CalendarIdentifier { get; }
+
+		[Watch (3,0), TV (10,0), Mac (10,12), iOS (10,0)]
+		[Export ("localizedStringForCalendarIdentifier:")]
+		[return: NullAllowed]
+		string GetLocalizedString (NSString calendarIdentifier);
 	}
 
 	public delegate void NSMatchEnumerator (NSTextCheckingResult result, NSMatchingFlags flags, ref bool stop);
@@ -12838,6 +12847,7 @@ namespace XamCore.Foundation
 		string ToString (NSDate date);
 
 		[Export ("dateFromString:")]
+		[return: NullAllowed]
 		NSDate ToDate (string @string);
 
 		[Static]
