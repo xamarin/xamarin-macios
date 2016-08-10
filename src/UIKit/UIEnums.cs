@@ -1851,6 +1851,7 @@ namespace XamCore.UIKit {
 		Custom
 	}
 
+	[NoWatch]
 	[iOS (10,0)]
 	[Native]
 	public enum UIDisplayGamut : nint
@@ -1860,6 +1861,7 @@ namespace XamCore.UIKit {
 		P3
 	}
 
+	[NoWatch]
 	[iOS (10,0)]
 	[Native]
 	public enum UITraitEnvironmentLayoutDirection : nint
@@ -1878,6 +1880,7 @@ namespace XamCore.UIKit {
 		Dark
 	}
 
+	[NoWatch]
 	[iOS (10,0)]
 	[Native]
 	public enum UITextItemInteraction : nint
@@ -1887,6 +1890,7 @@ namespace XamCore.UIKit {
 		Preview
 	}
 
+	[NoWatch]
 	[iOS (10,0)]
 	[Native]
 	public enum UIViewAnimatingState : nint
@@ -1896,6 +1900,7 @@ namespace XamCore.UIKit {
 		Stopped
 	}
 
+	[NoWatch]
 	[iOS (10,0)]
 	[Native]
 	public enum UIViewAnimatingPosition : nint
@@ -1905,6 +1910,7 @@ namespace XamCore.UIKit {
 		Current
 	}
 
+	[NoWatch]
 	[iOS (10,0)]
 	[Native]
 	public enum UITimingCurveType : nint
@@ -1915,6 +1921,8 @@ namespace XamCore.UIKit {
 		Composed
 	}
 
+	[NoWatch]
+	[NoTV]
 	[iOS(10,0)]
 	[Native]
 	public enum UIAccessibilityHearingDeviceEar : nuint {
@@ -1924,6 +1932,7 @@ namespace XamCore.UIKit {
 		Both = Left | Right
 	}
 
+	[NoWatch]
 	[iOS(10,0)]
 	[Native]
 	public enum UIAccessibilityCustomRotorDirection : nint

@@ -1422,11 +1422,14 @@ namespace XamCore.UIKit {
 		[Field ("UIAccessibilityNotificationVoiceOverIdentifier")]
 		NSString NotificationVoiceOverIdentifier { get; }
 
+		[NoWatch]
+		[NoTV]
 		[iOS (10,0)]
 		[Notification]
 		[Field ("UIAccessibilityHearingDevicePairedEarDidChangeNotification")]
 		NSString HearingDevicePairedEarDidChangeNotification { get; }
 
+		[NoWatch]
 		[iOS (10,0)]
 		[Notification]
 		[Field ("UIAccessibilityAssistiveTouchStatusDidChangeNotification")]
@@ -5057,6 +5060,7 @@ namespace XamCore.UIKit {
 		[Internal] // bug 25511
 		IntPtr _GetPreferredFontForTextStyle (NSString uiFontTextStyle);
 
+		// FIXME [Watch (3,0)] the API is present but UITraitCollection is not exposed / rdar 27785753
 #if !WATCH
 		[iOS (10,0)]
 		[Static]
@@ -5150,6 +5154,7 @@ namespace XamCore.UIKit {
 		[Static, Export ("preferredFontDescriptorWithTextStyle:")]
 		UIFontDescriptor GetPreferredDescriptorForTextStyle (NSString uiFontTextStyle);
 
+		// FIXME [Watch (3,0)] the API is present but UITraitCollection is not exposed / rdar #27785753
 #if !WATCH
 		[iOS (10,0)]
 		[Static]
