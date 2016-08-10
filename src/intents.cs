@@ -2803,9 +2803,6 @@ namespace XamCore.Intents {
 		[Export ("resolveDateTimeRangeForSearchForMessages:withCompletion:")]
 		void ResolveDateTimeRange (INSearchForMessagesIntent intent, Action<INDateComponentsRangeResolutionResult> completion);
 
-		[Export ("resolveIdentifiersForSearchForMessages:withCompletion:")]
-		void ResolveIdentifiers (INSearchForMessagesIntent intent, Action<INStringResolutionResult []> completion);
-
 		[Export ("resolveGroupNamesForSearchForMessages:withCompletion:")]
 		void ResolveGroupNames (INSearchForMessagesIntent intent, Action<INStringResolutionResult []> completion);
 	}
@@ -3253,9 +3250,6 @@ namespace XamCore.Intents {
 
 		[Export ("confirmSetMessageAttribute:completion:")]
 		void ConfirmSetMessageAttribute (INSetMessageAttributeIntent intent, Action<INSetMessageAttributeIntentResponse> completion);
-
-		[Export ("resolveIdentifiersForSetMessageAttribute:withCompletion:")]
-		void ResolveIdentifiers (INSetMessageAttributeIntent intent, Action<INStringResolutionResult []> completion);
 
 		[Export ("resolveAttributeForSetMessageAttribute:withCompletion:")]
 		void ResolveAttribute (INSetMessageAttributeIntent intent, Action<INMessageAttributeResolutionResult> completion);

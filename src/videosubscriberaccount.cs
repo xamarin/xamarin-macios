@@ -39,6 +39,22 @@ namespace XamCore.VideoSubscriberAccount {
 		Granted = 3
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.TvOS, 10, 0)]
+	[Unavailable (PlatformName.WatchOS)]
+	[Static]
+	interface VSErrorInfoKey {
+
+		[Field ("VSErrorInfoKeySAMLResponse")]
+		NSString SamlResponse { get; }
+
+		[Field ("VSErrorInfoKeySAMLResponseStatus")]
+		NSString SamlResponseStatus { get; }
+
+		[Field ("VSErrorInfoKeyUnsupportedProviderIdentifier")]
+		NSString UnsupportedProviderIdentifier { get; }
+	}
+
 	interface IVSAccountManagerDelegate { }
 
 	[Protocol, Model]
