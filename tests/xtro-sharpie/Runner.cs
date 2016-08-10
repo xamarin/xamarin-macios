@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using Mono.Cecil;
 
@@ -40,11 +41,64 @@ namespace Extrospection {
 			}
 
 			var reader = new AstReader ();
-			foreach (var v in managed_reader)
-				reader.TranslationUnitParsed += tu => tu.Accept (v);
+			foreach (var v in managed_reader) {
+				reader.TranslationUnitParsed += tu => {
+					tu.DeclFilter = ModuleExclusionList.DeclFilter;
+					tu.Accept (v);
+				};
+			}
+
 			reader.Load (pchFile);
 
 			managed_reader.End ();
+		}
+	}
+
+	class ModuleExclusionList {
+		static List<string> macOSXExclusionList = new List<string> () {
+			 // Nice to have someday
+			"IOBluetooth", "IOBluetoothUI", "PubSub", "CryptoTokenKit", "DiscRecording", "DiscRecordingUI", "ImageCaptureCore", "OSAKit", "AudioVideoBridging", "Automator", "ImageCapture",
+
+			 // Maybe?
+			"ICADevices", "OpenDirectory", "IMServicePlugIn", "PreferencePanes", "ScreenSaver",
+
+			 // Nope
+			"InstallerPlugins", "JavaVM", "ExceptionHandling", "JavaFrameEmbedding",
+
+			// Deprecated so double Nope
+			"SyncServices", "CalendarStore",
+		};
+
+		static IEnumerable<string> _exclusionList;
+		static IEnumerable<string> ExclusionList
+		{
+			get
+			{
+				if (_exclusionList == null)
+				{
+					switch (Helpers.Platform)
+					{
+						case "osx":
+							_exclusionList = macOSXExclusionList;
+							break;
+						default:
+							_exclusionList = Enumerable.Empty <string> ();
+							break;
+					}
+				}
+				return _exclusionList;
+			}
+		}
+
+		public static bool DeclFilter (Decl d)
+		{
+			if (d.OwningModule != null)
+			{
+				foreach (var item in ExclusionList)
+					if (d.InModule (item))
+						return false;
+			}
+			return true;
 		}
 	}
 
@@ -124,6 +178,18 @@ namespace Extrospection {
 		// last chance to report errors
 		public virtual void End ()
 		{
+		}
+
+		protected string GetDeclaringHeaderFile (Decl decl)
+		{
+			var header_file = decl.PresumedLoc.FileName;
+			var fxh = header_file.IndexOf (".framework/Headers/", StringComparison.Ordinal);
+			if (fxh > 0)
+			{
+				var start = header_file.LastIndexOf ('/', fxh) + 1;
+				return header_file.Substring (start, fxh - start);
+			}
+			return null;
 		}
 	}
 

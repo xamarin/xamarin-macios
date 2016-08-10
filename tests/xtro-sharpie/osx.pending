@@ -153,3 +153,7 @@
 !unknown-type! INRelativeReferenceResolutionResult bound
 !unknown-native-enum! INRelativeSetting bound
 !unknown-type! INRelativeSettingResolutionResult bound
+
+# Used in sandbox for NSOpen/Save panel but never should have been bound. #if !XAMCORE_3_0'ed
+!unknown-type! NSRemoteOpenPanel bound
+!unknown-type! NSRemoteSavePanel bound
