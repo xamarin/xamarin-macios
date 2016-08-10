@@ -10694,6 +10694,10 @@ namespace XamCore.AppKit {
 		[Mac (10,6)]
 		[Field ("NSPasteboardTypeFindPanelSearchOptions")]
 		NSString NSPasteboardTypeFindPanelSearchOptions { get; }
+
+		[Mac (10,12)]
+		[Export ("prepareForNewContentsWithOptions:")]
+		nint PrepareForNewContents (NSPasteboardContentsOptions options);
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -23578,14 +23582,14 @@ namespace XamCore.AppKit {
 	interface NSFilePromiseProviderDelegate
 	{
 		[Abstract]
-		[Export ("filePromiseProvider:fileNameForDestination:")]
-		string GetFileNameForDestination (NSFilePromiseProvider filePromiseProvider, NSUrl destinationUrl);
+		[Export ("filePromiseProvider:fileNameForType:")]
+		string GetFileNameForDestination (NSFilePromiseProvider filePromiseProvider, string fileType);
 
 		[Export ("filePromiseProvider:writePromiseToURL:completionHandler:")]
 		void WritePromiseToUrl (NSFilePromiseProvider filePromiseProvider, NSUrl url, [NullAllowed] Action<NSError> completionHandler);
 
-		[Export ("promiseOperationQueueForFilePromiseProvider:")]
-		NSOperationQueue GetPromiseOperationQueue (NSFilePromiseProvider filePromiseProvider);
+		[Export ("operationQueueForFilePromiseProvider:")]
+		NSOperationQueue GetOperationQueue (NSFilePromiseProvider filePromiseProvider);
 	}
 
 	[Mac (10,12)]
