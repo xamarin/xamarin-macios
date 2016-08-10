@@ -1355,7 +1355,6 @@ namespace XamCore.GameKit {
 		[Export ("showsCompletionBanner", ArgumentSemantic.Assign)]
 		bool ShowsCompletionBanner { get; set;  }
 
-		[NoWatch]
 		[iOS (6,0), Mac (10,8)]
 		[Static]
 		[Export ("reportAchievements:withCompletionHandler:")]

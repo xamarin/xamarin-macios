@@ -16,9 +16,10 @@
 
 # GameKit
 
-## All members of the protocol sare not available on watchOS (but the protocols are not decorated)
+## All members of the protocol are marked as not available on watchOS (but the protocols themselves are not decorated)
 !missing-protocol! GKChallengeListener not bound
 !missing-protocol! GKInviteEventListener not bound
+!missing-protocol! GKGameSessionEventListener not bound
 
 ## types/members marked as deprecated in watchOS 2.0 (even if the framework was not available before 3.0)
 ## or deprecated well before that (and have alternatives). The last ones might be there but it seems better
@@ -51,6 +52,8 @@
 !missing-selector! GKLeaderboard::category not bound
 !missing-selector! GKLeaderboard::initWithPlayerIDs: not bound
 !missing-selector! GKLeaderboard::setCategory: not bound
+!missing-selector! +GKLeaderboard::loadCategoriesWithCompletionHandler: not bound
+!missing-selector! +GKLeaderboard::setDefaultLeaderboard:withCompletionHandler: not bound
 !missing-selector! GKLocalPlayer::authenticateWithCompletionHandler: not bound
 !missing-selector! GKLocalPlayer::friends not bound
 !missing-selector! GKLocalPlayer::loadDefaultLeaderboardCategoryIDWithCompletionHandler: not bound

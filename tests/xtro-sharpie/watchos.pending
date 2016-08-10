@@ -102,6 +102,10 @@
 
 # UIKit
 
+## UITraitCollection is not exposed in watchOS but those API are - rdar #27785753
+!missing-selector! +UIFont::preferredFontForTextStyle:compatibleWithTraitCollection: not bound
+!missing-selector! +UIFontDescriptor::preferredFontDescriptorWithTextStyle:compatibleWithTraitCollection: not bound
+
 ## Apple renamed it from UILineBreakMode and we kept the old name
 !missing-enum! NSLineBreakMode not bound
 !unknown-native-enum! UILineBreakMode bound
