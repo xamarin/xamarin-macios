@@ -1495,7 +1495,6 @@ namespace XamCore.CloudKit {
 
 	}
 
-#if !MONOMAC // radar 23904638 - The header does not match symbols in nm, and the header isn't even in CloudKit.h :facepalm:
 	delegate void CKFetchWebAuthTokenOperationHandler (string webAuthToken, NSError operationError);
 
 	[iOS (9,2), Mac (10,11,2, onlyOn64 : true)]
@@ -1517,7 +1516,6 @@ namespace XamCore.CloudKit {
 		[Export ("fetchWebAuthTokenCompletionBlock", ArgumentSemantic.Copy)]
 		CKFetchWebAuthTokenOperationHandler Completed { get; set; }
 	}
-#endif
 
 	[iOS (10,0), TV (10,0), Watch (3,0), Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(CKOperation))]
