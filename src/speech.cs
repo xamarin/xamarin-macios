@@ -197,7 +197,6 @@ namespace XamCore.Speech {
 		[Export ("defaultTaskHint", ArgumentSemantic.Assign)]
 		SFSpeechRecognitionTaskHint DefaultTaskHint { get; set; }
 
-		[Async]
 		[Export ("recognitionTaskWithRequest:resultHandler:")]
 		SFSpeechRecognitionTask GetRecognitionTask (SFSpeechRecognitionRequest request, Action<SFSpeechRecognitionResult, NSError> resultHandler);
 
