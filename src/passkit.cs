@@ -747,13 +747,14 @@ namespace XamCore.PassKit {
 
 	interface IPKPaymentAuthorizationControllerDelegate {}
 
+	[Watch (3,0)][iOS (10,0)]
 	[Protocol][Model]
 	[BaseType (typeof (NSObject))]
 	interface PKPaymentAuthorizationControllerDelegate {
 
 		[Abstract]
 		[Export ("paymentAuthorizationController:didAuthorizePayment:completion:")]
-		void PaymentAuthorizationController (PKPaymentAuthorizationController controller, PKPayment payment, Action<PKPaymentAuthorizationStatus> completion);
+		void DidAuthorizePayment (PKPaymentAuthorizationController controller, PKPayment payment, Action<PKPaymentAuthorizationStatus> completion);
 
 		[Abstract]
 		[Export ("paymentAuthorizationControllerDidFinish:")]
