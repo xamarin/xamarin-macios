@@ -45,7 +45,7 @@ namespace XamCore.CoreWlan {
 		bool IsEqualToChannel (CWChannel channel);
 	}
 
-	[Availability (Deprecated = Platform.Mac_10_7)]
+	[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_10)]
 	[BaseType (typeof (NSObject))]
 	interface CW8021XProfile : NSCoding, NSCopying {
 		[Availability (Deprecated = Platform.Mac_10_7)]
@@ -68,16 +68,16 @@ namespace XamCore.CoreWlan {
 		[Export ("alwaysPromptForPassword")]
 		bool AlwaysPromptForPassword{ get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_7)]
 		[Static]
 		[Export ("profile")]
+		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_10)]
 		CW8021XProfile Profile { get; }
 
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_10)]
 		[Export ("isEqualToProfile:")]
 		bool IsEqualToProfile (CW8021XProfile profile);
 
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_10)]
 		[Static]
 		[Export ("allUser8021XProfiles")]
 		CW8021XProfile[] AllUser8021XProfiles { get; }
@@ -412,7 +412,7 @@ namespace XamCore.CoreWlan {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[Availability (Deprecated = Platform.Mac_10_7)]
+	[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_10)]
 	interface CWWirelessProfile : NSCoding, NSCopying {
 		[Availability (Deprecated = Platform.Mac_10_7)]
 		[Export ("ssid", ArgumentSemantic.Copy)]
@@ -426,7 +426,7 @@ namespace XamCore.CoreWlan {
 		[Export ("passphrase", ArgumentSemantic.Copy)]
 		string Passphrase { get; set; }
 
-		[Availability (Deprecated = Platform.Mac_10_7)]
+		[Availability (Deprecated = Platform.Mac_10_7, Obsoleted = Platform.Mac_10_10)]
 		[Export ("user8021XProfile", ArgumentSemantic.Retain)]
 		CW8021XProfile User8021XProfile { get; set; }
 

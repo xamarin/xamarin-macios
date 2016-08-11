@@ -157,3 +157,21 @@
 # Used in sandbox for NSOpen/Save panel but never should have been bound. #if !XAMCORE_3_0'ed
 !unknown-type! NSRemoteOpenPanel bound
 !unknown-type! NSRemoteSavePanel bound
+
+# Informal Protocol
+!unknown-protocol! IKImageBrowserDataSource bound
+!unknown-protocol! IKImageBrowserItem bound
+
+# Fixed in XAMCORE_4_0
+!wrong-enum-size! NSEventSubtype managed 8 vs native 2
+!wrong-enum-size! WebNavigationType managed 4 vs native 8
+
+# 32-bit only, and marked correctly in binding
+!unknown-type! NSMenuView bound
+
+# Proxy class for NSGraphicsContext internal to AppKit
+!unknown-type! NSPrintPreviewGraphicsContext bound
+
+# Removed in 10.10
+!unknown-type! CW8021XProfile bound
+!unknown-type! CWWirelessProfile bound

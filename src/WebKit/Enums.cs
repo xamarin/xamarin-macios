@@ -93,7 +93,11 @@ namespace XamCore.WebKit {
 #endif
 	}
 
+#if !XAMCORE_4_0
 	public enum WebNavigationType : uint_compat_int {
+#else
+	public enum WebNavigationType : nint_compat_int {
+#endif
 		LinkClicked, FormSubmitted, BackForward, Reload, FormResubmitted, Other
 	}
 

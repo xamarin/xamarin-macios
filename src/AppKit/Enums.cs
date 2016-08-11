@@ -755,8 +755,12 @@ namespace XamCore.AppKit {
 		ModeSwitch     = 0xF747
 	}
 
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSEventSubtype : nuint_compat_int {
+#else
+	public enum NSEventSubtype : short {
+#endif
 		WindowExposed = 0,
 		ApplicationActivated = 1,
 		ApplicationDeactivated = 2,
