@@ -526,7 +526,6 @@
     <Compile Include="CoreVideo\PixelBufferTest.cs" />
     <Compile Include="CoreMidi\MidiThruConnectionTests.cs" />
     <Compile Include="SpriteKit\SKShapeNodeTest.cs" />
-    <Compile Include="CoreGraphics\ColorConverterTest.cs" />
     <Compile Include="CoreData\ExpressionDescriptionTest.cs" />
     <Compile Include="CoreData\FetchRequestExpressionTest.cs" />
     <Compile Include="CoreData\PropertyDescriptionTest.cs" />
@@ -556,6 +555,7 @@
     <Compile Include="CloudKit\CKModifySubscriptionsOperationTest.cs" />
     <Compile Include="CloudKit\CKQueryOperationTest.cs" />
     <Compile Include="CloudKit\CKUserIdentityLookupInfoTest.cs" />
+    <Compile Include="CoreGraphics\ColorConversionInfoTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>

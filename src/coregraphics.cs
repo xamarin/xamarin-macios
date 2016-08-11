@@ -175,4 +175,18 @@ namespace XamCore.CoreGraphics {
 		NSString GenericRGBLinear { get; }
 #endif
 	}
+
+	[Partial]
+	partial interface CGColorConversionInfo {
+
+		[Internal]
+		[Field ("kCGColorConversionBlackPointCompensation")]
+		NSString BlackPointCompensationKey { get; }
+	}
+
+	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
+	[StrongDictionary ("CGColorConversionInfo")]
+	interface CGColorConversionOptions {
+		bool BlackPointCompensation { get; set; }
+	}
 }
