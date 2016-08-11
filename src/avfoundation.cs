@@ -75,7 +75,7 @@ namespace XamCore.AVFoundation {
 		[Export ("videoCompositionInstruction", ArgumentSemantic.Copy)]
 		AVVideoCompositionInstruction VideoCompositionInstruction { get; }
 	
-		[NullAllowed]
+		[return: NullAllowed]
 		[Export ("sourceFrameByTrackID:")]
 		CVPixelBuffer SourceFrameByTrackID (int /* CMPersistentTrackID = int32_t */ trackID);
 	
@@ -2365,7 +2365,7 @@ namespace XamCore.AVFoundation {
 		AVMetadataItem [] Metadata { get; }
 
 		[Export ("unusedTrackID")]
-		int /* CMPersistentTrackID -> int32_t */ UnusedTrackId { get; }
+		int /* CMPersistentTrackID -> int32_t */ UnusedTrackId { get; }  // TODO: wrong name, should have benn UnusedTrackID
 
 		[iOS (9,0), Mac(10,11)]
 		[Export ("preferredMediaSelection")]
@@ -2488,7 +2488,7 @@ namespace XamCore.AVFoundation {
 	// calling 'init' returns a NIL handle
 	[DisableDefaultCtor]
 	interface AVAssetImageGenerator {
-		[Export ("maximumSize")]
+		[Export ("maximumSize", ArgumentSemantic.Assign)]
 		CGSize MaximumSize { get; set;  }
 
 		[Export ("apertureMode", ArgumentSemantic.Copy), NullAllowed]
@@ -2529,11 +2529,11 @@ namespace XamCore.AVFoundation {
 
 		// 5.0 APIs
 		[Since (5,0)]
-		[Export ("requestedTimeToleranceBefore")]
+		[Export ("requestedTimeToleranceBefore", ArgumentSemantic.Assign)]
 		CMTime RequestedTimeToleranceBefore { get; set;  }
 
 		[Since (5,0)]
-		[Export ("requestedTimeToleranceAfter")]
+		[Export ("requestedTimeToleranceAfter", ArgumentSemantic.Assign)]
 		CMTime RequestedTimeToleranceAfter { get; set;  }
 
 #if !MONOMAC
@@ -2873,7 +2873,7 @@ namespace XamCore.AVFoundation {
 		void FinishLoading ([NullAllowed] NSUrlResponse usingResponse, [NullAllowed] NSData data, [NullAllowed] NSUrlRequest redirect);
 
 		[Export ("finishLoadingWithError:")]
-		void FinishLoadingWithError ([NullAllowed]NSError error);
+		void FinishLoadingWithError ([NullAllowed]NSError error); // TODO: Should have been FinishLoading (NSerror);
 
 		[return: NullAllowed]
 		[Export ("streamingContentKeyRequestDataForApp:contentIdentifier:options:error:")]
@@ -2958,18 +2958,18 @@ namespace XamCore.AVFoundation {
 		[Export ("error"), NullAllowed]
 		NSError Error { get;  }
 
-		[Export ("movieFragmentInterval")]
+		[Export ("movieFragmentInterval", ArgumentSemantic.Assign)] 
 		CMTime MovieFragmentInterval { get; set;  }
 
 		[iOS (9,0), Mac (10,11)] // There is no availability attribute on headers but was introduced on iOS9 and Mac 10.11
-		[Export ("overallDurationHint")]
+		[Export ("overallDurationHint", ArgumentSemantic.Assign)]
 		CMTime OverallDurationHint { get; set; }
 
 		[Export ("shouldOptimizeForNetworkUse")]
 		bool ShouldOptimizeForNetworkUse { get; set;  }
 
 		[Export ("inputs")]
-		AVAssetWriterInput [] inputs { get;  }
+		AVAssetWriterInput [] inputs { get;  }  // TODO: Should have been Inputs
 
 		[Export ("availableMediaTypes")]
 		NSString [] AvailableMediaTypes { get; }
@@ -3085,7 +3085,7 @@ namespace XamCore.AVFoundation {
 		[Export ("outputSettings"), NullAllowed]
 		NSDictionary OutputSettings { get;  }
 
-		[Export ("transform")]
+		[Export ("transform", ArgumentSemantic.Assign)]
 		CGAffineTransform Transform { get; set;  }
 
 		[Export ("metadata", ArgumentSemantic.Copy)]
@@ -3257,7 +3257,7 @@ namespace XamCore.AVFoundation {
 		[Export ("assetWriterInput")]
 		AVAssetWriterInput AssetWriterInput { get;  }
 
-		[Export ("sourcePixelBufferAttributes")]
+		[NullAllowed, Export ("sourcePixelBufferAttributes")]
 		NSDictionary SourcePixelBufferAttributes { get;  }
 
 		[Wrap ("SourcePixelBufferAttributes")]
@@ -3284,6 +3284,18 @@ namespace XamCore.AVFoundation {
 
 		[Export ("appendPixelBuffer:withPresentationTime:")]
 		bool AppendPixelBufferWithPresentationTime (CVPixelBuffer pixelBuffer, CMTime presentationTime);
+	}
+
+	[NoWatch, iOS (10,0), TV (10,0), Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface AVAssetCache
+	{
+		[Export ("playableOffline")]
+		bool IsPlayableOffline { [Bind ("isPlayableOffline")] get; }
+
+		[Export ("mediaSelectionOptionsInMediaSelectionGroup:")]
+		AVMediaSelectionOption[] GetMediaSelectionOptions (AVMediaSelectionGroup mediaSelectionGroup);
 	}
 
 	[Since (4,0)]
@@ -3351,6 +3363,10 @@ namespace XamCore.AVFoundation {
 		[Field ("AVURLAssetHTTPCookiesKey")]
 		NSString HttpCookiesKey { get; }
 #endif
+
+		[iOS (10,0), TV (10,0), Mac (10,12)]
+		[NullAllowed, Export ("assetCache")]
+		AVAssetCache Cache { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -6317,7 +6333,7 @@ namespace XamCore.AVFoundation {
 		[Export ("maxDuration")]
 		CMTime MaxDuration { get;  }
 
-		[Export ("timeRange")]
+		[Export ("timeRange", ArgumentSemantic.Assign)]
 		CMTimeRange TimeRange { get; set;  }
 
 		[Export ("metadata", ArgumentSemantic.Copy), NullAllowed]
@@ -6329,7 +6345,7 @@ namespace XamCore.AVFoundation {
 		[Export ("audioMix", ArgumentSemantic.Copy), NullAllowed]
 		AVAudioMix AudioMix { get; set;  }
 
-		[Export ("videoComposition", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("videoComposition", ArgumentSemantic.Copy)]
 		AVVideoComposition VideoComposition { get; set;  }
 
 		[Export ("shouldOptimizeForNetworkUse")]
@@ -6557,6 +6573,10 @@ namespace XamCore.AVFoundation {
 	
 		[Export ("cancelAllPendingVideoCompositionRequests")]
 		void CancelAllPendingVideoCompositionRequests ();
+		
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[Export ("supportsWideColorSourceFrames")]
+		bool SupportsWideColorSourceFrames { get; }
 	}
 	
 	[Since (4,0)]
@@ -6593,6 +6613,18 @@ namespace XamCore.AVFoundation {
 		[Static]
 		[Export ("videoCompositionWithAsset:applyingCIFiltersWithHandler:")]
 		AVVideoComposition CreateVideoComposition (AVAsset asset, Action<AVAsynchronousCIImageFilteringRequest> applier);
+		
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[NullAllowed, Export ("colorPrimaries")]
+		string ColorPrimaries { get; }
+
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[NullAllowed, Export ("colorYCbCrMatrix")]
+		string ColorYCbCrMatrix { get; }
+
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[NullAllowed, Export ("colorTransferFunction")]
+		string ColorTransferFunction { get; }
 	}
 
 	[Since (7,0), Mavericks]
@@ -6646,10 +6678,10 @@ namespace XamCore.AVFoundation {
 	[Since (4,0)]
 	[BaseType (typeof (AVVideoComposition))]
 	interface AVMutableVideoComposition {
-		[Export ("frameDuration")]
+		[Export ("frameDuration", ArgumentSemantic.Assign)]
 		CMTime FrameDuration { get; set;  }
 
-		[Export ("renderSize")]
+		[Export ("renderSize", ArgumentSemantic.Assign)]
 		CGSize RenderSize { get; set;  }
 
 		[NullAllowed] // by default this property is null
@@ -6681,6 +6713,18 @@ namespace XamCore.AVFoundation {
 		[Static]
 		[Export ("videoCompositionWithAsset:applyingCIFiltersWithHandler:")]
 		AVMutableVideoComposition GetVideoComposition (AVAsset asset, Action<AVAsynchronousCIImageFilteringRequest> applier);
+		
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[NullAllowed, Export ("colorPrimaries")]
+		string ColorPrimaries { get; set; }
+
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[NullAllowed, Export ("colorYCbCrMatrix")]
+		string ColorYCbCrMatrix { get; set; }
+
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[NullAllowed, Export ("colorTransferFunction")]
+		string ColorTransferFunction { get; set; }
 	}
 
 	[Since (4,0), Lion]
@@ -6946,6 +6990,10 @@ namespace XamCore.AVFoundation {
 		[Since (7,0)]
 		[Export ("automaticallyConfiguresApplicationAudioSession")]
 		bool AutomaticallyConfiguresApplicationAudioSession { get; set; }
+		
+		[iOS (10, 0)]
+		[Export ("automaticallyConfiguresCaptureDeviceForWideColor")]
+		bool AutomaticallyConfiguresCaptureDeviceForWideColor { get; set; }
 #endif
 
 		[Since (7,0)]
@@ -7701,13 +7749,15 @@ namespace XamCore.AVFoundation {
 		[Export ("supportsAVCaptureSessionPreset:")]
 		bool SupportsAVCaptureSessionPreset (string preset);
 
+		[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_10_0, Message="Deprecated property, use AVCapturePhotoSettings.FlashMode instead")]
 		[Export ("flashMode")]
 		AVCaptureFlashMode FlashMode { get; set;  }
 
+		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_10_0, Message="Deprecated property, use AVCapturePhotoOutput.SupportedFlashModes instead")]
 		[Export ("isFlashModeSupported:")]
 		bool IsFlashModeSupported (AVCaptureFlashMode flashMode);
 
-		[Export ("torchMode")]
+		[Export ("torchMode", ArgumentSemantic.Assign)] 
 		AVCaptureTorchMode TorchMode { get; set;  }
 
 		[Export ("isTorchModeSupported:")]
@@ -7716,19 +7766,19 @@ namespace XamCore.AVFoundation {
 		[Export ("isFocusModeSupported:")]
 		bool IsFocusModeSupported (AVCaptureFocusMode focusMode);
 		
-		[Export ("focusMode")]
+		[Export ("focusMode", ArgumentSemantic.Assign)]
 		AVCaptureFocusMode FocusMode { get; set;  }
 
 		[Export ("focusPointOfInterestSupported")]
 		bool FocusPointOfInterestSupported { [Bind ("isFocusPointOfInterestSupported")] get;  }
 
-		[Export ("focusPointOfInterest")]
+		[Export ("focusPointOfInterest", ArgumentSemantic.Assign)]
 		CGPoint FocusPointOfInterest { get; set;  }
 
 		[Export ("adjustingFocus")]
 		bool AdjustingFocus { [Bind ("isAdjustingFocus")] get;  }
 
-		[Export ("exposureMode")]
+		[Export ("exposureMode", ArgumentSemantic.Assign)]
 		AVCaptureExposureMode ExposureMode { get; set;  }
 
 		[Export ("isExposureModeSupported:")]
@@ -7746,7 +7796,7 @@ namespace XamCore.AVFoundation {
 		[Export ("isWhiteBalanceModeSupported:")]
 		bool IsWhiteBalanceModeSupported (AVCaptureWhiteBalanceMode whiteBalanceMode);
 		
-		[Export ("whiteBalanceMode")]
+		[Export ("whiteBalanceMode", ArgumentSemantic.Assign)]
 		AVCaptureWhiteBalanceMode WhiteBalanceMode { get; set;  }
 
 		[Export ("adjustingWhiteBalance")]
@@ -7778,6 +7828,7 @@ namespace XamCore.AVFoundation {
 		[Export ("isFlashAvailable")]
 		bool FlashAvailable { get;  }
 
+		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_10_0, Message="Deprecated property, use AVCapturePhotoOutput.IsFlashScene instead")]
 		[Since(5,0)]
 		[Export ("isFlashActive")]
 		bool FlashActive { get; }
@@ -7994,6 +8045,11 @@ namespace XamCore.AVFoundation {
 		[iOS (8,0)]
 		[Export ("videoHDREnabled")]
 		bool VideoHdrEnabled { [Bind ("isVideoHDREnabled")] get; set; }
+
+		[iOS (10, 0)]
+		[Export ("activeColorSpace", ArgumentSemantic.Assign)]
+		AVCaptureColorSpace ActiveColorSpace { get; set; }
+
 #endif
 	}
 
@@ -8059,6 +8115,10 @@ namespace XamCore.AVFoundation {
 		[iOS (8,0)]
 		[Export ("autoFocusSystem")]
 		AVCaptureAutoFocusSystem AutoFocusSystem { get; }
+
+		[iOS (10, 0)]
+		[Export ("supportedColorSpaces")]
+		NSNumber[] SupportedColorSpaces { get; }
 #endif
 	}
 
@@ -9063,7 +9123,7 @@ namespace XamCore.AVFoundation {
 #endif
 		[Abstract]
 		[Export ("loadValuesAsynchronouslyForKeys:completionHandler:")]
-		void LoadValuesAsynchronously (string [] keys, NSAction handler);
+		void LoadValuesAsynchronously (string [] keys, [NullAllowed] NSAction handler);
 	}
 
 	[Since (4,1)]
@@ -9426,6 +9486,7 @@ namespace XamCore.AVFoundation {
 		[Export ("URLAsset")]
 		AVUrlAsset UrlAsset { get; }
 
+		[Availability (Introduced = Platform.iOS_9_0, Deprecated = Platform.iOS_10_0)]
 		[Export ("destinationURL")]
 		NSUrl DestinationUrl { get; }
 
@@ -9455,7 +9516,7 @@ namespace XamCore.AVFoundation {
 
 	}
 
-	[iOS (9,0)]
+	[NoTV, iOS (9,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSUrlSession), Name = "AVAssetDownloadURLSession")]
 	interface AVAssetDownloadUrlSession {
@@ -9463,18 +9524,24 @@ namespace XamCore.AVFoundation {
 		[Export ("sessionWithConfiguration:assetDownloadDelegate:delegateQueue:")]
 		AVAssetDownloadUrlSession CreateSession (NSUrlSessionConfiguration configuration, [NullAllowed] IAVAssetDownloadDelegate @delegate, [NullAllowed] NSOperationQueue delegateQueue);
 
+		[Availability (Introduced = Platform.iOS_9_0, Deprecated = Platform.iOS_10_0, Message="Deprecated method, please use GetAssetDownloadTask (AVUrlAsset, string, NSData, NSDictionary<NSString, NSObject>)")]
 		[Export ("assetDownloadTaskWithURLAsset:destinationURL:options:")]
 		[return: NullAllowed]
 		AVAssetDownloadTask GetAssetDownloadTask (AVUrlAsset urlAsset, NSUrl destinationUrl, [NullAllowed] NSDictionary options);
 
 		[Wrap ("GetAssetDownloadTask (urlAsset, destinationUrl, options != null ? options.Dictionary : null)")]
 		AVAssetDownloadTask GetAssetDownloadTask (AVUrlAsset urlAsset, NSUrl destinationUrl, AVAssetDownloadOptions options);
+		
+		[iOS (10,0)]
+		[Export ("assetDownloadTaskWithURLAsset:assetTitle:assetArtworkData:options:")]
+		[return: NullAllowed]
+		AVAssetDownloadTask GetAssetDownloadTask (AVUrlAsset URLAsset, string title, [NullAllowed] NSData artworkData, [NullAllowed] NSDictionary<NSString, NSObject> options);
 
 	}
 
 	interface IAVAssetDownloadDelegate {}
 
-	[iOS (9,0)]
+	[NoTV, iOS (9,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface AVAssetDownloadDelegate : NSUrlSessionTaskDelegate {
@@ -9483,6 +9550,10 @@ namespace XamCore.AVFoundation {
 
 		[Export ("URLSession:assetDownloadTask:didResolveMediaSelection:")]
 		void DidResolveMediaSelection (NSUrlSession session, AVAssetDownloadTask assetDownloadTask, AVMediaSelection resolvedMediaSelection);
+
+		[iOS (10,0)]
+		[Export ("URLSession:assetDownloadTask:didFinishDownloadingToURL:")]
+		void DidFinishDownloadingToUrl (NSUrlSession session, AVAssetDownloadTask assetDownloadTask, NSUrl location);
 	}
 
 #endif

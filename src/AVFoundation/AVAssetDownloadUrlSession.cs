@@ -6,13 +6,13 @@
 //     
 // Copyright 2015 Xamarin Inc.
 //
-
+#if !TVOS
 using System;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
 namespace XamCore.AVFoundation {
-#if !MONOMAC
+#if !MONOMAC 
 	public partial class AVAssetDownloadUrlSession : NSUrlSession {
 
 		public new static NSUrlSession SharedSession {
@@ -113,4 +113,4 @@ namespace XamCore.AVFoundation {
 	}
 	#endif
 }
-
+#endif
