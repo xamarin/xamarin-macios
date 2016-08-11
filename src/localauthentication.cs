@@ -15,9 +15,11 @@ namespace XamCore.LocalAuthentication {
 		[Export ("localizedFallbackTitle")]
 		string LocalizedFallbackTitle { get; set; }
 
+#if !XAMCORE_4_0
 		[iOS (8,3), Mac (10,10)]
 		[Field ("LAErrorDomain")]
 		NSString ErrorDomain { get; }
+#endif
 
 		[Export ("canEvaluatePolicy:error:")]
 		bool CanEvaluatePolicy (LAPolicy policy, out NSError error);
@@ -49,6 +51,10 @@ namespace XamCore.LocalAuthentication {
 		[Export ("evaluatedPolicyDomainState")]
 		[NullAllowed]
 		NSData EvaluatedPolicyDomainState { get; }
+
+		[iOS (10,0)][Mac (10,12)]
+		[NullAllowed, Export ("localizedCancelTitle")]
+		string LocalizedCancelTitle { get; set; }
 
 #if !MONOMAC
 		[Availability (Introduced = Platform.iOS_8_3, Deprecated = Platform.iOS_9_0)]
