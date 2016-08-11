@@ -201,6 +201,9 @@
     <Compile Include="GLKit\EffectPropertyFog.cs" />
     <Compile Include="AudioToolbox\AudioFileStreamTest.cs" />
     <Compile Include="AVFoundation\AVAssetImageGeneratorTest.cs" />
+    <Compile Include="AVFoundation\AVAudioConverterPrimeInfoTest.cs" />
+    <Compile Include="AVFoundation\AVBeatRangeTest.cs" />
+    <Compile Include="AVFoundation\AVCaptureWhiteBalanceGainsTest.cs" />
     <Compile Include="ImageIO\ImagePropertiesTest.cs" />
     <Compile Include="CoreLocation\LocationTest.cs" />
     <Compile Include="CoreFoundation\ProxyTest.cs" />
