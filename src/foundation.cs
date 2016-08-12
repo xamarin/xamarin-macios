@@ -2059,6 +2059,11 @@ namespace XamCore.Foundation
 	
 		[Export ("getObjectValue:forString:errorDescription:")]
 		bool GetObjectValue (out NSObject result, string str, out string errorDescription);
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[Export ("personNameComponentsFromString:")]
+		[return: NullAllowed]
+		NSPersonNameComponents GetComponents (string @string);
 	}
 	
 	
@@ -2205,6 +2210,12 @@ namespace XamCore.Foundation
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -[NSKeyedArchiver init]: cannot use -init for initialization
 	[DisableDefaultCtor]
 	public interface NSKeyedArchiver {
+
+		// hack so we can decorate the default .ctor with availability attributes
+		[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
+		[Export ("init")]
+		IntPtr Constructor ();
+
 		[Export ("initForWritingWithMutableData:")]
 		IntPtr Constructor (NSMutableData data);
 	
@@ -2246,6 +2257,10 @@ namespace XamCore.Foundation
 		[Since (6,0), Mac(10,8)] // Yup, right, this is being back-supported to iOS 6
 		[Export ("requiresSecureCoding")]
 		bool GetRequiresSecureCoding ();
+
+		[Watch (3,0)][TV (10,0)][Mac (10, 12)][iOS (10,0)]
+		[Export ("encodedData", ArgumentSemantic.Strong)]
+		NSData EncodedData { get; }
 	}
 	
 	[BaseType (typeof (NSCoder),
@@ -3297,6 +3312,7 @@ namespace XamCore.Foundation
 		NSExpression _FalseExpression { get; }
 		
 		[Export ("expressionValueWithObject:context:")]
+		[return: NullAllowed]
 		NSObject EvaluateWith ([NullAllowed] NSObject obj, [NullAllowed] NSMutableDictionary context);
 	}
 
@@ -3703,14 +3719,16 @@ namespace XamCore.Foundation
 		[Internal, Field ("NSLocaleAlternateQuotationEndDelimiterKey")]
 		NSString _AlternateQuotationEndDelimiterKey { get; }
 
+		// follow the pattern of NSLocale.cs which included managed helpers that did the same
+
 		[Watch (3, 0), TV (10, 0), Mac (10, 12), iOS (10, 0)]
 		[Export ("calendarIdentifier")]
-		NSString CalendarIdentifier { get; }
+		string CalendarIdentifier { get; }
 
 		[Watch (3,0), TV (10,0), Mac (10,12), iOS (10,0)]
 		[Export ("localizedStringForCalendarIdentifier:")]
 		[return: NullAllowed]
-		string GetLocalizedString (NSString calendarIdentifier);
+		string GetLocalizedCalendarIdentifier (string calendarIdentifier);
 	}
 
 	public delegate void NSMatchEnumerator (NSTextCheckingResult result, NSMatchingFlags flags, ref bool stop);
@@ -3770,10 +3788,10 @@ namespace XamCore.Foundation
 	// init returns NIL
 	[DisableDefaultCtor]
 	public interface NSRunLoop {
-		[Export ("currentRunLoop")][Static][IsThreadStatic]
+		[Export ("currentRunLoop", ArgumentSemantic.Strong)][Static][IsThreadStatic]
 		NSRunLoop Current { get; }
 
-		[Export ("mainRunLoop")][Static]
+		[Export ("mainRunLoop", ArgumentSemantic.Strong)][Static]
 		NSRunLoop Main { get; }
 
 		[Export ("currentMode")]
@@ -3799,7 +3817,15 @@ namespace XamCore.Foundation
 
 		[Export ("runMode:beforeDate:")]
 		bool RunUntil (NSString runLoopMode, NSDate limitdate);
-		
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[Export ("performBlock:")]
+		void Perform (Action block);
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[Export ("performInModes:block:")]
+		void Perform (NSString[] modes, Action block);
+
 		[Field ("NSDefaultRunLoopMode")]
 		NSString NSDefaultRunLoopMode { get; }
 
@@ -3969,19 +3995,30 @@ namespace XamCore.Foundation
 	// init returns NIL
 	[DisableDefaultCtor]
 	public interface NSTimer {
-		// TODO: scheduledTimerWithTimeInterval:invocation:repeats:
 
 		[Static, Export ("scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:")]
 		NSTimer CreateScheduledTimer (double seconds, NSObject target, Selector selector, [NullAllowed] NSObject userInfo, bool repeats);
 
-		// TODO: timerWithTimeInterval:invocation:repeats:
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[Static]
+		[Export ("scheduledTimerWithTimeInterval:repeats:block:")]
+		NSTimer CreateScheduledTimer (double interval, bool repeats, Action<NSTimer> block);
 
 		[Static, Export ("timerWithTimeInterval:target:selector:userInfo:repeats:")]
 		NSTimer CreateTimer (double seconds, NSObject target, Selector selector, [NullAllowed] NSObject userInfo, bool repeats);
 
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[Static]
+		[Export ("timerWithTimeInterval:repeats:block:")]
+		NSTimer CreateTimer (double interval, bool repeats, Action<NSTimer> block);
+
 		[DesignatedInitializer]
 		[Export ("initWithFireDate:interval:target:selector:userInfo:repeats:")]
 		IntPtr Constructor (NSDate date, double seconds, NSObject target, Selector selector, [NullAllowed] NSObject userInfo, bool repeats);
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[Export ("initWithFireDate:interval:repeats:block:")]
+		IntPtr Constructor (NSDate date, double seconds, bool repeats, Action<NSTimer> block);
 
 		[Export ("fire")]
 		void Fire ();
@@ -4056,19 +4093,19 @@ namespace XamCore.Foundation
 		[Export ("timeZoneForSecondsFromGMT:")]
 		NSTimeZone FromGMT (nint seconds);
 
-		[Static, Export ("localTimeZone")]
+		[Static, Export ("localTimeZone", ArgumentSemantic.Copy)]
 		NSTimeZone LocalTimeZone { get; }
 
 		[Export ("secondsFromGMT")]
 		nint GetSecondsFromGMT { get; }
 
-		[Export ("defaultTimeZone"), Static]
+		[Export ("defaultTimeZone", ArgumentSemantic.Copy), Static]
 		NSTimeZone DefaultTimeZone { get; set; }
 
 		[Export ("resetSystemTimeZone"), Static]
 		void ResetSystemTimeZone ();
 
-		[Export ("systemTimeZone"), Static]
+		[Export ("systemTimeZone", ArgumentSemantic.Copy), Static]
 		NSTimeZone SystemTimeZone { get; }
 		
 		[Export ("timeZoneWithAbbreviation:"), Static]
@@ -4444,6 +4481,11 @@ namespace XamCore.Foundation
 		[Notification]
 		[Field ("NSUserDefaultsSizeLimitExceededNotification")]
 		NSString SizeLimitExceededNotification { get; }
+
+		[iOS (10,0)][TV (10,0)][Watch (3,0)][NoMac]
+		[Notification]
+		[Field ("NSUbiquitousUserDefaultsNoCloudAccountNotification")]
+		NSString NoCloudAccountNotification { get; }
 
 		[iOS (9,3)]
 		[NoMac][NoTV]
@@ -5120,28 +5162,28 @@ namespace XamCore.Foundation
 
 	[Category, BaseType (typeof (NSCharacterSet))]
 	public partial interface NSUrlUtilities_NSCharacterSet {
-		[Since (7,0), Static, Export ("URLUserAllowedCharacterSet")]
+		[Since (7,0), Static, Export ("URLUserAllowedCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet UrlUserAllowedCharacterSet { get; }
 	
-		[Since (7,0), Static, Export ("URLPasswordAllowedCharacterSet")]
+		[Since (7,0), Static, Export ("URLPasswordAllowedCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet UrlPasswordAllowedCharacterSet { get; }
 	
-		[Since (7,0), Static, Export ("URLHostAllowedCharacterSet")]
+		[Since (7,0), Static, Export ("URLHostAllowedCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet UrlHostAllowedCharacterSet { get; }
 	
-		[Since (7,0), Static, Export ("URLPathAllowedCharacterSet")]
+		[Since (7,0), Static, Export ("URLPathAllowedCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet UrlPathAllowedCharacterSet { get; }
 	
-		[Since (7,0), Static, Export ("URLQueryAllowedCharacterSet")]
+		[Since (7,0), Static, Export ("URLQueryAllowedCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet UrlQueryAllowedCharacterSet { get; }
 	
-		[Since (7,0), Static, Export ("URLFragmentAllowedCharacterSet")]
+		[Since (7,0), Static, Export ("URLFragmentAllowedCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet UrlFragmentAllowedCharacterSet { get; }
 	}
 		
 	[BaseType (typeof (NSObject), Name="NSURLCache")]
 	public interface NSUrlCache {
-		[Export ("sharedURLCache"), Static]
+		[Export ("sharedURLCache", ArgumentSemantic.Strong), Static]
 		NSUrlCache SharedCache { get; set; }
 
 		[Export ("initWithMemoryCapacity:diskCapacity:diskPath:")]
@@ -5616,7 +5658,7 @@ namespace XamCore.Foundation
 	[DisableDefaultCtor]
 	public interface NSUrlCredentialStorage {
 		[Static]
-		[Export ("sharedCredentialStorage")]
+		[Export ("sharedCredentialStorage", ArgumentSemantic.Strong)]
 		NSUrlCredentialStorage SharedCredentialStorage { get; }
 
 		[Export ("credentialsForProtectionSpace:")]
@@ -6111,7 +6153,7 @@ namespace XamCore.Foundation
 	[Model]
 	[BaseType (typeof (NSUrlSessionDelegate), Name="NSURLSessionTaskDelegate")]
 	[Protocol]
-	public partial interface NSUrlSessionTaskDelegate {
+	partial interface NSUrlSessionTaskDelegate {
 	
 		[Export ("URLSession:task:willPerformHTTPRedirection:newRequest:completionHandler:")]
 		void WillPerformHttpRedirection (NSUrlSession session, NSUrlSessionTask task, NSHttpUrlResponse response, NSUrlRequest newRequest, Action<NSUrlRequest> completionHandler);
@@ -6127,6 +6169,10 @@ namespace XamCore.Foundation
 	
 		[Export ("URLSession:task:didCompleteWithError:")]
 		void DidCompleteWithError (NSUrlSession session, NSUrlSessionTask task, NSError error);
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[Export ("URLSession:task:didFinishCollectingMetrics:")]
+		void DidFinishCollectingMetrics (NSUrlSession session, NSUrlSessionTask task, NSUrlSessionTaskMetrics metrics);
 	}
 	
 	[Since (7,0)]
@@ -6755,6 +6801,11 @@ namespace XamCore.Foundation
 		[Since (5,0)]
 		[Advanced, Field ("NSStreamNetworkServiceTypeVoice")]
 		NSString NetworkServiceTypeVoice { get; }
+
+		[Advanced]
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[Field ("NSStreamNetworkServiceTypeCallSignaling")]
+		NSString NetworkServiceTypeCallSignaling { get; }
 
 		[iOS (8,0), Mac(10,10)]
 		[Static, Export ("getBoundStreamsWithBufferSize:inputStream:outputStream:")]
@@ -9841,10 +9892,10 @@ namespace XamCore.Foundation
 
 	[BaseType (typeof (NSObject))]
 	public interface NSThread {
-		[Static, Export ("currentThread")]
+		[Static, Export ("currentThread", ArgumentSemantic.Strong)]
 		NSThread Current { get; }
 
-		[Static, Export ("callStackSymbols")]
+		[Static, Export ("callStackSymbols", ArgumentSemantic.Copy)]
 		string [] NativeCallStack { get; }
 
 		//+ (void)detachNewThreadSelector:(SEL)selector toTarget:(id)target withObject:(id)argument;
@@ -9887,7 +9938,7 @@ namespace XamCore.Foundation
 		bool IsMain { get; }
 
 		[Static]
-		[Export ("mainThread")]
+		[Export ("mainThread", ArgumentSemantic.Strong)]
 		NSThread MainThread { get; }
 
 		[Export ("isExecuting")]
@@ -10135,6 +10186,18 @@ namespace XamCore.Foundation
 		[Notification]
 		NSString ThermalStateDidChangeNotification { get; }
 #endif
+	}
+
+	[NoWatch][NoTV][NoiOS]
+	[Mac (10,12)]
+	[Category]
+	[BaseType (typeof (NSProcessInfo))]
+	interface NSProcessInfo_NSUserInformation {
+		[Export ("userName")]
+		string GetUserName ();
+
+		[Export ("fullUserName")]
+		string GetFullUserName ();
 	}
 
 	[Since (7,0), Mavericks]

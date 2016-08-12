@@ -368,21 +368,21 @@ namespace XamCore.Foundation  {
 		BundleOnDemandResourceExceededMaximumSizeError = 4993,
 		BundleOnDemandResourceInvalidTagError = 4994,
 
-		[Mac (10,12)]
+		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingNetworkFailureError = 5120,
-		[Mac (10,12)]
+		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingQuotaExceededError = 5121,
-		[Mac (10,12)]
+		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingTooManyParticipantsError = 5122,
-		[Mac (10,12)]
+		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingConflictError = 5123,
-		[Mac (10,12)]
+		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingNoPermissionError = 5124,
-		[Mac (10,12)]
+		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingOtherError = 5375,
-		[Mac (10,12)]
+		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingErrorMinimum = 5120,
-		[Mac (10,12)]
+		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
 		CloudSharingErrorMaximum = 5375,
 	}
 	
