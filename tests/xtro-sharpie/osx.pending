@@ -225,3 +225,14 @@
 !unknown-pinvoke! kevent bound
 !unknown-pinvoke! kqueue bound
 !unknown-pinvoke! _NSGetExecutablePath bound
+
+# CWErr in header file 
+!unknown-native-enum! CWStatus bound
+
+# In header file under different capitalization 
+!unknown-native-enum! CWIbssModeSecurity bound
+!unknown-native-enum! CWPhyMode bound
+
+# In header as old style unmaed enum
+!unknown-native-enum! IKCellsStyle bound
+!unknown-native-enum! IKGroupStyle bound
