@@ -165,6 +165,7 @@
 # Fixed in XAMCORE_4_0
 !wrong-enum-size! NSEventSubtype managed 8 vs native 2
 !wrong-enum-size! WebNavigationType managed 4 vs native 8
+!unknown-field! AVKitErrorDomain bound
 
 # 32-bit only, and marked correctly in binding
 !unknown-type! NSMenuView bound
@@ -175,3 +176,40 @@
 # Removed in 10.10
 !unknown-type! CW8021XProfile bound
 !unknown-type! CWWirelessProfile bound
+
+# Fields on various EventArg based structures that are in docs but not header
+!unknown-field! MenuItem bound
+!unknown-field! NSAlternativeString bound
+!unknown-field! NSFieldEditor bound
+!unknown-field! NSMenuItemIndex bound
+!unknown-field! NSMetadataQueryLocalDocumentsScope bound
+!unknown-field! NSNewColumn bound
+!unknown-field! NSNewNotifyingTextView bound
+!unknown-field! NSObject bound
+!unknown-field! NSOldColumn bound
+!unknown-field! NSOldNotifyingTextView bound
+!unknown-field! NSOldSelectedCharacterRange bound
+!unknown-field! NSOldWidth bound
+!unknown-field! NSOperationNumber bound
+!unknown-field! NSTableColumn bound
+!unknown-field! NSTextMovement bound
+!unknown-field! PDFAnnotationHit bound
+!unknown-field! item bound
+
+# Not declared in header for macOS unlike iOS but in Security.framework anyway
+!unknown-pinvoke! SecKeyDecrypt bound
+!unknown-pinvoke! SecKeyEncrypt bound
+!unknown-pinvoke! SecKeyRawSign bound
+!unknown-pinvoke! SecKeyRawVerify bound
+
+# /usr/include/dispatch/queue.h
+!unknown-pinvoke! dispatch_get_main_queue bound
+!unknown-pinvoke! dispatch_main bound
+
+# dlfcn.h
+!unknown-pinvoke! dladdr bound
+
+# Easily proven via man
+!unknown-pinvoke! kevent bound
+!unknown-pinvoke! kqueue bound
+!unknown-pinvoke! _NSGetExecutablePath bound
