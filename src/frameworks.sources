@@ -821,7 +821,7 @@ JAVASCRIPTCORE_SOURCES = \
 
 # LocalAuthentication
 
-LOCALAUTHENTICATION_CORE_SOURCES = \
+LOCALAUTHENTICATION_API_SOURCES = \
 	Localauthentication/LAEnums.cs \
 
 # MapKit
