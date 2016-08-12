@@ -288,6 +288,13 @@ namespace Introspection {
 					Transform = CGColorConverterTransformType.ApplySpace
 				};
 				return new CGColorConverter (null, cvt, cvt, cvt);
+			case "CGColorConversionInfo":
+				var cci = new GColorConversionInfoTriple () {
+					Space = CGColorSpace.CreateGenericRgb (),
+					Intent = CGColorRenderingIntent.Default,
+					Transform = CGColorConversionInfoTransformType.ApplySpace
+				};
+				return new CGColorConversionInfo ((NSDictionary) null, cci, cci, cci);
 			case "CGDataConsumer":
 				using (NSMutableData destData = new NSMutableData ()) {
 					return new CGDataConsumer (destData);
