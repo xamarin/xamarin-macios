@@ -73,6 +73,7 @@ MAC_ASSEMBLY_NAMES = \
 	System.Core \
 	System.Data.Services.Client \
 	System.Data \
+	System.IdentityModel \
 	System.IO.Compression.FileSystem \
 	System.IO.Compression \
 	System.Json \
@@ -108,7 +109,6 @@ MAC_4_5_ADDITIONAL_ASSEMBLY_NAMES = \
 	System.Configuration.Install \
 	System.Data.Linq \
 	System.EnterpriseServices \
-	System.IdentityModel \
 	System.IdentityModel.Selectors \
 	System.Messaging \
 	System.Runtime.Serialization.Formatters.Soap \
@@ -513,7 +513,7 @@ IOS_ASSEMBLIES = I18N.CJK I18N.MidEast I18N.Other I18N.Rare I18N.West I18N Mono.
 	System System.Core System.Data System.Data.Services.Client System.Json System.Runtime.Serialization \
 	System.ServiceModel.Web System.ServiceModel System.Transactions System.Web.Services System.Xml.Linq System.Xml \
 	System.ServiceModel.Internals \
-	System.Numerics System.IO.Compression System.IO.Compression.FileSystem \
+	System.Numerics System.IdentityModel System.IO.Compression System.IO.Compression.FileSystem \
 	System.ComponentModel.DataAnnotations System.ComponentModel.Composition \
 	System.Net.Http.WinHttpHandler \
 	System.Numerics.Vectors System.Reflection.Context System.Reflection.DispatchProxy \
