@@ -166,6 +166,18 @@
 !wrong-enum-size! NSEventSubtype managed 8 vs native 2
 !wrong-enum-size! WebNavigationType managed 4 vs native 8
 !unknown-field! AVKitErrorDomain bound
+!unknown-native-enum! AVAudioSessionCategoryOptions bound
+!unknown-native-enum! AVAudioSessionInterruptionType bound
+!unknown-native-enum! AVAudioSessionErrorCode bound
+!unknown-native-enum! AVAudioSessionInterruptionOptions bound
+!unknown-native-enum! AVAudioSessionSetActiveOptions bound
+!unknown-native-enum! AVAudioSessionPortOverride bound
+!unknown-native-enum! AVAudioSessionRouteChangeReason bound
+!unknown-native-enum! AVAudioSessionRecordPermission bound
+!unknown-native-enum! AVAudioSessionSilenceSecondaryAudioHintType bound
+!unknown-native-enum! AVKitError bound
+!unknown-native-enum! AVSpeechBoundary bound
+!unknown-native-enum! CBPeripheralManagerAuthorizationStatus bound
 
 # 32-bit only, and marked correctly in binding
 !unknown-type! NSMenuView bound

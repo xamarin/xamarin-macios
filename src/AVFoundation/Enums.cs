@@ -306,6 +306,7 @@ namespace XamCore.AVFoundation {
 	}
 #endif
 
+#if !MONOMAC || !XAMCORE_4_0
 	[Flags]
 	[Native]
 	// NSUInteger - AVAudioSession.h
@@ -381,6 +382,7 @@ namespace XamCore.AVFoundation {
 		[iOS (9,0)]
 		CodeResourceNotAvailable = 0x21726573
 	}
+#endif
 
 	[NoTV]
 	[Native]
@@ -412,6 +414,7 @@ namespace XamCore.AVFoundation {
 		NotDetermined, Restricted, Denied, Authorized
 	}
 
+#if !MONOMAC || !XAMCORE_4_0
 	[iOS (7,0)]
 	[Native]
 	// NSInteger - AVSpeechSynthesis.h
@@ -419,6 +422,7 @@ namespace XamCore.AVFoundation {
 		Immediate,
 		Word
 	}
+#endif
 
 	[iOS (8,0)]
 	[Native]
@@ -439,6 +443,7 @@ namespace XamCore.AVFoundation {
 		StereoPassThrough = 5
 	}
 
+#if !MONOMAC || !XAMCORE_4_0
 	[NoTV]
 	[Native]
 	public enum AVAudioSessionRecordPermission : nuint {
@@ -452,6 +457,7 @@ namespace XamCore.AVFoundation {
 		Begin = 1,
 		End = 0
 	}
+#endif
 
 	[Flags]
 	[Native]
