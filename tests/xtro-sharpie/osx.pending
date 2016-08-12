@@ -233,6 +233,6 @@
 !unknown-native-enum! CWIbssModeSecurity bound
 !unknown-native-enum! CWPhyMode bound
 
-# In header as old style unmaed enum
+# In header as old style unnamaed enum
 !unknown-native-enum! IKCellsStyle bound
 !unknown-native-enum! IKGroupStyle bound
