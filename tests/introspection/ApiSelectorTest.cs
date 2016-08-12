@@ -156,6 +156,16 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "MDLMesh":
+				switch (selectorName) {
+				case "initCapsuleWithExtent:cylinderSegments:hemisphereSegments:inwardNormals:geometryType:allocator:":
+				case "initConeWithExtent:segments:inwardNormals:cap:geometryType:allocator:":
+				case "initHemisphereWithExtent:segments:inwardNormals:cap:geometryType:allocator:":
+				case "initMeshBySubdividingMesh:submeshIndex:subdivisionLevels:allocator:":
+				case "initSphereWithExtent:segments:inwardNormals:geometryType:allocator:":
+					return true;
+				}
+				break;
 			case "NSImage":
 				switch (selectorName) {
 				case "initByReferencingFile:":

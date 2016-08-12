@@ -73,10 +73,6 @@ namespace Introspection {
 				case "GKScore":
 				// new in iOS8 and 10.0
 				case "NSExtensionContext":
-				// TODO: MDLMaterialProperty has NSCopying defined but copyWithZone doesn't work
-				// filled radar://26939747 with Apple
-				// https://trello.com/c/6aIzLH4a
-				case "MDLMaterialProperty":
 				case "NSLayoutAnchor`1":
 				case "NSLayoutDimension":
 				case "NSLayoutXAxisAnchor":

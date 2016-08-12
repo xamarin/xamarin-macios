@@ -574,6 +574,11 @@ namespace XamCore.MobileCoreServices {
 		[Field ("kUTTypeStereolithography", "ModelIO")]
 		NSString Stereolithography { get; }
 
+		[NoWatch]
+		[iOS (10,0)][Mac(10,12, onlyOn64 : true)]
+		[Field ("kUTTypeUniversalSceneDescription", "ModelIO")]
+		NSString UniversalSceneDescription { get; }
+
 		[Watch (2,2)]
 		[iOS (9,1)][TV (9,0)]
 		[NoMac]

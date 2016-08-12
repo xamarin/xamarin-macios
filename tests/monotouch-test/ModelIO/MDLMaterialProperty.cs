@@ -193,7 +193,6 @@ namespace MonoTouchFixtures.ModelIO {
 		}
 
 		[Test]
-		[Ignore ("MDLMaterialProperty has NSCopying defined but copyWithZone doesn't work. radar://26939747 - https://trello.com/c/6aIzLH4a")]
 		public void Copy ()
 		{
 			using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion)) {
