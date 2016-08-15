@@ -1,12 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 
 namespace Xamarin.iOS.Tasks
@@ -39,7 +36,7 @@ namespace Xamarin.iOS.Tasks
 			var fwDir = Path.Combine (AppBundlePath, "Frameworks");
 			if (Directory.Exists (fwDir)) {
 				foreach (var fw in Directory.GetDirectories (fwDir)) {
-					if (!fw.EndsWith (".framework")) {
+					if (Path.GetExtension (fw) != ".framework") {
 						Log.LogWarning ("Found a directory within the Frameworks directory which is not a framework: {0}", fw);
 						continue;
 					}
