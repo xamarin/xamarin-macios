@@ -43,6 +43,28 @@ namespace XamCore.Security.Tls
 			}
 		}
 
+		public static SecIdentity GetIdentity (X509Certificate certificate, out SecCertificate[] intermediateCerts)
+		{
+			var identity = GetIdentity (certificate);
+
+			var impl2 = certificate.Impl as X509Certificate2Impl;
+			if (impl2 == null || impl2.IntermediateCertificates == null) {
+				intermediateCerts = new SecCertificate [0];
+				return identity;
+			}
+
+			try {
+				intermediateCerts = new SecCertificate [impl2.IntermediateCertificates.Count];
+				for (int i = 0; i < intermediateCerts.Length; i++)
+					intermediateCerts [i] = new SecCertificate (impl2.IntermediateCertificates [i]);
+
+				return identity;
+			} catch {
+				identity.Dispose ();
+				throw;
+			}
+		}
+
 		public static bool Validate (string targetHost, bool serverMode, ICertificateValidator2 validator, X509CertificateCollection certificates)
 		{
 			var result = validator.ValidateCertificate (targetHost, serverMode, certificates);
