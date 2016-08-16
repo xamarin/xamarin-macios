@@ -7028,6 +7028,17 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (NSObject))]
 	[Since (4,0)]
 	interface AVCaptureConnection {
+		
+		[iOS (8,0), Mac (10,7)]
+		[Static]
+		[Export ("connectionWithInputPorts:output:")]
+		AVCaptureConnection FromInputPorts (AVCaptureInputPort [] ports, AVCaptureOutput output);
+		
+		[iOS (8,0)]
+		[Static]
+		[Export ("connectionWithInputPort:videoPreviewLayer:")]
+		AVCaptureConnection FromInputPort (AVCaptureInputPort port, AVCaptureVideoPreviewLayer layer);
+		
 		[iOS (8,0), Mac (10,7)]
 		[Export ("initWithInputPorts:output:")]
 		IntPtr Constructor (AVCaptureInputPort [] inputPorts, AVCaptureOutput output);
@@ -7048,7 +7059,7 @@ namespace XamCore.AVFoundation {
 		[Export ("videoMirrored")]
 		bool VideoMirrored { [Bind ("isVideoMirrored")] get; set;  }
 
-		[Export ("videoOrientation")]
+		[Export ("videoOrientation", ArgumentSemantic.Assign)]
 		AVCaptureVideoOrientation VideoOrientation { get; set;  }
 
 		[Export ("inputPorts")]
@@ -7541,7 +7552,7 @@ namespace XamCore.AVFoundation {
 		long MinFreeDiskSpaceLimit { get; set;  }
 
 		[Export ("outputFileURL")]
-		NSUrl OutputFileURL { get; }
+		NSUrl OutputFileURL { get; } // FIXME: should have been Url.
 
 		[Export ("startRecordingToOutputFileURL:recordingDelegate:")]
 		void StartRecordingToOutputFile (NSUrl outputFileUrl, [Protocolize] AVCaptureFileOutputRecordingDelegate recordingDelegate);
@@ -7613,6 +7624,210 @@ namespace XamCore.AVFoundation {
 	}
 #endif
 	
+	[NoTV, NoMac, iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	interface AVCapturePhotoSettings : NSCopying
+	{
+		[Static]
+		[Export ("photoSettings")]
+		AVCapturePhotoSettings Create ();
+
+		[Static]
+		[Export ("photoSettingsWithFormat:")]
+		AVCapturePhotoSettings FromFormat ([NullAllowed] NSDictionary<NSString, NSObject> format);
+
+		[Static]
+		[Export ("photoSettingsWithRawPixelFormatType:")]
+		AVCapturePhotoSettings FromRawPixelFormatType (uint rawPixelFormatType);
+
+		[Static]
+		[Export ("photoSettingsWithRawPixelFormatType:processedFormat:")]
+		AVCapturePhotoSettings FromRawPixelFormatType (uint rawPixelFormatType, [NullAllowed] NSDictionary<NSString, NSObject> processedFormat);
+
+		[Static]
+		[Export ("photoSettingsFromPhotoSettings:")]
+		AVCapturePhotoSettings FromPhotoSettings (AVCapturePhotoSettings photoSettings);
+
+		[Export ("uniqueID")]
+		long UniqueID { get; }
+
+		[NullAllowed, Export ("format", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, NSObject> Format { get; }
+
+		[Export ("rawPhotoPixelFormatType")]
+		uint RawPhotoPixelFormatType { get; }
+
+		[Export ("flashMode", ArgumentSemantic.Assign)]
+		AVCaptureFlashMode FlashMode { get; set; }
+
+		[Export ("autoStillImageStabilizationEnabled")]
+		bool IsAutoStillImageStabilizationEnabled { [Bind ("isAutoStillImageStabilizationEnabled")] get; set; }
+
+		[Export ("highResolutionPhotoEnabled")]
+		bool IsHighResolutionPhotoEnabled { [Bind ("isHighResolutionPhotoEnabled")] get; set; }
+
+		[NullAllowed, Export ("livePhotoMovieFileURL", ArgumentSemantic.Copy)]
+		NSUrl LivePhotoMovieFileUrl { get; set; }
+
+		[Export ("livePhotoMovieMetadata", ArgumentSemantic.Copy)]
+		AVMetadataItem[] LivePhotoMovieMetadata { get; set; }
+
+		[Export ("availablePreviewPhotoPixelFormatTypes")]
+		NSNumber[] AvailablePreviewPhotoPixelFormatTypes { get; }
+
+		[NullAllowed, Export ("previewPhotoFormat", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, NSObject> PreviewPhotoFormat { get; set; }
+	}
+	
+#if !MONOMAC
+	[NoTV, NoMac, iOS (10,0)]
+	[BaseType (typeof(AVCapturePhotoSettings))]
+	interface AVCapturePhotoBracketSettings
+	{
+		[Export ("initWithFormat:rawPixelFormatType:bracketedSettings:")]
+		IntPtr Constructor ([NullAllowed] NSDictionary<NSString, NSObject> format, uint rawPixelFormatType, AVCaptureBracketedStillImageSettings [] bracketedSettings);
+
+		[Export ("bracketedSettings")]
+		AVCaptureBracketedStillImageSettings [] BracketedSettings { get; }
+		
+		[Export ("lensStabilizationEnabled")]
+		bool IsLensStabilizationEnabled { [Bind ("isLensStabilizationEnabled")] get; set; }
+	}
+#endif
+
+	[NoTV, NoMac, iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface AVCaptureResolvedPhotoSettings
+	{
+		[Export ("uniqueID")]
+		long UniqueID { get; }
+
+		[Export ("photoDimensions")]
+		CMVideoDimensions PhotoDimensions { get; }
+
+		[Export ("rawPhotoDimensions")]
+		CMVideoDimensions RawPhotoDimensions { get; }
+
+		[Export ("previewDimensions")]
+		CMVideoDimensions PreviewDimensions { get; }
+
+		[Export ("livePhotoMovieDimensions")]
+		CMVideoDimensions LivePhotoMovieDimensions { get; }
+
+		[Export ("flashEnabled")]
+		bool IsFlashEnabled { [Bind ("isFlashEnabled")] get; }
+
+		[Export ("stillImageStabilizationEnabled")]
+		bool IsStillImageStabilizationEnabled { [Bind ("isStillImageStabilizationEnabled")] get; }
+	}
+
+#if !MONOMAC
+
+	interface IAVCapturePhotoCaptureDelegate {}
+
+	[NoTV, NoMac, iOS (10,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface AVCapturePhotoCaptureDelegate
+	{
+		[Export ("captureOutput:willBeginCaptureForResolvedSettings:")]
+		void WillBeginCapture (AVCapturePhotoOutput captureOutput, AVCaptureResolvedPhotoSettings resolvedSettings);
+
+		[Export ("captureOutput:willCapturePhotoForResolvedSettings:")]
+		void WillCapturePhoto (AVCapturePhotoOutput captureOutput, AVCaptureResolvedPhotoSettings resolvedSettings);
+
+		[Export ("captureOutput:didCapturePhotoForResolvedSettings:")]
+		void DidCapturePhoto (AVCapturePhotoOutput captureOutput, AVCaptureResolvedPhotoSettings resolvedSettings);
+
+		[Export ("captureOutput:didFinishProcessingPhotoSampleBuffer:previewPhotoSampleBuffer:resolvedSettings:bracketSettings:error:")]
+		void DidFinishProcessingPhoto (AVCapturePhotoOutput captureOutput, [NullAllowed] CMSampleBuffer photoSampleBuffer, [NullAllowed] CMSampleBuffer previewPhotoSampleBuffer, AVCaptureResolvedPhotoSettings resolvedSettings, [NullAllowed] AVCaptureBracketedStillImageSettings bracketSettings, [NullAllowed] NSError error);
+
+		[Export ("captureOutput:didFinishProcessingRawPhotoSampleBuffer:previewPhotoSampleBuffer:resolvedSettings:bracketSettings:error:")]
+		void DidFinishProcessingRawPhoto (AVCapturePhotoOutput captureOutput, [NullAllowed] CMSampleBuffer rawSampleBuffer, [NullAllowed] CMSampleBuffer previewPhotoSampleBuffer, AVCaptureResolvedPhotoSettings resolvedSettings, [NullAllowed] AVCaptureBracketedStillImageSettings bracketSettings, [NullAllowed] NSError error);
+
+		[Export ("captureOutput:didFinishRecordingLivePhotoMovieForEventualFileAtURL:resolvedSettings:")]
+		void DidFinishRecordingLivePhotoMovie (AVCapturePhotoOutput captureOutput, NSUrl outputFileUrl, AVCaptureResolvedPhotoSettings resolvedSettings);
+
+		[Export ("captureOutput:didFinishProcessingLivePhotoToMovieFileAtURL:duration:photoDisplayTime:resolvedSettings:error:")]
+		void DidFinishProcessingLivePhotoToMovieFile (AVCapturePhotoOutput captureOutput, NSUrl outputFileUrl, CMTime duration, CMTime photoDisplayTime, AVCaptureResolvedPhotoSettings resolvedSettings, [NullAllowed] NSError error);
+
+		[Export ("captureOutput:didFinishCaptureForResolvedSettings:error:")]
+		void DidFinishCapture (AVCapturePhotoOutput captureOutput, AVCaptureResolvedPhotoSettings resolvedSettings, [NullAllowed] NSError error);
+	}
+
+	[NoTV, NoMac, iOS (10,0)]
+	[BaseType (typeof(AVCaptureOutput))]
+	interface AVCapturePhotoOutput
+	{
+		[Export ("capturePhotoWithSettings:delegate:")]
+		void CapturePhoto (AVCapturePhotoSettings settings, IAVCapturePhotoCaptureDelegate cb);
+
+		[Export ("availablePhotoPixelFormatTypes")]
+		NSNumber [] AvailablePhotoPixelFormatTypes { get; }
+
+		[Export ("availablePhotoCodecTypes")]
+		string [] AvailablePhotoCodecTypes { get; }
+
+		[Export ("availableRawPhotoPixelFormatTypes")]
+		NSNumber [] AvailableRawPhotoPixelFormatTypes { get; }
+
+		[Export ("stillImageStabilizationSupported")]
+		bool IsStillImageStabilizationSupported { [Bind ("isStillImageStabilizationSupported")] get; }
+
+		[Export ("isStillImageStabilizationScene")]
+		bool IsStillImageStabilizationScene { get; }
+
+		[Export ("supportedFlashModes")]
+		NSNumber[] SupportedFlashModes { get; }
+
+		[Export ("isFlashScene")]
+		bool IsFlashScene { get; }
+
+		[Export ("photoSettingsForSceneMonitoring", ArgumentSemantic.Copy)]
+		AVCapturePhotoSettings PhotoSettingsForSceneMonitoring { get; set; }
+
+		// @property (getter = isHighResolutionCaptureEnabled, nonatomic) BOOL highResolutionCaptureEnabled;
+		[Export ("highResolutionCaptureEnabled")]
+		bool IsHighResolutionCaptureEnabled { [Bind ("isHighResolutionCaptureEnabled")] get; set; }
+
+		// @property (readonly, nonatomic) NSUInteger maxBracketedCapturePhotoCount;
+		[Export ("maxBracketedCapturePhotoCount")]
+		nuint MaxBracketedCapturePhotoCount { get; }
+
+		// @property (readonly, getter = isLensStabilizationDuringBracketedCaptureSupported, nonatomic) BOOL lensStabilizationDuringBracketedCaptureSupported;
+		[Export ("lensStabilizationDuringBracketedCaptureSupported")]
+		bool IsLensStabilizationDuringBracketedCaptureSupported { [Bind ("isLensStabilizationDuringBracketedCaptureSupported")] get; }
+
+		// @property (readonly, getter = isLivePhotoCaptureSupported, nonatomic) BOOL livePhotoCaptureSupported;
+		[Export ("livePhotoCaptureSupported")]
+		bool IsLivePhotoCaptureSupported { [Bind ("isLivePhotoCaptureSupported")] get; }
+
+		// @property (getter = isLivePhotoCaptureEnabled, nonatomic) BOOL livePhotoCaptureEnabled;
+		[Export ("livePhotoCaptureEnabled")]
+		bool IsLivePhotoCaptureEnabled { [Bind ("isLivePhotoCaptureEnabled")] get; set; }
+
+		// @property (getter = isLivePhotoCaptureSuspended, nonatomic) BOOL livePhotoCaptureSuspended;
+		[Export ("livePhotoCaptureSuspended")]
+		bool IsLivePhotoCaptureSuspended { [Bind ("isLivePhotoCaptureSuspended")] get; set; }
+
+		// @property (getter = isLivePhotoAutoTrimmingEnabled, nonatomic) BOOL livePhotoAutoTrimmingEnabled;
+		[Export ("livePhotoAutoTrimmingEnabled")]
+		bool IsLivePhotoAutoTrimmingEnabled { [Bind ("isLivePhotoAutoTrimmingEnabled")] get; set; }
+
+		// +(NSData * _Nullable)JPEGPhotoDataRepresentationForJPEGSampleBuffer:(CMSampleBufferRef _Nonnull)JPEGSampleBuffer previewPhotoSampleBuffer:(CMSampleBufferRef _Nullable)previewPhotoSampleBuffer;
+		[Static]
+		[Export ("JPEGPhotoDataRepresentationForJPEGSampleBuffer:previewPhotoSampleBuffer:")]
+		[return: NullAllowed]
+		NSData GetJPEGPhotoDataRepresentation (CMSampleBuffer JPEGSampleBuffer, [NullAllowed] CMSampleBuffer previewPhotoSampleBuffer);
+
+		[Static]
+		[Export ("DNGPhotoDataRepresentationForRawSampleBuffer:previewPhotoSampleBuffer:")]
+		[return: NullAllowed]
+		unsafe NSData GetDNGPhotoDataRepresentation (CMSampleBuffer rawSampleBuffer, [NullAllowed] CMSampleBuffer previewPhotoSampleBuffer);
+	}
+#endif
+	
 	[Since (4,0)]
 	[BaseType (typeof (AVCaptureFileOutput))]
 	[NoTV]
@@ -7632,11 +7847,24 @@ namespace XamCore.AVFoundation {
 		[iOS (9,0)]
 		[Export ("setRecordsVideoOrientationAndMirroringChanges:asMetadataTrackForConnection:")]
 		void SetRecordsVideoOrientationAndMirroringChanges (bool doRecordChanges, AVCaptureConnection connection);
+
+		[iOS (10, 0)]
+		[Export ("availableVideoCodecTypes")]
+		NSString [] AvailableVideoCodecTypes { get; }
+
+		[iOS (10,0)]
+		[Export ("outputSettingsForConnection:")]
+		NSDictionary GetOutputSettings (AVCaptureConnection connection);
+
+		[iOS (10,0)]
+		[Export ("setOutputSettings:forConnection:")]
+		void SetOutputSettings (NSDictionary outputSettings, AVCaptureConnection connection);
 #endif
 	}
 
 	[NoTV]
 	[Since (4,0)]
+	[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_10_0, Message = "Deprecated class, use AVCapturePhotoOutput instead.")]
 	[BaseType (typeof (AVCaptureOutput))]
 	interface AVCaptureStillImageOutput {
 		[Export ("availableImageDataCVPixelFormatTypes")]
@@ -7680,7 +7908,7 @@ namespace XamCore.AVFoundation {
 
 		[Since (8,0)]
 		[Export ("captureStillImageBracketAsynchronouslyFromConnection:withSettingsArray:completionHandler:")]
-		void CaptureStillImageBracket (AVCaptureConnection connection, AVCaptureBracketedStillImageSettings [] settings, Action<CMSampleBuffer,AVCaptureBracketedStillImageSettings, NSError> imageHandler);
+		void CaptureStillImageBracket (AVCaptureConnection connection, AVCaptureBracketedStillImageSettings [] settings, Action<CMSampleBuffer, AVCaptureBracketedStillImageSettings, NSError> imageHandler);
 
 		[Since (8,0)]
 		[Export ("maxBracketedCaptureStillImageCount")]
@@ -9516,7 +9744,10 @@ namespace XamCore.AVFoundation {
 
 	}
 
-	[NoTV, iOS (9,0)]
+#if XAMCORE_4_0
+	[NoTV]
+#endif
+	[iOS (9,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSUrlSession), Name = "AVAssetDownloadURLSession")]
 	interface AVAssetDownloadUrlSession {
@@ -9541,7 +9772,10 @@ namespace XamCore.AVFoundation {
 
 	interface IAVAssetDownloadDelegate {}
 
-	[NoTV, iOS (9,0)]
+#if XAMCORE_4_0
+	[NoTV]
+#endif
+	[iOS (9,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface AVAssetDownloadDelegate : NSUrlSessionTaskDelegate {

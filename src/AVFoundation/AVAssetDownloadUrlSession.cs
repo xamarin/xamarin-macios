@@ -12,7 +12,7 @@ using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
 namespace XamCore.AVFoundation {
-#if !MONOMAC 
+#if !MONOMAC
 	public partial class AVAssetDownloadUrlSession : NSUrlSession {
 
 		public new static NSUrlSession SharedSession {
