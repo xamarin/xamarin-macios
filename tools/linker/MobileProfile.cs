@@ -13,6 +13,7 @@ namespace Xamarin.Linker {
 			"System.Core",
 			"System.Data",
 			"System.Data.Services.Client",
+			"System.IdentityModel",
 			"System.IO.Compression.FileSystem",
 			"System.IO.Compression",
 			"System.Json",
