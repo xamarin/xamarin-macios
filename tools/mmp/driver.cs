@@ -614,6 +614,18 @@ namespace Xamarin.Bundler {
 					else
 						native_libs.Add (kvp.Key, kvp.Value);
 				}
+				// Idealy, this would be handled by Link () above. However in the non-linking case
+				// we do not run MobileMarkStep which generates the pinvoke list. Hack around this for now
+				// https://bugzilla.xamarin.com/show_bug.cgi?id=43419
+				if (App.LinkMode == LinkMode.None) {
+					foreach (var kvp in ProcessDllImports ()) {
+						List<MethodDefinition> methods;
+						if (native_libs.TryGetValue (kvp.Key, out methods))
+							methods.AddRange (kvp.Value);
+						else
+							native_libs.Add (kvp.Key, kvp.Value);
+					}
+				}
 				internalSymbols.UnionWith (BuildTarget.LinkContext.RequiredSymbols.Keys);
 				Watch (string.Format ("Linking (mode: '{0}')", App.LinkMode), 1);
 			}
@@ -1204,8 +1216,10 @@ namespace Xamarin.Bundler {
 			return BuildTarget.LinkContext.PInvokeModules;
 		}
 
-		static void ProcessDllImports (Dictionary<string, List<MethodDefinition>> pinvoke_modules, HashSet<string> internalSymbols)
+		static Dictionary<string, List<MethodDefinition>> ProcessDllImports ()
 		{
+			var pinvoke_modules = new Dictionary<string, List<MethodDefinition>> ();
+
 			foreach (string assembly_name in resolved_assemblies) {
 				AssemblyDefinition assembly = BuildTarget.Resolver.GetAssembly (assembly_name);
 				foreach (ModuleDefinition md in assembly.Modules) {
@@ -1223,10 +1237,7 @@ namespace Xamarin.Bundler {
 											List<MethodDefinition> methods;
 											if (!pinvoke_modules.TryGetValue (module, out methods))
 												pinvoke_modules.Add (module, methods = new List<MethodDefinition> ());
-											methods.Add (method);
 										}
-										if (module == "__Internal")
-											internalSymbols.Add (method.PInvokeInfo.EntryPoint);
 									}
 								}
 							}
@@ -1234,6 +1245,7 @@ namespace Xamarin.Bundler {
 					}
 				}
 			}
+			return pinvoke_modules;
 		}
 
 		static void CopyDependencies (IDictionary<string, List<MethodDefinition>> libraries)
