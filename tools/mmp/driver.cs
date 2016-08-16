@@ -1203,32 +1203,40 @@ namespace Xamarin.Bundler {
 			Mono.Linker.LinkContext context;
 			MonoMac.Tuner.Linker.Process (options, out context, out resolved_assemblies);
 			BuildTarget.LinkContext = (context as MonoMacLinkContext);
-			return BuildTarget.LinkContext.PInvokeModules;
+
+			// Idealy, this would be handled by Linker.Process above. However in the non-linking case
+			// we do not run MobileMarkStep which generates the pinvoke list. Hack around this for now
+			// https://bugzilla.xamarin.com/show_bug.cgi?id=43419
+			if (App.LinkMode == LinkMode.None)
+				return ProcessDllImports ();
+			else
+				return BuildTarget.LinkContext.PInvokeModules;
 		}
 
-		static void ProcessDllImports (Dictionary<string, List<MethodDefinition>> pinvoke_modules, HashSet<string> internalSymbols)
+		static Dictionary<string, List<MethodDefinition>> ProcessDllImports ()
 		{
+			var pinvoke_modules = new Dictionary<string, List<MethodDefinition>> ();
+
 			foreach (string assembly_name in resolved_assemblies) {
 				AssemblyDefinition assembly = BuildTarget.Resolver.GetAssembly (assembly_name);
-				foreach (ModuleDefinition md in assembly.Modules) {
-					if (md.HasTypes) {
-						foreach (TypeDefinition type in md.Types) {
-							if (type.HasMethods) {
-								foreach (MethodDefinition method in type.Methods) {
-									if ((method != null) && !method.HasBody && method.IsPInvokeImpl) {
-										// this happens for c++ assemblies (ref #11448)
-										if (method.PInvokeInfo == null)
-											continue;
-										string module = method.PInvokeInfo.Module.Name;
+				if (assembly != null) {
+					foreach (ModuleDefinition md in assembly.Modules) {
+						if (md.HasTypes) {
+							foreach (TypeDefinition type in md.Types) {
+								if (type.HasMethods) {
+									foreach (MethodDefinition method in type.Methods) {
+										if ((method != null) && !method.HasBody && method.IsPInvokeImpl) {
+											// this happens for c++ assemblies (ref #11448)
+											if (method.PInvokeInfo == null)
+												continue;
+											string module = method.PInvokeInfo.Module.Name;
 
-										if (!String.IsNullOrEmpty (module)) {
-											List<MethodDefinition> methods;
-											if (!pinvoke_modules.TryGetValue (module, out methods))
-												pinvoke_modules.Add (module, methods = new List<MethodDefinition> ());
-											methods.Add (method);
+											if (!String.IsNullOrEmpty (module)) {
+												List<MethodDefinition> methods;
+												if (!pinvoke_modules.TryGetValue (module, out methods))
+													pinvoke_modules.Add (module, methods = new List<MethodDefinition> ());
+											}
 										}
-										if (module == "__Internal")
-											internalSymbols.Add (method.PInvokeInfo.EntryPoint);
 									}
 								}
 							}
@@ -1236,6 +1244,7 @@ namespace Xamarin.Bundler {
 					}
 				}
 			}
+			return pinvoke_modules;
 		}
 
 		static void CopyDependencies (IDictionary<string, List<MethodDefinition>> libraries)

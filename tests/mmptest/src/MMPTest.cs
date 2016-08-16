@@ -344,5 +344,25 @@ namespace Xamarin.MMP.Tests
 				TI.TestUnifiedExecutable (test, shouldFail: false);
 			}
 		}
+
+		[Test]
+		public void DefaultProject_ShouldPullInMonoPosix_AndNaitveLib ()
+		{
+			RunMMPTest (tmpDir =>
+			{
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = true };
+				MonoPosixTestCore (tmpDir, test);
+				test.XM45 = false;
+				MonoPosixTestCore (tmpDir, test);
+			});
+		}
+
+		static void MonoPosixTestCore (string tmpDir, TI.UnifiedTestConfig test)
+		{
+			TI.TestUnifiedExecutable (test, shouldFail: false);
+
+			Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/Mono.Posix.dll")));
+			Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/libMonoPosixHelper.dylib")));
+		}
 }
 }
