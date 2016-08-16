@@ -58,11 +58,13 @@ namespace XamCore.WebKit
 		JavaScriptResultTypeIsUnsupported,
 	}
 
-	[Availability (Platform.Mac_10_10 | Platform.iOS_8_0)]
+#if !MONOMAC || !XAMCORE_4_0
+	[Availability (Platform.iOS_8_0)]
 	[Native]
 	public enum WKSelectionGranularity : nint {
 		Dynamic, Character
 	}
+#endif
 
 	[iOS (10,0)][NoMac]
 	[Native]

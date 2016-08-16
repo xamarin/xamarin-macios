@@ -636,7 +636,11 @@ namespace XamCore.AppKit {
 		NSObject ServicesProvider { get; set; }
 	
 		[Export ("userInterfaceLayoutDirection")]
+#if !XAMCORE_4_0
 		NSApplicationLayoutDirection UserInterfaceLayoutDirection { get; }
+#else
+		NSUserInterfaceLayoutDirection UserInterfaceLayoutDirection { get; }
+#endif
 
 		[Export ("servicesMenu")]
 		NSMenu ServicesMenu { get; set; }

@@ -88,11 +88,13 @@ namespace XamCore.AppKit {
 		Cancelled, Success, Failure, ReplyLater
 	}
 
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSApplicationLayoutDirection : nint {
 		LeftToRight = 0,
 		RightToLeft = 1
 	}
+#endif
 
 	[Native]
 	public enum NSImageInterpolation : nuint_compat_int {
@@ -484,8 +486,12 @@ namespace XamCore.AppKit {
 		Pen = 1, PenLower = 2, PenUpper = 4
 	}
 
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSKey : nuint_compat_int {
+#else
+	public enum NSKey
+#endif
 		A              = 0x00,
 		S              = 0x01,
 		D              = 0x02,
@@ -679,8 +685,12 @@ namespace XamCore.AppKit {
 #endif
 	}
 
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSFunctionKey : nuint_compat_int {
+#else
+	public enum NSFunctionKey {
+#endif
 		UpArrow        = 0xF700,
 		DownArrow      = 0xF701,
 		LeftArrow      = 0xF702,
@@ -769,14 +779,28 @@ namespace XamCore.AppKit {
 		AWT = 16
 	}
 
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSSystemDefinedEvents : nuint_compat_int {
+#else
+	public enum NSSystemDefinedEvents : short {
+#endif
 		NSPowerOffEventType = 1
 	}
 
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSEventMouseSubtype : nuint_compat_int {
-		Mouse, TablePoint, TabletProximity, Touch
+#else
+	public enum NSEventMouseSubtype {
+#endif
+		Mouse, 
+#if !XAMCORE_4_0
+		TablePoint, 
+#else
+		TabletPoint, 
+#endif
+		TabletProximity, Touch
 	}
 	
 #endregion
@@ -1239,8 +1263,12 @@ namespace XamCore.AppKit {
 		Override = 2,
 	}
 
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSTextMovement : nint {
+#else
+	public enum NSTextMovement {
+#endif
 		Other = 0,
 		Return = 0x10,
 		Tab = 0x11,
@@ -1400,13 +1428,18 @@ namespace XamCore.AppKit {
 	}
 
 	[Flags]
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSGlyphStorageOptions : nuint_compat_int {
+#else
+	public enum NSGlyphStorageOptions
+#endif
 		ShowControlGlyphs = 1,
 		ShowInvisibleGlyphs = 2,
 		WantsBidiLevels = 4
 	}
 
+#if !XAMCORE_4_0
 	[Availability (Deprecated = Platform.Mac_10_11, Message = "Use NSTextStorageEditActions instead")]
 	[Flags]
 	[Native]
@@ -1414,6 +1447,7 @@ namespace XamCore.AppKit {
 		EditedAttributed = 1,
 		EditedCharacters = 2
 	}
+#endif
 
 	[Mac (10,11)]
 	[Native]
@@ -1560,8 +1594,12 @@ namespace XamCore.AppKit {
 	}
 
 	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use NSAlertButtonReturn instead")]
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSAlertType : nint {
+#else
+	public enum NSAlertType {
+#endif
 		ErrorReturn = -2,
 		OtherReturn,
 		AlternateReturn,
@@ -1969,15 +2007,23 @@ namespace XamCore.AppKit {
 		MultiScreen =  81
 	}
 
+#if XAMCORE_4_0
 	[Native]
 	public enum NSOpenGLProfile : nint {
+#else
+	public enum NSOpenGLProfile {
+#endif
 		VersionLegacy   = 0x1000, // Legacy
 		Version3_2Core  = 0x3200,  // 3.2 or better
 		Version4_1Core  = 0x4100
 	}
 	
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSAlertButtonReturn : nint {
+#else
+	public enum NSAlertButtonReturn {
+#endif
 		First = 1000,
 		Second = 1001,
 		Third = 1002,
@@ -2304,8 +2350,12 @@ namespace XamCore.AppKit {
 	}
 
 	[Flags]
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSFontPanelMode : nuint_compat_int {
+#else
+	public enum NSFontPanelMode {
+#endif
 		FaceMask = 1 << 0,
 		SizeMask = 1 << 1,
 		CollectionMask = 1 << 2,
