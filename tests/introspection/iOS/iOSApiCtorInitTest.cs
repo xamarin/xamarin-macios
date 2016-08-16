@@ -295,6 +295,8 @@ namespace Introspection {
 			case "AVAudioSessionPortDescription":
 			case "CLBeacon":
 			case "CLCircularRegion":
+			// beta 2
+			case "CTCallCenter":
 			// beta 3
 			case "CNContainer":
 				if (TestRuntime.CheckXcodeVersion (8, 0))
