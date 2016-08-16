@@ -1222,21 +1222,23 @@ namespace Xamarin.Bundler {
 
 			foreach (string assembly_name in resolved_assemblies) {
 				AssemblyDefinition assembly = BuildTarget.Resolver.GetAssembly (assembly_name);
-				foreach (ModuleDefinition md in assembly.Modules) {
-					if (md.HasTypes) {
-						foreach (TypeDefinition type in md.Types) {
-							if (type.HasMethods) {
-								foreach (MethodDefinition method in type.Methods) {
-									if ((method != null) && !method.HasBody && method.IsPInvokeImpl) {
-										// this happens for c++ assemblies (ref #11448)
-										if (method.PInvokeInfo == null)
-											continue;
-										string module = method.PInvokeInfo.Module.Name;
+				if (assembly != null) {
+					foreach (ModuleDefinition md in assembly.Modules) {
+						if (md.HasTypes) {
+							foreach (TypeDefinition type in md.Types) {
+								if (type.HasMethods) {
+									foreach (MethodDefinition method in type.Methods) {
+										if ((method != null) && !method.HasBody && method.IsPInvokeImpl) {
+											// this happens for c++ assemblies (ref #11448)
+											if (method.PInvokeInfo == null)
+												continue;
+											string module = method.PInvokeInfo.Module.Name;
 
-										if (!String.IsNullOrEmpty (module)) {
-											List<MethodDefinition> methods;
-											if (!pinvoke_modules.TryGetValue (module, out methods))
-												pinvoke_modules.Add (module, methods = new List<MethodDefinition> ());
+											if (!String.IsNullOrEmpty (module)) {
+												List<MethodDefinition> methods;
+												if (!pinvoke_modules.TryGetValue (module, out methods))
+													pinvoke_modules.Add (module, methods = new List<MethodDefinition> ());
+											}
 										}
 									}
 								}
