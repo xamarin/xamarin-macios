@@ -125,7 +125,7 @@ mmp_sources = \
 DEFINES = -d:MONOMAC -d:MMP $(APPLETLS_DEFINES)
 
 mmp.exe: Makefile $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) $(mmp_sources) config config_mobile Info.plist.tmpl $(tuner_sources) $(linker_resources)
-	$(Q_MCS) $(SYSTEM_MCS) -debug -unsafe -out:mmp.exe $(DEFINES) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:Mono.Security.dll  -resource:config -resource:config_mobile -resource:machine.4_5.config -resource:Info.plist.tmpl $(linker_resources:%=-resource:%) $(tuner_sources) $(mmp_sources)
+	$(Q_MCS) $(SYSTEM_MCS) -unsafe -out:mmp.exe $(DEFINES) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:Mono.Security.dll  -resource:config -resource:config_mobile -resource:machine.4_5.config -resource:Info.plist.tmpl $(linker_resources:%=-resource:%) $(tuner_sources) $(mmp_sources)
 
 MMP_TARGETS = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/mmp \
