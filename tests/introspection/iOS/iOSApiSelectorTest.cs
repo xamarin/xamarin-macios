@@ -172,10 +172,10 @@ namespace Introspection {
 				break;
 			case "SKNode":
 				switch (name) {
-#if __TV__
+#if __TVOS__
 				// skip for tvOS 10+
 				case "preferredFocusedView":
-					if (!TestRuntime.CheckXcodeVersion (8, 0))
+					if (TestRuntime.CheckXcodeVersion (8, 0))
 						return true;
 					break;
 #else
