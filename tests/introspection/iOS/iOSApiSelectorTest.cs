@@ -172,11 +172,23 @@ namespace Introspection {
 				break;
 			case "SKNode":
 				switch (name) {
+#if __TV__
 				// skip for tvOS 10+
 				case "preferredFocusedView":
-					if (TestRuntime.CheckXcodeVersion (8, 0))
+					if (!TestRuntime.CheckXcodeVersion (8, 0))
 						return true;
 					break;
+#else
+				// UIFocus protocol conformance on iOS10+
+				case "didUpdateFocusInContext:withAnimationCoordinator:":
+				case "setNeedsFocusUpdate":
+				case "shouldUpdateFocusInContext:":
+				case "updateFocusIfNeeded":
+				case "preferredFocusedView":
+					if (!TestRuntime.CheckXcodeVersion (8, 0))
+						return true;
+					break;
+#endif
 				}
 				break;
 			}
@@ -527,6 +539,8 @@ namespace Introspection {
 				case "HKBiologicalSexObject":
 				case "HKBloodTypeObject":
 					return !TestRuntime.CheckXcodeVersion (7, 0);
+				case "HKWorkoutEvent":
+					return !TestRuntime.CheckXcodeVersion (8, 0);
 				}
 				break;
 
