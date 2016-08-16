@@ -614,18 +614,6 @@ namespace Xamarin.Bundler {
 					else
 						native_libs.Add (kvp.Key, kvp.Value);
 				}
-				// Idealy, this would be handled by Link () above. However in the non-linking case
-				// we do not run MobileMarkStep which generates the pinvoke list. Hack around this for now
-				// https://bugzilla.xamarin.com/show_bug.cgi?id=43419
-				if (App.LinkMode == LinkMode.None) {
-					foreach (var kvp in ProcessDllImports ()) {
-						List<MethodDefinition> methods;
-						if (native_libs.TryGetValue (kvp.Key, out methods))
-							methods.AddRange (kvp.Value);
-						else
-							native_libs.Add (kvp.Key, kvp.Value);
-					}
-				}
 				internalSymbols.UnionWith (BuildTarget.LinkContext.RequiredSymbols.Keys);
 				Watch (string.Format ("Linking (mode: '{0}')", App.LinkMode), 1);
 			}
@@ -1213,7 +1201,14 @@ namespace Xamarin.Bundler {
 			Mono.Linker.LinkContext context;
 			MonoMac.Tuner.Linker.Process (options, out context, out resolved_assemblies);
 			BuildTarget.LinkContext = (context as MonoMacLinkContext);
-			return BuildTarget.LinkContext.PInvokeModules;
+
+			// Idealy, this would be handled by Linker.Process above. However in the non-linking case
+			// we do not run MobileMarkStep which generates the pinvoke list. Hack around this for now
+			// https://bugzilla.xamarin.com/show_bug.cgi?id=43419
+			if (App.LinkMode == LinkMode.None)
+				return ProcessDllImports ();
+			else
+				return BuildTarget.LinkContext.PInvokeModules;
 		}
 
 		static Dictionary<string, List<MethodDefinition>> ProcessDllImports ()
