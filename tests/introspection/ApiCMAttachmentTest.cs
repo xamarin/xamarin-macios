@@ -230,6 +230,8 @@ namespace Introspection {
 			case "MidiEndpoint":
 			case "ABMultiValue":
 			case "ABMutableMultiValue":
+			// type was removed in iOS 10 (and replaced) and never consumed by other API
+			case "CGColorConverter":
 				return true;
 			default:
  				return false;
@@ -281,13 +283,6 @@ namespace Introspection {
 				var filename = Environment.GetFolderPath (Environment.SpecialFolder.CommonDocuments) + "/t.pdf";
 				using (var url = new NSUrl (filename))
 					return new CGContextPDF (url);
-			case "CGColorConverter":
-				var cvt = new CGColorConverterTriple () {
-					Space = CGColorSpace.CreateGenericRgb (),
-					Intent = CGColorRenderingIntent.Default,
-					Transform = CGColorConverterTransformType.ApplySpace
-				};
-				return new CGColorConverter (null, cvt, cvt, cvt);
 			case "CGColorConversionInfo":
 				var cci = new GColorConversionInfoTriple () {
 					Space = CGColorSpace.CreateGenericRgb (),

@@ -760,8 +760,8 @@ namespace XamCore.HealthKit {
 
 	}
 
-	[Watch (2,0)]
-	[iOS (8,0)]
+	[Watch (3,0)] // marked as iOS-only but some watchOS 3 API returns this type, rdar #27865614
+	[iOS (10,0)]
 	[BaseType (typeof (HKSampleType))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKDocumentType
 	public interface HKDocumentType {
