@@ -105,6 +105,7 @@ namespace Introspection
 			"Ciff",
 			"Cinepak",
 			"Clearcoat",
+			"Cnn", // Convolutional Neural Network
 			"Colos",
 			"Commerical",
 			"Composable",
@@ -122,6 +123,7 @@ namespace Introspection
 			"Deinterlace",
 			"Descendents",
 			"Descrete",
+			"Dhe", // Diffie–Hellman key exchange
 			"Differental",
 			"Diffie",
 			"Directionfor",
@@ -145,6 +147,7 @@ namespace Introspection
 			"dy",
 			"Ebu",
 			"Ecc",
+			"Ecdsa", // Elliptic Curve Digital Signature Algorithm
 			"Eof", // acronym End-Of-File
 			"Emagic",
 			"Emaili",
