@@ -691,7 +691,7 @@ namespace XamCore.AppKit {
 	[Native]
 	public enum NSFunctionKey : nuint_compat_int {
 #else
-	public enum NSFunctionKey {
+	public enum NSFunctionKey : int {
 #endif
 		UpArrow        = 0xF700,
 		DownArrow      = 0xF701,
@@ -794,7 +794,7 @@ namespace XamCore.AppKit {
 	[Native]
 	public enum NSEventMouseSubtype : nuint_compat_int {
 #else
-	public enum NSEventMouseSubtype {
+	public enum NSEventMouseSubtype : short {
 #endif
 		Mouse, 
 #if !XAMCORE_4_0
@@ -859,7 +859,7 @@ namespace XamCore.AppKit {
 	[Native]
 	public enum NSWindowStyle : nuint_compat_int {
 #else
-	public enum NSWindowStyle {
+	public enum NSWindowStyle : int {
 #endif
 		Borderless	       					= 0 << 0,
 		Titled		       					= 1 << 0,
@@ -909,7 +909,7 @@ namespace XamCore.AppKit {
 	[Native]
 	public enum NSWindowNumberListOptions : nuint_compat_int {
 #else
-	public enum NSWindowNumberListOptions {
+	public enum NSWindowNumberListOptions : int {
 #endif
 		AllApplication = 1 << 0,
 		AllSpaces = 1 << 4
@@ -1277,7 +1277,7 @@ namespace XamCore.AppKit {
 	[Native]
 	public enum NSTextMovement : nint {
 #else
-	public enum NSTextMovement {
+	public enum NSTextMovement : int {
 #endif
 		Other = 0,
 		Return = 0x10,
@@ -1442,7 +1442,7 @@ namespace XamCore.AppKit {
 	[Native]
 	public enum NSGlyphStorageOptions : nuint_compat_int {
 #else
-	public enum NSGlyphStorageOptions
+	public enum NSGlyphStorageOptions : int
 #endif
 		ShowControlGlyphs = 1,
 		ShowInvisibleGlyphs = 2,
@@ -1608,7 +1608,7 @@ namespace XamCore.AppKit {
 	[Native]
 	public enum NSAlertType : nint {
 #else
-	public enum NSAlertType {
+	public enum NSAlertType : int {
 #endif
 		ErrorReturn = -2,
 		OtherReturn,
@@ -2023,7 +2023,7 @@ namespace XamCore.AppKit {
 	[Native]
 	public enum NSOpenGLProfile : nint {
 #else
-	public enum NSOpenGLProfile {
+	public enum NSOpenGLProfile : int {
 #endif
 		VersionLegacy   = 0x1000, // Legacy
 		Version3_2Core  = 0x3200,  // 3.2 or better
@@ -2034,7 +2034,7 @@ namespace XamCore.AppKit {
 	[Native]
 	public enum NSAlertButtonReturn : nint {
 #else
-	public enum NSAlertButtonReturn {
+	public enum NSAlertButtonReturn : int {
 #endif
 		First = 1000,
 		Second = 1001,
@@ -2366,7 +2366,7 @@ namespace XamCore.AppKit {
 	[Native]
 	public enum NSFontPanelMode : nuint_compat_int {
 #else
-	public enum NSFontPanelMode {
+	public enum NSFontPanelMode : int {
 #endif
 		FaceMask = 1 << 0,
 		SizeMask = 1 << 1,
