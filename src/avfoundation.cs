@@ -1770,7 +1770,6 @@ namespace XamCore.AVFoundation {
 		void EndInterruption (AVAudioSessionInterruptionFlags flags);
 	}
 
-#if !MONOMAC
 	[Since (6,0)]
 	[BaseType (typeof (NSObject))]
 	interface AVAudioSessionChannelDescription {
@@ -1787,7 +1786,6 @@ namespace XamCore.AVFoundation {
 		[Export ("channelLabel")]
 		int /* AudioChannelLabel = UInt32 */ ChannelLabel { get; }
 	}
-#endif
 
 	[Since (6,0)]
 	[BaseType (typeof (NSObject))]

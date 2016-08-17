@@ -147,6 +147,7 @@ namespace XamCore.AVFoundation {
 		Locked, AutoWhiteBalance, ContinuousAutoWhiteBalance
 	}
 
+#if !MONOMAC || !XAMCORE_4_0
 	[Flags]
 	[NoTV, NoWatch]
 	[iOS (4,0)]
@@ -156,6 +157,7 @@ namespace XamCore.AVFoundation {
 	public enum AVAudioSessionInterruptionFlags : nuint_compat_int {
 		ShouldResume = 1
 	}
+#endif
 
 	// Populated in NSError.Code, an NSInteger
 	// anonymous enum - AVError.h
@@ -249,6 +251,7 @@ namespace XamCore.AVFoundation {
 		Unknown, ReadyToPlay, Failed
 	}
 
+#if !MONOMAC || !XAMCORE_4_0
 	[NoTV]
 	[Flags]
 	[iOS (4,0)]
@@ -258,6 +261,7 @@ namespace XamCore.AVFoundation {
 	public enum AVAudioSessionFlags : nuint_compat_int {
 		NotifyOthersOnDeactivation = 1
 	}
+#endif
 
 	[iOS (4,0)]
 	[Native]
@@ -357,11 +361,11 @@ namespace XamCore.AVFoundation {
 		[NoTV]
 		DefaultToSpeaker = 8,
 
-		[iOS (9,0), Mac (10,11)]
+		[iOS (9,0)]
 		InterruptSpokenAudioAndMixWithOthers = 17,
-		[NoWatch, iOS (10,0), TV (10,0), Mac(10,12)]
+		[NoWatch, iOS (10,0), TV (10,0)]
 		AllowBluetoothA2DP = 32,
-		[NoWatch, iOS (10,0), TV (10,0), Mac(10,12)]
+		[NoWatch, iOS (10,0), TV (10,0)]
 		AllowAirPlay = 64,
 	}
 
