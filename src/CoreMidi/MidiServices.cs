@@ -71,7 +71,7 @@ namespace XamCore.CoreMidi {
 		NotPermitted = -10844
 	}
 
-#if !XAMCORE_4_0
+#if !MONOMAC || !XAMCORE_4_0
 	// NSUInteger -> MIDINetworkSession.h
 	[Native]
 	public enum MidiNetworkConnectionPolicy : nuint_compat_int {
