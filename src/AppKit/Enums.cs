@@ -220,6 +220,7 @@ namespace XamCore.AppKit {
 	
 #region NSCell Defines 
 
+#if !XAMCORE_4_0
 	[Native]
 	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use formatters instead")]
 	public enum NSType : nuint_compat_int {
@@ -231,6 +232,7 @@ namespace XamCore.AppKit {
 	    Double		= 6,
 	    PositiveDouble	= 7
 	}
+#endif
 	
 	[Native]
 	public enum NSCellType : nuint_compat_int {
@@ -853,8 +855,12 @@ namespace XamCore.AppKit {
 	
 #region NSWindow
 	[Flags]
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSWindowStyle : nuint_compat_int {
+#else
+	public enum NSWindowStyle {
+#endif
 		Borderless	       					= 0 << 0,
 		Titled		       					= 1 << 0,
 		Closable	       					= 1 << 1,
@@ -899,8 +905,12 @@ namespace XamCore.AppKit {
 		[Mac (10, 11)] FullScreenDisallowsTiling = 1 << 12
 	}
 
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSWindowNumberListOptions : nuint_compat_int {
+#else
+	public enum NSWindowNumberListOptions {
+#endif
 		AllApplication = 1 << 0,
 		AllSpaces = 1 << 4
 	}
@@ -1606,11 +1616,13 @@ namespace XamCore.AppKit {
 		DefaultReturn
 	}
 
+#if !XAMCORE_4_0
 	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use NSModalResponse instead")]
 	[Native]
 	public enum NSPanelButtonType : nint {
 		Cancel, Ok
 	}
+#endif
 
 	[Native]
 	public enum NSTableViewColumnAutoresizingStyle : nuint_compat_int {

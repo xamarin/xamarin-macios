@@ -195,6 +195,11 @@
 !unknown-native-enum! WKSelectionGranularity bound
 !unknown-native-enum! SKCloudServiceAuthorizationStatus bound
 !unknown-native-enum! SKCloudServiceCapability bound
+!unknown-native-enum! NSWindowStyle bound
+!unknown-native-enum! NSPanelButtonType bound
+!unknown-native-enum! NSWindowNumberListOptions bound
+!unknown-native-enum! NSType bound
+!unknown-native-enum! SLComposeViewControllerResult bound
 # VALIDATE ^ BEFORE SUBMIT
 
 # 32-bit only, and marked correctly in binding
@@ -270,6 +275,7 @@
 !unknown-native-enum! IKCellsStyle bound
 !unknown-native-enum! IKGroupStyle bound
 !unknown-native-enum! NSModalResponse bound
+!unknown-native-enum! NSWindowLevel bound
 
 # In header under different name but close enough, not worth churn even in 4_0
 !unknown-native-enum! NSBackingStore bound
@@ -285,3 +291,4 @@
 !unknown-native-enum! NSTableColumnResizing bound
 !unknown-native-enum! NSTableViewAnimation bound
 !unknown-native-enum! NSTableViewGridStyle bound
+!unknown-native-enum! NSViewResizingMask bound
