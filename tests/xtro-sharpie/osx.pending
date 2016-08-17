@@ -196,9 +196,4 @@
 !unknown-native-enum! NSWindowNumberListOptions bound
 !unknown-native-enum! NSType bound
 !unknown-native-enum! SLComposeViewControllerResult bound
-# VALIDATE ^ BEFORE SUBMIT
-
-# 32-bit only, and marked correctly in binding
-!unknown-type! NSMenuView bound
-
 

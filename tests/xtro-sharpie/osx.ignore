@@ -385,3 +385,6 @@
 # Informal Protocol
 !unknown-protocol! IKImageBrowserDataSource bound
 !unknown-protocol! IKImageBrowserItem bound
+
+# 32-bit only, and marked correctly in binding
+!unknown-type! NSMenuView bound
