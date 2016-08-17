@@ -70,20 +70,16 @@ namespace Extrospection {
 		};
 
 		static IEnumerable<string> _exclusionList;
-		static IEnumerable<string> ExclusionList
-		{
-			get
-			{
-				if (_exclusionList == null)
-				{
-					switch (Helpers.Platform)
-					{
-						case "osx":
-							_exclusionList = macOSXExclusionList;
-							break;
-						default:
-							_exclusionList = Enumerable.Empty <string> ();
-							break;
+		static IEnumerable<string> ExclusionList {
+			get {
+				if (_exclusionList == null) {
+					switch (Helpers.Platform) {
+					case "osx":
+						_exclusionList = macOSXExclusionList;
+						break;
+					default:
+						_exclusionList = Enumerable.Empty <string> ();
+						break;
 					}
 				}
 				return _exclusionList;
@@ -92,8 +88,7 @@ namespace Extrospection {
 
 		public static bool DeclFilter (Decl d)
 		{
-			if (d.OwningModule != null)
-			{
+			if (d.OwningModule != null) {
 				foreach (var item in ExclusionList)
 					if (d.InModule (item))
 						return false;
@@ -184,8 +179,7 @@ namespace Extrospection {
 		{
 			var header_file = decl.PresumedLoc.FileName;
 			var fxh = header_file.IndexOf (".framework/Headers/", StringComparison.Ordinal);
-			if (fxh > 0)
-			{
+			if (fxh > 0) {
 				var start = header_file.LastIndexOf ('/', fxh) + 1;
 				return header_file.Substring (start, fxh - start);
 			}
