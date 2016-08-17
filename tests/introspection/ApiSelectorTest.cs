@@ -122,6 +122,13 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "MDLMaterialProperty":
+				switch (selectorName) {
+				case "copyWithZone:":
+					// not working before iOS 10, macOS 10.12
+					return !TestRuntime.CheckXcodeVersion (8, 0);
+				}
+				break;
 			// Xcode 8 beta 2
 			case "GKGraph":
 			case "NEFlowMetaData":

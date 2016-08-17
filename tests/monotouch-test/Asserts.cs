@@ -12,6 +12,11 @@ using NUnit.Framework;
 public static class Asserts
 {
 #if !__WATCHOS__
+	public static void AreEqual (bool expected, bool actual, string message)
+	{
+		Assert.AreEqual (expected, actual, message + " (M)");
+	}
+
 	public static void AreEqual (float expected, float actual, string message)
 	{
 		Assert.AreEqual (expected, actual, message + " (M)");
