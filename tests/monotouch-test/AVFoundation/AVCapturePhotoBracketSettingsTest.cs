@@ -1,4 +1,4 @@
-#if XAMCORE_2_0 && !__WATCHOS__
+#if XAMCORE_2_0 && !__WATCHOS__ && !__TVOS__
 
 using System;
 using Foundation;
