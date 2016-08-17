@@ -7688,7 +7688,7 @@ namespace XamCore.AVFoundation {
 	{
 		[Static]
 		[Export ("photoBracketSettingsWithRawPixelFormatType:processedFormat:bracketedSettings:")]
-		AVCapturePhotoBracketSettings Create (uint rawPixelFormatType, [NullAllowed] NSDictionary<NSString, NSObject> format, AVCaptureBracketedStillImageSettings [] bracketedSettings);
+		AVCapturePhotoBracketSettings FromRawPixelFormatType (uint rawPixelFormatType, [NullAllowed] NSDictionary<NSString, NSObject> format, AVCaptureBracketedStillImageSettings [] bracketedSettings);
 
 		[Export ("bracketedSettings")]
 		AVCaptureBracketedStillImageSettings [] BracketedSettings { get; }
@@ -7753,7 +7753,7 @@ namespace XamCore.AVFoundation {
 		void DidFinishRecordingLivePhotoMovie (AVCapturePhotoOutput captureOutput, NSUrl outputFileUrl, AVCaptureResolvedPhotoSettings resolvedSettings);
 
 		[Export ("captureOutput:didFinishProcessingLivePhotoToMovieFileAtURL:duration:photoDisplayTime:resolvedSettings:error:")]
-		void DidFinishProcessingLivePhotoToMovieFile (AVCapturePhotoOutput captureOutput, NSUrl outputFileUrl, CMTime duration, CMTime photoDisplayTime, AVCaptureResolvedPhotoSettings resolvedSettings, [NullAllowed] NSError error);
+		void DidFinishProcessingLivePhotoMovie (AVCapturePhotoOutput captureOutput, NSUrl outputFileUrl, CMTime duration, CMTime photoDisplayTime, AVCaptureResolvedPhotoSettings resolvedSettings, [NullAllowed] NSError error);
 
 		[Export ("captureOutput:didFinishCaptureForResolvedSettings:error:")]
 		void DidFinishCapture (AVCapturePhotoOutput captureOutput, AVCaptureResolvedPhotoSettings resolvedSettings, [NullAllowed] NSError error);

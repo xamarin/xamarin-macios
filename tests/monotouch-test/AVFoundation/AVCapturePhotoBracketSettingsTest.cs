@@ -19,7 +19,7 @@ namespace monotouchtest {
 			array [2] = AVCaptureAutoExposureBracketedStillImageSettings.Create (2f);
 			var output = new AVCapturePhotoOutput ();
 			if (output.AvailablePhotoPixelFormatTypes.Length > 0) {
-				using (var settings = AVCapturePhotoBracketSettings.Create ((uint) output.AvailablePhotoPixelFormatTypes [0], null, array))
+				using (var settings = AVCapturePhotoBracketSettings.FromRawPixelFormatType ((uint) output.AvailablePhotoPixelFormatTypes [0], null, array))
 					Assert.That (settings.Handle, Is.Not.EqualTo (IntPtr.Zero));
 			}
 		}
