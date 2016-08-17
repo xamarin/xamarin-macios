@@ -276,6 +276,8 @@ namespace Introspection {
 				if (ctor.ToString () == "Void .ctor(IMKOverlay)")
 					return true;
 				break;
+			case "MPSMatrixMultiplication":
+				// marked as NS_UNAVAILABLE - Use the above initialization method instead.
 			case "MPSImageHistogram":
 				// Could not initialize an instance of the type 'MetalPerformanceShaders.MPSImageHistogram': the native 'initWithDevice:' method returned nil.
 				// make sense: there's a `initWithDevice:histogramInfo:` DI

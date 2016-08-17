@@ -109,7 +109,7 @@ namespace Introspection
 		protected virtual bool CheckForEnumParameter (MethodInfo mi, ParameterInfo pi)
 		{
 			if (pi.ParameterType.IsEnum && pi.ParameterType.GetCustomAttribute<NativeAttribute> () != null) {
-				AddErrorLine ("{0}.{1} has a [Native] enum parameter in its signature: {2} {3}",
+				AddErrorLine ("[FAIL] {0}.{1} has a [Native] enum parameter in its signature: {2} {3}",
 					mi.DeclaringType.FullName, mi.Name, pi.ParameterType, pi.Name);
 				return false;
 			}

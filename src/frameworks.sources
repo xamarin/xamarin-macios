@@ -397,6 +397,7 @@ COREGRAPHICS_SOURCES = \
 	CoreGraphics/CGBitmapContext.cs \
 	CoreGraphics/CGContextPDF.cs \
 	CoreGraphics/CGColorConverter.cs \
+	CoreGraphics/CGColorConversionInfo.cs \
 	CoreGraphics/CGDataConsumer.cs \
 	CoreGraphics/CGDataProvider-2.cs \
 	CoreGraphics/CGDataProvider.cs \
@@ -821,7 +822,7 @@ JAVASCRIPTCORE_SOURCES = \
 
 # LocalAuthentication
 
-LOCALAUTHENTICATION_CORE_SOURCES = \
+LOCALAUTHENTICATION_API_SOURCES = \
 	Localauthentication/LAEnums.cs \
 
 # MapKit
@@ -1386,9 +1387,8 @@ WKWEBKIT_SOURCES = \
 APPLETLS_SOURCES = \
 	Security/Tls/AppleTlsContext.cs \
 	Security/Tls/AppleTlsProvider.cs \
+	Security/Tls/AppleTlsStream.cs \
 	Security/Tls/MobileCertificateHelper.cs \
-	Security/Tls/AsyncProtocolRequest.cs \
-	Security/Tls/MobileAuthenticatedStream.cs \
 	Security/Tls/OldTlsProvider.cs \
 
 #

@@ -2679,4 +2679,11 @@ namespace XamCore.AppKit {
 		Line,
 		Bezel,
 	}
+
+	[Mac (10, 12)]
+	[Native]
+	public enum NSPasteboardContentsOptions : nuint
+	{
+		CurrentHostOnly = 1,
+	}
 }

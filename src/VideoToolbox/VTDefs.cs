@@ -45,6 +45,7 @@ namespace XamCore.VideoToolbox {
 		FrameSiloInvalidTimeRange                 = -12216,
 		CouldNotFindTemporalFilter                = -12217,
 		PixelTransferNotPermitted                 = -12218,
+		ColorCorrectionImageRotationFailed        = -12219,
 	}
 
 	// uint32_t -> VTErrors.h

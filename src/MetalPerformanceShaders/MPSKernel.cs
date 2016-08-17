@@ -1,7 +1,8 @@
-// Copyright 2015 Xamarin Inc. All rights reserved.
+// Copyright 2015-2016 Xamarin Inc. All rights reserved.
 
 using System;
 using System.Runtime.InteropServices;
+using XamCore.CoreGraphics;
 using XamCore.Foundation;
 using XamCore.Metal;
 using XamCore.ObjCRuntime;
@@ -28,6 +29,18 @@ namespace XamCore.MetalPerformanceShaders {
 					return (IntPtr) ptr;
 			}
 		}
+
+#if XAMCORE_2_0
+		internal static IntPtr GetPtr (nfloat [] values, bool throwOnNull)
+		{
+			if (throwOnNull && (values == null))
+				throw new ArgumentNullException ("values");
+			unsafe {
+				fixed (nfloat *ptr = values)
+					return (IntPtr) ptr;
+			}
+		}
+#endif
 
 		internal unsafe static float [] GetTransform (IntPtr transform)
 		{
@@ -137,6 +150,41 @@ namespace XamCore.MetalPerformanceShaders {
 
 		public float[] ColorTransform {
 			get { return MPSKernel.GetTransform (_ColorTransform); }
+		}
+	}
+
+	public partial class MPSCnnConvolution {
+		public MPSCnnConvolution (IMTLDevice device, MPSCnnConvolutionDescriptor convolutionDescriptor, float[] kernelWeights, float[] biasTerms, MPSCnnConvolutionFlags flags)
+			: this (device, convolutionDescriptor, MPSKernel.GetPtr (kernelWeights, true), MPSKernel.GetPtr (biasTerms, false), flags)
+		{
+		}
+	}
+
+	public partial class MPSCnnFullyConnected {
+		public MPSCnnFullyConnected (IMTLDevice device, MPSCnnConvolutionDescriptor convolutionDescriptor, float[] kernelWeights, float[] biasTerms, MPSCnnConvolutionFlags flags)
+			: this (device, convolutionDescriptor, MPSKernel.GetPtr (kernelWeights, true), MPSKernel.GetPtr (biasTerms, false), flags)
+		{
+		}
+	}
+
+	public partial class MPSImageConversion {
+		public MPSImageConversion (IMTLDevice device, MPSAlphaType srcAlpha, MPSAlphaType destAlpha, nfloat[] backgroundColor, CGColorConversionInfo conversionInfo)
+			: this (device, srcAlpha, destAlpha, MPSKernel.GetPtr (backgroundColor, false), conversionInfo)
+		{
+		}
+	}
+
+	public partial class MPSImagePyramid {
+		public MPSImagePyramid (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights)
+			: this (device, kernelWidth, kernelHeight, MPSKernel.GetPtr (kernelWeights, true))
+		{
+		}
+	}
+
+	public partial class MPSImageGaussianPyramid {
+		public MPSImageGaussianPyramid (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights)
+			: this (device, kernelWidth, kernelHeight, MPSKernel.GetPtr (kernelWeights, true))
+		{
 		}
 	}
 #endif

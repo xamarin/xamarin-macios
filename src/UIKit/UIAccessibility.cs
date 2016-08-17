@@ -326,6 +326,7 @@ namespace XamCore.UIKit {
 			}
 		}
 
+#if !TVOS
 		[DllImport (Constants.UIKitLibrary)]
 		static extern nuint UIAccessibilityHearingDevicePairedEar ();
 
@@ -335,6 +336,7 @@ namespace XamCore.UIKit {
 				return (UIAccessibilityHearingDeviceEar)(ulong) UIAccessibilityHearingDevicePairedEar ();
 			}
 		}
+#endif
 	}
 
 

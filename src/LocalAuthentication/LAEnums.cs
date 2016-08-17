@@ -15,6 +15,7 @@ namespace XamCore.LocalAuthentication {
 	[iOS (8,0)]
 	[Availability (Platform.Mac_10_10)]
 	[Native]
+	[ErrorDomain ("LAErrorDomain")]
 	public enum LAStatus : nint {
 		Success = 0,
 		/// Authentication was not successful, because user failed to provide valid credentials.
@@ -51,6 +52,10 @@ namespace XamCore.LocalAuthentication {
 		CreateItem,
 		UseItem,
 		CreateKey,
-		UseKeySign
+		UseKeySign,
+		[iOS (10,0)][Mac (10,12)]
+		UseKeyDecrypt,
+		[iOS (10,0)][Mac (10,12)]
+		UseKeyKeyExchange,
 	}
 }

@@ -323,6 +323,8 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "ExternalAccessory", "ExternalAccessory", 10 },
 					{ "MultipeerConnectivity", 10 },
+					{ "Photos", "Photos", 10 },
+					{ "PhotosUI", "PhotosUI", 10 },
 					{ "ReplayKit", "ReplayKit", 10 },
 					{ "UserNotifications", "UserNotifications", 10 },
 					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },

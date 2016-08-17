@@ -441,7 +441,7 @@ namespace XamCore.GameKit {
 		string DisplayName { get; }
 	}
 
-	[Watch (3,0)]
+	[NoWatch]
 	[iOS (10,0)][Mac (10,12)]
 	[BaseType (typeof(GKBasePlayer))]
 	interface GKCloudPlayer
@@ -1355,7 +1355,6 @@ namespace XamCore.GameKit {
 		[Export ("showsCompletionBanner", ArgumentSemantic.Assign)]
 		bool ShowsCompletionBanner { get; set;  }
 
-		[NoWatch]
 		[iOS (6,0), Mac (10,8)]
 		[Static]
 		[Export ("reportAchievements:withCompletionHandler:")]
@@ -2283,6 +2282,7 @@ namespace XamCore.GameKit {
 		void WantsToQuitMatch (GKPlayer player, GKTurnBasedMatch match);
 	}
 
+	[NoWatch]
 	[iOS (10,0)][Mac (10,12)][TV (10,0)]
 	[BaseType (typeof(NSObject))]
 	interface GKGameSession
@@ -2373,6 +2373,7 @@ namespace XamCore.GameKit {
 
 	interface IGKGameSessionEventListener {}
 
+	[NoWatch]
 	[iOS (10,0)][Mac (10,12)][TV (10,0)]
 	[Protocol]
 	interface GKGameSessionEventListener

@@ -15,7 +15,7 @@ using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
 using Mono.Security.Interface;
-using MSN = Mono.Net.Security;
+using MNS = Mono.Net.Security;
 
 namespace XamCore.Security.Tls
 {
@@ -35,7 +35,7 @@ namespace XamCore.Security.Tls
 			Stream innerStream, bool leaveInnerStreamOpen,
 			MonoTlsSettings settings = null)
 		{
-			return new MobileAuthenticatedStream (innerStream, leaveInnerStreamOpen, settings, this);
+			return new AppleTlsStream (innerStream, leaveInnerStreamOpen, settings, this);
 		}
 
 		internal override IMonoTlsContext CreateTlsContext (
@@ -77,7 +77,7 @@ namespace XamCore.Security.Tls
 			out bool success, ref MonoSslPolicyErrors errors, ref int status11)
 		{
 			if (wantsChain)
-				chain = MSN.SystemCertificateValidator.CreateX509Chain (certificates);
+				chain = MNS.SystemCertificateValidator.CreateX509Chain (certificates);
 			return MobileCertificateHelper.InvokeSystemCertificateValidator (validator, targetHost, serverMode, certificates, out success, ref errors, ref status11);
 		}
 	}

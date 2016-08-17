@@ -386,6 +386,11 @@ namespace Xamarin.Bundler {
 				throw new MonoMacException (2007, true,
 					"Xamarin.Mac Unified API against a full .NET framework does not support linking. Pass the -nolink flag.");
 
+			if (App.LinkMode != LinkMode.None && is_extension) {
+				App.LinkMode = LinkMode.None;
+				ErrorHelper.Warning (2014, "Xamarin.Mac Extensions do not support linking. Request for linking will be ignored.");
+			}
+
 			if (!IsUnifiedMobile && tls_provider != null)
 				throw new MonoMacException (2011, true, "Selecting a TLS Provider is only supported in the Unified Mobile profile");
 
@@ -1006,6 +1011,8 @@ namespace Xamarin.Bundler {
 					args.Append ("-g ");
 				args.Append ("-mmacosx-version-min=").Append (minos.ToString ()).Append (' ');
 				args.Append ("-arch ").Append (arch).Append (' ');
+				if (arch == "x86_64")
+					args.Append ("-fobjc-runtime=macosx ");
 				foreach (var assembly in BuildTarget.Assemblies) {
 					if (assembly.LinkWith != null) {
 						foreach (var linkWith in assembly.LinkWith) {

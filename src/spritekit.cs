@@ -2229,21 +2229,18 @@ namespace XamCore.SpriteKit {
 
 		// SKAction_SKWarpable
 
-		[NoWatch]
 		[iOS (10,0)][Mac (10,12)]
 		[Static]
 		[Export ("warpTo:duration:")]
 		[return: NullAllowed]
 		SKAction WarpTo (SKWarpGeometry warp, double duration);
 
-		[NoWatch]
 		[iOS (10,0)][Mac (10,12)]
 		[Static]
 		[Export ("animateWithWarps:times:")]
 		[return: NullAllowed]
 		SKAction Animate (SKWarpGeometry[] warps, NSNumber[] times);
 
-		[NoWatch]
 		[iOS (10,0)][Mac (10,12)]
 		[Static]
 		[Export ("animateWithWarps:times:restore:")]
