@@ -7626,6 +7626,7 @@ namespace XamCore.AVFoundation {
 	
 	[NoTV, NoMac, iOS (10,0)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface AVCapturePhotoSettings : NSCopying
 	{
 		[Static]
@@ -7682,10 +7683,12 @@ namespace XamCore.AVFoundation {
 #if !MONOMAC
 	[NoTV, NoMac, iOS (10,0)]
 	[BaseType (typeof(AVCapturePhotoSettings))]
+	[DisableDefaultCtor]
 	interface AVCapturePhotoBracketSettings
 	{
-		[Export ("initWithFormat:rawPixelFormatType:bracketedSettings:")]
-		IntPtr Constructor ([NullAllowed] NSDictionary<NSString, NSObject> format, uint rawPixelFormatType, AVCaptureBracketedStillImageSettings [] bracketedSettings);
+		[Static]
+		[Export ("photoBracketSettingsWithRawPixelFormatType:processedFormat:bracketedSettings:")]
+		AVCapturePhotoBracketSettings Create (uint rawPixelFormatType, [NullAllowed] NSDictionary<NSString, NSObject> format, AVCaptureBracketedStillImageSettings [] bracketedSettings);
 
 		[Export ("bracketedSettings")]
 		AVCaptureBracketedStillImageSettings [] BracketedSettings { get; }

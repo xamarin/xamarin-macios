@@ -204,6 +204,7 @@
     <Compile Include="AVFoundation\AVAudioConverterPrimeInfoTest.cs" />
     <Compile Include="AVFoundation\AVBeatRangeTest.cs" />
     <Compile Include="AVFoundation\AVCaptureWhiteBalanceGainsTest.cs" />
+    <Compile Include="AVFoundation\AVCapturePhotoBracketSettingsTest.cs" />
     <Compile Include="ImageIO\ImagePropertiesTest.cs" />
     <Compile Include="CoreLocation\LocationTest.cs" />
     <Compile Include="CoreFoundation\ProxyTest.cs" />
