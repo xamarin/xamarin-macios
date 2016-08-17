@@ -25,6 +25,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.DSymUtil" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindItemWithLogicalName" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GenerateBundleName" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetAssetCatalogsFromImageAssets" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetAssetCatalogFiles" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetNativeExecutableName" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetPropertyListValue" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.PackLibraryResources" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
@@ -380,7 +382,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<PropertyGroup>
 		<_CollectBundleResourcesDependsOn>
 			_CompileInterfaceDefinitions;
-			_CompileImageAssets;
+			_CompileAssetCatalogs;
 			_CompileColladaAssets;
 			_CompileSceneKitAssets;
 			_CompileTextureAtlases;
@@ -981,28 +983,61 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</CreateItem>
 	</Target>
 
-	<Target Name="_CompileImageAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCoreCompileImageAssets;_ReadCompileImageAssets;_CoreCompileImageAssets" />
+	<PropertyGroup>
+		<_CompileAssetCatalogsDependsOn>
+			_DetectAppManifest;
+			_DetectSdkLocations;
+			_GetAssetCatalogsFromImageAssets;
+			_GetAssetCatalogFiles;
+			_BeforeCoreCompileAssetCatalogs;
+			_ReadCompileAssetCatalogs;
+			_CoreCompileAssetCatalogs
+		</_CompileAssetCatalogsDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_CompileAssetCatalogs" DependsOnTargets="$(_CompileAssetCatalogsDependsOn)" />
 	<!-- Cache files for incremental build support -->
 	<PropertyGroup>
 		<_ACTool_PartialAppManifestCache>$(DeviceSpecificIntermediateOutputPath)actool\_PartialAppManifest.items</_ACTool_PartialAppManifestCache>
 		<_ACTool_BundleResourceCache>$(DeviceSpecificIntermediateOutputPath)actool\_BundleResourceWithLogicalName.items</_ACTool_BundleResourceCache>
 	</PropertyGroup>
 
-	<Target Name="_BeforeCoreCompileImageAssets"
-		Inputs="@(ImageAsset);$(_AppManifest)"
-		Outputs="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)">
+	<!-- Needed for backward compatibility -->
+	<Target Name="_GetAssetCatalogsFromImageAssets" Condition="'@(AssetCatalog)' == '' And '@(ImageAsset)' != ''">
+		<GetAssetCatalogsFromImageAssets
+			SessionId="$(SessionId)"
+			ImageAssets="@(ImageAsset)"
+			ProjectDir="$(MSBuildProjectDirectory)">
+			<Output TaskParameter="AssetCatalogs" ItemName="AssetCatalog" />
+		</GetAssetCatalogsFromImageAssets>
+	</Target>
+
+	<!-- Needed for _BeforeCoreCompileAssetCatalogs in order to determine if a rebuild is needed -->
+	<Target Name="_GetAssetCatalogFiles">
+		<GetAssetCatalogFiles
+			SessionId="$(SessionId)"
+			AssetCatalogs="@(AssetCatalog)"
+			ProjectDir="$(MSBuildProjectDirectory)">
+			<Output TaskParameter="AssetCatalogFiles" ItemName="_AssetCatalogFile" />
+		</GetAssetCatalogFiles>
+	</Target>
+
+	<Target Name="_BeforeCoreCompileAssetCatalogs"
+		Inputs="@(_AssetCatalogFile);$(_AppManifest)"
+		Outputs="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)"
+		DependsOnTargets="_GetAssetCatalogsFromImageAssets;_GetAssetCatalogFiles">
 		
-		<!-- If any ImageAsset or AppManifest is newer than the generated items list, we delete them so that the _CoreCompileImageAssets
+		<!-- If any Asset Catalog files or the AppManifest is newer than the generated items list, we delete them so that the _CoreCompileAssetCatalogs
 		     target runs again and updates those lists for the next run
 		-->
 		<Delete Files="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)" />
 		<RemoveDir Directories="$(DeviceSpecificIntermediateOutputPath)actool" />
 	</Target>
 
-	<Target Name="_ReadCompileImageAssets"					
-		DependsOnTargets="_BeforeCoreCompileImageAssets">
+	<Target Name="_ReadCompileAssetCatalogs"					
+		DependsOnTargets="_BeforeCoreCompileAssetCatalogs">
 
-		<!-- If _BeforeCoreCompileImageAssets did not delete the generated items lists from _CoreCompileImageAsset, then we read them
+		<!-- If _BeforeCoreCompileAssetCatalogs did not delete the generated items lists from _CoreCompileAssetCatalogs, then we read them
 		     since that target won't run and we need the output items that are cached in those files, which includes full metadata -->
 		<ReadItemsFromFile File="$(_ACTool_PartialAppManifestCache)" Condition="Exists('$(_ACTool_PartialAppManifestCache)')">
 			<Output TaskParameter="Items" ItemName="_PartialAppManifest" />
@@ -1012,20 +1047,20 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</ReadItemsFromFile>
 	</Target>
 
-	<Target Name="_CoreCompileImageAssets" 
-		Inputs="@(ImageAsset);$(_AppManifest)"
+	<Target Name="_CoreCompileAssetCatalogs" 
+		Inputs="@(_AssetCatalogFile);$(_AppManifest)"
 		Outputs="$(_ACTool_PartialAppManifestCache);$(_ACTool_BundleResourceCache)"
-		DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCoreCompileImageAssets">
+		DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_BeforeCoreCompileAssetCatalogs">
 		
 		<ACTool
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '@(ImageAsset)' != ''"
+			Condition="'$(IsMacEnabled)' And '@(_AssetCatalogFile)' != ''"
 			ToolExe="$(ACToolExe)"
 			ToolPath="$(ACToolPath)"
 			AppManifest="$(_AppManifest)"
+			AssetCatalogs="@(AssetCatalog)"
 			DeviceModel="$(TargetDeviceModel)"
 			DeviceOSVersion="$(TargetDeviceOSVersion)"
-			ImageAssets="@(ImageAsset)"
 			OptimizePNGs="$(OptimizePNGs)"
 			OutputPath="$(DeviceSpecificOutputPath)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
@@ -1072,7 +1107,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_ReadCoreCompileSceneKitAssets"
 		DependsOnTargets="_BeforeCoreCompileSceneKitAssets">
 
-		<!-- If _BeforeCoreCompileImageAssets did not delete the generated items lists from _CoreCompileImageAsset, then we read them
+		<!-- If _BeforeCoreCompileSceneKitAssets did not delete the generated items lists from _CoreCompileSceneKitAssets then we read them
 		     since that target won't run and we need to the output items that are cached in those files which includes full metadata -->
 		<ReadItemsFromFile File="$(_SceneKitCache)" Condition="Exists('$(_SceneKitCache)')">
 			<Output TaskParameter="Items" ItemName="_BundleResourceWithLogicalName" />

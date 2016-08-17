@@ -9,9 +9,6 @@ using Microsoft.Build.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-using Xamarin.MacDev.Tasks;
-using Xamarin.MacDev;
-
 namespace Xamarin.MacDev.Tasks
 {
 	public abstract class ACToolTaskBase : XcodeCompilerToolTask
@@ -22,12 +19,12 @@ namespace Xamarin.MacDev.Tasks
 
 		#region Inputs
 
+		[Required]
+		public ITaskItem[] AssetCatalogs { get; set; }
+
 		public string DeviceModel { get; set; }
 
 		public string DeviceOSVersion { get; set; }
-
-		[Required]
-		public ITaskItem[] ImageAssets { get; set; }
 
 		public bool IsWatchApp { get; set; }
 
@@ -228,18 +225,16 @@ namespace Xamarin.MacDev.Tasks
 			var manifest = new TaskItem (Path.Combine (intermediate, "asset-manifest.plist"));
 			var bundleResources = new List<ITaskItem> ();
 			var outputManifests = new List<ITaskItem> ();
-			var catalogs = new List<ITaskItem> ();
-			var unique = new HashSet<string> ();
-			string bundleIdentifier = null;
 			var knownSpecs = new HashSet<string> ();
+			string bundleIdentifier = null;
 			var specs = new PArray ();
 			int rc;
 
 			Log.LogTaskName ("ACTool");
 			Log.LogTaskProperty ("AppManifest", AppManifest);
+			Log.LogTaskProperty ("AssetCatalogs", AssetCatalogs);
 			Log.LogTaskProperty ("DeviceModel", DeviceModel);
 			Log.LogTaskProperty ("DeviceOSVersion", DeviceOSVersion);
-			Log.LogTaskProperty ("ImageAssets", ImageAssets);
 			Log.LogTaskProperty ("IntermediateOutputPath", IntermediateOutputPath);
 			Log.LogTaskProperty ("IsWatchApp", IsWatchApp);
 			Log.LogTaskProperty ("OptimizePNGs", OptimizePNGs);
@@ -249,6 +244,9 @@ namespace Xamarin.MacDev.Tasks
 			Log.LogTaskProperty ("SdkBinPath", SdkBinPath);
 			Log.LogTaskProperty ("SdkPlatform", SdkPlatform);
 			Log.LogTaskProperty ("SdkVersion", SdkVersion);
+
+			if (AssetCatalogs == null || AssetCatalogs.Length == 0)
+				return true;
 
 			switch (SdkPlatform) {
 			case "iPhoneSimulator":
@@ -275,79 +273,57 @@ namespace Xamarin.MacDev.Tasks
 				bundleIdentifier = plist.GetCFBundleIdentifier ();
 			}
 
-			foreach (var asset in ImageAssets) {
-				var vpath = BundleResource.GetVirtualProjectPath (ProjectDir, asset);
-				if (Path.GetFileName (vpath) != "Contents.json")
-					continue;
+			if (AppleSdkSettings.XcodeVersion.Major >= 7 && !string.IsNullOrEmpty (bundleIdentifier) && SdkPlatform != "WatchSimulator") {
+				foreach (var catalog in AssetCatalogs) {
+					foreach (var contentsJson in Directory.EnumerateFiles (catalog.ItemSpec, "Contents.json", SearchOption.AllDirectories)) {
+						var text = File.ReadAllText (contentsJson);
 
-				// get the parent (which will typically be .appiconset, .launchimage, .imageset, .iconset, etc)
-				var catalog = Path.GetDirectoryName (vpath);
+						if (string.IsNullOrEmpty (text))
+							continue;
 
-				// keep walking up the directory structure until we get to the .xcassets directory
-				while (!string.IsNullOrEmpty (catalog) && Path.GetExtension (catalog) != ".xcassets")
-					catalog = Path.GetDirectoryName (catalog);
+						var json = JsonConvert.DeserializeObject (text) as JObject;
 
-				if (string.IsNullOrEmpty (catalog)) {
-					Log.LogWarning (null, null, null, asset.ItemSpec, 0, 0, 0, 0, "Asset not part of an asset catalog: {0}", asset.ItemSpec);
-					continue;
-				}
+						if (json == null)
+							continue;
 
-				if (unique.Add (catalog))
-					catalogs.Add (new TaskItem (catalog));
+						var properties = json.Property ("properties");
 
-				if (AppleSdkSettings.XcodeVersion.Major >= 7 && !string.IsNullOrEmpty (bundleIdentifier) && SdkPlatform != "WatchSimulator") {
-					var text = File.ReadAllText (asset.ItemSpec);
+						if (properties == null)
+							continue;
 
-					if (string.IsNullOrEmpty (text))
-						continue;
+						var resourceTags = properties.Value.ToObject<JObject> ().Property ("on-demand-resource-tags");
 
-					var json = JsonConvert.DeserializeObject (text) as JObject;
+						if (resourceTags == null || resourceTags.Value.Type != JTokenType.Array)
+							continue;
 
-					if (json == null)
-						continue;
+						var tagArray = resourceTags.Value.ToObject<JArray> ();
+						var tags = new HashSet<string> ();
+						string hash;
 
-					var properties = json.Property ("properties");
+						foreach (var tag in tagArray.Select (token => token.ToObject<string> ()))
+							tags.Add (tag);
 
-					if (properties == null)
-						continue;
+						var tagList = tags.ToList ();
+						tagList.Sort ();
 
-					var resourceTags = properties.Value.ToObject<JObject> ().Property ("on-demand-resource-tags");
+						var path = AssetPackUtils.GetAssetPackDirectory (intermediate, bundleIdentifier, tagList, out hash);
 
-					if (resourceTags == null || resourceTags.Value.Type != JTokenType.Array)
-						continue;
+						if (knownSpecs.Add (hash)) {
+							var assetpack = new PDictionary ();
+							var ptags = new PArray ();
 
-					var tagArray = resourceTags.Value.ToObject<JArray> ();
-					var tags = new HashSet<string> ();
-					string hash;
+							Directory.CreateDirectory (path);
 
-					foreach (var tag in tagArray.Select (token => token.ToObject<string> ()))
-						tags.Add (tag);
+							for (int i = 0; i < tags.Count; i++)
+								ptags.Add (new PString (tagList[i]));
 
-					var tagList = tags.ToList ();
-					tagList.Sort ();
-
-					var path = AssetPackUtils.GetAssetPackDirectory (intermediate, bundleIdentifier, tagList, out hash);
-
-					if (knownSpecs.Add (hash)) {
-						var assetpack = new PDictionary ();
-						var ptags = new PArray ();
-
-						Directory.CreateDirectory (path);
-
-						for (int i = 0; i < tags.Count; i++)
-							ptags.Add (new PString (tagList[i]));
-
-						assetpack.Add ("bundle-id", new PString (string.Format ("{0}.asset-pack-{1}", bundleIdentifier, hash)));
-						assetpack.Add ("bundle-path", new PString (Path.GetFullPath (path)));
-						assetpack.Add ("tags", ptags);
-						specs.Add (assetpack);
+							assetpack.Add ("bundle-id", new PString (string.Format ("{0}.asset-pack-{1}", bundleIdentifier, hash)));
+							assetpack.Add ("bundle-path", new PString (Path.GetFullPath (path)));
+							assetpack.Add ("tags", ptags);
+							specs.Add (assetpack);
+						}
 					}
 				}
-			}
-
-			if (catalogs.Count == 0) {
-				// There are no (supported?) asset catalogs
-				return true;
 			}
 
 			partialAppManifest = new TaskItem (Path.Combine (intermediate, "partial-info.plist"));
@@ -362,12 +338,12 @@ namespace Xamarin.MacDev.Tasks
 			Directory.CreateDirectory (intermediateBundleDir);
 
 			// Note: Compile() will set the PartialAppManifest property if it is used...
-			if ((rc = Compile (catalogs.ToArray (), output, manifest)) != 0) {
+			if ((rc = Compile (AssetCatalogs, output, manifest)) != 0) {
 				if (File.Exists (manifest.ItemSpec)) {
 					try {
 						var log = PDictionary.FromFile (manifest.ItemSpec);
 
-						LogWarningsAndErrors (log, catalogs[0]);
+						LogWarningsAndErrors (log, AssetCatalogs[0]);
 					} catch (FormatException) {
 						Log.LogError ("actool exited with code {0}", rc);
 					}
@@ -384,7 +360,7 @@ namespace Xamarin.MacDev.Tasks
 			try {
 				var manifestOutput = PDictionary.FromFile (manifest.ItemSpec);
 
-				LogWarningsAndErrors (manifestOutput, catalogs[0]);
+				LogWarningsAndErrors (manifestOutput, AssetCatalogs[0]);
 
 				bundleResources.AddRange (GetCompiledBundleResources (manifestOutput, intermediateBundleDir));
 				outputManifests.Add (manifest);

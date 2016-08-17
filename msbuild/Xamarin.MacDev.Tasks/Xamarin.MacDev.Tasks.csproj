@@ -84,6 +84,8 @@
     <Compile Include="Tasks\WriteItemsToFile.cs" />
     <Compile Include="Tasks\ReadItemsFromFile.cs" />
     <Compile Include="Tasks\Zip.cs" />
+    <Compile Include="Tasks\GetAssetCatalogsFromImageAssets.cs" />
+    <Compile Include="Tasks\GetAssetCatalogFiles.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

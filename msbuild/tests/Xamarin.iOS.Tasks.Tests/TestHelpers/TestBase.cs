@@ -17,7 +17,7 @@ namespace Xamarin.iOS.Tasks
 			public static string Build = "Build";
 			public static string Clean = "Clean";
 			public static string CollectBundleResources = "_CollectBundleResources";
-			public static string CompileImageAssets = "_CompileImageAssets";
+			public static string CompileAssetCatalogs = "_CompileAssetCatalogs";
 			public static string CompileInterfaceDefinitions = "_CompileInterfaceDefinitions";
 			public static string CopyResourcesToBundle = "_CopyResourcesToBundle";
 			public static string DetectAppManifest = "_DetectAppManifest";
