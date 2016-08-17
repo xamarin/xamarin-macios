@@ -492,7 +492,7 @@ namespace XamCore.AppKit {
 	[Native]
 	public enum NSKey : nuint_compat_int {
 #else
-	public enum NSKey
+	public enum NSKey : int
 #endif
 		A              = 0x00,
 		S              = 0x01,
