@@ -91,6 +91,7 @@ MAC_ASSEMBLY_NAMES = \
 	System.Xml.Serialization \
 	System.Xml \
 	System \
+	System.Security \
 	$(TLS_PROVIDER_ASSEMBLY_NAMES) \
 	System.Runtime.InteropServices.RuntimeInformation \
 	System.Reflection.Context	\
@@ -111,8 +112,7 @@ MAC_4_5_ADDITIONAL_ASSEMBLY_NAMES = \
 	System.EnterpriseServices \
 	System.IdentityModel.Selectors \
 	System.Messaging \
-	System.Runtime.Serialization.Formatters.Soap \
-	System.Security
+	System.Runtime.Serialization.Formatters.Soap
 
 MAC_4_5_ASSEMBLY_NAMES = $(MAC_ASSEMBLY_NAMES) $(MAC_4_5_ADDITIONAL_ASSEMBLY_NAMES)
 
