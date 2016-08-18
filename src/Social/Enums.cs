@@ -19,11 +19,13 @@ namespace XamCore.Social {
 		Get, Post, Delete, Put
 	}
 
+#if !MONOMAC || !XAMCORE_4_0
 	// NSInteger -> SLComposeViewController.h
 	[Native]
 	public enum SLComposeViewControllerResult : nint {
 		Cancelled, Done
 	}
+#endif
 
 	// note: those are NSString in iOS/OSX that we expose as an enum (i.e. it's NOT a native enum)
 	// when adding a value make sure to update SLRequest.KindToType method

@@ -636,7 +636,11 @@ namespace XamCore.AppKit {
 		NSObject ServicesProvider { get; set; }
 	
 		[Export ("userInterfaceLayoutDirection")]
+#if !XAMCORE_4_0
 		NSApplicationLayoutDirection UserInterfaceLayoutDirection { get; }
+#else
+		NSUserInterfaceLayoutDirection UserInterfaceLayoutDirection { get; }
+#endif
 
 		[Export ("servicesMenu")]
 		NSMenu ServicesMenu { get; set; }
@@ -9776,8 +9780,11 @@ namespace XamCore.AppKit {
 		[Export ("invalidateDisplayForGlyphRange:")]
 		void InvalidateDisplayForGlyphRange (NSRange glyphRange);
 
+#if !XAMCORE_4_0
+		[Availability (Deprecated = Platform.Mac_10_11, Message = "Use ProcessEditing (NSTextStorage textStorage, NSTextStorageEditActions editMask, NSRange newCharRange, nint delta, NSRange invalidatedCharRange) instead)")]
 		[Export ("textStorage:edited:range:changeInLength:invalidatedRange:")]
 		void TextStorageEdited (NSTextStorage str, NSTextStorageEditedFlags editedMask, NSRange newCharRange, nint changeInLength, NSRange invalidatedCharRange);
+#endif
 
 		[Export ("ensureGlyphsForCharacterRange:")]
 		void EnsureGlyphsForCharacterRange (NSRange charRange);
@@ -17209,7 +17216,11 @@ namespace XamCore.AppKit {
 		bool FixesAttributesLazily { get; }
 
 		[Export ("editedMask")]
+#if !XAMCORE_4_0
 		NSTextStorageEditedFlags EditedMask { get; }
+#else
+		NSTextStorageEditActions EditedMask { get; }
+#endif
 
 		[Export ("editedRange")]
 		NSRange EditedRange { get; }

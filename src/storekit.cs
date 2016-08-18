@@ -440,7 +440,7 @@ namespace XamCore.StoreKit {
 	[iOS (9,3)]
 	[TV (9,2)]
 	[BaseType (typeof (NSObject))]
-#if MONOMAC || XAMCORE_3_0 // Avoid breaking change in iOS
+#if XAMCORE_3_0 // Avoid breaking change in iOS
 	[DisableDefaultCtor]
 #endif
 	interface SKCloudServiceController {

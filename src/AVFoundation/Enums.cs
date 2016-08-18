@@ -147,6 +147,7 @@ namespace XamCore.AVFoundation {
 		Locked, AutoWhiteBalance, ContinuousAutoWhiteBalance
 	}
 
+#if !MONOMAC || !XAMCORE_4_0
 	[Flags]
 	[NoTV, NoWatch]
 	[iOS (4,0)]
@@ -156,6 +157,7 @@ namespace XamCore.AVFoundation {
 	public enum AVAudioSessionInterruptionFlags : nuint_compat_int {
 		ShouldResume = 1
 	}
+#endif
 
 	// Populated in NSError.Code, an NSInteger
 	// anonymous enum - AVError.h
@@ -249,6 +251,7 @@ namespace XamCore.AVFoundation {
 		Unknown, ReadyToPlay, Failed
 	}
 
+#if !MONOMAC || !XAMCORE_4_0
 	[NoTV]
 	[Flags]
 	[iOS (4,0)]
@@ -258,6 +261,7 @@ namespace XamCore.AVFoundation {
 	public enum AVAudioSessionFlags : nuint_compat_int {
 		NotifyOthersOnDeactivation = 1
 	}
+#endif
 
 	[iOS (4,0)]
 	[Native]
@@ -310,6 +314,7 @@ namespace XamCore.AVFoundation {
 	}
 #endif
 
+#if !MONOMAC || !XAMCORE_4_0
 	[Flags]
 	[Native]
 	// NSUInteger - AVAudioSession.h
@@ -356,11 +361,11 @@ namespace XamCore.AVFoundation {
 		[NoTV]
 		DefaultToSpeaker = 8,
 
-		[iOS (9,0), Mac (10,11)]
+		[iOS (9,0)]
 		InterruptSpokenAudioAndMixWithOthers = 17,
-		[NoWatch, iOS (10,0), TV (10,0), Mac(10,12)]
+		[NoWatch, iOS (10,0), TV (10,0)]
 		AllowBluetoothA2DP = 32,
-		[NoWatch, iOS (10,0), TV (10,0), Mac(10,12)]
+		[NoWatch, iOS (10,0), TV (10,0)]
 		AllowAirPlay = 64,
 	}
 
@@ -389,6 +394,7 @@ namespace XamCore.AVFoundation {
 		[iOS (9,0)]
 		CodeResourceNotAvailable = 0x21726573
 	}
+#endif
 
 	[NoTV]
 	[Native]
@@ -420,6 +426,7 @@ namespace XamCore.AVFoundation {
 		NotDetermined, Restricted, Denied, Authorized
 	}
 
+#if !MONOMAC || !XAMCORE_4_0
 	[iOS (7,0)]
 	[Native]
 	// NSInteger - AVSpeechSynthesis.h
@@ -427,6 +434,7 @@ namespace XamCore.AVFoundation {
 		Immediate,
 		Word
 	}
+#endif
 
 	[iOS (8,0)]
 	[Native]
@@ -447,6 +455,7 @@ namespace XamCore.AVFoundation {
 		StereoPassThrough = 5
 	}
 
+#if !MONOMAC || !XAMCORE_4_0
 	[NoTV, NoWatch]
 	[Native]
 	public enum AVAudioSessionRecordPermission : nuint {
@@ -460,6 +469,7 @@ namespace XamCore.AVFoundation {
 		Begin = 1,
 		End = 0
 	}
+#endif
 
 	[Flags]
 	[Native]

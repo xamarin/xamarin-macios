@@ -862,10 +862,12 @@ namespace XamCore.CoreBluetooth {
 		[Since (7,0)]
 		NSString RestoredStateAdvertisementDataKey { get; }
 
+#if !MONOMAC || !XAMCORE_4_0
 		[Since (7,0)]
 		[Static]
 		[Export ("authorizationStatus")]
 		CBPeripheralManagerAuthorizationStatus AuthorizationStatus { get; }
+#endif
 	}
 
 	[Since (6, 0), Mac(10,9)]
