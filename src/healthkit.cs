@@ -213,6 +213,7 @@ namespace XamCore.HealthKit {
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKDocumentSample
 	interface HKDocumentSample
 	{
+		[NoWatch] // HKDocumentType is iOS only, rdar #27865614
 		[Export ("documentType", ArgumentSemantic.Strong)]
 		HKDocumentType DocumentType { get; }
 	}
@@ -712,7 +713,8 @@ namespace XamCore.HealthKit {
 		[return: NullAllowed]
 		HKCorrelationType GetCorrelationType (NSString hkCorrelationTypeIdentifier);
 
-		[Watch (3,0), iOS (10,0)]
+		[NoWatch] // HKDocumentType is iOS only, rdar #27865614
+		[iOS (10,0)]
 		[Internal]
 		[Static]
 		[Export ("documentTypeForIdentifier:")]
@@ -760,7 +762,7 @@ namespace XamCore.HealthKit {
 
 	}
 
-	[Watch (3,0)] // marked as iOS-only but some watchOS 3 API returns this type, rdar #27865614
+	[NoWatch] // marked as iOS-only (confirmed by Apple) even if some watchOS 3 API returns this type, rdar #27865614
 	[iOS (10,0)]
 	[BaseType (typeof (HKSampleType))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKDocumentType

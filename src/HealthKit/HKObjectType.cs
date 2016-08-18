@@ -314,12 +314,13 @@ namespace XamCore.HealthKit
 		}
 	}
 
+#if !WATCH
 	public partial class HKDocumentType {
 		public static HKDocumentType Create (HKDocumentTypeIdentifier kind)
 		{
 			return HKObjectType._GetDocumentType (kind.GetConstant ());
 		}
 	}
-	
+#endif
 }
 
