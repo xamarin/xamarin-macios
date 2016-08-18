@@ -13,6 +13,7 @@ namespace monotouchtest {
 		[Test]
 		public void TestConstructor ()
 		{
+			TestRuntime.AssertXcodeVersion (5, 0);
 			AVCaptureAutoExposureBracketedStillImageSettings [] array = new AVCaptureAutoExposureBracketedStillImageSettings [3];
 			array [0] = AVCaptureAutoExposureBracketedStillImageSettings.Create (-2f);
 			array [1] = AVCaptureAutoExposureBracketedStillImageSettings.Create (0f);
