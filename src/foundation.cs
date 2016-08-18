@@ -12002,6 +12002,7 @@ namespace XamCore.Foundation
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSUnit))]
+	[Abstract] // abstract subclass of NSUnit
 	[DisableDefaultCtor] // there's a designated initializer
 	interface NSDimension : NSSecureCoding {
 		[Export ("converter", ArgumentSemantic.Copy)]
@@ -12011,9 +12012,12 @@ namespace XamCore.Foundation
 		[DesignatedInitializer]
 		IntPtr Constructor (string symbol, NSUnitConverter converter);
 
-		[Static]
-		[Export ("baseUnit")]
-		NSDimension BaseUnit { get; }
+		// needs to be overriden in suubclasses
+		//	NSInvalidArgumentException Reason: *** You must override baseUnit in your class NSDimension to define its base unit.
+		// we provide a basic, managed, implementation that throws with a similar message
+		//[Static]
+		//[Export ("baseUnit")]
+		//NSDimension BaseUnit { get; }
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -12036,6 +12040,11 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("fahrenheit", ArgumentSemantic.Copy)]
 		NSUnitTemperature Fahrenheit { get; }
+
+		[New] // kind of overloading a static member
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
 	}
 
 #if MONOMAC
@@ -13003,6 +13012,11 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("gravity", ArgumentSemantic.Copy)]
 		NSUnitAcceleration Gravity { get; }
+
+		[New] // kind of overloading a static member
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13036,6 +13050,11 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("revolutions", ArgumentSemantic.Copy)]
 		NSUnitAngle Revolutions { get; }
+
+		[New] // kind of overloading a static member
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13101,6 +13120,11 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("hectares", ArgumentSemantic.Copy)]
 		NSUnitArea Hectares { get; }
+
+		[New] // kind of overloading a static member
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13122,6 +13146,11 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("millimolesPerLiterWithGramsPerMole:")]
 		NSUnitConcentrationMass GetMillimolesPerLiter (double gramsPerMole);
+
+		[New] // kind of overloading a static member
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13135,6 +13164,11 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("partsPerMillion", ArgumentSemantic.Copy)]
 		NSUnitDispersion PartsPerMillion { get; }
+
+		[New] // kind of overloading a static member
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13156,6 +13190,11 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("hours", ArgumentSemantic.Copy)]
 		NSUnitDuration Hours { get; }
+
+		[New] // kind of overloading a static member
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13189,6 +13228,11 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("microampereHours", ArgumentSemantic.Copy)]
 		NSUnitElectricCharge MicroampereHours { get; }
+
+		[New] // kind of overloading a static member
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13218,6 +13262,11 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("microamperes", ArgumentSemantic.Copy)]
 		NSUnitElectricCurrent Microamperes { get; }
+
+		[New] // kind of overloading a static member
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13247,6 +13296,11 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("microvolts", ArgumentSemantic.Copy)]
 		NSUnitElectricPotentialDifference Microvolts { get; }
+
+		[New] // kind of overloading a static member
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13276,6 +13330,11 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("microohms", ArgumentSemantic.Copy)]
 		NSUnitElectricResistance Microohms { get; }
+
+		[New] // kind of overloading a static member
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13305,6 +13364,11 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("kilowattHours", ArgumentSemantic.Copy)]
 		NSUnitEnergy KilowattHours { get; }
+
+		[New] // kind of overloading a static member
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13346,6 +13410,11 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("nanohertz", ArgumentSemantic.Copy)]
 		NSUnitFrequency Nanohertz { get; }
+
+		[New] // kind of overloading a static member
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13367,6 +13436,11 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("milesPerGallon", ArgumentSemantic.Copy)]
 		NSUnitFuelEfficiency MilesPerGallon { get; }
+
+		[New] // kind of overloading a static member
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13464,6 +13538,11 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("parsecs", ArgumentSemantic.Copy)]
 		NSUnitLength Parsecs { get; }
+
+		[New] // kind of overloading a static member
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13477,6 +13556,11 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("lux", ArgumentSemantic.Copy)]
 		NSUnitIlluminance Lux { get; }
+
+		[New] // kind of overloading a static member
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13550,6 +13634,11 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("slugs", ArgumentSemantic.Copy)]
 		NSUnitMass Slugs { get; }
+
+		[New] // kind of overloading a static member
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13603,6 +13692,11 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("horsepower", ArgumentSemantic.Copy)]
 		NSUnitPower Horsepower { get; }
+
+		[New] // kind of overloading a static member
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13652,6 +13746,11 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("poundsForcePerSquareInch", ArgumentSemantic.Copy)]
 		NSUnitPressure PoundsForcePerSquareInch { get; }
+
+		[New] // kind of overloading a static member
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13677,6 +13776,11 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("knots", ArgumentSemantic.Copy)]
 		NSUnitSpeed Knots { get; }
+
+		[New] // kind of overloading a static member
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
 	}
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
@@ -13810,6 +13914,11 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("metricCups", ArgumentSemantic.Copy)]
 		NSUnitVolume MetricCups { get; }
+
+		[New] // kind of overloading a static member
+		[Static]
+		[Export ("baseUnit")]
+		NSDimension BaseUnit { get; }
 	}
 
 	[iOS (10,0)]

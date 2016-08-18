@@ -48,5 +48,7 @@
 	<string>Testing lens</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Testing mike</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Testing friends</string>
 </dict>
 </plist>
