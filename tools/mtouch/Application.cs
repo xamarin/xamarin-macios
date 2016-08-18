@@ -1076,6 +1076,15 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public static void CopyMsymData (string src, string dest)
+		{
+			var dirInfo = new DirectoryInfo (src);
+			if (!dirInfo.Exists) // got no aot data
+				return;
+			var copyProcess = new MsymCopyTask (src, dest);
+			copyProcess.Execute ();
+		}
+
 		void BuildFinalExecutable ()
 		{
 			if (FastDev) {
@@ -1833,6 +1842,37 @@ namespace Xamarin.Bundler {
 
 			if (Compile () != 0)
 				throw new MonoTouchException (4109, true, "Failed to compile the generated registrar code. Please file a bug report at http://bugzilla.xamarin.com");
+		}
+	}
+
+	public class MsymCopyTask : ProcessTask {
+		
+		public string Source { get; set; }
+		public string Destination { get; set; }
+		
+		public MsymCopyTask (string source, string destination) {
+			Source = source;
+			Destination = destination;
+			ProcessStartInfo.FileName = "mono-symbolicate";
+			ProcessStartInfo.Arguments = $"store-symbols \"{Source}\" \"{Destination}\"";
+		}
+		
+		protected override void Build ()
+		{
+			if (String.IsNullOrEmpty (Source)) {
+				Console.Error.WriteLine ("Symbolcation error, could not copy msym files because the source directory is missing.");
+				throw new ArgumentNullException (nameof (Source));
+			}
+			if (String.IsNullOrEmpty (Destination)) {
+				Console.Error.WriteLine ("Symbolcation error, could not copy msym files because the destination directory is missing.");
+				throw new ArgumentNullException (nameof (Source));
+			}
+			
+			var exit_code = base.Start ();
+			if (exit_code == 0)
+				return;
+			
+			Console.Error.WriteLine ("Msym files could not be copied from {Source} to {Destination}");
 		}
 	}
 

@@ -1,6 +1,7 @@
 ﻿// Copyright 2013 Xamarin Inc. All rights reserved.
 
 using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -101,18 +102,7 @@ namespace Xamarin.Bundler {
 			var dirInfo = new DirectoryInfo (msym_src);
 			if (!dirInfo.Exists) // got no aot data
 				return;
-			var subdirs = dirInfo.GetDirectories();
-			foreach (var subdir in subdirs) {
-				var destPath = Path.Combine (directory, subdir.Name.ToUpperInvariant ());
-				var destInfo = new DirectoryInfo (destPath);
-				if (!destInfo.Exists)
-					Directory.CreateDirectory (destPath);
-				var files = subdir.GetFiles ();
-				foreach (FileInfo file in files) {
-					string temppath = Path.Combine (destPath, file.Name);
-					file.CopyTo(temppath, true);
-				}
-			}
+			Application.CopyMsymData (msym_src, directory);
 		}
 
 		public void CopyConfigToDirectory (string directory)
