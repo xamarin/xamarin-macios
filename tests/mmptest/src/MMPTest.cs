@@ -71,7 +71,16 @@ namespace Xamarin.MMP.Tests
 				return;
 
 			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs>" };
+				// First in 64-bit
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>" };
+				// Mobile
+				TI.TestUnifiedExecutable (test);
+				// XM45
+				test.XM45 = true;
+				TI.TestUnifiedExecutable (test);
+
+				// Now 32-bit
+				test.CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>i386</XamMacArch>";
 				// Mobile
 				TI.TestUnifiedExecutable (test);
 				// XM45
@@ -334,6 +343,26 @@ namespace Xamarin.MMP.Tests
 				test.CSProjConfig = "<MonoBundlingExtraArgs>--allow-unsafe-gac-resolution</MonoBundlingExtraArgs>";
 				TI.TestUnifiedExecutable (test, shouldFail: false);
 			}
+		}
+
+		[Test]
+		public void DefaultProject_ShouldPullInMonoPosix_AndNaitveLib ()
+		{
+			RunMMPTest (tmpDir =>
+			{
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = true };
+				MonoPosixTestCore (tmpDir, test);
+				test.XM45 = false;
+				MonoPosixTestCore (tmpDir, test);
+			});
+		}
+
+		static void MonoPosixTestCore (string tmpDir, TI.UnifiedTestConfig test)
+		{
+			TI.TestUnifiedExecutable (test, shouldFail: false);
+
+			Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/Mono.Posix.dll")));
+			Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/libMonoPosixHelper.dylib")));
 		}
 }
 }

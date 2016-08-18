@@ -66,6 +66,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<!-- Do not resolve from the GAC under any circumstances in Mobile or XM45 -->
 	<PropertyGroup Condition="(('$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(UseXamMacFullFramework)' == 'true') Or '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac') And !$(MonoBundlingExtraArgs.Contains('--allow-unsafe-gac-resolution'))" >
 		<AssemblySearchPaths>$([System.String]::Copy('$(AssemblySearchPaths)').Replace('{GAC}',''))</AssemblySearchPaths>
+		<AssemblySearchPaths Condition="'$(MSBuildRuntimeVersion)' != ''">$(AssemblySearchPaths.Split(';'))</AssemblySearchPaths>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -435,8 +436,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<Target Name="_DetectSdkLocations">
 		<DetectSdkLocations
 			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			SdkVersion="$(MacOSXSdkVersion)">
+			SessionId="$(BuildSessionId)">
 			<Output TaskParameter="SdkVersion" PropertyName="MacOSXSdkVersion" />
 			<Output TaskParameter="SdkRoot" PropertyName="_SdkRoot" />
 			<Output TaskParameter="SdkBinPath" PropertyName="_SdkBinPath" />

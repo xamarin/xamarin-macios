@@ -919,8 +919,13 @@ namespace XamCore.CoreAnimation {
 		[Field ("kCAAnimationLinear")]
 		NSString AnimationLinear { get; }
 				
+#if !XAMCORE_4_0
 		[Field ("kCAAnimationDiscrete")]
+		[Obsolete ("The name has been fixed, use AnimationDiscrete instead")]
 		NSString AnimationDescrete { get; }
+#endif
+		[Field ("kCAAnimationDiscrete")]
+		NSString AnimationDiscrete { get; }
 		
 		[Field ("kCAAnimationPaced")]
 		NSString AnimationPaced { get; }

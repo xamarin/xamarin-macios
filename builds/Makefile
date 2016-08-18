@@ -73,6 +73,7 @@ MAC_ASSEMBLY_NAMES = \
 	System.Core \
 	System.Data.Services.Client \
 	System.Data \
+	System.IdentityModel \
 	System.IO.Compression.FileSystem \
 	System.IO.Compression \
 	System.Json \
@@ -91,13 +92,16 @@ MAC_ASSEMBLY_NAMES = \
 	System.Xml \
 	System \
 	System.Security \
-	$(TLS_PROVIDER_ASSEMBLY_NAMES)
+	$(TLS_PROVIDER_ASSEMBLY_NAMES) \
+	System.Runtime.InteropServices.RuntimeInformation \
+	System.Reflection.Context	\
+	System.Net.Http.WinHttpHandler
 
 FACADE_SUBDIRS_MK = $(MONO_PATH)/mcs/class/Facades/subdirs.make
 # File does not exist before checking out mono
 -include $(FACADE_SUBDIRS_MK)
 
-MAC_FACADE_ASSEMBLY_NAMES = $(xammac_PARALLEL_SUBDIRS)
+MAC_FACADE_ASSEMBLY_NAMES = $(xammac_PARALLEL_SUBDIRS) $(xammac_SUBDIRS)
 
 MAC_4_5_ADDITIONAL_ASSEMBLY_NAMES = \
 	Mono.Messaging \
@@ -106,14 +110,13 @@ MAC_4_5_ADDITIONAL_ASSEMBLY_NAMES = \
 	System.Configuration.Install \
 	System.Data.Linq \
 	System.EnterpriseServices \
-	System.IdentityModel \
 	System.IdentityModel.Selectors \
 	System.Messaging \
 	System.Runtime.Serialization.Formatters.Soap
 
 MAC_4_5_ASSEMBLY_NAMES = $(MAC_ASSEMBLY_NAMES) $(MAC_4_5_ADDITIONAL_ASSEMBLY_NAMES)
 
-MAC_4_5_FACADE_ASSEMBLY_NAMES = $(MAC_FACADE_ASSEMBLY_NAMES)
+MAC_4_5_FACADE_ASSEMBLY_NAMES = $(xammac_net_4_5_PARALLEL_SUBDIRS) $(xammac_net_4_5_SUBDIRS)
 
 MAC_ASSEMBLIES = $(addsuffix .dll,$(MAC_ASSEMBLY_NAMES))
 MAC_FACADE_ASSEMBLIES = $(addsuffix .dll,$(MAC_FACADE_ASSEMBLY_NAMES))
@@ -237,8 +240,8 @@ $(MAC_DIRECTORIES) $(BUILD_DESTDIR):
 
 mac-facade-check:
 	$(Q) rm -f .$@*
-	$(Q) echo $(MAC_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
-	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/xammac_net_4_5/Facades | grep dll | sort > .$@2
+	$(Q) echo $(MAC_4_5_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
+	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/xammac_net_4_5/Facades | grep dll$$ | sort > .$@2
 	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_PATH)/mcs/class/lib/xammac_net_4_5/Facades " not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
 	$(Q) rm -f .$@*
 
@@ -510,14 +513,17 @@ IOS_ASSEMBLIES = I18N.CJK I18N.MidEast I18N.Other I18N.Rare I18N.West I18N Mono.
 	System System.Core System.Data System.Data.Services.Client System.Json System.Runtime.Serialization \
 	System.ServiceModel.Web System.ServiceModel System.Transactions System.Web.Services System.Xml.Linq System.Xml \
 	System.ServiceModel.Internals \
-	System.Numerics System.IO.Compression System.IO.Compression.FileSystem \
+	System.Numerics System.IdentityModel System.IO.Compression System.IO.Compression.FileSystem \
 	System.ComponentModel.DataAnnotations System.ComponentModel.Composition \
+	System.Net.Http.WinHttpHandler \
+	System.Numerics.Vectors System.Reflection.Context System.Reflection.DispatchProxy \
+	System.Runtime.InteropServices.RuntimeInformation System.Security System.Xml.XPath.XmlDocument \
 	System.Windows System.Xml.Serialization System.Net Mono.Dynamic.Interpreter \
 	Microsoft.CSharp Mono.CSharp $(TLS_PROVIDER_ASSEMBLY_NAMES)
 
 IOS_REPL_ASSEMBLIES = mscorlib System System.Core System.Xml Mono.CSharp
 
-IOS_FACADE_ASSEMBLIES = $(monotouch_PARALLEL_SUBDIRS)
+IOS_FACADE_ASSEMBLIES = $(monotouch_PARALLEL_SUBDIRS) $(monotouch_SUBDIRS)
 
 # TVOS/WATCHOS BCL is built from a different mono branch and the assembly list might differ across time
 TVOS_ASSEMBLIES = $(IOS_ASSEMBLIES)
@@ -530,7 +536,7 @@ WATCHOS_REPL_ASSEMBLIES = $(IOS_REPL_ASSEMBLIES)
 ios-facade-check:
 	$(Q) rm -f .$@*
 	$(Q) echo $(IOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
-	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/monotouch/Facades | grep dll | sed 's/[.]dll//' | sort > .$@2
+	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/monotouch/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
 	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_PATH)/mcs/class/lib/monotouch/Facades" not defined in "$(FACADE_SUBDIRS_MK)"***\n"; exit 1; fi
 	$(Q) rm -f .$@*
 
@@ -540,14 +546,14 @@ watch-facade-check:
 disabled-watch-facade-check:
 	$(Q) rm -f .$@*
 	$(Q) echo $(WATCHOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
-	$(Q) ls -1 $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/Facades | grep dll | sed 's/[.]dll//' | sort > .$@2
+	$(Q) ls -1 $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
 	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/Facades" not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
 	$(Q) rm -f .$@*
 
 tvos-facade-check:
 	$(Q) rm -f .$@*
 	$(Q) echo $(TVOS_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
-	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/monotouch_tv/Facades | grep dll | sed 's/[.]dll//' | sort > .$@2
+	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/monotouch_tv/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
 	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_PATH)/mcs/class/lib/monotouch_tv/Facades" not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
 	$(Q) rm -f .$@*
 
@@ -1357,6 +1363,7 @@ ifdef INCLUDE_DEVICE
 iphoneos:: setup-iphoneos build-iphoneos install-iphoneos
 device:: iphoneos
 clean-device: clean-iphoneos
+install-device: install-iphoneos
 
 # this needs to be here because the normal usage of this makefile is "make all install", but nothing actually lists the -iphoneos targets as dependencies.
 ifdef INCLUDE_IOS

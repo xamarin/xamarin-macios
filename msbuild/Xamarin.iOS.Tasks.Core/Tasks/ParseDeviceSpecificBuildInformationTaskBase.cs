@@ -25,6 +25,9 @@ namespace Xamarin.iOS.Tasks
 		public string OutputPath { get; set; }
 
 		[Required]
+		public string TargetFrameworkIdentifier { get; set; }
+
+		[Required]
 		public string TargetiOSDevice { get; set; }
 
 		#endregion
@@ -51,14 +54,28 @@ namespace Xamarin.iOS.Tasks
 		public override bool Execute ()
 		{
 			TargetArchitecture architectures, deviceArchitectures, target = TargetArchitecture.Default;
+			string targetOperatingSystem;
 			PDictionary plist, device;
-			PString value;
+			PString value, os;
 
 			Log.LogTaskName ("ParseDeviceSpecificBuildInformation");
 			Log.LogTaskProperty ("Architectures", Architectures);
 			Log.LogTaskProperty ("IntermediateOutputPath", IntermediateOutputPath);
 			Log.LogTaskProperty ("OutputPath", OutputPath);
+			Log.LogTaskProperty ("TargetFrameworkIdentifier", TargetFrameworkIdentifier);
 			Log.LogTaskProperty ("TargetiOSDevice", TargetiOSDevice);
+
+			switch (PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier)) {
+			case PlatformFramework.WatchOS:
+				targetOperatingSystem = "watchOS";
+				break;
+			case PlatformFramework.TVOS:
+				targetOperatingSystem = "tvOS";
+				break;
+			default:
+				targetOperatingSystem = "iOS";
+				break;
+			}
 
 			if (!Enum.TryParse (Architectures, out architectures)) {
 				Log.LogError ("Invalid architectures: '{0}'.", Architectures);
@@ -66,7 +83,7 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			if ((plist = PObject.FromString (TargetiOSDevice) as PDictionary) == null) {
-				Log.LogError ("Failed to parse the target iOS device information.");
+				Log.LogError ("Failed to parse the target device information.");
 				return false;
 			}
 
@@ -85,8 +102,24 @@ namespace Xamarin.iOS.Tasks
 				return false;
 			}
 
+			if (!device.TryGetValue ("os", out os)) {
+				Log.LogError ("No device operating system information found.");
+				return false;
+			}
+
+			if (os.Value != targetOperatingSystem) {
+				// user is building the solution for another Apple device, do not build this project for a specific device
+				DeviceSpecificIntermediateOutputPath = IntermediateOutputPath;
+				DeviceSpecificOutputPath = OutputPath;
+				TargetArchitectures = Architectures;
+				TargetDeviceOSVersion = string.Empty;
+				TargetDeviceModel = string.Empty;
+
+				return !Log.HasLoggedErrors;
+			}
+
 			if ((architectures & deviceArchitectures) == 0) {
-				Log.LogError ("The target iOS device architecture {0} is not supported by the build configuration: {1}", architectures, deviceArchitectures);
+				Log.LogError ("The target {0} device architecture {1} is not supported by the build configuration: {2}", targetOperatingSystem, architectures, deviceArchitectures);
 				return false;
 			}
 

@@ -33,8 +33,8 @@ namespace XamCore.CoreData {
 		Custom = 0x01,
 		Add = 0x02,
 		Remove = 0x03,
-		Copy = 0x05,
-		Transform = 0x06
+		Copy = 0x04,
+		Transform = 0x05
 	}
 
 	// NUInteger -> NSAttributeDescription.h

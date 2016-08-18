@@ -21,13 +21,20 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 		<!-- Version/fx properties -->
 		<TargetFrameworkIdentifier Condition="'$(TargetFrameworkIdentifier)' == ''">Xamarin.WatchOS</TargetFrameworkIdentifier>
 		<TargetFrameworkVersion Condition="'$(TargetFrameworkVersion)' == ''">v1.0</TargetFrameworkVersion>
-
-		<FSharpTargets Condition="Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets')">$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets</FSharpTargets>
-		<FSharpTargets Condition="'$(FSharpTargets)' == ''">$(MSBuildBinPath)\Microsoft.FSharp.targets</FSharpTargets>
-
 		<DefineConstants>__UNIFIED__;__MOBILE__;__WATCHOS__;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
-	<Import Project="$(FSharpTargets)" />
+
+	<!-- xbuild searches multiple MSBuildExtensionsPath32, but only in the Import element so we can't determine this with a variable -->
+	<Import
+		Condition="'$(Language)' == '' And Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets')"
+		Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets" />
+	<Import
+		Condition="'$(Language)' == '' And Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\4.0\Framework\v4.0\Microsoft.FSharp.Targets')"
+		Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\4.0\Framework\v4.0\Microsoft.FSharp.Targets" />
+	<Import
+		Condition="'$(Language)' == '' And Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets')"
+		Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
+
 	<Import Project="Xamarin.WatchOS.AppExtension.Common.targets" />
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"

@@ -812,8 +812,6 @@ namespace Xamarin
 	}
 	
 	public class UuidCommand : LoadCommand {
-		public uint cmd;
-		public uint cmdsize;
 		public byte [] uuid;
 
 #if DEBUG
@@ -827,4 +825,3 @@ namespace Xamarin
 #endif
 	}
 }
-

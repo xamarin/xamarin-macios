@@ -5612,11 +5612,11 @@ namespace XamCore.AppKit {
 
 		[Static]
 		[Export ("setUserFont:")]
-		void SetUserFont (NSFont aFont);
+		void SetUserFont ([NullAllowed] NSFont aFont);
 
 		[Static]
 		[Export ("setUserFixedPitchFont:")]
-		void SetUserFixedPitchFont (NSFont aFont);
+		void SetUserFixedPitchFont ([NullAllowed] NSFont aFont);
 
 		[Static]
 		[Export ("systemFontOfSize:")]
@@ -18708,6 +18708,7 @@ namespace XamCore.AppKit {
 		bool ShouldCascadeWindows  { get; set; }
 	
 		[Export ("document")]
+		[NullAllowed]
 		NSDocument Document { get; set; }
 	
 		[Export ("setDocumentEdited:")]

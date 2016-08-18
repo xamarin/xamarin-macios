@@ -21,16 +21,20 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<!-- Version/fx properties -->
 		<TargetFrameworkIdentifier Condition="'$(TargetFrameworkIdentifier)' == ''">Xamarin.iOS</TargetFrameworkIdentifier>
 		<TargetFrameworkVersion Condition="'$(TargetFrameworkVersion)' == ''">v1.0</TargetFrameworkVersion>
-
-		<FSharpTargets Condition="'$(FSharpTargets)' == '' And '$(VisualStudioVersion)' == '11.0' And Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')">$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets</FSharpTargets>
-		<FSharpTargets Condition="'$(FSharpTargets)' == '' And Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets')">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets</FSharpTargets>
-		<FSharpTargets Condition="'$(FSharpTargets)' == '' And Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets')">$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets</FSharpTargets>
-		<FSharpTargets Condition="'$(FSharpTargets)' == '' And Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')">$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets</FSharpTargets>
-		<FSharpTargets Condition="'$(FSharpTargets)' == ''">$(MSBuildBinPath)\Microsoft.FSharp.Targets</FSharpTargets>
-
 		<DefineConstants>__UNIFIED__;__MOBILE__;__IOS__;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
-	<Import Project="$(FSharpTargets)" />
+
+	<!-- xbuild searches multiple MSBuildExtensionsPath32, but only in the Import element so we can't determine this with a variable -->
+	<Import
+		Condition="'$(Language)' == '' And Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets')"
+		Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets" />
+	<Import
+		Condition="'$(Language)' == '' And Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\4.0\Framework\v4.0\Microsoft.FSharp.Targets')"
+		Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\4.0\Framework\v4.0\Microsoft.FSharp.Targets" />
+	<Import
+		Condition="'$(Language)' == '' And Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets')"
+		Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
+
 	<Import Project="Xamarin.iOS.Common.targets" />
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"

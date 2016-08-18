@@ -330,7 +330,12 @@ namespace XamCore.CoreImage {
 		[iOS(9,0)]
 		[Static]
 		[Export ("registerFilterName:constructor:classAttributes:")]
+#if XAMCORE_4_0
+		void RegisterFilterName (string name, ICIFilterConstructor constructorObject, NSDictionary<NSString, NSObject> classAttributes);
+#else
+		[Advice ("The constructorObject argument must implement ICIFilterConstructor")]
 		void RegisterFilterName (string name, NSObject constructorObject, NSDictionary<NSString, NSObject> classAttributes);
+#endif
 #endif
 
 #if MONOMAC
@@ -657,9 +662,11 @@ namespace XamCore.CoreImage {
 		NSString FilterGenerator  { get; }
 	}
 
+	public interface ICIFilterConstructor {}
+
 	[iOS (9,0)]
 	[Protocol]
-	interface CIFilterConstructor
+	public interface CIFilterConstructor
 	{
 		// @required -(CIFilter * __nullable)filterWithName:(NSString * __nonnull)name;
 		[Abstract]

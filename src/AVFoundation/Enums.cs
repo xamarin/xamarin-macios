@@ -189,7 +189,7 @@ namespace XamCore.AVFoundation {
 		InvalidCompositionTrackSegmentSourceDuration = -11827,
 		FormatNotRecognized = -11828,
 		FailedToParse = -11829, // Should have been FileFailedToParse
-		MaximumStillImageCaptureRequestsExceeded = 11830,
+		MaximumStillImageCaptureRequestsExceeded = -11830,
 		ContentIsProtected = -11831,
 		NoImageAtTime = -11832,
 		DecoderNotFound = -11833,
@@ -211,7 +211,7 @@ namespace XamCore.AVFoundation {
 		IncompatibleAsset = -11848,
 		FailedToLoadMediaData = -11849,
 		ServerIncorrectlyConfigured = -11850,
-		ApplicationIsNotAuthorizedToUseDevice = 11852,
+		ApplicationIsNotAuthorizedToUseDevice = -11852,
 			
 		FailedToParse2 = -11853,
 		FileTypeDoesNotSupportSampleReferences = -11854,

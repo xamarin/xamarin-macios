@@ -4,6 +4,10 @@ This module is the main repository for both **Xamarin.iOS** and **Xamarin.Mac**.
 
 These frameworks allow us to create native iOS, tvOS, watchOS and Mac applications using the same UI controls we would in Objective-C and Xcode, except with the flexibility and elegance of a modern language (C#), the power of the .NET Base Class Library (BCL), and two first-class IDEs&mdash;Xamarin Studio and Visual Studio&mdash;at our fingertips.
 
+### Continuous Builds ###
+
+You can download continuous builds of our main development branches from [our wiki page](https://github.com/xamarin/xamarin-macios/wiki#continuous-builds).
+
 ## Build requirements ##
 
 * Autoconf, automake and libtool.
@@ -95,6 +99,11 @@ By default, everything required for both Xamarin.iOS and Xamarin.Mac will be bui
 ### Mailing Lists
 
 To discuss this project, and participate in the design, we use the [macios-devel@lists.xamarin.com](http://lists.xamarin.com/mailman/listinfo/macios-devel) mailing list.   
+
+### Chat
+
+There is also a gitter chat room that can be used to discuss this project, and participate in the design: 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/xamarin/xamarin-macios?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ### Coding Guidelines
 

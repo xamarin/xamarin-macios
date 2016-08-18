@@ -198,6 +198,96 @@
               </method>
             </methods>
           </class>
+          <class name="SafeNCryptHandle" type="class" base="System.Runtime.InteropServices.SafeHandle" abstract="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6276">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="IsInvalid" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsInvalid()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="ReleaseHandle()" attrib="196" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters />
+              </method>
+              <method name="ReleaseNativeHandle()" attrib="1476" abstract="true" virtual="true" returntype="System.Boolean">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="SafeNCryptKeyHandle" type="class" base="Microsoft.Win32.SafeHandles.SafeNCryptHandle" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="ReleaseNativeHandle()" attrib="196" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="SafeNCryptProviderHandle" type="class" base="Microsoft.Win32.SafeHandles.SafeNCryptHandle" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="ReleaseNativeHandle()" attrib="196" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="SafeNCryptSecretHandle" type="class" base="Microsoft.Win32.SafeHandles.SafeNCryptHandle" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="ReleaseNativeHandle()" attrib="196" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="SafePipeHandle" type="class" base="Microsoft.Win32.SafeHandles.SafeHandleZeroOrMinusOneIsInvalid" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.IntPtr, System.Boolean)" attrib="6278">
+                <parameters>
+                  <parameter name="preexistingHandle" position="0" attrib="0" type="System.IntPtr" />
+                  <parameter name="ownsHandle" position="1" attrib="0" type="System.Boolean" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="ReleaseHandle()" attrib="196" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters />
+              </method>
+            </methods>
+          </class>
         </classes>
       </namespace>
       <namespace name="System">
@@ -2942,6 +3032,524 @@
                 </parameters>
               </method>
             </methods>
+          </class>
+        </classes>
+      </namespace>
+      <namespace name="System.IO.Pipes">
+        <classes>
+          <class name="AnonymousPipeClientStream" type="class" base="System.IO.Pipes.PipeStream" sealed="true" charset="Ansi" layout="Auto">
+            <attributes />
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="pipeHandleAsString" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.IO.Pipes.PipeDirection, Microsoft.Win32.SafeHandles.SafePipeHandle)" attrib="6278">
+                <parameters>
+                  <parameter name="direction" position="0" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                  <parameter name="safePipeHandle" position="1" attrib="0" type="Microsoft.Win32.SafeHandles.SafePipeHandle" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.IO.Pipes.PipeDirection, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="direction" position="0" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                  <parameter name="pipeHandleAsString" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="ReadMode" attrib="0" ptype="System.IO.Pipes.PipeTransmissionMode">
+                <methods>
+                  <method name="set_ReadMode(System.IO.Pipes.PipeTransmissionMode)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.IO.Pipes.PipeTransmissionMode" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="TransmissionMode" attrib="0" ptype="System.IO.Pipes.PipeTransmissionMode">
+                <methods>
+                  <method name="get_TransmissionMode()" attrib="2246" virtual="true" is-override="true" returntype="System.IO.Pipes.PipeTransmissionMode">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="~AnonymousPipeClientStream()" attrib="196" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="AnonymousPipeServerStream" type="class" base="System.IO.Pipes.PipeStream" sealed="true" charset="Ansi" layout="Auto">
+            <attributes />
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.IO.Pipes.PipeDirection)" attrib="6278">
+                <parameters>
+                  <parameter name="direction" position="0" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.IO.Pipes.PipeDirection, System.IO.HandleInheritability)" attrib="6278">
+                <parameters>
+                  <parameter name="direction" position="0" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                  <parameter name="inheritability" position="1" attrib="0" type="System.IO.HandleInheritability" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.IO.Pipes.PipeDirection, Microsoft.Win32.SafeHandles.SafePipeHandle, Microsoft.Win32.SafeHandles.SafePipeHandle)" attrib="6278">
+                <attributes />
+                <parameters>
+                  <parameter name="direction" position="0" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                  <parameter name="serverSafePipeHandle" position="1" attrib="0" type="Microsoft.Win32.SafeHandles.SafePipeHandle" />
+                  <parameter name="clientSafePipeHandle" position="2" attrib="0" type="Microsoft.Win32.SafeHandles.SafePipeHandle" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.IO.Pipes.PipeDirection, System.IO.HandleInheritability, System.Int32)" attrib="6278">
+                <parameters>
+                  <parameter name="direction" position="0" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                  <parameter name="inheritability" position="1" attrib="0" type="System.IO.HandleInheritability" />
+                  <parameter name="bufferSize" position="2" attrib="0" type="System.Int32" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="ClientSafePipeHandle" attrib="0" ptype="Microsoft.Win32.SafeHandles.SafePipeHandle">
+                <attributes />
+                <methods>
+                  <method name="get_ClientSafePipeHandle()" attrib="2182" returntype="Microsoft.Win32.SafeHandles.SafePipeHandle">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ReadMode" attrib="0" ptype="System.IO.Pipes.PipeTransmissionMode">
+                <methods>
+                  <method name="set_ReadMode(System.IO.Pipes.PipeTransmissionMode)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.IO.Pipes.PipeTransmissionMode" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="TransmissionMode" attrib="0" ptype="System.IO.Pipes.PipeTransmissionMode">
+                <methods>
+                  <method name="get_TransmissionMode()" attrib="2246" virtual="true" is-override="true" returntype="System.IO.Pipes.PipeTransmissionMode">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="DisposeLocalCopyOfClientHandle()" attrib="134" returntype="System.Void">
+                <attributes />
+                <parameters />
+              </method>
+              <method name="GetClientHandleAsString()" attrib="134" returntype="System.String">
+                <parameters />
+              </method>
+              <method name="~AnonymousPipeServerStream()" attrib="196" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="NamedPipeClientStream" type="class" base="System.IO.Pipes.PipeStream" sealed="true" charset="Ansi" layout="Auto">
+            <attributes />
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="pipeName" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="serverName" position="0" attrib="0" type="System.String" />
+                  <parameter name="pipeName" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String, System.IO.Pipes.PipeDirection)" attrib="6278">
+                <parameters>
+                  <parameter name="serverName" position="0" attrib="0" type="System.String" />
+                  <parameter name="pipeName" position="1" attrib="0" type="System.String" />
+                  <parameter name="direction" position="2" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.IO.Pipes.PipeDirection, System.Boolean, System.Boolean, Microsoft.Win32.SafeHandles.SafePipeHandle)" attrib="6278">
+                <parameters>
+                  <parameter name="direction" position="0" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                  <parameter name="isAsync" position="1" attrib="0" type="System.Boolean" />
+                  <parameter name="isConnected" position="2" attrib="0" type="System.Boolean" />
+                  <parameter name="safePipeHandle" position="3" attrib="0" type="Microsoft.Win32.SafeHandles.SafePipeHandle" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String, System.IO.Pipes.PipeDirection, System.IO.Pipes.PipeOptions)" attrib="6278">
+                <parameters>
+                  <parameter name="serverName" position="0" attrib="0" type="System.String" />
+                  <parameter name="pipeName" position="1" attrib="0" type="System.String" />
+                  <parameter name="direction" position="2" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                  <parameter name="options" position="3" attrib="0" type="System.IO.Pipes.PipeOptions" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String, System.IO.Pipes.PipeDirection, System.IO.Pipes.PipeOptions, System.Security.Principal.TokenImpersonationLevel)" attrib="6278">
+                <parameters>
+                  <parameter name="serverName" position="0" attrib="0" type="System.String" />
+                  <parameter name="pipeName" position="1" attrib="0" type="System.String" />
+                  <parameter name="direction" position="2" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                  <parameter name="options" position="3" attrib="0" type="System.IO.Pipes.PipeOptions" />
+                  <parameter name="impersonationLevel" position="4" attrib="0" type="System.Security.Principal.TokenImpersonationLevel" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String, System.IO.Pipes.PipeDirection, System.IO.Pipes.PipeOptions, System.Security.Principal.TokenImpersonationLevel, System.IO.HandleInheritability)" attrib="6278">
+                <parameters>
+                  <parameter name="serverName" position="0" attrib="0" type="System.String" />
+                  <parameter name="pipeName" position="1" attrib="0" type="System.String" />
+                  <parameter name="direction" position="2" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                  <parameter name="options" position="3" attrib="0" type="System.IO.Pipes.PipeOptions" />
+                  <parameter name="impersonationLevel" position="4" attrib="0" type="System.Security.Principal.TokenImpersonationLevel" />
+                  <parameter name="inheritability" position="5" attrib="0" type="System.IO.HandleInheritability" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="NumberOfServerInstances" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_NumberOfServerInstances()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Connect()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Connect(System.Int32)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="timeout" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="NamedPipeServerStream" type="class" base="System.IO.Pipes.PipeStream" sealed="true" charset="Ansi" layout="Auto">
+            <attributes />
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="MaxAllowedServerInstances" attrib="32854" fieldtype="System.Int32" value="-1" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="pipeName" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.IO.Pipes.PipeDirection)" attrib="6278">
+                <parameters>
+                  <parameter name="pipeName" position="0" attrib="0" type="System.String" />
+                  <parameter name="direction" position="1" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.IO.Pipes.PipeDirection, System.Int32)" attrib="6278">
+                <parameters>
+                  <parameter name="pipeName" position="0" attrib="0" type="System.String" />
+                  <parameter name="direction" position="1" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                  <parameter name="maxNumberOfServerInstances" position="2" attrib="0" type="System.Int32" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.IO.Pipes.PipeDirection, System.Boolean, System.Boolean, Microsoft.Win32.SafeHandles.SafePipeHandle)" attrib="6278">
+                <parameters>
+                  <parameter name="direction" position="0" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                  <parameter name="isAsync" position="1" attrib="0" type="System.Boolean" />
+                  <parameter name="isConnected" position="2" attrib="0" type="System.Boolean" />
+                  <parameter name="safePipeHandle" position="3" attrib="0" type="Microsoft.Win32.SafeHandles.SafePipeHandle" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.IO.Pipes.PipeDirection, System.Int32, System.IO.Pipes.PipeTransmissionMode)" attrib="6278">
+                <parameters>
+                  <parameter name="pipeName" position="0" attrib="0" type="System.String" />
+                  <parameter name="direction" position="1" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                  <parameter name="maxNumberOfServerInstances" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="transmissionMode" position="3" attrib="0" type="System.IO.Pipes.PipeTransmissionMode" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.IO.Pipes.PipeDirection, System.Int32, System.IO.Pipes.PipeTransmissionMode, System.IO.Pipes.PipeOptions)" attrib="6278">
+                <parameters>
+                  <parameter name="pipeName" position="0" attrib="0" type="System.String" />
+                  <parameter name="direction" position="1" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                  <parameter name="maxNumberOfServerInstances" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="transmissionMode" position="3" attrib="0" type="System.IO.Pipes.PipeTransmissionMode" />
+                  <parameter name="options" position="4" attrib="0" type="System.IO.Pipes.PipeOptions" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.IO.Pipes.PipeDirection, System.Int32, System.IO.Pipes.PipeTransmissionMode, System.IO.Pipes.PipeOptions, System.Int32, System.Int32)" attrib="6278">
+                <parameters>
+                  <parameter name="pipeName" position="0" attrib="0" type="System.String" />
+                  <parameter name="direction" position="1" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                  <parameter name="maxNumberOfServerInstances" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="transmissionMode" position="3" attrib="0" type="System.IO.Pipes.PipeTransmissionMode" />
+                  <parameter name="options" position="4" attrib="0" type="System.IO.Pipes.PipeOptions" />
+                  <parameter name="inBufferSize" position="5" attrib="0" type="System.Int32" />
+                  <parameter name="outBufferSize" position="6" attrib="0" type="System.Int32" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="Disconnect()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="GetImpersonationUserName()" attrib="16518" returntype="System.String">
+                <attributes />
+                <parameters />
+              </method>
+              <method name="WaitForConnection()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="~NamedPipeServerStream()" attrib="196" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="PipeDirection" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="In" attrib="32854" fieldtype="System.IO.Pipes.PipeDirection" value="1" />
+              <field name="InOut" attrib="32854" fieldtype="System.IO.Pipes.PipeDirection" value="3" />
+              <field name="Out" attrib="32854" fieldtype="System.IO.Pipes.PipeDirection" value="2" />
+            </fields>
+          </class>
+          <class name="PipeOptions" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <attributes>
+              <attribute name="System.FlagsAttribute" />
+            </attributes>
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Asynchronous" attrib="32854" fieldtype="System.IO.Pipes.PipeOptions" value="1073741824" />
+              <field name="None" attrib="32854" fieldtype="System.IO.Pipes.PipeOptions" value="0" />
+              <field name="WriteThrough" attrib="32854" fieldtype="System.IO.Pipes.PipeOptions" value="-2147483648" />
+            </fields>
+          </class>
+          <class name="PipeStream" type="class" base="System.IO.Stream" abstract="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.IO.Pipes.PipeDirection, System.Int32)" attrib="6276">
+                <parameters>
+                  <parameter name="direction" position="0" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                  <parameter name="bufferSize" position="1" attrib="0" type="System.Int32" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.IO.Pipes.PipeDirection, System.IO.Pipes.PipeTransmissionMode, System.Int32)" attrib="6276">
+                <parameters>
+                  <parameter name="direction" position="0" attrib="0" type="System.IO.Pipes.PipeDirection" />
+                  <parameter name="transmissionMode" position="1" attrib="0" type="System.IO.Pipes.PipeTransmissionMode" />
+                  <parameter name="outBufferSize" position="2" attrib="0" type="System.Int32" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="CanRead" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_CanRead()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="CanSeek" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_CanSeek()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="CanWrite" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_CanWrite()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="InBufferSize" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_InBufferSize()" attrib="2502" virtual="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsAsync" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsAsync()" attrib="2182" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsConnected" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsConnected()" attrib="2182" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_IsConnected(System.Boolean)" attrib="2180" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IsMessageComplete" attrib="0" ptype="System.Boolean">
+                <attributes />
+                <methods>
+                  <method name="get_IsMessageComplete()" attrib="2182" returntype="System.Boolean">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Length" attrib="0" ptype="System.Int64">
+                <methods>
+                  <method name="get_Length()" attrib="2246" virtual="true" is-override="true" returntype="System.Int64">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="OutBufferSize" attrib="0" ptype="System.Int32">
+                <attributes />
+                <methods>
+                  <method name="get_OutBufferSize()" attrib="2502" virtual="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Position" attrib="0" ptype="System.Int64">
+                <methods>
+                  <method name="get_Position()" attrib="2246" virtual="true" is-override="true" returntype="System.Int64">
+                    <parameters />
+                  </method>
+                  <method name="set_Position(System.Int64)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int64" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ReadMode" attrib="0" ptype="System.IO.Pipes.PipeTransmissionMode">
+                <methods>
+                  <method name="get_ReadMode()" attrib="2502" virtual="true" returntype="System.IO.Pipes.PipeTransmissionMode">
+                    <parameters />
+                  </method>
+                  <method name="set_ReadMode(System.IO.Pipes.PipeTransmissionMode)" attrib="2502" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.IO.Pipes.PipeTransmissionMode" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="SafePipeHandle" attrib="0" ptype="Microsoft.Win32.SafeHandles.SafePipeHandle">
+                <methods>
+                  <method name="get_SafePipeHandle()" attrib="2182" returntype="Microsoft.Win32.SafeHandles.SafePipeHandle">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="TransmissionMode" attrib="0" ptype="System.IO.Pipes.PipeTransmissionMode">
+                <methods>
+                  <method name="get_TransmissionMode()" attrib="2502" virtual="true" returntype="System.IO.Pipes.PipeTransmissionMode">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="Flush()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <attributes />
+                <parameters />
+              </method>
+              <method name="Read(in System.Byte[], System.Int32, System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+                <attributes />
+                <parameters>
+                  <parameter name="buffer" position="0" attrib="1" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="ReadByte()" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+                <attributes />
+                <parameters />
+              </method>
+              <method name="Seek(System.Int64, System.IO.SeekOrigin)" attrib="198" virtual="true" is-override="true" returntype="System.Int64">
+                <parameters>
+                  <parameter name="offset" position="0" attrib="0" type="System.Int64" />
+                  <parameter name="origin" position="1" attrib="0" type="System.IO.SeekOrigin" />
+                </parameters>
+              </method>
+              <method name="SetLength(System.Int64)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Int64" />
+                </parameters>
+              </method>
+              <method name="Write(System.Byte[], System.Int32, System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <attributes />
+                <parameters>
+                  <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="WriteByte(System.Byte)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <attributes />
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Byte" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="PipeTransmissionMode" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Byte" attrib="32854" fieldtype="System.IO.Pipes.PipeTransmissionMode" value="0" />
+              <field name="Message" attrib="32854" fieldtype="System.IO.Pipes.PipeTransmissionMode" value="1" />
+            </fields>
           </class>
         </classes>
       </namespace>
@@ -14506,6 +15114,91 @@
       </namespace>
       <namespace name="System.Security.Cryptography">
         <classes>
+          <class name="AesCng" type="class" base="System.Security.Cryptography.Aes" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="keyName" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Security.Cryptography.CngProvider)" attrib="6278">
+                <parameters>
+                  <parameter name="keyName" position="0" attrib="0" type="System.String" />
+                  <parameter name="provider" position="1" attrib="0" type="System.Security.Cryptography.CngProvider" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Security.Cryptography.CngProvider, System.Security.Cryptography.CngKeyOpenOptions)" attrib="6278">
+                <parameters>
+                  <parameter name="keyName" position="0" attrib="0" type="System.String" />
+                  <parameter name="provider" position="1" attrib="0" type="System.Security.Cryptography.CngProvider" />
+                  <parameter name="openOptions" position="2" attrib="0" type="System.Security.Cryptography.CngKeyOpenOptions" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Key" attrib="0" ptype="System.Byte[]">
+                <methods>
+                  <method name="get_Key()" attrib="2246" virtual="true" is-override="true" returntype="System.Byte[]">
+                    <parameters />
+                  </method>
+                  <method name="set_Key(System.Byte[])" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Byte[]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="KeySize" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_KeySize()" attrib="2246" virtual="true" is-override="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_KeySize(System.Int32)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="CreateDecryptor()" attrib="198" virtual="true" is-override="true" returntype="System.Security.Cryptography.ICryptoTransform">
+                <parameters />
+              </method>
+              <method name="CreateDecryptor(System.Byte[], System.Byte[])" attrib="198" virtual="true" is-override="true" returntype="System.Security.Cryptography.ICryptoTransform">
+                <parameters>
+                  <parameter name="rgbKey" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="rgbIV" position="1" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+              <method name="CreateEncryptor()" attrib="198" virtual="true" is-override="true" returntype="System.Security.Cryptography.ICryptoTransform">
+                <parameters />
+              </method>
+              <method name="CreateEncryptor(System.Byte[], System.Byte[])" attrib="198" virtual="true" is-override="true" returntype="System.Security.Cryptography.ICryptoTransform">
+                <parameters>
+                  <parameter name="rgbKey" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="rgbIV" position="1" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GenerateIV()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="GenerateKey()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+            </methods>
+          </class>
           <class name="AesCryptoServiceProvider" type="class" base="System.Security.Cryptography.Aes" sealed="true" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="System.IDisposable" />
@@ -14565,6 +15258,759 @@
                 <parameters />
               </method>
             </methods>
+          </class>
+          <class name="CngAlgorithm" type="class" base="System.Object" sealed="true" serializable="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IEquatable`1[System.Security.Cryptography.CngAlgorithm]" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="algorithm" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Algorithm" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Algorithm()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ECDiffieHellmanP256" attrib="0" ptype="System.Security.Cryptography.CngAlgorithm">
+                <methods>
+                  <method name="get_ECDiffieHellmanP256()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngAlgorithm">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ECDiffieHellmanP384" attrib="0" ptype="System.Security.Cryptography.CngAlgorithm">
+                <methods>
+                  <method name="get_ECDiffieHellmanP384()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngAlgorithm">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ECDiffieHellmanP521" attrib="0" ptype="System.Security.Cryptography.CngAlgorithm">
+                <methods>
+                  <method name="get_ECDiffieHellmanP521()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngAlgorithm">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ECDsaP256" attrib="0" ptype="System.Security.Cryptography.CngAlgorithm">
+                <methods>
+                  <method name="get_ECDsaP256()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngAlgorithm">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ECDsaP384" attrib="0" ptype="System.Security.Cryptography.CngAlgorithm">
+                <methods>
+                  <method name="get_ECDsaP384()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngAlgorithm">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ECDsaP521" attrib="0" ptype="System.Security.Cryptography.CngAlgorithm">
+                <methods>
+                  <method name="get_ECDsaP521()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngAlgorithm">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="MD5" attrib="0" ptype="System.Security.Cryptography.CngAlgorithm">
+                <methods>
+                  <method name="get_MD5()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngAlgorithm">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Rsa" attrib="0" ptype="System.Security.Cryptography.CngAlgorithm">
+                <methods>
+                  <method name="get_Rsa()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngAlgorithm">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Sha1" attrib="0" ptype="System.Security.Cryptography.CngAlgorithm">
+                <methods>
+                  <method name="get_Sha1()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngAlgorithm">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Sha256" attrib="0" ptype="System.Security.Cryptography.CngAlgorithm">
+                <methods>
+                  <method name="get_Sha256()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngAlgorithm">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Sha384" attrib="0" ptype="System.Security.Cryptography.CngAlgorithm">
+                <methods>
+                  <method name="get_Sha384()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngAlgorithm">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Sha512" attrib="0" ptype="System.Security.Cryptography.CngAlgorithm">
+                <methods>
+                  <method name="get_Sha512()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngAlgorithm">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Equals(System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="obj" position="0" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="Equals(System.Security.Cryptography.CngAlgorithm)" attrib="486" virtual="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="other" position="0" attrib="0" type="System.Security.Cryptography.CngAlgorithm" />
+                </parameters>
+              </method>
+              <method name="GetHashCode()" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+                <parameters />
+              </method>
+              <method name="ToString()" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters />
+              </method>
+              <method name="op_Equality(System.Security.Cryptography.CngAlgorithm, System.Security.Cryptography.CngAlgorithm)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Security.Cryptography.CngAlgorithm" />
+                  <parameter name="right" position="1" attrib="0" type="System.Security.Cryptography.CngAlgorithm" />
+                </parameters>
+              </method>
+              <method name="op_Inequality(System.Security.Cryptography.CngAlgorithm, System.Security.Cryptography.CngAlgorithm)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Security.Cryptography.CngAlgorithm" />
+                  <parameter name="right" position="1" attrib="0" type="System.Security.Cryptography.CngAlgorithm" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="CngAlgorithmGroup" type="class" base="System.Object" sealed="true" serializable="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IEquatable`1[System.Security.Cryptography.CngAlgorithmGroup]" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="algorithmGroup" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="AlgorithmGroup" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_AlgorithmGroup()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="DiffieHellman" attrib="0" ptype="System.Security.Cryptography.CngAlgorithmGroup">
+                <methods>
+                  <method name="get_DiffieHellman()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngAlgorithmGroup">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Dsa" attrib="0" ptype="System.Security.Cryptography.CngAlgorithmGroup">
+                <methods>
+                  <method name="get_Dsa()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngAlgorithmGroup">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ECDiffieHellman" attrib="0" ptype="System.Security.Cryptography.CngAlgorithmGroup">
+                <methods>
+                  <method name="get_ECDiffieHellman()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngAlgorithmGroup">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ECDsa" attrib="0" ptype="System.Security.Cryptography.CngAlgorithmGroup">
+                <methods>
+                  <method name="get_ECDsa()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngAlgorithmGroup">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Rsa" attrib="0" ptype="System.Security.Cryptography.CngAlgorithmGroup">
+                <methods>
+                  <method name="get_Rsa()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngAlgorithmGroup">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Equals(System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="obj" position="0" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="Equals(System.Security.Cryptography.CngAlgorithmGroup)" attrib="486" virtual="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="other" position="0" attrib="0" type="System.Security.Cryptography.CngAlgorithmGroup" />
+                </parameters>
+              </method>
+              <method name="GetHashCode()" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+                <parameters />
+              </method>
+              <method name="ToString()" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters />
+              </method>
+              <method name="op_Equality(System.Security.Cryptography.CngAlgorithmGroup, System.Security.Cryptography.CngAlgorithmGroup)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Security.Cryptography.CngAlgorithmGroup" />
+                  <parameter name="right" position="1" attrib="0" type="System.Security.Cryptography.CngAlgorithmGroup" />
+                </parameters>
+              </method>
+              <method name="op_Inequality(System.Security.Cryptography.CngAlgorithmGroup, System.Security.Cryptography.CngAlgorithmGroup)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Security.Cryptography.CngAlgorithmGroup" />
+                  <parameter name="right" position="1" attrib="0" type="System.Security.Cryptography.CngAlgorithmGroup" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="CngExportPolicies" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <attributes>
+              <attribute name="System.FlagsAttribute" />
+            </attributes>
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="AllowArchiving" attrib="32854" fieldtype="System.Security.Cryptography.CngExportPolicies" value="4" />
+              <field name="AllowExport" attrib="32854" fieldtype="System.Security.Cryptography.CngExportPolicies" value="1" />
+              <field name="AllowPlaintextArchiving" attrib="32854" fieldtype="System.Security.Cryptography.CngExportPolicies" value="8" />
+              <field name="AllowPlaintextExport" attrib="32854" fieldtype="System.Security.Cryptography.CngExportPolicies" value="2" />
+              <field name="None" attrib="32854" fieldtype="System.Security.Cryptography.CngExportPolicies" value="0" />
+            </fields>
+          </class>
+          <class name="CngKey" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="Dispose()" attrib="486" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="CngKeyBlobFormat" type="class" base="System.Object" sealed="true" serializable="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IEquatable`1[System.Security.Cryptography.CngKeyBlobFormat]" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="format" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="EccPrivateBlob" attrib="0" ptype="System.Security.Cryptography.CngKeyBlobFormat">
+                <methods>
+                  <method name="get_EccPrivateBlob()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngKeyBlobFormat">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="EccPublicBlob" attrib="0" ptype="System.Security.Cryptography.CngKeyBlobFormat">
+                <methods>
+                  <method name="get_EccPublicBlob()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngKeyBlobFormat">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Format" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Format()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="GenericPrivateBlob" attrib="0" ptype="System.Security.Cryptography.CngKeyBlobFormat">
+                <methods>
+                  <method name="get_GenericPrivateBlob()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngKeyBlobFormat">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="GenericPublicBlob" attrib="0" ptype="System.Security.Cryptography.CngKeyBlobFormat">
+                <methods>
+                  <method name="get_GenericPublicBlob()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngKeyBlobFormat">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="OpaqueTransportBlob" attrib="0" ptype="System.Security.Cryptography.CngKeyBlobFormat">
+                <methods>
+                  <method name="get_OpaqueTransportBlob()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngKeyBlobFormat">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Pkcs8PrivateBlob" attrib="0" ptype="System.Security.Cryptography.CngKeyBlobFormat">
+                <methods>
+                  <method name="get_Pkcs8PrivateBlob()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngKeyBlobFormat">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Equals(System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="obj" position="0" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="Equals(System.Security.Cryptography.CngKeyBlobFormat)" attrib="486" virtual="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="other" position="0" attrib="0" type="System.Security.Cryptography.CngKeyBlobFormat" />
+                </parameters>
+              </method>
+              <method name="GetHashCode()" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+                <parameters />
+              </method>
+              <method name="ToString()" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters />
+              </method>
+              <method name="op_Equality(System.Security.Cryptography.CngKeyBlobFormat, System.Security.Cryptography.CngKeyBlobFormat)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Security.Cryptography.CngKeyBlobFormat" />
+                  <parameter name="right" position="1" attrib="0" type="System.Security.Cryptography.CngKeyBlobFormat" />
+                </parameters>
+              </method>
+              <method name="op_Inequality(System.Security.Cryptography.CngKeyBlobFormat, System.Security.Cryptography.CngKeyBlobFormat)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Security.Cryptography.CngKeyBlobFormat" />
+                  <parameter name="right" position="1" attrib="0" type="System.Security.Cryptography.CngKeyBlobFormat" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="CngKeyCreationOptions" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <attributes>
+              <attribute name="System.FlagsAttribute" />
+            </attributes>
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="MachineKey" attrib="32854" fieldtype="System.Security.Cryptography.CngKeyCreationOptions" value="32" />
+              <field name="None" attrib="32854" fieldtype="System.Security.Cryptography.CngKeyCreationOptions" value="0" />
+              <field name="OverwriteExistingKey" attrib="32854" fieldtype="System.Security.Cryptography.CngKeyCreationOptions" value="128" />
+            </fields>
+          </class>
+          <class name="CngKeyCreationParameters" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="ExportPolicy" attrib="0" ptype="System.Nullable`1[System.Security.Cryptography.CngExportPolicies]">
+                <methods>
+                  <method name="get_ExportPolicy()" attrib="2182" returntype="System.Nullable`1[System.Security.Cryptography.CngExportPolicies]">
+                    <parameters />
+                  </method>
+                  <method name="set_ExportPolicy(System.Nullable`1[System.Security.Cryptography.CngExportPolicies])" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Nullable`1[System.Security.Cryptography.CngExportPolicies]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="KeyCreationOptions" attrib="0" ptype="System.Security.Cryptography.CngKeyCreationOptions">
+                <methods>
+                  <method name="get_KeyCreationOptions()" attrib="2182" returntype="System.Security.Cryptography.CngKeyCreationOptions">
+                    <parameters />
+                  </method>
+                  <method name="set_KeyCreationOptions(System.Security.Cryptography.CngKeyCreationOptions)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Security.Cryptography.CngKeyCreationOptions" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="KeyUsage" attrib="0" ptype="System.Nullable`1[System.Security.Cryptography.CngKeyUsages]">
+                <methods>
+                  <method name="get_KeyUsage()" attrib="2182" returntype="System.Nullable`1[System.Security.Cryptography.CngKeyUsages]">
+                    <parameters />
+                  </method>
+                  <method name="set_KeyUsage(System.Nullable`1[System.Security.Cryptography.CngKeyUsages])" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Nullable`1[System.Security.Cryptography.CngKeyUsages]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Parameters" attrib="0" ptype="System.Security.Cryptography.CngPropertyCollection">
+                <methods>
+                  <method name="get_Parameters()" attrib="18566" returntype="System.Security.Cryptography.CngPropertyCollection">
+                    <attributes>
+                      <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ParentWindowHandle" attrib="0" ptype="System.IntPtr">
+                <methods>
+                  <method name="get_ParentWindowHandle()" attrib="2182" returntype="System.IntPtr">
+                    <parameters />
+                  </method>
+                  <method name="set_ParentWindowHandle(System.IntPtr)" attrib="18566" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.IntPtr" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Provider" attrib="0" ptype="System.Security.Cryptography.CngProvider">
+                <methods>
+                  <method name="get_Provider()" attrib="2182" returntype="System.Security.Cryptography.CngProvider">
+                    <parameters />
+                  </method>
+                  <method name="set_Provider(System.Security.Cryptography.CngProvider)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Security.Cryptography.CngProvider" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="UIPolicy" attrib="0" ptype="System.Security.Cryptography.CngUIPolicy">
+                <methods>
+                  <method name="get_UIPolicy()" attrib="2182" returntype="System.Security.Cryptography.CngUIPolicy">
+                    <parameters />
+                  </method>
+                  <method name="set_UIPolicy(System.Security.Cryptography.CngUIPolicy)" attrib="18566" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Security.Cryptography.CngUIPolicy" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="CngKeyHandleOpenOptions" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <attributes>
+              <attribute name="System.FlagsAttribute" />
+            </attributes>
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="EphemeralKey" attrib="32854" fieldtype="System.Security.Cryptography.CngKeyHandleOpenOptions" value="1" />
+              <field name="None" attrib="32854" fieldtype="System.Security.Cryptography.CngKeyHandleOpenOptions" value="0" />
+            </fields>
+          </class>
+          <class name="CngKeyOpenOptions" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <attributes>
+              <attribute name="System.FlagsAttribute" />
+            </attributes>
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="MachineKey" attrib="32854" fieldtype="System.Security.Cryptography.CngKeyOpenOptions" value="32" />
+              <field name="None" attrib="32854" fieldtype="System.Security.Cryptography.CngKeyOpenOptions" value="0" />
+              <field name="Silent" attrib="32854" fieldtype="System.Security.Cryptography.CngKeyOpenOptions" value="64" />
+              <field name="UserKey" attrib="32854" fieldtype="System.Security.Cryptography.CngKeyOpenOptions" value="0" />
+            </fields>
+          </class>
+          <class name="CngKeyUsages" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <attributes>
+              <attribute name="System.FlagsAttribute" />
+            </attributes>
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="AllUsages" attrib="32854" fieldtype="System.Security.Cryptography.CngKeyUsages" value="16777215" />
+              <field name="Decryption" attrib="32854" fieldtype="System.Security.Cryptography.CngKeyUsages" value="1" />
+              <field name="KeyAgreement" attrib="32854" fieldtype="System.Security.Cryptography.CngKeyUsages" value="4" />
+              <field name="None" attrib="32854" fieldtype="System.Security.Cryptography.CngKeyUsages" value="0" />
+              <field name="Signing" attrib="32854" fieldtype="System.Security.Cryptography.CngKeyUsages" value="2" />
+            </fields>
+          </class>
+          <class name="CngProperty" type="struct" base="System.ValueType" sealed="true" charset="Ansi" layout="Sequential">
+            <interfaces>
+              <interface name="System.IEquatable`1[System.Security.Cryptography.CngProperty]" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.String, System.Byte[], System.Security.Cryptography.CngPropertyOptions)" attrib="6278">
+                <parameters>
+                  <parameter name="name" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.Byte[]" />
+                  <parameter name="options" position="2" attrib="0" type="System.Security.Cryptography.CngPropertyOptions" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Name" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Name()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Options" attrib="0" ptype="System.Security.Cryptography.CngPropertyOptions">
+                <methods>
+                  <method name="get_Options()" attrib="2182" returntype="System.Security.Cryptography.CngPropertyOptions">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Equals(System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="obj" position="0" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="Equals(System.Security.Cryptography.CngProperty)" attrib="486" virtual="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="other" position="0" attrib="0" type="System.Security.Cryptography.CngProperty" />
+                </parameters>
+              </method>
+              <method name="GetHashCode()" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+                <parameters />
+              </method>
+              <method name="GetValue()" attrib="134" returntype="System.Byte[]">
+                <parameters />
+              </method>
+              <method name="op_Equality(System.Security.Cryptography.CngProperty, System.Security.Cryptography.CngProperty)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Security.Cryptography.CngProperty" />
+                  <parameter name="right" position="1" attrib="0" type="System.Security.Cryptography.CngProperty" />
+                </parameters>
+              </method>
+              <method name="op_Inequality(System.Security.Cryptography.CngProperty, System.Security.Cryptography.CngProperty)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Security.Cryptography.CngProperty" />
+                  <parameter name="right" position="1" attrib="0" type="System.Security.Cryptography.CngProperty" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="CngPropertyCollection" type="class" base="System.Collections.ObjectModel.Collection`1[System.Security.Cryptography.CngProperty]" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.Collections.Generic.ICollection`1[T]" />
+              <interface name="System.Collections.Generic.IEnumerable`1[T]" />
+              <interface name="System.Collections.Generic.IList`1[T]" />
+              <interface name="System.Collections.Generic.IReadOnlyCollection`1[T]" />
+              <interface name="System.Collections.Generic.IReadOnlyList`1[T]" />
+              <interface name="System.Collections.ICollection" />
+              <interface name="System.Collections.IEnumerable" />
+              <interface name="System.Collections.IList" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+          </class>
+          <class name="CngPropertyOptions" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <attributes>
+              <attribute name="System.FlagsAttribute" />
+            </attributes>
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="CustomProperty" attrib="32854" fieldtype="System.Security.Cryptography.CngPropertyOptions" value="1073741824" />
+              <field name="None" attrib="32854" fieldtype="System.Security.Cryptography.CngPropertyOptions" value="0" />
+              <field name="Persist" attrib="32854" fieldtype="System.Security.Cryptography.CngPropertyOptions" value="-2147483648" />
+            </fields>
+          </class>
+          <class name="CngProvider" type="class" base="System.Object" sealed="true" serializable="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IEquatable`1[System.Security.Cryptography.CngProvider]" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="provider" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="MicrosoftSmartCardKeyStorageProvider" attrib="0" ptype="System.Security.Cryptography.CngProvider">
+                <methods>
+                  <method name="get_MicrosoftSmartCardKeyStorageProvider()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngProvider">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="MicrosoftSoftwareKeyStorageProvider" attrib="0" ptype="System.Security.Cryptography.CngProvider">
+                <methods>
+                  <method name="get_MicrosoftSoftwareKeyStorageProvider()" attrib="2198" static="true" returntype="System.Security.Cryptography.CngProvider">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Provider" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Provider()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Equals(System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="obj" position="0" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="Equals(System.Security.Cryptography.CngProvider)" attrib="486" virtual="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="other" position="0" attrib="0" type="System.Security.Cryptography.CngProvider" />
+                </parameters>
+              </method>
+              <method name="GetHashCode()" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+                <parameters />
+              </method>
+              <method name="ToString()" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters />
+              </method>
+              <method name="op_Equality(System.Security.Cryptography.CngProvider, System.Security.Cryptography.CngProvider)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Security.Cryptography.CngProvider" />
+                  <parameter name="right" position="1" attrib="0" type="System.Security.Cryptography.CngProvider" />
+                </parameters>
+              </method>
+              <method name="op_Inequality(System.Security.Cryptography.CngProvider, System.Security.Cryptography.CngProvider)" attrib="2198" static="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="System.Security.Cryptography.CngProvider" />
+                  <parameter name="right" position="1" attrib="0" type="System.Security.Cryptography.CngProvider" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="CngUIPolicy" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor(System.Security.Cryptography.CngUIProtectionLevels)" attrib="6278">
+                <parameters>
+                  <parameter name="protectionLevel" position="0" attrib="0" type="System.Security.Cryptography.CngUIProtectionLevels" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Security.Cryptography.CngUIProtectionLevels, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="protectionLevel" position="0" attrib="0" type="System.Security.Cryptography.CngUIProtectionLevels" />
+                  <parameter name="friendlyName" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Security.Cryptography.CngUIProtectionLevels, System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="protectionLevel" position="0" attrib="0" type="System.Security.Cryptography.CngUIProtectionLevels" />
+                  <parameter name="friendlyName" position="1" attrib="0" type="System.String" />
+                  <parameter name="description" position="2" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Security.Cryptography.CngUIProtectionLevels, System.String, System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="protectionLevel" position="0" attrib="0" type="System.Security.Cryptography.CngUIProtectionLevels" />
+                  <parameter name="friendlyName" position="1" attrib="0" type="System.String" />
+                  <parameter name="description" position="2" attrib="0" type="System.String" />
+                  <parameter name="useContext" position="3" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Security.Cryptography.CngUIProtectionLevels, System.String, System.String, System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="protectionLevel" position="0" attrib="0" type="System.Security.Cryptography.CngUIProtectionLevels" />
+                  <parameter name="friendlyName" position="1" attrib="0" type="System.String" />
+                  <parameter name="description" position="2" attrib="0" type="System.String" />
+                  <parameter name="useContext" position="3" attrib="0" type="System.String" />
+                  <parameter name="creationTitle" position="4" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="CreationTitle" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_CreationTitle()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Description" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Description()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="FriendlyName" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_FriendlyName()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ProtectionLevel" attrib="0" ptype="System.Security.Cryptography.CngUIProtectionLevels">
+                <methods>
+                  <method name="get_ProtectionLevel()" attrib="2182" returntype="System.Security.Cryptography.CngUIProtectionLevels">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="UseContext" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_UseContext()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="CngUIProtectionLevels" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <attributes>
+              <attribute name="System.FlagsAttribute" />
+            </attributes>
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="ForceHighProtection" attrib="32854" fieldtype="System.Security.Cryptography.CngUIProtectionLevels" value="2" />
+              <field name="None" attrib="32854" fieldtype="System.Security.Cryptography.CngUIProtectionLevels" value="0" />
+              <field name="ProtectKey" attrib="32854" fieldtype="System.Security.Cryptography.CngUIProtectionLevels" value="1" />
+            </fields>
           </class>
           <class name="ECDiffieHellmanPublicKey" type="class" base="System.Object" abstract="true" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
@@ -14694,6 +16140,186 @@
                 <parameters>
                   <parameter name="hash" position="0" attrib="0" type="System.Byte[]" />
                   <parameter name="signature" position="1" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="ECDsaCng" type="class" base="System.Security.Cryptography.ECDsa" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="SignHash(System.Byte[])" attrib="198" virtual="true" is-override="true" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="hash" position="0" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+              <method name="VerifyHash(System.Byte[], System.Byte[])" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="hash" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="signature" position="1" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="RSACng" type="class" base="System.Security.Cryptography.RSA" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="ExportParameters(System.Boolean)" attrib="198" virtual="true" is-override="true" returntype="System.Security.Cryptography.RSAParameters">
+                <parameters>
+                  <parameter name="includePrivateParameters" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="ImportParameters(System.Security.Cryptography.RSAParameters)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="parameters" position="0" attrib="0" type="System.Security.Cryptography.RSAParameters" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="TripleDESCng" type="class" base="System.Security.Cryptography.TripleDES" sealed="true" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="keyName" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Security.Cryptography.CngProvider)" attrib="6278">
+                <parameters>
+                  <parameter name="keyName" position="0" attrib="0" type="System.String" />
+                  <parameter name="provider" position="1" attrib="0" type="System.Security.Cryptography.CngProvider" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Security.Cryptography.CngProvider, System.Security.Cryptography.CngKeyOpenOptions)" attrib="6278">
+                <parameters>
+                  <parameter name="keyName" position="0" attrib="0" type="System.String" />
+                  <parameter name="provider" position="1" attrib="0" type="System.Security.Cryptography.CngProvider" />
+                  <parameter name="openOptions" position="2" attrib="0" type="System.Security.Cryptography.CngKeyOpenOptions" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Key" attrib="0" ptype="System.Byte[]">
+                <methods>
+                  <method name="get_Key()" attrib="2246" virtual="true" is-override="true" returntype="System.Byte[]">
+                    <parameters />
+                  </method>
+                  <method name="set_Key(System.Byte[])" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Byte[]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="KeySize" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_KeySize()" attrib="2246" virtual="true" is-override="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_KeySize(System.Int32)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="CreateDecryptor()" attrib="198" virtual="true" is-override="true" returntype="System.Security.Cryptography.ICryptoTransform">
+                <parameters />
+              </method>
+              <method name="CreateDecryptor(System.Byte[], System.Byte[])" attrib="198" virtual="true" is-override="true" returntype="System.Security.Cryptography.ICryptoTransform">
+                <parameters>
+                  <parameter name="rgbKey" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="rgbIV" position="1" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+              <method name="CreateEncryptor()" attrib="198" virtual="true" is-override="true" returntype="System.Security.Cryptography.ICryptoTransform">
+                <parameters />
+              </method>
+              <method name="CreateEncryptor(System.Byte[], System.Byte[])" attrib="198" virtual="true" is-override="true" returntype="System.Security.Cryptography.ICryptoTransform">
+                <parameters>
+                  <parameter name="rgbKey" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="rgbIV" position="1" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GenerateIV()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="GenerateKey()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+        </classes>
+      </namespace>
+      <namespace name="System.Security.Cryptography.X509Certificates">
+        <classes>
+          <class name="ECDsaCertificateExtensions" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+            </attributes>
+            <methods>
+              <method name="GetECDsaPrivateKey(System.Security.Cryptography.X509Certificates.X509Certificate2)" attrib="150" static="true" returntype="System.Security.Cryptography.ECDsa">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="certificate" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate2" />
+                </parameters>
+              </method>
+              <method name="GetECDsaPublicKey(System.Security.Cryptography.X509Certificates.X509Certificate2)" attrib="150" static="true" returntype="System.Security.Cryptography.ECDsa">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="certificate" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate2" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="RSACertificateExtensions" type="class" base="System.Object" sealed="true" abstract="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+            </attributes>
+            <methods>
+              <method name="GetRSAPrivateKey(System.Security.Cryptography.X509Certificates.X509Certificate2)" attrib="150" static="true" returntype="System.Security.Cryptography.RSA">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="certificate" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate2" />
+                </parameters>
+              </method>
+              <method name="GetRSAPublicKey(System.Security.Cryptography.X509Certificates.X509Certificate2)" attrib="150" static="true" returntype="System.Security.Cryptography.RSA">
+                <attributes>
+                  <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="certificate" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate2" />
                 </parameters>
               </method>
             </methods>

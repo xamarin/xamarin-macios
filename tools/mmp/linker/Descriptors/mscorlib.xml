@@ -777,6 +777,8 @@
 		<type fullname="System.Runtime.Remoting.Proxies.TransparentProxy">
 			<!-- remoting.c: mono_marshal_get_ldfld_wrapper -->
 			<method name="LoadRemoteFieldNew" />
+			<!-- remoting.c: mono_marshal_get_stfld_wrapper -->
+			<method name="StoreRemoteField" />
 		</type>
 
 
@@ -892,6 +894,12 @@
 
 		<!-- by convention (and see #34671) -->
 		<type fullname="Mono.Runtime" />
+
+		<!-- marshal.c (mono_marshal_get_native_wrapper) -->
+		<type fullname="Mono.RuntimeStructs/HandleStackMark" />
+		<!-- marshal.c (mono_marshal_get_native_wrapper) -->
+		<type fullname="Mono.RuntimeStructs/MonoError" />
+
 	</assembly>
 </linker>
 

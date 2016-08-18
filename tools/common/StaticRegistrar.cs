@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using Xamarin.Bundler;
@@ -1695,7 +1696,12 @@ namespace XamCore.Registrar {
 			// Strip off the 'MonoTouch.' prefix
 			if (!IsDualBuild)
 				ns = type.Namespace.Substring (ns.IndexOf ('.') + 1);
+			
+			CheckNamespace (ns, exceptions);
+		}
 
+		void CheckNamespace (string ns, List<Exception> exceptions)
+		{
 			if (string.IsNullOrEmpty (ns))
 				return;
 
@@ -1708,8 +1714,9 @@ namespace XamCore.Registrar {
 			switch (ns) {
 #if MMP
 			case "CoreBluetooth":
-				h = "<IOBluetooth/IOBluetooth.h>";
-				break;
+				header.WriteLine ("#import <IOBluetooth/IOBluetooth.h>");
+				header.WriteLine ("#import <CoreBluetooth/CoreBluetooth.h>");
+				return;
 			case "CoreImage":
 				h = "<QuartzCore/QuartzCore.h>";
 				break;
@@ -1782,6 +1789,18 @@ namespace XamCore.Registrar {
 				header.WriteLine ("#import <WatchKit/WatchKit.h>");
 				namespaces.Add ("UIKit");
 				return;
+			case "QTKit":
+#if MONOMAC
+				if (Driver.SDKVersion >= new Version (10,12))
+					return; // 10.12 removed the header files for QTKit
+#endif
+				goto default;
+			case "ExternalAccessory":
+#if !MONOMAC
+				if (IsSimulator && Driver.App.Platform == Xamarin.Utils.ApplePlatform.TVOS)
+					return; // No headers provided for AppleTV/simulator.
+#endif
+				goto default;
 			default:
 				h = string.Format ("<{0}/{0}.h>", ns);
 				break;
@@ -1952,9 +1971,15 @@ namespace XamCore.Registrar {
 			case "System.Double": return "double";
 			case "System.Boolean": return "BOOL"; // map managed 'bool' to ObjC BOOL = unsigned char
 			case "System.Void": return "void";
-			case "System.nint": return "NSInteger";
-			case "System.nuint": return "NSUInteger";
-			case "System.nfloat": return "CGFloat";
+			case "System.nint":
+				CheckNamespace ("Foundation", exceptions);
+				return "NSInteger";
+			case "System.nuint":
+				CheckNamespace ("Foundation", exceptions);
+				return "NSUInteger";
+			case "System.nfloat":
+				CheckNamespace ("CoreGraphics", exceptions);
+				return "CGFloat";
 			case "System.DateTime":
 				throw ErrorHelper.CreateError (4102, "The registrar found an invalid type `{0}` in signature for method `{2}`. Use `{1}` instead.", "System.DateTime", IsDualBuild ? "Foundation.NSDate" : CompatNamespace + ".Foundation.NSDate", descriptiveMethodName);
 			case "ObjCRuntime.Selector":
@@ -2142,6 +2167,24 @@ namespace XamCore.Registrar {
 			return sb != null ? sb.ToString () : value;
 		}
 
+		static bool IsTypeCore (ObjCType type, string nsToMatch)
+		{
+			var ns = type.Type.Namespace;
+
+			var t = type.Type;
+			while (string.IsNullOrEmpty (ns) && t.DeclaringType != null) {
+				t = t.DeclaringType;
+				ns = t.Namespace;
+			}
+
+			return ns == nsToMatch;
+		}
+
+		static bool IsExternalAccessoryType (ObjCType type) => IsTypeCore (type, "ExternalAccessory");
+		static bool IsQTKitType (ObjCType type) => IsTypeCore (type, "QTKit");
+		static bool IsMapKitType (ObjCType type) => IsTypeCore (type, "MapKit");
+		static bool IsIntentsType (ObjCType type) => IsTypeCore (type, "Intents");
+
 		static bool IsMetalType (ObjCType type)
 		{
 			var ns = type.Type.Namespace;
@@ -2181,12 +2224,32 @@ namespace XamCore.Registrar {
 				if (!string.IsNullOrEmpty (single_assembly) && single_assembly != @class.Type.Module.Assembly.Name.Name)
 					continue;
 
-#if !MONOMAC
 				var isPlatformType = IsPlatformType (@class.Type);
+#if !MONOMAC
 
 				if (isPlatformType && IsSimulatorOrDesktop && IsMetalType (@class))
 					continue; // Metal isn't supported in the simulator.
+
+				if (IsSimulatorOrDesktop && Driver.App.Platform == Xamarin.Utils.ApplePlatform.TVOS && IsExternalAccessoryType (@class))
+					continue; // ExternalAccessory's headers aren't available for tvOS/Simulator.
+#else
+				// Don't register 64-bit only API on 32-bit XM
+				if (!Is64Bits)
+				{
+					var attributes = GetAvailabilityAttributes (@class.Type); // Can return null list
+					if (attributes != null && attributes.Any (x => x.Architecture == PlatformArchitecture.Arch64))
+						continue;
+				}
+
+				if (IsQTKitType (@class) && GetSDKVersion () >= new Version (10,12))
+					continue; // QTKit header was removed in 10.12 SDK
+
+				// These are 64-bit frameworks that extend NSExtensionContext / NSUserActivity, which you can't do
+				// if the header doesn't declare them. So hack it away, since they are useless in 64-bit anyway
+				if (!Is64Bits && (IsMapKitType (@class) || IsIntentsType (@class)))
+					continue;
 #endif
+
 				
 				if (@class.IsFakeProtocol)
 					continue;
@@ -3638,6 +3701,22 @@ namespace XamCore.Registrar {
 				}
 			}
 
+		}
+
+		protected override bool SkipRegisterAssembly (AssemblyDefinition assembly)
+		{
+			if (assembly.HasCustomAttributes) {
+				foreach (var ca in assembly.CustomAttributes) {
+					var t = ca.AttributeType.Resolve ();
+					while (t != null) {
+						if (t.Is ("ObjCRuntime", "DelayedRegistrationAttribute"))
+							return true;
+						t = t.BaseType?.Resolve ();
+					}
+				}
+			}
+
+			return base.SkipRegisterAssembly (assembly);
 		}
 	}
 

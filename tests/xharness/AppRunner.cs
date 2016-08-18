@@ -372,6 +372,9 @@ namespace xharness
 			args.AppendFormat (" -argument=-app-arg:-hostport:{0}", listener.Port);
 			args.AppendFormat (" -setenv=NUNIT_HOSTPORT={0}", listener.Port);
 
+			foreach (var kvp in Harness.EnvironmentVariables)
+				args.AppendFormat (" -setenv={0}={1}", kvp.Key, kvp.Value);
+
 			bool? success = null;
 			bool timed_out = false;
 
@@ -474,6 +477,12 @@ namespace xharness
 
 				args.Append (" --launchdev");
 				args.AppendFormat (" \"{0}\" ", launchAppPath);
+
+				var waits_for_exit = false;
+				if (mode == "watchos") {
+					args.Append (" --attach-native-debugger"); // this prevents the watch from backgrounding the app.
+					waits_for_exit = true;
+				}
 				
 				AddDeviceName (args);
 
@@ -489,9 +498,11 @@ namespace xharness
 
 				listener.StartAsync ();
 				main_log.WriteLine ("Starting test run");
-				// This will not wait for app completion
-				await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), main_log, TimeSpan.FromMinutes (1));
-				if (listener.WaitForCompletion (TimeSpan.FromMinutes (Harness.Timeout))) {
+
+				double launch_timeout = waits_for_exit ? Harness.Timeout : 1;
+				double listener_timeout = waits_for_exit ? 0.2 : Harness.Timeout;
+				await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), main_log, TimeSpan.FromMinutes (launch_timeout));
+				if (listener.WaitForCompletion (TimeSpan.FromMinutes (listener_timeout))) {
 					main_log.WriteLine ("Test run completed");
 				} else {
 					main_log.WriteLine ("Test run did not complete in {0} minutes.", Harness.Timeout);
