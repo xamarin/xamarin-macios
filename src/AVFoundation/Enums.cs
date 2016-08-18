@@ -229,9 +229,9 @@ namespace XamCore.AVFoundation {
 		[iOS (9,0)]
 		RecordingAlreadyInProgress = -11859,
 #endif
-		[NoWatch, iOS (10,0), TV (10,0), Mac (12,10)]
+		[NoWatch, iOS (10,0), TV (10,0), Mac (10,12)]
 		UnsupportedOutputSettings = -11861,
-		[NoWatch, iOS (10,0), TV (10,0), Mac (12,10)]
+		[NoWatch, iOS (10,0), TV (10,0), Mac (10,12)]
 		OperationNotAllowed = -11862,
 	}
 
