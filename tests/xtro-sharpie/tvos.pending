@@ -52,6 +52,13 @@
 !unknown-type! GKQuadTree bound
 !unknown-type! GKQuadTreeNode bound
 
+
+# Metal
+
+## new Apple abstract member (breaking change) fixed in XAMCORE_4_0
+!incorrect-protocol-member! MTLRenderCommandEncoder::setDepthClipMode: is REQUIRED and should be abstract
+
+
 # UserNotifications
 
 ## While these keys are present in the SDK, the class that uses them UNNotificationAttachment is __TVOS_PROHIBITED
