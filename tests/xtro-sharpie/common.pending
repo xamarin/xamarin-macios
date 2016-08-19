@@ -51,8 +51,8 @@
 
 # Photos
 
-## xcode 8 beta 1-3 defines it but it does not exists in the binaries
-common.unclassified:!missing-field! PHLivePhotoShouldRenderAtPlaybackTime not bound
+## xcode 8 beta 1-5 defines it but it does not exists in the binaries
+!missing-field! PHLivePhotoShouldRenderAtPlaybackTime not bound
 
 
 # SpriteKit

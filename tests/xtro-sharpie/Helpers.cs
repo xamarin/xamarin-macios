@@ -28,6 +28,7 @@ namespace Extrospection {
 			{ "MIDITransformType", "MidiTransformType" },
 			{ "MIDINetworkConnectionPolicy", "MidiNetworkConnectionPolicy" },
 			{ "MPMovieMediaTypeMask", "MPMovieMediaType" },
+			{ "MPSCNNConvolutionFlags", "MPSCnnConvolutionFlags" },
 			{ "MTLCPUCacheMode", "MTLCpuCacheMode" },
 			{ "NEVPNError", "NEVpnError" },
 			{ "NEVPNIKEAuthenticationMethod", "NEVpnIkeAuthenticationMethod" },
