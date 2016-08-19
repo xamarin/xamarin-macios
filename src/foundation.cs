@@ -13525,7 +13525,7 @@ namespace XamCore.Foundation
 
 		[Static]
 		[Export ("poundsMass", ArgumentSemantic.Copy)]
-		NSUnitMass PoundsMass { get; }
+		NSUnitMass Pounds { get; }
 
 		[Static]
 		[Export ("stones", ArgumentSemantic.Copy)]
