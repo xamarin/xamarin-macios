@@ -14,7 +14,13 @@ title:mtouch errors
 
 <h3><a name="MT0000"/>MT0000: Unexpected error - Please fill a bug report at http://bugzilla.xamarin.com</h3>
 
-An unexpected error condition occurred. Please [file a bug report](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with as much information as possible
+An unexpected error condition occurred. Please [file a bug report](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with as much information as possible, including:
+
+* Full build logs, with maximum verbosity (e.g. `-v -v -v -v` in the **Additional mtouch arguments**);
+* A minimal test case that reproduce the error; and
+* All version informations
+
+The easiest way to get exact version information is to use the **Xamarin Studio** menu, **About Xamarin Studio** item, **Show Details** button and copy/paste the version informations (you can use the **Copy Information** button).
 
 <h3><a name="MT0001"/>MT0001: '-devname' was provided without any device-specific action</h3>
 
@@ -337,7 +343,7 @@ The new refcount feature is now mandatory for all projects, and it's thus not po
 This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.
 
 <h3><a name="MT0087"/>MT0087: Incremental builds (--fastdev) is not supported with the Boehm GC. Incremental builds will be disabled.</h3>
-<h3><a name="MT0091"/>MT0081: This version of Xamarin.iOS requires the * SDK (shipped with Xcode *) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker.</h3>
+<h3><a name="MT0091"/>MT0091: This version of Xamarin.iOS requires the * SDK (shipped with Xcode *) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker.</h3>
 
 This version of Xamarin.iOS requires the SDK specified in the error message if the managed linker is disabled.
 
