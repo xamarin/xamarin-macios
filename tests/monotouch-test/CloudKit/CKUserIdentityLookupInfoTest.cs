@@ -11,6 +11,12 @@ namespace MonoTouchFixtures.CloudKit
 	[Preserve (AllMembers = true)]
 	public class CKUserIdentityLookupInfoTest
 	{
+		[SetUp]
+		public void MinimumSdkCheck ()
+		{
+			TestRuntime.AssertXcodeVersion (8,0);
+		}
+
 #if !__WATCHOS__ 
 		[Test]
 		public void TestFromEmail ()
