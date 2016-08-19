@@ -38,6 +38,10 @@ namespace MonoTouchFixtures.HealthKit {
 				switch (value) {
 				case HKCategoryTypeIdentifier.SleepAnalysis:
 					break;
+				case HKCategoryTypeIdentifier.MindfulSession:
+					if (!TestRuntime.CheckXcodeVersion (8, 0))
+						continue;
+					break;
 				default:
 					if (!TestRuntime.CheckXcodeVersion (7, 0))
 						continue;
