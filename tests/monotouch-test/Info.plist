@@ -50,5 +50,7 @@
 	<string>Testing mike</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Testing friends</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Smile!</string>
 </dict>
 </plist>
