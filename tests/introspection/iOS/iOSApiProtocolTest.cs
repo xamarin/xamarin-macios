@@ -410,6 +410,125 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (8,0);
 				}
 				break;
+
+			case "CALayerDelegate": // UIView now conforms to CALayerDelegate in iOS 10
+				switch (type.Name) {
+				case "UISearchBar":
+				case "UISegmentedControl":
+				case "UITableView":
+				case "UITableViewCell":
+				case "UITextField":
+				case "UITextView":
+				case "UIToolbar":
+				case "UIView":
+				case "MKPinAnnotationView":
+				case "UIImageView":
+				case "PHLivePhotoView":
+				case "UIInputView":
+				case "UILabel":
+				case "UIActionSheet":
+				case "UIButton":
+				case "UICollectionView":
+				case "UINavigationBar":
+				case "UIControl":
+				case "UIPickerView":
+				case "UIPageControl":
+				case "MPVolumeView":
+				case "UIPopoverBackgroundView":
+				case "UIProgressView":
+				case "UIRefreshControl":
+				case "HKActivityRingView":
+				case "UIScrollView":
+				case "CAInterAppAudioSwitcherView":
+				case "CAInterAppAudioTransportView":
+				case "UISlider":
+				case "UIStackView":
+				case "SCNView":
+				case "UIStepper":
+				case "UISwitch":
+				case "UITabBar":
+				case "UITableViewHeaderFooterView":
+				case "GLKView":
+				case "SKView":
+				case "MKMapView":
+				case "MKAnnotationView":
+				case "PKAddPassButton":
+				case "PKPaymentButton":
+				case "UIActivityIndicatorView":
+				case "UICollectionReusableView":
+				case "UIWebView":
+				case "UICollectionViewCell":
+				case "UIWindow":
+				case "UIDatePicker":
+				case "UIVisualEffectView":
+				case "WKWebView":
+				case "ADBannerView":
+					return !TestRuntime.CheckXcodeVersion (8, 0);
+				}
+				break;
+
+			case "UIFocusItem": // UIView now conforms to UIFocusItem in iOS 10
+				switch (type.Name) {
+				case "UIButton":
+				case "UICollectionReusableView":
+				case "UICollectionView":
+				case "UICollectionViewCell":
+				case "MKAnnotationView":
+				case "UIControl":
+				case "MKMapView":
+				case "UISearchBar":
+				case "UISegmentedControl":
+				case "UITableView":
+				case "UITableViewCell":
+				case "UITextField":
+				case "UITextView":
+				case "MKPinAnnotationView":
+				case "UIView":
+				case "SKNode":
+				case "SKShapeNode":
+				case "SKVideoNode":
+				case "UIImageView":
+				case "UIInputView":
+				case "UILabel":
+				case "UINavigationBar":
+				case "UIPageControl":
+				case "UIPopoverBackgroundView":
+				case "UIProgressView":
+				case "SCNView":
+				case "UIScrollView":
+				case "SK3DNode":
+				case "MTKView":
+				case "SKAudioNode":
+				case "SKCameraNode":
+				case "SKCropNode":
+				case "SKEffectNode":
+				case "SKEmitterNode":
+				case "SKFieldNode":
+				case "SKLabelNode":
+				case "SKLightNode":
+				case "UIStackView":
+				case "UITabBar":
+				case "SKReferenceNode":
+				case "GLKView":
+				case "SKScene":
+				case "SKSpriteNode":
+				case "SKView":
+				case "UITableViewHeaderFooterView":
+				case "UIActivityIndicatorView":
+				case "UIVisualEffectView":
+				case "UIWindow":
+					return !TestRuntime.CheckXcodeVersion (8, 0);
+				}
+				break;
+
+			case "UIContentSizeCategoryAdjusting": // new conformations of UIContentSizeCategoryAdjusting in iOS 10
+				switch (type.Name) {
+				case "UITextField":
+				case "UITextView":
+				case "UILabel":
+					return !TestRuntime.CheckXcodeVersion (8, 0);
+				}
+				break;
 			}
 			return base.Skip (type, protocolName);
 		}

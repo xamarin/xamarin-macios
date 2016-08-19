@@ -484,6 +484,7 @@ namespace XamCore.UIKit {
 		DecimalPad,
 		Twitter,
 		WebSearch,
+		[iOS (10, 0)]
 		AsciiCapableNumberPad
 	} 
 
@@ -1618,8 +1619,11 @@ namespace XamCore.UIKit {
 	[iOS (8,0)]
 	public enum UIBlurEffectStyle : nint {
 		ExtraLight, Light, Dark,
-		// Notice: value 3 is skipped
+		[TV (10,0), NoiOS, NoWatch]
+		ExtraDark,
+		[iOS (10,0)]
 		Regular = 4,
+		[iOS (10,0)]
 		Prominent = 5,
 	}
 
@@ -1640,6 +1644,7 @@ namespace XamCore.UIKit {
 
 	[NoTV][NoWatch]
 	[iOS (8,0)]
+	[Deprecated (PlatformName.iOS, 10, 0, message:"Use UNAuthorizationOptions instead")]
 	[Native]
 	[Flags]
 	public enum UIUserNotificationType : nuint {
@@ -1651,6 +1656,7 @@ namespace XamCore.UIKit {
 	
 	[NoTV][NoWatch]
 	[iOS (8, 0)]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNNotificationActionOptions instead")]
 	[Native]
 	public enum UIUserNotificationActivationMode : nuint {
 		Foreground,
@@ -1659,6 +1665,7 @@ namespace XamCore.UIKit {
 
 	[NoTV][NoWatch]
 	[iOS (8, 0)]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNNotificationCategory.Actions instead")]
 	[Native]
 	public enum UIUserNotificationActionContext : nuint {
 		Default,
@@ -1774,6 +1781,7 @@ namespace XamCore.UIKit {
 
 	[NoTV][NoWatch]
 	[iOS (9,0)]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNNotificationAction or UNTextInputNotificationAction instead")]
 	[Native]
 	public enum UIUserNotificationActionBehavior : nuint
 	{
@@ -1939,5 +1947,24 @@ namespace XamCore.UIKit {
 	{
 		Previous,
 		Next
+	}
+
+	[iOS (10,0), TV (10,0), NoWatch]
+	[Native]
+	[Flags]
+	public enum UICloudSharingPermissionOptions : nuint {
+		Standard = 0,
+		AllowPublic = 1 << 0,
+		AllowPrivate = 1 << 1,
+		AllowReadOnly = 1 << 2,
+		AllowReadWrite = 1 << 3
+	}
+
+	[iOS (10,0), TV (10,0), NoWatch]
+	[Native]
+	public enum UITextFieldDidEndEditingReason : nint {
+		Committed,
+		[NoiOS]
+		Cancelled
 	}
 }

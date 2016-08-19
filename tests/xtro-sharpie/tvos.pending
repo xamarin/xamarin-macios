@@ -145,3 +145,21 @@
 !incorrect-protocol-member! UITextInputTraits::keyboardType is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! UITextInputTraits::returnKeyType is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! UITextInputTraits::spellCheckingType is OPTIONAL and should NOT be abstract
+
+## Headers says it is available but none of its members or implementor class are available
+!missing-protocol! UIPreviewInteractionDelegate not bound
+
+## Header says they are available in tvOS but intro says nope nope nope radar:27929711
+## Undefined _OBJC_CLASS_$_UICloudSharingController
+!missing-protocol! UICloudSharingControllerDelegate not bound
+!missing-type! UICloudSharingController not bound
+!missing-selector! UICloudSharingController::availablePermissions not bound
+!missing-selector! UICloudSharingController::delegate not bound
+!missing-selector! UICloudSharingController::initWithPreparationHandler: not bound
+!missing-selector! UICloudSharingController::initWithShare:container: not bound
+!missing-selector! UICloudSharingController::setAvailablePermissions: not bound
+!missing-selector! UICloudSharingController::setDelegate: not bound
+!missing-selector! UICloudSharingController::share not bound
+
+## It seems that Apple added a setter but it seems it is a mistake on the newly added property radar:27929872
+!missing-selector! UIViewController::setDisablesAutomaticKeyboardDismissal: not bound

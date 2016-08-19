@@ -317,9 +317,10 @@ namespace XamCore.UIKit {
 			}
 		}
 
+		[iOS (10,0), TV (10,0)]
 		[DllImport (Constants.UIKitLibrary)]
 		static extern bool UIAccessibilityIsAssistiveTouchRunning ();
-		[iOS (10,0)]
+		[iOS (10,0), TV (10,0)]
 		public static bool IsAssistiveTouchRunning {
 			get {
 				return UIAccessibilityIsAssistiveTouchRunning ();
@@ -327,6 +328,7 @@ namespace XamCore.UIKit {
 		}
 
 #if !TVOS
+		[iOS (10,0)]
 		[DllImport (Constants.UIKitLibrary)]
 		static extern nuint UIAccessibilityHearingDevicePairedEar ();
 
