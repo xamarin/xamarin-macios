@@ -575,6 +575,15 @@ namespace Introspection {
 				}
 				break;
 
+			case "preferredFocusedView":
+				switch (declaredType.Name) {
+				// UIFocusGuide (added in iOS 9.0 and deprecated in iOS 10)
+				case "UIView":
+				case "UIViewController":
+					return !TestRuntime.CheckXcodeVersion (7,0);
+				}
+				break;
+
 #if XAMCORE_2_0
 			// some types adopted NS[Secure]Coding after the type was added
 			// and for unified that's something we generate automatically (so we can't put [iOS] on them)
