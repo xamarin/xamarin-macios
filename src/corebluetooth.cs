@@ -203,9 +203,11 @@ namespace XamCore.CoreBluetooth {
 		[Field ("CBAdvertisementDataTxPowerLevelKey")]
 		NSString TxPowerLevelKey { get; }
 
+		[Since (7,0), Mac (10,9)]
 		[Field ("CBAdvertisementDataIsConnectable")]
 		NSString IsConnectableKey { get; }
 
+		[Since (7,0), Mac (10,9)]
 		[Field ("CBAdvertisementDataSolicitedServiceUUIDsKey")]
 		NSString SolicitedServiceUuidsKey { get; }
 	}
@@ -223,12 +225,15 @@ namespace XamCore.CoreBluetooth {
 
 	[Static, Internal]
 	interface RestoredStateKeys {
+		[Since (7,0)]
 		[Field ("CBCentralManagerRestoredStatePeripheralsKey")]
 		NSString PeripheralsKey { get; }
 
+		[Since (7,0)]
 		[Field ("CBCentralManagerRestoredStateScanServicesKey")]
 		NSString ScanServicesKey { get; }
 
+		[Since (7,0)]
 		[Field ("CBCentralManagerRestoredStateScanOptionsKey")]
 		NSString ScanOptionsKey { get; }
 	}

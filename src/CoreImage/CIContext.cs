@@ -123,6 +123,7 @@ namespace XamCore.CoreImage {
 	
 	public partial class CIContext {
 
+		[iOS (8,0)]
 		public CIContext (CIContextOptions options) :
 			this (options?.Dictionary)
 		{

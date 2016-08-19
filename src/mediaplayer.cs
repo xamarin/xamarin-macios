@@ -1583,9 +1583,11 @@ namespace XamCore.MediaPlayer {
 		[Export ("changePlaybackRateCommand")]
 		MPChangePlaybackRateCommand ChangePlaybackRateCommand { get; }
 
+		[iOS (8,0)]
 		[Export ("changeRepeatModeCommand")]
 		MPChangeRepeatModeCommand ChangeRepeatModeCommand { get; }
 
+		[iOS (8,0)]
 		[Export ("changeShuffleModeCommand")]
 		MPChangeShuffleModeCommand ChangeShuffleModeCommand { get; }
 
