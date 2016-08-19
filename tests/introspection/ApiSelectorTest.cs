@@ -122,6 +122,13 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "MDLMaterialProperty":
+				switch (selectorName) {
+				case "copyWithZone:":
+					// not working before iOS 10, macOS 10.12
+					return !TestRuntime.CheckXcodeVersion (8, 0);
+				}
+				break;
 			// Xcode 8 beta 2
 			case "GKGraph":
 			case "NEFlowMetaData":
@@ -153,6 +160,16 @@ namespace Introspection {
 			case "GKPolygonObstacle":
 				switch (selectorName) {
 				case "initWithPoints:count:":
+					return true;
+				}
+				break;
+			case "MDLMesh":
+				switch (selectorName) {
+				case "initCapsuleWithExtent:cylinderSegments:hemisphereSegments:inwardNormals:geometryType:allocator:":
+				case "initConeWithExtent:segments:inwardNormals:cap:geometryType:allocator:":
+				case "initHemisphereWithExtent:segments:inwardNormals:cap:geometryType:allocator:":
+				case "initMeshBySubdividingMesh:submeshIndex:subdivisionLevels:allocator:":
+				case "initSphereWithExtent:segments:inwardNormals:geometryType:allocator:":
 					return true;
 				}
 				break;

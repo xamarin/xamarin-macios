@@ -1389,6 +1389,101 @@ namespace Xamarin.BindingMethods.Generator
 				}
 			);
 
+			// Required for ModelIO
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (Vector3, Vector2i, bool, IntPtr, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Vector3 },
+						new ParameterData { TypeData = Types.Vector2i },
+						new ParameterData { TypeData = Types.Bool },
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.IntPtr },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (Matrix4, bool);",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Matrix4f },
+						new ParameterData { TypeData = Types.Bool },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (Vector3, Vector2i, bool, nint, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Vector3 },
+						new ParameterData { TypeData = Types.Vector2i },
+						new ParameterData { TypeData = Types.Bool },
+						new ParameterData { TypeData = Types.NInt },
+						new ParameterData { TypeData = Types.IntPtr },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, nint, UInt32, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.NInt },
+						new ParameterData { TypeData = Types.UInt32 },
+						new ParameterData { TypeData = Types.IntPtr },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (Vector3, Vector2i, bool, bool, nint, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Vector3 },
+						new ParameterData { TypeData = Types.Vector2i },
+						new ParameterData { TypeData = Types.Bool },
+						new ParameterData { TypeData = Types.Bool },
+						new ParameterData { TypeData = Types.NInt },
+						new ParameterData { TypeData = Types.IntPtr },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (Vector3, Vector2i, int, bool, nint, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Vector3 },
+						new ParameterData { TypeData = Types.Vector2i },
+						new ParameterData { TypeData = Types.Int32 },
+						new ParameterData { TypeData = Types.Bool },
+						new ParameterData { TypeData = Types.NInt },
+						new ParameterData { TypeData = Types.IntPtr },
+					},
+				}
+			);
+
 			// We must expand functions with native types to their actual type as well.
 			for (int i = data.Count - 1; i >= 0; i--) {
 				if (!data [i].HasNativeType)
