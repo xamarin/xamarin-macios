@@ -4452,19 +4452,15 @@ namespace XamCore.Foundation
 		[Export ("initFileURLWithPath:isDirectory:")]
 		IntPtr Constructor (string path, bool isDir);
 
+		[Internal]
 		[Export ("initWithString:")]
-		IntPtr Constructor (string urlString);
+		IntPtr _Init (string urlString);
 
+		[Internal]
 		[DesignatedInitializer]
 		[Export ("initWithString:relativeToURL:")]
-		IntPtr Constructor (string urlString, NSUrl relativeToUrl);
+		IntPtr _Init (string urlString, NSUrl relativeToUrl);
 
-		[Export ("URLWithString:")][Static]
-		NSUrl FromString (string s);
-
-		[Export ("URLWithString:relativeToURL:")][Internal][Static]
-		NSUrl _FromStringRelative (string url, NSUrl relative);
-		
 		[Export ("absoluteString")]
 		string AbsoluteString { get; }
 

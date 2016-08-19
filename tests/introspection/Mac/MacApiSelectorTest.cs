@@ -275,6 +275,13 @@ namespace Introspection {
 					if (Mac.IsAtLeast (10, 11))
 						return true;
 					break;
+				case "NSUrl":
+					switch (selectorName) {
+					case "initWithString:":
+					case "initWithString:relativeToURL:":
+						return true;
+					}
+					break;
 				}
 				break;
 			case "MonoMac.AppKit":

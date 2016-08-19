@@ -30,6 +30,32 @@ namespace XamCore.Foundation {
 		{
 		}
 
+		public NSUrl (string urlString)
+		{
+			Handle = _Init (urlString);
+			if (Handle == IntPtr.Zero)
+				throw new ArgumentException ("Malformed url");
+		}
+
+		public NSUrl (string urlString, NSUrl relativeToUrl)
+		{
+			Handle = _Init (urlString, relativeToUrl);
+			if (Handle == IntPtr.Zero)
+				throw new ArgumentException ("Malformed url");
+		}
+
+		// Call these instead of obj-c static versions since these throw
+		// if nil returned due to malformed input
+		public static NSUrl FromString (string url)
+		{
+			return new NSUrl (url);
+		}
+
+		public static NSUrl FromStringRelative (string url, NSUrl relative)
+		{
+			return new NSUrl (url, relative);
+		}
+
 		// Equals(Object) and GetHashCode are now provided by NSObject
 #if !XAMCORE_2_0
 		public override bool Equals (object t)
@@ -78,10 +104,10 @@ namespace XamCore.Foundation {
 		{
 			return new NSUrl (url, false);
 		}
-		
+
 		public NSUrl MakeRelative (string url)
 		{
-			return _FromStringRelative (url, this);
+			return FromStringRelative (url, this);
 		}
 
 		public override string ToString ()
