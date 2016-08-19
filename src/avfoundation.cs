@@ -551,7 +551,7 @@ namespace XamCore.AVFoundation {
 		[Export ("outputNode")]
 		AVAudioOutputNode OutputNode { get; }
 
-		[NoTV]
+		[NoTV, NoWatch]
 		[Export ("inputNode"), NullAllowed]
 		AVAudioInputNode InputNode { get; }
 
@@ -619,19 +619,20 @@ namespace XamCore.AVFoundation {
 		NSString ConfigurationChangeNotification { get; }
 	}
 
+	[NoWatch]
 	[iOS (8,0)][Mac (10,10)]
 	[BaseType (typeof (AVAudioNode))]
 	interface AVAudioEnvironmentNode : AVAudioMixing {
 		[Export ("nextAvailableInputBus")]
 		nuint NextAvailableInputBus { get; }
 
-		[Export ("listenerPosition")]
+		[Export ("listenerPosition", ArgumentSemantic.Assign)]
 		Vector3 ListenerPosition { get; set; }
 
-		[Export ("listenerVectorOrientation")]
+		[Export ("listenerVectorOrientation", ArgumentSemantic.Assign)]
 		AVAudio3DVectorOrientation ListenerVectorOrientation { get; set; }
 
-		[Export ("listenerAngularOrientation")]
+		[Export ("listenerAngularOrientation", ArgumentSemantic.Assign)]
 		AVAudio3DAngularOrientation ListenerAngularOrientation { get; set; }
 
 		[Export ("distanceAttenuationParameters")]
@@ -655,7 +656,7 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioEnvironmentDistanceAttenuationParameters {
-		[Export ("distanceAttenuationModel")]
+		[Export ("distanceAttenuationModel", ArgumentSemantic.Assign)]
 		AVAudioEnvironmentDistanceAttenuationModel DistanceAttenuationModel { get; set; }
 
 		[Export ("referenceDistance")]
@@ -796,31 +797,41 @@ namespace XamCore.AVFoundation {
 
 		[Export ("isEqual:"), Internal]
 		bool IsEqual (NSObject obj);
+		
+		[iOS (10,0), TV (10,0), Watch (3,0), Mac (10,12)]
+		[NullAllowed, Export ("magicCookie", ArgumentSemantic.Retain)]
+		NSData MagicCookie { get; set; }
 	}
 
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface AVAudio3DMixing {
+		[NoWatch]
 		[Abstract]
 		[Export ("renderingAlgorithm")]
 		AVAudio3DMixingRenderingAlgorithm RenderingAlgorithm { get; set; }
 
+		[NoWatch]
 		[Abstract]
 		[Export ("rate")]
 		float Rate { get; set; } /* float, not CGFloat */
 
+		[NoWatch]
 		[Abstract]
 		[Export ("reverbBlend")]
 		float ReverbBlend { get; set; } /* float, not CGFloat */
 
+		[NoWatch]
 		[Abstract]
 		[Export ("obstruction")]
 		float Obstruction { get; set; } /* float, not CGFloat */
 
+		[NoWatch]
 		[Abstract]
 		[Export ("occlusion")]
 		float Occlusion { get; set; } /* float, not CGFloat */
 
+		[NoWatch]
 		[Abstract]
 		[Export ("position")]
 		Vector3 Position { get; set; }
@@ -966,6 +977,7 @@ namespace XamCore.AVFoundation {
 		IntPtr Int32ChannelData { get; }
 	}
 
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AVAudioPlayer {
@@ -974,7 +986,7 @@ namespace XamCore.AVFoundation {
 	
 		[Export ("initWithData:error:")][Internal]
 		IntPtr Constructor (NSData  data, IntPtr outError);
-	
+
 		[Export ("prepareToPlay")]
 		bool PrepareToPlay ();
 	
@@ -1011,6 +1023,9 @@ namespace XamCore.AVFoundation {
 	
 		[Export ("volume")]
 		float Volume { get; set;  } // defined as 'float'
+		
+		[Export ("setVolume:fadeDuration:")]
+		void SetVolume (float volume, double duration);
 	
 		[Export ("currentTime")]
 		double CurrentTime { get; set;  }
@@ -1067,8 +1082,13 @@ namespace XamCore.AVFoundation {
 		[Since (7,0), Export ("initWithData:fileTypeHint:error:")]
 		IntPtr Constructor (NSData data, [NullAllowed] string fileTypeHint, out NSError outError);
 #endif
+
+		[NoWatch, iOS (10, 0), TV (10,0), Mac (10,12)]
+		[Export ("format")]
+		AVAudioFormat Format { get; }
 	}
 	
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -1145,7 +1165,7 @@ namespace XamCore.AVFoundation {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[NoTV]
+	[NoTV, NoWatch]
 	interface AVAudioRecorder {
 		[Export ("initWithURL:settings:error:")][Internal]
 		IntPtr InitWithUrl (NSUrl url, NSDictionary settings, out NSError error);
@@ -1226,13 +1246,17 @@ namespace XamCore.AVFoundation {
 		[Since (6,0)]
 		[Export ("deviceCurrentTime")]
 		double DeviceCurrentTime { get; }
+
+		[iOS (10, 0)]
+		[Export ("format")]
+		AVAudioFormat Format { get; }
 #endif
 	}
 	
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	[NoTV]
+	[NoTV, NoWatch]
 	interface AVAudioRecorderDelegate {
 		[Export ("audioRecorderDidFinishRecording:successfully:"), CheckDisposed]
 		void FinishedRecording (AVAudioRecorder recorder, bool flag);
@@ -1277,6 +1301,7 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // for binary compatibility this is added in AVAudioSession.cs w/[Obsolete]
 	interface AVAudioSession {
+		
 		[Export ("sharedInstance"), Static]
 		AVAudioSession SharedInstance ();
 	
@@ -1398,6 +1423,10 @@ namespace XamCore.AVFoundation {
 		[Since (6,0)]
 		[Export ("setCategory:withOptions:error:")]
 		bool SetCategory (string category, AVAudioSessionCategoryOptions options, out NSError outError);
+		
+		[iOS (10,0), TV (10,0), Watch (3,0)]
+		[Export ("setCategory:mode:options:error:")]
+		bool SetCategory (string category, string mode, AVAudioSessionCategoryOptions options, out NSError outError);
 
 		[Since (6,0)]
 		[Export ("categoryOptions")]
@@ -1595,17 +1624,16 @@ namespace XamCore.AVFoundation {
 		[PostGet ("OutputDataSource")]
 		bool SetOutputDataSource ([NullAllowed] AVAudioSessionDataSourceDescription dataSource, out NSError outError);
 
-		
-		[NoTV]
+		[NoTV, NoWatch]
 		[Since (7,0)]
 		[Export ("requestRecordPermission:")]
 		void RequestRecordPermission (AVPermissionGranted responseCallback);
 
-		[Since (7,0)]
+		[NoWatch, Since (7,0)]
 		[Export ("setPreferredInput:error:")]
 		bool SetPreferredInput ([NullAllowed] AVAudioSessionPortDescription inPort, out NSError outError);
 
-		[Since (7,0)]
+		[NoWatch, Since (7,0)]
 		[Export ("preferredInput", ArgumentSemantic.Copy), NullAllowed]
 		AVAudioSessionPortDescription PreferredInput { get; }
 
@@ -1674,7 +1702,7 @@ namespace XamCore.AVFoundation {
 		NSString PolarPatternSubcardioid { get; }
 
 		// 8.0
-		[NoTV]
+		[NoTV, NoWatch]
 		[iOS (8,0)]
 		[Export ("recordPermission")]
 		AVAudioSessionRecordPermission RecordPermission { get; }
@@ -1687,6 +1715,10 @@ namespace XamCore.AVFoundation {
 		[Field ("AVAudioSessionSilenceSecondaryAudioHintNotification")]
 		[Notification (typeof (AVAudioSessionSecondaryAudioHintEventArgs))]
 		NSString SilenceSecondaryAudioHintNotification { get; }
+		
+		[NoWatch, NoTV, iOS(10,0), Mac (10,12)]
+		[Export ("setAggregatedIOPreference:error:")]
+		bool setAggregatedIOPreference (AVAudioSessionIOType ioType, out NSError error);
 	}
 	
 	[Since (6,0)]
@@ -1733,6 +1765,7 @@ namespace XamCore.AVFoundation {
 		[Since (7,0)]
 		[UnifiedInternal, Export ("setPreferredPolarPattern:error:")]
 		bool SetPreferredPolarPattern ([NullAllowed] NSString pattern, out NSError outError);
+		
 	}
 
 	interface AVAudioSessionInterruptionEventArgs {
@@ -1799,6 +1832,10 @@ namespace XamCore.AVFoundation {
 		[Export ("UID")]
 		string UID { get;  }
 
+		[iOS (10, 0)]
+		[Export ("hasHardwareVoiceCallProcessing")]
+		bool HasHardwareVoiceCallProcessing { get; }
+
 		[Export ("channels"), NullAllowed]
 		AVAudioSessionChannelDescription [] Channels { get;  }
 
@@ -1836,7 +1873,7 @@ namespace XamCore.AVFoundation {
 	}
 #endif
 
-	[iOS (8,0)]
+	[NoWatch, iOS (8,0)]
 	[BaseType (typeof (AVAudioNode))]
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioUnit {
@@ -1874,7 +1911,7 @@ namespace XamCore.AVFoundation {
 #endif
 	}
 
-	[iOS (8,0)]
+	[NoWatch, iOS (8,0)]
 	[BaseType (typeof (AVAudioUnitEffect))]
 	interface AVAudioUnitDelay {
 		[Export ("delayTime")]
@@ -1903,7 +1940,7 @@ namespace XamCore.AVFoundation {
 		void LoadFactoryPreset (AVAudioUnitDistortionPreset preset);
 	}
 
-	[iOS (8,0)]
+	[NoWatch, iOS (8,0)]
 	[BaseType (typeof (AVAudioUnit))]
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioUnitEffect {
@@ -1919,6 +1956,7 @@ namespace XamCore.AVFoundation {
 		bool Bypass { get; set; }
 	}
 
+	[NoWatch]
 	[iOS (8,0)][Mac (10,10)]
 	[BaseType (typeof (AVAudioUnitEffect))]
 	interface AVAudioUnitEQ {
@@ -1936,7 +1974,7 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioUnitEQFilterParameters {
-		[Export ("filterType")]
+		[Export ("filterType", ArgumentSemantic.Assign)]
 		AVAudioUnitEQFilterType FilterType { get; set; }
 
 		[Export ("frequency")]
@@ -1952,7 +1990,7 @@ namespace XamCore.AVFoundation {
 		bool Bypass { get; set; }
 	}
 
-	[iOS (8,0)]
+	[NoWatch, iOS (8,0)]
 	[BaseType (typeof (AVAudioUnit))]
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioUnitGenerator : AVAudioMixing {
@@ -1968,7 +2006,7 @@ namespace XamCore.AVFoundation {
 		bool Bypass { get; set; }
 	}
 
-	[iOS (8,0)]
+	[NoWatch, iOS (8,0)]
 	[BaseType (typeof (AVAudioUnit), Name="AVAudioUnitMIDIInstrument")]
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioUnitMidiInstrument : AVAudioMixing { 
@@ -2014,7 +2052,7 @@ namespace XamCore.AVFoundation {
 		void SendMidiSysExEvent (NSData midiData);
 	}
 
-	[iOS (8,0)]
+	[NoWatch, iOS (8,0)]
 	[BaseType (typeof (AVAudioUnitMidiInstrument))]
 	interface AVAudioUnitSampler {
 		[Export ("stereoPan")]
@@ -2036,7 +2074,7 @@ namespace XamCore.AVFoundation {
 		bool LoadAudioFiles (NSUrl [] audioFiles, out NSError outError);
 	}
 
-	[iOS (8,0)]
+	[NoWatch, iOS (8,0)]
 	[BaseType (typeof (AVAudioUnitEffect))]
 	interface AVAudioUnitReverb {
 
@@ -2048,7 +2086,7 @@ namespace XamCore.AVFoundation {
 	}
 	
 
-	[iOS (8,0)]
+	[NoWatch, iOS (8,0)]
 	[BaseType (typeof (AVAudioUnit))]
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioUnitTimeEffect {
@@ -2064,7 +2102,7 @@ namespace XamCore.AVFoundation {
 		bool Bypass { get; set; }
 	}
 	
-	[iOS (8,0)]
+	[NoWatch, iOS (8,0)]
 	[BaseType (typeof (AVAudioUnitTimeEffect))]
 	interface AVAudioUnitTimePitch {
 		[Export ("initWithAudioComponentDescription:")]
@@ -2086,7 +2124,7 @@ namespace XamCore.AVFoundation {
 		float Overlap { get; set; } /* float, not CGFloat */
 	}
 
-	[iOS (8,0)]
+	[NoWatch, iOS (8,0)]
 	[BaseType (typeof (AVAudioUnitTimeEffect))]
 	interface AVAudioUnitVarispeed {
 		[Export ("initWithAudioComponentDescription:")]
@@ -9816,7 +9854,7 @@ namespace XamCore.AVFoundation {
 		void SelectMediaOption ([NullAllowed] AVMediaSelectionOption mediaSelectionOption, AVMediaSelectionGroup mediaSelectionGroup);
 	}
 
-	[iOS (9,0)][Mac (10,11)]
+	[NoWatch, iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof (NSObject))]
 	interface AVAudioSequencer {
 
@@ -9881,7 +9919,7 @@ namespace XamCore.AVFoundation {
 		void Stop ();
 	}
 
-	[iOS (9,0)][Mac (10,11)]
+	[NoWatch, iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // Docs/headers do not state that init is disallowed but if 
 	// you get an instance that way and try to use it, it will inmediatelly crash also tested in ObjC app same result
@@ -9957,7 +9995,7 @@ namespace XamCore.AVFoundation {
 		NSString MidiProcessor { get; }
 	}
 
-	[iOS (9,0)][Mac (10,10)]
+	[NoWatch, iOS (9,0)][Mac (10,10)]
 	[BaseType (typeof(NSObject))]
 	interface AVAudioUnitComponent {
 
@@ -10033,7 +10071,7 @@ namespace XamCore.AVFoundation {
 
 	delegate bool AVAudioUnitComponentFilter (AVAudioUnitComponent comp, ref bool stop);
 
-	[iOS (9,0), Mac (10,10)]
+	[NoWatch, iOS (9,0), Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	interface AVAudioUnitComponentManager {
 		
