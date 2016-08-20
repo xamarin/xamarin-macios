@@ -244,6 +244,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVMetadataObject.cs \
 	AVFoundation/AVOutputSettingsAssistant.cs \
 	AVFoundation/AVPlayer.cs \
+	AVFoundation/AVPlayerItemVideoOutput.cs \
 	AVFoundation/AVPlayerLayer.cs \
 	AVFoundation/AVPlayerViewController.cs \
 	AVFoundation/AVTextStyleRule.cs \
