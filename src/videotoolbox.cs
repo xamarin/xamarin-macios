@@ -1026,7 +1026,7 @@ namespace XamCore.VideoToolbox {
 		[iOS (10,0)]
 		[Mac (10,8)]
 		[Field ("kVTPixelTransferPropertyKey_DestinationICCProfile")]
-		NSString DestinationICCProfile { get; }
+		NSString DestinationIccProfile { get; }
 
 		// DestinationYCbCrMatrix
 
