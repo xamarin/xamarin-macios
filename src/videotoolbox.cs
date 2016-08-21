@@ -947,11 +947,10 @@ namespace XamCore.VideoToolbox {
 		[Export ("DestinationPixelAspectRatio")]
 		AVVideoPixelAspectRatioSettings DestinationPixelAspectRatio { get; set; }
 
-#if MONOMAC
+		[iOS (10,0)]
 		[Mac (10,8)]
 		[Export ("DestinationICCProfile")]
 		NSData DestinationICCProfile { get; set; }
-#endif
 	}
 
 	// VTPixelTransferProperties are available in iOS 9 radar://22614931 https://trello.com/c/bTl6hRu9
