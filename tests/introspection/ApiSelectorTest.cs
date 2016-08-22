@@ -230,6 +230,7 @@ namespace Introspection {
 				case "initWithPixelBufferAttributes:":
 					return true;
 				}
+				break;
 			}
 
 			// old binding mistake

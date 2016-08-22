@@ -104,7 +104,6 @@ namespace XamCore.AVFoundation {
 			Handle = InitWithUrl (url, settings.Dictionary, out error);
 		}	
 
-		[iOS (10,0), Mac (10,12)]
 		AVAudioRecorder (NSUrl url, AVAudioFormat format, out NSError error) {
 			// We use this method because it allows us to out NSError but, as a side effect, it is possible for the handle to be null and we will need to check this manually (on the Create method).
 			Handle = InitWithUrl (url, format, out error);

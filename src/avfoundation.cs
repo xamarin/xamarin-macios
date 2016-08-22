@@ -9118,17 +9118,17 @@ namespace XamCore.AVFoundation {
 	interface AVVideoColorPrimaries {
 		[iOS (10, 0)]
 		[Field ("AVVideoColorPrimaries_ITU_R_709_2")]
-		NSString ITU_R_709_2 { get; }
+		NSString Itu_R_709_2 { get; }
 
 		[NoiOS]
 		[Field ("AVVideoColorPrimaries_EBU_3213")]
-		NSString EBU_3213 { get; }
+		NSString Ebu_3213 { get; }
 
 		[iOS (10, 0)]
 		[Field ("AVVideoColorPrimaries_SMPTE_C")]
-		NSString SMPTE_C { get; }
+		NSString Smpte_C { get; }
 
-		[iOS (10, 0) NoMac]
+		[iOS (10, 0), NoMac]
 		[Field ("AVVideoColorPrimaries_P3_D65")]
 		NSString P3_D65 { get; }
 	}
@@ -9137,11 +9137,11 @@ namespace XamCore.AVFoundation {
 	interface AVVideoTransferFunction {
 		[iOS (10, 0)]
 		[Field ("AVVideoTransferFunction_ITU_R_709_2")]
-		NSString AVVideoTransferFunction_ITU_R_709_2 { get; }
+		NSString AVVideoTransferFunction_Itu_R_709_2 { get; }
 
 		[NoiOS, Mac (10,12)]
 		[Field ("AVVideoTransferFunction_SMPTE_240M_1995")]
-		NSString AVVideoTransferFunction_SMPTE_240M_1995 { get; }
+		NSString AVVideoTransferFunction_Smpte_240M_1995 { get; }
 	}
 	
 	[Static]
@@ -9149,15 +9149,15 @@ namespace XamCore.AVFoundation {
 		
 		[iOS (10, 0)]
 		[Field ("AVVideoYCbCrMatrix_ITU_R_709_2")]
-		NSString ITU_R_709_2 { get; }
+		NSString Itu_R_709_2 { get; }
 
 		[iOS (10, 0)]
 		[Field ("AVVideoYCbCrMatrix_ITU_R_601_4")]
-		NSString ITU_R_601_4 { get; }
+		NSString Itu_R_601_4 { get; }
 
 		[NoiOS, Mac (10,12)]
 		[Field ("AVVideoYCbCrMatrix_SMPTE_240M_1995")]
-		NSString SMPTE_240M_1995 { get; }
+		NSString Smpte_240M_1995 { get; }
 
 	}
 	
@@ -9244,7 +9244,9 @@ namespace XamCore.AVFoundation {
 	interface AVPlayerItemVideoOutputSettings {
 		AVColorProperties ColorProperties { get; set; }
 		AVCompressionProperties CompressionProperties { get; set; }
+#if !MONOMAC
 		bool AllowWideColor { get; set; }
+#endif
 		NSString Codec { get; set; }
 		NSString ScalingMode { get; set; }
 		NSNumber Width { get; set; }
@@ -9254,14 +9256,14 @@ namespace XamCore.AVFoundation {
 	[Static]
 	[Internal]
 	interface AVPlayerItemVideoOutputSettingsKeys {
-		[iOS (10, 0)]
+		[iOS (10,0)]
 		[Field ("AVVideoColorPropertiesKey")]
 		NSString ColorPropertiesKey { get; }
 		
 		[Field ("AVVideoCompressionPropertiesKey")]
 		NSString CompressionPropertiesKey { get; }
 		
-		[iOS (10, 0)]
+		[iOS (10,0), NoMac]
 		[Field ("AVVideoAllowWideColorKey")]
 		NSString AllowWideColorKey { get; }
 		
