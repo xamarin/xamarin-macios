@@ -28,7 +28,7 @@ namespace XamCore.AVFoundation {
 		}
 
 		[DesignatedInitializer]
-		[Obsolete ("Please use the constructor that uses one of the available StrongDictionaries.")]
+		[Advice ("Please use the constructor that uses one of the available StrongDictionaries. This constructor expects Pixelbugger attributes.")]
 		protected AVPlayerItemVideoOutput (NSDictionary pixelBufferAttributes) : this (pixelBufferAttributes, InitMode.PixelAttributes) {}
 	}
 }

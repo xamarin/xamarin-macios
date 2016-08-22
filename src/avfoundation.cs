@@ -816,35 +816,30 @@ namespace XamCore.AVFoundation {
 		NSData MagicCookie { get; set; }
 	}
 
+	[NoWatch]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface AVAudio3DMixing {
-		[NoWatch]
 		[Abstract]
 		[Export ("renderingAlgorithm")]
 		AVAudio3DMixingRenderingAlgorithm RenderingAlgorithm { get; set; }
 
-		[NoWatch]
 		[Abstract]
 		[Export ("rate")]
 		float Rate { get; set; } /* float, not CGFloat */
 
-		[NoWatch]
 		[Abstract]
 		[Export ("reverbBlend")]
 		float ReverbBlend { get; set; } /* float, not CGFloat */
 
-		[NoWatch]
 		[Abstract]
 		[Export ("obstruction")]
 		float Obstruction { get; set; } /* float, not CGFloat */
 
-		[NoWatch]
 		[Abstract]
 		[Export ("occlusion")]
 		float Occlusion { get; set; } /* float, not CGFloat */
 
-		[NoWatch]
 		[Abstract]
 		[Export ("position")]
 		Vector3 Position { get; set; }

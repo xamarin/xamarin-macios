@@ -27,3 +27,4 @@ namespace XamCore.AVFoundation {
 	}
 }
 #endif
+
