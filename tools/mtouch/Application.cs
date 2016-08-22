@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Xml.Linq;
 using System.IO;
@@ -1078,8 +1077,7 @@ namespace Xamarin.Bundler {
 
 		public static void CopyMsymData (string src, string dest)
 		{
-			var dirInfo = new DirectoryInfo (src);
-			if (!dirInfo.Exists) // got no aot data
+			if (!DirectoryInfo.Exists (src)) // got no aot data
 				return;
 			var copyProcess = new MsymCopyTask (src, dest);
 			copyProcess.Execute ();
@@ -1850,7 +1848,8 @@ namespace Xamarin.Bundler {
 		public string Source { get; set; }
 		public string Destination { get; set; }
 		
-		public MsymCopyTask (string source, string destination) {
+		public MsymCopyTask (string source, string destination)
+		{
 			Source = source;
 			Destination = destination;
 			ProcessStartInfo.FileName = "mono-symbolicate";
@@ -1859,15 +1858,6 @@ namespace Xamarin.Bundler {
 		
 		protected override void Build ()
 		{
-			if (String.IsNullOrEmpty (Source)) {
-				Console.Error.WriteLine ("Symbolcation error, could not copy msym files because the source directory is missing.");
-				throw new ArgumentNullException (nameof (Source));
-			}
-			if (String.IsNullOrEmpty (Destination)) {
-				Console.Error.WriteLine ("Symbolcation error, could not copy msym files because the destination directory is missing.");
-				throw new ArgumentNullException (nameof (Source));
-			}
-			
 			var exit_code = base.Start ();
 			if (exit_code == 0)
 				return;
