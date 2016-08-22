@@ -268,7 +268,7 @@ namespace Xamarin.Bundler {
 			return new BuildTask [] { new AOTTask ()
 				{
 					AssemblyName = s,
-					ProcessStartInfo = Driver.CreateStartInfo (aotCompiler, aotArgs, Path.GetDirectoryName (s), App.EnableMSym ? "gen-compact-seq-points" : null),
+					ProcessStartInfo = Driver.CreateStartInfo (aotCompiler, aotArgs, Path.GetDirectoryName (s)),
 					NextTasks = nextTasks
 				}
 			};
