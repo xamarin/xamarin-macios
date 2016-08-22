@@ -99,7 +99,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 
 				Assert.IsTrue (nr.TryGetFlags (out flags), "#1");
 				// using Loopback iOS 10 / tvOS 10 returns no flags (0) on devices
-				if (TestRuntime.CheckXcodeVersion (8,0))
+				if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (8,0))
 					Assert.That ((int) flags, Is.EqualTo (0), "#1 Reachable");
 				else
 					Assert.That (flags, Is.EqualTo (NetworkReachabilityFlags.Reachable), "#1 Reachable");
@@ -119,7 +119,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 
 				Assert.IsTrue (nr.TryGetFlags (out flags), "#3");
 				// using Loopback iOS 10 / tvOS 10 returns no flags (0) on devices
-				if (TestRuntime.CheckXcodeVersion (8, 0))
+				if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (8, 0))
 					Assert.That ((int)flags, Is.EqualTo (0), "#3 Reachable");
 				else {
 					var expected = NetworkReachabilityFlags.Reachable;
