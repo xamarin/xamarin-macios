@@ -1,7 +1,6 @@
 ﻿// Copyright 2013 Xamarin Inc. All rights reserved.
 
 using System;
-using System.Diagnostics;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
