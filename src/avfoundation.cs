@@ -9128,7 +9128,7 @@ namespace XamCore.AVFoundation {
 		[Field ("AVVideoColorPrimaries_SMPTE_C")]
 		NSString SMPTE_C { get; }
 
-		[iOS (10, 0)]
+		[iOS (10, 0) NoMac]
 		[Field ("AVVideoColorPrimaries_P3_D65")]
 		NSString P3_D65 { get; }
 	}

@@ -224,6 +224,12 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "AVPlayerItemVideoOutput":
+				switch (selectorName) {
+				case "initWithOutputSettings:":
+				case "initWithPixelBufferAttributes:":
+					return true;
+				}
 			}
 
 			// old binding mistake
@@ -408,6 +414,7 @@ namespace Introspection {
 			case "initWithFileURL:options:documentAttributes:error:":
 			// AVAudioRecorder
 			case "initWithURL:settings:error:":
+			case "initWithURL:format:error:":
 			// NSUrlProtectionSpace
 			case "initWithHost:port:protocol:realm:authenticationMethod:":
 			case "initWithProxyHost:port:type:realm:authenticationMethod:":
