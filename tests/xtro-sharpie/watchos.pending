@@ -117,6 +117,9 @@
 !missing-enum! NSTextAlignment not bound
 !unknown-native-enum! UITextAlignment bound
 
+## Not bound intentionally, Factory method FromDisplayP3 is available and adding this as a ctor would make the api usage ugly since signature matches colorWithRed:green:blue:alpha:
+!missing-selector! UIColor::initWithDisplayP3Red:green:blue:alpha: not bound
+
 
 # others
 

@@ -161,3 +161,52 @@
 !missing-selector! INRideDriver::initWithHandle:nameComponents:image:rating:phoneNumber: not bound
 !missing-selector! INRideOption::identifier not bound
 !missing-selector! INRideOption::setIdentifier: not bound
+
+# UIKit
+
+## HACK: those members are not *required* in ObjC but we made them
+## abstract to have them inlined in UITextField and UITextView
+## Even more confusing it that respondToSelecttor return NO on them
+## even if it works in _real_ life (compare unit and introspection tests)
+!incorrect-protocol-member! UITextInputTraits::autocapitalizationType is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::autocorrectionType is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::enablesReturnKeyAutomatically is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::isSecureTextEntry is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::keyboardAppearance is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::keyboardType is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::returnKeyType is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::spellCheckingType is OPTIONAL and should NOT be abstract
+
+## it's technically optional but there's no point in adopting the protocol if you do not provide the implemenation
+## We should review the above ^ if we want to keep this when XAMCORE_4_0 becomes a thing
+!incorrect-protocol-member! UIInputViewAudioFeedback::enableInputClicksWhenVisible is OPTIONAL and should NOT be abstract
+
+## Obsoleted selectors in very early versions of iOS (3.0) and removed in XAMCORE_3_0
+!extra-protocol-member! unexpected selector UIImagePickerControllerDelegate::imagePickerController:didFinishPickingImage:editingInfo: found
+!extra-protocol-member! unexpected selector UITableViewDelegate::tableView:accessoryTypeForRowWithIndexPath: found
+
+## Special case from UIAccessibilityAction. We added it (completly) on UIResponser but magic tap is also available on app delegate according to docs
+## See comments is uikit.cs for more info
+!extra-protocol-member! unexpected selector UIApplicationDelegate::accessibilityPerformMagicTap found
+
+## Protocol Inlined Maybe we want to change this in XAMCORE_4_0 since this predates our Category support
+!missing-protocol! UIResponderStandardEditActions not bound
+!missing-protocol-conformance! UIResponder should conform to UIResponderStandardEditActions
+
+## @required members added to exixting interfaces (breaking change), fixed on XAMCORE_4_0
+!incorrect-protocol-member! UIViewControllerContextTransitioning::pauseInteractiveTransition is REQUIRED and should be abstract
+!incorrect-protocol-member! UIViewControllerTransitionCoordinator::notifyWhenInteractionChangesUsingBlock: is REQUIRED and should be abstract
+!incorrect-protocol-member! UIViewControllerTransitionCoordinatorContext::isInterruptible is REQUIRED and should be abstract
+!incorrect-protocol-member! UIFocusEnvironment::preferredFocusEnvironments is REQUIRED and should be abstract
+!incorrect-protocol-member! UITextDocumentProxy::documentInputMode is REQUIRED and should be abstract
+!incorrect-protocol-member! UILayoutSupport::bottomAnchor is REQUIRED and should be abstract
+!incorrect-protocol-member! UILayoutSupport::heightAnchor is REQUIRED and should be abstract
+!incorrect-protocol-member! UILayoutSupport::topAnchor is REQUIRED and should be abstract
+
+## Not bound intentionally, Factory method FromDisplayP3 is available and adding this as a ctor would make the api usage ugly since signature matches colorWithRed:green:blue:alpha:
+!missing-selector! UIColor::initWithDisplayP3Red:green:blue:alpha: not bound
+
+## It seems that Apple added a setter but it seems it is a mistake on the newly added property radar:27929872
+!missing-selector! UIViewController::setDisablesAutomaticKeyboardDismissal: not bound
+
+
