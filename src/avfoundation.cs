@@ -9888,7 +9888,7 @@ namespace XamCore.AVFoundation {
 
 		[iOS (10, 0), TV (10,0), Watch (3,0), NoMac]
 		[Field ("AVSpeechSynthesisIPANotationAttribute")]
-		NSString IPANotationAttribute { get; }
+		NSString IpaNotationAttribute { get; }
 	}
 
 	[Since (7,0)]
