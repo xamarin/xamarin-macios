@@ -176,6 +176,10 @@ namespace XamCore.AVFoundation {
 
 		[Field ("AVMediaCharacteristicFrameBased")]
 		NSString FrameBased { get; }
+		
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[Field ("AVMediaCharacteristicUsesWideGamutColorSpace")]
+		NSString UsesWideGamutColorSpace { get; }
 
 		[MountainLion][Since (5,0)]
 		[Field ("AVMediaCharacteristicIsMainProgramContent")]
@@ -345,6 +349,14 @@ namespace XamCore.AVFoundation {
 		[Field ("AVVideoCodecJPEG")]
 		NSString CodecJPEG { get; }
 		
+		[NoiOS, Mac (10,7)]
+		[Field ("AVVideoCodecAppleProRes4444")]
+		NSString AppleProRes4444 { get; }
+
+		[NoiOS, Mac (10,7)]
+		[Field ("AVVideoCodecAppleProRes422")]
+		NSString AppleProRes422 { get; }
+		
 		[Field ("AVVideoWidthKey")]
 		NSString WidthKey { get; }
 		
@@ -438,6 +450,7 @@ namespace XamCore.AVFoundation {
 		
 		[Field ("AVVideoCleanApertureVerticalOffsetKey")]
 		NSString CleanApertureVerticalOffsetKey { get; }
+
 	}
 
 	[Since (5,0)]
@@ -1169,6 +1182,11 @@ namespace XamCore.AVFoundation {
 	interface AVAudioRecorder {
 		[Export ("initWithURL:settings:error:")][Internal]
 		IntPtr InitWithUrl (NSUrl url, NSDictionary settings, out NSError error);
+		
+		[Internal]
+		[iOS (10,0), Mac (10,12)]
+		[Export ("initWithURL:format:error:")]
+		IntPtr InitWithUrl (NSUrl url, AVAudioFormat format, out NSError outError);
 	
 		[Export ("prepareToRecord")]
 		bool PrepareToRecord ();
@@ -1390,7 +1408,8 @@ namespace XamCore.AVFoundation {
 		[Field ("AVAudioSessionCategoryPlayAndRecord")]
 		NSString CategoryPlayAndRecord { get; }
 
-		[NoTV]
+		[NoTV][NoWatch]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_10_0)] // FIXME: Find the new value to use
 		[Field ("AVAudioSessionCategoryAudioProcessing")]
 		NSString CategoryAudioProcessing { get; }
 
@@ -4344,6 +4363,9 @@ namespace XamCore.AVFoundation {
 		
 		[Field ("AVMetadataID3MetadataKeyTime")]
 		NSString ID3MetadataKeyTime { get; }
+
+		[Field ("AVMetadataID3MetadataKeyInvolvedPeopleList_v24")]
+		NSString ID3MetadataKeyInvolvedPeopleList_v24 { get; }
 		
 		[Field ("AVMetadataID3MetadataKeyContentGroupDescription")]
 		NSString ID3MetadataKeyContentGroupDescription { get; }
@@ -4489,6 +4511,10 @@ namespace XamCore.AVFoundation {
 		[iOS (8,0)][Mac (10,10)]
 		[Field ("AVMetadataISOUserDataKeyTaggedCharacteristic")]
 		NSString IsoUserDataKeyTaggedCharacteristic { get; }
+		
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[Field ("AVMetadataISOUserDataKeyDate")]
+		NSString ISOUserDataKeyDate { get; }
 
 		[iOS (8,0)][Mac (10,10)]
 		[Field ("AVMetadataKeySpaceIcy")]
@@ -4723,6 +4749,11 @@ namespace XamCore.AVFoundation {
 		[iOS (8,0)][Mac (10,10)]
 		[Static]
 		interface Iso {
+			
+			[iOS (10, 0), TV (10,0), Mac (10,12)]
+			[Field ("AVMetadataIdentifierISOUserDataDate")]
+			NSString UserDataDate { get; }
+
 			[Field ("AVMetadataIdentifierISOUserDataCopyright")]
 			NSString UserDataCopyright { get; }
 			
@@ -5516,56 +5547,55 @@ namespace XamCore.AVFoundation {
 		[Field ("AVMetadataObjectTypeFace")]
 		NSString TypeFace { get; }
 
-
-		[Since(7,0)]
+		[NoTV, Since(7,0)]
 		[Field ("AVMetadataObjectTypeAztecCode")]
 		NSString TypeAztecCode { get; }
 		
-		[Since(7,0)]
+		[NoTV, Since(7,0)]
 		[Field ("AVMetadataObjectTypeCode128Code")]
 		NSString TypeCode128Code { get; }
 		
-		[Since(7,0)]
+		[NoTV, Since(7,0)]
 		[Field ("AVMetadataObjectTypeCode39Code")]
 		NSString TypeCode39Code { get; }
 		
-		[Since(7,0)]
+		[NoTV, Since(7,0)]
 		[Field ("AVMetadataObjectTypeCode39Mod43Code")]
 		NSString TypeCode39Mod43Code { get; }
 		
-		[Since(7,0)]
+		[NoTV, Since(7,0)]
 		[Field ("AVMetadataObjectTypeCode93Code")]
 		NSString TypeCode93Code { get; }
 		
-		[Since(7,0)]
+		[NoTV, Since(7,0)]
 		[Field ("AVMetadataObjectTypeEAN13Code")]
 		NSString TypeEAN13Code { get; }
 		
-		[Since(7,0)]
+		[NoTV, Since(7,0)]
 		[Field ("AVMetadataObjectTypeEAN8Code")]
 		NSString TypeEAN8Code { get; }
 		
 		[Field ("AVMetadataObjectTypePDF417Code")]
-		[Since(7,0)]
+		[NoTV, Since(7,0)]
 		NSString TypePDF417Code { get; }
 		
-		[Since(7,0)]
+		[NoTV, Since(7,0)]
 		[Field ("AVMetadataObjectTypeQRCode")]
 		NSString TypeQRCode { get; }
 		
-		[Since(7,0)]
+		[NoTV, Since(7,0)]
 		[Field ("AVMetadataObjectTypeUPCECode")]
 		NSString TypeUPCECode { get; }
 
-		[Since (8,0)]
+		[NoTV, Since (8,0)]
 		[Field ("AVMetadataObjectTypeInterleaved2of5Code")]
 		NSString TypeInterleaved2of5Code { get; }
 		
-		[Since (8,0)]
+		[NoTV, Since (8,0)]
 		[Field ("AVMetadataObjectTypeITF14Code")]
 		NSString TypeITF14Code { get; }
 		
-		[Since (8,0)]
+		[NoTV, Since (8,0)]
 		[Field ("AVMetadataObjectTypeDataMatrixCode")]
 		NSString TypeDataMatrixCode { get; }
 	}
@@ -8600,6 +8630,17 @@ namespace XamCore.AVFoundation {
 		string AudioOutputDeviceUniqueID { get; set; }
 #endif
 
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[Field ("AVPlayerWaitingToMinimizeStallsReason")]
+		NSString WaitingToMinimizeStallsReason { get; }
+
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[Field ("AVPlayerWaitingWhileEvaluatingBufferingRateReason")]
+		NSString WaitingWhileEvaluatingBufferingRateReason { get; }
+
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[Field ("AVPlayerWaitingWithNoItemToPlayReason")]
+		NSString WaitingWithNoItemToPlayReason { get; }
 	}
 
 	[Since (7,0), Mavericks]
@@ -9078,13 +9119,169 @@ namespace XamCore.AVFoundation {
 		void DidOutputTimedMetadataGroups (AVPlayerItemMetadataOutput output, AVTimedMetadataGroup [] groups, AVPlayerItemTrack track);
 	}
 
-	[StrongDictionary ("AVPlayerItemVideoOutputSettingsKeys")]
-	interface AVPlayerItemVideoOutputSettings {
+	[Static]
+	interface AVVideoColorPrimaries {
+		[iOS (10, 0)]
+		[Field ("AVVideoColorPrimaries_ITU_R_709_2")]
+		NSString ITU_R_709_2 { get; }
+
+		[NoiOS]
+		[Field ("AVVideoColorPrimaries_EBU_3213")]
+		NSString EBU_3213 { get; }
+
+		[iOS (10, 0)]
+		[Field ("AVVideoColorPrimaries_SMPTE_C")]
+		NSString SMPTE_C { get; }
+
+		[iOS (10, 0)]
+		[Field ("AVVideoColorPrimaries_P3_D65")]
+		NSString P3_D65 { get; }
+	}
+
+	[Static]
+	interface AVVideoTransferFunction {
+		[iOS (10, 0)]
+		[Field ("AVVideoTransferFunction_ITU_R_709_2")]
+		NSString AVVideoTransferFunction_ITU_R_709_2 { get; }
+
+		[NoiOS, Mac (10,12)]
+		[Field ("AVVideoTransferFunction_SMPTE_240M_1995")]
+		NSString AVVideoTransferFunction_SMPTE_240M_1995 { get; }
+	}
+	
+	[Static]
+	interface AVVideoYCbCrMatrix {
+		
+		[iOS (10, 0)]
+		[Field ("AVVideoYCbCrMatrix_ITU_R_709_2")]
+		NSString ITU_R_709_2 { get; }
+
+		[iOS (10, 0)]
+		[Field ("AVVideoYCbCrMatrix_ITU_R_601_4")]
+		NSString ITU_R_601_4 { get; }
+
+		[NoiOS, Mac (10,12)]
+		[Field ("AVVideoYCbCrMatrix_SMPTE_240M_1995")]
+		NSString SMPTE_240M_1995 { get; }
+
+	}
+	
+	[StrongDictionary ("AVColorPropertiesKeys")]
+	interface AVColorProperties {
+		NSString AVVideoColorPrimaries { get; set; }
+		NSString AVVideoTransferFunction { get; set; } 
+		NSString AVVideoYCbCrMatrix { get; }
 	}
 	
 	[Static]
 	[Internal]
+	interface AVColorPropertiesKeys {
+		[iOS (10, 0)]
+		[Field ("AVVideoColorPrimariesKey")]
+		NSString AVVideoColorPrimariesKey { get; }
+
+		[iOS (10, 0)]
+		[Field ("AVVideoTransferFunctionKey")]
+		NSString AVVideoTransferFunctionKey { get; }
+
+		[iOS (10, 0)]
+		[Field ("AVVideoYCbCrMatrixKey")]
+		NSString AVVideoYCbCrMatrixKey { get; }
+	}
+	
+	[StrongDictionary ("AVCleanAperturePropertiesKeys")]
+	interface AVCleanApertureProperties {
+		NSNumber Width { get; set; }
+		NSNumber Height { get; set; }
+		NSNumber HorizontalOffset { get; set; }
+		NSNumber VerticalOffset { get; set; }
+	}
+		
+	[Static]
+	[Internal]
+	interface AVCleanAperturePropertiesKeys {
+		[Field ("AVVideoCleanApertureWidthKey")]
+		NSString WidthKey { get; }
+
+		[Field ("AVVideoCleanApertureHeightKey")]
+		NSString HeightKey { get; }
+
+		[Field ("AVVideoCleanApertureHorizontalOffsetKey")]
+		NSString HorizontalOffsetKey { get; }
+
+		[Field ("AVVideoCleanApertureVerticalOffsetKey")]
+		NSString VerticalOffsetKey { get; }
+	}
+
+	[StrongDictionary ("AVPixelAspectRatioPropertiesKeys")]
+	interface AVPixelAspectRatioProperties {
+		NSNumber PixelAspectRatioHorizontalSpacing { get; set; }
+		NSNumber PixelAspectRatioVerticalSpacing { get; set; }
+	}
+
+	[Internal]
+	[Static]
+	interface AVPixelAspectRatioPropertiesKeys {
+		[Field ("AVVideoPixelAspectRatioHorizontalSpacingKey")]
+		NSString PixelAspectRatioHorizontalSpacingKey { get; }
+		
+		[Field ("AVVideoPixelAspectRatioVerticalSpacingKey")]
+		NSString PixelAspectRatioVerticalSpacingKey { get; }
+	}
+
+	[StrongDictionary ("AVCompressionPropertiesKeys")]
+	interface AVCompressionProperties {
+		AVCleanApertureProperties CleanAperture { get; set; }
+		AVPixelAspectRatioProperties PixelAspectRatio { get; set; }
+	}
+
+	[Static]
+	[Internal]
+	interface AVCompressionPropertiesKeys {
+		[Field ("AVVideoCleanApertureKey")]
+		NSString CleanApertureKey { get; }
+		
+		[Field ("AVVideoPixelAspectRatioKey")]
+		NSString PixelAspectRatioKey { get; }
+	}
+
+	[StrongDictionary ("AVPlayerItemVideoOutputSettingsKeys")]
+	interface AVPlayerItemVideoOutputSettings {
+		AVColorProperties ColorProperties { get; set; }
+		AVCompressionProperties CompressionProperties { get; set; }
+		bool AllowWideColor { get; set; }
+		NSString Codec { get; set; }
+		NSString ScalingMode { get; set; }
+		NSNumber Width { get; set; }
+		NSNumber Height { get; set; }
+	}
+
+	[Static]
+	[Internal]
 	interface AVPlayerItemVideoOutputSettingsKeys {
+		[iOS (10, 0)]
+		[Field ("AVVideoColorPropertiesKey")]
+		NSString ColorPropertiesKey { get; }
+		
+		[Field ("AVVideoCompressionPropertiesKey")]
+		NSString CompressionPropertiesKey { get; }
+		
+		[iOS (10, 0)]
+		[Field ("AVVideoAllowWideColorKey")]
+		NSString AllowWideColorKey { get; }
+		
+		[Field ("AVVideoCodecKey")]
+		NSString CodecKey { get; }
+		
+		[Since (5,0)]
+		[Field ("AVVideoScalingModeKey")]
+		NSString ScalingModeKey { get; }
+		
+		[Field ("AVVideoWidthKey")]
+		NSString WidthKey { get; }
+		
+		[Field ("AVVideoHeightKey")]
+		NSString HeightKey { get; }
 	}
 
 	[Since (6,0)]
@@ -9587,11 +9784,14 @@ namespace XamCore.AVFoundation {
 		[Since (7,0), Mavericks]
 		[Field ("AVSampleRateConverterAlgorithm_Mastering"), Internal]
 		NSString AVSampleRateConverterAlgorithm_Mastering { get; }
+		
+		[iOS (10, 0), TV (10,0), Watch (3,0), Mac (10,12)]
+		[Field ("AVSampleRateConverterAlgorithm_MinimumPhase")]
+		NSString AVSampleRateConverterAlgorithm_MinimumPhase { get; }
 
 		[Since (7,0), Mavericks]
 		[Field ("AVEncoderAudioQualityForVBRKey"), Internal]
 		NSString AVEncoderAudioQualityForVBRKey { get; }
-
 	}
 
 	[NoTV]
@@ -9629,6 +9829,15 @@ namespace XamCore.AVFoundation {
 
 		[Export ("stopRequestingMediaData")]
 		void StopRequestingMediaData ();
+		
+		[NoTV, iOS (8, 0)]
+		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotification")]
+		[Notification]
+		NSString FailedToDecodeNotification { get; }
+
+		[NoTV, iOS (8, 0)]
+		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotificationErrorKey")]
+		NSString FailedToDecodeNotificationErrorKey { get; }
 	}
 
 	[Since (4,0), BaseType (typeof (CALayer))]
@@ -9679,6 +9888,10 @@ namespace XamCore.AVFoundation {
 		[iOS (9,0)]
 		[Field ("AVSpeechSynthesisVoiceIdentifierAlex")]
 		NSString IdentifierAlex { get; }
+
+		[iOS (10, 0), TV (10,0), Watch (3,0), NoMac]
+		[Field ("AVSpeechSynthesisIPANotationAttribute")]
+		NSString IPANotationAttribute { get; }
 	}
 
 	[Since (7,0)]
