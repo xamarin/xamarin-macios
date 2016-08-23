@@ -34,27 +34,29 @@ namespace XamCore.Security {
 
 		[iOS (7,0)]
 		[DllImport (Constants.SecurityLibrary)]
-		extern static IntPtr /* CFDictionaryRef */ SecPolicyCopyProperties (IntPtr /* SecPolicyRef */ policyRef);
+		extern static IntPtr /* __nullable CFDictionaryRef */ SecPolicyCopyProperties (IntPtr /* SecPolicyRef */ policyRef);
 
 		[iOS (7,0)]
 		public NSDictionary GetProperties ()
 		{
-			return new NSDictionary (SecPolicyCopyProperties (Handle), true);
+			var dict = SecPolicyCopyProperties (Handle);
+			return Runtime.GetNSObject<NSDictionary> (dict, true);
 		}
 
 		[Mac (10,9)]
 		[DllImport (Constants.SecurityLibrary)]
-		extern static IntPtr /* SecPolicyRef */ SecPolicyCreateRevocation (/* CFOptionFlags */ nuint revocationFlags);
+		extern static IntPtr /* __nullable SecPolicyRef */ SecPolicyCreateRevocation (/* CFOptionFlags */ nuint revocationFlags);
 
 		[Mac (10,9)][iOS (7,0)]
 		static public SecPolicy CreateRevocationPolicy (SecRevocation revocationFlags)
 		{
-			return new SecPolicy (SecPolicyCreateRevocation ((nuint)(ulong) revocationFlags), true);
+			var policy = SecPolicyCreateRevocation ((nuint)(ulong) revocationFlags);
+			return policy == IntPtr.Zero ? null : new SecPolicy (policy, true);
 		}
 
 		[Mac (10,9)][iOS (7,0)]
 		[DllImport (Constants.SecurityLibrary)]
-		extern static IntPtr /* SecPolicyRef */ SecPolicyCreateWithProperties (IntPtr /* CFTypeRef */ policyIdentifier, IntPtr /* CFDictionaryRef */ properties);
+		extern static IntPtr /* __nullable SecPolicyRef */ SecPolicyCreateWithProperties (IntPtr /* CFTypeRef */ policyIdentifier, IntPtr /* CFDictionaryRef */ properties);
 
 		[Mac (10,9)][iOS (7,0)]
 		static public SecPolicy CreatePolicy (NSString policyIdentifier, NSDictionary properties)
