@@ -1031,7 +1031,8 @@ namespace XamCore.AVFoundation {
 	
 		[Export ("volume")]
 		float Volume { get; set;  } // defined as 'float'
-		
+
+		[iOS (10,0), TV (10,0), Mac (10,12)]
 		[Export ("setVolume:fadeDuration:")]
 		void SetVolume (float volume, double duration);
 	
@@ -8475,15 +8476,15 @@ namespace XamCore.AVFoundation {
 		[Export ("pause")]
 		void Pause ();
 		
-		[iOS (10, 0)]
+		[iOS (10,0), TV(10,0), Mac (10,12)]
 		[Export ("timeControlStatus")]
 		AVPlayerTimeControlStatus TimeControlStatus { get; }
 
-		[iOS (10, 0)]
+		[iOS (10,0), TV(10,0), Mac (10,12)]
 		[NullAllowed, Export ("reasonForWaitingToPlay")]
 		string ReasonForWaitingToPlay { get; }
 
-		[iOS (10,0)]
+		[iOS (10,0), TV(10,0), Mac (10,12)]
 		[Export ("playImmediatelyAtRate:")]
 		void PlayImmediatelyAtRate (float rate);
 
