@@ -46,6 +46,7 @@ bool xamarin_debug_mode = true;
 #else
 bool xamarin_debug_mode = false;
 #endif
+bool xamarin_disable_lldb_attach = false;
 // true if either OldDynamic or OldStatic (since the static registrar still needs
 // a dynamic registrar available too).
 bool xamarin_use_old_dynamic_registrar = false;

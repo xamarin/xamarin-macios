@@ -352,6 +352,11 @@ update_environment (xamarin_initialize_data *data)
 		}
 	}
 #endif
+	if (xamarin_disable_lldb_attach) {
+		// Unfortunately the only place to set debug_options.no_gdb_backtrace is in mini_parse_debug_option
+		// So route through MONO_DEBUG
+		setenv ("MONO_DEBUG", "no-gdb-backtrace", 0);
+	}
 }
 
 static void

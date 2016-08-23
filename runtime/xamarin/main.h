@@ -42,6 +42,7 @@ extern bool mono_use_llvm; // this is defined inside mono
 extern bool xamarin_use_new_assemblies;
 extern bool xamarin_gc_pump;
 extern bool xamarin_debug_mode;
+extern bool xamarin_disable_lldb_attach;
 extern bool xamarin_use_old_dynamic_registrar;
 extern bool xamarin_use_il_registrar;
 extern bool xamarin_init_mono_debug;
