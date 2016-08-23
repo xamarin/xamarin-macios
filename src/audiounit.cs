@@ -201,6 +201,14 @@ namespace XamCore.AudioUnit {
 		[NullAllowed, Export ("contextName")]
 		string ContextName { get; set; }
 
+		[iOS (10,0), Mac (10,12, onlyOn64 : true), TV (10,0)]
+		[Export ("supportsMPE")]
+		bool SupportsMpe { get; }
+
+		[iOS (10,0), Mac (10,12, onlyOn64 : true), TV (10,0)]
+		[Export ("channelMap"), NullAllowed]
+		NSNumber [] ChannelMap { get; set; }
+
 		[NoTV]
 		[Export ("requestViewControllerWithCompletionHandler:")]
 		[Async]
@@ -421,7 +429,19 @@ namespace XamCore.AudioUnit {
 
 		[Export ("valueFromString:")]
 		float GetValue (string str);
+
+		[iOS (10,0), Mac (10,12, onlyOn64 : true)]
+		[Internal]
+		[Export ("setValue:originator:atHostTime:eventType:")]
+		void SetValue (float value, IntPtr originator, ulong hostTime, AUParameterAutomationEventType eventType);
+
+		[iOS (10,0), Mac (10,12, onlyOn64 : true)]
+		[Wrap ("SetValue (value, originator.ObserverToken, hostTime, eventType)")]
+		void SetValue (float value, AUParameterObserverToken originator, ulong hostTime, AUParameterAutomationEventType eventType);
 	}
+
+	[iOS (10,0), Mac (10,12, onlyOn64 : true)]
+	delegate void AUParameterAutomationObserver (ulong address, float value);
 
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
@@ -480,6 +500,15 @@ namespace XamCore.AudioUnit {
 
 		[Export ("implementorDisplayNameWithLengthCallback", ArgumentSemantic.Copy)]
 		AUImplementorDisplayNameWithLengthCallback ImplementorDisplayNameWithLengthCallback { get; set; }
+
+		[iOS (10,0), Mac (10,12, onlyOn64 : true)]
+		[Internal]
+		[Export ("tokenByAddingParameterAutomationObserver:")]
+		IntPtr _GetToken (AUParameterAutomationObserver observer);
+
+		[iOS (10,0), Mac (10,12, onlyOn64 : true)]
+		[Wrap ("new AUParameterObserverToken (_GetToken (observer))")]
+		AUParameterObserverToken GetToken (AUParameterAutomationObserver observer);
 	}
 
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
