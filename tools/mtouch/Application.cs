@@ -1076,6 +1076,14 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public static void CopyMsymData (string src, string dest)
+		{
+			if (!Directory.Exists (src)) // got no aot data
+				return;
+			var copyProcess = new MsymCopyTask (src, dest);
+			copyProcess.Execute ();
+		}
+
 		void BuildFinalExecutable ()
 		{
 			if (FastDev) {
@@ -1833,6 +1841,29 @@ namespace Xamarin.Bundler {
 
 			if (Compile () != 0)
 				throw new MonoTouchException (4109, true, "Failed to compile the generated registrar code. Please file a bug report at http://bugzilla.xamarin.com");
+		}
+	}
+
+	public class MsymCopyTask : ProcessTask {
+		
+		public string Source { get; set; }
+		public string Destination { get; set; }
+		
+		public MsymCopyTask (string source, string destination)
+		{
+			Source = source;
+			Destination = destination;
+			ProcessStartInfo.FileName = "mono-symbolicate";
+			ProcessStartInfo.Arguments = $"store-symbols \"{Source}\" \"{Destination}\"";
+		}
+		
+		protected override void Build ()
+		{
+			var exit_code = base.Start ();
+			if (exit_code == 0)
+				return;
+			
+			Console.Error.WriteLine ("Msym files could not be copied from {Source} to {Destination}");
 		}
 	}
 
