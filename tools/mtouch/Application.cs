@@ -1078,7 +1078,7 @@ namespace Xamarin.Bundler {
 
 		public static void CopyMsymData (string src, string dest)
 		{
-			if (!DirectoryInfo.Exists (src)) // got no aot data
+			if (!Directory.Exists (src)) // got no aot data
 				return;
 			var copyProcess = new MsymCopyTask (src, dest);
 			copyProcess.Execute ();
