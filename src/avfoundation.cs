@@ -176,6 +176,10 @@ namespace XamCore.AVFoundation {
 
 		[Field ("AVMediaCharacteristicFrameBased")]
 		NSString FrameBased { get; }
+		
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[Field ("AVMediaCharacteristicUsesWideGamutColorSpace")]
+		NSString UsesWideGamutColorSpace { get; }
 
 		[MountainLion][Since (5,0)]
 		[Field ("AVMediaCharacteristicIsMainProgramContent")]
@@ -345,6 +349,14 @@ namespace XamCore.AVFoundation {
 		[Field ("AVVideoCodecJPEG")]
 		NSString CodecJPEG { get; }
 		
+		[NoiOS, Mac (10,7)]
+		[Field ("AVVideoCodecAppleProRes4444")]
+		NSString AppleProRes4444 { get; }
+
+		[NoiOS, Mac (10,7)]
+		[Field ("AVVideoCodecAppleProRes422")]
+		NSString AppleProRes422 { get; }
+		
 		[Field ("AVVideoWidthKey")]
 		NSString WidthKey { get; }
 		
@@ -438,6 +450,7 @@ namespace XamCore.AVFoundation {
 		
 		[Field ("AVVideoCleanApertureVerticalOffsetKey")]
 		NSString CleanApertureVerticalOffsetKey { get; }
+
 	}
 
 	[Since (5,0)]
@@ -551,7 +564,7 @@ namespace XamCore.AVFoundation {
 		[Export ("outputNode")]
 		AVAudioOutputNode OutputNode { get; }
 
-		[NoTV]
+		[NoTV, NoWatch]
 		[Export ("inputNode"), NullAllowed]
 		AVAudioInputNode InputNode { get; }
 
@@ -619,19 +632,20 @@ namespace XamCore.AVFoundation {
 		NSString ConfigurationChangeNotification { get; }
 	}
 
+	[NoWatch]
 	[iOS (8,0)][Mac (10,10)]
 	[BaseType (typeof (AVAudioNode))]
 	interface AVAudioEnvironmentNode : AVAudioMixing {
 		[Export ("nextAvailableInputBus")]
 		nuint NextAvailableInputBus { get; }
 
-		[Export ("listenerPosition")]
+		[Export ("listenerPosition", ArgumentSemantic.Assign)]
 		Vector3 ListenerPosition { get; set; }
 
-		[Export ("listenerVectorOrientation")]
+		[Export ("listenerVectorOrientation", ArgumentSemantic.Assign)]
 		AVAudio3DVectorOrientation ListenerVectorOrientation { get; set; }
 
-		[Export ("listenerAngularOrientation")]
+		[Export ("listenerAngularOrientation", ArgumentSemantic.Assign)]
 		AVAudio3DAngularOrientation ListenerAngularOrientation { get; set; }
 
 		[Export ("distanceAttenuationParameters")]
@@ -655,7 +669,7 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioEnvironmentDistanceAttenuationParameters {
-		[Export ("distanceAttenuationModel")]
+		[Export ("distanceAttenuationModel", ArgumentSemantic.Assign)]
 		AVAudioEnvironmentDistanceAttenuationModel DistanceAttenuationModel { get; set; }
 
 		[Export ("referenceDistance")]
@@ -796,8 +810,13 @@ namespace XamCore.AVFoundation {
 
 		[Export ("isEqual:"), Internal]
 		bool IsEqual (NSObject obj);
+		
+		[iOS (10,0), TV (10,0), Watch (3,0), Mac (10,12)]
+		[NullAllowed, Export ("magicCookie", ArgumentSemantic.Retain)]
+		NSData MagicCookie { get; set; }
 	}
 
+	[NoWatch]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface AVAudio3DMixing {
@@ -966,6 +985,7 @@ namespace XamCore.AVFoundation {
 		IntPtr Int32ChannelData { get; }
 	}
 
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AVAudioPlayer {
@@ -974,7 +994,7 @@ namespace XamCore.AVFoundation {
 	
 		[Export ("initWithData:error:")][Internal]
 		IntPtr Constructor (NSData  data, IntPtr outError);
-	
+
 		[Export ("prepareToPlay")]
 		bool PrepareToPlay ();
 	
@@ -1011,6 +1031,10 @@ namespace XamCore.AVFoundation {
 	
 		[Export ("volume")]
 		float Volume { get; set;  } // defined as 'float'
+
+		[iOS (10,0), TV (10,0), Mac (10,12)]
+		[Export ("setVolume:fadeDuration:")]
+		void SetVolume (float volume, double duration);
 	
 		[Export ("currentTime")]
 		double CurrentTime { get; set;  }
@@ -1067,8 +1091,13 @@ namespace XamCore.AVFoundation {
 		[Since (7,0), Export ("initWithData:fileTypeHint:error:")]
 		IntPtr Constructor (NSData data, [NullAllowed] string fileTypeHint, out NSError outError);
 #endif
+
+		[NoWatch, iOS (10, 0), TV (10,0), Mac (10,12)]
+		[Export ("format")]
+		AVAudioFormat Format { get; }
 	}
 	
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -1145,10 +1174,15 @@ namespace XamCore.AVFoundation {
 	}
 
 	[BaseType (typeof (NSObject))]
-	[NoTV]
+	[NoTV, NoWatch]
 	interface AVAudioRecorder {
 		[Export ("initWithURL:settings:error:")][Internal]
 		IntPtr InitWithUrl (NSUrl url, NSDictionary settings, out NSError error);
+		
+		[Internal]
+		[iOS (10,0), Mac (10,12)]
+		[Export ("initWithURL:format:error:")]
+		IntPtr InitWithUrl (NSUrl url, AVAudioFormat format, out NSError outError);
 	
 		[Export ("prepareToRecord")]
 		bool PrepareToRecord ();
@@ -1226,13 +1260,17 @@ namespace XamCore.AVFoundation {
 		[Since (6,0)]
 		[Export ("deviceCurrentTime")]
 		double DeviceCurrentTime { get; }
+
+		[iOS (10, 0)]
+		[Export ("format")]
+		AVAudioFormat Format { get; }
 #endif
 	}
 	
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	[NoTV]
+	[NoTV, NoWatch]
 	interface AVAudioRecorderDelegate {
 		[Export ("audioRecorderDidFinishRecording:successfully:"), CheckDisposed]
 		void FinishedRecording (AVAudioRecorder recorder, bool flag);
@@ -1277,6 +1315,7 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // for binary compatibility this is added in AVAudioSession.cs w/[Obsolete]
 	interface AVAudioSession {
+		
 		[Export ("sharedInstance"), Static]
 		AVAudioSession SharedInstance ();
 	
@@ -1306,6 +1345,7 @@ namespace XamCore.AVFoundation {
 		[Export ("setPreferredHardwareSampleRate:error:")]
 		bool SetPreferredHardwareSampleRate (double sampleRate, out NSError outError);
 	
+		[NoWatch]
 		[Export ("setPreferredIOBufferDuration:error:")]
 		bool SetPreferredIOBufferDuration (double duration, out NSError outError);
 	
@@ -1325,6 +1365,7 @@ namespace XamCore.AVFoundation {
 		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_6_0, Message = "Use PreferredSampleRate instead")]
 		double PreferredHardwareSampleRate { get;  }
 	
+		[NoWatch]
 		[Export ("preferredIOBufferDuration")]
 		double PreferredIOBufferDuration { get;  }
 	
@@ -1363,7 +1404,8 @@ namespace XamCore.AVFoundation {
 		[Field ("AVAudioSessionCategoryPlayAndRecord")]
 		NSString CategoryPlayAndRecord { get; }
 
-		[NoTV]
+		[NoTV][NoWatch]
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_10_0)] // FIXME: Find the new value to use
 		[Field ("AVAudioSessionCategoryAudioProcessing")]
 		NSString CategoryAudioProcessing { get; }
 
@@ -1398,6 +1440,10 @@ namespace XamCore.AVFoundation {
 		[Since (6,0)]
 		[Export ("setCategory:withOptions:error:")]
 		bool SetCategory (string category, AVAudioSessionCategoryOptions options, out NSError outError);
+		
+		[iOS (10,0), TV (10,0), Watch (3,0)]
+		[Export ("setCategory:mode:options:error:")]
+		bool SetCategory (string category, string mode, AVAudioSessionCategoryOptions options, out NSError outError);
 
 		[Since (6,0)]
 		[Export ("categoryOptions")]
@@ -1419,18 +1465,20 @@ namespace XamCore.AVFoundation {
 		[Export ("currentRoute")]
 		AVAudioSessionRouteDescription CurrentRoute { get;  }
 
-		[Since (6,0)]
+		[NoWatch, Since (6,0)]
 		[Export ("setPreferredSampleRate:error:")]
 		bool SetPreferredSampleRate (double sampleRate, out NSError error);
 		
-		[Since (6,0)]
+		[NoWatch, Since (6,0)]
 		[Export ("preferredSampleRate")]
 		double PreferredSampleRate { get;  }
 
+		[NoWatch]
 		[Since (6,0)]
 		[Export ("inputGain")]
 		float InputGain { get;  } // defined as 'float'
 
+		[NoWatch]
 		[Since (6,0)]
 		[Export ("inputGainSettable")]
 		bool InputGainSettable { [Bind ("isInputGainSettable")] get;  }
@@ -1467,6 +1515,7 @@ namespace XamCore.AVFoundation {
 		[Export ("IOBufferDuration")]
 		double IOBufferDuration { get;  }
 
+		[NoWatch]
 		[Since (6,0)]
 		[Export ("setInputGain:error:")]
 		bool SetInputGain (float /* defined as 'float' */ gain, out NSError outError);
@@ -1585,27 +1634,28 @@ namespace XamCore.AVFoundation {
 		[Export ("outputDataSource")]
 		AVAudioSessionDataSourceDescription OutputDataSource { get;  }
 		
+		[NoWatch]
 		[Since (6,0)]
 		[Export ("setInputDataSource:error:")]
 		[PostGet ("InputDataSource")]
 		bool SetInputDataSource ([NullAllowed] AVAudioSessionDataSourceDescription dataSource, out NSError outError);
 
+		[NoWatch]
 		[Since (6,0)]
 		[Export ("setOutputDataSource:error:")]
 		[PostGet ("OutputDataSource")]
 		bool SetOutputDataSource ([NullAllowed] AVAudioSessionDataSourceDescription dataSource, out NSError outError);
 
-		
-		[NoTV]
+		[NoTV, NoWatch]
 		[Since (7,0)]
 		[Export ("requestRecordPermission:")]
 		void RequestRecordPermission (AVPermissionGranted responseCallback);
 
-		[Since (7,0)]
+		[NoWatch, Since (7,0)]
 		[Export ("setPreferredInput:error:")]
 		bool SetPreferredInput ([NullAllowed] AVAudioSessionPortDescription inPort, out NSError outError);
 
-		[Since (7,0)]
+		[NoWatch, Since (7,0)]
 		[Export ("preferredInput", ArgumentSemantic.Copy), NullAllowed]
 		AVAudioSessionPortDescription PreferredInput { get; }
 
@@ -1613,18 +1663,22 @@ namespace XamCore.AVFoundation {
 		[Export ("availableInputs")]
 		AVAudioSessionPortDescription [] AvailableInputs { get; }
 
+		[NoWatch]
 		[Since (7,0)]
 		[Export ("setPreferredInputNumberOfChannels:error:")]
 		bool SetPreferredInputNumberOfChannels (nint count, out NSError outError);
 	
+		[NoWatch]
 		[Since (7,0)]
 		[Export ("preferredInputNumberOfChannels")]
 		nint GetPreferredInputNumberOfChannels ();
 	
+		[NoWatch]
 		[Since (7,0)]
 		[Export ("setPreferredOutputNumberOfChannels:error:")]
 		bool SetPreferredOutputNumberOfChannels (nint count, out NSError outError);
 	
+		[NoWatch]
 		[Since (7,0)]
 		[Export ("preferredOutputNumberOfChannels")]
 		nint GetPreferredOutputNumberOfChannels ();
@@ -1674,7 +1728,7 @@ namespace XamCore.AVFoundation {
 		NSString PolarPatternSubcardioid { get; }
 
 		// 8.0
-		[NoTV]
+		[NoTV, NoWatch]
 		[iOS (8,0)]
 		[Export ("recordPermission")]
 		AVAudioSessionRecordPermission RecordPermission { get; }
@@ -1687,6 +1741,10 @@ namespace XamCore.AVFoundation {
 		[Field ("AVAudioSessionSilenceSecondaryAudioHintNotification")]
 		[Notification (typeof (AVAudioSessionSecondaryAudioHintEventArgs))]
 		NSString SilenceSecondaryAudioHintNotification { get; }
+		
+		[NoWatch, NoTV, iOS(10,0), Mac (10,12)]
+		[Export ("setAggregatedIOPreference:error:")]
+		bool SetAggregatedIOPreference (AVAudioSessionIOType ioType, out NSError error);
 	}
 	
 	[Since (6,0)]
@@ -1718,21 +1776,26 @@ namespace XamCore.AVFoundation {
 		string Orientation { get; }
 #endif
 
+		[NoWatch]
 		[Since (7,0)]
 		[UnifiedInternal, Export ("supportedPolarPatterns")]
 		NSString [] SupportedPolarPatterns { get; }
 	
+		[NoWatch]
 		[Since (7,0)]
 		[UnifiedInternal, Export ("selectedPolarPattern", ArgumentSemantic.Copy)]
 		NSString SelectedPolarPattern { get; }
 	
+		[NoWatch]
 		[Since (7,0)]
 		[UnifiedInternal, Export ("preferredPolarPattern", ArgumentSemantic.Copy)]
 		NSString PreferredPolarPattern { get; }
 	
+		[NoWatch]
 		[Since (7,0)]
 		[UnifiedInternal, Export ("setPreferredPolarPattern:error:")]
 		bool SetPreferredPolarPattern ([NullAllowed] NSString pattern, out NSError outError);
+		
 	}
 
 	interface AVAudioSessionInterruptionEventArgs {
@@ -1754,7 +1817,7 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	[NoTV]
+	[NoTV][NoWatch]
 	interface AVAudioSessionDelegate {
 		[Export ("beginInterruption")]
 		void BeginInterruption ();
@@ -1799,6 +1862,10 @@ namespace XamCore.AVFoundation {
 		[Export ("UID")]
 		string UID { get;  }
 
+		[iOS (10, 0), TV (10,0), Watch (3,0)]
+		[Export ("hasHardwareVoiceCallProcessing")]
+		bool HasHardwareVoiceCallProcessing { get; }
+
 		[Export ("channels"), NullAllowed]
 		AVAudioSessionChannelDescription [] Channels { get;  }
 
@@ -1810,14 +1877,17 @@ namespace XamCore.AVFoundation {
 		AVAudioSessionDataSourceDescription [] DataSourceDescriptions { get; }
 #endif
 
+		[NoWatch]
 		[Since (7,0)]
 		[Export ("selectedDataSource", ArgumentSemantic.Copy), NullAllowed]
 		AVAudioSessionDataSourceDescription SelectedDataSource { get; }
 
+		[NoWatch]
 		[Since (7,0)]
 		[Export ("preferredDataSource", ArgumentSemantic.Copy), NullAllowed]
 		AVAudioSessionDataSourceDescription PreferredDataSource { get; }
 
+		[NoWatch]
 		[Since (7,0)]
 		[Export ("setPreferredDataSource:error:")]
 		bool SetPreferredDataSource ([NullAllowed] AVAudioSessionDataSourceDescription dataSource, out NSError outError);
@@ -1836,7 +1906,7 @@ namespace XamCore.AVFoundation {
 	}
 #endif
 
-	[iOS (8,0)]
+	[NoWatch, iOS (8,0)]
 	[BaseType (typeof (AVAudioNode))]
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioUnit {
@@ -1874,7 +1944,7 @@ namespace XamCore.AVFoundation {
 #endif
 	}
 
-	[iOS (8,0)]
+	[NoWatch, iOS (8,0)]
 	[BaseType (typeof (AVAudioUnitEffect))]
 	interface AVAudioUnitDelay {
 		[Export ("delayTime")]
@@ -1903,7 +1973,7 @@ namespace XamCore.AVFoundation {
 		void LoadFactoryPreset (AVAudioUnitDistortionPreset preset);
 	}
 
-	[iOS (8,0)]
+	[NoWatch, iOS (8,0)]
 	[BaseType (typeof (AVAudioUnit))]
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioUnitEffect {
@@ -1919,6 +1989,7 @@ namespace XamCore.AVFoundation {
 		bool Bypass { get; set; }
 	}
 
+	[NoWatch]
 	[iOS (8,0)][Mac (10,10)]
 	[BaseType (typeof (AVAudioUnitEffect))]
 	interface AVAudioUnitEQ {
@@ -1936,7 +2007,7 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioUnitEQFilterParameters {
-		[Export ("filterType")]
+		[Export ("filterType", ArgumentSemantic.Assign)]
 		AVAudioUnitEQFilterType FilterType { get; set; }
 
 		[Export ("frequency")]
@@ -1952,7 +2023,7 @@ namespace XamCore.AVFoundation {
 		bool Bypass { get; set; }
 	}
 
-	[iOS (8,0)]
+	[NoWatch, iOS (8,0)]
 	[BaseType (typeof (AVAudioUnit))]
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioUnitGenerator : AVAudioMixing {
@@ -1968,7 +2039,7 @@ namespace XamCore.AVFoundation {
 		bool Bypass { get; set; }
 	}
 
-	[iOS (8,0)]
+	[NoWatch, iOS (8,0)]
 	[BaseType (typeof (AVAudioUnit), Name="AVAudioUnitMIDIInstrument")]
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioUnitMidiInstrument : AVAudioMixing { 
@@ -2014,7 +2085,7 @@ namespace XamCore.AVFoundation {
 		void SendMidiSysExEvent (NSData midiData);
 	}
 
-	[iOS (8,0)]
+	[NoWatch, iOS (8,0)]
 	[BaseType (typeof (AVAudioUnitMidiInstrument))]
 	interface AVAudioUnitSampler {
 		[Export ("stereoPan")]
@@ -2036,7 +2107,7 @@ namespace XamCore.AVFoundation {
 		bool LoadAudioFiles (NSUrl [] audioFiles, out NSError outError);
 	}
 
-	[iOS (8,0)]
+	[NoWatch, iOS (8,0)]
 	[BaseType (typeof (AVAudioUnitEffect))]
 	interface AVAudioUnitReverb {
 
@@ -2048,7 +2119,7 @@ namespace XamCore.AVFoundation {
 	}
 	
 
-	[iOS (8,0)]
+	[NoWatch, iOS (8,0)]
 	[BaseType (typeof (AVAudioUnit))]
 	[DisableDefaultCtor] // returns a nil handle
 	interface AVAudioUnitTimeEffect {
@@ -2064,7 +2135,7 @@ namespace XamCore.AVFoundation {
 		bool Bypass { get; set; }
 	}
 	
-	[iOS (8,0)]
+	[NoWatch, iOS (8,0)]
 	[BaseType (typeof (AVAudioUnitTimeEffect))]
 	interface AVAudioUnitTimePitch {
 		[Export ("initWithAudioComponentDescription:")]
@@ -2086,7 +2157,7 @@ namespace XamCore.AVFoundation {
 		float Overlap { get; set; } /* float, not CGFloat */
 	}
 
-	[iOS (8,0)]
+	[NoWatch, iOS (8,0)]
 	[BaseType (typeof (AVAudioUnitTimeEffect))]
 	interface AVAudioUnitVarispeed {
 		[Export ("initWithAudioComponentDescription:")]
@@ -4288,6 +4359,9 @@ namespace XamCore.AVFoundation {
 		
 		[Field ("AVMetadataID3MetadataKeyTime")]
 		NSString ID3MetadataKeyTime { get; }
+
+		[Field ("AVMetadataID3MetadataKeyInvolvedPeopleList_v24")]
+		NSString ID3MetadataKeyInvolvedPeopleList_v24 { get; }
 		
 		[Field ("AVMetadataID3MetadataKeyContentGroupDescription")]
 		NSString ID3MetadataKeyContentGroupDescription { get; }
@@ -4433,6 +4507,10 @@ namespace XamCore.AVFoundation {
 		[iOS (8,0)][Mac (10,10)]
 		[Field ("AVMetadataISOUserDataKeyTaggedCharacteristic")]
 		NSString IsoUserDataKeyTaggedCharacteristic { get; }
+		
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[Field ("AVMetadataISOUserDataKeyDate")]
+		NSString ISOUserDataKeyDate { get; }
 
 		[iOS (8,0)][Mac (10,10)]
 		[Field ("AVMetadataKeySpaceIcy")]
@@ -4667,6 +4745,11 @@ namespace XamCore.AVFoundation {
 		[iOS (8,0)][Mac (10,10)]
 		[Static]
 		interface Iso {
+			
+			[iOS (10, 0), TV (10,0), Mac (10,12)]
+			[Field ("AVMetadataIdentifierISOUserDataDate")]
+			NSString UserDataDate { get; }
+
 			[Field ("AVMetadataIdentifierISOUserDataCopyright")]
 			NSString UserDataCopyright { get; }
 			
@@ -5460,56 +5543,55 @@ namespace XamCore.AVFoundation {
 		[Field ("AVMetadataObjectTypeFace")]
 		NSString TypeFace { get; }
 
-
-		[Since(7,0)]
+		[NoTV, Since(7,0)]
 		[Field ("AVMetadataObjectTypeAztecCode")]
 		NSString TypeAztecCode { get; }
 		
-		[Since(7,0)]
+		[NoTV, Since(7,0)]
 		[Field ("AVMetadataObjectTypeCode128Code")]
 		NSString TypeCode128Code { get; }
 		
-		[Since(7,0)]
+		[NoTV, Since(7,0)]
 		[Field ("AVMetadataObjectTypeCode39Code")]
 		NSString TypeCode39Code { get; }
 		
-		[Since(7,0)]
+		[NoTV, Since(7,0)]
 		[Field ("AVMetadataObjectTypeCode39Mod43Code")]
 		NSString TypeCode39Mod43Code { get; }
 		
-		[Since(7,0)]
+		[NoTV, Since(7,0)]
 		[Field ("AVMetadataObjectTypeCode93Code")]
 		NSString TypeCode93Code { get; }
 		
-		[Since(7,0)]
+		[NoTV, Since(7,0)]
 		[Field ("AVMetadataObjectTypeEAN13Code")]
 		NSString TypeEAN13Code { get; }
 		
-		[Since(7,0)]
+		[NoTV, Since(7,0)]
 		[Field ("AVMetadataObjectTypeEAN8Code")]
 		NSString TypeEAN8Code { get; }
 		
 		[Field ("AVMetadataObjectTypePDF417Code")]
-		[Since(7,0)]
+		[NoTV, Since(7,0)]
 		NSString TypePDF417Code { get; }
 		
-		[Since(7,0)]
+		[NoTV, Since(7,0)]
 		[Field ("AVMetadataObjectTypeQRCode")]
 		NSString TypeQRCode { get; }
 		
-		[Since(7,0)]
+		[NoTV, Since(7,0)]
 		[Field ("AVMetadataObjectTypeUPCECode")]
 		NSString TypeUPCECode { get; }
 
-		[Since (8,0)]
+		[NoTV, Since (8,0)]
 		[Field ("AVMetadataObjectTypeInterleaved2of5Code")]
 		NSString TypeInterleaved2of5Code { get; }
 		
-		[Since (8,0)]
+		[NoTV, Since (8,0)]
 		[Field ("AVMetadataObjectTypeITF14Code")]
 		NSString TypeITF14Code { get; }
 		
-		[Since (8,0)]
+		[NoTV, Since (8,0)]
 		[Field ("AVMetadataObjectTypeDataMatrixCode")]
 		NSString TypeDataMatrixCode { get; }
 	}
@@ -8380,19 +8462,31 @@ namespace XamCore.AVFoundation {
 
 		[Static]
 		[Export ("playerWithPlayerItem:")]
-		AVPlayer FromPlayerItem (AVPlayerItem item);
+		AVPlayer FromPlayerItem ([NullAllowed] AVPlayerItem item);
 
 		[Export ("initWithURL:")]
 		IntPtr Constructor (NSUrl URL);
 
 		[Export ("initWithPlayerItem:")]
-		IntPtr Constructor (AVPlayerItem item);
+		IntPtr Constructor ([NullAllowed] AVPlayerItem item);
 
 		[Export ("play")]
 		void Play ();
 
 		[Export ("pause")]
 		void Pause ();
+		
+		[iOS (10,0), TV(10,0), Mac (10,12)]
+		[Export ("timeControlStatus")]
+		AVPlayerTimeControlStatus TimeControlStatus { get; }
+
+		[iOS (10,0), TV(10,0), Mac (10,12)]
+		[NullAllowed, Export ("reasonForWaitingToPlay")]
+		string ReasonForWaitingToPlay { get; }
+
+		[iOS (10,0), TV(10,0), Mac (10,12)]
+		[Export ("playImmediatelyAtRate:")]
+		void PlayImmediatelyAtRate (float rate);
 
 		[Export ("replaceCurrentItemWithPlayerItem:")]
 		void ReplaceCurrentItemWithPlayerItem ([NullAllowed] AVPlayerItem item);
@@ -8458,6 +8552,10 @@ namespace XamCore.AVFoundation {
 		void Seek (NSDate date, AVCompletion onComplete);
 #endif
 
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[Export ("automaticallyWaitsToMinimizeStalling")]
+		bool AutomaticallyWaitsToMinimizeStalling { get; set; }
+		
 		[Since (6,0)]
 		[Export ("setRate:time:atHostTime:")]
 		void SetRate (float /* defined as 'float' */ rate, CMTime itemTime, CMTime hostClockTime);
@@ -8528,6 +8626,17 @@ namespace XamCore.AVFoundation {
 		string AudioOutputDeviceUniqueID { get; set; }
 #endif
 
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[Field ("AVPlayerWaitingToMinimizeStallsReason")]
+		NSString WaitingToMinimizeStallsReason { get; }
+
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[Field ("AVPlayerWaitingWhileEvaluatingBufferingRateReason")]
+		NSString WaitingWhileEvaluatingBufferingRateReason { get; }
+
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[Field ("AVPlayerWaitingWithNoItemToPlayReason")]
+		NSString WaitingWithNoItemToPlayReason { get; }
 	}
 
 	[Since (7,0), Mavericks]
@@ -8706,6 +8815,10 @@ namespace XamCore.AVFoundation {
 		[iOS (9,0), Mac (10,11)]
 		[Export ("canUseNetworkResourcesForLiveStreamingWhilePaused", ArgumentSemantic.Assign)]
 		bool CanUseNetworkResourcesForLiveStreamingWhilePaused { get; set; }
+		
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[Export ("preferredForwardBufferDuration")]
+		double PreferredForwardBufferDuration { get; set; }
 
 		[Export ("seekableTimeRanges"), NullAllowed]
 		NSValue [] SeekableTimeRanges { get;  }
@@ -9001,7 +9114,174 @@ namespace XamCore.AVFoundation {
 		[Export ("metadataOutput:didOutputTimedMetadataGroups:fromPlayerItemTrack:")]
 		void DidOutputTimedMetadataGroups (AVPlayerItemMetadataOutput output, AVTimedMetadataGroup [] groups, AVPlayerItemTrack track);
 	}
+
+	[Static]
+	interface AVVideoColorPrimaries {
+		[iOS (10, 0)]
+		[Field ("AVVideoColorPrimaries_ITU_R_709_2")]
+		NSString Itu_R_709_2 { get; }
+
+		[NoiOS]
+		[Field ("AVVideoColorPrimaries_EBU_3213")]
+		NSString Ebu_3213 { get; }
+
+		[iOS (10, 0)]
+		[Field ("AVVideoColorPrimaries_SMPTE_C")]
+		NSString Smpte_C { get; }
+
+		[iOS (10, 0), NoMac]
+		[Field ("AVVideoColorPrimaries_P3_D65")]
+		NSString P3_D65 { get; }
+	}
+
+	[Static]
+	interface AVVideoTransferFunction {
+		[iOS (10, 0)]
+		[Field ("AVVideoTransferFunction_ITU_R_709_2")]
+		NSString AVVideoTransferFunction_Itu_R_709_2 { get; }
+
+		[NoiOS, Mac (10,12)]
+		[Field ("AVVideoTransferFunction_SMPTE_240M_1995")]
+		NSString AVVideoTransferFunction_Smpte_240M_1995 { get; }
+	}
 	
+	[Static]
+	interface AVVideoYCbCrMatrix {
+		
+		[iOS (10, 0)]
+		[Field ("AVVideoYCbCrMatrix_ITU_R_709_2")]
+		NSString Itu_R_709_2 { get; }
+
+		[iOS (10, 0)]
+		[Field ("AVVideoYCbCrMatrix_ITU_R_601_4")]
+		NSString Itu_R_601_4 { get; }
+
+		[NoiOS, Mac (10,12)]
+		[Field ("AVVideoYCbCrMatrix_SMPTE_240M_1995")]
+		NSString Smpte_240M_1995 { get; }
+
+	}
+	
+	[StrongDictionary ("AVColorPropertiesKeys")]
+	interface AVColorProperties {
+		NSString AVVideoColorPrimaries { get; set; }
+		NSString AVVideoTransferFunction { get; set; } 
+		NSString AVVideoYCbCrMatrix { get; }
+	}
+	
+	[Static]
+	[Internal]
+	interface AVColorPropertiesKeys {
+		[iOS (10, 0)]
+		[Field ("AVVideoColorPrimariesKey")]
+		NSString AVVideoColorPrimariesKey { get; }
+
+		[iOS (10, 0)]
+		[Field ("AVVideoTransferFunctionKey")]
+		NSString AVVideoTransferFunctionKey { get; }
+
+		[iOS (10, 0)]
+		[Field ("AVVideoYCbCrMatrixKey")]
+		NSString AVVideoYCbCrMatrixKey { get; }
+	}
+	
+	[StrongDictionary ("AVCleanAperturePropertiesKeys")]
+	interface AVCleanApertureProperties {
+		NSNumber Width { get; set; }
+		NSNumber Height { get; set; }
+		NSNumber HorizontalOffset { get; set; }
+		NSNumber VerticalOffset { get; set; }
+	}
+		
+	[Static]
+	[Internal]
+	interface AVCleanAperturePropertiesKeys {
+		[Field ("AVVideoCleanApertureWidthKey")]
+		NSString WidthKey { get; }
+
+		[Field ("AVVideoCleanApertureHeightKey")]
+		NSString HeightKey { get; }
+
+		[Field ("AVVideoCleanApertureHorizontalOffsetKey")]
+		NSString HorizontalOffsetKey { get; }
+
+		[Field ("AVVideoCleanApertureVerticalOffsetKey")]
+		NSString VerticalOffsetKey { get; }
+	}
+
+	[StrongDictionary ("AVPixelAspectRatioPropertiesKeys")]
+	interface AVPixelAspectRatioProperties {
+		NSNumber PixelAspectRatioHorizontalSpacing { get; set; }
+		NSNumber PixelAspectRatioVerticalSpacing { get; set; }
+	}
+
+	[Internal]
+	[Static]
+	interface AVPixelAspectRatioPropertiesKeys {
+		[Field ("AVVideoPixelAspectRatioHorizontalSpacingKey")]
+		NSString PixelAspectRatioHorizontalSpacingKey { get; }
+		
+		[Field ("AVVideoPixelAspectRatioVerticalSpacingKey")]
+		NSString PixelAspectRatioVerticalSpacingKey { get; }
+	}
+
+	[StrongDictionary ("AVCompressionPropertiesKeys")]
+	interface AVCompressionProperties {
+		AVCleanApertureProperties CleanAperture { get; set; }
+		AVPixelAspectRatioProperties PixelAspectRatio { get; set; }
+	}
+
+	[Static]
+	[Internal]
+	interface AVCompressionPropertiesKeys {
+		[Field ("AVVideoCleanApertureKey")]
+		NSString CleanApertureKey { get; }
+		
+		[Field ("AVVideoPixelAspectRatioKey")]
+		NSString PixelAspectRatioKey { get; }
+	}
+
+	[StrongDictionary ("AVPlayerItemVideoOutputSettingsKeys")]
+	interface AVPlayerItemVideoOutputSettings {
+		AVColorProperties ColorProperties { get; set; }
+		AVCompressionProperties CompressionProperties { get; set; }
+#if !MONOMAC
+		bool AllowWideColor { get; set; }
+#endif
+		NSString Codec { get; set; }
+		NSString ScalingMode { get; set; }
+		NSNumber Width { get; set; }
+		NSNumber Height { get; set; }
+	}
+
+	[Static]
+	[Internal]
+	interface AVPlayerItemVideoOutputSettingsKeys {
+		[iOS (10,0)]
+		[Field ("AVVideoColorPropertiesKey")]
+		NSString ColorPropertiesKey { get; }
+		
+		[Field ("AVVideoCompressionPropertiesKey")]
+		NSString CompressionPropertiesKey { get; }
+		
+		[iOS (10,0), NoMac]
+		[Field ("AVVideoAllowWideColorKey")]
+		NSString AllowWideColorKey { get; }
+		
+		[Field ("AVVideoCodecKey")]
+		NSString CodecKey { get; }
+		
+		[Since (5,0)]
+		[Field ("AVVideoScalingModeKey")]
+		NSString ScalingModeKey { get; }
+		
+		[Field ("AVVideoWidthKey")]
+		NSString WidthKey { get; }
+		
+		[Field ("AVVideoHeightKey")]
+		NSString HeightKey { get; }
+	}
+
 	[Since (6,0)]
 	[BaseType (typeof (AVPlayerItemOutput))]
 	interface AVPlayerItemVideoOutput {
@@ -9015,13 +9295,22 @@ namespace XamCore.AVFoundation {
 		[Export ("delegateQueue"), NullAllowed]
 		DispatchQueue DelegateQueue { get;  }
 
-		[DesignatedInitializer]
+		[Internal, Static]
 		[Export ("initWithPixelBufferAttributes:")]
-		[Protected]
-		IntPtr Constructor ([NullAllowed] NSDictionary pixelBufferAttributes);
+		IntPtr _FromPixelBufferAttributes ([NullAllowed] NSDictionary pixelBufferAttributes);
 
-		[Wrap ("this (attributes == null ? null : attributes.Dictionary)")]
+		[Internal, Static]
+		[Export ("initWithOutputSettings:")]
+		IntPtr _FromOutputSettings ([NullAllowed] NSDictionary outputSettings);
+
+		[DesignatedInitializer]
+		[Wrap ("this (attributes == null ? null : attributes.Dictionary, AVPlayerItemVideoOutput.InitMode.PixelAttributes)")]
 		IntPtr Constructor (CVPixelBufferAttributes attributes);
+		
+		[DesignatedInitializer]
+		[iOS (10,0), TV (10,0), Mac (10,12)]
+		[Wrap ("this (settings == null ? null : settings.Dictionary, AVPlayerItemVideoOutput.InitMode.OutputSettings)")]
+		IntPtr Constructor (AVPlayerItemVideoOutputSettings settings);
 
 		[Export ("hasNewPixelBufferForItemTime:")]
 		bool HasNewPixelBufferForItemTime (CMTime itemTime);
@@ -9169,6 +9458,14 @@ namespace XamCore.AVFoundation {
 		[Export ("indicatedBitrate")]
 		double IndicatedBitrate { get; }
 
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[Export ("averageVideoBitrate")]
+		double AverageVideoBitrate { get; }
+
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
+		[Export ("averageAudioBitrate")]
+		double AverageAudioBitrate { get; }
+
 		[Export ("numberOfDroppedVideoFrames")]
 		nint DroppedVideoFrameCount { get; }
 
@@ -9314,6 +9611,36 @@ namespace XamCore.AVFoundation {
 		NSDictionary WeakPixelBufferAttributes { get; set; }
 	}
 
+	[iOS (10,0), TV (10,0), Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface AVPlayerLooper
+	{
+		[Static]
+		[Export ("playerLooperWithPlayer:templateItem:timeRange:")]
+		AVPlayerLooper FromPlayer (AVQueuePlayer player, AVPlayerItem itemToLoop, CMTimeRange loopRange);
+
+		[Static]
+		[Export ("playerLooperWithPlayer:templateItem:")]
+		AVPlayerLooper FromPlayer (AVQueuePlayer player, AVPlayerItem itemToLoop);
+
+		[Export ("initWithPlayer:templateItem:timeRange:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (AVQueuePlayer player, AVPlayerItem itemToLoop, CMTimeRange loopRange);
+
+		[Export ("disableLooping")]
+		void DisableLooping ();
+
+		[Export ("loopingEnabled")]
+		bool LoopingEnabled { [Bind ("isLoopingEnabled")] get; }
+
+		[Export ("loopCount")]
+		nint LoopCount { get; }
+
+		[Export ("loopingPlayerItems")]
+		AVPlayerItem[] LoopingPlayerItems { get; }
+	}
+
 	[Since (4,0)]
 	[BaseType (typeof (NSObject))]
 	interface AVPlayerItemTrack {
@@ -9455,11 +9782,14 @@ namespace XamCore.AVFoundation {
 		[Since (7,0), Mavericks]
 		[Field ("AVSampleRateConverterAlgorithm_Mastering"), Internal]
 		NSString AVSampleRateConverterAlgorithm_Mastering { get; }
+		
+		[iOS (10, 0), TV (10,0), Watch (3,0), Mac (10,12)]
+		[Field ("AVSampleRateConverterAlgorithm_MinimumPhase")]
+		NSString AVSampleRateConverterAlgorithm_MinimumPhase { get; }
 
 		[Since (7,0), Mavericks]
 		[Field ("AVEncoderAudioQualityForVBRKey"), Internal]
 		NSString AVEncoderAudioQualityForVBRKey { get; }
-
 	}
 
 	[NoTV]
@@ -9497,6 +9827,15 @@ namespace XamCore.AVFoundation {
 
 		[Export ("stopRequestingMediaData")]
 		void StopRequestingMediaData ();
+		
+		[NoTV, iOS (8, 0)]
+		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotification")]
+		[Notification]
+		NSString FailedToDecodeNotification { get; }
+
+		[NoTV, iOS (8, 0)]
+		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotificationErrorKey")]
+		NSString FailedToDecodeNotificationErrorKey { get; }
 	}
 
 	[Since (4,0), BaseType (typeof (CALayer))]
@@ -9547,6 +9886,10 @@ namespace XamCore.AVFoundation {
 		[iOS (9,0)]
 		[Field ("AVSpeechSynthesisVoiceIdentifierAlex")]
 		NSString IdentifierAlex { get; }
+
+		[iOS (10, 0), TV (10,0), Watch (3,0), NoMac]
+		[Field ("AVSpeechSynthesisIPANotationAttribute")]
+		NSString IpaNotationAttribute { get; }
 	}
 
 	[Since (7,0)]
@@ -9555,9 +9898,18 @@ namespace XamCore.AVFoundation {
 
 		[Static, Export ("speechUtteranceWithString:")]
 		AVSpeechUtterance FromString (string speechString);
+		
+		[iOS (10,0)]
+		[Static]
+		[Export ("speechUtteranceWithAttributedString:")]
+		AVSpeechUtterance FromString (NSAttributedString speechString);
 
 		[Export ("initWithString:")]
 		IntPtr Constructor (string speechString);
+		
+		[iOS (10,0)]
+		[Export ("initWithAttributedString:")]
+		IntPtr Constructor (NSAttributedString speechString);
 
 		[NullAllowed] // by default this property is null
 		[Export ("voice", ArgumentSemantic.Retain)]
@@ -9565,6 +9917,10 @@ namespace XamCore.AVFoundation {
 
 		[Export ("speechString", ArgumentSemantic.Copy)]
 		string SpeechString { get; }
+		
+		[iOS (10, 0)]
+		[Export ("attributedSpeechString")]
+		NSAttributedString AttributedSpeechString { get; }
 
 		[Export ("rate")]
 		float Rate { get; set; } // defined as 'float'
@@ -9619,6 +9975,10 @@ namespace XamCore.AVFoundation {
 
 		[Export ("continueSpeaking")]
 		bool ContinueSpeaking ();
+		
+		[iOS (10, 0)]
+		[NullAllowed, Export ("outputChannels", ArgumentSemantic.Retain)]
+		AVAudioSessionChannelDescription[] OutputChannels { get; set; }
 	}
 
 	[Model]
@@ -9763,11 +10123,15 @@ namespace XamCore.AVFoundation {
 
 		[Wrap ("GetAssetDownloadTask (urlAsset, destinationUrl, options != null ? options.Dictionary : null)")]
 		AVAssetDownloadTask GetAssetDownloadTask (AVUrlAsset urlAsset, NSUrl destinationUrl, AVAssetDownloadOptions options);
-		
+
 		[iOS (10,0)]
 		[Export ("assetDownloadTaskWithURLAsset:assetTitle:assetArtworkData:options:")]
 		[return: NullAllowed]
-		AVAssetDownloadTask GetAssetDownloadTask (AVUrlAsset URLAsset, string title, [NullAllowed] NSData artworkData, [NullAllowed] NSDictionary<NSString, NSObject> options);
+		AVAssetDownloadTask GetAssetDownloadTask (AVUrlAsset urlAsset, string title, [NullAllowed] NSData artworkData, [NullAllowed] NSDictionary options);
+
+		[iOS (10,0)]
+		[Wrap ("GetAssetDownloadTask (urlAsset, title, artworkData, options != null ? options.Dictionary : null)")]
+		AVAssetDownloadTask GetAssetDownloadTask (AVUrlAsset urlAsset, string title, [NullAllowed] NSData artworkData, AVAssetDownloadOptions options);
 
 	}
 
@@ -9816,7 +10180,7 @@ namespace XamCore.AVFoundation {
 		void SelectMediaOption ([NullAllowed] AVMediaSelectionOption mediaSelectionOption, AVMediaSelectionGroup mediaSelectionGroup);
 	}
 
-	[iOS (9,0)][Mac (10,11)]
+	[NoWatch, iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof (NSObject))]
 	interface AVAudioSequencer {
 
@@ -9881,7 +10245,7 @@ namespace XamCore.AVFoundation {
 		void Stop ();
 	}
 
-	[iOS (9,0)][Mac (10,11)]
+	[NoWatch, iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // Docs/headers do not state that init is disallowed but if 
 	// you get an instance that way and try to use it, it will inmediatelly crash also tested in ObjC app same result
@@ -9957,7 +10321,7 @@ namespace XamCore.AVFoundation {
 		NSString MidiProcessor { get; }
 	}
 
-	[iOS (9,0)][Mac (10,10)]
+	[NoWatch, iOS (9,0)][Mac (10,10)]
 	[BaseType (typeof(NSObject))]
 	interface AVAudioUnitComponent {
 
@@ -10033,7 +10397,7 @@ namespace XamCore.AVFoundation {
 
 	delegate bool AVAudioUnitComponentFilter (AVAudioUnitComponent comp, ref bool stop);
 
-	[iOS (9,0), Mac (10,10)]
+	[NoWatch, iOS (9,0), Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	interface AVAudioUnitComponentManager {
 		

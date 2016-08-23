@@ -192,6 +192,7 @@ namespace Introspection
 			"Intermenstrual",
 			"Intoi",
 			"Ios",
+			"Ipa",
 			"Ipp",
 			"Iptc",
 			"Ircs",

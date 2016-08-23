@@ -697,4 +697,12 @@ namespace XamCore.AVFoundation {
 		WaitingToPlayAtSpecifiedRate,
 		Playing
 	}
+
+	[NoWatch, NoTV, iOS (10,0), Mac (10,12)]
+	[Native]
+	public enum AVAudioSessionIOType : nint
+	{
+		NotSpecified = 0,
+		Aggregated = 1,
+	}
 }
