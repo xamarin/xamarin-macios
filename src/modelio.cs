@@ -133,6 +133,11 @@ namespace XamCore.ModelIO {
 		[Export ("objectAtIndex:")]
 		MDLObject GetObject (nuint index);
 
+		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[Mac (10,12)]
+		[Export ("masters", ArgumentSemantic.Retain)]
+		IMDLObjectContainerComponent Masters { get; set; }
+
 		[iOS (9,0), Mac(10,11)]
 		[Static]
 		[Export ("assetWithSCNScene:")]
@@ -339,6 +344,12 @@ namespace XamCore.ModelIO {
 
 		[Export ("lightType")]
 		MDLLightType LightType { get; set; }
+
+		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[Mac (10,12)]
+		[Export ("colorSpace")]
+		// No documentation to confirm but this should be a constant (hence NSString).
+		NSString ColorSpace { get; set; }
 
 		[iOS (9,0), Mac(10,11)]
 		[Static]
@@ -936,14 +947,29 @@ namespace XamCore.ModelIO {
 
 		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
 		[Mac (10,12)]
+		[NullAllowed, Export ("instance", ArgumentSemantic.Retain)]
+		MDLObject Instance { get; set; }
+
+		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[Mac (10,12)]
 		[Export ("path")]
 		string Path { get; }
+
+		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[Mac (10,12)]
+		[Export ("objectAtPath:")]
+		MDLObject GetObject (string path);
 
 		[NullAllowed, Export ("transform", ArgumentSemantic.Retain)]
 		IMDLTransformComponent Transform { get; set; }
 
 		[Export ("children", ArgumentSemantic.Retain), NullAllowed]
 		IMDLObjectContainerComponent Children { get; set; }
+
+		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[Mac (10,12)]
+		[Export ("hidden")]
+		bool Hidden { get; set; }
 
 		[Export ("addChild:")]
 		void AddChild (MDLObject child);
@@ -1564,6 +1590,11 @@ namespace XamCore.ModelIO {
 		[Export ("bufferIndex", ArgumentSemantic.Assign)]
 		nuint BufferIndex { get; set; }
 
+		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[Mac (10,12)]
+		[Export ("time")]
+		double Time { get; set; }
+
 		[Export ("initializationValue", ArgumentSemantic.Assign)]
 		Vector4 InitializationValue {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
@@ -1841,6 +1872,11 @@ namespace XamCore.ModelIO {
 	[BaseType (typeof(NSObject))]
 	interface MDLVertexBufferLayout : NSCopying
 	{
+		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[Mac (10,12)]
+		[Export ("initWithStride:")]
+		IntPtr Constructor (nuint stride);
+
 		[Export ("stride", ArgumentSemantic.Assign)]
 		nuint Stride { get; set; }
 	}
