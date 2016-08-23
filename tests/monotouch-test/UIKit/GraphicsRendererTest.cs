@@ -41,7 +41,7 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.True (f.Bounds.IsEmpty, "Bounds");
 			Assert.False (f.Opaque, "Opaque");
 			Assert.False (f.PrefersExtendedRange, "PrefersExtendedRange");
-			Assert.That (f.Scale, Is.EqualTo (2), "Scale");
+			Assert.That (f.Scale, Is.GreaterThan (0), "Scale"); // varies on platform
 			Assert.That (f.GetType ().Name, Is.EqualTo ("UIGraphicsImageRendererFormat"), "Name");
 		}
 
