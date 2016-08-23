@@ -558,6 +558,7 @@
     <Compile Include="CloudKit\CKUserIdentityLookupInfoTest.cs" />
     <Compile Include="CoreGraphics\ColorConversionInfoTest.cs" />
     <Compile Include="Foundation\DimensionTest.cs" />
+    <Compile Include="UIKit\GraphicsRendererTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
