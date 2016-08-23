@@ -75,6 +75,7 @@ namespace Introspection
 			"Arraycollation",
 			"Asin",
 			"Atan",
+			"Ats",	// App Transport Security
 			"Attrib",
 			"Attributevalue",
 			"Audiofile",
@@ -146,8 +147,10 @@ namespace Introspection
 			"Dtmf", // DTMF
 			"dy",
 			"Ebu",
-			"Ecc",
+			"Ecc",   // Elliptic Curve Cryptography
+			"Ecdh",  // Elliptic Curve Diffie–Hellman
 			"Ecdsa", // Elliptic Curve Digital Signature Algorithm
+			"Ecies", // Elliptic Curve Integrated Encryption Scheme
 			"Eof", // acronym End-Of-File
 			"Emagic",
 			"Emaili",

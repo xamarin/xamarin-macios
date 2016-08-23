@@ -73,16 +73,6 @@ namespace XamCore.Security {
 		Ntlm, Msn, Dpa, Rpa, HttpBasic, HttpDigest, HtmlForm, Default
 	}
 
-	public enum SecKeyClass {
-		Invalid = -1,
-		Public, Private, Symmetric
-	}
-
-	public enum SecKeyType {
-		Invalid = -1,
-		RSA, EC
-	}
-
 #if XAMCORE_2_0
 	public class SecKeyChain : INativeObject {
 
@@ -1206,17 +1196,14 @@ namespace XamCore.Security {
 				var k = Fetch (SecAttributeKey.KeyClass);
 				if (k == IntPtr.Zero)
 					return SecKeyClass.Invalid;
-				if (CFType.Equal (k, ClassKeys.Public))
-					return SecKeyClass.Public;
-				else if (CFType.Equal (k, ClassKeys.Private))
-					return SecKeyClass.Private;
-				else if (CFType.Equal (k, ClassKeys.Symmetric))
-					return SecKeyClass.Symmetric;
-				else
-					return SecKeyClass.Invalid;
+				using (var s = new NSString (k))
+					return SecKeyClassExtensions.GetValue (s);
 			}
 			set {
-				SetValue (value == SecKeyClass.Public ? ClassKeys.Public : value == SecKeyClass.Private ? ClassKeys.Private : ClassKeys.Symmetric, SecAttributeKey.KeyClass);
+				var k = value.GetConstant ();
+				if (k == null)
+					throw new ArgumentException ("Unknown value");
+				SetValue ((NSObject) k, SecAttributeKey.KeyClass);
 			}
 		}
 
@@ -1257,16 +1244,15 @@ namespace XamCore.Security {
 				var k = Fetch (SecAttributeKey.KeyType);
 				if (k == IntPtr.Zero)
 					return SecKeyType.Invalid;
-				if (CFType.Equal (k, KeyTypeKeys.RSA))
-					return SecKeyType.RSA;
-				else if (CFType.Equal (k, KeyTypeKeys.EC))
-					return SecKeyType.EC;
-				else
-					return SecKeyType.Invalid;
+				using (var s = new NSString (k))
+					return SecKeyTypeExtensions.GetValue (s);
 			}
 			
 			set {
-				SetValue (value == SecKeyType.RSA ? KeyTypeKeys.RSA : KeyTypeKeys.EC, SecAttributeKey.KeyType);
+				var k = value.GetConstant ();
+				if (k == null)
+					throw new ArgumentException ("Unknown value");
+				SetValue ((NSObject) k, SecAttributeKey.KeyType);
 			}
 		}
 

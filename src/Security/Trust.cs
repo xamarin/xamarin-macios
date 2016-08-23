@@ -192,7 +192,7 @@ namespace XamCore.Security {
 
 		[Mac (10,9)]
 		[DllImport (Constants.SecurityLibrary)]
-		extern static bool SecTrustSetExceptions (IntPtr /* SecTrustRef */ trust, IntPtr /* CFDataRef */ exceptions);
+		extern static bool SecTrustSetExceptions (IntPtr /* SecTrustRef */ trust, IntPtr /* __nullable CFDataRef */ exceptions);
 
 		[Mac (10,9)]
 		public bool SetExceptions (NSData data)
