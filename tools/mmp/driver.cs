@@ -81,6 +81,7 @@ namespace Xamarin.Bundler {
 		static bool? thread_check = null;
 		static string link_flags = null;
 		static LinkerOptions linker_options;
+		static bool disable_lldb_attach = false;
 
 		static bool arch_set = false;
 		static string arch = "i386";
@@ -287,6 +288,7 @@ namespace Xamarin.Bundler {
 				{ "http-message-handler=", "Specify the default HTTP Message Handler", v => { http_message_provider = v; }},
 				{ "extension", "Specifies an app extension", v => is_extension = true },
 				{ "allow-unsafe-gac-resolution", "Allow MSBuild to resolve from the System GAC", v => {} , true }, // Used in Xamarin.Mac.XM45.targets and must be ignored here. Hidden since it is a total hack. If you can use it, you don't need support
+				{ "disable-lldb-attach=", "Disable automatic lldb attach on crash", v => disable_lldb_attach = ParseBool (v, "disable_lldb_attach")},
 			};
 
 			AddSharedOptions (os);
@@ -908,6 +910,8 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("\txamarin_use_il_registrar = {0};", registrar == RegistrarMode.IL ? "true" : "false");
 				sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", App.MarshalManagedExceptions);
 				sw.WriteLine ("\txamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionMode{0};", App.MarshalObjectiveCExceptions);
+				if (disable_lldb_attach)
+					sw.WriteLine ("\txamarin_disable_lldb_attach = true;");
 				sw.WriteLine ();
 				if (Driver.registrar == RegistrarMode.Static)
 					sw.WriteLine ("\txamarin_create_classes ();");
