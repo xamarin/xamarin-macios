@@ -5575,6 +5575,7 @@ namespace XamCore.UIKit {
 
 	[iOS (10,0), TV (10,0)]
 	[BaseType (typeof(NSObject))]
+	[Abstract] // quote form headers "An abstract base class for creating graphics renderers. Do not use this class directly."
 	interface UIGraphicsRenderer
 	{
 		[Export ("initWithBounds:")]
@@ -5624,6 +5625,11 @@ namespace XamCore.UIKit {
 
 		[Export ("prefersExtendedRange")]
 		bool PrefersExtendedRange { get; set; }
+
+		[New] // kind of overloading a static member, make it return `instancetype`
+		[Static]
+		[Export ("defaultFormat")]
+		UIGraphicsImageRendererFormat DefaultFormat { get; }
 	}
 
 	[iOS (10,0), TV (10,0)]
@@ -5670,6 +5676,11 @@ namespace XamCore.UIKit {
 		[Export ("documentInfo", ArgumentSemantic.Copy)]
 		// TODO: add strongly typed binding
 		NSDictionary<NSString, NSObject> DocumentInfo { get; set; }
+
+		[New] // kind of overloading a static member, make it return `instancetype`
+		[Static]
+		[Export ("defaultFormat")]
+		UIGraphicsPdfRendererFormat DefaultFormat { get; }
 	}
 
 	[iOS (10,0), TV (10,0)]
