@@ -238,6 +238,7 @@ namespace Introspection
 			"Minification",
 			"Mobike", // acronym
 			"Morpher",
+			"Mpe", // acronym
 			"Mtu", // acronym
 			"Mtc", // acronym
 			"Mul",

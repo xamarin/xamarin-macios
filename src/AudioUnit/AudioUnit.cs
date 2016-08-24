@@ -73,7 +73,9 @@ namespace XamCore.AudioUnit
 		InstanceInvalidated		= -66749,
 		NotPermitted			= -66748,
 		InitializationTimedOut	= -66747,
-		InvalidFormat			= -66746
+		InvalidFormat			= -66746,
+		[iOS (10,0), Mac (10,12, onlyOn64: true)]
+		RenderTimeout			= -66745,
 	}
 
 	public enum AudioCodecManufacturer : uint  // Implictly cast to OSType in CoreAudio.framework - CoreAudioTypes.h
@@ -1234,6 +1236,8 @@ namespace XamCore.AudioUnit
 		ClassInfoFromDocument = 50,
 		RequestViewController = 56,
 		ParametersForOverview = 57,
+		[iOS (10,0), Mac (10,12, onlyOn64: true)]
+		SupportsMpe = 58,
 
 #if MONOMAC
 		FastDispatch = 5,
@@ -1320,6 +1324,8 @@ namespace XamCore.AudioUnit
 		MatrixLevels = 3006,
 		MatrixDimensions = 3009,
 		MeterClipping = 3011,
+		[iOS (10,0), Mac (10,12, onlyOn64: true)]
+		InputAnchorTimeStamp = 3016,
 
 		// SpatialMixer
 		ReverbRoomType = 10,
@@ -1764,6 +1770,10 @@ namespace XamCore.AudioUnit
 	public struct AUParameterObserverToken
 	{
 		public IntPtr ObserverToken;
+		public AUParameterObserverToken (IntPtr observerToken)
+		{
+			ObserverToken = observerToken;
+		}
 	}
 
 	[StructLayout (LayoutKind.Sequential)]
@@ -1967,6 +1977,23 @@ namespace XamCore.AudioUnit
 	{
 		InterAuralDelay = (1 << 0),
 		DistanceAttenuation = (1 << 2)
+	}
+
+	[iOS (10,0), Mac (10,12, onlyOn64: true)]
+	[StructLayout (LayoutKind.Sequential)]
+	public struct AUParameterAutomationEvent {
+		public ulong HostTime;
+		public ulong Address;
+		public float Value;
+		public AUParameterAutomationEventType EventType;
+		ulong Reserved;
+	}
+
+	[iOS (10,0), Mac (10,12, onlyOn64: true)]
+	public enum AUParameterAutomationEventType : uint {
+		Value = 0,
+		Touch = 1,
+		Release = 2
 	}
 
 #if !COREBUILD

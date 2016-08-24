@@ -40,7 +40,9 @@ namespace XamCore.AudioToolbox {
 		BadPropertySize = 0x2173697a,			// '!siz'
 		BadSpecifierSizeError = 0x21737063,		// '!spc'
 		SystemSoundUnspecifiedError = -1500,
-		SystemSoundClientTimedOutError = -1501
+		SystemSoundClientTimedOutError = -1501,
+		[iOS (10,0), Mac (10,12, onlyOn64: true)]
+		SystemSoundExceededMaximumDurationError = -1502,
 	}
 
 	enum AudioServicesPropertyKey : uint // UInt32 AudioServicesPropertyID
