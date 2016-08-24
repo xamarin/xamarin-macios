@@ -819,7 +819,6 @@ namespace Xamarin
 		{
 			base.Dump ();
 			Console.WriteLine ("    cmd: {0}", cmd);
-			Console.WriteLine ("    size: {0}", size);
 			Console.WriteLine ("    uuid: {0}", uuid);
 		}
 #endif
