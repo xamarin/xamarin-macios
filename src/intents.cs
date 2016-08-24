@@ -897,6 +897,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INBooleanResolutionResult GetConfirmationRequired ([NullAllowed] NSNumber valueToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INBooleanResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INBooleanResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INBooleanResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -912,6 +930,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INCallRecordTypeResolutionResult GetConfirmationRequired (INCallRecordType valueToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INCallRecordTypeResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INCallRecordTypeResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INCallRecordTypeResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -970,6 +1006,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INCarAirCirculationModeResolutionResult GetConfirmationRequired (INCarAirCirculationMode valueToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INCarAirCirculationModeResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INCarAirCirculationModeResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INCarAirCirculationModeResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -985,6 +1039,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INCarAudioSourceResolutionResult GetConfirmationRequired (INCarAudioSource valueToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INCarAudioSourceResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INCarAudioSourceResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INCarAudioSourceResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1000,6 +1072,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INCarDefrosterResolutionResult GetConfirmationRequired (INCarDefroster valueToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INCarDefrosterResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INCarDefrosterResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INCarDefrosterResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1015,6 +1105,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INCarSeatResolutionResult GetConfirmationRequired (INCarSeat valueToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INCarSeatResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INCarSeatResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INCarSeatResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1051,6 +1159,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithCurrencyAmountToConfirm:")]
 		INCurrencyAmountResolutionResult GetConfirmationRequired ([NullAllowed] INCurrencyAmount currencyAmountToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INCurrencyAmountResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INCurrencyAmountResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INCurrencyAmountResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1087,6 +1213,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithDateComponentsRangeToConfirm:")]
 		INDateComponentsRangeResolutionResult GetConfirmationRequired ([NullAllowed] INDateComponentsRange dateComponentsRangeToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INDateComponentsRangeResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INDateComponentsRangeResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INDateComponentsRangeResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1150,6 +1294,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INDoubleResolutionResult GetConfirmationRequired ([NullAllowed] NSNumber valueToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INDoubleResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INDoubleResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INDoubleResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1169,6 +1331,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithDateComponentsToConfirm:")]
 		INDateComponentsResolutionResult GetConfirmationRequired ([NullAllowed] NSDateComponents componentsToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INDateComponentsResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INDateComponentsResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INDateComponentsResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1531,6 +1711,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INIntegerResolutionResult GetConfirmationRequired ([NullAllowed] NSNumber valueToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INIntegerResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INIntegerResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INIntegerResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1550,21 +1748,25 @@ namespace XamCore.Intents {
 
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
+	[Abstract]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface INIntentResolutionResult {
 
-		[Static]
-		[Export ("needsValue")]
-		INIntentResolutionResult NeedsValue { get; }
+		// Needs to be overriden in subclasses
+		// we provide a basic, managed, implementation that throws
 
-		[Static]
-		[Export ("notRequired")]
-		INIntentResolutionResult NotRequired { get; }
+		//[Static]
+		//[Export ("needsValue")]
+		//INIntentResolutionResult NeedsValue { get; }
 
-		[Static]
-		[Export ("unsupported")]
-		INIntentResolutionResult Unsupported { get; }
+		//[Static]
+		//[Export ("notRequired")]
+		//INIntentResolutionResult NotRequired { get; }
+
+		//[Static]
+		//[Export ("unsupported")]
+		//INIntentResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1724,6 +1926,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INMessageAttributeOptionsResolutionResult GetConfirmationRequired (INMessageAttributeOptions valueToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INMessageAttributeOptionsResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INMessageAttributeOptionsResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INMessageAttributeOptionsResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1736,10 +1956,27 @@ namespace XamCore.Intents {
 		[Export ("successWithResolvedValue:")]
 		INMessageAttributeResolutionResult GetSuccess (INMessageAttribute resolvedValue);
 
-
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INMessageAttributeResolutionResult GetConfirmationRequired (INMessageAttribute valueToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INMessageAttributeResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INMessageAttributeResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INMessageAttributeResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1921,6 +2158,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithPersonToConfirm:")]
 		INPersonResolutionResult GetConfirmationRequired ([NullAllowed] INPerson personToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INPersonResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INPersonResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INPersonResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -1940,6 +2195,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithPlacemarkToConfirm:")]
 		INPlacemarkResolutionResult GetConfirmationRequired ([NullAllowed] CLPlacemark placemarkToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INPlacemarkResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INPlacemarkResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INPlacemarkResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2005,6 +2278,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INRadioTypeResolutionResult GetConfirmationRequired (INRadioType valueToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INRadioTypeResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INRadioTypeResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INRadioTypeResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2020,6 +2311,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INRelativeReferenceResolutionResult GetConfirmationRequired (INRelativeReference valueToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INRelativeReferenceResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INRelativeReferenceResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INRelativeReferenceResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2035,6 +2344,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INRelativeSettingResolutionResult GetConfirmationRequired (INRelativeSetting valueToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INRelativeSettingResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INRelativeSettingResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INRelativeSettingResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2247,6 +2574,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithRestaurantGuestToConfirm:")]
 		INRestaurantGuestResolutionResult GetConfirmationRequired ([NullAllowed] INRestaurantGuest restaurantGuestToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INRestaurantGuestResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INRestaurantGuestResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INRestaurantGuestResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2355,6 +2700,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithRestaurantToConfirm:")]
 		INRestaurantResolutionResult GetConfirmationRequired ([NullAllowed] INRestaurant restaurantToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INRestaurantResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INRestaurantResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INRestaurantResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -3507,6 +3870,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithStringToConfirm:")]
 		INSpeakableStringResolutionResult GetConfirmationRequired ([NullAllowed] INSpeakableString stringToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INSpeakableStringResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INSpeakableStringResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INSpeakableStringResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -3758,6 +4139,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithStringToConfirm:")]
 		INStringResolutionResult GetConfirmationRequired ([NullAllowed] string stringToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INStringResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INStringResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INStringResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -3777,6 +4176,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithTemperatureToConfirm:")]
 		INTemperatureResolutionResult GetConfirmationRequired ([NullAllowed] NSMeasurement<NSUnitTemperature> temperatureToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INTemperatureResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INTemperatureResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INTemperatureResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -3830,6 +4247,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INWorkoutGoalUnitTypeResolutionResult GetConfirmationRequired (INWorkoutGoalUnitType valueToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INWorkoutGoalUnitTypeResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INWorkoutGoalUnitTypeResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INWorkoutGoalUnitTypeResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -3845,6 +4280,24 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("confirmationRequiredWithValueToConfirm:")]
 		INWorkoutLocationTypeResolutionResult GetConfirmationRequired (INWorkoutLocationType valueToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INWorkoutLocationTypeResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INWorkoutLocationTypeResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INWorkoutLocationTypeResolutionResult Unsupported { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
