@@ -200,7 +200,7 @@ namespace MonoMac.Tuner {
 
 		static string GetFullyQualifiedName (AssemblyDefinition assembly)
 		{
-			return assembly.MainModule.FullyQualifiedName;
+			return assembly.MainModule.FileName;
 		}
 		
 		static ResolveFromXmlStep GetResolveStep (string filename)

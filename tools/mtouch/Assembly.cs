@@ -399,7 +399,7 @@ namespace Xamarin.Bundler {
 		{
 			try {
 				AssemblyDefinition = Target.Resolver.Load (filename);
-				FullPath = AssemblyDefinition.MainModule.FullyQualifiedName;
+				FullPath = AssemblyDefinition.MainModule.FileName;
 				if (symbols_loaded.HasValue && symbols_loaded.Value) {
 					symbols_loaded = null;
 					LoadSymbols ();

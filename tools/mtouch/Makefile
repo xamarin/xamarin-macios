@@ -7,7 +7,8 @@ export CCACHE_CPP2=1
 
 LINKER_DIR=../linker
 
-CECIL_DIR=$(CECIL_PATH)
+CECIL_PATH=$(MONO_PATH)/external/cecil
+
 MONO_DIR=$(MONO_PATH)
 MCS_TOOLS_DIR=$(MONO_DIR)/mcs/tools
 MONOLINKER=$(MCS_TOOLS_DIR)/linker
@@ -130,15 +131,15 @@ MTOUCH_SOURCES = \
 	$(TOP)/src/Foundation/ConnectAttribute.cs \
 	$(XAMARIN_MACDEV_PATH)/Xamarin.MacDev/PListObject.cs \
 
-CECIL_CONFIG=net_4_0_Debug
-MONO_CECIL_DLL=$(CECIL_DIR)/bin/$(CECIL_CONFIG)/Mono.Cecil.dll
-MONO_CECIL_MDB_DLL=$(CECIL_DIR)/bin/$(CECIL_CONFIG)/Mono.Cecil.Mdb.dll
+CECIL_CONFIG=net_4_0_Release
+MONO_CECIL_DLL=$(CECIL_PATH)/bin/$(CECIL_CONFIG)/Mono.Cecil.dll
+MONO_CECIL_MDB_DLL=$(CECIL_PATH)/bin/$(CECIL_CONFIG)/Mono.Cecil.Mdb.dll
 
 $(MONO_CECIL_DLL): $(CECIL_PATH)/Mono.Cecil.csproj
-	$(Q_XBUILD) cd $(CECIL_DIR) && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) Mono.Cecil.csproj $(XBUILD_VERBOSITY)
+	$(Q_XBUILD) cd $(CECIL_PATH) && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) Mono.Cecil.csproj $(XBUILD_VERBOSITY)
 
 $(MONO_CECIL_MDB_DLL): $(MONO_CECIL_DLL) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj
-	$(Q_XBUILD) cd $(CECIL_DIR) && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) symbols/mdb/Mono.Cecil.Mdb.csproj $(XBUILD_VERBOSITY)
+	$(Q_XBUILD) cd $(CECIL_PATH) && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) symbols/mdb/Mono.Cecil.Mdb.csproj $(XBUILD_VERBOSITY)
 
 SIMLAUNCHERS = simlauncher-sgen simlauncher32-sgen simlauncher64-sgen
 

@@ -85,7 +85,7 @@ namespace Xamarin.Bundler
 					ErrorHelper.Show (new MonoTouchException (11, false, "{0} was built against a more recent runtime ({1}) than Xamarin.iOS supports.", Path.GetFileName (reference), ad.MainModule.Runtime));
 
 				// Figure out if we're referencing Xamarin.iOS or monotouch.dll
-				if (Path.GetFileNameWithoutExtension (ad.MainModule.FullyQualifiedName) == Driver.ProductAssembly)
+				if (Path.GetFileNameWithoutExtension (ad.MainModule.FileName) == Driver.ProductAssembly)
 					ProductAssembly = ad;
 			}
 
@@ -228,7 +228,7 @@ namespace Xamarin.Bundler
 			if (assembly == null)
 				return;
 
-			var fqname = assembly.MainModule.FullyQualifiedName;
+			var fqname = assembly.MainModule.FileName;
 			if (assemblies.Contains (fqname))
 				return;
 
