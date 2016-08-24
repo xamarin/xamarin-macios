@@ -775,6 +775,7 @@ namespace XamCore.Registrar {
 						major = 6;
 						break;
 					case "CBManager":
+					case "GKBasePlayer":
 						major = 10;
 						break;
 					}
