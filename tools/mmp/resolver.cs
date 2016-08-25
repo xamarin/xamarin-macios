@@ -152,5 +152,9 @@ namespace Xamarin.Bundler {
 
 			return "";
 		}
+
+		public void Dispose ()
+		{
+		}
 	}
 }

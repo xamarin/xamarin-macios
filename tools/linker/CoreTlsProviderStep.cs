@@ -71,7 +71,7 @@ namespace Xamarin.Linker.Steps {
 			if (ctor == null)
 				throw new InvalidOperationException ();
 
-			return module.Import (ctor);
+			return module.ImportReference (ctor);
 		}
 
 		public override void ProcessType (TypeDefinition type)

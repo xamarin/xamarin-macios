@@ -60,7 +60,7 @@ namespace Xamarin.Bundler {
 		{
 			this.Target = target;
 			this.AssemblyDefinition = definition;
-			this.FullPath = definition.MainModule.FullyQualifiedName;
+			this.FullPath = definition.MainModule.FileName;
 		}
 
 		public void LoadSymbols ()

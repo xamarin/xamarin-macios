@@ -314,7 +314,7 @@ namespace XamCore.Registrar {
 				return;
 
 			foreach (var iface in type.Interfaces) {
-				var itd = iface.Resolve ();
+				var itd = iface.InterfaceType.Resolve ();
 				CollectInterfaces (ref ifaces, itd);
 
 				if (!HasAttribute (itd, Registrar.Foundation, Registrar.StringConstants.ProtocolAttribute))
@@ -493,8 +493,8 @@ namespace XamCore.Registrar {
 			var type = tr.Resolve ();
 			while (type != null) {
 				if (type.HasInterfaces) {
-					foreach (TypeReference iface in type.Interfaces)
-						if (iface.Is (Registrar.ObjCRuntime, Registrar.StringConstants.INativeObject))
+					foreach (var iface in type.Interfaces)
+						if (iface.InterfaceType.Is (Registrar.ObjCRuntime, Registrar.StringConstants.INativeObject))
 							return true;
 				}
 
@@ -930,7 +930,7 @@ namespace XamCore.Registrar {
 				return null;
 			var rv = new TypeReference [td.Interfaces.Count];
 			for (int i = 0; i < td.Interfaces.Count; i++)
-				rv [i] = td.Interfaces [i].Resolve ();
+				rv [i] = td.Interfaces [i].InterfaceType.Resolve ();
 			return rv;
 		}
 
