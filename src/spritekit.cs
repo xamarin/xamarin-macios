@@ -10,11 +10,11 @@ using System;
 using System.ComponentModel;
 
 #if !WATCH
-using XamCore.AVFoundation;
 using XamCore.CoreImage;
 using XamCore.GameplayKit;
 #endif
 
+using XamCore.AVFoundation;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 using XamCore.CoreFoundation;
@@ -520,11 +520,9 @@ namespace XamCore.SpriteKit {
 		[Protocolize]
 		SKSceneDelegate Delegate { get; set; }
 
-#if !WATCH // FIXME AVFoundation not yet enabled
 		[iOS (9,0),Mac(10,11)]
 		[Export ("audioEngine", ArgumentSemantic.Retain)]
 		AVAudioEngine AudioEngine { get; }
-#endif
 
 		[iOS (9,0), Mac(10,11)]
 		[NullAllowed, Export ("camera", ArgumentSemantic.Weak)]
@@ -2642,7 +2640,6 @@ namespace XamCore.SpriteKit {
 	[BaseType (typeof (SKNode))]
 	[DisableDefaultCtor]
 	interface SKAudioNode : NSCoding {
-#if !WATCH // FIXME AVFoundation not yet enabled on watch profile
 		[Export ("initWithAVAudioNode:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] AVAudioNode node);
@@ -2655,7 +2652,6 @@ namespace XamCore.SpriteKit {
 
 		[NullAllowed, Export ("avAudioNode", ArgumentSemantic.Retain)]
 		AVAudioNode AvAudioNode { get; set; }
-#endif
 
 		[Export ("autoplayLooped")]
 		bool AutoplayLooped { get; set; }
