@@ -34,6 +34,7 @@ namespace XamCore.CoreBluetooth {
 #endif
 	}
 
+#if !MONOMAC
 	[iOS (10,0)][NoMac]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -41,6 +42,7 @@ namespace XamCore.CoreBluetooth {
 		[Export ("state", ArgumentSemantic.Assign)]
 		CBManagerState State { get; }
 	}
+#endif
 
 	[Since (5,0)]
 	[Lion]

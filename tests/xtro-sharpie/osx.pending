@@ -196,4 +196,4 @@
 !unknown-native-enum! NSWindowNumberListOptions bound
 !unknown-native-enum! NSType bound
 !unknown-native-enum! SLComposeViewControllerResult bound
-
+!wrong-base-type! MDLVoxelArray expected MDLObject actual NSObject

@@ -11,6 +11,7 @@ using XamCore.ObjCRuntime;
 
 namespace XamCore.SafariServices {
 
+#if !MACCORE
 	// NSInteger -> SSReadingList.h
 	[Native]
 	public enum SSReadingListError : nint {
@@ -27,6 +28,7 @@ namespace XamCore.SafariServices {
 		NoAttachmentFound = 2,
 		LoadingInterrupted = 3
 	}
+#endif
 
 	[iOS (10,0)]
 	[Native]

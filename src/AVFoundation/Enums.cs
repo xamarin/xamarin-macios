@@ -718,11 +718,13 @@ namespace XamCore.AVFoundation {
 		Playing
 	}
 
-	[NoWatch, NoTV, iOS (10,0), Mac (10,12)]
+#if !MONOMAC || !XAMCORE_4_0
+	[NoWatch, NoTV, iOS (10,0)]
 	[Native]
 	public enum AVAudioSessionIOType : nint
 	{
 		NotSpecified = 0,
 		Aggregated = 1,
 	}
+#endif
 }
