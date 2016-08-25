@@ -7,8 +7,6 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 
-#if !__WATCHOS__
-
 using System;
 using System.Drawing;
 #if XAMCORE_2_0
@@ -31,12 +29,21 @@ namespace MonoTouchFixtures.AVFoundation {
 	[TestFixture]
 	public class SpeechSynthesisVoiceTest {
 
+		[SetUp]
+		public void SetUp ()
+		{
+#if __WATCHOS__
+			if (!TestRuntime.CheckWatchOSSystemVersion (3, 0))
+				Assert.Inconclusive ("Requires watchOS 3.0+");
+#else
+			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
+				Assert.Inconclusive ("Requires iOS 7.0+");
+#endif
+		}
+
 		[Test]
 		public void Default ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Inconclusive ("Requires iOS 7.0+");
-
 			// it's not clear that `init` should be called... it works (as it does not crash) but you can't set anything
 			using (var ssv = new AVSpeechSynthesisVoice ()) {
 				Assert.Null (ssv.Language, "Language");
@@ -46,9 +53,6 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void Static ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (7,0))
-				Assert.Inconclusive ("Requires iOS 7.0+");
-
 			Assert.NotNull (AVSpeechSynthesisVoice.CurrentLanguageCode, "CurrentLanguageCode");
 			foreach (var ssv in AVSpeechSynthesisVoice.GetSpeechVoices ()) {
 				Assert.NotNull (ssv.Language, ssv.Language);
@@ -56,5 +60,3 @@ namespace MonoTouchFixtures.AVFoundation {
 		}
 	}
 }
-
-#endif // !__WATCHOS__
