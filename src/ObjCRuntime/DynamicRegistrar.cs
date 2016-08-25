@@ -1139,9 +1139,9 @@ namespace XamCore.Registrar {
 			RegisterType (type, ref exceptions);
 		}
 
-		public string ComputeSignature (MethodInfo method)
+		public string ComputeSignature (MethodInfo method, bool isBlockSignature)
 		{
-			return base.ComputeSignature (method.DeclaringType, method);
+			return base.ComputeSignature (method.DeclaringType, method, isBlockSignature: isBlockSignature);
 		}
 	}
 }

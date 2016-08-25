@@ -556,7 +556,7 @@ namespace XamCore.Registrar {
 			}
 		}
 
-		public string ComputeSignature (MethodInfo minfo)
+		public string ComputeSignature (MethodInfo minfo, bool isBlockSignature)
 		{
 			return Method.Signature (minfo);
 		}
