@@ -72,7 +72,7 @@ namespace XamCore.AVFoundation {
 			return outError;
 		}
 
-#if !TVOS
+#if !TVOS && !WATCH
 		public NSError SetActive (bool active, AVAudioSessionSetActiveOptions options)
 		{
 			NSError outError;
@@ -113,7 +113,7 @@ namespace XamCore.AVFoundation {
 				return AVAudioSession.CategoryRecord;
 			case AVAudioSessionCategory.PlayAndRecord:
 				return AVAudioSession.CategoryPlayAndRecord;
-#if !TVOS
+#if !TVOS && !WATCH
 			case AVAudioSessionCategory.AudioProcessing:
 				return AVAudioSession.CategoryAudioProcessing;
 #endif

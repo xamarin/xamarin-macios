@@ -253,6 +253,7 @@ namespace XamCore.AVFoundation {
 	}
 #endif
 
+#if !WATCH
 	public static class AVUtilities {
 
 		[DllImport (Constants.AVFoundationLibrary)]
@@ -264,4 +265,5 @@ namespace XamCore.AVFoundation {
 			return AVMakeRectWithAspectRatioInsideRect (aspectRatio, self);
 		}
 	}
+#endif
 }

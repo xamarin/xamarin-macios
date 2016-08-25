@@ -40,6 +40,7 @@ namespace XamCore.AVFoundation {
 		Max = 0x7F
 	}
 
+	[NoWatch]
 	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVAssetExportSession.h
@@ -52,6 +53,7 @@ namespace XamCore.AVFoundation {
 		Cancelled
 	}
 
+	[NoWatch]
 	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVAssetReader.h
@@ -63,6 +65,7 @@ namespace XamCore.AVFoundation {
 		Cancelled,
 	}
 
+	[NoWatch]
 	[iOS (4,1)]
 	[Native]
 	// NSInteger - AVAssetWriter.h
@@ -85,6 +88,7 @@ namespace XamCore.AVFoundation {
 		LandscapeLeft,
 	}
 
+	[NoWatch]
 	[NoTV]
 	[iOS (4,0)]
 	[Native]
@@ -93,6 +97,7 @@ namespace XamCore.AVFoundation {
 		Off, On, Auto
 	}
 
+	[NoWatch]
 	[NoTV]
 	[iOS (4,0)]
 	[Native]
@@ -101,6 +106,7 @@ namespace XamCore.AVFoundation {
 		Off, On, Auto
 	}
 
+	[NoWatch]
 	[NoTV]
 	[iOS (4,0)]
 	[Native]
@@ -121,6 +127,7 @@ namespace XamCore.AVFoundation {
 #endif
 	}
 
+	[NoWatch]
 	[NoTV]
 	[iOS (4,0)]
 	[Native]
@@ -130,7 +137,8 @@ namespace XamCore.AVFoundation {
 		Back = 1,
 		Front = 2
 	}
-	
+
+	[NoWatch]
 	[NoTV]
 	[iOS (4,0)]
 	[Native]
@@ -139,6 +147,7 @@ namespace XamCore.AVFoundation {
 		Locked, AutoExpose, ContinuousAutoExposure, [iOS (8,0)] Custom
 	}
 
+	[NoWatch]
 	[NoTV]
 	[iOS (4,0)]
 	[Native]
@@ -161,6 +170,7 @@ namespace XamCore.AVFoundation {
 
 	// Populated in NSError.Code, an NSInteger
 	// anonymous enum - AVError.h
+	[NoWatch]
 	[Native]
 	public enum AVError : nint {
 		Unknown = -11800,
@@ -235,6 +245,7 @@ namespace XamCore.AVFoundation {
 		OperationNotAllowed = -11862,
 	}
 
+	[NoWatch]
 	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVPlayer.h
@@ -244,6 +255,7 @@ namespace XamCore.AVFoundation {
 		None
 	}
 
+	[NoWatch]
 	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVPlayerItem.h
@@ -263,6 +275,7 @@ namespace XamCore.AVFoundation {
 	}
 #endif
 
+	[NoWatch]
 	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVAsynchronousKeyValueLoading.h
@@ -270,6 +283,7 @@ namespace XamCore.AVFoundation {
 		Unknown, Loading, Loaded, Failed, Cancelled
 	}
 
+	[NoWatch]
 	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVPlayer.h
@@ -279,6 +293,7 @@ namespace XamCore.AVFoundation {
 		Failed
 	}
 
+	[NoWatch]
 	[Native]
 	// NSUInteger - AVAsset.h
 	public enum AVAssetReferenceRestrictions : nuint_compat_int {
@@ -290,6 +305,7 @@ namespace XamCore.AVFoundation {
 		ForbidAll = 0xFFFF,
 	}
 
+	[NoWatch]
 	[Native]
 	// NSInteger - AVAssetImageGenerator.h
 	public enum AVAssetImageGeneratorResult : nint {
@@ -396,6 +412,7 @@ namespace XamCore.AVFoundation {
 	}
 #endif
 
+	[NoWatch]
 	[NoTV]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
@@ -419,6 +436,7 @@ namespace XamCore.AVFoundation {
 		Mastering
 	}
 
+	[NoWatch]
 	[NoTV]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
@@ -544,12 +562,14 @@ namespace XamCore.AVFoundation {
 		Linear = 3
 	}
 
+	[NoWatch]
 	[NoTV]
 	[Native]
 	public enum AVQueuedSampleBufferRenderingStatus : nint {
 		Unknown, Rendering, Failed
 	}
 
+	[NoWatch]
 	[NoTV]
 	[Native]
 	public enum AVCaptureVideoStabilizationMode : nint {

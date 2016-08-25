@@ -1472,6 +1472,7 @@ SHARED_SOURCES = \
 #
 
 COMMON_FRAMEWORKS =         \
+	AVFoundation            \
 	CoreFoundation          \
 	Foundation              \
 	GameKit                 \
@@ -1486,7 +1487,6 @@ MAC_FRAMEWORKS =            \
 	AppKit                  \
 	AudioToolbox            \
 	AudioUnit               \
-	AVFoundation            \
 	AVKit                   \
 	CFNetwork               \
 	CloudKit                \
@@ -1546,7 +1546,6 @@ MAC_FRAMEWORKS =            \
 
 IOS_FRAMEWORKS =         \
 	$(COMMON_FRAMEWORKS) \
-	AVFoundation \
 	AVKit \
 	Accelerate \
 	Accounts \
@@ -1653,7 +1652,6 @@ WATCHOS_FRAMEWORKS =        \
 
 TVOS_FRAMEWORKS =           \
 	$(COMMON_FRAMEWORKS)    \
-	AVFoundation            \
 	AVKit                   \
 	Accelerate              \
 	AdSupport               \

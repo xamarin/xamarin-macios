@@ -27,7 +27,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if !TVOS
+#if !TVOS && !WATCH
 
 using System;
 using XamCore.ObjCRuntime;

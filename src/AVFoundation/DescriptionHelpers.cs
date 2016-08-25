@@ -6,6 +6,8 @@
 // Copyright 2014 Xamarin Inc.
 //
 
+#if !WATCH
+
 using System;
 
 using XamCore.Foundation;
@@ -44,3 +46,4 @@ namespace XamCore.AVFoundation {
 #endif
 }
 
+#endif

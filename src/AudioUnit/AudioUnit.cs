@@ -158,6 +158,8 @@ namespace XamCore.AudioUnit
 		}
 	}
 
+#if !WATCH
+
 #if !COREBUILD
 	public delegate AudioUnitStatus RenderDelegate (AudioUnitRenderActionFlags actionFlags, AudioTimeStamp timeStamp, uint busNumber, uint numberFrames, AudioBuffers data);
 	public delegate AudioUnitStatus InputDelegate (AudioUnitRenderActionFlags actionFlags, AudioTimeStamp timeStamp, uint busNumber, uint numberFrames, AudioUnit audioUnit);
@@ -2078,4 +2080,6 @@ namespace XamCore.AudioUnit
 	[Obsolete ("Use AUImplementorStringFromValueCallback instead")]
 	public delegate NSString _AUImplementorStringFromValueCallback (AUParameter param, IntPtr value);
 #endif
+
+#endif // !WATCH
 }
