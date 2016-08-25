@@ -761,7 +761,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<!-- strip embedded frameworks -->
 		<SymbolStrip
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '$(MtouchDebug)' != 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(MtouchDebug)' != 'true'"
 			Executable="%(_Frameworks.Identity)"
 			IsFramework="true"
 			SymbolFile=""
@@ -788,7 +788,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<!--- run dsymutil on the main bundle -->
 		<DSymUtil
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '$(MtouchNoDSymUtil)' == 'false'"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(MtouchNoDSymUtil)' == 'false'"
 			AppBundleDir="$(AppBundleDir)"
 			Architectures="$(_CompiledArchitectures)"
 			DSymDir="$(AppBundleDir).dSYM"
@@ -801,7 +801,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<!--- strip the main executable -->
 		<SymbolStrip
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '$(MtouchDebug)' == 'false' And '$(MtouchNoSymbolStrip)' == 'false'"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(MtouchDebug)' == 'false' And '$(MtouchNoSymbolStrip)' == 'false'"
 			Executable="$(_NativeExecutable)"
 			IsFramework="false"
 			SymbolFile="$(_MtouchSymbolsList)"
@@ -811,7 +811,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<!-- make sure spotlight indexes everything we've built -->
 		<SpotlightIndexer
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '$(MtouchNoDSymUtil)' == 'false'"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(MtouchNoDSymUtil)' == 'false'"
 			Input="$(AppBundleDir)/../"
 		>
 		</SpotlightIndexer>
@@ -1019,7 +1019,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		
 		<ACTool
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '@(ImageAsset)' != ''"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(ImageAsset)' != ''"
 			ToolExe="$(ACToolExe)"
 			ToolPath="$(ACToolPath)"
 			AppManifest="$(_AppManifest)"
@@ -1261,7 +1261,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_PrepareResourceRules" DependsOnTargets="_DetectSdkLocations;_GenerateBundleName">
 		<PrepareResourceRules
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '$(CodesignResourceRules)' != '' And '$(ComputedPlatform)' == 'iPhone'"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(CodesignResourceRules)' != '' And '$(ComputedPlatform)' == 'iPhone'"
 			AppBundleDir="$(AppBundleDir)"
 			ResourceRules="$(CodesignResourceRules)"
 			SdkVersion="$(MtouchSdkVersion)"
@@ -1355,11 +1355,11 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_CopyAppExtensionsToBundle" Condition="'$(IsAppExtension)' == 'false'" DependsOnTargets="_ResolveAppExtensionReferences">
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' And '@(_ResolvedAppExtensionReferences)' != ''" Directories="$(_AppBundlePath)PlugIns" />
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedAppExtensionReferences)' != ''" Directories="$(_AppBundlePath)PlugIns" />
 
 		<Ditto
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '@(_ResolvedAppExtensionReferences)' != '' And '%(_ResolvedAppExtensionReferences.Identity)' != ''"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedAppExtensionReferences)' != '' And '%(_ResolvedAppExtensionReferences.Identity)' != ''"
 			ToolExe="$(DittoExe)"
 			ToolPath="$(DittoPath)"
 			Source="@(_ResolvedAppExtensionReferences)"
@@ -1455,7 +1455,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_CopyWatchOS1AppsToBundle" Condition="'$(IsAppExtension)' == 'true'" DependsOnTargets="_ResolveWatchAppReferences">
 		<Ditto
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '@(_ResolvedWatchAppReferences)' != '' And '%(_ResolvedWatchAppReferences.Identity)' != ''"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedWatchAppReferences)' != '' And '%(_ResolvedWatchAppReferences.Identity)' != ''"
 			ToolExe="$(DittoExe)"
 			ToolPath="$(DittoPath)"
 			Source="@(_ResolvedWatchAppReferences)"
@@ -1466,7 +1466,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_CopyWatchOS2AppsToBundle" Condition="'$(OutputType)' == 'Exe'" DependsOnTargets="_ResolveWatchAppReferences">
 		<Ditto
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '@(_ResolvedWatchAppReferences)' != '' And '%(_ResolvedWatchAppReferences.Identity)' != ''"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedWatchAppReferences)' != '' And '%(_ResolvedWatchAppReferences.Identity)' != ''"
 			ToolExe="$(DittoExe)"
 			ToolPath="$(DittoPath)"
 			Source="@(_ResolvedWatchAppReferences)"
@@ -1533,7 +1533,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<Touch
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '$(_RequireCodeSigning)' == 'true' And Exists ('$(AppBundleDir).dSYM\Contents\Info.plist')"
+			Condition="'$(IsMacEnabled)' == 'true' And Exists ('$(AppBundleDir).dSYM\Contents\Info.plist')"
 			Files="$(AppBundleDir).dSYM\Contents\Info.plist"
 		/>
 	</Target>
@@ -1571,7 +1571,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<FindWatchOS1AppExtensionBundle
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '@(_ResolvedAppExtensionReferences)' != ''"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedAppExtensionReferences)' != ''"
 			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
 			>
 			<Output TaskParameter="WatchOS1AppExtensionBundle" PropertyName="_WatchOS1AppExtensionBundle"/>
@@ -1579,14 +1579,14 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<Copy
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '$(_WatchOS1AppExtensionBundle)' != ''"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_WatchOS1AppExtensionBundle)' != ''"
 			SourceFiles="$(_WatchOS1AppExtensionBundle)\_WatchKitStub\WK"
 			DestinationFolder="$(DeviceSpecificIntermediateOutputPath)ipa\WatchKitSupport"
 		/>
 
 		<FindWatchOS2AppBundle
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '@(_ResolvedWatchAppReferences)' != ''"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedWatchAppReferences)' != ''"
 			WatchAppReferences="@(_ResolvedWatchAppReferences)"
 			>
 			<Output TaskParameter="WatchOS2AppBundle" PropertyName="_WatchOS2AppBundle"/>
@@ -1594,7 +1594,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<Copy
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '$(_WatchOS2AppBundle)' != ''"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_WatchOS2AppBundle)' != ''"
 			SourceFiles="$(_WatchOS2AppBundle)\_WatchKitStub\WK"
 			DestinationFolder="$(DeviceSpecificIntermediateOutputPath)ipa\WatchKitSupport2"
 		/>
@@ -1609,7 +1609,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<Copy
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '@(_ITunesSourceFile)' != ''"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_ITunesSourceFile)' != ''"
 			SourceFiles="@(_ITunesSourceFile)"
 			DestinationFolder="$(DeviceSpecificIntermediateOutputPath)ipa"
 		/>
@@ -1659,12 +1659,12 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</PropertyGroup>
 		
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_IntermediateODRDir)" />
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' And Exists('$(DeviceSpecificOutputPath)OnDemandResources\')" Directories="$(_IntermediateODRDir)" />
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And Exists('$(DeviceSpecificOutputPath)OnDemandResources\')" Directories="$(_IntermediateODRDir)" />
 
 		<!-- Clone the compiled assetpack bundle... -->
 		<Ditto
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And Exists('$(DeviceSpecificOutputPath)OnDemandResources\')"
+			Condition="'$(IsMacEnabled)' == 'true' And Exists('$(DeviceSpecificOutputPath)OnDemandResources\')"
 			ToolExe="$(DittoExe)"
 			ToolPath="$(DittoPath)"
 			Source="$(DeviceSpecificOutputPath)OnDemandResources\"
@@ -1674,7 +1674,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<!-- Look for the *.assetpack folders in the ODR folder -->
 		<CollectAssetPacks
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And Exists('$(_IntermediateODRDir)')"
+			Condition="'$(IsMacEnabled)' == 'true' And Exists('$(_IntermediateODRDir)')"
 			OnDemandResourcesPath="$(_IntermediateODRDir)"
 			>
 
@@ -1693,7 +1693,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<!-- Sign assetpacks -->
 		<Codesign
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '@(_AssetPack)' != '' And '$(_DistributionType)' == 'AppStore'"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_AssetPack)' != '' And '$(_DistributionType)' == 'AppStore'"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="$(_CodesignAllocate)"
@@ -1707,19 +1707,19 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<WriteAssetPackManifest
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '$(_DistributionType)' == 'AdHoc' And Exists('$(_IntermediateODRDir)')"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_DistributionType)' == 'AdHoc' And Exists('$(_IntermediateODRDir)')"
 			TemplatePath="$(_IpaAppBundleDir)AssetPackManifestTemplate.plist"
 			OutputFile="$(_IpaAppBundleDir)AssetPackManifest.plist"
 			OnDemandResourceUrl="$(OnDemandResourcesUrl)"
 			IsStreamable="$(IsStreamable)"
 			/>
 
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' And '$(_DistributionType)' == 'AdHoc' And Exists('$(_IntermediateODRDir)')" Files="$(_IpaAppBundleDir)AssetPackManifestTemplate.plist" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(_DistributionType)' == 'AdHoc' And Exists('$(_IntermediateODRDir)')" Files="$(_IpaAppBundleDir)AssetPackManifestTemplate.plist" />
 
 		<!-- Re-sign app bundle if anything changed inside of it -->
 		<Codesign
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '$(_DistributionType)' == 'AdHoc' And Exists('$(_IntermediateODRDir)')"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_DistributionType)' == 'AdHoc' And Exists('$(_IntermediateODRDir)')"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="$(_CodesignAllocate)"
@@ -1731,12 +1731,12 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ExtraArgs="$(CodesignExtraArgs)"
 			/>
 
-		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' And '$(EmbedOnDemandResources)' == 'false'" Directories="$(IpaPackageDir)\OnDemandResources\" />
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' And '$(EmbedOnDemandResources)' == 'false'" Directories="$(IpaPackageDir)\OnDemandResources\" />
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(EmbedOnDemandResources)' == 'false'" Directories="$(IpaPackageDir)\OnDemandResources\" />
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(EmbedOnDemandResources)' == 'false'" Directories="$(IpaPackageDir)\OnDemandResources\" />
 
 		<CreateAssetPack
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '$(EmbedOnDemandResources)' == 'false'"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(EmbedOnDemandResources)' == 'false'"
 			ToolExe="$(ZipExe)"
 			ToolPath="$(ZipPath)"
 			Source="%(_AssetPack.Identity)"
@@ -1745,7 +1745,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<Copy
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '$(EmbedOnDemandResources)' == 'false'"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(EmbedOnDemandResources)' == 'false'"
 			SourceFiles="$(_IpaAppBundleDir)AssetPackManifest.plist"
 			DestinationFolder="$(IpaPackageDir)\OnDemandResources\"
 			/>
@@ -1771,7 +1771,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_CoreArchive" Condition="'$(ArchiveOnBuild)' == 'true'" DependsOnTargets="$(Codesign)">
 		<CollectITunesSourceFiles
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '@(_ITunesSourceFile)' == ''"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_ITunesSourceFile)' == ''"
 			OutputPath="$(DeviceSpecificOutputPath)"
 			>
 			<Output TaskParameter="ITunesSourceFiles" PropertyName="_ITunesSourceFile"/>
