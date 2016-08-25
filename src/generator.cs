@@ -1077,6 +1077,7 @@ public class Tuple<A,B> {
 //
 public class TrampolineInfo {
 	public string UserDelegate, DelegateName, TrampolineName, Parameters, Invoke, ReturnType, DelegateReturnType, ReturnFormat, Clear, OutReturnType;
+	public string UserDelegateTypeAttribute;
 	public Type Type;
 	
 	public TrampolineInfo (string userDelegate, string delegateName, string trampolineName, string pars, string invoke, string returnType, string delegateReturnType, string returnFormat, string clear, Type type)
@@ -1977,6 +1978,7 @@ public partial class Generator : IMemberGatherer {
 					     type: t);
 					     
 
+		ti.UserDelegateTypeAttribute = FormatType (null, t);
 		trampolines [t] = ti;
 			
 		return ti;
@@ -2908,6 +2910,7 @@ public partial class Generator : IMemberGatherer {
 
 			print ("");
 			print ("[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]");
+			print ("[UserDelegateType (typeof ({0}))]", ti.UserDelegate);
 			print ("internal delegate {0} {1} ({2});", ti.ReturnType, ti.DelegateName, ti.Parameters);
 			print ("");
 			print ("//\n// This class bridges native block invocations that call into C#\n//");

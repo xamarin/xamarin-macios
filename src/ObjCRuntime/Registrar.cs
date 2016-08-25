@@ -1950,7 +1950,7 @@ namespace XamCore.Registrar {
 			}
 		}
 
-		public string ComputeSignature (TType DeclaringType, TMethod Method, ObjCMember member = null, bool isCategoryInstance = false)
+		public string ComputeSignature (TType DeclaringType, TMethod Method, ObjCMember member = null, bool isCategoryInstance = false, bool isBlockSignature = false)
 		{
 			var success = true;
 			var signature = new StringBuilder ();
@@ -1972,7 +1972,7 @@ namespace XamCore.Registrar {
 					throw CreateException (4104, Method, "The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.", GetTypeFullName (ReturnType), GetTypeFullName (DeclaringType), GetDescriptiveMethodName (Method));
 			}
 
-			signature.Append ("@:");
+			signature.Append (isBlockSignature ? "@?" : "@:");
 
 			TType[] parameters;
 			if (Method != null) {

@@ -95,12 +95,30 @@ namespace XamCore.ObjCRuntime {
 
 			/* FIXME: support stret blocks */
 
+			// We need to get the signature of the target method, so that we can compute
+			// the ObjC signature correctly (the generated method that's actually
+			// invoked by native code does not have enough type information to compute
+			// the correct signature).
+			// This attribute might not exist for third-party libraries created
+			// with earlier versions of Xamarin.iOS, so make sure to cope with
+			// the attribute not being available.
+			var userDelegateType = trampoline.GetType ().GetCustomAttribute<UserDelegateTypeAttribute> ()?.UserDelegateType;
+			bool blockSignature;
+			MethodInfo userMethod;
+			if (userDelegateType != null) {
+				userMethod = userDelegateType.GetMethod ("Invoke");
+				blockSignature = true;
+			} else {
+				userMethod = trampoline.Method;
+				blockSignature = false;
+			}
+
 			// we allocate one big block of memory, the first part is the BlockDescriptor, 
 			// the second part is the signature string (no need to allocate a second time
 			// for the signature if we can avoid it). One descriptor is allocated for every 
 			// Block; this is potentially something the static registrar can fix, since it
 			// should know every possible trampoline signature.
-			var signature = Runtime.ComputeSignature (trampoline.Method);
+			var signature = Runtime.ComputeSignature (userMethod, blockSignature);
 			var bytes = System.Text.Encoding.UTF8.GetBytes (signature);
 			var desclen = sizeof (XamarinBlockDescriptor) + bytes.Length + 1 /* null character */;
 			var descptr = Marshal.AllocHGlobal (desclen);

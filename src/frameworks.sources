@@ -1459,6 +1459,7 @@ SHARED_SOURCES = \
 	ObjCRuntime/ThreadSafeAttribute.cs \
 	ObjCRuntime/TransientAttribute.cs \
 	ObjCRuntime/TypeConverter.cs \
+	ObjCRuntime/UserDelegateTypeAttribute.cs \
 	$(APPLETLS_SOURCES)
 
 #

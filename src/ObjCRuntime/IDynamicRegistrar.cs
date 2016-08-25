@@ -35,7 +35,7 @@ namespace XamCore.Registrar {
 		bool IsCustomType (Type type);
 		void RegisterMethod (Type type, MethodInfo minfo, ExportAttribute ea);
 		IEnumerable<Assembly> GetAssemblies ();
-		string ComputeSignature (MethodInfo minfo);
+		string ComputeSignature (MethodInfo minfo, bool isBlockSignature);
 	}
 #endif
 }
