@@ -148,6 +148,7 @@ namespace Xamarin.iOS.Tasks
 			Log.LogTaskName ("Archive");
 			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
 			Log.LogTaskProperty ("AppExtensionReferences", AppExtensionReferences);
+			Log.LogTaskProperty ("InsightsApiKey", InsightsApiKey);
 			Log.LogTaskProperty ("ITunesSourceFiles", ITunesSourceFiles);
 			Log.LogTaskProperty ("OutputPath", OutputPath);
 			Log.LogTaskProperty ("ProjectName", ProjectName);
@@ -259,6 +260,9 @@ namespace Xamarin.iOS.Tasks
 					arInfo.Add ("SolutionName", new PString (Path.GetFileNameWithoutExtension (SolutionPath)));
 					arInfo.Add ("SolutionPath", new PString (SolutionPath));
 				}
+
+				if (!string.IsNullOrEmpty (InsightsApiKey))
+					arInfo.Add ("InsightsApiKey", new PString (InsightsApiKey));
 
 				arInfo.Save (Path.Combine (archiveDir, "Info.plist"));
 
