@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>MyDocumentPickerExtension</string>
+	<string>com.your-company.MyDocumentPickerExtension</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.your-company.MyWebViewApp.MyDocumentPickerExtension</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -41,5 +41,7 @@
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.fileprovider-ui</string>
 	</dict>
+	<key>MinimumOSVersion</key>
+	<string>9.3</string>
 </dict>
 </plist>
