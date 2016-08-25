@@ -55,6 +55,8 @@
     <!-- XBuild does not define the MSBuildRuntimeVersion property. -->
     <Compile Include="MsBuildTasks\MoveTaskBase.cs" Condition="'$(MSBuildRuntimeVersion)' != ''" />
     <Compile Include="MsBuildTasks\XBuildMoveTaskBase.cs" Condition="'$(MSBuildRuntimeVersion)' == ''" />
+    <Compile Include="Tasks\GetAssetCatalogsFromImageAssetsTaskBase.cs" />
+    <Compile Include="Tasks\GetAssetCatalogFilesTaskBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MsBuildTasks\CopyBase.cs" />
@@ -73,7 +75,7 @@
     <Compile Include="Tasks\CompileAppManifestTaskBase.cs" />
     <Compile Include="Tasks\ComputeBundleResourceOutputPathsTaskBase.cs" />
     <Compile Include="Tasks\CollectBundleResourcesTaskBase.cs" />
-    <Compile Include="Tasks\CollectFrameworksBase.cs" />
+    <Compile Include="Tasks\CollectFrameworksTaskBase.cs" />
     <Compile Include="Tasks\CompileEntitlementsTaskBase.cs" />
     <Compile Include="Tasks\CompileSceneKitAssetsTaskBase.cs" />
     <Compile Include="Tasks\CreateAssetPackManifestTaskBase.cs" />

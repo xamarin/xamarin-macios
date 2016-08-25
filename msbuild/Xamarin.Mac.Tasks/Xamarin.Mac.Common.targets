@@ -22,6 +22,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreatePkgInfo" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Ditto" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindItemWithLogicalName" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetAssetCatalogsFromImageAssets" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetAssetCatalogFiles" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.PackLibraryResources" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SmartCopy" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.UnpackLibraryResources" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
@@ -562,16 +564,25 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</CreateItem>
 	</Target>
 
-	<Target Name="_CompileImageAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_CoreCompileImageAssets" />
+	<Target Name="_CompileImageAssets" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_GetAssetCatalogsFromImageAssets;_CoreCompileImageAssets" />
 
-	<Target Name="_CoreCompileImageAssets">
+	<Target Name="_GetAssetCatalogsFromImageAssets" Condition="'@(AssetCatalogs)' == '' And '@(ImageAssets)' != ''">
+		<GetAssetCatalogsFromImageAssets
+			SessionId="$(SessionId)"
+			ImageAssets="@(ImageAsset)"
+			ProjectDir="$(MSBuildProjectDirectory)">
+			<Output TaskParameter="AssetCatalogs" ItemName="AssetCatalog" />
+		</GetAssetCatalogsFromImageAssets>
+	</Target>
+
+	<Target Name="_CoreCompileImageAssets" DependsOnTargets="_GetAssetCatalogsFromImageAssets">
 		<ACTool
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			ToolExe="$(ACToolExe)"
 			ToolPath="$(ACToolPath)"
 			AppManifest="$(_AppManifest)"
-			ImageAssets="@(ImageAsset)"
+			AssetCatalogs="@(AssetCatalog)"
 			OptimizePngs="false"
 			OutputPath="$(OutputPath)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"

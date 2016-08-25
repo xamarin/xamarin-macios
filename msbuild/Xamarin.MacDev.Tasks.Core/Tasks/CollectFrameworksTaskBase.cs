@@ -8,7 +8,7 @@ using Xamarin.MacDev.Tasks;
 
 namespace Xamarin.iOS.Tasks
 {
-	public class CollectFrameworksBase : Task
+	public class CollectFrameworksTaskBase : Task
 	{
 		#region Inputs
 

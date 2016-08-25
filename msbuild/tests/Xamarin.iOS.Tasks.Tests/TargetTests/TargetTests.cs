@@ -492,7 +492,7 @@ namespace Xamarin.iOS.Tasks
 			plist.SetMinimumOSVersion ("6.1");
 			plist.Save (path, true);
 
-			RunTarget (project, TargetName.CompileImageAssets);
+			RunTarget (project, TargetName.CompileAssetCatalogs);
 
 			var bundleItemsNoAppIcon = project.GetEvaluatedItemsByName ("_BundleResourceWithLogicalName").ToArray ();
 			Assert.IsFalse (bundleItemsNoAppIcon.Any (i => i.FinalItemSpec == Path.Combine (actool, "AppIcons60x60@2x.png") && i.GetMetadata ("LogicalName") == "AppIcons60x60@2x.png"), "#1");
@@ -507,7 +507,7 @@ namespace Xamarin.iOS.Tasks
 
 			// Re-run the task with app icon set this time and no clean.
 			// The task should be aware the app icon is now being used.
-			RunTarget (project, TargetName.CompileImageAssets);
+			RunTarget (project, TargetName.CompileAssetCatalogs);
 
 			var bundleItemsWithAppIcon = project.GetEvaluatedItemsByName ("_BundleResourceWithLogicalName").ToArray ();
 			Assert.IsTrue (bundleItemsWithAppIcon.Any (i => i.FinalItemSpec == Path.Combine (actool, "AppIcons60x60@2x.png") && i.GetMetadata ("LogicalName") == "AppIcons60x60@2x.png"), "#2");
