@@ -21,6 +21,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#if !WATCH
+
 using XamCore.Foundation;
 using XamCore.CoreFoundation;
 using XamCore.AudioToolbox;
@@ -166,3 +169,5 @@ namespace XamCore.AVFoundation {
 	}
 #endif // !TVOS
 }
+
+#endif // !WATCH

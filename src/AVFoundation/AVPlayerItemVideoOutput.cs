@@ -1,3 +1,5 @@
+#if !WATCH
+
 using System;
 
 using XamCore.Foundation;
@@ -32,3 +34,5 @@ namespace XamCore.AVFoundation {
 		protected AVPlayerItemVideoOutput (NSDictionary pixelBufferAttributes) : this (pixelBufferAttributes, InitMode.PixelAttributes) {}
 	}
 }
+
+#endif

@@ -3080,6 +3080,8 @@ public partial class Generator : IMemberGatherer {
 	void GenerateStrongDictionaryTypes ()
 	{
 		foreach (var dictType in strong_dictionaries){
+			if (dictType.IsUnavailable ())
+				continue;
 			var sa = dictType.GetCustomAttributes (typeof (StrongDictionaryAttribute), true) [0] as StrongDictionaryAttribute;
 			var keyContainerType = sa.TypeWithKeys;
 			string suffix = sa.Suffix;

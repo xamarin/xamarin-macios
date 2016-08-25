@@ -1,5 +1,7 @@
 // Copyright 2014-2015 Xamarin Inc. All rights reserved.
 
+#if !WATCH
+
 using System;
 using XamCore.CoreMedia;
 using XamCore.Foundation;
@@ -80,3 +82,5 @@ namespace XamCore.AVFoundation {
 	}
 #endif
 }
+
+#endif

@@ -1,5 +1,11 @@
 # UNLIKELY TO BE EVER FIXED
 
+# AVFoundation
+
+## all members are marked as not available on watchOS (but not the protocol itself)
+!missing-protocol! AVAudio3DMixing not bound
+
+
 # Foundation
 
 ## does not exists in iOS (or watchOS) as a type - but some API refers to it (messy)

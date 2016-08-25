@@ -7,10 +7,10 @@
 // Copyright 2012, 2014 Xamarin Inc
 //
 
+#if !WATCH
+
 using System;
 using XamCore.Foundation;
-using XamCore.CoreMedia;
-using XamCore.CoreVideo;
 
 namespace XamCore.AVFoundation {
 	public partial class AVAssetResourceLoadingDataRequest {
@@ -20,3 +20,5 @@ namespace XamCore.AVFoundation {
 		}
 	}
 }
+
+#endif
