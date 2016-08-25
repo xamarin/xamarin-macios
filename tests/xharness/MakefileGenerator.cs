@@ -630,16 +630,14 @@ namespace xharness
 					// to make the build parallelizable and support the wrench mode at the same time.
 
 					writer.WriteLine ("wrenchhelper-{0}:", make_escaped_name);
-					writer.WriteLine ("\t$(Q) rm -f \".$@-failure.stamp\" \".$@-ios-simclassic-build-failure.stamp\" \".$@-ios-simunified-build-failure.stamp\" \".$@-tvos-sim-build-failure.stamp\" \".$@-watchos-sim-build-failure.stamp\"");
+					writer.WriteLine ("\t$(Q) rm -f \".$@-failure.stamp\" \".$@-ios-simunified-build-failure.stamp\" \".$@-tvos-sim-build-failure.stamp\" \".$@-watchos-sim-build-failure.stamp\"");
 					writer.WriteLine ("\t$(Q) echo \"@MonkeyWrench: SetSummary:\"");
 					// first build (serialized)
-					writer.WriteLine ("\t$(Q) $(MAKE) \"build-ios-simclassic-{0}\" || echo \"@MonkeyWrench: AddSummary: <b>classic failed to build</b> <br/>\" >> \".$@-ios-simclassic-build-failure.stamp\"", target.Name);
 					writer.WriteLine ("\t$(Q) $(MAKE) \"build-ios-simunified-{0}\" || echo \"@MonkeyWrench: AddSummary: <b>unified failed to build</b> <br/>\" >> \".$@-ios-simunified-build-failure.stamp\"", target.Name);
 					writer.WriteLine ("\t$(Q) $(MAKE) \"build-tvos-sim-{0}\"       || echo \"@MonkeyWrench: AddSummary: <b>tvos failed to build</b> <br/>\"    >> \".$@-tvos-sim-build-failure.stamp\"", target.Name);
 					if (harness.INCLUDE_WATCH)
 						writer.WriteLine ("\t$(Q) $(MAKE) \"build-watchos-sim-{0}\"    || echo \"@MonkeyWrench: AddSummary: <b>watchos failed to build</b> <br/>\" >> \".$@-watchos-sim-build-failure.stamp\"", target.Name);
 					// then run
-					writer.WriteLine ("\t$(Q) (test -e \".$@-ios-simclassic-build-failure.stamp\" && cat \".$@-ios-simclassic-build-failure.stamp\" >> \".$@-failure.stamp\") || $(MAKE) \"exec-ios-simclassic-{0}\" || echo \"exec-sim-iosclassic-{0} failed\" >> \".$@-failure.stamp\"", target.Name);
 					writer.WriteLine ("\t$(Q) (test -e \".$@-ios-simunified-build-failure.stamp\" && cat \".$@-ios-simunified-build-failure.stamp\" >> \".$@-failure.stamp\") || $(MAKE) \"exec-ios-sim32-{0}\"      || echo \"exec-ios-sim32-{0} failed\"      >> \".$@-failure.stamp\"", target.Name);
 					writer.WriteLine ("\t$(Q)  test -e \".$@-ios-simunified-build-failure.stamp\"                                                                             || $(MAKE) \"exec-ios-sim64-{0}\"      || echo \"exec-ios-sim64-{0} failed\"      >> \".$@-failure.stamp\"", target.Name);
 					writer.WriteLine ("\t$(Q) (test -e \".$@-tvos-sim-build-failure.stamp\"       && cat \".$@-tvos-sim-build-failure.stamp\"       >> \".$@-failure.stamp\") || $(MAKE) \"exec-tvos-sim-{0}\"       || echo \"exec-tvos-sim-{0} failed\"       >> \".$@-failure.stamp\"", target.Name);
