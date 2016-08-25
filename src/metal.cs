@@ -72,6 +72,14 @@ namespace XamCore.Metal {
 
 		[Export ("textureDataType")]
 		MTLDataType TextureDataType { get; }
+
+		[iOS (10, 0), TV (10,0), NoWatch, Mac (10,12)]
+		[Export ("isDepthTexture")]
+		bool IsDepthTexture { get; }
+		
+		[iOS (10, 0), TV (10,0), NoWatch]
+		[Export ("arrayLength")]
+		nuint ArrayLength { get; }
 	}
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
@@ -132,7 +140,43 @@ namespace XamCore.Metal {
 		[Abstract, Export ("newTextureWithDescriptor:offset:bytesPerRow:")]
 		IMTLTexture CreateTexture (MTLTextureDescriptor descriptor, nuint offset, nuint bytesPerRow);
 #endif
+
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("addDebugMarker:range:")]
+		void AddDebugMarker (string marker, NSRange range);
+
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("removeAllDebugMarkers")]
+		void RemoveAllDebugMarkers ();
 	}
+	
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	public interface MTLBufferLayoutDescriptor : NSCopying
+	{
+		[Export ("stride")]
+		nuint Stride { get; set; }
+
+		[Export ("stepFunction", ArgumentSemantic.Assign)]
+		MTLStepFunction StepFunction { get; set; }
+
+		[Export ("stepRate")]
+		nuint StepRate { get; set; }
+	}
+
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	public interface MTLBufferLayoutDescriptorArray
+	{
+		[Export ("objectAtIndexedSubscript:")]
+		MTLBufferLayoutDescriptor GetObject (nuint index);
+
+		[Export ("setObject:atIndexedSubscript:")]
+		void SetObject ([NullAllowed] MTLBufferLayoutDescriptor bufferDesc, nuint index);
+	}
+	
 
 	public interface IMTLCommandBuffer {}
 
@@ -292,8 +336,8 @@ namespace XamCore.Metal {
 #if XAMCORE_2_0
 		[Abstract]
 #endif
-		[Export ("setTextures:withRange:")]
-		void SetTextures (IMTLTexture [] textures, NSRange range);
+		// [Export ("setTextures:withRange:")]
+		// void SetTextures (IMTLTexture [] textures, NSRange range);
 
 		[iOS (8,3)]
 		[Abstract]
@@ -304,6 +348,21 @@ namespace XamCore.Metal {
 		[Abstract]
 		[Export ("setBytes:length:atIndex:")]
 		void SetBytes (IntPtr bytes, nuint length, nuint index);
+
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("setStageInRegion:")]
+		void SetStageInRegion (MTLRegion region);
+
+		[iOS (10,0), TV (10,0), NoWatch, NoMac]
+		[Abstract]
+		[Export ("updateFence:")]
+		void UpdateFence (IMTLFence fence);
+
+		[iOS (10,0), TV (10,0), NoWatch, NoMac]
+		[Abstract]
+		[Export ("waitForFence:")]
+		void WaitForFence (IMTLFence fence);
 	}
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
@@ -378,6 +437,32 @@ namespace XamCore.Metal {
 
 		[Abstract, Export ("copyFromBuffer:sourceOffset:toBuffer:destinationOffset:size:")]
 		void CopyFromBuffer (IMTLBuffer sourceBuffer, nuint sourceOffset, IMTLBuffer destinationBuffer, nuint destinationOffset, nuint size);
+		
+		[iOS (10,0), TV (10,0), NoWatch, NoMac]
+		[Abstract]
+		[Export ("updateFence:")]
+		void UpdateFence (IMTLFence fence);
+
+		[iOS (10,0), TV (10,0), NoWatch, NoMac]
+		[Abstract]
+		[Export ("waitForFence:")]
+		void WaitForFence (IMTLFence fence);
+	}
+	
+	public interface IMTLFence {}
+
+	[iOS (10,0), TV (10,0), NoWatch, NoMac]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	public interface MTLFence
+	{
+		[Abstract]
+		[Export ("device")]
+		IMTLDevice Device { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("label")]
+		string Label { get; set; }
 	}
 
 	public interface IMTLDevice {}
@@ -405,11 +490,31 @@ namespace XamCore.Metal {
 		[NoTV]
 		[Export ("headless")]
 		bool Headless { [Bind ("isHeadless")] get; }
+		
+		[NoiOS, NoTV, NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("recommendedMaxWorkingSetSize")]
+		ulong RecommendedMaxWorkingSetSize { get; }
 
 		[NoiOS]
 		[NoTV]
 		[Export ("depth24Stencil8PixelFormatSupported")]
 		bool Depth24Stencil8PixelFormatSupported { [Bind ("isDepth24Stencil8PixelFormatSupported")] get; }
+		
+		[iOS (10,0), TV (10,0), NoWatch, NoMac]
+		[Abstract]
+		[Export ("heapTextureSizeAndAlignWithDescriptor:")]
+		MTLSizeAndAlign HeapTextureSizeAndAlign (MTLTextureDescriptor desc);
+
+		[iOS (10,0), TV (10,0), NoWatch, NoMac]
+		[Abstract]
+		[Export ("heapBufferSizeAndAlignWithLength:options:")]
+		MTLSizeAndAlign HeapBufferSizeAndAlignWithLength (nuint length, MTLResourceOptions options);
+
+		[iOS (10,0), TV (10,0), NoWatch, NoMac]
+		[Abstract]
+		[Export ("newHeapWithDescriptor:")]
+		IMTLHeap CreateHeap (MTLHeapDescriptor descriptor);
 
 		[Abstract, Export ("newCommandQueue")]
 		IMTLCommandQueue CreateCommandQueue ();
@@ -449,6 +554,12 @@ namespace XamCore.Metal {
 
 		[Abstract, Export ("newLibraryWithSource:options:completionHandler:")]
 		void CreateLibrary (string source, MTLCompileOptions options, Action<IMTLLibrary, NSError> completionHandler);
+		
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("newDefaultLibraryWithBundle:error:")]
+		[return: NullAllowed]
+		IMTLLibrary CreateLibrary (NSBundle bundle, out NSError error);
 
 		[Abstract, Export ("newRenderPipelineStateWithDescriptor:error:")]
 		IMTLRenderPipelineState CreateRenderPipelineState (MTLRenderPipelineDescriptor descriptor, out NSError error);
@@ -501,6 +612,11 @@ namespace XamCore.Metal {
 #endif
 		[Export ("newComputePipelineStateWithDescriptor:options:completionHandler:")]
 		void CreateComputePipelineState (MTLComputePipelineDescriptor descriptor, MTLPipelineOption options, MTLNewComputePipelineStateWithReflectionCompletionHandler completionHandler);
+		
+		[iOS (10, 0), TV (10,0), NoWatch, NoMac]
+		[Abstract]
+		[Export ("newFence")]
+		IMTLFence CreateFence ();
 
 		[Abstract, Export ("supportsFeatureSet:")]
 		bool SupportsFeatureSet (MTLFeatureSet featureSet);
@@ -533,6 +649,7 @@ namespace XamCore.Metal {
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	public partial interface MTLTexture : MTLResource {
+		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_10_0)]
 		[Abstract, Export ("rootResource")]
 		IMTLResource RootResource { get; }
 
@@ -652,10 +769,10 @@ namespace XamCore.Metal {
 	[BaseType (typeof (NSObject))]
 	public partial interface MTLTextureDescriptor : NSCopying {
 
-		[Export ("textureType")]
+		[Export ("textureType", ArgumentSemantic.Assign)]
 		MTLTextureType TextureType { get; set; }
 
-		[Export ("pixelFormat")]
+		[Export ("pixelFormat", ArgumentSemantic.Assign)]
 		MTLPixelFormat PixelFormat { get; set; }
 
 		[Export ("width")]
@@ -676,7 +793,7 @@ namespace XamCore.Metal {
 		[Export ("arrayLength")]
 		nuint ArrayLength { get; set; }
 
-		[Export ("resourceOptions")]
+		[Export ("resourceOptions", ArgumentSemantic.Assign)]
 		MTLResourceOptions ResourceOptions { get; set; }
 
 		[Static, Export ("texture2DDescriptorWithPixelFormat:width:height:mipmapped:")]
@@ -702,25 +819,25 @@ namespace XamCore.Metal {
 	[BaseType (typeof (NSObject))]
 	public partial interface MTLSamplerDescriptor : NSCopying {
 
-		[Export ("minFilter")]
+		[Export ("minFilter", ArgumentSemantic.Assign)]
 		MTLSamplerMinMagFilter MinFilter { get; set; }
 
-		[Export ("magFilter")]
+		[Export ("magFilter", ArgumentSemantic.Assign)]
 		MTLSamplerMinMagFilter MagFilter { get; set; }
 
-		[Export ("mipFilter")]
+		[Export ("mipFilter", ArgumentSemantic.Assign)]
 		MTLSamplerMipFilter MipFilter { get; set; }
 
 		[Export ("maxAnisotropy")]
 		nuint MaxAnisotropy { get; set; }
 
-		[Export ("sAddressMode")]
+		[Export ("sAddressMode", ArgumentSemantic.Assign)]
 		MTLSamplerAddressMode SAddressMode { get; set; }
 
-		[Export ("tAddressMode")]
+		[Export ("tAddressMode", ArgumentSemantic.Assign)]
 		MTLSamplerAddressMode TAddressMode { get; set; }
 
-		[Export ("rAddressMode")]
+		[Export ("rAddressMode", ArgumentSemantic.Assign)]
 		MTLSamplerAddressMode RAddressMode { get; set; }
 
 		[Export ("normalizedCoordinates")]
@@ -737,6 +854,10 @@ namespace XamCore.Metal {
 		[Export ("lodAverage")]
 		bool LodAverage { get; set; }
 #endif
+
+		[NoiOS, NoTV, NoWatch, Mac (10,12)]
+		[Export ("borderColor", ArgumentSemantic.Assign)]
+		MTLSamplerBorderColor BorderColor { get; set; }
 
 		[iOS (9,0)]
 		[Export ("compareFunction")]
@@ -803,6 +924,38 @@ namespace XamCore.Metal {
 
 		[Export ("stencilAttachmentPixelFormat")]
 		MTLPixelFormat StencilAttachmentPixelFormat { get; set; }
+		
+		[NoiOS, NoTV, NoWatch, Mac (10,11)]
+		[Export ("inputPrimitiveTopology", ArgumentSemantic.Assign)]
+		MTLPrimitiveTopologyClass InputPrimitiveTopology { get; set; }
+		
+		[iOS (10, 0), TV (10,0), NoWatch, Mac (10,12)]
+		[Export ("tessellationPartitionMode", ArgumentSemantic.Assign)]
+		MTLTessellationPartitionMode TessellationPartitionMode { get; set; }
+
+		[iOS (10, 0), TV (10,0), NoWatch, Mac (10,12)]
+		[Export ("maxTessellationFactor")]
+		nuint MaxTessellationFactor { get; set; }
+
+		[iOS (10, 0), TV (10,0), NoWatch, Mac (10,12)]
+		[Export ("tessellationFactorScaleEnabled")]
+		bool IsTessellationFactorScaleEnabled { [Bind ("isTessellationFactorScaleEnabled")] get; set; }
+
+		[iOS (10, 0), TV (10,0), NoWatch, Mac (10,12)]
+		[Export ("tessellationFactorFormat", ArgumentSemantic.Assign)]
+		MTLTessellationFactorFormat TessellationFactorFormat { get; set; }
+
+		[iOS (10, 0), TV (10,0), NoWatch, Mac (10,12)]
+		[Export ("tessellationControlPointIndexType", ArgumentSemantic.Assign)]
+		MTLTessellationControlPointIndexType TessellationControlPointIndexType { get; set; }
+
+		[iOS (10, 0), TV (10,0), NoWatch, Mac (10,12)]
+		[Export ("tessellationFactorStepFunction", ArgumentSemantic.Assign)]
+		MTLTessellationFactorStepFunction TessellationFactorStepFunction { get; set; }
+
+		[iOS (10, 0), TV (10,0), NoWatch, Mac (10,12)]
+		[Export ("tessellationOutputWindingOrder", ArgumentSemantic.Assign)]
+		MTLWinding TessellationOutputWindingOrder { get; set; }
 	}
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
@@ -835,7 +988,7 @@ namespace XamCore.Metal {
 		[Export ("stride", ArgumentSemantic.UnsafeUnretained)]
 		nuint Stride { get; set; }
 
-		[Export ("stepFunction", ArgumentSemantic.UnsafeUnretained)]
+		[Export ("stepFunction", ArgumentSemantic.Assign)]
 		MTLVertexStepFunction StepFunction { get; set; }
 
 		[Export ("stepRate", ArgumentSemantic.UnsafeUnretained)]
@@ -852,16 +1005,67 @@ namespace XamCore.Metal {
 		void SetObject (MTLVertexBufferLayoutDescriptor bufferDesc, nuint index);
 	}
 
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	public interface MTLAttribute
+	{
+		[NullAllowed, Export ("name")]
+		string Name { get; }
+
+		[Export ("attributeIndex")]
+		nuint AttributeIndex { get; }
+
+		[Export ("attributeType")]
+		MTLDataType AttributeType { get; }
+
+		[Export ("active")]
+		bool Active { [Bind ("isActive")] get; }
+
+		[Export ("patchData")]
+		bool IsPatchData { [Bind ("isPatchData")] get; }
+
+		[Export ("patchControlPointData")]
+		bool IsPatchControlPointData { [Bind ("isPatchControlPointData")] get; }
+	}
+	
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	public interface MTLAttributeDescriptor : NSCopying
+	{
+		// @property (assign, nonatomic) MTLAttributeFormat format;
+		[Export ("format", ArgumentSemantic.Assign)]
+		MTLAttributeFormat Format { get; set; }
+
+		// @property (assign, nonatomic) NSUInteger offset;
+		[Export ("offset")]
+		nuint Offset { get; set; }
+
+		// @property (assign, nonatomic) NSUInteger bufferIndex;
+		[Export ("bufferIndex")]
+		nuint BufferIndex { get; set; }
+	}
+
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	public interface MTLAttributeDescriptorArray
+	{
+		[Export ("objectAtIndexedSubscript:")]
+		MTLAttributeDescriptor GetObject (nuint index);
+
+		[Export ("setObject:atIndexedSubscript:")]
+		void SetObject ([NullAllowed] MTLAttributeDescriptor attributeDesc, nuint index);
+	}
+
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	public interface MTLVertexAttributeDescriptor : NSCopying {
-		[Export ("format", ArgumentSemantic.UnsafeUnretained)]
+		[Export ("format", ArgumentSemantic.Assign)]
 		MTLVertexFormat Format { get; set; }
 
-		[Export ("offset", ArgumentSemantic.UnsafeUnretained)]
+		[Export ("offset", ArgumentSemantic.Assign)]
 		nuint Offset { get; set; }
 
-		[Export ("bufferIndex", ArgumentSemantic.UnsafeUnretained)]
+		[Export ("bufferIndex", ArgumentSemantic.Assign)]
 		nuint BufferIndex { get; set; }
 	}
 
@@ -872,7 +1076,7 @@ namespace XamCore.Metal {
 		MTLVertexAttributeDescriptor ObjectAtIndexedSubscript (nuint index);
 
 		[Export ("setObject:atIndexedSubscript:"), Internal]
-		void SetObject (MTLVertexAttributeDescriptor attributeDesc, nuint index);
+		void SetObject ([NullAllowed] MTLVertexAttributeDescriptor attributeDesc, nuint index);
 	}
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
@@ -906,6 +1110,48 @@ namespace XamCore.Metal {
 
 		[Export ("name")]
 		string Name { get; }
+		
+		[iOS (10, 0), TV (10,0), NoWatch, Mac (10,12)]
+		[Export ("patchData")]
+		bool PatchData { [Bind ("isPatchData")] get; }
+
+		[iOS (10, 0), TV (10,0), NoWatch, Mac (10,12)]
+		[Export ("patchControlPointData")]
+		bool PatchControlPointData { [Bind ("isPatchControlPointData")] get; }
+	}
+
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	public interface MTLFunctionConstantValues : NSCopying
+	{
+		[Export ("setConstantValue:type:atIndex:")]
+		void SetConstantValue (IntPtr value, MTLDataType type, nuint index);
+
+		[Export ("setConstantValues:type:withRange:")]
+		void SetConstantValues (IntPtr values, MTLDataType type, NSRange range);
+
+		[Export ("setConstantValue:type:withName:")]
+		void SetConstantValue (IntPtr value, MTLDataType type, string name);
+
+		[Export ("reset")]
+		void Reset ();
+	}
+	
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	public interface MTLFunctionConstant
+	{
+		[Export ("name")]
+		string Name { get; }
+
+		[Export ("type")]
+		MTLDataType Type { get; }
+
+		[Export ("index")]
+		nuint Index { get; }
+
+		[Export ("required")]
+		bool IsRequired { get; }
 	}
 
 	public interface IMTLFunction {}
@@ -913,6 +1159,11 @@ namespace XamCore.Metal {
 	[Protocol] // // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	public partial interface MTLFunction  {
 
+		[iOS (10, 0), TV (10,0), NoWatch, Mac (10,12)]
+		[Abstract]
+		[NullAllowed, Export ("label")]
+		string Label { get; set; }
+		
 		[Abstract, Export ("device")]
 		IMTLDevice Device { get; }
 
@@ -924,6 +1175,26 @@ namespace XamCore.Metal {
 
 		[Abstract, Export ("name")]
 		string Name { get; }
+
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("patchType")]
+		MTLPatchType PatchType { get; }
+
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("patchControlPointCount")]
+		nint PatchControlPointCount { get; }
+
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		[Abstract]
+		[NullAllowed, Export ("stageInputAttributes")]
+		MTLAttribute[] StageInputAttributes { get; }
+
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("functionConstantsDictionary")]
+		NSDictionary<NSString, MTLFunctionConstant> FunctionConstants { get; }
 	}
 
 	public interface IMTLLibrary {}
@@ -943,6 +1214,17 @@ namespace XamCore.Metal {
 
 		[Abstract, Export ("newFunctionWithName:")]
 		IMTLFunction CreateFunction (string functionName);
+		
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("newFunctionWithName:constantValues:error:")]
+		[return: NullAllowed]
+		IMTLFunction CreateFunction (string name, MTLFunctionConstantValues constantValues, out NSError error);
+
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("newFunctionWithName:constantValues:completionHandler:")]
+		void CreateFunction (string name, MTLFunctionConstantValues constantValues, Action<IMTLFunction, NSError> completionHandler);
 
 		[Field ("MTLLibraryErrorDomain")]
 		NSString ErrorDomain { get; }
@@ -1072,6 +1354,21 @@ namespace XamCore.Metal {
 		[Export ("renderCommandEncoder")]
 		[Autorelease]
 		IMTLRenderCommandEncoder CreateRenderCommandEncoder ();
+		
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("setColorStoreAction:atIndex:")]
+		void SetColorStoreAction (MTLStoreAction storeAction, nuint colorAttachmentIndex);
+
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("setDepthStoreAction:")]
+		void SetDepthStoreAction (MTLStoreAction storeAction);
+
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("setStencilStoreAction:")]
+		void SetStencilStoreAction (MTLStoreAction storeAction);
 	}
 
 	public interface IMTLRenderCommandEncoder {}
@@ -1386,9 +1683,75 @@ namespace XamCore.Metal {
 		[Static, Export ("renderPassDescriptor")]
 		[Autorelease]
 		MTLRenderPassDescriptor CreateRenderPassDescriptor ();
+		
+		[NoiOS, Mac (10,11)]
+		[Export ("renderTargetArrayLength")]
+		nuint RenderTargetArrayLength { get; set; }
 	}
 
+
+	[iOS (10, 0), TV (10,0), NoWatch, NoMac]
+	[BaseType (typeof(NSObject))]
+	public interface MTLHeapDescriptor : NSCopying
+	{
+		[Export ("size")]
+		nuint Size { get; set; }
+
+		[Export ("storageMode", ArgumentSemantic.Assign)]
+		MTLStorageMode StorageMode { get; set; }
+
+		[Export ("cpuCacheMode", ArgumentSemantic.Assign)]
+		MTLCpuCacheMode CpuCacheMode { get; set; }
+	}
+	
+	[iOS (10, 0), TV (10,0), NoWatch, NoMac]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	public interface MTLHeap
+	{
+		[Abstract]
+		[NullAllowed, Export ("label")]
+		string Label { get; set; }
+
+		[Abstract]
+		[Export ("device")]
+		IMTLDevice Device { get; }
+
+		[Abstract]
+		[Export ("storageMode")]
+		MTLStorageMode StorageMode { get; }
+
+		[Abstract]
+		[Export ("cpuCacheMode")]
+		MTLCpuCacheMode CpuCacheMode { get; }
+
+		[Abstract]
+		[Export ("size")]
+		nuint Size { get; }
+
+		[Abstract]
+		[Export ("usedSize")]
+		nuint UsedSize { get; }
+
+		[Abstract]
+		[Export ("maxAvailableSizeWithAlignment:")]
+		nuint MaxAvailableSizeWithAlignment (nuint alignment);
+
+		[Abstract]
+		[Export ("newBufferWithLength:options:")]
+		IMTLBuffer CreateBuffer (nuint length, MTLResourceOptions options);
+
+		[Abstract]
+		[Export ("newTextureWithDescriptor:")]
+		IMTLTexture CreateTexture (MTLTextureDescriptor desc);
+
+		[Abstract]
+		[Export ("setPurgeableState:")]
+		MTLPurgeableState SetPurgeableState (MTLPurgeableState state);
+	}
+	
 	public interface IMTLResource {}
+	public interface IMTLHeap {}
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	public partial interface MTLResource  {
@@ -1411,6 +1774,21 @@ namespace XamCore.Metal {
 
 		[Abstract, Export ("setPurgeableState:")]
 		MTLPurgeableState SetPurgeableState (MTLPurgeableState state);
+		
+		[iOS (10, 0), TV (10,0), NoWatch, NoMac]
+		[Abstract]
+		[NullAllowed, Export ("heap")]
+		IMTLHeap Heap { get; }
+
+		[iOS (10, 0), TV (10,0), NoWatch, NoMac]
+		[Abstract]
+		[Export ("makeAliasable")]
+		void MakeAliasable ();
+
+		[iOS (10, 0), TV (10,0), NoWatch, NoMac]
+		[Abstract]
+		[Export ("isAliasable")]
+		bool IsAliasable { get; }
 	}
 
 	[iOS (9,0)][Mac (10,11, onlyOn64: true)]
@@ -1428,6 +1806,34 @@ namespace XamCore.Metal {
 
 		[Export ("threadGroupSizeIsMultipleOfThreadExecutionWidth")]
 		bool ThreadGroupSizeIsMultipleOfThreadExecutionWidth { get; set; }
+
+		[Export ("reset")]
+		void Reset ();
+		
+		[iOS (10, 0), TV (10,0), NoWatch, Mac (10,12)]
+		[NullAllowed, Export ("stageInputDescriptor", ArgumentSemantic.Copy)]
+		MTLStageInputOutputDescriptor StageInputDescriptor { get; set; }
+	}
+	
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	public interface MTLStageInputOutputDescriptor : NSCopying
+	{
+		[Static]
+		[Export ("stageInputOutputDescriptor")]
+		MTLStageInputOutputDescriptor Create ();
+
+		[Export ("layouts")]
+		MTLBufferLayoutDescriptorArray Layouts { get; }
+
+		[Export ("attributes")]
+		MTLAttributeDescriptorArray Attributes { get; }
+
+		[Export ("indexType", ArgumentSemantic.Assign)]
+		MTLIndexType IndexType { get; set; }
+
+		[Export ("indexBufferIndex")]
+		nuint IndexBufferIndex { get; set; }
 
 		[Export ("reset")]
 		void Reset ();
