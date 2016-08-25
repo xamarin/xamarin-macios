@@ -174,9 +174,5 @@ namespace MonoTouch.Tuner {
 
 			return String.Empty;
 		}
-
-		public void Dispose ()
-		{
-		}
 	}
 }

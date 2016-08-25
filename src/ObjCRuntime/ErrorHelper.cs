@@ -75,7 +75,7 @@ namespace XamCore.ObjCRuntime {
 			if (method.Body.Instructions.Count == 0)
 				return;
 
-			var seq = method.DebugInformation.GetSequencePoint (method.Body.Instructions [0]);
+			var seq = method.Body.Instructions [0].SequencePoint;
 
 			if (seq == null)
 				return;

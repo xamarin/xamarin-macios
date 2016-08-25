@@ -84,7 +84,7 @@ namespace Xamarin.Linker.Steps {
 					// we can cross the assembly borders and the Dispose method might not be
 					// part of the existing member references so we import it in such cases
 					if (od.Module != bd.Module)
-						ins.Operand = od.Module.ImportReference (bd);
+						ins.Operand = od.Module.Import (bd);
 					else
 						ins.Operand = bd;
 					break;
@@ -95,7 +95,7 @@ namespace Xamarin.Linker.Steps {
 		bool FilterDispose (MethodDefinition m)
 		{
 #if DEBUG
-			var sp = m.DebugInformation.GetSequencePoint (m.Body.Instructions [0]);
+			var sp = m.Body.Instructions [0].SequencePoint;
 			if (sp != null) {
 				string source = sp.Document.Url;
 				if (!source.EndsWith (".g.cs", StringComparison.Ordinal))
@@ -199,7 +199,7 @@ namespace Xamarin.Linker.Steps {
 			if (method.HasCustomAttributes && t.HasInterfaces) {
 				string selector = null;
 				foreach (var r in t.Interfaces) {
-					var i = r.InterfaceType.Resolve ();
+					var i = r.Resolve ();
 					if (i == null || !i.HasCustomAttribute (Namespaces.Foundation, "ProtocolAttribute"))
 						continue;
 					if (selector == null) {
