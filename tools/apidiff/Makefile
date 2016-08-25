@@ -10,6 +10,11 @@ ifdef SKIP_ADDED_APIS
 ADD_REGEX = "-a:.?"
 endif
 
+MONO_API_HTML_DIR = $(MONO_PATH)/mcs/tools/mono-api-html
+MONO_API_INFO_DIR = $(MONO_PATH)/mcs/tools/corcompare
+MONO_API_INFO = $(MONO_API_INFO_DIR)/bin/Debug/mono-api-info.exe
+MONO_API_HTML = $(MONO_API_HTML_DIR)/bin/Debug/mono-api-html.exe
+
 # I18N are excluded - but otherwise if should be like ../../builds/Makefile + what XI adds
 # in the order to the api-diff.html merged file
 MONO_ASSEMBLIES = mscorlib System System.Core System.Numerics\
@@ -44,21 +49,21 @@ MAC_ARCH_ASSEMBLIES = native-32/Xamarin.Mac native-64/Xamarin.Mac
 # create api info. Directory hierarchy is based on installed hierarchy
 # (XM goes into temp/xm, and XI goes into temp/xi)
 
-temp/xi/%.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/%.dll mono-api-info.exe
+temp/xi/%.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) mono --debug mono-api-info.exe $< -o $@
+	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
-temp/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/%.dll mono-api-info.exe
+temp/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) mono --debug mono-api-info.exe $< -o $@
+	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
-temp/native-%/Xamarin.Mac.xml: $(TOP)/src/build/mac/mobile-%/Xamarin.Mac.dll mono-api-info.exe
+temp/native-%/Xamarin.Mac.xml: $(TOP)/src/build/mac/mobile-%/Xamarin.Mac.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) mono --debug mono-api-info.exe $< -o $@
+	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
-temp/native-%/Xamarin.iOS.xml: $(TOP)/src/build/ios/native-%/Xamarin.iOS.dll mono-api-info.exe
+temp/native-%/Xamarin.iOS.xml: $(TOP)/src/build/ios/native-%/Xamarin.iOS.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) mono --debug mono-api-info.exe $< -o $@
+	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
 
 # create diff from api info and reference info
 # note that we create an empty file (the 'touch' command)
@@ -66,29 +71,24 @@ temp/native-%/Xamarin.iOS.xml: $(TOP)/src/build/ios/native-%/Xamarin.iOS.dll mon
 # to run mono-api-html every time even if none of the
 # dependencies changed)
 
-diff/%.html: temp/%.xml references/%.xml mono-api-html.exe
+diff/%.html: temp/%.xml references/%.xml $(MONO_API_HTML)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) mono --debug mono-api-html.exe $(NEW_REGEX) $(ADD_REGEX) references/$*.xml temp/$*.xml -i 'INSObjectProtocol' $@
+	$(QF_GEN) mono --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) references/$*.xml temp/$*.xml -i 'INSObjectProtocol' $@
 	$(Q) touch $@
 
 # this is a hack to show the difference between iOS and tvOS
 diff/ios-to-tvos.html: temp/xi/Xamarin.iOS/Xamarin.iOS.xml temp/xi/Xamarin.TVOS/Xamarin.TVOS.xml
 	$(Q) mkdir -p $(dir $@)
 	$(Q) sed -e 's_<assembly name="Xamarin.TVOS" version="0.0.0.0">_<assembly name="Xamarin.iOS" version="0.0.0.0">_' temp/xi/Xamarin.TVOS/Xamarin.TVOS.xml > temp/Xamarin.TVOS-as-iOS.xml
-	$(QF_GEN) mono --debug mono-api-html.exe $< temp/Xamarin.TVOS-as-iOS.xml $@
+	$(QF_GEN) mono --debug $(MONO_API_HTML) $< temp/Xamarin.TVOS-as-iOS.xml $@
 
 # our api-info and api-html binaries
 
-MONO_API_HTML_DIR = $(MONO_PATH)/mcs/tools/mono-api-html
-MONO_API_INFO_DIR = $(MONO_PATH)/mcs/tools/corcompare
-
-mono-api-html.exe: $(wildcard $(MONO_API_HTML_DIR)/*.*)
+$(MONO_API_HTML): $(wildcard $(MONO_API_HTML_DIR)/*.*)
 	$(Q_GEN) cd $(MONO_API_HTML_DIR) && $(SYSTEM_XBUILD) mono-api-html.csproj $(XBUILD_VERBOSITY)
-	$(Q) cp $(MONO_API_HTML_DIR)/bin/Debug/*.exe* .
 
-mono-api-info.exe: $(wildcard $(MONO_API_INFO_DIR)/*.*)
+$(MONO_API_INFO): $(wildcard $(MONO_API_INFO_DIR)/*.*)
 	$(Q_GEN) cd $(MONO_API_INFO_DIR) && $(SYSTEM_XBUILD) mono-api-info.csproj $(XBUILD_VERBOSITY)
-	$(Q) cp $(MONO_API_INFO_DIR)/bin/Debug/*.exe* .
 
 # create diff files for all the assemblies per platform
 
@@ -176,13 +176,13 @@ MAC_REFS     = $(foreach file,$(MAC_ASSEMBLIES),updated-references/xm/$(file).xm
 WATCHOS_REFS = $(foreach file,$(WATCHOS_ASSEMBLIES),updated-references/xi/$(file).xml)
 TVOS_REFS    = $(foreach file,$(TVOS_ASSEMBLIES),updated-references/xi/$(file).xml)
 
-updated-references/xi/%.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/%.dll mono-api-info.exe
+updated-references/xi/%.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir references/xi/$*)
-	$(QF_GEN) mono --debug mono-api-info.exe $< -o references/xi/$*.xml
+	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o references/xi/$*.xml
 
-updated-references/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/%.dll mono-api-info.exe
+updated-references/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir references/xm/$*)
-	$(QF_GEN) mono --debug mono-api-info.exe $< -o references/xm/$*.xml
+	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o references/xm/$*.xml
 
 update-tvos-refs: $(TVOS_REFS)
 update-watchos-refs: $(WATCHOS_REFS)
