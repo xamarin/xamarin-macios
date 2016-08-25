@@ -10,6 +10,10 @@
 	path = external/fsharp
 	url = ../../fsharp/fsharp.git
 	branch = master
+[submodule "external/cecil"]
+	path = external/cecil
+	url = ../../mono/cecil.git
+	branch = workaround-for-bug-24976
 [submodule "external/MonoTouch.Dialog"]
 	path = external/MonoTouch.Dialog
 	url = ../../migueldeicaza/MonoTouch.Dialog.git

@@ -1572,7 +1572,7 @@ namespace Xamarin.Bundler {
 			if (assembly == null)
 				return;
 
-			var fqname = GetRealPath (assembly.MainModule.FileName);
+			var fqname = GetRealPath (assembly.MainModule.FullyQualifiedName);
 
 			if (resolved_assemblies.Contains (fqname))
 				return;

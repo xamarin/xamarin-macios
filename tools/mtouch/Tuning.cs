@@ -206,7 +206,7 @@ namespace MonoTouch.Tuner {
 
 		static string GetFullyQualifiedName (AssemblyDefinition assembly)
 		{
-			return assembly.MainModule.FileName;
+			return assembly.MainModule.FullyQualifiedName;
 		}
 
 		static ResolveFromXmlStep GetResolveStep (string filename)
