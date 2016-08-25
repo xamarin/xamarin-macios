@@ -123,6 +123,10 @@ namespace XamCore.SafariServices {
 		[Static]
 		[Export ("setToolbarItemsNeedUpdate")]
 		void SetToolbarItemsNeedUpdate ();
+
+		[Static]
+		[Export ("showPreferencesForExtensionWithIdentifier:completionHandler:")]
+		void ShowPreferencesForExtensionWithIdentifier (string identifier, [NullAllowed] Action<NSError> completionHandler);
 	}
 
 	[Mac (10,12, onlyOn64 : true)]
@@ -241,5 +245,23 @@ namespace XamCore.SafariServices {
 	interface SFSafariExtensionHandler : NSExtensionRequestHandling, SFSafariExtensionHandling
 	{
 	}
+
+//	TODO - Needs Safari Extension support to test
+// 	[Mac (10,12)]
+// 	[BaseType (typeof(NSObject))]
+// 	interface SFSafariExtensionManager
+// 	{
+// 		[Static]
+// 		[Export ("getStateOfSafariExtensionWithIdentifier:completionHandler:")]
+// 		void GetStateOfSafariExtensionWithIdentifier (string identifier, Action<SFSafariExtensionState, NSError> completionHandler);
+// 	}
+//
+// 	[Mac (10,12)]
+// 	[BaseType (typeof(NSObject))]
+// 	interface SFSafariExtensionState
+// 	{
+// 		[Export ("enabled")]
+// 		bool Enabled { [Bind ("isEnabled")] get; }
+// 	}
 #endif
 }
