@@ -158,6 +158,10 @@ namespace xharness
 			watch.Start ();
 
 			do {
+				if (failure) {
+					log.WriteLine ("Failed to edit TCC.db, trying again in 1 second... ", (int) (tcc_edit_timeout - watch.Elapsed.TotalSeconds));
+					await Task.Delay (TimeSpan.FromSeconds (1));
+				}
 				failure = false;
 				foreach (var bundle_identifier in bundle_identifiers) {
 					var sql = new System.Text.StringBuilder ();
@@ -169,16 +173,12 @@ namespace xharness
 					}
 					sql.Append ("\"");
 					var rv = await ProcessHelper.ExecuteCommandAsync ("sqlite3", sql.ToString (), log, TimeSpan.FromSeconds (5));
-					if (!rv.Succeeded)
+					if (!rv.Succeeded) {
 						failure = true;
-					if (failure) {
-						if (watch.Elapsed.TotalSeconds > tcc_edit_timeout)
-							break;
-						log.WriteLine ("Failed to edit TCC.db, trying again in 1 second... ", (int) (tcc_edit_timeout - watch.Elapsed.TotalSeconds));
-						await Task.Delay (TimeSpan.FromSeconds (1));
+						break;
 					}
 				}
-			} while (failure);
+			} while (failure && watch.Elapsed.TotalSeconds <= tcc_edit_timeout);
 
 			if (failure) {
 				log.WriteLine ("Failed to edit TCC.db, the test run might hang due to permission request dialogs");
