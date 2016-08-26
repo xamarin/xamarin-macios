@@ -12811,6 +12811,49 @@ namespace XamCore.Foundation
 
 		[Field ("NSUserNotificationDefaultSoundName")]
 		NSString NSUserNotificationDefaultSoundName { get; }
+
+		[Mac (10, 9)]
+		[NullAllowed, Export ("identifier")]
+		string Identifier { get; set; }
+
+		[Mac (10, 9)]
+		[NullAllowed, Export ("contentImage", ArgumentSemantic.Copy)]
+		NSImage ContentImage { get; set; }
+
+		[Mac (10, 9)]
+		[Export ("hasReplyButton")]
+		bool HasReplyButton { get; set; }
+
+		[Mac (10, 9)]
+		[NullAllowed, Export ("responsePlaceholder")]
+		string ResponsePlaceholder { get; set; }
+
+		[Mac (10, 9)]
+		[NullAllowed, Export ("response", ArgumentSemantic.Copy)]
+		NSAttributedString Response { get; }
+
+		[Mac (10, 10)]
+		[NullAllowed, Export ("additionalActions", ArgumentSemantic.Copy)]
+		NSUserNotificationAction[] AdditionalActions { get; set; }
+
+		[Mac (10, 10)]
+		[NullAllowed, Export ("additionalActivationAction", ArgumentSemantic.Copy)]
+		NSUserNotificationAction AdditionalActivationAction { get; }
+	}
+
+	[Mac (10,10)]
+	[BaseType (typeof(NSObject))]
+	public interface NSUserNotificationAction : NSCopying
+	{
+		[Static]
+		[Export ("actionWithIdentifier:title:")]
+		NSUserNotificationAction GetAction ([NullAllowed] string identifier, [NullAllowed] string title);
+
+		[NullAllowed, Export ("identifier")]
+		string Identifier { get; }
+
+		[NullAllowed, Export ("title")]
+		string Title { get; }
 	}
 	
 	[MountainLion]

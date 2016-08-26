@@ -233,6 +233,25 @@ namespace Introspection {
 					case "activationType":
 					case "otherButtonTitle":
 					case "setOtherButtonTitle:":
+					case "additionalActions":
+					case "setAdditionalActions:":
+					case "additionalActivationAction":
+					case "contentImage":
+					case "hasReplyButton":
+					case "setHasReplyButton:":
+					case "identifier":
+					case "setIdentifier:":
+					case "response":
+					case "responsePlaceholder":
+					case "setResponsePlaceholder:":
+						return true;
+					}
+					break;
+				// looks like it's routed to (private) NSConcreteUserNotificationAction
+				case "NSUserNotificationAction":
+					switch (selectorName) {
+					case "identifier":
+					case "title":
 						return true;
 					}
 					break;
