@@ -142,12 +142,12 @@ namespace XamCore.Metal {
 #endif
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("addDebugMarker:range:")]
 		void AddDebugMarker (string marker, NSRange range);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("removeAllDebugMarkers")]
 		void RemoveAllDebugMarkers ();
 	}
@@ -352,17 +352,17 @@ namespace XamCore.Metal {
 		void SetBytes (IntPtr bytes, nuint length, nuint index);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("setStageInRegion:")]
 		void SetStage (MTLRegion region);
 
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("updateFence:")]
 		void Update (IMTLFence fence);
 
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("waitForFence:")]
 		void Wait (IMTLFence fence);
 	}
@@ -441,12 +441,12 @@ namespace XamCore.Metal {
 		void CopyFromBuffer (IMTLBuffer sourceBuffer, nuint sourceOffset, IMTLBuffer destinationBuffer, nuint destinationOffset, nuint size);
 		
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("updateFence:")]
 		void Update (IMTLFence fence);
 
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("waitForFence:")]
 		void Wait (IMTLFence fence);
 	}
@@ -1162,7 +1162,7 @@ namespace XamCore.Metal {
 	public partial interface MTLFunction  {
 
 		[iOS (10, 0), TV (10,0), NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[NullAllowed, Export ("label")]
 		string Label { get; set; }
 		
@@ -1179,22 +1179,22 @@ namespace XamCore.Metal {
 		string Name { get; }
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("patchType")]
 		MTLPatchType PatchType { get; }
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("patchControlPointCount")]
 		nint PatchControlPointCount { get; }
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[NullAllowed, Export ("stageInputAttributes")]
 		MTLAttribute[] StageInputAttributes { get; }
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("functionConstantsDictionary")]
 		NSDictionary<NSString, MTLFunctionConstant> FunctionConstants { get; }
 	}
@@ -1218,13 +1218,13 @@ namespace XamCore.Metal {
 		IMTLFunction CreateFunction (string functionName);
 		
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("newFunctionWithName:constantValues:error:")]
 		[return: NullAllowed]
 		IMTLFunction CreateFunction (string name, MTLFunctionConstantValues constantValues, out NSError error);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("newFunctionWithName:constantValues:completionHandler:")]
 		void CreateFunction (string name, MTLFunctionConstantValues constantValues, Action<IMTLFunction, NSError> completionHandler);
 
@@ -1358,17 +1358,17 @@ namespace XamCore.Metal {
 		IMTLRenderCommandEncoder CreateRenderCommandEncoder ();
 		
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstrack, break the api
+		// [Abstract] - should be abstract, break the api
 		[Export ("setColorStoreAction:atIndex:")]
 		void SetColorStoreAction (MTLStoreAction storeAction, nuint colorAttachmentIndex);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstrack, break the api
+		// [Abstract] - should be abstract, break the api
 		[Export ("setDepthStoreAction:")]
 		void SetDepthStoreAction (MTLStoreAction storeAction);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstrack, break the api
+		// [Abstract] - should be abstract, break the api
 		[Export ("setStencilStoreAction:")]
 		void SetStencilStoreAction (MTLStoreAction storeAction);
 	}
@@ -1461,7 +1461,7 @@ namespace XamCore.Metal {
 		void SetVisibilityResultMode (MTLVisibilityResultMode mode, nuint offset);
 		
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - should be abstract, break the api
 		[Export ("setColorStoreAction:atIndex:")]
 		void SetColorStoreAction (MTLStoreAction storeAction, nuint colorAttachmentIndex);
 
@@ -1471,7 +1471,7 @@ namespace XamCore.Metal {
 		void SetDepthStoreAction (MTLStoreAction storeAction);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("setStencilStoreAction:")]
 		void SetStencilStoreAction (MTLStoreAction storeAction);
 
@@ -1560,27 +1560,27 @@ namespace XamCore.Metal {
 		void TextureBarrier ();
 
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("updateFence:afterStages:")]
 		void Update (IMTLFence fence, MTLRenderStages stages);
 
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("waitForFence:beforeStages:")]
 		void Wait (IMTLFence fence, MTLRenderStages stages);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("setTessellationFactorBuffer:offset:instanceStride:")]
 		void SetTessellationFactorBuffer ([NullAllowed] IMTLBuffer buffer, nuint offset, nuint instanceStride);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("setTessellationFactorScale:")]
 		void SetTessellationFactorScale (float scale);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("drawPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:instanceCount:baseInstance:")]
 		void DrawPatches (nuint numberOfPatchControlPoints, nuint patchStart, nuint patchCount, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, nuint instanceCount, nuint baseInstance);
 
@@ -1590,7 +1590,7 @@ namespace XamCore.Metal {
 		void DrawPatches (nuint numberOfPatchControlPoints, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, IMTLBuffer indirectBuffer, nuint indirectBufferOffset);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("drawIndexedPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:instanceCount:baseInstance:")]
 		void DrawIndexedPatches (nuint numberOfPatchControlPoints, nuint patchStart, nuint patchCount, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, IMTLBuffer controlPointIndexBuffer, nuint controlPointIndexBufferOffset, nuint instanceCount, nuint baseInstance);
 
@@ -1839,17 +1839,17 @@ namespace XamCore.Metal {
 		MTLPurgeableState SetPurgeableState (MTLPurgeableState state);
 		
 		[iOS (10, 0), TV (10,0), NoWatch, NoMac]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[NullAllowed, Export ("heap")]
 		IMTLHeap Heap { get; }
 
 		[iOS (10, 0), TV (10,0), NoWatch, NoMac]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("makeAliasable")]
 		void MakeAliasable ();
 
 		[iOS (10, 0), TV (10,0), NoWatch, NoMac]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("isAliasable")]
 		bool IsAliasable { get; }
 	}
