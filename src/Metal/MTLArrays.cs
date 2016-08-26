@@ -60,22 +60,22 @@ namespace XamCore.Metal {
 		}
 	}
 	public partial class MTLBufferLayoutDescriptorArray {
-		public MTLBufferLayoutDescriptor this [nint idx] {
+		public MTLBufferLayoutDescriptor this [nuint idx] {
 			get {
-				return ObjectAtIndexedSubscript ((nuint) idx);
+				return ObjectAtIndexedSubscript (idx);
 			}
 			set {
-				SetObject (value, (nuint) idx);
+				SetObject (value, idx);
 			}
 		}
 	}
 	public partial class MTLAttributeDescriptorArray {
-		public MTLAttributeDescriptor this [nint idx] {
+		public MTLAttributeDescriptor this [nuint idx] {
 			get {
-				return ObjectAtIndexedSubscript ((nuint) idx);
+				return ObjectAtIndexedSubscript (idx);
 			}
 			set {
-				SetObject (value, (nuint) idx);
+				SetObject (value, idx);
 			}
 		}
 	}
