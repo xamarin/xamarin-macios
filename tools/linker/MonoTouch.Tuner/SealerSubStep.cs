@@ -85,11 +85,15 @@ namespace Xamarin.Linker.Steps {
 					continue;
 				}
 
-				// we can seal the method (final in IL)
+				// we can seal the method (final in IL / !virtual in C#)
 				method.IsFinal = true;
 #if DEBUG
 				Console.WriteLine ("Final {0} ({1})", method, ++final);
 #endif
+				// subclasses might need this method to satisfy an interface requirement
+				// and requires dispatch/virtual support
+				if (!type.IsSealed)
+					continue;
 
 				var bases = Annotations.GetBaseMethods (method);
 				// look if this method is an override to existing _marked_ methods
