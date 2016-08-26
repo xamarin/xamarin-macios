@@ -219,7 +219,7 @@ namespace Introspection {
 						return true;
 					}
 					break;
-				// looks like it's routed to (private) NSUserNotificationAction
+				// looks like it's routed to (private) NSConcreteUserNotificationAction
 				case "NSUserNotificationAction":
 					switch (selectorName) {
 					case "identifier":
