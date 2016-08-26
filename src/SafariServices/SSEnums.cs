@@ -11,13 +11,14 @@ using XamCore.ObjCRuntime;
 
 namespace XamCore.SafariServices {
 
-#if !MACCORE
 	// NSInteger -> SSReadingList.h
+	[NoMac]
 	[Native]
 	public enum SSReadingListError : nint {
 		UrlSchemeNotAllowed = 1
 	}
 
+	[NoMac]
 	[iOS (9,0)]
 	[Deprecated (PlatformName.iOS, 10,0, message: "Use SFErrorCode enum")]
 	[Native]
@@ -28,7 +29,6 @@ namespace XamCore.SafariServices {
 		NoAttachmentFound = 2,
 		LoadingInterrupted = 3
 	}
-#endif
 
 	[iOS (10,0)]
 	[Native]

@@ -17,16 +17,9 @@ namespace XamCore.CoreBluetooth {
 	[iOS (10,0)]
 	[Native]
 	public enum CBManagerState : nint {
-		Unknown = 0,
-		Resetting,
-		Unsupported,
-		Unauthorized,
-		PoweredOff,
-		PoweredOn
-	}
 #else
-	// There is no base enum to steal value from, so let's make an internal one
 	internal enum CBManagerState {
+#endif
 		Unknown = 0,
 		Resetting,
 		Unsupported,
@@ -34,7 +27,6 @@ namespace XamCore.CoreBluetooth {
 		PoweredOff,
 		PoweredOn
 	}
-#endif
 
 	// NSInteger -> CBCentralManager.h
 	[Introduced (PlatformName.iOS, 5, 0)]
