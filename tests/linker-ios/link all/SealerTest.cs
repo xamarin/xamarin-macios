@@ -20,6 +20,20 @@ namespace Linker.Sealer {
 	[Preserve (AllMembers = true)]
 	public class Sealable : Unsealable {
 		public override bool B () { return true; }
+		public virtual bool C () { return false; }
+	}
+
+	interface Interface {
+		bool A ();
+	}
+
+	[Preserve (AllMembers = true)]
+	public class Base {
+		public bool A () { return true; }
+	}
+
+	[Preserve (AllMembers = true)]
+	public class Subclass : Base, Interface {
 	}
 
 	[TestFixture]
@@ -33,10 +47,19 @@ namespace Linker.Sealer {
 			Assert.False (typeof (Unsealable).IsSealed, "Unsealed");
 #if DEBUG
 			// this is not a sealed type (in the source)
-			Assert.False (typeof (Sealable).IsSealed, "Sealed");
+			Assert.False (typeof (Sealable).IsSealed, "Sealable");
+			Assert.False (typeof (Base).IsSealed, "Base");
+			Assert.False (typeof (Subclass).IsSealed, "Subclass");
+			Assert.False (typeof (Interface).IsSealed, "Interface");
 #else
-			// but it can be optimized / sealed as nothing else is (or can) subclass it
-			Assert.True (typeof (Sealable).IsSealed, "Sealed");
+			// Sealable can be optimized / sealed as nothing else is (or can) subclass it
+			Assert.True (typeof (Sealable).IsSealed, "Sealable");
+			// Base is subclassed so it can't be sealed
+			Assert.False (typeof (Base).IsSealed, "Base");
+			// Subclass is not subclassed anymore and can be sealed
+			Assert.True (typeof (Subclass).IsSealed, "Subclass");
+			// interface can not be sealed
+			Assert.False (typeof (Interface).IsSealed, "Interface");
 #endif
 		}
 
@@ -44,12 +67,19 @@ namespace Linker.Sealer {
 		public void Final ()
 		{
 			var t = typeof (Sealable);
+			var a = t.GetMethod ("A");
+			var b = t.GetMethod ("B");
+			var c = t.GetMethod ("C");
 #if DEBUG
-			// this is not a sealed method (in the source)
-			Assert.False (t.GetMethod ("B").IsFinal, "Not Final");
+			// this is not a sealed (C#) method (in the source)
+			Assert.False (a.IsFinal, "A");
+			Assert.False (b.IsFinal, "B");
+			Assert.False (c.IsFinal, "C");
 #else
 			// but it can be optimized / sealed as nothing else is (or can) overrides it
-			Assert.True (t.GetMethod ("B").IsFinal, "Final");
+			Assert.True (a.IsFinal, "A");
+			Assert.True (b.IsFinal, "B");
+			Assert.True (c.IsFinal, "C");
 #endif
 		}
 
@@ -57,15 +87,31 @@ namespace Linker.Sealer {
 		public void Virtual ()
 		{
 			var t = typeof (Sealable);
+			var a = t.GetMethod ("A");
+			var b = t.GetMethod ("B");
+			var c = t.GetMethod ("C");
 #if DEBUG
-			// both methods are virtual (iin the source)
-			Assert.True (t.GetMethod ("A").IsVirtual, "A");
-			Assert.True (t.GetMethod ("B").IsVirtual, "B");
+			// both methods are virtual (both in C# and IL)
+			Assert.True (a.IsVirtual, "A");
+			Assert.True (b.IsVirtual, "B");
+			Assert.True (c.IsVirtual, "C");
 #else
-			// but A can be de-virtualized as it overrides nothing and is not overridden
-			Assert.False (t.GetMethod ("A").IsVirtual, "A");
-			Assert.True (t.GetMethod ("B").IsVirtual, "B");
+			// calling A needs dispatch to base type Unsealable
+			Assert.True (a.IsVirtual, "A");
+			// B is an override and must remain virtual
+			Assert.True (b.IsVirtual, "B");
+			// C has no special requirement and can be de-virtualized
+			Assert.False (c.IsVirtual, "C");
 #endif
+		}
+
+		[Test]
+		public void Interface ()
+		{
+			var t = typeof (Subclass);
+			var a = t.GetMethod ("A");
+			// A cannot be de-virtualized since Concrete must satisfy Interface thru Base
+			Assert.True (a.IsVirtual, "A");
 		}
 	}
 }
