@@ -1358,17 +1358,17 @@ namespace XamCore.Metal {
 		IMTLRenderCommandEncoder CreateRenderCommandEncoder ();
 		
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - should be abstrack, break the api
 		[Export ("setColorStoreAction:atIndex:")]
 		void SetColorStoreAction (MTLStoreAction storeAction, nuint colorAttachmentIndex);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - should be abstrack, break the api
 		[Export ("setDepthStoreAction:")]
 		void SetDepthStoreAction (MTLStoreAction storeAction);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - should be abstrack, break the api
 		[Export ("setStencilStoreAction:")]
 		void SetStencilStoreAction (MTLStoreAction storeAction);
 	}
