@@ -170,9 +170,11 @@ namespace XamCore.Metal {
 	[BaseType (typeof(NSObject))]
 	public interface MTLBufferLayoutDescriptorArray
 	{
+		[Internal]
 		[Export ("objectAtIndexedSubscript:")]
-		MTLBufferLayoutDescriptor GetObject (nuint index);
+		MTLBufferLayoutDescriptor ObjectAtIndexedSubscript (nuint index);
 
+		[Internal]
 		[Export ("setObject:atIndexedSubscript:")]
 		void SetObject ([NullAllowed] MTLBufferLayoutDescriptor bufferDesc, nuint index);
 	}
@@ -1046,9 +1048,11 @@ namespace XamCore.Metal {
 	[BaseType (typeof(NSObject))]
 	public interface MTLAttributeDescriptorArray
 	{
+		[Internal]
 		[Export ("objectAtIndexedSubscript:")]
-		MTLAttributeDescriptor GetObject (nuint index);
+		MTLAttributeDescriptor ObjectAtIndexedSubscript (nuint index);
 
+		[Internal]
 		[Export ("setObject:atIndexedSubscript:")]
 		void SetObject ([NullAllowed] MTLAttributeDescriptor attributeDesc, nuint index);
 	}
