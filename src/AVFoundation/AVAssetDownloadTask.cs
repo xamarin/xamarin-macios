@@ -11,7 +11,7 @@ using System;
 using XamCore.Foundation;
 
 namespace XamCore.AVFoundation {
-#if !MONOMAC && !WATCH
+#if !MONOMAC && !WATCH && !TVOS
 	public partial class AVAssetDownloadTask : NSUrlSessionTask {
 
 		// NSURLRequest and NSURLResponse objects are not available for AVAssetDownloadTask
