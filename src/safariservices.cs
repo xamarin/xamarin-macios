@@ -253,7 +253,7 @@ namespace XamCore.SafariServices {
 // 	{
 // 		[Static]
 // 		[Export ("getStateOfSafariExtensionWithIdentifier:completionHandler:")]
-// 		void GetStateOfSafariExtensionWithIdentifier (string identifier, Action<SFSafariExtensionState, NSError> completionHandler);
+// 		void GetStateOfSafariExtension (string identifier, Action<SFSafariExtensionState, NSError> completionHandler);
 // 	}
 //
 // 	[Mac (10,12)]
