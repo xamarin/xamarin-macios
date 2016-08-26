@@ -126,7 +126,7 @@ namespace XamCore.SafariServices {
 
 		[Static]
 		[Export ("showPreferencesForExtensionWithIdentifier:completionHandler:")]
-		void ShowPreferencesForExtensionWithIdentifier (string identifier, [NullAllowed] Action<NSError> completionHandler);
+		void ShowPreferencesForExtension (string identifier, [NullAllowed] Action<NSError> completionHandler);
 	}
 
 	[Mac (10,12, onlyOn64 : true)]
