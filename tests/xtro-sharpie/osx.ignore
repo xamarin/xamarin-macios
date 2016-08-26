@@ -388,7 +388,3 @@
 
 # 32-bit only, and marked correctly in binding
 !unknown-type! NSMenuView bound
-
-# Not found anywhere in xamarin-macios / maccore
-!unknown-pinvoke! SSLSetSessionStrengthPolicy bound
-
