@@ -1823,7 +1823,7 @@ namespace XamCore.AVFoundation {
 		[Notification (typeof (AVAudioSessionSecondaryAudioHintEventArgs))]
 		NSString SilenceSecondaryAudioHintNotification { get; }
 		
-		[NoWatch, NoTV, iOS(10,0), Mac (10,12)]
+		[NoWatch, NoTV, iOS(10,0)]
 		[Export ("setAggregatedIOPreference:error:")]
 		bool SetAggregatedIOPreference (AVAudioSessionIOType ioType, out NSError error);
 	}

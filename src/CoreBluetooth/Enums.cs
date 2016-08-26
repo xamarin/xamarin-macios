@@ -13,9 +13,13 @@ using XamCore.ObjCRuntime;
 
 namespace XamCore.CoreBluetooth {
 
+#if !MONOMAC
 	[iOS (10,0)]
 	[Native]
 	public enum CBManagerState : nint {
+#else
+	internal enum CBManagerState {
+#endif
 		Unknown = 0,
 		Resetting,
 		Unsupported,
