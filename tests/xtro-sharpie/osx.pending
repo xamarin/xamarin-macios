@@ -197,3 +197,8 @@
 !unknown-native-enum! NSType bound
 !unknown-native-enum! SLComposeViewControllerResult bound
 
+# Bound but commented out until we can test w\ template
+!missing-selector! +SFSafariExtensionManager::getStateOfSafariExtensionWithIdentifier:completionHandler: not bound
+!missing-type! SFSafariExtensionManager not bound
+!missing-selector! SFSafariExtensionState::isEnabled not bound
+!missing-type! SFSafariExtensionState not bound
