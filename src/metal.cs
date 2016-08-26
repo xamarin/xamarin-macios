@@ -1768,7 +1768,7 @@ namespace XamCore.Metal {
 	}
 	
 	[iOS (10, 0), TV (10,0), NoWatch, NoMac]
-	[Protocol, Model]
+	[Protocol]
 	[BaseType (typeof(NSObject))]
 	public interface MTLHeap
 	{
