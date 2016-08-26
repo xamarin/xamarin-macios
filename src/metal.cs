@@ -1466,7 +1466,7 @@ namespace XamCore.Metal {
 		void SetColorStoreAction (MTLStoreAction storeAction, nuint colorAttachmentIndex);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - should be abstract but would break the API.
 		[Export ("setDepthStoreAction:")]
 		void SetDepthStoreAction (MTLStoreAction storeAction);
 
@@ -1562,12 +1562,12 @@ namespace XamCore.Metal {
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
 		[Abstract]
 		[Export ("updateFence:afterStages:")]
-		void Update (MTLFence fence, MTLRenderStages stages);
+		void Update (IMTLFence fence, MTLRenderStages stages);
 
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
 		[Abstract]
 		[Export ("waitForFence:beforeStages:")]
-		void Wait (MTLFence fence, MTLRenderStages stages);
+		void Wait (IMTLFence fence, MTLRenderStages stages);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 		[Abstract]

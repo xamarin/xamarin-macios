@@ -302,6 +302,12 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "MTLArgument": // we do have unit tests under monotouch-tests for this properties
+				switch (selectorName){
+				case "isDepthTexture":
+					return true;
+				}
+				break;
 			}
 
 			// old binding mistake
