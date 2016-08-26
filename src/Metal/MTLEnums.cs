@@ -337,6 +337,7 @@ namespace XamCore.Metal {
 		[NoWatch, iOS (9,0), TV (9,0), Mac (10,11)]
 		X32_Stencil8 = 261,
 #if MONOMAC
+		[Mac (10,12)]
 		X24_Stencil8 = 262,
 #endif
 	}

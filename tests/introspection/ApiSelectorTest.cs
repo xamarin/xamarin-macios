@@ -248,6 +248,60 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "MTLBufferLayoutDescriptor": // We do have unit tests under monotouch-tests for this properties
+				switch (selectorName){
+				case "stepFunction":
+				case "setStepFunction:":
+				case "stepRate":
+				case "setStepRate:":
+				case "stride":
+				case "setStride:":
+					return true;
+				}
+				break;
+			case "MTLFunctionConstant": // we do have unit tests under monotouch-tests for this properties
+				switch (selectorName){
+				case "name":
+				case "type":
+				case "index":
+				case "required":
+					return true;
+				}
+				break;
+			case "MTLStageInputOutputDescriptor": // we do have unit tests under monotouch-tests for this properties
+				switch (selectorName){
+				case "attributes":
+				case "indexBufferIndex":
+				case "setIndexBufferIndex:":
+				case "indexType":
+				case "setIndexType:":
+				case "layouts":
+					return true;
+				}
+				break;
+			case "MTLAttributeDescriptor": // we do have unit tests under monotouch-tests for this properties
+				switch (selectorName){
+				case "bufferIndex":
+				case "setBufferIndex:":
+				case "format":
+				case "setFormat:":
+				case "offset":
+				case "setOffset:":
+					return true;
+				}
+				break;
+			case "MTLAttribute": // we do have unit tests under monotouch-tests for this properties
+				switch (selectorName){
+				case "isActive":
+				case "attributeIndex":
+				case "attributeType":
+				case "isPatchControlPointData":
+				case "isPatchData":
+				case "name":
+				case "isDepthTexture":
+					return true;
+				}
+				break;
 			}
 
 			// old binding mistake

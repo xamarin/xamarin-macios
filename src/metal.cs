@@ -336,8 +336,8 @@ namespace XamCore.Metal {
 #if XAMCORE_2_0
 		[Abstract]
 #endif
-		// [Export ("setTextures:withRange:")]
-		// void SetTextures (IMTLTexture [] textures, NSRange range);
+		[Export ("setTextures:withRange:")]
+		void SetTextures (IMTLTexture [] textures, NSRange range);
 
 		[iOS (8,3)]
 		[Abstract]
@@ -352,17 +352,17 @@ namespace XamCore.Metal {
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 		[Abstract]
 		[Export ("setStageInRegion:")]
-		void SetStageInRegion (MTLRegion region);
+		void SetStage (MTLRegion region);
 
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
 		[Abstract]
 		[Export ("updateFence:")]
-		void UpdateFence (IMTLFence fence);
+		void Update (IMTLFence fence);
 
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
 		[Abstract]
 		[Export ("waitForFence:")]
-		void WaitForFence (IMTLFence fence);
+		void Wait (IMTLFence fence);
 	}
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
@@ -441,18 +441,18 @@ namespace XamCore.Metal {
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
 		[Abstract]
 		[Export ("updateFence:")]
-		void UpdateFence (IMTLFence fence);
+		void Update (IMTLFence fence);
 
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
 		[Abstract]
 		[Export ("waitForFence:")]
-		void WaitForFence (IMTLFence fence);
+		void Wait (IMTLFence fence);
 	}
 	
 	public interface IMTLFence {}
 
 	[iOS (10,0), TV (10,0), NoWatch, NoMac]
-	[Protocol, Model]
+	[Protocol]
 	[BaseType (typeof(NSObject))]
 	public interface MTLFence
 	{
@@ -492,7 +492,7 @@ namespace XamCore.Metal {
 		bool Headless { [Bind ("isHeadless")] get; }
 		
 		[NoiOS, NoTV, NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - Should be abstract but would be a API breaking change
 		[Export ("recommendedMaxWorkingSetSize")]
 		ulong RecommendedMaxWorkingSetSize { get; }
 
@@ -502,17 +502,17 @@ namespace XamCore.Metal {
 		bool Depth24Stencil8PixelFormatSupported { [Bind ("isDepth24Stencil8PixelFormatSupported")] get; }
 		
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
-		[Abstract]
+		// [Abstract] - Should be abstract but would be a API breaking change
 		[Export ("heapTextureSizeAndAlignWithDescriptor:")]
 		MTLSizeAndAlign HeapTextureSizeAndAlign (MTLTextureDescriptor desc);
 
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
-		[Abstract]
+		// [Abstract] - Should be abstract but would be a API breaking change
 		[Export ("heapBufferSizeAndAlignWithLength:options:")]
 		MTLSizeAndAlign HeapBufferSizeAndAlignWithLength (nuint length, MTLResourceOptions options);
 
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
-		[Abstract]
+		// [Abstract] - Should be abstract but would be a API breaking change
 		[Export ("newHeapWithDescriptor:")]
 		IMTLHeap CreateHeap (MTLHeapDescriptor descriptor);
 
@@ -556,7 +556,7 @@ namespace XamCore.Metal {
 		void CreateLibrary (string source, MTLCompileOptions options, Action<IMTLLibrary, NSError> completionHandler);
 		
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		[Abstract]
+		// [Abstract] - Should be abstract but would be a API breaking change
 		[Export ("newDefaultLibraryWithBundle:error:")]
 		[return: NullAllowed]
 		IMTLLibrary CreateLibrary (NSBundle bundle, out NSError error);
@@ -614,7 +614,7 @@ namespace XamCore.Metal {
 		void CreateComputePipelineState (MTLComputePipelineDescriptor descriptor, MTLPipelineOption options, MTLNewComputePipelineStateWithReflectionCompletionHandler completionHandler);
 		
 		[iOS (10, 0), TV (10,0), NoWatch, NoMac]
-		[Abstract]
+		// [Abstract] - Should be abstract but would be a API breaking change
 		[Export ("newFence")]
 		IMTLFence CreateFence ();
 
@@ -1032,15 +1032,12 @@ namespace XamCore.Metal {
 	[BaseType (typeof(NSObject))]
 	public interface MTLAttributeDescriptor : NSCopying
 	{
-		// @property (assign, nonatomic) MTLAttributeFormat format;
 		[Export ("format", ArgumentSemantic.Assign)]
 		MTLAttributeFormat Format { get; set; }
 
-		// @property (assign, nonatomic) NSUInteger offset;
 		[Export ("offset")]
 		nuint Offset { get; set; }
 
-		// @property (assign, nonatomic) NSUInteger bufferIndex;
 		[Export ("bufferIndex")]
 		nuint BufferIndex { get; set; }
 	}
@@ -1122,6 +1119,7 @@ namespace XamCore.Metal {
 
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	public interface MTLFunctionConstantValues : NSCopying
 	{
 		[Export ("setConstantValue:type:atIndex:")]
@@ -1457,6 +1455,21 @@ namespace XamCore.Metal {
 
 		[Abstract, Export ("setVisibilityResultMode:offset:")]
 		void SetVisibilityResultMode (MTLVisibilityResultMode mode, nuint offset);
+		
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("setColorStoreAction:atIndex:")]
+		void SetColorStoreAction (MTLStoreAction storeAction, nuint colorAttachmentIndex);
+
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("setDepthStoreAction:")]
+		void SetDepthStoreAction (MTLStoreAction storeAction);
+
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("setStencilStoreAction:")]
+		void SetStencilStoreAction (MTLStoreAction storeAction);
 
 		[Abstract, Export ("drawPrimitives:vertexStart:vertexCount:instanceCount:")]
 		void DrawPrimitives (MTLPrimitiveType primitiveType, nuint vertexStart, nuint vertexCount, nuint instanceCount);
@@ -1536,37 +1549,82 @@ namespace XamCore.Metal {
 #endif
 		[Export ("setVertexTextures:withRange:")]
 		void SetVertexTextures (IMTLTexture [] textures, NSRange range);
+
+		[NoiOS, NoTV, NoWatch, Mac (10,11)]
+		[Abstract]
+		[Export ("textureBarrier")]
+		void TextureBarrier ();
+
+		[iOS (10,0), TV (10,0), NoWatch, NoMac]
+		[Abstract]
+		[Export ("updateFence:afterStages:")]
+		void Update (MTLFence fence, MTLRenderStages stages);
+
+		[iOS (10,0), TV (10,0), NoWatch, NoMac]
+		[Abstract]
+		[Export ("waitForFence:beforeStages:")]
+		void Wait (MTLFence fence, MTLRenderStages stages);
+
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("setTessellationFactorBuffer:offset:instanceStride:")]
+		void SetTessellationFactorBuffer ([NullAllowed] IMTLBuffer buffer, nuint offset, nuint instanceStride);
+
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("setTessellationFactorScale:")]
+		void SetTessellationFactorScale (float scale);
+
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("drawPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:instanceCount:baseInstance:")]
+		void DrawPatches (nuint numberOfPatchControlPoints, nuint patchStart, nuint patchCount, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, nuint instanceCount, nuint baseInstance);
+
+		[NoiOS, NoTV, NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("drawPatches:patchIndexBuffer:patchIndexBufferOffset:indirectBuffer:indirectBufferOffset:")]
+		void DrawPatches (nuint numberOfPatchControlPoints, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, IMTLBuffer indirectBuffer, nuint indirectBufferOffset);
+
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("drawIndexedPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:instanceCount:baseInstance:")]
+		void DrawIndexedPatches (nuint numberOfPatchControlPoints, nuint patchStart, nuint patchCount, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, IMTLBuffer controlPointIndexBuffer, nuint controlPointIndexBufferOffset, nuint instanceCount, nuint baseInstance);
+
+		[NoiOS, NoTV, NoWatch, Mac (10,12)]
+		[Abstract]
+		[Export ("drawIndexedPatches:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:indirectBuffer:indirectBufferOffset:")]
+		void DrawIndexedPatches (nuint numberOfPatchControlPoints, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, IMTLBuffer controlPointIndexBuffer, nuint controlPointIndexBufferOffset, IMTLBuffer indirectBuffer, nuint indirectBufferOffset);
 	}
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	public interface MTLRenderPipelineColorAttachmentDescriptor : NSCopying {
 
-		[Export ("pixelFormat")]
+		[Export ("pixelFormat", ArgumentSemantic.Assign)]
 		MTLPixelFormat PixelFormat { get; set; }
 
 		[Export ("blendingEnabled")]
 		bool BlendingEnabled { [Bind ("isBlendingEnabled")] get; set; }
 
-		[Export ("sourceRGBBlendFactor")]
+		[Export ("sourceRGBBlendFactor", ArgumentSemantic.Assign)]
 		MTLBlendFactor SourceRgbBlendFactor { get; set; }
 
-		[Export ("destinationRGBBlendFactor")]
+		[Export ("destinationRGBBlendFactor", ArgumentSemantic.Assign)]
 		MTLBlendFactor DestinationRgbBlendFactor { get; set; }
 
-		[Export ("rgbBlendOperation")]
+		[Export ("rgbBlendOperation", ArgumentSemantic.Assign)]
 		MTLBlendOperation RgbBlendOperation { get; set; }
 
-		[Export ("sourceAlphaBlendFactor")]
+		[Export ("sourceAlphaBlendFactor", ArgumentSemantic.Assign)]
 		MTLBlendFactor SourceAlphaBlendFactor { get; set; }
 
-		[Export ("destinationAlphaBlendFactor")]
+		[Export ("destinationAlphaBlendFactor", ArgumentSemantic.Assign)]
 		MTLBlendFactor DestinationAlphaBlendFactor { get; set; }
 
-		[Export ("alphaBlendOperation")]
+		[Export ("alphaBlendOperation", ArgumentSemantic.Assign)]
 		MTLBlendOperation AlphaBlendOperation { get; set; }
 
-		[Export ("writeMask")]
+		[Export ("writeMask", ArgumentSemantic.Assign)]
 		MTLColorWriteMask WriteMask { get; set; }
 	}
 
@@ -1692,6 +1750,7 @@ namespace XamCore.Metal {
 
 	[iOS (10, 0), TV (10,0), NoWatch, NoMac]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	public interface MTLHeapDescriptor : NSCopying
 	{
 		[Export ("size")]
@@ -1735,7 +1794,7 @@ namespace XamCore.Metal {
 
 		[Abstract]
 		[Export ("maxAvailableSizeWithAlignment:")]
-		nuint MaxAvailableSizeWithAlignment (nuint alignment);
+		nuint GetMaxAvailableSize (nuint alignment);
 
 		[Abstract]
 		[Export ("newBufferWithLength:options:")]
