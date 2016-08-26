@@ -20,6 +20,8 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public ITaskItem AppBundleDir { get; set; }
 
+		public string InsightsApiKey { get; set; }
+
 		[Required]
 		public ITaskItem[] ITunesSourceFiles { get; set; }
 

@@ -302,6 +302,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</_CodesignAppBundleDependsOn>
 
 		<_CoreCodesignDependsOn>
+			_CodesignNativeLibraries;
+			_CodesignFrameworks;
 			_CodesignAppBundle;
 			_CodesignVerify;
 		</_CoreCodesignDependsOn>
@@ -317,7 +319,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="CoreCodesign" DependsOnTargets="$(_CoreCodesignDependsOn)" />
 	<Target Name="AfterCodesign" />
 
-	<Target Name="Codesign" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(_RequireCodeSigning)' == 'true'"  DependsOnTargets="_CreateAppBundle;$(CodesignDependsOn)" />
+	<Target Name="Codesign" Condition="'$(_CanOutputAppBundle)' == 'true'"  DependsOnTargets="_CreateAppBundle;$(CodesignDependsOn)" />
 
 	<PropertyGroup>
 		<CreateIpaDependsOn>
@@ -1228,7 +1230,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<CreatePkgInfo SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" OutputPath="$(_AppBundlePath)PkgInfo" />
 	</Target>
 
-	<Target Name="_EmbedMobileProvision" DependsOnTargets="_GenerateBundleName;_DetectSigningIdentity"
+	<Target Name="_EmbedMobileProvision" Condition="'$(_RequireCodeSigning)' == 'true'" DependsOnTargets="_GenerateBundleName;_DetectSigningIdentity"
 		Outputs="$(_AppBundlePath)embedded.mobileprovision">
 		<EmbedMobileProvision
 			SessionId="$(BuildSessionId)"
@@ -1485,9 +1487,10 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</CollectFrameworks>
 	</Target>
 
-	<Target Name="_CodesignNativeLibraries" Condition="'$(_RequireCodeSigning)' == 'true'" DependsOnTargets="_DetectSigningIdentity;">
+	<!-- Note: Always codesign *.dylibs even for Simulator builds. We use $(_CanOutputAppBundle) because dylibs can exist in app extensions as well. -->
+	<Target Name="_CodesignNativeLibraries" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_DetectSigningIdentity">
 		<Codesign
-			Condition="'$(IsMacEnabled)' And '@(_NativeLibrary)' != ''"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_NativeLibrary)' != ''"
 			SessionId="$(BuildSessionId)"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
@@ -1500,9 +1503,10 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</Codesign>
 	</Target>
 
-	<Target Name="_CodesignFrameworks" Condition="'$(_RequireCodeSigning)' == 'true'" DependsOnTargets="_DetectSigningIdentity;_CollectFrameworks">
+	<!-- Note: Always codesign user Frameworks even for Simulator builds. We use $(_IsContainerApp) instead of $(_CanOutputAppBundle) as an optimization because only the container app can contain user Frameworks. -->
+	<Target Name="_CodesignFrameworks" Condition="'$(_IsContainerApp)' == 'true'" DependsOnTargets="_DetectSigningIdentity;_CollectFrameworks">
 		<Codesign
-			Condition="'$(IsMacEnabled)' And '@(_Frameworks)' != ''"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_Frameworks)' != ''"
 			SessionId="$(BuildSessionId)"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
@@ -1533,7 +1537,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<Touch
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And Exists ('$(AppBundleDir).dSYM\Contents\Info.plist')"
+			Condition="'$(IsMacEnabled)' And '$(_RequireCodeSigning)' == 'true' And Exists ('$(AppBundleDir).dSYM\Contents\Info.plist')"
 			Files="$(AppBundleDir).dSYM\Contents\Info.plist"
 		/>
 	</Target>
@@ -1782,6 +1786,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleDir="$(AppBundleDir)"
 			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
+			InsightsApiKey="$(XamarinInsightsApiKey)"
 			ITunesSourceFiles="@(_ITunesSourceFile)"
 			OutputPath="$(DeviceSpecificOutputPath)"
 			ProjectName="$(MSBuildProjectName)"

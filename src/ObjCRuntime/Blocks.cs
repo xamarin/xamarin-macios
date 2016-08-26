@@ -29,6 +29,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
@@ -51,7 +52,7 @@ namespace XamCore.ObjCRuntime {
 
 	struct XamarinBlockDescriptor {
 		public BlockDescriptor descriptor;
-		public int xamarin_size; // the size of the complete XamarinBlockDescriptor structure
+		public volatile int ref_count;
 		// followed by variable-length string (the signature)
 	}
 
@@ -127,7 +128,7 @@ namespace XamCore.ObjCRuntime {
 			var xblock_descriptor = (XamarinBlockDescriptor *) block_descriptor;
 			xblock_descriptor->descriptor = * (BlockDescriptor *) xamarin_get_block_descriptor ();
 			xblock_descriptor->descriptor.signature = descptr + sizeof (BlockDescriptor) + 4 /* signature_length */;
-			xblock_descriptor->xamarin_size = desclen;
+			xblock_descriptor->ref_count = 1;
 			Marshal.Copy (bytes, 0, xblock_descriptor->descriptor.signature, bytes.Length);
 			Marshal.WriteByte (xblock_descriptor->descriptor.signature + bytes.Length, 0); // null terminate string
 		}
@@ -135,7 +136,16 @@ namespace XamCore.ObjCRuntime {
 		public void CleanupBlock ()
 		{
 			GCHandle.FromIntPtr (local_handle).Free ();
-			Marshal.FreeHGlobal (block_descriptor);
+			var xblock_descriptor = (XamarinBlockDescriptor *) block_descriptor;
+#pragma warning disable 420
+			// CS0420: A volatile field references will not be treated as volatile
+			// Documentation says: "A volatile field should not normally be passed using a ref or out parameter, since it will not be treated as volatile within the scope of the function. There are exceptions to this, such as when calling an interlocked API."
+			// So ignoring the warning, since it's a documented exception.
+			var rc = Interlocked.Decrement (ref xblock_descriptor->ref_count);
+#pragma warning restore 420
+
+			if (rc == 0)
+				Marshal.FreeHGlobal (block_descriptor);
 		}
 
 		public object Target {

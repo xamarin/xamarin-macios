@@ -544,18 +544,22 @@ namespace xharness
 					}
 				} else if (timed_out) {
 					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} timed out</i></b><br/>", mode);
+					success = false;
 				} else {
 					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed</i></b><br/>", mode);
 					main_log.WriteLine ("Test run crashed");
 					crashed = true;
+					success = false;
 				}
 			} else if (timed_out) {
 				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} never launched</i></b><br/>", mode);
 				main_log.WriteLine ("Test run never launched");
+				success = false;
 			} else {
 				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed at startup (no log)</i></b><br/>", mode);
 				main_log.WriteLine ("Test run crashed before it started (no log file produced)");
 				crashed = true;
+				success = false;
 			}
 				
 			if (!success.HasValue)

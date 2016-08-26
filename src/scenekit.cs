@@ -28,12 +28,12 @@
 using System;
 using System.ComponentModel;
 
+using XamCore.AVFoundation;
 using XamCore.CoreFoundation;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
 #if !WATCH
-using XamCore.AVFoundation;
 using XamCore.CoreAnimation;
 using XamCore.CoreImage;
 #endif
@@ -173,7 +173,6 @@ namespace XamCore.SceneKit {
 		[DesignatedInitializer]
 		IntPtr Constructor (SCNAudioSource source);
 	
-#if !WATCH // FIXME AVFoundation not yet enabled
 		[Export ("initWithAVAudioNode:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (AVAudioNode audioNode);
@@ -194,7 +193,6 @@ namespace XamCore.SceneKit {
 	
 		[NullAllowed, Export ("audioNode")]
 		AVAudioNode AudioNode { get; }
-#endif
 	
 		[NullAllowed, Export ("audioSource")]
 		SCNAudioSource AudioSource { get; }
@@ -2296,8 +2294,6 @@ namespace XamCore.SceneKit {
 		IMTLCommandQueue CommandQueue { get; }
 #endif
 
-#if !WATCH // FIXME: AVFoundation not yet enabled
-
 #if XAMCORE_4_0
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
@@ -2308,11 +2304,10 @@ namespace XamCore.SceneKit {
 #if XAMCORE_4_0
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
+		[NoWatch]
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		[Export ("audioEnvironmentNode")]
 		AVAudioEnvironmentNode AudioEnvironmentNode { get; }
-
-#endif // FIXME
 
 #if XAMCORE_4_0
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
