@@ -38,6 +38,7 @@ using XamCore.CoreImage;
 using XamCore.CoreAnimation;
 using XamCore.CoreData;
 using XamCore.OpenGL;
+using XamCore.CoreVideo;
 
 using CGGlyph = System.UInt16;
 
@@ -23631,4 +23632,31 @@ namespace XamCore.AppKit {
 	//	[return: NullAllowed]
 	//	CKShare GetCloudShare (NSValidatedUserInterfaceItem item);
 	//}
+
+	[Mac (10,6)]
+	[BaseType (typeof(CAOpenGLLayer))]
+	interface NSOpenGLLayer
+	{
+		[NullAllowed, Export ("view", ArgumentSemantic.Assign)]
+		NSView View { get; set; }
+
+		[NullAllowed, Export ("openGLPixelFormat", ArgumentSemantic.Strong)]
+		NSOpenGLPixelFormat OpenGLPixelFormat { get; set; }
+
+		[NullAllowed, Export ("openGLContext", ArgumentSemantic.Strong)]
+		NSOpenGLContext OpenGLContext { get; set; }
+
+		[Export ("openGLPixelFormatForDisplayMask:")]
+		NSOpenGLPixelFormat GetOpenGLPixelFormat (uint mask);
+
+		[Export ("openGLContextForPixelFormat:")]
+		NSOpenGLContext GetOpenGLContext (NSOpenGLPixelFormat pixelFormat);
+
+		[Export ("canDrawInOpenGLContext:pixelFormat:forLayerTime:displayTime:")]
+		bool CanDraw (NSOpenGLContext context, NSOpenGLPixelFormat pixelFormat, double t, ref CVTimeStamp ts);
+
+		[Export ("drawInOpenGLContext:pixelFormat:forLayerTime:displayTime:")]
+		void Draw (NSOpenGLContext context, NSOpenGLPixelFormat pixelFormat, double t, ref CVTimeStamp ts);
+	}
+
 }
