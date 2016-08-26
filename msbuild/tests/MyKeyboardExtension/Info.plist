@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>MyKeyboardExtension</string>
+	<string>com.your-company.MyKeyboardExtension</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.your-company.MyMetalGame.MyKeyboardExtension</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -38,5 +38,7 @@
 		<key>NSExtensionPrincipalClass</key>
 		<string>KeyboardViewController</string>
 	</dict>
+	<key>MinimumOSVersion</key>
+	<string>9.3</string>
 </dict>
 </plist>
