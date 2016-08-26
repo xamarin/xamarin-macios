@@ -9,6 +9,88 @@
 !missing-selector! AVFragmentedAsset::tracksWithMediaCharacteristic: not bound
 !missing-selector! AVFragmentedAsset::tracksWithMediaType: not bound
 
+## AVCaptureDevice_AVCaptureDeviceAuthorization category over AVCaptureDevice - not in tvOS
+!missing-selector! +AVCaptureDevice::authorizationStatusForMediaType: not bound
+!missing-selector! +AVCaptureDevice::requestAccessForMediaType:completionHandler: not bound
+
+## AVCaptureDevice_AVCaptureDeviceColorSpaceSupport category over AVCaptureDevice - not in tvOS
+!missing-selector! AVCaptureDevice::activeColorSpace not bound
+!missing-selector! AVCaptureDevice::setActiveColorSpace: not bound
+
+## AVCaptureDevice_AVCaptureDeviceExposure category over AVCaptureDevice - not in tvOS
+!missing-selector! AVCaptureDevice::ISO not bound
+!missing-selector! AVCaptureDevice::exposureDuration not bound
+!missing-selector! AVCaptureDevice::exposureTargetBias not bound
+!missing-selector! AVCaptureDevice::exposureTargetOffset not bound
+!missing-selector! AVCaptureDevice::lensAperture not bound
+!missing-selector! AVCaptureDevice::maxExposureTargetBias not bound
+!missing-selector! AVCaptureDevice::minExposureTargetBias not bound
+!missing-selector! AVCaptureDevice::setExposureTargetBias:completionHandler: not bound
+!missing-selector! AVCaptureDevice::setExposureModeCustomWithDuration:ISO:completionHandler: not bound
+
+## AVCaptureDevice_AVCaptureDeviceFlash
+!missing-selector! AVCaptureDevice::flashMode not bound
+!missing-selector! AVCaptureDevice::isFlashActive not bound
+!missing-selector! AVCaptureDevice::isFlashAvailable not bound
+!missing-selector! AVCaptureDevice::isFlashModeSupported: not bound
+!missing-selector! AVCaptureDevice::setFlashMode: not bound
+
+## AVCaptureDevice_AVCaptureDeviceFocus category over AVCaptureDevice - not in tvOS
+!missing-selector! AVCaptureDevice::autoFocusRangeRestriction not bound
+!missing-selector! AVCaptureDevice::isAutoFocusRangeRestrictionSupported not bound
+!missing-selector! AVCaptureDevice::isSmoothAutoFocusEnabled not bound
+!missing-selector! AVCaptureDevice::isSmoothAutoFocusSupported not bound
+!missing-selector! AVCaptureDevice::lensPosition not bound
+!missing-selector! AVCaptureDevice::setAutoFocusRangeRestriction: not bound
+!missing-selector! AVCaptureDevice::setFocusModeLockedWithLensPosition:completionHandler: not bound
+!missing-selector! AVCaptureDevice::setSmoothAutoFocusEnabled: not bound
+
+## AVCaptureDevice_AVCaptureDeviceHighDynamicRangeSupport
+!missing-selector! AVCaptureDevice::automaticallyAdjustsVideoHDREnabled not bound
+!missing-selector! AVCaptureDevice::isVideoHDREnabled not bound
+!missing-selector! AVCaptureDevice::setAutomaticallyAdjustsVideoHDREnabled: not bound
+!missing-selector! AVCaptureDevice::setVideoHDREnabled: not bound
+
+## AVCaptureDevice_AVCaptureDeviceLowLightBoost
+!missing-selector! AVCaptureDevice::automaticallyEnablesLowLightBoostWhenAvailable not bound
+!missing-selector! AVCaptureDevice::isLowLightBoostEnabled not bound
+!missing-selector! AVCaptureDevice::isLowLightBoostSupported not bound
+!missing-selector! AVCaptureDevice::setAutomaticallyEnablesLowLightBoostWhenAvailable: not bound
+
+## AVCaptureDevice_AVCaptureDeviceSubjectAreaChangeMonitoring
+!missing-selector! AVCaptureDevice::isSubjectAreaChangeMonitoringEnabled not bound
+!missing-selector! AVCaptureDevice::setSubjectAreaChangeMonitoringEnabled: not bound
+
+## AVCaptureDevice_AVCaptureDeviceTorch
+!missing-selector! AVCaptureDevice::isTorchActive not bound
+!missing-selector! AVCaptureDevice::isTorchAvailable not bound
+!missing-selector! AVCaptureDevice::setTorchModeOnWithLevel:error: not bound
+!missing-selector! AVCaptureDevice::torchLevel not bound
+
+## AVCaptureDevice_AVCaptureDeviceVideoZoom
+!missing-selector! AVCaptureDevice::isRampingVideoZoom not bound
+!missing-selector! AVCaptureDevice::rampToVideoZoomFactor:withRate: not bound
+!missing-selector! AVCaptureDevice::videoZoomFactor not bound
+!missing-selector! AVCaptureDevice::setVideoZoomFactor: not bound
+
+## AVCaptureDevice_AVCaptureDeviceWhiteBalance
+!missing-selector! AVCaptureDevice::chromaticityValuesForDeviceWhiteBalanceGains: not bound
+!missing-selector! AVCaptureDevice::deviceWhiteBalanceGains not bound
+!missing-selector! AVCaptureDevice::deviceWhiteBalanceGainsForChromaticityValues: not bound
+!missing-selector! AVCaptureDevice::deviceWhiteBalanceGainsForTemperatureAndTintValues: not bound
+!missing-selector! AVCaptureDevice::grayWorldDeviceWhiteBalanceGains not bound
+!missing-selector! AVCaptureDevice::maxWhiteBalanceGain not bound
+!missing-selector! AVCaptureDevice::setWhiteBalanceModeLockedWithDeviceWhiteBalanceGains:completionHandler: not bound
+!missing-selector! AVCaptureDevice::temperatureAndTintValuesForDeviceWhiteBalanceGains: not bound
+
+## AVCaptureStillImageOutput_BracketedCaptureMethods category over AVCaptureStillImageOutput - not in tvOS (and deprecated)
+!missing-selector! AVCaptureStillImageOutput::captureStillImageBracketAsynchronouslyFromConnection:withSettingsArray:completionHandler: not bound
+!missing-selector! AVCaptureStillImageOutput::isLensStabilizationDuringBracketedCaptureEnabled not bound
+!missing-selector! AVCaptureStillImageOutput::isLensStabilizationDuringBracketedCaptureSupported not bound
+!missing-selector! AVCaptureStillImageOutput::maxBracketedCaptureStillImageCount not bound
+!missing-selector! AVCaptureStillImageOutput::prepareToCaptureStillImageBracketFromConnection:withSettingsArray:completionHandler: not bound
+!missing-selector! AVCaptureStillImageOutput::setLensStabilizationDuringBracketedCaptureEnabled: not bound
+
 
 # CloudKit
 
