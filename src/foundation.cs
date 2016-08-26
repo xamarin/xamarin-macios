@@ -12609,7 +12609,7 @@ namespace XamCore.Foundation
 
 	[Mac (10,10)]
 	[BaseType (typeof(NSObject))]
-	public interface NSUserNotificationAction : NSCopying, INSCopying
+	public interface NSUserNotificationAction : NSCopying
 	{
 		[Static]
 		[Export ("actionWithIdentifier:title:")]
