@@ -1119,7 +1119,6 @@ namespace XamCore.MetalPerformanceShaders {
 		[Export ("rightMatrixOrigin", ArgumentSemantic.Assign)]
 		MTLOrigin RightMatrixOrigin { get; set; }
 
-		[DesignatedInitializer]
 		[Export ("initWithDevice:transposeLeft:transposeRight:resultRows:resultColumns:interiorColumns:alpha:beta:")]
 		IntPtr Constructor (IMTLDevice device, bool transposeLeft, bool transposeRight, nuint resultRows, nuint resultColumns, nuint interiorColumns, double alpha, double beta);
 
