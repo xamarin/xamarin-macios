@@ -69,6 +69,7 @@ namespace XamCore.SafariServices {
 		[PostGet ("NibBundle")]
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
+		[DesignatedInitializer]
 		[Export ("initWithURL:entersReaderIfAvailable:")]
 		IntPtr Constructor (NSUrl url, bool entersReaderIfAvailable);
 
