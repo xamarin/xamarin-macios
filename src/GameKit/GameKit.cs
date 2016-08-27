@@ -19,7 +19,10 @@ namespace XamCore.GameKit {
 #if !MONOMAC
 
 	// NSUInteger -> GKPeerPickerController.h
-	[NoTV][NoWatch]
+#if XAMCORE_4_0
+	[NoTV] // preserve binary compatibility with existing/shipping code
+#endif
+	[NoWatch]
 	[Native]
 	[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0)]
 	public enum GKPeerPickerConnectionType : nuint_compat_int {
