@@ -307,6 +307,24 @@ namespace XamCore.SpriteKit {
 		[iOS (9,0),Mac(10,11)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
+
+#if !WATCH
+		// Extensions from GameplayKit, inlined to avoid ugly static extension syntax
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64: true)]
+		[Static]
+		[Export ("obstaclesFromSpriteTextures:accuracy:")]
+		GKPolygonObstacle [] GetObstaclesFromSpriteTextures (SKNode [] sprites, float accuracy);
+
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64: true)]
+		[Static]
+		[Export ("obstaclesFromNodeBounds:")]
+		GKPolygonObstacle [] GetObstaclesFromNodeBounds (SKNode [] nodes);
+
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64: true)]
+		[Static]
+		[Export ("obstaclesFromNodePhysicsBodies:")]
+		GKPolygonObstacle [] GetObstaclesFromNodePhysicsBodies (SKNode [] nodes);
+#endif
 	}
 
 #if MONOMAC
@@ -1491,6 +1509,14 @@ namespace XamCore.SpriteKit {
 		[iOS (9,0), Mac (10,11)]
 		[Export ("CGImage")]
 		CGImage CGImage { get; }
+
+#if !WATCH
+		// Static Category from GameplayKit
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64: true)]
+		[Static]
+		[Export ("textureWithNoiseMap:")]
+		SKTexture FromNoiseMap (GKNoiseMap noiseMap);
+#endif
 	}
 
 	delegate void SKTextureModify (IntPtr pixelData, nuint lengthInBytes);
@@ -2925,6 +2951,14 @@ namespace XamCore.SpriteKit {
 
 		[Export ("centerOfTileAtColumn:row:")]
 		CGPoint GetCenterOfTile (nuint column, nuint row);
+
+#if !WATCH
+		// Static Category from GameplayKit
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64: true)]
+		[Static]
+		[Export ("tileMapNodesWithTileSet:columns:rows:tileSize:fromNoiseMap:tileTypeNoiseMapThresholds:")]
+		SKTileMapNode[] FromTileSet (SKTileSet tileSet, nuint columns, nuint rows, CGSize tileSize, GKNoiseMap noiseMap, NSNumber[] thresholds);
+#endif
 	}
 
 	[Watch (3,0)]

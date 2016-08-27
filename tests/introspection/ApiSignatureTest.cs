@@ -162,6 +162,7 @@ namespace Introspection {
 					return 48;	// matrix_float3x3
 				case "Matrix4":
 					return 64;	// matrix_float4x4
+				case "Vector3d":    // sizeof (vector_double3)
 				case "MDLAxisAlignedBoundingBox":
 					return 32; // struct (Vector3, Vector3)
 				}
@@ -379,10 +380,13 @@ namespace Introspection {
 			switch (pt.Name) {
 			case "Vector2":
 			case "Vector2i":
+			case "Vector2d":
 			case "Vector3":
 			case "Vector3i":
+			case "Vector3d":
 			case "Vector4":
 			case "Vector4i":
+			case "Vector4d":
 			case "Matrix2":
 			case "Matrix3":
 			case "Matrix4":
