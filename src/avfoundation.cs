@@ -401,11 +401,11 @@ namespace XamCore.AVFoundation {
 		[Field ("AVVideoCodecJPEG")]
 		NSString CodecJPEG { get; }
 		
-		[NoiOS, Mac (10,7)]
+		[NoiOS, NoTV, Mac (10,7)]
 		[Field ("AVVideoCodecAppleProRes4444")]
 		NSString AppleProRes4444 { get; }
 
-		[NoiOS, Mac (10,7)]
+		[NoiOS, NoTV, Mac (10,7)]
 		[Field ("AVVideoCodecAppleProRes422")]
 		NSString AppleProRes422 { get; }
 		
@@ -1024,6 +1024,7 @@ namespace XamCore.AVFoundation {
 
 	}	
 
+	[NoTV]
 	[NoWatch]
 	[iOS (8,0)][Mac (10,10)]
 	[BaseType (typeof (AVAudioIONode))]
@@ -9327,7 +9328,7 @@ namespace XamCore.AVFoundation {
 		[Field ("AVVideoColorPrimaries_ITU_R_709_2")]
 		NSString Itu_R_709_2 { get; }
 
-		[NoiOS]
+		[NoiOS, NoTV]
 		[Field ("AVVideoColorPrimaries_EBU_3213")]
 		NSString Ebu_3213 { get; }
 
@@ -9347,7 +9348,7 @@ namespace XamCore.AVFoundation {
 		[Field ("AVVideoTransferFunction_ITU_R_709_2")]
 		NSString AVVideoTransferFunction_Itu_R_709_2 { get; }
 
-		[NoiOS, Mac (10,12)]
+		[NoiOS, NoTV, Mac (10,12)]
 		[Field ("AVVideoTransferFunction_SMPTE_240M_1995")]
 		NSString AVVideoTransferFunction_Smpte_240M_1995 { get; }
 	}
@@ -9364,7 +9365,7 @@ namespace XamCore.AVFoundation {
 		[Field ("AVVideoYCbCrMatrix_ITU_R_601_4")]
 		NSString Itu_R_601_4 { get; }
 
-		[NoiOS, Mac (10,12)]
+		[NoiOS, NoTV, Mac (10,12)]
 		[Field ("AVVideoYCbCrMatrix_SMPTE_240M_1995")]
 		NSString Smpte_240M_1995 { get; }
 
@@ -10309,6 +10310,7 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
+	[NoTV]
 	[iOS (9,0)]
 	[NoMac]
 	[BaseType (typeof (NSUrlSessionTask))]
@@ -10349,9 +10351,7 @@ namespace XamCore.AVFoundation {
 		AVMediaSelection MediaSelection { get; }
 	}
 
-#if XAMCORE_4_0
 	[NoTV]
-#endif
 	[NoWatch]
 	[iOS (9,0)]
 	[DisableDefaultCtor]
@@ -10382,9 +10382,7 @@ namespace XamCore.AVFoundation {
 
 	interface IAVAssetDownloadDelegate {}
 
-#if XAMCORE_4_0
 	[NoTV]
-#endif
 	[NoWatch]
 	[iOS (9,0)]
 	[Protocol, Model]
