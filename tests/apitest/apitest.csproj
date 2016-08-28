@@ -117,6 +117,7 @@
     <Compile Include="src\Foundation\NSScriptCommandDescriptionTest.cs" />
     <Compile Include="src\Foundation\NSString.cs" />
     <Compile Include="src\Foundation\NSThread.cs" />
+    <Compile Include="src\Foundation\NSUrl.cs" />
     <Compile Include="src\MonoMac\AssemblyTest.cs" />
     <Compile Include="src\MonoMac\CBUUID.cs" />
     <Compile Include="src\NSScriptCommandDescriptionDictionaryTest.cs" />
