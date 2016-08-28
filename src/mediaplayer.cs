@@ -1314,7 +1314,6 @@ namespace XamCore.MediaPlayer {
 		NSString PropertyIsLiveStream { get; }
 	}
 
-	[NoTV] // This type was made available in tvOS but MPMediaItemArtwork is still restricted radar://24982126 https://trello.com/c/2gxuFbeS
 	[Since (7,1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash if used
@@ -1340,10 +1339,12 @@ namespace XamCore.MediaPlayer {
 		string Title { get; set; }
 
 		[iOS (10,0)]
+		[TV (10,0)]
 		[Export ("streamingContent")]
 		bool StreamingContent { [Bind ("isStreamingContent")] get; set; }
 
 		[iOS (10,0)]
+		[TV (10,0)]
 		[Export ("explicitContent")]
 		bool ExplicitContent { [Bind ("isExplicitContent")] get; set; }
 
