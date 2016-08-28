@@ -41,6 +41,13 @@
 !missing-field! GKSessionErrorDomain not bound
 
 
+# Intents
+
+## not exposed by our API (better use the OS version)
+!missing-field! IntentsVersionNumber not bound
+!missing-field! IntentsVersionString not bound
+
+
 # CloudKit
 
 ## default init does not work, there's no init in base types, so it's a defacto designated initializer

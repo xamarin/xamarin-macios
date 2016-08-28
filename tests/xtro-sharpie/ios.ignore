@@ -16,8 +16,17 @@
 !missing-selector! CIKernel::setROISelector: not bound
 
 
+# GameKit
+
 ## typedef is used + untyped enum in GKPeerPickerController.h: typedef NSUInteger GKPeerPickerConnectionType
 !unknown-native-enum! GKPeerPickerConnectionType bound
+
+
+# IntentsUI
+
+## not exposed by our API (better use the OS version)
+!missing-field! IntentsUIVersionNumber not bound
+!missing-field! IntentsUIVersionString not bound
 
 
 # ReplayKit
@@ -65,6 +74,12 @@
 !incorrect-protocol-member! WCSessionDelegate::session:activationDidCompleteWithState:error: is REQUIRED and should be abstract
 !incorrect-protocol-member! WCSessionDelegate::sessionDidBecomeInactive: is REQUIRED and should be abstract
 !incorrect-protocol-member! WCSessionDelegate::sessionDidDeactivate: is REQUIRED and should be abstract
+
+
+# WatchKit
+
+## the returned type WKCrownSequencer is not available on iOS (watchOS only)
+!missing-selector! WKInterfaceController::crownSequencer not bound
 
 
 ## methods are [Sealed] so we can't reflect the selector
