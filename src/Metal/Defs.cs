@@ -225,6 +225,69 @@ namespace XamCore.Metal {
 		public uint BaseVertex;
 		public uint BaseInstance;
 	}
+	
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[StructLayout (LayoutKind.Sequential)]
+	public struct MTLSizeAndAlign
+	{
+		public nuint Size;
+		public nuint Align;
+		
+		public MTLSizeAndAlign (nuint size, nuint align)
+		{
+			Size = size;
+			Align = align;
+		}
+	
+	}
+
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[StructLayout (LayoutKind.Sequential)]
+	public struct MTLDrawPatchIndirectArguments
+	{
+		public uint PatchCount;
+		public uint InstanceCount;
+		public uint PatchStart;
+		public uint BaseInstance;
+
+		public MTLDrawPatchIndirectArguments (uint pathCount, uint instanceCount, uint patchStart, uint baseInstance)
+		{
+			PatchCount = pathCount;
+			InstanceCount = instanceCount;
+			PatchStart = patchStart;
+			BaseInstance = baseInstance;
+		}
+
+	}
+
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[StructLayout (LayoutKind.Sequential)]
+	public struct MTLQuadTessellationFactorsHalf
+	{
+		public ushort[] EdgeTessellationFactor;
+		public ushort[] InsideTessellationFactor;
+		
+		public MTLQuadTessellationFactorsHalf (ushort[] edgeTessellationFactor, ushort[] insideTessellationFactor)
+		{
+			EdgeTessellationFactor = edgeTessellationFactor;
+			InsideTessellationFactor = insideTessellationFactor;
+		}
+	
+	}
+
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[StructLayout (LayoutKind.Sequential)]
+	public struct MTLTriangleTessellationFactorsHalf
+	{
+		public ushort[] EdgeTessellationFactor;
+		public ushort InsideTessellationFactor;
+		
+		public MTLTriangleTessellationFactorsHalf (ushort[] edgeTessellationFactor, ushort insideTessellationFactor)
+		{
+			EdgeTessellationFactor = edgeTessellationFactor;
+			InsideTessellationFactor = insideTessellationFactor;
+		}
+	}
 
 #if COREBUILD
 	// IMTLCommandBuffer and IMTLTexture visibility are needed for MPSCopyAllocator - but they are generated later

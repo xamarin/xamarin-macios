@@ -428,6 +428,11 @@
     <Compile Include="AVFoundation\MetadataObjectTest.cs" />
     <Compile Include="AVFoundation\CaptureMetadataOutputTest.cs" />
     <Compile Include="Metal\ClearValueTest.cs" />
+    <Compile Include="Metal\MTLBufferLayoutDescriptorTest.cs" />
+    <Compile Include="Metal\MTLFunctionConstantTest.cs" />
+    <Compile Include="Metal\MTLStageInputOutputDescriptorTest.cs" />
+    <Compile Include="Metal\MTLAttributeDescriptorTest.cs" />
+    <Compile Include="Metal\MTLAttributeTest.cs" />
     <Compile Include="MediaPlayer\MoviePlayerControllerTest.cs" />
     <Compile Include="AVKit\PlayerViewControllerTest.cs" />
     <Compile Include="UIKit\VibrancyEffectTest.cs" />

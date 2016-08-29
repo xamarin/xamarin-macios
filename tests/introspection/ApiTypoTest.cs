@@ -82,6 +82,7 @@ namespace Introspection
 			"Automapping",
 			"Automounted",
 			"Autoredirect",
+			"Aliasable",
 			"Backface",
 			"Bary",
 			"Batc",

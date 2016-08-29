@@ -61,6 +61,15 @@ namespace Introspection {
 					return true;
 
 				break;
+			case "MTLFence":
+			case "MTLHeap":
+				if (Runtime.Arch != Arch.DEVICE)
+					return true;
+
+				// Requires iOS 10
+				if (!TestRuntime.CheckXcodeVersion (8, 0))
+					return true;
+				break;
 			}
 
 			return base.Skip (type);

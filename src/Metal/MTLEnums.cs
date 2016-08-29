@@ -76,7 +76,9 @@ namespace XamCore.Metal {
 		Blacklisted = 4,
 		NotPermitted = 7,
 		OutOfMemory = 8,
-		InvalidResource = 9
+		InvalidResource = 9,
+		[iOS (10,0), TV (10,0), NoWatch, NoMac]
+		Memoryless = 10,
 	}
 
 	[Native]
@@ -86,7 +88,11 @@ namespace XamCore.Metal {
 
 	[Native]
 	public enum MTLStoreAction : nuint {
-		DontCare, Store, MultisampleResolve
+		DontCare, Store, MultisampleResolve,
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		StoreAndMultisampleResolve,
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		Unknown,
 	}
 
 	[Native]
@@ -124,6 +130,9 @@ namespace XamCore.Metal {
 		Repeat = 2,
 		MirrorRepeat = 3,
 		ClampToZero = 4,
+		
+		[Mac (10,12)]
+		ClampToBorderColor = 5,
 	}
 
 	[Native]
@@ -324,6 +333,13 @@ namespace XamCore.Metal {
 #endif
 		[iOS (9,0)]
 		Depth32Float_Stencil8 = 260,
+	
+		[NoWatch, iOS (9,0), TV (9,0), Mac (10,11)]
+		X32_Stencil8 = 261,
+#if MONOMAC
+		[Mac (10,12)]
+		X24_Stencil8 = 262,
+#endif
 	}
 
 	[Native]
@@ -339,7 +355,11 @@ namespace XamCore.Metal {
 		Unsupported = 1,
 		Internal,
 		CompileFailure,
-		CompileWarning
+		CompileWarning,
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		FunctionNotFound,
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		FileNotFound,
 	}
 
 	[Native]
@@ -450,12 +470,22 @@ namespace XamCore.Metal {
 #endif
 		[iOS (9,0)]
 		StorageModePrivate = MTLStorageMode.Private << 4,
+		
+		[iOS (10,0), TV (10,0), NoWatch, NoMac]
+		StorageModeMemoryless = MTLStorageMode.Memoryless << 4,
+
+		[iOS (10,0), TV (10,0), NoWatch, NoMac]
+		HazardTrackingModeUntracked = 1 << 8,
 	}
 
 	// MTLVertexDescriptor.h
 	[Native]
 	public enum MTLVertexStepFunction : nuint {
-		Constant, PerVertex, PerInstance
+		Constant, PerVertex, PerInstance,
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]	
+		PerPatch = 3,
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]	
+		PerPatchControlPoint = 4,
 	}
 
 	[Native]
@@ -562,12 +592,27 @@ namespace XamCore.Metal {
 		iOS_GPUFamily2_v1 = 1,
 		iOS_GPUFamily2_v2 = 3,
 		iOS_GPUFamily3_v1 = 4,
+		[iOS (10,0), NoTV, NoWatch, NoMac]
+		iOS_GPUFamily1_v3 = 5,
+		[iOS (10,0), NoTV, NoWatch, NoMac]
+		iOS_GPUFamily2_v3 = 6,
+		[iOS (10,0), NoTV, NoWatch, NoMac]
+		iOS_GPUFamily3_v2 = 7,
 
 		[Mac (10,11)]
 		OSX_GPUFamily1_v1 = 10000,
+		
+		[NoiOS, NoTV, NoWatch, Mac (10,12)]
+		OSX_GPUFamily1_v2 = 10001,
+		
+		[NoiOS, NoTV, NoWatch, Mac (10,12)]
+		OSX_ReadWriteTextureTier2 = 10002,
 
 		[TV (9,0)]
 		TVOS_GPUFamily1_v1 = 30000,
+
+		[NoiOS, TV (10,0), NoWatch, NoMac]
+		tvOS_GPUFamily1_v2 = 30001
 	}
 
 	[iOS (9,0)][Mac (10,11)]
@@ -577,12 +622,13 @@ namespace XamCore.Metal {
 		v1_0 = (1 << 16),
 #endif
 		v1_1 = (1 << 16) + 1,
+		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+		v1_2 = (1 << 16) + 2,
 	}
 
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
-	public enum MTLDepthClipMode : nuint
-	{
+	public enum MTLDepthClipMode : nuint {
 		Clip = 0,
 		Clamp = 1
 	}
@@ -590,8 +636,7 @@ namespace XamCore.Metal {
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
 	[Flags]
-	public enum MTLBlitOption : nuint
-	{
+	public enum MTLBlitOption : nuint {
 		None = 0,
 		DepthFromDepthStencil = 1 << 0,
 		StencilFromDepthStencil = 1 << 1,
@@ -602,18 +647,144 @@ namespace XamCore.Metal {
 
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
-	public enum MTLStorageMode : nuint
-	{
+	public enum MTLStorageMode : nuint {
 		Shared = 0,
 #if MONOMAC
 		Managed = 1,
 #endif
 		Private = 2,
+		[iOS (10,0), TV (10,0), NoWatch, NoMac]
+		Memoryless = 3,
 	}
 
 	[Native]
 	public enum MTLMultisampleDepthResolveFilter : nuint{
 		Sample0, Min, Max
+	}
+
+	[Mac (10,12)]
+	[Native]
+	public enum MTLSamplerBorderColor : nuint {
+		TransparentBlack = 0,
+		OpaqueBlack = 1,
+		OpaqueWhite = 2
+	}
+
+	[NoiOS, Mac (10,11)]
+	[Native]
+	public enum MTLPrimitiveTopologyClass : nuint {
+		Unspecified = 0,
+		Point = 1,
+		Line = 2,
+		Triangle = 3
+	}
+
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[Native]
+	public enum MTLTessellationPartitionMode : nuint {
+		Pow2 = 0,
+		Integer = 1,
+		FractionalOdd = 2,
+		FractionalEven = 3
+	}
+
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[Native]
+	public enum MTLTessellationFactorFormat : nuint {
+		Half = 0
+	}
+
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[Native]
+	public enum MTLTessellationControlPointIndexType : nuint {
+		None = 0,
+		UInt16 = 1,
+		UInt32 = 2
+	}
+
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[Native]
+	public enum MTLTessellationFactorStepFunction : nuint {
+		Constant = 0,
+		PerPatch = 1,
+		PerInstance = 2,
+		PerPatchAndPerInstance = 3
+	}
+	
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[Native]
+	public enum MTLPatchType : nuint {
+		None = 0,
+		Triangle = 1,
+		Quad = 2
+	}
+	
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[Native]
+	public enum MTLAttributeFormat : nuint {
+		Invalid = 0,
+		UChar2 = 1,
+		UChar3 = 2,
+		UChar4 = 3,
+		Char2 = 4,
+		Char3 = 5,
+		Char4 = 6,
+		UChar2Normalized = 7,
+		UChar3Normalized = 8,
+		UChar4Normalized = 9,
+		Char2Normalized = 10,
+		Char3Normalized = 11,
+		Char4Normalized = 12,
+		UShort2 = 13,
+		UShort3 = 14,
+		UShort4 = 15,
+		Short2 = 16,
+		Short3 = 17,
+		Short4 = 18,
+		UShort2Normalized = 19,
+		UShort3Normalized = 20,
+		UShort4Normalized = 21,
+		Short2Normalized = 22,
+		Short3Normalized = 23,
+		Short4Normalized = 24,
+		Half2 = 25,
+		Half3 = 26,
+		Half4 = 27,
+		Float = 28,
+		Float2 = 29,
+		Float3 = 30,
+		Float4 = 31,
+		Int = 32,
+		Int2 = 33,
+		Int3 = 34,
+		Int4 = 35,
+		UInt = 36,
+		UInt2 = 37,
+		UInt3 = 38,
+		UInt4 = 39,
+		Int1010102Normalized = 40,
+		UInt1010102Normalized = 41
+	}
+	
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[Native]
+	public enum MTLStepFunction : nuint {
+		Constant = 0,
+		PerVertex = 1,
+		PerInstance = 2,
+		PerPatch = 3,
+		PerPatchControlPoint = 4,
+		ThreadPositionInGridX = 5,
+		ThreadPositionInGridY = 6,
+		ThreadPositionInGridXIndexed = 7,
+		ThreadPositionInGridYIndexed = 8
+	}
+
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[Native]
+	public enum MTLRenderStages : nuint {
+		Vertex = (1 << 0),
+		Fragment = (1 << 1)
 	}
 }
 #endif

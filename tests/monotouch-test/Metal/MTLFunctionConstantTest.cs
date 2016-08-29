@@ -1,0 +1,47 @@
+#if !__WATCHOS__
+
+using System;
+
+#if XAMCORE_2_0
+using Metal;
+#else
+using MonoTouch.Metal;
+#endif
+
+using NUnit.Framework;
+
+namespace MonoTouchFixtures.Metal {
+	
+	[TestFixture]
+	public class MTLFunctionConstantTest {
+		[Test]
+		public void GetNameTest ()
+		{
+			var constant = new MTLFunctionConstant ();
+			Assert.IsNull (constant.Name); // defualt value is null
+		}
+		
+		[Test]
+		public void GetTypeTest ()
+		{
+			var constant = new MTLFunctionConstant ();
+			Assert.AreEqual (MTLDataType.None, constant.Type); // default value is none
+		}
+		
+		[Test]
+		public void GetIndexTest ()
+		{
+			var constant = new MTLFunctionConstant ();
+			Assert.AreEqual (0, constant.Index, $"Index is {constant.Index}"); // default value is 0
+		}
+		
+		[Test]
+		public void GetIsRequiredTest ()
+		{
+			var constant = new MTLFunctionConstant ();
+			Assert.False (constant.IsRequired); // defualt value is false
+		}
+	}
+}
+
+#endif // !__WATCHOS__
