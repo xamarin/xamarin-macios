@@ -628,8 +628,7 @@ namespace XamCore.Metal {
 
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
-	public enum MTLDepthClipMode : nuint
-	{
+	public enum MTLDepthClipMode : nuint {
 		Clip = 0,
 		Clamp = 1
 	}
@@ -637,8 +636,7 @@ namespace XamCore.Metal {
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
 	[Flags]
-	public enum MTLBlitOption : nuint
-	{
+	public enum MTLBlitOption : nuint {
 		None = 0,
 		DepthFromDepthStencil = 1 << 0,
 		StencilFromDepthStencil = 1 << 1,
@@ -649,8 +647,7 @@ namespace XamCore.Metal {
 
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
-	public enum MTLStorageMode : nuint
-	{
+	public enum MTLStorageMode : nuint {
 		Shared = 0,
 #if MONOMAC
 		Managed = 1,
@@ -667,8 +664,7 @@ namespace XamCore.Metal {
 
 	[Mac (10,12)]
 	[Native]
-	public enum MTLSamplerBorderColor : nuint
-	{
+	public enum MTLSamplerBorderColor : nuint {
 		TransparentBlack = 0,
 		OpaqueBlack = 1,
 		OpaqueWhite = 2
@@ -676,8 +672,7 @@ namespace XamCore.Metal {
 
 	[NoiOS, Mac (10,11)]
 	[Native]
-	public enum MTLPrimitiveTopologyClass : nuint
-	{
+	public enum MTLPrimitiveTopologyClass : nuint {
 		Unspecified = 0,
 		Point = 1,
 		Line = 2,
@@ -686,8 +681,7 @@ namespace XamCore.Metal {
 
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 	[Native]
-	public enum MTLTessellationPartitionMode : nuint
-	{
+	public enum MTLTessellationPartitionMode : nuint {
 		Pow2 = 0,
 		Integer = 1,
 		FractionalOdd = 2,
@@ -696,15 +690,13 @@ namespace XamCore.Metal {
 
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 	[Native]
-	public enum MTLTessellationFactorFormat : nuint
-	{
+	public enum MTLTessellationFactorFormat : nuint {
 		Half = 0
 	}
 
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 	[Native]
-	public enum MTLTessellationControlPointIndexType : nuint
-	{
+	public enum MTLTessellationControlPointIndexType : nuint {
 		None = 0,
 		UInt16 = 1,
 		UInt32 = 2
@@ -712,8 +704,7 @@ namespace XamCore.Metal {
 
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 	[Native]
-	public enum MTLTessellationFactorStepFunction : nuint
-	{
+	public enum MTLTessellationFactorStepFunction : nuint {
 		Constant = 0,
 		PerPatch = 1,
 		PerInstance = 2,
@@ -722,8 +713,7 @@ namespace XamCore.Metal {
 	
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 	[Native]
-	public enum MTLPatchType : nuint
-	{
+	public enum MTLPatchType : nuint {
 		None = 0,
 		Triangle = 1,
 		Quad = 2
@@ -731,8 +721,7 @@ namespace XamCore.Metal {
 	
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 	[Native]
-	public enum MTLAttributeFormat : nuint
-	{
+	public enum MTLAttributeFormat : nuint {
 		Invalid = 0,
 		UChar2 = 1,
 		UChar3 = 2,
@@ -779,8 +768,7 @@ namespace XamCore.Metal {
 	
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 	[Native]
-	public enum MTLStepFunction : nuint
-	{
+	public enum MTLStepFunction : nuint {
 		Constant = 0,
 		PerVertex = 1,
 		PerInstance = 2,
@@ -794,8 +782,7 @@ namespace XamCore.Metal {
 
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
 	[Native]
-	public enum MTLRenderStages : nuint
-	{
+	public enum MTLRenderStages : nuint {
 		Vertex = (1 << 0),
 		Fragment = (1 << 1)
 	}
