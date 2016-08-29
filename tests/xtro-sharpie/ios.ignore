@@ -9,6 +9,16 @@
 !unknown-native-enum! ALAssetsGroupType bound
 
 
+# CoreBluetooth
+
+## obsoleted (removed from headers) in iOS 8.4
+!extra-protocol-member! unexpected selector CBCentralManagerDelegate::centralManager:didRetrieveConnectedPeripherals: found
+!extra-protocol-member! unexpected selector CBCentralManagerDelegate::centralManager:didRetrievePeripherals: found
+
+## obsoleted (removed from headers) in iOS 8.4
+!extra-protocol-member! unexpected selector CBPeripheralDelegate::peripheralDidInvalidateServices: found
+
+
 # CoreImage
 
 ## OSX-only API, rdar #22524785
@@ -66,6 +76,11 @@
 !missing-selector! UITableViewHeaderFooterView::tintColor not bound
 !missing-selector! UIToolbar::setTintColor: not bound
 !missing-selector! UIToolbar::tintColor not bound
+
+## static members cannot be abstract (@required) in .NET
+!incorrect-protocol-member! +UIPopoverBackgroundViewMethods::arrowBase is REQUIRED and should be abstract
+!incorrect-protocol-member! +UIPopoverBackgroundViewMethods::arrowHeight is REQUIRED and should be abstract
+!incorrect-protocol-member! +UIPopoverBackgroundViewMethods::contentViewInsets is REQUIRED and should be abstract
 
 
 # WatchConnectivity
