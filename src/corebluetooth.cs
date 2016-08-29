@@ -247,10 +247,12 @@ namespace XamCore.CoreBluetooth {
 		void UpdatedState (CBCentralManager central);
 
 		[NoTV]
+		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_8_4)] // Available in iOS 5.0 through iOS 8.4. Deprecated in iOS 7.0.
 		[Export ("centralManager:didRetrievePeripherals:"), EventArgs ("CBPeripherals")]
 		void RetrievedPeripherals (CBCentralManager central, CBPeripheral [] peripherals);
 
 		[NoTV]
+		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_8_4)] // Available in iOS 5.0 through iOS 8.4. Deprecated in iOS 7.0.
 		[Export ("centralManager:didRetrieveConnectedPeripherals:"), EventArgs ("CBPeripherals")]
 		void RetrievedConnectedPeripherals (CBCentralManager central, CBPeripheral [] peripherals);
 
@@ -559,7 +561,7 @@ namespace XamCore.CoreBluetooth {
 		void WroteDescriptorValue (CBPeripheral peripheral, CBDescriptor descriptor, NSError error);
 
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_6_0, Deprecated = Platform.iOS_7_0)]
+		[Availability (Introduced = Platform.iOS_6_0, Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_8_4)]
 		[Export ("peripheralDidInvalidateServices:")]
 		void InvalidatedService (CBPeripheral peripheral);	
 
