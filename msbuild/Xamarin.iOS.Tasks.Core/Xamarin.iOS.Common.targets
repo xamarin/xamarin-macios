@@ -595,7 +595,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</PropertyGroup>
 
 	<Target Name="_CompileAppManifest"
-		DependsOnTargets="_DetectSdkLocations;_DetectAppManifest;_GenerateBundleName;_DetectSigningIdentity;_PrepareResourceRules;_ResolveWatchAppReferences"
+		DependsOnTargets="_DetectSdkLocations;_DetectAppManifest;_GenerateBundleName;_DetectSigningIdentity;_PrepareResourceRules;_ResolveWatchAppReferences;_DetectDebugNetworkConfiguration"
 		Inputs="$(_AppManifest);@(_PartialAppManifest)"
 		Outputs="$(_AppBundlePath)Info.plist" >
 		<CompileAppManifest
@@ -607,6 +607,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Architecture="$(MtouchArch)"
 			AssemblyName="$(AssemblyName)"
 			BundleIdentifier="$(_BundleIdentifier)"
+			Debug="$(MtouchDebug)"
 			DefaultSdkVersion="$(MtouchSdkVersion)"
 			IsAppExtension="$(IsAppExtension)"
 			IsWatchApp="$(IsWatchApp)"
@@ -616,6 +617,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
 			SdkPlatform="$(_SdkPlatform)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
+			DebugIPAddresses="$(_DebugIPAddresses)"
 			>
 		</CompileAppManifest>
 
