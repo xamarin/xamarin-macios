@@ -670,6 +670,7 @@ namespace XamCore.Metal {
 		OpaqueWhite = 2
 	}
 
+	[NoTV]
 	[NoiOS, Mac (10,11)]
 	[Native]
 	public enum MTLPrimitiveTopologyClass : nuint {

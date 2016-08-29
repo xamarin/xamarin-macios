@@ -900,6 +900,7 @@ METAL_CORE_SOURCES = \
 	Metal/Defs.cs \
 
 METAL_SOURCES = \
+	Metal/MTLCompat.cs \
 	Metal/MTLDevice.cs \
 	Metal/MTLArrays.cs \
 	Metal/MTLVertexDescriptor.cs \

@@ -1448,7 +1448,9 @@ namespace XamCore.Metal {
 		[Abstract, Export ("setCullMode:")]
 		void SetCullMode (MTLCullMode cullMode);
 
-		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+		[Mac (10,11, onlyOn64 : true)]
+		[NoTV]
+		[NoiOS] // it was [iOS (9,0)] but now it's marked as not available on iOS in Xcode 8
 #if XAMCORE_4_0
 		// Apple added a new required member in iOS 9, but that breaks our binary compat, so we can't do that in our existing code.
 		[Abstract]
