@@ -126,6 +126,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "ModelIO", 10, 11 },
 
 					{ "Intents", 10, 12 },
+					{ "SafariServices", "SafariServices", 10, 12 },
 				};
 			}
 			return mac_frameworks;
@@ -261,6 +262,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "WatchConnectivity", "WatchConnectivity", 2 },
 					{ "WatchKit", "WatchKit", 2 },
 
+					//{ "AVFoundation", "AVFoundation", 3 },
+					{ "CloudKit", "CloudKit", 3 },
 					{ "GameKit", "GameKit", 3 },
 					{ "SceneKit", "SceneKit", 3 },
 					{ "SpriteKit", "SpriteKit", 3 },
@@ -299,7 +302,6 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "GameController", "GameController", 9 },
 					{ "GameKit", "GameKit", 9 },
 					{ "GameplayKit", "GameplayKit", 9 },
-					{ "HomeKit", "HomeKit", 10 },
 					{ "ImageIO", "ImageIO", 9 },
 					{ "JavaScriptCore", "JavaScriptCore", 9 },
 					{ "MediaAccessibility", "MediaAccessibility", 9 },
@@ -322,6 +324,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "MapKit", "MapKit", 9, 2 },
 
 					{ "ExternalAccessory", "ExternalAccessory", 10 },
+					{ "HomeKit", "HomeKit", 10 },
 					{ "MultipeerConnectivity", 10 },
 					{ "Photos", "Photos", 10 },
 					{ "PhotosUI", "PhotosUI", 10 },
