@@ -142,17 +142,21 @@ namespace XamCore.Metal {
 #endif
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("addDebugMarker:range:")]
 		void AddDebugMarker (string marker, NSRange range);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("removeAllDebugMarkers")]
 		void RemoveAllDebugMarkers ();
 	}
 	
-	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	public interface MTLBufferLayoutDescriptor : NSCopying
 	{
@@ -166,7 +170,7 @@ namespace XamCore.Metal {
 		nuint StepRate { get; set; }
 	}
 
-	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	public interface MTLBufferLayoutDescriptorArray
 	{
@@ -352,17 +356,23 @@ namespace XamCore.Metal {
 		void SetBytes (IntPtr bytes, nuint length, nuint index);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("setStageInRegion:")]
 		void SetStage (MTLRegion region);
 
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("updateFence:")]
 		void Update (IMTLFence fence);
 
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("waitForFence:")]
 		void Wait (IMTLFence fence);
 	}
@@ -441,12 +451,16 @@ namespace XamCore.Metal {
 		void CopyFromBuffer (IMTLBuffer sourceBuffer, nuint sourceOffset, IMTLBuffer destinationBuffer, nuint destinationOffset, nuint size);
 		
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("updateFence:")]
 		void Update (IMTLFence fence);
 
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("waitForFence:")]
 		void Wait (IMTLFence fence);
 	}
@@ -454,8 +468,7 @@ namespace XamCore.Metal {
 	public interface IMTLFence {}
 
 	[iOS (10,0), TV (10,0), NoWatch, NoMac]
-	[Protocol]
-	[BaseType (typeof(NSObject))]
+	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	public interface MTLFence
 	{
 		[Abstract]
@@ -494,7 +507,9 @@ namespace XamCore.Metal {
 		bool Headless { [Bind ("isHeadless")] get; }
 		
 		[NoiOS, NoTV, NoWatch, Mac (10,12)]
-		// [Abstract] - Should be abstract but would be a API breaking change
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("recommendedMaxWorkingSetSize")]
 		ulong RecommendedMaxWorkingSetSize { get; }
 
@@ -504,17 +519,23 @@ namespace XamCore.Metal {
 		bool Depth24Stencil8PixelFormatSupported { [Bind ("isDepth24Stencil8PixelFormatSupported")] get; }
 		
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
-		// [Abstract] - Should be abstract but would be a API breaking change
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("heapTextureSizeAndAlignWithDescriptor:")]
-		MTLSizeAndAlign HeapTextureSizeAndAlign (MTLTextureDescriptor desc);
+		MTLSizeAndAlign GetHeapTextureSizeAndAlign (MTLTextureDescriptor desc);
 
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
-		// [Abstract] - Should be abstract but would be a API breaking change
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("heapBufferSizeAndAlignWithLength:options:")]
-		MTLSizeAndAlign HeapBufferSizeAndAlignWithLength (nuint length, MTLResourceOptions options);
+		MTLSizeAndAlign GetHeapBufferSizeAndAlignWithLength (nuint length, MTLResourceOptions options);
 
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
-		// [Abstract] - Should be abstract but would be a API breaking change
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("newHeapWithDescriptor:")]
 		IMTLHeap CreateHeap (MTLHeapDescriptor descriptor);
 
@@ -558,7 +579,9 @@ namespace XamCore.Metal {
 		void CreateLibrary (string source, MTLCompileOptions options, Action<IMTLLibrary, NSError> completionHandler);
 		
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - Should be abstract but would be a API breaking change
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("newDefaultLibraryWithBundle:error:")]
 		[return: NullAllowed]
 		IMTLLibrary CreateLibrary (NSBundle bundle, out NSError error);
@@ -616,7 +639,9 @@ namespace XamCore.Metal {
 		void CreateComputePipelineState (MTLComputePipelineDescriptor descriptor, MTLPipelineOption options, MTLNewComputePipelineStateWithReflectionCompletionHandler completionHandler);
 		
 		[iOS (10, 0), TV (10,0), NoWatch, NoMac]
-		// [Abstract] - Should be abstract but would be a API breaking change
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("newFence")]
 		IMTLFence CreateFence ();
 
@@ -1007,7 +1032,7 @@ namespace XamCore.Metal {
 		void SetObject (MTLVertexBufferLayoutDescriptor bufferDesc, nuint index);
 	}
 
-	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	public interface MTLAttribute
 	{
@@ -1030,7 +1055,7 @@ namespace XamCore.Metal {
 		bool IsPatchControlPointData { [Bind ("isPatchControlPointData")] get; }
 	}
 	
-	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	public interface MTLAttributeDescriptor : NSCopying
 	{
@@ -1044,7 +1069,7 @@ namespace XamCore.Metal {
 		nuint BufferIndex { get; set; }
 	}
 
-	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	public interface MTLAttributeDescriptorArray
 	{
@@ -1121,7 +1146,7 @@ namespace XamCore.Metal {
 		bool PatchControlPointData { [Bind ("isPatchControlPointData")] get; }
 	}
 
-	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	public interface MTLFunctionConstantValues : NSCopying
@@ -1139,7 +1164,7 @@ namespace XamCore.Metal {
 		void Reset ();
 	}
 	
-	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	public interface MTLFunctionConstant
 	{
@@ -1162,7 +1187,9 @@ namespace XamCore.Metal {
 	public partial interface MTLFunction  {
 
 		[iOS (10, 0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[NullAllowed, Export ("label")]
 		string Label { get; set; }
 		
@@ -1179,22 +1206,30 @@ namespace XamCore.Metal {
 		string Name { get; }
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("patchType")]
 		MTLPatchType PatchType { get; }
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("patchControlPointCount")]
 		nint PatchControlPointCount { get; }
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[NullAllowed, Export ("stageInputAttributes")]
 		MTLAttribute[] StageInputAttributes { get; }
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("functionConstantsDictionary")]
 		NSDictionary<NSString, MTLFunctionConstant> FunctionConstants { get; }
 	}
@@ -1218,13 +1253,17 @@ namespace XamCore.Metal {
 		IMTLFunction CreateFunction (string functionName);
 		
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("newFunctionWithName:constantValues:error:")]
 		[return: NullAllowed]
 		IMTLFunction CreateFunction (string name, MTLFunctionConstantValues constantValues, out NSError error);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("newFunctionWithName:constantValues:completionHandler:")]
 		void CreateFunction (string name, MTLFunctionConstantValues constantValues, Action<IMTLFunction, NSError> completionHandler);
 
@@ -1358,17 +1397,23 @@ namespace XamCore.Metal {
 		IMTLRenderCommandEncoder CreateRenderCommandEncoder ();
 		
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstract, break the api
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("setColorStoreAction:atIndex:")]
 		void SetColorStoreAction (MTLStoreAction storeAction, nuint colorAttachmentIndex);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstract, break the api
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("setDepthStoreAction:")]
 		void SetDepthStoreAction (MTLStoreAction storeAction);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstract, break the api
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("setStencilStoreAction:")]
 		void SetStencilStoreAction (MTLStoreAction storeAction);
 	}
@@ -1461,17 +1506,23 @@ namespace XamCore.Metal {
 		void SetVisibilityResultMode (MTLVisibilityResultMode mode, nuint offset);
 		
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstract, break the api
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("setColorStoreAction:atIndex:")]
 		void SetColorStoreAction (MTLStoreAction storeAction, nuint colorAttachmentIndex);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("setDepthStoreAction:")]
 		void SetDepthStoreAction (MTLStoreAction storeAction);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("setStencilStoreAction:")]
 		void SetStencilStoreAction (MTLStoreAction storeAction);
 
@@ -1560,27 +1611,37 @@ namespace XamCore.Metal {
 		void TextureBarrier ();
 
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("updateFence:afterStages:")]
 		void Update (IMTLFence fence, MTLRenderStages stages);
 
 		[iOS (10,0), TV (10,0), NoWatch, NoMac]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("waitForFence:beforeStages:")]
 		void Wait (IMTLFence fence, MTLRenderStages stages);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("setTessellationFactorBuffer:offset:instanceStride:")]
 		void SetTessellationFactorBuffer ([NullAllowed] IMTLBuffer buffer, nuint offset, nuint instanceStride);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("setTessellationFactorScale:")]
 		void SetTessellationFactorScale (float scale);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("drawPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:instanceCount:baseInstance:")]
 		void DrawPatches (nuint numberOfPatchControlPoints, nuint patchStart, nuint patchCount, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, nuint instanceCount, nuint baseInstance);
 
@@ -1590,7 +1651,9 @@ namespace XamCore.Metal {
 		void DrawPatches (nuint numberOfPatchControlPoints, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, IMTLBuffer indirectBuffer, nuint indirectBufferOffset);
 
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("drawIndexedPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:instanceCount:baseInstance:")]
 		void DrawIndexedPatches (nuint numberOfPatchControlPoints, nuint patchStart, nuint patchCount, [NullAllowed] IMTLBuffer patchIndexBuffer, nuint patchIndexBufferOffset, IMTLBuffer controlPointIndexBuffer, nuint controlPointIndexBufferOffset, nuint instanceCount, nuint baseInstance);
 
@@ -1768,8 +1831,7 @@ namespace XamCore.Metal {
 	}
 	
 	[iOS (10, 0), TV (10,0), NoWatch, NoMac]
-	[Protocol]
-	[BaseType (typeof(NSObject))]
+	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	public interface MTLHeap
 	{
 		[Abstract]
@@ -1839,17 +1901,23 @@ namespace XamCore.Metal {
 		MTLPurgeableState SetPurgeableState (MTLPurgeableState state);
 		
 		[iOS (10, 0), TV (10,0), NoWatch, NoMac]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[NullAllowed, Export ("heap")]
 		IMTLHeap Heap { get; }
 
 		[iOS (10, 0), TV (10,0), NoWatch, NoMac]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("makeAliasable")]
 		void MakeAliasable ();
 
 		[iOS (10, 0), TV (10,0), NoWatch, NoMac]
-		// [Abstract] - should be abstract but would break the API.
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[Export ("isAliasable")]
 		bool IsAliasable { get; }
 	}
@@ -1878,7 +1946,7 @@ namespace XamCore.Metal {
 		MTLStageInputOutputDescriptor StageInputDescriptor { get; set; }
 	}
 	
-	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
+	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	public interface MTLStageInputOutputDescriptor : NSCopying
 	{
