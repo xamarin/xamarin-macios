@@ -77,7 +77,7 @@ namespace XamCore.Metal {
 		[Export ("isDepthTexture")]
 		bool IsDepthTexture { get; }
 		
-		[iOS (10, 0), TV (10,0), NoWatch]
+		[iOS (10, 0), TV (10,0), NoWatch, NoMac]
 		[Export ("arrayLength")]
 		nuint ArrayLength { get; }
 	}
