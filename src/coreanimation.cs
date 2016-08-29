@@ -991,7 +991,8 @@ namespace XamCore.CoreAnimation {
 		#endregion
 	}
 
-	[Protocol] // since iOS10
+	// Adding [Protocol] breaks when building with older SDKs (see bug #43825)
+	//[Protocol] // since iOS10
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Synthetic]
