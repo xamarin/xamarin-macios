@@ -51,6 +51,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.iOS.Tasks.CreateDebugSettings" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.CreateDebugConfiguration" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.DetectBundleIdentifier" AssemblyFile="Xamarin.iOS.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.iOS.Tasks.DetectDebugNetworkConfiguration" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.DetectSdkLocations" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.DetectSigningIdentity" AssemblyFile="Xamarin.iOS.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.iOS.Tasks.EmbedMobileProvision" AssemblyFile="Xamarin.iOS.Tasks.dll" />
@@ -832,14 +833,14 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_CreateDebugConfiguration" Condition="'$(MtouchDebug)' == 'true' And '$(IsWatchApp)' == 'false'"
-		DependsOnTargets="_CopyResourcesToBundle"
+		DependsOnTargets="_CopyResourcesToBundle;_DetectDebugNetworkConfiguration"
 		Outputs="$(_AppBundlePath)MonoTouchDebugConfiguration.txt" >
 		<CreateDebugConfiguration
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleDir="$(AppBundleDir)"
 			DebugOverWiFi="$(IOSDebugOverWiFi)"
-			DebuggerHosts="$(IOSDebuggerHosts)"
+			DebugIPAddresses="$(_DebugIPAddresses)"
 			DebuggerPort="$(IOSDebuggerPort)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			>
@@ -1354,6 +1355,19 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 			<Output TaskParameter="DetectedBundleId" PropertyName="_BundleIdentifier" />
 		</DetectBundleIdentifier>
+	</Target>
+
+	<Target Name="_DetectDebugNetworkConfiguration">
+		<DetectDebugNetworkConfiguration
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			DebugOverWiFi="$(IOSDebugOverWiFi)"
+			DebuggerHosts="$(IOSDebuggerHosts)"
+			SdkIsSimulator="$(_SdkIsSimulator)"
+			>
+
+			<Output TaskParameter="DebugIPAddresses" PropertyName="_DebugIPAddresses" />
+		</DetectDebugNetworkConfiguration>
 	</Target>
 
 	<Target Name="_CopyAppExtensionsToBundle" Condition="'$(IsAppExtension)' == 'false'" DependsOnTargets="_ResolveAppExtensionReferences">
