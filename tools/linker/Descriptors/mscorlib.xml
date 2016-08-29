@@ -808,6 +808,9 @@
 		<!-- by convention (and see #34671) -->
 		<type fullname="Mono.Runtime" />
 
+		<!--  this is a temporary workaround for bug #43658 -->
+		<type fullname="Mono.RuntimeStructs" preserve="fields" />
+
 		<!-- marshal.c (mono_marshal_get_native_wrapper) -->
 		<type fullname="Mono.RuntimeStructs/HandleStackMark" />
 		<!-- marshal.c (mono_marshal_get_native_wrapper) -->
