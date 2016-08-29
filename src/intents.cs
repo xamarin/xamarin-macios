@@ -10,10 +10,17 @@
 #if XAMCORE_2_0 // The Intents framework uses generics which is only supported in Unified
 
 using System;
+using XamCore.CoreGraphics;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 using XamCore.CoreLocation;
 using XamCore.Contacts;
+
+#if MONOMAC
+using UIImage = XamCore.Foundation.NSObject;
+#else
+using XamCore.UIKit;
+#endif
 
 // TODO: 	Review all FIXME [Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] with Introspection tests on macOS 10.12
 //			Once we have this ^ we can add the same availability metadata to enums
@@ -1696,6 +1703,23 @@ namespace XamCore.Intents {
 		[Static]
 		[Export ("imageWithURL:")]
 		INImage FromUrl (NSUrl url);
+
+		// INImage_IntentsUI (IntentsUI)
+
+		[NoMac]
+		[Static]
+		[Export ("imageWithCGImage:")]
+		INImage FromImage (CGImage image);
+
+		[NoMac]
+		[Static]
+		[Export ("imageWithUIImage:")]
+		INImage FromImage (UIImage image);
+
+		[NoMac]
+		[Static]
+		[Export ("imageSizeForIntentResponse:")]
+		CGSize GetImageSize (INIntentResponse response);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]

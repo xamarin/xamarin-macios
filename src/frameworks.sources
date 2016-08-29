@@ -812,7 +812,6 @@ IMAGEKIT_CORE_SOURCES = \
 # Intents
 
 INTENTS_SOURCES = \
-	Intents/INImage.cs \
 	Intents/INIntentResolutionResult.cs \
 	Intents/INPriceRange.cs \
 

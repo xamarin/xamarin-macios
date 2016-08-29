@@ -26,25 +26,6 @@ namespace XamCore.IntentsUI {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Category]
-	[Internal] // We are exposing this members as manual bindings in INImage.INImage
-	[BaseType (typeof (INImage))]
-	interface INImage_IntentsUI {
-
-		[Static]
-		[Export ("imageWithCGImage:")]
-		INImage ImageWithCGImage (CGImage image);
-
-		[Static]
-		[Export ("imageWithUIImage:")]
-		INImage ImageWithUIImage (UIImage image);
-
-		[Static]
-		[Export ("imageSizeForIntentResponse:")]
-		CGSize ImageSizeForIntentResponse (INIntentResponse response);
-	}
-
-	[Introduced (PlatformName.iOS, 10, 0)]
 	[Protocol]
 	interface INUIHostedViewControlling {
 
