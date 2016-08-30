@@ -565,6 +565,7 @@
     <Compile Include="Foundation\DimensionTest.cs" />
     <Compile Include="UIKit\GraphicsRendererTest.cs" />
     <Compile Include="Intents\INIntentResolutionResultTests.cs" />
+    <Compile Include="MessageUI\MessageComposeViewControllerTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
