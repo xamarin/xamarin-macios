@@ -35,5 +35,17 @@ namespace MonoTouchFixtures.CloudKit
 			op.Completed = (e) => { Console.WriteLine ("Completed");};
 			Assert.NotNull (op.Completed);
 		}
+
+		[Test]
+		public void Default ()
+		{
+			// watchOS does not allow `init` so we need to ensure that our default .ctor
+			// match the existing `init*` with null values (so we can remove it)
+			using (var def = new CKModifyBadgeOperation ())
+			using (var zr0 = new CKModifyBadgeOperation (0)) {
+				Assert.That (def.BadgeValue, Is.EqualTo (zr0.BadgeValue), "BadgeValue");
+				Assert.That (def.Completed, Is.EqualTo (zr0.Completed), "Completed");
+			}
+		}
 	}
 }
