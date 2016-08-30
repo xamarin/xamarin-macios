@@ -737,16 +737,23 @@ GAMEKIT_SOURCES = \
 
 # GameplayKit
 
+GAMEPLAYKIT_CORE_SOURCES = \
+	GameplayKit/GKPrimitives.cs \
+
 GAMEPLAYKIT_SOURCES = \
 	GameplayKit/GKBehavior.cs \
 	GameplayKit/GKCompat.cs \
 	GameplayKit/GKComponentSystem.cs \
+	GameplayKit/GKCompositeBehavior.cs \
 	GameplayKit/GKEntity.cs \
 	GameplayKit/GKGameModel.cs \
+	GameplayKit/GKGridGraph.cs \
+	GameplayKit/GKObstacleGraph.cs \
 	GameplayKit/GKPath.cs \
 	GameplayKit/GKPolygonObstacle.cs \
 	GameplayKit/GKState.cs \
 	GameplayKit/GKStateMachine.cs \
+	GameplayKit/NSArray_GameplayKit.cs \
 
 # GLKit
 

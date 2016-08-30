@@ -125,6 +125,8 @@ namespace Introspection {
 				case "GKComponent":
 				case "GKGraph":
 				case "GKGraphNode":
+				case "GKAgent2D":
+				case "GKAgent":
 					if (!Mac.CheckSystemVersion (10, 12)) // NSCoding was added in 10.12
 						return true;
 					break;

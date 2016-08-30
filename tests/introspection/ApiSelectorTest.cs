@@ -131,6 +131,8 @@ namespace Introspection {
 				break;
 			// Xcode 8 beta 2
 			case "GKGraph":
+			case "GKAgent":
+			case "GKAgent2D":
 			case "NEFlowMetaData":
 			case "NWEndpoint":
 				switch (selectorName) {
@@ -154,6 +156,7 @@ namespace Introspection {
 			case "GKPath":
 				switch (selectorName) {
 				case "initWithPoints:count:radius:cyclical:":
+				case "initWithFloat3Points:count:radius:cyclical:":
 					return true;
 				}
 				break;

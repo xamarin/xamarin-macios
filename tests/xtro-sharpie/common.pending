@@ -518,3 +518,8 @@
 !missing-selector! INPerson::initWithHandle:displayName:contactIdentifier: not bound
 !missing-selector! INPerson::initWithHandle:nameComponents:contactIdentifier: not bound
 !missing-selector! INPerson::initWithHandle:nameComponents:displayName:image:contactIdentifier: not bound
+
+# GameplayKit
+
+## Fixed in XAMCORE_4_0
+!incorrect-protocol-member! GKGameModelPlayer::playerId is REQUIRED and should be abstract
