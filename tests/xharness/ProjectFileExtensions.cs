@@ -333,6 +333,8 @@ namespace xharness
 				var include = n.Attributes ["Include"];
 				include.Value = include.Value.Replace (".csproj", suffix + ".csproj");
 				include.Value = include.Value.Replace (".fsproj", suffix + ".fsproj");
+				var nameElement = n ["Name"];
+				nameElement.InnerText = System.IO.Path.GetFileNameWithoutExtension (include.Value);
 			}
 		}
 
