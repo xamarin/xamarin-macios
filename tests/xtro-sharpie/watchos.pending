@@ -49,7 +49,6 @@
 !missing-selector! CKOperation::usesBackgroundSession not bound
 !missing-field! CKOwnerDefaultName not bound
 
-
 ## lots of stuff moved into CKSubscription_CKSubscriptionDeprecated which we won't bring into watchOS
 !missing-selector! CKSubscription::initWithCoder: not bound
 !missing-selector! CKSubscription::initWithRecordType:predicate:options: not bound
@@ -99,7 +98,6 @@
 !missing-selector! +SCNParticlePropertyController::controllerWithAnimation: not bound
 !missing-protocol-member! SCNAnimatable::addAnimation:forKey: not found
 !missing-protocol-member! SCNAnimatable::animationForKey: not found
-
 
 ## JavaScriptCore is not available in watchOS 3
 !missing-pinvoke! SCNExportJavaScriptModule is not bound

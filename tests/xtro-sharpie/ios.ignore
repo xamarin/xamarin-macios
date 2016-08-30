@@ -82,6 +82,12 @@
 !incorrect-protocol-member! +UIPopoverBackgroundViewMethods::arrowHeight is REQUIRED and should be abstract
 !incorrect-protocol-member! +UIPopoverBackgroundViewMethods::contentViewInsets is REQUIRED and should be abstract
 
+## Exposed thru UIAccessibilityContainer (informal protocol) as we do not want all NSObject to expose them (as a category of UKit)
+!missing-selector! NSObject::accessibilityElementAtIndex: not bound
+!missing-selector! NSObject::accessibilityElements not bound
+!missing-selector! NSObject::indexOfAccessibilityElement: not bound
+!missing-selector! NSObject::setAccessibilityElements: not bound
+
 
 # WatchConnectivity
 
