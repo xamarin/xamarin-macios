@@ -24,7 +24,6 @@ MONO_ASSEMBLIES = mscorlib System System.Core System.Numerics\
 # (relative to /Library/Frameworks/Xamarin.[Mac|iOS].framework/Versions/Current/lib/mono)
 
 IOS_SRC_ASSEMBLIES     = \
-	2.1/monotouch 2.1/MonoTouch.Dialog-1 2.1/MonoTouch.NUnitLite 2.1/OpenTK 2.1/OpenTK-1.0 2.1/System.Net.Http \
 	Xamarin.iOS/MonoTouch.Dialog-1 Xamarin.iOS/MonoTouch.NUnitLite Xamarin.iOS/OpenTK-1.0 Xamarin.iOS/System.Net.Http Xamarin.iOS/Xamarin.iOS
 MAC_SRC_ASSEMBLIES     = \
 	XamMac XamMac.CFNetwork \
@@ -104,7 +103,7 @@ tvos-api-diff.html:    $(foreach file,$(TVOS_ASSEMBLIES),diff/xi/$(file).html)
 		if [[ "x0" != "x`stat -L -f %z $$file`" ]]; then  \
 			cat $$file | sed "s_<h1>_<h1 id='$$file'>_" >> $@;	\
 			echo "<br><hr>" >> $@;	\
-			echo "<a href='#$$file'>`echo $$file | sed -e 's_html_dll_' -e 's_diff/xi/2.1/_\(Classic\) _' -e 's_diff/xi/Xamarin.iOS/_\(Unified\) _' -e 's_diff/xi/Xamarin.WatchOS/__' -e 's_diff/xi/Xamarin.TVOS/__' -e 's_diff/xm/4.5/_\(Full profile\) _' -e 's_diff/xm/Xamarin.Mac/_\(Mobile profile\) _' -e 's_diff/xm/_\(Classic profile\) _' `</a><br/>" >> $@-toc; \
+			echo "<a href='#$$file'>`echo $$file | sed -e 's_html_dll_' -e 's_diff/xi/2.1/__' -e 's_diff/xi/Xamarin.iOS/__' -e 's_diff/xi/Xamarin.WatchOS/__' -e 's_diff/xi/Xamarin.TVOS/__' -e 's_diff/xm/4.5/_\(Full profile\) _' -e 's_diff/xm/Xamarin.Mac/_\(Mobile profile\) _' -e 's_diff/xm/_\(Classic profile\) _' `</a><br/>" >> $@-toc; \
 		fi; \
 	done
 	$(Q) if [ ! -f $@ ]; then \
