@@ -49,5 +49,22 @@ namespace MonoTouchFixtures.CloudKit
 			op.Completed = (saved, deleted, e) => { Console.WriteLine ("Completed");};
 			Assert.NotNull (op.Completed);
 		}
+
+		[Test]
+		public void Default ()
+		{
+			// watchOS does not allow `init` so we need to ensure that our default .ctor
+			// match the existing `init*` with null values (so we can remove it)
+			using (var mro = new CKModifyRecordsOperation ()) {
+				Assert.That (op.Atomic, Is.EqualTo (mro.Atomic), "Atomic");
+				Assert.That (op.RecordsToSave, Is.EqualTo (mro.RecordsToSave), "RecordsToSave");
+				Assert.That (op.RecordIdsToDelete, Is.EqualTo (mro.RecordIdsToDelete), "RecordIdsToDelete");
+				Assert.That (op.SavePolicy, Is.EqualTo (mro.SavePolicy), "SavePolicy");
+				Assert.That (op.ClientChangeTokenData, Is.EqualTo (mro.ClientChangeTokenData), "ClientChangeTokenData");
+				Assert.That (op.PerRecordProgress, Is.EqualTo (mro.PerRecordProgress), "PerRecordProgress");
+				Assert.That (op.PerRecordCompletion, Is.EqualTo (mro.PerRecordCompletion), "PerRecordCompletion");
+				Assert.That (op.Completed, Is.EqualTo (mro.Completed), "Completed");
+			}
+		}
 	}
 }

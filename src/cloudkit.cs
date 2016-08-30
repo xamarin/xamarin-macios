@@ -382,6 +382,9 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (CKOperation))]
 	[DisableDefaultCtor]
+#if XAMCORE_4_0 || WATCH
+	[Abstract] // as per docs
+#endif
 	interface CKDatabaseOperation {
 
 		[Export ("database", ArgumentSemantic.Retain)] [NullAllowed]
@@ -483,7 +486,7 @@ namespace XamCore.CloudKit {
 	}
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
-	[DisableDefaultCtor]
+	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
 	[BaseType (typeof (CKOperation))]
 	interface CKFetchNotificationChangesOperation {
 		[Export ("initWithPreviousServerChangeToken:")]
@@ -633,7 +636,9 @@ namespace XamCore.CloudKit {
 	delegate void CKFetchRecordsCompletedHandler (NSDictionary recordsByRecordId, NSError error);
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
+#if XAMCORE_4_0 || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
 	[DisableDefaultCtor]
+#endif
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKFetchRecordsOperation {
 
@@ -678,7 +683,9 @@ namespace XamCore.CloudKit {
 	delegate void CKRecordZoneCompleteHandler (NSDictionary recordZonesByZoneId, NSError operationError);
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
+#if XAMCORE_4_0 || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
 	[DisableDefaultCtor]
+#endif
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKFetchRecordZonesOperation {
 		[Export ("initWithRecordZoneIDs:")]
@@ -729,7 +736,9 @@ namespace XamCore.CloudKit {
 	}
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
+#if XAMCORE_4_0 || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
 	[DisableDefaultCtor]
+#endif
 	[BaseType (typeof (NSSortDescriptor))]
 	interface CKLocationSortDescriptor : NSSecureCoding {
 		[DesignatedInitializer]
@@ -764,7 +773,7 @@ namespace XamCore.CloudKit {
 	}
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
-	[DisableDefaultCtor]
+	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
 	[BaseType (typeof (CKOperation))]
 	interface CKModifyBadgeOperation {
 
@@ -786,7 +795,7 @@ namespace XamCore.CloudKit {
 	delegate void CKModifyRecordsOperationHandler (CKRecord [] savedRecords, CKRecordID [] deletedRecordIds, NSError operationError);
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
-	[DisableDefaultCtor]
+	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKModifyRecordsOperation {
 
@@ -838,7 +847,7 @@ namespace XamCore.CloudKit {
 	delegate void CKModifyRecordZonesHandler (CKRecordZone [] savedRecordZones, CKRecordZoneID [] deletedRecordZoneIds, NSError operationError);
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
-	[DisableDefaultCtor]
+	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKModifyRecordZonesOperation {
 
@@ -890,7 +899,7 @@ namespace XamCore.CloudKit {
 	}
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
-	[DisableDefaultCtor]
+	[DisableDefaultCtor] // doc: <quote>You do not create notification IDs directly.</quote>
 	[BaseType (typeof (NSObject))]
 	interface CKNotificationID : NSCopying, NSSecureCoding, NSCoding {
 
@@ -900,6 +909,9 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: CKNotification is not meant for direct instantiation
 	[BaseType (typeof (NSObject))]
+#if XAMCORE_4_0 || WATCH
+	[Abstract] // as per doc
+#endif
 	interface CKNotification : NSSecureCoding {
 
 		[Export ("notificationType", ArgumentSemantic.Assign)]
@@ -1015,6 +1027,9 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSOperation))]
 	[DisableDefaultCtor] // Assertion failure in -[CKOperation init], /SourceCache/CloudKit/CloudKit-175.3/Framework/Operations/CKOperation.m:65
+#if XAMCORE_4_0 || WATCH
+	[Abstract] // as per docs
+#endif
 	interface CKOperation {
 
 		// Apple removed, without deprecation, this property in iOS 9.3 SDK
@@ -1079,7 +1094,9 @@ namespace XamCore.CloudKit {
 	}
 
 	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
+#if XAMCORE_4_0 || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
 	[DisableDefaultCtor]
+#endif
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKQueryOperation {
 
@@ -1254,7 +1271,9 @@ namespace XamCore.CloudKit {
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[Watch (3,0)]
+#if XAMCORE_4_0 || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
 	[DisableDefaultCtor]
+#endif
 	[BaseType (typeof (NSObject))]
 	interface CKRecordZone : NSSecureCoding, NSCopying {
 
@@ -1500,7 +1519,9 @@ namespace XamCore.CloudKit {
 	[iOS (9,2), Mac (10,11,2, onlyOn64 : true)]
 	[TV (9,1)]
 	[Watch (3,0)]
+#if XAMCORE_4_0 || WATCH // does not work on watchOS - existiong init* does not allow null to be used to fake it
 	[DisableDefaultCtor]
+#endif
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKFetchWebAuthTokenOperation {
 

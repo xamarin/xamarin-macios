@@ -30,16 +30,30 @@ namespace MonoTouchFixtures.CloudKit
 			op?.Dispose ();
 		}
 
+		[Test]
 		public void TestNotificationChangedSetter ()
 		{
 			op.NotificationChanged = (obj) => { Console.WriteLine ("Notification");};
 			Assert.NotNull (op.NotificationChanged);
 		}
 
+		[Test]
 		public void TestCompletedSetter ()
 		{
 			op.Completed = (arg1, arg2) => { Console.WriteLine ("Completed");};
 			Assert.NotNull (op.Completed);
+		}
+
+		[Test]
+		public void Default ()
+		{
+			// watchOS does not allow `init` so we need to ensure that our default .ctor
+			// match the existing `init*` with null values (so we can remove it)
+			using (var mrzo = new CKFetchNotificationChangesOperation ()) {
+				Assert.That (op.PreviousServerChangeToken, Is.EqualTo (mrzo.PreviousServerChangeToken), "PreviousServerChangeToken");
+				Assert.That (op.Completed, Is.EqualTo (mrzo.Completed), "Completed");
+				Assert.That (op.NotificationChanged, Is.EqualTo (mrzo.NotificationChanged), "NotificationChanged");
+			}
 		}
 	}
 }
