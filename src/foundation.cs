@@ -7139,6 +7139,12 @@ namespace XamCore.Foundation
 
 		[Export ("hasSuffix:")]
 		bool HasSuffix (NSString suffix);
+
+		// UNUserNotificationCenterSupport category
+		[iOS (10,0), Watch (3,0), NoTV, NoMac]
+		[Static]
+		[Export ("localizedUserNotificationStringForKey:arguments:")]
+		string GetLocalizedUserNotificationString (string key, [NullAllowed] NSObject [] arguments);
 	}
 
 	[StrongDictionary ("NSString")]

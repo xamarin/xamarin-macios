@@ -115,18 +115,6 @@ namespace XamCore.UserNotifications {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.WatchOS, 3, 0)]
-	[Unavailable (PlatformName.TvOS)]
-	[Category]
-	[BaseType (typeof (NSString))]
-	interface NSString_UNUserNotificationCenterSupport {
-
-		[Static]
-		[Export ("localizedUserNotificationStringForKey:arguments:")]
-		string GetLocalizedUserNotificationString (string key, [NullAllowed] NSObject [] arguments);
-	}
-
-	[Introduced (PlatformName.iOS, 10, 0)]
 	[Introduced (PlatformName.TvOS, 10, 0)]
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[BaseType (typeof (NSObject))]
