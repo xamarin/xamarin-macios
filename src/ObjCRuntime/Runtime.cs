@@ -36,7 +36,7 @@ namespace XamCore.ObjCRuntime {
 		internal const bool IsUnifiedBuild = false;
 #endif
 
-		static Dictionary<IntPtr,Delegate> block_to_delegate_cache;
+		static Dictionary<Tuple<IntPtr,Type>,Delegate> block_to_delegate_cache;
 
 		static List <object> delegates;
 		static List <Assembly> assemblies;
@@ -759,21 +759,22 @@ namespace XamCore.ObjCRuntime {
 		static Delegate GetDelegateForBlock (IntPtr methodPtr, Type type)
 		{
 			if (block_to_delegate_cache == null)
-				block_to_delegate_cache = new Dictionary<IntPtr, Delegate> (IntPtrEqualityComparer);
+				block_to_delegate_cache = new Dictionary<Tuple<IntPtr, Type>, Delegate> ();
 
 			// We do not care if there is a race condition and we initialize two caches
 			// since the worst that can happen is that we end up with an extra
 			// delegate->function pointer.
 			Delegate val;
+			var pair = new Tuple<IntPtr, Type> (methodPtr, type);
 			lock (block_to_delegate_cache) {
-				if (block_to_delegate_cache.TryGetValue (methodPtr, out val))
+				if (block_to_delegate_cache.TryGetValue (pair, out val))
 					return val;
 			}
 
 			val = Marshal.GetDelegateForFunctionPointer (methodPtr, type);
 
 			lock (block_to_delegate_cache){
-				block_to_delegate_cache [methodPtr] = val;
+				block_to_delegate_cache [pair] = val;
 			}
 			return val;
 		}
