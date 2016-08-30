@@ -14,14 +14,6 @@
 !missing-selector! AVPlayerItem::setExternalSubtitleOptionLanguages: not bound
 !missing-selector! AVPlayerItem::setSelectedExternalSubtitleOptionLanguage: not bound
 
-## AVAudioPlayer INTERRUPTION NOTIFICATIONS ARE DEPRECATED - Use AVAudioSession instead. 
-
-### deprecated in iOS8
-!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
-
-### deprecated in iOS6, replaced by above
-!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions: not found
-
 
 # CloudKit
 
