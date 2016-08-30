@@ -139,6 +139,9 @@
 !missing-enum-native! MFMailComposeErrorCode
 !missing-enum-native! MFMailComposeResult
 !missing-enum-native! MessageComposeResult
+!wrong-enum-size! MFMailComposeErrorCode managed 4 vs native 8
+!wrong-enum-size! MFMailComposeResult managed 4 vs native 8
+!wrong-enum-size! MessageComposeResult managed 4 vs native 8
 
 
 # Speech
