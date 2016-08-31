@@ -195,6 +195,7 @@ namespace MonoTouchFixtures.ModelIO {
 		[Test]
 		public void Copy ()
 		{
+			TestRuntime.AssertXcodeVersion (8, 0);
 			using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion)) {
 				Assert.IsNotNull (obj.Copy ());
 			}

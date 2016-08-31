@@ -67,7 +67,7 @@ namespace XamCore.ModelIO {
 		[Export ("initWithURL:vertexDescriptor:bufferAllocator:")]
 		IntPtr Constructor (NSUrl url, [NullAllowed] MDLVertexDescriptor vertexDescriptor, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[NoMac]
 		[Export ("initWithBufferAllocator:")]
 		IntPtr Constructor ([NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
@@ -87,7 +87,7 @@ namespace XamCore.ModelIO {
 		[Export ("canExportFileExtension:")]
 		bool CanExportFileExtension (string extension);
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("childObjectsOfClass:")]
 		MDLObject[] GetChildObjects (Class objectClass);
@@ -133,7 +133,7 @@ namespace XamCore.ModelIO {
 		[Export ("objectAtIndex:")]
 		MDLObject GetObject (nuint index);
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("masters", ArgumentSemantic.Retain)]
 		IMDLObjectContainerComponent Masters { get; set; }
@@ -176,7 +176,7 @@ namespace XamCore.ModelIO {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
 		}
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("projection", ArgumentSemantic.Assign)]
 		MDLCameraProjection Projection { get; set; }
@@ -345,7 +345,7 @@ namespace XamCore.ModelIO {
 		[Export ("lightType")]
 		MDLLightType LightType { get; set; }
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("colorSpace")]
 		// No documentation to confirm but this should be a constant (hence NSString).
@@ -431,7 +431,7 @@ namespace XamCore.ModelIO {
 		[Export ("count")]
 		nuint Count { get; }
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("materialFace", ArgumentSemantic.Assign)]
 		MDLMaterialFace MaterialFace { get; set; }
@@ -531,7 +531,7 @@ namespace XamCore.ModelIO {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("luminance")]
 		float Luminance { get; set; }
@@ -592,7 +592,7 @@ namespace XamCore.ModelIO {
 	[BaseType (typeof(MDLObject))]
 	interface MDLMesh
 	{
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("initWithBufferAllocator:")]
 		IntPtr Constructor ([NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
@@ -608,7 +608,7 @@ namespace XamCore.ModelIO {
 		[return: NullAllowed]
 		MDLVertexAttributeData GetVertexAttributeDataForAttribute (string attributeName);
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("vertexAttributeDataForAttributeNamed:asFormat:")]
 		[return: NullAllowed]
@@ -625,7 +625,7 @@ namespace XamCore.ModelIO {
 		[Export ("vertexCount")]
 		nuint VertexCount {
 			get;
-			// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+			[iOS (10,0)]
 			[Mac (10,12)]
 			set;
 		}
@@ -637,12 +637,12 @@ namespace XamCore.ModelIO {
 		[Export ("submeshes", ArgumentSemantic.Copy)]
 		NSMutableArray<MDLSubmesh> Submeshes {
 			get;
-			// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+			[iOS (10,0)]
 			[Mac (10,12)]
 			set;
 		}
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("allocator", ArgumentSemantic.Retain)]
 		IMDLMeshBufferAllocator Allocator { get; }
@@ -652,12 +652,12 @@ namespace XamCore.ModelIO {
 		[Export ("addAttributeWithName:format:")]
 		void AddAttribute (string name, MDLVertexFormat format);
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("addAttributeWithName:format:type:data:stride:")]
 		void AddAttribute (string name, MDLVertexFormat format, string type, NSData data, nint stride);
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("addAttributeWithName:format:type:data:stride:time:")]
 		void AddAttribute (string name, MDLVertexFormat format, string type, NSData data, nint stride, double time);
@@ -671,7 +671,7 @@ namespace XamCore.ModelIO {
 		[Export ("addTangentBasisForTextureCoordinateAttributeNamed:normalAttributeNamed:tangentAttributeNamed:")]
 		void AddTangentBasisWithNormals (string textureCoordinateAttributeName, string normalAttributeName, string tangentAttributeName);
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("addUnwrappedTextureCoordinatesForAttributeNamed:")]
 		void AddUnwrappedTextureCoordinates (string textureCoordinateAttributeName);
@@ -679,17 +679,17 @@ namespace XamCore.ModelIO {
 		[Export ("makeVerticesUnique")]
 		void MakeVerticesUnique ();
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("replaceAttributeNamed:withData:")]
 		void ReplaceAttribute (string name, MDLVertexAttributeData newData);
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("updateAttributeNamed:withData:")]
 		void UpdateAttribute (string name, MDLVertexAttributeData newData);
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("removeAttributeNamed:")]
 		void RemoveAttribute (string name);
@@ -945,17 +945,17 @@ namespace XamCore.ModelIO {
 		[NullAllowed, Export ("parent", ArgumentSemantic.Weak)]
 		MDLObject Parent { get; set; }
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[NullAllowed, Export ("instance", ArgumentSemantic.Retain)]
 		MDLObject Instance { get; set; }
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("path")]
 		string Path { get; }
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("objectAtPath:")]
 		MDLObject GetObject (string path);
@@ -966,7 +966,7 @@ namespace XamCore.ModelIO {
 		[Export ("children", ArgumentSemantic.Retain), NullAllowed]
 		IMDLObjectContainerComponent Children { get; set; }
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("hidden")]
 		bool Hidden { get; set; }
@@ -1257,7 +1257,7 @@ namespace XamCore.ModelIO {
 		[Export ("indexBuffer", ArgumentSemantic.Retain)]
 		IMDLMeshBuffer IndexBuffer { get; }
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("indexBufferAsIndexType:")]
 		IMDLMeshBuffer GetIndexBuffer (MDLIndexBitDepth indexType);
@@ -1365,7 +1365,7 @@ namespace XamCore.ModelIO {
 		[Export ("isCube")]
 		bool IsCube { get; set; }
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("hasAlphaValues")]
 		bool HasAlphaValues { get; set; }
@@ -1414,7 +1414,7 @@ namespace XamCore.ModelIO {
 		[Export ("initWithTransformComponent:")]
 		IntPtr Constructor (IMDLTransformComponent component);
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("initWithTransformComponent:resetsTransform:")]
 		IntPtr Constructor (IMDLTransformComponent component, bool resetsTransform);
@@ -1423,7 +1423,7 @@ namespace XamCore.ModelIO {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor (Matrix4 matrix);
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("initWithMatrix:resetsTransform:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -1513,7 +1513,7 @@ namespace XamCore.ModelIO {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 #if XAMCORE_4_0
 		[Abstract]
@@ -1590,7 +1590,7 @@ namespace XamCore.ModelIO {
 		[Export ("bufferIndex", ArgumentSemantic.Assign)]
 		nuint BufferIndex { get; set; }
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("time")]
 		double Time { get; set; }
@@ -1670,7 +1670,7 @@ namespace XamCore.ModelIO {
 		[Export ("addOrReplaceAttribute:")]
 		void AddOrReplaceAttribute (MDLVertexAttribute attribute);
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("removeAttributeNamed:")]
 		void RemoveAttribute (string name);
@@ -1713,7 +1713,7 @@ namespace XamCore.ModelIO {
 		[Export ("initWithAsset:divisions:interiorNBWidth:exteriorNBWidth:patchRadius:")]
 		IntPtr Constructor (MDLAsset asset, int divisions, float interiorNBWidth, float exteriorNBWidth, float patchRadius);
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("initWithAsset:divisions:patchRadius:")]
 		IntPtr Constructor (MDLAsset asset, int divisions, float patchRadius);
@@ -1733,7 +1733,7 @@ namespace XamCore.ModelIO {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		void SetVoxel (Vector4i index);
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("setVoxelsForMesh:divisions:patchRadius:")]
 		void SetVoxels (MDLMesh mesh, int divisions, float patchRadius);
@@ -1786,33 +1786,33 @@ namespace XamCore.ModelIO {
 		[Export ("boundingBox")]
 		MDLAxisAlignedBoundingBox BoundingBox { get; }
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("convertToSignedShellField")]
 		void ConvertToSignedShellField ();
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("isValidSignedShellField")]
 		bool IsValidSignedShellField { get; }
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("shellFieldInteriorThickness")]
 		float ShellFieldInteriorThickness { get; set; }
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("shellFieldExteriorThickness")]
 		float ShellFieldExteriorThickness { get; set; }
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("coarseMesh")]
 		[return: NullAllowed]
 		MDLMesh GetCoarseMesh ();
 
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("coarseMeshUsingAllocator:")]
 		[return: NullAllowed]
@@ -1872,7 +1872,7 @@ namespace XamCore.ModelIO {
 	[BaseType (typeof(NSObject))]
 	interface MDLVertexBufferLayout : NSCopying
 	{
-		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("initWithStride:")]
 		IntPtr Constructor (nuint stride);

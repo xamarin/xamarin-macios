@@ -146,6 +146,7 @@ namespace Introspection {
 			case "MDLNamed":
 				switch (type.Name) {
 				case "MTKMeshBuffer":
+				case "MDLVoxelArray": // base class changed to MDLObject (was NSObject before)
 					return true;
 				}
 				break;
