@@ -98,9 +98,11 @@ namespace Xamarin.Bundler {
 		public void CopyMSymToDirectory (string directory)
 		{
 			string msym_src = FullPath + ".aotid.msym";
-			var dirInfo = new DirectoryInfo (msym_src);
-			if (!dirInfo.Exists) // got no aot data
+			if (!Directory.Exists (msym_src)) // got no aot data
 				return;
+			if (!Directory.Exists (directory)) {
+				Directory.CreateDirectory (directory);
+			}
 			Application.CopyMsymData (msym_src, directory);
 		}
 
