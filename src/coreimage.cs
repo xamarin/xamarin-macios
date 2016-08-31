@@ -220,7 +220,7 @@ namespace XamCore.CoreImage {
 		[Export ("contextWithOptions:")]
 		CIContext FromOptions ([NullAllowed] NSDictionary dictionary);
 
-		[iOS (8,0)] // documented as earlier but missing
+		[iOS (9,0)] // documented as earlier but missing
 		[Internal]
 		[Export ("initWithOptions:")]
 		IntPtr Constructor ([NullAllowed] NSDictionary options);
