@@ -862,23 +862,6 @@ namespace Xamarin.Bundler {
 
 			Namespaces.Initialize ();
 
-			var hasBitcodeCapableRuntime = false;
-			switch (Platform) {
-			case ApplePlatform.iOS:
-#if ENABLE_BITCODE_ON_IOS
-				hasBitcodeCapableRuntime = true;
-#endif
-				break;
-			case ApplePlatform.TVOS:
-			case ApplePlatform.WatchOS:
-				hasBitcodeCapableRuntime = true;
-				break;
-			}
-			if (hasBitcodeCapableRuntime && EnableProfiling && FastDev) {
-				ErrorHelper.Warning (94, "Both profiling (--profiling) and incremental builds (--fastdev) are currently not supported when building for {0}, and incremental builds have been disabled (this will be fixed in a future release).", PlatformName);
-				FastDev = false;
-			}
-
 			InitializeCommon ();
 
 			Driver.Watch ("Resolve References", 1);
@@ -1096,17 +1079,17 @@ namespace Xamarin.Bundler {
 					if (p.ExitCode == 0)
 						return;
 					else {
-						Console.Error.WriteLine ($"Msym files could not be copied from {src} to {dest}: {error}.");
-						throw new MonoTouchException (95, true, "Aot files could not be copied to the destination directory: {dest}"); 
+						ErrorHelper.Warning (95, $"Aot files could not be copied to the destination directory: {dest}"); 
+						return;
 					}
 				}
 
-				Console.Error.WriteLine ($"Msym files could not be copied from {src} to {dest}: Could not start process.");
-				throw new MonoTouchException (95, true, "Aot files could not be copied to the destination directory: {dest}"); 
+				ErrorHelper.Warning (95, $"Aot files could not be copied to the destination directory {dest}: Could not start process."); 
+				return;
 			}
 			catch (Exception e) {
-				Console.Error.WriteLine ($"Msym files could not be copied from {src} to {dest}: Could not start process.");
-				throw new MonoTouchException (95, true, e, "Aot files could not be copied to the destination directory: Could not start process {error}"); 
+				ErrorHelper.Warning (95, $"Aot files could not be copied to the destination directory {dest}: Could not start process."); 
+				return;
 			}
 		}
 
