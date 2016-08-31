@@ -167,6 +167,7 @@ namespace XamCore.Messages {
 
 	[iOS (10,0)]
 	[BaseType (typeof(NSObject))]
+	[Abstract] // as per docs
 	[DisableDefaultCtor]
 	interface MSMessageLayout : NSCopying {}
 
