@@ -4,6 +4,7 @@ configure.inc
 _ios-build
 _mac-build
 *.userprefs
+*.user
 *.suo
 *.exe
 *.dll
