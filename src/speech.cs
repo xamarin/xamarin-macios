@@ -45,6 +45,7 @@ namespace XamCore.Speech {
 
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[DisableDefaultCtor]
+	[Abstract] // no docs (yet) but it has no means (init*) to create it, unlike its subclasses
 	[BaseType (typeof (NSObject))]
 	interface SFSpeechRecognitionRequest {
 
@@ -148,7 +149,7 @@ namespace XamCore.Speech {
 		void FinishedReadingAudio (SFSpeechRecognitionTask task);
 
 		[Export ("speechRecognitionTaskWasCancelled:")]
-		void TaskWasCancelled (SFSpeechRecognitionTask task);
+		void WasCancelled (SFSpeechRecognitionTask task);
 
 		[Export ("speechRecognitionTask:didFinishSuccessfully:")]
 		void DidFinishSuccessfully (SFSpeechRecognitionTask task, bool successfully);
@@ -201,7 +202,7 @@ namespace XamCore.Speech {
 		SFSpeechRecognitionTask GetRecognitionTask (SFSpeechRecognitionRequest request, Action<SFSpeechRecognitionResult, NSError> resultHandler);
 
 		[Export ("recognitionTaskWithRequest:delegate:")]
-		SFSpeechRecognitionTask GetRecognitionTask (SFSpeechRecognitionRequest request, ISFSpeechRecognitionTaskDelegate aDelegate);
+		SFSpeechRecognitionTask GetRecognitionTask (SFSpeechRecognitionRequest request, ISFSpeechRecognitionTaskDelegate @delegate);
 
 		[Export ("queue", ArgumentSemantic.Strong)]
 		NSOperationQueue Queue { get; set; }
