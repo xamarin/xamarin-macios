@@ -200,13 +200,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		</_CollectBundleResourcesDependsOn>
 	</PropertyGroup>
 
-	<Target Name="_CollectNativeLibraries" DependsOnTargets="_CompileToNative;_CopyContentToBundle">
-		<ItemGroup>
-			<_NativeLibrary Include="$(_AppBundlePath)**\*.dylib" />
-		</ItemGroup>
-	</Target>
-
-	<Target Name="_CodesignNativeLibraries" Condition="'$(EnableCodeSigning)'" DependsOnTargets="_DetectSigningIdentity;_CollectNativeLibraries">
+	<Target Name="_CodesignNativeLibraries" Condition="'$(EnableCodeSigning)'" DependsOnTargets="_DetectSigningIdentity">
 		<Codesign
 			SessionId="$(BuildSessionId)"
 			ToolExe="$(CodesignExe)"
@@ -502,6 +496,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			FrameworkRoot="$(XamarinMacFrameworkRoot)"
+			AppBundleDir="$(AppBundleDir)"
 			OutputPath="$(OutputPath)"
 			ApplicationName="$(_AppBundleName)"
 			ApplicationAssembly="$(OutputPath)$(AssemblyName)"
@@ -523,8 +518,9 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			IntermediateOutputPath="$(IntermediateOutputPath)mmp-cache"
 			AppManifest="$(_AppManifest)"
 			SdkVersion="$(MacOSXSdkVersion)"
-			IsAppExtension="$(IsAppExtension)"
-			 />
+			IsAppExtension="$(IsAppExtension)">
+			<Output TaskParameter="NativeLibraries" ItemName="_NativeLibrary" />
+		</Mmp>
 	</Target>
 
 	<Target Name="_CollectColladaAssets">
