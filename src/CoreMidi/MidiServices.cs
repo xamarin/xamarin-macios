@@ -1867,8 +1867,9 @@ namespace XamCore.CoreMidi {
 				if (owns)
 					MIDIEndpointDispose (handle);
 				handle = MidiObject.InvalidRef;
-				gch.Free ();
 			}
+			if (gch.IsAllocated)
+				gch.Free ();
 		}
 
 		public string EndpointName { get; private set; }
