@@ -118,7 +118,7 @@ namespace XamCore.UserNotifications {
 	[Introduced (PlatformName.TvOS, 10, 0)]
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
+	[DisableDefaultCtor] // as per docs (not user created)
 	interface UNNotification : NSCopying, NSSecureCoding {
 
 		[Export ("date", ArgumentSemantic.Copy)]
@@ -132,7 +132,7 @@ namespace XamCore.UserNotifications {
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
+	[DisableDefaultCtor] // as per docs (use FromIdentifier)
 	interface UNNotificationAction : NSCopying, NSSecureCoding {
 
 		[Export ("identifier")]
@@ -153,7 +153,7 @@ namespace XamCore.UserNotifications {
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (UNNotificationAction))]
-	[DisableDefaultCtor]
+	[DisableDefaultCtor] // as per docs (use FromIdentifier)
 	interface UNTextInputNotificationAction {
 
 		[Static]
@@ -171,7 +171,7 @@ namespace XamCore.UserNotifications {
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
+	[DisableDefaultCtor] // as per docs (use FromIdentifier)
 	interface UNNotificationAttachment : NSCopying, NSSecureCoding {
 
 		[Export ("identifier")]
@@ -193,6 +193,7 @@ namespace XamCore.UserNotifications {
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[Unavailable (PlatformName.TvOS)]
 	[Static]
+	[Internal]
 	interface UNNotificationAttachmentOptionsKeys {
 
 		[Field ("UNNotificationAttachmentOptionsTypeHintKey")]
@@ -208,7 +209,6 @@ namespace XamCore.UserNotifications {
 		NSString ThumbnailTime { get; }
 	}
 
-#if XAMCORE_2_0 && !TVOS
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[Unavailable (PlatformName.TvOS)]
@@ -221,9 +221,10 @@ namespace XamCore.UserNotifications {
 		[Export ("ThumbnailHidden")]
 		bool ThumbnailHidden { get; set; }
 
+#if XAMCORE_2_0
 		[Export ("ThumbnailClippingRect")]
 		CGRect ThumbnailClippingRect { get; set; }
-
+#endif
 		// According to apple docs UNNotificationAttachmentOptionsThumbnailTimeKey
 		// can be either a CMTime or a NSNumber (in seconds). Exposing both options
 		// in the strong dictionary because watchOS does not have CMTime or
@@ -236,13 +237,12 @@ namespace XamCore.UserNotifications {
 		[Export ("ThumbnailTime")]
 		double ThumbnailTimeInSeconds { get; set; }
 	}
-#endif // !TVOS
 
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
+	[DisableDefaultCtor] // as per docs (use FromIdentifier)
 	interface UNNotificationCategory : NSCopying, NSSecureCoding {
 
 		[Export ("identifier")]
@@ -266,6 +266,7 @@ namespace XamCore.UserNotifications {
 	[Introduced (PlatformName.TvOS, 10, 0)]
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // as per docs
 	interface UNNotificationContent : NSCopying, NSMutableCopying, NSSecureCoding {
 
 		[Unavailable (PlatformName.TvOS)]
@@ -391,7 +392,7 @@ namespace XamCore.UserNotifications {
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
+	[DisableDefaultCtor] // as per docs
 	interface UNNotificationResponse : NSCopying, NSSecureCoding {
 
 		[Export ("notification", ArgumentSemantic.Copy)]
@@ -406,6 +407,7 @@ namespace XamCore.UserNotifications {
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (UNNotificationResponse))]
+	[DisableDefaultCtor] // as per docs
 	interface UNTextInputNotificationResponse {
 
 		[Export ("userText")]
@@ -416,6 +418,7 @@ namespace XamCore.UserNotifications {
 	[Unavailable (PlatformName.TvOS)]
 	[Unavailable (PlatformName.WatchOS)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // as per docs
 	interface UNNotificationServiceExtension {
 
 		[Export ("didReceiveNotificationRequest:withContentHandler:")]
@@ -429,7 +432,7 @@ namespace XamCore.UserNotifications {
 	[Introduced (PlatformName.TvOS, 10, 0)]
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
+	[DisableDefaultCtor] // as per docs
 	interface UNNotificationSettings : NSCopying, NSSecureCoding {
 
 		[Export ("authorizationStatus")]
@@ -471,12 +474,12 @@ namespace XamCore.UserNotifications {
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
+	[DisableDefaultCtor] // as per docs (use provided methods)
 	interface UNNotificationSound : NSCopying, NSSecureCoding {
 
 		[Static]
 		[Export ("defaultSound")]
-		UNNotificationSound DefaultSound { get; }
+		UNNotificationSound Default { get; }
 
 		[Unavailable (PlatformName.WatchOS)]
 		[Static]
@@ -488,6 +491,7 @@ namespace XamCore.UserNotifications {
 	[Introduced (PlatformName.TvOS, 10, 0)]
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[BaseType (typeof (NSObject))]
+	[Abstract] // as per docs
 	[DisableDefaultCtor]
 	interface UNNotificationTrigger : NSCopying, NSSecureCoding {
 
@@ -499,7 +503,7 @@ namespace XamCore.UserNotifications {
 	[Introduced (PlatformName.TvOS, 10, 0)]
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[BaseType (typeof (UNNotificationTrigger))]
-	[DisableDefaultCtor] // Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: use subclasses
+	[DisableDefaultCtor] // as per docs (system created)
 	interface UNPushNotificationTrigger {
 	
 	}
@@ -508,7 +512,7 @@ namespace XamCore.UserNotifications {
 	[Introduced (PlatformName.TvOS, 10, 0)]
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[BaseType (typeof (UNNotificationTrigger))]
-	[DisableDefaultCtor]
+	[DisableDefaultCtor] // as per doc, use supplied method (Trigger)
 	interface UNTimeIntervalNotificationTrigger {
 
 		[Export ("timeInterval")]
@@ -525,7 +529,7 @@ namespace XamCore.UserNotifications {
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Introduced (PlatformName.TvOS, 10, 0)]
 	[Introduced (PlatformName.WatchOS, 3, 0)]
-	[DisableDefaultCtor]
+	[DisableDefaultCtor] // as per doc, use supplied method (Trigger)
 	[BaseType (typeof (UNNotificationTrigger))]
 	interface UNCalendarNotificationTrigger {
 
@@ -544,7 +548,7 @@ namespace XamCore.UserNotifications {
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (UNNotificationTrigger))]
-	[DisableDefaultCtor]
+	[DisableDefaultCtor] // as per doc, use supplied method (Trigger)
 	interface UNLocationNotificationTrigger {
 
 		[Export ("region", ArgumentSemantic.Copy)]
@@ -588,7 +592,7 @@ namespace XamCore.UserNotifications {
 
 		[Static]
 		[Export ("currentNotificationCenter")]
-		UNUserNotificationCenter CurrentNotificationCenter { get; }
+		UNUserNotificationCenter Current { get; }
 
 		[Async]
 		[Export ("requestAuthorizationWithOptions:completionHandler:")]
