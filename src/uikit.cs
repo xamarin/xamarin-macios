@@ -1062,11 +1062,11 @@ namespace XamCore.UIKit {
 		[Export ("lineFragmentUsedRectForGlyphAtIndex:effectiveRange:withoutAdditionalLayout:")]
 		CGRect GetLineFragmentUsedRect (nuint glyphIndex, out NSRange effectiveGlyphRange, bool withoutAdditionalLayout);
 
-		[iOS (7,0)]
+		[iOS (9,0)] // documented as 7.0 but missing in 8.x
 		[Export ("CGGlyphAtIndex:isValidIndex:")]
 		unsafe ushort GetGlyph (nuint glyphIndex, ref bool isValidIndex);
 	
-		[iOS (7,0)]
+		[iOS (9,0)] // documented as 7.0 but missing in 8.x
 		[Export ("CGGlyphAtIndex:")]
 		ushort GetGlyph (nuint glyphIndex);
 		
@@ -15927,6 +15927,7 @@ namespace XamCore.UIKit {
 		// and we need to teach the intro and xtro tests about it
 		[Abstract]
 		[NullAllowed, Export ("preferredFocusedView", ArgumentSemantic.Weak)]
+		[iOS (9,0)] // duplicated so it's inlined properly
 		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use PreferredFocusEnvironments instead")]
 		UIView PreferredFocusedView { get; }
 
