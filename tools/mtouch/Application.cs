@@ -1068,23 +1068,29 @@ namespace Xamarin.Bundler {
 
 			var p = new Process ();
 			p.StartInfo.UseShellExecute = false;
-			p.StartInfo.RedirectStandardOutput = true;
 			p.StartInfo.RedirectStandardError = true;
 			p.StartInfo.FileName = "mono-symbolicate";
 			p.StartInfo.Arguments = $"store-symbols \"{src}\" \"{dest}\"";
 
-			if (p.Start ()) {
-				var error = p.StandardError.ReadToEnd();
-				p.WaitForExit ();
-				if (p.ExitCode == 0)
-					return;
-				else {
-					Console.Error.WriteLine ($"Msym files could not be copied from {src} to {dest}: {error}.");
-					return;
+			try {
+				if (p.Start ()) {
+					var error = p.StandardError.ReadToEnd();
+					p.WaitForExit ();
+					if (p.ExitCode == 0)
+						return;
+					else {
+						ErrorHelper.Warning (95, $"Aot files could not be copied to the destination directory: {dest}"); 
+						return;
+					}
 				}
-			}
 
-			Console.Error.WriteLine ($"Msym files could not be copied from {src} to {dest}: Could not start process.");
+				ErrorHelper.Warning (95, $"Aot files could not be copied to the destination directory {dest}: Could not start process."); 
+				return;
+			}
+			catch (Exception e) {
+				ErrorHelper.Warning (95, $"Aot files could not be copied to the destination directory {dest}: Could not start process."); 
+				return;
+			}
 		}
 
 		void BuildFinalExecutable ()
