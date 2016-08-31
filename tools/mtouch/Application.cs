@@ -862,6 +862,23 @@ namespace Xamarin.Bundler {
 
 			Namespaces.Initialize ();
 
+			var hasBitcodeCapableRuntime = false;
+			switch (Platform) {
+			case ApplePlatform.iOS:
+#if ENABLE_BITCODE_ON_IOS
+				hasBitcodeCapableRuntime = true;
+#endif
+				break;
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				hasBitcodeCapableRuntime = true;
+				break;
+			}
+			if (hasBitcodeCapableRuntime && EnableProfiling && FastDev) {
+				ErrorHelper.Warning (94, "Both profiling (--profiling) and incremental builds (--fastdev) are currently not supported when building for {0}, and incremental builds have been disabled (this will be fixed in a future release).", PlatformName);
+				FastDev = false;
+			}
+
 			InitializeCommon ();
 
 			Driver.Watch ("Resolve References", 1);
@@ -1068,23 +1085,29 @@ namespace Xamarin.Bundler {
 
 			var p = new Process ();
 			p.StartInfo.UseShellExecute = false;
-			p.StartInfo.RedirectStandardOutput = true;
 			p.StartInfo.RedirectStandardError = true;
 			p.StartInfo.FileName = "mono-symbolicate";
 			p.StartInfo.Arguments = $"store-symbols \"{src}\" \"{dest}\"";
 
-			if (p.Start ()) {
-				var error = p.StandardError.ReadToEnd();
-				p.WaitForExit ();
-				if (p.ExitCode == 0)
-					return;
-				else {
-					Console.Error.WriteLine ($"Msym files could not be copied from {src} to {dest}: {error}.");
-					return;
+			try {
+				if (p.Start ()) {
+					var error = p.StandardError.ReadToEnd();
+					p.WaitForExit ();
+					if (p.ExitCode == 0)
+						return;
+					else {
+						Console.Error.WriteLine ($"Msym files could not be copied from {src} to {dest}: {error}.");
+						throw new MonoTouchException (95, true, "Aot files could not be copied to the destination directory: {dest}"); 
+					}
 				}
-			}
 
-			Console.Error.WriteLine ($"Msym files could not be copied from {src} to {dest}: Could not start process.");
+				Console.Error.WriteLine ($"Msym files could not be copied from {src} to {dest}: Could not start process.");
+				throw new MonoTouchException (95, true, "Aot files could not be copied to the destination directory: {dest}"); 
+			}
+			catch (Exception e) {
+				Console.Error.WriteLine ($"Msym files could not be copied from {src} to {dest}: Could not start process.");
+				throw new MonoTouchException (95, true, e, "Aot files could not be copied to the destination directory: Could not start process {error}"); 
+			}
 		}
 
 		void BuildFinalExecutable ()
