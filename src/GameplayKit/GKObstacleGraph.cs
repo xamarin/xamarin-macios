@@ -26,6 +26,7 @@ namespace XamCore.GameplayKit {
 		}
 	}
 
+#if XAMCORE_2_0
 	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
 	[Register ("GKObstacleGraph", SkipRegistration = true)]
 	public partial class GKObstacleGraph<NodeType> : GKObstacleGraph where NodeType : GKGraphNode2D {
@@ -53,5 +54,6 @@ namespace XamCore.GameplayKit {
 			return NSArray.ArrayFromHandle<NodeType> (_GetNodes (obstacle));
 		}
 	}
+#endif
 }
 #endif
