@@ -25,6 +25,12 @@ namespace MonoTouchFixtures.Foundation {
 	[Preserve (AllMembers = true)]
 	public class DimensionTest {
 
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertXcodeVersion (8,0);
+		}
+
 		[Test]
 		public void BaseUnit ()
 		{

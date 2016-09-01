@@ -22,6 +22,12 @@ namespace MonoTouchFixtures.Intents {
 	[Preserve (AllMembers = true)]
 	public class INIntentResolutionResultTests {
 
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+		}
+
 		[Test]
 		public void INIntentResolutionResultIsAbstractTest ()
 		{

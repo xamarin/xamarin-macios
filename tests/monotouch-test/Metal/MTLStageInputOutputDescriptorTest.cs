@@ -19,6 +19,7 @@ namespace MonoTouchFixtures.Metal {
 		[SetUp]
 		public void SetUp ()
 		{
+			TestRuntime.AssertXcodeVersion (8, 0);
 			descriptor = MTLStageInputOutputDescriptor.Create ();
 		}
 		
