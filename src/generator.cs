@@ -4794,8 +4794,10 @@ public partial class Generator : IMemberGatherer {
 				} else {
 					if (IsArrayOfWrappedType (pi.PropertyType))
 						print ("return NSArray.FromArray<{0}>({1} as NSArray);", FormatType (pi.DeclaringType, pi.PropertyType.GetElementType ()), wrap);
-					else 
-						print ("return {0} as {1}{2};", wrap, minfo.protocolize ? "I" : "/**/", FormatType (pi.DeclaringType, pi.PropertyType));
+					else if (pi.PropertyType.IsValueType)
+						print ("return ({0}) ({1});", FormatType (pi.DeclaringType, pi.PropertyType), wrap);
+					else
+						print ("return {0} as {1}{2};", wrap, minfo.protocolize ? "I" : String.Empty, FormatType (pi.DeclaringType, pi.PropertyType));
 				}
 				indent--;
 				print ("}");
