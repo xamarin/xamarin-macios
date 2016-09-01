@@ -38,6 +38,7 @@ typedef struct {
 void mono_debugger_agent_parse_options (const char *options); 
 gboolean mono_debugger_agent_transport_handshake (void);
 void mono_debugger_agent_register_transport (DebuggerTransport *trans);
+bool xamarin_is_native_debugger_attached ();
 
 #ifdef __cplusplus
 } /* extern "C" */
