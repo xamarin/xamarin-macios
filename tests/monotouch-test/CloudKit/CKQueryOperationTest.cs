@@ -21,6 +21,7 @@ namespace MonoTouchFixtures.CloudKit
 		[SetUp]
 		public void SetUp ()
 		{
+			TestRuntime.AssertXcodeVersion (6, 0);
 			q = new CKQuery ("Foo", NSPredicate.FromFormat ("email = '@xamarin'"));
 			op = new CKQueryOperation (q);
 		}

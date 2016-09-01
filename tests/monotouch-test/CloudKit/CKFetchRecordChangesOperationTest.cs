@@ -22,6 +22,7 @@ namespace MonoTouchFixtures.CloudKit
 		[SetUp]
 		public void SetUp ()
 		{
+			TestRuntime.AssertXcodeVersion (6, 0);
 			zoneID = new CKRecordZoneID ("foo", "xamarin");
 			op = new CKFetchRecordChangesOperation (zoneID, null);
 		}

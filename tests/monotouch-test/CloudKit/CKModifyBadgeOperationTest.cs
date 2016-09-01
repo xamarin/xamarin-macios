@@ -20,6 +20,7 @@ namespace MonoTouchFixtures.CloudKit
 		[SetUp]
 		public void SetUp ()
 		{
+			TestRuntime.AssertXcodeVersion (6, 0);
 			op = new CKModifyBadgeOperation (3);
 		}
 

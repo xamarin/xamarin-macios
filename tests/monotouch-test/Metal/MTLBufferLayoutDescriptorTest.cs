@@ -14,6 +14,13 @@ namespace MonoTouchFixtures.Metal {
 	
 	[TestFixture]
 	public class MTLBufferLayoutDescriptorTest {
+
+		[SetUp]
+		public void Setup ()
+		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+		}
+
 		[Test]
 		public void GetSetStrideTest ()
 		{
