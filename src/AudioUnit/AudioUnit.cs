@@ -92,7 +92,7 @@ namespace XamCore.AudioUnit
 		Audiofile	= 3,
 		EXS24		= 4
 	}
-	
+
 	public class AudioUnitException : Exception {
 		static string Lookup (int k)
 		{
@@ -157,8 +157,6 @@ namespace XamCore.AudioUnit
 		{
 		}
 	}
-
-#if !WATCH
 
 #if !COREBUILD
 	public delegate AudioUnitStatus RenderDelegate (AudioUnitRenderActionFlags actionFlags, AudioTimeStamp timeStamp, uint busNumber, uint numberFrames, AudioBuffers data);
@@ -2080,6 +2078,4 @@ namespace XamCore.AudioUnit
 	[Obsolete ("Use AUImplementorStringFromValueCallback instead")]
 	public delegate NSString _AUImplementorStringFromValueCallback (AUParameter param, IntPtr value);
 #endif
-
-#endif // !WATCH
 }

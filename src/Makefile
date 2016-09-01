@@ -683,7 +683,6 @@ WATCHOS_EXTRA_CORE_SOURCES = \
     $(IOS_OPENTK_1_0_CORE_SOURCES)     \
     CoreVideo/CVPixelFormatType.cs     \
     AudioToolbox/AudioType.cs          \
-    AudioUnit/AudioUnit.cs             \
 
 WATCHOS_CORE_SOURCES +=           \
     $(WATCHOS_EXTRA_CORE_SOURCES) \
