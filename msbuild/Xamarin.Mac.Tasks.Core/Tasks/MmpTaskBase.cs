@@ -8,6 +8,7 @@
 
 using System;
 using System.IO;
+using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -24,6 +25,9 @@ namespace Xamarin.Mac.Tasks
 		}
 
 		public string SessionId { get; set; }
+
+		[Required]
+		public string AppBundleDir { get; set; }
 
 		[Required]
 		public string FrameworkRoot { get; set; }
@@ -72,6 +76,9 @@ namespace Xamarin.Mac.Tasks
 		public string [] NativeReferences { get; set; }
 
 		public string IntermediateOutputPath { get; set; }
+
+		[Output]
+		public ITaskItem[] NativeLibraries { get; set; }
 		
 		protected override string GenerateFullPathToTool ()
 		{
@@ -203,6 +210,7 @@ namespace Xamarin.Mac.Tasks
 		public override bool Execute ()
 		{
 			Log.LogTaskName ("Mmp");
+			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
 			Log.LogTaskProperty ("ApplicationAssembly", ApplicationAssembly + (IsAppExtension ? ".dll" : ".exe"));
 			Log.LogTaskProperty ("ApplicationName", ApplicationName);
 			Log.LogTaskProperty ("Architecture", Architecture);
@@ -226,7 +234,24 @@ namespace Xamarin.Mac.Tasks
 			Log.LogTaskProperty ("NativeReferences", NativeReferences);
 			Log.LogTaskProperty ("IsAppExtension", IsAppExtension);
 
-			return base.Execute ();
+			if (!base.Execute ())
+				return false;
+
+			try {
+				var nativeLibrariesPath = Directory.EnumerateFiles (Path.Combine (AppBundleDir, "Contents", "MonoBundle"), "*.dylib", SearchOption.AllDirectories);
+				var nativeLibraryItems = new List<ITaskItem> ();
+
+				foreach (var nativeLibrary in nativeLibrariesPath) {
+					nativeLibraryItems.Add (new TaskItem (nativeLibrary));
+				}
+
+				NativeLibraries = nativeLibraryItems.ToArray ();
+			} catch (Exception ex) {
+				Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Could not get native libraries: {0}", ex.Message);
+				return false;
+			}
+
+			return !Log.HasLoggedErrors;
 		}
 
 		protected override void LogEventsFromTextOutput (string singleLine, MessageImportance messageImportance)
