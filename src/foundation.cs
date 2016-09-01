@@ -13248,7 +13248,7 @@ namespace XamCore.Foundation
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
-	interface NSUnitElectricCharge : INSSecureCoding {
+	interface NSUnitElectricCharge : NSSecureCoding {
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
