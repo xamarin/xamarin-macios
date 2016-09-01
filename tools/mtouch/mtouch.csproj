@@ -345,11 +345,11 @@
     <Folder Include="Xamarin.Linker\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\external\cecil\Mono.Cecil.csproj">
+    <ProjectReference Include="..\..\external\mono\external\cecil\Mono.Cecil.csproj">
       <Project>{D68133BD-1E63-496E-9EDE-4FBDBF77B486}</Project>
       <Name>Mono.Cecil</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\external\cecil\symbols\mdb\Mono.Cecil.Mdb.csproj">
+    <ProjectReference Include="..\..\external\mono\external\cecil\symbols\mdb\Mono.Cecil.Mdb.csproj">
       <Project>{8559DD7F-A16F-46D0-A05A-9139FAEBA8FD}</Project>
       <Name>Mono.Cecil.Mdb</Name>
     </ProjectReference>
