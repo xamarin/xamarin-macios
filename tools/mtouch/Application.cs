@@ -1418,7 +1418,7 @@ namespace Xamarin.Bundler {
 
 		void CopyAssemblyData (Assembly asm, string targetDir)
 		{
-			var mvid = asm.AssemblyDefinition.MainModule.Mvid.ToString ().ToUpperInvariant ();
+			var mvid = asm.AssemblyDefinition.MainModule.Mvid.ToString ().ToLowerInvariant ().Replace ("-", "");
 			var assemblyDir = Path.Combine (targetDir, mvid);
 			if (!Directory.Exists (assemblyDir))
 				Directory.CreateDirectory (assemblyDir);
