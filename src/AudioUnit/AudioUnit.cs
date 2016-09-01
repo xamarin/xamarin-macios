@@ -2074,8 +2074,10 @@ namespace XamCore.AudioUnit
 		NetReceive 				= 0x6E726376, // 'nrcv'
 #endif
 	}
-#if !XAMCORE_4_0 && !MONOMAC && !COREBUILD
+#if !XAMCORE_4_0 && !COREBUILD
+#if XAMCORE_2_0 || !MONOMAC
 	[Obsolete ("Use AUImplementorStringFromValueCallback instead")]
 	public delegate NSString _AUImplementorStringFromValueCallback (AUParameter param, IntPtr value);
+#endif
 #endif
 }
