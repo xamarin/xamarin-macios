@@ -379,6 +379,7 @@ namespace XamCore.UserNotifications {
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[Unavailable (PlatformName.TvOS)]
 	[Static]
+	[Internal]
 	interface UNNotificationActionIdentifier {
 
 		[Field ("UNNotificationDefaultActionIdentifier")]
@@ -398,9 +399,17 @@ namespace XamCore.UserNotifications {
 		[Export ("notification", ArgumentSemantic.Copy)]
 		UNNotification Notification { get; }
 
-		[Advice ("Check against UNNotificationActionIdentifier or your custom registered identifier")]
 		[Export ("actionIdentifier")]
 		NSString ActionIdentifier { get; }
+
+		[Wrap ("ActionIdentifier == UNNotificationActionIdentifier.Default")]
+		bool IsDefaultAction { get; }
+
+		[Wrap ("ActionIdentifier == UNNotificationActionIdentifier.Dismiss")]
+		bool IsDismissAction { get; }
+
+		[Wrap ("!IsDefaultAction && !IsDismissAction")]
+		bool IsCustomAction { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
