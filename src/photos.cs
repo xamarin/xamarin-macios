@@ -988,6 +988,7 @@ namespace XamCore.Photos
 		PHAuthorizationStatus AuthorizationStatus { get; }
 
 		[Static, Export ("requestAuthorization:")]
+		[Async]
 		void RequestAuthorization (Action<PHAuthorizationStatus> handler);
 
 		[Export ("performChanges:completionHandler:")]
