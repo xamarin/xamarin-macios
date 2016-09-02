@@ -674,7 +674,7 @@ namespace XamCore.HealthKit {
 		[Export ("identifier")]
 		NSString Identifier { get; }
 
-#if XAMCORE_4_0
+#if XAMCORE_4_0 || WATCH
 		[Internal]
 #else
 		[Obsolete ("Use HKQuantityType.Create (HKQuantityTypeIdentifier)")]
@@ -684,7 +684,7 @@ namespace XamCore.HealthKit {
 		[return: NullAllowed]
 		HKQuantityType GetQuantityType (NSString hkTypeIdentifier);
 
-#if XAMCORE_4_0
+#if XAMCORE_4_0 || WATCH
 		[Internal]
 #else
 		[Obsolete ("Use HKCategoryType.Create (HKCategoryTypeIdentifier)")]
@@ -694,7 +694,7 @@ namespace XamCore.HealthKit {
 		[return: NullAllowed]
 		HKCategoryType GetCategoryType (NSString hkCategoryTypeIdentifier);
 
-#if XAMCORE_4_0
+#if XAMCORE_4_0 || WATCH
 		[Internal]
 #else
 		[Obsolete ("Use HKCharacteristicType.Create (HKCharacteristicTypeIdentifier)")]
@@ -704,7 +704,7 @@ namespace XamCore.HealthKit {
 		[return: NullAllowed]
 		HKCharacteristicType GetCharacteristicType (NSString hkCharacteristicTypeIdentifier);
 
-#if XAMCORE_4_0
+#if XAMCORE_4_0 || WATCH
 		[Internal]
 #else
 		[Obsolete ("Use HKCorrelationType.Create (HKCorrelationTypeIdentifier)")]

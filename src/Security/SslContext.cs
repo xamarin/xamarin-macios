@@ -537,6 +537,7 @@ namespace XamCore.Security {
 			return SSLContextGetTypeID ();
 		}
 
+#if !WATCH
 		[iOS(9,0)][Mac (10,11)]
 		// TODO: Headers say /* Deprecated, does nothing */ but we are not completly sure about it since there is no deprecation macro
 		// Plus they added new members to SslSessionStrengthPolicy enum opened radar://23379052 https://trello.com/c/NbdTLVD3
@@ -548,6 +549,7 @@ namespace XamCore.Security {
 			Console.WriteLine ("SetSessionStrengthPolicy is not available anymore.");
 			return SslStatus.Success;
 		}
+#endif
 
 		[iOS (10,0)][Mac (10,12)]
 		[DllImport (Constants.SecurityLibrary)]

@@ -15,9 +15,9 @@ namespace XamCore.CoreLocation {
 	}
 #endif
 
-#if !XAMCORE_4_0
+#if !XAMCORE_4_0 && !WATCH
 
-#if !WATCH && !TVOS
+#if !TVOS
 	public partial class CLHeading {
 
 		[Obsolete ("Use the Description property from NSObject")]

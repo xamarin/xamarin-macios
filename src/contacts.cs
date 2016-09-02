@@ -451,7 +451,7 @@ namespace XamCore.Contacts {
 		[Protected] // we cannot use ICNKeyDescriptor as Apple (and others) can adopt it from categories
 		NSObject GetUnifiedMeContact (NSArray keys, out NSError error);
 
-#if !XAMCORE_4_0
+#if !XAMCORE_4_0 && !WATCH
 		[Obsolete ("Use the overload that takes CNContactStoreListContactsHandler instead")]
 		[Export ("enumerateContactsWithFetchRequest:error:usingBlock:")]
 		bool EnumerateContacts (CNContactFetchRequest fetchRequest, out NSError error, CNContactStoreEnumerateContactsHandler handler);

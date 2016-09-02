@@ -186,7 +186,6 @@ namespace XamCore.CoreData
 
 		[Static, Export ("insertNewObjectForEntityForName:inManagedObjectContext:")]
 #if !XAMCORE_4_0
-		[Obsolete ("Method InsertNewObjectForEntityForName is deprecated, please use InsertNewObject instead")]
 		NSObject InsertNewObjectForEntityForName (string entityName, NSManagedObjectContext context);
 #else
 		NSManagedObject InsertNewObject (string entityName, NSManagedObjectContext context);

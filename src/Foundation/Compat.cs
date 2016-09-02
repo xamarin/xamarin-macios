@@ -22,7 +22,7 @@ namespace XamCore.Foundation {
 	}
 #endif
 
-#if !XAMCORE_4_0 && (XAMCORE_2_0 || !MONOMAC)
+#if !XAMCORE_4_0 && (XAMCORE_2_0 || !MONOMAC) && !WATCH
 	public partial class NSUserActivity {
 
 		[Obsolete ("Use the constructor that allows you to set an activity type")]

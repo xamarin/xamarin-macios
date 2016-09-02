@@ -245,7 +245,7 @@ namespace XamCore.Registrar {
 				RegisterAttribute parent_attr = (RegisterAttribute) Attribute.GetCustomAttribute (parent_type, typeof (RegisterAttribute), false);
 				parent_name = parent_attr == null ? parent_type.FullName : parent_attr.Name ?? parent_type.FullName;
 				parent = Class.objc_getClass (parent_name);
-				if (parent == IntPtr.Zero && parent_type.Assembly != NSObject.MonoTouchAssembly) {
+				if (parent == IntPtr.Zero && parent_type.Assembly != NSObject.PlatformAssembly) {
 					bool parent_is_wrapper = parent_attr == null ? false : parent_attr.IsWrapper;
 					// Its possible as we scan that we might be derived from a type that isn't reigstered yet.
 					Register (parent_type, parent_name, parent_is_wrapper);
@@ -329,10 +329,10 @@ namespace XamCore.Registrar {
 					bool is_conforms_to_protocol;
 					bool is_model = false;
 					
-					is_conforms_to_protocol = minfo.DeclaringType.Assembly == NSObject.MonoTouchAssembly && minfo.DeclaringType.Name == "NSObject" && minfo.Name == "ConformsToProtocol";
+					is_conforms_to_protocol = minfo.DeclaringType.Assembly == NSObject.PlatformAssembly && minfo.DeclaringType.Name == "NSObject" && minfo.Name == "ConformsToProtocol";
 					
 					if (!is_conforms_to_protocol)
-						is_model = minfo.IsVirtual && ((minfo.DeclaringType != type && minfo.DeclaringType.Assembly == NSObject.MonoTouchAssembly) || (Attribute.IsDefined (minfo.DeclaringType, typeof (ModelAttribute), false)));
+						is_model = minfo.IsVirtual && ((minfo.DeclaringType != type && minfo.DeclaringType.Assembly == NSObject.PlatformAssembly) || (Attribute.IsDefined (minfo.DeclaringType, typeof (ModelAttribute), false)));
 					
 					if (is_model)
 						continue;
