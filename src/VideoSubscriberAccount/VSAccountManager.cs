@@ -14,7 +14,7 @@ using XamCore.Foundation;
 namespace XamCore.VideoSubscriberAccount {
 	public partial class VSAccountManager {
 
-		public virtual void CheckAccessStatus (VSAccountManagerAccessOptions accessOptions, Action<VSAccountAccessStatus, NSError> completionHandler)
+		public void CheckAccessStatus (VSAccountManagerAccessOptions accessOptions, Action<VSAccountAccessStatus, NSError> completionHandler)
 		{
 			if (accessOptions == null)
 				throw new ArgumentNullException (nameof (accessOptions));
@@ -24,7 +24,7 @@ namespace XamCore.VideoSubscriberAccount {
 			CheckAccessStatus (accessOptions.Dictionary, completionHandler);
 		}
 
-		public virtual Task<VSAccountAccessStatus> CheckAccessStatusAsync (VSAccountManagerAccessOptions accessOptions)
+		public Task<VSAccountAccessStatus> CheckAccessStatusAsync (VSAccountManagerAccessOptions accessOptions)
 		{
 			if (accessOptions == null)
 				throw new ArgumentNullException (nameof (accessOptions));
