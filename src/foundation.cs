@@ -3184,7 +3184,7 @@ namespace XamCore.Foundation
 		string[] CallStackSymbols { get; }
 	}
 
-#if !XAMCORE_4_0
+#if !XAMCORE_4_0 && !WATCH
 	[Obsolete("NSExpressionHandler is deprecated, please use FromFormat (string, NSObject[]) instead.")]
 	public delegate void NSExpressionHandler (NSObject evaluatedObject, NSExpression [] expressions, NSMutableDictionary context);
 #endif
@@ -3211,7 +3211,7 @@ namespace XamCore.Foundation
 		[Static, Export ("expressionWithFormat:")]
 		NSExpression FromFormat (string expressionFormat);
 
-#if !XAMCORE_4_0
+#if !XAMCORE_4_0 && !WATCH
 		[Obsolete("FromFormat (string, NSExpression[]) is deprecated, please use FromFormat (string, NSObject[]) instead.")]
 		[Static, Export ("expressionWithFormat:argumentArray:")]
 		NSExpression FromFormat (string format, NSExpression [] parameters);
@@ -3240,7 +3240,7 @@ namespace XamCore.Foundation
 		[Static, Export ("expressionForFunction:selectorName:arguments:")]
 		NSExpression FromFunction (NSExpression target, string name, NSExpression[] parameters);
 
-#if !XAMCORE_4_0
+#if !XAMCORE_4_0 && !WATCH
 		[Obsolete("FromFunction (NSExpressionHandler, NSExpression[]) is deprecated, please use FromFunction (NSExpressionCallbackHandler, NSExpression[]) instead.")]
 		[Static, Export ("expressionForBlock:arguments:")]
 		NSExpression FromFunction (NSExpressionHandler target, NSExpression[] parameters);

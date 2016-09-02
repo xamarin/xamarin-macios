@@ -537,8 +537,13 @@ namespace XamCore.HomeKit {
 		Door,
 		DoorLock,
 		Fan,
+#if !WATCH
 		[Obsolete ("Use GarageDoorOpener instead")]
 		DoorOpener,
+		GarageDoorOpener = DoorOpener,
+#else
+		GarageDoorOpener,
+#endif
 		Lightbulb,
 		Outlet,
 		ProgrammableSwitch,
@@ -547,7 +552,6 @@ namespace XamCore.HomeKit {
 		Thermostat,
 		Window,
 		WindowCovering,
-		GarageDoorOpener = DoorOpener,
 		[iOS (10,0), Watch (3,0), TV (10,0)]
 		RangeExtender,
 		[iOS (10,0), Watch (3,0), TV (10,0)]
