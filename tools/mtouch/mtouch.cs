@@ -529,7 +529,7 @@ namespace Xamarin.Bundler
 				args.Append ("direct-pinvoke,");
 
 			if (app.EnableMSym) {
-				var msymdir = Quote (Path.Combine (outputDir, $"{fname}.aotid.msym"));
+				var msymdir = Quote (Path.Combine (outputDir, "Msym"));
 				args.Append ($"msym-dir={msymdir},");
 			}
 

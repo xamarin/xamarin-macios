@@ -94,17 +94,6 @@ namespace Xamarin.Bundler {
 				Application.UpdateFile (mdb_src, mdb_target);
 			}
 		}
-		
-		public void CopyMSymToDirectory (string directory)
-		{
-			string msym_src = FullPath + ".aotid.msym";
-			if (!Directory.Exists (msym_src)) // got no aot data
-				return;
-			if (!Directory.Exists (directory)) {
-				Directory.CreateDirectory (directory);
-			}
-			Application.CopyMsymData (msym_src, directory);
-		}
 
 		public void CopyConfigToDirectory (string directory)
 		{
