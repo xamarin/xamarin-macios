@@ -141,11 +141,18 @@ namespace XamCore.CoreAnimation {
 		[DllImport(Constants.QuartzLibrary)]
 		extern static CATransform3D CATransform3DInvert (CATransform3D t);
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use Invert() as the argument to this method is unused.")]
 		public CATransform3D Invert (CATransform3D t)
 		{
 			return CATransform3DInvert (this);
 		}
-		
+#endif
+		public CATransform3D Invert ()
+		{
+			return CATransform3DInvert (this);
+		}
+
 		[DllImport(Constants.QuartzLibrary, EntryPoint="CATransform3DMakeAffineTransform")]
 		public extern static CATransform3D MakeFromAffine (CGAffineTransform m);
 		
