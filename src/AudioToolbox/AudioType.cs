@@ -1111,6 +1111,7 @@ namespace XamCore.AudioToolbox {
 		}
 	}
 
+#if !WATCH
 	[StructLayout(LayoutKind.Sequential)]
 	public struct AudioBuffer {
 		public int NumberChannels;
@@ -1135,4 +1136,5 @@ namespace XamCore.AudioToolbox {
 		public /* UInt16 */ ushort Reserved;
 	}
 #endif
+#endif // !WATCH
 }
