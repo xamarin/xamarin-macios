@@ -7,6 +7,7 @@ namespace XamCore.HomeKit {
 	partial class HMAccessoryCategory {
 
 		[iOS (9,0)]
+		[TV (10,0)]
 		public HMAccessoryCategoryType CategoryType {
 			get {
 				var s = _CategoryType;

@@ -12,6 +12,7 @@ interface UIView {}
 
 namespace XamCore.HomeKit {
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[Static]
 	public partial interface HMErrors {
@@ -76,6 +77,7 @@ namespace XamCore.HomeKit {
 		void DidRemoveHome (HMHomeManager manager, HMHome home);
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject), Delegates=new string[] {"WeakDelegate"}, Events=new Type[] {typeof(HMAccessoryDelegate)})]
 	public partial interface HMAccessory {
@@ -142,11 +144,12 @@ namespace XamCore.HomeKit {
 
 		// HMAccessory(Camera)
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[NullAllowed, Export ("cameraProfiles", ArgumentSemantic.Copy)]
 		HMCameraProfile [] CameraProfiles { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[Model, Protocol]
 	[BaseType (typeof (NSObject))]
@@ -225,6 +228,7 @@ namespace XamCore.HomeKit {
 		HMAccessory Accessory { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	public partial interface HMAction {
@@ -234,6 +238,7 @@ namespace XamCore.HomeKit {
 		NSUuid UniqueIdentifier { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -275,11 +280,12 @@ namespace XamCore.HomeKit {
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Export ("lastExecutionDate", ArgumentSemantic.Copy)]
 		NSDate LastExecutionDate { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (9,0)]
 	[Static]
 	[Internal]
@@ -299,11 +305,12 @@ namespace XamCore.HomeKit {
 		[Field ("HMActionSetTypeUserDefined")]
 		NSString UserDefined { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Field ("HMActionSetTypeTriggerOwned")]
 		NSString TriggerOwned { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]	
 	[BaseType (typeof (NSObject))]
 	public partial interface HMCharacteristic {
@@ -362,6 +369,7 @@ namespace XamCore.HomeKit {
 		NSString ValueKeyPath { get; }
 	}
 
+	[TV (10,0)]
 	[iOS(8,0)]
 	[Static]
 	[Internal]
@@ -381,6 +389,7 @@ namespace XamCore.HomeKit {
 		NSString SupportsEventNotification { get; }		
 	}
 
+	[TV (10,0)]
 	[iOS(8,0)]
 	[Static]
 	[Internal]
@@ -635,59 +644,60 @@ namespace XamCore.HomeKit {
 		[Field ("HMCharacteristicTypeTargetSecuritySystemState")]
 		NSString TargetSecuritySystemState { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Field ("HMCharacteristicTypeStreamingStatus")]
 		NSString StreamingStatus { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Field ("HMCharacteristicTypeSetupStreamEndpoint")]
 		NSString SetupStreamEndpoint { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Field ("HMCharacteristicTypeSupportedVideoStreamConfiguration")]
 		NSString SupportedVideoStreamConfiguration { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Field ("HMCharacteristicTypeSupportedAudioStreamConfiguration")]
 		NSString SupportedAudioStreamConfiguration { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Field ("HMCharacteristicTypeSupportedRTPConfiguration")]
 		NSString SupportedRtpConfiguration { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Field ("HMCharacteristicTypeSelectedStreamConfiguration")]
 		NSString SelectedStreamConfiguration { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Field ("HMCharacteristicTypeVolume")]
 		NSString Volume { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Field ("HMCharacteristicTypeMute")]
 		NSString Mute { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Field ("HMCharacteristicTypeNightVision")]
 		NSString NightVision { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Field ("HMCharacteristicTypeOpticalZoom")]
 		NSString OpticalZoom { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Field ("HMCharacteristicTypeDigitalZoom")]
 		NSString DigitalZoom { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Field ("HMCharacteristicTypeImageRotation")]
 		NSString ImageRotation { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Field ("HMCharacteristicTypeImageMirroring")]
 		NSString ImageMirroring { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[Static]
 	[Internal]
@@ -712,15 +722,16 @@ namespace XamCore.HomeKit {
 		[Field ("HMCharacteristicMetadataUnitsLux")]
 		NSString Lux { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Field ("HMCharacteristicMetadataUnitsPartsPerMillion")]
 		NSString PartsPerMillion { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Field ("HMCharacteristicMetadataUnitsMicrogramsPerCubicMeter")]
 		NSString MicrogramsPerCubicMeter { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	public partial interface HMCharacteristicMetadata {
@@ -748,11 +759,12 @@ namespace XamCore.HomeKit {
 		[Export ("manufacturerDescription")]
 		string ManufacturerDescription { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[NullAllowed, Export ("validValues", ArgumentSemantic.Copy)]
 		NSNumber[] ValidValues { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (HMAction))]
@@ -996,6 +1008,7 @@ namespace XamCore.HomeKit {
 		NSString UserFailedAccessoriesKey { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[Model, Protocol]
 	[BaseType (typeof (NSObject))]
@@ -1089,6 +1102,7 @@ namespace XamCore.HomeKit {
 		void DidEncounterError (HMHome home, NSError error, HMAccessory accessory);
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -1111,6 +1125,7 @@ namespace XamCore.HomeKit {
 		NSUuid UniqueIdentifier { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[Static]
 	[Internal]
@@ -1158,7 +1173,7 @@ namespace XamCore.HomeKit {
 		[Field ("HMServiceTypeDoor")]
 		NSString Door { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Field ("HMServiceTypeDoorbell")]
 		NSString Doorbell { get; }
 
@@ -1218,23 +1233,24 @@ namespace XamCore.HomeKit {
 		[Field ("HMServiceTypeSecuritySystem")]
 		NSString SecuritySystem { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Field ("HMServiceTypeCameraRTPStreamManagement")]
 		NSString CameraRtpStreamManagement { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Field ("HMServiceTypeCameraControl")]
 		NSString CameraControl { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Field ("HMServiceTypeMicrophone")]
 		NSString Microphone { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Field ("HMServiceTypeSpeaker")]
 		NSString Speaker { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	public partial interface HMService { 
@@ -1280,15 +1296,16 @@ namespace XamCore.HomeKit {
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[Export ("primaryService")]
 		bool PrimaryService { [Bind ("isPrimaryService")] get; }
 
-		[Watch (3,0), TV (10,0), iOS (10,0)]
+		[Watch (3,0), iOS (10,0)]
 		[NullAllowed, Export ("linkedServices", ArgumentSemantic.Copy)]
 		HMService[] LinkedServices { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -1323,6 +1340,7 @@ namespace XamCore.HomeKit {
 		NSUuid UniqueIdentifier { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (HMTrigger))]
@@ -1365,6 +1383,7 @@ namespace XamCore.HomeKit {
 		void UpdateRecurrence ([NullAllowed] NSDateComponents recurrence, Action<NSError> completion);
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -1411,6 +1430,7 @@ namespace XamCore.HomeKit {
 		NSUuid UniqueIdentifier { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -1447,6 +1467,7 @@ namespace XamCore.HomeKit {
 
 	[Static, Internal]
 	[iOS (8,0)]
+	[TV (10,0)]
 	interface HMCharacteristicMetadataFormatKeys {
 		[Field ("HMCharacteristicMetadataFormatBool")]
 		NSString _Bool { get; }
@@ -1485,6 +1506,7 @@ namespace XamCore.HomeKit {
 		NSString _Tlv8 { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1497,6 +1519,7 @@ namespace XamCore.HomeKit {
 		NSUuid UniqueIdentifier { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: init is unavailable
@@ -1509,6 +1532,7 @@ namespace XamCore.HomeKit {
 		string LocalizedDescription { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (9,0)]
 	[Static]
 	[Internal]
@@ -1571,6 +1595,7 @@ namespace XamCore.HomeKit {
 		NSString RangeExtender { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (9,0)]
 	[BaseType (typeof (HMEvent))]
 	[DisableDefaultCtor]
@@ -1593,6 +1618,7 @@ namespace XamCore.HomeKit {
 		void UpdateTriggerValue ([NullAllowed] INSCopying triggerValue, Action<NSError> completion);
 	}
 
+	[TV (10,0)]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	interface HMEvent {
@@ -1600,6 +1626,7 @@ namespace XamCore.HomeKit {
 		NSUuid UniqueIdentifier { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (9,0)]
 	[BaseType (typeof (HMTrigger))]
 	[DisableDefaultCtor]
@@ -1658,6 +1685,7 @@ namespace XamCore.HomeKit {
 	[Static]
 	[Internal]
 	[iOS (9,0)]
+	[TV (10,0)]
 	partial interface HMSignificantEventInternal {
 		
 		[Field ("HMSignificantEventSunrise")]
@@ -1668,6 +1696,7 @@ namespace XamCore.HomeKit {
 	}
 
 	[iOS (9,0)]
+	[TV (10,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	public interface HMHomeAccessControl {
@@ -1676,6 +1705,7 @@ namespace XamCore.HomeKit {
 	}
 
 	[iOS (9,0)]
+	[TV (10,0)]
 	[BaseType (typeof (HMEvent))]
 	[DisableDefaultCtor]
 	interface HMLocationEvent {

@@ -6,6 +6,7 @@ using XamCore.Foundation;
 namespace XamCore.HomeKit {
 
 	[iOS (8,0)]
+	[TV (10,0)]
 	public partial class HMHome
 	{
 		public HMService [] GetServices (HMServiceType serviceTypes) 
