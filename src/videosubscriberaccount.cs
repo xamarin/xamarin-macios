@@ -43,16 +43,30 @@ namespace XamCore.VideoSubscriberAccount {
 	[Introduced (PlatformName.TvOS, 10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Static]
-	interface VSErrorInfoKey {
+	[Internal]
+	interface VSErrorInfoKeys {
 
 		[Field ("VSErrorInfoKeySAMLResponse")]
-		NSString SamlResponse { get; }
+		NSString SamlResponseKey { get; }
 
 		[Field ("VSErrorInfoKeySAMLResponseStatus")]
-		NSString SamlResponseStatus { get; }
+		NSString SamlResponseStatusKey { get; }
 
 		[Field ("VSErrorInfoKeyUnsupportedProviderIdentifier")]
-		NSString UnsupportedProviderIdentifier { get; }
+		NSString UnsupportedProviderIdentifierKey { get; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.TvOS, 10, 0)]
+	[Unavailable (PlatformName.WatchOS)]
+	[StrongDictionary ("VSErrorInfoKeys")]
+	public interface VSErrorInfo {
+
+		string SamlResponse { get; }
+
+		string SamlResponseStatus { get; }
+
+		string UnsupportedProviderIdentifier { get; }
 	}
 
 	interface IVSAccountManagerDelegate { }
@@ -95,6 +109,7 @@ namespace XamCore.VideoSubscriberAccount {
 	[Introduced (PlatformName.TvOS, 10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[Static]
+	[Internal]
 	interface VSCheckAccessOptionKeys {
 
 		[Field ("VSCheckAccessOptionPrompt")]
