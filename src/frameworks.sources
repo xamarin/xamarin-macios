@@ -821,6 +821,12 @@ IMAGEKIT_CORE_SOURCES = \
 INTENTS_SOURCES = \
 	Intents/INIntentResolutionResult.cs \
 	Intents/INPriceRange.cs \
+	Intents/INRideOption.cs \
+	Intents/INSetClimateSettingsInCarIntent.cs \
+	Intents/INSetDefrosterSettingsInCarIntent.cs \
+	Intents/INSetProfileInCarIntent.cs \
+	Intents/INSetSeatSettingsInCarIntent.cs \
+	Intents/INStartWorkoutIntent.cs \
 
 # JavaScriptCore
 

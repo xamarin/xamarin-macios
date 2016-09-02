@@ -22,11 +22,6 @@ using UIImage = XamCore.Foundation.NSObject;
 using XamCore.UIKit;
 #endif
 
-// TODO: 	Review all FIXME [Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] with Introspection tests on macOS 10.12
-//			Once we have this ^ we can add the same availability metadata to enums
-// TODO: 	Enhance API marked with NS_REFINED_FOR_SWIFT, we should match what Swift exposes https://gist.github.com/dalexsoto/44e363dbeeac96e67849e7c56d9fcca0
-//			This ^ will make the API prettier i.e. hiding `NSNumber EnableFan { get; }` and exposing a `bool? EnableFan { get; }` instead
-//			We could add some generator support for that instead of manually fixing case by case something like WrapAttribute but also that works on getters/setters props
 namespace XamCore.Intents {
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2895,8 +2890,9 @@ namespace XamCore.Intents {
 		[NullAllowed, Export ("priceRange", ArgumentSemantic.Copy)]
 		INPriceRange PriceRange { get; set; }
 
+		[Internal]
 		[NullAllowed, Export ("usesMeteredFare", ArgumentSemantic.Copy)]
-		NSNumber UsesMeteredFare { get; set; }
+		NSNumber _UsesMeteredFare { get; set; }
 
 		[NullAllowed, Export ("disclaimerMessage")]
 		string DisclaimerMessage { get; set; }
@@ -3465,21 +3461,26 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSetClimateSettingsInCarIntent {
 
+		[Protected]
 		[Export ("initWithEnableFan:enableAirConditioner:enableClimateControl:enableAutoMode:airCirculationMode:fanSpeedIndex:fanSpeedPercentage:relativeFanSpeedSetting:temperature:relativeTemperatureSetting:climateZone:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] NSNumber enableFan, [NullAllowed] NSNumber enableAirConditioner, [NullAllowed] NSNumber enableClimateControl, [NullAllowed] NSNumber enableAutoMode, INCarAirCirculationMode airCirculationMode, [NullAllowed] NSNumber fanSpeedIndex, [NullAllowed] NSNumber fanSpeedPercentage, INRelativeSetting relativeFanSpeedSetting, [NullAllowed] NSMeasurement<NSUnitTemperature> temperature, INRelativeSetting relativeTemperatureSetting, INCarSeat climateZone);
 
+		[Internal]
 		[NullAllowed, Export ("enableFan", ArgumentSemantic.Copy)]
-		NSNumber EnableFan { get; }
+		NSNumber _EnableFan { get; }
 
+		[Internal]
 		[NullAllowed, Export ("enableAirConditioner", ArgumentSemantic.Copy)]
-		NSNumber EnableAirConditioner { get; }
+		NSNumber _EnableAirConditioner { get; }
 
+		[Internal]
 		[NullAllowed, Export ("enableClimateControl", ArgumentSemantic.Copy)]
-		NSNumber EnableClimateControl { get; }
+		NSNumber _EnableClimateControl { get; }
 
+		[Internal]
 		[NullAllowed, Export ("enableAutoMode", ArgumentSemantic.Copy)]
-		NSNumber EnableAutoMode { get; }
+		NSNumber _EnableAutoMode { get; }
 
 		[Export ("airCirculationMode", ArgumentSemantic.Assign)]
 		INCarAirCirculationMode AirCirculationMode { get; }
@@ -3568,12 +3569,14 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSetDefrosterSettingsInCarIntent {
 
+		[Protected]
 		[Export ("initWithEnable:defroster:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] NSNumber enable, INCarDefroster defroster);
 
+		[Internal]
 		[NullAllowed, Export ("enable", ArgumentSemantic.Copy)]
-		NSNumber Enable { get; }
+		NSNumber _Enable { get; }
 
 		[Export ("defroster", ArgumentSemantic.Assign)]
 		INCarDefroster Defroster { get; }
@@ -3663,6 +3666,7 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSetProfileInCarIntent {
 
+		[Protected]
 		[Export ("initWithProfileNumber:profileLabel:defaultProfile:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileLabel, [NullAllowed] NSNumber defaultProfile);
@@ -3673,8 +3677,9 @@ namespace XamCore.Intents {
 		[NullAllowed, Export ("profileLabel")]
 		string ProfileLabel { get; }
 
+		[Internal]
 		[NullAllowed, Export ("defaultProfile", ArgumentSemantic.Copy)]
-		NSNumber DefaultProfile { get; }
+		NSNumber _DefaultProfile { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -3782,18 +3787,22 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSetSeatSettingsInCarIntent {
 
+		[Protected] // allow subclassing
 		[Export ("initWithEnableHeating:enableCooling:enableMassage:seat:level:relativeLevelSetting:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] NSNumber enableHeating, [NullAllowed] NSNumber enableCooling, [NullAllowed] NSNumber enableMassage, INCarSeat seat, [NullAllowed] NSNumber level, INRelativeSetting relativeLevelSetting);
 
+		[Internal]
 		[NullAllowed, Export ("enableHeating", ArgumentSemantic.Copy)]
-		NSNumber EnableHeating { get; }
+		NSNumber _EnableHeating { get; }
 
+		[Internal]
 		[NullAllowed, Export ("enableCooling", ArgumentSemantic.Copy)]
-		NSNumber EnableCooling { get; }
+		NSNumber _EnableCooling { get; }
 
+		[Internal]
 		[NullAllowed, Export ("enableMassage", ArgumentSemantic.Copy)]
-		NSNumber EnableMassage { get; }
+		NSNumber _EnableMassage { get; }
 
 		[Export ("seat", ArgumentSemantic.Assign)]
 		INCarSeat Seat { get; }
@@ -4086,6 +4095,7 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntent))]
 	interface INStartWorkoutIntent {
 
+		[Protected]
 		[Export ("initWithWorkoutName:goalValue:workoutGoalUnitType:workoutLocationType:isOpenEnded:")]
 		[DesignatedInitializer]
 		IntPtr Constructor ([NullAllowed] INSpeakableString workoutName, [NullAllowed] NSNumber goalValue, INWorkoutGoalUnitType workoutGoalUnitType, INWorkoutLocationType workoutLocationType, [NullAllowed] NSNumber isOpenEnded);
@@ -4102,8 +4112,9 @@ namespace XamCore.Intents {
 		[Export ("workoutLocationType", ArgumentSemantic.Assign)]
 		INWorkoutLocationType WorkoutLocationType { get; }
 
+		[Internal]
 		[NullAllowed, Export ("isOpenEnded", ArgumentSemantic.Copy)]
-		NSNumber IsOpenEnded { get; }
+		NSNumber _IsOpenEnded { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
