@@ -115,8 +115,6 @@ namespace Xamarin.Linker {
 			"System.Net.WebSockets.Client",
 			"System.Net.WebSockets",
 			"System.ObjectModel",
-			"System.Private.CoreLib.InteropServices",
-			"System.Private.CoreLib.Threading",
 			"System.Reflection.Extensions",
 			"System.Reflection.Primitives",
 			"System.Reflection.TypeExtensions",
