@@ -159,18 +159,26 @@ namespace XamCore.ExternalAccessory {
 
 
 	public interface IEAWiFiUnconfiguredAccessoryBrowserDelegate {}
-
-	[TV (10,0)]
+	
+	// This class is exposed for tvOS in the headers, but there's no available initializer (so it can't be constructed)
+	// The API is also clearly unusable (you can list the unconfigured accessories, but you can't search for them first...)
+	[NoTV] // [TV (10,0)]
 	[iOS (8,0)]
 #if TVOS
 	[BaseType (typeof (NSObject))]
 #else
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(EAWiFiUnconfiguredAccessoryBrowserDelegate)})]
 #endif
+#if XAMCORE_4_0
+	// There's a designated initializer, which leads to think that the default ctor
+	// should not be used (documentation says nothing).
+	[DisableDefaultCtor]
+#endif
 	interface EAWiFiUnconfiguredAccessoryBrowser {
 
 		[NoTV]
 		[Export ("initWithDelegate:queue:")]
+		[DesignatedInitializer] // according to header comment (but not in attributes)
 		IntPtr Constructor ([NullAllowed] IEAWiFiUnconfiguredAccessoryBrowserDelegate accessoryBrowserDelegate, [NullAllowed] DispatchQueue queue);
 
 		[NoTV] // no member is available
