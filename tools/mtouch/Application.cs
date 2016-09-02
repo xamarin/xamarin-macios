@@ -1423,23 +1423,24 @@ namespace Xamarin.Bundler {
 				return;
 			}
 				
-			var dir = new DirectoryInfo(src);
-			var dirs = dir.GetDirectories();
-
-			if (!dir.Exists) 
+			var dir = new DirectoryInfo (src);
+			if (!dir.Exists) {
 				ErrorHelper.Warning (95, $"Aot files could not be copied to the destination directory {dest}"); 
+				return;
+			}
 
-			if (!Directory.Exists(dest))
-				Directory.CreateDirectory(dest);
+			var dirs = dir.GetDirectories ();
+			if (!Directory.Exists (dest))
+				Directory.CreateDirectory (dest);
 				
-			var files = dir.GetFiles();
+			var files = dir.GetFiles ();
 			foreach (var file in files) {
-				var tmp = Path.Combine(dest, file.Name);
-				file.CopyTo(tmp, true);
+				var tmp = Path.Combine (dest, file.Name);
+				file.CopyTo (tmp, true);
 			}
 
 			foreach (var subdir in dirs) {
-				var tmp = Path.Combine(dest, subdir.Name);
+				var tmp = Path.Combine (dest, subdir.Name);
 				CopyAotData (subdir.FullName, tmp);
 			}
 		}
