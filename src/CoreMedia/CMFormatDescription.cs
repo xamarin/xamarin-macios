@@ -40,6 +40,10 @@ namespace XamCore.CoreMedia {
 	public class CMFormatDescription : INativeObject, IDisposable {
 		internal IntPtr handle;
 
+		internal CMFormatDescription ()
+		{
+		}
+
 		internal CMFormatDescription (IntPtr handle)
 			: this (handle, false)
 		{
@@ -215,8 +219,24 @@ namespace XamCore.CoreMedia {
 		}
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		extern static /* AudioStreamBasicDescription */ IntPtr CMAudioFormatDescriptionGetStreamBasicDescription (/* CMAudioFormatDescriptionRef */ IntPtr desc);
+		protected internal extern static /* AudioStreamBasicDescription */ IntPtr CMAudioFormatDescriptionGetStreamBasicDescription (/* CMAudioFormatDescriptionRef */ IntPtr desc);
 
+		[DllImport (Constants.CoreMediaLibrary)]
+		protected internal extern static /* AudioChannelLayout* */ IntPtr CMAudioFormatDescriptionGetChannelLayout (/* CMAudioFormatDescriptionRef */ IntPtr desc, /* size_t* */ out nint size);
+
+		[DllImport (Constants.CoreMediaLibrary)]
+		protected internal extern static /* AudioFormatListItem* */ IntPtr CMAudioFormatDescriptionGetFormatList (/* CMAudioFormatDescriptionRef */ IntPtr desc, /* size_t* */ out nint size);
+
+		[DllImport (Constants.CoreMediaLibrary)]
+		protected internal extern static /* const void* */ IntPtr CMAudioFormatDescriptionGetMagicCookie (/* CMAudioFormatDescriptionRef */ IntPtr desc, /* size_t* */ out nint size);
+
+		[DllImport (Constants.CoreMediaLibrary)]
+		protected internal extern static /* AudioFormatListItem* */ IntPtr CMAudioFormatDescriptionGetMostCompatibleFormat (/* CMAudioFormatDescriptionRef */ IntPtr desc);
+
+		[DllImport (Constants.CoreMediaLibrary)]
+		protected internal extern static /* AudioFormatListItem* */ IntPtr CMAudioFormatDescriptionGetRichestDecodableFormat (/* CMAudioFormatDescriptionRef */ IntPtr desc);
+
+#if !XAMCORE_4_0  // These should all be part of the CMAudioFormatDescription subclass
 		public AudioStreamBasicDescription? AudioStreamBasicDescription {
 			get {
 				var ret = CMAudioFormatDescriptionGetStreamBasicDescription (handle);
@@ -229,9 +249,6 @@ namespace XamCore.CoreMedia {
 			}
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
-		extern static /* AudioChannelLayout* */ IntPtr CMAudioFormatDescriptionGetChannelLayout (/* CMAudioFormatDescriptionRef */ IntPtr desc, /* size_t* */ out nint size);
-			
 		public AudioChannelLayout AudioChannelLayout {
 			get {
 				nint size;
@@ -241,9 +258,6 @@ namespace XamCore.CoreMedia {
 				return AudioChannelLayout.FromHandle (res);
 			}
 		}
-
-		[DllImport (Constants.CoreMediaLibrary)]
-		extern static /* AudioFormatListItem* */ IntPtr CMAudioFormatDescriptionGetFormatList (/* CMAudioFormatDescriptionRef */ IntPtr desc, /* size_t* */ out nint size);
 
 		public AudioFormat [] AudioFormats {
 			get {
@@ -262,9 +276,6 @@ namespace XamCore.CoreMedia {
 			}
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
-		extern static /* const void* */ IntPtr CMAudioFormatDescriptionGetMagicCookie (/* CMAudioFormatDescriptionRef */ IntPtr desc, /* size_t* */ out nint size);
-
 		public byte [] AudioMagicCookie {
 			get {
 				nint size;
@@ -278,9 +289,6 @@ namespace XamCore.CoreMedia {
 			}
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
-		extern static /* AudioFormatListItem* */ IntPtr CMAudioFormatDescriptionGetMostCompatibleFormat (/* CMAudioFormatDescriptionRef */ IntPtr desc);
-
 		public AudioFormat AudioMostCompatibleFormat {
 			get {
 				unsafe {
@@ -292,9 +300,6 @@ namespace XamCore.CoreMedia {
 			}
 		}
 
-		[DllImport (Constants.CoreMediaLibrary)]
-		extern static /* AudioFormatListItem* */ IntPtr CMAudioFormatDescriptionGetRichestDecodableFormat (/* CMAudioFormatDescriptionRef */ IntPtr desc);
-
 		public AudioFormat AudioRichestDecodableFormat {
 			get {
 				unsafe {
@@ -305,7 +310,7 @@ namespace XamCore.CoreMedia {
 				}
 			}
 		}
-
+	#endif
 		// CMVideoDimensions => int32_t width + int32_t height
 
 		[DllImport (Constants.CoreMediaLibrary)]
@@ -357,13 +362,95 @@ namespace XamCore.CoreMedia {
 				throw new ArgumentNullException ("imageBuffer");
 			return CMVideoFormatDescriptionMatchesImageBuffer (handle, imageBuffer.Handle);
 		}
+
+		[Mac (10,7)]
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern CMFormatDescriptionError CMTextFormatDescriptionGetDisplayFlags (
+			/* CMFormatDescriptionRef* */ IntPtr desc, 
+			out uint outDisplayFlags);
+
+		public uint GetTextDisplayFlags ()
+		{
+			uint outDisplayFlags;
+			var error = CMTextFormatDescriptionGetDisplayFlags (handle, out outDisplayFlags);
+			if (error != CMFormatDescriptionError.None)
+				throw new ArgumentException (error.ToString ());
+
+			return outDisplayFlags;
+		}
+
+		[Mac (10,7)]
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern CMFormatDescriptionError CMTextFormatDescriptionGetJustification (
+			/* CMFormatDescriptionRef* */ IntPtr desc,  
+			out bool outHorizontalJust, 
+			out bool outVerticalJust);
+
+		public void GetTextJustification (out bool outHorizontalJust, out bool outVerticalJust)
+		{
+			var error = CMTextFormatDescriptionGetJustification (handle, out outHorizontalJust, out outVerticalJust);
+			if (error != CMFormatDescriptionError.None)
+				throw new ArgumentException (error.ToString ());
+		}
+
+		[Mac (10,7)]
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern CMFormatDescriptionError CMTextFormatDescriptionGetDefaultTextBox (
+			/* CMFormatDescriptionRef* */ IntPtr desc, 
+			bool originIsAtTopLeft, 
+			nfloat heightOfTextTrack, 
+			out CGRect outDefaultTextBox);
+
+		public CGRect GetDefaultTextBox (bool originIsAtTopLeft, nfloat heightOfTextTrack)
+		{
+			CGRect outDefaultTextBox;
+			var error = CMTextFormatDescriptionGetDefaultTextBox (handle, originIsAtTopLeft, heightOfTextTrack, out outDefaultTextBox);
+			if (error != CMFormatDescriptionError.None)
+				throw new ArgumentException (error.ToString ());
+
+			return outDefaultTextBox;
+		}
+
+		[Mac (10,7)]
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern CMFormatDescriptionError CMTextFormatDescriptionGetDefaultStyle (
+			/* CMFormatDescriptionRef* */ IntPtr desc, 
+			out ushort outLocalFontID, 
+			out bool outBold, 
+			out bool outItalic, 
+			out bool outUnderline, 
+			out nfloat outFontSize, 
+			nfloat[] outColorComponents);
+
+		public void GetTextDefaultStyle (out ushort outLocalFontId, out bool outBold, out bool outItalic, out bool outUnderline, out nfloat outFontSize, nfloat[] outColorComponents)
+		{
+			var error = CMTextFormatDescriptionGetDefaultStyle (handle, out outLocalFontId, out outBold, out outItalic, out outUnderline, out outFontSize, outColorComponents);
+			if (error != CMFormatDescriptionError.None)
+				throw new ArgumentException (error.ToString ());
+		}
+
+		[Mac (10,7)]
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern CMFormatDescriptionError CMTextFormatDescriptionGetFontName (
+			/* CMFormatDescriptionRef* */ IntPtr desc, 
+			ushort localFontID, 
+			/* CFStringRef** */ out string outFontName);
+
+		public string GetTextFontName (ushort localFontId)
+		{
+			string outFontName;
+			var error = CMTextFormatDescriptionGetFontName (handle, localFontId, out outFontName);
+			if (error != CMFormatDescriptionError.None)
+				throw new ArgumentException (error.ToString ());
+
+			return outFontName;
+		}
 #endif
 #endif
 	}
 
 	[iOS (4,0)]
 	public class CMAudioFormatDescription : CMFormatDescription {
-		
 		internal CMAudioFormatDescription (IntPtr handle)
 			: base (handle)
 		{
@@ -374,7 +461,132 @@ namespace XamCore.CoreMedia {
 		{
 		}
 
-		// TODO: Move more audio specific methods here
+#if !COREBUILD
+		[DllImport (Constants.CoreMediaLibrary)]
+		static unsafe extern /* OSStatus */ CMFormatDescriptionError CMAudioFormatDescriptionCreate (
+			/* CFAllocatorRef */ IntPtr allocator, 
+			ref AudioStreamBasicDescription description,
+			nuint layoutSize, 
+			/* AudioChannelLayout* */ IntPtr layout, 
+			nuint magicCookieSize, 
+			/* void* */ IntPtr magicCookie, 
+			/* CFDictionaryRef* */ IntPtr extensions,
+			out IntPtr outDesc);
+
+		public CMAudioFormatDescription (ref AudioStreamBasicDescription asbd) : this (ref asbd, null, 0, IntPtr.Zero, null)
+		{
+		}
+
+		public CMAudioFormatDescription (ref AudioStreamBasicDescription asbd, AudioChannelLayout layout) : this (ref asbd, layout, 0, IntPtr.Zero, null)
+		{
+		}
+
+		public CMAudioFormatDescription (ref AudioStreamBasicDescription asbd, uint magicCookieSize, IntPtr magicCookie) : this (ref asbd, null, magicCookieSize, magicCookie, null)
+		{
+		}
+
+		public CMAudioFormatDescription (ref AudioStreamBasicDescription asbd, NSDictionary extensions) : this (ref asbd, null, 0, IntPtr.Zero, extensions)
+		{
+		}
+
+		public CMAudioFormatDescription (ref AudioStreamBasicDescription asbd, AudioChannelLayout layout, uint magicCookieSize, IntPtr magicCookie) : this (ref asbd, layout, magicCookieSize, magicCookie, null)
+		{
+		}
+
+		public CMAudioFormatDescription (ref AudioStreamBasicDescription asbd, AudioChannelLayout layout, NSDictionary extensions) : this (ref asbd, layout, 0, IntPtr.Zero, extensions)
+		{
+		}
+
+		public CMAudioFormatDescription (ref AudioStreamBasicDescription asbd, uint magicCookieSize, IntPtr magicCookie, NSDictionary extensions) : this (ref asbd, null, magicCookieSize, magicCookie, extensions)
+		{
+		}
+
+		public CMAudioFormatDescription (ref AudioStreamBasicDescription asbd, AudioChannelLayout layout, uint magicCookieSize, IntPtr magicCookie, NSDictionary extensions)
+		{
+			IntPtr ptr = IntPtr.Zero;
+			uint size = 0;
+			if (layout != null) {
+				size = (uint)Marshal.SizeOf (layout.NativeStruct);
+				Marshal.StructureToPtr (layout.NativeStruct, ptr, false);
+			}
+			var error = CMAudioFormatDescriptionCreate (IntPtr.Zero, ref asbd, size, ptr, magicCookieSize, magicCookie, extensions != null ? extensions.Handle : IntPtr.Zero, out handle);
+			
+			if (error != CMFormatDescriptionError.None)
+				throw new ArgumentException (error.ToString ());
+		}
+
+		public unsafe AudioStreamBasicDescription? StreamBasicDescription {
+			get {
+				var ret = CMAudioFormatDescriptionGetStreamBasicDescription (handle);
+				if (ret != IntPtr.Zero) {
+					return *((AudioStreamBasicDescription*)ret);
+				}
+				return null;
+			}
+		}
+
+		public AudioChannelLayout ChannelLayout {
+			get {
+				nint size;
+				var res = CMAudioFormatDescriptionGetChannelLayout (handle, out size);
+				if (res == IntPtr.Zero || size == 0)
+					return null;
+				return AudioChannelLayout.FromHandle (res);
+			}
+		}
+
+		public AudioFormat [] Formats {
+			get {
+				unsafe {
+					nint size;
+					var v = CMAudioFormatDescriptionGetFormatList (handle, out size);
+					if (v == IntPtr.Zero)
+						return null;
+					var items = size / sizeof (AudioFormat);
+					var ret = new AudioFormat [items];
+					var ptr = (AudioFormat *) v;
+					for (int i = 0; i < items; i++)
+						ret [i] = ptr [i];
+					return ret;
+				}
+			}
+		}
+
+		public byte [] MagicCookie {
+			get {
+				nint size;
+				var h = CMAudioFormatDescriptionGetMagicCookie (handle, out size);
+				if (h == IntPtr.Zero)
+					return null;
+
+				var result = new byte [size];
+				Marshal.Copy (h, result, 0, result.Length);
+				return result;
+			}
+		}
+
+		public AudioFormat MostCompatibleFormat {
+			get {
+				unsafe {
+					var ret = (AudioFormat *) CMAudioFormatDescriptionGetMostCompatibleFormat (handle);
+					if (ret == null)
+						return new AudioFormat ();
+					return *ret;
+				}
+			}
+		}
+
+		public AudioFormat RichestDecodableFormat {
+			get {
+				unsafe {
+					var ret = (AudioFormat *) CMAudioFormatDescriptionGetRichestDecodableFormat (handle);
+					if (ret == null)
+						return new AudioFormat ();
+					return *ret;
+				}
+			}
+		}
+#endif
 	}
 
 	[iOS (4,0)]
@@ -398,22 +610,23 @@ namespace XamCore.CoreMedia {
 			/* int32_t */ int height,
 			/* CFDictionaryRef */ IntPtr extensions,
 			/* CMVideoFormatDescriptionRef* */ out IntPtr outDesc);
-
-		static IntPtr CreateCMVideoFormatDescription (CMVideoCodecType codecType, CMVideoDimensions size)
+		
+#if !COREBUILD
+		public CMVideoFormatDescription (CMVideoCodecType codecType, CMVideoDimensions size) : this (codecType, size.Width, size.Height, null)
 		{
-			IntPtr handle;
-			var error = CMVideoFormatDescriptionCreate (IntPtr.Zero, codecType, size.Width, size.Height, IntPtr.Zero, out handle);
+		}
+
+		public CMVideoFormatDescription (CMVideoCodecType codecType, CMVideoDimensions size, NSDictionary extensions) : this (codecType, size.Width, size.Height, extensions)
+		{
+		}
+
+		public CMVideoFormatDescription (CMVideoCodecType codecType, int width, int height, NSDictionary extensions)
+		{
+			var error = CMVideoFormatDescriptionCreate (IntPtr.Zero, codecType, width, height, extensions != null ? extensions.Handle : IntPtr.Zero, out handle);
 			if (error != CMFormatDescriptionError.None)
 				throw new ArgumentException (error.ToString ());
-			return handle;
 		}
 
-		public CMVideoFormatDescription (CMVideoCodecType codecType, CMVideoDimensions size)
-			: base (CreateCMVideoFormatDescription (codecType, size), true)
-		{
-		}
-
-#if !COREBUILD
 		public CMVideoDimensions Dimensions {
 			get {
 				return CMVideoFormatDescriptionGetDimensions (handle);
@@ -425,6 +638,16 @@ namespace XamCore.CoreMedia {
 			/* CFAllocatorRef */ IntPtr allocator, 
 			/* CVImageBufferRef */ IntPtr imageBuffer,
 			/* CMVideoFormatDescriptionRef* */ out IntPtr outDesc);
+
+		public CMVideoFormatDescription (CVImageBuffer imageBuffer)
+		{
+			if (imageBuffer == null)
+				throw new ArgumentNullException ("imageBuffer");
+
+			var error = CMVideoFormatDescriptionCreateForImageBuffer (IntPtr.Zero, imageBuffer.handle, out handle);
+			if (error != CMFormatDescriptionError.None)
+				throw new ArgumentException (error.ToString ());
+		}
 
 		public static CMVideoFormatDescription CreateForImageBuffer (CVImageBuffer imageBuffer, out CMFormatDescriptionError error)
 		{
@@ -538,6 +761,200 @@ namespace XamCore.CoreMedia {
 			return CMVideoFormatDescriptionMatchesImageBuffer (handle, imageBuffer.Handle);
 		}
 #endif
+#endif
+	}
+
+	public partial class CMMuxedFormatDescription : CMFormatDescription {
+		internal CMMuxedFormatDescription (IntPtr handle)
+			: base (handle)
+		{
+		}
+
+		internal CMMuxedFormatDescription (IntPtr handle, bool owns)
+			: base (handle, owns)
+		{
+		}
+
+#if !COREBUILD
+		[Mac (10,7)]
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern CMFormatDescriptionError CMMuxedFormatDescriptionCreate (
+			/* CFAllocatorRef */ IntPtr allocator, 
+			uint muxType, 
+			/* CFDictionaryRef */ IntPtr extensions, 
+			/* CMMuxedFormatDescriptionRef */ out IntPtr outDesc);
+		
+		public CMMuxedFormatDescription (uint muxType, NSDictionary extensions = null)
+		{
+			var error = CMMuxedFormatDescriptionCreate (IntPtr.Zero, muxType, extensions != null ? extensions.Handle : IntPtr.Zero, out handle);
+			if (error != CMFormatDescriptionError.None)
+				throw new ArgumentException (error.ToString ());
+		}
+#endif
+	}
+
+	public partial class CMTimeCodeFormatDescription : CMFormatDescription {
+		internal CMTimeCodeFormatDescription (IntPtr handle)
+			: base (handle)
+		{
+		}
+
+		internal CMTimeCodeFormatDescription (IntPtr handle, bool owns)
+			: base (handle, owns)
+		{
+		}
+
+#if !COREBUILD
+		[Mac (10,7)]
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern CMFormatDescriptionError CMTimeCodeFormatDescriptionCreate (
+			/* CFAllocatorRef* */ IntPtr allocator, 
+			uint timeCodeFormatType, 
+			CMTime frameDuration, 
+			uint frameQuanta, 
+			uint tcFlags, 
+			/* CFDictionaryRef* */ IntPtr extensions, 
+			/* CMTimeCodeFormatDescriptionRef* */ out IntPtr descOut);
+
+		public CMTimeCodeFormatDescription (uint timeCodeFormatType, CMTime frameDuration, uint frameQuanta, uint tcFlags, NSDictionary extensions = null)
+		{
+			var error = CMTimeCodeFormatDescriptionCreate (IntPtr.Zero, timeCodeFormatType, frameDuration, frameQuanta, tcFlags, extensions != null ? extensions.Handle : IntPtr.Zero, out handle);
+			if (error != CMFormatDescriptionError.None)
+				throw new ArgumentException (error.ToString ());
+		}
+
+		[Mac (10,7)]
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern CMTime CMTimeCodeFormatDescriptionGetFrameDuration (
+			/*CMTimeCodeFormatDescriptionRef* */ IntPtr timeCodeFormatDescription);
+
+		public CMTime GetFrameDuration ()
+		{
+			return CMTimeCodeFormatDescriptionGetFrameDuration (handle);
+		}
+
+		[Mac (10,7)]
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern uint CMTimeCodeFormatDescriptionGetFrameQuanta (
+			/*CMTimeCodeFormatDescriptionRef* */ IntPtr timeCodeFormatDescription);
+
+		public uint GetFrameQuanta ()
+		{
+			return CMTimeCodeFormatDescriptionGetFrameQuanta (handle);
+		}
+
+		[Mac (10,7)]
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern uint CMTimeCodeFormatDescriptionGetTimeCodeFlags (
+			/*CMTimeCodeFormatDescriptionRef* */ IntPtr desc);
+
+		public uint GetTimeCodeFlags ()
+		{
+			return CMTimeCodeFormatDescriptionGetTimeCodeFlags (handle);
+		}
+#endif
+	}
+
+	public partial class CMMetadataFormatDescription : CMFormatDescription {
+		internal CMMetadataFormatDescription (IntPtr handle)
+			: base (handle)
+		{
+		}
+
+		internal CMMetadataFormatDescription (IntPtr handle, bool owns)
+			: base (handle, owns)
+		{
+		}
+
+#if !COREBUILD
+		[Mac (10,7)]
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern CMFormatDescriptionError CMMetadataFormatDescriptionCreateWithKeys (
+			/* CFAllocatorRef* */ IntPtr allocator, 
+			CMMetadataFormatType metadataType, 
+			/* CFArrayRef */ IntPtr keys, 
+			/* CMMetadataFormatDescriptionRef* */ out IntPtr outDesc);
+
+		public CMMetadataFormatDescription (CMMetadataFormatType metadataType, NSArray keys = null)
+		{
+			var error = CMMetadataFormatDescriptionCreateWithKeys (IntPtr.Zero, metadataType, keys != null ? keys.Handle : IntPtr.Zero, out handle);
+			if (error != CMFormatDescriptionError.None)
+				throw new ArgumentException (error.ToString ());
+		}
+
+		[Mac (10,10)]
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern CMFormatDescriptionError CMMetadataFormatDescriptionCreateWithMetadataSpecifications (
+			/* CFAllocatorRef* */ IntPtr allocator,
+			CMMetadataFormatType metadataType,
+			/* CFArrayRef* */ IntPtr metadataSpecifications, 
+			/* CMMetadataFormatDescriptionRef* */ out IntPtr outDesc);
+
+		public static CMMetadataFormatDescription FromMetadataSpecifications (CMMetadataFormatType metadataType, NSArray metadataSpecifications)
+		{
+			IntPtr handle;
+			var error = CMMetadataFormatDescriptionCreateWithMetadataSpecifications (IntPtr.Zero, metadataType, metadataSpecifications != null ? metadataSpecifications.Handle : IntPtr.Zero, out handle);
+			if (error != CMFormatDescriptionError.None)
+				throw new ArgumentException (error.ToString ());
+
+			return new CMMetadataFormatDescription (handle, true);
+		}
+
+		[Mac (10,10)]
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern CMFormatDescriptionError CMMetadataFormatDescriptionCreateWithMetadataFormatDescriptionAndMetadataSpecifications (
+			/* CFAllocatorRef */ IntPtr allocator, 
+			/* CMMetadataFormatDescriptionRef */ IntPtr srcDesc, 
+			/* CFArrayRef */ IntPtr metadataSpecifications, 
+			/* CMMetadataFormatDescriptionRef* */ out IntPtr outDesc);
+
+		public CMMetadataFormatDescription (CMFormatDescription srcDesc, NSArray metadataSpecifications)
+		{
+			var error = CMMetadataFormatDescriptionCreateWithMetadataFormatDescriptionAndMetadataSpecifications (IntPtr.Zero, srcDesc != null ? srcDesc.Handle : IntPtr.Zero, metadataSpecifications != null ? metadataSpecifications.Handle : IntPtr.Zero, out handle);
+			if (error != CMFormatDescriptionError.None)
+				throw new ArgumentException (error.ToString ());
+		}
+
+		[Mac (10,10)]
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern CMFormatDescriptionError CMMetadataFormatDescriptionCreateByMergingMetadataFormatDescriptions (
+			/* CFAllocatorRef */ IntPtr allocator, 
+			/* CMMetadataFormatDescriptionRef */ IntPtr srcDesc1, 
+			/* CMMetadataFormatDescriptionRef */ IntPtr srcDesc2, 
+			/* CMMetadataFormatDescriptionRef* */ out IntPtr outDesc);
+
+		public CMMetadataFormatDescription (CMMetadataFormatDescription srcDesc1, CMMetadataFormatDescription srcDesc2)
+		{
+			var error = CMMetadataFormatDescriptionCreateByMergingMetadataFormatDescriptions (IntPtr.Zero, srcDesc1 != null ? srcDesc1.Handle : IntPtr.Zero, srcDesc2 != null ? srcDesc2.Handle : IntPtr.Zero, out handle);
+			if (error != CMFormatDescriptionError.None)
+				throw new ArgumentException (error.ToString ());
+		}
+
+		[Mac (10,7)]
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern /* CFDictionaryRef* */ IntPtr CMMetadataFormatDescriptionGetKeyWithLocalID (
+			/* CMMetadataFormatDescriptionRef */ IntPtr desc, 
+			uint localKeyID);
+
+		public NSDictionary GetKey (uint localKeyId)
+		{
+			IntPtr handle = CMMetadataFormatDescriptionGetKeyWithLocalID (Handle, localKeyId);
+			if (handle == IntPtr.Zero)
+				return null;
+
+			return new NSDictionary (handle, false);
+		}
+
+		[Mac (10,10)]
+		[DllImport (Constants.CoreMediaLibrary)]
+		static extern /* CFArrayRef */ IntPtr CMMetadataFormatDescriptionGetIdentifiers (
+			/* CMMetadataFormatDescriptionRef*/ IntPtr desc);
+
+		public NSString [] GetIdentifiers ()
+		{
+			IntPtr handle = CMMetadataFormatDescriptionGetIdentifiers (Handle);
+			return NSArray.ArrayFromHandle <NSString> (handle);
+		}
 #endif
 	}
 }
