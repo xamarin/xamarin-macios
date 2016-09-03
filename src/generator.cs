@@ -2386,6 +2386,9 @@ public partial class Generator : IMemberGatherer {
 
 	void DeclareInvoker (MethodInfo mi)
 	{
+		if (HasAttribute (mi, typeof (WrapAttribute)))
+			return;
+
 		try {
 			if (Compat) {
 				bool arm_stret = ArmNeedStret (mi);
@@ -2421,9 +2424,8 @@ public partial class Generator : IMemberGatherer {
 					}
 				}
 			}
-		} catch {
-			string m = mi.ToString ();
-			Console.WriteLine ("   in Method: {0}::{1}", mi.DeclaringType.FullName, m.Substring (m.IndexOf (' ') + 1));
+		} catch (BindingException ex) {
+			throw ex;
 		}
 	}
 	static char [] invalid_selector_chars = new char [] { '*', '^', '(', ')' };
