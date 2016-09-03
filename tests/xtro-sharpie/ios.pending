@@ -109,6 +109,12 @@
 !missing-field! kCVOpenGLESTextureCacheMaximumTextureAgeKey not bound
 
 
+# ExternalAccessory
+
+## according to header comment (but not in attributes)
+!extra-designated-initializer! EAWiFiUnconfiguredAccessoryBrowser::initWithDelegate:queue: is incorrectly decorated with an [DesignatedInitializer] attribute
+
+
 # GameplayKit
 
 ## Apple introduced those types in Xcode 7.1 and removed them afterward !?!
@@ -304,3 +310,8 @@
 !missing-selector! UIViewController::setDisablesAutomaticKeyboardDismissal: not bound
 
 
+# WatchKit
+
+## unfortunate duplicated name
+!duplicate-type-name! WKErrorCode enum exists as both WatchKit.WKErrorCode and WebKit.WKErrorCode
+!duplicate-type-name! WKErrorCode enum exists as both WebKit.WKErrorCode and WatchKit.WKErrorCode

@@ -49,6 +49,13 @@
 ## All GKSessionError values were deprecated in iOS7 and we never bound then (no point in adding it now)
 !missing-field! GKSessionErrorDomain not bound
 
+## enum size declared after the enum, e.g. `typedef NSInteger GKPhotoSize;`, so we miss the metadata
+!unknown-native-enum! GKInviteeResponse bound
+!unknown-native-enum! GKPhotoSize bound
+
+## part of category GKScore_Deprecated
+!missing-selector! GKScore::playerID not bound
+
 
 # Intents
 
@@ -96,6 +103,8 @@
 !missing-selector! SKView::preferredFrameRate not bound
 !missing-selector! SKView::setPreferredFrameRate: not bound
 
+## it's an internal that is called from a non-generated binding
+!incorrect-designated-initializer! SKWarpGeometryGrid::initWithColumns:rows:sourcePositions:destPositions: is not a constructor
 
 
 # UIKit
@@ -106,6 +115,9 @@
 
 ## this was (pre iOS10) a required member that was deprecated and made optional
 !incorrect-protocol-member! UIFocusEnvironment::preferredFocusedView is OPTIONAL and should NOT be abstract
+
+## https://bugzilla.xamarin.com/show_bug.cgi?id=43788
+!missing-selector! +UIView::layerClass not bound
 
 
 # non-imported headers
