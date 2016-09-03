@@ -220,6 +220,7 @@ namespace XamCore.HealthKit {
 
 	[Watch (3,0), iOS (10,0)]
 	[BaseType (typeof(HKSample))]
+	[Abstract] // as per docs
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKDocumentSample
 	interface HKDocumentSample
 	{
@@ -248,6 +249,7 @@ namespace XamCore.HealthKit {
 
 	[Watch (3,0), iOS (10,0)]
 	[BaseType (typeof(NSObject), Name = "HKCDADocument")]
+	[DisableDefaultCtor] // as per docs
 	interface HKCdaDocument
 	{
 		[NullAllowed, Export ("documentData", ArgumentSemantic.Copy)]
@@ -555,7 +557,7 @@ namespace XamCore.HealthKit {
 
 		[Watch (3,0), iOS (10,0)]
 		[Export ("WeatherCondition")]
-		NSNumber WeatherCondition { get; }
+		HKWeatherCondition WeatherCondition { get; }
 
 		[Watch (3,0), iOS (10,0)]
 		[Export ("WeatherTemperature")]
@@ -650,6 +652,9 @@ namespace XamCore.HealthKit {
 
 	[Watch (2,0)]
 	[iOS (8,0)]
+#if XAMCORE_4_0
+	[Abstract] // as per docs
+#endif
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
 	[BaseType (typeof (NSObject))]
 	public interface HKObject : NSSecureCoding {
@@ -677,6 +682,9 @@ namespace XamCore.HealthKit {
 
 	[Watch (2,0)]
 	[iOS (8,0)]
+#if XAMCORE_4_0
+	[Abstract]
+#endif
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
 	[BaseType (typeof (NSObject))]
 	public interface HKObjectType : NSSecureCoding, NSCopying {
@@ -802,6 +810,9 @@ namespace XamCore.HealthKit {
 	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKQuery))]
+#if XAMCORE_4_0
+	[Abstract]
+#endif
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKObserverQuery
 	public interface HKObserverQuery {
 		[Export ("initWithSampleType:predicate:updateHandler:")]
@@ -976,6 +987,9 @@ namespace XamCore.HealthKit {
 	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKObject))]
+#if XAMCORE_4_0
+	[Abstract]
+#endif
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKSample
 	public interface HKSample {
 
