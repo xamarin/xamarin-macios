@@ -106,6 +106,13 @@
 !missing-selector! CIKernel::setROISelector: not bound
 
 
+# ExternalAccessory
+
+## it's unusable (no way to create instances, no static methods, not even any usable instance methods)
+!missing-type! EAWiFiUnconfiguredAccessoryBrowser not bound
+!missing-selector! EAWiFiUnconfiguredAccessoryBrowser::unconfiguredAccessories not bound
+
+
 # Foundation
 
 ## does not exists in iOS (or watchOS) as a type - but some API refers to it (messy)
