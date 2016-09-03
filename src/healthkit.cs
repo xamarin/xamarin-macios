@@ -171,7 +171,8 @@ namespace XamCore.HealthKit {
 		NSString CdaCustodianName { get; }
 	}
 
-	[Watch (3,0), iOS (10,0)]
+	[NoWatch] // headers says it's available but it's only usable from another, unavailable, type
+	[iOS (10,0)]
 	[Static]
 	[Internal]
 	public interface HKDetailedCdaErrorKeys {
@@ -179,7 +180,8 @@ namespace XamCore.HealthKit {
 		NSString ValidationErrorKey { get; }
 	}
 
-	[Watch (3,0), iOS (10,0)]
+	[NoWatch]
+	[iOS (10,0)]
 	[StrongDictionary ("HKDetailedCdaErrorKeys")]
 	[Internal]
 	public interface HKDetailedCdaErrors {
