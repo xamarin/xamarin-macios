@@ -198,6 +198,7 @@ namespace XamCore.Speech {
 		[Export ("defaultTaskHint", ArgumentSemantic.Assign)]
 		SFSpeechRecognitionTaskHint DefaultTaskHint { get; set; }
 
+		// no [Async] as this gets called multiple times, leading to an exception
 		[Export ("recognitionTaskWithRequest:resultHandler:")]
 		SFSpeechRecognitionTask GetRecognitionTask (SFSpeechRecognitionRequest request, Action<SFSpeechRecognitionResult, NSError> resultHandler);
 

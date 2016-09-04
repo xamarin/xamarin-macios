@@ -134,6 +134,7 @@ namespace XamCore.Messages {
 
 	[iOS (10,0)]
 	[BaseType (typeof(NSObject))]
+	// note: docs says `init` can be used even if `initWithSession:` is the designated initializer
 	interface MSMessage : NSCopying, NSSecureCoding
 	{
 		[Export ("initWithSession:")]
