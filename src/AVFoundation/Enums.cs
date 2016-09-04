@@ -734,4 +734,19 @@ namespace XamCore.AVFoundation {
 		Failed,
 		Cancelled
 	}
+	
+	[NoiOS, TV (10,0), NoWatch, NoMac]
+	[Native]
+	public enum AVContentProposalAction : nint {
+		Accept,
+		Reject,
+		Defer
+	}
+
+	[NoiOS, TV (10,0), NoWatch, NoMac]
+	[Native]
+	public enum AVPlayerViewControllerSkippingBehavior : nint {
+		Default = 0,
+		SkipItem
+	}
 }
