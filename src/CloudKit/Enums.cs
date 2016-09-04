@@ -102,7 +102,7 @@ namespace XamCore.CloudKit
 		Query = 1,
 		RecordZone = 2,
 		ReadNotification = 3,
-		[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12)] Database = 4,
+		[iOS (10,0), TV (10,0), Mac (10,12)] Database = 4,
 	}
 
 	// NSInteger -> CKNotification.h
@@ -146,7 +146,7 @@ namespace XamCore.CloudKit
 	public enum CKSubscriptionType : nint {
 		Query = 1,
 		RecordZone = 2,
-		[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12)] Database = 3,
+		[iOS (10,0), TV (10,0), Mac (10,12)] Database = 3,
 	}
 
 	// NSInteger -> CKSubscription.h

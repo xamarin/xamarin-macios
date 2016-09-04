@@ -10,37 +10,24 @@ namespace XamCore.CloudKit
 
 	public partial class CKUserIdentityLookupInfo
 	{
-		enum CKUserIdentityLookupInfoParamType {
-			EmailAddress,
-			PhoneNumber
-		};
-
-		CKUserIdentityLookupInfo (string data, CKUserIdentityLookupInfoParamType type)
+		// extra, unused, parameter to get a unique signature
+		CKUserIdentityLookupInfo (IntPtr handle, int unused)
 		{
-			switch (type) {
-			case CKUserIdentityLookupInfoParamType.EmailAddress:
-				Handle = _FromEmail (data);
-				break;
-			case CKUserIdentityLookupInfoParamType.PhoneNumber:
-				Handle = _FromPhoneNumber (data);
-				break;
-			default:
-				throw new ArgumentException ("type");
-			}
+			InitializeHandle (handle);
 		}
 
 		public static CKUserIdentityLookupInfo FromEmail (string email)
 		{
 			if (string.IsNullOrEmpty (email))
 				throw new ArgumentNullException (nameof (email));
-			return new CKUserIdentityLookupInfo (email, CKUserIdentityLookupInfoParamType.EmailAddress);
+			return new CKUserIdentityLookupInfo (_FromEmail (email), 0);
 		}
 
 		public static CKUserIdentityLookupInfo FromPhoneNumber (string phoneNumber)
 		{
 			if (string.IsNullOrEmpty (phoneNumber))
 				throw new ArgumentNullException (nameof (phoneNumber));
-			return new CKUserIdentityLookupInfo (phoneNumber, CKUserIdentityLookupInfoParamType.PhoneNumber);
+			return new CKUserIdentityLookupInfo (_FromPhoneNumber (phoneNumber), 0);
 		}
 	}
 #endif
