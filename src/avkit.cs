@@ -234,7 +234,7 @@ namespace XamCore.AVKit {
 
 		[NoiOS, TV (10,0), NoWatch, NoMac]
 		[Export ("playerViewController:timeToSeekAfterUserNavigatedFromTime:toTime:")]
-		CMTime TimeToSeekAfterUserNavigatedFromTime (AVPlayerViewController playerViewController, CMTime oldTime, CMTime targetTime);
+		CMTime TimeToSeekAfterUserNavigated (AVPlayerViewController playerViewController, CMTime oldTime, CMTime targetTime);
 
 		[NoiOS, TV (10,0), NoWatch, NoMac]
 		[Export ("skipToNextItemForPlayerViewController:")]
@@ -327,6 +327,10 @@ namespace XamCore.AVKit {
 	[BaseType (typeof(UIViewController))]
 	interface AVContentProposalViewController
 	{
+		[Export ("initWithNibName:bundle:")]
+		[PostGet ("NibBundle")]
+		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		
 		[NullAllowed, Export ("contentProposal")]
 		AVContentProposal ContentProposal { get; }
 
