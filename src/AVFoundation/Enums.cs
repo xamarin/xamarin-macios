@@ -725,4 +725,13 @@ namespace XamCore.AVFoundation {
 		NotSpecified = 0,
 		Aggregated = 1,
 	}
+
+	[NoWatch, iOS (10,0), TV (10,0), Mac (10,12)]
+	[Native]
+	public enum AVPlayerLooperStatus : nint {
+		Unknown,
+		Ready,
+		Failed,
+		Cancelled
+	}
 }
