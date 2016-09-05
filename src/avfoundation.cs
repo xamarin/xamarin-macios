@@ -8105,6 +8105,14 @@ namespace XamCore.AVFoundation {
 		[Export ("DNGPhotoDataRepresentationForRawSampleBuffer:previewPhotoSampleBuffer:")]
 		[return: NullAllowed]
 		NSData GetDngPhotoDataRepresentation (CMSampleBuffer rawSampleBuffer, [NullAllowed] CMSampleBuffer previewPhotoSampleBuffer);
+
+		[iOS (10,0), NoTV, NoWatch, NoMac]
+		[Export ("preparedPhotoSettingsArray")]
+		AVCapturePhotoSettings[] PreparedPhotoSettings { get; }
+
+		[iOS (10,0), NoTV, NoWatch, NoMac]
+		[Export ("setPreparedPhotoSettingsArray:completionHandler:")]
+		void SetPreparedPhotoSettings (AVCapturePhotoSettings[] preparedPhotoSettingsArray, [NullAllowed] Action<bool, NSError> completionHandler);
 	}
 #endif
 	
