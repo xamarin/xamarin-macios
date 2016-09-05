@@ -3550,7 +3550,7 @@ namespace XamCore.AVFoundation {
 
 		[iOS (10, 0), TV (10, 0), NoWatch, NoMac]
 		[Field ("AVURLAssetAllowsCellularAccessKey")]
-		NSString AVURLAssetAllowsCellularAccessKey { get; }	
+		NSString AllowsCellularAccessKey { get; }	
 	}
 
 	[NoWatch]
