@@ -48,6 +48,8 @@ using System;
 using OpenTK;
 #if MONOMAC
 using XamCore.AppKit;
+#else
+using XamCore.UIKit;
 #endif
 
 #if !XAMCORE_2_0
@@ -9260,6 +9262,11 @@ namespace XamCore.AVFoundation {
 		[TV (9,2)]
 		[Export ("mediaDataCollectors")]
 		AVPlayerItemMediaDataCollector[] MediaDataCollectors { get; }
+#if !MONOMAC
+		[NoiOS, TV (10, 0), NoWatch, NoMac]
+		[NullAllowed, Export ("nextContentProposal", ArgumentSemantic.Assign)]
+		AVContentProposal NextContentProposal { get; set; }
+#endif
 	}
 
 	[NoWatch]
@@ -10733,4 +10740,34 @@ namespace XamCore.AVFoundation {
 		[Export ("finishWithError:")]
 		void Finish (NSError error);
 	}
+	
+#if !MONOMAC
+	[NoiOS, TV (10,0), NoWatch, NoMac]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface AVContentProposal : NSCopying
+	{
+		[Export ("contentTimeForTransition")]
+		CMTime ContentTimeForTransition { get; }
+		
+		[Export ("automaticAcceptanceInterval")]
+		double AutomaticAcceptanceInterval { get; set; }
+		
+		[Export ("title")]
+		string Title { get; }
+
+		[NullAllowed, Export ("previewImage")]
+		UIImage PreviewImage { get; }
+
+		[NullAllowed, Export ("URL", ArgumentSemantic.Assign)]
+		NSUrl Url { get; set; }
+
+		[Export ("metadata", ArgumentSemantic.Copy)]
+		AVMetadataItem[] Metadata { get; set; }
+
+		[Export ("initWithContentTimeForTransition:title:previewImage:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (CMTime contentTimeForTransition, string title, [NullAllowed] UIImage previewImage);
+	}
+#endif
 }

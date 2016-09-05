@@ -95,7 +95,7 @@ namespace XamCore.AVKit {
 	}
 	
 
-	[iOS (8,0)]
+	[iOS (8,0), TV (10,0)]
 	[BaseType (typeof (UIViewController))]
 	interface AVPlayerViewController {
 		[Export ("initWithNibName:bundle:")]
@@ -157,6 +157,22 @@ namespace XamCore.AVKit {
 		[Export ("requiresFullSubtitles")]
 		bool RequiresFullSubtitles { get; set; }
 #endregion
+#if !MONOMAC
+		[NoiOS, TV (10, 0), NoWatch, NoMac]
+		[Export ("contentProposalViewController", ArgumentSemantic.Assign)]
+		AVContentProposalViewController ContentProposalViewController { get; set; }
+#endif
+		[NoiOS, TV (10, 0), NoWatch, NoMac]
+		[Export ("skippingBehavior", ArgumentSemantic.Assign)]
+		AVPlayerViewControllerSkippingBehavior SkippingBehavior { get; set; }
+
+		[NoiOS, TV (10, 0), NoWatch, NoMac]
+		[Export ("skipForwardEnabled")]
+		bool SkipForwardEnabled { [Bind ("isSkipForwardEnabled")] get; set; }
+
+		[NoiOS, TV (10, 0), NoWatch, NoMac]
+		[Export ("skipBackwardEnabled")]
+		bool SkipBackwardEnabled { [Bind ("isSkipBackwardEnabled")] get; set; }
 	}
 
 	[Protocol, Model]
@@ -215,6 +231,30 @@ namespace XamCore.AVKit {
 		[TV (9,0)]
 		[Export ("playerViewController:didSelectExternalSubtitleOptionLanguage:")]
 		void DidSelectExternalSubtitleOptionLanguage (AVPlayerViewController playerViewController, string language);
+
+		[NoiOS, TV (10,0), NoWatch, NoMac]
+		[Export ("playerViewController:timeToSeekAfterUserNavigatedFromTime:toTime:")]
+		CMTime GetTimeToSeekAfterUserNavigated (AVPlayerViewController playerViewController, CMTime oldTime, CMTime targetTime);
+
+		[NoiOS, TV (10,0), NoWatch, NoMac]
+		[Export ("skipToNextItemForPlayerViewController:")]
+		void SkipToNextItem (AVPlayerViewController playerViewController);
+
+		[NoiOS, TV (10,0), NoWatch, NoMac]
+		[Export ("skipToPreviousItemForPlayerViewController:")]
+		void SkipToPreviousItem (AVPlayerViewController playerViewController);
+
+		[NoiOS, TV (10,0), NoWatch, NoMac]
+		[Export ("playerViewController:shouldPresentContentProposal:")]
+		bool ShouldPresentContentProposal (AVPlayerViewController playerViewController, AVContentProposal proposal);
+
+		[NoiOS, TV (10,0), NoWatch, NoMac]
+		[Export ("playerViewController:didAcceptContentProposal:")]
+		void DidAcceptContentProposal (AVPlayerViewController playerViewController, AVContentProposal proposal);
+
+		[NoiOS, TV (10,0), NoWatch, NoMac]
+		[Export ("playerViewController:didRejectContentProposal:")]
+		void DidRejectContentProposal (AVPlayerViewController playerViewController, AVContentProposal proposal);
 	}
 		
 #else
@@ -281,4 +321,33 @@ namespace XamCore.AVKit {
 		[NullAllowed, Export ("dateRangeNavigationMarkers")]
 		AVDateRangeMetadataGroup[] DateRangeNavigationMarkers { get; }
 	}
+	
+#if !MONOMAC
+	[NoiOS, TV (10,0), NoWatch, NoMac]
+	[BaseType (typeof(UIViewController))]
+	interface AVContentProposalViewController
+	{
+		[Export ("initWithNibName:bundle:")]
+		[PostGet ("NibBundle")]
+		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		
+		[NullAllowed, Export ("contentProposal")]
+		AVContentProposal ContentProposal { get; }
+
+		[NullAllowed, Export ("playerViewController", ArgumentSemantic.Weak)]
+		AVPlayerViewController PlayerViewController { get; }
+
+		[Export ("preferredPlayerViewFrame")]
+		CGRect PreferredPlayerViewFrame { get; }
+
+		[Export ("playerLayoutGuide")]
+		UILayoutGuide PlayerLayoutGuide { get; }
+
+		[NullAllowed, Export ("dateOfAutomaticAcceptance", ArgumentSemantic.Assign)]
+		NSDate DateOfAutomaticAcceptance { get; set; }
+
+		[Export ("dismissContentProposalForAction:animated:completion:")]
+		void DismissContentProposal (AVContentProposalAction action, bool animated, [NullAllowed] Action block);
+	}
+#endif
 }
