@@ -2163,6 +2163,33 @@ xamarin_insert_dllmap ()
 #endif // defined (__i386__) || defined (__x86_64__)
 }
 
+void
+xamarin_printf (const char *format, ...)
+{
+	va_list list;
+	va_start (list, format);
+	xamarin_vprintf (format, list);
+	va_end (list);
+}
+
+void
+xamarin_vprintf (const char *format, va_list args)
+{
+	NSString *message = [[NSString alloc] initWithFormat: [NSString stringWithUTF8String: format] arguments: args];
+	
+#if TARGET_OS_WATCH && defined (__arm__) // maybe make this configurable somehow?
+	const char *msg = [message UTF8String];
+	int len = strlen (msg);
+	fwrite (msg, 1, len, stdout);
+	if (len == 0 || msg [len - 1] != '\n')
+		fwrite ("\n", 1, 1, stdout);
+	fflush (stdout);
+#else
+	NSLog (@"%@", message);	
+#endif
+
+	[message release];
+}
 /*
  * Object unregistration:
  *

@@ -2,8 +2,10 @@
 #include <objc/objc.h>
 #include <objc/runtime.h>
 #include <objc/message.h>
+#include <iconv.h>
 
 #include "xamarin/xamarin.h"
+#include "runtime-internal.h"
 #include "monotouch-support.h"
 
 const char *
@@ -19,7 +21,13 @@ void
 xamarin_log (const unsigned short *unicodeMessage)
 {
 	// COOP: no managed memory access: any mode.
-	NSLog (@"%S", unicodeMessage); 
+	int length = 0;
+	const unsigned short *ptr = unicodeMessage;
+	while (*ptr++)
+		length += sizeof (unsigned short);
+	NSString *msg = [[NSString alloc] initWithBytes: unicodeMessage length: length encoding: NSUTF16LittleEndianStringEncoding];
+	xamarin_printf ([msg UTF8String]);
+	[msg release];
 }
 
 void*
