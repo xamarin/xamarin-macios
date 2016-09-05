@@ -22,6 +22,8 @@
 #include "xamarin/main.h"
 #include "xamarin/mono-runtime.h"
 #include "xamarin/runtime.h"
+#include "product.h"
+#include "runtime-internal.h"
 
 <# foreach (var export in exports) { #>
 typedef <#= export.ReturnType #> (* <#= export.EntryPoint #>_def) (<#= export.ArgumentSignature #>);
@@ -97,7 +99,7 @@ xamarin_initialize_dynamic_runtime (const char *mono_runtime_prefix)
 	if (libmono == NULL) {
 		const char *dlopen_err = dlerror ();
 		if (dlopen_err != NULL)
-			NSLog (@": dlopen error: %s", dlopen_err);
+			PRINT (PRODUCT ": dlopen error: %s", dlopen_err);
 		return "This application requires the Mono framework.";
 	}
 

@@ -84,7 +84,7 @@ xamarin_start_wwan (const char *uri)
 	
 	if (CFReadStreamOpen (stream)) {
 		// CFStreamStatus status = CFReadStreamGetStatus (stream);
-		// NSLog (@"CFStreamStatus %i", status);
+		// PRINT ("CFStreamStatus %i", status);
 		// note: some earlier iOS7 beta returned 1 (Opening) instead of 2 (Open) - a bit more time was needed or
 		// CFReadStreamRead blocks (and never return)
 		CFReadStreamRead (stream, buf, 1);
@@ -124,13 +124,13 @@ xamarin_GetFolderPath (int folder)
 
 void objc_msgSend_stret (id self, SEL op, ...)
 {
-	NSLog (@"Unimplemented objc_msgSend_stret %s", sel_getName (op));
+	PRINT ("Unimplemented objc_msgSend_stret %s", sel_getName (op));
 	abort ();
 }
 
 void objc_msgSendSuper_stret (struct objc_super *super, SEL op, ...)
 {
-	NSLog (@"Unimplemented objc_msgSendSuper_stret %s", sel_getName (op));
+	PRINT ("Unimplemented objc_msgSendSuper_stret %s", sel_getName (op));
 	abort ();
 }
 

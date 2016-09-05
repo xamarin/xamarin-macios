@@ -675,7 +675,7 @@ gc_register_toggleref (MonoObject *obj, id self, bool isCustomType)
 #ifdef DEBUG_TOGGLEREF
 	id handle = xamarin_get_nsobject_handle (obj);
 
-	NSLog (@"**Registering object %p handle %p RC %d flags: %i",
+	PRINT ("**Registering object %p handle %p RC %d flags: %i",
 		obj,
 		handle,
 		(int) (handle ? [handle retainCount] : 0),
@@ -733,7 +733,7 @@ gc_toggleref_callback (MonoObject *object)
 	} else {
 		cn = object_getClassName (handle);
 	}
-	NSLog (@"\tinspecting %p handle:%p %s flags: %i RC %d -> %s\n", object, handle, cn, (int) flags, (int) (handle ? [handle retainCount] : 0), rv);
+	PRINT ("\tinspecting %p handle:%p %s flags: %i RC %d -> %s\n", object, handle, cn, (int) flags, (int) (handle ? [handle retainCount] : 0), rv);
 #endif
 
 	return res;
@@ -810,7 +810,7 @@ xamarin_open_assembly (const char *name)
 	if (xamarin_get_is_mkbundle ()) {
 		assembly = mono_assembly_open (name, NULL);
 		if (assembly == NULL) {
-			NSLog (@ PRODUCT ": Could not find the required assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: http://bugzilla.xamarin.com", name);
+			PRINT (PRODUCT ": Could not find the required assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: http://bugzilla.xamarin.com", name);
 			exit (1);
 		}
 		return assembly;
@@ -839,19 +839,19 @@ xamarin_open_assembly (const char *name)
 		if (assembly)
 			return assembly;
 		
-		NSLog (@ PRODUCT ": Could not find the assembly '%s' in the app nor as an already loaded assembly. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: http://bugzilla.xamarin.com", name);
+		PRINT (PRODUCT ": Could not find the assembly '%s' in the app nor as an already loaded assembly. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: http://bugzilla.xamarin.com", name);
 		exit (1);
 	}
 #endif
 
 	if (!xamarin_file_exists (path)) {
-		NSLog (@ PRODUCT ": Could not find the assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: http://bugzilla.xamarin.com", name);
+		PRINT (PRODUCT ": Could not find the assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: http://bugzilla.xamarin.com", name);
 		exit (1);
 	}
 
 	assembly = mono_assembly_open (path, NULL);
 	if (assembly == NULL) {
-		NSLog (@ PRODUCT ": Could not find the required assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: http://bugzilla.xamarin.com", name);
+		PRINT (PRODUCT ": Could not find the required assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: http://bugzilla.xamarin.com", name);
 		exit (1);
 	}
 		
@@ -888,7 +888,7 @@ is_class_finalization_aware (MonoClass *cls)
 	if (nsobject_class)
 		rv = cls == nsobject_class || mono_class_is_assignable_from (nsobject_class, cls);
 
-	//NSLog (@"IsClass %s.%s finalization aware: %i\n", mono_class_get_namespace (cls), mono_class_get_name (cls), rv);
+	//PRINT ("IsClass %s.%s finalization aware: %i\n", mono_class_get_namespace (cls), mono_class_get_name (cls), rv);
 
 	return rv;
 }
@@ -900,7 +900,7 @@ object_queued_for_finalization (MonoObject *object)
 	
 	/* This is called with the GC lock held, so it can only use signal-safe code */
 	struct Managed_NSObject *obj = (struct Managed_NSObject *) object;
-	//NSLog (@"In finalization response for %s.%s %p (handle: %p class_handle: %p flags: %i)\n", 
+	//PRINT ("In finalization response for %s.%s %p (handle: %p class_handle: %p flags: %i)\n", 
 	obj->flags |= NSObjectFlagsInFinalizerQueue;
 }
 
@@ -950,7 +950,7 @@ fetch_exception_property (MonoObject *obj, const char *name, bool is_virtual)
 
 		return (MonoObject *) mono_runtime_invoke (get, obj, NULL, &exc);
 	} else {
-		NSLog (@"Could not find the property System.Exception.%s", name);
+		PRINT ("Could not find the property System.Exception.%s", name);
 	}
 	
 	return NULL;
@@ -1037,7 +1037,7 @@ xamarin_process_managed_exception_gchandle (guint32 gchandle)
 void
 xamarin_unhandled_exception_handler (MonoObject *exc, gpointer user_data)
 {
-	NSLog (@"%@", print_all_exceptions (exc));
+	PRINT ("%@", print_all_exceptions (exc));
 
 	abort ();
 }
@@ -1049,7 +1049,7 @@ exception_handler (NSException *exc)
 	LOG (PRODUCT ": Received unhandled ObjectiveC exception: %@ %@", [exc name], [exc reason]);
 
 	if (xamarin_is_gc_coop) {
-		NSLog (@"Uncaught Objective-C exception: %@", exc);
+		PRINT ("Uncaught Objective-C exception: %@", exc);
 		assert (false); // Re-throwing the Objective-C exception will probably just end up with infinite recursion
 	}
 
@@ -1105,7 +1105,7 @@ static void
 log_callback (const char *log_domain, const char *log_level, const char *message, mono_bool fatal, void *user_data)
 {
 	// COOP: Not accessing managed memory: any mode
-	NSLog (@"%s: %s", log_level, message);
+	PRINT ("%s: %s", log_level, message);
 
 	if (fatal)
 		abort ();
@@ -1115,7 +1115,7 @@ static void
 print_callback (const char *string, mono_bool is_stdout)
 {
 	// COOP: Not accessing managed memory: any mode
-	NSLog (@"%s", string);
+	PRINT ("%s", string);
 }
 
 void
@@ -1302,7 +1302,7 @@ xamarin_assertion_message (const char *msg, ...)
 	va_start (args, msg);
 	vasprintf (&formatted, msg, args);
 	if (formatted) {
-		NSLog (@ PRODUCT ": %s", formatted);
+		PRINT ( PRODUCT ": %s", formatted);
 		free (formatted);
 	}
 	va_end (args);
@@ -1582,7 +1582,7 @@ xamarin_create_gchandle (id self, void *managed_object, int flags, bool force_we
 	assert ((gchandle & GCHANDLE_MASK) == 0); // Make sure we don't create too many gchandles...
 	set_raw_gchandle (self, gchandle | flags);
 #if defined(DEBUG_REF_COUNTING)
-	NSLog (@"\tGCHandle created for %p: %d (flags: %p) = %d %s\n", self, gchandle, GINT_TO_POINTER (flags), get_raw_gchandle (self), weak ? "weak" : "strong");
+	PRINT ("\tGCHandle created for %p: %d (flags: %p) = %d %s\n", self, gchandle, GINT_TO_POINTER (flags), get_raw_gchandle (self), weak ? "weak" : "strong");
 #endif
 }
 
@@ -1606,7 +1606,7 @@ xamarin_switch_gchandle (id self, bool to_weak)
 		if (to_weak == is_weak) {
 			// we already have the GCHandle we need
 #if defined(DEBUG_REF_COUNTING)
-			NSLog (@"Object %p already has a %s GCHandle = %d\n", self, to_weak ? "weak" : "strong", old_gchandle);
+			PRINT ("Object %p already has a %s GCHandle = %d\n", self, to_weak ? "weak" : "strong", old_gchandle);
 #endif
 			return;
 		}
@@ -1620,7 +1620,7 @@ xamarin_switch_gchandle (id self, bool to_weak)
 		// if we do, managed ctors end up being executed at a different moment,
 		// which breaks implicit assumptions in people's code.)
 #if defined(DEBUG_REF_COUNTING)
-		NSLog (@"Object %p has no managed object to create a %s GCHandle for\n", self, to_weak ? "weak" : "strong");
+		PRINT ("Object %p has no managed object to create a %s GCHandle for\n", self, to_weak ? "weak" : "strong");
 #endif
 		return;
 	}
@@ -1662,7 +1662,7 @@ xamarin_switch_gchandle (id self, bool to_weak)
 	MONO_THREAD_DETACH; // COOP: this will switch to GC_SAFE
 
 #if defined(DEBUG_REF_COUNTING)
-	NSLog (@"Switched object %p to %s GCHandle = %d\n", self, to_weak ? "weak" : "strong", new_gchandle);
+	PRINT ("Switched object %p to %s GCHandle = %d\n", self, to_weak ? "weak" : "strong", new_gchandle);
 #endif
 
 	xamarin_process_managed_exception_gchandle (exception_gchandle);
@@ -1674,14 +1674,14 @@ xamarin_free_gchandle (id self, int gchandle)
 	// COOP: no managed memory access, but calls mono function mono_gc_handle_free. Assuming that function can be called with any mode: this function can be called with any mode as well
 	if (gchandle) {
 #if defined(DEBUG_REF_COUNTING)
-		NSLog (@"\tGCHandle %i destroyed for object %p\n", gchandle, self);
+		PRINT ("\tGCHandle %i destroyed for object %p\n", gchandle, self);
 #endif
 		mono_gchandle_free (gchandle);
 
 		set_raw_gchandle (self, 0);
 	} else {
 #if defined(DEBUG_REF_COUNTING)
-		NSLog (@"\tNo GCHandle for the object %p\n", self);
+		PRINT ("\tNo GCHandle for the object %p\n", self);
 #endif
 	}
 }
@@ -1734,7 +1734,7 @@ xamarin_release_managed_ref (id self, MonoObject *managed_obj)
 	guint32 exception_gchandle = 0;
 	
 #if defined(DEBUG_REF_COUNTING)
-	NSLog (@"monotouch_release_managed_ref (%s Handle=%p) retainCount=%d; HasManagedRef=%i GCHandle=%i IsUserType=%i\n", 
+	PRINT ("monotouch_release_managed_ref (%s Handle=%p) retainCount=%d; HasManagedRef=%i GCHandle=%i IsUserType=%i\n", 
 		class_getName (object_getClass (self)), self, (int32_t) [self retainCount], user_type ? xamarin_has_managed_ref (self) : 666, user_type ? get_gchandle (self) : 666, user_type);
 #endif
 
@@ -1771,7 +1771,7 @@ xamarin_create_managed_ref (id self, gpointer managed_object, bool retain)
 	bool user_type = is_user_type (self);
 	
 #if defined(DEBUG_REF_COUNTING)
-	NSLog (@"monotouch_create_managed_ref (%s Handle=%p) retainCount=%d; HasManagedRef=%i GCHandle=%i IsUserType=%i\n", 
+	PRINT ("monotouch_create_managed_ref (%s Handle=%p) retainCount=%d; HasManagedRef=%i GCHandle=%i IsUserType=%i\n", 
 		class_getName ([self class]), self, get_safe_retainCount (self), user_type ? xamarin_has_managed_ref (self) : 666, user_type ? get_gchandle (self) : 666, user_type);
 #endif
 	
@@ -1840,7 +1840,7 @@ get_method_block_wrapper_creator (MonoMethod *method, int par, guint32 *exceptio
 	mp.method = method;
 	mp.par = par;
 
-	// NSLog (@"Looking up method and par (%x and %d)", (int) method, par);
+	// PRINT ("Looking up method and par (%x and %d)", (int) method, par);
 	MONO_ENTER_GC_SAFE;
 	pthread_mutex_lock (&wrapper_hash_lock);
 	MONO_EXIT_GC_SAFE;
@@ -1855,14 +1855,14 @@ get_method_block_wrapper_creator (MonoMethod *method, int par, guint32 *exceptio
 	res = (MonoObject *) mono_g_hash_table_lookup (xamarin_wrapper_hash, &mp);
 	pthread_mutex_unlock (&wrapper_hash_lock);
 	if (res != NULL){
-		// NSLog (@"Found match: %x", (int) res);
+		// PRINT ("Found match: %x", (int) res);
 		return res;
 	}
 
 	res = xamarin_get_block_wrapper_creator ((MonoObject *) mono_method_get_object (mono_domain_get (), method, NULL), par, exception_gchandle);
 	if (*exception_gchandle != 0)
 		return NULL;
-	// NSLog (@"New value: %x", (int) res);
+	// PRINT ("New value: %x", (int) res);
 
 	nmp = (MethodAndPar *) malloc (sizeof (MethodAndPar));
 	*nmp = mp;
@@ -2003,8 +2003,8 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 	mode = xamarin_on_marshal_objectivec_exception (ns_exception, throwManagedAsDefault, &exception_gchandle);
 
 	if (exception_gchandle != 0) {
-		NSLog (@PRODUCT ": Got an exception while executing the MarshalObjectiveCException event (this exception will be ignored):");
-		NSLog (@"%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
+		PRINT (PRODUCT ": Got an exception while executing the MarshalObjectiveCException event (this exception will be ignored):");
+		PRINT ("%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
 		mono_gchandle_free (exception_gchandle);
 		exception_gchandle = 0;
 	}
@@ -2027,8 +2027,8 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 		} else {
 			int handle = xamarin_create_ns_exception (ns_exception, &exception_gchandle);
 			if (exception_gchandle != 0) {
-				NSLog (@PRODUCT ": Got an exception while creating a managed NSException wrapper (will throw this exception instead):");
-				NSLog (@"%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
+				PRINT (PRODUCT ": Got an exception while creating a managed NSException wrapper (will throw this exception instead):");
+				PRINT ("%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
 				handle = exception_gchandle;
 				exception_gchandle = 0;
 			}
@@ -2060,8 +2060,8 @@ xamarin_process_managed_exception (MonoObject *exception)
 	mono_gchandle_free (handle);
 
 	if (exception_gchandle != 0) {
-		NSLog (@PRODUCT ": Got an exception while executing the MarshalManagedCException event (this exception will be ignored):");
-		NSLog (@"%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
+		PRINT (PRODUCT ": Got an exception while executing the MarshalManagedCException event (this exception will be ignored):");
+		PRINT ("%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
 		mono_gchandle_free (exception_gchandle);
 		exception_gchandle = 0;
 		mode = MarshalManagedExceptionModeDefault;
@@ -2082,8 +2082,8 @@ xamarin_process_managed_exception (MonoObject *exception)
 		NSException *ns_exc = xamarin_unwrap_ns_exception (handle, &exception_gchandle);
 		
 		if (exception_gchandle != 0) {
-			NSLog (@PRODUCT ": Got an exception while unwrapping a managed NSException wrapper (this exception will be ignored):");
-			NSLog (@"%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
+			PRINT (PRODUCT ": Got an exception while unwrapping a managed NSException wrapper (this exception will be ignored):");
+			PRINT ("%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
 			mono_gchandle_free (exception_gchandle);
 			exception_gchandle = 0;
 			ns_exc = NULL;
@@ -2105,8 +2105,8 @@ xamarin_process_managed_exception (MonoObject *exception)
 			
 			fullname = xamarin_type_get_full_name (mono_class_get_type (mono_object_get_class (exception)), &exception_gchandle);
 			if (exception_gchandle != 0) {
-				NSLog (@PRODUCT ": Got an exception when trying to get the typename for an exception (this exception will be ignored):");
-				NSLog (@"%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
+				PRINT (PRODUCT ": Got an exception when trying to get the typename for an exception (this exception will be ignored):");
+				PRINT ("%@", print_all_exceptions (mono_gchandle_get_target (exception_gchandle)));
 				mono_gchandle_free (exception_gchandle);
 				exception_gchandle = 0;
 				fullname = "Unknown";
