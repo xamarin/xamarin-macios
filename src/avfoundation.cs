@@ -3547,6 +3547,10 @@ namespace XamCore.AVFoundation {
 		[iOS (10,0), TV (10,0), Mac (10,12)]
 		[NullAllowed, Export ("assetCache")]
 		AVAssetCache Cache { get; }
+
+		[iOS (10, 0), TV (10, 0), NoWatch, NoMac]
+		[Field ("AVURLAssetAllowsCellularAccessKey")]
+		NSString AllowsCellularAccessKey { get; }	
 	}
 
 	[NoWatch]
@@ -9682,6 +9686,7 @@ namespace XamCore.AVFoundation {
 		[Export ("observedBitrate")]
 		double ObservedBitrate { get; }
 
+		[iOS (8,0), TV (9,0), NoWatch, Mac (10,10)]
 		[Export ("indicatedBitrate")]
 		double IndicatedBitrate { get; }
 
@@ -9735,6 +9740,7 @@ namespace XamCore.AVFoundation {
 		[Since (7,0), Mavericks]
 		[Export ("transferDuration")]
 		double TransferDuration { get; }
+
 	}
 
 	[NoWatch]
@@ -9871,6 +9877,12 @@ namespace XamCore.AVFoundation {
 
 		[Export ("loopingPlayerItems")]
 		AVPlayerItem[] LoopingPlayerItems { get; }
+
+		[Export ("status")]
+		AVPlayerLooperStatus Status { get; }
+
+		[NullAllowed, Export ("error")]
+		NSError Error { get; }
 	}
 
 	[NoWatch]
