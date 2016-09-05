@@ -234,7 +234,7 @@ namespace XamCore.AVKit {
 
 		[NoiOS, TV (10,0), NoWatch, NoMac]
 		[Export ("playerViewController:timeToSeekAfterUserNavigatedFromTime:toTime:")]
-		CMTime TimeToSeekAfterUserNavigated (AVPlayerViewController playerViewController, CMTime oldTime, CMTime targetTime);
+		CMTime GetTimeToSeekAfterUserNavigated (AVPlayerViewController playerViewController, CMTime oldTime, CMTime targetTime);
 
 		[NoiOS, TV (10,0), NoWatch, NoMac]
 		[Export ("skipToNextItemForPlayerViewController:")]
