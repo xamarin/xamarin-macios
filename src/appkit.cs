@@ -17772,7 +17772,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10, 12)]
 		[Static]
-		[Export ("StronglyReferencesTextStoragestronglyReferencesTextStorage")]
+		[Export ("stronglyReferencesTextStorage")]
 		bool StronglyReferencesTextStorage { get; }
 	}
 
