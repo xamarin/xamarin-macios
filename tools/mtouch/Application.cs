@@ -1450,7 +1450,7 @@ namespace Xamarin.Bundler {
 			if (!EnableMSym)
 				return;
 
-			var target_directory = string.Format ("{0}.msym", AppDirectory);
+			var target_directory = string.Format ("{0}.mSYM", AppDirectory);
 			if (!Directory.Exists (target_directory))
 				Directory.CreateDirectory (target_directory);
 
