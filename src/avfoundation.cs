@@ -4633,7 +4633,7 @@ namespace XamCore.AVFoundation {
 		
 		[iOS (10, 0), TV (10,0), Mac (10,12)]
 		[Field ("AVMetadataISOUserDataKeyDate")]
-		NSString ISOUserDataKeyDate { get; }
+		NSString IsoUserDataKeyDate { get; }
 
 		[iOS (8,0)][Mac (10,10)]
 		[Field ("AVMetadataKeySpaceIcy")]
@@ -7501,6 +7501,9 @@ namespace XamCore.AVFoundation {
 	[NoTV]
 	[Since (4,0)]
 	[BaseType (typeof (NSObject))]
+#if XAMCORE_4_0
+	[Abstract] // as per docs
+#endif
 	// Objective-C exception thrown.  Name: NSGenericException Reason: Cannot instantiate AVCaptureOutput because it is an abstract superclass.
 	[DisableDefaultCtor]
 	interface AVCaptureOutput {
@@ -8067,35 +8070,27 @@ namespace XamCore.AVFoundation {
 		[Export ("photoSettingsForSceneMonitoring", ArgumentSemantic.Copy)]
 		AVCapturePhotoSettings PhotoSettingsForSceneMonitoring { get; set; }
 
-		// @property (getter = isHighResolutionCaptureEnabled, nonatomic) BOOL highResolutionCaptureEnabled;
 		[Export ("highResolutionCaptureEnabled")]
 		bool IsHighResolutionCaptureEnabled { [Bind ("isHighResolutionCaptureEnabled")] get; set; }
 
-		// @property (readonly, nonatomic) NSUInteger maxBracketedCapturePhotoCount;
 		[Export ("maxBracketedCapturePhotoCount")]
 		nuint MaxBracketedCapturePhotoCount { get; }
 
-		// @property (readonly, getter = isLensStabilizationDuringBracketedCaptureSupported, nonatomic) BOOL lensStabilizationDuringBracketedCaptureSupported;
 		[Export ("lensStabilizationDuringBracketedCaptureSupported")]
 		bool IsLensStabilizationDuringBracketedCaptureSupported { [Bind ("isLensStabilizationDuringBracketedCaptureSupported")] get; }
 
-		// @property (readonly, getter = isLivePhotoCaptureSupported, nonatomic) BOOL livePhotoCaptureSupported;
 		[Export ("livePhotoCaptureSupported")]
 		bool IsLivePhotoCaptureSupported { [Bind ("isLivePhotoCaptureSupported")] get; }
 
-		// @property (getter = isLivePhotoCaptureEnabled, nonatomic) BOOL livePhotoCaptureEnabled;
 		[Export ("livePhotoCaptureEnabled")]
 		bool IsLivePhotoCaptureEnabled { [Bind ("isLivePhotoCaptureEnabled")] get; set; }
 
-		// @property (getter = isLivePhotoCaptureSuspended, nonatomic) BOOL livePhotoCaptureSuspended;
 		[Export ("livePhotoCaptureSuspended")]
 		bool IsLivePhotoCaptureSuspended { [Bind ("isLivePhotoCaptureSuspended")] get; set; }
 
-		// @property (getter = isLivePhotoAutoTrimmingEnabled, nonatomic) BOOL livePhotoAutoTrimmingEnabled;
 		[Export ("livePhotoAutoTrimmingEnabled")]
 		bool IsLivePhotoAutoTrimmingEnabled { [Bind ("isLivePhotoAutoTrimmingEnabled")] get; set; }
 
-		// +(NSData * _Nullable)JPEGPhotoDataRepresentationForJPEGSampleBuffer:(CMSampleBufferRef _Nonnull)JPEGSampleBuffer previewPhotoSampleBuffer:(CMSampleBufferRef _Nullable)previewPhotoSampleBuffer;
 		[Static]
 		[Export ("JPEGPhotoDataRepresentationForJPEGSampleBuffer:previewPhotoSampleBuffer:")]
 		[return: NullAllowed]
@@ -8106,11 +8101,9 @@ namespace XamCore.AVFoundation {
 		[return: NullAllowed]
 		NSData GetDngPhotoDataRepresentation (CMSampleBuffer rawSampleBuffer, [NullAllowed] CMSampleBuffer previewPhotoSampleBuffer);
 
-		[iOS (10,0), NoTV, NoWatch, NoMac]
 		[Export ("preparedPhotoSettingsArray")]
 		AVCapturePhotoSettings[] PreparedPhotoSettings { get; }
 
-		[iOS (10,0), NoTV, NoWatch, NoMac]
 		[Export ("setPreparedPhotoSettingsArray:completionHandler:")]
 		[Async]
 		void SetPreparedPhotoSettings (AVCapturePhotoSettings[] preparedPhotoSettingsArray, [NullAllowed] Action<bool, NSError> completionHandler);
