@@ -26,7 +26,7 @@ namespace Xamarin.iOS.Tasks {
 		{
 			var mtouchPaths = SetupProjectPaths ("MyWatchApp", platform: Platform);
 			using (var xiproj = XIProject.Clone (mtouchPaths.ProjectPath, "MyWatchKitExtension", "MyWatchKitApp")) {
-				mtouchPaths = SetupProjectPaths ("MyWatchApp", xiproj.ProjectDirectory, platform: Platform);
+				mtouchPaths = SetupProjectPaths ("MyWatchApp", "MyWatchApp", xiproj.ProjectDirectory, platform: Platform);
 
 				var appInfoPath = Path.Combine (mtouchPaths.ProjectPath, "Info.plist");
 				var appInfoContents = File.ReadAllText (appInfoPath);
