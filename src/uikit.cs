@@ -700,6 +700,18 @@ namespace XamCore.UIKit {
 		[Since (7,0)]
 		[Notification, Internal, Field ("NSTextStorageDidProcessEditingNotification")]
 		NSString DidProcessEditingNotification { get; }
+
+		// we need to hide this methods inherited from the NSMuttableAttributedString since the class does not implement them
+#if XAMCORE_4_0
+		[New, Abstract]
+		[Export ("string")]
+		IntPtr LowLevelValue { get; }
+
+		[New, Abstract]
+		[Export ("attributesAtIndex:effectiveRange:")]	
+		IntPtr LowLevelGetAttributes (nint location, out NSRange effectiveRange);
+#endif
+
 	}
 
 	[Model]
