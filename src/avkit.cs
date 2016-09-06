@@ -95,7 +95,7 @@ namespace XamCore.AVKit {
 	}
 	
 
-	[iOS (8,0), TV (10,0)]
+	[iOS (8,0)]
 	[BaseType (typeof (UIViewController))]
 	interface AVPlayerViewController {
 		[Export ("initWithNibName:bundle:")]
