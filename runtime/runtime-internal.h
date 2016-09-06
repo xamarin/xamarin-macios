@@ -13,7 +13,8 @@
 
 #include "xamarin/xamarin.h"
 
-#define LOG(...) do { if (xamarin_log_level > 0) NSLog (@ __VA_ARGS__); } while (0);
+#define PRINT(...) do { xamarin_printf (__VA_ARGS__); } while (0);
+#define LOG(...) do { if (xamarin_log_level > 0) xamarin_printf (__VA_ARGS__); } while (0);
 
 // #define DEBUG_LAUNCH_TIME
 

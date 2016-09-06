@@ -37,7 +37,7 @@ create_mt_exception (char *msg)
 static void
 dump_state (struct CallState *state)
 {
-	NSLog (@"type: %u is_stret: %i self: %p SEL: %s -- double_ret: %f float_ret: %f longlong_ret: %llu ptr_ret: %p\n",
+	PRINT ("type: %u is_stret: %i self: %p SEL: %s -- double_ret: %f float_ret: %f longlong_ret: %llu ptr_ret: %p\n",
 		state->type, (state->type & Tramp_Stret) == Tramp_Stret, state->self, sel_getName (state->sel),
 		state->double_ret, state->float_ret, state->longlong_ret, state->ptr_ret);
 }

@@ -363,7 +363,7 @@ void sdb_connect (const char *address)
 	MONO_EXIT_GC_UNSAFE;
 	
 	if (!shaked)
-		NSLog (@PRODUCT ": Handshake error with IDE.");
+		PRINT (PRODUCT ": Handshake error with IDE.");
 
 	return;
 }
@@ -453,7 +453,7 @@ int monotouch_connect_wifi (NSMutableArray *ips)
 	long flags;
 	
 	if (ip_count == 0) {
-		NSLog (@PRODUCT ": No IPs to connect to.");
+		PRINT (PRODUCT ": No IPs to connect to.");
 		return 2;
 	}
 	
@@ -485,13 +485,13 @@ int monotouch_connect_wifi (NSMutableArray *ips)
 				sin6->sin6_port = htons (listen_port);
 				family_str = "IPv6";
 			} else {
-				NSLog (@PRODUCT ": Error parsing '%s': %s", ip, errno ? strerror (errno) : "unsupported address type");
+				PRINT (PRODUCT ": Error parsing '%s': %s", ip, errno ? strerror (errno) : "unsupported address type");
 				sockets[i] = -1;
 				continue;
 			}
 			
 			if ((sockets[i] = socket (family, SOCK_STREAM, IPPROTO_TCP)) == -1) {
-				NSLog (@PRODUCT ": Failed to create %s socket: %s", family_str, strerror (errno));
+				PRINT (PRODUCT ": Failed to create %s socket: %s", family_str, strerror (errno));
 				continue;
 			}
 			
@@ -507,7 +507,7 @@ int monotouch_connect_wifi (NSMutableArray *ips)
 			}
 			
 			if (rv < 0 && errno != EINPROGRESS) {
-				NSLog (@PRODUCT ": Failed to connect to %s on port %d: %s", ip, listen_port, strerror (errno));
+				PRINT (PRODUCT ": Failed to connect to %s on port %d: %s", ip, listen_port, strerror (errno));
 				close (sockets[i]);
 				sockets[i] = -1;
 				continue;
@@ -553,7 +553,7 @@ int monotouch_connect_wifi (NSMutableArray *ips)
 					continue;
 				
 				// irrecoverable error
-				NSLog (@PRODUCT ": Error while waiting for connections: %s", strerror (errno));
+				PRINT (PRODUCT ": Error while waiting for connections: %s", strerror (errno));
 				free (sockets);
 				return 1;
 			}
@@ -577,7 +577,7 @@ int monotouch_connect_wifi (NSMutableArray *ips)
 				
 				// okay, this socket is ready for reading or writing...
 				if (getsockopt (sockets[i], SOL_SOCKET, SO_ERROR, &error, &optlen) < 0) {
-					NSLog (@PRODUCT ": Error while trying to get socket options for %s: %s", [[ips objectAtIndex:i] UTF8String], strerror (errno));
+					PRINT (PRODUCT ": Error while trying to get socket options for %s: %s", [[ips objectAtIndex:i] UTF8String], strerror (errno));
 					close (sockets[i]);
 					sockets[i] = -1;
 					waiting--;
@@ -585,7 +585,7 @@ int monotouch_connect_wifi (NSMutableArray *ips)
 				}
 				
 				if (error != 0) {
-					NSLog (@PRODUCT ": Socket error while connecting to IDE on %s:%d: %s", [[ips objectAtIndex:i] UTF8String], listen_port, strerror (error));
+					PRINT (PRODUCT ": Socket error while connecting to IDE on %s:%d: %s", [[ips objectAtIndex:i] UTF8String], listen_port, strerror (error));
 					close (sockets[i]);
 					sockets[i] = -1;
 					waiting--;
@@ -640,13 +640,13 @@ int monotouch_connect_usb ()
 	// Create the listen socket and set it up
 	listen_socket = socket (PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (listen_socket == -1) {
-		NSLog (@PRODUCT ": Could not create socket for the IDE to connect to: %s", strerror (errno));
+		PRINT (PRODUCT ": Could not create socket for the IDE to connect to: %s", strerror (errno));
 		return 1;
 	}
 	
 	flags = 1;
 	if (setsockopt (listen_socket, SOL_SOCKET, SO_REUSEADDR, &flags, sizeof (flags)) == -1) {
-		NSLog (@PRODUCT ": Could not set SO_REUSEADDR on the listening socket (%s)", strerror (errno));
+		PRINT (PRODUCT ": Could not set SO_REUSEADDR on the listening socket (%s)", strerror (errno));
 		// not a fatal failure
 	}
 	
@@ -657,7 +657,7 @@ int monotouch_connect_usb ()
 	listen_addr.sin_addr.s_addr = INADDR_ANY;
 	rv = bind (listen_socket, (struct sockaddr *) &listen_addr, sizeof (listen_addr));
 	if (rv == -1) {
-		NSLog (@PRODUCT ": Could not bind to address: %s", strerror (errno));
+		PRINT (PRODUCT ": Could not bind to address: %s", strerror (errno));
 		rv = 2;
 		goto cleanup;
 	}
@@ -669,7 +669,7 @@ int monotouch_connect_usb ()
 
 	rv = listen (listen_socket, 1);
 	if (rv == -1) {
-		NSLog (@PRODUCT ": Could not listen for the IDE: %s", strerror (errno));
+		PRINT (PRODUCT ": Could not listen for the IDE: %s", strerror (errno));
 		rv = 2;
 		goto cleanup;
 	}
@@ -712,7 +712,7 @@ int monotouch_connect_usb ()
 		} while (rv == -1 && errno == EINTR);
 
 		if (rv == -1) {
-			NSLog (@PRODUCT ": Failed while waiting for the IDE to connect: %s", strerror (errno));
+			PRINT (PRODUCT ": Failed while waiting for the IDE to connect: %s", strerror (errno));
 			rv = 2;
 			goto cleanup;
 		}
@@ -720,14 +720,14 @@ int monotouch_connect_usb ()
 		len = sizeof (struct sockaddr_in);
 		fd = accept (listen_socket, (struct sockaddr *) &listen_addr, &len);
 		if (fd == -1) {
-			NSLog (@PRODUCT ": Failed to accept connection from the IDE: %s", strerror (errno));
+			PRINT (PRODUCT ": Failed to accept connection from the IDE: %s", strerror (errno));
 			rv = 3;
 			goto cleanup;
 		}
 
 		flags = 1;
 		if (setsockopt (fd, IPPROTO_TCP, TCP_NODELAY, (char *) &flags, sizeof (flags)) < 0) {
-			NSLog (@PRODUCT ": Could not set TCP_NODELAY on socket (%s)", strerror (errno));
+			PRINT (PRODUCT ": Could not set TCP_NODELAY on socket (%s)", strerror (errno));
 			// not a fatal failure
 		}
 
@@ -960,12 +960,12 @@ int monotouch_debug_listen (int debug_port, int output_port)
 	// Create the listen socket and set it up
 	listen_socket = socket (PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (listen_socket == -1) {
-		NSLog (@PRODUCT ": Could not create socket for the IDE to connect to: %s", strerror (errno));
+		PRINT (PRODUCT ": Could not create socket for the IDE to connect to: %s", strerror (errno));
 		return 1;
 	} else {
 		flag = 1;
 		if (setsockopt (listen_socket, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof (flag)) == -1) {
-			NSLog (@PRODUCT ": Could not set SO_REUSEADDR on the listening socket (%s)", strerror (errno));
+			PRINT (PRODUCT ": Could not set SO_REUSEADDR on the listening socket (%s)", strerror (errno));
 			// not a fatal failure
 		}
 
@@ -975,7 +975,7 @@ int monotouch_debug_listen (int debug_port, int output_port)
 		listen_addr.sin_addr.s_addr = INADDR_ANY;
 		rv = bind (listen_socket, (struct sockaddr *) &listen_addr, sizeof (listen_addr));
 		if (rv == -1) {
-			NSLog (@PRODUCT ": Could not bind to address: %s", strerror (errno));
+			PRINT (PRODUCT ": Could not bind to address: %s", strerror (errno));
 			close (listen_socket);
 			return 2;
 		} else {
@@ -986,7 +986,7 @@ int monotouch_debug_listen (int debug_port, int output_port)
 
 			rv = listen (listen_socket, 1);
 			if (rv == -1) {
-				NSLog (@PRODUCT ": Could not listen for the IDE: %s", strerror (errno));
+				PRINT (PRODUCT ": Could not listen for the IDE: %s", strerror (errno));
 				close (listen_socket);
 				return 2;
 			} else {
@@ -1004,14 +1004,14 @@ int monotouch_debug_listen (int debug_port, int output_port)
 	do {
 		if ((rv = select (listen_socket + 1, &rset, NULL, NULL, &tv)) == 0) {
 			// timeout hit, no connections available.
-			NSLog (@PRODUCT ": Listened for connections from the IDE for 2 seconds, nobody connected.");
+			PRINT (PRODUCT ": Listened for connections from the IDE for 2 seconds, nobody connected.");
 			close (listen_socket);
 			return 3;
 		}
 	} while (rv == -1 && errno == EINTR);
 	
 	if (rv == -1) {
-		NSLog (@PRODUCT ": Failed while waiting for the IDE to connect: %s", strerror (errno));
+		PRINT (PRODUCT ": Failed while waiting for the IDE to connect: %s", strerror (errno));
 		close (listen_socket);
 		return 2;
 	}
@@ -1019,14 +1019,14 @@ int monotouch_debug_listen (int debug_port, int output_port)
 	len = sizeof (struct sockaddr_in);
 	output_socket = accept (listen_socket, (struct sockaddr *) &listen_addr, &len);
 	if (output_socket == -1) {
-		NSLog (@PRODUCT ": Failed to accept connection from the IDE: %s", strerror (errno));
+		PRINT (PRODUCT ": Failed to accept connection from the IDE: %s", strerror (errno));
 		close (listen_socket);
 		return 3;
 	}
 
 	flag = 1;
 	if (setsockopt (output_socket, IPPROTO_TCP, TCP_NODELAY, (char *) &flag, sizeof (flag)) < 0) {
-		NSLog (@PRODUCT ": Could not set TCP_NODELAY on socket (%s)", strerror (errno));
+		PRINT (PRODUCT ": Could not set TCP_NODELAY on socket (%s)", strerror (errno));
 		// not a fatal failure
 	}
 		
@@ -1065,7 +1065,7 @@ int monotouch_debug_connect (NSMutableArray *ips, int debug_port, int output_por
 	long flags;
 	
 	if (ip_count == 0) {
-		NSLog (@PRODUCT ": No IPs to connect to.");
+		PRINT (PRODUCT ": No IPs to connect to.");
 		return 2;
 	}
 	
@@ -1092,13 +1092,13 @@ int monotouch_debug_connect (NSMutableArray *ips, int debug_port, int output_por
 			sin6->sin6_port = htons (output_port);
 			family_str = "IPv6";
 		} else {
-			NSLog (@PRODUCT ": Error parsing '%s': %s", ip, errno ? strerror (errno) : "unsupported address type");
+			PRINT (PRODUCT ": Error parsing '%s': %s", ip, errno ? strerror (errno) : "unsupported address type");
 			sockets[i] = -1;
 			continue;
 		}
 		
 		if ((sockets[i] = socket (family, SOCK_STREAM, IPPROTO_TCP)) == -1) {
-			NSLog (@PRODUCT ": Failed to create %s socket: %s", family_str, strerror (errno));
+			PRINT (PRODUCT ": Failed to create %s socket: %s", family_str, strerror (errno));
 			continue;
 		}
 		
@@ -1114,7 +1114,7 @@ int monotouch_debug_connect (NSMutableArray *ips, int debug_port, int output_por
 		}
 		
 		if (rv < 0 && errno != EINPROGRESS) {
-			NSLog (@PRODUCT ": Failed to connect to %s on port %d: %s", ip, output_port, strerror (errno));
+			PRINT (PRODUCT ": Failed to connect to %s on port %d: %s", ip, output_port, strerror (errno));
 			close (sockets[i]);
 			sockets[i] = -1;
 			continue;
@@ -1160,7 +1160,7 @@ int monotouch_debug_connect (NSMutableArray *ips, int debug_port, int output_por
 				continue;
 			
 			// irrecoverable error
-			NSLog (@PRODUCT ": Error while waiting for connections: %s", strerror (errno));
+			PRINT (PRODUCT ": Error while waiting for connections: %s", strerror (errno));
 			free (sockets);
 			return 1;
 		}
@@ -1184,7 +1184,7 @@ int monotouch_debug_connect (NSMutableArray *ips, int debug_port, int output_por
 			
 			// okay, this socket is ready for reading or writing...
 			if (getsockopt (sockets[i], SOL_SOCKET, SO_ERROR, &error, &optlen) < 0) {
-				NSLog (@PRODUCT ": Error while trying to get socket options for %s: %s", [[ips objectAtIndex:i] UTF8String], strerror (errno));
+				PRINT (PRODUCT ": Error while trying to get socket options for %s: %s", [[ips objectAtIndex:i] UTF8String], strerror (errno));
 				close (sockets[i]);
 				sockets[i] = -1;
 				waiting--;
@@ -1192,7 +1192,7 @@ int monotouch_debug_connect (NSMutableArray *ips, int debug_port, int output_por
 			}
 			
 			if (error != 0) {
-				NSLog (@PRODUCT ": Socket error while connecting to the IDE on %s:%d: %s", [[ips objectAtIndex:i] UTF8String], output_port, strerror (error));
+				PRINT (PRODUCT ": Socket error while connecting to the IDE on %s:%d: %s", [[ips objectAtIndex:i] UTF8String], output_port, strerror (error));
 				close (sockets[i]);
 				sockets[i] = -1;
 				waiting--;
