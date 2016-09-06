@@ -51,7 +51,7 @@
 
 # Photos
 
-## xcode 8 beta 1-5 defines it but it does not exists in the binaries
+## xcode 8 beta 1-6 defines it but it does not exists in the binaries - rdar #28169810 https://trello.com/c/RwXK6YRX
 !missing-field! PHLivePhotoShouldRenderAtPlaybackTime not bound
 
 
