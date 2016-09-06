@@ -1096,12 +1096,10 @@ namespace XamCore.Photos
 
 		[Async]
 		[Export ("prepareLivePhotoForPlaybackWithTargetSize:options:completionHandler:")]
-		// TODO: `options` candidate for a strong dictionary
 		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<PHLivePhoto, NSError> handler);
 
 		[Async]
 		[Export ("saveLivePhotoToOutput:options:completionHandler:")]
-		// TODO: `options` candidate for a strong dictionary
 		void SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<bool, NSError> handler);
 
 		[Export ("cancel")]
@@ -1132,7 +1130,8 @@ namespace XamCore.Photos
 		nfloat RenderScale { get; }
 	}
 
-	// TODO returns null on iOS 10 beta 1-6, check again later to see if/when it gets implemented
+	// TODO returns null on Xcode 8 beta 1-6, rdar #28169810 https://trello.com/c/RwXK6YRX
+	// PHLivePhotoEditingContext.PrepareLivePhotoForPlayback and SaveLivePhoto could use a strong dictionary once it's available
 #if false
 	[iOS (10,0)]
 	[TV (10,0)]
