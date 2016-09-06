@@ -102,7 +102,7 @@ namespace XamCore.VideoSubscriberAccount {
 
 		[Async]
 		[Export ("enqueueAccountMetadataRequest:completionHandler:")]
-		VSAccountManagerResult EnqueueAccountMetadataRequest (VSAccountMetadataRequest request, Action<VSAccountMetadata, NSError> completionHandler);
+		VSAccountManagerResult Enqueue (VSAccountMetadataRequest accountMetadataRequest, Action<VSAccountMetadata, NSError> completionHandler);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
