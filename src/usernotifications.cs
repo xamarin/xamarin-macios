@@ -641,7 +641,7 @@ namespace XamCore.UserNotifications {
 
 		[Unavailable (PlatformName.TvOS)]
 		[Export ("removeDeliveredNotificationsWithIdentifiers:")]
-		void RemoveDeliveredNotificationsWithIdentifiers (string[] identifiers);
+		void RemoveDeliveredNotifications (string[] identifiers);
 
 		[Unavailable (PlatformName.TvOS)]
 		[Export ("removeAllDeliveredNotifications")]
