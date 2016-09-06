@@ -92,7 +92,7 @@ namespace Xamarin.iOS.Tasks
 			get; set;
 		}
 
-		public ProjectPaths SetupProjectPaths (string projectName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug")
+		public ProjectPaths SetupProjectPaths (string projectName, string csprojName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug")
 		{
 			var projectPath = Path.Combine(baseDir, projectName);
 
@@ -103,9 +103,14 @@ namespace Xamarin.iOS.Tasks
 				ProjectPath = projectPath,
 				ProjectBinPath = binPath,
 				ProjectObjPath = objPath,
-				ProjectCSProjPath = Path.Combine (projectPath, projectName + ".csproj"),
+				ProjectCSProjPath = Path.Combine (projectPath, csprojName + ".csproj"),
 				AppBundlePath = Path.Combine (binPath, projectName + ".app"),
 			};
+		}
+
+		public ProjectPaths SetupProjectPaths (string projectName, string baseDir = "../", bool includePlatform = true, string platform = "iPhoneSimulator", string config = "Debug")
+		{
+			return SetupProjectPaths (projectName, projectName, baseDir, includePlatform, platform, config);
 		}
 
 		[SetUp]
