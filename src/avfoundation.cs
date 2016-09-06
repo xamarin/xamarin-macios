@@ -8112,6 +8112,7 @@ namespace XamCore.AVFoundation {
 
 		[iOS (10,0), NoTV, NoWatch, NoMac]
 		[Export ("setPreparedPhotoSettingsArray:completionHandler:")]
+		[Async]
 		void SetPreparedPhotoSettings (AVCapturePhotoSettings[] preparedPhotoSettingsArray, [NullAllowed] Action<bool, NSError> completionHandler);
 	}
 #endif
