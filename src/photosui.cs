@@ -9,8 +9,12 @@ namespace XamCore.PhotosUI
 {
 	[iOS (8,0)]
 	[Protocol]
+#if !XAMCORE_4_0 && !TVOS
+	// According to documentation you're supposed to implement this protocol in a UIViewController subclass,
+	// which means a model (which does not inherit from UIViewController) is not useful.
 	[Model]
 	[BaseType (typeof (NSObject))]
+#endif
 	interface PHContentEditingController {
 
 		[Abstract]
