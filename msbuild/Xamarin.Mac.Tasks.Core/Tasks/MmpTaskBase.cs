@@ -237,18 +237,24 @@ namespace Xamarin.Mac.Tasks
 			if (!base.Execute ())
 				return false;
 
-			try {
-				var nativeLibrariesPath = Directory.EnumerateFiles (Path.Combine (AppBundleDir, "Contents", "MonoBundle"), "*.dylib", SearchOption.AllDirectories);
-				var nativeLibraryItems = new List<ITaskItem> ();
+			var monoBundleDir = Path.Combine (AppBundleDir, "Contents", "MonoBundle");
 
-				foreach (var nativeLibrary in nativeLibrariesPath) {
-					nativeLibraryItems.Add (new TaskItem (nativeLibrary));
+			if (Directory.Exists (monoBundleDir)) {
+				try {
+					var nativeLibrariesPath = Directory.EnumerateFiles (monoBundleDir, "*.dylib", SearchOption.AllDirectories);
+					var nativeLibraryItems = new List<ITaskItem> ();
+
+					foreach (var nativeLibrary in nativeLibrariesPath) {
+						nativeLibraryItems.Add (new TaskItem (nativeLibrary));
+					}
+
+					NativeLibraries = nativeLibraryItems.ToArray ();
+				} catch (Exception ex) {
+					Log.LogError (null, null, null, AppBundleDir, 0, 0, 0, 0, "Could not get native libraries: {0}", ex.Message);
+					return false;
 				}
-
-				NativeLibraries = nativeLibraryItems.ToArray ();
-			} catch (Exception ex) {
-				Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Could not get native libraries: {0}", ex.Message);
-				return false;
+			} else {
+				NativeLibraries = new ITaskItem[0];
 			}
 
 			return !Log.HasLoggedErrors;
