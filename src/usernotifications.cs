@@ -430,6 +430,7 @@ namespace XamCore.UserNotifications {
 	[DisableDefaultCtor] // as per docs
 	interface UNNotificationServiceExtension {
 
+		// Not async because app developers are supposed to implement/override this method, not call it themselves.
 		[Export ("didReceiveNotificationRequest:withContentHandler:")]
 		void DidReceiveNotificationRequest (UNNotificationRequest request, Action<UNNotificationContent> contentHandler);
 
@@ -521,7 +522,7 @@ namespace XamCore.UserNotifications {
 	[Introduced (PlatformName.TvOS, 10, 0)]
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[BaseType (typeof (UNNotificationTrigger))]
-	[DisableDefaultCtor] // as per doc, use supplied method (Trigger)
+	[DisableDefaultCtor] // as per doc, use supplied method (CreateTrigger)
 	interface UNTimeIntervalNotificationTrigger {
 
 		[Export ("timeInterval")]
@@ -529,7 +530,7 @@ namespace XamCore.UserNotifications {
 
 		[Static]
 		[Export ("triggerWithTimeInterval:repeats:")]
-		UNTimeIntervalNotificationTrigger Trigger (double timeInterval, bool repeats);
+		UNTimeIntervalNotificationTrigger CreateTrigger (double timeInterval, bool repeats);
 
 		[NullAllowed, Export ("nextTriggerDate")]
 		NSDate NextTriggerDate { get; }
@@ -538,7 +539,7 @@ namespace XamCore.UserNotifications {
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Introduced (PlatformName.TvOS, 10, 0)]
 	[Introduced (PlatformName.WatchOS, 3, 0)]
-	[DisableDefaultCtor] // as per doc, use supplied method (Trigger)
+	[DisableDefaultCtor] // as per doc, use supplied method (CreateTrigger)
 	[BaseType (typeof (UNNotificationTrigger))]
 	interface UNCalendarNotificationTrigger {
 
@@ -547,7 +548,7 @@ namespace XamCore.UserNotifications {
 
 		[Static]
 		[Export ("triggerWithDateMatchingComponents:repeats:")]
-		UNCalendarNotificationTrigger Trigger (NSDateComponents dateComponents, bool repeats);
+		UNCalendarNotificationTrigger CreateTrigger (NSDateComponents dateComponents, bool repeats);
 
 		[NullAllowed, Export ("nextTriggerDate")]
 		NSDate NextTriggerDate { get; }
@@ -557,7 +558,7 @@ namespace XamCore.UserNotifications {
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[Unavailable (PlatformName.TvOS)]
 	[BaseType (typeof (UNNotificationTrigger))]
-	[DisableDefaultCtor] // as per doc, use supplied method (Trigger)
+	[DisableDefaultCtor] // as per doc, use supplied method (CreateTrigger)
 	interface UNLocationNotificationTrigger {
 
 		[Export ("region", ArgumentSemantic.Copy)]
@@ -566,7 +567,7 @@ namespace XamCore.UserNotifications {
 		[Unavailable (PlatformName.WatchOS)]
 		[Static]
 		[Export ("triggerWithRegion:repeats:")]
-		UNLocationNotificationTrigger Trigger (CLRegion region, bool repeats);
+		UNLocationNotificationTrigger CreateTrigger (CLRegion region, bool repeats);
 	}
 
 	interface IUNUserNotificationCenterDelegate { }
