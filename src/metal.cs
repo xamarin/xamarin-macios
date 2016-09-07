@@ -1819,7 +1819,7 @@ namespace XamCore.Metal {
 
 	[iOS (10, 0), TV (10,0), NoWatch, NoMac]
 	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor]
+	// note: type works only on devices, symbol is missing on the simulator
 	public interface MTLHeapDescriptor : NSCopying
 	{
 		[Export ("size")]
