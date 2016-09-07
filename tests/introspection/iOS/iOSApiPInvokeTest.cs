@@ -66,10 +66,15 @@ namespace Introspection {
 		{
 			// we only want to check this on a version of iOS that
 			// 1. is the current SDK target (or a newer one)
-#if !__WATCHOS__
 			var sdk = new Version (Constants.SdkVersion);
+#if __WATCHOS__
+			if (!TestRuntime.CheckWatchOSSystemVersion (sdk.Major, sdk.Minor))
+				return true;
+#elif __IOS__ || ___TVOS__
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (sdk.Major, sdk.Minor))
 				return true;
+#else
+	#error unknown target
 #endif
 			// 2. on the real target for Xamarin.iOS.dll/monotouch.dll
 			//    as the simulator miss some libraries and symbols
