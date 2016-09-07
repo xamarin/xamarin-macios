@@ -236,6 +236,10 @@ namespace XamCore.HealthKit
 		DistanceWheelchair,
 		[iOS (10,0), Watch (3,0)]
 		PushCount,
+		[iOS (10,0), Watch (3,0)]
+		DistanceSwimming,
+		[iOS (10,0), Watch (3,0)]
+		SwimmingStrokeCount,
 	}
 
 	// Convenience enum, ObjC uses NSString
@@ -490,5 +494,24 @@ namespace XamCore.HealthKit
 		TropicalStorm,
 		Hurricane,
 		Tornado,
+	}
+
+	[Watch (3,0), iOS (10,0)]
+	[Native]
+	public enum HKWorkoutSwimmingLocationType : nint {
+		Unknown = 0,
+		Pool,
+		OpenWater,
+	}
+
+	[Watch (3,0), iOS (10,0)]
+	[Native]
+	public enum HKSwimmingStrokeStyle : nint {
+		Unknown = 0,
+		Mixed,
+		Freestyle,
+		Backstroke,
+		Breaststroke,
+		Butterfly,
 	}
 }

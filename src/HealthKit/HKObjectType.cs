@@ -65,6 +65,12 @@ namespace XamCore.HealthKit
 			case HKQuantityTypeIdentifier.PushCount:
 				return HKQuantityTypeIdentifierKey.PushCount;
 
+			case HKQuantityTypeIdentifier.DistanceSwimming:
+				return HKQuantityTypeIdentifierKey.DistanceSwimming;
+
+			case HKQuantityTypeIdentifier.SwimmingStrokeCount:
+				return HKQuantityTypeIdentifierKey.SwimmingStrokeCount;
+
 		// Blood
 			case HKQuantityTypeIdentifier.OxygenSaturation:
 				return HKQuantityTypeIdentifierKey.OxygenSaturation;				

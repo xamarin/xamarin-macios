@@ -49,6 +49,8 @@ namespace MonoTouchFixtures.HealthKit {
 					break;
 				case HKQuantityTypeIdentifier.DistanceWheelchair:
 				case HKQuantityTypeIdentifier.PushCount:
+				case HKQuantityTypeIdentifier.DistanceSwimming:
+				case HKQuantityTypeIdentifier.SwimmingStrokeCount:
 					if (!TestRuntime.CheckXcodeVersion (8, 0))
 						continue;
 					break;
