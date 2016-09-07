@@ -70,6 +70,11 @@
 
 # UIKit
 
+# TODO: MUST BE FIXED by SR0 or SR1 of iOS 10 related bug https://bugzilla.xamarin.com/show_bug.cgi?id=43579
+!missing-protocol-member! UITextFieldDelegate::textFieldDidEndEditing:reason: not found
+!missing-protocol-member! UITextViewDelegate::textView:shouldInteractWithTextAttachment:inRange:interaction: not found
+!missing-protocol-member! UITextViewDelegate::textView:shouldInteractWithURL:inRange:interaction: not found
+
 ## Apple docs: This property is inherited from the UIView parent class. This class changes the default value of this property to NO.
 !missing-selector! UIImageView::isUserInteractionEnabled not bound
 !missing-selector! UIImageView::setUserInteractionEnabled: not bound
