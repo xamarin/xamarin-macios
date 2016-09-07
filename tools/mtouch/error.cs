@@ -217,6 +217,7 @@ namespace Xamarin.Bundler {
 	// MT4xxx	code generation
 	// 			MT40xx	main.m
 	//					MT4001	The main template could not be expanded to `{0}`.
+	//					MT4002	Failed to compile the generated code for P/Invoke methods. Please file a bug report at http://bugzilla.xamarin.com
 	//			MT41xx	registrar.m
 	//					MT4101	The registrar cannot build a signature for type `{0}`.
 	//					MT4102	The registrar found an invalid type `{0}` in signature for method `{2}`. Use `{1}` instead.

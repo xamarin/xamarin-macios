@@ -618,7 +618,14 @@ namespace Xamarin.Bundler
 				// Write P/Invokes
 				var state = LinkerOptions.MarshalNativeExceptionsState;
 				state.End ();
-				RegistrarTask.Create (compile_tasks, Abis, this, state.SourcePath);
+				PinvokesTask.Create (compile_tasks, Abis, this, state.SourcePath);
+
+				if (App.FastDev) {
+					// In this case assemblies must link with the resulting dylib,
+					// so we can't compile the pinvoke dylib in parallel with later
+					// stuff.
+					compile_tasks.ExecuteInParallel ();
+				}
 			}
 
 			// Now the assemblies are in PreBuildDirectory.
