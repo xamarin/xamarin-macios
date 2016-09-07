@@ -447,6 +447,9 @@ namespace XamCore.Photos
 	[BaseType (typeof (PHObject))]
 	[DisableDefaultCtor] // not user createable (calling description fails, see below) must be fetched by API
 	// NSInternalInconsistencyException Reason: PHCollection has no identifier
+#if TVOS || XAMCORE_4_0
+	[Abstract] // Acording to docs: The abstract superclass for Photos asset collections and collection lists.
+#endif
 	interface PHCollection {
 
 		[Export ("canContainAssets", ArgumentSemantic.Assign)]
@@ -944,6 +947,9 @@ namespace XamCore.Photos
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // doc -> "abstract base class"
 	// throws "NSInternalInconsistencyException Reason: PHObject has no identifier"
+#if TVOS || XAMCORE_4_0
+	[Abstract] // Acording to docs: The abstract base class for Photos model objects (assets and collections).
+#endif
 	interface PHObject : NSCopying {
 
 		[Export ("localIdentifier", ArgumentSemantic.Copy)]
