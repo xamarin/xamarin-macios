@@ -94,6 +94,13 @@ namespace Introspection {
 			set { logProgress.Value = value; }
 		}
 
+		StringBuilder error_data;
+		protected StringBuilder ErrorData {
+			get {
+				return error_data ?? (error_data = new StringBuilder ());
+			}
+		}
+
 		protected TextWriter Writer {
 #if MONOMAC
 			get { return Console.Out; }
@@ -112,6 +119,7 @@ namespace Introspection {
 			else {
 				Writer.Write ("[FAIL] ");
 				Writer.WriteLine (s, parameters);
+				ErrorData.AppendFormat (s, parameters).AppendLine ();
 				Errors++;
 			}
 		}

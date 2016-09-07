@@ -243,6 +243,7 @@ namespace Introspection {
 		public void InstanceMethods ()
 		{
 			Errors = 0;
+			ErrorData.Clear ();
 			int n = 0;
 			
 			foreach (Type t in Assembly.GetTypes ()) {
@@ -265,7 +266,7 @@ namespace Introspection {
 					Process (class_ptr, t, m, ref n);
 				}
 			}
-			Assert.AreEqual (0, Errors, "{0} errors found in {1} instance selector validated", Errors, n);
+			Assert.AreEqual (0, Errors, "{0} errors found in {1} instance selector validated{2}", Errors, n, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
 		}
 
 		void Process (IntPtr class_ptr, Type t, MethodBase m, ref int n)
@@ -364,6 +365,7 @@ namespace Introspection {
 		public void StaticMethods ()
 		{
 			Errors = 0;
+			ErrorData.Clear ();
 			int n = 0;
 			
 			IntPtr responds_handle = Selector.GetHandle ("respondsToSelector:");
@@ -400,7 +402,7 @@ namespace Introspection {
 					}
 				}
 			}
-			Assert.AreEqual (0, Errors, "{0} errors found in {1} static selector validated", Errors, n);
+			Assert.AreEqual (0, Errors, "{0} errors found in {1} static selector validated{2}", Errors, n, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
 		}
 	}
 }

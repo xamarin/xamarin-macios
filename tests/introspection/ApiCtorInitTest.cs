@@ -177,6 +177,7 @@ namespace Introspection {
 		public void DefaultCtorAllowed ()
 		{
 			Errors = 0;
+			ErrorData.Clear ();
 			int n = 0;
 			
 			foreach (Type t in Assembly.GetTypes ()) {
@@ -221,7 +222,7 @@ namespace Introspection {
 				}
 				n++;
 			}
-			Assert.AreEqual (0, Errors, "{0} potential errors found in {1} default ctor validated", Errors, n);
+			Assert.AreEqual (0, Errors, "{0} potential errors found in {1} default ctor validated{2}", Errors, n, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
 		}
 
 		// .NET constructors are not virtual, so we need to re-expose the base class .ctor when a subclass is created.

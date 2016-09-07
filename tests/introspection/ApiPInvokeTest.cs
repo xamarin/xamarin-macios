@@ -165,6 +165,7 @@ namespace Introspection
 		protected void Check (Assembly a)
 		{
 			Errors = 0;
+			ErrorData.Clear ();
 			int n = 0;
 			foreach (var t in a.GetTypes ()) {
 				foreach (var m in t.GetMethods (BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)) {
@@ -202,7 +203,7 @@ namespace Introspection
 					n++;
 				}
 			}
-			Assert.AreEqual (0, Errors, "{0} errors found in {1} symbol lookups", Errors, n);
+			Assert.AreEqual (0, Errors, "{0} errors found in {1} symbol lookups{2}", Errors, n, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
 		}
 
 		protected abstract bool SkipAssembly (Assembly a);
