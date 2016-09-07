@@ -10,24 +10,25 @@ namespace XamCore.CloudKit
 
 	public partial class CKUserIdentityLookupInfo
 	{
-		// extra, unused, parameter to get a unique signature
-		CKUserIdentityLookupInfo (IntPtr handle, int unused)
+		// extra parameter to get a unique signature for a string argument
+		CKUserIdentityLookupInfo (string id, int type)
 		{
-			InitializeHandle (handle);
+			var h = type == 0 ? _FromEmail (id) : _FromPhoneNumber (id);
+			InitializeHandle (h);
 		}
 
 		public static CKUserIdentityLookupInfo FromEmail (string email)
 		{
 			if (string.IsNullOrEmpty (email))
 				throw new ArgumentNullException (nameof (email));
-			return new CKUserIdentityLookupInfo (_FromEmail (email), 0);
+			return new CKUserIdentityLookupInfo (email, 0);
 		}
 
 		public static CKUserIdentityLookupInfo FromPhoneNumber (string phoneNumber)
 		{
 			if (string.IsNullOrEmpty (phoneNumber))
 				throw new ArgumentNullException (nameof (phoneNumber));
-			return new CKUserIdentityLookupInfo (_FromPhoneNumber (phoneNumber), 0);
+			return new CKUserIdentityLookupInfo (phoneNumber, 1);
 		}
 	}
 #endif
