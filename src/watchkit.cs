@@ -384,6 +384,10 @@ namespace XamCore.WatchKit {
 		[Export ("systemName")]
 		string SystemName { get; }
 
+		[Watch (3,0)][NoiOS]
+		[Export ("waterResistanceRating")]
+		WKWaterResistanceRating WaterResistanceRating { get; }
+
 		[Watch (2,0), NoiOS]
 		[Export ("playHaptic:")]
 		void PlayHaptic (WKHapticType type);
