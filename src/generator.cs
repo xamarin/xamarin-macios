@@ -6590,6 +6590,8 @@ public partial class Generator : IMemberGatherer {
 
 					string shouldOverrideDelegateString = isProtocolizedEventBacked ? "" : "override ";
 
+					string previous_miname = null;
+					int miname_count = 0;
 					foreach (var mi in dtype.GatherMethods ().OrderBy (m => m.Name)) {
 						if (ShouldSkipEventGeneration (mi))
 							continue;
@@ -6605,13 +6607,21 @@ public partial class Generator : IMemberGatherer {
 						
 						var sender = pars.Length == 0 ? "this" : pars [0].Name;
 
+						var miname = PascalCase (mi.Name);
+						if (miname == previous_miname) {
+							// overloads, add a numbered suffix (it's internal)
+							previous_miname = miname;
+							miname += (++miname_count).ToString ();
+						} else
+							previous_miname = miname;
+
 						if (mi.ReturnType == typeof (void)){
 							if (bta.Singleton || mi.GetParameters ().Length == 1)
-								print ("internal EventHandler {0};", PascalCase (mi.Name));
+								print ("internal EventHandler {0};", miname);
 							else
-								print ("internal EventHandler<{0}> {1};", GetEventArgName (mi), PascalCase (mi.Name));
+								print ("internal EventHandler<{0}> {1};", GetEventArgName (mi), miname);
 						} else
-							print ("internal {0} {1};", GetDelegateName (mi), PascalCase (mi.Name));
+							print ("internal {0} {1};", GetDelegateName (mi), miname);
 
 						print ("[Preserve (Conditional = true)]");
 						if (isProtocolizedEventBacked)
@@ -6640,7 +6650,7 @@ public partial class Generator : IMemberGatherer {
 							if (bta.Singleton || mi.GetParameters ().Length == 1)
 								print ("EventHandler handler = {0};", PascalCase (mi.Name));
 							else
-								print ("EventHandler<{0}> handler = {1};", GetEventArgName (mi), PascalCase (mi.Name));
+								print ("EventHandler<{0}> handler = {1};", GetEventArgName (mi), miname);
 
 							print ("if (handler != null){");
 							indent++;

@@ -68,6 +68,7 @@ namespace XamCore.ModelIO {
 		IntPtr Constructor (NSUrl url, [NullAllowed] MDLVertexDescriptor vertexDescriptor, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 
 		[iOS (10,0)]
+		[TV (10,0)]
 		[NoMac]
 		[Export ("initWithBufferAllocator:")]
 		IntPtr Constructor ([NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
@@ -89,6 +90,7 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("childObjectsOfClass:")]
 		MDLObject[] GetChildObjects (Class objectClass);
 
@@ -135,6 +137,7 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("masters", ArgumentSemantic.Retain)]
 		IMDLObjectContainerComponent Masters { get; set; }
 
@@ -144,6 +147,7 @@ namespace XamCore.ModelIO {
 		MDLAsset FromScene (SCNScene scene);
 
 		[iOS (10, 0), Mac (10, 12)]
+		[TV (10,0)]
 		[Static]
 		[Export ("assetWithSCNScene:bufferAllocator:")]
 		MDLAsset FromScene (SCNScene scene, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
@@ -178,6 +182,7 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("projection", ArgumentSemantic.Assign)]
 		MDLCameraProjection Projection { get; set; }
 
@@ -347,6 +352,7 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("colorSpace")]
 		// No documentation to confirm but this should be a constant (hence NSString).
 		NSString ColorSpace { get; set; }
@@ -433,6 +439,7 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("materialFace", ArgumentSemantic.Assign)]
 		MDLMaterialFace MaterialFace { get; set; }
 
@@ -533,11 +540,13 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("luminance")]
 		float Luminance { get; set; }
 	}
 
 	[iOS (10,0), Mac (10,12)]
+	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface MDLMaterialPropertyConnection : MDLNamed
@@ -553,6 +562,7 @@ namespace XamCore.ModelIO {
 	}
 
 	[iOS (10,0), Mac (10,12)]
+	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface MDLMaterialPropertyNode : MDLNamed
@@ -571,6 +581,7 @@ namespace XamCore.ModelIO {
 	}
 
 	[iOS (10,0), Mac (10,12)]
+	[TV (10,0)]
 	[BaseType (typeof(MDLMaterialPropertyNode))]
 	[DisableDefaultCtor]
 	interface MDLMaterialPropertyGraph
@@ -594,6 +605,7 @@ namespace XamCore.ModelIO {
 	{
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("initWithBufferAllocator:")]
 		IntPtr Constructor ([NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 
@@ -610,6 +622,7 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("vertexAttributeDataForAttributeNamed:asFormat:")]
 		[return: NullAllowed]
 		MDLVertexAttributeData GetVertexAttributeData (string attributeName, MDLVertexFormat format);
@@ -627,6 +640,7 @@ namespace XamCore.ModelIO {
 			get;
 			[iOS (10,0)]
 			[Mac (10,12)]
+			[TV (10,0)]
 			set;
 		}
 
@@ -639,11 +653,13 @@ namespace XamCore.ModelIO {
 			get;
 			[iOS (10,0)]
 			[Mac (10,12)]
+			[TV (10,0)]
 			set;
 		}
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("allocator", ArgumentSemantic.Retain)]
 		IMDLMeshBufferAllocator Allocator { get; }
 
@@ -654,11 +670,13 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("addAttributeWithName:format:type:data:stride:")]
 		void AddAttribute (string name, MDLVertexFormat format, string type, NSData data, nint stride);
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("addAttributeWithName:format:type:data:stride:time:")]
 		void AddAttribute (string name, MDLVertexFormat format, string type, NSData data, nint stride, double time);
 
@@ -673,6 +691,7 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("addUnwrappedTextureCoordinatesForAttributeNamed:")]
 		void AddUnwrappedTextureCoordinates (string textureCoordinateAttributeName);
 
@@ -681,16 +700,19 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("replaceAttributeNamed:withData:")]
 		void ReplaceAttribute (string name, MDLVertexAttributeData newData);
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("updateAttributeNamed:withData:")]
 		void UpdateAttribute (string name, MDLVertexAttributeData newData);
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("removeAttributeNamed:")]
 		void RemoveAttribute (string name);
 
@@ -784,6 +806,7 @@ namespace XamCore.ModelIO {
 		MDLMesh FromGeometry (SCNGeometry geometry);
 
 		[iOS (10, 0), Mac (10, 12)]
+		[TV (10,0)]
 		[Static]
 		[Export ("meshWithSCNGeometry:bufferAllocator:")]
 		MDLMesh FromGeometry (SCNGeometry geometry, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
@@ -947,16 +970,19 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[NullAllowed, Export ("instance", ArgumentSemantic.Retain)]
 		MDLObject Instance { get; set; }
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("path")]
 		string Path { get; }
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("objectAtPath:")]
 		MDLObject GetObject (string path);
 
@@ -968,6 +994,7 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("hidden")]
 		bool Hidden { get; set; }
 
@@ -984,6 +1011,7 @@ namespace XamCore.ModelIO {
 		MDLObject FromNode (SCNNode node);
 
 		[iOS (10,0), Mac (10,12)]
+		[TV (10,0)]
 		[Static]
 		[Export ("objectWithSCNNode:bufferAllocator:")]
 		MDLObject FromNode (SCNNode node, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
@@ -1259,6 +1287,7 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("indexBufferAsIndexType:")]
 		IMDLMeshBuffer GetIndexBuffer (MDLIndexBitDepth indexType);
 
@@ -1282,6 +1311,7 @@ namespace XamCore.ModelIO {
 		MDLSubmesh FromGeometryElement (SCNGeometryElement element);
 
 		[iOS (10, 0), Mac (10, 12)]
+		[TV (10,0)]
 		[Static]
 		[Export ("submeshWithSCNGeometryElement:bufferAllocator:")]
 		MDLSubmesh FromGeometryElement (SCNGeometryElement element, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
@@ -1367,6 +1397,7 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("hasAlphaValues")]
 		bool HasAlphaValues { get; set; }
 	}
@@ -1416,6 +1447,7 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("initWithTransformComponent:resetsTransform:")]
 		IntPtr Constructor (IMDLTransformComponent component, bool resetsTransform);
 
@@ -1425,6 +1457,7 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("initWithMatrix:resetsTransform:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor (Matrix4 matrix, bool resetsTransform);
@@ -1515,6 +1548,7 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 #if XAMCORE_4_0
 		[Abstract]
 #endif
@@ -1592,6 +1626,7 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("time")]
 		double Time { get; set; }
 
@@ -1672,6 +1707,7 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("removeAttributeNamed:")]
 		void RemoveAttribute (string name);
 
@@ -1715,6 +1751,7 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("initWithAsset:divisions:patchRadius:")]
 		IntPtr Constructor (MDLAsset asset, int divisions, float patchRadius);
 
@@ -1735,6 +1772,7 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("setVoxelsForMesh:divisions:patchRadius:")]
 		void SetVoxels (MDLMesh mesh, int divisions, float patchRadius);
 
@@ -1788,32 +1826,38 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("convertToSignedShellField")]
 		void ConvertToSignedShellField ();
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("isValidSignedShellField")]
 		bool IsValidSignedShellField { get; }
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("shellFieldInteriorThickness")]
 		float ShellFieldInteriorThickness { get; set; }
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("shellFieldExteriorThickness")]
 		float ShellFieldExteriorThickness { get; set; }
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("coarseMesh")]
 		[return: NullAllowed]
 		MDLMesh GetCoarseMesh ();
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("coarseMeshUsingAllocator:")]
 		[return: NullAllowed]
 		MDLMesh GetCoarseMeshUsingAllocator ([NullAllowed] IMDLMeshBufferAllocator allocator);
@@ -1874,6 +1918,7 @@ namespace XamCore.ModelIO {
 	{
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Export ("initWithStride:")]
 		IntPtr Constructor (nuint stride);
 

@@ -136,6 +136,7 @@ namespace XamCore.Security {
 
 		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
+		[TV (10,0)]
 		[Field ("kSecTrustCertificateTransparencyWhiteList")]
 		NSString CertificateTransparencyWhiteList { get; }
 	}
@@ -162,6 +163,7 @@ namespace XamCore.Security {
 		[iOS (10,0)]
 		[Mac (10,12)]
 		[Watch (3,0)]
+		[TV (10,0)]
 		[Field ("kSecAttrKeyTypeECSECPrimeRandom")]
 		ECSecPrimeRandom = 2,
 	}
@@ -492,6 +494,7 @@ namespace XamCore.Security {
 		[iOS (10,0)]
 		[Mac (10,12)]
 		[Watch (3,0)]
+		[TV (10,0)]
 		[Field ("kSecAttrAccessGroupToken")]
 		IntPtr AccessGroupToken { get; }
 	}

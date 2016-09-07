@@ -70,7 +70,7 @@ namespace Introspection {
 #if __WATCHOS__
 			if (!TestRuntime.CheckWatchOSSystemVersion (sdk.Major, sdk.Minor))
 				return true;
-#elif __IOS__ || ___TVOS__
+#elif __IOS__ || __TVOS__
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (sdk.Major, sdk.Minor))
 				return true;
 #else

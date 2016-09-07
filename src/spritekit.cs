@@ -471,6 +471,7 @@ namespace XamCore.SpriteKit {
 		SKScene FromSize (CGSize size);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("sceneDidLoad")]
 		void SceneDidLoad ();
 
@@ -708,6 +709,7 @@ namespace XamCore.SpriteKit {
 		SKShader Shader { get; set; }		
 
 		[iOS (10,0), Mac (10,12)]
+		[TV (10,0)]
 		[Export ("scaleToSize:")]
 		void ScaleTo (CGSize size);
 	}
@@ -1357,10 +1359,12 @@ namespace XamCore.SpriteKit {
 		SKTexture TextureFromNode (SKNode node, CGRect crop);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("preferredFramesPerSecond")]
 		nint PreferredFramesPerSecond { get; set; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		ISKViewDelegate Delegate { get; set; }
 	}
@@ -1599,6 +1603,7 @@ namespace XamCore.SpriteKit {
 		IntPtr InitWithNameFloatVector2 (string name, Vector2 value);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("initWithName:vectorFloat2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #if WATCH
@@ -1615,6 +1620,7 @@ namespace XamCore.SpriteKit {
 		IntPtr InitWithNameFloatVector3 (string name, Vector3 value);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("initWithName:vectorFloat3:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #if WATCH
@@ -1631,6 +1637,7 @@ namespace XamCore.SpriteKit {
 		IntPtr InitWithNameFloatVector4 (string name, Vector4 value);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("initWithName:vectorFloat4:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #if WATCH
@@ -1647,6 +1654,7 @@ namespace XamCore.SpriteKit {
 		IntPtr InitWithNameFloatMatrix2 (string name, Matrix2 value);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("initWithName:matrixFloat2x2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #if WATCH
@@ -1663,6 +1671,7 @@ namespace XamCore.SpriteKit {
 		IntPtr InitWithNameFloatMatrix3 (string name, Matrix3 value);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("initWithName:matrixFloat3x3:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #if WATCH
@@ -1679,6 +1688,7 @@ namespace XamCore.SpriteKit {
 		IntPtr InitWithNameFloatMatrix4 (string name, Matrix4 value);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("initWithName:matrixFloat4x4:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 #if WATCH
@@ -1707,6 +1717,7 @@ namespace XamCore.SpriteKit {
 		Vector2 _FloatVector2Value { get; set; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("vectorFloat2Value", ArgumentSemantic.Assign)]
 #if WATCH
 		Vector2 FloatVector2Value {
@@ -1725,6 +1736,7 @@ namespace XamCore.SpriteKit {
 		Vector3 _FloatVector3Value { get; set; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("vectorFloat3Value", ArgumentSemantic.Assign)]
 #if WATCH
 		Vector3 FloatVector3Value {
@@ -1743,6 +1755,7 @@ namespace XamCore.SpriteKit {
 		Vector4 _FloatVector4Value { get; set; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("vectorFloat4Value", ArgumentSemantic.Assign)]
 #if WATCH
 		Vector4 FloatVector4Value {
@@ -1761,6 +1774,7 @@ namespace XamCore.SpriteKit {
 		Matrix2 _FloatMatrix2Value { get; set; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("matrixFloat2x2Value", ArgumentSemantic.Assign)]
 #if WATCH
 		Matrix2 FloatMatrix2x2Value {
@@ -1779,6 +1793,7 @@ namespace XamCore.SpriteKit {
 		Matrix3 _FloatMatrix3Value { get; set; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("matrixFloat3x3Value", ArgumentSemantic.Assign)]
 #if WATCH
 		Matrix3 FloatMatrix3x3Value {
@@ -1797,6 +1812,7 @@ namespace XamCore.SpriteKit {
 		Matrix4 _FloatMatrix4Value { get; set; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("matrixFloat4x4Value", ArgumentSemantic.Assign)]
 #if WATCH
 		Matrix4 FloatMatrix4x4Value {
@@ -1936,6 +1952,7 @@ namespace XamCore.SpriteKit {
 		SKAction ScaleYTo (nfloat scale, double sec);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Static]
 		[Export ("scaleToSize:duration:")]
 		SKAction ScaleTo (CGSize size, double sec);
@@ -2254,18 +2271,21 @@ namespace XamCore.SpriteKit {
 		// SKAction_SKWarpable
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Static]
 		[Export ("warpTo:duration:")]
 		[return: NullAllowed]
 		SKAction WarpTo (SKWarpGeometry warp, double duration);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Static]
 		[Export ("animateWithWarps:times:")]
 		[return: NullAllowed]
 		SKAction Animate (SKWarpGeometry[] warps, NSNumber[] times);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Static]
 		[Export ("animateWithWarps:times:restore:")]
 		[return: NullAllowed]
@@ -2794,6 +2814,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[iOS (10,0)][Mac (10,12)]
+	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface SKTileDefinition : NSCopying, NSCoding
@@ -2866,6 +2887,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[iOS (10,0)][Mac (10,12)]
+	[TV (10,0)]
 	[BaseType (typeof(SKNode))]
 	interface SKTileMapNode : NSCopying, NSCoding
 	{
@@ -2963,6 +2985,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[iOS (10,0)][Mac (10,12)]
+	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
 	interface SKTileSet : NSCopying, NSCoding
 	{
@@ -3008,6 +3031,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[iOS (10,0)][Mac (10,12)]
+	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
 	interface SKTileGroup : NSCopying, NSCoding
 	{
@@ -3038,6 +3062,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[iOS (10,0)][Mac (10,12)]
+	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
 	interface SKTileGroupRule : NSCopying, NSCoding
 	{
@@ -3060,11 +3085,13 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[iOS (10,0)][Mac (10,12)]
+	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
 	interface SKWarpGeometry : NSCopying, NSCoding {}
 
 	[Watch (3,0)]
 	[iOS (10,0)][Mac (10,12)]
+	[TV (10,0)]
 	[Protocol]
 	interface SKWarpable
 	{
@@ -3079,6 +3106,7 @@ namespace XamCore.SpriteKit {
 
 	[Watch (3,0)]
 	[iOS (10,0)][Mac (10,12)]
+	[TV (10,0)]
 	[BaseType (typeof(SKWarpGeometry))]
 	[DisableDefaultCtor]
 	interface SKWarpGeometryGrid : NSCoding

@@ -576,6 +576,7 @@ namespace XamCore.MobileCoreServices {
 
 		[NoWatch]
 		[iOS (10,0)][Mac(10,12, onlyOn64 : true)]
+		[TV (10,0)]
 		[Field ("kUTTypeUniversalSceneDescription", "ModelIO")]
 		NSString UniversalSceneDescription { get; }
 

@@ -9334,10 +9334,12 @@ namespace XamCore.AVFoundation {
 		void DidOutputTimedMetadataGroups (AVPlayerItemMetadataOutput output, AVTimedMetadataGroup [] groups, AVPlayerItemTrack track);
 	}
 
+	[iOS (10,0)]
+	[Mac (10,12)]
+	[TV (10,0)]
 	[NoWatch]
 	[Static]
 	interface AVVideoColorPrimaries {
-		[iOS (10, 0)]
 		[Field ("AVVideoColorPrimaries_ITU_R_709_2")]
 		NSString Itu_R_709_2 { get; }
 
@@ -9345,11 +9347,10 @@ namespace XamCore.AVFoundation {
 		[Field ("AVVideoColorPrimaries_EBU_3213")]
 		NSString Ebu_3213 { get; }
 
-		[iOS (10, 0)]
 		[Field ("AVVideoColorPrimaries_SMPTE_C")]
 		NSString Smpte_C { get; }
 
-		[iOS (10, 0), NoMac]
+		[NoMac]
 		[Field ("AVVideoColorPrimaries_P3_D65")]
 		NSString P3_D65 { get; }
 	}
@@ -9474,9 +9475,15 @@ namespace XamCore.AVFoundation {
 	[NoWatch]
 	[StrongDictionary ("AVPlayerItemVideoOutputSettingsKeys")]
 	interface AVPlayerItemVideoOutputSettings {
+
+		[iOS (10,0)]
+		[TV (10,0)]
 		AVColorProperties ColorProperties { get; set; }
+
 		AVCompressionProperties CompressionProperties { get; set; }
 #if !MONOMAC
+		[iOS (10,0)]
+		[TV (10,0)]
 		bool AllowWideColor { get; set; }
 #endif
 		NSString Codec { get; set; }
@@ -9490,6 +9497,7 @@ namespace XamCore.AVFoundation {
 	[Internal]
 	interface AVPlayerItemVideoOutputSettingsKeys {
 		[iOS (10,0)]
+		[TV (10,0)]
 		[Field ("AVVideoColorPropertiesKey")]
 		NSString ColorPropertiesKey { get; }
 		
@@ -9497,6 +9505,7 @@ namespace XamCore.AVFoundation {
 		NSString CompressionPropertiesKey { get; }
 		
 		[iOS (10,0), NoMac]
+		[TV (10,0)]
 		[Field ("AVVideoAllowWideColorKey")]
 		NSString AllowWideColorKey { get; }
 		
@@ -10161,6 +10170,7 @@ namespace XamCore.AVFoundation {
 		AVSpeechUtterance FromString (string speechString);
 		
 		[iOS (10,0)]
+		[TV (10,0)]
 		[Static]
 		[Export ("speechUtteranceWithAttributedString:")]
 		AVSpeechUtterance FromString (NSAttributedString speechString);
@@ -10169,6 +10179,7 @@ namespace XamCore.AVFoundation {
 		IntPtr Constructor (string speechString);
 		
 		[iOS (10,0)]
+		[TV (10,0)]
 		[Export ("initWithAttributedString:")]
 		IntPtr Constructor (NSAttributedString speechString);
 
@@ -10180,6 +10191,7 @@ namespace XamCore.AVFoundation {
 		string SpeechString { get; }
 		
 		[iOS (10, 0)]
+		[TV (10,0)]
 		[Export ("attributedSpeechString")]
 		NSAttributedString AttributedSpeechString { get; }
 
@@ -10239,6 +10251,7 @@ namespace XamCore.AVFoundation {
 		bool ContinueSpeaking ();
 		
 		[iOS (10, 0)]
+		[TV (10,0)]
 		[NullAllowed, Export ("outputChannels", ArgumentSemantic.Retain)]
 		AVAudioSessionChannelDescription[] OutputChannels { get; set; }
 	}

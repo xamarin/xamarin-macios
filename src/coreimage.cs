@@ -57,6 +57,7 @@ namespace XamCore.CoreImage {
 		CIColor FromRgba (nfloat red, nfloat green, nfloat blue, nfloat alpha);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Static]
 		[Export ("colorWithRed:green:blue:alpha:colorSpace:")]
 		[return: NullAllowed]
@@ -67,6 +68,7 @@ namespace XamCore.CoreImage {
 		CIColor FromRgb (nfloat red, nfloat green, nfloat blue);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Static]
 		[Export ("colorWithRed:green:blue:colorSpace:")]
 		[return: NullAllowed]
@@ -85,6 +87,7 @@ namespace XamCore.CoreImage {
 		IntPtr Constructor (nfloat red, nfloat green, nfloat blue);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("initWithRed:green:blue:colorSpace:")]
 		IntPtr Constructor (nfloat red, nfloat green, nfloat blue, CGColorSpace colorSpace);
 
@@ -93,6 +96,7 @@ namespace XamCore.CoreImage {
 		IntPtr Constructor (nfloat red, nfloat green, nfloat blue, nfloat alpha);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("initWithRed:green:blue:alpha:colorSpace:")]
 		IntPtr Constructor (nfloat red, nfloat green, nfloat blue, nfloat alpha, CGColorSpace colorSpace);
 
@@ -122,51 +126,61 @@ namespace XamCore.CoreImage {
 		// conflicting names means we have to keep the *Color suffix on them
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Static]
 		[Export ("blackColor")]
 		CIColor BlackColor { get; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Static]
 		[Export ("whiteColor")]
 		CIColor WhiteColor { get; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Static]
 		[Export ("grayColor")]
 		CIColor GrayColor { get; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Static]
 		[Export ("redColor")]
 		CIColor RedColor { get; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Static]
 		[Export ("greenColor")]
 		CIColor GreenColor { get; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Static]
 		[Export ("blueColor")]
 		CIColor BlueColor { get; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Static]
 		[Export ("cyanColor")]
 		CIColor CyanColor { get; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Static]
 		[Export ("magentaColor")]
 		CIColor MagentaColor { get; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Static]
 		[Export ("yellowColor")]
 		CIColor YellowColor { get; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Static]
 		[Export ("clearColor")]
 		CIColor ClearColor { get; }
@@ -274,6 +288,7 @@ namespace XamCore.CoreImage {
 		CGImage CreateCGImage (CIImage image, CGRect fromRect, int /* CIFormat = int */ ciImageFormat, [NullAllowed] CGColorSpace colorSpace);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("createCGImage:fromRect:format:colorSpace:deferred:")]
 		[return: NullAllowed]
 		CGImage CreateCGImage (CIImage image, CGRect fromRect, CIFormat format, [NullAllowed] CGColorSpace colorSpace, bool deferred);
@@ -295,6 +310,7 @@ namespace XamCore.CoreImage {
 #endif
 
 		[iOS (10,0)]
+		[TV (10,0)]
 		[Export ("clearCaches")]
 		void ClearCaches ();
 
@@ -345,6 +361,7 @@ namespace XamCore.CoreImage {
 		CGColorSpace WorkingColorSpace { get; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("workingFormat")]
 		CIFormat WorkingFormat { get; }
 
@@ -354,6 +371,7 @@ namespace XamCore.CoreImage {
 		NSString OutputPremultiplied { get; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Internal]
 		[Field ("kCIContextCacheIntermediates", "+CoreImage")]
 		NSString CacheIntermediates { get; }
@@ -401,7 +419,7 @@ namespace XamCore.CoreImage {
 		[Export ("name")]
 		string Name {
 			get;
-			[iOS (10,0)]
+			[iOS (10,0)][TV (10,0)]
 			set;
 		 }
 
@@ -483,36 +501,43 @@ namespace XamCore.CoreImage {
 		// CIRAWFilter (CIFilter)
 
 		[iOS (10,0)]
+		[TV (10,0)]
 		[Static]
 		[Export ("filterWithImageURL:options:")]
 		CIFilter CreateRawFilter (NSUrl url, NSDictionary options);
 
 		[iOS (10,0)]
+		[TV (10,0)]
 		[Static]
 		[Wrap ("CreateRawFilter (url, options?.Dictionary)")]
 		CIFilter CreateRawFilter (NSUrl url, CIRawFilterOptions options);
 
 		[iOS (10,0)]
+		[TV (10,0)]
 		[Static]
 		[Export ("filterWithImageData:options:")]
 		CIFilter CreateRawFilter (NSData data, NSDictionary options);
 
 		[iOS (10,0)]
+		[TV (10,0)]
 		[Static]
 		[Wrap ("CreateRawFilter (data, options?.Dictionary)")]
 		CIFilter CreateRawFilter (NSData data, CIRawFilterOptions options);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Static]
 		[Export ("filterWithCVPixelBuffer:properties:options:")]
 		CIFilter CreateRawFilter (CVPixelBuffer pixelBuffer, NSDictionary properties, NSDictionary options);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Static]
 		[Wrap ("CreateRawFilter (pixelBuffer, properties, options?.Dictionary)")]
 		CIFilter CreateRawFilter (CVPixelBuffer pixelBuffer, NSDictionary properties, CIRawFilterOptions options);
 	}
 
+	[TV (10,0)]
 	[Static]
 	[Internal]
 	interface CIRawFilterKeys {
@@ -625,6 +650,7 @@ namespace XamCore.CoreImage {
 		NSString ActiveKeysKey { get; }
 	}
 
+	[TV (10,0)]
 	[StrongDictionary ("CIRawFilterKeys")]
 	public interface CIRawFilterOptions {
 
@@ -1572,44 +1598,54 @@ namespace XamCore.CoreImage {
 #endif
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("imageByClampingToRect:")]
 		CIImage CreateByClamping (CGRect rect);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("imageByColorMatchingColorSpaceToWorkingSpace:")]
 		[return: NullAllowed]
 		CIImage CreateByColorMatchingColorSpaceToWorkingSpace (CGColorSpace colorSpace);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("imageByColorMatchingWorkingSpaceToColorSpace:")]
 		[return: NullAllowed]
 		CIImage CreateByColorMatchingWorkingSpaceToColorSpace (CGColorSpace colorSpace);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("imageByPremultiplyingAlpha")]
 		CIImage CreateByPremultiplyingAlpha ();
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("imageByUnpremultiplyingAlpha")]
 		CIImage CreateByUnpremultiplyingAlpha ();
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("imageBySettingAlphaOneInExtent:")]
 		CIImage CreateBySettingAlphaOne (CGRect extent);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("imageByApplyingGaussianBlurWithSigma:")]
 		CIImage CreateByApplyingGaussianBlur (double sigma);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Export ("imageBySettingProperties:")]
 		CIImage CreateBySettingProperties (NSDictionary properties);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[NullAllowed, Export ("pixelBuffer")]
 		CVPixelBuffer PixelBuffer { get; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[NullAllowed, Export ("CGImage")]
 		CGImage CGImage { get; }
 	}
@@ -2029,6 +2065,7 @@ namespace XamCore.CoreImage {
 
 		[iOS (10,0)]
 		[Mac (10,12)]
+		[TV (10,0)]
 		[Field ("CIDetectorMaxFeatureCount"), Internal]
 		NSString MaxFeatureCount { get; }
 
@@ -2227,6 +2264,7 @@ namespace XamCore.CoreImage {
 #endif
 
 	[iOS (10,0)][Mac (10,12)]
+	[TV (10,0)]
 	[BaseType (typeof (NSObject))]
 	interface CIImageProcessorKernel {
 		[Static]
@@ -4339,6 +4377,7 @@ namespace XamCore.CoreImage {
 	[CoreImageFilter]
 	[iOS (10,0)]
 	[Mac (10,12)]
+	[TV (10,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIClamp {
 
@@ -4349,6 +4388,7 @@ namespace XamCore.CoreImage {
 	[CoreImageFilter]
 	[iOS (10,0)]
 	[Mac (10,12)]
+	[TV (10,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIHueSaturationValueGradient {
 
@@ -4371,6 +4411,7 @@ namespace XamCore.CoreImage {
 	[CoreImageFilter]
 	[iOS (10,0)]
 	[Mac (10,12)]
+	[TV (10,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CINinePartStretched {
 
@@ -4387,6 +4428,7 @@ namespace XamCore.CoreImage {
 	[CoreImageFilter]
 	[iOS (10,0)]
 	[Mac (10,12)]
+	[TV (10,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CINinePartTiled {
 
@@ -4406,6 +4448,7 @@ namespace XamCore.CoreImage {
 	[CoreImageFilter]
 	[iOS (10,0)]
 	[Mac (10,12)] // filter says 10.11 but it fails when I run it on El Capitan
+	[TV (10,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIThermal {
 	}
@@ -4413,6 +4456,7 @@ namespace XamCore.CoreImage {
 	[CoreImageFilter]
 	[iOS (10,0)]
 	[Mac (10,12)] // filter says 10.11 but it fails when I run it on El Capitan
+	[TV (10,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIXRay {
 	}

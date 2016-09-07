@@ -64,6 +64,7 @@ namespace XamCore.OpenGLES {
 		bool PresentRenderBuffer (nuint target);
 
 		[iOS (10,0)]
+		[TV (10,0)]
 		[Export ("presentRenderbuffer:atTime:")]
 		bool PresentRenderBuffer (nuint target, double presentationTime);
 

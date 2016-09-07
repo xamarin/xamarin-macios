@@ -431,6 +431,7 @@ namespace XamCore.GameKit {
 
 	[Watch (3,0)]
 	[iOS (10,0)][Mac (10,12)]
+	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
 	interface GKBasePlayer
 	{
@@ -443,6 +444,7 @@ namespace XamCore.GameKit {
 
 	[NoWatch]
 	[iOS (10,0)][Mac (10,12)]
+	[TV (10,0)]
 	[BaseType (typeof(GKBasePlayer))]
 	interface GKCloudPlayer
 	{
