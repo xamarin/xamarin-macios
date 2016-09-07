@@ -573,6 +573,7 @@
     <Compile Include="GameplayKit\GKNoiseTests.cs" />
     <Compile Include="CoreMidi\MidiEndpointTest.cs" />
     <Compile Include="HealthKit\CdaDocumentSampleTest.cs" />
+    <Compile Include="AVFoundation\CapturePhotoOutputTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>

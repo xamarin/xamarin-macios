@@ -90,6 +90,11 @@ namespace Introspection {
 			case "CAMetalLayer":
 				return (Runtime.Arch == Arch.SIMULATOR);
 
+			// iOS 10 - this type can only be instantiated on devices, but the selectors are forwarded
+			//  to a MTLHeapDescriptorInternal and don't respond - so we'll add unit tests for them
+			case "MTLHeapDescriptor":
+				return Runtime.Arch == Arch.DEVICE;
+
 			default:
 				return base.Skip (type);
 			}

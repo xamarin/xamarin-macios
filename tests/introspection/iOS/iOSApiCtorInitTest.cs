@@ -176,6 +176,10 @@ namespace Introspection {
 			case "MPMediaItemArtwork":
 				// NSInvalidArgumentException Reason: image must be non-nil
 				return true;
+
+			// iOS 10 - this works only on devices, so we skip the simulator
+			case "MTLHeapDescriptor":
+				return Runtime.Arch == Arch.SIMULATOR;
 			default:
 				return base.Skip (type);
 			}
