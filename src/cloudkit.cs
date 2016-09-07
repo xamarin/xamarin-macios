@@ -1162,11 +1162,11 @@ namespace XamCore.CloudKit {
 
 		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 		[Field ("CKRecordParentKey")]
-		NSString RecordParentKey { get; }
+		NSString ParentKey { get; }
 
 		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 		[Field ("CKRecordShareKey")]
-		NSString RecordShareKey { get; }
+		NSString ShareKey { get; }
 
 		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
 		[Field ("CKRecordTypeShare")]
