@@ -130,26 +130,32 @@ namespace XamCore.CoreGraphics {
 		NSString Dcip3 { get; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[Watch (3,0)]
 		[Field ("kCGColorSpaceExtendedSRGB")]
 		NSString ExtendedSrgb { get; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[Watch (3,0)]
 		[Field ("kCGColorSpaceLinearSRGB")]
 		NSString LinearSrgb { get; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[Watch (3,0)]
 		[Field ("kCGColorSpaceExtendedLinearSRGB")]
 		NSString ExtendedLinearSrgb { get; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[Watch (3,0)]
 		[Field ("kCGColorSpaceExtendedGray")]
 		NSString ExtendedGray { get; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[Watch (3,0)]
 		[Field ("kCGColorSpaceLinearGray")]
 		NSString LinearGray { get; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[Watch (3,0)]
 		[Field ("kCGColorSpaceExtendedLinearGray")]
 		NSString ExtendedLinearGray { get; }
 

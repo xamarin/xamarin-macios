@@ -572,6 +572,7 @@ namespace XamCore.Security {
 		}
 
 		[iOS (10,0)][Mac (10,12)]
+		[Watch (3,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern int SSLReHandshake (IntPtr /* SSLContextRef* */ context);
 

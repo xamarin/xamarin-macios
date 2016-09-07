@@ -65,6 +65,7 @@ namespace XamCore.Contacts {
 		string PhoneticFamilyName { get; }
 
 		[iOS (10,0)][Mac (10,12, onlyOn64: true)]
+		[Watch (3,0)]
 		[Export ("phoneticOrganizationName")]
 		string PhoneticOrganizationName { get; }
 
@@ -217,6 +218,7 @@ namespace XamCore.Contacts {
 		NSString PhoneticFamilyName { get; }
 
 		[iOS (10,0)][Mac (10,12, onlyOn64: true)]
+		[Watch (3,0)]
 		[Field ("CNContactPhoneticOrganizationNameKey")]
 		NSString PhoneticOrganizationName { get; }
 
@@ -801,6 +803,7 @@ namespace XamCore.Contacts {
 		string PhoneticFamilyName { get; set; }
 
 		[iOS (10,0)][Mac (10,12, onlyOn64: true)]
+		[Watch (3,0)]
 		[New]
 		[Export ("phoneticOrganizationName")]
 		string PhoneticOrganizationName { get; set; }
