@@ -1707,6 +1707,8 @@ namespace Xamarin.Bundler {
 				return;
 			
 			Parallel.ForEach (this, new ParallelOptions () { MaxDegreeOfParallelism = Environment.ProcessorCount }, Execute);
+
+			Clear ();
 		}
 	}
 
@@ -1839,6 +1841,49 @@ namespace Xamarin.Bundler {
 		{
 			if (Compile () != 0)
 				throw new MonoTouchException (5103, true, "Failed to compile the file '{0}'. Please file a bug report at http://bugzilla.xamarin.com", InputFile);
+		}
+	}
+
+	internal class PinvokesTask : CompileTask
+	{
+		public static void Create (List<BuildTask> tasks, IEnumerable<Abi> abis, Target target, string ifile)
+		{
+			foreach (var abi in abis)
+				Create (tasks, abi, target, ifile);
+		}
+
+		public static void Create (List<BuildTask> tasks, Abi abi, Target target, string ifile)
+		{
+			var arch = abi.AsArchString ();
+			var ext = Driver.App.FastDev ? ".dylib" : ".o";
+			var ofile = Path.Combine (Cache.Location, Path.GetFileNameWithoutExtension (ifile) + "." + arch + ext);
+
+			if (!Application.IsUptodate (ifile, ofile)) {
+				var task = new PinvokesTask ()
+				{
+					Target = target,
+					Abi = abi,
+					InputFile = ifile,
+					OutputFile = ofile,
+					SharedLibrary = Driver.App.FastDev,
+					Language = "objective-c++",
+				};
+				if (Driver.App.FastDev) {
+					task.CompilerFlags.AddFramework ("Foundation");
+					task.CompilerFlags.LinkWithXamarin ();
+				}
+				tasks.Add (task);
+			} else {
+				Driver.Log (3, "Target '{0}' is up-to-date.", ofile);
+			}
+
+			target.LinkWith (ofile);
+		}
+
+		protected override void Build ()
+		{
+			if (Compile () != 0)
+				throw new MonoTouchException (4002, true, "Failed to compile the generated code for P/Invoke methods. Please file a bug report at http://bugzilla.xamarin.com");
 		}
 	}
 

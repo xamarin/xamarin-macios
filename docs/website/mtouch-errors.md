@@ -885,6 +885,10 @@ Either disable Bitcode support or enable LLVM.
 
 An error occurred when generating main.m. Please file a bug at http://bugzilla.xamarin.com.
 
+<h3><a name="MT4002"/>MT4002 Failed to compile the generated code for P/Invoke methods. Please file a bug report at http://bugzilla.xamarin.com</h3>
+
+Failed to compile the generated code for P/Invoke methods. Please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
 <!--
   MT41xx registrar.m
   -->
