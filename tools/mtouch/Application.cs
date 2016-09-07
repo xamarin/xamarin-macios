@@ -1088,7 +1088,7 @@ namespace Xamarin.Bundler {
 				return;
 			}
 			catch (Exception e) {
-				ErrorHelper.Warning (95, $"Aot files could not be copied to the destination directory {dest}: Could not start process."); 
+				ErrorHelper.Warning (95, e, $"Aot files could not be copied to the destination directory {dest}: Could not start process."); 
 				return;
 			}
 		}
