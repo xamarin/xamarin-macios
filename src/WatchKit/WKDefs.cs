@@ -209,4 +209,11 @@ namespace XamCore.WatchKit {
 		Left,
 		Right
 	}
+
+	[Watch (3,0)][NoiOS]
+	[Native]
+	public enum WKWaterResistanceRating : nint {
+		Ipx7,
+		Wr50,
+	}
 }
