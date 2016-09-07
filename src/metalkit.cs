@@ -141,6 +141,7 @@ namespace XamCore.MetalKit {
 		NSString AllocateMipmapsKey { get; }
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[TV (10,0)]
 		[Field ("MTKTextureLoaderOptionGenerateMipmaps")]
 		NSString GenerateMipmapsKey { get; }
 
@@ -154,25 +155,30 @@ namespace XamCore.MetalKit {
 		NSString TextureCpuCacheModeKey { get; }
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[TV (10,0)]
 		[Field ("MTKTextureLoaderOptionTextureStorageMode")]
 		NSString TextureStorageModeKey { get; }
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[TV (10,0)]
 		[Field ("MTKTextureLoaderOptionCubeLayout")]
 		NSString CubeLayoutKey { get; }
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[TV (10,0)]
 		[Field ("MTKTextureLoaderOptionOrigin")]
 		NSString OriginKey { get; }
 	}
 
 	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+	[TV (10,0)]
 	enum MTKTextureLoaderCubeLayout {
 		[Field ("MTKTextureLoaderCubeLayoutVertical")]
 		Vertical,
 	}
 
 	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+	[TV (10,0)]
 	enum MTKTextureLoaderOrigin {
 		[Field ("MTKTextureLoaderOriginTopLeft")]
 		TopLeft,
@@ -186,6 +192,7 @@ namespace XamCore.MetalKit {
 	interface MTKTextureLoaderOptions {
 		bool AllocateMipmaps { get; set; }
 
+		[TV (10,0)]
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		bool GenerateMipmaps { get; }
 

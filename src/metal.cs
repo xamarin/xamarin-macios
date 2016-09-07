@@ -1812,6 +1812,7 @@ namespace XamCore.Metal {
 		MTLRenderPassDescriptor CreateRenderPassDescriptor ();
 		
 		[NoiOS, Mac (10,11)]
+		[NoTV]
 		[Export ("renderTargetArrayLength")]
 		nuint RenderTargetArrayLength { get; set; }
 	}

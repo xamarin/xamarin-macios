@@ -431,11 +431,13 @@ namespace XamCore.AudioUnit {
 		float GetValue (string str);
 
 		[iOS (10,0), Mac (10,12, onlyOn64 : true)]
+		[TV (10,0)]
 		[Internal]
 		[Export ("setValue:originator:atHostTime:eventType:")]
 		void SetValue (float value, IntPtr originator, ulong hostTime, AUParameterAutomationEventType eventType);
 
 		[iOS (10,0), Mac (10,12, onlyOn64 : true)]
+		[TV (10,0)]
 		[Wrap ("SetValue (value, originator.ObserverToken, hostTime, eventType)")]
 		void SetValue (float value, AUParameterObserverToken originator, ulong hostTime, AUParameterAutomationEventType eventType);
 	}
@@ -502,11 +504,13 @@ namespace XamCore.AudioUnit {
 		AUImplementorDisplayNameWithLengthCallback ImplementorDisplayNameWithLengthCallback { get; set; }
 
 		[iOS (10,0), Mac (10,12, onlyOn64 : true)]
+		[TV (10,0)]
 		[Internal]
 		[Export ("tokenByAddingParameterAutomationObserver:")]
 		IntPtr _GetToken (AUParameterAutomationObserver observer);
 
 		[iOS (10,0), Mac (10,12, onlyOn64 : true)]
+		[TV (10,0)]
 		[Wrap ("new AUParameterObserverToken (_GetToken (observer))")]
 		AUParameterObserverToken GetToken (AUParameterAutomationObserver observer);
 	}

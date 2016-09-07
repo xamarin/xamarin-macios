@@ -382,11 +382,13 @@ namespace XamCore.CoreGraphics {
 
 		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
+		[TV (10,0)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern /* CFDataRef* */ IntPtr CGColorSpaceCopyICCData (/* CGColorSpaceRef */ IntPtr space);
 
 		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
+		[TV (10,0)]
 		public NSData GetIccData ()
 		{
 			IntPtr ptr = CGColorSpaceCopyICCData (handle);
@@ -394,10 +396,12 @@ namespace XamCore.CoreGraphics {
 		}
 
 		[iOS (10,0)]
+		[TV (10,0)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern unsafe /* CFStringRef* */ IntPtr CGColorSpaceCopyName (/* CGColorSpaceRef */ IntPtr space);
 
 		[iOS (10,0)]
+		[TV (10,0)]
 		public string Name {
 			get {
 				return CFString.FetchString (CGColorSpaceCopyName (handle));
@@ -406,11 +410,13 @@ namespace XamCore.CoreGraphics {
 
 		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
+		[TV (10,0)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern bool CGColorSpaceIsWideGamutRGB (/* CGColorSpaceRef */ IntPtr space);
 
 		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
+		[TV (10,0)]
 		public bool IsWideGamutRgb {
 			get {
 				return CGColorSpaceIsWideGamutRGB (handle);
@@ -418,10 +424,12 @@ namespace XamCore.CoreGraphics {
 		}
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern bool CGColorSpaceSupportsOutput (/* CGColorSpaceRef */ IntPtr space);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		public bool SupportsOutput {
 			get {
 				return CGColorSpaceSupportsOutput (handle);

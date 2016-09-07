@@ -249,6 +249,7 @@ namespace XamCore.MediaPlayer {
 	[DisableDefaultCtor]
 	public interface MPMediaItemArtwork {
 		[iOS (10,0)]
+		[TV (10,0)]
 		[Export ("initWithBoundsSize:requestHandler:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (CGSize boundsSize, Func<CGSize, UIImage> requestHandler);
@@ -1290,26 +1291,32 @@ namespace XamCore.MediaPlayer {
 		NSString PropertyCurrentLanguageOptions { get; }
 
 		[iOS (10,0)]
+		[TV (10,0)]
 		[Field ("MPNowPlayingInfoCollectionIdentifier")]
 		NSString PropertyCollectionIdentifier { get; }
 
 		[iOS (10,0)]
+		[TV (10,0)]
 		[Field ("MPNowPlayingInfoPropertyExternalContentIdentifier")]
 		NSString PropertyExternalContentIdentifier { get; }
 
 		[iOS (10,0)]
+		[TV (10,0)]
 		[Field ("MPNowPlayingInfoPropertyExternalUserProfileIdentifier")]
 		NSString PropertyExternalUserProfileIdentifier { get; }
 
 		[iOS (10,0)]
+		[TV (10,0)]
 		[Field ("MPNowPlayingInfoPropertyPlaybackProgress")]
 		NSString PropertyPlaybackProgress { get; }
 
 		[iOS (10,0)]
+		[TV (10,0)]
 		[Field ("MPNowPlayingInfoPropertyMediaType")]
 		NSString PropertyMediaType { get; }
 
 		[iOS (10,0)]
+		[TV (10,0)]
 		[Field ("MPNowPlayingInfoPropertyIsLiveStream")]
 		NSString PropertyIsLiveStream { get; }
 	}
@@ -1709,6 +1716,7 @@ namespace XamCore.MediaPlayer {
 		MPNowPlayingInfoLanguageOption LanguageOption { get; }
 
 		[iOS (10,0)]
+		[TV (10,0)]
 		[Export ("setting")]
 		MPChangeLanguageOptionSetting Setting { get; }
 	}
@@ -1722,6 +1730,7 @@ namespace XamCore.MediaPlayer {
 		MPShuffleType ShuffleType { get; }
 
 		[iOS (10,0)]
+		[TV (10,0)]
 		[Export ("preservesShuffleMode")]
 		bool PreservesShuffleMode { get; }
 	}
@@ -1735,6 +1744,7 @@ namespace XamCore.MediaPlayer {
 		MPRepeatType RepeatType { get; }
 
 		[iOS (10,0)]
+		[TV (10,0)]
 		[Export ("preservesRepeatMode")]
 		bool PreservesRepeatMode { get; }
 	}

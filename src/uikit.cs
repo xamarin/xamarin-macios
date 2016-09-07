@@ -5488,6 +5488,7 @@ namespace XamCore.UIKit {
 		NSNumber[] AllowedPressTypes { get; set; }
 
 		[iOS (9,2)]
+		[TV (9,1)]
 		[Export ("requiresExclusiveTouchType")]
 		bool RequiresExclusiveTouchType { get; set; }
 

@@ -163,10 +163,12 @@ namespace XamCore.CoreVideo {
 		NSString TransferFunction_UseGamma { get; }
 
 		[iOS (9,0), Mac (10,11)]
+		[TV (10,0)]
 		[Field ("kCVImageBufferTransferFunction_ITU_R_2020")]
 		NSString TransferFunction_ITU_R_2020 { get; }
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[Field ("kCVImageBufferTransferFunction_SMPTE_ST_428_1")]
 		NSString TransferFunction_SMPTE_ST_428_1 { get; }
 

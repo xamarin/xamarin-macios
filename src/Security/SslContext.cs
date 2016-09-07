@@ -552,10 +552,12 @@ namespace XamCore.Security {
 #endif
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern int SSLSetSessionConfig (IntPtr /* SSLContextRef* */ context, IntPtr /* CFStringRef* */ config);
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		public int SetSessionConfig (NSString config)
 		{
@@ -566,6 +568,7 @@ namespace XamCore.Security {
 		}
 
 		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
 		public int SetSessionConfig (SslSessionConfig config)
 		{
 			return SetSessionConfig (config.GetConstant ());
@@ -573,10 +576,13 @@ namespace XamCore.Security {
 
 		[iOS (10,0)][Mac (10,12)]
 		[Watch (3,0)]
+		[TV (10,0)]
 		[DllImport (Constants.SecurityLibrary)]
 		static extern int SSLReHandshake (IntPtr /* SSLContextRef* */ context);
 
 		[iOS (10,0)][Mac (10,12)]
+		[Watch (3,0)]
+		[TV (10,0)]
 		public int ReHandshake ()
 		{
 			return SSLReHandshake (Handle);
