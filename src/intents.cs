@@ -3456,6 +3456,10 @@ namespace XamCore.Intents {
 		INSetAudioSourceInCarIntentResponseCode Code { get; }
 	}
 
+	// HACK only to please the generator - which does not (normally) know the type hierarchy in the
+	// binding files. The lack of namespace will generate the correct code for the C# compiler
+	interface NSUnitTemperature : NSUnit {}
+
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (INIntent))]
