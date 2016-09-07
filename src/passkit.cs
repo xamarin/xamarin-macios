@@ -708,6 +708,7 @@ namespace XamCore.PassKit {
 		NSString Ecc_V2 { get; }
 
 		[iOS (10,0)]
+		[Watch (3,0)]
 		[Field ("PKEncryptionSchemeRSA_V2")]
 		NSString Rsa_V2 { get; }
 	}

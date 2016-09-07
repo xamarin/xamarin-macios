@@ -1296,6 +1296,7 @@ namespace XamCore.GameKit {
 
 	[BaseType (typeof (NSObject))]
 	[Since (4,2)][MountainLion]
+	[Watch (3,0)]
 	interface GKAchievement : NSSecureCoding {
 		[NoTV]
 		[Availability (Deprecated = Platform.iOS_6_0 | Platform.Mac_10_10, Message = "Use IsHidden on the GKAchievementDescription class instead")]
@@ -1439,6 +1440,7 @@ namespace XamCore.GameKit {
 
 	[BaseType (typeof (NSObject))]
 	[Since (4,2)][MountainLion]
+	[Watch (3,0)]
 	interface GKAchievementDescription : NSSecureCoding {
 		[Export ("identifier", ArgumentSemantic.Copy)]
 		string Identifier { get; }
@@ -1633,6 +1635,7 @@ namespace XamCore.GameKit {
 	}
 
 	[Since (5,0)]
+	[Watch (3,0)]
 	[BaseType (typeof (NSObject))]
 	interface GKTurnBasedParticipant {
 		[iOS (8,0)][Mac (10,10)]
@@ -1665,6 +1668,7 @@ namespace XamCore.GameKit {
 	[Model]
 	[Protocol]
 	[Availability (Introduced = Platform.iOS_5_0 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use GKLocalPlayer.RegisterListener with an object that implements IGKTurnBasedEventListener.")]
+	[Watch (3,0)]
 	interface GKTurnBasedEventHandlerDelegate {
 #if !XAMCORE_2_0
 		[Export ("handleInviteFromGameCenterDoNotUse:")]
@@ -1701,6 +1705,7 @@ namespace XamCore.GameKit {
 	[NoTV]
 	[Availability (Introduced = Platform.iOS_5_0 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use GKLocalPlayer.RegisterListener with an object that implements IGKTurnBasedEventListener.")]
 	[BaseType (typeof (NSObject))]
+	[Watch (3,0)]
 	interface GKTurnBasedEventHandler {
 
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
@@ -1724,6 +1729,7 @@ namespace XamCore.GameKit {
 	delegate void GKTurnBasedMatchData (NSData matchData, NSError error);
 
 	[Since (5,0)]
+	[Watch (3,0)]
 	[BaseType (typeof (NSObject))]
 	interface GKTurnBasedMatch {
 		[Export ("matchID")]
@@ -2131,6 +2137,7 @@ namespace XamCore.GameKit {
 #endif
 
 	[iOS (7,0), Mac (10,10)]
+	[Watch (3,0)]
 	[BaseType (typeof (NSObject))]
 	interface GKTurnBasedExchange
 	{
@@ -2180,6 +2187,7 @@ namespace XamCore.GameKit {
 	}
 
 	[iOS (7,0), Mac (10,10)]
+	[Watch (3,0)]
 	[BaseType (typeof (NSObject))]
 	interface GKTurnBasedExchangeReply
 	{
@@ -2198,6 +2206,7 @@ namespace XamCore.GameKit {
 	}
 
 	[Since (7,0), Mac (10,10)]
+	[Watch (3,0)]
 	[Model, Protocol, BaseType (typeof (NSObject))]
 	interface GKLocalPlayerListener : GKTurnBasedEventListener
 #if !TVOS && !WATCH
@@ -2248,6 +2257,7 @@ namespace XamCore.GameKit {
 	}
 
 	[Since (7,0), Mac (10,10)]
+	[Watch (3,0)]
 	[Model, Protocol, BaseType (typeof (NSObject))]
 	interface GKTurnBasedEventListener
 	{
