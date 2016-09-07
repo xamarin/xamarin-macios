@@ -142,6 +142,10 @@ namespace XamCore.HealthKit {
 		[Field ("HKPredicateKeyPathWorkoutType")]
 		NSString WorkoutType { get; }
 
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HKPredicateKeyPathWorkoutTotalSwimmingStrokeCount")]
+		NSString WorkoutTotalSwimmingStrokeCount { get; }
+
 		[iOS (9,0)]
 		[Field ("HKPredicateKeyPathDevice")]
 		NSString Device { get; }
@@ -566,6 +570,18 @@ namespace XamCore.HealthKit {
 		[Watch (3,0), iOS (10,0)]
 		[Export ("WeatherHumidity")]
 		HKQuantity WeatherHumidity { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Export ("LapLength")]
+		NSString LapLength { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Export ("SwimmingLocationType")]
+		NSString SwimmingLocationType { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Export ("SwimmingStrokeStyle")]
+		NSString SwimmingStrokeStyle { get; }
 	}
 		
 	[Watch (2,0)]
@@ -648,6 +664,18 @@ namespace XamCore.HealthKit {
 		[Watch (3,0), iOS (10,0)]
 		[Field ("HKMetadataKeyWeatherHumidity")]
 		NSString WeatherHumidity { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HKMetadataKeyLapLength")]
+		NSString LapLength { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HKMetadataKeySwimmingLocationType")]
+		NSString SwimmingLocationType { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HKMetadataKeySwimmingStrokeStyle")]
+		NSString SwimmingStrokeStyle { get; }
 	}
 
 	[Watch (2,0)]
@@ -971,6 +999,11 @@ namespace XamCore.HealthKit {
 		[Export ("predicateForWorkoutsWithOperatorType:totalDistance:")]
 		NSPredicate GetPredicateForTotalDistance (NSPredicateOperatorType operatorType, HKQuantity totalDistance);
 
+		[iOS (10,0), Watch (3,0)]
+		[Static]
+		[Export ("predicateForWorkoutsWithOperatorType:totalSwimmingStrokeCount:")]
+		NSPredicate GetPredicateForTotalSwimmingStrokeCount (NSPredicateOperatorType operatorType, HKQuantity totalSwimmingStrokeCount);
+
 		// HKActivitySummaryPredicates
 
 		[iOS (9,3), Watch (2,2)]
@@ -1217,6 +1250,14 @@ namespace XamCore.HealthKit {
 		[iOS (10,0), Watch (3,0)]
 		[Field ("HKQuantityTypeIdentifierPushCount")]
 		NSString PushCount { get; }
+
+		[iOS (10,0), Watch (3,0)]
+		[Field ("HKQuantityTypeIdentifierDistanceSwimming")]
+		NSString DistanceSwimming { get; }
+
+		[iOS (10,0), Watch (3,0)]
+		[Field ("HKQuantityTypeIdentifierSwimmingStrokeCount")]
+		NSString SwimmingStrokeCount { get; }
 
 		// Blood
 		[Field ("HKQuantityTypeIdentifierOxygenSaturation")]
@@ -1732,6 +1773,10 @@ namespace XamCore.HealthKit {
 		[Export ("totalDistance", ArgumentSemantic.Retain)]
 		HKQuantity TotalDistance { get; }
 
+		[Watch (3,0), iOS (10,0)]
+		[NullAllowed, Export ("totalSwimmingStrokeCount", ArgumentSemantic.Strong)]
+		HKQuantity TotalSwimmingStrokeCount { get; }
+
 		[Static, Export ("workoutWithActivityType:startDate:endDate:")]
 		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate);
 
@@ -1769,6 +1814,16 @@ namespace XamCore.HealthKit {
 		[Wrap ("Create (workoutActivityType, startDate, endDate, duration, totalEnergyBurned, totalDistance, device, metadata == null ? null : metadata.Dictionary)")]
 		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, double duration, HKQuantity totalEnergyBurned, HKQuantity totalDistance, HKDevice device, HKMetadata metadata);
 
+		[Watch (3,0), iOS (10,0)]
+		[Static]
+		[Export ("workoutWithActivityType:startDate:endDate:workoutEvents:totalEnergyBurned:totalDistance:totalSwimmingStrokeCount:device:metadata:")]
+		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, [NullAllowed] HKWorkoutEvent[] workoutEvents, [NullAllowed] HKQuantity totalEnergyBurned, [NullAllowed] HKQuantity totalDistance, [NullAllowed] HKQuantity totalSwimmingStrokeCount, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary metadata);
+
+		[Watch (3,0), iOS (10,0)]
+		[Static]
+		[Wrap ("Create (workoutActivityType, startDate, endDate, workoutEvents, totalEnergyBurned, totalDistance, totalSwimmingStrokeCount, device, metadata == null ? null : metadata.Dictionary)")]
+		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, HKWorkoutEvent[] workoutEvents, HKQuantity totalEnergyBurned, HKQuantity totalDistance, HKQuantity totalSwimmingStrokeCount, HKDevice device, HKMetadata metadata);
+
 		// TODO: where is this thing used?
 		[Field ("HKWorkoutSortIdentifierDuration")]
 		NSString SortIdentifierDuration { get; }
@@ -1780,6 +1835,10 @@ namespace XamCore.HealthKit {
 		// TODO: where is this thing used?
 		[Field ("HKWorkoutSortIdentifierTotalEnergyBurned")]
 		NSString SortIdentifierTotalEnergyBurned { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HKWorkoutSortIdentifierTotalSwimmingStrokeCount")]
+		NSString SortIdentifierTotalSwimmingStrokeCount { get; }
 	}
 
 	[Watch (2,0)]
@@ -2072,5 +2131,11 @@ namespace XamCore.HealthKit {
 
 		[Export ("locationType", ArgumentSemantic.Assign)]
 		HKWorkoutSessionLocationType LocationType { get; set; }
+
+		[Export ("swimmingLocationType", ArgumentSemantic.Assign)]
+		HKWorkoutSwimmingLocationType SwimmingLocationType { get; set; }
+
+		[NullAllowed, Export ("lapLength", ArgumentSemantic.Copy)]
+		HKQuantity LapLength { get; set; }
 	}
 }
