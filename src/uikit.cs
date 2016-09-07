@@ -91,6 +91,22 @@ namespace XamCore.UIKit {
 		Update
 	}
 
+	[NoWatch, NoTV, iOS (10,0)]
+	[Native]
+	public enum UIImpactFeedbackStyle : nint {
+		Light,
+		Medium,
+		Heavy
+	}
+
+	[NoWatch, NoTV, iOS (10,0)]
+	[Native]
+	public enum UINotificationFeedbackType : nint {
+		Success,
+		Warning,
+		Error
+	}
+
 #if WATCH
 	// hacks to ease compilation
 	public interface CIColor {}
@@ -126,6 +142,44 @@ namespace XamCore.UIKit {
 		NSAttributedString FromTextAttachment (NSTextAttachment attachment);
 	}
 #endif
+
+	[NoWatch, NoTV, iOS (10,0)]
+	[DisableDefaultCtor]
+	[Abstract] // abstract class that should not be used directly
+	[BaseType (typeof (NSObject))]
+	interface UIFeedbackGenerator {
+
+		[Export ("prepare")]
+		void Prepare ();
+	}
+
+	[NoWatch, NoTV, iOS (10,0)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (UIFeedbackGenerator))]
+	interface UIImpactFeedbackGenerator {
+
+		[Export ("initWithStyle:")]
+		IntPtr Constructor (UIImpactFeedbackStyle style);
+
+		[Export ("impactOccurred")]
+		void ImpactOccurred ();
+	}
+
+	[NoWatch, NoTV, iOS (10,0)]
+	[BaseType (typeof (UIFeedbackGenerator))]
+	interface UINotificationFeedbackGenerator {
+
+		[Export ("notificationOccurred:")]
+		void NotificationOccurred (UINotificationFeedbackType notificationType);
+	}
+
+	[NoWatch, NoTV, iOS (10,0)]
+	[BaseType (typeof (UIFeedbackGenerator))]
+	interface UISelectionFeedbackGenerator {
+
+		[Export ("selectionChanged")]
+		void SelectionChanged ();
+	}
 
 	interface IUICloudSharingControllerDelegate { }
 
