@@ -538,7 +538,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_DetectSdkLocations" DependsOnTargets="_ComputeTargetArchitectures">
 		<Error Text="Support for Classic applications (using monotouch.dll) is obsoleted in Xamarin.iOS 10.0+. Please migrate your project to Unified (Project > Migrate to Xamarin.iOS Unified API)."
-				Condition="'$(TargetFrameworkIdentifier)' == 'MonoTouch' And !Exists('$(MonoTouchSdkRoot)/lib/mono/2.1/monotouch.dll')"/>
+				Condition="'$(TargetFrameworkIdentifier)' == 'MonoTouch'"/>
 
 		<DetectSdkLocations
 			SessionId="$(BuildSessionId)"
