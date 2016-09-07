@@ -264,6 +264,11 @@
 
 # UIKit
 
+# TODO: MUST BE FIXED by SR0 or SR1 of iOS 10 related bug https://bugzilla.xamarin.com/show_bug.cgi?id=43579
+!missing-protocol-member! UITextFieldDelegate::textFieldDidEndEditing:reason: not found
+!missing-protocol-member! UITextViewDelegate::textView:shouldInteractWithTextAttachment:inRange:interaction: not found
+!missing-protocol-member! UITextViewDelegate::textView:shouldInteractWithURL:inRange:interaction: not found
+
 ## HACK: those members are not *required* in ObjC but we made them
 ## abstract to have them inlined in UITextField and UITextView
 ## Even more confusing it that respondToSelecttor return NO on them
