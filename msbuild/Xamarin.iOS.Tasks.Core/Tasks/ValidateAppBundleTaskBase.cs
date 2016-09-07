@@ -170,6 +170,13 @@ namespace Xamarin.iOS.Tasks
 							case "com.apple.spotlight.index": // iOS
 							case "com.apple.AudioUnit-UI": // iOS
 							case "com.apple.tv-services": // tvOS
+							case "com.apple.broadcast-services": // iOS+tvOS
+							case "com.apple.callkit.call-directory": // iOS
+							case "com.apple.message-payload-provider": // iOS
+							case "com.apple.intents-service": // iOS
+							case "com.apple.intents-ui-service": // iOS
+							case "com.apple.usernotifications.content-extension": // iOS
+							case "com.apple.usernotifications.service": // iOS
 								break;
 							case "com.apple.watchkit": // iOS8.2
 								if (nsExtensionAttributes == null) {
