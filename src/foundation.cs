@@ -13976,9 +13976,8 @@ namespace XamCore.Foundation
 #if !XAMCORE_2_0
 	interface NSMeasurement : NSCopying, NSSecureCoding {
 #else
-	interface NSMeasurement<UnitType> : NSCopying, NSSecureCoding {
-// FIXME pending generator fix
-//		where UnitType : NSUnit {
+	interface NSMeasurement<UnitType> : NSCopying, NSSecureCoding
+		where UnitType : NSUnit {
 #endif
 		[Export ("unit", ArgumentSemantic.Copy)]
 		NSUnit Unit { get; }
