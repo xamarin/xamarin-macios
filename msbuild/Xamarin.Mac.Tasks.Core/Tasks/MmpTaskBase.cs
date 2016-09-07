@@ -229,7 +229,7 @@ namespace Xamarin.Mac.Tasks
 					    arg.StartsWith ("custom_bundle_name=", StringComparison.Ordinal))
 						return arg.Substring ("custom_bundle_name=".Length);
 
-				if (arg == "custo\tm_bundle_name" && i + 1 < args.Length)
+					if (arg == "custom_bundle_name" && i + 1 < args.Length)
 						return args[i + 1];
 				}
 			}
