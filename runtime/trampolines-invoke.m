@@ -47,8 +47,10 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 
 		if (has_nsobject) {
 			self = xamarin_invoke_objc_method_implementation (self, sel, (IMP) xamarin_ctor_trampoline);
+			MONO_THREAD_ATTACH;
 			marshal_return_value (context, "|", sizeof (id), self, NULL, false, NULL, &exception_gchandle);
 			xamarin_process_managed_exception_gchandle (exception_gchandle);
+			MONO_THREAD_DETACH;
 			return;
 		}
 	}

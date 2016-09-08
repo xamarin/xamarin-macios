@@ -214,7 +214,7 @@
 			"MonoDomain *", "domain"
 		),
 
-		new Export ("void", "mono_thread_detach_if_exiting"),
+		new Export ("mono_bool", "mono_thread_detach_if_exiting"),
 
 		#endregion
 
@@ -581,11 +581,29 @@
 			"void **", "stackdata"
 		),
 
+		new Export (true, "void*", "mono_threads_enter_gc_unsafe_region_unbalanced",
+			"void **", "stackdata"
+		),
+
+		new Export (true, "void", "mono_threads_exit_gc_unsafe_region_unbalanced",
+			"void *", "cookie",
+			"void **", "stackdata"
+		),
+
 		new Export (true, "void*", "mono_threads_enter_gc_safe_region",
 			"void **", "stackdata"
 		),
 
 		new Export (true, "void", "mono_threads_exit_gc_safe_region",
+			"void *", "cookie",
+			"void **", "stackdata"
+		),
+
+		new Export (true, "void*", "mono_threads_enter_gc_safe_region_unbalanced",
+			"void **", "stackdata"
+		),
+
+		new Export (true, "void", "mono_threads_exit_gc_safe_region_unbalanced",
 			"void *", "cookie",
 			"void **", "stackdata"
 		),

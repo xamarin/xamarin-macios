@@ -15,6 +15,7 @@
 
 #include <stdbool.h>
 #include <Foundation/Foundation.h>
+#include <pthread.h>
 
 #include "main.h"
 #include "mono-runtime.h"
@@ -122,7 +123,6 @@ const char *	xamarin_skip_encoding_flags (const char *encoding);
 void			xamarin_add_registration_map (struct MTRegistrationMap *map);
 
 bool			xamarin_has_managed_ref (id self);
-bool			xamarin_has_managed_ref_safe (id self);
 void			xamarin_switch_gchandle (id self, bool to_weak);
 int				xamarin_get_gchandle (id self);
 void			xamarin_free_gchandle (id self, int gchandle);
@@ -219,31 +219,59 @@ public:
 
 #define MONO_ENTER_GC_UNSAFE
 #define MONO_EXIT_GC_UNSAFE
+#define MONO_ENTER_GC_UNSAFE_UNBALANCED
+#define MONO_EXIT_GC_UNSAFE_UNBALANCED
 #define MONO_ENTER_GC_SAFE
 #define MONO_EXIT_GC_SAFE
+#define MONO_ENTER_GC_SAFE_UNBALANCED
+#define MONO_EXIT_GC_SAFE_UNBALANCED
 #define MONO_ASSERT_GC_SAFE
 #define MONO_ASSERT_GC_SAFE_OR_DETACHED
 #define MONO_ASSERT_GC_UNSAFE
 #define MONO_ASSERT_GC_STARTING
 
+static inline int
+pthread_mutex_lock_coop (pthread_mutex_t *mutex)
+{
+	return pthread_mutex_lock (mutex);
+}
+
 #else
 
 #define MONO_ENTER_GC_UNSAFE	\
 	do {	\
-		gpointer __dummy;	\
-		gpointer __gc_unsafe_cookie = mono_threads_enter_gc_unsafe_region (&__dummy)	\
+		gpointer __gc_unsafe_dummy;	\
+		gpointer __gc_unsafe_cookie = mono_threads_enter_gc_unsafe_region (&__gc_unsafe_dummy)
 
 #define MONO_EXIT_GC_UNSAFE	\
-		mono_threads_exit_gc_unsafe_region	(__gc_unsafe_cookie, &__dummy);	\
+		mono_threads_exit_gc_unsafe_region	(__gc_unsafe_cookie, &__gc_unsafe_dummy);	\
+	} while (0)
+
+#define MONO_ENTER_GC_UNSAFE_UNBALANCED	\
+	do {	\
+		gpointer __gc_unsafe_unbalanced_dummy;	\
+		gpointer __gc_unsafe_unbalanced_cookie = mono_threads_enter_gc_unsafe_region_unbalanced (&__gc_unsafe_unbalanced_dummy)
+
+#define MONO_EXIT_GC_UNSAFE_UNBALANCED	\
+		mono_threads_exit_gc_unsafe_region_unbalanced	(__gc_unsafe_unbalanced_cookie, &__gc_unbalanced_unsafe_dummy);	\
 	} while (0)
 
 #define MONO_ENTER_GC_SAFE	\
 	do {	\
-		gpointer __dummy;	\
-		gpointer __gc_safe_cookie = mono_threads_enter_gc_safe_region (&__dummy)	\
+		gpointer __gc_safe_dummy;	\
+		gpointer __gc_safe_cookie = mono_threads_enter_gc_safe_region (&__gc_safe_dummy)
 
 #define MONO_EXIT_GC_SAFE	\
-		mono_threads_exit_gc_safe_region (__gc_safe_cookie, &__dummy);	\
+		mono_threads_exit_gc_safe_region (__gc_safe_cookie, &__gc_safe_dummy);	\
+	} while (0)
+
+#define MONO_ENTER_GC_SAFE_UNBALANCED	\
+	do {	\
+		gpointer __gc_safe_unbalanced_dummy;	\
+		gpointer __gc_safe_unbalanced_cookie = mono_threads_enter_gc_safe_region_unbalanced (&__gc_safe_unbalanced_dummy)
+
+#define MONO_EXIT_GC_SAFE_UNBALANCED	\
+		mono_threads_exit_gc_safe_region_unbalanced (__gc_safe_unbalanced_cookie, &__gc_safe_unbalanced_dummy);	\
 	} while (0)
 
 //#if DEBUG
@@ -260,6 +288,21 @@ public:
 //	#define MONO_ASSERT_GC_SAFE
 //	#define MONO_ASSERT_GC_UNSAFE
 //#endif /* DEBUG */
+
+static inline int
+pthread_mutex_lock_coop (pthread_mutex_t *mutex)
+{
+	int ret;
+
+	if (pthread_mutex_trylock (mutex) == 0)
+		return 0;
+
+	MONO_ENTER_GC_SAFE;
+	ret = pthread_mutex_lock (mutex);
+	MONO_EXIT_GC_SAFE;
+
+	return ret;
+}
 
 #endif /* !TARGET_OS_WATCH */
 

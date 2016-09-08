@@ -91,6 +91,9 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 static void
 marshal_return_value (void *context, const char *type, size_t size, void *vvalue, MonoType *mtype, bool retain, MonoMethod *method, guint32 *exception_gchandle)
 {
+	// COOP: accessing managed memory (as input), so must be in unsafe mode.
+	MONO_ASSERT_GC_UNSAFE;
+
 	MonoObject *value = (MonoObject *) vvalue;
 	struct ParamIterator *it = (struct ParamIterator *) context;
 	struct CallState *state = it->state;
