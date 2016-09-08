@@ -8216,6 +8216,36 @@ namespace XamCore.AVFoundation {
 #endif
 	}
 
+	[NoTV, iOS (10,0), NoMac, NoWatch]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // init NS_UNAVAILABLE
+	interface AVCaptureDeviceDiscoverySession {
+
+		[Internal]
+		[Static]
+		[Export ("discoverySessionWithDeviceTypes:mediaType:position:")]
+		AVCaptureDeviceDiscoverySession _Create (NSArray deviceTypes, [NullAllowed] string mediaType, AVCaptureDevicePosition position);
+
+		[Export ("devices")]
+		AVCaptureDevice [] Devices { get; }
+	}
+
+	[NoTV, iOS (10,0), NoMac, NoWatch]
+	enum AVCaptureDeviceType {
+
+		[Field ("AVCaptureDeviceTypeBuiltInMicrophone")]
+		BuiltInMicrophone,
+
+		[Field ("AVCaptureDeviceTypeBuiltInWideAngleCamera")]
+		BuiltInWideAngleCamera,
+
+		[Field ("AVCaptureDeviceTypeBuiltInTelephotoCamera")]
+		BuiltInTelephotoCamera,
+
+		[Field ("AVCaptureDeviceTypeBuiltInDuoCamera")]
+		BuiltInDuoCamera,
+	}
+
 	[NoWatch]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
@@ -8235,9 +8265,11 @@ namespace XamCore.AVFoundation {
 		[Export ("connected")]
 		bool Connected { [Bind ("isConnected")] get;  }
 
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use AVCaptureDeviceDiscoverySession instead.")]
 		[Static, Export ("devices")]
 		AVCaptureDevice [] Devices { get;  }
 
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use AVCaptureDeviceDiscoverySession instead.")]
 		[Static]
 		[Export ("devicesWithMediaType:")]
 		AVCaptureDevice [] DevicesWithMediaType (string mediaType);
@@ -8278,7 +8310,7 @@ namespace XamCore.AVFoundation {
 
 		[Export ("isFocusModeSupported:")]
 		bool IsFocusModeSupported (AVCaptureFocusMode focusMode);
-		
+
 		[Export ("focusMode", ArgumentSemantic.Assign)]
 		AVCaptureFocusMode FocusMode { get; set;  }
 
@@ -8441,6 +8473,35 @@ namespace XamCore.AVFoundation {
 		[Mac (10,9)]
 		[Export ("activeVideoMaxFrameDuration", ArgumentSemantic.Copy)]
 		CMTime ActiveVideoMaxFrameDuration { get; set; }
+
+		[iOS (10,0), NoMac]
+		[Export ("lockingFocusWithCustomLensPositionSupported")]
+		bool LockingFocusWithCustomLensPositionSupported { [Bind ("isLockingFocusWithCustomLensPositionSupported")] get; }
+
+		[iOS (10,0), NoMac]
+		[Export ("lockingWhiteBalanceWithCustomDeviceGainsSupported")]
+		bool LockingWhiteBalanceWithCustomDeviceGainsSupported { [Bind ("isLockingWhiteBalanceWithCustomDeviceGainsSupported")] get; }
+
+		// From AVCaptureDevice (AVCaptureDeviceType) Category
+		[Internal]
+		[iOS (10,0), NoMac]
+		[Export ("deviceType")]
+		NSString _DeviceType { get; }
+
+		[iOS (10, 0), NoMac]
+		[Wrap ("AVCaptureDeviceTypeExtensions.GetValue (_DeviceType)")]
+		AVCaptureDeviceType DeviceType { get; }
+
+		[Internal]
+		[iOS (10,0), NoMac]
+		[Static]
+		[Export ("defaultDeviceWithDeviceType:mediaType:position:")]
+		AVCaptureDevice _DefaultDeviceWithDeviceType (NSString deviceType, string mediaType, AVCaptureDevicePosition position);
+
+		[iOS (10,0), NoMac]
+		[Static]
+		[Wrap ("AVCaptureDevice._DefaultDeviceWithDeviceType (deviceType.GetConstant (), mediaType, position)")]
+		AVCaptureDevice GetDefaultDevice (AVCaptureDeviceType deviceType, string mediaType, AVCaptureDevicePosition position);
 
 #if !MONOMAC && !WATCH
 		//
