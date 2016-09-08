@@ -64,12 +64,11 @@ namespace Introspection
 		public void Signatures ()
 		{
 			int totalPInvokes = 0;
-			int totalErrors = 0;
+			Errors = 0;
 
 			foreach (MethodInfo mi in pinvokeQuery) {
 				totalPInvokes++;
 				if (!CheckSignature (mi)) {
-					totalErrors++;
 
 					if (!ContinueOnFailure)
 						break;
@@ -78,7 +77,7 @@ namespace Introspection
 
 			AssertIfErrors (
 				"{0} errors found in {1} P/Invoke signatures validated",
-				totalErrors, totalPInvokes);
+				Errors, totalPInvokes);
 		}
 
 		protected virtual bool CheckSignature (MethodInfo mi)
