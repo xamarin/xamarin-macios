@@ -193,7 +193,7 @@ namespace XamCore.ReplayKit {
 		void DidFinish (RPBroadcastController broadcastController, [NullAllowed] NSError error);
 
 		[Export ("broadcastController:didUpdateServiceInfo:")]
-		void DidUpdateServiceInfo (RPBroadcastController broadcastController, NSDictionary<NSString, NSCoding> serviceInfo);
+		void DidUpdateServiceInfo (RPBroadcastController broadcastController, NSDictionary<NSString, INSCoding> serviceInfo);
 	}
 
 	[iOS (10,0)]
@@ -219,7 +219,7 @@ namespace XamCore.ReplayKit {
 		void LoadBroadcastingApplicationInfo (LoadBroadcastingHandler handler);
 
 		[Export ("completeRequestWithBroadcastURL:broadcastConfiguration:setupInfo:")]
-		void CompleteRequest (NSUrl broadcastURL, RPBroadcastConfiguration broadcastConfiguration, [NullAllowed] NSDictionary<NSString, NSCoding> setupInfo);
+		void CompleteRequest (NSUrl broadcastURL, RPBroadcastConfiguration broadcastConfiguration, [NullAllowed] NSDictionary<NSString, INSCoding> setupInfo);
 	}
 
 	[iOS (10,0)]
