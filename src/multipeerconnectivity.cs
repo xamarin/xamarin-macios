@@ -57,6 +57,7 @@ namespace XamCore.MultipeerConnectivity {
 		[Export ("connectedPeers")]
 		MCPeerID [] ConnectedPeers { get; }
 
+		[Async]
 		[Export ("sendResourceAtURL:withName:toPeer:withCompletionHandler:")]
 		NSProgress SendResource (NSUrl resourceUrl, string resourceName, MCPeerID peerID, [NullAllowed] Action<NSError> completionHandler);
 
@@ -88,6 +89,7 @@ namespace XamCore.MultipeerConnectivity {
 
 		#region Custom Discovery Category
 
+		[Async]
 		[Export ("nearbyConnectionDataForPeer:withCompletionHandler:")]
 		void NearbyConnectionDataForPeer (MCPeerID peerID, MCSessionNearbyConnectionDataForPeerCompletionHandler completionHandler);
 
