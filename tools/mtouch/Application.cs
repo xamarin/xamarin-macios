@@ -762,9 +762,9 @@ namespace Xamarin.Bundler {
 				throw new MonoTouchException (74, true, "Xamarin.iOS {0} does not support a deployment target of {1} for {3} (the maximum is {2}). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.iOS.", Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (Platform), PlatformName);
 			}
 
-			if (Platform == ApplePlatform.iOS && FastDev && DeploymentTarget.Major < 7) {
-				ErrorHelper.Warning (78, "Incremental builds are enabled with a deployment target < 7.0 (currently {0}). This is not supported (the resulting application will not launch on iOS 9), so the deployment target will be set to 7.0.", DeploymentTarget);
-				DeploymentTarget = new Version (7, 0);
+			if (Platform == ApplePlatform.iOS && FastDev && DeploymentTarget.Major < 8) {
+				ErrorHelper.Warning (78, "Incremental builds are enabled with a deployment target < 8.0 (currently {0}). This is not supported (the resulting application will not launch on iOS 9), so the deployment target will be set to 8.0.", DeploymentTarget);
+				DeploymentTarget = new Version (8, 0);
 			}
 
 			if (Driver.classic_only_arguments.Count > 0) {

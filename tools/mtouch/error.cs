@@ -85,7 +85,7 @@ namespace Xamarin.Bundler {
 	//					MT0075	Invalid architecture '{0}' for {1} projects. Valid architectures are: {2}
 	//					MT0076	No architecture specified (using the --abi argument). An architecture is required for {0} projects.
 	//					MT0077	WatchOS projects must be extensions.
-	//					MT0078	Incremental builds are enabled with a deployment target < 7.0 (currently {0}). This is not supported (the resulting application will not launch on iOS 9), so the deployment target will be set to 7.0.
+	//					MT0078	Incremental builds are enabled with a deployment target < 8.0 (currently {0}). This is not supported (the resulting application will not launch on iOS 9), so the deployment target will be set to 8.0.
 	//		Warning		MT0079	The recommended Xcode version for Xamarin.iOS {0} is Xcode 7.0 or later. The current Xcode version (found in {2}) is {1}.
 	//		Warning		MT0080  Disabling NewRefCount, --new-refcount:false, is deprecated.
 	//					MT0081	The command line argument --download-crash-report also requires --download-crash-report-to.
