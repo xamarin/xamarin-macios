@@ -1097,6 +1097,9 @@ QUICKLOOKUI_SOURCES = \
 REPLAYKIT_API_SOURCES = \
 	ReplayKit/RPEnums.cs \
 
+REPLAYKIT_SOURCES = \
+	ReplayKit/RPBroadcastConfiguration.cs \
+
 # SafariServices
 
 SAFARISERVICES_API_SOURCES = \
