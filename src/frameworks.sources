@@ -231,6 +231,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVAudioSessionDataSourceDescription.cs \
 	AVFoundation/AVAudioSessionPortDescription.cs \
 	AVFoundation/AVCaptureConnection.cs \
+	AVFoundation/AVCaptureDeviceDiscoverySession.cs \
 	AVFoundation/AVCaptureDeviceInput.cs \
 	AVFoundation/AVCaptureFileOutput.cs \
 	AVFoundation/AVCaptureMetadataOutput.cs \
