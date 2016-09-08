@@ -315,11 +315,11 @@ This usually indicates a bug in Xamarin.iOS; please file a bug report at http://
 
 This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.
 
-<h3><a name="MT0078"/>MT0077: Incremental builds are enabled with a deployment target < 7.0 (currently *). This is not supported (the resulting application will not launch on iOS 9), so the deployment target will be set to 7.0.</h3>
+<h3><a name="MT0078"/>MT0077: Incremental builds are enabled with a deployment target < 8.0 (currently *). This is not supported (the resulting application will not launch on iOS 9), so the deployment target will be set to 8.0.</h3>
 
-This is a warning informing that the deployment target has been set to 7.0 for this build so that incremental builds work properly.
+This is a warning informing that the deployment target has been set to 8.0 for this build so that incremental builds work properly.
 
-Incremental builds are only supported when the deployment target is at least 7.0 (because the resulting application will not launch on iOS 9 otherwise).
+Incremental builds are only supported when the deployment target is at least 8.0 (because the resulting application will not launch on iOS 9 otherwise).
 
 <h3><a name="MT0079"/>MT0078: The recommended Xcode version for Xamarin.iOS * is Xcode * or later. The current Xcode version (found in *) is *.</h3>
 
