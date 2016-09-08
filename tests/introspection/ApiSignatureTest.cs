@@ -187,6 +187,7 @@ namespace Introspection {
 		{
 			int n = 0;
 			Errors = 0;
+			ErrorData.Clear ();
 			
 			foreach (Type t in Assembly.GetTypes ()) {
 
@@ -209,7 +210,7 @@ namespace Introspection {
 				foreach (MethodBase m in t.GetConstructors (Flags)) 
 					CheckMemberSignature (m, t, class_ptr, ref n);
 			}
-			AssertIfErrors ("{0} errors found in {1} signatures validated", Errors, n);
+			AssertIfErrors ("{0} errors found in {1} signatures validated{2}", Errors, n, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
 		}
 
 		void CheckMemberSignature (MethodBase m, Type t, IntPtr class_ptr, ref int n)
