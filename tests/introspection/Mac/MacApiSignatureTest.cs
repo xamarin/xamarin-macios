@@ -112,6 +112,14 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "NSSlider":
+			case "NSSliderCell":
+				switch (selector) {
+				case "isVertical": // radar 27222357 
+				case "setVertical:": // radar 27222357
+					return true;
+				}
+				break;
 			}
 			return base.Skip (type, method, selector);
 		}

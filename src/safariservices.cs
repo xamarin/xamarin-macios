@@ -11,10 +11,35 @@ using System;
 
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
+#if !MONOMAC
 using XamCore.UIKit;
+#else
+using XamCore.AppKit;
+#endif
 
 namespace XamCore.SafariServices {
+	[Mac (10,12, onlyOn64: true)][iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	interface SFContentBlockerState
+	{
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; }
+	}
 
+	[iOS (9,0)][Mac (10,12, onlyOn64: true)]
+	[BaseType (typeof (NSObject))]
+	interface SFContentBlockerManager {
+		[Async]
+		[Static, Export ("reloadContentBlockerWithIdentifier:completionHandler:")]
+		void ReloadContentBlocker (string identifier, [NullAllowed] Action<NSError> completionHandler);
+
+		[iOS (10,0)]
+		[Static][Async]
+		[Export ("getStateOfContentBlockerWithIdentifier:completionHandler:")]
+		void GetStateOfContentBlocker (string identifier, Action<SFContentBlockerState, NSError> completionHandler);
+	}
+
+#if !MONOMAC
 	[Since (7,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSGenericException Misuse of SSReadingList interface. Use class method defaultReadingList.
@@ -37,13 +62,6 @@ namespace XamCore.SafariServices {
 	}
 
 	[iOS (9,0)]
-	[BaseType (typeof (NSObject))]
-	interface SFContentBlockerManager {
-		[Static, Export ("reloadContentBlockerWithIdentifier:completionHandler:")]
-		void ReloadContentBlocker (string identifier, [NullAllowed] Action<NSError> completionHandler);
-	}
-	
-	[iOS (9,0)]
 	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor] // NSGenericException Reason: Misuse of SFSafariViewController interface. Use initWithURL:entersReaderIfAvailable:
 	interface SFSafariViewController {
@@ -65,6 +83,14 @@ namespace XamCore.SafariServices {
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
 		SFSafariViewControllerDelegate Delegate { get; set; }
+
+		[iOS (10, 0)]
+		[Export ("preferredBarTintColor", ArgumentSemantic.Assign)]
+		UIColor PreferredBarTintColor { get; set; }
+
+		[iOS (10, 0)]
+		[Export ("preferredControlTintColor", ArgumentSemantic.Assign)]
+		UIColor PreferredControlTintColor { get; set; }
 	}
 
 	[iOS (9,0)]
@@ -81,4 +107,162 @@ namespace XamCore.SafariServices {
 		[Export ("safariViewController:didCompleteInitialLoad:")]
 		void DidCompleteInitialLoad (SFSafariViewController controller, bool didLoadSuccessfully);
 	}
+#else
+	[Mac (10,12, onlyOn64: true)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface SFSafariApplication
+	{
+		[Static][Async]
+		[Export ("getActiveWindowWithCompletionHandler:")]
+		void GetActiveWindow (Action<SFSafariWindow> completionHandler);
+
+		[Static][Async]
+		[Export ("openWindowWithURL:completionHandler:")]
+		void OpenWindow (NSUrl url, [NullAllowed] Action<SFSafariWindow> completionHandler);
+
+		[Static]
+		[Export ("setToolbarItemsNeedUpdate")]
+		void SetToolbarItemsNeedUpdate ();
+
+		[Static]
+		[Export ("showPreferencesForExtensionWithIdentifier:completionHandler:")]
+		void ShowPreferencesForExtension (string identifier, [NullAllowed] Action<NSError> completionHandler);
+	}
+
+	[Mac (10,12, onlyOn64 : true)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface SFSafariPage
+	{
+		[Export ("dispatchMessageToScriptWithName:userInfo:")]
+		void DispatchMessageToScript (string messageName, [NullAllowed] NSDictionary userInfo);
+
+		[Export ("reload")]
+		void Reload ();
+
+		[Async]
+		[Export ("getPagePropertiesWithCompletionHandler:")]
+		void GetPageProperties (Action<SFSafariPageProperties> completionHandler);
+	}
+
+	[Mac (10,12, onlyOn64 : true)]
+	[Protocol]
+	interface SFSafariExtensionHandling
+	{
+		[Export ("messageReceivedWithName:fromPage:userInfo:")]
+		void MessageReceived (string messageName, SFSafariPage page, [NullAllowed] NSDictionary userInfo);
+
+		[Export ("toolbarItemClickedInWindow:")]
+		void ToolbarItemClicked (SFSafariWindow window);
+
+		[Async (ResultTypeName="SFValidationResult")]
+		[Export ("validateToolbarItemInWindow:validationHandler:")]
+		void ValidateToolbarItem (SFSafariWindow window, Action<bool, NSString> validationHandler);
+
+		[Export ("contextMenuItemSelectedWithCommand:inPage:userInfo:")]
+		void ContextMenuItemSelected (string command, SFSafariPage page, [NullAllowed] NSDictionary userInfo);
+
+		[Export ("popoverWillShowInWindow:")]
+		void PopoverWillShow (SFSafariWindow window);
+
+		[Export ("popoverDidCloseInWindow:")]
+		void PopoverDidClose (SFSafariWindow window);
+
+		[Export ("popoverViewController")]
+		SFSafariExtensionViewController PopoverViewController { get; }
+	}
+
+	[Mac (10,12, onlyOn64: true)]
+	[BaseType (typeof(NSObject))]
+	interface SFSafariPageProperties
+	{
+		[Export ("url")]
+		NSUrl Url { get; }
+
+		[Export ("title")]
+		string Title { get; }
+
+		[Export ("usesPrivateBrowsing")]
+		bool UsesPrivateBrowsing { get; }
+
+		[Export ("active")]
+		bool Active { [Bind ("isActive")] get; }
+	}
+
+	[Mac (10,12, onlyOn64: true)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface SFSafariTab
+	{
+		[Async]
+		[Export ("getActivePageWithCompletionHandler:")]
+		void GetActivePage (Action<SFSafariPage> completionHandler);
+
+		[Async]
+		[Export ("getPagesWithCompletionHandler:")]
+		void GetPages (Action<SFSafariPage[]> completionHandler);
+
+		[Async]
+		[Export ("activateWithCompletionHandler:")]
+		void Activate ([NullAllowed] Action completionHandler);
+	}
+
+	[Mac (10,12, onlyOn64: true)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface SFSafariToolbarItem
+	{
+		[Export ("setEnabled:withBadgeText:")]
+		void SetEnabled (bool enabled, [NullAllowed] string badgeText);
+	}
+
+	[Mac (10,12, onlyOn64: true)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface SFSafariWindow
+	{
+		[Async]
+		[Export ("getActiveTabWithCompletionHandler:")]
+		void GetActiveTab (Action<SFSafariTab> completionHandler);
+
+		[Async]
+		[Export ("openTabWithURL:makeActiveIfPossible:completionHandler:")]
+		void OpenTab (NSUrl url, bool activateTab, [NullAllowed] Action<SFSafariTab> completionHandler);
+
+		[Async]
+		[Export ("getToolbarItemWithCompletionHandler:")]
+		void GetToolbarItem (Action<SFSafariToolbarItem> completionHandler);
+	}
+
+	[Mac (10,12, onlyOn64: true)]
+	[BaseType (typeof(NSViewController))]
+	interface SFSafariExtensionViewController
+	{
+	}
+
+	[Mac (10,12, onlyOn64: true)]
+	[BaseType (typeof(NSObject))]
+	interface SFSafariExtensionHandler : NSExtensionRequestHandling, SFSafariExtensionHandling
+	{
+	}
+
+//	TODO - Needs Safari Extension support to test
+// 	[Mac (10,12)]
+// 	[BaseType (typeof(NSObject))]
+// 	interface SFSafariExtensionManager
+// 	{
+// 		[Static]
+// 		[Export ("getStateOfSafariExtensionWithIdentifier:completionHandler:")]
+// 		void GetStateOfSafariExtension (string identifier, Action<SFSafariExtensionState, NSError> completionHandler);
+// 	}
+//
+// 	[Mac (10,12)]
+// 	[BaseType (typeof(NSObject))]
+// 	interface SFSafariExtensionState
+// 	{
+// 		[Export ("enabled")]
+// 		bool Enabled { [Bind ("isEnabled")] get; }
+// 	}
+#endif
 }

@@ -82,6 +82,7 @@ namespace XamCore.AVFoundation {
 			}
 		}
 
+#if !WATCH
 		public AVAudioDataSourcePolarPattern []SupportedPolarPatterns {
 			get {
 				var x = SupportedPolarPatterns_;
@@ -109,6 +110,7 @@ namespace XamCore.AVFoundation {
 		{
 			return SetPreferredPolarPattern_ (ToToken (pattern), out outError);
 		}
+#endif
 	}
 }
 #endif

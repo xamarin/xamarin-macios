@@ -26,8 +26,10 @@ namespace XamCore.NetworkExtension {
 		[Export ("metaData")]
 		NEFlowMetaData MetaData { get; }
 
+#if !XAMCORE_4_0
 		[Field ("NEAppProxyErrorDomain")]
 		NSString ErrorDomain { get; }
+#endif
 	}
 	
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
@@ -285,8 +287,10 @@ namespace XamCore.NetworkExtension {
 		[Notification]
 		NSString ConfigurationDidChangeNotification { get; }
 
+#if !XAMCORE_4_0
 		[Field ("NEFilterErrorDomain")]
 		NSString ErrorDomain { get; }
+#endif
 	}
 
 #if !MONOMAC
@@ -399,7 +403,7 @@ namespace XamCore.NetworkExtension {
 		
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	interface NEFlowMetaData
+	interface NEFlowMetaData : NSCopying, NSSecureCoding
 	{
 		[Export ("sourceAppUniqueIdentifier")]
 		NSData SourceAppUniqueIdentifier { get; }
@@ -620,6 +624,10 @@ namespace XamCore.NetworkExtension {
 	
 		[NullAllowed, Export ("defaultPath")]
 		NWPath DefaultPath { get; }
+
+		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[Export ("displayMessage:completionHandler:")]
+		void DisplayMessage (string message, Action<bool> completionHandler);
 	}
 
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
@@ -741,8 +749,10 @@ namespace XamCore.NetworkExtension {
 		[Export ("routingMethod")]
 		NETunnelProviderRoutingMethod RoutingMethod { get; }
 
+#if !XAMCORE_4_0
 		[Field ("NETunnelProviderErrorDomain")]
 		NSString ErrorDomain { get; }
+#endif
 	}
 
 	
@@ -796,8 +806,10 @@ namespace XamCore.NetworkExtension {
 		// - (void)setAuthorization:(AuthorizationRef)authorization NS_AVAILABLE(10_10, NA);
 #endif
 
+#if !XAMCORE_4_0
 		[Field ("NEVPNErrorDomain")]
 		NSString ErrorDomain { get; }
+#endif
 
 		[Notification]
 		[Field ("NEVPNConfigurationChangeNotification")]
@@ -829,6 +841,10 @@ namespace XamCore.NetworkExtension {
 
 		[Export ("stopVPNTunnel")]
 		void StopVpnTunnel ();
+
+		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[Export ("manager")]
+		NEVpnManager Manager { get; }
 
 		[Notification]
 		[Field ("NEVPNStatusDidChangeNotification")]
@@ -1051,7 +1067,7 @@ namespace XamCore.NetworkExtension {
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[Abstract]
-	interface NWEndpoint {
+	interface NWEndpoint : NSSecureCoding, NSCopying {
 	}
 	
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
@@ -1257,9 +1273,11 @@ namespace XamCore.NetworkExtension {
 	[iOS (9,0)]
 	[BaseType (typeof (NEFilterFlow))]
 	interface NEFilterSocketFlow {
+		[NullAllowed]
 		[Export ("remoteEndpoint")]
 		NWEndpoint RemoteEndpoint { get; }
 
+		[NullAllowed]
 		[Export ("localEndpoint")]
 		NWEndpoint LocalEndpoint { get; }
 
@@ -1302,6 +1320,15 @@ namespace XamCore.NetworkExtension {
 
 		[Export ("writePackets:withProtocols:")]
 		bool WritePackets (NSData[] packets, NSNumber[] protocols);
+
+		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[Async]
+		[Export ("readPacketObjectsWithCompletionHandler:")]
+		void ReadPacketObjects (Action<NEPacket[]> completionHandler);
+
+		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[Export ("writePacketObjects:")]
+		bool WritePacketObjects (NEPacket[] packets);
 	}
 
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
@@ -1350,6 +1377,22 @@ namespace XamCore.NetworkExtension {
 
 		[Export ("sendProviderMessage:returnError:responseHandler:")]
 		bool SendProviderMessage (NSData messageData, [NullAllowed] out NSError error, [NullAllowed] Action<NSData> responseHandler);
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12, onlyOn64 : true)][iOS (10,0)]
+	[BaseType (typeof (NSObject))]
+	interface NEPacket : NSCopying, NSSecureCoding {
+		[Export ("initWithData:protocolFamily:")]
+		IntPtr Constructor (NSData data, /* sa_family_t */ byte protocolFamily);
+
+		[Export ("data", ArgumentSemantic.Copy)]
+		NSData Data { get; }
+
+		[Export ("protocolFamily")]
+		byte ProtocolFamily { get; }
+
+		[NullAllowed, Export ("metadata")]
+		NEFlowMetaData Metadata { get; }
 	}
 }
 #endif

@@ -1,4 +1,6 @@
-﻿using XamCore.ObjCRuntime;
+﻿#if !MONOMAC
+
+using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 using System;
 using System.Collections;
@@ -36,3 +38,4 @@ namespace XamCore.Photos
 	}
 }
 
+#endif

@@ -12,10 +12,29 @@ using XamCore.Foundation;
 namespace XamCore.AppKit {
 
 	public partial class NSSegmentedControl {
+		NSActionDispatcher dispatcher;
 		
 		public new NSSegmentedCell Cell {
 			get { return (NSSegmentedCell) base.Cell; }
 			set { base.Cell = value; }
+		}
+
+		[Mac (10,12)]
+		public static NSSegmentedControl FromLabels (string[] labels, NSSegmentSwitchTracking trackingMode, NSAction action)
+		{
+			var dispatcher = new NSActionDispatcher (action);
+			var control = _FromLabels (labels, trackingMode, dispatcher, NSActionDispatcher.Selector);
+			control.dispatcher = dispatcher;
+			return control;
+		}
+
+		[Mac (10,12)]
+		public static NSSegmentedControl FromImages (NSImage[] images, NSSegmentSwitchTracking trackingMode, NSAction action)
+		{
+			var dispatcher = new NSActionDispatcher (action);
+			var control = _FromImages (images, trackingMode, dispatcher, NSActionDispatcher.Selector);
+			control.dispatcher = dispatcher;
+			return control;
 		}
 
 		public void UnselectAllSegments()

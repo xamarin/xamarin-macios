@@ -122,11 +122,11 @@ public partial class Generator {
 			foreach (var kvp in fields) {
 				var f = kvp.Key;
 				var fa = kvp.Value;
-				// the attributes (availability and field) are important for our tests
-				PrintPlatformAttributes (f);
 				print ("[Field (\"{0}\", \"{1}\")]", fa.SymbolName, library_name);
 				print ("static NSString _{0};", fa.SymbolName);
 				print ("");
+				// the attributes (availability and field) are important for our tests
+				PrintPlatformAttributes (f);
 				print ("internal static NSString {0} {{", fa.SymbolName);
 				indent++;
 				print ("get {");

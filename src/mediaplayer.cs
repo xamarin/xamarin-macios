@@ -159,6 +159,11 @@ namespace XamCore.MediaPlayer {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString ArtworkProperty { get; }
 
+		[iOS (7,0)]
+		[Field ("MPMediaItemPropertyIsExplicit")]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		NSString IsExplicitProperty { get; }
+
 		[Since (3,0)]
 		[Field ("MPMediaItemPropertyLyrics")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -233,22 +238,34 @@ namespace XamCore.MediaPlayer {
 		[Field ("MPMediaItemPropertyHasProtectedAsset")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString HasProtectedAssetProperty { get; }
+
+		[iOS (10, 0)]
+		[Field ("MPMediaItemPropertyDateAdded")]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		NSString DateAddedProperty { get; }
 	}
 
-	[NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	public interface MPMediaItemArtwork {
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Export ("initWithBoundsSize:requestHandler:")]
 		[DesignatedInitializer]
+		IntPtr Constructor (CGSize boundsSize, Func<CGSize, UIImage> requestHandler);
+
+		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Export ("initWithImage:")]
 		IntPtr Constructor (UIImage image);
 		
 		[Export ("imageWithSize:")]
+		[return: NullAllowed]
 		UIImage ImageWithSize (CGSize size);
 
 		[Export ("bounds")]
 		CGRect Bounds { get; }
 
+		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Export ("imageCropRect")]
 		CGRect ImageCropRectangle { get; }
 	}
@@ -1272,9 +1289,38 @@ namespace XamCore.MediaPlayer {
 		[Internal]
 		[Field ("MPNowPlayingInfoPropertyCurrentLanguageOptions")]
 		NSString PropertyCurrentLanguageOptions { get; }
+
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Field ("MPNowPlayingInfoCollectionIdentifier")]
+		NSString PropertyCollectionIdentifier { get; }
+
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Field ("MPNowPlayingInfoPropertyExternalContentIdentifier")]
+		NSString PropertyExternalContentIdentifier { get; }
+
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Field ("MPNowPlayingInfoPropertyExternalUserProfileIdentifier")]
+		NSString PropertyExternalUserProfileIdentifier { get; }
+
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Field ("MPNowPlayingInfoPropertyPlaybackProgress")]
+		NSString PropertyPlaybackProgress { get; }
+
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Field ("MPNowPlayingInfoPropertyMediaType")]
+		NSString PropertyMediaType { get; }
+
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Field ("MPNowPlayingInfoPropertyIsLiveStream")]
+		NSString PropertyIsLiveStream { get; }
 	}
 
-	[NoTV] // This type was made available in tvOS but MPMediaItemArtwork is still restricted radar://24982126 https://trello.com/c/2gxuFbeS
 	[Since (7,1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash if used
@@ -1299,6 +1345,16 @@ namespace XamCore.MediaPlayer {
 		[Export ("title")]
 		string Title { get; set; }
 
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Export ("streamingContent")]
+		bool StreamingContent { [Bind ("isStreamingContent")] get; set; }
+
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Export ("explicitContent")]
+		bool ExplicitContent { [Bind ("isExplicitContent")] get; set; }
+
 		[Export ("container")]
 		bool Container { [Bind ("isContainer")] get; set; }
 
@@ -1317,7 +1373,11 @@ namespace XamCore.MediaPlayer {
 		[Abstract]
 #endif
 		[Export ("contentItemAtIndexPath:")]
+#if XAMCORE_4_0
+		MPContentItem GetContentItem (NSIndexPath indexPath);
+#else
 		MPContentItem ContentItem (NSIndexPath indexPath);
+#endif
 
 		[Export ("beginLoadingChildItemsAtIndexPath:completionHandler:")]
 		void BeginLoadingChildItems (NSIndexPath indexPath, Action<NSError> completionHandler);
@@ -1330,6 +1390,11 @@ namespace XamCore.MediaPlayer {
 #endif
 		[Export ("numberOfChildItemsAtIndexPath:")]
 		nint NumberOfChildItems (NSIndexPath indexPath);
+
+		[iOS (10,0)]
+		[Async]
+		[Export ("contentItemForIdentifier:completionHandler:")]
+		void GetContentItem (string identifier, Action<MPContentItem, NSError> completionHandler);
 	}
 
 	interface IMPPlayableContentDataSource {
@@ -1349,8 +1414,13 @@ namespace XamCore.MediaPlayer {
 		void ContextUpdated (MPPlayableContentManager contentManager, MPPlayableContentManagerContext context);
 
 		[iOS (9,0)]
+		[Deprecated (PlatformName.iOS, 9, 3, message: "Use InitializePlaybackQueue (MPPlayableContentManager, MPContentItem[], Action<NSError>) instead")]
 		[Export ("playableContentManager:initializePlaybackQueueWithCompletionHandler:")]
 		void InitializePlaybackQueue (MPPlayableContentManager contentManager, Action<NSError> completionHandler);
+
+		[iOS (9,3)]
+		[Export ("playableContentManager:initializePlaybackQueueWithContentItems:completionHandler:")]
+		void InitializePlaybackQueue (MPPlayableContentManager contentManager, [NullAllowed] MPContentItem[] contentItems, Action<NSError> completionHandler);
 	}
 
 	[NoTV]
@@ -1389,6 +1459,10 @@ namespace XamCore.MediaPlayer {
 		[iOS (8,4)]
 		[Export ("context")]
 		MPPlayableContentManagerContext Context { get; }
+
+		[iOS (10,0)]
+		[Export ("nowPlayingIdentifiers", ArgumentSemantic.Strong)]
+		string[] NowPlayingIdentifiers { get; set; }
 	}
 
 	[NoTV]
@@ -1444,6 +1518,24 @@ namespace XamCore.MediaPlayer {
 		NSNumber[] SupportedPlaybackRates { get; set; }
 	}
 
+	[iOS (8,0)]
+	[BaseType (typeof(MPRemoteCommand))]
+	[DisableDefaultCtor] // NSGenericException Reason: MPChangeShuffleModeCommand cannot be initialized externally.
+	interface MPChangeShuffleModeCommand
+	{
+		[Export ("currentShuffleType", ArgumentSemantic.Assign)]
+		MPShuffleType CurrentShuffleType { get; set; }
+	}
+
+	[iOS (8,0)]
+	[BaseType (typeof(MPRemoteCommand))]
+	[DisableDefaultCtor] // NSGenericException Reason: MPChangeRepeatModeCommand cannot be initialized externally.
+	interface MPChangeRepeatModeCommand
+	{
+		[Export ("currentRepeatType", ArgumentSemantic.Assign)]
+		MPRepeatType CurrentRepeatType { get; set; }
+	}
+
 	[Since (7,1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPFeedbackCommands cannot be initialized externally.
@@ -1486,6 +1578,7 @@ namespace XamCore.MediaPlayer {
 
 	[Since (7,1)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface MPRemoteCommandCenter {
 
 		[Static]
@@ -1497,6 +1590,14 @@ namespace XamCore.MediaPlayer {
 
 		[Export ("changePlaybackRateCommand")]
 		MPChangePlaybackRateCommand ChangePlaybackRateCommand { get; }
+
+		[iOS (8,0)]
+		[Export ("changeRepeatModeCommand")]
+		MPChangeRepeatModeCommand ChangeRepeatModeCommand { get; }
+
+		[iOS (8,0)]
+		[Export ("changeShuffleModeCommand")]
+		MPChangeShuffleModeCommand ChangeShuffleModeCommand { get; }
 
 		[Export ("dislikeCommand")]
 		MPFeedbackCommand DislikeCommand { get; }
@@ -1613,6 +1714,39 @@ namespace XamCore.MediaPlayer {
 	interface MPChangeLanguageOptionCommandEvent {
 		[Export ("languageOption")]
 		MPNowPlayingInfoLanguageOption LanguageOption { get; }
+
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Export ("setting")]
+		MPChangeLanguageOptionSetting Setting { get; }
+	}
+
+	[iOS (8,0)]
+	[BaseType (typeof(MPRemoteCommandEvent))]
+	[DisableDefaultCtor] // NSGenericException Reason: MPChangeShuffleModeCommandEvent cannot be initialized externally.
+	interface MPChangeShuffleModeCommandEvent
+	{
+		[Export ("shuffleType")]
+		MPShuffleType ShuffleType { get; }
+
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Export ("preservesShuffleMode")]
+		bool PreservesShuffleMode { get; }
+	}
+
+	[iOS (8,0)]
+	[BaseType (typeof(MPRemoteCommandEvent))]
+	[DisableDefaultCtor] // NSGenericException Reason: MPChangeRepeatModeCommandEvent cannot be initialized externally.
+	interface MPChangeRepeatModeCommandEvent
+	{
+		[Export ("repeatType")]
+		MPRepeatType RepeatType { get; }
+
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Export ("preservesRepeatMode")]
+		bool PreservesRepeatMode { get; }
 	}
 
 	[iOS (9,0)]

@@ -1,11 +1,18 @@
+using XamCore.CoreGraphics;
 using XamCore.CoreLocation;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
+using XamCore.UIKit;
 using System;
 using System.ComponentModel;
 
+#if WATCH
+interface UIView {}
+#endif
+
 namespace XamCore.HomeKit {
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[Static]
 	public partial interface HMErrors {
@@ -13,6 +20,7 @@ namespace XamCore.HomeKit {
 		NSString HMErrorDomain { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject), Delegates=new string[] {"WeakDelegate"}, Events=new Type[] {typeof(HMHomeManagerDelegate)})]
 	public partial interface HMHomeManager {
@@ -31,22 +39,26 @@ namespace XamCore.HomeKit {
 		[Export ("homes", ArgumentSemantic.Copy)]
 		HMHome [] Homes { get; }
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("updatePrimaryHome:completionHandler:")]
 		void UpdatePrimaryHome (HMHome home, Action<NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("addHomeWithName:completionHandler:")]
 		void AddHome (string homeName, Action<HMHome, NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("removeHome:completionHandler:")]
 		void RemoveHome (HMHome home, Action<NSError> completion);
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[Model, Protocol]
 	[BaseType (typeof (NSObject))]
@@ -65,6 +77,7 @@ namespace XamCore.HomeKit {
 		void DidRemoveHome (HMHomeManager manager, HMHome home);
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject), Delegates=new string[] {"WeakDelegate"}, Events=new Type[] {typeof(HMAccessoryDelegate)})]
 	public partial interface HMAccessory {
@@ -72,6 +85,7 @@ namespace XamCore.HomeKit {
 		[Export ("name")]
 		string Name { get; }
 
+		[NoTV]
 		[NoWatch]
 		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0)]
 		[Export ("identifier", ArgumentSemantic.Copy)]
@@ -95,6 +109,7 @@ namespace XamCore.HomeKit {
 		[Export ("bridged")]
 		bool Bridged { [Bind ("isBridged")] get; }
 
+		[NoTV]
 		[NoWatch]
 		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0)]
 		[Export ("identifiersForBridgedAccessories", ArgumentSemantic.Copy)]
@@ -113,6 +128,7 @@ namespace XamCore.HomeKit {
 		[Export ("blocked")]
 		bool Blocked { [Bind ("isBlocked")] get; }
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("updateName:completionHandler:")]
@@ -125,8 +141,15 @@ namespace XamCore.HomeKit {
 		[iOS (9,0)]
 		[Export ("category", ArgumentSemantic.Strong)]
 		HMAccessoryCategory Category { get; }
+
+		// HMAccessory(Camera)
+
+		[Watch (3,0), iOS (10,0)]
+		[NullAllowed, Export ("cameraProfiles", ArgumentSemantic.Copy)]
+		HMCameraProfile [] CameraProfiles { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[Model, Protocol]
 	[BaseType (typeof (NSObject))]
@@ -153,6 +176,7 @@ namespace XamCore.HomeKit {
 
 #if !WATCH
 	// __WATCHOS_PROHIBITED
+	[NoTV]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject), Delegates=new string[] {"WeakDelegate"}, Events=new Type[] {typeof(HMAccessoryBrowserDelegate)})]
 	public partial interface HMAccessoryBrowser {
@@ -175,6 +199,7 @@ namespace XamCore.HomeKit {
 		void StopSearchingForNewAccessories ();
 	}
 
+	[NoTV]
 	[iOS (8,0)]
 	[Model, Protocol]
 	[BaseType (typeof (NSObject))]
@@ -188,6 +213,22 @@ namespace XamCore.HomeKit {
 	}
 #endif // !WATCH
 
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface HMAccessoryProfile
+	{
+		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
+		NSUuid UniqueIdentifier { get; }
+
+		[Export ("services", ArgumentSemantic.Strong)]
+		HMService[] Services { get; }
+
+		[NullAllowed, Export ("accessory", ArgumentSemantic.Weak)]
+		HMAccessory Accessory { get; }
+	}
+
+	[TV (10,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	public partial interface HMAction {
@@ -197,6 +238,7 @@ namespace XamCore.HomeKit {
 		NSUuid UniqueIdentifier { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -211,16 +253,19 @@ namespace XamCore.HomeKit {
 		[Export ("executing")]
 		bool Executing { [Bind ("isExecuting")] get; }
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("updateName:completionHandler:")]
 		void UpdateName (string name, Action<NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("addAction:completionHandler:")]
 		void AddAction (HMAction action, Action<NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("removeAction:completionHandler:")]
@@ -234,8 +279,13 @@ namespace XamCore.HomeKit {
 		[iOS (9,0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Export ("lastExecutionDate", ArgumentSemantic.Copy)]
+		NSDate LastExecutionDate { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (9,0)]
 	[Static]
 	[Internal]
@@ -254,8 +304,13 @@ namespace XamCore.HomeKit {
 
 		[Field ("HMActionSetTypeUserDefined")]
 		NSString UserDefined { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HMActionSetTypeTriggerOwned")]
+		NSString TriggerOwned { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]	
 	[BaseType (typeof (NSObject))]
 	public partial interface HMCharacteristic {
@@ -291,6 +346,7 @@ namespace XamCore.HomeKit {
 		[Export ("enableNotification:completionHandler:")]
 		void EnableNotification (bool enable, Action<NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("updateAuthorizationData:completionHandler:")]
@@ -313,6 +369,7 @@ namespace XamCore.HomeKit {
 		NSString ValueKeyPath { get; }
 	}
 
+	[TV (10,0)]
 	[iOS(8,0)]
 	[Static]
 	[Internal]
@@ -332,6 +389,7 @@ namespace XamCore.HomeKit {
 		NSString SupportsEventNotification { get; }		
 	}
 
+	[TV (10,0)]
 	[iOS(8,0)]
 	[Static]
 	[Internal]
@@ -585,8 +643,61 @@ namespace XamCore.HomeKit {
 		[iOS (9,0)]
 		[Field ("HMCharacteristicTypeTargetSecuritySystemState")]
 		NSString TargetSecuritySystemState { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HMCharacteristicTypeStreamingStatus")]
+		NSString StreamingStatus { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HMCharacteristicTypeSetupStreamEndpoint")]
+		NSString SetupStreamEndpoint { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HMCharacteristicTypeSupportedVideoStreamConfiguration")]
+		NSString SupportedVideoStreamConfiguration { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HMCharacteristicTypeSupportedAudioStreamConfiguration")]
+		NSString SupportedAudioStreamConfiguration { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HMCharacteristicTypeSupportedRTPConfiguration")]
+		NSString SupportedRtpConfiguration { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HMCharacteristicTypeSelectedStreamConfiguration")]
+		NSString SelectedStreamConfiguration { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HMCharacteristicTypeVolume")]
+		NSString Volume { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HMCharacteristicTypeMute")]
+		NSString Mute { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HMCharacteristicTypeNightVision")]
+		NSString NightVision { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HMCharacteristicTypeOpticalZoom")]
+		NSString OpticalZoom { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HMCharacteristicTypeDigitalZoom")]
+		NSString DigitalZoom { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HMCharacteristicTypeImageRotation")]
+		NSString ImageRotation { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HMCharacteristicTypeImageMirroring")]
+		NSString ImageMirroring { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[Static]
 	[Internal]
@@ -610,8 +721,17 @@ namespace XamCore.HomeKit {
 		[iOS (9,3)][Watch (2,2)]
 		[Field ("HMCharacteristicMetadataUnitsLux")]
 		NSString Lux { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HMCharacteristicMetadataUnitsPartsPerMillion")]
+		NSString PartsPerMillion { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HMCharacteristicMetadataUnitsMicrogramsPerCubicMeter")]
+		NSString MicrogramsPerCubicMeter { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	public partial interface HMCharacteristicMetadata {
@@ -638,13 +758,19 @@ namespace XamCore.HomeKit {
 
 		[Export ("manufacturerDescription")]
 		string ManufacturerDescription { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[NullAllowed, Export ("validValues", ArgumentSemantic.Copy)]
+		NSNumber[] ValidValues { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (HMAction))]
 	public partial interface HMCharacteristicWriteAction {
 
+		[NoTV]
 		[NoWatch]
 		[DesignatedInitializer]
 		[Export ("initWithCharacteristic:targetValue:")]
@@ -664,6 +790,7 @@ namespace XamCore.HomeKit {
 		NSObject TargetValue { get; }
 #endif
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("updateTargetValue:completionHandler:")]
@@ -674,6 +801,7 @@ namespace XamCore.HomeKit {
 #endif
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Delegates=new string[] {"WeakDelegate"}, Events=new Type[] {typeof(HMHomeDelegate)})]
@@ -693,6 +821,7 @@ namespace XamCore.HomeKit {
 		[Export ("primary")]
 		bool Primary { [Bind ("isPrimary")] get; }
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("updateName:completionHandler:")]
@@ -707,16 +836,19 @@ namespace XamCore.HomeKit {
 		[Export ("accessories", ArgumentSemantic.Copy)]
 		HMAccessory [] Accessories { get; }
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("addAccessory:completionHandler:")]
 		void AddAccessory (HMAccessory accessory, Action<NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("removeAccessory:completionHandler:")]
 		void RemoveAccessory (HMAccessory accessory, Action<NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("assignAccessory:toRoom:completionHandler:")]
@@ -726,21 +858,29 @@ namespace XamCore.HomeKit {
 		[Export ("servicesWithTypes:")]
 		HMService [] _ServicesWithTypes (NSString [] serviceTypes);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("unblockAccessory:completionHandler:")]
 		void UnblockAccessory (HMAccessory accessory, Action<NSError> completion);
+
+		[NoWatch, NoTV, iOS (10,0)]
+		[Async]
+		[Export ("addAndSetupAccessoriesWithCompletionHandler:")]
+		void AddAndSetupAccessories (Action<NSError> completion);
 
 		// HMHome(HMRoom)
 
 		[Export ("rooms", ArgumentSemantic.Copy)]
 		HMRoom [] Rooms { get; }
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("addRoomWithName:completionHandler:")]
 		void AddRoom (string roomName, Action<HMRoom, NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("removeRoom:completionHandler:")]
@@ -754,11 +894,13 @@ namespace XamCore.HomeKit {
 		[Export ("zones", ArgumentSemantic.Copy)]
 		HMZone [] Zones { get; }
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("addZoneWithName:completionHandler:")]
 		void AddZone (string zoneName, Action<HMZone, NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("removeZone:completionHandler:")]
@@ -769,11 +911,13 @@ namespace XamCore.HomeKit {
 		[Export ("serviceGroups", ArgumentSemantic.Copy)]
 		HMServiceGroup [] ServiceGroups { get; }
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("addServiceGroupWithName:completionHandler:")]
 		void AddServiceGroup (string serviceGroupName, Action<HMServiceGroup, NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("removeServiceGroup:completionHandler:")]
@@ -784,11 +928,13 @@ namespace XamCore.HomeKit {
 		[Export ("actionSets", ArgumentSemantic.Copy)]
 		HMActionSet [] ActionSets { get; }
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("addActionSetWithName:completionHandler:")]
 		void AddActionSet (string actionSetName, Action<HMActionSet, NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("removeActionSet:completionHandler:")]
@@ -808,11 +954,13 @@ namespace XamCore.HomeKit {
 		[Export ("triggers", ArgumentSemantic.Copy)]
 		HMTrigger [] Triggers { get; }
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("addTrigger:completionHandler:")]
 		void AddTrigger (HMTrigger trigger, Action<NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("removeTrigger:completionHandler:")]
@@ -820,17 +968,20 @@ namespace XamCore.HomeKit {
 
 		// HMHome(HMUser)
 
+		[NoTV]
 		[NoWatch]
 		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0)]
 		[Export ("users")]
 		HMUser [] Users { get; }
 
+		[NoTV]
 		[NoWatch]
 		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0)]
 		[Async]
 		[Export ("addUserWithCompletionHandler:")]
 		void AddUser (Action<HMUser,NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0)]
 		[Async]
@@ -841,6 +992,7 @@ namespace XamCore.HomeKit {
 		[Export ("currentUser", ArgumentSemantic.Strong)]
 		HMUser CurrentUser { get; }
 
+		[NoTV]
 		[NoWatch]
 		[iOS (9,0)]
 		[Export ("manageUsersWithCompletionHandler:")]
@@ -856,6 +1008,7 @@ namespace XamCore.HomeKit {
 		NSString UserFailedAccessoriesKey { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[Model, Protocol]
 	[BaseType (typeof (NSObject))]
@@ -949,6 +1102,7 @@ namespace XamCore.HomeKit {
 		void DidEncounterError (HMHome home, NSError error, HMAccessory accessory);
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -960,6 +1114,7 @@ namespace XamCore.HomeKit {
 		[Export ("accessories", ArgumentSemantic.Copy)]
 		HMAccessory [] Accessories { get; }
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("updateName:completionHandler:")]
@@ -970,6 +1125,7 @@ namespace XamCore.HomeKit {
 		NSUuid UniqueIdentifier { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[Static]
 	[Internal]
@@ -1016,6 +1172,10 @@ namespace XamCore.HomeKit {
 		[iOS (9,0)]
 		[Field ("HMServiceTypeDoor")]
 		NSString Door { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HMServiceTypeDoorbell")]
+		NSString Doorbell { get; }
 
 		[iOS (9,0)]
 		[Field ("HMServiceTypeHumiditySensor")]
@@ -1072,8 +1232,25 @@ namespace XamCore.HomeKit {
 		[iOS (9,0)]
 		[Field ("HMServiceTypeSecuritySystem")]
 		NSString SecuritySystem { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HMServiceTypeCameraRTPStreamManagement")]
+		NSString CameraRtpStreamManagement { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HMServiceTypeCameraControl")]
+		NSString CameraControl { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HMServiceTypeMicrophone")]
+		NSString Microphone { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HMServiceTypeSpeaker")]
+		NSString Speaker { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	public partial interface HMService { 
@@ -1094,11 +1271,13 @@ namespace XamCore.HomeKit {
 		[Export ("characteristics", ArgumentSemantic.Copy)]
 		HMCharacteristic [] Characteristics { get; }
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("updateName:completionHandler:")]
 		void UpdateName (string name, Action<NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Async]
@@ -1116,8 +1295,17 @@ namespace XamCore.HomeKit {
 		[iOS (9,0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
 		NSUuid UniqueIdentifier { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Export ("primaryService")]
+		bool PrimaryService { [Bind ("isPrimaryService")] get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[NullAllowed, Export ("linkedServices", ArgumentSemantic.Copy)]
+		HMService[] LinkedServices { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -1129,16 +1317,19 @@ namespace XamCore.HomeKit {
 		[Export ("services", ArgumentSemantic.Copy)]
 		HMService [] Services { get; }
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("updateName:completionHandler:")]
 		void UpdateName (string name, Action<NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("addService:completionHandler:")]
 		void AddService (HMService service, Action<NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("removeService:completionHandler:")]
@@ -1149,11 +1340,13 @@ namespace XamCore.HomeKit {
 		NSUuid UniqueIdentifier { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (HMTrigger))]
 	public partial interface HMTimerTrigger { 
 
+		[NoTV]
 		[NoWatch]
 		[DesignatedInitializer]
 		[Export ("initWithName:fireDate:timeZone:recurrence:recurrenceCalendar:")]
@@ -1171,22 +1364,26 @@ namespace XamCore.HomeKit {
 		[Export ("recurrenceCalendar", ArgumentSemantic.Copy)]
 		NSCalendar RecurrenceCalendar { get; }
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("updateFireDate:completionHandler:")]
 		void UpdateFireDate (NSDate fireDate, Action<NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("updateTimeZone:completionHandler:")]
 		void UpdateTimeZone ([NullAllowed] NSTimeZone timeZone, Action<NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("updateRecurrence:completionHandler:")]
 		void UpdateRecurrence ([NullAllowed] NSDateComponents recurrence, Action<NSError> completion);
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -1204,21 +1401,25 @@ namespace XamCore.HomeKit {
 		[Export ("lastFireDate", ArgumentSemantic.Copy)]
 		NSDate LastFireDate { get; }
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("updateName:completionHandler:")]
 		void UpdateName (string name, Action<NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("addActionSet:completionHandler:")]
 		void AddActionSet (HMActionSet actionSet, Action<NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("removeActionSet:completionHandler:")]
 		void RemoveActionSet (HMActionSet actionSet, Action<NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("enable:completionHandler:")]
@@ -1229,6 +1430,7 @@ namespace XamCore.HomeKit {
 		NSUuid UniqueIdentifier { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -1240,16 +1442,19 @@ namespace XamCore.HomeKit {
 		[Export ("rooms", ArgumentSemantic.Copy)]
 		HMRoom [] Rooms { get; }
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("updateName:completionHandler:")]
 		void UpdateName (string name, Action<NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("addRoom:completionHandler:")]
 		void AddRoom (HMRoom room, Action<NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Async]
 		[Export ("removeRoom:completionHandler:")]
@@ -1262,6 +1467,7 @@ namespace XamCore.HomeKit {
 
 	[Static, Internal]
 	[iOS (8,0)]
+	[TV (10,0)]
 	interface HMCharacteristicMetadataFormatKeys {
 		[Field ("HMCharacteristicMetadataFormatBool")]
 		NSString _Bool { get; }
@@ -1300,6 +1506,7 @@ namespace XamCore.HomeKit {
 		NSString _Tlv8 { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1312,6 +1519,7 @@ namespace XamCore.HomeKit {
 		NSUuid UniqueIdentifier { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: init is unavailable
@@ -1324,6 +1532,7 @@ namespace XamCore.HomeKit {
 		string LocalizedDescription { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (9,0)]
 	[Static]
 	[Internal]
@@ -1347,7 +1556,11 @@ namespace XamCore.HomeKit {
 		NSString Fan { get; }
 
 		[Field ("HMAccessoryCategoryTypeGarageDoorOpener")]
-		NSString DoorOpener { get; }
+		NSString GarageDoorOpener { get; }
+
+		[iOS (10,0), Watch (3,0)]
+		[Field ("HMAccessoryCategoryTypeIPCamera")]
+		NSString IPCamera { get; }
 
 		[Field ("HMAccessoryCategoryTypeLightbulb")]
 		NSString Lightbulb { get; }
@@ -1367,6 +1580,10 @@ namespace XamCore.HomeKit {
 		[Field ("HMAccessoryCategoryTypeThermostat")]
 		NSString Thermostat { get; }
 
+		[iOS (10,0), Watch (3,0), TV (10,0)]
+		[Field ("HMAccessoryCategoryTypeVideoDoorbell")]
+		NSString VideoDoorbell { get; }
+
 		[Field ("HMAccessoryCategoryTypeWindow")]
 		NSString Window { get; }
 
@@ -1378,10 +1595,12 @@ namespace XamCore.HomeKit {
 		NSString RangeExtender { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (9,0)]
 	[BaseType (typeof (HMEvent))]
 	[DisableDefaultCtor]
 	interface HMCharacteristicEvent {
+		[NoTV]
 		[NoWatch]
 		[Export ("initWithCharacteristic:triggerValue:")]
 		IntPtr Constructor (HMCharacteristic characteristic, [NullAllowed] INSCopying triggerValue);
@@ -1393,11 +1612,13 @@ namespace XamCore.HomeKit {
 		[Export ("triggerValue", ArgumentSemantic.Copy)]
 		INSCopying TriggerValue { get; }
 
+		[NoTV]
 		[NoWatch]
 		[Export ("updateTriggerValue:completionHandler:")]
 		void UpdateTriggerValue ([NullAllowed] INSCopying triggerValue, Action<NSError> completion);
 	}
 
+	[TV (10,0)]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	interface HMEvent {
@@ -1405,13 +1626,14 @@ namespace XamCore.HomeKit {
 		NSUuid UniqueIdentifier { get; }
 	}
 
+	[TV (10,0)]
 	[iOS (9,0)]
 	[BaseType (typeof (HMTrigger))]
 	[DisableDefaultCtor]
 	interface HMEventTrigger {
+		[NoTV]
 		[NoWatch]
 		[Export ("initWithName:events:predicate:")]
-		[DesignatedInitializer]
 		IntPtr Constructor (string name, HMEvent[] events, [NullAllowed] NSPredicate predicate);
 
 		[Export ("events", ArgumentSemantic.Copy)]
@@ -1444,14 +1666,17 @@ namespace XamCore.HomeKit {
 		[Export ("predicateForEvaluatingTriggerWithCharacteristic:relatedBy:toValue:")]
 		NSPredicate CreatePredicateForEvaluatingTrigger (HMCharacteristic characteristic, NSPredicateOperatorType operatorType, NSObject value);
 
+		[NoTV]
 		[NoWatch]
 		[Export ("addEvent:completionHandler:")]
 		void AddEvent (HMEvent @event, Action<NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Export ("removeEvent:completionHandler:")]
 		void RemoveEvent (HMEvent @event, Action<NSError> completion);
 
+		[NoTV]
 		[NoWatch]
 		[Export ("updatePredicate:completionHandler:")]
 		void UpdatePredicate ([NullAllowed] NSPredicate predicate, Action<NSError> completion);
@@ -1460,6 +1685,7 @@ namespace XamCore.HomeKit {
 	[Static]
 	[Internal]
 	[iOS (9,0)]
+	[TV (10,0)]
 	partial interface HMSignificantEventInternal {
 		
 		[Field ("HMSignificantEventSunrise")]
@@ -1470,6 +1696,7 @@ namespace XamCore.HomeKit {
 	}
 
 	[iOS (9,0)]
+	[TV (10,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	public interface HMHomeAccessControl {
@@ -1478,9 +1705,11 @@ namespace XamCore.HomeKit {
 	}
 
 	[iOS (9,0)]
+	[TV (10,0)]
 	[BaseType (typeof (HMEvent))]
 	[DisableDefaultCtor]
 	interface HMLocationEvent {
+		[NoTV]
 		[NoWatch]
 		[Export ("initWithRegion:")]
 		IntPtr Constructor (CLRegion region);
@@ -1488,8 +1717,179 @@ namespace XamCore.HomeKit {
 		[NullAllowed, Export ("region", ArgumentSemantic.Strong)]
 		CLRegion Region { get; }
 
+		[NoTV]
 		[NoWatch]
 		[Export ("updateRegion:completionHandler:")]
 		void UpdateRegion (CLRegion region, Action<NSError> completion);
+	}
+
+	[NoWatch]
+	[TV (10,0), iOS (10,0)]
+	[BaseType (typeof(UIView))]
+	interface HMCameraView
+	{
+		// inlined ctor
+		[Export ("initWithFrame:")]
+		IntPtr Constructor (CGRect frame);
+
+		[NullAllowed, Export ("cameraSource", ArgumentSemantic.Strong)]
+		HMCameraSource CameraSource { get; set; }
+	}
+
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[Abstract] // documented as such in header file
+	[BaseType (typeof(NSObject))]
+	interface HMCameraSource {}
+
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[BaseType (typeof(HMAccessoryProfile))]
+	[DisableDefaultCtor]
+	public interface HMCameraProfile
+	{
+		[NullAllowed, Export ("streamControl", ArgumentSemantic.Strong)]
+		HMCameraStreamControl StreamControl { get; }
+
+		[NullAllowed, Export ("snapshotControl", ArgumentSemantic.Strong)]
+		HMCameraSnapshotControl SnapshotControl { get; }
+
+		[NullAllowed, Export ("settingsControl", ArgumentSemantic.Strong)]
+		HMCameraSettingsControl SettingsControl { get; }
+
+		[NullAllowed, Export ("speakerControl", ArgumentSemantic.Strong)]
+		HMCameraAudioControl SpeakerControl { get; }
+
+		[NullAllowed, Export ("microphoneControl", ArgumentSemantic.Strong)]
+		HMCameraAudioControl MicrophoneControl { get; }
+	}
+
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	interface HMCameraControl {}
+
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[BaseType (typeof(HMCameraControl))]
+	public interface HMCameraStreamControl
+	{
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		IHMCameraStreamControlDelegate Delegate { get; set; }
+
+		[Export ("streamState", ArgumentSemantic.Assign)]
+		HMCameraStreamState StreamState { get; }
+
+		[NullAllowed, Export ("cameraStream", ArgumentSemantic.Strong)]
+		HMCameraStream CameraStream { get; }
+
+		[Export ("startStream")]
+		void StartStream ();
+
+		[Export ("stopStream")]
+		void StopStream ();
+	}
+
+	public interface IHMCameraStreamControlDelegate {}
+
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface HMCameraStreamControlDelegate
+	{
+		[Export ("cameraStreamControlDidStartStream:")]
+		void DidStartStream (HMCameraStreamControl cameraStreamControl);
+
+		[Export ("cameraStreamControl:didStopStreamWithError:")]
+		void DidStopStream (HMCameraStreamControl cameraStreamControl, [NullAllowed] NSError error);
+	}
+
+	// TODO: Type still available for tvOS even if everything in it is __TVOS_PROHIBITED.
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[BaseType (typeof(HMCameraSource))]
+	public interface HMCameraStream
+	{
+		[NoTV]
+		[Export ("audioStreamSetting", ArgumentSemantic.Assign)]
+		HMCameraAudioStreamSetting AudioStreamSetting { get; }
+
+		[NoTV]
+		[Async]
+		[Export ("updateAudioStreamSetting:completionHandler:")]
+		void UpdateAudioStreamSetting (HMCameraAudioStreamSetting audioStreamSetting, Action<NSError> completion);
+	}
+
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[BaseType (typeof(HMCameraControl))]
+	public interface HMCameraSnapshotControl
+	{
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		IHMCameraSnapshotControlDelegate Delegate { get; set; }
+
+		[NullAllowed, Export ("mostRecentSnapshot", ArgumentSemantic.Strong)]
+		HMCameraSnapshot MostRecentSnapshot { get; }
+
+		[Export ("takeSnapshot")]
+		void TakeSnapshot ();
+	}
+
+	public interface IHMCameraSnapshotControlDelegate {}
+
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	public interface HMCameraSnapshotControlDelegate
+	{
+		[Export ("cameraSnapshotControl:didTakeSnapshot:error:")]
+		void DidTakeSnapshot (HMCameraSnapshotControl cameraSnapshotControl, [NullAllowed] HMCameraSnapshot snapshot, [NullAllowed] NSError error);
+	}
+
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[BaseType (typeof(HMCameraSource))]
+	public interface HMCameraSnapshot
+	{
+		[Export ("captureDate", ArgumentSemantic.Copy)]
+		NSDate CaptureDate { get; }
+	}
+
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[BaseType (typeof(HMCameraControl))]
+	[DisableDefaultCtor]
+	public interface HMCameraSettingsControl
+	{
+		[NullAllowed, Export ("nightVision", ArgumentSemantic.Strong)]
+		HMCharacteristic NightVision { get; }
+
+		[NullAllowed, Export ("currentHorizontalTilt", ArgumentSemantic.Strong)]
+		HMCharacteristic CurrentHorizontalTilt { get; }
+
+		[NullAllowed, Export ("targetHorizontalTilt", ArgumentSemantic.Strong)]
+		HMCharacteristic TargetHorizontalTilt { get; }
+
+		[NullAllowed, Export ("currentVerticalTilt", ArgumentSemantic.Strong)]
+		HMCharacteristic CurrentVerticalTilt { get; }
+
+		[NullAllowed, Export ("targetVerticalTilt", ArgumentSemantic.Strong)]
+		HMCharacteristic TargetVerticalTilt { get; }
+
+		[NullAllowed, Export ("opticalZoom", ArgumentSemantic.Strong)]
+		HMCharacteristic OpticalZoom { get; }
+
+		[NullAllowed, Export ("digitalZoom", ArgumentSemantic.Strong)]
+		HMCharacteristic DigitalZoom { get; }
+
+		[NullAllowed, Export ("imageRotation", ArgumentSemantic.Strong)]
+		HMCharacteristic ImageRotation { get; }
+
+		[NullAllowed, Export ("imageMirroring", ArgumentSemantic.Strong)]
+		HMCharacteristic ImageMirroring { get; }
+	}
+
+	[Watch (3,0), TV (10,0), iOS (10,0)]
+	[BaseType (typeof(HMCameraControl))]
+	[DisableDefaultCtor]
+	public interface HMCameraAudioControl
+	{
+		[NullAllowed, Export ("mute", ArgumentSemantic.Strong)]
+		HMCharacteristic Mute { get; }
+
+		[NullAllowed, Export ("volume", ArgumentSemantic.Strong)]
+		HMCharacteristic Volume { get; }
 	}
 }

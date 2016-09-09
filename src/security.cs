@@ -59,6 +59,10 @@ namespace XamCore.Security {
 		[Field ("kSecPolicyAppleRevocation")]
 		NSString AppleRevocation { get; }
 
+		[iOS (7,0)][Mac (10,9)]
+		[Field ("kSecPolicyApplePassbookSigning")]
+		NSString ApplePassbookSigning { get; }
+
 		[Mac(10,11), iOS (9,0)]
 		[Field ("kSecPolicyApplePayIssuerEncryption")]
 		NSString ApplePayIssuerEncryption { get; }
@@ -79,6 +83,10 @@ namespace XamCore.Security {
 		[Mavericks]
 		[Field ("kSecPolicyRevocationFlags")]
 		NSString RevocationFlags { get; }
+
+		[iOS (7,0)][Mac (10,9)]
+		[Field ("kSecPolicyTeamIdentifier")]
+		NSString TeamIdentifier { get; }
 	}
 	
 	[Static]
@@ -122,9 +130,15 @@ namespace XamCore.Security {
 		NSString RevocationValidUntilDate { get; }
 
 		[iOS (9,0)]
-		[NoMac]
+		[Mac (10,12)] // headers says 10.11 but it's not present in 10.11
 		[Field ("kSecTrustCertificateTransparency")]
 		NSString CertificateTransparency { get; }
+
+		[iOS (10,0)][Mac (10,12)]
+		[Watch (3,0)]
+		[TV (10,0)]
+		[Field ("kSecTrustCertificateTransparencyWhiteList")]
+		NSString CertificateTransparencyWhiteList { get; }
 	}
 
 	[Static]
@@ -136,26 +150,35 @@ namespace XamCore.Security {
 		IntPtr MatchLimitAll { get; }
 	}
 
-	[Static][Internal]
-	interface KeyTypeKeys {
+	enum SecKeyType {
+		Invalid = -1,
+
 		[Field ("kSecAttrKeyTypeRSA")]
-		IntPtr RSA { get; }
+		RSA = 0,
 
 		[Mac (10,9)]
 		[Field ("kSecAttrKeyTypeEC")]
-		IntPtr EC { get; }
+		EC = 1,
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[Watch (3,0)]
+		[TV (10,0)]
+		[Field ("kSecAttrKeyTypeECSECPrimeRandom")]
+		ECSecPrimeRandom = 2,
 	}
 
-	[Static][Internal]
-	interface ClassKeys {
+	enum SecKeyClass {
+		Invalid = -1,
+
 		[Field ("kSecAttrKeyClassPublic")]
-		IntPtr Public { get; }
+		Public = 0,
 
 		[Field ("kSecAttrKeyClassPrivate")]
-		IntPtr Private { get; }
+		Private = 1,
 
 		[Field ("kSecAttrKeyClassSymmetric")]
-		IntPtr Symmetric { get; }
+		Symmetric = 2,
 	}
 
 	[Static][Internal]
@@ -459,9 +482,21 @@ namespace XamCore.Security {
 		IntPtr CanUnwrap { get; }
 
 		[iOS (9,0)]
-		[NoMac]
+		[Mac (10,12)]
 		[Field ("kSecAttrTokenID")]
 		IntPtr TokenID { get; }
+
+		[iOS (9,0)]
+		[NoMac]
+		[Field ("kSecAttrTokenIDSecureEnclave")]
+		IntPtr SecureEnclave { get; }
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[Watch (3,0)]
+		[TV (10,0)]
+		[Field ("kSecAttrAccessGroupToken")]
+		IntPtr AccessGroupToken { get; }
 	}
 
 	[Static][Internal]
@@ -606,5 +641,234 @@ namespace XamCore.Security {
 
 		[Field ("kSecPropertyKeyValue")]
 		IntPtr Value { get; }
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	enum SecKeyAlgorithm {
+		[Field ("kSecKeyAlgorithmRSASignatureRaw")]
+		RsaSignatureRaw,
+
+		[Field ("kSecKeyAlgorithmRSASignatureDigestPKCS1v15Raw")]
+		RsaSignatureDigestPkcs1v15Raw,
+
+		[Field ("kSecKeyAlgorithmRSASignatureDigestPKCS1v15SHA1")]
+		RsaSignatureDigestPkcs1v15Sha1,
+
+		[Field ("kSecKeyAlgorithmRSASignatureDigestPKCS1v15SHA224")]
+		RsaSignatureDigestPkcs1v15Sha224,
+
+		[Field ("kSecKeyAlgorithmRSASignatureDigestPKCS1v15SHA256")]
+		RsaSignatureDigestPkcs1v15Sha256,
+
+		[Field ("kSecKeyAlgorithmRSASignatureDigestPKCS1v15SHA384")]
+		RsaSignatureDigestPkcs1v15Sha384,
+
+		[Field ("kSecKeyAlgorithmRSASignatureDigestPKCS1v15SHA512")]
+		RsaSignatureDigestPkcs1v15Sha512,
+
+		[Field ("kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA1")]
+		RsaSignatureMessagePkcs1v15Sha1,
+
+		[Field ("kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA224")]
+		RsaSignatureMessagePkcs1v15Sha224,
+
+		[Field ("kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA256")]
+		RsaSignatureMessagePkcs1v15Sha256,
+
+		[Field ("kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA384")]
+		RsaSignatureMessagePkcs1v15Sha384,
+
+		[Field ("kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA512")]
+		RsaSignatureMessagePkcs1v15Sha512,
+
+		[Field ("kSecKeyAlgorithmECDSASignatureRFC4754")]
+		EcdsaSignatureRfc4754,
+
+		[Field ("kSecKeyAlgorithmECDSASignatureDigestX962")]
+		EcdsaSignatureDigestX962,
+
+		[Field ("kSecKeyAlgorithmECDSASignatureDigestX962SHA1")]
+		EcdsaSignatureDigestX962Sha1,
+
+		[Field ("kSecKeyAlgorithmECDSASignatureDigestX962SHA224")]
+		EcdsaSignatureDigestX962Sha224,
+
+		[Field ("kSecKeyAlgorithmECDSASignatureDigestX962SHA256")]
+		EcdsaSignatureDigestX962Sha256,
+
+		[Field ("kSecKeyAlgorithmECDSASignatureDigestX962SHA384")]
+		EcdsaSignatureDigestX962Sha384,
+
+		[Field ("kSecKeyAlgorithmECDSASignatureDigestX962SHA512")]
+		EcdsaSignatureDigestX962Sha512,
+
+		[Field ("kSecKeyAlgorithmECDSASignatureMessageX962SHA1")]
+		EcdsaSignatureMessageX962Sha1,
+
+		[Field ("kSecKeyAlgorithmECDSASignatureMessageX962SHA224")]
+		EcdsaSignatureMessageX962Sha224,
+
+		[Field ("kSecKeyAlgorithmECDSASignatureMessageX962SHA256")]
+		EcdsaSignatureMessageX962Sha256,
+
+		[Field ("kSecKeyAlgorithmECDSASignatureMessageX962SHA384")]
+		EcdsaSignatureMessageX962Sha384,
+
+		[Field ("kSecKeyAlgorithmECDSASignatureMessageX962SHA512")]
+		EcdsaSignatureMessageX962Sha512,
+
+		[Field ("kSecKeyAlgorithmRSAEncryptionRaw")]
+		RsaEncryptionRaw,
+
+		[Field ("kSecKeyAlgorithmRSAEncryptionPKCS1")]
+		RsaEncryptionPkcs1,
+
+		[Field ("kSecKeyAlgorithmRSAEncryptionOAEPSHA1")]
+		RsaEncryptionOaepSha1,
+
+		[Field ("kSecKeyAlgorithmRSAEncryptionOAEPSHA224")]
+		RsaEncryptionOaepSha224,
+
+		[Field ("kSecKeyAlgorithmRSAEncryptionOAEPSHA256")]
+		RsaEncryptionOaepSha256,
+
+		[Field ("kSecKeyAlgorithmRSAEncryptionOAEPSHA384")]
+		RsaEncryptionOaepSha384,
+
+		[Field ("kSecKeyAlgorithmRSAEncryptionOAEPSHA512")]
+		RsaEncryptionOaepSha512,
+
+		[Field ("kSecKeyAlgorithmRSAEncryptionOAEPSHA1AESGCM")]
+		RsaEncryptionOaepSha1AesCgm,
+
+		[Field ("kSecKeyAlgorithmRSAEncryptionOAEPSHA224AESGCM")]
+		RsaEncryptionOaepSha224AesGcm,
+
+		[Field ("kSecKeyAlgorithmRSAEncryptionOAEPSHA256AESGCM")]
+		RsaEncryptionOaepSha256AesGcm,
+
+		[Field ("kSecKeyAlgorithmRSAEncryptionOAEPSHA384AESGCM")]
+		RsaEncryptionOaepSha384AesGcm,
+
+		[Field ("kSecKeyAlgorithmRSAEncryptionOAEPSHA512AESGCM")]
+		RsaEncryptionOaepSha512AesGcm,
+
+		[Field ("kSecKeyAlgorithmECIESEncryptionStandardX963SHA1AESGCM")]
+		EciesEncryptionStandardX963Sha1AesGcm,
+
+		[Field ("kSecKeyAlgorithmECIESEncryptionStandardX963SHA224AESGCM")]
+		EciesEncryptionStandardX963Sha224AesGcm,
+
+		[Field ("kSecKeyAlgorithmECIESEncryptionStandardX963SHA256AESGCM")]
+		EciesEncryptionStandardX963Sha256AesGcm,
+
+		[Field ("kSecKeyAlgorithmECIESEncryptionStandardX963SHA384AESGCM")]
+		EciesEncryptionStandardX963Sha384AesGcm,
+
+		[Field ("kSecKeyAlgorithmECIESEncryptionStandardX963SHA512AESGCM")]
+		EciesEncryptionStandardX963Sha512AesGcm,
+
+		[Field ("kSecKeyAlgorithmECIESEncryptionCofactorX963SHA1AESGCM")]
+		EciesEncryptionCofactorX963Sha1AesGcm,
+
+		[Field ("kSecKeyAlgorithmECIESEncryptionCofactorX963SHA224AESGCM")]
+		EciesEncryptionCofactorX963Sha224AesGcm,
+
+		[Field ("kSecKeyAlgorithmECIESEncryptionCofactorX963SHA256AESGCM")]
+		EciesEncryptionCofactorX963Sha256AesGcm,
+
+		[Field ("kSecKeyAlgorithmECIESEncryptionCofactorX963SHA384AESGCM")]
+		EciesEncryptionCofactorX963Sha384AesGcm,
+
+		[Field ("kSecKeyAlgorithmECIESEncryptionCofactorX963SHA512AESGCM")]
+		EciesEncryptionCofactorX963Sha512AesGcm,
+
+		[Field ("kSecKeyAlgorithmECDHKeyExchangeStandard")]
+		EcdhKeyExchangeStandard,
+
+		[Field ("kSecKeyAlgorithmECDHKeyExchangeStandardX963SHA1")]
+		EcdhKeyExchangeStandardX963Sha1,
+
+		[Field ("kSecKeyAlgorithmECDHKeyExchangeStandardX963SHA224")]
+		EcdhKeyExchangeStandardX963Sha224,
+
+		[Field ("kSecKeyAlgorithmECDHKeyExchangeStandardX963SHA256")]
+		EcdhKeyExchangeStandardX963Sha256,
+
+		[Field ("kSecKeyAlgorithmECDHKeyExchangeStandardX963SHA384")]
+		EcdhKeyExchangeStandardX963Sha384,
+
+		[Field ("kSecKeyAlgorithmECDHKeyExchangeStandardX963SHA512")]
+		EcdhKeyExchangeStandardX963Sha512,
+
+		[Field ("kSecKeyAlgorithmECDHKeyExchangeCofactor")]
+		EcdhKeyExchangeCofactor,
+
+		[Field ("kSecKeyAlgorithmECDHKeyExchangeCofactorX963SHA1")]
+		EcdhKeyExchangeCofactorX963Sha1,
+
+		[Field ("kSecKeyAlgorithmECDHKeyExchangeCofactorX963SHA224")]
+		EcdhKeyExchangeCofactorX963Sha224,
+
+		[Field ("kSecKeyAlgorithmECDHKeyExchangeCofactorX963SHA256")]
+		EcdhKeyExchangeCofactorX963Sha256,
+
+		[Field ("kSecKeyAlgorithmECDHKeyExchangeCofactorX963SHA384")]
+		EcdhKeyExchangeCofactorX963Sha384,
+
+		[Field ("kSecKeyAlgorithmECDHKeyExchangeCofactorX963SHA512")]
+		EcdhKeyExchangeCofactorX963Sha512,
+	}
+
+	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
+	enum SslSessionConfig {
+		[Field ("kSSLSessionConfig_default")]
+		Default,
+
+		[Field ("kSSLSessionConfig_ATSv1")]
+		Ats1,
+
+		[Field ("kSSLSessionConfig_ATSv1_noPFS")]
+		Ats1NoPfs,
+
+		[Field ("kSSLSessionConfig_standard")]
+		Standard,
+
+		[Field ("kSSLSessionConfig_RC4_fallback")]
+		RC4Fallback,
+
+		[Field ("kSSLSessionConfig_TLSv1_fallback")]
+		Tls1Fallback,
+
+		[Field ("kSSLSessionConfig_TLSv1_RC4_fallback")]
+		Tls1RC4Fallback,
+
+		[Field ("kSSLSessionConfig_legacy")]
+		Legacy,
+
+		[Field ("kSSLSessionConfig_legacy_DHE")]
+		LegacyDhe,
+
+		[Field ("kSSLSessionConfig_anonymous")]
+		Anonymous,
+	}
+
+	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
+	[Internal][Static]
+	interface SecKeyKeyExchangeParameterKey {
+		[Field ("kSecKeyKeyExchangeParameterRequestedSize")]
+		NSString RequestedSizeKey { get; }
+
+		[Field ("kSecKeyKeyExchangeParameterSharedInfo")]
+		NSString SharedInfoKey { get; }
+	}
+
+	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
+	[StrongDictionary ("SecKeyKeyExchangeParameterKey")]
+	interface SecKeyKeyExchangeParameter {
+
+		int RequestedSize { get; set; }
+
+		NSData SharedInfo { get; set; }
 	}
 }

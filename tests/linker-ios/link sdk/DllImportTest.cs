@@ -13,10 +13,12 @@ using System.Runtime.InteropServices;
 #if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
+using UIKit;
 #else
 using MonoTouch;
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;
+using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
@@ -50,15 +52,26 @@ namespace LinkSdk {
 			try {
 				Assert.That (Dlfcn.dlsym (lib, "sqlite3_bind_int"), Is.Not.EqualTo (IntPtr.Zero), "sqlite3_bind_int");
 				// iOS does not have some symbols defined - if that change/fail in the future we'll need to update Mono.Data.Sqlite
-				Assert.That (Dlfcn.dlsym (lib, "sqlite3_key"), Is.EqualTo (IntPtr.Zero), "sqlite3_key");
-				Assert.That (Dlfcn.dlsym (lib, "sqlite3_rekey"), Is.EqualTo (IntPtr.Zero), "sqlite3_rekey");
+				// note: Apple devices (at least iOS and AppleTV) running 10.x have a more recent version of libsqlite which includes _key and _rekey
+#if __WATCHOS__
+				var version = true;
+#else
+				var version = UIDevice.CurrentDevice.CheckSystemVersion (10,0);
+#endif
+				if (version && (Runtime.Arch == Arch.DEVICE)) {
+					Assert.That (Dlfcn.dlsym (lib, "sqlite3_key"), Is.Not.EqualTo (IntPtr.Zero), "sqlite3_key");
+					Assert.That (Dlfcn.dlsym (lib, "sqlite3_rekey"), Is.Not.EqualTo (IntPtr.Zero), "sqlite3_rekey");
+				} else {
+					Assert.That (Dlfcn.dlsym (lib, "sqlite3_key"), Is.EqualTo (IntPtr.Zero), "sqlite3_key");
+					Assert.That (Dlfcn.dlsym (lib, "sqlite3_rekey"), Is.EqualTo (IntPtr.Zero), "sqlite3_rekey");
+				}
 				Assert.That (Dlfcn.dlsym (lib, "sqlite3_column_database_name"), Is.EqualTo (IntPtr.Zero), "sqlite3_column_database_name");
 				Assert.That (Dlfcn.dlsym (lib, "sqlite3_column_database_name16"), Is.EqualTo (IntPtr.Zero), "sqlite3_column_database_name16");
 				Assert.That (Dlfcn.dlsym (lib, "sqlite3_column_origin_name"), Is.EqualTo (IntPtr.Zero), "sqlite3_column_origin_name");
 				Assert.That (Dlfcn.dlsym (lib, "sqlite3_column_origin_name16"), Is.EqualTo (IntPtr.Zero), "sqlite3_column_origin_name16");
 				Assert.That (Dlfcn.dlsym (lib, "sqlite3_column_table_name"), Is.EqualTo (IntPtr.Zero), "sqlite3_column_table_name");
 				Assert.That (Dlfcn.dlsym (lib, "sqlite3_column_table_name16"), Is.EqualTo (IntPtr.Zero), "sqlite3_column_table_name16");
-				}
+			}
 			finally {
 				Dlfcn.dlclose (lib);
 			}

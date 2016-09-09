@@ -401,6 +401,21 @@ namespace XamCore.GLKit {
 		
 		[Export ("target")]
 		GLKTextureTarget Target { get; }
+
+		[iOS (10,0)][Mac (10,12, onlyOn64: true)]
+		[TV (10,0)]
+		[Export ("mimapLevelCount")]
+		uint MimapLevelCount { get; }
+
+		[iOS (10,0)][Mac (10,12, onlyOn64: true)]
+		[TV (10,0)]
+		[Export ("arrayLength")]
+		uint ArrayLength { get; }
+
+		[iOS (10,0)][Mac (10,12, onlyOn64: true)]
+		[TV (10,0)]
+		[Export ("depth")]
+		uint Depth { get; }
 	}
 
 	delegate void GLKTextureLoaderCallback (GLKTextureInfo textureInfo, NSError error);
@@ -437,6 +452,13 @@ namespace XamCore.GLKit {
 		[Export ("cubeMapWithContentsOfURL:options:error:")]
 		GLKTextureInfo CubeMapFromUrl (NSUrl url, [NullAllowed] NSDictionary textureOperations, out NSError error);
 
+		[iOS (10,0)][Mac (10,12, onlyOn64: true)]
+		[TV (10,0)]
+		[Static]
+		[Export ("textureWithName:scaleFactor:bundle:options:error:")]
+		[return: NullAllowed]
+		GLKTextureInfo FromName (string name, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary<NSString, NSNumber> options, out NSError outError);
+
 #if !MONOMAC
 		[Export ("initWithSharegroup:")]
 		IntPtr Constructor (EAGLSharegroup sharegroup);
@@ -469,6 +491,12 @@ namespace XamCore.GLKit {
 		[Export ("cubeMapWithContentsOfURL:options:queue:completionHandler:")]
 		[Async]
 		void BeginLoadCubeMap (NSUrl filePath, [NullAllowed] NSDictionary textureOperations, [NullAllowed] DispatchQueue queue, GLKTextureLoaderCallback onComplete);
+
+		[iOS (10,0)][Mac (10,12, onlyOn64: true)]
+		[TV (10,0)]
+		[Export ("textureWithName:scaleFactor:bundle:options:queue:completionHandler:")]
+		[Async]
+		void BeginTextureLoad (string name, nfloat scaleFactor, [NullAllowed] NSBundle bundle, [NullAllowed] NSDictionary<NSString, NSNumber> options, [NullAllowed] DispatchQueue queue, GLKTextureLoaderCallback block);
 
 		[Field ("GLKTextureLoaderApplyPremultiplication")]
 		NSString ApplyPremultiplication { get; }

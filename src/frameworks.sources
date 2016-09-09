@@ -123,6 +123,7 @@ APPKIT_SOURCES = \
 	AppKit/NSScreen.cs \
 	AppKit/NSSegmentedControl.cs \
 	AppKit/NSSharingService.cs \
+	AppKit/NSSlider.cs \
 	AppKit/NSSound.cs \
 	AppKit/NSSpeechSynthesizer.cs \
 	AppKit/NSSpellChecker.cs \
@@ -141,6 +142,8 @@ APPKIT_SOURCES = \
 	AppKit/NSSavePanel.cs \
 	AppKit/NSWorkspace.cs \
 	AppKit/NSCollectionView.cs \
+	AppKit/NSTextTableBlock.cs \
+	AppKit/NSMutableFontCollection.cs \
 	AppKit/NSCollectionViewLayout.cs
 
 # AssetsLibrary
@@ -228,6 +231,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVAudioSessionDataSourceDescription.cs \
 	AVFoundation/AVAudioSessionPortDescription.cs \
 	AVFoundation/AVCaptureConnection.cs \
+	AVFoundation/AVCaptureDeviceDiscoverySession.cs \
 	AVFoundation/AVCaptureDeviceInput.cs \
 	AVFoundation/AVCaptureFileOutput.cs \
 	AVFoundation/AVCaptureMetadataOutput.cs \
@@ -241,6 +245,7 @@ AVFOUNDATION_SOURCES = \
 	AVFoundation/AVMetadataObject.cs \
 	AVFoundation/AVOutputSettingsAssistant.cs \
 	AVFoundation/AVPlayer.cs \
+	AVFoundation/AVPlayerItemVideoOutput.cs \
 	AVFoundation/AVPlayerLayer.cs \
 	AVFoundation/AVPlayerViewController.cs \
 	AVFoundation/AVTextStyleRule.cs \
@@ -254,6 +259,11 @@ AVKIT_API_SOURCES = \
 
 AVKIT_SOURCES = \
 	AVKit/AVPlayerViewController.cs \
+
+# CallKit
+
+CALLKIT_SOURCES = \
+	CallKit/CXProvider.cs \
 
 # ClockKit
 
@@ -270,6 +280,7 @@ CLOUDKIT_SOURCES = \
 	CloudKit/CKRecord.cs \
 	CloudKit/CKRecordID.cs \
 	CloudKit/CKRecordZoneID.cs \
+	CloudKit/CKUserIdentityLookupInfo.cs \
 
 # CFNetwork
 
@@ -388,6 +399,7 @@ COREGRAPHICS_SOURCES = \
 	CoreGraphics/CGBitmapContext.cs \
 	CoreGraphics/CGContextPDF.cs \
 	CoreGraphics/CGColorConverter.cs \
+	CoreGraphics/CGColorConversionInfo.cs \
 	CoreGraphics/CGDataConsumer.cs \
 	CoreGraphics/CGDataProvider-2.cs \
 	CoreGraphics/CGDataProvider.cs \
@@ -488,6 +500,7 @@ CORESPOTLIGHT_API_SOURCES = \
 	CoreSpotlight/CSEnums.cs \
 	
 CORESPOTLIGHT_SOURCES = \
+	CoreSpotlight/CSCompat.cs \
 	CoreSpotlight/CSSearchableIndex.cs \
 	CoreSpotlight/CSSearchableItemAttributeSet.cs \
 
@@ -529,6 +542,7 @@ CORETELEPHONY_CORE_SOURCES = \
 
 COREVIDEO_CORE_SOURCES = \
 	CoreVideo/CoreVideo.cs \
+	CoreVideo/CVPixelFormatType.cs \
 	CoreVideo/CVBuffer.cs \
 	CoreVideo/CVImageBuffer.cs \
 	CoreVideo/CVPixelBuffer.cs \
@@ -590,6 +604,7 @@ FOUNDATION_CORE_SOURCES = \
 	Foundation/NSAction.cs \
 	Foundation/NSAutoreleasePool.cs \
 	Foundation/NSDecimal.cs \
+	Foundation/NSDimension.cs \
 	Foundation/NSError.cs \
 	Foundation/NSNumber.cs \
 	Foundation/NSObject2.cs \
@@ -723,15 +738,23 @@ GAMEKIT_SOURCES = \
 
 # GameplayKit
 
+GAMEPLAYKIT_CORE_SOURCES = \
+	GameplayKit/GKPrimitives.cs \
+
 GAMEPLAYKIT_SOURCES = \
 	GameplayKit/GKBehavior.cs \
+	GameplayKit/GKCompat.cs \
 	GameplayKit/GKComponentSystem.cs \
+	GameplayKit/GKCompositeBehavior.cs \
 	GameplayKit/GKEntity.cs \
 	GameplayKit/GKGameModel.cs \
+	GameplayKit/GKGridGraph.cs \
+	GameplayKit/GKObstacleGraph.cs \
 	GameplayKit/GKPath.cs \
 	GameplayKit/GKPolygonObstacle.cs \
 	GameplayKit/GKState.cs \
 	GameplayKit/GKStateMachine.cs \
+	GameplayKit/NSArray_GameplayKit.cs \
 
 # GLKit
 
@@ -794,6 +817,18 @@ IMAGEIO_SOURCES = \
 IMAGEKIT_CORE_SOURCES = \
 	ImageKit/Enums.cs \
 
+# Intents
+
+INTENTS_SOURCES = \
+	Intents/INIntentResolutionResult.cs \
+	Intents/INPriceRange.cs \
+	Intents/INRideOption.cs \
+	Intents/INSetClimateSettingsInCarIntent.cs \
+	Intents/INSetDefrosterSettingsInCarIntent.cs \
+	Intents/INSetProfileInCarIntent.cs \
+	Intents/INSetSeatSettingsInCarIntent.cs \
+	Intents/INStartWorkoutIntent.cs \
+
 # JavaScriptCore
 
 JAVASCRIPTCORE_SOURCES = \
@@ -802,7 +837,7 @@ JAVASCRIPTCORE_SOURCES = \
 
 # LocalAuthentication
 
-LOCALAUTHENTICATION_CORE_SOURCES = \
+LOCALAUTHENTICATION_API_SOURCES = \
 	Localauthentication/LAEnums.cs \
 
 # MapKit
@@ -843,6 +878,7 @@ MEDIAPLAYER_SOURCES = \
 	MediaPlayer/MPMoviePlayerController.cs \
 	MediaPlayer/MPNowPlayingInfoCenter.cs \
 	MediaPlayer/MPPlayableContentDelegate.cs \
+	MediaPlayer/MPRemoteCommandCenter.cs \
 	MediaPlayer/MPSkipIntervalCommand.cs \
 	MediaPlayer/MPVolumeSettings.cs \
 
@@ -877,6 +913,7 @@ METAL_CORE_SOURCES = \
 	Metal/Defs.cs \
 
 METAL_SOURCES = \
+	Metal/MTLCompat.cs \
 	Metal/MTLDevice.cs \
 	Metal/MTLArrays.cs \
 	Metal/MTLVertexDescriptor.cs \
@@ -923,8 +960,10 @@ MULTIPEERCONNECTIVITY_SOURCES = \
 
 # NetworkExtension
 
-NETWORKEXTENSION_CORE_SOURCES = \
+NETWORKEXTENSION_API_SOURCES = \
 	NetworkExtension/NEEnums.cs \
+
+NETWORKEXTENSION_CORE_SOURCES = \
 	NetworkExtension/NEHotspotHelperOptions.cs \
 	NetworkExtension/NEVpnConnectionStartOptions.cs \
 
@@ -939,7 +978,7 @@ NEWSSTANDKIT_CORE_SOURCES = \
 
 # NotificationCenter
 
-NOTIFICATIONCENTER_CORE_SOURCES = \
+NOTIFICATIONCENTER_API_SOURCES = \
 	NotificationCenter/NCEnums.cs \
 
 # OpenGL
@@ -1000,7 +1039,7 @@ OPENGLES_SOURCES = \
 
 # PassKit
 
-PASSKIT_CORE_SOURCES = \
+PASSKIT_API_SOURCES = \
 	PassKit/PKEnums.cs \
 
 # PdfKit
@@ -1013,7 +1052,7 @@ PDFKIT_SOURCES = \
 
 # Photos
 
-PHOTOS_CORE_SOURCES = \
+PHOTOS_API_SOURCES = \
 	Photos/Enums.cs \
 
 PHOTOS_SOURCES = \
@@ -1057,6 +1096,9 @@ QUICKLOOKUI_SOURCES = \
 
 REPLAYKIT_API_SOURCES = \
 	ReplayKit/RPEnums.cs \
+
+REPLAYKIT_SOURCES = \
+	ReplayKit/RPBroadcastConfiguration.cs \
 
 # SafariServices
 
@@ -1155,7 +1197,9 @@ SPRITEKIT_SOURCES = \
 	SpriteKit/SKNode.cs \
 	SpriteKit/SKFieldNode.cs \
 	SpriteKit/SKShapeNode.cs \
+	SpriteKit/SKUniform.cs \
 	SpriteKit/SKVideoNode.cs \
+	SpriteKit/SKWarpGeometryGrid.cs \
 
 # StoreKit
 
@@ -1276,6 +1320,7 @@ UIKIT_SOURCES = \
 	UIKit/UITextAttributes.cs \
 	UIKit/UITextField.cs \
 	UIKit/UITextView.cs \
+	UIKit/UITraitCollection.cs \
 	UIKit/UIToolbar.cs \
 	UIKit/UIVibrancyEffect.cs \
 	UIKit/UIVideo.cs \
@@ -1283,6 +1328,16 @@ UIKIT_SOURCES = \
 	UIKit/UIViewController.cs \
 	UIKit/UIViewControllerTransitionCoordinatorContext.cs \
 	UIKit/UIWindow.cs \
+
+# UserNotifications
+
+USERNOTIFICATIONS_SOURCES = \
+	UserNotifications/UNNotificationAttachment.cs \
+
+# VideoSubscriberAccount
+
+VIDEOSUBSCRIBERACCOUNT_SOURCES = \
+	VideoSubscriberAccount/VSAccountManager.cs \
 
 # VideoToolbox
 
@@ -1421,6 +1476,7 @@ SHARED_SOURCES = \
 	ObjCRuntime/ThreadSafeAttribute.cs \
 	ObjCRuntime/TransientAttribute.cs \
 	ObjCRuntime/TypeConverter.cs \
+	ObjCRuntime/UserDelegateTypeAttribute.cs \
 	$(APPLETLS_SOURCES)
 
 #
@@ -1433,9 +1489,13 @@ SHARED_SOURCES = \
 # wkwebkit.cs (webkit.cs is already used for Mac bindings)
 #
 
-COMMON_FRAMEWORKS =      \
-	CoreFoundation       \
-	Foundation           \
+COMMON_FRAMEWORKS =         \
+	AVFoundation            \
+	CoreFoundation          \
+	Foundation              \
+	GameKit                 \
+	SceneKit                \
+	SpriteKit               \
 
 MAC_FRAMEWORKS =            \
 	$(COMMON_FRAMEWORKS)    \
@@ -1445,7 +1505,6 @@ MAC_FRAMEWORKS =            \
 	AppKit                  \
 	AudioToolbox            \
 	AudioUnit               \
-	AVFoundation            \
 	AVKit                   \
 	CFNetwork               \
 	CloudKit                \
@@ -1467,11 +1526,11 @@ MAC_FRAMEWORKS =            \
 	EventKit                \
 	FinderSync		\
 	GameController          \
-	GameKit                 \
 	GameplayKit             \
 	GLKit                   \
 	ImageIO                 \
 	ImageKit                \
+	Intents                 \
 	JavaScriptCore          \
 	LocalAuthentication     \
 	MapKit                  \
@@ -1487,16 +1546,16 @@ MAC_FRAMEWORKS =            \
 	NotificationCenter 	\
 	OpenGL                  \
 	PdfKit                  \
+	Photos                  \
 	QTKit                   \
 	QuartzComposer          \
 	QuickLook               \
 	QuickLookUI             \
-	SceneKit                \
+	SafariServices          \
 	ScriptingBridge         \
 	SearchKit               \
 	Security                \
 	Social                  \
-	SpriteKit               \
 	StoreKit                \
 	SystemConfiguration     \
 	VideoToolbox            \
@@ -1505,7 +1564,6 @@ MAC_FRAMEWORKS =            \
 
 IOS_FRAMEWORKS =         \
 	$(COMMON_FRAMEWORKS) \
-	AVFoundation \
 	AVKit \
 	Accelerate \
 	Accounts \
@@ -1515,6 +1573,7 @@ IOS_FRAMEWORKS =         \
 	AssetsLibrary \
 	AudioToolbox \
 	AudioUnit \
+	CallKit \
 	CFNetwork \
 	CloudKit \
 	Contacts \
@@ -1538,18 +1597,20 @@ IOS_FRAMEWORKS =         \
 	ExternalAccessory \
 	GLKit \
 	GameController \
-	GameKit \
 	GameplayKit \
 	HealthKit \
 	HealthKitUI \
 	HomeKit \
 	ImageIO \
+	Intents \
+	IntentsUI \
 	JavaScriptCore \
 	LocalAuthentication \
 	MapKit \
 	MediaAccessibility \
 	MediaPlayer \
 	MediaToolbox \
+	Messages \
 	MessageUI \
 	Metal \
 	MetalKit \
@@ -1568,15 +1629,17 @@ IOS_FRAMEWORKS =         \
 	QuickLook \
 	ReplayKit \
 	SafariServices \
-	SceneKit \
 	Security \
 	Social \
-	SpriteKit \
+	Speech \
 	StoreKit \
 	SystemConfiguration \
 	Twitter \
 	UIKit \
+	UserNotifications \
+	UserNotificationsUI \
 	VideoToolbox \
+	VideoSubscriberAccount \
 	WatchConnectivity \
 	WatchKit \
 	WKWebKit \
@@ -1585,6 +1648,7 @@ IOS_FRAMEWORKS =         \
 WATCHOS_FRAMEWORKS =        \
 	$(COMMON_FRAMEWORKS)    \
 	ClockKit                \
+	CloudKit                \
 	Contacts                \
 	CoreData                \
 	CoreGraphics            \
@@ -1600,12 +1664,12 @@ WATCHOS_FRAMEWORKS =        \
 	PassKit                 \
 	Security                \
 	UIKit                   \
+	UserNotifications       \
 	WatchConnectivity       \
 	WatchKit                \
 
 TVOS_FRAMEWORKS =           \
 	$(COMMON_FRAMEWORKS)    \
-	AVFoundation            \
 	AVKit                   \
 	Accelerate              \
 	AdSupport               \
@@ -1623,10 +1687,11 @@ TVOS_FRAMEWORKS =           \
 	CoreSpotlight			\
 	CoreText                \
 	CoreVideo               \
+	ExternalAccessory       \
 	GLKit                   \
 	GameController          \
-	GameKit                 \
 	GameplayKit             \
+	HomeKit                 \
 	ImageIO                 \
 	JavaScriptCore          \
 	MapKit                  \
@@ -1638,15 +1703,19 @@ TVOS_FRAMEWORKS =           \
 	MetalPerformanceShaders \
 	MobileCoreServices      \
 	ModelIO                 \
+	MultipeerConnectivity   \
 	OpenGLES                \
-	SceneKit                \
+	Photos                  \
+	PhotosUI                \
+	ReplayKit               \
 	Security                \
-	SpriteKit               \
 	StoreKit                \
 	SystemConfiguration     \
 	TVMLKit                 \
 	TVServices				\
 	UIKit                   \
+	UserNotifications       \
+	VideoSubscriberAccount  \
 
 #
 # Compute the SOURCES variables.

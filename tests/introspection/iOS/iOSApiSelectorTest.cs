@@ -90,6 +90,11 @@ namespace Introspection {
 			case "CAMetalLayer":
 				return (Runtime.Arch == Arch.SIMULATOR);
 
+			// iOS 10 - this type can only be instantiated on devices, but the selectors are forwarded
+			//  to a MTLHeapDescriptorInternal and don't respond - so we'll add unit tests for them
+			case "MTLHeapDescriptor":
+				return Runtime.Arch == Arch.DEVICE;
+
 			default:
 				return base.Skip (type);
 			}
@@ -162,6 +167,27 @@ namespace Introspection {
 					if (!TestRuntime.CheckXcodeVersion (7, 3))
 						return true;
 					break;
+				}
+				break;
+			case "SKNode":
+				switch (name) {
+				// UIFocus protocol conformance on iOS10+
+				case "didUpdateFocusInContext:withAnimationCoordinator:":
+				case "setNeedsFocusUpdate":
+				case "shouldUpdateFocusInContext:":
+				case "updateFocusIfNeeded":
+#if __TVOS__
+				case "canBecomeFocused":
+#else
+				case "preferredFocusedView":
+#endif
+					if (!TestRuntime.CheckXcodeVersion (8, 0))
+						return true;
+					break;
+#if __TVOS__
+				case "preferredFocusedView":
+					return true;
+#endif
 				}
 				break;
 			}
@@ -512,6 +538,8 @@ namespace Introspection {
 				case "HKBiologicalSexObject":
 				case "HKBloodTypeObject":
 					return !TestRuntime.CheckXcodeVersion (7, 0);
+				case "HKWorkoutEvent":
+					return !TestRuntime.CheckXcodeVersion (8, 0);
 				}
 				break;
 
@@ -546,6 +574,15 @@ namespace Introspection {
 				}
 				break;
 
+			case "preferredFocusedView":
+				switch (declaredType.Name) {
+				// UIFocusGuide (added in iOS 9.0 and deprecated in iOS 10)
+				case "UIView":
+				case "UIViewController":
+					return !TestRuntime.CheckXcodeVersion (7,0);
+				}
+				break;
+
 #if XAMCORE_2_0
 			// some types adopted NS[Secure]Coding after the type was added
 			// and for unified that's something we generate automatically (so we can't put [iOS] on them)
@@ -558,6 +595,11 @@ namespace Introspection {
 				case "HKBiologicalSexObject":
 				case "HKBloodTypeObject":
 					return !TestRuntime.CheckXcodeVersion (7, 0);
+#if __TVOS__
+				case "SKAttribute":
+				case "SKAttributeValue":
+					return !TestRuntime.CheckXcodeVersion (7, 2);
+#endif
 				}
 				break;
 #else
@@ -584,6 +626,18 @@ namespace Introspection {
 					return true;
 				}
 				break;
+#if __WATCHOS__
+			case "fetchAllRecordZonesOperation":
+			case "fetchCurrentUserRecordOperation":
+			case "notificationFromRemoteNotificationDictionary:":
+			case "containerWithIdentifier:":
+			case "defaultContainer":
+			case "defaultRecordZone":
+				// needs investigation, seems all class selectors from CloudKit don't answer
+				if (declaredType.Namespace == "CloudKit")
+					return true;
+				break;
+#endif
 			}
 			return base.CheckStaticResponse (value, actualType, declaredType, ref name);
 		}

@@ -40,6 +40,7 @@ namespace XamCore.AVFoundation {
 		Max = 0x7F
 	}
 
+	[NoWatch]
 	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVAssetExportSession.h
@@ -52,6 +53,7 @@ namespace XamCore.AVFoundation {
 		Cancelled
 	}
 
+	[NoWatch]
 	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVAssetReader.h
@@ -63,6 +65,7 @@ namespace XamCore.AVFoundation {
 		Cancelled,
 	}
 
+	[NoWatch]
 	[iOS (4,1)]
 	[Native]
 	// NSInteger - AVAssetWriter.h
@@ -74,7 +77,7 @@ namespace XamCore.AVFoundation {
 		Cancelled,
 	}
 
-	[NoTV]
+	[NoTV, NoWatch]
 	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVCaptureSession.h
@@ -85,6 +88,7 @@ namespace XamCore.AVFoundation {
 		LandscapeLeft,
 	}
 
+	[NoWatch]
 	[NoTV]
 	[iOS (4,0)]
 	[Native]
@@ -93,6 +97,7 @@ namespace XamCore.AVFoundation {
 		Off, On, Auto
 	}
 
+	[NoWatch]
 	[NoTV]
 	[iOS (4,0)]
 	[Native]
@@ -101,6 +106,7 @@ namespace XamCore.AVFoundation {
 		Off, On, Auto
 	}
 
+	[NoWatch]
 	[NoTV]
 	[iOS (4,0)]
 	[Native]
@@ -121,6 +127,7 @@ namespace XamCore.AVFoundation {
 #endif
 	}
 
+	[NoWatch]
 	[NoTV]
 	[iOS (4,0)]
 	[Native]
@@ -130,7 +137,8 @@ namespace XamCore.AVFoundation {
 		Back = 1,
 		Front = 2
 	}
-	
+
+	[NoWatch]
 	[NoTV]
 	[iOS (4,0)]
 	[Native]
@@ -139,6 +147,7 @@ namespace XamCore.AVFoundation {
 		Locked, AutoExpose, ContinuousAutoExposure, [iOS (8,0)] Custom
 	}
 
+	[NoWatch]
 	[NoTV]
 	[iOS (4,0)]
 	[Native]
@@ -147,8 +156,9 @@ namespace XamCore.AVFoundation {
 		Locked, AutoWhiteBalance, ContinuousAutoWhiteBalance
 	}
 
+#if !MONOMAC || !XAMCORE_4_0
 	[Flags]
-	[NoTV]
+	[NoTV, NoWatch]
 	[iOS (4,0)]
 	[Native]
 	[Availability (Deprecated = Platform.iOS_6_0)]
@@ -156,9 +166,11 @@ namespace XamCore.AVFoundation {
 	public enum AVAudioSessionInterruptionFlags : nuint_compat_int {
 		ShouldResume = 1
 	}
+#endif
 
 	// Populated in NSError.Code, an NSInteger
 	// anonymous enum - AVError.h
+	[NoWatch]
 	[Native]
 	public enum AVError : nint {
 		Unknown = -11800,
@@ -181,11 +193,11 @@ namespace XamCore.AVFoundation {
 		MediaServicesWereReset = -11819,
 		ExportFailed = -11820,
 		DecodeFailed = -11821,
-		InvalidSourceMedia = - 11822,
+		InvalidSourceMedia = -11822,
 		FileAlreadyExists = -11823,
 		CompositionTrackSegmentsNotContiguous = -11824,
 		InvalidCompositionTrackSegmentDuration = -11825,
-		InvalidCompositionTrackSegmentSourceStartTime= -11826,
+		InvalidCompositionTrackSegmentSourceStartTime = -11826,
 		InvalidCompositionTrackSegmentSourceDuration = -11827,
 		FormatNotRecognized = -11828,
 		FailedToParse = -11829, // Should have been FileFailedToParse
@@ -225,10 +237,15 @@ namespace XamCore.AVFoundation {
 
 #if !MONOMAC
 		[iOS (9,0)]
-		RecordingAlreadyInProgress = -11859
+		RecordingAlreadyInProgress = -11859,
 #endif
+		[NoWatch, iOS (10,0), TV (10,0), Mac (10,12)]
+		UnsupportedOutputSettings = -11861,
+		[NoWatch, iOS (10,0), TV (10,0), Mac (10,12)]
+		OperationNotAllowed = -11862,
 	}
 
+	[NoWatch]
 	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVPlayer.h
@@ -238,6 +255,7 @@ namespace XamCore.AVFoundation {
 		None
 	}
 
+	[NoWatch]
 	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVPlayerItem.h
@@ -245,6 +263,7 @@ namespace XamCore.AVFoundation {
 		Unknown, ReadyToPlay, Failed
 	}
 
+#if !MONOMAC || !XAMCORE_4_0
 	[NoTV]
 	[Flags]
 	[iOS (4,0)]
@@ -254,7 +273,9 @@ namespace XamCore.AVFoundation {
 	public enum AVAudioSessionFlags : nuint_compat_int {
 		NotifyOthersOnDeactivation = 1
 	}
+#endif
 
+	[NoWatch]
 	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVAsynchronousKeyValueLoading.h
@@ -262,6 +283,7 @@ namespace XamCore.AVFoundation {
 		Unknown, Loading, Loaded, Failed, Cancelled
 	}
 
+	[NoWatch]
 	[iOS (4,0)]
 	[Native]
 	// NSInteger - AVPlayer.h
@@ -271,6 +293,7 @@ namespace XamCore.AVFoundation {
 		Failed
 	}
 
+	[NoWatch]
 	[Native]
 	// NSUInteger - AVAsset.h
 	public enum AVAssetReferenceRestrictions : nuint_compat_int {
@@ -282,6 +305,7 @@ namespace XamCore.AVFoundation {
 		ForbidAll = 0xFFFF,
 	}
 
+	[NoWatch]
 	[Native]
 	// NSInteger - AVAssetImageGenerator.h
 	public enum AVAssetImageGeneratorResult : nint {
@@ -297,7 +321,7 @@ namespace XamCore.AVFoundation {
 		NotPlaying, Playing
 	}
 
-	[NoTV]
+	[NoTV, NoWatch]
 	[Mac (10,7)] // N/A in iOS
 	[Native]
 	// NSInteger - AVCaptureSession.h
@@ -306,6 +330,7 @@ namespace XamCore.AVFoundation {
 	}
 #endif
 
+#if !MONOMAC || !XAMCORE_4_0
 	[Flags]
 	[Native]
 	// NSUInteger - AVAudioSession.h
@@ -352,8 +377,12 @@ namespace XamCore.AVFoundation {
 		[NoTV]
 		DefaultToSpeaker = 8,
 
-		[iOS (9,0), Mac (10,11)]
-		InterruptSpokenAudioAndMixWithOthers = 17
+		[iOS (9,0)]
+		InterruptSpokenAudioAndMixWithOthers = 17,
+		[NoWatch, iOS (10,0), TV (10,0)]
+		AllowBluetoothA2DP = 32,
+		[NoWatch, iOS (10,0), TV (10,0)]
+		AllowAirPlay = 64,
 	}
 
 	[Native]
@@ -381,7 +410,9 @@ namespace XamCore.AVFoundation {
 		[iOS (9,0)]
 		CodeResourceNotAvailable = 0x21726573
 	}
+#endif
 
+	[NoWatch]
 	[NoTV]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
@@ -405,6 +436,7 @@ namespace XamCore.AVFoundation {
 		Mastering
 	}
 
+	[NoWatch]
 	[NoTV]
 	[Native]
 	// NSInteger - AVCaptureDevice.h
@@ -412,6 +444,7 @@ namespace XamCore.AVFoundation {
 		NotDetermined, Restricted, Denied, Authorized
 	}
 
+#if !MONOMAC || !XAMCORE_4_0
 	[iOS (7,0)]
 	[Native]
 	// NSInteger - AVSpeechSynthesis.h
@@ -419,6 +452,7 @@ namespace XamCore.AVFoundation {
 		Immediate,
 		Word
 	}
+#endif
 
 	[iOS (8,0)]
 	[Native]
@@ -439,7 +473,8 @@ namespace XamCore.AVFoundation {
 		StereoPassThrough = 5
 	}
 
-	[NoTV]
+#if !MONOMAC || !XAMCORE_4_0
+	[NoTV, NoWatch]
 	[Native]
 	public enum AVAudioSessionRecordPermission : nuint {
 		Undetermined = 1970168948 /*'undt'*/,
@@ -452,6 +487,7 @@ namespace XamCore.AVFoundation {
 		Begin = 1,
 		End = 0
 	}
+#endif
 
 	[Flags]
 	[Native]
@@ -526,19 +562,21 @@ namespace XamCore.AVFoundation {
 		Linear = 3
 	}
 
+	[NoWatch]
 	[NoTV]
 	[Native]
 	public enum AVQueuedSampleBufferRenderingStatus : nint {
 		Unknown, Rendering, Failed
 	}
 
+	[NoWatch]
 	[NoTV]
 	[Native]
 	public enum AVCaptureVideoStabilizationMode : nint {
 		Off, Standard, Cinematic, Auto = -1
 	}
 
-	[NoTV]
+	[NoTV, NoMac, NoWatch, iOS (8,0)]
 	[Native]
 	public enum AVCaptureAutoFocusSystem : nint {
 		None,
@@ -596,7 +634,7 @@ namespace XamCore.AVFoundation {
 	}
 
 #if !MONOMAC
-	[NoTV]
+	[NoTV, NoWatch]
 	[iOS (9,0)]
 	[Native]
 	public enum AVCaptureSessionInterruptionReason : nint {
@@ -655,4 +693,60 @@ namespace XamCore.AVFoundation {
 		TruncateDestinationToMovieHeaderOnly = (1 << 0)
 	}
 #endif
+
+	[NoTV, NoWatch, NoMac, iOS (10,0)]
+	[Native]
+	public enum AVCaptureColorSpace : nint
+	{
+		Srgb = 0,
+		P3D65 = 1
+	}
+
+	[iOS (8,0)]
+	[Native]
+	public enum AVMusicTrackLoopCount : nint
+	{
+		Forever = -1
+	}
+
+	[NoWatch, iOS (10,0), TV (10,0), Mac (10,12)]
+	[Native]
+	public enum AVPlayerTimeControlStatus : nint
+	{
+		Paused,
+		WaitingToPlayAtSpecifiedRate,
+		Playing
+	}
+
+	[NoWatch, NoTV, iOS (10,0), NoMac]
+	[Native]
+	public enum AVAudioSessionIOType : nint
+	{
+		NotSpecified = 0,
+		Aggregated = 1,
+	}
+
+	[NoWatch, iOS (10,0), TV (10,0), Mac (10,12)]
+	[Native]
+	public enum AVPlayerLooperStatus : nint {
+		Unknown,
+		Ready,
+		Failed,
+		Cancelled
+	}
+	
+	[NoiOS, TV (10,0), NoWatch, NoMac]
+	[Native]
+	public enum AVContentProposalAction : nint {
+		Accept,
+		Reject,
+		Defer
+	}
+
+	[NoiOS, TV (10,0), NoWatch, NoMac]
+	[Native]
+	public enum AVPlayerViewControllerSkippingBehavior : nint {
+		Default = 0,
+		SkipItem
+	}
 }

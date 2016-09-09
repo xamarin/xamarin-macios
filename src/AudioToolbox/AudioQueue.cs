@@ -70,6 +70,8 @@ namespace XamCore.AudioToolbox {
 		EnqueueDuringReset   = -66632,
 		InvalidOfflineMode   = -66626,
 		BufferEnqueuedTwice  = -66666,
+		[iOS (10,0), Mac (10,12, onlyOn64: true)]
+		CannotStartYet       = -66665,
 		
 		// There is countless of not well documented error codes returned
 		QueueStopped         = 0x73746f70,	// 'stop'

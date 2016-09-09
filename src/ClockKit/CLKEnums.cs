@@ -4,7 +4,7 @@
 // Authors:
 //	Alex Soto  <alex.soto@xamarin.com>
 //
-// Copyright 2015 Xamarin Inc. All rights reserved.
+// Copyright 2015-2016 Xamarin Inc. All rights reserved.
 //
 
 using System;
@@ -18,7 +18,12 @@ namespace XamCore.ClockKit {
 		ModularLarge,
 		UtilitarianSmall,
 		UtilitarianLarge,
-		CircularSmall
+		CircularSmall,
+		// nothing has the value of 5
+		[Watch (3,0)]
+		UtilitarianSmallFlat = 6,
+		[Watch (3,0)]
+		ExtraLarge = 7,
 	}
 
 	[Native]

@@ -33,6 +33,7 @@ namespace ObjCRuntime {
 		public const string GameKitLibrary = "/System/Library/Frameworks/GameKit.framework/GameKit";
 		public const string GameplayKitLibrary = "/System/Library/Frameworks/GameplayKit.framework/GameplayKit";
 		public const string GLKitLibrary = "/System/Library/Frameworks/GLKit.framework/GLKit";
+		public const string HomeKitLibrary = "/System/Library/Frameworks/HomeKit.framework/HomeKit";
 		public const string ImageIOLibrary = "/System/Library/Frameworks/ImageIO.framework/ImageIO";
 		public const string JavaScriptCoreLibrary = "/System/Library/Frameworks/JavaScriptCore.framework/JavaScriptCore";
 		public const string MediaAccessibilityLibrary = "/System/Library/Frameworks/MediaAccessibility.framework/MediaAccessibility";
@@ -57,5 +58,13 @@ namespace ObjCRuntime {
 
 		// TVOS 9.2
 		public const string MapKitLibrary = "/System/Library/Frameworks/MapKit.framework/MapKit";
+
+		// TVOS 10.0
+		public const string ExternalAccessoryLibrary = "/System/Library/Frameworks/ExternalAccessory.framework/ExternalAccessory";
+		public const string MultipeerConnectivityLibrary = "/System/Library/Frameworks/MultipeerConnectivity.framework/MultipeerConnectivity";
+		public const string PhotosLibrary = "/System/Library/Frameworks/Photos.framework/Photos";
+		public const string ReplayKitLibrary = "/System/Library/Frameworks/ReplayKit.framework/ReplayKit";
+		public const string UserNotificationsLibrary = "/System/Library/Frameworks/UserNotifications.framework/UserNotifications";
+		public const string VideoSubscriberAccountLibrary = "/System/Library/Frameworks/VideoSubscriberAccount.framework/VideoSubscriberAccount";
 	}
 }

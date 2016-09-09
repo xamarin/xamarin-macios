@@ -32,9 +32,56 @@ using XamCore.Foundation;
 namespace XamCore.AppKit {
 
 	public partial class NSButton {
+		NSActionDispatcher dispatcher;
+
 		public new NSButtonCell Cell {
 			get { return (NSButtonCell)base.Cell; }
 			set { base.Cell = value; }
+		}
+
+		[Mac (10,12)]
+		public static NSButton CreateButton (string title, NSImage image, NSAction action)
+		{
+			var dispatcher = new NSActionDispatcher (action);
+			var control = _CreateButton (title, image, dispatcher, NSActionDispatcher.Selector);
+			control.dispatcher = dispatcher;
+			return control;
+		}
+
+		[Mac (10,12)]
+		public static NSButton CreateButton (string title, NSAction action)
+		{
+			var dispatcher = new NSActionDispatcher (action);
+			var control = _CreateButton (title, dispatcher, NSActionDispatcher.Selector);
+			control.dispatcher = dispatcher;
+			return control;
+		}
+
+		[Mac (10,12)]
+		public static NSButton CreateButton (NSImage image, NSAction action)
+		{
+			var dispatcher = new NSActionDispatcher (action);
+			var control = _CreateButton (image, dispatcher, NSActionDispatcher.Selector);
+			control.dispatcher = dispatcher;
+			return control;
+		}
+
+		[Mac (10,12)]
+		public static NSButton CreateCheckbox (string title, NSAction action)
+		{
+			var dispatcher = new NSActionDispatcher (action);
+			var control = _CreateCheckbox (title, dispatcher, NSActionDispatcher.Selector);
+			control.dispatcher = dispatcher;
+			return control;
+		}
+
+		[Mac (10,12)]
+		public static NSButton CreateRadioButton (string title, NSAction action)
+		{
+			var dispatcher = new NSActionDispatcher (action);
+			var control = _CreateRadioButton (title, dispatcher, NSActionDispatcher.Selector);
+			control.dispatcher = dispatcher;
+			return control;
 		}
 	}
 }

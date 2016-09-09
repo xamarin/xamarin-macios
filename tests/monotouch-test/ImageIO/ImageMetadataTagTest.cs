@@ -87,7 +87,8 @@ namespace MonoTouchFixtures.ImageIO {
 				Assert.That (tag.Namespace.ToString (), Is.EqualTo ("http://ns.adobe.com/exif/1.0/"), "Namespace");
 				Assert.That (tag.Prefix.ToString (), Is.EqualTo ("exif"), "Prefix");
 				Assert.That (tag.Type, Is.EqualTo (CGImageMetadataType.ArrayOrdered), "Type");
-				Assert.That (tag.Value, Is.TypeOf<NSMutableArray> (), "Value");
+				// an NSArray before iOS 10, NSMutableArray then
+				Assert.That (tag.Value, Is.InstanceOf<NSArray> (), "Value");
 				Assert.Null (tag.GetQualifiers (), "GetQualifiers");
 			}
 		}

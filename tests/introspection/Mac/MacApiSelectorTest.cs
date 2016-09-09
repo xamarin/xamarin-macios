@@ -112,7 +112,26 @@ namespace Introspection {
 
 		protected override bool Skip (Type type, string selectorName)
 		{
+			if (SkipAccessibilitySelectors (type, selectorName))
+				return true;
+			
 			switch (selectorName) {
+			case "encodeWithCoder:":
+				switch (type.Name) {
+				case "CNContactFetchRequest":
+				case "NWEndpoint":
+				case "GKEntity":
+				case "GKPolygonObstacle":
+				case "GKComponent":
+				case "GKGraph":
+				case "GKGraphNode":
+				case "GKAgent2D":
+				case "GKAgent":
+					if (!Mac.CheckSystemVersion (10, 12)) // NSCoding was added in 10.12
+						return true;
+					break;
+				}
+				break;
 			case "accessibilityNotifiesWhenDestroyed":
 				// The header declares this on an NSObject category but 
 				// it doesn't even respondsToSelector on NSView/NSCell...
@@ -152,8 +171,19 @@ namespace Introspection {
 				break;
 			// some types had NSCopying added after they were first introduced
 			case "copyWithZone:":
-				if (type.Name == "CBPeripheral" && !Mac.CheckSystemVersion (10, 9))
-					return true;
+				switch (type.Name) {
+				case "MDLTransform":
+				case "NWEndpoint":
+				case "GKBehavior":
+				case "GKGraph":
+					if (!Mac.CheckSystemVersion (10, 12)) // NSCopying was added in 10.12
+						return true;
+					break;
+				case "CBPeripheral":
+					if (!Mac.CheckSystemVersion (10, 9))
+						return true;
+					break;
+				}
 				break;
 			case "readingOptionsForType:pasteboard:":
 			case "writingOptionsForType:pasteboard:":
@@ -205,6 +235,25 @@ namespace Introspection {
 					case "activationType":
 					case "otherButtonTitle":
 					case "setOtherButtonTitle:":
+					case "additionalActions":
+					case "setAdditionalActions:":
+					case "additionalActivationAction":
+					case "contentImage":
+					case "hasReplyButton":
+					case "setHasReplyButton:":
+					case "identifier":
+					case "setIdentifier:":
+					case "response":
+					case "responsePlaceholder":
+					case "setResponsePlaceholder:":
+						return true;
+					}
+					break;
+				// looks like it's routed to (private) NSConcreteUserNotificationAction
+				case "NSUserNotificationAction":
+					switch (selectorName) {
+					case "identifier":
+					case "title":
 						return true;
 					}
 					break;
@@ -280,6 +329,16 @@ namespace Introspection {
 			case "MonoMac.AppKit":
 			case "AppKit":
 				switch (type.Name) {
+				case "NSMenu":
+				case "NSMenuItem":
+					switch (selectorName) {
+					case "accessibilityAddChildElement:":
+					case "accessibilityElementWithRole:frame:label:parent:":
+						// Defined in header NSAccessibilityElement.h for NSAccessibilityElement which they implement, in theory
+						return true;
+					}
+					break;
+
 #if !XAMCORE_3_0		// These should be not be marked [Abstract] but can't fix w/o breaking change...
 				case "NSScrollView":
 				case "NSTextView":
@@ -320,6 +379,8 @@ namespace Introspection {
 						if (!Mac.CheckSystemVersion (10, 8))
 							return true;
 						break;
+					case "newWindowForTab:": // Cocoa checks to see if implemented in responder chain - " A plus button on tabbed windows will only be shown if this method exists in the responder chain."
+						return true;
 					}
 					break;
 				case "NSViewController":
@@ -526,6 +587,289 @@ namespace Introspection {
 				break;
 			}
 			return base.Skip (type, selectorName);
+		}
+
+		public bool SkipAccessibilitySelectors (Type type, string selectorName)
+		{
+			switch (selectorName) {
+			case "accessibilityAddChildElement:":
+			case "accessibilityPerformCancel":
+			case "accessibilityPerformConfirm":
+			case "accessibilityPerformDecrement":
+			case "accessibilityPerformDelete":
+			case "accessibilityPerformIncrement":
+			case "accessibilityPerformPick":
+			case "accessibilityPerformPress":
+			case "accessibilityPerformRaise":
+			case "accessibilityPerformShowAlternateUI":
+			case "accessibilityPerformShowDefaultUI":
+			case "accessibilityPerformShowMenu":
+			case "accessibilityAttributedStringForRange:":
+			case "accessibilityCellForColumn:row:":
+			case "accessibilityFrameForRange:":
+			case "accessibilityLayoutPointForScreenPoint:":
+			case "accessibilityLayoutSizeForScreenSize:":
+			case "accessibilityLineForIndex:":
+			case "accessibilityRangeForPosition:":
+			case "accessibilityRangeForIndex:":
+			case "accessibilityRangeForLine:":
+			case "accessibilityRTFForRange:":
+			case "accessibilityScreenPointForLayoutPoint:":
+			case "accessibilityScreenSizeForLayoutSize:":
+			case "accessibilityStringForRange:":
+			case "accessibilityStyleRangeForIndex:":
+			case "isAccessibilitySelectorAllowed:":
+			case "accessibilityActivationPoint":
+			case "setAccessibilityActivationPoint:":
+			case "accessibilityAllowedValues":
+			case "setAccessibilityAllowedValues:":
+			case "isAccessibilityAlternateUIVisible":
+			case "setAccessibilityAlternateUIVisible:":
+			case "accessibilityApplicationFocusedUIElement":
+			case "setAccessibilityApplicationFocusedUIElement:":
+			case "accessibilityCancelButton":
+			case "setAccessibilityCancelButton:":
+			case "accessibilityChildren":
+			case "setAccessibilityChildren:":
+			case "accessibilityClearButton":
+			case "setAccessibilityClearButton:":
+			case "accessibilityCloseButton":
+			case "setAccessibilityCloseButton:":
+			case "accessibilityColumnCount":
+			case "setAccessibilityColumnCount:":
+			case "accessibilityColumnHeaderUIElements":
+			case "setAccessibilityColumnHeaderUIElements:":
+			case "accessibilityColumnIndexRange":
+			case "setAccessibilityColumnIndexRange:":
+			case "accessibilityColumns":
+			case "setAccessibilityColumns:":
+			case "accessibilityColumnTitles":
+			case "setAccessibilityColumnTitles:":
+			case "accessibilityContents":
+			case "setAccessibilityContents:":
+			case "accessibilityCriticalValue":
+			case "setAccessibilityCriticalValue:":
+			case "accessibilityDecrementButton":
+			case "setAccessibilityDecrementButton:":
+			case "accessibilityDefaultButton":
+			case "setAccessibilityDefaultButton:":
+			case "isAccessibilityDisclosed":
+			case "setAccessibilityDisclosed:":
+			case "accessibilityDisclosedByRow":
+			case "setAccessibilityDisclosedByRow:":
+			case "accessibilityDisclosedRows":
+			case "setAccessibilityDisclosedRows:":
+			case "accessibilityDisclosureLevel":
+			case "setAccessibilityDisclosureLevel:":
+			case "accessibilityDocument":
+			case "setAccessibilityDocument:":
+			case "isAccessibilityEdited":
+			case "setAccessibilityEdited:":
+			case "isAccessibilityElement":
+			case "setAccessibilityElement:":
+			case "isAccessibilityEnabled":
+			case "setAccessibilityEnabled:":
+			case "isAccessibilityExpanded":
+			case "setAccessibilityExpanded:":
+			case "accessibilityExtrasMenuBar":
+			case "setAccessibilityExtrasMenuBar:":
+			case "accessibilityFilename":
+			case "setAccessibilityFilename:":
+			case "isAccessibilityFocused":
+			case "setAccessibilityFocused:":
+			case "accessibilityFocusedWindow":
+			case "setAccessibilityFocusedWindow:":
+			case "accessibilityFrame":
+			case "setAccessibilityFrame:":
+			case "accessibilityFrameInParentSpace":
+			case "setAccessibilityFrameInParentSpace:":
+			case "isAccessibilityFrontmost":
+			case "setAccessibilityFrontmost:":
+			case "accessibilityFullScreenButton":
+			case "setAccessibilityFullScreenButton:":
+			case "accessibilityGrowArea":
+			case "setAccessibilityGrowArea:":
+			case "accessibilityHandles":
+			case "setAccessibilityHandles:":
+			case "accessibilityHeader":
+			case "setAccessibilityHeader:":
+			case "accessibilityHelp":
+			case "setAccessibilityHelp:":
+			case "isAccessibilityHidden":
+			case "setAccessibilityHidden:":
+			case "accessibilityHorizontalScrollBar":
+			case "setAccessibilityHorizontalScrollBar:":
+			case "accessibilityHorizontalUnitDescription":
+			case "setAccessibilityHorizontalUnitDescription:":
+			case "accessibilityHorizontalUnits":
+			case "setAccessibilityHorizontalUnits:":
+			case "accessibilityIdentifier":
+			case "setAccessibilityIdentifier:":
+			case "accessibilityIncrementButton":
+			case "setAccessibilityIncrementButton:":
+			case "accessibilityIndex":
+			case "setAccessibilityIndex:":
+			case "accessibilityInsertionPointLineNumber":
+			case "setAccessibilityInsertionPointLineNumber:":
+			case "accessibilityLabel":
+			case "setAccessibilityLabel:":
+			case "accessibilityLabelUIElements":
+			case "setAccessibilityLabelUIElements:":
+			case "accessibilityLabelValue":
+			case "setAccessibilityLabelValue:":
+			case "accessibilityLinkedUIElements":
+			case "setAccessibilityLinkedUIElements:":
+			case "isAccessibilityMain":
+			case "setAccessibilityMain:":
+			case "accessibilityMainWindow":
+			case "setAccessibilityMainWindow:":
+			case "accessibilityMarkerGroupUIElement":
+			case "setAccessibilityMarkerGroupUIElement:":
+			case "accessibilityMarkerTypeDescription":
+			case "setAccessibilityMarkerTypeDescription:":
+			case "accessibilityMarkerUIElements":
+			case "setAccessibilityMarkerUIElements:":
+			case "accessibilityMarkerValues":
+			case "setAccessibilityMarkerValues:":
+			case "accessibilityMaxValue":
+			case "setAccessibilityMaxValue:":
+			case "accessibilityMenuBar":
+			case "setAccessibilityMenuBar:":
+			case "accessibilityMinimizeButton":
+			case "setAccessibilityMinimizeButton:":
+			case "isAccessibilityMinimized":
+			case "setAccessibilityMinimized:":
+			case "accessibilityMinValue":
+			case "setAccessibilityMinValue:":
+			case "isAccessibilityModal":
+			case "setAccessibilityModal:":
+			case "accessibilityNextContents":
+			case "setAccessibilityNextContents:":
+			case "accessibilityNumberOfCharacters":
+			case "setAccessibilityNumberOfCharacters:":
+			case "isAccessibilityOrderedByRow":
+			case "setAccessibilityOrderedByRow:":
+			case "accessibilityOrientation":
+			case "setAccessibilityOrientation:":
+			case "accessibilityOverflowButton":
+			case "setAccessibilityOverflowButton:":
+			case "accessibilityParent":
+			case "setAccessibilityParent:":
+			case "accessibilityPlaceholderValue":
+			case "setAccessibilityPlaceholderValue:":
+			case "accessibilityPreviousContents":
+			case "setAccessibilityPreviousContents:":
+			case "isAccessibilityProtectedContent":
+			case "setAccessibilityProtectedContent:":
+			case "accessibilityProxy":
+			case "setAccessibilityProxy:":
+			case "accessibilityRole":
+			case "setAccessibilityRole:":
+			case "accessibilityRoleDescription":
+			case "setAccessibilityRoleDescription:":
+			case "accessibilityRowCount":
+			case "setAccessibilityRowCount:":
+			case "accessibilityRowHeaderUIElements":
+			case "setAccessibilityRowHeaderUIElements:":
+			case "accessibilityRowIndexRange":
+			case "setAccessibilityRowIndexRange:":
+			case "accessibilityRows":
+			case "setAccessibilityRows:":
+			case "accessibilityRulerMarkerType":
+			case "setAccessibilityRulerMarkerType:":
+			case "accessibilitySearchButton":
+			case "setAccessibilitySearchButton:":
+			case "accessibilitySearchMenu":
+			case "setAccessibilitySearchMenu:":
+			case "isAccessibilitySelected":
+			case "setAccessibilitySelected:":
+			case "accessibilitySelectedCells":
+			case "setAccessibilitySelectedCells:":
+			case "accessibilitySelectedChildren":
+			case "setAccessibilitySelectedChildren:":
+			case "accessibilitySelectedColumns":
+			case "setAccessibilitySelectedColumns:":
+			case "accessibilitySelectedRows":
+			case "setAccessibilitySelectedRows:":
+			case "accessibilitySelectedText":
+			case "setAccessibilitySelectedText:":
+			case "accessibilitySelectedTextRange":
+			case "setAccessibilitySelectedTextRange:":
+			case "accessibilitySelectedTextRanges":
+			case "setAccessibilitySelectedTextRanges:":
+			case "accessibilityServesAsTitleForUIElements":
+			case "setAccessibilityServesAsTitleForUIElements:":
+			case "accessibilitySharedCharacterRange":
+			case "setAccessibilitySharedCharacterRange:":
+			case "accessibilitySharedFocusElements":
+			case "setAccessibilitySharedFocusElements:":
+			case "accessibilitySharedTextUIElements":
+			case "setAccessibilitySharedTextUIElements:":
+			case "accessibilityShownMenu":
+			case "setAccessibilityShownMenu:":
+			case "accessibilitySortDirection":
+			case "setAccessibilitySortDirection:":
+			case "accessibilitySplitters":
+			case "setAccessibilitySplitters:":
+			case "accessibilitySubrole":
+			case "setAccessibilitySubrole:":
+			case "accessibilityTabs":
+			case "setAccessibilityTabs:":
+			case "accessibilityTitle":
+			case "setAccessibilityTitle:":
+			case "accessibilityTitleUIElement":
+			case "setAccessibilityTitleUIElement:":
+			case "accessibilityToolbarButton":
+			case "setAccessibilityToolbarButton:":
+			case "accessibilityTopLevelUIElement":
+			case "setAccessibilityTopLevelUIElement:":
+			case "accessibilityUnitDescription":
+			case "setAccessibilityUnitDescription:":
+			case "accessibilityUnits":
+			case "setAccessibilityUnits:":
+			case "accessibilityURL":
+			case "setAccessibilityURL:":
+			case "accessibilityValue":
+			case "setAccessibilityValue:":
+			case "accessibilityValueDescription":
+			case "setAccessibilityValueDescription:":
+			case "accessibilityVerticalScrollBar":
+			case "setAccessibilityVerticalScrollBar:":
+			case "accessibilityVerticalUnitDescription":
+			case "setAccessibilityVerticalUnitDescription:":
+			case "accessibilityVerticalUnits":
+			case "setAccessibilityVerticalUnits:":
+			case "accessibilityVisibleCells":
+			case "setAccessibilityVisibleCells:":
+			case "accessibilityVisibleCharacterRange":
+			case "setAccessibilityVisibleCharacterRange:":
+			case "accessibilityVisibleChildren":
+			case "setAccessibilityVisibleChildren:":
+			case "accessibilityVisibleColumns":
+			case "setAccessibilityVisibleColumns:":
+			case "accessibilityVisibleRows":
+			case "setAccessibilityVisibleRows:":
+			case "accessibilityWarningValue":
+			case "setAccessibilityWarningValue:":
+			case "accessibilityWindow":
+			case "setAccessibilityWindow:":
+			case "accessibilityWindows":
+			case "setAccessibilityWindows:":
+			case "accessibilityZoomButton":
+			case "setAccessibilityZoomButton:":
+			case "accessibilityElementWithRole:frame:label:parent:":
+				switch (type.Name) {
+				case "NSMenu":
+				case "NSMenuItem":
+					if (!Mac.CheckSystemVersion (10, 12))
+						return true;
+					break;
+				}
+
+				break;
+			}
+
+			return false;
 		}
 
 		static List<NSObject> do_not_dispose = new List<NSObject> ();

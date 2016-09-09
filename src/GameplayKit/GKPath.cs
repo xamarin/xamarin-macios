@@ -11,6 +11,7 @@ using System;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 using Vector2 = global::OpenTK.Vector2;
+using Vector3 = global::OpenTK.Vector3;
 using System.Runtime.InteropServices;
 
 namespace XamCore.GameplayKit {
@@ -20,14 +21,10 @@ namespace XamCore.GameplayKit {
 		{
 			if (points == null)
 				throw new ArgumentNullException ("points");
-			
-			var size = Marshal.SizeOf (typeof (Vector2));
-			var length = points.Length * size;
-			var buffer = Marshal.AllocHGlobal (length);
 
+			var buffer = IntPtr.Zero;
 			try {
-				for (int i = 0; i < points.Length; i++)
-					Marshal.StructureToPtr (points[i], IntPtr.Add (buffer, i * size), false);
+				PrepareBuffer (out buffer, ref points);
 
 				return FromPoints (buffer, (nuint)points.Length, radius, cyclical);
 			} finally {
@@ -42,19 +39,61 @@ namespace XamCore.GameplayKit {
 			if (points == null)
 				throw new ArgumentNullException ("points");
 			
-			var size = Marshal.SizeOf (typeof (Vector2));
-			var length = points.Length * size;
-			var buffer = Marshal.AllocHGlobal (length);
-
+			var buffer = IntPtr.Zero;
 			try {
-				for (int i = 0; i < points.Length; i++)
-					Marshal.StructureToPtr (points[i], IntPtr.Add (buffer, i * size), false);
+				PrepareBuffer (out buffer, ref points);
 
 				Handle = InitWithPoints (buffer, (nuint)points.Length, radius, cyclical);
 			} finally {
 				if (buffer != IntPtr.Zero)
 					Marshal.FreeHGlobal (buffer);
 			}
+		}
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+		public static GKPath FromPoints (Vector3 [] points, float radius, bool cyclical)
+		{
+			if (points == null)
+				throw new ArgumentNullException ("points");
+
+			var buffer = IntPtr.Zero;
+			try {
+				PrepareBuffer (out buffer, ref points);
+
+				return FromFloat3Points (buffer, (nuint) points.Length, radius, cyclical);
+			}
+			finally {
+				if (buffer != IntPtr.Zero)
+					Marshal.FreeHGlobal (buffer);
+			}
+		}
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+		public GKPath (Vector3 [] points, float radius, bool cyclical)
+		{
+			if (points == null)
+				throw new ArgumentNullException ("points");
+
+			var buffer = IntPtr.Zero;
+			try {
+				PrepareBuffer (out buffer, ref points);
+
+				Handle = InitWithFloat3Points (buffer, (nuint) points.Length, radius, cyclical);
+			}
+			finally {
+				if (buffer != IntPtr.Zero)
+					Marshal.FreeHGlobal (buffer);
+			}
+		}
+
+		static void PrepareBuffer<T> (out IntPtr buffer, ref T[] points) where T : struct
+		{
+			var size = Marshal.SizeOf (typeof (T));
+			var length = points.Length * size;
+			buffer = Marshal.AllocHGlobal (length);
+
+			for (int i = 0; i < points.Length; i++)
+				Marshal.StructureToPtr (points [i], IntPtr.Add (buffer, i * size), false);
 		}
 	}
 }

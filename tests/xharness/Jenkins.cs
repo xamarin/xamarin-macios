@@ -49,6 +49,10 @@ namespace xharness
 			} catch (Exception e) {
 				SimulatorLoadLog.WriteLine ("Failed to load simulators:");
 				SimulatorLoadLog.WriteLine (e.ToString ());
+				var task = new RunSimulatorTask (buildTask) { ExecutionResult = TestExecutingResult.Failed };
+				var log = task.Logs.CreateFile ("Run log", Path.Combine (task.LogDirectory, "run-" + DateTime.Now.Ticks + ".log"));
+				File.WriteAllText (log.Path, "Failed to load simulators.");
+				runtasks.Add (task);
 				return runtasks;
 			}
 
@@ -279,6 +283,7 @@ namespace xharness
 				return Tasks.Any ((v) => v.Failed) ? 1 : 0;
 			} catch (Exception ex) {
 				MainLog.WriteLine ("Unexpected exception: {0}", ex);
+				Console.WriteLine ("Unexpected exception: {0}", ex);
 				return 2;
 			}
 		}
@@ -604,7 +609,9 @@ function toggleContainerVisibility (containerName)
 
 		public string LogDirectory {
 			get {
-				return Path.Combine (Jenkins.LogDirectory, TestName);
+				var rv = Path.Combine (Jenkins.LogDirectory, TestName);
+				Directory.CreateDirectory (rv);
+				return rv;
 			}
 		}
 
@@ -979,7 +986,9 @@ function toggleContainerVisibility (containerName)
 
 		public SimDevice [] Simulators {
 			get {
-				if (CompanionDevice == null) {
+				if (Device == null) {
+					return new SimDevice [] { };
+				} else if (CompanionDevice == null) {
 					return new SimDevice [] { Device };
 				} else {
 					return new SimDevice [] { Device, CompanionDevice };
@@ -1025,7 +1034,7 @@ function toggleContainerVisibility (containerName)
 				case TestPlatform.iOS_Unified64:
 					return "iOS Unified 64-bits";
 				case TestPlatform.iOS_Unified:
-					if (Jenkins.Simulators.SupportedDeviceTypes.Find ((SimDeviceType v) => v.Identifier == Device.SimDeviceType).Supports64Bits) {
+					if (Jenkins.Simulators?.SupportedDeviceTypes?.Find ((SimDeviceType v) => v.Identifier == Device?.SimDeviceType)?.Supports64Bits == true) {
 						return "iOS Unified 32-bits";
 					} else {
 						return "iOS Unified 64-bits";
@@ -1037,13 +1046,14 @@ function toggleContainerVisibility (containerName)
 			set { throw new NotSupportedException (); }
 		}
 
-		public RunSimulatorTask (XBuildTask build_task, SimDevice device, SimDevice companion_device = null)
+		public RunSimulatorTask (XBuildTask build_task, SimDevice device = null, SimDevice companion_device = null)
 		{
 			BuildTask = build_task;
 			Device = device;
 			CompanionDevice = companion_device;
 			Jenkins = build_task.Jenkins;
 			ProjectFile = build_task.ProjectFile;
+			Platform = build_task.Platform;
 
 			var project = Path.GetFileNameWithoutExtension (ProjectFile);
 			if (project.EndsWith ("-tvos", StringComparison.Ordinal)) {
@@ -1136,7 +1146,7 @@ function toggleContainerVisibility (containerName)
 			using (var desktop = await Jenkins.DesktopResource.AcquireExclusiveAsync ()) {
 				run_timer.Start ();
 
-				Jenkins.MainLog.WriteLine ("Preparing simulator: {0}", Devices [0].Name);
+				Jenkins.MainLog.WriteLine ("Preparing simulator: {0}", Devices.Length > 0 ? Devices [0].Name : "none");
 				// We need to set the dialog permissions for all the apps
 				// before launching the simulator, because once launched
 				// the simulator caches the values in-memory.

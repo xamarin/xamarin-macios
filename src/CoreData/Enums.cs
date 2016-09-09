@@ -131,4 +131,58 @@ namespace XamCore.CoreData {
 		ObjectIDs = 1,
 		Count = 2
 	}
+
+	[Native]
+	public enum ValidationErrorType : nuint {
+		ManagedObjectValidation = 1550,
+		MultipleErrors = 1560,
+		MissingMandatoryProperty = 1570,
+		RelationshipLacksMinimumCount = 1580,
+		RelationshipExceedsMaximumCount = 1590,
+		RelationshipDeniedDelete = 1600,
+		NumberTooLarge = 1610,
+		NumberTooSmall = 1620,
+		DateTooLate = 1630,
+		DateTooSoon = 1640,
+		InvalidDate = 1650,
+		StringTooLong = 1660,
+		StringTooShort = 1670,
+		StringPatternMatching = 1680
+	}
+
+	[Native]
+	public enum ObjectGraphManagementErrorType : nuint {
+		ManagedObjectContextLocking = 132000,
+		PersistentStoreCoordinatorLocking = 132010,
+		ManagedObjectReferentialIntegrity = 133000,
+		ManagedObjectExternalRelationship = 133010,
+		ManagedObjectMerge = 133020
+	}
+
+	[Native]
+	public enum PersistentStoreErrorType : nuint {
+		InvalidType = 134000,
+		TypeMismatch = 134010,
+		IncompatibleSchema = 134020,
+		Save = 134030,
+		IncompleteSave = 134040,
+		SaveConflicts = 134050,
+		Operation = 134070,
+		Open = 134080,
+		Timeout = 134090,
+		IncompatibleVersionHash = 134100
+	}
+	
+	[Native]
+	public enum MigrationErrorType {
+		Migration = 134110,
+		MigrationCancelled = 134120,
+		MigrationMissingSourceModel = 134130,
+		MigrationMissingMappingModel = 134140,
+		MigrationManagerSourceStore = 134150,
+		MigrationManagerDestinationStore = 134160,
+		EntityMigrationPolicy = 134170,
+		InferredMappingModel = 134190,
+		ExternalRecordImport = 134200
+	}
 }

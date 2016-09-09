@@ -6,7 +6,7 @@
 //
 // Copyright 2012, 2014 Xamarin Inc
 //
-#if !MONOMAC
+#if !MONOMAC && !WATCH
 
 using System;
 using XamCore.Foundation;

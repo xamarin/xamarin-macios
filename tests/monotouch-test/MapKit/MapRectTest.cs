@@ -42,7 +42,10 @@ namespace MonoTouchFixtures.MapKit {
 		{
 			MKMapRect rect = new MKMapRect ();
 			MKMapPoint point = new MKMapPoint ();
-			Assert.False (rect.Contains (point), "default");
+			if (TestRuntime.CheckXcodeVersion (8, 0))
+				Assert.True (rect.Contains (point), "default");
+			else
+				Assert.False (rect.Contains (point), "default");
 		}
 
 		[Test]

@@ -98,7 +98,7 @@ namespace XamCore.GLKit {
 		BottomLeft
 	}
 
-	// GLuint (we'll keep in for compatibility) -> GLKTextureLoader.h
+	// GLuint (we'll keep `int` for compatibility) -> GLKTextureLoader.h
 	public enum GLKTextureLoaderError {
 		FileOrURLNotFound = 0,
 		InvalidNSData = 1,
@@ -118,7 +118,8 @@ namespace XamCore.GLKit {
 		ReorientationFailure = 15,
 		AlphaPremultiplicationFailure = 16,
 		InvalidEAGLContext = 17,
-		IncompatibleFormatSRGB = 18
+		IncompatibleFormatSRGB = 18,
+		UnsupportedTextureTarget = 19,
 	}
 
 	// glVertexAttribPointer structure values, again, problems with definitions being in different namespaces

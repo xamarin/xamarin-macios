@@ -12,6 +12,7 @@ using XamCore.ObjCRuntime;
 namespace XamCore.iAd {
 
 	// NSInteger -> ADBannerView.h
+	[Deprecated (PlatformName.iOS, 10, 0)]
 	[Native]
 	[ErrorDomain ("ADErrorDomain")]
 	public enum ADError : nint {
@@ -27,6 +28,7 @@ namespace XamCore.iAd {
 	}
 
 	// NSInteger -> ADBannerView.h
+	[Deprecated (PlatformName.iOS, 10, 0)]
 	[iOS (6,0)] 
 	[Native]
 	public enum ADAdType : nint {
@@ -34,6 +36,7 @@ namespace XamCore.iAd {
 	}
 
 	// NSInteger -> UIViewControlleriAdAdditions.h
+	[Deprecated (PlatformName.iOS, 10, 0)]
 	[Native]
 	public enum ADInterstitialPresentationPolicy : nint {
 		None = 0,
@@ -43,6 +46,7 @@ namespace XamCore.iAd {
 
 	[iOS (9,0)]
 	[Native]
+	[ErrorDomain ("ADClientErrorDomain")]
 	public enum ADClientError : nint {
 		Unknown = 0,
 		LimitAdTracking = 1

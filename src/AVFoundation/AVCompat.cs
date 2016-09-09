@@ -1,8 +1,13 @@
-// Copyright 2014-2015 Xamarin Inc. All rights reserved.
+// Copyright 2014-2016 Xamarin Inc. All rights reserved.
+
+#if !WATCH
 
 using System;
+using System.ComponentModel;
+using OpenTK;
 using XamCore.CoreMedia;
 using XamCore.Foundation;
+using XamCore.ObjCRuntime;
 
 namespace XamCore.AVFoundation {
 
@@ -61,4 +66,426 @@ namespace XamCore.AVFoundation {
 		}
 	}
 #endif
+
+#if !XAMCORE_4_0
+	partial class AVAudioChannelLayout {
+
+		[Obsolete ("Valid instance of this type cannot be directly created")]
+		public AVAudioChannelLayout ()
+		{
+		}
+	}
+
+	partial class AVAudioConnectionPoint {
+
+		[Obsolete ("Valid instance of this type cannot be directly created")]
+		public AVAudioConnectionPoint ()
+		{
+		}
+	}
+
+#if TVOS
+	// tvOS removed some types - we need to keep stubs of them for binary compatibility
+	[Obsolete ("Removed in tvOS 10")]
+	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None, "Removed in tvOS 10")]
+	public class AVAssetDownloadDelegate : NSObject, IAVAssetDownloadDelegate {
+		public AVAssetDownloadDelegate ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		protected AVAssetDownloadDelegate (NSObjectFlag t)
+		{
+			throw new NotImplementedException ();
+		}
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		protected internal AVAssetDownloadDelegate (IntPtr handle)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public virtual void DidCompleteWithError (NSUrlSession session, NSUrlSessionTask task, NSError error)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public virtual void DidFinishCollectingMetrics (NSUrlSession session, NSUrlSessionTask task, NSUrlSessionTaskMetrics metrics)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public virtual void DidFinishDownloadingToUrl (NSUrlSession session, AVAssetDownloadTask assetDownloadTask, NSUrl location)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public virtual void DidLoadTimeRange (NSUrlSession session, AVAssetDownloadTask assetDownloadTask, CMTimeRange timeRange, NSValue[] loadedTimeRanges, CMTimeRange timeRangeExpectedToLoad)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public virtual void DidReceiveChallenge (NSUrlSession session, NSUrlSessionTask task, NSUrlAuthenticationChallenge challenge, [BlockProxy (typeof(Trampolines.NIDActionArity2V0))] Action<NSUrlSessionAuthChallengeDisposition, NSUrlCredential> completionHandler)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public virtual void DidResolveMediaSelection (NSUrlSession session, AVAssetDownloadTask assetDownloadTask, AVMediaSelection resolvedMediaSelection)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public virtual void DidSendBodyData (NSUrlSession session, NSUrlSessionTask task, long bytesSent, long totalBytesSent, long totalBytesExpectedToSend)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public virtual void NeedNewBodyStream (NSUrlSession session, NSUrlSessionTask task, [BlockProxy (typeof(Trampolines.NIDActionArity1V0))] Action<NSInputStream> completionHandler)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public virtual void WillPerformHttpRedirection (NSUrlSession session, NSUrlSessionTask task, NSHttpUrlResponse response, NSUrlRequest newRequest, [BlockProxy (typeof(Trampolines.NIDActionArity1V1))] Action<NSUrlRequest> completionHandler)
+		{
+			throw new NotImplementedException ();
+		}
+	}
+
+	[Obsolete ("Removed in tvOS 10")]
+	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None, "Removed in tvOS 10")]
+	public interface IAVAssetDownloadDelegate : INativeObject, IDisposable, INSUrlSessionTaskDelegate, INSUrlSessionDelegate {
+	}
+
+	[Obsolete ("Removed in tvOS 10")]
+	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None, "Removed in tvOS 10")]
+	public static class AVAssetDownloadDelegate_Extensions {
+
+		public static void DidFinishDownloadingToUrl (this IAVAssetDownloadDelegate This, NSUrlSession session, AVAssetDownloadTask assetDownloadTask, NSUrl location)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public static void DidLoadTimeRange (this IAVAssetDownloadDelegate This, NSUrlSession session, AVAssetDownloadTask assetDownloadTask, CMTimeRange timeRange, NSValue[] loadedTimeRanges, CMTimeRange timeRangeExpectedToLoad)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public static void DidResolveMediaSelection (this IAVAssetDownloadDelegate This, NSUrlSession session, AVAssetDownloadTask assetDownloadTask, AVMediaSelection resolvedMediaSelection)
+		{
+			throw new NotImplementedException ();
+		}
+	}
+
+	[Obsolete ("Removed in tvOS 10")]
+	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None, "Removed in tvOS 10")]
+	public class AVAssetDownloadTask : NSUrlSessionTask {
+
+		public override IntPtr ClassHandle {
+			get {
+				throw new NotImplementedException ();
+			}
+		}
+
+		public override NSUrlRequest CurrentRequest {
+			get {
+				throw new NotImplementedException ();
+			}
+		}
+
+		public virtual NSUrl DestinationUrl {
+			get {
+				throw new NotImplementedException ();
+			}
+		}
+
+		public virtual NSValue[] LoadedTimeRanges {
+			get {
+				throw new NotImplementedException ();
+			}
+		}
+
+		public virtual NSDictionary<NSString, NSObject> Options {
+			get {
+				throw new NotImplementedException ();
+			}
+		}
+
+		public override NSUrlRequest OriginalRequest {
+			get {
+				throw new NotImplementedException ();
+			}
+		}
+
+		public override NSUrlResponse Response {
+			get {
+				throw new NotImplementedException ();
+			}
+		}
+
+		public virtual AVUrlAsset UrlAsset {
+			get {
+				throw new NotImplementedException ();
+			}
+		}
+
+		[EditorBrowsable (EditorBrowsableState.Advanced),]
+		protected AVAssetDownloadTask (NSObjectFlag t)
+		{
+			throw new NotImplementedException ();
+		}
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		protected internal AVAssetDownloadTask (IntPtr handle)
+		{
+			throw new NotImplementedException ();
+		}
+	}
+
+	[Obsolete ("Removed in tvOS 10")]
+	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None, "Removed in tvOS 10")]
+	public class AVAssetDownloadUrlSession : NSUrlSession {
+
+		public new static NSUrlSession SharedSession {
+			get {
+				throw new NotImplementedException ();
+			}
+		}
+
+		public override IntPtr ClassHandle {
+			get {
+				throw new NotImplementedException ();
+			}
+		}
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		protected internal AVAssetDownloadUrlSession (IntPtr handle) : base (handle)
+		{
+			throw new NotImplementedException ();
+		}
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		protected AVAssetDownloadUrlSession (NSObjectFlag t) : base (t)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public static AVAssetDownloadUrlSession CreateSession (NSUrlSessionConfiguration configuration, IAVAssetDownloadDelegate @delegate, NSOperationQueue delegateQueue)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public new static NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public new static NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration, NSUrlSessionDelegate sessionDelegate, NSOperationQueue delegateQueue)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public new static NSUrlSession FromWeakConfiguration (NSUrlSessionConfiguration configuration, NSObject weakDelegate, NSOperationQueue delegateQueue)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public override NSUrlSessionDataTask CreateDataTask (NSUrlRequest request)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public override NSUrlSessionDataTask CreateDataTask (NSUrl url)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public override NSUrlSessionDataTask CreateDataTask (NSUrlRequest request, NSUrlSessionResponse completionHandler)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public override NSUrlSessionDataTask CreateDataTask (NSUrl url, NSUrlSessionResponse completionHandler)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public override NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request, NSUrlDownloadSessionResponse completionHandler)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public override NSUrlSessionDownloadTask CreateDownloadTask (NSUrl url, NSUrlDownloadSessionResponse completionHandler)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public override NSUrlSessionDownloadTask CreateDownloadTask (NSData resumeData)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public override NSUrlSessionDownloadTask CreateDownloadTask (NSUrl url)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public override NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public override NSUrlSessionDownloadTask CreateDownloadTaskFromResumeData (NSData resumeData, NSUrlDownloadSessionResponse completionHandler)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public override NSUrlSessionUploadTask CreateUploadTask (NSUrlRequest request, NSUrl fileURL)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public override NSUrlSessionUploadTask CreateUploadTask (NSUrlRequest request, NSData bodyData)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public override NSUrlSessionUploadTask CreateUploadTask (NSUrlRequest request, NSUrl fileURL, NSUrlSessionResponse completionHandler)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public override NSUrlSessionUploadTask CreateUploadTask (NSUrlRequest request, NSData bodyData, NSUrlSessionResponse completionHandler)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public override NSUrlSessionUploadTask CreateUploadTask (NSUrlRequest request)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public virtual AVAssetDownloadTask GetAssetDownloadTask (AVUrlAsset urlAsset, NSUrl destinationUrl, NSDictionary options)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public AVAssetDownloadTask GetAssetDownloadTask (AVUrlAsset urlAsset, NSUrl destinationUrl, AVAssetDownloadOptions options)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public virtual AVAssetDownloadTask GetAssetDownloadTask (AVUrlAsset urlAsset, string title, NSData artworkData, NSDictionary options)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public AVAssetDownloadTask GetAssetDownloadTask (AVUrlAsset urlAsset, string title, NSData artworkData, AVAssetDownloadOptions options)
+		{
+			throw new NotImplementedException ();
+		}
+	}
+
+	[Obsolete ("Removed in tvOS 10")]
+	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None, "Removed in tvOS 10")]
+	public class AVAudioInputNode : AVAudioIONode, IAVAudio3DMixing, IAVAudioMixing, IAVAudioStereoMixing {
+
+		public override IntPtr ClassHandle {
+			get {
+				throw new NotImplementedException ();
+			}
+		}
+
+		public virtual float Obstruction {
+			get {
+				throw new NotImplementedException ();
+			}
+			set {
+				throw new NotImplementedException ();
+			}
+		}
+
+		public virtual float Occlusion {
+			get {
+				throw new NotImplementedException ();
+			}
+			set {
+				throw new NotImplementedException ();
+			}
+		}
+
+		public virtual float Pan {
+			get {
+				throw new NotImplementedException ();
+			}
+			set {
+				throw new NotImplementedException ();
+			}
+		}
+
+		public virtual Vector3 Position {
+			get {
+				throw new NotImplementedException ();
+			}
+			set {
+				throw new NotImplementedException ();
+			}
+		}
+
+		public virtual float Rate {
+			get {
+				throw new NotImplementedException ();
+			}
+			set {
+				throw new NotImplementedException ();
+			}
+		}
+
+		public virtual AVAudio3DMixingRenderingAlgorithm RenderingAlgorithm {
+			get {
+				throw new NotImplementedException ();
+			}
+			set {
+				throw new NotImplementedException ();
+			}
+		}
+
+		public virtual float ReverbBlend {
+			get {
+				throw new NotImplementedException ();
+			}
+			set {
+				throw new NotImplementedException ();
+			}
+		}
+
+		public virtual float Volume {
+			get {
+				throw new NotImplementedException ();
+			}
+			set {
+				throw new NotImplementedException ();
+			}
+		}
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		protected AVAudioInputNode (NSObjectFlag t) : base (t)
+		{
+			throw new NotImplementedException ();
+		}
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		protected internal AVAudioInputNode (IntPtr handle) : base (handle)
+		{
+		}
+
+		public virtual AVAudioMixingDestination DestinationForMixer (AVAudioNode mixer, nuint bus)
+		{
+			throw new NotImplementedException ();
+		}
+	}
+#endif // TVOS
+#endif // !XAMCORE_4_0
 }
+
+#endif

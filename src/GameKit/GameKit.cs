@@ -18,15 +18,17 @@ namespace XamCore.GameKit {
 
 #if !MONOMAC
 
-#if !TVOS
 	// NSUInteger -> GKPeerPickerController.h
+#if XAMCORE_4_0
+	[NoTV] // preserve binary compatibility with existing/shipping code
+#endif
+	[NoWatch]
 	[Native]
 	[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0)]
 	public enum GKPeerPickerConnectionType : nuint_compat_int {
 		Online = 1 << 0,
 		Nearby = 1 << 1
 	}
-#endif
 
 	// untyped enum -> GKPublicConstants.h
 	[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_7_0)]
@@ -128,8 +130,45 @@ namespace XamCore.GameKit {
 #else
 		InvitationsDisabled = 25, // iOS 7.0
 		PlayerPhotoFailure = 26,  // iOS 8.0
-		UbiquityContainerUnavailable = 27 // iOS 8.0
+		UbiquityContainerUnavailable = 27, // iOS 8.0
 #endif
+		MatchNotConnected = 28,
+		GameSessionRequestInvalid = 29,
+	}
+
+	[Native]
+	[iOS (10,0)][Mac (10,12)][TV (10,0)]
+	public enum GKConnectionState : nint {
+		NotConnected,
+		Connected,
+	}
+
+	[Native]
+	[iOS (10,0)][Mac (10,12)][TV (10,0)]
+	public enum GKTransportType : nint {
+		Unreliable,
+		Reliable,
+	}
+
+	[Native]
+	[ErrorDomain ("GKGameSessionErrorDomain")]
+	public enum GKGameSessionErrorCode : nint {
+		Unknown = 1,
+		NotAuthenticated = 2,
+		SessionConflict = 3,
+		SessionNotShared = 4,
+		ConnectionCancelledByUser = 5,
+		ConnectionFailed = 6,
+		SessionHasMaxConnectedPlayers = 7,
+		SendDataNotConnected = 8,
+		SendDataNoRecipients = 9,
+		SendDataNotReachable = 10,
+		SendRateLimitReached = 11,
+		BadContainer = 12,
+		CloudQuotaExceeded = 13,
+		NetworkFailure = 14,
+		CloudDriveDisabled = 15,
+		InvalidSession = 16,
 	}
 
 	// NSInteger -> GKMatch.h
@@ -197,6 +236,7 @@ namespace XamCore.GameKit {
 	}
 
 	// NSInteger -> GKGameCenterViewController.h
+	[NoWatch]
 	[Native]
 	public enum GKGameCenterViewControllerState : nint {
 		Default = -1,

@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using XamCore.CoreGraphics;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 
@@ -34,6 +35,7 @@ namespace XamCore.NotificationCenter {
 
 		[Export ("widgetMarginInsetsForProposedMarginInsets:"), DelegateName ("NCWidgetProvidingMarginInsets"), DefaultValueFromArgument ("defaultMarginInsets")]
 #if !MONOMAC
+		[Deprecated (PlatformName.iOS, 10,0, message: "Never called on iOS10+")]
 		UIEdgeInsets GetWidgetMarginInsets (UIEdgeInsets defaultMarginInsets);
 #else
 		NSEdgeInsets GetWidgetMarginInsets (NSEdgeInsets defaultMarginInsets);
@@ -48,6 +50,10 @@ namespace XamCore.NotificationCenter {
 
 		[Export ("widgetDidEndEditing")]
 		void WidgetDidEndEditing ();
+#else
+		[iOS (10,0)]
+		[Export ("widgetActiveDisplayModeDidChange:withMaximumSize:")]
+		void WidgetActiveDisplayModeDidChange (NCWidgetDisplayMode activeDisplayMode, CGSize maxSize);
 #endif
 	}
 
@@ -61,8 +67,44 @@ namespace XamCore.NotificationCenter {
 #else
 		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
 #endif
+		[Deprecated (PlatformName.iOS, 10,0)]
 		[Static, Export ("notificationCenterVibrancyEffect")]
 		UIVibrancyEffect NotificationCenterVibrancyEffect ();
+	}
+
+	[Category]
+	[BaseType (typeof (NSExtensionContext))]
+	interface NSExtensionContext_NCWidgetAdditions {
+		[iOS (10,0)]
+		[Export ("widgetLargestAvailableDisplayMode")]
+		NCWidgetDisplayMode GetWidgetLargestAvailableDisplayMode ();
+
+		[iOS (10,0)]
+		[Export ("setWidgetLargestAvailableDisplayMode:")]
+		void SetWidgetLargestAvailableDisplayMode (NCWidgetDisplayMode mode);
+
+		[iOS (10,0)]
+		[Export ("widgetActiveDisplayMode")]
+		NCWidgetDisplayMode GetWidgetActiveDisplayMode ();
+
+		[iOS (10,0)]
+		[Export ("widgetMaximumSizeForDisplayMode:")]
+		CGSize GetWidgetMaximumSize (NCWidgetDisplayMode displayMode);
+	}
+
+	[Category]
+	[Internal] // only static methods, which are not _nice_ to use as extension methods
+	[BaseType (typeof (UIVibrancyEffect))]
+	interface UIVibrancyEffect_NCWidgetAdditions {
+		[iOS (10,0)]
+		[Static]
+		[Export ("widgetPrimaryVibrancyEffect")]
+		UIVibrancyEffect GetWidgetPrimaryVibrancyEffect ();
+
+		[iOS (10,0)]
+		[Static]
+		[Export ("widgetSecondaryVibrancyEffect")]
+		UIVibrancyEffect GetWidgetSecondaryVibrancyEffect ();
 	}
 #endif
 

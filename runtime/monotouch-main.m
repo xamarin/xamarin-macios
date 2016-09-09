@@ -160,7 +160,7 @@ void debug_launch_time_print (const char *msg)
 		date = startDate;
 	}
 
-	NSLog (@"%s: %llu us Total: %llu us", msg, unow - date, unow - startDate);
+	PRINT ("%s: %llu us Total: %llu us", msg, unow - date, unow - startDate);
 
 	date = unow;
 }
@@ -349,7 +349,7 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 				if (value) {
 					monotouch_set_monodevelop_port (strtol (value, NULL, 10));
 				} else {
-					NSLog (@"MonoTouch: --%s requires an argument.", name);
+					PRINT ("MonoTouch: --%s requires an argument.", name);
 				}
 			} else if (!strcmp (name, "connection-mode")) {
 				if (!value && argc > i + 1)
@@ -357,7 +357,7 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 				if (value) {
 					monotouch_set_connection_mode (value);
 				} else {
-					NSLog (@"MonoTouch: --%s requires an argument.", name);
+					PRINT ("MonoTouch: --%s requires an argument.", name);
 				}
 			} 
 #endif /* DEBUG */
@@ -368,7 +368,7 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 				if (value) {
 					managed_argv [managed_argc++] = value;
 				} else {
-					NSLog (@"MonoTouch: --%s requires an argument.", name);
+					PRINT ("MonoTouch: --%s requires an argument.", name);
 				}
 			} else if (!strcmp (name, "setenv")) {
 				if (!value && argc > i + 1)
@@ -384,7 +384,7 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 					}
 					free (k);
 				} else {
-					NSLog (@"MonoTouch: --%s requires an argument.", name);
+					PRINT ("MonoTouch: --%s requires an argument.", name);
 				}
 			}
 			

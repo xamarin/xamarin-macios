@@ -33,6 +33,8 @@ namespace MonoTouchFixtures.MediaPlayer {
 					Assert.Inconclusive ("This test needs music in the music library on the device.");
 
 				var six_dot_oh = TestRuntime.CheckSystemAndSDKVersion (6, 0);
+				var nine_dot_two = TestRuntime.CheckSystemAndSDKVersion (9, 2);
+				var ten_dot_oh = TestRuntime.CheckSystemAndSDKVersion (10, 0);
 
 				foreach (var i in items) {
 					object dummy;
@@ -71,6 +73,12 @@ namespace MonoTouchFixtures.MediaPlayer {
 					Assert.DoesNotThrow (() => dummy = i.SkipCount, "SkipCount");
 					Assert.DoesNotThrow (() => dummy = i.Title, "Title");
 					Assert.DoesNotThrow (() => dummy = i.UserGrouping, "UserGrouping");
+					if (nine_dot_two)
+						Assert.DoesNotThrow (() => dummy = i.HasProtectedAsset, "HasProtectedAsset");
+					if (ten_dot_oh) {
+						Assert.DoesNotThrow (() => dummy = i.IsExplicitItem, "IsExplicitItem");
+						Assert.DoesNotThrow (() => dummy = i.DateAdded, "DateAdded");
+					}
 				}
 			}
 		}

@@ -49,6 +49,8 @@ namespace Xamarin.Mac.Tests
 					continue;
 
 				var ctor = t.GetConstructor (BindingFlags.Instance | BindingFlags.Public, null, new Type[0], null);
+				if (Asserts.SkipDueToAvailabilityAttribute (ctor))
+					continue;
 
 				// If they have one of the properites we are testing
 				if (ctor != null) {

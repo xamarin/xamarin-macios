@@ -79,8 +79,8 @@ namespace Xamarin.iOS.Tasks
 					"System.Xml.dll.mdb",
 					"System.dll",
 					"System.dll.mdb",
-					"monotouch.dll",
-					"monotouch.dll.mdb",
+					"Xamarin.iOS.dll",
+					"Xamarin.iOS.dll.mdb",
 					"mscorlib.dll",
 					"mscorlib.dll.mdb",
 					"runtime-options.plist",
@@ -145,7 +145,7 @@ namespace Xamarin.iOS.Tasks
 			Assert.IsTrue (references.Any (t => t.Include.Contains ("System.Xml")), "#3b");
 			Assert.IsTrue (references.Any (t => t.Include.Contains ("System.Core")), "#3c");
 			Assert.IsTrue (references.Any (t => t.Include.Contains ("mscorlib")), "#3d");
-			Assert.IsTrue (references.Any (t => t.Include.Contains ("monotouch")), "#3e");
+			Assert.IsTrue (references.Any (t => t.Include.Contains ("Xamarin.iOS")), "#3e");
 		}
 
 		[Test]
@@ -155,12 +155,11 @@ namespace Xamarin.iOS.Tasks
 			var references = LibraryProject.GetEvaluatedItemsByName ("ReferencePath").ToArray ();
 
 			Assert.AreEqual (5, references.Length, "#1");
-			Assert.IsTrue (references.All (t => t.Include.Contains ("2.1")), "#2");
-			Assert.IsTrue (references.Any (t => t.Include.Contains ("System")), "#3a");
-			Assert.IsTrue (references.Any (t => t.Include.Contains ("System.Xml")), "#3b");
-			Assert.IsTrue (references.Any (t => t.Include.Contains ("System.Core")), "#3c");
-			Assert.IsTrue (references.Any (t => t.Include.Contains ("mscorlib")), "#3d");
-			Assert.IsTrue (references.Any (t => t.Include.Contains ("monotouch")), "#3e");
+			Assert.IsTrue (references.Any (t => t.Include.Contains ("System")), "#2a");
+			Assert.IsTrue (references.Any (t => t.Include.Contains ("System.Xml")), "#2b");
+			Assert.IsTrue (references.Any (t => t.Include.Contains ("System.Core")), "#2c");
+			Assert.IsTrue (references.Any (t => t.Include.Contains ("mscorlib")), "#2d");
+			Assert.IsTrue (references.Any (t => t.Include.Contains ("Xamarin.iOS")), "#2e");
 		}
 
 		[Test]

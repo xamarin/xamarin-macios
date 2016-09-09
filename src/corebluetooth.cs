@@ -34,13 +34,31 @@ namespace XamCore.CoreBluetooth {
 #endif
 	}
 
+	[iOS (10,0)][NoMac]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface CBManager {
+		[Export ("state", ArgumentSemantic.Assign)]
+		CBManagerState State { get; }
+	}
+
 	[Since (5,0)]
 	[Lion]
-	[BaseType (typeof (NSObject), Delegates=new[] {"WeakDelegate"}, Events = new[] { typeof (CBCentralManagerDelegate)})]
+	[BaseType (
+#if MONOMAC
+	typeof (NSObject)
+#else
+	typeof (CBManager)
+#endif
+	, Delegates=new[] {"WeakDelegate"}, Events = new[] { typeof (CBCentralManagerDelegate)})]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
 	interface CBCentralManager {
+#if MONOMAC
+		// Removed in iOS 10 – The selector now exists in the base type.
+		// Note: macOS doesn't inherit from CBManager.
 		[Export ("state")]
 		CBCentralManagerState State { get;  }
+#endif
 
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -185,9 +203,11 @@ namespace XamCore.CoreBluetooth {
 		[Field ("CBAdvertisementDataTxPowerLevelKey")]
 		NSString TxPowerLevelKey { get; }
 
+		[Since (7,0), Mac (10,9)]
 		[Field ("CBAdvertisementDataIsConnectable")]
 		NSString IsConnectableKey { get; }
 
+		[Since (7,0), Mac (10,9)]
 		[Field ("CBAdvertisementDataSolicitedServiceUUIDsKey")]
 		NSString SolicitedServiceUuidsKey { get; }
 	}
@@ -205,12 +225,15 @@ namespace XamCore.CoreBluetooth {
 
 	[Static, Internal]
 	interface RestoredStateKeys {
+		[Since (7,0)]
 		[Field ("CBCentralManagerRestoredStatePeripheralsKey")]
 		NSString PeripheralsKey { get; }
 
+		[Since (7,0)]
 		[Field ("CBCentralManagerRestoredStateScanServicesKey")]
 		NSString ScanServicesKey { get; }
 
+		[Since (7,0)]
 		[Field ("CBCentralManagerRestoredStateScanOptionsKey")]
 		NSString ScanOptionsKey { get; }
 	}
@@ -224,10 +247,12 @@ namespace XamCore.CoreBluetooth {
 		void UpdatedState (CBCentralManager central);
 
 		[NoTV]
+		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_8_4)] // Available in iOS 5.0 through iOS 8.4. Deprecated in iOS 7.0.
 		[Export ("centralManager:didRetrievePeripherals:"), EventArgs ("CBPeripherals")]
 		void RetrievedPeripherals (CBCentralManager central, CBPeripheral [] peripherals);
 
 		[NoTV]
+		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_8_4)] // Available in iOS 5.0 through iOS 8.4. Deprecated in iOS 7.0.
 		[Export ("centralManager:didRetrieveConnectedPeripherals:"), EventArgs ("CBPeripherals")]
 		void RetrievedConnectedPeripherals (CBCentralManager central, CBPeripheral [] peripherals);
 
@@ -420,7 +445,7 @@ namespace XamCore.CoreBluetooth {
 		[Export ("services", ArgumentSemantic.Retain)]
 		CBService [] Services { get;  }
 
-		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
 		[Wrap ("WeakDelegate")]
@@ -536,7 +561,7 @@ namespace XamCore.CoreBluetooth {
 		void WroteDescriptorValue (CBPeripheral peripheral, CBDescriptor descriptor, NSError error);
 
 		[NoTV]
-		[Availability (Introduced = Platform.iOS_6_0, Deprecated = Platform.iOS_7_0)]
+		[Availability (Introduced = Platform.iOS_6_0, Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_8_4)]
 		[Export ("peripheralDidInvalidateServices:")]
 		void InvalidatedService (CBPeripheral peripheral);	
 
@@ -665,6 +690,15 @@ namespace XamCore.CoreBluetooth {
 		[Field ("CBUUIDCharacteristicAggregateFormatString")]
 		NSString CharacteristicAggregateFormatString { get; }
 
+#if !MONOMAC // Filled radar://27160443 – Trello: https://trello.com/c/oqB27JA6
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Field ("CBUUIDCharacteristicValidRangeString")]
+#else
+		[Field ("CBUUIDValidRangeString")]
+#endif
+		NSString CharacteristicValidRangeString { get; }
+
 #if !XAMCORE_3_0
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Obsoleted (PlatformName.iOS, 9, 0)]
@@ -752,8 +786,13 @@ namespace XamCore.CoreBluetooth {
 	}
 
 	[Since (6, 0), Mac(10,9)]
-	[BaseType (typeof (NSObject), Delegates=new[] { "WeakDelegate" }, Events=new[] { typeof (CBPeripheralManagerDelegate) })]
-	[DisableDefaultCtor]
+	[BaseType (
+#if MONOMAC
+	typeof (NSObject)
+#else
+	typeof (CBManager)
+#endif
+	, Delegates=new[] { "WeakDelegate" }, Events=new[] { typeof (CBPeripheralManagerDelegate) })]
 	interface CBPeripheralManager {
 		[NoTV]
 		[Export ("initWithDelegate:queue:")]
@@ -769,18 +808,24 @@ namespace XamCore.CoreBluetooth {
 		[PostGet ("WeakDelegate")]
 		IntPtr Constructor ([Protocolize] CBPeripheralManagerDelegate peripheralDelegate, [NullAllowed] DispatchQueue queue, [NullAllowed] NSDictionary options);
 
+		[NullAllowed]
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
 		CBPeripheralManagerDelegate Delegate { get; set; }
 
-		[Export ("delegate", ArgumentSemantic.Assign)]
+		[NullAllowed]
+		[Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 
 		[Export ("isAdvertising")]
 		bool Advertising { get; }
 
+#if MONOMAC
+		// Removed in iOS 10 – The selector now exists in the base type.
+		// Note: macOS doesn't inherit from CBManager.
 		[Export ("state")]
 		CBPeripheralManagerState State { get; }
+#endif
 
 		[Export ("addService:")]
 		void AddService (CBMutableService service);
@@ -825,10 +870,12 @@ namespace XamCore.CoreBluetooth {
 		[Since (7,0)]
 		NSString RestoredStateAdvertisementDataKey { get; }
 
+#if !MONOMAC || !XAMCORE_4_0
 		[Since (7,0)]
 		[Static]
 		[Export ("authorizationStatus")]
 		CBPeripheralManagerAuthorizationStatus AuthorizationStatus { get; }
+#endif
 	}
 
 	[Since (6, 0), Mac(10,9)]

@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@xamarin.com>
 //
-// Copyright 2012-2013 Xamarin Inc. All rights reserved.
+// Copyright 2012-2013, 2016 Xamarin Inc. All rights reserved.
 //
 
 using System;
@@ -64,6 +64,14 @@ namespace MonoTouchFixtures.CoreGraphics {
 
 				if (TestRuntime.CheckXcodeVersion (5, 0))
 					Assert.Null (cs.GetICCProfile (), "GetICCProfile");
+
+				if (TestRuntime.CheckXcodeVersion (8, 0)) {
+					// kCGColorSpaceDeviceGray is not a public constant, e.g. from CGColorSpaceNames.*
+					Assert.That (cs.Name, Is.EqualTo ("kCGColorSpaceDeviceGray"), "Name");
+					Assert.False (cs.IsWideGamutRgb, "IsWideGamutRgb");
+					Assert.True (cs.SupportsOutput, "SupportsOutput");
+					Assert.Null (cs.GetIccData (), "GetIccData");
+				}
 			}
 		}
 
@@ -79,6 +87,14 @@ namespace MonoTouchFixtures.CoreGraphics {
 
 				if (TestRuntime.CheckXcodeVersion (5, 0))
 					Assert.Null (cs.GetICCProfile (), "GetICCProfile");
+
+				if (TestRuntime.CheckXcodeVersion (8, 0)) {
+					// kCGColorSpaceDeviceRGB is not a public constant
+					Assert.That (cs.Name, Is.EqualTo ("kCGColorSpaceDeviceRGB"), "Name");
+					Assert.False (cs.IsWideGamutRgb, "IsWideGamutRgb");
+					Assert.True (cs.SupportsOutput, "SupportsOutput");
+					Assert.Null (cs.GetIccData (), "GetIccData");
+				}
 			}
 		}
 
@@ -94,6 +110,14 @@ namespace MonoTouchFixtures.CoreGraphics {
 
 				if (TestRuntime.CheckXcodeVersion (5, 0))
 					Assert.Null (cs.GetICCProfile (), "GetICCProfile");
+
+				if (TestRuntime.CheckXcodeVersion (8, 0)) {
+					// kCGColorSpaceDeviceCMYK is not a public constant
+					Assert.That (cs.Name, Is.EqualTo ("kCGColorSpaceDeviceCMYK"), "Name");
+					Assert.False (cs.IsWideGamutRgb, "IsWideGamutRgb");
+					Assert.True (cs.SupportsOutput, "SupportsOutput");
+					Assert.Null (cs.GetIccData (), "GetIccData");
+				}
 			}
 		}
 
@@ -118,7 +142,60 @@ namespace MonoTouchFixtures.CoreGraphics {
 
 				if (TestRuntime.CheckXcodeVersion (5, 0))
 					Assert.Null (cs.GetICCProfile (), "GetICCProfile");
+
+				if (TestRuntime.CheckXcodeVersion (8, 0)) {
+					Assert.Null (cs.Name, "Name");
+					Assert.False (cs.IsWideGamutRgb, "IsWideGamutRgb");
+					Assert.False (cs.SupportsOutput, "SupportsOutput");
+					Assert.Null (cs.GetIccData (), "GetIccData");
+				}
 			}
+		}
+
+		[Test]
+		public void CreateExtendedSrgb ()
+		{
+			if (!TestRuntime.CheckXcodeVersion (8, 0))
+				Assert.Ignore ("Requires iOS 10+");
+			
+			using (var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.ExtendedSrgb)) {
+				Assert.That (cs.Components, Is.EqualTo ((nint)3), "3");
+				Assert.That (cs.Model, Is.EqualTo (CGColorSpaceModel.RGB), "RGB");
+				Assert.Null (cs.GetBaseColorSpace (), "GetBaseColorSpace");
+				// not indexed so no color table
+				Assert.That (cs.GetColorTable ().Length, Is.EqualTo (0), "GetColorTable");
+
+				using (var icc_profile = cs.GetICCProfile ())
+					Assert.That (icc_profile.Length, Is.EqualTo (3144), "GetICCProfile");
+
+				Assert.That (cs.Name, Is.EqualTo (CGColorSpaceNames.ExtendedSrgb.ToString ()), "Name");
+				Assert.True (cs.IsWideGamutRgb, "IsWideGamutRgb");
+				Assert.True (cs.SupportsOutput, "SupportsOutput");
+
+				using (var icc_data = cs.GetIccData ())
+					Assert.That (icc_data.Length, Is.EqualTo (3144), "GetIccData");
+			}
+		}
+
+		[Test]
+		public void Disposed ()
+		{
+			if (!TestRuntime.CheckXcodeVersion (8, 0))
+				Assert.Ignore ("Requires iOS 10+");
+			
+			var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.ExtendedSrgb);
+			cs.Dispose ();
+
+			Assert.That (cs.Components, Is.EqualTo ((nint)0), "0");
+			Assert.That (cs.Model, Is.EqualTo (CGColorSpaceModel.Unknown), "Unknown");
+			Assert.Null (cs.GetBaseColorSpace (), "GetBaseColorSpace");
+			Assert.That (cs.GetColorTable ().Length, Is.EqualTo (0), "GetColorTable");
+			Assert.Null (cs.GetICCProfile (), "GetICCProfile");
+			Assert.Null (cs.Name, "Name");
+			Assert.False (cs.IsWideGamutRgb, "IsWideGamutRgb");
+			Assert.False (cs.SupportsOutput, "SupportsOutput");
+			Assert.Null (cs.GetIccData (), "GetIccData");
+			// IOW all safe to call with a `nil` handle
 		}
 
 		[Test]
@@ -139,6 +216,14 @@ namespace MonoTouchFixtures.CoreGraphics {
 				if (TestRuntime.CheckXcodeVersion (5, 0)) {
 					using (var icc_profile = cs.GetICCProfile ())
 						Assert.That (icc_profile.Length, Is.EqualTo (3284), "GetICCProfile");
+				}
+
+				if (TestRuntime.CheckXcodeVersion (8, 0)) {
+					Assert.Null (cs.Name, "Name");
+					Assert.False (cs.IsWideGamutRgb, "IsWideGamutRgb");
+					Assert.True (cs.SupportsOutput, "SupportsOutput");
+					using (var icc_data = cs.GetIccData ())
+						Assert.That (icc_data.Length, Is.EqualTo (3284), "GetIccData");
 				}
 			}
 		}

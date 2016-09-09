@@ -7,6 +7,8 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 
+#if !WATCH
+
 using System;
 using System.Runtime.InteropServices;
 using XamCore.Foundation;
@@ -26,3 +28,5 @@ namespace XamCore.SceneKit
 		}
 	}
 }
+
+#endif

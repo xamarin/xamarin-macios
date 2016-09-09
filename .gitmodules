@@ -5,7 +5,7 @@
 [submodule "external/mono"]
 	path = external/mono
 	url = ../../mono/mono.git
-	branch = mono-4.5.0-branch
+	branch = mono-4.6.0-branch
 [submodule "external/fsharp"]
 	path = external/fsharp
 	url = ../../fsharp/fsharp.git

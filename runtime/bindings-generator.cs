@@ -1244,6 +1244,522 @@ namespace Xamarin.BindingMethods.Generator
 				}
 			);
 
+			// Required for SpriteKit
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, Matrix2)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.Matrix2f },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, Matrix3)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.Matrix3f },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, Matrix4)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.Matrix4f },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, Vector3)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.Vector3 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, Vector4)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.Vector4 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (Vector4)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Vector4 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (nint, nint, Vector2, Vector2)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.NInt },
+						new ParameterData { TypeData = Types.NInt },
+						new ParameterData { TypeData = Types.Vector2 },
+						new ParameterData { TypeData = Types.Vector2 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // Matrix2 func ()",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.Matrix2f,
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // Matrix3 func ()",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.Matrix3f,
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // Vector2 func (nint)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.Vector2,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.NInt },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (Matrix2)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Matrix2f },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (Matrix3)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Matrix3f },
+					},
+				}
+			);
+
+			// Required for ModelIO
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (Vector3, Vector2i, bool, IntPtr, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Vector3 },
+						new ParameterData { TypeData = Types.Vector2i },
+						new ParameterData { TypeData = Types.Bool },
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.IntPtr },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (Matrix4, bool);",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Matrix4f },
+						new ParameterData { TypeData = Types.Bool },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (Vector3, Vector2i, bool, nint, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Vector3 },
+						new ParameterData { TypeData = Types.Vector2i },
+						new ParameterData { TypeData = Types.Bool },
+						new ParameterData { TypeData = Types.NInt },
+						new ParameterData { TypeData = Types.IntPtr },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, nint, UInt32, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.NInt },
+						new ParameterData { TypeData = Types.UInt32 },
+						new ParameterData { TypeData = Types.IntPtr },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (Vector3, Vector2i, bool, bool, nint, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Vector3 },
+						new ParameterData { TypeData = Types.Vector2i },
+						new ParameterData { TypeData = Types.Bool },
+						new ParameterData { TypeData = Types.Bool },
+						new ParameterData { TypeData = Types.NInt },
+						new ParameterData { TypeData = Types.IntPtr },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (Vector3, Vector2i, int, bool, nint, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Vector3 },
+						new ParameterData { TypeData = Types.Vector2i },
+						new ParameterData { TypeData = Types.Int32 },
+						new ParameterData { TypeData = Types.Bool },
+						new ParameterData { TypeData = Types.NInt },
+						new ParameterData { TypeData = Types.IntPtr },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, Vector2d, Vector2d, Vector2i, bool)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.Vector2d },
+						new ParameterData { TypeData = Types.Vector2d },
+						new ParameterData { TypeData = Types.Vector2i },
+						new ParameterData { TypeData = Types.Bool },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (Vector2i, int, int, bool, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Vector2i },
+						new ParameterData { TypeData = Types.Int32 },
+						new ParameterData { TypeData = Types.Int32 },
+						new ParameterData { TypeData = Types.Bool },
+						new ParameterData { TypeData = Types.IntPtr },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (float, Vector2, Vector2)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Float },
+						new ParameterData { TypeData = Types.Vector2 },
+						new ParameterData { TypeData = Types.Vector2 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (float, Vector2, Vector2, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Float },
+						new ParameterData { TypeData = Types.Vector2 },
+						new ParameterData { TypeData = Types.Vector2 },
+						new ParameterData { TypeData = Types.IntPtr },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // Vector2d func ()",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.Vector2d
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // Vector3 func (nuint)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.Vector3,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.NUInt },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // float func (Vector2)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.Float,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Vector2 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // float func (Vector2i)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.Float,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Vector2i },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (IntPtr, Vector2, Vector2, Int64)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.Vector2 },
+						new ParameterData { TypeData = Types.Vector2 },
+						new ParameterData { TypeData = Types.Int64 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (IntPtr, Vector2, Vector2, Int)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.Vector2 },
+						new ParameterData { TypeData = Types.Vector2 },
+						new ParameterData { TypeData = Types.Int32 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (IntPtr, Vector2, Vector2)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.Vector2 },
+						new ParameterData { TypeData = Types.Vector2 },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (Vector3d)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Vector3d },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // void func (float, Vector2i)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.Float },
+						new ParameterData { TypeData = Types.Vector2i },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // GKBox func ()",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.GKBox
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (GKBox)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.GKBox },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (GKBox, float)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.GKBox },
+						new ParameterData { TypeData = Types.Float },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, GKBox)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.GKBox },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // GKQuad func ()",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.GKQuad
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (GKQuad)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.GKQuad },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (GKQuad, float)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.GKQuad },
+						new ParameterData { TypeData = Types.Float },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (IntPtr, GKQuad)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.IntPtr },
+						new ParameterData { TypeData = Types.GKQuad },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // GKTriangle func (nuint)",
+					Prefix = "simd__",
+					Variants = Variants.All,
+					ReturnType = Types.GKTriangle,
+					Parameters = new ParameterData [] {
+						new ParameterData { TypeData = Types.NUInt },
+					},
+				}
+			);
+
 			// We must expand functions with native types to their actual type as well.
 			for (int i = data.Count - 1; i >= 0; i--) {
 				if (!data [i].HasNativeType)
@@ -1263,17 +1779,20 @@ namespace Xamarin.BindingMethods.Generator
 		static void MarshalToManaged (StringWriter writer, TypeData type, string nativeVariable, string managedVariable)
 		{
 			switch (type.ManagedType) {
+			case "Vector2d":
 			case "Vector2i":
 			case "Vector2":
 				writer.WriteLine ("\t{0}.a = {1} [0];", managedVariable, nativeVariable);
 				writer.WriteLine ("\t{0}.b = {1} [1];", managedVariable, nativeVariable);
 				break;
+			case "Vector3d":
 			case "Vector3i":
 			case "Vector3":
 				writer.WriteLine ("\t{0}.a = {1} [0];", managedVariable, nativeVariable);
 				writer.WriteLine ("\t{0}.b = {1} [1];", managedVariable, nativeVariable);
 				writer.WriteLine ("\t{0}.c = {1} [2];", managedVariable, nativeVariable);
 				break;
+			case "Vector4d":
 			case "Vector4i":
 			case "Vector4":
 				if (type.NativeType == "vector_float3") {
@@ -1281,7 +1800,7 @@ namespace Xamarin.BindingMethods.Generator
 					writer.WriteLine ("\t{0}.b = {1} [1];", managedVariable, nativeVariable);
 					writer.WriteLine ("\t{0}.c = {1} [2];", managedVariable, nativeVariable);
 					writer.WriteLine ("\t{0}.d = 0;", managedVariable);
-				} else if (type.NativeType == "vector_float4" || type.NativeType == "vector_int4") {
+				} else if (type.NativeType == "vector_float4" || type.NativeType == "vector_int4" || type.NativeType == "vector_double4") {
 					writer.WriteLine ("\t{0}.a = {1} [0];", managedVariable, nativeVariable);
 					writer.WriteLine ("\t{0}.b = {1} [1];", managedVariable, nativeVariable);
 					writer.WriteLine ("\t{0}.c = {1} [2];", managedVariable, nativeVariable);
@@ -1289,6 +1808,19 @@ namespace Xamarin.BindingMethods.Generator
 				} else {
 					goto default;
 				}
+				break;
+			case "Matrix2":
+				writer.WriteLine ("\tfor (int i = 0; i < 2; i++) {");
+				writer.WriteLine ("\t\t{0}.columns [i].a = {1}.columns [i] [0];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t\t{0}.columns [i].b = {1}.columns [i] [1];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t}");
+				break;
+			case "Matrix3":
+				writer.WriteLine ("\tfor (int i = 0; i < 3; i++) {");
+				writer.WriteLine ("\t\t{0}.columns [i].a = {1}.columns [i] [0];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t\t{0}.columns [i].b = {1}.columns [i] [1];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t\t{0}.columns [i].c = {1}.columns [i] [2];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t}");
 				break;
 			case "Matrix4":
 				writer.WriteLine ("\tfor (int i = 0; i < 4; i++) {");
@@ -1306,6 +1838,27 @@ namespace Xamarin.BindingMethods.Generator
 				writer.WriteLine ("\t{0}.minBounds.b = {1}.minBounds [1];", managedVariable, nativeVariable);
 				writer.WriteLine ("\t{0}.minBounds.c = {1}.minBounds [2];", managedVariable, nativeVariable);
 				break;
+			case "GKBox":
+				writer.WriteLine ("\t{0}.maxBounds.a = {1}.maxBounds [0];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t{0}.maxBounds.b = {1}.maxBounds [1];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t{0}.maxBounds.c = {1}.maxBounds [2];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t{0}.minBounds.a = {1}.minBounds [0];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t{0}.minBounds.b = {1}.minBounds [1];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t{0}.minBounds.c = {1}.minBounds [2];", managedVariable, nativeVariable);
+				break;
+			case "GKQuad":
+				writer.WriteLine ("\t{0}.maxBounds.a = {1}.maxBounds [0];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t{0}.maxBounds.b = {1}.maxBounds [1];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t{0}.minBounds.a = {1}.minBounds [0];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t{0}.minBounds.b = {1}.minBounds [1];", managedVariable, nativeVariable);
+				break;
+			case "GKTriangle":
+				writer.WriteLine ("\tfor (int i = 0; i < 3; i++) {");
+				writer.WriteLine ("\t\t{0}.points [i].a = {1}.points [i] [0];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t\t{0}.points [i].b = {1}.points [i] [1];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t\t{0}.points [i].c = {1}.points [i] [2];", managedVariable, nativeVariable);
+				writer.WriteLine ("\t}");
+				break;
 			default:
 				throw new NotImplementedException (string.Format ("MarshalToManaged for: NativeType: {0} ManagedType: {1}", type.NativeType, type.ManagedType));
 			}
@@ -1314,24 +1867,27 @@ namespace Xamarin.BindingMethods.Generator
 		static void MarshalToNative (StringWriter writer, TypeData type, string nativeVariable, string managedVariable)
 		{
 			switch (type.ManagedType) {
+			case "Vector2d":
 			case "Vector2i":
 			case "Vector2":
 				writer.WriteLine ("\t{0} [0] = {1}.a;", nativeVariable, managedVariable);
 				writer.WriteLine ("\t{0} [1] = {1}.b;", nativeVariable, managedVariable);
 				break;
+			case "Vector3d":
 			case "Vector3i":
 			case "Vector3":
 				writer.WriteLine ("\t{0} [0] = {1}.a;", nativeVariable, managedVariable);
 				writer.WriteLine ("\t{0} [1] = {1}.b;", nativeVariable, managedVariable);
 				writer.WriteLine ("\t{0} [2] = {1}.c;", nativeVariable, managedVariable);
 				break;
+			case "Vector4d":
 			case "Vector4i":
 			case "Vector4":
 				if (type.NativeType == "vector_float3") {
 					writer.WriteLine ("\t{0} [0] = {1}.a;", nativeVariable, managedVariable);
 					writer.WriteLine ("\t{0} [1] = {1}.b;", nativeVariable, managedVariable);
 					writer.WriteLine ("\t{0} [2] = {1}.c;", nativeVariable, managedVariable);
-				} else if (type.NativeType == "vector_float4" || type.NativeType == "vector_int4") {
+				} else if (type.NativeType == "vector_float4" || type.NativeType == "vector_int4" || type.NativeType == "vector_double4") {
 					writer.WriteLine ("\t{0} [0] = {1}.a;", nativeVariable, managedVariable);
 					writer.WriteLine ("\t{0} [1] = {1}.b;", nativeVariable, managedVariable);
 					writer.WriteLine ("\t{0} [2] = {1}.c;", nativeVariable, managedVariable);
@@ -1339,6 +1895,19 @@ namespace Xamarin.BindingMethods.Generator
 				} else {
 					goto default;
 				}
+				break;
+			case "Matrix2":
+				writer.WriteLine ("\tfor (int i = 0; i < 2; i++) {");
+				writer.WriteLine ("\t\t{0}.columns [i][0] = {1}.columns [i].a;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t\t{0}.columns [i][1] = {1}.columns [i].b;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t}");
+				break;
+			case "Matrix3":
+				writer.WriteLine ("\tfor (int i = 0; i < 3; i++) {");
+				writer.WriteLine ("\t\t{0}.columns [i][0] = {1}.columns [i].a;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t\t{0}.columns [i][1] = {1}.columns [i].b;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t\t{0}.columns [i][2] = {1}.columns [i].c;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t}");
 				break;
 			case "Matrix4":
 				writer.WriteLine ("\tfor (int i = 0; i < 4; i++) {");
@@ -1355,6 +1924,27 @@ namespace Xamarin.BindingMethods.Generator
 				writer.WriteLine ("\t{0}.minBounds [0] = {1}.minBounds.a;", nativeVariable, managedVariable);
 				writer.WriteLine ("\t{0}.minBounds [1] = {1}.minBounds.b;", nativeVariable, managedVariable);
 				writer.WriteLine ("\t{0}.minBounds [2] = {1}.minBounds.c;", nativeVariable, managedVariable);
+				break;
+			case "GKBox":
+				writer.WriteLine ("\t{0}.maxBounds [0] = {1}.maxBounds.a;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t{0}.maxBounds [1] = {1}.maxBounds.b;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t{0}.maxBounds [2] = {1}.maxBounds.c;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t{0}.minBounds [0] = {1}.minBounds.a;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t{0}.minBounds [1] = {1}.minBounds.b;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t{0}.minBounds [2] = {1}.minBounds.c;", nativeVariable, managedVariable);
+				break;
+			case "GKQuad":
+				writer.WriteLine ("\t{0}.maxBounds [0] = {1}.maxBounds.a;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t{0}.maxBounds [1] = {1}.maxBounds.b;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t{0}.minBounds [0] = {1}.minBounds.a;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t{0}.minBounds [1] = {1}.minBounds.b;", nativeVariable, managedVariable);
+				break;
+			case "GKTriangle":
+				writer.WriteLine ("\tfor (int i = 0; i < 3; i++) {");
+				writer.WriteLine ("\t\t{0}.points [i][0] = {1}.points [i].a;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t\t{0}.points [i][1] = {1}.points [i].b;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t\t{0}.points [i][2] = {1}.points [i].c;", nativeVariable, managedVariable);
+				writer.WriteLine ("\t}");
 				break;
 			default:
 				throw new NotImplementedException (string.Format ("MarshalToNative for: NativeType: {0} ManagedType: {1}", type.NativeType, type.ManagedType));
@@ -1775,6 +2365,42 @@ namespace Xamarin.BindingMethods.Generator
 				NativeWrapperType = "struct Vector4i",
 				RequireMarshal = true,
 			};
+			public static TypeData Vector2d = new TypeData {
+				ManagedType = "Vector2d",
+				NativeType = "vector_double2",
+				NativeWrapperType = "struct Vector2d",
+				RequireMarshal = true
+			};
+			public static TypeData Vector3d = new TypeData {
+				ManagedType = "Vector3d",
+				NativeType = "vector_double3",
+				NativeWrapperType = "struct Vector3d",
+				RequireMarshal = true,
+			};
+			public static TypeData Vector4d = new TypeData {
+				ManagedType = "Vector4d",
+				NativeType = "vector_double4",
+				NativeWrapperType = "struct Vector4d",
+				RequireMarshal = true,
+			};
+			public static TypeData Matrix2f = new TypeData {
+				ManagedType = "Matrix2",
+				NativeType = "matrix_float2x2",
+				NativeWrapperType = "struct Matrix2f",
+				RequireMarshal = true,
+				IsARMStret = true,
+				IsX86Stret = true,
+				IsX64Stret = false,
+			};
+			public static TypeData Matrix3f = new TypeData {
+				ManagedType = "Matrix3",
+				NativeType = "matrix_float3x3",
+				NativeWrapperType = "struct Matrix3f",
+				RequireMarshal = true,
+				IsARMStret = true,
+				IsX86Stret = true,
+				IsX64Stret = true,
+			};
 			public static TypeData Matrix4f = new TypeData {
 				ManagedType = "Matrix4",
 				NativeType = "matrix_float4x4",
@@ -1859,6 +2485,36 @@ namespace Xamarin.BindingMethods.Generator
 				IsX86Stret = true,
 				IsX64Stret = true,
 				IsARMStret = true,
+			};
+
+			public static TypeData GKBox = new TypeData {
+				ManagedType = "GKBox",
+				NativeType = "GKBox",
+				NativeWrapperType = "struct GKBoxWrapper",
+				RequireMarshal = true,
+				IsX86Stret = true,
+				IsX64Stret = true,
+				IsARMStret = true,
+			};
+
+			public static TypeData GKQuad = new TypeData {
+				ManagedType = "GKQuad",
+				NativeType = "GKQuad",
+				NativeWrapperType = "struct GKQuadWrapper",
+				RequireMarshal = true,
+				IsARMStret = true,
+				IsX86Stret = true,
+				IsX64Stret = false,
+			};
+
+			public static TypeData GKTriangle = new TypeData {
+				ManagedType = "GKTriangle",
+				NativeType = "GKTriangle",
+				NativeWrapperType = "struct GKTriangleWrapper",
+				RequireMarshal = true,
+				IsARMStret = true,
+				IsX86Stret = true,
+				IsX64Stret = true,
 			};
 		}
 	}

@@ -39,8 +39,12 @@ namespace MonoTouchFixtures.HealthKit {
 		{
 			TestRuntime.AssertXcodeVersion (6, 0);
 
-			using (var t = HKObjectType.GetCategoryType (HKCategoryTypeIdentifierKey.SleepAnalysis))
+			using (var t = HKCategoryType.Create (HKCategoryTypeIdentifier.SleepAnalysis))
+#if __WATCHOS__
+			using (var aoq = new HKAnchoredObjectQuery (t, null, HKQueryAnchor.Create (HKAnchoredObjectQuery.NoAnchor), 0, delegate (HKAnchoredObjectQuery query, HKSample [] addedObjects, HKDeletedObject [] deletedObjects, HKQueryAnchor newAnchor, NSError error) {
+#else
 			using (var aoq = new HKAnchoredObjectQuery (t, null, HKAnchoredObjectQuery.NoAnchor, 0, delegate (HKAnchoredObjectQuery query, HKSample[] results, nuint newAnchor, NSError error) {
+#endif
 			})) {
 				Assert.That (aoq.Handle, Is.Not.EqualTo (IntPtr.Zero), "handle");
 			}

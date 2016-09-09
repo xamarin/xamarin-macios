@@ -133,6 +133,14 @@ namespace XamCore.CoreSpotlight {
 		[Field ("CSSearchableItemActivityIdentifier")]
 		NSString ActivityIdentifier { get; }
 
+		[iOS (10,0)]
+		[Field ("CSQueryContinuationActionType")]
+		NSString ContinuationActionType { get; }
+
+		[iOS (10,0)]
+		[Field ("CSSearchQueryString")]
+		NSString QueryString { get; }
+
 		[Export ("initWithUniqueIdentifier:domainIdentifier:attributeSet:")]
 		IntPtr Constructor ([NullAllowed] string uniqueIdentifier, [NullAllowed] string domainIdentifier, CSSearchableItemAttributeSet attributeSet);
 
@@ -167,6 +175,7 @@ namespace XamCore.CoreSpotlight {
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // NSInvalidArgumentException Reason: You must call -[CSCustomAttributeKey initWithKeyName...]
 	public interface CSCustomAttributeKey : NSCopying, NSSecureCoding {
 
 		[Export ("initWithKeyName:")]
@@ -308,7 +317,7 @@ namespace XamCore.CoreSpotlight {
 		[Export ("importantDates")]
 		NSDate [] ImportantDates { get; set; }
 
-		[Export ("allDay")]
+		[Export ("allDay", ArgumentSemantic.Strong)]
 		[NullAllowed]
 		NSNumber AllDay { get; set; }
 
@@ -362,6 +371,18 @@ namespace XamCore.CoreSpotlight {
 		[NullAllowed]
 		[Export ("title")]
 		string Title { get; set; }
+
+		[NullAllowed]
+		[Export ("version")]
+		string Version { get; set; }
+
+		[iOS (10,0)]
+		[NullAllowed, Export ("weakRelatedUniqueIdentifier", ArgumentSemantic.Copy)]
+		string WeakRelatedUniqueIdentifier { get; set; }
+
+		[iOS (10,0)]
+		[NullAllowed, Export ("domainIdentifier")]
+		string DomainIdentifier { get; set; }
 
 		// CSSearchableItemAttributeSet_Images.h
 		// CSSearchableItemAttributeSet (CSImages) Category
@@ -544,10 +565,6 @@ namespace XamCore.CoreSpotlight {
 		[NullAllowed]
 		[Export ("contactKeywords")]
 		string [] ContactKeywords { get; set; }
-
-		[NullAllowed]
-		[Export ("version")]
-		string Version { get; set; }
 
 		[NullAllowed]
 		[Export ("codecs")]
@@ -910,12 +927,28 @@ namespace XamCore.CoreSpotlight {
 		[Export ("GPSDifferental", ArgumentSemantic.Strong)]
 		NSNumber GpsDifferental { get; set; }
 
+		[iOS (10,0)]
+		[NullAllowed, Export ("fullyFormattedAddress")]
+		string FullyFormattedAddress { get; set; }
+
+		[iOS (10,0)]
+		[NullAllowed, Export ("postalCode")]
+		string PostalCode { get; set; }
+
+		[iOS (10,0)]
+		[NullAllowed, Export ("subThoroughfare")]
+		string SubThoroughfare { get; set; }
+
+		[iOS (10,0)]
+		[NullAllowed, Export ("thoroughfare")]
+		string Thoroughfare { get; set; }
+
 		// CSActionExtras
 
-		[NullAllowed, Export ("supportsPhoneCall", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("supportsPhoneCall", ArgumentSemantic.Strong)]
 		NSNumber SupportsPhoneCall { get; set; }
 
-		[NullAllowed, Export ("supportsNavigation", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("supportsNavigation", ArgumentSemantic.Strong)]
 		NSNumber SupportsNavigation { get; set; }
 
 		// CSContainment
@@ -929,7 +962,7 @@ namespace XamCore.CoreSpotlight {
 		[NullAllowed, Export ("containerIdentifier")]
 		string ContainerIdentifier { get; set; }
 
-		[NullAllowed, Export ("containerOrder", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("containerOrder", ArgumentSemantic.Strong)]
 		NSNumber ContainerOrder { get; set; }
 
 		// CSCustomAttributes
@@ -942,6 +975,35 @@ namespace XamCore.CoreSpotlight {
 		[Export ("valueForCustomKey:")]
 		[return: NullAllowed]
 		INSSecureCoding ValueForCustomKey (CSCustomAttributeKey key);
+	}
+
+	[NoTV][iOS (10,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CSSearchQuery {
+		[Export ("initWithQueryString:attributes:")]
+		IntPtr Constructor (string queryString, [NullAllowed] string[] attributes);
+
+		[Export ("cancelled")]
+		bool Cancelled { [Bind ("isCancelled")] get; }
+
+		[Export ("foundItemCount")]
+		nuint FoundItemCount { get; }
+
+		[NullAllowed, Export ("foundItemsHandler", ArgumentSemantic.Copy)]
+		Action<CSSearchableItem[]> FoundItemsHandler { get; set; }
+
+		[NullAllowed, Export ("completionHandler", ArgumentSemantic.Copy)]
+		Action<NSError> CompletionHandler { get; set; }
+
+		[Export ("protectionClasses", ArgumentSemantic.Copy)]
+		string[] ProtectionClasses { get; set; }
+
+		[Export ("start")]
+		void Start ();
+
+		[Export ("cancel")]
+		void Cancel ();
 	}
 #endif
 }

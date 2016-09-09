@@ -28,16 +28,20 @@
 using System;
 using System.ComponentModel;
 
+using XamCore.AVFoundation;
 using XamCore.CoreFoundation;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
+
+#if !WATCH
 using XamCore.CoreAnimation;
-using XamCore.CoreGraphics;
 using XamCore.CoreImage;
+#endif
+
+using XamCore.CoreGraphics;
 using XamCore.SpriteKit;
-using XamCore.AVFoundation;
 // MonoMac (classic) does not support those 64bits only frameworks
-#if XAMCORE_2_0 || !MONOMAC
+#if (XAMCORE_2_0 || !MONOMAC) && !WATCH
 using XamCore.ModelIO;
 using XamCore.Metal;
 #endif
@@ -46,10 +50,16 @@ using XamCore.Metal;
 using XamCore.AppKit;
 using OpenTK;
 #else
+
+#if WATCH
+using NSView = global::XamCore.Foundation.NSObject; // won't be used -> [NoWatch] but must compile
+#else
 using XamCore.OpenGLES;
 
-using NSColor = global::XamCore.UIKit.UIColor;
 using NSView = global::XamCore.UIKit.UIView;
+#endif
+
+using NSColor = global::XamCore.UIKit.UIColor;
 using NSFont = global::XamCore.UIKit.UIFont;
 using NSImage = global::XamCore.UIKit.UIImage;
 using NSBezierPath = global::XamCore.UIKit.UIBezierPath;
@@ -57,9 +67,33 @@ using NSBezierPath = global::XamCore.UIKit.UIBezierPath;
 
 namespace XamCore.SceneKit {
 
+#if WATCH
+	// stubs to limit the number of preprocessor directives in the source file
+	public interface CAAnimation {}
+	interface CALayer {}
+	interface CAMediaTimingFunction {}
+	interface MDLAsset {}
+	interface MDLCamera {}
+	interface MDLLight {}
+	interface MDLMaterial {}
+	interface MDLMesh {}
+	interface MDLObject {}
+	interface MDLSubmesh {}
+	enum MTLPixelFormat {}
+	enum MTLVertexFormat {}
+	interface IMTLBuffer {}
+	interface IMTLCommandBuffer {}
+	interface IMTLCommandQueue {}
+	interface IMTLDevice {}
+	interface IMTLLibrary {}
+	interface IMTLRenderCommandEncoder {}
+	interface MTLRenderPassDescriptor {}
+#endif
+
 	[Mac (10,8), iOS (8,0)]
 	delegate void SCNSceneSourceStatusHandler (float /* float, not CGFloat */ totalProgress, SCNSceneSourceStatus status, NSError error, ref bool stopLoading);
-	
+
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[Model, Protocol]
 	[BaseType (typeof (NSObject))]
@@ -67,6 +101,7 @@ namespace XamCore.SceneKit {
 #if XAMCORE_2_0
 		[Abstract]
 #endif
+		[NoWatch]
 		[Export ("addAnimation:forKey:")]
 		void AddAnimation (CAAnimation animation, [NullAllowed] NSString key);
 
@@ -91,6 +126,7 @@ namespace XamCore.SceneKit {
 #if XAMCORE_2_0
 		[Abstract]
 #endif
+		[NoWatch]
 		[Export ("animationForKey:")]
 		CAAnimation GetAnimation (NSString key);
 
@@ -121,8 +157,13 @@ namespace XamCore.SceneKit {
 		[Mac (10,10)]
 		[Export ("removeAnimationForKey:fadeOutDuration:")]
 		void RemoveAnimation (NSString key, nfloat duration);
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("setSpeed:forAnimationKey:")]
+		void SetSpeed (nfloat speed, NSString key);
 	}
 
+	[Watch (3,0)]
 	[iOS(9,0),Mac(10,11)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -157,6 +198,7 @@ namespace XamCore.SceneKit {
 		SCNAudioSource AudioSource { get; }
 	}
 	
+	[Watch (3,0)]
 	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -197,6 +239,7 @@ namespace XamCore.SceneKit {
 	}
 		
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[Model, Protocol]
 	[BaseType (typeof (NSObject))]
@@ -219,6 +262,7 @@ namespace XamCore.SceneKit {
 		bool GetBoundingSphere (ref SCNVector3 center, ref nfloat radius);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	interface SCNBox {
@@ -250,6 +294,7 @@ namespace XamCore.SceneKit {
 		SCNBox Create (nfloat width, nfloat height, nfloat length, nfloat chamferRadius);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface SCNCamera : SCNAnimatable, SCNTechniqueSupport, NSCopying, NSSecureCoding {
@@ -303,11 +348,92 @@ namespace XamCore.SceneKit {
 		[Export ("aperture")]
 		nfloat Aperture { get; set; }
 
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("motionBlurIntensity")]
+		nfloat MotionBlurIntensity { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("wantsHDR")]
+		bool WantsHdr { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("exposureOffset")]
+		nfloat ExposureOffset { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("averageGray")]
+		nfloat AverageGray { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("whitePoint")]
+		nfloat WhitePoint { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("wantsExposureAdaptation")]
+		bool WantsExposureAdaptation { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("exposureAdaptationBrighteningSpeedFactor")]
+		nfloat ExposureAdaptationBrighteningSpeedFactor { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("exposureAdaptationDarkeningSpeedFactor")]
+		nfloat ExposureAdaptationDarkeningSpeedFactor { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("minimumExposure")]
+		nfloat MinimumExposure { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("maximumExposure")]
+		nfloat MaximumExposure { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("bloomThreshold")]
+		nfloat BloomThreshold { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("bloomIntensity")]
+		nfloat BloomIntensity { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("bloomBlurRadius")]
+		nfloat BloomBlurRadius { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("vignettingPower")]
+		nfloat VignettingPower { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("vignettingIntensity")]
+		nfloat VignettingIntensity { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("colorFringeStrength")]
+		nfloat ColorFringeStrength { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("colorFringeIntensity")]
+		nfloat ColorFringeIntensity { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("saturation")]
+		nfloat Saturation { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("contrast")]
+		nfloat Contrast { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("colorGrading")]
+		SCNMaterialProperty ColorGrading { get; }
+
 		[iOS (8,0)][Mac (10,10)]
 		[Export ("categoryBitMask")]
 		nuint CategoryBitMask { get; set; }
 
 #if XAMCORE_2_0
+		[NoWatch]
 		[iOS (9,0), Mac(10,11)]
 		[Static]
 		[Export ("cameraWithMDLCamera:")]
@@ -315,6 +441,7 @@ namespace XamCore.SceneKit {
 #endif
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	interface SCNCapsule {
@@ -337,6 +464,7 @@ namespace XamCore.SceneKit {
 		SCNCapsule Create (nfloat capRadius, nfloat height);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	interface SCNCone {
@@ -359,6 +487,7 @@ namespace XamCore.SceneKit {
 		SCNCone Create (nfloat topRadius, nfloat bottomRadius, nfloat height);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	interface SCNCylinder {
@@ -378,6 +507,7 @@ namespace XamCore.SceneKit {
 		SCNCylinder Create (nfloat radius, nfloat height);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	interface SCNFloor {
@@ -390,6 +520,18 @@ namespace XamCore.SceneKit {
 		[Export ("reflectionFalloffEnd")]
 		nfloat ReflectionFalloffEnd { get; set;  }
 
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("reflectionCategoryBitMask")]
+		nuint ReflectionCategoryBitMask { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("width")]
+		nfloat Width { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("length")]
+		nfloat Length { get; set; }
+
 		[Mac (10,10)]
 		[Export ("reflectionResolutionScaleFactor")]
 		nfloat ReflectionResolutionScaleFactor { get; set; }
@@ -398,6 +540,7 @@ namespace XamCore.SceneKit {
 		SCNFloor Create ();
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] 
@@ -437,7 +580,7 @@ namespace XamCore.SceneKit {
 
 		[Static]
 		[Export ("geometryWithSources:elements:")]
-		SCNGeometry Create (SCNGeometrySource [] sources, SCNGeometryElement [] elements);
+		SCNGeometry Create (SCNGeometrySource [] sources, [NullAllowed] SCNGeometryElement [] elements);
 	
 		[Export ("geometrySourcesForSemantic:")]
 		SCNGeometrySource [] GetGeometrySourcesForSemantic (string semantic);
@@ -469,6 +612,7 @@ namespace XamCore.SceneKit {
 		SCNGeometrySource EdgeCreasesSource { get; set; }
 
 #if XAMCORE_2_0
+		[NoWatch]
 		[iOS (9,0), Mac(10,11)]
 		[Static]
 		[Export ("geometryWithMDLMesh:")]
@@ -476,6 +620,7 @@ namespace XamCore.SceneKit {
 #endif
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface SCNGeometrySource : NSSecureCoding {
@@ -520,6 +665,7 @@ namespace XamCore.SceneKit {
 		SCNGeometrySource FromTextureCoordinates (IntPtr texcoords, nint count);
 
 #if XAMCORE_2_0 || !MONOMAC
+		[NoWatch]
 		[iOS (9,0)][Mac (10,11)]
 		[Static]
 		[Export ("geometrySourceWithBuffer:vertexFormat:semantic:vertexCount:dataOffset:dataStride:")]
@@ -527,6 +673,7 @@ namespace XamCore.SceneKit {
 #endif
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[Static]
 	interface SCNGeometrySourceSemantic {
@@ -541,6 +688,10 @@ namespace XamCore.SceneKit {
 		
 		[Field ("SCNGeometrySourceSemanticTexcoord")]
 		NSString Texcoord { get; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Field ("SCNGeometrySourceSemanticTangent")]
+		NSString Tangent { get; }
 
 		[Mac (10,10)]
 		[Field ("SCNGeometrySourceSemanticVertexCrease")]
@@ -559,6 +710,7 @@ namespace XamCore.SceneKit {
 		NSString BoneIndices { get; }
 	}
 	
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface SCNGeometryElement : NSSecureCoding {
@@ -579,6 +731,7 @@ namespace XamCore.SceneKit {
 		SCNGeometryElement FromData ([NullAllowed] NSData data, SCNGeometryPrimitiveType primitiveType, nint primitiveCount, nint bytesPerIndex);
 
 #if XAMCORE_2_0
+		[NoWatch]
 		[iOS (9,0), Mac(10,11)]
 		[Static]
 		[Export ("geometryElementWithMDLSubmesh:")]
@@ -586,6 +739,7 @@ namespace XamCore.SceneKit {
 #endif
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[Static]
 	interface SCNHitTest {
@@ -620,8 +774,12 @@ namespace XamCore.SceneKit {
 		[Field ("SCNHitTestIgnoreHiddenNodesKey")]
 		NSString IgnoreHiddenNodes { get; }
 #endif
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Field ("SCNHitTestOptionCategoryBitMask")]
+		NSString OptionCategoryBitMaskKey { get; }
 	}
 	
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	// quote: The SCNHitTestResult class is exposed as the return object from the hitTest:options: method, as an array of SCNHitTestResult objects.
@@ -648,6 +806,10 @@ namespace XamCore.SceneKit {
 		[Export ("modelTransform")]
 		SCNMatrix4 ModelTransform { get;  }
 
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("boneNode")]
+		SCNNode BoneNode { get; }
+
 		[Export ("node")]
 		SCNNode Node { get; }
 
@@ -665,6 +827,7 @@ namespace XamCore.SceneKit {
 	}
 #endif
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface SCNLight : SCNAnimatable, SCNTechniqueSupport, NSCopying, NSSecureCoding {
@@ -676,6 +839,14 @@ namespace XamCore.SceneKit {
 
 		[Wrap ("WeakColor")]
 		NSColor Color { get; set;  }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("temperature")]
+		nfloat Temperature { get; set; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("intensity")]
+		nfloat Intensity { get; set; }
 
 		[NullAllowed] // by default this property is null
 		[Export ("name", ArgumentSemantic.Copy)]
@@ -723,6 +894,10 @@ namespace XamCore.SceneKit {
 		[Mac (10,9)]
 		[Export ("gobo")]
 		SCNMaterialProperty Gobo { get; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[NullAllowed, Export ("IESProfileURL", ArgumentSemantic.Retain)]
+		NSUrl IesProfileUrl { get; set; }
 
 		[Mac (10,10)]
 		[Export ("shadowMapSize")]
@@ -773,6 +948,7 @@ namespace XamCore.SceneKit {
 		nuint CategoryBitMask { get; set; }
 
 #if XAMCORE_2_0
+		[NoWatch]
 		[iOS (9,0), Mac(10,11)]
 		[Static]
 		[Export ("lightWithMDLLight:")]
@@ -780,6 +956,7 @@ namespace XamCore.SceneKit {
 #endif
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[Static]
 	interface SCNLightType {
@@ -794,6 +971,14 @@ namespace XamCore.SceneKit {
 		
 		[Field ("SCNLightTypeSpot")]
 		NSString Spot { get; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Field ("SCNLightTypeIES")]
+		NSString Ies { get; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Field ("SCNLightTypeProbe")]
+		NSString Probe { get; }
 	}
 
 #if MONOMAC
@@ -823,6 +1008,7 @@ namespace XamCore.SceneKit {
 	}
 #endif
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[Static]
 	interface SCNLightingModel {
@@ -837,8 +1023,13 @@ namespace XamCore.SceneKit {
 		
 		[Field ("SCNLightingModelConstant")]
 		NSString Constant { get; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Field ("SCNLightingModelPhysicallyBased")]
+		NSString PhysicallyBased { get; }
 	}
 	
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface SCNMaterial : SCNAnimatable, SCNShadable, NSCopying, NSSecureCoding {
@@ -920,7 +1111,16 @@ namespace XamCore.SceneKit {
 		[Export ("selfIllumination")]
 		SCNMaterialProperty SelfIllumination { get; }
 
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("metalness")]
+		SCNMaterialProperty Metalness { get; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("roughness")]
+		SCNMaterialProperty Roughness { get; }
+
 #if XAMCORE_2_0
+		[NoWatch]
 		[iOS (9,0), Mac(10,11)]
 		[Static]
 		[Export ("materialWithMDLMaterial:")]
@@ -928,6 +1128,7 @@ namespace XamCore.SceneKit {
 #endif
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // runtime -> [SCNKit ERROR] Do not instantiate SCNMaterialProperty objects directly
@@ -950,8 +1151,11 @@ namespace XamCore.SceneKit {
 		[Export ("wrapT")]
 		SCNWrapMode WrapT { get; set;  }
 
-		[Export ("borderColor", ArgumentSemantic.Retain)]
-		NSObject BorderColor { get; set;  }
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Deprecated")]
+		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Deprecated")]
+		[NoWatch, NoTV]
+		[NullAllowed, Export ("borderColor", ArgumentSemantic.Retain)]
+		NSObject BorderColor { get; set; }
 
 		[Export ("mappingChannel")]
 		nint MappingChannel { get; set;  }
@@ -965,6 +1169,7 @@ namespace XamCore.SceneKit {
 		[Wrap ("Contents")]
 		NSImage ContentImage { get; set; }
 
+		[NoWatch]
 		[Wrap ("Contents")]
 		CALayer ContentLayer { get; set; }
 
@@ -998,11 +1203,15 @@ namespace XamCore.SceneKit {
 		SCNMaterialProperty Create (NSObject contents);
 	}
 
+#if !WATCH
+	[NoWatch]
 	[StrongDictionary ("SCNProgram")]
 	interface SCNProgramSemanticOptions {
 		nuint MappingChannel { get; set; }
 	}
+#endif
 
+	[Watch (3,0)]
 	[StrongDictionary ("SCNHitTest")]
 	interface SCNHitTestOptions {
 		bool FirstFoundOnly { get; set; }
@@ -1014,6 +1223,7 @@ namespace XamCore.SceneKit {
 		SCNNode RootNode { get; set; }
 	}
 
+	[Watch (3,0)]
 	[StrongDictionary ("SCNSceneSourceLoading")]
 	interface SCNSceneLoadingOptions {
 		NSUrl [] AssetDirectoryUrls { get; set; }
@@ -1023,11 +1233,18 @@ namespace XamCore.SceneKit {
 		bool OverrideAssetUrls { get; set; }
 		bool StrictConformance { get; set; }
 		bool UseSafeMode { get; set; }
-#if !TVOS
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("SCNSceneSourceLoading.OptionPreserveOriginalTopology")]
+		bool PreserveOriginalTopology { get; set; }
+
+#if !TVOS && !WATCH
 		// note: generator's StrongDictionary does not support No* attributes yet
 		[NoTV]
+		[NoWatch]
 		float ConvertUnitsToMeters { get; set; } /* 'floating value encapsulated in a NSNumber' probably a float since it's a graphics framework */
 		[NoTV]
+		[NoWatch]
 		bool ConvertToYUp { get; set; }
 #endif
 
@@ -1038,6 +1255,10 @@ namespace XamCore.SceneKit {
 	[Mac (10,8), iOS (8,0)]
 	delegate bool SCNNodePredicate (SCNNode node, out bool stop);
 
+	[Mac (10, 8), iOS (8, 0)]
+	delegate void SCNNodeHandler (SCNNode node, out bool stop);
+
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface SCNNode : SCNAnimatable, SCNBoundingVolume, SCNActionable, NSCopying, NSSecureCoding {
@@ -1089,9 +1310,11 @@ namespace XamCore.SceneKit {
 		[Export ("name", ArgumentSemantic.Copy)]
 		string Name { get; set;  }
 
+		[NoWatch]
 		[Export ("rendererDelegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakRendererDelegate { get; set;  }
 
+		[NoWatch]
 		[Wrap ("WeakRendererDelegate")]
 		[Protocolize]
 		SCNNodeRendererDelegate RendererDelegate { get; set; }
@@ -1145,7 +1368,7 @@ namespace XamCore.SceneKit {
 		[Export ("constraints", ArgumentSemantic.Copy)]
 		SCNConstraint [] Constraints { get; [NullAllowed] set; }
 
-		[Mac (10,9)]
+		[NoWatch, Mac (10, 9)]
 		[NullAllowed] // by default this property is null
 		[Export ("filters", ArgumentSemantic.Copy)]
 		CIFilter [] Filters { get; set; }
@@ -1186,6 +1409,10 @@ namespace XamCore.SceneKit {
 		[Export ("castsShadow")]
 		bool CastsShadow { get; set; }
 
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("movabilityHint", ArgumentSemantic.Assign)]
+		SCNMovabilityHint MovabilityHint { get; set; }
+
 		[Mac (10,10, onlyOn64 : true)] // More broken 32-bit code, 17710842
 		[Export ("physicsBody", ArgumentSemantic.Retain), NullAllowed]
 		SCNPhysicsBody PhysicsBody { get; set; }
@@ -1205,7 +1432,11 @@ namespace XamCore.SceneKit {
 
 		[Mac (10,10)]
 		[Export ("enumerateChildNodesUsingBlock:")]
-		void EnumerateChildNodes (SCNNodePredicate predicate);
+		void EnumerateChildNodes (SCNNodeHandler handler);
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("enumerateHierarchyUsingBlock:")]
+		void EnumerateHierarchy (SCNNodeHandler handler);
 
 		#region SCNParticleSystemSupport (SCNNode) category
 
@@ -1248,6 +1479,7 @@ namespace XamCore.SceneKit {
 		#endregion
 
 #if XAMCORE_2_0
+		[NoWatch]
 		[iOS (9,0), Mac(10,11)]
 		[Static]
 		[Export ("nodeWithMDLObject:")]
@@ -1255,6 +1487,7 @@ namespace XamCore.SceneKit {
 #endif
 	}
 
+	[NoWatch]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[Model, Protocol]
@@ -1263,6 +1496,7 @@ namespace XamCore.SceneKit {
 		void Render (SCNNode node, SCNRenderer renderer, [NullAllowed] NSDictionary arguments);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	interface SCNPlane {
@@ -1292,7 +1526,7 @@ namespace XamCore.SceneKit {
 
 	delegate void SCNBufferBindingHandler (ISCNBufferStream buffer, SCNNode node, SCNShadable shadable, SCNRenderer renderer);
 
-	[Mac (10,8), iOS (8,0)]
+	[Mac (10,8), iOS (8,0), NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface SCNProgram : NSCopying, NSSecureCoding {
 		[NullAllowed]
@@ -1331,8 +1565,11 @@ namespace XamCore.SceneKit {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		void SetSemantic (NSString geometrySourceSemantic, string symbol, [NullAllowed] NSDictionary options);
 
+#if !WATCH
+		[NoWatch]
 		[Wrap ("SetSemantic (geometrySourceSemantic, symbol, options == null ? null : options.Dictionary)")]
 		void SetSemantic (NSString geometrySourceSemantic, string symbol, SCNProgramSemanticOptions options);
+#endif
 
 		[Export ("semanticForSymbol:")]
 #if XAMCORE_4_0
@@ -1341,6 +1578,7 @@ namespace XamCore.SceneKit {
 		NSString GetSemanticForSymbol (string symbol);
 #endif
 
+		[NoWatch]
 		[Field ("SCNProgramMappingChannelKey")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString MappingChannelKey { get; }
@@ -1350,6 +1588,7 @@ namespace XamCore.SceneKit {
 		bool Opaque { [Bind ("isOpaque")] get; set; }
 
 #if XAMCORE_2_0
+		[NoWatch]
 		[iOS (9,0)][Mac (10,11)]
 		[NullAllowed]
 		[Export ("library", ArgumentSemantic.Retain)]
@@ -1357,7 +1596,7 @@ namespace XamCore.SceneKit {
 #endif
 	}
 
-	[Mac (10,8), iOS (8,0)]
+	[Mac (10,8), iOS (8,0), NoWatch]
 	[BaseType (typeof (NSObject))]
 	[Model, Protocol]
 	interface SCNProgramDelegate {
@@ -1383,6 +1622,7 @@ namespace XamCore.SceneKit {
 #if !XAMCORE_2_0
 	#if XAMCORE_3_0
 		[Availability (Unavailable = Platform.iOS_Version)]
+		[NoTV, NoWatch]
 	#endif
 		[Availability (Deprecated = Platform.Mac_10_10, Message = "Use the SCNProgram's Opaque property instead")]
 		[Export ("programIsOpaque:")]
@@ -1390,6 +1630,7 @@ namespace XamCore.SceneKit {
 #endif
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	interface SCNPyramid {
@@ -1415,7 +1656,7 @@ namespace XamCore.SceneKit {
 		SCNPyramid Create (nfloat width, nfloat height, nfloat length);
 	}
 
-	[Mac (10,8), iOS (8,0)]
+	[Mac (10,8), iOS (8,0), NoWatch]
 	[BaseType (typeof (NSObject))]
 #if !MONOMAC || XAMCORE_2_0
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[SCNRenderer init]: unrecognized selector sent to instance 0x7ce85a30
@@ -1429,6 +1670,7 @@ namespace XamCore.SceneKit {
 		[Static, Export ("rendererWithContext:options:")]
 		SCNRenderer FromContext (IntPtr context, [NullAllowed] NSDictionary options);
 
+		[NoWatch, NoTV]
 		[Export ("render")]
 		[Availability (Deprecated = Platform.Mac_10_11 | Platform.iOS_9_0)]
 		void Render ();
@@ -1437,22 +1679,32 @@ namespace XamCore.SceneKit {
 		[Export ("renderAtTime:")]
 		void Render (double timeInSeconds);
 
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("snapshotAtTime:withSize:antialiasingMode:")]
+		NSImage GetSnapshot (double time, CGSize size, SCNAntialiasingMode antialiasingMode);
+
 		[Mac (10,10)]
 		[Export ("nextFrameTime")]
 		double NextFrameTimeInSeconds { get; }
 
 #if XAMCORE_2_0 || !MONOMAC
+		[NoWatch]
 		[iOS (9,0)][Mac (10,11)]
 		[Static]
 		[Export ("rendererWithDevice:options:")]
 		SCNRenderer FromDevice ([NullAllowed] IMTLDevice device, [NullAllowed] NSDictionary options);
 
+		[NoWatch]
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("renderAtTime:viewport:commandBuffer:passDescriptor:")]
 		void Render (double timeInSeconds, CGRect viewport, IMTLCommandBuffer commandBuffer, MTLRenderPassDescriptor renderPassDescriptor);
 #endif
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("updateProbes:atTime:")]
+		void Update (SCNNode [] lightProbes, double time);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[Static]
 	interface SCNRenderingArguments {
@@ -1478,6 +1730,7 @@ namespace XamCore.SceneKit {
 	[Mac (10,9), iOS (8,0)]
 	delegate void SCNSceneExportProgressHandler (float /* float, not CGFloat */ totalProgress, NSError error, out bool stop);
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface SCNScene : NSSecureCoding {
@@ -1517,6 +1770,10 @@ namespace XamCore.SceneKit {
 		[Export ("background")]
 		SCNMaterialProperty Background { get; }
 
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Export ("lightingEnvironment")]
+		SCNMaterialProperty LightingEnvironment { get; }
+
 		[Mac (10,10), iOS (8,0)]
 		[Export ("fogStartDistance")]
 		nfloat FogStartDistance { get; set; }
@@ -1550,18 +1807,30 @@ namespace XamCore.SceneKit {
 		[Static, Wrap ("FromFile (name, directory, options == null ? null : options.Dictionary)")]
 		SCNScene FromFile (string name, string directory, SCNSceneLoadingOptions options);
 
-#if MONOMAC
-		[Mac (10,9), iOS (8,0)]
+		// Keeping here the same name WriteToUrl for iOS and friends because it is how it was bound
+		// initialy for macOS and having it named diferently would hurt shared code
+		[TV (10, 0), NoWatch, Mac (10, 9), iOS (10, 0)]
 		[Export ("writeToURL:options:delegate:progressHandler:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		bool WriteToUrl (NSUrl url,
 			[NullAllowed] NSDictionary options,
-			[NullAllowed] SCNSceneExportDelegate handler,
+			[NullAllowed] ISCNSceneExportDelegate aDelegate,
 			[NullAllowed] SCNSceneExportProgressHandler exportProgressHandler);
 
-		[Mac (10,9), iOS (8,0)]
+		[TV (10, 0), NoWatch, Mac (10, 9), iOS (10, 0)]
 		[Wrap ("WriteToUrl (url, options == null ? null : options.Dictionary, handler, exportProgressHandler)")]
+		bool WriteToUrl (NSUrl url, SCNSceneLoadingOptions options, ISCNSceneExportDelegate handler, SCNSceneExportProgressHandler exportProgressHandler);
+
+#if MONOMAC && !XAMCORE_4_0 // Add this overloads for binary compat only on macOS
+		[Obsolete ("Use the ISCNSceneExportDelegate overload instead")]
+		[Mac (10, 9)]
+		[Wrap ("WriteToUrl (url: url, options: options == null ? null : options.Dictionary, aDelegate: handler, exportProgressHandler: exportProgressHandler)")]
 		bool WriteToUrl (NSUrl url, SCNSceneLoadingOptions options, SCNSceneExportDelegate handler, SCNSceneExportProgressHandler exportProgressHandler);
+
+		[Obsolete ("Use the ISCNSceneExportDelegate overload instead")]
+		[Mac (10, 9)]
+		[Wrap ("WriteToUrl (url: url, options: options, aDelegate: handler, exportProgressHandler: exportProgressHandler)")]
+		bool WriteToUrl (NSUrl url, NSDictionary options, SCNSceneExportDelegate handler, SCNSceneExportProgressHandler exportProgressHandler);
 #endif
 		#region SCNParticleSystemSupport (SCNNode) category
 
@@ -1597,6 +1866,7 @@ namespace XamCore.SceneKit {
 		NSString UpAxisAttributeKey { get; }
 
 #if XAMCORE_2_0
+		[NoWatch]
 		[iOS (9,0), Mac(10,11)]
 		[Static]
 		[Export ("sceneWithMDLAsset:")]
@@ -1604,21 +1874,19 @@ namespace XamCore.SceneKit {
 #endif
 	}
 
-#if XAMCORE_3_0
-	[Availability (Unavailable = Platform.iOS_Version)]
-#elif !MONOMAC
-	[Obsolete ("Do not use; this type only exist in OSX, not in iOS")]
-#endif
-	[NoTV]
-	[Availability (Introduced = Platform.Mac_10_9)]
+	interface ISCNSceneExportDelegate { }
+
+	[TV (10, 0), NoWatch, Mac (10, 9), iOS (10, 0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface SCNSceneExportDelegate {
 
 		[Export ("writeImage:withSceneDocumentURL:originalImageURL:")]
-		NSUrl WriteImage (NSImage image, NSUrl documentURL, NSUrl originalImageURL);
+		[return: NullAllowed]
+		NSUrl WriteImage (NSImage image, NSUrl documentUrl, [NullAllowed] NSUrl originalImageUrl);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1692,6 +1960,7 @@ namespace XamCore.SceneKit {
 	}
 	public delegate bool SCNSceneSourceFilter (NSObject entry, NSString identifier, ref bool stop);
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[Static]
 	interface SCNSceneSourceLoading {
@@ -1730,13 +1999,13 @@ namespace XamCore.SceneKit {
 
 		[Mac(10,10)]
 		[Availability (Deprecated = Platform.iOS_8_3)] // header says NA and docs says "Available in iOS 8.0 through iOS 8.2."
-		[NoTV]
+		[NoTV, NoWatch]
 		[Field ("SCNSceneSourceConvertUnitsToMetersKey")]
 		NSString ConvertUnitsToMetersKey { get; }
 
 		[Mac(10,10)]
 		[Availability (Deprecated = Platform.iOS_8_3)] // header says NA and docs says "Available in iOS 8.0 through iOS 8.2."
-		[NoTV]
+		[NoTV, NoWatch]
 		[Field ("SCNSceneSourceConvertToYUpKey")]
 		NSString ConvertToYUpKey { get; }
 
@@ -1759,8 +2028,13 @@ namespace XamCore.SceneKit {
 		[Mac(10,10), iOS(8,0)]
 		[Field ("SCNSceneSourceAnimationImportPolicyPlayUsingSceneTimeBase")]
 		NSString AnimationImportPolicyPlayUsingSceneTimeBase { get; }
+
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Field ("SCNSceneSourceLoadingOptionPreserveOriginalTopology")]
+		NSString OptionPreserveOriginalTopology { get; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[Static]
 	interface SCNSceneSourceLoadErrors {
@@ -1777,6 +2051,7 @@ namespace XamCore.SceneKit {
 		NSString DetailedErrorsKey { get; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[Static]
 	interface SCNSceneSourceProperties {
@@ -1794,8 +2069,21 @@ namespace XamCore.SceneKit {
 		
 		[Field ("SCNSceneSourceAssetUnitKey")]
 		NSString AssetUnitKey { get; }
+
+		[Field ("SCNSceneSourceAssetAuthoringToolKey")]
+		NSString AssetAuthoringToolKey { get; }
+
+		[Field ("SCNSceneSourceAssetAuthorKey")]
+		NSString AssetAuthorKey { get; }
+
+		[Field ("SCNSceneSourceAssetUnitNameKey")]
+		NSString AssetUnitNameKey { get; }
+
+		[Field ("SCNSceneSourceAssetUnitMeterKey")]
+		NSString AssetUnitMeterKey { get; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -1960,6 +2248,7 @@ namespace XamCore.SceneKit {
 	#if XAMCORE_4_0
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
+		[NoWatch]
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)] // IMTLRenderCommandEncoder -> Metal -> only on 64 bits
 		[NullAllowed, Export ("currentRenderCommandEncoder")]
 		IMTLRenderCommandEncoder CurrentRenderCommandEncoder { get; }
@@ -1967,6 +2256,7 @@ namespace XamCore.SceneKit {
 	#if XAMCORE_4_0
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
+		[NoWatch]
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		[NullAllowed, Export ("device")]
 		IMTLDevice Device { get; }
@@ -1974,6 +2264,7 @@ namespace XamCore.SceneKit {
 	#if XAMCORE_4_0
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
+		[NoWatch]
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		[Export ("colorPixelFormat")]
 		MTLPixelFormat ColorPixelFormat { get; }
@@ -1981,6 +2272,7 @@ namespace XamCore.SceneKit {
 	#if XAMCORE_4_0
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
+		[NoWatch]
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		[Export ("depthPixelFormat")]
 		MTLPixelFormat DepthPixelFormat { get; }
@@ -1988,6 +2280,7 @@ namespace XamCore.SceneKit {
 	#if XAMCORE_4_0
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
+		[NoWatch]
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		[Export ("stencilPixelFormat")]
 		MTLPixelFormat StencilPixelFormat { get; }
@@ -1995,6 +2288,7 @@ namespace XamCore.SceneKit {
 	#if XAMCORE_4_0
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
+		[NoWatch]
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		[NullAllowed, Export ("commandQueue")]
 		IMTLCommandQueue CommandQueue { get; }
@@ -2010,6 +2304,7 @@ namespace XamCore.SceneKit {
 #if XAMCORE_4_0
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 #endif
+		[NoWatch]
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		[Export ("audioEnvironmentNode")]
 		AVAudioEnvironmentNode AudioEnvironmentNode { get; }
@@ -2022,6 +2317,7 @@ namespace XamCore.SceneKit {
 		SCNNode AudioListener { get; set; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -2046,6 +2342,7 @@ namespace XamCore.SceneKit {
 		void DidSimulatePhysics ([Protocolize]SCNSceneRenderer renderer, double timeInSeconds);
 	}	
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	[DisableDefaultCtor] 
@@ -2064,6 +2361,7 @@ namespace XamCore.SceneKit {
 
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	[DisableDefaultCtor] 
@@ -2116,6 +2414,7 @@ namespace XamCore.SceneKit {
 		nfloat Flatness { get; set; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	[DisableDefaultCtor] 
@@ -2136,6 +2435,7 @@ namespace XamCore.SceneKit {
 		SCNTorus Create (nfloat ringRadius, nfloat pipeRadius);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface SCNTransaction {
@@ -2176,6 +2476,7 @@ namespace XamCore.SceneKit {
 		double AnimationDuration { get; set; }
 
 		[Static]
+		[NoWatch]
 		[NullAllowed] // by default this property is null
 		[Export ("animationTimingFunction")]
 		CAMediaTimingFunction AnimationTimingFunction { get; set; }
@@ -2185,6 +2486,7 @@ namespace XamCore.SceneKit {
 		bool DisableActions { get; set; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	interface SCNTube {
@@ -2207,11 +2509,12 @@ namespace XamCore.SceneKit {
 		SCNTube Create (nfloat innerRadius, nfloat outerRadius, nfloat height);
 	}
 
+	[NoWatch]
 	[iOS (9,0)][Mac (10,11)]
 	[Static]
 	[Internal] // we'll make it public if there's a need for them (beside the strong dictionary we provide)
-	interface SCNRenderingOptionsKeys
-	{
+	interface SCNRenderingOptionsKeys {
+
 		[Field ("SCNPreferredRenderingAPIKey")]
 		NSString RenderingApiKey { get; }
 
@@ -2222,6 +2525,8 @@ namespace XamCore.SceneKit {
 		NSString LowPowerDeviceKey { get; }
 	}
 
+#if !WATCH
+	[NoWatch]
 	[iOS (9,0)][Mac (10,11)]
 	[StrongDictionary ("SCNRenderingOptionsKeys")]
 	interface SCNRenderingOptions
@@ -2235,8 +2540,9 @@ namespace XamCore.SceneKit {
 
 		bool LowPowerDevice { get; set; }
 	}
+#endif
 
-	[Mac (10,8), iOS (8,0)]
+	[Mac (10,8), iOS (8,0), NoWatch]
 	[BaseType (typeof (NSView))]
 	[DisableDefaultCtor] 
 	interface SCNView : SCNSceneRenderer, SCNTechniqueSupport {
@@ -2258,18 +2564,18 @@ namespace XamCore.SceneKit {
 
 		[Export ("pixelFormat", ArgumentSemantic.Retain)]
 		NSOpenGLPixelFormat PixelFormat { get; set;  }
-#else
+#elif !WATCH
 		[Export ("eaglContext", ArgumentSemantic.Retain)]
 #if XAMCORE_2_0
 		EAGLContext EAGLContext { get; set; }
 #else
 		new EAGLContext Context { get; set; }
 #endif
-#endif
 
 		[iOS (9,0)][Mac (10,11)]
 		[Wrap ("this (frame, options != null ? options.Dictionary : null)")]
 		IntPtr Constructor (CGRect frame, [NullAllowed] SCNRenderingOptions options);
+#endif
 
 		[Export ("initWithFrame:options:")]
 		IntPtr Constructor (CGRect frame, [NullAllowed] NSDictionary options);
@@ -2307,6 +2613,7 @@ namespace XamCore.SceneKit {
 	[Mac (10,9), iOS (8,0)]
 	public delegate void SCNAnimationEventHandler (CAAnimation animation, NSObject animatedObject, bool playingBackward);
 
+	[NoWatch]
 	[Mac (10,9), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -2315,6 +2622,7 @@ namespace XamCore.SceneKit {
 		SCNAnimationEvent Create (nfloat keyTime, SCNAnimationEventHandler eventHandler);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9), iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
 	public partial interface SCNShape {
@@ -2339,6 +2647,7 @@ namespace XamCore.SceneKit {
 		SCNShape Create (NSBezierPath path, nfloat extrusionDepth);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface SCNMorpher : SCNAnimatable, NSSecureCoding {
@@ -2356,6 +2665,7 @@ namespace XamCore.SceneKit {
 		nfloat GetWeight (nuint targetIndex);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -2392,6 +2702,7 @@ namespace XamCore.SceneKit {
 			SCNGeometrySource boneWeights, SCNGeometrySource boneIndices);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[Abstract]
@@ -2402,6 +2713,7 @@ namespace XamCore.SceneKit {
 		nfloat InfluenceFactor { get; set; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[BaseType (typeof (SCNConstraint))]
 	[DisableDefaultCtor]
@@ -2428,25 +2740,27 @@ namespace XamCore.SceneKit {
 		
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9), iOS (8,0)]
 	[BaseType (typeof (SCNConstraint))]
 #if !MONOMAC || XAMCORE_2_0
 	[DisableDefaultCtor]
 #endif
 	interface SCNLookAtConstraint {
-		[Export ("target")]
-		SCNNode Target { get; }
+		[Export ("target", ArgumentSemantic.Retain), NullAllowed]
+		SCNNode Target { get; [Mac (10, 12), iOS (10, 0), TV (10, 0)] set; }
 
 		[Export ("gimbalLockEnabled")]
 		bool GimbalLockEnabled { get; set; }
 
 		[Static, Export ("lookAtConstraintWithTarget:")]
-		SCNLookAtConstraint Create (SCNNode target);
+		SCNLookAtConstraint Create ([NullAllowed] SCNNode target);
 	}
 
 	[Mac (10,9), iOS (8,0)]
 	delegate SCNMatrix4 SCNTransformConstraintHandler (SCNNode node, SCNMatrix4 transform);
 
+	[Watch (3,0)]
 	[Mac (10,9), iOS (8,0)]
 	[BaseType (typeof (SCNConstraint))]
 	[DisableDefaultCtor]
@@ -2455,6 +2769,7 @@ namespace XamCore.SceneKit {
 		SCNTransformConstraint Create (bool inWorldSpace, SCNTransformConstraintHandler transformHandler);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -2475,6 +2790,7 @@ namespace XamCore.SceneKit {
 		SCNLevelOfDetail CreateWithWorldSpaceDistance ([NullAllowed] SCNGeometry geometry, nfloat worldSpaceDistance);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,9), iOS (8,0)]
 	[Static]
 	interface _SCNShaderModifiers {
@@ -2492,6 +2808,7 @@ namespace XamCore.SceneKit {
 	}
 
 
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -2544,6 +2861,9 @@ namespace XamCore.SceneKit {
 		[Export ("removeAllActions")]
 		void RemoveAllActions ();
 
+#if XAMCORE_4_0
+		[Abstract]
+#endif
 		[iOS (8,0), Mac(10,10)]
 		[Export ("actionKeys")]
 		string [] ActionKeys { get; }
@@ -2552,6 +2872,7 @@ namespace XamCore.SceneKit {
 	[Mac (10,10), iOS (8,0)]
 	delegate void SCNActionNodeWithElapsedTimeHandler (SCNNode node, nfloat elapsedTime);
 
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface SCNAction : NSCopying, NSSecureCoding {
@@ -2662,6 +2983,7 @@ namespace XamCore.SceneKit {
 	[Mac (10,8), iOS (8,0)]
 	delegate void SCNBindingHandler (uint /* unsigned int */ programId, uint /* unsigned int */ location, SCNNode renderedNode, SCNRenderer renderer);
 
+	[Watch (3,0)]
 	[StrongDictionary ("_SCNShaderModifiers")]
 	interface SCNShaderModifiers {
 		string EntryPointGeometry { get; set; }
@@ -2670,6 +2992,7 @@ namespace XamCore.SceneKit {
 		string EntryPointFragment { get; set; }
 	}
 	
+	[Watch (3,0)]
 	[Mac (10,9), iOS (8,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -2684,20 +3007,21 @@ namespace XamCore.SceneKit {
 		[Wrap ("WeakShaderModifiers")]
 		SCNShaderModifiers ShaderModifiers { get; set; }
 
+		[NoWatch]
 		[NullAllowed] // by default this property is null
 		[Export ("program", ArgumentSemantic.Retain)]
 		SCNProgram Program { get; set; }
 
-		[Mac (10,9)]
+		[Mac (10,9), NoWatch]
 		[Export ("handleBindingOfSymbol:usingBlock:")]
 		void HandleBinding (string symbol, SCNBindingHandler handler);
 
-		[Mac (10,9)]
+		[Mac (10,9), NoWatch]
 		[Export ("handleUnbindingOfSymbol:usingBlock:")]
 		void HandleUnbinding (string symbol, SCNBindingHandler handler);
 	}
 
-
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -2717,6 +3041,7 @@ namespace XamCore.SceneKit {
 		[Static, Export ("techniqueBySequencingTechniques:")]
 		SCNTechnique Create (SCNTechnique [] techniques);
 
+		[NoWatch]
 		[Export ("handleBindingOfSymbol:usingBlock:")]
 		void HandleBinding (string symbol, [NullAllowed] SCNBindingHandler handler);
 
@@ -2730,6 +3055,7 @@ namespace XamCore.SceneKit {
 		void _SetObject ([NullAllowed] NSObject obj, INSCopying key);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -2740,6 +3066,7 @@ namespace XamCore.SceneKit {
 		SCNTechnique Technique { get; [NullAllowed] set; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[Static]
 	interface SCNPhysicsTestKeys {
@@ -2754,6 +3081,7 @@ namespace XamCore.SceneKit {
 		NSString BackfaceCullingKey { get; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[Static]
 	interface SCNPhysicsTestSearchModeKeys {
@@ -2768,6 +3096,7 @@ namespace XamCore.SceneKit {
 		NSString All { get; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -2872,6 +3201,7 @@ namespace XamCore.SceneKit {
 	[Mac (10,10), iOS (8,0)]
 	delegate SCNVector3 SCNFieldForceEvaluator (SCNVector3 position, SCNVector3 velocity, float /* float, not CGFloat */ mass, float /* float, not CGFloat */ charge, double timeInSeconds);
 
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -2941,6 +3271,7 @@ namespace XamCore.SceneKit {
 		nuint CategoryBitMask { get; set; }
 	}
 
+	[Watch (3,0)]
 	[StrongDictionary ("SCNPhysicsTestKeys")]
 	interface SCNPhysicsTest {
 		nuint CollisionBitMask { get; set; }
@@ -2951,6 +3282,7 @@ namespace XamCore.SceneKit {
 		NSString _SearchMode { get; set; }
 	}
 	
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[BaseType (typeof (NSObject),
 		Delegates = new [] { "WeakContactDelegate" },
@@ -3020,6 +3352,7 @@ namespace XamCore.SceneKit {
 		void UpdateCollisionPairs ();
 	}
 
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -3049,6 +3382,7 @@ namespace XamCore.SceneKit {
 		NSValue[] Transforms { get; }		
 	}
 
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -3057,6 +3391,10 @@ namespace XamCore.SceneKit {
 		[Field ("SCNPhysicsShapeScaleKey")]
 		NSString Scale { get; }
 
+		[TV (10, 0), Mac (10, 12), iOS (10, 0)]
+		[Field ("SCNPhysicsShapeOptionCollisionMargin")]
+		NSString CollisionMargin { get; }
+
 		[Field ("SCNPhysicsShapeKeepAsCompoundKey")]
 		NSString KeepAsCompound { get; }
 
@@ -3064,6 +3402,7 @@ namespace XamCore.SceneKit {
 		NSString Type { get; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -3079,6 +3418,7 @@ namespace XamCore.SceneKit {
 		NSString ConcavePolyhedron { get; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -3103,6 +3443,7 @@ namespace XamCore.SceneKit {
 		nfloat PenetrationDistance { get; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -3118,6 +3459,7 @@ namespace XamCore.SceneKit {
 		void DidEndContact (SCNPhysicsWorld world, SCNPhysicsContact contact);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[Abstract]
@@ -3126,6 +3468,7 @@ namespace XamCore.SceneKit {
 
 	}
 
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[BaseType (typeof (SCNPhysicsBehavior))]
 	[DisableDefaultCtor]
@@ -3157,6 +3500,7 @@ namespace XamCore.SceneKit {
 		SCNVector3 AnchorB { get; set; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[BaseType (typeof (SCNPhysicsBehavior))]
 	[DisableDefaultCtor]
@@ -3181,6 +3525,7 @@ namespace XamCore.SceneKit {
 		SCNVector3 AnchorB { get; set; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[BaseType (typeof (SCNPhysicsBehavior))]
 	[DisableDefaultCtor]
@@ -3236,6 +3581,7 @@ namespace XamCore.SceneKit {
 		nfloat MotorMaximumTorque { get; set; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[BaseType (typeof (SCNPhysicsBehavior))]
 	[DisableDefaultCtor]
@@ -3263,6 +3609,7 @@ namespace XamCore.SceneKit {
 		void ApplyBrakingForce (nfloat value, nint index);
 	}
 
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -3308,6 +3655,7 @@ namespace XamCore.SceneKit {
 		nfloat SuspensionRestLength { get; set; }
 	}
 
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -3517,6 +3865,7 @@ namespace XamCore.SceneKit {
 		
 	}
 
+	[Watch (3,0)]
 	[Static]
 	interface SCNParticleProperty {
 		[Mac (10,10), iOS (8,0)]
@@ -3574,6 +3923,14 @@ namespace XamCore.SceneKit {
 		[Mac (10,10), iOS (8,0)]
 		[Field ("SCNParticlePropertyFriction")]
 		NSString Friction { get; }
+
+		[Mac (10, 10), iOS (8, 0)]
+		[Field ("SCNParticlePropertyContactPoint")]
+		NSString ContactPoint { get; }
+
+		[Mac (10, 10), iOS (8, 0)]
+		[Field ("SCNParticlePropertyContactNormal")]
+		NSString ContactNormal { get; }
 	}
 	
 	[Mac (10,10), iOS (8,0)]
@@ -3582,14 +3939,17 @@ namespace XamCore.SceneKit {
 	[Mac (10,10), iOS (8,0)]
 	delegate void SCNParticleModifierHandler (IntPtr data, IntPtr dataStride, nint start, nint end, float /* float, not CGFloat */ deltaTime);
 
+	[Watch (3,0)]
 	[Mac (10,10), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SCNParticlePropertyController : NSSecureCoding, NSCopying {
 
+		[NoWatch]
 		[Static, Export ("controllerWithAnimation:")]
 		SCNParticlePropertyController Create (CAAnimation animation);
 
+		[NoWatch]
 		[Export ("animation", ArgumentSemantic.Retain)]
 		CAAnimation Animation { get; set; }
 
@@ -3609,6 +3969,7 @@ namespace XamCore.SceneKit {
 		NSString InputProperty { get; set; }
 	}
 
+	[Watch (3,0)]
 	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof (SCNConstraint))]
 	interface SCNBillboardConstraint {
@@ -3620,6 +3981,7 @@ namespace XamCore.SceneKit {
 		SCNBillboardAxis FreeAxes { get; set; }
 	}
 
+	[Watch (3,0)]
 	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof (SCNNode))]
 	[DisableDefaultCtor]
@@ -3650,6 +4012,7 @@ namespace XamCore.SceneKit {
 
 	interface ISCNBufferStream { }
 
+	[Watch (3,0)]
 	[iOS (9,0)][Mac (10,11)]
 	[Protocol]
 	interface SCNBufferStream {

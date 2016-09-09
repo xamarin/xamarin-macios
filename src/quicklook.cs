@@ -118,9 +118,16 @@ namespace XamCore.QuickLook {
 		[Since (4,2)]
 		[Export ("previewController:transitionImageForPreviewItem:contentRect:"), DelegateName ("QLTransition"), DefaultValue (null)]
 		UIImage TransitionImageForPreviewItem (QLPreviewController controller, [Protocolize] QLPreviewItem item, CGRect contentRect);
+
+		[iOS (10,0)]
+		[Export ("previewController:transitionViewForPreviewItem:"), DelegateName ("QLTransitionView"), DefaultValue (null)]
+		[return: NullAllowed]
+		UIView TransitionViewForPreviewItem (QLPreviewController controller, IQLPreviewItem item);
 #endif
 	}
-	
+
+	interface IQLPreviewItem {}
+
 	[Since (4,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -130,7 +137,9 @@ namespace XamCore.QuickLook {
 		[Export ("previewItemURL")]
 		NSUrl ItemUrl { get; }
 
+#if !XAMCORE_4_0
 		[Abstract]
+#endif
 		[Export ("previewItemTitle")]
 		string ItemTitle { get; }
 	}

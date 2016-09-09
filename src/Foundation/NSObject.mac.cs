@@ -71,6 +71,7 @@ namespace XamCore.Foundation {
 		static IntPtr ma = Dlfcn.dlopen (Constants.MediaAccessibilityLibrary, 1);
 		static IntPtr mi = Dlfcn.dlopen (Constants.CoreMidiLibrary, 1);
 #if XAMCORE_2_0 && ARCH_64
+		static IntPtr it = Dlfcn.dlopen (Constants.IntentsLibrary, 1);
 		static IntPtr me = Dlfcn.dlopen (Constants.MediaLibraryLibrary, 1);
 		static IntPtr gl = Dlfcn.dlopen (Constants.GLKitLibrary, 1);
 		static IntPtr sp = Dlfcn.dlopen (Constants.SpriteKitLibrary, 1);
@@ -93,6 +94,7 @@ namespace XamCore.Foundation {
 		static IntPtr ml = Dlfcn.dlopen (Constants.MetalKitLibrary, 1);
 		static IntPtr io = Dlfcn.dlopen (Constants.ModelIOLibrary, 1);
 		static IntPtr nc = Dlfcn.dlopen (Constants.NotificationCenterLibrary, 1);
+		static IntPtr pl = Dlfcn.dlopen (Constants.PhotosLibrary, 1);
 #endif
 		// ** IF YOU ADD ITEMS HERE PLEASE UPDATE linker/ObjCExtensions.cs and mmp/linker/MonoMac.Tuner/MonoMacNamespaces.cs
 

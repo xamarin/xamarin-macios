@@ -11,7 +11,7 @@ using System;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
-#if XAMCORE_2_0 || !MONOMAC
+#if (XAMCORE_2_0 || !MONOMAC) && !WATCH
 namespace XamCore.SpriteKit {
 	public partial class SKVideoNode : SKNode {
 
@@ -19,9 +19,11 @@ namespace XamCore.SpriteKit {
 		{
 #if MONOMAC
 			return PlatformHelper.CheckSystemVersion (10, 10);
-#else
+#elif TVOS || IOS
 			return XamCore.UIKit.UIDevice.CurrentDevice.CheckSystemVersion (8, 0);
-#endif // MONOMAC
+#else
+			#error Unknown platform
+#endif
 		}
 
 		// Apple deprecated videoNodeWithVideoFileNamed: in 10.10/8.0

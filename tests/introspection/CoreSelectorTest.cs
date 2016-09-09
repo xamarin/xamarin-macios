@@ -33,6 +33,15 @@ namespace Introspection {
 
 			var declaredType = method.DeclaringType;
 
+			switch (declaredType.Name) {
+			case "NSUrlSessionTaskMetrics":
+			case "NSUrlSessionTaskTransactionMetrics":
+				// does not respond but the properties works (see monotouch-test for a partial list)
+				if (TestRuntime.CheckXcodeVersion (8, 0))
+					return true;
+				break;
+			}
+
 			switch (name) {
 			// optional stuff defined in NSObject (but not implemented by every subclasses)
 			case "encodeWithCoder:":

@@ -127,13 +127,15 @@ namespace XamCore.SceneKit
             Row3 = new SCNVector4(m30, m31, m32, m33);
         }
 
-	public SCNMatrix4 (XamCore.CoreAnimation.CATransform3D transform)
-	{
-		Row0 = new SCNVector4 ((pfloat)transform.m11, (pfloat)transform.m12, (pfloat)transform.m13, (pfloat)transform.m14);
-		Row1 = new SCNVector4 ((pfloat)transform.m21, (pfloat)transform.m22, (pfloat)transform.m23, (pfloat)transform.m24);
-		Row2 = new SCNVector4 ((pfloat)transform.m31, (pfloat)transform.m32, (pfloat)transform.m33, (pfloat)transform.m34);
-		Row3 = new SCNVector4 ((pfloat)transform.m41, (pfloat)transform.m42, (pfloat)transform.m43, (pfloat)transform.m44);
-	}
+#if !WATCH
+		public SCNMatrix4 (XamCore.CoreAnimation.CATransform3D transform)
+		{
+			Row0 = new SCNVector4 ((pfloat)transform.m11, (pfloat)transform.m12, (pfloat)transform.m13, (pfloat)transform.m14);
+			Row1 = new SCNVector4 ((pfloat)transform.m21, (pfloat)transform.m22, (pfloat)transform.m23, (pfloat)transform.m24);
+			Row2 = new SCNVector4 ((pfloat)transform.m31, (pfloat)transform.m32, (pfloat)transform.m33, (pfloat)transform.m34);
+			Row3 = new SCNVector4 ((pfloat)transform.m41, (pfloat)transform.m42, (pfloat)transform.m43, (pfloat)transform.m44);
+		}
+#endif
 	
         #endregion
 

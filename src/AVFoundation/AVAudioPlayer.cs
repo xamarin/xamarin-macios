@@ -80,7 +80,8 @@ namespace XamCore.AVFoundation {
 		}
 	}
 #endif
-	
+
+#if !WATCH
 	public partial class AVAudioPlayer {
 
 		public static AVAudioPlayer FromUrl (NSUrl url, out NSError error)
@@ -164,4 +165,5 @@ namespace XamCore.AVFoundation {
 		}
 #endif
 	}
+#endif // !WATCH
 }

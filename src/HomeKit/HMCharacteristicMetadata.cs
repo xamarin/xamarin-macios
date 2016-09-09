@@ -4,6 +4,7 @@ using XamCore.Foundation;
 
 namespace XamCore.HomeKit {
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	public partial class HMCharacteristicMetadata
 	{
@@ -23,6 +24,11 @@ namespace XamCore.HomeKit {
 					return HMCharacteristicMetadataUnits.Seconds;
 				if (u == HMCharacteristicMetadataUnitsInternal.Lux)
 					return HMCharacteristicMetadataUnits.Lux;
+				// iOS 10.0
+				if (u == HMCharacteristicMetadataUnitsInternal.PartsPerMillion)
+					return HMCharacteristicMetadataUnits.PartsPerMillion;
+				if (u == HMCharacteristicMetadataUnitsInternal.MicrogramsPerCubicMeter)
+					return HMCharacteristicMetadataUnits.MicrogramsPerCubicMeter;
 
 				return HMCharacteristicMetadataUnits.None;
 			}

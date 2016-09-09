@@ -430,9 +430,9 @@ namespace XamCore.ObjCRuntime {
 			return Registrar.GetAssemblies ();
 		}
 
-		internal static string ComputeSignature (MethodInfo method)
+		internal static string ComputeSignature (MethodInfo method, bool isBlockSignature)
 		{
-			return Registrar.ComputeSignature (method);
+			return Registrar.ComputeSignature (method, isBlockSignature);
 		}
 
 		public static void RegisterAssembly (Assembly a)

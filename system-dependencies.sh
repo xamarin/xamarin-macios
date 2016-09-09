@@ -171,16 +171,32 @@ function install_specific_xcode () {
 	local XCODE_DMG=$PROVISION_DOWNLOAD_DIR/$XCODE_NAME
 	curl -L $XCODE_URL > $XCODE_DMG
 
-	local XCODE_MOUNTPOINT=$PROVISION_DOWNLOAD_DIR/$XCODE_NAME-mount
-	log "Mounting $XCODE_DMG into $XCODE_MOUNTPOINT..."
-	hdiutil attach $XCODE_DMG -mountpoint $XCODE_MOUNTPOINT -quiet -nobrowse
-	log "Removing previous Xcode from $XCODE_ROOT"
-	rm -Rf $XCODE_ROOT
-	log "Installing Xcode $XCODE_VERSION to $XCODE_ROOT..."
-	cp -R $XCODE_MOUNTPOINT/*.app $XCODE_ROOT
-	log "Unmounting $XCODE_DMG..."
-	hdiutil detach $XCODE_MOUNTPOINT -quiet
-
+	if [[ ${XCODE_DMG: -4} == ".dmg" ]]; then
+		local XCODE_MOUNTPOINT=$PROVISION_DOWNLOAD_DIR/$XCODE_NAME-mount
+		log "Mounting $XCODE_DMG into $XCODE_MOUNTPOINT..."
+		hdiutil attach $XCODE_DMG -mountpoint $XCODE_MOUNTPOINT -quiet -nobrowse
+		log "Removing previous Xcode from $XCODE_ROOT"
+		rm -Rf $XCODE_ROOT
+		log "Installing Xcode $XCODE_VERSION to $XCODE_ROOT..."
+		cp -R $XCODE_MOUNTPOINT/*.app $XCODE_ROOT
+		log "Unmounting $XCODE_DMG..."
+		hdiutil detach $XCODE_MOUNTPOINT -quiet
+	elif [[ ${XCODE_DMG: -4} == ".xip" ]]; then
+		mkdir $PROVISION_DOWNLOAD_DIR/$XCODE_NAME-decompressed
+		pushd .
+		cd $PROVISION_DOWNLOAD_DIR/$XCODE_NAME-decompressed
+		log "Decompressing $XCODE_DMG..."
+		xar -x -f $XCODE_DMG
+		log "Extracting $XCODE_DMG..."
+		# the cpio command spews a lot of "Can't create ..." errors, but they seem to be innocuous
+		gunzip < Content | cpio -i -d
+		log "Installing Xcode $XCODE_VERSION to $XCODE_ROOT..."
+		mv *.app $XCODE_ROOT
+		popd
+		rm -Rf $PROVISION_DOWNLOAD_DIR/$XCODE_NAME-decompressed
+	else
+		fail "Don't know how to install $XCODE_DMG"
+	fi
 	rm -f $XCODE_DMG
 
 	log "Removing any com.apple.quarantine attributes from the installed Xcode"
@@ -190,6 +206,9 @@ function install_specific_xcode () {
 		log "Accepting Xcode license"
 		sudo $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -license accept
 	fi
+
+	log "Executing 'sudo xcode-select -s $XCODE_DEVELOPER_ROOT'"
+	sudo xcode-select -s $XCODE_DEVELOPER_ROOT
 
 	ok "Xcode $XCODE_VERSION provisioned"
 }

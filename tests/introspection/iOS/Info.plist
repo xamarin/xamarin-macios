@@ -25,5 +25,11 @@
 	<string>LaunchScreen</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcons.appiconset</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Testing tastes</string>
+	<key>NSHomeKitUsageDescription</key>
+	<string>Testing roofs</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Testing lens</string>
 </dict>
 </plist>

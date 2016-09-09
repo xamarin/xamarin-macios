@@ -1,6 +1,6 @@
 ﻿// Copyright 2015 Xamarin Inc.
 
-#if TVOS
+#if IOS || TVOS
 
 using System;
 using System.Runtime.InteropServices;
@@ -9,6 +9,8 @@ using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 
 namespace XamCore.GameController {
+
+	[iOS (10,0)][TV (9,0)]
 	// GCMicroGamepadSnapshot.h
 	// float_t are 4 bytes (at least for ARM64)
 	[StructLayout (LayoutKind.Sequential, Pack = 1)]
@@ -51,4 +53,4 @@ namespace XamCore.GameController {
 	}
 }
 
-#endif // TVOS
+#endif // IOS || TVOS

@@ -1780,6 +1780,12 @@ namespace XamCore.Registrar {
 					return;
 #endif
 				goto default;
+			case "GameKit":
+#if !MONOMAC
+				if (IsSimulator && Driver.App.Platform == Xamarin.Utils.ApplePlatform.WatchOS)
+					return; // No headers provided for watchOS/simulator.
+#endif
+				goto default;
 			case "WatchKit":
 				// There's a bug in Xcode 7 beta 2 headers where the build fails with
 				// ObjC++ files if WatchKit.h is included before UIKit.h (radar 21651022).
@@ -1793,12 +1799,6 @@ namespace XamCore.Registrar {
 #if MONOMAC
 				if (Driver.SDKVersion >= new Version (10,12))
 					return; // 10.12 removed the header files for QTKit
-#endif
-				goto default;
-			case "ExternalAccessory":
-#if !MONOMAC
-				if (IsSimulator && Driver.App.Platform == Xamarin.Utils.ApplePlatform.TVOS)
-					return; // No headers provided for AppleTV/simulator.
 #endif
 				goto default;
 			default:
@@ -2180,7 +2180,6 @@ namespace XamCore.Registrar {
 			return ns == nsToMatch;
 		}
 
-		static bool IsExternalAccessoryType (ObjCType type) => IsTypeCore (type, "ExternalAccessory");
 		static bool IsQTKitType (ObjCType type) => IsTypeCore (type, "QTKit");
 		static bool IsMapKitType (ObjCType type) => IsTypeCore (type, "MapKit");
 		static bool IsIntentsType (ObjCType type) => IsTypeCore (type, "Intents");
@@ -2229,9 +2228,6 @@ namespace XamCore.Registrar {
 
 				if (isPlatformType && IsSimulatorOrDesktop && IsMetalType (@class))
 					continue; // Metal isn't supported in the simulator.
-
-				if (IsSimulatorOrDesktop && Driver.App.Platform == Xamarin.Utils.ApplePlatform.TVOS && IsExternalAccessoryType (@class))
-					continue; // ExternalAccessory's headers aren't available for tvOS/Simulator.
 #else
 				// Don't register 64-bit only API on 32-bit XM
 				if (!Is64Bits)

@@ -67,6 +67,7 @@ namespace XamCore.AVFoundation {
 		HighAutoLevel,
 	}
 
+#if !WATCH
 	public class AVVideoSettingsUncompressed : CVPixelBufferAttributes
 	{
 #if !COREBUILD
@@ -604,4 +605,5 @@ namespace XamCore.AVFoundation {
 		}
 #endif
 	}
+#endif // !WATCH
 }

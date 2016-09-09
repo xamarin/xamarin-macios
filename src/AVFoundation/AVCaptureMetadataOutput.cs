@@ -23,7 +23,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if XAMCORE_2_0 && !MONOMAC && !TVOS
+#if XAMCORE_2_0 && IOS
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 using System;

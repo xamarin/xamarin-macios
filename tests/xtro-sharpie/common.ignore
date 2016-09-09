@@ -1,18 +1,27 @@
 # AVFoundation
 
-# We only bind "finished" as we cannot use [Bind] here as it would break compatibility with iOS 6.x
-# `isFinished` was only added in iOS 7.0 SDK and cannot be called in earlier versions
+## We only bind "finished" as we cannot use [Bind] here as it would break compatibility with iOS 6.x
+## `isFinished` was only added in iOS 7.0 SDK and cannot be called in earlier versions
 !missing-selector! AVAssetResourceLoadingRequest::isFinished not bound
 
-# it's already defined in the base class, it's fine even if it returns mutable tracks in this case 
+## it's already defined in the base class, it's fine even if it returns mutable tracks in this case 
 !missing-selector! AVMutableComposition::tracks not bound
 
-# AVVideoCompositionInstruction is both a class and a protocol - so we have duplicate entries
-# and right now only implement the type (protocol can't have the same name anyway)
+## AVVideoCompositionInstruction is both a class and a protocol - so we have duplicate entries
+## and right now only implement the type (protocol can't have the same name anyway)
 !missing-selector! AVVideoCompositionInstruction::enablePostProcessing not bound
 !missing-selector! AVVideoCompositionInstruction::passthroughTrackID not bound
 !missing-selector! AVVideoCompositionInstruction::requiredSourceTrackIDs not bound
 !missing-selector! AVVideoCompositionInstruction::timeRange not bound
+
+## AVAudioPlayer INTERRUPTION NOTIFICATIONS ARE DEPRECATED - Use AVAudioSession instead. 
+
+### deprecated in iOS8
+!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
+### deprecated in iOS6, replaced by above
+!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions: not found
+## deprecated in iOS8
+!missing-protocol-member! AVAudioRecorderDelegate::audioRecorderEndInterruption:withOptions: not found
 
 
 # CoreGraphics
@@ -40,6 +49,47 @@
 ## All GKSessionError values were deprecated in iOS7 and we never bound then (no point in adding it now)
 !missing-field! GKSessionErrorDomain not bound
 
+## enum size declared after the enum, e.g. `typedef NSInteger GKPhotoSize;`, so we miss the metadata
+!unknown-native-enum! GKInviteeResponse bound
+!unknown-native-enum! GKPhotoSize bound
+
+## part of category GKScore_Deprecated
+!missing-selector! GKScore::playerID not bound
+
+
+# Intents
+
+## not exposed by our API (better use the OS version)
+!missing-field! IntentsVersionNumber not bound
+!missing-field! IntentsVersionString not bound
+
+
+# CloudKit
+
+## default init does not work, there's no init in base types, so it's a defacto designated initializer
+!extra-designated-initializer! CKMarkNotificationsReadOperation::initWithNotificationIDsToMarkRead: is incorrectly decorated with an [DesignatedInitializer] attribute
+## we offer a better managed API using another selector
+!missing-selector! CKRecord::objectForKeyedSubscript: not bound
+!missing-selector! CKRecord::setObject:forKeyedSubscript: not bound
+
+
+# Metal
+
+## New @required (abstract) methods in existing types (breaking changes)
+!incorrect-protocol-member! MTLBlitCommandEncoder::updateFence: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::waitForFence: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::updateFence: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::waitForFence: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::heapBufferSizeAndAlignWithLength:options: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::heapTextureSizeAndAlignWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newFence is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newHeapWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::updateFence:afterStages: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::waitForFence:beforeStages: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLResource::heap is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLResource::isAliasable is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLResource::makeAliasable is REQUIRED and should be abstract
+
 
 # ModelIO
 
@@ -47,8 +97,30 @@
 !missing-selector! MDLAsset::exportAssetToURL: not bound
 
 
+# SpriteKit
+
+## both introduced and deprecated in Xcode8
+!missing-selector! SKView::preferredFrameRate not bound
+!missing-selector! SKView::setPreferredFrameRate: not bound
+
+## it's an internal that is called from a non-generated binding
+!incorrect-designated-initializer! SKWarpGeometryGrid::initWithColumns:rows:sourcePositions:destPositions: is not a constructor
+
+
 # UIKit
 
 ## no point in having p/invoke calls that can be implement with a type cast (byte vs nint)
 !missing-pinvoke! NSTextAlignmentFromCTTextAlignment is not bound
 !missing-pinvoke! NSTextAlignmentToCTTextAlignment is not bound
+
+## this was (pre iOS10) a required member that was deprecated and made optional
+!incorrect-protocol-member! UIFocusEnvironment::preferredFocusedView is OPTIONAL and should NOT be abstract
+
+## https://bugzilla.xamarin.com/show_bug.cgi?id=43788
+!missing-selector! +UIView::layerClass not bound
+
+
+# non-imported headers
+
+## objc runtime
+!unknown-pinvoke! class_addProperty bound

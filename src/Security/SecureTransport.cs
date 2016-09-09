@@ -1,6 +1,7 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 
 using System;
+using XamCore.ObjCRuntime;
 
 namespace XamCore.Security {
 
@@ -85,23 +86,27 @@ namespace XamCore.Security {
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
 	public enum SslSessionOption {
-		// 10.6+ / iOS5+
 		BreakOnServerAuth,
 		BreakOnCertRequested,
-		// 10.8+ / iOS5+
+		[Mac (10,8)]
 		BreakOnClientAuth,
-		// 10.9+ / iOS7+
+
+		[iOS (7,0)][Mac (10,9)]
 		FalseStart,
+
 		SendOneByteRecord,
 
-		// 10.11 / iOS9.0, 
+		[iOS (9,0)][Mac (10,11)]
 		AllowServerIdentityChange = 5,
 		
-		// 10.10 / iOS8.1+
+		[iOS (8,1)][Mac (10,10)]
 		Fallback = 6,
 
-		// 10.11 / iOS9.0
-		BreakOnClientHello
+		[iOS (9,0)][Mac (10,11)]
+		BreakOnClientHello = 7,
+
+		[iOS (10,0)][Mac (10,12)]
+		AllowRenegotiation = 8,
 	}
 
 	// Security.framework/Headers/SecureTransport.h

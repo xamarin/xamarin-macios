@@ -24,13 +24,13 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		[Test]
 		public void RectNoClip ()
 		{
+			TestRuntime.AssertXcodeVersion (7,0);
+
 			var d = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
 			if (d == null)
 				Assert.Inconclusive ("Metal is not supported");
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (9,0))
-				Assert.Inconclusive ("MetalPerformanceShaders requires iOS 9.0+");
-
+			
 			var r = MPSKernel.RectNoClip;
 			var o = r.Origin;
 			Assert.That (o.X, Is.EqualTo (0), "X");

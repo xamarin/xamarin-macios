@@ -1077,6 +1077,7 @@ public class Tuple<A,B> {
 //
 public class TrampolineInfo {
 	public string UserDelegate, DelegateName, TrampolineName, Parameters, Invoke, ReturnType, DelegateReturnType, ReturnFormat, Clear, OutReturnType;
+	public string UserDelegateTypeAttribute;
 	public Type Type;
 	
 	public TrampolineInfo (string userDelegate, string delegateName, string trampolineName, string pars, string invoke, string returnType, string delegateReturnType, string returnFormat, string clear, Type type)
@@ -1409,6 +1410,7 @@ public class NamespaceManager
 			Get ("Foundation"),
 			Get ("ObjCRuntime"),
 			Get ("CoreGraphics"),
+			Get ("SceneKit"),
 #if !WATCH
 			Get ("AudioUnit"),
 			Get ("CoreAnimation"),
@@ -1418,7 +1420,6 @@ public class NamespaceManager
 			Get ("CoreVideo"),
 			Get ("CoreMedia"),
 			Get ("Security"),
-			Get ("SceneKit"),
 			Get ("AVFoundation"),
 #endif
 #if MONOMAC
@@ -1977,6 +1978,7 @@ public partial class Generator : IMemberGatherer {
 					     type: t);
 					     
 
+		ti.UserDelegateTypeAttribute = FormatType (null, t);
 		trampolines [t] = ti;
 			
 		return ti;
@@ -2384,6 +2386,9 @@ public partial class Generator : IMemberGatherer {
 
 	void DeclareInvoker (MethodInfo mi)
 	{
+		if (HasAttribute (mi, typeof (WrapAttribute)))
+			return;
+
 		try {
 			if (Compat) {
 				bool arm_stret = ArmNeedStret (mi);
@@ -2419,9 +2424,8 @@ public partial class Generator : IMemberGatherer {
 					}
 				}
 			}
-		} catch {
-			string m = mi.ToString ();
-			Console.WriteLine ("   in Method: {0}::{1}", mi.DeclaringType.FullName, m.Substring (m.IndexOf (' ') + 1));
+		} catch (BindingException ex) {
+			throw ex;
 		}
 	}
 	static char [] invalid_selector_chars = new char [] { '*', '^', '(', ')' };
@@ -2908,6 +2912,7 @@ public partial class Generator : IMemberGatherer {
 
 			print ("");
 			print ("[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]");
+			print ("[UserDelegateType (typeof ({0}))]", ti.UserDelegate);
 			print ("internal delegate {0} {1} ({2});", ti.ReturnType, ti.DelegateName, ti.Parameters);
 			print ("");
 			print ("//\n// This class bridges native block invocations that call into C#\n//");
@@ -3077,6 +3082,8 @@ public partial class Generator : IMemberGatherer {
 	void GenerateStrongDictionaryTypes ()
 	{
 		foreach (var dictType in strong_dictionaries){
+			if (dictType.IsUnavailable ())
+				continue;
 			var sa = dictType.GetCustomAttributes (typeof (StrongDictionaryAttribute), true) [0] as StrongDictionaryAttribute;
 			var keyContainerType = sa.TypeWithKeys;
 			string suffix = sa.Suffix;
@@ -3149,6 +3156,22 @@ public partial class Generator : IMemberGatherer {
 						} else if (fetchType == typeof (nuint)){
 							getter = "{1} GetNUIntValue ({0})";
 							setter = "SetNumberValue ({0}, {1}value)";
+#if XAMCORE_2_0
+						} else if (fetchType == typeof (CGRect)){
+							getter = "{1} GetCGRectValue ({0})";
+							setter = "SetCGRectValue ({0}, {1}value)";
+						} else if (fetchType == typeof (CGSize)){
+							getter = "{1} GetCGSizeValue ({0})";
+							setter = "SetCGSizeValue ({0}, {1}value)";
+						} else if (fetchType == typeof (CGPoint)){
+							getter = "{1} GetCGPointValue ({0})";
+							setter = "SetCGPointValue ({0}, {1}value)";
+#endif // XAMCORE_2_0
+#if !WATCH
+						} else if (fetchType == typeof (CMTime)){
+							getter = "{1} GetCMTimeValue ({0})";
+							setter = "SetCMTimeValue ({0}, {1}value)";
+#endif // !WATCH
 						} else {
 							throw new BindingException (1031, true,
 										    "Limitation: can not automatically create strongly typed dictionary for " +
@@ -4773,8 +4796,10 @@ public partial class Generator : IMemberGatherer {
 				} else {
 					if (IsArrayOfWrappedType (pi.PropertyType))
 						print ("return NSArray.FromArray<{0}>({1} as NSArray);", FormatType (pi.DeclaringType, pi.PropertyType.GetElementType ()), wrap);
-					else 
-						print ("return {0} as {1}{2};", wrap, minfo.protocolize ? "I" : "/**/", FormatType (pi.DeclaringType, pi.PropertyType));
+					else if (pi.PropertyType.IsValueType)
+						print ("return ({0}) ({1});", FormatType (pi.DeclaringType, pi.PropertyType), wrap);
+					else
+						print ("return {0} as {1}{2};", wrap, minfo.protocolize ? "I" : String.Empty, FormatType (pi.DeclaringType, pi.PropertyType));
 				}
 				indent--;
 				print ("}");
@@ -6565,6 +6590,8 @@ public partial class Generator : IMemberGatherer {
 
 					string shouldOverrideDelegateString = isProtocolizedEventBacked ? "" : "override ";
 
+					string previous_miname = null;
+					int miname_count = 0;
 					foreach (var mi in dtype.GatherMethods ().OrderBy (m => m.Name)) {
 						if (ShouldSkipEventGeneration (mi))
 							continue;
@@ -6580,13 +6607,21 @@ public partial class Generator : IMemberGatherer {
 						
 						var sender = pars.Length == 0 ? "this" : pars [0].Name;
 
+						var miname = PascalCase (mi.Name);
+						if (miname == previous_miname) {
+							// overloads, add a numbered suffix (it's internal)
+							previous_miname = miname;
+							miname += (++miname_count).ToString ();
+						} else
+							previous_miname = miname;
+
 						if (mi.ReturnType == typeof (void)){
 							if (bta.Singleton || mi.GetParameters ().Length == 1)
-								print ("internal EventHandler {0};", PascalCase (mi.Name));
+								print ("internal EventHandler {0};", miname);
 							else
-								print ("internal EventHandler<{0}> {1};", GetEventArgName (mi), PascalCase (mi.Name));
+								print ("internal EventHandler<{0}> {1};", GetEventArgName (mi), miname);
 						} else
-							print ("internal {0} {1};", GetDelegateName (mi), PascalCase (mi.Name));
+							print ("internal {0} {1};", GetDelegateName (mi), miname);
 
 						print ("[Preserve (Conditional = true)]");
 						if (isProtocolizedEventBacked)
@@ -6615,7 +6650,7 @@ public partial class Generator : IMemberGatherer {
 							if (bta.Singleton || mi.GetParameters ().Length == 1)
 								print ("EventHandler handler = {0};", PascalCase (mi.Name));
 							else
-								print ("EventHandler<{0}> handler = {1};", GetEventArgName (mi), PascalCase (mi.Name));
+								print ("EventHandler<{0}> handler = {1};", GetEventArgName (mi), miname);
 
 							print ("if (handler != null){");
 							indent++;
@@ -7375,11 +7410,11 @@ public partial class Generator : IMemberGatherer {
 			return "void";
 
 		string ns = t.Namespace;
-		if (NamespaceManager.ImplicitNamespaces.Contains (ns)) {
+		if (NamespaceManager.ImplicitNamespaces.Contains (ns) || t.IsGenericType) {
 			var targs = t.GetGenericArguments ();
 			if (targs.Length == 0)
 				return t.Name;
-			return RemoveArity (t.Name) + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (null, l)).ToArray ()) + ">";
+			return $"global::{t.Namespace}." + RemoveArity (t.Name) + "<" + string.Join (", ", targs.Select (l => FormatTypeUsedIn (null, l)).ToArray ()) + ">";
 		}
 		if (NamespaceManager.NamespacesThatConflictWithTypes.Contains (NamespaceManager.Get(ns)))
 			return "global::" + t.FullName;

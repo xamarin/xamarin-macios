@@ -9,6 +9,7 @@ using XamCore.ObjCRuntime;
 
 namespace XamCore.ExternalAccessory {
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[Native]
 	[Flags]
@@ -18,6 +19,7 @@ namespace XamCore.ExternalAccessory {
 		SupportsHomeKit  = (1 << 2), // iOS 8 beta 5
 	}
 
+	[TV (10,0)]
 	[iOS (8,0)]
 	[Native]
 	public enum EAWiFiUnconfiguredAccessoryBrowserState : nint {
@@ -28,6 +30,7 @@ namespace XamCore.ExternalAccessory {
 	}
 
 	// NSInteger -> EAWiFiUnconfiguredAccessoryBrowser.h
+	[TV (10,0)]
 	[iOS (8,0)]
 	[Native]
 	public enum EAWiFiUnconfiguredAccessoryConfigurationStatus : nint {
@@ -37,6 +40,7 @@ namespace XamCore.ExternalAccessory {
 	}
 
 	// NSInteger -> EAAccessoryManager.h
+	[TV (10,0)]
 	[iOS (6,0)]
 	[Native]
 	[ErrorDomain ("EABluetoothAccessoryPickerErrorDomain")]

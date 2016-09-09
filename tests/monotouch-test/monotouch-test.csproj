@@ -165,7 +165,6 @@
     <Compile Include="AddressBook\AddressBookTest.cs" />
     <Compile Include="CoreMedia\CMTimeTests.cs" />
     <Compile Include="UIKit\UIDocumentTest.cs" />
-    <Compile Include="CoreVideo\PixelFormatTypeTest.cs" />
     <Compile Include="UIKit\SplitViewControllerTest.cs" />
     <Compile Include="Foundation\UrlTest.cs" />
     <Compile Include="UIKit\DictationPhrase.cs" />
@@ -202,6 +201,10 @@
     <Compile Include="GLKit\EffectPropertyFog.cs" />
     <Compile Include="AudioToolbox\AudioFileStreamTest.cs" />
     <Compile Include="AVFoundation\AVAssetImageGeneratorTest.cs" />
+    <Compile Include="AVFoundation\AVAudioConverterPrimeInfoTest.cs" />
+    <Compile Include="AVFoundation\AVBeatRangeTest.cs" />
+    <Compile Include="AVFoundation\AVCaptureWhiteBalanceGainsTest.cs" />
+    <Compile Include="AVFoundation\AVCapturePhotoBracketSettingsTest.cs" />
     <Compile Include="ImageIO\ImagePropertiesTest.cs" />
     <Compile Include="CoreLocation\LocationTest.cs" />
     <Compile Include="CoreFoundation\ProxyTest.cs" />
@@ -425,6 +428,11 @@
     <Compile Include="AVFoundation\MetadataObjectTest.cs" />
     <Compile Include="AVFoundation\CaptureMetadataOutputTest.cs" />
     <Compile Include="Metal\ClearValueTest.cs" />
+    <Compile Include="Metal\MTLBufferLayoutDescriptorTest.cs" />
+    <Compile Include="Metal\MTLFunctionConstantTest.cs" />
+    <Compile Include="Metal\MTLStageInputOutputDescriptorTest.cs" />
+    <Compile Include="Metal\MTLAttributeDescriptorTest.cs" />
+    <Compile Include="Metal\MTLAttributeTest.cs" />
     <Compile Include="MediaPlayer\MoviePlayerControllerTest.cs" />
     <Compile Include="AVKit\PlayerViewControllerTest.cs" />
     <Compile Include="UIKit\VibrancyEffectTest.cs" />
@@ -524,7 +532,6 @@
     <Compile Include="CoreVideo\PixelBufferTest.cs" />
     <Compile Include="CoreMidi\MidiThruConnectionTests.cs" />
     <Compile Include="SpriteKit\SKShapeNodeTest.cs" />
-    <Compile Include="CoreGraphics\ColorConverterTest.cs" />
     <Compile Include="CoreData\ExpressionDescriptionTest.cs" />
     <Compile Include="CoreData\FetchRequestExpressionTest.cs" />
     <Compile Include="CoreData\PropertyDescriptionTest.cs" />
@@ -532,10 +539,42 @@
     <Compile Include="ObjCRuntime\ExceptionsTest.cs" />
     <Compile Include="Foundation\NSExpressionTest.cs" />
     <Compile Include="CoreGraphics\RectTest.cs" />
+    <Compile Include="Messages\MSMessageTest.cs" />
     <Compile Include="..\common\TestRuntime.cs">
       <Link>TestRuntime.cs</Link>
     </Compile>
     <Compile Include="CoreMidi\MidiEndpointTest.cs" />
+    <Compile Include="MediaPlayer\NowPlayingInfoCenterTest.cs" />
+    <Compile Include="Foundation\UrlSessionTaskMetricsTest.cs" />
+    <Compile Include="Foundation\UrlSessionTaskTransactionMetricsTest.cs" />
+    <Compile Include="SpriteKit\WarpGeometryGridTest.cs" />
+    <Compile Include="SpriteKit\UniformTest.cs" />
+    <Compile Include="CloudKit\CKDiscoverUserInfosOperationTest.cs" />
+    <Compile Include="CloudKit\CKFetchRecordChangesOperationTest.cs" />
+    <Compile Include="CloudKit\CKFetchSubscriptionsOperationTest.cs" />
+    <Compile Include="CloudKit\CKFetchNotificationChangesOperationTest.cs" />
+    <Compile Include="CloudKit\CKFetchRecordZonesOperationTest.cs" />
+    <Compile Include="CloudKit\CKFetchRecordsOperationTest.cs" />
+    <Compile Include="CloudKit\CKMarkNotificationsReadOperationTest.cs" />
+    <Compile Include="CloudKit\CKModifyBadgeOperationTest.cs" />
+    <Compile Include="CloudKit\CKModifyRecordZonesOperationTest.cs" />
+    <Compile Include="CloudKit\CKModifyRecordsOperationTest.cs" />
+    <Compile Include="CloudKit\CKModifySubscriptionsOperationTest.cs" />
+    <Compile Include="CloudKit\CKQueryOperationTest.cs" />
+    <Compile Include="CloudKit\CKUserIdentityLookupInfoTest.cs" />
+    <Compile Include="CoreGraphics\ColorConversionInfoTest.cs" />
+    <Compile Include="Foundation\DimensionTest.cs" />
+    <Compile Include="UIKit\GraphicsRendererTest.cs" />
+    <Compile Include="Intents\INIntentResolutionResultTests.cs" />
+    <Compile Include="MessageUI\MessageComposeViewControllerTest.cs" />
+    <Compile Include="GameplayKit\GKOctreeTests.cs" />
+    <Compile Include="GameplayKit\GKQuadTreeTests.cs" />
+    <Compile Include="GameplayKit\GKMeshGraphTests.cs" />
+    <Compile Include="GameplayKit\GKNoiseMapTests.cs" />
+    <Compile Include="GameplayKit\GKNoiseTests.cs" />
+    <Compile Include="CoreMidi\MidiEndpointTest.cs" />
+    <Compile Include="HealthKit\CdaDocumentSampleTest.cs" />
+    <Compile Include="Metal\HeapDescriptorTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
@@ -596,6 +635,9 @@
     <Folder Include="MetalPerformanceShaders\" />
     <Folder Include="CoreMidi\" />
     <Folder Include="CoreAudioKit\" />
+    <Folder Include="Messages\" />
+    <Folder Include="CloudKit\" />
+    <Folder Include="Intents\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />

@@ -40,7 +40,7 @@ namespace MonoTouchFixtures.CoreLocation {
 				Assert.Null (br.Major, "Major");
 				Assert.Null (br.Minor, "Minor");
 				Assert.False (br.NotifyEntryStateOnDisplay, "NotifyEntryStateOnDisplay");
-				Assert.AreSame (uuid, br.ProximityUuid, "ProximityUuid");
+				Assert.That (uuid.AsString (), Is.EqualTo (br.ProximityUuid.AsString ()), "ProximityUuid");
 				// CLRegion
 				Assert.That (br.Identifier, Is.EqualTo ("identifier"), "identifier");
 				Assert.True (br.NotifyOnEntry, "NotifyOnEntry");
@@ -60,7 +60,7 @@ namespace MonoTouchFixtures.CoreLocation {
 				Assert.That (br.Major.Int32Value, Is.EqualTo (0), "Major");
 				Assert.Null (br.Minor, "Minor");
 				Assert.False (br.NotifyEntryStateOnDisplay, "NotifyEntryStateOnDisplay");
-				Assert.AreSame (uuid, br.ProximityUuid, "ProximityUuid");
+				Assert.That (uuid.AsString (), Is.EqualTo (br.ProximityUuid.AsString ()), "ProximityUuid");
 				// CLRegion
 				Assert.That (br.Identifier, Is.EqualTo ("identifier"), "identifier");
 				Assert.True (br.NotifyOnEntry, "NotifyOnEntry");
@@ -79,7 +79,7 @@ namespace MonoTouchFixtures.CoreLocation {
 				Assert.That (br.Major.Int32Value, Is.EqualTo (2), "Major");
 				Assert.That (br.Minor.Int32Value, Is.EqualTo (3), "Minor");
 				Assert.False (br.NotifyEntryStateOnDisplay, "NotifyEntryStateOnDisplay");
-				Assert.AreSame (uuid, br.ProximityUuid, "ProximityUuid");
+				Assert.That (uuid.AsString (), Is.EqualTo (br.ProximityUuid.AsString ()), "ProximityUuid");
 				// CLRegion
 				Assert.That (br.Identifier, Is.EqualTo ("identifier"), "identifier");
 				Assert.True (br.NotifyOnEntry, "NotifyOnEntry");

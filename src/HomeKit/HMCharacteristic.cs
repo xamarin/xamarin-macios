@@ -5,6 +5,7 @@ using XamCore.Foundation;
 namespace XamCore.HomeKit {
 
 	[iOS (8,0)]
+	[TV (10,0)]
 	partial class HMCharacteristic 
 	{
 		public HMCharacteristicType CharacteristicType {
@@ -154,6 +155,33 @@ namespace XamCore.HomeKit {
 					return HMCharacteristicType.TargetPosition;
 				if (s == HMCharacteristicTypeInternal.TargetVerticalTilt)
 					return HMCharacteristicType.TargetVerticalTilt;
+				// iOS 10.0
+				if (s == HMCharacteristicTypeInternal.StreamingStatus)
+					return HMCharacteristicType.StreamingStatus;
+				if (s == HMCharacteristicTypeInternal.SetupStreamEndpoint)
+					return HMCharacteristicType.SetupStreamEndpoint;
+				if (s == HMCharacteristicTypeInternal.SupportedVideoStreamConfiguration)
+					return HMCharacteristicType.SupportedVideoStreamConfiguration;
+				if (s == HMCharacteristicTypeInternal.SupportedAudioStreamConfiguration)
+					return HMCharacteristicType.SupportedAudioStreamConfiguration;
+				if (s == HMCharacteristicTypeInternal.SupportedRtpConfiguration)
+					return HMCharacteristicType.SupportedRtpConfiguration;
+				if (s == HMCharacteristicTypeInternal.SelectedStreamConfiguration)
+					return HMCharacteristicType.SelectedStreamConfiguration;
+				if (s == HMCharacteristicTypeInternal.Volume)
+					return HMCharacteristicType.Volume;
+				if (s == HMCharacteristicTypeInternal.Mute)
+					return HMCharacteristicType.Mute;
+				if (s == HMCharacteristicTypeInternal.NightVision)
+					return HMCharacteristicType.NightVision;
+				if (s == HMCharacteristicTypeInternal.OpticalZoom)
+					return HMCharacteristicType.OpticalZoom;
+				if (s == HMCharacteristicTypeInternal.DigitalZoom)
+					return HMCharacteristicType.DigitalZoom;
+				if (s == HMCharacteristicTypeInternal.ImageRotation)
+					return HMCharacteristicType.ImageRotation;
+				if (s == HMCharacteristicTypeInternal.ImageMirroring)
+					return HMCharacteristicType.ImageMirroring;
 
 				return HMCharacteristicType.None;
 			}
@@ -190,6 +218,7 @@ namespace XamCore.HomeKit {
 		}
 
 		[iOS (9,3)][Watch (2,2)]
+		[TV (10,0)]
 		public bool Hidden {
 			get {
 				foreach (var p in Properties) {

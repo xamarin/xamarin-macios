@@ -563,6 +563,7 @@ IOS_BCL_TARGETS_DIRS +=                    \
 	$(PREFIX)/lib/mono/2.1                 \
 	$(PREFIX)/lib/mono/2.1/Facades         \
 	$(PREFIX)/lib/mono/Xamarin.iOS         \
+	$(PREFIX)/lib/mono/Xamarin.iOS/Facades \
 	$(PREFIX)/lib/mono/2.1/repl            \
 	$(PREFIX)/lib/mono/Xamarin.iOS/repl    \
 	$(BUILD_DESTDIR)/ios/bcl/Facades       \
@@ -586,7 +587,6 @@ TVOS_BCL_TARGETS_DIRS +=                    \
 	$(BUILD_DESTDIR)/tvos/bcl/repl          \
 
 IOS_BCL_TARGETS +=                                                                                                  \
-	$(PREFIX)/lib/mono/Xamarin.iOS/Facades                                                                          \
 	$(foreach file,$(IOS_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/$(file).dll)                                                \
 	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(IOS_ASSEMBLIES)),$(PREFIX)/lib/mono/2.1/$(file).dll.mdb)         \
 	$(foreach file,$(IOS_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/$(file).dll)                                        \
@@ -595,6 +595,7 @@ IOS_BCL_TARGETS +=                                                              
 	$(PREFIX)/lib/mono/2.1/mscorlib.dll                                                                             \
 	$(PREFIX)/bin/btouch-mono                                                                                       \
 	$(foreach file,$(IOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/Facades/$(file).dll)                                 \
+	$(foreach file,$(IOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/Facades/$(file).dll)                         \
 	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/repl/$(file).dll)                                      \
 	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/repl/$(file).dll.mdb)                                  \
 	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/repl/$(file).dll)                              \
@@ -618,8 +619,8 @@ TVOS_BCL_TARGETS += \
 	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).dll)                              \
 	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).dll.mdb)                          \
 
-$(PREFIX)/lib/mono/Xamarin.iOS/Facades: | $(PREFIX)/lib/mono/Xamarin.iOS
-	$(Q_LN) ln -Fhs $(abspath $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades) $@
+$(PREFIX)/lib/mono/Xamarin.iOS/Facades/%.dll: $(BUILD_DESTDIR)/ios/bcl/Facades/%.dll | $(PREFIX)/lib/mono/Xamarin.iOS/Facades
+	$(Q_LN) ln -fhs $(abspath $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades)/$*.dll $@
 
 $(PREFIX)/lib/mono/Xamarin.iOS/repl/%: | $(PREFIX)/lib/mono/Xamarin.iOS/repl
 	$(Q_LN) ln -Fs ../../2.1/repl/$(@F) $@

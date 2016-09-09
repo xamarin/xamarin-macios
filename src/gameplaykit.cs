@@ -11,10 +11,39 @@ using System;
 using System.ComponentModel;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
+using XamCore.SpriteKit;
 using Vector2 = global::OpenTK.Vector2;
+using Vector2d = global::OpenTK.Vector2d;
 using Vector2i = global::OpenTK.Vector2i;
+using Vector3 = global::OpenTK.Vector3;
+using Vector3d = global::OpenTK.Vector3d;
+using Matrix3 = global::OpenTK.Matrix3;
+
+#if MONOMAC
+using SKColor = XamCore.AppKit.NSColor;
+#else
+using SKColor = XamCore.UIKit.UIColor;
+#endif
 
 namespace XamCore.GameplayKit {
+
+	[Native]
+	[Flags]
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	public enum GKMeshGraphTriangulationMode : nuint {
+		Vertices = 1 << 0,
+		Centers = 1 << 1,
+		EdgeMidpoints = 1 << 2
+	}
+
+	[Native]
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	public enum GKRTreeSplitStrategy : nint {
+		Halve = 0,
+		Linear = 1,
+		Quadratic = 2,
+		ReduceOverlap = 3
+	}
 
 	interface IGKAgentDelegate { }
 
@@ -32,7 +61,7 @@ namespace XamCore.GameplayKit {
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (GKComponent))]
-	interface GKAgent {
+	interface GKAgent : NSCoding {
 		
 		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
 		IGKAgentDelegate Delegate { get; set; }
@@ -48,7 +77,7 @@ namespace XamCore.GameplayKit {
 		float Radius { get; set; }
 
 		[Export ("speed")]
-		float Speed { get; }
+		float Speed { get; [iOS (10,0), TV(10,0), Mac (10,12, onlyOn64: true)] set; }
 
 		[Export ("maxAcceleration")]
 		float MaxAcceleration { get; set; }
@@ -59,7 +88,7 @@ namespace XamCore.GameplayKit {
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (GKAgent))]
-	interface GKAgent2D {
+	interface GKAgent2D : NSCoding {
 		
 		[Export ("position", ArgumentSemantic.Assign)]
 		Vector2 Position { 
@@ -79,7 +108,40 @@ namespace XamCore.GameplayKit {
 		float Rotation { get; set; }
 
 		[Export ("updateWithDeltaTime:")]
-		void Update (double seconds);
+		void Update (double deltaTimeInSeconds);
+	}
+
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[BaseType (typeof (GKAgent))]
+	interface GKAgent3D {
+
+		[Export ("position", ArgumentSemantic.Assign)]
+		Vector3 Position {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			set;
+		}
+
+		[Export ("velocity")]
+		Vector3 Velocity {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+
+		[Export ("rightHanded")]
+		bool RightHanded { get; set; }
+
+		[Export ("rotation", ArgumentSemantic.Assign)]
+		Matrix3 Rotation { 
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			set;
+		}
+
+		[Export ("updateWithDeltaTime:")]
+		void Update (double deltaTimeInSeconds);
 	}
 
 	// FIXME: @interface GKBehavior : NSObject <NSFastEnumeration>
@@ -87,7 +149,7 @@ namespace XamCore.GameplayKit {
 	// https://bugzilla.xamarin.com/show_bug.cgi?id=4391
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	interface GKBehavior {
+	interface GKBehavior : NSCopying {
 		
 		[Export ("goalCount")]
 		nint GoalCount { get; }
@@ -136,14 +198,22 @@ namespace XamCore.GameplayKit {
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[Abstract]
-	interface GKComponent : NSCopying {
+	interface GKComponent : NSCopying, NSCoding {
 
 		[NullAllowed]
 		[Export ("entity", ArgumentSemantic.Weak)]
 		GKEntity Entity { get; }
 
 		[Export ("updateWithDeltaTime:")]
-		void Update (double seconds);
+		void Update (double deltaTimeInSeconds);
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+		[Export ("didAddToEntity")]
+		void DidAddToEntity ();
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+		[Export ("willRemoveFromEntity")]
+		void WillRemoveFromEntity ();
 	}
 
 #if XAMCORE_2_0 // GKComponentSystem is a generic type, which we only support in Unified (for now at least)
@@ -183,20 +253,109 @@ namespace XamCore.GameplayKit {
 		void RemoveComponent (TComponent component);
 
 		[Export ("updateWithDeltaTime:")]
-		void Update (double seconds);
+		void Update (double deltaTimeInSeconds);
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+		[Export ("classForGenericArgumentAtIndex:")]
+		Class GetClassForGenericArgument (nuint index);
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+		[Wrap ("Class.Lookup (GetClassForGenericArgument (index))")]
+		Type GetTypeForGenericArgument (nuint index);
 	}
 #endif // XAMCORE_2_0
 
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[BaseType (typeof (GKBehavior))]
+	interface GKCompositeBehavior {
+
+		[Export ("behaviorCount")]
+		nint BehaviorCount { get; }
+
+		[Static]
+		[Export ("behaviorWithBehaviors:")]
+		GKCompositeBehavior FromBehaviors (GKBehavior [] behaviors);
+
+		[Static]
+		[Export ("behaviorWithBehaviors:andWeights:")]
+		GKCompositeBehavior FromBehaviors (GKBehavior [] behaviors, NSNumber [] weights);
+
+		[Export ("setWeight:forBehavior:")]
+		void SetWeight (float weight, GKBehavior behavior);
+
+		[Export ("weightForBehavior:")]
+		float GetWeight (GKBehavior behavior);
+
+		[Export ("removeBehavior:")]
+		void RemoveBehavior (GKBehavior behavior);
+
+		[Export ("removeAllBehaviors")]
+		void RemoveAllBehaviors ();
+
+		[Internal]
+		[Export ("objectAtIndexedSubscript:")]
+		GKBehavior ObjectAtIndexedSubscript (nuint index);
+
+		[Internal]
+		[Export ("setObject:forKeyedSubscript:")]
+		void SetObject (NSNumber weight, GKBehavior behavior);
+
+		[Internal]
+		[Export ("objectForKeyedSubscript:")]
+		NSNumber ObjectForKeyedSubscript (GKBehavior behavior);
+	}
+
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSObject))]
+	interface GKDecisionNode {
+
+		[Export ("createBranchWithValue:attribute:")]
+		GKDecisionNode CreateBranch (NSNumber value, NSObject attribute);
+
+		[Export ("createBranchWithPredicate:attribute:")]
+		GKDecisionNode CreateBranch (NSPredicate predicate, NSObject attribute);
+
+		[Export ("createBranchWithWeight:attribute:")]
+		GKDecisionNode CreateBranch (nint weight, NSObject attribute);
+	}
+
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSObject))]
+	interface GKDecisionTree : NSSecureCoding {
+
+		[NullAllowed, Export ("rootNode")]
+		GKDecisionNode RootNode { get; }
+
+		[Export ("randomSource", ArgumentSemantic.Copy)]
+		GKRandomSource RandomSource { get; set; }
+
+		[Export ("initWithAttribute:")]
+		IntPtr Constructor (NSObject attribute);
+
+		[Export ("initWithExamples:actions:attributes:")]
+#if XAMCORE_2_0
+		IntPtr Constructor (NSArray<NSObject> [] examples, NSObject [] actions, NSObject [] attributes);
+#else
+		IntPtr Constructor (NSArray [] examples, NSObject [] actions, NSObject [] attributes);
+#endif
+		[Export ("findActionForAnswers:")]
+		[return: NullAllowed]
+		NSObject FindAction (NSDictionary<NSObject, NSObject> answers);
+	}
+
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	interface GKEntity : NSCopying {
+	interface GKEntity : NSCopying, NSCoding {
 		
 		[Static]
 		[Export ("entity")]
 		GKEntity GetEntity ();
 
 		[Export ("updateWithDeltaTime:")]
-		void Update (double seconds);
+		void Update (double deltaTimeInSeconds);
 
 		[Export ("components", ArgumentSemantic.Retain)]
 		GKComponent [] Components { get; }
@@ -346,7 +505,7 @@ namespace XamCore.GameplayKit {
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	interface GKGraph {
+	interface GKGraph : NSCopying, NSCoding {
 		
 		[NullAllowed]
 		[Export ("nodes")]
@@ -372,6 +531,8 @@ namespace XamCore.GameplayKit {
 		GKGraphNode[] FindPath (GKGraphNode startNode, GKGraphNode endNode);
 	}
 
+	interface GKObstacleGraph<NodeType> : GKObstacleGraph { }
+
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (GKGraph))]
 	interface GKObstacleGraph {
@@ -388,6 +549,17 @@ namespace XamCore.GameplayKit {
 
 		[Export ("initWithObstacles:bufferRadius:")]
 		IntPtr Constructor (GKPolygonObstacle [] obstacles, float bufferRadius);
+
+		[Internal]
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+		[Static]
+		[Export ("graphWithObstacles:bufferRadius:nodeClass:")]
+		IntPtr GraphWithObstacles (GKPolygonObstacle [] obstacles, float bufferRadius, Class nodeClass);
+
+		[Internal]
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+		[Export ("initWithObstacles:bufferRadius:nodeClass:")]
+		IntPtr Constructor (GKPolygonObstacle [] obstacles, float bufferRadius, Class nodeClass);
 
 		[Export ("connectNodeUsingObstacles:")]
 		void ConnectNodeUsingObstacles (GKGraphNode2D node);
@@ -407,8 +579,9 @@ namespace XamCore.GameplayKit {
 		[Export ("removeAllObstacles")]
 		void RemoveAllObstacles ();
 
+		[Internal]
 		[Export ("nodesForObstacle:")]
-		GKGraphNode2D [] GetNodes (GKPolygonObstacle obstacle);
+		IntPtr _GetNodes (GKPolygonObstacle obstacle);
 
 		[Export ("lockConnectionFromNode:toNode:")]
 		void LockConnection (GKGraphNode2D startNode, GKGraphNode2D endNode);
@@ -418,8 +591,22 @@ namespace XamCore.GameplayKit {
 
 		[Export ("isConnectionLockedFromNode:toNode:")]
 		bool IsConnectionLocked (GKGraphNode2D startNode, GKGraphNode2D endNode);
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+		[Export ("classForGenericArgumentAtIndex:")]
+		Class GetClassForGenericArgument (nuint index);
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+		[Wrap ("Class.Lookup (GetClassForGenericArgument (index))")]
+		Type GetTypeForGenericArgument (nuint index);
 	}
 
+	// Apple turned GKGridGraph into a generic type in Xcode8 update
+	// 	interface GKGridGraph<NodeType : GKGridGraphNode *>  : GKGraph
+	// but we are not doing it since there is not much value to do it right now
+	// due to it is only used in the return type of GetNodeAt which in docs says
+	// it returns a GKGridGraphNode and we avoid a breaking change. Added a generic GetNodeAt.
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (GKGraph))]
 	interface GKGridGraph {
@@ -448,18 +635,115 @@ namespace XamCore.GameplayKit {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor (Vector2i position, int width, int height, bool diagonalsAllowed);
 
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+		[Static]
+		[Export ("graphFromGridStartingAt:width:height:diagonalsAllowed:nodeClass:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		GKGridGraph FromGridStartingAt (Vector2i position, int width, int height, bool diagonalsAllowed, Class aClass);
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+		[Static]
+		[Wrap ("FromGridStartingAt (position, width, height, diagonalsAllowed, new Class (type))")]
+		GKGridGraph FromGridStartingAt (Vector2i position, int width, int height, bool diagonalsAllowed, Type type);
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+		[Export ("initFromGridStartingAt:width:height:diagonalsAllowed:nodeClass:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr Constructor (Vector2i position, int width, int height, bool diagonalsAllowed, Class aClass);
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+		[Wrap ("this (position, width, height, diagonalsAllowed, new Class (nodeType))")]
+		IntPtr Constructor (Vector2i position, int width, int height, bool diagonalsAllowed, Type nodeType);
+
+		[Internal]
 		[Export ("nodeAtGridPosition:")]
 		[return: NullAllowed]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		GKGridGraphNode GetNodeAt (Vector2i position);
+		IntPtr _GetNodeAt (Vector2i position);
 
 		[Export ("connectNodeToAdjacentNodes:")]
 		void ConnectNodeToAdjacentNodes (GKGridGraphNode node);
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+		[Export ("classForGenericArgumentAtIndex:")]
+		Class GetClassForGenericArgument (nuint index);
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+		[Wrap ("Class.Lookup (GetClassForGenericArgument (index))")]
+		Type GetTypeForGenericArgument (nuint index);
 	}
+
+#if XAMCORE_2_0
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[BaseType (typeof (GKGraph))]
+	interface GKMeshGraph<NodeType> where NodeType : GKGraphNode2D {
+
+		[Export ("obstacles")]
+		GKPolygonObstacle [] Obstacles { get; }
+
+		[Export ("bufferRadius")]
+		float BufferRadius { get; }
+
+		[Export ("triangulationMode", ArgumentSemantic.Assign)]
+		GKMeshGraphTriangulationMode TriangulationMode { get; set; }
+
+		[Export ("triangleCount")]
+		nuint TriangleCount { get; }
+
+		[Static]
+		[Export ("graphWithBufferRadius:minCoordinate:maxCoordinate:nodeClass:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		GKMeshGraph<NodeType> FromBufferRadius (float bufferRadius, Vector2 min, Vector2 max, Class nodeClass);
+
+		[Static]
+		[Wrap ("FromBufferRadius (bufferRadius, min, max, new Class (nodeType))")]
+		GKMeshGraph<NodeType> FromBufferRadius (float bufferRadius, Vector2 min, Vector2 max, Type nodeType);
+
+		[Export ("initWithBufferRadius:minCoordinate:maxCoordinate:nodeClass:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr Constructor (float bufferRadius, Vector2 min, Vector2 max, Class nodeClass);
+
+		[Wrap ("this (bufferRadius, min, max, new Class (nodeType))")]
+		IntPtr Constructor (float bufferRadius, Vector2 min, Vector2 max, Type nodeType);
+
+		[Static]
+		[Export ("graphWithBufferRadius:minCoordinate:maxCoordinate:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		GKMeshGraph<NodeType> FromBufferRadius (float bufferRadius, Vector2 min, Vector2 max);
+
+		[Export ("initWithBufferRadius:minCoordinate:maxCoordinate:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr Constructor (float bufferRadius, Vector2 min, Vector2 max);
+
+		[Export ("addObstacles:")]
+		void AddObstacles (GKPolygonObstacle [] obstacles);
+
+		[Export ("removeObstacles:")]
+		void RemoveObstacles (GKPolygonObstacle [] obstacles);
+
+		[Export ("connectNodeUsingObstacles:")]
+		void ConnectNodeUsingObstacles (NodeType node);
+
+		[Export ("triangulate")]
+		void Triangulate ();
+
+		[Export ("triangleAtIndex:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		GKTriangle GetTriangle (nuint index);
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("classForGenericArgumentAtIndex:")]
+		Class GetClassForGenericArgument (nuint index);
+
+		[Wrap ("Class.Lookup (GetClassForGenericArgument (index))")]
+		Type GetTypeForGenericArgument (nuint index);
+	}
+#endif
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	interface GKGraphNode {
+	interface GKGraphNode : NSCoding {
 		
 		[Export ("connectedNodes")]
 		GKGraphNode [] ConnectedNodes { get; }
@@ -502,9 +786,31 @@ namespace XamCore.GameplayKit {
 		GKGraphNode2D FromPoint (Vector2 point);
 
 		[Export ("initWithPoint:")]
-		[DesignatedInitializer]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor (Vector2 point);
+	}
+
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (GKGraphNode))]
+	interface GKGraphNode3D {
+
+		[Export ("position", ArgumentSemantic.Assign)]
+		Vector3 Position {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			set;
+		}
+
+		[Static]
+		[Export ("nodeWithPoint:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		GKGraphNode3D FromPoint (Vector3 point);
+
+		[Export ("initWithPoint:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr Constructor (Vector3 point);
 	}
 
 	[DisableDefaultCtor]
@@ -515,9 +821,15 @@ namespace XamCore.GameplayKit {
 		[Export ("gridPosition", ArgumentSemantic.Assign)]
 		Vector2i GridPosition { 
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-			get; 
+			get;
+#if !XAMCORE_2_0
+			// classic expose the xamarin_simd__void_objc_msgSend[Super]_Vector2i so it's a breaking change not to include the attribute
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+#endif
+#if !XAMCORE_4_0
+			[NotImplemented]
 			set; 
+#endif
 		}
 
 		[Static]
@@ -526,26 +838,13 @@ namespace XamCore.GameplayKit {
 		GKGridGraphNode FromGridPosition (Vector2i gridPosition);
 
 		[Export ("initWithGridPosition:")]
-		[DesignatedInitializer]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor (Vector2i gridPosition);
 	}
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject), Name = "GKMinmaxStrategist")]
-#if !MONOMAC
 	interface GKMinMaxStrategist : GKStrategist {
-#else
-	interface GKMinMaxStrategist {
-		// GKStrategist protocol is not yet available
-		[NullAllowed]
-		[Export ("gameModel", ArgumentSemantic.Retain)]
-		IGKGameModel GameModel { get; set; }
-
-		[NullAllowed]
-		[Export ("randomSource", ArgumentSemantic.Retain)]
-		IGKRandom RandomSource { get; set; }
-#endif		
 		[Export ("maxLookAheadDepth", ArgumentSemantic.Assign)]
 		nint MaxLookAheadDepth { get; set; }
 
@@ -592,7 +891,7 @@ namespace XamCore.GameplayKit {
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (GKObstacle))]
-	interface GKPolygonObstacle {
+	interface GKPolygonObstacle : NSCoding {
 
 		[Export ("vertexCount")]
 		nuint VertexCount { get; }
@@ -611,6 +910,31 @@ namespace XamCore.GameplayKit {
 		Vector2 GetVertex (nuint index);
 	}
 
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (GKObstacle))]
+	interface GKSphereObstacle {
+
+		[Export ("radius")]
+		float Radius { get; set; }
+
+		[Export ("position", ArgumentSemantic.Assign)]
+		Vector3 Position {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			set;
+		}
+
+		[Static]
+		[Export ("obstacleWithRadius:")]
+		GKSphereObstacle FromRadius (float radius);
+
+		[Export ("initWithRadius:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (float radius);
+	}
+
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
@@ -619,11 +943,11 @@ namespace XamCore.GameplayKit {
 		[Export ("radius")]
 		float Radius { get; set; }
 
-		[Export ("cyclical")]
-		bool Cyclical { [Bind ("isCyclical")] get; set; }
-
 		[Export ("numPoints")]
 		nuint NumPoints { get; }
+
+		[Export ("cyclical")]
+		bool Cyclical { [Bind ("isCyclical")] get; set; }
 
 		[Static, Internal]
 		[Export ("pathWithPoints:count:radius:cyclical:")]
@@ -631,19 +955,48 @@ namespace XamCore.GameplayKit {
 
 		[Internal]
 		[Export ("initWithPoints:count:radius:cyclical:")]
-		[DesignatedInitializer]
 		IntPtr InitWithPoints (IntPtr points, nuint count, float radius, bool cyclical);
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+		[Static, Internal]
+		[Export ("pathWithFloat3Points:count:radius:cyclical:")]
+		GKPath FromFloat3Points (IntPtr points, nuint count, float radius, bool cyclical);
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+		[Internal]
+		[Export ("initWithFloat3Points:count:radius:cyclical:")]
+		IntPtr InitWithFloat3Points (IntPtr points, nuint count, float radius, bool cyclical);
 
 		[Static]
 		[Export ("pathWithGraphNodes:radius:")]
+		GKPath FromGraphNodes (GKGraphNode [] nodes, float radius);
+
+		[Static] // Avoid breaking change
+		[Wrap ("FromGraphNodes (nodes: graphNodes, radius: radius)")]
 		GKPath FromGraphNodes (GKGraphNode2D [] graphNodes, float radius);
 
 		[Export ("initWithGraphNodes:radius:")]
+		IntPtr Constructor (GKGraphNode [] nodes, float radius);
+
+		[Wrap ("this (nodes: graphNodes, radius: radius)")] // Avoid breaking change
 		IntPtr Constructor (GKGraphNode2D [] graphNodes, float radius);
 
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use GetVector2Point instead")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use GetVector2Point instead")]
+		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use GetVector2Point instead")]
 		[Export ("pointAtIndex:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		Vector2 GetPoint (nuint index);
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+		[Export ("float2AtIndex:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		Vector2 GetVector2Point (nuint index);
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+		[Export ("float3AtIndex:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		Vector3 GetVector3Point (nuint index);
 	}
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
@@ -917,7 +1270,7 @@ namespace XamCore.GameplayKit {
 		void DidEnter ([NullAllowed] GKState previousState);
 
 		[Export ("updateWithDeltaTime:")]
-		void Update (double seconds);
+		void Update (double deltaTimeInSeconds);
 
 		[Export ("willExitWithNextState:")]
 		void WillExit (GKState nextState);
@@ -941,7 +1294,7 @@ namespace XamCore.GameplayKit {
 		IntPtr Constructor (GKState[] states);
 
 		[Export ("updateWithDeltaTime:")]
-		void Update (double seconds);
+		void Update (double deltaTimeInSeconds);
 
 		[Protected] // should only be used if subclassed
 		[Export ("stateForClass:")]
@@ -987,8 +1340,7 @@ namespace XamCore.GameplayKit {
 		IGKGameModelUpdate GetBestMoveForActivePlayer ();
 	}
 
-	[NoMac]
-	[iOS (9,1)][TV (9,0)]
+	[iOS (9,1), TV (9,0), Mac (10,12, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	interface GKMonteCarloStrategist : GKStrategist {
 		[Export ("budget")]
@@ -998,49 +1350,563 @@ namespace XamCore.GameplayKit {
 		nuint ExplorationParameter { get; set; }
 	}
 
-	[NoMac]
-	[iOS (9,1)][TV (9,0)]
+	[iOS (10,0), TV (10, 0), Mac (10,12, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	// [DisableDefaultCtor] // <quote>Used as a hint for faster removal via [GKQuadTree removeData:WithNode:]</quote>
-	interface GKQuadTreeNode {
+	interface GKNoise {
+
+		[Export ("gradientColors", ArgumentSemantic.Copy)]
+		NSDictionary<NSNumber, SKColor> GradientColors { get; set; }
+
+		[Static]
+		[Export ("noiseWithNoiseSource:")]
+		GKNoise FromNoiseSource (GKNoiseSource noiseSource);
+
+		[Static]
+		[Export ("noiseWithNoiseSource:gradientColors:")]
+		GKNoise FromNoiseSource (GKNoiseSource noiseSource, NSDictionary<NSNumber, SKColor> gradientColors);
+
+		[Export ("initWithNoiseSource:")]
+		IntPtr Constructor (GKNoiseSource noiseSource);
+
+		[Export ("initWithNoiseSource:gradientColors:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (GKNoiseSource noiseSource, NSDictionary<NSNumber, SKColor> gradientColors);
+
+		[Static]
+		[Export ("noiseWithComponentNoises:selectionNoise:")]
+		GKNoise FromComponentNoises (GKNoise [] noises, GKNoise selectionNoise);
+
+		[Static]
+		[Export ("noiseWithComponentNoises:selectionNoise:componentBoundaries:boundaryBlendDistances:")]
+		GKNoise FromComponentNoises (GKNoise [] noises, GKNoise selectionNoise, NSNumber [] componentBoundaries, NSNumber [] blendDistances);
+
+		[Export ("valueAtPosition:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		float GetValue (Vector2 position);
+
+		[Export ("applyAbsoluteValue")]
+		void ApplyAbsoluteValue ();
+
+		[Export ("clampWithLowerBound:upperBound:")]
+		void Clamp (double lowerBound, double upperBound);
+
+		[Export ("raiseToPower:")]
+		void RaiseToPower (double power);
+
+		[Export ("invert")]
+		void Invert ();
+
+		[Export ("applyTurbulenceWithFrequency:power:roughness:seed:")]
+		void ApplyTurbulence (double frequency, double power, int roughness, int seed);
+
+		[Export ("remapValuesToCurveWithControlPoints:")]
+		void RemapValuesToCurve (NSDictionary<NSNumber, NSNumber> controlPoints);
+
+		[Export ("remapValuesToTerracesWithPeaks:terracesInverted:")]
+		void RemapValuesToTerraces (NSNumber [] peakInputValues, bool inverted);
+
+		[Export ("moveBy:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		void Move (Vector3d delta);
+
+		[Export ("scaleBy:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		void Scale (Vector3d factor);
+
+		[Export ("rotateBy:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		void Rotate (Vector3d radians);
+
+		[Export ("addWithNoise:")]
+		void Add (GKNoise noise);
+
+		[Export ("multiplyWithNoise:")]
+		void Multiply (GKNoise noise);
+
+		[Export ("minimumWithNoise:")]
+		void GetMinimum (GKNoise noise);
+
+		[Export ("maximumWithNoise:")]
+		void GetMaximum (GKNoise noise);
+
+		[Export ("raiseToPowerWithNoise:")]
+		void RaiseToPower (GKNoise noise);
+
+		[Export ("displaceXWithNoise:yWithNoise:zWithNoise:")]
+		void DisplaceX (GKNoise xDisplacementNoise, GKNoise yDisplacementNoise, GKNoise zDisplacementNoise);
 	}
 
-	[NoMac]
-	[iOS (9,1)][TV (9,0)]
-	[BaseType (typeof(NSObject))]
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[BaseType (typeof (NSObject))]
+	interface GKNoiseMap {
+
+		[Export ("size")]
+		Vector2d Size {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+
+		[Export ("origin")]
+		Vector2d Origin {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+
+		[Export ("sampleCount")]
+		Vector2i SampleCount {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+
+		[Export ("seamless")]
+		bool Seamless { [Bind ("isSeamless")] get; }
+
+		[Static]
+		[Export ("noiseMapWithNoise:")]
+		GKNoiseMap FromNoise (GKNoise noise);
+
+		[Static]
+		[Export ("noiseMapWithNoise:size:origin:sampleCount:seamless:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		GKNoiseMap FromNoise (GKNoise noise, Vector2d size, Vector2d origin, Vector2i sampleCount, bool seamless);
+
+		[Export ("initWithNoise:")]
+		IntPtr Constructor (GKNoise noise);
+
+		[Export ("initWithNoise:size:origin:sampleCount:seamless:")]
+		[DesignatedInitializer]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr Constructor (GKNoise noise, Vector2d size, Vector2d origin, Vector2i sampleCount, bool seamless);
+
+		[Export ("valueAtPosition:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		float GetValue (Vector2i position);
+
+		[Export ("interpolatedValueAtPosition:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		float GetInterpolatedValue (Vector2 position);
+
+		[Export ("setValue:atPosition:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		void SetValue (float value, Vector2i position);
+	}
+
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[DisableDefaultCtor]
+	[Abstract]
+	[BaseType (typeof (NSObject))]
+	interface GKNoiseSource {
+
+	}
+
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[Abstract]
+	[BaseType (typeof (GKNoiseSource))]
+	interface GKCoherentNoiseSource {
+
+		[Export ("frequency")]
+		double Frequency { get; set; }
+
+		[Export ("octaveCount")]
+		nint OctaveCount { get; set; }
+
+		[Export ("lacunarity")]
+		double Lacunarity { get; set; }
+
+		[Export ("seed")]
+		int Seed { get; set; }
+	}
+
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (GKCoherentNoiseSource))]
+	interface GKPerlinNoiseSource {
+
+		[Export ("persistence")]
+		double Persistence { get; set; }
+
+		[Static]
+		[Export ("perlinNoiseSourceWithFrequency:octaveCount:persistence:lacunarity:seed:")]
+		GKPerlinNoiseSource Create (double frequency, nint octaveCount, double persistence, double lacunarity, int seed);
+
+		[Export ("initWithFrequency:octaveCount:persistence:lacunarity:seed:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (double frequency, nint octaveCount, double persistence, double lacunarity, int seed);
+	}
+
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (GKCoherentNoiseSource))]
+	interface GKBillowNoiseSource {
+
+		[Export ("persistence")]
+		double Persistence { get; set; }
+
+		[Static]
+		[Export ("billowNoiseSourceWithFrequency:octaveCount:persistence:lacunarity:seed:")]
+		GKBillowNoiseSource Create (double frequency, nint octaveCount, double persistence, double lacunarity, int seed);
+
+		[Export ("initWithFrequency:octaveCount:persistence:lacunarity:seed:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (double frequency, nint octaveCount, double persistence, double lacunarity, int seed);
+	}
+
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (GKCoherentNoiseSource))]
+	interface GKRidgedNoiseSource {
+
+		[Static]
+		[Export ("ridgedNoiseSourceWithFrequency:octaveCount:lacunarity:seed:")]
+		GKRidgedNoiseSource Create (double frequency, nint octaveCount, double lacunarity, int seed);
+
+		[Export ("initWithFrequency:octaveCount:lacunarity:seed:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (double frequency, nint octaveCount, double lacunarity, int seed);
+	}
+
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (GKNoiseSource))]
+	interface GKVoronoiNoiseSource {
+
+		[Export ("frequency")]
+		double Frequency { get; set; }
+
+		[Export ("displacement")]
+		double Displacement { get; set; }
+
+		[Export ("distanceEnabled")]
+		bool DistanceEnabled { [Bind ("isDistanceEnabled")] get; set; }
+
+		[Export ("seed")]
+		int Seed { get; set; }
+
+		[Static]
+		[Export ("voronoiNoiseWithFrequency:displacement:distanceEnabled:seed:")]
+		GKVoronoiNoiseSource Create (double frequency, double displacement, bool distanceEnabled, int seed);
+
+		[Export ("initWithFrequency:displacement:distanceEnabled:seed:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (double frequency, double displacement, bool distanceEnabled, int seed);
+	}
+
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (GKNoiseSource))]
+	interface GKConstantNoiseSource {
+
+		[Export ("value")]
+		double Value { get; set; }
+
+		[Static]
+		[Export ("constantNoiseWithValue:")]
+		GKConstantNoiseSource Create (double value);
+
+		[Export ("initWithValue:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (double value);
+	}
+
+	[iOS (10, 0), TV (10, 0), Mac (10, 12, onlyOn64: true)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (GKNoiseSource))]
+	interface GKCylindersNoiseSource {
+
+		[Export ("frequency")]
+		double Frequency { get; set; }
+
+		[Static]
+		[Export ("cylindersNoiseWithFrequency:")]
+		GKCylindersNoiseSource Create (double frequency);
+
+		[Export ("initWithFrequency:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (double frequency);
+	}
+
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (GKNoiseSource))]
+	interface GKSpheresNoiseSource {
+
+		[Export ("frequency")]
+		double Frequency { get; set; }
+
+		[Static]
+		[Export ("spheresNoiseWithFrequency:")]
+		GKSpheresNoiseSource Create (double frequency);
+
+		[Export ("initWithFrequency:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (double frequency);
+	}
+
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (GKNoiseSource))]
+	interface GKCheckerboardNoiseSource {
+
+		[Export ("squareSize")]
+		double SquareSize { get; set; }
+
+		[Static]
+		[Export ("checkerboardNoiseWithSquareSize:")]
+		GKCheckerboardNoiseSource Create (double squareSize);
+
+		[Export ("initWithSquareSize:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (double squareSize);
+	}
+
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSObject))]
+	interface GKOctreeNode {
+
+		[Export ("box")]
+		GKBox Box {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+	}
+
+#if XAMCORE_2_0
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[BaseType (typeof (NSObject))]
+	interface GKOctree <ElementType> where ElementType : NSObject {
+
+		[Static]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		[Export ("octreeWithBoundingBox:minimumCellSize:")]
+		GKOctree<ElementType> FromBoundingBox (GKBox box, float minCellSize);
+
+		[Export ("initWithBoundingBox:minimumCellSize:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr Constructor (GKBox box, float minCellSize);
+
+		[Export ("addElement:withPoint:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		GKOctreeNode AddElement (ElementType element, Vector3 point);
+
+		[Export ("addElement:withBox:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		GKOctreeNode AddElement (ElementType element, GKBox box);
+
+		[Export ("elementsAtPoint:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		ElementType [] GetElements (Vector3 point);
+
+		[Export ("elementsInBox:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		ElementType [] GetElements (GKBox box);
+
+		[Export ("removeElement:")]
+		bool RemoveElement (ElementType element);
+
+		[Export ("removeElement:withNode:")]
+		bool RemoveElement (ElementType element, GKOctreeNode node);
+	}
+
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface GKRTree<ElementType> where ElementType : NSObject {
+
+		[Export ("queryReserve")]
+		nuint QueryReserve { get; set; }
+
+		[Static]
+		[Export ("treeWithMaxNumberOfChildren:")]
+		GKRTree<ElementType> FromMaxNumberOfChildren (nuint maxNumberOfChildren);
+
+		[Export ("initWithMaxNumberOfChildren:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (nuint maxNumberOfChildren);
+
+		[Export ("addElement:boundingRectMin:boundingRectMax:splitStrategy:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		void AddElement (ElementType element, Vector2 boundingRectMin, Vector2 boundingRectMax, GKRTreeSplitStrategy splitStrategy);
+
+		[Export ("removeElement:boundingRectMin:boundingRectMax:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		void RemoveElement (ElementType element, Vector2 boundingRectMin, Vector2 boundingRectMax);
+
+		[Export ("elementsInBoundingRectMin:rectMax:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		ElementType [] GetElements (Vector2 rectMin, Vector2 rectMax);
+	}
+#endif
+
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[BaseType (typeof (GKComponent))]
+	interface GKSKNodeComponent : GKAgentDelegate {
+
+		[Static]
+		[Export ("componentWithNode:")]
+		GKSKNodeComponent FromNode (SKNode node);
+
+		[Export ("initWithNode:")]
+		IntPtr Constructor (SKNode node);
+
+		[Export ("node", ArgumentSemantic.Strong)]
+		SKNode Node { get; set; }
+	}
+
+	interface IGKSceneRootNodeType { }
+
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[Protocol]
+	interface GKSceneRootNodeType {
+	}
+
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[BaseType (typeof (NSObject))]
+	interface GKScene : NSCopying, NSCoding {
+
+		[Static]
+		[Export ("sceneWithFileNamed:")]
+		[return: NullAllowed]
+		GKScene FromFile (string filename);
+
+		[Export ("entities")]
+		GKEntity [] Entities { get; }
+
+		[NullAllowed, Export ("rootNode", ArgumentSemantic.Assign)]
+		IGKSceneRootNodeType RootNode { get; set; }
+
+		[Export ("graphs")]
+		NSDictionary<NSString, GKGraph> Graphs { get; }
+
+		[Export ("addEntity:")]
+		void AddEntity (GKEntity entity);
+
+		[Export ("removeEntity:")]
+		void RemoveEntity (GKEntity entity);
+
+		[Export ("addGraph:name:")]
+		void AddGraph (GKGraph graph, string name);
+
+		[Export ("removeGraph:")]
+		void RemoveGraph (string name);
+	}
+
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[Category]
+	[BaseType (typeof (SKNode))]
+	interface SKNode_GameplayKit {
+
+		// Inlined them in SKNode to avoid ugly syntax
+		//[Static]
+		//[Export ("obstaclesFromSpriteTextures:accuracy:")]
+		//GKPolygonObstacle [] ObstaclesFromSpriteTextures (SKNode [] sprites, float accuracy);
+
+		//[Static]
+		//[Export ("obstaclesFromNodeBounds:")]
+		//GKPolygonObstacle [] ObstaclesFromNodeBounds (SKNode [] nodes);
+
+		//[Static]
+		//[Export ("obstaclesFromNodePhysicsBodies:")]
+		//GKPolygonObstacle [] ObstaclesFromNodePhysicsBodies (SKNode [] nodes);
+
+		[Export ("entity")]
+		GKEntity GetEntity ();
+
+		[Export ("setEntity:")]
+		void SetEntity (GKEntity entity);
+	}
+
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[BaseType (typeof (NSObject), Name = "GKQuadtreeNode")] // Renamed to GKQuadtreeNode (lower case t) in Xcode8
+	[DisableDefaultCtor] // <quote>Used as a hint for faster removal via [GKQuadTree removeData:WithNode:]</quote>
+	interface GKQuadTreeNode {
+
+		[Export ("quad")]
+		GKQuad Quad {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
+	}
+
+	[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64: true)]
+	[BaseType (typeof (NSObject), Name = "GKQuadtree")] // Renamed to GKQuadtree (lower case t) in xcode8
 	[DisableDefaultCtor] // crash (endless recursion)
 	interface GKQuadTree {
-		[Static]
-		[Export ("quadTreeWithMinPosition:maxPosition:minCellSize:")]
-		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		GKQuadTree QuadTreeWithMinPosition (Vector2 min, Vector2 max, float minCellSize);
 
-		[Export ("initWithMinPosition:maxPosition:minCellSize:")]
+		[Static]
+		[Export ("quadtreeWithBoundingQuad:minimumCellSize:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		GKQuadTree FromBoundingQuad (GKQuad quad, float minCellSize);
+
+		[Export ("initWithBoundingQuad:minimumCellSize:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[DesignatedInitializer]
+		IntPtr Constructor (GKQuad quad, float minCellSize);
+
+		[Export ("addElement:withPoint:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		GKQuadTreeNode AddElement (NSObject element, Vector2 point);
+
+		[Export ("addElement:withQuad:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		GKQuadTreeNode AddElement (NSObject element, GKQuad quad);
+
+		[Export ("elementsAtPoint:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		NSObject [] GetElements (Vector2 point);
+
+		[Export ("elementsInQuad:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		NSObject [] GetElements (GKQuad quad);
+
+		[Export ("removeElement:")]
+		bool RemoveElement (NSObject element);
+
+		[Export ("removeElement:withNode:")]
+		bool RemoveElement (NSObject data, GKQuadTreeNode node);
+
+#if !XAMCORE_4_0 && !MONOMAC // This API is removed in Xcode 8
+
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
+		[Export ("initWithMinPosition:maxPosition:minCellSize:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor (Vector2 min, Vector2 max, float minCellSize);
 
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Export ("addDataWithPoint:point:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		GKQuadTreeNode AddData (NSObject data, Vector2 point);
 
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Export ("addDataWithQuad:quadOrigin:quadSize:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		GKQuadTreeNode AddData (NSObject data, Vector2 quadOrigin, Vector2 quadSize);
 
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Export ("queryDataForPoint:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		NSObject[] QueryData (Vector2 point);
 
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Export ("queryDataForQuad:quadSize:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		NSObject[] QueryData (Vector2 quadOrigin, Vector2 quadSize);
 
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Export ("removeData:")]
 		bool RemoveData (NSObject data);
 
+		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Export ("removeData:withNode:")]
 		bool RemoveData (NSObject data, GKQuadTreeNode node);
+#endif
 	}
 }
 #endif

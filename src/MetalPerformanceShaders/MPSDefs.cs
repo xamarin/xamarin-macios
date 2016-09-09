@@ -22,6 +22,30 @@ namespace XamCore.MetalPerformanceShaders {
 		Clamp = 1
 	}
 
+	[iOS (10,0)][TV (10,0)]
+	[Native]
+	public enum MPSAlphaType : nuint {
+		NonPremultiplied = 0,
+		AlphaIsOne = 1,
+		Premultiplied = 2,
+	}
+	 
+	[iOS (10,0)][TV (10,0)]
+	public enum MPSDataType : uint { // uint32_t
+		FloatBit = 0x10000000,
+		Float32 = FloatBit | 32,
+	}
+
+	[iOS (10,0)][TV (10,0)]
+	[Native]
+	public enum MPSImageFeatureChannelFormat : nuint {
+		Invalid = 0,
+		Unorm8 = 1,
+		Unorm16 = 2,
+		Float16 = 3,
+		Float32 = 4,
+	}
+
 	// uses NSInteger
 	public struct MPSOffset {
 		public nint X;

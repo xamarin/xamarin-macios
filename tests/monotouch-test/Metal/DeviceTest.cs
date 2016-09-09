@@ -19,6 +19,8 @@ namespace MonoTouchFixtures.Metal {
 		[Test]
 		public void System ()
 		{
+			TestRuntime.AssertXcodeVersion (6,0);
+
 			var d = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
 			if (d == null)

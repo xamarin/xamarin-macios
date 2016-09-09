@@ -64,6 +64,11 @@ namespace XamCore.Contacts {
 		[Export ("phoneticFamilyName")]
 		string PhoneticFamilyName { get; }
 
+		[iOS (10,0)][Mac (10,12, onlyOn64: true)]
+		[Watch (3,0)]
+		[Export ("phoneticOrganizationName")]
+		string PhoneticOrganizationName { get; }
+
 		[Export ("organizationName")]
 		string OrganizationName { get; }
 
@@ -84,10 +89,9 @@ namespace XamCore.Contacts {
 		[Export ("thumbnailImageData", ArgumentSemantic.Copy)]
 		NSData ThumbnailImageData { get; }
 
-#if !MONOMAC
+		[Mac (10,12)]
 		[Export ("imageDataAvailable")]
 		bool ImageDataAvailable { get; }
-#endif
 
 		[Export ("phoneNumbers", ArgumentSemantic.Copy)]
 		CNLabeledValue<CNPhoneNumber> [] PhoneNumbers { get; }
@@ -213,6 +217,11 @@ namespace XamCore.Contacts {
 		[Field ("CNContactPhoneticFamilyNameKey")]
 		NSString PhoneticFamilyName { get; }
 
+		[iOS (10,0)][Mac (10,12, onlyOn64: true)]
+		[Watch (3,0)]
+		[Field ("CNContactPhoneticOrganizationNameKey")]
+		NSString PhoneticOrganizationName { get; }
+
 		[Field ("CNContactOrganizationNameKey")]
 		NSString OrganizationName { get; }
 
@@ -231,13 +240,12 @@ namespace XamCore.Contacts {
 		[Field ("CNContactNoteKey")]
 		NSString Note { get; }
 
-#if !MONOMAC
 		[Field ("CNContactImageDataKey")]
 		NSString ImageData { get; }
 
+		[Mac (10,12)]
 		[Field ("CNContactImageDataAvailableKey")]
 		NSString ImageDataAvailable { get; }
-#endif
 
 		[Field ("CNContactThumbnailImageDataKey")]
 		NSString ThumbnailImageData { get; }
@@ -273,7 +281,7 @@ namespace XamCore.Contacts {
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // using init raises an exception according to docs
-	public interface CNContactFetchRequest {
+	public interface CNContactFetchRequest : NSSecureCoding {
 
 		[DesignatedInitializer]
 		[Export ("initWithKeysToFetch:")]
@@ -289,6 +297,7 @@ namespace XamCore.Contacts {
 		// cannot be exposed as NSString since they could be internalized types, like CNAggregateKeyDescriptor
 		NSArray KeysToFetch { get; set; }
 
+		[iOS (10,0)][Mac (10,12)] // API existed previously ? maybe it was not working before now ?
 		[Export ("mutableObjects")]
 		bool MutableObjects { get; set; }
 
@@ -444,7 +453,7 @@ namespace XamCore.Contacts {
 		[Protected] // we cannot use ICNKeyDescriptor as Apple (and others) can adopt it from categories
 		NSObject GetUnifiedMeContact (NSArray keys, out NSError error);
 
-#if !XAMCORE_4_0
+#if !XAMCORE_4_0 && !WATCH
 		[Obsolete ("Use the overload that takes CNContactStoreListContactsHandler instead")]
 		[Export ("enumerateContactsWithFetchRequest:error:usingBlock:")]
 		bool EnumerateContacts (CNContactFetchRequest fetchRequest, out NSError error, CNContactStoreEnumerateContactsHandler handler);
@@ -475,6 +484,7 @@ namespace XamCore.Contacts {
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
+	[ThreadSafe (false)]
 	public interface CNContactsUserDefaults {
 
 		[Static]
@@ -691,6 +701,7 @@ namespace XamCore.Contacts {
 		[Export ("identifier")]
 		string Identifier { get; }
 
+		[NullAllowed]
 		[Export ("label")]
 		string Label { get; }
 
@@ -790,6 +801,12 @@ namespace XamCore.Contacts {
 		[New]
 		[Export ("phoneticFamilyName")]
 		string PhoneticFamilyName { get; set; }
+
+		[iOS (10,0)][Mac (10,12, onlyOn64: true)]
+		[Watch (3,0)]
+		[New]
+		[Export ("phoneticOrganizationName")]
+		string PhoneticOrganizationName { get; set; }
 
 		[New]
 		[Export ("organizationName")]

@@ -5,6 +5,9 @@
 //
 // Authors:
 //    Miguel de Icaza (miguel@xamarin.com)
+
+#if !MONOMAC
+
 using System;
 using XamCore.Foundation;
 
@@ -23,3 +26,5 @@ namespace XamCore.Photos {
 		}
 	}
 }
+
+#endif

@@ -176,6 +176,10 @@ namespace Introspection {
 			case "MPMediaItemArtwork":
 				// NSInvalidArgumentException Reason: image must be non-nil
 				return true;
+
+			// iOS 10 - this works only on devices, so we skip the simulator
+			case "MTLHeapDescriptor":
+				return Runtime.Arch == Arch.SIMULATOR;
 			default:
 				return base.Skip (type);
 			}
@@ -207,6 +211,10 @@ namespace Introspection {
 			case "CIImageAccumulator":
 			case "NEAppProxyTcpFlow":
 			case "NEAppProxyUdpFlow":
+				do_not_dispose.Add (obj);
+				break;
+			// iOS 10 beta 1 - crash when disposed
+			case "CLBeacon":
 				do_not_dispose.Add (obj);
 				break;
 			default:
@@ -279,14 +287,23 @@ namespace Introspection {
 				if (TestRuntime.CheckXcodeVersion (4, 5))
 					return;
 				break;
-			// crash (when asking `description`) under iOS5 (only) simulator
-			case "NSUrlConnection":
-				return;
 			// iOS 9 beta 1 - crash when called
 			case "WKFrameInfo":
 			case "WKNavigation":
 			case "WKNavigationAction":
 				if (TestRuntime.CheckXcodeVersion (7, 0))
+					return;
+				break;
+			// new iOS 10 beta 1 - crash when calling `description` selector
+			case "AVAudioSessionDataSourceDescription":
+			case "AVAudioSessionPortDescription":
+			case "CLBeacon":
+			case "CLCircularRegion":
+			// beta 2
+			case "CTCallCenter":
+			// beta 3
+			case "CNContainer":
+				if (TestRuntime.CheckXcodeVersion (8, 0))
 					return;
 				break;
 			default:

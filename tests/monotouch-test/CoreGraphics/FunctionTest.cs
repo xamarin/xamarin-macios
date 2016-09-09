@@ -87,6 +87,52 @@ namespace MonoTouchFixtures.CoreGraphics {
 				return (nfloat)(p/(p + Math.Pow(1.0f-x, A)));
 			}
 		}
+
+#if XAMCORE_2_0
+
+		[Test]
+		public void CoreGraphicsStrongDictionary ()
+		{
+			var rect = new CGRect (10, 10, 100, 100);
+			var size = new CGSize (200, 200);
+			var point = new CGPoint (10, 20);
+			var graphicsDict = new GraphicsDict {
+				Rect = rect,
+				Size = size,
+				Point = point
+			};
+
+			var retrievedRect = graphicsDict.Rect;
+			Assert.IsTrue (rect == retrievedRect, "CoreGraphicsStrongDictionary CGRect");
+
+			var retrievedSize = graphicsDict.Size;
+			Assert.IsTrue (size == retrievedSize, "CoreGraphicsStrongDictionary CGSize");
+
+			var retrievedPoint = graphicsDict.Point;
+			Assert.IsTrue (point == retrievedPoint, "CoreGraphicsStrongDictionary CGPoint");
+		}
+
+		class GraphicsDict : DictionaryContainer {
+			static NSString RectKey = new NSString ("RectKey");
+			public CGRect? Rect {
+				get { return GetCGRectValue (RectKey); }
+				set { SetCGRectValue (RectKey, value); }
+			}
+
+			static NSString SizeKey = new NSString ("SizeKey");
+			public CGSize? Size {
+				get { return GetCGSizeValue (SizeKey); }
+				set { SetCGSizeValue (SizeKey, value); }
+			}
+
+			static NSString PointKey = new NSString ("PointKey");
+			public CGPoint? Point {
+				get { return GetCGPointValue (PointKey); }
+				set { SetCGPointValue (PointKey, value); }
+			}
+		}
+
+#endif // XAMCORE_2_0
 #endif // !__WATCHOS__
 	}
 }

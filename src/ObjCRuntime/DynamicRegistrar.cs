@@ -764,18 +764,23 @@ namespace XamCore.Registrar {
 					// to not link it away anymore like we currently do.
 
 #if !COREBUILD && !MONOMAC && !WATCH
+					var major = -1;
 					switch (type.Name) {
 					case "PKObject":
 					case "CBAttribute":
 					case "CBPeer":
-						if (!UIDevice.CurrentDevice.CheckSystemVersion (8,0))
-							return;
+						major = 8;
 						break;
 					case "GKGameCenterViewController":
-						if (!UIDevice.CurrentDevice.CheckSystemVersion (6,0))
-							return;
+						major = 6;
+						break;
+					case "CBManager":
+					case "GKBasePlayer":
+						major = 10;
 						break;
 					}
+					if ((major > 0) && !UIDevice.CurrentDevice.CheckSystemVersion (major, 0))
+						return;
 #endif
 
 					// a missing [Model] attribute will cause this error on devices (e.g. bug #4864)
@@ -1134,9 +1139,9 @@ namespace XamCore.Registrar {
 			RegisterType (type, ref exceptions);
 		}
 
-		public string ComputeSignature (MethodInfo method)
+		public string ComputeSignature (MethodInfo method, bool isBlockSignature)
 		{
-			return base.ComputeSignature (method.DeclaringType, method);
+			return base.ComputeSignature (method.DeclaringType, method, isBlockSignature: isBlockSignature);
 		}
 	}
 }

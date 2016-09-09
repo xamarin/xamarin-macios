@@ -86,7 +86,7 @@ namespace XamCore.CoreGraphics {
 		[Field ("kCGColorSpaceGenericCMYK")]
 		NSString GenericCmyk { get; }
 
-		[iOS (9,3)][Mac(10,11)] // Docs say 10,10 but radar 25396312:
+		[iOS (9,3)][Mac(10,11,2)]
 		[TV (9,2)]
 		[Field ("kCGColorSpaceDisplayP3")]
 		NSString DisplayP3 { get; }
@@ -128,7 +128,42 @@ namespace XamCore.CoreGraphics {
 		[TV (9,2)]
 		[Field ("kCGColorSpaceDCIP3")]
 		NSString Dcip3 { get; }
-		
+
+		[iOS (10,0)][Mac (10,12)]
+		[Watch (3,0)]
+		[TV (10,0)]
+		[Field ("kCGColorSpaceExtendedSRGB")]
+		NSString ExtendedSrgb { get; }
+
+		[iOS (10,0)][Mac (10,12)]
+		[Watch (3,0)]
+		[TV (10,0)]
+		[Field ("kCGColorSpaceLinearSRGB")]
+		NSString LinearSrgb { get; }
+
+		[iOS (10,0)][Mac (10,12)]
+		[Watch (3,0)]
+		[TV (10,0)]
+		[Field ("kCGColorSpaceExtendedLinearSRGB")]
+		NSString ExtendedLinearSrgb { get; }
+
+		[iOS (10,0)][Mac (10,12)]
+		[Watch (3,0)]
+		[TV (10,0)]
+		[Field ("kCGColorSpaceExtendedGray")]
+		NSString ExtendedGray { get; }
+
+		[iOS (10,0)][Mac (10,12)]
+		[Watch (3,0)]
+		[TV (10,0)]
+		[Field ("kCGColorSpaceLinearGray")]
+		NSString LinearGray { get; }
+
+		[iOS (10,0)][Mac (10,12)]
+		[Watch (3,0)]
+		[TV (10,0)]
+		[Field ("kCGColorSpaceExtendedLinearGray")]
+		NSString ExtendedLinearGray { get; }
 
 #if MONOMAC
 		[Obsolete ("Now accessible as GenericCmyk")]
@@ -151,5 +186,19 @@ namespace XamCore.CoreGraphics {
 		[Field ("kCGColorSpaceGenericRGBLinear")]
 		NSString GenericRGBLinear { get; }
 #endif
+	}
+
+	[Partial]
+	partial interface CGColorConversionInfo {
+
+		[Internal]
+		[Field ("kCGColorConversionBlackPointCompensation")]
+		NSString BlackPointCompensationKey { get; }
+	}
+
+	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
+	[StrongDictionary ("CGColorConversionInfo")]
+	interface CGColorConversionOptions {
+		bool BlackPointCompensation { get; set; }
 	}
 }

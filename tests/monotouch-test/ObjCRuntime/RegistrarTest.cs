@@ -2514,4 +2514,88 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 	}
 #endif // !__WATCHOS__
+
+
+	[TestFixture]
+	[Preserve (AllMembers = true)]
+	public class BlockSignatureTest
+	{
+		[StructLayout (LayoutKind.Sequential)]
+		struct BlockDescriptor2
+		{
+			public IntPtr reserved;
+			public IntPtr size;
+			public IntPtr copy_helper;
+			public IntPtr dispose;
+			public IntPtr signature;
+		}
+
+		[StructLayout (LayoutKind.Sequential)]
+		struct BlockLiteral2
+		{
+			public IntPtr isa;
+			public /*BlockFlags*/ int flags;
+			public int reserved;
+			public IntPtr invoke;
+			public IntPtr block_descriptor;
+			public IntPtr local_handle;
+			public IntPtr global_handle;
+		}
+
+		[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]
+		internal delegate void DActionArity1V1 (IntPtr block, IntPtr obj);
+		static internal class SDActionArity1V1
+		{
+			static internal readonly DActionArity1V1 Handler = Invoke;
+
+			[MonoPInvokeCallback (typeof (DActionArity1V1))]
+			public static unsafe void Invoke (IntPtr block, IntPtr obj)
+			{
+				throw new NotImplementedException ();
+			}
+		}
+
+		[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]
+		[UserDelegateType (typeof (Action<NSObject>))]
+		internal delegate void DActionArity1V2 (IntPtr block, IntPtr obj);
+		static internal class SDActionArity1V2
+		{
+			static internal readonly DActionArity1V2 Handler = Invoke;
+
+			[MonoPInvokeCallback (typeof (DActionArity1V2))]
+			public static unsafe void Invoke (IntPtr block, IntPtr obj)
+			{
+				throw new NotImplementedException ();
+			}
+		}
+
+		unsafe string GetBlockSignature (BlockLiteral block)
+		{
+			BlockLiteral2* blockptr = (BlockLiteral2*) &block;
+			BlockDescriptor2* descptr = (BlockDescriptor2*) blockptr->block_descriptor;
+			return Marshal.PtrToStringAuto (descptr->signature);
+		}
+	
+		[Test]
+		public void WithoutUserDelegateTypeAttribute ()
+		{
+			var block = new BlockLiteral ();
+			var tramp = new DActionArity1V1 (SDActionArity1V1.Invoke);
+			Action<NSObject> del = (v) => { };
+			block.SetupBlock (tramp, del);
+			Assert.AreEqual ("v@:^v^v", GetBlockSignature (block), "a");
+			block.CleanupBlock ();
+		}
+
+		[Test]
+		public void WithUserDelegateTypeAttribute ()
+		{
+			var block = new BlockLiteral ();
+			var tramp = new DActionArity1V2 (SDActionArity1V2.Invoke);
+			Action<NSObject> del = (v) => { };
+			block.SetupBlock (tramp, del);
+			Assert.AreEqual ("v@?@", GetBlockSignature (block), "a");
+			block.CleanupBlock ();
+		}
+	}
 }

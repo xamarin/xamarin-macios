@@ -68,6 +68,20 @@ namespace Xamarin.MacDev.Tasks
 			return id.Value == "com.apple.watchkit";
 		}
 
+		static bool IsMessagesExtension (PDictionary plist)
+		{
+			PDictionary extension;
+			PString id;
+
+			if (!plist.TryGetValue ("NSExtension", out extension))
+				return false;
+
+			if (!extension.TryGetValue ("NSExtensionPointIdentifier", out id))
+				return false;
+
+			return id.Value == "com.apple.message-payload-provider";
+		}
+
 		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, ProcessArgumentBuilder args, ITaskItem[] items)
 		{
 			string minimumDeploymentTarget;
@@ -102,6 +116,9 @@ namespace Xamarin.MacDev.Tasks
 
 						args.Add ("--app-icon");
 						args.AddQuoted (assetName);
+
+						if (IsMessagesExtension (plist))
+							args.Add ("--product-type com.apple.product-type.app-extension.messages");
 					}
 				}
 

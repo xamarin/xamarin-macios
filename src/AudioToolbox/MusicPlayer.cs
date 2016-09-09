@@ -230,7 +230,7 @@ namespace XamCore.AudioToolbox {
 			}
 			set {
 				currentSequence = value;
-				MusicPlayerSetSequence (handle, value.Handle);
+				MusicPlayerSetSequence (handle, value == null ? IntPtr.Zero : value.Handle);
 			}
 		}
 #endif
