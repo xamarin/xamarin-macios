@@ -8,6 +8,7 @@
 //
 
 using System;
+using XamCore.AVFoundation;
 using XamCore.CoreMedia;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
@@ -203,9 +204,8 @@ namespace XamCore.ReplayKit {
 		[Export ("clipDuration")]
 		double ClipDuration { get; set; }
 
-		// TODO review, once API documentation is available, if we can provide an easier to use strongdictionary
 		[NullAllowed, Export ("videoCompressionProperties", ArgumentSemantic.Strong)]
-		NSDictionary<NSNumber, INSSecureCoding> VideoCompressionProperties { get; set; }
+		NSDictionary<NSString, INSSecureCoding> WeakVideoCompressionProperties { get; set; }
 	}
 
 	delegate void LoadBroadcastingHandler (string bundleID, string displayName, UIImage appIcon);
