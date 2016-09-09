@@ -226,11 +226,6 @@ namespace Xamarin.MacDev.Tasks
 			certs = keychain.FindNamedSigningCertificates (x => StartsWithAny (x, prefixes)).Where (x => now < x.NotAfter).ToList ();
 
 			if (certs.Count == 0) {
-				if (SdkIsSimulator) {
-					// We don't codesign Simulator builds, so this is actually valid...
-					return true;
-				}
-
 				var message = "No valid " + PlatformName + " code signing keys found in keychain. You need to request a codesigning certificate from https://developer.apple.com.";
 
 				Log.LogError (message);
@@ -278,6 +273,7 @@ namespace Xamarin.MacDev.Tasks
 			Log.LogTaskProperty ("Keychain", Keychain);
 			Log.LogTaskProperty ("ProvisioningProfile", ProvisioningProfile);
 			Log.LogTaskProperty ("RequireCodesigning", RequireCodeSigning);
+			Log.LogTaskProperty ("RequireProvisioningProfile", RequireProvisioningProfile);
 			Log.LogTaskProperty ("SdkPlatform", SdkPlatform);
 			Log.LogTaskProperty ("SdkIsSimulator", SdkIsSimulator);
 			Log.LogTaskProperty ("SigningKey", SigningKey);
@@ -356,22 +352,20 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			if (!RequireProvisioningProfile && string.IsNullOrEmpty (ProvisioningProfile)) {
-				if (certs.Count > 0) {
-					if (certs.Count > 1) {
-						if (!string.IsNullOrEmpty (SigningKey))
-							Log.LogMessage (MessageImportance.Normal, "Multiple signing identities match '{0}'; using the first match.", SigningKey);
-						else
-							Log.LogMessage (MessageImportance.Normal, "Multiple signing identities found; using the first identity.");
+				if (certs.Count > 1) {
+					if (!string.IsNullOrEmpty (SigningKey))
+						Log.LogMessage (MessageImportance.Normal, "Multiple signing identities match '{0}'; using the first match.", SigningKey);
+					else
+						Log.LogMessage (MessageImportance.Normal, "Multiple signing identities found; using the first identity.");
 
-						for (int i = 0; i < certs.Count; i++) {
-							Log.LogMessage (MessageImportance.Normal, "{0,3}. Signing Identity: {1} ({2})", i + 1,
-							                SecKeychain.GetCertificateCommonName (certs[i]), certs[i].Thumbprint);
-						}
+					for (int i = 0; i < certs.Count; i++) {
+						Log.LogMessage (MessageImportance.Normal, "{0,3}. Signing Identity: {1} ({2})", i + 1,
+						                SecKeychain.GetCertificateCommonName (certs[i]), certs[i].Thumbprint);
 					}
-
-					codesignCommonName = SecKeychain.GetCertificateCommonName (certs[0]);
-					DetectedCodeSigningKey = certs[0].Thumbprint;
 				}
+
+				codesignCommonName = SecKeychain.GetCertificateCommonName (certs[0]);
+				DetectedCodeSigningKey = certs[0].Thumbprint;
 
 				DetectedBundleId = identity.BundleId ?? GetDefaultBundleId (AppBundleName, null);
 				DetectedAppId = DetectedBundleId;
