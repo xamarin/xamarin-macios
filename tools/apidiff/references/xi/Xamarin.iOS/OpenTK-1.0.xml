@@ -48715,6 +48715,7 @@
         <classes>
           <class name="iPhoneOSGameView" type="class" base="UIKit.UIView" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="CoreAnimation.ICALayerDelegate" />
               <interface name="Foundation.INSCoding" />
               <interface name="Foundation.INSObjectProtocol" />
               <interface name="ObjCRuntime.INativeObject" />
@@ -48729,6 +48730,7 @@
               <interface name="UIKit.IUICoordinateSpace" />
               <interface name="UIKit.IUIDynamicItem" />
               <interface name="UIKit.IUIFocusEnvironment" />
+              <interface name="UIKit.IUIFocusItem" />
               <interface name="UIKit.IUITraitEnvironment" />
             </interfaces>
             <constructors>
