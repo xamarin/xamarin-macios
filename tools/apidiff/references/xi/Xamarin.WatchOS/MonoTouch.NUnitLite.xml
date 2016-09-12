@@ -701,6 +701,24 @@
                   </method>
                 </methods>
               </property>
+              <property name="Transport" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Transport()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_Transport(System.String)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
             </properties>
           </class>
           <class name="WatchOSRunner" type="class" base="MonoTouch.NUnit.UI.BaseTouchRunner" charset="Ansi" layout="Auto">
@@ -1352,11 +1370,6 @@
                   </parameter>
                 </parameters>
               </method>
-              <method name="Catch(NUnit.Framework.TestDelegate)" attrib="150" static="true" returntype="System.Exception">
-                <parameters>
-                  <parameter name="code" position="0" attrib="0" type="NUnit.Framework.TestDelegate" />
-                </parameters>
-              </method>
               <method name="Catch(NUnit.Framework.TestDelegate)" attrib="150" static="true" returntype="T">
                 <parameters>
                   <parameter name="code" position="0" attrib="0" type="NUnit.Framework.TestDelegate" />
@@ -1369,10 +1382,9 @@
                   </generic-parameter>
                 </generic-parameters>
               </method>
-              <method name="Catch(NUnit.Framework.TestDelegate, System.String)" attrib="150" static="true" returntype="System.Exception">
+              <method name="Catch(NUnit.Framework.TestDelegate)" attrib="150" static="true" returntype="System.Exception">
                 <parameters>
                   <parameter name="code" position="0" attrib="0" type="NUnit.Framework.TestDelegate" />
-                  <parameter name="message" position="1" attrib="0" type="System.String" />
                 </parameters>
               </method>
               <method name="Catch(NUnit.Framework.TestDelegate, System.String)" attrib="150" static="true" returntype="T">
@@ -1388,21 +1400,16 @@
                   </generic-parameter>
                 </generic-parameters>
               </method>
+              <method name="Catch(NUnit.Framework.TestDelegate, System.String)" attrib="150" static="true" returntype="System.Exception">
+                <parameters>
+                  <parameter name="code" position="0" attrib="0" type="NUnit.Framework.TestDelegate" />
+                  <parameter name="message" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </method>
               <method name="Catch(System.Type, NUnit.Framework.TestDelegate)" attrib="150" static="true" returntype="System.Exception">
                 <parameters>
                   <parameter name="expectedExceptionType" position="0" attrib="0" type="System.Type" />
                   <parameter name="code" position="1" attrib="0" type="NUnit.Framework.TestDelegate" />
-                </parameters>
-              </method>
-              <method name="Catch(NUnit.Framework.TestDelegate, System.String, System.Object[])" attrib="150" static="true" returntype="System.Exception">
-                <parameters>
-                  <parameter name="code" position="0" attrib="0" type="NUnit.Framework.TestDelegate" />
-                  <parameter name="message" position="1" attrib="0" type="System.String" />
-                  <parameter name="args" position="2" attrib="0" type="System.Object[]">
-                    <attributes>
-                      <attribute name="System.ParamArrayAttribute" />
-                    </attributes>
-                  </parameter>
                 </parameters>
               </method>
               <method name="Catch(NUnit.Framework.TestDelegate, System.String, System.Object[])" attrib="150" static="true" returntype="T">
@@ -1422,6 +1429,17 @@
                     </generic-parameter-constraints>
                   </generic-parameter>
                 </generic-parameters>
+              </method>
+              <method name="Catch(NUnit.Framework.TestDelegate, System.String, System.Object[])" attrib="150" static="true" returntype="System.Exception">
+                <parameters>
+                  <parameter name="code" position="0" attrib="0" type="NUnit.Framework.TestDelegate" />
+                  <parameter name="message" position="1" attrib="0" type="System.String" />
+                  <parameter name="args" position="2" attrib="0" type="System.Object[]">
+                    <attributes>
+                      <attribute name="System.ParamArrayAttribute" />
+                    </attributes>
+                  </parameter>
+                </parameters>
               </method>
               <method name="Catch(System.Type, NUnit.Framework.TestDelegate, System.String)" attrib="150" static="true" returntype="System.Exception">
                 <parameters>
@@ -1569,6 +1587,42 @@
                   <parameter name="condition" position="0" attrib="0" type="System.Boolean" />
                   <parameter name="message" position="1" attrib="0" type="System.String" />
                   <parameter name="args" position="2" attrib="0" type="System.Object[]">
+                    <attributes>
+                      <attribute name="System.ParamArrayAttribute" />
+                    </attributes>
+                  </parameter>
+                </parameters>
+              </method>
+              <method name="IsInstanceOfType(System.Type, System.Object)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="expected" position="0" attrib="0" type="System.Type" />
+                  <parameter name="actual" position="1" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="IsInstanceOfType(System.Object, System.String, System.Object[])" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="anObject" position="0" attrib="0" type="System.Object" />
+                  <parameter name="message" position="1" attrib="0" type="System.String" />
+                  <parameter name="args" position="2" attrib="0" type="System.Object[]">
+                    <attributes>
+                      <attribute name="System.ParamArrayAttribute" />
+                    </attributes>
+                  </parameter>
+                </parameters>
+              </method>
+              <method name="IsInstanceOfType(System.Type, System.Object, System.String)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="expected" position="0" attrib="0" type="System.Type" />
+                  <parameter name="actual" position="1" attrib="0" type="System.Object" />
+                  <parameter name="message" position="2" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="IsInstanceOfType(System.Type, System.Object, System.String, System.Object[])" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="expected" position="0" attrib="0" type="System.Type" />
+                  <parameter name="actual" position="1" attrib="0" type="System.Object" />
+                  <parameter name="message" position="2" attrib="0" type="System.String" />
+                  <parameter name="args" position="3" attrib="0" type="System.Object[]">
                     <attributes>
                       <attribute name="System.ParamArrayAttribute" />
                     </attributes>
@@ -9739,6 +9793,30 @@
               </method>
             </methods>
           </class>
+          <class name="FinallyDelegate" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="Complete()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="HandleUnhandledExc(System.Exception)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="ex" position="0" attrib="0" type="System.Exception" />
+                </parameters>
+              </method>
+              <method name="Set(NUnit.Framework.Internal.TestExecutionContext, System.Int64, NUnit.Framework.Internal.TestResult)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="context" position="0" attrib="0" type="NUnit.Framework.Internal.TestExecutionContext" />
+                  <parameter name="startTicks" position="1" attrib="0" type="System.Int64" />
+                  <parameter name="result" position="2" attrib="0" type="NUnit.Framework.Internal.TestResult" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
           <class name="IApplyToContext" type="interface" abstract="true" charset="Ansi" layout="Auto">
             <methods>
               <method name="ApplyToContext(NUnit.Framework.Internal.TestExecutionContext)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
@@ -9860,9 +9938,10 @@
               <interface name="NUnit.Framework.Api.ITestAssemblyRunner" />
             </interfaces>
             <constructors>
-              <constructor name=".ctor(NUnit.Framework.Api.ITestAssemblyBuilder)" attrib="6278">
+              <constructor name=".ctor(NUnit.Framework.Api.ITestAssemblyBuilder, NUnit.Framework.Internal.FinallyDelegate)" attrib="6278">
                 <parameters>
                   <parameter name="builder" position="0" attrib="0" type="NUnit.Framework.Api.ITestAssemblyBuilder" />
+                  <parameter name="finallyDelegate" position="1" attrib="0" type="NUnit.Framework.Internal.FinallyDelegate" />
                 </parameters>
               </constructor>
             </constructors>
@@ -11018,9 +11097,10 @@
                   <parameter name="obj" position="0" attrib="0" type="System.Object" />
                 </parameters>
               </method>
-              <method name="CreateWorkItem(NUnit.Framework.Api.ITestFilter)" attrib="1478" abstract="true" virtual="true" returntype="NUnit.Framework.Internal.WorkItems.WorkItem">
+              <method name="CreateWorkItem(NUnit.Framework.Api.ITestFilter, NUnit.Framework.Internal.FinallyDelegate)" attrib="1478" abstract="true" virtual="true" returntype="NUnit.Framework.Internal.WorkItems.WorkItem">
                 <parameters>
                   <parameter name="childFilter" position="0" attrib="0" type="NUnit.Framework.Api.ITestFilter" />
+                  <parameter name="finD" position="1" attrib="0" type="NUnit.Framework.Internal.FinallyDelegate" />
                 </parameters>
               </method>
               <method name="MakeTestResult()" attrib="1478" abstract="true" virtual="true" returntype="NUnit.Framework.Internal.TestResult">
@@ -11434,9 +11514,10 @@
                   <parameter name="recursive" position="1" attrib="0" type="System.Boolean" />
                 </parameters>
               </method>
-              <method name="CreateWorkItem(NUnit.Framework.Api.ITestFilter)" attrib="198" virtual="true" is-override="true" returntype="NUnit.Framework.Internal.WorkItems.WorkItem">
+              <method name="CreateWorkItem(NUnit.Framework.Api.ITestFilter, NUnit.Framework.Internal.FinallyDelegate)" attrib="198" virtual="true" is-override="true" returntype="NUnit.Framework.Internal.WorkItems.WorkItem">
                 <parameters>
                   <parameter name="childFilter" position="0" attrib="0" type="NUnit.Framework.Api.ITestFilter" />
+                  <parameter name="fd" position="1" attrib="0" type="NUnit.Framework.Internal.FinallyDelegate" />
                 </parameters>
               </method>
               <method name="MakeTestCommand()" attrib="454" virtual="true" returntype="NUnit.Framework.Internal.Commands.TestCommand">
@@ -11453,6 +11534,7 @@
               <interface name="NUnit.Framework.Api.IXmlNodeBuilder" />
             </interfaces>
             <fields>
+              <field name="ThreadCrashFail" attrib="6" fieldtype="System.Boolean" />
               <field name="assertCount" attrib="4" fieldtype="System.Int32">
                 <attributes>
                   <attribute name="System.CLSCompliantAttribute">
@@ -11724,9 +11806,10 @@
                   <parameter name="recursive" position="1" attrib="0" type="System.Boolean" />
                 </parameters>
               </method>
-              <method name="CreateWorkItem(NUnit.Framework.Api.ITestFilter)" attrib="198" virtual="true" is-override="true" returntype="NUnit.Framework.Internal.WorkItems.WorkItem">
+              <method name="CreateWorkItem(NUnit.Framework.Api.ITestFilter, NUnit.Framework.Internal.FinallyDelegate)" attrib="198" virtual="true" is-override="true" returntype="NUnit.Framework.Internal.WorkItems.WorkItem">
                 <parameters>
                   <parameter name="childFilter" position="0" attrib="0" type="NUnit.Framework.Api.ITestFilter" />
+                  <parameter name="finD" position="1" attrib="0" type="NUnit.Framework.Internal.FinallyDelegate" />
                 </parameters>
               </method>
               <method name="GetOneTimeSetUpCommand()" attrib="454" virtual="true" returntype="NUnit.Framework.Internal.Commands.TestCommand">
@@ -12459,10 +12542,11 @@
         <classes>
           <class name="CompositeWorkItem" type="class" base="NUnit.Framework.Internal.WorkItems.WorkItem" charset="Ansi" layout="Auto">
             <constructors>
-              <constructor name=".ctor(NUnit.Framework.Internal.TestSuite, NUnit.Framework.Api.ITestFilter)" attrib="6278">
+              <constructor name=".ctor(NUnit.Framework.Internal.TestSuite, NUnit.Framework.Api.ITestFilter, NUnit.Framework.Internal.FinallyDelegate)" attrib="6278">
                 <parameters>
                   <parameter name="suite" position="0" attrib="0" type="NUnit.Framework.Internal.TestSuite" />
                   <parameter name="childFilter" position="1" attrib="0" type="NUnit.Framework.Api.ITestFilter" />
+                  <parameter name="fd" position="2" attrib="0" type="NUnit.Framework.Internal.FinallyDelegate" />
                 </parameters>
               </constructor>
             </constructors>
@@ -12474,14 +12558,16 @@
           </class>
           <class name="SimpleWorkItem" type="class" base="NUnit.Framework.Internal.WorkItems.WorkItem" charset="Ansi" layout="Auto">
             <constructors>
-              <constructor name=".ctor(NUnit.Framework.Internal.Commands.TestCommand)" attrib="6278">
+              <constructor name=".ctor(NUnit.Framework.Internal.Commands.TestCommand, NUnit.Framework.Internal.FinallyDelegate)" attrib="6278">
                 <parameters>
                   <parameter name="command" position="0" attrib="0" type="NUnit.Framework.Internal.Commands.TestCommand" />
+                  <parameter name="fd" position="1" attrib="0" type="NUnit.Framework.Internal.FinallyDelegate" />
                 </parameters>
               </constructor>
-              <constructor name=".ctor(NUnit.Framework.Internal.TestMethod)" attrib="6278">
+              <constructor name=".ctor(NUnit.Framework.Internal.TestMethod, NUnit.Framework.Internal.FinallyDelegate)" attrib="6278">
                 <parameters>
                   <parameter name="test" position="0" attrib="0" type="NUnit.Framework.Internal.TestMethod" />
+                  <parameter name="fd" position="1" attrib="0" type="NUnit.Framework.Internal.FinallyDelegate" />
                 </parameters>
               </constructor>
             </constructors>
@@ -12493,12 +12579,14 @@
           </class>
           <class name="WorkItem" type="class" base="System.Object" abstract="true" charset="Ansi" layout="Auto">
             <fields>
+              <field name="finD" attrib="4" fieldtype="NUnit.Framework.Internal.FinallyDelegate" />
               <field name="testResult" attrib="4" fieldtype="NUnit.Framework.Internal.TestResult" />
             </fields>
             <constructors>
-              <constructor name=".ctor(NUnit.Framework.Internal.Test)" attrib="6278">
+              <constructor name=".ctor(NUnit.Framework.Internal.Test, NUnit.Framework.Internal.FinallyDelegate)" attrib="6278">
                 <parameters>
                   <parameter name="test" position="0" attrib="0" type="NUnit.Framework.Internal.Test" />
+                  <parameter name="finallyDelegate" position="1" attrib="0" type="NUnit.Framework.Internal.FinallyDelegate" />
                 </parameters>
               </constructor>
             </constructors>
@@ -13013,6 +13101,12 @@
               <method name="TestStarted(NUnit.Framework.Api.ITest)" attrib="486" virtual="true" returntype="System.Void">
                 <parameters>
                   <parameter name="test" position="0" attrib="0" type="NUnit.Framework.Api.ITest" />
+                </parameters>
+              </method>
+              <method name="TopLevelHandler(System.Object, System.UnhandledExceptionEventArgs)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="sender" position="0" attrib="0" type="System.Object" />
+                  <parameter name="e" position="1" attrib="0" type="System.UnhandledExceptionEventArgs" />
                 </parameters>
               </method>
               <method name="WriteHeader(System.IO.TextWriter)" attrib="150" static="true" returntype="System.Void">

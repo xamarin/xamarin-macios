@@ -504,6 +504,18 @@
                   </method>
                 </methods>
               </property>
+              <property name="CheckCertificateRevocationList" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_CheckCertificateRevocationList()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_CheckCertificateRevocationList(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
               <property name="ClientCertificateOptions" attrib="0" ptype="System.Net.Http.ClientCertificateOption">
                 <methods>
                   <method name="get_ClientCertificateOptions()" attrib="2182" returntype="System.Net.Http.ClientCertificateOption">
@@ -513,6 +525,13 @@
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.Net.Http.ClientCertificateOption" />
                     </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ClientCertificates" attrib="0" ptype="System.Security.Cryptography.X509Certificates.X509CertificateCollection">
+                <methods>
+                  <method name="get_ClientCertificates()" attrib="2182" returntype="System.Security.Cryptography.X509Certificates.X509CertificateCollection">
+                    <parameters />
                   </method>
                 </methods>
               </property>
@@ -540,12 +559,36 @@
                   </method>
                 </methods>
               </property>
+              <property name="DefaultProxyCredentials" attrib="0" ptype="System.Net.ICredentials">
+                <methods>
+                  <method name="get_DefaultProxyCredentials()" attrib="2182" returntype="System.Net.ICredentials">
+                    <parameters />
+                  </method>
+                  <method name="set_DefaultProxyCredentials(System.Net.ICredentials)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Net.ICredentials" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
               <property name="MaxAutomaticRedirections" attrib="0" ptype="System.Int32">
                 <methods>
                   <method name="get_MaxAutomaticRedirections()" attrib="2182" returntype="System.Int32">
                     <parameters />
                   </method>
                   <method name="set_MaxAutomaticRedirections(System.Int32)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="MaxConnectionsPerServer" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_MaxConnectionsPerServer()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_MaxConnectionsPerServer(System.Int32)" attrib="2182" returntype="System.Void">
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.Int32" />
                     </parameters>
@@ -564,6 +607,18 @@
                   </method>
                 </methods>
               </property>
+              <property name="MaxResponseHeadersLength" attrib="0" ptype="System.Int32">
+                <methods>
+                  <method name="get_MaxResponseHeadersLength()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_MaxResponseHeadersLength(System.Int32)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
               <property name="PreAuthenticate" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_PreAuthenticate()" attrib="2182" returntype="System.Boolean">
@@ -576,6 +631,13 @@
                   </method>
                 </methods>
               </property>
+              <property name="Properties" attrib="0" ptype="System.Collections.Generic.IDictionary`2[System.String,System.Object]">
+                <methods>
+                  <method name="get_Properties()" attrib="2182" returntype="System.Collections.Generic.IDictionary`2[System.String,System.Object]">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
               <property name="Proxy" attrib="0" ptype="System.Net.IWebProxy">
                 <methods>
                   <method name="get_Proxy()" attrib="2182" returntype="System.Net.IWebProxy">
@@ -584,6 +646,30 @@
                   <method name="set_Proxy(System.Net.IWebProxy)" attrib="2182" returntype="System.Void">
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.Net.IWebProxy" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ServerCertificateCustomValidationCallback" attrib="0" ptype="System.Func`5[System.Net.Http.HttpRequestMessage,System.Security.Cryptography.X509Certificates.X509Certificate2,System.Security.Cryptography.X509Certificates.X509Chain,System.Net.Security.SslPolicyErrors,System.Boolean]">
+                <methods>
+                  <method name="get_ServerCertificateCustomValidationCallback()" attrib="2182" returntype="System.Func`5[System.Net.Http.HttpRequestMessage,System.Security.Cryptography.X509Certificates.X509Certificate2,System.Security.Cryptography.X509Certificates.X509Chain,System.Net.Security.SslPolicyErrors,System.Boolean]">
+                    <parameters />
+                  </method>
+                  <method name="set_ServerCertificateCustomValidationCallback(System.Func`5[System.Net.Http.HttpRequestMessage,System.Security.Cryptography.X509Certificates.X509Certificate2,System.Security.Cryptography.X509Certificates.X509Chain,System.Net.Security.SslPolicyErrors,System.Boolean])" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Func`5[System.Net.Http.HttpRequestMessage,System.Security.Cryptography.X509Certificates.X509Certificate2,System.Security.Cryptography.X509Certificates.X509Chain,System.Net.Security.SslPolicyErrors,System.Boolean]" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="SslProtocols" attrib="0" ptype="System.Security.Authentication.SslProtocols">
+                <methods>
+                  <method name="get_SslProtocols()" attrib="2182" returntype="System.Security.Authentication.SslProtocols">
+                    <parameters />
+                  </method>
+                  <method name="set_SslProtocols(System.Security.Authentication.SslProtocols)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Security.Authentication.SslProtocols" />
                     </parameters>
                   </method>
                 </methods>
