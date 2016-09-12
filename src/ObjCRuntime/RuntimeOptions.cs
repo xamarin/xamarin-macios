@@ -238,8 +238,13 @@ namespace XamCore.ObjCRuntime {
 		internal static HttpMessageHandler GetHttpMessageHandler ()
 		{
 			var options = RuntimeOptions.Read ();
-			if (options == null)
+			if (options == null) {
+#if WATCH
+				return new NSUrlSessionHandler ();
+#else
 				return new HttpClientHandler ();
+#endif
+			}
 
 			// all types will be present as this is executed only when the linker is not enabled
 			var handler_name = options.http_message_handler;
@@ -250,8 +255,13 @@ namespace XamCore.ObjCRuntime {
 				handler = Activator.CreateInstance (t) as HttpMessageHandler;
 			if (handler != null)
 				return handler;
+#if WATCH
+			Console.WriteLine ("{0} is not a valid HttpMessageHandler, defaulting to NSUrlSessionHandler", handler_name);
+			return new NSUrlSessionHandler ();
+#else
 			Console.WriteLine ("{0} is not a valid HttpMessageHandler, defaulting to System.Net.Http.HttpClientHandler", handler_name);
 			return new HttpClientHandler ();
+#endif
 		}
 #endif
 #endif
