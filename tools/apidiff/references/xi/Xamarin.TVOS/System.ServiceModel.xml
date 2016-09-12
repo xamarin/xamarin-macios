@@ -550,7 +550,7 @@
               </constructor>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="6276">
@@ -561,8 +561,8 @@
               </constructor>
               <constructor name=".ctor(System.String, System.Exception)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
-                  <parameter name="inner" position="1" attrib="0" type="System.Exception" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                  <parameter name="innerException" position="1" attrib="0" type="System.Exception" />
                 </parameters>
               </constructor>
             </constructors>
@@ -1065,7 +1065,7 @@
             <methods>
               <method name="ApplyConfiguration(System.String)" attrib="452" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="endpointConfig" position="0" attrib="0" type="System.String" />
+                  <parameter name="configurationName" position="0" attrib="0" type="System.String" />
                 </parameters>
               </method>
               <method name="CreateDescription()" attrib="1476" abstract="true" virtual="true" returntype="System.ServiceModel.Description.ServiceEndpoint">
@@ -1091,12 +1091,12 @@
               <method name="InitializeEndpoint(System.ServiceModel.Channels.Binding, System.ServiceModel.EndpointAddress)" attrib="132" returntype="System.Void">
                 <parameters>
                   <parameter name="binding" position="0" attrib="0" type="System.ServiceModel.Channels.Binding" />
-                  <parameter name="remoteAddress" position="1" attrib="0" type="System.ServiceModel.EndpointAddress" />
+                  <parameter name="address" position="1" attrib="0" type="System.ServiceModel.EndpointAddress" />
                 </parameters>
               </method>
               <method name="InitializeEndpoint(System.String, System.ServiceModel.EndpointAddress)" attrib="132" returntype="System.Void">
                 <parameters>
-                  <parameter name="endpointConfigurationName" position="0" attrib="0" type="System.String" />
+                  <parameter name="configurationName" position="0" attrib="0" type="System.String" />
                   <parameter name="remoteAddress" position="1" attrib="0" type="System.ServiceModel.EndpointAddress" />
                 </parameters>
               </method>
@@ -1176,7 +1176,7 @@
               </constructor>
               <constructor name=".ctor(System.Type)" attrib="6276">
                 <parameters>
-                  <parameter name="type" position="0" attrib="0" type="System.Type" />
+                  <parameter name="channelType" position="0" attrib="0" type="System.Type" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.ServiceModel.Channels.Binding, System.ServiceModel.EndpointAddress)" attrib="6278">
@@ -1656,7 +1656,7 @@
               </constructor>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="6276">
@@ -1667,8 +1667,8 @@
               </constructor>
               <constructor name=".ctor(System.String, System.Exception)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
-                  <parameter name="inner" position="1" attrib="0" type="System.Exception" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                  <parameter name="innerException" position="1" attrib="0" type="System.Exception" />
                 </parameters>
               </constructor>
             </constructors>
@@ -1683,7 +1683,7 @@
               </constructor>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="6276">
@@ -1694,8 +1694,8 @@
               </constructor>
               <constructor name=".ctor(System.String, System.Exception)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
-                  <parameter name="inner" position="1" attrib="0" type="System.Exception" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                  <parameter name="innerException" position="1" attrib="0" type="System.Exception" />
                 </parameters>
               </constructor>
             </constructors>
@@ -1710,7 +1710,7 @@
               </constructor>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="6276">
@@ -1721,8 +1721,8 @@
               </constructor>
               <constructor name=".ctor(System.String, System.Exception)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
-                  <parameter name="inner" position="1" attrib="0" type="System.Exception" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                  <parameter name="innerException" position="1" attrib="0" type="System.Exception" />
                 </parameters>
               </constructor>
             </constructors>
@@ -1799,7 +1799,7 @@
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
-                  <parameter name="dns" position="0" attrib="0" type="System.String" />
+                  <parameter name="dnsName" position="0" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
             </constructors>
@@ -2028,76 +2028,76 @@
             <constructors>
               <constructor name=".ctor(System.Object)" attrib="6276">
                 <parameters>
-                  <parameter name="instance" position="0" attrib="0" type="System.Object" />
+                  <parameter name="callbackInstance" position="0" attrib="0" type="System.Object" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.ServiceModel.InstanceContext)" attrib="6276">
                 <parameters>
-                  <parameter name="instance" position="0" attrib="0" type="System.ServiceModel.InstanceContext" />
+                  <parameter name="callbackInstance" position="0" attrib="0" type="System.ServiceModel.InstanceContext" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Object, System.ServiceModel.Description.ServiceEndpoint)" attrib="6276">
                 <parameters>
-                  <parameter name="instance" position="0" attrib="0" type="System.Object" />
+                  <parameter name="callbackInstance" position="0" attrib="0" type="System.Object" />
                   <parameter name="endpoint" position="1" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Object, System.String)" attrib="6276">
                 <parameters>
-                  <parameter name="instance" position="0" attrib="0" type="System.Object" />
-                  <parameter name="configurationName" position="1" attrib="0" type="System.String" />
+                  <parameter name="callbackInstance" position="0" attrib="0" type="System.Object" />
+                  <parameter name="endpointConfigurationName" position="1" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.ServiceModel.InstanceContext, System.ServiceModel.Description.ServiceEndpoint)" attrib="6276">
                 <parameters>
-                  <parameter name="instance" position="0" attrib="0" type="System.ServiceModel.InstanceContext" />
+                  <parameter name="callbackInstance" position="0" attrib="0" type="System.ServiceModel.InstanceContext" />
                   <parameter name="endpoint" position="1" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.ServiceModel.InstanceContext, System.String)" attrib="6276">
                 <parameters>
-                  <parameter name="instance" position="0" attrib="0" type="System.ServiceModel.InstanceContext" />
-                  <parameter name="configurationName" position="1" attrib="0" type="System.String" />
+                  <parameter name="callbackInstance" position="0" attrib="0" type="System.ServiceModel.InstanceContext" />
+                  <parameter name="endpointConfigurationName" position="1" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Object, System.ServiceModel.Channels.Binding, System.ServiceModel.EndpointAddress)" attrib="6276">
                 <parameters>
-                  <parameter name="instance" position="0" attrib="0" type="System.Object" />
+                  <parameter name="callbackInstance" position="0" attrib="0" type="System.Object" />
                   <parameter name="binding" position="1" attrib="0" type="System.ServiceModel.Channels.Binding" />
-                  <parameter name="address" position="2" attrib="0" type="System.ServiceModel.EndpointAddress" />
+                  <parameter name="remoteAddress" position="2" attrib="0" type="System.ServiceModel.EndpointAddress" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Object, System.String, System.ServiceModel.EndpointAddress)" attrib="6276">
                 <parameters>
-                  <parameter name="instance" position="0" attrib="0" type="System.Object" />
+                  <parameter name="callbackInstance" position="0" attrib="0" type="System.Object" />
                   <parameter name="bindingConfigurationName" position="1" attrib="0" type="System.String" />
-                  <parameter name="address" position="2" attrib="0" type="System.ServiceModel.EndpointAddress" />
+                  <parameter name="remoteAddress" position="2" attrib="0" type="System.ServiceModel.EndpointAddress" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Object, System.String, System.String)" attrib="6276">
                 <parameters>
-                  <parameter name="instance" position="0" attrib="0" type="System.Object" />
+                  <parameter name="callbackInstance" position="0" attrib="0" type="System.Object" />
                   <parameter name="endpointConfigurationName" position="1" attrib="0" type="System.String" />
                   <parameter name="remoteAddress" position="2" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.ServiceModel.InstanceContext, System.ServiceModel.Channels.Binding, System.ServiceModel.EndpointAddress)" attrib="6276">
                 <parameters>
-                  <parameter name="instance" position="0" attrib="0" type="System.ServiceModel.InstanceContext" />
+                  <parameter name="callbackInstance" position="0" attrib="0" type="System.ServiceModel.InstanceContext" />
                   <parameter name="binding" position="1" attrib="0" type="System.ServiceModel.Channels.Binding" />
-                  <parameter name="address" position="2" attrib="0" type="System.ServiceModel.EndpointAddress" />
+                  <parameter name="remoteAddress" position="2" attrib="0" type="System.ServiceModel.EndpointAddress" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.ServiceModel.InstanceContext, System.String, System.ServiceModel.EndpointAddress)" attrib="6276">
                 <parameters>
-                  <parameter name="instance" position="0" attrib="0" type="System.ServiceModel.InstanceContext" />
-                  <parameter name="configurationName" position="1" attrib="0" type="System.String" />
+                  <parameter name="callbackInstance" position="0" attrib="0" type="System.ServiceModel.InstanceContext" />
+                  <parameter name="endpointConfigurationName" position="1" attrib="0" type="System.String" />
                   <parameter name="address" position="2" attrib="0" type="System.ServiceModel.EndpointAddress" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.ServiceModel.InstanceContext, System.String, System.String)" attrib="6276">
                 <parameters>
-                  <parameter name="instance" position="0" attrib="0" type="System.ServiceModel.InstanceContext" />
+                  <parameter name="callbackInstance" position="0" attrib="0" type="System.ServiceModel.InstanceContext" />
                   <parameter name="endpointConfigurationName" position="1" attrib="0" type="System.String" />
                   <parameter name="remoteAddress" position="2" attrib="0" type="System.String" />
                 </parameters>
@@ -2128,7 +2128,7 @@
               <constructor name=".ctor(System.Uri, System.ServiceModel.Channels.AddressHeader[])" attrib="6278">
                 <parameters>
                   <parameter name="uri" position="0" attrib="0" type="System.Uri" />
-                  <parameter name="headers" position="1" attrib="0" type="System.ServiceModel.Channels.AddressHeader[]">
+                  <parameter name="addressHeaders" position="1" attrib="0" type="System.ServiceModel.Channels.AddressHeader[]">
                     <attributes>
                       <attribute name="System.ParamArrayAttribute" />
                     </attributes>
@@ -2146,7 +2146,7 @@
                 <parameters>
                   <parameter name="uri" position="0" attrib="0" type="System.Uri" />
                   <parameter name="identity" position="1" attrib="0" type="System.ServiceModel.EndpointIdentity" />
-                  <parameter name="headers" position="2" attrib="0" type="System.ServiceModel.Channels.AddressHeader[]">
+                  <parameter name="addressHeaders" position="2" attrib="0" type="System.ServiceModel.Channels.AddressHeader[]">
                     <attributes>
                       <attribute name="System.ParamArrayAttribute" />
                     </attributes>
@@ -2351,6 +2351,18 @@
                   </method>
                 </methods>
               </property>
+              <property name="Identity" attrib="0" ptype="System.ServiceModel.EndpointIdentity">
+                <methods>
+                  <method name="get_Identity()" attrib="2182" returntype="System.ServiceModel.EndpointIdentity">
+                    <parameters />
+                  </method>
+                  <method name="set_Identity(System.ServiceModel.EndpointIdentity)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.ServiceModel.EndpointIdentity" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
               <property name="Uri" attrib="0" ptype="System.Uri">
                 <methods>
                   <method name="get_Uri()" attrib="2182" returntype="System.Uri">
@@ -2387,7 +2399,7 @@
               </constructor>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="6276">
@@ -2398,8 +2410,8 @@
               </constructor>
               <constructor name=".ctor(System.String, System.Exception)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
-                  <parameter name="inner" position="1" attrib="0" type="System.Exception" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                  <parameter name="innerException" position="1" attrib="0" type="System.Exception" />
                 </parameters>
               </constructor>
             </constructors>
@@ -2649,7 +2661,7 @@
               <constructor name=".ctor(System.String, System.ServiceModel.FaultCode)" attrib="6278">
                 <parameters>
                   <parameter name="name" position="0" attrib="0" type="System.String" />
-                  <parameter name="subcode" position="1" attrib="0" type="System.ServiceModel.FaultCode" />
+                  <parameter name="subCode" position="1" attrib="0" type="System.ServiceModel.FaultCode" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.String, System.String)" attrib="6278">
@@ -2662,7 +2674,7 @@
                 <parameters>
                   <parameter name="name" position="0" attrib="0" type="System.String" />
                   <parameter name="ns" position="1" attrib="0" type="System.String" />
-                  <parameter name="subcode" position="2" attrib="0" type="System.ServiceModel.FaultCode" />
+                  <parameter name="subCode" position="2" attrib="0" type="System.ServiceModel.FaultCode" />
                 </parameters>
               </constructor>
             </constructors>
@@ -2713,7 +2725,7 @@
             <methods>
               <method name="CreateReceiverFaultCode(System.ServiceModel.FaultCode)" attrib="150" static="true" returntype="System.ServiceModel.FaultCode">
                 <parameters>
-                  <parameter name="subcode" position="0" attrib="0" type="System.ServiceModel.FaultCode" />
+                  <parameter name="subCode" position="0" attrib="0" type="System.ServiceModel.FaultCode" />
                 </parameters>
               </method>
               <method name="CreateReceiverFaultCode(System.String, System.String)" attrib="150" static="true" returntype="System.ServiceModel.FaultCode">
@@ -2724,7 +2736,7 @@
               </method>
               <method name="CreateSenderFaultCode(System.ServiceModel.FaultCode)" attrib="150" static="true" returntype="System.ServiceModel.FaultCode">
                 <parameters>
-                  <parameter name="subcode" position="0" attrib="0" type="System.ServiceModel.FaultCode" />
+                  <parameter name="subCode" position="0" attrib="0" type="System.ServiceModel.FaultCode" />
                 </parameters>
               </method>
               <method name="CreateSenderFaultCode(System.String, System.String)" attrib="150" static="true" returntype="System.ServiceModel.FaultCode">
@@ -2916,8 +2928,8 @@
               <method name="CreateFault(System.ServiceModel.Channels.MessageFault, System.Type[])" attrib="150" static="true" returntype="System.ServiceModel.FaultException">
                 <attributes />
                 <parameters>
-                  <parameter name="fault" position="0" attrib="0" type="System.ServiceModel.Channels.MessageFault" />
-                  <parameter name="details" position="1" attrib="0" type="System.Type[]">
+                  <parameter name="messageFault" position="0" attrib="0" type="System.ServiceModel.Channels.MessageFault" />
+                  <parameter name="faultDetailTypes" position="1" attrib="0" type="System.Type[]">
                     <attributes>
                       <attribute name="System.ParamArrayAttribute" />
                     </attributes>
@@ -3757,14 +3769,102 @@
               <field name="Required" attrib="32854" fieldtype="System.ServiceModel.ImpersonationOption" value="2" />
             </fields>
           </class>
-          <class name="InstanceContext" type="class" base="System.Object" charset="Ansi" layout="Auto">
+          <class name="InstanceContext" type="class" base="System.ServiceModel.Channels.CommunicationObject" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.ServiceModel.ICommunicationObject" />
+              <interface name="System.ServiceModel.IExtensibleObject`1[System.ServiceModel.InstanceContext]" />
+            </interfaces>
             <constructors>
               <constructor name=".ctor(System.Object)" attrib="6278">
                 <parameters>
-                  <parameter name="dummy" position="0" attrib="0" type="System.Object" />
+                  <parameter name="implementation" position="0" attrib="0" type="System.Object" />
                 </parameters>
               </constructor>
             </constructors>
+            <properties>
+              <property name="DefaultCloseTimeout" attrib="0" ptype="System.TimeSpan">
+                <methods>
+                  <method name="get_DefaultCloseTimeout()" attrib="2245" virtual="true" is-override="true" returntype="System.TimeSpan">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="DefaultOpenTimeout" attrib="0" ptype="System.TimeSpan">
+                <methods>
+                  <method name="get_DefaultOpenTimeout()" attrib="2245" virtual="true" is-override="true" returntype="System.TimeSpan">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="SynchronizationContext" attrib="0" ptype="System.Threading.SynchronizationContext">
+                <methods>
+                  <method name="get_SynchronizationContext()" attrib="2182" returntype="System.Threading.SynchronizationContext">
+                    <parameters />
+                  </method>
+                  <method name="set_SynchronizationContext(System.Threading.SynchronizationContext)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Threading.SynchronizationContext" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="GetServiceInstance(System.ServiceModel.Channels.Message)" attrib="134" returntype="System.Object">
+                <parameters>
+                  <parameter name="message" position="0" attrib="0" type="System.ServiceModel.Channels.Message" />
+                </parameters>
+              </method>
+              <method name="OnAbort()" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="OnBeginClose(System.TimeSpan, System.AsyncCallback, System.Object)" attrib="196" virtual="true" is-override="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="timeout" position="0" attrib="0" type="System.TimeSpan" />
+                  <parameter name="callback" position="1" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="state" position="2" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="OnBeginOpen(System.TimeSpan, System.AsyncCallback, System.Object)" attrib="196" virtual="true" is-override="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="timeout" position="0" attrib="0" type="System.TimeSpan" />
+                  <parameter name="callback" position="1" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="state" position="2" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="OnClose(System.TimeSpan)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="timeout" position="0" attrib="0" type="System.TimeSpan" />
+                </parameters>
+              </method>
+              <method name="OnClosed()" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="OnEndClose(System.IAsyncResult)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="OnEndOpen(System.IAsyncResult)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="OnFaulted()" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="OnOpen(System.TimeSpan)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="timeout" position="0" attrib="0" type="System.TimeSpan" />
+                </parameters>
+              </method>
+              <method name="OnOpened()" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="OnOpening()" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+            </methods>
           </class>
           <class name="InstanceContextMode" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
             <interfaces>
@@ -3788,7 +3888,7 @@
               </constructor>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="6276">
@@ -3799,8 +3899,8 @@
               </constructor>
               <constructor name=".ctor(System.String, System.Exception)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
-                  <parameter name="inner" position="1" attrib="0" type="System.Exception" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                  <parameter name="innerException" position="1" attrib="0" type="System.Exception" />
                 </parameters>
               </constructor>
             </constructors>
@@ -4049,7 +4149,7 @@
               </constructor>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="6276">
@@ -4066,8 +4166,8 @@
               </constructor>
               <constructor name=".ctor(System.String, System.Exception)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
-                  <parameter name="inner" position="1" attrib="0" type="System.Exception" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                  <parameter name="innerException" position="1" attrib="0" type="System.Exception" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.String, System.String, System.String)" attrib="6278">
@@ -4152,7 +4252,7 @@
               <constructor name=".ctor(T, System.Boolean, System.String, System.Boolean)" attrib="6278">
                 <parameters>
                   <parameter name="content" position="0" attrib="0" type="T" />
-                  <parameter name="must_understand" position="1" attrib="0" type="System.Boolean" />
+                  <parameter name="mustUnderstand" position="1" attrib="0" type="System.Boolean" />
                   <parameter name="actor" position="2" attrib="0" type="System.String" />
                   <parameter name="relay" position="3" attrib="0" type="System.Boolean" />
                 </parameters>
@@ -4276,6 +4376,11 @@
             </properties>
           </class>
           <class name="MessageSecurityOverTcp" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
             <properties>
               <property name="ClientCredentialType" attrib="0" ptype="System.ServiceModel.MessageCredentialType">
                 <methods>
@@ -5268,7 +5373,7 @@
               </constructor>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="6276">
@@ -5279,8 +5384,8 @@
               </constructor>
               <constructor name=".ctor(System.String, System.Exception)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
-                  <parameter name="inner" position="1" attrib="0" type="System.Exception" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                  <parameter name="innerException" position="1" attrib="0" type="System.Exception" />
                 </parameters>
               </constructor>
             </constructors>
@@ -5319,7 +5424,7 @@
               </constructor>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="6276">
@@ -5330,8 +5435,8 @@
               </constructor>
               <constructor name=".ctor(System.String, System.Exception)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
-                  <parameter name="inner" position="1" attrib="0" type="System.Exception" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                  <parameter name="innerException" position="1" attrib="0" type="System.Exception" />
                 </parameters>
               </constructor>
             </constructors>
@@ -5466,7 +5571,7 @@
               </constructor>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="6276">
@@ -5477,8 +5582,8 @@
               </constructor>
               <constructor name=".ctor(System.String, System.Exception)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
-                  <parameter name="inner" position="1" attrib="0" type="System.Exception" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                  <parameter name="innerException" position="1" attrib="0" type="System.Exception" />
                 </parameters>
               </constructor>
             </constructors>
@@ -5493,7 +5598,7 @@
               </constructor>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)" attrib="6276">
@@ -5504,8 +5609,8 @@
               </constructor>
               <constructor name=".ctor(System.String, System.Exception)" attrib="6278">
                 <parameters>
-                  <parameter name="msg" position="0" attrib="0" type="System.String" />
-                  <parameter name="inner" position="1" attrib="0" type="System.Exception" />
+                  <parameter name="message" position="0" attrib="0" type="System.String" />
+                  <parameter name="innerException" position="1" attrib="0" type="System.Exception" />
                 </parameters>
               </constructor>
             </constructors>
@@ -5674,7 +5779,7 @@
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
-                  <parameter name="spn" position="0" attrib="0" type="System.String" />
+                  <parameter name="spnName" position="0" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
             </constructors>
@@ -5750,6 +5855,19 @@
                   </method>
                 </methods>
               </property>
+              <property name="SslProtocols" attrib="0" ptype="System.Security.Authentication.SslProtocols">
+                <attributes />
+                <methods>
+                  <method name="get_SslProtocols()" attrib="2182" returntype="System.Security.Authentication.SslProtocols">
+                    <parameters />
+                  </method>
+                  <method name="set_SslProtocols(System.Security.Authentication.SslProtocols)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Security.Authentication.SslProtocols" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
             </properties>
           </class>
           <class name="TransactionFlowOption" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
@@ -5792,7 +5910,7 @@
             <constructors>
               <constructor name=".ctor(System.String)" attrib="6278">
                 <parameters>
-                  <parameter name="upn" position="0" attrib="0" type="System.String" />
+                  <parameter name="upnName" position="0" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
             </constructors>
@@ -6008,7 +6126,7 @@
               <method name="CreateAddressHeader(System.Object, System.Runtime.Serialization.XmlObjectSerializer)" attrib="150" static="true" returntype="System.ServiceModel.Channels.AddressHeader">
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.Object" />
-                  <parameter name="formatter" position="1" attrib="0" type="System.Runtime.Serialization.XmlObjectSerializer" />
+                  <parameter name="serializer" position="1" attrib="0" type="System.Runtime.Serialization.XmlObjectSerializer" />
                 </parameters>
               </method>
               <method name="CreateAddressHeader(System.String, System.String, System.Object)" attrib="150" static="true" returntype="System.ServiceModel.Channels.AddressHeader">
@@ -6023,7 +6141,7 @@
                   <parameter name="name" position="0" attrib="0" type="System.String" />
                   <parameter name="ns" position="1" attrib="0" type="System.String" />
                   <parameter name="value" position="2" attrib="0" type="System.Object" />
-                  <parameter name="formatter" position="3" attrib="0" type="System.Runtime.Serialization.XmlObjectSerializer" />
+                  <parameter name="serializer" position="3" attrib="0" type="System.Runtime.Serialization.XmlObjectSerializer" />
                 </parameters>
               </method>
               <method name="Equals(System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
@@ -6045,7 +6163,7 @@
               </method>
               <method name="GetValue(System.Runtime.Serialization.XmlObjectSerializer)" attrib="134" returntype="T">
                 <parameters>
-                  <parameter name="formatter" position="0" attrib="0" type="System.Runtime.Serialization.XmlObjectSerializer" />
+                  <parameter name="serializer" position="0" attrib="0" type="System.Runtime.Serialization.XmlObjectSerializer" />
                 </parameters>
                 <generic-parameters>
                   <generic-parameter name="T" attributes="0" />
@@ -6103,7 +6221,7 @@
               </constructor>
               <constructor name=".ctor(System.Collections.Generic.IEnumerable`1[System.ServiceModel.Channels.AddressHeader])" attrib="6278">
                 <parameters>
-                  <parameter name="headers" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.ServiceModel.Channels.AddressHeader]" />
+                  <parameter name="addressHeaders" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.ServiceModel.Channels.AddressHeader]" />
                 </parameters>
               </constructor>
             </constructors>
@@ -6430,7 +6548,7 @@
               <constructor name=".ctor(System.ServiceModel.Channels.CustomBinding, System.ServiceModel.Channels.BindingParameterCollection)" attrib="6278">
                 <parameters>
                   <parameter name="binding" position="0" attrib="0" type="System.ServiceModel.Channels.CustomBinding" />
-                  <parameter name="parms" position="1" attrib="0" type="System.ServiceModel.Channels.BindingParameterCollection" />
+                  <parameter name="parameters" position="1" attrib="0" type="System.ServiceModel.Channels.BindingParameterCollection" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.ServiceModel.Channels.CustomBinding, System.ServiceModel.Channels.BindingParameterCollection, System.Uri, System.String, System.ServiceModel.Description.ListenUriMode)" attrib="6278">
@@ -6534,7 +6652,7 @@
               <constructor name=".ctor(System.ServiceModel.Channels.BindingElement)" attrib="6276">
                 <attributes />
                 <parameters>
-                  <parameter name="other" position="0" attrib="0" type="System.ServiceModel.Channels.BindingElement" />
+                  <parameter name="elementToBeCloned" position="0" attrib="0" type="System.ServiceModel.Channels.BindingElement" />
                 </parameters>
               </constructor>
             </constructors>
@@ -6586,12 +6704,12 @@
               </constructor>
               <constructor name=".ctor(System.Collections.Generic.IEnumerable`1[System.ServiceModel.Channels.BindingElement])" attrib="6278">
                 <parameters>
-                  <parameter name="bindings" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.ServiceModel.Channels.BindingElement]" />
+                  <parameter name="elements" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.ServiceModel.Channels.BindingElement]" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.ServiceModel.Channels.BindingElement[])" attrib="6278">
                 <parameters>
-                  <parameter name="bindings" position="0" attrib="0" type="System.ServiceModel.Channels.BindingElement[]" />
+                  <parameter name="elements" position="0" attrib="0" type="System.ServiceModel.Channels.BindingElement[]" />
                 </parameters>
               </constructor>
             </constructors>
@@ -6765,7 +6883,7 @@
             <constructors>
               <constructor name=".ctor(System.ServiceModel.Channels.ChannelManagerBase)" attrib="6276">
                 <parameters>
-                  <parameter name="manager" position="0" attrib="0" type="System.ServiceModel.Channels.ChannelManagerBase" />
+                  <parameter name="channelManager" position="0" attrib="0" type="System.ServiceModel.Channels.ChannelManagerBase" />
                 </parameters>
               </constructor>
             </constructors>
@@ -6916,12 +7034,12 @@
             <methods>
               <method name="CreateChannel(System.ServiceModel.EndpointAddress)" attrib="486" virtual="true" returntype="TChannel">
                 <parameters>
-                  <parameter name="remoteAddress" position="0" attrib="0" type="System.ServiceModel.EndpointAddress" />
+                  <parameter name="address" position="0" attrib="0" type="System.ServiceModel.EndpointAddress" />
                 </parameters>
               </method>
               <method name="CreateChannel(System.ServiceModel.EndpointAddress, System.Uri)" attrib="486" virtual="true" returntype="TChannel">
                 <parameters>
-                  <parameter name="remoteAddress" position="0" attrib="0" type="System.ServiceModel.EndpointAddress" />
+                  <parameter name="address" position="0" attrib="0" type="System.ServiceModel.EndpointAddress" />
                   <parameter name="via" position="1" attrib="0" type="System.Uri" />
                 </parameters>
               </method>
@@ -6942,7 +7060,7 @@
               </method>
               <method name="OnCreateChannel(System.ServiceModel.EndpointAddress, System.Uri)" attrib="1476" abstract="true" virtual="true" returntype="TChannel">
                 <parameters>
-                  <parameter name="remoteAddress" position="0" attrib="0" type="System.ServiceModel.EndpointAddress" />
+                  <parameter name="address" position="0" attrib="0" type="System.ServiceModel.EndpointAddress" />
                   <parameter name="via" position="1" attrib="0" type="System.Uri" />
                 </parameters>
               </method>
@@ -7418,7 +7536,7 @@
               </constructor>
               <constructor name=".ctor(System.Collections.Generic.IEnumerable`1[System.ServiceModel.Channels.BindingElement])" attrib="6278">
                 <parameters>
-                  <parameter name="bindingElements" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.ServiceModel.Channels.BindingElement]" />
+                  <parameter name="bindingElementsInTopDownChannelStackOrder" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.ServiceModel.Channels.BindingElement]" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.ServiceModel.Channels.Binding)" attrib="6278">
@@ -7428,7 +7546,7 @@
               </constructor>
               <constructor name=".ctor(System.ServiceModel.Channels.BindingElement[])" attrib="6278">
                 <parameters>
-                  <parameter name="binding" position="0" attrib="0" type="System.ServiceModel.Channels.BindingElement[]">
+                  <parameter name="bindingElementsInTopDownChannelStackOrder" position="0" attrib="0" type="System.ServiceModel.Channels.BindingElement[]">
                     <attributes>
                       <attribute name="System.ParamArrayAttribute" />
                     </attributes>
@@ -7444,7 +7562,7 @@
                 <parameters>
                   <parameter name="name" position="0" attrib="0" type="System.String" />
                   <parameter name="ns" position="1" attrib="0" type="System.String" />
-                  <parameter name="binding" position="2" attrib="0" type="System.ServiceModel.Channels.BindingElement[]">
+                  <parameter name="bindingElementsInTopDownChannelStackOrder" position="2" attrib="0" type="System.ServiceModel.Channels.BindingElement[]">
                     <attributes>
                       <attribute name="System.ParamArrayAttribute" />
                     </attributes>
@@ -7491,13 +7609,13 @@
                 <parameters>
                   <parameter name="message" position="0" attrib="0" type="System.ServiceModel.Channels.Message" />
                   <parameter name="fault" position="1" attrib="0" type="System.ServiceModel.Channels.MessageFault" />
-                  <parameter name="error" position="2" attrib="2" type="System.Exception&amp;" direction="out" />
+                  <parameter name="exception" position="2" attrib="2" type="System.Exception&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="OnTryCreateFaultMessage(System.Exception, out System.ServiceModel.Channels.Message&amp;)" attrib="1476" abstract="true" virtual="true" returntype="System.Boolean">
                 <attributes />
                 <parameters>
-                  <parameter name="error" position="0" attrib="0" type="System.Exception" />
+                  <parameter name="exception" position="0" attrib="0" type="System.Exception" />
                   <parameter name="message" position="1" attrib="2" type="System.ServiceModel.Channels.Message&amp;" direction="out" />
                 </parameters>
               </method>
@@ -7505,12 +7623,12 @@
                 <parameters>
                   <parameter name="message" position="0" attrib="0" type="System.ServiceModel.Channels.Message" />
                   <parameter name="fault" position="1" attrib="0" type="System.ServiceModel.Channels.MessageFault" />
-                  <parameter name="error" position="2" attrib="2" type="System.Exception&amp;" direction="out" />
+                  <parameter name="exception" position="2" attrib="2" type="System.Exception&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="TryCreateFaultMessage(System.Exception, out System.ServiceModel.Channels.Message&amp;)" attrib="134" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="error" position="0" attrib="0" type="System.Exception" />
+                  <parameter name="exception" position="0" attrib="0" type="System.Exception" />
                   <parameter name="message" position="1" attrib="2" type="System.ServiceModel.Channels.Message&amp;" direction="out" />
                 </parameters>
               </method>
@@ -7691,7 +7809,7 @@
               </constructor>
               <constructor name=".ctor(System.ServiceModel.Channels.HttpTransportBindingElement)" attrib="6276">
                 <parameters>
-                  <parameter name="other" position="0" attrib="0" type="System.ServiceModel.Channels.HttpTransportBindingElement" />
+                  <parameter name="elementToBeCloned" position="0" attrib="0" type="System.ServiceModel.Channels.HttpTransportBindingElement" />
                 </parameters>
               </constructor>
             </constructors>
@@ -8061,7 +8179,7 @@
               </constructor>
               <constructor name=".ctor(System.ServiceModel.Channels.HttpsTransportBindingElement)" attrib="6276">
                 <parameters>
-                  <parameter name="other" position="0" attrib="0" type="System.ServiceModel.Channels.HttpsTransportBindingElement" />
+                  <parameter name="elementToBeCloned" position="0" attrib="0" type="System.ServiceModel.Channels.HttpsTransportBindingElement" />
                 </parameters>
               </constructor>
             </constructors>
@@ -8763,7 +8881,7 @@
                   <parameter name="version" position="0" attrib="0" type="System.ServiceModel.Channels.MessageVersion" />
                   <parameter name="action" position="1" attrib="0" type="System.String" />
                   <parameter name="body" position="2" attrib="0" type="System.Object" />
-                  <parameter name="xmlFormatter" position="3" attrib="0" type="System.Runtime.Serialization.XmlObjectSerializer" />
+                  <parameter name="serializer" position="3" attrib="0" type="System.Runtime.Serialization.XmlObjectSerializer" />
                 </parameters>
               </method>
               <method name="CreateMessage(System.ServiceModel.Channels.MessageVersion, System.ServiceModel.FaultCode, System.String, System.Object, System.String)" attrib="150" static="true" returntype="System.ServiceModel.Channels.Message">
@@ -8783,7 +8901,7 @@
               </method>
               <method name="GetBody(System.Runtime.Serialization.XmlObjectSerializer)" attrib="134" returntype="T">
                 <parameters>
-                  <parameter name="xmlFormatter" position="0" attrib="0" type="System.Runtime.Serialization.XmlObjectSerializer" />
+                  <parameter name="serializer" position="0" attrib="0" type="System.Runtime.Serialization.XmlObjectSerializer" />
                 </parameters>
                 <generic-parameters>
                   <generic-parameter name="T" attributes="0" />
@@ -9068,7 +9186,7 @@
               <constructor name=".ctor(System.ServiceModel.Channels.MessageEncodingBindingElement)" attrib="6278">
                 <attributes />
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.ServiceModel.Channels.MessageEncodingBindingElement" />
+                  <parameter name="elementToBeCloned" position="0" attrib="0" type="System.ServiceModel.Channels.MessageEncodingBindingElement" />
                 </parameters>
               </constructor>
             </constructors>
@@ -9092,7 +9210,7 @@
               </method>
               <method name="GetProperty(System.ServiceModel.Channels.BindingContext)" attrib="198" virtual="true" is-override="true" returntype="T">
                 <parameters>
-                  <parameter name="ctx" position="0" attrib="0" type="System.ServiceModel.Channels.BindingContext" />
+                  <parameter name="context" position="0" attrib="0" type="System.ServiceModel.Channels.BindingContext" />
                 </parameters>
                 <generic-parameters>
                   <generic-parameter name="T" attributes="4" />
@@ -9206,7 +9324,7 @@
               </method>
               <method name="GetDetail(System.Runtime.Serialization.XmlObjectSerializer)" attrib="134" returntype="T">
                 <parameters>
-                  <parameter name="formatter" position="0" attrib="0" type="System.Runtime.Serialization.XmlObjectSerializer" />
+                  <parameter name="serializer" position="0" attrib="0" type="System.Runtime.Serialization.XmlObjectSerializer" />
                 </parameters>
                 <generic-parameters>
                   <generic-parameter name="T" attributes="0" />
@@ -9298,7 +9416,7 @@
                   <parameter name="name" position="0" attrib="0" type="System.String" />
                   <parameter name="ns" position="1" attrib="0" type="System.String" />
                   <parameter name="value" position="2" attrib="0" type="System.Object" />
-                  <parameter name="must_understand" position="3" attrib="0" type="System.Boolean" />
+                  <parameter name="mustUnderstand" position="3" attrib="0" type="System.Boolean" />
                 </parameters>
               </method>
               <method name="CreateHeader(System.String, System.String, System.Object, System.Runtime.Serialization.XmlObjectSerializer)" attrib="150" static="true" returntype="System.ServiceModel.Channels.MessageHeader">
@@ -9306,7 +9424,7 @@
                   <parameter name="name" position="0" attrib="0" type="System.String" />
                   <parameter name="ns" position="1" attrib="0" type="System.String" />
                   <parameter name="value" position="2" attrib="0" type="System.Object" />
-                  <parameter name="formatter" position="3" attrib="0" type="System.Runtime.Serialization.XmlObjectSerializer" />
+                  <parameter name="serializer" position="3" attrib="0" type="System.Runtime.Serialization.XmlObjectSerializer" />
                 </parameters>
               </method>
               <method name="CreateHeader(System.String, System.String, System.Object, System.Boolean, System.String)" attrib="150" static="true" returntype="System.ServiceModel.Channels.MessageHeader">
@@ -9314,7 +9432,7 @@
                   <parameter name="name" position="0" attrib="0" type="System.String" />
                   <parameter name="ns" position="1" attrib="0" type="System.String" />
                   <parameter name="value" position="2" attrib="0" type="System.Object" />
-                  <parameter name="must_understand" position="3" attrib="0" type="System.Boolean" />
+                  <parameter name="mustUnderstand" position="3" attrib="0" type="System.Boolean" />
                   <parameter name="actor" position="4" attrib="0" type="System.String" />
                 </parameters>
               </method>
@@ -9323,8 +9441,8 @@
                   <parameter name="name" position="0" attrib="0" type="System.String" />
                   <parameter name="ns" position="1" attrib="0" type="System.String" />
                   <parameter name="value" position="2" attrib="0" type="System.Object" />
-                  <parameter name="formatter" position="3" attrib="0" type="System.Runtime.Serialization.XmlObjectSerializer" />
-                  <parameter name="must_understand" position="4" attrib="0" type="System.Boolean" />
+                  <parameter name="serializer" position="3" attrib="0" type="System.Runtime.Serialization.XmlObjectSerializer" />
+                  <parameter name="mustUnderstand" position="4" attrib="0" type="System.Boolean" />
                 </parameters>
               </method>
               <method name="CreateHeader(System.String, System.String, System.Object, System.Boolean, System.String, System.Boolean)" attrib="150" static="true" returntype="System.ServiceModel.Channels.MessageHeader">
@@ -9332,7 +9450,7 @@
                   <parameter name="name" position="0" attrib="0" type="System.String" />
                   <parameter name="ns" position="1" attrib="0" type="System.String" />
                   <parameter name="value" position="2" attrib="0" type="System.Object" />
-                  <parameter name="must_understand" position="3" attrib="0" type="System.Boolean" />
+                  <parameter name="mustUnderstand" position="3" attrib="0" type="System.Boolean" />
                   <parameter name="actor" position="4" attrib="0" type="System.String" />
                   <parameter name="relay" position="5" attrib="0" type="System.Boolean" />
                 </parameters>
@@ -9342,8 +9460,8 @@
                   <parameter name="name" position="0" attrib="0" type="System.String" />
                   <parameter name="ns" position="1" attrib="0" type="System.String" />
                   <parameter name="value" position="2" attrib="0" type="System.Object" />
-                  <parameter name="formatter" position="3" attrib="0" type="System.Runtime.Serialization.XmlObjectSerializer" />
-                  <parameter name="must_understand" position="4" attrib="0" type="System.Boolean" />
+                  <parameter name="serializer" position="3" attrib="0" type="System.Runtime.Serialization.XmlObjectSerializer" />
+                  <parameter name="mustUnderstand" position="4" attrib="0" type="System.Boolean" />
                   <parameter name="actor" position="5" attrib="0" type="System.String" />
                 </parameters>
               </method>
@@ -9352,27 +9470,27 @@
                   <parameter name="name" position="0" attrib="0" type="System.String" />
                   <parameter name="ns" position="1" attrib="0" type="System.String" />
                   <parameter name="value" position="2" attrib="0" type="System.Object" />
-                  <parameter name="formatter" position="3" attrib="0" type="System.Runtime.Serialization.XmlObjectSerializer" />
-                  <parameter name="must_understand" position="4" attrib="0" type="System.Boolean" />
+                  <parameter name="serializer" position="3" attrib="0" type="System.Runtime.Serialization.XmlObjectSerializer" />
+                  <parameter name="mustUnderstand" position="4" attrib="0" type="System.Boolean" />
                   <parameter name="actor" position="5" attrib="0" type="System.String" />
                   <parameter name="relay" position="6" attrib="0" type="System.Boolean" />
                 </parameters>
               </method>
               <method name="IsMessageVersionSupported(System.ServiceModel.Channels.MessageVersion)" attrib="454" virtual="true" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="version" position="0" attrib="0" type="System.ServiceModel.Channels.MessageVersion" />
+                  <parameter name="messageVersion" position="0" attrib="0" type="System.ServiceModel.Channels.MessageVersion" />
                 </parameters>
               </method>
               <method name="OnWriteHeaderContents(System.Xml.XmlDictionaryWriter, System.ServiceModel.Channels.MessageVersion)" attrib="1476" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
                   <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlDictionaryWriter" />
-                  <parameter name="version" position="1" attrib="0" type="System.ServiceModel.Channels.MessageVersion" />
+                  <parameter name="messageVersion" position="1" attrib="0" type="System.ServiceModel.Channels.MessageVersion" />
                 </parameters>
               </method>
               <method name="OnWriteStartHeader(System.Xml.XmlDictionaryWriter, System.ServiceModel.Channels.MessageVersion)" attrib="452" virtual="true" returntype="System.Void">
                 <parameters>
                   <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlDictionaryWriter" />
-                  <parameter name="version" position="1" attrib="0" type="System.ServiceModel.Channels.MessageVersion" />
+                  <parameter name="messageVersion" position="1" attrib="0" type="System.ServiceModel.Channels.MessageVersion" />
                 </parameters>
               </method>
               <method name="ToString()" attrib="198" virtual="true" is-override="true" returntype="System.String">
@@ -9381,31 +9499,31 @@
               <method name="WriteHeader(System.Xml.XmlDictionaryWriter, System.ServiceModel.Channels.MessageVersion)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlDictionaryWriter" />
-                  <parameter name="version" position="1" attrib="0" type="System.ServiceModel.Channels.MessageVersion" />
+                  <parameter name="messageVersion" position="1" attrib="0" type="System.ServiceModel.Channels.MessageVersion" />
                 </parameters>
               </method>
               <method name="WriteHeader(System.Xml.XmlWriter, System.ServiceModel.Channels.MessageVersion)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlWriter" />
-                  <parameter name="version" position="1" attrib="0" type="System.ServiceModel.Channels.MessageVersion" />
+                  <parameter name="messageVersion" position="1" attrib="0" type="System.ServiceModel.Channels.MessageVersion" />
                 </parameters>
               </method>
               <method name="WriteHeaderAttributes(System.Xml.XmlDictionaryWriter, System.ServiceModel.Channels.MessageVersion)" attrib="132" returntype="System.Void">
                 <parameters>
                   <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlDictionaryWriter" />
-                  <parameter name="version" position="1" attrib="0" type="System.ServiceModel.Channels.MessageVersion" />
+                  <parameter name="messageVersion" position="1" attrib="0" type="System.ServiceModel.Channels.MessageVersion" />
                 </parameters>
               </method>
               <method name="WriteHeaderContents(System.Xml.XmlDictionaryWriter, System.ServiceModel.Channels.MessageVersion)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlDictionaryWriter" />
-                  <parameter name="version" position="1" attrib="0" type="System.ServiceModel.Channels.MessageVersion" />
+                  <parameter name="messageVersion" position="1" attrib="0" type="System.ServiceModel.Channels.MessageVersion" />
                 </parameters>
               </method>
               <method name="WriteStartHeader(System.Xml.XmlDictionaryWriter, System.ServiceModel.Channels.MessageVersion)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="writer" position="0" attrib="0" type="System.Xml.XmlDictionaryWriter" />
-                  <parameter name="version" position="1" attrib="0" type="System.ServiceModel.Channels.MessageVersion" />
+                  <parameter name="messageVersion" position="1" attrib="0" type="System.ServiceModel.Channels.MessageVersion" />
                 </parameters>
               </method>
             </methods>
@@ -9619,29 +9737,29 @@
               </method>
               <method name="CopyHeaderFrom(System.ServiceModel.Channels.Message, System.Int32)" attrib="134" returntype="System.Void">
                 <parameters>
-                  <parameter name="m" position="0" attrib="0" type="System.ServiceModel.Channels.Message" />
-                  <parameter name="index" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="message" position="0" attrib="0" type="System.ServiceModel.Channels.Message" />
+                  <parameter name="headerIndex" position="1" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="CopyHeaderFrom(System.ServiceModel.Channels.MessageHeaders, System.Int32)" attrib="134" returntype="System.Void">
                 <parameters>
-                  <parameter name="headers" position="0" attrib="0" type="System.ServiceModel.Channels.MessageHeaders" />
-                  <parameter name="index" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="collection" position="0" attrib="0" type="System.ServiceModel.Channels.MessageHeaders" />
+                  <parameter name="headerIndex" position="1" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="CopyHeadersFrom(System.ServiceModel.Channels.Message)" attrib="134" returntype="System.Void">
                 <parameters>
-                  <parameter name="m" position="0" attrib="0" type="System.ServiceModel.Channels.Message" />
+                  <parameter name="message" position="0" attrib="0" type="System.ServiceModel.Channels.Message" />
                 </parameters>
               </method>
               <method name="CopyHeadersFrom(System.ServiceModel.Channels.MessageHeaders)" attrib="134" returntype="System.Void">
                 <parameters>
-                  <parameter name="headers" position="0" attrib="0" type="System.ServiceModel.Channels.MessageHeaders" />
+                  <parameter name="collection" position="0" attrib="0" type="System.ServiceModel.Channels.MessageHeaders" />
                 </parameters>
               </method>
               <method name="CopyTo(System.ServiceModel.Channels.MessageHeaderInfo[], System.Int32)" attrib="134" returntype="System.Void">
                 <parameters>
-                  <parameter name="dst" position="0" attrib="0" type="System.ServiceModel.Channels.MessageHeaderInfo[]" />
+                  <parameter name="array" position="0" attrib="0" type="System.ServiceModel.Channels.MessageHeaderInfo[]" />
                   <parameter name="index" position="1" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
@@ -9717,7 +9835,7 @@
               </method>
               <method name="GetReaderAtHeader(System.Int32)" attrib="134" returntype="System.Xml.XmlDictionaryReader">
                 <parameters>
-                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="headerIndex" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="HaveMandatoryHeadersBeenUnderstood()" attrib="134" returntype="System.Boolean">
@@ -9734,7 +9852,7 @@
               </method>
               <method name="Insert(System.Int32, System.ServiceModel.Channels.MessageHeader)" attrib="134" returntype="System.Void">
                 <parameters>
-                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="headerIndex" position="0" attrib="0" type="System.Int32" />
                   <parameter name="header" position="1" attrib="0" type="System.ServiceModel.Channels.MessageHeader" />
                 </parameters>
               </method>
@@ -9746,7 +9864,7 @@
               </method>
               <method name="RemoveAt(System.Int32)" attrib="134" returntype="System.Void">
                 <parameters>
-                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="headerIndex" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="SetAction(System.Xml.XmlDictionaryString)" attrib="134" returntype="System.Void">
@@ -9756,37 +9874,37 @@
               </method>
               <method name="WriteHeader(System.Int32, System.Xml.XmlDictionaryWriter)" attrib="134" returntype="System.Void">
                 <parameters>
-                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="headerIndex" position="0" attrib="0" type="System.Int32" />
                   <parameter name="writer" position="1" attrib="0" type="System.Xml.XmlDictionaryWriter" />
                 </parameters>
               </method>
               <method name="WriteHeader(System.Int32, System.Xml.XmlWriter)" attrib="134" returntype="System.Void">
                 <parameters>
-                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="headerIndex" position="0" attrib="0" type="System.Int32" />
                   <parameter name="writer" position="1" attrib="0" type="System.Xml.XmlWriter" />
                 </parameters>
               </method>
               <method name="WriteHeaderContents(System.Int32, System.Xml.XmlDictionaryWriter)" attrib="134" returntype="System.Void">
                 <parameters>
-                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="headerIndex" position="0" attrib="0" type="System.Int32" />
                   <parameter name="writer" position="1" attrib="0" type="System.Xml.XmlDictionaryWriter" />
                 </parameters>
               </method>
               <method name="WriteHeaderContents(System.Int32, System.Xml.XmlWriter)" attrib="134" returntype="System.Void">
                 <parameters>
-                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="headerIndex" position="0" attrib="0" type="System.Int32" />
                   <parameter name="writer" position="1" attrib="0" type="System.Xml.XmlWriter" />
                 </parameters>
               </method>
               <method name="WriteStartHeader(System.Int32, System.Xml.XmlDictionaryWriter)" attrib="134" returntype="System.Void">
                 <parameters>
-                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="headerIndex" position="0" attrib="0" type="System.Int32" />
                   <parameter name="writer" position="1" attrib="0" type="System.Xml.XmlDictionaryWriter" />
                 </parameters>
               </method>
               <method name="WriteStartHeader(System.Int32, System.Xml.XmlWriter)" attrib="134" returntype="System.Void">
                 <parameters>
-                  <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="headerIndex" position="0" attrib="0" type="System.Int32" />
                   <parameter name="writer" position="1" attrib="0" type="System.Xml.XmlWriter" />
                 </parameters>
               </method>
@@ -10052,18 +10170,18 @@
             <methods>
               <method name="CreateVersion(System.ServiceModel.EnvelopeVersion)" attrib="150" static="true" returntype="System.ServiceModel.Channels.MessageVersion">
                 <parameters>
-                  <parameter name="envelope_version" position="0" attrib="0" type="System.ServiceModel.EnvelopeVersion" />
+                  <parameter name="envelopeVersion" position="0" attrib="0" type="System.ServiceModel.EnvelopeVersion" />
                 </parameters>
               </method>
               <method name="CreateVersion(System.ServiceModel.EnvelopeVersion, System.ServiceModel.Channels.AddressingVersion)" attrib="150" static="true" returntype="System.ServiceModel.Channels.MessageVersion">
                 <parameters>
-                  <parameter name="envelope_version" position="0" attrib="0" type="System.ServiceModel.EnvelopeVersion" />
-                  <parameter name="addressing_version" position="1" attrib="0" type="System.ServiceModel.Channels.AddressingVersion" />
+                  <parameter name="envelopeVersion" position="0" attrib="0" type="System.ServiceModel.EnvelopeVersion" />
+                  <parameter name="addressingVersion" position="1" attrib="0" type="System.ServiceModel.Channels.AddressingVersion" />
                 </parameters>
               </method>
               <method name="Equals(System.Object)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="value" position="0" attrib="0" type="System.Object" />
+                  <parameter name="obj" position="0" attrib="0" type="System.Object" />
                 </parameters>
               </method>
               <method name="GetHashCode()" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
@@ -10348,6 +10466,13 @@
           </class>
           <class name="SecurityBindingElement" type="class" base="System.ServiceModel.Channels.BindingElement" abstract="true" charset="Ansi" layout="Auto">
             <properties>
+              <property name="EndpointSupportingTokenParameters" attrib="0" ptype="System.ServiceModel.Security.Tokens.SupportingTokenParameters">
+                <methods>
+                  <method name="get_EndpointSupportingTokenParameters()" attrib="2182" returntype="System.ServiceModel.Security.Tokens.SupportingTokenParameters">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
               <property name="IncludeTimestamp" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_IncludeTimestamp()" attrib="2182" returntype="System.Boolean">
@@ -10373,6 +10498,30 @@
                       <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
                     </attributes>
                     <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="MessageSecurityVersion" attrib="0" ptype="System.ServiceModel.MessageSecurityVersion">
+                <methods>
+                  <method name="get_MessageSecurityVersion()" attrib="2182" returntype="System.ServiceModel.MessageSecurityVersion">
+                    <parameters />
+                  </method>
+                  <method name="set_MessageSecurityVersion(System.ServiceModel.MessageSecurityVersion)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.ServiceModel.MessageSecurityVersion" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="SecurityHeaderLayout" attrib="0" ptype="System.ServiceModel.Channels.SecurityHeaderLayout">
+                <methods>
+                  <method name="get_SecurityHeaderLayout()" attrib="2182" returntype="System.ServiceModel.Channels.SecurityHeaderLayout">
+                    <parameters />
+                  </method>
+                  <method name="set_SecurityHeaderLayout(System.ServiceModel.Channels.SecurityHeaderLayout)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.ServiceModel.Channels.SecurityHeaderLayout" />
+                    </parameters>
                   </method>
                 </methods>
               </property>
@@ -10402,6 +10551,24 @@
                 <generic-parameters>
                   <generic-parameter name="TChannel" attributes="0" />
                 </generic-parameters>
+              </method>
+              <method name="CreateSecureConversationBindingElement(System.ServiceModel.Channels.SecurityBindingElement)" attrib="150" static="true" returntype="System.ServiceModel.Channels.SecurityBindingElement">
+                <parameters>
+                  <parameter name="bootstrapSecurity" position="0" attrib="0" type="System.ServiceModel.Channels.SecurityBindingElement" />
+                </parameters>
+              </method>
+              <method name="CreateSecureConversationBindingElement(System.ServiceModel.Channels.SecurityBindingElement, System.Boolean)" attrib="150" static="true" returntype="System.ServiceModel.Channels.SecurityBindingElement">
+                <parameters>
+                  <parameter name="bootstrapSecurity" position="0" attrib="0" type="System.ServiceModel.Channels.SecurityBindingElement" />
+                  <parameter name="requireCancellation" position="1" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="CreateSecureConversationBindingElement(System.ServiceModel.Channels.SecurityBindingElement, System.Boolean, System.ServiceModel.Security.ChannelProtectionRequirements)" attrib="150" static="true" returntype="System.ServiceModel.Channels.SecurityBindingElement">
+                <parameters>
+                  <parameter name="bootstrapSecurity" position="0" attrib="0" type="System.ServiceModel.Channels.SecurityBindingElement" />
+                  <parameter name="requireCancellation" position="1" attrib="0" type="System.Boolean" />
+                  <parameter name="bootstrapProtectionRequirements" position="2" attrib="0" type="System.ServiceModel.Security.ChannelProtectionRequirements" />
+                </parameters>
               </method>
               <method name="CreateUserNameOverTransportBindingElement()" attrib="150" static="true" returntype="System.ServiceModel.Channels.TransportSecurityBindingElement">
                 <attributes />
@@ -10451,6 +10618,19 @@
                   <method name="set_RequireClientCertificate(System.Boolean)" attrib="2182" returntype="System.Void">
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="SslProtocols" attrib="0" ptype="System.Security.Authentication.SslProtocols">
+                <attributes />
+                <methods>
+                  <method name="get_SslProtocols()" attrib="2182" returntype="System.Security.Authentication.SslProtocols">
+                    <parameters />
+                  </method>
+                  <method name="set_SslProtocols(System.Security.Authentication.SslProtocols)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Security.Authentication.SslProtocols" />
                     </parameters>
                   </method>
                 </methods>
@@ -10568,7 +10748,7 @@
               </constructor>
               <constructor name=".ctor(System.ServiceModel.Channels.TcpTransportBindingElement)" attrib="6276">
                 <parameters>
-                  <parameter name="other" position="0" attrib="0" type="System.ServiceModel.Channels.TcpTransportBindingElement" />
+                  <parameter name="elementToBeCloned" position="0" attrib="0" type="System.ServiceModel.Channels.TcpTransportBindingElement" />
                 </parameters>
               </constructor>
             </constructors>
@@ -10770,7 +10950,7 @@
               </constructor>
               <constructor name=".ctor(System.ServiceModel.Channels.TransportBindingElement)" attrib="6276">
                 <parameters>
-                  <parameter name="other" position="0" attrib="0" type="System.ServiceModel.Channels.TransportBindingElement" />
+                  <parameter name="elementToBeCloned" position="0" attrib="0" type="System.ServiceModel.Channels.TransportBindingElement" />
                 </parameters>
               </constructor>
             </constructors>
@@ -11172,14 +11352,42 @@
               <constructor name=".ctor(System.ServiceModel.Description.ClientCredentials)" attrib="6276">
                 <attributes />
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.ServiceModel.Description.ClientCredentials" />
+                  <parameter name="other" position="0" attrib="0" type="System.ServiceModel.Description.ClientCredentials" />
                 </parameters>
               </constructor>
             </constructors>
             <properties>
+              <property name="ClientCertificate" attrib="0" ptype="System.ServiceModel.Security.X509CertificateInitiatorClientCredential">
+                <methods>
+                  <method name="get_ClientCertificate()" attrib="2182" returntype="System.ServiceModel.Security.X509CertificateInitiatorClientCredential">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="HttpDigest" attrib="0" ptype="System.ServiceModel.Security.HttpDigestClientCredential">
+                <methods>
+                  <method name="get_HttpDigest()" attrib="2182" returntype="System.ServiceModel.Security.HttpDigestClientCredential">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ServiceCertificate" attrib="0" ptype="System.ServiceModel.Security.X509CertificateRecipientClientCredential">
+                <methods>
+                  <method name="get_ServiceCertificate()" attrib="2182" returntype="System.ServiceModel.Security.X509CertificateRecipientClientCredential">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
               <property name="UserName" attrib="0" ptype="System.ServiceModel.Security.UserNamePasswordClientCredential">
                 <methods>
                   <method name="get_UserName()" attrib="2182" returntype="System.ServiceModel.Security.UserNamePasswordClientCredential">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Windows" attrib="0" ptype="System.ServiceModel.Security.WindowsClientCredential">
+                <methods>
+                  <method name="get_Windows()" attrib="2182" returntype="System.ServiceModel.Security.WindowsClientCredential">
                     <parameters />
                   </method>
                 </methods>
@@ -11189,7 +11397,7 @@
               <method name="ApplyClientBehavior(System.ServiceModel.Description.ServiceEndpoint, System.ServiceModel.Dispatcher.ClientRuntime)" attrib="454" virtual="true" returntype="System.Void">
                 <attributes />
                 <parameters>
-                  <parameter name="endpoint" position="0" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
+                  <parameter name="serviceEndpoint" position="0" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
                   <parameter name="behavior" position="1" attrib="0" type="System.ServiceModel.Dispatcher.ClientRuntime" />
                 </parameters>
               </method>
@@ -11568,28 +11776,28 @@
             <methods>
               <method name="AddBindingParameters(System.ServiceModel.Description.ContractDescription, System.ServiceModel.Description.ServiceEndpoint, System.ServiceModel.Channels.BindingParameterCollection)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="description" position="0" attrib="0" type="System.ServiceModel.Description.ContractDescription" />
+                  <parameter name="contractDescription" position="0" attrib="0" type="System.ServiceModel.Description.ContractDescription" />
                   <parameter name="endpoint" position="1" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
-                  <parameter name="parameters" position="2" attrib="0" type="System.ServiceModel.Channels.BindingParameterCollection" />
+                  <parameter name="bindingParameters" position="2" attrib="0" type="System.ServiceModel.Channels.BindingParameterCollection" />
                 </parameters>
               </method>
               <method name="ApplyClientBehavior(System.ServiceModel.Description.ContractDescription, System.ServiceModel.Description.ServiceEndpoint, System.ServiceModel.Dispatcher.ClientRuntime)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="description" position="0" attrib="0" type="System.ServiceModel.Description.ContractDescription" />
+                  <parameter name="contractDescription" position="0" attrib="0" type="System.ServiceModel.Description.ContractDescription" />
                   <parameter name="endpoint" position="1" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
-                  <parameter name="proxy" position="2" attrib="0" type="System.ServiceModel.Dispatcher.ClientRuntime" />
+                  <parameter name="clientRuntime" position="2" attrib="0" type="System.ServiceModel.Dispatcher.ClientRuntime" />
                 </parameters>
               </method>
               <method name="ApplyDispatchBehavior(System.ServiceModel.Description.ContractDescription, System.ServiceModel.Description.ServiceEndpoint, System.ServiceModel.Dispatcher.DispatchRuntime)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="description" position="0" attrib="0" type="System.ServiceModel.Description.ContractDescription" />
+                  <parameter name="contractDescription" position="0" attrib="0" type="System.ServiceModel.Description.ContractDescription" />
                   <parameter name="endpoint" position="1" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
-                  <parameter name="dispatch" position="2" attrib="0" type="System.ServiceModel.Dispatcher.DispatchRuntime" />
+                  <parameter name="dispatchRuntime" position="2" attrib="0" type="System.ServiceModel.Dispatcher.DispatchRuntime" />
                 </parameters>
               </method>
               <method name="Validate(System.ServiceModel.Description.ContractDescription, System.ServiceModel.Description.ServiceEndpoint)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="description" position="0" attrib="0" type="System.ServiceModel.Description.ContractDescription" />
+                  <parameter name="contractDescription" position="0" attrib="0" type="System.ServiceModel.Description.ContractDescription" />
                   <parameter name="endpoint" position="1" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
                 </parameters>
               </method>
@@ -11600,24 +11808,24 @@
               <method name="AddBindingParameters(System.ServiceModel.Description.ServiceEndpoint, System.ServiceModel.Channels.BindingParameterCollection)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
                   <parameter name="endpoint" position="0" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
-                  <parameter name="parameters" position="1" attrib="0" type="System.ServiceModel.Channels.BindingParameterCollection" />
+                  <parameter name="bindingParameters" position="1" attrib="0" type="System.ServiceModel.Channels.BindingParameterCollection" />
                 </parameters>
               </method>
               <method name="ApplyClientBehavior(System.ServiceModel.Description.ServiceEndpoint, System.ServiceModel.Dispatcher.ClientRuntime)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="serviceEndpoint" position="0" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
-                  <parameter name="behavior" position="1" attrib="0" type="System.ServiceModel.Dispatcher.ClientRuntime" />
+                  <parameter name="endpoint" position="0" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
+                  <parameter name="clientRuntime" position="1" attrib="0" type="System.ServiceModel.Dispatcher.ClientRuntime" />
                 </parameters>
               </method>
               <method name="ApplyDispatchBehavior(System.ServiceModel.Description.ServiceEndpoint, System.ServiceModel.Dispatcher.EndpointDispatcher)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="serviceEndpoint" position="0" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
-                  <parameter name="dispatcher" position="1" attrib="0" type="System.ServiceModel.Dispatcher.EndpointDispatcher" />
+                  <parameter name="endpoint" position="0" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
+                  <parameter name="endpointDispatcher" position="1" attrib="0" type="System.ServiceModel.Dispatcher.EndpointDispatcher" />
                 </parameters>
               </method>
               <method name="Validate(System.ServiceModel.Description.ServiceEndpoint)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="serviceEndpoint" position="0" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
+                  <parameter name="endpoint" position="0" attrib="0" type="System.ServiceModel.Description.ServiceEndpoint" />
                 </parameters>
               </method>
             </methods>
@@ -11626,25 +11834,25 @@
             <methods>
               <method name="AddBindingParameters(System.ServiceModel.Description.OperationDescription, System.ServiceModel.Channels.BindingParameterCollection)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="description" position="0" attrib="0" type="System.ServiceModel.Description.OperationDescription" />
-                  <parameter name="parameters" position="1" attrib="0" type="System.ServiceModel.Channels.BindingParameterCollection" />
+                  <parameter name="operationDescription" position="0" attrib="0" type="System.ServiceModel.Description.OperationDescription" />
+                  <parameter name="bindingParameters" position="1" attrib="0" type="System.ServiceModel.Channels.BindingParameterCollection" />
                 </parameters>
               </method>
               <method name="ApplyClientBehavior(System.ServiceModel.Description.OperationDescription, System.ServiceModel.Dispatcher.ClientOperation)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="description" position="0" attrib="0" type="System.ServiceModel.Description.OperationDescription" />
-                  <parameter name="proxy" position="1" attrib="0" type="System.ServiceModel.Dispatcher.ClientOperation" />
+                  <parameter name="operationDescription" position="0" attrib="0" type="System.ServiceModel.Description.OperationDescription" />
+                  <parameter name="clientOperation" position="1" attrib="0" type="System.ServiceModel.Dispatcher.ClientOperation" />
                 </parameters>
               </method>
               <method name="ApplyDispatchBehavior(System.ServiceModel.Description.OperationDescription, System.ServiceModel.Dispatcher.DispatchOperation)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="description" position="0" attrib="0" type="System.ServiceModel.Description.OperationDescription" />
-                  <parameter name="dispatch" position="1" attrib="0" type="System.ServiceModel.Dispatcher.DispatchOperation" />
+                  <parameter name="operationDescription" position="0" attrib="0" type="System.ServiceModel.Description.OperationDescription" />
+                  <parameter name="dispatchOperation" position="1" attrib="0" type="System.ServiceModel.Dispatcher.DispatchOperation" />
                 </parameters>
               </method>
               <method name="Validate(System.ServiceModel.Description.OperationDescription)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="description" position="0" attrib="0" type="System.ServiceModel.Description.OperationDescription" />
+                  <parameter name="operationDescription" position="0" attrib="0" type="System.ServiceModel.Description.OperationDescription" />
                 </parameters>
               </method>
             </methods>
@@ -13038,13 +13246,13 @@
               <method name="DeserializeReply(System.ServiceModel.Channels.Message, System.Object[])" attrib="1478" abstract="true" virtual="true" returntype="System.Object">
                 <parameters>
                   <parameter name="message" position="0" attrib="0" type="System.ServiceModel.Channels.Message" />
-                  <parameter name="paremeters" position="1" attrib="0" type="System.Object[]" />
+                  <parameter name="parameters" position="1" attrib="0" type="System.Object[]" />
                 </parameters>
               </method>
               <method name="SerializeRequest(System.ServiceModel.Channels.MessageVersion, System.Object[])" attrib="1478" abstract="true" virtual="true" returntype="System.ServiceModel.Channels.Message">
                 <parameters>
-                  <parameter name="version" position="0" attrib="0" type="System.ServiceModel.Channels.MessageVersion" />
-                  <parameter name="inputs" position="1" attrib="0" type="System.Object[]" />
+                  <parameter name="messageVersion" position="0" attrib="0" type="System.ServiceModel.Channels.MessageVersion" />
+                  <parameter name="parameters" position="1" attrib="0" type="System.Object[]" />
                 </parameters>
               </method>
             </methods>
@@ -13053,13 +13261,13 @@
             <methods>
               <method name="AfterReceiveReply(System.ServiceModel.Channels.Message&amp;, System.Object)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="message" position="0" attrib="0" type="System.ServiceModel.Channels.Message&amp;" direction="ref" />
+                  <parameter name="reply" position="0" attrib="0" type="System.ServiceModel.Channels.Message&amp;" direction="ref" />
                   <parameter name="correlationState" position="1" attrib="0" type="System.Object" />
                 </parameters>
               </method>
               <method name="BeforeSendRequest(System.ServiceModel.Channels.Message&amp;, System.ServiceModel.IClientChannel)" attrib="1478" abstract="true" virtual="true" returntype="System.Object">
                 <parameters>
-                  <parameter name="message" position="0" attrib="0" type="System.ServiceModel.Channels.Message&amp;" direction="ref" />
+                  <parameter name="request" position="0" attrib="0" type="System.ServiceModel.Channels.Message&amp;" direction="ref" />
                   <parameter name="channel" position="1" attrib="0" type="System.ServiceModel.IClientChannel" />
                 </parameters>
               </method>
@@ -13179,6 +13387,74 @@
               </property>
             </properties>
           </class>
+          <class name="ChannelProtectionRequirements" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.ServiceModel.Security.ChannelProtectionRequirements)" attrib="6278">
+                <parameters>
+                  <parameter name="other" position="0" attrib="0" type="System.ServiceModel.Security.ChannelProtectionRequirements" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="IncomingEncryptionParts" attrib="0" ptype="System.ServiceModel.Security.ScopedMessagePartSpecification">
+                <methods>
+                  <method name="get_IncomingEncryptionParts()" attrib="2182" returntype="System.ServiceModel.Security.ScopedMessagePartSpecification">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IncomingSignatureParts" attrib="0" ptype="System.ServiceModel.Security.ScopedMessagePartSpecification">
+                <methods>
+                  <method name="get_IncomingSignatureParts()" attrib="2182" returntype="System.ServiceModel.Security.ScopedMessagePartSpecification">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsReadOnly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsReadOnly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="OutgoingEncryptionParts" attrib="0" ptype="System.ServiceModel.Security.ScopedMessagePartSpecification">
+                <methods>
+                  <method name="get_OutgoingEncryptionParts()" attrib="2182" returntype="System.ServiceModel.Security.ScopedMessagePartSpecification">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="OutgoingSignatureParts" attrib="0" ptype="System.ServiceModel.Security.ScopedMessagePartSpecification">
+                <methods>
+                  <method name="get_OutgoingSignatureParts()" attrib="2182" returntype="System.ServiceModel.Security.ScopedMessagePartSpecification">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Add(System.ServiceModel.Security.ChannelProtectionRequirements)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="protectionRequirements" position="0" attrib="0" type="System.ServiceModel.Security.ChannelProtectionRequirements" />
+                </parameters>
+              </method>
+              <method name="Add(System.ServiceModel.Security.ChannelProtectionRequirements, System.Boolean)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="protectionRequirements" position="0" attrib="0" type="System.ServiceModel.Security.ChannelProtectionRequirements" />
+                  <parameter name="channelScopeOnly" position="1" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="CreateInverse()" attrib="134" returntype="System.ServiceModel.Security.ChannelProtectionRequirements">
+                <parameters />
+              </method>
+              <method name="MakeReadOnly()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+            </methods>
+          </class>
           <class name="HttpDigestClientCredential" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
             <properties>
               <property name="AllowedImpersonationLevel" attrib="0" ptype="System.Security.Principal.TokenImpersonationLevel">
@@ -13206,6 +13482,85 @@
                 </methods>
               </property>
             </properties>
+          </class>
+          <class name="MessagePartSpecification" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.Boolean)" attrib="6278">
+                <parameters>
+                  <parameter name="isBodyIncluded" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Xml.XmlQualifiedName[])" attrib="6278">
+                <parameters>
+                  <parameter name="headerTypes" position="0" attrib="0" type="System.Xml.XmlQualifiedName[]">
+                    <attributes>
+                      <attribute name="System.ParamArrayAttribute" />
+                    </attributes>
+                  </parameter>
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Boolean, System.Xml.XmlQualifiedName[])" attrib="6278">
+                <parameters>
+                  <parameter name="isBodyIncluded" position="0" attrib="0" type="System.Boolean" />
+                  <parameter name="headerTypes" position="1" attrib="0" type="System.Xml.XmlQualifiedName[]">
+                    <attributes>
+                      <attribute name="System.ParamArrayAttribute" />
+                    </attributes>
+                  </parameter>
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="HeaderTypes" attrib="0" ptype="System.Collections.Generic.ICollection`1[System.Xml.XmlQualifiedName]">
+                <methods>
+                  <method name="get_HeaderTypes()" attrib="2182" returntype="System.Collections.Generic.ICollection`1[System.Xml.XmlQualifiedName]">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsBodyIncluded" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsBodyIncluded()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_IsBodyIncluded(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IsReadOnly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsReadOnly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="NoParts" attrib="0" ptype="System.ServiceModel.Security.MessagePartSpecification">
+                <methods>
+                  <method name="get_NoParts()" attrib="2198" static="true" returntype="System.ServiceModel.Security.MessagePartSpecification">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Clear()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="MakeReadOnly()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Union(System.ServiceModel.Security.MessagePartSpecification)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="other" position="0" attrib="0" type="System.ServiceModel.Security.MessagePartSpecification" />
+                </parameters>
+              </method>
+            </methods>
           </class>
           <class name="MessageSecurityException" type="class" base="System.ServiceModel.CommunicationException" serializable="true" charset="Ansi" layout="Auto">
             <interfaces>
@@ -13238,6 +13593,70 @@
                 <parameters>
                   <parameter name="info" position="0" attrib="0" type="System.Runtime.Serialization.SerializationInfo" />
                   <parameter name="ctx" position="1" attrib="0" type="System.Runtime.Serialization.StreamingContext" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="ScopedMessagePartSpecification" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.ServiceModel.Security.ScopedMessagePartSpecification)" attrib="6278">
+                <parameters>
+                  <parameter name="other" position="0" attrib="0" type="System.ServiceModel.Security.ScopedMessagePartSpecification" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Actions" attrib="0" ptype="System.Collections.Generic.ICollection`1[System.String]">
+                <methods>
+                  <method name="get_Actions()" attrib="2182" returntype="System.Collections.Generic.ICollection`1[System.String]">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ChannelParts" attrib="0" ptype="System.ServiceModel.Security.MessagePartSpecification">
+                <methods>
+                  <method name="get_ChannelParts()" attrib="2182" returntype="System.ServiceModel.Security.MessagePartSpecification">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsReadOnly" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_IsReadOnly()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="AddParts(System.ServiceModel.Security.MessagePartSpecification)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="parts" position="0" attrib="0" type="System.ServiceModel.Security.MessagePartSpecification" />
+                </parameters>
+              </method>
+              <method name="AddParts(System.ServiceModel.Security.MessagePartSpecification, System.String)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="parts" position="0" attrib="0" type="System.ServiceModel.Security.MessagePartSpecification" />
+                  <parameter name="action" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="MakeReadOnly()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="TryGetParts(System.String, out System.ServiceModel.Security.MessagePartSpecification&amp;)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="action" position="0" attrib="0" type="System.String" />
+                  <parameter name="parts" position="1" attrib="2" type="System.ServiceModel.Security.MessagePartSpecification&amp;" direction="out" />
+                </parameters>
+              </method>
+              <method name="TryGetParts(System.String, System.Boolean, out System.ServiceModel.Security.MessagePartSpecification&amp;)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="action" position="0" attrib="0" type="System.String" />
+                  <parameter name="excludeChannelScope" position="1" attrib="0" type="System.Boolean" />
+                  <parameter name="parts" position="2" attrib="2" type="System.ServiceModel.Security.MessagePartSpecification&amp;" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -13540,6 +13959,174 @@
               </property>
             </properties>
           </class>
+          <class name="X509CertificateInitiatorClientCredential" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
+            <properties>
+              <property name="Certificate" attrib="0" ptype="System.Security.Cryptography.X509Certificates.X509Certificate2">
+                <methods>
+                  <method name="get_Certificate()" attrib="2182" returntype="System.Security.Cryptography.X509Certificates.X509Certificate2">
+                    <parameters />
+                  </method>
+                  <method name="set_Certificate(System.Security.Cryptography.X509Certificates.X509Certificate2)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate2" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="SetCertificate(System.String, System.Security.Cryptography.X509Certificates.StoreLocation, System.Security.Cryptography.X509Certificates.StoreName)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="subjectName" position="0" attrib="0" type="System.String" />
+                  <parameter name="storeLocation" position="1" attrib="0" type="System.Security.Cryptography.X509Certificates.StoreLocation" />
+                  <parameter name="storeName" position="2" attrib="0" type="System.Security.Cryptography.X509Certificates.StoreName" />
+                </parameters>
+              </method>
+              <method name="SetCertificate(System.Security.Cryptography.X509Certificates.StoreLocation, System.Security.Cryptography.X509Certificates.StoreName, System.Security.Cryptography.X509Certificates.X509FindType, System.Object)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="storeLocation" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.StoreLocation" />
+                  <parameter name="storeName" position="1" attrib="0" type="System.Security.Cryptography.X509Certificates.StoreName" />
+                  <parameter name="findType" position="2" attrib="0" type="System.Security.Cryptography.X509Certificates.X509FindType" />
+                  <parameter name="findValue" position="3" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="X509CertificateRecipientClientCredential" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
+            <properties>
+              <property name="Authentication" attrib="0" ptype="System.ServiceModel.Security.X509ServiceCertificateAuthentication">
+                <methods>
+                  <method name="get_Authentication()" attrib="2182" returntype="System.ServiceModel.Security.X509ServiceCertificateAuthentication">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="DefaultCertificate" attrib="0" ptype="System.Security.Cryptography.X509Certificates.X509Certificate2">
+                <methods>
+                  <method name="get_DefaultCertificate()" attrib="2182" returntype="System.Security.Cryptography.X509Certificates.X509Certificate2">
+                    <parameters />
+                  </method>
+                  <method name="set_DefaultCertificate(System.Security.Cryptography.X509Certificates.X509Certificate2)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate2" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ScopedCertificates" attrib="0" ptype="System.Collections.Generic.Dictionary`2[System.Uri,System.Security.Cryptography.X509Certificates.X509Certificate2]">
+                <methods>
+                  <method name="get_ScopedCertificates()" attrib="2182" returntype="System.Collections.Generic.Dictionary`2[System.Uri,System.Security.Cryptography.X509Certificates.X509Certificate2]">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="SslCertificateAuthentication" attrib="0" ptype="System.ServiceModel.Security.X509ServiceCertificateAuthentication">
+                <attributes />
+                <methods>
+                  <method name="get_SslCertificateAuthentication()" attrib="2182" returntype="System.ServiceModel.Security.X509ServiceCertificateAuthentication">
+                    <parameters />
+                  </method>
+                  <method name="set_SslCertificateAuthentication(System.ServiceModel.Security.X509ServiceCertificateAuthentication)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.ServiceModel.Security.X509ServiceCertificateAuthentication" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="SetDefaultCertificate(System.String, System.Security.Cryptography.X509Certificates.StoreLocation, System.Security.Cryptography.X509Certificates.StoreName)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="subjectName" position="0" attrib="0" type="System.String" />
+                  <parameter name="storeLocation" position="1" attrib="0" type="System.Security.Cryptography.X509Certificates.StoreLocation" />
+                  <parameter name="storeName" position="2" attrib="0" type="System.Security.Cryptography.X509Certificates.StoreName" />
+                </parameters>
+              </method>
+              <method name="SetDefaultCertificate(System.Security.Cryptography.X509Certificates.StoreLocation, System.Security.Cryptography.X509Certificates.StoreName, System.Security.Cryptography.X509Certificates.X509FindType, System.Object)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="storeLocation" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.StoreLocation" />
+                  <parameter name="storeName" position="1" attrib="0" type="System.Security.Cryptography.X509Certificates.StoreName" />
+                  <parameter name="findType" position="2" attrib="0" type="System.Security.Cryptography.X509Certificates.X509FindType" />
+                  <parameter name="findValue" position="3" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="SetScopedCertificate(System.String, System.Security.Cryptography.X509Certificates.StoreLocation, System.Security.Cryptography.X509Certificates.StoreName, System.Uri)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="subjectName" position="0" attrib="0" type="System.String" />
+                  <parameter name="storeLocation" position="1" attrib="0" type="System.Security.Cryptography.X509Certificates.StoreLocation" />
+                  <parameter name="storeName" position="2" attrib="0" type="System.Security.Cryptography.X509Certificates.StoreName" />
+                  <parameter name="targetService" position="3" attrib="0" type="System.Uri" />
+                </parameters>
+              </method>
+              <method name="SetScopedCertificate(System.Security.Cryptography.X509Certificates.StoreLocation, System.Security.Cryptography.X509Certificates.StoreName, System.Security.Cryptography.X509Certificates.X509FindType, System.Object, System.Uri)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="storeLocation" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.StoreLocation" />
+                  <parameter name="storeName" position="1" attrib="0" type="System.Security.Cryptography.X509Certificates.StoreName" />
+                  <parameter name="findType" position="2" attrib="0" type="System.Security.Cryptography.X509Certificates.X509FindType" />
+                  <parameter name="findValue" position="3" attrib="0" type="System.Object" />
+                  <parameter name="targetService" position="4" attrib="0" type="System.Uri" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="X509ServiceCertificateAuthentication" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <attributes />
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="CertificateValidationMode" attrib="0" ptype="System.ServiceModel.Security.X509CertificateValidationMode">
+                <methods>
+                  <method name="get_CertificateValidationMode()" attrib="2182" returntype="System.ServiceModel.Security.X509CertificateValidationMode">
+                    <parameters />
+                  </method>
+                  <method name="set_CertificateValidationMode(System.ServiceModel.Security.X509CertificateValidationMode)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.ServiceModel.Security.X509CertificateValidationMode" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="CustomCertificateValidator" attrib="0" ptype="System.IdentityModel.Selectors.X509CertificateValidator">
+                <methods>
+                  <method name="get_CustomCertificateValidator()" attrib="2182" returntype="System.IdentityModel.Selectors.X509CertificateValidator">
+                    <parameters />
+                  </method>
+                  <method name="set_CustomCertificateValidator(System.IdentityModel.Selectors.X509CertificateValidator)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.IdentityModel.Selectors.X509CertificateValidator" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="RevocationMode" attrib="0" ptype="System.Security.Cryptography.X509Certificates.X509RevocationMode">
+                <methods>
+                  <method name="get_RevocationMode()" attrib="2182" returntype="System.Security.Cryptography.X509Certificates.X509RevocationMode">
+                    <parameters />
+                  </method>
+                  <method name="set_RevocationMode(System.Security.Cryptography.X509Certificates.X509RevocationMode)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.X509RevocationMode" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="TrustedStoreLocation" attrib="0" ptype="System.Security.Cryptography.X509Certificates.StoreLocation">
+                <methods>
+                  <method name="get_TrustedStoreLocation()" attrib="2182" returntype="System.Security.Cryptography.X509Certificates.StoreLocation">
+                    <parameters />
+                  </method>
+                  <method name="set_TrustedStoreLocation(System.Security.Cryptography.X509Certificates.StoreLocation)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Security.Cryptography.X509Certificates.StoreLocation" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
         </classes>
       </namespace>
       <namespace name="System.ServiceModel.Security.Tokens">
@@ -13551,7 +14138,7 @@
               </constructor>
               <constructor name=".ctor(System.ServiceModel.Channels.SecurityBindingElement)" attrib="6278">
                 <parameters>
-                  <parameter name="element" position="0" attrib="0" type="System.ServiceModel.Channels.SecurityBindingElement" />
+                  <parameter name="bootstrapSecurityBindingElement" position="0" attrib="0" type="System.ServiceModel.Channels.SecurityBindingElement" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.ServiceModel.Security.Tokens.SecureConversationSecurityTokenParameters)" attrib="6276">
@@ -13561,7 +14148,7 @@
               </constructor>
               <constructor name=".ctor(System.ServiceModel.Channels.SecurityBindingElement, System.Boolean)" attrib="6278">
                 <parameters>
-                  <parameter name="element" position="0" attrib="0" type="System.ServiceModel.Channels.SecurityBindingElement" />
+                  <parameter name="bootstrapSecurityBindingElement" position="0" attrib="0" type="System.ServiceModel.Channels.SecurityBindingElement" />
                   <parameter name="requireCancellation" position="1" attrib="0" type="System.Boolean" />
                 </parameters>
               </constructor>
