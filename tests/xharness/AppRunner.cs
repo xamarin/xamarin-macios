@@ -71,28 +71,28 @@ namespace xharness
 			if (simulators != null)
 				return;
 			
-			string simulator_devicetype;
+			string [] simulator_devicetypes;
 			string simulator_runtime;
 
 			switch (Target) {
 			case "ios-simulator-32":
-				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.iPhone-5";
+				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5" };
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
 				break;
 			case "ios-simulator-64":
-				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.iPhone-5s";
+				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5s" };
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
 				break;
 			case "ios-simulator":
-				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.iPhone-5";
+				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5" };
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
 				break;
 			case "tvos-simulator":
-				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.Apple-TV-1080p";
+				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.Apple-TV-1080p" };
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.tvOS-" + Xamarin.SdkVersions.TVOS.Replace ('.', '-');
 				break;
 			case "watchos-simulator":
-				simulator_devicetype = "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-38mm";
+				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-38mm", "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-2-38mm" };
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.watchOS-" + Xamarin.SdkVersions.WatchOS.Replace ('.', '-');
 				break;
 			default:
@@ -107,7 +107,7 @@ namespace xharness
 				await sims.LoadAsync (Logs.CreateStream (LogDirectory, "simulator-list.log", "Simulator list"));
 			}).Wait ();
 
-			var devices = sims.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == simulator_runtime && v.SimDeviceType == simulator_devicetype);
+			var devices = sims.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == simulator_runtime && simulator_devicetypes.Contains (v.SimDeviceType));
 			SimDevice candidate = null;
 			simulators = null;
 			foreach (var device in devices) {
@@ -134,7 +134,7 @@ namespace xharness
 			}
 			if (simulators == null) {
 				if (candidate == null)
-					throw new Exception ($"Could not find simulator for runtime={simulator_runtime} and device type={simulator_devicetype}.");
+					throw new Exception ($"Could not find simulator for runtime={simulator_runtime} and device type={string.Join (";", simulator_devicetypes)}.");
 				simulators = new SimDevice [] { candidate };
 			}
 
