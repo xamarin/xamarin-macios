@@ -160,3 +160,7 @@
 
 ## It seems that Apple added a setter but it seems it is a mistake on the newly added property radar:27929872
 !missing-selector! UIViewController::setDisablesAutomaticKeyboardDismissal: not bound
+
+## enums only exposed from properties marked with UIKIT_CLASS_AVAILABLE_IOS_ONLY(10_0)
+!missing-enum! UIImpactFeedbackStyle not bound
+!missing-enum! UINotificationFeedbackType not bound
