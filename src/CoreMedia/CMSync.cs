@@ -477,6 +477,7 @@ namespace XamCore.CoreMedia {
 		public CMClockOrTimebase (IntPtr handle)
 		{
 			this.handle = handle;
+			CFObject.CFRetain (this.handle);
 		}
 
 		internal CMClockOrTimebase (IntPtr handle, bool owns)
