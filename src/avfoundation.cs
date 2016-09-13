@@ -10442,8 +10442,8 @@ namespace XamCore.AVFoundation {
 	[NoWatch]
 	[StrongDictionary ("AVAssetDownloadTaskKeys")]
 	interface AVAssetDownloadOptions {
-		NSNumber MinimumRequiredMediaBitrate { get; }
-		AVMediaSelection MediaSelection { get; }
+		NSNumber MinimumRequiredMediaBitrate { get; set; }
+		AVMediaSelection MediaSelection { get; set; }
 	}
 
 	[NoTV]
