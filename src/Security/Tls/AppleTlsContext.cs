@@ -317,6 +317,12 @@ namespace XamCore.Security.Tls
 
 			if (AskForClientCertificate)
 				SetClientSideAuthenticate (SslAuthenticate.Try);
+
+			IPAddress address;
+			if (!IsServer && !string.IsNullOrEmpty (TargetHost) &&
+			    !IPAddress.TryParse (TargetHost, out address)) {
+				PeerDomainName = TargetHost;
+			}
 		}
 
 		void InitializeSession ()
