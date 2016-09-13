@@ -44,6 +44,8 @@
 !missing-selector! AVCaptureDevice::setAutoFocusRangeRestriction: not bound
 !missing-selector! AVCaptureDevice::setFocusModeLockedWithLensPosition:completionHandler: not bound
 !missing-selector! AVCaptureDevice::setSmoothAutoFocusEnabled: not bound
+!missing-selector! AVCaptureDevice::isLockingFocusWithCustomLensPositionSupported not bound
+!missing-selector! AVCaptureDevice::isLockingWhiteBalanceWithCustomDeviceGainsSupported not bound
 
 ## AVCaptureDevice_AVCaptureDeviceHighDynamicRangeSupport
 !missing-selector! AVCaptureDevice::automaticallyAdjustsVideoHDREnabled not bound
