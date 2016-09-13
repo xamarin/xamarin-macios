@@ -2182,7 +2182,7 @@ xamarin_vprintf (const char *format, va_list args)
 	const char *msg = [message UTF8String];
 	int len = strlen (msg);
 	fwrite (msg, 1, len, stdout);
-	if (len == 0 || msg [len - 1] != '\n')
+	if (len == 0 || msg [len - 1] != '\n')
 		fwrite ("\n", 1, 1, stdout);
 	fflush (stdout);
 #else
