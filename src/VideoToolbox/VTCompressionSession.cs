@@ -55,7 +55,7 @@ namespace XamCore.VideoToolbox {
 
 		// sourceFrame: It seems it's only used as a parameter to be passed into EncodeFrame so no need to strong type it
 		public delegate void VTCompressionOutputCallback (/* void* */ IntPtr sourceFrame, /* OSStatus */ VTStatus status, VTEncodeInfoFlags flags, CMSampleBuffer buffer);
-		delegate void CompressionOutputCallback (/* void* */ IntPtr outputCallbackClosure, /* void* */ IntPtr sourceFrame, /* OSStatus */ VTStatus status, VTEncodeInfoFlags infoFlags, /* CMSampleBufferRef */ IntPtr cmSampleBufferPtr);
+		delegate void CompressionOutputCallback (/* void* CM_NULLABLE */ IntPtr outputCallbackClosure, /* void* CM_NULLABLE */ IntPtr sourceFrame, /* OSStatus */ VTStatus status, VTEncodeInfoFlags infoFlags, /* CMSampleBufferRef CM_NULLABLE */ IntPtr cmSampleBufferPtr);
 
 		#region Legacy code start
 		//
@@ -69,17 +69,25 @@ namespace XamCore.VideoToolbox {
 				return _static_CompressionOutputCallback;
 			}
 		}
-		
+
+		static void CompressionCallback (IntPtr outputCallbackClosure, IntPtr sourceFrame, VTStatus status, VTEncodeInfoFlags infoFlags, IntPtr cmSampleBufferPtr, bool owns)
+		{
+			var gch = GCHandle.FromIntPtr (outputCallbackClosure);
+			var func = (VTCompressionOutputCallback) gch.Target;
+			if (cmSampleBufferPtr == IntPtr.Zero) {
+				func (sourceFrame, status, infoFlags, null);
+			} else {
+				using (var sampleBuffer = new CMSampleBuffer (cmSampleBufferPtr, owns: owns))
+					func (sourceFrame, status, infoFlags, sampleBuffer);
+			}
+		}
+
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (CompressionOutputCallback))]
 #endif
 		static void CompressionCallback (IntPtr outputCallbackClosure, IntPtr sourceFrame, VTStatus status, VTEncodeInfoFlags infoFlags, IntPtr cmSampleBufferPtr)
 		{
-			var gch = GCHandle.FromIntPtr (outputCallbackClosure);
-			var func = (VTCompressionOutputCallback) gch.Target;
-			using (var sampleBuffer = new CMSampleBuffer (cmSampleBufferPtr)) {
-				func (sourceFrame, status, infoFlags, sampleBuffer);
-			}
+			CompressionCallback (outputCallbackClosure, sourceFrame, status, infoFlags, cmSampleBufferPtr, true);
 		}
 
 		[Obsolete ("This overload requires that the provided compressionOutputCallback manually CFRetain the passed CMSampleBuffer, use Create(int,int,CMVideoCodecType,VTCompressionOutputCallback,VTVideoEncoderSpecification,CVPixelBufferAttributes) variant instead which does not have that requirement.")]
@@ -107,11 +115,7 @@ namespace XamCore.VideoToolbox {
 #endif
 		static void NewCompressionCallback (IntPtr outputCallbackClosure, IntPtr sourceFrame, VTStatus status, VTEncodeInfoFlags infoFlags, IntPtr cmSampleBufferPtr)
 		{
-			var gch = GCHandle.FromIntPtr (outputCallbackClosure);
-			var func = (VTCompressionOutputCallback) gch.Target;
-			using (var sampleBuffer = new CMSampleBuffer (cmSampleBufferPtr, owns: false)) {
-				func (sourceFrame, status, infoFlags, sampleBuffer);
-			}
+			CompressionCallback (outputCallbackClosure, sourceFrame, status, infoFlags, cmSampleBufferPtr, false);
 		}
 
 		[DllImport (Constants.VideoToolboxLibrary)]
