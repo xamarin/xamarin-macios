@@ -97,7 +97,6 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="CopyFilesToOutputDirectory" />
-	<Target Name="CoreCompile" />
 	<Target Name="CreateIpa"/>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
