@@ -23,4 +23,6 @@ Makefile.inc
 test.config
 mac-test-package
 .nuget
+logs
+*.mSYM
 
