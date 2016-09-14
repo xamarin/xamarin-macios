@@ -48,7 +48,6 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string SdkPlatform { get; set; }
 
-		[Required]
 		public bool SdkIsSimulator { get; set; }
 
 		public bool RequireCodeSigning { get; set; }
@@ -219,13 +218,13 @@ namespace Xamarin.MacDev.Tasks
 			return false;
 		}
 
-		bool TryGetSigningCertificates (SecKeychain keychain, out IList<X509Certificate2> certs, string[] prefixes)
+		bool TryGetSigningCertificates (SecKeychain keychain, out IList<X509Certificate2> certs, string[] prefixes, bool allowZeroCerts)
 		{
 			var now = DateTime.Now;
 
 			certs = keychain.FindNamedSigningCertificates (x => StartsWithAny (x, prefixes)).Where (x => now < x.NotAfter).ToList ();
 
-			if (certs.Count == 0) {
+			if (certs.Count == 0 && !allowZeroCerts) {
 				var message = "No valid " + PlatformName + " code signing keys found in keychain. You need to request a codesigning certificate from https://developer.apple.com.";
 
 				Log.LogError (message);
@@ -247,6 +246,35 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			return true;
+		}
+
+		bool TryGetSigningCertificates (out IList<X509Certificate2> certs, bool allowZeroCerts)
+		{
+			try {
+				var keychain = !string.IsNullOrEmpty (Keychain) ? SecKeychain.Open (Keychain) : SecKeychain.Default;
+
+				if (string.IsNullOrEmpty (SigningKey) || MatchesAny (SigningKey, DevelopmentPrefixes)) {
+					// Note: we treat an empty signing key as "developer automatic".
+					if (!TryGetSigningCertificates (keychain, out certs, DevelopmentPrefixes, allowZeroCerts))
+						return false;
+				} else if (MatchesAny (SigningKey, AppStoreDistributionPrefixes)) {
+					if (!TryGetSigningCertificates (keychain, out certs, AppStoreDistributionPrefixes, false))
+						return false;
+				} else if (MatchesAny (SigningKey, DirectDistributionPrefixes)) {
+					if (!TryGetSigningCertificates (keychain, out certs, DirectDistributionPrefixes, false))
+						return false;
+				} else {
+					// The user has specified an exact name to match...
+					if (!TryGetSigningCertificates (keychain, out certs, SigningKey))
+						return false;
+				}
+
+				return true;
+			} catch (Exception ex) {
+				Log.LogError ("{0}", ex.Message);
+				certs = null;
+				return false;
+			}
 		}
 
 		class SigningIdentityComparer : IComparer<CodeSignIdentity>
@@ -328,44 +356,37 @@ namespace Xamarin.MacDev.Tasks
 				return !Log.HasLoggedErrors;
 			}
 
-			try {
-				var keychain = !string.IsNullOrEmpty (Keychain) ? SecKeychain.Open (Keychain) : SecKeychain.Default;
-
-				if (string.IsNullOrEmpty (SigningKey) || MatchesAny (SigningKey, DevelopmentPrefixes)) {
-					// Note: we treat an empty signing key as "developer automatic".
-					if (!TryGetSigningCertificates (keychain, out certs, DevelopmentPrefixes))
-						return false;
-				} else if (MatchesAny (SigningKey, AppStoreDistributionPrefixes)) {
-					if (!TryGetSigningCertificates (keychain, out certs, AppStoreDistributionPrefixes))
-						return false;
-				} else if (MatchesAny (SigningKey, DirectDistributionPrefixes)) {
-					if (!TryGetSigningCertificates (keychain, out certs, DirectDistributionPrefixes))
-						return false;
-				} else {
-					// The user has specified an exact name to match...
-					if (!TryGetSigningCertificates (keychain, out certs, SigningKey))
-						return false;
-				}
-			} catch (Exception ex) {
-				Log.LogError ("{0}", ex.Message);
-				return false;
-			}
-
 			if (!RequireProvisioningProfile && string.IsNullOrEmpty (ProvisioningProfile)) {
-				if (certs.Count > 1) {
-					if (!string.IsNullOrEmpty (SigningKey))
-						Log.LogMessage (MessageImportance.Normal, "Multiple signing identities match '{0}'; using the first match.", SigningKey);
-					else
-						Log.LogMessage (MessageImportance.Normal, "Multiple signing identities found; using the first identity.");
+				if (SdkIsSimulator && AppleSdkSettings.XcodeVersion.Major >= 8) {
+					// Note: Starting with Xcode 8.0, we need to codesign iOS Simulator builds in order for them to run.
+					// The "-" key is a special value allowed by the codesign utility that allows us to get away with
+					// not having an actual codesign key. As far as we know, this only works with Xcode >= 8.
+					DetectedCodeSigningKey = "-";
+				} else {
+					// Try and get a valid codesigning certificate...
+					if (!TryGetSigningCertificates (out certs, SdkIsSimulator))
+						return false;
 
-					for (int i = 0; i < certs.Count; i++) {
-						Log.LogMessage (MessageImportance.Normal, "{0,3}. Signing Identity: {1} ({2})", i + 1,
-						                SecKeychain.GetCertificateCommonName (certs[i]), certs[i].Thumbprint);
+					if (certs.Count > 0) {
+						if (certs.Count > 1) {
+							if (!string.IsNullOrEmpty (SigningKey))
+								Log.LogMessage (MessageImportance.Normal, "Multiple signing identities match '{0}'; using the first match.", SigningKey);
+							else
+								Log.LogMessage (MessageImportance.Normal, "Multiple signing identities found; using the first identity.");
+
+							for (int i = 0; i < certs.Count; i++) {
+								Log.LogMessage (MessageImportance.Normal, "{0,3}. Signing Identity: {1} ({2})", i + 1,
+												SecKeychain.GetCertificateCommonName (certs[i]), certs[i].Thumbprint);
+							}
+						}
+
+						codesignCommonName = SecKeychain.GetCertificateCommonName (certs[0]);
+						DetectedCodeSigningKey = certs[0].Thumbprint;
+					} else {
+						// Note: We don't have to codesign for iOS Simulator builds meant to run on Xcode iOS Simulators
+						// older than 8.0, so it's non-fatal if we don't find any...
 					}
 				}
-
-				codesignCommonName = SecKeychain.GetCertificateCommonName (certs[0]);
-				DetectedCodeSigningKey = certs[0].Thumbprint;
 
 				DetectedBundleId = identity.BundleId ?? GetDefaultBundleId (AppBundleName, null);
 				DetectedAppId = DetectedBundleId;
@@ -374,6 +395,10 @@ namespace Xamarin.MacDev.Tasks
 
 				return !Log.HasLoggedErrors;
 			}
+
+			// Note: if we make it this far, we absolutely need a codesigning certificate
+			if (!TryGetSigningCertificates (out certs, false))
+				return false;
 
 			if (!IsAutoCodeSignProfile (ProvisioningProfile)) {
 				identity.Profile = MobileProvisionIndex.GetMobileProvision (platform, ProvisioningProfile);
