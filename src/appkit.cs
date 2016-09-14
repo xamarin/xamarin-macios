@@ -573,18 +573,19 @@ namespace XamCore.AppKit {
 		NSDockTile DockTile { get; }
 	
 		[Export ("sendAction:to:from:")]
-		bool SendAction (Selector theAction, [NullAllowed] NSObject theTarget, NSObject sender);
+		bool SendAction (Selector theAction, [NullAllowed] NSObject theTarget, [NullAllowed] NSObject sender);
 	
 		[Export ("targetForAction:")]
 		NSObject TargetForAction (Selector theAction);
 	
 		[Export ("targetForAction:to:from:")]
-		NSObject TargetForAction (Selector theAction, NSObject theTarget, NSObject sender);
+		NSObject TargetForAction (Selector theAction, [NullAllowed] NSObject theTarget, [NullAllowed] NSObject sender);
 	
 		[Export ("tryToPerform:with:")]
-		bool TryToPerform (Selector anAction, NSObject target);
+		bool TryToPerform (Selector anAction, [NullAllowed] NSObject target);
 	
 		[Export ("validRequestorForSendType:returnType:")]
+		[return: NullAllowed]
 		NSObject ValidRequestor (string sendType, string returnType);
 	
 		[Export ("reportException:")]
@@ -5061,7 +5062,7 @@ namespace XamCore.AppKit {
 		void UpdateChangeCount (NSDocumentChangeType change);
 
 		[Export ("presentError:modalForWindow:delegate:didPresentSelector:contextInfo:")]
-		void PresentError (NSError error, NSWindow window, NSObject delegateObject, Selector didPresentSelector, IntPtr contextInfo);
+		void PresentError (NSError error, NSWindow window, [NullAllowed] NSObject delegateObject, [NullAllowed] Selector didPresentSelector, IntPtr contextInfo);
 
 		[Export ("presentError:")]
 		bool PresentError (NSError error);
@@ -5347,7 +5348,7 @@ namespace XamCore.AppKit {
 		void CloseAllDocuments (NSObject delegateObject, Selector didCloseAllSelector, IntPtr contextInfo);
 
 		[Export ("presentError:modalForWindow:delegate:didPresentSelector:contextInfo:")]
-		void PresentError (NSError error, NSWindow window, NSObject delegateObject, Selector didPresentSelector, IntPtr contextInfo);
+		void PresentError (NSError error, NSWindow window, [NullAllowed] NSObject delegateObject, [NullAllowed] Selector didPresentSelector, IntPtr contextInfo);
 
 		[Export ("presentError:")]
 		bool PresentError (NSError error);
@@ -11694,14 +11695,14 @@ namespace XamCore.AppKit {
 	[BaseType (typeof (NSObject))]
 	public partial interface NSResponder : NSCoding {
 		[Export ("tryToPerform:with:")]
-		bool TryToPerformwith (Selector anAction, NSObject anObject);
+		bool TryToPerformwith (Selector anAction, [NullAllowed] NSObject anObject);
 
 		[Export ("performKeyEquivalent:")]
 		bool PerformKeyEquivalent (NSEvent theEvent);
 
 		[Export ("validRequestorForSendType:returnType:")]
 #if XAMCORE_2_0
-		NSObject ValidRequestorForSendType (string sendType, string returnType);
+		NSObject ValidRequestorForSendType ([NullAllowed] string sendType, [NullAllowed] string returnType);
 #else
 		[Obsolete ("Use ValidRequestorForSendType instead")]
 		NSObject ValidRequestorForSendTypereturnType (string sendType, string returnType);
@@ -18822,7 +18823,7 @@ namespace XamCore.AppKit {
 		NSDictionary DeviceDescription { get; }
 	
 		[Export ("sendEvent:")]
-		void SendEvent (NSEvent  theEvent);
+		void SendEvent (NSEvent theEvent);
 	
 		[Export ("mouseLocationOutsideOfEventStream")]
 		CGPoint MouseLocationOutsideOfEventStream { get; }
@@ -20893,7 +20894,7 @@ namespace XamCore.AppKit {
 	[Category, BaseType (typeof (NSResponder))]
 	public partial interface NSControlEditingSupport {
 		[Lion, Export ("validateProposedFirstResponder:forEvent:")]
-		bool ValidateProposedFirstResponder (NSResponder responder, NSEvent forEvent);
+		bool ValidateProposedFirstResponder (NSResponder responder, [NullAllowed] NSEvent forEvent);
 	}
 
 	public partial interface NSResponder {
@@ -20901,7 +20902,7 @@ namespace XamCore.AppKit {
 		bool WantsScrollEventsForSwipeTrackingOnAxis (NSEventGestureAxis axis);
 
 		[Lion, Export ("supplementalTargetForAction:sender:")]
-		NSObject SupplementalTargetForAction (Selector action, NSObject sender);
+		NSObject SupplementalTargetForAction (Selector action, [NullAllowed] NSObject sender);
 
 		[MountainLion, Export ("smartMagnifyWithEvent:")]
 		void SmartMagnify (NSEvent withEvent);
@@ -20928,7 +20929,7 @@ namespace XamCore.AppKit {
 	[Category, BaseType (typeof (NSResponder))]
 	public partial interface NSTextFinderSupport {
 		[Lion, Export ("performTextFinderAction:")]
-		void PerformTextFinderAction (NSObject sender);
+		void PerformTextFinderAction ([NullAllowed] NSObject sender);
 	}
 
 	public partial interface NSRunningApplication {
