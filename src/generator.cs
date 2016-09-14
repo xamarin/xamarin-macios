@@ -707,6 +707,34 @@ public class DelegateNameAttribute : Attribute {
 	public string Name { get; set; }
 }
 
+//
+// Used to specify the delegate property name that will be created when
+// the generator creates the delegate property on the host
+// class that holds events.
+//
+// This is really useful when you have two overload methods that makes
+// sense to keep them named as is but you want to expose them in the host class
+// with a better given name.
+//
+// example:
+// interface SomeDelegate {
+//     [Export ("foo"), DelegateApiName ("Confirmation"), DelegateName ("Func<bool>"), DefaultValue (false)]
+//     bool Confirm (Some source);
+// }
+//
+// Generates propety in the host class:
+//	Func<bool> Confirmation { get; set; }
+//
+//
+public class DelegateApiNameAttribute : Attribute {
+	public DelegateApiNameAttribute (string apiName)
+	{
+		Name = apiName;
+	}
+
+	public string Name { get; set; }
+}
+
 public class EventNameAttribute : Attribute {
 	public EventNameAttribute (string s)
 	{
@@ -2732,7 +2760,7 @@ public partial class Generator : IMemberGatherer {
 					} else if (attr is AlphaAttribute) {
 						continue;
 #endif
-					} else if (attr is SealedAttribute || attr is EventArgsAttribute || attr is DelegateNameAttribute || attr is EventNameAttribute || attr is IgnoredInDelegateAttribute || attr is ObsoleteAttribute || attr is NewAttribute || attr is PostGetAttribute || attr is NullAllowedAttribute || attr is CheckDisposedAttribute || attr is SnippetAttribute || attr is AppearanceAttribute || attr is ThreadSafeAttribute || attr is AutoreleaseAttribute || attr is EditorBrowsableAttribute || attr is AdviceAttribute || attr is OverrideAttribute)
+					} else if (attr is SealedAttribute || attr is EventArgsAttribute || attr is DelegateNameAttribute || attr is EventNameAttribute || attr is IgnoredInDelegateAttribute || attr is ObsoleteAttribute || attr is NewAttribute || attr is PostGetAttribute || attr is NullAllowedAttribute || attr is CheckDisposedAttribute || attr is SnippetAttribute || attr is AppearanceAttribute || attr is ThreadSafeAttribute || attr is AutoreleaseAttribute || attr is EditorBrowsableAttribute || attr is AdviceAttribute || attr is OverrideAttribute || attr is DelegateApiNameAttribute)
 						continue;
 					else if (attr is MarshalNativeExceptionsAttribute)
 						continue;
@@ -6648,7 +6676,7 @@ public partial class Generator : IMemberGatherer {
 								eaname = "<NOTREACHED>";
 							
 							if (bta.Singleton || mi.GetParameters ().Length == 1)
-								print ("EventHandler handler = {0};", PascalCase (mi.Name));
+								print ("EventHandler handler = {0};", PascalCase (miname));
 							else
 								print ("EventHandler<{0}> handler = {1};", GetEventArgName (mi), miname);
 
@@ -6688,7 +6716,7 @@ public partial class Generator : IMemberGatherer {
 							if (debug)
 								print ("Console.WriteLine (\"Method {0}.{1} invoked\");", dtype.Name, mi.Name);
 
-							print ("{0} handler = {1};", delname, PascalCase (mi.Name));
+							print ("{0} handler = {1};", delname, PascalCase (miname));
 							print ("if (handler != null)");
 							print ("	return handler ({0}{1});",
 							       sender,
@@ -6770,7 +6798,9 @@ public partial class Generator : IMemberGatherer {
 				}
 				print ("");
 
-				
+				string prev_miname = null;
+				int minameCount = 0;
+				repeatedDelegateApiNames.Clear ();
 				// Now add the instance vars and event handlers
 				foreach (var dtype in bta.Events.OrderBy (d => d.Name)) {
 					foreach (var mi in dtype.GatherMethods ().OrderBy (m => m.Name)) {
@@ -6778,6 +6808,14 @@ public partial class Generator : IMemberGatherer {
 							continue;
 
 						string ensureArg = bta.KeepRefUntil == null ? "" : "this";
+
+						var miname = PascalCase (mi.Name);
+						if (miname == prev_miname) {
+							// overloads, add a numbered suffix (it's internal)
+							prev_miname = miname;
+							miname += (++minameCount).ToString ();
+						} else
+							prev_miname = miname;
 						
 						if (mi.ReturnType == typeof (void)){
 							foreach (ObsoleteAttribute oa in mi.GetCustomAttributes (typeof (ObsoleteAttribute), false))
@@ -6787,13 +6825,13 @@ public partial class Generator : IMemberGatherer {
 								print ("public event EventHandler {0} {{", CamelCase (GetEventName (mi)));
 							else 
 								print ("public event EventHandler<{0}> {1} {{", GetEventArgName (mi), CamelCase (GetEventName (mi)));
-							print ("\tadd {{ Ensure{0} ({1}).{2} += value; }}", dtype.Name, ensureArg, PascalCase (mi.Name));
-							print ("\tremove {{ Ensure{0} ({1}).{2} -= value; }}", dtype.Name, ensureArg, PascalCase (mi.Name));
+							print ("\tadd {{ Ensure{0} ({1}).{2} += value; }}", dtype.Name, ensureArg, miname);
+							print ("\tremove {{ Ensure{0} ({1}).{2} -= value; }}", dtype.Name, ensureArg, miname);
 							print ("}\n");
 						} else {
-							print ("public {0} {1} {{", GetDelegateName (mi), CamelCase (mi.Name));
-							print ("\tget {{ return Ensure{0} ({1}).{2}; }}", dtype.Name, ensureArg, PascalCase (mi.Name));
-							print ("\tset {{ Ensure{0} ({1}).{2} = value; }}", dtype.Name, ensureArg, PascalCase (mi.Name));
+							print ("public {0} {1} {{", GetDelegateName (mi), CamelCase (GetDelegateApiName (mi)));
+							print ("\tget {{ return Ensure{0} ({1}).{2}; }}", dtype.Name, ensureArg, miname);
+							print ("\tset {{ Ensure{0} ({1}).{2} = value; }}", dtype.Name, ensureArg, miname);
 							print ("}\n");
 						}
 					}
@@ -7299,6 +7337,25 @@ public partial class Generator : IMemberGatherer {
 		var ea = (EventNameAttribute) a;
 		
 		return ea.EvtName;
+	}
+
+	HashSet<string> repeatedDelegateApiNames = new HashSet<string> ();
+	string GetDelegateApiName (MethodInfo mi)
+	{
+		var a = GetAttribute (mi, typeof (DelegateApiNameAttribute));
+
+		if (repeatedDelegateApiNames.Contains (mi.Name) && a == null)
+			throw new BindingException (1043, true, $"Repeated overload {mi.Name} and no [DelegateApiNameAttribute] provided to generate property name on host class.");
+		if (a == null) {
+			repeatedDelegateApiNames.Add (mi.Name);
+			return mi.Name;
+		}
+
+		var apiName = (DelegateApiNameAttribute) a;
+		if (repeatedDelegateApiNames.Contains (apiName.Name))
+			throw new BindingException (1044, true, $"Repeated name '{apiName.Name}' provided in [DelegateApiNameAttribute]");
+
+		return apiName.Name;
 	}
 
 	string GetEventArgName (MethodInfo mi)
