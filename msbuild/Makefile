@@ -105,6 +105,7 @@ endif
 WATCH_TARGETS =                                                  \
 	$(wildcard Xamarin.iOS.Tasks.Core/Xamarin.WatchOS.*.props)   \
 	$(wildcard Xamarin.iOS.Tasks.Core/Xamarin.WatchOS.*.targets) \
+	Xamarin.iOS.Tasks.Core/NoCode.cs                             \
 
 WATCH_DIRECTORIES =                                                                                             \
 	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.WatchOS/v1.0/RedistList \
