@@ -453,9 +453,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			RequireCodeSigning="$(EnableCodeSigning)"
 			SdkPlatform="MacOSX"
 			ProvisioningProfile="$(CodeSignProvision)"
-			SigningKey="$(CodeSigningKey)"
-			SdkIsSimulator="false"
-			>
+			SigningKey="$(CodeSigningKey)">
 			<Output TaskParameter="DetectedAppId" PropertyName="_AppIdentifier" />
 			<Output TaskParameter="DetectedBundleId" PropertyName="_BundleIdentifier" />
 			<Output TaskParameter="DetectedCodeSigningKey" PropertyName="_CodeSigningKey" />
