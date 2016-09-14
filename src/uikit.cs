@@ -11834,11 +11834,9 @@ namespace XamCore.UIKit {
 		[Export ("textFieldDidEndEditing:"), EventArgs ("UITextField"), EventName ("Ended")]
 		void EditingEnded (UITextField textField);
 
-		//TODO: Until we fix the below bug (hopefuly SR0) and get better names we will have this out of the API
-		// We have a generator bug (https://bugzilla.xamarin.com/show_bug.cgi?id=43579) that won't allow overloads (AmbiguousMatchException) in protocols this is the why of Foo2 naming below
-		//[iOS (10, 0)]
-		//[Export ("textFieldDidEndEditing:reason:"), EventArgs ("UITextFieldEditingEnded"), EventName ("Ended2")]
-		//void EditingEnded2 (UITextField textField, UITextFieldDidEndEditingReason reason);
+		[iOS (10, 0)]
+		[Export ("textFieldDidEndEditing:reason:"), EventArgs ("UITextFieldEditingEnded"), EventName ("EndedWithReason")]
+		void EditingEnded (UITextField textField, UITextFieldDidEndEditingReason reason);
 		
 		[Export ("textFieldShouldClear:"), DelegateName ("UITextFieldCondition"), DefaultValue ("true")]
 		bool ShouldClear (UITextField textField);
@@ -11996,24 +11994,22 @@ namespace XamCore.UIKit {
 		void SelectionChanged (UITextView textView);
 
 		[Since (7,0)]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use ShouldInteractWithUrl2 instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use ShouldInteractWithUrl overload that takes UITextItemInteraction instead")]
 		[Export ("textView:shouldInteractWithURL:inRange:"), DelegateName ("Func<UITextView,NSUrl,NSRange,bool>"), DefaultValue ("true")]
 		bool ShouldInteractWithUrl (UITextView textView, NSUrl URL, NSRange characterRange);
 
 		[Since (7,0)]
-		[Deprecated (PlatformName.iOS, 10, 0, message: "Use ShouldInteractWithTextAttachment2 instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use ShouldInteractWithTextAttachment overload that takes UITextItemInteraction instead")]
 		[Export ("textView:shouldInteractWithTextAttachment:inRange:"), DelegateName ("Func<UITextView,NSTextAttachment,NSRange,bool>"), DefaultValue ("true")]
 		bool ShouldInteractWithTextAttachment (UITextView textView, NSTextAttachment textAttachment, NSRange characterRange);
 
-		//TODO: Until we fix the below bug (hopefuly SR0) and get better names we will have this out of the API
-		// We have a generator bug (https://bugzilla.xamarin.com/show_bug.cgi?id=43579) that won't allow overloads (AmbiguousMatchException) in protocols this is the why of Foo2 naming below
-		//[iOS (10, 0)]
-		//[Export ("textView:shouldInteractWithURL:inRange:interaction:"), DelegateName ("UITextViewDelegateShouldInteractUrlDelegate"), DefaultValue ("true")]
-		//bool ShouldInteractWithUrl2 (UITextView textView, NSUrl url, NSRange characterRange, UITextItemInteraction interaction);
+		[iOS (10, 0)]
+		[Export ("textView:shouldInteractWithURL:inRange:interaction:"), DelegateApiName ("AllowUrlInteraction"), DelegateName ("UITextViewDelegateShouldInteractUrlDelegate"), DefaultValue ("true")]
+		bool ShouldInteractWithUrl (UITextView textView, NSUrl url, NSRange characterRange, UITextItemInteraction interaction);
 
-		//[iOS (10,0)]
-		//[Export ("textView:shouldInteractWithTextAttachment:inRange:interaction:"), DelegateName ("UITextViewDelegateShouldInteractTextDelegate"), DefaultValue ("true")]
-		//bool ShouldInteractWithTextAttachment2 (UITextView textView, NSTextAttachment textAttachment, NSRange characterRange, UITextItemInteraction interaction);
+		[iOS (10,0)]
+		[Export ("textView:shouldInteractWithTextAttachment:inRange:interaction:"), DelegateApiName ("AllowTextAttachmentInteraction"), DelegateName ("UITextViewDelegateShouldInteractTextDelegate"), DefaultValue ("true")]
+		bool ShouldInteractWithTextAttachment (UITextView textView, NSTextAttachment textAttachment, NSRange characterRange, UITextItemInteraction interaction);
 	}
 	
 	[NoTV]
