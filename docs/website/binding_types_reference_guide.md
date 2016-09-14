@@ -148,7 +148,7 @@ declaration in your Model class. For example:
 
 ```
 [BaseType (typeof (UINavigationControllerDelegate))]
-[Model]
+[Model][Protocol]
 public interface UIImagePickerControllerDelegate {
     [Export ("imagePickerController:didFinishPickingImage:editingInfo:"), EventArgs ("UIImagePickerImagePicked")]
     void FinishedPickingImage (UIImagePickerController picker, UIImage image, NSDictionary editingInfo);
@@ -180,7 +180,7 @@ himself. For example, the `ShouldScrollToTop` definition is this:
 
 ```
 [BaseType (typeof (NSObject))]
-[Model]
+[Model][Protocol]
 public interface UIScrollViewDelegate {
     [Export ("scrollViewShouldScrollToTop:"), DelegateName ("UIScrollViewCondition"), DefaultValue ("true")]
     bool ShouldScrollToTop (UIScrollView scrollView);
@@ -270,7 +270,7 @@ public interface UIAccelerometer {
 }
 
 [BaseType (typeof (NSObject))]
-[Model]
+[Model][Protocol]
 public interface UIAccelerometerDelegate {
 }
 ```
@@ -301,7 +301,7 @@ public interface UIActionSheet {
 }
 
 [BaseType (typeof (NSObject))]
-[Model]
+[Model][Protocol]
 public interface UIActionSheetDelegate {
     [Export ("actionSheet:didDismissWithButtonIndex:"), EventArgs ("UIButton")]
     void Dismissed (UIActionSheet actionSheet, nint buttonIndex);
@@ -443,7 +443,7 @@ The following is taken from Xamarin.iOS:
 
 ```
 [BaseType (typeof (NSObject))]
-[Model]
+[Model][Protocol]
 public interface UITableViewDataSource {
     [Export ("tableView:numberOfRowsInSection:")]
     [Abstract]
@@ -477,7 +477,7 @@ attribute:
 
 ```
 [BaseType (typeof (NSObject))]
-[Model]
+[Model][Protocol]
 interface CameraDelegate {
     [Export ("camera:shouldPromptForAction:"), DefaultValue (false)]
     bool ShouldUploadToServer (Camera camera, CameraAction action);
@@ -517,7 +517,7 @@ Example:
 
 ```
 [BaseType (typeof (NSObject))]
-[Model]
+[Model][Protocol]
 public interface NSAnimationDelegate {
     [Export ("animation:valueForProgress:"), DelegateName ("NSAnimationProgress"), DefaultValueFromArgumentAttribute ("progress")]
     float ComputeAnimationCurve (NSAnimation animation, nfloat progress);
@@ -536,6 +536,28 @@ also: [NoDefaultValueAttribute](#NoDefaultValueAttribute), [DefaultValueAttribut
 
 
 
+## IgnoredInDelegateAttribute
+
+Sometimes it makes sense not to expose an event or delegate property from a 
+Model class into the host class so adding this attribute will instruct the
+generator to avoid the generation of any method decorated with it.
+
+```
+[BaseType (typeof (UINavigationControllerDelegate))]
+[Model][Protocol]
+public interface UIImagePickerControllerDelegate {
+    [Export ("imagePickerController:didFinishPickingImage:editingInfo:"), EventArgs ("UIImagePickerImagePicked")]
+    void FinishedPickingImage (UIImagePickerController picker, UIImage image, NSDictionary editingInfo);
+    
+    [Export ("imagePickerController:didFinishPickingImage:"), IgnoredInDelegate)] // No event generated for this method
+    void FinishedPickingImage (UIImagePickerController picker, UIImage image);
+}
+```
+
+ <a name="IgnoredInDelegateAttribute" class="injected"></a>
+
+
+
 ## DelegateNameAttribute
 
 This attribute is used in Model methods that return values to set the name of
@@ -545,7 +567,7 @@ Example:
 
 ```
 [BaseType (typeof (NSObject))]
-[Model]
+[Model][Protocol]
 public interface NSAnimationDelegate {
     [Export ("animation:valueForProgress:"), DelegateName ("NSAnimationProgress"), DefaultValueFromArgumentAttribute ("progress")]
     float ComputeAnimationCurve (NSAnimation animation, float progress);
@@ -562,6 +584,38 @@ public delegate float NSAnimationProgress (MonoMac.AppKit.NSAnimation animation,
  <a name="EventArgsAttribute" class="injected"></a>
 
 
+
+## DelegateApiNameAttribute
+
+This attribute is used to allow the generator to change the name of the property generated
+in the host class. Sometimes it is useful when the name of the FooDelegate class method 
+makes sense for the Delegate class, but would look odd in the host class as a property.
+
+Also this is really useful (and needed) when you have two or more overload methods that makes
+sense to keep them named as is in the FooDelegate class but you want to expose them in the host
+class with a better given name.
+
+Example:
+
+```
+[BaseType (typeof (NSObject))]
+[Model][Protocol]
+public interface NSAnimationDelegate {
+    [Export ("animation:valueForProgress:"), DelegateApiName ("ComputeAnimationCurve"), DelegateName ("Func<NSAnimation, float, float>"), DefaultValueFromArgument ("progress")]
+    float GetValueForProgress (NSAnimation animation, float progress);
+}
+```
+
+With the above definition, the generator will produce the following public
+declaration in the host class:
+
+```
+public Func<NSAnimation, float, float> ComputeAnimationCurve { get; set; }
+```
+
+ <a name="DelegateApiNameAttribute" class="injected"></a>
+ 
+ 
 ## EventArgsAttribute
 
 For events that take more than one parameter (in Objective-C the convention
@@ -574,7 +628,7 @@ For example:
 
 ```
 [BaseType (typeof (UINavigationControllerDelegate))]
-[Model]
+[Model][Protocol]
 public interface UIImagePickerControllerDelegate {
     [Export ("imagePickerController:didFinishPickingImage:editingInfo:"), EventArgs ("UIImagePickerImagePicked")]
     void FinishedPickingImage (UIImagePickerController picker, UIImage image, NSDictionary editingInfo);
@@ -652,7 +706,7 @@ specified selector is implemented in this class.
 
 ```
 [BaseType (typeof (NSObject))]
-[Model]
+[Model][Protocol]
 interface CameraDelegate {
     [Export ("shouldDisplayPopup"), NoDefaultValoue]
     bool ShouldUploadToServer ();
@@ -1623,7 +1677,7 @@ interface Demo {
 }
 
 [BaseType (typeof (NSObject))]
-[Model]
+[Model][Protocol]
 interface DemoDelegate {
     [Export ("doDemo")]
     void DoDemo ();
