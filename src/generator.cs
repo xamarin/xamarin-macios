@@ -7137,7 +7137,9 @@ public partial class Generator : IMemberGatherer {
 		Type currentType = type;
 		do
 		{
-			MethodInfo method = currentType.GetMethod (mi.Name);
+			// avoid AmbiguousMatchException when GetMethod is used.
+			var parameters = mi.GetParameters ().Select ((arg) => arg.ParameterType).ToArray ();
+			MethodInfo method = currentType.GetMethod (mi.Name, parameters);
 			if (method != null) {
 				string wrap;
 				ExportAttribute export = Generator.GetExportAttribute (method, out wrap);
