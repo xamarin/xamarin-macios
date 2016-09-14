@@ -14,6 +14,8 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string CodesignAllocate { get; set; }
 
+		public bool DisableTimestamp { get; set; }
+
 		public string Entitlements { get; set; }
 
 		public string Keychain { get; set; }
@@ -54,7 +56,7 @@ namespace Xamarin.MacDev.Tasks
 			args.Add ("--force");
 
 			if (IsAppExtension)
-				args.Add("--deep");
+				args.Add ("--deep");
 			
 			args.Add ("--sign");
 			args.AddQuoted (SigningKey);
@@ -74,6 +76,9 @@ namespace Xamarin.MacDev.Tasks
 				args.AddQuoted (Path.GetFullPath (Entitlements));
 			}
 
+			if (DisableTimestamp)
+				args.Add ("--timestamp=none");
+
 			if (!string.IsNullOrEmpty (ExtraArgs))
 				args.Add (ExtraArgs);
 
@@ -92,6 +97,7 @@ namespace Xamarin.MacDev.Tasks
 		{
 			Log.LogTaskName ("Codesign");
 			Log.LogTaskProperty ("CodesignAllocate", CodesignAllocate);
+			Log.LogTaskProperty ("DisableTimestamp", DisableTimestamp);
 			Log.LogTaskProperty ("Entitlements", Entitlements);
 			Log.LogTaskProperty ("Keychain", Keychain);
 			Log.LogTaskProperty ("Resource", Resource);
