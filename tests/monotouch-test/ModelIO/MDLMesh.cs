@@ -184,6 +184,8 @@ namespace MonoTouchFixtures.ModelIO {
 		[Test]
 		public void CreateSphereTest ()
 		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+
 			Vector3 V3 = new Vector3 (1, 2, 3);
 			Vector2i V2i = new Vector2i (4, 5);
 
@@ -201,6 +203,8 @@ namespace MonoTouchFixtures.ModelIO {
 		[Test]
 		public void CreateHemisphereTest ()
 		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+
 			Vector3 V3 = new Vector3 (1, 2, 3);
 			Vector2i V2i = new Vector2i (4, 5);
 
@@ -218,6 +222,8 @@ namespace MonoTouchFixtures.ModelIO {
 		[Test]
 		public void CreateCapsuleTest ()
 		{
+			TestRuntime.AssertXcodeVersion (8,0);
+
 			Vector3 V3 = new Vector3 (1, 2, 3);
 			Vector2i V2i = new Vector2i (4, 5);
 
@@ -235,6 +241,8 @@ namespace MonoTouchFixtures.ModelIO {
 		[Test]
 		public void CreateConeTest ()
 		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+
 			Vector3 V3 = new Vector3 (1, 2, 3);
 			Vector2i V2i = new Vector2i (4, 5);
 
