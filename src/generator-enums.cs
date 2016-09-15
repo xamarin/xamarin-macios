@@ -107,7 +107,7 @@ public partial class Generator {
 			// the *Extensions has the same version requirement as the enum itself
 			PrintPlatformAttributes (type);
 			print ("[CompilerGenerated]");
-			print ("static public class {0}Extensions {{", type.Name);
+			print ("static public partial class {0}Extensions {{", type.Name);
 			indent++;
 
 			// note: not every binding namespace will start with ns.Prefix (e.g. MonoTouch.)
