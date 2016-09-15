@@ -150,10 +150,16 @@ namespace XamCore.CoreAnimation {
 	
 		[Export ("addToRunLoop:forMode:")]
 		void AddToRunLoop (NSRunLoop runloop, [NullAllowed] NSString mode);
+
+		[Wrap ("AddToRunLoop (runloop, mode.GetConstant ())")]
+		void AddToRunLoop (NSRunLoop runloop, NSRunLoopMode mode);
 	
 		[Export ("removeFromRunLoop:forMode:")]
 		void RemoveFromRunLoop (NSRunLoop runloop, [NullAllowed] NSString mode);
-	
+
+		[Wrap ("RemoveFromRunLoop (runloop, mode.GetConstant ())")]
+		void RemoveFromRunLoop (NSRunLoop runloop, NSRunLoopMode mode);
+
 		[Export ("invalidate")]
 		void Invalidate ();
 	
