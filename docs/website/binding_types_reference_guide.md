@@ -1952,6 +1952,105 @@ interface MyMutableString {
 }
 ```
 
+# Enum Attributes
+
+Mapping `NSString` constants to enum values is a easy way to create better
+.NET API. It:
+
+* allows code completion to be more useful, by showing **only** the correct values for the API;
+* adds type safety, you cannot use another `NSString` constant in a incorrect context; and
+* allows to hide some constants, making code completion show shorter API list without losing functionality.
+
+Example:
+
+```
+enum NSRunLoopMode {
+
+	[DefaultEnumValue]
+	[Field ("NSDefaultRunLoopMode")]
+	Default,
+
+	[Field ("NSRunLoopCommonModes")]
+	Common,
+	
+	[Field (null)]
+	Other = 1000
+}
+```
+
+From the above binding definition the generator will create the `enum` itself and will
+also create a `*Extensions` static type that includes two-ways conversion methods
+between the enum values and the `NSString` constants. This means the constants remains
+available to developers even if they are not part of the API.
+
+Examples:
+
+```
+// using the NSString constant in a different API / framework / 3rd party code
+CallApiRequiringAnNSString (NSRunLoopMode.Default.GetConstant ());
+```
+
+```
+// converting the constants from a different API / framework / 3rd party code
+var constant = CallApiReturningAnNSString ();
+// back into an enum value
+CallApiWithEnum (NSRunLoopModeExtensions.GetValue (constant));
+```
+
+## DefaultEnumValueAttribute
+
+You can decorate **one** enum value with this attribute. This will become the constant
+being returned if the enum value is not known.
+
+From the example above:
+
+```
+var x = (NSRunLoopMode) 99;
+Call (x.GetConstant ()); // NSDefaultRunLoopMode will be used
+```
+
+If no enum value is decorated then a `NotSupportedException` will be thrown.
+
+## ErrorDomainAttribute
+
+Error codes are bound as an enum values. There's generally an error domain for them
+and it's not always easy to find which one applies (or if one even exists).
+
+You can use this attribute to associate the error domain with the enum itself.
+
+Example:
+
+```
+	[Native]
+	[ErrorDomain ("AVKitErrorDomain")]
+	public enum AVKitError : nint {
+		None = 0,
+		Unknown = -1000,
+		PictureInPictureStartFailed = -1001
+	}
+```
+
+You can then call the extension method `GetDomain` to get the domain constant of
+any error.
+
+## FieldAttribute
+
+This is the same `[Field]` attribute used for constants inside type. It can also
+be used inside enums to map a value with a specific constant.
+
+A `null` value can be used to specify which enum value should be returned if a
+`null` `NSString` constant is specified.
+
+From the example above:
+
+```
+var constant = NSRunLoopMode.NewInWatchOS3; // will be null in watchOS 2.x
+Call (NSRunLoopModeExtensions.GetValue (constant)); // will return 1000
+```
+
+If no `null` value is present then an `ArgumentNullException` will be thrown.
+
+
 # Global Attributes
 
 Global attributes are either applied using the `[assembly:]` attribute modifier

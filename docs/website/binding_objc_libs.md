@@ -779,6 +779,67 @@ interface LonelyClass {
  <a name="Binding_Notifications" class="injected"></a>
 
 
+## Binding Enums
+
+You can add `enum` directly in your binding files to makes it easier
+to use them inside API definitions - without using a different source
+file (that needs to be compiled in both the bindings and the final 
+project).
+
+Example:
+
+```
+[Native] // needed for enums defined as NSInteger in ObjC
+enum MyEnum {}
+
+interface MyType {
+	[Export ("initWithEnum:")]
+	Int Constructor (MyEnum value);
+}
+```
+
+It is also possible to create your own enums to replace `NSString`
+constants. In this case the generator will **automatically** create the
+methods to convert enums values and NSString constants for you.
+
+Example:
+
+```
+enum NSRunLoopMode {
+
+	[DefaultEnumValue]
+	[Field ("NSDefaultRunLoopMode")]
+	Default,
+
+	[Field ("NSRunLoopCommonModes")]
+	Common,
+	
+	[Field (null)]
+	Other = 1000
+}
+
+interface MyType {
+	[Export ("performForMode:")]
+	void Perform (NSString mode);
+ 
+	[Wrap ("Perform (mode.GetConstant ())")]
+	void Perform (NSRunLoopMode mode);
+}
+```
+
+In the above example you could decide to decorate `void Perform (NSString mode);`
+with an `[Internal]` attribute. This will **hide** the constant-based API
+from your binding consumers.
+
+However this would limit subclassing the type as the nicer API alternative
+uses a `[Wrap]` attribute. Those generated methods are not `virtual`, i.e.
+you won't be able to override them - which may, or not, be a good choice.
+
+An alternative is to mark the original, `NSString`-based, definition as 
+`[Protected]`. This will allow subclassing to work, when required, and 
+the wrap'ed version will still work and call the overriden method.
+
+
 ## Binding Notifications
 
 Notifications are messages that are posted to the
