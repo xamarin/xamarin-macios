@@ -1217,13 +1217,10 @@ xamarin_initialize ()
 	install_nsautoreleasepool_hooks ();
 
 #if defined (DEBUG)
-// Disable this for watchOS for now, since we still have known bugs with the COOP GC causing crashes.
-#if !TARGET_OS_WATCH
 	if (xamarin_gc_pump) {
 		pthread_t gc_thread;
 		pthread_create (&gc_thread, NULL, pump_gc, NULL);
 	}
-#endif // !TARGET_OS_WATCH
 #endif
 
 	gc_enable_new_refcount ();
