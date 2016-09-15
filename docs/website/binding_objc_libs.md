@@ -794,7 +794,7 @@ enum MyEnum {}
 
 interface MyType {
 	[Export ("initWithEnum:")]
-	Int Constructor (MyEnum value);
+	IntPtr Constructor (MyEnum value);
 }
 ```
 
