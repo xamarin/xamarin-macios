@@ -227,10 +227,12 @@ namespace Xamarin.iOS.Tasks
 				var props = new PDictionary ();
 				props.Add ("ApplicationPath", new PString (string.Format ("Applications/{0}", Path.GetFileName (AppBundleDir.ItemSpec))));
 				props.Add ("CFBundleIdentifier", new PString (plist.GetCFBundleIdentifier ()));
-				if (plist.GetCFBundleShortVersionString () != null)
-					props.Add ("CFBundleShortVersionString", new PString (plist.GetCFBundleShortVersionString ()));
-				else if (plist.GetCFBundleVersion () != null)
-					props.Add ("CFBundleShortVersionString", new PString (plist.GetCFBundleVersion ()));
+
+				var version = plist.GetCFBundleShortVersionString ();
+				var build = plist.GetCFBundleVersion ();
+
+				props.Add ("CFBundleShortVersionString", new PString (version ?? (build ?? "1.0")));
+				props.Add ("CFBundleVersion", new PString (build ?? "1.0"));
 
 				var iconFiles = plist.GetCFBundleIconFiles ();
 				var iconDict = plist.GetCFBundleIcons ();
