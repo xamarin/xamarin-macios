@@ -805,29 +805,29 @@ namespace XamCore.Security {
 
 		NSObject FetchObject (IntPtr key)
 		{
-			return Runtime.GetNSObject<NSObject> (Fetch (key));
+			return Runtime.GetNSObject (Fetch (key));
 		}
 
 		string FetchString (IntPtr key)
 		{
-			return NSString.FromHandle (Fetch (key));
+			return (NSString) FetchObject (key);
 		}
 
 		int FetchInt (IntPtr key)
 		{
-			var obj = Runtime.GetNSObject<NSNumber> (Fetch (key));
+			var obj = (NSNumber) FetchObject (key);
 			return obj == null ? -1 : obj.Int32Value;
 		}
 
 		bool FetchBool (IntPtr key, bool defaultValue)
 		{
-			var obj = Runtime.GetNSObject<NSNumber> (Fetch (key));
+			var obj = (NSNumber) FetchObject (key);
 			return obj == null ? defaultValue : obj.Int32Value != 0;
 		}
 
 		T Fetch<T> (IntPtr key) where T : NSObject
 		{
-			return Runtime.GetNSObject<T> (Fetch (key));
+			return (T) FetchObject (key);
 		}
 		
 
