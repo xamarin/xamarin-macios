@@ -140,7 +140,7 @@ public partial class Generator {
 			foreach (var kvp in fields) {
 				var f = kvp.Key;
 				var fa = kvp.Value;
-				print ("[Field (\"{0}\", \"{1}\")]", fa.SymbolName, library_name);
+				print ("[Field (\"{0}\", \"{1}\")]", fa.SymbolName, fa.LibraryName ?? library_name);
 				print ("static NSString _{0};", fa.SymbolName);
 				print ("");
 				// the attributes (availability and field) are important for our tests
@@ -151,7 +151,7 @@ public partial class Generator {
 				indent++;
 				print ("if (_{0} == null)", fa.SymbolName);
 				indent++;
-				print ("_{0} = Dlfcn.GetStringConstant (Libraries.{1}.Handle, \"{0}\");", fa.SymbolName, library_name);
+				print ("_{0} = Dlfcn.GetStringConstant (Libraries.{1}.Handle, \"{0}\");", fa.SymbolName, fa.LibraryName ?? library_name);
 				indent--;
 				print ("return _{0};", fa.SymbolName);
 				indent--;
