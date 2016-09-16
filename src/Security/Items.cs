@@ -1051,6 +1051,20 @@ namespace XamCore.Security {
 			}
 		}
 
+#if XAMCORE_2_0 && !WATCH && !TVOS
+		[iOS (9, 0), Mac (10, 11)]
+		public XamCore.LocalAuthentication.LAContext AuthenticationContext {
+			get {
+				return Fetch<XamCore.LocalAuthentication.LAContext> (SecItem.UseAuthenticationContext);
+			}
+			set {
+				if (value == null)
+					throw new ArgumentNullException (nameof (value));
+				SetValue (value.Handle, SecItem.UseAuthenticationContext);
+			}
+		}
+#endif
+
 		// Must store the _secAccessControl here, since we have no way of inspecting its values if
 		// it is ever returned from a dictionary, so return what we cached.
 		SecAccessControl _secAccessControl;

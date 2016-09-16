@@ -614,6 +614,10 @@ namespace XamCore.Security {
 		[iOS (9,0)][Mac (10,11)]
 		[Field ("kSecUseAuthenticationUI")]
 		IntPtr UseAuthenticationUI { get; }
+
+		[iOS (9,0)][Mac (10,11)]
+		[Field ("kSecUseAuthenticationContext")]
+		IntPtr UseAuthenticationContext { get; }
 	}
 
 	[NoiOS][NoTV][NoWatch]
