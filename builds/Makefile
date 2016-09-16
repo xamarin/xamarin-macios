@@ -619,11 +619,17 @@ TVOS_BCL_TARGETS += \
 	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).dll)                              \
 	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).dll.mdb)                          \
 
+$(PREFIX)/lib/mono/Xamarin.iOS/%.mdb: $(BUILD_DESTDIR)/ios/bcl/%.mdb | $(PREFIX)/lib/mono/Xamarin.iOS $(PREFIX)/lib/mono/Xamarin.iOS/repl
+	$(Q) install -m 0644 $< $@
+
 $(PREFIX)/lib/mono/Xamarin.iOS/Facades/%.dll: $(BUILD_DESTDIR)/ios/bcl/Facades/%.dll | $(PREFIX)/lib/mono/Xamarin.iOS/Facades
-	$(Q_LN) ln -fhs $(abspath $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades)/$*.dll $@
+	$(Q) install -m 0755 $< $@
+
+$(PREFIX)/lib/mono/Xamarin.iOS/%.dll: $(BUILD_DESTDIR)/ios/bcl/%.dll | $(PREFIX)/lib/mono/Xamarin.iOS $(PREFIX)/lib/mono/Xamarin.iOS/repl
+	$(Q) install -m 0755 $< $@
 
 $(PREFIX)/lib/mono/Xamarin.iOS/repl/%: | $(PREFIX)/lib/mono/Xamarin.iOS/repl
-	$(Q_LN) ln -Fs ../../2.1/repl/$(@F) $@
+	$(Q) install -m 0755 $< $@
 
 $(PREFIX)/lib/mono/2.1/Facades/%.dll: $(BUILD_DESTDIR)/ios/bcl/Facades/%.dll | $(PREFIX)/lib/mono/2.1/Facades
 	$(Q) install -m 0755 $< $@
@@ -737,12 +743,6 @@ $(BUILD_DESTDIR)/tvos/bcl/repl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv_ru
 	@# mdb-rebase the repl mdb
 	$(Q) cp $< $@
 	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
-
-$(PREFIX)/lib/mono/Xamarin.iOS/%.dll: | $(PREFIX)/lib/mono/Xamarin.iOS
-	$(Q_LN) ln -Fs ../2.1/$*.dll $@
-
-$(PREFIX)/lib/mono/Xamarin.iOS/%.mdb: | $(PREFIX)/lib/mono/Xamarin.iOS
-	$(Q_LN) ln -Fs ../2.1/$*.mdb $@
 
 $(IOS_BCL_TARGETS_DIRS) $(WATCH_BCL_TARGETS_DIRS) $(TVOS_BCL_TARGETS_DIRS):
 	$(Q) mkdir -p $@
