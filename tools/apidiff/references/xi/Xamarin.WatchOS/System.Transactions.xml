@@ -900,6 +900,11 @@
                   <parameter name="transaction" position="0" attrib="0" type="System.Transactions.Transaction" />
                 </parameters>
               </constructor>
+              <constructor name=".ctor(System.Transactions.TransactionScopeAsyncFlowOption)" attrib="6278">
+                <parameters>
+                  <parameter name="asyncFlow" position="0" attrib="0" type="System.Transactions.TransactionScopeAsyncFlowOption" />
+                </parameters>
+              </constructor>
               <constructor name=".ctor(System.Transactions.TransactionScopeOption)" attrib="6278">
                 <parameters>
                   <parameter name="option" position="0" attrib="0" type="System.Transactions.TransactionScopeOption" />
@@ -923,12 +928,25 @@
                   <parameter name="options" position="1" attrib="0" type="System.Transactions.TransactionOptions" />
                 </parameters>
               </constructor>
+              <constructor name=".ctor(System.Transactions.TransactionScopeOption, System.Transactions.TransactionScopeAsyncFlowOption)" attrib="6278">
+                <parameters>
+                  <parameter name="option" position="0" attrib="0" type="System.Transactions.TransactionScopeOption" />
+                  <parameter name="asyncFlow" position="1" attrib="0" type="System.Transactions.TransactionScopeAsyncFlowOption" />
+                </parameters>
+              </constructor>
               <constructor name=".ctor(System.Transactions.Transaction, System.TimeSpan, System.Transactions.EnterpriseServicesInteropOption)" attrib="6278">
                 <attributes />
                 <parameters>
                   <parameter name="transaction" position="0" attrib="0" type="System.Transactions.Transaction" />
                   <parameter name="timeout" position="1" attrib="0" type="System.TimeSpan" />
                   <parameter name="opt" position="2" attrib="0" type="System.Transactions.EnterpriseServicesInteropOption" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.Transactions.TransactionScopeOption, System.TimeSpan, System.Transactions.TransactionScopeAsyncFlowOption)" attrib="6278">
+                <parameters>
+                  <parameter name="option" position="0" attrib="0" type="System.Transactions.TransactionScopeOption" />
+                  <parameter name="timeout" position="1" attrib="0" type="System.TimeSpan" />
+                  <parameter name="asyncFlow" position="2" attrib="0" type="System.Transactions.TransactionScopeAsyncFlowOption" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Transactions.TransactionScopeOption, System.Transactions.TransactionOptions, System.Transactions.EnterpriseServicesInteropOption)" attrib="6278">
@@ -948,6 +966,17 @@
                 <parameters />
               </method>
             </methods>
+          </class>
+          <class name="TransactionScopeAsyncFlowOption" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
+            <interfaces>
+              <interface name="System.IComparable" />
+              <interface name="System.IConvertible" />
+              <interface name="System.IFormattable" />
+            </interfaces>
+            <fields>
+              <field name="Enabled" attrib="32854" fieldtype="System.Transactions.TransactionScopeAsyncFlowOption" value="1" />
+              <field name="Suppress" attrib="32854" fieldtype="System.Transactions.TransactionScopeAsyncFlowOption" value="0" />
+            </fields>
           </class>
           <class name="TransactionScopeOption" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto" enumtype="System.Int32">
             <interfaces>

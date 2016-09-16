@@ -37123,6 +37123,8 @@
         <classes>
           <class name="MonoMacGameView" type="class" base="AppKit.NSView" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="AppKit.INSAccessibility" />
+              <interface name="AppKit.INSAccessibilityElementProtocol" />
               <interface name="AppKit.INSAppearanceCustomization" />
               <interface name="AppKit.INSDraggingDestination" />
               <interface name="AppKit.INSUserInterfaceItemIdentification" />
