@@ -116,6 +116,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<PropertyGroup>
 		<BuildDependsOn>
+			BuildOnlySettings;
 			_CollectBundleResources;
 			_PackLibraryResources;
 			_UnpackLibraryResources;
