@@ -93,6 +93,9 @@ namespace XamCore.Foundation
 	delegate void NSItemProviderLoadHandler ([BlockCallback] NSItemProviderCompletionHandler completionHandler, Class expectedValueClass, NSDictionary options);
 	delegate void EnumerateDatesCallback (NSDate date, bool exactMatch, ref bool stop);
 	delegate void EnumerateIndexSetCallback (nuint idx, ref bool stop);
+#if MONOMAC
+	delegate void CloudKitRegistrationPreparationHandler (CKShare share, CKContainer container, NSError error);
+#endif
 
 	interface NSArray<TValue> : NSArray {}
 
@@ -8657,16 +8660,15 @@ namespace XamCore.Foundation
 		[Mac (10,10)]
 		[Export ("preferredPresentationSize")]
 		CGSize PreferredPresentationSize { get; }
+
+		[Mac (10,12)][Async]
+		[Export ("registerCloudKitShareWithPreparationHandler:")]
+		void RegisterCloudKitShare (Action<CloudKitRegistrationPreparationHandler> preparationHandler);
+
+		[Mac (10,12)]
+		[Export ("registerCloudKitShare:container:")]
+		void RegisterCloudKitShare (CKShare share, CKContainer container);
 #endif
-
-		// TODO - Needs CloudKit bound
-		//[Mac (10,12)][Async]
-		//[Export ("registerCloudKitShareWithPreparationHandler:")]
-		//void RegisterCloudKitShare (Action<Action<CKShare, CKContainer, NSError>> preparationHandler);
-
-		//[Mac (10,12)]
-		//[Export ("registerCloudKitShare:container:")]
-		//void RegisterCloudKitShare (CKShare share, CKContainer container);
 	}
 
 #if XAMCORE_2_0
