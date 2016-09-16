@@ -313,7 +313,6 @@ COREANIMATION_CORE_SOURCES = \
 COREANIMATION_SOURCES = \
 	CoreAnimation/CABasicAnimation.cs \
 	CoreAnimation/CADefs.cs \
-	CoreAnimation/CADisplayLink.cs \
 	CoreAnimation/CALayer.cs \
 	CoreAnimation/CAKeyFrameAnimation.cs \
 	CoreAnimation/CALayerDelegate.cs \
@@ -591,6 +590,9 @@ FINDERSYNC_CORE_SOURCES = \
 
 # Foundation
 
+FOUNDATION_API_SOURCES = \
+	Foundation/Enums.cs \
+
 FOUNDATION_CORE_SOURCES = \
 	Foundation/AdviceAttribute.cs \
 	Foundation/ConnectAttribute.cs \
@@ -615,7 +617,6 @@ FOUNDATION_CORE_SOURCES = \
 	Foundation/PreserveAttribute.cs \
 	Foundation/ProtocolAttribute.cs \
 	Foundation/RegisterAttribute.cs \
-	Foundation/Enums.cs \
 	Foundation/NSObject.iOS.cs \
 	Foundation/NSAttributedString.iOS.cs \
 	Foundation/EnumDesktop.cs \
