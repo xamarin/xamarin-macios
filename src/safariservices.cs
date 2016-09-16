@@ -43,7 +43,7 @@ namespace XamCore.SafariServices {
 	[Since (7,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSGenericException Misuse of SSReadingList interface. Use class method defaultReadingList.
-	public partial interface SSReadingList {
+	partial interface SSReadingList {
 
 		[NullAllowed]
 		[Static, Export ("defaultReadingList")]

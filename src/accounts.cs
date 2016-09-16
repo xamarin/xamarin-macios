@@ -65,8 +65,8 @@ namespace XamCore.Accounts {
 		string OAuthToken { get; set;  }
 	}
 
-	public delegate void ACAccountStoreSaveCompletionHandler (bool success, NSError error);
-	public delegate void ACRequestCompletionHandler (bool granted, NSError error);
+	delegate void ACAccountStoreSaveCompletionHandler (bool success, NSError error);
+	delegate void ACRequestCompletionHandler (bool granted, NSError error);
 	
 	[Since (5,0)]
 	[Mac (10,8, onlyOn64 : true)]

@@ -38,7 +38,7 @@ using XamCore.CoreAnimation;
 namespace XamCore.ImageKit {
 
 	[BaseType (typeof (NSView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (IKCameraDeviceViewDelegate)})]
-	public interface IKCameraDeviceView {
+	interface IKCameraDeviceView {
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
@@ -117,7 +117,7 @@ namespace XamCore.ImageKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface IKCameraDeviceViewDelegate {
+	interface IKCameraDeviceViewDelegate {
 		[Export ("cameraDeviceViewSelectionDidChange:"), EventArgs ("IKCameraDeviceView")]
 		void SelectionDidChange (IKCameraDeviceView cameraDeviceView);
 
@@ -130,7 +130,7 @@ namespace XamCore.ImageKit {
 	}
 
 	[BaseType (typeof (NSView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (IKDeviceBrowserViewDelegate)})]
-	public interface IKDeviceBrowserView {
+	interface IKDeviceBrowserView {
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
@@ -161,7 +161,7 @@ namespace XamCore.ImageKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface IKDeviceBrowserViewDelegate {
+	interface IKDeviceBrowserViewDelegate {
 //		FIXME need ImageCaptureCore;
 //		[Abstract]
 //		[Export ("deviceBrowserView:selectionDidChange:"), EventArgs ("IKDeviceBrowserViewICDevice")]
@@ -172,7 +172,7 @@ namespace XamCore.ImageKit {
 	}
 
 	[BaseType (typeof (NSPanel))]
-	public interface IKFilterBrowserPanel {
+	interface IKFilterBrowserPanel {
 		[Static]
 		[Export ("filterBrowserPanelWithStyleMask:")]
 		IKFilterBrowserPanel Create (IKFilterBrowserPanelStyleMask styleMask);
@@ -224,7 +224,7 @@ namespace XamCore.ImageKit {
 	}
 
 	[BaseType (typeof (NSView))]
-	public interface IKFilterBrowserView {
+	interface IKFilterBrowserView {
 		[Export ("setPreviewState:")]
 		void SetPreviewState (bool showPreview);
 
@@ -236,7 +236,7 @@ namespace XamCore.ImageKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface IKFilterCustomUIProvider {
+	interface IKFilterCustomUIProvider {
 		// The Apple documentation says the native implementation of CIFilter.GetFilterUIView will call
 		// this method (if it exists). This means that This method should not be called GetFilterUIView
 		// (because it seems like you shouldn't override CIFilter.GetFilterUIView, and implementing
@@ -271,7 +271,7 @@ namespace XamCore.ImageKit {
 	}
 
 	[BaseType (typeof (NSView))]
-	public interface IKFilterUIView {
+	interface IKFilterUIView {
 		[Export ("initWithFrame:filter:")]
 		IntPtr Constructor (CGRect frame, CIFilter filter);
 
@@ -283,7 +283,7 @@ namespace XamCore.ImageKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface IKImageBrowserCell {
+	interface IKImageBrowserCell {
 		[Export ("imageBrowserView")]
 		IKImageBrowserView ImageBrowserView  { get; }
 
@@ -341,7 +341,7 @@ namespace XamCore.ImageKit {
 	}
 
 	[BaseType (typeof (NSView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (IKImageBrowserDelegate)})]
-	public interface IKImageBrowserView {
+	interface IKImageBrowserView {
 		//@category IKImageBrowserView (IKMainMethods)
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
@@ -497,7 +497,7 @@ namespace XamCore.ImageKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface IKImageBrowserDataSource {
+	interface IKImageBrowserDataSource {
 		[Abstract]
 		[Export ("numberOfItemsInImageBrowser:")]
 		nint ItemCount (IKImageBrowserView aBrowser);
@@ -548,7 +548,7 @@ namespace XamCore.ImageKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface IKImageBrowserItem {
+	interface IKImageBrowserItem {
 		[Abstract]
 		[Export ("imageUID")]
 		string ImageUID { get; }
@@ -620,12 +620,12 @@ namespace XamCore.ImageKit {
 		bool IsSelectable { get; }
 	}
 
-	public interface IIKImageBrowserItem {}
+	interface IIKImageBrowserItem {}
 
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol (IsInformal = true)]
-	public interface IKImageBrowserDelegate {
+	interface IKImageBrowserDelegate {
 		[Export ("imageBrowserSelectionDidChange:"), EventArgs ("IKImageBrowserView")]
 		void SelectionDidChange (IKImageBrowserView browser);
 
@@ -641,7 +641,7 @@ namespace XamCore.ImageKit {
 
 	[BaseType (typeof (NSPanel))]
 	[DisableDefaultCtor] // crash when disposed, sharedImageEditPanel must be used
-	public interface IKImageEditPanel {
+	interface IKImageEditPanel {
 		[Static]
 		[Export ("sharedImageEditPanel")]
 		IKImageEditPanel SharedPanel { get; }
@@ -660,7 +660,7 @@ namespace XamCore.ImageKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface IKImageEditPanelDataSource {
+	interface IKImageEditPanelDataSource {
 		[Abstract]
 		[Export ("image")]
 		CGImage Image { get; }
@@ -686,7 +686,7 @@ namespace XamCore.ImageKit {
 	}
 
 	[BaseType (typeof (NSView))]
-	public interface IKImageView {
+	interface IKImageView {
 		//There is no protocol for this delegate.  used to respond to messages in the responder chain
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject Delegate { get; set; }
@@ -804,7 +804,7 @@ namespace XamCore.ImageKit {
 	}
 
 	[BaseType (typeof (NSPanel))]
-	public interface IKPictureTaker {
+	interface IKPictureTaker {
 		[Static]
 		[Export ("pictureTaker")]
 		IKPictureTaker SharedPictureTaker { get; }
@@ -873,7 +873,7 @@ namespace XamCore.ImageKit {
 	}
 
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (IKSaveOptionsDelegate)})]
-	public interface IKSaveOptions {
+	interface IKSaveOptions {
 		[Export ("imageProperties")]
 		NSDictionary ImageProperties { get;  }
 
@@ -903,13 +903,13 @@ namespace XamCore.ImageKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol (IsInformal = true)]
-	public interface IKSaveOptionsDelegate {
+	interface IKSaveOptionsDelegate {
 		[Export ("saveOptions:shouldShowUTType:"), DelegateName ("SaveOptionsShouldShowUTType"), DefaultValue (false)]
 		bool ShouldShowType (IKSaveOptions saveOptions, string imageUTType);
 	}
 
 	[BaseType (typeof (NSView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (IKScannerDeviceViewDelegate)})]
-	public interface IKScannerDeviceView {
+	interface IKScannerDeviceView {
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
@@ -958,7 +958,7 @@ namespace XamCore.ImageKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface IKScannerDeviceViewDelegate {
+	interface IKScannerDeviceViewDelegate {
 		[Export ("scannerDeviceView:didScanToURL:fileData:error:"), EventArgs ("IKScannerDeviceViewScan")]
 		void DidScan (IKScannerDeviceView scannerDeviceView, NSUrl url, NSData data, NSError error);
 
@@ -967,7 +967,7 @@ namespace XamCore.ImageKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface IKSlideshow {
+	interface IKSlideshow {
 		[Static]
 		[Export ("sharedSlideshow")]
 		IKSlideshow SharedSlideshow { get; }
@@ -1048,7 +1048,7 @@ namespace XamCore.ImageKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface IKSlideshowDataSource {
+	interface IKSlideshowDataSource {
 		[Abstract]
 		[Export ("numberOfSlideshowItems")]
 		nint ItemCount { get; }

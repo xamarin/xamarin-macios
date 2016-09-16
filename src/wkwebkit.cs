@@ -513,7 +513,7 @@ namespace XamCore.WebKit
 		SecTrust ServerTrust { get; }
 	}
 
-	public delegate void WKJavascriptEvaluationResult (NSObject result, NSError error);
+	delegate void WKJavascriptEvaluationResult (NSObject result, NSError error);
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]

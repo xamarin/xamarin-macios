@@ -21,7 +21,7 @@ namespace XamCore.StoreKit {
 
 	[Since(6,0)]
 	[BaseType (typeof (NSObject))]
-	public partial interface SKDownload {
+	partial interface SKDownload {
 #if MONOMAC
 		[Export ("state")]
 		SKDownloadState DownloadState { get;  }
@@ -72,7 +72,7 @@ namespace XamCore.StoreKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	public partial interface SKPayment : NSMutableCopying {
+	partial interface SKPayment : NSMutableCopying {
 		[Static]
 		[Export("paymentWithProduct:")]
 		SKPayment CreateFrom (SKProduct product);
@@ -104,7 +104,7 @@ namespace XamCore.StoreKit {
 	}
 
 	[BaseType (typeof (SKPayment))]
-	public interface SKMutablePayment {
+	interface SKMutablePayment {
 		[Static]
 		[Export("paymentWithProduct:")]
 		SKMutablePayment PaymentWithProduct (SKProduct product);
@@ -139,7 +139,7 @@ namespace XamCore.StoreKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface SKPaymentQueue {
+	interface SKPaymentQueue {
 		[Export ("defaultQueue")][Static]
 		SKPaymentQueue DefaultQueue { get; }
 
@@ -191,7 +191,7 @@ namespace XamCore.StoreKit {
 	}
 	
 	[BaseType (typeof (NSObject))]
-	public interface SKProduct {
+	interface SKProduct {
 		[Export ("localizedDescription")]
 		string LocalizedDescription { get; }
 
@@ -238,7 +238,7 @@ namespace XamCore.StoreKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface SKPaymentTransactionObserver {
+	interface SKPaymentTransactionObserver {
 
 		[Export ("paymentQueue:updatedTransactions:")][Abstract]
 		void UpdatedTransactions (SKPaymentQueue queue, SKPaymentTransaction [] transactions);
@@ -258,7 +258,7 @@ namespace XamCore.StoreKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface SKPaymentTransaction {
+	interface SKPaymentTransaction {
 		[Export ("error")]
 		NSError Error { get; }
 
@@ -289,7 +289,7 @@ namespace XamCore.StoreKit {
 	}
 
 	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (SKRequestDelegate)})]
-	public interface SKRequest {
+	interface SKRequest {
 		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
 		NSObject WeakDelegate { get; [NullAllowed] set; }
 
@@ -307,7 +307,7 @@ namespace XamCore.StoreKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface SKRequestDelegate {
+	interface SKRequestDelegate {
 		[Export ("requestDidFinish:")]
 		void RequestFinished (SKRequest request);
 		
@@ -318,7 +318,7 @@ namespace XamCore.StoreKit {
 	[Since (7,0)]
 	[Mac (10,9)]
 	[BaseType (typeof (SKRequest))]
-	public interface SKReceiptRefreshRequest {
+	interface SKReceiptRefreshRequest {
 		[Export ("initWithReceiptProperties:")]
 		IntPtr Constructor ([NullAllowed] NSDictionary properties);
 
@@ -347,7 +347,7 @@ namespace XamCore.StoreKit {
 	}
 
 	[BaseType (typeof (SKRequest), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (SKProductsRequestDelegate)})]
-	public interface SKProductsRequest {
+	interface SKProductsRequest {
 		[Export ("initWithProductIdentifiers:")]
 		IntPtr Constructor (NSSet productIdentifiersStringSet);
 		
@@ -360,7 +360,7 @@ namespace XamCore.StoreKit {
 	}
 	
 	[BaseType (typeof (NSObject))]
-	public interface SKProductsResponse {
+	interface SKProductsResponse {
 		[Export ("products")]
 		SKProduct [] Products { get; }
 
@@ -371,7 +371,7 @@ namespace XamCore.StoreKit {
 	[BaseType (typeof (SKRequestDelegate))]
 	[Model]
 	[Protocol]
-	public interface SKProductsRequestDelegate {
+	interface SKProductsRequestDelegate {
 		[Export ("productsRequest:didReceiveResponse:")][Abstract][EventArgs ("SKProductsRequestResponse")]
 		void ReceivedResponse (SKProductsRequest request, SKProductsResponse response);
 	}

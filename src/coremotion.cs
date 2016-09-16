@@ -217,7 +217,7 @@ namespace XamCore.CoreMotion {
 	[BaseType (typeof (CMLogItem))]
 	[Since (5,0)]
 	[DisableDefaultCtor] // will crash, see Extra.cs for compatibility stubs
-	public interface CMMagnetometerData : NSSecureCoding {
+	interface CMMagnetometerData : NSSecureCoding {
 		[Export ("magneticField")]
 		CMMagneticField MagneticField { get; }
 	}

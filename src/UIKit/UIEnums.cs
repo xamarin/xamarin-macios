@@ -995,7 +995,7 @@ namespace XamCore.UIKit {
 	}
 
 #if !WATCH
-	public delegate void UIPrintInteractionCompletionHandler (UIPrintInteractionController printInteractionController, bool completed, NSError error);
+	delegate void UIPrintInteractionCompletionHandler (UIPrintInteractionController printInteractionController, bool completed, NSError error);
 #endif
 
 	// untyped (and unamed) enum -> UIPrintError.h

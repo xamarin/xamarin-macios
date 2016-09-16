@@ -126,7 +126,7 @@ automatically for Objective-C APIs by the generator).
 
 **Objective-C Binding**
 ```csharp
-public interface Fooable {
+interface Fooable {
 	[Export ("foo:")]
 	void Foo (NSTableViewDropOperation dropOp);
 }

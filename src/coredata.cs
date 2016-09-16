@@ -14,7 +14,7 @@ using XamCore.ObjCRuntime;
 namespace XamCore.CoreData
 {
 	[StrongDictionary ("UserInfoKeys")]
-	public interface UserInfo {
+	interface UserInfo {
 		NSError [] DetailedErrors { get; set; }
 		NSManagedObject ObjectForValidationError { get; set; }
 		NSString KeyForValidationError { get; set; }
@@ -71,7 +71,7 @@ namespace XamCore.CoreData
 	[BaseType (typeof (NSPersistentStore))]
 	// Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: NSMappedObjectStore must be initialized with initWithPersistentStoreCoordinator:configurationName:URL:options
 	[DisableDefaultCtor]
-	public interface NSAtomicStore {
+	interface NSAtomicStore {
 
 		[Export ("initWithPersistentStoreCoordinator:configurationName:URL:options:")]
 		IntPtr Constructor (NSPersistentStoreCoordinator coordinator, string configurationName, NSUrl url, [NullAllowed] NSDictionary options);
@@ -127,7 +127,7 @@ namespace XamCore.CoreData
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: NSAtomicStoreCacheNodes must be initialized using initWithObjectID:(NSManagedObjectID *)
 	[DisableDefaultCtor]
-	public interface NSAtomicStoreCacheNode {
+	interface NSAtomicStoreCacheNode {
 
 		[Export ("initWithObjectID:")]
 		IntPtr Constructor (NSManagedObjectID moid);
@@ -151,7 +151,7 @@ namespace XamCore.CoreData
 
 	}
 	[BaseType (typeof (NSPropertyDescription))]
-	public interface NSAttributeDescription {
+	interface NSAttributeDescription {
 
 		[Export ("attributeType")]
 		NSAttributeType AttributeType { get; set; }
@@ -178,7 +178,7 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSEntityDescription : NSCoding, NSCopying {
+	interface NSEntityDescription : NSCoding, NSCopying {
 
 		[Static, Export ("entityForName:inManagedObjectContext:")]
 		[return: NullAllowed]
@@ -272,7 +272,7 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSEntityMapping {
+	interface NSEntityMapping {
 
 		[Export ("name")]
 		string Name { get; set; }
@@ -316,7 +316,7 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSEntityMigrationPolicy {
+	interface NSEntityMigrationPolicy {
 
 		[Export ("beginEntityMapping:manager:error:")]
 		bool BeginEntityMapping (NSEntityMapping mapping, NSMigrationManager manager, out NSError error);
@@ -341,7 +341,7 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSPropertyDescription))]
-	public interface NSExpressionDescription {
+	interface NSExpressionDescription {
 
 		[NullAllowed, Export ("expression", ArgumentSemantic.Strong)]
 		NSExpression Expression { get; set; }
@@ -351,7 +351,7 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSPropertyDescription))]
-	public interface NSFetchedPropertyDescription {
+	interface NSFetchedPropertyDescription {
 
 		[NullAllowed] // by default this property is null
 		[Export ("fetchRequest", ArgumentSemantic.Retain)]
@@ -360,7 +360,7 @@ namespace XamCore.CoreData
 
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSExpression))]
-	public interface NSFetchRequestExpression {
+	interface NSFetchRequestExpression {
 
 		[Internal]
 		[DesignatedInitializer]
@@ -380,14 +380,14 @@ namespace XamCore.CoreData
 		bool IsCountOnly { [Bind ("isCountOnlyRequest")] get;}
 	}
 
-	public interface INSFetchRequestResult {}
+	interface INSFetchRequestResult {}
 
 	[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
 	[Protocol]
-	public interface NSFetchRequestResult {}
+	interface NSFetchRequestResult {}
 
 	[BaseType (typeof (NSPersistentStoreRequest))]
-	public interface NSFetchRequest : NSCoding {
+	interface NSFetchRequest : NSCoding {
 
 		[Export ("entity", ArgumentSemantic.Retain)]
 		[NullAllowed]
@@ -672,7 +672,7 @@ namespace XamCore.CoreData
 	// 'init' issues a warning: CoreData: error: Failed to call designated initializer on NSManagedObject class 'NSManagedObject' 
 	// then crash while disposing the instance
 	[DisableDefaultCtor]
-	public interface NSManagedObject {
+	interface NSManagedObject {
 		[DesignatedInitializer]
 		[Export ("initWithEntity:insertIntoManagedObjectContext:")]
 		IntPtr Constructor (NSEntityDescription entity, [NullAllowed] NSManagedObjectContext context);
@@ -844,14 +844,14 @@ namespace XamCore.CoreData
 
 	[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
 	[BaseType (typeof(NSObject))]
-	public interface NSQueryGenerationToken : NSCopying
+	interface NSQueryGenerationToken : NSCopying
 	{
 		[Static, Export ("currentQueryGenerationToken", ArgumentSemantic.Strong)]
 		NSQueryGenerationToken CurrentToken { get; }
 	}
 	
 	[BaseType (typeof (NSObject))]
-	public interface NSManagedObjectContext : NSCoding
+	interface NSManagedObjectContext : NSCoding
 #if !WATCH && !TVOS
 	, NSLocking
 #endif // !WATCH
@@ -1067,7 +1067,7 @@ namespace XamCore.CoreData
 		void RefreshAllObjects ();
 	}
 
-	public interface NSManagedObjectChangeEventArgs {
+	interface NSManagedObjectChangeEventArgs {
 		[Export ("NSInsertedObjectsKey")]
 		NSSet InsertedObjects { get; }
 
@@ -1091,7 +1091,7 @@ namespace XamCore.CoreData
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -URIRepresentation cannot be sent to an abstract object of class NSManagedObjectID: Create a concrete instance!
 	[DisableDefaultCtor]
-	public interface NSManagedObjectID : NSCopying {
+	interface NSManagedObjectID : NSCopying {
 
 		[Export ("entity", ArgumentSemantic.Strong)]
 		NSEntityDescription Entity { get; }
@@ -1108,7 +1108,7 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSManagedObjectModel : NSCoding, NSCopying {
+	interface NSManagedObjectModel : NSCoding, NSCopying {
 
 		[Static, Export ("mergedModelFromBundles:")]
 		[return: NullAllowed]
@@ -1210,7 +1210,7 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSMappingModel {
+	interface NSMappingModel {
 
 		[Static, Export ("mappingModelFromBundles:forSourceModel:destinationModel:")]
 		[return: NullAllowed]
@@ -1242,7 +1242,7 @@ namespace XamCore.CoreData
 	[Since(5,0)][Lion]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface NSMergeConflict {
+	interface NSMergeConflict {
 		[Export ("sourceObject", ArgumentSemantic.Retain)]
 		NSManagedObject SourceObject { get;  }
 
@@ -1330,7 +1330,7 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSMigrationManager {
+	interface NSMigrationManager {
 
 		[Export ("initWithSourceModel:destinationModel:")]
 		IntPtr Constructor (NSManagedObjectModel sourceModel, NSManagedObjectModel destinationModel);
@@ -1399,7 +1399,7 @@ namespace XamCore.CoreData
 	// make our managed version [Abstract].
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface NSPersistentStore {
+	interface NSPersistentStore {
 
 		[Static, Export ("metadataForPersistentStoreWithURL:error:")]
 		[return: NullAllowed]
@@ -1470,7 +1470,7 @@ namespace XamCore.CoreData
 	[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	public interface NSPersistentStoreDescription : NSCopying
+	interface NSPersistentStoreDescription : NSCopying
 	{
 		[Static]
 		[Export ("persistentStoreDescriptionWithURL:")]
@@ -1520,7 +1520,7 @@ namespace XamCore.CoreData
 	[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	public interface NSPersistentContainer
+	interface NSPersistentContainer
 	{
 		[Static]
 		[Export ("persistentContainerWithName:")]
@@ -1569,7 +1569,7 @@ namespace XamCore.CoreData
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // iOS8 -> Core Data: warning: client failed to call designated initializer on NSPersistentStoreCoordinator
-	public partial interface NSPersistentStoreCoordinator
+	partial interface NSPersistentStoreCoordinator
 #if !WATCH && !TVOS
 		: NSLocking
 #endif // !WATCH
@@ -1849,7 +1849,7 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSPersistentStoreRequest : NSCopying {
+	interface NSPersistentStoreRequest : NSCopying {
 		[Export ("requestType")]
 		NSPersistentStoreRequestType RequestType { get; }
 
@@ -1875,7 +1875,7 @@ namespace XamCore.CoreData
 
 	[iOS (8,0), Mac (10,10)]
 	[BaseType (typeof (NSObject))]
-	public interface NSPersistentStoreResult {
+	interface NSPersistentStoreResult {
 
 	}
 
@@ -1919,7 +1919,7 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSPropertyDescription : NSCoding, NSCopying {
+	interface NSPropertyDescription : NSCoding, NSCopying {
 
 		[Export ("entity")]
 		NSEntityDescription Entity { get; }
@@ -1970,7 +1970,7 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSPropertyMapping {
+	interface NSPropertyMapping {
 
 		[NullAllowed] // by default this property is null
 		[Export ("name")]
@@ -1986,7 +1986,7 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSPropertyDescription))]
-	public interface NSRelationshipDescription {
+	interface NSRelationshipDescription {
 
 		[NullAllowed] // by default this property is null
 		[Export ("destinationEntity")]
