@@ -1509,11 +1509,12 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<!-- Note: Always codesign *.dylibs even for Simulator builds. We use $(_CanOutputAppBundle) because dylibs can exist in app extensions as well. -->
 	<Target Name="_CodesignNativeLibraries" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_DetectSigningIdentity">
 		<Codesign
-			Condition="'$(IsMacEnabled)' == 'true' And '@(_NativeLibrary)' != ''"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_NativeLibrary)' != '' And '$(_CodeSigningKey)' != ''"
 			SessionId="$(BuildSessionId)"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="$(_CodesignAllocate)"
+			DisableTimestamp="$(_SdkIsSimulator)"
 			Keychain="$(CodesignKeychain)"
 			Resource="%(_NativeLibrary.Identity)"
 			SigningKey="$(_CodeSigningKey)"
@@ -1525,11 +1526,12 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<!-- Note: Always codesign user Frameworks even for Simulator builds. We use $(_IsContainerApp) instead of $(_CanOutputAppBundle) as an optimization because only the container app can contain user Frameworks. -->
 	<Target Name="_CodesignFrameworks" Condition="'$(_IsContainerApp)' == 'true'" DependsOnTargets="_DetectSigningIdentity;_CollectFrameworks">
 		<Codesign
-			Condition="'$(IsMacEnabled)' == 'true' And '@(_Frameworks)' != ''"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_Frameworks)' != '' And '$(_CodeSigningKey)' != ''"
 			SessionId="$(BuildSessionId)"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="$(_CodesignAllocate)"
+			DisableTimestamp="$(_SdkIsSimulator)"
 			Keychain="$(CodesignKeychain)"
 			Resource="%(_Frameworks.Identity)"
 			SigningKey="$(_CodeSigningKey)"
@@ -1545,6 +1547,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="$(_CodesignAllocate)"
+			DisableTimestamp="$(_SdkIsSimulator)"
 			Keychain="$(CodesignKeychain)"
 			Entitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
 			ResourceRules="$(_PreparedResourceRules)"
@@ -1720,6 +1723,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="$(_CodesignAllocate)"
+			DisableTimestamp="$(_SdkIsSimulator)"
 			Keychain="$(CodesignKeychain)"
 			Entitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
 			Resource="%(_AssetPack.Identity)"
@@ -1746,6 +1750,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="$(_CodesignAllocate)"
+			DisableTimestamp="$(_SdkIsSimulator)"
 			Keychain="$(CodesignKeychain)"
 			Entitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
 			ResourceRules="$(_PreparedResourceRules)"
