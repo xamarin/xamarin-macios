@@ -207,6 +207,40 @@ namespace Xamarin.Mac.Tasks
 			return args.ToString ();
 		}
 
+		string GetMonoBundleDirName ()
+		{
+			if (!string.IsNullOrEmpty (ExtraArguments)) {
+				var args = ProcessArgumentBuilder.Parse (ExtraArguments);
+
+				for (int i = 0; i < args.Length; i++) {
+					string arg;
+
+					if (string.IsNullOrEmpty (args[i]))
+						continue;
+
+					if (args[i][0] == '/') {
+						arg = args[i].Substring (1);
+					} else if (args[i][0] == '-') {
+						if (args[i].Length >= 2 && args[i][1] == '-')
+							arg = args[i].Substring (2);
+						else
+							arg = args[i].Substring (1);
+					} else {
+						continue;
+					}
+
+					if (arg.StartsWith ("custom_bundle_name:", StringComparison.Ordinal) ||
+					    arg.StartsWith ("custom_bundle_name=", StringComparison.Ordinal))
+						return arg.Substring ("custom_bundle_name=".Length);
+
+					if (arg == "custom_bundle_name" && i + 1 < args.Length)
+						return args[i + 1];
+				}
+			}
+
+			return "MonoBundle";
+		}
+
 		public override bool Execute ()
 		{
 			Log.LogTaskName ("Mmp");
@@ -237,8 +271,10 @@ namespace Xamarin.Mac.Tasks
 			if (!base.Execute ())
 				return false;
 
+			var monoBundleDir = Path.Combine (AppBundleDir, "Contents", GetMonoBundleDirName ());
+
 			try {
-				var nativeLibrariesPath = Directory.EnumerateFiles (Path.Combine (AppBundleDir, "Contents", "MonoBundle"), "*.dylib", SearchOption.AllDirectories);
+				var nativeLibrariesPath = Directory.EnumerateFiles (monoBundleDir, "*.dylib", SearchOption.AllDirectories);
 				var nativeLibraryItems = new List<ITaskItem> ();
 
 				foreach (var nativeLibrary in nativeLibrariesPath) {
@@ -247,7 +283,7 @@ namespace Xamarin.Mac.Tasks
 
 				NativeLibraries = nativeLibraryItems.ToArray ();
 			} catch (Exception ex) {
-				Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Could not get native libraries: {0}", ex.Message);
+				Log.LogError (null, null, null, AppBundleDir, 0, 0, 0, 0, "Could not get native libraries: {0}", ex.Message);
 				return false;
 			}
 
