@@ -8,7 +8,7 @@ using XamCore.ObjCRuntime;
 
 namespace XamCore.SearchKit {
 	[Static]
-	public interface SKTextAnalysisKeys {
+	interface SKTextAnalysisKeys {
 		[Field ("kSKMinTermLength")]
 		NSString MinTermLengthKey { get; }
 		

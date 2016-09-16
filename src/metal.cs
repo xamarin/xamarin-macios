@@ -25,15 +25,15 @@ using XamCore.ObjCRuntime;
 
 namespace XamCore.Metal {
 
-	public delegate void MTLDeallocator (IntPtr pointer, nuint length);
+	delegate void MTLDeallocator (IntPtr pointer, nuint length);
 
-	public delegate void MTLNewComputePipelineStateWithReflectionCompletionHandler (IMTLComputePipelineState computePipelineState, MTLComputePipelineReflection reflection, NSError error);
+	delegate void MTLNewComputePipelineStateWithReflectionCompletionHandler (IMTLComputePipelineState computePipelineState, MTLComputePipelineReflection reflection, NSError error);
 	
-	public interface IMTLCommandEncoder {}
+	interface IMTLCommandEncoder {}
 	
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public interface MTLArgument {
+	interface MTLArgument {
 		[Export ("name")]
 		string Name { get; }
 
@@ -84,7 +84,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public interface MTLArrayType {
+	interface MTLArrayType {
 		[Export ("arrayLength")]
 		nuint Length { get; }
 
@@ -103,7 +103,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
-	public partial interface MTLCommandEncoder {
+	partial interface MTLCommandEncoder {
 		[Abstract, Export ("device")]
 		IMTLDevice Device { get; }
 
@@ -123,11 +123,11 @@ namespace XamCore.Metal {
 		void PopDebugGroup ();
 	}
 
-	public interface IMTLBuffer {}
+	interface IMTLBuffer {}
 	
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
-	public partial interface MTLBuffer : MTLResource {
+	partial interface MTLBuffer : MTLResource {
 		[Abstract, Export ("length")]
 		nuint Length { get; }
 
@@ -158,7 +158,7 @@ namespace XamCore.Metal {
 	
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	public interface MTLBufferLayoutDescriptor : NSCopying
+	interface MTLBufferLayoutDescriptor : NSCopying
 	{
 		[Export ("stride")]
 		nuint Stride { get; set; }
@@ -172,7 +172,7 @@ namespace XamCore.Metal {
 
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	public interface MTLBufferLayoutDescriptorArray
+	interface MTLBufferLayoutDescriptorArray
 	{
 		[Internal]
 		[Export ("objectAtIndexedSubscript:")]
@@ -184,11 +184,11 @@ namespace XamCore.Metal {
 	}
 	
 
-	public interface IMTLCommandBuffer {}
+	interface IMTLCommandBuffer {}
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
-	public partial interface MTLCommandBuffer {
+	partial interface MTLCommandBuffer {
 
 		[Abstract, Export ("device")]
 		IMTLDevice Device { get; }
@@ -260,11 +260,11 @@ namespace XamCore.Metal {
 		IMTLRenderCommandEncoder CreateRenderCommandEncoder (MTLRenderPassDescriptor renderPassDescriptor);
 	}
 
-	public interface IMTLCommandQueue {}
+	interface IMTLCommandQueue {}
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
-	public partial interface MTLCommandQueue {
+	partial interface MTLCommandQueue {
 
 		[Abstract, Export ("label")]
 		string Label { get; set; }
@@ -284,11 +284,11 @@ namespace XamCore.Metal {
 		void InsertDebugCaptureBoundary ();
 	}
 
-	public interface IMTLComputeCommandEncoder {}
+	interface IMTLComputeCommandEncoder {}
 	
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
-	public partial interface MTLComputeCommandEncoder : MTLCommandEncoder {
+	partial interface MTLComputeCommandEncoder : MTLCommandEncoder {
 		[Abstract, Export ("setComputePipelineState:")]
 		void SetComputePipelineState (IMTLComputePipelineState state);
 
@@ -379,7 +379,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public interface MTLComputePipelineReflection {
+	interface MTLComputePipelineReflection {
 		[Export ("arguments")]
 #if XAMCORE_4_0
 		MTLArgument [] Arguments { get; }
@@ -388,10 +388,10 @@ namespace XamCore.Metal {
 #endif
 	}
 
-	public interface IMTLComputePipelineState {}
+	interface IMTLComputePipelineState {}
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
-	public partial interface MTLComputePipelineState {
+	partial interface MTLComputePipelineState {
 		[Abstract, Export ("device")]
 		IMTLDevice Device { get; }
 
@@ -402,11 +402,11 @@ namespace XamCore.Metal {
 		nuint ThreadExecutionWidth { get; }
 	}
 
-	public interface IMTLBlitCommandEncoder {}
+	interface IMTLBlitCommandEncoder {}
 	
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
-	public partial interface MTLBlitCommandEncoder : MTLCommandEncoder {
+	partial interface MTLBlitCommandEncoder : MTLCommandEncoder {
 
 #if MONOMAC
 		[Abstract, Export ("synchronizeResource:")]
@@ -465,11 +465,11 @@ namespace XamCore.Metal {
 		void Wait (IMTLFence fence);
 	}
 	
-	public interface IMTLFence {}
+	interface IMTLFence {}
 
 	[iOS (10,0), TV (10,0), NoWatch, NoMac]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
-	public interface MTLFence
+	interface MTLFence
 	{
 		[Abstract]
 		[Export ("device")]
@@ -480,11 +480,11 @@ namespace XamCore.Metal {
 		string Label { get; set; }
 	}
 
-	public interface IMTLDevice {}
+	interface IMTLDevice {}
 	
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
-	public partial interface MTLDevice {
+	partial interface MTLDevice {
 
 		[Abstract, Export ("name")]
 		string Name { get; }
@@ -657,11 +657,11 @@ namespace XamCore.Metal {
 		bool SupportsTextureSampleCount (nuint sampleCount);
 	}
 
-	public interface IMTLDrawable {}
+	interface IMTLDrawable {}
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
-	public partial interface MTLDrawable {
+	partial interface MTLDrawable {
 		[Abstract, Export ("present")]
 		void Present ();
 		
@@ -669,13 +669,13 @@ namespace XamCore.Metal {
 		void Present (double presentationTime);
 	}
 
-	public interface IMTLTexture {}
+	interface IMTLTexture {}
 
 	// Apple added several new *required* members in iOS 9,
 	// but that breaks our binary compat, so we can't do that in our existing code.
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
-	public partial interface MTLTexture : MTLResource {
+	partial interface MTLTexture : MTLResource {
 		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_10_0)]
 		[Abstract, Export ("rootResource")]
 		IMTLResource RootResource { get; }
@@ -794,7 +794,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public partial interface MTLTextureDescriptor : NSCopying {
+	partial interface MTLTextureDescriptor : NSCopying {
 
 		[Export ("textureType", ArgumentSemantic.Assign)]
 		MTLTextureType TextureType { get; set; }
@@ -844,7 +844,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public partial interface MTLSamplerDescriptor : NSCopying {
+	partial interface MTLSamplerDescriptor : NSCopying {
 
 		[Export ("minFilter", ArgumentSemantic.Assign)]
 		MTLSamplerMinMagFilter MinFilter { get; set; }
@@ -896,10 +896,10 @@ namespace XamCore.Metal {
 		string Label { get; set; }
 	}
 
-	public interface IMTLSamplerState {}
+	interface IMTLSamplerState {}
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
-	public partial interface MTLSamplerState  {
+	partial interface MTLSamplerState  {
 
 		[Abstract, Export ("label")]
 		string Label { get; }
@@ -910,7 +910,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public partial interface MTLRenderPipelineDescriptor : NSCopying {
+	partial interface MTLRenderPipelineDescriptor : NSCopying {
 
 		// [NullAllowed] we can't allow setting null - even if the default value is null
 		// /SourceCache/AcceleratorKit/AcceleratorKit-14.9/Framework/MTLRenderPipeline.mm:627: failed assertion `label must not be nil.'
@@ -987,7 +987,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public interface MTLRenderPipelineColorAttachmentDescriptorArray {
+	interface MTLRenderPipelineColorAttachmentDescriptorArray {
 
 		[Export ("objectAtIndexedSubscript:"), Internal]
 		MTLRenderPipelineColorAttachmentDescriptor ObjectAtIndexedSubscript (nuint attachmentIndex);
@@ -996,11 +996,11 @@ namespace XamCore.Metal {
 		void SetObject (MTLRenderPipelineColorAttachmentDescriptor attachment, nuint attachmentIndex);
 	}
 
-	public interface IMTLRenderPipelineState {}
+	interface IMTLRenderPipelineState {}
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
-	public partial interface MTLRenderPipelineState {
+	partial interface MTLRenderPipelineState {
 
 		[Abstract, Export ("label")]
 		string Label { get; }
@@ -1011,7 +1011,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public interface MTLVertexBufferLayoutDescriptor : NSCopying {
+	interface MTLVertexBufferLayoutDescriptor : NSCopying {
 		[Export ("stride", ArgumentSemantic.UnsafeUnretained)]
 		nuint Stride { get; set; }
 
@@ -1024,7 +1024,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public interface MTLVertexBufferLayoutDescriptorArray {
+	interface MTLVertexBufferLayoutDescriptorArray {
 		[Export ("objectAtIndexedSubscript:"), Internal]
 		MTLVertexBufferLayoutDescriptor ObjectAtIndexedSubscript (nuint index);
 
@@ -1034,7 +1034,7 @@ namespace XamCore.Metal {
 
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	public interface MTLAttribute
+	interface MTLAttribute
 	{
 		[NullAllowed, Export ("name")]
 		string Name { get; }
@@ -1057,7 +1057,7 @@ namespace XamCore.Metal {
 	
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	public interface MTLAttributeDescriptor : NSCopying
+	interface MTLAttributeDescriptor : NSCopying
 	{
 		[Export ("format", ArgumentSemantic.Assign)]
 		MTLAttributeFormat Format { get; set; }
@@ -1071,7 +1071,7 @@ namespace XamCore.Metal {
 
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	public interface MTLAttributeDescriptorArray
+	interface MTLAttributeDescriptorArray
 	{
 		[Internal]
 		[Export ("objectAtIndexedSubscript:")]
@@ -1084,7 +1084,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public interface MTLVertexAttributeDescriptor : NSCopying {
+	interface MTLVertexAttributeDescriptor : NSCopying {
 		[Export ("format", ArgumentSemantic.Assign)]
 		MTLVertexFormat Format { get; set; }
 
@@ -1097,7 +1097,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public interface MTLVertexAttributeDescriptorArray {
+	interface MTLVertexAttributeDescriptorArray {
 		[Export ("objectAtIndexedSubscript:"), Internal]
 		MTLVertexAttributeDescriptor ObjectAtIndexedSubscript (nuint index);
 
@@ -1107,7 +1107,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public partial interface MTLVertexDescriptor : NSCopying {
+	partial interface MTLVertexDescriptor : NSCopying {
 		[Static, Export ("vertexDescriptor")]
 		MTLVertexDescriptor Create ();
 
@@ -1123,7 +1123,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public partial interface MTLVertexAttribute {
+	partial interface MTLVertexAttribute {
 		[Export ("attributeIndex")]
 		nuint AttributeIndex { get; }
 
@@ -1149,7 +1149,7 @@ namespace XamCore.Metal {
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	public interface MTLFunctionConstantValues : NSCopying
+	interface MTLFunctionConstantValues : NSCopying
 	{
 		[Export ("setConstantValue:type:atIndex:")]
 		void SetConstantValue (IntPtr value, MTLDataType type, nuint index);
@@ -1166,7 +1166,7 @@ namespace XamCore.Metal {
 	
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	public interface MTLFunctionConstant
+	interface MTLFunctionConstant
 	{
 		[Export ("name")]
 		string Name { get; }
@@ -1181,10 +1181,10 @@ namespace XamCore.Metal {
 		bool IsRequired { get; }
 	}
 
-	public interface IMTLFunction {}
+	interface IMTLFunction {}
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[Protocol] // // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
-	public partial interface MTLFunction  {
+	partial interface MTLFunction  {
 
 		[iOS (10, 0), TV (10,0), NoWatch, Mac (10,12)]
 #if XAMCORE_4_0
@@ -1234,11 +1234,11 @@ namespace XamCore.Metal {
 		NSDictionary<NSString, MTLFunctionConstant> FunctionConstants { get; }
 	}
 
-	public interface IMTLLibrary {}
+	interface IMTLLibrary {}
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
-	public partial interface MTLLibrary  {
+	partial interface MTLLibrary  {
 
 		[Abstract, Export ("label")]
 		string Label { get; set; }
@@ -1273,7 +1273,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public partial interface MTLCompileOptions : NSCopying {
+	partial interface MTLCompileOptions : NSCopying {
 
 		[NullAllowed] // by default this property is null
 		[Export ("preprocessorMacros", ArgumentSemantic.Copy)]
@@ -1289,7 +1289,7 @@ namespace XamCore.Metal {
 	
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public partial interface MTLStencilDescriptor : NSCopying {
+	partial interface MTLStencilDescriptor : NSCopying {
 		[Export ("stencilCompareFunction")]
 		MTLCompareFunction StencilCompareFunction { get; set; }
 
@@ -1311,7 +1311,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public interface MTLStructMember {
+	interface MTLStructMember {
 		[Export ("name")]
 		string Name { get; }
 
@@ -1338,7 +1338,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public interface MTLStructType {
+	interface MTLStructType {
 		[Export ("members")]
 		MTLStructMember [] Members { get; }
 
@@ -1346,11 +1346,11 @@ namespace XamCore.Metal {
 		MTLStructMember Lookup (string name);
 	}
 
-	public interface IMTLDepthStencilState {}
+	interface IMTLDepthStencilState {}
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
-	public partial interface MTLDepthStencilState  {
+	partial interface MTLDepthStencilState  {
 #if XAMCORE_2_0
 		[Abstract]
 #endif
@@ -1366,7 +1366,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public partial interface MTLDepthStencilDescriptor : NSCopying {
+	partial interface MTLDepthStencilDescriptor : NSCopying {
 
 		[Export ("depthCompareFunction")]
 		MTLCompareFunction DepthCompareFunction { get; set; }
@@ -1386,11 +1386,11 @@ namespace XamCore.Metal {
 		string Label { get; set; }
 	}
 
-	public interface IMTLParallelRenderCommandEncoder {}
+	interface IMTLParallelRenderCommandEncoder {}
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
-	public interface MTLParallelRenderCommandEncoder : MTLCommandEncoder {
+	interface MTLParallelRenderCommandEncoder : MTLCommandEncoder {
 		[Abstract]
 		[Export ("renderCommandEncoder")]
 		[Autorelease]
@@ -1418,11 +1418,11 @@ namespace XamCore.Metal {
 		void SetStencilStoreAction (MTLStoreAction storeAction);
 	}
 
-	public interface IMTLRenderCommandEncoder {}
+	interface IMTLRenderCommandEncoder {}
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
-	public partial interface MTLRenderCommandEncoder : MTLCommandEncoder {
+	partial interface MTLRenderCommandEncoder : MTLCommandEncoder {
 
 		[Abstract, Export ("setRenderPipelineState:")]
 		void SetRenderPipelineState (IMTLRenderPipelineState pipelineState);
@@ -1667,7 +1667,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public interface MTLRenderPipelineColorAttachmentDescriptor : NSCopying {
+	interface MTLRenderPipelineColorAttachmentDescriptor : NSCopying {
 
 		[Export ("pixelFormat", ArgumentSemantic.Assign)]
 		MTLPixelFormat PixelFormat { get; set; }
@@ -1699,7 +1699,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public interface MTLRenderPipelineReflection {
+	interface MTLRenderPipelineReflection {
 		[Export ("vertexArguments")]
 #if XAMCORE_4_0
 		MTLArgument [] VertexArguments { get; }
@@ -1754,14 +1754,14 @@ namespace XamCore.Metal {
 	
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (MTLRenderPassAttachmentDescriptor))]
-	public interface MTLRenderPassColorAttachmentDescriptor {
+	interface MTLRenderPassColorAttachmentDescriptor {
 		[Export ("clearColor")]
 		MTLClearColor ClearColor { get; set; }
 	}
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (MTLRenderPassAttachmentDescriptor))]
-	public interface MTLRenderPassDepthAttachmentDescriptor {
+	interface MTLRenderPassDepthAttachmentDescriptor {
 
 		[Export ("clearDepth")]
 		double ClearDepth { get; set; }
@@ -1774,7 +1774,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (MTLRenderPassAttachmentDescriptor))]
-	public interface MTLRenderPassStencilAttachmentDescriptor {
+	interface MTLRenderPassStencilAttachmentDescriptor {
 
 		[Export ("clearStencil")]
 		uint ClearStencil { get; set; } /* uint32_t */
@@ -1782,7 +1782,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public interface MTLRenderPassColorAttachmentDescriptorArray {
+	interface MTLRenderPassColorAttachmentDescriptorArray {
 		[Export ("objectAtIndexedSubscript:"), Internal]
 		MTLRenderPassColorAttachmentDescriptor ObjectAtIndexedSubscript (nuint attachmentIndex);
 
@@ -1792,7 +1792,7 @@ namespace XamCore.Metal {
 
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
-	public interface MTLRenderPassDescriptor : NSCopying {
+	interface MTLRenderPassDescriptor : NSCopying {
 
 		[Export ("colorAttachments")]
 		MTLRenderPassColorAttachmentDescriptorArray ColorAttachments { get; }
@@ -1821,7 +1821,7 @@ namespace XamCore.Metal {
 	[iOS (10, 0), TV (10,0), NoWatch, NoMac]
 	[BaseType (typeof(NSObject))]
 	// note: type works only on devices, symbol is missing on the simulator
-	public interface MTLHeapDescriptor : NSCopying
+	interface MTLHeapDescriptor : NSCopying
 	{
 		[Export ("size")]
 		nuint Size { get; set; }
@@ -1835,7 +1835,7 @@ namespace XamCore.Metal {
 	
 	[iOS (10, 0), TV (10,0), NoWatch, NoMac]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
-	public interface MTLHeap
+	interface MTLHeap
 	{
 		[Abstract]
 		[NullAllowed, Export ("label")]
@@ -1878,11 +1878,11 @@ namespace XamCore.Metal {
 		MTLPurgeableState SetPurgeableState (MTLPurgeableState state);
 	}
 	
-	public interface IMTLResource {}
-	public interface IMTLHeap {}
+	interface IMTLResource {}
+	interface IMTLHeap {}
 	[iOS (8,0)][Mac (10,11, onlyOn64 : true)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
-	public partial interface MTLResource  {
+	partial interface MTLResource  {
 
 		[Abstract, Export ("label")]
 		string Label { get; set; }
@@ -1927,7 +1927,7 @@ namespace XamCore.Metal {
 
 	[iOS (9,0)][Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	public interface MTLComputePipelineDescriptor : NSCopying {
+	interface MTLComputePipelineDescriptor : NSCopying {
 		// it's marked as `nullable` but it asserts with
 		// /BuildRoot/Library/Caches/com.apple.xbs/Sources/Metal/Metal-54.18/Framework/MTLComputePipeline.mm:216: failed assertion `label must not be nil.'
 		[Export ("label")]
@@ -1951,7 +1951,7 @@ namespace XamCore.Metal {
 	
 	[iOS (10,0), TV (10,0), NoWatch, Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	public interface MTLStageInputOutputDescriptor : NSCopying
+	interface MTLStageInputOutputDescriptor : NSCopying
 	{
 		[Static]
 		[Export ("stageInputOutputDescriptor")]

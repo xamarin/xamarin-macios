@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
@@ -26,7 +26,7 @@ namespace XamCore.ContactsUI {
 		void Close ();
 	}
 
-	public interface ICNContactPickerDelegate { }
+	interface ICNContactPickerDelegate { }
 
 	[Mac (10,11, onlyOn64: true)]
 	[Protocol, Model]

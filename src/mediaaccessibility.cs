@@ -7,7 +7,7 @@ namespace XamCore.MediaAccessibility {
 
 #if XAMCORE_4_0
 	[Static]
-	public interface MACaptionAppearance {
+	interface MACaptionAppearance {
 		[iOS (7,0)][Mac (10,9)]
 		[Notification]
 		[Field ("kMACaptionAppearanceSettingsChangedNotification")]
@@ -16,7 +16,7 @@ namespace XamCore.MediaAccessibility {
 #endif
 
 	[Static]
-	public interface MAAudibleMedia {
+	interface MAAudibleMedia {
 		[iOS (8,0)][Mac (10,10)]
 		[Notification]
 		[Field ("kMAAudibleMediaSettingsChangedNotification")]
@@ -24,7 +24,7 @@ namespace XamCore.MediaAccessibility {
 	}
 
 	[Static]
-	public interface MAMediaCharacteristic {
+	interface MAMediaCharacteristic {
 		[iOS (7,0)][Mac (10,9)]
 		[Field ("MAMediaCharacteristicDescribesMusicAndSoundForAccessibility")]
 		NSString DescribesMusicAndSoundForAccessibility { get; }

@@ -69,7 +69,7 @@ namespace XamCore.SceneKit {
 
 #if WATCH
 	// stubs to limit the number of preprocessor directives in the source file
-	public interface CAAnimation {}
+	interface CAAnimation {}
 	interface CALayer {}
 	interface CAMediaTimingFunction {}
 	interface MDLAsset {}
@@ -1958,7 +1958,7 @@ namespace XamCore.SceneKit {
 		[Export ("entriesPassingTest:")]
 		NSObject [] EntriesPassingTest (SCNSceneSourceFilter predicate);		
 	}
-	public delegate bool SCNSceneSourceFilter (NSObject entry, NSString identifier, ref bool stop);
+	delegate bool SCNSceneSourceFilter (NSObject entry, NSString identifier, ref bool stop);
 
 	[Watch (3,0)]
 	[Mac (10,8), iOS (8,0)]
@@ -2611,13 +2611,13 @@ namespace XamCore.SceneKit {
 	}
 
 	[Mac (10,9), iOS (8,0)]
-	public delegate void SCNAnimationEventHandler (CAAnimation animation, NSObject animatedObject, bool playingBackward);
+	delegate void SCNAnimationEventHandler (CAAnimation animation, NSObject animatedObject, bool playingBackward);
 
 	[NoWatch]
 	[Mac (10,9), iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface SCNAnimationEvent {
+	interface SCNAnimationEvent {
 		[Static, Export ("animationEventWithKeyTime:block:")]
 		SCNAnimationEvent Create (nfloat keyTime, SCNAnimationEventHandler eventHandler);
 	}
@@ -2625,7 +2625,7 @@ namespace XamCore.SceneKit {
 	[Watch (3,0)]
 	[Mac (10,9), iOS (8,0)]
 	[BaseType (typeof (SCNGeometry))]
-	public partial interface SCNShape {
+	partial interface SCNShape {
 		[NullAllowed] // by default this property is null
 		[Export ("path", ArgumentSemantic.Copy)]
 		NSBezierPath Path { get; set; }
