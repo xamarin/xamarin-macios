@@ -899,7 +899,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10,12, onlyOn64 : true)]
 		[Export ("application:userDidAcceptCloudKitShareWithMetadata:"), EventArgs ("NSApplicationUserAcceptedCloudKitShare")]
-		void UserDidAcceptedCloudKitShare (NSApplication application, CKShareMetadata metadata);
+		void UserDidAcceptCloudKitShare (NSApplication application, CKShareMetadata metadata);
 #endif
 	}
 		
