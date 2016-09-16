@@ -1454,6 +1454,7 @@ public class NamespaceManager
 			Get ("OpenGL"),
 			Get ("QTKit"),
 			Get ("AppKit"),
+			Get ("CloudKit"),
 #else
 #if !WATCH && !TVOS
 			Get ("CoreMotion"),

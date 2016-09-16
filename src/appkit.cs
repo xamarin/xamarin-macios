@@ -39,6 +39,7 @@ using XamCore.CoreAnimation;
 using XamCore.CoreData;
 using XamCore.OpenGL;
 using XamCore.CoreVideo;
+using XamCore.CloudKit;
 
 using CGGlyph = System.UInt16;
 
@@ -896,12 +897,11 @@ namespace XamCore.AppKit {
 		[Mac (10,10, onlyOn64 : true)]
 		[Export ("application:didUpdateUserActivity:"), EventArgs ("NSApplicationUpdatedUserActivity"), DefaultValue (false)]
 		void UpdatedUserActivity (NSApplication application, NSUserActivity userActivity);
-#endif
 
-		//TODO - Waiting on CloudKit binding
-		//[Mac (10,12)]
-		//[Export ("application:userDidAcceptCloudKitShareWithMetadata:")]
-		//void UserDidAcceptedCloudKitShare (NSApplication application, CKShareMetadata metadata);
+		[Mac (10,12, onlyOn64 : true)]
+		[Export ("application:userDidAcceptCloudKitShareWithMetadata:"), EventArgs ("NSApplicationUserAcceptedCloudKitShare")]
+		void UserDidAcceptedCloudKitShare (NSApplication application, CKShareMetadata metadata);
+#endif
 	}
 		
 	[BaseType (typeof (NSObjectController))]
@@ -20281,12 +20281,11 @@ namespace XamCore.AppKit {
 		[Export ("optionsForSharingService:shareProvider:")]
 		NSCloudKitSharingServiceOptions Options (NSSharingService cloudKitSharingService, NSItemProvider provider);
 
-		// TODO - Add when CloudKit bindings are done
-		//[Export ("sharingService:didSaveShare:")]
-		//void Saved (NSSharingService sharingService, CKShare share);
+		[Export ("sharingService:didSaveShare:")]
+		void Saved (NSSharingService sharingService, CKShare share);
 
-		//[Export ("sharingService:didStopSharing:")]
-		//void Stopped (NSSharingService sharingService, CKShare share);
+		[Export ("sharingService:didStopSharing:")]
+		void Stopped (NSSharingService sharingService, CKShare share);
 	}
 
 	[MountainLion]
