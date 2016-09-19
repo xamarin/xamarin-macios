@@ -125,7 +125,7 @@ namespace Xamarin.MMP.Tests
 		{
 			// Mobile
 			test.XM45 = false;
-			string buildResults = TI.TestUnifiedExecutable (test, false);
+			string buildResults = TI.TestUnifiedExecutable (test, false).BuildOutput;
 			Assert.IsTrue (!buildShouldBeSuccessful || !buildResults.Contains ("MM2006"), string.Format ("{0} - Mobile had MM2006 state {1} not match expected\n{2}", testName, buildShouldBeSuccessful, buildResults));
 			if (processBuildOutput != null)
 				Assert.IsTrue (processBuildOutput (buildResults), string.Format ("{0} - Mobile - We did not see our expected item in the build output: {1}", testName, libraryName));
@@ -136,7 +136,7 @@ namespace Xamarin.MMP.Tests
 
 			// XM45
 			test.XM45 = true;
-			buildResults = TI.TestUnifiedExecutable (test, false);
+			buildResults = TI.TestUnifiedExecutable (test, false).BuildOutput;
 			Assert.IsTrue (!buildShouldBeSuccessful || !buildResults.Contains ("MM2006"), string.Format ("{0} - XM45 had MM2006 state {1} not match expected\n{2}", testName, buildShouldBeSuccessful, buildResults));
 			if (processBuildOutput != null)
 				Assert.IsTrue (processBuildOutput (buildResults), string.Format ("{0} - Mobile - We did not see our expected item in the build output: {1}", testName, libraryName));
