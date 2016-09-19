@@ -455,6 +455,15 @@ namespace XamCore.Registrar {
 
 			if (type.IsGenericParameter) {
 				if (typeof (NSObject).IsAssignableFrom (type)) {
+					// First look for a more specific constraint
+					var constraints = type.GetGenericParameterConstraints ();
+					foreach (var constraint in constraints) {
+						if (constraint.IsSubclassOf (typeof (NSObject))) {
+							constrained_type = constraint;
+							return true;
+						}
+					}
+					// Fallback to NSObject.
 					constrained_type = typeof(NSObject);
 					return true;
 				}
