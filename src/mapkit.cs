@@ -1452,7 +1452,7 @@ namespace XamCore.MapKit {
 	[TV (9,2)]
 	[Since (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9, onlyOn64 : true)]
-	public partial interface MKMapCamera : NSCopying, NSSecureCoding {
+	partial interface MKMapCamera : NSCopying, NSSecureCoding {
 
 		[Export ("centerCoordinate")]
 		CLLocationCoordinate2D CenterCoordinate { get; set; }

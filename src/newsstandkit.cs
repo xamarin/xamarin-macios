@@ -16,7 +16,7 @@ namespace XamCore.NewsstandKit {
 	// <quote>You create an NKAssetDownload instance using the NKIssue method addAssetWithRequest:</quote> -> http://developer.apple.com/library/ios/#documentation/StoreKit/Reference/NKAssetDownload_Class/NKAssetDownload/NKAssetDownload.html
 	// init returns NIL
 	[DisableDefaultCtor]
-	public interface NKAssetDownload {
+	interface NKAssetDownload {
 		[Export ("issue", ArgumentSemantic.Weak)]
 		NKIssue Issue { get;  }
 
@@ -39,7 +39,7 @@ namespace XamCore.NewsstandKit {
 	// http://developer.apple.com/library/ios/#documentation/StoreKit/Reference/NKIssue_Class/NKIssue/NKIssue.html#//apple_ref/occ/cl/NKIssue
 	// init returns NIL
 	[DisableDefaultCtor]
-	public interface NKIssue {
+	interface NKIssue {
 		[Export ("downloadingAssets", ArgumentSemantic.Copy)]
 		NKAssetDownload [] DownloadingAssets { get;  }
 

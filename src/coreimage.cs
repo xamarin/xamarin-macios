@@ -47,7 +47,7 @@ namespace XamCore.CoreImage {
 	[BaseType (typeof (NSObject))]
 	[Since (5,0)]
 	[DisableDefaultCtor]
-	public interface CIColor : NSSecureCoding, NSCopying {
+	interface CIColor : NSSecureCoding, NSCopying {
 		[Static]
 		[Export ("colorWithCGColor:")]
 		CIColor FromCGColor (CGColor c);
@@ -200,7 +200,7 @@ namespace XamCore.CoreImage {
 	[BaseType (typeof (NSObject))]
 	[Since (5,0)]
 	[DisableDefaultCtor]
-	public interface CIContext {
+	interface CIContext {
 		// When we bind OpenGL add these:
 		//[Export ("contextWithCGLContext:pixelFormat:colorSpace:options:")]
 		//CIContext ContextWithCGLContextpixelFormatcolorSpaceoptions (CGLContextObj ctx, CGLPixelFormatObj pf, CGColorSpaceRef cs, NSDictionary dict, );
@@ -407,7 +407,7 @@ namespace XamCore.CoreImage {
 	[BaseType (typeof (NSObject))]
 	[Since (5,0)]
 	[DisableDefaultCtor] //  In iOS8 they expose custom filters, we expose a protected one in CIFilter.cs
-	public interface CIFilter : NSSecureCoding, NSCopying {
+	interface CIFilter : NSSecureCoding, NSCopying {
 		[Export ("inputKeys")]
 		string [] InputKeys { get; }
 
@@ -662,7 +662,7 @@ namespace XamCore.CoreImage {
 
 	[TV (10,0)]
 	[StrongDictionary ("CIRawFilterKeys")]
-	public interface CIRawFilterOptions {
+	interface CIRawFilterOptions {
 
 		[iOS (10,0)]
 		bool AllowDraftMode { get; set; }
@@ -749,14 +749,14 @@ namespace XamCore.CoreImage {
 
 	[Since (5,0)]
 	[Static]
-	public interface CIFilterOutputKey {
+	interface CIFilterOutputKey {
 		[Field ("kCIOutputImageKey", "+CoreImage")]
 		NSString Image  { get; }
 	}
 	
 	[Since (5,0)]
 	[Static]
-	public interface CIFilterInputKey {
+	interface CIFilterInputKey {
 		[Field ("kCIInputBackgroundImageKey", "+CoreImage")]
 		NSString BackgroundImage  { get; }
 
@@ -862,7 +862,7 @@ namespace XamCore.CoreImage {
 		
 	[Since (5,0)]
 	[Static]
-	public interface CIFilterAttributes {
+	interface CIFilterAttributes {
 		[Field ("kCIAttributeFilterName", "+CoreImage")]
 		NSString FilterName  { get; }
 
@@ -978,7 +978,7 @@ namespace XamCore.CoreImage {
 
 	[Since (5,0)]
 	[Static]
-	public interface CIFilterCategory {
+	interface CIFilterCategory {
 		[Field ("kCICategoryDistortionEffect", "+CoreImage")]
 		NSString DistortionEffect  { get; }
 
@@ -1044,11 +1044,11 @@ namespace XamCore.CoreImage {
 		NSString FilterGenerator  { get; }
 	}
 
-	public interface ICIFilterConstructor {}
+	interface ICIFilterConstructor {}
 
 	[iOS (9,0)]
 	[Protocol]
-	public interface CIFilterConstructor
+	interface CIFilterConstructor
 	{
 		// @required -(CIFilter * __nullable)filterWithName:(NSString * __nonnull)name;
 		[Abstract]
@@ -1059,7 +1059,7 @@ namespace XamCore.CoreImage {
 	
 	[Static]
 	[iOS (9,0)]
-	public interface CIUIParameterSet {
+	interface CIUIParameterSet {
 		[Field ("kCIUISetBasic", "+CoreImage")]
 		NSString Basic  { get; }
 
@@ -1075,7 +1075,7 @@ namespace XamCore.CoreImage {
 
 #if MONOMAC
 	[Static]
-	public interface CIFilterApply {
+	interface CIFilterApply {
 		[Field ("kCIApplyOptionExtent", "+CoreImage")]
 		NSString OptionExtent  { get; }
 
@@ -1149,7 +1149,7 @@ namespace XamCore.CoreImage {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	[iOS(9,0)]
-	public interface CIFilterShape : NSCopying {
+	interface CIFilterShape : NSCopying {
 		[Static]
 		[Export ("shapeWithRect:")]
 		CIFilterShape FromRect (CGRect rect);
@@ -1182,7 +1182,7 @@ namespace XamCore.CoreImage {
 	[BaseType (typeof (NSObject))]
 	[Since (5,0)]
 	[DisableDefaultCtor]
-	public interface CIImage : NSSecureCoding, NSCopying {
+	interface CIImage : NSSecureCoding, NSCopying {
 		[Static]
 		[Export ("imageWithCGImage:")]
 		CIImage FromCGImage (CGImage image);
@@ -1663,7 +1663,7 @@ namespace XamCore.CoreImage {
 		CGImage CGImage { get; }
 	}
 
-	public interface ICIImageProcessorInput {}
+	interface ICIImageProcessorInput {}
 
 	[iOS (10,0)][Mac (10,12)]
 	[Protocol]
@@ -1695,7 +1695,7 @@ namespace XamCore.CoreImage {
 #endif
 	}
 
-	public interface ICIImageProcessorOutput {}
+	interface ICIImageProcessorOutput {}
 
 	[iOS (10,0)][Mac (10,12)]
 	[Protocol]
@@ -1749,7 +1749,7 @@ namespace XamCore.CoreImage {
 		NSString UserInfoKey { get; } 
 	}
 	
-	public interface ICIImageProvider {}
+	interface ICIImageProvider {}
 
 	// Informal protocol
 	[Protocol (IsInformal = true)]
@@ -1759,12 +1759,12 @@ namespace XamCore.CoreImage {
 		unsafe void ProvideImageData (IntPtr data, nuint rowbytes, nuint x, nuint y, nuint width, nuint height, [NullAllowed] NSObject info);
 	}
 	
-	public delegate CGRect CIKernelRoiCallback (int /* int, not NSInteger */ index, CGRect rect);
+	delegate CGRect CIKernelRoiCallback (int /* int, not NSInteger */ index, CGRect rect);
 
 	[iOS (8,0), Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // avoid crashes
-	public interface CIKernel {
+	interface CIKernel {
 #if !XAMCORE_2_0
 		[Obsolete ("Use FromProgramSingle")] // better API
 		[Static, Export ("kernelWithString:")]
@@ -1820,7 +1820,7 @@ namespace XamCore.CoreImage {
 
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
-	public interface CIImageAccumulator {
+	interface CIImageAccumulator {
 		[Static]
 		[Export ("imageAccumulatorWithExtent:format:")]
 #if !MONOMAC
@@ -1862,7 +1862,7 @@ namespace XamCore.CoreImage {
 
 #if MONOMAC
 	[BaseType (typeof (NSObject))]
-	public interface CIPlugIn {
+	interface CIPlugIn {
 		[Static]
 		[Export ("loadAllPlugIns")]
 		void LoadAllPlugIns ();
@@ -1880,7 +1880,7 @@ namespace XamCore.CoreImage {
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface CISampler : NSCopying {
+	interface CISampler : NSCopying {
 		[Static, Export ("samplerWithImage:")]
 		CISampler FromImage (CIImage sourceImage);
 
@@ -1930,7 +1930,7 @@ namespace XamCore.CoreImage {
 	[BaseType (typeof (NSObject))]
 	[Since (5,0)]
 	[DisableDefaultCtor]
-	public interface CIVector : NSSecureCoding, NSCopying {
+	interface CIVector : NSSecureCoding, NSCopying {
 		[Static, Internal, Export ("vectorWithValues:count:")]
 		CIVector _FromValues (IntPtr values, nint count);
 
@@ -2231,7 +2231,7 @@ namespace XamCore.CoreImage {
 	[iOS (8,0)]
 	[Mac (10,12)]
 	[BaseType (typeof (CIFeature))]
-	public partial interface CIQRCodeFeature {
+	partial interface CIQRCodeFeature {
 
 		[Export ("bounds", ArgumentSemantic.Assign)]
 		CGRect Bounds { get; }

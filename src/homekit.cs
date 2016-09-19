@@ -15,7 +15,7 @@ namespace XamCore.HomeKit {
 	[TV (10,0)]
 	[iOS (8,0)]
 	[Static]
-	public partial interface HMErrors {
+	partial interface HMErrors {
 		[Field ("HMErrorDomain")]
 		NSString HMErrorDomain { get; }
 	}
@@ -23,7 +23,7 @@ namespace XamCore.HomeKit {
 	[TV (10,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject), Delegates=new string[] {"WeakDelegate"}, Events=new Type[] {typeof(HMHomeManagerDelegate)})]
-	public partial interface HMHomeManager {
+	partial interface HMHomeManager {
 
 		[Export ("delegate", ArgumentSemantic.Weak)]
 		[NullAllowed]
@@ -62,7 +62,7 @@ namespace XamCore.HomeKit {
 	[iOS (8,0)]
 	[Model, Protocol]
 	[BaseType (typeof (NSObject))]
-	public partial interface HMHomeManagerDelegate {
+	partial interface HMHomeManagerDelegate {
 
 		[Export ("homeManagerDidUpdateHomes:")]
 		void DidUpdateHomes (HMHomeManager manager);
@@ -80,7 +80,7 @@ namespace XamCore.HomeKit {
 	[TV (10,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject), Delegates=new string[] {"WeakDelegate"}, Events=new Type[] {typeof(HMAccessoryDelegate)})]
-	public partial interface HMAccessory {
+	partial interface HMAccessory {
 
 		[Export ("name")]
 		string Name { get; }
@@ -153,7 +153,7 @@ namespace XamCore.HomeKit {
 	[iOS (8,0)]
 	[Model, Protocol]
 	[BaseType (typeof (NSObject))]
-	public partial interface HMAccessoryDelegate {
+	partial interface HMAccessoryDelegate {
 
 		[Export ("accessoryDidUpdateName:")]
 		void DidUpdateName (HMAccessory accessory);
@@ -179,7 +179,7 @@ namespace XamCore.HomeKit {
 	[NoTV]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject), Delegates=new string[] {"WeakDelegate"}, Events=new Type[] {typeof(HMAccessoryBrowserDelegate)})]
-	public partial interface HMAccessoryBrowser {
+	partial interface HMAccessoryBrowser {
 
 		[Export ("delegate", ArgumentSemantic.Weak)]
 		[NullAllowed]
@@ -203,7 +203,7 @@ namespace XamCore.HomeKit {
 	[iOS (8,0)]
 	[Model, Protocol]
 	[BaseType (typeof (NSObject))]
-	public partial interface HMAccessoryBrowserDelegate {
+	partial interface HMAccessoryBrowserDelegate {
 
 		[Export ("accessoryBrowser:didFindNewAccessory:"), EventArgs ("HMAccessoryBrowser")]
 		void DidFindNewAccessory (HMAccessoryBrowser browser, HMAccessory accessory);
@@ -231,7 +231,7 @@ namespace XamCore.HomeKit {
 	[TV (10,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
-	public partial interface HMAction {
+	partial interface HMAction {
 
 		[iOS (9,0)]
 		[Export ("uniqueIdentifier", ArgumentSemantic.Copy)]
@@ -242,7 +242,7 @@ namespace XamCore.HomeKit {
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	public partial interface HMActionSet {
+	partial interface HMActionSet {
 
 		[Export ("name")]
 		string Name { get; }
@@ -289,7 +289,7 @@ namespace XamCore.HomeKit {
 	[iOS (9,0)]
 	[Static]
 	[Internal]
-	public interface HMActionSetTypesInternal {
+	interface HMActionSetTypesInternal {
 		[Field ("HMActionSetTypeWakeUp")]
 		NSString WakeUp { get; }
 
@@ -313,7 +313,7 @@ namespace XamCore.HomeKit {
 	[TV (10,0)]
 	[iOS (8,0)]	
 	[BaseType (typeof (NSObject))]
-	public partial interface HMCharacteristic {
+	partial interface HMCharacteristic {
 
 		[Internal]
 		[Export ("characteristicType", ArgumentSemantic.Copy)]
@@ -373,7 +373,7 @@ namespace XamCore.HomeKit {
 	[iOS(8,0)]
 	[Static]
 	[Internal]
-	public interface HMCharacteristicPropertyInternal {
+	interface HMCharacteristicPropertyInternal {
 
 		[Field ("HMCharacteristicPropertyReadable")]
 		NSString Readable { get; }
@@ -393,7 +393,7 @@ namespace XamCore.HomeKit {
 	[iOS(8,0)]
 	[Static]
 	[Internal]
-	public interface HMCharacteristicTypeInternal {
+	interface HMCharacteristicTypeInternal {
 		[Field ("HMCharacteristicTypePowerState")]
 		NSString PowerState { get; }
 
@@ -734,7 +734,7 @@ namespace XamCore.HomeKit {
 	[TV (10,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
-	public partial interface HMCharacteristicMetadata {
+	partial interface HMCharacteristicMetadata {
 
 		[Export ("minimumValue")]
 		NSNumber MinimumValue { get; }
@@ -768,7 +768,7 @@ namespace XamCore.HomeKit {
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (HMAction))]
-	public partial interface HMCharacteristicWriteAction {
+	partial interface HMCharacteristicWriteAction {
 
 		[NoTV]
 		[NoWatch]
@@ -805,7 +805,7 @@ namespace XamCore.HomeKit {
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject), Delegates=new string[] {"WeakDelegate"}, Events=new Type[] {typeof(HMHomeDelegate)})]
-	public partial interface HMHome { 
+	partial interface HMHome { 
 
 		[Export ("delegate", ArgumentSemantic.Weak)]
 		[NullAllowed]
@@ -1012,7 +1012,7 @@ namespace XamCore.HomeKit {
 	[iOS (8,0)]
 	[Model, Protocol]
 	[BaseType (typeof (NSObject))]
-	public partial interface HMHomeDelegate {
+	partial interface HMHomeDelegate {
 
 		[Export ("homeDidUpdateName:")]
 		void DidUpdateNameForHome (HMHome home);
@@ -1106,7 +1106,7 @@ namespace XamCore.HomeKit {
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	public partial interface HMRoom {
+	partial interface HMRoom {
 
 		[Export ("name")]
 		string Name { get; }
@@ -1129,7 +1129,7 @@ namespace XamCore.HomeKit {
 	[iOS (8,0)]
 	[Static]
 	[Internal]
-	public interface HMServiceTypeInternal {
+	interface HMServiceTypeInternal {
 		[Field ("HMServiceTypeLightbulb")]
 		NSString LightBulb { get; }
 
@@ -1253,7 +1253,7 @@ namespace XamCore.HomeKit {
 	[TV (10,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
-	public partial interface HMService { 
+	partial interface HMService { 
 
 		[Export ("accessory", ArgumentSemantic.Weak)]
 		HMAccessory Accessory { get; }
@@ -1309,7 +1309,7 @@ namespace XamCore.HomeKit {
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	public partial interface HMServiceGroup {
+	partial interface HMServiceGroup {
 
 		[Export ("name")]
 		string Name { get; }
@@ -1344,7 +1344,7 @@ namespace XamCore.HomeKit {
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (HMTrigger))]
-	public partial interface HMTimerTrigger { 
+	partial interface HMTimerTrigger { 
 
 		[NoTV]
 		[NoWatch]
@@ -1387,7 +1387,7 @@ namespace XamCore.HomeKit {
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	public partial interface HMTrigger { 
+	partial interface HMTrigger { 
 
 		[Export ("name")]
 		string Name { get; }
@@ -1434,7 +1434,7 @@ namespace XamCore.HomeKit {
 	[iOS (8,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	public partial interface HMZone { 
+	partial interface HMZone { 
 
 		[Export ("name")]
 		string Name { get; }
@@ -1510,7 +1510,7 @@ namespace XamCore.HomeKit {
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface HMUser {
+	interface HMUser {
 		[Export ("name")]
 		string Name { get; }
 
@@ -1523,7 +1523,7 @@ namespace XamCore.HomeKit {
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: init is unavailable
-	public interface HMAccessoryCategory {
+	interface HMAccessoryCategory {
 		[Internal]
 		[Export ("categoryType")]
 		NSString _CategoryType { get; }
@@ -1536,7 +1536,7 @@ namespace XamCore.HomeKit {
 	[iOS (9,0)]
 	[Static]
 	[Internal]
-	public interface HMAccessoryCategoryTypesInternal {
+	interface HMAccessoryCategoryTypesInternal {
 		[Field ("HMAccessoryCategoryTypeOther")]
 		NSString Other { get; }
 
@@ -1699,7 +1699,7 @@ namespace XamCore.HomeKit {
 	[TV (10,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface HMHomeAccessControl {
+	interface HMHomeAccessControl {
 		[Export ("administrator")]
 		bool Administrator { [Bind ("isAdministrator")] get; }
 	}
@@ -1744,7 +1744,7 @@ namespace XamCore.HomeKit {
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[BaseType (typeof(HMAccessoryProfile))]
 	[DisableDefaultCtor]
-	public interface HMCameraProfile
+	interface HMCameraProfile
 	{
 		[NullAllowed, Export ("streamControl", ArgumentSemantic.Strong)]
 		HMCameraStreamControl StreamControl { get; }
@@ -1768,7 +1768,7 @@ namespace XamCore.HomeKit {
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[BaseType (typeof(HMCameraControl))]
-	public interface HMCameraStreamControl
+	interface HMCameraStreamControl
 	{
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		IHMCameraStreamControlDelegate Delegate { get; set; }
@@ -1786,7 +1786,7 @@ namespace XamCore.HomeKit {
 		void StopStream ();
 	}
 
-	public interface IHMCameraStreamControlDelegate {}
+	interface IHMCameraStreamControlDelegate {}
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[Protocol, Model]
@@ -1803,7 +1803,7 @@ namespace XamCore.HomeKit {
 	// TODO: Type still available for tvOS even if everything in it is __TVOS_PROHIBITED.
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[BaseType (typeof(HMCameraSource))]
-	public interface HMCameraStream
+	interface HMCameraStream
 	{
 		[NoTV]
 		[Export ("audioStreamSetting", ArgumentSemantic.Assign)]
@@ -1817,7 +1817,7 @@ namespace XamCore.HomeKit {
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[BaseType (typeof(HMCameraControl))]
-	public interface HMCameraSnapshotControl
+	interface HMCameraSnapshotControl
 	{
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		IHMCameraSnapshotControlDelegate Delegate { get; set; }
@@ -1829,12 +1829,12 @@ namespace XamCore.HomeKit {
 		void TakeSnapshot ();
 	}
 
-	public interface IHMCameraSnapshotControlDelegate {}
+	interface IHMCameraSnapshotControlDelegate {}
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
-	public interface HMCameraSnapshotControlDelegate
+	interface HMCameraSnapshotControlDelegate
 	{
 		[Export ("cameraSnapshotControl:didTakeSnapshot:error:")]
 		void DidTakeSnapshot (HMCameraSnapshotControl cameraSnapshotControl, [NullAllowed] HMCameraSnapshot snapshot, [NullAllowed] NSError error);
@@ -1842,7 +1842,7 @@ namespace XamCore.HomeKit {
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[BaseType (typeof(HMCameraSource))]
-	public interface HMCameraSnapshot
+	interface HMCameraSnapshot
 	{
 		[Export ("captureDate", ArgumentSemantic.Copy)]
 		NSDate CaptureDate { get; }
@@ -1851,7 +1851,7 @@ namespace XamCore.HomeKit {
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[BaseType (typeof(HMCameraControl))]
 	[DisableDefaultCtor]
-	public interface HMCameraSettingsControl
+	interface HMCameraSettingsControl
 	{
 		[NullAllowed, Export ("nightVision", ArgumentSemantic.Strong)]
 		HMCharacteristic NightVision { get; }
@@ -1884,7 +1884,7 @@ namespace XamCore.HomeKit {
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[BaseType (typeof(HMCameraControl))]
 	[DisableDefaultCtor]
-	public interface HMCameraAudioControl
+	interface HMCameraAudioControl
 	{
 		[NullAllowed, Export ("mute", ArgumentSemantic.Strong)]
 		HMCharacteristic Mute { get; }

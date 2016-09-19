@@ -74,30 +74,33 @@ namespace XamCore.Foundation {
 #else
 namespace XamCore.UIKit {
 #endif
-	public delegate void NSFilePresenterReacquirer ([BlockCallback] Action reacquirer);
+	delegate void NSFilePresenterReacquirer ([BlockCallback] Action reacquirer);
 }
 
 namespace XamCore.Foundation
 {
 #if XAMCORE_2_0
-	public delegate NSComparisonResult NSComparator (NSObject obj1, NSObject obj2);
+	delegate NSComparisonResult NSComparator (NSObject obj1, NSObject obj2);
 #else
-	public delegate int /* !XAMCORE_2_0 */ NSComparator (NSObject obj1, NSObject obj2);
+	delegate int /* !XAMCORE_2_0 */ NSComparator (NSObject obj1, NSObject obj2);
 #endif
-	public delegate void NSAttributedRangeCallback (NSDictionary attrs, NSRange range, ref bool stop);
-	public delegate void NSAttributedStringCallback (NSObject value, NSRange range, ref bool stop);
+	delegate void NSAttributedRangeCallback (NSDictionary attrs, NSRange range, ref bool stop);
+	delegate void NSAttributedStringCallback (NSObject value, NSRange range, ref bool stop);
 
-	public delegate bool NSEnumerateErrorHandler (NSUrl url, NSError error);
-	public delegate void NSMetadataQueryEnumerationCallback (NSObject result, nuint idx, ref bool stop);
-	public delegate void NSItemProviderCompletionHandler (NSObject itemBeingLoaded, NSError error);
-	public delegate void NSItemProviderLoadHandler ([BlockCallback] NSItemProviderCompletionHandler completionHandler, Class expectedValueClass, NSDictionary options);
-	public delegate void EnumerateDatesCallback (NSDate date, bool exactMatch, ref bool stop);
-	public delegate void EnumerateIndexSetCallback (nuint idx, ref bool stop);
+	delegate bool NSEnumerateErrorHandler (NSUrl url, NSError error);
+	delegate void NSMetadataQueryEnumerationCallback (NSObject result, nuint idx, ref bool stop);
+	delegate void NSItemProviderCompletionHandler (NSObject itemBeingLoaded, NSError error);
+	delegate void NSItemProviderLoadHandler ([BlockCallback] NSItemProviderCompletionHandler completionHandler, Class expectedValueClass, NSDictionary options);
+	delegate void EnumerateDatesCallback (NSDate date, bool exactMatch, ref bool stop);
+	delegate void EnumerateIndexSetCallback (nuint idx, ref bool stop);
+#if MONOMAC
+	delegate void CloudKitRegistrationPreparationHandler (CKShare share, CKContainer container, NSError error);
+#endif
 
-	public interface NSArray<TValue> : NSArray {}
+	interface NSArray<TValue> : NSArray {}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSArray : NSSecureCoding, NSMutableCopying, INSFastEnumeration {
+	interface NSArray : NSSecureCoding, NSMutableCopying, INSFastEnumeration {
 		[Export ("count")]
 		nuint Count { get; }
 
@@ -155,12 +158,12 @@ namespace XamCore.Foundation
 	}
 
 #if MONOMAC
-	public interface NSAttributedStringDocumentAttributes { }
+	interface NSAttributedStringDocumentAttributes { }
 #endif
 
 	[Since (3,2)]
 	[BaseType (typeof (NSObject))]
-	public partial interface NSAttributedString : NSCoding, NSMutableCopying, NSSecureCoding
+	partial interface NSAttributedString : NSCoding, NSMutableCopying, NSSecureCoding
 	#if MONOMAC
 		, NSPasteboardReading, NSPasteboardWriting
 	#endif
@@ -497,7 +500,7 @@ namespace XamCore.Foundation
 		   Delegates=new string [] { "WeakDelegate" },
 		   Events=new Type [] { typeof (NSCacheDelegate)} )]
 	[Since (4,0)]
-	public interface NSCache {
+	interface NSCache {
 		[Export ("objectForKey:")]
 		NSObject ObjectForKey (NSObject key);
 
@@ -537,7 +540,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface NSCacheDelegate {
+	interface NSCacheDelegate {
 		[Export ("cache:willEvictObject:"), EventArgs ("NSObject")]
 		void WillEvictObject (NSCache cache, NSObject obj);
 	}
@@ -545,7 +548,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject), Name="NSCachedURLResponse")]
 	// instance created with 'init' will crash when Dispose is called
 	[DisableDefaultCtor]
-	public interface NSCachedUrlResponse : NSCoding, NSSecureCoding, NSCopying {
+	interface NSCachedUrlResponse : NSCoding, NSSecureCoding, NSCopying {
 		[Export ("initWithResponse:data:userInfo:storagePolicy:")]
 		IntPtr Constructor (NSUrlResponse response, NSData data, [NullAllowed] NSDictionary userInfo, NSUrlCacheStoragePolicy storagePolicy);
 
@@ -568,7 +571,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject))]
 	// 'init' returns NIL - `init` now marked as NS_UNAVAILABLE
 	[DisableDefaultCtor]
-	public interface NSCalendar : NSSecureCoding, NSCopying {
+	interface NSCalendar : NSSecureCoding, NSCopying {
 		[DesignatedInitializer]
 		[Export ("initWithCalendarIdentifier:")]
 		IntPtr Constructor (NSString identifier);
@@ -955,7 +958,7 @@ namespace XamCore.Foundation
 
 	[Since (3,2)]
 	[BaseType (typeof (NSObject))]
-	public interface NSCharacterSet : NSSecureCoding, NSMutableCopying {
+	interface NSCharacterSet : NSSecureCoding, NSMutableCopying {
 		[Static, Export ("alphanumericCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet Alphanumerics {get;}
 
@@ -1067,7 +1070,7 @@ namespace XamCore.Foundation
 	// Already exists in MonoMac: from from foundation-desktop?
 	
 	[BaseType (typeof (NSCharacterSet))]
-	public interface NSMutableCharacterSet {
+	interface NSMutableCharacterSet {
 		[Export ("addCharactersInRange:")]
 		void AddCharacters (NSRange aRange);
 		
@@ -1168,7 +1171,7 @@ namespace XamCore.Foundation
 #endif
 	
 	[BaseType (typeof (NSObject))]
-	public interface NSCoder {
+	interface NSCoder {
 
 		//
 		// Encoding and decoding
@@ -1287,7 +1290,7 @@ namespace XamCore.Foundation
 	}
 	
 	[BaseType (typeof (NSPredicate))]
-	public interface NSComparisonPredicate : NSSecureCoding {
+	interface NSComparisonPredicate : NSSecureCoding {
 		[Static, Export ("predicateWithLeftExpression:rightExpression:modifier:type:options:")]
 		NSComparisonPredicate Create (NSExpression leftExpression, NSExpression rightExpression, NSComparisonPredicateModifier comparisonModifier, NSPredicateOperatorType operatorType, NSComparisonPredicateOptions comparisonOptions);
 
@@ -1323,7 +1326,7 @@ namespace XamCore.Foundation
 
 	[BaseType (typeof (NSPredicate))]
 	[DisableDefaultCtor] // An uncaught exception was raised: Can't have a NOT predicate with no subpredicate.
-	public interface NSCompoundPredicate : NSCoding {
+	interface NSCompoundPredicate : NSCoding {
 		[DesignatedInitializer]
 		[Export ("initWithType:subpredicates:")]
 		IntPtr Constructor (NSCompoundPredicateType type, NSPredicate[] subpredicates);
@@ -1348,10 +1351,10 @@ namespace XamCore.Foundation
 
 	}
 
-	public delegate void NSDataByteRangeEnumerator (IntPtr bytes, NSRange range, ref bool stop);
+	delegate void NSDataByteRangeEnumerator (IntPtr bytes, NSRange range, ref bool stop);
 	
 	[BaseType (typeof (NSObject))]
-	public interface NSData : NSSecureCoding, NSMutableCopying {
+	interface NSData : NSSecureCoding, NSMutableCopying {
 		[Export ("dataWithContentsOfURL:")]
 		[Static]
 		NSData FromUrl (NSUrl url);
@@ -1443,7 +1446,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSRegularExpression))]
-	public interface NSDataDetector : NSCopying, NSCoding {
+	interface NSDataDetector : NSCopying, NSCoding {
 		// Invalid parent ctor: -[NSDataDetector initWithPattern:options:error:]: Not valid for NSDataDetector
 //		[Export ("initWithPattern:options:error:")]
 //		IntPtr Constructor (NSString pattern, NSRegularExpressionOptions options, out NSError error);
@@ -1456,7 +1459,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSDateComponents : NSSecureCoding, NSCopying, INSCopying, INSSecureCoding, INativeObject {
+	interface NSDateComponents : NSSecureCoding, NSCopying, INSCopying, INSSecureCoding, INativeObject {
 		[Since (4,0)]
 		[NullAllowed] // by default this property is null
 		[Export ("timeZone", ArgumentSemantic.Copy)]
@@ -1584,7 +1587,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSFormatter))]
-	public interface NSDateFormatter {
+	interface NSDateFormatter {
 		[Export ("stringFromDate:")]
 		string ToString (NSDate date);
 
@@ -1820,10 +1823,10 @@ namespace XamCore.Foundation
 	}
 
 #if !XAMCORE_2_0
-	public delegate void NSFileHandleUpdateHandler (NSFileHandle handle);
+	delegate void NSFileHandleUpdateHandler (NSFileHandle handle);
 #endif
 
-	public interface NSFileHandleReadEventArgs {
+	interface NSFileHandleReadEventArgs {
 		[Export ("NSFileHandleNotificationDataItem")]
 		NSData AvailableData { get; }
 
@@ -1831,7 +1834,7 @@ namespace XamCore.Foundation
 		nint UnixErrorCode { get; }
 	}
 
-	public interface NSFileHandleConnectionAcceptedEventArgs {
+	interface NSFileHandleConnectionAcceptedEventArgs {
 		[Export ("NSFileHandleNotificationFileHandleItem")]
 		NSFileHandle NearSocketConnection { get; }
 		
@@ -1841,7 +1844,7 @@ namespace XamCore.Foundation
 	
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // return invalid handle
-	public interface NSFileHandle : NSSecureCoding {
+	interface NSFileHandle : NSSecureCoding {
 		[Export ("availableData")]
 		NSData AvailableData ();
 		
@@ -2080,7 +2083,7 @@ namespace XamCore.Foundation
 	
 	
 	[BaseType (typeof (NSObject))]
-	public interface NSPipe {
+	interface NSPipe {
 		
 		[Export ("fileHandleForReading")]
 		NSFileHandle ReadHandle { get; }
@@ -2094,7 +2097,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSFormatter : NSCoding, NSCopying {
+	interface NSFormatter : NSCoding, NSCopying {
 		[Export ("stringForObjectValue:")]
 		string StringFor ([NullAllowed] NSObject value);
 
@@ -2134,7 +2137,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface NSCoding {
+	interface NSCoding {
 #if XAMCORE_2_0
 		// [Abstract]
 		[Export ("initWithCoder:")]
@@ -2147,14 +2150,14 @@ namespace XamCore.Foundation
 	}
 
 	[Protocol]
-	public interface NSSecureCoding : NSCoding {
+	interface NSSecureCoding : NSCoding {
 		// note: +supportsSecureCoding being static it is not a good "generated" binding candidate
 	}
 
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface NSCopying {
+	interface NSCopying {
 #if XAMCORE_2_0
 		[Abstract]
 #endif
@@ -2165,7 +2168,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface NSMutableCopying : NSCopying {
+	interface NSMutableCopying : NSCopying {
 #if XAMCORE_2_0
 		[Abstract]
 #endif
@@ -2174,12 +2177,12 @@ namespace XamCore.Foundation
 		NSObject MutableCopy ([NullAllowed] NSZone zone);
 	}
 
-	public interface INSMutableCopying {}
+	interface INSMutableCopying {}
 
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface NSKeyedArchiverDelegate {
+	interface NSKeyedArchiverDelegate {
 		[Export ("archiver:didEncodeObject:"), EventArgs ("NSObject")]
 		void EncodedObject (NSKeyedArchiver archiver, NSObject obj);
 		
@@ -2199,7 +2202,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface NSKeyedUnarchiverDelegate {
+	interface NSKeyedUnarchiverDelegate {
 		[Export ("unarchiver:didDecodeObject:"), DelegateName ("NSDecoderCallback"), DefaultValue (null)]
 		NSObject DecodedObject (NSKeyedUnarchiver unarchiver, NSObject obj);
 		
@@ -2221,7 +2224,7 @@ namespace XamCore.Foundation
 		   Events=new Type [] { typeof (NSKeyedArchiverDelegate) })]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -[NSKeyedArchiver init]: cannot use -init for initialization
 	[DisableDefaultCtor]
-	public interface NSKeyedArchiver {
+	interface NSKeyedArchiver {
 
 		// hack so we can decorate the default .ctor with availability attributes
 		[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
@@ -2280,7 +2283,7 @@ namespace XamCore.Foundation
 		   Events=new Type [] { typeof (NSKeyedUnarchiverDelegate) })]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -[NSKeyedUnarchiver init]: cannot use -init for initialization
 	[DisableDefaultCtor]
-	public interface NSKeyedUnarchiver {
+	interface NSKeyedUnarchiver {
 		[Export ("initForReadingWithData:")]
 		[MarshalNativeExceptions]
 		IntPtr Constructor (NSData data);
@@ -2326,7 +2329,7 @@ namespace XamCore.Foundation
 
 	[Since (5,0)]
 	[BaseType (typeof (NSObject), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSMetadataQueryDelegate)})]
-	public interface NSMetadataQuery {
+	interface NSMetadataQuery {
 		[Export ("startQuery")]
 		bool StartQuery ();
 
@@ -2585,7 +2588,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface NSMetadataQueryDelegate {
+	interface NSMetadataQueryDelegate {
 		[Export ("metadataQuery:replacementObjectForResultObject:"), DelegateName ("NSMetadataQueryObject"), DefaultValue(null)]
 		NSObject ReplacementObjectForResultObject (NSMetadataQuery query, NSMetadataItem result);
 
@@ -2595,7 +2598,7 @@ namespace XamCore.Foundation
 
 	[Since (5,0)]
 	[BaseType (typeof (NSObject))]
-	public interface NSMetadataItem {
+	interface NSMetadataItem {
 		[Export ("valueForAttribute:")]
 		NSObject ValueForAttribute (string key);
 
@@ -2624,7 +2627,7 @@ namespace XamCore.Foundation
 
 	[Since (5,0)]
 	[BaseType (typeof (NSObject))]
-	public interface NSMetadataQueryAttributeValueTuple {
+	interface NSMetadataQueryAttributeValueTuple {
 		[Export ("attribute")]
 		string Attribute { get; }
 
@@ -2637,7 +2640,7 @@ namespace XamCore.Foundation
 
 	[Since (5,0)]
 	[BaseType (typeof (NSObject))]
-	public interface NSMetadataQueryResultGroup {
+	interface NSMetadataQueryResultGroup {
 		[Export ("attribute")]
 		string Attribute { get; }
 
@@ -2662,7 +2665,7 @@ namespace XamCore.Foundation
 	// Apple has now surfaced it on a few methods.   So we need to take the Obsolete
 	// out, and we will have to fully support it.
 	[BaseType (typeof (NSArray))]
-	public interface NSMutableArray {
+	interface NSMutableArray {
 		[DesignatedInitializer]
 		[Export ("initWithCapacity:")]
 		IntPtr Constructor (nuint capacity);
@@ -2724,11 +2727,11 @@ namespace XamCore.Foundation
 		
 	}
 	
-	public interface NSMutableArray<TValue> : NSMutableArray {}
+	interface NSMutableArray<TValue> : NSMutableArray {}
 
 	[Since (3,2)]
 	[BaseType (typeof (NSAttributedString))]
-	public interface NSMutableAttributedString {
+	interface NSMutableAttributedString {
 		[Export ("initWithString:")]
 		IntPtr Constructor (string str);
 		
@@ -2820,7 +2823,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSData))]
-	public interface NSMutableData {
+	interface NSMutableData {
 		[Static, Export ("dataWithCapacity:")] [Autorelease]
 		[PreSnippet ("if (capacity < 0 || capacity > nint.MaxValue) throw new ArgumentOutOfRangeException ();")]
 		NSMutableData FromCapacity (nint capacity);
@@ -2864,7 +2867,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSDate : NSSecureCoding, NSCopying {
+	interface NSDate : NSSecureCoding, NSCopying {
 		[Export ("timeIntervalSinceReferenceDate")]
 		double SecondsSinceReferenceDate { get; }
 
@@ -2911,7 +2914,7 @@ namespace XamCore.Foundation
 	}
 	
 	[BaseType (typeof (NSObject))]
-	public interface NSDictionary : NSSecureCoding, NSMutableCopying {
+	interface NSDictionary : NSSecureCoding, NSMutableCopying {
 		[Export ("dictionaryWithContentsOfFile:")]
 		[Static]
 		NSDictionary FromFile (string path);
@@ -3021,17 +3024,17 @@ namespace XamCore.Foundation
 
 	}
 
-	public interface NSDictionary<K,V> : NSDictionary {}
+	interface NSDictionary<K,V> : NSDictionary {}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSEnumerator {
+	interface NSEnumerator {
 		[Export ("nextObject")]
 		NSObject NextObject (); 
 	}
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface NSError : NSSecureCoding, NSCopying {
+	interface NSError : NSSecureCoding, NSCopying {
 		[Static, Export ("errorWithDomain:code:userInfo:")]
 		NSError FromDomain (NSString domain, nint code, [NullAllowed] NSDictionary userInfo);
 
@@ -3170,12 +3173,12 @@ namespace XamCore.Foundation
 #endif
 	}
 
-	public delegate NSObject NSErrorUserInfoValueProvider (NSError error, NSString userInfoKey);	
+	delegate NSObject NSErrorUserInfoValueProvider (NSError error, NSString userInfoKey);	
 
 	[BaseType (typeof (NSObject))]
 	// 'init' returns NIL
 	[DisableDefaultCtor]
-	public interface NSException : NSCoding, NSCopying {
+	interface NSException : NSCoding, NSCopying {
 		[DesignatedInitializer]
 		[Export ("initWithName:reason:userInfo:")]
 		IntPtr Constructor (string name, string reason, [NullAllowed] NSDictionary userInfo);
@@ -3198,13 +3201,13 @@ namespace XamCore.Foundation
 
 #if !XAMCORE_4_0 && !WATCH
 	[Obsolete("NSExpressionHandler is deprecated, please use FromFormat (string, NSObject[]) instead.")]
-	public delegate void NSExpressionHandler (NSObject evaluatedObject, NSExpression [] expressions, NSMutableDictionary context);
+	delegate void NSExpressionHandler (NSObject evaluatedObject, NSExpression [] expressions, NSMutableDictionary context);
 #endif
-	public delegate NSObject NSExpressionCallbackHandler (NSObject evaluatedObject, NSExpression [] expressions, NSMutableDictionary context);
+	delegate NSObject NSExpressionCallbackHandler (NSObject evaluatedObject, NSExpression [] expressions, NSMutableDictionary context);
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -predicateFormat cannot be sent to an abstract object of class NSExpression: Create a concrete instance!
 	[DisableDefaultCtor]
-	public interface NSExpression : NSSecureCoding, NSCopying {
+	interface NSExpression : NSSecureCoding, NSCopying {
 		[Static, Export ("expressionForConstantValue:")]
 		NSExpression FromConstant (NSObject obj);
 
@@ -3330,7 +3333,7 @@ namespace XamCore.Foundation
 
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
-	public partial interface NSExtensionContext {
+	partial interface NSExtensionContext {
 
 		[Export ("inputItems", ArgumentSemantic.Copy)]
 		NSExtensionItem [] InputItems { get; }
@@ -3373,7 +3376,7 @@ namespace XamCore.Foundation
 
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
-	public partial interface NSExtensionItem : NSCopying, NSSecureCoding {
+	partial interface NSExtensionItem : NSCopying, NSSecureCoding {
 
 		[NullAllowed] // by default this property is null
 		[Export ("attributedTitle", ArgumentSemantic.Copy)]
@@ -3401,7 +3404,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSNull : NSSecureCoding, NSCopying {
+	interface NSNull : NSSecureCoding, NSCopying {
 		[Export ("null"), Static]
 		NSNull Null { get; }
 	}
@@ -3483,7 +3486,7 @@ namespace XamCore.Foundation
 
 	[Since (5,0)]
 	[Static]
-	public interface NSLinguisticTag {
+	interface NSLinguisticTag {
 		[Field ("NSLinguisticTagSchemeTokenType")]
 		NSString SchemeTokenType { get; }
 
@@ -3603,7 +3606,7 @@ namespace XamCore.Foundation
 	// 'init' returns NIL so it's not usable evenif it does not throw an ObjC exception
 	// funnily it was "added" in iOS 7 and header files says "do not invoke; not a valid initializer for this class"
 	[DisableDefaultCtor]
-	public interface NSLocale : NSSecureCoding, NSCopying {
+	interface NSLocale : NSSecureCoding, NSCopying {
 		[Static]
 		[Export ("systemLocale", ArgumentSemantic.Copy)]
 		NSLocale SystemLocale { get; }
@@ -3743,13 +3746,13 @@ namespace XamCore.Foundation
 		string GetLocalizedCalendarIdentifier (string calendarIdentifier);
 	}
 
-	public delegate void NSMatchEnumerator (NSTextCheckingResult result, NSMatchingFlags flags, ref bool stop);
+	delegate void NSMatchEnumerator (NSTextCheckingResult result, NSMatchingFlags flags, ref bool stop);
 
 	// This API surfaces NSString instead of strings, because we already have the .NET version that uses
 	// strings, so it makes sense to use NSString here (and also, the replacing functionality operates on
 	// NSMutableStrings)
 	[BaseType (typeof (NSObject))]
-	public interface NSRegularExpression : NSCopying, NSSecureCoding {
+	interface NSRegularExpression : NSCopying, NSSecureCoding {
 		[DesignatedInitializer]
 		[Export ("initWithPattern:options:error:")]
 		IntPtr Constructor (NSString pattern, NSRegularExpressionOptions options, out NSError error);
@@ -3799,7 +3802,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject))]
 	// init returns NIL
 	[DisableDefaultCtor]
-	public interface NSRunLoop {
+	interface NSRunLoop {
 		[Export ("currentRunLoop", ArgumentSemantic.Strong)][Static][IsThreadStatic]
 		NSRunLoop Current { get; }
 
@@ -3883,7 +3886,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSSet : NSSecureCoding, NSMutableCopying {
+	interface NSSet : NSSecureCoding, NSMutableCopying {
 		[Export ("set")][Static]
 		NSSet CreateSet ();
 
@@ -3969,10 +3972,10 @@ namespace XamCore.Foundation
 #endif
 	}
 
-	public interface NSSet<TKey> : NSSet {}
+	interface NSSet<TKey> : NSSet {}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSSortDescriptor : NSSecureCoding, NSCopying {
+	interface NSSortDescriptor : NSSecureCoding, NSCopying {
 		[Export ("initWithKey:ascending:")]
 		IntPtr Constructor (string key, bool ascending);
 
@@ -4003,7 +4006,7 @@ namespace XamCore.Foundation
 	}
 	
 	[Category, BaseType (typeof (NSOrderedSet))]
-	public partial interface NSKeyValueSorting_NSOrderedSet {
+	partial interface NSKeyValueSorting_NSOrderedSet {
 		[Since (5,0)]
 		[Export ("sortedArrayUsingDescriptors:")]
 		NSObject [] GetSortedArray (NSSortDescriptor [] sortDescriptors);
@@ -4012,13 +4015,13 @@ namespace XamCore.Foundation
 #pragma warning disable 618
 	[Category, BaseType (typeof (NSMutableArray))]
 #pragma warning restore 618
-	public partial interface NSSortDescriptorSorting_NSMutableArray {
+	partial interface NSSortDescriptorSorting_NSMutableArray {
 		[Since (5,0), Export ("sortUsingDescriptors:")]
 		void SortUsingDescriptors (NSSortDescriptor [] sortDescriptors);
 	}
 
 	[Category, BaseType (typeof (NSMutableOrderedSet))]
-	public partial interface NSKeyValueSorting_NSMutableOrderedSet {
+	partial interface NSKeyValueSorting_NSMutableOrderedSet {
 		[Since (5,0), Export ("sortUsingDescriptors:")]
 		void SortUsingDescriptors (NSSortDescriptor [] sortDescriptors);
 	}
@@ -4027,7 +4030,7 @@ namespace XamCore.Foundation
 	[Dispose ("if (disposing) { Invalidate (); } ")]
 	// init returns NIL
 	[DisableDefaultCtor]
-	public interface NSTimer {
+	interface NSTimer {
 
 		[Static, Export ("scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:")]
 		NSTimer CreateScheduledTimer (double seconds, NSObject target, Selector selector, [NullAllowed] NSObject userInfo, bool repeats);
@@ -4081,7 +4084,7 @@ namespace XamCore.Foundation
 	// NSTimeZone is an abstract class that defines the behavior of time zone objects. -> http://developer.apple.com/library/ios/#documentation/Cocoa/Reference/Foundation/Classes/NSTimeZone_Class/Reference/Reference.html
 	// calling 'init' returns a NIL pointer, i.e. an unusable instance
 	[DisableDefaultCtor]
-	public interface NSTimeZone : NSSecureCoding, NSCopying {
+	interface NSTimeZone : NSSecureCoding, NSCopying {
 		[Export ("initWithName:")]
 		IntPtr Constructor (string name);
 		
@@ -4247,7 +4250,7 @@ namespace XamCore.Foundation
 
 	[Since (6,0)]
 	[BaseType (typeof (NSObject), Name="NSUUID")]
-	public interface NSUuid : NSSecureCoding, NSCopying {
+	interface NSUuid : NSSecureCoding, NSCopying {
 		[Export ("initWithUUIDString:")]
 		IntPtr Constructor (string str);
 
@@ -4265,7 +4268,7 @@ namespace XamCore.Foundation
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // .objc_class_name_NSUserActivity", referenced from '' not found
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // xcode 8 beta 4 marks it as API_DEPRECATED
-	public partial interface NSUserActivity {
+	partial interface NSUserActivity {
 	
 		[DesignatedInitializer]
 		[Export ("initWithActivityType:")]
@@ -4354,7 +4357,7 @@ namespace XamCore.Foundation
 
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // same as NSUserActivity
 	[Static]
-	public partial interface NSUserActivityType {
+	partial interface NSUserActivityType {
 		[Field ("NSUserActivityTypeBrowsingWeb")]
 		NSString BrowsingWeb { get; }
 	}
@@ -4362,7 +4365,7 @@ namespace XamCore.Foundation
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // same as NSUserActivity
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
-	public partial interface NSUserActivityDelegate {
+	partial interface NSUserActivityDelegate {
 		[Export ("userActivityWillSave:")]
 		void UserActivityWillSave (NSUserActivity userActivity);
 	
@@ -4374,7 +4377,7 @@ namespace XamCore.Foundation
 	}
 		
 	[BaseType (typeof (NSObject))]
-	public interface NSUserDefaults {
+	interface NSUserDefaults {
 		[Mac (10,6)][iOS (4,0)]
 		[Export ("URLForKey:")]
 		[return: NullAllowed]
@@ -4540,7 +4543,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject), Name="NSURL")]
 	// init returns NIL
 	[DisableDefaultCtor]
-	public partial interface NSUrl : NSSecureCoding, NSCopying
+	partial interface NSUrl : NSSecureCoding, NSCopying
 #if MONOMAC
 	, NSPasteboardReading, NSPasteboardWriting
 #endif
@@ -5164,7 +5167,7 @@ namespace XamCore.Foundation
 	// Just a category so we can document the three methods together
 	//
 	[Category, BaseType (typeof (NSUrl))]
-	public partial interface NSUrl_PromisedItems {
+	partial interface NSUrl_PromisedItems {
 		[Mac (10,10), iOS (8,0)]
 		[Export ("checkPromisedItemIsReachableAndReturnError:")]
 		bool CheckPromisedItemIsReachable (out NSError error);
@@ -5181,7 +5184,7 @@ namespace XamCore.Foundation
 
 	[iOS (8,0), Mac (10,10)]
 	[BaseType (typeof (NSObject), Name="NSURLQueryItem")]
-	public interface NSUrlQueryItem : NSSecureCoding, NSCopying {
+	interface NSUrlQueryItem : NSSecureCoding, NSCopying {
 		[DesignatedInitializer]
 		[Export ("initWithName:value:")]
 		IntPtr Constructor (string name, string value);
@@ -5194,7 +5197,7 @@ namespace XamCore.Foundation
 	}
 
 	[Category, BaseType (typeof (NSCharacterSet))]
-	public partial interface NSUrlUtilities_NSCharacterSet {
+	partial interface NSUrlUtilities_NSCharacterSet {
 		[Since (7,0), Static, Export ("URLUserAllowedCharacterSet", ArgumentSemantic.Copy)]
 		NSCharacterSet UrlUserAllowedCharacterSet { get; }
 	
@@ -5215,7 +5218,7 @@ namespace XamCore.Foundation
 	}
 		
 	[BaseType (typeof (NSObject), Name="NSURLCache")]
-	public interface NSUrlCache {
+	interface NSUrlCache {
 		[Export ("sharedURLCache", ArgumentSemantic.Strong), Static]
 		NSUrlCache SharedCache { get; set; }
 
@@ -5266,7 +5269,7 @@ namespace XamCore.Foundation
 	
 	[Since (7,0), Mavericks]
 	[BaseType (typeof (NSObject), Name="NSURLComponents")]
-	public partial interface NSUrlComponents : NSCopying {
+	partial interface NSUrlComponents : NSCopying {
 		[Export ("initWithURL:resolvingAgainstBaseURL:")]
 		IntPtr Constructor (NSUrl url, bool resolveAgainstBaseUrl);
 	
@@ -5386,7 +5389,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject), Name="NSURLAuthenticationChallenge")]
 	// 'init' returns NIL
 	[DisableDefaultCtor]
-	public interface NSUrlAuthenticationChallenge : NSSecureCoding {
+	interface NSUrlAuthenticationChallenge : NSSecureCoding {
 		[Export ("initWithProtectionSpace:proposedCredential:previousFailureCount:failureResponse:error:sender:")]
 		IntPtr Constructor (NSUrlProtectionSpace space, NSUrlCredential credential, nint previousFailureCount, NSUrlResponse response, [NullAllowed] NSError error, NSUrlConnection sender);
 		
@@ -5414,11 +5417,11 @@ namespace XamCore.Foundation
 
 	[Protocol (Name = "NSURLAuthenticationChallengeSender")]
 #if XAMCORE_4_0
-	public interface NSUrlAuthenticationChallengeSender {
+	interface NSUrlAuthenticationChallengeSender {
 #else
 	[Model]
 	[BaseType (typeof (NSObject))]
-	public interface NSURLAuthenticationChallengeSender {
+	interface NSURLAuthenticationChallengeSender {
 #endif
 		[Abstract]
 		[Export ("useCredential:forAuthenticationChallenge:")]
@@ -5460,10 +5463,10 @@ namespace XamCore.Foundation
 	}
 
 
-	public delegate void NSUrlConnectionDataResponse (NSUrlResponse response, NSData data, NSError error);
+	delegate void NSUrlConnectionDataResponse (NSUrlResponse response, NSData data, NSError error);
 	
 	[BaseType (typeof (NSObject), Name="NSURLConnection")]
-	public interface NSUrlConnection : 
+	interface NSUrlConnection : 
 #if XAMCORE_4_0
 		NSUrlAuthenticationChallengeSender
 #else
@@ -5538,7 +5541,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject), Name="NSURLConnectionDelegate")]
 	[Model]
 	[Protocol]
-	public interface NSUrlConnectionDelegate {
+	interface NSUrlConnectionDelegate {
 #if !XAMCORE_2_0
 		// part of NSURLConnectionDataDelegate
 		[Export ("connection:willSendRequest:redirectResponse:")]
@@ -5619,7 +5622,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSUrlConnectionDelegate), Name="NSURLConnectionDownloadDelegate")]
 	[Model]
 	[Protocol]
-	public interface NSUrlConnectionDownloadDelegate {
+	interface NSUrlConnectionDownloadDelegate {
 		[Export ("connection:didWriteData:totalBytesWritten:expectedTotalBytes:")]
 		void WroteData (NSUrlConnection connection, long bytesWritten, long totalBytesWritten, long expectedTotalBytes);
 		
@@ -5634,7 +5637,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject), Name="NSURLCredential")]
 	// crash when calling NSObjecg.get_Description (and likely other selectors)
 	[DisableDefaultCtor]
-	public interface NSUrlCredential : NSSecureCoding, NSCopying {
+	interface NSUrlCredential : NSSecureCoding, NSCopying {
 
 		[Export ("initWithTrust:")]
 		IntPtr Constructor (SecTrust trust);
@@ -5695,7 +5698,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject), Name="NSURLCredentialStorage")]
 	// init returns NIL -> SharedCredentialStorage
 	[DisableDefaultCtor]
-	public interface NSUrlCredentialStorage {
+	interface NSUrlCredentialStorage {
 		[Static]
 		[Export ("sharedCredentialStorage", ArgumentSemantic.Strong)]
 		NSUrlCredentialStorage SharedCredentialStorage { get; }
@@ -5753,18 +5756,18 @@ namespace XamCore.Foundation
 	}
 
 #if XAMCORE_4_0
-	public delegate void NSUrlSessionPendingTasks (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask[] downloadTasks);
+	delegate void NSUrlSessionPendingTasks (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask[] downloadTasks);
 #elif XAMCORE_3_0
-	public delegate void NSUrlSessionPendingTasks2 (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask[] downloadTasks);
+	delegate void NSUrlSessionPendingTasks2 (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask[] downloadTasks);
 #else
-	public delegate void NSUrlSessionPendingTasks (NSUrlSessionDataTask [] dataTasks, NSUrlSessionUploadTask [] uploadTasks, NSUrlSessionDownloadTask[] downloadTasks);
-	public delegate void NSUrlSessionPendingTasks2 (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask[] downloadTasks);
+	delegate void NSUrlSessionPendingTasks (NSUrlSessionDataTask [] dataTasks, NSUrlSessionUploadTask [] uploadTasks, NSUrlSessionDownloadTask[] downloadTasks);
+	delegate void NSUrlSessionPendingTasks2 (NSUrlSessionTask [] dataTasks, NSUrlSessionTask [] uploadTasks, NSUrlSessionTask[] downloadTasks);
 #endif
-	public delegate void NSUrlSessionAllPendingTasks (NSUrlSessionTask [] tasks);
-	public delegate void NSUrlSessionResponse (NSData data, NSUrlResponse response, NSError error);
-	public delegate void NSUrlSessionDownloadResponse (NSUrl data, NSUrlResponse response, NSError error);
+	delegate void NSUrlSessionAllPendingTasks (NSUrlSessionTask [] tasks);
+	delegate void NSUrlSessionResponse (NSData data, NSUrlResponse response, NSError error);
+	delegate void NSUrlSessionDownloadResponse (NSUrl data, NSUrlResponse response, NSError error);
 
-	public delegate void NSUrlDownloadSessionResponse (NSUrl location, NSUrlResponse response, NSError error);
+	delegate void NSUrlDownloadSessionResponse (NSUrl location, NSUrlResponse response, NSError error);
 
 	//
 	// Some of the XxxTaskWith methods that take a completion were flagged as allowing a null in
@@ -5784,7 +5787,7 @@ namespace XamCore.Foundation
 #if XAMCORE_2_0
 	[DisableDefaultCtorAttribute]
 #endif
-	public partial interface NSUrlSession {
+	partial interface NSUrlSession {
 	
 		[Static, Export ("sharedSession", ArgumentSemantic.Strong)]
 		NSUrlSession SharedSession { get; }
@@ -5923,7 +5926,7 @@ namespace XamCore.Foundation
 	[Since(9,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSUrlSessionTaskDelegate), Name="NSURLSessionStreamDelegate")]
-	public interface NSUrlSessionStreamDelegate
+	interface NSUrlSessionStreamDelegate
 	{
 		[Export ("URLSession:readClosedForStreamTask:")]
 		void ReadClosed (NSUrlSession session, NSUrlSessionStreamTask streamTask);
@@ -5943,11 +5946,11 @@ namespace XamCore.Foundation
 		void CompletedTaskCaptureStreams (NSUrlSession session, NSUrlSessionStreamTask streamTask, NSInputStream inputStream, NSOutputStream outputStream);
 	}
 	
-	public delegate void NSUrlSessionDataRead (NSData data, bool atEof, NSError error);
+	delegate void NSUrlSessionDataRead (NSData data, bool atEof, NSError error);
 	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(NSUrlSessionTask), Name="NSURLSessionStreamTask")]
 	[DisableDefaultCtor]
-	public interface NSUrlSessionStreamTask
+	interface NSUrlSessionStreamTask
 	{
 		[Export ("readDataOfMinLength:maxLength:timeout:completionHandler:")]
 		[Async (ResultTypeName="NSUrlSessionStreamDataRead")]
@@ -5976,7 +5979,7 @@ namespace XamCore.Foundation
 	[Since (7,0)]
 	[Availability (Introduced = Platform.Mac_10_9)]
 	[BaseType (typeof (NSObject), Name="NSURLSessionTask")]
-	public partial interface NSUrlSessionTask : NSCopying {
+	partial interface NSUrlSessionTask : NSCopying {
 	
 		[Export ("taskIdentifier")]
 		nuint TaskIdentifier { get; }
@@ -6058,17 +6061,17 @@ namespace XamCore.Foundation
 	[Since (7,0)]
 	[Availability (Introduced = Platform.Mac_10_9)]
 	[BaseType (typeof (NSUrlSessionTask), Name="NSURLSessionDataTask")]
-	public partial interface NSUrlSessionDataTask {}
+	partial interface NSUrlSessionDataTask {}
 
 	[Since (7,0)]
 	[Availability (Introduced = Platform.Mac_10_9)]
 	[BaseType (typeof (NSUrlSessionDataTask), Name="NSURLSessionUploadTask")]
-	public partial interface NSUrlSessionUploadTask {}
+	partial interface NSUrlSessionUploadTask {}
 
 	[Since (7,0)]
 	[Availability (Introduced = Platform.Mac_10_9)]
 	[BaseType (typeof (NSUrlSessionTask), Name="NSURLSessionDownloadTask")]
-	public partial interface NSUrlSessionDownloadTask {
+	partial interface NSUrlSessionDownloadTask {
 		[Export ("cancelByProducingResumeData:")]
 		void Cancel (Action<NSData> resumeCallback);
 	}
@@ -6080,7 +6083,7 @@ namespace XamCore.Foundation
 #if XAMCORE_2_0
 	[DisableDefaultCtorAttribute]
 #endif
-	public partial interface NSUrlSessionConfiguration : NSCopying {
+	partial interface NSUrlSessionConfiguration : NSCopying {
 	
 		[Static, Export ("defaultSessionConfiguration", ArgumentSemantic.Strong)]
 		NSUrlSessionConfiguration DefaultSessionConfiguration { get; }
@@ -6176,7 +6179,7 @@ namespace XamCore.Foundation
 	[Availability (Introduced = Platform.Mac_10_9)]
 	[Model, BaseType (typeof (NSObject), Name="NSURLSessionDelegate")]
 	[Protocol]
-	public partial interface NSUrlSessionDelegate {
+	partial interface NSUrlSessionDelegate {
 		[Export ("URLSession:didBecomeInvalidWithError:")]
 		void DidBecomeInvalid (NSUrlSession session, NSError error);
 	
@@ -6219,7 +6222,7 @@ namespace XamCore.Foundation
 	[Model]
 	[BaseType (typeof (NSUrlSessionTaskDelegate), Name="NSURLSessionDataDelegate")]
 	[Protocol]
-	public partial interface NSUrlSessionDataDelegate {
+	partial interface NSUrlSessionDataDelegate {
 		[Export ("URLSession:dataTask:didReceiveResponse:completionHandler:")]
 		void DidReceiveResponse (NSUrlSession session, NSUrlSessionDataTask dataTask, NSUrlResponse response, Action<NSUrlSessionResponseDisposition> completionHandler);
 	
@@ -6242,7 +6245,7 @@ namespace XamCore.Foundation
 	[Model]
 	[BaseType (typeof (NSUrlSessionTaskDelegate), Name="NSURLSessionDownloadDelegate")]
 	[Protocol]
-	public partial interface NSUrlSessionDownloadDelegate {
+	partial interface NSUrlSessionDownloadDelegate {
 	
 #if XAMCORE_2_0
 		[Abstract]
@@ -6268,7 +6271,7 @@ namespace XamCore.Foundation
 	}
 	
 	[BaseType (typeof (NSObject))]
-	public interface NSUndoManager {
+	interface NSUndoManager {
 		[Export ("beginUndoGrouping")]
 		void BeginUndoGrouping ();
 		
@@ -6418,7 +6421,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject), Name="NSURLProtectionSpace")]
 	// 'init' returns NIL
 	[DisableDefaultCtor]
-	public interface NSUrlProtectionSpace : NSSecureCoding, NSCopying {
+	interface NSUrlProtectionSpace : NSSecureCoding, NSCopying {
 		
 		[Internal]
 		[Export ("initWithHost:port:protocol:realm:authenticationMethod:")]
@@ -6513,7 +6516,7 @@ namespace XamCore.Foundation
 	}
 	
 	[BaseType (typeof (NSObject), Name="NSURLRequest")]
-	public interface NSUrlRequest : NSSecureCoding, NSMutableCopying {
+	interface NSUrlRequest : NSSecureCoding, NSMutableCopying {
 		[Export ("initWithURL:")]
 		IntPtr Constructor (NSUrl url);
 
@@ -6563,7 +6566,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSDictionary))]
-	public interface NSMutableDictionary {
+	interface NSMutableDictionary {
 		[Export ("dictionaryWithContentsOfFile:")]
 		[Static]
 		NSMutableDictionary FromFile (string path);
@@ -6627,7 +6630,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSSet))]
-	public interface NSMutableSet {
+	interface NSMutableSet {
 		[Export ("initWithArray:")]
 		IntPtr Constructor (NSArray other);
 
@@ -6673,7 +6676,7 @@ namespace XamCore.Foundation
 	}
 	
 	[BaseType (typeof (NSUrlRequest), Name="NSMutableURLRequest")]
-	public interface NSMutableUrlRequest {
+	interface NSMutableUrlRequest {
 		[Export ("initWithURL:")]
 		IntPtr Constructor (NSUrl url);
 
@@ -6724,7 +6727,7 @@ namespace XamCore.Foundation
 	}
 	
 	[BaseType (typeof (NSObject), Name="NSURLResponse")]
-	public interface NSUrlResponse : NSSecureCoding, NSCopying {
+	interface NSUrlResponse : NSSecureCoding, NSCopying {
 		[DesignatedInitializer]
 		[Export ("initWithURL:MIMEType:expectedContentLength:textEncodingName:")]
 		IntPtr Constructor (NSUrl url, string mimetype, nint expectedContentLength, [NullAllowed] string textEncodingName);
@@ -6746,7 +6749,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSStreamDelegate)} )]
-	public interface NSStream {
+	interface NSStream {
 		[Export ("open")]
 		void Open ();
 
@@ -6881,13 +6884,13 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface NSStreamDelegate {
+	interface NSStreamDelegate {
 		[Export ("stream:handleEvent:"), EventArgs ("NSStream"), EventName ("OnEvent")]
 		void HandleEvent (NSStream theStream, NSStreamEvent streamEvent);
 	}
 
 	[BaseType (typeof (NSObject)), Bind ("NSString")]
-	public interface NSString2 : NSSecureCoding, NSMutableCopying
+	interface NSString2 : NSSecureCoding, NSMutableCopying
 	#if MONOMAC
 		, NSPasteboardReading, NSPasteboardWriting // Documented that it implements NSPasteboard protocols even if header doesn't show it
 	#endif
@@ -7209,7 +7212,7 @@ namespace XamCore.Foundation
 	}
 
 	[StrongDictionary ("NSString")]
-	public interface EncodingDetectionOptions {
+	interface EncodingDetectionOptions {
 		NSStringEncoding [] EncodingDetectionSuggestedEncodings { get; set; }
 		NSStringEncoding [] EncodingDetectionDisallowedEncodings { get; set; }
 		bool EncodingDetectionUseOnlySuggestedEncodings { get; set; }
@@ -7221,7 +7224,7 @@ namespace XamCore.Foundation
 
 	[BaseType (typeof (NSString))]
 	// hack: it seems that generator.cs can't track NSCoding correctly ? maybe because the type is named NSString2 at that time
-	public interface NSMutableString : NSCoding {
+	interface NSMutableString : NSCoding {
 		[Export ("initWithCapacity:")]
 		IntPtr Constructor (nint capacity);
 
@@ -7253,9 +7256,9 @@ namespace XamCore.Foundation
 	
 	[Category, BaseType (typeof (NSString))]
 #if XAMCORE_2_0
-	public partial interface NSUrlUtilities_NSString {
+	partial interface NSUrlUtilities_NSString {
 #else
-	public partial interface NSURLUtilities_NSString {
+	partial interface NSURLUtilities_NSString {
 #endif
 		[Since (7,0)]
 		[Export ("stringByAddingPercentEncodingWithAllowedCharacters:")]
@@ -7277,7 +7280,7 @@ namespace XamCore.Foundation
 	// This comes from UIKit.framework/Headers/NSStringDrawing.h
 	[Since (6,0)]
 	[BaseType (typeof (NSObject))]
-	public interface NSStringDrawingContext {
+	interface NSStringDrawingContext {
 		[Export ("minimumScaleFactor")]
 		nfloat MinimumScaleFactor { get; set;  }
 
@@ -7301,7 +7304,7 @@ namespace XamCore.Foundation
 
 	[BaseType (typeof (NSStream))]
 	[DefaultCtorVisibility (Visibility.Protected)]
-	public interface NSInputStream {
+	interface NSInputStream {
 		[Export ("hasBytesAvailable")]
 		bool HasBytesAvailable ();
 	
@@ -7335,7 +7338,7 @@ namespace XamCore.Foundation
 	// calls being made and the keys are mostly tokens
 	//
 	[BaseType (typeof (NSObject)), Bind ("NSObject")]
-	public interface NSObject2 : NSObjectProtocol {
+	interface NSObject2 : NSObjectProtocol {
 
 		// those are to please the compiler while creating the definition .dll
 		// but, for the final binary, we'll be using manually bounds alternatives
@@ -7532,7 +7535,7 @@ namespace XamCore.Foundation
 	}
 
 	[Protocol (Name = "NSObject")] // exists both as a type and a protocol in ObjC, Swift uses NSObjectProtocol
-	public interface NSObjectProtocol {
+	interface NSObjectProtocol {
 
 		[Abstract]
 		[Export ("description")]
@@ -7636,7 +7639,7 @@ namespace XamCore.Foundation
 
 	[BaseType (typeof (NSObject))]
 	[Since (4,0)]
-	public interface NSOperation {
+	interface NSOperation {
 		[Export ("start")]
 		void Start ();
 
@@ -7700,7 +7703,7 @@ namespace XamCore.Foundation
 
 	[BaseType (typeof (NSOperation))]
 	[Since (4,0)]
-	public interface NSBlockOperation {
+	interface NSBlockOperation {
 		[Static]
 		[Export ("blockOperationWithBlock:")]
 		NSBlockOperation Create (/* non null */ NSAction method);
@@ -7714,7 +7717,7 @@ namespace XamCore.Foundation
 
 	[BaseType (typeof (NSObject))]
 	[Since (4,0)]
-	public interface NSOperationQueue {
+	interface NSOperationQueue {
 		[Export ("addOperation:")][PostGet ("Operations")]
 		void AddOperation ([NullAllowed] NSOperation op);
 
@@ -7766,12 +7769,12 @@ namespace XamCore.Foundation
 	}
 
 #if XAMCORE_2_0
-	public interface NSOrderedSet<TKey> : NSOrderedSet {}
+	interface NSOrderedSet<TKey> : NSOrderedSet {}
 #endif
 
 	[Since (5,0)]
 	[BaseType (typeof (NSObject))]
-	public interface NSOrderedSet : NSSecureCoding, NSMutableCopying {
+	interface NSOrderedSet : NSSecureCoding, NSMutableCopying {
 		[Export ("initWithObject:")]
 		IntPtr Constructor (NSObject start);
 
@@ -7861,12 +7864,12 @@ namespace XamCore.Foundation
 	}
 
 #if XAMCORE_2_0
-	public interface NSMutableOrderedSet<TKey> : NSMutableOrderedSet {}
+	interface NSMutableOrderedSet<TKey> : NSMutableOrderedSet {}
 #endif
 
 	[Since (5,0)]
 	[BaseType (typeof (NSOrderedSet))]
-	public interface NSMutableOrderedSet {
+	interface NSMutableOrderedSet {
 		[Export ("initWithObject:")]
 		IntPtr Constructor (NSObject start);
 
@@ -8004,7 +8007,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -[__NSArrayM insertObject:atIndex:]: object cannot be nil
 	[DisableDefaultCtor]
-	public interface NSOrthography : NSSecureCoding, NSCopying {
+	interface NSOrthography : NSSecureCoding, NSCopying {
 		[Export ("dominantScript")]
 		string DominantScript { get;  }
 
@@ -8033,7 +8036,7 @@ namespace XamCore.Foundation
 	
 	[BaseType (typeof (NSStream))]
 	[DisableDefaultCtor] // crash when used
-	public interface NSOutputStream {
+	interface NSOutputStream {
 		[Export ("initToMemory")]
 		IntPtr Constructor ();
 
@@ -8066,7 +8069,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject), Name="NSHTTPCookie")]
 	// default 'init' crash both simulator and devices
 	[DisableDefaultCtor]
-	public interface NSHttpCookie {
+	interface NSHttpCookie {
 		[Export ("initWithProperties:")]
 		IntPtr Constructor (NSDictionary properties);
 
@@ -8163,7 +8166,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject), Name="NSHTTPCookieStorage")]
 	// NSHTTPCookieStorage implements a singleton object -> use SharedStorage since 'init' returns NIL
 	[DisableDefaultCtor]
-	public interface NSHttpCookieStorage {
+	interface NSHttpCookieStorage {
 		[Export ("sharedHTTPCookieStorage", ArgumentSemantic.Strong), Static]
 		NSHttpCookieStorage SharedStorage { get; }
 
@@ -8220,7 +8223,7 @@ namespace XamCore.Foundation
 	}
 	
 	[BaseType (typeof (NSUrlResponse), Name="NSHTTPURLResponse")]
-	public interface NSHttpUrlResponse {
+	interface NSHttpUrlResponse {
 		[Export ("initWithURL:MIMEType:expectedContentLength:textEncodingName:")]
 		IntPtr Constructor (NSUrl url, string mimetype, nint expectedContentLength, [NullAllowed] string textEncodingName);
 
@@ -8242,7 +8245,7 @@ namespace XamCore.Foundation
 #if MONOMAC
 	[DisableDefaultCtor] // An uncaught exception was raised: -[__NSCFDictionary removeObjectForKey:]: attempt to remove nil key
 #endif
-	public partial interface NSBundle {
+	partial interface NSBundle {
 		[Export ("mainBundle")][Static]
 		NSBundle MainBundle { get; }
 
@@ -8496,7 +8499,7 @@ namespace XamCore.Foundation
 #endif
 		
 	[BaseType (typeof (NSObject))]
-	public interface NSIndexPath : NSCoding, NSSecureCoding, NSCopying {
+	interface NSIndexPath : NSCoding, NSSecureCoding, NSCopying {
 		[Export ("indexPathWithIndex:")][Static]
 		NSIndexPath FromIndex (nuint index);
 
@@ -8570,10 +8573,10 @@ namespace XamCore.Foundation
 		nint Item { get; }
 	}
 
-	public delegate void NSRangeIterator (NSRange range, ref bool stop);
+	delegate void NSRangeIterator (NSRange range, ref bool stop);
 	
 	[BaseType (typeof (NSObject))]
-	public interface NSIndexSet : NSCoding, NSSecureCoding, NSMutableCopying {
+	interface NSIndexSet : NSCoding, NSSecureCoding, NSMutableCopying {
 		[Static, Export ("indexSetWithIndex:")]
 		NSIndexSet FromIndex (nint idx);
 
@@ -8641,7 +8644,7 @@ namespace XamCore.Foundation
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // from the docs: " you should not create these objects using alloc and init."
-	public interface NSInvocation {
+	interface NSInvocation {
 
 		[Export ("selector")]
 		Selector Selector { get; set; }
@@ -8674,7 +8677,7 @@ namespace XamCore.Foundation
 
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
-	public partial interface NSItemProvider : NSCopying {
+	partial interface NSItemProvider : NSCopying {
 		[DesignatedInitializer]
 		[Export ("initWithItem:typeIdentifier:")]
 		IntPtr Constructor ([NullAllowed] NSObject item, string typeIdentifier);
@@ -8718,23 +8721,22 @@ namespace XamCore.Foundation
 		[Mac (10,10)]
 		[Export ("preferredPresentationSize")]
 		CGSize PreferredPresentationSize { get; }
+
+		[Mac (10,12)][Async]
+		[Export ("registerCloudKitShareWithPreparationHandler:")]
+		void RegisterCloudKitShare (Action<CloudKitRegistrationPreparationHandler> preparationHandler);
+
+		[Mac (10,12)]
+		[Export ("registerCloudKitShare:container:")]
+		void RegisterCloudKitShare (CKShare share, CKContainer container);
 #endif
-
-		// TODO - Needs CloudKit bound
-		//[Mac (10,12)][Async]
-		//[Export ("registerCloudKitShareWithPreparationHandler:")]
-		//void RegisterCloudKitShare (Action<Action<CKShare, CKContainer, NSError>> preparationHandler);
-
-		//[Mac (10,12)]
-		//[Export ("registerCloudKitShare:container:")]
-		//void RegisterCloudKitShare (CKShare share, CKContainer container);
 	}
 
 #if XAMCORE_2_0
 	[Static]
 #endif
 	[iOS (8,0), Mac (10,10, onlyOn64: true)]
-	public partial interface NSJavaScriptExtension {
+	partial interface NSJavaScriptExtension {
 		[Field ("NSExtensionJavaScriptPreprocessingResultsKey")]
 		NSString PreprocessingResultsKey { get; }
 
@@ -8743,7 +8745,7 @@ namespace XamCore.Foundation
 	}
 
 	[iOS (8,0), Mac (10,10)]
-	public interface NSTypeIdentifier {
+	interface NSTypeIdentifier {
 		[Field ("NSTypeIdentifierDateText")]
 		NSString DateText { get; }
 
@@ -8759,7 +8761,7 @@ namespace XamCore.Foundation
 		
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // `init` returns a null handle
-	public interface NSMethodSignature {
+	interface NSMethodSignature {
 		[Static]
 		[Export ("signatureWithObjCTypes:")]
 		NSMethodSignature FromObjcTypes (IntPtr utf8objctypes);
@@ -8811,7 +8813,7 @@ namespace XamCore.Foundation
 	}
 	
 	[BaseType (typeof (NSIndexSet))]
-	public interface NSMutableIndexSet : NSSecureCoding {
+	interface NSMutableIndexSet : NSSecureCoding {
 		[Export ("initWithIndex:")]
 		IntPtr Constructor (nuint index);
 
@@ -8848,7 +8850,7 @@ namespace XamCore.Foundation
 	[DisableDefaultCtor] // the instance just crash when trying to call selectors
 #endif
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSNetServiceDelegate)})]
-	public interface NSNetService {
+	interface NSNetService {
 		[DesignatedInitializer]
 		[Export ("initWithDomain:type:name:port:")]
 		IntPtr Constructor (string domain, string type, string name, int /* int, not NSInteger */ port);
@@ -8950,7 +8952,7 @@ namespace XamCore.Foundation
 	[NoWatch]
 	[Model, BaseType (typeof (NSObject))]
 	[Protocol]
-	public interface NSNetServiceDelegate {
+	interface NSNetServiceDelegate {
 		[Export ("netServiceWillPublish:")]
 		void WillPublish (NSNetService sender);
 
@@ -8984,7 +8986,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject),
 		   Delegates=new string [] {"WeakDelegate"},
 		   Events=new Type [] {typeof (NSNetServiceBrowserDelegate)})]
-	public interface NSNetServiceBrowser {
+	interface NSNetServiceBrowser {
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
@@ -9034,7 +9036,7 @@ namespace XamCore.Foundation
 	[NoWatch]
 	[Model, BaseType (typeof (NSObject))]
 	[Protocol]
-	public interface NSNetServiceBrowserDelegate {
+	interface NSNetServiceBrowserDelegate {
 		[Export ("netServiceBrowserWillSearch:")]
 		void SearchStarted (NSNetServiceBrowser sender);
 		
@@ -9060,7 +9062,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSGenericException Reason: *** -[NSConcreteNotification init]: should never be used
 	[DisableDefaultCtor] // added in iOS7 but header files says "do not invoke; not a valid initializer for this class"
-	public interface NSNotification : NSCoding, NSCopying {
+	interface NSNotification : NSCoding, NSCopying {
 		[Export ("name")]
 		// Null not allowed
 		string Name { get; }
@@ -9082,7 +9084,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSNotificationCenter {
+	interface NSNotificationCenter {
 		[Static][Export ("defaultCenter", ArgumentSemantic.Strong)]
 		NSNotificationCenter DefaultCenter { get; }
 	
@@ -9120,7 +9122,7 @@ namespace XamCore.Foundation
 	[Mac (10, 10)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	public interface NSDistributedLock
+	interface NSDistributedLock
 	{
 		[Static]
 		[Export ("lockWithPath:")]
@@ -9145,7 +9147,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSNotificationCenter))]
-	public interface NSDistributedNotificationCenter {
+	interface NSDistributedNotificationCenter {
 		[Static]
 		[Export ("defaultCenter")]
 		NSObject DefaultCenter { get; }
@@ -9181,7 +9183,7 @@ namespace XamCore.Foundation
 #endif
 	
 	[BaseType (typeof (NSObject))]
-	public interface NSNotificationQueue {
+	interface NSNotificationQueue {
 		[Static][IsThreadStatic]
 		[Export ("defaultQueue", ArgumentSemantic.Strong)]
 		NSNotificationQueue DefaultQueue { get; }
@@ -9208,13 +9210,13 @@ namespace XamCore.Foundation
 	}
 
 #if !XAMCORE_2_0
-	public delegate void NSNotificationHandler (NSNotification notification);
+	delegate void NSNotificationHandler (NSNotification notification);
 #endif
 
 	[BaseType (typeof (NSObject))]
 	// init returns NIL
 	[DisableDefaultCtor]
-	public partial interface NSValue : NSSecureCoding, NSCopying {
+	partial interface NSValue : NSSecureCoding, NSCopying {
 		[Export ("getValue:")]
 		void StoreValueAtAddress (IntPtr value);
 
@@ -9505,7 +9507,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSValue))]
 	// init returns NIL
 	[DisableDefaultCtor]
-	public interface NSNumber {
+	interface NSNumber {
 		[Export ("charValue")]
 		sbyte SByteValue { get; }
 	
@@ -9902,7 +9904,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSNumber))]
-	public interface NSDecimalNumber : NSSecureCoding {
+	interface NSDecimalNumber : NSSecureCoding {
 		[Export ("initWithMantissa:exponent:isNegative:")]
 		IntPtr Constructor (long mantissa, short exponent, bool isNegative);
 		
@@ -9994,7 +9996,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSThread {
+	interface NSThread {
 		[Static, Export ("currentThread", ArgumentSemantic.Strong)]
 		NSThread Current { get; }
 
@@ -10070,7 +10072,7 @@ namespace XamCore.Foundation
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface NSPort : NSCoding, NSCopying {
+	interface NSPort : NSCoding, NSCopying {
 		[Static, Export ("port")]
 		NSPort Create ();
 
@@ -10111,13 +10113,13 @@ namespace XamCore.Foundation
 
 	[Model, BaseType (typeof (NSObject))]
 	[Protocol]
-	public interface NSPortDelegate {
+	interface NSPortDelegate {
 		[Export ("handlePortMessage:")]
 		void MessageReceived (NSPortMessage message);
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSPortMessage {
+	interface NSPortMessage {
 #if MONOMAC
 		[Export ("initWithSendPort:receivePort:components:")]
 		IntPtr Constructor (NSPort sendPort, NSPort recvPort, NSArray components);
@@ -10145,7 +10147,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSPort))]
-	public interface NSMachPort {
+	interface NSMachPort {
 		[DesignatedInitializer]
 		[Export ("initWithMachPort:")]
 		IntPtr Constructor (uint /* uint32_t */ machPort);
@@ -10186,13 +10188,13 @@ namespace XamCore.Foundation
 
 	[Model, BaseType (typeof (NSPortDelegate))]
 	[Protocol]
-	public interface NSMachPortDelegate {
+	interface NSMachPortDelegate {
 		[Export ("handleMachMessage:")]
 		void MachMessageReceived (IntPtr msgHeader);
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSProcessInfo {
+	interface NSProcessInfo {
 		[Export ("processInfo", ArgumentSemantic.Strong)][Static]
 		NSProcessInfo ProcessInfo { get; }
 
@@ -10315,7 +10317,7 @@ namespace XamCore.Foundation
 
 	[Since (7,0), Mavericks]
 	[BaseType (typeof (NSObject))]
-	public partial interface NSProgress {
+	partial interface NSProgress {
 	
 		[Static, Export ("currentProgress")]
 		NSProgress CurrentProgress { get; }
@@ -10486,11 +10488,11 @@ namespace XamCore.Foundation
 	
 	[BaseType (typeof (NSMutableData))]
 	[Since (4,0)]
-	public interface NSPurgeableData : NSSecureCoding, NSMutableCopying, NSDiscardableContent {
+	interface NSPurgeableData : NSSecureCoding, NSMutableCopying, NSDiscardableContent {
 	}
 
 	[Protocol]
-	public interface NSDiscardableContent {
+	interface NSDiscardableContent {
 		[Abstract]
 		[Export ("beginContentAccess")]
 		bool BeginContentAccess ();
@@ -10509,9 +10511,9 @@ namespace XamCore.Foundation
 	}
 
 #if !XAMCORE_2_0
-	public delegate void NSFileCoordinatorWorker (NSUrl newUrl);
+	delegate void NSFileCoordinatorWorker (NSUrl newUrl);
 #endif
-	public delegate void NSFileCoordinatorWorkerRW (NSUrl newReadingUrl, NSUrl newWritingUrl);
+	delegate void NSFileCoordinatorWorkerRW (NSUrl newReadingUrl, NSUrl newWritingUrl);
 
 	[Since (5,0)]
 	[BaseType (typeof (NSObject))]
@@ -10590,7 +10592,7 @@ namespace XamCore.Foundation
 	}
 	
 	[BaseType (typeof (NSObject))]
-	public partial interface NSFileManager {
+	partial interface NSFileManager {
 		[Field("NSFileType")]
 		NSString NSFileType { get; }
 
@@ -10927,7 +10929,7 @@ namespace XamCore.Foundation
 	[BaseType(typeof(NSObject))]
 	[Model]
 	[Protocol]
-	public interface NSFileManagerDelegate {
+	interface NSFileManagerDelegate {
 		[Export("fileManager:shouldCopyItemAtPath:toPath:")]
 		bool ShouldCopyItemAtPath(NSFileManager fm, NSString srcPath, NSString dstPath);
 
@@ -11148,7 +11150,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSFileWrapper : NSCoding {
+	interface NSFileWrapper : NSCoding {
 		[DesignatedInitializer]
 		[Export ("initWithURL:options:error:")]
 		IntPtr Constructor (NSUrl url, NSFileWrapperReadingOptions options, out NSError outError);
@@ -11231,7 +11233,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSEnumerator))]
-	public interface NSDirectoryEnumerator {
+	interface NSDirectoryEnumerator {
 		[Export ("fileAttributes")]
 		NSDictionary FileAttributes { get; }
 
@@ -11313,13 +11315,13 @@ namespace XamCore.Foundation
 #endif
 	}
 
-	public delegate bool NSPredicateEvaluator (NSObject evaluatedObject, NSDictionary bindings);
+	delegate bool NSPredicateEvaluator (NSObject evaluatedObject, NSDictionary bindings);
 	
 	[BaseType (typeof (NSObject))]
 	[Since (4,0)]
 	// 'init' returns NIL
 	[DisableDefaultCtor]
-	public interface NSPredicate : NSSecureCoding, NSCopying {
+	interface NSPredicate : NSSecureCoding, NSCopying {
 		[Static]
 		[Internal]
 		[Export ("predicateWithFormat:argumentArray:")]
@@ -11355,21 +11357,21 @@ namespace XamCore.Foundation
 	}
 
 	[Category, BaseType (typeof (NSOrderedSet))]
-	public partial interface NSPredicateSupport_NSOrderedSet {
+	partial interface NSPredicateSupport_NSOrderedSet {
 		[Since (5,0)]
 		[Export ("filteredOrderedSetUsingPredicate:")]
 		NSOrderedSet FilterUsingPredicate (NSPredicate p);
 	}
 	
 	[Category, BaseType (typeof (NSMutableOrderedSet))]
-	public partial interface NSPredicateSupport_NSMutableOrderedSet {
+	partial interface NSPredicateSupport_NSMutableOrderedSet {
 		[Since (5,0)]
 		[Export ("filterUsingPredicate:")]
 		void FilterUsingPredicate (NSPredicate p);
 	}
 
 	[Category, BaseType (typeof (NSArray))]
-	public partial interface NSPredicateSupport_NSArray {
+	partial interface NSPredicateSupport_NSArray {
 		[Export ("filteredArrayUsingPredicate:")]
 		NSArray FilterUsingPredicate (NSArray array);
 	}
@@ -11377,26 +11379,26 @@ namespace XamCore.Foundation
 #pragma warning disable 618
 	[Category, BaseType (typeof (NSMutableArray))]
 #pragma warning restore 618
-	public partial interface NSPredicateSupport_NSMutableArray {
+	partial interface NSPredicateSupport_NSMutableArray {
 		[Export ("filterUsingPredicate:")]
 		void FilterUsingPredicate (NSPredicate predicate);
 	}
 	
 	[Category, BaseType (typeof (NSSet))]
-	public partial interface NSPredicateSupport_NSSet {
+	partial interface NSPredicateSupport_NSSet {
 		[Export ("filteredSetUsingPredicate:")]
 		NSSet FilterUsingPredicate (NSPredicate predicate);
 	}
 
 	[Category, BaseType (typeof (NSMutableSet))]
-	public partial interface NSPredicateSupport_NSMutableSet {
+	partial interface NSPredicateSupport_NSMutableSet {
 		[Export ("filterUsingPredicate:")]
 		void FilterUsingPredicate (NSPredicate predicate);
 	}
 	
 #if MONOMAC
 	[BaseType (typeof (NSObject), Name="NSURLDownload")]
-	public interface NSUrlDownload {
+	interface NSUrlDownload {
 		[Static, Export ("canResumeDownloadDecodedWithEncodingMIMEType:")]
 		bool CanResumeDownloadDecodedWithEncodingMimeType (string mimeType);
 
@@ -11425,7 +11427,7 @@ namespace XamCore.Foundation
     	[BaseType (typeof (NSObject))]
     	[Model]
 	[Protocol (Name = "NSURLDownloadDelegate")]
-	public interface NSUrlDownloadDelegate {
+	interface NSUrlDownloadDelegate {
 		[Export ("downloadDidBegin:")]
 		void DownloadBegan (NSUrlDownload download);
 
@@ -11601,7 +11603,7 @@ namespace XamCore.Foundation
 
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	public interface NSPropertyListSerialization {
+	interface NSPropertyListSerialization {
 		[Static, Export ("dataWithPropertyList:format:options:error:")]
 		NSData DataWithPropertyList (NSObject plist, NSPropertyListFormat format,
 			NSPropertyListWriteOptions options, out NSError error);
@@ -11623,12 +11625,12 @@ namespace XamCore.Foundation
 	}
 
 #if XAMCORE_2_0 || !MONOMAC
-	public interface INSExtensionRequestHandling { }
+	interface INSExtensionRequestHandling { }
 
 	[iOS (8,0)][Mac (10,10)] // Not defined in 32-bit
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
-	public interface NSExtensionRequestHandling {
+	interface NSExtensionRequestHandling {
 		[Abstract]
 		[Mac (10,10, onlyOn64 : true)] 
 		// @required - (void)beginRequestWithExtensionContext:(NSExtensionContext *)context;
@@ -11639,7 +11641,7 @@ namespace XamCore.Foundation
 	[iOS (8,0)][Mac (10,10, onlyOn64:true)] // Not defined in 32-bit
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
-	public interface NSExtensionRequestHandling {
+	interface NSExtensionRequestHandling {
 		[Abstract]
 		// @required - (void)beginRequestWithExtensionContext:(NSExtensionContext *)context;
 		[Export ("beginRequestWithExtensionContext:")]
@@ -11648,7 +11650,7 @@ namespace XamCore.Foundation
 #endif
 
 	[Protocol]
-	public interface NSLocking {
+	interface NSLocking {
 
 		[Abstract]
 		[Export ("lock")]
@@ -11662,7 +11664,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // An uncaught exception was raised: *** -range cannot be sent to an abstract object of class NSTextCheckingResult: Create a concrete instance!
 	[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_6)]
-	public interface NSTextCheckingResult : NSSecureCoding, NSCopying {
+	interface NSTextCheckingResult : NSSecureCoding, NSCopying {
 		[Export ("resultType")]
 		NSTextCheckingType ResultType { get;  }
 
@@ -11811,7 +11813,7 @@ namespace XamCore.Foundation
 	}
 
 	[StrongDictionary ("NSTextChecking")]
-	public interface NSTextCheckingTransitComponents {
+	interface NSTextCheckingTransitComponents {
 		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_7)]
 		string Airline { get; }
 
@@ -11820,7 +11822,7 @@ namespace XamCore.Foundation
 	}
 
 	[StrongDictionary ("NSTextChecking")]
-	public interface NSTextCheckingAddressComponents {
+	interface NSTextCheckingAddressComponents {
 		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_6)]
 		string Name { get; }
 
@@ -11851,7 +11853,7 @@ namespace XamCore.Foundation
 	}
 
 	[Static]
-	public interface NSTextChecking {
+	interface NSTextChecking {
 		[Field ("NSTextCheckingNameKey")]
 		[Availability (Introduced = Platform.iOS_4_0 | Platform.Mac_10_6)]
 		NSString NameKey { get; }
@@ -11977,24 +11979,24 @@ namespace XamCore.Foundation
 
 // Not yet, the IntPtr[] argument isn't handled correctly by the generator (it tries to convert to NSArray, while the native method expects a C array).
 //	[Protocol]
-//	public interface NSFastEnumeration {
+//	interface NSFastEnumeration {
 //		[Abstract]
 //		[Export ("countByEnumeratingWithState:objects:count:")]
 //		nuint Enumerate (ref NSFastEnumerationState state, IntPtr[] objects, nuint count);
 //	}
 
 	// Placeholer, just so we can start flagging things
-	public interface INSFastEnumeration {}
+	interface INSFastEnumeration {}
 	
 #if MONOMAC
-	public partial interface NSBundle {
+	partial interface NSBundle {
 		// - (NSImage *)imageForResource:(NSString *)name NS_AVAILABLE_MAC(10_7);
 		[Lion, Export ("imageForResource:")]
 		NSImage ImageForResource (string name);
 	}
 #endif
 
-	public partial interface NSAttributedString {
+	partial interface NSAttributedString {
 
 #if MONOMAC
 		[Lion, Field ("NSTextLayoutSectionOrientation", "AppKit")]
@@ -12181,7 +12183,7 @@ namespace XamCore.Foundation
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public partial interface NSHost {
+	partial interface NSHost {
 
 		[Static, Internal, Export ("currentHost")]
 		NSHost _Current { get;}
@@ -12231,7 +12233,7 @@ namespace XamCore.Foundation
 
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	public partial interface NSScriptCommand : NSCoding {
+	partial interface NSScriptCommand : NSCoding {
 
 		[Internal]
 		[Export ("initWithCommandDescription:")]
@@ -12253,14 +12255,14 @@ namespace XamCore.Foundation
 	}
 
 	[StrongDictionary ("NSScriptCommandArgumentDescriptionKeys")]
-	public partial interface NSScriptCommandArgumentDescription {
+	partial interface NSScriptCommandArgumentDescription {
 		string AppleEventCode { get; set; }
 		string Type { get; set;}
 		string Optional { get; set; }
 	}
 
 	[StrongDictionary ("NSScriptCommandDescriptionDictionaryKeys")]
-	public partial interface NSScriptCommandDescriptionDictionary {
+	partial interface NSScriptCommandDescriptionDictionary {
 		string CommandClass { get; set; } 
 		string AppleEventCode { get; set; } 
 		string AppleEventClassCode { get; set; }
@@ -12271,7 +12273,7 @@ namespace XamCore.Foundation
 
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	public partial interface NSScriptCommandDescription : NSCoding {
+	partial interface NSScriptCommandDescription : NSCoding {
 
 		[Internal]
 		[Export ("initWithSuiteName:commandName:dictionary:")]
@@ -12322,7 +12324,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSAffineTransform : NSSecureCoding, NSCopying {
+	interface NSAffineTransform : NSSecureCoding, NSCopying {
 		[Export ("initWithTransform:")]
 		IntPtr Constructor (NSAffineTransform transform);
 
@@ -12371,7 +12373,7 @@ namespace XamCore.Foundation
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface NSConnection {
+	interface NSConnection {
 		[Static, Export ("connectionWithReceivePort:sendPort:")]
 		NSConnection Create ([NullAllowed] NSPort receivePort, [NullAllowed] NSPort sendPort);
 
@@ -12475,7 +12477,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface NSConnectionDelegate {
+	interface NSConnectionDelegate {
 		[Export ("authenticateComponents:withData:")]
 		bool AuthenticateComponents (NSArray components, NSData authenticationData);
 
@@ -12497,7 +12499,7 @@ namespace XamCore.Foundation
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface NSDistantObjectRequest {
+	interface NSDistantObjectRequest {
 		[Export ("connection")]
 		NSConnection Connection { get; }
 
@@ -12513,7 +12515,7 @@ namespace XamCore.Foundation
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface NSPortNameServer {
+	interface NSPortNameServer {
 		[Static, Export ("systemDefaultPortNameServer")]
 		NSPortNameServer SystemDefault { get; }
 
@@ -12537,7 +12539,7 @@ namespace XamCore.Foundation
 	//}
 
 	[BaseType (typeof (NSCharacterSet))]
-	public interface NSMutableCharacterSet {
+	interface NSMutableCharacterSet {
 		[Export ("removeCharactersInRange:")]
 		void RemoveCharacters (NSRange aRange);
 
@@ -12559,7 +12561,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSAppleEventDescriptor : NSSecureCoding, NSCopying {
+	interface NSAppleEventDescriptor : NSSecureCoding, NSCopying {
 		[Static]
 		[Export ("nullDescriptor")]
 		NSAppleEventDescriptor NullDescriptor { get; }
@@ -12772,7 +12774,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSAppleEventManager {
+	interface NSAppleEventManager {
 		[Static]
 		[Export ("sharedAppleEventManager")]
 		NSAppleEventManager SharedAppleEventManager { get; }
@@ -12812,7 +12814,7 @@ namespace XamCore.Foundation
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSTask {
+	interface NSTask {
 		[Export ("launch")]
 		void Launch ();
 
@@ -12876,7 +12878,7 @@ namespace XamCore.Foundation
 
 	[MountainLion]
 	[BaseType (typeof (NSObject))]
-	public interface NSUserNotification : NSCoding, NSCopying {
+	interface NSUserNotification : NSCoding, NSCopying {
 		[Export ("title", ArgumentSemantic.Copy)]
 		string Title { get; set; }
 		
@@ -12956,7 +12958,7 @@ namespace XamCore.Foundation
 
 	[Mac (10,10)]
 	[BaseType (typeof(NSObject))]
-	public interface NSUserNotificationAction : NSCopying
+	interface NSUserNotificationAction : NSCopying
 	{
 		[Static]
 		[Export ("actionWithIdentifier:title:")]
@@ -12974,7 +12976,7 @@ namespace XamCore.Foundation
 	           Delegates=new string [] {"WeakDelegate"},
 	Events=new Type [] { typeof (NSUserNotificationCenterDelegate) })]
 	[DisableDefaultCtor] // crash with: NSUserNotificationCenter designitated initializer is _centerForBundleIdentifier
-	public interface NSUserNotificationCenter 
+	interface NSUserNotificationCenter 
 	{
 		[Export ("defaultUserNotificationCenter")][Static]
 		NSUserNotificationCenter DefaultUserNotificationCenter { get; }
@@ -13012,7 +13014,7 @@ namespace XamCore.Foundation
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface NSUserNotificationCenterDelegate 
+	interface NSUserNotificationCenterDelegate 
 	{
 		[Export ("userNotificationCenter:didDeliverNotification:"), EventArgs ("UNCDidDeliverNotification")]
 		void DidDeliverNotification (NSUserNotificationCenter center, NSUserNotification notification);

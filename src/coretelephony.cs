@@ -129,17 +129,17 @@ namespace XamCore.CoreTelephony {
 
 	[BaseType (typeof (NSObject))]
 	[Since (7,0)]
-	public partial interface CTSubscriber {
+	partial interface CTSubscriber {
 		[Since (7,0), Export ("carrierToken")]
 		NSData CarrierToken { get; }
 	}
 
 #if !XAMCORE_2_0
-	public delegate void SimAuthenticationCallback (NSDictionary dictionary);
+	delegate void SimAuthenticationCallback (NSDictionary dictionary);
 #endif
 
 	[Since (6,0), BaseType (typeof (NSObject))]
-	public partial interface CTSubscriberInfo {
+	partial interface CTSubscriberInfo {
 		[Static]
 		[Export ("subscriber")]
 		CTSubscriber Subscriber { get; }

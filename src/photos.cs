@@ -1017,7 +1017,7 @@ namespace XamCore.Photos
 #endif
 	[Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	public interface PHLivePhoto
+	interface PHLivePhoto
 #if !MONOMAC
 	: NSSecureCoding, NSCopying
 #endif

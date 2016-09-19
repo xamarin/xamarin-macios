@@ -544,7 +544,7 @@ namespace XamCore.QTKit
 	}
 
 	[Static]
-	public interface QTErrorKey {
+	interface QTErrorKey {
 		[Field ("QTKitErrorDomain")]
 		NSString Domain { get; }
 

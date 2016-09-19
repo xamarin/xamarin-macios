@@ -158,7 +158,7 @@ namespace XamCore.ExternalAccessory {
 	}
 
 
-	public interface IEAWiFiUnconfiguredAccessoryBrowserDelegate {}
+	interface IEAWiFiUnconfiguredAccessoryBrowserDelegate {}
 	
 	// This class is exposed for tvOS in the headers, but there's no available initializer (so it can't be constructed)
 	// The API is also clearly unusable (you can list the unconfigured accessories, but you can't search for them first...)

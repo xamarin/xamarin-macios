@@ -20,7 +20,7 @@ namespace XamCore.OpenGLES {
 	[BaseType (typeof (NSObject))]
 	// <quote>It is created when an EAGLContext object is initialized and disposed of when the last EAGLContext object that references it is released.</quote>
 	[DisableDefaultCtor]
-	public interface EAGLSharegroup {
+	interface EAGLSharegroup {
 
 		[iOS (6,0)]
 		[Export ("debugLabel")]
@@ -29,7 +29,7 @@ namespace XamCore.OpenGLES {
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // init now marked with NS_UNAVAILABLE
-	public interface EAGLContext {
+	interface EAGLContext {
 		[Export ("initWithAPI:")]
 		IntPtr Constructor (EAGLRenderingAPI api);
 
@@ -75,7 +75,7 @@ namespace XamCore.OpenGLES {
 
 	[Protocol]
 	// no [Model] because "The EAGLDrawable protocol is not intended to be implemented by objects outside of the iOS."
-	public interface EAGLDrawable {
+	interface EAGLDrawable {
 		[Abstract]
 		[NullAllowed] // by default this property is null
 		[Export ("drawableProperties", ArgumentSemantic.Copy)]

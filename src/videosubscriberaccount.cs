@@ -1,4 +1,4 @@
-﻿//
+//
 // VideoSubscriberAccount bindings
 //
 // Authors:
@@ -60,7 +60,7 @@ namespace XamCore.VideoSubscriberAccount {
 	[Introduced (PlatformName.TvOS, 10, 0)]
 	[Unavailable (PlatformName.WatchOS)]
 	[StrongDictionary ("VSErrorInfoKeys")]
-	public interface VSErrorInfo {
+	interface VSErrorInfo {
 
 		string SamlResponse { get; }
 

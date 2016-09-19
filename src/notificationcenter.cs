@@ -138,7 +138,7 @@ namespace XamCore.NotificationCenter {
 		nuint GetRow (NSViewController viewController);
 	}
 
-	public interface INCWidgetListViewDelegate {}
+	interface INCWidgetListViewDelegate {}
 
 	[Mac (10, 10)]
 	[Protocol, Model]
@@ -185,7 +185,7 @@ namespace XamCore.NotificationCenter {
 		string SearchResultKeyPath { get; set; }
 	}
 
-	public interface INCWidgetSearchViewDelegate {}
+	interface INCWidgetSearchViewDelegate {}
 
 	[Mac (10,10)]
 	[Protocol, Model]

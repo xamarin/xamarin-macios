@@ -17,7 +17,7 @@ using XamCore.AppKit;
 
 namespace XamCore.InputMethodKit {
 
-	public partial interface IMKGlobal {
+	partial interface IMKGlobal {
 		[Field ("kIMKCommandMenuItemName")]
 		NSString CommandMenuItemName { get; }
 
@@ -26,7 +26,7 @@ namespace XamCore.InputMethodKit {
 	}
 
 	[Model]
-	public partial interface IMKServerProxy {
+	partial interface IMKServerProxy {
 		[Field ("IMKModeDictionary")]
 		NSString ModeDictionary { get; }
 
@@ -38,7 +38,7 @@ namespace XamCore.InputMethodKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	public partial interface IMKServer : IMKServerProxy {
+	partial interface IMKServer : IMKServerProxy {
 
 		[Export ("initWithName:bundleIdentifier:")]
 		IntPtr Constructor (string name, string bundleIdentifier);
@@ -57,7 +57,7 @@ namespace XamCore.InputMethodKit {
 	}
 
 	[Category, BaseType (typeof (NSObject))]
-	public partial interface IMKServerInput_NSObject {
+	partial interface IMKServerInput_NSObject {
 
 		[Export ("inputText:key:modifiers:client:")]
 		bool InputText (string str, nint keyCode, nuint flags, NSObject sender);
@@ -85,7 +85,7 @@ namespace XamCore.InputMethodKit {
 	}
 
 	[Protocol]
-	public partial interface IMKStateSetting {
+	partial interface IMKStateSetting {
 		[Abstract]
 		[Export ("activateServer:")]
 		void ActivateServer (NSObject sender);
@@ -116,7 +116,7 @@ namespace XamCore.InputMethodKit {
 	}
 
 	[Model]
-	public partial interface IMKMouseHandling {
+	partial interface IMKMouseHandling {
 
 		[Export ("mouseDownOnCharacterIndex:coordinate:withModifier:continueTracking:client:")]
 		bool MouseDown (nuint index, NSPoint point, nuint flags, out bool keepTracking, NSObject sender);
@@ -129,7 +129,7 @@ namespace XamCore.InputMethodKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	public partial interface IMKInputController : IMKStateSetting, IMKMouseHandling {
+	partial interface IMKInputController : IMKStateSetting, IMKMouseHandling {
 
 		[Export ("initWithServer:delegate:client:")]
 		IntPtr Constructor (IMKServer server, NSObject delegateObject, NSObject inputClient);
@@ -184,7 +184,7 @@ namespace XamCore.InputMethodKit {
 	}
 
 	[BaseType (typeof (NSResponder))]
-	public partial interface IMKCandidates {
+	partial interface IMKCandidates {
 
 		[Export ("initWithServer:panelType:")]
 		IntPtr Constructor (IMKServer server, IMKCandidatePanelType panelType);

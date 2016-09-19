@@ -13,12 +13,12 @@ using XamCore.CoreGraphics;
 
 namespace XamCore.JavaScriptCore {
 
-	public delegate void JSContextExceptionHandler (JSContext context, JSValue exception);
+	delegate void JSContextExceptionHandler (JSContext context, JSValue exception);
 
 	[Mac (10,9, onlyOn64: true), iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public partial interface JSContext {
+	partial interface JSContext {
 
 		[Export ("init")]
 		IntPtr Constructor ();
@@ -89,7 +89,7 @@ namespace XamCore.JavaScriptCore {
 	[Mac (10,9, onlyOn64: true), iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // invalid (null) Handle is returned
-	public partial interface JSValue {
+	partial interface JSValue {
 		[Static, Export ("valueWithObject:inContext:")]
 		JSValue From (NSObject value, JSContext context);
 
@@ -285,7 +285,7 @@ namespace XamCore.JavaScriptCore {
 #if XAMCORE_3_0
 	[DisableDefaultCtor]
 #endif
-	public partial interface JSManagedValue {
+	partial interface JSManagedValue {
 		[Static, Export ("managedValueWithValue:")]
 		JSManagedValue Get (JSValue value);
 
@@ -303,7 +303,7 @@ namespace XamCore.JavaScriptCore {
 	[Mac (10,9, onlyOn64: true), iOS (7,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public partial interface JSVirtualMachine {
+	partial interface JSVirtualMachine {
 
 		[Export ("init")]
 		IntPtr Constructor ();

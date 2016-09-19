@@ -76,7 +76,7 @@ namespace XamCore.CoreGraphics {
 
 	[Static]
 	[iOS (9,0)]
-	public interface CGColorSpaceNames {
+	interface CGColorSpaceNames {
 		[Field ("kCGColorSpaceGenericGray")]
 		NSString GenericGray { get; }
 
