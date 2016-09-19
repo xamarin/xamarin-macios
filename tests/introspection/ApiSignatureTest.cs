@@ -195,7 +195,7 @@ namespace Introspection {
 		const BindingFlags Flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance;
 
 		[Test]
-		public void Signatures ()
+		public void NativeSignatures ()
 		{
 			int n = 0;
 			Errors = 0;
@@ -793,6 +793,50 @@ namespace Introspection {
 				return type.FullName == "System.IntPtr";
 			}
 			return false;
+		}
+
+		[Test]
+		public void ManagedSignature ()
+		{
+			int n = 0;
+			Errors = 0;
+			ErrorData.Clear ();
+
+			foreach (Type t in Assembly.GetTypes ()) {
+
+				if (!NSObjectType.IsAssignableFrom (t))
+					continue;
+
+				CurrentType = t;
+
+				foreach (MethodBase m in t.GetMethods (Flags))
+					CheckManagedMemberSignatures (m, t, ref n);
+				foreach (MethodBase m in t.GetConstructors (Flags))
+					CheckManagedMemberSignatures (m, t, ref n);
+			}
+			AssertIfErrors ("{0} errors found in {1} signatures validated{2}", Errors, n, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
+		}
+
+		void CheckManagedMemberSignatures (MethodBase m, Type t, ref int n)
+		{
+			// if the method was obsoleted then it's not an issue, we assume the alternative is fine
+			if (m.GetCustomAttribute<ObsoleteAttribute> () != null)
+				return;
+			if (m.DeclaringType != t)
+				return;
+
+			CurrentMethod = m;
+
+			foreach (var p in m.GetParameters ()) {
+				var pt = p.ParameterType;
+				// look for [Model] types
+				if (pt.GetCustomAttribute<ModelAttribute> () == null)
+					continue;
+				// skip methods added inside the [Model] type - those are fine
+				if (t == pt)
+					continue;
+				ReportError ($"`{t.Name}.{m.Name}` includes a paramater of type `{pt.Name}` which is a concrete type `[Model]` and not an interface `[Protocol]`");
+			}
 		}
 	}
 }
