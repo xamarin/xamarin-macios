@@ -95,7 +95,8 @@ MAC_ASSEMBLY_NAMES = \
 	$(TLS_PROVIDER_ASSEMBLY_NAMES) \
 	System.Runtime.InteropServices.RuntimeInformation \
 	System.Reflection.Context	\
-	System.Net.Http.WinHttpHandler
+	System.Net.Http.WinHttpHandler \
+	System.Numerics.Vectors
 
 FACADE_SUBDIRS_MK = $(MONO_PATH)/mcs/class/Facades/subdirs.make
 # File does not exist before checking out mono
