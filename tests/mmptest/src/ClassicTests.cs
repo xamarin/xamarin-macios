@@ -51,7 +51,7 @@ namespace Xamarin.MMP.Tests
 				return;
 
 			RunMMPTest (tmpDir => {
-				string buildOutput = TI.TestClassicExecutable (tmpDir, csprojConfig : "<IncludeMonoRuntime>true</IncludeMonoRuntime><MonoBundlingExtraArgs>--new-refcount=false</MonoBundlingExtraArgs>");
+				string buildOutput = TI.TestClassicExecutable (tmpDir, csprojConfig : "<IncludeMonoRuntime>true</IncludeMonoRuntime><MonoBundlingExtraArgs>--new-refcount=false</MonoBundlingExtraArgs>").BuildOutput;
 				Assert.IsTrue (buildOutput.Contains ("Disabling the new refcount logic is deprecated"), "Classic_NewRefCount_Warns did not warn as expected:\n\n", buildOutput);
 			});
 		}

@@ -150,7 +150,7 @@ namespace Xamarin.MMP.Tests
 		{
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--new-refcount=false</MonoBundlingExtraArgs>" };
-				string buildOutput = TI.TestUnifiedExecutable (test);
+				string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
 				Assert.IsTrue (buildOutput.Contains ("Disabling the new refcount logic is deprecated"), "Mobile_NewRefCount_Warns did not warn as expected:\n\n", buildOutput);
 			});
 		}
@@ -193,13 +193,29 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
 				// Mobile
-				string buildResults = TI.TestUnifiedExecutable (test);
+				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
 				Assert.IsTrue (!buildResults.Contains ("warning"), "Unified_HelloWorld_ShouldHaveNoWarnings - Mobile had warning: \n" + buildResults);
 
 				// XM45
 				test.XM45 = true;
-				buildResults = TI.TestUnifiedExecutable (test);
+				buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
 				Assert.IsTrue (!buildResults.Contains ("warning"), "Unified_HelloWorld_ShouldHaveNoWarnings - XM45 had warning: \n" + buildResults);
+			});
+		}
+
+		[Test]
+		public void Unified_HelloWorld_ShouldHaveNoRegistrarWarnings ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
+				// Mobile
+				string output = TI.TestUnifiedExecutable (test).RunOutput;
+				Assert.IsTrue (!output.Contains ("Could not register the assembly"), "Unified_HelloWorld_ShouldHaveNoRegistrarWarnings - Mobile had registrar issues: \n" + output);
+
+				// XM45
+				test.XM45 = true;
+				output = TI.TestUnifiedExecutable (test).RunOutput;
+				Assert.IsTrue (!output.Contains ("Could not register the assembly"), "Unified_HelloWorld_ShouldHaveNoRegistrarWarnings - XM45 had registrar issues: \n" + output);
 			});
 		}
 
