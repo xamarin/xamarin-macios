@@ -18,6 +18,8 @@ cp -p Makefile-mac.inc $DIR/tests
 cp -p common.mk $DIR/tests
 cp -p Makefile $DIR/tests
 cp -p ../Make.config $DIR
+cp -p test-dependencies.sh $DIR
+cp -p ../system-dependencies.sh $DIR
 mkdir -p $DIR/mk
 cp -p ../Make.config $DIR
 cp -p ../mk/subdirs.mk $DIR/mk
