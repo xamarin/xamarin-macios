@@ -32,6 +32,26 @@ while ! test -z $1; do
 			PROVISION_XCODE=1
 			shift
 			;;
+		--ignore-osx)
+			IGNORE_OSX=1
+			shift
+			;;
+		--ignore-xcode)
+			IGNORE_XCODE=1
+			shift
+			;;
+		--ignore-xamarin-studio)
+			IGNORE_XAMARIN_STUDIO=1
+			shift
+			;;
+		--ignore-mono)
+			IGNORE_MONO=1
+			shift
+			;;
+		--ignore-autotools)
+			IGNORE_AUTOTOOLS=1
+			shift
+			;;
 		*)
 			echo "Unknown argument: $1"
 			exit 1
@@ -265,6 +285,8 @@ function check_specific_xcode () {
 }
 
 function check_xcode () {
+	if ! test -z $IGNORE_XCODE; then return; fi
+
 	# must have latest Xcode in /Applications/Xcode<version>.app
 	check_specific_xcode
 
@@ -296,6 +318,8 @@ function check_xcode () {
 }
 
 function check_mono () {
+	if ! test -z $IGNORE_MONO; then return; fi
+
 	PKG_CONFIG_PATH=/Library/Frameworks/Mono.framework/Versions/Current/bin/pkg-config
 	if ! /Library/Frameworks/Mono.framework/Commands/mono --version 2>/dev/null >/dev/null; then
 		if ! test -z $PROVISION_MONO; then
@@ -344,6 +368,8 @@ function check_mono () {
 }
 
 function check_autotools () {
+	if ! test -z $IGNORE_AUTOTOOLS; then return; fi
+
 IFStmp=$IFS
 IFS='
 '
@@ -372,6 +398,8 @@ IFS=$IFS_tmp
 }
 
 function check_xamarin_studio () {
+	if ! test -z $IGNORE_XAMARIN_STUDIO; then return; fi
+
 	XS="/Applications/Xamarin Studio.app"
 	local XS_URL=`grep MIN_XAMARIN_STUDIO_URL= Make.config | sed 's/.*=//'`
 	if ! test -d "$XS"; then
@@ -414,6 +442,8 @@ function check_xamarin_studio () {
 }
 
 function check_osx_version () {
+	if ! test -z $IGNORE_OSX; then return; fi
+
 	MIN_OSX_BUILD_VERSION=`grep MIN_OSX_BUILD_VERSION= Make.config | sed 's/.*=//'`
 
 	ACTUAL_OSX_VERSION=$(sw_vers -productVersion)
