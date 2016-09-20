@@ -545,33 +545,33 @@ namespace XamCore.CoreWlan {
 	{
 	}
 
-    [BaseType (typeof (NSObject))]
-    interface CWWiFiClient
-    {
-        [Export ("interface")]
-        CWInterface MainInterface { get; }
+	[BaseType (typeof (NSObject))]
+	interface CWWiFiClient
+	{
+		[Export ("interface")]
+		CWInterface MainInterface { get; }
 
-        [Export ("interfaceWithName:")]
-        CWInterface FromName (string name);
+		[Export ("interfaceWithName:")]
+		CWInterface FromName (string name);
 
-        [Export ("interfaces")]
-        CWInterface[] Interfaces { get; }
+		[Export ("interfaces")]
+		CWInterface[] Interfaces { get; }
 
-        [Export ("interfaceNames")]
-        [Static]
-        string[] InterfaceNames { get; }
+		[Export ("interfaceNames")]
+		[Static]
+		string[] InterfaceNames { get; }
 
-        [Export ("sharedWiFiClient")]
-        [Static]
-        CWWiFiClient SharedWiFiClient { get; }
+		[Export ("sharedWiFiClient")]
+		[Static]
+		CWWiFiClient SharedWiFiClient { get; }
 
-        [Export ("startMonitoringEventWithType:error:")]
-        bool StartMonitoringEvent (CWEventType type, out NSError error);
+		[Export ("startMonitoringEventWithType:error:")]
+		bool StartMonitoringEvent (CWEventType type, out NSError error);
 
-        [Export ("stopMonitoringAllEventsAndReturnError:")]
-        bool StopMonitoringAllEvents (out NSError error);
+		[Export ("stopMonitoringAllEventsAndReturnError:")]
+		bool StopMonitoringAllEvents (out NSError error);
 
-        [Export ("stopMonitoringEventWithType:error:")]
-        bool StopMonitoringEvent (CWEventType type, out NSError error);
-    }
+		[Export ("stopMonitoringEventWithType:error:")]
+		bool StopMonitoringEvent (CWEventType type, out NSError error);
+	}
 }
