@@ -139,7 +139,10 @@ namespace xharness
 				var split_template = File.ReadAllText (Path.Combine (Harness.RootDirectory, "bcl-test", TestName, TestName + "-split.csproj.template"));
 				for (int i = 0; i < split_count; i++) {
 					var split_output = Path.Combine (Harness.RootDirectory, "bcl-test", TestName, TestName + "-" + i + ".csproj");
-					Harness.Save (split_template.Replace ("#SPLIT#", (i + 1).ToString ()).Replace ("#FILES#", sb [i].ToString ()), split_output);
+					var split_contents = split_template.Replace ("#SPLIT#", (i + 1).ToString ());
+					split_contents = split_contents.Replace ("#FILES#", sb [i].ToString ());
+					split_contents = split_contents.Replace ("#GUID#", Harness.NewStableGuid ().ToString ());
+					Harness.Save (split_contents, split_output);
 				}
 				Harness.Save (csproj_input.Replace ("#FILES#", sb [sb.Length - 1].ToString ()), csproj_output);
 			} else {
