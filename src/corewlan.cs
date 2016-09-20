@@ -545,6 +545,7 @@ namespace XamCore.CoreWlan {
 	{
 	}
 
+	[Mac (10,10)] 
 	[BaseType (typeof (NSObject))]
 	interface CWWiFiClient
 	{
@@ -552,7 +553,7 @@ namespace XamCore.CoreWlan {
 		CWInterface MainInterface { get; }
 
 		[Export ("interfaceWithName:")]
-		CWInterface FromName (string name);
+		CWInterface FromName ([NullAllowed] string name);
 
 		[Export ("interfaces")]
 		CWInterface[] Interfaces { get; }
