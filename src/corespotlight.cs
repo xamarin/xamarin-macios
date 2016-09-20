@@ -1,4 +1,4 @@
-﻿//
+//
 // CoreSpotlight bindings
 //
 // Authors:
@@ -17,14 +17,14 @@ namespace XamCore.CoreSpotlight {
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
-	public interface CSIndexExtensionRequestHandler : NSExtensionRequestHandling, CSSearchableIndexDelegate {
+	interface CSIndexExtensionRequestHandler : NSExtensionRequestHandling, CSSearchableIndexDelegate {
 
 	}
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
-	public interface CSPerson : NSSecureCoding, NSCopying {
+	interface CSPerson : NSSecureCoding, NSCopying {
 
 		[Export ("initWithDisplayName:handles:handleIdentifier:")]
 		IntPtr Constructor ([NullAllowed] string displayName, string [] handles, NSString handleIdentifier);
@@ -47,7 +47,7 @@ namespace XamCore.CoreSpotlight {
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
-	public interface CSSearchableIndex {
+	interface CSSearchableIndex {
 
 		[Export ("indexDelegate", ArgumentSemantic.Weak)][NullAllowed]
 		ICSSearchableIndexDelegate IndexDelegate { get; set; }
@@ -81,13 +81,13 @@ namespace XamCore.CoreSpotlight {
 		void DeleteAll ([NullAllowed] Action<NSError> completionHandler);
 	}
 
-	public delegate void CSSearchableIndexFetchHandler (NSData clientState, NSError error);
+	delegate void CSSearchableIndexFetchHandler (NSData clientState, NSError error);
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
 	[Category]
 	[BaseType (typeof (CSSearchableIndex))]
-	public interface CSSearchableIndex_CSOptionalBatchingExtension {
+	interface CSSearchableIndex_CSOptionalBatchingExtension {
 
 		[Export ("beginIndexBatch")]
 		void BeginIndexBatch ();
@@ -99,13 +99,13 @@ namespace XamCore.CoreSpotlight {
 		void FetchLastClientState (CSSearchableIndexFetchHandler completionHandler);
 	}
 
-	public interface ICSSearchableIndexDelegate {}
+	interface ICSSearchableIndexDelegate {}
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
-	public interface CSSearchableIndexDelegate {
+	interface CSSearchableIndexDelegate {
 
 		[Abstract]
 		[Export ("searchableIndex:reindexAllSearchableItemsWithAcknowledgementHandler:")]
@@ -125,7 +125,7 @@ namespace XamCore.CoreSpotlight {
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
-	public interface CSSearchableItem : NSSecureCoding, NSCopying {
+	interface CSSearchableItem : NSSecureCoding, NSCopying {
 
 		[Field ("CSSearchableItemActionType")]
 		NSString ActionType { get; }
@@ -163,7 +163,7 @@ namespace XamCore.CoreSpotlight {
 	[iOS (9,0)]
 	[BaseType (typeof (NSString))]
 	// hack: it seems that generator.cs can't track NSCoding correctly ? maybe because the type is named NSString2 at that time
-	public interface CSLocalizedString : NSCoding {
+	interface CSLocalizedString : NSCoding {
 
 		[Export ("initWithLocalizedStrings:")]
 		IntPtr Constructor (NSDictionary localizedStrings);
@@ -176,7 +176,7 @@ namespace XamCore.CoreSpotlight {
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: You must call -[CSCustomAttributeKey initWithKeyName...]
-	public interface CSCustomAttributeKey : NSCopying, NSSecureCoding {
+	interface CSCustomAttributeKey : NSCopying, NSSecureCoding {
 
 		[Export ("initWithKeyName:")]
 		IntPtr Constructor (string keyName);
@@ -204,7 +204,7 @@ namespace XamCore.CoreSpotlight {
 	[iOS (9,0)]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
 	[Static]
-	public interface CSMailboxKey {
+	interface CSMailboxKey {
 
 		[Field ("CSMailboxInbox")]
 		NSString Inbox { get; }
@@ -228,12 +228,12 @@ namespace XamCore.CoreSpotlight {
 	[NoTV]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
-	public interface CSSearchableItemAttributeSet : NSCopying, NSSecureCoding {
+	interface CSSearchableItemAttributeSet : NSCopying, NSSecureCoding {
 
 		[Export ("initWithItemContentType:")]
 		IntPtr Constructor (string itemContentType);
 
-		// FIXME: Should we keep all the following Categories inline? or should we make them actual [Category] public interfaces
+		// FIXME: Should we keep all the following Categories inline? or should we make them actual [Category] interfaces
 		// There are no methods on any of the following categories, just properties
 
 		// CSSearchableItemAttributeSet_Documents.h

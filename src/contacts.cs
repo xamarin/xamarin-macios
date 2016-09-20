@@ -1,4 +1,4 @@
-﻿//
+//
 // Contacts bindings
 //
 // Authors:
@@ -16,17 +16,17 @@ namespace XamCore.Contacts {
 
 #if XAMCORE_2_0 // The Contacts framework uses generics heavily, which is only supported in Unified (for now at least)
 
-	public interface ICNKeyDescriptor {}
+	interface ICNKeyDescriptor {}
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[Protocol]
 	// Headers say "This protocol is reserved for Contacts framework usage.", so don't create a model
-	public interface CNKeyDescriptor : NSObjectProtocol, NSSecureCoding, NSCopying {
+	interface CNKeyDescriptor : NSObjectProtocol, NSSecureCoding, NSCopying {
 	}
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	public interface CNContact : NSCopying, NSMutableCopying, NSSecureCoding {
+	interface CNContact : NSCopying, NSMutableCopying, NSSecureCoding {
 
 		[Export ("identifier")]
 		string Identifier { get; }
@@ -182,7 +182,7 @@ namespace XamCore.Contacts {
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
-	public interface CNContactKey {
+	interface CNContactKey {
 
 		[Field ("CNContactIdentifierKey")]
 		NSString Identifier { get; }
@@ -281,7 +281,7 @@ namespace XamCore.Contacts {
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // using init raises an exception according to docs
-	public interface CNContactFetchRequest : NSSecureCoding {
+	interface CNContactFetchRequest : NSSecureCoding {
 
 		[DesignatedInitializer]
 		[Export ("initWithKeysToFetch:")]
@@ -310,7 +310,7 @@ namespace XamCore.Contacts {
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSFormatter))]
-	public interface CNContactFormatter {
+	interface CNContactFormatter {
 
 		[Static]
 		[Export ("descriptorForRequiredKeysForStyle:")]
@@ -347,7 +347,7 @@ namespace XamCore.Contacts {
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	public interface CNContactProperty : NSCopying, NSSecureCoding {
+	interface CNContactProperty : NSCopying, NSSecureCoding {
 
 		[Export ("contact", ArgumentSemantic.Copy)]
 		CNContact Contact { get; }
@@ -370,7 +370,7 @@ namespace XamCore.Contacts {
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	public interface CNContactRelation : NSCopying, NSSecureCoding, INSCopying, INSSecureCoding {
+	interface CNContactRelation : NSCopying, NSSecureCoding, INSCopying, INSSecureCoding {
 
 		[Static]
 		[Export ("contactRelationWithName:")]
@@ -386,7 +386,7 @@ namespace XamCore.Contacts {
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
-	public interface CNLabelContactRelationKey {
+	interface CNLabelContactRelationKey {
 
 		[Field ("CNLabelContactRelationFather")]
 		NSString Father { get; }
@@ -422,15 +422,15 @@ namespace XamCore.Contacts {
 		NSString Manager { get; }
 	}
 
-	public delegate void CNContactStoreRequestAccessHandler (bool granted, NSError error);
+	delegate void CNContactStoreRequestAccessHandler (bool granted, NSError error);
 #if !XAMCORE_4_0
-	public delegate void CNContactStoreEnumerateContactsHandler (CNContact contact, bool stop);
+	delegate void CNContactStoreEnumerateContactsHandler (CNContact contact, bool stop);
 #endif
-	public delegate void CNContactStoreListContactsHandler (CNContact contact, ref bool stop);
+	delegate void CNContactStoreListContactsHandler (CNContact contact, ref bool stop);
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	public interface CNContactStore {
+	interface CNContactStore {
 
 		[Static]
 		[Export ("authorizationStatusForEntityType:")]
@@ -485,7 +485,7 @@ namespace XamCore.Contacts {
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[ThreadSafe (false)]
-	public interface CNContactsUserDefaults {
+	interface CNContactsUserDefaults {
 
 		[Static]
 		[Export ("sharedDefaults")]
@@ -500,7 +500,7 @@ namespace XamCore.Contacts {
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	public interface CNContactVCardSerialization {
+	interface CNContactVCardSerialization {
 
 		[Static]
 		[Export ("descriptorForRequiredKeys")]
@@ -518,7 +518,7 @@ namespace XamCore.Contacts {
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[Category]
 	[BaseType (typeof (CNContainer))]
-	public interface CNContainer_PredicatesExtension {
+	interface CNContainer_PredicatesExtension {
 
 		[Static]
 		[Export ("predicateForContainersWithIdentifiers:")]
@@ -535,7 +535,7 @@ namespace XamCore.Contacts {
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	public interface CNContainer : NSCopying, NSSecureCoding {
+	interface CNContainer : NSCopying, NSSecureCoding {
 
 		[Export ("identifier")]
 		string Identifier { get; }
@@ -550,7 +550,7 @@ namespace XamCore.Contacts {
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
-	public interface CNContainerKey { // Can be used in KVO
+	interface CNContainerKey { // Can be used in KVO
 
 		[Field ("CNContainerIdentifierKey")]
 		NSString Identifier { get; }
@@ -565,7 +565,7 @@ namespace XamCore.Contacts {
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
-	public interface CNErrorUserInfoKey {
+	interface CNErrorUserInfoKey {
 
 		[Field ("CNErrorUserInfoAffectedRecordsKey")]
 		NSString AffectedRecords { get; }
@@ -583,7 +583,7 @@ namespace XamCore.Contacts {
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[Category]
 	[BaseType (typeof (CNGroup))]
-	public interface CNGroup_PredicatesExtension {
+	interface CNGroup_PredicatesExtension {
 
 		[Static]
 		[Export ("predicateForGroupsWithIdentifiers:")]
@@ -601,7 +601,7 @@ namespace XamCore.Contacts {
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	public interface CNGroup : NSCopying, NSMutableCopying, NSSecureCoding {
+	interface CNGroup : NSCopying, NSMutableCopying, NSSecureCoding {
 
 		[Export ("identifier")]
 		string Identifier { get; }
@@ -613,7 +613,7 @@ namespace XamCore.Contacts {
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
-	public interface CNGroupKey { // Can be used in KVO
+	interface CNGroupKey { // Can be used in KVO
 
 		[Field ("CNGroupIdentifierKey")]
 		NSString Identifier { get; }
@@ -624,7 +624,7 @@ namespace XamCore.Contacts {
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	public interface CNInstantMessageAddress : NSCopying, NSSecureCoding, INSCopying, INSSecureCoding {
+	interface CNInstantMessageAddress : NSCopying, NSSecureCoding, INSCopying, INSSecureCoding {
 
 		[Export ("initWithUsername:service:")]
 		IntPtr Constructor (string username, string service);
@@ -647,7 +647,7 @@ namespace XamCore.Contacts {
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
-	public interface CNInstantMessageAddressKey { // Can be used in KVO
+	interface CNInstantMessageAddressKey { // Can be used in KVO
 
 		[Field ("CNInstantMessageAddressUsernameKey")]
 		NSString Username { get; }
@@ -659,7 +659,7 @@ namespace XamCore.Contacts {
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
-	public interface CNInstantMessageServiceKey {
+	interface CNInstantMessageServiceKey {
 
 		[Field ("CNInstantMessageServiceAIM")]
 		NSString Aim { get; }
@@ -694,7 +694,7 @@ namespace XamCore.Contacts {
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	public interface CNLabeledValue<ValueType> : NSCopying, NSSecureCoding
+	interface CNLabeledValue<ValueType> : NSCopying, NSSecureCoding
 		where ValueType : INSCopying, INSSecureCoding
 	{
 
@@ -733,7 +733,7 @@ namespace XamCore.Contacts {
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
-	public interface CNLabelKey {
+	interface CNLabelKey {
 
 		[Field ("CNLabelHome")]
 		NSString Home { get; }
@@ -756,7 +756,7 @@ namespace XamCore.Contacts {
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (CNContact))]
-	public interface CNMutableContact {
+	interface CNMutableContact {
 
 		[New]
 		[Export ("contactType")]
@@ -874,7 +874,7 @@ namespace XamCore.Contacts {
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (CNGroup))]
-	public interface CNMutableGroup {
+	interface CNMutableGroup {
 
 		[New]
 		[Export ("name")]
@@ -883,7 +883,7 @@ namespace XamCore.Contacts {
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (CNPostalAddress))]
-	public interface CNMutablePostalAddress {
+	interface CNMutablePostalAddress {
 
 		[New]
 		[Export ("street")]
@@ -913,7 +913,7 @@ namespace XamCore.Contacts {
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // Apple doc: no handle (nil) if no string (or nil string) is given
-	public interface CNPhoneNumber : NSCopying, NSSecureCoding, INSCopying, INSSecureCoding {
+	interface CNPhoneNumber : NSCopying, NSSecureCoding, INSCopying, INSSecureCoding {
 
 		// @required + (instancetype)phoneNumberWithStringValue:(NSString *)stringValue;
 		[Static, Export ("phoneNumberWithStringValue:")]
@@ -931,7 +931,7 @@ namespace XamCore.Contacts {
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
-	public interface CNLabelPhoneNumberKey {
+	interface CNLabelPhoneNumberKey {
 
 		[Field ("CNLabelPhoneNumberiPhone")]
 		NSString iPhone { get; }
@@ -957,7 +957,7 @@ namespace XamCore.Contacts {
 
 	[iOS (9,0)] [Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	public interface CNPostalAddress : NSCopying, NSMutableCopying, NSSecureCoding, INSCopying, INSSecureCoding {
+	interface CNPostalAddress : NSCopying, NSMutableCopying, NSSecureCoding, INSCopying, INSSecureCoding {
 
 		[Export ("street")]
 		string Street { get; }
@@ -985,7 +985,7 @@ namespace XamCore.Contacts {
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
-	public interface CNPostalAddressKey { // Can be used in KVO
+	interface CNPostalAddressKey { // Can be used in KVO
 
 		[Field ("CNPostalAddressStreetKey")]
 		NSString Street { get; }
@@ -1008,7 +1008,7 @@ namespace XamCore.Contacts {
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSFormatter))]
-	public interface CNPostalAddressFormatter {
+	interface CNPostalAddressFormatter {
 
 		[Static]
 		[Export ("stringFromPostalAddress:style:")]
@@ -1037,7 +1037,7 @@ namespace XamCore.Contacts {
 #if !WATCH
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	public interface CNSaveRequest {
+	interface CNSaveRequest {
 
 		[Export ("addContact:toContainerWithIdentifier:")]
 		void AddContact (CNMutableContact contact, [NullAllowed] string identifier);
@@ -1075,7 +1075,7 @@ namespace XamCore.Contacts {
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	public interface CNSocialProfile : NSCopying, NSSecureCoding, INSCopying, INSSecureCoding {
+	interface CNSocialProfile : NSCopying, NSSecureCoding, INSCopying, INSSecureCoding {
 
 		[Export ("urlString")]
 		string UrlString { get; }
@@ -1104,7 +1104,7 @@ namespace XamCore.Contacts {
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
-	public interface CNSocialProfileKey { // Can be used in KVO
+	interface CNSocialProfileKey { // Can be used in KVO
 
 		[Field ("CNSocialProfileURLStringKey")]
 		NSString UrlString { get; }
@@ -1122,7 +1122,7 @@ namespace XamCore.Contacts {
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
-	public interface CNSocialProfileServiceKey {
+	interface CNSocialProfileServiceKey {
 
 		[Field ("CNSocialProfileServiceFacebook")]
 		NSString Facebook { get; }

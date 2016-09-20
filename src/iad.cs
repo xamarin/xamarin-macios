@@ -173,7 +173,7 @@ namespace XamCore.iAd {
 	}
 
 	[Category, BaseType (typeof (MPMoviePlayerController))]
-	public partial interface IAdPreroll {
+	partial interface IAdPreroll {
 
 #if XAMCORE_2_0
 		[Internal]
@@ -195,12 +195,12 @@ namespace XamCore.iAd {
 	}
 
 #if !XAMCORE_2_0
-	public delegate void PlayPrerollAdCompletionHandler (NSError error);
+	delegate void PlayPrerollAdCompletionHandler (NSError error);
 #endif
 
 	[Deprecated (PlatformName.iOS, 10, 0)]
 	[Category, BaseType (typeof (UIViewController))]
-	public partial interface IAdAdditions {
+	partial interface IAdAdditions {
 
 #if XAMCORE_2_0
 		[Internal]
@@ -238,12 +238,12 @@ namespace XamCore.iAd {
 		bool ShouldPresentInterstitialAd ();
 	}
 
-	public delegate void ADConversionDetails (NSDate appPurchaseDate, NSDate iAdImpressionDate);
+	delegate void ADConversionDetails (NSDate appPurchaseDate, NSDate iAdImpressionDate);
 	
 	[Since (7,1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface ADClient {
+	interface ADClient {
 		[Static]
 		[Export ("sharedClient")]
 		ADClient SharedClient { get; }
@@ -272,7 +272,7 @@ namespace XamCore.iAd {
 #endif
 	}
 
-	public delegate void AttributedToiAdCompletionHandler (bool attributedToiAd);
+	delegate void AttributedToiAdCompletionHandler (bool attributedToiAd);
 
 	[Category]
 	[BaseType (typeof (AVPlayerViewController))]

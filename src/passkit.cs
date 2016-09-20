@@ -191,8 +191,8 @@ namespace XamCore.PassKit {
 	}
 
 #if !WATCH
-	public delegate void PKPaymentShippingAddressSelected (PKPaymentAuthorizationStatus status, PKShippingMethod [] shippingMethods, PKPaymentSummaryItem [] summaryItems);
-	public delegate void PKPaymentShippingMethodSelected (PKPaymentAuthorizationStatus status, PKPaymentSummaryItem[] summaryItems);
+	delegate void PKPaymentShippingAddressSelected (PKPaymentAuthorizationStatus status, PKShippingMethod [] shippingMethods, PKPaymentSummaryItem [] summaryItems);
+	delegate void PKPaymentShippingMethodSelected (PKPaymentAuthorizationStatus status, PKPaymentSummaryItem[] summaryItems);
 
 #if !XAMCORE_2_0
 	delegate void PKPaymentAuthorizationHandler (PKPaymentAuthorizationStatus status);
@@ -273,7 +273,7 @@ namespace XamCore.PassKit {
 	[Watch (3,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
-	public interface PKPaymentSummaryItem {
+	interface PKPaymentSummaryItem {
 		[NullAllowed] // by default this property is null
 		[Export ("label")]
 		string Label { get; set; }
@@ -298,7 +298,7 @@ namespace XamCore.PassKit {
 	[Watch (3,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (PKPaymentSummaryItem))]
-	public interface PKShippingMethod {
+	interface PKShippingMethod {
 		[NullAllowed] // by default this property is null
 		[Export ("identifier")]
 		string Identifier { get; set; }
@@ -630,7 +630,7 @@ namespace XamCore.PassKit {
 	
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
-	public partial interface PKObject : NSCoding, NSSecureCoding, NSCopying {
+	partial interface PKObject : NSCoding, NSSecureCoding, NSCopying {
 		//Empty class in header file
 	}
 

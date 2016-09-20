@@ -1319,7 +1319,7 @@ namespace XamCore.WebKit {
 		[Export ("handleEvent:")]
 		void HandleEvent (DomEvent evt);
 	}
-	public interface IDomEventListener {}
+	interface IDomEventListener {}
 	
 	[BaseType (typeof (DomCharacterData), Name="DOMProcessingInstruction")]
 	[DisableDefaultCtor] // An uncaught exception was raised: +[DOMProcessingInstruction init]: should never be used
@@ -2043,7 +2043,7 @@ namespace XamCore.WebKit {
 		void Cancel ();
 	}
 
-	public interface IWebOpenPanelResultListener {}
+	interface IWebOpenPanelResultListener {}
 
 	[BaseType (typeof (NSObject))]
 	[Model]

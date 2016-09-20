@@ -44,7 +44,7 @@ namespace XamCore.PdfKit {
 #if XAMCORE_2_0
 	[Abstract]
 #endif
-	public interface PdfAction : NSCopying {
+	interface PdfAction : NSCopying {
 		//This is an abstract superclass with no public init - should it have a private constructor??
 		//As it is, I can create instances, that segfault when you access the type method.
 		//marking the method as [Abstract] doesn't work because the subclasses do not explictly
@@ -54,7 +54,7 @@ namespace XamCore.PdfKit {
 	}
 
 	[BaseType (typeof (PdfAction), Name="PDFActionGoTo")]
-	public interface PdfActionGoTo {
+	interface PdfActionGoTo {
 		[Export ("initWithDestination:")]
 		IntPtr Constructor (PdfDestination destination);
 
@@ -63,7 +63,7 @@ namespace XamCore.PdfKit {
 	}
 
 	[BaseType (typeof (PdfAction), Name="PDFActionNamed")]
-	public interface PdfActionNamed {
+	interface PdfActionNamed {
 		[Export ("initWithName:")]
 		IntPtr Constructor (PdfActionNamedName name);
 
@@ -72,7 +72,7 @@ namespace XamCore.PdfKit {
 	}
 
 	[BaseType (typeof (PdfAction), Name="PDFActionRemoteGoTo")]
-	public interface PdfActionRemoteGoTo {
+	interface PdfActionRemoteGoTo {
 		[Export ("initWithPageIndex:atPoint:fileURL:")]
 		IntPtr Constructor (nint pageIndex, CGPoint point, NSUrl fileUrl);
 
@@ -87,7 +87,7 @@ namespace XamCore.PdfKit {
 	}
 
 	[BaseType (typeof (PdfAction), Name="PDFActionResetForm")]
-	public interface PdfActionResetForm {
+	interface PdfActionResetForm {
 		//has a public Init ???
 		
 		//NSArray of NSString
@@ -99,7 +99,7 @@ namespace XamCore.PdfKit {
 	}
 
 	[BaseType (typeof (PdfAction), Name="PDFActionURL")]
-	public interface PdfActionUrl {
+	interface PdfActionUrl {
 		[Export ("initWithURL:")]
 		IntPtr Constructor (NSUrl url);
 
@@ -108,7 +108,7 @@ namespace XamCore.PdfKit {
 	}
 
 	[BaseType (typeof (NSObject), Name="PDFAnnotation")]
-	public interface PdfAnnotation : NSCoding, NSCopying {
+	interface PdfAnnotation : NSCoding, NSCopying {
 		[Export ("initWithBounds:")]
 		IntPtr Constructor (CGRect bounds);
 
@@ -162,7 +162,7 @@ namespace XamCore.PdfKit {
 	}
 
 	[BaseType (typeof (PdfAnnotation), Name="PDFAnnotationButtonWidget")]
-	public interface PdfAnnotationButtonWidget {
+	interface PdfAnnotationButtonWidget {
 		[Export ("controlType")]
 		PdfWidgetControlType ControlType { get; set; }
 		
@@ -195,7 +195,7 @@ namespace XamCore.PdfKit {
 	}
 
 	[BaseType (typeof (PdfAnnotation), Name="PDFAnnotationChoiceWidget")]
-	public interface PdfAnnotationChoiceWidget {
+	interface PdfAnnotationChoiceWidget {
 		[Export ("stringValue")]
 		string Text { get; set; }
 
@@ -220,13 +220,13 @@ namespace XamCore.PdfKit {
 	}
 
 	[BaseType (typeof (PdfAnnotation), Name="PDFAnnotationCircle")]
-	public interface PdfAnnotationCircle {
+	interface PdfAnnotationCircle {
 		[Export ("interiorColor")]
 		NSColor InteriorColor { get; set; }
 	}
 
 	[BaseType (typeof (PdfAnnotation), Name="PDFAnnotationFreeText")]
-	public interface PdfAnnotationFreeText {
+	interface PdfAnnotationFreeText {
 		[Export ("font")]
 		NSFont Font { get; set; }
 
@@ -238,7 +238,7 @@ namespace XamCore.PdfKit {
 	}
 
 	[BaseType (typeof (PdfAnnotation), Name="PDFAnnotationInk")]
-	public interface PdfAnnotationInk {
+	interface PdfAnnotationInk {
 		[Export ("paths")]
 		NSBezierPath [] Paths { get; }
 
@@ -250,7 +250,7 @@ namespace XamCore.PdfKit {
 	}
 
 	[BaseType (typeof (PdfAnnotation), Name="PDFAnnotationLine")]
-	public interface PdfAnnotationLine {
+	interface PdfAnnotationLine {
 		[Export ("startPoint")]
 		CGPoint StartPoint { get; set; }
 
@@ -268,7 +268,7 @@ namespace XamCore.PdfKit {
 	}
 
 	[BaseType (typeof (PdfAnnotation), Name="PDFAnnotationLink")]
-	public interface PdfAnnotationLink {
+	interface PdfAnnotationLink {
 		[Export ("destination")]
 		PdfDestination Destination { get; set; }
 
@@ -280,7 +280,7 @@ namespace XamCore.PdfKit {
 	}
 
 	[BaseType (typeof (PdfAnnotation), Name="PDFAnnotationMarkup")]
-	public interface PdfAnnotationMarkup {
+	interface PdfAnnotationMarkup {
 		[Export ("quadrilateralPoints", ArgumentSemantic.Assign), NullAllowed]
 #if XAMCORE_2_0
 		NSArray WeakQuadrilateralPoints { get; set; }
@@ -293,31 +293,31 @@ namespace XamCore.PdfKit {
 	}
 
 	[BaseType (typeof (PdfAnnotation), Name="PDFAnnotationPopup")]
-	public interface PdfAnnotationPopup {
+	interface PdfAnnotationPopup {
 		[Export ("isOpen")]
 		bool IsOpen { get; set; }
 	}
 
 	[BaseType (typeof (PdfAnnotation), Name="PDFAnnotationSquare")]
-	public interface PdfAnnotationSquare {
+	interface PdfAnnotationSquare {
 		[Export ("interiorColor")]
 		NSColor InteriorColor { get; set; }
 	}
 
 	[BaseType (typeof (PdfAnnotation), Name="PDFAnnotationStamp")]
-	public interface PdfAnnotationStamp {
+	interface PdfAnnotationStamp {
 		[Export ("name")]
 		string Name { get; set; }
 	}
 
 	[BaseType (typeof (PdfAnnotation), Name="PDFAnnotationText")]
-	public interface PdfAnnotationText {
+	interface PdfAnnotationText {
 		[Export ("iconType")]
 		PdfTextAnnotationIconType IconType { get; set; }
 	}
 
 	[BaseType (typeof (PdfAnnotation), Name="PDFAnnotationTextWidget")]
-	public interface PdfAnnotationTextWidget {
+	interface PdfAnnotationTextWidget {
 		[Export ("stringValue")]
 		string StringValue { get; set; }
 
@@ -344,7 +344,7 @@ namespace XamCore.PdfKit {
 	}
 
 	[BaseType (typeof (NSObject), Name="PDFBorder")]
-	public interface PdfBorder : NSCoding, NSCopying {
+	interface PdfBorder : NSCoding, NSCopying {
 		[Export ("style")]
 		PdfBorderStyle Style { get; set; }
 
@@ -369,7 +369,7 @@ namespace XamCore.PdfKit {
 	}
 
 	[BaseType (typeof (NSObject), Name="PDFDestination")]
-	public interface PdfDestination : NSCopying {
+	interface PdfDestination : NSCopying {
 		[Export ("initWithPage:atPoint:")]
 		IntPtr Constructor (PdfPage page, CGPoint point);
 
@@ -386,7 +386,7 @@ namespace XamCore.PdfKit {
 
 	//Add attributes for delegates/events
 	[BaseType (typeof (NSObject), Name="PDFDocument", Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (PdfDocumentDelegate)})]
-	public interface PdfDocument : NSCopying {
+	interface PdfDocument : NSCopying {
 		[Export ("initWithURL:")]
 		IntPtr Constructor (NSUrl url);
 
@@ -514,7 +514,7 @@ namespace XamCore.PdfKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol (IsInformal = true)]
-	public interface PdfDocumentDelegate {
+	interface PdfDocumentDelegate {
 		[Export ("didMatchString:"), EventArgs ("PdfSelection")]
 		void DidMatchString (PdfSelection sender);
 
@@ -539,7 +539,7 @@ namespace XamCore.PdfKit {
 	}
 
 	[BaseType (typeof (NSObject), Name="PDFOutline")]
-	public interface PdfOutline {
+	interface PdfOutline {
 		// Why did this have a special init????
 		// Constructor/class needs special documentation on how to use one that is created (not obtained from another object).
 
@@ -578,7 +578,7 @@ namespace XamCore.PdfKit {
 	}
 
 	[BaseType (typeof (NSObject), Name="PDFPage")]
-	public interface PdfPage : NSCopying {
+	interface PdfPage : NSCopying {
 		[Export ("initWithImage:")]
 		IntPtr Constructor (NSImage image);
 
@@ -660,7 +660,7 @@ namespace XamCore.PdfKit {
 
 	[BaseType (typeof (NSObject), Name="PDFSelection")]
 	[DisableDefaultCtor] // An uncaught exception was raised: init: not a valid initializer for PDFSelection
-	public interface PdfSelection : NSCopying {
+	interface PdfSelection : NSCopying {
 		[Export ("initWithDocument:")]
 		IntPtr Constructor (PdfDocument document);
 
@@ -704,7 +704,7 @@ namespace XamCore.PdfKit {
 	}
 
 	[BaseType (typeof (NSView), Name="PDFThumbnailView")]
-	public interface PdfThumbnailView {
+	interface PdfThumbnailView {
 		[Export ("PDFView")]
 		PdfView PdfView { get; set; }
 
@@ -732,7 +732,7 @@ namespace XamCore.PdfKit {
 	}
 
 	[BaseType (typeof (NSView), Name="PDFView", Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (PdfViewDelegate)})]
-	public interface PdfView : NSMenuDelegate {
+	interface PdfView : NSMenuDelegate {
 		[Export ("document")]
 		PdfDocument Document { get; set; }
 
@@ -968,7 +968,7 @@ namespace XamCore.PdfKit {
 		NSString DisplayBoxChangedNotification { get; }
 	}
 	
-	public interface PdfViewAnnotationHitEventArgs {
+	interface PdfViewAnnotationHitEventArgs {
 		[Export ("PDFAnnotationHit")]
 		PdfAnnotation AnnotationHit { get; }
 	}
@@ -978,7 +978,7 @@ namespace XamCore.PdfKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol (IsInformal = true)]
-	public interface PdfViewDelegate {
+	interface PdfViewDelegate {
 		//from docs: 'By default, the scale factor is restricted to a range between 0.1 and 10.0 inclusive.'
 		[Export ("PDFViewWillChangeScaleFactor:toScale:"), DelegateName ("PdfViewScale"), DefaultValueFromArgument ("scale")]
 		nfloat WillChangeScaleFactor (PdfView sender, nfloat scale);

@@ -42,12 +42,12 @@ namespace XamCore.GameKit {
 
 #if MONOMAC
 	delegate void GKImageLoadedHandler  (NSImage image, NSError error);
-	public delegate void GKPlayerPhotoLoaded (NSImage photo, NSError error);
+	delegate void GKPlayerPhotoLoaded (NSImage photo, NSError error);
 	delegate void GKChallengeComposeHandler (NSViewController composeController, bool issuedChallenge, string [] sentPlayerIDs);
 #else
 	delegate void GKLeaderboardSetsHandler (GKLeaderboardSet [] leaderboardSets, NSError error);
 	delegate void GKImageLoadedHandler  (UIImage image, NSError error);
-	public delegate void GKPlayerPhotoLoaded (UIImage photo, NSError error);
+	delegate void GKPlayerPhotoLoaded (UIImage photo, NSError error);
 	delegate void GKChallengeComposeHandler (UIViewController composeController, bool issuedChallenge, string [] sentPlayerIDs);
 #endif
 
@@ -1623,7 +1623,7 @@ namespace XamCore.GameKit {
 	[NoWatch]
 	[Since (5,0)]
 	[BaseType(typeof(NSObject))]
-	public partial interface GKNotificationBanner {
+	partial interface GKNotificationBanner {
 		[Static, Export ("showBannerWithTitle:message:completionHandler:")]
 		[Async]
 		void Show ([NullAllowed] string title, [NullAllowed] string message, [NullAllowed] NSAction onCompleted);

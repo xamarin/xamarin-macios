@@ -501,7 +501,7 @@ namespace XamCore.CoreLocation {
 	[Mac (10,7)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // will crash, see CoreLocation.cs for compatibility stubs
-	public partial interface CLRegion : NSSecureCoding, NSCopying {
+	partial interface CLRegion : NSSecureCoding, NSCopying {
 		[NoTV]
 		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10, Message = "Use CLCircularRegion instead")]
 		[Export ("center")]
@@ -600,7 +600,7 @@ namespace XamCore.CoreLocation {
 #if MONOMAC
 	[DisableDefaultCtor]
 #endif
-	public partial interface CLCircularRegion {
+	partial interface CLCircularRegion {
 
 		[Export ("initWithCenter:radius:identifier:")]
 		IntPtr Constructor (CLLocationCoordinate2D center, double radius, string identifier);
@@ -619,7 +619,7 @@ namespace XamCore.CoreLocation {
 	[NoWatch][NoMac][NoTV]
 	[Since (7,0), BaseType (typeof (CLRegion))]
 	[DisableDefaultCtor] // nil-Handle on iOS8 if 'init' is used
-	public partial interface CLBeaconRegion {
+	partial interface CLBeaconRegion {
 
 		[Export ("initWithProximityUUID:identifier:")]
 		IntPtr Constructor (NSUuid proximityUuid, string identifier);
@@ -648,7 +648,7 @@ namespace XamCore.CoreLocation {
 
 	[NoWatch][NoMac][NoTV]
 	[Since (7,0), BaseType (typeof (NSObject))]
-	public partial interface CLBeacon : NSCopying, NSSecureCoding {
+	partial interface CLBeacon : NSCopying, NSSecureCoding {
 
 		[Export ("proximityUUID", ArgumentSemantic.Copy)]
 		NSUuid ProximityUuid { get; }

@@ -30,7 +30,7 @@ using XamCore.ObjCRuntime;
 namespace XamCore.MediaLibrary {
 	[Static]
 	[Mac (10,9, onlyOn64 : true)]
-	public interface MediaLibraryTypeIdentifierKey {
+	interface MediaLibraryTypeIdentifierKey {
 		[Field ("MLFolderRootGroupTypeIdentifier")]
 		NSString FolderRootGroupTypeIdentifier { get; }
 
