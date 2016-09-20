@@ -251,14 +251,18 @@ namespace XamCore.CoreImage {
 		[Static]
 		[Export ("contextWithEAGLContext:options:")]
 		CIContext FromContext (EAGLContext eaglContext, [NullAllowed] NSDictionary dictionary);
+#endif
 
+		[Mac (10,11)]
 		[Export ("render:toCVPixelBuffer:")]
 		void Render (CIImage image, CVPixelBuffer buffer);
 
+		[Mac (10,11)]
 		[Export ("render:toCVPixelBuffer:bounds:colorSpace:")]
 		// null is not documented for CGColorSpace but it makes sense with the other overload not having this parameter (unit tested)
 		void Render (CIImage image, CVPixelBuffer buffer, CGRect rectangle, [NullAllowed] CGColorSpace cs);
 
+#if !MONOMAC
 		[Export ("inputImageMaximumSize")]
 		CGSize InputImageMaximumSize { get; }
 
@@ -480,6 +484,7 @@ namespace XamCore.CoreImage {
 		IKFilterUIView GetFilterUIView (NSDictionary configurationOptions, [NullAllowed] NSArray excludedKeys);
 
 #else
+		// added in 10.10 but it was already accessible in a different way before (manual bindings)
 		[Export ("outputImage")]
 		CIImage OutputImage { get; }
 
@@ -1083,7 +1088,7 @@ namespace XamCore.CoreImage {
 #if MONOMAC
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface CIFilterGenerator : NSSecureCoding, NSCopying {
+	interface CIFilterGenerator : CIFilterConstructor, NSSecureCoding, NSCopying {
 		[Static, Export ("filterGenerator")]
 		CIFilterGenerator Create ();
 
@@ -1366,16 +1371,18 @@ namespace XamCore.CoreImage {
 		[iOS(9,0)]
 		[Wrap ("this (imageBuffer, options == null ? null : options.Dictionary)")]
 		IntPtr Constructor (CVImageBuffer imageBuffer, [NullAllowed] CIImageInitializationOptions options);
-#if !MONOMAC
+
+		[Mac (10,11)]
 		[Export ("initWithCVPixelBuffer:")]
 		IntPtr Constructor (CVPixelBuffer buffer);
 
+		[Mac (10,11)]
 		[Export ("initWithCVPixelBuffer:options:")]
 		IntPtr Constructor (CVPixelBuffer buffer, [NullAllowed] NSDictionary dict);
 
+		[Mac (10,11)]
 		[Wrap ("this (buffer, options == null ? null : options.Dictionary)")]
 		IntPtr Constructor (CVPixelBuffer buffer, [NullAllowed] CIImageInitializationOptions options);
-#endif
 
 		[Export ("initWithColor:")]
 		IntPtr Constructor (CIColor color);
@@ -1536,11 +1543,10 @@ namespace XamCore.CoreImage {
 		[Field ("kCIImageProperties"), Internal]
 		NSString CIImagePropertiesKey { get; }
 
-#if !MONOMAC
 		[Since (6,0)] // publicly documented in 7.0 but really available since 6.0
+		[Mac (10,12)]
 		[Export ("regionOfInterestForImage:inRect:")]
 		CGRect GetRegionOfInterest (CIImage im, CGRect r);
-#endif
 
 		//
 		// iOS 8.0
@@ -2010,16 +2016,17 @@ namespace XamCore.CoreImage {
 		[Export ("W")]
 		nfloat W { get; }
 
-#if !MONOMAC
+		[Mac (10,9)]
 		[Export ("CGPointValue")]
 		CGPoint Point { get; }
 
+		[Mac (10,9)]
 		[Export ("CGRectValue")]
 		CGRect Rectangle { get; }
 
+		[Mac (10,9)]
 		[Export ("CGAffineTransformValue")]
 		CGAffineTransform AffineTransform { get; }
-#endif
 
 		[Export ("stringRepresentation"), Internal]
 		string StringRepresentation ();
@@ -2216,8 +2223,8 @@ namespace XamCore.CoreImage {
 		CGPoint BottomRight { get; }
 	}
 
-#if !MONOMAC
 	[iOS (8,0)]
+	[Mac (10,12)]
 	[BaseType (typeof (CIFeature))]
 	partial interface CIQRCodeFeature {
 
@@ -2239,10 +2246,9 @@ namespace XamCore.CoreImage {
 		[Export ("messageString")]
 		string MessageString { get; }
 	}
-#endif
 
-#if !MONOMAC
 	[iOS (9,0)]
+	[Mac (10,12)]
 	[BaseType (typeof (CIFeature))]
 	interface CITextFeature {
 		[Export ("bounds")]
@@ -2263,7 +2269,6 @@ namespace XamCore.CoreImage {
 		[Export ("subFeatures")]
 		CIFeature[] SubFeatures { get; }
 	}
-#endif
 
 	[iOS (10,0)][Mac (10,12)]
 	[TV (10,0)]
