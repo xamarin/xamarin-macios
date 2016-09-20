@@ -118,11 +118,11 @@ namespace XamCore.CoreWlan {
 	}
 
 	[Native]
-	public enum CWEventType : nuint_compat_int {
+	public enum CWEventType : nint {
 		None = 0,
 		PowerDidChange = 1,
-		SSIDDidChange = 2,
-		BSSIDDidChange = 3,
+		SsidDidChange = 2,
+		BssidDidChange = 3,
 		CountryCodeDidChange = 4,
 		LinkDidChange = 5,
 		LinkQualityDidChange = 6,

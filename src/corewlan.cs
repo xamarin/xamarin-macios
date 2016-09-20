@@ -549,6 +549,14 @@ namespace XamCore.CoreWlan {
 	[BaseType (typeof (NSObject))]
 	interface CWWiFiClient
 	{
+		[Export ("delegate", ArgumentSemantic.Weak)]
+		[NullAllowed]
+		NSObject WeakDelegate { get; set; }
+
+		[Wrap ("WeakDelegate")]
+		[Protocolize]
+		CWEventDelegate Delegate { get; set; }
+		
 		[Export ("interface")]
 		CWInterface MainInterface { get; }
 
@@ -574,5 +582,41 @@ namespace XamCore.CoreWlan {
 
 		[Export ("stopMonitoringEventWithType:error:")]
 		bool StopMonitoringEvent (CWEventType type, out NSError error);
+	}
+	
+	[BaseType (typeof (NSObject))]
+	[Model]
+	[Protocol]
+	interface CWEventDelegate
+	{
+		[Export ("clientConnectionInterrupted")]
+		void ClientConnectionInterrupted ();
+		
+		[Export ("clientConnectionInvalidated")]
+		void ClientConnectionInvalidated ();
+		
+		[Export ("powerStateDidChangeForWiFiInterfaceWithName:")]
+		void PowerStateDidChangeForWiFi (string interfaceName);
+		
+		[Export ("ssidDidChangeForWiFiInterfaceWithName:")]
+		void SsidDidChangeForWiFi (string interfaceName);
+		
+		[Export ("bssidDidChangeForWiFiInterfaceWithName:")]
+		void BssidDidChangeForWiFi (string interfaceName);
+		
+		[Export ("countryCodeDidChangeForWiFiInterfaceWithName:")]
+		void CountryCodeDidChangeForWiFi (string interfaceName);
+		
+		[Export ("linkDidChangeForWiFiInterfaceWithName:")]
+		void LinkDidChangeForWiFi (string interfaceName);
+		
+		[Export ("linkQualityDidChangeForWiFiInterfaceWithName:rssi:transmitRate:")]
+		void LinkQualityDidChangeForWiFi (string interfaceName, int rssi, double transmitRate);
+		
+		[Export ("modeDidChangeForWiFiInterfaceWithName:")]
+		void ModeDidChangeForWiFi (string interfaceName);
+		
+		[Export ("scanCacheUpdatedForWiFiInterfaceWithName:")]
+		void ScanCacheUpdatedForWiFi (string interfaceName);
 	}
 }
