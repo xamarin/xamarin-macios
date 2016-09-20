@@ -56,7 +56,6 @@ namespace Xamarin.Bundler {
 		Default,
 		Dynamic,
 		Static,
-		IL,
 	}
 
 	public static partial class Driver {
@@ -245,7 +244,7 @@ namespace Xamarin.Bundler {
 							registrar = RegistrarMode.Dynamic;
 							break;
 						case "il":
-							registrar = RegistrarMode.IL;
+							registrar = RegistrarMode.Dynamic;
 							break;
 						case "default":
 							registrar = RegistrarMode.Default;
@@ -907,7 +906,6 @@ namespace Xamarin.Bundler {
 					sw.WriteLine ("extern NSString* xamarin_custom_bundle_name;");
 					sw.WriteLine ("\txamarin_custom_bundle_name = @\"" + custom_bundle_name + "\";");
 				}
-				sw.WriteLine ("\txamarin_use_il_registrar = {0};", registrar == RegistrarMode.IL ? "true" : "false");
 				sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", App.MarshalManagedExceptions);
 				sw.WriteLine ("\txamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionMode{0};", App.MarshalObjectiveCExceptions);
 				if (disable_lldb_attach)

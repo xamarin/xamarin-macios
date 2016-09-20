@@ -50,7 +50,6 @@ bool xamarin_disable_lldb_attach = false;
 // true if either OldDynamic or OldStatic (since the static registrar still needs
 // a dynamic registrar available too).
 bool xamarin_use_old_dynamic_registrar = false;
-bool xamarin_use_il_registrar = false;
 #if DEBUG
 bool xamarin_init_mono_debug = true;
 #else
@@ -139,7 +138,7 @@ enum InitializationFlags : int {
 	/* unused									= 0x01,*/
 	InitializationFlagsUseOldDynamicRegistrar	= 0x02,
 	InitializationFlagsDynamicRegistrar			= 0x04,
-	InitializationFlagsILRegistrar				= 0x08,
+	/* unused									= 0x08,*/
 	InitializationFlagsIsSimulator				= 0x10,
 };
 
@@ -1191,8 +1190,6 @@ xamarin_initialize ()
 	options.size = sizeof (options);
 	if (xamarin_use_new_assemblies && xamarin_use_old_dynamic_registrar)
 		options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsUseOldDynamicRegistrar);
-	if (xamarin_use_il_registrar)
-		options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsILRegistrar);
 #if MONOTOUCH && (defined(__i386__) || defined (__x86_64__))
 	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsSimulator);
 #endif
