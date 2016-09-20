@@ -809,12 +809,32 @@ namespace Introspection {
 
 				CurrentType = t;
 
-				foreach (MethodBase m in t.GetMethods (Flags))
+				foreach (MethodInfo m in t.GetMethods (Flags)) {
 					CheckManagedMemberSignatures (m, t, ref n);
+					var rt = m.ReturnType;
+					if (!CheckType (rt, ref n))
+						ReportError ($"`{t.Name}.{m.Name}` return type `{rt.Name}` is a concrete type `[Model]` and not an interface `[Protocol]`");
+				}
 				foreach (MethodBase m in t.GetConstructors (Flags))
 					CheckManagedMemberSignatures (m, t, ref n);
 			}
 			AssertIfErrors ("{0} errors found in {1} signatures validated{2}", Errors, n, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
+		}
+
+		bool CheckType (Type t, ref int n)
+		{
+			if (t.IsArray)
+				return CheckType (t.GetElementType (), ref n);
+			// e.g. NSDictionary<NSString,NSObject> needs 3 check
+			if (t.IsGenericType) {
+				foreach (var ga in t.GetGenericArguments ())
+					return CheckType (ga, ref n);
+			}
+			// look for [Model] types
+			if (t.GetCustomAttribute<ModelAttribute> (false) == null)
+				return true;
+			n++;
+			return false;
 		}
 
 		void CheckManagedMemberSignatures (MethodBase m, Type t, ref int n)
@@ -829,13 +849,11 @@ namespace Introspection {
 
 			foreach (var p in m.GetParameters ()) {
 				var pt = p.ParameterType;
-				// look for [Model] types
-				if (pt.GetCustomAttribute<ModelAttribute> () == null)
-					continue;
 				// skip methods added inside the [Model] type - those are fine
 				if (t == pt)
 					continue;
-				ReportError ($"`{t.Name}.{m.Name}` includes a paramater of type `{pt.Name}` which is a concrete type `[Model]` and not an interface `[Protocol]`");
+				if (!CheckType (pt, ref n))
+					ReportError ($"`{t.Name}.{m.Name}` includes a paramater of type `{pt.Name}` which is a concrete type `[Model]` and not an interface `[Protocol]`");
 			}
 		}
 	}
