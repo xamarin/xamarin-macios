@@ -1083,7 +1083,7 @@ namespace XamCore.CoreImage {
 #if MONOMAC
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface CIFilterGenerator : NSSecureCoding, NSCopying {
+	interface CIFilterGenerator : NSSecureCoding, NSCopying {
 		[Static, Export ("filterGenerator")]
 		CIFilterGenerator Create ();
 
