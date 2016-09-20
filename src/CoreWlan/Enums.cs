@@ -2,7 +2,7 @@
 
 using XamCore.Foundation;
 using XamCore.CoreFoundation;
-using XamCore.ObjCRuntime; 
+using XamCore.ObjCRuntime;
 using System;
 
 namespace XamCore.CoreWlan {
@@ -115,5 +115,21 @@ namespace XamCore.CoreWlan {
 		None = 0,
 		User = 1,
 		System = 2,
+	}
+
+	[Native]
+	public enum CWEventType : nuint_compat_int {
+		None = 0,
+		PowerDidChange = 1,
+		SSIDDidChange = 2,
+		BSSIDDidChange = 3,
+		CountryCodeDidChange = 4,
+		LinkDidChange = 5,
+		LinkQualityDidChange = 6,
+		ModeDidChange = 7,
+		ScanCacheUpdated = 8,
+		VirtualInterfaceStateChanged = 9,
+		RangingReportEvent = 10,
+		Unknown = int.MaxValue
 	}
 }
