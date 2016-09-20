@@ -878,7 +878,7 @@ namespace MTouchTests
 			case Profile.Classic:
 				return string.Empty;
 			case Profile.Unified:
-				return "-unified";
+				return string.Empty;
 			case Profile.TVOS:
 				return "-tvos";
 			case Profile.WatchOS:

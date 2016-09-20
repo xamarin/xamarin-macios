@@ -6,6 +6,8 @@
 	<string>LinkAll</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.xamarin.linkall</string>
+	<key>CFBundleName</key>
+	<string>LinkAll</string>
 	<key>MinimumOSVersion</key>
 	<string>6.0</string>
 	<key>UIDeviceFamily</key>
@@ -26,7 +28,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>CFBundleName</key>
-	<string>LinkAll</string>
 </dict>
 </plist>

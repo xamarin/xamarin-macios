@@ -289,9 +289,7 @@ IOS_TARGETS += \
 	MonoTouch.Dialog-1.dll                                                         \
 	MonoTouch.NUnitLite.dll                                                        \
 	MonoTouch.NUnitLite.csproj                                                     \
-	MonoTouch.NUnitLite.unified.csproj                                             \
 	MonoTouch.Dialog-1.csproj                                                      \
-	MonoTouch.Dialog-1.unified.csproj                                              \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/Version                                      \
 	$(PMCS_MONOTOUCH_INSTALL_TARGETS)                                              \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/System.Net.Http.dll             \
@@ -376,16 +374,10 @@ xamios.csproj: xamios.tmpl.csproj Makefile $(wildcard $(TOP)/src/*.sources)
 MonoTouch.NUnitLite.csproj: MonoTouch.NUnitLite.templ.csproj Makefile touch-unit.sources
 	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(IOS_TOUCHUNIT_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-MonoTouch.NUnitLite.unified.csproj: MonoTouch.NUnitLite.unified.templ.csproj Makefile touch-unit.sources
-	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(IOS_TOUCHUNIT_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
-
 MonoTouch.Dialog-1.csproj: MonoTouch.Dialog-1.templ.csproj Makefile touch-unit.sources
 	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(MONOTOUCH_DIALOG_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
 
-MonoTouch.Dialog-1.unified.csproj: MonoTouch.Dialog-1.unified.templ.csproj Makefile touch-unit.sources
-	$(Q) sed -e 's*<!--%FILES%-->*$(foreach file,$(MONOTOUCH_DIALOG_SOURCES),<Compile Include="$(file)"/>)*' $< | xmllint --format - > $@
-
-PROJECT_FILES += xamios.csproj MonoTouch.NUnitLite.csproj MonoTouch.NUnitLite.unified.csproj MonoTouch.Dialog-1.csproj MonoTouch.Dialog-1.unified.csproj
+PROJECT_FILES += xamios.csproj MonoTouch.NUnitLite.csproj MonoTouch.Dialog-1.csproj
 
 all-ios: $(IOS_TARGETS)
 install-ios: $(IOS_TARGETS)
