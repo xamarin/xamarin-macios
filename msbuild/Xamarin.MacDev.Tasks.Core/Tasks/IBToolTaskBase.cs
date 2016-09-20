@@ -42,7 +42,7 @@ namespace Xamarin.MacDev.Tasks
 		}
 
 		protected bool CanLinkStoryboards {
-			get { return AppleSdkSettings.XcodeVersion.Major >= 7; }
+			get { return AppleSdkSettings.XcodeVersion.Major > 7 || (AppleSdkSettings.XcodeVersion.Major == 7 && AppleSdkSettings.XcodeVersion.Minor >= 2); }
 		}
 
 		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, ProcessArgumentBuilder args, ITaskItem[] items)
