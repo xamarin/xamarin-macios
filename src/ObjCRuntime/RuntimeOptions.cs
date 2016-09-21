@@ -67,6 +67,9 @@ namespace XamCore.ObjCRuntime {
 			case null:
 				return HttpClientHandlerValue;
 			case HttpClientHandlerValue:
+				if (Driver.App.Platform == Utils.ApplePlatform.WatchOS)
+					throw ErrorHelper.CreateError (2015, "Invalid HttpMessageHandler `{0}` for watchOS. Valid values are NSUrlSessionHandler (default) or CFNetworkHandler", value);
+				return value;
 			case CFNetworkHandlerValue:
 			case NSUrlSessionHandlerValue:
 				return value;
@@ -159,7 +162,15 @@ namespace XamCore.ObjCRuntime {
 		// Called from CoreHttpMessageHandler
 		internal static TypeDefinition GetHttpMessageHandler (RuntimeOptions options, ModuleDefinition httpModule, ModuleDefinition platformModule = null)
 		{
-			var handler = options != null ? options.http_message_handler : HttpClientHandlerValue;
+			string handler;
+
+			if (options != null) {
+				handler = options.http_message_handler;
+			} else if (Driver.App.Platform == Utils.ApplePlatform.WatchOS) {
+				handler = NSUrlSessionHandlerValue;
+			} else {
+				handler = HttpClientHandlerValue;
+			}
 			TypeDefinition type;
 			switch (handler) {
 #if MONOMAC
@@ -174,6 +185,8 @@ namespace XamCore.ObjCRuntime {
 				break;
 #else
 			case HttpClientHandlerValue:
+				if (Driver.App.Platform == Utils.ApplePlatform.WatchOS)
+					throw ErrorHelper.CreateError (2015, "Invalid HttpMessageHandler `{0}` for watchOS. Valid values are NSUrlSessionHandler (default) or CFNetworkHandler", handler);
 				type = httpModule.GetType ("System.Net.Http", "HttpClientHandler");
 				break;
 			case CFNetworkHandlerValue:
@@ -239,7 +252,7 @@ namespace XamCore.ObjCRuntime {
 		{
 			var options = RuntimeOptions.Read ();
 			if (options == null) {
-#if WATCH
+#if MONOTOUCH_WATCH
 				return new NSUrlSessionHandler ();
 #else
 				return new HttpClientHandler ();
@@ -255,7 +268,7 @@ namespace XamCore.ObjCRuntime {
 				handler = Activator.CreateInstance (t) as HttpMessageHandler;
 			if (handler != null)
 				return handler;
-#if WATCH
+#if MONOTOUCH_WATCH
 			Console.WriteLine ("{0} is not a valid HttpMessageHandler, defaulting to NSUrlSessionHandler", handler_name);
 			return new NSUrlSessionHandler ();
 #else
