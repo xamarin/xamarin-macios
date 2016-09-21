@@ -46,11 +46,6 @@ namespace Xamarin.Linker {
 			"Mono.Security",
 			"OpenTK",
 			"OpenTK-1.0",
-			// New TLS Code
-			"Mono.Security.Providers.NewSystemSource",
-			"Mono.Security.Providers.OldTls",
-			"Mono.Security.Providers.NewTls",
-			"Mono.Security.Providers.DotNet",
 			// Facades assemblies (PCL)
 			"Microsoft.Win32.Primitives",
 			"Microsoft.Win32.Registry.AccessControl",

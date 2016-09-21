@@ -92,7 +92,6 @@ MAC_ASSEMBLY_NAMES = \
 	System.Xml \
 	System \
 	System.Security \
-	$(TLS_PROVIDER_ASSEMBLY_NAMES) \
 	System.Runtime.InteropServices.RuntimeInformation \
 	System.Reflection.Context	\
 	System.Net.Http.WinHttpHandler \
@@ -520,7 +519,7 @@ IOS_ASSEMBLIES = I18N.CJK I18N.MidEast I18N.Other I18N.Rare I18N.West I18N Mono.
 	System.Numerics.Vectors System.Reflection.Context System.Reflection.DispatchProxy \
 	System.Runtime.InteropServices.RuntimeInformation System.Security System.Xml.XPath.XmlDocument \
 	System.Windows System.Xml.Serialization System.Net Mono.Dynamic.Interpreter \
-	Microsoft.CSharp Mono.CSharp $(TLS_PROVIDER_ASSEMBLY_NAMES)
+	Microsoft.CSharp Mono.CSharp
 
 IOS_REPL_ASSEMBLIES = mscorlib System System.Core System.Xml Mono.CSharp
 
