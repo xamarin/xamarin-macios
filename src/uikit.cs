@@ -7496,12 +7496,12 @@ namespace XamCore.UIKit {
 
 		[Export ("initWithImage:")]
 		[PostGet ("Image")]
-		IntPtr Constructor (UIImage image);
+		IntPtr Constructor ([NullAllowed] UIImage image);
 
 		[Export ("initWithImage:highlightedImage:")]
 		[PostGet ("Image")]
 		[PostGet ("HighlightedImage")]
-		IntPtr Constructor (UIImage image, UIImage highlightedImage);
+		IntPtr Constructor ([NullAllowed] UIImage image, [NullAllowed] UIImage highlightedImage);
 
 		[Export ("image", ArgumentSemantic.Retain)][NullAllowed]
 		UIImage Image { get; set; }
