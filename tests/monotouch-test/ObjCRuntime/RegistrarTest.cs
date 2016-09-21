@@ -2501,6 +2501,14 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		static extern IntPtr method_getName (IntPtr method);
 #endif
+
+		[Test]
+		public void TestConstrainedGenericType2 ()
+		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+			using (var m = new NSMeasurement<NSUnitTemperature> (2, NSUnitTemperature.Fahrenheit)) {
+			}
+		}
 	}
 
 #if !__WATCHOS__
