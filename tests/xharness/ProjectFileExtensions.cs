@@ -186,7 +186,7 @@ namespace xharness
 
 		public static void SetPlatformAssembly (this XmlDocument csproj, string value)
 		{
-			SetAssemblyReference (csproj, "monotouch", value);
+			SetAssemblyReference (csproj, "Xamarin.iOS", value);
 		}
 
 		public static void SetAssemblyReference (this XmlDocument csproj, string current, string value)
@@ -363,6 +363,7 @@ namespace xharness
 				switch (n.InnerText.ToLower ()) {
 				case "i386":
 				case "x86_64":
+				case "i386, x86_64":
 					n.InnerText = simulator_arch;
 					break;
 				case "armv7":

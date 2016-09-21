@@ -6,7 +6,7 @@ namespace xharness
 	{
 		public override string Suffix {
 			get {
-				return "-unified";
+				return "-ios";
 			}
 		}
 			
@@ -86,7 +86,13 @@ namespace xharness
 
 		public override string MakefileWhereSuffix {
 			get {
-				return "unified";
+				return string.Empty;
+			}
+		}
+
+		public override string ProjectFileSuffix {
+			get {
+				return string.Empty;
 			}
 		}
 
@@ -94,6 +100,11 @@ namespace xharness
 			get {
 				return true;
 			}
+		}
+
+		protected override void ExecuteInternal ()
+		{
+			// Nothing to do here
 		}
 	}
 }

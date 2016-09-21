@@ -356,7 +356,6 @@ namespace xharness
 
 		void ConfigureIOS ()
 		{
-			var classic_targets = new List<ClassicTarget> ();
 			var unified_targets = new List<UnifiedTarget> ();
 			var tvos_targets = new List<TVOSTarget> ();
 			var watchos_targets = new List<WatchOSTarget> ();
@@ -393,19 +392,11 @@ namespace xharness
 				};
 				unified.Execute ();
 				unified_targets.Add (unified);
-
-				var classic = new ClassicTarget () {
-					TemplateProjectPath = file,
-					Harness = this,
-				};
-				classic.Execute ();
-				classic_targets.Add (classic);
 			}
 
 			SolutionGenerator.CreateSolution (this, watchos_targets, "watchos");
 			SolutionGenerator.CreateSolution (this, tvos_targets, "tvos");
-			SolutionGenerator.CreateSolution (this, unified_targets, "unified");
-			MakefileGenerator.CreateMakefile (this, classic_targets, unified_targets, tvos_targets, watchos_targets);
+			MakefileGenerator.CreateMakefile (this, unified_targets, tvos_targets, watchos_targets);
 		}
 
 		public int Install ()

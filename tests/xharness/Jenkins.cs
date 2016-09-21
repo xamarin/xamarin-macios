@@ -12,7 +12,6 @@ namespace xharness
 	public class Jenkins
 	{
 		public Harness Harness;
-		public bool IncludeClassiciOS;
 		public bool IncludeClassicMac = true;
 		public bool IncludeBcl;
 		public bool IncludeMac = true;
@@ -101,12 +100,8 @@ namespace xharness
 							  OrderBy ((SimRuntime v) => v.Version).
 							  Last ();
 
-				if (fn.EndsWith ("-unified", StringComparison.Ordinal)) {
-					runtasks.Add (new RunSimulatorTask (buildTask, Simulators.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == latestiOSRuntime.Identifier && v.SimDeviceType == "com.apple.CoreSimulator.SimDeviceType.iPhone-5").First ()) { Platform = TestPlatform.iOS_Unified32 });
-					runtasks.Add (new RunSimulatorTask (buildTask, Simulators.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == latestiOSRuntime.Identifier && v.SimDeviceType == "com.apple.CoreSimulator.SimDeviceType.iPhone-6s").First ()) { Platform = TestPlatform.iOS_Unified64 });
-				} else {
-					runtasks.Add (new RunSimulatorTask (buildTask, Simulators.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == latestiOSRuntime.Identifier && v.SimDeviceType == "com.apple.CoreSimulator.SimDeviceType.iPhone-5").First ()) { Platform = TestPlatform.iOS_Classic });
-				}
+				runtasks.Add (new RunSimulatorTask (buildTask, Simulators.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == latestiOSRuntime.Identifier && v.SimDeviceType == "com.apple.CoreSimulator.SimDeviceType.iPhone-5").First ()) { Platform = TestPlatform.iOS_Unified32 });
+				runtasks.Add (new RunSimulatorTask (buildTask, Simulators.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == latestiOSRuntime.Identifier && v.SimDeviceType == "com.apple.CoreSimulator.SimDeviceType.iPhone-6s").First ()) { Platform = TestPlatform.iOS_Unified64 });
 			}
 
 			return runtasks;
@@ -138,14 +133,12 @@ namespace xharness
 						ProjectFile = project.Path,
 						ProjectConfiguration = "Debug",
 						ProjectPlatform = "iPhoneSimulator",
-						Platform = TestPlatform.iOS_Classic,
+						Platform = TestPlatform.iOS_Unified,
 					};
-					if (IncludeClassiciOS && IncludeiOS)
+					if (IncludeiOS)
 						runSimulatorTasks.AddRange (await CreateRunSimulatorTaskAsync (build));
 
 					var suffixes = new List<Tuple<string, TestPlatform>> ();
-					if (IncludeiOS)
-						suffixes.Add (new Tuple<string, TestPlatform> ("-unified", TestPlatform.iOS_Unified));
 					if (IncludetvOS)
 						suffixes.Add (new Tuple<string, TestPlatform> ("-tvos", TestPlatform.tvOS));
 					if (IncludewatchOS)
@@ -657,7 +650,6 @@ function toggleContainerVisibility (containerName)
 		{
 			switch (Platform) {
 			case TestPlatform.iOS:
-			case TestPlatform.iOS_Classic:
 			case TestPlatform.iOS_Unified:
 			case TestPlatform.iOS_Unified32:
 			case TestPlatform.iOS_Unified64:
@@ -1027,8 +1019,6 @@ function toggleContainerVisibility (containerName)
 				case TestPlatform.tvOS:
 				case TestPlatform.watchOS:
 					return Platform.ToString ();
-				case TestPlatform.iOS_Classic:
-					return "iOS Classic";
 				case TestPlatform.iOS_Unified32:
 					return "iOS Unified 32-bits";
 				case TestPlatform.iOS_Unified64:
@@ -1264,7 +1254,6 @@ function toggleContainerVisibility (containerName)
 	{
 		None,
 		iOS,
-		iOS_Classic,
 		iOS_Unified,
 		iOS_Unified32,
 		iOS_Unified64,

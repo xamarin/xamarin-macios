@@ -20,7 +20,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-    <Commandlineparameters>--verbose --jenkins --autoconf --rootdir ../ --sdkroot /Applications/Xcode8-beta1.app</Commandlineparameters>
+    <Commandlineparameters>--verbose --configure --autoconf --rootdir ../ --sdkroot /Applications/Xcode8.app</Commandlineparameters>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -49,7 +49,6 @@
     <Compile Include="TVOSTarget.cs" />
     <Compile Include="Target.cs" />
     <Compile Include="UnifiedTarget.cs" />
-    <Compile Include="ClassicTarget.cs" />
     <Compile Include="AppRunner.cs" />
     <Compile Include="..\..\tools\mtouch\SdkVersions.cs">
       <Link>SdkVersions.cs</Link>
