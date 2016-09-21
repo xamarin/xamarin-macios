@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -309,6 +309,95 @@ namespace xharness
 			}
 		}
 
+		public bool TestsSucceeded (LogStream listener_log, bool timed_out, bool crashed) {
+			string log;
+			using (var reader = listener_log.GetReader ())
+				log = reader.ReadToEnd ();
+			// parsing the result is different if we are in jenkins or nor.
+			if (!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"))
+					&& Environment.GetEnvironmentVariable ("BUILD_REVISION") == "jenkins") {
+				// we have to parse the xml result
+				crashed = false;
+				if (log.Contains ("test-results")) {
+					// remove any possible extra info
+					var index = log.IndexOf ("<test-results");
+					log = log.Remove (0, index - 1);
+					var testsResults = new XmlDocument ();
+					testsResults.LoadXml (log);
+
+					// store a clean version of the logs, later this will be used by the bots to show results in github/web
+					var path = listener_log.FullPath;
+					path = path.Replace (".log", ".xml");
+					testsResults.Save (path);
+
+					var mainResultNode = testsResults.SelectSingleNode("test-results");
+					if (mainResultNode == null) {
+						crashed = true;
+						return false;
+					}
+					int ignored = Convert.ToInt16(mainResultNode.Attributes["ignored"].Value);
+					int invalid = Convert.ToInt16(mainResultNode.Attributes["invalid"].Value);
+					int inconclusive = Convert.ToInt16(mainResultNode.Attributes["inconclusive"].Value);
+					int errors = Convert.ToInt16(mainResultNode.Attributes["errors"].Value);
+					int failures = Convert.ToInt16(mainResultNode.Attributes["failures"].Value);
+					int totalTests = Convert.ToInt16(mainResultNode.Attributes["total"].Value);
+					var failed = errors != 0 || failures != 0;
+					if (failed) {
+						Harness.LogWrench ($"@MonkeyWrench: AddSummary: <b>{mode} failed: Test run: {totalTests} Passed: {totalTests - invalid - inconclusive - ignored} Inconclusive: {inconclusive} Failed: {errors + failures} Ignored: {ignored}</b><br/>");
+						main_log.WriteLine ("Test run failed");
+						return false;
+					} else {
+						Harness.LogWrench ($"@MonkeyWrench: AddSummary: {mode} succeeded: Test run: {totalTests} Passed: {totalTests - invalid - inconclusive - ignored} Inconclusive: {inconclusive} Failed: 0 Ignored: {ignored}<br/>");
+						main_log.WriteLine ("Test run succeeded");
+						return true;
+					}
+				} else if (timed_out) {
+					Harness.LogWrench ($"@MonkeyWrench: AddSummary: <b><i>{mode} timed out</i></b><br/>");
+					return false;
+				} else {
+					Harness.LogWrench ($"@MonkeyWrench: AddSummary: <b><i>{mode} crashed</i></b><br/>");
+					main_log.WriteLine ("Test run crashed");
+					crashed = true;
+					return false;
+				}
+			} else {
+				// parsing the human readable results
+				if (log.Contains ("Tests run")) {
+					var tests_run = string.Empty;
+					var log_lines = log.Split ('\n');
+					var failed = false;
+					foreach (var line in log_lines) {
+						if (line.Contains ("Tests run:")) {
+							Console.WriteLine (line);
+							tests_run = line.Replace ("Tests run: ", "");
+							break;
+						} else if (line.Contains ("FAIL")) {
+							Console.WriteLine (line);
+							failed = true;
+						}
+					}
+
+					if (failed) {
+						Harness.LogWrench ("@MonkeyWrench: AddSummary: <b>{0} failed: {1}</b><br/>", mode, tests_run);
+						main_log.WriteLine ("Test run failed");
+						return false;
+					} else {
+						Harness.LogWrench ("@MonkeyWrench: AddSummary: {0} succeeded: {1}<br/>", mode, tests_run);
+						main_log.WriteLine ("Test run succeeded");
+						return true;
+					}
+				} else if (timed_out) {
+					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} timed out</i></b><br/>", mode);
+					return false;
+				} else {
+					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed</i></b><br/>", mode);
+					main_log.WriteLine ("Test run crashed");
+					crashed = true;
+					return false;
+				}
+			}
+		}
+
 		[DllImport ("/usr/lib/libc.dylib")]
 		extern static IntPtr ttyname (int filedes);
 
@@ -346,6 +435,11 @@ namespace xharness
 			args.Append (" -setenv=NUNIT_AUTOEXIT=true");
 			args.Append (" -argument=-app-arg:-enablenetwork");
 			args.Append (" -setenv=NUNIT_ENABLE_NETWORK=true");
+			// detect if we are using a jenkins bot.
+			if (!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"))
+				&& Environment.GetEnvironmentVariable ("BUILD_REVISION") == "jenkins")
+				args.Append (" -setenv=NUNIT_ENABLE_XML_OUTPUT=true");
+
 			if (isSimulator) {
 				args.Append (" -argument=-app-arg:-hostname:127.0.0.1");
 				args.Append (" -setenv=NUNIT_HOSTNAME=127.0.0.1");
@@ -555,46 +649,7 @@ namespace xharness
 			var crashed = false;
 			if (File.Exists (listener_log.FullPath)) {
 				Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", listener_log.FullPath);
-				string log;
-				using (var reader = listener_log.GetReader ())
-					log = reader.ReadToEnd ();
-				if (log.Contains ("Tests run")) {
-					var tests_run = string.Empty;
-					var log_lines = log.Split ('\n');
-					var failed = false;
-					foreach (var line in log_lines) {
-						if (line.Contains ("Tests run:")) {
-							Console.WriteLine (line);
-							tests_run = line.Replace ("Tests run: ", "");
-							break;
-						} else if (line.Contains ("FAIL")) {
-							Console.WriteLine (line);
-							failed = true;
-						}
-					}
-
-					if (failed) {
-						Harness.LogWrench ("@MonkeyWrench: AddSummary: <b>{0} failed: {1}</b><br/>", mode, tests_run);
-						main_log.WriteLine ("Test run failed");
-						success = false;
-					} else {
-						Harness.LogWrench ("@MonkeyWrench: AddSummary: {0} succeeded: {1}<br/>", mode, tests_run);
-						main_log.WriteLine ("Test run succeeded");
-						success = true;
-					}
-				} else if (timed_out) {
-					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} timed out</i></b><br/>", mode);
-					success = false;
-				} else if (launch_failure) {
-					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} failed to launch</i></b><br/>", mode);
-					main_log.WriteLine ("Test run failed to launch");
-					success = false;
-				} else {
-					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed</i></b><br/>", mode);
-					main_log.WriteLine ("Test run crashed");
-					crashed = true;
-					success = false;
-				}
+				success = TestsSucceeded (listener_log, timed_out, crashed);
 			} else if (timed_out) {
 				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} never launched</i></b><br/>", mode);
 				main_log.WriteLine ("Test run never launched");
@@ -657,4 +712,3 @@ namespace xharness
 		}
 	}
 }
-
