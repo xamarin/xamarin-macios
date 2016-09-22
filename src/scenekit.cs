@@ -49,13 +49,17 @@ using XamCore.Metal;
 #if MONOMAC
 using XamCore.AppKit;
 using OpenTK;
+
+using GLContext = global::XamCore.OpenGL.CGLContext;
 #else
 
 #if WATCH
+using GLContext = global::XamCore.Foundation.NSObject; // won't be used -> [NoWatch] but must compile
 using NSView = global::XamCore.Foundation.NSObject; // won't be used -> [NoWatch] but must compile
 #else
 using XamCore.OpenGLES;
 
+using GLContext = global::XamCore.OpenGLES.EAGLContext;
 using NSView = global::XamCore.UIKit.UIView;
 #endif
 
@@ -1669,6 +1673,13 @@ namespace XamCore.SceneKit {
 		// options: nothing today, it is reserved for future use
 		[Static, Export ("rendererWithContext:options:")]
 		SCNRenderer FromContext (IntPtr context, [NullAllowed] NSDictionary options);
+
+		[NoWatch]
+		[Static]
+		[Wrap ("FromContext (context.GetHandle (), options)")]
+		// GetHandle will return IntPtr.Zero is context is null
+		// GLContext == CGLContext on macOS and EAGLContext in iOS and tvOS (using on top of file)
+		SCNRenderer FromContext (GLContext context, [NullAllowed] NSDictionary options);
 
 		[NoWatch, NoTV]
 		[Export ("render")]
