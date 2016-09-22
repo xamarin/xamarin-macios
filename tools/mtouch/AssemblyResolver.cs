@@ -52,6 +52,7 @@ namespace MonoTouch.Tuner {
 			cache = new Dictionary<string, AssemblyDefinition> (StringComparer.InvariantCultureIgnoreCase);
 			parameters = new ReaderParameters ();
 			parameters.AssemblyResolver = this;
+			parameters.InMemory = true;
 		}
 
 		public IDictionary ToResolverCache ()
