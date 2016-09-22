@@ -1009,7 +1009,7 @@ namespace Xamarin.Bundler
 
 			if (strip) {
 				// note: this is much slower when Parallel.ForEach is used
-				Parallel.ForEach (Assemblies, new ParallelOptions () { MaxDegreeOfParallelism = Environment.ProcessorCount }, (assembly) => 
+				Parallel.ForEach (Assemblies, new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency }, (assembly) => 
 					{
 						var file = assembly.FullPath;
 						var output = Path.Combine (AppTargetDirectory, Path.GetFileName (assembly.FullPath));

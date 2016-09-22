@@ -1698,7 +1698,7 @@ namespace Xamarin.Bundler {
 		{
 			var next = v.Execute ();
 			if (next != null)
-				Parallel.ForEach (next, new ParallelOptions () { MaxDegreeOfParallelism = Environment.ProcessorCount }, Execute);
+				Parallel.ForEach (next, new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency }, Execute);
 		}
 
 		public void ExecuteInParallel ()
@@ -1706,7 +1706,7 @@ namespace Xamarin.Bundler {
 			if (Count == 0)
 				return;
 			
-			Parallel.ForEach (this, new ParallelOptions () { MaxDegreeOfParallelism = Environment.ProcessorCount }, Execute);
+			Parallel.ForEach (this, new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency }, Execute);
 
 			Clear ();
 		}
