@@ -204,7 +204,7 @@ namespace Xamarin.Bundler {
 	//					MT2012  ** reserved Xamarin.Mac **
 	//					MT2013	** reserved Xamarin.Mac **
 	//					MT2014	** reserved Xamarin.Mac **
-	//					MT2015	Invalid HttpMessageHandler `{0}` for watchOS. Valid values are NSUrlSessionHandler (default) or CFNetworkHandler
+	//					MT2015	Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.
 	// MT3xxx	AOT
 	//			MT30xx	AOT (general) errors
 	//					MT3001	Could not AOT the assembly '{0}'
