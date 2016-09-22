@@ -150,6 +150,13 @@ namespace Xamarin.Bundler
 
 		public static List<string> classic_only_arguments = new List<string> (); // list of deprecated arguments, which (if used) will cause errors in Unified profile)
 
+		static int Jobs;
+		public static int Concurrency {
+			get {
+				return Jobs == 0 ? Environment.ProcessorCount : Jobs;
+			}
+		}
+
 		//
 		// We need to put a hard dep on Mono.Cecil.Mdb.dll so that it get's mkbundled
 		//
@@ -1075,6 +1082,7 @@ namespace Xamarin.Bundler
 			var os = new OptionSet () {
 			{ "h|?|help", "Displays the help", v => SetAction (Action.Help) },
 			{ "version", "Output version information and exit.", v => SetAction (Action.Version) },
+			{ "j|jobs=", "The level of concurrency. Default is the number of processors.", v => Jobs = int.Parse (v) },
 			{ "d|dir=", "Output directory for the results (Used for partial builds) [Deprecated]", v => { output_dir = v; classic_only_arguments.Add ("--dir"); }, true },
 			{ "cp=|crossprefix=", "Specifies the Mono cross compiler prefix [Deprecated]", v => { cross_prefix = v; classic_only_arguments.Add ("--crossprefix"); }, true },
 			{ "f|force", "Forces the recompilation of code, regardless of timestamps", v=>force = true },
