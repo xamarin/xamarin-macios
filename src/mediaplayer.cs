@@ -1120,6 +1120,15 @@ namespace XamCore.MediaPlayer {
 		[Export ("setQueueWithStoreIDs:")]
 		void SetQueue (string[] storeIDs);
 
+		[iOS (10,1)]
+		[Export ("setQueueWithDescriptor:")]
+		void SetQueue (MPMusicPlayerQueueDescriptor descriptor);
+
+		[iOS (10,1)]
+		[Async]
+		[Export ("prepareToPlayWithCompletionHandler:")]
+		void PrepareToPlay (Action<NSError> completionHandler);
+
 		[Export ("skipToNextItem")]
 		void SkipToNextItem ();
 
@@ -1864,5 +1873,58 @@ namespace XamCore.MediaPlayer {
 
 		[Export ("descriptionText")]
 		string DescriptionText { get; set; }
+	}
+
+	[NoTV]
+	[iOS (10,1)]
+	[BaseType (typeof (NSObject))]
+	interface MPMusicPlayerQueueDescriptor : NSSecureCoding {}
+
+	[NoTV]
+	[iOS (10,1)]
+	[BaseType (typeof(MPMusicPlayerQueueDescriptor))]
+	interface MPMusicPlayerMediaItemQueueDescriptor
+	{
+		[Export ("initWithQuery:")]
+		IntPtr Constructor (MPMediaQuery query);
+
+		[Export ("initWithItemCollection:")]
+		IntPtr Constructor (MPMediaItemCollection itemCollection);
+
+		[Export ("query", ArgumentSemantic.Copy)]
+		MPMediaQuery Query { get; }
+
+		[Export ("itemCollection", ArgumentSemantic.Strong)]
+		MPMediaItemCollection ItemCollection { get; }
+
+		[NullAllowed, Export ("startItem", ArgumentSemantic.Strong)]
+		MPMediaItem StartItem { get; set; }
+
+		[Export ("setStartTime:forItem:")]
+		void SetStartTime (double startTime, MPMediaItem mediaItem);
+
+		[Export ("setEndTime:forItem:")]
+		void SetEndTime (double endTime, MPMediaItem mediaItem);
+	}
+
+	[NoTV]
+	[iOS (10,1)]
+	[BaseType (typeof(MPMusicPlayerQueueDescriptor))]
+	interface MPMusicPlayerStoreQueueDescriptor
+	{
+		[Export ("initWithStoreIDs:")]
+		IntPtr Constructor (string[] storeIDs);
+
+		[NullAllowed, Export ("storeIDs", ArgumentSemantic.Copy)]
+		string[] StoreIDs { get; set; }
+
+		[NullAllowed, Export ("startItemID")]
+		string StartItemID { get; set; }
+
+		[Export ("setStartTime:forItemWithStoreID:")]
+		void SetStartTime (double startTime, string storeID);
+
+		[Export ("setEndTime:forItemWithStoreID:")]
+		void SetEndTime (double endTime, string storeID);
 	}
 }
