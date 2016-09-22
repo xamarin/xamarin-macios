@@ -837,6 +837,8 @@ This generally indicates that there is a problem with your Xamarin.iOS installat
 
 <!--- 2012 used by mmp -->
 
+<h3><a name="MT2015"/>MT2015: Invalid HttpMessageHandler `*` for watchOS. Valid values are NSUrlSessionHandler (default) or CFNetworkHandler</h3>
+
 <!--
  MT3xxx AOT
   MT30xx AOT (general) errors
