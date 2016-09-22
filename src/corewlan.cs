@@ -550,12 +550,8 @@ namespace XamCore.CoreWlan {
 	interface CWWiFiClient
 	{
 		[Export ("delegate", ArgumentSemantic.Weak)]
-		[NullAllowed]
-		NSObject WeakDelegate { get; set; }
-
-		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		CWEventDelegate Delegate { get; set; }
+        [NullAllowed]
+        ICWEventDelegate Delegate { get; set; }
 		
 		[Export ("interface")]
 		CWInterface MainInterface { get; }
@@ -583,6 +579,8 @@ namespace XamCore.CoreWlan {
 		[Export ("stopMonitoringEventWithType:error:")]
 		bool StopMonitoringEvent (CWEventType type, out NSError error);
 	}
+	
+	interface ICWEventDelegate { }
 	
 	[BaseType (typeof (NSObject))]
 	[Model]
