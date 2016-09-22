@@ -44,7 +44,6 @@ extern bool xamarin_gc_pump;
 extern bool xamarin_debug_mode;
 extern bool xamarin_disable_lldb_attach;
 extern bool xamarin_use_old_dynamic_registrar;
-extern bool xamarin_use_il_registrar;
 extern bool xamarin_init_mono_debug;
 extern bool xamarin_compact_seq_points;
 extern int xamarin_log_level;

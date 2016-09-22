@@ -100,7 +100,7 @@ namespace XamCore.ObjCRuntime {
 			/* unused               = 0x01 */
 			UseOldDynamicRegistrar	= 0x02,
 			DynamicRegistrar		= 0x04,
-			ILRegistrar				= 0x08,
+			/* unused				= 0x08,*/
 			IsSimulator				= 0x10,
 		}
 
