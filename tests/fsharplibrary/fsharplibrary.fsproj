@@ -25,7 +25,6 @@
     <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <ConsolePause>false</ConsolePause>
-    <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
     <MtouchUseSGen>true</MtouchUseSGen>
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <PlatformTarget>
@@ -37,7 +36,6 @@
     <DefineConstants>;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <ConsolePause>false</ConsolePause>
-    <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
     <MtouchUseSGen>true</MtouchUseSGen>
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <GenerateTailCalls>true</GenerateTailCalls>
@@ -50,7 +48,6 @@
     <DefineConstants>;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <ConsolePause>false</ConsolePause>
-    <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
     <MtouchUseSGen>true</MtouchUseSGen>
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <GenerateTailCalls>true</GenerateTailCalls>
