@@ -550,8 +550,8 @@ namespace XamCore.CoreWlan {
 	interface CWWiFiClient
 	{
 		[Export ("delegate", ArgumentSemantic.Weak)]
-        [NullAllowed]
-        ICWEventDelegate Delegate { get; set; }
+		[NullAllowed]
+		ICWEventDelegate Delegate { get; set; }
 		
 		[Export ("interface")]
 		CWInterface MainInterface { get; }
