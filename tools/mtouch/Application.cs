@@ -1,6 +1,7 @@
 // Copyright 2013 Xamarin Inc. All rights reserved.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -1694,19 +1695,29 @@ namespace Xamarin.Bundler {
 
 	public class BuildTasks : List<BuildTask>
 	{
-		static void Execute (BuildTask v)
+		static void AddToBuildList (ConcurrentBag<BuildTask> build_list, IEnumerable<BuildTask> list)
 		{
-			var next = v.Execute ();
-			if (next != null)
-				Parallel.ForEach (next, new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency }, Execute);
+			if (list == null)
+				return;
+			foreach (var item in list)
+				build_list.Add (item);
+		}
+
+		static void Execute (ConcurrentBag<BuildTask> build_list, BuildTask v)
+		{
+			AddToBuildList (build_list, v.Execute ());
 		}
 
 		public void ExecuteInParallel ()
 		{
 			if (Count == 0)
 				return;
-			
-			Parallel.ForEach (this, new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency }, Execute);
+
+			var build_list = new ConcurrentBag<BuildTask> ();
+			AddToBuildList (build_list, this);
+			Parallel.ForEach (build_list, new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency }, (v) => {
+				Execute (build_list, v);
+			});
 
 			Clear ();
 		}
