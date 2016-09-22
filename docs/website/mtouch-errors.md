@@ -846,6 +846,8 @@ This generally indicates that there is a problem with your Xamarin.iOS installat
 
 This generally indicates a bug in the AOT compiler. Please file a bug [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a project that can be used to reproduce the error.
 
+Sometimes it's possible to work around this by disabling incremental builds in the project's iOS Build option (but it's still a bug, so please report it anyways).
+
 <h3><a name="MT3002"/>MT3002 AOT restriction: Method '*' must be static since it is decorated with [MonoPInvokeCallback]. See http://ios.xamarin.com/Documentation/Limitations#Reverse_Callbacks # this error message comes from the AOT compiler</h3>
 
 
