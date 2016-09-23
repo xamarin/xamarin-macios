@@ -78,15 +78,19 @@ namespace xharness
 							  Where ((SimRuntime v) => v.Identifier.StartsWith ("com.apple.CoreSimulator.SimRuntime.watchOS-", StringComparison.Ordinal)).
 							  OrderBy ((SimRuntime v) => v.Version).
 							  Last ();
-				var watchOSDeviceType =
+				var watchOSDeviceTypes =
 					Simulators.SupportedDeviceTypes.
-							  Where ((SimDeviceType v) => v.ProductFamilyId == "Watch").
-							  First ();
+							  Where ((SimDeviceType v) => v.ProductFamilyId == "Watch");
 				var devices = 
 					Simulators.AvailableDevices.
-					          Where ((SimDevice d) => d.SimRuntime == latestwatchOSRuntime.Identifier && d.SimDeviceType == watchOSDeviceType.Identifier);
+					          Where ((SimDevice d) => d.SimRuntime == latestwatchOSRuntime.Identifier && watchOSDeviceTypes.Any ((v) => d.SimDeviceType == v.Identifier));
 				var pair = Simulators.AvailableDevicePairs.
 				              FirstOrDefault ((SimDevicePair v) => devices.Any ((SimDevice d) => d.UDID == v.Gizmo));
+				if (pair == null) {
+					var msg = string.Format ("Could not find a device pair for any of these devices: {0}", string.Join (", ", devices.Select ((v) => v.Name).ToArray ()));
+					SimulatorLoadLog.WriteLine (msg);
+					throw new Exception (msg);
+				}
 				var device =
 					Simulators.AvailableDevices.
 							  FirstOrDefault ((SimDevice v) => pair.Gizmo == v.UDID); // select the device in the device pair.
