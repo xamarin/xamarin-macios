@@ -314,7 +314,8 @@ namespace xharness
 			using (var reader = listener_log.GetReader ())
 				log = reader.ReadToEnd ();
 			// parsing the result is different if we are in jenkins or nor.
-			if (Harness.InWrench) {
+			if (Harness.InJenkins) {
+				Harness.LogWrench ($"We are in jenkins.");
 				// we have to parse the xml result
 				crashed = false;
 				if (log.Contains ("test-results")) {
@@ -323,18 +324,24 @@ namespace xharness
 					log = log.Remove (0, index - 1);
 					var testsResults = new XmlDocument ();
 					testsResults.LoadXml (log);
-
-					// store a clean version of the logs, later this will be used by the bots to show results in github/web
-					var path = listener_log.FullPath;
-					path = path.Replace (".log", ".xml");
-					Harness.LogWrench ($"@MonkeyWrench: Added tests results from {mode} to {path}");
-					testsResults.Save (path);
+					Harness.LogWrench ($"Loaded xml.");
 
 					var mainResultNode = testsResults.SelectSingleNode("test-results");
+					Harness.LogWrench ($"Got main node.");
 					if (mainResultNode == null) {
+						Harness.LogWrench ($"Node is null.");
 						crashed = true;
 						return false;
 					}
+					// update the information of the main node to add information about the mode and the test that is excuted. This will later create
+					// nicer reports in jenkins
+					Harness.LogWrench ($"Setting name node to {Target}.");
+					mainResultNode.Attributes["name"].Value = Target;
+					// store a clean version of the logs, later this will be used by the bots to show results in github/web
+					var path = listener_log.FullPath;
+					path = path.Replace (".log", ".xml");
+					testsResults.Save (path);
+					
 					int ignored = Convert.ToInt16(mainResultNode.Attributes["ignored"].Value);
 					int invalid = Convert.ToInt16(mainResultNode.Attributes["invalid"].Value);
 					int inconclusive = Convert.ToInt16(mainResultNode.Attributes["inconclusive"].Value);
@@ -436,7 +443,7 @@ namespace xharness
 			args.Append (" -argument=-app-arg:-enablenetwork");
 			args.Append (" -setenv=NUNIT_ENABLE_NETWORK=true");
 			// detect if we are using a jenkins bot.
-			if (Harness.InWrench) 
+			if (Harness.InJenkins) 
 				args.Append (" -setenv=NUNIT_ENABLE_XML_OUTPUT=true");
 
 			if (isSimulator) {
