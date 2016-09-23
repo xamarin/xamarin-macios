@@ -327,6 +327,7 @@ namespace xharness
 					// store a clean version of the logs, later this will be used by the bots to show results in github/web
 					var path = listener_log.FullPath;
 					path = path.Replace (".log", ".xml");
+					Harness.LogWrench ($"Added tests results from {mode} to {path}");
 					testsResults.Save (path);
 
 					var mainResultNode = testsResults.SelectSingleNode("test-results");
