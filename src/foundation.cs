@@ -8724,7 +8724,7 @@ namespace XamCore.Foundation
 
 		[Mac (10,12)][Async]
 		[Export ("registerCloudKitShareWithPreparationHandler:")]
-		void RegisterCloudKitShare (Action<CloudKitRegistrationPreparationHandler> preparationHandler);
+		void RegisterCloudKitShare ([BlockCallback] Action<CloudKitRegistrationPreparationHandler> preparationHandler);
 
 		[Mac (10,12)]
 		[Export ("registerCloudKitShare:container:")]
