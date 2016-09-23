@@ -314,8 +314,7 @@ namespace xharness
 			using (var reader = listener_log.GetReader ())
 				log = reader.ReadToEnd ();
 			// parsing the result is different if we are in jenkins or nor.
-			if (!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"))
-					&& Environment.GetEnvironmentVariable ("BUILD_REVISION") == "jenkins") {
+			if (Harness.InWrench) {
 				// we have to parse the xml result
 				crashed = false;
 				if (log.Contains ("test-results")) {
@@ -436,8 +435,7 @@ namespace xharness
 			args.Append (" -argument=-app-arg:-enablenetwork");
 			args.Append (" -setenv=NUNIT_ENABLE_NETWORK=true");
 			// detect if we are using a jenkins bot.
-			if (!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"))
-				&& Environment.GetEnvironmentVariable ("BUILD_REVISION") == "jenkins")
+			if (Harness.InWrench) 
 				args.Append (" -setenv=NUNIT_ENABLE_XML_OUTPUT=true");
 
 			if (isSimulator) {
