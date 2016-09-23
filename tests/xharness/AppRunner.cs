@@ -675,7 +675,6 @@ namespace xharness
 			} else {
 				Result = TestExecutingResult.Failed;
 			}
-
 			return success.Value ? 0 : 1;
 		}
 
