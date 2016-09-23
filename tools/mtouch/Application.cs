@@ -1694,19 +1694,30 @@ namespace Xamarin.Bundler {
 
 	public class BuildTasks : List<BuildTask>
 	{
-		static void Execute (BuildTask v)
+		static void Execute (List<BuildTask> added, BuildTask v)
 		{
 			var next = v.Execute ();
-			if (next != null)
-				Parallel.ForEach (next, new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency }, Execute);
+			if (next != null) {
+				lock (added)
+					added.AddRange (next);
+			}
 		}
 
 		public void ExecuteInParallel ()
 		{
 			if (Count == 0)
 				return;
-			
-			Parallel.ForEach (this, new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency }, Execute);
+
+			var build_list = new List<BuildTask> (this);
+			var added = new List<BuildTask> ();
+			while (build_list.Count > 0) {
+				added.Clear ();
+				Parallel.ForEach (build_list, new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency }, (v) => {
+					Execute (added, v);
+				});
+				build_list.Clear ();
+				build_list.AddRange (added);
+			}
 
 			Clear ();
 		}
