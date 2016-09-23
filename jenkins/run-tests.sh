@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
 cd $WORKSPACE
+export BUILD_REVISION=jenkins
 # Unlock
 security default-keychain -s builder.keychain
 security list-keychains -s builder.keychain
