@@ -961,6 +961,47 @@ as your thread did not return control to the main loop. Uf your thread was some
 sort of background downloader that is always alive and waiting for work, the
 images would never be released.
 
+
+<a name="ForcedTypeAttribute" class="injected"></a>
+
+
+## ForcedTypeAttribute
+
+The `ForcedTypeAttribute` is used to enforce the creation of a managed type even
+if the returned unmanaged object does not match the type described in the binding
+definition.
+
+This is useful when the type described in a header does not match the returned type
+of the native method, for example take the following Objective-C definition from `NSURLSession`:
+
+`- (NSURLSessionDownloadTask *)downloadTaskWithRequest:(NSURLRequest *)request`
+
+It clearly states that it will return an `NSURLSessionDownloadTask` instance, but yet it
+**returns** a `NSURLSessionTask`, which is a superclass and thus not convertible to 
+`NSURLSessionDownloadTask`. Since we are in a type-safe context an `InvalidCastException`
+will happen.
+
+In order to comply with the header description and avoid the `InvalidCastException`, the
+`ForcedTypeAttribute` is used.
+
+```
+[BaseType (typeof (NSObject), Name="NSURLSession")]
+interface NSUrlSession {
+
+	[Export ("downloadTaskWithRequest:")]
+	[return: ForcedType]
+	NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request);
+}
+```
+
+The `ForcedTypeAttribute` also accepts a boolean value named `Owns` that is `false`
+by default `[ForcedType (owns: true)]`. The owns parameter is used to follow
+the [Ownership Policy](https://developer.apple.com/library/content/documentation/CoreFoundation/Conceptual/CFMemoryMgmt/Concepts/Ownership.html)
+for **Core Foundation** objects.
+
+The `ForcedTypeAttribute` is only valid on `parameters`, `properties` and `return value`. 
+
+
  <a name="BindAttribute" class="injected"></a>
 
 

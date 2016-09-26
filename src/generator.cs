@@ -279,6 +279,47 @@ public static class StringExtensions
 	};
 }
 
+//
+// ForcedTypeAttribute
+//
+// The ForcedTypeAttribute is used to enforce the creation of a managed type even
+// if the returned unmanaged object does not match the type described in the binding definition.
+//
+// This is useful when the type described in a header does not match the returned type
+// of the native method for example take the following Objective-C definition from NSURLSession:
+//
+//	- (NSURLSessionDownloadTask *)downloadTaskWithRequest:(NSURLRequest *)request
+//
+// It clearly states that it will return an NSURLSessionDownloadTask instance, but yet
+// it returns a NSURLSessionTask, which is a superclass and thus not convertible to 
+// NSURLSessionDownloadTask. Since we are in a type-safe context an InvalidCastException will happen.
+//
+// In order to comply with the header description and avoid the InvalidCastException, 
+// the ForcedTypeAttribute is used.
+//
+//	[BaseType (typeof (NSObject), Name="NSURLSession")]
+//	interface NSUrlSession {
+//		[Export ("downloadTaskWithRequest:")]
+//		[return: ForcedType]
+//		NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request);
+//	}
+//
+// The `ForcedTypeAttribute` also accepts a boolean value named `Owns` that is `false`
+// by default `[ForcedType (owns: true)]`. The owns parameter could be used to follow
+// the Ownership Policy[1] for Core Foundation objects.
+//
+// [1]: https://developer.apple.com/library/content/documentation/CoreFoundation/Conceptual/CFMemoryMgmt/Concepts/Ownership.html
+//
+
+[AttributeUsage (AttributeTargets.ReturnValue | AttributeTargets.Parameter | AttributeTargets.Property, AllowMultiple = false)]
+public class ForcedTypeAttribute : Attribute {
+	public ForcedTypeAttribute (bool owns = false)
+	{
+		Owns = owns;
+	}
+	public bool Owns;
+}
+
 // Used to flag a type as needing to be turned into a protocol on output for Unified
 // For example:
 //   [Protocolize, Wrap ("WeakDelegate")]
@@ -1207,12 +1248,12 @@ public class MemberInformation
 	public readonly MemberInfo mi;
 	public readonly Type type;
 	public readonly Type category_extension_type;
-	public readonly bool is_abstract, is_protected, is_internal, is_unified_internal, is_override, is_new, is_sealed, is_static, is_thread_static, is_autorelease, is_wrapper;
+	public readonly bool is_abstract, is_protected, is_internal, is_unified_internal, is_override, is_new, is_sealed, is_static, is_thread_static, is_autorelease, is_wrapper, is_forced;
 	public readonly Generator.ThreadCheck threadCheck;
 	public bool is_unsafe, is_virtual_method, is_export, is_category_extension, is_variadic, is_interface_impl, is_extension_method, is_appearance, is_model, is_ctor;
 	public bool is_return_release;
 	public bool protocolize;
-	public string selector, wrap_method;
+	public string selector, wrap_method, is_forced_owns;
 
 	public MethodInfo method { get { return (MethodInfo) mi; } }
 	public PropertyInfo property { get { return (PropertyInfo) mi; } }
@@ -1234,6 +1275,7 @@ public class MemberInformation
 		is_autorelease = Generator.HasAttribute (mi, typeof (AutoreleaseAttribute));
 		is_wrapper = !Generator.HasAttribute (mi.DeclaringType, typeof(SyntheticAttribute));
 		is_return_release = method != null && Generator.HasAttribute (method.ReturnTypeCustomAttributes, typeof (ReleaseAttribute));
+		is_forced = Generator.HasForcedAttribute (mi, out is_forced_owns);
 
 		var tsa = Generator.GetAttribute<ThreadSafeAttribute> (mi);
 		// if there's an attribute then it overrides the parent (e.g. type attribute) or namespace default
@@ -1840,6 +1882,19 @@ public partial class Generator : IMemberGatherer {
 		return "I" + type.Name;
 	}
 
+	public static bool HasForcedAttribute (ICustomAttributeProvider cu, out string owns)
+	{
+		var att = GetAttribute<ForcedTypeAttribute> (cu) ?? GetAttribute<ForcedTypeAttribute> ((cu as MethodInfo)?.ReturnParameter);
+
+		if (att == null) {
+			owns = "false";
+			return false;
+		}
+
+		owns = att.Owns ? "true" : "false";
+		return true;
+	}
+
 	public string MakeTrampolineName (Type t)
 	{
 		var trampoline_name = t.Name.Replace ("`", "Arity");
@@ -1895,6 +1950,9 @@ public partial class Generator : IMemberGatherer {
 		pars.Append ("IntPtr block");
 		var parameters = mi.GetParameters ();
 		foreach (var pi in parameters){
+			string isForcedOwns;
+			var isForced = HasForcedAttribute (pi, out isForcedOwns);
+
 			pars.Append (", ");
 			if (pi != parameters [0])
 				invoke.Append (", ");
@@ -1903,6 +1961,8 @@ public partial class Generator : IMemberGatherer {
 				pars.AppendFormat ("IntPtr {0}", pi.Name.GetSafeParamName ());
 				if (IsProtocolInterface (pi.ParameterType)) {
 					invoke.AppendFormat (" Runtime.GetINativeObject<{1}> ({0}, false)", pi.Name.GetSafeParamName (), pi.ParameterType);
+				} else if (isForced) {
+					invoke.AppendFormat (" Runtime.GetINativeObject<{1}> ({0}, {2})", pi.Name.GetSafeParamName (), RenderType (pi.ParameterType), isForcedOwns);
 				} else {
 					invoke.AppendFormat (" Runtime.GetNSObject<{1}> ({0})", pi.Name.GetSafeParamName (), RenderType (pi.ParameterType));
 				}
@@ -2138,6 +2198,9 @@ public partial class Generator : IMemberGatherer {
 	
 	public static T GetAttribute<T> (ICustomAttributeProvider mi) where T: class
 	{
+		if (mi == null)
+			return null;
+
 		object [] a = mi.GetCustomAttributes (typeof (T), true);
 		if (a.Length > 0)
 			return (T) a [0];
@@ -2761,7 +2824,7 @@ public partial class Generator : IMemberGatherer {
 					} else if (attr is AlphaAttribute) {
 						continue;
 #endif
-					} else if (attr is SealedAttribute || attr is EventArgsAttribute || attr is DelegateNameAttribute || attr is EventNameAttribute || attr is IgnoredInDelegateAttribute || attr is ObsoleteAttribute || attr is NewAttribute || attr is PostGetAttribute || attr is NullAllowedAttribute || attr is CheckDisposedAttribute || attr is SnippetAttribute || attr is AppearanceAttribute || attr is ThreadSafeAttribute || attr is AutoreleaseAttribute || attr is EditorBrowsableAttribute || attr is AdviceAttribute || attr is OverrideAttribute || attr is DelegateApiNameAttribute)
+					} else if (attr is SealedAttribute || attr is EventArgsAttribute || attr is DelegateNameAttribute || attr is EventNameAttribute || attr is IgnoredInDelegateAttribute || attr is ObsoleteAttribute || attr is NewAttribute || attr is PostGetAttribute || attr is NullAllowedAttribute || attr is CheckDisposedAttribute || attr is SnippetAttribute || attr is AppearanceAttribute || attr is ThreadSafeAttribute || attr is AutoreleaseAttribute || attr is EditorBrowsableAttribute || attr is AdviceAttribute || attr is OverrideAttribute || attr is DelegateApiNameAttribute || attr is ForcedTypeAttribute)
 						continue;
 					else if (attr is MarshalNativeExceptionsAttribute)
 						continue;
@@ -3908,6 +3971,9 @@ public partial class Generator : IMemberGatherer {
 			} else if (minfo != null && minfo.protocolize) {
 				cast_a = " Runtime.GetINativeObject<" + FormatType (mi.DeclaringType, mi.ReturnType.Namespace, FindProtocolInterface (mi.ReturnType, mi)) + "> (";
 				cast_b = ", false)";
+			} else if (minfo != null && minfo.is_forced) {
+				cast_a = " Runtime.GetINativeObject<" + FormatType (declaringType, GetCorrectGenericType (mi.ReturnType)) + "> (";
+				cast_b = $", {minfo.is_forced_owns})";
 			} else {
 				cast_a = " Runtime.GetNSObject<" + FormatType (declaringType, GetCorrectGenericType (mi.ReturnType)) + "> (";
 				cast_b = ")";
@@ -4330,11 +4396,15 @@ public partial class Generator : IMemberGatherer {
 
 			// Handle ByRef
 			if (mai.Type.IsByRef && mai.Type.GetElementType ().IsValueType == false){
+				string isForcedOwns;
+				var isForced = HasForcedAttribute (pi, out isForcedOwns);
 				by_ref_init.AppendFormat ("IntPtr {0}Value = IntPtr.Zero;\n", pi.Name.GetSafeParamName ());
 
 				by_ref_processing.AppendLine();
 				if (mai.Type.GetElementType () == typeof (string)){
 					by_ref_processing.AppendFormat("{0} = {0}Value != IntPtr.Zero ? NSString.FromHandle ({0}Value) : null;", pi.Name.GetSafeParamName ());
+				} else if (isForced) {
+					by_ref_processing.AppendFormat("{0} = {0}Value != IntPtr.Zero ? Runtime.GetINativeObject<{1}> ({0}Value, {2}) : null;", pi.Name.GetSafeParamName (), RenderType (mai.Type.GetElementType ()), isForcedOwns);
 				} else {
 					by_ref_processing.AppendFormat("{0} = {0}Value != IntPtr.Zero ? Runtime.GetNSObject<{1}> ({0}Value) : null;", pi.Name.GetSafeParamName (), RenderType (mai.Type.GetElementType ()));
 				}

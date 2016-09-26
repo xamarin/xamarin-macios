@@ -10453,6 +10453,7 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (NSUrlSession), Name = "AVAssetDownloadURLSession")]
 	interface AVAssetDownloadUrlSession {
 		[Static]
+		[return: ForcedType]
 		[Export ("sessionWithConfiguration:assetDownloadDelegate:delegateQueue:")]
 		AVAssetDownloadUrlSession CreateSession (NSUrlSessionConfiguration configuration, [NullAllowed] IAVAssetDownloadDelegate @delegate, [NullAllowed] NSOperationQueue delegateQueue);
 
