@@ -443,7 +443,7 @@ class BindingTouch {
 
 			if (generate_file_list != null){
 				using (var f = File.CreateText (generate_file_list)){
-					foreach (var x in g.GeneratedFiles)
+					foreach (var x in g.GeneratedFiles.OrderBy ((v) => v))
 						f.WriteLine (x);
 				}
 				return 0;
