@@ -23,7 +23,7 @@ namespace MonoTouch.Tuner {
 
 		public override string GetNamespace (string nspace)
 		{
-			return Xamarin.Bundler.Driver.App.IsUnified ? nspace : "MonoTouch." + nspace;
+			return nspace;
 		}
 
 		public void SetProductAssembly (string assembly)

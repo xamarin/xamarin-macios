@@ -356,6 +356,8 @@ A potential alternative solution is to enable the managed linker (although this 
 A last-straw solution would be to use a different version of Xamarin.iOS, one that supports the SDK your project requires.
 
 <h3><a name="MT0093"/>MT0093: Aot symbolication files could not be copied to the destination directory. Symbolication will not work with the application.</h3>
+
+<h3><a name="MT0096"/>MT0096: No reference to Xamarin.iOS.dll was found.</h3>
 <!--
  MT1xxx file copy / symlinks (project related)
   MT10xx installer.cs / mtouch.cs
