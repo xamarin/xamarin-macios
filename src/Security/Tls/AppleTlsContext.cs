@@ -51,6 +51,7 @@ namespace XamCore.Security.Tls
 		MonoTlsConnectionInfo connectionInfo;
 		bool havePeerTrust;
 		bool isAuthenticated;
+		bool handshakeFinished;
 		int handshakeStarted;
 
 		bool closed;
@@ -197,11 +198,12 @@ namespace XamCore.Security.Tls
 
 		public override bool ProcessHandshake ()
 		{
-			SslStatus status;
+			if (handshakeFinished)
+				throw new NotSupportedException ("Handshake already finished.");
 
-			do {
+			while (true) {
 				lastException = null;
-				status = SSLHandshake (Handle);
+				var status = SSLHandshake (Handle);
 				Debug ("Handshake: {0} - {0:x}", status);
 
 				CheckStatusAndThrow (status, SslStatus.WouldBlock, SslStatus.PeerAuthCompleted, SslStatus.PeerClientCertRequested);
@@ -221,10 +223,11 @@ namespace XamCore.Security.Tls
 					SetCertificate (clientIdentity, new SecCertificate [0]);
 				} else if (status == SslStatus.WouldBlock) {
 					return false;
+				} else if (status == SslStatus.Success) {
+					handshakeFinished = true;
+					return true;
 				}
-			} while (status != SslStatus.Success);
-
-			return true;
+			}
 		}
 
 		void RequirePeerTrust ()
