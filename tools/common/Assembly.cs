@@ -212,6 +212,7 @@ namespace Xamarin.Bundler {
 					if (!Application.IsUptodate (FullPath, zipPath)) {
 						Application.ExtractResource (assembly.MainModule, libraryName, zipPath, false);
 						Driver.Log (3, "Extracted third-party framework '{0}' from '{1}' to '{2}'", libraryName, FullPath, zipPath);
+						LogLinkWithAttribute (linkWith);
 					} else {
 						Driver.Log (3, "Target '{0}' is up-to-date.", path);
 					}
@@ -236,6 +237,7 @@ namespace Xamarin.Bundler {
 					if (!Application.IsUptodate (FullPath, path)) {
 						Application.ExtractResource (assembly.MainModule, libraryName, path, false);
 						Driver.Log (3, "Extracted third-party binding '{0}' from '{1}' to '{2}'", libraryName, FullPath, path);
+						LogLinkWithAttribute (linkWith);
 					} else {
 						Driver.Log (3, "Target '{0}' is up-to-date.", path);
 					}
@@ -267,6 +269,18 @@ namespace Xamarin.Bundler {
 				LinkerFlags.Add ("-lgcc_eh");
 			}
 
+		}
+
+		static void LogLinkWithAttribute (LinkWithAttribute linkWith)
+		{
+			Driver.Log (3, "    ForceLoad: {0}", linkWith.ForceLoad);
+			Driver.Log (3, "    Frameworks: {0}", linkWith.Frameworks);
+			Driver.Log (3, "    IsCxx: {0}", linkWith.IsCxx);
+			Driver.Log (3, "    LinkerFlags: {0}", linkWith.LinkerFlags);
+			Driver.Log (3, "    LinkTarget: {0}", linkWith.LinkTarget);
+			Driver.Log (3, "    NeedsGccExceptionHandling: {0}", linkWith.NeedsGccExceptionHandling);
+			Driver.Log (3, "    SmartLink: {0}", linkWith.SmartLink);
+			Driver.Log (3, "    WeakFrameworks: {0}", linkWith.WeakFrameworks);
 		}
 
 		public static LinkWithAttribute GetLinkWithAttribute (CustomAttribute attr)
