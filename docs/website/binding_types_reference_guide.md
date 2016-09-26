@@ -972,7 +972,7 @@ if the returned unmanaged object does not match the type described in the bindin
 definition.
 
 This is useful when the type described in a header does not match the returned type
-of the native method for example take the following Objective-C definition from `NSURLSession`:
+of the native method, for example take the following Objective-C definition from `NSURLSession`:
 
 `- (NSURLSessionDownloadTask *)downloadTaskWithRequest:(NSURLRequest *)request`
 
@@ -989,11 +989,17 @@ In order to comply with the header description and avoid the `InvalidCastExcepti
 interface NSUrlSession {
 
 	[Export ("downloadTaskWithRequest:")]
-	[ForcedType]
+	[return: ForcedType]
 	NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request);
 }
 ```
 
+The `ForcedTypeAttribute` also accepts a boolean value named `Owns` that is `false`
+by default `[ForcedType (owns: true)]`. The owns parameter is used to follow
+the [Ownership Policy](https://developer.apple.com/library/content/documentation/CoreFoundation/Conceptual/CFMemoryMgmt/Concepts/Ownership.html)
+for **Core Foundation** objects.
+
+The `ForcedTypeAttribute` is only valid on `parameters`, `properties` and `return value`. 
 
 
  <a name="BindAttribute" class="injected"></a>

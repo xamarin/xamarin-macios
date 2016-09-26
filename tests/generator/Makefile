@@ -121,6 +121,17 @@ bug35176:
 		echo "Error: Expected 4 Introduced attributes in generated code."; exit 1; \
 	fi
 
+forcedtype:
+	@rm -Rf $@.tmpdir
+	@mkdir -p $@.tmpdir
+	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) --sourceonly:$@.source -tmpdir=$@.tmpdir $@.cs
+	@if ! grep -r GetINativeObject forcedtype.tmpdir > /dev/null; then \
+		echo "error: Could not find GetINativeObject usage in generated code."; exit 1; \
+	fi
+	@if [ `grep -r GetINativeObject forcedtype.tmpdir | wc -l` -ne 12 ]; then \
+		echo "Error: Expected 12 GetINativeObject usages in generated code."; exit 1; \
+	fi
+
 bi1036:
 	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) $@.cs | grep BI1036 >/dev/null 2>&1
 

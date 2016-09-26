@@ -5855,69 +5855,69 @@ namespace XamCore.Foundation
 #endif
 
 		[Export ("dataTaskWithRequest:")]
-		[ForcedType]
+		[return: ForcedType]
 		NSUrlSessionDataTask CreateDataTask (NSUrlRequest request);
 	
 		[Export ("dataTaskWithURL:")]
-		[ForcedType]
+		[return: ForcedType]
 		NSUrlSessionDataTask CreateDataTask (NSUrl url);
 	
 		[Export ("uploadTaskWithRequest:fromFile:")]
-		[ForcedType]
+		[return: ForcedType]
 		NSUrlSessionUploadTask CreateUploadTask (NSUrlRequest request, NSUrl fileURL);
 	
 		[Export ("uploadTaskWithRequest:fromData:")]
-		[ForcedType]
+		[return: ForcedType]
 		NSUrlSessionUploadTask CreateUploadTask (NSUrlRequest request, NSData bodyData);
 	
 		[Export ("uploadTaskWithStreamedRequest:")]
-		[ForcedType]
+		[return: ForcedType]
 		NSUrlSessionUploadTask CreateUploadTask (NSUrlRequest request);
 	
 		[Export ("downloadTaskWithRequest:")]
-		[ForcedType]
+		[return: ForcedType]
 		NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request);
 	
 		[Export ("downloadTaskWithURL:")]
-		[ForcedType]
+		[return: ForcedType]
 		NSUrlSessionDownloadTask CreateDownloadTask (NSUrl url);
 	
 		[Export ("downloadTaskWithResumeData:")]
-		[ForcedType]
+		[return: ForcedType]
 		NSUrlSessionDownloadTask CreateDownloadTask (NSData resumeData);
 
 		[Export ("dataTaskWithRequest:completionHandler:")]
-		[ForcedType]
+		[return: ForcedType]
 		[Async (ResultTypeName="NSUrlSessionDataTaskRequest", PostNonResultSnippet = "result.Resume ();")]
 		NSUrlSessionDataTask CreateDataTask (NSUrlRequest request, [NullAllowed] NSUrlSessionResponse completionHandler);
 	
 		[Export ("dataTaskWithURL:completionHandler:")]
-		[ForcedType]
+		[return: ForcedType]
 		[Async(ResultTypeName="NSUrlSessionDataTaskRequest", PostNonResultSnippet = "result.Resume ();")]
 		NSUrlSessionDataTask CreateDataTask (NSUrl url, [NullAllowed] NSUrlSessionResponse completionHandler);
 	
 		[Export ("uploadTaskWithRequest:fromFile:completionHandler:")]
-		[ForcedType]
+		[return: ForcedType]
 		[Async(ResultTypeName="NSUrlSessionDataTaskRequest", PostNonResultSnippet = "result.Resume ();")]
 		NSUrlSessionUploadTask CreateUploadTask (NSUrlRequest request, NSUrl fileURL, NSUrlSessionResponse completionHandler);
 	
 		[Export ("uploadTaskWithRequest:fromData:completionHandler:")]
-		[ForcedType]
+		[return: ForcedType]
 		[Async(ResultTypeName="NSUrlSessionDataTaskRequest", PostNonResultSnippet = "result.Resume ();")]
 		NSUrlSessionUploadTask CreateUploadTask (NSUrlRequest request, NSData bodyData, NSUrlSessionResponse completionHandler);
 	
 		[Export ("downloadTaskWithRequest:completionHandler:")]
-		[ForcedType]
+		[return: ForcedType]
 		[Async(ResultTypeName="NSUrlSessionDownloadTaskRequest", PostNonResultSnippet = "result.Resume ();")]
 		NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request, [NullAllowed] NSUrlDownloadSessionResponse completionHandler);
 	
 		[Export ("downloadTaskWithURL:completionHandler:")]
-		[ForcedType]
+		[return: ForcedType]
 		[Async(ResultTypeName="NSUrlSessionDownloadTaskRequest", PostNonResultSnippet = "result.Resume ();")]
 		NSUrlSessionDownloadTask CreateDownloadTask (NSUrl url, [NullAllowed] NSUrlDownloadSessionResponse completionHandler);
 
 		[Export ("downloadTaskWithResumeData:completionHandler:")]
-		[ForcedType]
+		[return: ForcedType]
 		[Async(ResultTypeName="NSUrlSessionDownloadTaskRequest", PostNonResultSnippet = "result.Resume ();")]
 		NSUrlSessionDownloadTask CreateDownloadTaskFromResumeData (NSData resumeData, [NullAllowed] NSUrlDownloadSessionResponse completionHandler);
 
