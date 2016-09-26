@@ -192,12 +192,6 @@ namespace Xamarin.Tests
 			}
 		}
 
-		public static string MonoTouchDll {
-			get {
-				return Path.Combine (mt_root, "lib", "mono", "2.1", "monotouch.dll");
-			}
-		}
-
 		public static string XamarinIOSDll {
 			get {
 				return Path.Combine (mt_root, "lib", "mono", "Xamarin.iOS", "Xamarin.iOS.dll");
@@ -246,7 +240,7 @@ namespace Xamarin.Tests
 
 		public static string BtouchPath {
 			get {
-				return Path.Combine (SdkBinDir, "btouch");
+				return Path.Combine (SdkBinDir, "btouch-native");
 			}
 		}
 
