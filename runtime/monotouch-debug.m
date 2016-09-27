@@ -155,6 +155,15 @@ static volatile int http_connect_counter = 0;
  *    also means a lingering request from an earlier process would
  *    confuse the IDE if mlaunch didn't filter them out). The GET 
  *    request also contains a monotonically increasing ID.
+ *
+ *    The app has a list of potential IP addresses, and for the first
+ *    connection an http request is sent to all IP addresses. This
+ *    first request also has a 'uniqueRequest' value, which tells
+ *    mlaunch that it should only accept one of those requests (if
+ *    multiple requests are received, which might happen if more than
+ *    one of those IP addresses are on the same network). All other
+ *    request will be rejected by mlaunch (HTTP 400 error).
+ *
  * d) When the app sends sends data to the IDE, a HTTP POST request is
  *    sent. The full data for the post has to be provided when the
  *    request is sent, which means that we'll send a HTTP POST request
@@ -175,6 +184,7 @@ static volatile int http_connect_counter = 0;
 	@property void (^completion_handler)(bool);
 	@property (copy) NSString* ip;
 	@property int id;
+	@property bool uniqueRequest;
 
 	-(int) fileDescriptor;
 	-(int) localDescriptor;
@@ -228,10 +238,7 @@ xamarin_http_send (void *c)
 -(void) reportCompletion: (bool) success
 {
 	LOG_HTTP ("%i reportCompletion (%i) completion_handler: %p", self.id, success, self.completion_handler);
-	if (self.completion_handler) {
-		self.completion_handler (success);
-		self.completion_handler = NULL; // don't call more than once.
-	}
+	self.completion_handler (success);
 }
 
 
@@ -275,11 +282,11 @@ xamarin_http_send (void *c)
 
 	http_session = [NSURLSession sessionWithConfiguration: http_session_config delegate: self delegateQueue: NULL];
 
-	NSURL *downloadURL = [NSURL URLWithString: [NSString stringWithFormat: @"http://%@:%i/download?pid=%i&id=%i", self.ip, monodevelop_port, getpid (), self.id]];
+	NSURL *downloadURL = [NSURL URLWithString: [NSString stringWithFormat: @"http://%@:%i/download?pid=%i&id=%i&uniqueRequest=%i", self.ip, monodevelop_port, getpid (), self.id, self.uniqueRequest]];
 	NSURLSessionDataTask *downloadTask = [http_session dataTaskWithURL: downloadURL];
 	[downloadTask resume];
 
-	LOG_HTTP ("%i Connected to: %@:%i downloadTask: %@", self.id, ip, port, [[downloadTask currentRequest] URL]);
+	LOG_HTTP ("%i Connecting to: %@:%i downloadTask: %@", self.id, ip, port, [[downloadTask currentRequest] URL]);
 }
 
 -(void) sendData: (void *) buffer length: (int) length
@@ -308,9 +315,11 @@ xamarin_http_send (void *c)
 
 -(void) URLSession: (NSURLSession *) session dataTask: (NSURLSessionDataTask *) dataTask didReceiveResponse: (NSURLResponse *) response completionHandler: (void (^)(NSURLSessionResponseDisposition disposition)) completionHandler
 {
-	LOG_HTTP ("%i didReceiveResponse: task: %@ url: %@", self.id, dataTask, [[dataTask originalRequest] URL]);
+	NSHTTPURLResponse *http_response = (NSHTTPURLResponse *) response;
+
+	LOG_HTTP ("%i didReceiveResponse: task: %@ url: %@ response: %@", self.id, dataTask, [[dataTask originalRequest] URL], response);
 	completionHandler (NSURLSessionResponseAllow);
-	[self reportCompletion: true];
+	[self reportCompletion: http_response.statusCode == 200];
 }
 
 -(void) URLSession: (NSURLSession *) session dataTask: (NSURLSessionDataTask *) dataTask didReceiveData: (NSData *) data
@@ -772,6 +781,7 @@ xamarin_connect_http (NSMutableArray *ips)
 
 	connections = [[[NSMutableArray<XamarinHttpConnection *> alloc] init] autorelease];
 
+	bool unique_request = true;
 	do {
 		pthread_mutex_lock (&connected_mutex);
 		if (connected_connection != NULL) {
@@ -786,6 +796,7 @@ xamarin_connect_http (NSMutableArray *ips)
 		for (int i = 0; i < [ips count]; i++) {
 			XamarinHttpConnection *connection = [[[XamarinHttpConnection alloc] init] autorelease];
 			connection.ip = [ips objectAtIndex: i];
+			connection.uniqueRequest = unique_request;
 			[connections addObject: connection];
 			[connection connect: [ips objectAtIndex: i] port: monodevelop_port completionHandler: ^void (bool success)
 			{
@@ -801,6 +812,8 @@ xamarin_connect_http (NSMutableArray *ips)
 				}
 			}];
 		}
+
+		unique_request = false;
 
 		LOG_HTTP ("Will wait for connections");
 		pthread_mutex_lock (&connected_mutex);
