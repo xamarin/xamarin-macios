@@ -5356,7 +5356,7 @@ namespace XamCore.AppKit {
 		[Export ("willPresentError:")]
 		NSError WillPresentError (NSError error);
 
-		[Export ("maximumRecentDocumentCount")]
+		[Export ("maximumRecentDocumentCount"), ThreadSafe]
 		nint MaximumRecentDocumentCount { get; }
 
 		[Export ("clearRecentDocuments:")]
