@@ -323,6 +323,9 @@
     <Compile Include="..\common\PInvokeWrapperGenerator.cs">
       <Link>common\PInvokeWrapperGenerator.cs</Link>
     </Compile>
+    <Compile Include="..\linker\ExceptionalSubStep.cs">
+      <Link>Xamarin.Linker\ExceptionalSubStep.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />

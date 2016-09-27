@@ -1,20 +1,24 @@
-// Copyright 2012-2013 Xamarin Inc. All rights reserved.
+// Copyright 2012-2013, 2016 Xamarin Inc. All rights reserved.
 
 using System;
-using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Linker;
 using Mono.Tuner;
 
 namespace Xamarin.Linker {
-	
-	public class CoreOptimizeGeneratedCode : BaseSubStep {
-		
+
+	public abstract class CoreOptimizeGeneratedCode : ExceptionalSubStep {
+
+		protected override string Name { get; } = "Binding Optimizer";
+		protected override int ErrorCode { get; } = 2100;
+
 		protected bool HasGeneratedCode { get; private set; }
+		protected bool IsExtensionType { get; private set; }
+		protected bool ProcessMethods { get; private set; }
 
 		public override SubStepTargets Targets {
-			get { return SubStepTargets.Assembly | SubStepTargets.Type; }
+			get { return SubStepTargets.Assembly | SubStepTargets.Type | SubStepTargets.Method; }
 		}
 		
 		public override bool IsActiveFor (AssemblyDefinition assembly)
@@ -55,33 +59,19 @@ namespace Xamarin.Linker {
 			return true;
 		}
 
-		public override void ProcessType (TypeDefinition type)
+		protected override void Process (TypeDefinition type)
 		{
 			// if 'type' inherits from NSObject inside an assembly that has [GeneratedCode]
 			// or for static types used for optional members (using extensions methods), they can be optimized too
-			bool extensions = type.IsSealed && type.IsAbstract && type.Name.EndsWith ("_Extensions", StringComparison.Ordinal);
-			if (!HasGeneratedCode && (type.IsNSObject () || !extensions))
-				return;
-			
-			if (type.HasMethods)
-				ProcessMethods (type.Methods, extensions);
+			IsExtensionType = type.IsSealed && type.IsAbstract && type.Name.EndsWith ("_Extensions", StringComparison.Ordinal);
+			ProcessMethods = HasGeneratedCode || (!type.IsNSObject () && !IsExtensionType);
 		}
 
 		// [GeneratedCode] is not enough - e.g. it's used for anonymous delegates even if the 
 		// code itself is not tool/compiler generated
-		static bool IsExport (ICustomAttributeProvider provider)
+		static protected bool IsExport (ICustomAttributeProvider provider)
 		{
 			return provider.HasCustomAttribute (Namespaces.Foundation, "ExportAttribute");
-		}
-
-		void ProcessMethods (IEnumerable<MethodDefinition> c, bool extensions)
-		{
-			foreach (MethodDefinition m in c) {
-				// special processing on generated methods from NSObject-inherited types
-				// it would be too risky to apply on user-generated code
-				if (m.HasBody && m.IsGeneratedCode () && (extensions || IsExport (m)))
-					ProcessMethod (m);
-			}
 		}
 
 		// less risky to nop-ify if branches are pointing to this instruction

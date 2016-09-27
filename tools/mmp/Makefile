@@ -84,6 +84,7 @@ tuner_sources = \
 	$(TOP)/tools/linker/MobileRemoveAttributes.cs		\
 	$(TOP)/tools/linker/MobileSweepStep.cs			\
 	$(TOP)/tools/linker/RemoveSelectors.cs			\
+	$(TOP)/tools/linker/ExceptionalSubStep.cs		\
 	../linker/MonoTouch.Tuner/RemoveMonoTouchResources.cs	\
 	../linker/MonoTouch.Tuner/Extensions.cs	\
 	../linker/MonoTouch.Tuner/ListExportedSymbols.cs	\

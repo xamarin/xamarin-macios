@@ -839,6 +839,15 @@ This generally indicates that there is a problem with your Xamarin.iOS installat
 
 <h3><a name="MT2015"/>MT2015: Invalid HttpMessageHandler `*` for watchOS. The only valid value is NSUrlSessionHandler.</h3>
 
+<h3><a name="MT202x"/>MT202x: Binding Optimizer failed processing `...`.</h3>
+
+Something unexpected occured when trying to optimize generated binding code. The element causing the issue is named in the error message. In order to fix this issue the assembly named (or containing the type or method named) will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+The last digit `x` will be:
+* `0` for an assembly name;
+* `1` for a type name;
+* `3` for a method name;
+
 <!--
  MT3xxx AOT
   MT30xx AOT (general) errors
