@@ -255,6 +255,9 @@ namespace MonoTouch.Tuner {
 			Nop (ins);						// ldfld MonoTouch.Foundation.IsDirectBinding
 			Instruction next = ins.Next;				// brfalse IL_x (SuperHandle processing)
 			Instruction end = null;
+			// unoptimized compiled code can produce a (unneeeded) store/load combo, leave it there
+			while (next.OpCode.FlowControl != FlowControl.Cond_Branch)
+				next = next.Next; // leave the code there (the JIT/AOT will deal with it)
 			ins = (next.Operand as Instruction).Previous;		// br end (ret)
 			if (ins.OpCode.Code == Code.Ret) {			// if there's not branch but it returns immediately then do not remove the 'ret' instruction
 				ins = ins.Next;
