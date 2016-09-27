@@ -762,6 +762,48 @@ namespace XamCore.Security {
 #endif
 		}
 
+		public SecRecord (SecCertificate certificate) : this (SecKind.Certificate)
+		{
+			SetCertificate (certificate);
+		}
+
+		public SecRecord (SecIdentity identity) : this (SecKind.Identity)
+		{
+			SetIdentity (identity);
+		}
+
+		public SecRecord (SecKey key) : this (SecKind.Key)
+		{
+			SetKey (key);
+		}
+
+		public SecCertificate GetCertificate ()
+		{
+			var kind = queryDict.LowlevelObjectForKey (SecClass.SecClassKey);
+			if (kind != SecClass.Certificate)
+				throw new InvalidOperationException ("This SecRecord is not a Certificate record");
+
+			return GetValueRef <SecCertificate> ();
+		}
+
+		public SecIdentity GetIdentity ()
+		{
+			var kind = queryDict.LowlevelObjectForKey (SecClass.SecClassKey);
+			if (kind != SecClass.Identity)
+				throw new InvalidOperationException ("This SecRecord is not an Identity record");
+
+			return GetValueRef<SecIdentity> ();
+		}
+
+		public SecKey GetKey ()
+		{
+			var kind = queryDict.LowlevelObjectForKey (SecClass.SecClassKey);
+			if (kind != SecClass.Key)
+				throw new InvalidOperationException ("This SecRecord is not a Key record");
+
+			return GetValueRef<SecKey> ();
+		}
+
 		public SecRecord Clone ()
 		{
 			return new SecRecord (NSMutableDictionary.FromDictionary (queryDict));
@@ -1515,6 +1557,11 @@ namespace XamCore.Security {
 		{
 			SetValue (value == null ? IntPtr.Zero : value.Handle, SecItem.ValueRef);
 		}
+
+		public void SetCertificate (SecCertificate cert) => SetValueRef (cert);
+		public void SetIdentity (SecIdentity identity) => SetValueRef (identity);
+		public void SetKey (SecKey key) => SetValueRef (key);
+
 	}
 	
 	internal partial class SecItem {
