@@ -26,6 +26,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<CscToolPath Condition="'$(CscToolPath)' == '' And Exists('/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mtouch')">/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin</CscToolPath>
 		<CscToolPath Condition="'$(CscToolPath)' == ''">/Developer/MonoTouch/usr/bin</CscToolPath>
 		<CscToolExe Condition="'$(CscToolExe)' == ''">smcs</CscToolExe>
+		<!-- We default to smcs compiler above, so, select .mdb as the debug ext -->
+		<CscDebugFileExt Condition="'$(CscDebugFileExt)' == ''">.mdb</CscDebugFileExt>
 
 		<DefineConstants>__MOBILE__;__IOS__;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>

@@ -23,14 +23,20 @@ Copyright (C) 2011 Xamarin Inc. All rights reserved.
     <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(OS)' == 'Unix'">
+    <!-- work around a bug in the Mono Microsoft.CSharp.Targets that defaults the compiler to gmcs -->
+    <CscToolPath>$(MonoTouchSdkRoot)/bin/</CscToolPath>
+    <CscToolExe>smcs</CscToolExe>
+
+    <!-- We default to *mcs compiler above, so, select the .mdb as the debug ext.
+	 This must be set *before* importing Microsoft.CSharp.targets -->
+    <CscDebugFileExt>.mdb</CscDebugFileExt>
+  </PropertyGroup>
+
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
   <Import Project="Xamarin.ObjcBinding.Common.targets" />
 
   <PropertyGroup>
-    <!-- work around a bug in the Mono Microsoft.CSharp.Targets that defaults the compiler to gmcs -->
-    <CscToolPath Condition = "'$(OS)' == 'Unix'">$(MonoTouchSdkRoot)/bin/</CscToolPath>
-    <CscToolExe Condition = "'$(OS)' == 'Unix'">smcs</CscToolExe>
-
     <!-- Btouch needs CscPath, but when building from within Visual Studio, it and the CscTool{Exe,Path}
          properties will be empty since VS uses the in-process compiler, so fix them. -->
     <CscPath Condition="'$(CscPath)' == '' And '$(OS)' != 'Unix'">$(CscToolPath)\$(CscToolExe)</CscPath>
