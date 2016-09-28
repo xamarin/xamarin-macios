@@ -14528,7 +14528,12 @@ namespace XamCore.AppKit {
 		NSMenu DefaultMenu ();
 
 		[Export ("addToolTipRect:owner:userData:")]
+#if !XAMCORE_4_0
 		nint AddToolTip (CGRect aRect, NSObject anObject, IntPtr data);
+#else
+		[Internal]
+		nint _AddToolTip (CGRect aRect, NSObject anObject, IntPtr data);
+#endif
 
 		[Export ("removeToolTip:")]
 		void RemoveToolTip (nint tag);
