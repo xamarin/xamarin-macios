@@ -779,29 +779,27 @@ namespace XamCore.Security {
 
 		public SecCertificate GetCertificate ()
 		{
-			var kind = queryDict.LowlevelObjectForKey (SecClass.SecClassKey);
-			if (kind != SecClass.Certificate)
-				throw new InvalidOperationException ("This SecRecord is not a Certificate record");
-
+			CheckClass (SecClass.Certificate);
 			return GetValueRef <SecCertificate> ();
 		}
 
 		public SecIdentity GetIdentity ()
 		{
-			var kind = queryDict.LowlevelObjectForKey (SecClass.SecClassKey);
-			if (kind != SecClass.Identity)
-				throw new InvalidOperationException ("This SecRecord is not an Identity record");
-
+			CheckClass (SecClass.Identity);
 			return GetValueRef<SecIdentity> ();
 		}
 
 		public SecKey GetKey ()
 		{
-			var kind = queryDict.LowlevelObjectForKey (SecClass.SecClassKey);
-			if (kind != SecClass.Key)
-				throw new InvalidOperationException ("This SecRecord is not a Key record");
-
+			CheckClass (SecClass.Key);
 			return GetValueRef<SecKey> ();
+		}
+
+		void CheckClass (IntPtr secClass)
+		{
+			var kind = queryDict.LowlevelObjectForKey (SecClass.SecClassKey);
+			if (kind != secClass)
+				throw new InvalidOperationException ("SecRecord of incompatible SecClass");
 		}
 
 		public SecRecord Clone ()
