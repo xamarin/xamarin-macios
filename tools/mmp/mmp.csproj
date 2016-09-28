@@ -320,6 +320,9 @@
     <Compile Include="..\common\PInvokeWrapperGenerator.cs">
       <Link>external\PInvokeWrapperGenerator.cs</Link>
     </Compile>
+    <Compile Include="..\linker\ExceptionalSubStep.cs">
+      <Link>Xamarin.Linker\ExceptionalSubStep.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
