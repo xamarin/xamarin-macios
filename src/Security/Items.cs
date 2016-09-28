@@ -762,6 +762,46 @@ namespace XamCore.Security {
 #endif
 		}
 
+		public SecRecord (SecCertificate certificate) : this (SecKind.Certificate)
+		{
+			SetCertificate (certificate);
+		}
+
+		public SecRecord (SecIdentity identity) : this (SecKind.Identity)
+		{
+			SetIdentity (identity);
+		}
+
+		public SecRecord (SecKey key) : this (SecKind.Key)
+		{
+			SetKey (key);
+		}
+
+		public SecCertificate GetCertificate ()
+		{
+			CheckClass (SecClass.Certificate);
+			return GetValueRef <SecCertificate> ();
+		}
+
+		public SecIdentity GetIdentity ()
+		{
+			CheckClass (SecClass.Identity);
+			return GetValueRef<SecIdentity> ();
+		}
+
+		public SecKey GetKey ()
+		{
+			CheckClass (SecClass.Key);
+			return GetValueRef<SecKey> ();
+		}
+
+		void CheckClass (IntPtr secClass)
+		{
+			var kind = queryDict.LowlevelObjectForKey (SecClass.SecClassKey);
+			if (kind != secClass)
+				throw new InvalidOperationException ("SecRecord of incompatible SecClass");
+		}
+
 		public SecRecord Clone ()
 		{
 			return new SecRecord (NSMutableDictionary.FromDictionary (queryDict));
@@ -1515,6 +1555,11 @@ namespace XamCore.Security {
 		{
 			SetValue (value == null ? IntPtr.Zero : value.Handle, SecItem.ValueRef);
 		}
+
+		public void SetCertificate (SecCertificate cert) => SetValueRef (cert);
+		public void SetIdentity (SecIdentity identity) => SetValueRef (identity);
+		public void SetKey (SecKey key) => SetValueRef (key);
+
 	}
 	
 	internal partial class SecItem {

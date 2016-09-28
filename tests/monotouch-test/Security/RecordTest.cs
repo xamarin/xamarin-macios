@@ -12,6 +12,7 @@ using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+using System.Security.Cryptography.X509Certificates;
 
 namespace MonoTouchFixtures.Security {
 
@@ -273,6 +274,62 @@ namespace MonoTouchFixtures.Security {
 				success = (removeCode == SecStatusCode.Success);
 			}
 			return success;
+		}
+
+		[Test]
+		public void IdentityRecordTest ()
+		{
+			using (var identity = IdentityTest.GetIdentity ())
+			using (var rec = new SecRecord (identity)) {
+				SecStatusCode code = SecKeyChain.Add (rec);
+				Assert.True (code == SecStatusCode.DuplicateItem || code == SecStatusCode.Success, "Identity added");
+
+				var ret = rec.GetIdentity ();
+				Assert.NotNull (ret, "ret is null");
+				Assert.That (identity.Handle, Is.EqualTo (ret.Handle), "Same Handle");
+
+				Assert.Throws<InvalidOperationException> (() => rec.GetKey (), "GetKey should throw");
+				Assert.Throws<InvalidOperationException> (() => rec.GetCertificate (), "GetCertificate should throw");
+			}
+		}
+
+		[Test]
+		public void SecRecordRecordTest ()
+		{
+			using (var cert = new X509Certificate (CertificateTest.mail_google_com))
+			using (var sc = new SecCertificate (cert))
+			using (var rec = new SecRecord (sc)) {
+				Assert.NotNull (rec, "rec is null");
+
+				var ret = rec.GetCertificate ();
+				Assert.That (ret.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
+				Assert.That (ret.Handle, Is.EqualTo (cert.Handle), "Same Handle");
+				Assert.That (cert.ToString (true), Is.EqualTo (ret.ToX509Certificate ().ToString (true)), "X509Certificate");
+
+				Assert.Throws<InvalidOperationException> (() => rec.GetKey (), "GetKey should throw");
+				Assert.Throws<InvalidOperationException> (() => rec.GetIdentity (), "GetIdentity should throw");
+			}
+		}
+
+		[Test]
+		public void KeyRecordTest ()
+		{
+			using (var cert = new X509Certificate2 (ImportExportTest.farscape_pfx, "farscape"))
+			using (var policy = SecPolicy.CreateBasicX509Policy ())
+			using (var trust = new SecTrust (cert, policy)) {
+				trust.Evaluate ();
+				using (SecKey pubkey = trust.GetPublicKey ())
+				using (var rec = new SecRecord (pubkey)) {
+					Assert.NotNull (rec, "rec is null");
+
+					var ret = rec.GetKey ();
+					Assert.That (ret.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
+					Assert.That (ret.Handle, Is.EqualTo (pubkey.Handle), "Same Handle");
+
+					Assert.Throws<InvalidOperationException> (() => rec.GetCertificate (), "GetCertificate should throw");
+					Assert.Throws<InvalidOperationException> (() => rec.GetIdentity (), "GetIdentity should throw");
+				}
+			}
 		}
 	}
 }
