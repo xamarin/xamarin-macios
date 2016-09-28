@@ -126,7 +126,7 @@ namespace Foundation {
 		{
 			string value;
 			if (!headerSeparators.TryGetValue (name, out value))
-			    value = ",";
+				value = ",";
 			return value;
 		}
 
@@ -162,7 +162,7 @@ namespace Foundation {
 #endif
 		protected override async Task<HttpResponseMessage> SendAsync (HttpRequestMessage request, CancellationToken cancellationToken)
 		{
-			var nsrequest = await CreateRequest (request);
+			var nsrequest = await CreateRequest (request).ConfigureAwait(false);
 			var dataTask = session.CreateDataTask (nsrequest);
 
 			var tcs = new TaskCompletionSource<HttpResponseMessage> ();
@@ -191,7 +191,7 @@ namespace Foundation {
 		// Needed since we strip during linking since we're inside a product assembly.
 		[Preserve (AllMembers = true)]
 #endif
-		private class NSUrlSessionHandlerDelegate : NSUrlSessionDataDelegate
+		private partial class NSUrlSessionHandlerDelegate : NSUrlSessionDataDelegate
 		{
 			private readonly NSUrlSessionHandler sessionHandler;
 
@@ -472,7 +472,7 @@ namespace Foundation {
 
 				var d = currentStream;
 				var bufferCount = Math.Min (count, (int)(d.Length - d.Position));
-				var bytesRead = await d.ReadAsync (buffer, offset, bufferCount, cancellationToken);
+				var bytesRead = await d.ReadAsync (buffer, offset, bufferCount, cancellationToken).ConfigureAwait(false);
 
 				// add the bytes read from the pointer to the position
 				position += bytesRead;
