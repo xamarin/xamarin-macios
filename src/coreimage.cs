@@ -1588,10 +1588,9 @@ namespace XamCore.CoreImage {
 		[NullAllowed, Export ("url")]
 		NSUrl Url { get; }
 
-		// WARNING: "CF_RETURNS_NOT_RETAINED", so not surfacing for now, until we research
-		//[iOS (9,0)]
-		//[NullAllowed, Export ("colorSpace")]
-		//CGColorSpace ColorSpace { get; }
+		[iOS (9,0)]
+		[NullAllowed, Export ("colorSpace")]
+		CGColorSpace ColorSpace { get; }
 
 		[iOS (9,0)]
 		[Static, Internal]
