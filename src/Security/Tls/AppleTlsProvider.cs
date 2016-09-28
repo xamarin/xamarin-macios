@@ -78,7 +78,7 @@ namespace XamCore.Security.Tls
 		{
 			if (wantsChain)
 				chain = MNS.SystemCertificateValidator.CreateX509Chain (certificates);
-			return MobileCertificateHelper.InvokeSystemCertificateValidator (validator, targetHost, serverMode, certificates, out success, ref errors, ref status11);
+			return AppleCertificateHelper.InvokeSystemCertificateValidator (validator, targetHost, serverMode, certificates, out success, ref errors, ref status11);
 		}
 	}
 }

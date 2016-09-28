@@ -1,6 +1,6 @@
 ﻿#if XAMARIN_APPLETLS
 //
-// MobileCertificateHelper.cs
+// AppleCertificateHelper.cs
 //
 // Author:
 //       Martin Baulig <martin.baulig@xamarin.com>
@@ -23,7 +23,7 @@ using XamCore.Security;
 
 namespace XamCore.Security.Tls
 {
-	static class MobileCertificateHelper
+	static class AppleCertificateHelper
 	{
 		public static SecIdentity GetIdentity (X509Certificate certificate)
 		{
@@ -63,33 +63,6 @@ namespace XamCore.Security.Tls
 				identity.Dispose ();
 				throw;
 			}
-		}
-
-		public static bool Validate (string targetHost, bool serverMode, ICertificateValidator2 validator, X509CertificateCollection certificates)
-		{
-			var result = validator.ValidateCertificate (targetHost, serverMode, certificates);
-
-			if (result != null && result.Trusted && !result.UserDenied)
-				return true;
-
-			return false;
-		}
-
-		public static X509Certificate SelectClientCertificate (string targetHost, ICertificateValidator2 validator, X509CertificateCollection clientCertificates, X509Certificate serverCertificate)
-		{
-			X509Certificate certificate;
-			var selected = validator.SelectClientCertificate (targetHost, clientCertificates, serverCertificate, null, out certificate);
-			if (selected)
-				return certificate;
-
-			if (clientCertificates == null || clientCertificates.Count == 0)
-				return null;
-
-			if (clientCertificates.Count == 1)
-				return clientCertificates [0];
-
-			// FIXME: select onne.
-			throw new NotImplementedException ();
 		}
 
 		public static bool InvokeSystemCertificateValidator (
