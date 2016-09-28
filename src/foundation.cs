@@ -7489,9 +7489,6 @@ namespace XamCore.Foundation
 		[Export ("commitEditingWithDelegate:didCommitSelector:contextInfo:")]
 		//void CommitEditingWithDelegateDidCommitSelectorContextInfo (NSObject objDelegate, Selector didCommitSelector, IntPtr contextInfo);
 		void CommitEditing (NSObject objDelegate, Selector didCommitSelector, IntPtr contextInfo);
-
-		[Export ("view:stringForToolTip:point:userData:")]
-		string GetStringForToolTip (NSView view, nint tag, CGPoint point, IntPtr data);
 #endif
 		[Export ("methodForSelector:")]
 		IntPtr GetMethodForSelector (Selector sel);

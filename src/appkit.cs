@@ -23671,4 +23671,10 @@ namespace XamCore.AppKit {
 		void Draw (NSOpenGLContext context, NSOpenGLPixelFormat pixelFormat, double t, ref CVTimeStamp ts);
 	}
 
+	[Protocol]
+	interface NSToolTipOwner
+	{
+		[Export ("view:stringForToolTip:point:userData:")]
+		string GetStringForToolTip (NSView view, nint tag, CGPoint point, IntPtr data);
+	}
 }
