@@ -11,7 +11,7 @@ namespace Xamarin.Linker {
 	public abstract class CoreOptimizeGeneratedCode : ExceptionalSubStep {
 
 		protected override string Name { get; } = "Binding Optimizer";
-		protected override int ErrorCode { get; } = 2100;
+		protected override int ErrorCode { get; } = 2020;
 
 		protected bool HasGeneratedCode { get; private set; }
 		protected bool IsExtensionType { get; private set; }
