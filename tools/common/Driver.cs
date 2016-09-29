@@ -172,6 +172,8 @@ namespace Xamarin.Bundler {
 				stderr_completed.WaitOne (TimeSpan.FromSeconds (1));
 				stdout_completed.WaitOne (TimeSpan.FromSeconds (1));
 
+				GC.Collect (); // Workaround for: https://bugzilla.xamarin.com/show_bug.cgi?id=43462#c14
+
 				if (p.ExitCode != 0) {
 					// note: this repeat the failing command line. However we can't avoid this since we're often
 					// running commands in parallel (so the last one printed might not be the one failing)
