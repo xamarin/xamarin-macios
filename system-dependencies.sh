@@ -56,6 +56,10 @@ while ! test -z $1; do
 			IGNORE_CMAKE=1
 			shift
 			;;
+		--ignore-*)
+			echo "Unknown ignore argument: $1"
+			exit 0
+			;;
 		*)
 			echo "Unknown argument: $1"
 			exit 1
