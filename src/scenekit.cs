@@ -1604,7 +1604,7 @@ namespace XamCore.SceneKit {
 	[BaseType (typeof (NSObject))]
 	[Model, Protocol]
 	interface SCNProgramDelegate {
-#if !XAMCORE_2_0
+#if MACCORE || !XAMCORE_2_0
 	#if XAMCORE_3_0
 		[Availability (Unavailable = Platform.iOS_Version)]
 	#endif
@@ -1623,7 +1623,7 @@ namespace XamCore.SceneKit {
 		[Export ("program:handleError:")]
 		void HandleError (SCNProgram program, NSError error);
 
-#if !XAMCORE_2_0
+#if MACCORE || !XAMCORE_2_0
 	#if XAMCORE_3_0
 		[Availability (Unavailable = Platform.iOS_Version)]
 		[NoTV, NoWatch]
@@ -2607,10 +2607,9 @@ namespace XamCore.SceneKit {
 		[Export ("snapshot")]
 		NSImage Snapshot ();
 
-#if !MONOMAC
+		[Mac (10,12)]
 		[Export ("preferredFramesPerSecond")]
 		nint PreferredFramesPerSecond { get; set; }
-#endif
 
 		[iOS (8,0)][Mac (10,10)]
 		[Export ("antialiasingMode")]

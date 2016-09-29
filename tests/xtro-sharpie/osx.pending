@@ -127,6 +127,10 @@
 !extra-protocol-member! unexpected selector NSApplicationDelegate::readSelectionFromPasteboard: found
 !extra-protocol-member! unexpected selector NSApplicationDelegate::registerServicesMenuSendTypes:returnTypes: found
 !extra-protocol-member! unexpected selector NSApplicationDelegate::writeSelectionToPasteboard:types: found
+!incorrect-protocol-member! MTLDevice::isDepth24Stencil8PixelFormatSupported is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::isHeadless is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::isLowPower is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::recommendedMaxWorkingSetSize is REQUIRED and should be abstract
 
 # Intents API macOS 10.12 
 
