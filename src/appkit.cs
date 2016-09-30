@@ -23679,6 +23679,7 @@ namespace XamCore.AppKit {
 	[Protocol (IsInformal=true)]
 	interface NSToolTipOwner
 	{
+		[Abstract]
 		[Export ("view:stringForToolTip:point:userData:")]
 		string GetStringForToolTip (NSView view, nint tag, CGPoint point, IntPtr data);
 	}
