@@ -23627,28 +23627,6 @@ namespace XamCore.AppKit {
 		[Export ("receivePromisedFilesAtDestination:options:operationQueue:reader:")]
 		void ReceivePromisedFiles (NSUrl destinationDir, NSDictionary options, NSOperationQueue operationQueue, Action<NSUrl, NSError> reader);
 	}
-/*
-	[Protocol]
-	interface NSValidatedUserInterfaceItem
-	{
-		[Abstract]
-		[NullAllowed, Export ("action")]
-		Selector Action { get; }
-
-		[Abstract]
-		[Export ("tag")]
-		nint Tag { get; }
-	}
-
-	[Protocol]
-	[Mac (10,12)]
-	interface NSCloudSharingValidation
-	{
-		[Abstract]
-		[Export ("cloudShareForUserInterfaceItem:")]
-		[return: NullAllowed]
-		CKShare GetCloudShare (NSValidatedUserInterfaceItem item);
-	}*/
 
 	[Mac (10,6)]
 	[BaseType (typeof(CAOpenGLLayer))]
@@ -23682,5 +23660,45 @@ namespace XamCore.AppKit {
 		[Abstract]
 		[Export ("view:stringForToolTip:point:userData:")]
 		string GetStringForToolTip (NSView view, nint tag, CGPoint point, IntPtr data);
+	}
+
+	interface INSValidatedUserInterfaceItem { }
+
+	[Protocol]
+	interface NSValidatedUserInterfaceItem
+	{
+		[Abstract]
+		[NullAllowed, Export ("action")]
+		Selector Action { get; }
+
+		[Abstract]
+		[Export ("tag")]
+		nint Tag { get; }
+	}
+
+	[Protocol]
+	[Mac (10,12)]
+	interface NSCloudSharingValidation
+	{
+		[Abstract]
+		[Export ("cloudShareForUserInterfaceItem:")]
+		[return: NullAllowed]
+		CKShare GetCloudShare (INSValidatedUserInterfaceItem item);
+	}
+
+	[Protocol]
+	interface NSUserInterfaceValidations
+	{
+		[Abstract]
+		[Export ("validateUserInterfaceItem:")]
+		bool ValidateUserInterfaceItem (INSValidatedUserInterfaceItem item);
+	}
+
+	[Protocol (IsInformal=true)]
+	interface NSMenuValidation
+	{
+		[Abstract]
+		[Export ("validateUserInterfaceItem:")]
+		bool ValidateUserInterfaceItem (INSValidatedUserInterfaceItem item);
 	}
 }
