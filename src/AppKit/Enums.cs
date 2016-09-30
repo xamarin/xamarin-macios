@@ -2161,7 +2161,9 @@ namespace XamCore.AppKit {
 	[Native]
 	public enum NSRemoteNotificationType : nuint_compat_int {
 		None = 0,
-		Badge = 1
+		Badge = 1 << 0,
+		Sound = 1 << 1,
+		Alert = 1 << 2
 	}
 	
 	[Native]

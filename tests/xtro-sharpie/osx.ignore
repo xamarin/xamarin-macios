@@ -388,3 +388,6 @@
 
 # 32-bit only, and marked correctly in binding
 !unknown-type! NSMenuView bound
+
+# Only one type currently, which default returns. Currently unneeded unless they extend.
+!missing-selector! +NSDistributedNotificationCenter::notificationCenterForType: not bound
