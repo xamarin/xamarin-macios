@@ -14528,7 +14528,12 @@ namespace XamCore.AppKit {
 		NSMenu DefaultMenu ();
 
 		[Export ("addToolTipRect:owner:userData:")]
+#if !XAMCORE_4_0
 		nint AddToolTip (CGRect aRect, NSObject anObject, IntPtr data);
+#else
+		[Internal]
+		nint _AddToolTip (CGRect aRect, NSObject anObject, IntPtr data);
+#endif
 
 		[Export ("removeToolTip:")]
 		void RemoveToolTip (nint tag);
@@ -23671,4 +23676,11 @@ namespace XamCore.AppKit {
 		void Draw (NSOpenGLContext context, NSOpenGLPixelFormat pixelFormat, double t, ref CVTimeStamp ts);
 	}
 
+	[Protocol (IsInformal=true)]
+	interface NSToolTipOwner
+	{
+		[Abstract]
+		[Export ("view:stringForToolTip:point:userData:")]
+		string GetStringForToolTip (NSView view, nint tag, CGPoint point, IntPtr data);
+	}
 }
