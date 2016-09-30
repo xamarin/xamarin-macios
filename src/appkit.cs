@@ -23676,8 +23676,9 @@ namespace XamCore.AppKit {
 		nint Tag { get; }
 	}
 
+#if XAMCORE_2_0
 	[Protocol]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	interface NSCloudSharingValidation
 	{
 		[Abstract]
@@ -23685,6 +23686,7 @@ namespace XamCore.AppKit {
 		[return: NullAllowed]
 		CKShare GetCloudShare (INSValidatedUserInterfaceItem item);
 	}
+#endif
 
 	[Protocol]
 	interface NSUserInterfaceValidations
