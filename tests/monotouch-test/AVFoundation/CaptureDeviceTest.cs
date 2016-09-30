@@ -1,4 +1,4 @@
-﻿#if !__WATCHOS__
+﻿#if __IOS__
 using System;
 #if XAMCORE_2_0
 using Foundation;
