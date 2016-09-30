@@ -596,6 +596,7 @@
     <Compile Include="HealthKit\CdaDocumentSampleTest.cs" />
     <Compile Include="Metal\HeapDescriptorTest.cs" />
     <Compile Include="CoreMedia\CMClockOrTimebaseTest.cs" />
+    <Compile Include="AVFoundation\CaptureDeviceTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>

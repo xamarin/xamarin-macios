@@ -135,7 +135,47 @@ namespace XamCore.AVFoundation {
 		[Export ("finishCancelledRequest")]
 		void FinishCancelledRequest ();
 	}
-		
+
+	// values are manually given since not some are platform specific
+	[NoWatch]
+	enum AVMediaTypes {
+		[Field ("AVMediaTypeVideo")]
+		Video = 0,
+
+		[Field ("AVMediaTypeAudio")]
+		Audio = 1,
+
+		[Field ("AVMediaTypeText")]
+		Text = 2,
+
+		[Field ("AVMediaTypeClosedCaption")]
+		ClosedCaption = 3,
+
+		[Field ("AVMediaTypeSubtitle")]
+		Subtitle = 4,
+
+		[Field ("AVMediaTypeTimecode")]
+		Timecode = 5,
+
+		[NoTV]
+		[Availability (Obsoleted = Platform.iOS_6_0 | Platform.Mac_10_8)]
+		[Field ("AVMediaTypeTimedMetadata")] // last header where I can find this: iOS 5.1 SDK, 10.7 only on Mac
+		TimedMetadata = 6,
+
+		[Field ("AVMediaTypeMuxed")]
+		Muxed = 7,
+
+		[iOS (9,0)][NoMac]
+		[Field ("AVMediaTypeMetadataObject")]
+		MetadataObject = 8,
+
+		[Since (6,0)][Mac (10,8)]
+		[Field ("AVMediaTypeMetadata")]
+		Metadata = 9,
+	}
+
+#if !XAMCORE_4_0
+	[Obsolete ("Use AVMediaTypes enum values")]
 	[NoWatch]
 	[Since (4,0)]
 	[BaseType (typeof (NSObject))][Static]
@@ -174,6 +214,7 @@ namespace XamCore.AVFoundation {
 		[Field ("AVMediaTypeMetadata")]
 		NSString Metadata { get; }
 	}
+#endif
 
 	[NoWatch]
 	[iOS (9,0), Mac(10,11)]
@@ -8276,7 +8317,18 @@ namespace XamCore.AVFoundation {
 
 		[Static]
 		[Export ("defaultDeviceWithMediaType:")]
+		AVCaptureDevice GetDefaultDevice (NSString mediaType);
+
+		[Static]
+		[Wrap ("GetDefaultDevice (mediaType.GetConstant ())")]
+		AVCaptureDevice GetDefaultDevice (AVMediaTypes mediaType);
+
+#if !XAMCORE_4_0
+		[Obsolete ("Use GetDefaultDevice(AVMediaTypes)")]
+		[Static]
+		[Wrap ("GetDefaultDevice ((NSString) mediaType)")]
 		AVCaptureDevice DefaultDeviceWithMediaType (string mediaType);
+#endif
 
 		[Static]
 		[Export ("deviceWithUniqueID:")]
@@ -8284,6 +8336,9 @@ namespace XamCore.AVFoundation {
 
 		[Export ("hasMediaType:")]
 		bool HasMediaType (string mediaType);
+
+		[Wrap ("HasMediaType ((string) mediaType.GetConstant ())")]
+		bool HasMediaType (AVMediaTypes mediaType);
 
 		[Export ("lockForConfiguration:")]
 		bool LockForConfiguration (out NSError error);
