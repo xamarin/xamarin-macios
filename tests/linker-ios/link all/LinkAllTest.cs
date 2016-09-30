@@ -520,7 +520,7 @@ namespace LinkAll {
 		{
 			var provider = Mono.Security.Interface.MonoTlsProviderFactory.GetProvider ();
 			Assert.NotNull (provider, "provider");
-			Assert.That (provider.ID, Is.EqualTo (new Guid ("97d31751-d0b3-4707-99f7-a6456b972a19")), "correct provider");
+			Assert.That (provider.ID, Is.EqualTo (new Guid ("809e77d5-56cc-4da8-b9f0-45e65ba9cceb")), "correct provider");
 		}
 
 		[Test]
