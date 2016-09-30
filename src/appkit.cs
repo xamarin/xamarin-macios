@@ -23654,14 +23654,6 @@ namespace XamCore.AppKit {
 		void Draw (NSOpenGLContext context, NSOpenGLPixelFormat pixelFormat, double t, ref CVTimeStamp ts);
 	}
 
-	[Protocol (IsInformal=true)]
-	interface NSToolTipOwner
-	{
-		[Abstract]
-		[Export ("view:stringForToolTip:point:userData:")]
-		string GetStringForToolTip (NSView view, nint tag, CGPoint point, IntPtr data);
-	}
-
 	interface INSValidatedUserInterfaceItem { }
 
 	[Protocol]
@@ -23687,6 +23679,14 @@ namespace XamCore.AppKit {
 		CKShare GetCloudShare (INSValidatedUserInterfaceItem item);
 	}
 #endif
+
+	[Protocol (IsInformal=true)]
+	interface NSToolTipOwner
+	{
+		[Abstract]
+		[Export ("view:stringForToolTip:point:userData:")]
+		string GetStringForToolTip (NSView view, nint tag, CGPoint point, IntPtr data);
+	}
 
 	[Protocol]
 	interface NSUserInterfaceValidations
