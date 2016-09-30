@@ -1461,7 +1461,6 @@ SHARED_SOURCES = \
 	ObjCRuntime/MethodDescription.cs \
 	ObjCRuntime/NSStringMarshal.cs \
 	ObjCRuntime/ObjectWrapper.cs \
-	ObjCRuntime/OldDynamicRegistrar.cs \
 	ObjCRuntime/PlatformAvailability.cs \
 	ObjCRuntime/Registrar.cs \
 	ObjCRuntime/ReleaseAttribute.cs \

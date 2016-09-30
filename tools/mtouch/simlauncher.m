@@ -16,12 +16,7 @@ void xamarin_setup_impl ()
 #if DEBUG
 	xamarin_debug_mode = TRUE;
 #endif
-#if XAMCORE_2_0
-	xamarin_use_new_assemblies = TRUE;
 	xamarin_create_classes_Xamarin_iOS ();
-#else
-	xamarin_use_new_assemblies = FALSE;
-#endif
 	xamarin_marshal_managed_exception_mode = MarshalManagedExceptionModeDisable;
 #if DEBUG
 	xamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionModeUnwindManagedCode;

@@ -98,7 +98,7 @@ namespace XamCore.ObjCRuntime {
 
 		internal enum InitializationFlags : int {
 			/* unused               = 0x01 */
-			UseOldDynamicRegistrar	= 0x02,
+			/* unused				= 0x02,*/
 			DynamicRegistrar		= 0x04,
 			/* unused				= 0x08,*/
 			IsSimulator				= 0x10,
@@ -112,12 +112,6 @@ namespace XamCore.ObjCRuntime {
 			public RegistrationData *RegistrationData;
 			public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptionMode;
 			public MarshalManagedExceptionMode MarshalManagedExceptionMode;
-
-			public bool UseOldDynamicRegistrar {
-				get {
-					return (Flags & InitializationFlags.UseOldDynamicRegistrar) == InitializationFlags.UseOldDynamicRegistrar;
-				}
-			}
 
 			public bool IsSimulator {
 				get {

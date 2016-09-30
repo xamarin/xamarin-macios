@@ -56,15 +56,7 @@ namespace XamCore.ObjCRuntime {
 		// moved into it's own method to make it easier /safer to be re-written by the linker
 		static void CreateRegistrar (InitializationOptions options)
 		{
-#if XAMCORE_2_0
 			Registrar = new DynamicRegistrar ();
-#else
-			if (options.UseOldDynamicRegistrar) {
-				Registrar = new OldDynamicRegistrar ();
-			} else {
-				Registrar = new DynamicRegistrar ();
-			}
-#endif
 		}
 
 		// This method is documented to be for diagnostic purposes only,
