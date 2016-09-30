@@ -52,6 +52,10 @@ while ! test -z $1; do
 			IGNORE_AUTOTOOLS=1
 			shift
 			;;
+		--ignore-cmake)
+			IGNORE_CMAKE=1
+			shift
+			;;
 		*)
 			echo "Unknown argument: $1"
 			exit 1
@@ -455,6 +459,26 @@ function check_osx_version () {
 	ok "Found OSX $ACTUAL_OSX_VERSION (at least $MIN_OSX_BUILD_VERSION is required)"
 }
 
+function check_cmake () {
+	if ! test -z $IGNORE_CMAKE; then return; fi
+
+	local MIN_CMAKE_VERSION=`grep MIN_CMAKE_VERSION= Make.config | sed 's/.*=//'`
+	local CMAKE_URL=`grep CMAKE_URL= Make.config | sed 's/.*=//'`
+
+	if ! cmake --version &> /dev/null; then
+		fail "You must install CMake ($CMAKE_URL)"
+		return
+	fi
+
+	ACTUAL_CMAKE_VERSION=$(cmake --version | grep "cmake version" | sed 's/cmake version //')
+	if ! is_at_least_version $ACTUAL_CMAKE_VERSION $MIN_CMAKE_VERSION; then
+		fail "You must have at least CMake $MIN_CMAKE_VERSION (found $ACTUAL_CMAKE_VERSION)"
+		return
+	fi
+
+	ok "Found CMake $ACTUAL_CMAKE_VERSION (at least $MIN_CMAKE_VERSION is required)"
+}
+
 echo "Checking system..."
 
 check_osx_version
@@ -462,6 +486,7 @@ check_xcode
 check_autotools
 check_mono
 check_xamarin_studio
+check_cmake
 
 if test -z $FAIL; then
 	echo "System check succeeded"
