@@ -23628,32 +23628,6 @@ namespace XamCore.AppKit {
 		void ReceivePromisedFiles (NSUrl destinationDir, NSDictionary options, NSOperationQueue operationQueue, Action<NSUrl, NSError> reader);
 	}
 
-	[Mac (10,6)]
-	[BaseType (typeof(CAOpenGLLayer))]
-	interface NSOpenGLLayer
-	{
-		[NullAllowed, Export ("view", ArgumentSemantic.Assign)]
-		NSView View { get; set; }
-
-		[NullAllowed, Export ("openGLPixelFormat", ArgumentSemantic.Strong)]
-		NSOpenGLPixelFormat OpenGLPixelFormat { get; set; }
-
-		[NullAllowed, Export ("openGLContext", ArgumentSemantic.Strong)]
-		NSOpenGLContext OpenGLContext { get; set; }
-
-		[Export ("openGLPixelFormatForDisplayMask:")]
-		NSOpenGLPixelFormat GetOpenGLPixelFormat (uint mask);
-
-		[Export ("openGLContextForPixelFormat:")]
-		NSOpenGLContext GetOpenGLContext (NSOpenGLPixelFormat pixelFormat);
-
-		[Export ("canDrawInOpenGLContext:pixelFormat:forLayerTime:displayTime:")]
-		bool CanDraw (NSOpenGLContext context, NSOpenGLPixelFormat pixelFormat, double t, ref CVTimeStamp ts);
-
-		[Export ("drawInOpenGLContext:pixelFormat:forLayerTime:displayTime:")]
-		void Draw (NSOpenGLContext context, NSOpenGLPixelFormat pixelFormat, double t, ref CVTimeStamp ts);
-	}
-
 	interface INSValidatedUserInterfaceItem { }
 
 	[Protocol]
@@ -23679,6 +23653,32 @@ namespace XamCore.AppKit {
 		CKShare GetCloudShare (INSValidatedUserInterfaceItem item);
 	}
 #endif
+
+	[Mac (10,6)]
+	[BaseType (typeof(CAOpenGLLayer))]
+	interface NSOpenGLLayer
+	{
+		[NullAllowed, Export ("view", ArgumentSemantic.Assign)]
+		NSView View { get; set; }
+
+		[NullAllowed, Export ("openGLPixelFormat", ArgumentSemantic.Strong)]
+		NSOpenGLPixelFormat OpenGLPixelFormat { get; set; }
+
+		[NullAllowed, Export ("openGLContext", ArgumentSemantic.Strong)]
+		NSOpenGLContext OpenGLContext { get; set; }
+
+		[Export ("openGLPixelFormatForDisplayMask:")]
+		NSOpenGLPixelFormat GetOpenGLPixelFormat (uint mask);
+
+		[Export ("openGLContextForPixelFormat:")]
+		NSOpenGLContext GetOpenGLContext (NSOpenGLPixelFormat pixelFormat);
+
+		[Export ("canDrawInOpenGLContext:pixelFormat:forLayerTime:displayTime:")]
+		bool CanDraw (NSOpenGLContext context, NSOpenGLPixelFormat pixelFormat, double t, ref CVTimeStamp ts);
+
+		[Export ("drawInOpenGLContext:pixelFormat:forLayerTime:displayTime:")]
+		void Draw (NSOpenGLContext context, NSOpenGLPixelFormat pixelFormat, double t, ref CVTimeStamp ts);
+	}
 
 	[Protocol (IsInformal=true)]
 	interface NSToolTipOwner
