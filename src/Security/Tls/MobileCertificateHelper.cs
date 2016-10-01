@@ -103,6 +103,12 @@ namespace XamCore.Security.Tls
 				return true;
 			}
 
+			if (!string.IsNullOrEmpty (targetHost)) {
+				var pos = targetHost.IndexOf (':');
+				if (pos > 0)
+					targetHost = targetHost.Substring (0, pos);
+			}
+
 			var policy = SecPolicy.CreateSslPolicy (!serverMode, targetHost);
 			var trust = new SecTrust (certificates, policy);
 
