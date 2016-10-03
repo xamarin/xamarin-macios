@@ -1604,7 +1604,7 @@ namespace XamCore.SceneKit {
 	[BaseType (typeof (NSObject))]
 	[Model, Protocol]
 	interface SCNProgramDelegate {
-#if MACCORE || !XAMCORE_2_0
+#if MONOMAC || !XAMCORE_2_0
 	#if XAMCORE_3_0
 		[Availability (Unavailable = Platform.iOS_Version)]
 	#endif
@@ -1623,7 +1623,7 @@ namespace XamCore.SceneKit {
 		[Export ("program:handleError:")]
 		void HandleError (SCNProgram program, NSError error);
 
-#if MACCORE || !XAMCORE_2_0
+#if MONOMAC || !XAMCORE_2_0
 	#if XAMCORE_3_0
 		[Availability (Unavailable = Platform.iOS_Version)]
 		[NoTV, NoWatch]
