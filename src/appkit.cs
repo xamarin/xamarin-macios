@@ -23700,7 +23700,7 @@ namespace XamCore.AppKit {
 	interface NSMenuValidation
 	{
 		[Abstract]
-		[Export ("validateUserInterfaceItem:")]
-		bool ValidateUserInterfaceItem (INSValidatedUserInterfaceItem item);
+		[Export ("validateMenuItem:")]
+		bool ValidateMenuItem (NSMenuItem menuItem);
 	}
 }
