@@ -66,6 +66,7 @@ namespace Foundation {
 
 		public NSUrlSessionHandler ()
 		{
+			AllowAutoRedirect = true;
 			var configuration = NSUrlSessionConfiguration.DefaultSessionConfiguration;
 
 			// we cannot do a bitmask but we can set the minimum based on ServicePointManager.SecurityProtocol minimum
