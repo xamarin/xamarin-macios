@@ -11875,7 +11875,7 @@ namespace XamCore.AppKit {
 		[Export ("willPresentError:")]
 		NSError WillPresentError (NSError error);
 
-		[EditorBrowsable (EditorBrowsableState.Advanced)] // You probably shouldn't override this method, because you have no way of reliably predicting whether this method vs. -presentError will be invoked for any particular error.
+		[Sealed]
 		[Export ("presentError:modalForWindow:delegate:didPresentSelector:contextInfo:")]
 		void PresentError (NSError error, NSWindow window, [NullAllowed] NSObject @delegate, [NullAllowed] Selector didPresentSelector, IntPtr contextInfo);
 	}
