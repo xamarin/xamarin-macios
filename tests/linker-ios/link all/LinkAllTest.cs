@@ -278,6 +278,9 @@ namespace LinkAll {
 		}
 
 		[Test]
+#if __WATCHOS__
+		[ExpectedException (typeof (PlatformNotSupportedException))]
+#endif
 		public void SystemDataSqlClient ()
 		{
 			// notes:
@@ -515,6 +518,7 @@ namespace LinkAll {
 			Assert.NotNull (nix);
 		}
 
+#if !__WATCHOS__
 		[Test]
 		public void TlsProvider_Legacy ()
 		{
@@ -530,6 +534,7 @@ namespace LinkAll {
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Security.Tls.OldTlsProvider");
 			Assert.NotNull (Type.GetType (fqn), "Should be included");
 		}
+#endif // !__WATCHOS__
 
 		[Test]
 		public void AppleTls_OptOut ()
