@@ -39,7 +39,6 @@
     <Compile Include="BitcodeConverter.cs" />
     <Compile Include="error.cs" />
     <Compile Include="mtouch.cs" />
-    <Compile Include="OldStaticRegistrar.cs" />
     <Compile Include="SdkVersions.cs" />
     <Compile Include="Stripper.cs" />
     <Compile Include="Target.cs" />
@@ -191,9 +190,6 @@
     <Compile Include="..\linker\MonoTouch.Tuner\ProcessExportedFields.cs">
       <Link>MonoTouch.Tuner\ProcessExportedFields.cs</Link>
     </Compile>
-    <Compile Include="..\linker\MonoTouch.Tuner\RemoveExtraRegistrar.cs">
-      <Link>MonoTouch.Tuner\RemoveExtraRegistrar.cs</Link>
-    </Compile>
     <Compile Include="..\..\external\mono\mcs\tools\tuner\Mono.Tuner\CecilRocks.cs">
       <Link>Mono.Tuner\CecilRocks.cs</Link>
     </Compile>
@@ -322,6 +318,9 @@
     </Compile>
     <Compile Include="..\common\PInvokeWrapperGenerator.cs">
       <Link>common\PInvokeWrapperGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\ExceptionalSubStep.cs">
+      <Link>Xamarin.Linker\ExceptionalSubStep.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

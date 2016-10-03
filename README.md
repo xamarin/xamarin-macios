@@ -21,6 +21,17 @@ You can download continuous builds of our main development branches from [our wi
       $ brew update
       $ brew install libtool autoconf automake bison flex
 
+* CMake
+
+  You can use brew, or download manually from [cmake.org](https://cmake.org/download/).
+
+  CMake must be in PATH, so if you install it somewhere else, you'll have to
+  fix up your PATH accordingly (not necessary if installed using brew).
+
+  To install using brew:
+
+      $ brew install cmake
+
 * Xcode
 
   To build the Xamarin.iOS and Xamarin.Mac SDKs you need a certain version of Xcode.

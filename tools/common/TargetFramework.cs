@@ -34,13 +34,12 @@ namespace Xamarin.Utils
 		public static readonly TargetFramework Net_4_5 = Parse ("4.5");
 		public static readonly TargetFramework Xamarin_Mac_2_0 = Parse ("Xamarin.Mac,v2.0");
 
-		public static readonly TargetFramework MonoTouch_1_0 = Parse ("MonoTouch,v1.0");
 		public static readonly TargetFramework Xamarin_iOS_1_0 = Parse ("Xamarin.iOS,v1.0");
 		public static readonly TargetFramework Xamarin_WatchOS_1_0 = Parse ("Xamarin.WatchOS,v1.0");
 		public static readonly TargetFramework Xamarin_TVOS_1_0 = Parse ("Xamarin.TVOS,v1.0");
 
 #if MTOUCH
-		public static readonly TargetFramework [] ValidFrameworks = new TargetFramework[] { MonoTouch_1_0, Xamarin_iOS_1_0, Xamarin_WatchOS_1_0, Xamarin_TVOS_1_0 };
+		public static readonly TargetFramework [] ValidFrameworks = new TargetFramework[] { Xamarin_iOS_1_0, Xamarin_WatchOS_1_0, Xamarin_TVOS_1_0 };
 #endif
 
 		public static TargetFramework Parse (string targetFrameworkString)

@@ -45,11 +45,11 @@ namespace Xamarin.Bundler {
 	//					MT0034	Cannot reference '{0}.dll' in a {1} project - it is implicitly referenced by '{2}'.
 	//					MT0035	<unused>
 	//					MT0036	<unused>
-	//					MT0037	monotouch.dll is not 64-bit compatible. Either reference Xamarin.iOS.dll, or do not build for a 64-bit architecture (ARM64 and/or x86_64).
-	//					MT0038	The old registrars (--registrar:oldstatic|olddynamic) are not supported when referencing Xamarin.iOS.dll.
+	//					MT0037	<unused>
+	//					MT0038	<unused>
 	//					MT0040	Could not find the assembly '{0}', referenced by '{1}'.
-	//					MT0041	Cannot reference both 'monotouch.dll' and 'Xamarin.iOS.dll'.
-	//		Warning		MT0042	No reference to either monotouch.dll or Xamarin.iOS.dll was found. A reference to monotouch.dll will be added.
+	//					MT0041	<unused>
+	//					MT0042	<unused>
 	//		Warning		MT0043	The Boehm garbage collector is not supported. The SGen garbage collector has been selected instead.
 	//					MT0044	--listsim is only supported with Xcode 6.0 or later.
 	//					MT0045	--extension is only supported when using the iOS 8.0 (or later) SDK.
@@ -71,7 +71,7 @@ namespace Xamarin.Bundler {
 	//					MT0061	No Xcode.app specified (using --sdkroot), using the system Xcode as reported by 'xcode-select --print-path': {0}
 	//					MT0062	No Xcode.app specified (using --sdkroot or 'xcode-select --print-path'), using the default Xcode instead: {0}
 	//					MT0063	Cannot find the executable in the extension {0} (no CFBundleExecutable entry in its Info.plist)
-	//					MT0064	Xamarin.iOS only supports embedded frameworks with Unified projects.
+	//					MT0064	<unused>
 	//					MT0065	Xamarin.iOS only supports embedded frameworks when deployment target is at least 8.0 (current deployment target: {0} embedded frameworks: {1})
 	//					MT0066	Invalid build registrar assembly: {0}
 	//					MT0067	Invalid registrar: {0}
@@ -102,6 +102,7 @@ namespace Xamarin.Bundler {
 	//					MT0093	Could not find 'mlaunch'.
 	//		Warning		MT0094	<unused> Both profiling (--profiling) and incremental builds (--fastdev) are currently not supported when building for {0}, and incremental builds have been disabled (this will be fixed in a future release).
 	//					MT0095 Aot files could not be copied to the destination directory.
+	//					MT0096 No reference to Xamarin.iOS.dll was found.
 	// MT1xxx	file copy / symlinks (project related)
 	//			MT10xx	installer.cs / mtouch.cs
 	//					MT1001	Could not find an application at the specified directory: {0}
@@ -205,6 +206,7 @@ namespace Xamarin.Bundler {
 	//					MT2013	** reserved Xamarin.Mac **
 	//					MT2014	** reserved Xamarin.Mac **
 	//					MT2015	Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.
+	//					MT202x	Binding Optimizer failed processing `...`.
 	// MT3xxx	AOT
 	//			MT30xx	AOT (general) errors
 	//					MT3001	Could not AOT the assembly '{0}'
@@ -307,7 +309,7 @@ namespace Xamarin.Bundler {
 	//					MT5304	Failed to strip the final binary. Please review the build log.
 	//					MT5305  Missing 'lipo' tool. Please install Xcode 'Command-Line Tools' component
 	//					MT5306  Failed to create the a fat library. Please review the build log.
-	//					MT5307  Failed to sign the executable. Please review the build log.
+	//					MT5307  <unused>
 	//					MT5308  ** reserved Xamarin.Mac **
 	//					MT5309  ** reserved Xamarin.Mac **
 	//					MT5310  ** reserved Xamarin.Mac **

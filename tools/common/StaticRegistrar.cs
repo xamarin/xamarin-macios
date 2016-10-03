@@ -650,7 +650,7 @@ namespace XamCore.Registrar {
 #if MMP
 				return Xamarin.Bundler.Driver.IsUnified;
 #else
-				return Driver.App.IsUnified;
+				return true;
 #endif
 			}
 		}

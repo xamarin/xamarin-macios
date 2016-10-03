@@ -1,6 +1,6 @@
 ﻿#if XAMARIN_APPLETLS
 //
-// MobileCertificateHelper.cs
+// AppleCertificateHelper.cs
 //
 // Author:
 //       Martin Baulig <martin.baulig@xamarin.com>
@@ -23,7 +23,7 @@ using XamCore.Security;
 
 namespace XamCore.Security.Tls
 {
-	static class MobileCertificateHelper
+	static class AppleCertificateHelper
 	{
 		public static SecIdentity GetIdentity (X509Certificate certificate)
 		{
@@ -65,33 +65,6 @@ namespace XamCore.Security.Tls
 			}
 		}
 
-		public static bool Validate (string targetHost, bool serverMode, ICertificateValidator2 validator, X509CertificateCollection certificates)
-		{
-			var result = validator.ValidateCertificate (targetHost, serverMode, certificates);
-
-			if (result != null && result.Trusted && !result.UserDenied)
-				return true;
-
-			return false;
-		}
-
-		public static X509Certificate SelectClientCertificate (string targetHost, ICertificateValidator2 validator, X509CertificateCollection clientCertificates, X509Certificate serverCertificate)
-		{
-			X509Certificate certificate;
-			var selected = validator.SelectClientCertificate (targetHost, clientCertificates, serverCertificate, null, out certificate);
-			if (selected)
-				return certificate;
-
-			if (clientCertificates == null || clientCertificates.Count == 0)
-				return null;
-
-			if (clientCertificates.Count == 1)
-				return clientCertificates [0];
-
-			// FIXME: select onne.
-			throw new NotImplementedException ();
-		}
-
 		public static bool InvokeSystemCertificateValidator (
 			ICertificateValidator2 validator, string targetHost, bool serverMode,
 			X509CertificateCollection certificates, out bool success,
@@ -101,6 +74,12 @@ namespace XamCore.Security.Tls
 				errors |= MonoSslPolicyErrors.RemoteCertificateNotAvailable;
 				success = false;
 				return true;
+			}
+
+			if (!string.IsNullOrEmpty (targetHost)) {
+				var pos = targetHost.IndexOf (':');
+				if (pos > 0)
+					targetHost = targetHost.Substring (0, pos);
 			}
 
 			var policy = SecPolicy.CreateSslPolicy (!serverMode, targetHost);

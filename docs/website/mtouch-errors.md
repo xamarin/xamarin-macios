@@ -356,6 +356,8 @@ A potential alternative solution is to enable the managed linker (although this 
 A last-straw solution would be to use a different version of Xamarin.iOS, one that supports the SDK your project requires.
 
 <h3><a name="MT0093"/>MT0093: Aot symbolication files could not be copied to the destination directory. Symbolication will not work with the application.</h3>
+
+<h3><a name="MT0096"/>MT0096: No reference to Xamarin.iOS.dll was found.</h3>
 <!--
  MT1xxx file copy / symlinks (project related)
   MT10xx installer.cs / mtouch.cs
@@ -838,6 +840,15 @@ This generally indicates that there is a problem with your Xamarin.iOS installat
 <!--- 2012 used by mmp -->
 
 <h3><a name="MT2015"/>MT2015: Invalid HttpMessageHandler `*` for watchOS. The only valid value is NSUrlSessionHandler.</h3>
+
+<h3><a name="MT202x"/>MT202x: Binding Optimizer failed processing `...`.</h3>
+
+Something unexpected occured when trying to optimize generated binding code. The element causing the issue is named in the error message. In order to fix this issue the assembly named (or containing the type or method named) will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+The last digit `x` will be:
+* `0` for an assembly name;
+* `1` for a type name;
+* `3` for a method name;
 
 <!--
  MT3xxx AOT

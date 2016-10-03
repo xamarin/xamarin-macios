@@ -66,11 +66,8 @@ namespace Xamarin.Bundler {
 
 	public enum RegistrarMode {
 		Default,
-		Legacy,
 		Dynamic,
 		Static,
-		LegacyStatic,
-		LegacyDynamic,
 	}
 
 	public enum BuildTarget {
@@ -134,21 +131,9 @@ namespace Xamarin.Bundler {
 		public List<string> References = new List<string> ();
 		
 		public bool? BuildDSym;
-		bool? generate_manifests;
-		public bool GenerateManifests {
-			get { return generate_manifests.Value; }
-			set { generate_manifests = value; }
-		}
-		bool? sign;
-		public bool Sign {
-			get { return sign.Value; }
-			set { sign = value; }
-		}
 		public bool Is32Build { get { return IsArchEnabled (Abi.Arch32Mask); } } // If we're targetting a 32 bit arch.
 		public bool Is64Build { get { return IsArchEnabled (Abi.Arch64Mask); } } // If we're targetting a 64 bit arch.
 		public bool IsDualBuild { get { return Is32Build && Is64Build; } } // if we're building both a 32 and a 64 bit version.
-		public bool IsUnified { get { return !IsClassic; } } // this is true for watch
-		public bool IsClassic { get { return Driver.TargetFramework.Identifier == "MonoTouch"; } }
 		public bool IsLLVM { get { return IsArchEnabled (Abi.LLVM); } }
 
 		public List<Target> Targets = new List<Target> ();
@@ -373,13 +358,11 @@ namespace Xamarin.Bundler {
 				} else {
 					validAbis.Add (Abi.i386);
 				}
-				if (IsUnified) {
-					if (IsDeviceBuild) {
-						validAbis.Add (Abi.ARM64);
-						validAbis.Add (Abi.ARM64 | Abi.LLVM);
-					} else {
-						validAbis.Add (Abi.x86_64);
-					}
+				if (IsDeviceBuild) {
+					validAbis.Add (Abi.ARM64);
+					validAbis.Add (Abi.ARM64 | Abi.LLVM);
+				} else {
+					validAbis.Add (Abi.x86_64);
 				}
 				break;
 			case ApplePlatform.WatchOS:
@@ -576,9 +559,7 @@ namespace Xamarin.Bundler {
 			BuildMSymDirectory ();
 			StripNativeCode ();
 			StripManagedCode ();
-			GenerateAppManifests ();
 			GenerateRuntimeOptions ();
-			SignBundle ();
 
 			if (Cache.IsCacheTemporary) {
 				// If we used a temporary directory we created ourselves for the cache
@@ -598,18 +579,15 @@ namespace Xamarin.Bundler {
 			Console.WriteLine ("{0} built successfully.", AppDirectory);
 		}
 
-		bool implicit_monotouch_reference;
+		bool no_framework;
 		public void SetDefaultFramework ()
 		{
-			// If no target framework was specified, check if we're referencing Xamarin.iOS.dll or monotouch.dll,
-			// and then deduce the target framework.
+			// If no target framework was specified, check if we're referencing Xamarin.iOS.dll.
+			// It's an error if neither target framework nor Xamarin.iOS.dll is not specified
 			if (!Driver.HasTargetFramework) {
 				foreach (var reference in References) {
 					var name = Path.GetFileName (reference);
 					switch (name) {
-					case "monotouch.dll":
-						Driver.TargetFramework = TargetFramework.MonoTouch_1_0;
-						break;
 					case "Xamarin.iOS.dll":
 						Driver.TargetFramework = TargetFramework.Xamarin_iOS_1_0;
 						break;
@@ -623,11 +601,10 @@ namespace Xamarin.Bundler {
 				}
 			}
 
-			// Still nothing. Default to monotouch.dll.
 			if (!Driver.HasTargetFramework) {
-				implicit_monotouch_reference = true;
-				Driver.TargetFramework = TargetFramework.MonoTouch_1_0;
-				References.Add (Path.Combine (Driver.PlatformFrameworkDirectory, "monotouch.dll"));
+				// Set a default target framework to show errors in the least confusing order.
+				Driver.TargetFramework = TargetFramework.Xamarin_iOS_1_0;
+				no_framework = true;
 			}
 		}
 
@@ -635,10 +612,10 @@ namespace Xamarin.Bundler {
 		{
 			if (!File.Exists (RootAssembly))
 				throw new MonoTouchException (7, true, "The root assembly '{0}' does not exist", RootAssembly);
-
-			if (implicit_monotouch_reference)
-				ErrorHelper.Warning (42, "No reference to either monotouch.dll or Xamarin.iOS.dll was found. A reference to monotouch.dll will be added.");
 			
+			if (no_framework)
+				throw ErrorHelper.CreateError (96, "No reference to Xamarin.iOS.dll was found.");
+
 			// Add a reference to the platform assembly if none has been added, and check that we're not referencing
 			// any platform assemblies from another platform.
 			var platformAssemblyReference = false;
@@ -648,7 +625,6 @@ namespace Xamarin.Bundler {
 					platformAssemblyReference = true;
 				} else {
 					switch (name) {
-					case "monotouch":
 					case "Xamarin.iOS":
 					case "Xamarin.TVOS":
 					case "Xamarin.WatchOS":
@@ -692,13 +668,9 @@ namespace Xamarin.Bundler {
 				var target = new Target (this);
 
 				target.TargetDirectory = AppDirectory;
-				target.AppTargetDirectory = (IsSimulatorBuild || IsClassic) ? AppDirectory : Path.Combine (AppDirectory, Is64Build ? ".monotouch-64" : ".monotouch-32");
+				target.AppTargetDirectory = IsSimulatorBuild ? AppDirectory : Path.Combine (AppDirectory, Is64Build ? ".monotouch-64" : ".monotouch-32");
 				target.ArchDirectory = Cache.Location;
-				if (IsClassic) {
-					target.Resolver.ArchDirectory = Driver.PlatformFrameworkDirectory;
-				} else {
-					target.Resolver.ArchDirectory = Path.Combine (Driver.PlatformFrameworkDirectory, "..", "..", Is32Build ? "32bits" : "64bits");
-				}
+				target.Resolver.ArchDirectory = Path.Combine (Driver.PlatformFrameworkDirectory, "..", "..", Is32Build ? "32bits" : "64bits");
 				target.Abis = abis;
 
 				Targets.Add (target);
@@ -737,9 +709,6 @@ namespace Xamarin.Bundler {
 				ErrorHelper.Warning (30, "The executable name ({0}) and the app name ({1}) are different, this may prevent crash logs from getting symbolicated properly.",
 					ExecutableName, Path.GetFileName (AppDirectory));
 			
-			if (Is64Build && IsClassic)
-				ErrorHelper.Error (37, "monotouch.dll is not 64-bit compatible. Either reference Xamarin.iOS.dll, or do not build for a 64-bit architecture (ARM64 or x86_64).");
-
 			if (IsExtension && Platform == ApplePlatform.iOS && Driver.SDKVersion < new Version (8, 0))
 				throw new MonoTouchException (45, true, "--extension is only supported when using the iOS 8.0 (or later) SDK.");
 
@@ -770,24 +739,10 @@ namespace Xamarin.Bundler {
 			if (Driver.classic_only_arguments.Count > 0) {
 				var exceptions = new List<Exception> ();
 				foreach (var deprecated in Driver.classic_only_arguments) {
-					switch (deprecated) {
-					case "--nomanifest":
-					case "--nosign":
-						// These options default to 'true' (for Classic), so we can't deprecated them (for Classic).
-						if (IsClassic)
-							continue;
-						break;
-					}
-					exceptions.Add (new MonoTouchException (16, IsUnified, "The option '{0}' has been deprecated.", deprecated));
+					exceptions.Add (new MonoTouchException (16, true, "The option '{0}' has been deprecated.", deprecated));
 				}
 				ErrorHelper.Show (exceptions);
 			}
-
-			if (!generate_manifests.HasValue)
-				generate_manifests = IsClassic;
-
-			if (!sign.HasValue)
-				sign = IsClassic;
 
 			if (!package_mdb.HasValue) {
 				package_mdb = EnableDebug;
@@ -800,15 +755,11 @@ namespace Xamarin.Bundler {
 
 			if (!UseMonoFramework.HasValue && DeploymentTarget >= new Version (8, 0)) {
 				if (IsExtension) {
-					if (IsUnified) {
-						UseMonoFramework = true;
-						Driver.Log (2, "Automatically linking with Mono.framework because this is an extension");
-					}
-				} else if (IsUnified) {
-					if (Extensions.Count > 0) {
-						UseMonoFramework = true;
-						Driver.Log (2, "Automatically linking with Mono.framework because this is an app with extensions");
-					}
+					UseMonoFramework = true;
+					Driver.Log (2, "Automatically linking with Mono.framework because this is an extension");
+				} else if (Extensions.Count > 0) {
+					UseMonoFramework = true;
+					Driver.Log (2, "Automatically linking with Mono.framework because this is an app with extensions");
 				}
 			}
 
@@ -832,9 +783,6 @@ namespace Xamarin.Bundler {
 			if (Frameworks.Count > 0) {
 				if (DeploymentTarget < new Version (8, 0))
 					throw ErrorHelper.CreateError (65, "Xamarin.iOS only supports embedded frameworks when deployment target is at least 8.0 (current deployment target: '{0}'; embedded frameworks: '{1}')", DeploymentTarget, string.Join (", ", Frameworks.ToArray ()));
-
-				if (IsClassic)
-					throw ErrorHelper.CreateError (64, "Xamarin.iOS only supports embedded frameworks with Unified projects.");
 			}
 
 			if (IsDeviceBuild) {
@@ -869,12 +817,6 @@ namespace Xamarin.Bundler {
 		
 		void SelectRegistrar ()
 		{
-			if (IsUnified) {
-				// The old registrars are not implemented when using Xamarin.iOS.dll.
-				if (Registrar == RegistrarMode.LegacyStatic || Registrar == RegistrarMode.LegacyDynamic || Registrar == RegistrarMode.Legacy)
-					throw new MonoTouchException (38, true, "The legacy registrars (--registrar:legacy|legacystatic|legacydynamic) are not supported with the Unified API.");
-			}
-
 			// If the default values are changed, remember to update CanWeSymlinkTheApplication
 			// and main.m (default value for xamarin_use_old_dynamic_registrar must match).
 			if (Driver.enable_generic_nsobject && Registrar != RegistrarMode.Default)
@@ -885,12 +827,6 @@ namespace Xamarin.Bundler {
 					Registrar = RegistrarMode.Static;
 				} else { /* if (app.IsSimulatorBuild) */
 					Registrar = RegistrarMode.Dynamic;
-				}
-			} else if (Registrar == RegistrarMode.Legacy) {
-				if (IsDeviceBuild) {
-					Registrar = RegistrarMode.LegacyStatic;
-				} else { /* if (app.IsSimulatorBuild) */
-					Registrar = RegistrarMode.LegacyDynamic;
 				}
 			}
 
@@ -940,7 +876,7 @@ namespace Xamarin.Bundler {
 			// Deduplicate files from the Build directory. We need to do this before the AOT
 			// step, so that we can ignore timestamp/GUID in assemblies (the GUID is
 			// burned into the AOT assembly, so after that we'll need the original assembly.
-			if (IsDualBuild && IsDeviceBuild && !Sign) {
+			if (IsDualBuild && IsDeviceBuild) {
 				// All the assemblies are now in BuildDirectory.
 				var t1 = Targets [0];
 				var t2 = Targets [1];
@@ -1076,6 +1012,7 @@ namespace Xamarin.Bundler {
 				if (p.Start ()) {
 					var error = p.StandardError.ReadToEnd();
 					p.WaitForExit ();
+					GC.Collect (); // Workaround for: https://bugzilla.xamarin.com/show_bug.cgi?id=43462#c14
 					if (p.ExitCode == 0)
 						return;
 					else {
@@ -1557,7 +1494,7 @@ namespace Xamarin.Bundler {
 				target.StripManagedCode ();
 
 			// deduplicate assemblies between the .monotouch-32 and .monotouch-64 directories
-			if (IsDualBuild && IsDeviceBuild && !Sign)
+			if (IsDualBuild && IsDeviceBuild)
 				DeduplicateDir ("..", Targets [0].AppTargetDirectory, Targets [1].AppTargetDirectory);
 		}
 
@@ -1606,20 +1543,6 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public void SignBundle ()
-		{
-			if (!IsDeviceBuild || !Sign)
-				return;
-
-			var env_vars = new string [] {
-				"CODESIGN_ALLOCATE", 
-				Path.Combine (Driver.PlatformDirectory, "Developer", "usr", "bin", "codesign_allocate")
-			};
-
-			if (Driver.RunCommand ("codesign", String.Format ("-v -s \"{0}\" \"{1}\"", CertificateName, Executable), env_vars) != 0)
-				ErrorHelper.Error (5307, "Failed to sign the executable. Please review the build log.");
-		}
-
 		public void GenerateRuntimeOptions ()
 		{
 			// only if the linker is disabled
@@ -1627,33 +1550,6 @@ namespace Xamarin.Bundler {
 				return;
 
 			RuntimeOptions.Write (AppDirectory);
-		}
-
-		public void GenerateAppManifests ()
-		{
-			if (!GenerateManifests)
-				return;
-			
-			using (var f = File.OpenWrite (Path.Combine (AppDirectory, "PkgInfo"))){
-				f.Write (new byte [] { 0X41, 0X50, 0X50, 0X4C, 0x3f, 0x3f, 0x3f, 0x3f}, 0, 8);
-			}
-
-			var executable = Path.GetFileName (Executable);
-
-			var sr = new StreamReader (typeof (Driver).Assembly.GetManifestResourceStream ("Info.plist.tmpl"));
-			var all = sr.ReadToEnd ();
-			var icon_str = (Icon != null) ? "\t<key>CFBundleIconFile</key>\n\t<string>" + Icon + "</string>\n\t" : "";
-
-			using (var sw = new StreamWriter (Path.Combine (AppDirectory, "Info.plist"))){
-				sw.WriteLine (
-					all.Replace ("@BUNDLEDISPLAYNAME@", BundleDisplayName ?? executable).
-					Replace ("@EXECUTABLE@", executable).
-					Replace ("@BUNDLEID@", BundleId).
-					Replace ("@BUNDLEICON@", icon_str).
-					Replace ("@BUNDLENAME@", executable).
-					Replace ("@MAINNIB@", MainNib));
-
-			}
 		}
 
 		public void ProcessFrameworksForArguments (StringBuilder args, IEnumerable<string> frameworks, IEnumerable<string> weak_frameworks, IList<string> inputs)
@@ -1801,6 +1697,8 @@ namespace Xamarin.Bundler {
 				
 				stderr_completed.WaitOne (TimeSpan.FromSeconds (1));
 				stdout_completed.WaitOne (TimeSpan.FromSeconds (1));
+
+				GC.Collect (); // Workaround for: https://bugzilla.xamarin.com/show_bug.cgi?id=43462#c14
 
 				if (p.ExitCode != 0)
 					return p.ExitCode;

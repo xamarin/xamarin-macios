@@ -84,7 +84,11 @@ namespace LinkSdk {
 			// iOS (tvOS/watchOS) does not support Process to run ping either so it ends up with a InvalidOperationException
 			// which is now "optimized" to reduce code size (and remove DllImport) until we implement ping (see: #964)
 			var p = new Ping ();
+#if __WATCHOS__
+			Assert.Throws<PlatformNotSupportedException> (delegate { p.Send ("localhost"); });
+#else
 			Assert.Throws<InvalidOperationException> (delegate { p.Send ("localhost"); });
+#endif
 		}
 	}
 }

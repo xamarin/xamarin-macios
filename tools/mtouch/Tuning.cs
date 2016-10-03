@@ -27,11 +27,9 @@ namespace MonoTouch.Tuner {
 		public bool Device { get; set; }
 		public bool EnsureUIThread { get; set; }
 		public IList<string> ExtraDefinitions { get; set; }
-		public bool OldRegistrar { get; set; }
 		public bool DebugBuild { get; set; }
 		public int Arch { get; set; }
 		public bool IsDualBuild { get; set; }
-		public bool Unified { get; set; }
 		public bool DumpDependencies { get; set; }
 		internal PInvokeWrapperGenerator MarshalNativeExceptionsState { get; set; }
 		internal RuntimeOptions RuntimeOptions { get; set; }
@@ -121,9 +119,6 @@ namespace MonoTouch.Tuner {
 				sub.Add (new RemoveCode (options));
 			sub.Add (new MarkNSObjects ());
 			sub.Add (new PreserveSoapHttpClients ());
-			// there's only one registrar for unified, i.e. DynamicRegistrar
-			if (!options.Unified)
-				sub.Add (new RemoveExtraRegistrar (options.OldRegistrar));
 			sub.Add (new CoreHttpMessageHandler (options));
 			sub.Add (new CoreTlsProviderStep (options));
 			return sub;

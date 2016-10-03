@@ -28,7 +28,6 @@ namespace Xamarin.Linker {
 	[TestFixture]
 	public partial class SdkTest {
 		
-		static string ClassicPath { get { return Path.Combine (Configuration.MonoTouchRootDirectory, "lib/mono/2.1/"); } }
 		static string UnifiedPath { get { return Path.Combine (Configuration.MonoTouchRootDirectory, "lib/mono/Xamarin.iOS/"); } }
 		static string tvOSPath { get { return Path.Combine (Configuration.MonoTouchRootDirectory, "lib/mono/Xamarin.TVOS/"); } }
 		static string watchOSPath { get { return Path.Combine (Configuration.MonoTouchRootDirectory, "lib/mono/Xamarin.WatchOS/"); } }
@@ -50,7 +49,6 @@ namespace Xamarin.Linker {
 					break;
 				case "MonoTouch.Dialog-1":
 				case "MonoTouch.NUnitLite":
-				case "monotouch":
 				case "Xamarin.iOS":
 				case "Xamarin.TVOS":
 				case "Xamarin.WatchOS":
@@ -65,8 +63,7 @@ namespace Xamarin.Linker {
 				case "Xamarin.MacDev.Tasks.Core":
 				case "Xamarin.Analysis.Tasks":
 					// other stuff that is not part of the SDK but shipped in the same 2.1 directory
-					if (path != ClassicPath)
-						failed_bcl.Add (aname);
+					failed_bcl.Add (aname);
 					break;
 				default:
 					if (!ProfilePoker.IsWellKnownSdk (aname))
@@ -111,14 +108,6 @@ namespace Xamarin.Linker {
 					failed_facades.Add (aname);
 			}
 			CollectionAssert.IsEmpty (failed_facades, "Facades");
-		}
-
-		[Test]
-		public void iOS_Classic ()
-		{
-			BCL (ClassicPath);
-			REPL (ClassicPath);
-			Facades (ClassicPath);
 		}
 
 		[Test]

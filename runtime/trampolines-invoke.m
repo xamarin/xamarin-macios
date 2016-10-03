@@ -86,7 +86,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	int i;
 	int mofs = 0;
 
-	if (xamarin_use_old_dynamic_registrar || is_ctor || is_static) {
+	if (is_ctor || is_static) {
 		desc = xamarin_get_method_for_selector ([self class], sel, &exception_gchandle);
 	} else {
 		desc = xamarin_get_method_and_object_for_selector ([self class], sel, self, &mthis, &exception_gchandle);
@@ -103,15 +103,6 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	arg_frame = (void **) alloca (frame_length);
 	arg_ptrs = (void **) alloca (sizeof (void *) * (num_arg + (isCategoryInstance ? 1 : 0)));
 	
-	if (!is_static && !is_ctor && xamarin_use_old_dynamic_registrar) {
-		mthis = xamarin_get_managed_object_for_ptr (self, &exception_gchandle);
-		if (exception_gchandle != 0)
-			goto exception_handling;
-		xamarin_check_for_gced_object (mthis, sel, self, method, &exception_gchandle);
-		if (exception_gchandle != 0)
-			goto exception_handling;
-	}
-
 #ifdef TRACE
 	memset (arg_ptrs, 0xDEADF00D, num_arg * sizeof (void*));
 #endif

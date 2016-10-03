@@ -68,6 +68,11 @@ namespace XamCore.CoreVideo {
 		public CVPlanarComponentInfo ComponentInfoCr;
 	}
 
+	public struct CVPlanarPixelBufferInfo_YCbCrBiPlanar {
+		public CVPlanarComponentInfo ComponentInfoY;
+		public CVPlanarComponentInfo ComponentInfoCbCr;
+	}
+
 	// int32_t -> CVReturn.h
 	public enum CVReturn : int {
 		Success = 0,

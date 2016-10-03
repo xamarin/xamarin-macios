@@ -198,7 +198,7 @@ namespace Xamarin.Bundler
 		}
 
 		public static bool IsUnified {
-			get { return app.IsUnified; }
+			get { return true; }
 		}
 
 		public static int Verbosity {
@@ -272,7 +272,7 @@ namespace Xamarin.Bundler
 			get {
 				switch (app.Platform) {
 				case ApplePlatform.iOS:
-					return Path.Combine (MonoTouchDirectory, "lib", "mono", app.IsUnified ? "Xamarin.iOS" : "2.1");
+					return Path.Combine (MonoTouchDirectory, "lib", "mono", "Xamarin.iOS");
 				case ApplePlatform.WatchOS:
 					return Path.Combine (MonoTouchDirectory, "lib", "mono", "Xamarin.WatchOS");
 				case ApplePlatform.TVOS:
@@ -324,7 +324,7 @@ namespace Xamarin.Bundler
 			get {
 				switch (app.Platform) {
 				case ApplePlatform.iOS:
-					return app.IsUnified ? "Xamarin.iOS" : "monotouch";
+					return "Xamarin.iOS";
 				case ApplePlatform.WatchOS:
 					return "Xamarin.WatchOS";
 				case ApplePlatform.TVOS:
@@ -656,12 +656,7 @@ namespace Xamarin.Bundler
 
 					if (App.EnableLLVMOnlyBitCode)
 						sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_LLVMONLY);");
-
-					if (app.Registrar == RegistrarMode.LegacyDynamic || app.Registrar == RegistrarMode.LegacyStatic)
-						sw.WriteLine ("\txamarin_use_old_dynamic_registrar = TRUE;");
-					else
-						sw.WriteLine ("\txamarin_use_old_dynamic_registrar = FALSE;");
-
+					
 					if (registration_methods != null) {
 						for (int i = 0; i < registration_methods.Count; i++) {
 							sw.Write ("\t");
@@ -675,7 +670,6 @@ namespace Xamarin.Bundler
 					sw.WriteLine ("\txamarin_init_mono_debug = {0};", app.PackageMdb ? "TRUE" : "FALSE");
 					sw.WriteLine ("\txamarin_compact_seq_points = {0};", app.EnableMSym ? "TRUE" : "FALSE");
 					sw.WriteLine ("\txamarin_executable_name = \"{0}\";", assembly_name);
-					sw.WriteLine ("\txamarin_use_new_assemblies = {0};", app.IsUnified ? "1" : "0");
 					sw.WriteLine ("\tmono_use_llvm = {0};", enable_llvm ? "TRUE" : "FALSE");
 					sw.WriteLine ("\txamarin_log_level = {0};", verbose);
 					sw.WriteLine ("\txamarin_arch_name = \"{0}\";", abi.AsArchString ());
@@ -934,7 +928,7 @@ namespace Xamarin.Bundler
 			if (environment_variables.Count > 0)
 				return false;
 
-			if (app.Registrar == RegistrarMode.Static || app.Registrar == RegistrarMode.LegacyStatic || app.Registrar == RegistrarMode.LegacyDynamic)
+			if (app.Registrar == RegistrarMode.Static)
 				return false;
 
 			// The default exception marshalling differs between release and debug mode, but we
@@ -1106,7 +1100,7 @@ namespace Xamarin.Bundler
 			{ "time", v => watch_level++ },
 			{ "executable=", "Specifies the native executable name to output", v => app.ExecutableName = v },
 			{ "m|main=", "Specifies the name of the main startup file, defaults to main.m [Deprecated]", v => { classic_only_arguments.Add ("--main"); }, true },
-			{ "nomanifest", "Do not generate PkgInfo and Info.plist [Deprecated in the Unified API]", v => { app.GenerateManifests = false; classic_only_arguments.Add ("--nomanifest"); } },
+			{ "nomanifest", "Do not generate PkgInfo and Info.plist [Deprecated in the Unified API]", v => { classic_only_arguments.Add ("--nomanifest"); } },
 			{ "nofastsim", "Do not run the simulator fast-path build", v => fast_sim = false },
 			{ "nolink", "Do not link the assemblies", v => app.LinkMode = LinkMode.None },
 			{ "mapinject", "[Deprecated]", v => { classic_only_arguments.Add ("--mapinject"); }, true },
@@ -1129,7 +1123,7 @@ namespace Xamarin.Bundler
 					}
 				} },
 			{ "dsym:", "Turn on (default for device) or off (default for simulator) .dSYM symbols.", v => app.BuildDSym = ParseBool (v, "dsym") },
-			{ "nosign", "Do not sign the application [Deprecated in the Unified API]", v => { app.Sign = false; classic_only_arguments.Add ("--nosign"); } },
+			{ "nosign", "Do not sign the application [Deprecated in the Unified API]", v => { classic_only_arguments.Add ("--nosign"); } },
 			{ "dlsym:", "Use dlsym to resolve pinvokes in AOT compiled assemblies", v => app.ParseDlsymOptions (v) },
 			{ "r|ref=", "Add an assembly to the resolver", v => app.References.Add (v) },
 			{ "gcc_flags=", "Set flags to be passed along to gcc at link time", v => app.UserGccFlags = v },
@@ -1284,17 +1278,6 @@ namespace Xamarin.Bundler
 						break;
 					case "default":
 						app.Registrar = RegistrarMode.Default;
-						break;
-					case "legacy":
-						app.Registrar = RegistrarMode.Legacy;
-						break;
-					case "legacystatic":
-					case "oldstatic":
-						app.Registrar = RegistrarMode.LegacyStatic;
-						break;
-					case "legacydynamic":
-					case "olddynamic":
-						app.Registrar = RegistrarMode.LegacyDynamic;
 						break;
 					default:
 						throw new MonoTouchException (20, true, "The valid options for '{0}' are '{1}'.", "--registrar", "static, dynamic or default");
@@ -1598,6 +1581,9 @@ namespace Xamarin.Bundler
 				RedirectStream (p.StandardError, new StreamWriter (Console.OpenStandardError ()));
 
 				p.WaitForExit ();
+
+				GC.Collect (); // Workaround for: https://bugzilla.xamarin.com/show_bug.cgi?id=43462#c14
+
 				return p.ExitCode;
 			}
 		}

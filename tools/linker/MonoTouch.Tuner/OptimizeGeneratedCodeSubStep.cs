@@ -39,7 +39,7 @@ namespace MonoTouch.Tuner {
 
 		bool ApplyIntPtrSizeOptimization { get; set; }
 
-		public override void ProcessAssembly (AssemblyDefinition assembly)
+		protected override void Process (AssemblyDefinition assembly)
 		{
 			// The "get_Size" is a performance (over size) optimization.
 			// It always makes sense for plaftorm assemblies because:
@@ -54,20 +54,25 @@ namespace MonoTouch.Tuner {
 			//
 			// TODO: we could make this an option "optimize for size vs optimize for speed" in the future
 			ApplyIntPtrSizeOptimization = ((Profile.Current as BaseProfile).ProductAssembly == assembly.Name.Name) || !IsDualBuild;
-			base.ProcessAssembly (assembly);
+			base.Process (assembly);
 		}
 
-		public override void ProcessType (TypeDefinition type)
+		protected override void Process (TypeDefinition type)
 		{
 			if (!HasGeneratedCode)
 				return;
 
 			isdirectbinding_check_required = type.IsDirectBindingCheckRequired ();
-			base.ProcessType (type);
+			base.Process (type);
 		}
 
-		public override void ProcessMethod (MethodDefinition method)
+		protected override void Process (MethodDefinition method)
 		{
+			// special processing on generated methods from NSObject-inherited types
+			// it would be too risky to apply on user-generated code
+			if (!method.HasBody || !method.IsGeneratedCode () || (!IsExtensionType && !IsExport (method)))
+				return;
+			
 			var instructions = method.Body.Instructions;
 			for (int i = 0; i < instructions.Count; i++) {
 				switch (instructions [i].OpCode.Code) {
@@ -255,6 +260,9 @@ namespace MonoTouch.Tuner {
 			Nop (ins);						// ldfld MonoTouch.Foundation.IsDirectBinding
 			Instruction next = ins.Next;				// brfalse IL_x (SuperHandle processing)
 			Instruction end = null;
+			// unoptimized compiled code can produce a (unneeeded) store/load combo, leave it there
+			while (next.OpCode.FlowControl != FlowControl.Cond_Branch)
+				next = next.Next; // leave the code there (the JIT/AOT will deal with it)
 			ins = (next.Operand as Instruction).Previous;		// br end (ret)
 			if (ins.OpCode.Code == Code.Ret) {			// if there's not branch but it returns immediately then do not remove the 'ret' instruction
 				ins = ins.Next;

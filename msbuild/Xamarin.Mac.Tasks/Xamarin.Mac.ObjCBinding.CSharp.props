@@ -30,6 +30,9 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 
 		<CscToolPath Condition="'$(CscToolPath)' == ''">/Library/Frameworks/Mono.framework/Commands</CscToolPath>
 		<CscToolExe Condition="'$(CscToolExe)' == ''">mcs</CscToolExe>
+		<!-- We default to mcs compiler above, so, select .mdb as the debug ext. This file gets correctly
+		     imported *before* Microsoft.CSharp.targets -->
+		<CscDebugFileExt Condition="'$(CscDebugFileExt)' == ''">.mdb</CscDebugFileExt>
 
 		<BaseLibDllPath Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">$(XamarinMacFrameworkRoot)/lib/mono/Xamarin.Mac/Xamarin.Mac.dll</BaseLibDllPath>
 		<BaseLibDllPath Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac'">$(XamarinMacFrameworkRoot)/lib/mono/4.5/Xamarin.Mac.dll</BaseLibDllPath>

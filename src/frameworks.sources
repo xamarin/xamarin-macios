@@ -1408,7 +1408,7 @@ APPLETLS_SOURCES = \
 	Security/Tls/AppleTlsContext.cs \
 	Security/Tls/AppleTlsProvider.cs \
 	Security/Tls/AppleTlsStream.cs \
-	Security/Tls/MobileCertificateHelper.cs \
+	Security/Tls/AppleCertificateHelper.cs \
 	Security/Tls/OldTlsProvider.cs \
 
 #
@@ -1461,7 +1461,6 @@ SHARED_SOURCES = \
 	ObjCRuntime/MethodDescription.cs \
 	ObjCRuntime/NSStringMarshal.cs \
 	ObjCRuntime/ObjectWrapper.cs \
-	ObjCRuntime/OldDynamicRegistrar.cs \
 	ObjCRuntime/PlatformAvailability.cs \
 	ObjCRuntime/Registrar.cs \
 	ObjCRuntime/ReleaseAttribute.cs \
