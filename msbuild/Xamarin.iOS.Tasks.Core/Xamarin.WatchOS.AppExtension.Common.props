@@ -24,10 +24,6 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 		<_XamarinWatchOSAppExtensionCommonPropsHasBeenImported>true</_XamarinWatchOSAppExtensionCommonPropsHasBeenImported>
 	</PropertyGroup>
 
-	<PropertyGroup>
-		<_IsWatchExtension>true</_IsWatchExtension>
-	</PropertyGroup>
-
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props')"/>
 
