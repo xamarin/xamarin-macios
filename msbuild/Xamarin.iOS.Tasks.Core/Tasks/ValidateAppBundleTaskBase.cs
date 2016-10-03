@@ -222,9 +222,7 @@ namespace Xamarin.iOS.Tasks
 				count++;
 			}
 
-			if (count > 0)
-				Log.LogError ("The Watch App '{0}' contains more than 1 Watch Extension.", name);
-			else if (count == 0)
+			if (count == 0)
 				Log.LogError ("The Watch App '{0}' does not contan a Watch Extension.", name);
 		}
 
