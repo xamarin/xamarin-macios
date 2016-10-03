@@ -55,14 +55,14 @@ namespace Foundation {
 #endif
 	public partial class NSUrlSessionHandler : HttpMessageHandler
 	{
-		private readonly Dictionary<string, string> headerSeparators = new Dictionary<string, string> {
+		readonly Dictionary<string, string> headerSeparators = new Dictionary<string, string> {
 			["User-Agent"] = " ",
 			["Server"] = " "
 		};
 
-		private readonly NSUrlSession session;
-		private readonly Dictionary<NSUrlSessionTask, InflightData> inflightRequests;
-		private readonly object inflightRequestsLock = new object ();
+		readonly NSUrlSession session;
+		readonly Dictionary<NSUrlSessionTask, InflightData> inflightRequests;
+		readonly object inflightRequestsLock = new object ();
 
 		public NSUrlSessionHandler ()
 		{
@@ -83,7 +83,7 @@ namespace Foundation {
 			inflightRequests = new Dictionary<NSUrlSessionTask, InflightData> ();
 		}
 
-		private void RemoveInflightData (NSUrlSessionTask task, bool cancel = true)
+		void RemoveInflightData (NSUrlSessionTask task, bool cancel = true)
 		{
 			InflightData inflight;
 			lock (inflightRequestsLock)
@@ -122,7 +122,7 @@ namespace Foundation {
 			}
 		}
 
-		private string GetHeaderSeparator (string name)
+		string GetHeaderSeparator (string name)
 		{
 			string value;
 			if (!headerSeparators.TryGetValue (name, out value))
@@ -130,7 +130,7 @@ namespace Foundation {
 			return value;
 		}
 
-		private async Task<NSUrlRequest> CreateRequest (HttpRequestMessage request)
+		async Task<NSUrlRequest> CreateRequest (HttpRequestMessage request)
 		{
 			var stream = Stream.Null;
 			var headers = request.Headers as IEnumerable<KeyValuePair<string, IEnumerable<string>>>;
@@ -191,16 +191,16 @@ namespace Foundation {
 		// Needed since we strip during linking since we're inside a product assembly.
 		[Preserve (AllMembers = true)]
 #endif
-		private partial class NSUrlSessionHandlerDelegate : NSUrlSessionDataDelegate
+		partial class NSUrlSessionHandlerDelegate : NSUrlSessionDataDelegate
 		{
-			private readonly NSUrlSessionHandler sessionHandler;
+			readonly NSUrlSessionHandler sessionHandler;
 
 			public NSUrlSessionHandlerDelegate (NSUrlSessionHandler handler)
 			{
 				sessionHandler = handler;
 			}
 
-			private InflightData GetInflightData (NSUrlSessionTask task)
+			InflightData GetInflightData (NSUrlSessionTask task)
 			{
 				var inflight = default (InflightData);
 
@@ -292,7 +292,7 @@ namespace Foundation {
 				}
 			}
 
-			private void SetResponse (InflightData inflight)
+			void SetResponse (InflightData inflight)
 			{
 				lock (inflight.Lock) {
 					if (inflight.ResponseSent)
@@ -342,7 +342,7 @@ namespace Foundation {
 		// Needed since we strip during linking since we're inside a product assembly.
 		[Preserve (AllMembers = true)]
 #endif
-		private class InflightData
+		class InflightData
 		{
 			public readonly object Lock = new object ();
 			public string RequestUrl { get; set; }
@@ -364,9 +364,9 @@ namespace Foundation {
 		// Needed since we strip during linking since we're inside a product assembly.
 		[Preserve (AllMembers = true)]
 #endif
-		private class NSUrlSessionDataTaskStreamContent : StreamContent
+		class NSUrlSessionDataTaskStreamContent : StreamContent
 		{
-			private Action disposed;
+			Action disposed;
 
 			public NSUrlSessionDataTaskStreamContent (NSUrlSessionDataTaskStream source, Action onDisposed) : base (source)
 			{
@@ -386,19 +386,19 @@ namespace Foundation {
 		// Needed since we strip during linking since we're inside a product assembly.
 		[Preserve (AllMembers = true)]
 #endif
-		private class NSUrlSessionDataTaskStream : Stream
+		class NSUrlSessionDataTaskStream : Stream
 		{
-			private readonly Queue<NSData> data;
-			private readonly object dataLock = new object ();
+			readonly Queue<NSData> data;
+			readonly object dataLock = new object ();
 
-			private long position;
-			private long length;
+			long position;
+			long length;
 
-			private bool receivedAllData;
-			private Exception exc;
+			bool receivedAllData;
+			Exception exc;
 
-			private NSData current;
-			private Stream currentStream;
+			NSData current;
+			Stream currentStream;
 
 			public NSUrlSessionDataTaskStream ()
 			{
@@ -407,7 +407,7 @@ namespace Foundation {
 
 			protected override void Dispose (bool disposing)
 			{
-				lock(dataLock) {
+				lock (dataLock) {
 					foreach (var q in data)
 						q?.Dispose ();
 				}
@@ -434,7 +434,7 @@ namespace Foundation {
 				TrySetReceivedAllData ();
 			}
 
-			private void ThrowIfNeeded (CancellationToken cancellationToken)
+			void ThrowIfNeeded (CancellationToken cancellationToken)
 			{
 				if (exc != null)
 					throw exc;
@@ -464,7 +464,7 @@ namespace Foundation {
 						}
 					}
 
-					await Task.Delay(50).ConfigureAwait(false);
+					await Task.Delay (50).ConfigureAwait (false);
 				}
 
 				// try to throw again before read
@@ -472,7 +472,7 @@ namespace Foundation {
 
 				var d = currentStream;
 				var bufferCount = Math.Min (count, (int)(d.Length - d.Position));
-				var bytesRead = await d.ReadAsync (buffer, offset, bufferCount, cancellationToken).ConfigureAwait(false);
+				var bytesRead = await d.ReadAsync (buffer, offset, bufferCount, cancellationToken).ConfigureAwait (false);
 
 				// add the bytes read from the pointer to the position
 				position += bytesRead;
@@ -532,12 +532,12 @@ namespace Foundation {
 		// Needed since we strip during linking since we're inside a product assembly.
 		[Preserve (AllMembers = true)]
 #endif
-		private class WrappedNSInputStream : NSInputStream
+		class WrappedNSInputStream : NSInputStream
 		{
-			private NSStreamStatus status;
-			private CFRunLoopSource source;
-			private readonly Stream stream;
-			private bool notifying;
+			NSStreamStatus status;
+			CFRunLoopSource source;
+			readonly Stream stream;
+			bool notifying;
 
 			public WrappedNSInputStream (Stream inputStream)
 			{
