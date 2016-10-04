@@ -26,10 +26,15 @@ while ! test -z $1; do
 			PROVISION_MONO=1
 			shift
 			;;
+		--provision-cmake)
+			PROVISION_CMAKE=1
+			shift
+			;;
 		--provision-all)
 			PROVISION_MONO=1
 			PROVISION_XS=1
 			PROVISION_XCODE=1
+			PROVISION_CMAKE=1
 			shift
 			;;
 		--ignore-osx)
@@ -459,6 +464,15 @@ function check_osx_version () {
 	ok "Found OSX $ACTUAL_OSX_VERSION (at least $MIN_OSX_BUILD_VERSION is required)"
 }
 
+function install_cmake () {
+	if ! brew --version >& /dev/null; then
+		fail "Asked to install cmake, but brew is not installed."
+		return
+	fi
+
+	brew install cmake
+}
+
 function check_cmake () {
 	if ! test -z $IGNORE_CMAKE; then return; fi
 
@@ -466,7 +480,11 @@ function check_cmake () {
 	local CMAKE_URL=`grep CMAKE_URL= Make.config | sed 's/.*=//'`
 
 	if ! cmake --version &> /dev/null; then
-		fail "You must install CMake ($CMAKE_URL)"
+		if ! test -z $PROVISION_CMAKE; then
+			install_cmake
+		else
+			fail "You must install CMake ($CMAKE_URL)"
+		fi
 		return
 	fi
 
