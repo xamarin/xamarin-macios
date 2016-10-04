@@ -63,7 +63,7 @@ namespace XamCore.CoreBluetooth {
 		Disconnecting
 	}
 
-#if !MONOMAC || !XAMCORE_4_0
+#if !XAMCORE_4_0
 	// NSInteger -> CBPeripheralManager.h
 	[Native]
 	public enum CBPeripheralManagerAuthorizationStatus : nint {
