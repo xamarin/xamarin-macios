@@ -185,6 +185,7 @@ $(2)_CONFIGURE_FLAGS = \
 	--disable-iconv \
 	--disable-mcs-build \
 	--disable-boehm \
+	--disable-blts \
 	$(XAMARIN_CONFIGURE_FLAGS) \
 
 $(2)_ACVARS = $(COMMON_ACVARS)
