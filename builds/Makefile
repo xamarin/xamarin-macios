@@ -346,8 +346,10 @@ endif
 $(MONO_PATH)/configure: $(MONO_PATH)/configure.ac $(BUILDS_MAKEFILE_DEP)
 	$(Q) ./wrap-autogen.sh $(MONO_PATH) mono $(XAMARIN_AUTOGEN_FLAGS)
 
+ifneq ($(WATCH_MONO_PATH),$(MONO_PATH))
 $(WATCH_MONO_PATH)/configure: $(WATCH_MONO_PATH)/configure.ac $(BUILDS_MAKEFILE_DEP)
 	$(Q) ./wrap-autogen.sh $(WATCH_MONO_PATH) mono
+endif
 
 configure-mono:
 	rm -f $(MONO_PATH)/configure
@@ -1871,15 +1873,21 @@ install-llvm64: .stamp-build-llvm64 $(LLVM_TARGETS)
 llvm: setup-llvm build-llvm install-llvm
 llvm64: install-llvm64
 
+ifneq ($(WATCH_MONO_PATH),$(MONO_PATH))
 $(MONO_PATH)/tools/offsets-tool/.stamp-clone $(WATCH_MONO_PATH)/tools/offsets-tool/.stamp-clone:
+else
+$(MONO_PATH)/tools/offsets-tool/.stamp-clone:
+endif
 	@echo Cloning for offsets-tool in $(dir $@)
 	$(Q) $(MAKE) -C $(dir $@) .stamp-clone
 
 $(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(MONO_PATH)/tools/offsets-tool/.stamp-clone $(wildcard $(MONO_PATH)/tools/offsets-tool/*.cs)
 	$(Q) $(MAKE) -C $(dir $@) MonoAotOffsetsDumper.exe
 
+ifneq ($(WATCH_MONO_PATH),$(MONO_PATH))
 $(WATCH_MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(WATCH_MONO_PATH)/tools/offsets-tool/.stamp-clone $(wildcard $(WATCH_MONO_PATH)/tools/offsets-tool/*.cs)
 	$(Q) $(MAKE) -C $(dir $@) MonoAotOffsetsDumper.exe
+endif
 
 target7/mono/arch/arm/arm_dpimacros.h: setup-target7
 	$(Q) $(MAKE) -C $(dir $@) $(notdir $@)
