@@ -67,13 +67,12 @@ namespace XamCore.Security.Tls
 
 		public static bool InvokeSystemCertificateValidator (
 			ICertificateValidator2 validator, string targetHost, bool serverMode,
-			X509CertificateCollection certificates, out bool success,
+			X509CertificateCollection certificates,
 			ref MonoSslPolicyErrors errors, ref int status11)
 		{
 			if (certificates == null) {
 				errors |= MonoSslPolicyErrors.RemoteCertificateNotAvailable;
-				success = false;
-				return true;
+				return false;
 			}
 
 			if (!string.IsNullOrEmpty (targetHost)) {
@@ -93,14 +92,11 @@ namespace XamCore.Security.Tls
 			}
 
 			var result = trust.Evaluate ();
-			if (result == SecTrustResult.Unspecified) {
-				success = true;
+			if (result == SecTrustResult.Unspecified)
 				return true;
-			}
 
 			errors |= MonoSslPolicyErrors.RemoteCertificateChainErrors;
-			success = false;
-			return true;
+			return false;
 		}
 	}
 }

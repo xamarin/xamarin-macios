@@ -120,7 +120,8 @@ namespace MonoTouch.Tuner {
 			sub.Add (new MarkNSObjects ());
 			sub.Add (new PreserveSoapHttpClients ());
 			sub.Add (new CoreHttpMessageHandler (options));
-			sub.Add (new CoreTlsProviderStep (options));
+			if (Driver.App.Platform != Xamarin.Utils.ApplePlatform.WatchOS)
+				sub.Add (new CoreTlsProviderStep (options));
 			return sub;
 		}
 
