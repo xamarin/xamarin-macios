@@ -55,11 +55,11 @@ namespace XamCore.CoreFoundation {
 
 		delegate void CFMessagePortInvalidationCallBackProxy (/* CFMessagePortRef */ IntPtr messagePort, /* void * */ IntPtr info);
 
-		static Dictionary <IntPtr, CFMessagePortCallBack> outputHandles = new Dictionary <IntPtr, CFMessagePortCallBack> ();
+		static Dictionary <IntPtr, CFMessagePortCallBack> outputHandles = new Dictionary <IntPtr, CFMessagePortCallBack> (Runtime.IntPtrEqualityComparer);
 
-		static Dictionary <IntPtr, Action> invalidationHandles = new Dictionary <IntPtr, Action> ();
+		static Dictionary <IntPtr, Action> invalidationHandles = new Dictionary <IntPtr, Action> (Runtime.IntPtrEqualityComparer);
 
-		static Dictionary <IntPtr, CFMessagePortContext> messagePortContexts = new Dictionary <IntPtr, CFMessagePortContext> ();
+		static Dictionary <IntPtr, CFMessagePortContext> messagePortContexts = new Dictionary <IntPtr, CFMessagePortContext> (Runtime.IntPtrEqualityComparer);
 
 		static CFMessagePortCallBackProxy messageOutputCallback = new CFMessagePortCallBackProxy (MessagePortCallback);
 

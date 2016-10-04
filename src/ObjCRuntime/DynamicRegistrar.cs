@@ -119,7 +119,7 @@ namespace XamCore.Registrar {
 				RegisterType (type);
 
 				if (!method_map.TryGetValue (type, out methods)) {
-					methods = new Dictionary <IntPtr, MethodDescription> ();
+					methods = new Dictionary <IntPtr, MethodDescription> (Runtime.IntPtrEqualityComparer);
 					method_map [type] = methods;
 				}
 
@@ -804,7 +804,7 @@ namespace XamCore.Registrar {
 			if (type.IsFakeProtocol)
 				return;
 
-			var methods = new Dictionary <IntPtr, MethodDescription> ();
+			var methods = new Dictionary <IntPtr, MethodDescription> (Runtime.IntPtrEqualityComparer);
 
 			var super = type.SuperType;
 
