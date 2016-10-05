@@ -31,6 +31,7 @@
 
 using System;
 using System.Diagnostics;
+using System.ComponentModel;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 using XamCore.CoreGraphics;
@@ -11867,6 +11868,16 @@ namespace XamCore.AppKit {
 		[Mac (10,12)]
 		[Export ("newWindowForTab:")]
 		void GetNewWindowForTab ([NullAllowed] NSObject sender);
+
+		[Export ("presentError:")]
+		bool PresentError (NSError error);
+
+		[Export ("willPresentError:")]
+		NSError WillPresentError (NSError error);
+
+		[Sealed]
+		[Export ("presentError:modalForWindow:delegate:didPresentSelector:contextInfo:")]
+		void PresentError (NSError error, NSWindow window, [NullAllowed] NSObject @delegate, [NullAllowed] Selector didPresentSelector, IntPtr contextInfo);
 	}
 
 	[Mac (10,10)]
