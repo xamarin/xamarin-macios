@@ -392,7 +392,7 @@
 # Only one type currently, which default returns. Currently unneeded unless they extend.
 !missing-selector! +NSDistributedNotificationCenter::notificationCenterForType: not bound
 
-# iOS Only, not available for macOS  - NS_CLASS_AVAILABLE(NA, 10_0)
+# iOS Only, not available for macOS  - NS_CLASS_AVAILABLE(NA, XXX)
 !missing-protocol! MTLFence not bound
 !missing-protocol! MTLHeap not bound
 !missing-protocol-member! MTLBlitCommandEncoder::updateFence: not found
@@ -413,6 +413,9 @@
 !missing-selector! MTLHeapDescriptor::setStorageMode: not bound
 !missing-selector! MTLHeapDescriptor::size not bound
 !missing-selector! MTLHeapDescriptor::storageMode not bound
+!missing-field! CBCentralManagerOptionRestoreIdentifierKey not bound
+!missing-field! CBConnectPeripheralOptionNotifyOnConnectionKey not bound
+!missing-field! CBConnectPeripheralOptionNotifyOnNotificationKey not bound
 
 # iOS Only - NS_AVAILABLE_IOS
 !missing-protocol-member! MTLRenderCommandEncoder::updateFence:afterStages: not found
@@ -422,3 +425,7 @@
 !missing-selector! MTLRenderPassDepthAttachmentDescriptor::setDepthResolveFilter: not bound
 !missing-selector! MTLSamplerDescriptor::lodAverage not bound
 !missing-selector! MTLSamplerDescriptor::setLodAverage: not bound
+
+# Deprecated in the same version of OS X that CBCentral becomes available.  The alternative (Identifier property) is bound and available.
+!missing-selector! CBCentral::UUID not bound
+!missing-selector! CBPeripheral::UUID not bound
