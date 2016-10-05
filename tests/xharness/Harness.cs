@@ -90,7 +90,7 @@ namespace xharness
 		{
 			// Just hardcode this for now. We should be able to switch to a shipped version of XS soon.
 			// NOTE: the filename part in the url must be unique so that the caching logic works properly.
-			var mlaunch_url = "http://bosstoragemirror.blob.core.windows.net/public-builder/mlaunch-307d345a06bd3f13994877ee5a4f316f5e6a7940";
+			var mlaunch_url = "http://bosstoragemirror.blob.core.windows.net/public-builder/mlaunch-d6ca7038939ed95f8204896a6951e9d4a9cfd77f";
 			var mlaunch_path = Path.Combine (Path.GetTempPath (), Path.GetFileName (mlaunch_url), "mlaunch");
 			if (File.Exists (mlaunch_path))
 				return mlaunch_path;
