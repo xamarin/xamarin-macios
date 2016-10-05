@@ -378,7 +378,6 @@ TOOLS64_LDFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) $(COMMO
 
 TOOLS64_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
 			--with-monotouch_tv=yes \
-			--with-monotouch_watch=no \
 			--prefix=$(BUILD_DESTDIR)/tools64 \
 			--enable-maintainer-mode \
 			--cache-file=../tools64.config.cache \
@@ -394,6 +393,12 @@ TOOLS64_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
 			--disable-iconv	\
 			--disable-boehm \
 			$(XAMARIN_CONFIGURE_FLAGS) \
+
+ifeq ($(WATCH_MONO_PATH),$(MONO_PATH))
+TOOLS64_CONFIGURE_FLAGS += --with-monotouch_watch=yes
+else
+TOOLS64_CONFIGURE_FLAGS += --with-monotouch_watch=no
+endif
 
 TOOLS64_ACVARS = $(COMMON_ACVARS)
 
@@ -515,8 +520,10 @@ watchbcl: build-watchbcl install-tools-watch
 
 setup-watchbcl: .stamp-configure-watchbcl
 
+ifneq ($(WATCH_MONO_PATH),$(MONO_PATH))
 .stamp-configure-watchbcl: $(WATCH_MONO_PATH)/configure
 	$(Q) $(WATCHBCL_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh watchbcl ../$(WATCH_MONO_PATH)/configure $(WATCHBCL_CONFIGURE_FLAGS)
+endif
 
 build-tools-bcl: build-watchbcl
 build-tools: build-watchbcl
@@ -524,9 +531,13 @@ build-tools: build-watchbcl
 build-watchbcl: .stamp-build-watchbcl
 	$(MAKE) $(WATCH_BCL_TARGETS)
 
+ifeq ($(WATCH_MONO_PATH),$(MONO_PATH))
+.stamp-build-watchbcl: .stamp-build-tools64
+else
 .stamp-build-watchbcl: .stamp-configure-watchbcl .stamp-build-tools64
 	$(MAKE) -C watchbcl all EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
 	$(MAKE) -C watchbcl install EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
+endif
 	$(Q) touch $@
 
 clean-watchbcl:
@@ -692,7 +703,11 @@ $(PREFIX)/lib/mono/Xamarin.TVOS/%.mdb: $(BUILD_DESTDIR)/tvos/bcl/%.mdb | $(PREFI
 $(PREFIX)/bin/btv-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
 	$(Q) install -s -m 0755 $< $@
 
+ifeq ($(WATCH_MONO_PATH),$(MONO_PATH))
+$(PREFIX)/bin/bwatch-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
+else
 $(PREFIX)/bin/bwatch-mono: $(BUILD_DESTDIR)/watchbcl/bin/mono | $(PREFIX)/bin
+endif
 	$(Q) install -s -m 0755 $< $@
 
 # copy to temporary directory before signing / mdb-rebasing,
