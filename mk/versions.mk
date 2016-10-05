@@ -59,7 +59,6 @@ endef
 $(shell rm -f .check-versions-failure)
 $(eval $(call CheckSubmoduleTemplate,llvm,LLVM))
 $(eval $(call CheckSubmoduleTemplate,mono,MONO))
-$(eval $(call CheckSubmoduleTemplate,watch-mono,WATCH_MONO))
 $(eval $(call CheckSubmoduleTemplate,fsharp,FSHARP))
 $(eval $(call CheckSubmoduleTemplate,MonoTouch.Dialog,MONOTOUCH_DIALOG))
 $(eval $(call CheckSubmoduleTemplate,Touch.Unit,TOUCH_UNIT))
