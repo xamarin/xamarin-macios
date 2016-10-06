@@ -63,6 +63,25 @@ namespace Xamarin.Bundler
 		List<string> link_with_and_ship = new List<string> ();
 		public IEnumerable<string> LibrariesToShip { get { return link_with_and_ship; } }
 
+		PInvokeWrapperGenerator pinvoke_state;
+		PInvokeWrapperGenerator MarshalNativeExceptionsState {
+			get {
+				if (!App.RequiresPInvokeWrappers)
+					return null;
+
+				if (pinvoke_state == null) {
+					pinvoke_state = new PInvokeWrapperGenerator ()
+					{
+						SourcePath = Path.Combine (ArchDirectory, "pinvokes.m"),
+						HeaderPath = Path.Combine (ArchDirectory, "pinvokes.h"),
+						Registrar = (StaticRegistrar) StaticRegistrar,
+					};
+				}
+
+				return pinvoke_state;
+			}
+		}
+
 		public string Executable {
 			get {
 				return Path.Combine (TargetDirectory, App.ExecutableName);
@@ -389,12 +408,7 @@ namespace Xamarin.Bundler
 				IsDualBuild = App.IsDualBuild,
 				DumpDependencies = App.LinkerDumpDependencies,
 				RuntimeOptions = App.RuntimeOptions,
-				MarshalNativeExceptionsState = !App.RequiresPInvokeWrappers ? null : new PInvokeWrapperGenerator ()
-				{
-					SourcePath = Path.Combine (ArchDirectory, "pinvokes.m"),
-					HeaderPath = Path.Combine (ArchDirectory, "pinvokes.h"),
-					Registrar = (StaticRegistrar) StaticRegistrar,
-				},
+				MarshalNativeExceptionsState = MarshalNativeExceptionsState,
 			};
 
 			MonoTouch.Tuner.Linker.Process (LinkerOptions, out link_context, out assemblies);
@@ -617,8 +631,13 @@ namespace Xamarin.Bundler
 
 			if (App.RequiresPInvokeWrappers) {
 				// Write P/Invokes
-				var state = LinkerOptions.MarshalNativeExceptionsState;
-				state.End ();
+				var state = MarshalNativeExceptionsState;
+				if (state.Started) {
+					// The generator is 'started' by the linker, which means it may not
+					// be started if the linker was not executed due to re-using cached results.
+					state.End ();
+				}
+				
 				PinvokesTask.Create (compile_tasks, Abis, this, state.SourcePath);
 
 				if (App.FastDev) {
