@@ -10,18 +10,15 @@ IPHONEOS_PREFIX=$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphoneos.sdk/usr
 
 ifdef ENABLE_XAMARIN
 XAMARIN_AUTOGEN_FLAGS=--enable-extension-module=xamarin
-XAMARIN_CONFIGURE_FLAGS=--enable-extension-module=xamarin
+XAMARIN_IOS_CONFIGURE_FLAGS=--enable-extension-module=xamarin
+XAMARIN_MAC_CONFIGURE_FLAGS=--enable-extension-module=xamarin --enable-extension-module
 -include $(MACCORE_PATH)/builds/Makefile.include
-else
-XAMARIN_CONFIGURE_FLAGS=--enable-extension-module
 endif
 
 ifndef DISABLE_STRIP
 INSTALL_STRIP_FLAG=-s
 endif
 
-XAMARIN_IOS_CONFIGURE_FLAGS=$(XAMARIN_CONFIGURE_FLAG)
-XAMARIN_MAC_CONFIGURE_FLAGS=$(XAMARIN_CONFIGURE_FLAG)
 ifndef ENABLE_XI_BTLS
 XAMARIN_IOS_CONFIGURE_FLAGS += --disable-btls
 endif
