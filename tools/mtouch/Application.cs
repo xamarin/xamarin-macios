@@ -961,6 +961,15 @@ namespace Xamarin.Bundler {
 
 					target.LinkWith (a.Dylib);
 				}
+
+				foreach (var dylib in target.LibrariesToShip) {
+					List<string> dylibs;
+					var targetName = Path.GetFileNameWithoutExtension (Path.GetFileNameWithoutExtension (dylib)) + Path.GetExtension (dylib);
+					var targetPath = Path.Combine (AppDirectory, targetName);
+					if (!hash.TryGetValue (targetPath, out dylibs))
+						hash [targetPath] = dylibs = new List<string> ();
+					dylibs.Add (dylib);
+				}
 			}
 
 			foreach (var kvp in hash) {
@@ -1765,7 +1774,7 @@ namespace Xamarin.Bundler {
 		{
 			var arch = abi.AsArchString ();
 			var ext = Driver.App.FastDev ? ".dylib" : ".o";
-			var ofile = Path.Combine (Cache.Location, Path.GetFileNameWithoutExtension (ifile) + "." + arch + ext);
+			var ofile = Path.Combine (Cache.Location, "lib" + Path.GetFileNameWithoutExtension (ifile) + "." + arch + ext);
 
 			if (!Application.IsUptodate (ifile, ofile)) {
 				var task = new PinvokesTask ()
@@ -1787,6 +1796,7 @@ namespace Xamarin.Bundler {
 			}
 
 			target.LinkWith (ofile);
+			target.LinkWithAndShip (ofile);
 		}
 
 		protected override void Build ()

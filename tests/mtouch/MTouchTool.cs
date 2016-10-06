@@ -71,6 +71,7 @@ namespace MTouchTests
 		public bool? NoFastSim;
 		public MTouchRegistrar Registrar;
 		public I18N I18N;
+		public bool? Extension;
 #pragma warning restore 649
 
 		// These are a bit smarter
@@ -169,6 +170,9 @@ namespace MTouchTests
 
 			if (FastDev.HasValue && FastDev.Value)
 				sb.Append (" --fastdev");
+
+			if (Extension == true)
+				sb.Append (" --extension");
 
 			if (Dlsym.HasValue)
 				sb.Append (" --dlsym:").Append (Dlsym.Value ? "true" : "false");
@@ -332,6 +336,58 @@ namespace MTouchTests
 			Executable = MTouch.CompileTestAppExecutable (testDir, code: code, profile: Profile);
 		}
 
+		public void CreateTemporaryWatchKitExtension (string code = null)
+		{
+			var testDir = CreateTemporaryDirectory ();
+			var app = Path.Combine (testDir, "testApp.appex");
+			Directory.CreateDirectory (app);
+
+			if (code == null) {
+				code = @"using WatchKit;
+public partial class NotificationController : WKUserNotificationInterfaceController
+{
+	protected NotificationController (System.IntPtr handle) : base (handle) {}
+}";
+			}
+
+			AppPath = app;
+			Executable = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile);
+
+			File.WriteAllText (Path.Combine (app, "Info.plist"), @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
+<plist version=""1.0"">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>testapp</string>
+	<key>CFBundleName</key>
+	<string>testapp</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.xamarin.testapp</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	<key>MinimumOSVersion</key>
+	<string>2.0</string>
+	<key>NSExtension</key>
+	<dict>
+		<key>NSExtensionAttributes</key>
+		<dict>
+			<key>WKAppBundleIdentifier</key>
+			<string>com.xamarin.testapp.watchkitapp</string>
+		</dict>
+		<key>NSExtensionPointIdentifier</key>
+		<string>com.apple.watchkit</string>
+	</dict>
+	<key>RemoteInterfacePrincipleClass</key>
+	<string>InterfaceController</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+</dict>
+</plist>
+");
+		}
+
 		public string CreateTemporaryDirectory ()
 		{
 			var tmpDir = MTouch.GetTempDirectory ();
@@ -356,6 +412,11 @@ namespace MTouchTests
 			Directory.CreateDirectory (AppPath);
 
 			return AppPath;
+		}
+
+		public void CreateTemporaryCacheDirectory ()
+		{
+			Cache = Path.Combine (CreateTemporaryDirectory (), "mtouch-test-cache");
 		}
 
 		void IDisposable.Dispose ()

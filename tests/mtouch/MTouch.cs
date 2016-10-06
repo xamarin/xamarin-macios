@@ -1960,6 +1960,23 @@ class Test {
 			}
 		}
 
+		[Test]
+		public void PInvokeWrapperGenerationTest ()
+		{
+			using (var tool = new MTouchTool ()) {
+				tool.Profile = Profile.WatchOS;
+				tool.CreateTemporaryCacheDirectory ();
+				tool.Verbosity = 5;
+				tool.Extension = true;
+				tool.CreateTemporaryWatchKitExtension ();
+
+				tool.FastDev = true;
+				Assert.AreEqual (0, tool.Execute (MTouchAction.BuildDev));
+
+				Assert.IsTrue (File.Exists (Path.Combine (tool.AppPath, "libpinvokes.dylib")), "libpinvokes.dylib existence");
+			}
+		}
+
 #region Helper functions
 		static string CompileUnifiedTestAppExecutable (string targetDirectory, string code = null, string extraArg = "")
 		{
@@ -1968,27 +1985,37 @@ class Test {
 
 		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.Unified)
 		{
-			string cs = Path.Combine (targetDirectory, "testApp.cs");
-			string exe = Path.Combine (targetDirectory, "testApp.exe");
-			var root_library = GetBaseLibrary (profile);
-
-			if (code == null) {
+			if (code == null)
 				code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
-			}
+
+			return CompileTestAppCode ("exe", targetDirectory, code, extraArg, profile);
+		}
+
+		public static string CompileTestAppLibrary (string targetDirectory, string code, string extraArg = null, Profile profile = Profile.Unified)
+		{
+			return CompileTestAppCode ("library", targetDirectory, code, extraArg, profile);
+		}
+
+		public static string CompileTestAppCode (string target, string targetDirectory, string code, string extraArg = "", Profile profile = Profile.Unified)
+		{
+			var ext = target == "exe" ? "exe" : "dll";
+			var cs = Path.Combine (targetDirectory, "testApp.cs");
+			var assembly = Path.Combine (targetDirectory, "testApp." + ext);
+			var root_library = GetBaseLibrary (profile);
 
 			File.WriteAllText (cs, code);
 
 			string output;
 			StringBuilder args = new StringBuilder ();
 			string fileName = GetCompiler (profile, args);
-			args.AppendFormat (" /noconfig /t:exe /nologo /out:{1} /r:{0} {2} {3}", Quote (root_library), Quote (exe), cs, extraArg);
+			args.AppendFormat ($" /noconfig /t:{target} /nologo /out:{Quote (assembly)} /r:{Quote (root_library)} {cs} {extraArg}");
 			if (ExecutionHelper.Execute (fileName, args.ToString (), out output) != 0) {
 				Console.WriteLine ("{0} {1}", fileName, args);
 				Console.WriteLine (output);
 				throw new Exception (output);
 			}
 
-			return exe;
+			return assembly;
 		}
 
 		static string CreateBindingLibrary (string targetDirectory, string nativeCode, string bindingCode, string linkWith = null, string extraCode = "")

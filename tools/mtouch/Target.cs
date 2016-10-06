@@ -60,6 +60,9 @@ namespace Xamarin.Bundler
 		public bool Is32Build { get { return Application.IsArchEnabled (Abis, Abi.Arch32Mask); } } // If we're targetting a 32 bit arch for this target.
 		public bool Is64Build { get { return Application.IsArchEnabled (Abis, Abi.Arch64Mask); } } // If we're targetting a 64 bit arch for this target.
 
+		List<string> link_with_and_ship = new List<string> ();
+		public IEnumerable<string> LibrariesToShip { get { return link_with_and_ship; } }
+
 		public string Executable {
 			get {
 				return Path.Combine (TargetDirectory, App.ExecutableName);
@@ -987,6 +990,11 @@ namespace Xamarin.Bundler
 		{
 			lock (link_with)
 				link_with.Add (native_library);
+		}
+
+		public void LinkWithAndShip (string dylib)
+		{
+			link_with_and_ship.Add (dylib);
 		}
 
 		public void StripManagedCode ()
