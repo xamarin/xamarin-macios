@@ -1787,6 +1787,7 @@ namespace Xamarin.Bundler {
 					Language = "objective-c++",
 				};
 				if (Driver.App.FastDev) {
+					task.InstallName = "lib" + Path.GetFileNameWithoutExtension (ifile) + ext;
 					task.CompilerFlags.AddFramework ("Foundation");
 					task.CompilerFlags.LinkWithXamarin ();
 				}
@@ -1978,6 +1979,9 @@ namespace Xamarin.Bundler {
 		
 		void GetSharedCompilerFlags (CompilerFlags flags, string install_name)
 		{
+			if (string.IsNullOrEmpty (install_name))
+				throw new ArgumentNullException (nameof (install_name));
+
 			flags.AddOtherFlag ("-shared");
 			if (!App.EnableMarkerOnlyBitCode)
 				flags.AddOtherFlag ("-read_only_relocs suppress");
