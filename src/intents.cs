@@ -1935,7 +1935,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INMessageAttributeOptionsResolutionResult {
@@ -1968,7 +1968,7 @@ namespace XamCore.Intents {
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
-	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)] // <- FIXME: Verify if true with Introspection tests on macOS 10.12
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[BaseType (typeof (INIntentResolutionResult))]
 	[DisableDefaultCtor]
 	interface INMessageAttributeResolutionResult {

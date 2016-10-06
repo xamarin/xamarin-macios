@@ -48,7 +48,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <None Include="README" />
     <None Include="packages.config" />
   </ItemGroup>
 </Project>
