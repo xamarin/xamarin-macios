@@ -592,7 +592,6 @@
     <Compile Include="GameplayKit\GKMeshGraphTests.cs" />
     <Compile Include="GameplayKit\GKNoiseMapTests.cs" />
     <Compile Include="GameplayKit\GKNoiseTests.cs" />
-    <Compile Include="CoreMidi\MidiEndpointTest.cs" />
     <Compile Include="HealthKit\CdaDocumentSampleTest.cs" />
     <Compile Include="Metal\HeapDescriptorTest.cs" />
     <Compile Include="CoreMedia\CMClockOrTimebaseTest.cs" />
