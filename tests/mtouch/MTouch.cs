@@ -1971,7 +1971,7 @@ class Test {
 				tool.CreateTemporaryWatchKitExtension ();
 
 				tool.FastDev = true;
-				Assert.AreEqual (0, tool.Execute (MTouchAction.BuildDev));
+				Assert.AreEqual (0, tool.Execute (MTouchAction.BuildDev), "build");
 
 				Assert.IsTrue (File.Exists (Path.Combine (tool.AppPath, "libpinvokes.dylib")), "libpinvokes.dylib existence");
 
@@ -1985,6 +1985,8 @@ class Test {
 						break;
 					}
 				}
+
+				Assert.AreEqual (0, tool.Execute (MTouchAction.BuildDev), "cached build");
 			}
 		}
 

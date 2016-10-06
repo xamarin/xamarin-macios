@@ -28,6 +28,12 @@ namespace Xamarin.Bundler
 
 		bool first;
 
+		public bool Started {
+			get {
+				return first;
+			}
+		}
+
 		public void Start ()
 		{							
 			if (Driver.EnableDebug)
@@ -48,6 +54,9 @@ namespace Xamarin.Bundler
 
 		public void End ()
 		{
+			if (!first)
+				throw new Exception ("Generator not started");
+
 			sb.WriteLine ("}");
 
 			Registrar.GeneratePInvokeWrappersEnd ();
