@@ -301,7 +301,7 @@ MTOUCH_DEFINES= -define:ENABLE_BITCODE_ON_IOS
 endif
 
 MTOUCH_COMPILE_DEPS = $(MTOUCH_SOURCES) $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) Makefile $(LINKER_RESOURCES)
-MTOUCH_COMPILE_ARGS = -unsafe $(IOS_DEFINES) -resource:Info.plist.tmpl -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:System.Xml.Linq.dll $(MTOUCH_SOURCES) -nowarn:0436 $(LINKER_RESOURCES:%=-resource:%) $(MTOUCH_DEFINES)
+MTOUCH_COMPILE_ARGS = -unsafe $(IOS_DEFINES) -resource:Info.plist.tmpl -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:System.Xml.Linq.dll $(MTOUCH_SOURCES) -nowarn:0436 $(LINKER_RESOURCES:%=-resource:%) $(MTOUCH_DEFINES) -debug
 
 # bin/Debug/mtouch.exe is used from mtouch.csproj when debugging
 bin/Debug/mtouch.exe: $(MTOUCH_COMPILE_DEPS)
