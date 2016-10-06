@@ -12,10 +12,21 @@ ifdef ENABLE_XAMARIN
 XAMARIN_AUTOGEN_FLAGS=--enable-extension-module=xamarin
 XAMARIN_CONFIGURE_FLAGS=--enable-extension-module=xamarin
 -include $(MACCORE_PATH)/builds/Makefile.include
+else
+XAMARIN_CONFIGURE_FLAGS=--enable-extension-module
 endif
 
 ifndef DISABLE_STRIP
 INSTALL_STRIP_FLAG=-s
+endif
+
+XAMARIN_IOS_CONFIGURE_FLAGS=$(XAMARIN_CONFIGURE_FLAG)
+XAMARIN_MAC_CONFIGURE_FLAGS=$(XAMARIN_CONFIGURE_FLAG)
+ifndef ENABLE_XI_BTLS
+XAMARIN_IOS_CONFIGURE_FLAGS += --disable-btls
+endif
+ifndef ENABLE_XM_BTLS
+XAMARIN_MAC_CONFIGURE_FLAGS += --disable-btls
 endif
 
 # ld: weak import of symbol '_fstatat' not supported because of option: -no_weak_imports for architecture x86_64
@@ -185,8 +196,7 @@ $(2)_CONFIGURE_FLAGS = \
 	--disable-iconv \
 	--disable-mcs-build \
 	--disable-boehm \
-	--disable-blts \
-	$(XAMARIN_CONFIGURE_FLAGS) \
+	$(XAMARIN_MAC_CONFIGURE_FLAGS) \
 
 $(2)_ACVARS = $(COMMON_ACVARS)
 
@@ -392,7 +402,7 @@ TOOLS64_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
 			--disable-nls \
 			--disable-iconv	\
 			--disable-boehm \
-			$(XAMARIN_CONFIGURE_FLAGS) \
+			$(XAMARIN_IOS_CONFIGURE_FLAGS) \
 
 ifeq ($(WATCH_MONO_PATH),$(MONO_PATH))
 TOOLS64_CONFIGURE_FLAGS += --with-monotouch_watch=yes
@@ -498,7 +508,7 @@ WATCHBCL_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
 			--disable-nls \
 			--disable-iconv	\
 			--disable-boehm \
-			--enable-extension-module
+			$(XAMARIN_IOS_CONFIGURE_FLAGS)
 
 WATCHBCL_CONFIGURE_ENVIRONMENT = \
 	$(WATCHBCL_ACVARS) \
@@ -868,7 +878,7 @@ $(eval SIM$(2)_CONFIGURE_FLAGS=	--host=$(1)-apple-darwin10 \
 			--disable-boehm \
 			--disable-executables \
 			--disable-visibility-hidden	\
-			$(XAMARIN_CONFIGURE_FLAGS) \
+			$(XAMARIN_IOS_CONFIGURE_FLAGS) \
 			)
 
 $(eval SIM$(2)_CONFIGURE_ENVIRONMENT= \
@@ -1011,7 +1021,7 @@ WATCHSIMULATOR_CONFIGURE_FLAGS =                \
 	--disable-nls                               \
 	--disable-iconv                             \
 	--disable-visibility-hidden	                \
-	$(XAMARIN_CONFIGURE_FLAGS)         \
+	$(XAMARIN_IOS_CONFIGURE_FLAGS)         \
 
 # FIXME: remove --with-checked-build=yes when we've stabilized a bit.
 WATCHSIMULATOR_CONFIGURE_FLAGS += \
@@ -1153,7 +1163,7 @@ TVSIMULATOR_CONFIGURE_FLAGS =                         \
 	--disable-iconv                                   \
 	--with-tls=pthread                                \
 	--disable-visibility-hidden	                      \
-	$(XAMARIN_CONFIGURE_FLAGS)               \
+	$(XAMARIN_IOS_CONFIGURE_FLAGS)               \
 
 TVSIMULATOR_ACVARS =  \
 	mono_cv_uscore=yes \
@@ -1298,7 +1308,7 @@ $(eval $(2)_CONFIGURE_FLAGS=--build=i386-apple-darwin10 \
 			--disable-boehm \
 			--enable-dtrace=no \
 			$(IOS_BITCODE_CONFIGURE_FLAGS) \
-			$(XAMARIN_CONFIGURE_FLAGS) \
+			$(XAMARIN_IOS_CONFIGURE_FLAGS) \
 			)
 
 $(eval $(2)_ACVARS= mono_cv_uscore=yes \
@@ -1524,7 +1534,7 @@ WATCHOS_CONFIGURE_FLAGS =                        \
 	--disable-nls                                \
 	--disable-iconv                              \
 	--disable-visibility-hidden	                 \
-	$(XAMARIN_CONFIGURE_FLAGS)          \
+	$(XAMARIN_IOS_CONFIGURE_FLAGS)          \
 	$(BITCODE_CONFIGURE_FLAGS)
 
 WATCHOS_ACVARS =                    \
@@ -1692,6 +1702,7 @@ TVOS_CONFIGURE_FLAGS =                           \
 	--disable-visibility-hidden	                 \
 	--enable-extension-module                    \
 	--enable-dtrace=no                           \
+	$(XAMARIN_IOS_CONFIGURE_FLAGS)               \
 	$(BITCODE_CONFIGURE_FLAGS)					 \
 
 # explicitly disable dtrace, since it requires inline assembly, which is disabled on AppleTV (and mono's configure.ac doesn't know that (yet at least))
@@ -1933,8 +1944,8 @@ CROSS_BASE_CONFIGURE_FLAGS= \
 			--disable-nls \
 			--disable-iconv \
 			--disable-libraries	\
-			--enable-extension-module \
-			--disable-boehm
+			--disable-boehm \
+			$(XAMARIN_IOS_CONFIGURE_FLAGS)
 
 #
 # 32 bit cross compiler
