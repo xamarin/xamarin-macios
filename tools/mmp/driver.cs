@@ -914,6 +914,9 @@ namespace Xamarin.Bundler {
 				if (Driver.registrar == RegistrarMode.Static)
 					sw.WriteLine ("\txamarin_create_classes ();");
 
+				if (App.EnableDebug)
+					sw.WriteLine ("\txamarin_debug_mode = TRUE;");
+
 				sw.WriteLine ("\treturn 0;");
 				sw.WriteLine ("}");
 				sw.WriteLine ();
