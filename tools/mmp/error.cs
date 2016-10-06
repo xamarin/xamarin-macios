@@ -35,6 +35,7 @@ namespace Xamarin.Bundler {
 	//			Warning		MT0080  Disabling NewRefCount, --new-refcount:false, is deprecated.
 	//					MM0088	** Reserved mtouch **
 	//					MM0089	** Reserved mtouch **
+	//					MM0097	machine.config file '{0}' can not be found.
 	// MM1xxx	file copy / symlinks (project related)
 	//			MM14xx	Product assemblies
 	//					MM1401	The required '{0}' assembly is missing from the references

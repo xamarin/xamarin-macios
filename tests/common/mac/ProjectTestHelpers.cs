@@ -82,12 +82,12 @@ namespace Xamarin.MMP.Tests
 		{
 			StringBuilder output = new StringBuilder ();
 			Environment.SetEnvironmentVariable ("MONO_PATH", null);
-			int compileResult = Xamarin.Bundler.Driver.RunCommand (exe, args != null ? args.ToString() : string.Empty, MonoDevelopLike, output, suppressPrintOnErrors: shouldFail);
+			int compileResult = Xamarin.Bundler.Driver.RunCommand (exe, args != null ? args.ToString() : string.Empty, MonoDevelopLike, output, suppressPrintOnErrors: true);
 			Func<string> getInfo = () => getAdditionalFailInfo != null ? getAdditionalFailInfo() : "";
 			if (!shouldFail)
-				Assert.AreEqual (0, compileResult, stepName + " failed: '" + output + "' " + exe + " " + args + getInfo ());
+				Assert.AreEqual (0, compileResult, stepName + " failed:\n\n'" + output + "' " + exe + " " + args + getInfo ());
 			else
-				Assert.AreNotEqual (0, compileResult, stepName + " did not fail as expected: '" + output + "' " + exe + " " + args + getInfo ());
+				Assert.AreNotEqual (0, compileResult, stepName + " did not fail as expected:\n\n'" + output + "' " + exe + " " + args + getInfo ());
 
 			return output.ToString ();
 		}
@@ -111,11 +111,17 @@ namespace Xamarin.MMP.Tests
 
 			buildArgs.Append (csprojTarget);
 
+			Func <string> getBuildProjectErrorInfo = () => {
+				string csprojText = "\n\n\n\tCSProj: \n" + File.ReadAllText (csprojTarget);
+				string csprojLocation = Path.GetDirectoryName (csprojTarget);
+				string fileList = "\n\n\tFiles: " + String.Join (" ", Directory.GetFiles (csprojLocation).Select (x => x.Replace (csprojLocation + "/", "")));
+				return csprojText + fileList;
+			};
 
 			if (isUnified)
-				return RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/xbuild", buildArgs, "Compile", shouldFail, () => File.ReadAllText (csprojTarget));
+				return RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/xbuild", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo);
 			else
-				return RunAndAssert ("/Applications/Xamarin Studio.app/Contents/MacOS/mdtool", buildArgs, "Compile", shouldFail, () => File.ReadAllText (csprojTarget));
+				return RunAndAssert ("/Applications/Xamarin Studio.app/Contents/MacOS/mdtool", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo);
 		}
 
 		static string ProjectTextReplacement (UnifiedTestConfig config, string text)

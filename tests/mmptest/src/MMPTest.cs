@@ -16,6 +16,10 @@ namespace Xamarin.MMP.Tests
 		{
 			string tmpDir = Path.Combine (Path.GetTempPath (), "mmp-test-dir");
 			try {
+				// Clean out any existing build there first to prevent strange behavior
+				if (Directory.Exists (tmpDir))
+					Directory.Delete (tmpDir, true);
+
 				Directory.CreateDirectory (tmpDir);
 				test (tmpDir);
 			}
@@ -380,5 +384,86 @@ namespace Xamarin.MMP.Tests
 			Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/Mono.Posix.dll")));
 			Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/libMonoPosixHelper.dylib")));
 		}
-}
+
+
+		const string machineConfigMobileLocation = "bin/Debug/UnifiedExample.app/Contents/MonoBundle/mono/4.5/machine.config";
+		const string machineConfigXM45Location = "bin/Debug/XM45Example.app/Contents/MonoBundle/mono/4.5/machine.config";
+
+		[Test]
+		public void Unified_ShouldNotGenerateMachineConfigInBundle_WithoutOption()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
+				// Mobile
+				TI.TestUnifiedExecutable (test);
+
+				Assert.IsFalse (File.Exists (Path.Combine (tmpDir, machineConfigMobileLocation)));
+
+				// XM45
+				test.XM45 = true;
+				TI.TestUnifiedExecutable (test);
+
+				Assert.IsFalse (File.Exists (Path.Combine (tmpDir, machineConfigXM45Location)));
+			});
+		}
+
+		[Test]
+		public void Unified_InvalidCustomMachineConfigInBundle_ThrowsError()
+		{
+			RunMMPTest (tmpDir => {
+				string invalidCustomConfigPath = Path.Combine (tmpDir, "nonexistant/machine.config");
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = string.Format ("<MonoBundlingExtraArgs>--custom-machine-config={0}</MonoBundlingExtraArgs>", invalidCustomConfigPath)
+				};
+				string buildOutput = TI.TestUnifiedExecutable (test, shouldFail : true).BuildOutput;
+				Assert.IsTrue (buildOutput.Contains ("can not be found"), "Unified_InvalidCustomMachineConfigInBundle_ThrowsError did not error as expected (1):\n\n", buildOutput);
+				Assert.IsTrue (buildOutput.Contains ("97"), "Unified_InvalidCustomMachineConfigInBundle_ThrowsError did not error as expected (2):\n\n", buildOutput);
+			});
+		}
+
+		[Test]
+		public void Unified_ShouldGenerateMachineConfigInBundle_WithEmptyOption()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = "<MonoBundlingExtraArgs>--custom-machine-config=\"\"</MonoBundlingExtraArgs>"
+				};
+				TI.TestUnifiedExecutable (test);
+				Assert.IsTrue (File.Exists (Path.Combine (tmpDir, machineConfigMobileLocation)));
+
+				test.XM45 = true;
+				TI.TestUnifiedExecutable (test);
+				Assert.IsTrue (File.Exists (Path.Combine (tmpDir, machineConfigXM45Location)));
+			});
+		}
+
+		[Test]
+		public void Unified_ShouldGenerateCustomMachineConfigInBundle_WhenPassedIn()
+		{
+			RunMMPTest (tmpDir => {
+				const string customConfigText = "THIS_IS_NOT_A_REAL_CONFIG_FILE";
+				string customConfigPath = Path.Combine (tmpDir, "machine.config");
+				File.WriteAllLines (customConfigPath, new string [] { customConfigText });
+
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = string.Format ("<MonoBundlingExtraArgs>--custom-machine-config={0}</MonoBundlingExtraArgs>", customConfigPath)
+				};
+
+				// Mobile
+				TI.TestUnifiedExecutable (test);
+
+				Assert.IsTrue (File.Exists (Path.Combine (tmpDir, machineConfigMobileLocation)));
+				string [] text = File.ReadAllLines (Path.Combine (tmpDir, machineConfigMobileLocation));
+				Assert.IsTrue (text.Length == 1 && text[0] == customConfigText);
+
+				// XM45
+				test.XM45 = true;
+				TI.TestUnifiedExecutable (test);
+
+				Assert.IsTrue (File.Exists (Path.Combine (tmpDir, machineConfigXM45Location)));
+				text = File.ReadAllLines (Path.Combine (tmpDir, machineConfigXM45Location));
+				Assert.IsTrue (text.Length == 1 && text[0] == customConfigText);
+			});
+		}
+	}
 }

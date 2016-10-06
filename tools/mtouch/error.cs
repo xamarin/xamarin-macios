@@ -103,6 +103,7 @@ namespace Xamarin.Bundler {
 	//		Warning		MT0094	<unused> Both profiling (--profiling) and incremental builds (--fastdev) are currently not supported when building for {0}, and incremental builds have been disabled (this will be fixed in a future release).
 	//					MT0095 Aot files could not be copied to the destination directory.
 	//					MT0096 No reference to Xamarin.iOS.dll was found.
+	//					MT0097 <used by mmp>
 	// MT1xxx	file copy / symlinks (project related)
 	//			MT10xx	installer.cs / mtouch.cs
 	//					MT1001	Could not find an application at the specified directory: {0}
