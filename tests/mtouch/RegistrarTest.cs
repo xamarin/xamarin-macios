@@ -1223,6 +1223,8 @@ class CTP4 : CTP3 {
 				};
 				p.WaitForExit ();
 				
+				GC.Collect (); // Workaround for: https://bugzilla.xamarin.com/show_bug.cgi?id=43462#c14
+
 				Console.WriteLine (output);
 				
 				if (p.ExitCode != 0)
