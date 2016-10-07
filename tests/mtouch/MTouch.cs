@@ -1274,7 +1274,7 @@ namespace MTouchTests
 		[Test]
 		public void ScriptedTests ()
 		{
-			ExecutionHelper.Execute ("make", string.Format ("-C \"{0}\"", Path.Combine (Configuration.SourceRoot, "tests", "scripted")));
+			ExecutionHelper.Execute ("make", string.Format ("-C \"{0}\"", Path.Combine (Configuration.SourceRoot, "tests", "scripted")), timeout: TimeSpan.FromMinutes (10));
 		}
 
 		[Test]
