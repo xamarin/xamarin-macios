@@ -93,23 +93,6 @@
     <MtouchArch>ARM64</MtouchArch>
     <DefineConstants>MONOTOUCH;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugStaticRegistrar|iPhone' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\iPhone\DebugStaticRegistrar-unified</OutputPath>
-    <DefineConstants>DEBUG;MONOTOUCH;$(DefineConstants)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <MtouchArch>ARM64</MtouchArch>
-    <MtouchI18n>
-    </MtouchI18n>
-    <MtouchLink>None</MtouchLink>
-    <MtouchDebug>true</MtouchDebug>
-    <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchExtraArgs>-v -v --registrar:static</MtouchExtraArgs>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
