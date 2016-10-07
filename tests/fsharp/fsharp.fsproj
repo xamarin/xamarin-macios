@@ -41,6 +41,30 @@
     <GenerateTailCalls>true</GenerateTailCalls>
     <MtouchLink>None</MtouchLink>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release32|iPhone' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
+    <DefineConstants>;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchFloat32>true</MtouchFloat32>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <MtouchArch>ARMv7</MtouchArch>
+    <GenerateTailCalls>true</GenerateTailCalls>
+    <MtouchLink>None</MtouchLink>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release64|iPhone' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
+    <DefineConstants>;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchFloat32>true</MtouchFloat32>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <MtouchArch>ARM64</MtouchArch>
+    <GenerateTailCalls>true</GenerateTailCalls>
+    <MtouchLink>None</MtouchLink>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
@@ -81,6 +105,40 @@
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchLink>None</MtouchLink>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug32|iPhone' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
+    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <DeviceSpecificBuild>true</DeviceSpecificBuild>
+    <MtouchDebug>true</MtouchDebug>
+    <MtouchFastDev>false</MtouchFastDev>
+    <MtouchProfiling>true</MtouchProfiling>
+    <MtouchFloat32>true</MtouchFloat32>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <MtouchLink>None</MtouchLink>
+    <MtouchArch>ARMv7</MtouchArch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug64|iPhone' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
+    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <DeviceSpecificBuild>true</DeviceSpecificBuild>
+    <MtouchDebug>true</MtouchDebug>
+    <MtouchFastDev>false</MtouchFastDev>
+    <MtouchProfiling>true</MtouchProfiling>
+    <MtouchFloat32>true</MtouchFloat32>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <MtouchLink>None</MtouchLink>
+    <MtouchArch>ARM64</MtouchArch>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

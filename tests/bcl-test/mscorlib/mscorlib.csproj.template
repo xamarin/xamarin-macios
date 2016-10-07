@@ -54,6 +54,34 @@
     <MtouchI18n>cjk</MtouchI18n>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug32|iPhone' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
+    <DefineConstants>DEBUG;INSIDE_CORLIB;LIBC;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;MONO_DATACONVERTER_STATIC_METHODS;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchDebug>True</MtouchDebug>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchI18n>cjk</MtouchI18n>
+    <MtouchArch>ARMv7</MtouchArch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug64|iPhone' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
+    <DefineConstants>DEBUG;INSIDE_CORLIB;LIBC;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;MONO_DATACONVERTER_STATIC_METHODS;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchDebug>True</MtouchDebug>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <MtouchI18n>cjk</MtouchI18n>
+    <MtouchArch>ARM64</MtouchArch>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
     <Optimize>True</Optimize>
@@ -66,6 +94,32 @@
     <DefineConstants>INSIDE_CORLIB;LIBC;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;MONO_DATACONVERTER_STATIC_METHODS;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE;$(DefineConstants)</DefineConstants>
     <MtouchI18n>cjk</MtouchI18n>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release32|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
+    <DefineConstants>INSIDE_CORLIB;LIBC;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;MONO_DATACONVERTER_STATIC_METHODS;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DefineConstants>INSIDE_CORLIB;LIBC;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;MONO_DATACONVERTER_STATIC_METHODS;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE;$(DefineConstants)</DefineConstants>
+    <MtouchI18n>cjk</MtouchI18n>
+    <MtouchArch>ARMv7</MtouchArch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release64|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
+    <DefineConstants>INSIDE_CORLIB;LIBC;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;MONO_DATACONVERTER_STATIC_METHODS;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DefineConstants>INSIDE_CORLIB;LIBC;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;MONO_DATACONVERTER_STATIC_METHODS;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE;$(DefineConstants)</DefineConstants>
+    <MtouchI18n>cjk</MtouchI18n>
+    <MtouchArch>ARM64</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
     <DebugType>none</DebugType>

@@ -17,7 +17,7 @@
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
     <DefineConstants>XAMCORE_2_0</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Debug32' Or '$(Configuration)' == 'Debug64' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -27,7 +27,7 @@
     <PlatformTarget>
     </PlatformTarget>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release32' Or '$(Configuration)' == 'Release64' Or '$(Configuration)' == 'Release-bitcode' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\Any CPU\$(Configuration)-unified</OutputPath>
     <DefineConstants>;$(DefineConstants)</DefineConstants>
@@ -35,17 +35,6 @@
     <GenerateTailCalls>true</GenerateTailCalls>
     <PlatformTarget>
     </PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release-bitcode' ">
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Any CPU\Release-bitcode-unified</OutputPath>
-    <DefineConstants>;$(DefineConstants)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <GenerateTailCalls>true</GenerateTailCalls>
-    <PlatformTarget>
-    </PlatformTarget>
-    <MtouchExtraArgs>--bitcode:full</MtouchExtraArgs>
-    <MtouchUseLlvm>true</MtouchUseLlvm>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

@@ -48,6 +48,30 @@
     <MtouchExtraArgs>--nostrip --nosymbolstrip: --aot-options=-O=float32</MtouchExtraArgs>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug32|iPhone' ">
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchDebug>true</MtouchDebug>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchArch>ARMv7</MtouchArch>
+    <MtouchExtraArgs>--nostrip --nosymbolstrip: --aot-options=-O=float32</MtouchExtraArgs>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug64|iPhone' ">
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchDebug>true</MtouchDebug>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchArch>ARM64</MtouchArch>
+    <MtouchExtraArgs>--nostrip --nosymbolstrip: --aot-options=-O=float32</MtouchExtraArgs>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
@@ -57,6 +81,26 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <MtouchExtraArgs>--nostrip --nosymbolstrip: --aot-options=-O=float32</MtouchExtraArgs>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release32|iPhone' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <MtouchExtraArgs>--nostrip --nosymbolstrip: --aot-options=-O=float32</MtouchExtraArgs>
+    <MtouchArch>ARMv7</MtouchArch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release64|iPhone' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <MtouchExtraArgs>--nostrip --nosymbolstrip: --aot-options=-O=float32</MtouchExtraArgs>
+    <MtouchArch>ARM64</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
     <Optimize>true</Optimize>
