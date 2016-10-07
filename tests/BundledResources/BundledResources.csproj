@@ -23,7 +23,6 @@
     <DefineConstants>DEBUG;;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>False</ConsolePause>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugType>none</DebugType>
@@ -31,7 +30,6 @@
     <OutputPath>bin\Any CPU\$(Configuration)-unified</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>False</ConsolePause>
     <DefineConstants>DO_NOT_REMOVE;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release-bitcode' ">
@@ -40,7 +38,6 @@
     <OutputPath>bin\Any CPU\$(Configuration)-unified</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>False</ConsolePause>
     <DefineConstants>DO_NOT_REMOVE;$(DefineConstants)</DefineConstants>
     <MtouchExtraArgs>--bitcode:full</MtouchExtraArgs>
     <MtouchUseLlvm>true</MtouchUseLlvm>

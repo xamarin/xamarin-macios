@@ -22,12 +22,9 @@
     <DefineConstants>DEBUG;MONOTOUCH;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>False</ConsolePause>
     <MtouchLink>None</MtouchLink>
     <MtouchDebug>True</MtouchDebug>
     <MtouchExtraArgs>-v -v</MtouchExtraArgs>
-    <MtouchI18n>
-    </MtouchI18n>
     <MtouchArch>i386, x86_64</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
@@ -36,12 +33,9 @@
     <OutputPath>bin\iPhoneSimulator\$(Configuration)-unified</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>False</ConsolePause>
     <MtouchLink>None</MtouchLink>
     <MtouchExtraArgs>-v -v -gcc_flags="-weak_framework GameController"</MtouchExtraArgs>
     <MtouchArch>i386, x86_64</MtouchArch>
-    <MtouchI18n>
-    </MtouchI18n>
     <DefineConstants>MONOTOUCH;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
@@ -52,13 +46,10 @@
     <DefineConstants>DEBUG;MONOTOUCH;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>False</ConsolePause>
     <MtouchDebug>True</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchLink>None</MtouchLink>
-    <MtouchI18n>
-    </MtouchI18n>
-    <MtouchExtraArgs>-v -v --registrar:static</MtouchExtraArgs>
+    <MtouchExtraArgs></MtouchExtraArgs>
     <MtouchArch>ARM64</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
@@ -67,12 +58,9 @@
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>False</ConsolePause>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v</MtouchExtraArgs>
     <MtouchUseLlvm>True</MtouchUseLlvm>
-    <MtouchI18n>
-    </MtouchI18n>
     <MtouchLink>None</MtouchLink>
     <MtouchArch>ARM64</MtouchArch>
     <DefineConstants>MONOTOUCH;$(DefineConstants)</DefineConstants>
@@ -83,12 +71,9 @@
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>False</ConsolePause>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v --bitcode:full</MtouchExtraArgs>
     <MtouchUseLlvm>true</MtouchUseLlvm>
-    <MtouchI18n>
-    </MtouchI18n>
     <MtouchLink>None</MtouchLink>
     <MtouchArch>ARM64</MtouchArch>
     <DefineConstants>MONOTOUCH;$(DefineConstants)</DefineConstants>

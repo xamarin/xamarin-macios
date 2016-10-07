@@ -22,7 +22,6 @@
     <DefineConstants>DEBUG;LINKALL;;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>False</ConsolePause>
     <MtouchDebug>True</MtouchDebug>
     <MtouchLink>Full</MtouchLink>
     <MtouchI18n>mideast,other</MtouchI18n>
@@ -35,7 +34,6 @@
     <OutputPath>bin\iPhoneSimulator\$(Configuration)-unified</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>False</ConsolePause>
     <MtouchLink>Full</MtouchLink>
     <MtouchI18n>mideast,other</MtouchI18n>
     <MtouchArch>i386, x86_64</MtouchArch>
@@ -50,7 +48,6 @@
     <DefineConstants>DEBUG;LINKALL;;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>False</ConsolePause>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchDebug>True</MtouchDebug>
     <MtouchLink>Full</MtouchLink>
@@ -64,7 +61,6 @@
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>False</ConsolePause>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchLink>Full</MtouchLink>
     <MtouchI18n>mideast,other</MtouchI18n>
@@ -79,7 +75,6 @@
     <OutputPath>bin\iPhone\$(Configuration)-bitcode-unified</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>False</ConsolePause>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchLink>Full</MtouchLink>
     <MtouchI18n>mideast,other</MtouchI18n>
