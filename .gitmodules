@@ -40,4 +40,4 @@
 [submodule "external/watch-mono"]
 	path = external/watch-mono
 	url = ../../mono/mono.git
-	branch = master
+	branch = mono-4.6.0-branch-watchos-debugging
