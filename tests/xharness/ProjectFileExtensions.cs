@@ -32,6 +32,7 @@ namespace xharness
 		}
 
 		static string[] eqsplitter = new string[] { "==" };
+		static string[] orsplitter = new string[] { " Or " };
 		static char[] pipesplitter = new char[] { '|' };
 		static char[] trimchars = new char[] { '\'', ' ' };
 
@@ -114,15 +115,21 @@ namespace xharness
 			var conditionValue = condition.Value;
 			conditionValue = conditionValue.Replace ("$(Configuration)", configuration).Replace ("$(Platform)", platform);
 
-			var eqsplit = conditionValue.Split (eqsplitter, StringSplitOptions.None);
-			if (eqsplit.Length != 2) {
-				Console.WriteLine ("Could not parse condition; {0}", conditionValue);
-				return false;
+			var orsplits = conditionValue.Split (orsplitter, StringSplitOptions.None);
+			foreach (var orsplit in orsplits) {
+				var eqsplit = orsplit.Split (eqsplitter, StringSplitOptions.None);
+				if (eqsplit.Length != 2) {
+					Console.WriteLine ("Could not parse condition; {0}", conditionValue);
+					return false;
+				}
+
+				var left = eqsplit [0].Trim (trimchars);
+				var right = eqsplit [1].Trim (trimchars);
+				if (left == right)
+					return true;
 			}
 
-			var left = eqsplit [0].Trim (trimchars);
-			var right = eqsplit [1].Trim (trimchars);
-			return left == right;
+			return false;
 		}
 
 		public static string GetOutputPath (this XmlDocument csproj, string platform, string configuration)
@@ -133,7 +140,7 @@ namespace xharness
 			
 			foreach (XmlNode n in nodes) {
 				if (IsNodeApplicable (n, platform, configuration))
-					return n.InnerText;
+					return n.InnerText.Replace ("$(Platform)", platform).Replace ("$(Configuration)", configuration);
 			}
 			throw new Exception ("Could not find OutputPath");
 		}
@@ -369,6 +376,7 @@ namespace xharness
 				case "armv7":
 				case "armv7s":
 				case "arm64":
+				case "armv7, arm64":
 					n.InnerText = device_arch;
 					break;
 				default:
@@ -510,6 +518,22 @@ namespace xharness
 				var condition = clone.Attributes ["Condition"];
 				condition.InnerText = condition.InnerText.Replace (configuration, new_configuration);
 				xmlnode.ParentNode.InsertAfter (clone, xmlnode);
+				return;
+			}
+
+			throw new Exception ("Configuration not found.");
+		}
+
+		public static void DeleteConfiguration (this XmlDocument csproj, string platform, string configuration)
+		{
+			var projnode = csproj.SelectNodes ("//*[local-name() = 'PropertyGroup']");
+			foreach (XmlNode xmlnode in projnode) {
+				if (xmlnode.Attributes ["Condition"] == null)
+					continue;
+				if (!IsNodeApplicable (xmlnode, platform, configuration))
+					continue;
+				xmlnode.ParentNode.RemoveChild (xmlnode);
+
 				return;
 			}
 

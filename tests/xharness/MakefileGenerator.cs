@@ -370,9 +370,24 @@ namespace xharness
 						writer.WriteLine ("\t$(Q) echo Build succeeded"); // This is important, otherwise we'll end up executing the catch-all clean-% target
 						writer.WriteLine ();
 					}
-					writer.WriteTarget ("build{0}-dev{3}-{1}", "{2} xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.ProjectPath.Replace (" ", "\\ "), target.MakefileWhereSuffix);
-					writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhone\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
-					writer.WriteLine ();
+
+					if (target.IsMultiArchitecture) {
+						writer.WriteTarget ("build{0}-dev-{1}", "build{0}-dev32-{1} build{0}-dev64-{1}", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) echo Build succeeded"); // This is important, otherwise we'll end up executing the catch-all build-% target
+						writer.WriteLine ();
+
+						writer.WriteTarget ("build{0}-dev32-{1}", "{2} xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.ProjectPath.Replace (" ", "\\ "));
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)32\" \"/property:Platform=iPhone\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+						writer.WriteLine ();
+
+						writer.WriteTarget ("build{0}-dev64-{1}", "{2} xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.ProjectPath.Replace (" ", "\\ "));
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)64\" \"/property:Platform=iPhone\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+						writer.WriteLine ();
+					} else {
+						writer.WriteTarget ("build{0}-dev{3}-{1}", "{2} xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.ProjectPath.Replace (" ", "\\ "), target.MakefileWhereSuffix);
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhone\" /t:Build $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+						writer.WriteLine ();
+					}
 
 					// clean dev project target
 					if (target.IsBCLProject) {
@@ -380,19 +395,42 @@ namespace xharness
 						writer.WriteLine ("\t$(Q) echo Clean succeeded"); // This is important, otherwise we'll end up executing the catch-all clean-% target
 						writer.WriteLine ();
 					}
-					writer.WriteTarget ("clean{0}-dev{2}-{1}", string.Empty, make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-					writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhone\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
-					writer.WriteLine ();
+					if (target.IsMultiArchitecture) {
+						writer.WriteTarget ("clean{0}-dev-{1}", "clean{0}-dev32-{1} clean{0}-dev64-{1}", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) echo Clean succeeded"); // This is important, otherwise we'll end up executing the catch-all clean-% target
+						writer.WriteLine ();
 
-					// install dev project target
-					if (target.IsBCLProject) {
-						writer.WriteTarget ("install{0}-bcl-dev{2}-{1}", "install{0}-dev-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-						writer.WriteLine ("\t$(Q) echo Install succeeded"); // This is important, otherwise we'll end up executing the catch-all install-% target
+						writer.WriteTarget ("clean{0}-dev32-{1}", string.Empty, make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)32\" \"/property:Platform=iPhone\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+						writer.WriteLine ();
+
+						writer.WriteTarget ("clean{0}-dev64-{1}", string.Empty, make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)64\" \"/property:Platform=iPhone\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
+						writer.WriteLine ();
+					} else {
+						writer.WriteTarget ("clean{0}-dev{2}-{1}", string.Empty, make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						writer.WriteLine ("\t$(Q_XBUILD) $(SYSTEM_XBUILD) \"/property:Configuration=$(CONFIG)\" \"/property:Platform=iPhone\" /t:Clean $(XBUILD_VERBOSITY) \"{0}\"", target.ProjectPath);
 						writer.WriteLine ();
 					}
-					writer.WriteTarget ("install{0}-dev{2}-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-					writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --install \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG)", target.ProjectPath, target.Platform);
-					writer.WriteLine ();
+
+					// install dev project target
+					if (target.IsMultiArchitecture) {
+						writer.WriteTarget ("install{0}-dev32-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --install \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG)32", target.ProjectPath, target.Platform);
+						writer.WriteLine ();
+						writer.WriteTarget ("install{0}-dev64-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --install \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG)64", target.ProjectPath, target.Platform);
+						writer.WriteLine ();
+					} else {
+						if (target.IsBCLProject) {
+							writer.WriteTarget ("install{0}-bcl-dev{2}-{1}", "install{0}-dev-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+							writer.WriteLine ("\t$(Q) echo Install succeeded"); // This is important, otherwise we'll end up executing the catch-all install-% target
+							writer.WriteLine ();
+						}
+						writer.WriteTarget ("install{0}-dev{2}-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --install \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG)", target.ProjectPath, target.Platform);
+						writer.WriteLine ();
+					}
 
 					// run dev project target
 					if (target.IsBCLProject) {
@@ -400,11 +438,35 @@ namespace xharness
 						writer.WriteLine ("\t$(Q) echo Run succeeded"); // This is important, otherwise we'll end up executing the catch-all run-% target
 						writer.WriteLine ();
 					}
-					writer.WriteTarget ("run{0}-dev{2}-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-					writer.WriteLine ("\t$(Q) $(MAKE) build{0}-dev{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-					writer.WriteLine ("\t$(Q) $(MAKE) install{0}-dev{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-					writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-dev{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-					writer.WriteLine ();
+					if (target.IsMultiArchitecture) {
+						writer.WriteTarget ("run{0}-dev-{1}", string.Empty, make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) rm -f \".$@-failure.stamp\"");
+						writer.WriteLine ("\t$(Q) $(MAKE) build{0}-dev32-{1} build{0}-dev64-{1}", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(MAKE) install{0}-dev32-{1} || echo \"install{0}-dev32-{1} failed\" >> \".$@-failure.stamp\"", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-dev32-{1}    || echo \"exec{0}-dev32-{1} failed\" >> \".$@-failure.stamp\"", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(MAKE) install{0}-dev64-{1} || echo \"install{0}-dev32-{1} failed\" >> \".$@-failure.stamp\"", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-dev64-{1}    || echo \"exec{0}-dev64-{1} failed\" >> \".$@-failure.stamp\"", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) if test -e \".$@-failure.stamp\"; then cat \".$@-failure.stamp\"; rm \".$@-failure.stamp\"; exit 1; fi");
+						writer.WriteLine ();
+
+						writer.WriteTarget ("run{0}-dev32-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(MAKE) build{0}-dev32-{1}", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(MAKE) install{0}-dev32-{1}", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-dev32-{1}", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ();
+
+						writer.WriteTarget ("run{0}-dev64-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(MAKE) build{0}-dev64-{1}", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(MAKE) install{0}-dev64-{1}", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-dev64-{1}", make_escaped_suffix, make_escaped_name);
+						writer.WriteLine ();
+					} else {
+						writer.WriteTarget ("run{0}-dev{2}-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						writer.WriteLine ("\t$(Q) $(MAKE) build{0}-dev{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						writer.WriteLine ("\t$(Q) $(MAKE) install{0}-dev{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-dev{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+						writer.WriteLine ();
+					}
 
 					// exec dev project target
 					if (target.IsBCLProject) {
@@ -431,23 +493,36 @@ namespace xharness
 						foreach (var chunk in chunks) {
 							var chunk_name = chunk [0] == chunk [1] ? chunk [0].ToString () : chunk;
 							chunk_name = chunk_name.ToLowerInvariant ();
-							var target_name = string.Format ("exec{0}-dev{2}-{1}-{3}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix, chunk_name);
-							writer.WriteTarget (target_name, "xharness/xharness.exe");
-							writer.WriteLine ("\t@echo Executing subset: {0}-{1}", chunk [0], chunk [1]);
-							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG) --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --setenv:NUNIT_FILTER_START={2} --setenv:NUNIT_FILTER_END={3}", target.ProjectPath, target.Platform, chunk [0], chunk [1]);
-							writer.WriteLine ();
-							writer.WriteTarget ("run{0}-dev{2}-{1}-{3}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix, chunk_name);
-							writer.WriteLine ("\t$(Q) $(MAKE) build{0}-dev{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-							writer.WriteLine ("\t$(Q) $(MAKE) install{0}-dev{2}-{1}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-							writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-dev{2}-{1}-{3}", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix, chunk_name);
-							writer.WriteLine ();
-							chunked_targets.Add (target_name);
+							var suffixes = target.IsMultiArchitecture ? new string [] { "32", "64" } : new string [] { "" };
+							foreach (var suffix in suffixes) {
+								var target_name = string.Format ("exec{0}-dev{2}-{1}-{3}", make_escaped_suffix, make_escaped_name, suffix, chunk_name);
+								writer.WriteTarget (target_name, "xharness/xharness.exe");
+								writer.WriteLine ("\t@echo Executing subset: {0}-{1}", chunk [0], chunk [1]);
+								writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG){4} --logdirectory \"$(abspath $(CURDIR))/logs/$@\" --setenv:NUNIT_FILTER_START={2} --setenv:NUNIT_FILTER_END={3}", target.ProjectPath, target.Platform, chunk [0], chunk [1], suffix);
+								writer.WriteLine ();
+								writer.WriteTarget ("run{0}-dev{2}-{1}-{3}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name, suffix, chunk_name);
+								writer.WriteLine ("\t$(Q) $(MAKE) build{0}-dev{2}-{1}", make_escaped_suffix, make_escaped_name, suffix);
+								writer.WriteLine ("\t$(Q) $(MAKE) install{0}-dev{2}-{1}", make_escaped_suffix, make_escaped_name, suffix);
+								writer.WriteLine ("\t$(Q) $(MAKE) exec{0}-dev{2}-{1}-{3}", make_escaped_suffix, make_escaped_name, suffix, chunk_name);
+								writer.WriteLine ();
+								chunked_targets.Add (target_name);
+							}
 						}
 						writer.WriteTarget ("exec{0}-dev{2}-{1}", string.Join (" ", chunked_targets), make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
 						writer.WriteLine ("\t@echo Chunked tests {0} succeeded.", target.Name);
 					} else {
-						writer.WriteTarget ("exec{0}-dev{2}-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
-						writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG) --logdirectory \"$(abspath $(CURDIR))/logs/$@\"", target.ProjectPath, target.Platform);
+						if (target.IsMultiArchitecture) {
+							writer.WriteTarget ("exec{0}-dev32-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name);
+							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG)32 --logdirectory \"$(abspath $(CURDIR))/logs/$@\"", target.ProjectPath, target.Platform);
+							writer.WriteLine ();
+
+							writer.WriteTarget ("exec{0}-dev64-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name);
+							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG)64 --logdirectory \"$(abspath $(CURDIR))/logs/$@\"", target.ProjectPath, target.Platform);
+							writer.WriteLine ();
+						} else {
+							writer.WriteTarget ("exec{0}-dev{2}-{1}", "xharness/xharness.exe", make_escaped_suffix, make_escaped_name, target.MakefileWhereSuffix);
+							writer.WriteLine ("\t$(Q) $(SYSTEM_MONO) --debug xharness/xharness.exe $(XHARNESS_VERBOSITY) --run \"{0}\" --target {1}-device --sdkroot $(XCODE_DEVELOPER_ROOT) --configuration $(CONFIG) --logdirectory \"$(abspath $(CURDIR))/logs/$@\"", target.ProjectPath, target.Platform);
+						}
 					}
 					writer.WriteLine ();
 

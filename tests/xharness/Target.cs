@@ -74,6 +74,11 @@ namespace xharness
 				inputProject.SetMtouchUseLlvm (true, "iPhone", "Release-bitcode");
 			}
 
+			if (!IsMultiArchitecture && IsExe) {
+				inputProject.DeleteConfiguration ("iPhone", "Debug32");
+				inputProject.DeleteConfiguration ("iPhone", "Debug64");
+			}
+
 			inputProject.SetOutputPath ("bin\\$(Platform)\\$(Configuration)" + Suffix);
 			inputProject.SetIntermediateOutputPath ("obj\\$(Platform)\\$(Configuration)" + Suffix);
 			
