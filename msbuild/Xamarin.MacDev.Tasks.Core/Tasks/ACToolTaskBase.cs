@@ -204,7 +204,7 @@ namespace Xamarin.MacDev.Tasks
 
 		IEnumerable<ITaskItem> GetCompiledBundleResources (PDictionary output, string intermediateBundleDir)
 		{
-			var pwd = PathUtils.ResolveSymbolicLink (Environment.CurrentDirectory);
+			var pwd = PathUtils.ResolveSymbolicLinks (Environment.CurrentDirectory);
 			PDictionary dict;
 			PArray array;
 
@@ -214,7 +214,7 @@ namespace Xamarin.MacDev.Tasks
 					if (path.EndsWith ("partial-info.plist", StringComparison.Ordinal))
 						continue;
 
-					var vpath = PathUtils.AbsoluteToRelative (pwd, PathUtils.ResolveSymbolicLink (path));
+					var vpath = PathUtils.AbsoluteToRelative (pwd, PathUtils.ResolveSymbolicLinks (path));
 					var item = new TaskItem (vpath);
 
 					// Note: the intermediate bundle dir functions as a top-level bundle dir

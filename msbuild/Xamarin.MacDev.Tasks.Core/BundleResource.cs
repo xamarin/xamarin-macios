@@ -81,8 +81,8 @@ namespace Xamarin.MacDev
 				baseDir = projectDir;
 			}
 
-			baseDir = PathUtils.ResolveSymbolicLink (baseDir);
-			path = PathUtils.ResolveSymbolicLink (path);
+			baseDir = PathUtils.ResolveSymbolicLinks (baseDir);
+			path = PathUtils.ResolveSymbolicLinks (path);
 			
 			return PathUtils.AbsoluteToRelative (baseDir, path);
 		}
