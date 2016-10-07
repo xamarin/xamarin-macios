@@ -21,7 +21,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Any CPU\Debug-unified</OutputPath>
+    <OutputPath>bin\Any CPU\$(Configuration)-unified</OutputPath>
     <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <ConsolePause>false</ConsolePause>
@@ -32,7 +32,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <Optimize>true</Optimize>
-    <OutputPath>bin\Any CPU\Release-unified</OutputPath>
+    <OutputPath>bin\Any CPU\$(Configuration)-unified</OutputPath>
     <DefineConstants>;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <ConsolePause>false</ConsolePause>

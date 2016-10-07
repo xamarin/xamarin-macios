@@ -18,7 +18,7 @@
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
-    <OutputPath>bin\iPhoneSimulator\Debug-unified</OutputPath>
+    <OutputPath>bin\iPhoneSimulator\$(Configuration)-unified</OutputPath>
     <DefineConstants>DEBUG;MONOTOUCH;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -33,7 +33,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
     <Optimize>False</Optimize>
-    <OutputPath>bin\iPhoneSimulator\Release-unified</OutputPath>
+    <OutputPath>bin\iPhoneSimulator\$(Configuration)-unified</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
@@ -48,7 +48,7 @@
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
-    <OutputPath>bin\iPhone\Debug-unified</OutputPath>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <DefineConstants>DEBUG;MONOTOUCH;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -64,7 +64,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
     <Optimize>False</Optimize>
-    <OutputPath>bin\iPhone\Release-unified</OutputPath>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
@@ -80,7 +80,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
     <DebugType>none</DebugType>
     <Optimize>False</Optimize>
-    <OutputPath>bin\iPhone\Release-bitcode-unified</OutputPath>
+    <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>

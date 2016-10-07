@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
-    <OutputPath>bin\iPhoneSimulator\Debug-watchos</OutputPath>
+    <OutputPath>bin\iPhoneSimulator\$(Configuration)-watchos</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -31,7 +31,7 @@
     <MtouchProfiling>true</MtouchProfiling>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
-    <OutputPath>bin\iPhone\Release-watchos</OutputPath>
+    <OutputPath>bin\iPhone\$(Configuration)-watchos</OutputPath>
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <ErrorReport>prompt</ErrorReport>
@@ -46,7 +46,7 @@
     <MtouchLink>Full</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
-    <OutputPath>bin\iPhoneSimulator\Release-watchos</OutputPath>
+    <OutputPath>bin\iPhoneSimulator\$(Configuration)-watchos</OutputPath>
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <ErrorReport>prompt</ErrorReport>
@@ -59,7 +59,7 @@
     <MtouchUseSGen>true</MtouchUseSGen>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
-    <OutputPath>bin\iPhone\Debug-watchos</OutputPath>
+    <OutputPath>bin\iPhone\$(Configuration)-watchos</OutputPath>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
