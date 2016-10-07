@@ -246,5 +246,18 @@ namespace MonoTouchFixtures.CoreGraphics {
 				Assert.IsFalse (p2.IsEmpty, "IsEmpty");
 			}
 		}
+
+		[Test]
+		public void Bug40230 ()
+		{
+			var rect = new CGRect (1, 1, 25, 25);
+			// Assertion failed: (corner_width >= 0 && 2 * corner_width <= CGRectGetWidth(rect)), function CGPathCreateWithRoundedRect
+			Assert.Throws<ArgumentException> (() => CGPath.FromRoundedRect (rect, 13.5f, 1), "width");
+			// Assertion failed: (corner_height >= 0 && 2 * corner_height <= CGRectGetHeight(rect)), function CGPathRef CGPathCreateWithRoundedRect
+			Assert.Throws<ArgumentException> (() => CGPath.FromRoundedRect (rect, 1, 13.5f), "height");
+			using (var path = CGPath.FromRoundedRect (rect, 1, 1)) {
+				Assert.IsNotNull (path, "path");
+			}
+		}
 	}
 }
