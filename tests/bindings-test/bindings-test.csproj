@@ -47,10 +47,12 @@
   </ItemGroup>
   <ItemGroup>
     <ObjcBindingApiDefinition Include="ApiDefinition.cs" />
+    <ObjcBindingApiDefinition Include="ApiDefinition.generated.cs" />
     <ObjcBindingApiDefinition Include="ApiProtocol.cs" />
   </ItemGroup>
   <ItemGroup>
     <ObjcBindingCoreSource Include="StructsAndEnums.cs" />
+    <ObjcBindingCoreSource Include="StructsAndEnums.generated.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.ObjCBinding.CSharp.targets" />
   <ItemGroup>
@@ -74,8 +76,26 @@
     <None Include="..\..\tests\test-libraries\libtest.h">
       <Link>libtest.h</Link>
     </None>
+    <None Include="..\..\tests\test-libraries\libtest.structs.h">
+      <Link>libtest.structs.h</Link>
+    </None>
+    <None Include="..\..\tests\test-libraries\libtest.properties.h">
+      <Link>libtest.properties.h</Link>
+    </None>
+    <None Include="..\..\tests\test-libraries\testgenerator.cs">
+      <Link>testgenerator.cs</Link>
+    </None>
   </ItemGroup>
-  <Target Name="BeforeBuild" Inputs="..\..\tests\test-libraries\libtest.m" Outputs="..\..\tests\test-libraries\.libs\ios\libtest.a">
+  <ItemGroup>
+    <GeneratedTestInput Include="..\..\tests\test-libraries\*.m" />
+    <GeneratedTestInput Include="..\..\tests\test-libraries\*.h" />
+    <GeneratedTestInput Include="..\..\tests\test-libraries\*.cs" />
+    <GeneratedTestInput Include="..\..\tests\test-libraries\Makefile" />
+    <GeneratedTestOutput Include="..\..\tests\test-libraries\.libs\ios\libtest.a" />
+    <GeneratedTestOutput Include="ApiDefinition.generated.cs" />
+    <GeneratedTestOutput Include="StructsAndEnums.generated.cs" />
+  </ItemGroup>
+  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)">
     <Exec Command="make -j8 -C ..\..\tests\test-libraries" />
   </Target>
 </Project>

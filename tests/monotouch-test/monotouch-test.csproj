@@ -478,7 +478,9 @@
     <Compile Include="Foundation\DictionaryContainerTest.cs" />
     <Compile Include="ObjCRuntime\Messaging.cs" />
     <Compile Include="ObjCRuntime\TrampolineTest.cs" />
+    <Compile Include="ObjCRuntime\TrampolineTest.generated.cs" />
     <Compile Include="ObjCRuntime\RegistrarTest.cs" />
+    <Compile Include="ObjCRuntime\RegistrarTest.generated.cs" />
     <Compile Include="CoreGraphics\DataProviderTest.cs" />
     <Compile Include="HealthKit\QuantityTypeIdentifierTest.cs" />
     <Compile Include="HealthKit\CategoryTypeIdentifierTest.cs" />
@@ -753,4 +755,15 @@
     <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-76%402x.png" />
     <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\icon-app-83.5%402x.png" />
   </ItemGroup>
+  <ItemGroup>
+    <GeneratedTestInput Include="..\..\tests\test-libraries\*.m" />
+    <GeneratedTestInput Include="..\..\tests\test-libraries\*.h" />
+    <GeneratedTestInput Include="..\..\tests\test-libraries\*.cs" />
+    <GeneratedTestInput Include="..\..\tests\test-libraries\Makefile" />
+    <GeneratedTestOutput Include="ObjCRuntime\TrampolineTest.generated.cs" />
+    <GeneratedTestOutput Include="ObjCRuntime\RegistrarTest.generated.cs" />
+  </ItemGroup>
+  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)">
+    <Exec Command="make -j8 -C ..\..\tests\test-libraries" />
+  </Target>
 </Project>
