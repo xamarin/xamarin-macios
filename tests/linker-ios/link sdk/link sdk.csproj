@@ -48,7 +48,7 @@
     <MtouchDebug>True</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -xml=${ProjectDir}/extra-linker-defs.xml "--dlsym:-link sdk" -gcc_flags="-UhoItsB0rken"</MtouchExtraArgs>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
@@ -60,7 +60,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -xml=${ProjectDir}/extra-linker-defs.xml "--dlsym:-link sdk"</MtouchExtraArgs>
     <MtouchUseLlvm>True</MtouchUseLlvm>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
     <DefineConstants>DO_NOT_REMOVE;XAMARIN_APPLETLS;;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
@@ -72,7 +72,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -xml=${ProjectDir}/extra-linker-defs.xml "--dlsym:-link sdk" --bitcode:full</MtouchExtraArgs>
     <MtouchUseLlvm>true</MtouchUseLlvm>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
     <DefineConstants>DO_NOT_REMOVE;XAMARIN_APPLETLS;;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>

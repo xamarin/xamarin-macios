@@ -44,7 +44,7 @@
     <WarningLevel>4</WarningLevel>
     <MtouchDebug>true</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
     <MtouchExtraArgs>--nostrip --nosymbolstrip: --aot-options=-O=float32</MtouchExtraArgs>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -56,7 +56,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <MtouchExtraArgs>--nostrip --nosymbolstrip: --aot-options=-O=float32</MtouchExtraArgs>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
     <Optimize>true</Optimize>
@@ -66,7 +66,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <MtouchExtraArgs>--nostrip --nosymbolstrip: --aot-options=-O=float32 --bitcode:full</MtouchExtraArgs>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
     <MtouchUseLlvm>true</MtouchUseLlvm>
   </PropertyGroup>
   <ItemGroup>

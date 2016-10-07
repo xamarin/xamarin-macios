@@ -56,7 +56,7 @@
     <MtouchDebug>True</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <IpaPackageName>
     </IpaPackageName>
@@ -70,7 +70,7 @@
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -v -v --nosymbolstrip</MtouchExtraArgs>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchUseLlvm>true</MtouchUseLlvm>
   </PropertyGroup>
@@ -83,7 +83,7 @@
     <WarningLevel>4</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -v -v --nosymbolstrip --bitcode:full</MtouchExtraArgs>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchUseLlvm>true</MtouchUseLlvm>
   </PropertyGroup>

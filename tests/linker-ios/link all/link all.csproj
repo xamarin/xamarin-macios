@@ -52,7 +52,7 @@
     <MtouchDebug>True</MtouchDebug>
     <MtouchLink>Full</MtouchLink>
     <MtouchI18n>mideast,other</MtouchI18n>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
     <MtouchExtraArgs>--tls-provider=legacy -gcc_flags="-UhoItsB0rken"</MtouchExtraArgs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
@@ -65,7 +65,7 @@
     <MtouchLink>Full</MtouchLink>
     <MtouchI18n>mideast,other</MtouchI18n>
     <MtouchUseLlvm>True</MtouchUseLlvm>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
     <MtouchExtraArgs>-v -v -v -v --tls-provider=legacy</MtouchExtraArgs>
     <DefineConstants>LINKALL;;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
@@ -79,7 +79,7 @@
     <MtouchLink>Full</MtouchLink>
     <MtouchI18n>mideast,other</MtouchI18n>
     <MtouchUseLlvm>true</MtouchUseLlvm>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
     <MtouchExtraArgs>-v -v -v -v --tls-provider=legacy --bitcode:full</MtouchExtraArgs>
     <DefineConstants>LINKALL;;$(DefineConstants)</DefineConstants>
   </PropertyGroup>

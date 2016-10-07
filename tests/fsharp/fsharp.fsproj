@@ -37,7 +37,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchFloat32>true</MtouchFloat32>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
     <GenerateTailCalls>true</GenerateTailCalls>
     <MtouchLink>None</MtouchLink>
   </PropertyGroup>
@@ -49,7 +49,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchFloat32>true</MtouchFloat32>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
     <GenerateTailCalls>true</GenerateTailCalls>
     <MtouchLink>None</MtouchLink>
     <MtouchExtraArgs>--bitcode:full</MtouchExtraArgs>
@@ -80,7 +80,7 @@
     <MtouchFloat32>true</MtouchFloat32>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchLink>None</MtouchLink>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

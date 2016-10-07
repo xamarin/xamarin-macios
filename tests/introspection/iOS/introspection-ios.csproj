@@ -51,7 +51,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchLink>None</MtouchLink>
     <MtouchExtraArgs></MtouchExtraArgs>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -63,7 +63,7 @@
     <MtouchExtraArgs>-v -v</MtouchExtraArgs>
     <MtouchUseLlvm>True</MtouchUseLlvm>
     <MtouchLink>None</MtouchLink>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
     <DefineConstants>MONOTOUCH;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
@@ -76,7 +76,7 @@
     <MtouchExtraArgs>-v -v --bitcode:full</MtouchExtraArgs>
     <MtouchUseLlvm>true</MtouchUseLlvm>
     <MtouchLink>None</MtouchLink>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
     <DefineConstants>MONOTOUCH;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>

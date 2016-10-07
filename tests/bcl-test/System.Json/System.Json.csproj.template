@@ -51,7 +51,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchDebug>True</MtouchDebug>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -63,7 +63,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE;$(DefineConstants)</DefineConstants>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|iPhone' ">
     <DebugType>none</DebugType>
@@ -75,7 +75,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;NET_2_1;MOBILE;MONOTOUCH;DISABLE_CAS_USE;$(DefineConstants)</DefineConstants>
-    <MtouchArch>ARM64</MtouchArch>
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
     <MtouchExtraArgs>--bitcode:full</MtouchExtraArgs>
     <MtouchUseLlvm>true</MtouchUseLlvm>
   </PropertyGroup>
