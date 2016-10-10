@@ -41,9 +41,6 @@ IOS_TASK_ASSEMBLIES =         \
 	Xamarin.MacDev.Tasks      \
 	Xamarin.MacDev.Tasks.Core \
 
-IOS_BINDING_TASK_ASSEMBLIES = \
-	Xamarin.ObjcBinding.Tasks \
-
 IOS_TASK_REFERENCE_ASSEMBLIES =	\
 	Xamarin.MacDev              \
 	Newtonsoft.Json             \
@@ -55,12 +52,15 @@ IOS_DIRECTORIES =                                                               
 	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/                               \
 	$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/msbuild/iOS/               \
 
+IOS_2_1_SYMLINKS = \
+	$(foreach target,$(IOS_BINDING_TARGETS)       ,$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/$(notdir $(target)))       \
+
 # these point to a file in /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS
 IOS_X_I_SYMLINKS = \
 	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.iOS/v1.0/RedistList/FrameworkList.xml                          \
 	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/iOS                                                                       \
 
-IOS_SYMLINKS = $(IOS_X_I_SYMLINKS)
+IOS_SYMLINKS = $(IOS_X_I_SYMLINKS) $(IOS_2_1_SYMLINKS)
 
 IOS_PRODUCTS =                                                                                                         \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/FrameworkList.xml                                                       \
@@ -68,7 +68,6 @@ IOS_PRODUCTS =                                                                  
 	$(foreach target,$(IOS_BINDING_TARGETS)       ,$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/$(notdir $(target)))     \
 	$(foreach dll,$(IOS_TASK_REFERENCE_ASSEMBLIES),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/$(dll).dll)              \
 	$(foreach dll,$(IOS_TASK_ASSEMBLIES)          ,$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/$(dll).dll)              \
-	$(foreach dll,$(IOS_BINDING_TASK_ASSEMBLIES)  ,$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/$(dll).dll)              \
 	$(IOS_SYMLINKS)
 
 all-ios: $(IOS_PRODUCTS)
@@ -78,7 +77,7 @@ ifdef INCLUDE_IOS
 MSBUILD_PRODUCTS += all-ios
 MSBUILD_DIRECTORIES += $(IOS_DIRECTORIES)
 MSBUILD_SYMLINKS += symlinks-ios
-MSBUILD_TASK_ASSEMBLIES += $(IOS_TASK_ASSEMBLIES) $(IOS_BINDING_TASK_ASSEMBLIES)
+MSBUILD_TASK_ASSEMBLIES += $(IOS_TASK_ASSEMBLIES)
 MSBUILD_REFERENCE_ASSEMBLIES += $(IOS_TASK_REFERENCE_ASSEMBLIES)
 endif
 
@@ -225,6 +224,9 @@ $(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xama
 
 $(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/iOS: | $(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin
 	$(Q) ln -Fhs $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/msbuild/iOS $@
+
+$(IOS_2_1_SYMLINKS): | $(IOS_DIRECTORIES)
+	$(Q) ln -fs $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/msbuild/iOS/$(notdir $@) $@
 
 # The actual content goes into /Library/Frameworks/Xamarin.iOS.framework/Versions/Current
 
