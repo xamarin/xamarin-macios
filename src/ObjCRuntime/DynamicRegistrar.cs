@@ -67,7 +67,7 @@ namespace XamCore.Registrar {
 		}
 	}
 
-	class DynamicRegistrar : Registrar, IDynamicRegistrar {
+	class DynamicRegistrar : Registrar {
 		Dictionary<IntPtr, ObjCType> type_map;
 		Dictionary <IntPtr, LazyMapEntry> lazy_map;
 		Dictionary <Type, Dictionary <IntPtr, MethodDescription>> method_map;
