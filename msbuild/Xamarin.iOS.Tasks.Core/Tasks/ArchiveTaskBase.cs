@@ -39,7 +39,7 @@ namespace Xamarin.iOS.Tasks
 			if (!attributes.TryGetValue ("WKAppBundleIdentifier", out expectedBundleIdentifier))
 				return false;
 
-			var pwd = PathUtils.ResolveSymbolicLink (Environment.CurrentDirectory);
+			var pwd = PathUtils.ResolveSymbolicLinks (Environment.CurrentDirectory);
 
 			// Scan the *.app subdirectories to find the WatchApp bundle...
 			foreach (var bundle in Directory.GetDirectories (appex.ItemSpec, "*.app")) {
@@ -54,7 +54,7 @@ namespace Xamarin.iOS.Tasks
 				if (bundleIdentifier.Value != expectedBundleIdentifier.Value)
 					continue;
 
-				watchAppBundleDir = PathUtils.AbsoluteToRelative (pwd, PathUtils.ResolveSymbolicLink (bundle));
+				watchAppBundleDir = PathUtils.AbsoluteToRelative (pwd, PathUtils.ResolveSymbolicLinks (bundle));
 
 				return true;
 			}

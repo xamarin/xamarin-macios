@@ -28,13 +28,13 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			var pwd = PathUtils.ResolveSymbolicLink (Environment.CurrentDirectory);
+			var pwd = PathUtils.ResolveSymbolicLinks (Environment.CurrentDirectory);
 
 			Log.LogTaskName ("FindWatchOS2AppBundle");
 			Log.LogTaskProperty ("WatchAppReferences", WatchAppReferences);
 
 			if (WatchAppReferences.Length > 0) {
-				WatchOS2AppBundle = PathUtils.AbsoluteToRelative (pwd, PathUtils.ResolveSymbolicLink (WatchAppReferences[0].ItemSpec));
+				WatchOS2AppBundle = PathUtils.AbsoluteToRelative (pwd, PathUtils.ResolveSymbolicLinks (WatchAppReferences[0].ItemSpec));
 
 				return true;
 			}

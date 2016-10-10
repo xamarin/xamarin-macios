@@ -1,9 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-
-using Mono.Unix;
 
 namespace Xamarin.MacDev
 {
@@ -22,13 +19,16 @@ namespace Xamarin.MacDev
 		[DllImport ("/usr/lib/libc.dylib")]
 		static extern IntPtr realpath (string path, IntPtr buffer);
 
-		static string ResolveFullPath (string path)
+		public static string ResolveSymbolicLinks (string path)
 		{
+			if (string.IsNullOrEmpty (path))
+				return path;
+
 			if (Path.DirectorySeparatorChar == '\\')
 				return Path.GetFullPath (path);
 
 			const int PATHMAX = 4096 + 1;
-			IntPtr buffer = IntPtr.Zero;
+			var buffer = IntPtr.Zero;
 
 			try {
 				buffer = Marshal.AllocHGlobal (PATHMAX);
@@ -37,45 +37,6 @@ namespace Xamarin.MacDev
 			} finally {
 				if (buffer != IntPtr.Zero)
 					Marshal.FreeHGlobal (buffer);
-			}
-		}
-
-		public static string ResolveSymbolicLink (string path)
-		{
-			if (string.IsNullOrEmpty (path))
-				return path;
-
-			if (Path.DirectorySeparatorChar == '\\')
-				return Path.GetFullPath (path);
-
-			try {
-				var alreadyVisted = new HashSet<string> ();
-
-				while (true) {
-					if (alreadyVisted.Contains (path))
-						return string.Empty;
-
-					alreadyVisted.Add (path);
-
-					var linkInfo = new UnixSymbolicLinkInfo (path);
-					if (linkInfo.IsSymbolicLink && linkInfo.HasContents) {
-						string contentsPath = linkInfo.ContentsPath;
-
-						if (!Path.IsPathRooted (contentsPath))
-							path = Path.Combine (Path.GetDirectoryName (path), contentsPath);
-						else
-							path = contentsPath;
-
-						path = ResolveFullPath (path);
-						continue;
-					}
-
-					path = Path.Combine (ResolveSymbolicLink (Path.GetDirectoryName (path)), Path.GetFileName (path));
-
-					return ResolveFullPath (path);
-				}
-			} catch {
-				return path;
 			}
 		}
 
