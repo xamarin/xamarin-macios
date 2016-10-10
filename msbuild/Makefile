@@ -51,7 +51,6 @@ IOS_TASK_REFERENCE_ASSEMBLIES =	\
 IOS_DIRECTORIES =                                                                                           \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1                                                          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS                                                  \
-	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/MonoTouch/v1.0/RedistList   \
 	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.iOS/v1.0/RedistList \
 	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/                               \
 	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/iOS                            \
@@ -59,7 +58,6 @@ IOS_DIRECTORIES =                                                               
 
 # these point to a file in /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/2.1/
 IOS_2_1_SYMLINKS = \
-	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/MonoTouch/v1.0/RedistList/FrameworkList.xml                            \
 	$(foreach target,$(IOS_TARGETS)               ,$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/iOS/$(notdir $(target)))     \
 	$(foreach target,$(IOS_BINDING_TARGETS)       ,$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/$(notdir $(target)))         \
 	$(foreach dll,$(IOS_TASK_REFERENCE_ASSEMBLIES),$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/iOS/$(dll).dll)              \
@@ -78,8 +76,7 @@ IOS_X_I_SYMLINKS = \
 IOS_SYMLINKS = $(IOS_2_1_SYMLINKS) $(IOS_X_I_SYMLINKS)
 
 IOS_PRODUCTS =                                                                                                         \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/FrameworkList.xml                                                   \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/FrameworkList.xml                                           \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/FrameworkList.xml                                                       \
 	$(foreach target,$(IOS_TARGETS)               ,$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/$(notdir $(target))) \
 	$(foreach target,$(IOS_BINDING_TARGETS)       ,$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/$(notdir $(target))) \
 	$(foreach dll,$(IOS_TASK_REFERENCE_ASSEMBLIES),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/$(dll).dll)          \
@@ -244,10 +241,7 @@ $(IOS_X_I_SYMLINKS): | $(IOS_DIRECTORIES)
 
 # The actual content goes into /Library/Frameworks/Xamarin.iOS.framework/Versions/Current
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/FrameworkList.xml: Xamarin.iOS.Tasks.Core/FrameworkList.xml.in Makefile | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
-	$(Q) sed 's@%TargetFrameworkDirectory%@$(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/2.1@' $< > $@
-
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/FrameworkList.xml: Xamarin.iOS.Tasks.Core/Xamarin.iOS-FrameworkList.xml.in Makefile | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS
+$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/FrameworkList.xml: Xamarin.iOS.Tasks.Core/Xamarin.iOS-FrameworkList.xml.in Makefile | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS
 	$(Q) sed 's@%TargetFrameworkDirectory%@$(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS@' $< > $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/%: Xamarin.ObjcBinding.Tasks/% | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1
