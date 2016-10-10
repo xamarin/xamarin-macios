@@ -81,7 +81,7 @@ namespace Xamarin.Bundler {
 		static string link_flags = null;
 		static LinkerOptions linker_options;
 		static bool disable_lldb_attach = false;
-		static string custom_machine_config_path = null;
+		static string machine_config_path = null;
 
 		static bool arch_set = false;
 		static string arch = "i386";
@@ -289,7 +289,7 @@ namespace Xamarin.Bundler {
 				{ "extension", "Specifies an app extension", v => is_extension = true },
 				{ "allow-unsafe-gac-resolution", "Allow MSBuild to resolve from the System GAC", v => {} , true }, // Used in Xamarin.Mac.XM45.targets and must be ignored here. Hidden since it is a total hack. If you can use it, you don't need support
 				{ "disable-lldb-attach=", "Disable automatic lldb attach on crash", v => disable_lldb_attach = ParseBool (v, "disable-lldb-attach")},
-				{ "custom-machine-config=", "Custom machine.config file to copy into MonoBundle/mono/4.5/machine.config. Pass \"\" to copy in a valid \"empty\" config file.", v => custom_machine_config_path = v },
+				{ "machine-config=", "Custom machine.config file to copy into MonoBundle/mono/4.5/machine.config. Pass \"\" to copy in a valid \"empty\" config file.", v => machine_config_path = v },
 			};
 
 			AddSharedOptions (os);
@@ -1501,18 +1501,18 @@ namespace Xamarin.Bundler {
 				CopyResourceFile ("config", "config");
 			}
 
-			if (custom_machine_config_path != null) {
+			if (machine_config_path != null) {
 				string machineConfigDestDir = Path.Combine (mmp_dir, "mono/4.5/");
 				string machineConfigDestFile = Path.Combine (machineConfigDestDir, "machine.config");
 
 				CreateDirectoryIfNeeded (machineConfigDestDir);
-				if (custom_machine_config_path == String.Empty) {
+				if (machine_config_path == String.Empty) {
 					File.WriteAllLines (machineConfigDestFile, new string [] { "<?xml version=\"1.0\" encoding=\"utf-8\"?>", "<configuration>", "</configuration>" });
 				}
 				else {
-					if (!File.Exists (custom_machine_config_path))
-						throw new MonoMacException (97, true, "machine.config file '{0}' can not be found.", custom_machine_config_path);
-					File.Copy (custom_machine_config_path, machineConfigDestFile);
+					if (!File.Exists (machine_config_path))
+						throw new MonoMacException (97, true, "machine.config file '{0}' can not be found.", machine_config_path);
+					File.Copy (machine_config_path, machineConfigDestFile);
 				}
 			}
 		}

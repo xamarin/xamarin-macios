@@ -390,7 +390,7 @@ namespace Xamarin.MMP.Tests
 		const string machineConfigXM45Location = "bin/Debug/XM45Example.app/Contents/MonoBundle/mono/4.5/machine.config";
 
 		[Test]
-		public void Unified_ShouldNotGenerateMachineConfigInBundle_WithoutOption()
+		public void Unified_ShouldNotGenerateMachineConfigInBundle_WithoutOption ()
 		{
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
@@ -408,25 +408,25 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
-		public void Unified_InvalidCustomMachineConfigInBundle_ThrowsError()
+		public void Unified_InvalidMachineConfigInBundle_ThrowsError ()
 		{
 			RunMMPTest (tmpDir => {
-				string invalidCustomConfigPath = Path.Combine (tmpDir, "nonexistant/machine.config");
+				string invalidConfigPath = Path.Combine (tmpDir, "nonexistant/machine.config");
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = string.Format ("<MonoBundlingExtraArgs>--custom-machine-config={0}</MonoBundlingExtraArgs>", invalidCustomConfigPath)
+					CSProjConfig = string.Format ("<MonoBundlingExtraArgs>--machine-config={0}</MonoBundlingExtraArgs>", invalidConfigPath)
 				};
 				string buildOutput = TI.TestUnifiedExecutable (test, shouldFail : true).BuildOutput;
-				Assert.IsTrue (buildOutput.Contains ("can not be found"), "Unified_InvalidCustomMachineConfigInBundle_ThrowsError did not error as expected (1):\n\n", buildOutput);
-				Assert.IsTrue (buildOutput.Contains ("97"), "Unified_InvalidCustomMachineConfigInBundle_ThrowsError did not error as expected (2):\n\n", buildOutput);
+				Assert.IsTrue (buildOutput.Contains ("can not be found"), "Unified_InvalidMachineConfigInBundle_ThrowsError did not error as expected (1):\n\n", buildOutput);
+				Assert.IsTrue (buildOutput.Contains ("97"), "Unified_InvalidMachineConfigInBundle_ThrowsError did not error as expected (2):\n\n", buildOutput);
 			});
 		}
 
 		[Test]
-		public void Unified_ShouldGenerateMachineConfigInBundle_WithEmptyOption()
+		public void Unified_ShouldGenerateMachineConfigInBundle_WithEmptyOption ()
 		{
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = "<MonoBundlingExtraArgs>--custom-machine-config=\"\"</MonoBundlingExtraArgs>"
+					CSProjConfig = "<MonoBundlingExtraArgs>--machine-config=\"\"</MonoBundlingExtraArgs>"
 				};
 				TI.TestUnifiedExecutable (test);
 				Assert.IsTrue (File.Exists (Path.Combine (tmpDir, machineConfigMobileLocation)));
@@ -438,15 +438,15 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
-		public void Unified_ShouldGenerateCustomMachineConfigInBundle_WhenPassedIn()
+		public void Unified_ShouldGenerateMachineConfigInBundle_WhenPassedIn ()
 		{
 			RunMMPTest (tmpDir => {
-				const string customConfigText = "THIS_IS_NOT_A_REAL_CONFIG_FILE";
-				string customConfigPath = Path.Combine (tmpDir, "machine.config");
-				File.WriteAllLines (customConfigPath, new string [] { customConfigText });
+				const string configText = "THIS_IS_NOT_A_REAL_CONFIG_FILE";
+				string configPath = Path.Combine (tmpDir, "machine.config");
+				File.WriteAllLines (configPath, new string [] { configText });
 
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = string.Format ("<MonoBundlingExtraArgs>--custom-machine-config={0}</MonoBundlingExtraArgs>", customConfigPath)
+					CSProjConfig = string.Format ("<MonoBundlingExtraArgs>--machine-config={0}</MonoBundlingExtraArgs>", configPath)
 				};
 
 				// Mobile
@@ -454,7 +454,7 @@ namespace Xamarin.MMP.Tests
 
 				Assert.IsTrue (File.Exists (Path.Combine (tmpDir, machineConfigMobileLocation)));
 				string [] text = File.ReadAllLines (Path.Combine (tmpDir, machineConfigMobileLocation));
-				Assert.IsTrue (text.Length == 1 && text[0] == customConfigText);
+				Assert.IsTrue (text.Length == 1 && text[0] == configText);
 
 				// XM45
 				test.XM45 = true;
@@ -462,7 +462,7 @@ namespace Xamarin.MMP.Tests
 
 				Assert.IsTrue (File.Exists (Path.Combine (tmpDir, machineConfigXM45Location)));
 				text = File.ReadAllLines (Path.Combine (tmpDir, machineConfigXM45Location));
-				Assert.IsTrue (text.Length == 1 && text[0] == customConfigText);
+				Assert.IsTrue (text.Length == 1 && text[0] == configText);
 			});
 		}
 	}
