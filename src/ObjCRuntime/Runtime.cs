@@ -48,8 +48,7 @@ namespace XamCore.ObjCRuntime {
 		internal static IntPtrEqualityComparer IntPtrEqualityComparer;
 		internal static TypeEqualityComparer TypeEqualityComparer;
 
-		// note: must stay a field (or the linker must be modified)
-		internal static IDynamicRegistrar Registrar;
+		internal static DynamicRegistrar Registrar;
 
 		internal unsafe struct RegistrationData {
 			public MTRegistrationMap *map;
