@@ -321,8 +321,27 @@ namespace Foundation {
 				completionHandler (sessionHandler.AllowAutoRedirect ? newRequest : null);
 			}
 
-			public override void DidReceiveChallenge(NSUrlSession session, NSUrlSessionTask task, NSUrlAuthenticationChallenge challenge, Action<NSUrlSessionAuthChallengeDisposition, NSUrlCredential> completionHandler)
+			public override void DidReceiveChallenge (NSUrlSession session, NSUrlSessionTask task, NSUrlAuthenticationChallenge challenge, Action<NSUrlSessionAuthChallengeDisposition, NSUrlCredential> completionHandler)
 			{
+				// case for the basic auth failing up front. As per apple documentation:
+				// The URL Loading System is designed to handle various aspects of the HTTP protocol for you. As a result, you should not modify the following headers using
+				// the addValue(_:forHTTPHeaderField:) or setValue(_:forHTTPHeaderField:) methods:
+				// 	Authorization
+				// 	Connection
+				// 	Host
+				// 	Proxy-Authenticate
+				// 	Proxy-Authorization
+				// 	WWW-Authenticate
+				// but we are hiding such a situation from our users, we can nevertheless know if the header was added and deal with it. The idea is as follows,
+				// check if we are in the first attempt, if we are (PreviousFailureCount == 0), we check the headers of the request and if we do have the Auth 
+				// header, it means that we do not have the correct credentials, in any other case just do what it is expected.
+				
+				var authHeader = GetInflightData (task).Request.Headers.Authorization;
+				if (challenge.PreviousFailureCount == 0 && (!string.IsNullOrEmpty (authHeader.Scheme) || !string.IsNullOrEmpty (authHeader.Parameter))) {
+					completionHandler (NSUrlSessionAuthChallengeDisposition.RejectProtectionSpace, null);
+					return;
+				}
+
 				if (challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodNTLM) {
 					if (sessionHandler.Credentials != null) {
 						var credentialsToUse = sessionHandler.Credentials as NetworkCredential;
