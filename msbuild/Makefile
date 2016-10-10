@@ -54,22 +54,14 @@ IOS_DIRECTORIES =                                                               
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS                                                           \
 	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.iOS/v1.0/RedistList \
 	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/                               \
-	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/iOS                            \
 	$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/msbuild/iOS/               \
-
-# these point to a file in /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/2.1/
-IOS_2_1_SYMLINKS = \
-	$(foreach target,$(IOS_TARGETS)               ,$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/iOS/$(notdir $(target)))     \
-	$(foreach target,$(IOS_BINDING_TARGETS)       ,$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/$(notdir $(target)))         \
-	$(foreach dll,$(IOS_TASK_REFERENCE_ASSEMBLIES),$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/iOS/$(dll).dll)              \
-	$(foreach dll,$(IOS_TASK_ASSEMBLIES)          ,$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/iOS/$(dll).dll)              \
-	$(foreach dll,$(IOS_BINDING_TASK_ASSEMBLIES)  ,$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/$(dll).dll)                  \
 
 # these point to a file in /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS
 IOS_X_I_SYMLINKS = \
 	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.iOS/v1.0/RedistList/FrameworkList.xml                          \
+	$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/iOS                                                                       \
 
-IOS_SYMLINKS = $(IOS_2_1_SYMLINKS) $(IOS_X_I_SYMLINKS)
+IOS_SYMLINKS = $(IOS_X_I_SYMLINKS)
 
 IOS_PRODUCTS =                                                                                                         \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/msbuild/iOS/FrameworkList.xml                                                       \
@@ -234,11 +226,11 @@ endif
 # Everything in /Library/Frameworks/Mono.framework/External are links into /Library/Frameworks/Xamarin.iOS.framework/Versions/Current
 # This makes it easy to switch XI, by just pointing /Library/Frameworks/Xamarin.iOS.framework/Versions/Current somewhere else
 
-$(IOS_2_1_SYMLINKS): | $(IOS_DIRECTORIES)
-	$(Q) ln -fs $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/2.1/$(notdir $@) $@
+$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.iOS/v1.0/RedistList/FrameworkList.xml: | $(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks/Xamarin.iOS/v1.0/RedistList
+	$(Q) ln -fs $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/msbuild/iOS/$(notdir $@) $@
 
-$(IOS_X_I_SYMLINKS): | $(IOS_DIRECTORIES)
-	$(Q) ln -fs $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/$(notdir $@) $@
+$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin/iOS: | $(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild/Xamarin
+	$(Q) ln -Fhs $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/msbuild/iOS $@
 
 # The actual content goes into /Library/Frameworks/Xamarin.iOS.framework/Versions/Current
 
