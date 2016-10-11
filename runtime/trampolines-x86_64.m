@@ -460,9 +460,10 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 
 			};
 		} else if (size == 8) {
-			if (!strcmp (type, "[ff]") || !strcmp (type, "[d]")) {
+			type = skip_type_name (type);
+			if (!strncmp (type, "ff}", 3) || !strncmp (type, "d}", 2)) {
 				// the only two fully fp combinations are: ff and d
-				it->state->xmm0 = *(float *) mono_object_unbox (value);
+				memcpy (&it->state->xmm0, mono_object_unbox (value), 8);
 			} else {
 				// all other combinations would contain at least one INTEGER-class type.
 				it->state->rax = *(uint64_t *) mono_object_unbox (value);
