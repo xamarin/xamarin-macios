@@ -84,12 +84,6 @@ namespace xharness
 			}
 		}
 
-		public override string MakefileWhereSuffix {
-			get {
-				return string.Empty;
-			}
-		}
-
 		public override string ProjectFileSuffix {
 			get {
 				return string.Empty;
