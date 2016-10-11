@@ -1473,6 +1473,7 @@ SHARED_SOURCES = \
 	ObjCRuntime/Selector.iOS.cs \
 	ObjCRuntime/Selector.mac.cs \
 	ObjCRuntime/SelectorMarshaler.cs \
+	ObjCRuntime/Stret.cs \
 	ObjCRuntime/ThreadSafeAttribute.cs \
 	ObjCRuntime/TransientAttribute.cs \
 	ObjCRuntime/TypeConverter.cs \

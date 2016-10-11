@@ -338,6 +338,7 @@ namespace Xamarin.Bundler {
 	//					MT8015	Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: The DelegateType's ({2}) 'Handler' field is not a delegate, it's a {3}. Please file a bug at http://bugzilla.xamarin.com.
 	//					MT8016	Unable to convert delegate to block for the return value for the method {0}.{1}, because the input isn't a delegate, it's a {1}. Please file a bug at http://bugzilla.xamarin.com.
 	//					MT8017	** reserved Xamarin.Mac **
+	//					MT8018	Internal consistency error. Please file a bug report at http://bugzilla.xamarin.com.
 	// MT9xxx	Licensing
 	//
 
