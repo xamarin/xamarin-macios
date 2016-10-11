@@ -359,7 +359,7 @@ update_environment (xamarin_initialize_data *data)
 		setenv ("MONO_DEBUG", "no-gdb-backtrace", 0);
 	}
 
-	setenv ("MONO_CFG_DIR", [monobundle_dir UTF8String], 1);
+	setenv ("MONO_CFG_DIR", [monobundle_dir UTF8String], 0);
 }
 
 static void
