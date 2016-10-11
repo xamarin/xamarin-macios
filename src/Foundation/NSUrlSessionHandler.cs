@@ -336,10 +336,12 @@ namespace Foundation {
 				// check if we are in the first attempt, if we are (PreviousFailureCount == 0), we check the headers of the request and if we do have the Auth 
 				// header, it means that we do not have the correct credentials, in any other case just do what it is expected.
 				
-				var authHeader = GetInflightData (task).Request.Headers.Authorization;
-				if (challenge.PreviousFailureCount == 0 && (!string.IsNullOrEmpty (authHeader.Scheme) || !string.IsNullOrEmpty (authHeader.Parameter))) {
-					completionHandler (NSUrlSessionAuthChallengeDisposition.RejectProtectionSpace, null);
-					return;
+				if (challenge.PreviousFailureCount == 0) {
+					var authHeader = GetInflightData (task).Request.Headers.Authorization;
+					if (!(string.IsNullOrEmpty (authHeader.Scheme) && string.IsNullOrEmpty (authHeader.Parameter))) {
+						completionHandler (NSUrlSessionAuthChallengeDisposition.RejectProtectionSpace, null);
+						return;
+					}
 				}
 
 				if (challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodNTLM) {
