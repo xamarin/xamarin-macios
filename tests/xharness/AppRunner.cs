@@ -318,7 +318,18 @@ namespace xharness
 
 			Initialize ();
 
-			crash_reports = new CrashReportSnapshot () { Device = !isSimulator, Harness = Harness, Log = main_log, Logs = Logs, LogDirectory = LogDirectory };
+			if (!isSimulator)
+				FindDevice ();
+
+			crash_reports = new CrashReportSnapshot ()
+			{
+				Device = !isSimulator,
+				DeviceName = device_name,
+				Harness = Harness,
+				Log = main_log,
+				Logs = Logs,
+				LogDirectory = LogDirectory,
+			};
 
 			var args = new StringBuilder ();
 			if (!string.IsNullOrEmpty (Harness.XcodeRoot))
@@ -471,9 +482,7 @@ namespace xharness
 					log.StopCapture ();
 				
 			} else {
-				FindDevice ();
-
-				main_log.WriteLine ("*** Executing {0}/{1} on device ***", appName, mode);
+				main_log.WriteLine ("*** Executing {0}/{1} on device '{2}' ***", appName, mode, device_name);
 
 				args.Append (" --launchdev");
 				args.AppendFormat (" \"{0}\" ", launchAppPath);

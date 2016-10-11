@@ -629,7 +629,7 @@ namespace xharness
 			}
 		}
 
-		public async Task<HashSet<string>> CreateCrashReportsSnapshotAsync (Log log, bool simulatorOrDesktop)
+		public async Task<HashSet<string>> CreateCrashReportsSnapshotAsync (Log log, bool simulatorOrDesktop, string device)
 		{
 			var rv = new HashSet<string> ();
 
@@ -640,7 +640,12 @@ namespace xharness
 			} else {
 				var tmp = Path.GetTempFileName ();
 				try {
-					var result = await ProcessHelper.ExecuteCommandAsync (MlaunchPath, "--list-crash-reports=" + tmp + " --sdkroot " + XcodeRoot, log, TimeSpan.FromMinutes (1));
+					var sb = new StringBuilder ();
+					sb.Append (" --list-crash-reports=").Append (Quote (tmp));
+					sb.Append (" --sdkroot ").Append (Quote (XcodeRoot));
+					if (!string.IsNullOrEmpty (device))
+						sb.Append (" --devname ").Append (Quote (device));
+					var result = await ProcessHelper.ExecuteCommandAsync (MlaunchPath, sb.ToString (), log, TimeSpan.FromMinutes (1));
 					if (result.Succeeded)
 						rv.UnionWith (File.ReadAllLines (tmp));
 				} finally {
@@ -659,13 +664,14 @@ namespace xharness
 		public Logs Logs { get; set; }
 		public string LogDirectory { get; set; }
 		public bool Device { get; set; }
+		public string DeviceName { get; set; }
 
 		public HashSet<string> InitialSet { get; private set; }
 		public IEnumerable<string> Reports { get; private set; }
 
 		public async Task StartCaptureAsync ()
 		{
-			InitialSet = await Harness.CreateCrashReportsSnapshotAsync (Log, !Device);
+			InitialSet = await Harness.CreateCrashReportsSnapshotAsync (Log, !Device, DeviceName);
 		}
 
 		public async Task EndCaptureAsync (TimeSpan timeout)
@@ -676,7 +682,7 @@ namespace xharness
 			var watch = new Stopwatch ();
 			watch.Start ();
 			do {
-				var end_crashes = await Harness.CreateCrashReportsSnapshotAsync (Log, !Device);
+				var end_crashes = await Harness.CreateCrashReportsSnapshotAsync (Log, !Device, DeviceName);
 				end_crashes.ExceptWith (InitialSet);
 				Reports = end_crashes;
 				if (end_crashes.Count > 0) {
@@ -695,7 +701,13 @@ namespace xharness
 						var downloaded_crash_reports = new List<LogFile> ();
 						foreach (var file in end_crashes) {
 							var crash_report_target = Logs.CreateFile ("Crash report: " + Path.GetFileName (file), Path.Combine (LogDirectory, Path.GetFileName (file)));
-							var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, "--download-crash-report=" + file + " --download-crash-report-to=" + crash_report_target.Path + " --sdkroot " + Harness.XcodeRoot, Log, TimeSpan.FromMinutes (1));
+							var sb = new StringBuilder ();
+							sb.Append (" --download-crash-report=").Append (Harness.Quote (file));
+							sb.Append (" --download-crash-report-to=").Append (Harness.Quote (crash_report_target.Path));
+							sb.Append (" --sdkroot ").Append (Harness.Quote (Harness.XcodeRoot));
+							if (!string.IsNullOrEmpty (DeviceName))
+								sb.Append (" --devname ").Append (Harness.Quote (DeviceName));
+							var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, sb.ToString (), Log, TimeSpan.FromMinutes (1));
 							if (result.Succeeded) {
 								Log.WriteLine ("Downloaded crash report {0} to {1}", file, crash_report_target.Path);
 								crash_report_target = await Harness.SymbolicateCrashReportAsync (Log, crash_report_target);
