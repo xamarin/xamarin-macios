@@ -800,6 +800,7 @@ namespace XamCore.PassKit {
 	[iOS (10,1)]
 	[NoWatch] // Radar: https://trello.com/c/MvaHEZlc
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor] // there's a designated initializer and it does not accept null
 	interface PKLabeledValue
 	{
 		[Export ("initWithLabel:value:")]
