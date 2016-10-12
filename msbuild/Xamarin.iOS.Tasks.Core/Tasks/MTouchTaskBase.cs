@@ -340,15 +340,15 @@ namespace Xamarin.iOS.Tasks
 
 		static string Unquote (string text, int startIndex)
 		{
-			var builder = new StringBuilder ();
-			var escaped = false;
-			var quoted = true;
-
 			if (startIndex >= text.Length)
 				return string.Empty;
 
 			if (text[startIndex] != '"')
 				return text.Substring (startIndex);
+
+			var builder = new StringBuilder ();
+			var escaped = false;
+			var quoted = true;
 
 			for (int i = startIndex; i < text.Length && quoted; i++) {
 				switch (text[i]) {
@@ -567,24 +567,22 @@ namespace Xamarin.iOS.Tasks
 				for (int i = 0; i < extraArgs.Length; i++) {
 					var argument = extraArgs[i];
 					int startIndex = 0;
-					int endIndex;
 
 					while (argument.Length > startIndex && argument[startIndex] == '-')
 						startIndex++;
 
-					endIndex = startIndex;
+					int endIndex = startIndex;
 					while (endIndex < argument.Length && argument[endIndex] != '=')
 						endIndex++;
 
-					if (startIndex > 0)
-						argument = argument.Substring (startIndex, endIndex - startIndex);
+					int length = endIndex - startIndex;
 
-					if (argument == "gcc_flags") {
+					if (length == 9 && string.CompareOrdinal (argument, startIndex, "gcc_flags", 0, 9) == 0) {
 						// user-defined -gcc_flags argument
 						string flags = null;
 
 						if (endIndex < extraArgs[i].Length) {
-							flags = Unquote (extraArgs[i], endIndex + 1);
+							flags = Unquote (argument, endIndex + 1);
 						} else if (i + 1 < extraArgs.Length) {
 							flags = extraArgs[++i];
 						}
@@ -597,7 +595,7 @@ namespace Xamarin.iOS.Tasks
 						}
 					} else {
 						// other user-defined mtouch arguments
-						args.AddQuoted (StringParserService.Parse (extraArgs[i], customTags));
+						args.AddQuoted (StringParserService.Parse (argument, customTags));
 					}
 				}
 			}
