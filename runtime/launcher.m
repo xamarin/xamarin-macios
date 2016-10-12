@@ -311,6 +311,7 @@ update_environment (xamarin_initialize_data *data)
 
 	// 3) Ensure the following environment variables are set: [...]
 	NSString *res_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/Resources"];
+	NSString *monobundle_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/MonoBundle"];
 
 #ifdef DYNAMIC_MONO_RUNTIME
 	NSString *bin_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/MacOS"];
@@ -357,6 +358,8 @@ update_environment (xamarin_initialize_data *data)
 		// So route through MONO_DEBUG
 		setenv ("MONO_DEBUG", "no-gdb-backtrace", 0);
 	}
+
+	setenv ("MONO_CFG_DIR", [monobundle_dir UTF8String], 1);
 }
 
 static void
