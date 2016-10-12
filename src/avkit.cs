@@ -256,7 +256,7 @@ namespace XamCore.AVKit {
 		[Export ("playerViewController:didRejectContentProposal:")]
 		void DidRejectContentProposal (AVPlayerViewController playerViewController, AVContentProposal proposal);
 	}
-		
+
 #else
 
 	[Mac (10,9, onlyOn64 : true)]
@@ -284,6 +284,69 @@ namespace XamCore.AVKit {
 		[Mac (10,10)]
 		[Export ("contentOverlayView")]
 		NSView ContentOverlayView { get; }
+
+		[Mac (10,9)]
+		[Export ("actionPopUpButtonMenu")]
+		NSMenu ActionPopUpButtonMenu { get; set; }
+
+		[Mac (10,9)] // No async
+		[Export ("beginTrimmingWithCompletionHandler:")]
+		void BeginTrimming (Action<AVPlayerViewTrimResult> handler);
+
+		[Mac (10,9)]
+		[Export ("canBeginTrimming")]
+		bool CanBeginTrimming { get; }
+
+		[Mac (10,9)]
+		[Export ("flashChapterNumber:chapterTitle:")]
+		void FlashChapter (nuint chapterNumber, string chapterTitle);
+
+		[Mac (10,9)]
+		[Export ("showsFrameSteppingButtons")]
+		bool ShowsFrameSteppingButtons { get; set; }
+
+		[Mac (10,9)]
+		[Export ("showsFullScreenToggleButton")]
+		bool ShowsFullScreenToggleButton { get; set; }
+
+		[Mac (10,9)]
+		[Export ("showsSharingServiceButton")]
+		bool ShowsSharingServiceButton { get; set; }
+	}
+
+	[Mac (10,10, onlyOn64 : true)]
+	[BaseType (typeof (NSView))]
+	interface AVCaptureView {
+
+		[Export ("session"), NullAllowed]
+		AVCaptureSession Session { get; }
+
+		[Export ("setSession:showVideoPreview:showAudioPreview:")]
+		void SetSession ([NullAllowed] AVCaptureSession session, bool showVideoPreview, bool showAudioPreview);
+
+		[Export ("fileOutput"), NullAllowed]
+		AVCaptureFileOutput FileOutput { get; }
+
+		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
+		IAVCaptureViewDelegate Delegate { get; set; }
+
+		[Export ("controlsStyle")]
+		AVCaptureViewControlsStyle ControlsStyle { get; set; }
+
+		// TODO: Create an enum version of this property
+		[Export ("videoGravity", ArgumentSemantic.Copy)]
+		NSString WeakVideoGravity { get; set; }
+	}
+
+	interface IAVCaptureViewDelegate { }
+
+	[Protocol, Model]
+	[Mac (10,10, onlyOn64 : true)]
+	[BaseType (typeof (NSObject))]
+	interface AVCaptureViewDelegate {
+		[Abstract]
+		[Export ("captureView:startRecordingToFileOutput:")]
+		void StartRecording (AVCaptureView captureView, AVCaptureFileOutput fileOutput);
 	}
 #endif
 

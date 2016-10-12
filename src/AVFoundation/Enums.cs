@@ -692,6 +692,33 @@ namespace XamCore.AVFoundation {
 		AddMovieHeaderToDestination = 0,
 		TruncateDestinationToMovieHeaderOnly = (1 << 0)
 	}
+
+	[Mac (10,10)]
+	[Native]
+	public enum AVContentAuthorizationStatus : nint {
+		Unknown,
+		Completed,
+		Cancelled,
+		TimedOut,
+		Busy,
+		NotAvailable,
+		NotPossible,
+	}
+
+	[Mac (10,10)]
+	[Native]
+	public enum AVSampleBufferRequestDirection : nint {
+		Forward = 1,
+		None = 0,
+		Reverse = -1,
+	}
+
+	[Mac (10,10)]
+	[Native]
+	public enum AVSampleBufferRequestMode : nint {
+		Immediate,
+		Scheduled,
+	}
 #endif
 
 	[NoTV, NoWatch, NoMac, iOS (10,0)]
