@@ -7468,32 +7468,62 @@ namespace XamCore.Foundation
 		NSString ChangeNotificationIsPriorKey { get; }
 #if MONOMAC
 		// Cocoa Bindings added by Kenneth J. Pouncey 2010/11/17
-		[Export ("exposedBindings")]
-		NSString[] ExposedBindings ();
-
 		[Export ("valueClassForBinding:")]
-		Class BindingValueClass (string binding);
+		Class GetBindingValueClass (NSString binding);
 
-		[Export ("bind:toObject:withKeyPath:options:")]
+#if !XAMCORE_4_0
+		[Obsolete ("Use Bind (NSString binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options) instead")]
+		[Wrap ("Bind ((NSString) binding, observable, keyPath, options)")]
 		void Bind (string binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options);
 
-		[Export ("unbind:")]
+		[Obsolete ("Use Unbind (NSString binding) instead")]
+		[Wrap ("Unbind ((NSString) binding)")]
 		void Unbind (string binding);
 
-		[Export ("infoForBinding:")]
+		[Obsolete ("Use GetBindingValueClass (NSString binding) instead")]
+		[Wrap ("GetBindingValueClass ((NSString) binding)")]
+		Class BindingValueClass (string binding);
+
+		[Obsolete ("Use GetBindingInfo (NSString binding) instead")]
+		[Wrap ("GetBindingInfo ((NSString) binding)")]
 		NSDictionary BindingInfo (string binding);
 
-		[Export ("optionDescriptionsForBinding:")]
+		[Obsolete ("Use GetBindingOptionDescriptions (NSString aBinding) instead")]
+		[Wrap (" GetBindingOptionDescriptions ((NSString) aBinding)")]
 		NSObject[] BindingOptionDescriptions (string aBinding);
+
+		[Static]
+		[Obsolete ("Use SetDefaultPlaceholder (NSObject placeholder, NSObject marker, NSString binding) instead")]
+		[Wrap ("SetDefaultPlaceholder (placeholder, marker, (NSString) binding)")]
+		void SetDefaultPlaceholder (NSObject placeholder, NSObject marker, string binding);
+
+		[Export ("exposedBindings")]
+		NSString[] ExposedBindings ();
+#else
+		[Export ("exposedBindings")]
+		NSString[] ExposedBindings;
+#endif
+
+		[Export ("bind:toObject:withKeyPath:options:")]
+		void Bind (NSString binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options);
+
+		[Export ("unbind:")]
+		void Unbind (NSString binding);
+
+		[Export ("infoForBinding:")]
+		NSDictionary GetBindingInfo (NSString binding);
+
+		[Export ("optionDescriptionsForBinding:")]
+		NSObject[] GetBindingOptionDescriptions (NSString aBinding);
 
 		// NSPlaceholders (informal) protocol
 		[Static]
 		[Export ("defaultPlaceholderForMarker:withBinding:")]
-		NSObject GetDefaultPlaceholder (NSObject marker, string binding);
+		NSObject GetDefaultPlaceholder (NSObject marker, NSString binding);
 
 		[Static]
 		[Export ("setDefaultPlaceholder:forMarker:withBinding:")]
-		void SetDefaultPlaceholder (NSObject placeholder, NSObject marker, string binding);
+		void SetDefaultPlaceholder (NSObject placeholder, NSObject marker, NSString binding);
 
 		[Export ("objectDidEndEditing:")]
 		void ObjectDidEndEditing (NSObject editor);
