@@ -18357,6 +18357,7 @@ namespace XamCore.AppKit {
 	delegate void NSWindowTrackEventsMatchingCompletionHandler (NSEvent evt, ref bool stop);
 	
 	[BaseType (typeof (NSResponder), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSWindowDelegate)})]
+	[DisableDefaultCtor]
 	partial interface NSWindow : NSAnimatablePropertyContainer, NSUserInterfaceItemIdentification, NSAppearanceCustomization, NSAccessibilityElementProtocol, NSAccessibility {
 		[Static, Export ("frameRectForContentRect:styleMask:")]
 		CGRect FrameRectFor (CGRect contectRect, NSWindowStyle styleMask);
@@ -18378,11 +18379,17 @@ namespace XamCore.AppKit {
 	
 		[Export ("contentRectForFrameRect:")]
 		CGRect ContentRectFor (CGRect frameRect);
-	
+
+		[Export ("init")]
+		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }")]
+		IntPtr Constructor ();
+
 		[Export ("initWithContentRect:styleMask:backing:defer:")]
+		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }")]
 		IntPtr Constructor (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation);
 	
 		[Export ("initWithContentRect:styleMask:backing:defer:screen:")]
+		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }")]
 		IntPtr Constructor (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation, NSScreen  screen);
 	
 		[Export ("title")]
