@@ -23,11 +23,12 @@ namespace Xamarin.Mac.Tests
 		static void RunTests()
 		{
 			TestRunner.MainLoop = new NSRunLoopIntegration();
-			TestRunner.Main(new[] {
-				typeof(MainClass).Assembly.Location,
-				"-labels",
-				"-noheader"
-			});
+			string testName = System.Environment.GetEnvironmentVariable ("XM_TEST_NAME");
+			string [] args = testName != null ?
+				new [] { typeof(MainClass).Assembly.Location, "-labels", "-noheader", string.Format ("-test={0}", testName) } :
+				new [] { typeof(MainClass).Assembly.Location, "-labels", "-noheader" };
+
+			TestRunner.Main (args);
 		}
 
 		class NSRunLoopIntegration : NSObject, IMainLoopIntegration
