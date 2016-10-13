@@ -24,10 +24,15 @@ using System;
 using XamCore.CoreFoundation;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
+using XamCore.CoreGraphics;
 
 namespace XamCore.AppKit {
 
 	public partial class NSWindow {
+
+		public static bool ForceReleasedWhenClosed = true;
+
+		static IntPtr selInit = Selector.GetHandle ("init");
 		static IntPtr selInitWithWindowRef = Selector.GetHandle ("initWithWindowRef:");
 
 		// Do not actually export because NSObjectFlag is not exportable.
@@ -41,6 +46,33 @@ namespace XamCore.AppKit {
 			} else {
 				Handle = XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper (this.SuperHandle, selInitWithWindowRef);
 			}
+			if (ForceReleasedWhenClosed)
+				ReleasedWhenClosed = false;
+		}
+
+		public NSWindow ()  : base (NSObjectFlag.Empty)
+		{
+			if (IsDirectBinding) {
+				Handle = XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSend (this.Handle, selInit);
+			} else {
+				Handle = XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper (this.SuperHandle, selInit);
+			}
+			if (ForceReleasedWhenClosed)
+				ReleasedWhenClosed = false;
+		}
+
+		public NSWindow (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation)  : base (NSObjectFlag.Empty)
+		{
+			Handle = _Init (contentRect, aStyle, bufferingType, deferCreation);
+			if (ForceReleasedWhenClosed)
+				ReleasedWhenClosed = false;
+		}
+
+		public NSWindow (CGRect contentRect, NSWindowStyle aStyle, NSBackingStore bufferingType, bool deferCreation, NSScreen screen)  : base (NSObjectFlag.Empty)
+		{
+			Handle = _Init (contentRect, aStyle, bufferingType, deferCreation, screen);
+			if (ForceReleasedWhenClosed)
+				ReleasedWhenClosed = false;
 		}
 
 		static public NSWindow FromWindowRef (IntPtr windowRef)
