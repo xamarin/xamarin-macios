@@ -18380,7 +18380,7 @@ namespace XamCore.AppKit {
 		[Export ("contentRectForFrameRect:")]
 		CGRect ContentRectFor (CGRect frameRect);
 
-		[Export ("init:")]
+		[Export ("init")]
 		[PostSnippet ("if (!DisableReleasedWhenClosedInConstructor) { ReleasedWhenClosed = false; }")]
 		IntPtr Constructor ();
 
