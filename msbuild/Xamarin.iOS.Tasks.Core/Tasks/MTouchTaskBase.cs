@@ -183,24 +183,6 @@ namespace Xamarin.iOS.Tasks
 
 		#endregion
 
-		bool IsClassic {
-			get { return !IsUnified; }
-		}
-
-		bool IsUnified {
-			get {
-				switch (Framework) {
-				case PlatformFramework.iOS:
-					return TargetFrameworkIdentifier == "Xamarin.iOS";
-				case PlatformFramework.WatchOS:
-				case PlatformFramework.TVOS:
-					return true;
-				default:
-					throw new InvalidOperationException (string.Format ("Invalid framework: {0}", Framework));
-				}
-			}
-		}
-
 		public PlatformFramework Framework {
 			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier); }
 		}
@@ -389,21 +371,11 @@ namespace Xamarin.iOS.Tasks
 				return null;
 			}
 
-			if (IsClassic && minimumOSVersion < IPhoneSdkVersion.V3_1 && architectures.HasFlag (TargetArchitecture.ARMv7)) {
-				Log.LogWarning (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Deployment Target changed from iOS {0} to iOS 3.1 (minimum requirement for ARMv7)", minimumOSVersion);
-				minimumOSVersion = IPhoneSdkVersion.V3_1;
-			}
-
 			if (!string.IsNullOrEmpty (IntermediateOutputPath)) {
 				Directory.CreateDirectory (IntermediateOutputPath);
 
 				args.Add ("--cache");
 				args.AddQuoted (Path.GetFullPath (IntermediateOutputPath));
-			}
-
-			if (IsClassic || IPhoneSdks.MonoTouch.Version < new IPhoneSdkVersion (8, 5, 0)) {
-				args.Add ("--nomanifest");
-				args.Add ("--nosign");
 			}
 
 			args.Add (SdkIsSimulator ? "--sim" : "--dev");
@@ -718,17 +690,13 @@ namespace Xamarin.iOS.Tasks
 			} else {
 				switch (Framework) {
 				case PlatformFramework.iOS:
-					if (IsUnified) {
-						IPhoneSdkVersion sdkVersion;
-						if (!IPhoneSdkVersion.TryParse (SdkVersion, out sdkVersion)) {
-							Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Could not parse SdkVersion '{0}'", SdkVersion);
-							return false;
-						}
-
-						minimumOSVersion = sdkVersion;
-					} else {
-						minimumOSVersion = IPhoneSdkVersion.V5_1_1;
+					IPhoneSdkVersion sdkVersion;
+					if (!IPhoneSdkVersion.TryParse (SdkVersion, out sdkVersion)) {
+						Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Could not parse SdkVersion '{0}'", SdkVersion);
+						return false;
 					}
+
+					minimumOSVersion = sdkVersion;
 					break;
 				case PlatformFramework.WatchOS:
 				case PlatformFramework.TVOS:
@@ -767,7 +735,7 @@ namespace Xamarin.iOS.Tasks
 			if (File.Exists (fullName))
 				return fullName;
 
-			var frameworkDir = TargetFrameworkIdentifier == "MonoTouch" ? "2.1" : TargetFrameworkIdentifier;
+			var frameworkDir = TargetFrameworkIdentifier;
 			var fileName = Path.GetFileName (fullName);
 
 			return ResolveFrameworkFileOrFacade (frameworkDir, fileName) ?? fullName;
