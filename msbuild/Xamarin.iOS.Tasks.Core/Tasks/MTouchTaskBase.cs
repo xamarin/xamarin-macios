@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text;
 using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
@@ -337,6 +338,43 @@ namespace Xamarin.iOS.Tasks
 			}
 		}
 
+		static string Unquote (string text, int startIndex)
+		{
+			if (startIndex >= text.Length)
+				return string.Empty;
+
+			if (text[startIndex] != '"')
+				return text.Substring (startIndex);
+
+			var builder = new StringBuilder ();
+			var escaped = false;
+			var quoted = true;
+
+			for (int i = startIndex; i < text.Length && quoted; i++) {
+				switch (text[i]) {
+				case '\\':
+					if (escaped)
+						builder.Append ('\\');
+					escaped = !escaped;
+					break;
+				case '"':
+					if (escaped) {
+						builder.Append ('"');
+						escaped = false;
+					} else {
+						quoted = false;
+					}
+					break;
+				default:
+					builder.Append (text[i]);
+					escaped = false;
+					break;
+				}
+			}
+
+			return builder.ToString ();
+		}
+
 		protected override string GenerateCommandLineCommands ()
 		{
 			var args = new ProcessArgumentBuilder ();
@@ -527,19 +565,37 @@ namespace Xamarin.iOS.Tasks
 				};
 
 				for (int i = 0; i < extraArgs.Length; i++) {
-					if (extraArgs[i] == "-gcc_flags" || extraArgs[i] == "--gcc_flags") {
+					var argument = extraArgs[i];
+					int startIndex = 0;
+
+					while (argument.Length > startIndex && argument[startIndex] == '-')
+						startIndex++;
+
+					int endIndex = startIndex;
+					while (endIndex < argument.Length && argument[endIndex] != '=')
+						endIndex++;
+
+					int length = endIndex - startIndex;
+
+					if (length == 9 && string.CompareOrdinal (argument, startIndex, "gcc_flags", 0, 9) == 0) {
 						// user-defined -gcc_flags argument
-						if (i + 1 < extraArgs.Length && !string.IsNullOrEmpty (extraArgs[i + 1])) {
-							var gccArgs = ProcessArgumentBuilder.Parse (extraArgs[i + 1]);
+						string flags = null;
+
+						if (endIndex < extraArgs[i].Length) {
+							flags = Unquote (argument, endIndex + 1);
+						} else if (i + 1 < extraArgs.Length) {
+							flags = extraArgs[++i];
+						}
+
+						if (!string.IsNullOrEmpty (flags)) {
+							var gccArgs = ProcessArgumentBuilder.Parse (flags);
 
 							for (int j = 0; j < gccArgs.Length; j++)
 								gcc.Arguments.Add (StringParserService.Parse (gccArgs[j], customTags));
 						}
-
-						i++;
 					} else {
 						// other user-defined mtouch arguments
-						args.AddQuoted (StringParserService.Parse (extraArgs[i], customTags));
+						args.AddQuoted (StringParserService.Parse (argument, customTags));
 					}
 				}
 			}
