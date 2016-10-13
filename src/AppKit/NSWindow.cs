@@ -32,7 +32,6 @@ namespace XamCore.AppKit {
 
 		public static bool DisableReleasedWhenClosedInConstructor;
 
-		static IntPtr selInit = Selector.GetHandle ("init");
 		static IntPtr selInitWithWindowRef = Selector.GetHandle ("initWithWindowRef:");
 
 		// Do not actually export because NSObjectFlag is not exportable.
