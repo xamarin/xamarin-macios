@@ -2348,101 +2348,6 @@ public partial class Generator : IMemberGatherer {
 		       need_stret ? (aligned ? "IntPtr" : "out " + FormatTypeUsedIn (ns.CoreObjCRuntime, mi.ReturnType)) + " retval, " : "");
 	}
 
-	bool IsMagicType (Type t)
-	{
-		switch (t.Name) {
-		case "nint":
-		case "nuint":
-		case "nfloat":
-			return t.Assembly == typeof (NSObject).Assembly;
-		default:
-			return t.Assembly == typeof (object).Assembly;
-		}
-	}
-
-	bool ArmNeedStret (MethodInfo mi)
-	{
-		Type t = mi.ReturnType;
-
-		bool assembly = Compat ? t.Assembly == typeof (object).Assembly : IsMagicType (t);
-		if (!t.IsValueType || t.IsEnum || assembly)
-			return false;
-
-#if WATCH
-		// According to clang watchOS passes arguments bigger than 16 bytes by reference.
-		// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5248-L5250
-		// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5542-L5543
-		if (GetValueTypeSize (t, false) <= 16)
-			return false;
-#endif
-
-		return true;
-	}
-
-	bool X86NeedStret (MethodInfo mi)
-	{
-		Type t = mi.ReturnType;
-		
-		if (!t.IsValueType || t.IsEnum || t.Assembly == typeof (object).Assembly)
-			return false;
-
-		return GetValueTypeSize (t, false) > 8;
-	}
-
-	bool X86_64NeedStret (MethodInfo mi)
-	{
-		Type t = mi.ReturnType;
-
-		if (!t.IsValueType || t.IsEnum || t.Assembly == typeof (object).Assembly)
-			return false;
-
-		return GetValueTypeSize (t, true) > 16;
-	}
-
-	public static int GetValueTypeSize (Type type, bool is_64_bits)
-	{
-		switch (type.FullName) {
-		case "System.Char":
-		case "System.Boolean":
-		case "System.SByte":
-		case "System.Byte": return 1;
-		case "System.Int16":
-		case "System.UInt16": return 2;
-		case "System.Single":
-		case "System.Int32":
-		case "System.UInt32": return 4;
-		case "System.Double":
-		case "System.Int64": 
-		case "System.UInt64": return 8;
-		case "System.IntPtr":
-		case "System.nfloat":
-		case "System.nuint":
-		case "System.nint": return is_64_bits ? 8 : 4;
-		default:
-			int size = 0;
-			foreach (var field in type.GetFields (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)) {
-				int s = GetValueTypeSize (field.FieldType, is_64_bits);
-				if (s == -1)
-					return -1;
-				size += s;
-			}
-			return size;
-		}
-	}
-
-	bool NeedStret (MethodInfo mi)
-	{
-		if (Compat)
-			return ArmNeedStret (mi) || X86NeedStret (mi);
-
-		bool no_arm_stret = X86NeedStret (mi) || X86_64NeedStret (mi);
-
-		if (OnlyDesktop)
-			return no_arm_stret;
-
-		return no_arm_stret || ArmNeedStret (mi);
-	}
-
 	bool IsNativeEnum (Type type)
 	{
 		return type.IsEnum && HasAttribute (type, typeof (NativeAttribute));
@@ -2483,12 +2388,12 @@ public partial class Generator : IMemberGatherer {
 
 		try {
 			if (Compat) {
-				bool arm_stret = ArmNeedStret (mi);
+				bool arm_stret = Stret.ArmNeedStret (mi);
 				bool is_aligned = HasAttribute (mi, typeof (AlignAttribute));
 				RegisterMethod (arm_stret, mi, MakeSig (mi, arm_stret, arm_stret && is_aligned), arm_stret && is_aligned);
 				RegisterMethod (arm_stret, mi, MakeSuperSig (mi, arm_stret, arm_stret && is_aligned), arm_stret && is_aligned);
 
-				bool x86_stret = X86NeedStret (mi);
+				bool x86_stret = Stret.X86NeedStret (mi);
 				if (x86_stret != arm_stret){
 					RegisterMethod (x86_stret, mi, MakeSig (mi, x86_stret, x86_stret && is_aligned), x86_stret && is_aligned);
 					RegisterMethod (x86_stret, mi, MakeSuperSig (mi, x86_stret, x86_stret && is_aligned), x86_stret && is_aligned);
@@ -2505,7 +2410,7 @@ public partial class Generator : IMemberGatherer {
 					RegisterMethod (false, mi, MakeSig (mi, false, enum_mode: mode), false, mode);
 					RegisterMethod (false, mi, MakeSuperSig (mi, false, enum_mode: mode), false, mode);
 
-					if (NeedStret (mi)) {
+					if (Stret.NeedStret (mi)) {
 						RegisterMethod (true, mi, MakeSig (mi, true, enum_mode: mode), false, mode);
 						RegisterMethod (true, mi, MakeSuperSig (mi, true, enum_mode: mode), false, mode);
 
@@ -4095,8 +4000,8 @@ public partial class Generator : IMemberGatherer {
 			return;
 		}
 
-		bool arm_stret = ArmNeedStret (mi);
-		bool x86_stret = X86NeedStret (mi);
+		bool arm_stret = Stret.ArmNeedStret (mi);
+		bool x86_stret = Stret.X86NeedStret (mi);
 		bool aligned = HasAttribute (mi, typeof(AlignAttribute));
 
 		if (OnlyDesktop){
@@ -4122,9 +4027,9 @@ public partial class Generator : IMemberGatherer {
 
 	void GenerateNewStyleInvoke (bool supercall, MethodInfo mi, MemberInformation minfo, string selector, string[] args, bool assign_to_temp, Type category_type)
 	{
-		bool arm_stret = ArmNeedStret (mi);
-		bool x86_stret = X86NeedStret (mi);
-		bool x64_stret = X86_64NeedStret (mi);
+		bool arm_stret = Stret.ArmNeedStret (mi);
+		bool x86_stret = Stret.X86NeedStret (mi);
+		bool x64_stret = Stret.X86_64NeedStret (mi);
 		bool dual_enum = HasNativeEnumInSignature (mi);
 		bool is_stret_multi = arm_stret || x86_stret || x64_stret;
 		bool need_multi_path = is_stret_multi || dual_enum;
@@ -4556,7 +4461,7 @@ public partial class Generator : IMemberGatherer {
 
 		bool use_temp_return  =
 			minfo.is_return_release ||
-			(mi.Name != "Constructor" && (NeedStret (mi) || disposes.Length > 0 || postget != null) && mi.ReturnType != typeof (void)) ||
+			(mi.Name != "Constructor" && (Stret.NeedStret (mi) || disposes.Length > 0 || postget != null) && mi.ReturnType != typeof (void)) ||
 			(HasAttribute (mi, typeof (FactoryAttribute))) ||
 			((body_options & BodyOption.NeedsTempReturn) == BodyOption.NeedsTempReturn) ||
 			(mi.ReturnType.IsSubclassOf (typeof (Delegate))) ||
