@@ -1245,12 +1245,12 @@ namespace MTouchTests
 		}
 
 		[Test]
-		[TestCase (Target.Dev, Profile.Unified, "dont link", "Release")]
-		[TestCase (Target.Dev, Profile.Unified, "link all", "Release")]
-		[TestCase (Target.Dev, Profile.Unified, "link sdk", "Release")]
-		[TestCase (Target.Dev, Profile.Unified, "monotouch-test", "Release")]
-		[TestCase (Target.Dev, Profile.Unified, "mscorlib", "Release")]
-		[TestCase (Target.Dev, Profile.Unified, "System.Core", "Release")]
+		[TestCase (Target.Dev, Profile.Unified, "dont link", "Release64")]
+		[TestCase (Target.Dev, Profile.Unified, "link all", "Release64")]
+		[TestCase (Target.Dev, Profile.Unified, "link sdk", "Release64")]
+		[TestCase (Target.Dev, Profile.Unified, "monotouch-test", "Release64")]
+		[TestCase (Target.Dev, Profile.Unified, "mscorlib", "Release64")]
+		[TestCase (Target.Dev, Profile.Unified, "System.Core", "Release64")]
 		public void BuildTestProject (Target target, Profile profile, string testname, string configuration)
 		{
 			var subdir = string.Empty;
