@@ -101,9 +101,6 @@ namespace Xamarin.MMP.Tests
 			Environment.SetEnvironmentVariable ("MSBuildExtensionsPath", rootDirectory + "/Library/Frameworks/Mono.framework/External/xbuild");
 			Environment.SetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH", rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current");
 
-			// FSharp tests will fail if this is set
-			Environment.SetEnvironmentVariable ("MONO_CFG_DIR", "");
-
 			// This is to force build to use our mmp and not system mmp
 			StringBuilder buildArgs = new StringBuilder ();
 			if (isUnified) {
