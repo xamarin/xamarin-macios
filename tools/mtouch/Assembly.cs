@@ -318,7 +318,7 @@ namespace Xamarin.Bundler {
 				};
 			} else {
 				link_task_input = infile_path;
-				if (infile_path.EndsWith (".s"))
+				if (infile_path.EndsWith (".s", StringComparison.Ordinal))
 					link_language = "assembler";
 			}
 

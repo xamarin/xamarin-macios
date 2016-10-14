@@ -436,7 +436,7 @@ namespace Xamarin.Bundler
 		}
 
 		public static bool IsUsingClang {
-			get { return compiler_path.EndsWith ("clang") || compiler_path.EndsWith ("clang++"); }
+			get { return compiler_path.EndsWith ("clang", StringComparison.Ordinal) || compiler_path.EndsWith ("clang++", StringComparison.Ordinal); }
 		}
 
 		public static string CompilerPath {
@@ -1082,7 +1082,7 @@ namespace Xamarin.Bundler
 			{ "f|force", "Forces the recompilation of code, regardless of timestamps", v=>force = true },
 			{ "cache=", "Specify the directory where object files will be cached", v => Cache.Location = v },
 			{ "aot=", "Arguments to the static compiler",
-				v => aot_args = v + (v.EndsWith (",") ? String.Empty : ",") + aot_args
+				v => aot_args = v + (v.EndsWith (",", StringComparison.Ordinal) ? String.Empty : ",") + aot_args
 			},
 			{ "aot-options=", "Non AOT arguments to the static compiler",
 				v => {
@@ -1487,7 +1487,7 @@ namespace Xamarin.Bundler
 			if (assemblies.Count != 1) {
 				var exceptions = new List<Exception> ();
 				for (int i = assemblies.Count - 1; i >= 0; i--) {
-					if (assemblies [i].StartsWith ("-")) {
+					if (assemblies [i].StartsWith ("-", StringComparison.Ordinal)) {
 						exceptions.Add (new MonoTouchException (18, true, "Unknown command line argument: '{0}'", assemblies [i]));
 						assemblies.RemoveAt (i);
 					}

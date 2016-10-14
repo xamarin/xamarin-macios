@@ -166,10 +166,10 @@ namespace Xamarin.Bundler {
 				var assemblies = options.Split (',');
 				foreach (var assembly in assemblies) {
 					var asm = assembly;
-					if (assembly.StartsWith ("+")) {
+					if (assembly.StartsWith ("+", StringComparison.Ordinal)) {
 						dlsym = true;
 						asm = assembly.Substring (1);
-					} else if (assembly.StartsWith ("-")) {
+					} else if (assembly.StartsWith ("-", StringComparison.Ordinal)) {
 						dlsym = false;
 						asm = assembly.Substring (1);
 					} else {
@@ -1088,7 +1088,7 @@ namespace Xamarin.Bundler {
 				}
 				
 				foreach (var fw in all_frameworks) {
-					if (!fw.EndsWith (".framework"))
+					if (!fw.EndsWith (".framework", StringComparison.Ordinal))
 						continue;
 					if (!Xamarin.MachO.IsDynamicFramework (Path.Combine (fw, Path.GetFileNameWithoutExtension (fw)))) {
 						// We can have static libraries camouflaged as frameworks. We don't want those copied to the app.
@@ -1220,11 +1220,11 @@ namespace Xamarin.Bundler {
 				if (line.Contains ("Undefined symbols for architecture")) {
 					while (++i < lines.Count) {
 						line = lines [i];
-						if (!line.EndsWith (", referenced from:"))
+						if (!line.EndsWith (", referenced from:", StringComparison.Ordinal))
 							break;
 
 						var symbol = line.Replace (", referenced from:", "").Trim ('\"', ' ');
-						if (symbol.StartsWith ("_OBJC_CLASS_$_")) {
+						if (symbol.StartsWith ("_OBJC_CLASS_$_", StringComparison.Ordinal)) {
 							errors.Add (new MonoTouchException (5211, error, 
 																"Native linking failed, undefined Objective-C class: {0}. The symbol '{1}' could not be found in any of the libraries or frameworks linked with your application.",
 							                                    symbol.Replace ("_OBJC_CLASS_$_", ""), symbol));
@@ -1255,7 +1255,7 @@ namespace Xamarin.Bundler {
 							i++;
 						}
 					}
-				} else if (line.StartsWith ("duplicate symbol") && line.EndsWith (" in:")) {
+				} else if (line.StartsWith ("duplicate symbol", StringComparison.Ordinal) && line.EndsWith (" in:", StringComparison.Ordinal)) {
 					var symbol = line.Replace ("duplicate symbol ", "").Replace (" in:", "").Trim ();
 					errors.Add (new MonoTouchException (5212, error, "Native linking failed, duplicate symbol: '{0}'.", symbol));
 
@@ -1268,7 +1268,7 @@ namespace Xamarin.Bundler {
 						errors.Add (new MonoTouchException (5213, error, "Duplicate symbol in: {0} (Location related to previous error)", line.Trim ()));
 					}
 				} else {
-					if (line.StartsWith ("ld: "))
+					if (line.StartsWith ("ld: ", StringComparison.Ordinal))
 						line = line.Substring (4);
 
 					line = line.Trim ();
@@ -1586,7 +1586,7 @@ namespace Xamarin.Bundler {
 		public static void ProcessFrameworkForArguments (StringBuilder args, string fw, bool is_weak, IList<string> inputs, ref bool any_user_framework)
 		{
 			var name = Path.GetFileNameWithoutExtension (fw);
-			if (fw.EndsWith (".framework")) {
+			if (fw.EndsWith (".framework", StringComparison.Ordinal)) {
 				// user framework, we need to pass -F to the linker so that the linker finds the user framework.
 				any_user_framework = true;
 				if (inputs != null)
@@ -1864,7 +1864,7 @@ namespace Xamarin.Bundler {
 			if (Output.Length > 0) {
 				List<Exception> exceptions = new List<Exception> ();
 				foreach (var line in Output.ToString ().Split ('\n')) {
-					if (line.StartsWith ("AOT restriction: Method '") && line.Contains ("must be static since it is decorated with [MonoPInvokeCallback]")) {
+					if (line.StartsWith ("AOT restriction: Method '", StringComparison.Ordinal) && line.Contains ("must be static since it is decorated with [MonoPInvokeCallback]")) {
 						exceptions.Add (new MonoTouchException (3002, true, line));
 					}
 				}
@@ -1918,10 +1918,10 @@ namespace Xamarin.Bundler {
 
 		public static void GetCompilerFlags (CompilerFlags flags, string ifile, string language = null)
 		{
-			if (string.IsNullOrEmpty (ifile) || !ifile.EndsWith (".s"))
+			if (string.IsNullOrEmpty (ifile) || !ifile.EndsWith (".s", StringComparison.Ordinal))
 				flags.AddOtherFlag ("-gdwarf-2");
 
-			if (!string.IsNullOrEmpty (ifile) && !ifile.EndsWith (".s")) {
+			if (!string.IsNullOrEmpty (ifile) && !ifile.EndsWith (".s", StringComparison.Ordinal)) {
 				if (string.IsNullOrEmpty (language) || !language.Contains ("++")) {
 					// error: invalid argument '-std=c99' not allowed with 'C++/ObjC++'
 					flags.AddOtherFlag ("-std=c99");

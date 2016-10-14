@@ -73,7 +73,7 @@ namespace Xamarin.Bundler {
 				if (s.Length == 0)
 					continue;
 
-				if (s.StartsWith (".asciz") || s.StartsWith (".ascii"))
+				if (s.StartsWith (".asciz", StringComparison.Ordinal) || s.StartsWith (".ascii", StringComparison.Ordinal))
 					s = FixAsciz (s, line);
 				else if (s.Contains ("\""))
 					s = s.Replace ("\"", "\\22");
@@ -193,7 +193,7 @@ namespace Xamarin.Bundler {
 				res.Append (to_append.ToString ());
 			}
 
-			if (s.StartsWith (".asciz")) {
+			if (s.StartsWith (".asciz", StringComparison.Ordinal)) {
 				if (!first)
 					res.Append (", ");
 				res.Append ("0");
