@@ -32,8 +32,10 @@ namespace Xamarin.Bundler {
 			}
 			set {
 				full_path = value;
-				if (!is_framework_assembly.HasValue)
-					is_framework_assembly = full_path.StartsWith (Path.GetDirectoryName (Target.Resolver.FrameworkDirectory), StringComparison.Ordinal);
+				if (!is_framework_assembly.HasValue) {
+					var real_full_path = Target.GetRealPath (full_path);
+					is_framework_assembly = real_full_path.StartsWith (Path.GetDirectoryName (Path.GetDirectoryName (Target.Resolver.FrameworkDirectory)), StringComparison.Ordinal);
+				}
 			}
 		}
 		public string FileName { get { return Path.GetFileName (FullPath); } }
