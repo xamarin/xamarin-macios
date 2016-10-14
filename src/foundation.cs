@@ -7468,29 +7468,34 @@ namespace XamCore.Foundation
 		NSString ChangeNotificationIsPriorKey { get; }
 #if MONOMAC
 		// Cocoa Bindings added by Kenneth J. Pouncey 2010/11/17
+		[Sealed]
 		[Export ("valueClassForBinding:")]
 		Class GetBindingValueClass (NSString binding);
 
 #if !XAMCORE_4_0
 		[Obsolete ("Use Bind (NSString binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options) instead")]
-		[Wrap ("Bind ((NSString) binding, observable, keyPath, options)")]
+		[Export ("bind:toObject:withKeyPath:options:")]
 		void Bind (string binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options);
 
 		[Obsolete ("Use Unbind (NSString binding) instead")]
-		[Wrap ("Unbind ((NSString) binding)")]
+		[Export ("unbind:")]
 		void Unbind (string binding);
 
 		[Obsolete ("Use GetBindingValueClass (NSString binding) instead")]
-		[Wrap ("GetBindingValueClass ((NSString) binding)")]
+		[Export ("valueClassForBinding:")]
 		Class BindingValueClass (string binding);
 
 		[Obsolete ("Use GetBindingInfo (NSString binding) instead")]
-		[Wrap ("GetBindingInfo ((NSString) binding)")]
+		[Export ("infoForBinding:")]
 		NSDictionary BindingInfo (string binding);
 
 		[Obsolete ("Use GetBindingOptionDescriptions (NSString aBinding) instead")]
-		[Wrap (" GetBindingOptionDescriptions ((NSString) aBinding)")]
+		[Export ("optionDescriptionsForBinding:")]
 		NSObject[] BindingOptionDescriptions (string aBinding);
+
+		[Static]
+		[Wrap ("GetDefaultPlaceholder (marker, (NSString) binding)")]
+		NSObject GetDefaultPlaceholder (NSObject marker, string binding);
 
 		[Static]
 		[Obsolete ("Use SetDefaultPlaceholder (NSObject placeholder, NSObject marker, NSString binding) instead")]
@@ -7501,18 +7506,21 @@ namespace XamCore.Foundation
 		NSString[] ExposedBindings ();
 #else
 		[Export ("exposedBindings")]
-		NSString[] ExposedBindings;
+		NSString[] ExposedBindings { get; }
 #endif
-
+		[Sealed]
 		[Export ("bind:toObject:withKeyPath:options:")]
 		void Bind (NSString binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options);
 
+		[Sealed]
 		[Export ("unbind:")]
 		void Unbind (NSString binding);
 
+		[Sealed]
 		[Export ("infoForBinding:")]
 		NSDictionary GetBindingInfo (NSString binding);
 
+		[Sealed]
 		[Export ("optionDescriptionsForBinding:")]
 		NSObject[] GetBindingOptionDescriptions (NSString aBinding);
 
