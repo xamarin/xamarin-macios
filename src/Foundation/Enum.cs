@@ -1114,11 +1114,6 @@ namespace XamCore.Foundation  {
 		Contains, Same, Other
 	}
 
-	public enum NSItemDownloadingStatus {
-		Unknown = -1,
-		Current, Downloaded, NotDownloaded
-	}
-
 	// NSTextCheckingResult.h:typedef NS_OPTIONS(uint64_t, NSTextCheckingType)
 	public enum NSTextCheckingType : ulong {
 		Orthography   = 1 << 0,

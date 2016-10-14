@@ -2501,6 +2501,7 @@ namespace XamCore.Foundation
 		[Field ("NSMetadataUbiquitousItemHasUnresolvedConflictsKey")]
 		NSString UbiquitousItemHasUnresolvedConflictsKey { get; }
 
+		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_9, Message="Use UbiquitousItemDownloadingStatusKey")]
 		[Field ("NSMetadataUbiquitousItemIsDownloadedKey")]
 		NSString UbiquitousItemIsDownloadedKey { get; }
 
@@ -2598,31 +2599,29 @@ namespace XamCore.Foundation
 
 	[Since (5,0)]
 	[BaseType (typeof (NSObject))]
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // points to nothing so access properties crash the apps
+#endif
 	interface NSMetadataItem {
+
+		[NoiOS][NoTV][NoWatch]
+		[Mac (10,9)]
+		[DesignatedInitializer]
+		[Export ("initWithURL:")]
+		IntPtr Constructor (NSUrl url);
+
 		[Export ("valueForAttribute:")]
 		NSObject ValueForAttribute (string key);
 
+		[Sealed]
+		[Internal]
+		[Export ("valueForAttribute:")]
+		IntPtr GetHandle (NSString key);
 		[Export ("valuesForAttributes:")]
 		NSDictionary ValuesForAttributes (NSArray keys);
 
 		[Export ("attributes")]
 		NSObject [] Attributes { get; }
-
-		[Mac(10,9),iOS(7,0)]
-		[Internal]
-		[Field ("NSMetadataUbiquitousItemDownloadingStatusCurrent")]
-		NSString _StatusCurrent { get; }
-
-		[Mac(10,9),iOS(7,0)]
-		[Internal]
-		[Field ("NSMetadataUbiquitousItemDownloadingStatusDownloaded")]
-		NSString _StatusDownloaded { get; }
-
-		[Mac(10,9),iOS(7,0)]
-		[Internal]
-		[Field ("NSMetadataUbiquitousItemDownloadingStatusNotDownloaded")]
-		NSString _NotDownloaded { get; }
-		
 	}
 
 	[Since (5,0)]
