@@ -354,6 +354,12 @@ namespace Xamarin.Bundler {
 					case "libdyld":
 					case "libsystem_kernel":
 						break;
+					case "sqlite3":
+						if (LinkWith == null)
+							LinkWith = new List<string> ();
+						LinkWith.Add ("-lsqlite3");
+						Driver.Log (3, "Linking with {0} because it's referenced by a module reference in {1}", file, FileName);
+						break;
 					case "libsqlite3":
 						// remove lib prefix
 						if (LinkWith == null)
