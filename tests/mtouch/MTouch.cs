@@ -1458,18 +1458,6 @@ namespace MTouchTests
 		}
 
 		[Test]
-		public void BuildMonoTouchTests_StaticRegistrar ()
-		{
-			BuildMonotouchTests ("static --compiler:clang", "DEBUG;STATICREGISTRAR");
-		}
-		
-		[Test]
-		public void BuildMonoTouchTests_OldStaticRegistrar ()
-		{
-			BuildMonotouchTests ("oldstatic", "DEBUG;OLDSTATICREGISTRAR");
-		}
-
-		[Test]
 		[TestCase (Target.Dev, Profile.Unified, "dont link", "Release")]
 		[TestCase (Target.Dev, Profile.Unified, "link all", "Release")]
 		[TestCase (Target.Dev, Profile.Unified, "link sdk", "Release")]
