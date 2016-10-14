@@ -155,6 +155,16 @@ namespace Xamarin.Bundler {
 		List<Abi> abis;
 		HashSet<Abi> all_architectures; // all Abis used in the app, including extensions.
 
+		public void SetDlsymOption (string asm, bool dlsym)
+		{
+			if (DlsymAssemblies == null)
+				DlsymAssemblies = new List<Tuple<string, bool>> ();
+
+			DlsymAssemblies.Add (new Tuple<string, bool> (Path.GetFileNameWithoutExtension (asm), dlsym));
+
+			DlsymOptions = DlsymOptions.Custom;
+		}
+
 		public void ParseDlsymOptions (string options)
 		{
 			bool dlsym;
@@ -186,19 +196,19 @@ namespace Xamarin.Bundler {
 		{
 			string asm;
 
-			switch (DlsymOptions) {
-			case DlsymOptions.All:
-				return true;
-			case DlsymOptions.None:
-				return false;
-			}
-
 			if (DlsymAssemblies != null) {
 				asm = Path.GetFileNameWithoutExtension (assembly);
 				foreach (var tuple in DlsymAssemblies) {
 					if (string.Equals (tuple.Item1, asm, StringComparison.Ordinal))
 						return tuple.Item2;
 				}
+			}
+
+			switch (DlsymOptions) {
+			case DlsymOptions.All:
+				return true;
+			case DlsymOptions.None:
+				return false;
 			}
 
 			if (EnableLLVMOnlyBitCode)

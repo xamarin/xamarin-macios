@@ -1990,6 +1990,31 @@ class Test {
 			}
 		}
 
+		[Test]
+		public void LinkWithNoLibrary ()
+		{
+			using (var tool = new MTouchTool ()) {
+				tool.Profile = Profile.Unified;
+				tool.CreateTemporaryApp (@"
+using System;
+using System.Runtime.InteropServices;
+using ObjCRuntime;
+[assembly: LinkWith (Dlsym = DlsymOption.Required)]
+class C {
+	[DllImport (""libsqlite3"")]
+	static extern void sqlite3_column_database_name16 ();
+	static void Main ()
+	{
+	}
+}
+");
+				tool.NoFastSim = true;
+				tool.Dlsym = false;
+				tool.Linker = MTouchLinker.LinkSdk;
+				Assert.AreEqual (0, tool.Execute (MTouchAction.BuildDev), "build");
+			}
+		}
+
 #region Helper functions
 		static string CompileUnifiedTestAppExecutable (string targetDirectory, string code = null, string extraArg = "")
 		{

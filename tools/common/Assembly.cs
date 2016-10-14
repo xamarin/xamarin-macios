@@ -162,7 +162,8 @@ namespace Xamarin.Bundler {
 				string libraryName = linkWith.LibraryName;
 				
 				// Remove the resource from the assembly at a later stage.
-				AddResourceToBeRemoved (libraryName);
+				if (!string.IsNullOrEmpty (libraryName))
+					AddResourceToBeRemoved (libraryName);
 
 				// We can't add -dead_strip if there are any LinkWith attributes where smart linking is disabled.
 				if (!linkWith.SmartLink)
@@ -200,59 +201,65 @@ namespace Xamarin.Bundler {
 				if (linkWith.IsCxx)
 					EnableCxx = true;
 
-				path = Path.Combine (Cache.Location, libraryName);
-				if (path.EndsWith (".framework", StringComparison.Ordinal)) {
 #if MONOTOUCH
-					if (App.DeploymentTarget.Major < 8) {
-						throw ErrorHelper.CreateError (1305, "The binding library '{0}' contains a user framework ({0}), but embedded user frameworks require iOS 8.0 (the deployment target is {1}). Please set the deployment target in the Info.plist file to at least 8.0.",
-							FileName, Path.GetFileName (path), App.DeploymentTarget);
-					}
+				if (linkWith.Dlsym != DlsymOption.Default)
+					App.SetDlsymOption (FullPath, linkWith.Dlsym == DlsymOption.Required);
 #endif
-					var zipPath = path + ".zip";
-					if (!Application.IsUptodate (FullPath, zipPath)) {
-						Application.ExtractResource (assembly.MainModule, libraryName, zipPath, false);
-						Driver.Log (3, "Extracted third-party framework '{0}' from '{1}' to '{2}'", libraryName, FullPath, zipPath);
-						LogLinkWithAttribute (linkWith);
+
+				if (!string.IsNullOrEmpty (libraryName)) {
+					path = Path.Combine (Cache.Location, libraryName);
+					if (path.EndsWith (".framework", StringComparison.Ordinal)) {
+#if MONOTOUCH
+						if (App.DeploymentTarget.Major < 8) {
+							throw ErrorHelper.CreateError (1305, "The binding library '{0}' contains a user framework ({0}), but embedded user frameworks require iOS 8.0 (the deployment target is {1}). Please set the deployment target in the Info.plist file to at least 8.0.",
+								FileName, Path.GetFileName (path), App.DeploymentTarget);
+						}
+#endif
+						var zipPath = path + ".zip";
+						if (!Application.IsUptodate (FullPath, zipPath)) {
+							Application.ExtractResource (assembly.MainModule, libraryName, zipPath, false);
+							Driver.Log (3, "Extracted third-party framework '{0}' from '{1}' to '{2}'", libraryName, FullPath, zipPath);
+							LogLinkWithAttribute (linkWith);
+						} else {
+							Driver.Log (3, "Target '{0}' is up-to-date.", path);
+						}
+
+						if (!File.Exists (zipPath)) {
+							ErrorHelper.Warning (1302, "Could not extract the native framework '{0}' from '{1}'. " +
+								"Please ensure the native framework was properly embedded in the managed assembly " +
+								"(if the assembly was built using a binding project, the native framework must be included in the project, and its Build Action must be 'ObjcBindingNativeFramework').",
+								libraryName, zipPath);
+						} else {
+							if (!Directory.Exists (path))
+								Directory.CreateDirectory (path);
+
+							if (Driver.RunCommand ("/usr/bin/unzip", string.Format ("-u -o -d {0} {1}", Driver.Quote (path), Driver.Quote (zipPath))) != 0)
+								throw ErrorHelper.CreateError (1303, "Could not decompress the native framework '{0}' from '{1}'. Please review the build log for more information from the native 'unzip' command.", libraryName, zipPath);
+						}
+
+						if (Frameworks == null)
+							Frameworks = new HashSet<string> ();
+						Frameworks.Add (path);
 					} else {
-						Driver.Log (3, "Target '{0}' is up-to-date.", path);
+						if (!Application.IsUptodate (FullPath, path)) {
+							Application.ExtractResource (assembly.MainModule, libraryName, path, false);
+							Driver.Log (3, "Extracted third-party binding '{0}' from '{1}' to '{2}'", libraryName, FullPath, path);
+							LogLinkWithAttribute (linkWith);
+						} else {
+							Driver.Log (3, "Target '{0}' is up-to-date.", path);
+						}
+
+						if (!File.Exists (path))
+							ErrorHelper.Warning (1302, "Could not extract the native library '{0}' from '{1}'. " +
+							"Please ensure the native library was properly embedded in the managed assembly " +
+							"(if the assembly was built using a binding project, the native library must be included in the project, and its Build Action must be 'ObjcBindingNativeLibrary').",
+								libraryName, path);
+
+						if (LinkWith == null)
+							LinkWith = new List<string> ();
+						LinkWith.Add (path);
 					}
-
-					if (!File.Exists (zipPath)) {
-						ErrorHelper.Warning (1302, "Could not extract the native framework '{0}' from '{1}'. " +
-							"Please ensure the native framework was properly embedded in the managed assembly " +
-							"(if the assembly was built using a binding project, the native framework must be included in the project, and its Build Action must be 'ObjcBindingNativeFramework').",
-							libraryName, zipPath);
-					} else {
-						if (!Directory.Exists (path))
-							Directory.CreateDirectory (path);
-
-						if (Driver.RunCommand ("/usr/bin/unzip", string.Format ("-u -o -d {0} {1}", Driver.Quote (path), Driver.Quote (zipPath))) != 0)
-							throw ErrorHelper.CreateError (1303, "Could not decompress the native framework '{0}' from '{1}'. Please review the build log for more information from the native 'unzip' command.", libraryName, zipPath);
-					}
-
-					if (Frameworks == null)
-						Frameworks = new HashSet<string> ();
-					Frameworks.Add (path);
-				} else {
-					if (!Application.IsUptodate (FullPath, path)) {
-						Application.ExtractResource (assembly.MainModule, libraryName, path, false);
-						Driver.Log (3, "Extracted third-party binding '{0}' from '{1}' to '{2}'", libraryName, FullPath, path);
-						LogLinkWithAttribute (linkWith);
-					} else {
-						Driver.Log (3, "Target '{0}' is up-to-date.", path);
-					}
-
-					if (!File.Exists (path))
-						ErrorHelper.Warning (1302, "Could not extract the native library '{0}' from '{1}'. " +
-						"Please ensure the native library was properly embedded in the managed assembly " +
-						"(if the assembly was built using a binding project, the native library must be included in the project, and its Build Action must be 'ObjcBindingNativeLibrary').",
-							libraryName, path);
-
-					if (LinkWith == null)
-						LinkWith = new List<string> ();
-					LinkWith.Add (path);
 				}
-
 			}
 
 			if (exceptions != null && exceptions.Count > 0)
@@ -295,6 +302,9 @@ namespace Xamarin.Bundler {
 			case 2:
 				linkWith = new LinkWithAttribute ((string) cargs [0].Value, (LinkTarget) cargs [1].Value); 
 				break;
+			case 0:
+				linkWith = new LinkWithAttribute ();
+				break;
 			default: 
 			case 1: 
 				linkWith = new LinkWithAttribute ((string) cargs [0].Value); 
@@ -326,6 +336,9 @@ namespace Xamarin.Bundler {
 					break;
 				case "SmartLink":
 					linkWith.SmartLink = (bool) property.Argument.Value;
+					break;
+				case "Dlsym":
+					linkWith.Dlsym = (DlsymOption) property.Argument.Value;
 					break;
 				default: 
 					break;
