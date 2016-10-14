@@ -74,11 +74,11 @@ namespace XamCore.Registrar {
 
 		void Output (string a)
 		{
-			if (a.StartsWith ("}"))
+			if (a.StartsWith ("}", StringComparison.Ordinal))
 				Unindent ();
 			OutputIndentation ();
 			sb.Append (a);
-			if (a.EndsWith ("{"))
+			if (a.EndsWith ("{", StringComparison.Ordinal))
 				Indent ();
 		}
 
@@ -1653,7 +1653,7 @@ namespace XamCore.Registrar {
 			if (IsDualBuild) {
 				return Driver.Frameworks.ContainsKey (type.Namespace);
 			} else {
-				return type.Namespace.StartsWith (CompatNamespace + ".");
+				return type.Namespace.StartsWith (CompatNamespace + ".", StringComparison.Ordinal);
 			}
 		}
 

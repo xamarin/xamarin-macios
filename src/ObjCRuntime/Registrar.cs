@@ -680,7 +680,7 @@ namespace XamCore.Registrar {
 					if (Method == null)
 						return false;
 					
-					return Method.IsSpecialName && (Method.Name.StartsWith ("get_") || Method.Name.StartsWith ("set_"));
+					return Method.IsSpecialName && (Method.Name.StartsWith ("get_", StringComparison.Ordinal) || Method.Name.StartsWith ("set_", StringComparison.Ordinal));
 				}
 			}
 		}
