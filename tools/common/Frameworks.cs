@@ -133,6 +133,7 @@ public class Frameworks : Dictionary <string, Framework>
 		}
 	}
 
+#if MTOUCH
 	static Frameworks ios_frameworks;
 	public static Frameworks iOSFrameworks {
 		get {
@@ -203,7 +204,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "SceneKit", "SceneKit", 8 },
 					{ "CloudKit", "CloudKit", 8 },
 					{ "AVKit", "AVKit", 8 },
-					{ "CoreAudioKit", "CoreAudioKit", 8 },
+					{ "CoreAudioKit", "CoreAudioKit", Driver.App.IsSimulatorBuild ? 9 : 8 },
 					{ "Metal", "Metal", 8 },
 					{ "WebKit", "WebKit", 8 },
 					{ "NetworkExtension", "NetworkExtension", 8 },
@@ -336,6 +337,7 @@ public class Frameworks : Dictionary <string, Framework>
 			return tvos_frameworks;
 		}
 	}
+#endif
 
 	public static void Gather (AssemblyDefinition product_assembly, HashSet<string> frameworks, HashSet<string> weak_frameworks)
 	{
