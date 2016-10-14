@@ -49,4 +49,20 @@ namespace XamCore.Foundation {
 		[Field (null)]
 		Other = 1000
 	}
+
+	[Mac (10,9)]
+	[iOS (7,0)]
+	public enum NSItemDownloadingStatus {
+		[Field (null)]
+		Unknown = -1,
+
+		[Field ("NSMetadataUbiquitousItemDownloadingStatusCurrent")]
+		Current,
+
+		[Field ("NSMetadataUbiquitousItemDownloadingStatusDownloaded")]
+		Downloaded,
+
+		[Field ("NSMetadataUbiquitousItemDownloadingStatusNotDownloaded")]
+		NotDownloaded,
+	}
 }
