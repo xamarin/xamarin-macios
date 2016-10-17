@@ -54,11 +54,6 @@ bool xamarin_init_mono_debug = true;
 #else
 bool xamarin_init_mono_debug = false;
 #endif
-#if DEBUG && (defined (__i386__) || defined (__x86_64__))
-bool xamarin_compact_seq_points = false;
-#else
-bool xamarin_compact_seq_points = true;
-#endif
 int xamarin_log_level = 0;
 const char *xamarin_executable_name = NULL;
 #if MONOMAC
