@@ -15,7 +15,10 @@ namespace Xamarin.Mac.Tests {
 		[Test]
 		public void CtorUrl ()
 		{
-			var url = NSRunningApplication.CurrentApplication.BundleUrl;
+			// 10.9 for NSMetadataItem initWithURL:
+			TestRuntime.AssertXcodeVersion (5,1);
+
+			var url = NSBundle.MainBundle.BundleUrl;
 			using (var mi = new NSMetadataItem (url)) {
 				Assert.That (mi.DisplayName.ToString (), Is.EqualTo ("apitest"), "DisplayName");
 				Assert.NotNull (mi.FileSystemContentChangeDate, "FileSystemContentChangeDate");
@@ -34,16 +37,14 @@ namespace Xamarin.Mac.Tests {
 				Assert.That (mi.UbiquitousItemPercentUploaded, Is.EqualTo (0), "UbiquitousItemPercentUploaded");
 				Assert.Null (mi.Url, "Url");
 
-				// 10.9
-				if (TestRuntime.CheckXcodeVersion (5,1)) {
-					Assert.That (mi.ContentType.ToString (), Is.EqualTo ("com.apple.application-bundle"), "ContentType");
-					Assert.That (mi.ContentTypeTree.Length, Is.GreaterThan (1), "ContentTypeTree");
-					Assert.That (mi.DownloadingStatus, Is.EqualTo (NSItemDownloadingStatus.Unknown), "DownloadingStatus");
-					Assert.Null (mi.UbiquitousItemDownloadingError, "UbiquitousItemDownloadingError");
-					Assert.Null (mi.UbiquitousItemUploadingError, "UbiquitousItemUploadingError");
-					Assert.Null (mi.UbiquitousItemContainerDisplayName, "UbiquitousItemContainerDisplayName");
-					Assert.Null (mi.UbiquitousItemUrlInLocalContainer, "UbiquitousItemUrlInLocalContainer");
-				}
+				Assert.That (mi.ContentType.ToString (), Is.EqualTo ("com.apple.application-bundle"), "ContentType");
+				Assert.That (mi.ContentTypeTree.Length, Is.GreaterThan (1), "ContentTypeTree");
+				Assert.That (mi.DownloadingStatus, Is.EqualTo (NSItemDownloadingStatus.Unknown), "DownloadingStatus");
+				Assert.Null (mi.UbiquitousItemDownloadingError, "UbiquitousItemDownloadingError");
+				Assert.Null (mi.UbiquitousItemUploadingError, "UbiquitousItemUploadingError");
+				Assert.Null (mi.UbiquitousItemContainerDisplayName, "UbiquitousItemContainerDisplayName");
+				Assert.Null (mi.UbiquitousItemUrlInLocalContainer, "UbiquitousItemUrlInLocalContainer");
+
 				// 10.10
 				if (TestRuntime.CheckXcodeVersion (6,0)) {
 					Assert.False (mi.UbiquitousItemDownloadRequested, "UbiquitousItemDownloadRequested");
