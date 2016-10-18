@@ -627,41 +627,10 @@ namespace MTouchTests
 		[Test]
 		public void ExtensionBuild ()
 		{
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			try {
-				var exe = CompileTestAppExecutable (testDir);
-				File.WriteAllText (Path.Combine (app, "Info.plist"), @"<?xml version=""1.0"" encoding=""UTF-8""?>
-<!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
-<plist version=""1.0"">
-<dict>
-	<key>CFBundleDisplayName</key>
-	<string>Extensiontest</string>
-	<key>CFBundleIdentifier</key>
-	<string>com.xamarin.extensiontest</string>
-	<key>MinimumOSVersion</key>
-	<string>6.0</string>
-	<key>UIDeviceFamily</key>
-	<array>
-		<integer>1</integer>
-		<integer>2</integer>
-	</array>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-</dict>
-</plist>
-");
-				ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk {3} --targetver {3} --extension -r:{2} {1}", app, exe, Configuration.XamarinIOSDll, Configuration.sdk_version), hide_output: false);
-				ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk {3} --targetver {3} --extension -r:{2} {1}", app, exe, Configuration.XamarinIOSDll, Configuration.sdk_version), hide_output: false);
-			} finally {
-				Directory.Delete (testDir, true);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp (hasPlist: true);
+				ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk {3} --targetver {3} --extension -r:{2} {1}", mtouch.AppPath, mtouch.Executable, Configuration.XamarinIOSDll, Configuration.sdk_version), hide_output: false);
+				ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk {3} --targetver {3} --extension -r:{2} {1}", mtouch.AppPath, mtouch.Executable, Configuration.XamarinIOSDll, Configuration.sdk_version), hide_output: false);
 			}
 		}
 
@@ -1952,7 +1921,7 @@ class Test {
 				tool.Profile = profile;
 				tool.Verbosity = 5;
 				tool.Cache = Path.Combine (tool.CreateTemporaryDirectory (), "mtouch-test-cache");
-				tool.CreateTemporaryApp ("using UIKit; class C { static void Main (string[] args) { UIApplication.Main (args); } }");
+				tool.CreateTemporaryApp (code: "using UIKit; class C { static void Main (string[] args) { UIApplication.Main (args); } }");
 				tool.FastDev = true;
 				tool.Dlsym = false;
 
@@ -1996,12 +1965,12 @@ class Test {
 			return CompileTestAppExecutable (targetDirectory, code, extraArg, profile: MTouch.Profile.Unified);
 		}
 
-		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.Unified)
+		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.Unified, string appName = "testApp")
 		{
 			if (code == null)
 				code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
 
-			return CompileTestAppCode ("exe", targetDirectory, code, extraArg, profile);
+			return CompileTestAppCode ("exe", targetDirectory, code, extraArg, profile, appName);
 		}
 
 		public static string CompileTestAppLibrary (string targetDirectory, string code, string extraArg = null, Profile profile = Profile.Unified)
@@ -2009,11 +1978,11 @@ class Test {
 			return CompileTestAppCode ("library", targetDirectory, code, extraArg, profile);
 		}
 
-		public static string CompileTestAppCode (string target, string targetDirectory, string code, string extraArg = "", Profile profile = Profile.Unified)
+		public static string CompileTestAppCode (string target, string targetDirectory, string code, string extraArg = "", Profile profile = Profile.Unified, string appName = "testApp")
 		{
 			var ext = target == "exe" ? "exe" : "dll";
 			var cs = Path.Combine (targetDirectory, "testApp.cs");
-			var assembly = Path.Combine (targetDirectory, "testApp." + ext);
+			var assembly = Path.Combine (targetDirectory, appName + "." + ext);
 			var root_library = GetBaseLibrary (profile);
 
 			File.WriteAllText (cs, code);

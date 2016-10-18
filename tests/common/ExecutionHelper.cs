@@ -48,10 +48,15 @@ namespace Xamarin.Tests
 
 		public int Execute (string arguments, params string [] args)
 		{
+			return Execute (Configuration.MtouchPath, arguments, args);
+		}
+
+		public int Execute (string toolPath, string arguments, params string [] args)
+		{
 			output.Clear ();
 			output_lines = null;
 
-			var rv = ExecutionHelper.Execute (TestTarget.ToolPath, string.Format (arguments, args), EnvironmentVariables, output, output);
+			var rv = ExecutionHelper.Execute (toolPath, string.Format (arguments, args), EnvironmentVariables, output, output);
 
 			if (rv != 0) {
 				if (output.Length > 0)

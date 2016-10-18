@@ -16,6 +16,8 @@ namespace Xamarin.Tests
 			{ "PKG_CONFIG_PATH", "/Applications/Xamarin Studio.app/Contents/MacOS" }
 		};
 
+		const string XS_PATH = "/Applications/Xamarin Studio.app/Contents/Resources";
+
 		static string mt_root;
 		static string ios_destdir;
 		public static string mt_src_root;
@@ -232,6 +234,12 @@ namespace Xamarin.Tests
 			}
 		}
 
+		static string XSIphoneDir {
+			get {
+				return Path.Combine (XS_PATH, "lib", "monodevelop", "AddIns", "MonoDevelop.IPhone");
+			}
+		}
+
 		public static string SmcsPath {
 			get {
 				return Path.Combine (SdkBinDir, "smcs");
@@ -253,6 +261,12 @@ namespace Xamarin.Tests
 		public static string MtouchPath {
 			get {
 				return Path.Combine (BinDirXI, "mtouch");
+			}
+		}
+
+		public static string MlaunchPath {
+			get {
+				return Path.Combine (XSIphoneDir, "mlaunch.app", "Contents", "MacOS", "mlaunch");
 			}
 		}
 	}
