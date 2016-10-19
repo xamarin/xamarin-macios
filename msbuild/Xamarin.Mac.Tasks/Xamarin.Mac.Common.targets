@@ -161,11 +161,21 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			_CodesignNativeLibraries;
 		</_CodesignAppBundleDependsOn>
 
-		<CodesignDependsOn>
+		<CoreCodesignDependsOn>
 			_CodesignAppBundle;
 			_CodesignVerify;
+		</CoreCodesignDependsOn>
+
+		<CodesignDependsOn>
+			BeforeCodeSign;
+			CoreCodeSign;
+			AfterCodeSign;
 		</CodesignDependsOn>
 	</PropertyGroup>
+
+	<Target Name="BeforeCodesign" />
+	<Target Name="CoreCodesign" DependsOnTargets="$(_CoreCodesignDependsOn)" />
+	<Target Name="AfterCodesign" />
 
 	<Target Name="Codesign" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CodesignDependsOn)" />
 
