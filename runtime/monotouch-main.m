@@ -145,11 +145,11 @@ do_second_check:
 }
 
 #ifdef DEBUG_LAUNCH_TIME
-guint64 startDate = 0;
-guint64 date = 0;
+uint64_t startDate = 0;
+uint64_t date = 0;
 void debug_launch_time_print (const char *msg)
 {
-	guint64 unow;
+	uint64_t unow;
 	struct timeval now;
 
 	gettimeofday (&now, NULL);
