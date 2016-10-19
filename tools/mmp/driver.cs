@@ -332,12 +332,12 @@ namespace Xamarin.Bundler {
 				IsUnifiedMobile = true;
 			} else {
 				foreach (var asm in references) {
-					if (asm.EndsWith ("reference/full/Xamarin.Mac.dll")) {
+					if (asm.EndsWith ("reference/full/Xamarin.Mac.dll", StringComparison.Ordinal)) {
 						IsUnifiedFullSystemFramework = true;
 						force45From40UnifiedSystemFull = targetFramework == TargetFramework.Net_4_0;
 						break;
 					}
-					if (asm.EndsWith ("mono/4.5/Xamarin.Mac.dll")) {
+					if (asm.EndsWith ("mono/4.5/Xamarin.Mac.dll", StringComparison.Ordinal)) {
 						IsUnifiedFullXamMacFramework = true;
 						break;
 					}
@@ -471,7 +471,7 @@ namespace Xamarin.Bundler {
 			var sdkdir = Path.Combine (DeveloperDirectory, "Platforms", "MacOSX.platform", "Developer", "SDKs");
 			foreach (var sdkpath in Directory.GetDirectories (sdkdir)) {
 				var sdk = Path.GetFileName (sdkpath);
-				if (sdk.StartsWith ("MacOSX") && sdk.EndsWith (".sdk")) {
+				if (sdk.StartsWith ("MacOSX", StringComparison.Ordinal) && sdk.EndsWith (".sdk", StringComparison.Ordinal)) {
 					Version sdkVersion;
 					if (Version.TryParse (sdk.Substring (6, sdk.Length - 10), out sdkVersion))
 						sdks.Add (sdkVersion);
@@ -489,7 +489,7 @@ namespace Xamarin.Bundler {
 		static void CheckForUnknownCommandLineArguments (IList<Exception> exceptions, IList<string> arguments)
 		{
 			for (int i = arguments.Count - 1; i >= 0; i--) {
-				if (arguments [i].StartsWith ("-")) {
+				if (arguments [i].StartsWith ("-", StringComparison.Ordinal)) {
 					exceptions.Add (ErrorHelper.CreateError (18, "Unknown command line argument: '{0}'", arguments [i]));
 					arguments.RemoveAt (i);
 				}
@@ -815,9 +815,9 @@ namespace Xamarin.Bundler {
 
 		static string GetRealPath (string path)
 		{
-			if (path.StartsWith ("@executable_path/"))
+			if (path.StartsWith ("@executable_path/", StringComparison.Ordinal))
 				path = Path.Combine (mmp_dir, path.Substring (17));
-			if (path.StartsWith ("@rpath/"))
+			if (path.StartsWith ("@rpath/", StringComparison.Ordinal))
 				path = Path.Combine (mmp_dir, path.Substring (7));
 
 			const int PATHMAX = 1024 + 1;
@@ -937,7 +937,7 @@ namespace Xamarin.Bundler {
 				args.Append ("-F ").Append (Quote (path)).Append (' ');
 			args.Append (weak ? "-weak_framework " : "-framework ").Append (Quote (name)).Append (' ');
 
-			if (!framework.EndsWith (".framework"))
+			if (!framework.EndsWith (".framework", StringComparison.Ordinal))
 				return;
 
 			// TODO - There is a chunk of code in mtouch that calls Xamarin.MachO.IsDynamicFramework and doesn't cpoy if framework of static libs
@@ -1025,7 +1025,7 @@ namespace Xamarin.Bundler {
 						foreach (var linkWith in assembly.LinkWith) {
 							if (verbose > 1)
 								Console.WriteLine ("Found LinkWith on {0} for {1}", assembly.FileName, linkWith);
-							if (linkWith.EndsWith (".dylib")) {
+							if (linkWith.EndsWith (".dylib", StringComparison.Ordinal)) {
 								// Link against the version copied into MonoBudle, since we install_name_tool'd it already
 								string libName = Path.GetFileName (linkWith);
 								string finalLibPath = Path.Combine (mmp_dir, libName);
@@ -1258,7 +1258,7 @@ namespace Xamarin.Bundler {
 		{
 			// Process LinkWith first so we don't have unnecessary warnings
 			foreach (var assembly in BuildTarget.Assemblies.Where (a => a.LinkWith != null)) {
-				foreach (var linkWith in assembly.LinkWith.Where (l => l.EndsWith (".dylib"))) {
+				foreach (var linkWith in assembly.LinkWith.Where (l => l.EndsWith (".dylib", StringComparison.Ordinal))) {
 					string libName = Path.GetFileName (linkWith);
 					string finalLibPath = Path.Combine (mmp_dir, libName);
 					Application.UpdateFile (linkWith, finalLibPath);
@@ -1421,7 +1421,7 @@ namespace Xamarin.Bundler {
 				CopyFileAndRemoveReadOnly (real_src, dest);
 			}
 
-			bool isStaticLib = real_src.EndsWith (".a");
+			bool isStaticLib = real_src.EndsWith (".a", StringComparison.Ordinal);
 			if (native_references.Contains (real_src)) {
 				if (!isStaticLib) {
 					int ret = XcodeRun ("install_name_tool -id", string.Format ("{0} {1}", Quote("@executable_path/../" + BundleName + "/" + name), Quote(dest)));
