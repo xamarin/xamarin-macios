@@ -500,7 +500,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_CompileToNative" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_GenerateBundleName;ResolveReferences;_CompileEntitlements;_CompileAppManifest"
 		Inputs="$(TargetDir)$(TargetFileName)"
-		Outputs="$(_AppBundlePath)Contents\MacOS\$(TargetFileName)">
+		Outputs="$(_AppBundlePath)Contents\MonoBundle\$(TargetFileName)">
 		<Mmp
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
