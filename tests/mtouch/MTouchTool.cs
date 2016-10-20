@@ -60,6 +60,7 @@ namespace MTouchTests
 		public bool? FastDev;
 		public bool? Dlsym;
 		public string Sdk;
+		public string TargetVer;
 		public string [] References;
 		public string Executable;
 		public string TargetFramework;
@@ -163,6 +164,12 @@ namespace MTouchTests
 				sb.Append (" --sdk ").Append (Sdk);
 			} else {
 				sb.Append (" --sdk ").Append (MTouch.GetSdkVersion (Profile));
+			}
+
+			if (TargetVer == None) {
+				// do nothing
+			} else if (!string.IsNullOrEmpty (TargetVer)) {
+				sb.Append (" --targetver ").Append (TargetVer);
 			}
 
 			if (Debug.HasValue && Debug.Value)
@@ -343,7 +350,7 @@ namespace MTouchTests
 	<key>CFBundleExecutable</key>
 	<string>{0}</string>
 	<key>MinimumOSVersion</key>
-	<string>6.0</string>
+	<string>{1}</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
@@ -358,7 +365,7 @@ namespace MTouchTests
 	</array>
 </dict>
 </plist>
-", appName);
+", appName, MTouch.GetSdkVersion (Profile));
 				break;
 			case MTouch.Profile.TVOS:
 				plist = string.Format (@"<?xml version=""1.0"" encoding=""UTF-8""?>
@@ -372,14 +379,14 @@ namespace MTouchTests
 	<key>CFBundleExecutable</key>
 	<string>{0}</string>
 	<key>MinimumOSVersion</key>
-	<string>9.0</string>
+	<string>{1}</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>3</integer>
 	</array>
 </dict>
 </plist>
-", appName);
+", appName, MTouch.GetSdkVersion (Profile));
 				break;
 			default:
 				throw new Exception ("Profile not specified.");

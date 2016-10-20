@@ -629,8 +629,10 @@ namespace MTouchTests
 		{
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.CreateTemporaryApp (hasPlist: true);
-				ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk {3} --targetver {3} --extension -r:{2} {1}", mtouch.AppPath, mtouch.Executable, Configuration.XamarinIOSDll, Configuration.sdk_version), hide_output: false);
-				ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk {3} --targetver {3} --extension -r:{2} {1}", mtouch.AppPath, mtouch.Executable, Configuration.XamarinIOSDll, Configuration.sdk_version), hide_output: false);
+				mtouch.Extension = true;
+				mtouch.TargetVer = Configuration.sdk_version;
+				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildSim));
+				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev));
 			}
 		}
 
