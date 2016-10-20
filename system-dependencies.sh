@@ -30,11 +30,17 @@ while ! test -z $1; do
 			PROVISION_CMAKE=1
 			shift
 			;;
+		--provision-autotools)
+			PROVISION_AUTOTOOLS=1
+			shift
+			;;
 		--provision-all)
 			PROVISION_MONO=1
 			PROVISION_XS=1
 			PROVISION_XCODE=1
 			PROVISION_CMAKE=1
+			PROVISION_AUTOTOOLS=1
+			PROVISION_HOMEBREW=1
 			shift
 			;;
 		--ignore-osx)
@@ -74,6 +80,12 @@ function fail () {
 	echo "    $1"
 	tput sgr0 2>/dev/null || true
 	FAIL=1
+}
+
+function warn () {
+	tput setaf 3 2>/dev/null || true
+	echo "    $1"
+	tput sgr0 2>/dev/null || true
 }
 
 function ok () {
@@ -376,6 +388,34 @@ function check_mono () {
 	ok "Found Mono $ACTUAL_MONO_VERSION (at least $MIN_MONO_VERSION and not more than $MAX_MONO_VERSION is required)"
 }
 
+function install_autoconf () {
+	if ! brew --version >& /dev/null; then
+		fail "Asked to install autoconf, but brew is not installed."
+		return
+	fi
+
+	brew install autoconf
+}
+
+function install_libtool () {
+	if ! brew --version >& /dev/null; then
+		fail "Asked to install libtool, but brew is not installed."
+		return
+	fi
+
+	brew install libtool
+}
+
+function install_automake () {
+	if ! brew --version >& /dev/null; then
+		fail "Asked to install automake, but brew is not installed."
+		return
+	fi
+
+	brew install automake
+}
+
+
 function check_autotools () {
 	if ! test -z $IGNORE_AUTOTOOLS; then return; fi
 
@@ -384,6 +424,8 @@ IFS='
 '
 	if AUTOCONF_VERSION=($(autoconf --version 2>/dev/null)); then
 		ok "Found ${AUTOCONF_VERSION[0]} (no specific version is required)"
+	elif ! test -z $PROVISION_AUTOTOOLS; then
+		install_autoconf
 	else
 		fail "You must install autoconf, read the README.md for instructions"
 	fi
@@ -392,16 +434,20 @@ IFS='
 		LIBTOOL=$(which libtool)
 	fi
 
-	if ! LIBTOOL_VERSION=($($LIBTOOL --version 2>/dev/null )); then
-		fail "You must install libtool, read the README.md for instructions"
-	else
+	if LIBTOOL_VERSION=($($LIBTOOL --version 2>/dev/null )); then
 		ok "Found ${LIBTOOL_VERSION[0]} (no specific version is required)"
+	elif ! test -z $PROVISION_AUTOTOOLS; then
+		install_libtool
+	else
+		fail "You must install libtool, read the README.md for instructions"
 	fi
 
-	if ! AUTOMAKE_VERSION=($(automake --version 2>/dev/null)); then
-		fail "You must install automake, read the README.md for instructions"
-	else
+	if AUTOMAKE_VERSION=($(automake --version 2>/dev/null)); then
 		ok "Found ${AUTOMAKE_VERSION[0]} (no specific version is required)"
+	elif ! test -z $PROVISION_AUTOTOOLS; then
+		install_automake
+	else
+		fail "You must install automake, read the README.md for instructions"
 	fi
 IFS=$IFS_tmp
 }
@@ -497,10 +543,29 @@ function check_cmake () {
 	ok "Found CMake $ACTUAL_CMAKE_VERSION (at least $MIN_CMAKE_VERSION is required)"
 }
 
+function check_homebrew ()
+{
+IFStmp=$IFS
+IFS='
+'
+	if HOMEBREW_VERSION=($(brew --version 2>/dev/null)); then
+		ok "Found Homebrew ($HOMEBREW_VERSION)"
+	elif ! test -z $PROVISION_HOMEBREW; then
+		log "Installing Homebrew..."
+		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+		HOMEBREW_VERSION=($(brew --version 2>/dev/null))
+		log "Installed Homebrew ($HOMEBREW_VERSION)"
+	else
+		warn "Could not find Homebrew. Homebrew is required to auto-provision some dependencies (autotools, cmake), but not required otherwise."
+	fi
+IFS=$IFS_tmp
+}
+
 echo "Checking system..."
 
 check_osx_version
 check_xcode
+check_homebrew
 check_autotools
 check_mono
 check_xamarin_studio
