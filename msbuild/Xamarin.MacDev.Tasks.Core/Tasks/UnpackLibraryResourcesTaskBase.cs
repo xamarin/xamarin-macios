@@ -26,6 +26,9 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public ITaskItem[] ReferencedLibraries { get; set; }
 
+		[Required]
+		public ITaskItem[] TargetFrameworkDirectory { get; set; }
+
 		#endregion
 
 		#region Outputs
@@ -42,6 +45,7 @@ namespace Xamarin.MacDev.Tasks
 			Log.LogTaskProperty ("IntermediateOutputPath", IntermediateOutputPath);
 			Log.LogTaskProperty ("NoOverwrite", NoOverwrite);
 			Log.LogTaskProperty ("ReferencedLibraries", ReferencedLibraries);
+			Log.LogTaskProperty ("TargetFrameworkDirectory", TargetFrameworkDirectory);
 
 			// TODO: give each assembly its own intermediate output directory
 			// TODO: use list file to avoid re-extracting assemblies but allow FileWrites to work
@@ -49,7 +53,9 @@ namespace Xamarin.MacDev.Tasks
 			HashSet<string> ignore = null;
 
 			foreach (var asm in ReferencedLibraries) {
-				if (asm.GetMetadata ("ResolvedFrom") == "{TargetFrameworkDirectory}") {
+				// mscorlib.dll was not coming out with ResolvedFrom == {TargetFrameworkDirectory}
+				// and what we really care is where it comes from, not how it was resolved
+				if (IsFrameworkAssembly (asm)) {
 					Log.LogMessage (MessageImportance.Low, "  Skipping framework assembly: {0}", asm.ItemSpec);
 				} else {
 					var extracted = ExtractContentAssembly (asm.ItemSpec, IntermediateOutputPath);
@@ -81,6 +87,15 @@ namespace Xamarin.MacDev.Tasks
 			BundleResourcesWithLogicalNames = results.ToArray ();
 
 			return !Log.HasLoggedErrors;
+		}
+
+		bool IsFrameworkAssembly (ITaskItem asm)
+		{
+			foreach (var dir in TargetFrameworkDirectory) {
+				if (asm.ItemSpec.StartsWith (dir.ItemSpec, StringComparison.Ordinal))
+					return true;
+			}
+			return false;
 		}
 
 		IEnumerable<ITaskItem> ExtractContentAssembly (string assembly, string intermediatePath)
