@@ -30,7 +30,7 @@ namespace Xamarin.Profiler
 		/// <summary>
 		/// Time to launch an application on the simulators.</summary>
 		/// <remarks>
-		/// Note: the measurement is being done with the simulator closed and the app not yet installed.</remarks>
+		/// Note: the measurement is being done with the simulator already open and the app not yet installed.</remarks>
 		[Test]
 		public void AppLaunchTime ()
 		{
