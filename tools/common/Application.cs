@@ -84,16 +84,12 @@ namespace Xamarin.Bundler {
 			if (Driver.Force)
 				return false;
 
-			var tfi = new FileInfo (target);
-			
-			if (!tfi.Exists) {
+			if (!File.Exists (target)) {
 				Driver.Log (3, "Target '{0}' does not exist.", target);
 				return false;
 			}
 
-			var sfi = new FileInfo (source);
-
-			if (sfi.LastWriteTimeUtc <= tfi.LastWriteTimeUtc) {
+			if (File.GetLastWriteTimeUtc (source) <= File.GetLastWriteTimeUtc (target)) {
 				Driver.Log (3, "Prerequisite '{0}' is older than the target '{1}'.", source, target);
 				return true;
 			} else {
@@ -277,13 +273,12 @@ namespace Xamarin.Bundler {
 				ErrorHelper.Error (1013, "Dependency tracking error: no files to compare. Please file a bug report at http://bugzilla.xamarin.com with a test case.");
 
 			foreach (var s in sources) {
-				var sfi = new FileInfo (s);
-				if (!sfi.Exists) {
+				if (!File.Exists (s)) {
 					Driver.Log (3, "Prerequisite '{0}' does not exist.", s);
 					return false;
 				}
 
-				var st = sfi.LastWriteTimeUtc;
+				var st = File.GetLastWriteTimeUtc (s);
 				if (st > max_source) {
 					max_source = st;
 					max_s = s;
@@ -292,13 +287,12 @@ namespace Xamarin.Bundler {
 
 
 			foreach (var t in targets) {
-				var tfi = new FileInfo (t);
-				if (!tfi.Exists) {
+				if (!File.Exists (t)) {
 					Driver.Log (3, "Target '{0}' does not exist.", t);
 					return false;
 				}
 
-				var lwt = tfi.LastWriteTimeUtc;
+				var lwt = File.GetLastWriteTimeUtc (t);
 				if (max_source > lwt) {
 					Driver.Log (3, "Prerequisite '{0}' is newer than target '{1}' ({2} vs {3}).", max_s, t, max_source, lwt);
 					return false;
