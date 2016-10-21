@@ -17,7 +17,7 @@ namespace MTouchTests
 		LaunchSim,
 	}
 
-	enum MTouchLinker
+	public enum MTouchLinker
 	{
 		Unspecified,
 		LinkAll,
