@@ -541,8 +541,10 @@ namespace Xamarin.Bundler {
 			if (Driver.Force) {
 				Driver.Log (3, "A full rebuild has been forced by the command line argument -f.");
 				Cache.Clean ();
-			} else if (!Cache.VerifyCache ()) {
-				Driver.Force = true;
+			} else {
+				// this will destroy the cache if invalid, which makes setting Driver.Force to true mostly unneeded
+				// in fact setting it means some actions (like extract native resource) gets duplicate for fat builds
+				Cache.VerifyCache ();
 			}
 
 			Initialize ();
