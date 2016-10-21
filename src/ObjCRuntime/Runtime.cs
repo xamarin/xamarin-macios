@@ -190,7 +190,7 @@ namespace XamCore.ObjCRuntime {
 
 			NSObjectClass = NSObject.Initialize (ref options);
 
-			CreateRegistrar (options);
+			Registrar = new DynamicRegistrar ();
 			RegisterDelegates (ref options);
 			Method.Initialize (ref options);
 			Class.Initialize (ref options);
