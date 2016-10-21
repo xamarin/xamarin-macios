@@ -76,6 +76,38 @@ namespace Xamarin.Profiler
 			}
 		}
 
+		[TestCase (MTouchRegistrar.Dynamic)]
+		[TestCase (MTouchRegistrar.Static)]
+		public void RegistrarTime (MTouchRegistrar registrarMode)
+		{
+			using (var buildTool = new MTouchTool ()) {
+				var registrarModeName = Enum.GetName (typeof (MTouchRegistrar), registrarMode);
+				buildTool.Profile = profile;
+				buildTool.Registrar = registrarMode;
+				buildTool.NoFastSim = true;
+				buildTool.CreateTemporaryApp (profile, true, "RegistrarTime" + registrarModeName + profile);
+
+				var sw = new Stopwatch ();
+				sw.Start ();
+				buildTool.Execute (MTouchAction.BuildSim);
+				sw.Stop ();
+				var buildTime = sw.Elapsed.TotalSeconds;
+
+				var launchTool = new MLaunchTool ();
+				launchTool.AppPath = buildTool.AppPath;
+				launchTool.Profile = profile;
+
+				sw.Reset ();
+				sw.Start ();
+				launchTool.Execute ();
+				sw.Stop ();
+				var launchTime = sw.Elapsed.TotalSeconds;
+
+				var totalTime = buildTime + launchTime;
+				sb.AppendLine (string.Format ("RegistrarTime - {0}: {1} seconds [build time], {2} seconds [launch time], {3} seconds [total time]", registrarModeName, buildTime.ToString ("#.000"), launchTime.ToString ("#.000"), totalTime.ToString ("#.000")));
+			}
+		}
+
 		[TestFixtureTearDown]
 		public void PrintLogs ()
 		{
