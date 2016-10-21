@@ -5,14 +5,7 @@ using System.Runtime.InteropServices;
 namespace XamCore.ObjCRuntime {
 	internal static class Method {
 #if !COREBUILD
-		static Runtime.Trampolines tramps;
-		
-		internal static void Initialize (ref Runtime.InitializationOptions options)
-		{
-			tramps = options.Trampolines;
-		}
-
-#if !XAMCORE_2_0
+		#if !XAMCORE_2_0
 		public static string Signature (MethodBase minfo) {
 			string signature = null;
 
@@ -30,112 +23,112 @@ namespace XamCore.ObjCRuntime {
 		}
 #endif
 
-		public static IntPtr Trampoline {
+		public unsafe static IntPtr Trampoline {
 			get {
-				return tramps.tramp;
+				return Runtime.options->Trampolines->tramp;
 			}
 		}
 
-		public static IntPtr SingleTrampoline {
+		public unsafe static IntPtr SingleTrampoline {
 			get {
-				return tramps.fpret_single_tramp;
+				return Runtime.options->Trampolines->fpret_single_tramp;
 			}
 		}
 		
-		public static IntPtr StaticSingleTrampoline {
+		public unsafe static IntPtr StaticSingleTrampoline {
 			get {
-				return tramps.static_fpret_single_tramp;
+				return Runtime.options->Trampolines->static_fpret_single_tramp;
 			}
 		}
 
-		public static IntPtr DoubleTrampoline {
+		public unsafe static IntPtr DoubleTrampoline {
 			get {
-				return tramps.fpret_double_tramp;
+				return Runtime.options->Trampolines->fpret_double_tramp;
 			}
 		}
 		
-		public static IntPtr StaticDoubleTrampoline {
+		public unsafe static IntPtr StaticDoubleTrampoline {
 			get {
-				return tramps.static_fpret_double_tramp;
+				return Runtime.options->Trampolines->static_fpret_double_tramp;
 			}
 		}
 
-		public static IntPtr StretTrampoline {
+		public unsafe static IntPtr StretTrampoline {
 			get {
-				return tramps.stret_tramp;
+				return Runtime.options->Trampolines->stret_tramp;
 			}
 		}
 		
-		public static IntPtr StaticStretTrampoline {
+		public unsafe static IntPtr StaticStretTrampoline {
 			get {
-				return tramps.static_stret_tramp;
+				return Runtime.options->Trampolines->static_stret_tramp;
 			}
 		}
 
-		public static IntPtr StaticTrampoline {
+		public unsafe static IntPtr StaticTrampoline {
 			get {
-				return tramps.static_tramp;
+				return Runtime.options->Trampolines->static_tramp;
 			}
 		}
 
-		public static IntPtr ConstructorTrampoline {
+		public unsafe static IntPtr ConstructorTrampoline {
 			get {
-				return tramps.ctor_tramp;
+				return Runtime.options->Trampolines->ctor_tramp;
 			}
 		}
 
-		internal static IntPtr ReleaseTrampoline {
+		internal unsafe static IntPtr ReleaseTrampoline {
 			get {
-				return tramps.release_tramp;
+				return Runtime.options->Trampolines->release_tramp;
 			}
 		}
 
-		internal static IntPtr RetainTrampoline {
+		internal unsafe static IntPtr RetainTrampoline {
 			get {
-				return tramps.retain_tramp;
+				return Runtime.options->Trampolines->retain_tramp;
 			}
 		}
 			
-		internal static IntPtr X86_DoubleABI_StretTrampoline {
+		internal unsafe static IntPtr X86_DoubleABI_StretTrampoline {
 			get {
-				return tramps.x86_double_abi_stret_tramp;
+				return Runtime.options->Trampolines->x86_double_abi_stret_tramp;
 			}
 		}
 		
-		internal static IntPtr X86_DoubleABI_StaticStretTrampoline {
+		internal unsafe static IntPtr X86_DoubleABI_StaticStretTrampoline {
 			get {
-				return tramps.x86_double_abi_static_stret_tramp;
+				return Runtime.options->Trampolines->x86_double_abi_static_stret_tramp;
 			}
 		}
 		
-		internal static IntPtr LongTrampoline {
+		internal unsafe static IntPtr LongTrampoline {
 			get {
-				return tramps.long_tramp;
+				return Runtime.options->Trampolines->long_tramp;
 			}
 		}
 		
-		internal static IntPtr StaticLongTrampoline {
+		internal unsafe static IntPtr StaticLongTrampoline {
 			get {
-				return tramps.static_long_tramp;
+				return Runtime.options->Trampolines->static_long_tramp;
 			}
 		}
 
 #if MONOMAC
-		internal static IntPtr CopyWithZone1 {
-			get { return tramps.copy_with_zone_1; }
+		internal unsafe static IntPtr CopyWithZone1 {
+			get { return Runtime.options->Trampolines->copy_with_zone_1; }
 		}
 
-		internal static IntPtr CopyWithZone2 {
-			get { return tramps.copy_with_zone_2; }
+		internal unsafe static IntPtr CopyWithZone2 {
+			get { return Runtime.options->Trampolines->copy_with_zone_2; }
 		}
 #endif
 
-		internal static IntPtr GetGCHandleTrampoline {
-			get { return tramps.get_gchandle_tramp; }
+		internal unsafe static IntPtr GetGCHandleTrampoline {
+			get { return Runtime.options->Trampolines->get_gchandle_tramp; }
 		}
 
-		internal static IntPtr SetGCHandleTrampoline {
-			get { return tramps.set_gchandle_tramp; }
+		internal unsafe static IntPtr SetGCHandleTrampoline {
+			get { return Runtime.options->Trampolines->set_gchandle_tramp; }
 		}
 #endif // !COREBUILD
 	}
