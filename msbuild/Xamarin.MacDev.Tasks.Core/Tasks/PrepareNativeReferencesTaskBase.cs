@@ -137,9 +137,16 @@ namespace Xamarin.MacDev.Tasks
 				text.AppendLine ();
 			}
 
+			bool skipLinkWithGeneration = false;
 			var linkWith = Path.Combine (IntermediateOutputPath, "LinkWithAttributes.cs");
-			Directory.CreateDirectory (Path.GetDirectoryName (linkWith));
-			File.WriteAllText (linkWith, text.ToString ());
+			if (File.Exists (linkWith)) {
+				string existingLinkWithText = File.ReadAllText (linkWith);
+				skipLinkWithGeneration = String.Equals (existingLinkWithText, text.ToString (), StringComparison.Ordinal);
+			}
+			if (!skipLinkWithGeneration) {
+				Directory.CreateDirectory (Path.GetDirectoryName (linkWith));
+				File.WriteAllText (linkWith, text.ToString ());
+			}
 
 			EmbeddedResources = embeddedResources.ToArray ();
 			NativeFrameworks = nativeFrameworks.ToArray ();
