@@ -40,7 +40,9 @@ namespace Xamarin.Profiler
 		}
 
 		/// <summary>
-		/// Time to build and launch an application on the simulators.</summary>
+		/// Time to build and launch an app on the simulators with different linker modes.</summary>
+		/// <param name="linkerMode">
+		/// Set the linker to DontLink, LinkSdk or LinkAll.</param>
 		/// <remarks>
 		/// Note: the measurement is being done with the simulator already open and, on the bots, the app not yet installed.
 		/// Warning: If you're running those tests multiple times locally, you may want to reset the simulator manually each time.</remarks>
@@ -76,6 +78,13 @@ namespace Xamarin.Profiler
 			}
 		}
 
+		/// <summary>
+		/// Time to build and launch an app on the simulators with different registrar modes.</summary>
+		/// <param name="registrarMode">
+		/// Use the dynamic or static registrar.</param>
+		/// <remarks>
+		/// Note: the measurement is being done with the simulator already open and, on the bots, the app not yet installed.
+		/// Warning: If you're running those tests multiple times locally, you may want to reset the simulator manually each time.</remarks>
 		[TestCase (MTouchRegistrar.Dynamic)]
 		[TestCase (MTouchRegistrar.Static)]
 		public void RegistrarTime (MTouchRegistrar registrarMode)
