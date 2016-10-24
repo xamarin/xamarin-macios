@@ -293,7 +293,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			foreach (var asset in ImageAssets) {
-				var vpath = BundleResource.GetVirtualProjectPath (ProjectDir, asset);
+				var vpath = BundleResource.GetVirtualProjectPath (ProjectDir, asset, !string.IsNullOrEmpty(SessionId));
 				if (Path.GetFileName (vpath) != "Contents.json")
 					continue;
 
