@@ -1,5 +1,6 @@
 #!/bin/bash -e
 
+export BUILD_REVISION=jenkins
 cd $WORKSPACE
 export BUILD_REVISION=jenkins
 # Unlock
