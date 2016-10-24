@@ -30,10 +30,8 @@ namespace Xamarin.Bundler
 
 		// directories used during the build process
 		public string ArchDirectory;
-		public string PreBuildDirectory;
 		public string BuildDirectory;
 		public string LinkDirectory;
-		public string NoResDirectory;
 
 		// Note that each 'Target' can have multiple abis: armv7+armv7s for instance.
 		public List<Abi> Abis;
@@ -445,11 +443,11 @@ namespace Xamarin.Bundler
 							continue;
 						cached_loaded.Add (a.FullPath);
 						input.Add (a.FullPath);
-						output.Add (Path.Combine (PreBuildDirectory, a.FileName));
+						output.Add (Path.Combine (BuildDirectory, a.FileName));
 						if (a.Satellites != null) {
 							foreach (var s in a.Satellites) {
 								input.Add (s);
-								output.Add (Path.Combine (PreBuildDirectory, Path.GetFileName (Path.GetDirectoryName (s)), Path.GetFileName (s)));
+								output.Add (Path.Combine (BuildDirectory, Path.GetFileName (Path.GetDirectoryName (s)), Path.GetFileName (s)));
 							}
 						}
 					}
@@ -461,7 +459,7 @@ namespace Xamarin.Bundler
 					var not_loaded = cached_output.Except (cached_loaded);
 					foreach (var path in not_loaded) {
 						input.Add (path);
-						output.Add (Path.Combine (PreBuildDirectory, Path.GetFileName (path)));
+						output.Add (Path.Combine (BuildDirectory, Path.GetFileName (path)));
 					}
 
 					// Include mtouch here too?
@@ -476,13 +474,13 @@ namespace Xamarin.Bundler
 								continue;
 							}
 							// Load the cached assembly
-							a.LoadAssembly (Path.Combine (PreBuildDirectory, a.FileName));
+							a.LoadAssembly (Path.Combine (BuildDirectory, a.FileName));
 							Driver.Log (3, "Target '{0}' is up-to-date.", a.FullPath);
 						}
 
 						foreach (var path in not_loaded) {
 							var a = new Assembly (this, path);
-							a.LoadAssembly (Path.Combine (PreBuildDirectory, a.FileName));
+							a.LoadAssembly (Path.Combine (BuildDirectory, a.FileName));
 							Assemblies.Add (a);
 						}
 
@@ -502,7 +500,7 @@ namespace Xamarin.Bundler
 				assemblies.Add (a.FullPath);
 			var linked_assemblies = new List<string> (assemblies);
 
-			LinkAssemblies (App.RootAssembly, ref linked_assemblies, PreBuildDirectory, out LinkContext);
+			LinkAssemblies (App.RootAssembly, ref linked_assemblies, BuildDirectory, out LinkContext);
 
 			// Remove assemblies that were linked away
 			var removed = new HashSet<string> (assemblies);
@@ -530,10 +528,10 @@ namespace Xamarin.Bundler
 			foreach (var assembly in added) {
 				// the linker already copied the assemblies (linked or not) into the output directory
 				// and we must NOT overwrite the linker work with an original (unlinked) assembly
-				string path = Path.Combine (PreBuildDirectory, assembly);
+				string path = Path.Combine (BuildDirectory, assembly);
 				var ad = ManifestResolver.Load (path);
 				var a = new Assembly (this, ad);
-				a.CopyToDirectory (PreBuildDirectory);
+				a.CopyToDirectory (BuildDirectory);
 				Assemblies.Add (a);
 			}
 
@@ -541,7 +539,7 @@ namespace Xamarin.Bundler
 
 			// Make the assemblies point to the right path.
 			foreach (var a in Assemblies)
-				a.FullPath = Path.Combine (PreBuildDirectory, a.FileName);
+				a.FullPath = Path.Combine (BuildDirectory, a.FileName);
 
 			File.WriteAllText (cache_path, string.Join ("\n", linked_assemblies));
 		}
@@ -551,30 +549,17 @@ namespace Xamarin.Bundler
 			//
 			// * Linking
 			//   Copy assemblies to LinkDirectory
-			//   Link and save to PreBuildDirectory
+			//   Link and save to BuildDirectory
 			//   If marshalling native exceptions:
-			//     * Generate/calculate P/Invoke wrappers and save to PreBuildDirectory
-			//   * Has resourced to be removed:
-			//     Remove resource and save to NoResDirectory
-			//     Copy to BuildDirectory. [Why not save directly to BuildDirectory? Because otherwise if we're rebuilding 
-			//                              and the only thing that changed is the resources we're removing in this step,
-			//                              we won't be able to detect that the remaining parts of the assembly
-			//                              haven't changed.]
-			//   * No resources to be removed:
-			//     Copy to BuildDirectory.
+			//     * Generate/calculate P/Invoke wrappers and save to BuildDirectory
 			//   [AOT assemblies in BuildDirectory]
 			//   Strip managed code save to TargetDirectory (or just copy the file if stripping is disabled).
 			//
 			// * No linking
 			//   If marshalling native exceptions:
-			//     Generate/calculate P/Invoke wrappers and save to PreBuildDirectory.
+			//     Generate/calculate P/Invoke wrappers and save to BuildDirectory.
 			//   If not marshalling native exceptions:
-			//     Copy assemblies to PreBuildDirectory
-			//   * Has resourced to be removed:
-			//     Remove resource and save to NoResDirectory
-			//     Copy to BuildDirectory.
-			//   * No resources to be removed:
-			//     Copy to BuildDirectory.
+			//     Copy assemblies to BuildDirectory
 			//   [AOT assemblies in BuildDirectory]
 			//   Strip managed code save to TargetDirectory (or just copy the file if stripping is disabled).
 			//
@@ -612,17 +597,9 @@ namespace Xamarin.Bundler
 			if (!Directory.Exists (LinkDirectory))
 				Directory.CreateDirectory (LinkDirectory);
 
-			PreBuildDirectory = Path.Combine (ArchDirectory, "PreBuild");
-			if (!Directory.Exists (PreBuildDirectory))
-				Directory.CreateDirectory (PreBuildDirectory);
-
 			BuildDirectory = Path.Combine (ArchDirectory, "Build");
 			if (!Directory.Exists (BuildDirectory))
 				Directory.CreateDirectory (BuildDirectory);
-
-			NoResDirectory = Path.Combine (ArchDirectory, "NoRes");
-			if (!Directory.Exists (NoResDirectory))
-				Directory.CreateDirectory (NoResDirectory);
 
 			if (!Directory.Exists (TargetDirectory))
 				Directory.CreateDirectory (TargetDirectory);
@@ -648,31 +625,7 @@ namespace Xamarin.Bundler
 				}
 			}
 
-			// Now the assemblies are in PreBuildDirectory.
-
-			//
-			// PreBuildDirectory -> BuildDirectory [resource removal]
-			// 
-			// Resource removal
-			// * Remove any __monotouch_content_* or __monotouch_page_* resources
-			//   - This is already done in the linker, so there is no need to do it here if the linker is enabled (for user assemblies).
-			//   - It is only done for device-builds. Xamarin Studio requires the resources to be present (to extract
-			//     them) - which is not a problem for device-builds since we operate on a copied assembly, not the
-			//     original like Xamarin Studio does).
-			// * Remove any LinkWith-related resources
-			//
-
-			var remove_res = App.IsDeviceBuild && App.LinkMode != LinkMode.All;
-			foreach (var a in Assemblies) {
-				var target = Path.Combine (BuildDirectory, a.FileName);
-				if (!Application.IsUptodate (a.FullPath, target)) {
-					a.RemoveResources (remove_res, BuildDirectory, NoResDirectory);
-				} else {
-					a.FullPath = target;
-					Driver.Log (3, "Target '{0}' is up-to-date.", target);
-				}
-			}
-			Driver.Watch ("Removing Resources", 1);
+			// Now the assemblies are in BuildDirectory.
 
 			Driver.GatherFrameworks (this, Frameworks, WeakFrameworks);
 

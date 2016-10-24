@@ -65,7 +65,6 @@ LINKER_SOURCES = \
 	$(LINKER_DIR)/MonoTouch.Tuner/ProcessExportedFields.cs	\
 	$(LINKER_DIR)/MonoTouch.Tuner/RemoveAttributes.cs		\
 	$(LINKER_DIR)/MonoTouch.Tuner/RemoveCode.cs			\
-	$(LINKER_DIR)/MonoTouch.Tuner/RemoveMonoTouchResources.cs	\
 	$(LINKER_DIR)/MonoTouch.Tuner/SealerSubStep.cs	\
 	$(TOP)/tools/linker/ApplyPreserveAttribute.cs 		\
 	$(TOP)/tools/linker/BaseProfile.cs			\
@@ -85,7 +84,8 @@ LINKER_SOURCES = \
 	$(TOP)/tools/linker/MobileResolveMainAssemblyStep.cs	\
 	$(TOP)/tools/linker/MobileSweepStep.cs			\
 	$(TOP)/tools/linker/ObjCExtensions.cs			\
-	$(TOP)/tools/linker/RemoveSelectors.cs
+	$(TOP)/tools/linker/RemoveSelectors.cs			\
+	$(TOP)/tools/linker/RemoveUserResourcesSubStep.cs \
 
 
 COMMON_SOURCES = 											\

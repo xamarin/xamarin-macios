@@ -90,39 +90,6 @@ namespace Xamarin.Bundler {
 			link_with_resources.Add (resource);
 		}
 
-		public void RemoveResources (bool remove_resources, string target_directory, string nores_directory)
-		{
-			var modified = false;
-
-			if (link_with_resources != null && link_with_resources.Count != 0) {
-				foreach (var r in link_with_resources)
-					Application.RemoveResource (AssemblyDefinition.MainModule, r);
-				modified = true;
-			}
-
-			if (remove_resources && RemoveMonoTouchResources.RemoveResources (AssemblyDefinition)) {
-				Driver.Log (3, "Removing bundled resources from {0}", FullPath);
-				modified = true;
-			}
-
-			// Note that we need to save the assembly even if no resources 
-			// were removed, since this method is only called if the target assembly
-			// is not up-to-date (which may happen for assemblies without resources).
-			var target = Path.Combine (target_directory, FileName);
-			if (modified) {
-				if (!this.symbols_loaded.HasValue)
-					LoadSymbols ();
-				var nores_target = Path.Combine (nores_directory, FileName);
-				Application.SaveAssembly (AssemblyDefinition, nores_target);
-				CopyAssembly (nores_target, target);
-			} else {
-				// If no resources were removed we can just do a file copy.
-				CopyAssembly (FullPath, target);
-			}
-			FullPath = target;
-		}
-
-		// Executed in parallel
 		public void ExtractNativeLinkInfo ()
 		{
 			// ignore framework assemblies, they won't have any LinkWith attributes

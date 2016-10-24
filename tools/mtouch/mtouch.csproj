@@ -76,9 +76,6 @@
     <Compile Include="..\linker\MonoTouch.Tuner\RemoveCode.cs">
       <Link>MonoTouch.Tuner\RemoveCode.cs</Link>
     </Compile>
-    <Compile Include="..\linker\MonoTouch.Tuner\RemoveMonoTouchResources.cs">
-      <Link>MonoTouch.Tuner\RemoveMonoTouchResources.cs</Link>
-    </Compile>
     <Compile Include="..\linker\MonoTouch.Tuner\MonoTouchTypeMap.cs">
       <Link>MonoTouch.Tuner\MonoTouchTypeMap.cs</Link>
     </Compile>
@@ -321,6 +318,9 @@
     </Compile>
     <Compile Include="..\linker\ExceptionalSubStep.cs">
       <Link>Xamarin.Linker\ExceptionalSubStep.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\RemoveUserResourcesSubStep.cs">
+      <Link>Xamarin.Linker\RemoveUserResourcesSubStep.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
