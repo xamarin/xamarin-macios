@@ -465,5 +465,62 @@ namespace Xamarin.MMP.Tests
 				Assert.IsTrue (text.Length == 1 && text[0] == configText);
 			});
 		}
+
+		[Test]
+		public void UnifiedWithDepNativeRefLib_ShouldHaveItRemoved_OnceInBundle ()
+		{
+			RunMMPTest (tmpDir =>
+			{
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir)
+				{
+					ProjectName = "MobileBinding.csproj",
+					ItemGroup = string.Format (NativeReferenceTemplate, Path.GetFullPath (SimpleDylibPath), "Dynamic"),
+					StructsAndEnumsConfig = "public class UnifiedWithDepNativeRefLibTestClass {}"
+				};
+
+				string projectPath = TI.GenerateBindingLibraryProject (test);
+				TI.BuildProject (projectPath, true);
+
+				string referenceCode = string.Format (@"<Reference Include=""MobileBinding""><HintPath>{0}</HintPath></Reference>", Path.Combine (tmpDir, "bin/Debug", "MobileBinding.dll"));
+
+				test = new TI.UnifiedTestConfig (tmpDir) { References = referenceCode, TestCode = "System.Console.WriteLine (typeof (ExampleBinding.UnifiedWithDepNativeRefLibTestClass));" };
+				TI.TestUnifiedExecutable (test);
+
+				string libPath = Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MonoBundle/MobileBinding.dll");
+				Assert.True (File.Exists (libPath));
+				string monoDisResults = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/monodis", new StringBuilder ("--presources " + libPath), "monodis");
+				Assert.IsFalse (monoDisResults.Contains ("SimpleClassDylib.dylib"));
+			});
+		}
+
+		public const string BundleResourceTemplate = "<ItemGroup><BundleResource Include=\"{0}\" /></ItemGroup>";
+
+		[Test]
+		public void UnifiedWithDepLib_ThatContainsUserResource_ShouldBeRemovedUnderFullLink ()
+		{
+			RunMMPTest (tmpDir =>
+			{
+				string resoucePath = Path.Combine (tmpDir, "foo.xml");
+				File.Create (resoucePath);
+
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir)
+				{
+					ProjectName = "UnifiedLibrary",
+					ItemGroup = string.Format (BundleResourceTemplate, resoucePath),
+				};
+				var libProject = TI.GenerateUnifiedLibraryProject (test);
+				TI.BuildProject (libProject, true);
+
+				string referenceCode = string.Format (@"<Reference Include=""UnifiedLibrary""><HintPath>{0}</HintPath></Reference>", Path.Combine (tmpDir, "bin/Debug", "UnifiedLibrary.dll"));
+
+				test = new TI.UnifiedTestConfig (tmpDir) { References = referenceCode, TestCode = "System.Console.WriteLine (typeof (Library.MyClass));" };
+				TI.TestUnifiedExecutable (test);
+
+				string libPath = Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MonoBundle/UnifiedLibrary.dll");
+				Assert.True (File.Exists (libPath));
+				string monoDisResults = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/monodis", new StringBuilder ("--presources " + libPath), "monodis");
+				Assert.IsFalse (monoDisResults.Contains ("foo.xml"));
+			});
+		}
 	}
 }

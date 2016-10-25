@@ -4,17 +4,23 @@ using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Linker;
 using Mono.Tuner;
-using MonoTouch.Tuner;
 
 namespace Xamarin.Linker {
 
 	public class RemoveUserResourcesSubStep : ExceptionalSubStep {
 
-		public RemoveUserResourcesSubStep (LinkerOptions options)
+#if MTOUCH
+		const string Content = "__monotouch_content_";
+		const string Page = "__monotouch_page_";
+
+		public RemoveUserResourcesSubStep (MonoTouch.Tuner.LinkerOptions options)
 		{
 			Device = options.Device;
 		}
-
+#else
+		const string Content = "__xammac_content_";
+		const string Page = "__xammac_page_";
+#endif
 		public override SubStepTargets Targets {
 			get { return SubStepTargets.Assembly; }
 		}
@@ -39,14 +45,13 @@ namespace Xamarin.Linker {
 					if (!ca.AttributeType.Is ("ObjCRuntime", "LinkWithAttribute"))
 						continue;
 					var lwa = Xamarin.Bundler.Assembly.GetLinkWithAttribute (ca);
-					if (libraries == null)
-						libraries = new HashSet<string> (StringComparer.OrdinalIgnoreCase);
-					libraries.Add (lwa.LibraryName);
+					if (lwa.LibraryName != null) {
+						if (libraries == null)
+							libraries = new HashSet<string> (StringComparer.OrdinalIgnoreCase);
+						libraries.Add (lwa.LibraryName);
+					}
 				}
 			}
-
-			if (libraries == null)
-				return;
 
 			var found = false;
 			var resources = module.Resources;
@@ -69,12 +74,16 @@ namespace Xamarin.Linker {
 				Annotations.SetAction (assembly, AssemblyAction.Save);
 		}
 
-		static bool IsMonoTouchResource (string resourceName)
+		bool IsMonoTouchResource (string resourceName)
 		{
-			if (resourceName.StartsWith ("__monotouch_content_", StringComparison.OrdinalIgnoreCase))
+#if MTOUCH
+			if (!Device)
+				return false;
+#endif
+			if (resourceName.StartsWith (Content, StringComparison.OrdinalIgnoreCase))
 				return true;
 
-			if (resourceName.StartsWith ("__monotouch_page_", StringComparison.OrdinalIgnoreCase))
+			if (resourceName.StartsWith (Page, StringComparison.OrdinalIgnoreCase))
 				return true;
 
 			return false;

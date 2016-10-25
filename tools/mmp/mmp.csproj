@@ -248,9 +248,6 @@
     <Compile Include="..\linker\MonoTouch.Tuner\Extensions.cs">
       <Link>MonoTouch.Tuner\Extensions.cs</Link>
     </Compile>
-    <Compile Include="..\linker\MonoTouch.Tuner\RemoveMonoTouchResources.cs">
-      <Link>MonoTouch.Tuner\RemoveMonoTouchResources.cs</Link>
-    </Compile>
     <Compile Include="..\linker\MonoTouch.Tuner\ListExportedSymbols.cs">
       <Link>MonoTouch.Tuner\ListExportedSymbols.cs</Link>
     </Compile>
@@ -322,6 +319,9 @@
     </Compile>
     <Compile Include="..\linker\ExceptionalSubStep.cs">
       <Link>Xamarin.Linker\ExceptionalSubStep.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\RemoveUserResourcesSubStep.cs">
+      <Link>Xamarin.Linker\RemoveUserResourcesSubStep.cs</Link>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
