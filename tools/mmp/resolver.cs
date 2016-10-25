@@ -69,7 +69,7 @@ namespace Xamarin.Bundler {
 			if (cache.TryGetValue (name, out assembly))
 				return assembly;
 
-			assembly = AssemblyDefinition.ReadAssembly (fileName, new ReaderParameters { AssemblyResolver = this });
+			assembly = AssemblyDefinition.ReadAssembly (fileName, new ReaderParameters { AssemblyResolver = this, InMemory = true });
 			cache.Add (name, assembly);
 			return assembly;
 		}

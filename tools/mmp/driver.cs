@@ -605,20 +605,27 @@ namespace Xamarin.Bundler {
 						native_libs.Add (nr, null);
 				}
 
-				// warn if we ask to remove thread checks but the linker is not enabled
-				if (App.LinkMode == LinkMode.None && thread_check.HasValue && !thread_check.Value)
-					ErrorHelper.Warning (2003, "Option '{0}' will be ignored since linking is disabled", "-disable-thread-check");
-				
-				var linked_native_libs = Link ();
-				foreach (var kvp in linked_native_libs) {
-					List<MethodDefinition> methods;
-					if (native_libs.TryGetValue (kvp.Key, out methods))
-						methods.AddRange (kvp.Value);
-					else
-						native_libs.Add (kvp.Key, kvp.Value);
+				if (App.LinkMode != LinkMode.None) {
+					var linked_native_libs = Link ();
+					foreach (var kvp in linked_native_libs) {
+						List<MethodDefinition> methods;
+						if (native_libs.TryGetValue (kvp.Key, out methods))
+							methods.AddRange (kvp.Value);
+						else
+							native_libs.Add (kvp.Key, kvp.Value);
+					}
+					internalSymbols.UnionWith (BuildTarget.LinkContext.RequiredSymbols.Keys);
+					Watch (string.Format ("Linking (mode: '{0}')", App.LinkMode), 1);
 				}
-				internalSymbols.UnionWith (BuildTarget.LinkContext.RequiredSymbols.Keys);
-				Watch (string.Format ("Linking (mode: '{0}')", App.LinkMode), 1);
+				else {
+					// warn if we ask to remove thread checks but the linker is not enabled
+					if (thread_check.HasValue && !thread_check.Value)
+						ErrorHelper.Warning (2003, "Option '{0}' will be ignored since linking is disabled", "-disable-thread-check");
+
+					// we need to scan the pinvoke if we're not doing it at link time
+					native_libs = ProcessDllImports (internalSymbols);
+					Watch ("Analyzing Dependencies", 1);
+ 				}
 			}
 
 			if (App.MarshalObjectiveCExceptions != MarshalObjectiveCExceptionMode.Disable && !App.RequiresPInvokeWrappers && BuildTarget.Is64Build) {
@@ -1215,12 +1222,12 @@ namespace Xamarin.Bundler {
 			// we do not run MobileMarkStep which generates the pinvoke list. Hack around this for now
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=43419
 			if (App.LinkMode == LinkMode.None)
-				return ProcessDllImports ();
+				return ProcessDllImports (null);
 			else
 				return BuildTarget.LinkContext.PInvokeModules;
 		}
 
-		static Dictionary<string, List<MethodDefinition>> ProcessDllImports ()
+		static Dictionary<string, List<MethodDefinition>> ProcessDllImports (HashSet<string> internalSymbols)
 		{
 			var pinvoke_modules = new Dictionary<string, List<MethodDefinition>> ();
 
@@ -1243,6 +1250,8 @@ namespace Xamarin.Bundler {
 												if (!pinvoke_modules.TryGetValue (module, out methods))
 													pinvoke_modules.Add (module, methods = new List<MethodDefinition> ());
 											}
+											if (internalSymbols != null && module == "__Internal")
+												internalSymbols.Add (method.PInvokeInfo.EntryPoint);	
 										}
 									}
 								}
