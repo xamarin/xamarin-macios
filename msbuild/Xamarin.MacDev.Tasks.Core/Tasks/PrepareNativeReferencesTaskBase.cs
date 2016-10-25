@@ -138,19 +138,20 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			bool skipLinkWithGeneration = false;
-			var linkWith = Path.Combine (IntermediateOutputPath, "LinkWithAttributes.cs");
-			if (File.Exists (linkWith)) {
-				string existingLinkWithText = File.ReadAllText (linkWith);
-				skipLinkWithGeneration = String.Equals (existingLinkWithText, text.ToString (), StringComparison.Ordinal);
+			string linkWithText = text.ToString ();
+			var linkWithPath = Path.Combine (IntermediateOutputPath, "LinkWithAttributes.cs");
+			if (File.Exists (linkWithPath)) {
+				string existingLinkWithText = File.ReadAllText (linkWithPath);
+				skipLinkWithGeneration = String.Equals (existingLinkWithText, linkWithText, StringComparison.Ordinal);
 			}
 			if (!skipLinkWithGeneration) {
-				Directory.CreateDirectory (Path.GetDirectoryName (linkWith));
-				File.WriteAllText (linkWith, text.ToString ());
+				Directory.CreateDirectory (Path.GetDirectoryName (linkWithPath));
+				File.WriteAllText (linkWithPath, linkWithText);
 			}
 
 			EmbeddedResources = embeddedResources.ToArray ();
 			NativeFrameworks = nativeFrameworks.ToArray ();
-			LinkWithAttributes = new TaskItem (linkWith);
+			LinkWithAttributes = new TaskItem (linkWithPath);
 
 			return !Log.HasLoggedErrors;
 		}
