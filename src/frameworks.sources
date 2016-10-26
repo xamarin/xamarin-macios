@@ -219,6 +219,7 @@ AVFOUNDATION_CORE_SOURCES = \
 AVFOUNDATION_SOURCES = \
 	AVFoundation/AVAssetDownloadTask.cs \
 	AVFoundation/AVAssetDownloadUrlSession.cs \
+	AVFoundation/AVAssetExportSession.cs \
 	AVFoundation/AVAssetImageGenerator.cs \
 	AVFoundation/AVAssetReaderVideoCompositionOutput.cs \
 	AVFoundation/AVAssetResourceLoadingDataRequest.cs \
