@@ -109,6 +109,13 @@
 !missing-selector! GKVoiceChatService::stopVoiceChatWithParticipantID: not bound
 
 
+#PassKit
+
+## enums added in Xcode 8.1 but the only API using them are not available on watchOS
+!missing-enum! PKPaymentButtonStyle not bound
+!missing-enum! PKPaymentButtonType not bound
+
+
 # UIKit
 
 ## Implemented in managed code

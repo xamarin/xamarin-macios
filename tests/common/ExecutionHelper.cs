@@ -287,14 +287,15 @@ namespace Xamarin.Tests
 		private static extern void kill (int pid, int sig);
 
 		public static string Execute (string fileName, string arguments, bool throwOnError = true, Dictionary<string,string> environmentVariables = null,
-			bool hide_output = false
+			bool hide_output = false, TimeSpan? timeout = null
 		)
 		{
 			StringBuilder output = new StringBuilder ();
-			int exitCode = Execute (fileName, arguments, environmentVariables, output, output);
+			int exitCode = Execute (fileName, arguments, environmentVariables, output, output, timeout);
 			if (!hide_output) {
 				Console.WriteLine ("{0} {1}", fileName, arguments);
 				Console.WriteLine (output);
+				Console.WriteLine ("Exit code: {0}", exitCode);
 			}
 			if (throwOnError && exitCode != 0)
 				throw new TestExecutionException (output.ToString ());

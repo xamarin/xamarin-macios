@@ -1458,15 +1458,36 @@ namespace MTouchTests
 		}
 
 		[Test]
-		public void BuildMonoTouchTests_StaticRegistrar ()
+		[TestCase (Target.Dev, Profile.Unified, "dont link", "Release")]
+		[TestCase (Target.Dev, Profile.Unified, "link all", "Release")]
+		[TestCase (Target.Dev, Profile.Unified, "link sdk", "Release")]
+		[TestCase (Target.Dev, Profile.Unified, "monotouch-test", "Release")]
+		[TestCase (Target.Dev, Profile.Unified, "mscorlib", "Release")]
+		[TestCase (Target.Dev, Profile.Unified, "System.Core", "Release")]
+		public void BuildTestProject (Target target, Profile profile, string testname, string configuration)
 		{
-			BuildMonotouchTests ("static --compiler:clang", "DEBUG;STATICREGISTRAR");
+			var subdir = string.Empty;
+			switch (testname) {
+			case "dont link":
+			case "link sdk":
+			case "link all":
+				subdir = "/linker-ios";
+				break;
+			case "monotouch-test":
+				break;
+			default:
+				subdir = "/bcl-test";
+				break;
+			}
+			var platform = target == Target.Dev ? "iPhone" : "iPhoneSimulator";
+			var csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname, testname + GetProjectSuffix (profile) + ".csproj");
+			XBuild.Build (csproj, configuration, platform);
 		}
-		
+
 		[Test]
-		public void BuildMonoTouchTests_OldStaticRegistrar ()
+		public void ScriptedTests ()
 		{
-			BuildMonotouchTests ("oldstatic", "DEBUG;OLDSTATICREGISTRAR");
+			ExecutionHelper.Execute ("make", string.Format ("-C \"{0}\"", Path.Combine (Configuration.SourceRoot, "tests", "scripted")), timeout: TimeSpan.FromMinutes (10));
 		}
 
 		[Test]
