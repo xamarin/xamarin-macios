@@ -276,7 +276,9 @@ namespace XamCore.MediaPlayer {
 		CloudServiceCapabilityMissing,
 		NetworkConnectionFailed,
 		NotFound,
-		NotSupported
+		NotSupported,
+		[iOS (10,1)]
+		Cancelled,
 	}
 
 	[NoTV]

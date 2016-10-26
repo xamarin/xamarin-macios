@@ -154,7 +154,7 @@
               </method>
             </methods>
           </class>
-          <class name="SqlDataRecord" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
+          <class name="SqlDataRecord" type="class" base="System.Object" charset="Ansi" layout="Auto">
             <attributes>
               <attribute name="System.Reflection.DefaultMemberAttribute">
                 <properties>
@@ -166,21 +166,27 @@
               <interface name="System.Data.IDataRecord" />
             </interfaces>
             <constructors>
-              <constructor name=".ctor()" attrib="6278">
-                <parameters />
+              <constructor name=".ctor(Microsoft.SqlServer.Server.SqlMetaData[])" attrib="6278">
+                <parameters>
+                  <parameter name="metaData" position="0" attrib="0" type="Microsoft.SqlServer.Server.SqlMetaData[]">
+                    <attributes>
+                      <attribute name="System.ParamArrayAttribute" />
+                    </attributes>
+                  </parameter>
+                </parameters>
               </constructor>
             </constructors>
             <properties>
               <property name="FieldCount" attrib="0" ptype="System.Int32">
                 <methods>
-                  <method name="get_FieldCount()" attrib="2534" virtual="true" returntype="System.Int32">
+                  <method name="get_FieldCount()" attrib="2502" virtual="true" returntype="System.Int32">
                     <parameters />
                   </method>
                 </methods>
               </property>
               <property name="Item" attrib="0" ptype="System.Object" params="System.Int32">
                 <methods>
-                  <method name="get_Item(System.Int32)" attrib="2534" virtual="true" returntype="System.Object">
+                  <method name="get_Item(System.Int32)" attrib="2502" virtual="true" returntype="System.Object">
                     <parameters>
                       <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                     </parameters>
@@ -189,7 +195,7 @@
               </property>
               <property name="Item" attrib="0" ptype="System.Object" params="System.String">
                 <methods>
-                  <method name="get_Item(System.String)" attrib="2534" virtual="true" returntype="System.Object">
+                  <method name="get_Item(System.String)" attrib="2502" virtual="true" returntype="System.Object">
                     <parameters>
                       <parameter name="name" position="0" attrib="0" type="System.String" />
                     </parameters>
@@ -198,17 +204,17 @@
               </property>
             </properties>
             <methods>
-              <method name="GetBoolean(System.Int32)" attrib="486" virtual="true" returntype="System.Boolean">
+              <method name="GetBoolean(System.Int32)" attrib="454" virtual="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-              <method name="GetByte(System.Int32)" attrib="486" virtual="true" returntype="System.Byte">
+              <method name="GetByte(System.Int32)" attrib="454" virtual="true" returntype="System.Byte">
                 <parameters>
                   <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-              <method name="GetBytes(System.Int32, System.Int64, System.Byte[], System.Int32, System.Int32)" attrib="486" virtual="true" returntype="System.Int64">
+              <method name="GetBytes(System.Int32, System.Int64, System.Byte[], System.Int32, System.Int32)" attrib="454" virtual="true" returntype="System.Int64">
                 <parameters>
                   <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                   <parameter name="fieldOffset" position="1" attrib="0" type="System.Int64" />
@@ -217,12 +223,12 @@
                   <parameter name="length" position="4" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-              <method name="GetChar(System.Int32)" attrib="486" virtual="true" returntype="System.Char">
+              <method name="GetChar(System.Int32)" attrib="454" virtual="true" returntype="System.Char">
                 <parameters>
                   <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-              <method name="GetChars(System.Int32, System.Int64, System.Char[], System.Int32, System.Int32)" attrib="486" virtual="true" returntype="System.Int64">
+              <method name="GetChars(System.Int32, System.Int64, System.Char[], System.Int32, System.Int32)" attrib="454" virtual="true" returntype="System.Int64">
                 <parameters>
                   <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                   <parameter name="fieldOffset" position="1" attrib="0" type="System.Int64" />
@@ -231,89 +237,417 @@
                   <parameter name="length" position="4" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-              <method name="GetData(System.Int32)" attrib="486" virtual="true" returntype="System.Data.IDataReader">
+              <method name="GetData(System.Int32)" attrib="454" virtual="true" returntype="System.Data.IDataReader">
                 <parameters>
                   <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-              <method name="GetDataTypeName(System.Int32)" attrib="486" virtual="true" returntype="System.String">
+              <method name="GetDataTypeName(System.Int32)" attrib="454" virtual="true" returntype="System.String">
                 <parameters>
                   <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-              <method name="GetDateTime(System.Int32)" attrib="486" virtual="true" returntype="System.DateTime">
+              <method name="GetDateTime(System.Int32)" attrib="454" virtual="true" returntype="System.DateTime">
                 <parameters>
                   <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-              <method name="GetDecimal(System.Int32)" attrib="486" virtual="true" returntype="System.Decimal">
+              <method name="GetDateTimeOffset(System.Int32)" attrib="454" virtual="true" returntype="System.DateTimeOffset">
                 <parameters>
                   <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-              <method name="GetDouble(System.Int32)" attrib="486" virtual="true" returntype="System.Double">
+              <method name="GetDecimal(System.Int32)" attrib="454" virtual="true" returntype="System.Decimal">
                 <parameters>
                   <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-              <method name="GetFieldType(System.Int32)" attrib="486" virtual="true" returntype="System.Type">
+              <method name="GetDouble(System.Int32)" attrib="454" virtual="true" returntype="System.Double">
                 <parameters>
                   <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-              <method name="GetFloat(System.Int32)" attrib="486" virtual="true" returntype="System.Single">
+              <method name="GetFieldType(System.Int32)" attrib="454" virtual="true" returntype="System.Type">
                 <parameters>
                   <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-              <method name="GetGuid(System.Int32)" attrib="486" virtual="true" returntype="System.Guid">
+              <method name="GetFloat(System.Int32)" attrib="454" virtual="true" returntype="System.Single">
                 <parameters>
                   <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-              <method name="GetInt16(System.Int32)" attrib="486" virtual="true" returntype="System.Int16">
+              <method name="GetGuid(System.Int32)" attrib="454" virtual="true" returntype="System.Guid">
                 <parameters>
                   <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-              <method name="GetInt32(System.Int32)" attrib="486" virtual="true" returntype="System.Int32">
+              <method name="GetInt16(System.Int32)" attrib="454" virtual="true" returntype="System.Int16">
                 <parameters>
                   <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-              <method name="GetInt64(System.Int32)" attrib="486" virtual="true" returntype="System.Int64">
+              <method name="GetInt32(System.Int32)" attrib="454" virtual="true" returntype="System.Int32">
                 <parameters>
                   <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-              <method name="GetName(System.Int32)" attrib="486" virtual="true" returntype="System.String">
+              <method name="GetInt64(System.Int32)" attrib="454" virtual="true" returntype="System.Int64">
                 <parameters>
                   <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-              <method name="GetOrdinal(System.String)" attrib="486" virtual="true" returntype="System.Int32">
+              <method name="GetName(System.Int32)" attrib="454" virtual="true" returntype="System.String">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetOrdinal(System.String)" attrib="454" virtual="true" returntype="System.Int32">
                 <parameters>
                   <parameter name="name" position="0" attrib="0" type="System.String" />
                 </parameters>
               </method>
-              <method name="GetString(System.Int32)" attrib="486" virtual="true" returntype="System.String">
+              <method name="GetSqlBinary(System.Int32)" attrib="454" virtual="true" returntype="System.Data.SqlTypes.SqlBinary">
                 <parameters>
                   <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-              <method name="GetValue(System.Int32)" attrib="486" virtual="true" returntype="System.Object">
+              <method name="GetSqlBoolean(System.Int32)" attrib="454" virtual="true" returntype="System.Data.SqlTypes.SqlBoolean">
                 <parameters>
                   <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
-              <method name="GetValues(System.Object[])" attrib="486" virtual="true" returntype="System.Int32">
+              <method name="GetSqlByte(System.Int32)" attrib="454" virtual="true" returntype="System.Data.SqlTypes.SqlByte">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetSqlBytes(System.Int32)" attrib="454" virtual="true" returntype="System.Data.SqlTypes.SqlBytes">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetSqlChars(System.Int32)" attrib="454" virtual="true" returntype="System.Data.SqlTypes.SqlChars">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetSqlDateTime(System.Int32)" attrib="454" virtual="true" returntype="System.Data.SqlTypes.SqlDateTime">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetSqlDecimal(System.Int32)" attrib="454" virtual="true" returntype="System.Data.SqlTypes.SqlDecimal">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetSqlDouble(System.Int32)" attrib="454" virtual="true" returntype="System.Data.SqlTypes.SqlDouble">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetSqlFieldType(System.Int32)" attrib="454" virtual="true" returntype="System.Type">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetSqlGuid(System.Int32)" attrib="454" virtual="true" returntype="System.Data.SqlTypes.SqlGuid">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetSqlInt16(System.Int32)" attrib="454" virtual="true" returntype="System.Data.SqlTypes.SqlInt16">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetSqlInt32(System.Int32)" attrib="454" virtual="true" returntype="System.Data.SqlTypes.SqlInt32">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetSqlInt64(System.Int32)" attrib="454" virtual="true" returntype="System.Data.SqlTypes.SqlInt64">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetSqlMetaData(System.Int32)" attrib="454" virtual="true" returntype="Microsoft.SqlServer.Server.SqlMetaData">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetSqlMoney(System.Int32)" attrib="454" virtual="true" returntype="System.Data.SqlTypes.SqlMoney">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetSqlSingle(System.Int32)" attrib="454" virtual="true" returntype="System.Data.SqlTypes.SqlSingle">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetSqlString(System.Int32)" attrib="454" virtual="true" returntype="System.Data.SqlTypes.SqlString">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetSqlValue(System.Int32)" attrib="454" virtual="true" returntype="System.Object">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetSqlValues(System.Object[])" attrib="454" virtual="true" returntype="System.Int32">
                 <parameters>
                   <parameter name="values" position="0" attrib="0" type="System.Object[]" />
                 </parameters>
               </method>
-              <method name="IsDBNull(System.Int32)" attrib="486" virtual="true" returntype="System.Boolean">
+              <method name="GetSqlXml(System.Int32)" attrib="454" virtual="true" returntype="System.Data.SqlTypes.SqlXml">
                 <parameters>
                   <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetString(System.Int32)" attrib="454" virtual="true" returntype="System.String">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetTimeSpan(System.Int32)" attrib="454" virtual="true" returntype="System.TimeSpan">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetValue(System.Int32)" attrib="454" virtual="true" returntype="System.Object">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetValues(System.Object[])" attrib="454" virtual="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="values" position="0" attrib="0" type="System.Object[]" />
+                </parameters>
+              </method>
+              <method name="IsDBNull(System.Int32)" attrib="454" virtual="true" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="SetBoolean(System.Int32, System.Boolean)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="SetByte(System.Int32, System.Byte)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Byte" />
+                </parameters>
+              </method>
+              <method name="SetBytes(System.Int32, System.Int64, System.Byte[], System.Int32, System.Int32)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="fieldOffset" position="1" attrib="0" type="System.Int64" />
+                  <parameter name="buffer" position="2" attrib="0" type="System.Byte[]" />
+                  <parameter name="bufferOffset" position="3" attrib="0" type="System.Int32" />
+                  <parameter name="length" position="4" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="SetChar(System.Int32, System.Char)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Char" />
+                </parameters>
+              </method>
+              <method name="SetChars(System.Int32, System.Int64, System.Char[], System.Int32, System.Int32)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="fieldOffset" position="1" attrib="0" type="System.Int64" />
+                  <parameter name="buffer" position="2" attrib="0" type="System.Char[]" />
+                  <parameter name="bufferOffset" position="3" attrib="0" type="System.Int32" />
+                  <parameter name="length" position="4" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="SetDBNull(System.Int32)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="SetDateTime(System.Int32, System.DateTime)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.DateTime" />
+                </parameters>
+              </method>
+              <method name="SetDateTimeOffset(System.Int32, System.DateTimeOffset)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.DateTimeOffset" />
+                </parameters>
+              </method>
+              <method name="SetDecimal(System.Int32, System.Decimal)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Decimal" />
+                </parameters>
+              </method>
+              <method name="SetDouble(System.Int32, System.Double)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Double" />
+                </parameters>
+              </method>
+              <method name="SetFloat(System.Int32, System.Single)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Single" />
+                </parameters>
+              </method>
+              <method name="SetGuid(System.Int32, System.Guid)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Guid" />
+                </parameters>
+              </method>
+              <method name="SetInt16(System.Int32, System.Int16)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Int16" />
+                </parameters>
+              </method>
+              <method name="SetInt32(System.Int32, System.Int32)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="SetInt64(System.Int32, System.Int64)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Int64" />
+                </parameters>
+              </method>
+              <method name="SetSqlBinary(System.Int32, System.Data.SqlTypes.SqlBinary)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Data.SqlTypes.SqlBinary" />
+                </parameters>
+              </method>
+              <method name="SetSqlBoolean(System.Int32, System.Data.SqlTypes.SqlBoolean)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Data.SqlTypes.SqlBoolean" />
+                </parameters>
+              </method>
+              <method name="SetSqlByte(System.Int32, System.Data.SqlTypes.SqlByte)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Data.SqlTypes.SqlByte" />
+                </parameters>
+              </method>
+              <method name="SetSqlBytes(System.Int32, System.Data.SqlTypes.SqlBytes)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Data.SqlTypes.SqlBytes" />
+                </parameters>
+              </method>
+              <method name="SetSqlChars(System.Int32, System.Data.SqlTypes.SqlChars)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Data.SqlTypes.SqlChars" />
+                </parameters>
+              </method>
+              <method name="SetSqlDateTime(System.Int32, System.Data.SqlTypes.SqlDateTime)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Data.SqlTypes.SqlDateTime" />
+                </parameters>
+              </method>
+              <method name="SetSqlDecimal(System.Int32, System.Data.SqlTypes.SqlDecimal)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Data.SqlTypes.SqlDecimal" />
+                </parameters>
+              </method>
+              <method name="SetSqlDouble(System.Int32, System.Data.SqlTypes.SqlDouble)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Data.SqlTypes.SqlDouble" />
+                </parameters>
+              </method>
+              <method name="SetSqlGuid(System.Int32, System.Data.SqlTypes.SqlGuid)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Data.SqlTypes.SqlGuid" />
+                </parameters>
+              </method>
+              <method name="SetSqlInt16(System.Int32, System.Data.SqlTypes.SqlInt16)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Data.SqlTypes.SqlInt16" />
+                </parameters>
+              </method>
+              <method name="SetSqlInt32(System.Int32, System.Data.SqlTypes.SqlInt32)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Data.SqlTypes.SqlInt32" />
+                </parameters>
+              </method>
+              <method name="SetSqlInt64(System.Int32, System.Data.SqlTypes.SqlInt64)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Data.SqlTypes.SqlInt64" />
+                </parameters>
+              </method>
+              <method name="SetSqlMoney(System.Int32, System.Data.SqlTypes.SqlMoney)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Data.SqlTypes.SqlMoney" />
+                </parameters>
+              </method>
+              <method name="SetSqlSingle(System.Int32, System.Data.SqlTypes.SqlSingle)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Data.SqlTypes.SqlSingle" />
+                </parameters>
+              </method>
+              <method name="SetSqlString(System.Int32, System.Data.SqlTypes.SqlString)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Data.SqlTypes.SqlString" />
+                </parameters>
+              </method>
+              <method name="SetSqlXml(System.Int32, System.Data.SqlTypes.SqlXml)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Data.SqlTypes.SqlXml" />
+                </parameters>
+              </method>
+              <method name="SetString(System.Int32, System.String)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="SetTimeSpan(System.Int32, System.TimeSpan)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.TimeSpan" />
+                </parameters>
+              </method>
+              <method name="SetValue(System.Int32, System.Object)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="ordinal" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="value" position="1" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="SetValues(System.Object[])" attrib="454" virtual="true" returntype="System.Int32">
+                <parameters>
+                  <parameter name="values" position="0" attrib="0" type="System.Object[]">
+                    <attributes>
+                      <attribute name="System.ParamArrayAttribute" />
+                    </attributes>
+                  </parameter>
                 </parameters>
               </method>
             </methods>
@@ -547,6 +881,42 @@
                   <parameter name="objectName" position="4" attrib="0" type="System.String" />
                 </parameters>
               </constructor>
+              <constructor name=".ctor(System.String, System.Data.SqlDbType, System.Boolean, System.Boolean, System.Data.SqlClient.SortOrder, System.Int32)" attrib="6278">
+                <attributes />
+                <parameters>
+                  <parameter name="name" position="0" attrib="0" type="System.String" />
+                  <parameter name="dbType" position="1" attrib="0" type="System.Data.SqlDbType" />
+                  <parameter name="useServerDefault" position="2" attrib="0" type="System.Boolean" />
+                  <parameter name="isUniqueKey" position="3" attrib="0" type="System.Boolean" />
+                  <parameter name="columnSortOrder" position="4" attrib="0" type="System.Data.SqlClient.SortOrder" />
+                  <parameter name="sortOrdinal" position="5" attrib="0" type="System.Int32" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Data.SqlDbType, System.Int64, System.Boolean, System.Boolean, System.Data.SqlClient.SortOrder, System.Int32)" attrib="6278">
+                <attributes />
+                <parameters>
+                  <parameter name="name" position="0" attrib="0" type="System.String" />
+                  <parameter name="dbType" position="1" attrib="0" type="System.Data.SqlDbType" />
+                  <parameter name="maxLength" position="2" attrib="0" type="System.Int64" />
+                  <parameter name="useServerDefault" position="3" attrib="0" type="System.Boolean" />
+                  <parameter name="isUniqueKey" position="4" attrib="0" type="System.Boolean" />
+                  <parameter name="columnSortOrder" position="5" attrib="0" type="System.Data.SqlClient.SortOrder" />
+                  <parameter name="sortOrdinal" position="6" attrib="0" type="System.Int32" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Data.SqlDbType, System.Byte, System.Byte, System.Boolean, System.Boolean, System.Data.SqlClient.SortOrder, System.Int32)" attrib="6278">
+                <attributes />
+                <parameters>
+                  <parameter name="name" position="0" attrib="0" type="System.String" />
+                  <parameter name="dbType" position="1" attrib="0" type="System.Data.SqlDbType" />
+                  <parameter name="precision" position="2" attrib="0" type="System.Byte" />
+                  <parameter name="scale" position="3" attrib="0" type="System.Byte" />
+                  <parameter name="useServerDefault" position="4" attrib="0" type="System.Boolean" />
+                  <parameter name="isUniqueKey" position="5" attrib="0" type="System.Boolean" />
+                  <parameter name="columnSortOrder" position="6" attrib="0" type="System.Data.SqlClient.SortOrder" />
+                  <parameter name="sortOrdinal" position="7" attrib="0" type="System.Int32" />
+                </parameters>
+              </constructor>
               <constructor name=".ctor(System.String, System.Data.SqlDbType, System.Int64, System.Byte, System.Byte, System.Int64, System.Data.SqlTypes.SqlCompareOptions, System.Type)" attrib="6278">
                 <parameters>
                   <parameter name="name" position="0" attrib="0" type="System.String" />
@@ -557,6 +927,51 @@
                   <parameter name="locale" position="5" attrib="0" type="System.Int64" />
                   <parameter name="compareOptions" position="6" attrib="0" type="System.Data.SqlTypes.SqlCompareOptions" />
                   <parameter name="userDefinedType" position="7" attrib="0" type="System.Type" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Data.SqlDbType, System.Int64, System.Int64, System.Data.SqlTypes.SqlCompareOptions, System.Boolean, System.Boolean, System.Data.SqlClient.SortOrder, System.Int32)" attrib="6278">
+                <attributes />
+                <parameters>
+                  <parameter name="name" position="0" attrib="0" type="System.String" />
+                  <parameter name="dbType" position="1" attrib="0" type="System.Data.SqlDbType" />
+                  <parameter name="maxLength" position="2" attrib="0" type="System.Int64" />
+                  <parameter name="locale" position="3" attrib="0" type="System.Int64" />
+                  <parameter name="compareOptions" position="4" attrib="0" type="System.Data.SqlTypes.SqlCompareOptions" />
+                  <parameter name="useServerDefault" position="5" attrib="0" type="System.Boolean" />
+                  <parameter name="isUniqueKey" position="6" attrib="0" type="System.Boolean" />
+                  <parameter name="columnSortOrder" position="7" attrib="0" type="System.Data.SqlClient.SortOrder" />
+                  <parameter name="sortOrdinal" position="8" attrib="0" type="System.Int32" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Data.SqlDbType, System.String, System.String, System.String, System.Boolean, System.Boolean, System.Data.SqlClient.SortOrder, System.Int32)" attrib="6278">
+                <attributes />
+                <parameters>
+                  <parameter name="name" position="0" attrib="0" type="System.String" />
+                  <parameter name="dbType" position="1" attrib="0" type="System.Data.SqlDbType" />
+                  <parameter name="database" position="2" attrib="0" type="System.String" />
+                  <parameter name="owningSchema" position="3" attrib="0" type="System.String" />
+                  <parameter name="objectName" position="4" attrib="0" type="System.String" />
+                  <parameter name="useServerDefault" position="5" attrib="0" type="System.Boolean" />
+                  <parameter name="isUniqueKey" position="6" attrib="0" type="System.Boolean" />
+                  <parameter name="columnSortOrder" position="7" attrib="0" type="System.Data.SqlClient.SortOrder" />
+                  <parameter name="sortOrdinal" position="8" attrib="0" type="System.Int32" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Data.SqlDbType, System.Int64, System.Byte, System.Byte, System.Int64, System.Data.SqlTypes.SqlCompareOptions, System.Type, System.Boolean, System.Boolean, System.Data.SqlClient.SortOrder, System.Int32)" attrib="6278">
+                <attributes />
+                <parameters>
+                  <parameter name="name" position="0" attrib="0" type="System.String" />
+                  <parameter name="dbType" position="1" attrib="0" type="System.Data.SqlDbType" />
+                  <parameter name="maxLength" position="2" attrib="0" type="System.Int64" />
+                  <parameter name="precision" position="3" attrib="0" type="System.Byte" />
+                  <parameter name="scale" position="4" attrib="0" type="System.Byte" />
+                  <parameter name="localeId" position="5" attrib="0" type="System.Int64" />
+                  <parameter name="compareOptions" position="6" attrib="0" type="System.Data.SqlTypes.SqlCompareOptions" />
+                  <parameter name="userDefinedType" position="7" attrib="0" type="System.Type" />
+                  <parameter name="useServerDefault" position="8" attrib="0" type="System.Boolean" />
+                  <parameter name="isUniqueKey" position="9" attrib="0" type="System.Boolean" />
+                  <parameter name="columnSortOrder" position="10" attrib="0" type="System.Data.SqlClient.SortOrder" />
+                  <parameter name="sortOrdinal" position="11" attrib="0" type="System.Int32" />
                 </parameters>
               </constructor>
             </constructors>
@@ -571,6 +986,14 @@
               <property name="DbType" attrib="0" ptype="System.Data.DbType">
                 <methods>
                   <method name="get_DbType()" attrib="2182" returntype="System.Data.DbType">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="IsUniqueKey" attrib="0" ptype="System.Boolean">
+                <attributes />
+                <methods>
+                  <method name="get_IsUniqueKey()" attrib="2182" returntype="System.Boolean">
                     <parameters />
                   </method>
                 </methods>
@@ -617,6 +1040,22 @@
                   </method>
                 </methods>
               </property>
+              <property name="SortOrder" attrib="0" ptype="System.Data.SqlClient.SortOrder">
+                <attributes />
+                <methods>
+                  <method name="get_SortOrder()" attrib="2182" returntype="System.Data.SqlClient.SortOrder">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="SortOrdinal" attrib="0" ptype="System.Int32">
+                <attributes />
+                <methods>
+                  <method name="get_SortOrdinal()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
               <property name="SqlDbType" attrib="0" ptype="System.Data.SqlDbType">
                 <methods>
                   <method name="get_SqlDbType()" attrib="2182" returntype="System.Data.SqlDbType">
@@ -628,6 +1067,14 @@
                 <attributes />
                 <methods>
                   <method name="get_TypeName()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="UseServerDefault" attrib="0" ptype="System.Boolean">
+                <attributes />
+                <methods>
+                  <method name="get_UseServerDefault()" attrib="2182" returntype="System.Boolean">
                     <parameters />
                   </method>
                 </methods>
@@ -755,9 +1202,20 @@
                   <parameter name="value" position="0" attrib="0" type="System.Data.SqlTypes.SqlString" />
                 </parameters>
               </method>
+              <method name="Adjust(System.Data.SqlTypes.SqlXml)" attrib="134" returntype="System.Data.SqlTypes.SqlXml">
+                <attributes />
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Data.SqlTypes.SqlXml" />
+                </parameters>
+              </method>
               <method name="Adjust(System.DateTime)" attrib="134" returntype="System.DateTime">
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.DateTime" />
+                </parameters>
+              </method>
+              <method name="Adjust(System.DateTimeOffset)" attrib="134" returntype="System.DateTimeOffset">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.DateTimeOffset" />
                 </parameters>
               </method>
               <method name="Adjust(System.Decimal)" attrib="134" returntype="System.Decimal">
@@ -803,6 +1261,11 @@
               <method name="Adjust(System.String)" attrib="134" returntype="System.String">
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="Adjust(System.TimeSpan)" attrib="134" returntype="System.TimeSpan">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.TimeSpan" />
                 </parameters>
               </method>
               <method name="InferFromValue(System.Object, System.String)" attrib="150" static="true" returntype="Microsoft.SqlServer.Server.SqlMetaData">
@@ -13016,6 +13479,19 @@
                   </method>
                 </methods>
               </property>
+              <property name="EnableStreaming" attrib="0" ptype="System.Boolean">
+                <attributes />
+                <methods>
+                  <method name="get_EnableStreaming()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_EnableStreaming(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
               <property name="NotifyAfter" attrib="0" ptype="System.Int32">
                 <methods>
                   <method name="get_NotifyAfter()" attrib="2182" returntype="System.Int32">
@@ -13036,6 +13512,12 @@
               <method name="Close()" attrib="134" returntype="System.Void">
                 <parameters />
               </method>
+              <method name="WriteToServer(System.Data.Common.DbDataReader)" attrib="134" returntype="System.Void">
+                <attributes />
+                <parameters>
+                  <parameter name="reader" position="0" attrib="0" type="System.Data.Common.DbDataReader" />
+                </parameters>
+              </method>
               <method name="WriteToServer(System.Data.DataRow[])" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="rows" position="0" attrib="0" type="System.Data.DataRow[]" />
@@ -13055,6 +13537,19 @@
                 <parameters>
                   <parameter name="table" position="0" attrib="0" type="System.Data.DataTable" />
                   <parameter name="rowState" position="1" attrib="0" type="System.Data.DataRowState" />
+                </parameters>
+              </method>
+              <method name="WriteToServerAsync(System.Data.Common.DbDataReader)" attrib="134" returntype="System.Threading.Tasks.Task">
+                <attributes />
+                <parameters>
+                  <parameter name="reader" position="0" attrib="0" type="System.Data.Common.DbDataReader" />
+                </parameters>
+              </method>
+              <method name="WriteToServerAsync(System.Data.Common.DbDataReader, System.Threading.CancellationToken)" attrib="134" returntype="System.Threading.Tasks.Task">
+                <attributes />
+                <parameters>
+                  <parameter name="reader" position="0" attrib="0" type="System.Data.Common.DbDataReader" />
+                  <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
               </method>
             </methods>
@@ -13781,11 +14276,44 @@
                   <parameter name="behavior" position="0" attrib="0" type="System.Data.CommandBehavior" />
                 </parameters>
               </method>
+              <method name="ExecuteReaderAsync()" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Data.SqlClient.SqlDataReader]">
+                <attributes />
+                <parameters />
+              </method>
+              <method name="ExecuteReaderAsync(System.Data.CommandBehavior)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Data.SqlClient.SqlDataReader]">
+                <attributes />
+                <parameters>
+                  <parameter name="behavior" position="0" attrib="0" type="System.Data.CommandBehavior" />
+                </parameters>
+              </method>
+              <method name="ExecuteReaderAsync(System.Threading.CancellationToken)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Data.SqlClient.SqlDataReader]">
+                <attributes />
+                <parameters>
+                  <parameter name="cancellationToken" position="0" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
+              <method name="ExecuteReaderAsync(System.Data.CommandBehavior, System.Threading.CancellationToken)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Data.SqlClient.SqlDataReader]">
+                <attributes />
+                <parameters>
+                  <parameter name="behavior" position="0" attrib="0" type="System.Data.CommandBehavior" />
+                  <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+              </method>
               <method name="ExecuteScalar()" attrib="198" virtual="true" is-override="true" returntype="System.Object">
                 <parameters />
               </method>
               <method name="ExecuteXmlReader()" attrib="134" returntype="System.Xml.XmlReader">
                 <parameters />
+              </method>
+              <method name="ExecuteXmlReaderAsync()" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Xml.XmlReader]">
+                <attributes />
+                <parameters />
+              </method>
+              <method name="ExecuteXmlReaderAsync(System.Threading.CancellationToken)" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Xml.XmlReader]">
+                <attributes />
+                <parameters>
+                  <parameter name="cancellationToken" position="0" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
               </method>
               <method name="Prepare()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
                 <parameters />
@@ -14100,6 +14628,14 @@
               </constructor>
             </constructors>
             <properties>
+              <property name="ClientConnectionId" attrib="0" ptype="System.Guid">
+                <attributes />
+                <methods>
+                  <method name="get_ClientConnectionId()" attrib="2182" returntype="System.Guid">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
               <property name="ConnectionString" attrib="0" ptype="System.String">
                 <attributes>
                   <attribute name="System.ComponentModel.DefaultValueAttribute">
@@ -14376,6 +14912,14 @@
                 </parameters>
               </method>
               <method name="Open()" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="ResetStatistics()" attrib="134" returntype="System.Void">
+                <attributes />
+                <parameters />
+              </method>
+              <method name="RetrieveStatistics()" attrib="134" returntype="System.Collections.IDictionary">
+                <attributes />
                 <parameters />
               </method>
             </methods>
@@ -15843,6 +16387,15 @@
                   <generic-parameter name="T" attributes="0" />
                 </generic-parameters>
               </method>
+              <method name="GetFieldValueAsync(System.Int32, System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task`1[T]">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
+                </parameters>
+                <generic-parameters>
+                  <generic-parameter name="T" attributes="0" />
+                </generic-parameters>
+              </method>
               <method name="GetFloat(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Single">
                 <parameters>
                   <parameter name="i" position="0" attrib="0" type="System.Int32" />
@@ -15987,7 +16540,17 @@
                   <parameter name="i" position="0" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
+              <method name="GetStream(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.IO.Stream">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
               <method name="GetString(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="GetTextReader(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.IO.TextReader">
                 <parameters>
                   <parameter name="i" position="0" attrib="0" type="System.Int32" />
                 </parameters>
@@ -16022,6 +16585,12 @@
               <method name="IsDBNull(System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="IsDBNullAsync(System.Int32, System.Threading.CancellationToken)" attrib="198" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task`1[System.Boolean]">
+                <parameters>
+                  <parameter name="i" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="cancellationToken" position="1" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
               </method>
               <method name="NextResult()" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
@@ -16234,6 +16803,14 @@
               <property name="Class" attrib="0" ptype="System.Byte">
                 <methods>
                   <method name="get_Class()" attrib="2182" returntype="System.Byte">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ClientConnectionId" attrib="0" ptype="System.Guid">
+                <attributes />
+                <methods>
+                  <method name="get_ClientConnectionId()" attrib="2182" returntype="System.Guid">
                     <parameters />
                   </method>
                 </methods>
@@ -16800,6 +17377,31 @@
                   <method name="set_SqlValue(System.Object)" attrib="2182" returntype="System.Void">
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.Object" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="TypeName" attrib="0" ptype="System.String">
+                <attributes>
+                  <attribute name="System.ComponentModel.BrowsableAttribute">
+                    <properties>
+                      <property name="Browsable" value="False" />
+                    </properties>
+                  </attribute>
+                </attributes>
+                <methods>
+                  <method name="get_TypeName()" attrib="2182" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_TypeName(System.String)" attrib="2182" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
                     </parameters>
                   </method>
                 </methods>
