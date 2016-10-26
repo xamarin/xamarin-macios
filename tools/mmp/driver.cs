@@ -1203,6 +1203,7 @@ namespace Xamarin.Bundler {
 					HeaderPath = Path.Combine (Cache.Location, "pinvokes.h"),
 					Registrar = (StaticRegistrar) BuildTarget.StaticRegistrar,
 				},
+				SkipExportedSymbolsInSdkAssemblies = !embed_mono,
 			};
 
 			linker_options = options;
