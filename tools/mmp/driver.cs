@@ -110,6 +110,7 @@ namespace Xamarin.Bundler {
 
 		static bool is_extension;
 		static bool frameworks_copied_to_bundle_dir;	// Have we copied any frameworks to Foo.app/Contents/Frameworks?
+		static bool just_run_registrar;
 
 		// This must be kept in sync with the system launcher's minimum mono version (in launcher/launcher-system.m)
 		static Version MinimumMonoVersion = new Version (4, 2, 0);
@@ -135,6 +136,8 @@ namespace Xamarin.Bundler {
 		public static bool IsUnified { get { return IsUnifiedFullSystemFramework || IsUnifiedMobile || IsUnifiedFullXamMacFramework; } }
 		public static bool IsClassic { get { return !IsUnified; } }
 
+		public static bool UsesPartialRegistrar => IsUnified && (registrar == RegistrarMode.Dynamic || registrar == RegistrarMode.Default) && App.LinkMode == LinkMode.None;
+
 		public static bool Is64Bit { 
 			get {
 				if (IsUnified && !arch_set)
@@ -148,8 +151,30 @@ namespace Xamarin.Bundler {
 
 		public static Version MinOSVersion { get { return minos; } }
 
+		public static string ProductAssembly => "Xamarin.Mac";
+		public static string PlatformFrameworkDirectory =>
+					Path.Combine (MMPDirectory, "lib", "mono", "Xamarin.Mac");
+
 		static int watch_level;
 		static Stopwatch watch;
+
+		static string xm_framework_dir;
+		public static string MMPDirectory {
+			get {
+				if (xm_framework_dir == null) {
+					xm_framework_dir = Path.GetFullPath (GetFullPath () + "/../../..");
+#if DEV
+					// when launched from Xamarin Studio, mtouch is not in the final install location,
+					// so walk the directory hierarchy to find the root source directory.
+					while (!File.Exists (Path.Combine (xm_framework_dir, "Make.config")))
+						xm_framework_dir = Path.GetDirectoryName (xm_framework_dir);
+					xm_framework_dir = Path.Combine (xm_framework_dir, "_mac-build", "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
+#endif
+					xm_framework_dir = Target.GetRealPath (xm_framework_dir);
+				}
+				return xm_framework_dir;
+			}
+		}
 		
 		static void Watch (string msg, int level)
 		{
@@ -290,6 +315,15 @@ namespace Xamarin.Bundler {
 				{ "allow-unsafe-gac-resolution", "Allow MSBuild to resolve from the System GAC", v => {} , true }, // Used in Xamarin.Mac.XM45.targets and must be ignored here. Hidden since it is a total hack. If you can use it, you don't need support
 				{ "disable-lldb-attach=", "Disable automatic lldb attach on crash", v => disable_lldb_attach = ParseBool (v, "disable-lldb-attach")},
 				{ "machine-config=", "Custom machine.config file to copy into MonoBundle/mono/4.5/machine.config. Pass \"\" to copy in a valid \"empty\" config file.", v => machine_config_path = v },
+				{ "runregistrar:", "Runs the registrar on the input assembly and outputs a corresponding native library.",
+					v => {
+						just_run_registrar = true;
+						App.RegistrarOutputLibrary = v;
+					},
+					true /* this is an internal option */
+				},
+				{ "xamarin-framework-directory=", "The framework directory", v => { xm_framework_dir = v; }, true },
+
 			};
 
 			AddSharedOptions (os);
@@ -404,6 +438,15 @@ namespace Xamarin.Bundler {
 			if (verbose > 0)
 				Console.WriteLine ("Selected target framework: {0}; API: {1}", targetFramework, IsClassic ? "Classic" : "Unified");
 
+			if (just_run_registrar)
+			{
+				App.AllowStaticRegistrarSingleArch = true;
+				App.RootAssembly = unprocessed [0];
+				App.AppDirectory = output_dir;
+				App.Registrar = RegistrarMode.Static;
+				App.RunRegistrar ();
+				return;
+			}
 			try {
 				Pack (unprocessed);
 			} finally {
@@ -899,10 +942,13 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("#include <xamarin/xamarin.h>");
 				sw.WriteLine ("#import <AppKit/NSAlert.h>");
 				sw.WriteLine ("#import <Foundation/NSDate.h>"); // 10.7 wants this even if not needed on 10.9
+				if (UsesPartialRegistrar)
+					sw.WriteLine ("extern int xamarin_create_classes_Xamarin_Mac ();");
 				sw.WriteLine ();
 				sw.WriteLine ();
 				sw.WriteLine ();
 				sw.WriteLine ("extern \"C\" int xammac_setup ()");
+
 				sw.WriteLine ("{");
 				if (custom_bundle_name != null) {
 					sw.WriteLine ("extern NSString* xamarin_custom_bundle_name;");
@@ -914,6 +960,10 @@ namespace Xamarin.Bundler {
 				if (disable_lldb_attach)
 					sw.WriteLine ("\txamarin_disable_lldb_attach = true;");
 				sw.WriteLine ();
+
+				if (UsesPartialRegistrar)
+					sw.WriteLine ("xamarin_create_classes_Xamarin_Mac ();");
+
 				if (Driver.registrar == RegistrarMode.Static)
 					sw.WriteLine ("\txamarin_create_classes ();");
 
@@ -1091,6 +1141,12 @@ namespace Xamarin.Bundler {
 						args.Append ("-u _mono_profiler_startup_log -lz ");
 					}
 				}
+
+				if (UsesPartialRegistrar) {
+					args.Append (Path.Combine (GetXamMacPrefix (), "lib", "mmp/Xamarin.Mac.registrar.mac.a "));
+					args.Append ("-framework Quartz ");
+				}
+
 				args.Append ("-framework AppKit -liconv -x objective-c++ ");
 				args.Append ("-I").Append (Quote (Path.Combine (GetXamMacPrefix (), "include"))).Append (' ');
 				if (registrarPath != null)

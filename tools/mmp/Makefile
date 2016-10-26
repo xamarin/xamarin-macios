@@ -132,6 +132,7 @@ MMP_TARGETS = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/mmp.exe \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Mono.Cecil.dll \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Mono.Cecil.Mdb.dll \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Xamarin.Mac.registrar.mac.a \
 
 MMP_DIRECTORIES = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin \
@@ -150,8 +151,29 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Mono.Cecil.dll: $(MONO_CECIL_
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Mono.Cecil.Mdb.dll: $(MONO_CECIL_MDB_DLL) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
 	$(Q) cp $<* $(dir $@)
 
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp/Xamarin.Mac.registrar.mac.a: Xamarin.Mac.registrar.mac.a | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mmp
+	$(Q) cp $<* $(dir $@)
+
 $(MMP_DIRECTORIES):
 	$(Q) mkdir -p $@
+
+Xamarin.Mac.registrar.mac.i386.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.dll mmp.exe
+	$(Q_GEN) $(SYSTEM_MONO) --debug mmp.exe --xamarin-framework-directory=$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(OSX_SDK_VERSION)   $< --registrar:static --target-framework Xamarin.Mac,v1.0 --arch=i386
+	$(Q) touch Xamarin.Mac.registrar.mac.i386.m Xamarin.Mac.registrar.mac.i386.h
+
+Xamarin.Mac.registrar.mac.x86_64.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.dll mmp.exe
+	$(Q_GEN) $(SYSTEM_MONO) --debug mmp.exe --xamarin-framework-directory=$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(OSX_SDK_VERSION)   $< --registrar:static --target-framework Xamarin.Mac,v1.0 --arch=x86_64
+	$(Q) touch Xamarin.Mac.registrar.mac.x86_64.m Xamarin.Mac.registrar.mac.x86_64.h
+
+Xamarin.Mac.registrar.mac.i386.a:   Xamarin.Mac.registrar.mac.i386.m
+	$(Q_CC) xcrun -sdk macosx clang -DDEBUG -g -gdwarf-2 -x objective-c++ -o $@ -c -arch i386 $< -Wall -I$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include -mmacosx-version-min=10.7 -fobjc-runtime=macosx
+
+Xamarin.Mac.registrar.mac.x86_64.a: Xamarin.Mac.registrar.mac.x86_64.m
+	$(Q_CC) xcrun -sdk macosx clang -DDEBUG -g -gdwarf-2 -x objective-c++ -o $@ -c -arch x86_64 $< -Wall -I$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include -mmacosx-version-min=10.7 -fobjc-runtime=macosx
+
+Xamarin.Mac.registrar.mac.a: Xamarin.Mac.registrar.mac.i386.a Xamarin.Mac.registrar.mac.x86_64.a
+	$(Q_LIPO) $(DEVICE_BIN_PATH)/lipo -create -output $@ $^
+
 
 ifdef INCLUDE_MAC
 install-local:: $(MMP_TARGETS)
@@ -167,3 +189,7 @@ clean-local::
 	$(SYSTEM_XBUILD) /t:Clean /p:Configuration=$(CECIL_CONFIG) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj
 
 include $(TOP)/mk/rules.mk
+
+# make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
+# marking those files as .SECONDARY will prevent that deletion.
+.SECONDARY: $(foreach ext,a h m,Xamarin.Mac.registrar.i386.$(ext) Xamarin.Mac.registrar..x86_64.$(ext))

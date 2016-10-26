@@ -86,7 +86,6 @@ namespace Xamarin.Bundler {
 	public partial class Application
 	{
 		public string ExecutableName;
-		public string RootAssembly;
 		public BuildTarget BuildTarget;
 
 		public Version DeploymentTarget;
@@ -108,7 +107,6 @@ namespace Xamarin.Bundler {
 		public List<string> Extensions = new List<string> (); // A list of the extensions this app contains.
 
 		public bool FastDev;
-		public string RegistrarOutputLibrary;
 
 		public bool? EnablePie;
 		public bool NativeStrip = true;
@@ -501,45 +499,6 @@ namespace Xamarin.Bundler {
 					return true;
 			}
 			return false;
-		}
-
-		public void RunRegistrar ()
-		{
-			// The static registrar.
-			if (Registrar != RegistrarMode.Static)
-				throw new MonoTouchException (67, "Invalid registrar: {0}", Registrar); // this is only called during our own build
-
-			var registrar_m = RegistrarOutputLibrary;
-
-			var resolvedAssemblies = new List<AssemblyDefinition> ();
-			var resolver = new MonoTouchResolver () {
-				FrameworkDirectory = Driver.PlatformFrameworkDirectory,
-				RootDirectory = Path.GetDirectoryName (RootAssembly),
-			};
-
-			if (Driver.App.Platform == ApplePlatform.iOS) {
-				if (Driver.App.Is32Build) {
-					resolver.ArchDirectory = Driver.Arch32Directory;
-				} else {
-					resolver.ArchDirectory = Driver.Arch64Directory;
-				}
-			}
-
-			var ps = new ReaderParameters ();
-			ps.AssemblyResolver = resolver;
-			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve ("mscorlib"));
-
-			var rootName = Path.GetFileNameWithoutExtension (RootAssembly);
-			if (rootName != Driver.ProductAssembly)
-				throw new MonoTouchException (66, "Invalid build registrar assembly: {0}", RootAssembly);
-
-			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (rootName));
-			Driver.Log (3, "Loaded {0}", resolvedAssemblies [resolvedAssemblies.Count - 1].MainModule.FileName);
-
-			BuildTarget = BuildTarget.Simulator;
-
-			var registrar = new XamCore.Registrar.StaticRegistrar (this);
-			registrar.GenerateSingleAssembly (resolvedAssemblies, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly));
 		}
 
 		public void Build ()
