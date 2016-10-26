@@ -251,6 +251,19 @@ function install_specific_xcode () {
 		sudo $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -license accept
 	fi
 
+	if is_at_least_version $XCODE_VERSION 8.0; then
+		PKGS="MobileDevice.pkg MobileDeviceDevelopment.pkg XcodeSystemResources.pkg"
+		for pkg in $PKGS; do
+			if test -f "$XCODE_DEVELOPER_ROOT/../Resources/Packages/$pkg"; then
+				log "Installing $pkg"
+				sudo /usr/sbin/installer -dumplog -verbose -pkg "$XCODE_DEVELOPER_ROOT/../Resources/Packages/$pkg" -target /
+				log "Installed $pkg"
+			else
+				log "Not installing $pkg because it doesn't exist."
+			fi
+		done
+	fi
+
 	log "Executing 'sudo xcode-select -s $XCODE_DEVELOPER_ROOT'"
 	sudo xcode-select -s $XCODE_DEVELOPER_ROOT
 
