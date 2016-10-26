@@ -692,7 +692,7 @@ namespace XamCore.AudioToolbox {
 #endif // !COREBUILD
 
 	[StructLayout (LayoutKind.Sequential)]
-	public struct AudioChannelLayoutNative
+	internal struct AudioChannelLayoutNative
 	{
 		public uint Tag;
 
@@ -724,7 +724,7 @@ namespace XamCore.AudioToolbox {
 			}
 		}
 
-		public AudioChannelLayoutNative NativeStruct {
+		internal AudioChannelLayoutNative NativeStruct {
 			get {
 				return new AudioChannelLayoutNative {
 					Tag = (uint)AudioTag,

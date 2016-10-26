@@ -36,6 +36,23 @@ namespace XamCore.CoreMedia {
 		ValueNotAvailable   = -12718,
 	}
 
+	public enum CMTextDisplayFlags : uint
+	{
+		ScrollIn = 0x00000020,
+		ScrollOut = 0x00000040,
+		ScrollDirectionMask = 0x00000180,
+		ScrollDirection_BottomToTop = 0x00000000,
+		ScrollDirection_RightToLeft = 0x00000080,
+		ScrollDirection_TopToBottom = 0x00000100,
+		ScrollDirection_LeftToRight = 0x00000180,
+		ContinuousKaraoke = 0x00000800,
+		WriteTextVertically = 0x00020000,
+		FillTextRegion = 0x00040000,
+		ObeySubtitleFormatting = 0x20000000,
+		ForcedSubtitlesPresent = 0x40000000,
+		AllSubtitlesForced = 0x80000000,
+	}
+
 	[iOS (4,0)]
 	public class CMFormatDescription : INativeObject, IDisposable {
 		internal IntPtr handle;
@@ -184,7 +201,7 @@ namespace XamCore.CoreMedia {
 #if !COREBUILD
 
 		[DllImport (Constants.CoreMediaLibrary)]
-		extern static /* OSStatus */ CMFormatDescriptionError CMFormatDescriptionCreate (/* CFAllocatorRef */ IntPtr allocator, CMMediaType mediaType, /* FourCharCode */ uint mediaSubtype, /* CFDictionaryRef */ IntPtr extensions, /* CMFormatDescriptionRef* */ out IntPtr descOut);
+		internal extern static /* OSStatus */ CMFormatDescriptionError CMFormatDescriptionCreate (/* CFAllocatorRef */ IntPtr allocator, CMMediaType mediaType, /* FourCharCode */ uint mediaSubtype, /* CFDictionaryRef */ IntPtr extensions, /* CMFormatDescriptionRef* */ out IntPtr descOut);
 
 		public static CMFormatDescription Create (CMMediaType mediaType, uint mediaSubtype, out CMFormatDescriptionError error)
 		{
@@ -206,7 +223,7 @@ namespace XamCore.CoreMedia {
 			return Create (handle, false);
 		}
 
-		static CMFormatDescription Create (CMMediaType type, IntPtr handle, bool owns)
+		internal static CMFormatDescription Create (CMMediaType type, IntPtr handle, bool owns)
 		{		
 			switch (type) {
 			case CMMediaType.Video:
@@ -300,12 +317,12 @@ namespace XamCore.CoreMedia {
 			}
 		}
 
-		public AudioFormat AudioRichestDecodableFormat {
+		public AudioFormat? AudioRichestDecodableFormat {
 			get {
 				unsafe {
 					var ret = (AudioFormat *) CMAudioFormatDescriptionGetRichestDecodableFormat (handle);
 					if (ret == null)
-						return new AudioFormat ();
+						return null;
 					return *ret;
 				}
 			}
@@ -369,14 +386,14 @@ namespace XamCore.CoreMedia {
 			/* CMFormatDescriptionRef* */ IntPtr desc, 
 			out uint outDisplayFlags);
 
-		public uint GetTextDisplayFlags ()
+		public CMTextDisplayFlags GetTextDisplayFlags ()
 		{
 			uint outDisplayFlags;
 			var error = CMTextFormatDescriptionGetDisplayFlags (handle, out outDisplayFlags);
 			if (error != CMFormatDescriptionError.None)
 				throw new ArgumentException (error.ToString ());
 
-			return outDisplayFlags;
+			return (CMTextDisplayFlags) outDisplayFlags;
 		}
 
 		[Mac (10,7)]
@@ -424,6 +441,9 @@ namespace XamCore.CoreMedia {
 
 		public void GetTextDefaultStyle (out ushort outLocalFontId, out bool outBold, out bool outItalic, out bool outUnderline, out nfloat outFontSize, nfloat[] outColorComponents)
 		{
+			if (outColorComponents.Length != 4)
+				throw new ArgumentException ("outColorComponent should be a length 4 array");
+			
 			var error = CMTextFormatDescriptionGetDefaultStyle (handle, out outLocalFontId, out outBold, out outItalic, out outUnderline, out outFontSize, outColorComponents);
 			if (error != CMFormatDescriptionError.None)
 				throw new ArgumentException (error.ToString ());
@@ -504,15 +524,36 @@ namespace XamCore.CoreMedia {
 		public CMAudioFormatDescription (ref AudioStreamBasicDescription asbd, AudioChannelLayout layout, uint magicCookieSize, IntPtr magicCookie, NSDictionary extensions)
 		{
 			IntPtr ptr = IntPtr.Zero;
-			uint size = 0;
+			int size = 0;
 			if (layout != null) {
-				size = (uint)Marshal.SizeOf (layout.NativeStruct);
+				size = Marshal.SizeOf (layout.NativeStruct);
+				ptr = Marshal.AllocHGlobal (size);
 				Marshal.StructureToPtr (layout.NativeStruct, ptr, false);
 			}
-			var error = CMAudioFormatDescriptionCreate (IntPtr.Zero, ref asbd, size, ptr, magicCookieSize, magicCookie, extensions != null ? extensions.Handle : IntPtr.Zero, out handle);
+			var error = CMAudioFormatDescriptionCreate (IntPtr.Zero, ref asbd, (nuint) size, ptr, (nuint) magicCookieSize, magicCookie, extensions != null ? extensions.Handle : IntPtr.Zero, out handle);
 			
 			if (error != CMFormatDescriptionError.None)
 				throw new ArgumentException (error.ToString ());
+		}
+
+		public static CMAudioFormatDescription Create (AudioFormatType audioSubtype, out CMFormatDescriptionError error)
+		{
+			IntPtr handle;
+			error = CMFormatDescriptionCreate (IntPtr.Zero, CMMediaType.Audio, (uint) audioSubtype, IntPtr.Zero, out handle);
+			if (error != CMFormatDescriptionError.None)
+				return null;
+
+			return (CMAudioFormatDescription) Create (CMMediaType.Audio, handle, true);
+		}
+
+		public static CMAudioFormatDescription Create (AudioFormatType audioSubtype)
+		{
+			IntPtr handle;
+			CMFormatDescriptionError error = CMFormatDescriptionCreate (IntPtr.Zero, CMMediaType.Audio, (uint)audioSubtype, IntPtr.Zero, out handle);
+			if (error != CMFormatDescriptionError.None)
+				throw new Exception ("CMFormatDescriptionError - " + error.ToString ());
+
+			return (CMAudioFormatDescription)Create (CMMediaType.Audio, handle, true);
 		}
 
 		public unsafe AudioStreamBasicDescription? StreamBasicDescription {
