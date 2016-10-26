@@ -226,18 +226,16 @@ function install_specific_xcode () {
 		log "Unmounting $XCODE_DMG..."
 		hdiutil detach $XCODE_MOUNTPOINT -quiet
 	elif [[ ${XCODE_DMG: -4} == ".xip" ]]; then
-		mkdir $PROVISION_DOWNLOAD_DIR/$XCODE_NAME-decompressed
-		pushd .
-		cd $PROVISION_DOWNLOAD_DIR/$XCODE_NAME-decompressed
-		log "Decompressing $XCODE_DMG..."
-		xar -x -f $XCODE_DMG
 		log "Extracting $XCODE_DMG..."
-		# the cpio command spews a lot of "Can't create ..." errors, but they seem to be innocuous
-		gunzip < Content | cpio -i -d
+		pushd . > /dev/null
+		cd $PROVISION_DOWNLOAD_DIR
+		# make sure there's nothing interfering
+		rm -Rf *.app
+		# extract
+		/System/Library/CoreServices/Applications/Archive\ Utility.app/Contents/MacOS/Archive\ Utility "$XCODE_DMG"
 		log "Installing Xcode $XCODE_VERSION to $XCODE_ROOT..."
 		mv *.app $XCODE_ROOT
-		popd
-		rm -Rf $PROVISION_DOWNLOAD_DIR/$XCODE_NAME-decompressed
+		popd > /dev/null
 	else
 		fail "Don't know how to install $XCODE_DMG"
 	fi
