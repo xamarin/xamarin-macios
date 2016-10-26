@@ -210,6 +210,9 @@ function install_specific_xcode () {
 	log "Downloading Xcode $XCODE_VERSION from $XCODE_URL to $PROVISION_DOWNLOAD_DIR..."
 	local XCODE_NAME=`basename $XCODE_URL`
 	local XCODE_DMG=$PROVISION_DOWNLOAD_DIR/$XCODE_NAME
+
+	# To test this script with new Xcode versions, copy the downloaded file to $XCODE_DMG,
+	# uncomment the following curl line, and run ./system-dependencies.sh --provision-xcode
 	curl -L $XCODE_URL > $XCODE_DMG
 
 	if [[ ${XCODE_DMG: -4} == ".dmg" ]]; then
