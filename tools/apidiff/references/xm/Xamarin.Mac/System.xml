@@ -116,11 +116,6 @@
       </attribute>
       <attribute name="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
         <properties>
-<<<<<<< HEAD
-          <property name="AssemblyName" value="Mono.Security, PublicKey=002400000480000094000000060200000024000052534131000400000100010079159977d2d03a8e6bea7a2e74e8d1afcc93e8851974952bb480a12c9134474d04062447c37e0e68c080536fcf3c3fbe2ff9c979ce998475e506e8ce82dd5b0f350dc10e93bf2eeecf874b24770c5081dbea7447fddafa277b22de47d6ffea449674a4f9fccf84d15069089380284dbdd35f46cdff12a1bd78e4ef0065d016df" />
-        </properties>
-      </attribute>
-=======
           <property name="AssemblyName" value="Xamarin.BoringTls, PublicKey=002400000480000094000000060200000024000052534131000400001100000099dd12eda85767ae6f06023ee28e711c7e5a212462095c83868c29db75eddf6d8e296e03824c14fedd5f55553fed0b6173be3cc985a4b7f9fb7c83ccff8ba3938563b3d1f45a81122f12a1bcb73edcaad61a8456c7595a6da5184b4dd9d10f011b949ef1391fccfeab1ba62aa51c267ef8bd57ef1b6ba5a4c515d0badb81a78f" />
         </properties>
       </attribute>
@@ -149,7 +144,6 @@
           <property name="AssemblyName" value="Xamarin.TVOS, PublicKey=0024000004800000940000000602000000240000525341310004000011000000438ac2a5acfbf16cbd2b2b47a62762f273df9cb2795ceccdf77d10bf508e69e7a362ea7a45455bbf3ac955e1f2e2814f144e5d817efc4c6502cc012df310783348304e3ae38573c6d658c234025821fda87a0be8a0d504df564e2c93b2b878925f42503e9d54dfef9f9586d9e6f38a305769587b1de01f6c0410328b2c9733db" />
         </properties>
       </attribute>
->>>>>>> xcode8.1
       <attribute name="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute">
         <properties>
           <property name="WrapNonExceptionThrows" value="True" />
@@ -706,7 +700,7 @@
                   <parameter name="localCertificates" position="1" attrib="0" type="System.Security.Cryptography.X509Certificates.X509CertificateCollection" />
                   <parameter name="remoteCertificate" position="2" attrib="0" type="System.Security.Cryptography.X509Certificates.X509Certificate" />
                   <parameter name="acceptableIssuers" position="3" attrib="0" type="System.String[]" />
-                  <parameter name="clientCertificate" position="4" attrib="2" type="System.Security.Cryptography.X509Certificates.X509Certificate&amp;" direction="out" />
+                  <parameter name="clientCertificate" position="4" attrib="2" type="System.Security.Cryptography.X509Certificates.X509Certificate" direction="out" />
                 </parameters>
               </method>
               <method name="ValidateCertificate(System.String, System.Boolean, System.Security.Cryptography.X509Certificates.X509CertificateCollection)" attrib="1478" abstract="true" virtual="true" returntype="Mono.Security.Interface.ValidationResult">
@@ -1838,8 +1832,8 @@
                   <parameter name="username" position="2" attrib="0" type="System.String" />
                   <parameter name="password" position="3" attrib="0" type="System.String" />
                   <parameter name="domain" position="4" attrib="0" type="System.String" />
-                  <parameter name="lm" position="5" attrib="2" type="System.Byte[]&amp;" direction="out" />
-                  <parameter name="ntlm" position="6" attrib="2" type="System.Byte[]&amp;" direction="out" />
+                  <parameter name="lm" position="5" attrib="2" type="System.Byte[]" direction="out" />
+                  <parameter name="ntlm" position="6" attrib="2" type="System.Byte[]" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -2643,7 +2637,7 @@
               <method name="HexUnescape(System.String, System.Int32&amp;)" attrib="150" static="true" returntype="System.Char">
                 <parameters>
                   <parameter name="pattern" position="0" attrib="0" type="System.String" />
-                  <parameter name="index" position="1" attrib="0" type="System.Int32&amp;" direction="ref" />
+                  <parameter name="index" position="1" attrib="0" type="System.Int32" direction="ref" />
                 </parameters>
               </method>
               <method name="IsBadFileSystemCharacter(System.Char)" attrib="452" virtual="true" returntype="System.Boolean">
@@ -2741,21 +2735,21 @@
                 <parameters>
                   <parameter name="uriString" position="0" attrib="0" type="System.String" />
                   <parameter name="uriKind" position="1" attrib="0" type="System.UriKind" />
-                  <parameter name="result" position="2" attrib="2" type="System.Uri&amp;" direction="out" />
+                  <parameter name="result" position="2" attrib="2" type="System.Uri" direction="out" />
                 </parameters>
               </method>
               <method name="TryCreate(System.Uri, System.String, out System.Uri&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="baseUri" position="0" attrib="0" type="System.Uri" />
                   <parameter name="relativeUri" position="1" attrib="0" type="System.String" />
-                  <parameter name="result" position="2" attrib="2" type="System.Uri&amp;" direction="out" />
+                  <parameter name="result" position="2" attrib="2" type="System.Uri" direction="out" />
                 </parameters>
               </method>
               <method name="TryCreate(System.Uri, System.Uri, out System.Uri&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="baseUri" position="0" attrib="0" type="System.Uri" />
                   <parameter name="relativeUri" position="1" attrib="0" type="System.Uri" />
-                  <parameter name="result" position="2" attrib="2" type="System.Uri&amp;" direction="out" />
+                  <parameter name="result" position="2" attrib="2" type="System.Uri" direction="out" />
                 </parameters>
               </method>
               <method name="Unescape(System.String)" attrib="452" virtual="true" returntype="System.String">
@@ -3077,7 +3071,7 @@
               <method name="InitializeAndValidate(System.Uri, out System.UriFormatException&amp;)" attrib="452" virtual="true" returntype="System.Void">
                 <parameters>
                   <parameter name="uri" position="0" attrib="0" type="System.Uri" />
-                  <parameter name="parsingError" position="1" attrib="2" type="System.UriFormatException&amp;" direction="out" />
+                  <parameter name="parsingError" position="1" attrib="2" type="System.UriFormatException" direction="out" />
                 </parameters>
               </method>
               <method name="IsBaseOf(System.Uri, System.Uri)" attrib="452" virtual="true" returntype="System.Boolean">
@@ -3116,7 +3110,7 @@
                 <parameters>
                   <parameter name="baseUri" position="0" attrib="0" type="System.Uri" />
                   <parameter name="relativeUri" position="1" attrib="0" type="System.Uri" />
-                  <parameter name="parsingError" position="2" attrib="2" type="System.UriFormatException&amp;" direction="out" />
+                  <parameter name="parsingError" position="2" attrib="2" type="System.UriFormatException" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -3598,13 +3592,13 @@
               <method name="TakeFromAny(System.Collections.Concurrent.BlockingCollection`1[T][], out T&amp;)" attrib="150" static="true" returntype="System.Int32">
                 <parameters>
                   <parameter name="collections" position="0" attrib="0" type="System.Collections.Concurrent.BlockingCollection`1[T][]" />
-                  <parameter name="item" position="1" attrib="2" type="T&amp;" direction="out" />
+                  <parameter name="item" position="1" attrib="2" type="T" direction="out" />
                 </parameters>
               </method>
               <method name="TakeFromAny(System.Collections.Concurrent.BlockingCollection`1[T][], out T&amp;, System.Threading.CancellationToken)" attrib="150" static="true" returntype="System.Int32">
                 <parameters>
                   <parameter name="collections" position="0" attrib="0" type="System.Collections.Concurrent.BlockingCollection`1[T][]" />
-                  <parameter name="item" position="1" attrib="2" type="T&amp;" direction="out" />
+                  <parameter name="item" position="1" attrib="2" type="T" direction="out" />
                   <parameter name="cancellationToken" position="2" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
               </method>
@@ -3665,24 +3659,24 @@
               </method>
               <method name="TryTake(out T&amp;)" attrib="134" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="item" position="0" attrib="2" type="T&amp;" direction="out" />
+                  <parameter name="item" position="0" attrib="2" type="T" direction="out" />
                 </parameters>
               </method>
               <method name="TryTake(out T&amp;, System.Int32)" attrib="134" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="item" position="0" attrib="2" type="T&amp;" direction="out" />
+                  <parameter name="item" position="0" attrib="2" type="T" direction="out" />
                   <parameter name="millisecondsTimeout" position="1" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="TryTake(out T&amp;, System.TimeSpan)" attrib="134" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="item" position="0" attrib="2" type="T&amp;" direction="out" />
+                  <parameter name="item" position="0" attrib="2" type="T" direction="out" />
                   <parameter name="timeout" position="1" attrib="0" type="System.TimeSpan" />
                 </parameters>
               </method>
               <method name="TryTake(out T&amp;, System.Int32, System.Threading.CancellationToken)" attrib="134" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="item" position="0" attrib="2" type="T&amp;" direction="out" />
+                  <parameter name="item" position="0" attrib="2" type="T" direction="out" />
                   <parameter name="millisecondsTimeout" position="1" attrib="0" type="System.Int32" />
                   <parameter name="cancellationToken" position="2" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
@@ -3690,27 +3684,27 @@
               <method name="TryTakeFromAny(System.Collections.Concurrent.BlockingCollection`1[T][], out T&amp;)" attrib="150" static="true" returntype="System.Int32">
                 <parameters>
                   <parameter name="collections" position="0" attrib="0" type="System.Collections.Concurrent.BlockingCollection`1[T][]" />
-                  <parameter name="item" position="1" attrib="2" type="T&amp;" direction="out" />
+                  <parameter name="item" position="1" attrib="2" type="T" direction="out" />
                 </parameters>
               </method>
               <method name="TryTakeFromAny(System.Collections.Concurrent.BlockingCollection`1[T][], out T&amp;, System.Int32)" attrib="150" static="true" returntype="System.Int32">
                 <parameters>
                   <parameter name="collections" position="0" attrib="0" type="System.Collections.Concurrent.BlockingCollection`1[T][]" />
-                  <parameter name="item" position="1" attrib="2" type="T&amp;" direction="out" />
+                  <parameter name="item" position="1" attrib="2" type="T" direction="out" />
                   <parameter name="millisecondsTimeout" position="2" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="TryTakeFromAny(System.Collections.Concurrent.BlockingCollection`1[T][], out T&amp;, System.TimeSpan)" attrib="150" static="true" returntype="System.Int32">
                 <parameters>
                   <parameter name="collections" position="0" attrib="0" type="System.Collections.Concurrent.BlockingCollection`1[T][]" />
-                  <parameter name="item" position="1" attrib="2" type="T&amp;" direction="out" />
+                  <parameter name="item" position="1" attrib="2" type="T" direction="out" />
                   <parameter name="timeout" position="2" attrib="0" type="System.TimeSpan" />
                 </parameters>
               </method>
               <method name="TryTakeFromAny(System.Collections.Concurrent.BlockingCollection`1[T][], out T&amp;, System.Int32, System.Threading.CancellationToken)" attrib="150" static="true" returntype="System.Int32">
                 <parameters>
                   <parameter name="collections" position="0" attrib="0" type="System.Collections.Concurrent.BlockingCollection`1[T][]" />
-                  <parameter name="item" position="1" attrib="2" type="T&amp;" direction="out" />
+                  <parameter name="item" position="1" attrib="2" type="T" direction="out" />
                   <parameter name="millisecondsTimeout" position="2" attrib="0" type="System.Int32" />
                   <parameter name="cancellationToken" position="3" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
@@ -3791,12 +3785,12 @@
               </method>
               <method name="TryPeek(out T&amp;)" attrib="134" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="result" position="0" attrib="2" type="T&amp;" direction="out" />
+                  <parameter name="result" position="0" attrib="2" type="T" direction="out" />
                 </parameters>
               </method>
               <method name="TryTake(out T&amp;)" attrib="486" virtual="true" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="result" position="0" attrib="2" type="T&amp;" direction="out" />
+                  <parameter name="result" position="0" attrib="2" type="T" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -4379,7 +4373,7 @@
               <method name="TryGetValue(TKey, out TValue&amp;)" attrib="486" virtual="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="key" position="0" attrib="0" type="TKey" />
-                  <parameter name="value" position="1" attrib="2" type="TValue&amp;" direction="out" />
+                  <parameter name="value" position="1" attrib="2" type="TValue" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -4754,7 +4748,7 @@
               <method name="TryGetValue(TKey, out TValue&amp;)" attrib="486" virtual="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="key" position="0" attrib="0" type="TKey" />
-                  <parameter name="value" position="1" attrib="2" type="TValue&amp;" direction="out" />
+                  <parameter name="value" position="1" attrib="2" type="TValue" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -10465,14 +10459,14 @@
                 <parameters>
                   <parameter name="component" position="0" attrib="0" type="System.Object" />
                   <parameter name="dispid" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="success" position="2" attrib="0" type="System.Boolean&amp;" direction="ref" />
+                  <parameter name="success" position="2" attrib="0" type="System.Boolean" direction="ref" />
                 </parameters>
               </method>
               <method name="GetPropertyValue(System.Object, System.String, System.Boolean&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Object">
                 <parameters>
                   <parameter name="component" position="0" attrib="0" type="System.Object" />
                   <parameter name="propertyName" position="1" attrib="0" type="System.String" />
-                  <parameter name="success" position="2" attrib="0" type="System.Boolean&amp;" direction="ref" />
+                  <parameter name="success" position="2" attrib="0" type="System.Boolean" direction="ref" />
                 </parameters>
               </method>
             </methods>
@@ -10681,7 +10675,7 @@
                 <parameters>
                   <parameter name="language" position="0" attrib="0" type="System.String" />
                   <parameter name="value" position="1" attrib="0" type="System.String" />
-                  <parameter name="newValue" position="2" attrib="0" type="System.String&amp;" direction="ref" />
+                  <parameter name="newValue" position="2" attrib="0" type="System.String" direction="ref" />
                 </parameters>
               </method>
             </methods>
@@ -11436,7 +11430,7 @@
                 <parameters>
                   <parameter name="type" position="0" attrib="0" type="System.Type" />
                   <parameter name="instance" position="1" attrib="0" type="System.Object" />
-                  <parameter name="license" position="2" attrib="2" type="System.ComponentModel.License&amp;" direction="out" />
+                  <parameter name="license" position="2" attrib="2" type="System.ComponentModel.License" direction="out" />
                 </parameters>
               </method>
               <method name="LockContext(System.Object)" attrib="150" static="true" returntype="System.Void">
@@ -12337,15 +12331,15 @@
               <method name="Add(System.Char, out System.Int32&amp;, out System.ComponentModel.MaskedTextResultHint&amp;)" attrib="134" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.Char" />
-                  <parameter name="testPosition" position="1" attrib="2" type="System.Int32&amp;" direction="out" />
-                  <parameter name="resultHint" position="2" attrib="2" type="System.ComponentModel.MaskedTextResultHint&amp;" direction="out" />
+                  <parameter name="testPosition" position="1" attrib="2" type="System.Int32" direction="out" />
+                  <parameter name="resultHint" position="2" attrib="2" type="System.ComponentModel.MaskedTextResultHint" direction="out" />
                 </parameters>
               </method>
               <method name="Add(System.String, out System.Int32&amp;, out System.ComponentModel.MaskedTextResultHint&amp;)" attrib="134" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="testPosition" position="1" attrib="2" type="System.Int32&amp;" direction="out" />
-                  <parameter name="resultHint" position="2" attrib="2" type="System.ComponentModel.MaskedTextResultHint&amp;" direction="out" />
+                  <parameter name="testPosition" position="1" attrib="2" type="System.Int32" direction="out" />
+                  <parameter name="resultHint" position="2" attrib="2" type="System.ComponentModel.MaskedTextResultHint" direction="out" />
                 </parameters>
               </method>
               <method name="Clear()" attrib="134" returntype="System.Void">
@@ -12353,7 +12347,7 @@
               </method>
               <method name="Clear(out System.ComponentModel.MaskedTextResultHint&amp;)" attrib="134" returntype="System.Void">
                 <parameters>
-                  <parameter name="resultHint" position="0" attrib="2" type="System.ComponentModel.MaskedTextResultHint&amp;" direction="out" />
+                  <parameter name="resultHint" position="0" attrib="2" type="System.ComponentModel.MaskedTextResultHint" direction="out" />
                 </parameters>
               </method>
               <method name="Clone()" attrib="486" virtual="true" returntype="System.Object">
@@ -12432,16 +12426,16 @@
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.Char" />
                   <parameter name="position" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="testPosition" position="2" attrib="2" type="System.Int32&amp;" direction="out" />
-                  <parameter name="resultHint" position="3" attrib="2" type="System.ComponentModel.MaskedTextResultHint&amp;" direction="out" />
+                  <parameter name="testPosition" position="2" attrib="2" type="System.Int32" direction="out" />
+                  <parameter name="resultHint" position="3" attrib="2" type="System.ComponentModel.MaskedTextResultHint" direction="out" />
                 </parameters>
               </method>
               <method name="InsertAt(System.String, System.Int32, out System.Int32&amp;, out System.ComponentModel.MaskedTextResultHint&amp;)" attrib="134" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
                   <parameter name="position" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="testPosition" position="2" attrib="2" type="System.Int32&amp;" direction="out" />
-                  <parameter name="resultHint" position="3" attrib="2" type="System.ComponentModel.MaskedTextResultHint&amp;" direction="out" />
+                  <parameter name="testPosition" position="2" attrib="2" type="System.Int32" direction="out" />
+                  <parameter name="resultHint" position="3" attrib="2" type="System.ComponentModel.MaskedTextResultHint" direction="out" />
                 </parameters>
               </method>
               <method name="IsAvailablePosition(System.Int32)" attrib="134" returntype="System.Boolean">
@@ -12474,8 +12468,8 @@
               </method>
               <method name="Remove(out System.Int32&amp;, out System.ComponentModel.MaskedTextResultHint&amp;)" attrib="134" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="testPosition" position="0" attrib="2" type="System.Int32&amp;" direction="out" />
-                  <parameter name="resultHint" position="1" attrib="2" type="System.ComponentModel.MaskedTextResultHint&amp;" direction="out" />
+                  <parameter name="testPosition" position="0" attrib="2" type="System.Int32" direction="out" />
+                  <parameter name="resultHint" position="1" attrib="2" type="System.ComponentModel.MaskedTextResultHint" direction="out" />
                 </parameters>
               </method>
               <method name="RemoveAt(System.Int32)" attrib="134" returntype="System.Boolean">
@@ -12493,8 +12487,8 @@
                 <parameters>
                   <parameter name="startPosition" position="0" attrib="0" type="System.Int32" />
                   <parameter name="endPosition" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="testPosition" position="2" attrib="2" type="System.Int32&amp;" direction="out" />
-                  <parameter name="resultHint" position="3" attrib="2" type="System.ComponentModel.MaskedTextResultHint&amp;" direction="out" />
+                  <parameter name="testPosition" position="2" attrib="2" type="System.Int32" direction="out" />
+                  <parameter name="resultHint" position="3" attrib="2" type="System.ComponentModel.MaskedTextResultHint" direction="out" />
                 </parameters>
               </method>
               <method name="Replace(System.Char, System.Int32)" attrib="134" returntype="System.Boolean">
@@ -12513,16 +12507,16 @@
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.Char" />
                   <parameter name="position" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="testPosition" position="2" attrib="2" type="System.Int32&amp;" direction="out" />
-                  <parameter name="resultHint" position="3" attrib="2" type="System.ComponentModel.MaskedTextResultHint&amp;" direction="out" />
+                  <parameter name="testPosition" position="2" attrib="2" type="System.Int32" direction="out" />
+                  <parameter name="resultHint" position="3" attrib="2" type="System.ComponentModel.MaskedTextResultHint" direction="out" />
                 </parameters>
               </method>
               <method name="Replace(System.String, System.Int32, out System.Int32&amp;, out System.ComponentModel.MaskedTextResultHint&amp;)" attrib="134" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
                   <parameter name="position" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="testPosition" position="2" attrib="2" type="System.Int32&amp;" direction="out" />
-                  <parameter name="resultHint" position="3" attrib="2" type="System.ComponentModel.MaskedTextResultHint&amp;" direction="out" />
+                  <parameter name="testPosition" position="2" attrib="2" type="System.Int32" direction="out" />
+                  <parameter name="resultHint" position="3" attrib="2" type="System.ComponentModel.MaskedTextResultHint" direction="out" />
                 </parameters>
               </method>
               <method name="Replace(System.Char, System.Int32, System.Int32, out System.Int32&amp;, out System.ComponentModel.MaskedTextResultHint&amp;)" attrib="134" returntype="System.Boolean">
@@ -12530,8 +12524,8 @@
                   <parameter name="input" position="0" attrib="0" type="System.Char" />
                   <parameter name="startPosition" position="1" attrib="0" type="System.Int32" />
                   <parameter name="endPosition" position="2" attrib="0" type="System.Int32" />
-                  <parameter name="testPosition" position="3" attrib="2" type="System.Int32&amp;" direction="out" />
-                  <parameter name="resultHint" position="4" attrib="2" type="System.ComponentModel.MaskedTextResultHint&amp;" direction="out" />
+                  <parameter name="testPosition" position="3" attrib="2" type="System.Int32" direction="out" />
+                  <parameter name="resultHint" position="4" attrib="2" type="System.ComponentModel.MaskedTextResultHint" direction="out" />
                 </parameters>
               </method>
               <method name="Replace(System.String, System.Int32, System.Int32, out System.Int32&amp;, out System.ComponentModel.MaskedTextResultHint&amp;)" attrib="134" returntype="System.Boolean">
@@ -12539,8 +12533,8 @@
                   <parameter name="input" position="0" attrib="0" type="System.String" />
                   <parameter name="startPosition" position="1" attrib="0" type="System.Int32" />
                   <parameter name="endPosition" position="2" attrib="0" type="System.Int32" />
-                  <parameter name="testPosition" position="3" attrib="2" type="System.Int32&amp;" direction="out" />
-                  <parameter name="resultHint" position="4" attrib="2" type="System.ComponentModel.MaskedTextResultHint&amp;" direction="out" />
+                  <parameter name="testPosition" position="3" attrib="2" type="System.Int32" direction="out" />
+                  <parameter name="resultHint" position="4" attrib="2" type="System.ComponentModel.MaskedTextResultHint" direction="out" />
                 </parameters>
               </method>
               <method name="Set(System.String)" attrib="134" returntype="System.Boolean">
@@ -12551,8 +12545,8 @@
               <method name="Set(System.String, out System.Int32&amp;, out System.ComponentModel.MaskedTextResultHint&amp;)" attrib="134" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="testPosition" position="1" attrib="2" type="System.Int32&amp;" direction="out" />
-                  <parameter name="resultHint" position="2" attrib="2" type="System.ComponentModel.MaskedTextResultHint&amp;" direction="out" />
+                  <parameter name="testPosition" position="1" attrib="2" type="System.Int32" direction="out" />
+                  <parameter name="resultHint" position="2" attrib="2" type="System.ComponentModel.MaskedTextResultHint" direction="out" />
                 </parameters>
               </method>
               <method name="ToDisplayString()" attrib="134" returntype="System.String">
@@ -12606,7 +12600,7 @@
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.Char" />
                   <parameter name="position" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="hint" position="2" attrib="2" type="System.ComponentModel.MaskedTextResultHint&amp;" direction="out" />
+                  <parameter name="hint" position="2" attrib="2" type="System.ComponentModel.MaskedTextResultHint" direction="out" />
                 </parameters>
               </method>
               <method name="VerifyEscapeChar(System.Char, System.Int32)" attrib="134" returntype="System.Boolean">
@@ -12623,8 +12617,8 @@
               <method name="VerifyString(System.String, out System.Int32&amp;, out System.ComponentModel.MaskedTextResultHint&amp;)" attrib="134" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="testPosition" position="1" attrib="2" type="System.Int32&amp;" direction="out" />
-                  <parameter name="resultHint" position="2" attrib="2" type="System.ComponentModel.MaskedTextResultHint&amp;" direction="out" />
+                  <parameter name="testPosition" position="1" attrib="2" type="System.Int32" direction="out" />
+                  <parameter name="resultHint" position="2" attrib="2" type="System.ComponentModel.MaskedTextResultHint" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -16410,7 +16404,7 @@
                   </attribute>
                   <attribute name="System.ComponentModel.TypeConverterAttribute">
                     <properties>
-                      <property name="ConverterTypeName" value="null" />
+                      <property name="ConverterTypeName" value="System.ComponentModel.Design.DesignerOptionService/DesignerOptionConverter" />
                     </properties>
                   </attribute>
                   <attribute name="System.Reflection.DefaultMemberAttribute">
@@ -28093,7 +28087,7 @@
               <method name="EndGetRequestStream(System.IAsyncResult, out System.Net.TransportContext&amp;)" attrib="134" returntype="System.IO.Stream">
                 <parameters>
                   <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
-                  <parameter name="transportContext" position="1" attrib="2" type="System.Net.TransportContext&amp;" direction="out" />
+                  <parameter name="transportContext" position="1" attrib="2" type="System.Net.TransportContext" direction="out" />
                 </parameters>
               </method>
               <method name="EndGetResponse(System.IAsyncResult)" attrib="198" virtual="true" is-override="true" returntype="System.Net.WebResponse">
@@ -28519,7 +28513,7 @@
               <method name="TryParse(System.String, out System.Net.IPAddress&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="ipString" position="0" attrib="0" type="System.String" />
-                  <parameter name="address" position="1" attrib="2" type="System.Net.IPAddress&amp;" direction="out" />
+                  <parameter name="address" position="1" attrib="2" type="System.Net.IPAddress" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -37886,7 +37880,7 @@
                   <parameter name="cancellationToken" position="0" attrib="0" type="System.Threading.CancellationToken" />
                 </parameters>
               </method>
-              <method name="Read(in System.Byte[], System.Int32, System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
+              <method name="Read(System.Byte[], System.Int32, System.Int32)" attrib="198" virtual="true" is-override="true" returntype="System.Int32">
                 <parameters>
                   <parameter name="buffer" position="0" attrib="3" type="System.Byte[]" />
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
@@ -38487,7 +38481,7 @@
                 <parameters>
                   <parameter name="buffers" position="0" attrib="0" type="System.Collections.Generic.IList`1[System.ArraySegment`1[System.Byte]]" />
                   <parameter name="socketFlags" position="1" attrib="0" type="System.Net.Sockets.SocketFlags" />
-                  <parameter name="errorCode" position="2" attrib="2" type="System.Net.Sockets.SocketError&amp;" direction="out" />
+                  <parameter name="errorCode" position="2" attrib="2" type="System.Net.Sockets.SocketError" direction="out" />
                   <parameter name="callback" position="3" attrib="0" type="System.AsyncCallback" />
                   <parameter name="state" position="4" attrib="0" type="System.Object" />
                 </parameters>
@@ -38508,7 +38502,7 @@
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="size" position="2" attrib="0" type="System.Int32" />
                   <parameter name="flags" position="3" attrib="0" type="System.Net.Sockets.SocketFlags" />
-                  <parameter name="error" position="4" attrib="2" type="System.Net.Sockets.SocketError&amp;" direction="out" />
+                  <parameter name="error" position="4" attrib="2" type="System.Net.Sockets.SocketError" direction="out" />
                   <parameter name="callback" position="5" attrib="0" type="System.AsyncCallback" />
                   <parameter name="state" position="6" attrib="0" type="System.Object" />
                 </parameters>
@@ -38519,7 +38513,7 @@
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="size" position="2" attrib="0" type="System.Int32" />
                   <parameter name="socket_flags" position="3" attrib="0" type="System.Net.Sockets.SocketFlags" />
-                  <parameter name="remote_end" position="4" attrib="0" type="System.Net.EndPoint&amp;" direction="ref" />
+                  <parameter name="remote_end" position="4" attrib="0" type="System.Net.EndPoint" direction="ref" />
                   <parameter name="callback" position="5" attrib="0" type="System.AsyncCallback" />
                   <parameter name="state" position="6" attrib="0" type="System.Object" />
                 </parameters>
@@ -38531,7 +38525,7 @@
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="size" position="2" attrib="0" type="System.Int32" />
                   <parameter name="socketFlags" position="3" attrib="0" type="System.Net.Sockets.SocketFlags" />
-                  <parameter name="remoteEP" position="4" attrib="0" type="System.Net.EndPoint&amp;" direction="ref" />
+                  <parameter name="remoteEP" position="4" attrib="0" type="System.Net.EndPoint" direction="ref" />
                   <parameter name="callback" position="5" attrib="0" type="System.AsyncCallback" />
                   <parameter name="state" position="6" attrib="0" type="System.Object" />
                 </parameters>
@@ -38555,7 +38549,7 @@
                 <parameters>
                   <parameter name="buffers" position="0" attrib="0" type="System.Collections.Generic.IList`1[System.ArraySegment`1[System.Byte]]" />
                   <parameter name="socketFlags" position="1" attrib="0" type="System.Net.Sockets.SocketFlags" />
-                  <parameter name="errorCode" position="2" attrib="2" type="System.Net.Sockets.SocketError&amp;" direction="out" />
+                  <parameter name="errorCode" position="2" attrib="2" type="System.Net.Sockets.SocketError" direction="out" />
                   <parameter name="callback" position="3" attrib="0" type="System.AsyncCallback" />
                   <parameter name="state" position="4" attrib="0" type="System.Object" />
                 </parameters>
@@ -38576,7 +38570,7 @@
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="size" position="2" attrib="0" type="System.Int32" />
                   <parameter name="socketFlags" position="3" attrib="0" type="System.Net.Sockets.SocketFlags" />
-                  <parameter name="errorCode" position="4" attrib="2" type="System.Net.Sockets.SocketError&amp;" direction="out" />
+                  <parameter name="errorCode" position="4" attrib="2" type="System.Net.Sockets.SocketError" direction="out" />
                   <parameter name="callback" position="5" attrib="0" type="System.AsyncCallback" />
                   <parameter name="state" position="6" attrib="0" type="System.Object" />
                 </parameters>
@@ -38687,14 +38681,14 @@
               </method>
               <method name="EndAccept(out System.Byte[]&amp;, System.IAsyncResult)" attrib="134" returntype="System.Net.Sockets.Socket">
                 <parameters>
-                  <parameter name="buffer" position="0" attrib="2" type="System.Byte[]&amp;" direction="out" />
+                  <parameter name="buffer" position="0" attrib="2" type="System.Byte[]" direction="out" />
                   <parameter name="asyncResult" position="1" attrib="0" type="System.IAsyncResult" />
                 </parameters>
               </method>
               <method name="EndAccept(out System.Byte[]&amp;, out System.Int32&amp;, System.IAsyncResult)" attrib="134" returntype="System.Net.Sockets.Socket">
                 <parameters>
-                  <parameter name="buffer" position="0" attrib="2" type="System.Byte[]&amp;" direction="out" />
-                  <parameter name="bytesTransferred" position="1" attrib="2" type="System.Int32&amp;" direction="out" />
+                  <parameter name="buffer" position="0" attrib="2" type="System.Byte[]" direction="out" />
+                  <parameter name="bytesTransferred" position="1" attrib="2" type="System.Int32" direction="out" />
                   <parameter name="asyncResult" position="2" attrib="0" type="System.IAsyncResult" />
                 </parameters>
               </method>
@@ -38716,22 +38710,22 @@
               <method name="EndReceive(System.IAsyncResult, out System.Net.Sockets.SocketError&amp;)" attrib="134" returntype="System.Int32">
                 <parameters>
                   <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
-                  <parameter name="errorCode" position="1" attrib="2" type="System.Net.Sockets.SocketError&amp;" direction="out" />
+                  <parameter name="errorCode" position="1" attrib="2" type="System.Net.Sockets.SocketError" direction="out" />
                 </parameters>
               </method>
               <method name="EndReceiveFrom(System.IAsyncResult, System.Net.EndPoint&amp;)" attrib="134" returntype="System.Int32">
                 <parameters>
                   <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
-                  <parameter name="end_point" position="1" attrib="0" type="System.Net.EndPoint&amp;" direction="ref" />
+                  <parameter name="end_point" position="1" attrib="0" type="System.Net.EndPoint" direction="ref" />
                 </parameters>
               </method>
               <method name="EndReceiveMessageFrom(System.IAsyncResult, System.Net.Sockets.SocketFlags&amp;, System.Net.EndPoint&amp;, out System.Net.Sockets.IPPacketInformation&amp;)" attrib="134" returntype="System.Int32">
                 <attributes />
                 <parameters>
                   <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
-                  <parameter name="socketFlags" position="1" attrib="0" type="System.Net.Sockets.SocketFlags&amp;" direction="ref" />
-                  <parameter name="endPoint" position="2" attrib="0" type="System.Net.EndPoint&amp;" direction="ref" />
-                  <parameter name="ipPacketInformation" position="3" attrib="2" type="System.Net.Sockets.IPPacketInformation&amp;" direction="out" />
+                  <parameter name="socketFlags" position="1" attrib="0" type="System.Net.Sockets.SocketFlags" direction="ref" />
+                  <parameter name="endPoint" position="2" attrib="0" type="System.Net.EndPoint" direction="ref" />
+                  <parameter name="ipPacketInformation" position="3" attrib="2" type="System.Net.Sockets.IPPacketInformation" direction="out" />
                 </parameters>
               </method>
               <method name="EndSend(System.IAsyncResult)" attrib="134" returntype="System.Int32">
@@ -38742,7 +38736,7 @@
               <method name="EndSend(System.IAsyncResult, out System.Net.Sockets.SocketError&amp;)" attrib="134" returntype="System.Int32">
                 <parameters>
                   <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
-                  <parameter name="errorCode" position="1" attrib="2" type="System.Net.Sockets.SocketError&amp;" direction="out" />
+                  <parameter name="errorCode" position="1" attrib="2" type="System.Net.Sockets.SocketError" direction="out" />
                 </parameters>
               </method>
               <method name="EndSendFile(System.IAsyncResult)" attrib="134" returntype="System.Void">
@@ -38847,7 +38841,7 @@
                 <parameters>
                   <parameter name="buffers" position="0" attrib="0" type="System.Collections.Generic.IList`1[System.ArraySegment`1[System.Byte]]" />
                   <parameter name="socketFlags" position="1" attrib="0" type="System.Net.Sockets.SocketFlags" />
-                  <parameter name="errorCode" position="2" attrib="2" type="System.Net.Sockets.SocketError&amp;" direction="out" />
+                  <parameter name="errorCode" position="2" attrib="2" type="System.Net.Sockets.SocketError" direction="out" />
                 </parameters>
               </method>
               <method name="Receive(System.Byte[], System.Int32, System.Int32, System.Net.Sockets.SocketFlags)" attrib="134" returntype="System.Int32">
@@ -38864,7 +38858,7 @@
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="size" position="2" attrib="0" type="System.Int32" />
                   <parameter name="socketFlags" position="3" attrib="0" type="System.Net.Sockets.SocketFlags" />
-                  <parameter name="errorCode" position="4" attrib="2" type="System.Net.Sockets.SocketError&amp;" direction="out" />
+                  <parameter name="errorCode" position="4" attrib="2" type="System.Net.Sockets.SocketError" direction="out" />
                 </parameters>
               </method>
               <method name="ReceiveAsync(System.Net.Sockets.SocketAsyncEventArgs)" attrib="134" returntype="System.Boolean">
@@ -38875,14 +38869,14 @@
               <method name="ReceiveFrom(System.Byte[], System.Net.EndPoint&amp;)" attrib="134" returntype="System.Int32">
                 <parameters>
                   <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
-                  <parameter name="remoteEP" position="1" attrib="0" type="System.Net.EndPoint&amp;" direction="ref" />
+                  <parameter name="remoteEP" position="1" attrib="0" type="System.Net.EndPoint" direction="ref" />
                 </parameters>
               </method>
               <method name="ReceiveFrom(System.Byte[], System.Net.Sockets.SocketFlags, System.Net.EndPoint&amp;)" attrib="134" returntype="System.Int32">
                 <parameters>
                   <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
                   <parameter name="socketFlags" position="1" attrib="0" type="System.Net.Sockets.SocketFlags" />
-                  <parameter name="remoteEP" position="2" attrib="0" type="System.Net.EndPoint&amp;" direction="ref" />
+                  <parameter name="remoteEP" position="2" attrib="0" type="System.Net.EndPoint" direction="ref" />
                 </parameters>
               </method>
               <method name="ReceiveFrom(System.Byte[], System.Int32, System.Net.Sockets.SocketFlags, System.Net.EndPoint&amp;)" attrib="134" returntype="System.Int32">
@@ -38890,7 +38884,7 @@
                   <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
                   <parameter name="size" position="1" attrib="0" type="System.Int32" />
                   <parameter name="socketFlags" position="2" attrib="0" type="System.Net.Sockets.SocketFlags" />
-                  <parameter name="remoteEP" position="3" attrib="0" type="System.Net.EndPoint&amp;" direction="ref" />
+                  <parameter name="remoteEP" position="3" attrib="0" type="System.Net.EndPoint" direction="ref" />
                 </parameters>
               </method>
               <method name="ReceiveFrom(System.Byte[], System.Int32, System.Int32, System.Net.Sockets.SocketFlags, System.Net.EndPoint&amp;)" attrib="134" returntype="System.Int32">
@@ -38899,7 +38893,7 @@
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="size" position="2" attrib="0" type="System.Int32" />
                   <parameter name="socketFlags" position="3" attrib="0" type="System.Net.Sockets.SocketFlags" />
-                  <parameter name="remoteEP" position="4" attrib="0" type="System.Net.EndPoint&amp;" direction="ref" />
+                  <parameter name="remoteEP" position="4" attrib="0" type="System.Net.EndPoint" direction="ref" />
                 </parameters>
               </method>
               <method name="ReceiveFromAsync(System.Net.Sockets.SocketAsyncEventArgs)" attrib="134" returntype="System.Boolean">
@@ -38913,9 +38907,9 @@
                   <parameter name="buffer" position="0" attrib="0" type="System.Byte[]" />
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="size" position="2" attrib="0" type="System.Int32" />
-                  <parameter name="socketFlags" position="3" attrib="0" type="System.Net.Sockets.SocketFlags&amp;" direction="ref" />
-                  <parameter name="remoteEP" position="4" attrib="0" type="System.Net.EndPoint&amp;" direction="ref" />
-                  <parameter name="ipPacketInformation" position="5" attrib="2" type="System.Net.Sockets.IPPacketInformation&amp;" direction="out" />
+                  <parameter name="socketFlags" position="3" attrib="0" type="System.Net.Sockets.SocketFlags" direction="ref" />
+                  <parameter name="remoteEP" position="4" attrib="0" type="System.Net.EndPoint" direction="ref" />
+                  <parameter name="ipPacketInformation" position="5" attrib="2" type="System.Net.Sockets.IPPacketInformation" direction="out" />
                 </parameters>
               </method>
               <method name="ReceiveMessageFromAsync(System.Net.Sockets.SocketAsyncEventArgs)" attrib="134" returntype="System.Boolean">
@@ -38972,7 +38966,7 @@
                 <parameters>
                   <parameter name="buffers" position="0" attrib="0" type="System.Collections.Generic.IList`1[System.ArraySegment`1[System.Byte]]" />
                   <parameter name="socketFlags" position="1" attrib="0" type="System.Net.Sockets.SocketFlags" />
-                  <parameter name="errorCode" position="2" attrib="2" type="System.Net.Sockets.SocketError&amp;" direction="out" />
+                  <parameter name="errorCode" position="2" attrib="2" type="System.Net.Sockets.SocketError" direction="out" />
                 </parameters>
               </method>
               <method name="Send(System.Byte[], System.Int32, System.Int32, System.Net.Sockets.SocketFlags)" attrib="134" returntype="System.Int32">
@@ -38989,7 +38983,7 @@
                   <parameter name="offset" position="1" attrib="0" type="System.Int32" />
                   <parameter name="size" position="2" attrib="0" type="System.Int32" />
                   <parameter name="socketFlags" position="3" attrib="0" type="System.Net.Sockets.SocketFlags" />
-                  <parameter name="errorCode" position="4" attrib="2" type="System.Net.Sockets.SocketError&amp;" direction="out" />
+                  <parameter name="errorCode" position="4" attrib="2" type="System.Net.Sockets.SocketError" direction="out" />
                 </parameters>
               </method>
               <method name="SendAsync(System.Net.Sockets.SocketAsyncEventArgs)" attrib="134" returntype="System.Boolean">
@@ -40216,7 +40210,7 @@
               <method name="EndReceive(System.IAsyncResult, System.Net.IPEndPoint&amp;)" attrib="134" returntype="System.Byte[]">
                 <parameters>
                   <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
-                  <parameter name="remoteEP" position="1" attrib="0" type="System.Net.IPEndPoint&amp;" direction="ref" />
+                  <parameter name="remoteEP" position="1" attrib="0" type="System.Net.IPEndPoint" direction="ref" />
                 </parameters>
               </method>
               <method name="EndSend(System.IAsyncResult)" attrib="134" returntype="System.Int32">
@@ -40249,7 +40243,7 @@
               </method>
               <method name="Receive(System.Net.IPEndPoint&amp;)" attrib="134" returntype="System.Byte[]">
                 <parameters>
-                  <parameter name="remoteEP" position="0" attrib="0" type="System.Net.IPEndPoint&amp;" direction="ref" />
+                  <parameter name="remoteEP" position="0" attrib="0" type="System.Net.IPEndPoint" direction="ref" />
                 </parameters>
               </method>
               <method name="ReceiveAsync()" attrib="134" returntype="System.Threading.Tasks.Task`1[System.Net.Sockets.UdpReceiveResult]">
@@ -41342,8 +41336,8 @@
               </method>
               <method name="OnDataChange(in System.Runtime.InteropServices.ComTypes.FORMATETC&amp;, in System.Runtime.InteropServices.ComTypes.STGMEDIUM&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="format" position="0" attrib="1" type="System.Runtime.InteropServices.ComTypes.FORMATETC&amp;" direction="ref" />
-                  <parameter name="stgmedium" position="1" attrib="1" type="System.Runtime.InteropServices.ComTypes.STGMEDIUM&amp;" direction="ref" />
+                  <parameter name="format" position="0" attrib="1" type="System.Runtime.InteropServices.ComTypes.FORMATETC" direction="ref" />
+                  <parameter name="stgmedium" position="1" attrib="1" type="System.Runtime.InteropServices.ComTypes.STGMEDIUM" direction="ref" />
                 </parameters>
               </method>
               <method name="OnRename(System.Runtime.InteropServices.ComTypes.IMoniker)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
@@ -41378,10 +41372,10 @@
             <methods>
               <method name="DAdvise(in System.Runtime.InteropServices.ComTypes.FORMATETC&amp;, System.Runtime.InteropServices.ComTypes.ADVF, System.Runtime.InteropServices.ComTypes.IAdviseSink, out System.Int32&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Int32">
                 <parameters>
-                  <parameter name="pFormatetc" position="0" attrib="1" type="System.Runtime.InteropServices.ComTypes.FORMATETC&amp;" direction="ref" />
+                  <parameter name="pFormatetc" position="0" attrib="1" type="System.Runtime.InteropServices.ComTypes.FORMATETC" direction="ref" />
                   <parameter name="advf" position="1" attrib="0" type="System.Runtime.InteropServices.ComTypes.ADVF" />
                   <parameter name="adviseSink" position="2" attrib="0" type="System.Runtime.InteropServices.ComTypes.IAdviseSink" />
-                  <parameter name="connection" position="3" attrib="2" type="System.Int32&amp;" direction="out" />
+                  <parameter name="connection" position="3" attrib="2" type="System.Int32" direction="out" />
                 </parameters>
               </method>
               <method name="DUnadvise(System.Int32)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
@@ -41391,7 +41385,7 @@
               </method>
               <method name="EnumDAdvise(out System.Runtime.InteropServices.ComTypes.IEnumSTATDATA&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Int32">
                 <parameters>
-                  <parameter name="enumAdvise" position="0" attrib="2" type="System.Runtime.InteropServices.ComTypes.IEnumSTATDATA&amp;" direction="out" />
+                  <parameter name="enumAdvise" position="0" attrib="2" type="System.Runtime.InteropServices.ComTypes.IEnumSTATDATA" direction="out" />
                 </parameters>
               </method>
               <method name="EnumFormatEtc(System.Runtime.InteropServices.ComTypes.DATADIR)" attrib="1478" abstract="true" virtual="true" returntype="System.Runtime.InteropServices.ComTypes.IEnumFORMATETC">
@@ -41401,31 +41395,31 @@
               </method>
               <method name="GetCanonicalFormatEtc(in System.Runtime.InteropServices.ComTypes.FORMATETC&amp;, out System.Runtime.InteropServices.ComTypes.FORMATETC&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Int32">
                 <parameters>
-                  <parameter name="formatIn" position="0" attrib="1" type="System.Runtime.InteropServices.ComTypes.FORMATETC&amp;" direction="ref" />
-                  <parameter name="formatOut" position="1" attrib="2" type="System.Runtime.InteropServices.ComTypes.FORMATETC&amp;" direction="out" />
+                  <parameter name="formatIn" position="0" attrib="1" type="System.Runtime.InteropServices.ComTypes.FORMATETC" direction="ref" />
+                  <parameter name="formatOut" position="1" attrib="2" type="System.Runtime.InteropServices.ComTypes.FORMATETC" direction="out" />
                 </parameters>
               </method>
               <method name="GetData(in System.Runtime.InteropServices.ComTypes.FORMATETC&amp;, out System.Runtime.InteropServices.ComTypes.STGMEDIUM&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="format" position="0" attrib="1" type="System.Runtime.InteropServices.ComTypes.FORMATETC&amp;" direction="ref" />
-                  <parameter name="medium" position="1" attrib="2" type="System.Runtime.InteropServices.ComTypes.STGMEDIUM&amp;" direction="out" />
+                  <parameter name="format" position="0" attrib="1" type="System.Runtime.InteropServices.ComTypes.FORMATETC" direction="ref" />
+                  <parameter name="medium" position="1" attrib="2" type="System.Runtime.InteropServices.ComTypes.STGMEDIUM" direction="out" />
                 </parameters>
               </method>
               <method name="GetDataHere(in System.Runtime.InteropServices.ComTypes.FORMATETC&amp;, System.Runtime.InteropServices.ComTypes.STGMEDIUM&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="format" position="0" attrib="1" type="System.Runtime.InteropServices.ComTypes.FORMATETC&amp;" direction="ref" />
-                  <parameter name="medium" position="1" attrib="0" type="System.Runtime.InteropServices.ComTypes.STGMEDIUM&amp;" direction="ref" />
+                  <parameter name="format" position="0" attrib="1" type="System.Runtime.InteropServices.ComTypes.FORMATETC" direction="ref" />
+                  <parameter name="medium" position="1" attrib="0" type="System.Runtime.InteropServices.ComTypes.STGMEDIUM" direction="ref" />
                 </parameters>
               </method>
               <method name="QueryGetData(in System.Runtime.InteropServices.ComTypes.FORMATETC&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Int32">
                 <parameters>
-                  <parameter name="format" position="0" attrib="1" type="System.Runtime.InteropServices.ComTypes.FORMATETC&amp;" direction="ref" />
+                  <parameter name="format" position="0" attrib="1" type="System.Runtime.InteropServices.ComTypes.FORMATETC" direction="ref" />
                 </parameters>
               </method>
               <method name="SetData(in System.Runtime.InteropServices.ComTypes.FORMATETC&amp;, in System.Runtime.InteropServices.ComTypes.STGMEDIUM&amp;, System.Boolean)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="formatIn" position="0" attrib="1" type="System.Runtime.InteropServices.ComTypes.FORMATETC&amp;" direction="ref" />
-                  <parameter name="medium" position="1" attrib="1" type="System.Runtime.InteropServices.ComTypes.STGMEDIUM&amp;" direction="ref" />
+                  <parameter name="formatIn" position="0" attrib="1" type="System.Runtime.InteropServices.ComTypes.FORMATETC" direction="ref" />
+                  <parameter name="medium" position="1" attrib="1" type="System.Runtime.InteropServices.ComTypes.STGMEDIUM" direction="ref" />
                   <parameter name="release" position="2" attrib="8192" type="System.Boolean" />
                 </parameters>
               </method>
@@ -41447,10 +41441,10 @@
             <methods>
               <method name="Clone(out System.Runtime.InteropServices.ComTypes.IEnumFORMATETC&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="newEnum" position="0" attrib="2" type="System.Runtime.InteropServices.ComTypes.IEnumFORMATETC&amp;" direction="out" />
+                  <parameter name="newEnum" position="0" attrib="2" type="System.Runtime.InteropServices.ComTypes.IEnumFORMATETC" direction="out" />
                 </parameters>
               </method>
-              <method name="Next(System.Int32, out System.Runtime.InteropServices.ComTypes.FORMATETC[], out System.Int32[])" attrib="1478" abstract="true" virtual="true" returntype="System.Int32">
+              <method name="Next(System.Int32, System.Runtime.InteropServices.ComTypes.FORMATETC[], System.Int32[])" attrib="1478" abstract="true" virtual="true" returntype="System.Int32">
                 <parameters>
                   <parameter name="celt" position="0" attrib="0" type="System.Int32" />
                   <parameter name="rgelt" position="1" attrib="8194" type="System.Runtime.InteropServices.ComTypes.FORMATETC[]" />
@@ -41483,10 +41477,10 @@
             <methods>
               <method name="Clone(out System.Runtime.InteropServices.ComTypes.IEnumSTATDATA&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="newEnum" position="0" attrib="2" type="System.Runtime.InteropServices.ComTypes.IEnumSTATDATA&amp;" direction="out" />
+                  <parameter name="newEnum" position="0" attrib="2" type="System.Runtime.InteropServices.ComTypes.IEnumSTATDATA" direction="out" />
                 </parameters>
               </method>
-              <method name="Next(System.Int32, out System.Runtime.InteropServices.ComTypes.STATDATA[], out System.Int32[])" attrib="1478" abstract="true" virtual="true" returntype="System.Int32">
+              <method name="Next(System.Int32, System.Runtime.InteropServices.ComTypes.STATDATA[], System.Int32[])" attrib="1478" abstract="true" virtual="true" returntype="System.Int32">
                 <parameters>
                   <parameter name="celt" position="0" attrib="0" type="System.Int32" />
                   <parameter name="rgelt" position="1" attrib="8194" type="System.Runtime.InteropServices.ComTypes.STATDATA[]" />
@@ -45558,7 +45552,7 @@
                   <parameter name="initialCount" position="0" attrib="0" type="System.Int32" />
                   <parameter name="maximumCount" position="1" attrib="0" type="System.Int32" />
                   <parameter name="name" position="2" attrib="0" type="System.String" />
-                  <parameter name="createdNew" position="3" attrib="2" type="System.Boolean&amp;" direction="out" />
+                  <parameter name="createdNew" position="3" attrib="2" type="System.Boolean" direction="out" />
                 </parameters>
               </constructor>
               <constructor name=".ctor(System.Int32, System.Int32, System.String, out System.Boolean&amp;, System.Security.AccessControl.SemaphoreSecurity)" attrib="6278">
@@ -45567,7 +45561,7 @@
                   <parameter name="initialCount" position="0" attrib="0" type="System.Int32" />
                   <parameter name="maximumCount" position="1" attrib="0" type="System.Int32" />
                   <parameter name="name" position="2" attrib="0" type="System.String" />
-                  <parameter name="createdNew" position="3" attrib="2" type="System.Boolean&amp;" direction="out" />
+                  <parameter name="createdNew" position="3" attrib="2" type="System.Boolean" direction="out" />
                   <parameter name="semaphoreSecurity" position="4" attrib="0" type="System.Security.AccessControl.SemaphoreSecurity" />
                 </parameters>
               </constructor>
@@ -45620,14 +45614,14 @@
               <method name="TryOpenExisting(System.String, out System.Threading.Semaphore&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="name" position="0" attrib="0" type="System.String" />
-                  <parameter name="result" position="1" attrib="2" type="System.Threading.Semaphore&amp;" direction="out" />
+                  <parameter name="result" position="1" attrib="2" type="System.Threading.Semaphore" direction="out" />
                 </parameters>
               </method>
               <method name="TryOpenExisting(System.String, System.Security.AccessControl.SemaphoreRights, out System.Threading.Semaphore&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="name" position="0" attrib="0" type="System.String" />
                   <parameter name="rights" position="1" attrib="0" type="System.Security.AccessControl.SemaphoreRights" />
-                  <parameter name="result" position="2" attrib="2" type="System.Threading.Semaphore&amp;" direction="out" />
+                  <parameter name="result" position="2" attrib="2" type="System.Threading.Semaphore" direction="out" />
                 </parameters>
               </method>
             </methods>

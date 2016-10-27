@@ -124,7 +124,7 @@
               </method>
               <method name="TryComputeLength(out System.Int64&amp;)" attrib="197" virtual="true" is-override="true" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="length" position="0" attrib="2" type="System.Int64&amp;" direction="out" />
+                  <parameter name="length" position="0" attrib="2" type="System.Int64" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -912,7 +912,7 @@
               </method>
               <method name="TryComputeLength(out System.Int64&amp;)" attrib="1477" abstract="true" virtual="true" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="length" position="0" attrib="2" type="System.Int64&amp;" direction="out" />
+                  <parameter name="length" position="0" attrib="2" type="System.Int64" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -1409,7 +1409,7 @@
               </method>
               <method name="TryComputeLength(out System.Int64&amp;)" attrib="197" virtual="true" is-override="true" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="length" position="0" attrib="2" type="System.Int64&amp;" direction="out" />
+                  <parameter name="length" position="0" attrib="2" type="System.Int64" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -1551,7 +1551,7 @@
               </method>
               <method name="TryComputeLength(out System.Int64&amp;)" attrib="197" virtual="true" is-override="true" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="length" position="0" attrib="2" type="System.Int64&amp;" direction="out" />
+                  <parameter name="length" position="0" attrib="2" type="System.Int64" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -1644,7 +1644,7 @@
               <method name="TryParse(System.String, out System.Net.Http.Headers.AuthenticationHeaderValue&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.AuthenticationHeaderValue&amp;" direction="out" />
+                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.AuthenticationHeaderValue" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -1935,7 +1935,7 @@
               <method name="TryParse(System.String, out System.Net.Http.Headers.CacheControlHeaderValue&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.CacheControlHeaderValue&amp;" direction="out" />
+                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.CacheControlHeaderValue" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -2081,7 +2081,7 @@
               <method name="TryParse(System.String, out System.Net.Http.Headers.ContentDispositionHeaderValue&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.ContentDispositionHeaderValue&amp;" direction="out" />
+                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.ContentDispositionHeaderValue" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -2188,7 +2188,7 @@
               <method name="TryParse(System.String, out System.Net.Http.Headers.ContentRangeHeaderValue&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.ContentRangeHeaderValue&amp;" direction="out" />
+                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.ContentRangeHeaderValue" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -2259,7 +2259,7 @@
               <method name="TryParse(System.String, out System.Net.Http.Headers.EntityTagHeaderValue&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.EntityTagHeaderValue&amp;" direction="out" />
+                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.EntityTagHeaderValue" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -2522,7 +2522,7 @@
               <method name="TryGetValues(System.String, out System.Collections.Generic.IEnumerable`1[System.String]&amp;)" attrib="134" returntype="System.Boolean">
                 <parameters>
                   <parameter name="name" position="0" attrib="0" type="System.String" />
-                  <parameter name="values" position="1" attrib="2" type="System.Collections.Generic.IEnumerable`1[System.String]&amp;" direction="out" />
+                  <parameter name="values" position="1" attrib="2" type="System.Collections.Generic.IEnumerable`1[System.String]" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -3084,7 +3084,7 @@
               <method name="TryParse(System.String, out System.Net.Http.Headers.MediaTypeHeaderValue&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.MediaTypeHeaderValue&amp;" direction="out" />
+                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.MediaTypeHeaderValue" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -3129,7 +3129,7 @@
               <method name="TryParse(System.String, out System.Net.Http.Headers.MediaTypeWithQualityHeaderValue&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.MediaTypeWithQualityHeaderValue&amp;" direction="out" />
+                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.MediaTypeWithQualityHeaderValue" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -3200,7 +3200,7 @@
               <method name="TryParse(System.String, out System.Net.Http.Headers.NameValueHeaderValue&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.NameValueHeaderValue&amp;" direction="out" />
+                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.NameValueHeaderValue" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -3256,7 +3256,7 @@
               <method name="TryParse(System.String, out System.Net.Http.Headers.NameValueWithParametersHeaderValue&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.NameValueWithParametersHeaderValue&amp;" direction="out" />
+                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.NameValueWithParametersHeaderValue" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -3320,7 +3320,7 @@
               <method name="TryParse(System.String, out System.Net.Http.Headers.ProductHeaderValue&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.ProductHeaderValue&amp;" direction="out" />
+                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.ProductHeaderValue" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -3389,7 +3389,7 @@
               <method name="TryParse(System.String, out System.Net.Http.Headers.ProductInfoHeaderValue&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.ProductInfoHeaderValue&amp;" direction="out" />
+                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.ProductInfoHeaderValue" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -3457,7 +3457,7 @@
               <method name="TryParse(System.String, out System.Net.Http.Headers.RangeConditionHeaderValue&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.RangeConditionHeaderValue&amp;" direction="out" />
+                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.RangeConditionHeaderValue" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -3518,7 +3518,7 @@
               <method name="TryParse(System.String, out System.Net.Http.Headers.RangeHeaderValue&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.RangeHeaderValue&amp;" direction="out" />
+                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.RangeHeaderValue" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -3629,7 +3629,7 @@
               <method name="TryParse(System.String, out System.Net.Http.Headers.RetryConditionHeaderValue&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.RetryConditionHeaderValue&amp;" direction="out" />
+                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.RetryConditionHeaderValue" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -3693,7 +3693,7 @@
               <method name="TryParse(System.String, out System.Net.Http.Headers.StringWithQualityHeaderValue&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.StringWithQualityHeaderValue&amp;" direction="out" />
+                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.StringWithQualityHeaderValue" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -3750,7 +3750,7 @@
               <method name="TryParse(System.String, out System.Net.Http.Headers.TransferCodingHeaderValue&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.TransferCodingHeaderValue&amp;" direction="out" />
+                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.TransferCodingHeaderValue" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -3795,7 +3795,7 @@
               <method name="TryParse(System.String, out System.Net.Http.Headers.TransferCodingWithQualityHeaderValue&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.TransferCodingWithQualityHeaderValue&amp;" direction="out" />
+                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.TransferCodingWithQualityHeaderValue" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -3889,7 +3889,7 @@
               <method name="TryParse(System.String, out System.Net.Http.Headers.ViaHeaderValue&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.ViaHeaderValue&amp;" direction="out" />
+                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.ViaHeaderValue" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -3977,7 +3977,7 @@
               <method name="TryParse(System.String, out System.Net.Http.Headers.WarningHeaderValue&amp;)" attrib="150" static="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="input" position="0" attrib="0" type="System.String" />
-                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.WarningHeaderValue&amp;" direction="out" />
+                  <parameter name="parsedValue" position="1" attrib="2" type="System.Net.Http.Headers.WarningHeaderValue" direction="out" />
                 </parameters>
               </method>
             </methods>
