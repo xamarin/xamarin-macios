@@ -2251,12 +2251,5 @@ public class TestApp {
 			: base (output)
 		{
 		}
-	}	
-
-	class ActivationException : Exception {
-		public ActivationException (string output)
-			: base (output)
-		{
-		}
 	}
 }
