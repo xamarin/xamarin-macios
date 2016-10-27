@@ -512,33 +512,29 @@ namespace Xamarin.Bundler {
 			var registrar_m = RegistrarOutputLibrary;
 
 			var resolvedAssemblies = new List<AssemblyDefinition> ();
-			var ps = new ReaderParameters ();
-			ps.AssemblyResolver = new MonoTouchResolver () {
+			var resolver = new MonoTouchResolver () {
 				FrameworkDirectory = Driver.PlatformFrameworkDirectory,
 				RootDirectory = Path.GetDirectoryName (RootAssembly),
 			};
+
+			if (Driver.App.Platform == ApplePlatform.iOS) {
+				if (Driver.App.Is32Build) {
+					resolver.ArchDirectory = Driver.Arch32Directory;
+				} else {
+					resolver.ArchDirectory = Driver.Arch64Directory;
+				}
+			}
+
+			var ps = new ReaderParameters ();
+			ps.AssemblyResolver = resolver;
 			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve ("mscorlib"));
 
 			var rootName = Path.GetFileNameWithoutExtension (RootAssembly);
-			switch (rootName) {
-			// MonoTouch.NUnitLite doesn't quite work yet, because its generated registrar code uses types
-			// from the generated registrar code for MonoTouch.Dialog-1 (and there is no header file (yet)
-			// for those types).
-//			case "MonoTouch.NUnitLite":
-//				resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (rootName));
-//				goto case "MonoTouch.Dialog-1";
-			case "MonoTouch.Dialog-1":
-				resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (rootName));
-				resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (Driver.ProductAssembly));
-				break;
-			default:
-				if (rootName == Driver.ProductAssembly) {
-					resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (rootName));
-				} else {
-					throw new MonoTouchException (66, "Invalid build registrar assembly: {0}", RootAssembly);
-				}
-				break;
-			}
+			if (rootName != Driver.ProductAssembly)
+				throw new MonoTouchException (66, "Invalid build registrar assembly: {0}", RootAssembly);
+
+			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (rootName));
+			Driver.Log (3, "Loaded {0}", resolvedAssemblies [resolvedAssemblies.Count - 1].MainModule.FileName);
 
 			BuildTarget = BuildTarget.Simulator;
 

@@ -749,27 +749,6 @@ namespace Xamarin.Bundler
 
 				registration_methods.Add (method);
 				link_with.Add (Path.Combine (Driver.ProductSdkDirectory, "usr", "lib", library));
-			
-				if (App.Platform == ApplePlatform.iOS) {
-					foreach (var assembly in Assemblies) {
-						if (!assembly.IsFrameworkAssembly)
-							continue;
-
-						switch (Path.GetFileNameWithoutExtension (assembly.FileName)) {
-						case "MonoTouch.Dialog-1":
-							registration_methods.Add ("xamarin_create_classes_MonoTouch_Dialog_1");
-							link_with.Add (Path.Combine (Driver.ProductSdkDirectory, "usr", "lib", "MonoTouch.Dialog-1.registrar.a"));
-							break;
-							// MonoTouch.NUnitLite doesn't quite work yet, because its generated registrar code uses types
-							// from the generated registrar code for MonoTouch.Dialog-1 (and there is no header file (yet)
-							// for those types).
-	//					case "MonoTouch.NUnitLite":
-	//						registration_methods.Add ("xamarin_create_classes_MonoTouch_NUnitLite");
-	//						link_with.Add (Path.Combine (MTouch.MonoTouchIPhoneSimulatorDirectory, "usr", "lib", "MonoTouch.NUnitLite.registrar.a"));
-	//						break;
-						}
-					}
-				}
 			}
 
 			// The main method.
