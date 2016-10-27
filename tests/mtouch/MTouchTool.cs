@@ -73,6 +73,8 @@ namespace Xamarin
 		public MTouchRegistrar Registrar;
 		public I18N I18N;
 		public bool? Extension;
+		public List<string> AppExtensions = new List<string> ();
+		public List<string> Frameworks = new List<string> ();
 #pragma warning restore 649
 
 		// These are a bit smarter
@@ -116,6 +118,11 @@ namespace Xamarin
 		public int Execute (MTouchAction action)
 		{
 			return Execute (BuildArguments (action));
+		}
+
+		public void AssertExecute (MTouchAction action, string message = null)
+		{
+			NUnit.Framework.Assert.AreEqual (0, Execute (action), message);
 		}
 
 		string BuildArguments (MTouchAction action)
@@ -180,6 +187,12 @@ namespace Xamarin
 
 			if (Extension == true)
 				sb.Append (" --extension");
+
+			foreach (var appext in AppExtensions)
+				sb.Append (" --app-extension ").Append (MTouch.Quote (appext));
+
+			foreach (var framework in Frameworks)
+				sb.Append (" --framework ").Append (MTouch.Quote (framework));
 
 			if (Dlsym.HasValue)
 				sb.Append (" --dlsym:").Append (Dlsym.Value ? "true" : "false");
@@ -406,6 +419,59 @@ namespace Xamarin
 
 			if (hasPlist)
 				File.WriteAllText (Path.Combine (app, "Info.plist"), CreatePlist (profile, appName));
+		}
+
+		public void CreateTemporararyServiceExtension (string code = null)
+		{
+			var testDir = CreateTemporaryDirectory ();
+			var app = Path.Combine (testDir, "testApp.appex");
+			Directory.CreateDirectory (app);
+
+			if (code == null) {
+				code = @"using UserNotifications;
+[Foundation.Register (""NotificationService"")]
+public partial class NotificationService : UNNotificationServiceExtension
+{
+	protected NotificationService (System.IntPtr handle) : base (handle) {}
+}";
+			}
+
+			AppPath = app;
+			Executable = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile);
+
+			File.WriteAllText (Path.Combine (app, "Info.plist"),
+@"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
+<plist version=""1.0"">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>serviceextension</string>
+	<key>CFBundleName</key>
+	<string>serviceextension</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.xamarin.testapp.serviceextension</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>XPC!</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	<key>MinimumOSVersion</key>
+	<string>10.0</string>
+	<key>NSExtension</key>
+	<dict>
+		<key>NSExtensionPointIdentifier</key>
+		<string>com.apple.usernotifications.service</string>
+		<key>NSExtensionPrincipalClass</key>
+		<string>NotificationService</string>
+	</dict>
+</dict>
+</plist>
+");
 		}
 
 		public void CreateTemporaryWatchKitExtension (string code = null)
