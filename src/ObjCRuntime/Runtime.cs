@@ -50,24 +50,20 @@ namespace XamCore.ObjCRuntime {
 
 		internal static DynamicRegistrar Registrar;
 
-		internal unsafe struct RegistrationData {
-			public MTRegistrationMap *map;
-			public int total_count;
-		}
-
 		internal unsafe struct MTRegistrationMap {
-			public MTRegistrationMap *next;
 			public IntPtr assembly;
 			public MTClassMap *map;
+			public IntPtr full_token_references; /* array of MTFullTokenReference */
 			public int assembly_count;
 			public int map_count;
 			public int custom_type_count;
+			public int full_token_reference_count;
 		}
 
-		internal unsafe struct MTClassMap {
-			public sbyte *name;
-			public sbyte *typename;
+		[StructLayout (LayoutKind.Sequential, Pack = 1)]
+		internal struct MTClassMap {
 			public IntPtr handle;
+			public uint type_reference;
 		}
 
 		/* Keep Delegates, Trampolines and InitializationOptions in sync with monotouch-glue.m */
@@ -108,7 +104,7 @@ namespace XamCore.ObjCRuntime {
 			public InitializationFlags Flags;
 			public Delegates *Delegates;
 			public Trampolines *Trampolines;
-			public RegistrationData *RegistrationData;
+			public MTRegistrationMap *RegistrationMap;
 			public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptionMode;
 			public MarshalManagedExceptionMode MarshalManagedExceptionMode;
 
@@ -541,29 +537,38 @@ namespace XamCore.ObjCRuntime {
 			NativeObjectHasDied (native_obj, ObjectWrapper.Convert (managed_obj) as NSObject);
 		}
 
-		static unsafe IntPtr GetMethodDirect (IntPtr typeptr, IntPtr methodptr, int paramCount, IntPtr* paramptr)
+		static unsafe IntPtr GetMethodFromToken (uint token_ref)
 		{
-			var method = FindMethod (typeptr, methodptr, paramCount, paramptr);
+			var method = Class.ResolveTokenReference (token_ref, 0x06000000);
+
+			var mb = method as MethodBase;
+			if (method != null && mb == null)
+				throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_ref:X} to be a method, but it's a {method.GetType ().Name}. Please file a bug report at http://bugzilla.xamarin.com.");
+			
 			if (method != null)
 				return ObjectWrapper.Convert (method);
 
 			return IntPtr.Zero;
 		}
 
-		static unsafe IntPtr GetGenericMethodDirect (IntPtr obj, IntPtr typeptr, IntPtr methodptr, int paramCount, IntPtr* paramptr)
+		static unsafe IntPtr GetGenericMethodFromToken (IntPtr obj, uint token_ref)
 		{
 #if MONOMAC
 			throw new NotSupportedException ();
 #else
-			var method = FindMethod (typeptr, methodptr, paramCount, paramptr);
+			var method = Class.ResolveTokenReference (token_ref, 0x06000000);
 			if (method == null)
 				return IntPtr.Zero;
 
+			var mb = method as MethodBase;
+			if (mb == null)
+				throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_ref:X} to be a method, but it's a {method.GetType ().Name}. Please file a bug report at http://bugzilla.xamarin.com.");
+
 			var nsobj = ObjectWrapper.Convert (obj) as NSObject;
 			if (nsobj == null)
-				throw new NotSupportedException ();
+				throw ErrorHelper.CreateError (8023, $"An instance object is required to construct a closed generic method for the open generic method: {mb.DeclaringType.FullName}.{mb.Name} (token reference: 0x{token_ref:X}). Please file a bug report at http://bugzilla.xamarin.com.");
 
-			return ObjectWrapper.Convert (DynamicRegistrar.FindClosedMethod (nsobj.GetType (), method));
+			return ObjectWrapper.Convert (DynamicRegistrar.FindClosedMethod (nsobj.GetType (), mb));
 #endif
 		}
 

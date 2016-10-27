@@ -1440,4 +1440,22 @@ This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzil
 
 This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
-<h3><
+<h3><a name="MT8019"/>MT8019: Could not find the assembly * in the loaded assemblies.</h3>
+
+This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
+<h3><a name="MT8020"/>MT8020: Could not find the module with MetadataToken * in the assembly *.</h3>
+
+This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
+<h3><a name="MT8021"/>MT8021: Unknown implicit token type: *.</h3>
+
+This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
+<h3><a name="MT8022"/>MT8022: Expected the token reference * to be a *, but it's a *. Please file a bug report at http://bugzilla.xamarin.com.</h3>
+
+This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
+<h3><a name="MT8023"/>MT8023: An instance object is required to construct a closed generic method for the open generic method: * (token reference: *). Please file a bug report at http://bugzilla.xamarin.com.</h3>
+
+This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
