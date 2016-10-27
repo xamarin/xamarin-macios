@@ -235,7 +235,7 @@ namespace Xamarin.Bundler
 			} catch (MonoTouchException mte) {
 				exceptions.Add (mte);
 			} catch (Exception e) {
-				exceptions.Add (new MonoTouchException (9, true, "Error while loading assemblies: {0}", e.Message));
+				exceptions.Add (new MonoTouchException (9, true, e, "Error while loading assemblies: {0}", e.Message));
 			}
 
 			if (App.LinkMode == LinkMode.None)
