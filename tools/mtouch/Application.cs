@@ -665,13 +665,13 @@ namespace Xamarin.Bundler {
 				target32.ArchDirectory = Path.Combine (Cache.Location, "32");
 				target32.TargetDirectory = IsSimulatorBuild ? Path.Combine (AppDirectory, ".monotouch-32") : Path.Combine (target32.ArchDirectory, "Output");
 				target32.AppTargetDirectory = Path.Combine (AppDirectory, ".monotouch-32");
-				target32.Resolver.ArchDirectory = Path.Combine (Driver.PlatformFrameworkDirectory, "..", "..", "32bits");
+				target32.Resolver.ArchDirectory = Driver.Arch32Directory;
 				target32.Abis = SelectAbis (abis, Abi.Arch32Mask);
 
 				target64.ArchDirectory = Path.Combine (Cache.Location, "64");
 				target64.TargetDirectory = IsSimulatorBuild ? Path.Combine (AppDirectory, ".monotouch-64") : Path.Combine (target64.ArchDirectory, "Output");
 				target64.AppTargetDirectory = Path.Combine (AppDirectory, ".monotouch-64");
-				target64.Resolver.ArchDirectory = Path.Combine (Driver.PlatformFrameworkDirectory, "..", "..", "64bits");
+				target64.Resolver.ArchDirectory = Driver.Arch64Directory;
 				target64.Abis = SelectAbis (abis, Abi.Arch64Mask);
 
 				Targets.Add (target64);
