@@ -3681,8 +3681,11 @@ namespace XamCore.Registrar {
 							methods = mthds;
 
 							mthds.WriteLine ($"#include \"{Path.GetFileName (header_path)}\"");
+							mthds.StringBuilder.AppendLine ("extern \"C\" {");
 
 							Specialize (sb);
+
+							mthds.StringBuilder.AppendLine ("} /* extern \"C\" */");
 
 							header = null;	
 							declarations = null;
