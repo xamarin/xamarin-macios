@@ -1987,6 +1987,33 @@ class C {
 		}
 
 		[Test]
+		public void WatchExtensionWithFramework ()
+		{
+			using (var exttool = new MTouchTool ()) {
+				exttool.Profile = Profile.WatchOS;
+				exttool.CreateTemporaryCacheDirectory ();
+				exttool.Verbosity = 5;
+
+				exttool.Extension = true;
+				exttool.CreateTemporaryWatchKitExtension ();
+				exttool.Frameworks.Add (Path.Combine (Configuration.SourceRoot, "tests/test-libraries/.libs/watchos/XTest.framework"));
+				exttool.AssertExecute (MTouchAction.BuildSim, "build extension");
+
+				using (var apptool = new MTouchTool ()) {
+					apptool.Profile = Profile.Unified;
+					apptool.CreateTemporaryCacheDirectory ();
+					apptool.Verbosity = exttool.Verbosity;
+					apptool.CreateTemporaryApp ();
+					apptool.AppExtensions.Add (exttool.AppPath);
+					apptool.AssertExecute (MTouchAction.BuildSim, "build app");
+
+					Assert.IsFalse (Directory.Exists (Path.Combine (apptool.AppPath, "Frameworks", "XTest.framework")), "framework inexistence");
+					Assert.IsTrue (Directory.Exists (Path.Combine (exttool.AppPath, "Frameworks", "XTest.framework")), "extension framework existence");
+				}
+			}
+		}
+
+		[Test]
 		public void OnlyExtensionWithFramework ()
 		{
 			// if an extension references a framework, and the main app does not,
