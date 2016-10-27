@@ -3,7 +3,7 @@ using System.Text;
 
 using Xamarin.Tests;
 
-namespace MTouchTests
+namespace Xamarin
 {
 	class MLaunchTool : Tool
 	{

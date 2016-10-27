@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using MTouchTests;
+using Xamarin;
 using NUnit.Framework;
 
 namespace Xamarin.Profiler
