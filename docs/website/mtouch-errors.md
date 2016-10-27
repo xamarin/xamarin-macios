@@ -253,7 +253,7 @@ This is a informational warning, explaining which Xcode will be used, since none
 
 Every Info.plist must have an executable (using the CFBundleExecutable entry), however an entry should be generated automatically during the build.
 
-This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.
+This usually indicates a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
 
 <h3><a name="MT0064"/>MT0064: Xamarin.iOS only supports embedded frameworks with Unified projects.</h3>
 
@@ -267,11 +267,11 @@ Please update the deployment target in the project's Info.plist to 8.0 or higher
 
 <h3><a name="MT0066"/>MT0066: Invalid build registrar assembly: *</h3>
 
-This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.
+This usually indicates a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
 
 <h3><a name="MT0067"/>MT0067: Invalid registrar: *</h3>
 
-This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.
+This usually indicates a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
 
 <h3><a name="MT0068"/>MT0068: Invalid value for target framework: *.</h3>
 
@@ -285,11 +285,11 @@ An invalid target framework was passed using the --target-framework argument. Pl
 
 <h3><a name="MT0071"/>MT0071: Unknown platform: *. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.</h3>
 
-This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.
+This usually indicates a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
 
 <h3><a name="MT0072"/>MT0072: Extensions are not supported for the platform '*'.</h3>
 
-This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.
+This usually indicates a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
 
 <h3><a name="MT0073"/>MT0073: Xamarin.iOS * does not support a deployment target of * (the minimum is *). Please select a newer deployment target in your project's Info.plist.</h3>
 
@@ -309,11 +309,11 @@ An invalid architecture was specified. Please verify that architecture is valid.
 
 <h3><a name="MT0076"/>MT0075: No architecture specified (using the --abi argument). An architecture is required for * projects.</h3>
 
-This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.
+This usually indicates a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
 
 <h3><a name="MT0077"/>MT0076: WatchOS projects must be extensions.</h3>
 
-This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.
+This usually indicates a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
 
 <h3><a name="MT0078"/>MT0077: Incremental builds are enabled with a deployment target < 8.0 (currently *). This is not supported (the resulting application will not launch on iOS 9), so the deployment target will be set to 8.0.</h3>
 
@@ -340,7 +340,7 @@ The new refcount feature is now mandatory for all projects, and it's thus not po
 <h3><a name="MT0085"/>MT0085: No reference to '*' was found. It will be added automatically.</h3>
 <h3><a name="MT0086"/>MT0086: A target framework (--target-framework) must be specified when building for TVOS or WatchOS.</h3>
 
-This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.
+This usually indicates a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
 
 <h3><a name="MT0087"/>MT0087: Incremental builds (--fastdev) is not supported with the Boehm GC. Incremental builds will be disabled.</h3>
 <h3><a name="MT0091"/>MT0091: This version of Xamarin.iOS requires the * SDK (shipped with Xcode *) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker.</h3>
@@ -424,7 +424,7 @@ $ launchctl list|grep UIKitApplication|awk '{print $3}'|xargs launchctl remove
 
 <h3><a name="MT1013"/>MT1013 Dependency tracking error: no files to compare. Please file a bug report at http://bugzilla.xamarin.com with a test case.</h3>
 
-
+This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test caes.
 
 <h3><a name="MT1014"/>MT1014 Failed to re-use cached version of '*': *.</h3>
 
@@ -898,7 +898,7 @@ Either disable Bitcode support or enable LLVM.
 
 <h3><a name="MT4001"/>MT4001 The main template could not be expanded to `*`.</h3>
 
-An error occurred when generating main.m. Please file a bug at http://bugzilla.xamarin.com.
+An error occurred when generating main.m. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
 <h3><a name="MT4002"/>MT4002 Failed to compile the generated code for P/Invoke methods. Please file a bug report at http://bugzilla.xamarin.com</h3>
 
@@ -994,7 +994,7 @@ This is always a bug in Xamarin.iOS; please file a bug report at [http://bugzill
 
 <h3><a name="MT4120"/>MT4120 The registrar found an unknown field type '*' in field '*.*'. Please file a bug report at http://bugzilla.xamarin.com</h3>
 
-
+This error indicates a bug in Xamarin.iOS. Please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
 <h3><a name="MT4121"/>MT4121 Cannot use GCC/G++ to compile the generated code from the static registrar when using the Accounts framework (the header files provided by Apple used during the compilation require Clang). Either use Clang (--compiler:clang) or the dynamic registrar (--registrar:dynamic).</h3>
 
@@ -1010,7 +1010,7 @@ This is always a bug in Xamarin.iOS; please file a bug report at [http://bugzill
 
 <h3><a name="MT4124"/>MT4124 Invalid * found on '*'. Please file a bug report at http://bugzilla.xamarin.com</h3>
 
-
+This error indicates a bug in Xamarin.iOS. Please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
 <h3><a name="MT4125"/>MT4125 The registrar found an invalid type '*' in signature for method '*': The interface must have a Protocol attribute specifying its wrapper type.</h3>
 
@@ -1091,6 +1091,9 @@ In this case Xamarin.iOS will override `retain`, `release` and `dealloc` on the 
 <h3><a name="MT4142"/>MT4142: Failed to register the type '*'.</h3>
 <h3><a name="MT4143"/>MT4143: The ObjectiveC class '*' could not be registered, it does not seem to derive from any known ObjectiveC class (including NSObject).</h3>
 <h3><a name="MT4144"/>MT4144: Cannot register the method '*' since it does not have an associated trampoline. Please file a bug report at http://bugzilla.xamarin.com.</h3>
+
+This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
 <h3><a name="MT4145"/>MT4145: Invalid enum '*': enums with the [Native] attribute must have a underlying enum type of either 'long' or 'ulong'.</h3>
 <!--- Not sure what happened to MT4146 -->
 <h3><a name="MT4147"/>MT4147: Detected a protocol inheriting from the JSExport protocol while using the dynamic registrar. It is not possible to export protocols to JavaScriptCore dynamically; the static registrar must be used (add '--registrar:static to the additional mtouch arguments in the project's iOS Build options to select the static registrar).</h3>
@@ -1123,7 +1126,7 @@ Please upgrade Xcode.
 
 <h3><a name="MT4163"/>MT4163: Internal error in the registrar (*). Please file a bug report at http://bugzilla.xamarin.com</h3>
 
-This error indicates a bug in Xamarin.iOS. Please file a bug report at http://bugzilla.xamarin.com.
+This error indicates a bug in Xamarin.iOS. Please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
 <h3><a name="MT4164"/>MT4164: Cannot export the property '*' because its selector '*' is an Objective-C keyword. Please use a different name.</h3>
 
@@ -1389,37 +1392,37 @@ This indicates something is wrong in the build process. Please file a bug at [ht
 
 Xamarin.iOS was unable to locate a required method at runtime (to convert a delegate to a block).
 
-This usually indicates a bug in Xamarin.iOS; please file a bug at http://bugzilla.xamarin.com.
+This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
 <h3><a name="MT8012"/>MT8012: Invalid DelegateProxyAttribute for the return value for the method *.*: DelegateType is null. Please file a bug at http://bugzilla.xamarin.com.</h3>
 
 The DelegateProxy attribute for the method in question is invalid.
 
-This usually indicates a bug in Xamarin.iOS; please file a bug at http://bugzilla.xamarin.com.
+This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
 <h3><a name="MT8013"/>MT8013: Invalid DelegateProxyAttribute for the return value for the method *.*: DelegateType ({2}) specifies a type without a 'Handler' field. Please file a bug at http://bugzilla.xamarin.com.</h3>
 
 The DelegateProxy attribute for the method in question is invalid.
 
-This usually indicates a bug in Xamarin.iOS; please file a bug at http://bugzilla.xamarin.com.
+This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
 <h3><a name="MT8014"/>MT8014: Invalid DelegateProxyAttribute for the return value for the method *.*: The DelegateType's ({2}) 'Handler' field is null. Please file a bug at http://bugzilla.xamarin.com.</h3>
 
 The DelegateProxy attribute for the method in question is invalid.
 
-This usually indicates a bug in Xamarin.iOS; please file a bug at http://bugzilla.xamarin.com.
+This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
 <h3><a name="MT8015"/>MT8015: Invalid DelegateProxyAttribute for the return value for the method *.*: The DelegateType's ({2}) 'Handler' field is not a delegate, it's a *. Please file a bug at http://bugzilla.xamarin.com.</h3>
 
 The DelegateProxy attribute for the method in question is invalid.
 
-This usually indicates a bug in Xamarin.iOS; please file a bug at http://bugzilla.xamarin.com.
+This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
 <h3><a name="MT8016"/>MT8016: Unable to convert delegate to block for the return value for the method *.*, because the input isn't a delegate, it's a *. Please file a bug at http://bugzilla.xamarin.com.</h3>
 
 The DelegateProxy attribute for the method in question is invalid.
 
-This usually indicates a bug in Xamarin.iOS; please file a bug at http://bugzilla.xamarin.com.
+This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
 <h3><a name="MT8018"/>MT8018: Internal consistency error. Please file a bug report at http://bugzilla.xamarin.com.</h3>
 
