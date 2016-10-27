@@ -311,6 +311,12 @@ namespace XamCore.ObjCRuntime {
 #endif
 		}
 
+		static void RethrowManagedException (uint exception_gchandle)
+		{
+			var e = (Exception) GCHandle.FromIntPtr ((IntPtr) exception_gchandle).Target;
+			System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture (e).Throw ();
+		}
+
 		static int CreateNSException (IntPtr ns_exception)
 		{
 			Exception ex;
