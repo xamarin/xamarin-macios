@@ -16915,6 +16915,14 @@ namespace XamCore.AppKit {
 		[Static]
 		[Export ("textFieldWithString:")]
 		NSTextField CreateTextField ([NullAllowed] string stringValue);
+
+		[Mac (10, 12, 1)]
+		[Export ("automaticTextCompletionEnabled")]
+		bool AutomaticTextCompletionEnabled { [Bind ("isAutomaticTextCompletionEnabled")] get; set; }
+
+		[Mac (10, 12, 1)]
+		[Export ("allowsCharacterPickerTouchBarItem")]
+		bool AllowsCharacterPickerTouchBarItem { get; set; }
 	}
 
 	[BaseType (typeof (NSTextField))]
@@ -16957,7 +16965,23 @@ namespace XamCore.AppKit {
 		void Changed (NSNotification notification);
 
 		[Export ("controlTextDidBeginEditing:"), EventArgs ("NSNotification")]
-		void EditingBegan (NSNotification notification);	
+		void EditingBegan (NSNotification notification);
+
+		//TODO: Unknown array return type.  How to name?
+		//[Mac (10,12,1)]
+		//[Export ("textField:textView:candidatesForSelectedRange:")]
+		//[return: NullAllowed]
+		//NSObject[] GetCandidates (NSTextField textField, NSTextView textView, NSRange selectedRange);
+
+		////TODO: How to name?
+		//[Mac (10,12,1)]
+		//[Export ("textField:textView:candidates:forSelectedRange:")]
+		//NSTextCheckingResult[] GetResults (NSTextField textField, NSTextView textView, NSTextCheckingResult[] candidates, NSRange selectedRange);
+
+		// @optional -(BOOL)textField:(NSTextField * _Nonnull)textField textView:(NSTextView * _Nonnull)textView shouldSelectCandidateAtIndex:(NSUInteger)index __attribute__((availability(macos, introduced=10_12_1)));
+		[Mac (10,12,1)]
+		[Export ("textField:textView:shouldSelectCandidateAtIndex:"), DelegateName ("NSTextFieldSelectCandidate"), DefaultValue (false)]
+		bool ShouldSelectCandidate (NSTextField textField, NSTextView textView, nuint index);
 	}
 	
 	[BaseType (typeof (NSTextFieldDelegate))]
@@ -17791,6 +17815,35 @@ namespace XamCore.AppKit {
 		[Static]
 		[Export ("stronglyReferencesTextStorage")]
 		bool StronglyReferencesTextStorage { get; }
+
+		[Mac (10, 12, 1)]
+		[Export ("automaticTextCompletionEnabled")]
+		bool AutomaticTextCompletionEnabled { [Bind ("isAutomaticTextCompletionEnabled")] get; set; }
+
+		[Mac (10,12,1)]
+		[Export ("toggleAutomaticTextCompletion:")]
+		void ToggleAutomaticTextCompletion ([NullAllowed] NSObject sender);
+
+		[Mac (10, 12, 1)]
+		[Export ("allowsCharacterPickerTouchBarItem")]
+		bool AllowsCharacterPickerTouchBarItem { get; set; }
+
+		[Mac (10,12,1)]
+		[Export ("updateTouchBarItemIdentifiers")]
+		void UpdateTouchBarItemIdentifiers ();
+
+		[Mac (10,12,1)]
+		[Export ("updateTextTouchBarItems")]
+		void UpdateTextTouchBarItems ();
+
+		[Mac (10,12,1)]
+		[Export ("updateCandidates")]
+		void UpdateCandidates ();
+
+		//TODO: Needs NSCandidateListTouchBarItem bound
+		//[Mac (10, 12, 1)]
+		//[NullAllowed, Export ("candidateListTouchBarItem", ArgumentSemantic.Strong)]
+		//NSCandidateListTouchBarItem GetCandidateListTouchBarItem { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -17911,6 +17964,27 @@ namespace XamCore.AppKit {
 
 		[Export ("undoManagerForTextView:"), DelegateName ("NSTextViewGetUndoManager"), DefaultValue (null)]
 		NSUndoManager GetUndoManager (NSTextView view);
+
+		[Mac (10,12,1)]
+		[Export ("textView:shouldUpdateTouchBarItemIdentifiers:"), DelegateName ("NSTextViewUpdateTouchBarItemIdentifiers"), DefaultValue (null)]
+		string[] ShouldUpdateTouchBarItemIdentifiers (NSTextView textView, string[] identifiers);
+
+		//TODO: Unknown array return type.  How to name?
+		//[Mac (10,12,1)]
+		//[Export ("textView:candidatesForSelectedRange:")]
+		////[Verify (StronglyTypedNSArray)]
+		//[return: NullAllowed]
+		//NSObject[] GetCandidates (NSTextView textView, NSRange selectedRange);
+
+		//TODO: How to name?
+		//[Mac (10,12,1)]
+		//[Export ("textView:candidates:forSelectedRange:")]
+		//NSTextCheckingResult[] GetCandidates (NSTextView textView, NSTextCheckingResult[] candidates, NSRange selectedRange);
+
+		[Mac (10,12,1)]
+		[Export ("textView:shouldSelectCandidateAtIndex:"), DelegateName ("NSTextViewSelectCandidate"), DefaultValue (false)]
+		bool ShouldSelectCandidates (NSTextView textView, nuint index);
+
 	}
 	
 	
@@ -18184,6 +18258,86 @@ namespace XamCore.AppKit {
 
 		[Export ("deviceSize")]
 		CGSize DeviceSize { get; }
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSObject), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTouchBarDelegate)})]
+	interface NSTouchBar : NSCoding
+	{
+
+		[NullAllowed, Export ("customizationIdentifier")]
+		string CustomizationIdentifier { get; set; }
+
+		[Export ("customizationAllowedItemIdentifiers", ArgumentSemantic.Copy)]
+		string[] CustomizationAllowedItemIdentifiers { get; set; }
+
+		[Export ("customizationRequiredItemIdentifiers", ArgumentSemantic.Copy)]
+		string[] CustomizationRequiredItemIdentifiers { get; set; }
+
+		[Export ("defaultItemIdentifiers", ArgumentSemantic.Copy)]
+		string[] DefaultItemIdentifiers { get; set; }
+
+		[Export ("itemIdentifiers", ArgumentSemantic.Copy)]
+		string[] ItemIdentifiers { get; }
+
+		[NullAllowed, Export ("principalItemIdentifier")]
+		string PrincipalItemIdentifier { get; set; }
+
+		[Export ("templateItems", ArgumentSemantic.Copy)]
+		NSSet<NSTouchBarItem> TemplateItems { get; set; }
+
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		[Protocolize]
+		NSTouchBarDelegate Delegate { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; set; }
+
+		[Export ("itemForIdentifier:")]
+		NSTouchBarItem ItemForIdentifier (string identifier);
+
+		[Export ("visible")]
+		bool Visible { [Bind ("isVisible")] get; }
+	}
+
+	interface INSTouchBarDelegate { }
+
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface NSTouchBarDelegate
+	{
+		[Export ("touchBar:makeItemForIdentifier:"), DelegateName ("NSTouchBarMakeItem"), DefaultValue (null)]
+		[return: NullAllowed]
+		NSTouchBarItem MakeItem (NSTouchBar touchBar, string identifier);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSTouchBarItem : NSCoding
+	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
+		[Export ("identifier")]
+		string Identifier { get; }
+
+		[Export ("visibilityPriority")]
+		float VisibilityPriority { get; set; }
+
+		[NullAllowed, Export ("view")]
+		NSView View { get; }
+
+		[NullAllowed, Export ("viewController")]
+		NSViewController ViewController { get; }
+
+		[Export ("customizationLabel")]
+		string CustomizationLabel { get; }
+
+		[Export ("visible")]
+		bool Visible { [Bind ("isVisible")] get; }
 	}
 
 	[BaseType (typeof (NSObject))]
