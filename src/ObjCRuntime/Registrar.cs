@@ -2055,7 +2055,14 @@ namespace XamCore.Registrar {
 
 		protected string GetExportedTypeName (TType type, RegisterAttribute register_attribute)
 		{
-			var name = register_attribute != null && register_attribute.Name != null ? register_attribute.Name : GetTypeFullName (type);
+			string name = null;
+			if (register_attribute != null) {
+				if (register_attribute.SkipRegistration)
+					return GetExportedTypeName (GetBaseType (type));
+				name = register_attribute.Name;
+			}
+			if (name == null)
+				name = GetTypeFullName (type);
 			return SanitizeName (name);
 		}
 

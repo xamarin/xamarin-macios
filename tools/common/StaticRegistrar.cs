@@ -1949,7 +1949,41 @@ namespace XamCore.Registrar {
 
 			if (arrtype != null)
 				return "NSArray *";
-			
+
+			var git = type as GenericInstanceType;
+			if (git != null && IsNSObject (type)) {
+				var sb = new StringBuilder ();
+				var elementType = git.GetElementType ();
+
+				sb.Append (ToObjCParameterType (elementType, descriptiveMethodName, exceptions, inMethod));
+
+				if (sb [sb.Length - 1] != '*') {
+					// I'm not sure if this is possible to hit (I couldn't come up with a test case), but better safe than sorry.
+					AddException (ref exceptions, CreateException (4166, inMethod.Resolve () as MethodDefinition, "Cannot register the method '{0}' because the signature contains a type ({1}) that isn't a reference type.", descriptiveMethodName, GetTypeFullName (elementType)));
+					return "id";
+				}
+
+				sb.Length--; // remove the trailing * of the element type
+
+				sb.Append ('<');
+				for (int i = 0; i < git.GenericArguments.Count; i++) {
+					if (i > 0)
+						sb.Append (", ");
+					var argumentType = git.GenericArguments [i];
+					if (!IsNSObject (argumentType)) {
+						// I believe the generic constraints we have should make this error impossible to hit, but better safe than sorry.
+						AddException (ref exceptions, CreateException (4167, inMethod.Resolve () as MethodDefinition, "Cannot register the method '{0}' because the signature contains a generic type ({1}) with a generic argument type that isn't an NSObject subclass ({2}).", descriptiveMethodName, GetTypeFullName (type), GetTypeFullName (argumentType)));
+						return "id";
+					}
+					sb.Append (ToObjCParameterType (argumentType, descriptiveMethodName, exceptions, inMethod));
+				}
+				sb.Append ('>');
+
+				sb.Append ('*'); // put back the * from the element type
+
+				return sb.ToString ();
+			}
+
 			switch (td.FullName) {
 #if MMP
 			case "System.Drawing.RectangleF": return "NSRect";
