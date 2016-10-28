@@ -1966,7 +1966,7 @@ class Test {
 		{
 			using (var tool = new MTouchTool ()) {
 				tool.Profile = Profile.Unified;
-				tool.CreateTemporaryApp (@"
+				tool.CreateTemporaryApp (code: @"
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
