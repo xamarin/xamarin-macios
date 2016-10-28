@@ -390,9 +390,7 @@ TOOLS64_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
 			--cache-file=../tools64.config.cache \
 			--with-glib=embedded \
 			--enable-minimal=com	\
-			--with-profile2=no \
 			--with-profile4=no \
-			--with-profile4_5=yes \
 			--with-monotouch=yes \
 			--with-xammac=yes \
 			--with-mcs-docs=no \
