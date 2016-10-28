@@ -13298,6 +13298,35 @@ namespace XamCore.AppKit {
 		[Export ("barRectFlipped:")]
 		CGRect BarRectFlipped (bool flipped);
 	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSTouchBarItem))]
+	interface NSSliderTouchBarItem
+	{
+		[Export ("slider", ArgumentSemantic.Strong)]
+		NSSlider Slider { get; set; }
+
+		[NullAllowed, Export ("label")]
+		string Label { get; set; }
+
+		[NullAllowed, Export ("minimumValueAccessory", ArgumentSemantic.Strong)]
+		NSSliderAccessory MinimumValueAccessory { get; set; }
+
+		[NullAllowed, Export ("maximumValueAccessory", ArgumentSemantic.Strong)]
+		NSSliderAccessory MaximumValueAccessory { get; set; }
+
+		[Export ("valueAccessoryWidth")]
+		double ValueAccessoryWidth { get; set; }
+
+		[NullAllowed, Export ("target", ArgumentSemantic.Weak)]
+		NSObject Target { get; set; }
+
+		[NullAllowed, Export ("action", ArgumentSemantic.Assign)]
+		Selector Action { get; set; }
+
+		[Export ("customizationLabel")]
+		string CustomizationLabel { get; set; }
+	}
 	
 	[BaseType (typeof (NSObject))]
 	interface NSSpeechRecognizer {
@@ -13605,6 +13634,20 @@ namespace XamCore.AppKit {
 		[Mac (10,12)]
 		[Export ("preventsAutocorrectionBeforeString:language:")]
 		bool PreventsAutocorrectionBefore (string aString, [NullAllowed] string language);
+
+		[Mac (10, 12, 1)]
+		[Static]
+		[Export ("isAutomaticTextCompletionEnabled")]
+		bool IsAutomaticTextCompletionEnabled { get; }
+
+		[Mac (10,12,1)]
+		[Export ("requestCandidatesForSelectedRange:inString:types:options:inSpellDocumentWithTag:completionHandler:")]
+		nint RequestCandidates (NSRange selectedRange, string stringToCheck, ulong checkingTypes, [NullAllowed] NSDictionary<NSString, NSObject> options, nint tag, [NullAllowed] Action<nint, NSTextCheckingResult []> completionHandler);
+
+		[Mac (10,12,1)]
+		[Export ("deletesAutospaceBetweenString:andString:language:")]
+		bool DeletesAutospace (string precedingString, string followingString, [NullAllowed] string language);
+
 	}
 
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSSoundDelegate) })]
@@ -21659,6 +21702,10 @@ namespace XamCore.AppKit {
 		[Field ("NSSpellCheckerDidChangeAutomaticPeriodSubstitutionNotification")]
 		[Notification]
 		NSString DidChangeAutomaticPeriodSubstitutionNotification { get; }
+
+		[Mac (10, 12, 1)]
+		[Field ("NSSpellCheckerDidChangeAutomaticTextCompletionNotification")]
+		NSString DidChangeAutomaticTextCompletionNotification { get; }
 	}
 
 	partial interface NSTextViewDidChangeSelectionEventArgs {
@@ -24895,6 +24942,14 @@ namespace XamCore.AppKit {
 
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
+
+		[Mac (10, 12, 1)]
+		[Field ("NSSliderAccessoryWidthDefault")]
+		double WidthDefault { get; }
+
+		[Mac (10, 12, 1)]
+		[Field ("NSSliderAccessoryWidthWide")]
+		double WidthWide { get; }
 	}
 
 	[Mac (10,12)]
