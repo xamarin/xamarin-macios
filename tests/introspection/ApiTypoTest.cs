@@ -134,6 +134,7 @@ namespace Introspection
 			"dlerror",
 			"Dlfcn",
 			"dlopen",
+			"Dlsym",
 			"dlsym",
 			"Dng",
 			"Dns",
