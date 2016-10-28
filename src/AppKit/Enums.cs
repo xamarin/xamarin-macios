@@ -2707,4 +2707,23 @@ namespace XamCore.AppKit {
 		Direct = (1 << (int)NSTouchType.Direct),
 		Indirect = (1 << (int)NSTouchType.Indirect)
 	}
+
+	[Mac (10,12,1)]
+	[Native]
+	public enum NSScrubberMode : nint
+	{
+		Fixed = 0,
+		Free
+	}
+
+	[Mac (10,12,1)]
+	[Native]
+	public enum NSScrubberAlignment : nint
+	{
+		None = 0,
+		Leading,
+		Trailing,
+		Center
+	}
+
 }

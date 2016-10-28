@@ -10829,6 +10829,10 @@ namespace XamCore.AppKit {
 
 		[Export ("velocityInView:")]
 		CGPoint VelocityInView (NSView view);
+
+		[Mac (10, 12, 1)]
+		[Export ("numberOfTouchesRequired")]
+		nint NumberOfTouchesRequired { get; set; }
 	}
 
 	[Mac (10,10)]
@@ -10845,6 +10849,10 @@ namespace XamCore.AppKit {
 
 		[Export ("allowableMovement")]
 		nfloat AllowableMovement { get; set; }
+
+		[Mac (10, 12, 1)]
+		[Export ("numberOfTouchesRequired")]
+		nint NumberOfTouchesRequired { get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -24225,7 +24233,6 @@ namespace XamCore.AppKit {
 		bool ValidateMenuItem (NSMenuItem menuItem);
 	}
 
-#if !XAMCORE_2_0
 	public interface INSCandidateListTouchBarItemDelegate {}
 
 	[Mac (10,12,1)]
@@ -24381,5 +24388,338 @@ namespace XamCore.AppKit {
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 	}
-#endif
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSTouchBarItem))]
+	interface NSPopoverTouchBarItem
+	{
+		[Export ("popoverTouchBar", ArgumentSemantic.Strong)]
+		NSTouchBar PopoverTouchBar { get; set; }
+
+		[Export ("customizationLabel")]
+		string CustomizationLabel { get; set; }
+
+		[Export ("collapsedRepresentation", ArgumentSemantic.Strong)]
+		NSView CollapsedRepresentation { get; set; }
+
+		[NullAllowed, Export ("collapsedRepresentationImage", ArgumentSemantic.Strong)]
+		NSImage CollapsedRepresentationImage { get; set; }
+
+		[Export ("collapsedRepresentationLabel", ArgumentSemantic.Strong)]
+		string CollapsedRepresentationLabel { get; set; }
+
+		[NullAllowed, Export ("pressAndHoldTouchBar", ArgumentSemantic.Strong)]
+		NSTouchBar PressAndHoldTouchBar { get; set; }
+
+		[Export ("showsCloseButton")]
+		bool ShowsCloseButton { get; set; }
+
+		[Export ("showPopover:")]
+		void ShowPopover ([NullAllowed] NSObject sender);
+
+		[Export ("dismissPopover:")]
+		void DismissPopover ([NullAllowed] NSObject sender);
+
+		[Export ("makeStandardActivatePopoverGestureRecognizer")]
+		NSGestureRecognizer MakeStandardActivatePopoverGestureRecognizer ();
+	}
+	
+	interface INSScrubberDataSource {}
+	interface INSScrubberDelegate {}
+
+	[Protocol]
+	interface NSScrubberDataSource
+	{
+		[Mac (10,12,1)]
+		[Abstract]
+		[Export ("numberOfItemsForScrubber:")]
+		nint NumberOfItems (NSScrubber scrubber);
+
+		[Mac (10,12,1)]
+		[Abstract]
+		[Export ("scrubber:viewForItemAtIndex:")]
+		NSScrubberItemView GetViewForItem (NSScrubber scrubber, nint index);
+	}
+
+	[Protocol]
+	interface NSScrubberDelegate
+	{
+		[Mac (10,12,1)]
+		[Export ("scrubber:didSelectItemAtIndex:")]
+		void DidSelectItem (NSScrubber scrubber, nint selectedIndex);
+
+		[Mac (10,12,1)]
+		[Export ("scrubber:didHighlightItemAtIndex:")]
+		void DidHighlightItem (NSScrubber scrubber, nint highlightedIndex);
+
+		// Review - right?
+		[Mac (10,12,1)]
+		[Export ("scrubber:didChangeVisibleRange:")]
+		void DidChange (NSScrubber scrubber, NSRange visibleRange);
+
+		[Mac (10,12,1)]
+		[Export ("didBeginInteractingWithScrubber:")]
+		void DidBeginInteracting (NSScrubber scrubber);
+
+		[Mac (10,12,1)]
+		[Export ("didFinishInteractingWithScrubber:")]
+		void DidFinishInteracting (NSScrubber scrubber);
+
+		[Mac (10,12,1)]
+		[Export ("didCancelInteractingWithScrubber:")]
+		void DidCancelInteracting (NSScrubber scrubber);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSObject))]
+	interface NSScrubberSelectionStyle : INSCoding
+	{
+		[Static]
+		[Export ("outlineOverlayStyle", ArgumentSemantic.Strong)]
+		NSScrubberSelectionStyle OutlineOverlayStyle { get; }
+
+		[Static]
+		[Export ("roundedBackgroundStyle", ArgumentSemantic.Strong)]
+		NSScrubberSelectionStyle RoundedBackgroundStyle { get; }
+
+		[Export ("makeSelectionView")]
+		NSScrubberSelectionView MakeSelectionView ();
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSView))]
+	interface NSScrubber
+	{
+		[NullAllowed, Export ("dataSource", ArgumentSemantic.Weak)]
+		INSScrubberDataSource DataSource { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		INSScrubberDelegate Delegate { get; set; }
+
+		[Export ("scrubberLayout", ArgumentSemantic.Strong)]
+		NSScrubberLayout ScrubberLayout { get; set; }
+
+		[Export ("numberOfItems")]
+		nint NumberOfItems { get; }
+
+		[Export ("highlightedIndex")]
+		nint HighlightedIndex { get; }
+
+		[Export ("selectedIndex")]
+		nint SelectedIndex { get; set; }
+
+		[Export ("mode", ArgumentSemantic.Assign)]
+		NSScrubberMode Mode { get; set; }
+
+		[Export ("itemAlignment", ArgumentSemantic.Assign)]
+		NSScrubberAlignment ItemAlignment { get; set; }
+
+		[Export ("continuous")]
+		bool Continuous { [Bind ("isContinuous")] get; set; }
+
+		[Export ("floatsSelectionViews")]
+		bool FloatsSelectionViews { get; set; }
+
+		[NullAllowed, Export ("selectionBackgroundStyle", ArgumentSemantic.Strong)]
+		NSScrubberSelectionStyle SelectionBackgroundStyle { get; set; }
+
+		[NullAllowed, Export ("selectionOverlayStyle", ArgumentSemantic.Strong)]
+		NSScrubberSelectionStyle SelectionOverlayStyle { get; set; }
+
+		[Export ("showsArrowButtons")]
+		bool ShowsArrowButtons { get; set; }
+
+		[Export ("showsAdditionalContentIndicators")]
+		bool ShowsAdditionalContentIndicators { get; set; }
+
+		[NullAllowed, Export ("backgroundColor", ArgumentSemantic.Copy)]
+		NSColor BackgroundColor { get; set; }
+
+		[NullAllowed, Export ("backgroundView", ArgumentSemantic.Strong)]
+		NSView BackgroundView { get; set; }
+
+		[Export ("initWithFrame:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (CGRect frameRect);
+
+		[Export ("reloadData")]
+		void ReloadData ();
+
+		[Export ("performSequentialBatchUpdates:")]
+		void PerformSequentialBatchUpdates (Action updateBlock);
+
+		[Export ("insertItemsAtIndexes:")]
+		void InsertItemsAtIndexes (NSIndexSet indexes);
+
+		[Export ("removeItemsAtIndexes:")]
+		void RemoveItemsAtIndexes (NSIndexSet indexes);
+
+		[Export ("reloadItemsAtIndexes:")]
+		void ReloadItemsAtIndexes (NSIndexSet indexes);
+
+		[Export ("moveItemAtIndex:toIndex:")]
+		void MoveItemAtIndex (nint oldIndex, nint newIndex);
+
+		[Export ("scrollItemAtIndex:toAlignment:")]
+		void ScrollItemAtIndex (nint index, NSScrubberAlignment alignment);
+
+		[Export ("itemViewForItemAtIndex:")]
+		NSScrubberItemView GetItemViewForItemAtIndex (nint index);
+
+		[Export ("registerClass:forItemIdentifier:")]
+		void RegisterClass ([NullAllowed] Class itemViewClass, string itemIdentifier);
+
+		[Export ("registerNib:forItemIdentifier:")]
+		void RegisterNib ([NullAllowed] NSNib nib, string itemIdentifier);
+
+		[Export ("makeItemWithIdentifier:owner:")]
+		NSScrubberItemView MakeItemWithIdentifier (string itemIdentifier, [NullAllowed] NSObject owner);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSView))]
+	interface NSScrubberArrangedView
+	{
+		[Export ("selected")]
+		bool Selected { [Bind ("isSelected")] get; set; }
+
+		[Export ("highlighted")]
+		bool Highlighted { [Bind ("isHighlighted")] get; set; }
+
+		[Export ("applyLayoutAttributes:")]
+		//[RequiresSuper] - Review - Sharpie put here?
+		void ApplyLayoutAttributes (NSScrubberLayoutAttributes layoutAttributes);
+	}
+
+	// These are empty but types used in other bindings
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSScrubberArrangedView))]
+	interface NSScrubberItemView
+	{
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSScrubberArrangedView))]
+	interface NSScrubberSelectionView
+	{
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSScrubberItemView))]
+	interface NSScrubberTextItemView
+	{
+		[Export ("textField", ArgumentSemantic.Strong)]
+		NSTextField TextField { get; }
+
+		[Export ("title")]
+		string Title { get; set; }
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSScrubberItemView))]
+	interface NSScrubberImageItemView
+	{
+		[Export ("imageView", ArgumentSemantic.Strong)]
+		NSImageView ImageView { get; }
+
+		[Export ("image", ArgumentSemantic.Copy)]
+		NSImage Image { get; set; }
+
+		[Export ("imageAlignment", ArgumentSemantic.Assign)]
+		NSImageAlignment ImageAlignment { get; set; }
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSObject))]
+	interface NSScrubberLayoutAttributes : INSCopying
+	{
+		[Export ("itemIndex")]
+		nint ItemIndex { get; set; }
+
+		[Export ("frame", ArgumentSemantic.Assign)]
+		CGRect Frame { get; set; }
+
+		[Export ("alpha")]
+		nfloat Alpha { get; set; }
+
+		[Static]
+		[Export ("layoutAttributesForItemAtIndex:")]
+		NSScrubberLayoutAttributes CreateLayoutAttributesForItemAtIndex (nint index);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSObject))]
+	interface NSScrubberLayout : INSCoding
+	{
+		[Static]
+		[Export ("layoutAttributesClass")]
+		Class LayoutAttributesClass { get; }
+
+		[NullAllowed, Export ("scrubber", ArgumentSemantic.Weak)]
+		NSScrubber Scrubber { get; }
+
+		[Export ("visibleRect")]
+		CGRect VisibleRect { get; }
+
+		[Export ("invalidateLayout")]
+		//[RequiresSuper] - Review - Sharpie put here?
+		void InvalidateLayout ();
+
+		[Export ("prepareLayout")]
+		void PrepareLayout ();
+
+		[Export ("scrubberContentSize")]
+		CGSize ScrubberContentSize { get; }
+
+		[Export ("layoutAttributesForItemAtIndex:")]
+		NSScrubberLayoutAttributes LayoutAttributesForItemAtIndex (nint index);
+
+		[Export ("layoutAttributesForItemsInRect:")]
+		NSSet<NSScrubberLayoutAttributes> LayoutAttributesForItemsInRect (CGRect rect);
+
+		[Export ("shouldInvalidateLayoutForSelectionChange")]
+		bool ShouldInvalidateLayoutForSelectionChange ();
+
+		[Export ("shouldInvalidateLayoutForHighlightChange")]
+		bool ShouldInvalidateLayoutForHighlightChange ();
+
+		[Export ("shouldInvalidateLayoutForChangeFromVisibleRect:toVisibleRect:")]
+		bool ShouldInvalidateLayoutForChangeFromVisibleRect (CGRect fromVisibleRect, CGRect toVisibleRect);
+
+		[Export ("automaticallyMirrorsInRightToLeftLayout")]
+		bool AutomaticallyMirrorsInRightToLeftLayout { get; }
+	}
+
+	[Protocol]
+	interface NSScrubberFlowLayoutDelegate : NSScrubberDelegate
+	{
+		[Export ("scrubber:layout:sizeForItemAtIndex:")]
+		CGSize Layout (NSScrubber scrubber, NSScrubberFlowLayout layout, nint itemIndex);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSScrubberLayout))]
+	interface NSScrubberFlowLayout
+	{
+		[Export ("itemSpacing")]
+		nfloat ItemSpacing { get; set; }
+
+		[Export ("itemSize", ArgumentSemantic.Assign)]
+		CGSize ItemSize { get; set; }
+
+		[Export ("invalidateLayoutForItemsAtIndexes:")]
+		void InvalidateLayoutForItemsAtIndexes (NSIndexSet invalidItemIndexes);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSScrubberLayout))]
+	interface NSScrubberProportionalLayout
+	{
+		[Export ("numberOfVisibleItems")]
+		nint NumberOfVisibleItems { get; set; }
+
+		[Export ("initWithNumberOfVisibleItems:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (nint numberOfVisibleItems);
+	}
 }
