@@ -1134,6 +1134,10 @@ The selector for the property in question is not a valid Objective-C identifer.
 
 Please use a valid Objective-C identifier as selectors.
 
+<h3><a name="MT4165"/>MT4165: The registrar couldn't find the type 'System.Void' in any of the referenced assemblies.</h3>
+
+This error most likely indicates a bug in Xamarin.iOS. Please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
 <!--
  MT5xxx GCC and toolchain
   MT51xx compilation

@@ -850,7 +850,7 @@ namespace XamCore.Registrar {
 					return type;
 			}
 
-			throw new Exception ("Couldn't find System.Void");
+			throw ErrorHelper.CreateError (4165, "The registrar couldn't find the type 'System.Void' in any of the referenced assemblies.");
 		}
 
 		protected override bool IsVirtual (MethodDefinition method)
