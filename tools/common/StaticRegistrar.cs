@@ -292,8 +292,8 @@ namespace XamCore.Registrar {
 			if (!TypeMatch (candidate.ReturnType, method.ReturnType))
 				return false;
 
-			if (!candidate.HasParameters || !method.HasParameters)
-				return false;
+			if (!candidate.HasParameters)
+				return !method.HasParameters;
 
 			if (candidate.Parameters.Count != method.Parameters.Count)
 				return false;
