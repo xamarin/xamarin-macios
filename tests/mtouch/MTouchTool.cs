@@ -17,7 +17,7 @@ namespace MTouchTests
 		LaunchSim,
 	}
 
-	enum MTouchLinker
+	public enum MTouchLinker
 	{
 		Unspecified,
 		LinkAll,
@@ -25,7 +25,7 @@ namespace MTouchTests
 		DontLink,
 	}
 
-	enum MTouchRegistrar
+	public enum MTouchRegistrar
 	{
 		Unspecified,
 		Dynamic,
@@ -250,7 +250,7 @@ namespace MTouchTests
 			case MTouchRegistrar.Unspecified:
 				break;
 			case MTouchRegistrar.Dynamic:
-				sb.Append (" --registrar:static");
+				sb.Append (" --registrar:dynamic");
 				break;
 			case MTouchRegistrar.Static:
 				sb.Append (" --registrar:static");
