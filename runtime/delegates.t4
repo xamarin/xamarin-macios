@@ -22,6 +22,10 @@
 			ExceptionHandling = false,
 		},
 
+		new XDelegate ("void", "void", "xamarin_rethrow_managed_exception",
+			"guint32", "uint", "original_exception_gchandle"
+		) { WrappedManagedFunction = "RethrowManagedException" },
+
 		new XDelegate ("int", "int", "xamarin_create_ns_exception",
 			"NSException *", "IntPtr", "exc"
 		) { WrappedManagedFunction = "CreateNSException" },

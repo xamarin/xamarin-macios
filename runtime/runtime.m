@@ -54,11 +54,6 @@ bool xamarin_init_mono_debug = true;
 #else
 bool xamarin_init_mono_debug = false;
 #endif
-#if DEBUG && (defined (__i386__) || defined (__x86_64__))
-bool xamarin_compact_seq_points = false;
-#else
-bool xamarin_compact_seq_points = true;
-#endif
 int xamarin_log_level = 0;
 const char *xamarin_executable_name = NULL;
 #if MONOMAC
@@ -2073,7 +2068,32 @@ xamarin_process_managed_exception (MonoObject *exception)
 	case MarshalManagedExceptionModeUnwindNativeCode:
 		if (xamarin_is_gc_coop)
 			xamarin_assertion_message ("Cannot unwind native frames for managed exceptions when the GC is in cooperative mode.");
+
+		//
+		// We want to maintain the original stack trace of the exception, but unfortunately
+		// calling mono_raise_exception directly with the original exception will overwrite
+		// the original stack trace.
+		//
+		// The good news is that the managed ExceptionDispatchInfo class is able to capture
+		// a stack trace for an exception and show it later.
+		//
+		// The xamarin_rethrow_managed_exception method will use ExceptionDispatchInfo
+		// to throw an exception that contains the original stack trace.
+		//
+
+		handle = mono_gchandle_new (exception, false);
+		xamarin_rethrow_managed_exception (handle, &exception_gchandle);
+		mono_gchandle_free (handle);
+
+		if (exception_gchandle == 0) {
+			PRINT (PRODUCT ": Did not get a rethrow exception, will throw the original exception. The original stack trace will be lost.");
+		} else {
+			exception = mono_gchandle_get_target (exception_gchandle);
+			mono_gchandle_free (exception_gchandle);
+		}
+
 		mono_raise_exception ((MonoException *) exception);
+
 		break;
 	case MarshalManagedExceptionModeThrowObjectiveCException: {
 		int handle = mono_gchandle_new (exception, false);

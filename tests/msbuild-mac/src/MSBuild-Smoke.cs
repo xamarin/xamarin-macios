@@ -171,5 +171,23 @@ namespace Xamarin.MMP.Tests
 				}
 			});
 		}
+
+		[Test]
+		public void BuildingSameProject_TwoTimes_ShallNotInvokeMMPTwoTimes ()
+		{
+			RunMSBuildTest (tmpDir =>
+			{
+				foreach (var project in new string[] { "UnifiedExample.csproj", "XM45Example.csproj" })
+				{
+					var config = new TI.UnifiedTestConfig (tmpDir) { ProjectName = project };
+					string projectPath = TI.GenerateEXEProject (config);
+					string buildOutput = TI.BuildProject (projectPath, isUnified: true, diagnosticMSBuild: true);
+					Assert.IsTrue (buildOutput.Contains ("Target _CompileToNative needs to be built"));
+
+					string secondBuildOutput = TI.BuildProject (projectPath, isUnified: true, diagnosticMSBuild: true);
+					Assert.IsFalse (secondBuildOutput.Contains ("Target _CompileToNative needs to be built"));
+				}
+			});
+		}
 	}
 }

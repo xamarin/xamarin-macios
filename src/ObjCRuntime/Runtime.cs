@@ -311,6 +311,12 @@ namespace XamCore.ObjCRuntime {
 #endif
 		}
 
+		static void RethrowManagedException (uint exception_gchandle)
+		{
+			var e = (Exception) GCHandle.FromIntPtr ((IntPtr) exception_gchandle).Target;
+			System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture (e).Throw ();
+		}
+
 		static int CreateNSException (IntPtr ns_exception)
 		{
 			Exception ex;
@@ -1278,8 +1284,21 @@ namespace XamCore.ObjCRuntime {
 			ConnectMethod (method.DeclaringType, method, selector);
 		}
 
+#if MONOMAC
+		[DllImport (Constants.FoundationLibrary, EntryPoint = "NSLog")]
+		extern static void NSLog_impl (IntPtr format, [MarshalAs (UnmanagedType.LPStr)] string s);
+		static void NSLog (IntPtr format, string s)
+		{
+			if (PlatformHelper.CheckSystemVersion (10, 12)) {
+				Console.WriteLine (s);
+			} else {
+				NSLog_impl (format, s);
+			}
+		}
+#else
 		[DllImport (Constants.FoundationLibrary)]
 		extern static void NSLog (IntPtr format, [MarshalAs (UnmanagedType.LPStr)] string s);
+#endif
 
 		[DllImport (Constants.FoundationLibrary, EntryPoint = "NSLog")]
 		extern static void NSLog_arm64 (IntPtr format, IntPtr p2, IntPtr p3, IntPtr p4, IntPtr p5, IntPtr p6, IntPtr p7, IntPtr p8, [MarshalAs (UnmanagedType.LPStr)] string s);
