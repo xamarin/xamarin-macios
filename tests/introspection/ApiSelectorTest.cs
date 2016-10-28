@@ -96,6 +96,17 @@ namespace Introspection {
 			// AVAudioChannelLayout and AVAudioFormat started conforming to NSSecureCoding in OSX 10.11 and iOS 9
 			case "AVAudioChannelLayout":
 			case "AVAudioFormat":
+			// NSSecureCoding added in iOS 10 / macOS 10.12
+			case "CNContactFetchRequest":
+			case "GKEntity":
+			case "GKPolygonObstacle":
+			case "GKComponent":
+			case "GKGraphNode":
+			case "WKPreferences":
+			case "WKUserContentController":
+			case "WKProcessPool":
+			case "WKWebViewConfiguration":
+			case "WKWebsiteDataStore":
 				switch (selectorName) {
 				case "encodeWithCoder:":
 					return true;
@@ -103,8 +114,38 @@ namespace Introspection {
 				break;
 			// SKTransition started conforming to NSCopying in OSX 10.11 and iOS 9
 			case "SKTransition":
+			// iOS 10 beta 2
+			case "GKBehavior":
+			case "MDLTransform":
 				switch (selectorName) {
 				case "copyWithZone:":
+					return true;
+				}
+				break;
+			case "MDLMaterialProperty":
+				switch (selectorName) {
+				case "copyWithZone:":
+					// not working before iOS 10, macOS 10.12
+					return !TestRuntime.CheckXcodeVersion (8, 0);
+				}
+				break;
+			// Xcode 8 beta 2
+			case "GKGraph":
+			case "GKAgent":
+			case "GKAgent2D":
+			case "NEFlowMetaData":
+			case "NWEndpoint":
+				switch (selectorName) {
+				case "copyWithZone:":
+				case "encodeWithCoder:":
+					return true;
+				}
+				break;
+			// now conforms to MDLName
+			case "MTKMeshBuffer":
+				switch (selectorName) {
+				case "name":
+				case "setName:":
 					return true;
 				}
 				break;
@@ -115,6 +156,7 @@ namespace Introspection {
 			case "GKPath":
 				switch (selectorName) {
 				case "initWithPoints:count:radius:cyclical:":
+				case "initWithFloat3Points:count:radius:cyclical:":
 					return true;
 				}
 				break;
@@ -124,9 +166,47 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "MDLMesh":
+				switch (selectorName) {
+				case "initCapsuleWithExtent:cylinderSegments:hemisphereSegments:inwardNormals:geometryType:allocator:":
+				case "initConeWithExtent:segments:inwardNormals:cap:geometryType:allocator:":
+				case "initHemisphereWithExtent:segments:inwardNormals:cap:geometryType:allocator:":
+				case "initMeshBySubdividingMesh:submeshIndex:subdivisionLevels:allocator:":
+				case "initSphereWithExtent:segments:inwardNormals:geometryType:allocator:":
+					return true;
+				}
+				break;
 			case "NSImage":
 				switch (selectorName) {
 				case "initByReferencingFile:":
+					return true;
+				}
+				break;
+			// Conform to SKWarpable
+			case "SKEffectNode":
+			case "SKSpriteNode":
+				switch (selectorName) {
+				case "setSubdivisionLevels:":
+				case "setWarpGeometry:":
+					return true;
+				}
+				break;
+			case "SKUniform":
+				switch (selectorName) {
+				// New selectors
+				case "initWithName:vectorFloat2:":
+				case "initWithName:vectorFloat3:":
+				case "initWithName:vectorFloat4:":
+				case "initWithName:matrixFloat2x2:":
+				case "initWithName:matrixFloat3x3:":
+				case "initWithName:matrixFloat4x4:":
+				// Old selectors
+				case "initWithName:floatVector2:":
+				case "initWithName:floatVector3:":
+				case "initWithName:floatVector4:":
+				case "initWithName:floatMatrix2:":
+				case "initWithName:floatMatrix3:":
+				case "initWithName:floatMatrix4:":
 					return true;
 				}
 				break;
@@ -138,6 +218,96 @@ namespace Introspection {
 				case "initWithVideoURL:":
 				case "videoNodeWithFileNamed:":
 				case "videoNodeWithURL:":
+					return true;
+				}
+				break;
+			case "SKWarpGeometryGrid":
+				switch (selectorName) {
+				case "initWithColumns:rows:sourcePositions:destPositions:":
+					return true;
+				}
+				break;
+			case "INPriceRange":
+				switch (selectorName) {
+				case "initWithMaximumPrice:currencyCode:":
+				case "initWithMinimumPrice:currencyCode:":
+					return true;
+				}
+				break;
+			case "CKUserIdentityLookupInfo":
+				switch (selectorName) {
+				case "initWithEmailAddress:":
+				case "initWithPhoneNumber:":
+				case "lookupInfosWithRecordIDs:": // FAILs on watch yet we do have a unittest for it
+				case "lookupInfosWithEmails:": // FAILs on watch yet we do have a unittest for it
+				case "lookupInfosWithPhoneNumbers:": // FAILs on watch yet we do have a unittest for it
+					return true;
+				}
+				break;
+			case "AVPlayerItemVideoOutput":
+				switch (selectorName) {
+				case "initWithOutputSettings:":
+				case "initWithPixelBufferAttributes:":
+					return true;
+				}
+				break;
+			case "MTLBufferLayoutDescriptor": // We do have unit tests under monotouch-tests for this properties
+				switch (selectorName){
+				case "stepFunction":
+				case "setStepFunction:":
+				case "stepRate":
+				case "setStepRate:":
+				case "stride":
+				case "setStride:":
+					return true;
+				}
+				break;
+			case "MTLFunctionConstant": // we do have unit tests under monotouch-tests for this properties
+				switch (selectorName){
+				case "name":
+				case "type":
+				case "index":
+				case "required":
+					return true;
+				}
+				break;
+			case "MTLStageInputOutputDescriptor": // we do have unit tests under monotouch-tests for this properties
+				switch (selectorName){
+				case "attributes":
+				case "indexBufferIndex":
+				case "setIndexBufferIndex:":
+				case "indexType":
+				case "setIndexType:":
+				case "layouts":
+					return true;
+				}
+				break;
+			case "MTLAttributeDescriptor": // we do have unit tests under monotouch-tests for this properties
+				switch (selectorName){
+				case "bufferIndex":
+				case "setBufferIndex:":
+				case "format":
+				case "setFormat:":
+				case "offset":
+				case "setOffset:":
+					return true;
+				}
+				break;
+			case "MTLAttribute": // we do have unit tests under monotouch-tests for this properties
+				switch (selectorName){
+				case "isActive":
+				case "attributeIndex":
+				case "attributeType":
+				case "isPatchControlPointData":
+				case "isPatchData":
+				case "name":
+				case "isDepthTexture":
+					return true;
+				}
+				break;
+			case "MTLArgument": // we do have unit tests under monotouch-tests for this properties
+				switch (selectorName){
+				case "isDepthTexture":
 					return true;
 				}
 				break;
@@ -243,6 +413,7 @@ namespace Introspection {
 		public void InstanceMethods ()
 		{
 			Errors = 0;
+			ErrorData.Clear ();
 			int n = 0;
 			
 			foreach (Type t in Assembly.GetTypes ()) {
@@ -265,7 +436,7 @@ namespace Introspection {
 					Process (class_ptr, t, m, ref n);
 				}
 			}
-			Assert.AreEqual (0, Errors, "{0} errors found in {1} instance selector validated", Errors, n);
+			Assert.AreEqual (0, Errors, "{0} errors found in {1} instance selector validated{2}", Errors, n, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
 		}
 
 		void Process (IntPtr class_ptr, Type t, MethodBase m, ref int n)
@@ -325,6 +496,7 @@ namespace Introspection {
 			case "initWithFileURL:options:documentAttributes:error:":
 			// AVAudioRecorder
 			case "initWithURL:settings:error:":
+			case "initWithURL:format:error:":
 			// NSUrlProtectionSpace
 			case "initWithHost:port:protocol:realm:authenticationMethod:":
 			case "initWithProxyHost:port:type:realm:authenticationMethod:":
@@ -364,6 +536,7 @@ namespace Introspection {
 		public void StaticMethods ()
 		{
 			Errors = 0;
+			ErrorData.Clear ();
 			int n = 0;
 			
 			IntPtr responds_handle = Selector.GetHandle ("respondsToSelector:");
@@ -400,7 +573,7 @@ namespace Introspection {
 					}
 				}
 			}
-			Assert.AreEqual (0, Errors, "{0} errors found in {1} static selector validated", Errors, n);
+			Assert.AreEqual (0, Errors, "{0} errors found in {1} static selector validated{2}", Errors, n, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
 		}
 	}
 }

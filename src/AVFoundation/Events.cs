@@ -28,6 +28,8 @@
 //
 //
 
+#if !WATCH
+
 using System;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
@@ -393,3 +395,5 @@ namespace XamCore.AVFoundation {
 	}
 #endif
 }
+
+#endif

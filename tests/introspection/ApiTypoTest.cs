@@ -75,11 +75,14 @@ namespace Introspection
 			"Arraycollation",
 			"Asin",
 			"Atan",
+			"Ats",	// App Transport Security
 			"Attrib",
 			"Attributevalue",
 			"Audiofile",
+			"Automapping",
 			"Automounted",
 			"Autoredirect",
+			"Aliasable",
 			"Backface",
 			"Bary",
 			"Batc",
@@ -89,6 +92,7 @@ namespace Introspection
 			"Blinn",
 			"Blit",
 			"Bokeh",
+			"Bggr", // acronym for Blue, Green, Green, Red 
 			"Bsln",
 			"Bssid",
 			"Bzip",
@@ -96,12 +100,14 @@ namespace Introspection
 			"Caf", // acronym: Core Audio Format
 			"Cancellable",
 			"Cavlc",
+			"Cda", // acronym: Clinical Document Architecture
 			"Celp", // MPEG4ObjectID
 			"Characterteristic",
 			"Chromaticities",
 			"Ciff",
 			"Cinepak",
 			"Clearcoat",
+			"Cnn", // Convolutional Neural Network
 			"Colos",
 			"Commerical",
 			"Composable",
@@ -119,6 +125,7 @@ namespace Introspection
 			"Deinterlace",
 			"Descendents",
 			"Descrete",
+			"Dhe", // Diffie–Hellman key exchange
 			"Differental",
 			"Diffie",
 			"Directionfor",
@@ -127,6 +134,7 @@ namespace Introspection
 			"dlerror",
 			"Dlfcn",
 			"dlopen",
+			"Dlsym",
 			"dlsym",
 			"Dng",
 			"Dns",
@@ -138,15 +146,21 @@ namespace Introspection
 			"Dpad", // Directional pad (D-pad)
 			"Droste",
 			"Dtls",
+			"Dtmf", // DTMF
 			"dy",
 			"Ebu",
-			"Ecc",
+			"Ecc",   // Elliptic Curve Cryptography
+			"Ecdh",  // Elliptic Curve Diffie–Hellman
+			"Ecdsa", // Elliptic Curve Digital Signature Algorithm
+			"Ecies", // Elliptic Curve Integrated Encryption Scheme
 			"Eof", // acronym End-Of-File
 			"Emagic",
 			"Emaili",
 			"Eppc",
 			"Exhange",
 			"Exp",
+			"Felica", // Japanese contactless RFID smart card system
+			"Femtowatts",
 			"Flipside",
 			"Formati",
 			"Fov",
@@ -156,16 +170,21 @@ namespace Introspection
 			"Ftps",
 			"Func",
 			"Gadu",
+			"Gbrg",	// acronym for Green-Blue-Reg-Green
 			"Geocoder",
+			"Gigapascals",
 			"Gpp",
+			"Grbg", // acronym for Green-Red-Blue-Green
 			"Hdmi",
 			"Hdr",
+			"Hectopascals",
 			"Hevc", // CMVideoCodecType / High Efficiency Video Coding
 			"Hfp",
 			"Hipass",
 			"Hls",
 			"Hrtf", // acronym used in AUSpatializationAlgorithm
 			"Hvxc", // MPEG4ObjectID
+			"Ies",
 			"Icq",
 			"Identd",
 			"Imagefor",
@@ -179,17 +198,24 @@ namespace Introspection
 			"Intermenstrual",
 			"Intoi",
 			"Ios",
+			"Ipa",
 			"Ipp",
 			"Iptc",
 			"Ircs",
 			"Itu",
+			"Jcb", // Japanese credit card company
 			"Jfif",
 			"Json",
 			"Keyerror",
 			"Keyi",
 			"Keyspace",
 			"ks",
+			"Kiloampere",
+			"Kiloamperes",
+			"Kiloohms",
+			"Kilopascals",
 			"Langauges",
+			"Lacunarity",
 			"Ldaps",
 			"Lerp",
 			"Linecap",
@@ -198,16 +224,34 @@ namespace Introspection
 			"Lopass",
 			"Lowlevel",
 			"Matchingcoalesce",
+			"Megaampere",
+			"Megaamperes",
+			"Megaliters",
+			"Megameters",
+			"Megaohms",
+			"Megapascals",
 			"Metacharacters",
+			"Metalness",
+			"Metadatas",
+			"Microampere",
+			"Microamperes",
+			"Microohms",
+			"Microwatts",
+			"Millimoles",
+			"Milliohms",
+			"Mimap",
 			"Minification",
 			"Mobike", // acronym
 			"Morpher",
+			"Mpe", // acronym
 			"Mtu", // acronym
 			"Mtc", // acronym
 			"Mul",
 			"Mult",
 			"Multipeer",
 			"Muxed",
+			"Nanograms",
+			"Nanowatts",
 			"nfloat",
 			"nint",
 			"Nntps",
@@ -219,11 +263,13 @@ namespace Introspection
 			"Objectfor",
 			"Occlussion",
 			"Ocurrences",
+			"Octree",
 			"Oid",
 			"Oneup", // TVElementKeyOneupTemplate
 			"Orthographyrange",
 			"ove",
 			"Paeth", // PNG filter
+			"Perlin",
 			"Pausable",
 			"Pcl",
 			"Pcm",
@@ -231,6 +277,8 @@ namespace Introspection
 			"Persistance",
 			"Pesented",
 			"Pfs", // acronym
+			"Picometers",
+			"Picowatts",
 			"Pkcs",
 			"Placemark",
 			"Playthrough",
@@ -249,14 +297,19 @@ namespace Introspection
 			"Reinvite",
 			"Replayable",
 			"Requestwith",
+			"Ridesharing",
 			"Rgb",
 			"Rgba",
+			"Rggb", // acronym for Red, Green, Green, Blue
 			"Roi",
 			"Romm", // acronym: Reference Output Medium Metric
 			"Rpa",
 			"Rpn", // acronym
+			"Rsa", // Rivest, Shamir and Adleman
 			"Rssi",
+			"Rtp",
 			"Rtsp",
+			"Saml", // acronym
 			"Scn",
 			"Sdk",
 			"Sdtv", // acronym: Standard Definition Tele Vision
@@ -280,13 +333,16 @@ namespace Introspection
 			"Stateful",
 			"Stateright",
 			"Subbeat",
+			"Subcaption",
 			"Subcardioid",
 			"Subentities",
 			"Subheadline",
+			"Sublocality",
 			"Submesh",
 			"Submeshes",
 			"Subpixel",
 			"Subsec",
+			"Suica", // Japanese contactless smart card type
 			"Superentity",
 			"Sym",
 			"Synchronizable",
@@ -311,16 +367,21 @@ namespace Introspection
 			"Unconfigured",
 			"Undecodable",
 			"Underrun",
+			"Unflagged",
 			"Unorm",
+			"Unpremultiplying",
 			"Unprepare",
 			"Unproject",
 			"Uterance",
+			"Unentitled",
 			"Utf",
 			"Uti",
 			"Varispeed",
 			"Vergence",
+			"Voronoi",
 			"Vnode",
 			"Vpn",
+			"Warpable",
 			"Whitespaces",
 			"Writeability",
 			"Xpc",

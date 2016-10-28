@@ -11,7 +11,7 @@ using XamCore.ObjCRuntime;
 namespace XamCore.CoreVideo {
 
 	[Partial]
-	public interface CVPixelBufferPoolAllocationSettings {
+	interface CVPixelBufferPoolAllocationSettings {
 
 		[Internal][Field ("kCVPixelBufferPoolAllocationThresholdKey")]
 		NSString ThresholdKey { get; }
@@ -19,7 +19,7 @@ namespace XamCore.CoreVideo {
 
 #if XAMCORE_2_0
 	[Partial]
-	public interface CVBuffer {
+	interface CVBuffer {
 
 		[Field ("kCVBufferMovieTimeKey")]
 		NSString MovieTimeKey { get; }
@@ -38,7 +38,7 @@ namespace XamCore.CoreVideo {
 	}
 
 	[Partial]
-	public interface CVImageBuffer : CVBuffer {
+	interface CVImageBuffer : CVBuffer {
 
 		[Field ("kCVImageBufferCGColorSpaceKey")]
 		NSString CGColorSpaceKey  { get; }
@@ -163,8 +163,14 @@ namespace XamCore.CoreVideo {
 		NSString TransferFunction_UseGamma { get; }
 
 		[iOS (9,0), Mac (10,11)]
+		[TV (10,0)]
 		[Field ("kCVImageBufferTransferFunction_ITU_R_2020")]
 		NSString TransferFunction_ITU_R_2020 { get; }
+
+		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
+		[Field ("kCVImageBufferTransferFunction_SMPTE_ST_428_1")]
+		NSString TransferFunction_SMPTE_ST_428_1 { get; }
 
 		[Field ("kCVImageBufferChromaLocationTopFieldKey")]
 		NSString ChromaLocationTopFieldKey { get; }
@@ -216,7 +222,7 @@ namespace XamCore.CoreVideo {
 	}
 
 	[Partial]
-	public interface CVPixelBuffer {
+	interface CVPixelBuffer {
 
 		[Field ("kCVPixelBufferPixelFormatTypeKey")]
 		NSString PixelFormatTypeKey{ get; }
@@ -283,9 +289,9 @@ namespace XamCore.CoreVideo {
 
 	[Partial]
 #if XAMCORE_3_0
-	public interface CVPixelBufferPool {
+	interface CVPixelBufferPool {
 #else
-	public interface CVPixelBufferPool : CVImageBuffer {
+	interface CVPixelBufferPool : CVImageBuffer {
 #endif
 		[Field ("kCVPixelBufferPoolMinimumBufferCountKey")]
 		NSString MinimumBufferCountKey { get; }
@@ -296,7 +302,7 @@ namespace XamCore.CoreVideo {
 
 #if !MONOMAC
 	[Partial]
-	public interface CVMetalTextureCache {
+	interface CVMetalTextureCache {
 		[Internal]
 		[Field ("kCVMetalTextureCacheMaximumTextureAgeKey")]
 		IntPtr MaxTextureAge { get; }
@@ -304,7 +310,7 @@ namespace XamCore.CoreVideo {
 
 	// CVOpenGLESTextureCache is bound (manually) in OpenTK[-1.0].dll.
 	// [Partial]
-	// public interface CVOpenGLESTextureCache {
+	// interface CVOpenGLESTextureCache {
 	// 	[Internal]
 	// 	[Field ("kCVOpenGLESTextureCacheMaximumTextureAgeKey")]
 	// 	IntPtr MaxTextureAge { get; }

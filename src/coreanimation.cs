@@ -52,7 +52,7 @@ namespace XamCore.CoreAnimation {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface CAMediaTiming {
+	interface CAMediaTiming {
 #if XAMCORE_2_0
 		[Abstract]
 #endif
@@ -102,18 +102,18 @@ namespace XamCore.CoreAnimation {
 		string FillMode { get; set; }
 	}
 
-	public interface ICAMediaTiming {}
+	interface ICAMediaTiming {}
 
 #if MONOMAC
 	[BaseType (typeof (NSObject))]
-	public interface CAConstraintLayoutManager : NSCoding {
+	interface CAConstraintLayoutManager : NSCoding {
 		[Static]
 		[Export ("layoutManager")]
 		CAConstraintLayoutManager LayoutManager { get; }
 	}
 	
 	[BaseType (typeof (NSObject))]
-	public interface CAConstraint : NSCoding {
+	interface CAConstraint : NSCoding {
 		[Export ("attribute")]
 		CAConstraintAttribute Attribute { get;  }
 
@@ -144,16 +144,22 @@ namespace XamCore.CoreAnimation {
 	
 #else
 	[BaseType (typeof (NSObject))]
-	public interface CADisplayLink {
+	interface CADisplayLink {
 		[Export ("displayLinkWithTarget:selector:")][Static]
 		CADisplayLink Create (NSObject target, Selector sel);
 	
 		[Export ("addToRunLoop:forMode:")]
 		void AddToRunLoop (NSRunLoop runloop, [NullAllowed] NSString mode);
+
+		[Wrap ("AddToRunLoop (runloop, mode.GetConstant ())")]
+		void AddToRunLoop (NSRunLoop runloop, NSRunLoopMode mode);
 	
 		[Export ("removeFromRunLoop:forMode:")]
 		void RemoveFromRunLoop (NSRunLoop runloop, [NullAllowed] NSString mode);
-	
+
+		[Wrap ("RemoveFromRunLoop (runloop, mode.GetConstant ())")]
+		void RemoveFromRunLoop (NSRunLoop runloop, NSRunLoopMode mode);
+
 		[Export ("invalidate")]
 		void Invalidate ();
 	
@@ -163,17 +169,38 @@ namespace XamCore.CoreAnimation {
 		[Export ("paused")]
 		bool Paused { [Bind ("isPaused")] get; set; }
 	
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use PreferredFramesPerSecond property")]
+		[Deprecated (PlatformName.TvOS, 10,0, message: "Use PreferredFramesPerSecond property")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Use PreferredFramesPerSecond property")]
 		[Export ("frameInterval")]
 		nint FrameInterval { get; set;  }
 
 		[Export ("duration")]
 		double Duration { get; }
+
+		[Watch (3,0)][TV (10,0)][iOS (10,0)]
+		[Export ("targetTimestamp")]
+		double TargetTimestamp { get; }
+
+		[Watch (3,0)][TV (10,0)][iOS (10,0)]
+		[Export ("preferredFramesPerSecond")]
+		nint PreferredFramesPerSecond { get; set; }
 	}
 #endif
 
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	enum CAContentsFormat {
+		[Field ("kCAContentsFormatGray8Uint")]
+		Gray8Uint,
+		[Field ("kCAContentsFormatRGBA8Uint")]
+		Rgba8Uint,
+		[Field ("kCAContentsFormatRGBA16Float")]
+		Rgba16Float,
+	}
+
 	[BaseType (typeof (NSObject))]
 	[Dispose ("OnDispose ();")]
-	public interface CALayer : CAMediaTiming, NSCoding {
+	interface CALayer : CAMediaTiming, NSCoding {
 		[Export ("layer")][Static]
 		CALayer Create ();
 
@@ -484,6 +511,11 @@ namespace XamCore.CoreAnimation {
 		[Field ("kCAOnOrderOut")]
 		NSString OnOrderOut { get; }
 
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[Internal]
+		[Export ("contentsFormat")]
+		NSString _ContentsFormat { get; set; }
+
 		[Export ("visibleRect")]
 		CGRect VisibleRect { get;  }
 
@@ -598,7 +630,7 @@ namespace XamCore.CoreAnimation {
 #endif
 
 	[BaseType (typeof (CALayer))]
-	public interface CATiledLayer {
+	interface CATiledLayer {
 		[Export ("layer"), New, Static]
 		CALayer Create ();
 		
@@ -616,7 +648,7 @@ namespace XamCore.CoreAnimation {
 	}
 
 	[BaseType (typeof (CALayer))]
-	public interface CAReplicatorLayer {
+	interface CAReplicatorLayer {
 		[Export ("layer"), New, Static]
 		CALayer Create ();
 
@@ -650,7 +682,7 @@ namespace XamCore.CoreAnimation {
 
 
 	[BaseType (typeof (CALayer))]
-	public interface CAScrollLayer {
+	interface CAScrollLayer {
 		[Export ("layer"), New, Static]
 		CALayer Create ();
 
@@ -677,7 +709,7 @@ namespace XamCore.CoreAnimation {
 	}
 	
 	[BaseType (typeof (CALayer))]
-	public interface CAShapeLayer {
+	interface CAShapeLayer {
 		[Export ("layer"), New, Static]
 		CALayer Create ();
 
@@ -745,7 +777,7 @@ namespace XamCore.CoreAnimation {
 	}
 
 	[BaseType (typeof (CALayer))]
-	public interface CATransformLayer {
+	interface CATransformLayer {
 		[Export ("layer"), New, Static]
 		CALayer Create ();
 
@@ -755,7 +787,7 @@ namespace XamCore.CoreAnimation {
 
 	[Since (3,2)]
 	[BaseType (typeof (CALayer))]
-	public interface CATextLayer {
+	interface CATextLayer {
 		[Export ("layer"), New, Static]
 		CALayer Create ();
 
@@ -820,13 +852,17 @@ namespace XamCore.CoreAnimation {
 
 	[BaseType (typeof (NSObject))]
 	[Model]
-	[Protocol (IsInformal = true)]
-	public interface CALayerDelegate {
+	[Protocol (IsInformal = true)] // not informal as of iOS 10+, but removing the IsInformal value breaks when building with older SDKs (see bug #43585).
+	interface CALayerDelegate {
 		[Export ("displayLayer:")]
 		void DisplayLayer (CALayer layer);
 
 		[Export ("drawLayer:inContext:"), EventArgs ("CALayerDrawEventArgs")]
 		void DrawLayer (CALayer layer, CGContext context);
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[Export ("layerWillDraw:")]
+		void WillDrawLayer (CALayer layer);
 
 		[Export ("layoutSublayersOfLayer:")]
 		void LayoutSublayersOfLayer (CALayer layer);
@@ -837,7 +873,7 @@ namespace XamCore.CoreAnimation {
 	
 #if !MONOMAC
 	[BaseType (typeof (CALayer))]
-	public interface CAEAGLLayer : EAGLDrawable {
+	interface CAEAGLLayer : EAGLDrawable {
 		[Export ("layer"), New, Static]
 		CALayer Create ();
 
@@ -851,7 +887,7 @@ namespace XamCore.CoreAnimation {
 	[Model]
 	[Protocol]
 	[DisableDefaultCtor]
-	public interface CAAction {
+	interface CAAction {
 #if XAMCORE_2_0
 		[Abstract]
 #endif
@@ -860,7 +896,7 @@ namespace XamCore.CoreAnimation {
 	}
 	
 	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] { typeof (CAAnimationDelegate)})]
-	public interface CAAnimation : CAAction, CAMediaTiming, NSCoding, NSMutableCopying {
+	interface CAAnimation : CAAction, CAMediaTiming, NSCoding, NSMutableCopying {
 		[Export ("animation"), Static]
 		CAAnimation CreateAnimation ();
 	
@@ -919,8 +955,13 @@ namespace XamCore.CoreAnimation {
 		[Field ("kCAAnimationLinear")]
 		NSString AnimationLinear { get; }
 				
+#if !XAMCORE_4_0
 		[Field ("kCAAnimationDiscrete")]
+		[Obsolete ("The name has been fixed, use AnimationDiscrete instead")]
 		NSString AnimationDescrete { get; }
+#endif
+		[Field ("kCAAnimationDiscrete")]
+		NSString AnimationDiscrete { get; }
 		
 		[Field ("kCAAnimationPaced")]
 		NSString AnimationPaced { get; }
@@ -960,11 +1001,13 @@ namespace XamCore.CoreAnimation {
 
 		#endregion
 	}
-	
+
+	// Adding [Protocol] breaks when building with older SDKs (see bug #43825)
+	//[Protocol] // since iOS10
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Synthetic]
-	public interface CAAnimationDelegate {
+	interface CAAnimationDelegate {
 		[Export ("animationDidStart:")]
 		void AnimationStarted ([NullAllowed] CAAnimation anim);
 	
@@ -974,7 +1017,7 @@ namespace XamCore.CoreAnimation {
 	}
 	
 	[BaseType (typeof (CAAnimation))]
-	public interface CAPropertyAnimation {
+	interface CAPropertyAnimation {
 		[Static]
 		[Export ("animationWithKeyPath:")]
 		CAPropertyAnimation FromKeyPath ([NullAllowed] string path);
@@ -995,7 +1038,7 @@ namespace XamCore.CoreAnimation {
 	}
 	
 	[BaseType (typeof (CAPropertyAnimation))]
-	public interface CABasicAnimation {
+	interface CABasicAnimation {
 		[Static, New, Export ("animationWithKeyPath:")]
 		CABasicAnimation FromKeyPath ([NullAllowed] string path);
 
@@ -1041,7 +1084,7 @@ namespace XamCore.CoreAnimation {
 	}
 	
 	[BaseType (typeof (CAPropertyAnimation), Name="CAKeyframeAnimation")]
-	public interface CAKeyFrameAnimation {
+	interface CAKeyFrameAnimation {
 		[Static, Export ("animationWithKeyPath:")]
 #if XAMCORE_2_0
 		CAKeyFrameAnimation FromKeyPath ([NullAllowed] string path);
@@ -1101,7 +1144,7 @@ namespace XamCore.CoreAnimation {
 	}
 	
 	[BaseType (typeof (CAAnimation))]
-	public interface CATransition {
+	interface CATransition {
 		[Export ("animation"), Static, New]
 		CATransition CreateAnimation ();
 
@@ -1133,7 +1176,7 @@ namespace XamCore.CoreAnimation {
 #else
 	[Partial] // keep default .ctor for API compatibility
 #endif
-	public interface CAFillMode {
+	interface CAFillMode {
 		[Field ("kCAFillModeForwards")]
 		NSString Forwards { get; }
 
@@ -1154,7 +1197,7 @@ namespace XamCore.CoreAnimation {
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface CATransaction {
+	interface CATransaction {
 		[Static]
 		[Export ("begin")]
 		void Begin ();
@@ -1213,7 +1256,7 @@ namespace XamCore.CoreAnimation {
 	}
 
 	[BaseType (typeof (CAAnimation))]
-	public interface CAAnimationGroup {
+	interface CAAnimationGroup {
 		[NullAllowed] // by default this property is null
 		[Export ("animations", ArgumentSemantic.Copy)]
 		CAAnimation [] Animations { get; set; }
@@ -1223,7 +1266,7 @@ namespace XamCore.CoreAnimation {
 	}
 
 	[BaseType (typeof (CALayer))]
-	public interface CAGradientLayer {
+	interface CAGradientLayer {
 		[Export ("layer"), New, Static]
 		CALayer Create ();
 
@@ -1250,7 +1293,7 @@ namespace XamCore.CoreAnimation {
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface CAMediaTimingFunction : NSCoding {
+	interface CAMediaTimingFunction : NSCoding {
 		[Export ("functionWithName:")][Static]
 		CAMediaTimingFunction FromName (NSString  name);
 
@@ -1281,7 +1324,7 @@ namespace XamCore.CoreAnimation {
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface CAValueFunction : NSCoding {
+	interface CAValueFunction : NSCoding {
 		[Export ("functionWithName:"), Static]
 		CAValueFunction FromName (string name);
 
@@ -1612,6 +1655,10 @@ namespace XamCore.CoreAnimation {
 
 		[Field ("kCAEmitterBehaviorAttractor")]
 		NSString Attractor { get; }			
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[Field ("kCAEmitterBehaviorSimpleAttractor")]
+		NSString SimpleAttractor { get; }
 
 		[Field ("kCAEmitterBehaviorColorOverLife")]
 		NSString ColorOverLife { get; }			

@@ -1,4 +1,5 @@
 // Copyright 2012-2013 Xamarin Inc. All rights reserved.
+//#define DEBUG
 using System;
 using System.Collections.Generic;
 
@@ -14,6 +15,56 @@ using Xamarin.Bundler;
 namespace MonoMac.Tuner {
 
 	public class MonoMacNamespaces : IStep {
+
+	Dictionary <string, string> NamespaceMapping = new Dictionary <string, string> {
+		{ Constants.FoundationLibrary, Namespaces.Foundation },
+		{ Constants.AppKitLibrary, Namespaces.AppKit },
+		{ Constants.AddressBookLibrary, Namespaces.AddressBook },
+		{ Constants.CoreTextLibrary, Namespaces.CoreText },
+		{ Constants.WebKitLibrary, Namespaces.WebKit },
+		{ Constants.QuartzLibrary, Namespaces.CoreAnimation },
+		{ Constants.QTKitLibrary, Namespaces.QTKit },
+		{ Constants.CoreLocationLibrary, Namespaces.CoreLocation },
+		{ Constants.SecurityLibrary, Namespaces.Security },
+		{ Constants.QuartzComposerLibrary, Namespaces.QuartzComposer },
+		{ Constants.CoreWlanLibrary, Namespaces.CoreWlan },
+		{ Constants.PdfKitLibrary, Namespaces.PdfKit },
+		{ Constants.ImageKitLibrary, Namespaces.ImageKit },
+		{ Constants.ScriptingBridgeLibrary, Namespaces.ScriptingBridge },
+		{ Constants.AVFoundationLibrary, Namespaces.AVFoundation },
+		{ Constants.CoreBluetoothLibrary, Namespaces.CoreBluetooth },
+		{ Constants.GameKitLibrary, Namespaces.GameKit },
+		{ Constants.GameControllerLibrary, Namespaces.GameController },
+		{ Constants.JavaScriptCoreLibrary, Namespaces.JavaScriptCore },
+		{ Constants.CoreAudioKitLibrary, Namespaces.CoreAudioKit },
+		{ Constants.InputMethodKitLibrary, Namespaces.InputMethodKit },
+		{ Constants.OpenALLibrary, Namespaces.OpenAL },
+		{ Constants.MediaAccessibilityLibrary, Namespaces.MediaAccessibility },
+		{ Constants.CoreMidiLibrary, Namespaces.CoreMIDI },
+		{ Constants.MediaLibraryLibrary, Namespaces.MediaLibrary },
+		{ Constants.GLKitLibrary, Namespaces.GLKit },
+		{ Constants.SpriteKitLibrary, Namespaces.SpriteKit },
+		{ Constants.CloudKitLibrary, Namespaces.CloudKit },
+		{ Constants.LocalAuthenticationLibrary, Namespaces.LocalAuthentication },
+		{ Constants.AccountsLibrary, Namespaces.Accounts },
+		{ Constants.ContactsLibrary, Namespaces.Contacts },
+		{ Constants.ContactsUILibrary, Namespaces.ContactsUI },
+		{ Constants.MapKitLibrary, Namespaces.MapKit },
+		{ Constants.EventKitLibrary, Namespaces.EventKit },
+		{ Constants.SocialLibrary, Namespaces.Social },
+		{ Constants.AVKitLibrary, Namespaces.AVKit },
+		{ Constants.VideoToolboxLibrary, Namespaces.VideoToolbox },
+		{ Constants.GameplayKitLibrary, Namespaces.GameplayKit },
+		{ Constants.NetworkExtensionLibrary, Namespaces.NetworkExtension },
+		{ Constants.MultipeerConnectivityLibrary, Namespaces.MultipeerConnectivity },
+		{ Constants.MetalKitLibrary, Namespaces.MetalKit },
+		{ Constants.ModelIOLibrary, Namespaces.ModelIO },
+		{ Constants.IOBluetoothLibrary, Namespaces.IOBluetooth },
+		{ Constants.IOBluetoothUILibrary, Namespaces.IOBluetoothUI },
+		{ Constants.FinderSyncLibrary, Namespaces.FinderSync },
+		{ Constants.NotificationCenterLibrary, Namespaces.NotificationCenter },
+		{ Constants.SceneKitLibrary, Namespaces.SceneKit },
+		{ Constants.StoreKitLibrary, Namespaces.StoreKit } };
 
 		public void Process (LinkContext context)
 		{
@@ -43,92 +94,18 @@ namespace MonoMac.Tuner {
 				// only when we know the namespace is not being used by the app
 				// Based on the list from xamcore/src/Foundation/NSObjectMac.cs
 				bool remove_dlopen = false;
-				switch (ins.Operand as string) {
-				case Constants.FoundationLibrary:
-					// note: every app has Foundation - even if I could not find a sample that required it pre-loaded
-					remove_dlopen = !namespaces.Contains (Namespaces.Foundation);
-					break;
-				case Constants.AppKitLibrary:
-					// note: every app has AppKit - even if I could not find a sample that required it pre-loaded
-					remove_dlopen = !namespaces.Contains (Namespaces.AppKit);
-					break;
-				case Constants.AddressBookLibrary:
-					// no sample
-					remove_dlopen = !namespaces.Contains (Namespaces.AddressBook);
-					break;
-				case Constants.CoreTextLibrary:
-					// FIXME: CoreTextArcMonoMac does not need it (i.e. maybe we could always remove it)
-					remove_dlopen = !namespaces.Contains (Namespaces.CoreText);
-					break;
-				case Constants.WebKitLibrary:
-					// WhereIsMyMac sample won't work without it
-					remove_dlopen = !namespaces.Contains (Namespaces.WebKit);
-					break;
-				case Constants.QuartzLibrary:
-					// FIXME: AnimatedClock does not need it (i.e. maybe we could always remove it)
-					remove_dlopen = !namespaces.Contains (Namespaces.CoreAnimation);
-					break;
-				case Constants.QTKitLibrary:
-					// QTRecorder sample won't work without it
-					// StillMotion sample won't work without it
-					remove_dlopen = !namespaces.Contains (Namespaces.QTKit);
-					break;
-				case Constants.CoreLocationLibrary:
-					// WhereIsMyMac sample won't work without it
-					remove_dlopen = !namespaces.Contains (Namespaces.CoreLocation);
-					break;
-				case Constants.SecurityLibrary:
-					// no sample
-					remove_dlopen = !namespaces.Contains (Namespaces.Security);
-					break;
-				case Constants.QuartzComposerLibrary:
-					// CAQuartzComposition sample won't work without it
-					remove_dlopen = !namespaces.Contains (Namespaces.QuartzComposer);
-					break;
-				case Constants.CoreWlanLibrary:
-					// CoreWLANWirelessManager sample won't work without it
-					remove_dlopen = !namespaces.Contains (Namespaces.CoreWlan);
-					break;
-				case Constants.PdfKitLibrary:
-					// no sample
-					remove_dlopen = !namespaces.Contains (Namespaces.PdfKit);
-					break;
-				case Constants.ImageKitLibrary:
-					// ImageKitDemo sample won't work without it
-					remove_dlopen = !namespaces.Contains (Namespaces.ImageKit);
-					break;
-				case Constants.ScriptingBridgeLibrary:
-					// no working (attic) sample
-					remove_dlopen = !namespaces.Contains (Namespaces.ScriptingBridge);
-					break;
-				case Constants.AVFoundationLibrary:
-					// no sample
-					remove_dlopen = !namespaces.Contains (Namespaces.AVFoundation);
-					break;
-				case Constants.CoreBluetoothLibrary:
-					// no sample
-					remove_dlopen = !namespaces.Contains (Namespaces.CoreBluetooth);
-					break;
-				case Constants.GameKitLibrary:
-					// no sample
-					remove_dlopen = !namespaces.Contains (Namespaces.GameKit);
-					break;
-				case Constants.SceneKitLibrary:
-					// no sample
-					remove_dlopen = !namespaces.Contains (Namespaces.SceneKit);
-					break;
-				case Constants.StoreKitLibrary:
-					// no sample
-					remove_dlopen = !namespaces.Contains (Namespaces.StoreKit);
-					break;
+
+				string targetNamespace;
+				if (NamespaceMapping.TryGetValue (ins.Operand as string, out targetNamespace)) {
+					remove_dlopen = !namespaces.Contains (targetNamespace);
+				}
 #if DEBUG
-				default:
+				else {
 					string libname = ins.Operand as string;
 					if (libname.StartsWith ("/", StringComparison.Ordinal))
 						Console.WriteLine ("Unprocessed library / namespace {0}", libname);
-					break;
-#endif
 				}
+#endif
 
 				if (remove_dlopen) {
 					FieldDefinition f = Nop (ins);

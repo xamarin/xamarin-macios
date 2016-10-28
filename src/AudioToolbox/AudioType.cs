@@ -113,6 +113,7 @@ namespace XamCore.AudioToolbox {
 		CafIsLittleEndian = (1 << 1)
 	}
 
+#if !WATCH
 	[StructLayout (LayoutKind.Sequential)]
 	unsafe struct AudioFormatInfo
 	{
@@ -120,6 +121,7 @@ namespace XamCore.AudioToolbox {
 		public byte* MagicCookieWeak;
 		public int MagicCookieSize;
 	}
+#endif
 
 	[DebuggerDisplay ("{FormatName}")]
 	[StructLayout(LayoutKind.Sequential)]
@@ -170,6 +172,7 @@ namespace XamCore.AudioToolbox {
 			return desc;
 		}
 
+#if !WATCH
 		public unsafe static AudioChannelLayoutTag[] GetAvailableEncodeChannelLayoutTags (AudioStreamBasicDescription format)
 		{
 			var type_size = sizeof (AudioStreamBasicDescription);
@@ -313,6 +316,7 @@ namespace XamCore.AudioToolbox {
 				return data != 0;				
 			}
 		}
+#endif // !WATCH
 
 		public override string ToString ()
 		{
@@ -334,6 +338,7 @@ namespace XamCore.AudioToolbox {
 		}
 	}
 
+	[Watch (3,0)]
 	[Flags]
 	public enum AudioChannelFlags : uint_compat_int { // UInt32 in AudioPanningInfo -- AudioFormat.h
 		AllOff = 0,
@@ -465,7 +470,8 @@ namespace XamCore.AudioToolbox {
 				Coord2 = value [2];
 			}
 		}
-		
+
+#if !WATCH
 		public unsafe string Name {
 			get {
 				IntPtr sptr;
@@ -497,6 +503,7 @@ namespace XamCore.AudioToolbox {
 				return new CFString (sptr, true);
 			}
 		}
+#endif
 
 		internal unsafe IntPtr ToPointer ()
 		{
@@ -662,7 +669,7 @@ namespace XamCore.AudioToolbox {
 		Unknown                  = 0xFFFF0000                           // needs to be ORed with the actual number of channels  
 	}
 
-#if !COREBUILD
+#if !COREBUILD && !WATCH
 	public static class AudioChannelLayoutTagExtensions
 	{
 		public static AudioChannelBit? ToAudioChannel (this AudioChannelLayoutTag layoutTag)
@@ -705,6 +712,7 @@ namespace XamCore.AudioToolbox {
 			}
 		}
 
+#if !WATCH
 		[Advice ("Use the strongly typed AudioTag instead")]
 		public int Tag {
 			get {
@@ -724,11 +732,13 @@ namespace XamCore.AudioToolbox {
 				ChannelUsage = (AudioChannelBit) value;
 			}
 		}
+#endif
 
 		public AudioChannelLayoutTag AudioTag;
 		public AudioChannelBit ChannelUsage;
 		public AudioChannelDescription[] Channels;
 
+#if !WATCH
 		public unsafe string Name {
 			get {
 				IntPtr sptr;
@@ -786,6 +796,7 @@ namespace XamCore.AudioToolbox {
 			Marshal.FreeHGlobal (ptr);
 			return layout;
 		}
+#endif // !WATCH
 
 		internal static AudioChannelLayout FromHandle (IntPtr handle)
 		{
@@ -823,6 +834,7 @@ namespace XamCore.AudioToolbox {
 			return buffer;
 		}
 
+#if !WATCH
 		public static AudioFormatError Validate (AudioChannelLayout layout)
 		{
 			if (layout == null)
@@ -954,6 +966,7 @@ namespace XamCore.AudioToolbox {
 				return data;
 			}
 		}
+#endif // !WATCH
 
 		public NSData AsData ()
 		{
@@ -974,6 +987,7 @@ namespace XamCore.AudioToolbox {
 		TimeRunning = 1 << 1
 	}
 
+	[Watch (3,0)]
 	public enum MPEG4ObjectID { // long
 		AacMain = 1,
 		AacLc = 2,
@@ -1097,6 +1111,7 @@ namespace XamCore.AudioToolbox {
 		}
 	}
 
+#if !WATCH
 	[StructLayout(LayoutKind.Sequential)]
 	public struct AudioBuffer {
 		public int NumberChannels;
@@ -1121,4 +1136,5 @@ namespace XamCore.AudioToolbox {
 		public /* UInt16 */ ushort Reserved;
 	}
 #endif
+#endif // !WATCH
 }

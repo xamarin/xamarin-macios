@@ -4,11 +4,11 @@
 // Authors:
 //   Miguel de Icaza
 //
+
+#if !WATCH
+
 using XamCore.Foundation;
-using XamCore.ObjCRuntime;
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using XamCore.AudioToolbox;
 
 namespace XamCore.AVFoundation {
@@ -26,3 +26,5 @@ namespace XamCore.AVFoundation {
 		}
 	}
 }
+
+#endif

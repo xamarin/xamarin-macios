@@ -27,6 +27,11 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#if XAMARIN_APPLETLS || __WATCHOS__
+#define NATIVE_APPLE_CERTIFICATE
+#endif
+
 using System;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
@@ -85,7 +90,7 @@ namespace XamCore.Security {
 			if (certificate == null)
 				throw new ArgumentNullException ("certificate");
 
-#if XAMARIN_APPLETLS
+#if NATIVE_APPLE_CERTIFICATE
 			/*
 			 * This requires a recent Mono runtime which has the lazily-initialized
 			 * certifciates in mscorlib.dll, so we can't use it on XM classic.
@@ -93,7 +98,7 @@ namespace XamCore.Security {
 			 * Using 'XAMARIN_APPLETLS' as a conditional because 'XAMCORE_2_0' is
 			 * defined for tvos and watch, which have a recent-enough runtime.
 			 */
-			handle = certificate.Handle;
+			handle = certificate.Impl.GetNativeAppleCertificate ();
 			if (handle != IntPtr.Zero) {
 				CFObject.CFRetain (handle);
 				return;
@@ -105,13 +110,28 @@ namespace XamCore.Security {
 			}
 		}
 
+#if NATIVE_APPLE_CERTIFICATE
+		internal SecCertificate (X509CertificateImpl impl)
+		{
+			handle = impl.GetNativeAppleCertificate ();
+			if (handle != IntPtr.Zero) {
+				CFObject.CFRetain (handle);
+				return;
+			}
+
+			using (NSData cert = NSData.FromArray (impl.GetRawCertData ())) {
+				Initialize (cert);
+			}
+		}
+#endif
+
 		public SecCertificate (X509Certificate2 certificate)
 		{
 			if (certificate == null)
 				throw new ArgumentNullException ("certificate");
 
-#if XAMARIN_APPLETLS
-			handle = certificate.Handle;
+#if NATIVE_APPLE_CERTIFICATE
+			handle = certificate.Impl.GetNativeAppleCertificate ();
 			if (handle != IntPtr.Zero) {
 				CFObject.CFRetain (handle);
 				return;
@@ -138,10 +158,7 @@ namespace XamCore.Security {
 				if (handle == IntPtr.Zero)
 					throw new ObjectDisposedException ("SecCertificate");
 				
-				IntPtr cfstr = SecCertificateCopySubjectSummary (handle);
-				string ret = CFString.FetchString (cfstr);
-				CFObject.CFRelease (cfstr);
-				return ret;
+				return CFString.FetchString (SecCertificateCopySubjectSummary (handle), releaseHandle: true);
 			}
 		}
 
@@ -172,7 +189,7 @@ namespace XamCore.Security {
 
 		public X509Certificate ToX509Certificate ()
 		{
-#if XAMARIN_APPLETLS
+#if NATIVE_APPLE_CERTIFICATE
 			if (handle == IntPtr.Zero)
 				throw new ObjectDisposedException ("SecCertificate");
 
@@ -247,7 +264,7 @@ namespace XamCore.Security {
 				return new NSData (dataPtr);
 			}
 		}
-#elif XAMARIN_APPLETLS && (__IOS__ || __WATCHOS__ || __TVOS__)
+#elif NATIVE_APPLE_CERTIFICATE && (__IOS__ || __WATCHOS__ || __TVOS__)
 		//
 		// EXPERIMENTAL
 		// Needs some more testing before we can make this public.
@@ -644,6 +661,206 @@ namespace XamCore.Security {
 		{
 			plainText = null;
 			return _Decrypt (padding, cipherText, ref plainText);
+		}
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern IntPtr /* SecKeyRef _Nullable */ SecKeyCreateRandomKey (IntPtr /* CFDictionaryRef* */ parameters, out IntPtr /* CFErrorRef** */ error);
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		static public SecKey CreateRandomKey (NSDictionary parameters, out NSError error)
+		{
+			if (parameters == null)
+				throw new ArgumentNullException (nameof (parameters));
+
+			IntPtr err;
+			var key = SecKeyCreateRandomKey (parameters.Handle, out err);
+			error = err == IntPtr.Zero ? null : new NSError (err);
+			return key == IntPtr.Zero ? null : new SecKey (key, true);
+		}
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		static public SecKey CreateRandomKey (SecKeyType keyType, int keySizeInBits, NSDictionary parameters, out NSError error)
+		{
+			using (var ks = new NSNumber (keySizeInBits))
+			using (var md = parameters == null ? new NSMutableDictionary () : new NSMutableDictionary (parameters)) {
+				md.LowlevelSetObject (keyType.GetConstant (), SecAttributeKey.KeyType);
+				md.LowlevelSetObject (ks, SecAttributeKey.KeySizeInBits);
+				return CreateRandomKey (md, out error);
+			}
+		}
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern IntPtr /* SecKeyRef _Nullable */ SecKeyCreateWithData (IntPtr /* CFDataRef* */ keyData, IntPtr /* CFDictionaryRef* */ attributes, out IntPtr /* CFErrorRef** */ error);
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		static public SecKey Create (NSData keyData, NSDictionary parameters, out NSError error)
+		{
+			if (keyData == null)
+				throw new ArgumentNullException (nameof (keyData));
+			if (parameters == null)
+				throw new ArgumentNullException (nameof (parameters));
+
+			IntPtr err;
+			var key = SecKeyCreateWithData (keyData.Handle, parameters.Handle, out err);
+			error = err == IntPtr.Zero ? null : new NSError (err);
+			return key == IntPtr.Zero ? null : new SecKey (key, true);
+		}
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		static public SecKey Create (NSData keyData, SecKeyType keyType, SecKeyClass keyClass, int keySizeInBits, NSDictionary parameters, out NSError error)
+		{
+			using (var ks = new NSNumber (keySizeInBits))
+			using (var md = parameters == null ? new NSMutableDictionary () : new NSMutableDictionary (parameters)) {
+				md.LowlevelSetObject (keyType.GetConstant (), SecAttributeKey.KeyType);
+				md.LowlevelSetObject (keyClass.GetConstant (), SecAttributeKey.KeyClass);
+				md.LowlevelSetObject (ks, SecAttributeKey.KeySizeInBits);
+				return Create (keyData, md, out error);
+			}
+		}
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern IntPtr /* CFDataRef _Nullable */ SecKeyCopyExternalRepresentation (IntPtr /* SecKeyRef* */ key, out IntPtr /* CFErrorRef** */ error);
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		public NSData GetExternalRepresentation (out NSError error)
+		{
+			IntPtr err;
+			var data = SecKeyCopyExternalRepresentation (handle, out err);
+			error = err == IntPtr.Zero ? null : new NSError (err);
+			return Runtime.GetNSObject<NSData> (data, true);
+		}
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		public NSData GetExternalRepresentation ()
+		{
+			IntPtr err;
+			var data = SecKeyCopyExternalRepresentation (handle, out err);
+			return Runtime.GetNSObject<NSData> (data, true);
+		}
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern IntPtr /* CFDictionaryRef _Nullable */ SecKeyCopyAttributes (IntPtr /* SecKeyRef* */ key);
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		public NSDictionary GetAttributes ()
+		{
+			var dict = SecKeyCopyAttributes (handle);
+			return Runtime.GetNSObject<NSDictionary> (dict, true);
+		}
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern IntPtr /* SecKeyRef* */ SecKeyCopyPublicKey (IntPtr /* SecKeyRef* */ key);
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		public SecKey GetPublicKey ()
+		{
+			var key = SecKeyCopyPublicKey (handle);
+			return key == IntPtr.Zero ? null : new SecKey (key, true);
+		}
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern bool /* Boolean */ SecKeyIsAlgorithmSupported (IntPtr /* SecKeyRef* */ key, /* SecKeyOperationType */ nint operation, IntPtr /* SecKeyAlgorithm* */ algorithm);
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		public bool IsAlgorithmSupported (SecKeyOperationType operation, SecKeyAlgorithm algorithm)
+		{
+			return SecKeyIsAlgorithmSupported (handle, (int) operation, algorithm.GetConstant ().Handle);
+		}
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* CFDataRef _Nullable */ IntPtr SecKeyCreateSignature (/* SecKeyRef */ IntPtr key, /* SecKeyAlgorithm */ IntPtr algorithm, /* CFDataRef */ IntPtr dataToSign, /* CFErrorRef* */ out IntPtr error);
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		public NSData CreateSignature (SecKeyAlgorithm algorithm, NSData dataToSign, out NSError error)
+		{
+			if (dataToSign == null)
+				throw new ArgumentNullException (nameof (dataToSign));
+
+			IntPtr err;
+			var data = SecKeyCreateSignature (Handle, algorithm.GetConstant ().Handle, dataToSign.Handle, out err);
+			error = err == IntPtr.Zero ? null : new NSError (err);
+			return Runtime.GetNSObject<NSData> (data, true);
+		}
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* Boolean */ bool SecKeyVerifySignature (/* SecKeyRef */ IntPtr key, /* SecKeyAlgorithm */ IntPtr algorithm, /* CFDataRef */ IntPtr signedData, /* CFDataRef */ IntPtr signature, /* CFErrorRef* */ out IntPtr error);
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		public bool VerifySignature (SecKeyAlgorithm algorithm, NSData signedData, NSData signature, out NSError error)
+		{
+			if (signedData == null)
+				throw new ArgumentNullException (nameof (signedData));
+			if (signature == null)
+				throw new ArgumentNullException (nameof (signature));
+			
+			IntPtr err;
+			var result = SecKeyVerifySignature (Handle, algorithm.GetConstant ().Handle, signedData.Handle, signature.Handle, out err);
+			error = err == IntPtr.Zero ? null : new NSError (err);
+			return result;
+		}
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* CFDataRef _Nullable */ IntPtr SecKeyCreateEncryptedData (/* SecKeyRef */ IntPtr key, /* SecKeyAlgorithm */ IntPtr algorithm, /* CFDataRef */ IntPtr plaintext, /* CFErrorRef* */ out IntPtr error);
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		public NSData CreateEncryptedData (SecKeyAlgorithm algorithm, NSData plaintext, out NSError error)
+		{
+			if (plaintext == null)
+				throw new ArgumentNullException (nameof (plaintext));
+
+			IntPtr err;
+			var data = SecKeyCreateEncryptedData (Handle, algorithm.GetConstant ().Handle, plaintext.Handle, out err);
+			error = err == IntPtr.Zero ? null : new NSError (err);
+			return Runtime.GetNSObject<NSData> (data, true);
+		}
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* CFDataRef _Nullable */ IntPtr SecKeyCreateDecryptedData (/* SecKeyRef */ IntPtr key, /* SecKeyAlgorithm */ IntPtr algorithm, /* CFDataRef */ IntPtr ciphertext, /* CFErrorRef* */ out IntPtr error);
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		public NSData CreateDecryptedData (SecKeyAlgorithm algorithm, NSData ciphertext, out NSError error)
+		{
+			if (ciphertext == null)
+				throw new ArgumentNullException (nameof (ciphertext));
+
+			IntPtr err;
+			var data = SecKeyCreateDecryptedData (Handle, algorithm.GetConstant ().Handle, ciphertext.Handle, out err);
+			error = err == IntPtr.Zero ? null : new NSError (err);
+			return Runtime.GetNSObject<NSData> (data, true);
+		}
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* CFDataRef _Nullable */ IntPtr SecKeyCopyKeyExchangeResult (/* SecKeyRef */ IntPtr privateKey, /* SecKeyAlgorithm */ IntPtr algorithm, /* SecKeyRef */ IntPtr publicKey, /* CFDictionaryRef */ IntPtr parameters, /* CFErrorRef* */ out IntPtr error);
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		public NSData GetKeyExchangeResult (SecKeyAlgorithm algorithm, SecKey publicKey, NSDictionary parameters, out NSError error)
+		{
+			if (publicKey == null)
+				throw new ArgumentNullException (nameof (publicKey));
+			if (parameters == null)
+				throw new ArgumentNullException (nameof (parameters));
+
+			IntPtr err;
+			var data = SecKeyCopyKeyExchangeResult (Handle, algorithm.GetConstant ().Handle, publicKey.Handle, parameters.Handle, out err);
+			error = err == IntPtr.Zero ? null : new NSError (err);
+			return Runtime.GetNSObject<NSData> (data, true);
+		}
+
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		public NSData GetKeyExchangeResult (SecKeyAlgorithm algorithm, SecKey publicKey, SecKeyKeyExchangeParameter parameters, out NSError error)
+		{
+			return GetKeyExchangeResult (algorithm, publicKey, parameters?.Dictionary, out error);
 		}
 
 		~SecKey ()

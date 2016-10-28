@@ -75,7 +75,7 @@ namespace MonoTouchFixtures.Security {
 				// the system was able to construct the chain based on the single certificate
 				Assert.That (Evaluate (trust, true), Is.EqualTo (SecTrustResult.RecoverableTrustFailure), "Evaluate");
 
-				if (TestRuntime.CheckSystemAndSDKVersion (7, 0)) {
+				if (TestRuntime.CheckXcodeVersion (5, 0)) {
 					Assert.True (trust.NetworkFetchAllowed, "NetworkFetchAllowed-1");
 					trust.NetworkFetchAllowed = false;
 					Assert.False (trust.NetworkFetchAllowed, "NetworkFetchAllowed-2");
@@ -100,7 +100,7 @@ namespace MonoTouchFixtures.Security {
 				trust.SetVerifyDate (new DateTime (635108745218945450, DateTimeKind.Utc));
 				Assert.That (Evaluate (trust, true), Is.EqualTo (SecTrustResult.RecoverableTrustFailure), "Evaluate");
 
-				if (TestRuntime.CheckSystemAndSDKVersion (7, 0)) {
+				if (TestRuntime.CheckXcodeVersion (5, 0)) {
 					Assert.That (trust.GetTrustResult (), Is.EqualTo (SecTrustResult.RecoverableTrustFailure), "GetTrustResult");
 
 					using (var a = NSArray.FromNSObjects (policy))
@@ -127,7 +127,7 @@ namespace MonoTouchFixtures.Security {
 				trust.SetVerifyDate (new DateTime (635108745218945450, DateTimeKind.Utc));
 				Assert.That (Evaluate (trust, true), Is.EqualTo (SecTrustResult.RecoverableTrustFailure), "Evaluate");
 				
-				if (TestRuntime.CheckSystemAndSDKVersion (7, 0)) {
+				if (TestRuntime.CheckXcodeVersion (5, 0)) {
 					using (var rev = SecPolicy.CreateRevocationPolicy (SecRevocation.UseAnyAvailableMethod)) {
 						List<SecPolicy> list = new List<SecPolicy> () { policy, rev };
 						trust.SetPolicies (list);
@@ -150,7 +150,7 @@ namespace MonoTouchFixtures.Security {
 				// a host name is not meaningful for client certificates
 				Assert.That (Evaluate (trust, true), Is.EqualTo (SecTrustResult.RecoverableTrustFailure), "Evaluate");
 
-				if (TestRuntime.CheckSystemAndSDKVersion (7, 0)) {
+				if (TestRuntime.CheckXcodeVersion (5, 0)) {
 					// by default there's no *custom* anchors
 					Assert.Null (trust.GetCustomAnchorCertificates (), "GetCustomAnchorCertificates");
 
@@ -176,7 +176,7 @@ namespace MonoTouchFixtures.Security {
 				SecTrustResult result = SecTrustResult.RecoverableTrustFailure;
 				Assert.That (Evaluate (trust, result == SecTrustResult.RecoverableTrustFailure), Is.EqualTo (result), "Evaluate");
 
-				if (TestRuntime.CheckSystemAndSDKVersion (7, 0)) {
+				if (TestRuntime.CheckXcodeVersion (5, 0)) {
 					// call GetPolicies without a SetPolicy / SetPolicies
 					var policies = trust.GetPolicies ();
 					Assert.That (policies.Length, Is.EqualTo (1), "Policies.Length");
@@ -201,14 +201,14 @@ namespace MonoTouchFixtures.Security {
 				trust.SetVerifyDate (new DateTime (635108745218945450, DateTimeKind.Utc));
 				// iOS9 is not fully happy with the basic constraints: `SecTrustEvaluate  [root AnchorTrusted BasicContraints]`
 				// so it returns RecoverableTrustFailure and that affects the Count of trust later (it does not add to what we provided)
-				var ios9 = TestRuntime.CheckiOSSystemVersion (9,0);
+				var ios9 = TestRuntime.CheckXcodeVersion (7, 0);
 				var result = Evaluate (trust, ios9);
 				Assert.That (result, Is.EqualTo (ios9 ? SecTrustResult.RecoverableTrustFailure : SecTrustResult.Unspecified), "Evaluate");
 				// Evalute must be called prior to Count (Apple documentation)
 				Assert.That (trust.Count, Is.EqualTo (ios9 ? 2 : 3), "Count");
 
 				using (SecKey pkey = trust.GetPublicKey ()) {
-					Assert.That (CFGetRetainCount (pkey.Handle), Is.EqualTo ((nint) 2), "RetainCount(pkey)");
+					Assert.That (CFGetRetainCount (pkey.Handle), Is.GreaterThan ((nint) 1), "RetainCount(pkey)");
 				}
 			}
 		}
@@ -224,10 +224,17 @@ namespace MonoTouchFixtures.Security {
 			using (var trust = new SecTrust (certs, policy)) {
 				// that certificate stopped being valid on September 30th, 2013 so we validate it with a date earlier than that
 				trust.SetVerifyDate (new DateTime (635108745218945450, DateTimeKind.Utc));
+
+				SecTrustResult trust_result = SecTrustResult.Unspecified;
+				var ios9 = TestRuntime.CheckXcodeVersion (7, 0);
+				var ios10 = TestRuntime.CheckXcodeVersion (8, 0);
+				if (ios10)
+					trust_result = SecTrustResult.FatalTrustFailure;
 				// iOS9 is not fully happy with the basic constraints: `SecTrustEvaluate  [root AnchorTrusted BasicContraints]`
-				var ios9 = TestRuntime.CheckiOSSystemVersion (9,0);
-				var result = Evaluate (trust, ios9);
-				Assert.That (result, Is.EqualTo (ios9 ? SecTrustResult.RecoverableTrustFailure : SecTrustResult.Unspecified), "Evaluate");
+				else if (ios9)
+					trust_result = SecTrustResult.RecoverableTrustFailure;
+				var result = Evaluate (trust, true);
+				Assert.That (result, Is.EqualTo (trust_result), "Evaluate");
 
 				// Evalute must be called prior to Count (Apple documentation)
 				Assert.That (trust.Count, Is.EqualTo (3), "Count");
@@ -246,8 +253,8 @@ namespace MonoTouchFixtures.Security {
 					Assert.That (sc3.SubjectSummary, Is.EqualTo ("Class 3 Public Primary Certification Authority"), "SubjectSummary(sc3)");
 				}
 
-				if (TestRuntime.CheckSystemAndSDKVersion (7, 0)) {
-					Assert.That (trust.GetTrustResult (), Is.EqualTo (ios9 ? SecTrustResult.RecoverableTrustFailure : SecTrustResult.Unspecified), "GetTrustResult");
+				if (TestRuntime.CheckXcodeVersion (5, 0)) {
+					Assert.That (trust.GetTrustResult (), Is.EqualTo (trust_result), "GetTrustResult");
 
 					trust.SetAnchorCertificates (certs);
 					Assert.That (trust.GetCustomAnchorCertificates ().Length, Is.EqualTo (certs.Count), "GetCustomAnchorCertificates");
@@ -269,9 +276,15 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (CFGetRetainCount (trust.Handle), Is.EqualTo ((nint) 1), "RetainCount(trust)");
 				Assert.That (CFGetRetainCount (policy.Handle), Is.EqualTo ((nint) 2), "RetainCount(policy)");
 				// the system was able to construct the chain based on the single certificate
+#if __WATCHOS__
+				Assert.That (Evaluate (trust), Is.EqualTo (SecTrustResult.RecoverableTrustFailure), "Evaluate");
+				// Evalute must be called prior to Count (Apple documentation)
+				Assert.That (trust.Count, Is.EqualTo (1), "Count");
+#else
 				Assert.That (Evaluate (trust), Is.EqualTo (SecTrustResult.Unspecified), "Evaluate");
 				// Evalute must be called prior to Count (Apple documentation)
 				Assert.That (trust.Count, Is.EqualTo (3), "Count");
+#endif
 
 				using (NSData data = trust.GetExceptions ()) {
 					Assert.That (CFGetRetainCount (data.Handle), Is.EqualTo ((nint) 1), "RetainCount(data)");
@@ -296,7 +309,7 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (trust.Count, Is.EqualTo (3), "Count");
 
 				using (SecKey pkey = trust.GetPublicKey ()) {
-					Assert.That (CFGetRetainCount (pkey.Handle), Is.EqualTo ((nint) 2), "RetainCount(pkey)");
+					Assert.That (CFGetRetainCount (pkey.Handle), Is.GreaterThan ((nint) 1), "RetainCount(pkey)");
 				}
 			}
 		}

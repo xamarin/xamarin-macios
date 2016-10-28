@@ -20,10 +20,15 @@ using XamCore.Foundation;
 
 namespace XamCore.Security {
 
-	// CFIndex -> SecAccessControl.h
 	[Flags]
 	[Native]
+#if XAMCORE_4_0
+	// changed to CFOptionFlags in Xcode 8 SDK
+	public enum SecAccessControlCreateFlags : nuint {
+#else
+	// CFOptionFlags -> SecAccessControl.h
 	public enum SecAccessControlCreateFlags : nint {
+#endif
 		UserPresence        = 1 << 0,
 		TouchIDAny          = 1 << 1,
 		TouchIDCurrentSet   = 1 << 3,

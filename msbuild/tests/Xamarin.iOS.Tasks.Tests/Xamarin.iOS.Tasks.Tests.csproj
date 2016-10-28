@@ -101,6 +101,7 @@
     <Compile Include="TaskTests\GeneratePlistTaskTests\GeneratePlistTaskTests_tvOS.cs" />
     <Compile Include="TaskTests\SymbolStripTaskTests.cs" />
     <Compile Include="TaskTests\ValidateAppBundleTaskTests.cs" />
+    <Compile Include="ProjectsTests\IBToolLinking.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

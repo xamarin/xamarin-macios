@@ -242,6 +242,22 @@ namespace XamCore.Foundation {
 			return ret;
 		}
 
+		static public T [] EnumsFromHandle<T> (IntPtr handle) where T : struct, IConvertible
+		{
+			if (handle == IntPtr.Zero)
+				return null;
+			if (!typeof (T).IsEnum)
+				throw new ArgumentException ("T must be an enum");
+
+			var c = GetCount (handle);
+			T [] ret = new T [c];
+
+			for (uint i = 0; i < c; i++) {
+				ret [i] = (T) Convert.ChangeType (UnsafeGetItem<NSNumber> (handle, i).LongValue, typeof (T));
+			}
+			return ret;
+		}
+
 		static public T [] FromArray<T> (NSArray weakArray) where T : NSObject
 		{
 			if (weakArray == null || weakArray.Handle == IntPtr.Zero)

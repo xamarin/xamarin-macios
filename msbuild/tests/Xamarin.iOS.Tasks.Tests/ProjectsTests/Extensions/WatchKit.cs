@@ -26,7 +26,7 @@ namespace Xamarin.iOS.Tasks {
 		{
 			var mtouchPaths = SetupProjectPaths ("MyWatchApp", platform: Platform);
 			using (var xiproj = XIProject.Clone (mtouchPaths.ProjectPath, "MyWatchKitExtension", "MyWatchKitApp")) {
-				mtouchPaths = SetupProjectPaths ("MyWatchApp", xiproj.ProjectDirectory, platform: Platform);
+				mtouchPaths = SetupProjectPaths ("MyWatchApp", "MyWatchApp", xiproj.ProjectDirectory, platform: Platform);
 
 				var appInfoPath = Path.Combine (mtouchPaths.ProjectPath, "Info.plist");
 				var appInfoContents = File.ReadAllText (appInfoPath);
@@ -38,7 +38,7 @@ namespace Xamarin.iOS.Tasks {
 				Engine.GlobalProperties.SetProperty ("Platform", Platform);
 				AppBundlePath = mtouchPaths ["app_bundlepath"];
 				RunTarget (proj, "Build", 2);
-				Assert.AreEqual ("The App Extension WatchExtension has an invalid CFBundleIdentifier (com.xamarin.MyWatchApp.WatchExtension), it does not begin with the main app bundle's CFBundleIdentifier (com.xamarin.MyWatchAppX).", Engine.Logger.ErrorEvents [0].Message, "#1");
+				Assert.AreEqual ("The App Extension 'WatchExtension' has an invalid CFBundleIdentifier (com.xamarin.MyWatchApp.WatchExtension), it does not begin with the main app bundle's CFBundleIdentifier (com.xamarin.MyWatchAppX).", Engine.Logger.ErrorEvents [0].Message, "#1");
 				Assert.AreEqual ("The Watch App 'WatchApp' has an invalid WKCompanionAppBundleIdentifier value ('com.xamarin.MyWatchApp'), it does not match the main app bundle's CFBundleIdentifier ('com.xamarin.MyWatchAppX').", Engine.Logger.ErrorEvents [1].Message, "#2");
 			}
 		}

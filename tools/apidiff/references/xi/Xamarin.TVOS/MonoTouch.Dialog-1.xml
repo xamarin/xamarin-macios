@@ -62,6 +62,26 @@
               </method>
             </methods>
           </class>
+          <class name="AlignmentAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <fields>
+              <field name="Alignment" attrib="6" fieldtype="UIKit.UITextAlignment" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(UIKit.UITextAlignment)" attrib="6278">
+                <parameters>
+                  <parameter name="alignment" position="0" attrib="0" type="UIKit.UITextAlignment" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
           <class name="BadgeElement" type="class" base="MonoTouch.Dialog.Element" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="MonoTouch.Dialog.IElementSizing" />
@@ -175,6 +195,7 @@
             <classes>
               <class name="TextWithImageCellView" type="class" base="UIKit.UITableViewCell" charset="Ansi" layout="Auto">
                 <interfaces>
+                  <interface name="CoreAnimation.ICALayerDelegate" />
                   <interface name="Foundation.INSCoding" />
                   <interface name="Foundation.INSObjectProtocol" />
                   <interface name="ObjCRuntime.INativeObject" />
@@ -187,6 +208,7 @@
                   <interface name="UIKit.IUICoordinateSpace" />
                   <interface name="UIKit.IUIDynamicItem" />
                   <interface name="UIKit.IUIFocusEnvironment" />
+                  <interface name="UIKit.IUIFocusItem" />
                   <interface name="UIKit.IUIGestureRecognizerDelegate" />
                   <interface name="UIKit.IUITraitEnvironment" />
                 </interfaces>
@@ -209,6 +231,36 @@
                 </methods>
               </class>
             </classes>
+          </class>
+          <class name="BindingContext" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="Root" attrib="6" fieldtype="MonoTouch.Dialog.RootElement" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.Object, System.Object, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="callbacks" position="0" attrib="0" type="System.Object" />
+                  <parameter name="o" position="1" attrib="0" type="System.Object" />
+                  <parameter name="title" position="2" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="Dispose()" attrib="486" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Dispose(System.Boolean)" attrib="452" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="Fetch()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+            </methods>
           </class>
           <class name="BoolElement" type="class" base="MonoTouch.Dialog.Element" abstract="true" charset="Ansi" layout="Auto">
             <interfaces>
@@ -245,6 +297,66 @@
               </method>
             </methods>
           </class>
+          <class name="BooleanElement" type="class" base="MonoTouch.Dialog.BoolElement" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.String, System.Boolean)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.Boolean" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Boolean, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.Boolean" />
+                  <parameter name="key" position="2" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="CellKey" attrib="0" ptype="Foundation.NSString">
+                <methods>
+                  <method name="get_CellKey()" attrib="2244" virtual="true" is-override="true" returntype="Foundation.NSString">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Value" attrib="0" ptype="System.Boolean">
+                <methods>
+                  <method name="get_Value()" attrib="2246" virtual="true" is-override="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_Value(System.Boolean)" attrib="2246" virtual="true" is-override="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="Selected(MonoTouch.Dialog.DialogViewController, UIKit.UITableView, Foundation.NSIndexPath)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="dvc" position="0" attrib="0" type="MonoTouch.Dialog.DialogViewController" />
+                  <parameter name="tableView" position="1" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="path" position="2" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
           <class name="BooleanImageElement" type="class" base="MonoTouch.Dialog.BaseBooleanImageElement" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="System.IDisposable" />
@@ -269,6 +381,41 @@
                 <parameters />
               </method>
             </methods>
+          </class>
+          <class name="CaptionAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <fields>
+              <field name="Caption" attrib="6" fieldtype="System.String" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
+          <class name="CheckboxAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
           </class>
           <class name="CheckboxElement" type="class" base="MonoTouch.Dialog.StringElement" charset="Ansi" layout="Auto">
             <interfaces>
@@ -309,6 +456,85 @@
                   <parameter name="dvc" position="0" attrib="0" type="MonoTouch.Dialog.DialogViewController" />
                   <parameter name="tableView" position="1" attrib="0" type="UIKit.UITableView" />
                   <parameter name="path" position="2" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="DateAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+          </class>
+          <class name="DateElement" type="class" base="MonoTouch.Dialog.DateTimeElement" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.String, System.DateTime)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="date" position="1" attrib="0" type="System.DateTime" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="FormatDate(System.DateTime)" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters>
+                  <parameter name="dt" position="0" attrib="0" type="System.DateTime" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="DateTimeElement" type="class" base="MonoTouch.Dialog.StringElement" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="BackgroundColor" attrib="6" fieldtype="UIKit.UIColor" />
+              <field name="DateValue" attrib="6" fieldtype="System.DateTime" />
+              <field name="MinuteInterval" attrib="6" fieldtype="System.Int32" />
+              <field name="fmt" attrib="5" fieldtype="Foundation.NSDateFormatter" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.String, System.DateTime)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="date" position="1" attrib="0" type="System.DateTime" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <events>
+              <event name="DateSelected" attrib="0" eventtype="System.Action`1[MonoTouch.Dialog.DateTimeElement]" />
+            </events>
+            <methods>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="FormatDate(System.DateTime)" attrib="454" virtual="true" returntype="System.String">
+                <parameters>
+                  <parameter name="dt" position="0" attrib="0" type="System.DateTime" />
+                </parameters>
+              </method>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="GetDateWithKind(System.DateTime)" attrib="132" returntype="System.DateTime">
+                <parameters>
+                  <parameter name="dt" position="0" attrib="0" type="System.DateTime" />
                 </parameters>
               </method>
             </methods>
@@ -814,6 +1040,33 @@
               </method>
             </methods>
           </class>
+          <class name="EntryAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <fields>
+              <field name="AutocapitalizationType" attrib="6" fieldtype="UIKit.UITextAutocapitalizationType" />
+              <field name="AutocorrectionType" attrib="6" fieldtype="UIKit.UITextAutocorrectionType" />
+              <field name="ClearButtonMode" attrib="6" fieldtype="UIKit.UITextFieldViewMode" />
+              <field name="KeyboardType" attrib="6" fieldtype="UIKit.UIKeyboardType" />
+              <field name="Placeholder" attrib="6" fieldtype="System.String" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="placeholder" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
           <class name="EntryElement" type="class" base="MonoTouch.Dialog.Element" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="System.IDisposable" />
@@ -1072,8 +1325,58 @@
               </method>
             </methods>
           </class>
+          <class name="FloatElement" type="class" base="MonoTouch.Dialog.Element" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="MaxValue" attrib="6" fieldtype="System.Single" />
+              <field name="MinValue" attrib="6" fieldtype="System.Single" />
+              <field name="ShowCaption" attrib="6" fieldtype="System.Boolean" />
+              <field name="Value" attrib="6" fieldtype="System.Single" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.Single)" attrib="6278">
+                <parameters>
+                  <parameter name="value" position="0" attrib="0" type="System.Single" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(UIKit.UIImage, UIKit.UIImage, System.Single)" attrib="6278">
+                <parameters>
+                  <parameter name="left" position="0" attrib="0" type="UIKit.UIImage" />
+                  <parameter name="right" position="1" attrib="0" type="UIKit.UIImage" />
+                  <parameter name="value" position="2" attrib="0" type="System.Single" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="CellKey" attrib="0" ptype="Foundation.NSString">
+                <methods>
+                  <method name="get_CellKey()" attrib="2244" virtual="true" is-override="true" returntype="Foundation.NSString">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="Summary()" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters />
+              </method>
+            </methods>
+          </class>
           <class name="GlassButton" type="class" base="UIKit.UIButton" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="CoreAnimation.ICALayerDelegate" />
               <interface name="Foundation.INSCoding" />
               <interface name="Foundation.INSObjectProtocol" />
               <interface name="ObjCRuntime.INativeObject" />
@@ -1086,6 +1389,7 @@
               <interface name="UIKit.IUICoordinateSpace" />
               <interface name="UIKit.IUIDynamicItem" />
               <interface name="UIKit.IUIFocusEnvironment" />
+              <interface name="UIKit.IUIFocusItem" />
               <interface name="UIKit.IUITraitEnvironment" />
             </interfaces>
             <fields>
@@ -1178,6 +1482,68 @@
               </constructor>
             </constructors>
           </class>
+          <class name="HtmlAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+          </class>
+          <class name="HtmlElement" type="class" base="MonoTouch.Dialog.Element" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.String, Foundation.NSUrl)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="url" position="1" attrib="0" type="Foundation.NSUrl" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="url" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="CellKey" attrib="0" ptype="Foundation.NSString">
+                <methods>
+                  <method name="get_CellKey()" attrib="2244" virtual="true" is-override="true" returntype="Foundation.NSString">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Url" attrib="0" ptype="System.String">
+                <methods>
+                  <method name="get_Url()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Url(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
           <class name="IColorizeBackground" type="interface" abstract="true" charset="Ansi" layout="Auto">
             <methods>
               <method name="WillDisplay(UIKit.UITableView, UIKit.UITableViewCell, Foundation.NSIndexPath)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
@@ -1195,6 +1561,42 @@
                 <parameters>
                   <parameter name="tableView" position="0" attrib="0" type="UIKit.UITableView" />
                   <parameter name="indexPath" position="1" attrib="0" type="Foundation.NSIndexPath" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="ImageElement" type="class" base="MonoTouch.Dialog.Element" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="Value" attrib="6" fieldtype="UIKit.UIImage" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(UIKit.UIImage)" attrib="6278">
+                <parameters>
+                  <parameter name="image" position="0" attrib="0" type="UIKit.UIImage" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="CellKey" attrib="0" ptype="Foundation.NSString">
+                <methods>
+                  <method name="get_CellKey()" attrib="2244" virtual="true" is-override="true" returntype="Foundation.NSString">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
                 </parameters>
               </method>
             </methods>
@@ -1256,6 +1658,118 @@
               <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
                 <parameters>
                   <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="JsonElement" type="class" base="MonoTouch.Dialog.RootElement" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.Reflection.DefaultMemberAttribute">
+                <properties>
+                  <property name="MemberName" value="Item" />
+                </properties>
+              </attribute>
+            </attributes>
+            <interfaces>
+              <interface name="System.Collections.Generic.IEnumerable`1[MonoTouch.Dialog.Section]" />
+              <interface name="System.Collections.IEnumerable" />
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <fields>
+              <field name="Url" attrib="6" fieldtype="System.String" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="url" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, MonoTouch.Dialog.Group, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="group" position="1" attrib="0" type="MonoTouch.Dialog.Group" />
+                  <parameter name="url" position="2" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.Int32, System.Int32, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="section" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="element" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="url" position="3" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="DateKind" attrib="0" ptype="System.DateTimeKind">
+                <methods>
+                  <method name="get_DateKind()" attrib="2198" static="true" returntype="System.DateTimeKind">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_DateKind(System.DateTimeKind)" attrib="2198" static="true" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.DateTimeKind" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Item" attrib="0" ptype="MonoTouch.Dialog.Element" params="System.String">
+                <methods>
+                  <method name="get_Item(System.String)" attrib="2182" returntype="MonoTouch.Dialog.Element">
+                    <parameters>
+                      <parameter name="key" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="FromFile(System.String)" attrib="150" static="true" returntype="MonoTouch.Dialog.JsonElement">
+                <parameters>
+                  <parameter name="file" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="FromFile(System.String, System.Object)" attrib="150" static="true" returntype="MonoTouch.Dialog.JsonElement">
+                <parameters>
+                  <parameter name="file" position="0" attrib="0" type="System.String" />
+                  <parameter name="arg" position="1" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="FromJson(System.Json.JsonObject)" attrib="150" static="true" returntype="MonoTouch.Dialog.JsonElement">
+                <parameters>
+                  <parameter name="json" position="0" attrib="0" type="System.Json.JsonObject" />
+                </parameters>
+              </method>
+              <method name="FromJson(System.Json.JsonObject, System.Object)" attrib="150" static="true" returntype="MonoTouch.Dialog.JsonElement">
+                <parameters>
+                  <parameter name="json" position="0" attrib="0" type="System.Json.JsonObject" />
+                  <parameter name="data" position="1" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="FromJson(MonoTouch.Dialog.JsonElement, System.Json.JsonObject, System.Object)" attrib="150" static="true" returntype="MonoTouch.Dialog.JsonElement">
+                <parameters>
+                  <parameter name="parent" position="0" attrib="0" type="MonoTouch.Dialog.JsonElement" />
+                  <parameter name="json" position="1" attrib="0" type="System.Json.JsonObject" />
+                  <parameter name="data" position="2" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="GetCell(UIKit.UITableView)" attrib="198" virtual="true" is-override="true" returntype="UIKit.UITableViewCell">
+                <parameters>
+                  <parameter name="tv" position="0" attrib="0" type="UIKit.UITableView" />
+                </parameters>
+              </method>
+              <method name="Selected(MonoTouch.Dialog.DialogViewController, UIKit.UITableView, Foundation.NSIndexPath)" attrib="198" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="dvc" position="0" attrib="0" type="MonoTouch.Dialog.DialogViewController" />
+                  <parameter name="tableView" position="1" attrib="0" type="UIKit.UITableView" />
+                  <parameter name="path" position="2" attrib="0" type="Foundation.NSIndexPath" />
                 </parameters>
               </method>
             </methods>
@@ -1484,6 +1998,7 @@
           </class>
           <class name="MessageSummaryView" type="class" base="UIKit.UIView" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="CoreAnimation.ICALayerDelegate" />
               <interface name="Foundation.INSCoding" />
               <interface name="Foundation.INSObjectProtocol" />
               <interface name="ObjCRuntime.INativeObject" />
@@ -1496,6 +2011,7 @@
               <interface name="UIKit.IUICoordinateSpace" />
               <interface name="UIKit.IUIDynamicItem" />
               <interface name="UIKit.IUIFocusEnvironment" />
+              <interface name="UIKit.IUIFocusItem" />
               <interface name="UIKit.IUITraitEnvironment" />
             </interfaces>
             <constructors>
@@ -1583,6 +2099,21 @@
               </method>
             </methods>
           </class>
+          <class name="MultilineAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+          </class>
           <class name="MultilineElement" type="class" base="MonoTouch.Dialog.StringElement" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="MonoTouch.Dialog.IElementSizing" />
@@ -1620,6 +2151,26 @@
                 </parameters>
               </method>
             </methods>
+          </class>
+          <class name="OnTapAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <fields>
+              <field name="Method" attrib="6" fieldtype="System.String" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="method" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
           </class>
           <class name="OwnerDrawnElement" type="class" base="MonoTouch.Dialog.Element" abstract="true" charset="Ansi" layout="Auto">
             <interfaces>
@@ -1698,6 +2249,23 @@
               </method>
             </methods>
           </class>
+          <class name="PasswordAttribute" type="class" base="MonoTouch.Dialog.EntryAttribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="placeholder" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
           <class name="RadioElement" type="class" base="MonoTouch.Dialog.StringElement" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="System.IDisposable" />
@@ -1762,8 +2330,44 @@
               </property>
             </properties>
           </class>
+          <class name="RadioSelectionAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <fields>
+              <field name="Target" attrib="6" fieldtype="System.String" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="target" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
+          <class name="RangeAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <fields>
+              <field name="High" attrib="6" fieldtype="System.Single" />
+              <field name="Low" attrib="6" fieldtype="System.Single" />
+              <field name="ShowCaption" attrib="6" fieldtype="System.Boolean" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor(System.Single, System.Single)" attrib="6278">
+                <parameters>
+                  <parameter name="low" position="0" attrib="0" type="System.Single" />
+                  <parameter name="high" position="1" attrib="0" type="System.Single" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
           <class name="RefreshTableHeaderView" type="class" base="UIKit.UIView" charset="Ansi" layout="Auto">
             <interfaces>
+              <interface name="CoreAnimation.ICALayerDelegate" />
               <interface name="Foundation.INSCoding" />
               <interface name="Foundation.INSObjectProtocol" />
               <interface name="ObjCRuntime.INativeObject" />
@@ -1776,6 +2380,7 @@
               <interface name="UIKit.IUICoordinateSpace" />
               <interface name="UIKit.IUIDynamicItem" />
               <interface name="UIKit.IUIFocusEnvironment" />
+              <interface name="UIKit.IUIFocusItem" />
               <interface name="UIKit.IUITraitEnvironment" />
             </interfaces>
             <fields>
@@ -2272,6 +2877,51 @@
               </method>
             </methods>
           </class>
+          <class name="SectionAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <fields>
+              <field name="Caption" attrib="6" fieldtype="System.String" />
+              <field name="Footer" attrib="6" fieldtype="System.String" />
+            </fields>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+              <constructor name=".ctor(System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor(System.String, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="footer" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+          </class>
+          <class name="SkipAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+          </class>
           <class name="StringElement" type="class" base="MonoTouch.Dialog.Element" charset="Ansi" layout="Auto">
             <interfaces>
               <interface name="System.IDisposable" />
@@ -2487,6 +3137,41 @@
               <method name="PrepareCell(UIKit.UITableViewCell)" attrib="132" returntype="System.Void">
                 <parameters>
                   <parameter name="cell" position="0" attrib="0" type="UIKit.UITableViewCell" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="TimeAttribute" type="class" base="System.Attribute" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="Inherited" value="False" />
+                  <property name="ValidOn" value="Field, Property" />
+                </properties>
+              </attribute>
+            </attributes>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+          </class>
+          <class name="TimeElement" type="class" base="MonoTouch.Dialog.DateTimeElement" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.String, System.DateTime)" attrib="6278">
+                <parameters>
+                  <parameter name="caption" position="0" attrib="0" type="System.String" />
+                  <parameter name="date" position="1" attrib="0" type="System.DateTime" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="FormatDate(System.DateTime)" attrib="198" virtual="true" is-override="true" returntype="System.String">
+                <parameters>
+                  <parameter name="dt" position="0" attrib="0" type="System.DateTime" />
                 </parameters>
               </method>
             </methods>

@@ -7,6 +7,7 @@ namespace XamCore.HomeKit {
 	partial class HMAccessoryCategory {
 
 		[iOS (9,0)]
+		[TV (10,0)]
 		public HMAccessoryCategoryType CategoryType {
 			get {
 				var s = _CategoryType;
@@ -23,8 +24,8 @@ namespace XamCore.HomeKit {
 					return HMAccessoryCategoryType.DoorLock;
 				if (s == HMAccessoryCategoryTypesInternal.Fan)
 					return HMAccessoryCategoryType.Fan;
-				if (s == HMAccessoryCategoryTypesInternal.DoorOpener)
-					return HMAccessoryCategoryType.DoorOpener;
+				if (s == HMAccessoryCategoryTypesInternal.GarageDoorOpener)
+					return HMAccessoryCategoryType.GarageDoorOpener;
 				if (s == HMAccessoryCategoryTypesInternal.Lightbulb)
 					return HMAccessoryCategoryType.Lightbulb;
 				if (s == HMAccessoryCategoryTypesInternal.Outlet)
@@ -41,6 +42,14 @@ namespace XamCore.HomeKit {
 					return HMAccessoryCategoryType.Window;
 				if (s == HMAccessoryCategoryTypesInternal.WindowCovering)
 					return HMAccessoryCategoryType.WindowCovering;
+				// iOS 9.3
+				if (s == HMAccessoryCategoryTypesInternal.RangeExtender)
+					return HMAccessoryCategoryType.RangeExtender;
+				// iOS 10.0
+				if (s == HMAccessoryCategoryTypesInternal.IPCamera)
+					return HMAccessoryCategoryType.IPCamera;
+				if (s == HMAccessoryCategoryTypesInternal.VideoDoorbell)
+					return HMAccessoryCategoryType.VideoDoorbell;
 				return HMAccessoryCategoryType.Other;
 			}
 		}

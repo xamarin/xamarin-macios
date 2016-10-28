@@ -29,70 +29,70 @@ namespace XamCore.UIKit {
 		[iOS (7,0)]
 		public static UIFont PreferredHeadline {
 			get {
-				return GetPreferredFontForTextStyle (UIFont.TextStyleHeadline);
+				return GetPreferredFontForTextStyle (UIFontTextStyle.Headline);
 			}
 		}
 		
 		[iOS (7,0)]
 		public static UIFont PreferredBody {
 			get {
-				return GetPreferredFontForTextStyle (UIFont.TextStyleBody);
+				return GetPreferredFontForTextStyle (UIFontTextStyle.Body);
 			}
 		}
 		
 		[iOS (7,0)]
 		public static UIFont PreferredSubheadline {
 			get {
-				return GetPreferredFontForTextStyle (UIFont.TextStyleSubheadline);
+				return GetPreferredFontForTextStyle (UIFontTextStyle.Subheadline);
 			}
 		}
 		
 		[iOS (7,0)]
 		public static UIFont PreferredFootnote {
 			get {
-				return GetPreferredFontForTextStyle (UIFont.TextStyleFootnote);
+				return GetPreferredFontForTextStyle (UIFontTextStyle.Footnote);
 			}
 		}
 		
 		[iOS (7,0)]
 		public static UIFont PreferredCaption1 {
 			get {
-				return GetPreferredFontForTextStyle (UIFont.TextStyleCaption1);
+				return GetPreferredFontForTextStyle (UIFontTextStyle.Caption1);
 			}
 		}
 		
 		[iOS (7,0)]
 		public static UIFont PreferredCaption2 {
 			get {
-				return GetPreferredFontForTextStyle (UIFont.TextStyleCaption2);
+				return GetPreferredFontForTextStyle (UIFontTextStyle.Caption2);
 			}
 		}
 
 		[iOS (9,0)]
 		public static UIFont PreferredTitle1 {
 			get {
-				return GetPreferredFontForTextStyle (UIFont.TextStyleTitle1);
+				return GetPreferredFontForTextStyle (UIFontTextStyle.Title1);
 			}
 		}
 		
 		[iOS (9,0)]
 		public static UIFont PreferredTitle2 {
 			get {
-				return GetPreferredFontForTextStyle (UIFont.TextStyleTitle2);
+				return GetPreferredFontForTextStyle (UIFontTextStyle.Title2);
 			}
 		}
 		
 		[iOS (9,0)]
 		public static UIFont PreferredTitle3 {
 			get {
-				return GetPreferredFontForTextStyle (UIFont.TextStyleTitle3);
+				return GetPreferredFontForTextStyle (UIFontTextStyle.Title3);
 			}
 		}
 		
 		[iOS (9,0)]
 		public static UIFont PreferredCallout {
 			get {
-				return GetPreferredFontForTextStyle (UIFont.TextStyleCallout);
+				return GetPreferredFontForTextStyle (UIFontTextStyle.Callout);
 			}
 		}
 
@@ -151,6 +151,27 @@ namespace XamCore.UIKit {
 			var ptr = _GetPreferredFontForTextStyle (uiFontTextStyle);
 			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
 		}
+
+		[Availability (Introduced = Platform.iOS_7_0)]
+		public static UIFont GetPreferredFontForTextStyle (UIFontTextStyle uiFontTextStyle)
+		{
+			return GetPreferredFontForTextStyle (uiFontTextStyle.GetConstant ());
+		}
+
+#if !WATCH
+		[Availability (Introduced = Platform.iOS_7_0)]
+		public static UIFont GetPreferredFontForTextStyle (NSString uiFontTextStyle, UITraitCollection traitCollection)
+		{
+			var ptr = _GetPreferredFontForTextStyle (uiFontTextStyle, traitCollection);
+			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
+		}
+
+		[Availability (Introduced = Platform.iOS_7_0)]
+		public static UIFont GetPreferredFontForTextStyle (UIFontTextStyle uiFontTextStyle, UITraitCollection traitCollection)
+		{
+			return GetPreferredFontForTextStyle (uiFontTextStyle.GetConstant (), traitCollection);
+		}
+#endif
 
 		[Availability (Introduced = Platform.iOS_7_0)]
 		public static UIFont FromDescriptor (UIFontDescriptor descriptor, nfloat pointSize)

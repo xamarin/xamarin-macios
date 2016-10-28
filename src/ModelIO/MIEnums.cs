@@ -259,5 +259,27 @@ namespace XamCore.ModelIO {
 		}
 		public Vector4 MinimumExtent, MaximumExtent;
 	}
+
+	[Native]
+	public enum MDLCameraProjection : nuint
+	{
+		Perspective = 0,
+		Orthographic = 1,
+	}
+
+	[Native]
+	public enum MDLMaterialFace : nuint
+	{
+		Front = 0,
+		Back,
+		DoubleSided,
+	}
+
+	[Native]
+	public enum MDLProbePlacement : nint
+	{
+		UniformGrid = 0,
+		IrradianceDistribution,
+	}
 }
 #endif

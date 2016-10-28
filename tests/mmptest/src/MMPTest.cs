@@ -16,6 +16,10 @@ namespace Xamarin.MMP.Tests
 		{
 			string tmpDir = Path.Combine (Path.GetTempPath (), "mmp-test-dir");
 			try {
+				// Clean out any existing build there first to prevent strange behavior
+				if (Directory.Exists (tmpDir))
+					Directory.Delete (tmpDir, true);
+
 				Directory.CreateDirectory (tmpDir);
 				test (tmpDir);
 			}
@@ -71,7 +75,16 @@ namespace Xamarin.MMP.Tests
 				return;
 
 			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs>" };
+				// First in 64-bit
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>" };
+				// Mobile
+				TI.TestUnifiedExecutable (test);
+				// XM45
+				test.XM45 = true;
+				TI.TestUnifiedExecutable (test);
+
+				// Now 32-bit
+				test.CSProjConfig = "<MonoBundlingExtraArgs>--registrar=static</MonoBundlingExtraArgs><XamMacArch>i386</XamMacArch>";
 				// Mobile
 				TI.TestUnifiedExecutable (test);
 				// XM45
@@ -141,7 +154,7 @@ namespace Xamarin.MMP.Tests
 		{
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--new-refcount=false</MonoBundlingExtraArgs>" };
-				string buildOutput = TI.TestUnifiedExecutable (test);
+				string buildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
 				Assert.IsTrue (buildOutput.Contains ("Disabling the new refcount logic is deprecated"), "Mobile_NewRefCount_Warns did not warn as expected:\n\n", buildOutput);
 			});
 		}
@@ -184,13 +197,29 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
 				// Mobile
-				string buildResults = TI.TestUnifiedExecutable (test);
+				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
 				Assert.IsTrue (!buildResults.Contains ("warning"), "Unified_HelloWorld_ShouldHaveNoWarnings - Mobile had warning: \n" + buildResults);
 
 				// XM45
 				test.XM45 = true;
-				buildResults = TI.TestUnifiedExecutable (test);
+				buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
 				Assert.IsTrue (!buildResults.Contains ("warning"), "Unified_HelloWorld_ShouldHaveNoWarnings - XM45 had warning: \n" + buildResults);
+			});
+		}
+
+		[Test]
+		public void Unified_HelloWorld_ShouldHaveNoRegistrarWarnings ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
+				// Mobile
+				string output = TI.TestUnifiedExecutable (test).RunOutput;
+				Assert.IsTrue (!output.Contains ("Could not register the assembly"), "Unified_HelloWorld_ShouldHaveNoRegistrarWarnings - Mobile had registrar issues: \n" + output);
+
+				// XM45
+				test.XM45 = true;
+				output = TI.TestUnifiedExecutable (test).RunOutput;
+				Assert.IsTrue (!output.Contains ("Could not register the assembly"), "Unified_HelloWorld_ShouldHaveNoRegistrarWarnings - XM45 had registrar issues: \n" + output);
 			});
 		}
 
@@ -310,18 +339,130 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void UnsafeGACResolutionOptions_AllowsWindowsBaseResolution ()
 		{
+			RunMMPTest (tmpDir =>
+			{
+				UnsafeGACTestCore (tmpDir, true);
+				UnsafeGACTestCore (tmpDir, false);
+			});
+		}
+
+		static void UnsafeGACTestCore (string tmpDir, bool useFullProfile)
+		{
+			TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir)
+			{
+				XM45 = useFullProfile,
+				TestCode = "System.Console.WriteLine (typeof (System.Windows.DependencyObject));",
+				References = "<Reference Include=\"WindowsBase\" /><Reference Include=\"System.Xaml\" />"
+			};
+
+			TI.TestUnifiedExecutable (test, shouldFail: true);
+
+			// Mobile will fail terribly due to mismatch BCL, no need to see if this works. Just testing that Mobile fails
+			if (useFullProfile)
+			{
+				test.CSProjConfig = "<MonoBundlingExtraArgs>--allow-unsafe-gac-resolution</MonoBundlingExtraArgs>";
+				TI.TestUnifiedExecutable (test, shouldFail: false);
+			}
+		}
+
+		[Test]
+		public void DefaultProject_ShouldPullInMonoPosix_AndNaitveLib ()
+		{
+			RunMMPTest (tmpDir =>
+			{
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = true };
+				MonoPosixTestCore (tmpDir, test);
+				test.XM45 = false;
+				MonoPosixTestCore (tmpDir, test);
+			});
+		}
+
+		static void MonoPosixTestCore (string tmpDir, TI.UnifiedTestConfig test)
+		{
+			TI.TestUnifiedExecutable (test, shouldFail: false);
+
+			Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/Mono.Posix.dll")));
+			Assert.IsTrue (File.Exists (Path.Combine (tmpDir, "bin/Debug/XM45Example.app/Contents/MonoBundle/libMonoPosixHelper.dylib")));
+		}
+
+
+		const string machineConfigMobileLocation = "bin/Debug/UnifiedExample.app/Contents/MonoBundle/mono/4.5/machine.config";
+		const string machineConfigXM45Location = "bin/Debug/XM45Example.app/Contents/MonoBundle/mono/4.5/machine.config";
+
+		[Test]
+		public void Unified_ShouldNotGenerateMachineConfigInBundle_WithoutOption ()
+		{
 			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir)
-				{
-					XM45 = true,
-					TestCode = "System.Console.WriteLine (typeof (System.Windows.DependencyObject));",
-					References = "<Reference Include=\"WindowsBase\" />"
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
+				// Mobile
+				TI.TestUnifiedExecutable (test);
+
+				Assert.IsFalse (File.Exists (Path.Combine (tmpDir, machineConfigMobileLocation)));
+
+				// XM45
+				test.XM45 = true;
+				TI.TestUnifiedExecutable (test);
+
+				Assert.IsFalse (File.Exists (Path.Combine (tmpDir, machineConfigXM45Location)));
+			});
+		}
+
+		[Test]
+		public void Unified_InvalidMachineConfigInBundle_ThrowsError ()
+		{
+			RunMMPTest (tmpDir => {
+				string invalidConfigPath = Path.Combine (tmpDir, "nonexistant/machine.config");
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = string.Format ("<MonoBundlingExtraArgs>--machine-config={0}</MonoBundlingExtraArgs>", invalidConfigPath)
+				};
+				string buildOutput = TI.TestUnifiedExecutable (test, shouldFail : true).BuildOutput;
+				Assert.IsTrue (buildOutput.Contains ("can not be found"), "Unified_InvalidMachineConfigInBundle_ThrowsError did not error as expected (1):\n\n", buildOutput);
+				Assert.IsTrue (buildOutput.Contains ("97"), "Unified_InvalidMachineConfigInBundle_ThrowsError did not error as expected (2):\n\n", buildOutput);
+			});
+		}
+
+		[Test]
+		public void Unified_ShouldGenerateMachineConfigInBundle_WithEmptyOption ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = "<MonoBundlingExtraArgs>--machine-config=\"\"</MonoBundlingExtraArgs>"
+				};
+				TI.TestUnifiedExecutable (test);
+				Assert.IsTrue (File.Exists (Path.Combine (tmpDir, machineConfigMobileLocation)));
+
+				test.XM45 = true;
+				TI.TestUnifiedExecutable (test);
+				Assert.IsTrue (File.Exists (Path.Combine (tmpDir, machineConfigXM45Location)));
+			});
+		}
+
+		[Test]
+		public void Unified_ShouldGenerateMachineConfigInBundle_WhenPassedIn ()
+		{
+			RunMMPTest (tmpDir => {
+				const string configText = "THIS_IS_NOT_A_REAL_CONFIG_FILE";
+				string configPath = Path.Combine (tmpDir, "machine.config");
+				File.WriteAllLines (configPath, new string [] { configText });
+
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = string.Format ("<MonoBundlingExtraArgs>--machine-config={0}</MonoBundlingExtraArgs>", configPath)
 				};
 
-				TI.TestUnifiedExecutable (test, shouldFail : true);
+				// Mobile
+				TI.TestUnifiedExecutable (test);
 
-				test.CSProjConfig = "<MonoBundlingExtraArgs>--allow-unsafe-gac-resolution</MonoBundlingExtraArgs>";
-				TI.TestUnifiedExecutable (test, shouldFail : false);
+				Assert.IsTrue (File.Exists (Path.Combine (tmpDir, machineConfigMobileLocation)));
+				string [] text = File.ReadAllLines (Path.Combine (tmpDir, machineConfigMobileLocation));
+				Assert.IsTrue (text.Length == 1 && text[0] == configText);
+
+				// XM45
+				test.XM45 = true;
+				TI.TestUnifiedExecutable (test);
+
+				Assert.IsTrue (File.Exists (Path.Combine (tmpDir, machineConfigXM45Location)));
+				text = File.ReadAllLines (Path.Combine (tmpDir, machineConfigXM45Location));
+				Assert.IsTrue (text.Length == 1 && text[0] == configText);
 			});
 		}
 	}

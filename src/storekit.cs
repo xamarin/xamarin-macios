@@ -21,7 +21,7 @@ namespace XamCore.StoreKit {
 
 	[Since(6,0)]
 	[BaseType (typeof (NSObject))]
-	public partial interface SKDownload {
+	partial interface SKDownload {
 #if MONOMAC
 		[Export ("state")]
 		SKDownloadState DownloadState { get;  }
@@ -72,7 +72,7 @@ namespace XamCore.StoreKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	public partial interface SKPayment : NSMutableCopying {
+	partial interface SKPayment : NSMutableCopying {
 		[Static]
 		[Export("paymentWithProduct:")]
 		SKPayment CreateFrom (SKProduct product);
@@ -104,7 +104,7 @@ namespace XamCore.StoreKit {
 	}
 
 	[BaseType (typeof (SKPayment))]
-	public interface SKMutablePayment {
+	interface SKMutablePayment {
 		[Static]
 		[Export("paymentWithProduct:")]
 		SKMutablePayment PaymentWithProduct (SKProduct product);
@@ -139,7 +139,7 @@ namespace XamCore.StoreKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface SKPaymentQueue {
+	interface SKPaymentQueue {
 		[Export ("defaultQueue")][Static]
 		SKPaymentQueue DefaultQueue { get; }
 
@@ -191,7 +191,7 @@ namespace XamCore.StoreKit {
 	}
 	
 	[BaseType (typeof (NSObject))]
-	public interface SKProduct {
+	interface SKProduct {
 		[Export ("localizedDescription")]
 		string LocalizedDescription { get; }
 
@@ -238,7 +238,7 @@ namespace XamCore.StoreKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface SKPaymentTransactionObserver {
+	interface SKPaymentTransactionObserver {
 
 		[Export ("paymentQueue:updatedTransactions:")][Abstract]
 		void UpdatedTransactions (SKPaymentQueue queue, SKPaymentTransaction [] transactions);
@@ -258,7 +258,7 @@ namespace XamCore.StoreKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface SKPaymentTransaction {
+	interface SKPaymentTransaction {
 		[Export ("error")]
 		NSError Error { get; }
 
@@ -289,7 +289,7 @@ namespace XamCore.StoreKit {
 	}
 
 	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (SKRequestDelegate)})]
-	public interface SKRequest {
+	interface SKRequest {
 		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
 		NSObject WeakDelegate { get; [NullAllowed] set; }
 
@@ -307,7 +307,7 @@ namespace XamCore.StoreKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface SKRequestDelegate {
+	interface SKRequestDelegate {
 		[Export ("requestDidFinish:")]
 		void RequestFinished (SKRequest request);
 		
@@ -318,7 +318,7 @@ namespace XamCore.StoreKit {
 	[Since (7,0)]
 	[Mac (10,9)]
 	[BaseType (typeof (SKRequest))]
-	public interface SKReceiptRefreshRequest {
+	interface SKReceiptRefreshRequest {
 		[Export ("initWithReceiptProperties:")]
 		IntPtr Constructor ([NullAllowed] NSDictionary properties);
 
@@ -347,7 +347,7 @@ namespace XamCore.StoreKit {
 	}
 
 	[BaseType (typeof (SKRequest), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (SKProductsRequestDelegate)})]
-	public interface SKProductsRequest {
+	interface SKProductsRequest {
 		[Export ("initWithProductIdentifiers:")]
 		IntPtr Constructor (NSSet productIdentifiersStringSet);
 		
@@ -360,7 +360,7 @@ namespace XamCore.StoreKit {
 	}
 	
 	[BaseType (typeof (NSObject))]
-	public interface SKProductsResponse {
+	interface SKProductsResponse {
 		[Export ("products")]
 		SKProduct [] Products { get; }
 
@@ -371,7 +371,7 @@ namespace XamCore.StoreKit {
 	[BaseType (typeof (SKRequestDelegate))]
 	[Model]
 	[Protocol]
-	public interface SKProductsRequestDelegate {
+	interface SKProductsRequestDelegate {
 		[Export ("productsRequest:didReceiveResponse:")][Abstract][EventArgs ("SKProductsRequestResponse")]
 		void ReceivedResponse (SKProductsRequest request, SKProductsResponse response);
 	}
@@ -383,9 +383,12 @@ namespace XamCore.StoreKit {
 		   Delegates=new string [] { "WeakDelegate" },
 		   Events   =new Type   [] { typeof (SKStoreProductViewControllerDelegate) })]
 	interface SKStoreProductViewController {
+#if !XAMCORE_4_0
+		// SKStoreProductViewController is an OS View Controller which can't be customized
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+#endif
 
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set;  }
@@ -440,7 +443,7 @@ namespace XamCore.StoreKit {
 	[iOS (9,3)]
 	[TV (9,2)]
 	[BaseType (typeof (NSObject))]
-#if MONOMAC || XAMCORE_3_0 // Avoid breaking change in iOS
+#if XAMCORE_3_0 // Avoid breaking change in iOS
 	[DisableDefaultCtor]
 #endif
 	interface SKCloudServiceController {
@@ -468,6 +471,62 @@ namespace XamCore.StoreKit {
 		[Notification]
 		[Field ("SKCloudServiceCapabilitiesDidChangeNotification")]
 		NSString CloudServiceCapabilitiesDidChangeNotification { get; }
+	}
+
+	[NoTV, iOS (10,1)]
+	[BaseType (typeof(UIViewController))]
+	interface SKCloudServiceSetupViewController
+	{
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		ISKCloudServiceSetupViewControllerDelegate Delegate { get; set; }
+
+		[Async]
+		[Export ("loadWithOptions:completionHandler:")]
+		void Load (NSDictionary options, [NullAllowed] Action<bool, NSError> completionHandler);
+
+		[Async]
+		[Wrap ("Load (options == null ? null : options.Dictionary, completionHandler)")]
+		void Load (SKCloudServiceSetupOptions options, Action<bool, NSError> completionHandler);
+	}
+
+	interface ISKCloudServiceSetupViewControllerDelegate {}
+
+	[NoTV, iOS (10,1)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface SKCloudServiceSetupViewControllerDelegate
+	{
+		[Export ("cloudServiceSetupViewControllerDidDismiss:")]
+		void DidDismiss (SKCloudServiceSetupViewController cloudServiceSetupViewController);
+	}
+
+	[NoTV, iOS (10,1)]
+	[StrongDictionary ("SKCloudServiceSetupOptionsKeys")]
+	interface SKCloudServiceSetupOptions
+	{
+		// Headers comment: Action for setup entry point (of type SKCloudServiceSetupAction).
+		SKCloudServiceSetupAction Action { get; set; }
+
+		// Headers comment: Identifier of the iTunes Store item the user is trying to access which requires cloud service setup (NSNumber).
+		nint ITunesItemIdentifier { get; set; }
+	}
+
+	[NoTV, iOS (10,1)]
+	[Internal, Static]
+	interface SKCloudServiceSetupOptionsKeys
+	{
+		[Field ("SKCloudServiceSetupOptionsActionKey")]
+		NSString ActionKey { get; }
+
+		[Field ("SKCloudServiceSetupOptionsITunesItemIdentifierKey")]
+		NSString ITunesItemIdentifierKey { get; }
+	}
+
+	[NoTV, iOS (10,1)]
+	enum SKCloudServiceSetupAction
+	{
+		[Field ("SKCloudServiceSetupActionSubscribe")]
+		Subscribe,
 	}
 #endif
 }

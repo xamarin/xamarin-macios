@@ -68,11 +68,11 @@ namespace BCL.Tests
 #else
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (major, minor))
 				return false;
-#endif
 
 			// Check if the SDK version we're built includes the version we're checking for
 			// We don't want to execute iOS7 tests on an iOS7 device when built with the iOS6 SDK.
 			return CheckSDKVersion (major, minor);
+#endif
 		}
 
 		public static bool CheckSystemVersion (int major, int minor)
@@ -93,7 +93,6 @@ namespace BCL.Tests
 				// dyld_get_program_sdk_version was introduced with iOS 6.0, so don't do the SDK check on older deviecs.
 				return true; // dyld_get_program_sdk_version doesn't return what we're looking for on the mac.
 			}
-#endif
 
 			var sdk = GetSDKVersion ();
 			if (sdk.Major > major)
@@ -101,6 +100,7 @@ namespace BCL.Tests
 			if (sdk.Major == major && sdk.Minor >= minor)
 				return true;
 			return false;
+#endif
 		}
 	}
 }

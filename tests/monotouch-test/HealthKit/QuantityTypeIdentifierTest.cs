@@ -31,8 +31,7 @@ namespace MonoTouchFixtures.HealthKit {
 		[Test]
 		public void EnumValues_22351 ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8,0))
-				Assert.Inconclusive ("Requires iOS8+");
+			TestRuntime.AssertXcodeVersion (6, 0);
 
 			foreach (HKQuantityTypeIdentifier value in Enum.GetValues (typeof (HKQuantityTypeIdentifier))) {
 
@@ -41,7 +40,18 @@ namespace MonoTouchFixtures.HealthKit {
 				case HKQuantityTypeIdentifier.BasalBodyTemperature:
 				case HKQuantityTypeIdentifier.DietaryWater:
 				case HKQuantityTypeIdentifier.UVExposure:
-					if (!TestRuntime.CheckiOSSystemVersion (9, 0))
+					if (!TestRuntime.CheckXcodeVersion (7, 0))
+						continue;
+					break;
+				case HKQuantityTypeIdentifier.AppleExerciseTime:
+					if (!TestRuntime.CheckXcodeVersion (7, 3))
+						continue;
+					break;
+				case HKQuantityTypeIdentifier.DistanceWheelchair:
+				case HKQuantityTypeIdentifier.PushCount:
+				case HKQuantityTypeIdentifier.DistanceSwimming:
+				case HKQuantityTypeIdentifier.SwimmingStrokeCount:
+					if (!TestRuntime.CheckXcodeVersion (8, 0))
 						continue;
 					break;
 				}

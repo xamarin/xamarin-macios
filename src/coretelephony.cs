@@ -6,9 +6,11 @@ namespace XamCore.CoreTelephony {
 	[Since (4,0)]
 	[BaseType (typeof (NSObject))]
 	interface CTCall {
+		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use CallKit")]
 		[Export ("callID")]
 		string CallID { get;  }
 
+		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use CallKit")]
 		[Export ("callState")]
 		string CallState { get; }
 
@@ -91,6 +93,7 @@ namespace XamCore.CoreTelephony {
 	[BaseType (typeof (NSObject))]
 	[Since (4,0)]
 	interface CTCallCenter {
+		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use CallKit")]
 		[NullAllowed] // by default this property is null
 		[Export ("callEventHandler")]
 #if XAMCORE_2_0
@@ -99,6 +102,7 @@ namespace XamCore.CoreTelephony {
 		CTCallEventHandler CallEventHandler { get; set; }
 #endif
 
+		[Availability (Deprecated = Platform.iOS_10_0, Message = "Use CallKit")]
 		[Export ("currentCalls")]
 		NSSet CurrentCalls { get; }
 
@@ -125,17 +129,17 @@ namespace XamCore.CoreTelephony {
 
 	[BaseType (typeof (NSObject))]
 	[Since (7,0)]
-	public partial interface CTSubscriber {
+	partial interface CTSubscriber {
 		[Since (7,0), Export ("carrierToken")]
 		NSData CarrierToken { get; }
 	}
 
 #if !XAMCORE_2_0
-	public delegate void SimAuthenticationCallback (NSDictionary dictionary);
+	delegate void SimAuthenticationCallback (NSDictionary dictionary);
 #endif
 
 	[Since (6,0), BaseType (typeof (NSObject))]
-	public partial interface CTSubscriberInfo {
+	partial interface CTSubscriberInfo {
 		[Static]
 		[Export ("subscriber")]
 		CTSubscriber Subscriber { get; }

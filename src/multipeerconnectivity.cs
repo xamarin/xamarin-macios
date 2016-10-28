@@ -19,10 +19,11 @@ using XamCore.UIKit;
 
 namespace XamCore.MultipeerConnectivity {
 
+	[TV (10,0)]
 	[Since (7,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[MCPeerID init]: unrecognized selector sent to instance 0x7d721090
-	public partial interface MCPeerID : NSCopying, NSSecureCoding {
+	partial interface MCPeerID : NSCopying, NSSecureCoding {
 
 		[DesignatedInitializer]
 		[Export ("initWithDisplayName:")]
@@ -32,12 +33,13 @@ namespace XamCore.MultipeerConnectivity {
 		string DisplayName { get; }
 	}
 
-	public delegate void MCSessionNearbyConnectionDataForPeerCompletionHandler (NSData connectionData, NSError error);
+	delegate void MCSessionNearbyConnectionDataForPeerCompletionHandler (NSData connectionData, NSError error);
 
+	[TV (10,0)]
 	[Since (7,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash when calling `description` selector
-	public partial interface MCSession {
+	partial interface MCSession {
 
 		[Export ("initWithPeer:")]
 		IntPtr Constructor (MCPeerID myPeerID);
@@ -57,6 +59,7 @@ namespace XamCore.MultipeerConnectivity {
 		[Export ("connectedPeers")]
 		MCPeerID [] ConnectedPeers { get; }
 
+		[Async]
 		[Export ("sendResourceAtURL:withName:toPeer:withCompletionHandler:")]
 		NSProgress SendResource (NSUrl resourceUrl, string resourceName, MCPeerID peerID, [NullAllowed] Action<NSError> completionHandler);
 
@@ -88,6 +91,7 @@ namespace XamCore.MultipeerConnectivity {
 
 		#region Custom Discovery Category
 
+		[Async]
 		[Export ("nearbyConnectionDataForPeer:withCompletionHandler:")]
 		void NearbyConnectionDataForPeer (MCPeerID peerID, MCSessionNearbyConnectionDataForPeerCompletionHandler completionHandler);
 
@@ -100,11 +104,12 @@ namespace XamCore.MultipeerConnectivity {
 		#endregion
 	}
 
+	[TV (10,0)]
 	[Since (7,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public partial interface MCSessionDelegate {
+	partial interface MCSessionDelegate {
 		[Abstract]
 		[Export ("session:peer:didChangeState:")]
 		void DidChangeState (MCSession session, MCPeerID peerID, MCSessionState state);
@@ -129,10 +134,11 @@ namespace XamCore.MultipeerConnectivity {
 		bool DidReceiveCertificate (MCSession session, [NullAllowed] SecCertificate[] certificate, MCPeerID peerID, Action<bool> certificateHandler);
 	}
 
+	[TV (10,0)]
 	[Since (7,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException -[MCNearbyServiceAdvertiser init]: unrecognized selector sent to instance 0x19195e50
-	public partial interface MCNearbyServiceAdvertiser {
+	partial interface MCNearbyServiceAdvertiser {
 
 		[DesignatedInitializer]
 		[Export ("initWithPeer:discoveryInfo:serviceType:")]
@@ -161,13 +167,14 @@ namespace XamCore.MultipeerConnectivity {
 		string ServiceType { get; }
 	}
 
-	public delegate void MCNearbyServiceAdvertiserInvitationHandler (bool accept, MCSession session);
+	delegate void MCNearbyServiceAdvertiserInvitationHandler (bool accept, [NullAllowed] MCSession session);
 
+	[TV (10,0)]
 	[Since (7,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public partial interface MCNearbyServiceAdvertiserDelegate {
+	partial interface MCNearbyServiceAdvertiserDelegate {
 
 #if XAMCORE_2_0
 		[Abstract]
@@ -179,10 +186,11 @@ namespace XamCore.MultipeerConnectivity {
 		void DidNotStartAdvertisingPeer (MCNearbyServiceAdvertiser advertiser, NSError error);
 	}
 
+	[TV (10,0)]
 	[Since (7,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException -[MCNearbyServiceBrowser init]: unrecognized selector sent to instance 0x15519a70
-	public partial interface MCNearbyServiceBrowser {
+	partial interface MCNearbyServiceBrowser {
 
 		[DesignatedInitializer]
 		[Export ("initWithPeer:serviceType:")]
@@ -211,11 +219,12 @@ namespace XamCore.MultipeerConnectivity {
 		string ServiceType { get; }
 	}
 
+	[TV (10,0)]
 	[Since (7,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public partial interface MCNearbyServiceBrowserDelegate {
+	partial interface MCNearbyServiceBrowserDelegate {
 
 #if XAMCORE_2_0
 		[Abstract]
@@ -236,17 +245,18 @@ namespace XamCore.MultipeerConnectivity {
 		void DidNotStartBrowsingForPeers (MCNearbyServiceBrowser browser, NSError error);
 	}
 
-	public interface IMCNearbyServiceBrowserDelegate {}
+	interface IMCNearbyServiceBrowserDelegate {}
 
 #if MONOMAC
 	[Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSViewController))]
 #else
+	[TV (10,0)]
 	[Since (7,0)]
 	[BaseType (typeof (UIViewController))]
 #endif
 	[DisableDefaultCtor] // NSInvalidArgumentException -[MCPeerPickerViewController initWithNibName:bundle:]: unrecognized selector sent to instance 0x15517b90
-	public partial interface MCBrowserViewController : MCNearbyServiceBrowserDelegate {
+	partial interface MCBrowserViewController : MCNearbyServiceBrowserDelegate {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
@@ -278,11 +288,12 @@ namespace XamCore.MultipeerConnectivity {
 		MCSession Session { get; }
 	}
 
+	[TV (10,0)]
 	[Since (7,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public partial interface MCBrowserViewControllerDelegate {
+	partial interface MCBrowserViewControllerDelegate {
 
 #if XAMCORE_2_0
 		[Abstract]
@@ -302,6 +313,7 @@ namespace XamCore.MultipeerConnectivity {
 		bool ShouldPresentNearbyPeer (MCBrowserViewController browserViewController, MCPeerID peerID, [NullAllowed] NSDictionary info);
 	}
 
+	[TV (10,0)]
 	[Since (7,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: -[MCAdvertiserAssistant init]: unrecognized selector sent to instance 0x7ea7fa40
@@ -334,6 +346,7 @@ namespace XamCore.MultipeerConnectivity {
 		void Stop ();
 	}
 
+	[TV (10,0)]
 	[Since (7,0)][Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[Model]

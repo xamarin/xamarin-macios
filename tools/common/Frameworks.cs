@@ -124,12 +124,16 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "Metal", 10, 11 },
 					{ "MetalKit", 10, 11 },
 					{ "ModelIO", 10, 11 },
+
+					{ "Intents", 10, 12 },
+					{ "SafariServices", "SafariServices", 10, 12 },
 				};
 			}
 			return mac_frameworks;
 		}
 	}
 
+#if MTOUCH
 	static Frameworks ios_frameworks;
 	public static Frameworks iOSFrameworks {
 		get {
@@ -200,7 +204,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "SceneKit", "SceneKit", 8 },
 					{ "CloudKit", "CloudKit", 8 },
 					{ "AVKit", "AVKit", 8 },
-					{ "CoreAudioKit", "CoreAudioKit", 8 },
+					{ "CoreAudioKit", "CoreAudioKit", Driver.App.IsSimulatorBuild ? 9 : 8 },
 					{ "Metal", "Metal", 8 },
 					{ "WebKit", "WebKit", 8 },
 					{ "NetworkExtension", "NetworkExtension", 8 },
@@ -217,6 +221,15 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "MetalPerformanceShaders", "MetalPerformanceShaders", 9 },
 					{ "GameplayKit", "GameplayKit", 9 },
 					{ "HealthKitUI", "HealthKitUI", 9,3 },
+
+					{ "CallKit", "CallKit", 10 },
+					{ "Messages", "Messages", 10 },
+					{ "Speech", "Speech", 10 },
+					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
+					{ "UserNotifications", "UserNotifications", 10 },
+					{ "UserNotificationsUI", "UserNotificationsUI", 10 },
+					{ "Intents", "Intents", 10 },
+					{ "IntentsUI", "IntentsUI", 10 },
 				};
 			}
 			return ios_frameworks;
@@ -249,6 +262,13 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "UIKit", "UIKit", 2 },
 					{ "WatchConnectivity", "WatchConnectivity", 2 },
 					{ "WatchKit", "WatchKit", 2 },
+
+					//{ "AVFoundation", "AVFoundation", 3 },
+					{ "CloudKit", "CloudKit", 3 },
+					{ "GameKit", "GameKit", 3 },
+					{ "SceneKit", "SceneKit", 3 },
+					{ "SpriteKit", "SpriteKit", 3 },
+					{ "UserNotifications", "UserNotifications", 3 },
 				};
 			}
 			return watch_frameworks;
@@ -301,11 +321,23 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "TVMLKit", "TVMLKit", 9 },
 					{ "TVServices", "TVServices", 9 },
 					{ "UIKit", "UIKit", 9 },
+
+					{ "MapKit", "MapKit", 9, 2 },
+
+					{ "ExternalAccessory", "ExternalAccessory", 10 },
+					{ "HomeKit", "HomeKit", 10 },
+					{ "MultipeerConnectivity", 10 },
+					{ "Photos", "Photos", 10 },
+					{ "PhotosUI", "PhotosUI", 10 },
+					{ "ReplayKit", "ReplayKit", 10 },
+					{ "UserNotifications", "UserNotifications", 10 },
+					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
 				};
 			}
 			return tvos_frameworks;
 		}
 	}
+#endif
 
 	public static void Gather (AssemblyDefinition product_assembly, HashSet<string> frameworks, HashSet<string> weak_frameworks)
 	{

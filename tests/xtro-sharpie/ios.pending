@@ -1,5 +1,104 @@
 # iOS specific issues we need to look into
 
+
+# AddressBook
+
+## constants were manually bound and this framework is deprecated (Contact)
+## so it's not worth updating the binding code for them
+!missing-field! kABPersonAddressCityKey not bound
+!missing-field! kABPersonAddressCountryCodeKey not bound
+!missing-field! kABPersonAddressCountryKey not bound
+!missing-field! kABPersonAddressProperty not bound
+!missing-field! kABPersonAddressStateKey not bound
+!missing-field! kABPersonAddressStreetKey not bound
+!missing-field! kABPersonAddressZIPKey not bound
+!missing-field! kABPersonAlternateBirthdayCalendarIdentifierKey not bound
+!missing-field! kABPersonAlternateBirthdayDayKey not bound
+!missing-field! kABPersonAlternateBirthdayEraKey not bound
+!missing-field! kABPersonAlternateBirthdayIsLeapMonthKey not bound
+!missing-field! kABPersonAlternateBirthdayMonthKey not bound
+!missing-field! kABPersonAlternateBirthdayProperty not bound
+!missing-field! kABPersonAlternateBirthdayYearKey not bound
+!missing-field! kABPersonAnniversaryLabel not bound
+!missing-field! kABPersonAssistantLabel not bound
+!missing-field! kABPersonBirthdayProperty not bound
+!missing-field! kABPersonBrotherLabel not bound
+!missing-field! kABPersonChildLabel not bound
+!missing-field! kABPersonCreationDateProperty not bound
+!missing-field! kABPersonDateProperty not bound
+!missing-field! kABPersonDepartmentProperty not bound
+!missing-field! kABPersonEmailProperty not bound
+!missing-field! kABPersonFatherLabel not bound
+!missing-field! kABPersonFirstNamePhoneticProperty not bound
+!missing-field! kABPersonFirstNameProperty not bound
+!missing-field! kABPersonFriendLabel not bound
+!missing-field! kABPersonHomePageLabel not bound
+!missing-field! kABPersonInstantMessageProperty not bound
+!missing-field! kABPersonInstantMessageServiceAIM not bound
+!missing-field! kABPersonInstantMessageServiceFacebook not bound
+!missing-field! kABPersonInstantMessageServiceGaduGadu not bound
+!missing-field! kABPersonInstantMessageServiceGoogleTalk not bound
+!missing-field! kABPersonInstantMessageServiceICQ not bound
+!missing-field! kABPersonInstantMessageServiceJabber not bound
+!missing-field! kABPersonInstantMessageServiceKey not bound
+!missing-field! kABPersonInstantMessageServiceMSN not bound
+!missing-field! kABPersonInstantMessageServiceQQ not bound
+!missing-field! kABPersonInstantMessageServiceSkype not bound
+!missing-field! kABPersonInstantMessageServiceYahoo not bound
+!missing-field! kABPersonInstantMessageUsernameKey not bound
+!missing-field! kABPersonJobTitleProperty not bound
+!missing-field! kABPersonKindOrganization not bound
+!missing-field! kABPersonKindPerson not bound
+!missing-field! kABPersonKindProperty not bound
+!missing-field! kABPersonLastNamePhoneticProperty not bound
+!missing-field! kABPersonLastNameProperty not bound
+!missing-field! kABPersonManagerLabel not bound
+!missing-field! kABPersonMiddleNamePhoneticProperty not bound
+!missing-field! kABPersonMiddleNameProperty not bound
+!missing-field! kABPersonModificationDateProperty not bound
+!missing-field! kABPersonMotherLabel not bound
+!missing-field! kABPersonNicknameProperty not bound
+!missing-field! kABPersonNoteProperty not bound
+!missing-field! kABPersonOrganizationProperty not bound
+!missing-field! kABPersonParentLabel not bound
+!missing-field! kABPersonPartnerLabel not bound
+!missing-field! kABPersonPhoneHomeFAXLabel not bound
+!missing-field! kABPersonPhoneIPhoneLabel not bound
+!missing-field! kABPersonPhoneMainLabel not bound
+!missing-field! kABPersonPhoneMobileLabel not bound
+!missing-field! kABPersonPhoneOtherFAXLabel not bound
+!missing-field! kABPersonPhonePagerLabel not bound
+!missing-field! kABPersonPhoneProperty not bound
+!missing-field! kABPersonPhoneWorkFAXLabel not bound
+!missing-field! kABPersonPrefixProperty not bound
+!missing-field! kABPersonRelatedNamesProperty not bound
+!missing-field! kABPersonSisterLabel not bound
+!missing-field! kABPersonSocialProfileProperty not bound
+!missing-field! kABPersonSocialProfileServiceFacebook not bound
+!missing-field! kABPersonSocialProfileServiceFlickr not bound
+!missing-field! kABPersonSocialProfileServiceGameCenter not bound
+!missing-field! kABPersonSocialProfileServiceKey not bound
+!missing-field! kABPersonSocialProfileServiceLinkedIn not bound
+!missing-field! kABPersonSocialProfileServiceMyspace not bound
+!missing-field! kABPersonSocialProfileServiceSinaWeibo not bound
+!missing-field! kABPersonSocialProfileServiceTwitter not bound
+!missing-field! kABPersonSocialProfileURLKey not bound
+!missing-field! kABPersonSocialProfileUserIdentifierKey not bound
+!missing-field! kABPersonSocialProfileUsernameKey not bound
+!missing-field! kABPersonSpouseLabel not bound
+!missing-field! kABPersonSuffixProperty not bound
+!missing-field! kABPersonURLProperty not bound
+!missing-field! kABSourceNameProperty not bound
+!missing-field! kABSourceTypeProperty not bound
+
+
+# CallKit
+
+## +@property (nonatomic, strong, nullable) NSData *iconMaskImageData API_DEPRECATED_WITH_REPLACEMENT("iconTemplateImageData", ios(10.0, 10.0)); // Note: will be removed in a future beta SDK
+!missing-selector! CXProviderConfiguration::iconMaskImageData not bound
+!missing-selector! CXProviderConfiguration::setIconMaskImageData: not bound
+
+
 # CoreMedia
 
 !missing-field! kCMMetadataKeySpace_HLSDateRange not bound
@@ -10,14 +109,50 @@
 !missing-field! kCVOpenGLESTextureCacheMaximumTextureAgeKey not bound
 
 
+# ExternalAccessory
+
+## according to header comment (but not in attributes)
+!extra-designated-initializer! EAWiFiUnconfiguredAccessoryBrowser::initWithDelegate:queue: is incorrectly decorated with an [DesignatedInitializer] attribute
+
+
 # GameplayKit
 
 ## Apple introduced those types in Xcode 7.1 and removed them afterward !?!
-## they do work (intro tests checks them) but thy are not part of the header files
+## they do work (intro tests checks them) but they are not part of the header files
 !unknown-type! GKHybridStrategist bound
 !unknown-type! GKMonteCarloStrategist bound
 !unknown-type! GKQuadTree bound
 !unknown-type! GKQuadTreeNode bound
+
+
+# HomeKit
+
+## This was added and deprecated at the same time recommending the use of UpdateAudioStreamSetting.
+## We decided not to bind it, as it could be that Apple is just keeping it around because it's needed
+## somewhere else.
+!missing-selector! HMCameraStream::setAudioStreamSetting: not bound
+
+
+# Messages
+
+## No enum to attach the domain with.
+!missing-field! MSStickersErrorDomain not bound
+
+
+# MessageUI
+
+## [Native] available on XAMCORE_4_0
+!missing-enum-native! MFMailComposeErrorCode
+!missing-enum-native! MFMailComposeResult
+!missing-enum-native! MessageComposeResult
+!wrong-enum-size! MFMailComposeErrorCode managed 4 vs native 8
+!wrong-enum-size! MFMailComposeResult managed 4 vs native 8
+!wrong-enum-size! MessageComposeResult managed 4 vs native 8
+
+
+# Speech
+## iOS 10 beta 1 - use a non-public type in the signature https://trello.com/c/s6s6YKua
+!missing-selector! SFSpeechRecognizer::prepareWithRequest: not bound
 
 
 # OpenGLES
@@ -27,6 +162,12 @@
 !missing-field! kEAGLColorFormatSRGBA8 not bound
 !missing-field! kEAGLDrawablePropertyColorFormat not bound
 !missing-field! kEAGLDrawablePropertyRetainedBacking not bound
+
+
+# Quicklook
+
+## fixed for XAMCORE_4_0
+!incorrect-protocol-member! QLPreviewItem::previewItemTitle is OPTIONAL and should NOT be abstract
 
 
 # VideoToolbox
@@ -49,11 +190,6 @@
 # static methods in protocols are problematic
 !missing-selector! +UIViewControllerRestoration::viewControllerWithRestorationIdentifierPath:coder: not bound
 
-## added in iOS 8.0
-!missing-pinvoke! SecAddSharedWebCredential is not bound
-!missing-pinvoke! SecCreateSharedWebCredentialPassword is not bound
-!missing-pinvoke! SecRequestSharedWebCredential is not bound
-!missing-field! kSecSharedPassword not bound
 
 # the only member exists in OSX 10.11 - but there are empty protocols so it must be reported (and ignored)
 !missing-protocol! AVFragmentMinding not bound
@@ -117,3 +253,70 @@
 !unknown-field! kVTDecompressionPropertyKey_UsingHardwareAcceleratedVideoDecoder bound
 !unknown-field! kVTVideoDecoderSpecification_EnableHardwareAcceleratedVideoDecoder bound
 !unknown-field! kVTVideoDecoderSpecification_RequireHardwareAcceleratedVideoDecoder bound
+
+# Intents API iOS 10
+
+## Deprecated in Xcode 8 beta NS_DEPRECATED(10_12, 10_12, 10_0, 10_0) / pragma mark - Deprecated
+!missing-selector! INRideDriver::initWithHandle:displayName:image:rating:phoneNumber: not bound
+!missing-selector! INRideDriver::initWithHandle:nameComponents:image:rating:phoneNumber: not bound
+!missing-selector! INRideOption::identifier not bound
+!missing-selector! INRideOption::setIdentifier: not bound
+
+# UIKit
+
+# TODO: MUST BE FIXED by SR0 or SR1 of iOS 10 related bug https://bugzilla.xamarin.com/show_bug.cgi?id=43579
+!missing-protocol-member! UITextFieldDelegate::textFieldDidEndEditing:reason: not found
+!missing-protocol-member! UITextViewDelegate::textView:shouldInteractWithTextAttachment:inRange:interaction: not found
+!missing-protocol-member! UITextViewDelegate::textView:shouldInteractWithURL:inRange:interaction: not found
+
+## HACK: those members are not *required* in ObjC but we made them
+## abstract to have them inlined in UITextField and UITextView
+## Even more confusing it that respondToSelecttor return NO on them
+## even if it works in _real_ life (compare unit and introspection tests)
+!incorrect-protocol-member! UITextInputTraits::autocapitalizationType is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::autocorrectionType is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::enablesReturnKeyAutomatically is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::isSecureTextEntry is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::keyboardAppearance is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::keyboardType is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::returnKeyType is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::spellCheckingType is OPTIONAL and should NOT be abstract
+
+## it's technically optional but there's no point in adopting the protocol if you do not provide the implemenation
+## We should review the above ^ if we want to keep this when XAMCORE_4_0 becomes a thing
+!incorrect-protocol-member! UIInputViewAudioFeedback::enableInputClicksWhenVisible is OPTIONAL and should NOT be abstract
+
+## Obsoleted selectors in very early versions of iOS (3.0) and removed in XAMCORE_3_0
+!extra-protocol-member! unexpected selector UIImagePickerControllerDelegate::imagePickerController:didFinishPickingImage:editingInfo: found
+!extra-protocol-member! unexpected selector UITableViewDelegate::tableView:accessoryTypeForRowWithIndexPath: found
+
+## Special case from UIAccessibilityAction. We added it (completly) on UIResponser but magic tap is also available on app delegate according to docs
+## See comments is uikit.cs for more info
+!extra-protocol-member! unexpected selector UIApplicationDelegate::accessibilityPerformMagicTap found
+
+## Protocol Inlined Maybe we want to change this in XAMCORE_4_0 since this predates our Category support
+!missing-protocol! UIResponderStandardEditActions not bound
+!missing-protocol-conformance! UIResponder should conform to UIResponderStandardEditActions
+
+## @required members added to exixting interfaces (breaking change), fixed on XAMCORE_4_0
+!incorrect-protocol-member! UIViewControllerContextTransitioning::pauseInteractiveTransition is REQUIRED and should be abstract
+!incorrect-protocol-member! UIViewControllerTransitionCoordinator::notifyWhenInteractionChangesUsingBlock: is REQUIRED and should be abstract
+!incorrect-protocol-member! UIViewControllerTransitionCoordinatorContext::isInterruptible is REQUIRED and should be abstract
+!incorrect-protocol-member! UIFocusEnvironment::preferredFocusEnvironments is REQUIRED and should be abstract
+!incorrect-protocol-member! UITextDocumentProxy::documentInputMode is REQUIRED and should be abstract
+!incorrect-protocol-member! UILayoutSupport::bottomAnchor is REQUIRED and should be abstract
+!incorrect-protocol-member! UILayoutSupport::heightAnchor is REQUIRED and should be abstract
+!incorrect-protocol-member! UILayoutSupport::topAnchor is REQUIRED and should be abstract
+
+## Not bound intentionally, Factory method FromDisplayP3 is available and adding this as a ctor would make the api usage ugly since signature matches colorWithRed:green:blue:alpha:
+!missing-selector! UIColor::initWithDisplayP3Red:green:blue:alpha: not bound
+
+## It seems that Apple added a setter but it seems it is a mistake on the newly added property radar:27929872
+!missing-selector! UIViewController::setDisablesAutomaticKeyboardDismissal: not bound
+
+
+# WatchKit
+
+## unfortunate duplicated name
+!duplicate-type-name! WKErrorCode enum exists as both WatchKit.WKErrorCode and WebKit.WKErrorCode
+!duplicate-type-name! WKErrorCode enum exists as both WebKit.WKErrorCode and WatchKit.WKErrorCode

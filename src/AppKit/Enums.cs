@@ -88,11 +88,13 @@ namespace XamCore.AppKit {
 		Cancelled, Success, Failure, ReplyLater
 	}
 
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSApplicationLayoutDirection : nint {
 		LeftToRight = 0,
 		RightToLeft = 1
 	}
+#endif
 
 	[Native]
 	public enum NSImageInterpolation : nuint_compat_int {
@@ -218,6 +220,7 @@ namespace XamCore.AppKit {
 	
 #region NSCell Defines 
 
+#if !XAMCORE_4_0
 	[Native]
 	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use formatters instead")]
 	public enum NSType : nuint_compat_int {
@@ -229,6 +232,7 @@ namespace XamCore.AppKit {
 	    Double		= 6,
 	    PositiveDouble	= 7
 	}
+#endif
 	
 	[Native]
 	public enum NSCellType : nuint_compat_int {
@@ -267,6 +271,10 @@ namespace XamCore.AppKit {
 		ImageBelow,
 		ImageAbove,
 		ImageOverlaps,
+		[Mac (10,12)]
+		ImageLeading,
+		[Mac (10,12)]
+		ImageTrailing,
 	}
 	
 	[Native]
@@ -480,8 +488,12 @@ namespace XamCore.AppKit {
 		Pen = 1, PenLower = 2, PenUpper = 4
 	}
 
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSKey : nuint_compat_int {
+#else
+	public enum NSKey : int
+#endif
 		A              = 0x00,
 		S              = 0x01,
 		D              = 0x02,
@@ -675,8 +687,12 @@ namespace XamCore.AppKit {
 #endif
 	}
 
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSFunctionKey : nuint_compat_int {
+#else
+	public enum NSFunctionKey : int {
+#endif
 		UpArrow        = 0xF700,
 		DownArrow      = 0xF701,
 		LeftArrow      = 0xF702,
@@ -751,8 +767,12 @@ namespace XamCore.AppKit {
 		ModeSwitch     = 0xF747
 	}
 
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSEventSubtype : nuint_compat_int {
+#else
+	public enum NSEventSubtype : short {
+#endif
 		WindowExposed = 0,
 		ApplicationActivated = 1,
 		ApplicationDeactivated = 2,
@@ -761,14 +781,28 @@ namespace XamCore.AppKit {
 		AWT = 16
 	}
 
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSSystemDefinedEvents : nuint_compat_int {
+#else
+	public enum NSSystemDefinedEvents : short {
+#endif
 		NSPowerOffEventType = 1
 	}
 
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSEventMouseSubtype : nuint_compat_int {
-		Mouse, TablePoint, TabletProximity, Touch
+#else
+	public enum NSEventMouseSubtype : short {
+#endif
+		Mouse, 
+#if !XAMCORE_4_0
+		TablePoint, 
+#else
+		TabletPoint, 
+#endif
+		TabletProximity, Touch
 	}
 	
 #endregion
@@ -821,8 +855,12 @@ namespace XamCore.AppKit {
 	
 #region NSWindow
 	[Flags]
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSWindowStyle : nuint_compat_int {
+#else
+	public enum NSWindowStyle : int {
+#endif
 		Borderless	       					= 0 << 0,
 		Titled		       					= 1 << 0,
 		Closable	       					= 1 << 1,
@@ -862,12 +900,17 @@ namespace XamCore.AppKit {
 		IgnoresCycle = 1 << 6,
 		FullScreenPrimary = 1 << 7,
 		FullScreenAuxiliary = 1 << 8,
+		FullScreenNone = 1 << 9,
 		[Mac (10, 11)] FullScreenAllowsTiling = 1 << 11,
 		[Mac (10, 11)] FullScreenDisallowsTiling = 1 << 12
 	}
 
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSWindowNumberListOptions : nuint_compat_int {
+#else
+	public enum NSWindowNumberListOptions : int {
+#endif
 		AllApplication = 1 << 0,
 		AllSpaces = 1 << 4
 	}
@@ -881,7 +924,9 @@ namespace XamCore.AppKit {
 
 	[Native]
 	public enum NSWindowButton : nuint_compat_int {
-		CloseButton, MiniaturizeButton, ZoomButton, ToolbarButton, DocumentIconButton, DocumentVersionsButton = 6, FullScreenButton
+		CloseButton, MiniaturizeButton, ZoomButton, ToolbarButton, DocumentIconButton, DocumentVersionsButton = 6, 
+		[Availability (Deprecated = Platform.Mac_10_12, Message = "The standard window button for FullScreenButton is always null; use ZoomButton instead")]
+		FullScreenButton
 	}
 
 	[Flags]
@@ -973,6 +1018,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Native]
+	[Availability (Deprecated = Platform.Mac_10_12, Message = "The GradientType property is unused, and setting it has no effect.")]
 	public enum NSGradientType : nuint_compat_int {
 		None,
 		ConcaveWeak,
@@ -1007,6 +1053,37 @@ namespace XamCore.AppKit {
 		PlusDarker,
 		Highlight,
 		PlusLighter,
+
+		[Mac (10, 10)]
+		Multiply,
+		[Mac (10, 10)]
+		Screen,
+		[Mac (10, 10)]
+		Overlay,
+		[Mac (10, 10)]
+		Darken,
+		[Mac (10, 10)]
+		Lighten,
+		[Mac (10, 10)]
+		ColorDodge,
+		[Mac (10, 10)]
+		ColorBurn,
+		[Mac (10, 10)]
+		SoftLight,
+		[Mac (10, 10)]
+		HardLight,
+		[Mac (10, 10)]
+		Difference,
+		[Mac (10, 10)]
+		Exclusion,
+		[Mac (10, 10)]
+		Hue,
+		[Mac (10, 10)]
+		Saturation,
+		[Mac (10, 10)]
+		Color,
+		[Mac (10, 10)]
+		Luminosity
 	}
 
 	[Native]
@@ -1196,8 +1273,12 @@ namespace XamCore.AppKit {
 		Override = 2,
 	}
 
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSTextMovement : nint {
+#else
+	public enum NSTextMovement : int {
+#endif
 		Other = 0,
 		Return = 0x10,
 		Tab = 0x11,
@@ -1357,13 +1438,18 @@ namespace XamCore.AppKit {
 	}
 
 	[Flags]
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSGlyphStorageOptions : nuint_compat_int {
+#else
+	public enum NSGlyphStorageOptions : int
+#endif
 		ShowControlGlyphs = 1,
 		ShowInvisibleGlyphs = 2,
 		WantsBidiLevels = 4
 	}
 
+#if !XAMCORE_4_0
 	[Availability (Deprecated = Platform.Mac_10_11, Message = "Use NSTextStorageEditActions instead")]
 	[Flags]
 	[Native]
@@ -1371,6 +1457,7 @@ namespace XamCore.AppKit {
 		EditedAttributed = 1,
 		EditedCharacters = 2
 	}
+#endif
 
 	[Mac (10,11)]
 	[Native]
@@ -1517,19 +1604,25 @@ namespace XamCore.AppKit {
 	}
 
 	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use NSAlertButtonReturn instead")]
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSAlertType : nint {
+#else
+	public enum NSAlertType : int {
+#endif
 		ErrorReturn = -2,
 		OtherReturn,
 		AlternateReturn,
 		DefaultReturn
 	}
 
+#if !XAMCORE_4_0
 	[Availability (Introduced = Platform.Mac_10_0, Deprecated = Platform.Mac_10_10, Message = "Use NSModalResponse instead")]
 	[Native]
 	public enum NSPanelButtonType : nint {
 		Cancel, Ok
 	}
+#endif
 
 	[Native]
 	public enum NSTableViewColumnAutoresizingStyle : nuint_compat_int {
@@ -1664,7 +1757,9 @@ namespace XamCore.AppKit {
 		Below,
 		Above,
 		Left,
-		Right
+		Right,
+		Leading = Left,
+		Trailing = Right
 	}
 	
 	[Native]
@@ -1924,15 +2019,23 @@ namespace XamCore.AppKit {
 		MultiScreen =  81
 	}
 
+#if XAMCORE_4_0
 	[Native]
 	public enum NSOpenGLProfile : nint {
+#else
+	public enum NSOpenGLProfile : int {
+#endif
 		VersionLegacy   = 0x1000, // Legacy
 		Version3_2Core  = 0x3200,  // 3.2 or better
 		Version4_1Core  = 0x4100
 	}
 	
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSAlertButtonReturn : nint {
+#else
+	public enum NSAlertButtonReturn : int {
+#endif
 		First = 1000,
 		Second = 1001,
 		Third = 1002,
@@ -2058,7 +2161,9 @@ namespace XamCore.AppKit {
 	[Native]
 	public enum NSRemoteNotificationType : nuint_compat_int {
 		None = 0,
-		Badge = 1
+		Badge = 1 << 0,
+		Sound = 1 << 1,
+		Alert = 1 << 2
 	}
 	
 	[Native]
@@ -2259,8 +2364,12 @@ namespace XamCore.AppKit {
 	}
 
 	[Flags]
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSFontPanelMode : nuint_compat_int {
+#else
+	public enum NSFontPanelMode : int {
+#endif
 		FaceMask = 1 << 0,
 		SizeMask = 1 << 1,
 		CollectionMask = 1 << 2,
@@ -2305,7 +2414,8 @@ namespace XamCore.AppKit {
 		PostImageOnFlickr,
 		PostVideoOnVimeo,
 		PostVideoOnYouku,
-		PostVideoOnTudou
+		PostVideoOnTudou,
+		CloudSharing
 	}
 
 	[Flags]
@@ -2367,7 +2477,18 @@ namespace XamCore.AppKit {
 		AppearanceBased,
 		Light,
 		Dark,
-		Titlebar
+		Titlebar,
+		Selection,
+		[Mac (10,11)]
+		Menu,
+		[Mac (10,11)]
+		Popover,
+		[Mac (10,11)]
+		Sidebar,
+		[Mac (10,11)]
+		MediumLight,
+		[Mac (10,11)]
+		UltraDark,
 	}
 
 	[Native]
@@ -2454,5 +2575,117 @@ namespace XamCore.AppKit {
 		LineBreak = (1 << 3),
 		ParagraphBreak = (1 << 4),
 		ContainerBreak = (1 << 5)
+	}
+
+	[Mac (10,12)]
+	[Native]
+	public enum NSWindowListOptions : nint {
+		OrderedFrontToBack = (1 << 0)
+	}
+
+	[Mac (10,12)]
+	[Native]
+	public enum NSStatusItemBehavior : nuint
+	{
+		RemovalAllowed = (1 << 1),
+		TerminationOnRemoval = (1 << 2)
+	}
+
+	[Mac (10,12)]
+	[Native]
+	public enum NSWindowTabbingMode : nint
+	{
+		Automatic,
+		Preferred,
+		Disallowed
+	}
+
+	[Mac (10,12)]
+	[Native]
+	public enum NSWindowUserTabbingPreference : nint
+	{
+		Manual,
+		Always,
+		InFullScreen
+	}
+
+
+	[Mac (10, 12)]
+	[Native]
+	public enum NSGridCellPlacement : nint
+	{
+		Inherited = 0,
+		None,
+		Leading,
+		Top = Leading,
+		Trailing,
+		Bottom = Trailing,
+		Center,
+		Fill
+	}
+
+	[Mac (10, 12)]
+	[Native]
+	public enum NSGridRowAlignment : nint
+	{
+		Inherited = 0,
+		None,
+		FirstBaseline,
+		LastBaseline
+	}
+
+	[Mac (10, 12)]
+	[Native]
+	public enum NSImageLayoutDirection : nint
+	{
+		Unspecified = -1,
+		LeftToRight = 2,
+		RightToLeft = 3
+	}
+
+	[Mac (10, 12)]
+	[Native][Flags]
+	public enum NSCloudKitSharingServiceOptions : nuint
+	{
+		Standard = 0,
+		AllowPublic = 1 << 0,
+		AllowPrivate = 1 << 1,
+		AllowReadOnly = 1 << 4,
+		AllowReadWrite = 1 << 5
+	}
+
+	[Mac (10, 12)]
+	[Native]
+	public enum NSDisplayGamut : nint
+	{
+		Srgb = 1,
+		P3,
+	}
+
+	[Mac (10, 12)]
+	[Native]
+	public enum NSTabPosition : nuint
+	{
+		None = 0,
+		Top,
+		Left,
+		Bottom,
+		Right,
+	}
+
+	[Mac (10, 12)]
+	[Native]
+	public enum NSTabViewBorderType : nuint
+	{
+		None = 0,
+		Line,
+		Bezel,
+	}
+
+	[Mac (10, 12)]
+	[Native]
+	public enum NSPasteboardContentsOptions : nuint
+	{
+		CurrentHostOnly = 1,
 	}
 }

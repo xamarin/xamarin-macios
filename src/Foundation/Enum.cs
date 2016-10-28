@@ -367,6 +367,23 @@ namespace XamCore.Foundation  {
 		BundleOnDemandResourceOutOfSpaceError = 4992,
 		BundleOnDemandResourceExceededMaximumSizeError = 4993,
 		BundleOnDemandResourceInvalidTagError = 4994,
+
+		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
+		CloudSharingNetworkFailureError = 5120,
+		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
+		CloudSharingQuotaExceededError = 5121,
+		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
+		CloudSharingTooManyParticipantsError = 5122,
+		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
+		CloudSharingConflictError = 5123,
+		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
+		CloudSharingNoPermissionError = 5124,
+		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
+		CloudSharingOtherError = 5375,
+		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
+		CloudSharingErrorMinimum = 5120,
+		[Mac (10,12)][iOS (10,0)][NoTV][NoWatch]
+		CloudSharingErrorMaximum = 5375,
 	}
 	
 	// note: Make sure names are identical/consistent with CFNetworkErrors.*
@@ -870,7 +887,9 @@ namespace XamCore.Foundation  {
 		VoIP,
 		Video,
 		Background,
-		Voice
+		Voice,
+		[Mac (10,12)][iOS (10,0)][Watch (3,0)][TV (10,0)]
+		CallSignaling = 11,
 	}
 
 	[Flags]
@@ -976,7 +995,9 @@ namespace XamCore.Foundation  {
 		Abbreviated,
 		Short,
 		Full,
-		SpellOut
+		SpellOut,
+		[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
+		Brief,
 	}
 
 	[Native]
@@ -1093,11 +1114,6 @@ namespace XamCore.Foundation  {
 		Contains, Same, Other
 	}
 
-	public enum NSItemDownloadingStatus {
-		Unknown = -1,
-		Current, Downloaded, NotDownloaded
-	}
-
 	// NSTextCheckingResult.h:typedef NS_OPTIONS(uint64_t, NSTextCheckingType)
 	public enum NSTextCheckingType : ulong {
 		Orthography   = 1 << 0,
@@ -1204,4 +1220,49 @@ namespace XamCore.Foundation  {
 		WithoutUI = 1 << 1
 	}
 #endif
+
+	[iOS (9,0)][Mac (10,11)]
+	[Native]
+	public enum NSDecodingFailurePolicy : nint {
+		RaiseException,
+		SetErrorAndReturn
+	}
+
+	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
+	[Native]
+	[Flags]
+	public enum NSIso8601DateFormatOptions : nuint {
+		Year = 1 << 0,
+		Month = 1 << 1,
+		WeekOfYear = 1 << 2,
+		Day = 1 << 4,
+		Time = 1 << 5,
+		TimeZone = 1 << 6,
+		SpaceBetweenDateAndTime = 1 << 7,
+		DashSeparatorInDate = 1 << 8,
+		ColonSeparatorInTime = 1 << 9,
+		ColonSeparatorInTimeZone = 1 << 10,
+		FullDate = Year | Month | Day | DashSeparatorInDate,
+		FullTime = Time | ColonSeparatorInTime | TimeZone | ColonSeparatorInTimeZone,
+		InternetDateTime = FullDate | FullTime,
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[Native]
+	public enum NSUrlSessionTaskMetricsResourceFetchType : nint {
+		Unknown,
+		NetworkLoad,
+		ServerPush,
+		LocalCache
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[Native]
+	[Flags]
+	public enum NSMeasurementFormatterUnitOptions : nuint {
+		ProvidedUnit = (1 << 0),
+		NaturalScale = (1 << 1),
+		TemperatureWithoutUnit = (1 << 2)
+	}
+
 }

@@ -191,6 +191,15 @@ namespace MonoTouchFixtures.ModelIO {
 				Assert.AreEqual (3.1415f, obj.FloatValue, "11 FloatValue");
 			}
 		}
+
+		[Test]
+		public void Copy ()
+		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+			using (var obj = new MDLMaterialProperty ("name", MDLMaterialSemantic.AmbientOcclusion)) {
+				Assert.IsNotNull (obj.Copy ());
+			}
+		}
 	}
 }
 

@@ -10,6 +10,7 @@
 #if !TVOS
 
 using XamCore.Foundation;
+using XamCore.ObjCRuntime;
 
 namespace XamCore.MediaPlayer {
 
@@ -30,7 +31,25 @@ namespace XamCore.MediaPlayer {
 		public int? DiscNumber;
 		public ulong? PersistentID;
 		public double? PlaybackDuration;
+		[iOS (8,0)]
 		public double? DefaultPlaybackRate;
+
+		[iOS (9,0)]
+		public MPNowPlayingInfoLanguageOptionGroup[] AvailableLanguageOptions { get; set; }
+		[iOS (9,0)]
+		public MPNowPlayingInfoLanguageOption[] CurrentLanguageOptions { get; set; }
+		[iOS (10,0)]
+		public string CollectionIdentifier { get; set; }
+		[iOS (10,0)]
+		public string ExternalContentIdentifier { get; set; }
+		[iOS (10,0)]
+		public string ExternalUserProfileIdentifier { get; set; }
+		[iOS (10,0)]
+		public float? PlaybackProgress { get; set; }
+		[iOS (10,0)]
+		public MPNowPlayingInfoMediaType? MediaType { get; set; }
+		[iOS (10,0)]
+		public bool? IsLiveStream { get; set; }
 
 		public string AlbumTitle;
 		public string Artist;
@@ -55,6 +74,26 @@ namespace XamCore.MediaPlayer {
 				dict.Add (MPNowPlayingInfoCenter.PropertyChapterNumber, new NSNumber (ChapterNumber.Value));
 			if (ChapterCount.HasValue)
 				dict.Add (MPNowPlayingInfoCenter.PropertyChapterCount, new NSNumber (ChapterCount.Value));
+			if (DefaultPlaybackRate.HasValue)
+				Add (dict, MPNowPlayingInfoCenter.PropertyDefaultPlaybackRate, new NSNumber (DefaultPlaybackRate.Value));
+
+			if (AvailableLanguageOptions != null && AvailableLanguageOptions.Length != 0)
+				Add (dict, MPNowPlayingInfoCenter.PropertyAvailableLanguageOptions, NSArray.FromObjects (AvailableLanguageOptions));
+			if (CurrentLanguageOptions != null && CurrentLanguageOptions.Length != 0)
+				Add (dict, MPNowPlayingInfoCenter.PropertyCurrentLanguageOptions, NSArray.FromObjects (CurrentLanguageOptions));
+			if (CollectionIdentifier != null)
+				Add (dict, MPNowPlayingInfoCenter.PropertyCollectionIdentifier, new NSString (CollectionIdentifier));
+			if (ExternalContentIdentifier != null)
+				Add (dict, MPNowPlayingInfoCenter.PropertyExternalContentIdentifier, new NSString (ExternalContentIdentifier));
+			if (ExternalUserProfileIdentifier != null)
+				Add (dict, MPNowPlayingInfoCenter.PropertyExternalUserProfileIdentifier, new NSString (ExternalUserProfileIdentifier));
+			if (PlaybackProgress.HasValue)
+				Add (dict, MPNowPlayingInfoCenter.PropertyPlaybackProgress, new NSNumber (PlaybackProgress.Value));
+			if (MediaType.HasValue)
+				Add (dict, MPNowPlayingInfoCenter.PropertyMediaType, new NSNumber ((int)MediaType.Value));
+			if (IsLiveStream.HasValue)
+				Add (dict, MPNowPlayingInfoCenter.PropertyIsLiveStream, new NSNumber (IsLiveStream.Value));
+
 			if (AlbumTrackCount.HasValue)
 				dict.Add (MPMediaItem.AlbumTrackCountProperty, new NSNumber (AlbumTrackCount.Value));
 			if (AlbumTrackNumber.HasValue)
@@ -84,6 +123,12 @@ namespace XamCore.MediaPlayer {
 			return dict;
 		}
 
+		void Add (NSMutableDictionary dictionary, NSObject key, NSObject value)
+		{
+			if (key != null)
+				dictionary.Add (key, value);
+		}
+
 		internal MPNowPlayingInfo (NSDictionary source)
 		{
 			if (source == null)
@@ -103,8 +148,26 @@ namespace XamCore.MediaPlayer {
 				ChapterNumber = (int) (result as NSNumber).UInt32Value;
 			if (source.TryGetValue (MPNowPlayingInfoCenter.PropertyChapterCount, out result))
 				ChapterCount = (int) (result as NSNumber).UInt32Value;
-			if (source.TryGetValue (MPNowPlayingInfoCenter.PropertyDefaultPlaybackRate, out result))
+			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyDefaultPlaybackRate, out result))
 				DefaultPlaybackRate = (double) (result as NSNumber).DoubleValue;
+
+			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyAvailableLanguageOptions, out result))
+				AvailableLanguageOptions = NSArray.ArrayFromHandle<MPNowPlayingInfoLanguageOptionGroup> (result.Handle);
+			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyCurrentLanguageOptions, out result))
+				CurrentLanguageOptions = NSArray.ArrayFromHandle<MPNowPlayingInfoLanguageOption> (result.Handle);
+			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyCollectionIdentifier, out result))
+				CollectionIdentifier = (string) (result as NSString);
+			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyExternalContentIdentifier, out result))
+				ExternalContentIdentifier = (string) (result as NSString);
+			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyExternalUserProfileIdentifier, out result))
+				ExternalUserProfileIdentifier = (string) (result as NSString);
+			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyPlaybackProgress, out result))
+				PlaybackProgress = (float) (result as NSNumber).FloatValue;
+			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyMediaType, out result))
+				MediaType = (MPNowPlayingInfoMediaType) (result as NSNumber).UInt32Value;
+			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyIsLiveStream, out result))
+				IsLiveStream = (bool) (result as NSNumber).BoolValue;
+
 			if (source.TryGetValue (MPMediaItem.AlbumTrackCountProperty, out result))
 				AlbumTrackCount = (int) (result as NSNumber).UInt32Value;
 			if (source.TryGetValue (MPMediaItem.AlbumTrackNumberProperty, out result))
@@ -130,6 +193,17 @@ namespace XamCore.MediaPlayer {
 				Genre = (string) (result as NSString);
 			if (source.TryGetValue (MPMediaItem.TitleProperty, out result))
 				Title = (string) (result as NSString);
+		}
+
+		bool TryGetValue (NSDictionary source, NSObject key, out NSObject result)
+		{
+			var b = false;
+			result = null;
+			if (key != null) {
+				source.TryGetValue (key, out result);
+				b = true;
+			}
+			return b;
 		}
 	}
 	

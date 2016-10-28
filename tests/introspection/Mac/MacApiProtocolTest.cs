@@ -19,6 +19,7 @@ using MonoMac.CoreImage;
 #endif
 
 using NUnit.Framework;
+using Xamarin.Tests;
 
 namespace Introspection {
 
@@ -43,6 +44,14 @@ namespace Introspection {
 				case "AVCompositionTrackSegment": // Not declared in header file
 				case "MKMapSnapshotOptions": // Not declared in header file
 				case "NSTextTab": // Not declared in header file
+				case "NSTextList": // Not declared in header file
+				case "SFSafariPage": // Not declared in header file
+				case "SFSafariPageProperties": // Not declared in header file
+				case "SFSafariTab": // Not declared in header file
+				case "SFSafariToolbarItem": // Not declared in header file
+				case "SFSafariWindow": // Not declared in header file
+				case "SFContentBlockerState": // Not declared in header file
+				case "NEFlowMetaData": // Not declared in header file
 					return true;
 				default:
 					// CIFilter started implementing NSSecureCoding in 10.11
@@ -62,6 +71,7 @@ namespace Introspection {
 				case "EKEvent": // Not declared in header file
 				case "EKReminder": // Not declared in header file
 				case "ACAccount": // Not declared in header file
+				case "NEFlowMetaData": // Not declared in header file
 					return true;
 				}
 				break;
@@ -97,6 +107,13 @@ namespace Introspection {
 				case "AVMutableComposition": // Not declared in header file
 				case "AVCompositionTrackSegment": // Not declared in header file
 				case "MKMapSnapshotOptions": // Not declared in header file
+				case "SFContentBlockerState": // Not declared in header file
+				case "SFSafariPage": // Not declared in header file
+				case "SFSafariPageProperties": // Not declared in header file
+				case "SFSafariTab": // Not declared in header file
+				case "SFSafariToolbarItem": // Not declared in header file
+				case "SFSafariWindow": // Not declared in header file
+				case "NEFlowMetaData": // Not declared in header file
 					return true;
 				}
 				break;
@@ -114,6 +131,12 @@ namespace Introspection {
 				if (!Mac.CheckSystemVersion (10, 10) && (type == typeof(NSViewController) || type.IsSubclassOf (typeof (NSViewController))))
 					return true;
 
+				switch (type.Name) {
+				case "NSMenuItem":
+					if (!Mac.CheckSystemVersion (10, 12))
+						return true;
+					break;
+				}
 				break;
 			case "NSMenuDelegate":
 				switch (type.Name) {
@@ -131,6 +154,23 @@ namespace Introspection {
 			case "NSDraggingInfo":
 				return true; // We have to keep the type to maintain backwards compatibility.
 #endif
+			case "NSAccessibility":
+			case "NSAccessibilityElement":
+				switch (type.Name) {
+				case "NSMenu":
+				case "NSMenuItem":
+					if (!Mac.CheckSystemVersion (10, 12))
+						return true;
+				break;
+				}
+			break;
+			case "NSAnimationDelegate":
+			case "NSAnimatablePropertyContainer":
+				switch (type.Name) {
+				case "NSTitlebarAccessoryViewController":
+					return true; 
+				}
+				break;
 			}
 
 			switch (type.Name) {

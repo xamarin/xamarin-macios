@@ -27,12 +27,13 @@ namespace Xamarin.iOS.Tasks
 		[SetUp]
 		public override void Setup () 
 		{
+			AssertValidDeviceBuild (Platform);
 			SetupEngine ();
 		}
 
-		public void BuildProject (string appName, string bundlePath, string platform, int expectedErrorCount = 0) 
+		public void BuildProject (string appName, string platform, int expectedErrorCount = 0) 
 		{
-			var mtouchPaths = SetupProjectPaths (appName, "../", true, bundlePath);
+			var mtouchPaths = SetupProjectPaths (appName, "../", true, platform);
 
 			var proj = SetupProject (Engine, mtouchPaths ["project_csprojpath"]);
 
@@ -40,7 +41,7 @@ namespace Xamarin.iOS.Tasks
 			Engine.GlobalProperties.SetProperty("Platform", platform);
 
 			RunTarget (proj, "Clean");
-			Assert.IsFalse (Directory.Exists (AppBundlePath), "{1}: App bundle exists after cleanup: {0} ", AppBundlePath, bundlePath);
+			Assert.IsFalse (Directory.Exists (AppBundlePath), "App bundle exists after cleanup: {0} ", AppBundlePath);
 
 			proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
 			RunTarget (proj, "Build", expectedErrorCount);
@@ -48,7 +49,7 @@ namespace Xamarin.iOS.Tasks
 			if (expectedErrorCount > 0)
 				return;
 
-			Assert.IsTrue (Directory.Exists (AppBundlePath), "{1} App Bundle does not exist: {0} ", AppBundlePath, bundlePath);
+			Assert.IsTrue (Directory.Exists (AppBundlePath), "App Bundle does not exist: {0} ", AppBundlePath);
 
 			TestFilesExists (AppBundlePath, ExpectedAppFiles);
 			TestFilesDoNotExist (AppBundlePath, UnexpectedAppFiles);

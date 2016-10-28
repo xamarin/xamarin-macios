@@ -14,14 +14,6 @@
 !missing-selector! AVPlayerItem::setExternalSubtitleOptionLanguages: not bound
 !missing-selector! AVPlayerItem::setSelectedExternalSubtitleOptionLanguage: not bound
 
-## AVAudioPlayer INTERRUPTION NOTIFICATIONS ARE DEPRECATED - Use AVAudioSession instead. 
-
-### deprecated in iOS8
-!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
-
-### deprecated in iOS6, replaced by above
-!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withOptions: not found
-
 
 # CloudKit
 
@@ -36,6 +28,14 @@
 !missing-field! kCMFormatDescriptionYCbCrMatrix_P3_D65 not bound
 
 
+# ExternalAccessory
+
+## delegate is empty (nothing is available on tvOS) so we hide it (and the code that get/set it)
+!missing-protocol! EAWiFiUnconfiguredAccessoryBrowserDelegate not bound
+!missing-selector! EAWiFiUnconfiguredAccessoryBrowser::delegate not bound
+!missing-selector! EAWiFiUnconfiguredAccessoryBrowser::setDelegate: not bound
+
+
 # GameplayKit
 
 ## Xcode 7.1 added those types - but they are not in Xcode 7.2 SDK ??? Apple merge conflict
@@ -45,7 +45,36 @@
 !unknown-type! GKQuadTreeNode bound
 
 
+# Metal
+
+## new Apple abstract member (breaking change) fixed in XAMCORE_4_0
+!incorrect-protocol-member! MTLRenderCommandEncoder::setDepthClipMode: is REQUIRED and should be abstract
+
+
+# UserNotifications
+
+## While these keys are present in the SDK, the class that uses them UNNotificationAttachment is __TVOS_PROHIBITED
+!missing-field! UNNotificationAttachmentOptionsThumbnailClippingRectKey not bound
+!missing-field! UNNotificationAttachmentOptionsThumbnailHiddenKey not bound
+!missing-field! UNNotificationAttachmentOptionsThumbnailTimeKey not bound
+!missing-field! UNNotificationAttachmentOptionsTypeHintKey not bound
+
+
+# Security
+
+## Xcode 8 beta (tvOS 10) marked them with __TVOS_UNAVAILABLE so we'll not expose them in 9.x
+!missing-pinvoke! SecAddSharedWebCredential is not bound
+!missing-pinvoke! SecCreateSharedWebCredentialPassword is not bound
+!missing-pinvoke! SecRequestSharedWebCredential is not bound
+!missing-field! kSecSharedPassword not bound
+
+
 # UIKit
+
+# TODO: MUST BE FIXED by SR0 or SR1 of iOS 10 related bug https://bugzilla.xamarin.com/show_bug.cgi?id=43579
+!missing-protocol-member! UITextFieldDelegate::textFieldDidEndEditing:reason: not found
+!missing-protocol-member! UITextViewDelegate::textView:shouldInteractWithTextAttachment:inRange:interaction: not found
+!missing-protocol-member! UITextViewDelegate::textView:shouldInteractWithURL:inRange:interaction: not found
 
 ## Apple docs: This property is inherited from the UIView parent class. This class changes the default value of this property to NO.
 !missing-selector! UIImageView::isUserInteractionEnabled not bound
@@ -114,3 +143,25 @@
 !incorrect-protocol-member! UITextInputTraits::keyboardType is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! UITextInputTraits::returnKeyType is OPTIONAL and should NOT be abstract
 !incorrect-protocol-member! UITextInputTraits::spellCheckingType is OPTIONAL and should NOT be abstract
+
+## Headers says it is available but none of its members or implementor class are available
+!missing-protocol! UIPreviewInteractionDelegate not bound
+
+## Header says they are available in tvOS but intro says nope nope nope radar:27929711
+## Undefined _OBJC_CLASS_$_UICloudSharingController
+!missing-protocol! UICloudSharingControllerDelegate not bound
+!missing-type! UICloudSharingController not bound
+!missing-selector! UICloudSharingController::availablePermissions not bound
+!missing-selector! UICloudSharingController::delegate not bound
+!missing-selector! UICloudSharingController::initWithPreparationHandler: not bound
+!missing-selector! UICloudSharingController::initWithShare:container: not bound
+!missing-selector! UICloudSharingController::setAvailablePermissions: not bound
+!missing-selector! UICloudSharingController::setDelegate: not bound
+!missing-selector! UICloudSharingController::share not bound
+
+## It seems that Apple added a setter but it seems it is a mistake on the newly added property radar:27929872
+!missing-selector! UIViewController::setDisablesAutomaticKeyboardDismissal: not bound
+
+## enums only exposed from properties marked with UIKIT_CLASS_AVAILABLE_IOS_ONLY(10_0)
+!missing-enum! UIImpactFeedbackStyle not bound
+!missing-enum! UINotificationFeedbackType not bound

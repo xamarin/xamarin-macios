@@ -14,10 +14,10 @@ using XamCore.Accounts;
 
 namespace XamCore.Twitter {
 
-	public delegate void TWRequestHandler (NSData responseData, NSHttpUrlResponse urlResponse, NSError error);
+	delegate void TWRequestHandler (NSData responseData, NSHttpUrlResponse urlResponse, NSError error);
 
 #if !XAMCORE_2_0
-	public delegate void TWTweetComposeHandler (TWTweetComposeViewControllerResult result);
+	delegate void TWTweetComposeHandler (TWTweetComposeViewControllerResult result);
 #endif
 	
 	[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_6_0, Message = "Use the Social framework")]

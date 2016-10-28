@@ -14,7 +14,7 @@ namespace XamCore.AVKit {
 	}
 #endif
 
-#if !TVOS
+#if !TVOS && (!MONOMAC || !XAMCORE_4_0)
 	[iOS (9,0)]
 	[Native]
 	[ErrorDomain ("AVKitErrorDomain")]

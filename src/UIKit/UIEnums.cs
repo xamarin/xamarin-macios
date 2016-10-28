@@ -474,6 +474,7 @@ namespace XamCore.UIKit {
 	public enum UIKeyboardType : nint {
 		Default,
 		ASCIICapable,
+		AsciiCapable = ASCIICapable,
 		NumbersAndPunctuation,
 		Url,
 		NumberPad,
@@ -482,7 +483,9 @@ namespace XamCore.UIKit {
 		EmailAddress,
 		DecimalPad,
 		Twitter,
-		WebSearch
+		WebSearch,
+		[iOS (10, 0)]
+		AsciiCapableNumberPad
 	} 
 
 	// NSInteger -> UISegmentedControl.h
@@ -749,13 +752,20 @@ namespace XamCore.UIKit {
 	[Flags]
 	[NoTV][NoWatch]
 	public enum UIDataDetectorType : nuint {
-		PhoneNumber   = 1 << 0,
-		Link          = 1 << 1,
+		PhoneNumber            = 1 << 0,
+		Link                   = 1 << 1,
 
 		[iOS (4,0)]
-		Address       = 1 << 2,
+		Address                = 1 << 2,
 		[iOS (4,0)]
-		CalendarEvent = 1 << 3,
+		CalendarEvent          = 1 << 3,
+
+		[iOS (10,0)]
+		ShipmentTrackingNumber = 1 << 4,
+		[iOS (10,0)]
+		FlightNumber           = 1 << 5,
+		[iOS (10,0)]
+		LookupSuggestion       = 1 << 6,
 
 		None          = 0,
 #if XAMCORE_2_0
@@ -985,7 +995,7 @@ namespace XamCore.UIKit {
 	}
 
 #if !WATCH
-	public delegate void UIPrintInteractionCompletionHandler (UIPrintInteractionController printInteractionController, bool completed, NSError error);
+	delegate void UIPrintInteractionCompletionHandler (UIPrintInteractionController printInteractionController, bool completed, NSError error);
 #endif
 
 	// untyped (and unamed) enum -> UIPrintError.h
@@ -1349,12 +1359,6 @@ namespace XamCore.UIKit {
 		None, Push, Pop
 	}
 
-	// that's a convenience enum that maps to UIContentSizeCategoryXXX which are NSString
-	[NoWatch]
-	public enum UIContentSizeCategory {
-		ExtraSmall, Small, Medium, Large, ExtraLarge, ExtraExtraLarge, ExtraExtraExtraLarge
-	}
-
 	// NSInteger -> NSLayoutManager.h
 	[Native]
 	[NoWatch]
@@ -1614,7 +1618,13 @@ namespace XamCore.UIKit {
 	[NoWatch]
 	[iOS (8,0)]
 	public enum UIBlurEffectStyle : nint {
-		ExtraLight, Light, Dark
+		ExtraLight, Light, Dark,
+		[TV (10,0), NoiOS, NoWatch]
+		ExtraDark,
+		[iOS (10,0)]
+		Regular = 4,
+		[iOS (10,0)]
+		Prominent = 5,
 	}
 
 	[Native]
@@ -1634,6 +1644,7 @@ namespace XamCore.UIKit {
 
 	[NoTV][NoWatch]
 	[iOS (8,0)]
+	[Deprecated (PlatformName.iOS, 10, 0, message:"Use UNAuthorizationOptions instead")]
 	[Native]
 	[Flags]
 	public enum UIUserNotificationType : nuint {
@@ -1645,6 +1656,7 @@ namespace XamCore.UIKit {
 	
 	[NoTV][NoWatch]
 	[iOS (8, 0)]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNNotificationActionOptions instead")]
 	[Native]
 	public enum UIUserNotificationActivationMode : nuint {
 		Foreground,
@@ -1653,6 +1665,7 @@ namespace XamCore.UIKit {
 
 	[NoTV][NoWatch]
 	[iOS (8, 0)]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNNotificationCategory.Actions instead")]
 	[Native]
 	public enum UIUserNotificationActionContext : nuint {
 		Default,
@@ -1768,6 +1781,7 @@ namespace XamCore.UIKit {
 
 	[NoTV][NoWatch]
 	[iOS (9,0)]
+	[Deprecated (PlatformName.iOS, 10, 0, message: "Use UNNotificationAction or UNTextInputNotificationAction instead")]
 	[Native]
 	public enum UIUserNotificationActionBehavior : nuint
 	{
@@ -1843,5 +1857,114 @@ namespace XamCore.UIKit {
 	public enum UITableViewCellFocusStyle : nint {
 		Default,
 		Custom
+	}
+
+	[NoWatch]
+	[iOS (10,0)]
+	[Native]
+	public enum UIDisplayGamut : nint
+	{
+		Unspecified = -1,
+		Srgb,
+		P3
+	}
+
+	[NoWatch]
+	[iOS (10,0)]
+	[Native]
+	public enum UITraitEnvironmentLayoutDirection : nint
+	{
+		Unspecified = -1,
+		LeftToRight = UIUserInterfaceLayoutDirection.LeftToRight,
+		RightToLeft = UIUserInterfaceLayoutDirection.RightToLeft
+	}
+
+	[TV (10,0), NoWatch, NoiOS]
+	[Native]
+	public enum UIUserInterfaceStyle : nint
+	{
+		Unspecified,
+		Light,
+		Dark
+	}
+
+	[NoWatch]
+	[iOS (10,0)]
+	[Native]
+	public enum UITextItemInteraction : nint
+	{
+		InvokeDefaultAction,
+		PresentActions,
+		Preview
+	}
+
+	[NoWatch]
+	[iOS (10,0)]
+	[Native]
+	public enum UIViewAnimatingState : nint
+	{
+		Inactive,
+		Active,
+		Stopped
+	}
+
+	[NoWatch]
+	[iOS (10,0)]
+	[Native]
+	public enum UIViewAnimatingPosition : nint
+	{
+		End,
+		Start,
+		Current
+	}
+
+	[NoWatch]
+	[iOS (10,0)]
+	[Native]
+	public enum UITimingCurveType : nint
+	{
+		Builtin,
+		Cubic,
+		Spring,
+		Composed
+	}
+
+	[NoWatch]
+	[NoTV]
+	[iOS(10,0)]
+	[Native]
+	public enum UIAccessibilityHearingDeviceEar : nuint {
+		None = 0,
+		Left = 1 << 1,
+		Right = 1 << 2,
+		Both = Left | Right
+	}
+
+	[NoWatch]
+	[iOS(10,0)]
+	[Native]
+	public enum UIAccessibilityCustomRotorDirection : nint
+	{
+		Previous,
+		Next
+	}
+
+	[iOS (10,0), TV (10,0), NoWatch]
+	[Native]
+	[Flags]
+	public enum UICloudSharingPermissionOptions : nuint {
+		Standard = 0,
+		AllowPublic = 1 << 0,
+		AllowPrivate = 1 << 1,
+		AllowReadOnly = 1 << 2,
+		AllowReadWrite = 1 << 3
+	}
+
+	[iOS (10,0), TV (10,0), NoWatch]
+	[Native]
+	public enum UITextFieldDidEndEditingReason : nint {
+		Committed,
+		[NoiOS]
+		Cancelled
 	}
 }

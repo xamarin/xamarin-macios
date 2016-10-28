@@ -293,7 +293,9 @@ namespace XamCore.Security {
 		MissingAttributeWrappedKeyFormat	= -67805,	/* A wrapped key format attribute was missing. */
 		StagedOperationInProgress			= -67806,	/* A staged operation is in progress. */
 		StagedOperationNotStarted			= -67807,	/* A staged operation was not started. */
+#endif
 		VerifyFailed						= -67808,	/* A cryptographic verification failure has occurred. */
+#if MONOMAC
 		QuerySizeUnknown					= -67809,	/* The query size is unknown. */
 		BlockSizeMismatch					= -67810,	/* A block size mismatch occurred. */
 		PublicKeyInconsistent				= -67811,	/* The public key was inconsistent. */
@@ -410,7 +412,7 @@ namespace XamCore.Security {
 		Invalid,
 		Proceed,
 
-		[Availability (Deprecated = Platform.iOS_7_0)]
+		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_9)]
 		Confirm,
 		Deny,
 		Unspecified,
@@ -440,5 +442,15 @@ namespace XamCore.Security {
 
 		[Field ("kSecAttrTokenIDSecureEnclave")]
 		SecureEnclave,
+	}
+
+	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+	[Native]
+	public enum SecKeyOperationType : nint {
+		Sign = 0,
+		Verify = 1,
+		Encrypt = 2,
+		Decrypt = 3,
+		KeyExchange = 4
 	}
 }

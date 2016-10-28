@@ -15,7 +15,7 @@ using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
 using Mono.Security.Interface;
-using MSN = Mono.Net.Security;
+using MNS = Mono.Net.Security;
 
 namespace XamCore.Security.Tls
 {
@@ -35,16 +35,7 @@ namespace XamCore.Security.Tls
 			Stream innerStream, bool leaveInnerStreamOpen,
 			MonoTlsSettings settings = null)
 		{
-			return new MobileAuthenticatedStream (innerStream, leaveInnerStreamOpen, settings, this);
-		}
-
-		internal override IMonoTlsContext CreateTlsContext (
-			string hostname, bool serverMode, TlsProtocols protocolFlags,
-			X509Certificate serverCertificate, X509CertificateCollection clientCertificates,
-			bool remoteCertRequired, MonoEncryptionPolicy encryptionPolicy,
-			MonoTlsSettings settings)
-		{
-			throw new NotSupportedException ();
+			return new AppleTlsStream (innerStream, leaveInnerStreamOpen, settings, this);
 		}
 
 		public override bool SupportsSslStream {
@@ -63,22 +54,14 @@ namespace XamCore.Security.Tls
 			get { return SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls; }
 		}
 
-		internal override bool SupportsTlsContext {
-			get { return false; }
-		}
-
-		internal override bool HasCustomSystemCertificateValidator {
-			get { return true; }
-		}
-
-		internal override bool InvokeSystemCertificateValidator (
+		internal override bool ValidateCertificate (
 			ICertificateValidator2 validator, string targetHost, bool serverMode,
 			X509CertificateCollection certificates, bool wantsChain, ref X509Chain chain,
-			out bool success, ref MonoSslPolicyErrors errors, ref int status11)
+			ref MonoSslPolicyErrors errors, ref int status11)
 		{
 			if (wantsChain)
-				chain = MSN.SystemCertificateValidator.CreateX509Chain (certificates);
-			return MobileCertificateHelper.InvokeSystemCertificateValidator (validator, targetHost, serverMode, certificates, out success, ref errors, ref status11);
+				chain = MNS.SystemCertificateValidator.CreateX509Chain (certificates);
+			return AppleCertificateHelper.InvokeSystemCertificateValidator (validator, targetHost, serverMode, certificates, ref errors, ref status11);
 		}
 	}
 }

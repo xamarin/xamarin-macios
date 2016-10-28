@@ -59,13 +59,10 @@ endef
 $(shell rm -f .check-versions-failure)
 $(eval $(call CheckSubmoduleTemplate,llvm,LLVM))
 $(eval $(call CheckSubmoduleTemplate,mono,MONO))
-$(eval $(call CheckSubmoduleTemplate,watch-mono,WATCH_MONO))
 $(eval $(call CheckSubmoduleTemplate,fsharp,FSHARP))
-$(eval $(call CheckSubmoduleTemplate,cecil,CECIL))
 $(eval $(call CheckSubmoduleTemplate,MonoTouch.Dialog,MONOTOUCH_DIALOG))
 $(eval $(call CheckSubmoduleTemplate,Touch.Unit,TOUCH_UNIT))
 $(eval $(call CheckSubmoduleTemplate,opentk,OPENTK))
-$(eval $(call CheckSubmoduleTemplate,ModernHttpClient,MODERNHTTPCLIENT))
 $(eval $(call CheckSubmoduleTemplate,Xamarin.MacDev,XAMARIN_MACDEV))
 $(eval $(call CheckSubmoduleTemplate,guiunit,GUI_UNIT))
 

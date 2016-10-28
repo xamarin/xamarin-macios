@@ -217,39 +217,4 @@ namespace XamCore.CoreImage {
 		{
 		}
 	}
-
-	// convenience enum (fields are used) but also a `typedef int` -> CIImage.h
-        public enum CIFormat {
-		ARGB8 = 0,
-		RGBAh = 1,
-#if MONOMAC
-		RGBA16 = 2,
-		[Obsolete ("This value can not be shared across Mac/iOS binaries, future proof with kRGBAf instead")]
-		RGBAf  = 3,
-
-		// Please, do not add values into MonoMac/iOS without adding an explicit value
-#elif !XAMCORE_3_0
-		[Obsolete ("This value can not be shared across Mac/iOS binaries, future proof with kBGRA8 instead")]
-		BGRA8 = 2 ,
-		[Obsolete ("This value can not be shared across Mac/iOS binaries, future proof with kRGBA8 instead")]
-		RGBA8 = 3,
-		// Please, do not add values into MonoMac/iOS without adding an explicit value
-#endif
-		kRGBAf = 4,
-		kBGRA8 = 5,
-		kRGBA8 = 6,
-		ABGR8 = 7,
-		A8 = 11,
-		A16 = 12,
-		Ah = 13, 
-		Af = 14,
-		R8 = 15,
-		R16 = 16,
-		Rh = 17,
-		Rf = 18,
-		RG8 = 19, 
-		RG16 = 20,
-		RGh = 21,
-		RGf = 22
-	}
 }

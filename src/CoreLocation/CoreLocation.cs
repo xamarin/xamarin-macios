@@ -33,6 +33,10 @@ using System;
 using System.Runtime.InteropServices;
 
 using XamCore.ObjCRuntime;
+#if IOS && !COREBUILD && XAMCORE_2_0
+using XamCore.Contacts;
+using XamCore.Intents;
+#endif
 
 namespace XamCore.CoreLocation {
 
@@ -92,6 +96,16 @@ namespace XamCore.CoreLocation {
 		{
 			// calling ToString, 'description' selector, or disposing the instance would crash the application
 			IsDirectBinding = GetType () == typeof (CLPlacemark);
+		}
+	}
+#endif
+
+#if IOS && !COREBUILD && XAMCORE_2_0 // This code comes from Intents.CLPlacemark_INIntentsAdditions Category
+	public partial class CLPlacemark {
+		[iOS (10, 0)]
+		static public CLPlacemark GetPlacemark (CLLocation location, string name, CNPostalAddress postalAddress)
+		{
+			return (null as CLPlacemark)._GetPlacemark (location, name, postalAddress);
 		}
 	}
 #endif

@@ -66,8 +66,11 @@ namespace XamCore.ObjCRuntime {
 			// default
 			case null:
 				return HttpClientHandlerValue;
-			case HttpClientHandlerValue:
 			case CFNetworkHandlerValue:
+			case HttpClientHandlerValue:
+				if (Driver.App.Platform == Utils.ApplePlatform.WatchOS)
+					throw ErrorHelper.CreateError (2015, "Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.", value);
+				return value;
 			case NSUrlSessionHandlerValue:
 				return value;
 			default:
@@ -159,7 +162,15 @@ namespace XamCore.ObjCRuntime {
 		// Called from CoreHttpMessageHandler
 		internal static TypeDefinition GetHttpMessageHandler (RuntimeOptions options, ModuleDefinition httpModule, ModuleDefinition platformModule = null)
 		{
-			var handler = options != null ? options.http_message_handler : HttpClientHandlerValue;
+			string handler;
+
+			if (options != null) {
+				handler = options.http_message_handler;
+			} else if (Driver.App.Platform == Utils.ApplePlatform.WatchOS) {
+				handler = NSUrlSessionHandlerValue;
+			} else {
+				handler = HttpClientHandlerValue;
+			}
 			TypeDefinition type;
 			switch (handler) {
 #if MONOMAC
@@ -174,9 +185,13 @@ namespace XamCore.ObjCRuntime {
 				break;
 #else
 			case HttpClientHandlerValue:
+				if (Driver.App.Platform == Utils.ApplePlatform.WatchOS)
+					throw ErrorHelper.CreateError (2015, "Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.", handler);
 				type = httpModule.GetType ("System.Net.Http", "HttpClientHandler");
 				break;
 			case CFNetworkHandlerValue:
+				if (Driver.App.Platform == Utils.ApplePlatform.WatchOS)
+					throw ErrorHelper.CreateError (2015, "Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.", handler);
 				type = httpModule.GetType ("System.Net.Http", "CFNetworkHandler");
 				break;
 			case NSUrlSessionHandlerValue:
@@ -238,8 +253,13 @@ namespace XamCore.ObjCRuntime {
 		internal static HttpMessageHandler GetHttpMessageHandler ()
 		{
 			var options = RuntimeOptions.Read ();
-			if (options == null)
+			if (options == null) {
+#if MONOTOUCH_WATCH
+				return new NSUrlSessionHandler ();
+#else
 				return new HttpClientHandler ();
+#endif
+			}
 
 			// all types will be present as this is executed only when the linker is not enabled
 			var handler_name = options.http_message_handler;
@@ -250,8 +270,13 @@ namespace XamCore.ObjCRuntime {
 				handler = Activator.CreateInstance (t) as HttpMessageHandler;
 			if (handler != null)
 				return handler;
+#if MONOTOUCH_WATCH
+			Console.WriteLine ("{0} is not a valid HttpMessageHandler, defaulting to NSUrlSessionHandler", handler_name);
+			return new NSUrlSessionHandler ();
+#else
 			Console.WriteLine ("{0} is not a valid HttpMessageHandler, defaulting to System.Net.Http.HttpClientHandler", handler_name);
 			return new HttpClientHandler ();
+#endif
 		}
 #endif
 #endif

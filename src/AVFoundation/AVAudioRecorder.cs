@@ -21,6 +21,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#if !WATCH
+
 using XamCore.Foundation;
 using XamCore.CoreFoundation;
 using XamCore.AudioToolbox;
@@ -104,6 +107,11 @@ namespace XamCore.AVFoundation {
 			Handle = InitWithUrl (url, settings.Dictionary, out error);
 		}	
 
+		AVAudioRecorder (NSUrl url, AVAudioFormat format, out NSError error) {
+			// We use this method because it allows us to out NSError but, as a side effect, it is possible for the handle to be null and we will need to check this manually (on the Create method).
+			Handle = InitWithUrl (url, format, out error);
+		}
+
 		public static AVAudioRecorder Create (NSUrl url, AudioSettings settings, out NSError error)
 		{
 			if (settings == null)
@@ -111,6 +119,23 @@ namespace XamCore.AVFoundation {
 			error = null;
 			try {
 				AVAudioRecorder r = new AVAudioRecorder (url, settings, out error);
+				if (r.Handle == IntPtr.Zero) 
+					return null;
+
+				return r;
+			} catch { 
+				return null;
+			}
+		}
+
+		[iOS (10,0), Mac (10,12)]
+		public static AVAudioRecorder Create (NSUrl url, AVAudioFormat format, out NSError error)
+		{
+			if (format == null)
+				throw new ArgumentNullException (nameof (format));
+			error = null;
+			try {
+				AVAudioRecorder r = new AVAudioRecorder (url, format, out error);
 				if (r.Handle == IntPtr.Zero) 
 					return null;
 
@@ -144,3 +169,5 @@ namespace XamCore.AVFoundation {
 	}
 #endif // !TVOS
 }
+
+#endif // !WATCH

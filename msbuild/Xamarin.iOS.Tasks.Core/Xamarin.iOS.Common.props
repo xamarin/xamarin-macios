@@ -51,9 +51,11 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<MtouchUseThumb Condition="'$(MtouchUseThumb)' == ''">False</MtouchUseThumb>
 		<MtouchProjectDirectory>$(MSBuildProjectDirectory)</MtouchProjectDirectory>
 
-		<MtouchTargetsEnabled>true</MtouchTargetsEnabled>
+		<IsMacEnabled>true</IsMacEnabled>
+		<MtouchTargetsEnabled>$(IsMacEnabled)</MtouchTargetsEnabled>
 
 		<IsAppExtension Condition="'$(IsAppExtension)' == ''">False</IsAppExtension>
+		<IsWatchExtension Condition="'$(IsWatchExtension)' == ''">False</IsWatchExtension>
 		<IsWatchApp Condition="'$(IsWatchApp)' == ''">False</IsWatchApp>
 		<OptimizePNGs Condition="'$(OptimizePNGs)' == ''">True</OptimizePNGs>
 		<OptimizePropertyLists Condition="'$(OptimizePropertyLists)' == ''">True</OptimizePropertyLists>

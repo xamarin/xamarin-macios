@@ -53,6 +53,11 @@ namespace Xamarin.MMP.Tests
 
 				test.ItemGroup = string.Format (NativeReferenceTemplate, "/Library/Frameworks/iTunesLibrary.framework", "Framework");
 				NativeReferenceTestCore (tmpDir, test, "Unified_WithNativeReferences_InMainProjectWorks - Framework", null, true);
+				Assert.True (Directory.Exists (Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/Frameworks/iTunesLibrary.framework")));
+
+				string binaryPath = Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MacOS/UnifiedExample");
+				string otoolText = TI.RunAndAssert ("/usr/bin/otool", new StringBuilder ("-l " + binaryPath), "Unified_WithNativeReferences_InMainProjectWorks - rpath");
+				Assert.True (otoolText.Contains ("path @loader_path/../Frameworks"));
 			});
 		}
 
@@ -120,7 +125,7 @@ namespace Xamarin.MMP.Tests
 		{
 			// Mobile
 			test.XM45 = false;
-			string buildResults = TI.TestUnifiedExecutable (test, false);
+			string buildResults = TI.TestUnifiedExecutable (test, false).BuildOutput;
 			Assert.IsTrue (!buildShouldBeSuccessful || !buildResults.Contains ("MM2006"), string.Format ("{0} - Mobile had MM2006 state {1} not match expected\n{2}", testName, buildShouldBeSuccessful, buildResults));
 			if (processBuildOutput != null)
 				Assert.IsTrue (processBuildOutput (buildResults), string.Format ("{0} - Mobile - We did not see our expected item in the build output: {1}", testName, libraryName));
@@ -131,7 +136,7 @@ namespace Xamarin.MMP.Tests
 
 			// XM45
 			test.XM45 = true;
-			buildResults = TI.TestUnifiedExecutable (test, false);
+			buildResults = TI.TestUnifiedExecutable (test, false).BuildOutput;
 			Assert.IsTrue (!buildShouldBeSuccessful || !buildResults.Contains ("MM2006"), string.Format ("{0} - XM45 had MM2006 state {1} not match expected\n{2}", testName, buildShouldBeSuccessful, buildResults));
 			if (processBuildOutput != null)
 				Assert.IsTrue (processBuildOutput (buildResults), string.Format ("{0} - Mobile - We did not see our expected item in the build output: {1}", testName, libraryName));

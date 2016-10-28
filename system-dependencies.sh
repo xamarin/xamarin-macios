@@ -26,10 +26,45 @@ while ! test -z $1; do
 			PROVISION_MONO=1
 			shift
 			;;
+		--provision-cmake)
+			PROVISION_CMAKE=1
+			shift
+			;;
+		--provision-autotools)
+			PROVISION_AUTOTOOLS=1
+			shift
+			;;
 		--provision-all)
 			PROVISION_MONO=1
 			PROVISION_XS=1
 			PROVISION_XCODE=1
+			PROVISION_CMAKE=1
+			PROVISION_AUTOTOOLS=1
+			PROVISION_HOMEBREW=1
+			shift
+			;;
+		--ignore-osx)
+			IGNORE_OSX=1
+			shift
+			;;
+		--ignore-xcode)
+			IGNORE_XCODE=1
+			shift
+			;;
+		--ignore-xamarin-studio)
+			IGNORE_XAMARIN_STUDIO=1
+			shift
+			;;
+		--ignore-mono)
+			IGNORE_MONO=1
+			shift
+			;;
+		--ignore-autotools)
+			IGNORE_AUTOTOOLS=1
+			shift
+			;;
+		--ignore-cmake)
+			IGNORE_CMAKE=1
 			shift
 			;;
 		*)
@@ -45,6 +80,12 @@ function fail () {
 	echo "    $1"
 	tput sgr0 2>/dev/null || true
 	FAIL=1
+}
+
+function warn () {
+	tput setaf 3 2>/dev/null || true
+	echo "    $1"
+	tput sgr0 2>/dev/null || true
 }
 
 function ok () {
@@ -169,18 +210,40 @@ function install_specific_xcode () {
 	log "Downloading Xcode $XCODE_VERSION from $XCODE_URL to $PROVISION_DOWNLOAD_DIR..."
 	local XCODE_NAME=`basename $XCODE_URL`
 	local XCODE_DMG=$PROVISION_DOWNLOAD_DIR/$XCODE_NAME
-	curl -L $XCODE_URL > $XCODE_DMG
 
-	local XCODE_MOUNTPOINT=$PROVISION_DOWNLOAD_DIR/$XCODE_NAME-mount
-	log "Mounting $XCODE_DMG into $XCODE_MOUNTPOINT..."
-	hdiutil attach $XCODE_DMG -mountpoint $XCODE_MOUNTPOINT -quiet -nobrowse
-	log "Removing previous Xcode from $XCODE_ROOT"
-	rm -Rf $XCODE_ROOT
-	log "Installing Xcode $XCODE_VERSION to $XCODE_ROOT..."
-	cp -R $XCODE_MOUNTPOINT/*.app $XCODE_ROOT
-	log "Unmounting $XCODE_DMG..."
-	hdiutil detach $XCODE_MOUNTPOINT -quiet
+	# To test this script with new Xcode versions, copy the downloaded file to $XCODE_DMG,
+	# uncomment the following curl line, and run ./system-dependencies.sh --provision-xcode
+	if test -f "~/Downloads/$XCODE_NAME"; then
+		log "Found XCode $XCODE_VERSION in your ~/Downloads folder, copying that version instead."
+		cp "~/Downloads/$XCODE_NAME" "$XCODE_DMG"
+	else
+		curl -L $XCODE_URL > $XCODE_DMG
+	fi
 
+	if [[ ${XCODE_DMG: -4} == ".dmg" ]]; then
+		local XCODE_MOUNTPOINT=$PROVISION_DOWNLOAD_DIR/$XCODE_NAME-mount
+		log "Mounting $XCODE_DMG into $XCODE_MOUNTPOINT..."
+		hdiutil attach $XCODE_DMG -mountpoint $XCODE_MOUNTPOINT -quiet -nobrowse
+		log "Removing previous Xcode from $XCODE_ROOT"
+		rm -Rf $XCODE_ROOT
+		log "Installing Xcode $XCODE_VERSION to $XCODE_ROOT..."
+		cp -R $XCODE_MOUNTPOINT/*.app $XCODE_ROOT
+		log "Unmounting $XCODE_DMG..."
+		hdiutil detach $XCODE_MOUNTPOINT -quiet
+	elif [[ ${XCODE_DMG: -4} == ".xip" ]]; then
+		log "Extracting $XCODE_DMG..."
+		pushd . > /dev/null
+		cd $PROVISION_DOWNLOAD_DIR
+		# make sure there's nothing interfering
+		rm -Rf *.app
+		# extract
+		/System/Library/CoreServices/Applications/Archive\ Utility.app/Contents/MacOS/Archive\ Utility "$XCODE_DMG"
+		log "Installing Xcode $XCODE_VERSION to $XCODE_ROOT..."
+		mv *.app $XCODE_ROOT
+		popd > /dev/null
+	else
+		fail "Don't know how to install $XCODE_DMG"
+	fi
 	rm -f $XCODE_DMG
 
 	log "Removing any com.apple.quarantine attributes from the installed Xcode"
@@ -190,6 +253,22 @@ function install_specific_xcode () {
 		log "Accepting Xcode license"
 		sudo $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -license accept
 	fi
+
+	if is_at_least_version $XCODE_VERSION 8.0; then
+		PKGS="MobileDevice.pkg MobileDeviceDevelopment.pkg XcodeSystemResources.pkg"
+		for pkg in $PKGS; do
+			if test -f "$XCODE_DEVELOPER_ROOT/../Resources/Packages/$pkg"; then
+				log "Installing $pkg"
+				sudo /usr/sbin/installer -dumplog -verbose -pkg "$XCODE_DEVELOPER_ROOT/../Resources/Packages/$pkg" -target /
+				log "Installed $pkg"
+			else
+				log "Not installing $pkg because it doesn't exist."
+			fi
+		done
+	fi
+
+	log "Executing 'sudo xcode-select -s $XCODE_DEVELOPER_ROOT'"
+	sudo xcode-select -s $XCODE_DEVELOPER_ROOT
 
 	ok "Xcode $XCODE_VERSION provisioned"
 }
@@ -246,6 +325,8 @@ function check_specific_xcode () {
 }
 
 function check_xcode () {
+	if ! test -z $IGNORE_XCODE; then return; fi
+
 	# must have latest Xcode in /Applications/Xcode<version>.app
 	check_specific_xcode
 
@@ -277,6 +358,8 @@ function check_xcode () {
 }
 
 function check_mono () {
+	if ! test -z $IGNORE_MONO; then return; fi
+
 	PKG_CONFIG_PATH=/Library/Frameworks/Mono.framework/Versions/Current/bin/pkg-config
 	if ! /Library/Frameworks/Mono.framework/Commands/mono --version 2>/dev/null >/dev/null; then
 		if ! test -z $PROVISION_MONO; then
@@ -324,12 +407,44 @@ function check_mono () {
 	ok "Found Mono $ACTUAL_MONO_VERSION (at least $MIN_MONO_VERSION and not more than $MAX_MONO_VERSION is required)"
 }
 
+function install_autoconf () {
+	if ! brew --version >& /dev/null; then
+		fail "Asked to install autoconf, but brew is not installed."
+		return
+	fi
+
+	brew install autoconf
+}
+
+function install_libtool () {
+	if ! brew --version >& /dev/null; then
+		fail "Asked to install libtool, but brew is not installed."
+		return
+	fi
+
+	brew install libtool
+}
+
+function install_automake () {
+	if ! brew --version >& /dev/null; then
+		fail "Asked to install automake, but brew is not installed."
+		return
+	fi
+
+	brew install automake
+}
+
+
 function check_autotools () {
+	if ! test -z $IGNORE_AUTOTOOLS; then return; fi
+
 IFStmp=$IFS
 IFS='
 '
 	if AUTOCONF_VERSION=($(autoconf --version 2>/dev/null)); then
 		ok "Found ${AUTOCONF_VERSION[0]} (no specific version is required)"
+	elif ! test -z $PROVISION_AUTOTOOLS; then
+		install_autoconf
 	else
 		fail "You must install autoconf, read the README.md for instructions"
 	fi
@@ -338,21 +453,27 @@ IFS='
 		LIBTOOL=$(which libtool)
 	fi
 
-	if ! LIBTOOL_VERSION=($($LIBTOOL --version 2>/dev/null )); then
-		fail "You must install libtool, read the README.md for instructions"
-	else
+	if LIBTOOL_VERSION=($($LIBTOOL --version 2>/dev/null )); then
 		ok "Found ${LIBTOOL_VERSION[0]} (no specific version is required)"
+	elif ! test -z $PROVISION_AUTOTOOLS; then
+		install_libtool
+	else
+		fail "You must install libtool, read the README.md for instructions"
 	fi
 
-	if ! AUTOMAKE_VERSION=($(automake --version 2>/dev/null)); then
-		fail "You must install automake, read the README.md for instructions"
-	else
+	if AUTOMAKE_VERSION=($(automake --version 2>/dev/null)); then
 		ok "Found ${AUTOMAKE_VERSION[0]} (no specific version is required)"
+	elif ! test -z $PROVISION_AUTOTOOLS; then
+		install_automake
+	else
+		fail "You must install automake, read the README.md for instructions"
 	fi
 IFS=$IFS_tmp
 }
 
 function check_xamarin_studio () {
+	if ! test -z $IGNORE_XAMARIN_STUDIO; then return; fi
+
 	XS="/Applications/Xamarin Studio.app"
 	local XS_URL=`grep MIN_XAMARIN_STUDIO_URL= Make.config | sed 's/.*=//'`
 	if ! test -d "$XS"; then
@@ -395,6 +516,8 @@ function check_xamarin_studio () {
 }
 
 function check_osx_version () {
+	if ! test -z $IGNORE_OSX; then return; fi
+
 	MIN_OSX_BUILD_VERSION=`grep MIN_OSX_BUILD_VERSION= Make.config | sed 's/.*=//'`
 
 	ACTUAL_OSX_VERSION=$(sw_vers -productVersion)
@@ -406,13 +529,66 @@ function check_osx_version () {
 	ok "Found OSX $ACTUAL_OSX_VERSION (at least $MIN_OSX_BUILD_VERSION is required)"
 }
 
+function install_cmake () {
+	if ! brew --version >& /dev/null; then
+		fail "Asked to install cmake, but brew is not installed."
+		return
+	fi
+
+	brew install cmake
+}
+
+function check_cmake () {
+	if ! test -z $IGNORE_CMAKE; then return; fi
+
+	local MIN_CMAKE_VERSION=`grep MIN_CMAKE_VERSION= Make.config | sed 's/.*=//'`
+	local CMAKE_URL=`grep CMAKE_URL= Make.config | sed 's/.*=//'`
+
+	if ! cmake --version &> /dev/null; then
+		if ! test -z $PROVISION_CMAKE; then
+			install_cmake
+		else
+			fail "You must install CMake ($CMAKE_URL)"
+		fi
+		return
+	fi
+
+	ACTUAL_CMAKE_VERSION=$(cmake --version | grep "cmake version" | sed 's/cmake version //')
+	if ! is_at_least_version $ACTUAL_CMAKE_VERSION $MIN_CMAKE_VERSION; then
+		fail "You must have at least CMake $MIN_CMAKE_VERSION (found $ACTUAL_CMAKE_VERSION)"
+		return
+	fi
+
+	ok "Found CMake $ACTUAL_CMAKE_VERSION (at least $MIN_CMAKE_VERSION is required)"
+}
+
+function check_homebrew ()
+{
+IFStmp=$IFS
+IFS='
+'
+	if HOMEBREW_VERSION=($(brew --version 2>/dev/null)); then
+		ok "Found Homebrew ($HOMEBREW_VERSION)"
+	elif ! test -z $PROVISION_HOMEBREW; then
+		log "Installing Homebrew..."
+		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+		HOMEBREW_VERSION=($(brew --version 2>/dev/null))
+		log "Installed Homebrew ($HOMEBREW_VERSION)"
+	else
+		warn "Could not find Homebrew. Homebrew is required to auto-provision some dependencies (autotools, cmake), but not required otherwise."
+	fi
+IFS=$IFS_tmp
+}
+
 echo "Checking system..."
 
 check_osx_version
 check_xcode
+check_homebrew
 check_autotools
 check_mono
 check_xamarin_studio
+check_cmake
 
 if test -z $FAIL; then
 	echo "System check succeeded"

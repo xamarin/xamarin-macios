@@ -159,7 +159,7 @@ namespace XamCore.WebKit
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
-	interface WKPreferences {
+	interface WKPreferences : NSCoding {
 		[Export ("minimumFontSize")]
 		nfloat MinimumFontSize { get; set; }
 
@@ -263,8 +263,8 @@ namespace XamCore.WebKit
 	
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	interface WKWebsiteDataStore
-	{
+	interface WKWebsiteDataStore : NSCoding {
+
 		[Static]
 		[Export ("defaultDataStore")]
 		WKWebsiteDataStore DefaultDataStore { get; }
@@ -312,11 +312,26 @@ namespace XamCore.WebKit
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		[Export ("webViewDidClose:")]
 		void DidClose (WKWebView webView);
+
+		[iOS (10,0)][NoMac]
+		[Export ("webView:shouldPreviewElement:")]
+		bool ShouldPreviewElement (WKWebView webView, WKPreviewElementInfo elementInfo);
+
+#if !MONOMAC
+		[iOS (10,0)][NoMac]
+		[Export ("webView:previewingViewControllerForElement:defaultActions:")]
+		[return: NullAllowed]
+		UIViewController GetPreviewingViewController (WKWebView webView, WKPreviewElementInfo elementInfo, IWKPreviewActionItem[] previewActions);
+
+		[iOS (10,0)][NoMac]
+		[Export ("webView:commitPreviewingViewController:")]
+		void CommitPreviewingViewController (WKWebView webView, UIViewController previewingViewController);
+#endif
 	}
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
-	interface WKUserContentController {
+	interface WKUserContentController : NSCoding {
 
 		[Export ("userScripts")]
 		WKUserScript [] UserScripts { get; }
@@ -484,19 +499,25 @@ namespace XamCore.WebKit
 		string CustomUserAgent { get; set; }
 
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use ServerTrust property")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use ServerTrust property")]
 		[Export ("certificateChain", ArgumentSemantic.Copy)]
 		SecCertificate[] CertificateChain { get; }
 
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		[Export ("allowsLinkPreview")]
 		bool AllowsLinkPreview { get; set; }
+
+		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
+		[NullAllowed, Export ("serverTrust")]
+		SecTrust ServerTrust { get; }
 	}
 
-	public delegate void WKJavascriptEvaluationResult (NSObject result, NSError error);
+	delegate void WKJavascriptEvaluationResult (NSObject result, NSError error);
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
-	interface WKWebViewConfiguration : NSCopying {
+	interface WKWebViewConfiguration : NSCopying, NSCoding {
 
 		[Export ("processPool", ArgumentSemantic.Retain)]
 		WKProcessPool ProcessPool { get; set; }
@@ -526,7 +547,7 @@ namespace XamCore.WebKit
 		[Export ("allowsInlineMediaPlayback")]
 		bool AllowsInlineMediaPlayback { get; set; }
 
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0, Message = "Use RequiresUserActionForMediaPlayback")]
+		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0, Message = "Use RequiresUserActionForMediaPlayback or MediaTypesRequiringUserActionForPlayback")]
 		[Export ("mediaPlaybackRequiresUserAction")]
 		bool MediaPlaybackRequiresUserAction { get; set; }
 
@@ -537,19 +558,31 @@ namespace XamCore.WebKit
 		[Export ("selectionGranularity")]
 		WKSelectionGranularity SelectionGranularity { get; set; }
 
-		[iOS (9,0)]
+		[Availability (Introduced = Platform.iOS_9_0, Deprecated = Platform.iOS_10_0, Message = "Use MediaTypesRequiringUserActionForPlayback")]
 		[Export ("requiresUserActionForMediaPlayback")]
 		bool RequiresUserActionForMediaPlayback { get; set; }
 
 		[iOS (9,0)]
 		[Export ("allowsPictureInPictureMediaPlayback")]
 		bool AllowsPictureInPictureMediaPlayback { get; set; }
+
+		[iOS (10, 0)]
+		[Export ("dataDetectorTypes", ArgumentSemantic.Assign)]
+		WKDataDetectorTypes DataDetectorTypes { get; set; }
 #endif
+		[iOS (10,0)][Mac (10,12, only64: true)]
+		[Export ("mediaTypesRequiringUserActionForPlayback", ArgumentSemantic.Assign)]
+		WKAudiovisualMediaTypes MediaTypesRequiringUserActionForPlayback { get; set; }
+
+		[iOS (10,0)]
+		[NoMac]
+		[Export ("ignoresViewportScaleLimits")]
+		bool IgnoresViewportScaleLimits { get; set; }
 	}
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
-	interface WKProcessPool {
+	interface WKProcessPool : NSCoding {
 		// as of Mac 10.10, iOS 8.0 Beta 2,
 		// this interface is completely empty
 	}
@@ -584,5 +617,38 @@ namespace XamCore.WebKit
 		NSNumber height { get; }
 	}
 
-	
+#if !MONOMAC
+	interface IWKPreviewActionItem {}
+
+	[iOS (10,0)][NoMac]
+	[Protocol]
+	interface WKPreviewActionItem : UIPreviewActionItem {
+		[Abstract]
+		[Export ("identifier", ArgumentSemantic.Copy)]
+		NSString Identifier { get; }
+	}
+#endif
+
+	[iOS (10,0)][NoMac]
+	[Static]
+	interface WKPreviewActionItemIdentifier {
+		[Field ("WKPreviewActionItemIdentifierOpen")]
+		NSString Open { get; }
+
+		[Field ("WKPreviewActionItemIdentifierAddToReadingList")]
+		NSString AddToReadingList { get; }
+
+		[Field ("WKPreviewActionItemIdentifierCopy")]
+		NSString Copy { get; }
+
+		[Field ("WKPreviewActionItemIdentifierShare")]
+		NSString Share { get; }
+	}
+
+	[iOS (10,0)][NoMac]
+	[BaseType (typeof (NSObject))]
+	interface WKPreviewElementInfo : NSCopying {
+		[NullAllowed, Export ("linkURL")]
+		NSUrl LinkUrl { get; }
+	}
 }

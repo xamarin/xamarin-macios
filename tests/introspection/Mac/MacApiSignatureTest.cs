@@ -11,6 +11,7 @@ using System;
 using System.Reflection;
 
 using NUnit.Framework;
+using Xamarin.Tests;
 
 #if XAMCORE_2_0
 using Foundation;
@@ -108,6 +109,14 @@ namespace Introspection {
 			case "AVAudioUnit":
 				switch (selector) {
 				case "audioUnit": // ^{ComponentInstanceRecord=[1l], tested to work in an apitest
+					return true;
+				}
+				break;
+			case "NSSlider":
+			case "NSSliderCell":
+				switch (selector) {
+				case "isVertical": // radar 27222357 
+				case "setVertical:": // radar 27222357
 					return true;
 				}
 				break;

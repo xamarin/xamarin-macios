@@ -9,6 +9,90 @@
 !missing-selector! AVFragmentedAsset::tracksWithMediaCharacteristic: not bound
 !missing-selector! AVFragmentedAsset::tracksWithMediaType: not bound
 
+## AVCaptureDevice_AVCaptureDeviceAuthorization category over AVCaptureDevice - not in tvOS
+!missing-selector! +AVCaptureDevice::authorizationStatusForMediaType: not bound
+!missing-selector! +AVCaptureDevice::requestAccessForMediaType:completionHandler: not bound
+
+## AVCaptureDevice_AVCaptureDeviceColorSpaceSupport category over AVCaptureDevice - not in tvOS
+!missing-selector! AVCaptureDevice::activeColorSpace not bound
+!missing-selector! AVCaptureDevice::setActiveColorSpace: not bound
+
+## AVCaptureDevice_AVCaptureDeviceExposure category over AVCaptureDevice - not in tvOS
+!missing-selector! AVCaptureDevice::ISO not bound
+!missing-selector! AVCaptureDevice::exposureDuration not bound
+!missing-selector! AVCaptureDevice::exposureTargetBias not bound
+!missing-selector! AVCaptureDevice::exposureTargetOffset not bound
+!missing-selector! AVCaptureDevice::lensAperture not bound
+!missing-selector! AVCaptureDevice::maxExposureTargetBias not bound
+!missing-selector! AVCaptureDevice::minExposureTargetBias not bound
+!missing-selector! AVCaptureDevice::setExposureTargetBias:completionHandler: not bound
+!missing-selector! AVCaptureDevice::setExposureModeCustomWithDuration:ISO:completionHandler: not bound
+
+## AVCaptureDevice_AVCaptureDeviceFlash
+!missing-selector! AVCaptureDevice::flashMode not bound
+!missing-selector! AVCaptureDevice::isFlashActive not bound
+!missing-selector! AVCaptureDevice::isFlashAvailable not bound
+!missing-selector! AVCaptureDevice::isFlashModeSupported: not bound
+!missing-selector! AVCaptureDevice::setFlashMode: not bound
+
+## AVCaptureDevice_AVCaptureDeviceFocus category over AVCaptureDevice - not in tvOS
+!missing-selector! AVCaptureDevice::autoFocusRangeRestriction not bound
+!missing-selector! AVCaptureDevice::isAutoFocusRangeRestrictionSupported not bound
+!missing-selector! AVCaptureDevice::isSmoothAutoFocusEnabled not bound
+!missing-selector! AVCaptureDevice::isSmoothAutoFocusSupported not bound
+!missing-selector! AVCaptureDevice::lensPosition not bound
+!missing-selector! AVCaptureDevice::setAutoFocusRangeRestriction: not bound
+!missing-selector! AVCaptureDevice::setFocusModeLockedWithLensPosition:completionHandler: not bound
+!missing-selector! AVCaptureDevice::setSmoothAutoFocusEnabled: not bound
+!missing-selector! AVCaptureDevice::isLockingFocusWithCustomLensPositionSupported not bound
+!missing-selector! AVCaptureDevice::isLockingWhiteBalanceWithCustomDeviceGainsSupported not bound
+
+## AVCaptureDevice_AVCaptureDeviceHighDynamicRangeSupport
+!missing-selector! AVCaptureDevice::automaticallyAdjustsVideoHDREnabled not bound
+!missing-selector! AVCaptureDevice::isVideoHDREnabled not bound
+!missing-selector! AVCaptureDevice::setAutomaticallyAdjustsVideoHDREnabled: not bound
+!missing-selector! AVCaptureDevice::setVideoHDREnabled: not bound
+
+## AVCaptureDevice_AVCaptureDeviceLowLightBoost
+!missing-selector! AVCaptureDevice::automaticallyEnablesLowLightBoostWhenAvailable not bound
+!missing-selector! AVCaptureDevice::isLowLightBoostEnabled not bound
+!missing-selector! AVCaptureDevice::isLowLightBoostSupported not bound
+!missing-selector! AVCaptureDevice::setAutomaticallyEnablesLowLightBoostWhenAvailable: not bound
+
+## AVCaptureDevice_AVCaptureDeviceSubjectAreaChangeMonitoring
+!missing-selector! AVCaptureDevice::isSubjectAreaChangeMonitoringEnabled not bound
+!missing-selector! AVCaptureDevice::setSubjectAreaChangeMonitoringEnabled: not bound
+
+## AVCaptureDevice_AVCaptureDeviceTorch
+!missing-selector! AVCaptureDevice::isTorchActive not bound
+!missing-selector! AVCaptureDevice::isTorchAvailable not bound
+!missing-selector! AVCaptureDevice::setTorchModeOnWithLevel:error: not bound
+!missing-selector! AVCaptureDevice::torchLevel not bound
+
+## AVCaptureDevice_AVCaptureDeviceVideoZoom
+!missing-selector! AVCaptureDevice::isRampingVideoZoom not bound
+!missing-selector! AVCaptureDevice::rampToVideoZoomFactor:withRate: not bound
+!missing-selector! AVCaptureDevice::videoZoomFactor not bound
+!missing-selector! AVCaptureDevice::setVideoZoomFactor: not bound
+
+## AVCaptureDevice_AVCaptureDeviceWhiteBalance
+!missing-selector! AVCaptureDevice::chromaticityValuesForDeviceWhiteBalanceGains: not bound
+!missing-selector! AVCaptureDevice::deviceWhiteBalanceGains not bound
+!missing-selector! AVCaptureDevice::deviceWhiteBalanceGainsForChromaticityValues: not bound
+!missing-selector! AVCaptureDevice::deviceWhiteBalanceGainsForTemperatureAndTintValues: not bound
+!missing-selector! AVCaptureDevice::grayWorldDeviceWhiteBalanceGains not bound
+!missing-selector! AVCaptureDevice::maxWhiteBalanceGain not bound
+!missing-selector! AVCaptureDevice::setWhiteBalanceModeLockedWithDeviceWhiteBalanceGains:completionHandler: not bound
+!missing-selector! AVCaptureDevice::temperatureAndTintValuesForDeviceWhiteBalanceGains: not bound
+
+## AVCaptureStillImageOutput_BracketedCaptureMethods category over AVCaptureStillImageOutput - not in tvOS (and deprecated)
+!missing-selector! AVCaptureStillImageOutput::captureStillImageBracketAsynchronouslyFromConnection:withSettingsArray:completionHandler: not bound
+!missing-selector! AVCaptureStillImageOutput::isLensStabilizationDuringBracketedCaptureEnabled not bound
+!missing-selector! AVCaptureStillImageOutput::isLensStabilizationDuringBracketedCaptureSupported not bound
+!missing-selector! AVCaptureStillImageOutput::maxBracketedCaptureStillImageCount not bound
+!missing-selector! AVCaptureStillImageOutput::prepareToCaptureStillImageBracketFromConnection:withSettingsArray:completionHandler: not bound
+!missing-selector! AVCaptureStillImageOutput::setLensStabilizationDuringBracketedCaptureEnabled: not bound
+
 
 # CloudKit
 
@@ -22,6 +106,13 @@
 
 ## Apple bug (mac only) - https://trello.com/c/kpksFWto/6-22524785-coreimage-headers-discrepancies
 !missing-selector! CIKernel::setROISelector: not bound
+
+
+# ExternalAccessory
+
+## it's unusable (no way to create instances, no static methods, not even any usable instance methods)
+!missing-type! EAWiFiUnconfiguredAccessoryBrowser not bound
+!missing-selector! EAWiFiUnconfiguredAccessoryBrowser::unconfiguredAccessories not bound
 
 
 # Foundation
@@ -61,6 +152,9 @@
 !missing-selector! GKVoiceChatClient::voiceChatService:didStopWithParticipantID:error: not bound
 !missing-selector! GKVoiceChatClient::voiceChatService:sendData:toParticipantID: not bound
 !missing-selector! GKVoiceChatClient::voiceChatService:sendRealTimeData:toParticipantID: not bound
+
+## type is not available in tvOS but it's defined multiple times in the headers (so it gets picked up without the __TVOS_UNAVAILABLE)
+!missing-selector! GKFriendRequestComposeViewController::addRecipientPlayers: not bound
 
 
 # MediaPlayer
@@ -106,6 +200,8 @@
 !missing-field! MPMediaItemPropertySkipCount not bound
 !missing-field! MPMediaItemPropertyTitle not bound
 !missing-field! MPMediaItemPropertyUserGrouping not bound
+!missing-field! MPMediaItemPropertyDateAdded not bound
+!missing-field! MPMediaItemPropertyIsExplicit not bound
 
 ## shown as available in iOS 9.3 in tvOS header files (from Xcode 7.3) so normally available in tvOS 9.2 
 ## In reality it's only available in the simulator, not on AppleTV devices (all fields are null)
@@ -115,27 +211,6 @@
 
 ## the enum is only used in API marked with __TVOS_PROHIBITED
 !missing-enum! MPMediaLibraryAuthorizationStatus not bound
-
-## in tvOS 9.2 MPContentItem is not marked with __TVOS_PROHIBITED anymore
-## however it expose a type that is still marked with __TVOS_PROHIBITED !?!
-## and it's also not used by other, available, API 
-## we're not risking it into our public API until Apple replies to the radar
-## https://trello.com/c/2gxuFbeS/38-24982126-mpmediaitemartwork-is-not-available-on-tvos-9-3b5
-!missing-type! MPContentItem not bound
-!missing-selector! MPContentItem::artwork not bound
-!missing-selector! MPContentItem::identifier not bound
-!missing-selector! MPContentItem::initWithIdentifier: not bound
-!missing-selector! MPContentItem::isContainer not bound
-!missing-selector! MPContentItem::isPlayable not bound
-!missing-selector! MPContentItem::playbackProgress not bound
-!missing-selector! MPContentItem::setArtwork: not bound
-!missing-selector! MPContentItem::setContainer: not bound
-!missing-selector! MPContentItem::setPlayable: not bound
-!missing-selector! MPContentItem::setPlaybackProgress: not bound
-!missing-selector! MPContentItem::setSubtitle: not bound
-!missing-selector! MPContentItem::setTitle: not bound
-!missing-selector! MPContentItem::subtitle not bound
-!missing-selector! MPContentItem::title not bound
 
 
 ## Deprecated in iOS 9.0 (in favor of AVKit) and the related type 
@@ -169,6 +244,38 @@
 !missing-field! MPMoviePlayerWillEnterFullscreenNotification not bound
 !missing-field! MPMoviePlayerWillExitFullscreenNotification not bound
 !missing-field! MPMovieSourceTypeAvailableNotification not bound
+
+
+## Categories, e.g. MPMoviePlayerController_MPMovieProperties, over MPMoviePlayerController
+## are not marked as not available on tvOS
+!missing-selector! MPMoviePlayerController::accessLog not bound
+!missing-selector! MPMoviePlayerController::allowsAirPlay not bound
+!missing-selector! MPMoviePlayerController::duration not bound
+!missing-selector! MPMoviePlayerController::endPlaybackTime not bound
+!missing-selector! MPMoviePlayerController::errorLog not bound
+!missing-selector! MPMoviePlayerController::initialPlaybackTime not bound
+!missing-selector! MPMoviePlayerController::isAirPlayVideoActive not bound
+!missing-selector! MPMoviePlayerController::movieMediaTypes not bound
+!missing-selector! MPMoviePlayerController::movieSourceType not bound
+!missing-selector! MPMoviePlayerController::naturalSize not bound
+!missing-selector! MPMoviePlayerController::playableDuration not bound
+!missing-selector! MPMoviePlayerController::requestThumbnailImagesAtTimes:timeOption: not bound
+!missing-selector! MPMoviePlayerController::setAllowsAirPlay: not bound
+!missing-selector! MPMoviePlayerController::setEndPlaybackTime: not bound
+!missing-selector! MPMoviePlayerController::setInitialPlaybackTime: not bound
+!missing-selector! MPMoviePlayerController::setMovieSourceType: not bound
+!missing-selector! MPMoviePlayerController::setUseApplicationAudioSession: not bound
+!missing-selector! MPMoviePlayerController::thumbnailImageAtTime:timeOption: not bound
+!missing-selector! MPMoviePlayerController::timedMetadata not bound
+!missing-selector! MPMoviePlayerController::useApplicationAudioSession not bound
+!missing-selector! MPMusicPlayerController::indexOfNowPlayingItem not bound
+!missing-selector! MPMusicPlayerController::setQueueWithStoreIDs: not bound
+!missing-selector! MPMusicPlayerController::setVolume: not bound
+!missing-selector! MPMusicPlayerController::volume not bound
+
+## from (unmarked) MPMediaItem_MPMediaQueryAdditions but MPMediaItem is not in tvOS
+!missing-selector! +MPMediaItem::persistentIDPropertyForGroupingType: not bound
+!missing-selector! +MPMediaItem::titlePropertyForGroupingType: not bound
 
 
 # StoreKit
@@ -336,15 +443,6 @@
 !duplicate-type-name! VertexAttribParameter enum exists as both OpenTK.Graphics.ES30.VertexAttribParameter and OpenTK.Graphics.ES20.VertexAttribParameter
 !duplicate-type-name! VertexAttribPointerParameter enum exists as both OpenTK.Graphics.ES30.VertexAttribPointerParameter and OpenTK.Graphics.ES20.VertexAttribPointerParameter
 !duplicate-type-name! VertexAttribPointerType enum exists as both OpenTK.Graphics.ES30.VertexAttribPointerType and OpenTK.Graphics.ES20.VertexAttribPointerType
-
-
-# Security
-
-## added in iOS 8.0
-!missing-pinvoke! SecAddSharedWebCredential is not bound
-!missing-pinvoke! SecCreateSharedWebCredentialPassword is not bound
-!missing-pinvoke! SecRequestSharedWebCredential is not bound
-!missing-field! kSecSharedPassword not bound
 
 
 # Non-Apple

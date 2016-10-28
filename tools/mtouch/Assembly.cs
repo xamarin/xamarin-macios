@@ -94,6 +94,26 @@ namespace Xamarin.Bundler {
 				Application.UpdateFile (mdb_src, mdb_target);
 			}
 		}
+		
+		public void CopyMSymToDirectory (string directory)
+		{
+			string msym_src = FullPath + ".aotid.msym";
+			var dirInfo = new DirectoryInfo (msym_src);
+			if (!dirInfo.Exists) // got no aot data
+				return;
+			var subdirs = dirInfo.GetDirectories();
+			foreach (var subdir in subdirs) {
+				var destPath = Path.Combine (directory, subdir.Name.ToUpperInvariant ());
+				var destInfo = new DirectoryInfo (destPath);
+				if (!destInfo.Exists)
+					Directory.CreateDirectory (destPath);
+				var files = subdir.GetFiles ();
+				foreach (FileInfo file in files) {
+					string temppath = Path.Combine (destPath, file.Name);
+					file.CopyTo(temppath, true);
+				}
+			}
+		}
 
 		public void CopyConfigToDirectory (string directory)
 		{
@@ -248,7 +268,7 @@ namespace Xamarin.Bundler {
 			return new BuildTask [] { new AOTTask ()
 				{
 					AssemblyName = s,
-					ProcessStartInfo = Driver.CreateStartInfo (aotCompiler, aotArgs, Path.GetDirectoryName (s), App.EnableMSym ? "gen-compact-seq-points" : null),
+					ProcessStartInfo = Driver.CreateStartInfo (aotCompiler, aotArgs, Path.GetDirectoryName (s)),
 					NextTasks = nextTasks
 				}
 			};
@@ -298,7 +318,7 @@ namespace Xamarin.Bundler {
 				};
 			} else {
 				link_task_input = infile_path;
-				if (infile_path.EndsWith (".s"))
+				if (infile_path.EndsWith (".s", StringComparison.Ordinal))
 					link_language = "assembler";
 			}
 
@@ -310,6 +330,7 @@ namespace Xamarin.Bundler {
 				compiler_flags.AddOtherFlags (LinkerFlags);
 				if (Target.GetEntryPoints ().ContainsKey ("UIApplicationMain"))
 					compiler_flags.AddFramework ("UIKit");
+				compiler_flags.LinkWithPInvokes (abi);
 			}
 
 			link_task = new LinkTask ()
@@ -377,7 +398,7 @@ namespace Xamarin.Bundler {
 			var assembly = Path.Combine (build_dir, FileName);
 
 			if (App.FastDev)
-				Dylib = Path.Combine (App.AppDirectory, "lib" + Path.GetFileName (FullPath) + ".dylib");
+				Dylib = Path.Combine (App.AppDirectory, Driver.Quote ("lib" + Path.GetFileName (FullPath) + ".dylib"));
 
 			foreach (var abi in abis) {
 				var task = CreateManagedToAssemblyTasks (assembly, abi, build_dir);
@@ -390,7 +411,7 @@ namespace Xamarin.Bundler {
 		{
 			try {
 				AssemblyDefinition = Target.Resolver.Load (filename);
-				FullPath = AssemblyDefinition.MainModule.FullyQualifiedName;
+				FullPath = AssemblyDefinition.MainModule.FileName;
 				if (symbols_loaded.HasValue && symbols_loaded.Value) {
 					symbols_loaded = null;
 					LoadSymbols ();

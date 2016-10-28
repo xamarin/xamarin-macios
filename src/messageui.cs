@@ -12,6 +12,7 @@ using System;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 using XamCore.CoreFoundation;
+using XamCore.Messages;
 using XamCore.UIKit;
 
 namespace XamCore.MessageUI {
@@ -103,6 +104,10 @@ namespace XamCore.MessageUI {
 		[Since (7,0)]
 		[Export ("attachments")]
 		NSDictionary[] GetAttachments ();
+
+		[iOS (10,0)]
+		[NullAllowed, Export ("message", ArgumentSemantic.Copy)]
+		MSMessage Message { get; set; }
 
 		[Since (7,0)]
 		[Export ("addAttachmentURL:withAlternateFilename:")]

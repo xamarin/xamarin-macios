@@ -71,16 +71,36 @@ typedef __attribute__((__ext_vector_type__(2))) int vector_int2;
 typedef __attribute__((__ext_vector_type__(3))) int vector_int3;
 typedef __attribute__((__ext_vector_type__(4))) int vector_int4;
 
+typedef __attribute__((__ext_vector_type__(2))) double vector_double2;
+typedef __attribute__((__ext_vector_type__(3))) double vector_double3;
+typedef __attribute__((__ext_vector_type__(4))) double vector_double4;
+
 typedef __attribute__((__ext_vector_type__(2))) float vector_float2;
 typedef __attribute__((__ext_vector_type__(3))) float vector_float3;
 typedef __attribute__((__ext_vector_type__(4))) float vector_float4;
 
+typedef struct { vector_float2 columns[2]; } matrix_float2x2;
+typedef struct { vector_float3 columns[3]; } matrix_float3x3;
 typedef struct { vector_float4 columns[4]; } matrix_float4x4;
 
 typedef struct {
     vector_float3 maxBounds;
     vector_float3 minBounds;
 } MDLAxisAlignedBoundingBox;
+
+typedef struct {
+    vector_float3 maxBounds;
+    vector_float3 minBounds;
+} GKBox;
+
+typedef struct {
+    vector_float2 maxBounds;
+    vector_float2 minBounds;
+} GKQuad;
+
+typedef struct {
+    vector_float3 points[3];
+} GKTriangle;
 
 /*
  * iOS has a vector type (vector_float3) which can't be expressed
@@ -107,6 +127,24 @@ struct Vector4i {
 	int a, b, c, d;
 };
 
+struct Vector4d {
+	double a, b, c, d;
+};
+struct Vector3d {
+	double a, b, c;
+};
+struct Vector2d {
+	double a, b;
+};
+
+struct Matrix2f {
+	Vector2f columns [2];
+};
+
+struct Matrix3f {
+	Vector3f columns [3];
+};
+
 struct Matrix4f {
 	Vector4f columns [4];
 };
@@ -116,6 +154,19 @@ struct MDLAxisAlignedBoundingBoxWrapper {
     Vector3f minBounds;
 };
 
+struct GKBoxWrapper {
+	Vector3f maxBounds;
+    Vector3f minBounds;
+};
+
+struct GKQuadWrapper {
+    Vector2f maxBounds;
+    Vector2f minBounds;
+};
+
+struct GKTriangleWrapper {
+	Vector3f points [3];
+};
 
 struct Vector4f  xamarin_vector_float3__Vector4_objc_msgSend (id self, SEL sel);
 void             xamarin_vector_float3__Vector4_objc_msgSend_stret (struct Vector4f *v4, id self, SEL sel);

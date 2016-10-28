@@ -28,7 +28,36 @@ namespace Xamarin.Linker {
 			ObjCRuntime = profile.GetNamespace ("ObjCRuntime");
 			Security = profile.GetNamespace ("Security");
 			StoreKit = profile.GetNamespace ("StoreKit");
+			GameController = profile.GetNamespace ("GameController");
+			JavaScriptCore = profile.GetNamespace ("JavaScriptCore");
+			CoreAudioKit = profile.GetNamespace ("CoreAudioKit");
+			InputMethodKit = profile.GetNamespace ("InputMethodKit");
+			OpenAL = profile.GetNamespace ("OpenAL");
+			MediaAccessibility = profile.GetNamespace ("MediaAccessibility");
+			CoreMIDI = profile.GetNamespace ("CoreMIDI");
+			MediaLibrary = profile.GetNamespace ("MediaLibrary");
+			GLKit = profile.GetNamespace ("GLKit");
+			SpriteKit = profile.GetNamespace ("SpriteKit");
+			CloudKit = profile.GetNamespace ("CloudKit");
+			LocalAuthentication = profile.GetNamespace ("LocalAuthentication");
+			Accounts = profile.GetNamespace ("Accounts");
+			Contacts = profile.GetNamespace ("Contacts");
+			ContactsUI = profile.GetNamespace ("ContactsUI");
+			MapKit = profile.GetNamespace ("MapKit");
+			EventKit = profile.GetNamespace ("EventKit");
+			Social = profile.GetNamespace ("Social");
+			AVKit = profile.GetNamespace ("AVKit");
+			VideoToolbox = profile.GetNamespace ("VideoToolbox");
+			GameplayKit = profile.GetNamespace ("GameplayKit");
+			NetworkExtension = profile.GetNamespace ("NetworkExtension");
+			MultipeerConnectivity = profile.GetNamespace ("MultipeerConnectivity");
+			MetalKit = profile.GetNamespace ("MetalKit");
+			ModelIO = profile.GetNamespace ("ModelIO");
 #if MONOMAC
+			IOBluetooth = profile.GetNamespace ("IOBluetooth");
+			IOBluetoothUI = profile.GetNamespace ("IOBluetoothUI");
+			FinderSync = profile.GetNamespace ("FinderSync");
+			NotificationCenter = profile.GetNamespace ("NotificationCenter");
 			AppKit = profile.GetNamespace ("AppKit");
 			CoreWlan = profile.GetNamespace ("CoreWlan");
 			ImageKit = profile.GetNamespace ("ImageKit");
@@ -43,6 +72,31 @@ namespace Xamarin.Linker {
 			UIKit = profile.GetNamespace ("UIKit");
 #endif
 		}
+
+		public static string JavaScriptCore { get; private set; }
+		public static string CoreAudioKit { get; private set; }
+		public static string InputMethodKit { get; private set; }
+		public static string OpenAL { get; private set; }
+		public static string MediaAccessibility { get; private set; }
+		public static string CoreMIDI { get; private set; }
+		public static string MediaLibrary { get; private set; }
+		public static string GLKit { get; private set; }
+		public static string SpriteKit { get; private set; }
+		public static string CloudKit { get; private set; }
+		public static string LocalAuthentication { get; private set; }
+		public static string Accounts { get; private set; }
+		public static string Contacts { get; private set; }
+		public static string ContactsUI { get; private set; }
+		public static string MapKit { get; private set; }
+		public static string EventKit { get; private set; }
+		public static string Social { get; private set; }
+		public static string AVKit { get; private set; }
+		public static string VideoToolbox { get; private set; }
+		public static string GameplayKit { get; private set; }
+		public static string NetworkExtension { get; private set; }
+		public static string MultipeerConnectivity { get; private set; }
+		public static string MetalKit { get; private set; }
+		public static string ModelIO { get; private set; }
 
 		public static string AddressBook { get; private set; }
 
@@ -61,6 +115,8 @@ namespace Xamarin.Linker {
 		public static string Foundation { get; private set; }
 
 		public static string GameKit { get; private set; }
+		
+		public static string GameController { get; private set; }
 
 		public static string ObjCRuntime { get; private set; }
 
@@ -69,6 +125,11 @@ namespace Xamarin.Linker {
 		public static string StoreKit { get; private set; }
 
 #if MONOMAC
+		public static string IOBluetooth { get; private set; }
+		public static string IOBluetoothUI { get; private set; }
+		public static string FinderSync { get; private set; }
+		public static string NotificationCenter { get; private set; }
+
 		public static string AppKit { get; private set; }
 
 		public static string CoreWlan { get; private set; }

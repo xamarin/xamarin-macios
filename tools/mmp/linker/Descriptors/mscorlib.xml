@@ -616,6 +616,8 @@
 			<method name="StaticGetterAdapterFrame" />
 		</type>
 		<type fullname="System.Reflection.ParameterInfo" preserve="fields" />
+		<!-- reflection.c: ves_icall_get_parameter_info -->
+		<type fullname="System.Reflection.MonoParameterInfo" preserve="fields" />
 
 		<type fullname="System.Reflection.Emit.AssemblyBuilder" preserve="fields">
 			<method name="AddPermissionRequests" />
@@ -771,9 +773,14 @@
 			<method name="GetAppDomainTarget" />
 		</type>
 
-		<!-- domain.c: mono_defaults.transparent_proxy_class / removed with DISABLE_REMOTING
-		<type fullname="System.Runtime.Remoting.Proxies.TransparentProxy" />
-		-->
+		<!-- domain.c: mono_defaults.transparent_proxy_class -->
+		<type fullname="System.Runtime.Remoting.Proxies.TransparentProxy">
+			<!-- remoting.c: mono_marshal_get_ldfld_wrapper -->
+			<method name="LoadRemoteFieldNew" />
+			<!-- remoting.c: mono_marshal_get_stfld_wrapper -->
+			<method name="StoreRemoteField" />
+		</type>
+
 
         <type fullname="System.Runtime.Remoting.RemotingServices">
             <method name="SerializeCallData" />
@@ -887,6 +894,12 @@
 
 		<!-- by convention (and see #34671) -->
 		<type fullname="Mono.Runtime" />
+
+		<!-- marshal.c (mono_marshal_get_native_wrapper) -->
+		<type fullname="Mono.RuntimeStructs/HandleStackMark" />
+		<!-- marshal.c (mono_marshal_get_native_wrapper) -->
+		<type fullname="Mono.RuntimeStructs/MonoError" />
+
 	</assembly>
 </linker>
 

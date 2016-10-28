@@ -22,7 +22,7 @@ namespace XamCore.GameController {
 	[Mac (10,9, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // The GCControllerElement class is never instantiated directly.
-	public partial interface GCControllerElement {
+	partial interface GCControllerElement {
 
 		// NOTE: ArgumentSemantic.Weak if ARC, ArgumentSemantic.Assign otherwise;
 		// currently MonoTouch is not ARC, neither is Xammac, so go with assign.
@@ -33,13 +33,13 @@ namespace XamCore.GameController {
 		bool IsAnalog { [Bind ("isAnalog")] get; }
 	}
 
-	public delegate void GCControllerAxisValueChangedHandler (GCControllerAxisInput axis, float /* float, not CGFloat */ value);
+	delegate void GCControllerAxisValueChangedHandler (GCControllerAxisInput axis, float /* float, not CGFloat */ value);
 
 	[Since (7,0)]
 	[Mac (10,9, onlyOn64: true)]
 	[BaseType (typeof (GCControllerElement))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
-	public partial interface GCControllerAxisInput {
+	partial interface GCControllerAxisInput {
 
 		[Export ("valueChangedHandler", ArgumentSemantic.Copy)]
 		GCControllerAxisValueChangedHandler ValueChangedHandler { get; set; }
@@ -48,12 +48,12 @@ namespace XamCore.GameController {
 		float Value { get; } /* float, not CGFloat */
 	}
 
-	public delegate void GCControllerButtonValueChanged (GCControllerButtonInput button, float /* float, not CGFloat */ buttonValue, bool pressed);
+	delegate void GCControllerButtonValueChanged (GCControllerButtonInput button, float /* float, not CGFloat */ buttonValue, bool pressed);
 
 	[Since (7,0), Mac (10,9, onlyOn64: true)]
 	[BaseType (typeof (GCControllerElement))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
-	public partial interface GCControllerButtonInput {
+	partial interface GCControllerButtonInput {
 
 		[Export ("setValueChangedHandler:", ArgumentSemantic.Copy)]
 		void SetValueChangedHandler (GCControllerButtonValueChanged handler);
@@ -69,13 +69,13 @@ namespace XamCore.GameController {
 		void SetPressedChangedHandler (GCControllerButtonValueChanged handler);
 	}
 
-	public delegate void GCControllerDirectionPadValueChangedHandler (GCControllerDirectionPad dpad, float /* float, not CGFloat */ xValue, float /* float, not CGFloat */ yValue);
+	delegate void GCControllerDirectionPadValueChangedHandler (GCControllerDirectionPad dpad, float /* float, not CGFloat */ xValue, float /* float, not CGFloat */ yValue);
 
 	[Since (7,0)]
 	[Mac (10,9, onlyOn64: true)]
 	[BaseType (typeof (GCControllerElement))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
-	public partial interface GCControllerDirectionPad {
+	partial interface GCControllerDirectionPad {
 
 		[Export ("valueChangedHandler", ArgumentSemantic.Copy)]
 		GCControllerDirectionPadValueChangedHandler ValueChangedHandler { get; set; }
@@ -99,13 +99,13 @@ namespace XamCore.GameController {
 		GCControllerButtonInput Right { get; }
 	}
 
-	public delegate void GCGamepadValueChangedHandler (GCGamepad gamepad, GCControllerElement element);
+	delegate void GCGamepadValueChangedHandler (GCGamepad gamepad, GCControllerElement element);
 
 	[Since (7,0)]
 	[Mac (10,9, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
-	public partial interface GCGamepad {
+	partial interface GCGamepad {
 
 		[Export ("controller", ArgumentSemantic.Assign)]
 		GCController Controller { get; }
@@ -142,7 +142,7 @@ namespace XamCore.GameController {
 	[Mac (10,9, onlyOn64: true)]
 	[BaseType (typeof (GCGamepad))]
 	[DisableDefaultCtor]
-	public partial interface GCGamepadSnapshot {
+	partial interface GCGamepadSnapshot {
 
 		[Export ("snapshotData", ArgumentSemantic.Copy)]
 		NSData SnapshotData { get; set; }
@@ -154,13 +154,13 @@ namespace XamCore.GameController {
 		IntPtr Constructor (GCController controller, NSData data);
 	}
 
-	public delegate void GCExtendedGamepadValueChangedHandler (GCExtendedGamepad gamepad, GCControllerElement element);
+	delegate void GCExtendedGamepadValueChangedHandler (GCExtendedGamepad gamepad, GCControllerElement element);
 
 	[Since (7,0)]
 	[Mac (10,9, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
-	public partial interface GCExtendedGamepad {
+	partial interface GCExtendedGamepad {
 
 		[Export ("controller", ArgumentSemantic.Assign)]
 		GCController Controller { get; }
@@ -209,7 +209,7 @@ namespace XamCore.GameController {
 	[Mac (10,9, onlyOn64: true)]
 	[BaseType (typeof (GCExtendedGamepad))]
 	[DisableDefaultCtor]
-	public partial interface GCExtendedGamepadSnapshot {
+	partial interface GCExtendedGamepadSnapshot {
 
 		[Export ("snapshotData", ArgumentSemantic.Copy)]
 		NSData SnapshotData { get; set; }
@@ -222,12 +222,12 @@ namespace XamCore.GameController {
 	}
 
 #if !XAMCORE_2_0
-	public delegate void GCControllerPausedHandler (GCController controller);
+	delegate void GCControllerPausedHandler (GCController controller);
 #endif
 
 	[Since (7,0), Mac (10,9, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
-	public partial interface GCController {
+	partial interface GCController {
 
 		[Export ("controllerPausedHandler", ArgumentSemantic.Copy)]
 #if XAMCORE_2_0
@@ -256,7 +256,8 @@ namespace XamCore.GameController {
 		[Export ("extendedGamepad", ArgumentSemantic.Retain)]
 		GCExtendedGamepad ExtendedGamepad { get; }
 
-		[NoMac][NoiOS]
+		[NoMac]
+		[iOS (10,0)]
 		[NullAllowed, Export ("microGamepad", ArgumentSemantic.Retain)]
 		GCMicroGamepad MicroGamepad { get; }
 
@@ -287,7 +288,7 @@ namespace XamCore.GameController {
 	[iOS (8,0), Mac (10,10, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // access thru GCController.Motion - returns a nil Handle
-	public partial interface GCMotion {
+	partial interface GCMotion {
 
 		[Export ("controller", ArgumentSemantic.Assign)]
 		GCController Controller { get; }
@@ -310,15 +311,17 @@ namespace XamCore.GameController {
 		Vector3d RotationRate { get; }
 	}
 
-	[NoiOS][NoMac]
+	[NoMac]
+	[iOS (10,0)]
 	[TV (9,0)]
-	public delegate void GCMicroGamepadValueChangedHandler (GCMicroGamepad gamepad, GCControllerElement element);
+	delegate void GCMicroGamepadValueChangedHandler (GCMicroGamepad gamepad, GCControllerElement element);
 
-	[NoiOS][NoMac]
+	[NoMac]
+	[iOS (10,0)]
 	[TV (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface GCMicroGamepad {
+	interface GCMicroGamepad {
 		[Export ("controller", ArgumentSemantic.Assign)]
 		GCController Controller { get; }
 
@@ -344,10 +347,11 @@ namespace XamCore.GameController {
 		bool AllowsRotation { get; set; }
 	}
 
-	[NoiOS][NoMac]
+	[NoMac]
+	[iOS (10,0)]
 	[TV (9,0)]
 	[BaseType (typeof (GCMicroGamepad))]
-	public interface GCMicroGamepadSnapshot {
+	interface GCMicroGamepadSnapshot {
 		[Export ("snapshotData", ArgumentSemantic.Copy)]
 		NSData SnapshotData { get; set; }
 
@@ -358,8 +362,9 @@ namespace XamCore.GameController {
 		IntPtr Constructor (GCController controller, NSData data);
 	}
 
-#if TVOS
-	[NoiOS][NoMac]
+#if !MONOMAC
+	[NoMac]
+	[iOS (10,0)]
 	[TV (9,0)]
 	[BaseType (typeof (UIViewController))]
 	interface GCEventViewController {

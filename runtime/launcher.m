@@ -311,6 +311,7 @@ update_environment (xamarin_initialize_data *data)
 
 	// 3) Ensure the following environment variables are set: [...]
 	NSString *res_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/Resources"];
+	NSString *monobundle_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/MonoBundle"];
 
 #ifdef DYNAMIC_MONO_RUNTIME
 	NSString *bin_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/MacOS"];
@@ -347,11 +348,18 @@ update_environment (xamarin_initialize_data *data)
 		NSString *appBundleID = [[NSBundle mainBundle] bundleIdentifier];
 		NSURL *appSupport = [appSupportDirectories objectAtIndex: 0];
 		if (appSupport != nil && appBundleID != nil) {
-			NSURL *appDirectory = [appSupport URLByAppendingPathComponent:appBundleID];
+			NSURL *appDirectory = [appSupport URLByAppendingPathComponent:appBundleID isDirectory: YES];
 			setenv ("MONO_REGISTRY_PATH", [[appDirectory path] UTF8String], 1);
 		}
 	}
 #endif
+	if (xamarin_disable_lldb_attach) {
+		// Unfortunately the only place to set debug_options.no_gdb_backtrace is in mini_parse_debug_option
+		// So route through MONO_DEBUG
+		setenv ("MONO_DEBUG", "no-gdb-backtrace", 0);
+	}
+
+	setenv ("MONO_CFG_DIR", [monobundle_dir UTF8String], 0);
 }
 
 static void

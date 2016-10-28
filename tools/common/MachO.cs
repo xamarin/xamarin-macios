@@ -78,6 +78,7 @@ namespace Xamarin
 			//			mapped */
 			//#define	LC_ROUTINES_64	0x1a	/* 64-bit image routines */
 			//#define LC_UUID		0x1b	/* the uuid */
+			Uuid = 0x1b,
 			//#define LC_RPATH       (0x1c | LC_REQ_DYLD)    /* runpath additions */
 			//#define LC_CODE_SIGNATURE 0x1d	/* local of code signature */
 			//#define LC_SEGMENT_SPLIT_INFO 0x1e /* local of info to split segments */
@@ -590,6 +591,13 @@ namespace Xamarin
 
 					lc = dlc;
 					break;
+				case MachO.LoadCommands.Uuid:
+					var uuidCmd = new UuidCommand ();
+					uuidCmd.cmd = reader.ReadUInt32 ();
+					uuidCmd.cmdsize = reader.ReadUInt32 ();
+					uuidCmd.uuid = reader.ReadBytes (16); // defined in the header as uint8_t uuid [16]
+					lc = uuidCmd;
+					break;
 				default:
 					lc = new LoadCommand ();
 					lc.cmd = reader.ReadUInt32 ();
@@ -802,5 +810,17 @@ namespace Xamarin
 		}
 #endif
 	}
-}
+	
+	public class UuidCommand : LoadCommand {
+		public byte [] uuid;
 
+#if DEBUG
+		public override void Dump ()
+		{
+			base.Dump ();
+			Console.WriteLine ("    cmd: {0}", cmd);
+			Console.WriteLine ("    uuid: {0}", uuid);
+		}
+#endif
+	}
+}

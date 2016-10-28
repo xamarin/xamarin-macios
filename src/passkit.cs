@@ -4,24 +4,28 @@
 // Authors:
 //	Sebastien Pouliot  <sebastien@xamarin.com>
 //
-// Copyright 2012, 2015 Xamarin Inc. All rights reserved.
+// Copyright 2012, 2015-2016 Xamarin Inc. All rights reserved.
 //
 
 using System;
+using XamCore.Contacts;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 using XamCore.UIKit;
 #if !WATCH
 using XamCore.AddressBook;
+#else
+interface ABRecord {}
 #endif
-using XamCore.Contacts;
 
 namespace XamCore.PassKit {
+
+	[Watch (3,0)]
 	[iOS (9,0)]
 	[BaseType (typeof(NSObject))]
 	interface PKContact : NSSecureCoding
 	{
-		[NullAllowed, Export ("name", ArgumentSemantic.Retain)]
+		[NullAllowed, Export ("name", ArgumentSemantic.Strong)]
 		NSPersonNameComponents Name { get; set; }
 	
 #if XAMCORE_2_0 // The Contacts framework (CNPostalAddress) uses generics heavily, which is only supported in Unified (for now at least)
@@ -29,16 +33,16 @@ namespace XamCore.PassKit {
 		CNPostalAddress PostalAddress { get; set; }
 #endif // XAMCORE_2_0
 	
-		[NullAllowed, Export ("emailAddress", ArgumentSemantic.Retain)]
+		[NullAllowed, Export ("emailAddress", ArgumentSemantic.Strong)]
 		string EmailAddress { get; set; }
 	
 #if XAMCORE_2_0 // The Contacts framework (CNPhoneNumber) uses generics heavily, which is only supported in Unified (for now at least)
-		[NullAllowed, Export ("phoneNumber", ArgumentSemantic.Retain)]
+		[NullAllowed, Export ("phoneNumber", ArgumentSemantic.Strong)]
 		CNPhoneNumber PhoneNumber { get; set; }
 #endif // XAMCORE_2_0
 
 		[iOS (9,2)]
-		[NullAllowed, Export ("supplementarySubLocality", ArgumentSemantic.Retain)]
+		[NullAllowed, Export ("supplementarySubLocality", ArgumentSemantic.Strong)]
 		string SupplementarySubLocality { get; set; }
 	}
 	
@@ -108,6 +112,11 @@ namespace XamCore.PassKit {
 		[Export ("canAddPaymentPassWithPrimaryAccountIdentifier:")]
 		bool CanAddPaymentPass (string primaryAccountIdentifier);
 
+		[iOS (10,1)]
+		[NoWatch] // Radar: https://trello.com/c/MvaHEZlc
+		[Export ("canAddFelicaPass")]
+		bool CanAddFelicaPass { get; }
+
 		[NoWatch]
 		[iOS(9,0)]
 		[Static]
@@ -130,7 +139,10 @@ namespace XamCore.PassKit {
 		[Static]
 		[Export ("requestAutomaticPassPresentationSuppressionWithResponseHandler:")]
 		nuint RequestAutomaticPassPresentationSuppression (Action<PKAutomaticPassPresentationSuppressionResult> responseHandler);
-#endif		
+#endif
+		[NoWatch][iOS (10,0)]
+		[Export ("presentPaymentPass:")]
+		void PresentPaymentPass (PKPaymentPass pass);
 	}
 
 	[Since (6,0)]
@@ -153,36 +165,39 @@ namespace XamCore.PassKit {
 		NSString SerialNumber { get; }
 	}
 
-#if !WATCH
+	[Watch (3,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface PKPayment {
-		[Export ("token")]
+		[Export ("token", ArgumentSemantic.Strong)]
 		PKPaymentToken Token { get; }
 
-		[Export ("billingAddress")]
+		[NoWatch]
+		[Export ("billingAddress", ArgumentSemantic.Assign)]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "On iOS 9 and higher, use BillingContact instead")]
 		ABRecord BillingAddress { get; }
 
-		[Export ("shippingAddress")]
+		[NoWatch]
+		[Export ("shippingAddress", ArgumentSemantic.Assign)]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "On iOS 9 and higher, use ShippingContact instead")]
 		ABRecord ShippingAddress { get; }
 
-		[Export ("shippingMethod")]
+		[Export ("shippingMethod", ArgumentSemantic.Strong)]
 		PKShippingMethod ShippingMethod { get; }
 
 		
 		[iOS (9,0)]
-		[NullAllowed, Export ("shippingContact")]
+		[NullAllowed, Export ("shippingContact", ArgumentSemantic.Strong)]
 		PKContact ShippingContact { get; }
 
 		[iOS (9,0)]
-		[NullAllowed, Export ("billingContact")]
+		[NullAllowed, Export ("billingContact", ArgumentSemantic.Strong)]
 		PKContact BillingContact { get; }
 	}
 
-	public delegate void PKPaymentShippingAddressSelected (PKPaymentAuthorizationStatus status, PKShippingMethod [] shippingMethods, PKPaymentSummaryItem [] summaryItems);
-	public delegate void PKPaymentShippingMethodSelected (PKPaymentAuthorizationStatus status, PKPaymentSummaryItem[] summaryItems);
+#if !WATCH
+	delegate void PKPaymentShippingAddressSelected (PKPaymentAuthorizationStatus status, PKShippingMethod [] shippingMethods, PKPaymentSummaryItem [] summaryItems);
+	delegate void PKPaymentShippingMethodSelected (PKPaymentAuthorizationStatus status, PKPaymentSummaryItem[] summaryItems);
 
 #if !XAMCORE_2_0
 	delegate void PKPaymentAuthorizationHandler (PKPaymentAuthorizationStatus status);
@@ -258,10 +273,12 @@ namespace XamCore.PassKit {
 		[Export ("canMakePaymentsUsingNetworks:capabilities:")]
 		bool CanMakePaymentsUsingNetworks (string[] supportedNetworks, PKMerchantCapability capabilties);
 	}
+#endif
 
+	[Watch (3,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
-	public interface PKPaymentSummaryItem {
+	interface PKPaymentSummaryItem {
 		[NullAllowed] // by default this property is null
 		[Export ("label")]
 		string Label { get; set; }
@@ -283,9 +300,10 @@ namespace XamCore.PassKit {
 		PKPaymentSummaryItem Create (string label, NSDecimalNumber amount, PKPaymentSummaryItemType type);
 	}
 
+	[Watch (3,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (PKPaymentSummaryItem))]
-	public interface PKShippingMethod {
+	interface PKShippingMethod {
 		[NullAllowed] // by default this property is null
 		[Export ("identifier")]
 		string Identifier { get; set; }
@@ -295,6 +313,7 @@ namespace XamCore.PassKit {
 		string Detail { get; set; }
 	}
 
+	[Watch (3,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface PKPaymentRequest {
@@ -324,16 +343,18 @@ namespace XamCore.PassKit {
 		[Export ("requiredBillingAddressFields", ArgumentSemantic.UnsafeUnretained)]
 		PKAddressField RequiredBillingAddressFields { get; set; }
 
+		[NoWatch]
 		[NullAllowed] // by default this property is null
-		[Export ("billingAddress", ArgumentSemantic.UnsafeUnretained)]
+		[Export ("billingAddress", ArgumentSemantic.Assign)]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "On iOS 9 and higher, use BillingContact instead")]
 		ABRecord BillingAddress { get; set; }
 
 		[Export ("requiredShippingAddressFields", ArgumentSemantic.UnsafeUnretained)]
 		PKAddressField RequiredShippingAddressFields { get; set; }
 
+		[NoWatch]
 		[NullAllowed] // by default this property is null
-		[Export ("shippingAddress", ArgumentSemantic.UnsafeUnretained)]
+		[Export ("shippingAddress", ArgumentSemantic.Assign)]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "On iOS 9 and higher, use ShippingContact instead")]
 		ABRecord ShippingAddress { get; set; }
 
@@ -350,21 +371,30 @@ namespace XamCore.PassKit {
 		PKShippingType ShippingType { get; set; }
 
 		[iOS (9,0)]
-		[NullAllowed, Export ("shippingContact", ArgumentSemantic.Retain)]
+		[NullAllowed, Export ("shippingContact", ArgumentSemantic.Strong)]
 		PKContact ShippingContact { get; set; }
 
 		[iOS (9,0)]
-		[NullAllowed, Export ("billingContact", ArgumentSemantic.Retain)]
+		[NullAllowed, Export ("billingContact", ArgumentSemantic.Strong)]
 		PKContact BillingContact { get; set; }
+
+		[Watch (3,0)][iOS (10,0)]
+		[Static]
+		[Export ("availableNetworks")]
+		NSString[] AvailableNetworks { get; }
 	}
 
+	[Watch (3,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	interface PKPaymentToken {
-		[Export ("paymentInstrumentName")]
+
+		[NoWatch]
+		[Export ("paymentInstrumentName", ArgumentSemantic.Copy)]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "On iOS 9 and higher, use PaymentMethod instead")]
 		string PaymentInstrumentName { get; }
 
+		[NoWatch]
 		[Export ("paymentNetwork")]
 		[Availability (Deprecated = Platform.iOS_9_0, Message = "On iOS 9 and higher, use PaymentMethod instead")]
 		string PaymentNetwork { get; }
@@ -372,14 +402,15 @@ namespace XamCore.PassKit {
 		[Export ("transactionIdentifier")]
 		string TransactionIdentifier { get; }
 
-		[Export ("paymentData")]
+		[Export ("paymentData", ArgumentSemantic.Copy)]
 		NSData PaymentData { get; }
 
 		[iOS (9,0)]
-		[Export ("paymentMethod")]
+		[Export ("paymentMethod", ArgumentSemantic.Strong)]
 		PKPaymentMethod PaymentMethod { get; }		
 	}
 
+#if !WATCH
 	[Since (6,0)]
 	[BaseType (typeof (UIViewController), Delegates = new string [] {"WeakDelegate"}, Events = new Type [] { typeof (PKAddPassesViewControllerDelegate) })]
 	// invalid null handle for default 'init'
@@ -453,6 +484,11 @@ namespace XamCore.PassKit {
 	
 		[NullAllowed, Export ("primaryAccountSuffix")]
 		string PrimaryAccountSuffix { get; set; }
+
+		[iOS (10,1)]
+		[NoWatch] // Radar: https://trello.com/c/MvaHEZlc
+		[Export ("cardDetails", ArgumentSemantic.Copy)]
+		PKLabeledValue[] CardDetails { get; set; }
 	
 		[NullAllowed, Export ("localizedDescription")]
 		string LocalizedDescription { get; set; }
@@ -462,6 +498,11 @@ namespace XamCore.PassKit {
 	
 		[NullAllowed, Export ("paymentNetwork")]
 		string PaymentNetwork { get; set; }
+
+		[iOS (10,1)]
+		[NoWatch] // Radar: https://trello.com/c/MvaHEZlc
+		[Export ("requiresFelicaSecureElement")]
+		bool RequiresFelicaSecureElement { get; set; }
 	}
 
 	[iOS (9,0)]
@@ -524,6 +565,7 @@ namespace XamCore.PassKit {
 		[Export ("passTypeIdentifier", ArgumentSemantic.Copy)]
 		string PassTypeIdentifier { get; }
 
+		[NullAllowed]
 		[Export ("passURL", ArgumentSemantic.Copy)]
 		NSUrl PassUrl { get; }
 
@@ -563,7 +605,7 @@ namespace XamCore.PassKit {
 		string DeviceName { get; }		
 	}
 
-#if !WATCH
+	[Watch (3,0)]
 	[iOS (9,0)]
 	[BaseType (typeof(NSObject))]
 	interface PKPaymentMethod : NSSecureCoding
@@ -577,11 +619,10 @@ namespace XamCore.PassKit {
 		[Export ("type")]
 		PKPaymentMethodType Type { get; }
 
-		[NullAllowed, Export ("paymentPass")]
+		[NullAllowed, Export ("paymentPass", ArgumentSemantic.Copy)]
 		PKPaymentPass PaymentPass { get; }
 	}
-#endif // !WATCH
-	
+
 	[iOS (8,0)]
 	[BaseType (typeof (PKPass))]
 	interface PKPaymentPass {
@@ -604,12 +645,13 @@ namespace XamCore.PassKit {
 	
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
-	public partial interface PKObject : NSCoding, NSSecureCoding, NSCopying {
+	partial interface PKObject : NSCoding, NSSecureCoding, NSCopying {
 		//Empty class in header file
 	}
 
 	[Static]
 	[iOS (8,0)]
+	[Watch (3,0)]
 	interface PKPaymentNetwork {
 		[Field ("PKPaymentNetworkAmex")]
 		NSString Amex { get; }
@@ -637,6 +679,14 @@ namespace XamCore.PassKit {
 		[iOS (9,0)]
 		[Field ("PKPaymentNetworkPrivateLabel")]
 		NSString PrivateLabel { get; }
+
+		[Watch (3,1), iOS (10,1)]
+		[Field ("PKPaymentNetworkJCB")]
+		NSString Jcb { get; }
+
+		[Watch (3,1), iOS (10,1)]
+		[Field ("PKPaymentNetworkSuica")]
+		NSString Suica { get; }
 	}
 
 #if !WATCH
@@ -679,6 +729,116 @@ namespace XamCore.PassKit {
 	interface PKEncryptionScheme {
 		[Field ("PKEncryptionSchemeECC_V2")]
 		NSString Ecc_V2 { get; }
+
+		[iOS (10,0)]
+		[Watch (3,0)]
+		[Field ("PKEncryptionSchemeRSA_V2")]
+		NSString Rsa_V2 { get; }
 	}
-	
+
+	[Watch (3,0)][iOS (10,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // providing DesignatedInitializer
+	interface PKPaymentAuthorizationController {
+
+		[Static]
+		[Export ("canMakePayments")]
+		bool CanMakePayments { get; }
+
+		[Static]
+		[Export ("canMakePaymentsUsingNetworks:")]
+		bool CanMakePaymentsUsingNetworks (string[] supportedNetworks);
+
+		[Static]
+		[Export ("canMakePaymentsUsingNetworks:capabilities:")]
+		bool CanMakePaymentsUsingNetworks (string[] supportedNetworks, PKMerchantCapability capabilties);
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		IPKPaymentAuthorizationControllerDelegate Delegate { get; set; }
+
+		[Export ("initWithPaymentRequest:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (PKPaymentRequest request);
+
+		[Async]
+		[Export ("presentWithCompletion:")]
+		void Present ([NullAllowed] Action<bool> completion);
+
+		[Async]
+		[Export ("dismissWithCompletion:")]
+		void Dismiss ([NullAllowed] Action completion);
+	}
+
+	interface IPKPaymentAuthorizationControllerDelegate {}
+
+	[Watch (3,0)][iOS (10,0)]
+	[Protocol][Model]
+	[BaseType (typeof (NSObject))]
+	interface PKPaymentAuthorizationControllerDelegate {
+
+		[Abstract]
+		[Export ("paymentAuthorizationController:didAuthorizePayment:completion:")]
+		void DidAuthorizePayment (PKPaymentAuthorizationController controller, PKPayment payment, Action<PKPaymentAuthorizationStatus> completion);
+
+		[Abstract]
+		[Export ("paymentAuthorizationControllerDidFinish:")]
+		void DidFinish (PKPaymentAuthorizationController controller);
+
+		[Export ("paymentAuthorizationControllerWillAuthorizePayment:")]
+		void WillAuthorizePayment (PKPaymentAuthorizationController controller);
+
+		[Export ("paymentAuthorizationController:didSelectShippingMethod:completion:")]
+		void DidSelectShippingMethod (PKPaymentAuthorizationController controller, PKShippingMethod shippingMethod, Action<PKPaymentAuthorizationStatus, PKPaymentSummaryItem[]> completion);
+
+		[Export ("paymentAuthorizationController:didSelectShippingContact:completion:")]
+		void DidSelectShippingContact (PKPaymentAuthorizationController controller, PKContact contact, Action<PKPaymentAuthorizationStatus, PKShippingMethod[], PKPaymentSummaryItem[]> completion);
+
+		[Export ("paymentAuthorizationController:didSelectPaymentMethod:completion:")]
+		void DidSelectPaymentMethod (PKPaymentAuthorizationController controller, PKPaymentMethod paymentMethod, Action<PKPaymentSummaryItem[]> completion);
+	}
+
+	[iOS (10,1)]
+	[NoWatch] // Radar: https://trello.com/c/MvaHEZlc
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor] // there's a designated initializer and it does not accept null
+	interface PKLabeledValue
+	{
+		[Export ("initWithLabel:value:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string label, string value);
+
+		[Export ("label")]
+		string Label { get; }
+
+		[Export ("value")]
+		string Value { get; }
+	}
+
+	[Watch (3,1), iOS (10,1)]
+	[BaseType (typeof(NSObject))]
+	interface PKSuicaPassProperties
+	{
+		[Static]
+		[Export ("passPropertiesForPass:")]
+		[return: NullAllowed]
+		PKSuicaPassProperties GetPassProperties (PKPass pass);
+
+		[Export ("transitBalance", ArgumentSemantic.Copy)]
+		NSDecimalNumber TransitBalance { get; }
+
+		[Export ("transitBalanceCurrencyCode")]
+		string TransitBalanceCurrencyCode { get; }
+
+		[Export ("inStation")]
+		bool InStation { [Bind ("isInStation")] get; }
+
+		[Export ("inShinkansenStation")]
+		bool InShinkansenStation { [Bind ("isInShinkansenStation")] get; }
+
+		[Export ("greenCarTicketUsed")]
+		bool GreenCarTicketUsed { [Bind ("isGreenCarTicketUsed")] get; }
+
+		[Export ("blacklisted")]
+		bool Blacklisted { [Bind ("isBlacklisted")] get; }
+	}
 }

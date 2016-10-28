@@ -7,6 +7,7 @@ namespace XamCore.HomeKit {
 	partial class HMActionSet {
 
 		[iOS (9,0)]
+		[TV (10,0)]
 		public HMActionSetType ActionSetType {
 			get {
 				var s = _ActionSetType;
@@ -23,6 +24,8 @@ namespace XamCore.HomeKit {
 					return HMActionSetType.HomeArrival;
 				if (s == HMActionSetTypesInternal.UserDefined)
 					return HMActionSetType.UserDefined;
+				if (s == HMActionSetTypesInternal.TriggerOwned)
+					return HMActionSetType.TriggerOwned;
 				return HMActionSetType.Unknown;
 			}
 		}

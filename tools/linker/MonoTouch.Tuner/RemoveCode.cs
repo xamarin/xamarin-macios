@@ -59,7 +59,7 @@ namespace MonoTouch.Tuner {
 			}
 
 			// import the method into the current assembly
-			get_nse = assembly.MainModule.Import (get_nse_def);
+			get_nse = assembly.MainModule.ImportReference (get_nse_def);
 		}
 
 		public override void ProcessType (TypeDefinition type)
@@ -75,7 +75,7 @@ namespace MonoTouch.Tuner {
 					foreach (var m in type.Methods) {
 						if (m.Name == "RegisterEntryAssembly") {
 							ProcessMethod (m);
-							type.Module.Import (get_nse);
+							type.Module.ImportReference (get_nse);
 						}
 					}
 				}
@@ -173,7 +173,8 @@ namespace MonoTouch.Tuner {
 			case "System.Runtime.Remoting.Proxies":
 				return true;
 			case "System.Runtime.Remoting.Messaging":
-				return type.Name != "AsyncResult" && type.Name != "LogicalCallContext";
+				return type.Name != "AsyncResult" && type.Name != "LogicalCallContext"
+					&& type.Name != "MonoMethodMessage";
 			case "System.Security.AccessControl":
 			case "System.Security.Permissions":
 			case "System.Security.Policy":

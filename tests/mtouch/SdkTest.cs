@@ -1,6 +1,7 @@
 ﻿// Copyright 2015 Xamarin Inc. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 using NUnit.Framework;
@@ -27,13 +28,13 @@ namespace Xamarin.Linker {
 	[TestFixture]
 	public partial class SdkTest {
 		
-		static string ClassicPath { get { return Path.Combine (Configuration.MonoTouchRootDirectory, "lib/mono/2.1/"); } }
 		static string UnifiedPath { get { return Path.Combine (Configuration.MonoTouchRootDirectory, "lib/mono/Xamarin.iOS/"); } }
 		static string tvOSPath { get { return Path.Combine (Configuration.MonoTouchRootDirectory, "lib/mono/Xamarin.TVOS/"); } }
 		static string watchOSPath { get { return Path.Combine (Configuration.MonoTouchRootDirectory, "lib/mono/Xamarin.WatchOS/"); } }
 
 		void BCL (string path)
 		{
+			var failed_bcl = new List<string> ();
 			foreach (var file in Directory.GetFiles (path, "*.dll")) {
 				var aname = Path.GetFileNameWithoutExtension (file);
 				switch (aname) {
@@ -48,7 +49,6 @@ namespace Xamarin.Linker {
 					break;
 				case "MonoTouch.Dialog-1":
 				case "MonoTouch.NUnitLite":
-				case "monotouch":
 				case "Xamarin.iOS":
 				case "Xamarin.TVOS":
 				case "Xamarin.WatchOS":
@@ -63,19 +63,21 @@ namespace Xamarin.Linker {
 				case "Xamarin.MacDev.Tasks.Core":
 				case "Xamarin.Analysis.Tasks":
 					// other stuff that is not part of the SDK but shipped in the same 2.1 directory
-					if (path != ClassicPath)
-						Assert.Fail (aname);
+					failed_bcl.Add (aname);
 					break;
 				default:
-					Assert.IsTrue (ProfilePoker.IsWellKnownSdk (aname), aname);
+					if (!ProfilePoker.IsWellKnownSdk (aname))
+						failed_bcl.Add (aname);
 					break;
 				}
 			}
+			CollectionAssert.IsEmpty (failed_bcl, "BCL");
 		}
 
 		void REPL (string path)
 		{
 			var repl = Path.Combine (path, "repl");
+			var failed_repl = new List<string> ();
 			foreach (var file in Directory.GetFiles (repl, "*.dll")) {
 				var aname = Path.GetFileNameWithoutExtension (file);
 				switch (aname) {
@@ -85,30 +87,27 @@ namespace Xamarin.Linker {
 				case "System.Core":
 				case "System.Xml":
 				case "Mono.CSharp":
-					Assert.IsTrue (ProfilePoker.IsWellKnownSdk (aname), aname);
+					if (!ProfilePoker.IsWellKnownSdk (aname))
+						failed_repl.Add (aname);
 					break;
 				default:
-					Assert.Fail (aname);
+					failed_repl.Add (aname);
 					break;
 				}
 			}
+			CollectionAssert.IsEmpty (failed_repl, "Repl");
 		}
 
 		void Facades (string path)
 		{
 			var facades = Path.Combine (path, "Facades");
+			var failed_facades = new List<string> ();
 			foreach (var file in Directory.GetFiles (facades, "*.dll")) {
 				var aname = Path.GetFileNameWithoutExtension (file);
-				Assert.IsTrue (ProfilePoker.IsWellKnownSdk (aname), aname);
+				if (!ProfilePoker.IsWellKnownSdk (aname))
+					failed_facades.Add (aname);
 			}
-		}
-
-		[Test]
-		public void iOS_Classic ()
-		{
-			BCL (ClassicPath);
-			REPL (ClassicPath);
-			Facades (ClassicPath);
+			CollectionAssert.IsEmpty (failed_facades, "Facades");
 		}
 
 		[Test]

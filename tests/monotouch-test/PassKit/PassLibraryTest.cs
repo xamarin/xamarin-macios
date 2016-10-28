@@ -27,11 +27,11 @@ namespace MonoTouchFixtures.PassKit {
 	[Preserve (AllMembers = true)]
 	public class PassLibraryTest {
 
+#if !__WATCHOS__ // hangs on watchOS 3 beta 2 simulator
 		[Test]
 		public void Defaults ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("PassKit is new in 6.0");
+			TestRuntime.AssertXcodeVersion (4, 5);
 
 			// this is yet another case where Apples plays ping-ping with different versions
 			//
@@ -60,12 +60,12 @@ namespace MonoTouchFixtures.PassKit {
 				library.Remove (pass);
 			}
 		}
-
+#endif
+		
 		[Test]
 		public void Fields ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (6,0))
-				Assert.Inconclusive ("PassKit is new in 6.0");
+			TestRuntime.AssertXcodeVersion (4, 5);
 
 			Assert.That (PKPassLibraryUserInfoKey.AddedPasses.ToString (), Is.EqualTo ("PKPassLibraryAddedPassesUserInfo"), "AddedPassesUserInfoKey");
 			Assert.That (PKPassLibraryUserInfoKey.RemovedPassInfos.ToString (), Is.EqualTo ("PKPassLibraryRemovedPassInfosUserInfo"), "RemovedPassInfosUserInfoKey");

@@ -16,7 +16,9 @@ namespace XamCore.MapKit {
 	// it's similar to MKDirectionsTransportType values but it's something only used on the managed side
 	// to replace NSString fields
 	public enum MKDirectionsMode {
-		Driving, Walking, Transit
+		Driving, Walking, Transit,
+		[iOS (10,0)][NoTV][Watch (3,0)][Mac (10,12)]
+		Default
 	}
 	
 	public class MKLaunchOptions
@@ -68,6 +70,11 @@ namespace XamCore.MapKit {
 				case MKDirectionsMode.Walking:
 					v = MKMapItem.MKLaunchOptionsDirectionsModeWalking;
 					break;
+#if !TV
+				case MKDirectionsMode.Default:
+					v = MKMapItem.MKLaunchOptionsDirectionsModeDefault;
+					break;
+#endif
 				}
 				values [i++] = v;
 			}

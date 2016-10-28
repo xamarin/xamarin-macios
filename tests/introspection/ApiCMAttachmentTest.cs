@@ -229,6 +229,10 @@ namespace Introspection {
 			case "MidiDevice":
 			case "MidiEndpoint":
 			case "ABMultiValue":
+			case "ABMutableMultiValue":
+			case "ABSource": // not skipped when running on iOS 6.1
+			// type was removed in iOS 10 (and replaced) and never consumed by other API
+			case "CGColorConverter":
 				return true;
 			default:
  				return false;
@@ -280,13 +284,13 @@ namespace Introspection {
 				var filename = Environment.GetFolderPath (Environment.SpecialFolder.CommonDocuments) + "/t.pdf";
 				using (var url = new NSUrl (filename))
 					return new CGContextPDF (url);
-			case "CGColorConverter":
-				var cvt = new CGColorConverterTriple () {
+			case "CGColorConversionInfo":
+				var cci = new GColorConversionInfoTriple () {
 					Space = CGColorSpace.CreateGenericRgb (),
 					Intent = CGColorRenderingIntent.Default,
-					Transform = CGColorConverterTransformType.ApplySpace
+					Transform = CGColorConversionInfoTransformType.ApplySpace
 				};
-				return new CGColorConverter (null, cvt, cvt, cvt);
+				return new CGColorConversionInfo ((NSDictionary) null, cci, cci, cci);
 			case "CGDataConsumer":
 				using (NSMutableData destData = new NSMutableData ()) {
 					return new CGDataConsumer (destData);
@@ -325,13 +329,13 @@ namespace Introspection {
 				return new CTTypesetter (new NSAttributedString ("Hello, world",
 					new CTStringAttributes () {
 						ForegroundColorFromContext =  true,
-						Font = new CTFont ("Arial", 24)
+						Font = new CTFont ("ArialMT", 24)
 					}));
 			case "CTFrame":
 				var framesetter = new CTFramesetter (new NSAttributedString ("Hello, world",
 					new CTStringAttributes () {
 						ForegroundColorFromContext =  true,
-						Font = new CTFont ("Arial", 24)
+						Font = new CTFont ("ArialMT", 24)
 					}));
 				var bPath = UIBezierPath.FromRect (new RectangleF (0, 0, 3, 3));
 				return framesetter.GetFrame (new NSRange (0, 0), bPath.CGPath, null);
@@ -339,15 +343,15 @@ namespace Introspection {
 				return new CTFramesetter (new NSAttributedString ("Hello, world",
 					new CTStringAttributes () {
 						ForegroundColorFromContext =  true,
-						Font = new CTFont ("Arial", 24)
+						Font = new CTFont ("ArialMT", 24)
 					}));
 			case "CTGlyphInfo":
-				return new CTGlyphInfo ("Zapfino", new CTFont ("Arial", 24), "Foo");	
+				return new CTGlyphInfo ("Zapfino", new CTFont ("ArialMT", 24), "Foo");
 			case "CTLine":
 				return new CTLine (new NSAttributedString ("Hello, world",
 					new CTStringAttributes () {
 						ForegroundColorFromContext =  true,
-						Font = new CTFont ("Arial", 24)
+						Font = new CTFont ("ArialMT", 24)
 					}));
 			case "CGImageDestination":
 				var storage = new NSMutableData ();
@@ -395,7 +399,7 @@ namespace Introspection {
 			case "DispatchGroup":
 				return DispatchGroup.Create ();
 			case "CGColorSpace":
-				return CGColorSpace.CreateAcesCGLinear ();
+				return CGColorSpace.CreateDeviceCmyk ();
 			case "CGGradient":
 				CGColor[] cArray = { UIColor.Black.CGColor, UIColor.Clear.CGColor, UIColor.Blue.CGColor };
 				return new CGGradient (null, cArray);

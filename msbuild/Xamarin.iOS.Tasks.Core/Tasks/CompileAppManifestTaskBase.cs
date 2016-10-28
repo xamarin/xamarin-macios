@@ -31,6 +31,11 @@ namespace Xamarin.iOS.Tasks
 		[Required]
 		public string TargetFrameworkIdentifier { get; set; }
 
+		[Required]
+		public bool Debug { get; set; }
+
+		public string DebugIPAddresses { get; set; }
+
 		public string ResourceRules { get; set; }
 
 		public PlatformFramework Framework {
@@ -54,6 +59,8 @@ namespace Xamarin.iOS.Tasks
 			Log.LogTaskProperty ("Architecture", Architecture);
 			Log.LogTaskProperty ("AssemblyName", AssemblyName);
 			Log.LogTaskProperty ("BundleIdentifier", BundleIdentifier);
+			Log.LogTaskProperty ("Debug", Debug);
+			Log.LogTaskProperty ("DebugIPAddresses", DebugIPAddresses);
 			Log.LogTaskProperty ("DefaultSdkVersion", DefaultSdkVersion);
 			Log.LogTaskProperty ("IsAppExtension", IsAppExtension);
 			Log.LogTaskProperty ("IsWatchApp", IsWatchApp);
@@ -177,6 +184,42 @@ namespace Xamarin.iOS.Tasks
 
 			plist.SetIfNotPresent (ManifestKeys.MinimumOSVersion, minimumOSVersion.ToString ());
 
+			if (IsWatchExtension) {
+				// Note: Only watchOS1 Extensions target Xamarin.iOS
+				if (Framework == PlatformFramework.iOS) {
+					PObject value;
+
+					if (!plist.TryGetValue (ManifestKeys.UIRequiredDeviceCapabilities, out value)) {
+						var capabilities = new PArray ();
+						capabilities.Add (new PString ("watch-companion"));
+
+						plist.Add (ManifestKeys.UIRequiredDeviceCapabilities, capabilities);
+					} else if (value is PDictionary) {
+						var capabilities = (PDictionary) value;
+
+						if (!capabilities.ContainsKey ("watch-companion"))
+							capabilities.Add ("watch-companion", new PBoolean (true));
+					} else {
+						var capabilities = (PArray) value;
+						bool exists = false;
+
+						foreach (var capability in capabilities.OfType<PString> ()) {
+							if (capability.Value != "watch-companion")
+								continue;
+
+							exists = true;
+							break;
+						}
+
+						if (!exists)
+							capabilities.Add (new PString ("watch-companion"));
+					}
+				}
+
+				if (Debug)
+					SetAppTransportSecurity (plist);
+			}
+
 			// Remove any Xamarin Studio specific keys
 			plist.Remove (ManifestKeys.XSLaunchImageAssets);
 			plist.Remove (ManifestKeys.XSAppIconAssets);
@@ -222,6 +265,33 @@ namespace Xamarin.iOS.Tasks
 
 				if (minimumOSVersion >= IPhoneSdkVersion.V3_2 && supportedDevices == IPhoneDeviceType.NotSet)
 					plist.SetUIDeviceFamily (IPhoneDeviceType.IPhone);
+			}
+		}
+
+		void SetAppTransportSecurity (PDictionary plist)
+		{
+			// Debugging over http has a couple of gotchas:
+			// * We can't use https, because that requires a valid server certificate,
+			//   which we can't ensure.
+			//   It would also require a hostname for the mac, which it might not have either.
+			// * NSAppTransportSecurity/NSExceptionDomains does not allow exceptions based
+			//   on IP address (only hostname).
+			// * Which means the only way to make sure watchOS allows connections from 
+			//   the app on device to the mac is to disable App Transport Security altogether.
+			// Good news: watchOS 3 will apparently not apply ATS when connecting
+			// directly to IP addresses, which means we won't have to do this at all
+			// (sometime in the future).
+
+			PDictionary ats;
+
+			if (!plist.TryGetValue (ManifestKeys.NSAppTransportSecurity, out ats))
+				plist.Add (ManifestKeys.NSAppTransportSecurity, ats = new PDictionary ());
+
+			if (ats.GetBoolean (ManifestKeys.NSAllowsArbitraryLoads)) {
+				Log.LogMessage (MessageImportance.Low, "All http loads are already allowed.");
+			} else {
+				Log.LogMessage (MessageImportance.Low, "Allowed arbitrary HTTP loads to support debugging.");
+				ats.SetBooleanOrRemove (ManifestKeys.NSAllowsArbitraryLoads, true);
 			}
 		}
 

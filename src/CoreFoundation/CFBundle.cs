@@ -435,7 +435,7 @@ namespace XamCore.CoreFoundation {
 			using (CFString cfKey = new CFString (key),
 					cfValue = new CFString (defaultValue),
 					cfTable = new CFString (tableName)) {
-				return CFString.FetchString (CFBundleCopyLocalizedString (handle, cfKey.Handle, cfValue.Handle, cfTable.Handle));
+				return CFString.FetchString (CFBundleCopyLocalizedString (handle, cfKey.Handle, cfValue.Handle, cfTable.Handle), releaseHandle: true);
 			}
 		}
 

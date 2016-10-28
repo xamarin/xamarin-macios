@@ -125,7 +125,7 @@ namespace XamCore.Foundation {
 #endif
 
 		[DllImport (Constants.FoundationLibrary)]
-		static extern IntPtr NSDecimalString (ref NSDecimal value, IntPtr locale);
+		static extern IntPtr NSDecimalString (ref NSDecimal value, /* _Nullable */ IntPtr locale);
 
 		public override string ToString ()
 		{

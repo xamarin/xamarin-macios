@@ -37,6 +37,7 @@ namespace XamCore.StoreKit {
 		Waiting, Active, Paused, Finished, Failed, Cancelled
 	}
 
+#if !MONOMAC || !XAMCORE_4_0
 	[iOS (9,3)]
 	[Native]
 	public enum SKCloudServiceAuthorizationStatus : nint {
@@ -51,6 +52,9 @@ namespace XamCore.StoreKit {
 	public enum SKCloudServiceCapability : nuint {
 		None = 0,
 		MusicCatalogPlayback = 1 << 0,
+		[NoTV, iOS (10,1)]
+		MusicCatalogSubscriptionEligible = 1 << 1,
 		AddToCloudMusicLibrary = 1 << 8
 	}
+#endif
 }

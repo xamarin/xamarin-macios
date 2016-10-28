@@ -650,6 +650,9 @@ namespace LinkSdk {
 		[Test]
 		public void WebClient_SSL_Leak ()
 		{
+#if __WATCHOS__
+			Assert.Ignore ("WatchOS doesn't support BSD sockets, which our network stack currently requires.");
+#endif
 			WebClient wc = new WebClient ();
 			// note: needs to be executed under Instrument to verify it does not leak
 			string s = wc.DownloadString ("https://developers.google.com");
@@ -902,7 +905,7 @@ namespace LinkSdk {
 			path = TestFolder (Environment.SpecialFolder.UserProfile, readOnly: device);
 			if (Runtime.Arch == Arch.DEVICE) {
 #if __WATCHOS__
-				Assert.True (path.StartsWith ("/private/var/mobile/Containers/Data/Application/", StringComparison.Ordinal), "Containers-ios8");
+				Assert.That (path, Is.StringStarting ("/private/var/mobile/Containers/Data/PluginKitPlugin/"), "Containers-ios8");
 #else
 				if (UIDevice.CurrentDevice.CheckSystemVersion (8, 0))
 					Assert.True (path.StartsWith ("/private/var/mobile/Containers/Data/Application/", StringComparison.Ordinal), "Containers-ios8");
@@ -1020,6 +1023,7 @@ namespace LinkSdk {
 			Assert.NotNull (Trace.Listeners, "C6 had a SecurityPermission call");
 		}
 
+#if !__WATCHOS__
 		[Test]
 		public void TlsProvider_Apple ()
 		{
@@ -1027,6 +1031,7 @@ namespace LinkSdk {
 			Assert.NotNull (provider, "provider");
 			Assert.That (provider.ID, Is.EqualTo (new Guid ("981af8af-a3a3-419a-9f01-a518e3a17c1c")), "correct provider");
 		}
+#endif // !__WATCHOS__
 
 		[Test]
 		public void OldTlsProvider_LinkedOut ()
@@ -1036,6 +1041,7 @@ namespace LinkSdk {
 			Assert.Null (Type.GetType (fqn), "Should not be included");
 		}
 
+#if !__WATCHOS__
 		[Test]
 		public void AppleTls_Default ()
 		{
@@ -1043,5 +1049,6 @@ namespace LinkSdk {
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Security.Tls.AppleTlsProvider");
 			Assert.NotNull (Type.GetType (fqn), "Should be included");
 		}
+#endif // !__WATCHOS__
 	}
 }

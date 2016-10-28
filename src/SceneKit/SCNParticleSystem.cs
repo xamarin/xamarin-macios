@@ -11,7 +11,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-using XamCore.CoreAnimation;
 using XamCore.Foundation;
 
 namespace XamCore.SceneKit

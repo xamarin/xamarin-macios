@@ -23,16 +23,29 @@ namespace XamCore.WatchKit {
 			}
 		}
 
-		// The watch doesn't have UIContentSizeCategory, neither do the corresponding
-		// string constants show up in any header (but it looks like they're present
-		// in the framework). Removing from the API to make this build for now.
+		[Obsolete ("Use PreferredContentSizeCategoryString instead.")]
 		public UIContentSizeCategory PreferredContentSizeCategory {
 			get {
-				return _UIContentSizeCategory.ToEnum (_PreferredContentSizeCategory);
+				return UIContentSizeCategoryExtensions.GetValue (_PreferredContentSizeCategory);
 			}
 		}
 #endif
-		
+
+		// This method (preferredContentSizeCategory) is defined as "NSString *"
+		// in the headers, and the return values are not documented
+		// (documentation says the return values are the same as for
+		// UIApplication.ContentSizeCategory, but testing shows that to be
+		// incorrect).
+		//
+		// Unfortunately we've already bound this using the
+		// UIContentSizeCategory for Xamarin.iOS.dll, and since we can't
+		// change that, use a different name instead.
+		public string PreferredContentSizeCategoryString {
+			get {
+				return _PreferredContentSizeCategory;
+			}
+		}
+
 		public bool CheckSystemVersion (int major, int minor)
 		{
 			return Runtime.CheckSystemVersion (major, minor, SystemVersion);

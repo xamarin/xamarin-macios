@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>MyActionExtension</string>
+	<string>com.your-company.MyActionExtension</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.your-company.MyTabbedApplication.MyActionExtension</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -47,5 +47,7 @@
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.ui-services</string>
 	</dict>
+	<key>MinimumOSVersion</key>
+	<string>9.3</string>
 </dict>
 </plist>

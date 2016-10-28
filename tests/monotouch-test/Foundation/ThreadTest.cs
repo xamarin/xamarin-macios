@@ -36,6 +36,9 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void GetEntryAssemblyReturnsOk ()
 		{
+#if __WATCHOS__
+			Assert.IsNull (Assembly.GetEntryAssembly ());
+#else
 			Assert.IsNotNull (Assembly.GetEntryAssembly ());
 			Assert.IsTrue (NSThread.IsMain);
 			int rv = -1;
@@ -52,6 +55,7 @@ namespace MonoTouchFixtures.Foundation {
 			t.Start ();
 			t.Join ();
 			Assert.AreEqual (0, rv);
+#endif
 		}
 
 		[Test]

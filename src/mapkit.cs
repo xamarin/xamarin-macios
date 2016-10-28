@@ -17,6 +17,9 @@ using XamCore.CoreLocation;
 #if !MONOMAC
 using XamCore.UIKit;
 #endif
+#if !TVOS && XAMCORE_2_0
+using Contacts;
+#endif
 using System;
 
 #if MONOMAC
@@ -86,6 +89,7 @@ namespace XamCore.MapKit {
 	[TV (9,2)]
 	[Mac (10,9, onlyOn64 : true)]
 	interface MKAnnotationView {
+		[DesignatedInitializer]
 		[Export ("initWithAnnotation:reuseIdentifier:")]
 		[PostGet ("Annotation")]
 #if XAMCORE_2_0
@@ -329,6 +333,11 @@ namespace XamCore.MapKit {
 		[iOS (9,0)][Mac (10,11)]
 		[Field ("MKLaunchOptionsDirectionsModeTransit"), Internal]
 		NSString MKLaunchOptionsDirectionsModeTransit { get; }
+
+		[NoTV]
+		[iOS (10,0)][Mac (10,12)][Watch (3,0)]
+		[Field ("MKLaunchOptionsDirectionsModeDefault"), Internal]
+		NSString MKLaunchOptionsDirectionsModeDefault { get; }
 
 		[Export ("timeZone")]
 		[iOS (9,0), Mac(10,11)]
@@ -834,6 +843,18 @@ namespace XamCore.MapKit {
 		[Wrap ("this (coordinate, addressDictionary == null ? null : addressDictionary.Dictionary)")]
 		IntPtr Constructor (CLLocationCoordinate2D coordinate, MKPlacemarkAddress addressDictionary);
 #endif // !MONOMAC && !WATCH
+
+		[Watch (3,0)][TV (10,0)][iOS (10,0)]
+		[NoMac]
+		[Export ("initWithCoordinate:")]
+		IntPtr Constructor (CLLocationCoordinate2D coordinate);
+
+#if !TVOS && !MONOMAC && XAMCORE_2_0
+		[Watch (3,0)][iOS (10,0)]
+		[NoTV][NoMac]
+		[Export ("initWithCoordinate:postalAddress:")]
+		IntPtr Constructor (CLLocationCoordinate2D coordinate, CNPostalAddress postalAddress);
+#endif
 	
 		[Export ("countryCode")]
 		string CountryCode { get; }
@@ -1431,7 +1452,7 @@ namespace XamCore.MapKit {
 	[TV (9,2)]
 	[Since (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9, onlyOn64 : true)]
-	public partial interface MKMapCamera : NSCopying, NSSecureCoding {
+	partial interface MKMapCamera : NSCopying, NSSecureCoding {
 
 		[Export ("centerCoordinate")]
 		CLLocationCoordinate2D CenterCoordinate { get; set; }
@@ -1794,5 +1815,16 @@ namespace XamCore.MapKit {
 
 #endif // !WATCH
 
+	[Category]
+	[BaseType (typeof (NSUserActivity))]
+	interface NSUserActivity_MKMapItem {
+		[Watch (3,0)][TV (10,0)][iOS (10,0)][Mac (10,12)]
+		[Export ("mapItem")]
+		MKMapItem GetMapItem ();
+
+		[Watch (3,0)][TV (10,0)][iOS (10,0)][Mac (10,12)]
+		[Export ("setMapItem:")]
+		void SetMapItem (MKMapItem item);
+	}
 }
 #endif // XAMCORE_2_0 || !MONOMAC

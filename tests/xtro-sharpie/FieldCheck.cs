@@ -78,7 +78,14 @@ namespace Extrospection {
 
 			if (!decl.IsAvailable ())
 				return;
-			
+
+			var framework = GetDeclaringHeaderFile (decl);
+
+			switch (framework) {
+			case "ruby":
+				return;
+			}
+
 			var name = decl.ToString ();
 			MemberReference mr;
 			if (!fields.TryGetValue (name, out mr)) {

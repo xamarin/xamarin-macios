@@ -39,7 +39,6 @@
     <Compile Include="BitcodeConverter.cs" />
     <Compile Include="error.cs" />
     <Compile Include="mtouch.cs" />
-    <Compile Include="OldStaticRegistrar.cs" />
     <Compile Include="SdkVersions.cs" />
     <Compile Include="Stripper.cs" />
     <Compile Include="Target.cs" />
@@ -191,9 +190,6 @@
     <Compile Include="..\linker\MonoTouch.Tuner\ProcessExportedFields.cs">
       <Link>MonoTouch.Tuner\ProcessExportedFields.cs</Link>
     </Compile>
-    <Compile Include="..\linker\MonoTouch.Tuner\RemoveExtraRegistrar.cs">
-      <Link>MonoTouch.Tuner\RemoveExtraRegistrar.cs</Link>
-    </Compile>
     <Compile Include="..\..\external\mono\mcs\tools\tuner\Mono.Tuner\CecilRocks.cs">
       <Link>Mono.Tuner\CecilRocks.cs</Link>
     </Compile>
@@ -323,11 +319,15 @@
     <Compile Include="..\common\PInvokeWrapperGenerator.cs">
       <Link>common\PInvokeWrapperGenerator.cs</Link>
     </Compile>
+    <Compile Include="..\linker\ExceptionalSubStep.cs">
+      <Link>Xamarin.Linker\ExceptionalSubStep.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
     <Reference Include="System" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />
@@ -344,11 +344,11 @@
     <Folder Include="Xamarin.Linker\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\external\cecil\Mono.Cecil.csproj">
+    <ProjectReference Include="..\..\external\mono\external\cecil\Mono.Cecil.csproj">
       <Project>{D68133BD-1E63-496E-9EDE-4FBDBF77B486}</Project>
       <Name>Mono.Cecil</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\external\cecil\symbols\mdb\Mono.Cecil.Mdb.csproj">
+    <ProjectReference Include="..\..\external\mono\external\cecil\symbols\mdb\Mono.Cecil.Mdb.csproj">
       <Project>{8559DD7F-A16F-46D0-A05A-9139FAEBA8FD}</Project>
       <Name>Mono.Cecil.Mdb</Name>
     </ProjectReference>

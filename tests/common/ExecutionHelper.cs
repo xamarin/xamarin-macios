@@ -48,10 +48,15 @@ namespace Xamarin.Tests
 
 		public int Execute (string arguments, params string [] args)
 		{
+			return Execute (Configuration.MtouchPath, arguments, args);
+		}
+
+		public int Execute (string toolPath, string arguments, params string [] args)
+		{
 			output.Clear ();
 			output_lines = null;
 
-			var rv = ExecutionHelper.Execute (TestTarget.ToolPath, string.Format (arguments, args), EnvironmentVariables, output, output);
+			var rv = ExecutionHelper.Execute (toolPath, string.Format (arguments, args), EnvironmentVariables, output, output);
 
 			if (rv != 0) {
 				if (output.Length > 0)
@@ -287,14 +292,15 @@ namespace Xamarin.Tests
 		private static extern void kill (int pid, int sig);
 
 		public static string Execute (string fileName, string arguments, bool throwOnError = true, Dictionary<string,string> environmentVariables = null,
-			bool hide_output = false
+			bool hide_output = false, TimeSpan? timeout = null
 		)
 		{
 			StringBuilder output = new StringBuilder ();
-			int exitCode = Execute (fileName, arguments, environmentVariables, output, output);
+			int exitCode = Execute (fileName, arguments, environmentVariables, output, output, timeout);
 			if (!hide_output) {
 				Console.WriteLine ("{0} {1}", fileName, arguments);
 				Console.WriteLine (output);
+				Console.WriteLine ("Exit code: {0}", exitCode);
 			}
 			if (throwOnError && exitCode != 0)
 				throw new TestExecutionException (output.ToString ());

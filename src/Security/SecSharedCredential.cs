@@ -1,4 +1,4 @@
-#if !MONOMAC && !WATCH
+#if IOS
 
 using System;
 using System.ComponentModel;
@@ -136,4 +136,4 @@ namespace XamCore.Security {
 
 }
 
-#endif  //!MONOMAC && !WATCH
+#endif  // IOS

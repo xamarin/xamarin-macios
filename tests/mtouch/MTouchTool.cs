@@ -7,7 +7,7 @@ using System.Xml;
 
 using Xamarin.Tests;
 
-namespace MTouchTests
+namespace Xamarin
 {
 	public enum MTouchAction
 	{
@@ -17,7 +17,7 @@ namespace MTouchTests
 		LaunchSim,
 	}
 
-	enum MTouchLinker
+	public enum MTouchLinker
 	{
 		Unspecified,
 		LinkAll,
@@ -25,7 +25,7 @@ namespace MTouchTests
 		DontLink,
 	}
 
-	enum MTouchRegistrar
+	public enum MTouchRegistrar
 	{
 		Unspecified,
 		Dynamic,
@@ -60,6 +60,7 @@ namespace MTouchTests
 		public bool? FastDev;
 		public bool? Dlsym;
 		public string Sdk;
+		public string TargetVer;
 		public string [] References;
 		public string Executable;
 		public string TargetFramework;
@@ -71,11 +72,12 @@ namespace MTouchTests
 		public bool? NoFastSim;
 		public MTouchRegistrar Registrar;
 		public I18N I18N;
+		public bool? Extension;
 #pragma warning restore 649
 
 		// These are a bit smarter
-		public MTouch.Profile Profile = MTouch.Profile.Classic;
-
+		public MTouch.Profile Profile = MTouch.Profile.Unified;
+		public bool NoPlatformAssemblyReference;
 		static XmlDocument device_list_cache;
 
 		List<string> directories_to_delete;
@@ -156,11 +158,6 @@ namespace MTouchTests
 
 			sb.Append (" ").Append (GetVerbosity ());
 
-			if (!NoSign.HasValue && Profile == MTouch.Profile.Classic) {
-				sb.Append (" --nosign");
-			} else if (NoSign.HasValue && NoSign.Value && Profile == MTouch.Profile.Classic)
-				sb.Append (" --nosign");
-
 			if (Sdk == None) {
 				// do nothing	
 			} else if (!string.IsNullOrEmpty (Sdk)) {
@@ -169,11 +166,20 @@ namespace MTouchTests
 				sb.Append (" --sdk ").Append (MTouch.GetSdkVersion (Profile));
 			}
 
+			if (TargetVer == None) {
+				// do nothing
+			} else if (!string.IsNullOrEmpty (TargetVer)) {
+				sb.Append (" --targetver ").Append (TargetVer);
+			}
+
 			if (Debug.HasValue && Debug.Value)
 				sb.Append (" --debug");
 
 			if (FastDev.HasValue && FastDev.Value)
 				sb.Append (" --fastdev");
+
+			if (Extension == true)
+				sb.Append (" --extension");
 
 			if (Dlsym.HasValue)
 				sb.Append (" --dlsym:").Append (Dlsym.Value ? "true" : "false");
@@ -190,11 +196,9 @@ namespace MTouchTests
 				// do nothing
 			} else if (!string.IsNullOrEmpty (TargetFramework)) {
 				sb.Append (" --target-framework ").Append (TargetFramework);
-			} else {
+			} else if (!NoPlatformAssemblyReference) {
 				// make the implicit default the way tests have been running until now, and at the same time the very minimum to make apps build.
 				switch (Profile) {
-				case MTouch.Profile.Classic:
-					break;
 				case MTouch.Profile.Unified:
 					sb.Append (" -r:").Append (MTouch.Quote (Configuration.XamarinIOSDll));
 					break;
@@ -212,7 +216,6 @@ namespace MTouchTests
 				sb.Append (" --abi ").Append (Abi);
 			} else {
 				switch (Profile) {
-				case MTouch.Profile.Classic:
 				case MTouch.Profile.Unified:
 					break; // not required
 				case MTouch.Profile.TVOS:
@@ -247,7 +250,7 @@ namespace MTouchTests
 			case MTouchRegistrar.Unspecified:
 				break;
 			case MTouchRegistrar.Dynamic:
-				sb.Append (" --registrar:static");
+				sb.Append (" --registrar:dynamic");
 				break;
 			case MTouchRegistrar.Static:
 				sb.Append (" --registrar:static");
@@ -330,14 +333,131 @@ namespace MTouchTests
 			}
 		}
 
-		public void CreateTemporaryApp (string code = null)
+		string CreatePlist (MTouch.Profile profile, string appName)
+		{
+			string plist = null;
+
+			switch (profile) {
+			case MTouch.Profile.Unified:
+				plist = string.Format (@"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
+<plist version=""1.0"">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>{0}</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.xamarin.{0}</string>
+	<key>CFBundleExecutable</key>
+	<string>{0}</string>
+	<key>MinimumOSVersion</key>
+	<string>{1}</string>
+	<key>UIDeviceFamily</key>
+	<array>
+		<integer>1</integer>
+		<integer>2</integer>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+</dict>
+</plist>
+", appName, MTouch.GetSdkVersion (Profile));
+				break;
+			case MTouch.Profile.TVOS:
+				plist = string.Format (@"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
+<plist version=""1.0"">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>Extensiontest</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.xamarin.{0}</string>
+	<key>CFBundleExecutable</key>
+	<string>{0}</string>
+	<key>MinimumOSVersion</key>
+	<string>{1}</string>
+	<key>UIDeviceFamily</key>
+	<array>
+		<integer>3</integer>
+	</array>
+</dict>
+</plist>
+", appName, MTouch.GetSdkVersion (Profile));
+				break;
+			default:
+				throw new Exception ("Profile not specified.");
+			}
+
+			return plist;
+		}
+
+		public void CreateTemporaryApp (MTouch.Profile profile = MTouch.Profile.Unified, bool hasPlist = false, string appName = "testApp", string code = null)
 		{
 			var testDir = CreateTemporaryDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
+			var app = Path.Combine (testDir, appName + ".app");
 			Directory.CreateDirectory (app);
 
 			AppPath = app;
-			Executable = MTouch.CompileTestAppExecutable (testDir, code: code, profile: Profile);
+			Executable = MTouch.CompileTestAppExecutable (testDir, code, "", Profile, appName);
+
+			if (hasPlist)
+				File.WriteAllText (Path.Combine (app, "Info.plist"), CreatePlist (profile, appName));
+		}
+
+		public void CreateTemporaryWatchKitExtension (string code = null)
+		{
+			var testDir = CreateTemporaryDirectory ();
+			var app = Path.Combine (testDir, "testApp.appex");
+			Directory.CreateDirectory (app);
+
+			if (code == null) {
+				code = @"using WatchKit;
+public partial class NotificationController : WKUserNotificationInterfaceController
+{
+	protected NotificationController (System.IntPtr handle) : base (handle) {}
+}";
+			}
+
+			AppPath = app;
+			Executable = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile);
+
+			File.WriteAllText (Path.Combine (app, "Info.plist"), @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
+<plist version=""1.0"">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>testapp</string>
+	<key>CFBundleName</key>
+	<string>testapp</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.xamarin.testapp</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	<key>MinimumOSVersion</key>
+	<string>2.0</string>
+	<key>NSExtension</key>
+	<dict>
+		<key>NSExtensionAttributes</key>
+		<dict>
+			<key>WKAppBundleIdentifier</key>
+			<string>com.xamarin.testapp.watchkitapp</string>
+		</dict>
+		<key>NSExtensionPointIdentifier</key>
+		<string>com.apple.watchkit</string>
+	</dict>
+	<key>RemoteInterfacePrincipleClass</key>
+	<string>InterfaceController</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+</dict>
+</plist>
+");
 		}
 
 		public string CreateTemporaryDirectory ()
@@ -359,11 +479,16 @@ namespace MTouchTests
 		{
 			if (AppPath != null)
 				throw new Exception ("There already is an App directory");
-			
+
 			AppPath = Path.Combine (CreateTemporaryDirectory (), "testApp.app");
 			Directory.CreateDirectory (AppPath);
 
 			return AppPath;
+		}
+
+		public void CreateTemporaryCacheDirectory ()
+		{
+			Cache = Path.Combine (CreateTemporaryDirectory (), "mtouch-test-cache");
 		}
 
 		void IDisposable.Dispose ()

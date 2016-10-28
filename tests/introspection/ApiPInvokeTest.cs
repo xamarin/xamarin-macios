@@ -64,12 +64,11 @@ namespace Introspection
 		public void Signatures ()
 		{
 			int totalPInvokes = 0;
-			int totalErrors = 0;
+			Errors = 0;
 
 			foreach (MethodInfo mi in pinvokeQuery) {
 				totalPInvokes++;
 				if (!CheckSignature (mi)) {
-					totalErrors++;
 
 					if (!ContinueOnFailure)
 						break;
@@ -78,7 +77,7 @@ namespace Introspection
 
 			AssertIfErrors (
 				"{0} errors found in {1} P/Invoke signatures validated",
-				totalErrors, totalPInvokes);
+				Errors, totalPInvokes);
 		}
 
 		protected virtual bool CheckSignature (MethodInfo mi)
@@ -109,7 +108,7 @@ namespace Introspection
 		protected virtual bool CheckForEnumParameter (MethodInfo mi, ParameterInfo pi)
 		{
 			if (pi.ParameterType.IsEnum && pi.ParameterType.GetCustomAttribute<NativeAttribute> () != null) {
-				AddErrorLine ("{0}.{1} has a [Native] enum parameter in its signature: {2} {3}",
+				AddErrorLine ("[FAIL] {0}.{1} has a [Native] enum parameter in its signature: {2} {3}",
 					mi.DeclaringType.FullName, mi.Name, pi.ParameterType, pi.Name);
 				return false;
 			}
@@ -165,6 +164,7 @@ namespace Introspection
 		protected void Check (Assembly a)
 		{
 			Errors = 0;
+			ErrorData.Clear ();
 			int n = 0;
 			foreach (var t in a.GetTypes ()) {
 				foreach (var m in t.GetMethods (BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)) {
@@ -202,7 +202,7 @@ namespace Introspection
 					n++;
 				}
 			}
-			Assert.AreEqual (0, Errors, "{0} errors found in {1} symbol lookups", Errors, n);
+			Assert.AreEqual (0, Errors, "{0} errors found in {1} symbol lookups{2}", Errors, n, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
 		}
 
 		protected abstract bool SkipAssembly (Assembly a);

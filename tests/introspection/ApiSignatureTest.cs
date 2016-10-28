@@ -75,8 +75,9 @@ namespace Introspection {
 
 			pos = end + 3;
 
-			while (s != null) {
-				elements.Add (s);
+			while (pos < encoded.Length) {
+				if (s != null)
+					elements.Add (s);
 				s = Next (encoded, ref pos);
 			}
 			return elements.ToArray ();
@@ -103,7 +104,11 @@ namespace Introspection {
 					break;
 				c = encoded [pos];
 			}
-			return sb.ToString ();
+			var s = sb.ToString ();
+			if (s.StartsWith ("{?=[", StringComparison.Ordinal))
+				return null; // Ignore array of ? -> matrix_float2x2, matrix_float3x3, matrix_float4x4
+			return s;
+
 		}
 
 		int TypeSize (Type t)
@@ -140,7 +145,7 @@ namespace Introspection {
 			case "EKSpan":
 			case "EKRecurrenceFrequency":
 			case "EKEventAvailability":
-				if (!IsOSX11OrIOS9)
+				if (!TestRuntime.CheckXcodeVersion (7, 0))
 					return 4;
 				break;
 			case "MDLAxisAlignedBoundingBox":
@@ -151,6 +156,13 @@ namespace Introspection {
 				case "Vector3i":	// sizeof (vector_uint3)
 				case "Vector3":		// sizeof (vector_float3)
 					return 16;
+				case "Matrix2":
+					return 16;	// matrix_float2x2
+				case "Matrix3":
+					return 48;	// matrix_float3x3
+				case "Matrix4":
+					return 64;	// matrix_float4x4
+				case "Vector3d":    // sizeof (vector_double3)
 				case "MDLAxisAlignedBoundingBox":
 					return 32; // struct (Vector3, Vector3)
 				}
@@ -187,6 +199,7 @@ namespace Introspection {
 		{
 			int n = 0;
 			Errors = 0;
+			ErrorData.Clear ();
 			
 			foreach (Type t in Assembly.GetTypes ()) {
 
@@ -209,7 +222,7 @@ namespace Introspection {
 				foreach (MethodBase m in t.GetConstructors (Flags)) 
 					CheckMemberSignature (m, t, class_ptr, ref n);
 			}
-			AssertIfErrors ("{0} errors found in {1} signatures validated", Errors, n);
+			AssertIfErrors ("{0} errors found in {1} signatures validated{2}", Errors, n, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
 		}
 
 		void CheckMemberSignature (MethodBase m, Type t, IntPtr class_ptr, ref int n)
@@ -230,6 +243,11 @@ namespace Introspection {
 				if (exportAttribute == null)
 					continue;
 				string name = exportAttribute.Selector;
+
+				if (exportAttribute.IsVariadic) {
+					VariadicChecks (m);
+					continue;
+				}
 				
 				if (Skip (t, m, name))
 					continue;
@@ -242,6 +260,13 @@ namespace Introspection {
 				} else {
 					IntrospectionTest (m, methodinfo, t, class_ptr, ref n);
 				}
+			}
+		}
+
+		void VariadicChecks (MethodBase m)
+		{
+			if (m.IsPublic || m.IsFamily || m.IsFamilyOrAssembly) {
+				AddErrorLine ("Function '{0}.{1}' is exposed and variadic. Variadic methods need custom marshaling, and must not be exposed directly.", m.DeclaringType.FullName, m.Name);
 			}
 		}
 
@@ -294,7 +319,7 @@ namespace Introspection {
 			}
 			catch {
 			}
-			if (elements == null) {
+			if (elements == null || !elements.Any ()) {
 				if (LogProgress)
 					Console.WriteLine ("[WARNING] Could not parse encoded signature for {0} : {1}", CurrentSelector, encoded);
 				return;
@@ -306,9 +331,16 @@ namespace Introspection {
 			if (methodinfo != null) {
 				// check return value
 
-				result = Check (elements [CurrentParameter], methodinfo.ReturnType);
-				if (!result)
-					AddErrorLine ("Return Value of selector: {0} on type {1}, Type: {2}, Encoded as: {3}", CurrentSelector, t, methodinfo.ReturnType, elements [CurrentParameter]);
+				if (IgnoreSimd (methodinfo.ReturnType)) {
+					// Simd return types are not checked.
+					// However parameters have to be verified, 
+					// so we want to start at index 0 instead of 1.
+					CurrentParameter = -1;
+				} else {
+					result = Check (elements [CurrentParameter], methodinfo.ReturnType);
+					if (!result)
+						AddErrorLine ("Return Value of selector: {0} on type {1}, Type: {2}, Encoded as: {3}", CurrentSelector, t, methodinfo.ReturnType, elements [CurrentParameter]);
+				}
 			}
 
 			int size = 2 * IntPtr.Size; // self + selector (@0:)
@@ -316,16 +348,16 @@ namespace Introspection {
 			var parameters = m.GetParameters ();
 			bool simd = (parameters.Length >= elements.Length);
 			foreach (var p in parameters) {
-				CurrentParameter++;
+				CurrentParameter++; // usually starts at 1 to avoid re-checking the return, except if return type is "simd" (starts at 0)
 				var pt = p.ParameterType;
 				if (CurrentParameter >= elements.Length) {
 					// SIMD structures are not (ios8 beta2) encoded in the signature, we ignore them
-					result = IgnoreSimd (CurrentSelector, t, pt);
+					result = IgnoreSimd (pt);
 					if (!result)
 						AddErrorLine ("Selector: {0} on type {1}, Type: {2}, nothing encoded", CurrentSelector, t, pt);
 				} else {
 					// skip SIMD/vector parameters (as they are not encoded)
-					result = IgnoreSimd (CurrentSelector, t, pt);
+					result = IgnoreSimd (pt);
 					if (result)
 						CurrentParameter--;
 					else
@@ -344,15 +376,21 @@ namespace Introspection {
 				AddErrorLine ("Size {0} != {1} for {2} on {3}: {4}", encoded_size, size, CurrentSelector, t, encoded);
 		}
 
-		static bool IgnoreSimd (string name, Type t, Type pt)
+		static bool IgnoreSimd (Type pt)
 		{
 			switch (pt.Name) {
 			case "Vector2":
 			case "Vector2i":
+			case "Vector2d":
 			case "Vector3":
 			case "Vector3i":
+			case "Vector3d":
 			case "Vector4":
 			case "Vector4i":
+			case "Vector4d":
+			case "Matrix2":
+			case "Matrix3":
+			case "Matrix4":
 			case "MDLAxisAlignedBoundingBox": // struct { Vector3, Vector3 }
 				return true;
 			default:
@@ -670,7 +708,7 @@ namespace Introspection {
 				case "EventKit.EKSpan":
 				case "EventKit.EKAlarmType":
 				// EventKit.EK* enums are anonymous enums in 10.10 and iOS 8, but an NSInteger in 10.11 and iOS 9.
-					if (IsOSX11OrIOS9)
+					if (TestRuntime.CheckXcodeVersion (7, 0))
 						goto default;
 					return true;
 				default:

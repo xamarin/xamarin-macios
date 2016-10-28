@@ -17,6 +17,7 @@ using MonoMac.Foundation;
 #endif
 
 using NUnit.Framework;
+using Xamarin.Tests;
 
 namespace Introspection {
 
@@ -37,6 +38,10 @@ namespace Introspection {
 		protected override bool Skip (Type type)
 		{
 			switch (type.FullName) {
+			// Random failures on build machine
+			case "QuickLookUI.QLPreviewPanel":
+			case "MonoMac.QuickLookUI.QLPreviewPanel":
+				return true;
 			// These should be DisableDefaultCtor but can't due to backward compat
 			case "MonoMac.EventKit.EKParticipant":
 			case "EventKit.EKParticipant":
@@ -122,6 +127,11 @@ namespace Introspection {
 				// Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: 'Caller did not provide an activityType, and this process does not have a NSUserActivityTypes in its Info.plist.
 				// but since it looks like the constructor is usable with the proper Info.plist, we can't remove it.
 				return true;
+			case "MonoMac.AppKit.NSTextTableBlock":
+			case "AppKit.NSTextTableBlock":
+			case "MonoMac.AppKit.NSMutableFontCollection":
+			case "AppKit.NSMutableFontCollection":
+				return true; // Crashes in 10.12
 			}
 
 			switch (type.Namespace) {
@@ -165,6 +175,8 @@ namespace Introspection {
 		protected override void CheckToString (NSObject obj)
 		{
 			switch (obj.GetType ().FullName) {
+			// Crashes on 10.12
+			case "Contacts.CNContainer":
 			// native crash calling MonoMac.Foundation.NSObject.get_Description ()
 			case "WebKit.WKNavigationAction":
 			case "WebKit.WKFrameInfo": //  EXC_BAD_ACCESS (code=1, address=0x0)
@@ -223,6 +235,8 @@ namespace Introspection {
 			case "Accounts.ACAccountType":
 			case "MonoMac.CoreData.NSPersistentStoreCoordinator":
 			case "CoreData.NSPersistentStoreCoordinator":
+			case "AppKit.NSColorPanel":
+			case "MonoMac.AppKit.NSColorPanel":
 				do_not_dispose.Add (obj);
 				break;
 			// 10.11

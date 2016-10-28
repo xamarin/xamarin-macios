@@ -8,6 +8,7 @@ using XamCore.Contacts;
 
 namespace XamCore.CloudKit {
 
+	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: You must call -[CKAsset initWithFileURL:] or -[CKAsset initWithData:]
 	[BaseType (typeof (NSObject))]
@@ -19,14 +20,170 @@ namespace XamCore.CloudKit {
 		[Export ("fileURL", ArgumentSemantic.Copy)]
 		NSUrl FileUrl { get; }
 	}
+	
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface CKUserIdentityLookupInfo : NSSecureCoding, NSCopying
+	{
+		[Internal, Export ("initWithEmailAddress:")]
+		IntPtr _FromEmail (string emailAddress);
 
+		[Internal, Export ("initWithPhoneNumber:")]
+		IntPtr _FromPhoneNumber (string phoneNumber);
+
+		[Export ("initWithUserRecordID:")]
+		CKUserIdentityLookupInfo Constructor (CKRecordID userRecordID);
+
+		[Static]
+		[Export ("lookupInfosWithEmails:")]
+		CKUserIdentityLookupInfo[] GetLookupInfosWithEmails (string[] emails);
+
+		[Static]
+		[Export ("lookupInfosWithPhoneNumbers:")]
+		CKUserIdentityLookupInfo[] GetLookupInfosWithPhoneNumbers (string[] phoneNumbers);
+
+		[Static]
+		[Export ("lookupInfosWithRecordIDs:")]
+		CKUserIdentityLookupInfo[] GetLookupInfos (CKRecordID[] recordIDs);
+
+		[NullAllowed, Export ("emailAddress")]
+		string EmailAddress { get; }
+
+		[NullAllowed, Export ("phoneNumber")]
+		string PhoneNumber { get; }
+
+		[NullAllowed, Export ("userRecordID", ArgumentSemantic.Copy)]
+		CKRecordID UserRecordID { get; }
+	}
+
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface CKUserIdentity : NSSecureCoding, NSCopying
+	{
+		[NullAllowed, Export ("lookupInfo", ArgumentSemantic.Copy)]
+		CKUserIdentityLookupInfo LookupInfo { get; }
+
+		[NullAllowed, Export ("nameComponents", ArgumentSemantic.Copy)]
+		NSPersonNameComponents NameComponents { get; }
+
+		[NullAllowed, Export ("userRecordID", ArgumentSemantic.Copy)]
+		CKRecordID UserRecordID { get; }
+
+		[Export ("hasiCloudAccount")]
+		bool HasICloudAccount { get; }
+	}
+
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+	[BaseType (typeof(NSObject))]
+	interface CKShareMetadata : NSCopying, NSSecureCoding
+	{
+		[Export ("containerIdentifier")]
+		string ContainerIdentifier { get; }
+
+		[Export ("share", ArgumentSemantic.Strong)]
+		CKShare Share { get; }
+
+		[Export ("rootRecordID", ArgumentSemantic.Copy)]
+		CKRecordID RootRecordID { get; }
+
+		[Export ("participantType", ArgumentSemantic.Assign)]
+		CKShareParticipantType Type { get; }
+
+		[Export ("participantStatus", ArgumentSemantic.Assign)]
+		CKShareParticipantAcceptanceStatus Status { get; }
+
+		[Export ("participantPermission", ArgumentSemantic.Assign)]
+		CKShareParticipantPermission Permission { get; }
+
+		[Export ("ownerIdentity", ArgumentSemantic.Strong)]
+		CKUserIdentity OwnerIdentity { get; }
+
+		[NullAllowed, Export ("rootRecord", ArgumentSemantic.Strong)]
+		CKRecord RootRecord { get; }
+	}
+	
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+	[BaseType (typeof(CKRecord))]
+	[DisableDefaultCtor]
+	interface CKShare
+	{
+		[Export ("initWithRootRecord:")]
+		IntPtr Constructor (CKRecord rootRecord);
+
+		[Export ("initWithRootRecord:shareID:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (CKRecord rootRecord, CKRecordID shareID);
+
+		[Export ("publicPermission", ArgumentSemantic.Assign)]
+		CKShareParticipantPermission PublicPermission { get; set; }
+
+		[Export ("URL", ArgumentSemantic.Copy)]
+		NSUrl Url { get; }
+
+		[Export ("participants", ArgumentSemantic.Strong)]
+		CKShareParticipant[] Participants { get; }
+
+		[Export ("owner", ArgumentSemantic.Strong)]
+		CKShareParticipant Owner { get; }
+
+		[NullAllowed, Export ("currentUserParticipant", ArgumentSemantic.Strong)]
+		CKShareParticipant CurrentUser { get; }
+
+		[Export ("addParticipant:")]
+		void Add (CKShareParticipant participant);
+
+		[Export ("removeParticipant:")]
+		void Remove (CKShareParticipant participant);
+	}
+
+	[Static]
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+	partial interface CKShareKeys {
+		
+		[Field ("CKShareTitleKey")]
+		NSString Title { get; }
+
+		[Field ("CKShareThumbnailImageDataKey")]
+		NSString ThumbnailImageData { get; }
+
+		[Field ("CKShareTypeKey")]
+		NSString Type { get; }
+	}
+	
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface CKShareParticipant : NSSecureCoding, NSCopying
+	{
+		[Export ("userIdentity", ArgumentSemantic.Strong)]
+		CKUserIdentity UserIdentity { get; }
+
+		[Export ("type", ArgumentSemantic.Assign)]
+		CKShareParticipantType Type { get; set; }
+
+		[Export ("acceptanceStatus", ArgumentSemantic.Assign)]
+		CKShareParticipantAcceptanceStatus AcceptanceStatus { get; }
+
+		[Export ("permission", ArgumentSemantic.Assign)]
+		CKShareParticipantPermission Permission { get; set; }
+	}
+
+	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[DisableDefaultCtor] // NSInternalInconsistencyException Reason: Use +[CKContainer privateCloudDatabase] or +[CKContainer publicCloudDatabase] instead of creating your own
 	[BaseType (typeof (NSObject))]
 	interface CKContainer {
 
+		[NoWatch]
+		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use CurrentUserDefaultName instead")]
 		[Field ("CKOwnerDefaultName")]
 		NSString OwnerDefaultName { get; }
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[Field ("CKCurrentUserDefaultName")]
+		NSString CurrentUserDefaultName { get; }
 
 		[Static]
 		[Export ("defaultContainer")]
@@ -36,7 +193,7 @@ namespace XamCore.CloudKit {
 		[Export ("containerWithIdentifier:")]
 		CKContainer FromIdentifier (string containerIdentifier);
 
-		[Export ("containerIdentifier")]
+		[NullAllowed, Export ("containerIdentifier")]
 		string ContainerIdentifier { get; }
 
 		[Export ("addOperation:")]
@@ -47,6 +204,13 @@ namespace XamCore.CloudKit {
 
 		[Export ("publicCloudDatabase")]
 		CKDatabase PublicCloudDatabase { get; }
+
+		[Export ("sharedCloudDatabase")]
+		CKDatabase SharedCloudDatabase { get; }
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[Export ("databaseWithDatabaseScope:")]
+		CKDatabase GetDatabase (CKDatabaseScope databaseScope);
 
 		[Export ("accountStatusWithCompletionHandler:")]
 		[Async]
@@ -64,15 +228,42 @@ namespace XamCore.CloudKit {
 		[Async]
 		void FetchUserRecordId (Action<CKRecordID, NSError> completionHandler);
 
+		[iOS (10,0), TV (10,0), Mac (10,12)]
+		[NoTV]
+		[Export ("discoverAllIdentitiesWithCompletionHandler:")]
+		[Async]
+		void DiscoverAllIdentities (Action<CKUserIdentity[], NSError> completionHandler);
+		
+		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use DiscoverAllIdentities instead")]
+		[NoWatch]
 		[NoTV]
 		[Export ("discoverAllContactUserInfosWithCompletionHandler:")]
 		[Async]
 		void DiscoverAllContactUserInfos (Action<CKDiscoveredUserInfo[], NSError> completionHandler);
 
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[Export ("discoverUserIdentityWithEmailAddress:completionHandler:")]
+		[Async]
+		void DiscoverUserIdentityWithEmailAddress (string email, Action<CKUserIdentity, NSError> completionHandler);
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[Export ("discoverUserIdentityWithPhoneNumber:completionHandler:")]
+		[Async]
+		void DiscoverUserIdentityWithPhoneNumber (string phoneNumber, Action<CKUserIdentity, NSError> completionHandler);
+		
+		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use DiscoverUserIdentityWithEmailAddress instead")]
+		[NoWatch]
 		[Export ("discoverUserInfoWithEmailAddress:completionHandler:")]
 		[Async]
 		void DiscoverUserInfo (string email, Action<CKDiscoveredUserInfo, NSError> completionHandler);
 
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[Export ("discoverUserIdentityWithUserRecordID:completionHandler:")]
+		[Async]
+		void DiscoverUserIdentity (CKRecordID userRecordID, Action<CKUserIdentity, NSError> completionHandler);
+	
+		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use DiscoverUserIdentity instead")]
+		[NoWatch]
 		[Export ("discoverUserInfoWithUserRecordID:completionHandler:")]
 		[Async]
 		void DiscoverUserInfo (CKRecordID userRecordId, Action<CKDiscoveredUserInfo, NSError> completionHandler);
@@ -93,17 +284,46 @@ namespace XamCore.CloudKit {
 		[Export ("fetchLongLivedOperationWithID:completionHandler:")]
 		[Async]
 		void FetchLongLivedOperation (string[] operationID, Action<NSDictionary<NSString,NSOperation>, NSError> completionHandler);
-		
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[Export ("fetchShareParticipantWithEmailAddress:completionHandler:")]
+		[Async]
+		void FetchShareParticipantWithEmailAddress (string emailAddress, Action<CKShareParticipant, NSError> completionHandler);
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[Export ("fetchShareParticipantWithPhoneNumber:completionHandler:")]
+		[Async]
+		void FetchShareParticipantWithPhoneNumber (string phoneNumber, Action<CKShareParticipant, NSError> completionHandler);
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[Export ("fetchShareParticipantWithUserRecordID:completionHandler:")]
+		[Async]
+		void FetchShareParticipant (CKRecordID userRecordID, Action<CKShareParticipant, NSError> completionHandler);
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[Export ("fetchShareMetadataWithURL:completionHandler:")]
+		[Async]
+		void FetchShareMetadata (NSUrl url, Action<CKShareMetadata, NSError> completionHandler);
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[Export ("acceptShareMetadata:completionHandler:")]
+		[Async]
+		void AcceptShareMetadata (CKShareMetadata metadata, Action<CKShare, NSError> completionHandler);
 	}
 
 	delegate void CKDatabaseDeleteSubscriptionHandler (string subscriptionId, NSError error);
 
+	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[DisableDefaultCtor] // *** Assertion failure in -[CKDatabase init]
 	[BaseType (typeof (NSObject))]
 	interface CKDatabase {
 		[Export ("addOperation:")]
 		void AddOperation (CKDatabaseOperation operation);
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[Export ("databaseScope", ArgumentSemantic.Assign)]
+		CKDatabaseScope DatabaseScope { get; }
 
 		[Export ("fetchRecordWithID:completionHandler:")]
 		[Async]
@@ -119,7 +339,7 @@ namespace XamCore.CloudKit {
 
 		[Export ("performQuery:inZoneWithID:completionHandler:")]
 		[Async]
-		void PerformQuery (CKQuery query, CKRecordZoneID zoneId, Action<CKRecord[], NSError> completionHandler);
+		void PerformQuery (CKQuery query, [NullAllowed] CKRecordZoneID zoneId, Action<CKRecord[], NSError> completionHandler);
 
 		[Export ("fetchAllRecordZonesWithCompletionHandler:")]
 		[Async]
@@ -138,32 +358,42 @@ namespace XamCore.CloudKit {
 		void DeleteRecordZone (CKRecordZoneID zoneId, Action<CKRecordZoneID, NSError> completionHandler);
 
 		[Export ("fetchSubscriptionWithID:completionHandler:")]
+		[NoWatch]
 		[Async]
 		void FetchSubscription (string subscriptionId, Action<CKSubscription, NSError> completionHandler);
 
+		[NoWatch]
 		[Export ("fetchAllSubscriptionsWithCompletionHandler:")]
 		[Async]
 		void FetchAllSubscriptions (Action<CKSubscription[], NSError> completionHandler);
 
+		[NoWatch]
 		[Export ("saveSubscription:completionHandler:")]
 		[Async]
 		void SaveSubscription (CKSubscription subscription, Action<CKSubscription, NSError> completionHandler);
 
 		[Export ("deleteSubscriptionWithID:completionHandler:")]
+		[NoWatch]
 		[Async]
 		void DeleteSubscription (string subscriptionID, CKDatabaseDeleteSubscriptionHandler completionHandler);
 	}
 
+	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (CKOperation))]
 	[DisableDefaultCtor]
+#if XAMCORE_4_0 || WATCH
+	[Abstract] // as per docs
+#endif
 	interface CKDatabaseOperation {
 
 		[Export ("database", ArgumentSemantic.Retain)] [NullAllowed]
 		CKDatabase Database { get; set; }
 	}
 
+	[NoWatch]
 	[NoTV]
+	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use CKDiscoverAllUserIdentitiesOperation instead")]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (CKOperation))]
 	interface CKDiscoverAllContactsOperation {
@@ -172,7 +402,9 @@ namespace XamCore.CloudKit {
 		Action<CKDiscoveredUserInfo[], NSError> DiscoverAllContactsHandler { get; set; }
 	}
 
+	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use CKUserIdentity instead")]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface CKDiscoveredUserInfo : NSCoding, NSCopying, NSSecureCoding {
 
@@ -197,10 +429,13 @@ namespace XamCore.CloudKit {
 #endif // XAMCORE_2_0
 	}
 
+	[NoWatch]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	delegate void CKDiscoverUserInfosCompletionHandler (NSDictionary emailsToUserInfos, NSDictionary userRecordIdsToUserInfos, NSError operationError);
 
+	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use CKDiscoverUserIdentitiesOperation instead")]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[NoWatch]
 	[BaseType (typeof (CKOperation))]
 	interface CKDiscoverUserInfosOperation {
 
@@ -218,13 +453,13 @@ namespace XamCore.CloudKit {
 		[NullAllowed] // by default this property is null
 		[Export ("discoverUserInfosCompletionBlock", ArgumentSemantic.Copy)]
 		CKDiscoverUserInfosCompletionHandler Completed {
-			[NotImplemented ("Only setting the handler is currently supported.")]
 			get;
 			set; 
 		}
 	}
 
 	// CKError.h Fields
+	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[Static]
 	interface CKErrorFields {
@@ -250,11 +485,12 @@ namespace XamCore.CloudKit {
 		NSString ErrorRetryAfterKey { get; }
 	}
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
+	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
 	[BaseType (typeof (CKOperation))]
 	interface CKFetchNotificationChangesOperation {
 		[Export ("initWithPreviousServerChangeToken:")]
-		IntPtr Constructor (CKServerChangeToken previousServerChangeToken);
+		IntPtr Constructor ([NullAllowed] CKServerChangeToken previousServerChangeToken);
 
 		[NullAllowed] // by default this property is null
 		[Export ("previousServerChangeToken", ArgumentSemantic.Copy)]
@@ -269,7 +505,6 @@ namespace XamCore.CloudKit {
 		[NullAllowed] // by default this property is null
 		[Export ("notificationChangedBlock", ArgumentSemantic.Copy)]
 		Action<CKNotification> NotificationChanged {
-			[NotImplemented ("Only setting the handler is currently supported.")]
 			get;
 			set; 
 		}
@@ -277,12 +512,12 @@ namespace XamCore.CloudKit {
 		[NullAllowed] // by default this property is null
 		[Export ("fetchNotificationChangesCompletionBlock", ArgumentSemantic.Copy)]
 		Action<CKServerChangeToken, NSError> Completed {
-			[NotImplemented ("Only setting the handler is currently supported.")]
 			get;
 			set; 
 		}
 	}
 
+	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[DisableDefaultCtor] // Objective-C exception thrown.  Name: CKException Reason: You can't call init on CKServerChangeToken
 	[BaseType (typeof (NSObject))]
@@ -290,15 +525,18 @@ namespace XamCore.CloudKit {
 	
 	}
 
+	[NoWatch]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	delegate void CKFetchRecordChangesHandler (CKServerChangeToken serverChangeToken, NSData clientChangeTokenData, NSError operationError);
 
+	[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use CKFetchRecordZoneChangesOperation instead")]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[NoWatch]
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKFetchRecordChangesOperation {
 
 		[Export ("initWithRecordZoneID:previousServerChangeToken:")]
-		IntPtr Constructor (CKRecordZoneID recordZoneID, CKServerChangeToken previousServerChangeToken);
+		IntPtr Constructor (CKRecordZoneID recordZoneID, [NullAllowed] CKServerChangeToken previousServerChangeToken);
 
 		[NullAllowed] // by default this property is null
 		[Export ("recordZoneID", ArgumentSemantic.Copy)]
@@ -317,7 +555,6 @@ namespace XamCore.CloudKit {
 		[NullAllowed] // by default this property is null
 		[Export ("recordChangedBlock", ArgumentSemantic.Copy)]
 		Action<CKRecord> RecordChanged {
-			[NotImplemented ("Only setting the handler is currently supported.")]
 			get;
 			set; 
 		}
@@ -325,7 +562,6 @@ namespace XamCore.CloudKit {
 		[NullAllowed] // by default this property is null
 		[Export ("recordWithIDWasDeletedBlock", ArgumentSemantic.Copy)]
 		Action<CKRecordID> RecordDeleted {
-			[NotImplemented ("Only setting the handler is currently supported.")]
 			get;
 			set; 
 		}
@@ -336,16 +572,73 @@ namespace XamCore.CloudKit {
 		[NullAllowed] // by default this property is null
 		[Export ("fetchRecordChangesCompletionBlock", ArgumentSemantic.Copy)]
 		CKFetchRecordChangesHandler AllChangesReported {
-			[NotImplemented ("Only setting the handler is currently supported.")]
 			get;
 			set; 
 		}
 	}
 
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (12,10, onlyOn64 : true)]
+	delegate void CKFetchRecordZoneChangesWithIDWasDeletedHandler (CKRecordID recordID, NSString recordType);
+
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (12,10, onlyOn64 : true)]
+	delegate void CKFetchRecordZoneChangesTokensUpdatedHandler (CKRecordZoneID recordZoneID, CKServerChangeToken serverChangeToken, NSData clientChangeTokenData);
+
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (12,10, onlyOn64 : true)]
+	delegate void CKFetchRecordZoneChangesFetchCompletedHandler (CKRecordZoneID recordZoneID, CKServerChangeToken serverChangeToken, NSData clientChangeTokenData, bool moreComing, NSError recordZoneError);
+
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (12,10, onlyOn64 : true)]
+	[BaseType (typeof(CKDatabaseOperation))]
+	interface CKFetchRecordZoneChangesOperation
+	{
+		[Export ("initWithRecordZoneIDs:optionsByRecordZoneID:")]
+		IntPtr Constructor (CKRecordZoneID[] recordZoneIDs, [NullAllowed] NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesOptions> optionsByRecordZoneID);
+
+		[Export ("recordZoneIDs", ArgumentSemantic.Copy)]
+		CKRecordZoneID[] RecordZoneIDs { get; set; }
+
+		[NullAllowed, Export ("optionsByRecordZoneID", ArgumentSemantic.Copy)]
+		NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesOptions> OptionsByRecordZoneID { get; set; }
+
+		[Export ("fetchAllChanges")]
+		bool FetchAllChanges { get; set; }
+
+		[NullAllowed, Export ("recordChangedBlock", ArgumentSemantic.Copy)]
+		Action<CKRecord> RecordChanged { get; set; }
+
+		[NullAllowed, Export ("recordWithIDWasDeletedBlock", ArgumentSemantic.Copy)]
+		CKFetchRecordZoneChangesWithIDWasDeletedHandler RecordWithIDWasDeleted { get; set; }
+
+		[NullAllowed, Export ("recordZoneChangeTokensUpdatedBlock", ArgumentSemantic.Copy)]
+		CKFetchRecordZoneChangesTokensUpdatedHandler RecordZoneChangeTokensUpdated { get; set; }
+
+		[NullAllowed, Export ("recordZoneFetchCompletionBlock", ArgumentSemantic.Copy)]
+		CKFetchRecordZoneChangesFetchCompletedHandler FetchCompleted { get; set; }
+
+		[NullAllowed, Export ("fetchRecordZoneChangesCompletionBlock", ArgumentSemantic.Copy)]
+		Action<NSError> ChangesCompleted { get; set; }
+	}
+	
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+	[BaseType (typeof(NSObject))]
+	interface CKFetchRecordZoneChangesOptions : NSSecureCoding
+	{
+		[NullAllowed, Export ("previousServerChangeToken", ArgumentSemantic.Copy)]
+		CKServerChangeToken PreviousServerChangeToken { get; set; }
+
+		[Export ("resultsLimit")]
+		nuint ResultsLimit { get; set; }
+
+		[NullAllowed, Export ("desiredKeys", ArgumentSemantic.Copy)]
+		string[] DesiredKeys { get; set; }
+	}
+
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	delegate void CKFetchRecordsCompletedHandler (NSDictionary recordsByRecordId, NSError error);
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
+#if XAMCORE_4_0 || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
+	[DisableDefaultCtor]
+#endif
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKFetchRecordsOperation {
 
@@ -363,7 +656,6 @@ namespace XamCore.CloudKit {
 		[NullAllowed] // by default this property is null
 		[Export ("perRecordProgressBlock", ArgumentSemantic.Copy)]
 		Action<CKRecordID,double> PerRecordProgress {
-			[NotImplemented ("Only setting the handler is currently supported.")]
 			get;
 			set; 
 		}
@@ -371,7 +663,6 @@ namespace XamCore.CloudKit {
 		[NullAllowed] // by default this property is null
 		[Export ("perRecordCompletionBlock", ArgumentSemantic.Copy)]
 		Action<CKRecord,CKRecordID,NSError> PerRecordCompletion {
-			[NotImplemented ("Only setting the handler is currently supported.")]
 			get;
 			set; 
 		}
@@ -379,7 +670,6 @@ namespace XamCore.CloudKit {
 		[NullAllowed] // by default this property is null
 		[Export ("fetchRecordsCompletionBlock", ArgumentSemantic.Copy)]
 		CKFetchRecordsCompletedHandler Completed {
-			[NotImplemented ("Only setting the handler is currently supported.")]
 			get;
 			set; 
 		}
@@ -392,7 +682,10 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	delegate void CKRecordZoneCompleteHandler (NSDictionary recordZonesByZoneId, NSError operationError);
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
+#if XAMCORE_4_0 || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
+	[DisableDefaultCtor]
+#endif
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKFetchRecordZonesOperation {
 		[Export ("initWithRecordZoneIDs:")]
@@ -405,7 +698,6 @@ namespace XamCore.CloudKit {
 		[NullAllowed] // by default this property is null
 		[Export ("fetchRecordZonesCompletionBlock", ArgumentSemantic.Copy)]
 		CKRecordZoneCompleteHandler Completed {
-			[NotImplemented ("Only setting the handler is currently supported.")]
 			get;
 			set; 
 		}
@@ -415,10 +707,12 @@ namespace XamCore.CloudKit {
 		CKFetchRecordZonesOperation FetchAllRecordZonesOperation ();
 	}
 
+	[NoWatch]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	delegate void CKFetchSubscriptionsCompleteHandler (NSDictionary subscriptionsBySubscriptionId, NSError operationError);
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[NoWatch]
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKFetchSubscriptionsOperation {
 
@@ -432,7 +726,6 @@ namespace XamCore.CloudKit {
 		[NullAllowed] // by default this property is null
 		[Export ("fetchSubscriptionCompletionBlock", ArgumentSemantic.Copy)]
 		CKFetchSubscriptionsCompleteHandler Completed {
-			[NotImplemented ("Only setting the handler is currently supported.")]
 			get;
 			set; 
 		}
@@ -442,7 +735,10 @@ namespace XamCore.CloudKit {
 		CKFetchSubscriptionsOperation FetchAllSubscriptionsOperation ();
 	}
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
+#if XAMCORE_4_0 || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
+	[DisableDefaultCtor]
+#endif
 	[BaseType (typeof (NSSortDescriptor))]
 	interface CKLocationSortDescriptor : NSSecureCoding {
 		[DesignatedInitializer]
@@ -456,6 +752,7 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	delegate void CKMarkNotificationsReadHandler (CKNotificationID[] notificationIDsMarkedRead, NSError operationError);
 
+	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (CKOperation))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: You must call -[CKMarkNotificationsReadOperation initWithNotificationIDsToMarkRead:]
@@ -470,13 +767,13 @@ namespace XamCore.CloudKit {
 
 		[Export ("markNotificationsReadCompletionBlock", ArgumentSemantic.Copy)]
 		CKMarkNotificationsReadHandler Completed {
-			[NotImplemented ("Only setting the handler is currently supported.")]
 			get;
 			set; 
 		}
 	}
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
+	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
 	[BaseType (typeof (CKOperation))]
 	interface CKModifyBadgeOperation {
 
@@ -489,7 +786,6 @@ namespace XamCore.CloudKit {
 		[NullAllowed] // by default this property is null
 		[Export ("modifyBadgeCompletionBlock", ArgumentSemantic.Copy)]
 		Action<NSError> Completed {
-			[NotImplemented ("Only setting the handler is currently supported.")]
 			get;
 			set; 
 		}
@@ -498,12 +794,13 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	delegate void CKModifyRecordsOperationHandler (CKRecord [] savedRecords, CKRecordID [] deletedRecordIds, NSError operationError);
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
+	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKModifyRecordsOperation {
 
 		[Export ("initWithRecordsToSave:recordIDsToDelete:")]
-		IntPtr Constructor (CKRecord [] recordsToSave, [NullAllowed] CKRecordID [] recordsToDelete);
+		IntPtr Constructor ([NullAllowed] CKRecord [] recordsToSave, [NullAllowed] CKRecordID [] recordsToDelete);
 
 		[NullAllowed] // by default this property is null
 		[Export ("recordsToSave", ArgumentSemantic.Copy)]
@@ -513,7 +810,7 @@ namespace XamCore.CloudKit {
 		[Export ("recordIDsToDelete", ArgumentSemantic.Copy)]
 		CKRecordID [] RecordIdsToDelete { get; set; }
 
-		[Export ("savePolicy", ArgumentSemantic.UnsafeUnretained)]
+		[Export ("savePolicy", ArgumentSemantic.Assign)]
 		CKRecordSavePolicy SavePolicy { get; set; }
 
 		[NullAllowed] // by default this property is null
@@ -523,7 +820,6 @@ namespace XamCore.CloudKit {
 		[NullAllowed] // by default this property is null
 		[Export ("perRecordProgressBlock", ArgumentSemantic.Copy)]
 		Action<CKRecord,double> PerRecordProgress {
-			[NotImplemented ("Only setting the handler is currently supported.")]
 			get;
 			set; 
 		}
@@ -531,7 +827,6 @@ namespace XamCore.CloudKit {
 		[NullAllowed] // by default this property is null
 		[Export ("perRecordCompletionBlock", ArgumentSemantic.Copy)]
 		Action<CKRecord, NSError> PerRecordCompletion {
-			[NotImplemented ("Only setting the handler is currently supported.")]
 			get;
 			set; 
 		}
@@ -539,12 +834,11 @@ namespace XamCore.CloudKit {
 		[NullAllowed] // by default this property is null
 		[Export ("modifyRecordsCompletionBlock", ArgumentSemantic.Copy)]
 		CKModifyRecordsOperationHandler Completed {
-			[NotImplemented ("Only setting the handler is currently supported.")]
 			get;
 			set; 
 		}
 
-		[Export ("atomic", ArgumentSemantic.UnsafeUnretained)]
+		[Export ("atomic")]
 		bool Atomic { get; set; }
 		
 	}
@@ -552,12 +846,13 @@ namespace XamCore.CloudKit {
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	delegate void CKModifyRecordZonesHandler (CKRecordZone [] savedRecordZones, CKRecordZoneID [] deletedRecordZoneIds, NSError operationError);
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
+	[DisableDefaultCtor] // does not work on watchOS, working stub provided to ease source compatibility
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKModifyRecordZonesOperation {
 
 		[Export ("initWithRecordZonesToSave:recordZoneIDsToDelete:")]
-		IntPtr Constructor (CKRecordZone [] recordZonesToSave, CKRecordZoneID [] recordZoneIdsToDelete);
+		IntPtr Constructor ([NullAllowed] CKRecordZone [] recordZonesToSave, [NullAllowed] CKRecordZoneID [] recordZoneIdsToDelete);
 
 		[NullAllowed] // by default this property is null
 		[Export ("recordZonesToSave", ArgumentSemantic.Copy)]
@@ -570,7 +865,6 @@ namespace XamCore.CloudKit {
 		[NullAllowed] // by default this property is null
 		[Export ("modifyRecordZonesCompletionBlock", ArgumentSemantic.Copy)]
 		CKModifyRecordZonesHandler Completed {
-			[NotImplemented ("Only setting the handler is currently supported.")]
 			get;
 			set; 
 		}
@@ -580,12 +874,13 @@ namespace XamCore.CloudKit {
 	delegate void CKModifySubscriptionsHandler (CKSubscription [] savedSubscriptions, string [] deletedSubscriptionIds, NSError operationError);
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[NoWatch]
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKModifySubscriptionsOperation {
 
 		[DesignatedInitializer]
 		[Export ("initWithSubscriptionsToSave:subscriptionIDsToDelete:")]
-		IntPtr Constructor (CKSubscription [] subscriptionsToSave, string [] subscriptionIdsToDelete);
+		IntPtr Constructor ([NullAllowed] CKSubscription [] subscriptionsToSave, [NullAllowed] string [] subscriptionIdsToDelete);
 
 		[NullAllowed] // by default this property is null
 		[Export ("subscriptionsToSave", ArgumentSemantic.Copy)]
@@ -598,66 +893,74 @@ namespace XamCore.CloudKit {
 		[NullAllowed] // by default this property is null
 		[Export ("modifySubscriptionsCompletionBlock", ArgumentSemantic.Copy)]
 		CKModifySubscriptionsHandler Completed {
-			[NotImplemented ("Only setting the handler is currently supported.")]
 			get;
 			set; 
 		}
 	}
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
+	[DisableDefaultCtor] // doc: <quote>You do not create notification IDs directly.</quote>
 	[BaseType (typeof (NSObject))]
 	interface CKNotificationID : NSCopying, NSSecureCoding, NSCoding {
 
 	}
 
+	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: CKNotification is not meant for direct instantiation
 	[BaseType (typeof (NSObject))]
+#if XAMCORE_4_0 || WATCH
+	[Abstract] // as per doc
+#endif
 	interface CKNotification : NSSecureCoding {
 
-		[Export ("notificationType", ArgumentSemantic.UnsafeUnretained)]
+		[Export ("notificationType", ArgumentSemantic.Assign)]
 		CKNotificationType NotificationType { get; }
 
 		[Export ("notificationID", ArgumentSemantic.Copy)]
 		CKNotificationID NotificationId { get; }
 
-		[Export ("containerIdentifier")]
+		[NullAllowed, Export ("containerIdentifier")]
 		string ContainerIdentifier { get; }
 
 		[Export ("isPruned", ArgumentSemantic.UnsafeUnretained)]
 		bool IsPruned { get; }
 
 		[NoTV]
-		[Export ("alertBody")]
+		[NullAllowed, Export ("alertBody")]
 		string AlertBody { get; }
 
 		[NoTV]
-		[Export ("alertLocalizationKey")]
+		[NullAllowed, Export ("alertLocalizationKey")]
 		string AlertLocalizationKey { get; }
 
 		[NoTV]
-		[Export ("alertLocalizationArgs", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("alertLocalizationArgs", ArgumentSemantic.Copy)]
 		string [] AlertLocalizationArgs { get; }
 
 		[NoTV]
-		[Export ("alertActionLocalizationKey")]
+		[NullAllowed, Export ("alertActionLocalizationKey")]
 		string AlertActionLocalizationKey { get; }
 
 		[NoTV]
-		[Export ("alertLaunchImage")]
+		[NullAllowed, Export ("alertLaunchImage")]
 		string AlertLaunchImage { get; }
 
-		[NoTV]
-		[Export ("badge", ArgumentSemantic.Copy)]
+		[TV (10, 0)]
+		[NullAllowed, Export ("badge", ArgumentSemantic.Copy)]
 		NSNumber Badge { get; }
 
 		[NoTV]
-		[Export ("soundName")]
+		[NullAllowed, Export ("soundName")]
 		string SoundName { get; }
 
 		[Static]
 		[Export ("notificationFromRemoteNotificationDictionary:")]
+#if XAMCORE_4_0
+		CKNotification FromRemoteNotificationDictionary (NSDictionary<NSString, NSObject> notificationDictionary);
+#else
 		CKNotification FromRemoteNotificationDictionary (NSDictionary notificationDictionary);
+#endif
 
 		[iOS (9,0)][Mac (10,11)]
 		[NullAllowed, Export ("subscriptionID")]
@@ -669,24 +972,35 @@ namespace XamCore.CloudKit {
 		string Category { get; }
 	}
 
+	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: CKQueryNotification is not meant for direct instantiation
 	[BaseType (typeof (CKNotification))]
 	interface CKQueryNotification : NSCoding, NSSecureCoding {
 
-		[Export ("queryNotificationReason", ArgumentSemantic.UnsafeUnretained)]
+		[Export ("queryNotificationReason", ArgumentSemantic.Assign)]
 		CKQueryNotificationReason QueryNotificationReason { get; }
 
-		[Export ("recordFields", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("recordFields", ArgumentSemantic.Copy)]
+#if XAMCORE_4_0
+		NSDictionary<NSString, NSObject> RecordFields { get; }
+#else
 		NSDictionary RecordFields { get; }
+#endif
 
-		[Export ("recordID", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("recordID", ArgumentSemantic.Copy)]
 		CKRecordID RecordId { get; }
 
+		[Availability (Introduced = Platform.iOS_8_0 | Platform.Mac_10_10 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Use DatabaseScope instead")]
 		[Export ("isPublicDatabase", ArgumentSemantic.UnsafeUnretained)]
 		bool IsPublicDatabase { get; }
+		
+		[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[Export ("databaseScope", ArgumentSemantic.Assign)]
+		CKDatabaseScope DatabaseScope { get; }
 	}
 
+	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[DisableDefaultCtor] // objc_exception_throw on CKNotification init
 	[BaseType (typeof (CKNotification))]
@@ -694,11 +1008,28 @@ namespace XamCore.CloudKit {
 
 		[Export ("recordZoneID", ArgumentSemantic.Copy)]
 		CKRecordZoneID RecordZoneId { get; }
+
+		[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[Export ("databaseScope", ArgumentSemantic.Assign)]
+		CKDatabaseScope DatabaseScope { get; }
 	}
 
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+	[DisableDefaultCtor] // objc_exception_throw on CKNotification init
+	[BaseType (typeof(CKNotification))]
+	interface CKDatabaseNotification
+	{
+		[Export ("databaseScope", ArgumentSemantic.Assign)]
+		CKDatabaseScope DatabaseScope { get; }
+	}
+
+	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSOperation))]
 	[DisableDefaultCtor] // Assertion failure in -[CKOperation init], /SourceCache/CloudKit/CloudKit-175.3/Framework/Operations/CKOperation.m:65
+#if XAMCORE_4_0 || WATCH
+	[Abstract] // as per docs
+#endif
 	interface CKOperation {
 
 		// Apple removed, without deprecation, this property in iOS 9.3 SDK
@@ -706,9 +1037,10 @@ namespace XamCore.CloudKit {
 		// [Export ("activityStart")]
 		// ulong ActivityStart ();
 
-		[Export ("container", ArgumentSemantic.Retain)]
+		[NullAllowed, Export ("container", ArgumentSemantic.Retain)]
 		CKContainer Container { get; set; }
 
+		[NoWatch]
 		[Deprecated (PlatformName.iOS, 9,0, message: "Use QualityOfService property")]
 		[Deprecated (PlatformName.MacOSX, 10,11, message: "Use QualityOfService property")]
 		[Export ("usesBackgroundSession", ArgumentSemantic.UnsafeUnretained)]
@@ -727,12 +1059,21 @@ namespace XamCore.CloudKit {
 		[Export ("longLived")]
 		bool LongLived { [Bind ("isLongLived")] get; set; }
 
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[Export ("timeoutIntervalForRequest")]
+		double TimeoutIntervalForRequest { get; set; }
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[Export ("timeoutIntervalForResource")]
+		double TimeoutIntervalForResource { get; set; }
+
 		[iOS (9,3)][Mac (10,11,4)]
 		[TV (9,2)]
 		[Export ("longLivedOperationWasPersistedBlock", ArgumentSemantic.Strong)]
 		Action LongLivedOperationWasPersistedCallback { get; set; }		
 	}
 
+	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: You must call -[CKQuery initWithRecordType:predicate:sortDescriptors:]
 	[BaseType (typeof (NSObject))]
@@ -748,11 +1089,14 @@ namespace XamCore.CloudKit {
 		[Export ("predicate", ArgumentSemantic.Copy)]
 		NSPredicate Predicate { get; }
 
-		[Export ("sortDescriptors", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("sortDescriptors", ArgumentSemantic.Copy)]
 		NSSortDescriptor [] SortDescriptors { get; set; }
 	}
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[iOS (8,0), Watch (3,0), TV (10,0), Mac (10,10, onlyOn64 : true)]
+#if XAMCORE_4_0 || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
+	[DisableDefaultCtor]
+#endif
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKQueryOperation {
 
@@ -786,7 +1130,6 @@ namespace XamCore.CloudKit {
 		[NullAllowed] // by default this property is null
 		[Export ("recordFetchedBlock", ArgumentSemantic.Copy)]
 		Action<CKRecord> RecordFetched {
-			[NotImplemented ("Only setting the handler is currently supported.")]
 			get;
 			set; 
 		}
@@ -794,12 +1137,12 @@ namespace XamCore.CloudKit {
 		[NullAllowed] // by default this property is null
 		[Export ("queryCompletionBlock", ArgumentSemantic.Copy)]
 		Action<CKQueryCursor, NSError> Completed {
-			[NotImplemented ("Only setting the handler is currently supported.")]
 			get;
 			set; 
 		}
 	}
 
+	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -808,6 +1151,7 @@ namespace XamCore.CloudKit {
 
 	}
 
+	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[DisableDefaultCtor] // Crashes [CKRecord init] objc_exception_throw
 	[BaseType (typeof (NSObject))]
@@ -815,6 +1159,18 @@ namespace XamCore.CloudKit {
 
 		[Field ("CKRecordTypeUserRecord")]
 		NSString TypeUserRecord { get; }
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[Field ("CKRecordParentKey")]
+		NSString ParentKey { get; }
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[Field ("CKRecordShareKey")]
+		NSString ShareKey { get; }
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[Field ("CKRecordTypeShare")]
+		NSString TypeShare { get; }
 
 		[Export ("initWithRecordType:")]
 		IntPtr Constructor (string recordType);
@@ -836,19 +1192,19 @@ namespace XamCore.CloudKit {
 		CKRecordID RecordId { get; }
 #endif
 
-		[Export ("recordChangeTag")]
+		[NullAllowed, Export ("recordChangeTag")]
 		string RecordChangeTag { get; }
 
-		[Export ("creatorUserRecordID", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("creatorUserRecordID", ArgumentSemantic.Copy)]
 		CKRecordID CreatorUserRecordId { get; }
 
-		[Export ("creationDate", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("creationDate", ArgumentSemantic.Copy)]
 		NSDate CreationDate { get; }
 
-		[Export ("lastModifiedUserRecordID", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("lastModifiedUserRecordID", ArgumentSemantic.Copy)]
 		CKRecordID LastModifiedUserRecordId { get; }
 
-		[Export ("modificationDate", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("modificationDate", ArgumentSemantic.Copy)]
 		NSDate ModificationDate { get; }
 
 		[Export ("objectForKey:")] [Internal]
@@ -875,8 +1231,25 @@ namespace XamCore.CloudKit {
 
 		[Export ("encodeSystemFieldsWithCoder:")]
 		void EncodeSystemFields (NSCoder coder);
+		
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[NullAllowed, Export ("share", ArgumentSemantic.Copy)]
+		CKReference Share { get; }
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[NullAllowed, Export ("parent", ArgumentSemantic.Copy)]
+		CKReference Parent { get; set; }
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[Export ("setParentReferenceFromRecord:")]
+		void SetParent ([NullAllowed] CKRecord parentRecord);
+
+		[iOS (10,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+		[Export ("setParentReferenceFromRecordID:")]
+		void SetParent ([NullAllowed] CKRecordID parentRecordID);
 	}
 
+	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException You must call -[CKRecordID initWithRecordName:] or -[CKRecordID initWithRecordName:zoneID:]
@@ -897,6 +1270,10 @@ namespace XamCore.CloudKit {
 	}
 
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[Watch (3,0)]
+#if XAMCORE_4_0 || WATCH // does not work on watchOS, existiong init* does not allow null to be used to fake it
+	[DisableDefaultCtor]
+#endif
 	[BaseType (typeof (NSObject))]
 	interface CKRecordZone : NSSecureCoding, NSCopying {
 
@@ -920,6 +1297,7 @@ namespace XamCore.CloudKit {
 		CKRecordZone DefaultRecordZone ();
 	}
 
+	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException You must call -[CKRecordZoneID initWithZoneName:ownerName:]
@@ -936,6 +1314,7 @@ namespace XamCore.CloudKit {
 		string OwnerName { get; }
 	}
 
+	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: You must call -[CKReference initWithRecordID:] or -[CKReference initWithRecord:] or -[CKReference initWithAsset:]
 	[BaseType (typeof (NSObject))]
@@ -948,28 +1327,98 @@ namespace XamCore.CloudKit {
 		[Export ("initWithRecord:action:")]
 		IntPtr Constructor (CKRecord record, CKReferenceAction action);
 
-		[Export ("referenceAction", ArgumentSemantic.UnsafeUnretained)]
+		[Export ("referenceAction", ArgumentSemantic.Assign)]
 		CKReferenceAction ReferenceAction { get; }
 
 		[Export ("recordID", ArgumentSemantic.Copy)]
 		CKRecordID RecordId { get; }
 	}
 
+	[NoWatch]
+	[iOS (10,0)][TV (10,0), Mac (10,12, onlyOn64 : true)]
+	[DisableDefaultCtor]
+	[BaseType (typeof(CKSubscription))]
+	interface CKQuerySubscription : NSSecureCoding, NSCopying
+	{
+		[Export ("initWithRecordType:predicate:options:")]
+		IntPtr Constructor (string recordType, NSPredicate predicate, CKQuerySubscriptionOptions querySubscriptionOptions);
+
+		[Export ("initWithRecordType:predicate:subscriptionID:options:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string recordType, NSPredicate predicate, string subscriptionID, CKQuerySubscriptionOptions querySubscriptionOptions);
+
+		[Export ("recordType")]
+		string RecordType { get; }
+
+		[Export ("predicate", ArgumentSemantic.Copy)]
+		NSPredicate Predicate { get; }
+
+		[NullAllowed, Export ("zoneID", ArgumentSemantic.Copy)]
+		CKRecordZoneID ZoneID { get; set; }
+
+		[Export ("querySubscriptionOptions", ArgumentSemantic.Assign)]
+		CKQuerySubscriptionOptions SubscriptionOptions { get; }
+	}
+
+	[NoWatch]
+	[iOS (10,0)][TV (10,0), Mac (10,12, onlyOn64 : true)]
+	[DisableDefaultCtor]
+	[BaseType (typeof(CKSubscription))]
+	interface CKRecordZoneSubscription : NSSecureCoding, NSCopying
+	{
+		[Export ("initWithZoneID:")]
+		IntPtr Constructor (CKRecordZoneID zoneID);
+
+		[Export ("initWithZoneID:subscriptionID:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (CKRecordZoneID zoneID, string subscriptionID);
+
+		[Export ("zoneID", ArgumentSemantic.Copy)]
+		// we need the setter since it was bound in the base type
+		CKRecordZoneID ZoneID { get; [NotImplemented] set; }
+
+		[NullAllowed, Export ("recordType")]
+		string RecordType { get; set; }
+	}
+
+	[NoWatch]
+	[iOS (10,0)][TV (10,0), Mac (10,12, onlyOn64 : true)]
+	[DisableDefaultCtor]
+	[BaseType (typeof(CKSubscription))]
+	interface CKDatabaseSubscription : NSSecureCoding, NSCopying
+	{
+		[Export ("initWithSubscriptionID:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string subscriptionID);
+
+		[NullAllowed, Export ("recordType")]
+		string RecordType { get; set; }
+	}
+
+	[NoWatch]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[DisableDefaultCtor] // objc_exception_throw on [CKSubscription init]
 	[BaseType (typeof (NSObject))]
 	interface CKSubscription : NSSecureCoding, NSCopying {
 
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use CKQuerySubscription")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use CKQuerySubscription")]
 		[Export ("initWithRecordType:predicate:options:")]
 		IntPtr Constructor (string recordType, NSPredicate predicate, CKSubscriptionOptions subscriptionOptions);
 
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use CKQuerySubscription")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use CKQuerySubscription")]
 		[DesignatedInitializer]
 		[Export ("initWithRecordType:predicate:subscriptionID:options:")]
 		IntPtr Constructor (string recordType, NSPredicate predicate, string subscriptionId, CKSubscriptionOptions subscriptionOptions);
 
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use CKRecordZoneSubscription")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use CKRecordZoneSubscription")]
 		[Export ("initWithZoneID:options:")]
 		IntPtr Constructor (CKRecordZoneID zoneId, CKSubscriptionOptions subscriptionOptions);
 
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use CKRecordZoneSubscription")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use CKRecordZoneSubscription")]
 		[DesignatedInitializer]
 		[Export ("initWithZoneID:subscriptionID:options:")]
 		IntPtr Constructor (CKRecordZoneID zoneId, string subscriptionId, CKSubscriptionOptions subscriptionOptions);
@@ -980,23 +1429,33 @@ namespace XamCore.CloudKit {
 		[Export ("subscriptionType", ArgumentSemantic.UnsafeUnretained)]
 		CKSubscriptionType SubscriptionType { get; }
 
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use CKQuerySubscription")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use CKQuerySubscription")]
 		[Export ("recordType")]
 		string RecordType { get; }
 
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use CKQuerySubscription")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use CKQuerySubscription")]
 		[Export ("predicate", ArgumentSemantic.Copy)]
 		NSPredicate Predicate { get; }
 
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use CKQuerySubscriptionOptions")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use CKQuerySubscriptionOptions")]
 		[Export ("subscriptionOptions", ArgumentSemantic.UnsafeUnretained)]
 		CKSubscriptionOptions SubscriptionOptions { get; }
 
+		[TV (10,0)]
 		[Export ("notificationInfo", ArgumentSemantic.Copy)]
 		CKNotificationInfo NotificationInfo { get; set; }
 
+		[Deprecated (PlatformName.iOS, 10,0, message: "Use CKRecordZoneSubscription")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use CKRecordZoneSubscription")]
 		[Export ("zoneID", ArgumentSemantic.Copy)]
 		CKRecordZoneID ZoneID { get; set; }
 	}
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
+	[NoWatch]
+	[iOS (8,0)][TV (10,0), Mac (10,10, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface CKNotificationInfo : NSSecureCoding, NSCopying, NSCoding {
 
@@ -1034,11 +1493,10 @@ namespace XamCore.CloudKit {
 		[Export ("desiredKeys", ArgumentSemantic.Copy)]
 		string [] DesiredKeys { get; set; }
 
-		[NoTV]
+		[TV (10, 0)]
 		[Export ("shouldBadge", ArgumentSemantic.UnsafeUnretained)]
 		bool ShouldBadge { get; set; }
 
-		[NoTV]
 		[Export ("shouldSendContentAvailable")]
 		bool ShouldSendContentAvailable { get; set; }
 
@@ -1048,6 +1506,7 @@ namespace XamCore.CloudKit {
 		string Category { get; set; }
 	}
 	
+	[Watch (3,0)]
 	[iOS (8,0), Mac (10,10, onlyOn64 : true)]
 	[DisableDefaultCtor] // Name: CKException Reason: You can't call init on CKQueryCursor
 	[BaseType (typeof (NSObject))]
@@ -1055,11 +1514,14 @@ namespace XamCore.CloudKit {
 
 	}
 
-#if !MONOMAC // radar 23904638 - The header does not match symbols in nm, and the header isn't even in CloudKit.h :facepalm:
 	delegate void CKFetchWebAuthTokenOperationHandler (string webAuthToken, NSError operationError);
 
 	[iOS (9,2), Mac (10,11,2, onlyOn64 : true)]
 	[TV (9,1)]
+	[Watch (3,0)]
+#if XAMCORE_4_0 || WATCH // does not work on watchOS - existiong init* does not allow null to be used to fake it
+	[DisableDefaultCtor]
+#endif
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKFetchWebAuthTokenOperation {
 
@@ -1075,5 +1537,128 @@ namespace XamCore.CloudKit {
 		[Export ("fetchWebAuthTokenCompletionBlock", ArgumentSemantic.Copy)]
 		CKFetchWebAuthTokenOperationHandler Completed { get; set; }
 	}
-#endif
+
+	[iOS (10,0), TV (10,0), Watch (3,0), Mac (10,12, onlyOn64 : true)]
+	[BaseType (typeof(CKOperation))]
+	interface CKDiscoverUserIdentitiesOperation
+	{
+		[Export ("initWithUserIdentityLookupInfos:")]
+		IntPtr Constructor (CKUserIdentityLookupInfo[] userIdentityLookupInfos);
+
+		[Export ("userIdentityLookupInfos", ArgumentSemantic.Copy)]
+		CKUserIdentityLookupInfo[] UserIdentityLookupInfos { get; set; }
+
+		[NullAllowed, Export ("userIdentityDiscoveredBlock", ArgumentSemantic.Copy)]
+		Action<CKUserIdentity, CKUserIdentityLookupInfo> Discovered { get; set; }
+
+		[NullAllowed, Export ("discoverUserIdentitiesCompletionBlock", ArgumentSemantic.Copy)]
+		Action<NSError> Completed { get; set; }
+	}
+
+	[NoTV, iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+	[BaseType (typeof(CKOperation))]
+	interface CKDiscoverAllUserIdentitiesOperation
+	{
+		[NullAllowed, Export ("userIdentityDiscoveredBlock", ArgumentSemantic.Copy)]
+		Action<CKUserIdentity> Discovered { get; set; }
+
+		[NullAllowed, Export ("discoverAllUserIdentitiesCompletionBlock", ArgumentSemantic.Copy)]
+		Action<NSError> Completed { get; set; }
+	}
+
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+	[BaseType (typeof(CKOperation))]
+	interface CKFetchShareParticipantsOperation
+	{
+		[Export ("initWithUserIdentityLookupInfos:")]
+		IntPtr Constructor (CKUserIdentityLookupInfo[] userIdentityLookupInfos);
+
+		[Export ("userIdentityLookupInfos", ArgumentSemantic.Copy)]
+		CKUserIdentityLookupInfo[] UserIdentityLookupInfos { get; set; }
+
+		[NullAllowed, Export ("shareParticipantFetchedBlock", ArgumentSemantic.Copy)]
+		Action<CKShareParticipant> Fetched { get; set; }
+
+		[NullAllowed, Export ("fetchShareParticipantsCompletionBlock", ArgumentSemantic.Copy)]
+		Action<NSError> Completed { get; set; }
+	}
+
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+	delegate void CKAcceptPerShareCompletionHandler (CKShareMetadata shareMetadata, CKShare acceptedShare, NSError error);
+
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+	[BaseType (typeof(CKOperation))]
+	interface CKAcceptSharesOperation
+	{
+		[Export ("initWithShareMetadatas:")]
+		IntPtr Constructor (CKShareMetadata[] shareMetadatas);
+
+		[Export ("shareMetadatas", ArgumentSemantic.Copy)]
+		CKShareMetadata[] ShareMetadatas { get; set; }
+
+		[NullAllowed, Export ("perShareCompletionBlock", ArgumentSemantic.Copy)]
+		CKAcceptPerShareCompletionHandler PerShareCompleted { get; set; }
+
+		[NullAllowed, Export ("acceptSharesCompletionBlock", ArgumentSemantic.Copy)]
+		Action<NSError> AcceptSharesCompleted { get; set; }
+	}
+
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+	delegate void CKFetchPerShareMetadataHandler (NSUrl shareURL, CKShareMetadata shareMetadata, NSError error);
+
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+	[BaseType (typeof(CKOperation))]
+	interface CKFetchShareMetadataOperation
+	{
+		[Export ("initWithShareURLs:")]
+		IntPtr Constructor (NSUrl[] shareUrls);
+
+		[Export ("shareURLs", ArgumentSemantic.Copy)]
+		NSUrl[] ShareUrls { get; set; }
+
+		[Export ("shouldFetchRootRecord")]
+		bool ShouldFetchRootRecord { get; set; }
+
+		[NullAllowed, Export ("rootRecordDesiredKeys", ArgumentSemantic.Copy)]
+		string[] RootRecordDesiredKeys { get; set; }
+
+		[NullAllowed, Export ("perShareMetadataBlock", ArgumentSemantic.Copy)]
+		CKFetchPerShareMetadataHandler PerShareMetadata { get; set; }
+
+		[NullAllowed, Export ("fetchShareMetadataCompletionBlock", ArgumentSemantic.Copy)]
+		Action<NSError> FetchShareMetadataCompleted { get; set; }
+	}
+
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+	delegate void CKFetchDatabaseChangesCompletionHandler (CKServerChangeToken serverChangeToken, bool moreComing, NSError operationError);
+
+	[iOS (10,0), Watch (3,0), TV (10,0), Mac (10,12, onlyOn64 : true)]
+	[BaseType (typeof(CKDatabaseOperation))]
+	interface CKFetchDatabaseChangesOperation
+	{
+		[Export ("initWithPreviousServerChangeToken:")]
+		IntPtr Constructor ([NullAllowed] CKServerChangeToken previousServerChangeToken);
+
+		[NullAllowed, Export ("previousServerChangeToken", ArgumentSemantic.Copy)]
+		CKServerChangeToken PreviousServerChangeToken { get; set; }
+
+		// @property (assign, nonatomic) NSUInteger resultsLimit;
+		[Export ("resultsLimit")]
+		nuint ResultsLimit { get; set; }
+
+		[Export ("fetchAllChanges")]
+		bool FetchAllChanges { get; set; }
+
+		[NullAllowed, Export ("recordZoneWithIDChangedBlock", ArgumentSemantic.Copy)]
+		Action<CKRecordZoneID> Changed { get; set; }
+
+		[NullAllowed, Export ("recordZoneWithIDWasDeletedBlock", ArgumentSemantic.Copy)]
+		Action<CKRecordZoneID> WasDeleted { get; set; }
+
+		[NullAllowed, Export ("changeTokenUpdatedBlock", ArgumentSemantic.Copy)]
+		Action<CKServerChangeToken> ChangeTokenUpdated { get; set; }
+
+		[NullAllowed, Export ("fetchDatabaseChangesCompletionBlock", ArgumentSemantic.Copy)]
+		CKFetchDatabaseChangesCompletionHandler ChangesCompleted { get; set; }
+	}
 }

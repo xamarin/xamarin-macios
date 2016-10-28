@@ -47,10 +47,12 @@ using Bindings.Test;
 using RectangleF=CoreGraphics.CGRect;
 using SizeF=CoreGraphics.CGSize;
 using PointF=CoreGraphics.CGPoint;
+using CategoryAttribute=ObjCRuntime.CategoryAttribute;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
+using CategoryAttribute=MonoTouch.ObjCRuntime.CategoryAttribute;
 #endif
 
 using XamarinTests.ObjCRuntime;
@@ -223,9 +225,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void TestInheritedStaticMethods ()
 		{
-			if ((CurrentRegistrar & Registrars.AllNew) == 0)
-				Assert.Ignore ("This test only passes with the new registrars.");
-
 			// bug #6170
 			int rv;
 
@@ -418,9 +417,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void TestNonVirtualProperty ()
 		{
-			if (CurrentRegistrar == Registrars.OldDynamic)
-				Assert.Ignore ("This test does not pass with the legacy dynamic registrar.");
-
 			using (var obj = new DerivedRegistrar1 ()) {
 				Assert.IsTrue (Messaging.bool_objc_msgSend (obj.Handle, Selector.GetHandle ("b1")));
 			}
@@ -429,10 +425,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void TestGeneric ()
 		{
-			if ((CurrentRegistrar & Registrars.AllNew) == 0)
-				Assert.Ignore ("Generic NSObjects are only supported with the new registrars.");
-
-#if !OLDSTATICREGISTRAR
 			var g1 = new GenericTestClass<string> ();
 			var g2 = new GenericTestClass<object> ();
 			var g3 = new DerivedGenericTestClass<string> ();
@@ -469,31 +461,21 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Messaging.void_objc_msgSend (handle, Selector.GetHandle ("release"));
 
 			Assert.DoesNotThrow (() => new Closed (), "Created managed closed instance");
-#endif
 		}
 
 		[Test]
 		public void TestNestedGenericType ()
 		{
-			if ((CurrentRegistrar & Registrars.AllNew) == 0)
-				Assert.Ignore ("Generic NSObjects are only supported with the new registrars.");
-
-#if !OLDSTATICREGISTRAR
 			var foo = new NestedParent<NSObject>.Nested ();
 			var obj = new NSObject ();
 			Messaging.void_objc_msgSend_IntPtr (foo.Handle, Selector.GetHandle ("foo:"), obj.Handle);
 			obj.Dispose ();
 			foo.Dispose ();
-#endif
 		}
 
 		[Test]
 		public void TestInstanceMethodOnOpenGenericType ()
 		{
-			if ((CurrentRegistrar & Registrars.AllNew) == 0)
-				Assert.Ignore ("Generic NSObjects are only supported with the new registrars.");
-
-#if !OLDSTATICREGISTRAR
 			{
 				var foo = new Open<NSSet, string> ();
 
@@ -593,14 +575,12 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				view.Dispose ();
 				foo.Dispose ();
 			}
-#endif
 		}
 
 #if !__WATCHOS__
 		[Test]
 		public void TestGenericUIView ()
 		{
-#if !OLDSTATICREGISTRAR
 			using (var iview = new NullableIntView (new RectangleF (0, 0, 100, 100))) {
 				using (var strview = new StringView (new RectangleF (0, 0, 100, 100))) {
 					Messaging.void_objc_msgSend_RectangleF (iview.Handle, Selector.GetHandle ("drawRect:"), RectangleF.Empty);
@@ -611,7 +591,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					Assert.AreEqual ("StringView", strview.TypeName, "string typename");
 				}
 			}
-#endif
 		}
 #endif // !__WATCHOS__
 
@@ -667,6 +646,34 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				void_objc_msgSend_CGPoint_ref_CGPoint (obj.Handle, Selector.GetHandle ("testCGPoint:out:"), pnt1, ref pnt2);
 				Assert.AreEqual (123, pnt2.X, "X");
 				Assert.AreEqual (456, pnt2.Y, "Y");
+			}
+		}
+
+		[Test]
+		public void ExportedGenericsTest ()
+		{
+			using (var obj = new RegistrarTestClass ()) {
+				var rv = Runtime.GetNSObject<NSArray<NSString>> (Messaging.IntPtr_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("fetchNSArrayOfNSString:"), IntPtr.Zero));
+				Assert.IsNotNull (rv, "method");
+
+				using (var number_array = NSArray<NSNumber>.FromNSObjects ((NSNumber) 314)) {
+					rv = Runtime.GetNSObject<NSArray<NSString>> (Messaging.IntPtr_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("fetchNSArrayOfNSString:"), number_array.Handle));
+					Assert.IsNotNull (rv, "method param");
+				}
+
+				rv = Runtime.GetNSObject<NSArray<NSString>> (Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("nSArrayOfNSString")));
+				Assert.IsNotNull (rv, "property");
+
+				Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("setNSArrayOfNSString:"), IntPtr.Zero);
+				Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("setNSArrayOfNSString:"), rv.Handle);
+
+				var rv2 = Runtime.GetNSObject<NSArray<NSArray<NSString>>> (Messaging.IntPtr_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("fetchComplexGenericType:"), IntPtr.Zero));
+				Assert.IsNotNull (rv2, "complex");
+
+				using (var complex = new NSArray<NSDictionary<NSString, NSArray<NSNumber>>> ()) {
+					Runtime.GetNSObject<NSArray<NSArray<NSString>>> (Messaging.IntPtr_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("fetchComplexGenericType:"), complex.Handle));
+					Assert.IsNotNull (rv2, "complex param");
+				}
 			}
 		}
 
@@ -965,12 +972,31 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				pnt2.X = pnt.X;
 				pnt2.Y = pnt.Y;
 			}
-#if !OLDSTATICREGISTRAR
 #if !__WATCHOS__
 			[Export ("arrayOfINativeObject")]
 			public IUIKeyInput[] NativeObjects { get { return null; } }
 #endif // !__WATCHOS__
-#endif
+
+			[Export ("fetchNSArrayOfNSString:")]
+			NSArray<NSString> FetchNSArrayOfNSString (NSArray<NSNumber> p0)
+			{
+				return NSArray<NSString>.FromNSObjects ((NSString) "abc");
+			}
+
+			[Export ("fetchComplexGenericType:")]
+			NSArray<NSArray<NSString>> FetchComplexGenericType (NSArray<NSDictionary<NSString, NSArray<NSNumber>>> p0)
+			{
+				return new NSArray<NSArray<NSString>> ();
+			}
+
+			[Export ("nSArrayOfNSString")]
+			NSArray<NSString> NSArrayOfNSString {
+				get {
+					return new NSArray<NSString> ();
+				}
+				set {
+				}
+			}
 		}
 
 #if !__TVOS__ && !__WATCHOS__
@@ -1072,7 +1098,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-#if !OLDSTATICREGISTRAR
 		[Register ("Open_1")]
 		class Open<T> : NSObject {}
 		class Closed : Open<NSSet>
@@ -1181,22 +1206,16 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				return base.GetTypeFullName ();
 			}
 		}
-#endif // !OLDSTATICREGISTRAR
 
 		[Test]
 		public void TestRegisteredName ()
 		{
-			if ((CurrentRegistrar & Registrars.AllNew) == 0)
-				Assert.Ignore ("This test only works with the new registrars (because of the generic types used here)");
-
-#if !OLDSTATICREGISTRAR
 			Assert.AreEqual ("MonoTouchFixtures_ObjCRuntime_RegistrarTest_ConstrainedGenericType_1", new Class (typeof(ConstrainedGenericType<>)).Name);
 			Assert.AreEqual ("MonoTouchFixtures_ObjCRuntime_RegistrarTest_ConstrainedGenericType_1", new Class (typeof(ConstrainedGenericType<NSSet>)).Name);
 			Assert.AreEqual ("MonoTouchFixtures_ObjCRuntime_RegistrarTest_NestedParent_1_Nested", new Class (typeof(NestedParent<NSObject>.Nested)).Name);
 			Assert.AreEqual ("UnderlyingEnumValues", new Class (typeof(UnderlyingEnumValues)).Name);
 			Assert.AreEqual ("MonoTouchFixtures_ObjCRuntime_RegistrarTest_Nested1_Dummy", new Class (typeof(Nested1.Dummy)).Name);
 			Assert.AreEqual ("MonoTouchFixtures_ObjCRuntime_RegistrarTest_C", new Class (typeof (C)).Name);
-#endif
 		}
 
 		void ThrowsICEIfDebug (TestDelegate code, string message, bool execute_release_mode = true)
@@ -1215,7 +1234,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			IntPtr value;
 
-#if !OLDSTATICREGISTRAR
 			using (var obj = new ConstrainedGenericType<NSSet> ()) {
 				using (var view = new NSSet ()) {
 					using (var nsobj = new NSObject ()) {
@@ -1288,7 +1306,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					}
 				}
 			}
-#endif // !OLDSTATICREGISTRAR
 		}
 
 #if !__WATCHOS__
@@ -1333,8 +1350,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			var cl = new Class (typeof (TestTypeEncodingsClass));
 			var sig = Runtime.GetNSObject<NSMethodSignature> (Messaging.IntPtr_objc_msgSend_IntPtr (cl.Handle, Selector.GetHandle ("methodSignatureForSelector:"), Selector.GetHandle ("foo::::::::::::::::")));
-			var boolEncoding = IntPtr.Size == 8 ? "B" : "c";
-			var exp = new string [] { "@", ":", "^v", "C", "c", "c", "s", "S", "i", "I", "q", "Q", "f", "d", boolEncoding, "@", ":", "#" };
+			var boolEncoding = (IntPtr.Size == 8 || TrampolineTest.IsArmv7k) ? "B" : "c";
+			var exp = new string [] { "@", ":", "^v", "C", "c", "s", "s", "S", "i", "I", "q", "Q", "f", "d", boolEncoding, "@", ":", "#" };
 
 			Assert.AreEqual (exp.Length, sig.NumberOfArguments, "NumberOfArguments");
 //			for (uint i = 0; i < exp.Length; i++) {
@@ -1404,7 +1421,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #endif // !__WATCHOS__
 #endif // !__TVOS__
 
-#if !OLDSTATICREGISTRAR
 		class ConstrainedGenericType<T> : NSObject where T: NSObject
 		{
 			[Export ("m1:")]
@@ -1557,8 +1573,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public class ConformsToProtocolTestClass<T> : NSObject where T: NSObject {
 		}
 
-#endif // !OLDSTATICREGISTRAR
-
 		[Register ("UnderlyingEnumValues")]
 		class UnderlyingEnumValues : NSObject 
 		{
@@ -1673,149 +1687,12 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void Test_D ()
 		{
 			using (var tc = new ObjCRegistrarTest ()) {
-				Verify (tc, Pd1: 0);
+				Assert.AreEqual (tc.Pd1, 0, "Pd1");
 				Assert.AreEqual (0, tc.D (), "1");
 				tc.Pd1 = 1.2;
 				Assert.AreEqual (1.2, tc.D (), "2");
-				Verify (tc, Pd1: 1.2);
+				Assert.AreEqual (tc.Pd1, 1.2, "Pd1");
 			}
-		}
-
-		[Test]
-		public void Test_Sd ()
-		{
-			using (var tc = new ObjCRegistrarTest ()) {
-				Assert.AreEqual (0, tc.Sd ().d1, "1");
-				Verify (tc, PSd1: new Sd () ); 
-				tc.PSd = new Sd () { d1 = 1.23 };
-				Assert.AreEqual (1.23, tc.Sd ().d1, "2");
-				Verify (tc, PSd1: new Sd () { d1 = 1.23 }); 
-			}
-		}
-
-		void Verify (ObjCRegistrarTest obj, string msg = null,
-			int? Pi1 = null,
-			int? Pi2 = null,
-			int? Pi3 = null,
-			int? Pi4 = null,
-			int? Pi5 = null,
-			int? Pi6 = null,
-			int? Pi7 = null,
-			int? Pi8 = null,
-			int? Pi9 = null,
-			float? Pf1 = null,
-			float? Pf2 = null,
-			float? Pf3 = null,
-			float? Pf4 = null,
-			float? Pf5 = null,
-			float? Pf6 = null,
-			float? Pf7 = null,
-			float? Pf8 = null,
-			float? Pf9 = null,
-			double? Pd1 = null,
-			double? Pd2 = null,
-			double? Pd3 = null,
-			double? Pd4 = null,
-			double? Pd5 = null,
-			double? Pd6 = null,
-			double? Pd7 = null,
-			double? Pd8 = null,
-			double? Pd9 = null,
-			char? Pc1 = null,
-			char? Pc2 = null,
-			char? Pc3 = null,
-			char? Pc4 = null,
-			char? Pc5 = null,
-			char? Pc6 = null,
-			char? Pc7 = null,
-			char? Pc8 = null,
-			char? Pc9 = null,
-
-			Siid? PSiid1 = null,
-			Sd? PSd1 = null,
-			Sf? PSf1 = null)
-		{
-			if (Pi1.HasValue)
-				Assert.AreEqual (obj.Pi1, Pi1.Value, "Pi1");
-			if (Pi2.HasValue)
-				Assert.AreEqual (obj.Pi2, Pi2.Value, "Pi2");
-			if (Pi3.HasValue)
-				Assert.AreEqual (obj.Pi3, Pi3.Value, "Pi3");
-			if (Pi4.HasValue)
-				Assert.AreEqual (obj.Pi4, Pi4.Value, "Pi4");
-			if (Pi5.HasValue)
-				Assert.AreEqual (obj.Pi5, Pi5.Value, "Pi5");
-			if (Pi6.HasValue)
-				Assert.AreEqual (obj.Pi6, Pi6.Value, "Pi6");
-			if (Pi7.HasValue)
-				Assert.AreEqual (obj.Pi7, Pi7.Value, "Pi7");
-			if (Pi8.HasValue)
-				Assert.AreEqual (obj.Pi8, Pi8.Value, "Pi8");
-			if (Pi9.HasValue)
-				Assert.AreEqual (obj.Pi9, Pi9.Value, "Pi9");
-			if (Pf1.HasValue)
-				Assert.AreEqual (obj.Pf1, Pf1.Value, "Pf1");
-			if (Pf2.HasValue)
-				Assert.AreEqual (obj.Pf2, Pf2.Value, "Pf2");
-			if (Pf3.HasValue)
-				Assert.AreEqual (obj.Pf3, Pf3.Value, "Pf3");
-			if (Pf4.HasValue)
-				Assert.AreEqual (obj.Pf4, Pf4.Value, "Pf4");
-			if (Pf5.HasValue)
-				Assert.AreEqual (obj.Pf5, Pf5.Value, "Pf5");
-			if (Pf6.HasValue)
-				Assert.AreEqual (obj.Pf6, Pf6.Value, "Pf6");
-			if (Pf7.HasValue)
-				Assert.AreEqual (obj.Pf7, Pf7.Value, "Pf7");
-			if (Pf8.HasValue)
-				Assert.AreEqual (obj.Pf8, Pf8.Value, "Pf8");
-			if (Pf9.HasValue)
-				Assert.AreEqual (obj.Pf9, Pf9.Value, "Pf9");
-			if (Pd1.HasValue)
-				Assert.AreEqual (obj.Pd1, Pd1.Value, "Pd1");
-			if (Pd2.HasValue)
-				Assert.AreEqual (obj.Pd2, Pd2.Value, "Pd2");
-			if (Pd3.HasValue)
-				Assert.AreEqual (obj.Pd3, Pd3.Value, "Pd3");
-			if (Pd4.HasValue)
-				Assert.AreEqual (obj.Pd4, Pd4.Value, "Pd4");
-			if (Pd5.HasValue)
-				Assert.AreEqual (obj.Pd5, Pd5.Value, "Pd5");
-			if (Pd6.HasValue)
-				Assert.AreEqual (obj.Pd6, Pd6.Value, "Pd6");
-			if (Pd7.HasValue)
-				Assert.AreEqual (obj.Pd7, Pd7.Value, "Pd7");
-			if (Pd8.HasValue)
-				Assert.AreEqual (obj.Pd8, Pd8.Value, "Pd8");
-			if (Pd9.HasValue)
-				Assert.AreEqual (obj.Pd9, Pd9.Value, "Pd9");
-			if (Pc1.HasValue)
-				Assert.AreEqual (obj.Pc1, Pc1.Value, "Pc1");
-			if (Pc2.HasValue)
-				Assert.AreEqual (obj.Pc2, Pc2.Value, "Pc2");
-			if (Pc3.HasValue)
-				Assert.AreEqual (obj.Pc3, Pc3.Value, "Pc3");
-			if (Pc4.HasValue)
-				Assert.AreEqual (obj.Pc4, Pc4.Value, "Pc4");
-			if (Pc5.HasValue)
-				Assert.AreEqual (obj.Pc5, Pc5.Value, "Pc5");
-//			if (Pc6.HasValue)
-//				Assert.AreEqual (obj.Pc6, Pc6.Value, "Pc6");
-//			if (Pc7.HasValue)
-//				Assert.AreEqual (obj.Pc7, Pc7.Value, "Pc7");
-//			if (Pc8.HasValue)
-//				Assert.AreEqual (obj.Pc8, Pc8.Value, "Pc8");
-//			if (Pc9.HasValue)
-//				Assert.AreEqual (obj.Pc9, Pc9.Value, "Pc9");
-
-			if (PSiid1.HasValue)
-				Assert.AreEqual (obj.PSiid, PSiid1.Value, "PSiid1");
-
-			if (PSd1.HasValue)
-				Assert.AreEqual (obj.PSd, PSd1.Value, "PSd1");
-
-			if (PSf1.HasValue)
-				Assert.AreEqual (obj.PSf, PSf1.Value, "PSf1");
 		}
 
 		public class TestClass : ObjCRegistrarTest
@@ -2238,8 +2115,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void GenericAPI ()
 		{
-			if (!TestRuntime.CheckiOSSystemVersion (9, 0))
-				Assert.Inconclusive ("Contacts is iOS9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 
 			using (var contact = new CNMutableContact ()) {
 				var dt = new NSDateComponents () {
@@ -2452,6 +2328,17 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
+#if !XAMCORE_2_0
+		class Bug42454 : NSUrlProtocol
+		{
+			[Export ("initWithRequest:cachedResponse:client:")]
+			public Bug42454 (NSUrlRequest request, NSCachedUrlResponse response, NSUrlProtocolClient client)
+			{
+				throw new NotImplementedException ();
+			}
+		}
+#endif
+
 #if debug_code
 		static void DumpClass (Type type)
 		{
@@ -2489,5 +2376,109 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		static extern IntPtr method_getName (IntPtr method);
 #endif
+
+		[Test]
+		public void TestConstrainedGenericType2 ()
+		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+			using (var m = new NSMeasurement<NSUnitTemperature> (2, NSUnitTemperature.Fahrenheit)) {
+			}
+		}
+	}
+
+#if !__WATCHOS__
+	[Category (typeof (CALayer))]
+	static class CALayerColorsHelpers
+	{
+		[Export ("setBorderUIColor:")]
+		static void BorderUIColor (this CALayer self, UIColor borderColor)
+		{
+			self.BorderColor = borderColor.CGColor;
+		}
+	}
+#endif // !__WATCHOS__
+
+
+	[TestFixture]
+	[Preserve (AllMembers = true)]
+	public class BlockSignatureTest
+	{
+		[StructLayout (LayoutKind.Sequential)]
+		struct BlockDescriptor2
+		{
+			public IntPtr reserved;
+			public IntPtr size;
+			public IntPtr copy_helper;
+			public IntPtr dispose;
+			public IntPtr signature;
+		}
+
+		[StructLayout (LayoutKind.Sequential)]
+		struct BlockLiteral2
+		{
+			public IntPtr isa;
+			public /*BlockFlags*/ int flags;
+			public int reserved;
+			public IntPtr invoke;
+			public IntPtr block_descriptor;
+			public IntPtr local_handle;
+			public IntPtr global_handle;
+		}
+
+		[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]
+		internal delegate void DActionArity1V1 (IntPtr block, IntPtr obj);
+		static internal class SDActionArity1V1
+		{
+			static internal readonly DActionArity1V1 Handler = Invoke;
+
+			[MonoPInvokeCallback (typeof (DActionArity1V1))]
+			public static unsafe void Invoke (IntPtr block, IntPtr obj)
+			{
+				throw new NotImplementedException ();
+			}
+		}
+
+		[UnmanagedFunctionPointerAttribute (CallingConvention.Cdecl)]
+		[UserDelegateType (typeof (Action<NSObject>))]
+		internal delegate void DActionArity1V2 (IntPtr block, IntPtr obj);
+		static internal class SDActionArity1V2
+		{
+			static internal readonly DActionArity1V2 Handler = Invoke;
+
+			[MonoPInvokeCallback (typeof (DActionArity1V2))]
+			public static unsafe void Invoke (IntPtr block, IntPtr obj)
+			{
+				throw new NotImplementedException ();
+			}
+		}
+
+		unsafe string GetBlockSignature (BlockLiteral block)
+		{
+			BlockLiteral2* blockptr = (BlockLiteral2*) &block;
+			BlockDescriptor2* descptr = (BlockDescriptor2*) blockptr->block_descriptor;
+			return Marshal.PtrToStringAuto (descptr->signature);
+		}
+	
+		[Test]
+		public void WithoutUserDelegateTypeAttribute ()
+		{
+			var block = new BlockLiteral ();
+			var tramp = new DActionArity1V1 (SDActionArity1V1.Invoke);
+			Action<NSObject> del = (v) => { };
+			block.SetupBlock (tramp, del);
+			Assert.AreEqual ("v@:^v^v", GetBlockSignature (block), "a");
+			block.CleanupBlock ();
+		}
+
+		[Test]
+		public void WithUserDelegateTypeAttribute ()
+		{
+			var block = new BlockLiteral ();
+			var tramp = new DActionArity1V2 (SDActionArity1V2.Invoke);
+			Action<NSObject> del = (v) => { };
+			block.SetupBlock (tramp, del);
+			Assert.AreEqual ("v@?@", GetBlockSignature (block), "a");
+			block.CleanupBlock ();
+		}
 	}
 }

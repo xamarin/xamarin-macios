@@ -9,11 +9,12 @@ using MonoTouch.Foundation;
 #endif
 using NUnit.Framework;
 
+[assembly: Preserve (typeof (NSExpression), AllMembers = true)]
+
 namespace MonoTouchFixtures.Foundation
 {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	[assembly: Preserve (typeof (NSExpression))]
 	public class NSExpressionTest
 	{
 		List<string> properties = new List<string> { "Block", "ConstantValue", "KeyPath",  "Function", 
@@ -220,6 +221,8 @@ namespace MonoTouchFixtures.Foundation
 		[Test]
 		public void AnyKeyPropertiesTest ()
 		{
+			TestRuntime.AssertXcodeVersion (5, 0);
+
 			var availableProperties = new List<string> { };
 			using (var expression = NSExpression.FromAnyKey ()) {
 				Assert.AreEqual (NSExpressionType.AnyKey, expression.ExpressionType);

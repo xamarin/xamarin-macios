@@ -49,6 +49,12 @@
 !missing-selector! NSURLSession::getTasksWithCompletionHandler: not bound
 
 
+# Photos
+
+## xcode 8 beta 1-6 defines it but it does not exists in the binaries - rdar #28169810 https://trello.com/c/RwXK6YRX
+!missing-field! PHLivePhotoShouldRenderAtPlaybackTime not bound
+
+
 # SpriteKit
 
 ## https://bugzilla.xamarin.com/show_bug.cgi?id=34946
@@ -257,6 +263,43 @@
 !missing-enum! CBLAS_UPLO not bound
 !missing-protocol! OS_la_object not bound
 
+# SceneKit
+## untyped enum (SceneKitTypes.h) but described as the value of `code` for `NSError` which is an NSInteger
+!unknown-native-enum! SCNErrorCode bound
+
+## Breaking changes fixed in XAMCORE_4_0
+## we cannot add abstract members to existing SCNSceneRenderer or SCNAnimatable protocols (breaking changes)
+!incorrect-protocol-member! SCNSceneRenderer::audioEngine is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::audioEnvironmentNode is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::audioListener is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::colorPixelFormat is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::commandQueue is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::currentRenderCommandEncoder is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::debugOptions is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::depthPixelFormat is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::device is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::renderingAPI is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNSceneRenderer::stencilPixelFormat is REQUIRED and should be abstract
+!incorrect-protocol-member! SCNAnimatable::setSpeed:forAnimationKey: is REQUIRED and should be abstract
+
+## same for SCNActionable, it is required member of a protocol added to XAMCORE_4_0
+!incorrect-protocol-member! SCNActionable::actionKeys is REQUIRED and should be abstract
+
+## We have managed counterparts that comes from OpenTK code
+!missing-field! SCNVector3Zero not bound
+!missing-field! SCNVector4Zero not bound
+!missing-field! SCNMatrix4Identity not bound
+!missing-pinvoke! SCNMatrix4EqualToMatrix4 is not bound
+!missing-pinvoke! SCNMatrix4FromGLKMatrix4 is not bound
+!missing-pinvoke! SCNMatrix4Invert is not bound
+!missing-pinvoke! SCNMatrix4IsIdentity is not bound
+!missing-pinvoke! SCNMatrix4MakeRotation is not bound
+!missing-pinvoke! SCNMatrix4Mult is not bound
+!missing-pinvoke! SCNMatrix4Rotate is not bound
+!missing-pinvoke! SCNMatrix4Scale is not bound
+!missing-pinvoke! SCNMatrix4ToGLKMatrix4 is not bound
+!missing-pinvoke! SCNVector3EqualToVector3 is not bound
+!missing-pinvoke! SCNVector4EqualToVector4 is not bound
 
 # Security
 
@@ -467,3 +510,16 @@
 !unknown-pinvoke! sel_isMapped bound
 !unknown-pinvoke! sel_registerName bound
 !unknown-pinvoke! uname bound
+
+# Intents
+
+## NS_DEPRECATED(10_12, 10_12, 10_0, 10_0) / Designated init instead
+!missing-selector! INPerson::handle not bound
+!missing-selector! INPerson::initWithHandle:displayName:contactIdentifier: not bound
+!missing-selector! INPerson::initWithHandle:nameComponents:contactIdentifier: not bound
+!missing-selector! INPerson::initWithHandle:nameComponents:displayName:image:contactIdentifier: not bound
+
+# GameplayKit
+
+## Fixed in XAMCORE_4_0
+!incorrect-protocol-member! GKGameModelPlayer::playerId is REQUIRED and should be abstract

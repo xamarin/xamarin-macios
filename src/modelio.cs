@@ -67,6 +67,12 @@ namespace XamCore.ModelIO {
 		[Export ("initWithURL:vertexDescriptor:bufferAllocator:")]
 		IntPtr Constructor (NSUrl url, [NullAllowed] MDLVertexDescriptor vertexDescriptor, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 
+		[iOS (10,0)]
+		[TV (10,0)]
+		[NoMac]
+		[Export ("initWithBufferAllocator:")]
+		IntPtr Constructor ([NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
+
 		[Export ("initWithURL:vertexDescriptor:bufferAllocator:preserveTopology:error:")]
 		IntPtr Constructor (NSUrl url, [NullAllowed] MDLVertexDescriptor vertexDescriptor, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator, bool preserveTopology, out NSError error);
 
@@ -81,6 +87,12 @@ namespace XamCore.ModelIO {
 		[Static]
 		[Export ("canExportFileExtension:")]
 		bool CanExportFileExtension (string extension);
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("childObjectsOfClass:")]
+		MDLObject[] GetChildObjects (Class objectClass);
 
 		[Export ("boundingBoxAtTime:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -123,10 +135,40 @@ namespace XamCore.ModelIO {
 		[Export ("objectAtIndex:")]
 		MDLObject GetObject (nuint index);
 
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("masters", ArgumentSemantic.Retain)]
+		IMDLObjectContainerComponent Masters { get; set; }
+
 		[iOS (9,0), Mac(10,11)]
 		[Static]
 		[Export ("assetWithSCNScene:")]
 		MDLAsset FromScene (SCNScene scene);
+
+		[iOS (10, 0), Mac (10, 12)]
+		[TV (10,0)]
+		[Static]
+		[Export ("assetWithSCNScene:bufferAllocator:")]
+		MDLAsset FromScene (SCNScene scene, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
+	}
+
+	// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+	[Mac (10,12)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface MDLLightProbeIrradianceDataSource
+	{
+		[Abstract]
+		[Export ("boundingBox", ArgumentSemantic.Assign)]
+		MDLAxisAlignedBoundingBox BoundingBox { get; set; }
+
+		[Export ("sphericalHarmonicsLevel")]
+		nuint SphericalHarmonicsLevel { get; set; }
+
+		[Export ("sphericalHarmonicsCoefficientsAtPosition:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		NSData GetSphericalHarmonicsCoefficients (Vector3 position);
 	}
 
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
@@ -137,6 +179,12 @@ namespace XamCore.ModelIO {
 		Matrix4 ProjectionMatrix {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
 		}
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("projection", ArgumentSemantic.Assign)]
+		MDLCameraProjection Projection { get; set; }
 
 		[Export ("frameBoundingBox:setNearAndFar:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] 
@@ -302,6 +350,13 @@ namespace XamCore.ModelIO {
 		[Export ("lightType")]
 		MDLLightType LightType { get; set; }
 
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("colorSpace")]
+		// No documentation to confirm but this should be a constant (hence NSString).
+		NSString ColorSpace { get; set; }
+
 		[iOS (9,0), Mac(10,11)]
 		[Static]
 		[Export ("lightWithSCNLight:")]
@@ -382,6 +437,12 @@ namespace XamCore.ModelIO {
 		[Export ("count")]
 		nuint Count { get; }
 
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("materialFace", ArgumentSemantic.Assign)]
+		MDLMaterialFace MaterialFace { get; set; }
+
 		[iOS (9,0), Mac(10,11)]
 		[Static]
 		[Export ("materialWithSCNMaterial:")]
@@ -391,7 +452,7 @@ namespace XamCore.ModelIO {
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface MDLMaterialProperty : MDLNamed
+	interface MDLMaterialProperty : MDLNamed, NSCopying
 	{
 		[DesignatedInitializer]
 		[Export ("initWithName:semantic:")]
@@ -476,12 +537,78 @@ namespace XamCore.ModelIO {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("luminance")]
+		float Luminance { get; set; }
+	}
+
+	[iOS (10,0), Mac (10,12)]
+	[TV (10,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface MDLMaterialPropertyConnection : MDLNamed
+	{
+		[Export ("initWithOutput:input:")]
+		IntPtr Constructor (MDLMaterialProperty output, MDLMaterialProperty input);
+
+		[NullAllowed, Export ("output", ArgumentSemantic.Weak)]
+		MDLMaterialProperty Output { get; }
+
+		[NullAllowed, Export ("input", ArgumentSemantic.Weak)]
+		MDLMaterialProperty Input { get; }
+	}
+
+	[iOS (10,0), Mac (10,12)]
+	[TV (10,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface MDLMaterialPropertyNode : MDLNamed
+	{
+		[Export ("initWithInputs:outputs:evaluationFunction:")]
+		IntPtr Constructor (MDLMaterialProperty[] inputs, MDLMaterialProperty[] outputs, Action<MDLMaterialPropertyNode> function);
+
+		[Export ("evaluationFunction", ArgumentSemantic.Copy)]
+		Action<MDLMaterialPropertyNode> EvaluationFunction { get; set; }
+
+		[Export ("inputs")]
+		MDLMaterialProperty[] Inputs { get; }
+
+		[Export ("outputs")]
+		MDLMaterialProperty[] Outputs { get; }
+	}
+
+	[iOS (10,0), Mac (10,12)]
+	[TV (10,0)]
+	[BaseType (typeof(MDLMaterialPropertyNode))]
+	[DisableDefaultCtor]
+	interface MDLMaterialPropertyGraph
+	{
+		[Export ("initWithNodes:connections:")]
+		IntPtr Constructor (MDLMaterialPropertyNode[] nodes, MDLMaterialPropertyConnection[] connections);
+
+		[Export ("evaluate")]
+		void Evaluate ();
+
+		[Export ("nodes")]
+		MDLMaterialPropertyNode[] Nodes { get; }
+
+		[Export ("connections")]
+		MDLMaterialPropertyConnection[] Connections { get; }
 	}
 
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
 	[BaseType (typeof(MDLObject))]
 	interface MDLMesh
 	{
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("initWithBufferAllocator:")]
+		IntPtr Constructor ([NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
+
 		[Export ("initWithVertexBuffer:vertexCount:descriptor:submeshes:")]
 		IntPtr Constructor (IMDLMeshBuffer vertexBuffer, nuint vertexCount, MDLVertexDescriptor descriptor, MDLSubmesh [] submeshes);
 
@@ -493,6 +620,13 @@ namespace XamCore.ModelIO {
 		[return: NullAllowed]
 		MDLVertexAttributeData GetVertexAttributeDataForAttribute (string attributeName);
 
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("vertexAttributeDataForAttributeNamed:asFormat:")]
+		[return: NullAllowed]
+		MDLVertexAttributeData GetVertexAttributeData (string attributeName, MDLVertexFormat format);
+
 		[Export ("boundingBox")]
 		MDLAxisAlignedBoundingBox BoundingBox {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
@@ -502,17 +636,49 @@ namespace XamCore.ModelIO {
 		MDLVertexDescriptor VertexDescriptor { get; set; }
 
 		[Export ("vertexCount")]
-		nuint VertexCount { get; }
+		nuint VertexCount {
+			get;
+			[iOS (10,0)]
+			[Mac (10,12)]
+			[TV (10,0)]
+			set;
+		}
 
 		[Export ("vertexBuffers", ArgumentSemantic.Retain)]
 		IMDLMeshBuffer[] VertexBuffers { get; }
 
-		[Export ("submeshes", ArgumentSemantic.Retain)]
-		NSMutableArray<MDLSubmesh> Submeshes { get; }
+		[NullAllowed]
+		[Export ("submeshes", ArgumentSemantic.Copy)]
+		NSMutableArray<MDLSubmesh> Submeshes {
+			get;
+			[iOS (10,0)]
+			[Mac (10,12)]
+			[TV (10,0)]
+			set;
+		}
 
-		// These are categories on MDLMesh, so I am inlining them here
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("allocator", ArgumentSemantic.Retain)]
+		IMDLMeshBufferAllocator Allocator { get; }
+
+		// MDLMesh_Modifiers (category)
+
 		[Export ("addAttributeWithName:format:")]
 		void AddAttribute (string name, MDLVertexFormat format);
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("addAttributeWithName:format:type:data:stride:")]
+		void AddAttribute (string name, MDLVertexFormat format, string type, NSData data, nint stride);
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("addAttributeWithName:format:type:data:stride:time:")]
+		void AddAttribute (string name, MDLVertexFormat format, string type, NSData data, nint stride, double time);
 
 		[Export ("addNormalsWithAttributeNamed:creaseThreshold:")]
 		void AddNormals ([NullAllowed] string name, float creaseThreshold);
@@ -523,8 +689,59 @@ namespace XamCore.ModelIO {
 		[Export ("addTangentBasisForTextureCoordinateAttributeNamed:normalAttributeNamed:tangentAttributeNamed:")]
 		void AddTangentBasisWithNormals (string textureCoordinateAttributeName, string normalAttributeName, string tangentAttributeName);
 
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("addUnwrappedTextureCoordinatesForAttributeNamed:")]
+		void AddUnwrappedTextureCoordinates (string textureCoordinateAttributeName);
+
 		[Export ("makeVerticesUnique")]
 		void MakeVerticesUnique ();
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("replaceAttributeNamed:withData:")]
+		void ReplaceAttribute (string name, MDLVertexAttributeData newData);
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("updateAttributeNamed:withData:")]
+		void UpdateAttribute (string name, MDLVertexAttributeData newData);
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("removeAttributeNamed:")]
+		void RemoveAttribute (string name);
+
+		// MDLMesh_Generators (category)
+
+		[Internal]
+		[Export ("initSphereWithExtent:segments:inwardNormals:geometryType:allocator:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr InitSphere (Vector3 extent, Vector2i segments, bool inwardNormals, MDLGeometryType geometryType, [NullAllowed] IMDLMeshBufferAllocator allocator);
+
+		[Internal]
+		[Export ("initHemisphereWithExtent:segments:inwardNormals:cap:geometryType:allocator:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr InitHemisphere (Vector3 extent, Vector2i segments, bool inwardNormals, bool cap, MDLGeometryType geometryType, [NullAllowed] IMDLMeshBufferAllocator allocator);
+
+		[Internal]
+		[Export ("initCapsuleWithExtent:cylinderSegments:hemisphereSegments:inwardNormals:geometryType:allocator:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr InitCapsule (Vector3 extent, Vector2i segments, int hemisphereSegments, bool inwardNormals, MDLGeometryType geometryType, [NullAllowed] IMDLMeshBufferAllocator allocator);
+
+		[Internal]
+		[Export ("initConeWithExtent:segments:inwardNormals:cap:geometryType:allocator:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr InitCone (Vector3 extent, Vector2i segments, bool inwardNormals, bool cap, MDLGeometryType geometryType, [NullAllowed] IMDLMeshBufferAllocator allocator);
+
+		[Internal]
+		[Export ("initMeshBySubdividingMesh:submeshIndex:subdivisionLevels:allocator:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr InitMesh (MDLMesh mesh, int submeshIndex, uint subdivisionLevels, [NullAllowed] IMDLMeshBufferAllocator allocator);
 
 		[Static]
 		[Export ("newBoxWithDimensions:segments:geometryType:inwardNormals:allocator:")]
@@ -588,6 +805,11 @@ namespace XamCore.ModelIO {
 		[Export ("meshWithSCNGeometry:")]
 		MDLMesh FromGeometry (SCNGeometry geometry);
 
+		[iOS (10, 0), Mac (10, 12)]
+		[TV (10,0)]
+		[Static]
+		[Export ("meshWithSCNGeometry:bufferAllocator:")]
+		MDLMesh FromGeometry (SCNGeometry geometry, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 	}
 
 	interface IMDLMeshBuffer {}
@@ -746,11 +968,35 @@ namespace XamCore.ModelIO {
 		[NullAllowed, Export ("parent", ArgumentSemantic.Weak)]
 		MDLObject Parent { get; set; }
 
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[NullAllowed, Export ("instance", ArgumentSemantic.Retain)]
+		MDLObject Instance { get; set; }
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("path")]
+		string Path { get; }
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("objectAtPath:")]
+		MDLObject GetObject (string path);
+
 		[NullAllowed, Export ("transform", ArgumentSemantic.Retain)]
 		IMDLTransformComponent Transform { get; set; }
 
 		[Export ("children", ArgumentSemantic.Retain), NullAllowed]
 		IMDLObjectContainerComponent Children { get; set; }
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("hidden")]
+		bool Hidden { get; set; }
 
 		[Export ("addChild:")]
 		void AddChild (MDLObject child);
@@ -763,7 +1009,12 @@ namespace XamCore.ModelIO {
 		[Static]
 		[Export ("objectWithSCNNode:")]
 		MDLObject FromNode (SCNNode node);
-		
+
+		[iOS (10,0), Mac (10,12)]
+		[TV (10,0)]
+		[Static]
+		[Export ("objectWithSCNNode:bufferAllocator:")]
+		MDLObject FromNode (SCNNode node, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 	}
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
@@ -1034,6 +1285,12 @@ namespace XamCore.ModelIO {
 		[Export ("indexBuffer", ArgumentSemantic.Retain)]
 		IMDLMeshBuffer IndexBuffer { get; }
 
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("indexBufferAsIndexType:")]
+		IMDLMeshBuffer GetIndexBuffer (MDLIndexBitDepth indexType);
+
 		[Export ("indexCount")]
 		nuint IndexCount { get; }
 
@@ -1052,6 +1309,12 @@ namespace XamCore.ModelIO {
 		[Static]
 		[Export ("submeshWithSCNGeometryElement:")]
 		MDLSubmesh FromGeometryElement (SCNGeometryElement element);
+
+		[iOS (10, 0), Mac (10, 12)]
+		[TV (10,0)]
+		[Static]
+		[Export ("submeshWithSCNGeometryElement:bufferAllocator:")]
+		MDLSubmesh FromGeometryElement (SCNGeometryElement element, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 	}
 
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
@@ -1131,6 +1394,12 @@ namespace XamCore.ModelIO {
 
 		[Export ("isCube")]
 		bool IsCube { get; set; }
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("hasAlphaValues")]
+		bool HasAlphaValues { get; set; }
 	}
 
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
@@ -1171,14 +1440,27 @@ namespace XamCore.ModelIO {
 
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
-	interface MDLTransform : MDLTransformComponent
-	{
+	interface MDLTransform : MDLTransformComponent, NSCopying {
+
 		[Export ("initWithTransformComponent:")]
 		IntPtr Constructor (IMDLTransformComponent component);
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("initWithTransformComponent:resetsTransform:")]
+		IntPtr Constructor (IMDLTransformComponent component, bool resetsTransform);
 
 		[Export ("initWithMatrix:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor (Matrix4 matrix);
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("initWithMatrix:resetsTransform:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr Constructor (Matrix4 matrix, bool resetsTransform);
 
 		[Export ("setIdentity")]
 		void SetIdentity ();
@@ -1264,6 +1546,15 @@ namespace XamCore.ModelIO {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("resetsTransform")]
+		bool ResetsTransform { get; set; }
+
 		[Abstract]
 		[Export ("minimumTime")]
 		double MinimumTime { get; }
@@ -1271,6 +1562,14 @@ namespace XamCore.ModelIO {
 		[Abstract]
 		[Export ("maximumTime")]
 		double MaximumTime { get; }
+
+		// Added in iOS 10 SDK but it is supposed to be present in iOS 9.
+		[Mac (10,12)]
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("keyTimes", ArgumentSemantic.Copy)]
+		NSNumber[] KeyTimes { get; }
 
 		[Export ("setLocalTransform:forTime:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -1325,6 +1624,12 @@ namespace XamCore.ModelIO {
 		[Export ("bufferIndex", ArgumentSemantic.Assign)]
 		nuint BufferIndex { get; set; }
 
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("time")]
+		double Time { get; set; }
+
 		[Export ("initializationValue", ArgumentSemantic.Assign)]
 		Vector4 InitializationValue {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get;
@@ -1338,16 +1643,40 @@ namespace XamCore.ModelIO {
 	interface MDLVertexAttributeData
 	{
 		[Export ("map", ArgumentSemantic.Retain), NullAllowed]
-		MDLMeshBufferMap Map { get; set; }
+		MDLMeshBufferMap Map {
+			get;
+#if !XAMCORE_4_0
+			[NotImplemented]
+			set;
+#endif
+		}
 
 		[Export ("dataStart", ArgumentSemantic.Assign)]
-		IntPtr DataStart { get; set; }
+		IntPtr DataStart {
+			get;
+#if !XAMCORE_4_0
+			[NotImplemented]
+			set;
+#endif
+		}
 
 		[Export ("stride", ArgumentSemantic.Assign)]
-		nuint Stride { get; set; }
+		nuint Stride {
+			get;
+#if !XAMCORE_4_0
+			[NotImplemented]
+			set;
+#endif
+		}
 
 		[Export ("format", ArgumentSemantic.Assign)]
-		MDLVertexFormat Format { get; set; }
+		MDLVertexFormat Format {
+			get;
+#if !XAMCORE_4_0
+			[NotImplemented]
+			set;
+#endif
+		}
 	}
 
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
@@ -1376,6 +1705,12 @@ namespace XamCore.ModelIO {
 		[Export ("addOrReplaceAttribute:")]
 		void AddOrReplaceAttribute (MDLVertexAttribute attribute);
 
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("removeAttributeNamed:")]
+		void RemoveAttribute (string name);
+
 		[Export ("attributes", ArgumentSemantic.Retain)]
 		NSMutableArray<MDLVertexAttribute> Attributes { get; set; }
 
@@ -1393,16 +1728,32 @@ namespace XamCore.ModelIO {
 	}
 
 	[iOS (9,0),Mac(10,11, onlyOn64 : true)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (
+#if MONOMAC && !XAMCORE_4_0
+		typeof(NSObject)
+#else
+		typeof(MDLObject)
+#endif
+	)]
 	[DisableDefaultCtor]
 	interface MDLVoxelArray
 	{
 
+		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use new MDLVoxelArray (MDLAsset, int, float)")]
+		[Obsoleted (PlatformName.iOS, 10, 0, message: "Use new MDLVoxelArray (MDLAsset, int, float)")]
 		[Export ("initWithAsset:divisions:interiorShells:exteriorShells:patchRadius:")]
 		IntPtr Constructor (MDLAsset asset, int divisions, int interiorShells, int exteriorShells, float patchRadius);
 
+		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use new MDLVoxelArray (MDLAsset, int, float)")]
+		[Obsoleted (PlatformName.iOS, 10, 0, message: "Use new MDLVoxelArray (MDLAsset, int, float)")]
 		[Export ("initWithAsset:divisions:interiorNBWidth:exteriorNBWidth:patchRadius:")]
 		IntPtr Constructor (MDLAsset asset, int divisions, float interiorNBWidth, float exteriorNBWidth, float patchRadius);
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("initWithAsset:divisions:patchRadius:")]
+		IntPtr Constructor (MDLAsset asset, int divisions, float patchRadius);
 
 		[Export ("initWithData:boundingBox:voxelExtent:")]
 		IntPtr Constructor (NSData voxelData, MDLAxisAlignedBoundingBox boundingBox, float voxelExtent);
@@ -1419,9 +1770,19 @@ namespace XamCore.ModelIO {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		void SetVoxel (Vector4i index);
 
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("setVoxelsForMesh:divisions:patchRadius:")]
+		void SetVoxels (MDLMesh mesh, int divisions, float patchRadius);
+
+		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use SetVoxels (MDLMesh, int, float)")]
+		[Obsoleted (PlatformName.iOS, 10, 0, message: "Use SetVoxels (MDLMesh, int, float)")]
 		[Export ("setVoxelsForMesh:divisions:interiorShells:exteriorShells:patchRadius:")]
 		void SetVoxels (MDLMesh mesh, int divisions, int interiorShells, int exteriorShells, float patchRadius);
 
+		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use SetVoxels (MDLMesh, int, float)")]
+		[Obsoleted (PlatformName.iOS, 10, 0, message: "Use SetVoxels (MDLMesh, int, float)")]
 		[Export ("setVoxelsForMesh:divisions:interiorNBWidth:exteriorNBWidth:patchRadius:")]
 		void SetVoxels (MDLMesh mesh, int divisions, float interiorNBWidth, float exteriorNBWidth, float patchRadius);
 
@@ -1462,6 +1823,44 @@ namespace XamCore.ModelIO {
 
 		[Export ("boundingBox")]
 		MDLAxisAlignedBoundingBox BoundingBox { get; }
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("convertToSignedShellField")]
+		void ConvertToSignedShellField ();
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("isValidSignedShellField")]
+		bool IsValidSignedShellField { get; }
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("shellFieldInteriorThickness")]
+		float ShellFieldInteriorThickness { get; set; }
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("shellFieldExteriorThickness")]
+		float ShellFieldExteriorThickness { get; set; }
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("coarseMesh")]
+		[return: NullAllowed]
+		MDLMesh GetCoarseMesh ();
+
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("coarseMeshUsingAllocator:")]
+		[return: NullAllowed]
+		MDLMesh GetCoarseMeshUsingAllocator ([NullAllowed] IMDLMeshBufferAllocator allocator);
 	}
 
 	[Static]
@@ -1517,6 +1916,12 @@ namespace XamCore.ModelIO {
 	[BaseType (typeof(NSObject))]
 	interface MDLVertexBufferLayout : NSCopying
 	{
+		[iOS (10,0)]
+		[Mac (10,12)]
+		[TV (10,0)]
+		[Export ("initWithStride:")]
+		IntPtr Constructor (nuint stride);
+
 		[Export ("stride", ArgumentSemantic.Assign)]
 		nuint Stride { get; set; }
 	}

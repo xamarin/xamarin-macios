@@ -9,6 +9,7 @@ namespace xharness
 	public class SimpleHttpListener : SimpleListener
 	{
 		HttpListener server;
+		bool connected_once;
 
 		public override void Initialize ()
 		{
@@ -29,7 +30,7 @@ namespace xharness
 					Port = newPort;
 					break;
 				} catch (Exception ex) {
-					Console.WriteLine ("Failed to listen on port {0}: {1}", newPort, ex.Message);
+					Log.WriteLine ("Failed to listen on port {0}: {1}", newPort, ex.Message);
 				}
 			}
 		}
@@ -44,7 +45,7 @@ namespace xharness
 			bool processed;
 
 			try {
-				Console.WriteLine ("Test log server listening on: {0}:{1}", Address, Port);
+				Log.WriteLine ("Test log server listening on: {0}:{1}", Address, Port);
 				do {
 					var context = server.GetContext ();
 					processed = Processing (context);
@@ -77,17 +78,22 @@ namespace xharness
 
 			switch (request.RawUrl) {
 			case "/Start":
-				Connected (request.RemoteEndPoint.ToString ());
+				if (!connected_once) {
+					connected_once = true;
+					Connected (request.RemoteEndPoint.ToString ());
+				}
 				break;
 			case "/Finish":
-				using (var writer = new StreamWriter (OutputStream)) {
-					writer.Write (data);
-					writer.Flush ();
+				if (!finished) {
+					using (var writer = new StreamWriter (OutputStream)) {
+						writer.Write (data);
+						writer.Flush ();
+					}
+					finished = true;
 				}
-				finished = true;
 				break;
 			default:
-				Console.WriteLine ("Unknown upload url: {0}", request.RawUrl);
+				Log.WriteLine ("Unknown upload url: {0}", request.RawUrl);
 				response = $"Unknown upload url: {request.RawUrl}";
 				break;
 			}

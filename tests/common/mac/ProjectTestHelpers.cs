@@ -10,6 +10,18 @@ using System.Reflection;
 
 namespace Xamarin.MMP.Tests
 {
+	public struct OutputText
+	{
+		public string BuildOutput { get; private set; }
+		public string RunOutput { get; private set; }
+
+		public OutputText (string buildOutput, string runOutput)
+		{
+			BuildOutput = buildOutput;
+			RunOutput = runOutput;
+		}
+	}
+
 	// Hide the hacks and provide a nice interface for writting tests that build / run XM projects
 	static class TI 
 	{
@@ -20,6 +32,7 @@ namespace Xamarin.MMP.Tests
 			// Not necessarly required
 			public bool FSharp { get; set; }
 			public bool XM45 { get; set; }
+			public bool DiagnosticMSBuild { get; set; }
 			public string ProjectName { get; set; }
 			public string TestCode { get; set; }
 			public string CSProjConfig { get; set; }
@@ -73,14 +86,14 @@ namespace Xamarin.MMP.Tests
 			int compileResult = Xamarin.Bundler.Driver.RunCommand (exe, args != null ? args.ToString() : string.Empty, MonoDevelopLike, output, suppressPrintOnErrors: shouldFail);
 			Func<string> getInfo = () => getAdditionalFailInfo != null ? getAdditionalFailInfo() : "";
 			if (!shouldFail)
-				Assert.AreEqual (0, compileResult, stepName + " failed: '" + output + "' " + exe + " " + args + getInfo ());
+				Assert.AreEqual (0, compileResult, stepName + " failed:\n\n'" + output + "' " + exe + " " + args + getInfo ());
 			else
-				Assert.AreNotEqual (0, compileResult, stepName + " did not fail as expected: '" + output + "' " + exe + " " + args + getInfo ());
+				Assert.AreNotEqual (0, compileResult, stepName + " did not fail as expected:\n\n'" + output + "' " + exe + " " + args + getInfo ());
 
 			return output.ToString ();
 		}
 
-		public static string BuildProject (string csprojTarget, bool isUnified, bool shouldFail = false)
+		public static string BuildProject (string csprojTarget, bool isUnified, bool diagnosticMSBuild = false, bool shouldFail = false)
 		{
 			string rootDirectory = FindRootDirectory ();
 
@@ -92,18 +105,24 @@ namespace Xamarin.MMP.Tests
 			// This is to force build to use our mmp and not system mmp
 			StringBuilder buildArgs = new StringBuilder ();
 			if (isUnified) {
-				buildArgs.Append (" /verbosity:normal ");
+				buildArgs.Append (diagnosticMSBuild ? " /verbosity:diagnostic " : " /verbosity:normal ");
 				buildArgs.Append (" /property:XamarinMacFrameworkRoot=" + rootDirectory + "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current ");
 			} else
 				buildArgs.Append (" build ");
 
 			buildArgs.Append (csprojTarget);
 
+			Func <string> getBuildProjectErrorInfo = () => {
+				string csprojText = "\n\n\n\tCSProj: \n" + File.ReadAllText (csprojTarget);
+				string csprojLocation = Path.GetDirectoryName (csprojTarget);
+				string fileList = "\n\n\tFiles: " + String.Join (" ", Directory.GetFiles (csprojLocation).Select (x => x.Replace (csprojLocation + "/", "")));
+				return csprojText + fileList;
+			};
 
 			if (isUnified)
-				return RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/xbuild", buildArgs, "Compile", shouldFail, () => File.ReadAllText (csprojTarget));
+				return RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/xbuild", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo);
 			else
-				return RunAndAssert ("/Applications/Xamarin Studio.app/Contents/MacOS/mdtool", buildArgs, "Compile", shouldFail, () => File.ReadAllText (csprojTarget));
+				return RunAndAssert ("/Applications/Xamarin Studio.app/Contents/MacOS/mdtool", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo);
 		}
 
 		static string ProjectTextReplacement (UnifiedTestConfig config, string text)
@@ -111,12 +130,13 @@ namespace Xamarin.MMP.Tests
 			return text.Replace ("%CODE%", config.CSProjConfig).Replace ("%REFERENCES%", config.References).Replace ("%NAME%", config.AssemblyName ?? Path.GetFileNameWithoutExtension (config.ProjectName)).Replace ("%ITEMGROUP%", config.ItemGroup);
 		}
 
-		static void RunEXEAndVerifyGUID (string tmpDir, Guid guid, string path)
+		static string RunEXEAndVerifyGUID (string tmpDir, Guid guid, string path)
 		{
 			// Assert that the program actually runs and returns our guid
 			Assert.IsTrue (File.Exists (path), string.Format ("{0} did not generate an exe?", path));
 			string output = RunAndAssert (path, null, "Run");
 			Assert.IsTrue(File.Exists (Path.Combine (tmpDir, guid.ToString ())), "Generated program did not create expected guid file: " + output);
+			return output;
 		}
 
 		public static string GenerateEXEProject (UnifiedTestConfig config)
@@ -167,10 +187,10 @@ namespace Xamarin.MMP.Tests
 			config.ProjectName = projectName + projectExtension;
 			string csprojTarget = GenerateEXEProject (config);
 
-			return BuildProject (csprojTarget, isUnified: true, shouldFail: shouldFail);
+			return BuildProject (csprojTarget, isUnified: true, diagnosticMSBuild: config.DiagnosticMSBuild,  shouldFail: shouldFail);
 		}
 
-		public static string TestUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false)
+		public static OutputText TestUnifiedExecutable (UnifiedTestConfig config, bool shouldFail = false)
 		{
 			string projectName;
 			if (config.FSharp)
@@ -184,30 +204,30 @@ namespace Xamarin.MMP.Tests
 			config.ProjectName = projectName + projectExtension;
 			string csprojTarget = GenerateEXEProject (config);
 
-			string buildOutput = BuildProject (csprojTarget, isUnified : true, shouldFail : shouldFail);
+			string buildOutput = BuildProject (csprojTarget, isUnified : true, diagnosticMSBuild: config.DiagnosticMSBuild, shouldFail : shouldFail);
 			if (shouldFail)
-				return buildOutput;
+				return new OutputText (buildOutput, "");
 
 			string bundleName = config.AssemblyName != "" ? config.AssemblyName : projectName;
 			string exePath = Path.Combine (config.TmpDir, "bin/Debug/" + bundleName + ".app/Contents/MacOS/" +  bundleName);
-			RunEXEAndVerifyGUID (config.TmpDir, guid, exePath);
-			return buildOutput;
+			string runOutput = RunEXEAndVerifyGUID (config.TmpDir, guid, exePath);
+			return new OutputText (buildOutput, runOutput);
 		}
 
-		public static string TestClassicExecutable (string tmpDir, string testCode = "", string csprojConfig = "", bool shouldFail = false)
+		public static OutputText TestClassicExecutable (string tmpDir, string testCode = "", string csprojConfig = "", bool shouldFail = false)
 		{
 			Guid guid = Guid.NewGuid ();
 			string csprojTarget = GenerateClassicEXEProject (tmpDir, "ClassicExample.csproj", testCode + GenerateOuputCommand (tmpDir,guid), csprojConfig, "");
-			string buildOutput = BuildProject (csprojTarget, isUnified : false, shouldFail : shouldFail);
+			string buildOutput = BuildProject (csprojTarget, isUnified : false, diagnosticMSBuild: false, shouldFail : shouldFail);
 			if (shouldFail)
-				return buildOutput;
+				return new OutputText (buildOutput, "");
 
 			string exePath = Path.Combine (tmpDir, "bin/Debug/ClassicExample.app/Contents/MacOS/ClassicExample");
-			RunEXEAndVerifyGUID (tmpDir, guid, exePath);
-			return buildOutput;
+			string runOutput = RunEXEAndVerifyGUID (tmpDir, guid, exePath);
+			return new OutputText (buildOutput, runOutput);
 		}
 
-		public static string TestSystemMonoExecutable (UnifiedTestConfig config, bool shouldFail = false)
+		public static OutputText TestSystemMonoExecutable (UnifiedTestConfig config, bool shouldFail = false)
 		{
 			Guid guid = Guid.NewGuid ();
 			var projectName = "SystemMonoExample";
@@ -215,13 +235,13 @@ namespace Xamarin.MMP.Tests
 			config.ProjectName = $"{projectName}.csproj";
 			string csprojTarget = GenerateSystemMonoEXEProject (config);
 
-			string buildOutput = BuildProject (csprojTarget, isUnified : true, shouldFail : shouldFail);
+			string buildOutput = BuildProject (csprojTarget, isUnified : true, diagnosticMSBuild: config.DiagnosticMSBuild, shouldFail : shouldFail);
 			if (shouldFail)
-				return buildOutput;
+				return new OutputText (buildOutput, "");
 
 			string exePath = Path.Combine (config.TmpDir, "bin/Debug/" + projectName + ".app/Contents/MacOS/" + projectName);
-			RunEXEAndVerifyGUID (config.TmpDir, guid, exePath);
-			return buildOutput;
+			string runOutput = RunEXEAndVerifyGUID (config.TmpDir, guid, exePath);
+			return new OutputText (buildOutput, runOutput);
 		}
 
 		public static string GenerateClassicEXEProject (string tmpDir, string projectName, string testCode, string csprojConfig = "", string references = "", string assemblyName = null)

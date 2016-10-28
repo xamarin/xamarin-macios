@@ -73,6 +73,21 @@ namespace Introspection {
 				case "GKScore":
 				// new in iOS8 and 10.0
 				case "NSExtensionContext":
+				case "NSLayoutAnchor`1":
+				case "NSLayoutDimension":
+				case "NSLayoutXAxisAnchor":
+				case "NSLayoutYAxisAnchor":
+				// iOS 10 beta 3
+				case "GKCloudPlayer":
+				// iOS 10 : test throw because of generic usage
+				case "NSMeasurement`1":
+					return true; // skip
+				}
+				break;
+			case "NSMutableCopying":
+				switch (type.Name) {
+				// iOS 10 : test throw because of generic usage
+				case "NSMeasurement`1":
 					return true; // skip
 				}
 				break;
@@ -89,7 +104,16 @@ namespace Introspection {
 				// new in iOS8 and 10.0
 				case "NSExtensionContext":
 				case "NSItemProvider":
-					// undocumented
+				// iOS9 / 10.11
+				case "CNSaveRequest":
+				case "NSLayoutAnchor`1":
+				case "NSLayoutDimension":
+				case "NSLayoutXAxisAnchor":
+				case "NSLayoutYAxisAnchor":
+				case "GKCloudPlayer":
+				case "GKGameSession":
+				// iOS 10 : test throw because of generic usage
+				case "NSMeasurement`1":
 					return true;
 				}
 				break;
@@ -109,8 +133,27 @@ namespace Introspection {
 				case "NSMutableParagraphStyle": //17770106
 					return true; // skip
 				// iOS9 / 10.11
+				case "CNSaveRequest":
 				case "NSPersonNameComponentsFormatter":
+				case "GKCloudPlayer":
+				case "GKGameSession":
+				// iOS 10 : test throw because of generic usage
+				case "NSMeasurement`1":
 					return true; // skip
+				}
+				break;
+			// conformance added in Xcode 8 (iOS 10 / macOS 10.12)
+			case "MDLNamed":
+				switch (type.Name) {
+				case "MTKMeshBuffer":
+				case "MDLVoxelArray": // base class changed to MDLObject (was NSObject before)
+					return true;
+				}
+				break;
+			case "CALayerDelegate":
+				switch (type.Name) {
+				case "MTKView":
+					return true;
 				}
 				break;
 			}
@@ -284,7 +327,9 @@ namespace Introspection {
 
 					var klass = new Class (t);
 					if (klass.Handle == IntPtr.Zero) {
-						AddErrorLine ("Could not load {0}", t.FullName);
+						// This can often by caused by [Protocol] classes with no [Model] but having a [BaseType].
+						// Either have both a Model and BaseType or neither
+						AddErrorLine ("[FAIL] Could not load {0}", t.FullName);
 					} else if (t.IsPublic && !ConformTo (klass.Handle, protocol)) {
 						// note: some internal types, e.g. like UIAppearance subclasses, return false (and there's not much value in changing this)
 						ReportError ("Type {0} (native: {1}) does not conform {2}", t.FullName, klass.Name, protocolName);

@@ -16,5 +16,7 @@
 	<string>public.app-category.developer-tools</string>
 	<key>CFBundleName</key>
 	<string>introspection</string>
+	<key>LSUIElement</key>
+	<string>1</string>
 </dict>
 </plist>

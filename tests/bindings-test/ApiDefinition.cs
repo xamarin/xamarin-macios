@@ -40,7 +40,7 @@ namespace Bindings.Test {
 	 * ObjC test class used for registrar
 	 */
 	[BaseType (typeof (NSObject))]
-	interface ObjCRegistrarTest {
+	partial interface ObjCRegistrarTest {
 		[Export ("Pi1")]
 		int Pi1 { get; set; }
 
@@ -136,15 +136,6 @@ namespace Bindings.Test {
 
 		[Export ("Pc5")]
 		sbyte Pc5 { get; set; }
-
-		[Export ("PSiid1")]
-		Siid PSiid { get; set; }
-
-		[Export ("PSd1")]
-		Sd PSd { get; set; }
-
-		[Export ("PSf1")]
-		Sf PSf { get; set; }
 
 		[Export ("V")]
 		void V ();

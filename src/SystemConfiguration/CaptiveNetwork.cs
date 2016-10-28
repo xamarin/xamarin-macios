@@ -19,7 +19,6 @@ namespace XamCore.SystemConfiguration {
 	
 	// http://developer.apple.com/library/ios/#documentation/SystemConfiguration/Reference/CaptiveNetworkRef/Reference/reference.html
 	// CaptiveNetwork.h
-	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use NEHotspotHelper")]
 	public static partial class CaptiveNetwork {
 		
 #if !MONOMAC

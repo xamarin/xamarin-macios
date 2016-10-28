@@ -19,6 +19,7 @@ using XamCore.AVKit;
 namespace XamCore.iAd {
 
 	[Since (4,0)]
+	[Deprecated (PlatformName.iOS, 10, 0)]
 	[BaseType (typeof (UIView), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (ADBannerViewDelegate)})]
 	interface ADBannerView {
 		[Export ("initWithFrame:")]
@@ -86,6 +87,7 @@ namespace XamCore.iAd {
 	}
 
 	[Since (4,0)]
+	[Deprecated (PlatformName.iOS, 10, 0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -107,6 +109,7 @@ namespace XamCore.iAd {
 		void WillLoad (ADBannerView bannerView);
 	}
 
+	[Deprecated (PlatformName.iOS, 10, 0)]
 	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (ADInterstitialAdDelegate)})]
 	interface ADInterstitialAd {
 		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
@@ -133,6 +136,7 @@ namespace XamCore.iAd {
 		void PresentFromViewController (UIViewController viewController);
 	}
 
+	[Deprecated (PlatformName.iOS, 10, 0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -169,7 +173,7 @@ namespace XamCore.iAd {
 	}
 
 	[Category, BaseType (typeof (MPMoviePlayerController))]
-	public partial interface IAdPreroll {
+	partial interface IAdPreroll {
 
 #if XAMCORE_2_0
 		[Internal]
@@ -191,11 +195,12 @@ namespace XamCore.iAd {
 	}
 
 #if !XAMCORE_2_0
-	public delegate void PlayPrerollAdCompletionHandler (NSError error);
+	delegate void PlayPrerollAdCompletionHandler (NSError error);
 #endif
 
+	[Deprecated (PlatformName.iOS, 10, 0)]
 	[Category, BaseType (typeof (UIViewController))]
-	public partial interface IAdAdditions {
+	partial interface IAdAdditions {
 
 #if XAMCORE_2_0
 		[Internal]
@@ -233,12 +238,12 @@ namespace XamCore.iAd {
 		bool ShouldPresentInterstitialAd ();
 	}
 
-	public delegate void ADConversionDetails (NSDate appPurchaseDate, NSDate iAdImpressionDate);
+	delegate void ADConversionDetails (NSDate appPurchaseDate, NSDate iAdImpressionDate);
 	
 	[Since (7,1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface ADClient {
+	interface ADClient {
 		[Static]
 		[Export ("sharedClient")]
 		ADClient SharedClient { get; }
@@ -260,12 +265,14 @@ namespace XamCore.iAd {
 		[Export ("requestAttributionDetailsWithBlock:")]
 		void RequestAttributionDetails (Action<NSDictionary, NSError> completionHandler);
 
+#if !XAMCORE_4_0
 		[iOS (9,0)]
 		[Field ("ADClientErrorDomain")]
 		NSString ErrorDomain { get; }
+#endif
 	}
 
-	public delegate void AttributedToiAdCompletionHandler (bool attributedToiAd);
+	delegate void AttributedToiAdCompletionHandler (bool attributedToiAd);
 
 	[Category]
 	[BaseType (typeof (AVPlayerViewController))]

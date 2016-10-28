@@ -2,8 +2,10 @@
 #include <objc/objc.h>
 #include <objc/runtime.h>
 #include <objc/message.h>
+#include <iconv.h>
 
 #include "xamarin/xamarin.h"
+#include "runtime-internal.h"
 #include "monotouch-support.h"
 
 const char *
@@ -19,7 +21,22 @@ void
 xamarin_log (const unsigned short *unicodeMessage)
 {
 	// COOP: no managed memory access: any mode.
-	NSLog (@"%S", unicodeMessage); 
+#if TARGET_OS_WATCH && defined (__arm__) // maybe make this configurable somehow?
+	int length = 0;
+	const unsigned short *ptr = unicodeMessage;
+	while (*ptr++)
+		length += sizeof (unsigned short);
+	NSString *msg = [[NSString alloc] initWithBytes: unicodeMessage length: length encoding: NSUTF16LittleEndianStringEncoding];
+	const char *utf8 = [msg UTF8String];
+	int len = strlen (utf8);
+	fwrite (utf8, 1, len, stdout);
+	if (len == 0 || utf8 [len - 1] != '\n')
+		fwrite ("\n", 1, 1, stdout);
+	fflush (stdout);
+	[msg release];
+#else
+	NSLog (@"%S", unicodeMessage);
+#endif
 }
 
 void*
@@ -76,7 +93,7 @@ xamarin_start_wwan (const char *uri)
 	
 	if (CFReadStreamOpen (stream)) {
 		// CFStreamStatus status = CFReadStreamGetStatus (stream);
-		// NSLog (@"CFStreamStatus %i", status);
+		// PRINT ("CFStreamStatus %i", status);
 		// note: some earlier iOS7 beta returned 1 (Opening) instead of 2 (Open) - a bit more time was needed or
 		// CFReadStreamRead blocks (and never return)
 		CFReadStreamRead (stream, buf, 1);
@@ -116,13 +133,13 @@ xamarin_GetFolderPath (int folder)
 
 void objc_msgSend_stret (id self, SEL op, ...)
 {
-	NSLog (@"Unimplemented objc_msgSend_stret %s", sel_getName (op));
+	PRINT ("Unimplemented objc_msgSend_stret %s", sel_getName (op));
 	abort ();
 }
 
 void objc_msgSendSuper_stret (struct objc_super *super, SEL op, ...)
 {
-	NSLog (@"Unimplemented objc_msgSendSuper_stret %s", sel_getName (op));
+	PRINT ("Unimplemented objc_msgSendSuper_stret %s", sel_getName (op));
 	abort ();
 }
 

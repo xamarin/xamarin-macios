@@ -1,4 +1,4 @@
-﻿//
+//
 // CoreSpotlight bindings
 //
 // Authors:
@@ -17,14 +17,14 @@ namespace XamCore.CoreSpotlight {
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
-	public interface CSIndexExtensionRequestHandler : NSExtensionRequestHandling, CSSearchableIndexDelegate {
+	interface CSIndexExtensionRequestHandler : NSExtensionRequestHandling, CSSearchableIndexDelegate {
 
 	}
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
-	public interface CSPerson : NSSecureCoding, NSCopying {
+	interface CSPerson : NSSecureCoding, NSCopying {
 
 		[Export ("initWithDisplayName:handles:handleIdentifier:")]
 		IntPtr Constructor ([NullAllowed] string displayName, string [] handles, NSString handleIdentifier);
@@ -47,7 +47,7 @@ namespace XamCore.CoreSpotlight {
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
-	public interface CSSearchableIndex {
+	interface CSSearchableIndex {
 
 		[Export ("indexDelegate", ArgumentSemantic.Weak)][NullAllowed]
 		ICSSearchableIndexDelegate IndexDelegate { get; set; }
@@ -81,13 +81,13 @@ namespace XamCore.CoreSpotlight {
 		void DeleteAll ([NullAllowed] Action<NSError> completionHandler);
 	}
 
-	public delegate void CSSearchableIndexFetchHandler (NSData clientState, NSError error);
+	delegate void CSSearchableIndexFetchHandler (NSData clientState, NSError error);
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
 	[Category]
 	[BaseType (typeof (CSSearchableIndex))]
-	public interface CSSearchableIndex_CSOptionalBatchingExtension {
+	interface CSSearchableIndex_CSOptionalBatchingExtension {
 
 		[Export ("beginIndexBatch")]
 		void BeginIndexBatch ();
@@ -99,13 +99,13 @@ namespace XamCore.CoreSpotlight {
 		void FetchLastClientState (CSSearchableIndexFetchHandler completionHandler);
 	}
 
-	public interface ICSSearchableIndexDelegate {}
+	interface ICSSearchableIndexDelegate {}
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
-	public interface CSSearchableIndexDelegate {
+	interface CSSearchableIndexDelegate {
 
 		[Abstract]
 		[Export ("searchableIndex:reindexAllSearchableItemsWithAcknowledgementHandler:")]
@@ -125,13 +125,21 @@ namespace XamCore.CoreSpotlight {
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
-	public interface CSSearchableItem : NSSecureCoding, NSCopying {
+	interface CSSearchableItem : NSSecureCoding, NSCopying {
 
 		[Field ("CSSearchableItemActionType")]
 		NSString ActionType { get; }
 
 		[Field ("CSSearchableItemActivityIdentifier")]
 		NSString ActivityIdentifier { get; }
+
+		[iOS (10,0)]
+		[Field ("CSQueryContinuationActionType")]
+		NSString ContinuationActionType { get; }
+
+		[iOS (10,0)]
+		[Field ("CSSearchQueryString")]
+		NSString QueryString { get; }
 
 		[Export ("initWithUniqueIdentifier:domainIdentifier:attributeSet:")]
 		IntPtr Constructor ([NullAllowed] string uniqueIdentifier, [NullAllowed] string domainIdentifier, CSSearchableItemAttributeSet attributeSet);
@@ -155,7 +163,7 @@ namespace XamCore.CoreSpotlight {
 	[iOS (9,0)]
 	[BaseType (typeof (NSString))]
 	// hack: it seems that generator.cs can't track NSCoding correctly ? maybe because the type is named NSString2 at that time
-	public interface CSLocalizedString : NSCoding {
+	interface CSLocalizedString : NSCoding {
 
 		[Export ("initWithLocalizedStrings:")]
 		IntPtr Constructor (NSDictionary localizedStrings);
@@ -167,7 +175,8 @@ namespace XamCore.CoreSpotlight {
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
-	public interface CSCustomAttributeKey : NSCopying, NSSecureCoding {
+	[DisableDefaultCtor] // NSInvalidArgumentException Reason: You must call -[CSCustomAttributeKey initWithKeyName...]
+	interface CSCustomAttributeKey : NSCopying, NSSecureCoding {
 
 		[Export ("initWithKeyName:")]
 		IntPtr Constructor (string keyName);
@@ -195,7 +204,7 @@ namespace XamCore.CoreSpotlight {
 	[iOS (9,0)]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
 	[Static]
-	public interface CSMailboxKey {
+	interface CSMailboxKey {
 
 		[Field ("CSMailboxInbox")]
 		NSString Inbox { get; }
@@ -219,12 +228,12 @@ namespace XamCore.CoreSpotlight {
 	[NoTV]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
-	public interface CSSearchableItemAttributeSet : NSCopying, NSSecureCoding {
+	interface CSSearchableItemAttributeSet : NSCopying, NSSecureCoding {
 
 		[Export ("initWithItemContentType:")]
 		IntPtr Constructor (string itemContentType);
 
-		// FIXME: Should we keep all the following Categories inline? or should we make them actual [Category] public interfaces
+		// FIXME: Should we keep all the following Categories inline? or should we make them actual [Category] interfaces
 		// There are no methods on any of the following categories, just properties
 
 		// CSSearchableItemAttributeSet_Documents.h
@@ -308,7 +317,7 @@ namespace XamCore.CoreSpotlight {
 		[Export ("importantDates")]
 		NSDate [] ImportantDates { get; set; }
 
-		[Export ("allDay")]
+		[Export ("allDay", ArgumentSemantic.Strong)]
 		[NullAllowed]
 		NSNumber AllDay { get; set; }
 
@@ -362,6 +371,18 @@ namespace XamCore.CoreSpotlight {
 		[NullAllowed]
 		[Export ("title")]
 		string Title { get; set; }
+
+		[NullAllowed]
+		[Export ("version")]
+		string Version { get; set; }
+
+		[iOS (10,0)]
+		[NullAllowed, Export ("weakRelatedUniqueIdentifier", ArgumentSemantic.Copy)]
+		string WeakRelatedUniqueIdentifier { get; set; }
+
+		[iOS (10,0)]
+		[NullAllowed, Export ("domainIdentifier")]
+		string DomainIdentifier { get; set; }
 
 		// CSSearchableItemAttributeSet_Images.h
 		// CSSearchableItemAttributeSet (CSImages) Category
@@ -544,10 +565,6 @@ namespace XamCore.CoreSpotlight {
 		[NullAllowed]
 		[Export ("contactKeywords")]
 		string [] ContactKeywords { get; set; }
-
-		[NullAllowed]
-		[Export ("version")]
-		string Version { get; set; }
 
 		[NullAllowed]
 		[Export ("codecs")]
@@ -910,12 +927,28 @@ namespace XamCore.CoreSpotlight {
 		[Export ("GPSDifferental", ArgumentSemantic.Strong)]
 		NSNumber GpsDifferental { get; set; }
 
+		[iOS (10,0)]
+		[NullAllowed, Export ("fullyFormattedAddress")]
+		string FullyFormattedAddress { get; set; }
+
+		[iOS (10,0)]
+		[NullAllowed, Export ("postalCode")]
+		string PostalCode { get; set; }
+
+		[iOS (10,0)]
+		[NullAllowed, Export ("subThoroughfare")]
+		string SubThoroughfare { get; set; }
+
+		[iOS (10,0)]
+		[NullAllowed, Export ("thoroughfare")]
+		string Thoroughfare { get; set; }
+
 		// CSActionExtras
 
-		[NullAllowed, Export ("supportsPhoneCall", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("supportsPhoneCall", ArgumentSemantic.Strong)]
 		NSNumber SupportsPhoneCall { get; set; }
 
-		[NullAllowed, Export ("supportsNavigation", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("supportsNavigation", ArgumentSemantic.Strong)]
 		NSNumber SupportsNavigation { get; set; }
 
 		// CSContainment
@@ -929,7 +962,7 @@ namespace XamCore.CoreSpotlight {
 		[NullAllowed, Export ("containerIdentifier")]
 		string ContainerIdentifier { get; set; }
 
-		[NullAllowed, Export ("containerOrder", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("containerOrder", ArgumentSemantic.Strong)]
 		NSNumber ContainerOrder { get; set; }
 
 		// CSCustomAttributes
@@ -942,6 +975,35 @@ namespace XamCore.CoreSpotlight {
 		[Export ("valueForCustomKey:")]
 		[return: NullAllowed]
 		INSSecureCoding ValueForCustomKey (CSCustomAttributeKey key);
+	}
+
+	[NoTV][iOS (10,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CSSearchQuery {
+		[Export ("initWithQueryString:attributes:")]
+		IntPtr Constructor (string queryString, [NullAllowed] string[] attributes);
+
+		[Export ("cancelled")]
+		bool Cancelled { [Bind ("isCancelled")] get; }
+
+		[Export ("foundItemCount")]
+		nuint FoundItemCount { get; }
+
+		[NullAllowed, Export ("foundItemsHandler", ArgumentSemantic.Copy)]
+		Action<CSSearchableItem[]> FoundItemsHandler { get; set; }
+
+		[NullAllowed, Export ("completionHandler", ArgumentSemantic.Copy)]
+		Action<NSError> CompletionHandler { get; set; }
+
+		[Export ("protectionClasses", ArgumentSemantic.Copy)]
+		string[] ProtectionClasses { get; set; }
+
+		[Export ("start")]
+		void Start ();
+
+		[Export ("cancel")]
+		void Cancel ();
 	}
 #endif
 }

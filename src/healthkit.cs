@@ -16,7 +16,14 @@ using System.ComponentModel;
 
 namespace XamCore.HealthKit {
 
+	[Watch (3,0), iOS (10,0)]
+	public enum HKDocumentTypeIdentifier {
+		[Field ("HKDocumentTypeIdentifierCDA")]
+		Cda,
+	}
+
 	// NSInteger -> HKDefines.h
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[ErrorDomain ("HKErrorDomain")]
 	[Native]
@@ -33,7 +40,7 @@ namespace XamCore.HealthKit {
 		UserExitedWorkoutSession,
 	}
 
-	[NoiOS]
+	[iOS (10,0)]
 	[Watch (2,0)]
 	[Native]
 	public enum HKWorkoutSessionLocationType : nint {
@@ -48,24 +55,28 @@ namespace XamCore.HealthKit {
 	public enum HKWorkoutSessionState : nint {
 		NotStarted = 1,
 		Running,
-		Ended
+		Ended,
+		[Watch (3,0)]
+		Paused,
 	}
 
-	public delegate void HKAnchoredObjectResultHandler2 (HKAnchoredObjectQuery query, HKSample[] results, nuint newAnchor, NSError error);
+	delegate void HKAnchoredObjectResultHandler2 (HKAnchoredObjectQuery query, HKSample[] results, nuint newAnchor, NSError error);
 #if XAMCORE_2_0
 	[Obsolete ("Use HKAnchoredObjectResultHandler2 instead")]
-	public delegate void HKAnchoredObjectResultHandler (HKAnchoredObjectQuery query, HKSampleType[] results, nuint newAnchor, NSError error);
+	delegate void HKAnchoredObjectResultHandler (HKAnchoredObjectQuery query, HKSampleType[] results, nuint newAnchor, NSError error);
 #else
-	public delegate void HKAnchoredObjectResultHandler (HKAnchoredObjectQuery query, NSObject[] results, nuint newAnchor, NSError error);
+	delegate void HKAnchoredObjectResultHandler (HKAnchoredObjectQuery query, NSObject[] results, nuint newAnchor, NSError error);
 #endif
 
-	public delegate void HKAnchoredObjectUpdateHandler (HKAnchoredObjectQuery query, HKSample[] addedObjects, HKDeletedObject[] deletedObjects, HKQueryAnchor newAnchor, NSError error);
+	delegate void HKAnchoredObjectUpdateHandler (HKAnchoredObjectQuery query, HKSample[] addedObjects, HKDeletedObject[] deletedObjects, HKQueryAnchor newAnchor, NSError error);
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKQuery))]
 	[DisableDefaultCtor] // NSInvalidArgumentException: The -init method is not available on HKAnchoredObjectQuery
-	public interface HKAnchoredObjectQuery {
+	interface HKAnchoredObjectQuery {
 
+		[NoWatch]
 #if XAMCORE_2_0
 		[Obsolete ("Use the overload that takes HKAnchoredObjectResultHandler2 instead")]
 #endif
@@ -73,6 +84,7 @@ namespace XamCore.HealthKit {
 		[Export ("initWithType:predicate:anchor:limit:completionHandler:")]
 		IntPtr Constructor (HKSampleType type, [NullAllowed] NSPredicate predicate, nuint anchor, nuint limit, HKAnchoredObjectResultHandler completion);
 
+		[NoWatch]
 		[Sealed]
 		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0)]
 		[Export ("initWithType:predicate:anchor:limit:completionHandler:")]
@@ -87,9 +99,10 @@ namespace XamCore.HealthKit {
 		HKAnchoredObjectUpdateHandler UpdateHandler { get; set; }
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[Static]
-	public interface HKPredicateKeyPath {
+	interface HKPredicateKeyPath {
 		[Field ("HKPredicateKeyPathCategoryValue")]
 		NSString CategoryValue { get; }
 
@@ -129,6 +142,10 @@ namespace XamCore.HealthKit {
 		[Field ("HKPredicateKeyPathWorkoutType")]
 		NSString WorkoutType { get; }
 
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HKPredicateKeyPathWorkoutTotalSwimmingStrokeCount")]
+		NSString WorkoutTotalSwimmingStrokeCount { get; }
+
 		[iOS (9,0)]
 		[Field ("HKPredicateKeyPathDevice")]
 		NSString Device { get; }
@@ -140,12 +157,46 @@ namespace XamCore.HealthKit {
 		[iOS (9,3), Watch (2,2)]
 		[Field ("HKPredicateKeyPathDateComponents")]
 		NSString DateComponents { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HKPredicateKeyPathCDATitle")]
+		NSString CdaTitle { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HKPredicateKeyPathCDAPatientName")]
+		NSString CdaPatientName { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HKPredicateKeyPathCDAAuthorName")]
+		NSString CdaAuthorName { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HKPredicateKeyPathCDACustodianName")]
+		NSString CdaCustodianName { get; }
 	}
-	
+
+	[NoWatch] // headers says it's available but it's only usable from another, unavailable, type
+	[iOS (10,0)]
+	[Static]
+	[Internal]
+	interface HKDetailedCdaErrorKeys {
+		[Field ("HKDetailedCDAValidationErrorKey")]
+		NSString ValidationErrorKey { get; }
+	}
+
+	[NoWatch]
+	[iOS (10,0)]
+	[StrongDictionary ("HKDetailedCdaErrorKeys")]
+	[Internal]
+	interface HKDetailedCdaErrors {
+		NSString ValidationError { get; }
+	}
+
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
 	[BaseType (typeof (HKSample))]
-	public interface HKCategorySample {
+	interface HKCategorySample {
 		[Export ("categoryType")]
 		HKCategoryType CategoryType { get; }
 
@@ -171,10 +222,61 @@ namespace XamCore.HealthKit {
 		HKCategorySample FromType (HKCategoryType type, nint value, NSDate startDate, NSDate endDate, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary<NSString,NSObject> metadata);
 	}
 
+	[Watch (3,0), iOS (10,0)]
+	[BaseType (typeof(HKSample))]
+	[Abstract] // as per docs
+	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKDocumentSample
+	interface HKDocumentSample
+	{
+		[NoWatch] // HKDocumentType is iOS only, rdar #27865614
+		[Export ("documentType", ArgumentSemantic.Strong)]
+		HKDocumentType DocumentType { get; }
+	}
+
+	[NoWatch, iOS (10,0)]
+	[BaseType (typeof(HKDocumentSample), Name = "HKCDADocumentSample")]
+	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKCDADocumentSample
+	interface HKCdaDocumentSample
+	{
+		[NullAllowed, Export ("document")]
+		HKCdaDocument Document { get; }
+
+		[NoWatch]
+		[Static]
+		[Export ("CDADocumentSampleWithData:startDate:endDate:metadata:validationError:")]
+		[return: NullAllowed]
+		HKCdaDocumentSample Create (NSData documentData, NSDate startDate, NSDate endDate, [NullAllowed] NSDictionary metadata, out NSError validationError);
+
+		[Static, Wrap ("Create (documentData, startDate, endDate, metadata != null ? metadata.Dictionary : null, out validationError)")]
+		HKCdaDocumentSample Create (NSData documentData, NSDate startDate, NSDate endDate, HKMetadata metadata, out NSError validationError);
+	}
+
+	[Watch (3,0), iOS (10,0)]
+	[BaseType (typeof(NSObject), Name = "HKCDADocument")]
+	[DisableDefaultCtor] // as per docs
+	interface HKCdaDocument
+	{
+		[NullAllowed, Export ("documentData", ArgumentSemantic.Copy)]
+		NSData DocumentData { get; }
+
+		[Export ("title")]
+		string Title { get; }
+
+		[Export ("patientName")]
+		string PatientName { get; }
+
+		[Export ("authorName")]
+		string AuthorName { get; }
+
+		[Export ("custodianName")]
+		string CustodianName { get; }
+	}
+
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKSample))]
 	[DisableDefaultCtor] // NSInvalidArgumentException: The -init method is not available on HKCorrelation
-	public interface HKCorrelation : NSSecureCoding {
+	interface HKCorrelation : NSSecureCoding {
 
 		[Export ("objects")]
 		NSSet Objects { get; }
@@ -201,12 +303,13 @@ namespace XamCore.HealthKit {
 		HKCorrelation Create (HKCorrelationType correlationType, NSDate startDate, NSDate endDate, NSSet<HKSample> objects, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary<NSString,NSObject> metadata);
 	}
 
-	public delegate void HKCorrelationQueryResultHandler (HKCorrelationQuery query, HKCorrelation[] correlations, NSError error);
+	delegate void HKCorrelationQueryResultHandler (HKCorrelationQuery query, HKCorrelation[] correlations, NSError error);
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKQuery))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKCorrelationQuery
-	public interface HKCorrelationQuery {
+	interface HKCorrelationQuery {
 		[Export ("initWithType:predicate:samplePredicates:completion:")]
 		IntPtr Constructor (HKCorrelationType correlationType, [NullAllowed] NSPredicate predicate, [NullAllowed] NSDictionary samplePredicates, HKCorrelationQueryResultHandler completion);
 
@@ -217,16 +320,18 @@ namespace XamCore.HealthKit {
 		NSDictionary SamplePredicates { get; }
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKSampleType))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKCorrelationType
-	public interface HKCorrelationType {
+	interface HKCorrelationType {
 
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
-	public interface HKHealthStore {
+	interface HKHealthStore {
 		// FIXME NS_EXTENSION_UNAVAILABLE("Not available to extensions") ;
 		[Static]
 		[Export ("isHealthDataAvailable")]
@@ -278,13 +383,25 @@ namespace XamCore.HealthKit {
 		[return: NullAllowed]
 		HKFitzpatrickSkinTypeObject GetFitzpatrickSkinType (out NSError error);
 
+		[Watch (3,0), iOS (10,0)]
+		[Export ("wheelchairUseWithError:")]
+		[return: NullAllowed]
+		HKWheelchairUseObject GetWheelchairUse (out NSError error);
+
 		// FIXME NS_EXTENSION_UNAVAILABLE("Not available to extensions") ;
 		[Export ("stopQuery:")]
 		void StopQuery (HKQuery query);
 
 		// FIXME NS_EXTENSION_UNAVAILABLE("Not available to extensions") ;
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use GetDateOfBirthComponents instead")]
+		[Deprecated (PlatformName.iOS, 10, 0, message: "Use GetDateOfBirthComponents instead")]
 		[Export ("dateOfBirthWithError:")]
 		NSDate GetDateOfBirth (out NSError error);
+
+		[Watch (3,0), iOS (10,0)]
+		[Export ("dateOfBirthComponentsWithError:")]
+		[return: NullAllowed]
+		NSDateComponents GetDateOfBirthComponents (out NSError error);
 
 		// FIXME NS_EXTENSION_UNAVAILABLE("Not available to extensions") ;
 		[Export ("biologicalSexWithError:")]
@@ -316,7 +433,7 @@ namespace XamCore.HealthKit {
 		[Export ("splitTotalEnergy:startDate:endDate:resultsHandler:")]
 		void SplitTotalEnergy (HKQuantity totalEnergy, NSDate startDate, NSDate endDate, Action<HKQuantity, HKQuantity, NSError> resultsHandler);
 
-		// HKHealthStore category
+		// HKWorkout category
 
 		[Export ("addSamples:toWorkout:completion:")]
 		void AddSamples (HKSample [] samples, HKWorkout workout, HKStoreSampleAddedCallback callback);
@@ -331,6 +448,19 @@ namespace XamCore.HealthKit {
 		[Export ("endWorkoutSession:")]
 		void EndWorkoutSession (HKWorkoutSession workoutSession);
 
+		[Watch (3,0), NoiOS]
+		[Export ("pauseWorkoutSession:")]
+		void PauseWorkoutSession (HKWorkoutSession workoutSession);
+
+		[Watch (3,0), NoiOS]
+		[Export ("resumeWorkoutSession:")]
+		void ResumeWorkoutSession (HKWorkoutSession workoutSession);
+
+		[NoWatch, iOS (10,0)]
+		[Async]
+		[Export ("startWatchAppWithWorkoutConfiguration:completion:")]
+		void StartWatchApp (HKWorkoutConfiguration workoutConfiguration, Action<bool, NSError> completion);
+
 		// HKUserPreferences category
 
 		[iOS (8,2)]
@@ -344,24 +474,26 @@ namespace XamCore.HealthKit {
 		NSString UserPreferencesDidChangeNotification { get; }
 	}
 
-	public delegate void HKStoreSampleAddedCallback (bool success, NSError error);
+	delegate void HKStoreSampleAddedCallback (bool success, NSError error);
 	
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
-	public interface HKBiologicalSexObject : NSCopying, NSSecureCoding {
+	interface HKBiologicalSexObject : NSCopying, NSSecureCoding {
 		[Export ("biologicalSex")]
 		HKBiologicalSex BiologicalSex { get; }
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
-	public interface HKBloodTypeObject : NSCopying, NSSecureCoding {
+	interface HKBloodTypeObject : NSCopying, NSSecureCoding {
 		[Export ("bloodType")]
 		HKBloodType BloodType { get; }
 	}
 
 	[StrongDictionary ("HKMetadataKey")]
-	public interface HKMetadata {
+	interface HKMetadata {
 		[Export ("FoodType")]
 		string FoodType { get; set; }
 
@@ -396,8 +528,8 @@ namespace XamCore.HealthKit {
 		string DeviceManufacturerName { get; set; }
 		
 		[Export ("WasTakenInLab")]
-		bool WasTakenInLab { get; set; 
-}
+		bool WasTakenInLab { get; set; }
+
 		[Export ("ReferenceRangeLowerLimit")]
 		NSNumber ReferenceRangeLowerLimit { get; set; }
 		
@@ -426,11 +558,36 @@ namespace XamCore.HealthKit {
 		[iOS (9,0)]
 		[Export ("MenstrualCycleStart")]
 		bool MenstrualCycleStart { get; set; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Export ("WeatherCondition")]
+		HKWeatherCondition WeatherCondition { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Export ("WeatherTemperature")]
+		HKQuantity WeatherTemperature { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Export ("WeatherHumidity")]
+		HKQuantity WeatherHumidity { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Export ("LapLength")]
+		NSString LapLength { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Export ("SwimmingLocationType")]
+		NSString SwimmingLocationType { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Export ("SwimmingStrokeStyle")]
+		NSString SwimmingStrokeStyle { get; }
 	}
 		
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[Static]
-	public interface HKMetadataKey {
+	interface HKMetadataKey {
 		[Field ("HKMetadataKeyDeviceSerialNumber")]
 		NSString DeviceSerialNumber { get; }
 
@@ -495,12 +652,40 @@ namespace XamCore.HealthKit {
 		[iOS (9,0)]
 		[Field ("HKMetadataKeyMenstrualCycleStart")]
 		NSString MenstrualCycleStart { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HKMetadataKeyWeatherCondition")]
+		NSString WeatherCondition { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HKMetadataKeyWeatherTemperature")]
+		NSString WeatherTemperature { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HKMetadataKeyWeatherHumidity")]
+		NSString WeatherHumidity { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HKMetadataKeyLapLength")]
+		NSString LapLength { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HKMetadataKeySwimmingLocationType")]
+		NSString SwimmingLocationType { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HKMetadataKeySwimmingStrokeStyle")]
+		NSString SwimmingStrokeStyle { get; }
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
+#if XAMCORE_4_0
+	[Abstract] // as per docs
+#endif
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
 	[BaseType (typeof (NSObject))]
-	public interface HKObject : NSSecureCoding {
+	interface HKObject : NSSecureCoding {
 		[Export ("UUID", ArgumentSemantic.Strong)]
 		NSUuid Uuid { get; }
 
@@ -523,34 +708,71 @@ namespace XamCore.HealthKit {
 		HKDevice Device { get; }
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
+#if XAMCORE_4_0
+	[Abstract]
+#endif
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
 	[BaseType (typeof (NSObject))]
-	public interface HKObjectType : NSSecureCoding, NSCopying {
+	interface HKObjectType : NSSecureCoding, NSCopying {
 		// These identifiers come from HKTypeIdentifiers
 		[Export ("identifier")]
 		NSString Identifier { get; }
 
-		// TODO: introduce an enum? Allows HKTypeIdentifiers's 
+#if XAMCORE_4_0 || WATCH
+		[Internal]
+#else
+		[Obsolete ("Use HKQuantityType.Create (HKQuantityTypeIdentifier)")]
+#endif
 		[Static]
 		[Export ("quantityTypeForIdentifier:")]
+		[return: NullAllowed]
 		HKQuantityType GetQuantityType (NSString hkTypeIdentifier);
 
-		// TODO: introduce an enum?  Allows Hkcategorytypeidentifier's
+#if XAMCORE_4_0 || WATCH
+		[Internal]
+#else
+		[Obsolete ("Use HKCategoryType.Create (HKCategoryTypeIdentifier)")]
+#endif
 		[Static]
 		[Export ("categoryTypeForIdentifier:")]
+		[return: NullAllowed]
 		HKCategoryType GetCategoryType (NSString hkCategoryTypeIdentifier);
 
-		// TODO: introduce an enum?  Allows hkCharacteristicTypeIdentifier cosntats
+#if XAMCORE_4_0 || WATCH
+		[Internal]
+#else
+		[Obsolete ("Use HKCharacteristicType.Create (HKCharacteristicTypeIdentifier)")]
+#endif
 		[Static]
 		[Export ("characteristicTypeForIdentifier:")]
+		[return: NullAllowed]
 		HKCharacteristicType GetCharacteristicType (NSString hkCharacteristicTypeIdentifier);
 
+#if XAMCORE_4_0 || WATCH
+		[Internal]
+#else
+		[Obsolete ("Use HKCorrelationType.Create (HKCorrelationTypeIdentifier)")]
+#endif
 		[Static, Export ("correlationTypeForIdentifier:")]
+		[return: NullAllowed]
 		HKCorrelationType GetCorrelationType (NSString hkCorrelationTypeIdentifier);
 
+		[NoWatch] // HKDocumentType is iOS only, rdar #27865614
+		[iOS (10,0)]
+		[Internal]
+		[Static]
+		[Export ("documentTypeForIdentifier:")]
+		[return: NullAllowed]
+		HKDocumentType _GetDocumentType (NSString hkDocumentTypeIdentifier);
+
 		[Static, Export ("workoutType")]
+#if XAMCORE_4_0
+		HKWorkoutType WorkoutType { get; }
+#else
 		HKWorkoutType GetWorkoutType ();
+#endif
 
 		[Watch (2,2)]
 		[iOS (9,3)]
@@ -559,34 +781,46 @@ namespace XamCore.HealthKit {
 		HKActivitySummaryType ActivitySummaryType { get; }
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKObjectType))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKCharacteristicType
-	public interface HKCharacteristicType {
+	interface HKCharacteristicType {
 
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKSampleType
 	[BaseType (typeof (HKObjectType))]
 #if XAMCORE_2_0
 	[Abstract] // The HKSampleType class is an abstract subclass of the HKObjectType class, used to represent data samples. Never instantiate an HKSampleType object directly. Instead, you should always work with one of its concrete subclasses [...]
 #endif
-	public interface HKSampleType {
+	interface HKSampleType {
 
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKSampleType))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKCategoryType
-	public interface HKCategoryType {
+	interface HKCategoryType {
 
 	}
 
+	[NoWatch] // marked as iOS-only (confirmed by Apple) even if some watchOS 3 API returns this type, rdar #27865614
+	[iOS (10,0)]
+	[BaseType (typeof (HKSampleType))]
+	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKDocumentType
+	interface HKDocumentType {
+
+	}
+
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKSampleType))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKQuantityType
-	public interface HKQuantityType {
+	interface HKQuantityType {
 		[Export ("aggregationStyle")]
 		HKQuantityAggregationStyle AggregationStyle { get; }
 
@@ -595,24 +829,29 @@ namespace XamCore.HealthKit {
 	}
 
 #if XAMCORE_2_0
-	public delegate void HKObserverQueryUpdateHandler (HKObserverQuery query, [BlockCallback] Action completion, NSError error);
+	delegate void HKObserverQueryUpdateHandler (HKObserverQuery query, [BlockCallback] Action completion, NSError error);
 #else
-	public delegate void HKObserverQueryCompletionHandler ();
-	public delegate void HKObserverQueryUpdateHandler (HKObserverQuery query, [BlockCallback] HKObserverQueryCompletionHandler completion, NSError error);
+	delegate void HKObserverQueryCompletionHandler ();
+	delegate void HKObserverQueryUpdateHandler (HKObserverQuery query, [BlockCallback] HKObserverQueryCompletionHandler completion, NSError error);
 #endif
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKQuery))]
+#if XAMCORE_4_0
+	[Abstract]
+#endif
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKObserverQuery
-	public interface HKObserverQuery {
+	interface HKObserverQuery {
 		[Export ("initWithSampleType:predicate:updateHandler:")]
 		IntPtr Constructor (HKSampleType sampleType, [NullAllowed] NSPredicate predicate, HKObserverQueryUpdateHandler updateHandler);
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
 	[BaseType (typeof (NSObject))]
-	public interface HKQuantity : NSSecureCoding, NSCopying {
+	interface HKQuantity : NSSecureCoding, NSCopying {
 		[Static]
 		[Export ("quantityWithUnit:doubleValue:")]
 		HKQuantity FromQuantity (HKUnit unit, double value);
@@ -627,10 +866,11 @@ namespace XamCore.HealthKit {
 		NSComparisonResult Compare (HKQuantity quantity);
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKSample))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKQuantitySample
-	public interface HKQuantitySample {
+	interface HKQuantitySample {
 		[Export ("quantityType", ArgumentSemantic.Strong)]
 		HKQuantityType QuantityType { get; }
 
@@ -656,10 +896,11 @@ namespace XamCore.HealthKit {
 		HKQuantitySample FromType (HKQuantityType quantityType, HKQuantity quantity, NSDate startDate, NSDate endDate, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary<NSString,NSObject> metadata);
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
 	[BaseType (typeof (NSObject))]
-	public interface HKQuery {
+	interface HKQuery {
 		[iOS (9,3), Watch (2,2)]
 		[NullAllowed, Export ("objectType", ArgumentSemantic.Strong)]
 		HKObjectType ObjectType { get; }
@@ -758,6 +999,11 @@ namespace XamCore.HealthKit {
 		[Export ("predicateForWorkoutsWithOperatorType:totalDistance:")]
 		NSPredicate GetPredicateForTotalDistance (NSPredicateOperatorType operatorType, HKQuantity totalDistance);
 
+		[iOS (10,0), Watch (3,0)]
+		[Static]
+		[Export ("predicateForWorkoutsWithOperatorType:totalSwimmingStrokeCount:")]
+		NSPredicate GetPredicateForTotalSwimmingStrokeCount (NSPredicateOperatorType operatorType, HKQuantity totalSwimmingStrokeCount);
+
 		// HKActivitySummaryPredicates
 
 		[iOS (9,3), Watch (2,2)]
@@ -771,10 +1017,14 @@ namespace XamCore.HealthKit {
 		NSPredicate GetPredicateForActivitySummariesBetween (NSDateComponents startDateComponents, NSDateComponents endDateComponents);
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKObject))]
+#if XAMCORE_4_0
+	[Abstract]
+#endif
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKSample
-	public interface HKSample {
+	interface HKSample {
 
 		[Export ("sampleType", ArgumentSemantic.Strong)]
 		HKSampleType SampleType { get; }
@@ -795,12 +1045,13 @@ namespace XamCore.HealthKit {
 
 	}
 
-	public delegate void HKSampleQueryResultsHandler (HKSampleQuery query, HKSample [] results, NSError error);
+	delegate void HKSampleQueryResultsHandler (HKSampleQuery query, HKSample [] results, NSError error);
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKQuery))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKSampleQuery
-	public interface HKSampleQuery {
+	interface HKSampleQuery {
 
 		[Export ("limit")]
 		nuint Limit { get; }
@@ -812,10 +1063,11 @@ namespace XamCore.HealthKit {
 		IntPtr Constructor (HKSampleType sampleType, [NullAllowed] NSPredicate predicate, nuint limit, [NullAllowed] NSSortDescriptor[] sortDescriptors, HKSampleQueryResultsHandler resultsHandler);
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
 	[BaseType (typeof (NSObject))]
-	public interface HKSource : NSSecureCoding, NSCopying {
+	interface HKSource : NSSecureCoding, NSCopying {
 		[Export ("name")]
 		string Name { get; }
 
@@ -827,21 +1079,23 @@ namespace XamCore.HealthKit {
 		HKSource GetDefaultSource { get; }
 	}
 
-	public delegate void HKSourceQueryCompletionHandler (HKSourceQuery query, NSSet sources, NSError error);
+	delegate void HKSourceQueryCompletionHandler (HKSourceQuery query, NSSet sources, NSError error);
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKQuery))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKSourceQuery
-	public interface HKSourceQuery {
+	interface HKSourceQuery {
 
 		[Export ("initWithSampleType:samplePredicate:completionHandler:")]
 		IntPtr Constructor (HKSampleType sampleType, [NullAllowed] NSPredicate objectPredicate, HKSourceQueryCompletionHandler completionHandler);
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
 	[BaseType (typeof (NSObject))]
-	public interface HKStatistics : NSSecureCoding, NSCopying {
+	interface HKStatistics : NSSecureCoding, NSCopying {
 		[Export ("quantityType", ArgumentSemantic.Strong)]
 		HKQuantityType QuantityType { get; }
 
@@ -879,12 +1133,13 @@ namespace XamCore.HealthKit {
 		HKQuantity SumQuantity ();
 	}
 
-	public delegate void HKStatisticsCollectionEnumerator (HKStatistics result, bool stop);
+	delegate void HKStatisticsCollectionEnumerator (HKStatistics result, bool stop);
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
 	[BaseType (typeof (NSObject))]
-	public interface HKStatisticsCollection {
+	interface HKStatisticsCollection {
 
 		[Export ("statisticsForDate:")]
 		HKStatistics GetStatistics (NSDate date);
@@ -899,14 +1154,15 @@ namespace XamCore.HealthKit {
 		NSSet Sources { get; }
 	}
 
-	public delegate void HKStatisticsCollectionQueryInitialResultsHandler (HKStatisticsCollectionQuery query, HKStatisticsCollection result, NSError error);
-	public delegate void HKStatisticsCollectionQueryStatisticsUpdateHandler (HKStatisticsCollectionQuery query, HKStatistics statistics, HKStatisticsCollection collection, NSError error);
+	delegate void HKStatisticsCollectionQueryInitialResultsHandler (HKStatisticsCollectionQuery query, HKStatisticsCollection result, NSError error);
+	delegate void HKStatisticsCollectionQueryStatisticsUpdateHandler (HKStatisticsCollectionQuery query, HKStatistics statistics, HKStatisticsCollection collection, NSError error);
 
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKQuery))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKStatisticsCollectionQuery
-	public interface HKStatisticsCollectionQuery {
+	interface HKStatisticsCollectionQuery {
 
 		[Export ("anchorDate", ArgumentSemantic.Strong)]
 		NSDate AnchorDate { get; }
@@ -927,20 +1183,22 @@ namespace XamCore.HealthKit {
 		IntPtr Constructor (HKQuantityType quantityType, [NullAllowed] NSPredicate quantitySamplePredicate, HKStatisticsOptions options, NSDate anchorDate, NSDateComponents intervalComponents);
 	}
 
-	public delegate void HKStatisticsQueryHandler (HKStatisticsQuery query, HKStatistics result, NSError error);
+	delegate void HKStatisticsQueryHandler (HKStatisticsQuery query, HKStatistics result, NSError error);
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKQuery))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKStatisticsQuery
-	public interface HKStatisticsQuery {
+	interface HKStatisticsQuery {
 
 		[Export ("initWithQuantityType:quantitySamplePredicate:options:completionHandler:")]
 		IntPtr Constructor (HKQuantityType quantityType, [NullAllowed] NSPredicate quantitySamplePredicate, HKStatisticsOptions options, HKStatisticsQueryHandler handler);
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[Static]
-	public interface HKQuantityTypeIdentifierKey {
+	interface HKQuantityTypeIdentifierKey {
 
 		[Field ("HKQuantityTypeIdentifierBodyMassIndex")]
 		NSString BodyMassIndex { get; }
@@ -969,6 +1227,10 @@ namespace XamCore.HealthKit {
 		[Field ("HKQuantityTypeIdentifierDistanceCycling")]
 		NSString DistanceCycling { get; }
 
+		[iOS (10,0), Watch (3,0)]
+		[Field ("HKQuantityTypeIdentifierDistanceWheelchair")]
+		NSString DistanceWheelchair { get; }
+
 		[Field ("HKQuantityTypeIdentifierBasalEnergyBurned")]
 		NSString BasalEnergyBurned { get; }
 
@@ -984,6 +1246,18 @@ namespace XamCore.HealthKit {
 		[iOS (9,3), Watch (2,2)]
 		[Field ("HKQuantityTypeIdentifierAppleExerciseTime")]
 		NSString AppleExerciseTime { get; }
+
+		[iOS (10,0), Watch (3,0)]
+		[Field ("HKQuantityTypeIdentifierPushCount")]
+		NSString PushCount { get; }
+
+		[iOS (10,0), Watch (3,0)]
+		[Field ("HKQuantityTypeIdentifierDistanceSwimming")]
+		NSString DistanceSwimming { get; }
+
+		[iOS (10,0), Watch (3,0)]
+		[Field ("HKQuantityTypeIdentifierSwimmingStrokeCount")]
+		NSString SwimmingStrokeCount { get; }
 
 		// Blood
 		[Field ("HKQuantityTypeIdentifierOxygenSaturation")]
@@ -1159,20 +1433,23 @@ namespace XamCore.HealthKit {
 		// If you add field, add them to the enum too.
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[Static]
-	public interface HKCorrelationTypeKey {
+	interface HKCorrelationTypeKey {
 		[Field ("HKCorrelationTypeIdentifierBloodPressure")]
 		NSString IdentifierBloodPressure { get; }
 		
 		[Field ("HKCorrelationTypeIdentifierFood")]
 		NSString IdentifierFood { get; }
-	}
-	
 
+		// If you add fields, add them to the enum too.
+	}
+
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[Static]
-	public interface HKCategoryTypeIdentifierKey
+	interface HKCategoryTypeIdentifierKey
 	{
 		/**** HKCategoryType Identifiers ****/
 
@@ -1202,11 +1479,18 @@ namespace XamCore.HealthKit {
 		[iOS (9,0)]
 		[Field ("HKCategoryTypeIdentifierSexualActivity")]
 		NSString SexualActivity { get; }
+
+		[iOS (10,0), Watch (3,0)]
+		[Field ("HKCategoryTypeIdentifierMindfulSession")]
+		NSString MindfulSession { get; }
+
+		// If you add fields, add them to the enum too.
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[Static]
-	public interface HKCharacteristicTypeIdentifierKey
+	interface HKCharacteristicTypeIdentifierKey
 	{
 		/**** HKCharacteristicType Identifiers ****/
 
@@ -1222,12 +1506,19 @@ namespace XamCore.HealthKit {
 		[iOS (9,0)]
 		[Field ("HKCharacteristicTypeIdentifierFitzpatrickSkinType")]
 		NSString FitzpatrickSkinType { get; }
+
+		[iOS (10,0), Watch (3,0)]
+		[Field ("HKCharacteristicTypeIdentifierWheelchairUse")]
+		NSString WheelchairUse { get; }
+
+		// If you add fields, add them to the enum too.
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[DisableDefaultCtor] // - (instancetype)init NS_UNAVAILABLE;
 	[BaseType (typeof (NSObject))]
-	public interface HKUnit : NSCopying, NSSecureCoding {
+	interface HKUnit : NSCopying, NSSecureCoding {
 
 		[Export ("unitString")]
 		string UnitString { get; }
@@ -1462,10 +1753,11 @@ namespace XamCore.HealthKit {
 		HKUnit ReciprocalUnit ();
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKSample))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKWorkout
-	public interface HKWorkout {
+	interface HKWorkout {
 		[Export ("workoutActivityType")]
 		HKWorkoutActivityType WorkoutActivityType { get; }
 
@@ -1480,6 +1772,10 @@ namespace XamCore.HealthKit {
 
 		[Export ("totalDistance", ArgumentSemantic.Retain)]
 		HKQuantity TotalDistance { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[NullAllowed, Export ("totalSwimmingStrokeCount", ArgumentSemantic.Strong)]
+		HKQuantity TotalSwimmingStrokeCount { get; }
 
 		[Static, Export ("workoutWithActivityType:startDate:endDate:")]
 		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate);
@@ -1518,6 +1814,16 @@ namespace XamCore.HealthKit {
 		[Wrap ("Create (workoutActivityType, startDate, endDate, duration, totalEnergyBurned, totalDistance, device, metadata == null ? null : metadata.Dictionary)")]
 		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, double duration, HKQuantity totalEnergyBurned, HKQuantity totalDistance, HKDevice device, HKMetadata metadata);
 
+		[Watch (3,0), iOS (10,0)]
+		[Static]
+		[Export ("workoutWithActivityType:startDate:endDate:workoutEvents:totalEnergyBurned:totalDistance:totalSwimmingStrokeCount:device:metadata:")]
+		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, [NullAllowed] HKWorkoutEvent[] workoutEvents, [NullAllowed] HKQuantity totalEnergyBurned, [NullAllowed] HKQuantity totalDistance, [NullAllowed] HKQuantity totalSwimmingStrokeCount, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary metadata);
+
+		[Watch (3,0), iOS (10,0)]
+		[Static]
+		[Wrap ("Create (workoutActivityType, startDate, endDate, workoutEvents, totalEnergyBurned, totalDistance, totalSwimmingStrokeCount, device, metadata == null ? null : metadata.Dictionary)")]
+		HKWorkout Create (HKWorkoutActivityType workoutActivityType, NSDate startDate, NSDate endDate, HKWorkoutEvent[] workoutEvents, HKQuantity totalEnergyBurned, HKQuantity totalDistance, HKQuantity totalSwimmingStrokeCount, HKDevice device, HKMetadata metadata);
+
 		// TODO: where is this thing used?
 		[Field ("HKWorkoutSortIdentifierDuration")]
 		NSString SortIdentifierDuration { get; }
@@ -1529,42 +1835,70 @@ namespace XamCore.HealthKit {
 		// TODO: where is this thing used?
 		[Field ("HKWorkoutSortIdentifierTotalEnergyBurned")]
 		NSString SortIdentifierTotalEnergyBurned { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Field ("HKWorkoutSortIdentifierTotalSwimmingStrokeCount")]
+		NSString SortIdentifierTotalSwimmingStrokeCount { get; }
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface HKWorkoutEvent : NSSecureCoding {
+	interface HKWorkoutEvent : NSSecureCoding, NSCopying {
 		[Export ("type")]
 		HKWorkoutEventType Type { get; }
 
 		[Export ("date", ArgumentSemantic.Copy)]
 		NSDate Date { get; }
 
+		[Watch (3,0), iOS (10,0)]
+		[NullAllowed, Export ("metadata", ArgumentSemantic.Copy)]
+		NSDictionary WeakMetadata { get; }
+
+		[Watch (3,0), iOS (10,0)]
+		[Wrap ("WeakMetadata")]
+		HKMetadata Metadata { get; }
+
 		[Static, Export ("workoutEventWithType:date:")]
 		HKWorkoutEvent Create (HKWorkoutEventType type, NSDate date);
+
+		[Watch (3,0), iOS (10,0)]
+		[Static]
+		[EditorBrowsable (EditorBrowsableState.Advanced)] // this is not the one we want to be seen (compat only)
+		[Export ("workoutEventWithType:date:metadata:")]
+		HKWorkoutEvent Create (HKWorkoutEventType type, NSDate date, NSDictionary metadata);
+
+		[Watch (3,0), iOS (10,0)]
+		[Static]
+		[Wrap ("Create (type, date, metadata != null ? metadata.Dictionary : null)")]
+		HKWorkoutEvent Create (HKWorkoutEventType type, NSDate date, HKMetadata metadata);
 	}
 
+	[Watch (2,0)]
 	[iOS (8,0)]
 	[BaseType (typeof (HKSampleType))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKWorkoutType
-	public interface HKWorkoutType {
+	interface HKWorkoutType {
 		[Field ("HKWorkoutTypeIdentifier")]
 		NSString Identifier { get; }
 	}
 
+	[Watch (2,0)]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface HKDeletedObject : NSSecureCoding {
+	interface HKDeletedObject : NSSecureCoding {
 		[Export ("UUID", ArgumentSemantic.Strong)]
 		NSUuid Uuid { get; }
 	}
 
+	[Watch (2,0)]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface HKDevice : NSSecureCoding, NSCopying {
+	interface HKDevice : NSSecureCoding, NSCopying {
+		[NullAllowed]
 		[Export ("name")]
 		string Name { get; }
 
@@ -1597,6 +1931,25 @@ namespace XamCore.HealthKit {
 		HKDevice LocalDevice { get; }
 	}
 
+	[NoWatch, iOS (10,0)]
+	[BaseType (typeof(HKQuery))]
+	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKDocumentQuery
+	interface HKDocumentQuery
+	{
+		[Export ("limit")]
+		nuint Limit { get; }
+
+		[NullAllowed, Export ("sortDescriptors", ArgumentSemantic.Copy)]
+		NSSortDescriptor[] SortDescriptors { get; }
+
+		[Export ("includeDocumentData")]
+		bool IncludeDocumentData { get; }
+
+		[Export ("initWithDocumentType:predicate:limit:sortDescriptors:includeDocumentData:resultsHandler:")]
+		IntPtr Constructor (HKDocumentType documentType, [NullAllowed] NSPredicate predicate, nuint limit, [NullAllowed] NSSortDescriptor[] sortDescriptors, bool includeDocumentData, Action<HKDocumentQuery, HKDocumentSample [], bool, NSError> resultsHandler);
+	}
+
+	[Watch (2,0)]
 	[iOS (9,0)]
 	[Static]
 	interface HKDevicePropertyKey {
@@ -1625,17 +1978,26 @@ namespace XamCore.HealthKit {
 		NSString UdiDeviceIdentifier { get; }
 	}
 
+	[Watch (2,0)]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
-	public interface HKFitzpatrickSkinTypeObject : NSCopying, NSSecureCoding {
+	interface HKFitzpatrickSkinTypeObject : NSCopying, NSSecureCoding {
 		[Export ("skinType")]
 		HKFitzpatrickSkinType SkinType { get; }
 	}
 
+	[Watch (3,0), iOS (10,0)]
+	[BaseType (typeof(NSObject))]
+	interface HKWheelchairUseObject : NSCopying, NSSecureCoding {
+		[Export ("wheelchairUse")]
+		HKWheelchairUse WheelchairUse { get; }
+	}
+
+	[Watch (2,0)]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface HKSourceRevision : NSSecureCoding, NSCopying {
+	interface HKSourceRevision : NSSecureCoding, NSCopying {
 		[Export ("source")]
 		HKSource Source { get; }
 
@@ -1643,13 +2005,14 @@ namespace XamCore.HealthKit {
 		string Version { get; }
 
 		[Export ("initWithSource:version:")]
-		IntPtr Constructor (HKSource source, string version);
+		IntPtr Constructor (HKSource source, [NullAllowed] string version);
 	}
 
+	[Watch (2,0)]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface HKQueryAnchor : NSSecureCoding, NSCopying {
+	interface HKQueryAnchor : NSSecureCoding, NSCopying {
 		[Static]
 		[Export ("anchorFromValue:")]
 		HKQueryAnchor Create (nuint value);
@@ -1660,12 +2023,18 @@ namespace XamCore.HealthKit {
 	[Watch (2,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	public interface HKWorkoutSession : NSSecureCoding {
+	interface HKWorkoutSession : NSSecureCoding {
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use WorkoutConfiguration")]
 		[Export ("activityType")]
 		HKWorkoutActivityType ActivityType { get; }
 
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use WorkoutConfiguration")]
 		[Export ("locationType")]
 		HKWorkoutSessionLocationType LocationType { get; }
+
+		[Watch (3,0)]
+		[Export ("workoutConfiguration", ArgumentSemantic.Copy)]
+		HKWorkoutConfiguration WorkoutConfiguration { get; }
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
@@ -1684,15 +2053,20 @@ namespace XamCore.HealthKit {
 		[NullAllowed, Export ("endDate")]
 		NSDate EndDate { get; }
 
+		[Deprecated (PlatformName.WatchOS, 3, 0, message: "Use HKWorkoutSession (HKWorkoutConfiguration, out NSError)")]
 		[Export ("initWithActivityType:locationType:")]
 		IntPtr Constructor (HKWorkoutActivityType activityType, HKWorkoutSessionLocationType locationType);
+
+		[Watch (3,0)]
+		[Export ("initWithConfiguration:error:")]
+		IntPtr Constructor (HKWorkoutConfiguration workoutConfiguration, out NSError error);
 	}
 
 	[NoiOS]
 	[Watch (2,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
-	public interface HKWorkoutSessionDelegate {
+	interface HKWorkoutSessionDelegate {
 		[Abstract]
 		[Export ("workoutSession:didChangeToState:fromState:date:")]
 		void DidChangeToState (HKWorkoutSession workoutSession, HKWorkoutSessionState toState, HKWorkoutSessionState fromState, NSDate date);
@@ -1700,6 +2074,10 @@ namespace XamCore.HealthKit {
 		[Abstract]
 		[Export ("workoutSession:didFailWithError:")]
 		void DidFail (HKWorkoutSession workoutSession, NSError error);
+
+		[Watch (3,0), iOS (10,0)]
+		[Export ("workoutSession:didGenerateEvent:")]
+		void DidGenerateEvent (HKWorkoutSession workoutSession, HKWorkoutEvent @event);
 	}
 
 	[iOS (9,3), Watch (2,2)]
@@ -1741,6 +2119,23 @@ namespace XamCore.HealthKit {
 	[iOS (9,3), Watch (2,2)]
 	[BaseType (typeof (HKObjectType))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKActivitySummaryType
-	public interface HKActivitySummaryType {
+	interface HKActivitySummaryType {
+	}
+
+	[Watch (3,0)][iOS (10,0)]
+	[BaseType (typeof (NSObject))]
+	interface HKWorkoutConfiguration : NSCopying, NSSecureCoding {
+
+		[Export ("activityType", ArgumentSemantic.Assign)]
+		HKWorkoutActivityType ActivityType { get; set; }
+
+		[Export ("locationType", ArgumentSemantic.Assign)]
+		HKWorkoutSessionLocationType LocationType { get; set; }
+
+		[Export ("swimmingLocationType", ArgumentSemantic.Assign)]
+		HKWorkoutSwimmingLocationType SwimmingLocationType { get; set; }
+
+		[NullAllowed, Export ("lapLength", ArgumentSemantic.Copy)]
+		HKQuantity LapLength { get; set; }
 	}
 }

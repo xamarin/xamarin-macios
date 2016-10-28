@@ -59,54 +59,7 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
- <Compile Include="MacApiCtorInitTest.cs" />
-    <Compile Include="MacApiFieldTest.cs" />
-    <Compile Include="Mac.cs" />
-    <Compile Include="MacApiSelectorTest.cs" />
-    <Compile Include="MacApiProtocolTest.cs" />
-    <Compile Include="MacApiSignatureTest.cs" />
-    <Compile Include="..\bindings\CoreSelectorTest.cs">
-      <Link>CoreSelectorTest.cs</Link>
-    </Compile>
-    <Compile Include="..\bindings\ApiBaseTest.cs">
-      <Link>ApiBaseTest.cs</Link>
-    </Compile>
-    <Compile Include="..\bindings\ApiCtorInitTest.cs">
-      <Link>ApiCtorInitTest.cs</Link>
-    </Compile>
-    <Compile Include="..\bindings\ApiFieldTest.cs">
-      <Link>ApiFieldTest.cs</Link>
-    </Compile>
-    <Compile Include="..\bindings\ApiSelectorTest.cs">
-      <Link>ApiSelectorTest.cs</Link>
-    </Compile>
-    <Compile Include="..\introspection\EnvironmentVariable.cs">
-      <Link>EnvironmentVariable.cs</Link>
-    </Compile>
-    <Compile Include="..\bindings\ApiCoreImageFiltersTest.cs">
-      <Link>ApiCoreImageFiltersTest.cs</Link>
-    </Compile>
-    <Compile Include="..\bindings\ApiPInvokeTest.cs">
-      <Link>ApiPInvokeTest.cs</Link>
-    </Compile>
-    <Compile Include="..\bindings\ApiProtocolTest.cs">
-      <Link>ApiProtocolTest.cs</Link>
-    </Compile>
-    <Compile Include="..\bindings\ApiSignatureTest.cs">
-      <Link>ApiSignatureTest.cs</Link>
-    </Compile>
-    <Compile Include="..\bindings\ApiStructTest.cs">
-      <Link>ApiStructTest.cs</Link>
-    </Compile>
-    <Compile Include="..\bindings\PlatformInfo.cs">
-      <Link>PlatformInfo.cs</Link>
-    </Compile>
-    <Compile Include="MacCoreImageFiltersTest.cs" />
-    <Compile Include="..\bindings\ApiWeakPropertyTest.cs">
-      <Link>ApiWeakPropertyTest.cs</Link>
-    </Compile>
-    <Compile Include="MacApiPInvokeTest.cs" />
-    <Compile Include="MacApiWeakPropertyTest.cs" />
+    <Compile Include="Stub.cs" />
     <Compile Include="..\common\mac\MacTestMain.cs">
       <Link>MacTestMain.cs</Link>
     </Compile>

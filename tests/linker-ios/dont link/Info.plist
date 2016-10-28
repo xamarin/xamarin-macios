@@ -6,6 +6,8 @@
 	<string>DontLinkTest</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.xamarin.dontlink</string>
+	<key>MinimumOSVersion</key>
+	<string>6.0</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
@@ -24,7 +26,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>MinimumOSVersion</key>
-	<string>5.1.1</string>
 </dict>
 </plist>

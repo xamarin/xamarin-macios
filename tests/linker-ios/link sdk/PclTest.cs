@@ -29,6 +29,9 @@ namespace LinkSdk {
 		[Test]
 		public void System ()
 		{
+#if __WATCHOS__
+			Assert.Ignore ("WatchOS doesn't support BSD sockets, which our network stack currently requires.");
+#endif
 			const string url = "http://www.google.com";
 			Uri uri = new Uri (url);
 			

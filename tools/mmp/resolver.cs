@@ -69,7 +69,11 @@ namespace Xamarin.Bundler {
 			if (cache.TryGetValue (name, out assembly))
 				return assembly;
 
-			assembly = AssemblyDefinition.ReadAssembly (fileName, new ReaderParameters { AssemblyResolver = this });
+			assembly = AssemblyDefinition.ReadAssembly (fileName, new ReaderParameters 
+				{
+					AssemblyResolver = this,
+					InMemory = new FileInfo (fileName).Length < 1024 * 1024 * 100 // 100 MB
+				});
 			cache.Add (name, assembly);
 			return assembly;
 		}
@@ -151,6 +155,10 @@ namespace Xamarin.Bundler {
 				return files [0];
 
 			return "";
+		}
+
+		public void Dispose ()
+		{
 		}
 	}
 }

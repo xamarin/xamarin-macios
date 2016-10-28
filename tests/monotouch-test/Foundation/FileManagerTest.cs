@@ -40,7 +40,7 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.Inconclusive ("sometimes crash under the iOS simulator (generally on the SL/iOS5 bots)");
 
 			NSFileManager fm = new NSFileManager ();
-			if (TestRuntime.CheckSystemAndSDKVersion (6, 0) && fm.UbiquityIdentityToken == null) {
+			if (TestRuntime.CheckXcodeVersion (4, 5) && fm.UbiquityIdentityToken == null) {
 				// UbiquityIdentityToken is a fast way to check if iCloud is enabled
 				Assert.Pass ("not iCloud enabled"); 
 			}

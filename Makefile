@@ -155,6 +155,12 @@ endif
 endif
 
 install-system: install-system-ios install-system-mac
+	@# Clean up some old files
+	$(Q) rm -Rf /Library/Frameworks/Mono.framework/External/xbuild/Xamarin/iOS
+	$(Q) rm -Rf /Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Xamarin.ObjcBinding.CSharp.targets
+	$(Q) rm -Rf /Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Xamarin.Common.CSharp.targets
+	$(Q) rm -Rf /Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Xamarin.ObjcBinding.Tasks.dll
+	$(Q) rm -Rf /Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac
 	$(Q) $(MAKE) install-symlinks MAC_DESTDIR=/ MAC_INSTALL_VERSION=Current IOS_DESTDIR=/ IOS_INSTALL_VERSION=Current -C msbuild V=$(V)
 ifdef ENABLE_XAMARIN
 	$(Q) $(MAKE) install-symlinks MAC_DESTDIR=/ MAC_INSTALL_VERSION=Current IOS_DESTDIR=/ IOS_INSTALL_VERSION=Current -C $(MACCORE_PATH) V=$(V)
@@ -181,6 +187,21 @@ fix-install-permissions:
 	sudo chown -R $(USER) /Library/Frameworks/Mono.framework/External/
 	sudo chown -R $(USER) /Library/Frameworks/Xamarin.iOS.framework
 	sudo chown -R $(USER) /Library/Frameworks/Xamarin.Mac.framework
+
+git-clean-all:
+	@echo "Cleaning and resetting all dependencies. This is a destructive operation."
+	@echo "You have 5 seconds to cancel (Ctrl-C) if you wish."
+	@sleep 5
+	@echo "Cleaning xamarin-macios..."
+	@git clean -xffdq
+	@git submodule foreach -q --recursive 'git clean -xffdq'
+	@for dir in $(DEPENDENCY_DIRECTORIES); do if test -d $(CURDIR)/$$dir; then echo "Cleaning $$dir" && cd $(CURDIR)/$$dir && git clean -xffdq && git reset --hard -q && git submodule foreach -q --recursive 'git clean -xffdq'; else echo "Skipped  $$dir (does not exist)"; fi; done
+ifdef ENABLE_XAMARIN
+	@./configure --enable-xamarin
+	@echo "Done (Xamarin-specific build has been re-enabled)"
+else
+	@echo "Done"
+endif
 
 ifdef ENABLE_XAMARIN
 SUBDIRS += $(MACCORE_PATH)

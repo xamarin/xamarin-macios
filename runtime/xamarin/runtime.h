@@ -106,6 +106,7 @@ void			xamarin_set_nsobject_handle (MonoObject *obj, id handle);
 uint8_t         xamarin_get_nsobject_flags (MonoObject *obj);
 void			xamarin_set_nsobject_flags (MonoObject *obj, uint8_t flags);
 void			xamarin_throw_nsexception (MonoException *exc);
+void			xamarin_rethrow_managed_exception (guint32 original_gchandle, guint32 *exception_gchandle);
 MonoException *	xamarin_create_exception (const char *msg);
 id				xamarin_get_handle (MonoObject *obj, guint32 *exception_gchandle);
 char *			xamarin_strdup_printf (const char *msg, ...);
@@ -154,6 +155,12 @@ void			xamarin_process_managed_exception_gchandle (guint32 gchandle);
 void			xamarin_throw_product_exception (int code, const char *message);
 
 id				xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_impl);
+
+bool			xamarin_is_managed_exception_marshaling_disabled ();
+
+// this functions support NSLog/NSString-style format specifiers.
+void			xamarin_printf (const char *format, ...);
+void			xamarin_vprintf (const char *format, va_list args);
 
 #if defined(__arm__) || defined(__aarch64__)
 void mono_aot_register_module (void *aot_info);

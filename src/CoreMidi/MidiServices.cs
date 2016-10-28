@@ -71,11 +71,13 @@ namespace XamCore.CoreMidi {
 		NotPermitted = -10844
 	}
 
+#if !MONOMAC || !XAMCORE_4_0
 	// NSUInteger -> MIDINetworkSession.h
 	[Native]
 	public enum MidiNetworkConnectionPolicy : nuint_compat_int {
 		NoOne, HostsInContactsList, Anyone
 	}
+#endif
 
 	[Flags]
 	// SInt32 - MIDIServices.h
@@ -1867,8 +1869,9 @@ namespace XamCore.CoreMidi {
 				if (owns)
 					MIDIEndpointDispose (handle);
 				handle = MidiObject.InvalidRef;
-				gch.Free ();
 			}
+			if (gch.IsAllocated)
+				gch.Free ();
 		}
 
 		public string EndpointName { get; private set; }

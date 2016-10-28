@@ -176,6 +176,20 @@ namespace XamCore.UIKit {
 		{
 			return AnimateNotifyAsync (duration, animation);
 		}
+
+		public UIImage Capture (bool afterScreenUpdates = true)
+		{
+			UIImage snapshot = null;
+			var bounds = Bounds; // try to access objc the smalles amount of times.
+			try {
+				UIGraphics.BeginImageContextWithOptions (bounds.Size, Opaque, 0.0f);
+				DrawViewHierarchy (bounds, afterScreenUpdates);
+				snapshot = UIGraphics.GetImageFromCurrentImageContext ();
+			} finally {
+				UIGraphics.EndImageContext ();
+			}
+			return snapshot;
+		}
 	}
 }
 

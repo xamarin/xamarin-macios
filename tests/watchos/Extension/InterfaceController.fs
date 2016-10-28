@@ -16,6 +16,7 @@ type InterfaceController (handle: IntPtr) =
     inherit WKInterfaceController (handle)
 
     let mutable runner = Unchecked.defaultof<WatchOSRunner>
+    let mutable running = false
 
     [<Outlet ("lblStatus")>]
     member val lblStatus = Unchecked.defaultof<WKInterfaceLabel> with get, set
@@ -26,11 +27,8 @@ type InterfaceController (handle: IntPtr) =
     [<Outlet ("lblFailed")>]
     member val lblFailed = Unchecked.defaultof<WKInterfaceLabel> with get, set
 
-    [<Outlet ("lblIgnored")>]
-    member val lblIgnored = Unchecked.defaultof<WKInterfaceLabel> with get, set
-
-    [<Outlet ("lblInconclusive")>]
-    member val lblInconclusive = Unchecked.defaultof<WKInterfaceLabel> with get, set
+    [<Outlet ("lblIgnInc")>]
+    member val lblIgnInc = Unchecked.defaultof<WKInterfaceLabel> with get, set
 
     [<Outlet ("cmdRun")>]
     member val cmdRun = Unchecked.defaultof<WKInterfaceButton> with get, set
@@ -48,6 +46,8 @@ type InterfaceController (handle: IntPtr) =
                 this.RenderResults ()
                 this.cmdRun.SetEnabled (true)
                 this.cmdRun.SetHidden (false)
+
+                runner.AutoRun ()
             )
         )
         |> ignore
@@ -60,21 +60,37 @@ type InterfaceController (handle: IntPtr) =
         )
 
     member this.RenderResults () =
-        this.lblSuccess.SetText (String.Format ("Passed: {0}/{1} {2}%", runner.PassedCount, runner.TestCount, 100 * runner.PassedCount / runner.TestCount))
-        this.lblFailed.SetText (String.Format ("Failed: {0}/{1} {2}%", runner.FailedCount, runner.TestCount, 100 * runner.FailedCount / runner.TestCount))
-        this.lblIgnored.SetText (String.Format ("Ignored: {0}/{1} {2}%", runner.IgnoredCount, runner.TestCount, 100 * runner.IgnoredCount / runner.TestCount))
-        this.lblInconclusive.SetText (String.Format ("Inconclusive: {0}/{1} {2}%", runner.InconclusiveCount, runner.TestCount, 100 * runner.InconclusiveCount / runner.TestCount))
+        if runner.TestCount > 0 then
+            this.lblSuccess.SetText (String.Format ("P: {0}/{1} {2}%", runner.PassedCount, runner.TestCount, 100 * runner.PassedCount / runner.TestCount))
+            this.lblFailed.SetText (String.Format ("F: {0}/{1} {2}%", runner.FailedCount, runner.TestCount, 100 * runner.FailedCount / runner.TestCount))
+            this.lblIgnInc.SetText (String.Format ("I: {0}/{1} {2}%", (runner.IgnoredCount + runner.InconclusiveCount), runner.TestCount, 100 * (runner.IgnoredCount + runner.InconclusiveCount) / runner.TestCount))
+
+            if running && runner.PassedCount > 0 then
+                if runner.FailedCount = 0 then
+                    this.lblSuccess.SetTextColor (UIKit.UIColor.Green);
+                    this.lblStatus.SetTextColor (UIKit.UIColor.Green);
+                    this.lblStatus.SetText ("Success");
+                
+                if runner.FailedCount > 0 then
+                    this.lblFailed.SetTextColor (UIKit.UIColor.Red);
+                    this.lblStatus.SetTextColor (UIKit.UIColor.Red);
+                    this.lblStatus.SetText ("Failed");
 
     member this.RunTests () = 
-        this.cmdRun.SetEnabled (false)
-        this.lblStatus.SetText ("Running")
-        this.BeginInvokeOnMainThread (fun v ->
-            runner.Run ()
-            this.BeginInvokeOnMainThread (fun x ->
+        if running then
+            printf "Already running"
+        else
+            let running = true
+            this.cmdRun.SetEnabled (false)
+            this.lblStatus.SetText ("Running")
+            this.BeginInvokeOnMainThread (fun v ->
+                runner.Run ()
+                this.lblStatus.SetText ("Done")
+                let running = false
                 this.RenderResults ()
             )
-        )
 
+    [<Action ("runTests:")>]
     member this.RunTests (obj: NSObject) =
         this.RunTests ()
 

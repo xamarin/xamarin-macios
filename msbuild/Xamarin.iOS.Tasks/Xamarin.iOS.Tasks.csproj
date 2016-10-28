@@ -50,7 +50,7 @@
     <Compile Include="Tasks\DetectSdkLocations.cs" />
     <Compile Include="Tasks\DetectSigningIdentity.cs" />
     <Compile Include="Tasks\EmbedMobileProvision.cs" />
-    <Compile Include="Tasks\FindWatchAppBundle.cs" />
+    <Compile Include="Tasks\FindWatchOS1AppExtensionBundle.cs" />
     <Compile Include="Tasks\GetPropertyValue.cs" />
     <Compile Include="Tasks\IBTool.cs" />
     <Compile Include="Tasks\Metal.cs" />
@@ -69,6 +69,8 @@
     <Compile Include="Tasks\CollectAssetPacks.cs" />
     <Compile Include="Tasks\CreateAssetPack.cs" />
     <Compile Include="Tasks\WriteAssetPackManifest.cs" />
+    <Compile Include="Tasks\FindWatchOS2AppBundle.cs" />
+    <Compile Include="Tasks\DetectDebugNetworkConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xamarin.iOS.Tasks.Core\Xamarin.iOS.Tasks.Core.csproj">

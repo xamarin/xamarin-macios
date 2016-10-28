@@ -14,6 +14,8 @@ namespace Xamarin.iOS.Tasks
 	{
 		public ITaskItem[] AppExtensionReferences { get; set; }
 
+		public ITaskItem[] WatchAppReferences { get; set; }
+
 		static bool IsWatchAppExtension (ITaskItem appex, PDictionary plist, out string watchAppBundleDir)
 		{
 			PString expectedBundleIdentifier, bundleIdentifier, extensionPoint;
@@ -37,7 +39,7 @@ namespace Xamarin.iOS.Tasks
 			if (!attributes.TryGetValue ("WKAppBundleIdentifier", out expectedBundleIdentifier))
 				return false;
 
-			var pwd = PathUtils.ResolveSymbolicLink (Environment.CurrentDirectory);
+			var pwd = PathUtils.ResolveSymbolicLinks (Environment.CurrentDirectory);
 
 			// Scan the *.app subdirectories to find the WatchApp bundle...
 			foreach (var bundle in Directory.GetDirectories (appex.ItemSpec, "*.app")) {
@@ -52,7 +54,7 @@ namespace Xamarin.iOS.Tasks
 				if (bundleIdentifier.Value != expectedBundleIdentifier.Value)
 					continue;
 
-				watchAppBundleDir = PathUtils.AbsoluteToRelative (pwd, PathUtils.ResolveSymbolicLink (bundle));
+				watchAppBundleDir = PathUtils.AbsoluteToRelative (pwd, PathUtils.ResolveSymbolicLinks (bundle));
 
 				return true;
 			}
@@ -83,6 +85,31 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			var msymDir = appex.ItemSpec + ".mSYM";
+
+			if (Directory.Exists (msymDir)) {
+				var destDir = Path.Combine (archiveDir, "mSYMs", Path.GetFileName (msymDir));
+				Ditto (msymDir, destDir);
+			}
+		}
+
+		void ArchiveWatchApp (ITaskItem watchApp, string archiveDir)
+		{
+			var wk = Path.Combine (watchApp.ItemSpec, "_WatchKitStub", "WK");
+			var supportDir = Path.Combine (archiveDir, "WatchKitSupport2");
+
+			if (File.Exists (wk) && !Directory.Exists (supportDir)) {
+				Directory.CreateDirectory (supportDir);
+				File.Copy (wk, Path.Combine (supportDir, "WK"), true);
+			}
+
+			var dsymDir = watchApp.ItemSpec + ".dSYM";
+
+			if (Directory.Exists (dsymDir)) {
+				var destDir = Path.Combine (archiveDir, "dSYMs", Path.GetFileName (dsymDir));
+				Ditto (dsymDir, destDir);
+			}
+
+			var msymDir = watchApp.ItemSpec + ".mSYM";
 
 			if (Directory.Exists (msymDir)) {
 				var destDir = Path.Combine (archiveDir, "mSYMs", Path.GetFileName (msymDir));
@@ -121,11 +148,13 @@ namespace Xamarin.iOS.Tasks
 			Log.LogTaskName ("Archive");
 			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
 			Log.LogTaskProperty ("AppExtensionReferences", AppExtensionReferences);
+			Log.LogTaskProperty ("InsightsApiKey", InsightsApiKey);
 			Log.LogTaskProperty ("ITunesSourceFiles", ITunesSourceFiles);
 			Log.LogTaskProperty ("OutputPath", OutputPath);
 			Log.LogTaskProperty ("ProjectName", ProjectName);
 			Log.LogTaskProperty ("SigningKey", SigningKey);
 			Log.LogTaskProperty ("SolutionPath", SolutionPath);
+			Log.LogTaskProperty ("WatchAppReferences", WatchAppReferences);
 
 			var archiveDir = CreateArchiveDirectory ();
 
@@ -168,9 +197,15 @@ namespace Xamarin.iOS.Tasks
 				}
 
 				if (AppExtensionReferences != null) {
-					// Archive the dSYMs for each of the referenced App Extensions as well...
+					// Archive the dSYMs, mSYMs, etc for each of the referenced App Extensions as well...
 					for (int i = 0; i < AppExtensionReferences.Length; i++)
 						ArchiveAppExtension (AppExtensionReferences[i], archiveDir);
+				}
+
+				if (WatchAppReferences != null) {
+					// Archive the dSYMs, mSYMs, etc for each of the referenced WatchOS2 Apps as well...
+					for (int i = 0; i < WatchAppReferences.Length; i++)
+						ArchiveWatchApp(WatchAppReferences[i], archiveDir);
 				}
 
 				if (ITunesSourceFiles != null) {
@@ -192,10 +227,12 @@ namespace Xamarin.iOS.Tasks
 				var props = new PDictionary ();
 				props.Add ("ApplicationPath", new PString (string.Format ("Applications/{0}", Path.GetFileName (AppBundleDir.ItemSpec))));
 				props.Add ("CFBundleIdentifier", new PString (plist.GetCFBundleIdentifier ()));
-				if (plist.GetCFBundleShortVersionString () != null)
-					props.Add ("CFBundleShortVersionString", new PString (plist.GetCFBundleShortVersionString ()));
-				else if (plist.GetCFBundleVersion () != null)
-					props.Add ("CFBundleShortVersionString", new PString (plist.GetCFBundleVersion ()));
+
+				var version = plist.GetCFBundleShortVersionString ();
+				var build = plist.GetCFBundleVersion ();
+
+				props.Add ("CFBundleShortVersionString", new PString (version ?? (build ?? "1.0")));
+				props.Add ("CFBundleVersion", new PString (build ?? "1.0"));
 
 				var iconFiles = plist.GetCFBundleIconFiles ();
 				var iconDict = plist.GetCFBundleIcons ();
@@ -225,6 +262,9 @@ namespace Xamarin.iOS.Tasks
 					arInfo.Add ("SolutionName", new PString (Path.GetFileNameWithoutExtension (SolutionPath)));
 					arInfo.Add ("SolutionPath", new PString (SolutionPath));
 				}
+
+				if (!string.IsNullOrEmpty (InsightsApiKey))
+					arInfo.Add ("InsightsApiKey", new PString (InsightsApiKey));
 
 				arInfo.Save (Path.Combine (archiveDir, "Info.plist"));
 

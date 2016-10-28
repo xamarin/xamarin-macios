@@ -57,9 +57,18 @@ namespace Introspection {
 					return true;
 
 				// Requires iOS 8.2 or later in 32-bit mode
-				if (!CheckiOSSystemVersion (8, 2) && IntPtr.Size == 4)
+				if (!TestRuntime.CheckXcodeVersion (6, 2) && IntPtr.Size == 4)
 					return true;
 
+				break;
+			case "MTLFence":
+			case "MTLHeap":
+				if (Runtime.Arch != Arch.DEVICE)
+					return true;
+
+				// Requires iOS 10
+				if (!TestRuntime.CheckXcodeVersion (8, 0))
+					return true;
 				break;
 			}
 
@@ -75,7 +84,7 @@ namespace Introspection {
 			case "MonoTouch.CoreAudioKit":
 			case "CoreAudioKit":
 				// they works with iOS9 beta 4 (but won't work on older simulators)
-				if ((Runtime.Arch == Arch.SIMULATOR) && !CheckiOSOrTVOSSystemVersion (9,0))
+				if ((Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (7, 0))
 					return true;
 				break;
 
@@ -117,7 +126,7 @@ namespace Introspection {
 				case "GKLocalPlayer":
 					// NSSecureCoding is still undocumented, for iOS, and neither is NSCoding for OSX
 					// and it did not respond before 6.0 (when NSSecureCoding was introduced)
-					return !CheckiOSOrTVOSSystemVersion (6,0);
+					return !TestRuntime.CheckXcodeVersion (4, 5);
 				case "UITableViewDataSource":
 					// this is a *protocol( and we do not want to force people to conform to (an
 					// undocumented "requirement") NSCoding - as ObjC do not have to do this
@@ -147,6 +156,7 @@ namespace Introspection {
 				case "PKShippingMethod":
 				case "PKPaymentRequest":
 				case "PKPaymentToken":
+				case "PKLabeledValue":
 				// iOS9
 				case "UIFont":
 				case "AVAssetTrackSegment":
@@ -156,7 +166,62 @@ namespace Introspection {
 				case "MKMapSnapshotOptions":
 				case "WCSessionFile":
 				case "WCSessionFileTransfer":
+				// iOS10
+				case "CXCall":
+				case "CXCallDirectoryExtensionContext":
+				case "CXCallUpdate":
+				case "CXProviderConfiguration":
+				case "MSMessageTemplateLayout":
+				case "MSSession":
+				case "SFContentBlockerState":
+				case "SFSafariViewControllerConfiguration":
+				case "VSAccountMetadata":
+				case "VSAccountMetadataRequest":
 					return true;
+#if __WATCHOS__
+				case "CLKComplicationTemplate":
+				case "CLKComplicationTemplateCircularSmallRingImage":
+				case "CLKComplicationTemplateCircularSmallRingText":
+				case "CLKComplicationTemplateCircularSmallSimpleImage":
+				case "CLKComplicationTemplateCircularSmallSimpleText":
+				case "CLKComplicationTemplateCircularSmallStackImage":
+				case "CLKComplicationTemplateCircularSmallStackText":
+				case "CLKComplicationTemplateModularLargeColumns":
+				case "CLKComplicationTemplateModularLargeStandardBody":
+				case "CLKComplicationTemplateModularLargeTable":
+				case "CLKComplicationTemplateModularLargeTallBody":
+				case "CLKComplicationTemplateModularSmallColumnsText":
+				case "CLKComplicationTemplateModularSmallRingImage":
+				case "CLKComplicationTemplateModularSmallRingText":
+				case "CLKComplication":
+				case "CLKComplicationTemplateModularSmallSimpleImage":
+				case "CLKTextProvider":
+				case "CLKComplicationTemplateModularSmallSimpleText":
+				case "CLKTimeIntervalTextProvider":
+				case "CLKComplicationTemplateModularSmallStackImage":
+				case "CLKTimeTextProvider":
+				case "CLKComplicationTemplateModularSmallStackText":
+				case "CLKComplicationTemplateUtilitarianLargeFlat":
+				case "CLKComplicationTemplateUtilitarianSmallFlat":
+				case "CLKComplicationTemplateUtilitarianSmallRingImage":
+				case "CLKComplicationTemplateUtilitarianSmallRingText":
+				case "CLKComplicationTemplateUtilitarianSmallSquare":
+				case "CLKComplicationTimelineEntry":
+				case "CLKDateTextProvider":
+				case "CLKImageProvider":
+				case "CLKRelativeDateTextProvider":
+				case "CLKSimpleTextProvider":
+				case "WKAlertAction":
+				// watchOS 3
+				case "CLKComplicationTemplateExtraLargeSimpleImage":
+				case "CLKComplicationTemplateExtraLargeSimpleText":
+				case "CLKComplicationTemplateExtraLargeStackImage":
+				case "CLKComplicationTemplateExtraLargeStackText":
+				case "CLKComplicationTemplateExtraLargeColumnsText":
+				case "CLKComplicationTemplateExtraLargeRingImage":
+				case "CLKComplicationTemplateExtraLargeRingText":
+					return true;
+#endif
 				}
 				break;
 			case "NSSecureCoding":
@@ -187,6 +252,7 @@ namespace Introspection {
 				case "PKShippingMethod":
 				case "PKPaymentRequest":
 				case "PKPaymentToken":
+				case "PKLabeledValue":
 				// iOS9
 				case "UIFont":
 				case "AVAssetTrackSegment":
@@ -197,7 +263,62 @@ namespace Introspection {
 				case "NSTextTab":
 				case "WCSessionFile":
 				case "WCSessionFileTransfer":
+				// iOS10
+				case "CXCall":
+				case "CXCallDirectoryExtensionContext":
+				case "CXCallUpdate":
+				case "CXProviderConfiguration":
+				case "MSMessageTemplateLayout":
+				case "MSSession":
+				case "SFContentBlockerState":
+				case "SFSafariViewControllerConfiguration":
+				case "VSAccountMetadata":
+				case "VSAccountMetadataRequest":
 					return true;
+#if __WATCHOS__
+				case "CLKComplicationTemplate":
+				case "CLKComplicationTemplateCircularSmallRingImage":
+				case "CLKComplicationTemplateCircularSmallRingText":
+				case "CLKComplicationTemplateCircularSmallSimpleImage":
+				case "CLKComplicationTemplateCircularSmallSimpleText":
+				case "CLKComplicationTemplateCircularSmallStackImage":
+				case "CLKComplicationTemplateCircularSmallStackText":
+				case "CLKComplicationTemplateModularLargeColumns":
+				case "CLKComplicationTemplateModularLargeStandardBody":
+				case "CLKComplicationTemplateModularLargeTable":
+				case "CLKComplicationTemplateModularLargeTallBody":
+				case "CLKComplicationTemplateModularSmallColumnsText":
+				case "CLKComplicationTemplateModularSmallRingImage":
+				case "CLKComplicationTemplateModularSmallRingText":
+				case "CLKComplicationTemplateModularSmallSimpleImage":
+				case "CLKComplicationTemplateModularSmallSimpleText":
+				case "CLKComplicationTemplateModularSmallStackImage":
+				case "CLKComplicationTemplateModularSmallStackText":
+				case "CLKComplicationTemplateUtilitarianLargeFlat":
+				case "CLKComplicationTemplateUtilitarianSmallFlat":
+				case "CLKComplicationTemplateUtilitarianSmallRingImage":
+				case "CLKComplicationTemplateUtilitarianSmallRingText":
+				case "CLKComplicationTemplateUtilitarianSmallSquare":
+				case "CLKComplicationTimelineEntry":
+				case "CLKDateTextProvider":
+				case "CLKImageProvider":
+				case "CLKRelativeDateTextProvider":
+				case "CLKSimpleTextProvider":
+				case "CLKTextProvider":
+				case "CLKTimeIntervalTextProvider":
+				case "CLKTimeTextProvider":
+				case "CLKComplication":
+				case "WKAlertAction":
+				// watchOS 3
+				case "CLKComplicationTemplateExtraLargeSimpleImage":
+				case "CLKComplicationTemplateExtraLargeSimpleText":
+				case "CLKComplicationTemplateExtraLargeStackImage":
+				case "CLKComplicationTemplateExtraLargeStackText":
+				case "CLKComplicationTemplateExtraLargeColumnsText":
+				case "CLKComplicationTemplateExtraLargeRingImage":
+				case "CLKComplicationTemplateExtraLargeRingText":
+					return true;
+#endif
 				}
 				break;
 			case "NSCopying":
@@ -221,6 +342,24 @@ namespace Introspection {
 				case "HKQuantitySample":
 				case "HKSample":
 				case "HKWorkout":
+				case "PKPaymentMethod":
+				// iOS 10
+				case "CXCallDirectoryExtensionContext":
+				case "HKDocumentSample":
+				case "HKCdaDocumentSample":
+				case "SFSafariViewControllerConfiguration":
+				case "VSAccountMetadata":
+				case "VSAccountMetadataRequest":
+					return true;
+#if __WATCHOS__
+				case "CLKComplicationTimelineEntry":
+					return true;
+#endif
+				}
+				break;
+			case "NSMutableCopying":
+				switch (type.Name) {
+				case "UNNotificationSound":
 					return true;
 				}
 				break;
@@ -244,7 +383,7 @@ namespace Introspection {
 				break;
 			case "UITextInputTraits":
 				// UISearchBar conformance fails before 7.1 - reference bug #33333
-				if ((type.Name == "UISearchBar") && !CheckiOSOrTVOSSystemVersion (7,1))
+				if ((type.Name == "UISearchBar") && !TestRuntime.CheckXcodeVersion (5, 1))
 					return true;
 				break;
 #if !XAMCORE_3_0
@@ -258,7 +397,147 @@ namespace Introspection {
 			case "GKSavedGameListener":
 				switch (type.Name) {
 				case "GKLocalPlayerListener": // 37180
-					return !CheckiOSOrTVOSSystemVersion (8, 0);
+					return !TestRuntime.CheckXcodeVersion (6, 0);
+				}
+				break;
+
+			case "UIFocusEnvironment":
+				switch (type.Name) {
+				case "SK3DNode":
+				case "SKAudioNode":
+				case "SKCameraNode":
+				case "SKCropNode":
+				case "SKEffectNode":
+				case "SKEmitterNode":
+				case "SKFieldNode":
+				case "SKLabelNode":
+				case "SKLightNode":
+				case "SKNode":
+				case "SKReferenceNode":
+				case "SKScene":
+				case "SKShapeNode":
+				case "SKVideoNode":
+				case "SKSpriteNode":
+					return !TestRuntime.CheckXcodeVersion (8,0);
+				}
+				break;
+
+			case "CALayerDelegate": // UIView now conforms to CALayerDelegate in iOS 10
+				switch (type.Name) {
+				case "UISearchBar":
+				case "UISegmentedControl":
+				case "UITableView":
+				case "UITableViewCell":
+				case "UITextField":
+				case "UITextView":
+				case "UIToolbar":
+				case "UIView":
+				case "MKPinAnnotationView":
+				case "UIImageView":
+				case "PHLivePhotoView":
+				case "UIInputView":
+				case "UILabel":
+				case "UIActionSheet":
+				case "UIButton":
+				case "UICollectionView":
+				case "UINavigationBar":
+				case "UIControl":
+				case "UIPickerView":
+				case "UIPageControl":
+				case "MPVolumeView":
+				case "UIPopoverBackgroundView":
+				case "UIProgressView":
+				case "UIRefreshControl":
+				case "HKActivityRingView":
+				case "UIScrollView":
+				case "CAInterAppAudioSwitcherView":
+				case "CAInterAppAudioTransportView":
+				case "UISlider":
+				case "UIStackView":
+				case "SCNView":
+				case "UIStepper":
+				case "UISwitch":
+				case "UITabBar":
+				case "UITableViewHeaderFooterView":
+				case "GLKView":
+				case "SKView":
+				case "MKMapView":
+				case "MKAnnotationView":
+				case "PKAddPassButton":
+				case "PKPaymentButton":
+				case "UIActivityIndicatorView":
+				case "UICollectionReusableView":
+				case "UIWebView":
+				case "UICollectionViewCell":
+				case "UIWindow":
+				case "UIDatePicker":
+				case "UIVisualEffectView":
+				case "WKWebView":
+				case "ADBannerView":
+					return !TestRuntime.CheckXcodeVersion (8, 0);
+				}
+				break;
+
+			case "UIFocusItem": // UIView now conforms to UIFocusItem in iOS 10
+				switch (type.Name) {
+				case "UIButton":
+				case "UICollectionReusableView":
+				case "UICollectionView":
+				case "UICollectionViewCell":
+				case "MKAnnotationView":
+				case "UIControl":
+				case "MKMapView":
+				case "UISearchBar":
+				case "UISegmentedControl":
+				case "UITableView":
+				case "UITableViewCell":
+				case "UITextField":
+				case "UITextView":
+				case "MKPinAnnotationView":
+				case "UIView":
+				case "SKNode":
+				case "SKShapeNode":
+				case "SKVideoNode":
+				case "UIImageView":
+				case "UIInputView":
+				case "UILabel":
+				case "UINavigationBar":
+				case "UIPageControl":
+				case "UIPopoverBackgroundView":
+				case "UIProgressView":
+				case "SCNView":
+				case "UIScrollView":
+				case "SK3DNode":
+				case "MTKView":
+				case "SKAudioNode":
+				case "SKCameraNode":
+				case "SKCropNode":
+				case "SKEffectNode":
+				case "SKEmitterNode":
+				case "SKFieldNode":
+				case "SKLabelNode":
+				case "SKLightNode":
+				case "UIStackView":
+				case "UITabBar":
+				case "SKReferenceNode":
+				case "GLKView":
+				case "SKScene":
+				case "SKSpriteNode":
+				case "SKView":
+				case "UITableViewHeaderFooterView":
+				case "UIActivityIndicatorView":
+				case "UIVisualEffectView":
+				case "UIWindow":
+					return !TestRuntime.CheckXcodeVersion (8, 0);
+				}
+				break;
+
+			case "UIContentSizeCategoryAdjusting": // new conformations of UIContentSizeCategoryAdjusting in iOS 10
+				switch (type.Name) {
+				case "UITextField":
+				case "UITextView":
+				case "UILabel":
+					return !TestRuntime.CheckXcodeVersion (8, 0);
 				}
 				break;
 			}
@@ -268,8 +547,7 @@ namespace Introspection {
 		[Test]
 		public override void SecureCoding ()
 		{
-			if (!CheckiOSOrTVOSSystemVersion (6,0))
-				Assert.Inconclusive ("Requires iOS 6+");
+			TestRuntime.AssertXcodeVersion (4, 5);
 
 			base.SecureCoding ();
 		}
@@ -277,8 +555,7 @@ namespace Introspection {
 		[Test]
 		public override void SupportsSecureCoding ()
 		{
-			if (!CheckiOSOrTVOSSystemVersion (6,0))
-				Assert.Inconclusive ("Requires iOS 6+");
+			TestRuntime.AssertXcodeVersion (4, 5);
 
 			base.SupportsSecureCoding ();
 		}

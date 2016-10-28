@@ -29,6 +29,16 @@ namespace XamCore.CoreSpotlight {
 		QuotaExceeded = -1004,
 		IndexingUnsupported = -1005,
 	}
+
+	[NoTV][iOS (10,0)]
+	[ErrorDomain ("CSSearchQueryErrorDomain")]
+	[Native]
+	public enum CSSearchQueryErrorCode : nint {
+		Unknown = -2000,
+		IndexUnreachable = -2001,
+		InvalidQuery = -2002,
+		Cancelled = -2003
+	}
 #endif
 }
 

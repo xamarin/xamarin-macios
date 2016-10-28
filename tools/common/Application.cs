@@ -48,6 +48,7 @@ namespace Xamarin.Bundler {
 		public bool? EnableCoopGC;
 		public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptions;
 		public MarshalManagedExceptionMode MarshalManagedExceptions;
+		public bool IsDefaultMarshalManagedExceptionMode;
 
 		public bool RequiresPInvokeWrappers {
 			get {
@@ -389,6 +390,7 @@ namespace Xamarin.Bundler {
 				} else {
 					MarshalManagedExceptions = isSimulatorOrDesktopDebug ? MarshalManagedExceptionMode.UnwindNativeCode : MarshalManagedExceptionMode.Disable;
 				}
+				IsDefaultMarshalManagedExceptionMode = true;
 			}
 		}
 	}

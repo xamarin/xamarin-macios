@@ -36,7 +36,7 @@ namespace XamCore.ObjCRuntime {
 		internal const bool IsUnifiedBuild = false;
 #endif
 
-		static Dictionary<IntPtr,Delegate> block_to_delegate_cache;
+		static Dictionary<IntPtrTypeValueTuple,Delegate> block_to_delegate_cache;
 
 		static List <object> delegates;
 		static List <Assembly> assemblies;
@@ -48,8 +48,7 @@ namespace XamCore.ObjCRuntime {
 		internal static IntPtrEqualityComparer IntPtrEqualityComparer;
 		internal static TypeEqualityComparer TypeEqualityComparer;
 
-		// note: must stay a field (or the linker must be modified)
-		internal static IDynamicRegistrar Registrar;
+		internal static DynamicRegistrar Registrar;
 
 		internal unsafe struct RegistrationData {
 			public MTRegistrationMap *map;
@@ -98,9 +97,9 @@ namespace XamCore.ObjCRuntime {
 
 		internal enum InitializationFlags : int {
 			/* unused               = 0x01 */
-			UseOldDynamicRegistrar	= 0x02,
+			/* unused				= 0x02,*/
 			DynamicRegistrar		= 0x04,
-			ILRegistrar				= 0x08,
+			/* unused				= 0x08,*/
 			IsSimulator				= 0x10,
 		}
 
@@ -112,12 +111,6 @@ namespace XamCore.ObjCRuntime {
 			public RegistrationData *RegistrationData;
 			public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptionMode;
 			public MarshalManagedExceptionMode MarshalManagedExceptionMode;
-
-			public bool UseOldDynamicRegistrar {
-				get {
-					return (Flags & InitializationFlags.UseOldDynamicRegistrar) == InitializationFlags.UseOldDynamicRegistrar;
-				}
-			}
 
 			public bool IsSimulator {
 				get {
@@ -197,7 +190,7 @@ namespace XamCore.ObjCRuntime {
 
 			NSObjectClass = NSObject.Initialize (ref options);
 
-			CreateRegistrar (options);
+			Registrar = new DynamicRegistrar ();
 			RegisterDelegates (ref options);
 			Method.Initialize (ref options);
 			Class.Initialize (ref options);
@@ -318,6 +311,12 @@ namespace XamCore.ObjCRuntime {
 #endif
 		}
 
+		static void RethrowManagedException (uint exception_gchandle)
+		{
+			var e = (Exception) GCHandle.FromIntPtr ((IntPtr) exception_gchandle).Target;
+			System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture (e).Throw ();
+		}
+
 		static int CreateNSException (IntPtr ns_exception)
 		{
 			Exception ex;
@@ -430,9 +429,9 @@ namespace XamCore.ObjCRuntime {
 			return Registrar.GetAssemblies ();
 		}
 
-		internal static string ComputeSignature (MethodInfo method)
+		internal static string ComputeSignature (MethodInfo method, bool isBlockSignature)
 		{
-			return Registrar.ComputeSignature (method);
+			return Registrar.ComputeSignature (method, isBlockSignature);
 		}
 
 		public static void RegisterAssembly (Assembly a)
@@ -759,21 +758,22 @@ namespace XamCore.ObjCRuntime {
 		static Delegate GetDelegateForBlock (IntPtr methodPtr, Type type)
 		{
 			if (block_to_delegate_cache == null)
-				block_to_delegate_cache = new Dictionary<IntPtr, Delegate> (IntPtrEqualityComparer);
+				block_to_delegate_cache = new Dictionary<IntPtrTypeValueTuple, Delegate> ();
 
 			// We do not care if there is a race condition and we initialize two caches
 			// since the worst that can happen is that we end up with an extra
 			// delegate->function pointer.
 			Delegate val;
+			var pair = new IntPtrTypeValueTuple (methodPtr, type);
 			lock (block_to_delegate_cache) {
-				if (block_to_delegate_cache.TryGetValue (methodPtr, out val))
+				if (block_to_delegate_cache.TryGetValue (pair, out val))
 					return val;
 			}
 
 			val = Marshal.GetDelegateForFunctionPointer (methodPtr, type);
 
 			lock (block_to_delegate_cache){
-				block_to_delegate_cache [methodPtr] = val;
+				block_to_delegate_cache [pair] = val;
 			}
 			return val;
 		}
@@ -1284,8 +1284,21 @@ namespace XamCore.ObjCRuntime {
 			ConnectMethod (method.DeclaringType, method, selector);
 		}
 
+#if MONOMAC
+		[DllImport (Constants.FoundationLibrary, EntryPoint = "NSLog")]
+		extern static void NSLog_impl (IntPtr format, [MarshalAs (UnmanagedType.LPStr)] string s);
+		static void NSLog (IntPtr format, string s)
+		{
+			if (PlatformHelper.CheckSystemVersion (10, 12)) {
+				Console.WriteLine (s);
+			} else {
+				NSLog_impl (format, s);
+			}
+		}
+#else
 		[DllImport (Constants.FoundationLibrary)]
 		extern static void NSLog (IntPtr format, [MarshalAs (UnmanagedType.LPStr)] string s);
+#endif
 
 		[DllImport (Constants.FoundationLibrary, EntryPoint = "NSLog")]
 		extern static void NSLog_arm64 (IntPtr format, IntPtr p2, IntPtr p3, IntPtr p4, IntPtr p5, IntPtr p6, IntPtr p7, IntPtr p8, [MarshalAs (UnmanagedType.LPStr)] string s);
@@ -1359,6 +1372,50 @@ namespace XamCore.ObjCRuntime {
 			if (obj == null)
 				return 0;
 			return obj.GetHashCode ();
+		}
+	}
+
+	internal struct IntPtrTypeValueTuple : IEquatable<IntPtrTypeValueTuple>
+	{
+		static readonly IEqualityComparer<IntPtr> item1Comparer = Runtime.IntPtrEqualityComparer;
+		static readonly IEqualityComparer<Type> item2Comparer = Runtime.TypeEqualityComparer;
+
+		public readonly IntPtr Item1;
+		public readonly Type Item2;
+
+		public IntPtrTypeValueTuple (IntPtr item1, Type item2)
+		{
+			Item1 = item1;
+			Item2 = item2;
+		}
+
+		public bool Equals (IntPtrTypeValueTuple other)
+		{
+			return item1Comparer.Equals (Item1, other.Item1) &&
+				item2Comparer.Equals (Item2, other.Item2);
+		}
+
+		public override bool Equals (object obj)
+		{
+			if (obj is IntPtrTypeValueTuple)
+				return Equals ((IntPtrTypeValueTuple)obj);
+
+			return false;
+		}
+
+		public override int GetHashCode ()
+		{
+			return item1Comparer.GetHashCode (Item1) ^ item2Comparer.GetHashCode (Item2);
+		}
+
+		public static bool operator == (IntPtrTypeValueTuple left, IntPtrTypeValueTuple right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator != (IntPtrTypeValueTuple left, IntPtrTypeValueTuple right)
+		{
+			return !left.Equals(right);
 		}
 	}
 }

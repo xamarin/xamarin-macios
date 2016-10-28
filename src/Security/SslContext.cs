@@ -4,11 +4,12 @@
 // Authors:
 //	Sebastien Pouliot  <sebastien@xamarin.com>
 //
-// Copyright 2014-2015 Xamarin Inc.
+// Copyright 2014-2016 Xamarin Inc.
 //
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -469,18 +470,17 @@ namespace XamCore.Security {
 		}
 #endif
 		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLSetCertificate (/* SSLContextRef */ IntPtr context, /* CFArrayRef */ IntPtr certRefs);
+		extern unsafe static /* OSStatus */ SslStatus SSLSetCertificate (/* SSLContextRef */ IntPtr context, /* _Nullable CFArrayRef */ IntPtr certRefs);
 
 		NSArray Bundle (SecIdentity identity, IEnumerable<SecCertificate> certificates)
 		{
-			if (identity == null)
-				throw new ArgumentNullException ("identity");
-			int i = 0;
+			int i = identity == null ? 0 : 1;
 			int n = certificates == null ? 0 : certificates.Count ();
-			var ptrs = new IntPtr [n + 1];
-			ptrs [0] = identity.Handle;
+			var ptrs = new IntPtr [n + i];
+			if (i == 1)
+				ptrs [0] = identity.Handle;
 			foreach (var certificate in certificates)
-				ptrs [++i] = certificate.Handle;
+				ptrs [i++] = certificate.Handle;
 			return NSArray.FromIntPtrs (ptrs);
 		}
 
@@ -537,18 +537,76 @@ namespace XamCore.Security {
 			return SSLContextGetTypeID ();
 		}
 
-		[iOS(9,0)][Mac (10,11)]
-		//[Availability (Deprecated = Platform.iOS_9_2 | Platform.Mac_10_11)]
-		[DllImport (Constants.SecurityLibrary)]
-		extern unsafe static /* OSStatus */ SslStatus SSLSetSessionStrengthPolicy (/* SSLContextRef */ IntPtr context, SslSessionStrengthPolicy policyStrength);
-
+#if !WATCH
 		[iOS(9,0)][Mac (10,11)]
 		// TODO: Headers say /* Deprecated, does nothing */ but we are not completly sure about it since there is no deprecation macro
 		// Plus they added new members to SslSessionStrengthPolicy enum opened radar://23379052 https://trello.com/c/NbdTLVD3
-		//[Availability (Deprecated = Platform.iOS_9_2 | Platform.Mac_10_11, Message = "SetSessionStrengthPolicy is not available anymore")]
+		// Xcode 8 beta 1: the P/Invoke was removed completely.
+		[Availability (Deprecated = Platform.iOS_9_2 | Platform.Mac_10_11, Unavailable = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "SetSessionStrengthPolicy is not available anymore")]
+		[Obsolete ("SetSessionStrengthPolicy is not available anymore.")]
 		public SslStatus SetSessionStrengthPolicy (SslSessionStrengthPolicy policyStrength)
 		{
-			return SSLSetSessionStrengthPolicy (Handle, policyStrength);
+			Console.WriteLine ("SetSessionStrengthPolicy is not available anymore.");
+			return SslStatus.Success;
+		}
+#endif
+
+		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern int SSLSetSessionConfig (IntPtr /* SSLContextRef* */ context, IntPtr /* CFStringRef* */ config);
+
+		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		public int SetSessionConfig (NSString config)
+		{
+			if (config == null)
+				throw new ArgumentNullException (nameof (config));
+			
+			return SSLSetSessionConfig (Handle, config.Handle);
+		}
+
+		[iOS (10,0)][Mac (10,12)]
+		[TV (10,0)]
+		public int SetSessionConfig (SslSessionConfig config)
+		{
+			return SetSessionConfig (config.GetConstant ());
+		}
+
+		[iOS (10,0)][Mac (10,12)]
+		[Watch (3,0)]
+		[TV (10,0)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern int SSLReHandshake (IntPtr /* SSLContextRef* */ context);
+
+		[iOS (10,0)][Mac (10,12)]
+		[Watch (3,0)]
+		[TV (10,0)]
+		public int ReHandshake ()
+		{
+			return SSLReHandshake (Handle);
+		}
+
+		[iOS (9,0)][Mac (10,11)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* OSStatus */ SslStatus SSLCopyRequestedPeerName (IntPtr /* SSLContextRef* */ context, byte[] /* char* */ peerName, ref nuint /* size_t */ peerNameLen);
+
+		[iOS (9,0)][Mac (10,11)]
+		[DllImport (Constants.SecurityLibrary)]
+		static extern /* OSStatus */ SslStatus SSLCopyRequestedPeerNameLength (IntPtr /* SSLContextRef* */ context, ref nuint /* size_t */ peerNameLen);
+
+		[iOS (9,0)][Mac (10,11)]
+		public string GetRequestedPeerName ()
+		{
+			var result = String.Empty;
+			nuint length = 0;
+			if (SSLCopyRequestedPeerNameLength (Handle, ref length) == SslStatus.Success) {
+				var bytes = new byte [length];
+				if (SSLCopyRequestedPeerName (Handle, bytes, ref length) == SslStatus.Success)
+					result = Encoding.UTF8.GetString (bytes);
+			}
+			return result;
 		}
 	}
 }

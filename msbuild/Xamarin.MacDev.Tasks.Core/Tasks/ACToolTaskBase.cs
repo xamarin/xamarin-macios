@@ -68,6 +68,20 @@ namespace Xamarin.MacDev.Tasks
 			return id.Value == "com.apple.watchkit";
 		}
 
+		static bool IsMessagesExtension (PDictionary plist)
+		{
+			PDictionary extension;
+			PString id;
+
+			if (!plist.TryGetValue ("NSExtension", out extension))
+				return false;
+
+			if (!extension.TryGetValue ("NSExtensionPointIdentifier", out id))
+				return false;
+
+			return id.Value == "com.apple.message-payload-provider";
+		}
+
 		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, ProcessArgumentBuilder args, ITaskItem[] items)
 		{
 			string minimumDeploymentTarget;
@@ -102,6 +116,9 @@ namespace Xamarin.MacDev.Tasks
 
 						args.Add ("--app-icon");
 						args.AddQuoted (assetName);
+
+						if (IsMessagesExtension (plist))
+							args.Add ("--product-type com.apple.product-type.app-extension.messages");
 					}
 				}
 
@@ -187,7 +204,7 @@ namespace Xamarin.MacDev.Tasks
 
 		IEnumerable<ITaskItem> GetCompiledBundleResources (PDictionary output, string intermediateBundleDir)
 		{
-			var pwd = PathUtils.ResolveSymbolicLink (Environment.CurrentDirectory);
+			var pwd = PathUtils.ResolveSymbolicLinks (Environment.CurrentDirectory);
 			PDictionary dict;
 			PArray array;
 
@@ -197,7 +214,7 @@ namespace Xamarin.MacDev.Tasks
 					if (path.EndsWith ("partial-info.plist", StringComparison.Ordinal))
 						continue;
 
-					var vpath = PathUtils.AbsoluteToRelative (pwd, PathUtils.ResolveSymbolicLink (path));
+					var vpath = PathUtils.AbsoluteToRelative (pwd, PathUtils.ResolveSymbolicLinks (path));
 					var item = new TaskItem (vpath);
 
 					// Note: the intermediate bundle dir functions as a top-level bundle dir
@@ -276,7 +293,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			foreach (var asset in ImageAssets) {
-				var vpath = BundleResource.GetVirtualProjectPath (ProjectDir, asset);
+				var vpath = BundleResource.GetVirtualProjectPath (ProjectDir, asset, !string.IsNullOrEmpty(SessionId));
 				if (Path.GetFileName (vpath) != "Contents.json")
 					continue;
 

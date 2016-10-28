@@ -13,6 +13,7 @@ namespace Extrospection {
 		// the original name can be lost and, if not registered (e.g. enums), might not be available
 		static Dictionary<string,string> map = new Dictionary<string, string> () {
 			{ "CFURLPathStyle", "CFUrlPathStyle" },
+			{ "CXPlayDTMFCallActionType", "CXPlayDtmfCallActionType" },
 			{ "EABluetoothAccessoryPickerErrorCode", "EABluetoothAccessoryPickerError" },
 			{ "EKCalendarEventAvailabilityMask", "EKCalendarEventAvailability" },
 			{ "GKErrorCode", "GKError" },
@@ -27,6 +28,7 @@ namespace Extrospection {
 			{ "MIDITransformType", "MidiTransformType" },
 			{ "MIDINetworkConnectionPolicy", "MidiNetworkConnectionPolicy" },
 			{ "MPMovieMediaTypeMask", "MPMovieMediaType" },
+			{ "MPSCNNConvolutionFlags", "MPSCnnConvolutionFlags" },
 			{ "MTLCPUCacheMode", "MTLCpuCacheMode" },
 			{ "NEVPNError", "NEVpnError" },
 			{ "NEVPNIKEAuthenticationMethod", "NEVpnIkeAuthenticationMethod" },
@@ -55,6 +57,7 @@ namespace Extrospection {
 			{ "RPRecordingErrorCode", "RPRecordingError" },
 			{ "SKErrorCode", "SKError" },
 			{ "SSReadingListErrorCode", "SSReadingListError" },
+			{ "SCNRenderingAPI", "SCNRenderingApi" },
 			{ "UIDataDetectorTypes", "UIDataDetectorType" },
 			{ "UIControlEvents", "UIControlEvent" },
 			{ "UITableViewCellAccessoryType", "UITableViewCellAccessory" },

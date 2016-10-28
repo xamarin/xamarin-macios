@@ -67,7 +67,7 @@ namespace XamCore.Registrar {
 		}
 	}
 
-	class DynamicRegistrar : Registrar, IDynamicRegistrar {
+	class DynamicRegistrar : Registrar {
 		Dictionary<IntPtr, ObjCType> type_map;
 		Dictionary <IntPtr, LazyMapEntry> lazy_map;
 		Dictionary <Type, Dictionary <IntPtr, MethodDescription>> method_map;
@@ -119,7 +119,7 @@ namespace XamCore.Registrar {
 				RegisterType (type);
 
 				if (!method_map.TryGetValue (type, out methods)) {
-					methods = new Dictionary <IntPtr, MethodDescription> ();
+					methods = new Dictionary <IntPtr, MethodDescription> (Runtime.IntPtrEqualityComparer);
 					method_map [type] = methods;
 				}
 
@@ -455,6 +455,15 @@ namespace XamCore.Registrar {
 
 			if (type.IsGenericParameter) {
 				if (typeof (NSObject).IsAssignableFrom (type)) {
+					// First look for a more specific constraint
+					var constraints = type.GetGenericParameterConstraints ();
+					foreach (var constraint in constraints) {
+						if (constraint.IsSubclassOf (typeof (NSObject))) {
+							constrained_type = constraint;
+							return true;
+						}
+					}
+					// Fallback to NSObject.
 					constrained_type = typeof(NSObject);
 					return true;
 				}
@@ -764,18 +773,23 @@ namespace XamCore.Registrar {
 					// to not link it away anymore like we currently do.
 
 #if !COREBUILD && !MONOMAC && !WATCH
+					var major = -1;
 					switch (type.Name) {
 					case "PKObject":
 					case "CBAttribute":
 					case "CBPeer":
-						if (!UIDevice.CurrentDevice.CheckSystemVersion (8,0))
-							return;
+						major = 8;
 						break;
 					case "GKGameCenterViewController":
-						if (!UIDevice.CurrentDevice.CheckSystemVersion (6,0))
-							return;
+						major = 6;
+						break;
+					case "CBManager":
+					case "GKBasePlayer":
+						major = 10;
 						break;
 					}
+					if ((major > 0) && !UIDevice.CurrentDevice.CheckSystemVersion (major, 0))
+						return;
 #endif
 
 					// a missing [Model] attribute will cause this error on devices (e.g. bug #4864)
@@ -790,7 +804,7 @@ namespace XamCore.Registrar {
 			if (type.IsFakeProtocol)
 				return;
 
-			var methods = new Dictionary <IntPtr, MethodDescription> ();
+			var methods = new Dictionary <IntPtr, MethodDescription> (Runtime.IntPtrEqualityComparer);
 
 			var super = type.SuperType;
 
@@ -1134,9 +1148,9 @@ namespace XamCore.Registrar {
 			RegisterType (type, ref exceptions);
 		}
 
-		public string ComputeSignature (MethodInfo method)
+		public string ComputeSignature (MethodInfo method, bool isBlockSignature)
 		{
-			return base.ComputeSignature (method.DeclaringType, method);
+			return base.ComputeSignature (method.DeclaringType, method, isBlockSignature: isBlockSignature);
 		}
 	}
 }

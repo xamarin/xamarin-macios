@@ -45,10 +45,12 @@ namespace Xamarin.Mac.Tests
 			// Walk all non abstract types, looking for things with zero param constructors
 			foreach (Type t in xamMac.GetTypes ().Where (t => !t.IsAbstract)) {
 				// Check availability attributes.
-				if (Asserts.SkipDueToAvailabilityAttribute (t) || skip (t))
+				if (Asserts.SkipDueToAvailabilityAttribute (t) || Skip (t))
 					continue;
 
 				var ctor = t.GetConstructor (BindingFlags.Instance | BindingFlags.Public, null, new Type[0], null);
+				if (Asserts.SkipDueToAvailabilityAttribute (ctor))
+					continue;
 
 				// If they have one of the properites we are testing
 				if (ctor != null) {
@@ -94,7 +96,7 @@ namespace Xamarin.Mac.Tests
 			}
 		}
 
-		bool skip (Type t)
+		bool Skip (Type t)
 		{
 			switch (t.Name) {
 			case "AVAssetResourceLoader":
@@ -115,6 +117,7 @@ namespace Xamarin.Mac.Tests
 			case "SKScene":
 			case "NSSpeechRecognizer":
 			case "NSClickGestureRecognizer":
+			case "NSPopover":
 				// These classes don't do well when you instance them without support
 				return true;
 			case "SCNLayer":

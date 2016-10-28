@@ -145,11 +145,11 @@ do_second_check:
 }
 
 #ifdef DEBUG_LAUNCH_TIME
-guint64 startDate = 0;
-guint64 date = 0;
+uint64_t startDate = 0;
+uint64_t date = 0;
 void debug_launch_time_print (const char *msg)
 {
-	guint64 unow;
+	uint64_t unow;
 	struct timeval now;
 
 	gettimeofday (&now, NULL);
@@ -160,7 +160,7 @@ void debug_launch_time_print (const char *msg)
 		date = startDate;
 	}
 
-	NSLog (@"%s: %llu us Total: %llu us", msg, unow - date, unow - startDate);
+	PRINT ("%s: %llu us Total: %llu us", msg, unow - date, unow - startDate);
 
 	date = unow;
 }
@@ -191,17 +191,17 @@ extern void mono_gc_init_finalizer_thread (void);
 @implementation XamarinGCSupport
 - (id) init
 {
-#if TARGET_OS_WATCH
-	// I haven't found a way to listen for memory warnings on watchOS.
-	// fprintf (stderr, "Need to listen for memory warnings on the watch\n");
-#else
 	if (self = [super init]) {
 #if defined (__arm__) || defined(__aarch64__)
 		[self start];
 #endif
+#if TARGET_OS_WATCH
+		// I haven't found a way to listen for memory warnings on watchOS.
+		// fprintf (stderr, "Need to listen for memory warnings on the watch\n");
+#else
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(memoryWarning:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+#endif
 	}
-#endif /* TARGET_OS_WATCH */
 
 	return self;
 }
@@ -273,8 +273,6 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 	// see http://bugzilla.xamarin.com/show_bug.cgi?id=820
 	// take this line out once the bug is fixed
 	mini_parse_debug_option ("no-gdb-backtrace");
-	if (xamarin_compact_seq_points)
-		mini_parse_debug_option ("gen-compact-seq-points");
 
 	DEBUG_LAUNCH_TIME_PRINT ("Spin-up time");
 
@@ -349,7 +347,7 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 				if (value) {
 					monotouch_set_monodevelop_port (strtol (value, NULL, 10));
 				} else {
-					NSLog (@"MonoTouch: --%s requires an argument.", name);
+					PRINT ("MonoTouch: --%s requires an argument.", name);
 				}
 			} else if (!strcmp (name, "connection-mode")) {
 				if (!value && argc > i + 1)
@@ -357,7 +355,7 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 				if (value) {
 					monotouch_set_connection_mode (value);
 				} else {
-					NSLog (@"MonoTouch: --%s requires an argument.", name);
+					PRINT ("MonoTouch: --%s requires an argument.", name);
 				}
 			} 
 #endif /* DEBUG */
@@ -368,7 +366,7 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 				if (value) {
 					managed_argv [managed_argc++] = value;
 				} else {
-					NSLog (@"MonoTouch: --%s requires an argument.", name);
+					PRINT ("MonoTouch: --%s requires an argument.", name);
 				}
 			} else if (!strcmp (name, "setenv")) {
 				if (!value && argc > i + 1)
@@ -384,7 +382,7 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 					}
 					free (k);
 				} else {
-					NSLog (@"MonoTouch: --%s requires an argument.", name);
+					PRINT ("MonoTouch: --%s requires an argument.", name);
 				}
 			}
 			
@@ -472,6 +470,14 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 
 	int rv = 0;
 	if (is_extension) {
+		char base_dir [1024];
+		char config_file_name [1024];
+
+		snprintf (base_dir, sizeof (base_dir), "%s/" ARCH_SUBDIR, xamarin_get_bundle_path ());
+		snprintf (config_file_name, sizeof (config_file_name), "%s/%s.config", base_dir, xamarin_executable_name); // xamarin_executable_name should never be NULL for extensions.
+
+		mono_domain_set_config (mono_domain_get (), base_dir, config_file_name);
+
 		MONO_ENTER_GC_SAFE;
 		rv = xamarin_extension_main (argc, argv);
 		MONO_EXIT_GC_SAFE;

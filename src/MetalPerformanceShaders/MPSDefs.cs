@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.InteropServices;
+
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
@@ -20,6 +22,30 @@ namespace XamCore.MetalPerformanceShaders {
 	public enum MPSImageEdgeMode : nuint {
 		Zero,
 		Clamp = 1
+	}
+
+	[iOS (10,0)][TV (10,0)]
+	[Native]
+	public enum MPSAlphaType : nuint {
+		NonPremultiplied = 0,
+		AlphaIsOne = 1,
+		Premultiplied = 2,
+	}
+	 
+	[iOS (10,0)][TV (10,0)]
+	public enum MPSDataType : uint { // uint32_t
+		FloatBit = 0x10000000,
+		Float32 = FloatBit | 32,
+	}
+
+	[iOS (10,0)][TV (10,0)]
+	[Native]
+	public enum MPSImageFeatureChannelFormat : nuint {
+		Invalid = 0,
+		Unorm8 = 1,
+		Unorm16 = 2,
+		Float16 = 3,
+		Float32 = 4,
 	}
 
 	// uses NSInteger
@@ -57,10 +83,19 @@ namespace XamCore.MetalPerformanceShaders {
 	}
 
 	// MPSImageHistogram.h
+	[StructLayout (LayoutKind.Explicit)]
 	public struct MPSImageHistogramInfo {
+		[FieldOffset (0)]
 		public nuint NumberOfHistogramEntries;
+#if ARCH_64
+		[FieldOffset (8)]
+#else
+		[FieldOffset (4)]
+#endif
 		public bool HistogramForAlpha;
+		[FieldOffset (16)]
 		public Vector4 MinPixelValue;
+		[FieldOffset (32)]
 		public Vector4 MaxPixelValue;
 	}
 

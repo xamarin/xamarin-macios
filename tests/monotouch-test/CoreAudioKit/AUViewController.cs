@@ -26,6 +26,13 @@ namespace MonoTouchFixtures.CoreAudioKit {
 	[Preserve (AllMembers = true)]
 	public class AUViewControllerTest
 	{
+		[SetUp]
+		public void MinimumSdkCheck ()
+		{
+			// AUViewController was added in iOS 9
+			TestRuntime.AssertXcodeVersion (7, 0);
+		}
+
 		[Test]
 		public void Ctor ()
 		{

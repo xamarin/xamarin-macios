@@ -5,15 +5,11 @@
 [submodule "external/mono"]
 	path = external/mono
 	url = ../../mono/mono.git
-	branch = mono-4.5.0-branch
+	branch = mono-4.6.0-branch
 [submodule "external/fsharp"]
 	path = external/fsharp
 	url = ../../fsharp/fsharp.git
 	branch = master
-[submodule "external/cecil"]
-	path = external/cecil
-	url = ../../mono/cecil.git
-	branch = workaround-for-bug-24976
 [submodule "external/MonoTouch.Dialog"]
 	path = external/MonoTouch.Dialog
 	url = ../../migueldeicaza/MonoTouch.Dialog.git
@@ -26,10 +22,6 @@
 	path = external/opentk
 	url = ../../mono/opentk.git
 	branch = master
-[submodule "external/ModernHttpClient"]
-	path = external/ModernHttpClient
-	url = ../../xamarin/ModernHttpClient.git
-	branch = master
 [submodule "external/Xamarin.MacDev"]
 	path = external/Xamarin.MacDev
 	url = ../../xamarin/Xamarin.MacDev
@@ -37,7 +29,3 @@
 [submodule "external/guiunit"]
 	path = external/guiunit
 	url = ../../mono/guiunit.git
-[submodule "external/watch-mono"]
-	path = external/watch-mono
-	url = ../../mono/mono.git
-	branch = master

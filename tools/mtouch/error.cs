@@ -45,11 +45,11 @@ namespace Xamarin.Bundler {
 	//					MT0034	Cannot reference '{0}.dll' in a {1} project - it is implicitly referenced by '{2}'.
 	//					MT0035	<unused>
 	//					MT0036	<unused>
-	//					MT0037	monotouch.dll is not 64-bit compatible. Either reference Xamarin.iOS.dll, or do not build for a 64-bit architecture (ARM64 and/or x86_64).
-	//					MT0038	The old registrars (--registrar:oldstatic|olddynamic) are not supported when referencing Xamarin.iOS.dll.
+	//					MT0037	<unused>
+	//					MT0038	<unused>
 	//					MT0040	Could not find the assembly '{0}', referenced by '{1}'.
-	//					MT0041	Cannot reference both 'monotouch.dll' and 'Xamarin.iOS.dll'.
-	//		Warning		MT0042	No reference to either monotouch.dll or Xamarin.iOS.dll was found. A reference to monotouch.dll will be added.
+	//					MT0041	<unused>
+	//					MT0042	<unused>
 	//		Warning		MT0043	The Boehm garbage collector is not supported. The SGen garbage collector has been selected instead.
 	//					MT0044	--listsim is only supported with Xcode 6.0 or later.
 	//					MT0045	--extension is only supported when using the iOS 8.0 (or later) SDK.
@@ -71,7 +71,7 @@ namespace Xamarin.Bundler {
 	//					MT0061	No Xcode.app specified (using --sdkroot), using the system Xcode as reported by 'xcode-select --print-path': {0}
 	//					MT0062	No Xcode.app specified (using --sdkroot or 'xcode-select --print-path'), using the default Xcode instead: {0}
 	//					MT0063	Cannot find the executable in the extension {0} (no CFBundleExecutable entry in its Info.plist)
-	//					MT0064	Xamarin.iOS only supports embedded frameworks with Unified projects.
+	//					MT0064	<unused>
 	//					MT0065	Xamarin.iOS only supports embedded frameworks when deployment target is at least 8.0 (current deployment target: {0} embedded frameworks: {1})
 	//					MT0066	Invalid build registrar assembly: {0}
 	//					MT0067	Invalid registrar: {0}
@@ -85,7 +85,7 @@ namespace Xamarin.Bundler {
 	//					MT0075	Invalid architecture '{0}' for {1} projects. Valid architectures are: {2}
 	//					MT0076	No architecture specified (using the --abi argument). An architecture is required for {0} projects.
 	//					MT0077	WatchOS projects must be extensions.
-	//					MT0078	Incremental builds are enabled with a deployment target < 7.0 (currently {0}). This is not supported (the resulting application will not launch on iOS 9), so the deployment target will be set to 7.0.
+	//					MT0078	Incremental builds are enabled with a deployment target < 8.0 (currently {0}). This is not supported (the resulting application will not launch on iOS 9), so the deployment target will be set to 8.0.
 	//		Warning		MT0079	The recommended Xcode version for Xamarin.iOS {0} is Xcode 7.0 or later. The current Xcode version (found in {2}) is {1}.
 	//		Warning		MT0080  Disabling NewRefCount, --new-refcount:false, is deprecated.
 	//					MT0081	The command line argument --download-crash-report also requires --download-crash-report-to.
@@ -100,7 +100,10 @@ namespace Xamarin.Bundler {
 	//					MT0091	This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker. 
 	//					MT0092	<used by Xamarin.Launcher> The option '{0}' is required.
 	//					MT0093	Could not find 'mlaunch'.
-	//		Warning		MT0094	Both profiling (--profiling) and incremental builds (--fastdev) is not supported when building for {0}. Incremental builds have ben disabled.
+	//		Warning		MT0094	<unused> Both profiling (--profiling) and incremental builds (--fastdev) are currently not supported when building for {0}, and incremental builds have been disabled (this will be fixed in a future release).
+	//					MT0095 Aot files could not be copied to the destination directory.
+	//					MT0096 No reference to Xamarin.iOS.dll was found.
+	//					MT0097 <used by mmp>
 	// MT1xxx	file copy / symlinks (project related)
 	//			MT10xx	installer.cs / mtouch.cs
 	//					MT1001	Could not find an application at the specified directory: {0}
@@ -202,6 +205,9 @@ namespace Xamarin.Bundler {
 	//					MT2011	Unknown TlsProvider `{0}`.  Valid values are default, legacy or appletls.
 	//					MT2012  ** reserved Xamarin.Mac **
 	//					MT2013	** reserved Xamarin.Mac **
+	//					MT2014	** reserved Xamarin.Mac **
+	//					MT2015	Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.
+	//					MT202x	Binding Optimizer failed processing `...`.
 	// MT3xxx	AOT
 	//			MT30xx	AOT (general) errors
 	//					MT3001	Could not AOT the assembly '{0}'
@@ -215,6 +221,7 @@ namespace Xamarin.Bundler {
 	// MT4xxx	code generation
 	// 			MT40xx	main.m
 	//					MT4001	The main template could not be expanded to `{0}`.
+	//					MT4002	Failed to compile the generated code for P/Invoke methods. Please file a bug report at http://bugzilla.xamarin.com
 	//			MT41xx	registrar.m
 	//					MT4101	The registrar cannot build a signature for type `{0}`.
 	//					MT4102	The registrar found an invalid type `{0}` in signature for method `{2}`. Use `{1}` instead.
@@ -278,6 +285,9 @@ namespace Xamarin.Bundler {
 	//					MT4162	The type '{0}' (used as {1} {2}) is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer iOS SDK (usually done by using the most recent version of Xcode.
 	//					MT4163	Internal error in the registrar ({0}). Please file a bug report at http://bugzilla.xamarin.com
 	//					MT4164	Cannot export the property '{0}' because its selector '{1}' is an Objective-C keyword. Please use a different name.
+	//					MT4165	The registrar couldn't find the type 'System.Void' in any of the referenced assemblies.
+	//					MT4166	Cannot register the method '{0}' because the signature contains a type ({1}) that isn't a reference type.
+	//					MT4167	Cannot register the method '{0}' because the signature contains a generic type ({1}) with a generic argument type that isn't an NSObject subclass ({2}).
 	// MT5xxx	GCC and toolchain
 	//			MT51xx	compilation
 	//					MT5101	Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component
@@ -303,7 +313,7 @@ namespace Xamarin.Bundler {
 	//					MT5304	Failed to strip the final binary. Please review the build log.
 	//					MT5305  Missing 'lipo' tool. Please install Xcode 'Command-Line Tools' component
 	//					MT5306  Failed to create the a fat library. Please review the build log.
-	//					MT5307  Failed to sign the executable. Please review the build log.
+	//					MT5307  <unused>
 	//					MT5308  ** reserved Xamarin.Mac **
 	//					MT5309  ** reserved Xamarin.Mac **
 	//					MT5310  ** reserved Xamarin.Mac **
@@ -332,6 +342,7 @@ namespace Xamarin.Bundler {
 	//					MT8015	Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: The DelegateType's ({2}) 'Handler' field is not a delegate, it's a {3}. Please file a bug at http://bugzilla.xamarin.com.
 	//					MT8016	Unable to convert delegate to block for the return value for the method {0}.{1}, because the input isn't a delegate, it's a {1}. Please file a bug at http://bugzilla.xamarin.com.
 	//					MT8017	** reserved Xamarin.Mac **
+	//					MT8018	Internal consistency error. Please file a bug report at http://bugzilla.xamarin.com.
 	// MT9xxx	Licensing
 	//
 

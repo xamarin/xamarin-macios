@@ -73,16 +73,6 @@ namespace XamCore.Security {
 		Ntlm, Msn, Dpa, Rpa, HttpBasic, HttpDigest, HtmlForm, Default
 	}
 
-	public enum SecKeyClass {
-		Invalid = -1,
-		Public, Private, Symmetric
-	}
-
-	public enum SecKeyType {
-		Invalid = -1,
-		RSA, EC
-	}
-
 #if XAMCORE_2_0
 	public class SecKeyChain : INativeObject {
 
@@ -761,7 +751,7 @@ namespace XamCore.Security {
 #if MONOMAC
 			queryDict = NSMutableDictionary.LowlevelFromObjectAndKey (kind, SecClass.SecClassKey);
 #elif WATCH
-			throw new NotImplementedException (); // need to figure this out.
+			queryDict = NSMutableDictionary.LowlevelFromObjectAndKey (kind, SecClass.SecClassKey);
 #else
 			// Apple changed/fixed this in iOS7 (not the only change, see comments above)
 			// test suite has a test case that needs to work on both pre-7.0 and post-7.0
@@ -770,6 +760,46 @@ namespace XamCore.Security {
 			else
 				queryDict = NSMutableDictionary.LowlevelFromObjectAndKey (kind, SecClass.SecClassKey);
 #endif
+		}
+
+		public SecRecord (SecCertificate certificate) : this (SecKind.Certificate)
+		{
+			SetCertificate (certificate);
+		}
+
+		public SecRecord (SecIdentity identity) : this (SecKind.Identity)
+		{
+			SetIdentity (identity);
+		}
+
+		public SecRecord (SecKey key) : this (SecKind.Key)
+		{
+			SetKey (key);
+		}
+
+		public SecCertificate GetCertificate ()
+		{
+			CheckClass (SecClass.Certificate);
+			return GetValueRef <SecCertificate> ();
+		}
+
+		public SecIdentity GetIdentity ()
+		{
+			CheckClass (SecClass.Identity);
+			return GetValueRef<SecIdentity> ();
+		}
+
+		public SecKey GetKey ()
+		{
+			CheckClass (SecClass.Key);
+			return GetValueRef<SecKey> ();
+		}
+
+		void CheckClass (IntPtr secClass)
+		{
+			var kind = queryDict.LowlevelObjectForKey (SecClass.SecClassKey);
+			if (kind != secClass)
+				throw new InvalidOperationException ("SecRecord of incompatible SecClass");
 		}
 
 		public SecRecord Clone ()
@@ -815,29 +845,29 @@ namespace XamCore.Security {
 
 		NSObject FetchObject (IntPtr key)
 		{
-			return Runtime.GetNSObject<NSObject> (Fetch (key));
+			return Runtime.GetNSObject (Fetch (key));
 		}
 
 		string FetchString (IntPtr key)
 		{
-			return NSString.FromHandle (Fetch (key));
+			return (NSString) FetchObject (key);
 		}
 
 		int FetchInt (IntPtr key)
 		{
-			var obj = Runtime.GetNSObject<NSNumber> (Fetch (key));
+			var obj = (NSNumber) FetchObject (key);
 			return obj == null ? -1 : obj.Int32Value;
 		}
 
 		bool FetchBool (IntPtr key, bool defaultValue)
 		{
-			var obj = Runtime.GetNSObject<NSNumber> (Fetch (key));
+			var obj = (NSNumber) FetchObject (key);
 			return obj == null ? defaultValue : obj.Int32Value != 0;
 		}
 
 		T Fetch<T> (IntPtr key) where T : NSObject
 		{
-			return Runtime.GetNSObject<T> (Fetch (key));
+			return (T) FetchObject (key);
 		}
 		
 
@@ -1061,6 +1091,20 @@ namespace XamCore.Security {
 			}
 		}
 
+#if XAMCORE_2_0 && !WATCH && !TVOS
+		[iOS (9, 0), Mac (10, 11)]
+		public XamCore.LocalAuthentication.LAContext AuthenticationContext {
+			get {
+				return Fetch<XamCore.LocalAuthentication.LAContext> (SecItem.UseAuthenticationContext);
+			}
+			set {
+				if (value == null)
+					throw new ArgumentNullException (nameof (value));
+				SetValue (value.Handle, SecItem.UseAuthenticationContext);
+			}
+		}
+#endif
+
 		// Must store the _secAccessControl here, since we have no way of inspecting its values if
 		// it is ever returned from a dictionary, so return what we cached.
 		SecAccessControl _secAccessControl;
@@ -1206,17 +1250,14 @@ namespace XamCore.Security {
 				var k = Fetch (SecAttributeKey.KeyClass);
 				if (k == IntPtr.Zero)
 					return SecKeyClass.Invalid;
-				if (CFType.Equal (k, ClassKeys.Public))
-					return SecKeyClass.Public;
-				else if (CFType.Equal (k, ClassKeys.Private))
-					return SecKeyClass.Private;
-				else if (CFType.Equal (k, ClassKeys.Symmetric))
-					return SecKeyClass.Symmetric;
-				else
-					return SecKeyClass.Invalid;
+				using (var s = new NSString (k))
+					return SecKeyClassExtensions.GetValue (s);
 			}
 			set {
-				SetValue (value == SecKeyClass.Public ? ClassKeys.Public : value == SecKeyClass.Private ? ClassKeys.Private : ClassKeys.Symmetric, SecAttributeKey.KeyClass);
+				var k = value.GetConstant ();
+				if (k == null)
+					throw new ArgumentException ("Unknown value");
+				SetValue ((NSObject) k, SecAttributeKey.KeyClass);
 			}
 		}
 
@@ -1257,16 +1298,15 @@ namespace XamCore.Security {
 				var k = Fetch (SecAttributeKey.KeyType);
 				if (k == IntPtr.Zero)
 					return SecKeyType.Invalid;
-				if (CFType.Equal (k, KeyTypeKeys.RSA))
-					return SecKeyType.RSA;
-				else if (CFType.Equal (k, KeyTypeKeys.EC))
-					return SecKeyType.EC;
-				else
-					return SecKeyType.Invalid;
+				using (var s = new NSString (k))
+					return SecKeyTypeExtensions.GetValue (s);
 			}
 			
 			set {
-				SetValue (value == SecKeyType.RSA ? KeyTypeKeys.RSA : KeyTypeKeys.EC, SecAttributeKey.KeyType);
+				var k = value.GetConstant ();
+				if (k == null)
+					throw new ArgumentException ("Unknown value");
+				SetValue ((NSObject) k, SecAttributeKey.KeyType);
 			}
 		}
 
@@ -1515,6 +1555,11 @@ namespace XamCore.Security {
 		{
 			SetValue (value == null ? IntPtr.Zero : value.Handle, SecItem.ValueRef);
 		}
+
+		public void SetCertificate (SecCertificate cert) => SetValueRef (cert);
+		public void SetIdentity (SecIdentity identity) => SetValueRef (identity);
+		public void SetKey (SecKey key) => SetValueRef (key);
+
 	}
 	
 	internal partial class SecItem {

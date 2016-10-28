@@ -474,9 +474,8 @@ namespace XamCore.CoreMedia {
 		{
 		}
 
-		public CMClockOrTimebase (IntPtr handle)
+		public CMClockOrTimebase (IntPtr handle) : this (handle, false)
 		{
-			this.handle = handle;
 		}
 
 		internal CMClockOrTimebase (IntPtr handle, bool owns)

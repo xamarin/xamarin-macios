@@ -9,16 +9,14 @@ namespace xharness
 	public class DeviceLogCapturer
 	{
 		public Harness Harness;
-		public string LogPath;
+		public Log Log;
 		public string DeviceName;
 
-		StreamWriter writer;
 		Process process;
 		CountdownEvent streamEnds;
 
 		public void StartCapture ()
 		{
-			writer = new StreamWriter (new FileStream (LogPath, FileMode.Create));
 			streamEnds = new CountdownEvent (2);
 
 			process = new Process ();
@@ -35,8 +33,8 @@ namespace xharness
 				if (e.Data == null) {
 					streamEnds.Signal ();
 				} else {
-					lock (writer) {
-						writer.WriteLine (e.Data);
+					lock (Log) {
+						Log.WriteLine (e.Data);
 					}
 				}
 			};
@@ -44,12 +42,12 @@ namespace xharness
 				if (e.Data == null) {
 					streamEnds.Signal ();
 				} else {
-					lock (writer) {
-						writer.WriteLine (e.Data);
+					lock (Log) {
+						Log.WriteLine (e.Data);
 					}
 				}
 			};
-			Harness.Log (1, "{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
+			Log.WriteLine ("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
 			process.Start ();
 			process.BeginOutputReadLine ();
 			process.BeginErrorReadLine ();
@@ -57,13 +55,14 @@ namespace xharness
 
 		public void StopCapture ()
 		{
+			if (process.HasExited)
+				return;
+			
 			process.Kill ();
 			if (!streamEnds.Wait (TimeSpan.FromSeconds (5))) {
 				Harness.Log ("Could not kill 'mtouch --logdev' process in 5 seconds.");
 			}
 			process.Dispose ();
-			writer.Flush ();
-			writer.Dispose ();
 		}
 	}
 }

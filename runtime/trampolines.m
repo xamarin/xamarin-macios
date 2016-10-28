@@ -383,7 +383,7 @@ xamarin_copyWithZone_trampoline1 (id self, SEL sel, NSZone *zone)
 	struct objc_super sup;
 
 #if defined (DEBUG_REF_COUNTING)
-	NSLog (@"xamarin_copyWithZone_trampoline1 (%p, %s, %p)\n", self, sel_getName (sel), zone);
+	PRINT ("xamarin_copyWithZone_trampoline1 (%p, %s, %p)\n", self, sel_getName (sel), zone);
 #endif
 
 	// Clear out our own GCHandle
@@ -413,7 +413,7 @@ xamarin_copyWithZone_trampoline2 (id self, SEL sel, NSZone *zone)
 	int gchandle;
 
 #if defined (DEBUG_REF_COUNTING)
-	NSLog (@"xamarin_copyWithZone_trampoline2 (%p, %s, %p)\n", self, sel_getName (sel), zone);
+	PRINT ("xamarin_copyWithZone_trampoline2 (%p, %s, %p)\n", self, sel_getName (sel), zone);
 #endif
 
 	// Clear out our own GCHandle
@@ -447,7 +447,7 @@ xamarin_release_trampoline (id self, SEL sel)
 	ref_count = [self retainCount];
 
 #if defined(DEBUG_REF_COUNTING)
-	NSLog (@"xamarin_release_trampoline (%s Handle=%p) retainCount=%d; HasManagedRef=%i GCHandle=%i\n", 
+	PRINT ("xamarin_release_trampoline (%s Handle=%p) retainCount=%d; HasManagedRef=%i GCHandle=%i\n", 
 		class_getName ([self class]), self, ref_count, xamarin_has_managed_ref (self), xamarin_get_gchandle (self));
 #endif
 	
@@ -484,7 +484,7 @@ xamarin_notify_dealloc (id self, int gchandle)
 	/* Object is about to die. Unregister it and free any gchandles we may have */
 	MonoObject *mobj = mono_gchandle_get_target (gchandle);
 #if defined(DEBUG_REF_COUNTING)
-	NSLog (@"xamarin_notify_dealloc (%p, %i) target: %p\n", self, gchandle, mobj);
+	PRINT ("xamarin_notify_dealloc (%p, %i) target: %p\n", self, gchandle, mobj);
 #endif
 	xamarin_free_gchandle (self, gchandle);
 	xamarin_unregister_nsobject (self, mobj, &exception_gchandle);
@@ -524,7 +524,7 @@ xamarin_retain_trampoline (id self, SEL sel)
 	self = xamarin_invoke_objc_method_implementation (self, sel, (IMP) xamarin_retain_trampoline);
 	
 #if defined(DEBUG_REF_COUNTING)
-	NSLog (@"xamarin_retain_trampoline  (%s Handle=%p) initial retainCount=%d; new retainCount=%d HadManagedRef=%i HasManagedRef=%i old GCHandle=%i new GCHandle=%i\n", 
+	PRINT ("xamarin_retain_trampoline  (%s Handle=%p) initial retainCount=%d; new retainCount=%d HadManagedRef=%i HasManagedRef=%i old GCHandle=%i new GCHandle=%i\n", 
 		class_getName ([self class]), self, ref_count, (int) [self retainCount], had_managed_ref, xamarin_has_managed_ref (self), pre_gchandle, xamarin_get_gchandle (self));
 #endif
 

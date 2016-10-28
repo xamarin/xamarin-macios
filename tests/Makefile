@@ -65,6 +65,8 @@ test.config: Makefile $(TOP)/Make.config
 	@echo "IOS_DESTDIR=$(abspath $(IOS_DESTDIR))" >> $@
 	@echo "MAC_DESTDIR=$(abspath $(MAC_DESTDIR))" >> $@
 	@echo "WATCH_MONO_PATH=$(abspath $(WATCH_MONO_PATH))" >> $@
+	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
+	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
 
 clean-local::
 	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhoneSimulator /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests.sln
@@ -85,21 +87,8 @@ run run-all run-tests run-test:
 	$(Q) $(MAKE) run-local
 
 # separate build-dev-* entries because some of them are build with debug other (llvm) with release
-build-dev-bots: build-test-libraries
-	# test LLVM armv6, this is Classic only because arm64 doesn't have llvm support.
-	$(MAKE) "build-ios-devclassic-dont link" CONFIG=Release
-	# test LLVM armv7, this is Classic only because arm64 doesn't have llvm support.
-	$(MAKE) "build-ios-devclassic-link all" CONFIG=Release
-	# test LLVM armv6 arm7 (fat), this is Classic only because arm64 doesn't have llvm support.
-	$(MAKE) "build-ios-devclassic-link sdk" CONFIG=Release
-	# test LLVM arm7 w/thumb2, this is Classic only because arm64 doesn't have llvm support.
-	$(MAKE) build-ios-devclassic-monotouch-test CONFIG=Release
-	# test BCL mscorlib
-	$(MAKE) build-ios-dev-mscorlib CONFIG=Release
-	# test BCL System.Core
-	$(MAKE) build-ios-dev-System.Core CONFIG=Release
-	# run any other scripted tests
-	$(MAKE) -C scripted
+build-dev-bots:
+	@echo "These tests are now in the mtouch test suite"
 
 build-% run-% exec-% install-%:
 	@echo ""
@@ -312,7 +301,8 @@ endif
 wrench-docs:
 ifdef ENABLE_XAMARIN
 ifdef INCLUDE_IOS
-	$(MAKE) -C $(MACCORE_PATH) update-docs
+	@echo "Documentation process must be ported to not use XI/Classic, and not use system XI. In the meantime disable the docs tests."
+	@#$(MAKE) -C $(MACCORE_PATH) update-docs
 else
 	@echo "iOS tests have been disabled [$@]"
 endif
@@ -348,3 +338,5 @@ else
 	@echo "iOS tests have been disabled [$@]"
 endif
 
+jenkins: xharness/xharness.exe
+	$(Q) $(SYSTEM_MONO) --debug $< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT)

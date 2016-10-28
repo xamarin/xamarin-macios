@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using Xamarin.Bundler;
@@ -73,11 +74,11 @@ namespace XamCore.Registrar {
 
 		void Output (string a)
 		{
-			if (a.StartsWith ("}"))
+			if (a.StartsWith ("}", StringComparison.Ordinal))
 				Unindent ();
 			OutputIndentation ();
 			sb.Append (a);
-			if (a.EndsWith ("{"))
+			if (a.EndsWith ("{", StringComparison.Ordinal))
 				Indent ();
 		}
 
@@ -313,7 +314,7 @@ namespace XamCore.Registrar {
 				return;
 
 			foreach (var iface in type.Interfaces) {
-				var itd = iface.Resolve ();
+				var itd = iface.InterfaceType.Resolve ();
 				CollectInterfaces (ref ifaces, itd);
 
 				if (!HasAttribute (itd, Registrar.Foundation, Registrar.StringConstants.ProtocolAttribute))
@@ -432,7 +433,7 @@ namespace XamCore.Registrar {
 			case "System.IntPtr": return "void *";
 			case "System.SByte": return "unsigned char";
 			case "System.Byte": return "signed char";
-			case "System.Char": return "signed char";
+			case "System.Char": return "signed short";
 			case "System.Int16": return "short";
 			case "System.UInt16": return "unsigned short";
 			case "System.Int32": return "int";
@@ -492,8 +493,8 @@ namespace XamCore.Registrar {
 			var type = tr.Resolve ();
 			while (type != null) {
 				if (type.HasInterfaces) {
-					foreach (TypeReference iface in type.Interfaces)
-						if (iface.Is (Registrar.ObjCRuntime, Registrar.StringConstants.INativeObject))
+					foreach (var iface in type.Interfaces)
+						if (iface.InterfaceType.Is (Registrar.ObjCRuntime, Registrar.StringConstants.INativeObject))
 							return true;
 				}
 
@@ -572,7 +573,7 @@ namespace XamCore.Registrar {
 		public static int GetValueTypeSize (TypeDefinition type, bool is_64_bits)
 		{
 			switch (type.FullName) {
-				case "System.Char":
+				case "System.Char": return 2;
 				case "System.Boolean":
 				case "System.SByte":
 				case "System.Byte": return 1;
@@ -649,7 +650,7 @@ namespace XamCore.Registrar {
 #if MMP
 				return Xamarin.Bundler.Driver.IsUnified;
 #else
-				return Driver.App.IsUnified;
+				return true;
 #endif
 			}
 		}
@@ -826,8 +827,12 @@ namespace XamCore.Registrar {
 			return method.ReturnType;
 		}
 
+		TypeReference system_void;
 		protected override TypeReference GetSystemVoidType ()
 		{
+			if (system_void != null)
+				return system_void;
+			
 			// find corlib
 			AssemblyDefinition corlib = null;
 			AssemblyDefinition first = null;
@@ -846,10 +851,10 @@ namespace XamCore.Registrar {
 			}
 			foreach (var type in corlib.MainModule.Types) {
 				if (type.Namespace == "System" && type.Name == "Void")
-					return type;
+					return system_void = type;
 			}
 
-			throw new Exception ("Couldn't find System.Void");
+			throw ErrorHelper.CreateError (4165, "The registrar couldn't find the type 'System.Void' in any of the referenced assemblies.");
 		}
 
 		protected override bool IsVirtual (MethodDefinition method)
@@ -929,7 +934,7 @@ namespace XamCore.Registrar {
 				return null;
 			var rv = new TypeReference [td.Interfaces.Count];
 			for (int i = 0; i < td.Interfaces.Count; i++)
-				rv [i] = td.Interfaces [i].Resolve ();
+				rv [i] = td.Interfaces [i].InterfaceType.Resolve ();
 			return rv;
 		}
 
@@ -1652,7 +1657,7 @@ namespace XamCore.Registrar {
 			if (IsDualBuild) {
 				return Driver.Frameworks.ContainsKey (type.Namespace);
 			} else {
-				return type.Namespace.StartsWith (CompatNamespace + ".");
+				return type.Namespace.StartsWith (CompatNamespace + ".", StringComparison.Ordinal);
 			}
 		}
 
@@ -1695,7 +1700,12 @@ namespace XamCore.Registrar {
 			// Strip off the 'MonoTouch.' prefix
 			if (!IsDualBuild)
 				ns = type.Namespace.Substring (ns.IndexOf ('.') + 1);
+			
+			CheckNamespace (ns, exceptions);
+		}
 
+		void CheckNamespace (string ns, List<Exception> exceptions)
+		{
 			if (string.IsNullOrEmpty (ns))
 				return;
 
@@ -1708,8 +1718,9 @@ namespace XamCore.Registrar {
 			switch (ns) {
 #if MMP
 			case "CoreBluetooth":
-				h = "<IOBluetooth/IOBluetooth.h>";
-				break;
+				header.WriteLine ("#import <IOBluetooth/IOBluetooth.h>");
+				header.WriteLine ("#import <CoreBluetooth/CoreBluetooth.h>");
+				return;
 			case "CoreImage":
 				h = "<QuartzCore/QuartzCore.h>";
 				break;
@@ -1773,6 +1784,12 @@ namespace XamCore.Registrar {
 					return;
 #endif
 				goto default;
+			case "GameKit":
+#if !MONOMAC
+				if (IsSimulator && Driver.App.Platform == Xamarin.Utils.ApplePlatform.WatchOS)
+					return; // No headers provided for watchOS/simulator.
+#endif
+				goto default;
 			case "WatchKit":
 				// There's a bug in Xcode 7 beta 2 headers where the build fails with
 				// ObjC++ files if WatchKit.h is included before UIKit.h (radar 21651022).
@@ -1782,6 +1799,12 @@ namespace XamCore.Registrar {
 				header.WriteLine ("#import <WatchKit/WatchKit.h>");
 				namespaces.Add ("UIKit");
 				return;
+			case "QTKit":
+#if MONOMAC
+				if (Driver.SDKVersion >= new Version (10,12))
+					return; // 10.12 removed the header files for QTKit
+#endif
+				goto default;
 			default:
 				h = string.Format ("<{0}/{0}.h>", ns);
 				break;
@@ -1811,8 +1834,8 @@ namespace XamCore.Registrar {
 		{
 			switch (structure.FullName) {
 			case "System.Char":
-				name.Append ('c');
-				body.AppendLine ("char v{0};", size);
+				name.Append ('s');
+				body.AppendLine ("short v{0};", size);
 				size += 1;
 				break;
 			case "System.Boolean": // map managed 'bool' to ObjC BOOL
@@ -1926,7 +1949,41 @@ namespace XamCore.Registrar {
 
 			if (arrtype != null)
 				return "NSArray *";
-			
+
+			var git = type as GenericInstanceType;
+			if (git != null && IsNSObject (type)) {
+				var sb = new StringBuilder ();
+				var elementType = git.GetElementType ();
+
+				sb.Append (ToObjCParameterType (elementType, descriptiveMethodName, exceptions, inMethod));
+
+				if (sb [sb.Length - 1] != '*') {
+					// I'm not sure if this is possible to hit (I couldn't come up with a test case), but better safe than sorry.
+					AddException (ref exceptions, CreateException (4166, inMethod.Resolve () as MethodDefinition, "Cannot register the method '{0}' because the signature contains a type ({1}) that isn't a reference type.", descriptiveMethodName, GetTypeFullName (elementType)));
+					return "id";
+				}
+
+				sb.Length--; // remove the trailing * of the element type
+
+				sb.Append ('<');
+				for (int i = 0; i < git.GenericArguments.Count; i++) {
+					if (i > 0)
+						sb.Append (", ");
+					var argumentType = git.GenericArguments [i];
+					if (!IsNSObject (argumentType)) {
+						// I believe the generic constraints we have should make this error impossible to hit, but better safe than sorry.
+						AddException (ref exceptions, CreateException (4167, inMethod.Resolve () as MethodDefinition, "Cannot register the method '{0}' because the signature contains a generic type ({1}) with a generic argument type that isn't an NSObject subclass ({2}).", descriptiveMethodName, GetTypeFullName (type), GetTypeFullName (argumentType)));
+						return "id";
+					}
+					sb.Append (ToObjCParameterType (argumentType, descriptiveMethodName, exceptions, inMethod));
+				}
+				sb.Append ('>');
+
+				sb.Append ('*'); // put back the * from the element type
+
+				return sb.ToString ();
+			}
+
 			switch (td.FullName) {
 #if MMP
 			case "System.Drawing.RectangleF": return "NSRect";
@@ -1941,7 +1998,7 @@ namespace XamCore.Registrar {
 			case "System.IntPtr": return "void *";
 			case "System.SByte": return "signed char";
 			case "System.Byte": return "unsigned char";
-			case "System.Char": return "signed char";
+			case "System.Char": return "signed short";
 			case "System.Int16": return "short";
 			case "System.UInt16": return "unsigned short";
 			case "System.Int32": return "int";
@@ -1952,9 +2009,15 @@ namespace XamCore.Registrar {
 			case "System.Double": return "double";
 			case "System.Boolean": return "BOOL"; // map managed 'bool' to ObjC BOOL = unsigned char
 			case "System.Void": return "void";
-			case "System.nint": return "NSInteger";
-			case "System.nuint": return "NSUInteger";
-			case "System.nfloat": return "CGFloat";
+			case "System.nint":
+				CheckNamespace ("Foundation", exceptions);
+				return "NSInteger";
+			case "System.nuint":
+				CheckNamespace ("Foundation", exceptions);
+				return "NSUInteger";
+			case "System.nfloat":
+				CheckNamespace ("CoreGraphics", exceptions);
+				return "CGFloat";
 			case "System.DateTime":
 				throw ErrorHelper.CreateError (4102, "The registrar found an invalid type `{0}` in signature for method `{2}`. Use `{1}` instead.", "System.DateTime", IsDualBuild ? "Foundation.NSDate" : CompatNamespace + ".Foundation.NSDate", descriptiveMethodName);
 			case "ObjCRuntime.Selector":
@@ -2058,12 +2121,13 @@ namespace XamCore.Registrar {
 				sb.Append (' ');
 				sb.Append (split [0]);
 			} else {
+				var indexOffset = method.IsCategoryInstance ? 1 : 0;
 				for (int i = 0; i < split.Length - 1; i++) {
 					sb.Append (' ');
 					sb.Append (split [i]);
 					sb.Append (':');
 					sb.Append ('(');
-					sb.Append (ToObjCParameterType (method.Parameters [i], method.DescriptiveMethodName, exceptions, method.Method));
+					sb.Append (ToObjCParameterType (method.Parameters [i + indexOffset], method.DescriptiveMethodName, exceptions, method.Method));
 					sb.Append (')');
 					sb.AppendFormat ("p{0}", i);
 				}
@@ -2141,6 +2205,23 @@ namespace XamCore.Registrar {
 			return sb != null ? sb.ToString () : value;
 		}
 
+		static bool IsTypeCore (ObjCType type, string nsToMatch)
+		{
+			var ns = type.Type.Namespace;
+
+			var t = type.Type;
+			while (string.IsNullOrEmpty (ns) && t.DeclaringType != null) {
+				t = t.DeclaringType;
+				ns = t.Namespace;
+			}
+
+			return ns == nsToMatch;
+		}
+
+		static bool IsQTKitType (ObjCType type) => IsTypeCore (type, "QTKit");
+		static bool IsMapKitType (ObjCType type) => IsTypeCore (type, "MapKit");
+		static bool IsIntentsType (ObjCType type) => IsTypeCore (type, "Intents");
+
 		static bool IsMetalType (ObjCType type)
 		{
 			var ns = type.Type.Namespace;
@@ -2182,10 +2263,26 @@ namespace XamCore.Registrar {
 
 #if !MONOMAC
 				var isPlatformType = IsPlatformType (@class.Type);
-
 				if (isPlatformType && IsSimulatorOrDesktop && IsMetalType (@class))
 					continue; // Metal isn't supported in the simulator.
+#else
+				// Don't register 64-bit only API on 32-bit XM
+				if (!Is64Bits)
+				{
+					var attributes = GetAvailabilityAttributes (@class.Type); // Can return null list
+					if (attributes != null && attributes.Any (x => x.Architecture == PlatformArchitecture.Arch64))
+						continue;
+				}
+
+				if (IsQTKitType (@class) && GetSDKVersion () >= new Version (10,12))
+					continue; // QTKit header was removed in 10.12 SDK
+
+				// These are 64-bit frameworks that extend NSExtensionContext / NSUserActivity, which you can't do
+				// if the header doesn't declare them. So hack it away, since they are useless in 64-bit anyway
+				if (!Is64Bits && (IsMapKitType (@class) || IsIntentsType (@class)))
+					continue;
 #endif
+
 				
 				if (@class.IsFakeProtocol)
 					continue;
@@ -2272,11 +2369,16 @@ namespace XamCore.Registrar {
 				var class_name = EncodeNonAsciiCharacters (@class.ExportedName);
 				var is_protocol = @class.IsProtocol;
 				if (@class.IsCategory) {
-					sb.Write ("@interface {0} ({1})", EncodeNonAsciiCharacters (@class.BaseType.ExportedName), @class.CategoryName);
+					var exportedName = EncodeNonAsciiCharacters (@class.BaseType.ExportedName);
+					sb.Write ("@interface {0} ({1})", exportedName, @class.CategoryName);
+					declarations.AppendFormat ("@class {0};\n", exportedName);
 				} else if (is_protocol) {
-					sb.Write ("@protocol ").Write (EncodeNonAsciiCharacters (@class.ProtocolName));
+					var exportedName = EncodeNonAsciiCharacters (@class.ProtocolName);
+					sb.Write ("@protocol ").Write (exportedName);
+					declarations.AppendFormat ("@protocol {0};\n", exportedName);
 				} else {
 					sb.Write ("@interface {0} : {1}", class_name, EncodeNonAsciiCharacters (@class.SuperType.ExportedName));
+					declarations.AppendFormat ("@class {0};\n", class_name);
 				}
 				bool any_protocols = false;
 				ObjCType tp = @class;
@@ -3083,7 +3185,12 @@ namespace XamCore.Registrar {
 			var marshal_exception = "NULL";
 			if (App.MarshalManagedExceptions != MarshalManagedExceptionMode.Disable) {
 				body_setup.AppendLine ("MonoObject *exception = NULL;");
-				marshal_exception = "&exception";
+				if (App.EnableDebug && App.IsDefaultMarshalManagedExceptionMode) {
+					body_setup.AppendLine ("MonoObject **exception_ptr = xamarin_is_managed_exception_marshaling_disabled () ? NULL : &exception;");
+					marshal_exception = "exception_ptr";
+				} else {
+					marshal_exception = "&exception";
+				}
 			}
 
 			if (!isVoid) {
@@ -3234,7 +3341,7 @@ namespace XamCore.Registrar {
 				body.WriteLine ("if (exception_gchandle != 0) goto exception_handling;");
 				body.WriteLine ("if (has_nsobject) {");
 				body.WriteLine ("*call_super = true;");
-				body.WriteLine ("return self;");
+				body.WriteLine ("goto exception_handling;");
 				body.WriteLine ("}");
 			}
 
@@ -3616,8 +3723,11 @@ namespace XamCore.Registrar {
 							methods = mthds;
 
 							mthds.WriteLine ($"#include \"{Path.GetFileName (header_path)}\"");
+							mthds.StringBuilder.AppendLine ("extern \"C\" {");
 
 							Specialize (sb);
+
+							mthds.StringBuilder.AppendLine ("} /* extern \"C\" */");
 
 							header = null;	
 							declarations = null;
@@ -3632,6 +3742,22 @@ namespace XamCore.Registrar {
 				}
 			}
 
+		}
+
+		protected override bool SkipRegisterAssembly (AssemblyDefinition assembly)
+		{
+			if (assembly.HasCustomAttributes) {
+				foreach (var ca in assembly.CustomAttributes) {
+					var t = ca.AttributeType.Resolve ();
+					while (t != null) {
+						if (t.Is ("ObjCRuntime", "DelayedRegistrationAttribute"))
+							return true;
+						t = t.BaseType?.Resolve ();
+					}
+				}
+			}
+
+			return base.SkipRegisterAssembly (assembly);
 		}
 	}
 

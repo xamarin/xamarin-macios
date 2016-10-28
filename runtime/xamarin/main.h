@@ -39,13 +39,15 @@ enum MarshalManagedExceptionMode : int {
 
 extern bool mono_use_llvm; // this is defined inside mono
 
+#if MONOMAC
 extern bool xamarin_use_new_assemblies;
+#else
+	#define xamarin_use_new_assemblies 1
+#endif
 extern bool xamarin_gc_pump;
 extern bool xamarin_debug_mode;
-extern bool xamarin_use_old_dynamic_registrar;
-extern bool xamarin_use_il_registrar;
+extern bool xamarin_disable_lldb_attach;
 extern bool xamarin_init_mono_debug;
-extern bool xamarin_compact_seq_points;
 extern int xamarin_log_level;
 extern const char *xamarin_executable_name;
 extern const char *xamarin_arch_name;

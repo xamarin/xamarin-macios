@@ -53,19 +53,13 @@ namespace Extrospection {
 			// do not consider _* or __* as public API that should be bound
 			if (name [0] == '_')
 				return;
-			
+
+			var framework = GetDeclaringHeaderFile (decl);
 			// exclude non-framework code (e.g. all unix headers)
-			var header_file = decl.PresumedLoc.FileName;
-			var fxh = header_file.IndexOf (".framework/Headers/", StringComparison.Ordinal);
-			var framework = String.Empty;
-			if (fxh > 0) {
-				var start = header_file.LastIndexOf ('/', fxh) + 1;
-				framework = header_file.Substring (start, fxh - start);
-			} else {
-				// FIXME: we only process the headers in Frameworks, not all the UNIX headers
-				// that still miss a few things (like objc runtime) but nothing that *requires* binding
+			// FIXME: we only process the headers in Frameworks, not all the UNIX headers
+			// that still miss a few things (like objc runtime) but nothing that *requires* binding
+			if (framework == null)
 				return;
-			}
 
 			// check availability macros to see if the API is available on the OS and not deprecated
 			if (!decl.IsAvailable ())
@@ -88,8 +82,11 @@ namespace Extrospection {
 				case "OpenAL":
 				case "OpenGLES":
 					return;
+				case "ruby":
+				case "Tcl":
+				case "OpenGL":
+					return;
 				}
-
 				// if we find functions without matching DllImport then we report them
 				Console.WriteLine ("!missing-pinvoke! {0} is not bound", name);
 				return;

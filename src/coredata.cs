@@ -13,8 +13,44 @@ using XamCore.ObjCRuntime;
 
 namespace XamCore.CoreData
 {
+	[StrongDictionary ("UserInfoKeys")]
+	interface UserInfo {
+		NSError [] DetailedErrors { get; set; }
+		NSManagedObject ObjectForValidationError { get; set; }
+		NSString KeyForValidationError { get; set; }
+		NSPredicate PredicateForValidationError { get; set; }
+		NSValue ValueForValidationError { get; set; }
+		NSMergeConflict [] PersistentStoreSaveConflicts { get; set; }
+		NSPersistentStore [] AffectedStoresForError { get; set; }
+	}
+
+	[Static]
+	interface UserInfoKeys {
+		[Field ("NSDetailedErrorsKey")]
+		NSString DetailedErrorsKey { get; }
+
+		[Field ("NSValidationObjectErrorKey")]
+		NSString ObjectForValidationErrorKey { get; }
+
+		[Field ("NSValidationKeyErrorKey")]
+		NSString KeyForValidationErrorKey { get; }
+
+		[Field ("NSValidationPredicateErrorKey")]
+		NSString PredicateForValidationErrorKey { get; }
+
+		[Field ("NSValidationValueErrorKey")]
+		NSString ValueForValidationErrorKey { get; }
+
+		[Field ("NSPersistentStoreSaveConflictsErrorKey")]
+		NSString PersistentStoreSaveConflictsKey { get; }
+
+		[Field ("NSAffectedStoresErrorKey")]
+		NSString AffectedStoresForErrorKey { get; }
+	}
+
 	[NoWatch][NoTV]
 	[Native] // NUInteger -> NSPersistentStoreCoordinator.h
+	[Availability (Introduced = Platform.iOS_7_0 | Platform.Mac_10_9 , Deprecated = Platform.iOS_10_0 | Platform.Mac_10_12, Message = "Please see the release notes and Core Data documentation.")]
 	public enum NSPersistentStoreUbiquitousTransitionType : nuint_compat_int {
 		AccountAdded = 1,
 		AccountRemoved,
@@ -35,7 +71,7 @@ namespace XamCore.CoreData
 	[BaseType (typeof (NSPersistentStore))]
 	// Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: NSMappedObjectStore must be initialized with initWithPersistentStoreCoordinator:configurationName:URL:options
 	[DisableDefaultCtor]
-	public interface NSAtomicStore {
+	interface NSAtomicStore {
 
 		[Export ("initWithPersistentStoreCoordinator:configurationName:URL:options:")]
 		IntPtr Constructor (NSPersistentStoreCoordinator coordinator, string configurationName, NSUrl url, [NullAllowed] NSDictionary options);
@@ -53,15 +89,29 @@ namespace XamCore.CoreData
 		void UpdateCacheNode (NSAtomicStoreCacheNode node, NSManagedObject managedObject);
 
 		[Export ("cacheNodes")]
+#if XAMCORE_4_0
+		NSSet<NSAtomicStoreCacheNode> CacheNodes { get; }
+#else
 		NSSet CacheNodes { get; }
+#endif
 
 		[Export ("addCacheNodes:")]
+		
+#if XAMCORE_4_0
+		void AddCacheNodes (NSSet<NSAtomicStoreCacheNode> cacheNodes);
+#else
 		void AddCacheNodes (NSSet cacheNodes);
+#endif
 
 		[Export ("willRemoveCacheNodes:")]
+#if XAMCORE_4_0
+		void WillRemoveCacheNodes (NSSet<NSAtomicStoreCacheNode> cacheNodes);
+#else
 		void WillRemoveCacheNodes (NSSet cacheNodes);
+#endif
 
 		[Export ("cacheNodeForObjectID:")]
+		[return: NullAllowed]
 		NSAtomicStoreCacheNode CacheNodeForObjectID (NSManagedObjectID objectID);
 
 		[Export ("objectIDForEntity:referenceObject:")]
@@ -77,26 +127,31 @@ namespace XamCore.CoreData
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: NSAtomicStoreCacheNodes must be initialized using initWithObjectID:(NSManagedObjectID *)
 	[DisableDefaultCtor]
-	public interface NSAtomicStoreCacheNode {
+	interface NSAtomicStoreCacheNode {
 
 		[Export ("initWithObjectID:")]
 		IntPtr Constructor (NSManagedObjectID moid);
 
-		[Export ("objectID")]
+		[Export ("objectID", ArgumentSemantic.Strong)]
 		NSManagedObjectID ObjectID { get; }
 
-		[Export ("propertyCache", ArgumentSemantic.Retain)]
+		[NullAllowed, Export ("propertyCache", ArgumentSemantic.Retain)]
+#if XAMCORE_4_0
+		NSMutableDictionary<NSString, NSObject> PropertyCache { get; set; }
+#else
 		NSDictionary PropertyCache { get; set; }
+#endif
 
 		[Export ("valueForKey:")]
+		[return: NullAllowed]
 		NSAtomicStoreCacheNode ValueForKey (string key);
 
 		[Export ("setValue:forKey:")]
-		void SetValue (NSObject value, string key);
+		void SetValue ([NullAllowed] NSObject value, string key);
 
 	}
 	[BaseType (typeof (NSPropertyDescription))]
-	public interface NSAttributeDescription {
+	interface NSAttributeDescription {
 
 		[Export ("attributeType")]
 		NSAttributeType AttributeType { get; set; }
@@ -123,13 +178,18 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSEntityDescription : NSCoding, NSCopying {
+	interface NSEntityDescription : NSCoding, NSCopying {
 
 		[Static, Export ("entityForName:inManagedObjectContext:")]
+		[return: NullAllowed]
 		NSEntityDescription EntityForName (string entityName, NSManagedObjectContext context);
 
 		[Static, Export ("insertNewObjectForEntityForName:inManagedObjectContext:")]
+#if !XAMCORE_4_0
 		NSObject InsertNewObjectForEntityForName (string entityName, NSManagedObjectContext context);
+#else
+		NSManagedObject InsertNewObject (string entityName, NSManagedObjectContext context);
+#endif
 
 		[Export ("managedObjectModel")]
 		NSManagedObjectModel ManagedObjectModel { get; }
@@ -137,39 +197,55 @@ namespace XamCore.CoreData
 		[Export ("managedObjectClassName")]
 		string ManagedObjectClassName { get; set; }
 
-		[Export ("renamingIdentifier")]
+		[NullAllowed, Export ("renamingIdentifier")]
 		string RenamingIdentifier { get; set; }
 
 		[NullAllowed] // by default this property is null
 		[Export ("name")]
 		string Name { get; set; }
 
-		[Export ("Abstract")]
+		[Export ("abstract")]
 		bool Abstract { [Bind("isAbstract")] get; set; }
 
 		[Export ("subentitiesByName")]
+#if XAMCORE_4_0
+		NSDictionary<NSString, NSEntityDescription> SubentitiesByName { get; }
+#else
 		NSDictionary SubentitiesByName { get; }
+#endif
 
 		[Export ("subentities", ArgumentSemantic.Retain)]
 		NSEntityDescription[] Subentities { get; set; }
 
-		[Export ("superentity")]
+		[NullAllowed, Export ("superentity")]
 		NSEntityDescription Superentity { get; }
 
 		[Export ("propertiesByName")]
+#if XAMCORE_4_0
+		NSDictionary<NSString, NSPropertyDescription> PropertiesByName { get; }
+#else
 		NSDictionary PropertiesByName { get; }
+#endif
 
 		[Export ("properties", ArgumentSemantic.Retain)]
 		NSPropertyDescription[] Properties { get; set; }
 
-		[Export ("userInfo", ArgumentSemantic.Retain)]
+		[NullAllowed, Export ("userInfo", ArgumentSemantic.Retain)]
 		NSDictionary UserInfo { get; set; }
 
 		[Export ("attributesByName")]
+#if XAMCORE_4_0
+		NSDictionary<NSString, NSAttributeDescription> AttributesByName { get; }
+#else
 		NSDictionary AttributesByName { get; }
+#endif
 
 		[Export ("relationshipsByName")]
+#if XAMCORE_4_0
+		NSDictionary<NSString, NSRelationshipDescription> RelationshipsByName { get; }
+#else
 		NSDictionary RelationshipsByName { get; }
+#endif
 
 		[Export ("relationshipsWithDestinationEntity:")]
 		NSRelationshipDescription[] RelationshipsWithDestinationEntity (NSEntityDescription entity);
@@ -177,7 +253,6 @@ namespace XamCore.CoreData
 		[Export ("isKindOfEntity:")]
 		bool IsKindOfEntity (NSEntityDescription entity);
 
-		[NullAllowed] // by default this property is null
 		[Export ("versionHash")]
 		NSData VersionHash { get; }
 
@@ -197,7 +272,7 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSEntityMapping {
+	interface NSEntityMapping {
 
 		[Export ("name")]
 		string Name { get; set; }
@@ -241,7 +316,7 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSEntityMigrationPolicy {
+	interface NSEntityMigrationPolicy {
 
 		[Export ("beginEntityMapping:manager:error:")]
 		bool BeginEntityMapping (NSEntityMapping mapping, NSMigrationManager manager, out NSError error);
@@ -266,9 +341,9 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSPropertyDescription))]
-	public interface NSExpressionDescription {
+	interface NSExpressionDescription {
 
-		[Export ("expression")]
+		[NullAllowed, Export ("expression", ArgumentSemantic.Strong)]
 		NSExpression Expression { get; set; }
 
 		[Export ("expressionResultType")]
@@ -276,7 +351,7 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSPropertyDescription))]
-	public interface NSFetchedPropertyDescription {
+	interface NSFetchedPropertyDescription {
 
 		[NullAllowed] // by default this property is null
 		[Export ("fetchRequest", ArgumentSemantic.Retain)]
@@ -285,7 +360,7 @@ namespace XamCore.CoreData
 
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSExpression))]
-	public interface NSFetchRequestExpression {
+	interface NSFetchRequestExpression {
 
 		[Internal]
 		[DesignatedInitializer]
@@ -305,8 +380,14 @@ namespace XamCore.CoreData
 		bool IsCountOnly { [Bind ("isCountOnlyRequest")] get;}
 	}
 
+	interface INSFetchRequestResult {}
+
+	[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
+	[Protocol]
+	interface NSFetchRequestResult {}
+
 	[BaseType (typeof (NSPersistentStoreRequest))]
-	public interface NSFetchRequest : NSCoding {
+	interface NSFetchRequest : NSCoding {
 
 		[Export ("entity", ArgumentSemantic.Retain)]
 		[NullAllowed]
@@ -367,7 +448,7 @@ namespace XamCore.CoreData
 		IntPtr Constructor (string entityName);
 
 		[Since(5,0)]
-		[Export ("entityName")]
+		[NullAllowed, Export ("entityName", ArgumentSemantic.Strong)]
 		string EntityName { get; }
 
 		[Since(5,0)]
@@ -387,6 +468,11 @@ namespace XamCore.CoreData
 		[Export ("propertiesToGroupBy", ArgumentSemantic.Copy)]
 		[NullAllowed]
 		NSPropertyDescription [] PropertiesToGroupBy { get; set; }
+
+		[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
+		[Export ("execute:")]
+		[return: NullAllowed]
+		INSFetchRequestResult[] Execute (out NSError error);
 	}
 #if !MONOMAC
 	[BaseType (typeof (NSObject), Delegates = new string [] { "WeakDelegate" })]
@@ -402,28 +488,29 @@ namespace XamCore.CoreData
 		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
 		NSObject WeakDelegate { get; set; }
 
-		[Export ("cacheName")]
+		[NullAllowed, Export ("cacheName")]
 		string CacheName { get; }
 
 		[Export ("fetchedObjects")]
 		NSObject[] FetchedObjects { get; }
 
-		[Export ("fetchRequest")]
+		[NullAllowed, Export ("fetchRequest")]
 		NSFetchRequest FetchRequest { get; }
 
 		[Export ("managedObjectContext")]
 		NSManagedObjectContext ManagedObjectContext { get; }
 
-		[Export ("sectionNameKeyPath")]
+		[NullAllowed, Export ("sectionNameKeyPath")]
 		string SectionNameKeyPath { get; }
 
-		[Export ("sections")]
+		[NullAllowed, Export ("sections")]
 		INSFetchedResultsSectionInfo[] Sections { get; }
 
 		[Export ("performFetch:")]
 		bool PerformFetch (out NSError error);
 
 		[Export ("indexPathForObject:")]
+		[return: NullAllowed]
 		NSIndexPath FromObject (NSObject obj);
 
 		[Export ("objectAtIndexPath:")]
@@ -443,6 +530,7 @@ namespace XamCore.CoreData
 		string[] GetSectionIndexTitles ();
 #else
 		[Export ("sectionIndexTitleForSectionName:")]
+		[return: NullAllowed]
 		string GetSectionIndexTitle (string sectionName);
 
 		[Export ("sectionIndexTitles")]
@@ -462,7 +550,7 @@ namespace XamCore.CoreData
 		void WillChangeContent (NSFetchedResultsController controller);
 
 		[Export ("controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:")]
-		void DidChangeObject (NSFetchedResultsController controller, NSObject anObject, NSIndexPath indexPath, NSFetchedResultsChangeType type, NSIndexPath newIndexPath);
+		void DidChangeObject (NSFetchedResultsController controller, NSObject anObject, [NullAllowed] NSIndexPath indexPath, NSFetchedResultsChangeType type, [NullAllowed] NSIndexPath newIndexPath);
 
 		[Export ("controller:didChangeSection:atIndex:forChangeType:")]
 		void DidChangeSection (NSFetchedResultsController controller, INSFetchedResultsSectionInfo sectionInfo, nuint sectionIndex, NSFetchedResultsChangeType type);
@@ -482,7 +570,7 @@ namespace XamCore.CoreData
 		[Abstract]
 		nint Count { get; }
 
-		[Export ("objects")]
+		[NullAllowed, Export ("objects")]
 		[Abstract]
 		NSObject[] Objects { get; }
 
@@ -490,7 +578,7 @@ namespace XamCore.CoreData
 		[Abstract]
 		string Name { get; }
 
-		[Export ("indexTitle")]
+		[NullAllowed, Export ("indexTitle")]
 		[Abstract]
 		string IndexTitle { get; }
 	}
@@ -515,19 +603,27 @@ namespace XamCore.CoreData
 		bool LoadMetadata (out NSError error);
 
 		[Export ("executeRequest:withContext:error:")]
-		NSObject ExecuteRequest (NSPersistentStoreRequest request, NSManagedObjectContext context, out NSError error);
+		[return: NullAllowed]
+		NSObject ExecuteRequest (NSPersistentStoreRequest request, [NullAllowed] NSManagedObjectContext context, out NSError error);
 
 		[Export ("newValuesForObjectWithID:withContext:error:")]
+		[return: NullAllowed]
 		NSIncrementalStoreNode NewValues (NSManagedObjectID forObjectId, NSManagedObjectContext context, out NSError error);
 
 		[Export ("newValueForRelationship:forObjectWithID:withContext:error:")]
-		NSObject NewValue (NSRelationshipDescription forRelationship, NSManagedObjectID forObjectI, NSManagedObjectContext context, out NSError error);
+		[return: NullAllowed]
+		NSObject NewValue (NSRelationshipDescription forRelationship, NSManagedObjectID forObjectI, [NullAllowed] NSManagedObjectContext context, out NSError error);
 
 		[Static]
 		[Export ("identifierForNewStoreAtURL:")]
-		NSObject IdentifierForNewStoreAtURL (NSUrl storeURL);
+#if XAMCORE_4_0
+		NSObject IdentifierForNewStore (NSUrl storeUrl);
+#else
+		NSObject IdentifierForNewStoreAtURL (NSUrl storeUrl);
+#endif
 
 		[Export ("obtainPermanentIDsForObjects:error:")]
+		[return: NullAllowed]
 		NSObject [] ObtainPermanentIds (NSObject [] array, out NSError error);
 
 		[Export ("managedObjectContextDidRegisterObjectsWithIDs:")]
@@ -548,10 +644,18 @@ namespace XamCore.CoreData
 	[BaseType (typeof (NSObject))]
 	interface NSIncrementalStoreNode {
 		[Export ("initWithObjectID:withValues:version:")]
+#if XAMCORE_4_0
+		IntPtr Constructor (NSManagedObjectID objectID, NSDictionary<NSString, NSObject> values, ulong version);
+#else 
 		IntPtr Constructor (NSManagedObjectID objectId, NSDictionary values, ulong version);
+#endif
 
 		[Export ("updateWithValues:version:")]
+#if XAMCORE_4_0
+		void Update (NSDictionary<NSString, NSObject> values, ulong version);
+#else
 		void Update (NSDictionary values, ulong version);
+#endif
 
 		[Export ("objectID")]
 		NSManagedObjectID ObjectId { get; }
@@ -560,6 +664,7 @@ namespace XamCore.CoreData
 		long Version { get; }
 
 		[Export ("valueForPropertyDescription:")]
+		[return: NullAllowed]
 		NSObject ValueForPropertyDescription (NSPropertyDescription prop);
 	}
 
@@ -567,31 +672,49 @@ namespace XamCore.CoreData
 	// 'init' issues a warning: CoreData: error: Failed to call designated initializer on NSManagedObject class 'NSManagedObject' 
 	// then crash while disposing the instance
 	[DisableDefaultCtor]
-	public interface NSManagedObject {
+	interface NSManagedObject {
 		[DesignatedInitializer]
 		[Export ("initWithEntity:insertIntoManagedObjectContext:")]
-		IntPtr Constructor (NSEntityDescription entity, NSManagedObjectContext context);
+		IntPtr Constructor (NSEntityDescription entity, [NullAllowed] NSManagedObjectContext context);
 
-		[Export ("managedObjectContext")]
+		[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
+		[Export ("initWithContext:")]
+		IntPtr Constructor (NSManagedObjectContext moc);
+
+		[Watch (3, 0), TV (10, 0), iOS (10, 0), Mac (10,12)]
+		[Static]
+		[Export ("entity")]
+		NSEntityDescription GetEntityDescription ();
+
+		[Watch (3, 0), TV (10, 0), iOS (10, 0), Mac (10,12)]
+		[Static]
+		[Export ("fetchRequest")]
+		NSFetchRequest CreateFetchRequest ();
+
+		[NullAllowed, Export ("managedObjectContext")]
 		NSManagedObjectContext ManagedObjectContext { get; }
 
-		[Export ("entity")]
+		[Export ("entity", ArgumentSemantic.Strong)]
 		NSEntityDescription Entity { get; }
 
-		[Export ("objectID")]
+		[Export ("objectID", ArgumentSemantic.Strong)]
 		NSManagedObjectID ObjectID { get; }
+		
+		[iOS (3, 0), Mac (10,6)]
+		[Static, Export ("contextShouldIgnoreUnmodeledPropertyChanges")]
+		bool ContextShouldIgnoreUnModeledPropertyChanges { get; }
 
-		[Export ("isInserted")]
-		bool IsInserted { get; }
+		[Export ("inserted")]
+		bool IsInserted { [Bind ("isInserted")] get; }
 
-		[Export ("isUpdated")]
-		bool IsUpdated { get; }
+		[Export ("updated")]
+		bool IsUpdated { [Bind ("isUpdated")] get; }
 
-		[Export ("isDeleted")]
-		bool IsDeleted { get; }
+		[Export ("deleted")]
+		bool IsDeleted { [Bind ("isDeleted")] get; }
 
-		[Export ("isFault")]
-		bool IsFault { get; }
+		[Export ("fault")]
+		bool IsFault { [Bind ("isFault")] get; }
 
 		[Export ("faultingState")]
 		nuint FaultingState { get; }
@@ -600,10 +723,10 @@ namespace XamCore.CoreData
 		bool HasFaultForRelationshipNamed (string key);
 
 		[Export ("willAccessValueForKey:")]
-		void WillAccessValueForKey (string key);
+		void WillAccessValueForKey ([NullAllowed] string key);
 
 		[Export ("didAccessValueForKey:")]
-		void DidAccessValueForKey (string key);
+		void DidAccessValueForKey ([NullAllowed] string key);
 
 		[Export ("willChangeValueForKey:")]
 		void WillChangeValueForKey (string key);
@@ -627,6 +750,9 @@ namespace XamCore.CoreData
 		[Export ("awakeFromInsert")]
 		void AwakeFromInsert ();
 
+		[Export ("awakeFromSnapshotEvents:")]
+		void AwakeFromSnapshotEvents (NSSnapshotEventType flags);
+
 		[Export ("willSave")]
 		void WillSave ();
 
@@ -640,22 +766,48 @@ namespace XamCore.CoreData
 		void DidTurnIntoFault ();
 
 		[Export ("valueForKey:")]
+		[return: NullAllowed]
+#if XAMCORE_4_0
+		NSObject GetValue (string key);
+#else
 		IntPtr ValueForKey (string key);
+#endif
 
 		[Export ("setValue:forKey:")]
+#if XAMCORE_4_0
+		void SetValue ([NullAllowed] NSObject value, string key);
+#else
 		void SetValue (IntPtr value, string key);
+#endif
 
 		[Export ("primitiveValueForKey:")]
+		[return: NullAllowed]
+#if XAMCORE_4_0
+		NSObject GetPrimitiveValue (string key);
+#else
 		IntPtr PrimitiveValueForKey (string key);
+#endif
 
 		[Export ("setPrimitiveValue:forKey:")]
+#if XAMCORE_4_0
+		void SetPrimitiveValue ([NullAllowed] NSObject value, string key);
+#else
 		void SetPrimitiveValue (IntPtr value, string key);
+#endif
 
 		[Export ("committedValuesForKeys:")]
-		NSDictionary CommittedValuesForKeys (string[] keys);
+#if XAMCORE_4_0
+		NSDictionary<NSString, NSObject> GetCommittedValues ([NullAllowed] string[] keys);
+#else
+		NSDictionary CommittedValuesForKeys ([NullAllowed] string[] keys);
+#endif
 
 		[Export ("changedValues")]
+#if XAMCORE_4_0
+		NSDictionary<NSString, NSObject> ChangedValues { get; }
+#else
 		NSDictionary ChangedValues { get; }
+#endif
 
 		[Export ("validateValue:forKey:error:")]
 		bool ValidateValue (ref NSObject value, string key, out NSError error);
@@ -689,9 +841,17 @@ namespace XamCore.CoreData
 		[Export ("objectIDsForRelationshipNamed:")]
 		NSManagedObjectID [] GetObjectIDs (string relationshipName);
 	}
+
+	[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	interface NSQueryGenerationToken : NSCopying
+	{
+		[Static, Export ("currentQueryGenerationToken", ArgumentSemantic.Strong)]
+		NSQueryGenerationToken CurrentToken { get; }
+	}
 	
 	[BaseType (typeof (NSObject))]
-	public interface NSManagedObjectContext : NSCoding
+	interface NSManagedObjectContext : NSCoding
 #if !WATCH && !TVOS
 	, NSLocking
 #endif // !WATCH
@@ -715,6 +875,7 @@ namespace XamCore.CoreData
 		NSManagedObject ObjectWithID (NSManagedObjectID objectID);
 
 		[Export ("executeFetchRequest:error:")]
+		[return: NullAllowed]
 		NSObject[] ExecuteFetchRequest (NSFetchRequest request, out NSError error);
 
 		[Export ("countForFetchRequest:error:")]
@@ -733,25 +894,49 @@ namespace XamCore.CoreData
 		void DetectConflictsForObject (NSManagedObject object1);
 
 		[Export ("observeValueForKeyPath:ofObject:change:context:")]
-		void ObserveValueForKeyPath (string keyPath, IntPtr object1, NSDictionary change, IntPtr context);
+#if XAMCORE_4_0
+		void ObserveValue (string keyPath, [NullAllowed] NSObject object1, [NullAllowed] NSDictionary<NSString, NSObject> change, IntPtr context);
+#else
+		void ObserveValueForKeyPath (string keyPath, IntPtr object1, [NullAllowed] NSDictionary change, IntPtr context);
+#endif
 
 		[Export ("processPendingChanges")]
 		void ProcessPendingChanges ();
 
 		[Export ("assignObject:toPersistentStore:")]
+#if XAMCORE_4_0
+		void AssignObject (NSObject object1, NSPersistentStore store);
+#else
 		void AssignObject (IntPtr object1, NSPersistentStore store);
+#endif
 
-		[Export ("insertedObjects")]
+		[Export ("insertedObjects", ArgumentSemantic.Strong)]
+#if XAMCORE_4_0
+		NSSet<NSManagedObject> InsertedObjects { get; }
+#else
 		NSSet InsertedObjects { get; }
+#endif
 
-		[Export ("updatedObjects")]
+		[Export ("updatedObjects", ArgumentSemantic.Strong)]
+#if XAMCORE_4_0
+		NSSet<NSManagedObject> UpdatedObjects { get; }
+#else
 		NSSet UpdatedObjects { get; }
+#endif
 
-		[Export ("deletedObjects")]
+		[Export ("deletedObjects", ArgumentSemantic.Strong)]
+#if XAMCORE_4_0
+		NSSet<NSManagedObject> DeletedObjects { get; }
+#else
 		NSSet DeletedObjects { get; }
+#endif
 
-		[Export ("registeredObjects")]
+		[Export ("registeredObjects", ArgumentSemantic.Strong)]
+#if XAMCORE_4_0
+		NSSet<NSManagedObject> RegisteredObjects { get; }
+#else
 		NSSet RegisteredObjects { get; }
+#endif
 
 		[Export ("undo")]
 		void Undo ();
@@ -815,7 +1000,7 @@ namespace XamCore.CoreData
 		void PerformAndWait (/* non null */ NSAction action);
 
 		[Since (5,0)]
-		[Export ("userInfo")]
+		[Export ("userInfo", ArgumentSemantic.Strong)]
 		NSMutableDictionary UserInfo { get; }
 
 		[Since (5,0)]
@@ -825,7 +1010,7 @@ namespace XamCore.CoreData
 		//Detected properties
 		[Since (5,0)]
 		// default is null, but setting it to null again would crash the app
-		[Export ("parentContext", ArgumentSemantic.Retain)]
+		[NullAllowed, Export ("parentContext", ArgumentSemantic.Retain)]
 		NSManagedObjectContext ParentContext { get; set; }
 
 		[Field ("NSManagedObjectContextObjectsDidChangeNotification")]
@@ -865,12 +1050,24 @@ namespace XamCore.CoreData
 		[Export ("mergeChangesFromRemoteContextSave:intoContexts:")]
 		void MergeChangesFromRemoteContextSave (NSDictionary changeNotificationData, NSManagedObjectContext[] contexts);
 
+		[Watch (3, 0), TV (10, 0), iOS (10, 0), Mac (10,12)]
+		[NullAllowed, Export ("queryGenerationToken", ArgumentSemantic.Strong)]
+		NSQueryGenerationToken QueryGenerationToken { get; }
+
+		[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
+		[Export ("setQueryGenerationFromToken:error:")]
+		bool SetQueryGenerationFromToken ([NullAllowed] NSQueryGenerationToken generation, out NSError error);
+
+		[Watch (3, 0), TV (10, 0), iOS (10, 0), Mac (10,12)]
+		[Export ("automaticallyMergesChangesFromParent")]
+		bool AutomaticallyMergesChangesFromParent { get; set; }
+
 		[iOS (8,3), Mac (10,11)]
 		[Export ("refreshAllObjects")]
 		void RefreshAllObjects ();
 	}
 
-	public interface NSManagedObjectChangeEventArgs {
+	interface NSManagedObjectChangeEventArgs {
 		[Export ("NSInsertedObjectsKey")]
 		NSSet InsertedObjects { get; }
 
@@ -894,16 +1091,16 @@ namespace XamCore.CoreData
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: *** -URIRepresentation cannot be sent to an abstract object of class NSManagedObjectID: Create a concrete instance!
 	[DisableDefaultCtor]
-	public interface NSManagedObjectID : NSCopying {
+	interface NSManagedObjectID : NSCopying {
 
-		[Export ("entity")]
+		[Export ("entity", ArgumentSemantic.Strong)]
 		NSEntityDescription Entity { get; }
 
-		[Export ("persistentStore")]
+		[NullAllowed, Export ("persistentStore", ArgumentSemantic.Weak)]
 		NSPersistentStore PersistentStore { get; }
 
-		[Export ("isTemporaryID")]
-		bool IsTemporaryID { get; }
+		[Export ("temporaryID")]
+		bool IsTemporaryID { [Bind ("isTemporaryID")] get; }
 
 		[Export ("URIRepresentation")]
 		NSUrl URIRepresentation { get; }
@@ -911,70 +1108,120 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSManagedObjectModel : NSCoding, NSCopying {
+	interface NSManagedObjectModel : NSCoding, NSCopying {
 
 		[Static, Export ("mergedModelFromBundles:")]
-		NSManagedObjectModel MergedModelFromBundles (NSBundle[] bundles);
+		[return: NullAllowed]
+		NSManagedObjectModel MergedModelFromBundles ([NullAllowed] NSBundle[] bundles);
 
 		[Static, Export ("modelByMergingModels:")]
-		NSManagedObjectModel ModelByMergingModels (NSManagedObjectModel[] models);
+		[return: NullAllowed]
+		NSManagedObjectModel ModelByMergingModels ([NullAllowed] NSManagedObjectModel[] models);
 
 		[Export ("initWithContentsOfURL:")]
 		IntPtr Constructor (NSUrl url);
 
-		[Export ("entitiesByName")]
+		[Export ("entitiesByName", ArgumentSemantic.Copy)]
+#if XAMCORE_4_0
+		NSDictionary<NSString, NSEntityDescription> EntitiesByName { get; }
+#else
 		NSDictionary EntitiesByName { get; }
+#endif
 
 		[Export ("entities", ArgumentSemantic.Retain)]
 		NSEntityDescription[] Entities { get; set; }
 
-		[Export ("configurations")]
+		[Export ("configurations", ArgumentSemantic.Strong)]
 		string[] Configurations { get; }
 
 		[Export ("entitiesForConfiguration:")]
-		string[] EntitiesForConfiguration (string configuration);
+		[return: NullAllowed]
+		string[] EntitiesForConfiguration ([NullAllowed] string configuration);
 
 		[Export ("setEntities:forConfiguration:")]
 		void SetEntities (NSEntityDescription[] entities, string configuration);
 
 		[Export ("setFetchRequestTemplate:forName:")]
-		void SetFetchRequestTemplate (NSFetchRequest fetchRequestTemplate, string name);
+		void SetFetchRequestTemplate ([NullAllowed] NSFetchRequest fetchRequestTemplate, string name);
 
 		[Export ("fetchRequestTemplateForName:")]
+		[return: NullAllowed]
+#if XAMCORE_4_0
+		NSFetchRequest GetFetchRequestTemplate (string name);
+#else
 		NSFetchRequest FetchRequestTemplateForName (string name);
+#endif
 
 		[Export ("fetchRequestFromTemplateWithName:substitutionVariables:")]
+		[return: NullAllowed]
+#if XAMCORE_4_0
+		NSFetchRequest GetFetchRequestFromTemplate (string name, NSDictionary<NSString, NSObject> variables); 
+#else
 		NSFetchRequest FetchRequestFromTemplateWithName (string name, NSDictionary variables);
+#endif
 
 		[NullAllowed] // by default this property is null
 		[Export ("localizationDictionary", ArgumentSemantic.Retain)]
+#if XAMCORE_4_0
+		NSDictionary<NSString, NSString> LocalizationDictionary { get; set; }
+#else
 		NSDictionary LocalizationDictionary { get; set; }
+#endif
 
 		[Static, Export ("mergedModelFromBundles:forStoreMetadata:")]
-		NSManagedObjectModel MergedModelFromBundles (NSBundle[] bundles, NSDictionary metadata);
+		[return: NullAllowed]
+#if XAMCORE_4_0
+		NSManagedObjectModel GetMergedModel ([NullAllowed] NSBundle[] bundles, NSDictionary<NSString, NSObject> metadata);
+#else
+		NSManagedObjectModel MergedModelFromBundles ([NullAllowed] NSBundle[] bundles, NSDictionary metadata);
+#endif
 
 		[Static, Export ("modelByMergingModels:forStoreMetadata:")]
+		[return: NullAllowed]
+#if XAMCORE_4_0
+		NSManagedObjectModel GetModelByMerging (NSManagedObjectModel[] models, NSDictionary<NSString, NSObject> metadata);
+#else
 		NSManagedObjectModel ModelByMergingModels (NSManagedObjectModel[] models, NSDictionary metadata);
+#endif
 
-		[Export ("fetchRequestTemplatesByName")]
+		[Export ("fetchRequestTemplatesByName", ArgumentSemantic.Copy)]
+#if XAMCORE_4_0
+		NSDictionary<NSString, NSFetchRequest> FetchRequestTemplatesByName { get; }
+#else
 		NSDictionary FetchRequestTemplatesByName { get; }
+#endif
 
 		[Export ("versionIdentifiers", ArgumentSemantic.Copy)]
 		NSSet VersionIdentifiers { get; set; }
 
 		[Export ("isConfiguration:compatibleWithStoreMetadata:")]
+#if XAMCORE_4_0
+		bool IsConfiguration ([NullAllowed] string configuration, NSDictionary<NSString, NSObject> metadata);
+#else
 		bool IsConfiguration ([NullAllowed] string configuration, NSDictionary metadata);
+#endif
 
-		[Export ("entityVersionHashesByName")]
+		[Export ("entityVersionHashesByName", ArgumentSemantic.Copy)]
+#if XAMCORE_4_0
+		NSDictionary<NSString, NSData> EntityVersionHashesByName { get; }
+#else
 		NSDictionary EntityVersionHashesByName { get; }
+#endif
 	}
+
 	[BaseType (typeof (NSObject))]
-	public interface NSMappingModel {
+	interface NSMappingModel {
 
 		[Static, Export ("mappingModelFromBundles:forSourceModel:destinationModel:")]
+		[return: NullAllowed]
+#if XAMCORE_4_0
+		NSMappingModel FromBundles (NSBundle[] bundles, NSManagedObjectModel sourceModel, NSManagedObjectModel destinationModel);
+#else
 		NSMappingModel MappingModelFromBundles (NSBundle[] bundles, NSManagedObjectModel sourceModel, NSManagedObjectModel destinationModel);
+#endif
 
 		[Static, Export ("inferredMappingModelForSourceModel:destinationModel:error:")]
+		[return: NullAllowed]
 		NSMappingModel GetInferredMappingModel (NSManagedObjectModel source, NSManagedObjectModel destination, out NSError error);
 
 		[Export ("initWithContentsOfURL:")]
@@ -983,8 +1230,12 @@ namespace XamCore.CoreData
 		[Export ("entityMappings", ArgumentSemantic.Retain)]
 		NSEntityMapping[] EntityMappings { get; set; }
 
-		[Export ("entityMappingsByName")]
+		[Export ("entityMappingsByName", ArgumentSemantic.Copy)]
+#if XAMCORE_4_0
+		NSDictionary<NSString, NSEntityMapping> EntityMappingsByName { get; }
+#else
 		NSDictionary EntityMappingsByName { get; }
+#endif
 
 	}
 
@@ -996,13 +1247,25 @@ namespace XamCore.CoreData
 		NSManagedObject SourceObject { get;  }
 
 		[Export ("objectSnapshot", ArgumentSemantic.Retain)]
+#if XAMCORE_4_0
+		NSDictionary<NSString, NSObject> ObjectSnapshot { get; }
+#else
 		NSDictionary ObjectSnapshot { get;  }
+#endif
 
 		[Export ("cachedSnapshot", ArgumentSemantic.Retain)]
+#if XAMCORE_4_0
+		NSDictionary<NSString, NSObject> CachedSnapshot { get; }
+#else
 		NSDictionary CachedSnapshot { get;  }
+#endif
 
 		[Export ("persistedSnapshot", ArgumentSemantic.Retain)]
+#if XAMCORE_4_0
+		NSDictionary<NSString, NSObject> PersistedSnapshot { get; }
+#else
 		NSDictionary PersistedSnapshot { get;  }
+#endif
 
 		[Export ("newVersionNumber")]
 		nuint NewVersionNumber { get;  }
@@ -1012,7 +1275,11 @@ namespace XamCore.CoreData
 
 		[DesignatedInitializer]
 		[Export ("initWithSource:newVersion:oldVersion:cachedSnapshot:persistedSnapshot:")]
-		IntPtr Constructor (NSManagedObject srcObject, nuint newvers, nuint oldvers, NSDictionary cachesnap, NSDictionary persnap);
+#if XAMCORE_4_0
+		IntPtr Constructor (NSManagedObject srcObject, nuint newvers, nuint oldvers, [NullAllowed] NSDictionary<NSString, NSObject> cachesnap, [NullAllowed] NSDictionary<NSString, NSObject> persnap);
+#else
+		IntPtr Constructor (NSManagedObject srcObject, nuint newvers, nuint oldvers, [NullAllowed] NSDictionary cachesnap, [NullAllowed] NSDictionary persnap);
+#endif
 	}
 
 	[Since(5,0)]
@@ -1027,60 +1294,86 @@ namespace XamCore.CoreData
 		IntPtr Constructor (NSMergePolicyType ty);
 
 		[Export ("resolveConflicts:error:")]
+#if XAMCORE_4_0
+		bool ResolveConflicts (NSMergeConflict [] list, out NSError error);
+#else
 		bool ResolveConflictserror (NSMergeConflict [] list, out NSError error);
+#endif
 
 		[iOS (9,0), Mac (10,11)]
 		[Export ("resolveOptimisticLockingVersionConflicts:error:")]
-		bool ResolveOptimisticLockingVersionConflicts (NSMergeConflict[] list, [NullAllowed] out NSError error);
+		bool ResolveOptimisticLockingVersionConflicts (NSMergeConflict[] list, out NSError error);
 
 		[iOS (9,0), Mac (10,11)]
 		[Export ("resolveConstraintConflicts:error:")]
-		bool ResolveConstraintConflicts (NSConstraintConflict[] list, [NullAllowed] out NSError error);
+		bool ResolveConstraintConflicts (NSConstraintConflict[] list, out NSError error);
+
+		[Watch (3, 0), TV (10, 0), iOS (10, 0), Mac (10,12)]
+		[Static, Export ("errorMergePolicy", ArgumentSemantic.Strong)]
+		NSMergePolicy ErrorPolicy { get; }
+
+		[Watch (3, 0), TV (10, 0), iOS (10, 0), Mac (10,12)]
+		[Static, Export ("rollbackMergePolicy", ArgumentSemantic.Strong)]
+		NSMergePolicy RollbackPolicy { get; }
+
+		[Watch (3, 0), TV (10, 0), iOS (10, 0), Mac (10,12)]
+		[Static, Export ("overwriteMergePolicy", ArgumentSemantic.Strong)]
+		NSMergePolicy OverwritePolicy { get; }
+
+		[Watch (3, 0), TV (10, 0), iOS (10, 0), Mac (10,12)]
+		[Static, Export ("mergeByPropertyObjectTrumpMergePolicy", ArgumentSemantic.Strong)]
+		NSMergePolicy MergeByPropertyObjectTrumpPolicy { get; }
+
+		[Watch (3, 0), TV (10, 0), iOS (10, 0), Mac (10,12)]
+		[Static, Export ("mergeByPropertyStoreTrumpMergePolicy", ArgumentSemantic.Strong)]
+		NSMergePolicy MergeByPropertyStoreTrumpPolicy { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSMigrationManager {
+	interface NSMigrationManager {
 
 		[Export ("initWithSourceModel:destinationModel:")]
 		IntPtr Constructor (NSManagedObjectModel sourceModel, NSManagedObjectModel destinationModel);
 
 		[Export ("migrateStoreFromURL:type:options:withMappingModel:toDestinationURL:destinationType:destinationOptions:error:")]
-		bool MigrateStoreFromUrl (NSUrl sourceURL, string sStoreType, NSDictionary sOptions, NSMappingModel mappings, NSUrl dURL, string dStoreType, NSDictionary dOptions, out NSError error);
+		bool MigrateStoreFromUrl (NSUrl sourceUrl, string sStoreType, [NullAllowed] NSDictionary sOptions, [NullAllowed] NSMappingModel mappings, NSUrl dUrl, string dStoreType, [NullAllowed] NSDictionary dOptions, out NSError error);
 
 		[Export ("reset")]
 		void Reset ();
 
-		[Export ("mappingModel")]
+		[Export ("mappingModel", ArgumentSemantic.Strong)]
 		NSMappingModel MappingModel { get; }
 
-		[Export ("sourceModel")]
+		[Export ("sourceModel", ArgumentSemantic.Strong)]
 		NSManagedObjectModel SourceModel { get; }
 
-		[Export ("destinationModel")]
+		[Export ("destinationModel", ArgumentSemantic.Strong)]
 		NSManagedObjectModel DestinationModel { get; }
 
-		[Export ("sourceContext")]
+		[Export ("sourceContext", ArgumentSemantic.Strong)]
 		NSManagedObjectContext SourceContext { get; }
 
-		[Export ("destinationContext")]
+		[Export ("destinationContext", ArgumentSemantic.Strong)]
 		NSManagedObjectContext DestinationContext { get; }
 
 		[Export ("sourceEntityForEntityMapping:")]
+		[return: NullAllowed]
 		NSEntityDescription SourceEntityForEntityMapping (NSEntityMapping mEntity);
 
 		[Export ("destinationEntityForEntityMapping:")]
+		[return: NullAllowed]
 		NSEntityDescription DestinationEntityForEntityMapping (NSEntityMapping mEntity);
 
 		[Export ("associateSourceInstance:withDestinationInstance:forEntityMapping:")]
 		void AssociateSourceInstance (NSManagedObject sourceInstance, NSManagedObject destinationInstance, NSEntityMapping entityMapping);
 
 		[Export ("destinationInstancesForEntityMappingNamed:sourceInstances:")]
-		NSManagedObject[] DestinationInstancesForEntityMappingNamed (string mappingName, NSManagedObject[] sourceInstances);
+		NSManagedObject[] DestinationInstancesForEntityMappingNamed (string mappingName, [NullAllowed] NSManagedObject[] sourceInstances);
 
 		[Export ("sourceInstancesForEntityMappingNamed:destinationInstances:")]
-		NSManagedObject[] SourceInstancesForEntityMappingNamed (string mappingName, NSManagedObject[] destinationInstances);
+		NSManagedObject[] SourceInstancesForEntityMappingNamed (string mappingName, [NullAllowed] NSManagedObject[] destinationInstances);
 
-		[Export ("currentEntityMapping")]
+		[Export ("currentEntityMapping", ArgumentSemantic.Strong)]
 		NSEntityMapping CurrentEntityMapping { get; }
 
 		[Export ("migrationProgress")]
@@ -1106,28 +1399,40 @@ namespace XamCore.CoreData
 	// make our managed version [Abstract].
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface NSPersistentStore {
+	interface NSPersistentStore {
 
 		[Static, Export ("metadataForPersistentStoreWithURL:error:")]
+		[return: NullAllowed]
+#if XAMCORE_4_0
+		NSDictionary<NSString, NSObject> GetMetadataForPersistentStore (NSUrl url, out NSError error);
+#else
 		NSDictionary MetadataForPersistentStoreWithUrl (NSUrl url, out NSError error);
+#endif
 
 		[Static, Export ("setMetadata:forPersistentStoreWithURL:error:")]
-		bool SetMetadata (NSDictionary metadata, NSUrl url, out NSError error);
+#if XAMCORE_4_0
+		bool SetMetadata ([NullAllowed] NSDictionary<NSString, NSObject> metadata, NSUrl url, out NSError error);
+#else
+		bool SetMetadata ([NullAllowed] NSDictionary metadata, NSUrl url, out NSError error);
+#endif
 
 #if XAMCORE_4_0
 		[Protected]
 #endif
 		[DesignatedInitializer]
 		[Export ("initWithPersistentStoreCoordinator:configurationName:URL:options:")]
-		IntPtr Constructor (NSPersistentStoreCoordinator root, string name, NSUrl url, NSDictionary options);
+		IntPtr Constructor ([NullAllowed] NSPersistentStoreCoordinator root, [NullAllowed] string name, NSUrl url, [NullAllowed] NSDictionary options);
+		
+		[Export ("loadMetadata:")]
+		bool LoadMetadata (out NSError error);
 
-		[Export ("persistentStoreCoordinator")]
+		[NullAllowed, Export ("persistentStoreCoordinator", ArgumentSemantic.Weak)]
 		NSPersistentStoreCoordinator PersistentStoreCoordinator { get; }
 
 		[Export ("configurationName")]
 		string ConfigurationName { get; }
 
-		[Export ("options")]
+		[NullAllowed, Export ("options", ArgumentSemantic.Strong)]
 		NSDictionary Options { get; }
 
 		[NullAllowed] // by default this property is null
@@ -1140,62 +1445,190 @@ namespace XamCore.CoreData
 		[Export ("type")]
 		string Type { get; }
 
-		[Export ("isReadOnly")]
-		bool ReadOnly { get; [Bind("setReadOnly:")] set; }
+		[Export ("readOnly")]
+		bool ReadOnly { [Bind ("isReadOnly")] get; set; }
 
 		[Export ("metadata", ArgumentSemantic.Retain)]
+#if XAMCORE_4_0
+		NSDictionary<NSString, NSObject> Metadata { get; set; }
+#else
 		NSDictionary Metadata { get; set; }
+#endif
 
 		[Export ("didAddToPersistentStoreCoordinator:")]
 		void DidAddToPersistentStoreCoordinator (NSPersistentStoreCoordinator coordinator);
 
 		[Export ("willRemoveFromPersistentStoreCoordinator:")]
-		void WillRemoveFromPersistentStoreCoordinator (NSPersistentStoreCoordinator coordinator);
+		void WillRemoveFromPersistentStoreCoordinator ([NullAllowed] NSPersistentStoreCoordinator coordinator);
 
 		[Since (5,0)]
 		[Field ("NSPersistentStoreSaveConflictsErrorKey")]
 		NSString SaveConflictsErrorKey { get; }
 
 	}
+	
+	[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSPersistentStoreDescription : NSCopying
+	{
+		[Static]
+		[Export ("persistentStoreDescriptionWithURL:")]
+		NSPersistentStoreDescription GetPersistentStoreDescription (NSUrl Url);
+
+		[Export ("type")]
+		string Type { get; set; }
+
+		[NullAllowed, Export ("configuration")]
+		string Configuration { get; set; }
+
+		[NullAllowed, Export ("URL", ArgumentSemantic.Copy)]
+		NSUrl Url { get; set; }
+
+		[Export ("options", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, NSObject> Options { get; }
+
+		[Export ("setOption:forKey:")]
+		void SetOption ([NullAllowed] NSObject option, string key);
+
+		[Export ("readOnly")]
+		bool IsReadOnly { [Bind ("isReadOnly")] get; set; }
+
+		[Export ("timeout")]
+		double Timeout { get; set; }
+
+		[Export ("sqlitePragmas", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, NSObject> SqlitePragmas { get; }
+
+		[Export ("setValue:forPragmaNamed:")]
+		void SetValue ([NullAllowed] NSObject value, string name);
+
+		[Export ("shouldAddStoreAsynchronously")]
+		bool ShouldAddStoreAsynchronously { get; set; }
+
+		[Export ("shouldMigrateStoreAutomatically")]
+		bool ShouldMigrateStoreAutomatically { get; set; }
+
+		[Export ("shouldInferMappingModelAutomatically")]
+		bool ShouldInferMappingModelAutomatically { get; set; }
+
+		[Export ("initWithURL:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (NSUrl url);
+	}
+	
+	[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSPersistentContainer
+	{
+		[Static]
+		[Export ("persistentContainerWithName:")]
+		NSPersistentContainer GetPersistentContainer (string name);
+
+		[Static]
+		[Export ("persistentContainerWithName:managedObjectModel:")]
+		NSPersistentContainer GetPersistentContainer (string name, NSManagedObjectModel model);
+
+		[Static]
+		[Export ("defaultDirectoryURL")]
+		NSUrl DefaultDirectoryUrl { get; }
+
+		[Export ("name")]
+		string Name { get; }
+
+		[Export ("viewContext", ArgumentSemantic.Strong)]
+		NSManagedObjectContext ViewContext { get; }
+
+		[Export ("managedObjectModel", ArgumentSemantic.Strong)]
+		NSManagedObjectModel ManagedObjectModel { get; }
+
+		[Export ("persistentStoreCoordinator", ArgumentSemantic.Strong)]
+		NSPersistentStoreCoordinator PersistentStoreCoordinator { get; }
+
+		[Export ("persistentStoreDescriptions", ArgumentSemantic.Copy)]
+		NSPersistentStoreDescription[] PersistentStoreDescriptions { get; set; }
+
+		[Export ("initWithName:")]
+		IntPtr Constructor (string name);
+
+		[Export ("initWithName:managedObjectModel:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string name, NSManagedObjectModel model);
+
+		[Export ("loadPersistentStoresWithCompletionHandler:")]
+		[Async]
+		void LoadPersistentStores (Action<NSPersistentStoreDescription, NSError> block);
+
+		[Export ("newBackgroundContext")]
+		NSManagedObjectContext NewBackgroundContext { get; }
+
+		[Export ("performBackgroundTask:")]
+		void Perform (Action<NSManagedObjectContext> block);
+	}
 
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // iOS8 -> Core Data: warning: client failed to call designated initializer on NSPersistentStoreCoordinator
-	public partial interface NSPersistentStoreCoordinator
+	partial interface NSPersistentStoreCoordinator
 #if !WATCH && !TVOS
 		: NSLocking
 #endif // !WATCH
 	{
 
-		[Static, Export ("registeredStoreTypes")]
+		[Static, Export ("registeredStoreTypes", ArgumentSemantic.Strong)]
+#if XAMCORE_4_0
+		NSDictionary<NSString, NSValue> RegisteredStoreTypes { get; }
+#else
 		NSDictionary RegisteredStoreTypes { get; }
+#endif
 
 		[Static, Export ("registerStoreClass:forStoreType:")]
 		void RegisterStoreClass (Class storeClass, NSString storeType);
 
+		[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_5 , Deprecated = Platform.iOS_9_0 | Platform.Mac_10_11, Message = "This method is obsolete, please use the method that takes an out NSError parameter.")]
 		[Static, Export ("metadataForPersistentStoreOfType:URL:error:")]
+		[return: NullAllowed]
 		NSDictionary MetadataForPersistentStoreOfType (NSString storeType, NSUrl url, out NSError error);
+		
+		[iOS (7,0)]
+		[Static, Export ("metadataForPersistentStoreOfType:URL:options:error:")]
+		[return: NullAllowed]
+		NSDictionary<NSString, NSObject> GetMetadata (string storeType, NSUrl url, [NullAllowed] NSDictionary options, out NSError error);
 
+		[Availability (Introduced = Platform.iOS_3_0, Deprecated = Platform.iOS_9_0, Message = "This method is obsolete, please use the method that takes an out NSError parameter.")]
 		[Static, Export ("setMetadata:forPersistentStoreOfType:URL:error:")]
 		bool SetMetadata (NSDictionary metadata, NSString storeType, NSUrl url, out NSError error);
+		
+		[iOS (7,0)]
+		[Static, Export ("setMetadata:forPersistentStoreOfType:URL:options:error:")]
+		bool SetMetadata ([NullAllowed] NSDictionary<NSString, NSObject> metadata, string storeType, NSUrl url, [NullAllowed] NSDictionary options, out NSError error);
 
 		[Export ("setMetadata:forPersistentStore:")]
-		void SetMetadata (NSDictionary metadata, NSPersistentStore store);
+#if XAMCORE_4_0
+		void SetMetadata ([NullAllowed] NSDictionary<NSString, NSObject> metadata, NSPersistentStore store);
+#else
+		void SetMetadata ([NullAllowed] NSDictionary metadata, NSPersistentStore store);
+#endif
 
 		[Export ("metadataForPersistentStore:")]
+#if XAMCORE_4_0
+		NSDictionary<NSString, NSObject> GetMetadata (NSPersistentStore store);
+#else
 		NSDictionary MetadataForPersistentStore (NSPersistentStore store);
+#endif
 
 		[DesignatedInitializer]
 		[Export ("initWithManagedObjectModel:")]
 		IntPtr Constructor (NSManagedObjectModel model);
 
-		[Export ("managedObjectModel")]
+		[Export ("managedObjectModel", ArgumentSemantic.Strong)]
 		NSManagedObjectModel ManagedObjectModel { get; }
 
-		[Export ("persistentStores")]
+		[Export ("persistentStores", ArgumentSemantic.Strong)]
 		NSPersistentStore[] PersistentStores { get; }
 
 		[Export ("persistentStoreForURL:")]
-		NSPersistentStore PersistentStoreForUrl (NSUrl URL);
+		NSPersistentStore PersistentStoreForUrl (NSUrl url);
 
 		[Export ("URLForPersistentStore:")]
 		NSUrl UrlForPersistentStore (NSPersistentStore store);
@@ -1204,15 +1637,26 @@ namespace XamCore.CoreData
 		bool SetUrl (NSUrl url, NSPersistentStore store);
 
 		[Export ("addPersistentStoreWithType:configuration:URL:options:error:")]
-		NSPersistentStore AddPersistentStoreWithType (NSString storeType, [NullAllowed] string configuration, NSUrl storeURL, [NullAllowed] NSDictionary options, out NSError error);
+#if XAMCORE_4_0
+		NSPersistentStore AddPersistentStore (NSString storeType, [NullAllowed] string configuration, [NullAllowed] NSUrl storeUrl, [NullAllowed] NSDictionary options, out NSError error);
+#else
+		NSPersistentStore AddPersistentStoreWithType (NSString storeType, [NullAllowed] string configuration, [NullAllowed] NSUrl storeUrl, [NullAllowed] NSDictionary options, out NSError error);
+#endif
+		
+		[Watch (3,0), TV (10,0), iOS (10,0), Mac (10,12)]
+		[Export ("addPersistentStoreWithDescription:completionHandler:")]
+		[Async]
+		void AddPersistentStore (NSPersistentStoreDescription storeDescription, Action<NSPersistentStoreDescription, NSError> block);
 
 		[Export ("removePersistentStore:error:")]
 		bool RemovePersistentStore (NSPersistentStore store, out NSError error);
 
 		[Export ("migratePersistentStore:toURL:options:withType:error:")]
-		NSPersistentStore MigratePersistentStore (NSPersistentStore store, NSUrl URL, NSDictionary options, NSString storeType, out NSError error);
+		[return: NullAllowed]
+		NSPersistentStore MigratePersistentStore (NSPersistentStore store, NSUrl url, [NullAllowed] NSDictionary options, NSString storeType, out NSError error);
 
 		[Export ("managedObjectIDForURIRepresentation:")]
+		[return: NullAllowed]
 		NSManagedObjectID ManagedObjectIDForURIRepresentation (NSUrl url);
 
 #if !WATCH && !TVOS
@@ -1309,21 +1753,26 @@ namespace XamCore.CoreData
 		// 5.0
 		[Since(5,0)]
 		[Export ("executeRequest:withContext:error:")]
+		[return: NullAllowed]
+#if XAMCORE_4_0
+		NSObject Execute (NSPersistentStoreRequest request, NSManagedObjectContext context, out NSError error);
+#else
 		NSObject ExecuteRequestwithContexterror (NSPersistentStoreRequest request, NSManagedObjectContext context, out NSError error);
+#endif
 
 		[NoWatch][NoTV]
 		[Notification]
-		[Since (5,0)]
+		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_10_0, Message = "Please see the release notes and Core Data documentation.")]
 		[Field ("NSPersistentStoreDidImportUbiquitousContentChangesNotification")]
 		NSString DidImportUbiquitousContentChangesNotification { get; }
 
 		[NoWatch][NoTV]
-		[Since (5,0)]
+		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_10_0, Message = "Please see the release notes and Core Data documentation.")]
 		[Field ("NSPersistentStoreUbiquitousContentNameKey")]
 		NSString PersistentStoreUbiquitousContentNameKey { get; }
 
 		[NoWatch][NoTV]
-		[Since (5,0)]
+		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_10_0, Message = "Please see the release notes and Core Data documentation.")]
 		[Field ("NSPersistentStoreUbiquitousContentURLKey")]
 #if XAMCORE_4_0
 		NSString PersistentStoreUbiquitousContentUrlKey { get; }
@@ -1347,6 +1796,7 @@ namespace XamCore.CoreData
 		[NoWatch][NoTV]
 		[Since (7,0), Mavericks]
 		[Static]
+		[Availability (Introduced = Platform.iOS_5_0, Deprecated = Platform.iOS_10_0, Message = "Please see the release notes and Core Data documentation.")]
 		[Export ("removeUbiquitousContentAndPersistentStoreAtURL:options:error:")]
 		bool RemoveUbiquitousContentAndPersistentStore (NSUrl storeUrl, NSDictionary options, out NSError error);
 
@@ -1371,7 +1821,7 @@ namespace XamCore.CoreData
 		NSString eUbiquitousContainerIdentifierKey { get; }
 
 		[iOS (8,0), Mac (10,10)]
-		[Export ("name")]
+		[NullAllowed, Export ("name")]
 		string Name { get; set; }
 
 		[iOS (8,0), Mac (10,10)]
@@ -1384,21 +1834,22 @@ namespace XamCore.CoreData
 
 		[iOS (9,0), Mac (10,11)]
 		[Export ("destroyPersistentStoreAtURL:withType:options:error:")]
-		bool DestroyPersistentStore (NSUrl url, string storeType, [NullAllowed] NSDictionary options, [NullAllowed] out NSError error);
+		bool DestroyPersistentStore (NSUrl url, string storeType, [NullAllowed] NSDictionary options, out NSError error);
 
 		[iOS (9,0), Mac (10,11)]
 		[Export ("replacePersistentStoreAtURL:destinationOptions:withPersistentStoreFromURL:sourceOptions:storeType:error:")]
-		bool ReplacePersistentStore (NSUrl destinationURL, [NullAllowed] NSDictionary destinationOptions, NSUrl sourceURL, [NullAllowed] NSDictionary sourceOptions, string storeType, [NullAllowed] out NSError error);
+		bool ReplacePersistentStore (NSUrl destinationUrl, [NullAllowed] NSDictionary destinationOptions, NSUrl sourceUrl, [NullAllowed] NSDictionary sourceOptions, string storeType, out NSError error);
 	}
 
 	interface NSPersistentStoreCoordinatorStoreChangeEventArgs {
 		[NoWatch][NoTV]
 		[Export ("NSPersistentStoreUbiquitousTransitionTypeKey")]
+		[Availability (Introduced = Platform.iOS_7_0, Deprecated = Platform.iOS_10_0, Message = "Please see the release notes and Core Data documentation.")]
 		NSPersistentStoreUbiquitousTransitionType EventType { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSPersistentStoreRequest : NSCopying {
+	interface NSPersistentStoreRequest : NSCopying {
 		[Export ("requestType")]
 		NSPersistentStoreRequestType RequestType { get; }
 
@@ -1414,14 +1865,17 @@ namespace XamCore.CoreData
 		[Export ("fetchRequest", ArgumentSemantic.Retain)]
 		NSAsynchronousFetchRequest FetchRequest { get; }
 
-		// TODO: strong type
 		[Export ("finalResult", ArgumentSemantic.Retain)]
+#if XAMCORE_4_0
+		INSFetchRequestResult[] FinalResult { get; }
+#else
 		NSObject [] FinalResult { get; }
+#endif
 	}
 
 	[iOS (8,0), Mac (10,10)]
 	[BaseType (typeof (NSObject))]
-	public interface NSPersistentStoreResult {
+	interface NSPersistentStoreResult {
 
 	}
 
@@ -1455,7 +1909,7 @@ namespace XamCore.CoreData
 	[BaseType (typeof (NSPersistentStoreRequest))]
 	interface NSAsynchronousFetchRequest {
 		[Export ("initWithFetchRequest:completionBlock:")]
-		IntPtr Constructor (NSFetchRequest request, Action<NSAsynchronousFetchResult> completion);
+		IntPtr Constructor (NSFetchRequest request, [NullAllowed] Action<NSAsynchronousFetchResult> completion);
 
 		[Export ("fetchRequest", ArgumentSemantic.Retain)]
 		NSFetchRequest FetchRequest { get; }
@@ -1465,7 +1919,7 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSPropertyDescription : NSCoding, NSCopying {
+	interface NSPropertyDescription : NSCoding, NSCopying {
 
 		[Export ("entity")]
 		NSEntityDescription Entity { get; }
@@ -1474,11 +1928,11 @@ namespace XamCore.CoreData
 		[Export ("name")]
 		string Name { get; set; }
 
-		[Export ("isOptional")]
-		bool Optional { get; [Bind("setOptional:")] set; }
+		[Export ("optional")]
+		bool Optional { [Bind ("isOptional")] get; set; }
 
-		[Export ("isTransient")]
-		bool Transient { get; [Bind("setTransient:")] set; }
+		[Export ("transient")]
+		bool Transient { [Bind ("isTransient")] get; set; }
 
 		[Export ("validationPredicates")]
 		NSPredicate[] ValidationPredicates { get; }
@@ -1487,13 +1941,13 @@ namespace XamCore.CoreData
 		string[] ValidationWarnings { get; }
 
 		[Export ("setValidationPredicates:withValidationWarnings:")]
-		void SetValidationPredicates (NSPredicate[] validationPredicates, string[] validationWarnings);
+		void SetValidationPredicates ([NullAllowed] NSPredicate[] validationPredicates, [NullAllowed] string[] validationWarnings);
 
-		[Export ("userInfo", ArgumentSemantic.Retain)]
+		[NullAllowed, Export ("userInfo", ArgumentSemantic.Retain)]
 		NSDictionary UserInfo { get; set; }
 
-		[Export ("isIndexed")]
-		bool Indexed { get; [Bind("setIndexed:")] set; }
+		[Export ("indexed")]
+		bool Indexed { [Bind ("isIndexed")] get; set; }
 
 		[Export ("versionHash")]
 		NSData VersionHash { get; }
@@ -1516,7 +1970,7 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSObject))]
-	public interface NSPropertyMapping {
+	interface NSPropertyMapping {
 
 		[NullAllowed] // by default this property is null
 		[Export ("name")]
@@ -1532,7 +1986,7 @@ namespace XamCore.CoreData
 	}
 
 	[BaseType (typeof (NSPropertyDescription))]
-	public interface NSRelationshipDescription {
+	interface NSRelationshipDescription {
 
 		[NullAllowed] // by default this property is null
 		[Export ("destinationEntity")]
@@ -1551,8 +2005,8 @@ namespace XamCore.CoreData
 		[Export ("deleteRule")]
 		NSDeleteRule DeleteRule { get; set; }
 
-		[Export ("isToMany")]
-		bool IsToMany { get; }
+		[Export ("toMany")]
+		bool IsToMany { [Bind ("isToMany")] get; }
 
 		[Export ("versionHash")]
 		NSData VersionHash { get; }
@@ -1566,28 +2020,50 @@ namespace XamCore.CoreData
 	[BaseType (typeof (NSPersistentStoreRequest))]
 	interface NSSaveChangesRequest {
 		[Export ("initWithInsertedObjects:updatedObjects:deletedObjects:lockedObjects:")]
-		IntPtr Constructor (NSSet insertedObjects, NSSet updatedObjects, NSSet deletedObjects, NSSet lockedObjects);
+#if XAMCORE_4_0
+		IntPtr Constructor ([NullAllowed] NSSet<NSManagedObject> insertedObjects, [NullAllowed] NSSet<NSManagedObject> updatedObjects, [NullAllowed] NSSet<NSManagedObject> deletedObjects, [NullAllowed] NSSet<NSManagedObject> lockedObjects);
+#else
+		IntPtr Constructor ([NullAllowed] NSSet insertedObjects, [NullAllowed] NSSet updatedObjects, [NullAllowed] NSSet deletedObjects, [NullAllowed] NSSet lockedObjects);
+#endif
 
-		[Export ("insertedObjects")]
+		[NullAllowed, Export ("insertedObjects", ArgumentSemantic.Strong)]
+#if XAMCORE_4_0
+		NSSet<NSManagedObject> InsertedObjects { get; }
+#else
 		NSSet InsertedObjects { get; }
+#endif
 
-		[Export ("updatedObjects")]
+		[NullAllowed, Export ("updatedObjects", ArgumentSemantic.Strong)]
+#if XAMCORE_4_0
+		NSSet<NSManagedObject> UpdatedObjects { get; }
+#else
 		NSSet UpdatedObjects { get; }
+#endif
 
-		[Export ("deletedObjects")]
+		[NullAllowed, Export ("deletedObjects", ArgumentSemantic.Strong)]
+#if XAMCORE_4_0
+		NSSet<NSManagedObject> DeletedObjects { get; }
+#else
 		NSSet DeletedObjects { get; }
+#endif
 
-		[Export ("lockedObjects")]
+		[NullAllowed, Export ("lockedObjects", ArgumentSemantic.Strong)]
+#if XAMCORE_4_0
+		NSSet<NSManagedObject> LockedObjects { get; }
+#else
 		NSSet LockedObjects { get; }
+#endif
 	}
 
 	[iOS (8,0), Mac (10,10)]
 	[BaseType (typeof (NSPersistentStoreRequest))]
 	interface NSBatchUpdateRequest {
 		[Export ("initWithEntityName:")]
+		[DesignatedInitializer]
 		IntPtr Constructor (string entityName);
 
 		[Export ("initWithEntity:")]
+		[DesignatedInitializer]
 		IntPtr Constructor (NSEntityDescription entity);
 
 		[Export ("entityName")]
@@ -1603,7 +2079,7 @@ namespace XamCore.CoreData
 		[Export ("includesSubentities")]
 		bool IncludesSubentities { get; set; }
 
-		[Export ("resultType")]
+		[Export ("resultType", ArgumentSemantic.Assign)]
 		NSBatchUpdateRequestResultType ResultType { get; set; }
 
 		[NullAllowed] // by default this property is null

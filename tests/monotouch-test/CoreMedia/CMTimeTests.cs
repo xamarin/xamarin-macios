@@ -165,6 +165,27 @@ namespace MonoTouchFixtures.CoreMedia {
 			Assert.AreEqual (first.Duration, second.Duration, "CompareCMTimeRange - duration - " + description);
 			Assert.AreEqual (first.Start, second.Start, "CompareCMTimeRange - start - " + description);
 		}
+
+#if XAMCORE_2_0
+		[Test]
+		public void CMTimeStrongDictionary ()
+		{
+			var time = new CMTime (1000, 1);
+			var timeDict = new CMTimeDict {
+				Time = time
+			};
+			var retrievedTime = timeDict.Time;
+			Assert.IsTrue (time == retrievedTime, "CMTimeStrongDictionary");
+		}
+
+		class CMTimeDict : DictionaryContainer {
+			static NSString TimeKey = new NSString ("TimeKey");
+			public CMTime? Time {
+				get { return GetCMTimeValue (TimeKey); }
+				set { SetCMTimeValue (TimeKey, value); }
+			}
+		}
+#endif // XAMCORE_2_0
 	}
 }
 

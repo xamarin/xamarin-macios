@@ -5,8 +5,24 @@
 ## untyped enum, we took the prefix from values in ABPerson.h
 !unknown-native-enum! ABAddressBookError bound
 
+
+# AssetLibrary
+
 ## typedef is used + untyped enum in ALAssetsLibrary.h: typedef NSUInteger ALAssetsGroupType;
 !unknown-native-enum! ALAssetsGroupType bound
+
+## was returned by `valueForProperty:` on error condition. API deprecated in iOS9
+!missing-field! ALErrorInvalidProperty not bound
+
+
+# CoreBluetooth
+
+## obsoleted (removed from headers) in iOS 8.4
+!extra-protocol-member! unexpected selector CBCentralManagerDelegate::centralManager:didRetrieveConnectedPeripherals: found
+!extra-protocol-member! unexpected selector CBCentralManagerDelegate::centralManager:didRetrievePeripherals: found
+
+## obsoleted (removed from headers) in iOS 8.4
+!extra-protocol-member! unexpected selector CBPeripheralDelegate::peripheralDidInvalidateServices: found
 
 
 # CoreImage
@@ -16,8 +32,23 @@
 !missing-selector! CIKernel::setROISelector: not bound
 
 
+# GameKit
+
 ## typedef is used + untyped enum in GKPeerPickerController.h: typedef NSUInteger GKPeerPickerConnectionType
 !unknown-native-enum! GKPeerPickerConnectionType bound
+
+
+# IntentsUI
+
+## not exposed by our API (better use the OS version)
+!missing-field! IntentsUIVersionNumber not bound
+!missing-field! IntentsUIVersionString not bound
+
+
+# ReplayKit
+
+## only used on tvOS but exposed in iOS 10 SDK
+!missing-enum! RPPreviewViewControllerMode not bound
 
 
 # UIKit
@@ -51,6 +82,32 @@
 !missing-selector! UITableViewHeaderFooterView::tintColor not bound
 !missing-selector! UIToolbar::setTintColor: not bound
 !missing-selector! UIToolbar::tintColor not bound
+
+## static members cannot be abstract (@required) in .NET
+!incorrect-protocol-member! +UIPopoverBackgroundViewMethods::arrowBase is REQUIRED and should be abstract
+!incorrect-protocol-member! +UIPopoverBackgroundViewMethods::arrowHeight is REQUIRED and should be abstract
+!incorrect-protocol-member! +UIPopoverBackgroundViewMethods::contentViewInsets is REQUIRED and should be abstract
+
+## Exposed thru UIAccessibilityContainer (informal protocol) as we do not want all NSObject to expose them (as a category of UKit)
+!missing-selector! NSObject::accessibilityElementAtIndex: not bound
+!missing-selector! NSObject::accessibilityElements not bound
+!missing-selector! NSObject::indexOfAccessibilityElement: not bound
+!missing-selector! NSObject::setAccessibilityElements: not bound
+
+
+# WatchConnectivity
+
+## They were _upgraded_ to required in iOS 10 beta 1
+!incorrect-protocol-member! WCSessionDelegate::session:activationDidCompleteWithState:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! WCSessionDelegate::sessionDidBecomeInactive: is REQUIRED and should be abstract
+!incorrect-protocol-member! WCSessionDelegate::sessionDidDeactivate: is REQUIRED and should be abstract
+
+
+# WatchKit
+
+## the returned type WKCrownSequencer is not available on iOS (watchOS only)
+!missing-selector! WKInterfaceController::crownSequencer not bound
+
 
 ## methods are [Sealed] so we can't reflect the selector
 ### Docs: This method is intended to be called, not overridden.

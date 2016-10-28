@@ -13,31 +13,7 @@ void useZLib ();
  * Various structs used in ObjCRegistrarTest
  */
 
-struct Sd { double d1; } Sd;
-struct Sdd { double d1; double d2; } Sdd;
-struct Sddd { double d1; double d2; double d3; } Sddd;
-struct Sdddd { double d1; double d2; double d3; double d4; } Sdddd;
-struct Si { int i1; } Si;
-struct Sii { int i1; int i2; } Sii;
-struct Siii { int i1; int i2; int i3; } Siii;
-struct Siiii { int i1; int i2; int i3; int i4; } Siiii;
-struct Siiiii { int i1; int i2; int i3; int i4; int i5; } Siiiii;
-struct Sid { int i1; double d2; } Sid;
-struct Sdi { double d1; int i2; } Sdi;
-struct Sidi { int i1; double d2; int i3; } Sidi;
-struct Siid { int i1; int i2; double d3; } Siid;
-struct Sddi { double d1; double d2; int i3; } Sddi;
-struct Sl { long l1; } Sl;
-struct Sll { long l1; long l2; } Sll;
-struct Slll { long l1; long l2; long l3; } Slll;
-struct Scccc { char c1; char c2; char c3; char c4; } Scccc;
-struct Sffff { float f1; float f2; float f3; float f4; } Sffff;
-struct Sif { int i1; float f2; } Sif;
-struct Sf { float f1; } Sf;
-struct Sff { float f1; float f2; } Sff;
-struct Siff { int i1; float f2; float f3; } Siff;
-struct Siiff { int i1; int i2; float f3; float f4; } Siiff;
-struct Sfi { float f1; int i2; } Sfi;
+#include "libtest.structs.h"
 
 typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 
@@ -79,9 +55,7 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 	@property char Pc4;
 	@property char Pc5;
 
-	@property struct Siid PSiid1;
-	@property struct Sd PSd1;
-	@property struct Sf PSf1;
+#include "libtest.properties.h"
 
 	-(void) V;
 

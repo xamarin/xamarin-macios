@@ -22,9 +22,9 @@ namespace XamCore.MediaPlayer {
 	[BaseType (typeof (NSObject))]
 #if XAMCORE_2_0
 	// introduced in 4.2
-	public interface MPMediaEntity : NSSecureCoding {
+	interface MPMediaEntity : NSSecureCoding {
 #else
-	public interface MPMediaItem : NSSecureCoding {
+	interface MPMediaItem : NSSecureCoding {
 #endif
 		[Static]
 		[Export ("canFilterByProperty:")]
@@ -49,7 +49,7 @@ namespace XamCore.MediaPlayer {
 
 	[NoTV]
 	[BaseType (typeof (MPMediaEntity))]
-	public interface MPMediaItem {
+	interface MPMediaItem {
 #endif
 		[Since (4,2)]
 		[Export ("persistentIDPropertyForGroupingType:")][Static]
@@ -159,6 +159,11 @@ namespace XamCore.MediaPlayer {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString ArtworkProperty { get; }
 
+		[iOS (7,0)]
+		[Field ("MPMediaItemPropertyIsExplicit")]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		NSString IsExplicitProperty { get; }
+
 		[Since (3,0)]
 		[Field ("MPMediaItemPropertyLyrics")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -233,22 +238,34 @@ namespace XamCore.MediaPlayer {
 		[Field ("MPMediaItemPropertyHasProtectedAsset")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NSString HasProtectedAssetProperty { get; }
+
+		[iOS (10, 0)]
+		[Field ("MPMediaItemPropertyDateAdded")]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		NSString DateAddedProperty { get; }
 	}
 
-	[NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface MPMediaItemArtwork {
+	interface MPMediaItemArtwork {
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Export ("initWithBoundsSize:requestHandler:")]
 		[DesignatedInitializer]
+		IntPtr Constructor (CGSize boundsSize, Func<CGSize, UIImage> requestHandler);
+
+		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Export ("initWithImage:")]
 		IntPtr Constructor (UIImage image);
 		
 		[Export ("imageWithSize:")]
+		[return: NullAllowed]
 		UIImage ImageWithSize (CGSize size);
 
 		[Export ("bounds")]
 		CGRect Bounds { get; }
 
+		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Export ("imageCropRect")]
 		CGRect ImageCropRectangle { get; }
 	}
@@ -263,10 +280,10 @@ namespace XamCore.MediaPlayer {
 	[BaseType (typeof (NSObject))]
 #endif
 #if XAMCORE_3_0 || !XAMCORE_2_0
-	public interface MPMediaItemCollection : NSSecureCoding {
+	interface MPMediaItemCollection : NSSecureCoding {
 #else
 	// part of the bug is that we inlined MPMediaEntity needlessly
-	public interface MPMediaItemCollection : MPMediaEntity, NSSecureCoding {
+	interface MPMediaItemCollection : MPMediaEntity, NSSecureCoding {
 #endif
 		[Static]
 		[Export ("collectionWithItems:")]
@@ -291,7 +308,7 @@ namespace XamCore.MediaPlayer {
 
 	[NoTV]
 	[BaseType (typeof (NSObject))]
-	public interface MPMediaLibrary : NSSecureCoding {
+	interface MPMediaLibrary : NSSecureCoding {
 		[Static, Export ("defaultMediaLibrary")]
 		MPMediaLibrary DefaultMediaLibrary { get; }
 
@@ -337,7 +354,7 @@ namespace XamCore.MediaPlayer {
 
 	[NoTV]
 	[BaseType (typeof (UIViewController), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(MPMediaPickerControllerDelegate)})]
-	public interface MPMediaPickerController {
+	interface MPMediaPickerController {
 		[DesignatedInitializer]
 		[Export ("initWithMediaTypes:")]
 		IntPtr Constructor (MPMediaType mediaTypes);
@@ -372,7 +389,7 @@ namespace XamCore.MediaPlayer {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
-	public interface MPMediaPickerControllerDelegate {
+	interface MPMediaPickerControllerDelegate {
 		[Export ("mediaPicker:didPickMediaItems:"), EventArgs ("ItemsPicked"), EventName ("ItemsPicked")]
 		void MediaItemsPicked (MPMediaPickerController sender, MPMediaItemCollection mediaItemCollection);
 		
@@ -384,7 +401,7 @@ namespace XamCore.MediaPlayer {
 	[BaseType (typeof (MPMediaItemCollection))]
 	// Objective-C exception thrown.  Name: MPMediaItemCollectionInitException Reason: -init is not supported, use -initWithItems:
 	[DisableDefaultCtor]
-	public interface MPMediaPlaylist : NSSecureCoding {
+	interface MPMediaPlaylist : NSSecureCoding {
 		[Export ("initWithItems:")]
 		IntPtr Constructor (MPMediaItem [] items);
 
@@ -422,7 +439,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	[Static]
-	public interface MPMediaPlaylistProperty {
+	interface MPMediaPlaylistProperty {
 		[Field ("MPMediaPlaylistPropertyPersistentID")]
 		NSString PersistentID { get; }
 
@@ -448,7 +465,7 @@ namespace XamCore.MediaPlayer {
 
 	[NoTV]
 	[BaseType (typeof (NSObject))]
-	public interface MPMediaQuery : NSSecureCoding, NSCopying {
+	interface MPMediaQuery : NSSecureCoding, NSCopying {
 		[DesignatedInitializer]
 		[Export ("initWithFilterPredicates:")]
 		IntPtr Constructor ([NullAllowed] NSSet filterPredicates);
@@ -537,12 +554,12 @@ namespace XamCore.MediaPlayer {
 
 	[NoTV]
 	[BaseType (typeof (NSObject))]
-	public interface MPMediaPredicate : NSSecureCoding {
+	interface MPMediaPredicate : NSSecureCoding {
 	}
 
 	[NoTV]
 	[BaseType (typeof (MPMediaPredicate))]
-	public interface MPMediaPropertyPredicate {
+	interface MPMediaPropertyPredicate {
 		[Static, Export ("predicateWithValue:forProperty:")]
 		MPMediaPropertyPredicate PredicateWithValue ([NullAllowed] NSObject value, string property);
 
@@ -562,7 +579,7 @@ namespace XamCore.MediaPlayer {
 	[NoTV]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[BaseType (typeof (NSObject))]
-	public interface MPMovieAccessLog : NSCopying {
+	interface MPMovieAccessLog : NSCopying {
 		[Export ("events")]
 		MPMovieAccessLogEvent [] Events { get; }
 
@@ -576,7 +593,7 @@ namespace XamCore.MediaPlayer {
 	[NoTV]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[BaseType (typeof (NSObject))]
-	public interface MPMovieErrorLog : NSCopying {
+	interface MPMovieErrorLog : NSCopying {
 		[Export ("events")]
 		MPMovieErrorLogEvent [] Events { get; }
 
@@ -590,7 +607,7 @@ namespace XamCore.MediaPlayer {
 	[NoTV]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[BaseType (typeof (NSObject))]
-	public interface MPMovieAccessLogEvent : NSCopying {
+	interface MPMovieAccessLogEvent : NSCopying {
 		[Export ("numberOfSegmentsDownloaded")]
 		nint SegmentedDownloadedCount { get; }
 
@@ -637,7 +654,7 @@ namespace XamCore.MediaPlayer {
 	[NoTV]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[BaseType (typeof (NSObject))]
-	public interface MPMovieErrorLogEvent : NSCopying {
+	interface MPMovieErrorLogEvent : NSCopying {
 		[Export ("date")]
 		NSDate Date { get; }
 
@@ -695,7 +712,7 @@ namespace XamCore.MediaPlayer {
 
 	// no [Model] yet... it can be easily created in user code (all abstract) if needed
 	[Protocol]
-	public interface MPMediaPlayback {
+	interface MPMediaPlayback {
 		[Abstract]
 		[Export ("play")]
 		void Play ();
@@ -748,7 +765,7 @@ namespace XamCore.MediaPlayer {
 	[NoTV]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[BaseType (typeof (NSObject))]
-	public interface MPMoviePlayerController : MPMediaPlayback {
+	interface MPMoviePlayerController : MPMediaPlayback {
 		[DesignatedInitializer]
 		[Export ("initWithContentURL:")]
 		IntPtr Constructor (NSUrl url);
@@ -1021,7 +1038,7 @@ namespace XamCore.MediaPlayer {
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSGenericException Reason: MPTimedMetadata cannot be created directly
 	[DisableDefaultCtor]
-	public interface MPTimedMetadata {
+	interface MPTimedMetadata {
 		[Export ("key")]
 		string Key { get;  }
 
@@ -1045,7 +1062,7 @@ namespace XamCore.MediaPlayer {
 	[NoTV]
 	[BaseType (typeof (UIViewController))]
 	[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_9_0)]
-	public interface MPMoviePlayerViewController {
+	interface MPMoviePlayerViewController {
 		[DesignatedInitializer]
 		[Export ("initWithContentURL:")]
 		IntPtr Constructor (NSUrl url);
@@ -1061,7 +1078,7 @@ namespace XamCore.MediaPlayer {
 
 	[NoTV]
 	[BaseType (typeof (NSObject))]
-	public interface MPMusicPlayerController : MPMediaPlayback {
+	interface MPMusicPlayerController : MPMediaPlayback {
 		[Static, Export ("applicationMusicPlayer")]
 		MPMusicPlayerController ApplicationMusicPlayer { get; }
 
@@ -1103,6 +1120,15 @@ namespace XamCore.MediaPlayer {
 		[Export ("setQueueWithStoreIDs:")]
 		void SetQueue (string[] storeIDs);
 
+		[iOS (10,1)]
+		[Export ("setQueueWithDescriptor:")]
+		void SetQueue (MPMusicPlayerQueueDescriptor descriptor);
+
+		[iOS (10,1)]
+		[Async]
+		[Export ("prepareToPlayWithCompletionHandler:")]
+		void PrepareToPlay (Action<NSError> completionHandler);
+
 		[Export ("skipToNextItem")]
 		void SkipToNextItem ();
 
@@ -1133,7 +1159,7 @@ namespace XamCore.MediaPlayer {
 
 	[NoTV]
 	[BaseType (typeof (UIView))]
-	public interface MPVolumeView {
+	interface MPVolumeView {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
 
@@ -1214,7 +1240,7 @@ namespace XamCore.MediaPlayer {
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: MPMediaQuerySection is a read-only object
 	[DisableDefaultCtor]
-	public interface MPMediaQuerySection : NSSecureCoding, NSCopying {
+	interface MPMediaQuerySection : NSSecureCoding, NSCopying {
 		[Export ("range", ArgumentSemantic.Assign)]	
 		NSRange Range { get; }
 
@@ -1272,9 +1298,38 @@ namespace XamCore.MediaPlayer {
 		[Internal]
 		[Field ("MPNowPlayingInfoPropertyCurrentLanguageOptions")]
 		NSString PropertyCurrentLanguageOptions { get; }
+
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Field ("MPNowPlayingInfoCollectionIdentifier")]
+		NSString PropertyCollectionIdentifier { get; }
+
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Field ("MPNowPlayingInfoPropertyExternalContentIdentifier")]
+		NSString PropertyExternalContentIdentifier { get; }
+
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Field ("MPNowPlayingInfoPropertyExternalUserProfileIdentifier")]
+		NSString PropertyExternalUserProfileIdentifier { get; }
+
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Field ("MPNowPlayingInfoPropertyPlaybackProgress")]
+		NSString PropertyPlaybackProgress { get; }
+
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Field ("MPNowPlayingInfoPropertyMediaType")]
+		NSString PropertyMediaType { get; }
+
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Field ("MPNowPlayingInfoPropertyIsLiveStream")]
+		NSString PropertyIsLiveStream { get; }
 	}
 
-	[NoTV] // This type was made available in tvOS but MPMediaItemArtwork is still restricted radar://24982126 https://trello.com/c/2gxuFbeS
 	[Since (7,1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash if used
@@ -1299,6 +1354,16 @@ namespace XamCore.MediaPlayer {
 		[Export ("title")]
 		string Title { get; set; }
 
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Export ("streamingContent")]
+		bool StreamingContent { [Bind ("isStreamingContent")] get; set; }
+
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Export ("explicitContent")]
+		bool ExplicitContent { [Bind ("isExplicitContent")] get; set; }
+
 		[Export ("container")]
 		bool Container { [Bind ("isContainer")] get; set; }
 
@@ -1317,7 +1382,11 @@ namespace XamCore.MediaPlayer {
 		[Abstract]
 #endif
 		[Export ("contentItemAtIndexPath:")]
+#if XAMCORE_4_0
+		MPContentItem GetContentItem (NSIndexPath indexPath);
+#else
 		MPContentItem ContentItem (NSIndexPath indexPath);
+#endif
 
 		[Export ("beginLoadingChildItemsAtIndexPath:completionHandler:")]
 		void BeginLoadingChildItems (NSIndexPath indexPath, Action<NSError> completionHandler);
@@ -1330,6 +1399,11 @@ namespace XamCore.MediaPlayer {
 #endif
 		[Export ("numberOfChildItemsAtIndexPath:")]
 		nint NumberOfChildItems (NSIndexPath indexPath);
+
+		[iOS (10,0)]
+		[Async]
+		[Export ("contentItemForIdentifier:completionHandler:")]
+		void GetContentItem (string identifier, Action<MPContentItem, NSError> completionHandler);
 	}
 
 	interface IMPPlayableContentDataSource {
@@ -1349,8 +1423,13 @@ namespace XamCore.MediaPlayer {
 		void ContextUpdated (MPPlayableContentManager contentManager, MPPlayableContentManagerContext context);
 
 		[iOS (9,0)]
+		[Deprecated (PlatformName.iOS, 9, 3, message: "Use InitializePlaybackQueue (MPPlayableContentManager, MPContentItem[], Action<NSError>) instead")]
 		[Export ("playableContentManager:initializePlaybackQueueWithCompletionHandler:")]
 		void InitializePlaybackQueue (MPPlayableContentManager contentManager, Action<NSError> completionHandler);
+
+		[iOS (9,3)]
+		[Export ("playableContentManager:initializePlaybackQueueWithContentItems:completionHandler:")]
+		void InitializePlaybackQueue (MPPlayableContentManager contentManager, [NullAllowed] MPContentItem[] contentItems, Action<NSError> completionHandler);
 	}
 
 	[NoTV]
@@ -1389,6 +1468,10 @@ namespace XamCore.MediaPlayer {
 		[iOS (8,4)]
 		[Export ("context")]
 		MPPlayableContentManagerContext Context { get; }
+
+		[iOS (10,0)]
+		[Export ("nowPlayingIdentifiers", ArgumentSemantic.Strong)]
+		string[] NowPlayingIdentifiers { get; set; }
 	}
 
 	[NoTV]
@@ -1444,6 +1527,24 @@ namespace XamCore.MediaPlayer {
 		NSNumber[] SupportedPlaybackRates { get; set; }
 	}
 
+	[iOS (8,0)]
+	[BaseType (typeof(MPRemoteCommand))]
+	[DisableDefaultCtor] // NSGenericException Reason: MPChangeShuffleModeCommand cannot be initialized externally.
+	interface MPChangeShuffleModeCommand
+	{
+		[Export ("currentShuffleType", ArgumentSemantic.Assign)]
+		MPShuffleType CurrentShuffleType { get; set; }
+	}
+
+	[iOS (8,0)]
+	[BaseType (typeof(MPRemoteCommand))]
+	[DisableDefaultCtor] // NSGenericException Reason: MPChangeRepeatModeCommand cannot be initialized externally.
+	interface MPChangeRepeatModeCommand
+	{
+		[Export ("currentRepeatType", ArgumentSemantic.Assign)]
+		MPRepeatType CurrentRepeatType { get; set; }
+	}
+
 	[Since (7,1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPFeedbackCommands cannot be initialized externally.
@@ -1486,6 +1587,7 @@ namespace XamCore.MediaPlayer {
 
 	[Since (7,1)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface MPRemoteCommandCenter {
 
 		[Static]
@@ -1497,6 +1599,14 @@ namespace XamCore.MediaPlayer {
 
 		[Export ("changePlaybackRateCommand")]
 		MPChangePlaybackRateCommand ChangePlaybackRateCommand { get; }
+
+		[iOS (8,0)]
+		[Export ("changeRepeatModeCommand")]
+		MPChangeRepeatModeCommand ChangeRepeatModeCommand { get; }
+
+		[iOS (8,0)]
+		[Export ("changeShuffleModeCommand")]
+		MPChangeShuffleModeCommand ChangeShuffleModeCommand { get; }
 
 		[Export ("dislikeCommand")]
 		MPFeedbackCommand DislikeCommand { get; }
@@ -1613,6 +1723,39 @@ namespace XamCore.MediaPlayer {
 	interface MPChangeLanguageOptionCommandEvent {
 		[Export ("languageOption")]
 		MPNowPlayingInfoLanguageOption LanguageOption { get; }
+
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Export ("setting")]
+		MPChangeLanguageOptionSetting Setting { get; }
+	}
+
+	[iOS (8,0)]
+	[BaseType (typeof(MPRemoteCommandEvent))]
+	[DisableDefaultCtor] // NSGenericException Reason: MPChangeShuffleModeCommandEvent cannot be initialized externally.
+	interface MPChangeShuffleModeCommandEvent
+	{
+		[Export ("shuffleType")]
+		MPShuffleType ShuffleType { get; }
+
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Export ("preservesShuffleMode")]
+		bool PreservesShuffleMode { get; }
+	}
+
+	[iOS (8,0)]
+	[BaseType (typeof(MPRemoteCommandEvent))]
+	[DisableDefaultCtor] // NSGenericException Reason: MPChangeRepeatModeCommandEvent cannot be initialized externally.
+	interface MPChangeRepeatModeCommandEvent
+	{
+		[Export ("repeatType")]
+		MPRepeatType RepeatType { get; }
+
+		[iOS (10,0)]
+		[TV (10,0)]
+		[Export ("preservesRepeatMode")]
+		bool PreservesRepeatMode { get; }
 	}
 
 	[iOS (9,0)]
@@ -1716,7 +1859,7 @@ namespace XamCore.MediaPlayer {
 	[NoTV][iOS (9,3)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	public interface MPMediaPlaylistCreationMetadata {
+	interface MPMediaPlaylistCreationMetadata {
 		[Export ("initWithName:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (string name);
@@ -1730,5 +1873,58 @@ namespace XamCore.MediaPlayer {
 
 		[Export ("descriptionText")]
 		string DescriptionText { get; set; }
+	}
+
+	[NoTV]
+	[iOS (10,1)]
+	[BaseType (typeof (NSObject))]
+	interface MPMusicPlayerQueueDescriptor : NSSecureCoding {}
+
+	[NoTV]
+	[iOS (10,1)]
+	[BaseType (typeof(MPMusicPlayerQueueDescriptor))]
+	interface MPMusicPlayerMediaItemQueueDescriptor
+	{
+		[Export ("initWithQuery:")]
+		IntPtr Constructor (MPMediaQuery query);
+
+		[Export ("initWithItemCollection:")]
+		IntPtr Constructor (MPMediaItemCollection itemCollection);
+
+		[Export ("query", ArgumentSemantic.Copy)]
+		MPMediaQuery Query { get; }
+
+		[Export ("itemCollection", ArgumentSemantic.Strong)]
+		MPMediaItemCollection ItemCollection { get; }
+
+		[NullAllowed, Export ("startItem", ArgumentSemantic.Strong)]
+		MPMediaItem StartItem { get; set; }
+
+		[Export ("setStartTime:forItem:")]
+		void SetStartTime (double startTime, MPMediaItem mediaItem);
+
+		[Export ("setEndTime:forItem:")]
+		void SetEndTime (double endTime, MPMediaItem mediaItem);
+	}
+
+	[NoTV]
+	[iOS (10,1)]
+	[BaseType (typeof(MPMusicPlayerQueueDescriptor))]
+	interface MPMusicPlayerStoreQueueDescriptor
+	{
+		[Export ("initWithStoreIDs:")]
+		IntPtr Constructor (string[] storeIDs);
+
+		[NullAllowed, Export ("storeIDs", ArgumentSemantic.Copy)]
+		string[] StoreIDs { get; set; }
+
+		[NullAllowed, Export ("startItemID")]
+		string StartItemID { get; set; }
+
+		[Export ("setStartTime:forItemWithStoreID:")]
+		void SetStartTime (double startTime, string storeID);
+
+		[Export ("setEndTime:forItemWithStoreID:")]
+		void SetEndTime (double endTime, string storeID);
 	}
 }

@@ -11,7 +11,7 @@ using XamCore.ObjCRuntime;
 namespace XamCore.CoreFoundation {
 
 	[Partial]
-	public interface CFAllocator {
+	interface CFAllocator {
 
 		[Internal][Field ("kCFAllocatorDefault")]
 		IntPtr default_ptr { get; }
@@ -30,7 +30,7 @@ namespace XamCore.CoreFoundation {
 	}
 
 	[Partial]
-	public interface CFRunLoop {
+	interface CFRunLoop {
 
 		[Field ("kCFRunLoopDefaultMode")]
 		NSString ModeDefault { get; }
@@ -41,7 +41,7 @@ namespace XamCore.CoreFoundation {
 
 #if !WATCH
 	[Partial]
-	public interface CFNetwork {
+	interface CFNetwork {
 
 		[Field ("kCFErrorDomainCFNetwork", "CFNetwork")]
 		NSString ErrorDomain { get; }

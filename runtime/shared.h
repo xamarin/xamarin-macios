@@ -36,7 +36,7 @@ struct Xamarin_block_descriptor {
     void (*dispose_helper)(void *src);             // IFF (1<<25)
     // required ABI.2010.3.16
     const char *signature;                         // IFF (1<<30)
-    int xamarin_size;
+    volatile int ref_count;
     // variable-length string
 };
 

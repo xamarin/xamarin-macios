@@ -160,6 +160,9 @@ namespace LinkAll {
 		[Test]
 		public void TrustUsingOldPolicy ()
 		{
+#if __WATCHOS__
+			Assert.Ignore ("WatchOS doesn't support BSD sockets, which our network stack currently requires.");
+#endif
 			// Three similar tests exists in dontlink, linkall and linksdk to test 3 different cases
 			// untrusted, custom ICertificatePolicy and ServerCertificateValidationCallback without
 			// having caching issues (in S.Net or the SSL handshake cache)
@@ -275,6 +278,9 @@ namespace LinkAll {
 		}
 
 		[Test]
+#if __WATCHOS__
+		[ExpectedException (typeof (PlatformNotSupportedException))]
+#endif
 		public void SystemDataSqlClient ()
 		{
 			// notes:
@@ -512,12 +518,13 @@ namespace LinkAll {
 			Assert.NotNull (nix);
 		}
 
+#if !__WATCHOS__
 		[Test]
 		public void TlsProvider_Legacy ()
 		{
 			var provider = Mono.Security.Interface.MonoTlsProviderFactory.GetProvider ();
 			Assert.NotNull (provider, "provider");
-			Assert.That (provider.ID, Is.EqualTo (new Guid ("97d31751-d0b3-4707-99f7-a6456b972a19")), "correct provider");
+			Assert.That (provider.ID, Is.EqualTo (new Guid ("809e77d5-56cc-4da8-b9f0-45e65ba9cceb")), "correct provider");
 		}
 
 		[Test]
@@ -527,6 +534,7 @@ namespace LinkAll {
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Security.Tls.OldTlsProvider");
 			Assert.NotNull (Type.GetType (fqn), "Should be included");
 		}
+#endif // !__WATCHOS__
 
 		[Test]
 		public void AppleTls_OptOut ()

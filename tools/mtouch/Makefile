@@ -7,7 +7,8 @@ export CCACHE_CPP2=1
 
 LINKER_DIR=../linker
 
-CECIL_DIR=$(CECIL_PATH)
+CECIL_PATH=$(MONO_PATH)/external/cecil
+
 MONO_DIR=$(MONO_PATH)
 MCS_TOOLS_DIR=$(MONO_DIR)/mcs/tools
 MONOLINKER=$(MCS_TOOLS_DIR)/linker
@@ -64,7 +65,6 @@ LINKER_SOURCES = \
 	$(LINKER_DIR)/MonoTouch.Tuner/ProcessExportedFields.cs	\
 	$(LINKER_DIR)/MonoTouch.Tuner/RemoveAttributes.cs		\
 	$(LINKER_DIR)/MonoTouch.Tuner/RemoveCode.cs			\
-	$(LINKER_DIR)/MonoTouch.Tuner/RemoveExtraRegistrar.cs		\
 	$(LINKER_DIR)/MonoTouch.Tuner/RemoveMonoTouchResources.cs	\
 	$(LINKER_DIR)/MonoTouch.Tuner/SealerSubStep.cs	\
 	$(TOP)/tools/linker/ApplyPreserveAttribute.cs 		\
@@ -76,6 +76,7 @@ LINKER_SOURCES = \
 	$(TOP)/tools/linker/CorePreserveCode.cs		\
 	$(TOP)/tools/linker/CoreRemoveAttributes.cs		\
 	$(TOP)/tools/linker/CoreRemoveSecurity.cs		\
+	$(TOP)/tools/linker/ExceptionalSubStep.cs		\
 	$(TOP)/tools/linker/MarkNSObjects.cs			\
 	$(TOP)/tools/linker/MobileExtensions.cs		\
 	$(TOP)/tools/linker/MobileMarkStep.cs			\
@@ -109,7 +110,6 @@ MTOUCH_SOURCES = \
 	$(TOP)/tools/common/Frameworks.cs	\
 	$(TOP)/tools/common/MachO.cs		\
 	mtouch.cs		\
-	OldStaticRegistrar.cs		\
 	$(TOP)/tools/common/PInvokeWrapperGenerator.cs	\
 	$(TOP)/tools/common/TargetFramework.cs	\
 	$(TOP)/tools/common/StaticRegistrar.cs	\
@@ -130,17 +130,17 @@ MTOUCH_SOURCES = \
 	$(TOP)/src/Foundation/ConnectAttribute.cs \
 	$(XAMARIN_MACDEV_PATH)/Xamarin.MacDev/PListObject.cs \
 
-CECIL_CONFIG=net_4_0_Debug
-MONO_CECIL_DLL=$(CECIL_DIR)/bin/$(CECIL_CONFIG)/Mono.Cecil.dll
-MONO_CECIL_MDB_DLL=$(CECIL_DIR)/bin/$(CECIL_CONFIG)/Mono.Cecil.Mdb.dll
+CECIL_CONFIG=net_4_0_Release
+MONO_CECIL_DLL=$(CECIL_PATH)/bin/$(CECIL_CONFIG)/Mono.Cecil.dll
+MONO_CECIL_MDB_DLL=$(CECIL_PATH)/bin/$(CECIL_CONFIG)/Mono.Cecil.Mdb.dll
 
 $(MONO_CECIL_DLL): $(CECIL_PATH)/Mono.Cecil.csproj
-	$(Q_XBUILD) cd $(CECIL_DIR) && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) Mono.Cecil.csproj $(XBUILD_VERBOSITY)
+	$(Q_XBUILD) cd $(CECIL_PATH) && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) Mono.Cecil.csproj $(XBUILD_VERBOSITY)
 
 $(MONO_CECIL_MDB_DLL): $(MONO_CECIL_DLL) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj
-	$(Q_XBUILD) cd $(CECIL_DIR) && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) symbols/mdb/Mono.Cecil.Mdb.csproj $(XBUILD_VERBOSITY)
+	$(Q_XBUILD) cd $(CECIL_PATH) && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) symbols/mdb/Mono.Cecil.Mdb.csproj $(XBUILD_VERBOSITY)
 
-SIMLAUNCHERS = simlauncher-sgen simlauncher32-sgen simlauncher64-sgen
+SIMLAUNCHERS = simlauncher32-sgen simlauncher64-sgen
 
 monotouch-fixes.i386.dylib: monotouch-fixes.c Makefile
 	$(SIMULATOR_CCOMPILE) -DDEBUG -Wl,-headerpad_max_install_names -g -dynamiclib -gdwarf-2 -I$(TOP)/runtime/.libs -L$(TOP)/runtime/.libs $(SIMULATOR86_CFLAGS) monotouch-fixes.c -o $@ -Wall
@@ -254,7 +254,16 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework ModelIO						\
 	-weak_framework GameplayKit					\
 						\
-	-weak_framework HealthKitUI
+	-weak_framework HealthKitUI					\
+						\
+	-weak_framework CallKit					\
+	-weak_framework Messages				\
+	-weak_framework Speech					\
+	-weak_framework VideoSubscriberAccount	\
+	-weak_framework UserNotifications		\
+	-weak_framework UserNotificationsUI		\
+	-weak_framework Intents					\
+	-weak_framework IntentsUI
 
 # note: there _was_ no CoreAudioKit.framework or Metal.framework for the simulator (before recent iOS9 betas)
 # note 2: there's no GameKit, in iOS 9 (beta 3 at least), you're supposed to reference GameCenter instead (looks fixed in beta 4)
@@ -282,7 +291,6 @@ simlauncher$(5)$(1): simlauncher.m $(TOP)/runtime/.libs/ios/libxamarin.a $(BUILD
 
 endef
 
-$(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator86/lib/libmono-profiler-log.a -u _mono_profiler_startup,sgen,86,))
 $(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator86/lib/libmono-profiler-log.a -u _mono_profiler_startup -DXAMCORE_2_0 Xamarin.iOS.registrar.ios.a,sgen,86,32))
 $(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator64/lib/libmono-profiler-log.a -u _mono_profiler_startup -DXAMCORE_2_0 Xamarin.iOS.registrar.ios.a,sgen,64,64))
 
@@ -293,7 +301,7 @@ MTOUCH_DEFINES= -define:ENABLE_BITCODE_ON_IOS
 endif
 
 MTOUCH_COMPILE_DEPS = $(MTOUCH_SOURCES) $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) Makefile $(LINKER_RESOURCES)
-MTOUCH_COMPILE_ARGS = -unsafe $(IOS_DEFINES) -resource:Info.plist.tmpl -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) $(MTOUCH_SOURCES) -nowarn:0436 $(LINKER_RESOURCES:%=-resource:%) $(MTOUCH_DEFINES)
+MTOUCH_COMPILE_ARGS = -unsafe $(IOS_DEFINES) -resource:Info.plist.tmpl -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:System.Xml.Linq.dll $(MTOUCH_SOURCES) -nowarn:0436 $(LINKER_RESOURCES:%=-resource:%) $(MTOUCH_DEFINES) -debug
 
 # bin/Debug/mtouch.exe is used from mtouch.csproj when debugging
 bin/Debug/mtouch.exe: $(MTOUCH_COMPILE_DEPS)

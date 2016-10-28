@@ -205,65 +205,65 @@ namespace XamCore.UIKit {
 	public partial class UIFontDescriptor {
 		public static UIFontDescriptor PreferredHeadline {
 			get {
-				return GetPreferredDescriptorForTextStyle (UIFont.TextStyleHeadline);
+				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Headline);
 			}
 		}
 		
 		public static UIFontDescriptor PreferredBody {
 			get {
-				return GetPreferredDescriptorForTextStyle (UIFont.TextStyleBody);
+				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Body);
 			}
 		}
 		
 		public static UIFontDescriptor PreferredSubheadline {
 			get {
-				return GetPreferredDescriptorForTextStyle (UIFont.TextStyleSubheadline);
+				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Subheadline);
 			}
 		}
 		
 		public static UIFontDescriptor PreferredFootnote {
 			get {
-				return GetPreferredDescriptorForTextStyle (UIFont.TextStyleFootnote);
+				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Footnote);
 			}
 		}
 		
 		public static UIFontDescriptor PreferredCaption1 {
 			get {
-				return GetPreferredDescriptorForTextStyle (UIFont.TextStyleCaption1);
+				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Caption1);
 			}
 		}
 		
 		public static UIFontDescriptor PreferredCaption2 {
 			get {
-				return GetPreferredDescriptorForTextStyle (UIFont.TextStyleCaption2);
+				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Caption2);
 			}
 		}
 
 		[iOS (9,0)]
 		public static UIFontDescriptor PreferredTitle1 {
 			get {
-				return GetPreferredDescriptorForTextStyle (UIFont.TextStyleTitle1);
+				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Title1);
 			}
 		}
 		
 		[iOS (9,0)]
 		public static UIFontDescriptor PreferredTitle2 {
 			get {
-				return GetPreferredDescriptorForTextStyle (UIFont.TextStyleTitle2);
+				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Title2);
 			}
 		}
 		
 		[iOS (9,0)]
 		public static UIFontDescriptor PreferredTitle3 {
 			get {
-				return GetPreferredDescriptorForTextStyle (UIFont.TextStyleTitle3);
+				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Title3);
 			}
 		}
 		
 		[iOS (9,0)]
 		public static UIFontDescriptor PreferredCallout {
 			get {
-				return GetPreferredDescriptorForTextStyle (UIFont.TextStyleCallout);
+				return GetPreferredDescriptorForTextStyle (UIFontTextStyle.Callout);
 			}
 		}
 	

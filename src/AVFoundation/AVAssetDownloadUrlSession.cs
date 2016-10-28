@@ -6,7 +6,7 @@
 //     
 // Copyright 2015 Xamarin Inc.
 //
-
+#if !TVOS && !WATCH
 using System;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
@@ -113,4 +113,4 @@ namespace XamCore.AVFoundation {
 	}
 	#endif
 }
-
+#endif

@@ -39,8 +39,7 @@ namespace MonoTouchFixtures.ModelIO {
 		[TestFixtureSetUp]
 		public void Setup ()
 		{
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (9, 0))
-				Assert.Ignore ("Requires iOS9+");
+			TestRuntime.AssertXcodeVersion (7, 0);
 
 			if (Runtime.Arch == Arch.SIMULATOR && IntPtr.Size == 4) {
 				// There's a bug in the i386 version of objc_msgSend where it doesn't preserve SIMD arguments
@@ -75,6 +74,14 @@ namespace MonoTouchFixtures.ModelIO {
 				}
 				using (var obj = MDLMesh.CreatePlane (new Vector2 (1, 1), new Vector2i (1, 1), MDLGeometryType.Triangles, null)) {
 				}
+				using (var obj = MDLMesh.CreateSphere (new Vector3 (1, 2, 3), new Vector2i (4, 5), MDLGeometryType.Triangles, true, null)) {
+				}
+				using (var obj = MDLMesh.CreateHemisphere (new Vector3 (1, 2, 3), new Vector2i (4, 5), MDLGeometryType.Triangles, true, true, null)) {
+				}
+				using (var obj = MDLMesh.CreateCapsule (new Vector3 (1, 2, 3), new Vector2i (4, 5), MDLGeometryType.Triangles, true, 10, null)) {
+				}
+				using (var obj = MDLMesh.CreateCone (new Vector3 (1, 2, 3), new Vector2i (4, 5), MDLGeometryType.Triangles, true, true, null)) {
+				}
 //				using (var obj = MDLMesh.CreateSubdividedMesh (new MDLMesh (), 0, 0)) {
 //				}
 
@@ -92,13 +99,7 @@ namespace MonoTouchFixtures.ModelIO {
 				Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.5f, 1, 1.5f), MinBounds = new Vector3 (-0.5f, -1, -1.5f) }, obj.BoundingBox, "BoundingBox");
 				Assert.AreEqual (1, obj.Submeshes.Count, "Submeshes Count");
 				Assert.AreEqual (1, obj.VertexBuffers.Length, "VertexBuffers Count");
-				// iOS 9.3 is the basis of tvOS 9.2 (hopefully they'll get in sync with iOS 10+)
-#if __TVOS__
-				bool nine3 = UIDevice.CurrentDevice.CheckSystemVersion (9, 2);
-#else
-				bool nine3 = UIDevice.CurrentDevice.CheckSystemVersion (9, 3);
-#endif
-				Assert.AreEqual (nine3 ? 214 : 24, obj.VertexCount, "VertexCount");
+				Assert.AreEqual (TestRuntime.CheckXcodeVersion (7, 3) ? 214 : 24, obj.VertexCount, "VertexCount");
 				Assert.AreEqual (31, obj.VertexDescriptor.Attributes.Count, "VertexDescriptor Attributes Count");
 				Assert.AreEqual (31, obj.VertexDescriptor.Layouts.Count, "VertexDescriptor Layouts Count");
 			}
@@ -114,7 +115,8 @@ namespace MonoTouchFixtures.ModelIO {
 				Assert.IsNotNull (obj, "obj");
 				Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (1.5f, 0, 1.5f), MinBounds = new Vector3 (-1.5f, 0, -1.5f) }, obj.BoundingBox, "BoundingBox");
 				Assert.AreEqual (1, obj.Submeshes.Count, "Submeshes Count");
-				Assert.AreEqual (1, obj.VertexBuffers.Length, "VertexBuffers Count");
+				var vb = TestRuntime.CheckXcodeVersion (8,0) ? 3 : 1;
+				Assert.AreEqual (vb, obj.VertexBuffers.Length, "VertexBuffers Count");
 				Assert.AreEqual (16, obj.VertexCount, "VertexCount");
 				Assert.AreEqual (31, obj.VertexDescriptor.Attributes.Count, "VertexDescriptor Attributes Count");
 				Assert.AreEqual (31, obj.VertexDescriptor.Layouts.Count, "VertexDescriptor Layouts Count");
@@ -144,9 +146,14 @@ namespace MonoTouchFixtures.ModelIO {
 
 			using (var obj = MDLMesh.CreateCylindroid (1, V2, 3, 1, MDLGeometryType.Triangles, true, null)) {
 				Assert.IsNotNull (obj, "obj");
-				Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (1f, 0.5f, 1f), MinBounds = new Vector3 (-0.866025388f, -0.5f, -0.866025388f) }, obj.BoundingBox, "BoundingBox");
+				if (TestRuntime.CheckXcodeVersion (8, 0)) {
+					Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.866025448f, 1.0f, 1f), MinBounds = new Vector3 (-0.866025388f, -1.0f, -0.5f) }, obj.BoundingBox, "BoundingBox");
+					Assert.AreEqual (3, obj.VertexBuffers.Length, "VertexBuffers Count");
+				} else {
+					Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (1f, 0.5f, 1f), MinBounds = new Vector3 (-0.866025388f, -0.5f, -0.866025388f) }, obj.BoundingBox, "BoundingBox");
+					Assert.AreEqual (1, obj.VertexBuffers.Length, "VertexBuffers Count");
+				}
 				Assert.AreEqual (1, obj.Submeshes.Count, "Submeshes Count");
-				Assert.AreEqual (1, obj.VertexBuffers.Length, "VertexBuffers Count");
 				Assert.AreEqual (18, obj.VertexCount, "VertexCount");
 				Assert.AreEqual (31, obj.VertexDescriptor.Attributes.Count, "VertexDescriptor Attributes Count");
 				Assert.AreEqual (31, obj.VertexDescriptor.Layouts.Count, "VertexDescriptor Layouts Count");
@@ -160,10 +167,91 @@ namespace MonoTouchFixtures.ModelIO {
 
 			using (var obj = MDLMesh.CreateEllipticalCone (5, V2, 3, 1, MDLGeometryType.Triangles, true, null)) {
 				Assert.IsNotNull (obj, "obj");
-				Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.866025448f, 0f, 1f), MinBounds = new Vector3 (-0.866025388f, -5f, -0.50000006f) }, obj.BoundingBox, "BoundingBox");
+				if (TestRuntime.CheckXcodeVersion (8, 0)) {
+					Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.433012783f, 4.5f, 0.5f), MinBounds = new Vector3 (-0.433012783f, -0.5f, -0.25f) }, obj.BoundingBox, "BoundingBox");
+					Assert.AreEqual (3, obj.VertexBuffers.Length, "VertexBuffers Count");
+				} else {
+					Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.866025448f, 0f, 1f), MinBounds = new Vector3 (-0.866025388f, -5f, -0.50000006f) }, obj.BoundingBox, "BoundingBox");
+					Assert.AreEqual (1, obj.VertexBuffers.Length, "VertexBuffers Count");
+				}
+				Assert.AreEqual (1, obj.Submeshes.Count, "Submeshes Count");
+				Assert.AreEqual (13, obj.VertexCount, "VertexCount");
+				Assert.AreEqual (31, obj.VertexDescriptor.Attributes.Count, "VertexDescriptor Attributes Count");
+				Assert.AreEqual (31, obj.VertexDescriptor.Layouts.Count, "VertexDescriptor Layouts Count");
+			}
+		}
+
+		[Test]
+		public void CreateSphereTest ()
+		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+
+			Vector3 V3 = new Vector3 (1, 2, 3);
+			Vector2i V2i = new Vector2i (4, 5);
+
+			using (var obj = MDLMesh.CreateSphere (V3, V2i, MDLGeometryType.Triangles, true, null)) {
+				Assert.IsNotNull (obj, "obj");
+				Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.9510565f, 2, 2.85317f), MinBounds = new Vector3 (-0.9510565f, -2, -2.85317f) }, obj.BoundingBox, "BoundingBox");
 				Assert.AreEqual (1, obj.Submeshes.Count, "Submeshes Count");
 				Assert.AreEqual (1, obj.VertexBuffers.Length, "VertexBuffers Count");
-				Assert.AreEqual (13, obj.VertexCount, "VertexCount");
+				Assert.AreEqual (22, obj.VertexCount, "VertexCount");
+				Assert.AreEqual (31, obj.VertexDescriptor.Attributes.Count, "VertexDescriptor Attributes Count");
+				Assert.AreEqual (31, obj.VertexDescriptor.Layouts.Count, "VertexDescriptor Layouts Count");
+			}
+		}
+
+		[Test]
+		public void CreateHemisphereTest ()
+		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+
+			Vector3 V3 = new Vector3 (1, 2, 3);
+			Vector2i V2i = new Vector2i (4, 5);
+
+			using (var obj = MDLMesh.CreateHemisphere (V3, V2i, MDLGeometryType.Triangles, true, true, null)) {
+				Assert.IsNotNull (obj, "obj");
+				Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.9510565f, 2, 2.85317f), MinBounds = new Vector3 (-0.9510565f, 0.6180339f, -2.85317f) }, obj.BoundingBox, "BoundingBox");
+				Assert.AreEqual (1, obj.Submeshes.Count, "Submeshes Count");
+				Assert.AreEqual (1, obj.VertexBuffers.Length, "VertexBuffers Count");
+				Assert.AreEqual (16, obj.VertexCount, "VertexCount");
+				Assert.AreEqual (31, obj.VertexDescriptor.Attributes.Count, "VertexDescriptor Attributes Count");
+				Assert.AreEqual (31, obj.VertexDescriptor.Layouts.Count, "VertexDescriptor Layouts Count");
+			}
+		}
+
+		[Test]
+		public void CreateCapsuleTest ()
+		{
+			TestRuntime.AssertXcodeVersion (8,0);
+
+			Vector3 V3 = new Vector3 (1, 2, 3);
+			Vector2i V2i = new Vector2i (4, 5);
+
+			using (var obj = MDLMesh.CreateCapsule (V3, V2i, MDLGeometryType.Triangles, true, 10, null)) {
+				Assert.IsNotNull (obj, "obj");
+				Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.6f, 1.333333f, 1.8f), MinBounds = new Vector3 (-0.6f, -1, -1.8f) }, obj.BoundingBox, "BoundingBox");
+				Assert.AreEqual (1, obj.Submeshes.Count, "Submeshes Count");
+				Assert.AreEqual (3, obj.VertexBuffers.Length, "VertexBuffers Count");
+				Assert.AreEqual (152, obj.VertexCount, "VertexCount");
+				Assert.AreEqual (31, obj.VertexDescriptor.Attributes.Count, "VertexDescriptor Attributes Count");
+				Assert.AreEqual (31, obj.VertexDescriptor.Layouts.Count, "VertexDescriptor Layouts Count");
+			}
+		}
+
+		[Test]
+		public void CreateConeTest ()
+		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+
+			Vector3 V3 = new Vector3 (1, 2, 3);
+			Vector2i V2i = new Vector2i (4, 5);
+
+			using (var obj = MDLMesh.CreateCone (V3, V2i, MDLGeometryType.Triangles, true, true, null)) {
+				Assert.IsNotNull (obj, "obj");
+				Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.5f, -0.5f, 1.5f), MinBounds = new Vector3 (-0.5f, -2.5f, -1.5f) }, obj.BoundingBox, "BoundingBox");
+				Assert.AreEqual (1, obj.Submeshes.Count, "Submeshes Count");
+				Assert.AreEqual (3, obj.VertexBuffers.Length, "VertexBuffers Count");
+				Assert.AreEqual (36, obj.VertexCount, "VertexCount");
 				Assert.AreEqual (31, obj.VertexDescriptor.Attributes.Count, "VertexDescriptor Attributes Count");
 				Assert.AreEqual (31, obj.VertexDescriptor.Layouts.Count, "VertexDescriptor Layouts Count");
 			}
