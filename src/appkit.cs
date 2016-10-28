@@ -2136,6 +2136,10 @@ namespace XamCore.AppKit {
 		[Mac (10,5)]
 		[Export ("imageScaling")]
 		NSImageScale ImageScaling { get; set; }
+
+		[Mac (10, 12, 1)]
+		[NullAllowed, Export ("bezelColor", ArgumentSemantic.Copy)]
+		NSColor BezelColor { get; set; }
 	}
 	
 	[BaseType (typeof (NSImageRep))]
@@ -2508,6 +2512,10 @@ namespace XamCore.AppKit {
 
 		[Export ("numberOfClicksRequired")]
 		nint NumberOfClicksRequired { get; set; }
+
+		[Mac (10, 12, 1)]
+		[Export ("numberOfTouchesRequired")]
+		nint NumberOfTouchesRequired { get; set; }
 	}
 	
 	[BaseType (typeof (NSView))]
@@ -3800,6 +3808,11 @@ namespace XamCore.AppKit {
 		[Static]
 		[Export ("colorWithColorSpace:hue:saturation:brightness:alpha:")]
 		NSColor FromColor (NSColorSpace space, nfloat hue, nfloat saturation, nfloat brightness, nfloat alpha);
+
+		[Mac (10, 12, 1)]
+		[Static]
+		[Export ("scrubberTexturedBackgroundColor", ArgumentSemantic.Strong)]
+		NSColor ScrubberTexturedBackgroundColor { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -7208,6 +7221,18 @@ namespace XamCore.AppKit {
 		[Mac (10,10,3)]
 		[Export ("associatedEventsMask")]
 		NSEventMask AssociatedEventsMask { get; }
+
+		[Mac (10, 12)]
+		[Export ("allTouches")]
+		NSSet<NSTouch> AllTouches { get; }
+
+		[Mac (10,12)]
+		[Export ("touchesForView:")]
+		NSSet<NSTouch> GetTouches (NSView view);
+
+		[Mac (10,12,1)]
+		[Export ("coalescedTouchesForTouch:")]
+		NSTouch[] GetCoalescedTouches (NSTouch touch);
 	}
 
 	[Mac (10,10)]
@@ -7329,6 +7354,22 @@ namespace XamCore.AppKit {
 		[Mac (10,11)]
 		[Export ("pressureConfiguration", ArgumentSemantic.Strong)]
 		NSPressureConfiguration PressureConfiguration { get; set; }
+
+		[Mac (10,12,1)]
+		[Export ("touchesBeganWithEvent:")]
+		void TouchesBegan (NSEvent touchEvent);
+
+		[Mac (10,12,1)]
+		[Export ("touchesMovedWithEvent:")]
+		void TouchesMoved (NSEvent touchEvent);
+
+		[Mac (10,12,1)]
+		[Export ("touchesEndedWithEvent:")]
+		void TouchesEnded (NSEvent touchEvent);
+
+		[Mac (10,12,1)]
+		[Export ("touchesCancelledWithEvent:")]
+		void TouchesCancelled (NSEvent touchEvent);
 	}
 
 	[Mac (10,10)]
@@ -7356,6 +7397,10 @@ namespace XamCore.AppKit {
 		[Mac (10,11)]
 		[Export ("gestureRecognizer:shouldAttemptToRecognizeWithEvent:"), DelegateName ("NSGestureEvent"), DefaultValue (true)]
 		bool ShouldAttemptToRecognize (NSGestureRecognizer gestureRecognizer, NSEvent theEvent);
+
+		[Mac (10,12,1)]
+		[Export ("gestureRecognizer:shouldReceiveTouch:"), DelegateName ("NSTouchEvent"), DefaultValue (true)]
+		bool ShouldReceiveTouch (NSGestureRecognizer gestureRecognizer, NSTouch touch);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -8846,7 +8891,311 @@ namespace XamCore.AppKit {
 		[Mac (10,7)]
 		[Export ("layerContentsForContentsScale:")]
 		NSObject GetLayerContentsForContentsScale (nfloat layerContentsScale);
-		
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarAddDetailTemplate")]
+		NSString NSImageNameTouchBarAddDetailTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarAddTemplate")]
+		NSString NSImageNameTouchBarAddTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarAlarmTemplate")]
+		NSString NSImageNameTouchBarAlarmTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarAudioInputMuteTemplate")]
+		NSString NSImageNameTouchBarAudioInputMuteTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarAudioInputTemplate")]
+		NSString NSImageNameTouchBarAudioInputTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarAudioOutputMuteTemplate")]
+		NSString NSImageNameTouchBarAudioOutputMuteTemplate { get; }
+
+		// extern NSString *const _Nonnull NSImageNameTouchBarAudioOutputVolumeHighTemplate __attribute__((availability(macos, introduced=10.12.1)));
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarAudioOutputVolumeHighTemplate")]
+		NSString NSImageNameTouchBarAudioOutputVolumeHighTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarAudioOutputVolumeLowTemplate")]
+		NSString NSImageNameTouchBarAudioOutputVolumeLowTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarAudioOutputVolumeMediumTemplate")]
+		NSString NSImageNameTouchBarAudioOutputVolumeMediumTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarAudioOutputVolumeOffTemplate")]
+		NSString NSImageNameTouchBarAudioOutputVolumeOffTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarBookmarksTemplate")]
+		NSString NSImageNameTouchBarBookmarksTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarColorPickerFill")]
+		NSString NSImageNameTouchBarColorPickerFill { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarColorPickerFont")]
+		NSString NSImageNameTouchBarColorPickerFont { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarColorPickerStroke")]
+		NSString NSImageNameTouchBarColorPickerStroke { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarCommunicationAudioTemplate")]
+		NSString NSImageNameTouchBarCommunicationAudioTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarCommunicationVideoTemplate")]
+		NSString NSImageNameTouchBarCommunicationVideoTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarComposeTemplate")]
+		NSString NSImageNameTouchBarComposeTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarDeleteTemplate")]
+		NSString NSImageNameTouchBarDeleteTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarDownloadTemplate")]
+		NSString NSImageNameTouchBarDownloadTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarEnterFullScreenTemplate")]
+		NSString NSImageNameTouchBarEnterFullScreenTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarExitFullScreenTemplate")]
+		NSString NSImageNameTouchBarExitFullScreenTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarFastForwardTemplate")]
+		NSString NSImageNameTouchBarFastForwardTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarFolderCopyToTemplate")]
+		NSString NSImageNameTouchBarFolderCopyToTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarFolderMoveToTemplate")]
+		NSString NSImageNameTouchBarFolderMoveToTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarFolderTemplate")]
+		NSString NSImageNameTouchBarFolderTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarGetInfoTemplate")]
+		NSString NSImageNameTouchBarGetInfoTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarGoBackTemplate")]
+		NSString NSImageNameTouchBarGoBackTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarGoDownTemplate")]
+		NSString NSImageNameTouchBarGoDownTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarGoForwardTemplate")]
+		NSString NSImageNameTouchBarGoForwardTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarGoUpTemplate")]
+		NSString NSImageNameTouchBarGoUpTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarHistoryTemplate")]
+		NSString NSImageNameTouchBarHistoryTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarIconViewTemplate")]
+		NSString NSImageNameTouchBarIconViewTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarListViewTemplate")]
+		NSString NSImageNameTouchBarListViewTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarMailTemplate")]
+		NSString NSImageNameTouchBarMailTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarNewFolderTemplate")]
+		NSString NSImageNameTouchBarNewFolderTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarNewMessageTemplate")]
+		NSString NSImageNameTouchBarNewMessageTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarOpenInBrowserTemplate")]
+		NSString NSImageNameTouchBarOpenInBrowserTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarPauseTemplate")]
+		NSString NSImageNameTouchBarPauseTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarPlayheadTemplate")]
+		NSString NSImageNameTouchBarPlayheadTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarPlayPauseTemplate")]
+		NSString NSImageNameTouchBarPlayPauseTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarPlayTemplate")]
+		NSString NSImageNameTouchBarPlayTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarQuickLookTemplate")]
+		NSString NSImageNameTouchBarQuickLookTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarRecordStartTemplate")]
+		NSString NSImageNameTouchBarRecordStartTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarRecordStopTemplate")]
+		NSString NSImageNameTouchBarRecordStopTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarRefreshTemplate")]
+		NSString NSImageNameTouchBarRefreshTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarRewindTemplate")]
+		NSString NSImageNameTouchBarRewindTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarRotateLeftTemplate")]
+		NSString NSImageNameTouchBarRotateLeftTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarRotateRightTemplate")]
+		NSString NSImageNameTouchBarRotateRightTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarSearchTemplate")]
+		NSString NSImageNameTouchBarSearchTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarShareTemplate")]
+		NSString NSImageNameTouchBarShareTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarSidebarTemplate")]
+		NSString NSImageNameTouchBarSidebarTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarSkipAhead15SecondsTemplate")]
+		NSString NSImageNameTouchBarSkipAhead15SecondsTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarSkipAhead30SecondsTemplate")]
+		NSString NSImageNameTouchBarSkipAhead30SecondsTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarSkipAheadTemplate")]
+		NSString NSImageNameTouchBarSkipAheadTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarSkipBack15SecondsTemplate")]
+		NSString NSImageNameTouchBarSkipBack15SecondsTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarSkipBack30SecondsTemplate")]
+		NSString NSImageNameTouchBarSkipBack30SecondsTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarSkipBackTemplate")]
+		NSString NSImageNameTouchBarSkipBackTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarSkipToEndTemplate")]
+		NSString NSImageNameTouchBarSkipToEndTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarSkipToStartTemplate")]
+		NSString NSImageNameTouchBarSkipToStartTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarSlideshowTemplate")]
+		NSString NSImageNameTouchBarSlideshowTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarTagIconTemplate")]
+		NSString NSImageNameTouchBarTagIconTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarTextBoldTemplate")]
+		NSString NSImageNameTouchBarTextBoldTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarTextBoxTemplate")]
+		NSString NSImageNameTouchBarTextBoxTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarTextCenterAlignTemplate")]
+		NSString NSImageNameTouchBarTextCenterAlignTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarTextItalicTemplate")]
+		NSString NSImageNameTouchBarTextItalicTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarTextJustifiedAlignTemplate")]
+		NSString NSImageNameTouchBarTextJustifiedAlignTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarTextLeftAlignTemplate")]
+		NSString NSImageNameTouchBarTextLeftAlignTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarTextListTemplate")]
+		NSString NSImageNameTouchBarTextListTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarTextRightAlignTemplate")]
+		NSString NSImageNameTouchBarTextRightAlignTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarTextStrikethroughTemplate")]
+		NSString NSImageNameTouchBarTextStrikethroughTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarTextUnderlineTemplate")]
+		NSString NSImageNameTouchBarTextUnderlineTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarUserAddTemplate")]
+		NSString NSImageNameTouchBarUserAddTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarUserGroupTemplate")]
+		NSString NSImageNameTouchBarUserGroupTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarUserTemplate")]
+		NSString NSImageNameTouchBarUserTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarVolumeDownTemplate")]
+		NSString NSImageNameTouchBarVolumeDownTemplate { get; }
+
+		[Mac (10, 12, 1)]
+		[Internal, Field ("NSImageNameTouchBarVolumeUpTemplate")]
+		NSString NSImageNameTouchBarVolumeUpTemplate { get; }
 	}
 
 	interface NSStringAttributes {
@@ -23875,4 +24224,162 @@ namespace XamCore.AppKit {
 		[Export ("validateMenuItem:")]
 		bool ValidateMenuItem (NSMenuItem menuItem);
 	}
+
+#if !XAMCORE_2_0
+	public interface INSCandidateListTouchBarItemDelegate {}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSTouchBarItem))]
+	interface NSCandidateListTouchBarItem
+	{
+		[NullAllowed, Export ("client", ArgumentSemantic.Weak)]
+		NSTextInputClient Client { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		INSCandidateListTouchBarItemDelegate Delegate { get; set; }
+
+		[Export ("collapsed")]
+		bool Collapsed { [Bind ("isCollapsed")] get; set; }
+
+		[Export ("allowsCollapsing")]
+		bool AllowsCollapsing { get; set; }
+
+		[Export ("candidateListVisible")]
+		bool CandidateListVisible { [Bind ("isCandidateListVisible")] get; }
+
+		[Export ("updateWithInsertionPointVisibility:")]
+		void UpdateWithInsertionPointVisibility (bool isVisible);
+
+		[Export ("allowsTextInputContextCandidates")]
+		bool AllowsTextInputContextCandidates { get; set; }
+
+		// REVIEW, does this work?
+		[NullAllowed, Export ("attributedStringForCandidate", ArgumentSemantic.Copy)]
+		Func<NSObject, nint, NSAttributedString> AttributedStringForCandidate { get; set; }
+
+		[Export ("candidates", ArgumentSemantic.Copy)]
+		NSObject[] Candidates { get; }
+
+		[Export ("setCandidates:forSelectedRange:inString:")]
+		void SetCandidates (NSObject[] candidates, NSRange selectedRange, [NullAllowed] string originalString);
+
+		[Export ("customizationLabel")]
+		string CustomizationLabel { get; set; }
+	}
+
+	[Protocol]
+	interface NSCandidateListTouchBarItemDelegate
+	{
+		[Mac (10,12,1)]
+		[Export ("candidateListTouchBarItem:beginSelectingCandidateAtIndex:")]
+		void BeginSelectingCandidate (NSCandidateListTouchBarItem anItem, nint index);
+
+		[Mac (10,12,1)]
+		[Export ("candidateListTouchBarItem:changeSelectionFromCandidateAtIndex:toIndex:")]
+		void ChangeSelectionFromCandidate (NSCandidateListTouchBarItem anItem, nint previousIndex, nint index);
+
+		[Mac (10,12,1)]
+		[Export ("candidateListTouchBarItem:endSelectingCandidateAtIndex:")]
+		void EndSelectingCandidate (NSCandidateListTouchBarItem anItem, nint index);
+
+		[Mac (10,12,1)]
+		[Export ("candidateListTouchBarItem:changedCandidateListVisibility:")]
+		void ChangedCandidateListVisibility (NSCandidateListTouchBarItem anItem, bool isVisible);
+	}
+
+	[Category]
+	[BaseType (typeof(NSView))]
+	interface NSView_NSCandidateListTouchBarItem
+	{
+		[Mac (10, 12, 1)]
+		[NullAllowed, Export ("candidateListTouchBarItem", ArgumentSemantic.Strong)]
+		NSCandidateListTouchBarItem GetCandidateListTouchBarItem (); 
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSTouchBarItem))]
+	interface NSColorPickerTouchBarItem
+	{
+		[Static]
+		[Export ("colorPickerWithIdentifier:")]
+		NSColorPickerTouchBarItem CreateColorPicker(string identifier);
+
+		[Static]
+		[Export ("textColorPickerWithIdentifier:")]
+		NSColorPickerTouchBarItem CreateTextColorPicker (string identifier);
+
+		[Static]
+		[Export ("strokeColorPickerWithIdentifier:")]
+		NSColorPickerTouchBarItem CreateStrokeColorPicker(string identifier);
+
+		[Static]
+		[Export ("colorPickerWithIdentifier:buttonImage:")]
+		NSColorPickerTouchBarItem CreateColorPicker (string identifier, NSImage image);
+
+		[Export ("color", ArgumentSemantic.Copy)]
+		NSColor Color { get; set; }
+
+		[Export ("showsAlpha")]
+		bool ShowsAlpha { get; set; }
+
+		[Export ("colorList", ArgumentSemantic.Strong)]
+		NSColorList ColorList { get; set; }
+
+		[Export ("customizationLabel")]
+		string CustomizationLabel { get; set; }
+
+		// Review - Should I hide these?
+		[NullAllowed, Export ("target", ArgumentSemantic.Weak)]
+		NSObject Target { get; set; }
+
+		[NullAllowed, Export ("action", ArgumentSemantic.Assign)]
+		Selector Action { get; set; }
+
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSTouchBarItem))]
+	interface NSCustomTouchBarItem
+	{
+		[Export ("view", ArgumentSemantic.Strong)]
+		NSView View { get; set; }
+
+		[Export ("viewController", ArgumentSemantic.Strong)]
+		NSViewController ViewController { get; set; }
+
+		[Export ("customizationLabel")]
+		string CustomizationLabel { get; set; }
+	}
+
+	[Category]
+	[BaseType (typeof(NSGestureRecognizer))]
+	interface NSGestureRecognizer_NSTouchBar
+	{
+		// REVIEW - Is this better than inlining these and using a property get/set?
+		[Mac (10, 12, 1)]
+		[Export ("allowedTouchTypes", ArgumentSemantic.Assign)]
+		NSTouchTypeMask GetAllowedTouchTypes ();
+
+		[Mac (10, 12, 1)]
+		[Export ("setAllowedTouchTypes:", ArgumentSemantic.Assign)]
+		void SetAllowedTouchTypes (NSTouchTypeMask types);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSTouchBarItem))]
+	interface NSGroupTouchBarItem
+	{
+		[Static]
+		[Export ("groupItemWithIdentifier:items:")]
+		NSGroupTouchBarItem CreateGroupItem (string identifier, NSTouchBarItem[] items);
+
+		[Export ("groupTouchBar", ArgumentSemantic.Strong)]
+		NSTouchBar GroupTouchBar { get; set; }
+
+		[Export ("customizationLabel")]
+		string CustomizationLabel { get; set; }
+	}
+#endif
 }

@@ -69,7 +69,83 @@ namespace XamCore.AppKit {
 		MenuMixedStateTemplate,
 		UserGuest,
 		MobileMe,
-		ShareTemplate
+		ShareTemplate,
+		TouchBarAddDetailTemplate,
+		TouchBarAddTemplate,
+		TouchBarAlarmTemplate,
+		TouchBarAudioInputMuteTemplate,
+		TouchBarAudioInputTemplate,
+		TouchBarAudioOutputMuteTemplate,
+		TouchBarAudioOutputVolumeHighTemplate,
+		TouchBarAudioOutputVolumeLowTemplate,
+		TouchBarAudioOutputVolumeMediumTemplate,
+		TouchBarAudioOutputVolumeOffTemplate,
+		TouchBarBookmarksTemplate,
+		TouchBarColorPickerFill,
+		TouchBarColorPickerFont,
+		TouchBarColorPickerStroke,
+		TouchBarCommunicationAudioTemplate,
+		TouchBarCommunicationVideoTemplate,
+		TouchBarComposeTemplate,
+		TouchBarDeleteTemplate,
+		TouchBarDownloadTemplate,
+		TouchBarEnterFullScreenTemplate,
+		TouchBarExitFullScreenTemplate,
+		TouchBarFastForwardTemplate,
+		TouchBarFolderCopyToTemplate,
+		TouchBarFolderMoveToTemplate,
+		TouchBarFolderTemplate,
+		TouchBarGetInfoTemplate,
+		TouchBarGoBackTemplate,
+		TouchBarGoDownTemplate,
+		TouchBarGoForwardTemplate,
+		TouchBarGoUpTemplate,
+		TouchBarHistoryTemplate,
+		TouchBarIconViewTemplate,
+		TouchBarListViewTemplate,
+		TouchBarMailTemplate,
+		TouchBarNewFolderTemplate,
+		TouchBarNewMessageTemplate,
+		TouchBarOpenInBrowserTemplate,
+		TouchBarPauseTemplate,
+		TouchBarPlayheadTemplate,
+		TouchBarPlayPauseTemplate,
+		TouchBarPlayTemplate,
+		TouchBarQuickLookTemplate,
+		TouchBarRecordStartTemplate,
+		TouchBarRecordStopTemplate,
+		TouchBarRefreshTemplate,
+		TouchBarRewindTemplate,
+		TouchBarRotateLeftTemplate,
+		TouchBarRotateRightTemplate,
+		TouchBarSearchTemplate,
+		TouchBarShareTemplate,
+		TouchBarSidebarTemplate,
+		TouchBarSkipAhead15SecondsTemplate,
+		TouchBarSkipAhead30SecondsTemplate,
+		TouchBarSkipAheadTemplate,
+		TouchBarSkipBack15SecondsTemplate,
+		TouchBarSkipBack30SecondsTemplate,
+		TouchBarSkipBackTemplate,
+		TouchBarSkipToEndTemplate,
+		TouchBarSkipToStartTemplate,
+		TouchBarSlideshowTemplate,
+		TouchBarTagIconTemplate,
+		TouchBarTextBoldTemplate,
+		TouchBarTextBoxTemplate,
+		TouchBarTextCenterAlignTemplate,
+		TouchBarTextItalicTemplate,
+		TouchBarTextJustifiedAlignTemplate,
+		TouchBarTextLeftAlignTemplate,
+		TouchBarTextListTemplate,
+		TouchBarTextRightAlignTemplate,
+		TouchBarTextStrikethroughTemplate,
+		TouchBarTextUnderlineTemplate,
+		TouchBarUserAddTemplate,
+		TouchBarUserGroupTemplate,
+		TouchBarUserTemplate,
+		TouchBarVolumeDownTemplate,
+		TouchBarVolumeUpTemplate
 	}
 
 	public partial class NSImage {
@@ -196,6 +272,158 @@ namespace XamCore.AppKit {
 				return ImageNamed (NSImageNameMobileMe);
 			case NSImageName.ShareTemplate:
 				return ImageNamed (NSImageNameShareTemplate);
+			case NSImageName.TouchBarAddDetailTemplate:
+				return ImageNamed (NSImageNameTouchBarAddDetailTemplate);
+			case NSImageName.TouchBarAddTemplate:
+				return ImageNamed (NSImageNameTouchBarAddTemplate);
+			case NSImageName.TouchBarAlarmTemplate:
+				return ImageNamed (NSImageNameTouchBarAlarmTemplate);
+			case NSImageName.TouchBarAudioInputMuteTemplate:
+				return ImageNamed (NSImageNameTouchBarAudioInputMuteTemplate);
+			case NSImageName.TouchBarAudioInputTemplate:
+				return ImageNamed (NSImageNameTouchBarAudioInputTemplate);
+			case NSImageName.TouchBarAudioOutputMuteTemplate:
+				return ImageNamed (NSImageNameTouchBarAudioOutputMuteTemplate);
+			case NSImageName.TouchBarAudioOutputVolumeHighTemplate:
+				return ImageNamed (NSImageNameTouchBarAudioOutputVolumeHighTemplate);
+			case NSImageName.TouchBarAudioOutputVolumeLowTemplate:
+				return ImageNamed (NSImageNameTouchBarAudioOutputVolumeLowTemplate);
+			case NSImageName.TouchBarAudioOutputVolumeMediumTemplate:
+				return ImageNamed (NSImageNameTouchBarAudioOutputVolumeMediumTemplate);
+			case NSImageName.TouchBarAudioOutputVolumeOffTemplate:
+				return ImageNamed (NSImageNameTouchBarAudioOutputVolumeOffTemplate);
+			case NSImageName.TouchBarBookmarksTemplate:
+				return ImageNamed (NSImageNameTouchBarBookmarksTemplate);
+			case NSImageName.TouchBarColorPickerFill:
+				return ImageNamed (NSImageNameTouchBarColorPickerFill);
+			case NSImageName.TouchBarColorPickerFont:
+				return ImageNamed (NSImageNameTouchBarColorPickerFont);
+			case NSImageName.TouchBarColorPickerStroke:
+				return ImageNamed (NSImageNameTouchBarColorPickerStroke);
+			case NSImageName.TouchBarCommunicationAudioTemplate:
+				return ImageNamed (NSImageNameTouchBarCommunicationAudioTemplate);
+			case NSImageName.TouchBarCommunicationVideoTemplate:
+				return ImageNamed (NSImageNameTouchBarCommunicationVideoTemplate);
+			case NSImageName.TouchBarComposeTemplate:
+				return ImageNamed (NSImageNameTouchBarComposeTemplate);
+			case NSImageName.TouchBarDeleteTemplate:
+				return ImageNamed (NSImageNameTouchBarDeleteTemplate);
+			case NSImageName.TouchBarDownloadTemplate:
+				return ImageNamed (NSImageNameTouchBarDownloadTemplate);
+			case NSImageName.TouchBarEnterFullScreenTemplate:
+				return ImageNamed (NSImageNameTouchBarEnterFullScreenTemplate);
+			case NSImageName.TouchBarExitFullScreenTemplate:
+				return ImageNamed (NSImageNameTouchBarExitFullScreenTemplate);
+			case NSImageName.TouchBarFastForwardTemplate:
+				return ImageNamed (NSImageNameTouchBarFastForwardTemplate);
+			case NSImageName.TouchBarFolderCopyToTemplate:
+				return ImageNamed (NSImageNameTouchBarFolderCopyToTemplate);
+			case NSImageName.TouchBarFolderMoveToTemplate:
+				return ImageNamed (NSImageNameTouchBarFolderMoveToTemplate);
+			case NSImageName.TouchBarFolderTemplate:
+				return ImageNamed (NSImageNameTouchBarFolderTemplate);
+			case NSImageName.TouchBarGetInfoTemplate:
+				return ImageNamed (NSImageNameTouchBarGetInfoTemplate);
+			case NSImageName.TouchBarGoBackTemplate:
+				return ImageNamed (NSImageNameTouchBarGoBackTemplate);
+			case NSImageName.TouchBarGoDownTemplate:
+				return ImageNamed (NSImageNameTouchBarGoDownTemplate);
+			case NSImageName.TouchBarGoForwardTemplate:
+				return ImageNamed (NSImageNameTouchBarGoForwardTemplate);
+			case NSImageName.TouchBarGoUpTemplate:
+				return ImageNamed (NSImageNameTouchBarGoUpTemplate);
+			case NSImageName.TouchBarHistoryTemplate:
+				return ImageNamed (NSImageNameTouchBarHistoryTemplate);
+			case NSImageName.TouchBarIconViewTemplate:
+				return ImageNamed (NSImageNameTouchBarIconViewTemplate);
+			case NSImageName.TouchBarListViewTemplate:
+				return ImageNamed (NSImageNameTouchBarListViewTemplate);
+			case NSImageName.TouchBarMailTemplate:
+				return ImageNamed (NSImageNameTouchBarMailTemplate);
+			case NSImageName.TouchBarNewFolderTemplate:
+				return ImageNamed (NSImageNameTouchBarNewFolderTemplate);
+			case NSImageName.TouchBarNewMessageTemplate:
+				return ImageNamed (NSImageNameTouchBarNewMessageTemplate);
+			case NSImageName.TouchBarOpenInBrowserTemplate:
+				return ImageNamed (NSImageNameTouchBarOpenInBrowserTemplate);
+			case NSImageName.TouchBarPauseTemplate:
+				return ImageNamed (NSImageNameTouchBarPauseTemplate);
+			case NSImageName.TouchBarPlayheadTemplate:
+				return ImageNamed (NSImageNameTouchBarPlayheadTemplate);
+			case NSImageName.TouchBarPlayPauseTemplate:
+				return ImageNamed (NSImageNameTouchBarPlayPauseTemplate);
+			case NSImageName.TouchBarPlayTemplate:
+				return ImageNamed (NSImageNameTouchBarPlayTemplate);
+			case NSImageName.TouchBarQuickLookTemplate:
+				return ImageNamed (NSImageNameTouchBarQuickLookTemplate);
+			case NSImageName.TouchBarRecordStartTemplate:
+				return ImageNamed (NSImageNameTouchBarRecordStartTemplate);
+			case NSImageName.TouchBarRecordStopTemplate:
+				return ImageNamed (NSImageNameTouchBarRecordStopTemplate);
+			case NSImageName.TouchBarRefreshTemplate:
+				return ImageNamed (NSImageNameTouchBarRefreshTemplate);
+			case NSImageName.TouchBarRewindTemplate:
+				return ImageNamed (NSImageNameTouchBarRewindTemplate);
+			case NSImageName.TouchBarRotateLeftTemplate:
+				return ImageNamed (NSImageNameTouchBarRotateLeftTemplate);
+			case NSImageName.TouchBarRotateRightTemplate:
+				return ImageNamed (NSImageNameTouchBarRotateRightTemplate);
+			case NSImageName.TouchBarSearchTemplate:
+				return ImageNamed (NSImageNameTouchBarSearchTemplate);
+			case NSImageName.TouchBarShareTemplate:
+				return ImageNamed (NSImageNameTouchBarShareTemplate);
+			case NSImageName.TouchBarSidebarTemplate:
+				return ImageNamed (NSImageNameTouchBarSidebarTemplate);
+			case NSImageName.TouchBarSkipAhead15SecondsTemplate:
+				return ImageNamed (NSImageNameTouchBarSkipAhead15SecondsTemplate);
+			case NSImageName.TouchBarSkipAhead30SecondsTemplate:
+				return ImageNamed (NSImageNameTouchBarSkipAhead30SecondsTemplate);
+			case NSImageName.TouchBarSkipAheadTemplate:
+				return ImageNamed (NSImageNameTouchBarSkipAheadTemplate);
+			case NSImageName.TouchBarSkipBack15SecondsTemplate:
+				return ImageNamed (NSImageNameTouchBarSkipBack15SecondsTemplate);
+			case NSImageName.TouchBarSkipBack30SecondsTemplate:
+				return ImageNamed (NSImageNameTouchBarSkipBack30SecondsTemplate);
+			case NSImageName.TouchBarSkipBackTemplate:
+				return ImageNamed (NSImageNameTouchBarSkipBackTemplate);
+			case NSImageName.TouchBarSkipToEndTemplate:
+				return ImageNamed (NSImageNameTouchBarSkipToEndTemplate);
+			case NSImageName.TouchBarSkipToStartTemplate:
+				return ImageNamed (NSImageNameTouchBarSkipToStartTemplate);
+			case NSImageName.TouchBarSlideshowTemplate:
+				return ImageNamed (NSImageNameTouchBarSlideshowTemplate);
+			case NSImageName.TouchBarTagIconTemplate:
+				return ImageNamed (NSImageNameTouchBarTagIconTemplate);
+			case NSImageName.TouchBarTextBoldTemplate:
+				return ImageNamed (NSImageNameTouchBarTextBoldTemplate);
+			case NSImageName.TouchBarTextBoxTemplate:
+				return ImageNamed (NSImageNameTouchBarTextBoxTemplate);
+			case NSImageName.TouchBarTextCenterAlignTemplate:
+				return ImageNamed (NSImageNameTouchBarTextCenterAlignTemplate);
+			case NSImageName.TouchBarTextItalicTemplate:
+				return ImageNamed (NSImageNameTouchBarTextItalicTemplate);
+			case NSImageName.TouchBarTextJustifiedAlignTemplate:
+				return ImageNamed (NSImageNameTouchBarTextJustifiedAlignTemplate);
+			case NSImageName.TouchBarTextLeftAlignTemplate:
+				return ImageNamed (NSImageNameTouchBarTextLeftAlignTemplate);
+			case NSImageName.TouchBarTextListTemplate:
+				return ImageNamed (NSImageNameTouchBarTextListTemplate);
+			case NSImageName.TouchBarTextRightAlignTemplate:
+				return ImageNamed (NSImageNameTouchBarTextRightAlignTemplate);
+			case NSImageName.TouchBarTextStrikethroughTemplate:
+				return ImageNamed (NSImageNameTouchBarTextStrikethroughTemplate);
+			case NSImageName.TouchBarTextUnderlineTemplate:
+				return ImageNamed (NSImageNameTouchBarTextUnderlineTemplate);
+			case NSImageName.TouchBarUserAddTemplate:
+				return ImageNamed (NSImageNameTouchBarUserAddTemplate);
+			case NSImageName.TouchBarUserGroupTemplate:
+				return ImageNamed (NSImageNameTouchBarUserGroupTemplate);
+			case NSImageName.TouchBarUserTemplate:
+				return ImageNamed (NSImageNameTouchBarUserTemplate);
+			case NSImageName.TouchBarVolumeDownTemplate:
+				return ImageNamed (NSImageNameTouchBarVolumeDownTemplate);
+			case NSImageName.TouchBarVolumeUpTemplate:
+				return ImageNamed (NSImageNameTouchBarVolumeUpTemplate);
 			}
 
 			throw new ArgumentException ("Invalid enum value", "name");
