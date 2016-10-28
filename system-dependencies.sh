@@ -210,7 +210,15 @@ function install_specific_xcode () {
 	log "Downloading Xcode $XCODE_VERSION from $XCODE_URL to $PROVISION_DOWNLOAD_DIR..."
 	local XCODE_NAME=`basename $XCODE_URL`
 	local XCODE_DMG=$PROVISION_DOWNLOAD_DIR/$XCODE_NAME
-	curl -L $XCODE_URL > $XCODE_DMG
+
+	# To test this script with new Xcode versions, copy the downloaded file to $XCODE_DMG,
+	# uncomment the following curl line, and run ./system-dependencies.sh --provision-xcode
+	if test -f "~/Downloads/$XCODE_NAME"; then
+		log "Found XCode $XCODE_VERSION in your ~/Downloads folder, copying that version instead."
+		cp "~/Downloads/$XCODE_NAME" "$XCODE_DMG"
+	else
+		curl -L $XCODE_URL > $XCODE_DMG
+	fi
 
 	if [[ ${XCODE_DMG: -4} == ".dmg" ]]; then
 		local XCODE_MOUNTPOINT=$PROVISION_DOWNLOAD_DIR/$XCODE_NAME-mount
@@ -223,18 +231,16 @@ function install_specific_xcode () {
 		log "Unmounting $XCODE_DMG..."
 		hdiutil detach $XCODE_MOUNTPOINT -quiet
 	elif [[ ${XCODE_DMG: -4} == ".xip" ]]; then
-		mkdir $PROVISION_DOWNLOAD_DIR/$XCODE_NAME-decompressed
-		pushd .
-		cd $PROVISION_DOWNLOAD_DIR/$XCODE_NAME-decompressed
-		log "Decompressing $XCODE_DMG..."
-		xar -x -f $XCODE_DMG
 		log "Extracting $XCODE_DMG..."
-		# the cpio command spews a lot of "Can't create ..." errors, but they seem to be innocuous
-		gunzip < Content | cpio -i -d
+		pushd . > /dev/null
+		cd $PROVISION_DOWNLOAD_DIR
+		# make sure there's nothing interfering
+		rm -Rf *.app
+		# extract
+		/System/Library/CoreServices/Applications/Archive\ Utility.app/Contents/MacOS/Archive\ Utility "$XCODE_DMG"
 		log "Installing Xcode $XCODE_VERSION to $XCODE_ROOT..."
 		mv *.app $XCODE_ROOT
-		popd
-		rm -Rf $PROVISION_DOWNLOAD_DIR/$XCODE_NAME-decompressed
+		popd > /dev/null
 	else
 		fail "Don't know how to install $XCODE_DMG"
 	fi
@@ -246,6 +252,19 @@ function install_specific_xcode () {
 	if is_at_least_version $XCODE_VERSION 5.0; then
 		log "Accepting Xcode license"
 		sudo $XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild -license accept
+	fi
+
+	if is_at_least_version $XCODE_VERSION 8.0; then
+		PKGS="MobileDevice.pkg MobileDeviceDevelopment.pkg XcodeSystemResources.pkg"
+		for pkg in $PKGS; do
+			if test -f "$XCODE_DEVELOPER_ROOT/../Resources/Packages/$pkg"; then
+				log "Installing $pkg"
+				sudo /usr/sbin/installer -dumplog -verbose -pkg "$XCODE_DEVELOPER_ROOT/../Resources/Packages/$pkg" -target /
+				log "Installed $pkg"
+			else
+				log "Not installing $pkg because it doesn't exist."
+			fi
+		done
 	fi
 
 	log "Executing 'sudo xcode-select -s $XCODE_DEVELOPER_ROOT'"
