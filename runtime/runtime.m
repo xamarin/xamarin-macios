@@ -2367,6 +2367,31 @@ xamarin_get_is_debug ()
 	return xamarin_debug_mode;
 }
 
+bool
+xamarin_is_managed_exception_marshaling_disabled ()
+{
+#if DEBUG
+	if (xamarin_is_gc_coop)
+		return false;
+
+	switch (xamarin_marshal_managed_exception_mode) {
+	case MarshalManagedExceptionModeDefault:
+		// If all of the following are true:
+		// * In debug mode
+		// * Using the default exception marshaling mode
+		// * The debugger is attached
+		// Then disable managed exception marshaling.
+		return mono_is_debugger_attached ();
+	case MarshalManagedExceptionModeDisable:
+		return true;
+	default:
+		return false;
+	}
+#else
+	return false;
+#endif
+}
+
 /*
  * XamarinGCHandle
  */
