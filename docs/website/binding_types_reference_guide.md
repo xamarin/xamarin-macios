@@ -2103,10 +2103,10 @@ attributes.
 
 ## LinkWithAttribute
 
-This is an assembly-level attribute which is being introduced with Xamarin.iOS
-5.2 and allows developers to specify the linking flags required to reuse a bound
-library without forcing the consumer of the library to manually configure the
-gcc_flags and extra mtouch arguments passed to a library.
+This is an assembly-level attribute which allows developers to specify the
+linking flags required to reuse a bound library without forcing the consumer
+of the library to manually configure the gcc_flags and extra mtouch arguments
+passed to a library.
 
 Syntax:
 
