@@ -649,6 +649,34 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
+		[Test]
+		public void ExportedGenericsTest ()
+		{
+			using (var obj = new RegistrarTestClass ()) {
+				var rv = Runtime.GetNSObject<NSArray<NSString>> (Messaging.IntPtr_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("fetchNSArrayOfNSString:"), IntPtr.Zero));
+				Assert.IsNotNull (rv, "method");
+
+				using (var number_array = NSArray<NSNumber>.FromNSObjects ((NSNumber) 314)) {
+					rv = Runtime.GetNSObject<NSArray<NSString>> (Messaging.IntPtr_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("fetchNSArrayOfNSString:"), number_array.Handle));
+					Assert.IsNotNull (rv, "method param");
+				}
+
+				rv = Runtime.GetNSObject<NSArray<NSString>> (Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("nSArrayOfNSString")));
+				Assert.IsNotNull (rv, "property");
+
+				Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("setNSArrayOfNSString:"), IntPtr.Zero);
+				Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("setNSArrayOfNSString:"), rv.Handle);
+
+				var rv2 = Runtime.GetNSObject<NSArray<NSArray<NSString>>> (Messaging.IntPtr_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("fetchComplexGenericType:"), IntPtr.Zero));
+				Assert.IsNotNull (rv2, "complex");
+
+				using (var complex = new NSArray<NSDictionary<NSString, NSArray<NSNumber>>> ()) {
+					Runtime.GetNSObject<NSArray<NSArray<NSString>>> (Messaging.IntPtr_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("fetchComplexGenericType:"), complex.Handle));
+					Assert.IsNotNull (rv2, "complex param");
+				}
+			}
+		}
+
 		const string LIBOBJC_DYLIB = "/usr/lib/libobjc.dylib";
 		
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
@@ -948,6 +976,27 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			[Export ("arrayOfINativeObject")]
 			public IUIKeyInput[] NativeObjects { get { return null; } }
 #endif // !__WATCHOS__
+
+			[Export ("fetchNSArrayOfNSString:")]
+			NSArray<NSString> FetchNSArrayOfNSString (NSArray<NSNumber> p0)
+			{
+				return NSArray<NSString>.FromNSObjects ((NSString) "abc");
+			}
+
+			[Export ("fetchComplexGenericType:")]
+			NSArray<NSArray<NSString>> FetchComplexGenericType (NSArray<NSDictionary<NSString, NSArray<NSNumber>>> p0)
+			{
+				return new NSArray<NSArray<NSString>> ();
+			}
+
+			[Export ("nSArrayOfNSString")]
+			NSArray<NSString> NSArrayOfNSString {
+				get {
+					return new NSArray<NSString> ();
+				}
+				set {
+				}
+			}
 		}
 
 #if !__TVOS__ && !__WATCHOS__

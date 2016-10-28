@@ -1138,6 +1138,14 @@ Please use a valid Objective-C identifier as selectors.
 
 This error most likely indicates a bug in Xamarin.iOS. Please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
+<h3><a name="MT4166"/>MT4166: Cannot register the method '*' because the signature contains a type (*) that isn't a reference type.</h3>
+
+This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
+<h3><a name="MT4167"/>MT4167: Cannot register the method '*' because the signature contains a generic type (*) with a generic argument type that isn't an NSObject subclass (*).</h3>
+
+This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
 <!--
  MT5xxx GCC and toolchain
   MT51xx compilation
