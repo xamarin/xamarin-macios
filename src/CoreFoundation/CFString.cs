@@ -124,6 +124,11 @@ namespace XamCore.CoreFoundation {
 
 		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
 		extern static IntPtr CFStringGetCharacters (IntPtr handle, CFRange range, IntPtr buffer);
+
+		internal static IntPtr LowLevelCreate (string str)
+		{
+			return CFStringCreateWithCharacters (IntPtr.Zero, str, str.Length);
+		}
 		
 		public CFString (string str)
 		{
