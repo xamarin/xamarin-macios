@@ -2223,9 +2223,8 @@ namespace XamCore.Registrar {
 				if (!string.IsNullOrEmpty (single_assembly) && single_assembly != @class.Type.Module.Assembly.Name.Name)
 					continue;
 
-				var isPlatformType = IsPlatformType (@class.Type);
 #if !MONOMAC
-
+				var isPlatformType = IsPlatformType (@class.Type);
 				if (isPlatformType && IsSimulatorOrDesktop && IsMetalType (@class))
 					continue; // Metal isn't supported in the simulator.
 #else
