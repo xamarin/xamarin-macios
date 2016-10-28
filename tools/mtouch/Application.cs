@@ -781,8 +781,21 @@ namespace Xamarin.Bundler {
 			}
 
 			if (Frameworks.Count > 0) {
-				if (DeploymentTarget < new Version (8, 0))
-					throw ErrorHelper.CreateError (65, "Xamarin.iOS only supports embedded frameworks when deployment target is at least 8.0 (current deployment target: '{0}'; embedded frameworks: '{1}')", DeploymentTarget, string.Join (", ", Frameworks.ToArray ()));
+				switch (Platform) {
+				case ApplePlatform.iOS:
+					if (DeploymentTarget < new Version (8, 0))
+						throw ErrorHelper.CreateError (65, "Xamarin.iOS only supports embedded frameworks when deployment target is at least 8.0 (current deployment target: '{0}'; embedded frameworks: '{1}')", DeploymentTarget, string.Join (", ", Frameworks.ToArray ()));
+					break;
+				case ApplePlatform.WatchOS:
+					if (DeploymentTarget < new Version (2, 0))
+						throw ErrorHelper.CreateError (65, "Xamarin.iOS only supports embedded frameworks when deployment target is at least 2.0 (current deployment target: '{0}'; embedded frameworks: '{1}')", DeploymentTarget, string.Join (", ", Frameworks.ToArray ()));
+					break;
+				case ApplePlatform.TVOS:
+					// All versions of tvOS support extensions
+					break;
+				default:
+					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", Platform);
+				}
 			}
 
 			if (IsDeviceBuild) {
