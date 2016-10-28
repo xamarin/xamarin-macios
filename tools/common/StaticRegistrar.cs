@@ -827,8 +827,12 @@ namespace XamCore.Registrar {
 			return method.ReturnType;
 		}
 
+		TypeReference system_void;
 		protected override TypeReference GetSystemVoidType ()
 		{
+			if (system_void != null)
+				return system_void;
+			
 			// find corlib
 			AssemblyDefinition corlib = null;
 			AssemblyDefinition first = null;
@@ -847,7 +851,7 @@ namespace XamCore.Registrar {
 			}
 			foreach (var type in corlib.MainModule.Types) {
 				if (type.Namespace == "System" && type.Name == "Void")
-					return type;
+					return system_void = type;
 			}
 
 			throw ErrorHelper.CreateError (4165, "The registrar couldn't find the type 'System.Void' in any of the referenced assemblies.");
