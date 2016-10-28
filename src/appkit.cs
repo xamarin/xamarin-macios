@@ -904,22 +904,6 @@ namespace XamCore.AppKit {
 		void UserDidAcceptCloudKitShare (NSApplication application, CKShareMetadata metadata);
 #endif
 	}
-
-	[Mac (10, 12, 1)]
-	[Category]
-	[BaseType (typeof(NSApplication))]
-	interface NSApplication_NSTouchBarCustomization
-	{
-		[Export ("isAutomaticCustomizeTouchBarMenuItemEnabled")]
-		bool GetAutomaticCustomizeTouchBarMenuItemEnabled ();
-
-		[Export ("automaticCustomizeTouchBarMenuItemEnabled:")]
-		void SetAutomaticCustomizeTouchBarMenuItemEnabled (bool enabled);
-
-		[Export ("toggleTouchBarCustomizationPalette:")]
-		void ToggleTouchBarCustomizationPalette ([NullAllowed] NSObject sender);
-	}
-
 		
 	[BaseType (typeof (NSObjectController))]
 	interface NSArrayController {
@@ -12067,7 +12051,7 @@ namespace XamCore.AppKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	partial interface NSResponder : NSCoding, NSTouchBarProvider {
+	partial interface NSResponder : NSCoding {
 		[Export ("tryToPerform:with:")]
 		bool TryToPerformwith (Selector anAction, [NullAllowed] NSObject anObject);
 
@@ -12251,10 +12235,6 @@ namespace XamCore.AppKit {
 		[Sealed]
 		[Export ("presentError:modalForWindow:delegate:didPresentSelector:contextInfo:")]
 		void PresentError (NSError error, NSWindow window, [NullAllowed] NSObject @delegate, [NullAllowed] Selector didPresentSelector, IntPtr contextInfo);
-
-		[Mac (10, 12, 1)]
-		[NullAllowed, Export ("makeTouchBar")]
-		NSTouchBar MakeTouchBar ();
 	}
 
 	[Mac (10,10)]
@@ -14995,7 +14975,6 @@ namespace XamCore.AppKit {
 		[Export ("needsDisplay")]
 		bool NeedsDisplay { get; set; }
 
-		[Deprecated (PlatformName.MacOSX, 10, 12, 1)]
 		[Export ("acceptsTouchEvents")]
 		bool AcceptsTouchEvents { get; set; }
 
@@ -15498,19 +15477,7 @@ namespace XamCore.AppKit {
 		[Field ("NSViewAnimationFadeOutEffect")]
 		NSString FadeOutEffect { get; }
 	}
-
-	[Category]
-	[BaseType (typeof(NSView))]
-	interface NSView_NSTouchBar
-	{
-		// @property NSTouchTypeMask allowedTouchTypes __attribute__((availability(macos, introduced=10_12_1)));
-		[Mac (10, 12, 1)]
-		[Export ("allowedTouchTypes", ArgumentSemantic.Assign)]
-		NSTouchTypeMask GetAllowedTouchTypes ();
-
-		[Export ("setAllowedTouchTypes:", ArgumentSemantic.Assign)]
-		void SetAllowedTouchTypes (NSTouchTypeMask touchTypes);
-	}
+	
 
 	[BaseType (typeof (NSResponder))]
 	interface NSViewController : NSUserInterfaceItemIdentification, NSCoding, NSSeguePerforming
@@ -17313,26 +17280,15 @@ namespace XamCore.AppKit {
 		[Static]
 		[Export ("textFieldWithString:")]
 		NSTextField CreateTextField ([NullAllowed] string stringValue);
-	}
 
-	[Mac (10, 12, 1)]
-	[Category]
-	[BaseType (typeof(NSTextField))]
-	interface NSTextField_NSTouchBar
-	{
-		[Export ("isAutomaticTextCompletionEnabled")]
-		bool GetAutomaticTextCompletionEnabled ();
+		[Mac (10, 12, 1)]
+		[Export ("automaticTextCompletionEnabled")]
+		bool AutomaticTextCompletionEnabled { [Bind ("isAutomaticTextCompletionEnabled")] get; set; }
 
-		[Export ("automaticTextCompletionEnabled:")]
-		void SetAutomaticTextCompletionEnabled (bool enabled);
-
+		[Mac (10, 12, 1)]
 		[Export ("allowsCharacterPickerTouchBarItem")]
-		bool GetAllowsCharacterPickerTouchBarItem ();
-
-		[Export ("setAllowsCharacterPickerTouchBarItem:")]
-		void SetAllowsCharacterPickerTouchBarItem (bool allows);
+		bool AllowsCharacterPickerTouchBarItem { get; set; }
 	}
-
 
 	[BaseType (typeof (NSTextField))]
 	interface NSSecureTextField {
@@ -17376,16 +17332,16 @@ namespace XamCore.AppKit {
 		[Export ("controlTextDidBeginEditing:"), EventArgs ("NSNotification")]
 		void EditingBegan (NSNotification notification);
 
-		// Review
-		[Mac (10,12,1)]
-		[Export ("textField:textView:candidatesForSelectedRange:"), DelegateName ("NSTextFieldGetCandidates"), DefaultValue (null)]
-		[return: NullAllowed]
-		NSObject[] GetCandidates (NSTextField textField, NSTextView textView, NSRange selectedRange);
+		//TODO: Unknown array return type.  How to name?
+		//[Mac (10,12,1)]
+		//[Export ("textField:textView:candidatesForSelectedRange:")]
+		//[return: NullAllowed]
+		//NSObject[] GetCandidates (NSTextField textField, NSTextView textView, NSRange selectedRange);
 
-		// Review
-		[Mac (10,12,1)]
-		[Export ("textField:textView:candidates:forSelectedRange:"), DelegateName ("NSTextFieldTextCheckingResults"), DefaultValue (null)]
-		NSTextCheckingResult[] GetTextCheckingResults (NSTextField textField, NSTextView textView, NSTextCheckingResult[] candidates, NSRange selectedRange);
+		////TODO: How to name?
+		//[Mac (10,12,1)]
+		//[Export ("textField:textView:candidates:forSelectedRange:")]
+		//NSTextCheckingResult[] GetResults (NSTextField textField, NSTextView textView, NSTextCheckingResult[] candidates, NSRange selectedRange);
 
 		// @optional -(BOOL)textField:(NSTextField * _Nonnull)textField textView:(NSTextView * _Nonnull)textView shouldSelectCandidateAtIndex:(NSUInteger)index __attribute__((availability(macos, introduced=10_12_1)));
 		[Mac (10,12,1)]
@@ -17738,7 +17694,7 @@ namespace XamCore.AppKit {
 	}
 
 	[BaseType (typeof (NSText), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTextViewDelegate)})]
-	partial interface NSTextView : NSTextInputClient, NSDraggingSource, NSTextFinderClient, NSAccessibilityNavigableStaticText, NSCandidateListTouchBarItemDelegate, NSTouchBarDelegate {
+	partial interface NSTextView : NSTextInputClient, NSDraggingSource, NSTextFinderClient, NSAccessibilityNavigableStaticText {
 		[Export ("initWithFrame:textContainer:")]
 		IntPtr Constructor (CGRect frameRect, NSTextContainer container);
 
@@ -18229,7 +18185,7 @@ namespace XamCore.AppKit {
 		[Export ("automaticTextCompletionEnabled")]
 		bool AutomaticTextCompletionEnabled { [Bind ("isAutomaticTextCompletionEnabled")] get; set; }
 
-		[Mac (10, 12, 1)]
+		[Mac (10,12,1)]
 		[Export ("toggleAutomaticTextCompletion:")]
 		void ToggleAutomaticTextCompletion ([NullAllowed] NSObject sender);
 
@@ -18237,21 +18193,22 @@ namespace XamCore.AppKit {
 		[Export ("allowsCharacterPickerTouchBarItem")]
 		bool AllowsCharacterPickerTouchBarItem { get; set; }
 
-		[Mac (10, 12, 1)]
+		[Mac (10,12,1)]
 		[Export ("updateTouchBarItemIdentifiers")]
 		void UpdateTouchBarItemIdentifiers ();
 
-		[Mac (10, 12, 1)]
+		[Mac (10,12,1)]
 		[Export ("updateTextTouchBarItems")]
 		void UpdateTextTouchBarItems ();
 
-		[Mac (10, 12, 1)]
+		[Mac (10,12,1)]
 		[Export ("updateCandidates")]
 		void UpdateCandidates ();
 
-		[Mac (10, 12, 1)]
-		[NullAllowed, Export ("candidateListTouchBarItem", ArgumentSemantic.Strong)]
-		NSCandidateListTouchBarItem CandidateListTouchBarItem { get; }
+		//TODO: Needs NSCandidateListTouchBarItem bound
+		//[Mac (10, 12, 1)]
+		//[NullAllowed, Export ("candidateListTouchBarItem", ArgumentSemantic.Strong)]
+		//NSCandidateListTouchBarItem GetCandidateListTouchBarItem { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -18377,16 +18334,17 @@ namespace XamCore.AppKit {
 		[Export ("textView:shouldUpdateTouchBarItemIdentifiers:"), DelegateName ("NSTextViewUpdateTouchBarItemIdentifiers"), DefaultValue (null)]
 		string[] ShouldUpdateTouchBarItemIdentifiers (NSTextView textView, string[] identifiers);
 
-		//Review
-		[Mac (10,12,1)]
-		[Export ("textView:candidatesForSelectedRange:"), DelegateName ("NSTextViewGetCandidates"), DefaultValue (null)]
-		[return: NullAllowed]
-		NSObject[] GetCandidates (NSTextView textView, NSRange selectedRange);
+		//TODO: Unknown array return type.  How to name?
+		//[Mac (10,12,1)]
+		//[Export ("textView:candidatesForSelectedRange:")]
+		////[Verify (StronglyTypedNSArray)]
+		//[return: NullAllowed]
+		//NSObject[] GetCandidates (NSTextView textView, NSRange selectedRange);
 
-		//Review
-		[Mac (10,12,1)]
-		[Export ("textView:candidates:forSelectedRange:"), DelegateName ("NSTextViewTextCheckingResults"), DefaultValue (null)]
-		NSTextCheckingResult[] GetTextCheckingCandidates (NSTextView textView, NSTextCheckingResult[] candidates, NSRange selectedRange);
+		//TODO: How to name?
+		//[Mac (10,12,1)]
+		//[Export ("textView:candidates:forSelectedRange:")]
+		//NSTextCheckingResult[] GetCandidates (NSTextView textView, NSTextCheckingResult[] candidates, NSRange selectedRange);
 
 		[Mac (10,12,1)]
 		[Export ("textView:shouldSelectCandidateAtIndex:"), DelegateName ("NSTextViewSelectCandidate"), DefaultValue (false)]
@@ -18667,21 +18625,6 @@ namespace XamCore.AppKit {
 		CGSize DeviceSize { get; }
 	}
 
-	[Mac (10, 12, 1)]
-	[Category]
-	[BaseType (typeof(NSTouch))]
-	interface NSTouch_NSTouchBar
-	{
-		[Export ("type")]
-		NSTouchType GetType ();
-
-		[Export ("locationInView:")]
-		CGPoint GetLocation ([NullAllowed] NSView view);
-
-		[Export ("previousLocationInView:")]
-		CGPoint GetPreviousLocation ([NullAllowed] NSView view);
-	}
-
 	[Mac (10,12,1)]
 	[BaseType (typeof(NSObject), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTouchBarDelegate)})]
 	interface NSTouchBar : NSCoding
@@ -18761,52 +18704,6 @@ namespace XamCore.AppKit {
 		[Export ("visible")]
 		bool Visible { [Bind ("isVisible")] get; }
 	}
-
-	[Mac (10,12,1)]
-	interface NSTouchBarItemIdentifier
-	{
-		[Field ("NSTouchBarItemIdentifierFixedSpaceSmall")]
-		NSString FixedSpaceSmall { get; }
-
-		[Field ("NSTouchBarItemIdentifierFixedSpaceLarge")]
-		NSString FixedSpaceLarge { get; }
-
-		[Field ("NSTouchBarItemIdentifierFlexibleSpace")]
-		NSString FlexibleSpace { get; }
-
-		[Field ("NSTouchBarItemIdentifierOtherItemsProxy")]
-		NSString OtherItemsProxy { get; }
-
-		[Field ("NSTouchBarItemIdentifierCharacterPicker")]
-		NSString CharacterPicker { get; }
-
-		[Field ("NSTouchBarItemIdentifierTextColorPicker")]
-		NSString TextColorPicker { get; }
-
-		[Field ("NSTouchBarItemIdentifierTextStyle")]
-		NSString TextStyle { get; }
-
-		[Field ("NSTouchBarItemIdentifierTextAlignment")]
-		NSString TextAlignment { get; }
-
-		[Field ("NSTouchBarItemIdentifierTextList")]
-		NSString TextList { get; }
-
-		[Field ("NSTouchBarItemIdentifierTextFormat")]
-		NSString TextFormat { get; }
-	}
-
-	[Mac (10, 12, 1)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
-	interface NSTouchBarProvider
-	{
-		[Abstract]
-		[NullAllowed, Export ("touchBar", ArgumentSemantic.Strong)]
-		NSTouchBar TouchBar { get; }
-	}
-
-	interface INSTouchBarProvider { }
 
 	[BaseType (typeof (NSObject))]
 	interface NSTrackingArea : NSCoding, NSCopying {
@@ -24355,12 +24252,8 @@ namespace XamCore.AppKit {
 	[BaseType (typeof(NSTouchBarItem))]
 	interface NSCandidateListTouchBarItem
 	{
-		[Export ("initWithIdentifier:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (string identifier);
-
 		[NullAllowed, Export ("client", ArgumentSemantic.Weak)]
-		INSTextInputClient Client { get; set; }
+		NSTextInputClient Client { get; set; }
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		INSCandidateListTouchBarItemDelegate Delegate { get; set; }
@@ -24427,10 +24320,6 @@ namespace XamCore.AppKit {
 	[BaseType (typeof(NSTouchBarItem))]
 	interface NSColorPickerTouchBarItem
 	{
-		[Export ("initWithIdentifier:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (string identifier);
-
 		[Static]
 		[Export ("colorPickerWithIdentifier:")]
 		NSColorPickerTouchBarItem CreateColorPicker(string identifier);
@@ -24474,10 +24363,6 @@ namespace XamCore.AppKit {
 	[BaseType (typeof(NSTouchBarItem))]
 	interface NSCustomTouchBarItem
 	{
-		[Export ("initWithIdentifier:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (string identifier);
-
 		[Export ("view", ArgumentSemantic.Strong)]
 		NSView View { get; set; }
 
@@ -24506,10 +24391,6 @@ namespace XamCore.AppKit {
 	[BaseType (typeof(NSTouchBarItem))]
 	interface NSGroupTouchBarItem
 	{
-		[Export ("initWithIdentifier:")]
-		[DesignatedInitializer]
-		IntPtr Constructor (string identifier);
-
 		[Static]
 		[Export ("groupItemWithIdentifier:items:")]
 		NSGroupTouchBarItem CreateGroupItem (string identifier, NSTouchBarItem[] items);
@@ -24519,5 +24400,409 @@ namespace XamCore.AppKit {
 
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSTouchBarItem))]
+	interface NSPopoverTouchBarItem
+	{
+		[Export ("popoverTouchBar", ArgumentSemantic.Strong)]
+		NSTouchBar PopoverTouchBar { get; set; }
+
+		[Export ("customizationLabel")]
+		string CustomizationLabel { get; set; }
+
+		[Export ("collapsedRepresentation", ArgumentSemantic.Strong)]
+		NSView CollapsedRepresentation { get; set; }
+
+		[NullAllowed, Export ("collapsedRepresentationImage", ArgumentSemantic.Strong)]
+		NSImage CollapsedRepresentationImage { get; set; }
+
+		[Export ("collapsedRepresentationLabel", ArgumentSemantic.Strong)]
+		string CollapsedRepresentationLabel { get; set; }
+
+		[NullAllowed, Export ("pressAndHoldTouchBar", ArgumentSemantic.Strong)]
+		NSTouchBar PressAndHoldTouchBar { get; set; }
+
+		[Export ("showsCloseButton")]
+		bool ShowsCloseButton { get; set; }
+
+		[Export ("showPopover:")]
+		void ShowPopover ([NullAllowed] NSObject sender);
+
+		[Export ("dismissPopover:")]
+		void DismissPopover ([NullAllowed] NSObject sender);
+
+		[Export ("makeStandardActivatePopoverGestureRecognizer")]
+		NSGestureRecognizer MakeStandardActivatePopoverGestureRecognizer ();
+	}
+	
+	interface INSScrubberDataSource {}
+	interface INSScrubberDelegate {}
+
+	[Protocol]
+	interface NSScrubberDataSource
+	{
+		[Mac (10,12,1)]
+		[Abstract]
+		[Export ("numberOfItemsForScrubber:")]
+		nint NumberOfItems (NSScrubber scrubber);
+
+		[Mac (10,12,1)]
+		[Abstract]
+		[Export ("scrubber:viewForItemAtIndex:")]
+		NSScrubberItemView GetViewForItem (NSScrubber scrubber, nint index);
+	}
+
+	[Protocol]
+	interface NSScrubberDelegate
+	{
+		[Mac (10,12,1)]
+		[Export ("scrubber:didSelectItemAtIndex:")]
+		void DidSelectItem (NSScrubber scrubber, nint selectedIndex);
+
+		[Mac (10,12,1)]
+		[Export ("scrubber:didHighlightItemAtIndex:")]
+		void DidHighlightItem (NSScrubber scrubber, nint highlightedIndex);
+
+		// Review - right?
+		[Mac (10,12,1)]
+		[Export ("scrubber:didChangeVisibleRange:")]
+		void DidChange (NSScrubber scrubber, NSRange visibleRange);
+
+		[Mac (10,12,1)]
+		[Export ("didBeginInteractingWithScrubber:")]
+		void DidBeginInteracting (NSScrubber scrubber);
+
+		[Mac (10,12,1)]
+		[Export ("didFinishInteractingWithScrubber:")]
+		void DidFinishInteracting (NSScrubber scrubber);
+
+		[Mac (10,12,1)]
+		[Export ("didCancelInteractingWithScrubber:")]
+		void DidCancelInteracting (NSScrubber scrubber);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSObject))]
+	interface NSScrubberSelectionStyle : NSCoding
+	{
+		[Static]
+		[Export ("outlineOverlayStyle", ArgumentSemantic.Strong)]
+		NSScrubberSelectionStyle OutlineOverlayStyle { get; }
+
+		[Static]
+		[Export ("roundedBackgroundStyle", ArgumentSemantic.Strong)]
+		NSScrubberSelectionStyle RoundedBackgroundStyle { get; }
+
+		[Export ("makeSelectionView")]
+		NSScrubberSelectionView MakeSelectionView ();
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSView))]
+	interface NSScrubber
+	{
+		[NullAllowed, Export ("dataSource", ArgumentSemantic.Weak)]
+		INSScrubberDataSource DataSource { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		INSScrubberDelegate Delegate { get; set; }
+
+		[Export ("scrubberLayout", ArgumentSemantic.Strong)]
+		NSScrubberLayout ScrubberLayout { get; set; }
+
+		[Export ("numberOfItems")]
+		nint NumberOfItems { get; }
+
+		[Export ("highlightedIndex")]
+		nint HighlightedIndex { get; }
+
+		[Export ("selectedIndex")]
+		nint SelectedIndex { get; set; }
+
+		[Export ("mode", ArgumentSemantic.Assign)]
+		NSScrubberMode Mode { get; set; }
+
+		[Export ("itemAlignment", ArgumentSemantic.Assign)]
+		NSScrubberAlignment ItemAlignment { get; set; }
+
+		[Export ("continuous")]
+		bool Continuous { [Bind ("isContinuous")] get; set; }
+
+		[Export ("floatsSelectionViews")]
+		bool FloatsSelectionViews { get; set; }
+
+		[NullAllowed, Export ("selectionBackgroundStyle", ArgumentSemantic.Strong)]
+		NSScrubberSelectionStyle SelectionBackgroundStyle { get; set; }
+
+		[NullAllowed, Export ("selectionOverlayStyle", ArgumentSemantic.Strong)]
+		NSScrubberSelectionStyle SelectionOverlayStyle { get; set; }
+
+		[Export ("showsArrowButtons")]
+		bool ShowsArrowButtons { get; set; }
+
+		[Export ("showsAdditionalContentIndicators")]
+		bool ShowsAdditionalContentIndicators { get; set; }
+
+		[NullAllowed, Export ("backgroundColor", ArgumentSemantic.Copy)]
+		NSColor BackgroundColor { get; set; }
+
+		[NullAllowed, Export ("backgroundView", ArgumentSemantic.Strong)]
+		NSView BackgroundView { get; set; }
+
+		[Export ("initWithFrame:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (CGRect frameRect);
+
+		[Export ("reloadData")]
+		void ReloadData ();
+
+		[Export ("performSequentialBatchUpdates:")]
+		void PerformSequentialBatchUpdates (Action updateBlock);
+
+		[Export ("insertItemsAtIndexes:")]
+		void InsertItemsAtIndexes (NSIndexSet indexes);
+
+		[Export ("removeItemsAtIndexes:")]
+		void RemoveItemsAtIndexes (NSIndexSet indexes);
+
+		[Export ("reloadItemsAtIndexes:")]
+		void ReloadItemsAtIndexes (NSIndexSet indexes);
+
+		[Export ("moveItemAtIndex:toIndex:")]
+		void MoveItemAtIndex (nint oldIndex, nint newIndex);
+
+		[Export ("scrollItemAtIndex:toAlignment:")]
+		void ScrollItemAtIndex (nint index, NSScrubberAlignment alignment);
+
+		[Export ("itemViewForItemAtIndex:")]
+		NSScrubberItemView GetItemViewForItemAtIndex (nint index);
+
+		[Export ("registerClass:forItemIdentifier:")]
+		void RegisterClass ([NullAllowed] Class itemViewClass, string itemIdentifier);
+
+		[Export ("registerNib:forItemIdentifier:")]
+		void RegisterNib ([NullAllowed] NSNib nib, string itemIdentifier);
+
+		[Export ("makeItemWithIdentifier:owner:")]
+		NSScrubberItemView MakeItemWithIdentifier (string itemIdentifier, [NullAllowed] NSObject owner);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSView))]
+	interface NSScrubberArrangedView
+	{
+		[Export ("selected")]
+		bool Selected { [Bind ("isSelected")] get; set; }
+
+		[Export ("highlighted")]
+		bool Highlighted { [Bind ("isHighlighted")] get; set; }
+
+		[Export ("applyLayoutAttributes:")]
+		//[RequiresSuper] - Review - Sharpie put here?
+		void ApplyLayoutAttributes (NSScrubberLayoutAttributes layoutAttributes);
+	}
+
+	// These are empty but types used in other bindings
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSScrubberArrangedView))]
+	interface NSScrubberItemView
+	{
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSScrubberArrangedView))]
+	interface NSScrubberSelectionView
+	{
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSScrubberItemView))]
+	interface NSScrubberTextItemView
+	{
+		[Export ("textField", ArgumentSemantic.Strong)]
+		NSTextField TextField { get; }
+
+		[Export ("title")]
+		string Title { get; set; }
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSScrubberItemView))]
+	interface NSScrubberImageItemView
+	{
+		[Export ("imageView", ArgumentSemantic.Strong)]
+		NSImageView ImageView { get; }
+
+		[Export ("image", ArgumentSemantic.Copy)]
+		NSImage Image { get; set; }
+
+		[Export ("imageAlignment", ArgumentSemantic.Assign)]
+		NSImageAlignment ImageAlignment { get; set; }
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSObject))]
+	interface NSScrubberLayoutAttributes : NSCopying
+	{
+		[Export ("itemIndex")]
+		nint ItemIndex { get; set; }
+
+		[Export ("frame", ArgumentSemantic.Assign)]
+		CGRect Frame { get; set; }
+
+		[Export ("alpha")]
+		nfloat Alpha { get; set; }
+
+		[Static]
+		[Export ("layoutAttributesForItemAtIndex:")]
+		NSScrubberLayoutAttributes CreateLayoutAttributesForItemAtIndex (nint index);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSObject))]
+	interface NSScrubberLayout : NSCoding
+	{
+		[Static]
+		[Export ("layoutAttributesClass")]
+		Class LayoutAttributesClass { get; }
+
+		[NullAllowed, Export ("scrubber", ArgumentSemantic.Weak)]
+		NSScrubber Scrubber { get; }
+
+		[Export ("visibleRect")]
+		CGRect VisibleRect { get; }
+
+		[Export ("invalidateLayout")]
+		//[RequiresSuper] - Review - Sharpie put here?
+		void InvalidateLayout ();
+
+		[Export ("prepareLayout")]
+		void PrepareLayout ();
+
+		[Export ("scrubberContentSize")]
+		CGSize ScrubberContentSize { get; }
+
+		[Export ("layoutAttributesForItemAtIndex:")]
+		NSScrubberLayoutAttributes LayoutAttributesForItemAtIndex (nint index);
+
+		[Export ("layoutAttributesForItemsInRect:")]
+		NSSet<NSScrubberLayoutAttributes> LayoutAttributesForItemsInRect (CGRect rect);
+
+		[Export ("shouldInvalidateLayoutForSelectionChange")]
+		bool ShouldInvalidateLayoutForSelectionChange ();
+
+		[Export ("shouldInvalidateLayoutForHighlightChange")]
+		bool ShouldInvalidateLayoutForHighlightChange ();
+
+		[Export ("shouldInvalidateLayoutForChangeFromVisibleRect:toVisibleRect:")]
+		bool ShouldInvalidateLayoutForChangeFromVisibleRect (CGRect fromVisibleRect, CGRect toVisibleRect);
+
+		[Export ("automaticallyMirrorsInRightToLeftLayout")]
+		bool AutomaticallyMirrorsInRightToLeftLayout { get; }
+	}
+
+	[Protocol]
+	interface NSScrubberFlowLayoutDelegate : NSScrubberDelegate
+	{
+		[Export ("scrubber:layout:sizeForItemAtIndex:")]
+		CGSize Layout (NSScrubber scrubber, NSScrubberFlowLayout layout, nint itemIndex);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSScrubberLayout))]
+	interface NSScrubberFlowLayout
+	{
+		[Export ("itemSpacing")]
+		nfloat ItemSpacing { get; set; }
+
+		[Export ("itemSize", ArgumentSemantic.Assign)]
+		CGSize ItemSize { get; set; }
+
+		[Export ("invalidateLayoutForItemsAtIndexes:")]
+		void InvalidateLayoutForItemsAtIndexes (NSIndexSet invalidItemIndexes);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSScrubberLayout))]
+	interface NSScrubberProportionalLayout
+	{
+		[Export ("numberOfVisibleItems")]
+		nint NumberOfVisibleItems { get; set; }
+
+		[Export ("initWithNumberOfVisibleItems:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (nint numberOfVisibleItems);
+	}
+
+	public interface INSSharingServicePickerTouchBarItemDelegate {}
+
+	[Protocol]
+	interface NSSharingServicePickerTouchBarItemDelegate : NSSharingServicePickerDelegate
+	{
+		[Abstract]
+		[Export ("itemsForSharingServicePickerTouchBarItem:")]
+		INSPasteboardWriting [] ItemsForSharingServicePickerTouchBarItem (NSSharingServicePickerTouchBarItem pickerTouchBarItem);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSTouchBarItem))]
+	interface NSSharingServicePickerTouchBarItem
+	{
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		INSSharingServicePickerTouchBarItemDelegate Delegate { get; set; }
+
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+
+		[Export ("buttonTitle")]
+		string ButtonTitle { get; set; }
+
+		[NullAllowed, Export ("buttonImage", ArgumentSemantic.Retain)]
+		NSImage ButtonImage { get; set; }
+	}
+
+	[Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	interface NSSliderAccessory : NSCoding, NSAccessibility, NSAccessibilityElement
+	{
+		[Static]
+		[Export ("accessoryWithImage:")]
+		NSSliderAccessory CreateAccessoryWithImage (NSImage image);
+
+		[Export ("behavior", ArgumentSemantic.Copy)]
+		NSSliderAccessoryBehavior Behavior { get; set; }
+
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+	}
+
+	[Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	interface NSSliderAccessoryBehavior : NSCoding, NSCopying
+	{
+		[Static]
+		[Export ("automaticBehavior", ArgumentSemantic.Copy)]
+		NSSliderAccessoryBehavior AutomaticBehavior { get; }
+
+		[Static]
+		[Export ("valueStepBehavior", ArgumentSemantic.Copy)]
+		NSSliderAccessoryBehavior ValueStepBehavior { get; }
+
+		[Static]
+		[Export ("valueResetBehavior", ArgumentSemantic.Copy)]
+		NSSliderAccessoryBehavior ValueResetBehavior { get; }
+
+		[Static]
+		[Export ("behaviorWithTarget:action:")]
+		NSSliderAccessoryBehavior CreateBehavior ([NullAllowed] NSObject target, Selector action);
+
+		[Static]
+		[Export ("behaviorWithHandler:")]
+		NSSliderAccessoryBehavior CreateBehavior (Action<NSSliderAccessory> handler);
+
+		[Export ("handleAction:")]
+		void HandleAction (NSSliderAccessory sender);
 	}
 }
