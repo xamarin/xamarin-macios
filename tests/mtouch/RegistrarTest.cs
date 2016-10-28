@@ -8,7 +8,7 @@ using Xamarin.Tests;
 
 using NUnit.Framework;
 
-namespace MTouchTests
+namespace Xamarin
 {
 	[TestFixture]
 	public class Registrar

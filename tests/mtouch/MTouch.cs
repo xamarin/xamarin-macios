@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-using MTouchTests;
+using Xamarin;
 using Xamarin.Tests;
 
 using NUnit.Framework;
@@ -22,7 +22,7 @@ namespace Xamarin.Tests {
 	}
 }
 
-namespace MTouchTests
+namespace Xamarin
 {
 	[TestFixture]
 	public class MTouch

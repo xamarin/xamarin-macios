@@ -7,7 +7,7 @@ using System.Xml;
 
 using Xamarin.Tests;
 
-namespace MTouchTests
+namespace Xamarin
 {
 	public enum MTouchAction
 	{
