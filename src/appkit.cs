@@ -12999,6 +12999,10 @@ namespace XamCore.AppKit {
 		[Internal]
 		[Export ("segmentedControlWithImages:trackingMode:target:action:")]
 		NSSegmentedControl _FromImages (NSImage[] images, NSSegmentSwitchTracking trackingMode, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Mac (10, 12, 1)]
+		[NullAllowed, Export ("selectedSegmentBezelColor", ArgumentSemantic.Copy)]
+		NSColor SelectedSegmentBezelColor { get; set; }
 	}
 	
 	[BaseType (typeof (NSActionCell))]
@@ -13178,6 +13182,10 @@ namespace XamCore.AppKit {
 		[Internal]
 		[Export ("sliderWithValue:minValue:maxValue:target:action:")]
 		NSSlider _FromValue (double value, double minValue, double maxValue, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Mac (10, 12, 1)]
+		[NullAllowed, Export ("trackFillColor", ArgumentSemantic.Copy)]
+		NSColor TrackFillColor { get; set; }
 	}
 	
 	[BaseType (typeof (NSActionCell))]
@@ -20841,7 +20849,9 @@ namespace XamCore.AppKit {
 		[Export ("showRelativeToRect:ofView:preferredEdge:")]
 		void ShowRelativeToRect (CGRect rect, NSView view, NSRectEdge preferredEdge);
 	}
-	
+
+	interface INSSharingServicePickerDelegate {}
+
 	[MountainLion]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -22062,6 +22072,9 @@ namespace XamCore.AppKit {
 		[Notification, Field ("NSImageRepRegistryDidChangeNotification")]
 		NSString RegistryDidChangeNotification { get; }
 	}
+
+	interface INSAccessibility {};
+	interface INSAccessibilityElement {};
 
 	[Mac (10,10)]
 	[Protocol]
@@ -24472,7 +24485,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12,1)]
 	[BaseType (typeof(NSObject))]
-	interface NSScrubberSelectionStyle : INSCoding
+	interface NSScrubberSelectionStyle : NSCoding
 	{
 		[Static]
 		[Export ("outlineOverlayStyle", ArgumentSemantic.Strong)]
@@ -24631,7 +24644,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12,1)]
 	[BaseType (typeof(NSObject))]
-	interface NSScrubberLayoutAttributes : INSCopying
+	interface NSScrubberLayoutAttributes : NSCopying
 	{
 		[Export ("itemIndex")]
 		nint ItemIndex { get; set; }
@@ -24649,7 +24662,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12,1)]
 	[BaseType (typeof(NSObject))]
-	interface NSScrubberLayout : INSCoding
+	interface NSScrubberLayout : NSCoding
 	{
 		[Static]
 		[Export ("layoutAttributesClass")]
@@ -24721,5 +24734,75 @@ namespace XamCore.AppKit {
 		[Export ("initWithNumberOfVisibleItems:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (nint numberOfVisibleItems);
+	}
+
+	public interface INSSharingServicePickerTouchBarItemDelegate {}
+
+	[Protocol]
+	interface NSSharingServicePickerTouchBarItemDelegate : NSSharingServicePickerDelegate
+	{
+		[Abstract]
+		[Export ("itemsForSharingServicePickerTouchBarItem:")]
+		INSPasteboardWriting [] ItemsForSharingServicePickerTouchBarItem (NSSharingServicePickerTouchBarItem pickerTouchBarItem);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSTouchBarItem))]
+	interface NSSharingServicePickerTouchBarItem
+	{
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		INSSharingServicePickerTouchBarItemDelegate Delegate { get; set; }
+
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+
+		[Export ("buttonTitle")]
+		string ButtonTitle { get; set; }
+
+		[NullAllowed, Export ("buttonImage", ArgumentSemantic.Retain)]
+		NSImage ButtonImage { get; set; }
+	}
+
+	[Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	interface NSSliderAccessory : NSCoding, INSAccessibility, INSAccessibilityElement
+	{
+		[Static]
+		[Export ("accessoryWithImage:")]
+		NSSliderAccessory CreateAccessoryWithImage (NSImage image);
+
+		[Export ("behavior", ArgumentSemantic.Copy)]
+		NSSliderAccessoryBehavior Behavior { get; set; }
+
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+	}
+
+	[Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	interface NSSliderAccessoryBehavior : NSCoding, NSCopying
+	{
+		[Static]
+		[Export ("automaticBehavior", ArgumentSemantic.Copy)]
+		NSSliderAccessoryBehavior AutomaticBehavior { get; }
+
+		[Static]
+		[Export ("valueStepBehavior", ArgumentSemantic.Copy)]
+		NSSliderAccessoryBehavior ValueStepBehavior { get; }
+
+		[Static]
+		[Export ("valueResetBehavior", ArgumentSemantic.Copy)]
+		NSSliderAccessoryBehavior ValueResetBehavior { get; }
+
+		[Static]
+		[Export ("behaviorWithTarget:action:")]
+		NSSliderAccessoryBehavior CreateBehavior ([NullAllowed] NSObject target, Selector action);
+
+		[Static]
+		[Export ("behaviorWithHandler:")]
+		NSSliderAccessoryBehavior CreateBehavior (Action<NSSliderAccessory> handler);
+
+		[Export ("handleAction:")]
+		void HandleAction (NSSliderAccessory sender);
 	}
 }
