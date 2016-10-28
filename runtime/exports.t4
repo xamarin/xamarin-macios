@@ -377,6 +377,8 @@
 			"int", "generation"
 		),
 
+		new Export ("mono_bool", "mono_is_debugger_attached"),
+
 		#endregion
 
 		#region metadata/mono-config.h

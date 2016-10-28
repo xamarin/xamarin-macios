@@ -156,6 +156,8 @@ void			xamarin_throw_product_exception (int code, const char *message);
 
 id				xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_impl);
 
+bool			xamarin_is_managed_exception_marshaling_disabled ();
+
 // this functions support NSLog/NSString-style format specifiers.
 void			xamarin_printf (const char *format, ...);
 void			xamarin_vprintf (const char *format, va_list args);

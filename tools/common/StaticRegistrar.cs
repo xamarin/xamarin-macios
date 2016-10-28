@@ -3148,7 +3148,12 @@ namespace XamCore.Registrar {
 			var marshal_exception = "NULL";
 			if (App.MarshalManagedExceptions != MarshalManagedExceptionMode.Disable) {
 				body_setup.AppendLine ("MonoObject *exception = NULL;");
-				marshal_exception = "&exception";
+				if (App.EnableDebug && App.IsDefaultMarshalManagedExceptionMode) {
+					body_setup.AppendLine ("MonoObject **exception_ptr = xamarin_is_managed_exception_marshaling_disabled () ? NULL : &exception;");
+					marshal_exception = "exception_ptr";
+				} else {
+					marshal_exception = "&exception";
+				}
 			}
 
 			if (!isVoid) {
