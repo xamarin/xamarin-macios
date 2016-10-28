@@ -18,6 +18,7 @@ for i in tests/logs/*/*.xml; do
 	logname=$(basename "${i%.*}");
 	dirname=$(dirname "$i");
 	full_path="$dirname/$logname.log";
+	echo "Cleaning xml log on $full_path";
 	xsltproc jenkins/nunit-summary.xslt $i > $full_path;
 done
 # Lock
