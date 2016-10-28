@@ -2211,8 +2211,9 @@ The name of the unmanaged library to bundle. This is a file with the
 extension ".a" and it can contain object code for multiple platforms (for
 example, ARM and x86 for the simulator).
 
-You use the `LinkTarget` parameter to inform the binding tool which platforms
-are supported by your library.
+Earlier versions of Xamarin.iOS checked the `LinkTarget` property to determine
+the platform your library supported, but this is now auto-detected, and the
+`LinkTarget` property is ignored.
 
  <a name="LinkWithAttribute.LinkerFlags" class="injected"></a>
 
@@ -2231,11 +2232,9 @@ the `LinkerFlags` string to `"-lxml2 -lz"`.
 
 ### LinkWithAttribute.LinkTarget
 
-`LinkTarget` specifies which target architecture(s) the native library
-supports.
-
-For example, if you are binding a universal library which supports ARMv7 and
-i386 (for the Simulator), you would set LinkTarget to `LinkTarget.ArmV7|LinkTarget.Simulator`.
+Earlier versions of Xamarin.iOS checked the `LinkTarget` property to determine
+the platform your library supported, but this is now auto-detected, and the
+`LinkTarget` property is ignored.
 
  <a name="LinkWithAttribute.NeedsGccExceptionHandling" class="injected"></a>
 
