@@ -904,6 +904,22 @@ namespace XamCore.AppKit {
 		void UserDidAcceptCloudKitShare (NSApplication application, CKShareMetadata metadata);
 #endif
 	}
+
+	[Mac (10, 12, 1)]
+	[Category]
+	[BaseType (typeof(NSApplication))]
+	interface NSApplication_NSTouchBarCustomization
+	{
+		[Export ("isAutomaticCustomizeTouchBarMenuItemEnabled")]
+		bool GetAutomaticCustomizeTouchBarMenuItemEnabled ();
+
+		[Export ("automaticCustomizeTouchBarMenuItemEnabled:")]
+		void SetAutomaticCustomizeTouchBarMenuItemEnabled (bool enabled);
+
+		[Export ("toggleTouchBarCustomizationPalette:")]
+		void ToggleTouchBarCustomizationPalette ([NullAllowed] NSObject sender);
+	}
+
 		
 	[BaseType (typeof (NSObjectController))]
 	interface NSArrayController {
@@ -12051,7 +12067,7 @@ namespace XamCore.AppKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	partial interface NSResponder : NSCoding {
+	partial interface NSResponder : NSCoding, NSTouchBarProvider {
 		[Export ("tryToPerform:with:")]
 		bool TryToPerformwith (Selector anAction, [NullAllowed] NSObject anObject);
 
@@ -12235,6 +12251,10 @@ namespace XamCore.AppKit {
 		[Sealed]
 		[Export ("presentError:modalForWindow:delegate:didPresentSelector:contextInfo:")]
 		void PresentError (NSError error, NSWindow window, [NullAllowed] NSObject @delegate, [NullAllowed] Selector didPresentSelector, IntPtr contextInfo);
+
+		[Mac (10, 12, 1)]
+		[NullAllowed, Export ("makeTouchBar")]
+		NSTouchBar MakeTouchBar ();
 	}
 
 	[Mac (10,10)]
@@ -14975,6 +14995,7 @@ namespace XamCore.AppKit {
 		[Export ("needsDisplay")]
 		bool NeedsDisplay { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 12, 1)]
 		[Export ("acceptsTouchEvents")]
 		bool AcceptsTouchEvents { get; set; }
 
@@ -15477,7 +15498,19 @@ namespace XamCore.AppKit {
 		[Field ("NSViewAnimationFadeOutEffect")]
 		NSString FadeOutEffect { get; }
 	}
-	
+
+	[Category]
+	[BaseType (typeof(NSView))]
+	interface NSView_NSTouchBar
+	{
+		// @property NSTouchTypeMask allowedTouchTypes __attribute__((availability(macos, introduced=10_12_1)));
+		[Mac (10, 12, 1)]
+		[Export ("allowedTouchTypes", ArgumentSemantic.Assign)]
+		NSTouchTypeMask GetAllowedTouchTypes ();
+
+		[Export ("setAllowedTouchTypes:", ArgumentSemantic.Assign)]
+		void SetAllowedTouchTypes (NSTouchTypeMask touchTypes);
+	}
 
 	[BaseType (typeof (NSResponder))]
 	interface NSViewController : NSUserInterfaceItemIdentification, NSCoding, NSSeguePerforming
@@ -17280,15 +17313,26 @@ namespace XamCore.AppKit {
 		[Static]
 		[Export ("textFieldWithString:")]
 		NSTextField CreateTextField ([NullAllowed] string stringValue);
-
-		[Mac (10, 12, 1)]
-		[Export ("automaticTextCompletionEnabled")]
-		bool AutomaticTextCompletionEnabled { [Bind ("isAutomaticTextCompletionEnabled")] get; set; }
-
-		[Mac (10, 12, 1)]
-		[Export ("allowsCharacterPickerTouchBarItem")]
-		bool AllowsCharacterPickerTouchBarItem { get; set; }
 	}
+
+	[Mac (10, 12, 1)]
+	[Category]
+	[BaseType (typeof(NSTextField))]
+	interface NSTextField_NSTouchBar
+	{
+		[Export ("isAutomaticTextCompletionEnabled")]
+		bool GetAutomaticTextCompletionEnabled ();
+
+		[Export ("automaticTextCompletionEnabled:")]
+		void SetAutomaticTextCompletionEnabled (bool enabled);
+
+		[Export ("allowsCharacterPickerTouchBarItem")]
+		bool GetAllowsCharacterPickerTouchBarItem ();
+
+		[Export ("setAllowsCharacterPickerTouchBarItem:")]
+		void SetAllowsCharacterPickerTouchBarItem (bool allows);
+	}
+
 
 	[BaseType (typeof (NSTextField))]
 	interface NSSecureTextField {
@@ -17332,16 +17376,16 @@ namespace XamCore.AppKit {
 		[Export ("controlTextDidBeginEditing:"), EventArgs ("NSNotification")]
 		void EditingBegan (NSNotification notification);
 
-		//TODO: Unknown array return type.  How to name?
-		//[Mac (10,12,1)]
-		//[Export ("textField:textView:candidatesForSelectedRange:")]
-		//[return: NullAllowed]
-		//NSObject[] GetCandidates (NSTextField textField, NSTextView textView, NSRange selectedRange);
+		// Review
+		[Mac (10,12,1)]
+		[Export ("textField:textView:candidatesForSelectedRange:"), DelegateName ("NSTextFieldGetCandidates"), DefaultValue (null)]
+		[return: NullAllowed]
+		NSObject[] GetCandidates (NSTextField textField, NSTextView textView, NSRange selectedRange);
 
-		////TODO: How to name?
-		//[Mac (10,12,1)]
-		//[Export ("textField:textView:candidates:forSelectedRange:")]
-		//NSTextCheckingResult[] GetResults (NSTextField textField, NSTextView textView, NSTextCheckingResult[] candidates, NSRange selectedRange);
+		// Review
+		[Mac (10,12,1)]
+		[Export ("textField:textView:candidates:forSelectedRange:"), DelegateName ("NSTextFieldTextCheckingResults"), DefaultValue (null)]
+		NSTextCheckingResult[] GetTextCheckingResults (NSTextField textField, NSTextView textView, NSTextCheckingResult[] candidates, NSRange selectedRange);
 
 		// @optional -(BOOL)textField:(NSTextField * _Nonnull)textField textView:(NSTextView * _Nonnull)textView shouldSelectCandidateAtIndex:(NSUInteger)index __attribute__((availability(macos, introduced=10_12_1)));
 		[Mac (10,12,1)]
@@ -17694,7 +17738,7 @@ namespace XamCore.AppKit {
 	}
 
 	[BaseType (typeof (NSText), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTextViewDelegate)})]
-	partial interface NSTextView : NSTextInputClient, NSDraggingSource, NSTextFinderClient, NSAccessibilityNavigableStaticText {
+	partial interface NSTextView : NSTextInputClient, NSDraggingSource, NSTextFinderClient, NSAccessibilityNavigableStaticText, NSCandidateListTouchBarItemDelegate, NSTouchBarDelegate {
 		[Export ("initWithFrame:textContainer:")]
 		IntPtr Constructor (CGRect frameRect, NSTextContainer container);
 
@@ -18185,7 +18229,7 @@ namespace XamCore.AppKit {
 		[Export ("automaticTextCompletionEnabled")]
 		bool AutomaticTextCompletionEnabled { [Bind ("isAutomaticTextCompletionEnabled")] get; set; }
 
-		[Mac (10,12,1)]
+		[Mac (10, 12, 1)]
 		[Export ("toggleAutomaticTextCompletion:")]
 		void ToggleAutomaticTextCompletion ([NullAllowed] NSObject sender);
 
@@ -18193,22 +18237,21 @@ namespace XamCore.AppKit {
 		[Export ("allowsCharacterPickerTouchBarItem")]
 		bool AllowsCharacterPickerTouchBarItem { get; set; }
 
-		[Mac (10,12,1)]
+		[Mac (10, 12, 1)]
 		[Export ("updateTouchBarItemIdentifiers")]
 		void UpdateTouchBarItemIdentifiers ();
 
-		[Mac (10,12,1)]
+		[Mac (10, 12, 1)]
 		[Export ("updateTextTouchBarItems")]
 		void UpdateTextTouchBarItems ();
 
-		[Mac (10,12,1)]
+		[Mac (10, 12, 1)]
 		[Export ("updateCandidates")]
 		void UpdateCandidates ();
 
-		//TODO: Needs NSCandidateListTouchBarItem bound
-		//[Mac (10, 12, 1)]
-		//[NullAllowed, Export ("candidateListTouchBarItem", ArgumentSemantic.Strong)]
-		//NSCandidateListTouchBarItem GetCandidateListTouchBarItem { get; }
+		[Mac (10, 12, 1)]
+		[NullAllowed, Export ("candidateListTouchBarItem", ArgumentSemantic.Strong)]
+		NSCandidateListTouchBarItem CandidateListTouchBarItem { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -18334,17 +18377,16 @@ namespace XamCore.AppKit {
 		[Export ("textView:shouldUpdateTouchBarItemIdentifiers:"), DelegateName ("NSTextViewUpdateTouchBarItemIdentifiers"), DefaultValue (null)]
 		string[] ShouldUpdateTouchBarItemIdentifiers (NSTextView textView, string[] identifiers);
 
-		//TODO: Unknown array return type.  How to name?
-		//[Mac (10,12,1)]
-		//[Export ("textView:candidatesForSelectedRange:")]
-		////[Verify (StronglyTypedNSArray)]
-		//[return: NullAllowed]
-		//NSObject[] GetCandidates (NSTextView textView, NSRange selectedRange);
+		//Review
+		[Mac (10,12,1)]
+		[Export ("textView:candidatesForSelectedRange:"), DelegateName ("NSTextViewGetCandidates"), DefaultValue (null)]
+		[return: NullAllowed]
+		NSObject[] GetCandidates (NSTextView textView, NSRange selectedRange);
 
-		//TODO: How to name?
-		//[Mac (10,12,1)]
-		//[Export ("textView:candidates:forSelectedRange:")]
-		//NSTextCheckingResult[] GetCandidates (NSTextView textView, NSTextCheckingResult[] candidates, NSRange selectedRange);
+		//Review
+		[Mac (10,12,1)]
+		[Export ("textView:candidates:forSelectedRange:"), DelegateName ("NSTextViewTextCheckingResults"), DefaultValue (null)]
+		NSTextCheckingResult[] GetTextCheckingCandidates (NSTextView textView, NSTextCheckingResult[] candidates, NSRange selectedRange);
 
 		[Mac (10,12,1)]
 		[Export ("textView:shouldSelectCandidateAtIndex:"), DelegateName ("NSTextViewSelectCandidate"), DefaultValue (false)]
@@ -18625,6 +18667,21 @@ namespace XamCore.AppKit {
 		CGSize DeviceSize { get; }
 	}
 
+	[Mac (10, 12, 1)]
+	[Category]
+	[BaseType (typeof(NSTouch))]
+	interface NSTouch_NSTouchBar
+	{
+		[Export ("type")]
+		NSTouchType GetType ();
+
+		[Export ("locationInView:")]
+		CGPoint GetLocation ([NullAllowed] NSView view);
+
+		[Export ("previousLocationInView:")]
+		CGPoint GetPreviousLocation ([NullAllowed] NSView view);
+	}
+
 	[Mac (10,12,1)]
 	[BaseType (typeof(NSObject), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTouchBarDelegate)})]
 	interface NSTouchBar : NSCoding
@@ -18704,6 +18761,52 @@ namespace XamCore.AppKit {
 		[Export ("visible")]
 		bool Visible { [Bind ("isVisible")] get; }
 	}
+
+	[Mac (10,12,1)]
+	interface NSTouchBarItemIdentifier
+	{
+		[Field ("NSTouchBarItemIdentifierFixedSpaceSmall")]
+		NSString FixedSpaceSmall { get; }
+
+		[Field ("NSTouchBarItemIdentifierFixedSpaceLarge")]
+		NSString FixedSpaceLarge { get; }
+
+		[Field ("NSTouchBarItemIdentifierFlexibleSpace")]
+		NSString FlexibleSpace { get; }
+
+		[Field ("NSTouchBarItemIdentifierOtherItemsProxy")]
+		NSString OtherItemsProxy { get; }
+
+		[Field ("NSTouchBarItemIdentifierCharacterPicker")]
+		NSString CharacterPicker { get; }
+
+		[Field ("NSTouchBarItemIdentifierTextColorPicker")]
+		NSString TextColorPicker { get; }
+
+		[Field ("NSTouchBarItemIdentifierTextStyle")]
+		NSString TextStyle { get; }
+
+		[Field ("NSTouchBarItemIdentifierTextAlignment")]
+		NSString TextAlignment { get; }
+
+		[Field ("NSTouchBarItemIdentifierTextList")]
+		NSString TextList { get; }
+
+		[Field ("NSTouchBarItemIdentifierTextFormat")]
+		NSString TextFormat { get; }
+	}
+
+	[Mac (10, 12, 1)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface NSTouchBarProvider
+	{
+		[Abstract]
+		[NullAllowed, Export ("touchBar", ArgumentSemantic.Strong)]
+		NSTouchBar TouchBar { get; }
+	}
+
+	interface INSTouchBarProvider { }
 
 	[BaseType (typeof (NSObject))]
 	interface NSTrackingArea : NSCoding, NSCopying {
@@ -24252,8 +24355,12 @@ namespace XamCore.AppKit {
 	[BaseType (typeof(NSTouchBarItem))]
 	interface NSCandidateListTouchBarItem
 	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
 		[NullAllowed, Export ("client", ArgumentSemantic.Weak)]
-		NSTextInputClient Client { get; set; }
+		INSTextInputClient Client { get; set; }
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		INSCandidateListTouchBarItemDelegate Delegate { get; set; }
@@ -24320,6 +24427,10 @@ namespace XamCore.AppKit {
 	[BaseType (typeof(NSTouchBarItem))]
 	interface NSColorPickerTouchBarItem
 	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
 		[Static]
 		[Export ("colorPickerWithIdentifier:")]
 		NSColorPickerTouchBarItem CreateColorPicker(string identifier);
@@ -24363,6 +24474,10 @@ namespace XamCore.AppKit {
 	[BaseType (typeof(NSTouchBarItem))]
 	interface NSCustomTouchBarItem
 	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
 		[Export ("view", ArgumentSemantic.Strong)]
 		NSView View { get; set; }
 
@@ -24391,6 +24506,10 @@ namespace XamCore.AppKit {
 	[BaseType (typeof(NSTouchBarItem))]
 	interface NSGroupTouchBarItem
 	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
 		[Static]
 		[Export ("groupItemWithIdentifier:items:")]
 		NSGroupTouchBarItem CreateGroupItem (string identifier, NSTouchBarItem[] items);
