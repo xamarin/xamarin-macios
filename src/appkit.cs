@@ -24765,7 +24765,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
-	interface NSSliderAccessory : NSCoding, INSAccessibility, INSAccessibilityElement
+	interface NSSliderAccessory : NSCoding, NSAccessibility, NSAccessibilityElement
 	{
 		[Static]
 		[Export ("accessoryWithImage:")]
