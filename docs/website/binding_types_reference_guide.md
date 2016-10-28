@@ -2122,6 +2122,7 @@ public enum LinkTarget {
 
 [AttributeUsage(AttributeTargets.Assembly, AllowMultiple=true)]
 public class LinkWithAttribute : Attribute {
+    public LinkWithAttribute ();
     public LinkWithAttribute (string libraryName);
     public LinkWithAttribute (string libraryName, LinkTarget target);
     public LinkWithAttribute (string libraryName, LinkTarget target, string linkerFlags);
@@ -2149,6 +2150,13 @@ into the resulting assembly, allowing users to ship a single DLL that contains
 both the unmanaged dependencies as well as the command line flags necessary to
 properly consume the library from Xamarin.iOS.
 
+It' s also possible to not provide a `libraryName`, in which case the
+`LinkWith` attribute can be used to only specify additional linker flags:
+
+ ``` csharp
+[assembly: LinkWith (LinkerFlags = "-lsqlite3")]
+ ```
+
  <a name="LinkWithAttribute_Constructors" class="injected"></a>
 
 
@@ -2163,6 +2171,9 @@ Note that the LinkTarget argument is inferred by Xamarin.iOS and does not need t
 Examples:
 
 ```
+// Specify additional linker:
+[assembly: LinkWith (LinkerFlags = "-sqlite3")]
+
 // Specify library name for the constructor:
 [assembly: LinkWith ("libDemo.a");
 
