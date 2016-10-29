@@ -163,11 +163,27 @@ namespace XamCore.PrintCore {
 
 			// Now get the printer, we do not own it, so retain.
 			NativeInvoke.PMRetain (printerHandle);
-			printer = new PMPrinter (printerHandle);
+			printer = new PMPrinter (printerHandle, owns: false);
 			return PMStatusCode.Ok;
 		}
+
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static PMStatusCode PMSessionValidatePrintSettings (IntPtr handle, IntPtr printSettings, out byte changed);
 		
-		
+		public PMStatusCode ValidatePrintSettings (PMPrintSettings settings, out bool changed)
+		{
+			if (settings == null)
+				throw new ArgumentNullException (nameof (settings));
+			
+			byte c;
+			var code = PMSessionValidatePrintSettings (handle, settings.handle, out c);
+			if (code != PMStatusCode.Ok){
+				changed = false;
+				return code;
+			}
+			changed = c != 0;
+			return code;
+		}
 	}
 
 	public class PMPrintSettings : PMPrintCoreBase {
@@ -197,6 +213,51 @@ namespace XamCore.PrintCore {
 			return code;
 		}
 
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static PMStatusCode PMGetFirstPage (IntPtr handle, out uint first);
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static PMStatusCode PMSetFirstPage (IntPtr handle, uint first, byte lockb);
+		public uint FirstPage {
+			get {
+				uint val = 0;
+				PMGetFirstPage (handle, out val);
+				return val;
+			}
+			set {
+				PMSetFirstPage (handle, value, 0);
+			}
+		}
+
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static PMStatusCode PMGetLastPage (IntPtr handle, out uint last);
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static PMStatusCode PMSetLastPage (IntPtr handle, uint last, byte lockb);
+		public uint LastPage {
+			get {
+				uint val = 0;
+				PMGetLastPage (handle, out val);
+				return val;
+			}
+			set {
+				PMSetLastPage (handle, value, 0);
+			}
+		}
+
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static PMStatusCode PMGetPageRange (IntPtr handle, out uint minPage, out uint maxPage);
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static PMStatusCode PMSetPageRange (IntPtr handle, uint minPage, uint maxPage);
+		public PMStatusCode GetPageRange (out uint minPage, out uint maxPage)
+		{
+			return PMGetPageRange (handle, out minPage, out maxPage);
+		}
+
+		public PMStatusCode SetPageRange (uint minPage, uint maxPage)
+		{
+			return PMSetPageRange (handle, minPage, maxPage);
+		}
+		
+			
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMCopyPrintSettings (IntPtr source, IntPtr dest);
 		
@@ -322,6 +383,35 @@ namespace XamCore.PrintCore {
 			return code;
 		}
 
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static PMStatusCode PMSetOrientation (IntPtr handle, PMOrientation orientation, byte setToFalse);
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static PMStatusCode PMGetOrientation (IntPtr handle, out PMOrientation orientation);
+
+		public PMOrientation Orientation {
+			get {
+				PMOrientation o;
+				if (PMGetOrientation (handle, out o) == PMStatusCode.Ok)
+					return o;
+				else
+					return PMOrientation.Portrait;
+			}
+			set {
+				PMSetOrientation (handle, value, 0);
+			}
+		}
+
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static PMStatusCode PMGetAdjustedPageRect (IntPtr pageFormat, out PMRect pageRect);
+		public PMRect AdjustedPageRect {
+			get {
+				PMRect rect;
+				if (PMGetAdjustedPageRect (handle, out rect) == PMStatusCode.Ok)
+					return rect;
+				return new PMRect (0, 0, 0, 0);
+			}
+		}
+
 	}
 
 	public class PMPaper : PMPrintCoreBase {
@@ -397,7 +487,7 @@ namespace XamCore.PrintCore {
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static IntPtr PMPrinterCreateFromPrinterID (IntPtr id);
 
-		internal PMPrinter (IntPtr handle) : base (handle) {}
+		internal PMPrinter (IntPtr handle, bool owns) : base (handle, owns) {}
 		public PMPrinter ()
 		{
 			IntPtr value;
@@ -424,7 +514,7 @@ namespace XamCore.PrintCore {
 			IntPtr value;
 			var code = PMCreateGenericPrinter (out value);
 			if (code == PMStatusCode.Ok){
-				printer = new PMPrinter (value);
+				printer = new PMPrinter (value, owns: true);
 				return PMStatusCode.Ok;
 			}
 			printer = null;
@@ -437,7 +527,7 @@ namespace XamCore.PrintCore {
 				var h = PMPrinterCreateFromPrinterID (idf.Handle);
 				if (h == IntPtr.Zero)
 					return null;
-				return new PMPrinter (h);
+				return new PMPrinter (h, owns: true);
 			}
 		}
 
@@ -555,9 +645,102 @@ namespace XamCore.PrintCore {
 				CFObject.CFRelease (mime);
 			return code;
 		}
+
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static PMStatusCode PMPrinterGetOutputResolution (IntPtr printer, IntPtr printSettings, out PMResolution resolutionP);
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static PMStatusCode PMPrinterSetOutputResolution (IntPtr printer, IntPtr printSettings, ref PMResolution resolutionP);
+
+		public PMResolution GetOutputResolution (PMPrintSettings settings)
+		{
+			if (settings == null)
+				throw new ArgumentNullException (nameof (settings));
+
+			PMResolution res;
+			if (PMPrinterGetOutputResolution (handle, settings.Handle, out res) == PMStatusCode.Ok)
+				return res;
+			return new PMResolution (0, 0);
+		}
+
+		public void SetOutputResolution (PMPrintSettings settings, PMResolution res)
+		{
+			if (settings == null)
+				throw new ArgumentNullException (nameof (settings));
+			PMPrinterSetOutputResolution (handle, settings.Handle, ref res);
+		}
+
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static PMStatusCode PMPrinterSetDefault (IntPtr printer);
+
+		public PMStatusCode SetDefault ()
+		{
+			return PMPrinterSetDefault (handle);
+		}
+
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static byte PMPrinterIsFavorite (IntPtr printer);
+		public bool IsFavorite => PMPrinterIsFavorite (handle) != 0;
+		
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static byte PMPrinterIsDefault (IntPtr printer);
+		public bool IsDefault => PMPrinterIsDefault (handle) != 0;
+
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static byte PMPrinterIsPostScriptCapable (IntPtr printer);
+		public bool IsPostCriptCapable => PMPrinterIsPostScriptCapable (handle) != 0;
+
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static PMStatusCode PMPrinterIsPostScriptPrinter  (IntPtr printer, out byte isps);
+		public bool IsPostScriptPrinter {
+			get {
+				byte r;
+				if (PMPrinterIsPostScriptPrinter (handle, out r) == PMStatusCode.Ok)
+					return r != 0;
+				return false;
+			}
+		}
+
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static PMStatusCode PMPrinterIsRemote  (IntPtr printer, out byte isrem);
+		public bool IsRemote {
+			get {
+				byte r;
+				if (PMPrinterIsRemote (handle, out r) == PMStatusCode.Ok)
+					return r != 0;
+				return false;
+			}
+		}
+
 	}
 
 	public class PMServer : PMPrintCoreBase {
-		
+		PMServer () {}
+
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static PMStatusCode PMServerLaunchPrinterBrowser (IntPtr server, IntPtr dictFutureUse);
+
+		public PMStatusCode LaunchPrinterBrowser ()
+		{
+			return PMServerLaunchPrinterBrowser (IntPtr.Zero /* Server Local */, IntPtr.Zero);
+		}
+
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static PMStatusCode PMServerCreatePrinterList (IntPtr server, out IntPtr printerListArray);
+		public PMStatusCode CreatePrinterList (out PMPrinter [] printerList)
+		{
+			IntPtr arr;
+			var code = PMServerCreatePrinterList (IntPtr.Zero /* ServerLocal */, out arr);
+			if (code != PMStatusCode.Ok){
+				printerList = null;
+				return code;
+			}
+			int c = (int) CFArray.GetCount (arr);
+			printerList = new PMPrinter [c];
+			for (int i = 0; i < c; i++)
+				printerList [i] = new PMPrinter (CFArray.CFArrayGetValueAtIndex (arr, i), owns: false);
+
+			NativeInvoke.PMRelease (arr);
+			return PMStatusCode.Ok;
+		}
 	}
 }

@@ -152,6 +152,13 @@ namespace XamCore.PrintCore {
 		Tumble = 3,
 		SimplexTumble = 4
 	}
+
+	public enum PMOrientation : System.UInt16 {
+		Portrait = 1,
+		Landscape = 2,
+		ReversePortrait = 3,
+		ReverseLandscape = 4
+	}
 	
 	[StructLayout (LayoutKind.Sequential)]
 	public struct PMResolution {
@@ -171,15 +178,15 @@ namespace XamCore.PrintCore {
 	}
 		
 	[StructLayout (LayoutKind.Sequential)]
-	public struct PMPaperMargins {
-		double top, left, bottom, right;
+	public struct PMRect {
+		internal double top, left, bottom, right;
 		
 		public double Top => top;
 		public double Left => left;
 		public double Bottom => bottom;
 		public double Right => right;
 
-		public PMPaperMargins (double top, double bottom, double left, double right)
+		public PMRect (double top, double bottom, double left, double right)
 		{
 			this.top = top;
 			this.bottom = bottom;
@@ -190,6 +197,26 @@ namespace XamCore.PrintCore {
 		public override string ToString ()
 		{
 			return string.Format ($"[Top={top},Bottom={bottom},Left={left},Right={right}]");
+		}
+	}
+
+	[StructLayout (LayoutKind.Sequential)]
+	public struct PMPaperMargins {
+		PMRect Rect;
+		
+		public double Top => Rect.top;
+		public double Left => Rect.left;
+		public double Bottom => Rect.bottom;
+		public double Right => Rect.right;
+
+		public PMPaperMargins (double top, double bottom, double left, double right)
+		{
+			Rect = new PMRect (top, bottom, left, right);
+		}
+		
+		public override string ToString ()
+		{
+			return Rect.ToString ();
 		}
 	}
 }
