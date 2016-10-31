@@ -1573,12 +1573,12 @@ namespace Xamarin.Bundler {
 
 			if (is_assembly) {
 				equal = Cache.CompareAssemblies (f1, f2, true, true);
-				if (!equal && Driver.Verbosity > 0)
-					Console.WriteLine ("Assemblies {0} and {1} not found to be identical, cannot replace one with a symlink to the other.", f1, f2);
+				if (!equal)
+					Driver.Log (1, "Assemblies {0} and {1} not found to be identical, cannot replace one with a symlink to the other.", f1, f2);
 			} else {
 				equal = Cache.CompareFiles (f1, f2, true);
-				if (!equal && Driver.Verbosity > 0)
-					Console.WriteLine ("Targets {0} and {1} not found to be identical, cannot replace one with a symlink to the other.", f1, f2);
+				if (!equal)
+					Driver.Log (1, "Targets {0} and {1} not found to be identical, cannot replace one with a symlink to the other.", f1, f2);
 			}
 			if (!equal)
 				return;
@@ -1588,8 +1588,7 @@ namespace Xamarin.Bundler {
 			if (!Driver.Symlink (dest, f2)) {
 				File.Copy (f1, f2);
 			} else {
-				if (Driver.Verbosity > 0)
-					Console.WriteLine ("Targets {0} and {1} found to be identical, the later has been replaced with a symlink to the former.", f1, f2);
+				Driver.Log (1, "Targets {0} and {1} found to be identical, the later has been replaced with a symlink to the former.", f1, f2);
 			}
 		}
 
