@@ -13303,6 +13303,10 @@ namespace XamCore.AppKit {
 	[BaseType (typeof(NSTouchBarItem))]
 	interface NSSliderTouchBarItem
 	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
 		[Export ("slider", ArgumentSemantic.Strong)]
 		NSSlider Slider { get; set; }
 
@@ -24572,6 +24576,10 @@ namespace XamCore.AppKit {
 	[BaseType (typeof(NSTouchBarItem))]
 	interface NSPopoverTouchBarItem
 	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
 		[Export ("popoverTouchBar", ArgumentSemantic.Strong)]
 		NSTouchBar PopoverTouchBar { get; set; }
 
@@ -24916,6 +24924,10 @@ namespace XamCore.AppKit {
 	[BaseType (typeof(NSTouchBarItem))]
 	interface NSSharingServicePickerTouchBarItem
 	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		INSSharingServicePickerTouchBarItemDelegate Delegate { get; set; }
 
