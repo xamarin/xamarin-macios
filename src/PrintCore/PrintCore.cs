@@ -160,10 +160,12 @@ namespace XamCore.PrintCore {
 			}
 
 			printerList = FetchArray (array, true);
-
-			// Now get the printer, we do not own it, so retain.
-			NativeInvoke.PMRetain (printerHandle);
-			printer = new PMPrinter (printerHandle, owns: false);
+			if (printerHandle != IntPtr.Zero){
+				// Now get the printer, we do not own it, so retain.
+				NativeInvoke.PMRetain (printerHandle);
+				printer = new PMPrinter (printerHandle, owns: false);
+			} else
+				printer = null;
 			return PMStatusCode.Ok;
 		}
 
@@ -551,6 +553,18 @@ namespace XamCore.PrintCore {
 			return PMStatusCode.Ok;
 		}
 
+		public NSUrl DeviceUrl {
+			get {
+				IntPtr urlH;
+			
+				var code = PMPrinterCopyDeviceURI (handle, out urlH);
+				if (code != PMStatusCode.Ok)
+					return null;
+
+				return new NSUrl (urlH);
+			}
+		}
+
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMPrinterGetMakeAndModelName(IntPtr printer, out IntPtr makeAndModel);
 
@@ -610,6 +624,21 @@ namespace XamCore.PrintCore {
 				paperList [i] = new PMPaper (CFArray.CFArrayGetValueAtIndex (m, i), owns: false);
 
 			return PMStatusCode.Ok;
+		}
+
+		public PMPaper [] PaperList {
+			get {
+				IntPtr m;
+				if (PMPrinterGetPaperList (handle, out m) != PMStatusCode.Ok)
+					return new PMPaper [0];
+
+				int c = (int) CFArray.GetCount (m);
+				var paperList = new PMPaper [c];
+				for (int i = 0; i < c; i++)
+					paperList [i] = new PMPaper (CFArray.CFArrayGetValueAtIndex (m, i), owns: false);
+
+				return paperList;
+			}
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
@@ -687,7 +716,7 @@ namespace XamCore.PrintCore {
 
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static byte PMPrinterIsPostScriptCapable (IntPtr printer);
-		public bool IsPostCriptCapable => PMPrinterIsPostScriptCapable (handle) != 0;
+		public bool IsPostScriptCapable => PMPrinterIsPostScriptCapable (handle) != 0;
 
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMPrinterIsPostScriptPrinter  (IntPtr printer, out byte isps);
@@ -719,14 +748,14 @@ namespace XamCore.PrintCore {
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMServerLaunchPrinterBrowser (IntPtr server, IntPtr dictFutureUse);
 
-		public PMStatusCode LaunchPrinterBrowser ()
+		public static PMStatusCode LaunchPrinterBrowser ()
 		{
 			return PMServerLaunchPrinterBrowser (IntPtr.Zero /* Server Local */, IntPtr.Zero);
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMServerCreatePrinterList (IntPtr server, out IntPtr printerListArray);
-		public PMStatusCode CreatePrinterList (out PMPrinter [] printerList)
+		public static PMStatusCode CreatePrinterList (out PMPrinter [] printerList)
 		{
 			IntPtr arr;
 			var code = PMServerCreatePrinterList (IntPtr.Zero /* ServerLocal */, out arr);
@@ -739,7 +768,7 @@ namespace XamCore.PrintCore {
 			for (int i = 0; i < c; i++)
 				printerList [i] = new PMPrinter (CFArray.CFArrayGetValueAtIndex (arr, i), owns: false);
 
-			NativeInvoke.PMRelease (arr);
+			CFObject.CFRelease (arr);
 			return PMStatusCode.Ok;
 		}
 	}
