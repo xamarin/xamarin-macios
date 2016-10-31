@@ -1090,7 +1090,7 @@ namespace Xamarin.Bundler {
 			}
 
 			// Copy frameworks to the app bundle.
-			if (!IsExtension) {
+			if (!IsExtension || IsWatchExtension) {
 				var all_frameworks = new HashSet<string> ();
 				all_frameworks.UnionWith (Frameworks);
 				all_frameworks.UnionWith (WeakFrameworks);
