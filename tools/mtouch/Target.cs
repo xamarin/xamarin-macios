@@ -487,6 +487,7 @@ namespace Xamarin.Bundler
 						}
 
 						Driver.Watch ("Cached assemblies reloaded", 1);
+						Driver.Log ("Cached assemblies reloaded.");
 
 						return;
 					}
