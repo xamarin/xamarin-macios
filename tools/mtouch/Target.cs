@@ -804,7 +804,8 @@ namespace Xamarin.Bundler
 			// Collect all LinkWith flags and frameworks from all assemblies.
 			foreach (var a in Assemblies) {
 				compiler_flags.AddFrameworks (a.Frameworks, a.WeakFrameworks);
-				compiler_flags.AddLinkWith (a.LinkWith, a.ForceLoad);
+				if (!App.FastDev)
+					compiler_flags.AddLinkWith (a.LinkWith, a.ForceLoad);
 				compiler_flags.AddOtherFlags (a.LinkerFlags);
 			}
 
