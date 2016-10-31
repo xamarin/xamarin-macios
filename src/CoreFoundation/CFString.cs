@@ -127,6 +127,9 @@ namespace XamCore.CoreFoundation {
 
 		internal static IntPtr LowLevelCreate (string str)
 		{
+			if (str == null)
+				return IntPtr.Zero;
+			
 			return CFStringCreateWithCharacters (IntPtr.Zero, str, str.Length);
 		}
 		

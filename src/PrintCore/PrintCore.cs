@@ -159,13 +159,14 @@ namespace XamCore.PrintCore {
 				return code;
 			}
 
-			printerList = FetchArray (array, true);
+			printerList = NSArray.StringArrayFromHandle (array);
+			CFObject.CFRelease (array);
 			if (printerHandle != IntPtr.Zero){
 				// Now get the printer, we do not own it, so retain.
-				NativeInvoke.PMRetain (printerHandle);
 				printer = new PMPrinter (printerHandle, owns: false);
 			} else
 				printer = null;
+			
 			return PMStatusCode.Ok;
 		}
 
@@ -477,7 +478,9 @@ namespace XamCore.PrintCore {
 			var code = PMPaperCreateLocalizedName (handle, printer.handle, out name);
 			if (code != PMStatusCode.Ok)
 				return null;
-			return CFString.FetchString (name);
+			var str = CFString.FetchString (name);
+			CFObject.CFRelease (name);
+			return str;
 		}
 		
 	}
@@ -549,7 +552,7 @@ namespace XamCore.PrintCore {
 				url = null;
 				return code;
 			}
-			url = new NSUrl (urlH);
+			url = Runtime.GetNSObject<NSUrl> (urlH, true);
 			return PMStatusCode.Ok;
 		}
 
@@ -561,14 +564,14 @@ namespace XamCore.PrintCore {
 				if (code != PMStatusCode.Ok)
 					return null;
 
-				return new NSUrl (urlH);
+				return Runtime.GetNSObject<NSUrl> (urlH, true);
 			}
 		}
 
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMPrinterGetMakeAndModelName(IntPtr printer, out IntPtr makeAndModel);
 
-		public string GetMakeAndModel {
+		public string MakeAndModel {
 			get {
 				IntPtr v;
 				if (PMPrinterGetMakeAndModelName (handle, out v) == PMStatusCode.Ok){
@@ -604,7 +607,7 @@ namespace XamCore.PrintCore {
 				mimeTypes = null;
 				return code;
 			}
-			mimeTypes = PMPrintSession.FetchArray (m, owns: false);
+			mimeTypes = NSArray.StringArrayFromHandle (m);
 			return PMStatusCode.Ok;
 		}
 
@@ -651,7 +654,7 @@ namespace XamCore.PrintCore {
 			if (fileUrl == null)
 				throw new ArgumentNullException (nameof (fileUrl));
 				    
-			IntPtr mime = mimeType == null ? IntPtr.Zero : CFString.LowLevelCreate (mimeType);
+			IntPtr mime = CFString.LowLevelCreate (mimeType);
 			var code = PMPrinterPrintWithFile (handle, settings.handle, pageFormat == null ? IntPtr.Zero : pageFormat.handle, mime, fileUrl.Handle);
 			if (mime != IntPtr.Zero)
 				CFObject.CFRelease (mime);
@@ -668,7 +671,7 @@ namespace XamCore.PrintCore {
 			if (provider == null)
 				throw new ArgumentNullException (nameof (provider));
 				    
-			IntPtr mime = mimeType == null ? IntPtr.Zero : CFString.LowLevelCreate (mimeType);
+			IntPtr mime = CFString.LowLevelCreate (mimeType);
 			var code = PMPrinterPrintWithProvider (handle, settings.handle, pageFormat == null ? IntPtr.Zero : pageFormat.handle, mime, provider.Handle);
 			if (mime != IntPtr.Zero)
 				CFObject.CFRelease (mime);

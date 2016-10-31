@@ -60,12 +60,12 @@ namespace XamCore.PrintCore {
 		
 		NoDefaultItem          	= -9500,
 		NoDefaultSettings      	= -9501,
-		InvalidPDEContext	= -9530,
-		DontSwitchPDEError	= -9531,
+		InvalidPdeContext	= -9530,
+		DontSwitchPdeError	= -9531,
 		UnableToFindProcess	= -9532,
 		FeatureNotInstalled	= -9533,
 		
-		InvalidPBMRef		= -9540,
+		InvalidPbmRef		= -9540,
 		NoSelectedPrinters	= -9541,
 		InvalidLookupSpec	= -9542,
 		SyncRequestFailed	= -9543,
@@ -108,10 +108,10 @@ namespace XamCore.PrintCore {
 		
 		PMSymbolNotFound 	= -9660,
 		IOMSymbolNotFound 	= -9661,
-		CVMSymbolNotFound 	= -9662,
+		CvmSymbolNotFound 	= -9662,
 		InvalidPMContext        = -9663,
 		InvalidIOMContext       = -9664,
-		InvalidCVMContext       = -9665,
+		InvalidCvmContext       = -9665,
 		InvalidJobID     	= -9666,
 		NoPrinterJobID          = -9667,
 		JobStreamOpenFailed     = -9668,
@@ -196,7 +196,7 @@ namespace XamCore.PrintCore {
 		
 		public override string ToString ()
 		{
-			return string.Format ($"[Top={top},Bottom={bottom},Left={left},Right={right}]");
+			return $"[Top={top},Bottom={bottom},Left={left},Right={right}]";
 		}
 	}
 
