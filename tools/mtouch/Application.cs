@@ -1110,6 +1110,17 @@ namespace Xamarin.Bundler {
 					all_frameworks.Add (Path.Combine (Driver.ProductSdkDirectory, "Frameworks", "Mono.framework"));
 				}
 				
+				foreach (var appex in Extensions) {
+					var f_path = Path.Combine (appex, "..", "frameworks.txt");
+					if (!File.Exists (f_path))
+						continue;
+
+					foreach (var fw in File.ReadAllLines (f_path)) {
+						Driver.Log (3, "Copying {0} to the app's Frameworks directory because it's used by the extension {1}", fw, Path.GetFileName (appex));
+						all_frameworks.Add (fw);
+					}
+				}
+
 				foreach (var fw in all_frameworks) {
 					if (!fw.EndsWith (".framework", StringComparison.Ordinal))
 						continue;
@@ -1127,6 +1138,13 @@ namespace Xamarin.Bundler {
 						// Remove architectures we don't care about.
 						Xamarin.MachO.SelectArchitectures (Path.Combine (AppDirectory, "Frameworks", Path.GetFileName (fw), Path.GetFileNameWithoutExtension (fw)), AllArchitectures);
 					}
+				}
+			} else {
+				if (!IsWatchExtension) {
+					// In extensions we need to save a list of the frameworks we need so that the main app can get them.
+					var all_frameworks = Frameworks.Union (WeakFrameworks);
+					if (all_frameworks.Count () > 0)
+						Driver.WriteIfDifferent (Path.Combine (Path.GetDirectoryName (AppDirectory), "frameworks.txt"), string.Join ("\n", all_frameworks.ToArray ()));
 				}
 			}
 

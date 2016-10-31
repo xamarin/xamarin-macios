@@ -1986,6 +1986,35 @@ class C {
 			}
 		}
 
+		[Test]
+		public void OnlyExtensionWithFramework ()
+		{
+			// if an extension references a framework, and the main app does not,
+			// the framework should still be copied to the main app's Framework directory.
+			using (var exttool = new MTouchTool ()) {
+				exttool.Profile = Profile.Unified;
+				exttool.CreateTemporaryCacheDirectory ();
+				exttool.Verbosity = 5;
+
+				exttool.Extension = true;
+				exttool.CreateTemporararyServiceExtension ();
+				exttool.Frameworks.Add (Path.Combine (Configuration.SourceRoot, "tests/test-libraries/.libs/ios/XTest.framework"));
+				exttool.AssertExecute (MTouchAction.BuildSim, "build extension");
+
+				using (var apptool = new MTouchTool ()) {
+					apptool.Profile = Profile.Unified;
+					apptool.CreateTemporaryCacheDirectory ();
+					apptool.Verbosity = exttool.Verbosity;
+					apptool.CreateTemporaryApp ();
+					apptool.AppExtensions.Add (exttool.AppPath);
+					apptool.AssertExecute (MTouchAction.BuildSim, "build app");
+
+					Assert.IsTrue (Directory.Exists (Path.Combine (apptool.AppPath, "Frameworks", "XTest.framework")), "framework exists");
+					Assert.IsFalse (Directory.Exists (Path.Combine (exttool.AppPath, "Frameworks")), "extension framework inexistence");
+				}
+			}
+		}
+
 #region Helper functions
 		static string CompileUnifiedTestAppExecutable (string targetDirectory, string code = null, string extraArg = "")
 		{
