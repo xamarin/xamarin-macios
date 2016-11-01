@@ -15550,10 +15550,10 @@ namespace XamCore.AppKit {
 	interface NSView_NSTouchBar
 	{
 		[Mac (10, 12, 1)]
-		[Export ("allowedTouchTypes", ArgumentSemantic.Assign)]
+		[Export ("allowedTouchTypes")]
 		NSTouchTypeMask GetAllowedTouchTypes ();
 
-		[Export ("setAllowedTouchTypes:", ArgumentSemantic.Assign)]
+		[Export ("setAllowedTouchTypes:")]
 		void SetAllowedTouchTypes (NSTouchTypeMask touchTypes);
 	}
 
@@ -21697,6 +21697,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10, 12, 1)]
 		[Field ("NSSpellCheckerDidChangeAutomaticTextCompletionNotification")]
+		[Notification]
 		NSString DidChangeAutomaticTextCompletionNotification { get; }
 	}
 
@@ -24599,7 +24600,8 @@ namespace XamCore.AppKit {
 	interface INSScrubberDataSource {}
 	interface INSScrubberDelegate {}
 
-	[Protocol]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
 	interface NSScrubberDataSource
 	{
 		[Mac (10,12,1)]
@@ -24613,7 +24615,8 @@ namespace XamCore.AppKit {
 		NSScrubberItemView GetViewForItem (NSScrubber scrubber, nint index);
 	}
 
-	[Protocol]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
 	interface NSScrubberDelegate
 	{
 		[Mac (10,12,1)]
@@ -24626,7 +24629,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10,12,1)]
 		[Export ("scrubber:didChangeVisibleRange:")]
-		void DidChange (NSScrubber scrubber, NSRange visibleRange);
+		void DidChangeVisible (NSScrubber scrubber, NSRange visibleRange);
 
 		[Mac (10,12,1)]
 		[Export ("didBeginInteractingWithScrubber:")]
@@ -24717,25 +24720,25 @@ namespace XamCore.AppKit {
 		void ReloadData ();
 
 		[Export ("performSequentialBatchUpdates:")]
-		void PerformSequentialBatchUpdates (Action updateBlock);
+		void PerformSequentialBatchUpdates (Action updateHandler);
 
 		[Export ("insertItemsAtIndexes:")]
-		void InsertItemsAtIndexes (NSIndexSet indexes);
+		void InsertItems (NSIndexSet indexes);
 
 		[Export ("removeItemsAtIndexes:")]
-		void RemoveItemsAtIndexes (NSIndexSet indexes);
+		void RemoveItems (NSIndexSet indexes);
 
 		[Export ("reloadItemsAtIndexes:")]
-		void ReloadItemsAtIndexes (NSIndexSet indexes);
+		void ReloadItems (NSIndexSet indexes);
 
 		[Export ("moveItemAtIndex:toIndex:")]
-		void MoveItemAtIndex (nint oldIndex, nint newIndex);
+		void MoveItem (nint oldIndex, nint newIndex);
 
 		[Export ("scrollItemAtIndex:toAlignment:")]
-		void ScrollItemAtIndex (nint index, NSScrubberAlignment alignment);
+		void ScrollItem (nint index, NSScrubberAlignment alignment);
 
 		[Export ("itemViewForItemAtIndex:")]
-		NSScrubberItemView GetItemViewForItemAtIndex (nint index);
+		NSScrubberItemView GetItemViewForItem(nint index);
 
 		[Export ("registerClass:forItemIdentifier:")]
 		void RegisterClass ([NullAllowed] Class itemViewClass, string itemIdentifier);
@@ -24744,7 +24747,7 @@ namespace XamCore.AppKit {
 		void RegisterNib ([NullAllowed] NSNib nib, string itemIdentifier);
 
 		[Export ("makeItemWithIdentifier:owner:")]
-		NSScrubberItemView MakeItemWithIdentifier (string itemIdentifier, [NullAllowed] NSObject owner);
+		NSScrubberItemView MakeItem (string itemIdentifier, [NullAllowed] NSObject owner);
 	}
 
 	[Mac (10,12,1)]
@@ -24815,7 +24818,7 @@ namespace XamCore.AppKit {
 
 		[Static]
 		[Export ("layoutAttributesForItemAtIndex:")]
-		NSScrubberLayoutAttributes CreateLayoutAttributesForItemAtIndex (nint index);
+		NSScrubberLayoutAttributes CreateLayoutAttributes (nint index);
 	}
 
 	[Mac (10,12,1)]
@@ -24843,10 +24846,10 @@ namespace XamCore.AppKit {
 		CGSize ScrubberContentSize { get; }
 
 		[Export ("layoutAttributesForItemAtIndex:")]
-		NSScrubberLayoutAttributes LayoutAttributesForItemAtIndex (nint index);
+		NSScrubberLayoutAttributes LayoutAttributesForItem (nint index);
 
 		[Export ("layoutAttributesForItemsInRect:")]
-		NSSet<NSScrubberLayoutAttributes> LayoutAttributesForItemsInRect (CGRect rect);
+		NSSet<NSScrubberLayoutAttributes> LayoutAttributesForItems (CGRect rect);
 
 		[Export ("shouldInvalidateLayoutForSelectionChange")]
 		bool ShouldInvalidateLayoutForSelectionChange ();
@@ -24861,7 +24864,8 @@ namespace XamCore.AppKit {
 		bool AutomaticallyMirrorsInRightToLeftLayout { get; }
 	}
 
-	[Protocol]
+	[BaseType (typeof (NSObject))]
+	[Protocol, Model]
 	interface NSScrubberFlowLayoutDelegate : NSScrubberDelegate
 	{
 		[Export ("scrubber:layout:sizeForItemAtIndex:")]
@@ -24879,7 +24883,7 @@ namespace XamCore.AppKit {
 		CGSize ItemSize { get; set; }
 
 		[Export ("invalidateLayoutForItemsAtIndexes:")]
-		void InvalidateLayoutForItemsAtIndexes (NSIndexSet invalidItemIndexes);
+		void InvalidateLayoutForItems (NSIndexSet invalidItemIndexes);
 	}
 
 	[Mac (10,12,1)]
@@ -24896,7 +24900,8 @@ namespace XamCore.AppKit {
 
 	public interface INSSharingServicePickerTouchBarItemDelegate {}
 
-	[Protocol]
+	[BaseType (typeof (NSObject))]
+	[Protocol, Model]
 	interface NSSharingServicePickerTouchBarItemDelegate : NSSharingServicePickerDelegate
 	{
 		[Abstract]
@@ -24931,7 +24936,7 @@ namespace XamCore.AppKit {
 	{
 		[Static]
 		[Export ("accessoryWithImage:")]
-		NSSliderAccessory CreateAccessoryWithImage (NSImage image);
+		NSSliderAccessory CreateAccessory (NSImage image);
 
 		[Export ("behavior", ArgumentSemantic.Copy)]
 		NSSliderAccessoryBehavior Behavior { get; set; }
@@ -24941,7 +24946,7 @@ namespace XamCore.AppKit {
 
 		[Mac (10, 12, 1)]
 		[Field ("NSSliderAccessoryWidthDefault")]
-		double WidthDefault { get; }
+		double DefaultWidth { get; }
 
 		[Mac (10, 12, 1)]
 		[Field ("NSSliderAccessoryWidthWide")]
