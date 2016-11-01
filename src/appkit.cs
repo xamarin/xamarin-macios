@@ -24433,7 +24433,8 @@ namespace XamCore.AppKit {
 		string CustomizationLabel { get; set; }
 	}
 
-	[Protocol]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
 	interface NSCandidateListTouchBarItemDelegate
 	{
 		[Mac (10,12,1)]
@@ -24458,7 +24459,7 @@ namespace XamCore.AppKit {
 	interface NSView_NSCandidateListTouchBarItem
 	{
 		[Mac (10, 12, 1)]
-		[NullAllowed, Export ("candidateListTouchBarItem", ArgumentSemantic.Strong)]
+		[NullAllowed, Export ("candidateListTouchBarItem")]
 		NSCandidateListTouchBarItem GetCandidateListTouchBarItem (); 
 	}
 
