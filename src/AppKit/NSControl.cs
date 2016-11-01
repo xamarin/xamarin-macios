@@ -32,6 +32,7 @@ using XamCore.Foundation;
 namespace XamCore.AppKit {
 
 	public partial class NSControl {
+		// If you modify, also search for other copies
 		NSObject target;
 		Selector action;
 
