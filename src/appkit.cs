@@ -17421,13 +17421,11 @@ namespace XamCore.AppKit {
 		[Export ("controlTextDidBeginEditing:"), EventArgs ("NSNotification")]
 		void EditingBegan (NSNotification notification);
 
-		// Review
 		[Mac (10,12,1)]
 		[Export ("textField:textView:candidatesForSelectedRange:"), DelegateName ("NSTextFieldGetCandidates"), DefaultValue (null)]
 		[return: NullAllowed]
 		NSObject[] GetCandidates (NSTextField textField, NSTextView textView, NSRange selectedRange);
 
-		// Review
 		[Mac (10,12,1)]
 		[Export ("textField:textView:candidates:forSelectedRange:"), DelegateName ("NSTextFieldTextCheckingResults"), DefaultValue (null)]
 		NSTextCheckingResult[] GetTextCheckingResults (NSTextField textField, NSTextView textView, NSTextCheckingResult[] candidates, NSRange selectedRange);
@@ -24626,7 +24624,6 @@ namespace XamCore.AppKit {
 		[Export ("scrubber:didHighlightItemAtIndex:")]
 		void DidHighlightItem (NSScrubber scrubber, nint highlightedIndex);
 
-		// Review - right?
 		[Mac (10,12,1)]
 		[Export ("scrubber:didChangeVisibleRange:")]
 		void DidChange (NSScrubber scrubber, NSRange visibleRange);
