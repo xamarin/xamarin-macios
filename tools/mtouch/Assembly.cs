@@ -72,11 +72,11 @@ namespace Xamarin.Bundler {
 				if (!Application.IsUptodate (source, target) && !Cache.CompareAssemblies (source, target)) {
 					copied = true;
 					Application.CopyFile (source, target);
-
-					// Do not update the .mdb unless the assembly is also copied.
-					if (copy_mdb && File.Exists (source + ".mdb"))
-						Application.UpdateFile (source + ".mdb", target + ".mdb");
 				}
+
+				// Update the mdb even if the assembly didn't change.
+				if (copy_mdb && File.Exists (source + ".mdb"))
+					Application.UpdateFile (source + ".mdb", target + ".mdb");
 
 				CopyConfigToDirectory (Path.GetDirectoryName (target));
 			} catch (Exception e) {

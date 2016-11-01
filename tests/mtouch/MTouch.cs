@@ -2048,6 +2048,48 @@ class C {
 			}
 		}
 
+		[Test]
+		[TestCase (MTouchLinker.DontLink)]
+		[TestCase (MTouchLinker.LinkAll)]
+		// There shouldn't be a need to test LinkSdk as well.
+		public void OnlyDebugFileChange (MTouchLinker linker_options)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = Profile.Unified;
+				mtouch.Verbosity = 23;
+				var tmp = mtouch.CreateTemporaryDirectory ();
+				mtouch.CreateTemporaryCacheDirectory ();
+
+				// Create a sample exe
+				var code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
+				var exe = MTouch.CompileTestAppExecutable (tmp, code, "/debug:full");
+
+				mtouch.AppPath = mtouch.CreateTemporaryDirectory ();
+				mtouch.Executable = exe;
+				mtouch.Debug = true;
+				mtouch.Linker = linker_options;
+
+				// Build app
+				mtouch.AssertExecute (MTouchAction.BuildSim);
+
+				var exePath = Path.Combine (mtouch.AppPath, Path.GetFileName (exe));
+				var mdbPath = exePath + ".mdb";
+				var exeStamp = File.GetLastWriteTimeUtc (exePath);
+				var mdbStamp = File.GetLastWriteTimeUtc (mdbPath);
+
+				// Recompile the exe, adding only whitespace. This will only change the debuf files
+				MTouch.CompileTestAppExecutable (tmp, "\n\n" + code + "\n\n", "/debug:full");
+
+				// Rebuild the app
+				mtouch.AssertExecute (MTouchAction.BuildSim);
+
+				// The mdb files should be updated, but the exe should not.
+				Assert.AreEqual (exeStamp, File.GetLastWriteTimeUtc (exePath), "exe no change");
+				Assert.IsTrue (File.Exists (mdbPath), "mdb existence");
+				Assert.AreNotEqual (mdbStamp, File.GetLastWriteTimeUtc (mdbPath), "mdb changed");
+			}
+		}
+
 #region Helper functions
 		static string CompileUnifiedTestAppExecutable (string targetDirectory, string code = null, string extraArg = "")
 		{

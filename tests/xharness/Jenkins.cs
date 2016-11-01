@@ -20,6 +20,7 @@ namespace xharness
 		public bool IncludewatchOS = true;
 		public bool IncludeMmpTest;
 		public bool IncludeiOSMSBuild = true;
+		public bool IncludeMtouch;
 
 		public Logs Logs = new Logs ();
 		public Log MainLog;
@@ -232,6 +233,30 @@ namespace xharness
 						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45"));
 					}
 				}
+			}
+
+			if (IncludeMtouch) {
+				var build = new MakeTask ()
+				{
+					Jenkins = this,
+					ProjectFile = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "mtouch", "mtouch.sln")),
+					SpecifyPlatform = false,
+					SpecifyConfiguration = false,
+					Platform = TestPlatform.iOS,
+					Target = "dependencies",
+					WorkingDirectory = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "mtouch")),
+				};
+				var nunitExecution = new NUnitExecuteTask ()
+				{
+					Jenkins = this,
+					BuildTask = build,
+					TestLibrary = Path.Combine (Harness.RootDirectory, "mtouch", "bin", "Debug", "mtouch.dll"),
+					TestExecutable = Path.Combine (Harness.RootDirectory, "packages", "NUnit.Runners.2.6.4", "tools", "nunit-console.exe"),
+					WorkingDirectory = Path.Combine (Harness.RootDirectory, "packages", "NUnit.Runners.2.6.4", "tools", "lib"),
+					Platform = TestPlatform.iOS,
+					TestName = "MTouch tests",
+				};
+				Tasks.Add (nunitExecution);
 			}
 		}
 
@@ -732,6 +757,47 @@ function toggleContainerVisibility (containerName)
 		}
 	}
 
+	class MakeTask : BuildToolTask
+	{
+		public string Target;
+		public string WorkingDirectory;
+
+		protected override async Task ExecuteAsync ()
+		{
+			using (var resource = await Jenkins.DesktopResource.AcquireConcurrentAsync ()) {
+				using (var make = new Process ()) {
+					make.StartInfo.FileName = "make";
+					make.StartInfo.WorkingDirectory = WorkingDirectory;
+					make.StartInfo.Arguments = Target;
+					Jenkins.MainLog.WriteLine ("Making {0} in {1}", Target, WorkingDirectory);
+					SetEnvironmentVariables (make);
+					var log = Logs.CreateStream (LogDirectory, "make-" + Platform + ".txt", "Build log");
+					foreach (string key in make.StartInfo.EnvironmentVariables.Keys)
+						log.WriteLine ("{0}={1}", key, make.StartInfo.EnvironmentVariables [key]);
+					log.WriteLine ("{0} {1}", make.StartInfo.FileName, make.StartInfo.Arguments);
+					if (!Harness.DryRun) {
+						try {
+							var timeout = TimeSpan.FromMinutes (5);
+							var result = await make.RunAsync (log, true, timeout);
+							if (result.TimedOut) {
+								ExecutionResult = TestExecutingResult.TimedOut;
+								log.WriteLine ("Make timed out after {0} seconds.", timeout.TotalSeconds);
+							} else if (result.Succeeded) {
+								ExecutionResult = TestExecutingResult.Succeeded;
+							} else {
+								ExecutionResult = TestExecutingResult.Failed;
+							}
+						} catch (Exception e) {
+							log.WriteLine ("Harness exception: {0}", e);
+							ExecutionResult = TestExecutingResult.HarnessException;
+						}
+					}
+					Jenkins.MainLog.WriteLine ("Made {0} ({1})", TestName, Mode);
+				}
+			}
+		}
+	}
+
 	class XBuildTask : BuildToolTask
 	{
 		protected override async Task ExecuteAsync ()
@@ -779,7 +845,7 @@ function toggleContainerVisibility (containerName)
 
 	class NUnitExecuteTask : TestTask
 	{
-		public XBuildTask BuildTask;
+		public BuildToolTask BuildTask;
 		public string TestLibrary;
 		public string TestExecutable;
 		public string WorkingDirectory;
