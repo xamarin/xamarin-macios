@@ -413,11 +413,6 @@ namespace Xamarin.Bundler
 
 			MonoTouch.Tuner.Linker.Process (LinkerOptions, out link_context, out assemblies);
 
-			// reset resolver
-			foreach (var file in assemblies) {
-				/*				var assembly = */Resolver.Load (file);
-				// FIXME assembly.MainModule.AssemblyResolver = Resolver;
-			}
 			Driver.Watch ("Link Assemblies", 1);
 		}
 
