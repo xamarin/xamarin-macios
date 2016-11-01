@@ -112,7 +112,8 @@ namespace MonoTouch.Tuner {
 			sub.Add (new ApplyPreserveAttribute ());
 			sub.Add (new CoreRemoveSecurity ());
 			sub.Add (new OptimizeGeneratedCodeSubStep (options));
-			// OptimizeGeneratedCodeSubStep needs [GeneratedCode] so it must occurs before RemoveAttributes
+			sub.Add (new RemoveUserResourcesSubStep (options));
+			// OptimizeGeneratedCodeSubStep and RemoveNativeCodeSubStep needs [GeneratedCode] so it must occurs before RemoveAttributes
 			sub.Add (new RemoveAttributes ());
 			// http://bugzilla.xamarin.com/show_bug.cgi?id=1408
 			if (options.LinkAway)
@@ -162,11 +163,6 @@ namespace MonoTouch.Tuner {
 
 				pipeline.AppendStep (new PreserveCode (options));
 
-				// only remove bundled resources on device builds as MonoDevelop requires the resources later 
-				// (to be extracted). That differs from the device builds (where another unmodified copy is used)
-				if (options.Device)
-					pipeline.AppendStep (new RemoveMonoTouchResources ());
-
 				pipeline.AppendStep (new RemoveResources (options.I18nAssemblies)); // remove collation tables
 
 				pipeline.AppendStep (new MonoTouchMarkStep ());
@@ -178,6 +174,11 @@ namespace MonoTouch.Tuner {
 
 				pipeline.AppendStep (new RemoveSelectors ());
 				pipeline.AppendStep (new FixModuleFlags ());
+			} else {
+				SubStepDispatcher sub = new SubStepDispatcher () {
+					new RemoveUserResourcesSubStep (options)
+				};
+				pipeline.AppendStep (sub);
 			}
 
 			pipeline.AppendStep (new ListExportedSymbols (options.MarshalNativeExceptionsState));
