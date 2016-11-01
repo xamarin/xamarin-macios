@@ -1648,6 +1648,10 @@ namespace XamCore.Registrar {
 
 		Dictionary<Body, Body> bodies = new Dictionary<Body, Body> ();
 
+		AutoIndentStringBuilder full_token_references = new AutoIndentStringBuilder ();
+		uint full_token_reference_count;
+		List<string> registered_assemblies = new List<string> ();
+
 		static bool IsPlatformType (TypeReference type)
 		{
 			if (type.IsNested)
@@ -2311,6 +2315,13 @@ namespace XamCore.Registrar {
 				}
 			}
 
+			if (string.IsNullOrEmpty (single_assembly)) {
+				foreach (var assembly in GetAssemblies ())
+					registered_assemblies.Add (GetAssemblyName (assembly));
+			} else {
+				registered_assemblies.Add (single_assembly);
+			}
+
 			var customTypeCount = 0;
 			foreach (var @class in allTypes) {
 				var isPlatformType = IsPlatformType (@class.Type);
@@ -2322,7 +2333,10 @@ namespace XamCore.Registrar {
 						customTypeCount++;
 					
 					CheckNamespace (@class, exceptions);
-					map.AppendLine ("{{\"{0}\", \"{1}\", NULL }},", @class.ExportedName, GetAssemblyQualifiedName (@class.Type));
+					map.AppendLine ("{{ NULL, 0x{1:X} /* '{0}' => '{2}' */ }},", 
+									@class.ExportedName,
+									CreateTokenReference (@class.Type, TokenType.TypeDef), 
+									GetAssemblyQualifiedName (@class.Type));
 
 					bool use_dynamic;
 
@@ -2526,19 +2540,12 @@ namespace XamCore.Registrar {
 				sb.WriteLine ();
 			}
 
-			map.AppendLine ("{ NULL, NULL, NULL },");
+			map.AppendLine ("{ NULL, 0 },");
 			map.AppendLine ("};");
 			map.AppendLine ();
 
 			map.AppendLine ("static const char *__xamarin_registration_assemblies []= {");
 			int count = 0;
-			var registered_assemblies = new List<string> ();
-			if (string.IsNullOrEmpty (single_assembly)) {
-				foreach (var assembly in GetAssemblies ())
-					registered_assemblies.Add (GetAssemblyName (assembly));
-			} else {
-				registered_assemblies.Add (single_assembly);
-			}
 			foreach (var assembly in registered_assemblies) {
 				count++;
 				if (count > 1)
@@ -2551,14 +2558,21 @@ namespace XamCore.Registrar {
 			map.AppendLine ("};");
 			map.AppendLine ();
 
+			map.AppendLine ("static struct MTFullTokenReference __xamarin_token_references [] = {");
+			map.AppendLine (full_token_references);
+			map.AppendLine ("};");
+			map.AppendLine ();
+
 			map.AppendLine ("static struct MTRegistrationMap __xamarin_registration_map = {");
-			map.AppendLine ("NULL,");
 			map.AppendLine ("__xamarin_registration_assemblies,");
 			map.AppendLine ("__xamarin_class_map,");
+			map.AppendLine ("__xamarin_token_references,");
 			map.AppendLine ("{0},", count);
 			map.AppendLine ("{0},", i);
-			map.AppendLine ("{0}", customTypeCount);
+			map.AppendLine ("{0},", customTypeCount);
+			map.AppendLine ("{0}", full_token_reference_count);
 			map.AppendLine ("};");
+
 
 			map_init.AppendLine ("xamarin_add_registration_map (&__xamarin_registration_map);");
 			map_init.AppendLine ("}");
@@ -2668,7 +2682,6 @@ namespace XamCore.Registrar {
 			var descriptiveMethodName = method.DescriptiveMethodName;
 			var name = GetUniqueTrampolineName ("native_to_managed_trampoline_" + descriptiveMethodName);
 			var isVoid = returntype.FullName == "System.Void";
-			var arguments = new List<string> ();
 			var merge_bodies = true;
 
 			switch (method.CurrentTrampoline) {
@@ -2732,6 +2745,8 @@ namespace XamCore.Registrar {
 			invoke.Indentation = indent;
 			setup_call_stack.Indentation = indent;
 			setup_return.Indentation = indent;
+
+			var token_ref = CreateTokenReference (method.Method, TokenType.Method);
 
 			// A comment describing the managed signature
 			if (trace) {
@@ -3357,48 +3372,22 @@ namespace XamCore.Registrar {
 
 			// no locking should be required here, it doesn't matter if we overwrite the field (it'll be the same value).
 			body.WriteLine ("if (!managed_method) {");
-			if (num_arg > 0) {
-				body.Write ("const char *paramptr[{0}] = {{ ", num_arg);
-				for (int i = 0; i < num_arg; i++) {
-					string paramtype;
-					if (isGeneric) {
-						paramtype = GetAssemblyQualifiedName (method.Method.Parameters [i].ParameterType);
-					} else {
-						paramtype = GetAssemblyQualifiedName (method.Parameters [i]);
-					}
-					
-					if (merge_bodies) {
-						body.Write ("r{0}", arguments.Count);
-						arguments.Add (paramtype);
-					} else {
-						body.Write ("\"{0}\"", paramtype);
-					}
-					if (i < num_arg - 1)
-						body.Write (", ");
-				}
-				body.WriteLine (" };");
-			}
-
-			body.Write ("managed_method = ");
+			body.Write ("MonoReflectionMethod *reflection_method = ");
 			if (isGeneric)
-				body.Write ("xamarin_get_reflection_method_method (xamarin_get_generic_method_direct (mthis, ");
+				body.Write ("xamarin_get_generic_method_from_token (mthis, ");
 			else
-				body.Write ("xamarin_get_reflection_method_method (xamarin_get_method_direct(");
+				body.Write ("xamarin_get_method_from_token (");
 
 			if (merge_bodies) {
-				body.WriteLine ("r{2}, r{3}, {0}, {1}, &exception_gchandle));",
-					num_arg, num_arg > 0 ? "paramptr" : "NULL",
-					arguments.Count, arguments.Count + 1);
-				arguments.Add (GetAssemblyQualifiedName (method.Method.DeclaringType));
-				arguments.Add (method.Method.Name);
+				body.WriteLine ("token_ref, &exception_gchandle);");
 			} else {
-				body.WriteLine ("\"{0}\", \"{1}\", {2}, {3}, &exception_gchandle));",
-					GetAssemblyQualifiedName (method.Method.DeclaringType),
-					method.Method.Name, num_arg, num_arg > 0 ? "paramptr" : "NULL");
+				body.WriteLine ("0x{0:X}, &exception_gchandle);", token_ref);
 			}
 			body.WriteLine ("if (exception_gchandle != 0) goto exception_handling;");
+			body.WriteLine ("managed_method = xamarin_get_reflection_method_method (reflection_method);");
 			if (merge_bodies)
 				body.WriteLine ("*managed_method_ptr = managed_method;");
+			
 			body.WriteLine ("}");
 
 			if (!isStatic && !isInstanceCategory && !isCtor) {
@@ -3470,10 +3459,9 @@ namespace XamCore.Registrar {
 						methods.Append (", ").Append (ToObjCParameterType (method.Method.Parameters [i].ParameterType, descriptiveMethodName, exceptions, method.Method));
 						methods.Append (" ").Append ("p").Append (i.ToString ());
 					}
-					for (int i = 0; i < arguments.Count; i++)
-						methods.Append (", const char *").Append ("r").Append (i.ToString ());
 					if (isCtor)
 						methods.Append (", bool* call_super");
+					methods.Append (", uint32_t token_ref");
 					methods.AppendLine (")");
 					methods.AppendLine (body);
 					methods.AppendLine ();
@@ -3501,10 +3489,9 @@ namespace XamCore.Registrar {
 					paramCount--;
 				for (int i = 0; i < paramCount; i++)
 					sb.Write (", p{0}", i);
-				for (int i = 0; i < arguments.Count; i++)
-					sb.Write (", \"").Write (arguments [i]).Write ("\"");
 				if (isCtor)
 					sb.Write (", &call_super");
+				sb.Write (", 0x{0:X}", token_ref);
 				sb.WriteLine (");");
 				if (isCtor) {
 					sb.WriteLine ("if (call_super && rv) {");
@@ -3553,6 +3540,38 @@ namespace XamCore.Registrar {
 					return false;
 				return Code == other.Code && Signature == other.Signature;
 			}
+		}
+
+		uint CreateFullTokenReference (MemberReference member)
+		{
+			var rv = (full_token_reference_count++ << 1) + 1;
+			full_token_references.AppendFormat ("\t\t{{ /* #{3} = 0x{4:X} */ \"{0}\", 0x{1:X}, 0x{2:X} }},\n", GetAssemblyName (member.Module.Assembly), member.Module.MetadataToken.ToUInt32 (), member.MetadataToken.ToUInt32 (), full_token_reference_count, rv);
+			return rv;
+		}
+
+		uint CreateTokenReference (MemberReference member, TokenType implied_type)
+		{
+			var token = member.MetadataToken;
+
+			/* We can't create small token references if we're in partial mode, because we may have multiple arrays of registered assemblies, and no way of saying which one we refer to with the assembly index */
+			if (IsSingleAssembly)
+				return CreateFullTokenReference (member);
+
+			/* If the implied token type doesn't match, we need a full token */
+			if (implied_type != token.TokenType)
+				return CreateFullTokenReference (member);
+
+			/* For small token references the only valid module is the first one */
+			if (member.Module.MetadataToken.ToInt32 () != 1)
+				return CreateFullTokenReference (member);
+
+			/* The assembly must be a registered one, and only within the first 128 assemblies */
+			var assembly_name = GetAssemblyName (member.Module.Assembly);
+			var index = registered_assemblies.IndexOf (assembly_name);
+			if (index < 0 || index > 127)
+				return CreateFullTokenReference (member);
+
+			return (token.RID << 8) + ((uint) index << 1);
 		}
 
 		public void GeneratePInvokeWrappersStart (AutoIndentStringBuilder hdr, AutoIndentStringBuilder decls, AutoIndentStringBuilder mthds)

@@ -85,13 +85,6 @@ xamarin_extension_main_callback xamarin_extension_main = NULL;
 
 /* Local variable */
 
-typedef struct  {
-	struct MTRegistrationMap   *map;
-	int total_count; // SUM (registration_map->map_count)
-} RegistrationData;
-
-static RegistrationData registration_data;
-
 static MonoClass      *inativeobject_class;
 static MonoClass      *nsobject_class;
 
@@ -141,7 +134,7 @@ struct InitializationOptions {
 	enum InitializationFlags flags;
 	struct Delegates* Delegates;
 	struct Trampolines* Trampolines;
-	RegistrationData* RegistrationData;
+	struct MTRegistrationMap* RegistrationData;
 	enum MarshalObjectiveCExceptionMode MarshalObjectiveCExceptionMode;
 	enum MarshalManagedExceptionMode MarshalManagedExceptionMode;
 };
@@ -908,9 +901,7 @@ void
 xamarin_add_registration_map (struct MTRegistrationMap *map)
 {
 	// COOP: no managed memory access: any mode
-	map->next = registration_data.map;
-	registration_data.map = map;
-	registration_data.total_count += map->map_count;
+	options.RegistrationData = map;
 }
 
 /*
@@ -1192,7 +1183,6 @@ xamarin_initialize ()
 
 	options.Delegates = &delegates;
 	options.Trampolines = &trampolines;
-	options.RegistrationData = &registration_data;
 	options.MarshalObjectiveCExceptionMode = xamarin_marshal_objectivec_exception_mode;
 	options.MarshalManagedExceptionMode = xamarin_marshal_managed_exception_mode;
 

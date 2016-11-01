@@ -69,7 +69,6 @@ namespace XamCore.Registrar {
 
 	class DynamicRegistrar : Registrar {
 		Dictionary<IntPtr, ObjCType> type_map;
-		Dictionary <IntPtr, LazyMapEntry> lazy_map;
 		Dictionary <Type, Dictionary <IntPtr, MethodDescription>> method_map;
 		Dictionary <string, object> registered_assemblies; // Use Dictionary instead of HashSet to avoid pulling in System.Core.dll.
 
@@ -87,13 +86,6 @@ namespace XamCore.Registrar {
 			type_map = new Dictionary<IntPtr, ObjCType> (Runtime.IntPtrEqualityComparer);
 			method_map = new Dictionary<Type, Dictionary<IntPtr, MethodDescription>> (Runtime.TypeEqualityComparer);
 			custom_type_map = new Dictionary <Type, object> (Runtime.TypeEqualityComparer);
-		}
-
-		public Dictionary<IntPtr, LazyMapEntry> GetRegistrationMap (int initial_capacity)
-		{
-			if (lazy_map == null)
-				lazy_map = new Dictionary <IntPtr, LazyMapEntry> (initial_capacity, Runtime.IntPtrEqualityComparer);
-			return lazy_map;
 		}
 
 		protected override bool SkipRegisterAssembly (Assembly assembly)
@@ -939,13 +931,12 @@ namespace XamCore.Registrar {
 				do {
 					if (type_map.TryGetValue (@class, out type))
 						return type.Type;
-				
-					LazyMapEntry entry;
-					if (lazy_map != null && lazy_map.TryGetValue (@class, out entry)) {
-						lazy_map.Remove (@class);
-						var tp = Type.GetType (entry.Typename);
+
+					bool is_custom_type;
+					var tp = Class.FindType (@class, out is_custom_type);
+					if (tp != null) {
 						type = RegisterType (tp);
-						if (entry.IsCustomType)
+						if (is_custom_type)
 							AddCustomType (tp);
 						return tp;
 					}

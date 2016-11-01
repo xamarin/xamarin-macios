@@ -344,6 +344,11 @@ namespace Xamarin.Bundler {
 	//					MT8016	Unable to convert delegate to block for the return value for the method {0}.{1}, because the input isn't a delegate, it's a {1}. Please file a bug at http://bugzilla.xamarin.com.
 	//					MT8017	** reserved Xamarin.Mac **
 	//					MT8018	Internal consistency error. Please file a bug report at http://bugzilla.xamarin.com.
+	//					MT8019	Could not find the assembly {0} in the loaded assemblies.
+	//					MT8020	Could not find the module with MetadataToken {0} in the assembly {1}.
+	//					MT8021	Unknown implicit token type: 0x{0}.
+	//					MT8022	Expected the token reference 0x{0} to be a {1}, but it's a {2}. Please file a bug report at http://bugzilla.xamarin.com.
+	//					MT8023	An instance object is required to construct a closed generic method for the open generic method: {0}.{1} (token reference: 0x{2}). Please file a bug report at http://bugzilla.xamarin.com.
 	// MT9xxx	Licensing
 	//
 
