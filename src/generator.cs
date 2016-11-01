@@ -6371,6 +6371,9 @@ public partial class Generator : IMemberGatherer {
 					if (Generator.HasAttribute (field_pi, typeof (AdvancedAttribute))){
 						print ("[EditorBrowsable (EditorBrowsableState.Advanced)]");
 					}
+					// Check if this is a notification and print Advice to use our Notification API
+					if (HasAttribute (field_pi, typeof (NotificationAttribute)))
+						print ($"[Advice (\"Use {type.Name}.Notifications.Observe{GetNotificationName (field_pi)} helper method instead.\")]");
 					
 					print ("{0} static unsafe {1} {2}{3} {{", field_pi.IsInternal () ? "internal" : "public", fieldTypeName,
 					       field_pi.Name,
@@ -6957,6 +6960,10 @@ public partial class Generator : IMemberGatherer {
 						print ("\tpublic static NSObject Observe{0} (EventHandler<{1}> handler)", notification_name, event_name);
 						print ("\t{");
 						print ("\t\treturn {0}.AddObserver ({1}, notification => handler (null, new {2} (notification)));", notification_center, property.Name, event_name);
+						print ("\t}");
+						print ("\tpublic static NSObject Observe{0} (NSObject objectToObserve, EventHandler<{1}> handler)", notification_name, event_name);
+						print ("\t{");
+						print ("\t\treturn {0}.AddObserver ({1}, notification => handler (null, new {2} (notification)), objectToObserve);", notification_center, property.Name, event_name);
 						print ("\t}");
 					}
 				}
