@@ -134,6 +134,7 @@ namespace Introspection
 			"dlerror",
 			"Dlfcn",
 			"dlopen",
+			"Dlsym",
 			"dlsym",
 			"Dng",
 			"Dns",
@@ -158,6 +159,7 @@ namespace Introspection
 			"Eppc",
 			"Exhange",
 			"Exp",
+			"Felica", // Japanese contactless RFID smart card system
 			"Femtowatts",
 			"Flipside",
 			"Formati",
@@ -201,6 +203,7 @@ namespace Introspection
 			"Iptc",
 			"Ircs",
 			"Itu",
+			"Jcb", // Japanese credit card company
 			"Jfif",
 			"Json",
 			"Keyerror",
@@ -339,6 +342,7 @@ namespace Introspection
 			"Submeshes",
 			"Subpixel",
 			"Subsec",
+			"Suica", // Japanese contactless smart card type
 			"Superentity",
 			"Sym",
 			"Synchronizable",

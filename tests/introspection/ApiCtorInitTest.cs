@@ -290,6 +290,12 @@ namespace Introspection {
 				if (ctor.ToString () == "Void .ctor(NSString, NSRegularExpressionOptions, NSError&)")
 					return true;
 				break;
+			case "SKStoreProductViewController":
+			case "SKCloudServiceSetupViewController":
+				// SKStoreProductViewController and SKCloudServiceSetupViewController are OS View Controllers which can't be customized. Therefore they shouldn't re-expose initWithNibName:bundle:
+				if (ctor.ToString () == "Void .ctor(String, NSBundle)")
+					return true;
+				break;
 #if __TVOS__
 			case "UISearchBar":
 				// - (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_DESIGNATED_INITIALIZER __TVOS_PROHIBITED;

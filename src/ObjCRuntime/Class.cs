@@ -23,11 +23,11 @@ namespace XamCore.ObjCRuntime {
 
 		internal IntPtr handle;
 
-		internal unsafe static void Initialize (ref Runtime.InitializationOptions options)
+		internal unsafe static void Initialize (Runtime.InitializationOptions* options)
 		{
-			if (options.RegistrationData != null) {
-				var map = options.RegistrationData->map;
-				var lazy_map = Runtime.Registrar.GetRegistrationMap (options.RegistrationData->total_count);
+			if (options->RegistrationData != null) {
+				var map = options->RegistrationData->map;
+				var lazy_map = Runtime.Registrar.GetRegistrationMap (options->RegistrationData->total_count);
 				while (map != null) {
 					RegisterMap (map, lazy_map);
 					map = map->next;
@@ -220,14 +220,6 @@ namespace XamCore.ObjCRuntime {
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		internal extern static IntPtr class_getInstanceVariable (IntPtr cls, string name);
 
-#if MONOMAC && !XAMCORE_2_0
-		[DllImport ("/usr/lib/libc.dylib", SetLastError=true)]
-		internal extern static int mprotect (IntPtr addr, nint len, int prot);
-
-		[DllImport ("/usr/lib/libc.dylib", SetLastError=true)]
-		static extern IntPtr mmap (IntPtr start, ulong length, int prot, int flags, int fd, long offset);
-#endif
-		
 		[DllImport ("/usr/lib/libobjc.dylib", CharSet=CharSet.Ansi)]
 		internal extern static bool class_addProperty (IntPtr cls, string name, objc_attribute_prop [] attributes, int count);
 

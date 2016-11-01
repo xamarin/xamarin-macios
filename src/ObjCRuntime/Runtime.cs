@@ -106,8 +106,8 @@ namespace XamCore.ObjCRuntime {
 		internal unsafe struct InitializationOptions {
 			public int Size;
 			public InitializationFlags Flags;
-			public Delegates Delegates;
-			public Trampolines Trampolines;
+			public Delegates *Delegates;
+			public Trampolines *Trampolines;
 			public RegistrationData *RegistrationData;
 			public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptionMode;
 			public MarshalManagedExceptionMode MarshalManagedExceptionMode;
@@ -119,6 +119,8 @@ namespace XamCore.ObjCRuntime {
 			}
 		}
 
+		internal static unsafe InitializationOptions* options;
+
 		internal static bool Initialized {
 			get { return initialized; }
 		}
@@ -129,12 +131,12 @@ namespace XamCore.ObjCRuntime {
 #endif
 
 		[Preserve] // called from native - runtime.m.
-		unsafe static void Initialize (ref InitializationOptions options)
+		unsafe static void Initialize (InitializationOptions* options)
 		{
 #if PROFILE
 			var watch = new Stopwatch ();
 #endif
-			if (options.Size != Marshal.SizeOf (typeof (InitializationOptions))) {
+			if (options->Size != Marshal.SizeOf (typeof (InitializationOptions))) {
 				string msg = "Version mismatch between the native " + ProductName + " runtime and " + AssemblyName + ". Please reinstall " + ProductName + ".";
 				Console.Error.WriteLine (msg);
 #if MONOMAC
@@ -184,17 +186,17 @@ namespace XamCore.ObjCRuntime {
 			IntPtrEqualityComparer = new IntPtrEqualityComparer ();
 			TypeEqualityComparer = new TypeEqualityComparer ();
 
+			Runtime.options = options;
 			delegates = new List<object> ();
 			object_map = new Dictionary <IntPtr, WeakReference> (IntPtrEqualityComparer);
 			lock_obj = new object ();
 
-			NSObjectClass = NSObject.Initialize (ref options);
+			NSObjectClass = NSObject.Initialize ();
 
-			CreateRegistrar (options);
-			RegisterDelegates (ref options);
-			Method.Initialize (ref options);
-			Class.Initialize (ref options);
-			InitializePlatform (ref options);
+			Registrar = new DynamicRegistrar ();
+			RegisterDelegates (options);
+			Class.Initialize (options);
+			InitializePlatform (options);
 
 #if !COREBUILD && (XAMARIN_APPLETLS || XAMARIN_NO_TLS)
 			MonoTlsProviderFactory._PrivateFactoryDelegate = TlsProviderFactoryCallback;
@@ -204,8 +206,8 @@ namespace XamCore.ObjCRuntime {
 			UseAutoreleasePoolInThreadPool = true;
 #endif
 
-			objc_exception_mode = options.MarshalObjectiveCExceptionMode;
-			managed_exception_mode = options.MarshalManagedExceptionMode;
+			objc_exception_mode = options->MarshalObjectiveCExceptionMode;
+			managed_exception_mode = options->MarshalManagedExceptionMode;
 
 			initialized = true;
 #if PROFILE
@@ -309,6 +311,12 @@ namespace XamCore.ObjCRuntime {
 #else
 			throw new MonoTouchException (new NSException (ns_exception));
 #endif
+		}
+
+		static void RethrowManagedException (uint exception_gchandle)
+		{
+			var e = (Exception) GCHandle.FromIntPtr ((IntPtr) exception_gchandle).Target;
+			System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture (e).Throw ();
 		}
 
 		static int CreateNSException (IntPtr ns_exception)
@@ -1278,8 +1286,21 @@ namespace XamCore.ObjCRuntime {
 			ConnectMethod (method.DeclaringType, method, selector);
 		}
 
+#if MONOMAC
+		[DllImport (Constants.FoundationLibrary, EntryPoint = "NSLog")]
+		extern static void NSLog_impl (IntPtr format, [MarshalAs (UnmanagedType.LPStr)] string s);
+		static void NSLog (IntPtr format, string s)
+		{
+			if (PlatformHelper.CheckSystemVersion (10, 12)) {
+				Console.WriteLine (s);
+			} else {
+				NSLog_impl (format, s);
+			}
+		}
+#else
 		[DllImport (Constants.FoundationLibrary)]
 		extern static void NSLog (IntPtr format, [MarshalAs (UnmanagedType.LPStr)] string s);
+#endif
 
 		[DllImport (Constants.FoundationLibrary, EntryPoint = "NSLog")]
 		extern static void NSLog_arm64 (IntPtr format, IntPtr p2, IntPtr p3, IntPtr p4, IntPtr p5, IntPtr p6, IntPtr p7, IntPtr p8, [MarshalAs (UnmanagedType.LPStr)] string s);

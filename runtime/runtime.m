@@ -54,11 +54,6 @@ bool xamarin_init_mono_debug = true;
 #else
 bool xamarin_init_mono_debug = false;
 #endif
-#if DEBUG && (defined (__i386__) || defined (__x86_64__))
-bool xamarin_compact_seq_points = false;
-#else
-bool xamarin_compact_seq_points = true;
-#endif
 int xamarin_log_level = 0;
 const char *xamarin_executable_name = NULL;
 #if MONOMAC
@@ -144,8 +139,8 @@ enum InitializationFlags : int {
 struct InitializationOptions {
 	int size; // the size of this structure. This is used for version checking.
 	enum InitializationFlags flags;
-	struct Delegates Delegates;
-	struct Trampolines Trampolines;
+	struct Delegates* Delegates;
+	struct Trampolines* Trampolines;
 	RegistrationData* RegistrationData;
 	enum MarshalObjectiveCExceptionMode MarshalObjectiveCExceptionMode;
 	enum MarshalManagedExceptionMode MarshalManagedExceptionMode;
@@ -182,6 +177,8 @@ static struct Trampolines trampolines = {
 	(void *) &xamarin_get_gchandle_trampoline,
 	(void *) &xamarin_set_gchandle_trampoline,
 };
+
+struct InitializationOptions options = { 0 };
 
 struct Managed_NSObject {
 	MonoObject obj;
@@ -1129,7 +1126,6 @@ xamarin_initialize ()
 	MonoAssembly *assembly = NULL;
 	MonoImage *image;
 	MonoMethod *runtime_initialize;
-	struct InitializationOptions options;
 	void* params[2];
 	const char *product_dll = NULL;
 	guint32 exception_gchandle = 0;
@@ -1189,13 +1185,13 @@ xamarin_initialize ()
 
 	runtime_initialize = mono_class_get_method_from_name (runtime_class, "Initialize", 1);
 
-	memset (&options, 0, sizeof (options));
 	options.size = sizeof (options);
 #if MONOTOUCH && (defined(__i386__) || defined (__x86_64__))
 	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsSimulator);
 #endif
 
-	options.Trampolines = trampolines;
+	options.Delegates = &delegates;
+	options.Trampolines = &trampolines;
 	options.RegistrationData = &registration_data;
 	options.MarshalObjectiveCExceptionMode = xamarin_marshal_objectivec_exception_mode;
 	options.MarshalManagedExceptionMode = xamarin_marshal_managed_exception_mode;
@@ -1207,8 +1203,6 @@ xamarin_initialize ()
 	if (exc)
 		xamarin_process_managed_exception (exc);
 
-	delegates = options.Delegates;
-			
 	if (!register_assembly (assembly, &exception_gchandle))
 		xamarin_process_managed_exception_gchandle (exception_gchandle);
 
@@ -2073,7 +2067,32 @@ xamarin_process_managed_exception (MonoObject *exception)
 	case MarshalManagedExceptionModeUnwindNativeCode:
 		if (xamarin_is_gc_coop)
 			xamarin_assertion_message ("Cannot unwind native frames for managed exceptions when the GC is in cooperative mode.");
+
+		//
+		// We want to maintain the original stack trace of the exception, but unfortunately
+		// calling mono_raise_exception directly with the original exception will overwrite
+		// the original stack trace.
+		//
+		// The good news is that the managed ExceptionDispatchInfo class is able to capture
+		// a stack trace for an exception and show it later.
+		//
+		// The xamarin_rethrow_managed_exception method will use ExceptionDispatchInfo
+		// to throw an exception that contains the original stack trace.
+		//
+
+		handle = mono_gchandle_new (exception, false);
+		xamarin_rethrow_managed_exception (handle, &exception_gchandle);
+		mono_gchandle_free (handle);
+
+		if (exception_gchandle == 0) {
+			PRINT (PRODUCT ": Did not get a rethrow exception, will throw the original exception. The original stack trace will be lost.");
+		} else {
+			exception = mono_gchandle_get_target (exception_gchandle);
+			mono_gchandle_free (exception_gchandle);
+		}
+
 		mono_raise_exception ((MonoException *) exception);
+
 		break;
 	case MarshalManagedExceptionModeThrowObjectiveCException: {
 		int handle = mono_gchandle_new (exception, false);
@@ -2345,6 +2364,31 @@ bool
 xamarin_get_is_debug ()
 {
 	return xamarin_debug_mode;
+}
+
+bool
+xamarin_is_managed_exception_marshaling_disabled ()
+{
+#if DEBUG
+	if (xamarin_is_gc_coop)
+		return false;
+
+	switch (xamarin_marshal_managed_exception_mode) {
+	case MarshalManagedExceptionModeDefault:
+		// If all of the following are true:
+		// * In debug mode
+		// * Using the default exception marshaling mode
+		// * The debugger is attached
+		// Then disable managed exception marshaling.
+		return mono_is_debugger_attached ();
+	case MarshalManagedExceptionModeDisable:
+		return true;
+	default:
+		return false;
+	}
+#else
+	return false;
+#endif
 }
 
 /*

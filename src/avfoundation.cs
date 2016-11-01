@@ -6637,6 +6637,9 @@ namespace XamCore.AVFoundation {
 		[Export ("initWithAsset:presetName:")]
 		IntPtr Constructor (AVAsset asset, string presetName);
 
+		[Wrap ("this (asset, preset.GetConstant ())")]
+		IntPtr Constructor (AVAsset asset, AVAssetExportSessionPreset preset);
+
 		[Export ("exportAsynchronouslyWithCompletionHandler:")]
 		[Async ("ExportTaskAsync")]
 #if XAMCORE_2_0

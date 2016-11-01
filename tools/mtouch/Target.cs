@@ -233,7 +233,7 @@ namespace Xamarin.Bundler
 			} catch (MonoTouchException mte) {
 				exceptions.Add (mte);
 			} catch (Exception e) {
-				exceptions.Add (new MonoTouchException (9, true, "Error while loading assemblies: {0}", e.Message));
+				exceptions.Add (new MonoTouchException (9, true, e, "Error while loading assemblies: {0}", e.Message));
 			}
 
 			if (App.LinkMode == LinkMode.None)
@@ -411,11 +411,6 @@ namespace Xamarin.Bundler
 
 			MonoTouch.Tuner.Linker.Process (LinkerOptions, out link_context, out assemblies);
 
-			// reset resolver
-			foreach (var file in assemblies) {
-				/*				var assembly = */Resolver.Load (file);
-				// FIXME assembly.MainModule.AssemblyResolver = Resolver;
-			}
 			Driver.Watch ("Link Assemblies", 1);
 		}
 
@@ -485,6 +480,7 @@ namespace Xamarin.Bundler
 						}
 
 						Driver.Watch ("Cached assemblies reloaded", 1);
+						Driver.Log ("Cached assemblies reloaded.");
 
 						return;
 					}
@@ -756,7 +752,8 @@ namespace Xamarin.Bundler
 			// Collect all LinkWith flags and frameworks from all assemblies.
 			foreach (var a in Assemblies) {
 				compiler_flags.AddFrameworks (a.Frameworks, a.WeakFrameworks);
-				compiler_flags.AddLinkWith (a.LinkWith, a.ForceLoad);
+				if (!App.FastDev)
+					compiler_flags.AddLinkWith (a.LinkWith, a.ForceLoad);
 				compiler_flags.AddOtherFlags (a.LinkerFlags);
 			}
 

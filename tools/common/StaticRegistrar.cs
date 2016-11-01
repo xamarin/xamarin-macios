@@ -292,6 +292,9 @@ namespace XamCore.Registrar {
 			if (!TypeMatch (candidate.ReturnType, method.ReturnType))
 				return false;
 
+			if (!candidate.HasParameters)
+				return !method.HasParameters;
+
 			if (candidate.Parameters.Count != method.Parameters.Count)
 				return false;
 
@@ -827,8 +830,12 @@ namespace XamCore.Registrar {
 			return method.ReturnType;
 		}
 
+		TypeReference system_void;
 		protected override TypeReference GetSystemVoidType ()
 		{
+			if (system_void != null)
+				return system_void;
+			
 			// find corlib
 			AssemblyDefinition corlib = null;
 			AssemblyDefinition first = null;
@@ -847,10 +854,10 @@ namespace XamCore.Registrar {
 			}
 			foreach (var type in corlib.MainModule.Types) {
 				if (type.Namespace == "System" && type.Name == "Void")
-					return type;
+					return system_void = type;
 			}
 
-			throw new Exception ("Couldn't find System.Void");
+			throw ErrorHelper.CreateError (4165, "The registrar couldn't find the type 'System.Void' in any of the referenced assemblies.");
 		}
 
 		protected override bool IsVirtual (MethodDefinition method)
@@ -1945,7 +1952,41 @@ namespace XamCore.Registrar {
 
 			if (arrtype != null)
 				return "NSArray *";
-			
+
+			var git = type as GenericInstanceType;
+			if (git != null && IsNSObject (type)) {
+				var sb = new StringBuilder ();
+				var elementType = git.GetElementType ();
+
+				sb.Append (ToObjCParameterType (elementType, descriptiveMethodName, exceptions, inMethod));
+
+				if (sb [sb.Length - 1] != '*') {
+					// I'm not sure if this is possible to hit (I couldn't come up with a test case), but better safe than sorry.
+					AddException (ref exceptions, CreateException (4166, inMethod.Resolve () as MethodDefinition, "Cannot register the method '{0}' because the signature contains a type ({1}) that isn't a reference type.", descriptiveMethodName, GetTypeFullName (elementType)));
+					return "id";
+				}
+
+				sb.Length--; // remove the trailing * of the element type
+
+				sb.Append ('<');
+				for (int i = 0; i < git.GenericArguments.Count; i++) {
+					if (i > 0)
+						sb.Append (", ");
+					var argumentType = git.GenericArguments [i];
+					if (!IsNSObject (argumentType)) {
+						// I believe the generic constraints we have should make this error impossible to hit, but better safe than sorry.
+						AddException (ref exceptions, CreateException (4167, inMethod.Resolve () as MethodDefinition, "Cannot register the method '{0}' because the signature contains a generic type ({1}) with a generic argument type that isn't an NSObject subclass ({2}).", descriptiveMethodName, GetTypeFullName (type), GetTypeFullName (argumentType)));
+						return "id";
+					}
+					sb.Append (ToObjCParameterType (argumentType, descriptiveMethodName, exceptions, inMethod));
+				}
+				sb.Append ('>');
+
+				sb.Append ('*'); // put back the * from the element type
+
+				return sb.ToString ();
+			}
+
 			switch (td.FullName) {
 #if MMP
 			case "System.Drawing.RectangleF": return "NSRect";
@@ -2223,9 +2264,8 @@ namespace XamCore.Registrar {
 				if (!string.IsNullOrEmpty (single_assembly) && single_assembly != @class.Type.Module.Assembly.Name.Name)
 					continue;
 
-				var isPlatformType = IsPlatformType (@class.Type);
 #if !MONOMAC
-
+				var isPlatformType = IsPlatformType (@class.Type);
 				if (isPlatformType && IsSimulatorOrDesktop && IsMetalType (@class))
 					continue; // Metal isn't supported in the simulator.
 #else
@@ -2624,7 +2664,7 @@ namespace XamCore.Registrar {
 			var isStatic = method.IsStatic;
 			var isInstanceCategory = method.IsCategoryInstance;
 			var isCtor = false;
-			var num_arg = method.Method.Parameters.Count;
+			var num_arg = method.Method.HasParameters ? method.Method.Parameters.Count : 0;
 			var descriptiveMethodName = method.DescriptiveMethodName;
 			var name = GetUniqueTrampolineName ("native_to_managed_trampoline_" + descriptiveMethodName);
 			var isVoid = returntype.FullName == "System.Void";
@@ -3148,7 +3188,12 @@ namespace XamCore.Registrar {
 			var marshal_exception = "NULL";
 			if (App.MarshalManagedExceptions != MarshalManagedExceptionMode.Disable) {
 				body_setup.AppendLine ("MonoObject *exception = NULL;");
-				marshal_exception = "&exception";
+				if (App.EnableDebug && App.IsDefaultMarshalManagedExceptionMode) {
+					body_setup.AppendLine ("MonoObject **exception_ptr = xamarin_is_managed_exception_marshaling_disabled () ? NULL : &exception;");
+					marshal_exception = "exception_ptr";
+				} else {
+					marshal_exception = "&exception";
+				}
 			}
 
 			if (!isVoid) {
@@ -3397,8 +3442,10 @@ namespace XamCore.Registrar {
 			/* We merge duplicated bodies (based on the signature of the method and the entire body) */
 
 			var objc_signature = new StringBuilder ().Append (rettype).Append (":");
-			for (int i = 0; i < method.Method.Parameters.Count; i++)
-				objc_signature.Append (ToObjCParameterType (method.Method.Parameters [i].ParameterType, descriptiveMethodName, exceptions, method.Method)).Append (":");
+			if (method.Method.HasParameters) {
+				for (int i = 0; i < method.Method.Parameters.Count; i++)
+					objc_signature.Append (ToObjCParameterType (method.Method.Parameters [i].ParameterType, descriptiveMethodName, exceptions, method.Method)).Append (":");
+			}
 
 			Body existing;
 			Body b = new Body () {
@@ -3418,7 +3465,8 @@ namespace XamCore.Registrar {
 				if (merge_bodies) {
 					methods.Append ("static ");
 					methods.Append (rettype).Append (" ").Append (b.Name).Append (" (id self, SEL _cmd, MonoMethod **managed_method_ptr");
-					for (int i = (isInstanceCategory ? 1 : 0); i < method.Method.Parameters.Count; i++) {
+					var pcount = method.Method.HasParameters ? method.Method.Parameters.Count : 0;
+					for (int i = (isInstanceCategory ? 1 : 0); i < pcount; i++) {
 						methods.Append (", ").Append (ToObjCParameterType (method.Method.Parameters [i].ParameterType, descriptiveMethodName, exceptions, method.Method));
 						methods.Append (" ").Append ("p").Append (i.ToString ());
 					}
@@ -3448,7 +3496,7 @@ namespace XamCore.Registrar {
 				}
 				sb.Write (b.Name);
 				sb.Write (" (self, _cmd, &managed_method");
-				var paramCount = method.Method.Parameters.Count;
+				var paramCount = method.Method.HasParameters ? method.Method.Parameters.Count : 0;
 				if (isInstanceCategory)
 					paramCount--;
 				for (int i = 0; i < paramCount; i++)
@@ -3681,8 +3729,11 @@ namespace XamCore.Registrar {
 							methods = mthds;
 
 							mthds.WriteLine ($"#include \"{Path.GetFileName (header_path)}\"");
+							mthds.StringBuilder.AppendLine ("extern \"C\" {");
 
 							Specialize (sb);
+
+							mthds.StringBuilder.AppendLine ("} /* extern \"C\" */");
 
 							header = null;	
 							declarations = null;

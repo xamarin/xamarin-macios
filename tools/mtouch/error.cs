@@ -286,6 +286,9 @@ namespace Xamarin.Bundler {
 	//					MT4162	The type '{0}' (used as {1} {2}) is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer iOS SDK (usually done by using the most recent version of Xcode.
 	//					MT4163	Internal error in the registrar ({0}). Please file a bug report at http://bugzilla.xamarin.com
 	//					MT4164	Cannot export the property '{0}' because its selector '{1}' is an Objective-C keyword. Please use a different name.
+	//					MT4165	The registrar couldn't find the type 'System.Void' in any of the referenced assemblies.
+	//					MT4166	Cannot register the method '{0}' because the signature contains a type ({1}) that isn't a reference type.
+	//					MT4167	Cannot register the method '{0}' because the signature contains a generic type ({1}) with a generic argument type that isn't an NSObject subclass ({2}).
 	// MT5xxx	GCC and toolchain
 	//			MT51xx	compilation
 	//					MT5101	Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component

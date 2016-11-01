@@ -32,7 +32,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	MONO_ASSERT_GC_SAFE_OR_DETACHED;
 
 	MonoObject *exception = NULL;
-	MonoObject **exception_ptr = xamarin_marshal_managed_exception_mode == MarshalManagedExceptionModeDisable ? NULL : &exception;
+	MonoObject **exception_ptr = xamarin_is_managed_exception_marshaling_disabled () ? NULL : &exception;
 	guint32 exception_gchandle = 0;
 	bool is_static = (type & Tramp_Static) == Tramp_Static;
 	bool is_ctor = type == Tramp_Ctor;

@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-using MTouchTests;
+using Xamarin;
 using Xamarin.Tests;
 
 using NUnit.Framework;
@@ -22,7 +22,7 @@ namespace Xamarin.Tests {
 	}
 }
 
-namespace MTouchTests
+namespace Xamarin
 {
 	[TestFixture]
 	public class MTouch
@@ -627,41 +627,12 @@ namespace MTouchTests
 		[Test]
 		public void ExtensionBuild ()
 		{
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			try {
-				var exe = CompileTestAppExecutable (testDir);
-				File.WriteAllText (Path.Combine (app, "Info.plist"), @"<?xml version=""1.0"" encoding=""UTF-8""?>
-<!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
-<plist version=""1.0"">
-<dict>
-	<key>CFBundleDisplayName</key>
-	<string>Extensiontest</string>
-	<key>CFBundleIdentifier</key>
-	<string>com.xamarin.extensiontest</string>
-	<key>MinimumOSVersion</key>
-	<string>6.0</string>
-	<key>UIDeviceFamily</key>
-	<array>
-		<integer>1</integer>
-		<integer>2</integer>
-	</array>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-</dict>
-</plist>
-");
-				ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk {3} --targetver {3} --extension -r:{2} {1}", app, exe, Configuration.XamarinIOSDll, Configuration.sdk_version), hide_output: false);
-				ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk {3} --targetver {3} --extension -r:{2} {1}", app, exe, Configuration.XamarinIOSDll, Configuration.sdk_version), hide_output: false);
-			} finally {
-				Directory.Delete (testDir, true);
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp (hasPlist: true);
+				mtouch.Extension = true;
+				mtouch.TargetVer = Configuration.sdk_version;
+				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildSim));
+				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev));
 			}
 		}
 
@@ -854,6 +825,12 @@ namespace MTouchTests
 					Registrar = MTouchRegistrar.Static,
 				};
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev), "build");
+
+				var symbols = ExecutionHelper.Execute ("nm", Quote (mtouch.NativeExecutablePath), hide_output: true).Split ('\n');
+				Assert.That (symbols, Has.None.EndsWith (" T _theUltimateAnswer"), "Binding symbol not in executable");
+
+				symbols = ExecutionHelper.Execute ("nm", Quote (Path.Combine (mtouch.AppPath, "libbindings-test.dll.dylib")), hide_output: true).Split ('\n');
+				Assert.That (symbols, Has.Some.EndsWith (" T _theUltimateAnswer"), "Binding symbol in binding library");
 			} finally {
 				Directory.Delete (testDir, true);
 			}
@@ -1952,7 +1929,7 @@ class Test {
 				tool.Profile = profile;
 				tool.Verbosity = 5;
 				tool.Cache = Path.Combine (tool.CreateTemporaryDirectory (), "mtouch-test-cache");
-				tool.CreateTemporaryApp ("using UIKit; class C { static void Main (string[] args) { UIApplication.Main (args); } }");
+				tool.CreateTemporaryApp (code: "using UIKit; class C { static void Main (string[] args) { UIApplication.Main (args); } }");
 				tool.FastDev = true;
 				tool.Dlsym = false;
 
@@ -1990,18 +1967,99 @@ class Test {
 			}
 		}
 
+		[Test]
+		public void LinkWithNoLibrary ()
+		{
+			using (var tool = new MTouchTool ()) {
+				tool.Profile = Profile.Unified;
+				tool.CreateTemporaryApp (code: @"
+using System;
+using System.Runtime.InteropServices;
+using ObjCRuntime;
+[assembly: LinkWith (Dlsym = DlsymOption.Required)]
+class C {
+	[DllImport (""libsqlite3"")]
+	static extern void sqlite3_column_database_name16 ();
+	static void Main ()
+	{
+	}
+}
+");
+				tool.NoFastSim = true;
+				tool.Dlsym = false;
+				tool.Linker = MTouchLinker.LinkSdk;
+				Assert.AreEqual (0, tool.Execute (MTouchAction.BuildDev), "build");
+			}
+		}
+
+		[Test]
+		public void WatchExtensionWithFramework ()
+		{
+			using (var exttool = new MTouchTool ()) {
+				exttool.Profile = Profile.WatchOS;
+				exttool.CreateTemporaryCacheDirectory ();
+				exttool.Verbosity = 5;
+
+				exttool.Extension = true;
+				exttool.CreateTemporaryWatchKitExtension ();
+				exttool.Frameworks.Add (Path.Combine (Configuration.SourceRoot, "tests/test-libraries/.libs/watchos/XTest.framework"));
+				exttool.AssertExecute (MTouchAction.BuildSim, "build extension");
+
+				using (var apptool = new MTouchTool ()) {
+					apptool.Profile = Profile.Unified;
+					apptool.CreateTemporaryCacheDirectory ();
+					apptool.Verbosity = exttool.Verbosity;
+					apptool.CreateTemporaryApp ();
+					apptool.AppExtensions.Add (exttool.AppPath);
+					apptool.AssertExecute (MTouchAction.BuildSim, "build app");
+
+					Assert.IsFalse (Directory.Exists (Path.Combine (apptool.AppPath, "Frameworks", "XTest.framework")), "framework inexistence");
+					Assert.IsTrue (Directory.Exists (Path.Combine (exttool.AppPath, "Frameworks", "XTest.framework")), "extension framework existence");
+				}
+			}
+		}
+
+		[Test]
+		public void OnlyExtensionWithFramework ()
+		{
+			// if an extension references a framework, and the main app does not,
+			// the framework should still be copied to the main app's Framework directory.
+			using (var exttool = new MTouchTool ()) {
+				exttool.Profile = Profile.Unified;
+				exttool.CreateTemporaryCacheDirectory ();
+				exttool.Verbosity = 5;
+
+				exttool.Extension = true;
+				exttool.CreateTemporararyServiceExtension ();
+				exttool.Frameworks.Add (Path.Combine (Configuration.SourceRoot, "tests/test-libraries/.libs/ios/XTest.framework"));
+				exttool.AssertExecute (MTouchAction.BuildSim, "build extension");
+
+				using (var apptool = new MTouchTool ()) {
+					apptool.Profile = Profile.Unified;
+					apptool.CreateTemporaryCacheDirectory ();
+					apptool.Verbosity = exttool.Verbosity;
+					apptool.CreateTemporaryApp ();
+					apptool.AppExtensions.Add (exttool.AppPath);
+					apptool.AssertExecute (MTouchAction.BuildSim, "build app");
+
+					Assert.IsTrue (Directory.Exists (Path.Combine (apptool.AppPath, "Frameworks", "XTest.framework")), "framework exists");
+					Assert.IsFalse (Directory.Exists (Path.Combine (exttool.AppPath, "Frameworks")), "extension framework inexistence");
+				}
+			}
+		}
+
 #region Helper functions
 		static string CompileUnifiedTestAppExecutable (string targetDirectory, string code = null, string extraArg = "")
 		{
 			return CompileTestAppExecutable (targetDirectory, code, extraArg, profile: MTouch.Profile.Unified);
 		}
 
-		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.Unified)
+		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.Unified, string appName = "testApp")
 		{
 			if (code == null)
 				code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
 
-			return CompileTestAppCode ("exe", targetDirectory, code, extraArg, profile);
+			return CompileTestAppCode ("exe", targetDirectory, code, extraArg, profile, appName);
 		}
 
 		public static string CompileTestAppLibrary (string targetDirectory, string code, string extraArg = null, Profile profile = Profile.Unified)
@@ -2009,11 +2067,11 @@ class Test {
 			return CompileTestAppCode ("library", targetDirectory, code, extraArg, profile);
 		}
 
-		public static string CompileTestAppCode (string target, string targetDirectory, string code, string extraArg = "", Profile profile = Profile.Unified)
+		public static string CompileTestAppCode (string target, string targetDirectory, string code, string extraArg = "", Profile profile = Profile.Unified, string appName = "testApp")
 		{
 			var ext = target == "exe" ? "exe" : "dll";
 			var cs = Path.Combine (targetDirectory, "testApp.cs");
-			var assembly = Path.Combine (targetDirectory, "testApp." + ext);
+			var assembly = Path.Combine (targetDirectory, appName + "." + ext);
 			var root_library = GetBaseLibrary (profile);
 
 			File.WriteAllText (cs, code);
@@ -2277,13 +2335,6 @@ public class TestApp {
 
 	class McsException : Exception {
 		public McsException (string output)
-			: base (output)
-		{
-		}
-	}	
-
-	class ActivationException : Exception {
-		public ActivationException (string output)
 			: base (output)
 		{
 		}
