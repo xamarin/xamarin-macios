@@ -283,6 +283,28 @@ namespace Xamarin.Bundler
 			}
 		}
 
+		public static string Arch32Directory {
+			get {
+				switch (app.Platform) {
+				case ApplePlatform.iOS:
+					return Path.Combine (Driver.PlatformFrameworkDirectory, "..", "..", "32bits");
+				default:
+					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
+				}
+			}
+		}
+
+		public static string Arch64Directory {
+			get {
+				switch (app.Platform) {
+				case ApplePlatform.iOS:
+					return Path.Combine (Driver.PlatformFrameworkDirectory, "..", "..", "64bits");
+				default:
+					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
+				}
+			}
+		}
+
 		public static string ProductSdkDirectory {
 			get {
 				switch (app.Platform) {
