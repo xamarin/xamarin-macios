@@ -8932,7 +8932,6 @@ namespace XamCore.AppKit {
 		[Internal, Field ("NSImageNameTouchBarAudioOutputMuteTemplate")]
 		NSString NSImageNameTouchBarAudioOutputMuteTemplate { get; }
 
-		// extern NSString *const _Nonnull NSImageNameTouchBarAudioOutputVolumeHighTemplate __attribute__((availability(macos, introduced=10.12.1)));
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarAudioOutputVolumeHighTemplate")]
 		NSString NSImageNameTouchBarAudioOutputVolumeHighTemplate { get; }
@@ -15550,7 +15549,6 @@ namespace XamCore.AppKit {
 	[BaseType (typeof(NSView))]
 	interface NSView_NSTouchBar
 	{
-		// @property NSTouchTypeMask allowedTouchTypes __attribute__((availability(macos, introduced=10_12_1)));
 		[Mac (10, 12, 1)]
 		[Export ("allowedTouchTypes", ArgumentSemantic.Assign)]
 		NSTouchTypeMask GetAllowedTouchTypes ();
@@ -18424,13 +18422,11 @@ namespace XamCore.AppKit {
 		[Export ("textView:shouldUpdateTouchBarItemIdentifiers:"), DelegateName ("NSTextViewUpdateTouchBarItemIdentifiers"), DefaultValue (null)]
 		string[] ShouldUpdateTouchBarItemIdentifiers (NSTextView textView, string[] identifiers);
 
-		//Review
 		[Mac (10,12,1)]
 		[Export ("textView:candidatesForSelectedRange:"), DelegateName ("NSTextViewGetCandidates"), DefaultValue (null)]
 		[return: NullAllowed]
 		NSObject[] GetCandidates (NSTextView textView, NSRange selectedRange);
 
-		//Review
 		[Mac (10,12,1)]
 		[Export ("textView:candidates:forSelectedRange:"), DelegateName ("NSTextViewTextCheckingResults"), DefaultValue (null)]
 		NSTextCheckingResult[] GetTextCheckingCandidates (NSTextView textView, NSTextCheckingResult[] candidates, NSRange selectedRange);
@@ -18733,7 +18729,6 @@ namespace XamCore.AppKit {
 	[BaseType (typeof(NSObject), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTouchBarDelegate)})]
 	interface NSTouchBar : NSCoding
 	{
-
 		[NullAllowed, Export ("customizationIdentifier")]
 		string CustomizationIdentifier { get; set; }
 
@@ -18755,13 +18750,8 @@ namespace XamCore.AppKit {
 		[Export ("templateItems", ArgumentSemantic.Copy)]
 		NSSet<NSTouchBarItem> TemplateItems { get; set; }
 
-		[Wrap ("WeakDelegate")]
-		[NullAllowed]
-		[Protocolize]
-		NSTouchBarDelegate Delegate { get; set; }
-
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
-		NSObject WeakDelegate { get; set; }
+		INSTouchBarDelegate Delegate { get; set; }
 
 		[Export ("itemForIdentifier:")]
 		NSTouchBarItem ItemForIdentifier (string identifier);
@@ -24431,7 +24421,6 @@ namespace XamCore.AppKit {
 		[Export ("allowsTextInputContextCandidates")]
 		bool AllowsTextInputContextCandidates { get; set; }
 
-		// REVIEW, does this work?
 		[NullAllowed, Export ("attributedStringForCandidate", ArgumentSemantic.Copy)]
 		Func<NSObject, nint, NSAttributedString> AttributedStringForCandidate { get; set; }
 
@@ -24510,7 +24499,6 @@ namespace XamCore.AppKit {
 		[Export ("customizationLabel")]
 		string CustomizationLabel { get; set; }
 
-		// Review - Should I hide these?
 		[NullAllowed, Export ("target", ArgumentSemantic.Weak)]
 		NSObject Target { get; set; }
 
@@ -24543,7 +24531,6 @@ namespace XamCore.AppKit {
 	[BaseType (typeof(NSGestureRecognizer))]
 	interface NSGestureRecognizer_NSTouchBar
 	{
-		// REVIEW - Is this better than inlining these and using a property get/set?
 		[Mac (10, 12, 1)]
 		[Export ("allowedTouchTypes", ArgumentSemantic.Assign)]
 		NSTouchTypeMask GetAllowedTouchTypes ();
@@ -24774,7 +24761,7 @@ namespace XamCore.AppKit {
 		bool Highlighted { [Bind ("isHighlighted")] get; set; }
 
 		[Export ("applyLayoutAttributes:")]
-		//[RequiresSuper] - Review - Sharpie put here?
+		//[RequiresSuper]
 		void ApplyLayoutAttributes (NSScrubberLayoutAttributes layoutAttributes);
 	}
 
@@ -24849,7 +24836,7 @@ namespace XamCore.AppKit {
 		CGRect VisibleRect { get; }
 
 		[Export ("invalidateLayout")]
-		//[RequiresSuper] - Review - Sharpie put here?
+		//[RequiresSuper]
 		void InvalidateLayout ();
 
 		[Export ("prepareLayout")]
