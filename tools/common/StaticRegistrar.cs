@@ -292,6 +292,9 @@ namespace XamCore.Registrar {
 			if (!TypeMatch (candidate.ReturnType, method.ReturnType))
 				return false;
 
+			if (!candidate.HasParameters)
+				return !method.HasParameters;
+
 			if (candidate.Parameters.Count != method.Parameters.Count)
 				return false;
 
@@ -2661,7 +2664,7 @@ namespace XamCore.Registrar {
 			var isStatic = method.IsStatic;
 			var isInstanceCategory = method.IsCategoryInstance;
 			var isCtor = false;
-			var num_arg = method.Method.Parameters.Count;
+			var num_arg = method.Method.HasParameters ? method.Method.Parameters.Count : 0;
 			var descriptiveMethodName = method.DescriptiveMethodName;
 			var name = GetUniqueTrampolineName ("native_to_managed_trampoline_" + descriptiveMethodName);
 			var isVoid = returntype.FullName == "System.Void";
@@ -3439,8 +3442,10 @@ namespace XamCore.Registrar {
 			/* We merge duplicated bodies (based on the signature of the method and the entire body) */
 
 			var objc_signature = new StringBuilder ().Append (rettype).Append (":");
-			for (int i = 0; i < method.Method.Parameters.Count; i++)
-				objc_signature.Append (ToObjCParameterType (method.Method.Parameters [i].ParameterType, descriptiveMethodName, exceptions, method.Method)).Append (":");
+			if (method.Method.HasParameters) {
+				for (int i = 0; i < method.Method.Parameters.Count; i++)
+					objc_signature.Append (ToObjCParameterType (method.Method.Parameters [i].ParameterType, descriptiveMethodName, exceptions, method.Method)).Append (":");
+			}
 
 			Body existing;
 			Body b = new Body () {
@@ -3460,7 +3465,8 @@ namespace XamCore.Registrar {
 				if (merge_bodies) {
 					methods.Append ("static ");
 					methods.Append (rettype).Append (" ").Append (b.Name).Append (" (id self, SEL _cmd, MonoMethod **managed_method_ptr");
-					for (int i = (isInstanceCategory ? 1 : 0); i < method.Method.Parameters.Count; i++) {
+					var pcount = method.Method.HasParameters ? method.Method.Parameters.Count : 0;
+					for (int i = (isInstanceCategory ? 1 : 0); i < pcount; i++) {
 						methods.Append (", ").Append (ToObjCParameterType (method.Method.Parameters [i].ParameterType, descriptiveMethodName, exceptions, method.Method));
 						methods.Append (" ").Append ("p").Append (i.ToString ());
 					}
@@ -3490,7 +3496,7 @@ namespace XamCore.Registrar {
 				}
 				sb.Write (b.Name);
 				sb.Write (" (self, _cmd, &managed_method");
-				var paramCount = method.Method.Parameters.Count;
+				var paramCount = method.Method.HasParameters ? method.Method.Parameters.Count : 0;
 				if (isInstanceCategory)
 					paramCount--;
 				for (int i = 0; i < paramCount; i++)
