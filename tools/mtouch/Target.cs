@@ -441,10 +441,18 @@ namespace Xamarin.Bundler
 						cached_loaded.Add (a.FullPath);
 						input.Add (a.FullPath);
 						output.Add (Path.Combine (PreBuildDirectory, a.FileName));
+						if (File.Exists (a.FullPath + ".mdb")) {
+							// Debug files can change without the assemblies themselves changing
+							// This should also invalidate the cached linker results, since the non-linked mdbs can't be copied.
+							input.Add (a.FullPath + ".mdb");
+							output.Add (Path.Combine (PreBuildDirectory, a.FileName) + ".mdb");
+						}
+						
 						if (a.Satellites != null) {
 							foreach (var s in a.Satellites) {
 								input.Add (s);
 								output.Add (Path.Combine (PreBuildDirectory, Path.GetFileName (Path.GetDirectoryName (s)), Path.GetFileName (s)));
+								// No need to copy satellite mdb files, satellites are resource-only assemblies.
 							}
 						}
 					}
