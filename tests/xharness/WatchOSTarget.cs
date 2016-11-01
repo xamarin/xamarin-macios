@@ -73,7 +73,7 @@ namespace xharness
 			csproj.FixInfoPListInclude (suffix);
 			csproj.SetOutputType ("Library");
 			csproj.AddAdditionalDefines ("XAMCORE_2_0;XAMCORE_3_0;FEATURE_NO_BSD_SOCKETS");
-			csproj.RemoveReferences ("OpenTK");
+			csproj.RemoveReferences ("OpenTK-1.0");
 			var ext = IsFSharp ? "fs" : "cs";
 			csproj.AddCompileInclude ("InterfaceController." + ext, Path.Combine (Harness.WatchOSExtensionTemplate, "InterfaceController." + ext));
 			csproj.SetExtraLinkerDefs ("extra-linker-defs" + Suffix + ".xml");
