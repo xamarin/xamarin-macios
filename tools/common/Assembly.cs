@@ -122,7 +122,6 @@ namespace Xamarin.Bundler {
 			FullPath = target;
 		}
 
-		// Executed in parallel
 		public void ExtractNativeLinkInfo ()
 		{
 			// ignore framework assemblies, they won't have any LinkWith attributes
@@ -155,9 +154,6 @@ namespace Xamarin.Bundler {
 				if (!type.IsPlatformType ("ObjCRuntime", "LinkWithAttribute"))
 					continue;
 				
-				// we know we'll modify this assembly, so load its symbols to keep them in sync
-				LoadSymbols ();
-
 				// Let the linker remove it the attribute from the assembly
 				
 				LinkWithAttribute linkWith = GetLinkWithAttribute (attr);
