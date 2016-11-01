@@ -248,9 +248,7 @@ $$(BUILD_DESTDIR)/mac/$(2)/bcl/%.dll: $$(MONO_PATH)/mcs/class/lib/$(2)/%.dll | $
 	$$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $$@ $$(PRODUCT_KEY_PATH)
 
 $$(BUILD_DESTDIR)/mac/$(2)/bcl/%.mdb: $$(MONO_PATH)/mcs/class/lib/$(2)/%.mdb .stamp-build-tools64 | $$(BUILD_DESTDIR)/mac/$(2)/bcl
-	@# mdb-rebase the mdb
 	$$(Q) cp $$< $$@
-	$$(Q_MDB) $$(MDB_REBASE) -q -i $$(abspath $$(MONO_PATH))/ -o $$(MAC_TARGETDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/src/mono/ $$@
 
 $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/%.dll: $$(BUILD_DESTDIR)/mac/$(2)/bcl/%.dll | $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/Facades
 	$$(Q) install -m 0755 $$< $$@
@@ -440,7 +438,7 @@ build-tools-bcl: build-tools64
 build-tools: build-tools64
 
 .stamp-build-tools64: .stamp-configure-tools64
-	$(MAKE) -C tools64 all EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
+	$(MAKE) -C tools64 all EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO) MONOTOUCH_MCS_FLAGS=$(IOS_MCS_FLAGS) XAMMAC_MCS_FLAGS=$(MAC_MCS_FLAGS)
 	# NO_INSTALL is defined in mono/mcs/build/profiles except for net_4_5. If we don't have it, then it attempts to install into a gac, and sometimes fail
 	NO_INSTALL=1 $(MAKE) -C tools64 -j 1 install EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
 	@touch .stamp-build-tools64
@@ -715,7 +713,7 @@ $(PREFIX)/bin/bwatch-mono: $(BUILD_DESTDIR)/watchbcl/bin/mono | $(PREFIX)/bin
 endif
 	$(Q) install -s -m 0755 $< $@
 
-# copy to temporary directory before signing / mdb-rebasing,
+# copy to temporary directory before signing
 # otherwise we end up re-signing if installing into a different directory.
 $(BUILD_DESTDIR)/ios/bcl/Facades/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch/Facades/%.dll | $(BUILD_DESTDIR)/ios/bcl/Facades
 	@# sign the Facade assembly
@@ -733,14 +731,10 @@ $(BUILD_DESTDIR)/ios/bcl/repl/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch_runtim
 	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
 $(BUILD_DESTDIR)/ios/bcl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch/%.mdb .stamp-build-tools64 | $(BUILD_DESTDIR)/ios/bcl
-	@# mdb-rebase the mdb
 	$(Q) cp $< $@
-	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
 $(BUILD_DESTDIR)/ios/bcl/repl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_runtime/%.mdb .stamp-build-tools64 | $(BUILD_DESTDIR)/ios/bcl/repl
-	@# mdb-rebase the mdb
 	$(Q) cp $< $@
-	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
 $(BUILD_DESTDIR)/watchos/bcl/Facades/%.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/Facades/%.dll | $(BUILD_DESTDIR)/watchos/bcl/Facades
 	@# sign the Facade assembly
@@ -758,14 +752,10 @@ $(BUILD_DESTDIR)/watchos/bcl/repl/%.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monoto
 	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
 $(BUILD_DESTDIR)/watchos/bcl/%.mdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/%.mdb .stamp-build-watchbcl .stamp-build-tools64 | $(BUILD_DESTDIR)/watchos/bcl
-	@# mdb-rebase the mdb
 	$(Q) cp $< $@
-	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
 $(BUILD_DESTDIR)/watchos/bcl/repl/%.mdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch_runtime/%.mdb .stamp-build-watchbcl .stamp-build-tools64 | $(BUILD_DESTDIR)/watchos/bcl/repl
-	@# mdb-rebase the mdb
 	$(Q) cp $< $@
-	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
 $(BUILD_DESTDIR)/tvos/bcl/Facades/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch_tv/Facades/%.dll | $(BUILD_DESTDIR)/tvos/bcl/Facades
 	@# sign the Facade assembly
@@ -783,14 +773,10 @@ $(BUILD_DESTDIR)/tvos/bcl/repl/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch_tv_ru
 	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
 $(BUILD_DESTDIR)/tvos/bcl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv/%.mdb .stamp-build-tools64 | $(BUILD_DESTDIR)/tvos/bcl
-	@# mdb-rebase the mdb
 	$(Q) cp $< $@
-	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
 $(BUILD_DESTDIR)/tvos/bcl/repl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv_runtime/%.mdb .stamp-build-tools64 | $(BUILD_DESTDIR)/tvos/bcl/repl
-	@# mdb-rebase the repl mdb
 	$(Q) cp $< $@
-	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
 $(IOS_BCL_TARGETS_DIRS) $(WATCH_BCL_TARGETS_DIRS) $(TVOS_BCL_TARGETS_DIRS):
 	$(Q) mkdir -p $@
