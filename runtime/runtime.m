@@ -139,8 +139,8 @@ enum InitializationFlags : int {
 struct InitializationOptions {
 	int size; // the size of this structure. This is used for version checking.
 	enum InitializationFlags flags;
-	struct Delegates Delegates;
-	struct Trampolines Trampolines;
+	struct Delegates* Delegates;
+	struct Trampolines* Trampolines;
 	RegistrationData* RegistrationData;
 	enum MarshalObjectiveCExceptionMode MarshalObjectiveCExceptionMode;
 	enum MarshalManagedExceptionMode MarshalManagedExceptionMode;
@@ -177,6 +177,8 @@ static struct Trampolines trampolines = {
 	(void *) &xamarin_get_gchandle_trampoline,
 	(void *) &xamarin_set_gchandle_trampoline,
 };
+
+struct InitializationOptions options = { 0 };
 
 struct Managed_NSObject {
 	MonoObject obj;
@@ -1124,7 +1126,6 @@ xamarin_initialize ()
 	MonoAssembly *assembly = NULL;
 	MonoImage *image;
 	MonoMethod *runtime_initialize;
-	struct InitializationOptions options;
 	void* params[2];
 	const char *product_dll = NULL;
 	guint32 exception_gchandle = 0;
@@ -1184,13 +1185,13 @@ xamarin_initialize ()
 
 	runtime_initialize = mono_class_get_method_from_name (runtime_class, "Initialize", 1);
 
-	memset (&options, 0, sizeof (options));
 	options.size = sizeof (options);
 #if MONOTOUCH && (defined(__i386__) || defined (__x86_64__))
 	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsSimulator);
 #endif
 
-	options.Trampolines = trampolines;
+	options.Delegates = &delegates;
+	options.Trampolines = &trampolines;
 	options.RegistrationData = &registration_data;
 	options.MarshalObjectiveCExceptionMode = xamarin_marshal_objectivec_exception_mode;
 	options.MarshalManagedExceptionMode = xamarin_marshal_managed_exception_mode;
@@ -1202,8 +1203,6 @@ xamarin_initialize ()
 	if (exc)
 		xamarin_process_managed_exception (exc);
 
-	delegates = options.Delegates;
-			
 	if (!register_assembly (assembly, &exception_gchandle))
 		xamarin_process_managed_exception_gchandle (exception_gchandle);
 

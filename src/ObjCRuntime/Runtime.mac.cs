@@ -115,7 +115,7 @@ namespace XamCore.ObjCRuntime {
 			LookupInternalFunction<initialize_func> ("xamarin_initialize") ();
 		}
 
-		static void InitializePlatform (ref InitializationOptions options)
+		unsafe static void InitializePlatform (InitializationOptions* options)
 		{
 			// BaseDirectory may not be set in some Mono embedded environments
 			// so try some reasonable fallbacks in these cases.

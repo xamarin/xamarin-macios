@@ -23,11 +23,11 @@ namespace XamCore.ObjCRuntime {
 
 		internal IntPtr handle;
 
-		internal unsafe static void Initialize (ref Runtime.InitializationOptions options)
+		internal unsafe static void Initialize (Runtime.InitializationOptions* options)
 		{
-			if (options.RegistrationData != null) {
-				var map = options.RegistrationData->map;
-				var lazy_map = Runtime.Registrar.GetRegistrationMap (options.RegistrationData->total_count);
+			if (options->RegistrationData != null) {
+				var map = options->RegistrationData->map;
+				var lazy_map = Runtime.Registrar.GetRegistrationMap (options->RegistrationData->total_count);
 				while (map != null) {
 					RegisterMap (map, lazy_map);
 					map = map->next;
