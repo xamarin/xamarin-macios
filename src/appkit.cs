@@ -18714,7 +18714,7 @@ namespace XamCore.AppKit {
 	interface NSTouch_NSTouchBar
 	{
 		[Export ("type")]
-		NSTouchType GetType ();
+		NSTouchType GetTouchType ();
 
 		[Export ("locationInView:")]
 		CGPoint GetLocation ([NullAllowed] NSView view);
@@ -24391,6 +24391,8 @@ namespace XamCore.AppKit {
 
 	public interface INSCandidateListTouchBarItemDelegate {}
 
+	delegate NSAttributedString AttributedStringForCandidateHandler (NSObject candidate, nint index);
+
 	[Mac (10,12,1)]
 	[BaseType (typeof(NSTouchBarItem))]
 	interface NSCandidateListTouchBarItem
@@ -24421,7 +24423,7 @@ namespace XamCore.AppKit {
 		bool AllowsTextInputContextCandidates { get; set; }
 
 		[NullAllowed, Export ("attributedStringForCandidate", ArgumentSemantic.Copy)]
-		Func<NSObject, nint, NSAttributedString> AttributedStringForCandidate { get; set; }
+		AttributedStringForCandidateHandler AttributedStringForCandidate { get; set; }
 
 		[Export ("candidates", ArgumentSemantic.Copy)]
 		NSObject[] Candidates { get; }
