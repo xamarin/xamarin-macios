@@ -117,11 +117,40 @@ namespace xharness
 			return Path.Combine (Path.GetDirectoryName (path), Path.GetFileNameWithoutExtension (path) + suffix + Path.GetExtension (path));
 		}
 
+		void SetEnabled (IEnumerable<string> labels, string testname, ref bool value)
+		{
+			if (labels.Contains ("skip-" + testname + "-tests"))
+				value = false;
+			else if (labels.Contains ("run-" + testname + "-tests"))
+				value = true;
+			// respect any default value
+		}
+
 		async Task PopulateTasksAsync ()
 		{
 			// Missing:
 			// api-diff
 			// msbuild tests
+
+			int pull_request;
+			if (int.TryParse (Environment.GetEnvironmentVariable ("ghprbPullId"), out pull_request)) {
+				var labels = GitHub.GetLabels (Harness, pull_request);
+
+				MainLog.WriteLine ("Found pull request labels: {0}", string.Join (", ", labels.ToArray ()));
+
+				// disabled by default
+				SetEnabled (labels, "mtouch", ref IncludeMtouch);
+				SetEnabled (labels, "mmp", ref IncludeMmpTest);
+				SetEnabled (labels, "bcl", ref IncludeBcl);
+
+				// enabled by default
+				SetEnabled (labels, "ios", ref IncludeiOS);
+				SetEnabled (labels, "tvos", ref IncludetvOS);
+				SetEnabled (labels, "watchos", ref IncludewatchOS);
+				SetEnabled (labels, "mac", ref IncludeMac);
+				SetEnabled (labels, "mac-classic", ref IncludeClassicMac);
+				SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
+			}
 
 			if (IncludeiOS || IncludetvOS || IncludewatchOS) {
 				var runSimulatorTasks = new List<RunSimulatorTask> ();
