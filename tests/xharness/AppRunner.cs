@@ -388,6 +388,7 @@ namespace xharness
 
 			bool? success = null;
 			bool timed_out = false;
+			bool launch_failure = false;
 
 			if (isSimulator) {
 				FindSimulator ();
@@ -461,6 +462,8 @@ namespace xharness
 								var pidstr = line.Substring (line.LastIndexOf (' '));
 								if (!int.TryParse (pidstr, out pid))
 									main_log.WriteLine ("Could not parse pid: {0}", pidstr);
+							} else if (line.Contains ("error MT1008")) {
+								launch_failure = true;
 							}
 						}
 					}
@@ -565,6 +568,10 @@ namespace xharness
 					}
 				} else if (timed_out) {
 					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} timed out</i></b><br/>", mode);
+					success = false;
+				} else if (launch_failure) {
+					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} failed to launch</i></b><br/>", mode);
+					main_log.WriteLine ("Test run failed to launch");
 					success = false;
 				} else {
 					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed</i></b><br/>", mode);
