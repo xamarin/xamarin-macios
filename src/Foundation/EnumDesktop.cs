@@ -99,7 +99,9 @@ namespace XamCore.Foundation {
 	public enum NSUserNotificationActivationType : nint {
 		None = 0,
 		ContentsClicked = 1,
-		ActionButtonClicked = 2
+		ActionButtonClicked = 2,
+		Replied = 3,
+		AdditionalActionClicked = 4
 	}
 
 	[Mac (10,11)]
