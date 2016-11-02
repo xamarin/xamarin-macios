@@ -1069,6 +1069,11 @@ PHOTOS_SOURCES = \
 PHOTOSUI_CORE_SOURCES = \
 	PhotosUI/PHEnums.cs \
 
+# PrintCode
+PRINTCORE_SOURCES = \
+	PrintCore/Defs.cs	\
+	PrintCore/PrintCore.cs
+	
 # QTKit
 
 QTKIT_CORE_SOURCES = \
@@ -1509,7 +1514,7 @@ MAC_FRAMEWORKS =            \
 	CFNetwork               \
 	CloudKit                \
 	Contacts                \
-	ContactsUI.Mac			\
+	ContactsUI.Mac		\
 	CoreAnimation           \
 	CoreAudioKit            \
 	CoreBluetooth           \
@@ -1547,6 +1552,7 @@ MAC_FRAMEWORKS =            \
 	OpenGL                  \
 	PdfKit                  \
 	Photos                  \
+	PrintCore		\
 	QTKit                   \
 	QuartzComposer          \
 	QuickLook               \

@@ -119,7 +119,7 @@ namespace XamCore.CoreFoundation {
 		extern static /* CFArrayRef */ IntPtr CFArrayCreate (/* CFAllocatorRef */ IntPtr allocator, /* void** */ IntPtr values, nint numValues, /* CFArrayCallBacks* */ IntPtr callBacks);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static /* void* */ IntPtr CFArrayGetValueAtIndex (/* CFArrayRef */ IntPtr theArray, /* CFIndex */ nint idx);
+		internal extern static /* void* */ IntPtr CFArrayGetValueAtIndex (/* CFArrayRef */ IntPtr theArray, /* CFIndex */ nint idx);
 
 		public IntPtr GetValue (nint index)
 		{
