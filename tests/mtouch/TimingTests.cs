@@ -30,7 +30,7 @@ namespace Xamarin.Profiler
 			// Create dummy app to initialize the simulator.
 			using (var buildTool = new MTouchTool ()) {
 				buildTool.Profile = profile;
-				buildTool.CreateTemporaryApp (profile, true);
+				buildTool.CreateTemporaryApp (true);
 				buildTool.Execute (MTouchAction.BuildSim);
 				var mlaunch = new MLaunchTool ();
 				mlaunch.AppPath = buildTool.AppPath;
@@ -55,7 +55,7 @@ namespace Xamarin.Profiler
 				var linkerModeName = Enum.GetName (typeof (MTouchLinker), linkerMode);
 				buildTool.Profile = profile;
 				buildTool.Linker = linkerMode;
-				buildTool.CreateTemporaryApp (profile, true, "BuildAndLaunchTime" + linkerModeName + profile);
+				buildTool.CreateTemporaryApp (true, "BuildAndLaunchTime" + linkerModeName + profile);
 
 				var sw = new Stopwatch ();
 				sw.Start ();
@@ -94,7 +94,7 @@ namespace Xamarin.Profiler
 				buildTool.Profile = profile;
 				buildTool.Registrar = registrarMode;
 				buildTool.NoFastSim = true;
-				buildTool.CreateTemporaryApp (profile, true, "RegistrarTime" + registrarModeName + profile);
+				buildTool.CreateTemporaryApp (true, "RegistrarTime" + registrarModeName + profile);
 
 				var sw = new Stopwatch ();
 				sw.Start ();

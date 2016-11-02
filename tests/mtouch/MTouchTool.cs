@@ -408,7 +408,7 @@ namespace Xamarin
 			return plist;
 		}
 
-		public void CreateTemporaryApp (MTouch.Profile profile = MTouch.Profile.Unified, bool hasPlist = false, string appName = "testApp", string code = null)
+		public void CreateTemporaryApp (bool hasPlist = false, string appName = "testApp", string code = null)
 		{
 			var testDir = CreateTemporaryDirectory ();
 			var app = Path.Combine (testDir, appName + ".app");
@@ -418,7 +418,7 @@ namespace Xamarin
 			Executable = MTouch.CompileTestAppExecutable (testDir, code, "", Profile, appName);
 
 			if (hasPlist)
-				File.WriteAllText (Path.Combine (app, "Info.plist"), CreatePlist (profile, appName));
+				File.WriteAllText (Path.Combine (app, "Info.plist"), CreatePlist (Profile, appName));
 		}
 
 		public void CreateTemporararyServiceExtension (string code = null)
