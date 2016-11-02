@@ -217,7 +217,7 @@ namespace XamCore.UIKit {
 	[iOS (10,0), NoTV, NoWatch]
 	delegate void UICloudSharingControllerPreparationCompletionHandler ([NullAllowed] CKShare share, [NullAllowed] CKContainer container, [NullAllowed] NSError error);
 
-	[iOS (10,0), NoTV, NoWatch] //TODO: This is marked as available on tvOS 10 but it isn't radar: 27929711
+	[iOS (10,0), NoTV, NoWatch]
 	[BaseType (typeof (UIViewController))]
 	interface UICloudSharingController {
 
