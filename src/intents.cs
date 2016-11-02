@@ -2836,6 +2836,7 @@ namespace XamCore.Intents {
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INRideDriver bound
 	[BaseType (typeof (INPerson))]
+	[DisableDefaultCtor] // xcode 8.2 beta 1 -> NSInvalidArgumentException Reason: *** -[__NSPlaceholderDictionary initWithObjects:forKeys:count:]: attempt to insert nil object from objects[1]
 	interface INRideDriver : NSCopying, NSSecureCoding {
 
 		[Export ("initWithPersonHandle:nameComponents:displayName:image:rating:phoneNumber:")]
@@ -2941,6 +2942,7 @@ namespace XamCore.Intents {
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // xcode 8.2 beta 1 -> NSInvalidArgumentException Reason: *** -[__NSPlaceholderDictionary initWithObjects:forKeys:count:]: attempt to insert nil object from objects[1]
 	interface INRideStatus : NSCopying, NSSecureCoding {
 
 		[NullAllowed, Export ("rideIdentifier")]
