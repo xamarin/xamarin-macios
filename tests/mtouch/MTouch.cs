@@ -34,6 +34,8 @@ namespace Xamarin
 		[TestCase ("debug",  "-sdkroot {2} -v -v -v -v --dev {0} -sdk {3} --targetver 6.0 {1} -r:{4} --cache={5}/cache --debug")]
 		public void RebuildTest (string name, string format)
 		{
+			AssertDeviceAvailable ();
+
 			var testDir = GetTempDirectory ();
 			var app = Path.Combine (testDir, "testApp.app");
 			DateTime dt = DateTime.MinValue;
@@ -131,6 +133,9 @@ namespace Xamarin
 		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  false, "--abi:armv7+llvm")]
 		public void SymbolicationData (Target target, Config configuration, PackageMdb package_mdb, MSym msym, bool has_mdb, bool has_msym, string extra_mtouch_args)
 		{
+			if (target == Target.Dev)
+				AssertDeviceAvailable ();
+			
 			var testDir = GetTempDirectory ();
 			var appDir = Path.Combine (testDir, "testApp.app");
 			Directory.CreateDirectory (appDir);
@@ -279,6 +284,8 @@ namespace Xamarin
 		[Test]
 		public void MT0073 ()
 		{
+			AssertDeviceAvailable ();
+
 			var testDir = GetTempDirectory ();
 			var app = Path.Combine (testDir, "testApp.app");
 			Directory.CreateDirectory (app);
@@ -1128,6 +1135,8 @@ namespace Xamarin
 		[TestCase (Target.Sim, null)]
 		public void Architectures_TVOS (Target target, string abi)
 		{
+			AssertDeviceAvailable ();
+
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = MTouch.Profile.TVOS;
 				mtouch.Abi = abi;
@@ -1143,6 +1152,8 @@ namespace Xamarin
 		[Test]
 		public void Architectures_TVOS_Invalid ()
 		{
+			AssertDeviceAvailable ();
+
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = Profile.TVOS;
 				mtouch.CreateTemporaryApp ();
@@ -1230,6 +1241,9 @@ namespace Xamarin
 		[TestCase (Target.Dev, Profile.Unified, "System.Core", "Release64")]
 		public void BuildTestProject (Target target, Profile profile, string testname, string configuration)
 		{
+			if (target == Target.Dev)
+				AssertDeviceAvailable ();
+			
 			var subdir = string.Empty;
 			switch (testname) {
 			case "dont link":
@@ -1251,12 +1265,16 @@ namespace Xamarin
 		[Test]
 		public void ScriptedTests ()
 		{
+			AssertDeviceAvailable ();
+
 			ExecutionHelper.Execute ("make", string.Format ("-C \"{0}\"", Path.Combine (Configuration.SourceRoot, "tests", "scripted")), timeout: TimeSpan.FromMinutes (10));
 		}
 
 		[Test]
 		public void Registrar ()
 		{
+			AssertDeviceAvailable ();
+
 			var testDir = GetTempDirectory ();
 			var app = Path.Combine (testDir, "testApp.app");
 			Directory.CreateDirectory (app);
@@ -1297,6 +1315,8 @@ namespace Xamarin
 		[TestCase ("-linksdkonly")]
 		public void ExportedSymbols (string linker_flag)
 		{
+			AssertDeviceAvailable ();
+
 			//
 			// Here we test that symbols P/Invokes and [Field] attributes references are not
 			// stripped by the native linker. mtouch has to pass '-u _SYMBOL' to the native linker
@@ -1359,6 +1379,8 @@ public class TestApp {
 		[Test]
 		public void ExportedSymbols_VerifyLinkedAwayField ()
 		{
+			AssertDeviceAvailable ();
+
 			//
 			// Here we test that unused P/Invokes and [Field] members are properly linked away
 			// (and we do not request the native linker to preserve those symbols).
@@ -1431,6 +1453,8 @@ public class TestApp {
 		[Test]
 		public void LinkerWarnings ()
 		{
+			AssertDeviceAvailable ();
+
 			string output;
 			var testDir = GetTempDirectory ();
 
@@ -1453,6 +1477,8 @@ public class TestApp {
 		[Test]
 		public void NativeLinker_AllLoad ()
 		{
+			AssertDeviceAvailable ();
+
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=17199
 
 			var testDir = GetTempDirectory ();
@@ -1472,6 +1498,8 @@ public class TestApp {
 		[Test]
 		public void CachedManagedLinker ()
 		{
+			AssertDeviceAvailable ();
+
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=17506
 
 			var testDir = GetTempDirectory ();
@@ -1519,6 +1547,8 @@ public class TestApp {
 		[Test]
 		public void MT1016 ()
 		{
+			AssertDeviceAvailable ();
+
 			// #20607
 
 			var testDir = GetTempDirectory ();
@@ -1541,6 +1571,8 @@ public class TestApp {
 		[Test]
 		public void MT1017 ()
 		{
+			AssertDeviceAvailable ();
+
 			// #20607
 
 			var testDir = GetTempDirectory ();
@@ -1677,6 +1709,8 @@ public class TestApp {
 		[Test]
 		public void MT5211 ()
 		{
+			AssertDeviceAvailable ();
+
 			var testDir = GetTempDirectory ();
 
 			try {
@@ -1728,6 +1762,8 @@ class Test {
 		[Test]
 		public void TestCaseMismatchedAssemblyName ()
 		{
+			AssertDeviceAvailable ();
+
 			// desk #90367 (and others in the past as well)
 
 			var testDir = GetTempDirectory ();
@@ -1806,6 +1842,8 @@ class Test {
 		[Test]
 		public void TestDuplicatedFatApp ()
 		{
+			AssertDeviceAvailable ();
+
 			var testDir = GetTempDirectory ();
 			var app = Path.Combine (testDir, "testApp.app");
 			Directory.CreateDirectory (app);
@@ -1826,6 +1864,8 @@ class Test {
 		[Test]
 		public void TestAllLoad ()
 		{
+			AssertDeviceAvailable ();
+
 			var testDir = GetTempDirectory ();
 			var app = Path.Combine (testDir, "testApp.app");
 			Directory.CreateDirectory (app);
@@ -2371,6 +2411,12 @@ public class TestApp {
 			File.Delete (tmp);
 			Directory.CreateDirectory (tmp);
 			return tmp;
+		}
+
+		public static void AssertDeviceAvailable ()
+		{
+			if (!Configuration.include_device)
+				Assert.Ignore ("This build does not include device support.");
 		}
 #endregion
 	}
