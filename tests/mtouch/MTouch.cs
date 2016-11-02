@@ -1065,6 +1065,22 @@ namespace Xamarin
 		}
 
 		[Test]
+		[TestCase (Profile.Unified)]
+		public void FastSim (Profile profile)
+		{
+			using (var tool = new MTouchTool ()) {
+				tool.Verbosity = 1;
+				tool.Profile = profile;
+				tool.CreateTemporaryApp ();
+				tool.Linker = MTouchLinker.DontLink;
+				tool.Debug = true;
+				tool.AssertExecute (MTouchAction.BuildSim);
+				tool.AssertOutputPattern ("was built using fast-path for simulator"); // This is just to ensure we're actually testing fastsim. If this fails, modify the mtouch options to make this test use fastsim again.
+				Assert.That (File.GetLastWriteTimeUtc (tool.Executable), Is.LessThan (File.GetLastWriteTimeUtc (tool.NativeExecutablePath)), "simlauncher timestamp");
+			}
+		}
+
+		[Test]
 		[TestCase (Target.Dev, "armv7")]
 		[TestCase (Target.Dev, "armv7s")]
 		[TestCase (Target.Dev, "armv7,armv7s")]
