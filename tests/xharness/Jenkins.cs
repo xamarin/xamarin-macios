@@ -284,6 +284,7 @@ namespace xharness
 					WorkingDirectory = Path.Combine (Harness.RootDirectory, "packages", "NUnit.Runners.2.6.4", "tools", "lib"),
 					Platform = TestPlatform.iOS,
 					TestName = "MTouch tests",
+					Timeout = TimeSpan.FromMinutes (120),
 				};
 				Tasks.Add (nunitExecution);
 			}
@@ -879,6 +880,7 @@ function toggleContainerVisibility (containerName)
 		public string TestExecutable;
 		public string WorkingDirectory;
 		public bool ProduceHtmlReport = true;
+		public TimeSpan Timeout = TimeSpan.FromMinutes (10);
 
 		public override IEnumerable<Log> AggregatedLogs {
 			get {
@@ -924,10 +926,9 @@ function toggleContainerVisibility (containerName)
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
 						try {
-							var timeout = TimeSpan.FromMinutes (10);
-							var result = await proc.RunAsync (log, true, timeout);
+							var result = await proc.RunAsync (log, true, Timeout);
 							if (result.TimedOut) {
-								log.WriteLine ("Execution timed out after {0} seconds.", timeout.TotalSeconds);
+								log.WriteLine ("Execution timed out after {0} minutes.", Timeout.Minutes);
 								ExecutionResult = TestExecutingResult.TimedOut;
 							} else if (result.Succeeded) {
 								ExecutionResult = TestExecutingResult.Succeeded;
