@@ -979,6 +979,8 @@ namespace XamCore.Photos
 		void PhotoLibraryDidChange (PHChange changeInstance);
 	}
 
+	delegate void PHPhotoLibraryCancellableChangeHandler (out bool cancel);
+
 	[iOS (8,0)]
 	[TV (10,0)]
 	[NoMac]
@@ -1002,6 +1004,14 @@ namespace XamCore.Photos
 
 		[Export ("performChangesAndWait:error:")]
 		bool PerformChangesAndWait (Action changeHandler, out NSError error);
+
+		[iOS (8,2), TV (10,1)]
+		[Export ("performCancellableChanges:completionHandler:")]
+		void PerformChanges (PHPhotoLibraryCancellableChangeHandler cancellableChangeHandler, Action<bool, NSError> completionHandler);
+
+		[iOS (8,2), TV (10,1)]
+		[Export ("performCancellableChangesAndWait:error:")]
+		bool PerformChangesAndWait (PHPhotoLibraryCancellableChangeHandler cancellableChangeHandler, out NSError error);
 
 		[Export ("registerChangeObserver:")]
 		void RegisterChangeObserver ([Protocolize] PHPhotoLibraryChangeObserver observer);
