@@ -55,6 +55,12 @@ public partial class Generator {
 		}
 	}
 
+	void CopyObsolete (ICustomAttributeProvider provider)
+	{
+		foreach (ObsoleteAttribute oa in provider.GetCustomAttributes (typeof (ObsoleteAttribute), false))
+			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
+	}
+
 	// caller already:
 	//	- setup the header and namespace
 	//	- call/emit PrintPlatformAttributes on the type
@@ -70,6 +76,7 @@ public partial class Generator {
 			else
 				print ("[Native (\"{0}\")]", native.NativeName);
 		}
+		CopyObsolete (type);
 
 		var unique_constants = new HashSet<string> ();
 		var fields = new Dictionary<FieldInfo, FieldAttribute> ();
@@ -83,6 +90,7 @@ public partial class Generator {
 			if (f.IsSpecialName)
 				continue;
 			PrintPlatformAttributes (f);
+			CopyObsolete (f);
 			print ("{0} = {1},", f.Name, f.GetRawConstantValue ());
 			var fa = GetAttribute<FieldAttribute> (f);
 			if (fa == null)
