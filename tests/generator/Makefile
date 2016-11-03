@@ -121,6 +121,17 @@ bug35176:
 		echo "Error: Expected 4 Introduced attributes in generated code."; exit 1; \
 	fi
 
+bug46292:
+	@rm -Rf $@.tmpdir
+	@mkdir -p $@.tmpdir
+	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) --sourceonly:$@.source -tmpdir=$@.tmpdir $@.cs --process-enums
+	@if ! grep -r Obsolete bug46292.tmpdir/BindingTests > /dev/null; then \
+		echo "error: Could not find Obsolete attribute in generated code."; exit 1; \
+	fi
+	@if [ `grep -r Obsolete bug46292.tmpdir/BindingTests | wc -l` -ne 2 ]; then \
+		echo "Error: Expected 2 Obsolete attributes in generated code."; exit 1; \
+	fi
+
 forcedtype:
 	@rm -Rf $@.tmpdir
 	@mkdir -p $@.tmpdir
