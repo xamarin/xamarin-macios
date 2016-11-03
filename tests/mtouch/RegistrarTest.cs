@@ -1163,6 +1163,9 @@ class CTP4 : CTP3 {
 		// This method should not leave anything behind on disk.
 		static string CreateTestApp (MTouch.Profile profile, string source, string extra_args = "", string xcode = null, string sdk_version = null, MTouch.Target target = MTouch.Target.Dev)
 		{
+			if (target == MTouch.Target.Dev)
+				MTouch.AssertDeviceAvailable ();
+
 			string path = MTouch.GetTempDirectory ();
 			try {
 				string cs = Path.Combine (path, "Test.cs");
