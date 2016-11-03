@@ -12250,6 +12250,19 @@ namespace XamCore.AppKit {
 		[Sealed]
 		[Export ("presentError:modalForWindow:delegate:didPresentSelector:contextInfo:")]
 		void PresentError (NSError error, NSWindow window, [NullAllowed] NSObject @delegate, [NullAllowed] Selector didPresentSelector, IntPtr contextInfo);
+	}
+
+	[Category]
+	[BaseType (typeof(NSResponder))]
+	interface NSResponder_NSTouchBarProvider : INSTouchBarProvider
+	{
+		[Mac (10, 12, 1)]
+		[NullAllowed, Export ("touchBar")]
+		NSTouchBar GetTouchBar ();
+
+		[Mac (10, 12, 1)]
+		[Export ("setTouchBar:")]
+		void SetTouchBar ([NullAllowed]NSTouchBar bar);
 
 		[Mac (10, 12, 1)]
 		[NullAllowed, Export ("makeTouchBar")]
@@ -24764,7 +24777,6 @@ namespace XamCore.AppKit {
 		bool Highlighted { [Bind ("isHighlighted")] get; set; }
 
 		[Export ("applyLayoutAttributes:")]
-		//[RequiresSuper]
 		void ApplyLayoutAttributes (NSScrubberLayoutAttributes layoutAttributes);
 	}
 
@@ -24839,7 +24851,6 @@ namespace XamCore.AppKit {
 		CGRect VisibleRect { get; }
 
 		[Export ("invalidateLayout")]
-		//[RequiresSuper]
 		void InvalidateLayout ();
 
 		[Export ("prepareLayout")]
