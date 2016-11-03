@@ -448,13 +448,13 @@ namespace Xamarin.MacDev.Tasks
 
 			if (identity.BundleId != null) {
 				if (certs.Count > 0)
-					profiles = MobileProvisionIndex.GetMobileProvisions (platform, identity.BundleId, type, certs);
+					profiles = MobileProvisionIndex.GetMobileProvisions (platform, identity.BundleId, type, certs, unique: true);
 				else
-					profiles = MobileProvisionIndex.GetMobileProvisions (platform, identity.BundleId, type);
+					profiles = MobileProvisionIndex.GetMobileProvisions (platform, identity.BundleId, type, unique: true);
 			} else if (certs.Count > 0) {
-				profiles = MobileProvisionIndex.GetMobileProvisions (platform, type, certs);
+				profiles = MobileProvisionIndex.GetMobileProvisions (platform, type, certs, unique: true);
 			} else {
-				profiles = MobileProvisionIndex.GetMobileProvisions (platform, type);
+				profiles = MobileProvisionIndex.GetMobileProvisions (platform, type, unique: true);
 			}
 
 			List<CodeSignIdentity> pairs;
