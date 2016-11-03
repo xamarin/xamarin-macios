@@ -929,6 +929,7 @@ namespace Xamarin.Bundler
 					launcher.Append ("64");
 				launcher.Append ("-sgen");
 				File.Copy (launcher.ToString (), Executable);
+				File.SetLastWriteTime (Executable, DateTime.Now);
 			} catch (MonoTouchException) {
 				throw;
 			} catch (Exception ex) {
