@@ -473,7 +473,8 @@ namespace XamCore.StoreKit {
 		NSString CloudServiceCapabilitiesDidChangeNotification { get; }
 	}
 
-	[NoTV, iOS (10,1)]
+	[iOS (10,1)]
+	[NoTV] // __TVOS_PROHIBITED
 	[BaseType (typeof(UIViewController))]
 	interface SKCloudServiceSetupViewController
 	{
@@ -491,7 +492,8 @@ namespace XamCore.StoreKit {
 
 	interface ISKCloudServiceSetupViewControllerDelegate {}
 
-	[NoTV, iOS (10,1)]
+	[iOS (10,1)]
+	[NoTV] // __TVOS_PROHIBITED on the only member + SKCloudServiceSetupViewController is not in tvOS
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface SKCloudServiceSetupViewControllerDelegate
