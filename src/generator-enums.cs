@@ -71,10 +71,12 @@ public partial class Generator {
 				print ("[Native (\"{0}\")]", native.NativeName);
 		}
 
+		var unique_constants = new HashSet<string> ();
 		var fields = new Dictionary<FieldInfo, FieldAttribute> ();
 		Tuple<FieldInfo, FieldAttribute> null_field = null;
 		Tuple<FieldInfo, FieldAttribute> default_symbol = null;
-		print ("public enum {0} : {1} {{", type.Name, GetCSharpTypeName (Enum.GetUnderlyingType (type)));
+		var underlying_type = GetCSharpTypeName (Enum.GetUnderlyingType (type));
+		print ("public enum {0} : {1} {{", type.Name, underlying_type);
 		indent++;
 		foreach (var f in type.GetFields ()) {
 			// skip value__ field 
@@ -89,8 +91,12 @@ public partial class Generator {
 				continue;
 			if (fa.SymbolName == null)
 				null_field = new Tuple<FieldInfo, FieldAttribute> (f, fa);
-			else
+			else if (unique_constants.Contains (fa.SymbolName))
+				throw new BindingException (1046, true, $"The [Field] constant {fa.SymbolName} cannot only be used once inside enum {type.Name}.");
+			else {
 				fields.Add (f, fa);
+				unique_constants.Add (fa.SymbolName);
+			}
 			if (GetAttribute<DefaultEnumValueAttribute> (f) != null) {
 				if (default_symbol != null)
 					throw new BindingException (1045, true, $"Only a single [DefaultEnumValue] attribute can be used inside enum {type.Name}.");
@@ -99,6 +105,7 @@ public partial class Generator {
 		}
 		indent--;
 		print ("}");
+		unique_constants.Clear ();
 
 		var library_name = type.Namespace;
 		var error = GetAttribute<ErrorDomainAttribute> (type);
@@ -164,10 +171,11 @@ public partial class Generator {
 			print ("public static NSString GetConstant (this {0} self)", type.Name);
 			print ("{");
 			indent++;
-			print ("switch (self) {");
+			print ("switch (({0}) self) {{", underlying_type);
 			var default_symbol_name = default_symbol?.Item2.SymbolName;
+			// more than one enum member can share the same numeric value - ref: #46285
 			foreach (var kvp in fields) {
-				print ("case {0}.{1}:", type.Name, kvp.Key.Name);
+				print ("case {0}: // {1}.{2}", Convert.ToInt64 (kvp.Key.GetValue (null)), type.Name, kvp.Key.Name);
 				var sn = kvp.Value.SymbolName;
 				if (sn == default_symbol_name)
 					print ("default:");
