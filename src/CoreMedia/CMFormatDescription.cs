@@ -36,6 +36,15 @@ namespace XamCore.CoreMedia {
 		ValueNotAvailable   = -12718,
 	}
 
+	[Flags]
+	public enum CMTimeCodeFlag : uint
+	{
+		DropFrame = 1 << 0,
+		Max24Hour = 1 << 1,
+		NegTimesOK = 1 << 2
+	}
+
+	[Flags]
 	public enum CMTextDisplayFlags : uint
 	{
 		ScrollIn = 0x00000020,
@@ -551,7 +560,7 @@ namespace XamCore.CoreMedia {
 			IntPtr handle;
 			CMFormatDescriptionError error = CMFormatDescriptionCreate (IntPtr.Zero, CMMediaType.Audio, (uint)audioSubtype, IntPtr.Zero, out handle);
 			if (error != CMFormatDescriptionError.None)
-				throw new Exception ("CMFormatDescriptionError - " + error.ToString ());
+				throw new Exception ("CMAudioFormatDescriptionError - " + error.ToString ());
 
 			return (CMAudioFormatDescription)Create (CMMediaType.Audio, handle, true);
 		}
@@ -666,6 +675,26 @@ namespace XamCore.CoreMedia {
 			var error = CMVideoFormatDescriptionCreate (IntPtr.Zero, codecType, width, height, extensions != null ? extensions.Handle : IntPtr.Zero, out handle);
 			if (error != CMFormatDescriptionError.None)
 				throw new ArgumentException (error.ToString ());
+		}
+
+		public static CMVideoFormatDescription Create (CMVideoCodecType codecType, out CMFormatDescriptionError error)
+		{
+			IntPtr handle;
+			error = CMFormatDescriptionCreate (IntPtr.Zero, CMMediaType.Video, (uint)codecType, IntPtr.Zero, out handle);
+			if (error != CMFormatDescriptionError.None)
+				return null;
+
+			return (CMVideoFormatDescription)Create (CMMediaType.Video, handle, true);
+		}
+
+		public static CMVideoFormatDescription Create (CMVideoCodecType codecType)
+		{
+			IntPtr handle;
+			CMFormatDescriptionError error = CMFormatDescriptionCreate (IntPtr.Zero, CMMediaType.Video, (uint)codecType, IntPtr.Zero, out handle);
+			if (error != CMFormatDescriptionError.None)
+				throw new Exception ("CMVideoFormatDescriptionError - " + error.ToString ());
+
+			return (CMVideoFormatDescription)Create (CMMediaType.Video, handle, true);
 		}
 
 		public CMVideoDimensions Dimensions {
@@ -788,6 +817,12 @@ namespace XamCore.CoreMedia {
 			return CMVideoFormatDescriptionGetPresentationDimensions (handle, usePixelAspectRatio, useCleanAperture);
 		}
 
+		public CMVideoCodecType CodecType {
+			get {
+				return (CMVideoCodecType)MediaSubType;
+			}
+		}
+
 #if XAMCORE_2_0
 		public static NSObject [] GetExtensionKeysCommonWithImageBuffers ()
 		{
@@ -795,7 +830,7 @@ namespace XamCore.CoreMedia {
 			return NSArray.ArrayFromHandle<NSString> (arr);
 		}
 
-		public bool VideoMatchesImageBuffer (CVImageBuffer imageBuffer)
+		public bool MatchesImageBuffer (CVImageBuffer imageBuffer)
 		{
 			if (imageBuffer == null)
 				throw new ArgumentNullException ("imageBuffer");
@@ -825,11 +860,15 @@ namespace XamCore.CoreMedia {
 			/* CFDictionaryRef */ IntPtr extensions, 
 			/* CMMuxedFormatDescriptionRef */ out IntPtr outDesc);
 		
-		public CMMuxedFormatDescription (uint muxType, NSDictionary extensions = null)
+		public CMMuxedFormatDescription (CMMuxedStreamType muxType, NSDictionary extensions = null)
 		{
-			var error = CMMuxedFormatDescriptionCreate (IntPtr.Zero, muxType, extensions != null ? extensions.Handle : IntPtr.Zero, out handle);
+			var error = CMMuxedFormatDescriptionCreate (IntPtr.Zero, (uint) muxType, extensions != null ? extensions.Handle : IntPtr.Zero, out handle);
 			if (error != CMFormatDescriptionError.None)
 				throw new ArgumentException (error.ToString ());
+		}
+
+		public CMMuxedStreamType StreamType {
+			get { return (CMMuxedStreamType)MediaSubType; }
 		}
 #endif
 	}
@@ -857,9 +896,9 @@ namespace XamCore.CoreMedia {
 			/* CFDictionaryRef* */ IntPtr extensions, 
 			/* CMTimeCodeFormatDescriptionRef* */ out IntPtr descOut);
 
-		public CMTimeCodeFormatDescription (uint timeCodeFormatType, CMTime frameDuration, uint frameQuanta, uint tcFlags, NSDictionary extensions = null)
+		public CMTimeCodeFormatDescription (CMTimeCodeFormatType timeCodeFormatType, CMTime frameDuration, uint frameQuanta, CMTimeCodeFlag tcFlags, NSDictionary extensions = null)
 		{
-			var error = CMTimeCodeFormatDescriptionCreate (IntPtr.Zero, timeCodeFormatType, frameDuration, frameQuanta, tcFlags, extensions != null ? extensions.Handle : IntPtr.Zero, out handle);
+			var error = CMTimeCodeFormatDescriptionCreate (IntPtr.Zero, (uint) timeCodeFormatType, frameDuration, frameQuanta, (uint) tcFlags, extensions != null ? extensions.Handle : IntPtr.Zero, out handle);
 			if (error != CMFormatDescriptionError.None)
 				throw new ArgumentException (error.ToString ());
 		}
@@ -869,9 +908,11 @@ namespace XamCore.CoreMedia {
 		static extern CMTime CMTimeCodeFormatDescriptionGetFrameDuration (
 			/*CMTimeCodeFormatDescriptionRef* */ IntPtr timeCodeFormatDescription);
 
-		public CMTime GetFrameDuration ()
+		public CMTime FrameDuration
 		{
-			return CMTimeCodeFormatDescriptionGetFrameDuration (handle);
+			get {
+				return CMTimeCodeFormatDescriptionGetFrameDuration (handle);
+			}
 		}
 
 		[Mac (10,7)]
@@ -879,9 +920,8 @@ namespace XamCore.CoreMedia {
 		static extern uint CMTimeCodeFormatDescriptionGetFrameQuanta (
 			/*CMTimeCodeFormatDescriptionRef* */ IntPtr timeCodeFormatDescription);
 
-		public uint GetFrameQuanta ()
-		{
-			return CMTimeCodeFormatDescriptionGetFrameQuanta (handle);
+		public uint FrameQuanta {
+				get { return CMTimeCodeFormatDescriptionGetFrameQuanta (handle); }
 		}
 
 		[Mac (10,7)]
@@ -889,9 +929,17 @@ namespace XamCore.CoreMedia {
 		static extern uint CMTimeCodeFormatDescriptionGetTimeCodeFlags (
 			/*CMTimeCodeFormatDescriptionRef* */ IntPtr desc);
 
-		public uint GetTimeCodeFlags ()
+		public CMTimeCodeFlag TimeCodeFlags
 		{
-			return CMTimeCodeFormatDescriptionGetTimeCodeFlags (handle);
+			get {
+				return (CMTimeCodeFlag) CMTimeCodeFormatDescriptionGetTimeCodeFlags (handle);
+			}
+		}
+
+		public CMTimeCodeFormatType FormatType {
+			get {
+				return (CMTimeCodeFormatType)MediaSubType;
+			}
 		}
 #endif
 	}
@@ -995,6 +1043,12 @@ namespace XamCore.CoreMedia {
 		{
 			IntPtr handle = CMMetadataFormatDescriptionGetIdentifiers (Handle);
 			return NSArray.ArrayFromHandle <NSString> (handle);
+		}
+
+		public CMMetadataFormatType FormatType {
+			get {
+				return (CMMetadataFormatType) MediaSubType;
+			}
 		}
 #endif
 	}
