@@ -14,56 +14,69 @@ namespace XamCore.HomeKit {
 			var arr = new List<NSString> ();
 
 			if ((serviceTypes & HMServiceType.LightBulb) == HMServiceType.LightBulb)			
-				arr.Add (HMServiceTypeInternal.LightBulb);
+				arr.Add (HMServiceType.LightBulb.GetConstant ());
 			if ((serviceTypes & HMServiceType.Switch) == HMServiceType.Switch)			
-				arr.Add (HMServiceTypeInternal.Switch);
+				arr.Add (HMServiceType.Switch.GetConstant ());
 			if ((serviceTypes & HMServiceType.Thermostat) == HMServiceType.Thermostat)			
-				arr.Add (HMServiceTypeInternal.Thermostat);
+				arr.Add (HMServiceType.Thermostat.GetConstant ());
 			if ((serviceTypes & HMServiceType.GarageDoorOpener) == HMServiceType.GarageDoorOpener)			
-				arr.Add (HMServiceTypeInternal.GarageDoorOpener);
+				arr.Add (HMServiceType.GarageDoorOpener.GetConstant ());
 			if ((serviceTypes & HMServiceType.AccessoryInformation) == HMServiceType.AccessoryInformation)			
-				arr.Add (HMServiceTypeInternal.AccessoryInformation);
+				arr.Add (HMServiceType.AccessoryInformation.GetConstant ());
 			if ((serviceTypes & HMServiceType.Fan) == HMServiceType.Fan)			
-				arr.Add (HMServiceTypeInternal.Fan);
+				arr.Add (HMServiceType.Fan.GetConstant ());
 			if ((serviceTypes & HMServiceType.Outlet) == HMServiceType.Outlet)			
-				arr.Add (HMServiceTypeInternal.Outlet);
+				arr.Add (HMServiceType.Outlet.GetConstant ());
 			if ((serviceTypes & HMServiceType.LockMechanism) == HMServiceType.LockMechanism)			
-				arr.Add (HMServiceTypeInternal.LockMechanism);
+				arr.Add (HMServiceType.LockMechanism.GetConstant ());
 			if ((serviceTypes & HMServiceType.LockManagement) == HMServiceType.LockManagement)			
-				arr.Add (HMServiceTypeInternal.LockManagement);
+				arr.Add (HMServiceType.LockManagement.GetConstant ());
 			// iOS 9
 			if ((serviceTypes & HMServiceType.AirQualitySensor) == HMServiceType.AirQualitySensor)
-				arr.Add (HMServiceTypeInternal.AirQualitySensor);
+				arr.Add (HMServiceType.AirQualitySensor.GetConstant ());
 			if ((serviceTypes & HMServiceType.SecuritySystem) == HMServiceType.SecuritySystem)
-				arr.Add (HMServiceTypeInternal.SecuritySystem);
+				arr.Add (HMServiceType.SecuritySystem.GetConstant ());
 			if ((serviceTypes & HMServiceType.CarbonMonoxideSensor) == HMServiceType.CarbonMonoxideSensor)
-				arr.Add (HMServiceTypeInternal.CarbonMonoxideSensor);
+				arr.Add (HMServiceType.CarbonMonoxideSensor.GetConstant ());
 			if ((serviceTypes & HMServiceType.ContactSensor) == HMServiceType.ContactSensor)
-				arr.Add (HMServiceTypeInternal.ContactSensor);
+				arr.Add (HMServiceType.ContactSensor.GetConstant ());
 			if ((serviceTypes & HMServiceType.Door) == HMServiceType.Door)
-				arr.Add (HMServiceTypeInternal.Door);
+				arr.Add (HMServiceType.Door.GetConstant ());
 			if ((serviceTypes & HMServiceType.HumiditySensor) == HMServiceType.HumiditySensor)
-				arr.Add (HMServiceTypeInternal.HumiditySensor);
+				arr.Add (HMServiceType.HumiditySensor.GetConstant ());
 			if ((serviceTypes & HMServiceType.LeakSensor) == HMServiceType.LeakSensor)
-				arr.Add (HMServiceTypeInternal.LeakSensor);
+				arr.Add (HMServiceType.LeakSensor.GetConstant ());
 			if ((serviceTypes & HMServiceType.LightSensor) == HMServiceType.LightSensor)
-				arr.Add (HMServiceTypeInternal.LightSensor);
+				arr.Add (HMServiceType.LightSensor.GetConstant ());
 			if ((serviceTypes & HMServiceType.MotionSensor) == HMServiceType.MotionSensor)
-				arr.Add (HMServiceTypeInternal.MotionSensor);
+				arr.Add (HMServiceType.MotionSensor.GetConstant ());
 			if ((serviceTypes & HMServiceType.OccupancySensor) == HMServiceType.OccupancySensor)
-				arr.Add (HMServiceTypeInternal.OccupancySensor);
+				arr.Add (HMServiceType.OccupancySensor.GetConstant ());
 			if ((serviceTypes & HMServiceType.StatefulProgrammableSwitch) == HMServiceType.StatefulProgrammableSwitch)
-				arr.Add (HMServiceTypeInternal.StatefulProgrammableSwitch);
+				arr.Add (HMServiceType.StatefulProgrammableSwitch.GetConstant ());
 			if ((serviceTypes & HMServiceType.StatelessProgrammableSwitch) == HMServiceType.StatelessProgrammableSwitch)
-				arr.Add (HMServiceTypeInternal.StatelessProgrammableSwitch);
+				arr.Add (HMServiceType.StatelessProgrammableSwitch.GetConstant ());
 			if ((serviceTypes & HMServiceType.SmokeSensor) == HMServiceType.SmokeSensor)
-				arr.Add (HMServiceTypeInternal.SmokeSensor);
+				arr.Add (HMServiceType.SmokeSensor.GetConstant ());
 			if ((serviceTypes & HMServiceType.TemperatureSensor) == HMServiceType.TemperatureSensor)
-				arr.Add (HMServiceTypeInternal.TemperatureSensor);
+				arr.Add (HMServiceType.TemperatureSensor.GetConstant ());
 			if ((serviceTypes & HMServiceType.Window) == HMServiceType.Window)
-				arr.Add (HMServiceTypeInternal.Window);
+				arr.Add (HMServiceType.Window.GetConstant ());
 			if ((serviceTypes & HMServiceType.WindowCovering) == HMServiceType.WindowCovering)
-				arr.Add (HMServiceTypeInternal.WindowCovering);
+				arr.Add (HMServiceType.WindowCovering.GetConstant ());
+			// iOS 10.2
+			if ((serviceTypes & HMServiceType.AirPurifier) == HMServiceType.AirPurifier)
+				arr.Add (HMServiceType.AirPurifier.GetConstant ());
+			if ((serviceTypes & HMServiceType.VentilationFan) == HMServiceType.VentilationFan)
+				arr.Add (HMServiceType.VentilationFan.GetConstant ());
+			if ((serviceTypes & HMServiceType.FilterMaintenance) == HMServiceType.FilterMaintenance)
+				arr.Add (HMServiceType.FilterMaintenance.GetConstant ());
+			if ((serviceTypes & HMServiceType.HeaterCooler) == HMServiceType.HeaterCooler)
+				arr.Add (HMServiceType.HeaterCooler.GetConstant ());
+			if ((serviceTypes & HMServiceType.HumidifierDehumidifier) == HMServiceType.HumidifierDehumidifier)
+				arr.Add (HMServiceType.HumidifierDehumidifier.GetConstant ());
+			if ((serviceTypes & HMServiceType.Slat) == HMServiceType.Slat)
+				arr.Add (HMServiceType.Slat.GetConstant ());
 
 			return _ServicesWithTypes (arr.ToArray ());
 		}

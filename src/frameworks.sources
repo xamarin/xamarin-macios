@@ -781,11 +781,10 @@ HEALTHKIT_SOURCES = \
 
 # HomeKit
 
-HOMEKIT_CORE_SOURCES = \
+HOMEKIT_API_SOURCES = \
 	HomeKit/HMEnums.cs \
 
 HOMEKIT_SOURCES = \
-	HomeKit/HMAccessoryCategory.cs \
 	HomeKit/HMActionSet.cs \
 	HomeKit/HMCharacteristic.cs \
 	HomeKit/HMCharacteristicMetadata.cs \
