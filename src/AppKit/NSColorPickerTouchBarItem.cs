@@ -5,7 +5,7 @@ using XamCore.Foundation;
 namespace XamCore.AppKit {
 
 	public partial class NSColorPickerTouchBarItem {
-		// If you modify, also search for other copies
+		// If you modify, also search for other other XM_ACTIVATED_COPY and update as well
 		NSObject target;
 		Selector action;
 

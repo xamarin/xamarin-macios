@@ -13313,6 +13313,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12,1)]
 	[BaseType (typeof(NSTouchBarItem))]
+	[DisableDefaultCtor]
 	interface NSSliderTouchBarItem
 	{
 		[Export ("initWithIdentifier:")]
@@ -13657,6 +13658,7 @@ namespace XamCore.AppKit {
 		bool IsAutomaticTextCompletionEnabled { get; }
 
 		[Mac (10,12,1)]
+		[Async (ResultTypeName="NSSpellCheckerCanidates")]
 		[Export ("requestCandidatesForSelectedRange:inString:types:options:inSpellDocumentWithTag:completionHandler:")]
 		nint RequestCandidates (NSRange selectedRange, string stringToCheck, ulong checkingTypes, [NullAllowed] NSDictionary<NSString, NSObject> options, nint tag, [NullAllowed] Action<nint, NSTextCheckingResult []> completionHandler);
 
@@ -17443,7 +17445,6 @@ namespace XamCore.AppKit {
 		[Export ("textField:textView:candidates:forSelectedRange:"), DelegateName ("NSTextFieldTextCheckingResults"), DefaultValue (null)]
 		NSTextCheckingResult[] GetTextCheckingResults (NSTextField textField, NSTextView textView, NSTextCheckingResult[] candidates, NSRange selectedRange);
 
-		// @optional -(BOOL)textField:(NSTextField * _Nonnull)textField textView:(NSTextView * _Nonnull)textView shouldSelectCandidateAtIndex:(NSUInteger)index __attribute__((availability(macos, introduced=10_12_1)));
 		[Mac (10,12,1)]
 		[Export ("textField:textView:shouldSelectCandidateAtIndex:"), DelegateName ("NSTextFieldSelectCandidate"), DefaultValue (false)]
 		bool ShouldSelectCandidate (NSTextField textField, NSTextView textView, nuint index);
@@ -18765,7 +18766,7 @@ namespace XamCore.AppKit {
 		INSTouchBarDelegate Delegate { get; set; }
 
 		[Export ("itemForIdentifier:")]
-		NSTouchBarItem ItemForIdentifier (string identifier);
+		NSTouchBarItem GetItemForIdentifier (string identifier);
 
 		[Export ("visible")]
 		bool Visible { [Bind ("isVisible")] get; }
@@ -24408,6 +24409,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12,1)]
 	[BaseType (typeof(NSTouchBarItem))]
+	[DisableDefaultCtor]
 	interface NSCandidateListTouchBarItem
 	{
 		[Export ("initWithIdentifier:")]
@@ -24480,6 +24482,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12,1)]
 	[BaseType (typeof(NSTouchBarItem))]
+	[DisableDefaultCtor]
 	interface NSColorPickerTouchBarItem
 	{
 		[Export ("initWithIdentifier:")]
@@ -24526,6 +24529,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12,1)]
 	[BaseType (typeof(NSTouchBarItem))]
+	[DisableDefaultCtor]
 	interface NSCustomTouchBarItem
 	{
 		[Export ("initWithIdentifier:")]
@@ -24557,6 +24561,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12,1)]
 	[BaseType (typeof(NSTouchBarItem))]
+	[DisableDefaultCtor]
 	interface NSGroupTouchBarItem
 	{
 		[Export ("initWithIdentifier:")]
@@ -24576,6 +24581,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12,1)]
 	[BaseType (typeof(NSTouchBarItem))]
+	[DisableDefaultCtor]
 	interface NSPopoverTouchBarItem
 	{
 		[Export ("initWithIdentifier:")]
@@ -24623,7 +24629,7 @@ namespace XamCore.AppKit {
 		[Mac (10,12,1)]
 		[Abstract]
 		[Export ("numberOfItemsForScrubber:")]
-		nint NumberOfItems (NSScrubber scrubber);
+		nint GetNumberOfItems (NSScrubber scrubber);
 
 		[Mac (10,12,1)]
 		[Abstract]
@@ -24925,6 +24931,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12,1)]
 	[BaseType (typeof(NSTouchBarItem))]
+	[DisableDefaultCtor]
 	interface NSSharingServicePickerTouchBarItem
 	{
 		[Export ("initWithIdentifier:")]

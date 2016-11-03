@@ -2702,6 +2702,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12,1)]
 	[Native]
+	[Flags]
 	public enum NSTouchTypeMask : nuint
 	{
 		Direct = (1 << (int)NSTouchType.Direct),
