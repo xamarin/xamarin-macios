@@ -8779,127 +8779,6 @@ namespace XamCore.AppKit {
 		[Export ("resizingMode")]
 		NSImageResizingMode ResizingMode { get; set; }
 
-		[Internal, Field ("NSImageNameQuickLookTemplate")]
-		NSString NSImageNameQuickLookTemplate { get; }
-
-		[Internal, Field ("NSImageNameBluetoothTemplate")]
-		NSString NSImageNameBluetoothTemplate { get; }
-
-		[Internal, Field ("NSImageNameIChatTheaterTemplate")]
-		NSString NSImageNameIChatTheaterTemplate { get; }
-
-		[Internal, Field ("NSImageNameSlideshowTemplate")]
-		NSString NSImageNameSlideshowTemplate { get; }
-
-		[Internal, Field ("NSImageNameActionTemplate")]
-		NSString NSImageNameActionTemplate { get; }
-
-		[Internal, Field ("NSImageNameSmartBadgeTemplate")]
-		NSString NSImageNameSmartBadgeTemplate { get; }
-
-		[Internal, Field ("NSImageNamePathTemplate")]
-		NSString NSImageNamePathTemplate { get; }
-
-		[Internal, Field ("NSImageNameInvalidDataFreestandingTemplate")]
-		NSString NSImageNameInvalidDataFreestandingTemplate { get; }
-
-		[Internal, Field ("NSImageNameLockLockedTemplate")]
-		NSString NSImageNameLockLockedTemplate { get; }
-
-		[Internal, Field ("NSImageNameLockUnlockedTemplate")]
-		NSString NSImageNameLockUnlockedTemplate { get; }
-
-		[Internal, Field ("NSImageNameGoRightTemplate")]
-		NSString NSImageNameGoRightTemplate { get; }
-
-		[Internal, Field ("NSImageNameGoLeftTemplate")]
-		NSString NSImageNameGoLeftTemplate { get; }
-
-		[Internal, Field ("NSImageNameRightFacingTriangleTemplate")]
-		NSString NSImageNameRightFacingTriangleTemplate { get; }
-
-		[Internal, Field ("NSImageNameLeftFacingTriangleTemplate")]
-		NSString NSImageNameLeftFacingTriangleTemplate { get; }
-
-		[Internal, Field ("NSImageNameAddTemplate")]
-		NSString NSImageNameAddTemplate { get; }
-
-		[Internal, Field ("NSImageNameRemoveTemplate")]
-		NSString NSImageNameRemoveTemplate { get; }
-
-		[Internal, Field ("NSImageNameRevealFreestandingTemplate")]
-		NSString NSImageNameRevealFreestandingTemplate { get; }
-
-		[Internal, Field ("NSImageNameFollowLinkFreestandingTemplate")]
-		NSString NSImageNameFollowLinkFreestandingTemplate { get; }
-
-		[Internal, Field ("NSImageNameEnterFullScreenTemplate")]
-		NSString NSImageNameEnterFullScreenTemplate { get; }
-
-		[Internal, Field ("NSImageNameExitFullScreenTemplate")]
-		NSString NSImageNameExitFullScreenTemplate { get; }
-
-		[Internal, Field ("NSImageNameStopProgressTemplate")]
-		NSString NSImageNameStopProgressTemplate { get; }
-
-		[Internal, Field ("NSImageNameStopProgressFreestandingTemplate")]
-		NSString NSImageNameStopProgressFreestandingTemplate { get; }
-
-		[Internal, Field ("NSImageNameRefreshTemplate")]
-		NSString NSImageNameRefreshTemplate { get; }
-
-		[Internal, Field ("NSImageNameRefreshFreestandingTemplate")]
-		NSString NSImageNameRefreshFreestandingTemplate { get; }
-
-		[Internal, Field ("NSImageNameFolder")]
-		NSString NSImageNameFolder { get; }
-
-		[Internal, Field ("NSImageNameTrashEmpty")]
-		NSString NSImageNameTrashEmpty { get; }
-
-		[Internal, Field ("NSImageNameTrashFull")]
-		NSString NSImageNameTrashFull { get; }
-
-		[Internal, Field ("NSImageNameHomeTemplate")]
-		NSString NSImageNameHomeTemplate { get; }
-
-		[Internal, Field ("NSImageNameBookmarksTemplate")]
-		NSString NSImageNameBookmarksTemplate { get; }
-
-		[Internal, Field ("NSImageNameCaution")]
-		NSString NSImageNameCaution { get; }
-
-		[Internal, Field ("NSImageNameStatusAvailable")]
-		NSString NSImageNameStatusAvailable { get; }
-
-		[Internal, Field ("NSImageNameStatusPartiallyAvailable")]
-		NSString NSImageNameStatusPartiallyAvailable { get; }
-
-		[Internal, Field ("NSImageNameStatusUnavailable")]
-		NSString NSImageNameStatusUnavailable { get; }
-
-		[Internal, Field ("NSImageNameStatusNone")]
-		NSString NSImageNameStatusNone { get; }
-
-		[Internal, Field ("NSImageNameApplicationIcon")]
-		NSString NSImageNameApplicationIcon { get; }
-
-		[Internal, Field ("NSImageNameMenuOnStateTemplate")]
-		NSString NSImageNameMenuOnStateTemplate { get; }
-
-		[Internal, Field ("NSImageNameMenuMixedStateTemplate")]
-		NSString NSImageNameMenuMixedStateTemplate { get; }
-
-		[Internal, Field ("NSImageNameUserGuest")]
-		NSString NSImageNameUserGuest { get; }
-
-		[Internal, Field ("NSImageNameMobileMe")]
-		NSString NSImageNameMobileMe { get; }
-
-		[Mac (10, 8)]
-		[Internal, Field ("NSImageNameShareTemplate")]
-		NSString NSImageNameShareTemplate { get; }
-
 		[Mac (10,7)]
 		[Export ("recommendedLayerContentsScale:")]
 		nfloat GetRecommendedLayerContentsScale (nfloat preferredContentsScale);
@@ -8907,310 +8786,434 @@ namespace XamCore.AppKit {
 		[Mac (10,7)]
 		[Export ("layerContentsForContentsScale:")]
 		NSObject GetLayerContentsForContentsScale (nfloat layerContentsScale);
+	}
+
+	public enum NSImageName 
+	{
+		[Internal, Field ("NSImageNameQuickLookTemplate")]
+		QuickLookTemplate,
+
+		[Internal, Field ("NSImageNameBluetoothTemplate")]
+		BluetoothTemplate,
+
+		[Internal, Field ("NSImageNameIChatTheaterTemplate")]
+		IChatTheaterTemplate,
+
+		[Internal, Field ("NSImageNameSlideshowTemplate")]
+		SlideshowTemplate,
+
+		[Internal, Field ("NSImageNameActionTemplate")]
+		ActionTemplate,
+
+		[Internal, Field ("NSImageNameSmartBadgeTemplate")]
+		SmartBadgeTemplate,
+
+		[Internal, Field ("NSImageNamePathTemplate")]
+		PathTemplate,
+
+		[Internal, Field ("NSImageNameInvalidDataFreestandingTemplate")]
+		InvalidDataFreestandingTemplate,
+
+		[Internal, Field ("NSImageNameLockLockedTemplate")]
+		LockLockedTemplate,
+
+		[Internal, Field ("NSImageNameLockUnlockedTemplate")]
+		LockUnlockedTemplate,
+
+		[Internal, Field ("NSImageNameGoRightTemplate")]
+		GoRightTemplate,
+
+		[Internal, Field ("NSImageNameGoLeftTemplate")]
+		GoLeftTemplate,
+
+		[Internal, Field ("NSImageNameRightFacingTriangleTemplate")]
+		RightFacingTriangleTemplate,
+
+		[Internal, Field ("NSImageNameLeftFacingTriangleTemplate")]
+		LeftFacingTriangleTemplate,
+
+		[Internal, Field ("NSImageNameAddTemplate")]
+		AddTemplate,
+
+		[Internal, Field ("NSImageNameRemoveTemplate")]
+		RemoveTemplate,
+
+		[Internal, Field ("NSImageNameRevealFreestandingTemplate")]
+		RevealFreestandingTemplate,
+
+		[Internal, Field ("NSImageNameFollowLinkFreestandingTemplate")]
+		FollowLinkFreestandingTemplate,
+
+		[Internal, Field ("NSImageNameEnterFullScreenTemplate")]
+		EnterFullScreenTemplate,
+
+		[Internal, Field ("NSImageNameExitFullScreenTemplate")]
+		ExitFullScreenTemplate,
+
+		[Internal, Field ("NSImageNameStopProgressTemplate")]
+		StopProgressTemplate,
+
+		[Internal, Field ("NSImageNameStopProgressFreestandingTemplate")]
+		StopProgressFreestandingTemplate,
+
+		[Internal, Field ("NSImageNameRefreshTemplate")]
+		RefreshTemplate,
+
+		[Internal, Field ("NSImageNameRefreshFreestandingTemplate")]
+		RefreshFreestandingTemplate,
+
+		[Internal, Field ("NSImageNameFolder")]
+		Folder,
+
+		[Internal, Field ("NSImageNameTrashEmpty")]
+		TrashEmpty,
+
+		[Internal, Field ("NSImageNameTrashFull")]
+		TrashFull,
+
+		[Internal, Field ("NSImageNameHomeTemplate")]
+		HomeTemplate,
+
+		[Internal, Field ("NSImageNameBookmarksTemplate")]
+		BookmarksTemplate,
+
+		[Internal, Field ("NSImageNameCaution")]
+		Caution,
+
+		[Internal, Field ("NSImageNameStatusAvailable")]
+		StatusAvailable,
+
+		[Internal, Field ("NSImageNameStatusPartiallyAvailable")]
+		StatusPartiallyAvailable,
+
+		[Internal, Field ("NSImageNameStatusUnavailable")]
+		StatusUnavailable,
+
+		[Internal, Field ("NSImageNameStatusNone")]
+		StatusNone,
+
+		[Internal, Field ("NSImageNameApplicationIcon")]
+		ApplicationIcon,
+
+		[Internal, Field ("NSImageNameMenuOnStateTemplate")]
+		MenuOnStateTemplate,
+
+		[Internal, Field ("NSImageNameMenuMixedStateTemplate")]
+		MenuMixedStateTemplate,
+
+		[Internal, Field ("NSImageNameUserGuest")]
+		UserGuest,
+
+		[Internal, Field ("NSImageNameMobileMe")]
+		MobileMe,
+
+		[Mac (10, 8)]
+		[Internal, Field ("NSImageNameShareTemplate")]
+		ShareTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarAddDetailTemplate")]
-		NSString NSImageNameTouchBarAddDetailTemplate { get; }
+		TouchBarAddDetailTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarAddTemplate")]
-		NSString NSImageNameTouchBarAddTemplate { get; }
+		TouchBarAddTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarAlarmTemplate")]
-		NSString NSImageNameTouchBarAlarmTemplate { get; }
+		TouchBarAlarmTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarAudioInputMuteTemplate")]
-		NSString NSImageNameTouchBarAudioInputMuteTemplate { get; }
+		TouchBarAudioInputMuteTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarAudioInputTemplate")]
-		NSString NSImageNameTouchBarAudioInputTemplate { get; }
+		TouchBarAudioInputTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarAudioOutputMuteTemplate")]
-		NSString NSImageNameTouchBarAudioOutputMuteTemplate { get; }
+		TouchBarAudioOutputMuteTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarAudioOutputVolumeHighTemplate")]
-		NSString NSImageNameTouchBarAudioOutputVolumeHighTemplate { get; }
+		TouchBarAudioOutputVolumeHighTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarAudioOutputVolumeLowTemplate")]
-		NSString NSImageNameTouchBarAudioOutputVolumeLowTemplate { get; }
+		TouchBarAudioOutputVolumeLowTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarAudioOutputVolumeMediumTemplate")]
-		NSString NSImageNameTouchBarAudioOutputVolumeMediumTemplate { get; }
+		TouchBarAudioOutputVolumeMediumTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarAudioOutputVolumeOffTemplate")]
-		NSString NSImageNameTouchBarAudioOutputVolumeOffTemplate { get; }
+		TouchBarAudioOutputVolumeOffTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarBookmarksTemplate")]
-		NSString NSImageNameTouchBarBookmarksTemplate { get; }
+		TouchBarBookmarksTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarColorPickerFill")]
-		NSString NSImageNameTouchBarColorPickerFill { get; }
+		TouchBarColorPickerFill,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarColorPickerFont")]
-		NSString NSImageNameTouchBarColorPickerFont { get; }
+		TouchBarColorPickerFont,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarColorPickerStroke")]
-		NSString NSImageNameTouchBarColorPickerStroke { get; }
+		TouchBarColorPickerStroke,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarCommunicationAudioTemplate")]
-		NSString NSImageNameTouchBarCommunicationAudioTemplate { get; }
+		TouchBarCommunicationAudioTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarCommunicationVideoTemplate")]
-		NSString NSImageNameTouchBarCommunicationVideoTemplate { get; }
+		TouchBarCommunicationVideoTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarComposeTemplate")]
-		NSString NSImageNameTouchBarComposeTemplate { get; }
+		TouchBarComposeTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarDeleteTemplate")]
-		NSString NSImageNameTouchBarDeleteTemplate { get; }
+		TouchBarDeleteTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarDownloadTemplate")]
-		NSString NSImageNameTouchBarDownloadTemplate { get; }
+		TouchBarDownloadTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarEnterFullScreenTemplate")]
-		NSString NSImageNameTouchBarEnterFullScreenTemplate { get; }
+		TouchBarEnterFullScreenTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarExitFullScreenTemplate")]
-		NSString NSImageNameTouchBarExitFullScreenTemplate { get; }
+		TouchBarExitFullScreenTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarFastForwardTemplate")]
-		NSString NSImageNameTouchBarFastForwardTemplate { get; }
+		TouchBarFastForwardTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarFolderCopyToTemplate")]
-		NSString NSImageNameTouchBarFolderCopyToTemplate { get; }
+		TouchBarFolderCopyToTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarFolderMoveToTemplate")]
-		NSString NSImageNameTouchBarFolderMoveToTemplate { get; }
+		TouchBarFolderMoveToTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarFolderTemplate")]
-		NSString NSImageNameTouchBarFolderTemplate { get; }
+		TouchBarFolderTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarGetInfoTemplate")]
-		NSString NSImageNameTouchBarGetInfoTemplate { get; }
+		TouchBarGetInfoTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarGoBackTemplate")]
-		NSString NSImageNameTouchBarGoBackTemplate { get; }
+		TouchBarGoBackTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarGoDownTemplate")]
-		NSString NSImageNameTouchBarGoDownTemplate { get; }
+		TouchBarGoDownTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarGoForwardTemplate")]
-		NSString NSImageNameTouchBarGoForwardTemplate { get; }
+		TouchBarGoForwardTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarGoUpTemplate")]
-		NSString NSImageNameTouchBarGoUpTemplate { get; }
+		TouchBarGoUpTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarHistoryTemplate")]
-		NSString NSImageNameTouchBarHistoryTemplate { get; }
+		TouchBarHistoryTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarIconViewTemplate")]
-		NSString NSImageNameTouchBarIconViewTemplate { get; }
+		TouchBarIconViewTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarListViewTemplate")]
-		NSString NSImageNameTouchBarListViewTemplate { get; }
+		TouchBarListViewTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarMailTemplate")]
-		NSString NSImageNameTouchBarMailTemplate { get; }
+		TouchBarMailTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarNewFolderTemplate")]
-		NSString NSImageNameTouchBarNewFolderTemplate { get; }
+		TouchBarNewFolderTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarNewMessageTemplate")]
-		NSString NSImageNameTouchBarNewMessageTemplate { get; }
+		TouchBarNewMessageTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarOpenInBrowserTemplate")]
-		NSString NSImageNameTouchBarOpenInBrowserTemplate { get; }
+		TouchBarOpenInBrowserTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarPauseTemplate")]
-		NSString NSImageNameTouchBarPauseTemplate { get; }
+		TouchBarPauseTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarPlayheadTemplate")]
-		NSString NSImageNameTouchBarPlayheadTemplate { get; }
+		TouchBarPlayheadTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarPlayPauseTemplate")]
-		NSString NSImageNameTouchBarPlayPauseTemplate { get; }
+		TouchBarPlayPauseTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarPlayTemplate")]
-		NSString NSImageNameTouchBarPlayTemplate { get; }
+		TouchBarPlayTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarQuickLookTemplate")]
-		NSString NSImageNameTouchBarQuickLookTemplate { get; }
+		TouchBarQuickLookTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarRecordStartTemplate")]
-		NSString NSImageNameTouchBarRecordStartTemplate { get; }
+		TouchBarRecordStartTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarRecordStopTemplate")]
-		NSString NSImageNameTouchBarRecordStopTemplate { get; }
+		TouchBarRecordStopTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarRefreshTemplate")]
-		NSString NSImageNameTouchBarRefreshTemplate { get; }
+		TouchBarRefreshTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarRewindTemplate")]
-		NSString NSImageNameTouchBarRewindTemplate { get; }
+		TouchBarRewindTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarRotateLeftTemplate")]
-		NSString NSImageNameTouchBarRotateLeftTemplate { get; }
+		TouchBarRotateLeftTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarRotateRightTemplate")]
-		NSString NSImageNameTouchBarRotateRightTemplate { get; }
+		TouchBarRotateRightTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarSearchTemplate")]
-		NSString NSImageNameTouchBarSearchTemplate { get; }
+		TouchBarSearchTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarShareTemplate")]
-		NSString NSImageNameTouchBarShareTemplate { get; }
+		TouchBarShareTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarSidebarTemplate")]
-		NSString NSImageNameTouchBarSidebarTemplate { get; }
+		TouchBarSidebarTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarSkipAhead15SecondsTemplate")]
-		NSString NSImageNameTouchBarSkipAhead15SecondsTemplate { get; }
+		TouchBarSkipAhead15SecondsTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarSkipAhead30SecondsTemplate")]
-		NSString NSImageNameTouchBarSkipAhead30SecondsTemplate { get; }
+		TouchBarSkipAhead30SecondsTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarSkipAheadTemplate")]
-		NSString NSImageNameTouchBarSkipAheadTemplate { get; }
+		TouchBarSkipAheadTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarSkipBack15SecondsTemplate")]
-		NSString NSImageNameTouchBarSkipBack15SecondsTemplate { get; }
+		TouchBarSkipBack15SecondsTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarSkipBack30SecondsTemplate")]
-		NSString NSImageNameTouchBarSkipBack30SecondsTemplate { get; }
+		TouchBarSkipBack30SecondsTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarSkipBackTemplate")]
-		NSString NSImageNameTouchBarSkipBackTemplate { get; }
+		TouchBarSkipBackTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarSkipToEndTemplate")]
-		NSString NSImageNameTouchBarSkipToEndTemplate { get; }
+		TouchBarSkipToEndTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarSkipToStartTemplate")]
-		NSString NSImageNameTouchBarSkipToStartTemplate { get; }
+		TouchBarSkipToStartTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarSlideshowTemplate")]
-		NSString NSImageNameTouchBarSlideshowTemplate { get; }
+		TouchBarSlideshowTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarTagIconTemplate")]
-		NSString NSImageNameTouchBarTagIconTemplate { get; }
+		TouchBarTagIconTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarTextBoldTemplate")]
-		NSString NSImageNameTouchBarTextBoldTemplate { get; }
+		TouchBarTextBoldTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarTextBoxTemplate")]
-		NSString NSImageNameTouchBarTextBoxTemplate { get; }
+		TouchBarTextBoxTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarTextCenterAlignTemplate")]
-		NSString NSImageNameTouchBarTextCenterAlignTemplate { get; }
+		TouchBarTextCenterAlignTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarTextItalicTemplate")]
-		NSString NSImageNameTouchBarTextItalicTemplate { get; }
+		TouchBarTextItalicTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarTextJustifiedAlignTemplate")]
-		NSString NSImageNameTouchBarTextJustifiedAlignTemplate { get; }
+		TouchBarTextJustifiedAlignTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarTextLeftAlignTemplate")]
-		NSString NSImageNameTouchBarTextLeftAlignTemplate { get; }
+		TouchBarTextLeftAlignTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarTextListTemplate")]
-		NSString NSImageNameTouchBarTextListTemplate { get; }
+		TouchBarTextListTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarTextRightAlignTemplate")]
-		NSString NSImageNameTouchBarTextRightAlignTemplate { get; }
+		TouchBarTextRightAlignTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarTextStrikethroughTemplate")]
-		NSString NSImageNameTouchBarTextStrikethroughTemplate { get; }
+		TouchBarTextStrikethroughTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarTextUnderlineTemplate")]
-		NSString NSImageNameTouchBarTextUnderlineTemplate { get; }
+		TouchBarTextUnderlineTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarUserAddTemplate")]
-		NSString NSImageNameTouchBarUserAddTemplate { get; }
+		TouchBarUserAddTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarUserGroupTemplate")]
-		NSString NSImageNameTouchBarUserGroupTemplate { get; }
+		TouchBarUserGroupTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarUserTemplate")]
-		NSString NSImageNameTouchBarUserTemplate { get; }
+		TouchBarUserTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarVolumeDownTemplate")]
-		NSString NSImageNameTouchBarVolumeDownTemplate { get; }
+		TouchBarVolumeDownTemplate,
 
 		[Mac (10, 12, 1)]
 		[Internal, Field ("NSImageNameTouchBarVolumeUpTemplate")]
-		NSString NSImageNameTouchBarVolumeUpTemplate { get; }
+		TouchBarVolumeUpTemplate,
 	}
 
 	interface NSStringAttributes {
