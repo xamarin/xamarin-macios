@@ -309,6 +309,9 @@ namespace xharness
 			}
 		}
 
+		[DllImport ("/usr/lib/libc.dylib")]
+		extern static IntPtr ttyname (int filedes);
+
 		public async Task<int> RunAsync ()
 		{
 			CrashReportSnapshot crash_reports;
@@ -392,6 +395,19 @@ namespace xharness
 
 			if (isSimulator) {
 				FindSimulator ();
+
+				if (mode != "watchos") {
+					var stderr_tty = Marshal.PtrToStringAuto (ttyname (2));
+					if (!string.IsNullOrEmpty (stderr_tty)) {
+						args.Append (" --stdout=").Append (Harness.Quote (stderr_tty));
+						args.Append (" --stderr=").Append (Harness.Quote (stderr_tty));
+					} else {
+						var stdout_log = Logs.CreateFile ("Standard output", Path.Combine (LogDirectory, "stdout.log"));
+						var stderr_log = Logs.CreateFile ("Standard error", Path.Combine (LogDirectory, "stderr.log"));
+						args.Append (" --stdout=").Append (Harness.Quote (stdout_log.FullPath));
+						args.Append (" --stderr=").Append (Harness.Quote (stderr_log.FullPath));
+					}
+				}
 
 				var systemLogs = new List<CaptureLog> ();
 				foreach (var sim in simulators) {
