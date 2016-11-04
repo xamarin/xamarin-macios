@@ -37,6 +37,8 @@ using AUViewControllerBase = XamCore.UIKit.UIViewController;
 
 namespace XamCore.ModelIO {
 
+	delegate void MDLObjectHandler (MDLObject mdlObject, ref bool stop);
+
 	[iOS (9,0)][Mac(10,11, onlyOn64 : true)]
 	[BaseType (typeof(MDLPhysicallyPlausibleLight))]
 	[DisableDefaultCtor]
@@ -415,6 +417,10 @@ namespace XamCore.ModelIO {
 		[return: NullAllowed]
 		MDLMaterialProperty GetProperty (MDLMaterialSemantic semantic);
 
+		[iOS (10,2), Mac (10,12,1)]
+		[Export ("propertiesWithSemantic:")]
+		MDLMaterialProperty[] GetProperties (MDLMaterialSemantic semantic);
+
 		[Export ("removeAllProperties")]
 		void RemoveAllProperties ();
 
@@ -645,7 +651,11 @@ namespace XamCore.ModelIO {
 		}
 
 		[Export ("vertexBuffers", ArgumentSemantic.Retain)]
-		IMDLMeshBuffer[] VertexBuffers { get; }
+		IMDLMeshBuffer[] VertexBuffers {
+			get;
+			[iOS (10,2), Mac (10,12,1), TV (10,1)]
+			set;
+		}
 
 		[NullAllowed]
 		[Export ("submeshes", ArgumentSemantic.Copy)]
@@ -764,6 +774,12 @@ namespace XamCore.ModelIO {
 		MDLMesh CreateCylindroid (float height, Vector2 radii, nuint radialSegments, nuint verticalSegments, MDLGeometryType geometryType, bool inwardNormals, [NullAllowed] IMDLMeshBufferAllocator allocator);
 
 		[Static]
+		[iOS (10,2), Mac (12,1,1), TV (10,1)]
+		[Export ("newCapsuleWithHeight:radii:radialSegments:verticalSegments:hemisphereSegments:geometryType:inwardNormals:allocator:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		MDLMesh CreateCapsule (float height, Vector2 radii, nuint radialSegments, nuint verticalSegments, nuint hemisphereSegments, MDLGeometryType geometryType, bool inwardNormals, [NullAllowed] IMDLMeshBufferAllocator allocator);
+
+		[Static]
 		[Export ("newEllipticalConeWithHeight:radii:radialSegments:verticalSegments:geometryType:inwardNormals:allocator:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		MDLMesh CreateEllipticalCone (float height, Vector2 radii, nuint radialSegments, nuint verticalSegments, MDLGeometryType geometryType, bool inwardNormals, [NullAllowed] IMDLMeshBufferAllocator allocator);
@@ -771,6 +787,11 @@ namespace XamCore.ModelIO {
 		[Static]
 		[Export ("newIcosahedronWithRadius:inwardNormals:allocator:")]
 		MDLMesh CreateIcosahedron (float radius, bool inwardNormals, [NullAllowed] IMDLMeshBufferAllocator allocator);
+
+		[Static]
+		[iOS (10,2), Mac (12,1,1), TV (10,1)]
+		[Export ("newIcosahedronWithRadius:inwardNormals:geometryType:allocator:")]
+		MDLMesh CreateIcosahedron (float radius, bool inwardNormals, MDLGeometryType geometryType, [NullAllowed] IMDLMeshBufferAllocator allocator);
 
 		[Static]
 		[Export ("newSubdividedMesh:submeshIndex:subdivisionLevels:")]
@@ -932,13 +953,20 @@ namespace XamCore.ModelIO {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor ([NullAllowed] NSData pixelData, bool topLeftOrigin, [NullAllowed] string name, Vector2i dimensions, nint rowStride, nuint channelCount, MDLTextureChannelEncoding channelEncoding, bool isCube);
 
+		[Internal]
 		[Export ("initVectorNoiseWithSmoothness:name:textureDimensions:channelEncoding:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-		IntPtr Constructor (float smoothness, [NullAllowed] string name, Vector2i textureDimensions, MDLTextureChannelEncoding channelEncoding);
+		IntPtr InitVectorNoiseWithSmoothness (float smoothness, [NullAllowed] string name, Vector2i textureDimensions, MDLTextureChannelEncoding channelEncoding);
 
 		[Export ("initScalarNoiseWithSmoothness:name:textureDimensions:channelCount:channelEncoding:grayscale:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		IntPtr Constructor (float smoothness, [NullAllowed] string name, Vector2i textureDimensions, int channelCount, MDLTextureChannelEncoding channelEncoding, bool grayscale);
+
+		[Internal]
+		[iOS (10,2), Mac (12,1,1)]
+		[Export ("initCellularNoiseWithFrequency:name:textureDimensions:channelEncoding:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		IntPtr InitCellularNoiseWithFrequency (float frequency, [NullAllowed] string name, Vector2i textureDimensions, MDLTextureChannelEncoding channelEncoding);
 	}
 
 	[iOS (9,0), Mac(10,11, onlyOn64 : true)]
@@ -985,6 +1013,10 @@ namespace XamCore.ModelIO {
 		[TV (10,0)]
 		[Export ("objectAtPath:")]
 		MDLObject GetObject (string path);
+
+		[iOS (10,2), Mac (12,1,1), TV (10,1)]
+		[Export ("enumerateChildObjectsOfClass:root:usingBlock:stopPointer:")]
+		void EnumerateChildObjects (Class objectClass, MDLObject root, MDLObjectHandler handler, ref bool stop);
 
 		[NullAllowed, Export ("transform", ArgumentSemantic.Retain)]
 		IMDLTransformComponent Transform { get; set; }
@@ -1304,7 +1336,11 @@ namespace XamCore.ModelIO {
 		MDLMaterial Material { get; set; }
 
 		[NullAllowed, Export ("topology", ArgumentSemantic.Retain)]
-		MDLSubmeshTopology Topology { get; }
+		MDLSubmeshTopology Topology {
+			get;
+			[iOS (10,2), Mac (12,1,1), TV (10,1)]
+			set;
+		}
 
 		[Static]
 		[Export ("submeshWithSCNGeometryElement:")]
@@ -1739,8 +1775,6 @@ namespace XamCore.ModelIO {
 	interface MDLVoxelArray
 	{
 
-		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use new MDLVoxelArray (MDLAsset, int, float)")]
-		[Obsoleted (PlatformName.iOS, 10, 0, message: "Use new MDLVoxelArray (MDLAsset, int, float)")]
 		[Export ("initWithAsset:divisions:interiorShells:exteriorShells:patchRadius:")]
 		IntPtr Constructor (MDLAsset asset, int divisions, int interiorShells, int exteriorShells, float patchRadius);
 
@@ -1929,6 +1963,9 @@ namespace XamCore.ModelIO {
 	[iOS (9,0)][Mac(10,11, onlyOn64 : true)]
 	[BaseType (typeof (NSObject))]
 	interface MDLSubmeshTopology {
+		[Export ("initWithSubmesh:")]
+		IntPtr Constructor (MDLSubmesh submesh);
+
 		[NullAllowed, Export ("faceTopology", ArgumentSemantic.Retain)]
 		IMDLMeshBuffer FaceTopology { get; set; }
 
