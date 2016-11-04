@@ -1,0 +1,179 @@
+﻿#if MONOMAC
+using System;
+using System.Runtime.InteropServices;
+using XamCore.ObjCRuntime;
+using XamCore.Foundation;
+
+namespace XamCore.CoreGraphics
+{
+	public static class CGDisplay
+	{
+#if !COREBUILD
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern uint CGMainDisplayID ();
+
+		public static int MainDisplayID {
+			get {
+				return (int)CGMainDisplayID ();
+			}
+		}
+
+		public static int GetMainDisplayID ()
+		{
+			return (int)CGMainDisplayID ();
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern nuint CGDisplayModeGetTypeID ();
+
+		public static nint GetDisplayModeTypeID ()
+		{
+			return (nint)CGDisplayModeGetTypeID ();
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern CGRect CGDisplayBounds (uint display);
+
+		public static CGRect GetBounds (int display)
+		{
+			return CGDisplayBounds ((uint)display);
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern nuint CGDisplayPixelsWide (uint display);
+
+		public static nint GetWidth (int display)
+		{
+			return (nint)CGDisplayPixelsWide ((uint)display);
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern nuint CGDisplayPixelsHigh (uint display);
+
+		public static nint GetHeight (int display)
+		{
+			return (nint)CGDisplayPixelsHigh ((uint)display);
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern int CGSetDisplayTransferByFormula (uint display, float redMin, float redMax, float redGamma, float greenMin, float greenMax, float greenGamma, float blueMin, float blueMax, float blueGamma);
+
+		public static int SetDisplayTransfer (int display, float redMin, float redMax, float redGamma, float greenMin, float greenMax, float greenGamma, float blueMin, float blueMax, float blueGamma)
+		{
+			return CGSetDisplayTransferByFormula ((uint)display, redMin, redMax, redGamma, greenMin, greenMax, greenGamma, blueMin, blueMax, blueGamma);
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern uint CGDisplayGammaTableCapacity (uint display);
+
+		public static int GetGammaTableCapacity (int display)
+		{
+			return (int)CGDisplayGammaTableCapacity ((uint)display);
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint = "CGDisplayRestoreColorSyncSettings")]
+		public static extern void RestoreColorSyncSettings ();
+
+		[Deprecated (PlatformName.MacOSX, 10, 9)]
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern uint CGDisplayIsCaptured (uint display);
+
+		public static int IsCaptured (int display)
+		{
+			return (int)CGDisplayIsCaptured ((uint)display);
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern int CGDisplayCapture (uint display);
+
+		public static int Capture (int display)
+		{
+			return CGDisplayCapture ((uint)display);
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern int CGDisplayCaptureWithOptions (uint display, uint options);
+
+		public static int Capture (int display, int options)
+		{
+			return CGDisplayCaptureWithOptions ((uint)display, (uint)options);
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern int CGDisplayRelease (uint display);
+
+		public static int Release (int display)
+		{
+			return CGDisplayRelease ((uint)display);
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint = "CGCaptureAllDisplays")]
+		public static extern int CaptureAllDisplays ();
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern int CGCaptureAllDisplaysWithOptions (uint options);
+
+		public static int CaptureAllDisplays (int options)
+		{
+			return CGCaptureAllDisplaysWithOptions ((uint)options);
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint = "CGReleaseAllDisplays")]
+		public static extern int ReleaseAllDisplays ();
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern int CGDisplayHideCursor (uint display);
+
+		public static int HideCursor (int display)
+		{
+			return CGDisplayHideCursor ((uint)display);
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern int CGDisplayShowCursor (uint display);
+
+		public static int ShowCursor (int display)
+		{
+			return CGDisplayShowCursor ((uint)display);
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern int CGDisplayMoveCursorToPoint (uint display, CGPoint point);
+
+		public static int MoveCursor (int display, CGPoint point)
+		{
+			return CGDisplayMoveCursorToPoint ((uint)display, point);
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern uint CGDisplayIDToOpenGLDisplayMask (uint display);
+
+		public static int GetOpenGLDisplayMask (int display)
+		{
+			return (int)CGDisplayIDToOpenGLDisplayMask ((uint)display);
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern uint CGOpenGLDisplayMaskToDisplayID (uint mask);
+
+		public static int GetDisplayID (int displayMask)
+		{
+			return (int)CGOpenGLDisplayMaskToDisplayID ((uint)displayMask);
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern uint CGShieldingWindowID (uint display);
+
+		public static int GetShieldingWindowID (int display)
+		{
+			return (int)CGShieldingWindowID ((uint)display);
+		}
+
+		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint = "CGShieldingWindowLevel")]
+		public static extern int GetShieldingWindowLevel ();
+
+
+#endif
+	}
+}
+#endif
