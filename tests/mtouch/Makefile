@@ -8,7 +8,7 @@ export MSBuildExtensionsPath=$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/Ex
 
 check: run-tests
 
-NUNIT_MSBUILD_DIR=$(TOP)/tests/packages/NUnit.Runners.2.6.4/tools/lib
+NUNIT_MSBUILD_DIR=$(TOP)/packages/NUnit.Runners.2.6.4/tools/lib
 
 all-local::
 	$(MAKE) dependencies
