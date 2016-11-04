@@ -18795,6 +18795,9 @@ namespace XamCore.AppKit {
 		[DesignatedInitializer]
 		IntPtr Constructor (string identifier);
 
+		[Wrap ("this (identifier.GetConstant ())")]
+		IntPtr Constructor (NSTouchBarItemIdentifier identifier);
+
 		[Export ("identifier")]
 		string Identifier { get; }
 
@@ -18815,42 +18818,42 @@ namespace XamCore.AppKit {
 	}
 
 	[Mac (10,12,1)]
-	interface NSTouchBarItemIdentifier
+	public enum NSTouchBarItemIdentifier
 	{
 		[Field ("NSTouchBarItemIdentifierFixedSpaceSmall")]
-		NSString FixedSpaceSmall { get; }
+		FixedSpaceSmall,
 
 		[Field ("NSTouchBarItemIdentifierFixedSpaceLarge")]
-		NSString FixedSpaceLarge { get; }
+		FixedSpaceLarge,
 
 		[Field ("NSTouchBarItemIdentifierFlexibleSpace")]
-		NSString FlexibleSpace { get; }
+		FlexibleSpace,
 
 		[Field ("NSTouchBarItemIdentifierOtherItemsProxy")]
-		NSString OtherItemsProxy { get; }
+		OtherItemsProxy,
 
 		[Field ("NSTouchBarItemIdentifierCharacterPicker")]
-		NSString CharacterPicker { get; }
+		CharacterPicker,
 
 		[Field ("NSTouchBarItemIdentifierTextColorPicker")]
-		NSString TextColorPicker { get; }
+		TextColorPicker,
 
 		[Field ("NSTouchBarItemIdentifierTextStyle")]
-		NSString TextStyle { get; }
+		TextStyle,
 
 		[Field ("NSTouchBarItemIdentifierTextAlignment")]
-		NSString TextAlignment { get; }
+		TextAlignment,
 
 		[Field ("NSTouchBarItemIdentifierTextList")]
-		NSString TextList { get; }
+		TextList,
 
 		[Field ("NSTouchBarItemIdentifierTextFormat")]
-		NSString TextFormat { get; }
+		TextFormat,
+
 	}
 
 	[Mac (10, 12, 1)]
-	[Protocol, Model]
-	[BaseType (typeof(NSObject))]
+	[Protocol]
 	interface NSTouchBarProvider
 	{
 		[Abstract]
