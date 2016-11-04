@@ -1337,6 +1337,8 @@ USERNOTIFICATIONS_SOURCES = \
 
 VIDEOSUBSCRIBERACCOUNT_SOURCES = \
 	VideoSubscriberAccount/VSAccountManager.cs \
+	VideoSubscriberAccount/VSAccountMetadataRequest.cs \
+	VideoSubscriberAccount/VSAccountProviderAuthenticationScheme.cs \
 
 # VideoToolbox
 
