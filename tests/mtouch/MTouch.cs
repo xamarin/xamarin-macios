@@ -2009,12 +2009,12 @@ class Test {
 				Assert.IsTrue (File.Exists (Path.Combine (tool.AppPath, "libpinvokes.dylib")), "libpinvokes.dylib existence");
 
 				var otool_output = ExecutionHelper.Execute ("otool", $"-l {Quote (Path.Combine (tool.AppPath, "libpinvokes.dylib"))}", hide_output: true);
-				Assert.That (otool_output, Is.StringContaining ("LC_ID_DYLIB"), "output contains LC_ID_DYLIB");
+				Assert.That (otool_output, Does.Contain ("LC_ID_DYLIB"), "output contains LC_ID_DYLIB");
 
 				var lines = otool_output.Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 				for (int i = 0; i < lines.Length; i++) {
 					if (lines [i].Contains ("LC_ID_DYLIB")) {
-						Assert.That (lines [i + 2], Is.StringContaining ("name @executable_path/libpinvokes.dylib "), "LC_ID_DYLIB");
+						Assert.That (lines [i + 2], Does.Contain ("name @executable_path/libpinvokes.dylib "), "LC_ID_DYLIB");
 						break;
 					}
 				}

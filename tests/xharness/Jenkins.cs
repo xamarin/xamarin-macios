@@ -280,8 +280,8 @@ namespace xharness
 					Jenkins = this,
 					BuildTask = build,
 					TestLibrary = Path.Combine (Harness.RootDirectory, "mtouch", "bin", "Debug", "mtouch.dll"),
-					TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners.2.6.4", "tools", "nunit-console.exe"),
-					WorkingDirectory = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners.2.6.4", "tools", "lib"),
+					TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
+					WorkingDirectory = Path.Combine (Harness.RootDirectory, "mtouch", "bin", "Debug"),
 					Platform = TestPlatform.iOS,
 					TestName = "MTouch tests",
 					Timeout = TimeSpan.FromMinutes (120),
@@ -882,6 +882,11 @@ function toggleContainerVisibility (containerName)
 		public bool ProduceHtmlReport = true;
 		public TimeSpan Timeout = TimeSpan.FromMinutes (10);
 
+		public bool IsNUnit3 {
+			get {
+				return Path.GetFileName (TestExecutable) == "nunit3-console.exe";
+			}
+		}
 		public override IEnumerable<Log> AggregatedLogs {
 			get {
 				return base.AggregatedLogs.Union (BuildTask.Logs);
@@ -918,8 +923,13 @@ function toggleContainerVisibility (containerName)
 					var args = new StringBuilder ();
 					args.Append (Harness.Quote (Path.GetFullPath (TestExecutable))).Append (' ');
 					args.Append (Harness.Quote (Path.GetFullPath (TestLibrary))).Append (' ');
-					args.Append ("-xml=" + Harness.Quote (xmlLog.FullPath)).Append (' ');
-					args.Append ("-labels ");
+					if (IsNUnit3) {
+						args.Append ("-result=").Append (Harness.Quote (xmlLog.FullPath)).Append (";format=nunit2 ");
+						args.Append ("--labels=All ");
+					} else {
+						args.Append ("-xml=" + Harness.Quote (xmlLog.FullPath)).Append (' ');
+						args.Append ("-labels ");
+					}
 					proc.StartInfo.Arguments = args.ToString ();
 					SetEnvironmentVariables (proc);
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
