@@ -176,6 +176,13 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "MDLNoiseTexture":
+				switch (selectorName) {
+				case "initCellularNoiseWithFrequency:name:textureDimensions:channelEncoding:":
+				case "initVectorNoiseWithSmoothness:name:textureDimensions:channelEncoding:":
+					return true;
+				}
+				break;
 			case "NSImage":
 				switch (selectorName) {
 				case "initByReferencingFile:":
