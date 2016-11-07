@@ -5,6 +5,7 @@ using Vector2i = global::OpenTK.Vector2i;
 
 namespace XamCore.ModelIO {
 
+	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
 	public enum  MDLNoiseTextureType {
 		Vector,
 		Cellular,
@@ -16,6 +17,7 @@ namespace XamCore.ModelIO {
 		{
 		}
 
+		[iOS (10,2), Mac (10,12, onlyOn64 : true)]
 		public MDLNoiseTexture (float input, string name, Vector2i textureDimensions, MDLTextureChannelEncoding channelEncoding, MDLNoiseTextureType type)
 		{
 			// two different `init*` would share the same C# signature
