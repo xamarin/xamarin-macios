@@ -300,13 +300,13 @@ namespace XamCore.SpriteKit {
 		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
 
 #if !XAMCORE_4_0
-		[Obsolete ("Please use the subtype's method")]
+		// [Obsolete ("Please use the subtype's method")]
 		[iOS (9,0),Mac(10,11)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
 		SKAttributeValue GetValue (string key);
 
-		[Obsolete ("Please use the subtype's method")]
+		// [Obsolete ("Please use the subtype's method")]
 		[iOS (9,0),Mac(10,11)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
@@ -381,6 +381,7 @@ namespace XamCore.SpriteKit {
 		[Export ("shader", ArgumentSemantic.Retain)]
 		SKShader Shader { get; set; }
 
+#if XAMCORE_4_0
 		[iOS (9,0), Mac(10,11)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
@@ -389,6 +390,7 @@ namespace XamCore.SpriteKit {
 		[iOS (9,0), Mac(10,11)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
+#endif
 	}
 
 	delegate Vector3 SKFieldForceEvaluator (/* vector_float3 */ Vector4 position, /* vector_float3 */ Vector4 velocity, float /* float, not CGFloat */ mass, float /* float, not CGFloat */ charge, double time);
@@ -726,6 +728,7 @@ namespace XamCore.SpriteKit {
 		[Export ("scaleToSize:")]
 		void ScaleTo (CGSize size);
 
+#if XAMCORE_4_0
 		[iOS (9,0), Mac(10,11)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
@@ -734,6 +737,7 @@ namespace XamCore.SpriteKit {
 		[iOS (9,0), Mac(10,11)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
+#endif
 	}
 
 	[Watch (3,0)]
@@ -958,6 +962,7 @@ namespace XamCore.SpriteKit {
 		[Export ("particleRenderOrder", ArgumentSemantic.Assign)]
 		SKParticleRenderOrder ParticleRenderOrder { get; set; }
 
+#if XAMCORE_4_0
 		[iOS (9,0), Mac(10,11)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
@@ -966,6 +971,7 @@ namespace XamCore.SpriteKit {
 		[iOS (9,0), Mac(10,11)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
+#endif
 	}
 
 	[Watch (3,0)]
@@ -1085,6 +1091,7 @@ namespace XamCore.SpriteKit {
 		[Export ("lineLength")]
 		nfloat LineLength { get; }
 
+#if XAMCORE_4_0
 		[iOS (9,0), Mac(10,11)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
@@ -1093,6 +1100,7 @@ namespace XamCore.SpriteKit {
 		[iOS (9,0), Mac(10,11)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
+#endif
 	}
 
 	[Watch (3,0)]
@@ -3022,6 +3030,7 @@ namespace XamCore.SpriteKit {
 		SKTileMapNode[] FromTileSet (SKTileSet tileSet, nuint columns, nuint rows, CGSize tileSize, GKNoiseMap noiseMap, NSNumber[] thresholds);
 #endif
 
+#if XAMCORE_4_0
 		[iOS (9,0), Mac(10,11)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
@@ -3030,6 +3039,7 @@ namespace XamCore.SpriteKit {
 		[iOS (9,0), Mac(10,11)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
+#endif
 	}
 
 	[Watch (3,0)]
