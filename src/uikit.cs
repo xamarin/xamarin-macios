@@ -13108,11 +13108,13 @@ namespace XamCore.UIKit {
 		UIModalPresentationStyle ModalPresentationStyle { get; set; }
 
 		// 3.2 extensions from MoviePlayer
+		[NoMac]
 		[NoTV]
 		[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_9_0)]
 		[Export ("presentMoviePlayerViewControllerAnimated:")]
 		void PresentMoviePlayerViewController (MPMoviePlayerViewController moviePlayerViewController);
 
+		[NoMac]
 		[NoTV]
 		[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_9_0)]
 		[Export ("dismissMoviePlayerViewControllerAnimated")]

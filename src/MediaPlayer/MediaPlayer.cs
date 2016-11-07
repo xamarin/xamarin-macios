@@ -16,6 +16,7 @@ namespace XamCore.MediaPlayer {
 
 	// NSInteger -> MPMoviePlayerController.h
 	[Native]
+	[NoMac]
 	[NoTV]
 	public enum MPMoviePlaybackState : nint {
 		Stopped,
@@ -28,6 +29,7 @@ namespace XamCore.MediaPlayer {
 
 	// NSInteger -> MPMoviePlayerController.h
 	[Native]
+	[NoMac]
 	[NoTV]
 	public enum MPMovieLoadState : nint {
 		Unknown        = 0,
@@ -37,6 +39,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
+	[NoMac]
 	[NoTV]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[Native]
@@ -46,6 +49,7 @@ namespace XamCore.MediaPlayer {
 
 	// NSInteger -> MPMoviePlayerController.h
 	[Native]
+	[NoMac]
 	[NoTV]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	public enum MPMovieControlStyle : nint {
@@ -53,6 +57,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
+	[NoMac]
 	[NoTV]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[Native]
@@ -61,6 +66,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
+	[NoMac]
 	[NoTV]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[Native]
@@ -72,6 +78,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
+	[NoMac]
 	[NoTV]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[Native]
@@ -80,6 +87,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
+	[NoMac]
 	[NoTV]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[Native]
@@ -89,6 +97,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	// NSUInteger -> MPMediaItem.h
+	[NoMac]
 	[Native]
 	[Flags]
 	[NoTV]
@@ -131,6 +140,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	// NSInteger -> MPMediaPlaylist.h
+	[NoMac]
 	[Native]
 	[Flags]
 	[NoTV]
@@ -143,6 +153,7 @@ namespace XamCore.MediaPlayer {
 			
 	// NSInteger -> MPMediaQuery.h
 	[Native]
+	[NoMac]
 	[NoTV]
 	public enum MPMediaGrouping : nint {
 		Title,
@@ -157,6 +168,7 @@ namespace XamCore.MediaPlayer {
 
 	// NSInteger -> MPMediaQuery.h
 	[Native]
+	[NoMac]
 	[NoTV]
 	public enum MPMediaPredicateComparison : nint {
 		EqualsTo,
@@ -164,6 +176,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	// NSInteger -> MPMoviePlayerController.h
+	[NoMac]
 	[NoTV]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[Native]
@@ -175,6 +188,7 @@ namespace XamCore.MediaPlayer {
 	}
 	
 	// untyped enum -> MPMoviePlayerController.h
+	[NoMac]
 	public enum MPMovieControlMode {
 		Default, 
 		VolumeOnly,
@@ -182,6 +196,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	// NSInteger -> /MPMusicPlayerController.h
+	[NoMac]
 	[NoTV]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[Native]
@@ -196,6 +211,7 @@ namespace XamCore.MediaPlayer {
 	
 	// NSInteger -> /MPMusicPlayerController.h
 	[Native]
+	[NoMac]
 	[NoTV]
 	public enum MPMusicRepeatMode : nint {
 		Default,
@@ -206,6 +222,7 @@ namespace XamCore.MediaPlayer {
 	
 	// NSInteger -> /MPMusicPlayerController.h
 	[Native]
+	[NoMac]
 	[NoTV]
 	public enum MPMusicShuffleMode : nint {
 		Default,
@@ -216,6 +233,7 @@ namespace XamCore.MediaPlayer {
 
 	public delegate void MPMediaItemEnumerator (string property, NSObject value, ref bool stop);
 
+	[Mac (10,12,2)]
 	[Native]
 	public enum MPShuffleType : nint
 	{
@@ -224,6 +242,7 @@ namespace XamCore.MediaPlayer {
 		Collections
 	}
 
+	[Mac (10,12,2)]
 	[Native]
 	public enum MPRepeatType : nint
 	{
@@ -232,6 +251,7 @@ namespace XamCore.MediaPlayer {
 		All
 	}
 
+	[Mac (10,12,2)]
 	[iOS (10,0)]
 	[Native]
 	public enum MPChangeLanguageOptionSetting : nint
@@ -243,6 +263,7 @@ namespace XamCore.MediaPlayer {
 
 	// NSInteger -> MPRemoteCommand.h
 	[Native]
+	[Mac (10,12,2)]
 	[iOS (7,1)]
 	public enum MPRemoteCommandHandlerStatus : nint {
 		Success = 0,
@@ -254,12 +275,14 @@ namespace XamCore.MediaPlayer {
 
 	// NSUInteger -> MPRemoteCommandEvent.h
 	[Native]
+	[Mac (10,12,2)]
 	[iOS (7,1)]
 	public enum MPSeekCommandEventType : nuint_compat_int {
 		BeginSeeking,
 		EndSeeking
 	}
 
+	[Mac (10,12,2)]
 	[iOS (9,0)]
 	[Native]
 	public enum MPNowPlayingInfoLanguageOptionType : nuint {
@@ -267,6 +290,7 @@ namespace XamCore.MediaPlayer {
 		Legible
 	}
 
+	[NoMac]
 	[iOS (9,3)]
 	[Native]
 	[ErrorDomain ("MPErrorDomain")]
@@ -281,6 +305,7 @@ namespace XamCore.MediaPlayer {
 		Cancelled,
 	}
 
+	[NoMac]
 	[NoTV]
 	[iOS (9,3)]
 	[Native]
@@ -291,6 +316,7 @@ namespace XamCore.MediaPlayer {
 		Authorized
 	}
 
+	[Mac (10,12,2)]
 	[iOS (10,0)]
 	[Native]
 	public enum MPNowPlayingInfoMediaType : nuint
@@ -298,6 +324,19 @@ namespace XamCore.MediaPlayer {
 		None = 0,
 		Audio,
 		Video
+	}
+
+	[Mac (10,12,2)]
+	[NoiOS]
+	[NoTV]
+	[Native]
+	public enum MPNowPlayingPlaybackState : nuint
+	{
+		Unknown = 0,
+		Playing,
+		Paused,
+		Stopped,
+		Interrupted,
 	}
 
 }

@@ -1537,6 +1537,7 @@ MAC_FRAMEWORKS =            \
 	MapKit                  \
 	MediaAccessibility      \
 	MediaLibrary 		\
+	MediaPlayer             \
 	MediaToolbox            \
 	Metal                   \
 	MetalKit                \

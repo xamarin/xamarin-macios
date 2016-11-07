@@ -9,7 +9,7 @@
 // Copyright 2011-2012 Xamarin, Inc
 //
 
-#if !TVOS
+#if !TVOS && !MONOMAC
 
 using System;
 using System.Collections;
