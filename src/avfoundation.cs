@@ -3832,10 +3832,10 @@ namespace XamCore.AVFoundation {
 		NSComparisonResult ComparePositionInDecodeOrder (AVSampleCursor positionOfCursor);
 
 		[Export ("samplesWithEarlierDecodeTimeStampsMayHaveLaterPresentationTimeStampsThanCursor:")]
-		bool GetSamplesWithEarlierDecodeTimeStampsMayHaveLaterPresentationTimeStampsThan (AVSampleCursor positionOfCursor);
+		bool SamplesWithEarlierDecodeTimeStampsMayHaveLaterPresentationTimeStampsThan (AVSampleCursor positionOfCursor);
 
 		[Export ("samplesWithLaterDecodeTimeStampsMayHaveEarlierPresentationTimeStampsThanCursor:")]
-		bool GetSamplesWithLaterDecodeTimeStampsMayHaveEarlierPresentationTimeStampsThan (AVSampleCursor positionOfCursor);
+		bool SamplesWithLaterDecodeTimeStampsMayHaveEarlierPresentationTimeStampsThan (AVSampleCursor positionOfCursor);
 
 		[Export ("currentSampleDuration")]
 		CMTime CurrentSampleDuration { get; }
@@ -7752,7 +7752,7 @@ namespace XamCore.AVFoundation {
 		NSString M4V1080pHD { get; }
 
 		[Field ("AVAssetExportPresetAppleProRes422LPCM")]
-		NSString ProRes422LPcm { get; }
+		NSString ProRes422Lpcm { get; }
 	}
 
 #endif
