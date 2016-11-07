@@ -376,7 +376,7 @@ namespace xharness
 			default:
 				throw new NotImplementedException ();
 			}
-			listener_log = Logs.CreateStream (LogDirectory, string.Format ("test-{0:yyyyMMdd_HHmmss}.log", DateTime.Now), "Test log");
+			listener_log = Logs.CreateStream (LogDirectory, string.Format ("test-{0}-{1:yyyyMMdd_HHmmss}.log", mode, DateTime.Now), "Test log");
 			listener.TestLog = listener_log;
 			listener.Log = main_log;
 			listener.AutoExit = true;
@@ -416,7 +416,7 @@ namespace xharness
 					bool isCompanion = sim != simulator;
 
 					var log = new CaptureLog (sim.SystemLog) {
-						Path = Path.Combine (LogDirectory, sim.UDID + ".log"),
+						Path = Path.Combine (LogDirectory, sim.Name + ".log"),
 						Description = isCompanion ? "System log (companion)" : "System log",
 					};
 					log.StartCapture ();
