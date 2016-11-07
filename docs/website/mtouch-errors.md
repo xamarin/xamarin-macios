@@ -835,7 +835,11 @@ This generally indicates that there is a problem with your Xamarin.iOS installat
 
 <h3><a name="MT2010"/>MT2010: Unknown HttpMessageHandler `*`. Valid values are HttpClientHandler (default), CFNetworkHandler or NSUrlSessionHandler</h3>
 
-<h3><a name="MT2011"/>MT2011: Unknown TlsProvider `*`.  Valid values are default, legacy or appletls.</h3>
+<h3><a name="MT2011"/>MT2011: Unknown TlsProvider `*`.  Valid values are default or appletls.</h3>
+
+The value given to `tls-provider=` is not a valid TLS (Transport Layer Security) provider.
+
+Note that the `legacy` provider, which was a fully managed SSLv3 / TLSv1 only provider, is not shipped with Xamarin.iOS anymore.
 
 <!--- 2012 used by mmp -->
 

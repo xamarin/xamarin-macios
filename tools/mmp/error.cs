@@ -63,7 +63,7 @@ namespace Xamarin.Bundler {
 	//					MM2007  Xamarin.Mac Unified API against a full .NET profile does not support linking. Pass the -nolink flag.
 	//					MM2009	  Referenced by {0}.{1}     ** This message is related to MM2006 **
 	//					MM2010	Unknown HttpMessageHandler `{0}`. Valid values are HttpClientHandler (default), CFNetworkHandler or NSUrlSessionHandler
-	//					MM2011  Unknown TLSProvider `{0}.  Valid values are default, legacy or appletls
+	//					MM2011  Unknown TLSProvider `{0}.  Valid values are default or appletls
 	//					MM2012   Only first {0} of {1} "Referenced by" warnings shown. ** This message related to 2009 **
 	//				Warning	MM2013	Failed to resolve the reference to "{0}", referenced in "{1}". The app will not include the referenced assembly, and may fail at runtime.
 	//				Warning	MT2014	Xamarin.Mac Extensions do not support linking. Request for linking will be ignored.

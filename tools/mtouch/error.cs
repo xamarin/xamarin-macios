@@ -202,7 +202,7 @@ namespace Xamarin.Bundler {
 	//					MT2007	** reserved Xamarin.Mac **
 	//					MT2009  ** reserved Xamarin.Mac **
 	//					MT2010	Unknown HttpMessageHandler `{0}`. Valid values are HttpClientHandler (default), CFNetworkHandler or NSUrlSessionHandler
-	//					MT2011	Unknown TlsProvider `{0}`.  Valid values are default, legacy or appletls.
+	//					MT2011	Unknown TlsProvider `{0}`.  Valid values are default or appletls.
 	//					MT2012  ** reserved Xamarin.Mac **
 	//					MT2013	** reserved Xamarin.Mac **
 	//					MT2014	** reserved Xamarin.Mac **
