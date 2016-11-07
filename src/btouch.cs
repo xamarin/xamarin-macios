@@ -122,20 +122,25 @@ class BindingTouch {
 		}
 	}
 
-#if !MONOMAC
 	static string GetSDKRoot ()
 	{
-		var sdkRoot = Environment.GetEnvironmentVariable ("MD_MTOUCH_SDK_ROOT");
-		if (string.IsNullOrEmpty (sdkRoot)) {
-			if (Directory.Exists ("/Library/Frameworks/Xamarin.iOS.framework/Versions/Current")) {
-				sdkRoot = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current";
-			} else {
-				sdkRoot = "/Developer/MonoTouch/usr";
+		switch (CurrentPlatform) {
+		case PlatformName.iOS:
+		case PlatformName.WatchOS:
+		case PlatformName.TvOS:
+			var sdkRoot = Environment.GetEnvironmentVariable ("MD_MTOUCH_SDK_ROOT");
+			if (string.IsNullOrEmpty (sdkRoot)) {
+				if (Directory.Exists ("/Library/Frameworks/Xamarin.iOS.framework/Versions/Current")) {
+					sdkRoot = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current";
+				} else {
+					sdkRoot = "/Developer/MonoTouch/usr";
+				}
 			}
+			return sdkRoot;
+		default:
+			throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
 		}
-		return sdkRoot;
 	}
-#endif
 
 	static int Main2 (string [] args)
 	{

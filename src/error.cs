@@ -61,6 +61,7 @@ using System.Collections.Generic;
 //		BI1044 Repeated name '{apiName.Name}' provided in [DelegateApiNameAttribute].
 //		BI1045 Only a single [DefaultEnumValue] attribute can be used inside enum {type.Name}.
 //		BI1046 The [Field] constant {fa.SymbolName} cannot only be used once inside enum {type.Name}.
+//		BI1047 Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.
 //	BI11xx	warnings
 //		BI1101 Trying to use a string as a [Target]
 //		BI1102 Using the deprecated EventArgs for a delegate signature in {0}.{1}, please use DelegateName instead
