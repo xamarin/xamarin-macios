@@ -229,20 +229,30 @@ namespace xharness
 
 		long startPosition;
 		long endPosition;
+		bool entire_file;
 
-		public CaptureLog (string capture_path)
+		public CaptureLog (string capture_path, bool entire_file = false)
 		{
 			CapturePath = capture_path;
+			this.entire_file = entire_file;
 		}
 
 		public void StartCapture ()
 		{
+			if (entire_file)
+				return;
+
 			if (File.Exists (CapturePath))
 				startPosition = new FileInfo (CapturePath).Length;
 		}
 
 		public void StopCapture ()
 		{
+			if (entire_file) {
+				File.Copy (CapturePath, Path);
+				return;
+			}
+
 			endPosition = new FileInfo (CapturePath).Length;
 
 			Capture ();
@@ -250,7 +260,7 @@ namespace xharness
 
 		void Capture ()
 		{
-			if (startPosition == 0)
+			if (startPosition == 0 || entire_file)
 				return;
 			
 			var currentEndPosition = endPosition;
