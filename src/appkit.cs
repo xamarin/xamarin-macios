@@ -913,7 +913,7 @@ namespace XamCore.AppKit {
 		[Export ("isAutomaticCustomizeTouchBarMenuItemEnabled")]
 		bool GetAutomaticCustomizeTouchBarMenuItemEnabled ();
 
-		[Export ("getAutomaticCustomizeTouchBarMenuItemEnabled:")]
+		[Export ("setAutomaticCustomizeTouchBarMenuItemEnabled:")]
 		void SetAutomaticCustomizeTouchBarMenuItemEnabled (bool enabled);
 
 		[Export ("toggleTouchBarCustomizationPalette:")]
