@@ -1343,7 +1343,7 @@ namespace XamCore.HomeKit {
 		[Export ("cameraSnapshotControl:didTakeSnapshot:error:")]
 		void DidTakeSnapshot (HMCameraSnapshotControl cameraSnapshotControl, [NullAllowed] HMCameraSnapshot snapshot, [NullAllowed] NSError error);
 
-		[iOS (10,1)][Watch (3,1)][NoTV]
+		[iOS (10,1)][Watch (3,1)][TV (10,1)]
 		[Export ("cameraSnapshotControlDidUpdateMostRecentSnapshot:")]
 		void DidUpdateMostRecentSnapshot (HMCameraSnapshotControl cameraSnapshotControl);
 	}
