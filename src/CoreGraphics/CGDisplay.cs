@@ -18,18 +18,8 @@ namespace XamCore.CoreGraphics
 			}
 		}
 
-		public static int GetMainDisplayID ()
-		{
-			return (int)CGMainDisplayID ();
-		}
-
-		[DllImport (Constants.CoreGraphicsLibrary)]
-		static extern nuint CGDisplayModeGetTypeID ();
-
-		public static nint GetDisplayModeTypeID ()
-		{
-			return (nint)CGDisplayModeGetTypeID ();
-		}
+		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint="CGDisplayModeGetTypeID")]
+		public static extern nint GetTypeID ();
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern CGRect CGDisplayBounds (uint display);
@@ -76,11 +66,11 @@ namespace XamCore.CoreGraphics
 
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		static extern uint CGDisplayIsCaptured (uint display);
+		static extern bool CGDisplayIsCaptured (uint display);
 
-		public static int IsCaptured (int display)
+		public static bool IsCaptured (int display)
 		{
-			return (int)CGDisplayIsCaptured ((uint)display);
+			return CGDisplayIsCaptured ((uint)display);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -169,10 +159,12 @@ namespace XamCore.CoreGraphics
 			return (int)CGShieldingWindowID ((uint)display);
 		}
 
-		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint = "CGShieldingWindowLevel")]
-		public static extern int GetShieldingWindowLevel ();
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern int CGShieldingWindowLevel ();
 
-
+		public static int ShieldingWindowLevel {
+			get { return CGShieldingWindowLevel (); }
+		}
 #endif
 	}
 }
