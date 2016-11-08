@@ -2146,6 +2146,42 @@ class C {
 			}
 		}
 
+		[TestCase (Profile.Unified)]
+		[TestCase (Profile.TVOS)]
+		public void MT2010 (Profile profile)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = profile;
+				mtouch.CreateTemporaryApp ();
+
+				mtouch.HttpMessageHandler = "Dummy";
+				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim));
+				mtouch.AssertError (2010, "Unknown HttpMessageHandler `Dummy`. Valid values are HttpClientHandler (default), CFNetworkHandler or NSUrlSessionHandler");
+			}
+		}
+
+		[Test]
+		public void MT2015 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = Profile.WatchOS;
+				mtouch.CreateTemporaryWatchKitExtension ();
+				mtouch.Extension = true;
+
+				mtouch.HttpMessageHandler = "HttpClientHandler";
+				mtouch.AssertExecute (MTouchAction.BuildSim);
+				mtouch.AssertError (2015, "Invalid HttpMessageHandler `HttpClientHandler` for watchOS. The only valid value is NSUrlSessionHandler.");
+
+				mtouch.HttpMessageHandler = "CFNetworkHandler";
+				mtouch.AssertExecute (MTouchAction.BuildSim);
+				mtouch.AssertError (2015, "Invalid HttpMessageHandler `CFNetworkHandler` for watchOS. The only valid value is NSUrlSessionHandler.");
+
+				mtouch.HttpMessageHandler = "Dummy";
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim);
+				mtouch.AssertError (2015, "Invalid HttpMessageHandler `Dummy` for watchOS. The only valid value is NSUrlSessionHandler.");
+			}
+		}
+
 #region Helper functions
 		static string CompileUnifiedTestAppExecutable (string targetDirectory, string code = null, string extraArg = "")
 		{
