@@ -913,7 +913,7 @@ namespace XamCore.AppKit {
 		[Export ("isAutomaticCustomizeTouchBarMenuItemEnabled")]
 		bool GetAutomaticCustomizeTouchBarMenuItemEnabled ();
 
-		[Export ("automaticCustomizeTouchBarMenuItemEnabled:")]
+		[Export ("getAutomaticCustomizeTouchBarMenuItemEnabled:")]
 		void SetAutomaticCustomizeTouchBarMenuItemEnabled (bool enabled);
 
 		[Export ("toggleTouchBarCustomizationPalette:")]
@@ -24959,6 +24959,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
 	interface NSSliderAccessory : NSCoding, NSAccessibility, NSAccessibilityElement
 	{
 		[Static]
