@@ -2318,7 +2318,7 @@ namespace XamCore.SceneKit {
 		[NoWatch]
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		[Export ("audioEnvironmentNode")]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		AVAudioEnvironmentNode AudioEnvironmentNode { get; }
 
 #if XAMCORE_4_0
@@ -2326,7 +2326,7 @@ namespace XamCore.SceneKit {
 #endif
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		[NullAllowed, Export ("audioListener", ArgumentSemantic.Retain)]
-		[DebuggerBrowsable(DebuggerBrowsableState.Never)]
+		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		SCNNode AudioListener { get; set; }
 	}
 
