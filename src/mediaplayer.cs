@@ -1162,10 +1162,12 @@ namespace XamCore.MediaPlayer {
 		[Export ("setQueueWithStoreIDs:")]
 		void SetQueue (string[] storeIDs);
 
+		[TV (10,1)]
 		[iOS (10,1)]
 		[Export ("setQueueWithDescriptor:")]
 		void SetQueue (MPMusicPlayerQueueDescriptor descriptor);
 
+		[TV (10,1)]
 		[iOS (10,1)]
 		[Async]
 		[Export ("prepareToPlayWithCompletionHandler:")]
