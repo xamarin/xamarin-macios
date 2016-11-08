@@ -75,6 +75,7 @@ namespace Xamarin
 		public bool? Extension;
 		public List<string> AppExtensions = new List<string> ();
 		public List<string> Frameworks = new List<string> ();
+		public string HttpMessageHandler;
 #pragma warning restore 649
 
 		// These are a bit smarter
@@ -123,6 +124,11 @@ namespace Xamarin
 		public void AssertExecute (MTouchAction action, string message = null)
 		{
 			NUnit.Framework.Assert.AreEqual (0, Execute (action), message);
+		}
+
+		public void AssertExecuteFailure (MTouchAction action, string message = null)
+		{
+			NUnit.Framework.Assert.AreEqual (1, Execute (action), message);
 		}
 
 		string BuildArguments (MTouchAction action)
@@ -194,6 +200,9 @@ namespace Xamarin
 
 			foreach (var framework in Frameworks)
 				sb.Append (" --framework ").Append (MTouch.Quote (framework));
+
+			if (!string.IsNullOrEmpty (HttpMessageHandler))
+				sb.Append (" --http-message-handler=").Append (MTouch.Quote (HttpMessageHandler));
 
 			if (Dlsym.HasValue)
 				sb.Append (" --dlsym:").Append (Dlsym.Value ? "true" : "false");
