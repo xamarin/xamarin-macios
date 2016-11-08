@@ -30,6 +30,7 @@ namespace Xamarin.Bundler
 
 		// directories used during the build process
 		public string ArchDirectory;
+		public string PreBuildDirectory;
 		public string BuildDirectory;
 		public string LinkDirectory;
 
@@ -438,18 +439,18 @@ namespace Xamarin.Bundler
 							continue;
 						cached_loaded.Add (a.FullPath);
 						input.Add (a.FullPath);
-						output.Add (Path.Combine (BuildDirectory, a.FileName));
+						output.Add (Path.Combine (PreBuildDirectory, a.FileName));
 						if (File.Exists (a.FullPath + ".mdb")) {
 							// Debug files can change without the assemblies themselves changing
 							// This should also invalidate the cached linker results, since the non-linked mdbs can't be copied.
 							input.Add (a.FullPath + ".mdb");
-							output.Add (Path.Combine (BuildDirectory, a.FileName) + ".mdb");
+							output.Add (Path.Combine (PreBuildDirectory, a.FileName) + ".mdb");
 						}
 						
 						if (a.Satellites != null) {
 							foreach (var s in a.Satellites) {
 								input.Add (s);
-								output.Add (Path.Combine (BuildDirectory, Path.GetFileName (Path.GetDirectoryName (s)), Path.GetFileName (s)));
+								output.Add (Path.Combine (PreBuildDirectory, Path.GetFileName (Path.GetDirectoryName (s)), Path.GetFileName (s)));
 								// No need to copy satellite mdb files, satellites are resource-only assemblies.
 							}
 						}
@@ -462,7 +463,7 @@ namespace Xamarin.Bundler
 					var not_loaded = cached_output.Except (cached_loaded);
 					foreach (var path in not_loaded) {
 						input.Add (path);
-						output.Add (Path.Combine (BuildDirectory, Path.GetFileName (path)));
+						output.Add (Path.Combine (PreBuildDirectory, Path.GetFileName (path)));
 					}
 
 					// Include mtouch here too?
@@ -477,13 +478,13 @@ namespace Xamarin.Bundler
 								continue;
 							}
 							// Load the cached assembly
-							a.LoadAssembly (Path.Combine (BuildDirectory, a.FileName));
+							a.LoadAssembly (Path.Combine (PreBuildDirectory, a.FileName));
 							Driver.Log (3, "Target '{0}' is up-to-date.", a.FullPath);
 						}
 
 						foreach (var path in not_loaded) {
 							var a = new Assembly (this, path);
-							a.LoadAssembly (Path.Combine (BuildDirectory, a.FileName));
+							a.LoadAssembly (Path.Combine (PreBuildDirectory, a.FileName));
 							Assemblies.Add (a);
 						}
 
@@ -504,7 +505,7 @@ namespace Xamarin.Bundler
 				assemblies.Add (a.FullPath);
 			var linked_assemblies = new List<string> (assemblies);
 
-			LinkAssemblies (App.RootAssembly, ref linked_assemblies, BuildDirectory, out LinkContext);
+			LinkAssemblies (App.RootAssembly, ref linked_assemblies, PreBuildDirectory, out LinkContext);
 
 			// Remove assemblies that were linked away
 			var removed = new HashSet<string> (assemblies);
@@ -532,10 +533,10 @@ namespace Xamarin.Bundler
 			foreach (var assembly in added) {
 				// the linker already copied the assemblies (linked or not) into the output directory
 				// and we must NOT overwrite the linker work with an original (unlinked) assembly
-				string path = Path.Combine (BuildDirectory, assembly);
+				string path = Path.Combine (PreBuildDirectory, assembly);
 				var ad = ManifestResolver.Load (path);
 				var a = new Assembly (this, ad);
-				a.CopyToDirectory (BuildDirectory);
+				a.CopyToDirectory (PreBuildDirectory);
 				Assemblies.Add (a);
 			}
 
@@ -543,7 +544,7 @@ namespace Xamarin.Bundler
 
 			// Make the assemblies point to the right path.
 			foreach (var a in Assemblies)
-				a.FullPath = Path.Combine (BuildDirectory, a.FileName);
+				a.FullPath = Path.Combine (PreBuildDirectory, a.FileName);
 
 			File.WriteAllText (cache_path, string.Join ("\n", linked_assemblies));
 		}
@@ -553,17 +554,18 @@ namespace Xamarin.Bundler
 			//
 			// * Linking
 			//   Copy assemblies to LinkDirectory
-			//   Link and save to BuildDirectory
+			//   Link and save to PreBuildDirectory
 			//   If marshalling native exceptions:
-			//     * Generate/calculate P/Invoke wrappers and save to BuildDirectory
+			//     * Generate/calculate P/Invoke wrappers and save to PreBuildDirectory
 			//   [AOT assemblies in BuildDirectory]
 			//   Strip managed code save to TargetDirectory (or just copy the file if stripping is disabled).
 			//
 			// * No linking
 			//   If marshalling native exceptions:
-			//     Generate/calculate P/Invoke wrappers and save to BuildDirectory.
+			//     Generate/calculate P/Invoke wrappers and save to PreBuildDirectory.
 			//   If not marshalling native exceptions:
-			//     Copy assemblies to BuildDirectory
+			//     Copy assemblies to PreBuildDirectory
+			//     Copy unmodified assemblies to BuildDirectory
 			//   [AOT assemblies in BuildDirectory]
 			//   Strip managed code save to TargetDirectory (or just copy the file if stripping is disabled).
 			//
@@ -601,6 +603,10 @@ namespace Xamarin.Bundler
 			if (!Directory.Exists (LinkDirectory))
 				Directory.CreateDirectory (LinkDirectory);
 
+			PreBuildDirectory = Path.Combine (ArchDirectory, "BPreuild");
+			if (!Directory.Exists (PreBuildDirectory))
+				Directory.CreateDirectory (PreBuildDirectory);
+			
 			BuildDirectory = Path.Combine (ArchDirectory, "Build");
 			if (!Directory.Exists (BuildDirectory))
 				Directory.CreateDirectory (BuildDirectory);
@@ -629,7 +635,17 @@ namespace Xamarin.Bundler
 				}
 			}
 
-			// Now the assemblies are in BuildDirectory.
+			// Now the assemblies are in PreBuildDirectory.
+
+			foreach (var a in Assemblies) {
+				var target = Path.Combine (BuildDirectory, a.FileName);
+				if (!Application.IsUptodate (a.FullPath, target)) {
+					a.CopyToDirectory (target);
+				} else {
+					a.FullPath = target;
+					Driver.Log (3, "Target '{0}' is up-to-date.", target);
+				}
+			}
 
 			Driver.GatherFrameworks (this, Frameworks, WeakFrameworks);
 
