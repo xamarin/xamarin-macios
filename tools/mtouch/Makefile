@@ -69,7 +69,6 @@ LINKER_SOURCES = \
 	$(TOP)/tools/linker/ApplyPreserveAttribute.cs 		\
 	$(TOP)/tools/linker/BaseProfile.cs			\
 	$(TOP)/tools/linker/CoreHttpMessageHandler.cs	\
-	$(TOP)/tools/linker/CoreTlsProviderStep.cs		\
 	$(TOP)/tools/linker/CoreMarkStep.cs			\
 	$(TOP)/tools/linker/CoreOptimizeGeneratedCode.cs	\
 	$(TOP)/tools/linker/CorePreserveCode.cs		\

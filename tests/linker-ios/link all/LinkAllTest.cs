@@ -518,30 +518,16 @@ namespace LinkAll {
 			Assert.NotNull (nix);
 		}
 
-#if !__WATCHOS__
 		[Test]
-		public void TlsProvider_Legacy ()
-		{
-			var provider = Mono.Security.Interface.MonoTlsProviderFactory.GetProvider ();
-			Assert.NotNull (provider, "provider");
-			Assert.That (provider.ID, Is.EqualTo (new Guid ("809e77d5-56cc-4da8-b9f0-45e65ba9cceb")), "correct provider");
-		}
-
-		[Test]
-		public void OldTlsProvider_Selected ()
-		{
-			// make test work for classic (monotouch) and unified (iOS, tvOS and watchOS)
-			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Security.Tls.OldTlsProvider");
-			Assert.NotNull (Type.GetType (fqn), "Should be included");
-		}
-#endif // !__WATCHOS__
-
-		[Test]
-		public void AppleTls_OptOut ()
+		public void AppleTls ()
 		{
 			// make test work for classic (monotouch) and unified (iOS, tvOS and watchOS)
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Security.Tls.AppleTlsProvider");
-			Assert.Null (Type.GetType (fqn), "Should not be included");
+#if __WATCHOS__
+			Assert.Null (Type.GetType (fqn), "Should NOT be included (no SslStream or Socket support)");
+#else
+			Assert.NotNull (Type.GetType (fqn), "Should be included");
+#endif
 		}
 	}
 }

@@ -162,7 +162,6 @@ namespace MonoMac.Tuner {
 					new RemoveUserResourcesSubStep (),
 					new CoreRemoveAttributes (),
 					new CoreHttpMessageHandler (options),
-					new CoreTlsProviderStep (options),
 					new MarkNSObjects (),
 				});
 

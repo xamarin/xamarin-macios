@@ -88,16 +88,16 @@ namespace XamCore.ObjCRuntime {
 			// default
 			case null:
 				return DefaultTlsProviderValue;
-			case LegacyTlsProviderValue:
 			case DefaultTlsProviderValue:
 			case AppleTlsProviderValue:
 				return value;
+			case LegacyTlsProviderValue:
+				ErrorHelper.Warning (2016, "Invalid TlsProvider `{0}` option. The only valid value `{1}` will be used.", value, AppleTlsProviderValue);
+				return AppleTlsProviderValue;
 			default:
-				throw ErrorHelper.CreateError (2011, "Unknown TlsProvider `{0}`.  Valid values are default, legacy or appletls", value);
+				throw ErrorHelper.CreateError (2011, "Unknown TlsProvider `{0}`.  Valid values are default or appletls", value);
 			}
 		}
-
-
 
 		string GenerateMessageHandlerValue ()
 		{
@@ -131,36 +131,11 @@ namespace XamCore.ObjCRuntime {
 			content.AppendLine ("<key>HttpMessageHandler</key>");
 			content.Append ("<string>");
 			content.AppendLine (GenerateMessageHandlerValue ());
-			content.AppendLine ("<key>TlsProvider</key>");
-			content.Append ("<string>");
-			content.Append (tls_provider);
-			content.AppendLine ("</string>");
 			content.AppendLine ("</dict>");
 			content.AppendLine ("</plist>");
 
 			var file_name = GetFileName (app_dir);
 			File.WriteAllText (file_name, content.ToString ());
-		}
-
-		// Called from CoreTlsProviderStep
-		internal static TypeDefinition GetTlsProvider (RuntimeOptions options, ModuleDefinition module)
-		{
-			var provider = options != null ? options.tls_provider : DefaultTlsProviderValue;
-			TypeDefinition type;
-			switch (provider) {
-			case DefaultTlsProviderValue:
-			case AppleTlsProviderValue:
-				type = module.GetType (Namespaces.Security + ".Tls.AppleTlsProvider");
-				break;
-			case LegacyTlsProviderValue:
-				type = module.GetType (Namespaces.Security + ".Tls.OldTlsProvider");
-				break;
-			default:
-				throw new InvalidOperationException (string.Format ("Unknown TlsProvider `{0}`.", provider));
-			}
-			if (type == null)
-				throw new InvalidOperationException (string.Format ("Cannot load TlsProvider `{0}`.", provider));
-			return type;
 		}
 
 		// Called from CoreHttpMessageHandler
@@ -227,35 +202,10 @@ namespace XamCore.ObjCRuntime {
 			using (var plist = NSDictionary.FromFile (plist_path)) {
 				var options = new RuntimeOptions ();
 				options.http_message_handler = (NSString) plist ["HttpMessageHandler"];
-				options.tls_provider = (NSString) plist ["TlsProvider"];
 				return options;
 			}
 		}
 		
-#if !COREBUILD && (XAMARIN_APPLETLS || XAMARIN_NO_TLS)
-		internal static MonoTlsProvider GetTlsProvider ()
-		{
-#if XAMARIN_NO_TLS
-			return new OldTlsProvider ();
-#else
-			var options = Read ();
-			if (options == null)
-				return null;
-
-			switch (options.tls_provider) {
-			case null:
-			case DefaultTlsProviderValue:
-			case AppleTlsProviderValue:
-				return new AppleTlsProvider ();
-			case LegacyTlsProviderValue:
-				return new OldTlsProvider ();
-			default:
-				throw new InvalidOperationException (string.Format ("Invalid TLS Provider `{0}'.", options.tls_provider));
-			}
-#endif
-		}
-#endif
-
 #if SYSTEM_NET_HTTP || (MONOMAC && XAMCORE_2_0)
 #if MONOMAC
 		[Preserve]

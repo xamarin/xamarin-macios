@@ -202,11 +202,12 @@ namespace Xamarin.Bundler {
 	//					MT2007	** reserved Xamarin.Mac **
 	//					MT2009  ** reserved Xamarin.Mac **
 	//					MT2010	Unknown HttpMessageHandler `{0}`. Valid values are HttpClientHandler (default), CFNetworkHandler or NSUrlSessionHandler
-	//					MT2011	Unknown TlsProvider `{0}`.  Valid values are default, legacy or appletls.
+	//					MT2011	Unknown TlsProvider `{0}`.  Valid values are default or appletls.
 	//					MT2012  ** reserved Xamarin.Mac **
 	//					MT2013	** reserved Xamarin.Mac **
 	//					MT2014	** reserved Xamarin.Mac **
 	//		Warning		MT2015	Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.
+	//		Warning		MT2016  Invalid TlsProvider `{0}` option. The only valid value `{1}` will be used.
 	//					MT202x	Binding Optimizer failed processing `...`.
 	//					MT203x	Removing User Resources failed processing `...`.
 	// MT3xxx	AOT

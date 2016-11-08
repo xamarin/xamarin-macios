@@ -74,7 +74,6 @@ tuner_sources = \
 	$(TOP)/tools/linker/CorePreserveCode.cs		\
 	$(TOP)/tools/linker/CoreRemoveAttributes.cs		\
 	$(TOP)/tools/linker/CoreHttpMessageHandler.cs		\
-	$(TOP)/tools/linker/CoreTlsProviderStep.cs		\
 	$(TOP)/tools/linker/CoreRemoveSecurity.cs		\
 	$(TOP)/tools/linker/ObjCExtensions.cs			\
 	$(TOP)/tools/linker/MarkNSObjects.cs			\

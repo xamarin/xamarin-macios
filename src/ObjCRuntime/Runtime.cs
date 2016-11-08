@@ -271,10 +271,9 @@ namespace XamCore.ObjCRuntime {
 		}
 
 #if !COREBUILD && (XAMARIN_APPLETLS || XAMARIN_NO_TLS)
-		// This method is rewritten by the linker in CoreTlsProviderStep.
 		static MonoTlsProvider TlsProviderFactoryCallback ()
 		{
-			return RuntimeOptions.GetTlsProvider ();
+			return new AppleTlsProvider ();
 		}
 #endif
 

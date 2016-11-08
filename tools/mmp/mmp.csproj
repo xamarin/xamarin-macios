@@ -236,9 +236,6 @@
     <Compile Include="..\linker\MobileSweepStep.cs">
       <Link>Xamarin.Linker\MobileSweepStep.cs</Link>
     </Compile>
-    <Compile Include="..\linker\CoreTlsProviderStep.cs">
-      <Link>Xamarin.Linker\CoreTlsProviderStep.cs</Link>
-    </Compile>
     <Compile Include="..\linker\CoreOptimizeGeneratedCode.cs">
       <Link>Xamarin.Linker\CoreOptimizeGeneratedCode.cs</Link>
     </Compile>

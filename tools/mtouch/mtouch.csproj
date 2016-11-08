@@ -241,9 +241,6 @@
     <Compile Include="..\linker\CoreHttpMessageHandler.cs">
       <Link>Xamarin.Linker\CoreHttpMessageHandler.cs</Link>
     </Compile>
-    <Compile Include="..\linker\CoreTlsProviderStep.cs">
-      <Link>Xamarin.Linker\CoreTlsProviderStep.cs</Link>
-    </Compile>
     <Compile Include="..\linker\MobileResolveMainAssemblyStep.cs">
       <Link>Xamarin.Linker\MobileResolveMainAssemblyStep.cs</Link>
     </Compile>
