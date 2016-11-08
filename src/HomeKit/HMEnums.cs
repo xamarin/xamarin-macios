@@ -514,6 +514,10 @@ namespace XamCore.HomeKit {
 		[iOS (10,2), Watch (3,1,1), TV (10,1)]
 		[Field ("HMCharacteristicTypeHumidifierThreshold")]
 		HumidifierThreshold,
+
+		[iOS (9,0), Watch (2,0), TV (10,0)]
+		[Field ("HMCharacteristicTypeSecuritySystemAlarmType")]
+		SecuritySystemAlarmType,
 	}
 
 	// conveniance enum (ObjC uses NSString)
