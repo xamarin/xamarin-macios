@@ -174,7 +174,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	</PropertyGroup>
 
 	<Target Name="BeforeCodesign" />
-	<Target Name="CoreCodesign" DependsOnTargets="$(_CoreCodesignDependsOn)" />
+	<Target Name="CoreCodesign" DependsOnTargets="$(CoreCodesignDependsOn)" />
 	<Target Name="AfterCodesign" />
 
 	<Target Name="Codesign" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CodesignDependsOn)" />
