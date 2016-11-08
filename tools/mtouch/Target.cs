@@ -639,12 +639,9 @@ namespace Xamarin.Bundler
 
 			foreach (var a in Assemblies) {
 				var target = Path.Combine (BuildDirectory, a.FileName);
-				if (!Application.IsUptodate (a.FullPath, target)) {
-					a.CopyToDirectory (target);
-				} else {
-					a.FullPath = target;
+				if (!a.CopyAssembly (a.FullPath, target))
 					Driver.Log (3, "Target '{0}' is up-to-date.", target);
-				}
+				a.FullPath = target;
 			}
 
 			Driver.GatherFrameworks (this, Frameworks, WeakFrameworks);
