@@ -839,11 +839,17 @@ This generally indicates that there is a problem with your Xamarin.iOS installat
 
 The value given to `tls-provider=` is not a valid TLS (Transport Layer Security) provider.
 
-Note that the `legacy` provider, which was a fully managed SSLv3 / TLSv1 only provider, is not shipped with Xamarin.iOS anymore.
+The `default` and `appletls` are the only valid values and both represent the same option, which is to provide the SSL/TLS support using the native Apple TLS API.
 
 <!--- 2012 used by mmp -->
 
 <h3><a name="MT2015"/>MT2015: Invalid HttpMessageHandler `*` for watchOS. The only valid value is NSUrlSessionHandler.</h3>
+
+<h3><a name="MT2016"/>MT2016: Invalid TlsProvider `legacy` option. The only valid value `appletls` will be used.</h3>
+
+The `legacy` provider, which was a fully managed SSLv3 / TLSv1 only provider, is not shipped with Xamarin.iOS anymore. Projects that were using this old provider and now build with the newer `appletls` one.
+
+To fix this warning, open the project file in a text editor, and remove all `MtouchTlsProvider`` nodes from the XML.
 
 <h3><a name="MT202x"/>MT202x: Binding Optimizer failed processing `...`.</h3>
 

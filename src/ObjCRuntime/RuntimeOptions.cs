@@ -87,6 +87,9 @@ namespace XamCore.ObjCRuntime {
 			case DefaultTlsProviderValue:
 			case AppleTlsProviderValue:
 				return value;
+			case LegacyTlsProviderValue:
+				ErrorHelper.Warning (2016, "Invalid TlsProvider `{0}` option. The only valid value `{1}` will be used.", value, AppleTlsProviderValue);
+				return AppleTlsProviderValue;
 			default:
 				throw ErrorHelper.CreateError (2011, "Unknown TlsProvider `{0}`.  Valid values are default or appletls", value);
 			}

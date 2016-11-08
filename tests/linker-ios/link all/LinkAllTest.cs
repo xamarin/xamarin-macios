@@ -523,7 +523,11 @@ namespace LinkAll {
 		{
 			// make test work for classic (monotouch) and unified (iOS, tvOS and watchOS)
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Security.Tls.AppleTlsProvider");
+#if __WATCHOS__
+			Assert.Null (Type.GetType (fqn), "Should NOT be included (no SslStream or Socket support)");
+#else
 			Assert.NotNull (Type.GetType (fqn), "Should be included");
+#endif
 		}
 	}
 }
