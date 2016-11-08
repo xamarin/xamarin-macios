@@ -18756,9 +18756,6 @@ namespace XamCore.AppKit {
 		[Export ("defaultItemIdentifiers", ArgumentSemantic.Copy)]
 		string[] DefaultItemIdentifiers { get; set; }
 
-		[Export ("itemIdentifiers", ArgumentSemantic.Copy)]
-		string[] ItemIdentifiers { get; }
-
 		[NullAllowed, Export ("principalItemIdentifier")]
 		string PrincipalItemIdentifier { get; set; }
 
