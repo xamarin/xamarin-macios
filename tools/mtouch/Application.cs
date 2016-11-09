@@ -948,13 +948,7 @@ namespace Xamarin.Bundler {
 				sb.Append ("Xamarin built applications contain open source software.  ");
 				sb.Append ("For detailed attribution and licensing notices, please visit...");
 				sb.AppendLine ().AppendLine ().Append ("http://xamarin.com/mobile-licensing").AppendLine ();
-				var filename = Path.Combine (AppDirectory, "NOTICE");
-				if (!File.Exists (filename) || File.ReadAllText (filename) != sb.ToString ()) {
-					File.WriteAllText (Path.Combine (AppDirectory, "NOTICE"), sb.ToString ());
-					Driver.Log (3, "Wrote '{0}'.", filename);
-				} else {
-					Driver.Log (3, "Target '{0}' is up-to-date.", filename);
-				}
+				Driver.WriteIfDifferent (Path.Combine (AppDirectory, "NOTICE"), sb.ToString ());
 			} catch (Exception ex) {
 				throw new MonoTouchException (1017, true, ex, "Failed to create the NOTICE file: {0}", ex.Message);
 			}
