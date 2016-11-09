@@ -1348,7 +1348,7 @@ namespace Xamarin.Bundler
 			{ "mono:", "Comma-separated list of options for how the Mono runtime should be included. Possible values: 'static' (link statically), 'framework' (linked as a user framework), '[no-]package-framework' (if the Mono.framework should be copied to the app bundle or not. The default value is 'framework' for extensions, and main apps if the app targets iOS 8.0 or later and contains extensions, otherwise 'static'. The Mono.framework will be copied to the app bundle if mtouch detects it's needed, but this may be overridden if the default values for 'framework' vs 'static' is overwridden.", v =>
 				{
 					foreach (var opt in v.Split (new char [] { ',' })) {
-						switch (v) {
+						switch (opt) {
 						case "static":
 							app.UseMonoFramework = false;
 							break;
