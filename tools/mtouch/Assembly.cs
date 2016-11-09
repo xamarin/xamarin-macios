@@ -64,7 +64,7 @@ namespace Xamarin.Bundler {
 		}
 
 		// returns false if the assembly was not copied (because it was already up-to-date).
-		bool CopyAssembly (string source, string target, bool copy_mdb = true)
+		public bool CopyAssembly (string source, string target, bool copy_mdb = true)
 		{
 			var copied = false;
 
