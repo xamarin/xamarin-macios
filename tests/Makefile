@@ -195,7 +195,8 @@ endif
 	$(Q) cp $(TOP)/tests/test-libraries/.libs/ios/libtest.a $@.tmpdir/ios
 	$(Q) cp $(TOP)/tests/test-libraries/.libs/ios/libtest.dylib $@.tmpdir/ios
 	$(Q) cp -a $(TOP)/tests/test-libraries/.libs/ios/XTest.framework $@.tmpdir/ios
-	$(Q) cp $(MACCORE_PATH)/tools/mlaunch/mlaunch $@.tmpdir
+	$(Q) printf '#!/bin/bash -e\n\n/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch "$$@"\n' > $@.tmpdir/mlaunch
+	$(Q) chmod +x $@.tmpdir/mlaunch
 	@# Generate zip
 	$(Q_GEN) cd $@.tmpdir && zip -9r $(abspath $@) .
 	@# Cleanup
