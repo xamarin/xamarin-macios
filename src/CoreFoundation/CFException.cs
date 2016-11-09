@@ -102,7 +102,7 @@ namespace XamCore.CoreFoundation {
 		public static CFException FromCFError (IntPtr cfErrorHandle, bool release)
 		{
 			if (cfErrorHandle == IntPtr.Zero)
-				throw new ArgumentException ("cfErrorHandle must not be null.", "cfErrorHandle");
+				throw new ArgumentNullException (nameof (cfErrorHandle));
 
 			var e = new CFException (
 					CFString.FetchString (CFErrorCopyDescription (cfErrorHandle), releaseHandle: true),
