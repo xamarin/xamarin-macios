@@ -483,7 +483,7 @@ namespace Xamarin.MMP.Tests
 					string secondBuildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
 					Assert.IsTrue (!secondBuildOutput.Contains ("Skipping target \"_CompileToNative"));
 				}
-			}
+			});
 		}	
 				
 		public void UnifiedWithDepNativeRefLib_ShouldHaveItRemoved_OnceInBundle ()
