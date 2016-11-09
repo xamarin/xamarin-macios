@@ -27,6 +27,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 
 using XamCore.AVFoundation;
 using XamCore.CoreFoundation;
