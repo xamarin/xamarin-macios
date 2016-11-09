@@ -465,5 +465,25 @@ namespace Xamarin.MMP.Tests
 				Assert.IsTrue (text.Length == 1 && text[0] == configText);
 			});
 		}
+
+		[Test]
+		public void Unified_FailedBuild_ShouldRequireAnotherBuildNotSkipMMP ()
+		{
+			RunMMPTest (tmpDir => {
+				foreach (bool xm45 in new bool [] {false, true})
+				{
+					// First build with a Non-existant file to force us to error inside mmp test
+					TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--resource=Foo.bar</MonoBundlingExtraArgs>", XM45 = xm45 };
+					TI.TestUnifiedExecutable (test, shouldFail : true);
+
+					// Next, build again w\o it and verify we have a sane build
+					test.CSProjConfig = "";
+
+					// We'll likley fail with "did not generate an exe" before returning but let's check anyway
+					string secondBuildOutput = TI.TestUnifiedExecutable (test).BuildOutput;
+					Assert.IsTrue (!secondBuildOutput.Contains ("Skipping target \"_CompileToNative"));
+				}
+			});
+		}
 	}
 }
