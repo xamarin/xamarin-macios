@@ -33,7 +33,6 @@ namespace Xamarin.Bundler
 		public string PreBuildDirectory;
 		public string BuildDirectory;
 		public string LinkDirectory;
-		public string NoResDirectory;
 
 		// Note that each 'Target' can have multiple abis: armv7+armv7s for instance.
 		public List<Abi> Abis;
@@ -235,7 +234,7 @@ namespace Xamarin.Bundler
 			} catch (MonoTouchException mte) {
 				exceptions.Add (mte);
 			} catch (Exception e) {
-				exceptions.Add (new MonoTouchException (9, true, "Error while loading assemblies: {0}", e.Message));
+				exceptions.Add (new MonoTouchException (9, true, e, "Error while loading assemblies: {0}", e.Message));
 			}
 
 			if (App.LinkMode == LinkMode.None)
@@ -413,11 +412,6 @@ namespace Xamarin.Bundler
 
 			MonoTouch.Tuner.Linker.Process (LinkerOptions, out link_context, out assemblies);
 
-			// reset resolver
-			foreach (var file in assemblies) {
-				/*				var assembly = */Resolver.Load (file);
-				// FIXME assembly.MainModule.AssemblyResolver = Resolver;
-			}
 			Driver.Watch ("Link Assemblies", 1);
 		}
 
@@ -446,10 +440,18 @@ namespace Xamarin.Bundler
 						cached_loaded.Add (a.FullPath);
 						input.Add (a.FullPath);
 						output.Add (Path.Combine (PreBuildDirectory, a.FileName));
+						if (File.Exists (a.FullPath + ".mdb")) {
+							// Debug files can change without the assemblies themselves changing
+							// This should also invalidate the cached linker results, since the non-linked mdbs can't be copied.
+							input.Add (a.FullPath + ".mdb");
+							output.Add (Path.Combine (PreBuildDirectory, a.FileName) + ".mdb");
+						}
+						
 						if (a.Satellites != null) {
 							foreach (var s in a.Satellites) {
 								input.Add (s);
 								output.Add (Path.Combine (PreBuildDirectory, Path.GetFileName (Path.GetDirectoryName (s)), Path.GetFileName (s)));
+								// No need to copy satellite mdb files, satellites are resource-only assemblies.
 							}
 						}
 					}
@@ -487,6 +489,7 @@ namespace Xamarin.Bundler
 						}
 
 						Driver.Watch ("Cached assemblies reloaded", 1);
+						Driver.Log ("Cached assemblies reloaded.");
 
 						return;
 					}
@@ -554,14 +557,6 @@ namespace Xamarin.Bundler
 			//   Link and save to PreBuildDirectory
 			//   If marshalling native exceptions:
 			//     * Generate/calculate P/Invoke wrappers and save to PreBuildDirectory
-			//   * Has resourced to be removed:
-			//     Remove resource and save to NoResDirectory
-			//     Copy to BuildDirectory. [Why not save directly to BuildDirectory? Because otherwise if we're rebuilding 
-			//                              and the only thing that changed is the resources we're removing in this step,
-			//                              we won't be able to detect that the remaining parts of the assembly
-			//                              haven't changed.]
-			//   * No resources to be removed:
-			//     Copy to BuildDirectory.
 			//   [AOT assemblies in BuildDirectory]
 			//   Strip managed code save to TargetDirectory (or just copy the file if stripping is disabled).
 			//
@@ -570,11 +565,7 @@ namespace Xamarin.Bundler
 			//     Generate/calculate P/Invoke wrappers and save to PreBuildDirectory.
 			//   If not marshalling native exceptions:
 			//     Copy assemblies to PreBuildDirectory
-			//   * Has resourced to be removed:
-			//     Remove resource and save to NoResDirectory
-			//     Copy to BuildDirectory.
-			//   * No resources to be removed:
-			//     Copy to BuildDirectory.
+			//     Copy unmodified assemblies to BuildDirectory
 			//   [AOT assemblies in BuildDirectory]
 			//   Strip managed code save to TargetDirectory (or just copy the file if stripping is disabled).
 			//
@@ -612,17 +603,13 @@ namespace Xamarin.Bundler
 			if (!Directory.Exists (LinkDirectory))
 				Directory.CreateDirectory (LinkDirectory);
 
-			PreBuildDirectory = Path.Combine (ArchDirectory, "PreBuild");
+			PreBuildDirectory = Path.Combine (ArchDirectory, "BPreuild");
 			if (!Directory.Exists (PreBuildDirectory))
 				Directory.CreateDirectory (PreBuildDirectory);
-
+			
 			BuildDirectory = Path.Combine (ArchDirectory, "Build");
 			if (!Directory.Exists (BuildDirectory))
 				Directory.CreateDirectory (BuildDirectory);
-
-			NoResDirectory = Path.Combine (ArchDirectory, "NoRes");
-			if (!Directory.Exists (NoResDirectory))
-				Directory.CreateDirectory (NoResDirectory);
 
 			if (!Directory.Exists (TargetDirectory))
 				Directory.CreateDirectory (TargetDirectory);
@@ -650,29 +637,12 @@ namespace Xamarin.Bundler
 
 			// Now the assemblies are in PreBuildDirectory.
 
-			//
-			// PreBuildDirectory -> BuildDirectory [resource removal]
-			// 
-			// Resource removal
-			// * Remove any __monotouch_content_* or __monotouch_page_* resources
-			//   - This is already done in the linker, so there is no need to do it here if the linker is enabled (for user assemblies).
-			//   - It is only done for device-builds. Xamarin Studio requires the resources to be present (to extract
-			//     them) - which is not a problem for device-builds since we operate on a copied assembly, not the
-			//     original like Xamarin Studio does).
-			// * Remove any LinkWith-related resources
-			//
-
-			var remove_res = App.IsDeviceBuild && App.LinkMode != LinkMode.All;
 			foreach (var a in Assemblies) {
 				var target = Path.Combine (BuildDirectory, a.FileName);
-				if (!Application.IsUptodate (a.FullPath, target)) {
-					a.RemoveResources (remove_res, BuildDirectory, NoResDirectory);
-				} else {
-					a.FullPath = target;
+				if (!a.CopyAssembly (a.FullPath, target))
 					Driver.Log (3, "Target '{0}' is up-to-date.", target);
-				}
+				a.FullPath = target;
 			}
-			Driver.Watch ("Removing Resources", 1);
 
 			Driver.GatherFrameworks (this, Frameworks, WeakFrameworks);
 
@@ -745,27 +715,6 @@ namespace Xamarin.Bundler
 
 				registration_methods.Add (method);
 				link_with.Add (Path.Combine (Driver.ProductSdkDirectory, "usr", "lib", library));
-			
-				if (App.Platform == ApplePlatform.iOS) {
-					foreach (var assembly in Assemblies) {
-						if (!assembly.IsFrameworkAssembly)
-							continue;
-
-						switch (Path.GetFileNameWithoutExtension (assembly.FileName)) {
-						case "MonoTouch.Dialog-1":
-							registration_methods.Add ("xamarin_create_classes_MonoTouch_Dialog_1");
-							link_with.Add (Path.Combine (Driver.ProductSdkDirectory, "usr", "lib", "MonoTouch.Dialog-1.registrar.a"));
-							break;
-							// MonoTouch.NUnitLite doesn't quite work yet, because its generated registrar code uses types
-							// from the generated registrar code for MonoTouch.Dialog-1 (and there is no header file (yet)
-							// for those types).
-	//					case "MonoTouch.NUnitLite":
-	//						registration_methods.Add ("xamarin_create_classes_MonoTouch_NUnitLite");
-	//						link_with.Add (Path.Combine (MTouch.MonoTouchIPhoneSimulatorDirectory, "usr", "lib", "MonoTouch.NUnitLite.registrar.a"));
-	//						break;
-						}
-					}
-				}
 			}
 
 			// The main method.
@@ -803,7 +752,8 @@ namespace Xamarin.Bundler
 			// Collect all LinkWith flags and frameworks from all assemblies.
 			foreach (var a in Assemblies) {
 				compiler_flags.AddFrameworks (a.Frameworks, a.WeakFrameworks);
-				compiler_flags.AddLinkWith (a.LinkWith, a.ForceLoad);
+				if (!App.FastDev || App.IsSimulatorBuild)
+					compiler_flags.AddLinkWith (a.LinkWith, a.ForceLoad);
 				compiler_flags.AddOtherFlags (a.LinkerFlags);
 			}
 
@@ -992,6 +942,7 @@ namespace Xamarin.Bundler
 					launcher.Append ("64");
 				launcher.Append ("-sgen");
 				File.Copy (launcher.ToString (), Executable);
+				File.SetLastWriteTime (Executable, DateTime.Now);
 			} catch (MonoTouchException) {
 				throw;
 			} catch (Exception ex) {

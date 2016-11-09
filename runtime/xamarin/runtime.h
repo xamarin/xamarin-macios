@@ -51,21 +51,36 @@ typedef struct {
 	const char *argument_semantic;
 } MTProperty;
 
-typedef struct {
-	const char *name;
-	const char *_typename;
+// This structure completely describes everything required to resolve a metadata token
+typedef struct MTFullTokenReference {
+	const char *assembly_name; /* the name of the assembly */
+	uint32_t module_token;
+	uint32_t token;
+} MTFullTokenReference;
+
+// This structure is packed to be exactly 32 bits
+// If 'is_full_reference' is 1, then the remaining bits are an index into a table of MTFullTokenReference.
+typedef struct __attribute__((packed)) {
+	uint8_t is_full_reference:1;
+	uint8_t assembly_index:7; /* 0-based index into the '__xamarin_registration_assemblies' array. Max 127 (registered) assemblies before a full token reference has to be used */
+	uint32_t token:24; /* RID of the corresponding metadata token. The exact type of metadata token depends on the context where the token reference is used. */
+} MTTokenReference;
+
+typedef struct __attribute__((packed)) {
 	void *handle;
+	uint32_t /* MTTokenReference */ type_reference;
 } MTClassMap;
 
 struct MTRegistrationMap;
 
 struct MTRegistrationMap {
-	struct MTRegistrationMap *next;
 	const char **assembly;
 	MTClassMap *map;
+	MTFullTokenReference *full_token_references;
 	int assembly_count;
 	int map_count;
 	int custom_type_count;
+	int full_token_reference_count;
 };
 
 typedef struct {
@@ -156,6 +171,8 @@ void			xamarin_throw_product_exception (int code, const char *message);
 
 id				xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_impl);
 
+bool			xamarin_is_managed_exception_marshaling_disabled ();
+
 // this functions support NSLog/NSString-style format specifiers.
 void			xamarin_printf (const char *format, ...);
 void			xamarin_vprintf (const char *format, va_list args);
@@ -187,8 +204,8 @@ bool						xamarin_has_nsobject 						(id obj, guint32 *exception_gchandle);
 MonoObject*					xamarin_get_nsobject 						(id obj, guint32 *exception_gchandle);
 id							xamarin_get_handle_for_inativeobject		(MonoObject *obj, guint32 *exception_gchandle);
 void						xamarin_unregister_nsobject					(id native_obj, MonoObject *managed_obj, guint32 *exception_gchandle);
-MonoReflectionMethod*		xamarin_get_method_direct					(const char *typeptr, const char *methodptr, int paramCount, const char **parameters, guint32 *exception_gchandle);
-MonoReflectionMethod*		xamarin_get_generic_method_direct			(MonoObject *self, const char *typeptr, const char *methodptr, int paramCount, const char **parameters, guint32 *exception_gchandle);
+MonoReflectionMethod*		xamarin_get_method_from_token				(guint32 token_ref, guint32 *exception_gchandle);
+MonoReflectionMethod*		xamarin_get_generic_method_from_token		(MonoObject *obj, guint32 token_ref, guint32 *exception_gchandle);
 MonoObject*					xamarin_try_get_or_construct_nsobject 		(id obj, guint32 *exception_gchandle);
 MonoObject*					xamarin_get_inative_object_dynamic			(id obj, bool owns, void *type, guint32 *exception_gchandle);
 MonoObject*					xamarin_get_inative_object_static			(id obj, bool owns, const char *type_name, const char *iface_name, guint32 *exception_gchandle);

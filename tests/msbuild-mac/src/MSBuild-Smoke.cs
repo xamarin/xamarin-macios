@@ -153,6 +153,26 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
+		public void BuildingSameBindingProject_TwoTimes_ShallNotInvokeMMPTwoTimes ()
+		{
+			const string nativeRefItemGroup = "<ItemGroup><NativeReference Include = \"\\usr\\lib\\libz.dylib\"><Kind>Dynamic</Kind><SmartLink>False</SmartLink></NativeReference></ItemGroup>";
+
+			RunMSBuildTest (tmpDir =>
+			{
+				foreach (string project in new[] { "XM45Binding.csproj", "MobileBinding.csproj", "BindingProjectWithNoTag.csproj" })
+				{
+					var config = new TI.UnifiedTestConfig (tmpDir) { ProjectName = project, ItemGroup = nativeRefItemGroup };
+					string projectPath = TI.GenerateBindingLibraryProject (config);
+					string buildOutput = TI.BuildProject (projectPath, isUnified: true, diagnosticMSBuild: true);
+					Assert.IsTrue (buildOutput.Contains ("Target CoreCompile needs to be built"));
+
+					string secondBuildOutput = TI.BuildProject (projectPath, isUnified: true, diagnosticMSBuild: true);
+					Assert.IsFalse (secondBuildOutput.Contains ("Target CoreCompile needs to be built"));
+				}
+			});
+		}
+
+		[Test]
 		public void BuildingSameProject_TwoTimes_ShallNotInvokeMMPTwoTimes ()
 		{
 			RunMSBuildTest (tmpDir =>

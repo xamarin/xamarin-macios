@@ -298,6 +298,23 @@ namespace Xamarin.iOS.Tasks
 			} else {
 				Log.LogError ("The Watch Extension '{0}' has an invalid Info.plist: the NSExtensionAttributes dictionary must contain a WKAppBundleIdentifier.", name);
 			}
+
+			PObject requiredDeviceCapabilities;
+
+			if (plist.TryGetValue ("UIRequiredDeviceCapabilities", out requiredDeviceCapabilities)) {
+				var requiredDeviceCapabilitiesDictionary = requiredDeviceCapabilities as PDictionary;
+				var requiredDeviceCapabilitiesArray = requiredDeviceCapabilities as PArray;
+
+				if (requiredDeviceCapabilitiesDictionary != null) {
+					PBoolean watchCompanion;
+
+					if (requiredDeviceCapabilitiesDictionary.TryGetValue ("watch-companion", out watchCompanion))
+						Log.LogError ("The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities dictionary should not contain the 'watch-companion' capability.", name);
+				} else if (requiredDeviceCapabilitiesArray != null) {
+					if (requiredDeviceCapabilitiesArray.OfType<PString> ().Any (x => x.Value == "watch-companion"))
+						Log.LogError ("The WatchKit Extension '{0}' has an invalid Info.plist: the UIRequiredDeviceCapabilities array should not contain the 'watch-companion' capability.", name);
+				}
+			}
 		}
 
 		void ValidateWatchOS1App (string path, string extensionName, string mainBundleIdentifier, string wkAppBundleIdentifier)

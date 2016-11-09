@@ -5,6 +5,8 @@
 // Copyright 2011 - 2015 Xamarin Inc. All rights reserved.
 //
 
+// #define LOG_TYPELOAD
+
 using System;
 using System.Reflection;
 using System.Collections.Generic;
@@ -23,53 +25,16 @@ namespace XamCore.ObjCRuntime {
 
 		internal IntPtr handle;
 
-		internal unsafe static void Initialize (ref Runtime.InitializationOptions options)
+		internal unsafe static void Initialize (Runtime.InitializationOptions* options)
 		{
-			if (options.RegistrationData != null) {
-				var map = options.RegistrationData->map;
-				var lazy_map = Runtime.Registrar.GetRegistrationMap (options.RegistrationData->total_count);
-				while (map != null) {
-					RegisterMap (map, lazy_map);
-					map = map->next;
-				}
-			}
-		}
+			var map = options->RegistrationMap;
 
-		static unsafe void RegisterMap (Runtime.MTRegistrationMap *registration_map, Dictionary<IntPtr, LazyMapEntry> lazy_map)
-		{
-			var map = registration_map->map;
-			var size = registration_map->map_count;
-			var first_custom_type = size - registration_map->custom_type_count;
+			if (map == null)
+				return;
 
-#if LOG_MAP
-			Runtime.NSLog ("RegisterMap () {0} assemblies with {1} types", registration_map->assembly_count, registration_map->map_count);
-#endif
-
-			for (int i = 0; i < registration_map->assembly_count; i++) {
-				var assembly = Marshal.PtrToStringAuto (Marshal.ReadIntPtr (registration_map->assembly, i * IntPtr.Size));
-#if LOG_MAP
-				Runtime.NSLog ("    {0}", assembly);
-#endif
-				Runtime.Registrar.SetAssemblyRegistered (assembly);
-			}
-
-			for (int i = 0; i < size; i++) {
-				if (map [i].handle == IntPtr.Zero)
-					continue; 
-
-				sbyte* ptr = map [i].typename;
-				int num = 0;
-				while (0 != *ptr++)
-					num++;
-
-				var entry = new LazyMapEntry ();
-				entry.Typename = new String (map [i].typename, 0, num, System.Text.Encoding.UTF8);
-				entry.IsCustomType = i >= first_custom_type;
-				lazy_map [map [i].handle] = entry;
-
-#if LOG_MAP
-				Runtime.NSLog ("    {0} => 0x{1} IsCustomType: {2}", entry.Typename, map [i].handle.ToString ("x"), entry.IsCustomType);
-#endif
+			for (int i = 0; i < map->assembly_count; i++) {
+				var ptr = Marshal.ReadIntPtr (map->assembly, i * IntPtr.Size);
+				Runtime.Registrar.SetAssemblyRegistered (Marshal.PtrToStringAuto (ptr));
 			}
 		}
 
@@ -171,6 +136,145 @@ namespace XamCore.ObjCRuntime {
 			return Runtime.Registrar.GetMethods (t);
 		}
 
+		internal unsafe static Type FindType (IntPtr @class, out bool is_custom_type)
+		{
+			var map = Runtime.options->RegistrationMap;
+			Runtime.MTClassMap? entry = null;
+
+			is_custom_type = false;
+
+			if (map == null) {
+#if LOG_TYPELOAD
+				Console.WriteLine ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => found no map.");
+#endif
+				return null;
+			}
+
+			// Find the ObjC class pointer in our map
+			// Potential improvement: order the type handles after loading them, which means we could do a binary search here.
+			// A binary search will likely be faster than a dictionary for any real-world scenario (and if slower, not much slower),
+			// but it would need a lot less memory (very little when sorting, could probably use stack memory, and then nothing at all afterwards).
+			for (int i = 0; i < map->map_count; i++) {
+				if (map->map [i].handle != @class)
+					continue;
+
+				entry = map->map [i];
+				is_custom_type = i >= (map->map_count - map->custom_type_count);
+				break;
+			}
+
+			if (!entry.HasValue) {
+#if LOG_TYPELOAD
+				Console.WriteLine ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => found no type.");
+#endif
+				return null;
+			}
+
+			// Resolve the map entry we found to a managed type
+			var member = ResolveTokenReference (entry.Value.type_reference, 0x02000000);
+			var type = member as Type;
+
+			if (type == null && member != null)
+				throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{entry.Value.type_reference:X} to be a type, but it's a {member.GetType ().Name}. Please file a bug report at http://bugzilla.xamarin.com.");
+
+#if LOG_TYPELOAD
+			Console.WriteLine ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => {type.FullName}; is custom: {is_custom_type} (token reference: 0x{entry.Value.type_reference:X}).");
+#endif
+
+			return type;
+		}
+
+		internal unsafe static MemberInfo ResolveFullTokenReference (uint token_reference)
+		{
+			// sizeof (MTFullTokenReference) = IntPtr.Size + 4 + 4
+			var entry = Runtime.options->RegistrationMap->full_token_references + (IntPtr.Size + 8) * (int) (token_reference >> 1);
+			var assembly_name = Marshal.PtrToStringAuto (Marshal.ReadIntPtr (entry));
+			var module_token = (uint) Marshal.ReadInt32 (entry + IntPtr.Size);
+			var token = (uint) Marshal.ReadInt32 (entry + IntPtr.Size + 4);
+
+#if LOG_TYPELOAD
+			Console.WriteLine ($"ResolveFullTokenReference (0x{token_reference:X}) assembly name: {assembly_name} module token: 0x{module_token:X} token: 0x{token:X}.");
+#endif
+
+			var assembly = ResolveAssembly (assembly_name);
+			var module = ResolveModule (assembly, module_token);
+			return ResolveToken (module, token);
+		}
+
+		internal unsafe static MemberInfo ResolveTokenReference (uint token_reference, uint implicit_token_type)
+		{
+			var map = Runtime.options->RegistrationMap;
+
+			if ((token_reference & 0x1) == 0x1)
+				return ResolveFullTokenReference (token_reference);
+
+			var assembly_index = (token_reference >> 1) & 0x7F;
+			uint token = (token_reference >> 8) + implicit_token_type;
+
+#if LOG_TYPELOAD
+			Console.WriteLine ($"ResolveTokenReference (0x{token_reference:X}) assembly index: {assembly_index} token: 0x{token:X}.");
+#endif
+
+			var assembly_name = Marshal.PtrToStringAuto (Marshal.ReadIntPtr (map->assembly, (int) assembly_index * IntPtr.Size));
+			var assembly = ResolveAssembly (assembly_name);
+			var module = ResolveModule (assembly, 0x1);
+
+			return ResolveToken (module, token | implicit_token_type);
+		}
+
+		static MemberInfo ResolveToken (Module module, uint token)
+		{
+			// Finally resolve the token.
+			var token_type = token & 0xFF000000;
+			switch (token & 0xFF000000) {
+			case 0x02000000: // TypeDef
+				var type = module.ResolveType ((int) token);
+#if LOG_TYPELOAD
+				Console.WriteLine ($"ResolveToken (0x{token:X}) => Type: {type.FullName}");
+#endif
+				return type;
+			case 0x06000000: // Method
+				var method = module.ResolveMethod ((int) token);
+#if LOG_TYPELOAD
+				Console.WriteLine ($"ResolveToken (0x{token:X}) => Method: {method.DeclaringType.FullName}.{method.Name}");
+#endif
+				return method;
+			default:
+				throw ErrorHelper.CreateError (8021, $"Unknown implicit token type: 0x{token_type}.");
+			}
+		}
+
+		static Module ResolveModule (Assembly assembly, uint token)
+		{
+			foreach (var mod in assembly.GetModules ()) {
+				if (mod.MetadataToken != token)
+					continue;
+
+#if LOG_TYPELOAD
+				Console.WriteLine ($"ResolveModule (\"{assembly.FullName}\", 0x{token:X}): {mod.Name}.");
+#endif
+				return mod;
+			}
+
+			throw ErrorHelper.CreateError (8020, $"Could not find the module with MetadataToken 0x{token:X} in the assembly {assembly}.");
+		}
+
+		static Assembly ResolveAssembly (string assembly_name)
+		{
+			// Find the assembly. We've already loaded all the assemblies that contain registered types, so just look at those assemblies.
+			foreach (var asm in AppDomain.CurrentDomain.GetAssemblies ()) {
+				if (assembly_name != asm.GetName ().Name)
+					continue;
+
+#if LOG_TYPELOAD
+				Console.WriteLine ($"ResolveAssembly (\"{assembly_name}\"): {asm.FullName}.");
+#endif
+				return asm;
+			}
+
+			throw ErrorHelper.CreateError (8019, $"Could not find the assembly ${assembly_name} in the loaded assemblies.");
+		}
+
 		/*
 		Type must have been previously registered.
 		*/
@@ -220,14 +324,6 @@ namespace XamCore.ObjCRuntime {
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		internal extern static IntPtr class_getInstanceVariable (IntPtr cls, string name);
 
-#if MONOMAC && !XAMCORE_2_0
-		[DllImport ("/usr/lib/libc.dylib", SetLastError=true)]
-		internal extern static int mprotect (IntPtr addr, nint len, int prot);
-
-		[DllImport ("/usr/lib/libc.dylib", SetLastError=true)]
-		static extern IntPtr mmap (IntPtr start, ulong length, int prot, int flags, int fd, long offset);
-#endif
-		
 		[DllImport ("/usr/lib/libobjc.dylib", CharSet=CharSet.Ansi)]
 		internal extern static bool class_addProperty (IntPtr cls, string name, objc_attribute_prop [] attributes, int count);
 

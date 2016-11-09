@@ -608,7 +608,6 @@ FOUNDATION_CORE_SOURCES = \
 	Foundation/NSDecimal.cs \
 	Foundation/NSDimension.cs \
 	Foundation/NSError.cs \
-	Foundation/NSNumber.cs \
 	Foundation/NSObject2.cs \
 	Foundation/NSRange.cs \
 	Foundation/NSString.cs \
@@ -1069,6 +1068,11 @@ PHOTOS_SOURCES = \
 PHOTOSUI_CORE_SOURCES = \
 	PhotosUI/PHEnums.cs \
 
+# PrintCode
+PRINTCORE_SOURCES = \
+	PrintCore/Defs.cs	\
+	PrintCore/PrintCore.cs
+	
 # QTKit
 
 QTKIT_CORE_SOURCES = \
@@ -1456,7 +1460,6 @@ SHARED_SOURCES = \
 	ObjCRuntime/ErrorHelper.cs \
 	ObjCRuntime/Exceptions.cs \
 	ObjCRuntime/ExceptionMode.cs \
-	ObjCRuntime/IDynamicRegistrar.cs \
 	ObjCRuntime/Method.cs \
 	ObjCRuntime/MethodDescription.cs \
 	ObjCRuntime/NSStringMarshal.cs \
@@ -1510,7 +1513,7 @@ MAC_FRAMEWORKS =            \
 	CFNetwork               \
 	CloudKit                \
 	Contacts                \
-	ContactsUI.Mac			\
+	ContactsUI.Mac		\
 	CoreAnimation           \
 	CoreAudioKit            \
 	CoreBluetooth           \
@@ -1548,6 +1551,7 @@ MAC_FRAMEWORKS =            \
 	OpenGL                  \
 	PdfKit                  \
 	Photos                  \
+	PrintCore		\
 	QTKit                   \
 	QuartzComposer          \
 	QuickLook               \

@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-using MTouchTests;
+using Xamarin;
 using Xamarin.Tests;
 
 using NUnit.Framework;
@@ -22,7 +22,7 @@ namespace Xamarin.Tests {
 	}
 }
 
-namespace MTouchTests
+namespace Xamarin
 {
 	[TestFixture]
 	public class MTouch
@@ -34,6 +34,8 @@ namespace MTouchTests
 		[TestCase ("debug",  "-sdkroot {2} -v -v -v -v --dev {0} -sdk {3} --targetver 6.0 {1} -r:{4} --cache={5}/cache --debug")]
 		public void RebuildTest (string name, string format)
 		{
+			AssertDeviceAvailable ();
+
 			var testDir = GetTempDirectory ();
 			var app = Path.Combine (testDir, "testApp.app");
 			DateTime dt = DateTime.MinValue;
@@ -131,6 +133,9 @@ namespace MTouchTests
 		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  false, "--abi:armv7+llvm")]
 		public void SymbolicationData (Target target, Config configuration, PackageMdb package_mdb, MSym msym, bool has_mdb, bool has_msym, string extra_mtouch_args)
 		{
+			if (target == Target.Dev)
+				AssertDeviceAvailable ();
+			
 			var testDir = GetTempDirectory ();
 			var appDir = Path.Combine (testDir, "testApp.app");
 			Directory.CreateDirectory (appDir);
@@ -279,6 +284,8 @@ namespace MTouchTests
 		[Test]
 		public void MT0073 ()
 		{
+			AssertDeviceAvailable ();
+
 			var testDir = GetTempDirectory ();
 			var app = Path.Combine (testDir, "testApp.app");
 			Directory.CreateDirectory (app);
@@ -825,6 +832,12 @@ namespace MTouchTests
 					Registrar = MTouchRegistrar.Static,
 				};
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev), "build");
+
+				var symbols = ExecutionHelper.Execute ("nm", Quote (mtouch.NativeExecutablePath), hide_output: true).Split ('\n');
+				Assert.That (symbols, Has.None.EndsWith (" T _theUltimateAnswer"), "Binding symbol not in executable");
+
+				symbols = ExecutionHelper.Execute ("nm", Quote (Path.Combine (mtouch.AppPath, "libbindings-test.dll.dylib")), hide_output: true).Split ('\n');
+				Assert.That (symbols, Has.Some.EndsWith (" T _theUltimateAnswer"), "Binding symbol in binding library");
 			} finally {
 				Directory.Delete (testDir, true);
 			}
@@ -1052,6 +1065,22 @@ namespace MTouchTests
 		}
 
 		[Test]
+		[TestCase (Profile.Unified)]
+		public void FastSim (Profile profile)
+		{
+			using (var tool = new MTouchTool ()) {
+				tool.Verbosity = 1;
+				tool.Profile = profile;
+				tool.CreateTemporaryApp ();
+				tool.Linker = MTouchLinker.DontLink;
+				tool.Debug = true;
+				tool.AssertExecute (MTouchAction.BuildSim);
+				tool.AssertOutputPattern ("was built using fast-path for simulator"); // This is just to ensure we're actually testing fastsim. If this fails, modify the mtouch options to make this test use fastsim again.
+				Assert.That (File.GetLastWriteTimeUtc (tool.Executable), Is.LessThan (File.GetLastWriteTimeUtc (tool.NativeExecutablePath)), "simlauncher timestamp");
+			}
+		}
+
+		[Test]
 		[TestCase (Target.Dev, "armv7")]
 		[TestCase (Target.Dev, "armv7s")]
 		[TestCase (Target.Dev, "armv7,armv7s")]
@@ -1122,6 +1151,8 @@ namespace MTouchTests
 		[TestCase (Target.Sim, null)]
 		public void Architectures_TVOS (Target target, string abi)
 		{
+			AssertDeviceAvailable ();
+
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = MTouch.Profile.TVOS;
 				mtouch.Abi = abi;
@@ -1137,6 +1168,8 @@ namespace MTouchTests
 		[Test]
 		public void Architectures_TVOS_Invalid ()
 		{
+			AssertDeviceAvailable ();
+
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = Profile.TVOS;
 				mtouch.CreateTemporaryApp ();
@@ -1224,6 +1257,9 @@ namespace MTouchTests
 		[TestCase (Target.Dev, Profile.Unified, "System.Core", "Release64")]
 		public void BuildTestProject (Target target, Profile profile, string testname, string configuration)
 		{
+			if (target == Target.Dev)
+				AssertDeviceAvailable ();
+			
 			var subdir = string.Empty;
 			switch (testname) {
 			case "dont link":
@@ -1245,12 +1281,16 @@ namespace MTouchTests
 		[Test]
 		public void ScriptedTests ()
 		{
+			AssertDeviceAvailable ();
+
 			ExecutionHelper.Execute ("make", string.Format ("-C \"{0}\"", Path.Combine (Configuration.SourceRoot, "tests", "scripted")), timeout: TimeSpan.FromMinutes (10));
 		}
 
 		[Test]
 		public void Registrar ()
 		{
+			AssertDeviceAvailable ();
+
 			var testDir = GetTempDirectory ();
 			var app = Path.Combine (testDir, "testApp.app");
 			Directory.CreateDirectory (app);
@@ -1291,6 +1331,8 @@ namespace MTouchTests
 		[TestCase ("-linksdkonly")]
 		public void ExportedSymbols (string linker_flag)
 		{
+			AssertDeviceAvailable ();
+
 			//
 			// Here we test that symbols P/Invokes and [Field] attributes references are not
 			// stripped by the native linker. mtouch has to pass '-u _SYMBOL' to the native linker
@@ -1353,6 +1395,8 @@ public class TestApp {
 		[Test]
 		public void ExportedSymbols_VerifyLinkedAwayField ()
 		{
+			AssertDeviceAvailable ();
+
 			//
 			// Here we test that unused P/Invokes and [Field] members are properly linked away
 			// (and we do not request the native linker to preserve those symbols).
@@ -1425,6 +1469,8 @@ public class TestApp {
 		[Test]
 		public void LinkerWarnings ()
 		{
+			AssertDeviceAvailable ();
+
 			string output;
 			var testDir = GetTempDirectory ();
 
@@ -1447,6 +1493,8 @@ public class TestApp {
 		[Test]
 		public void NativeLinker_AllLoad ()
 		{
+			AssertDeviceAvailable ();
+
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=17199
 
 			var testDir = GetTempDirectory ();
@@ -1466,6 +1514,8 @@ public class TestApp {
 		[Test]
 		public void CachedManagedLinker ()
 		{
+			AssertDeviceAvailable ();
+
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=17506
 
 			var testDir = GetTempDirectory ();
@@ -1513,6 +1563,8 @@ public class TestApp {
 		[Test]
 		public void MT1016 ()
 		{
+			AssertDeviceAvailable ();
+
 			// #20607
 
 			var testDir = GetTempDirectory ();
@@ -1535,6 +1587,8 @@ public class TestApp {
 		[Test]
 		public void MT1017 ()
 		{
+			AssertDeviceAvailable ();
+
 			// #20607
 
 			var testDir = GetTempDirectory ();
@@ -1671,6 +1725,8 @@ public class TestApp {
 		[Test]
 		public void MT5211 ()
 		{
+			AssertDeviceAvailable ();
+
 			var testDir = GetTempDirectory ();
 
 			try {
@@ -1722,6 +1778,8 @@ class Test {
 		[Test]
 		public void TestCaseMismatchedAssemblyName ()
 		{
+			AssertDeviceAvailable ();
+
 			// desk #90367 (and others in the past as well)
 
 			var testDir = GetTempDirectory ();
@@ -1800,6 +1858,8 @@ class Test {
 		[Test]
 		public void TestDuplicatedFatApp ()
 		{
+			AssertDeviceAvailable ();
+
 			var testDir = GetTempDirectory ();
 			var app = Path.Combine (testDir, "testApp.app");
 			Directory.CreateDirectory (app);
@@ -1820,6 +1880,8 @@ class Test {
 		[Test]
 		public void TestAllLoad ()
 		{
+			AssertDeviceAvailable ();
+
 			var testDir = GetTempDirectory ();
 			var app = Path.Combine (testDir, "testApp.app");
 			Directory.CreateDirectory (app);
@@ -1947,17 +2009,176 @@ class Test {
 				Assert.IsTrue (File.Exists (Path.Combine (tool.AppPath, "libpinvokes.dylib")), "libpinvokes.dylib existence");
 
 				var otool_output = ExecutionHelper.Execute ("otool", $"-l {Quote (Path.Combine (tool.AppPath, "libpinvokes.dylib"))}", hide_output: true);
-				Assert.That (otool_output, Is.StringContaining ("LC_ID_DYLIB"), "output contains LC_ID_DYLIB");
+				Assert.That (otool_output, Does.Contain ("LC_ID_DYLIB"), "output contains LC_ID_DYLIB");
 
 				var lines = otool_output.Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 				for (int i = 0; i < lines.Length; i++) {
 					if (lines [i].Contains ("LC_ID_DYLIB")) {
-						Assert.That (lines [i + 2], Is.StringContaining ("name @executable_path/libpinvokes.dylib "), "LC_ID_DYLIB");
+						Assert.That (lines [i + 2], Does.Contain ("name @executable_path/libpinvokes.dylib "), "LC_ID_DYLIB");
 						break;
 					}
 				}
 
 				Assert.AreEqual (0, tool.Execute (MTouchAction.BuildDev), "cached build");
+			}
+		}
+
+		[Test]
+		public void LinkWithNoLibrary ()
+		{
+			using (var tool = new MTouchTool ()) {
+				tool.Profile = Profile.Unified;
+				tool.CreateTemporaryApp (code: @"
+using System;
+using System.Runtime.InteropServices;
+using ObjCRuntime;
+[assembly: LinkWith (Dlsym = DlsymOption.Required)]
+class C {
+	[DllImport (""libsqlite3"")]
+	static extern void sqlite3_column_database_name16 ();
+	static void Main ()
+	{
+	}
+}
+");
+				tool.NoFastSim = true;
+				tool.Dlsym = false;
+				tool.Linker = MTouchLinker.LinkSdk;
+				Assert.AreEqual (0, tool.Execute (MTouchAction.BuildDev), "build");
+			}
+		}
+
+		[Test]
+		public void WatchExtensionWithFramework ()
+		{
+			using (var exttool = new MTouchTool ()) {
+				exttool.Profile = Profile.WatchOS;
+				exttool.CreateTemporaryCacheDirectory ();
+				exttool.Verbosity = 5;
+
+				exttool.Extension = true;
+				exttool.CreateTemporaryWatchKitExtension ();
+				exttool.Frameworks.Add (Path.Combine (Configuration.SourceRoot, "tests/test-libraries/.libs/watchos/XTest.framework"));
+				exttool.AssertExecute (MTouchAction.BuildSim, "build extension");
+
+				using (var apptool = new MTouchTool ()) {
+					apptool.Profile = Profile.Unified;
+					apptool.CreateTemporaryCacheDirectory ();
+					apptool.Verbosity = exttool.Verbosity;
+					apptool.CreateTemporaryApp ();
+					apptool.AppExtensions.Add (exttool.AppPath);
+					apptool.AssertExecute (MTouchAction.BuildSim, "build app");
+
+					Assert.IsFalse (Directory.Exists (Path.Combine (apptool.AppPath, "Frameworks", "XTest.framework")), "framework inexistence");
+					Assert.IsTrue (Directory.Exists (Path.Combine (exttool.AppPath, "Frameworks", "XTest.framework")), "extension framework existence");
+				}
+			}
+		}
+
+		[Test]
+		public void OnlyExtensionWithFramework ()
+		{
+			// if an extension references a framework, and the main app does not,
+			// the framework should still be copied to the main app's Framework directory.
+			using (var exttool = new MTouchTool ()) {
+				exttool.Profile = Profile.Unified;
+				exttool.CreateTemporaryCacheDirectory ();
+				exttool.Verbosity = 5;
+
+				exttool.Extension = true;
+				exttool.CreateTemporararyServiceExtension ();
+				exttool.Frameworks.Add (Path.Combine (Configuration.SourceRoot, "tests/test-libraries/.libs/ios/XTest.framework"));
+				exttool.AssertExecute (MTouchAction.BuildSim, "build extension");
+
+				using (var apptool = new MTouchTool ()) {
+					apptool.Profile = Profile.Unified;
+					apptool.CreateTemporaryCacheDirectory ();
+					apptool.Verbosity = exttool.Verbosity;
+					apptool.CreateTemporaryApp ();
+					apptool.AppExtensions.Add (exttool.AppPath);
+					apptool.AssertExecute (MTouchAction.BuildSim, "build app");
+
+					Assert.IsTrue (Directory.Exists (Path.Combine (apptool.AppPath, "Frameworks", "XTest.framework")), "framework exists");
+					Assert.IsFalse (Directory.Exists (Path.Combine (exttool.AppPath, "Frameworks")), "extension framework inexistence");
+				}
+			}
+		}
+
+		[Test]
+		[TestCase (MTouchLinker.DontLink)]
+		[TestCase (MTouchLinker.LinkAll)]
+		// There shouldn't be a need to test LinkSdk as well.
+		public void OnlyDebugFileChange (MTouchLinker linker_options)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = Profile.Unified;
+				mtouch.Verbosity = 23;
+				var tmp = mtouch.CreateTemporaryDirectory ();
+				mtouch.CreateTemporaryCacheDirectory ();
+
+				// Create a sample exe
+				var code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
+				var exe = MTouch.CompileTestAppExecutable (tmp, code, "/debug:full");
+
+				mtouch.AppPath = mtouch.CreateTemporaryDirectory ();
+				mtouch.Executable = exe;
+				mtouch.Debug = true;
+				mtouch.Linker = linker_options;
+
+				// Build app
+				mtouch.AssertExecute (MTouchAction.BuildSim);
+
+				var exePath = Path.Combine (mtouch.AppPath, Path.GetFileName (exe));
+				var mdbPath = exePath + ".mdb";
+				var exeStamp = File.GetLastWriteTimeUtc (exePath);
+				var mdbStamp = File.GetLastWriteTimeUtc (mdbPath);
+
+				// Recompile the exe, adding only whitespace. This will only change the debuf files
+				MTouch.CompileTestAppExecutable (tmp, "\n\n" + code + "\n\n", "/debug:full");
+
+				// Rebuild the app
+				mtouch.AssertExecute (MTouchAction.BuildSim);
+
+				// The mdb files should be updated, but the exe should not.
+				Assert.AreEqual (exeStamp, File.GetLastWriteTimeUtc (exePath), "exe no change");
+				Assert.IsTrue (File.Exists (mdbPath), "mdb existence");
+				Assert.AreNotEqual (mdbStamp, File.GetLastWriteTimeUtc (mdbPath), "mdb changed");
+			}
+		}
+
+		[TestCase (Profile.Unified)]
+		[TestCase (Profile.TVOS)]
+		public void MT2010 (Profile profile)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = profile;
+				mtouch.CreateTemporaryApp ();
+
+				mtouch.HttpMessageHandler = "Dummy";
+				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildSim));
+				mtouch.AssertError (2010, "Unknown HttpMessageHandler `Dummy`. Valid values are HttpClientHandler (default), CFNetworkHandler or NSUrlSessionHandler");
+			}
+		}
+
+		[Test]
+		public void MT2015 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = Profile.WatchOS;
+				mtouch.CreateTemporaryWatchKitExtension ();
+				mtouch.Extension = true;
+
+				mtouch.HttpMessageHandler = "HttpClientHandler";
+				mtouch.AssertExecute (MTouchAction.BuildSim);
+				mtouch.AssertError (2015, "Invalid HttpMessageHandler `HttpClientHandler` for watchOS. The only valid value is NSUrlSessionHandler.");
+
+				mtouch.HttpMessageHandler = "CFNetworkHandler";
+				mtouch.AssertExecute (MTouchAction.BuildSim);
+				mtouch.AssertError (2015, "Invalid HttpMessageHandler `CFNetworkHandler` for watchOS. The only valid value is NSUrlSessionHandler.");
+
+				mtouch.HttpMessageHandler = "Dummy";
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim);
+				mtouch.AssertError (2015, "Invalid HttpMessageHandler `Dummy` for watchOS. The only valid value is NSUrlSessionHandler.");
 			}
 		}
 
@@ -2243,18 +2464,17 @@ public class TestApp {
 			Directory.CreateDirectory (tmp);
 			return tmp;
 		}
+
+		public static void AssertDeviceAvailable ()
+		{
+			if (!Configuration.include_device)
+				Assert.Ignore ("This build does not include device support.");
+		}
 #endregion
 	}
 
 	class McsException : Exception {
 		public McsException (string output)
-			: base (output)
-		{
-		}
-	}	
-
-	class ActivationException : Exception {
-		public ActivationException (string output)
 			: base (output)
 		{
 		}

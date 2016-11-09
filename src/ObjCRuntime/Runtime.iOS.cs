@@ -45,18 +45,12 @@ namespace XamCore.ObjCRuntime {
 
 		public static Arch Arch; // default: = Arch.DEVICE;
 
-		unsafe static void InitializePlatform (ref InitializationOptions options)
+		unsafe static void InitializePlatform (InitializationOptions* options)
 		{
-			if (options.IsSimulator)
+			if (options->IsSimulator)
 				Arch = Arch.SIMULATOR;
 
 			UIApplication.Initialize ();
-		}
-
-		// moved into it's own method to make it easier /safer to be re-written by the linker
-		static void CreateRegistrar (InitializationOptions options)
-		{
-			Registrar = new DynamicRegistrar ();
 		}
 
 		// This method is documented to be for diagnostic purposes only,

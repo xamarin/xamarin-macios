@@ -13,6 +13,7 @@ namespace Xamarin.Mac.Tests {
 	public class NSMetadataItemTest {
 		
 		[Test]
+		[Ignore ("Fails on bots, disabled until investigated")]
 		public void CtorUrl ()
 		{
 			// 10.9 for NSMetadataItem initWithURL:

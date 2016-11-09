@@ -34,6 +34,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Web" />
     <Reference Include="Mono.Posix" />
+    <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Simulators.cs" />
     <Compile Include="TestProject.cs" />
     <Compile Include="Log.cs" />
+    <Compile Include="GitHub.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

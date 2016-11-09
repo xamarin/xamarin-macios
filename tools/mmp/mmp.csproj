@@ -236,9 +236,6 @@
     <Compile Include="..\linker\MobileSweepStep.cs">
       <Link>Xamarin.Linker\MobileSweepStep.cs</Link>
     </Compile>
-    <Compile Include="..\linker\CoreTlsProviderStep.cs">
-      <Link>Xamarin.Linker\CoreTlsProviderStep.cs</Link>
-    </Compile>
     <Compile Include="..\linker\CoreOptimizeGeneratedCode.cs">
       <Link>Xamarin.Linker\CoreOptimizeGeneratedCode.cs</Link>
     </Compile>
@@ -247,9 +244,6 @@
     </Compile>
     <Compile Include="..\linker\MonoTouch.Tuner\Extensions.cs">
       <Link>MonoTouch.Tuner\Extensions.cs</Link>
-    </Compile>
-    <Compile Include="..\linker\MonoTouch.Tuner\RemoveMonoTouchResources.cs">
-      <Link>MonoTouch.Tuner\RemoveMonoTouchResources.cs</Link>
     </Compile>
     <Compile Include="..\linker\MonoTouch.Tuner\ListExportedSymbols.cs">
       <Link>MonoTouch.Tuner\ListExportedSymbols.cs</Link>
@@ -322,6 +316,9 @@
     </Compile>
     <Compile Include="..\linker\ExceptionalSubStep.cs">
       <Link>Xamarin.Linker\ExceptionalSubStep.cs</Link>
+    </Compile>
+    <Compile Include="..\linker\RemoveUserResourcesSubStep.cs">
+      <Link>Xamarin.Linker\RemoveUserResourcesSubStep.cs</Link>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

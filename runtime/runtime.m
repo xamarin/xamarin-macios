@@ -85,13 +85,6 @@ xamarin_extension_main_callback xamarin_extension_main = NULL;
 
 /* Local variable */
 
-typedef struct  {
-	struct MTRegistrationMap   *map;
-	int total_count; // SUM (registration_map->map_count)
-} RegistrationData;
-
-static RegistrationData registration_data;
-
 static MonoClass      *inativeobject_class;
 static MonoClass      *nsobject_class;
 
@@ -139,9 +132,9 @@ enum InitializationFlags : int {
 struct InitializationOptions {
 	int size; // the size of this structure. This is used for version checking.
 	enum InitializationFlags flags;
-	struct Delegates Delegates;
-	struct Trampolines Trampolines;
-	RegistrationData* RegistrationData;
+	struct Delegates* Delegates;
+	struct Trampolines* Trampolines;
+	struct MTRegistrationMap* RegistrationData;
 	enum MarshalObjectiveCExceptionMode MarshalObjectiveCExceptionMode;
 	enum MarshalManagedExceptionMode MarshalManagedExceptionMode;
 };
@@ -177,6 +170,8 @@ static struct Trampolines trampolines = {
 	(void *) &xamarin_get_gchandle_trampoline,
 	(void *) &xamarin_set_gchandle_trampoline,
 };
+
+struct InitializationOptions options = { 0 };
 
 struct Managed_NSObject {
 	MonoObject obj;
@@ -906,9 +901,7 @@ void
 xamarin_add_registration_map (struct MTRegistrationMap *map)
 {
 	// COOP: no managed memory access: any mode
-	map->next = registration_data.map;
-	registration_data.map = map;
-	registration_data.total_count += map->map_count;
+	options.RegistrationData = map;
 }
 
 /*
@@ -1124,7 +1117,6 @@ xamarin_initialize ()
 	MonoAssembly *assembly = NULL;
 	MonoImage *image;
 	MonoMethod *runtime_initialize;
-	struct InitializationOptions options;
 	void* params[2];
 	const char *product_dll = NULL;
 	guint32 exception_gchandle = 0;
@@ -1184,14 +1176,13 @@ xamarin_initialize ()
 
 	runtime_initialize = mono_class_get_method_from_name (runtime_class, "Initialize", 1);
 
-	memset (&options, 0, sizeof (options));
 	options.size = sizeof (options);
 #if MONOTOUCH && (defined(__i386__) || defined (__x86_64__))
 	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsSimulator);
 #endif
 
-	options.Trampolines = trampolines;
-	options.RegistrationData = &registration_data;
+	options.Delegates = &delegates;
+	options.Trampolines = &trampolines;
 	options.MarshalObjectiveCExceptionMode = xamarin_marshal_objectivec_exception_mode;
 	options.MarshalManagedExceptionMode = xamarin_marshal_managed_exception_mode;
 
@@ -1202,8 +1193,6 @@ xamarin_initialize ()
 	if (exc)
 		xamarin_process_managed_exception (exc);
 
-	delegates = options.Delegates;
-			
 	if (!register_assembly (assembly, &exception_gchandle))
 		xamarin_process_managed_exception_gchandle (exception_gchandle);
 
@@ -2365,6 +2354,31 @@ bool
 xamarin_get_is_debug ()
 {
 	return xamarin_debug_mode;
+}
+
+bool
+xamarin_is_managed_exception_marshaling_disabled ()
+{
+#if DEBUG
+	if (xamarin_is_gc_coop)
+		return false;
+
+	switch (xamarin_marshal_managed_exception_mode) {
+	case MarshalManagedExceptionModeDefault:
+		// If all of the following are true:
+		// * In debug mode
+		// * Using the default exception marshaling mode
+		// * The debugger is attached
+		// Then disable managed exception marshaling.
+		return mono_is_debugger_attached ();
+	case MarshalManagedExceptionModeDisable:
+		return true;
+	default:
+		return false;
+	}
+#else
+	return false;
+#endif
 }
 
 /*

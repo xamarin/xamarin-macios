@@ -309,6 +309,9 @@ namespace xharness
 			}
 		}
 
+		[DllImport ("/usr/lib/libc.dylib")]
+		extern static IntPtr ttyname (int filedes);
+
 		public async Task<int> RunAsync ()
 		{
 			CrashReportSnapshot crash_reports;
@@ -388,9 +391,23 @@ namespace xharness
 
 			bool? success = null;
 			bool timed_out = false;
+			bool launch_failure = false;
 
 			if (isSimulator) {
 				FindSimulator ();
+
+				if (mode != "watchos") {
+					var stderr_tty = Marshal.PtrToStringAuto (ttyname (2));
+					if (!string.IsNullOrEmpty (stderr_tty)) {
+						args.Append (" --stdout=").Append (Harness.Quote (stderr_tty));
+						args.Append (" --stderr=").Append (Harness.Quote (stderr_tty));
+					} else {
+						var stdout_log = Logs.CreateFile ("Standard output", Path.Combine (LogDirectory, "stdout.log"));
+						var stderr_log = Logs.CreateFile ("Standard error", Path.Combine (LogDirectory, "stderr.log"));
+						args.Append (" --stdout=").Append (Harness.Quote (stdout_log.FullPath));
+						args.Append (" --stderr=").Append (Harness.Quote (stderr_log.FullPath));
+					}
+				}
 
 				var systemLogs = new List<CaptureLog> ();
 				foreach (var sim in simulators) {
@@ -461,6 +478,8 @@ namespace xharness
 								var pidstr = line.Substring (line.LastIndexOf (' '));
 								if (!int.TryParse (pidstr, out pid))
 									main_log.WriteLine ("Could not parse pid: {0}", pidstr);
+							} else if (line.Contains ("error MT1008")) {
+								launch_failure = true;
 							}
 						}
 					}
@@ -565,6 +584,10 @@ namespace xharness
 					}
 				} else if (timed_out) {
 					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} timed out</i></b><br/>", mode);
+					success = false;
+				} else if (launch_failure) {
+					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} failed to launch</i></b><br/>", mode);
+					main_log.WriteLine ("Test run failed to launch");
 					success = false;
 				} else {
 					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed</i></b><br/>", mode);

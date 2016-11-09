@@ -89,6 +89,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<PropertyGroup>
 		<XamarinAnalysisTargetsFile Condition="Exists ('$(MSBuildThisFileDirectory)Xamarin.iOS.Analysis.targets')">$(MSBuildThisFileDirectory)Xamarin.iOS.Analysis.targets</XamarinAnalysisTargetsFile>
+		<IsXBuild Condition="'$(MSBuildRuntimeVersion)' == ''">true</IsXBuild>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Analysis.targets"
@@ -475,12 +476,12 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<Metal
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' and '%(Metal.Identity)' != ''"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(IPhoneResourcePrefix)"
 			SdkDevPath="$(_SdkDevPath)"
-			SourceFile="%(Metal.Identity)">
+			SourceFile="@(Metal)">
 			<Output TaskParameter="OutputFile" ItemName="_SmeltedMetal" />
 		</Metal>
 	</Target>
@@ -1318,22 +1319,30 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_ResolveAppExtensionReferences" DependsOnTargets="_SplitAppExtensionReferencesByExistent">
-		<!-- If building from a .sln.proj or from IDE, then referenced projects have already
-		     been built, so just get the target paths -->
+		<PropertyGroup>
+			<!-- When building a .sln with xbuild or building from IDE, the referenced projects are already built.  -->
+			<_BuildReferencedExtensionProjects Condition="'$(IsXBuild)' == 'true' and '$(BuildingSolutionFile)' != 'true' and '$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
+
+			<!-- When building a .sln with msbuild, the dependent projects may not be built. So, always build
+			     the referenced projects unless building from IDE. -->
+			<_BuildReferencedExtensionProjects Condition="'$(IsXBuild)' != 'true' and '$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
+		</PropertyGroup>
+
+		<!-- If the referenced projects have already been built, then just get the target paths -->
 		<MSBuild
 			Projects="@(_AppExtensionReferenceWithConfigurationExistent)"
 			Targets="GetBundleTargetPath"
 			Properties="%(_AppExtensionReferenceWithConfigurationExistent.SetConfiguration); %(_AppExtensionReferenceWithConfigurationExistent.SetPlatform)"
-			Condition="'@(_AppExtensionReferenceWithConfigurationExistent)' != '' and ('$(BuildingSolutionFile)' == 'true' or '$(BuildingInsideVisualStudio)' == 'true')">
+			Condition="'@(_AppExtensionReferenceWithConfigurationExistent)' != '' and '$(_BuildReferencedExtensionProjects)' != 'true'">
 
 			<Output TaskParameter="TargetOutputs" ItemName="_ResolvedAppExtensionReferences" Condition="'%(_AppExtensionReferenceWithConfigurationExistent.ReferenceOutputAssembly)' != 'false'"/>
 		</MSBuild>
 
-		<!-- Building a project directly, build the referenced projects also -->
+		<!-- Build the referenced project if required -->
 		<MSBuild
 			Projects="@(_AppExtensionReferenceWithConfigurationExistent)"
 			Properties="%(_AppExtensionReferenceWithConfigurationExistent.SetConfiguration); %(_AppExtensionReferenceWithConfigurationExistent.SetPlatform)"
-			Condition="'@(_AppExtensionReferenceWithConfigurationExistent)' != '' and '$(BuildingSolutionFile)' != 'true' and '$(BuildingInsideVisualStudio)' != 'true' ">
+			Condition="'@(_AppExtensionReferenceWithConfigurationExistent)' != '' and '$(_BuildReferencedExtensionProjects)' == 'true' ">
 
 			<Output TaskParameter="TargetOutputs" ItemName="_ResolvedAppExtensionReferences" Condition="'%(_AppExtensionReferenceWithConfigurationExistent.ReferenceOutputAssembly)' != 'false'"/>
 		</MSBuild>
@@ -1438,22 +1447,30 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_ResolveWatchAppReferences" DependsOnTargets="_SplitWatchAppReferencesByExistent">
-		<!-- If building from a .sln.proj or from IDE, then referenced projects have already
-		     been built, so just get the target paths -->
+		<PropertyGroup>
+			<!-- When building a .sln with xbuild or building from IDE, the referenced projects are already built.  -->
+			<_BuildReferencedExtensionProjects Condition="'$(IsXBuild)' == 'true' and '$(BuildingSolutionFile)' != 'true' and '$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
+
+			<!-- When building a .sln with msbuild, the dependent projects may not be built. So, always build
+			     the referenced projects unless building from IDE. -->
+			<_BuildReferencedExtensionProjects Condition="'$(IsXBuild)' != 'true' and '$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
+		</PropertyGroup>
+
+		<!-- If the referenced projects have already been built, then just get the target paths -->
 		<MSBuild
 			Projects="@(_WatchAppReferenceWithConfigurationExistent)"
 			Targets="GetBundleTargetPath"
 			Properties="%(_WatchAppReferenceWithConfigurationExistent.SetConfiguration); %(_WatchAppReferenceWithConfigurationExistent.SetPlatform)"
-			Condition="'@(_WatchAppReferenceWithConfigurationExistent)' != '' and ('$(BuildingSolutionFile)' == 'true' or '$(BuildingInsideVisualStudio)' == 'true')">
+			Condition="'@(_WatchAppReferenceWithConfigurationExistent)' != '' and '$(_BuildReferencedExtensionProjects)' != 'true'">
 
 			<Output TaskParameter="TargetOutputs" ItemName="_ResolvedWatchAppReferences" />
 		</MSBuild>
 
-		<!-- Building a project directly, build the referenced projects also -->
+		<!-- Build the referenced project if required -->
 		<MSBuild
 			Projects="@(_WatchAppReferenceWithConfigurationExistent)"
 			Properties="%(_WatchAppReferenceWithConfigurationExistent.SetConfiguration); %(_WatchAppReferenceWithConfigurationExistent.SetPlatform)"
-			Condition="'@(_WatchAppReferenceWithConfigurationExistent)' != '' and '$(BuildingSolutionFile)' != 'true' and '$(BuildingInsideVisualStudio)' != 'true' ">
+			Condition="'@(_WatchAppReferenceWithConfigurationExistent)' != '' and '$(_BuildReferencedExtensionProjects)' == 'true' ">
 
 			<Output TaskParameter="TargetOutputs" ItemName="_ResolvedWatchAppReferences" />
 		</MSBuild>

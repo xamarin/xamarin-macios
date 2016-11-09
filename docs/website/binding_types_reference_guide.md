@@ -2103,10 +2103,10 @@ attributes.
 
 ## LinkWithAttribute
 
-This is an assembly-level attribute which is being introduced with Xamarin.iOS
-5.2 and allows developers to specify the linking flags required to reuse a bound
-library without forcing the consumer of the library to manually configure the
-gcc_flags and extra mtouch arguments passed to a library.
+This is an assembly-level attribute which allows developers to specify the
+linking flags required to reuse a bound library without forcing the consumer
+of the library to manually configure the gcc_flags and extra mtouch arguments
+passed to a library.
 
 Syntax:
 
@@ -2122,6 +2122,7 @@ public enum LinkTarget {
 
 [AttributeUsage(AttributeTargets.Assembly, AllowMultiple=true)]
 public class LinkWithAttribute : Attribute {
+    public LinkWithAttribute ();
     public LinkWithAttribute (string libraryName);
     public LinkWithAttribute (string libraryName, LinkTarget target);
     public LinkWithAttribute (string libraryName, LinkTarget target, string linkerFlags);
@@ -2149,6 +2150,13 @@ into the resulting assembly, allowing users to ship a single DLL that contains
 both the unmanaged dependencies as well as the command line flags necessary to
 properly consume the library from Xamarin.iOS.
 
+It' s also possible to not provide a `libraryName`, in which case the
+`LinkWith` attribute can be used to only specify additional linker flags:
+
+ ``` csharp
+[assembly: LinkWith (LinkerFlags = "-lsqlite3")]
+ ```
+
  <a name="LinkWithAttribute_Constructors" class="injected"></a>
 
 
@@ -2163,6 +2171,9 @@ Note that the LinkTarget argument is inferred by Xamarin.iOS and does not need t
 Examples:
 
 ```
+// Specify additional linker:
+[assembly: LinkWith (LinkerFlags = "-sqlite3")]
+
 // Specify library name for the constructor:
 [assembly: LinkWith ("libDemo.a");
 
@@ -2211,8 +2222,9 @@ The name of the unmanaged library to bundle. This is a file with the
 extension ".a" and it can contain object code for multiple platforms (for
 example, ARM and x86 for the simulator).
 
-You use the `LinkTarget` parameter to inform the binding tool which platforms
-are supported by your library.
+Earlier versions of Xamarin.iOS checked the `LinkTarget` property to determine
+the platform your library supported, but this is now auto-detected, and the
+`LinkTarget` property is ignored.
 
  <a name="LinkWithAttribute.LinkerFlags" class="injected"></a>
 
@@ -2231,11 +2243,9 @@ the `LinkerFlags` string to `"-lxml2 -lz"`.
 
 ### LinkWithAttribute.LinkTarget
 
-`LinkTarget` specifies which target architecture(s) the native library
-supports.
-
-For example, if you are binding a universal library which supports ARMv7 and
-i386 (for the Simulator), you would set LinkTarget to `LinkTarget.ArmV7|LinkTarget.Simulator`.
+Earlier versions of Xamarin.iOS checked the `LinkTarget` property to determine
+the platform your library supported, but this is now auto-detected, and the
+`LinkTarget` property is ignored.
 
  <a name="LinkWithAttribute.NeedsGccExceptionHandling" class="injected"></a>
 

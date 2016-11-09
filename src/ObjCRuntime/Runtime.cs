@@ -50,24 +50,20 @@ namespace XamCore.ObjCRuntime {
 
 		internal static DynamicRegistrar Registrar;
 
-		internal unsafe struct RegistrationData {
-			public MTRegistrationMap *map;
-			public int total_count;
-		}
-
 		internal unsafe struct MTRegistrationMap {
-			public MTRegistrationMap *next;
 			public IntPtr assembly;
 			public MTClassMap *map;
+			public IntPtr full_token_references; /* array of MTFullTokenReference */
 			public int assembly_count;
 			public int map_count;
 			public int custom_type_count;
+			public int full_token_reference_count;
 		}
 
-		internal unsafe struct MTClassMap {
-			public sbyte *name;
-			public sbyte *typename;
+		[StructLayout (LayoutKind.Sequential, Pack = 1)]
+		internal struct MTClassMap {
 			public IntPtr handle;
+			public uint type_reference;
 		}
 
 		/* Keep Delegates, Trampolines and InitializationOptions in sync with monotouch-glue.m */
@@ -106,9 +102,9 @@ namespace XamCore.ObjCRuntime {
 		internal unsafe struct InitializationOptions {
 			public int Size;
 			public InitializationFlags Flags;
-			public Delegates Delegates;
-			public Trampolines Trampolines;
-			public RegistrationData *RegistrationData;
+			public Delegates *Delegates;
+			public Trampolines *Trampolines;
+			public MTRegistrationMap *RegistrationMap;
 			public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptionMode;
 			public MarshalManagedExceptionMode MarshalManagedExceptionMode;
 
@@ -118,6 +114,8 @@ namespace XamCore.ObjCRuntime {
 				}
 			}
 		}
+
+		internal static unsafe InitializationOptions* options;
 
 		internal static bool Initialized {
 			get { return initialized; }
@@ -129,12 +127,12 @@ namespace XamCore.ObjCRuntime {
 #endif
 
 		[Preserve] // called from native - runtime.m.
-		unsafe static void Initialize (ref InitializationOptions options)
+		unsafe static void Initialize (InitializationOptions* options)
 		{
 #if PROFILE
 			var watch = new Stopwatch ();
 #endif
-			if (options.Size != Marshal.SizeOf (typeof (InitializationOptions))) {
+			if (options->Size != Marshal.SizeOf (typeof (InitializationOptions))) {
 				string msg = "Version mismatch between the native " + ProductName + " runtime and " + AssemblyName + ". Please reinstall " + ProductName + ".";
 				Console.Error.WriteLine (msg);
 #if MONOMAC
@@ -184,17 +182,17 @@ namespace XamCore.ObjCRuntime {
 			IntPtrEqualityComparer = new IntPtrEqualityComparer ();
 			TypeEqualityComparer = new TypeEqualityComparer ();
 
+			Runtime.options = options;
 			delegates = new List<object> ();
 			object_map = new Dictionary <IntPtr, WeakReference> (IntPtrEqualityComparer);
 			lock_obj = new object ();
 
-			NSObjectClass = NSObject.Initialize (ref options);
+			NSObjectClass = NSObject.Initialize ();
 
-			CreateRegistrar (options);
-			RegisterDelegates (ref options);
-			Method.Initialize (ref options);
-			Class.Initialize (ref options);
-			InitializePlatform (ref options);
+			Registrar = new DynamicRegistrar ();
+			RegisterDelegates (options);
+			Class.Initialize (options);
+			InitializePlatform (options);
 
 #if !COREBUILD && (XAMARIN_APPLETLS || XAMARIN_NO_TLS)
 			MonoTlsProviderFactory._PrivateFactoryDelegate = TlsProviderFactoryCallback;
@@ -204,8 +202,8 @@ namespace XamCore.ObjCRuntime {
 			UseAutoreleasePoolInThreadPool = true;
 #endif
 
-			objc_exception_mode = options.MarshalObjectiveCExceptionMode;
-			managed_exception_mode = options.MarshalManagedExceptionMode;
+			objc_exception_mode = options->MarshalObjectiveCExceptionMode;
+			managed_exception_mode = options->MarshalManagedExceptionMode;
 
 			initialized = true;
 #if PROFILE
@@ -273,10 +271,9 @@ namespace XamCore.ObjCRuntime {
 		}
 
 #if !COREBUILD && (XAMARIN_APPLETLS || XAMARIN_NO_TLS)
-		// This method is rewritten by the linker in CoreTlsProviderStep.
 		static MonoTlsProvider TlsProviderFactoryCallback ()
 		{
-			return RuntimeOptions.GetTlsProvider ();
+			return new AppleTlsProvider ();
 		}
 #endif
 
@@ -539,29 +536,38 @@ namespace XamCore.ObjCRuntime {
 			NativeObjectHasDied (native_obj, ObjectWrapper.Convert (managed_obj) as NSObject);
 		}
 
-		static unsafe IntPtr GetMethodDirect (IntPtr typeptr, IntPtr methodptr, int paramCount, IntPtr* paramptr)
+		static unsafe IntPtr GetMethodFromToken (uint token_ref)
 		{
-			var method = FindMethod (typeptr, methodptr, paramCount, paramptr);
+			var method = Class.ResolveTokenReference (token_ref, 0x06000000);
+
+			var mb = method as MethodBase;
+			if (method != null && mb == null)
+				throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_ref:X} to be a method, but it's a {method.GetType ().Name}. Please file a bug report at http://bugzilla.xamarin.com.");
+			
 			if (method != null)
 				return ObjectWrapper.Convert (method);
 
 			return IntPtr.Zero;
 		}
 
-		static unsafe IntPtr GetGenericMethodDirect (IntPtr obj, IntPtr typeptr, IntPtr methodptr, int paramCount, IntPtr* paramptr)
+		static unsafe IntPtr GetGenericMethodFromToken (IntPtr obj, uint token_ref)
 		{
 #if MONOMAC
 			throw new NotSupportedException ();
 #else
-			var method = FindMethod (typeptr, methodptr, paramCount, paramptr);
+			var method = Class.ResolveTokenReference (token_ref, 0x06000000);
 			if (method == null)
 				return IntPtr.Zero;
 
+			var mb = method as MethodBase;
+			if (mb == null)
+				throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_ref:X} to be a method, but it's a {method.GetType ().Name}. Please file a bug report at http://bugzilla.xamarin.com.");
+
 			var nsobj = ObjectWrapper.Convert (obj) as NSObject;
 			if (nsobj == null)
-				throw new NotSupportedException ();
+				throw ErrorHelper.CreateError (8023, $"An instance object is required to construct a closed generic method for the open generic method: {mb.DeclaringType.FullName}.{mb.Name} (token reference: 0x{token_ref:X}). Please file a bug report at http://bugzilla.xamarin.com.");
 
-			return ObjectWrapper.Convert (DynamicRegistrar.FindClosedMethod (nsobj.GetType (), method));
+			return ObjectWrapper.Convert (DynamicRegistrar.FindClosedMethod (nsobj.GetType (), mb));
 #endif
 		}
 

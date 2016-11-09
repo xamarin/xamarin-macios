@@ -1,5 +1,145 @@
 # OSX specific issues we want to ignore
 
+## AVFoundation
+
+# Won't be used as a Delegate protocol so no need to mark this one as abstract
+!incorrect-protocol-member! AVFragmentMinding::isAssociatedWithFragmentMinder is REQUIRED and should be abstract
+
+#iOS Only. Available on OSX but probably private selector mostly decorated with NS_AVAILABLE_IOS
+!missing-enum! AVCaptureAutoFocusSystem not bound
+!missing-field! AVAssetResourceLoadingRequestStreamingContentKeyRequestRequiresPersistentKey not bound
+!missing-field! AVAudioTimePitchAlgorithmLowQualityZeroLatency not bound
+!missing-field! AVCaptureDeviceSubjectAreaDidChangeNotification not bound
+!missing-field! AVCaptureExposureDurationCurrent not bound
+!missing-field! AVCaptureExposureTargetBiasCurrent not bound
+!missing-field! AVCaptureISOCurrent not bound
+!missing-field! AVCaptureLensPositionCurrent not bound
+!missing-field! AVCaptureSessionPresetInputPriority not bound
+!missing-field! AVCaptureWhiteBalanceGainsCurrent not bound
+!missing-field! AVMediaCharacteristicEasyToRead not bound
+!missing-field! AVMediaTypeMetadataObject not bound
+!missing-field! AVMetadataObjectTypeAztecCode not bound
+!missing-field! AVMetadataObjectTypeCode128Code not bound
+!missing-field! AVMetadataObjectTypeCode39Code not bound
+!missing-field! AVMetadataObjectTypeCode39Mod43Code not bound
+!missing-field! AVMetadataObjectTypeCode93Code not bound
+!missing-field! AVMetadataObjectTypeDataMatrixCode not bound
+!missing-field! AVMetadataObjectTypeEAN13Code not bound
+!missing-field! AVMetadataObjectTypeEAN8Code not bound
+!missing-field! AVMetadataObjectTypeFace not bound
+!missing-field! AVMetadataObjectTypeITF14Code not bound
+!missing-field! AVMetadataObjectTypeInterleaved2of5Code not bound
+!missing-field! AVMetadataObjectTypePDF417Code not bound
+!missing-field! AVMetadataObjectTypeQRCode not bound
+!missing-field! AVMetadataObjectTypeUPCECode not bound
+!missing-field! AVURLAssetAllowsCellularAccessKey not bound
+!missing-field! AVURLAssetHTTPCookiesKey not bound
+!missing-selector! AVAssetResourceLoadingRequest::persistentContentKeyFromKeyVendorResponse:options:error: not bound
+!missing-selector! AVAudioRecorder::deviceCurrentTime not bound
+!missing-selector! AVAudioRecorder::recordAtTime: not bound
+!missing-selector! AVAudioRecorder::recordAtTime:forDuration: not bound
+!missing-selector! AVCaptureAudioDataOutput::recommendedAudioSettingsForAssetWriterWithOutputFileType: not bound
+!missing-selector! AVCaptureDevice::ISO not bound
+!missing-selector! AVCaptureDevice::setAutoFocusRangeRestriction: not bound
+!missing-selector! AVCaptureDevice::autoFocusRangeRestriction not bound
+!missing-selector! AVCaptureDevice::setAutomaticallyAdjustsVideoHDREnabled: not bound
+!missing-selector! AVCaptureDevice::automaticallyAdjustsVideoHDREnabled not bound
+!missing-selector! AVCaptureDevice::setAutomaticallyEnablesLowLightBoostWhenAvailable: not bound
+!missing-selector! AVCaptureDevice::automaticallyEnablesLowLightBoostWhenAvailable not bound
+!missing-selector! AVCaptureDevice::chromaticityValuesForDeviceWhiteBalanceGains: not bound
+!missing-selector! AVCaptureDevice::deviceWhiteBalanceGains not bound
+!missing-selector! AVCaptureDevice::deviceWhiteBalanceGainsForChromaticityValues: not bound
+!missing-selector! AVCaptureDevice::deviceWhiteBalanceGainsForTemperatureAndTintValues: not bound
+!missing-selector! AVCaptureDevice::exposureDuration not bound
+!missing-selector! AVCaptureDevice::exposureTargetBias not bound
+!missing-selector! AVCaptureDevice::exposureTargetOffset not bound
+!missing-selector! AVCaptureDevice::grayWorldDeviceWhiteBalanceGains not bound
+!missing-selector! AVCaptureDevice::isAutoFocusRangeRestrictionSupported not bound
+!missing-selector! AVCaptureDevice::isFlashActive not bound
+!missing-selector! AVCaptureDevice::isFlashAvailable not bound
+!missing-selector! AVCaptureDevice::isLowLightBoostEnabled not bound
+!missing-selector! AVCaptureDevice::isLowLightBoostSupported not bound
+!missing-selector! AVCaptureDevice::isRampingVideoZoom not bound
+!missing-selector! AVCaptureDevice::isSmoothAutoFocusEnabled not bound
+!missing-selector! AVCaptureDevice::isSmoothAutoFocusSupported not bound
+!missing-selector! AVCaptureDevice::isSubjectAreaChangeMonitoringEnabled not bound
+!missing-selector! AVCaptureDevice::isTorchActive not bound
+!missing-selector! AVCaptureDevice::isTorchAvailable not bound
+!missing-selector! AVCaptureDevice::isVideoHDREnabled not bound
+!missing-selector! AVCaptureDevice::lensAperture not bound
+!missing-selector! AVCaptureDevice::lensPosition not bound
+!missing-selector! AVCaptureDevice::maxExposureTargetBias not bound
+!missing-selector! AVCaptureDevice::maxWhiteBalanceGain not bound
+!missing-selector! AVCaptureDevice::minExposureTargetBias not bound
+!missing-selector! AVCaptureDevice::rampToVideoZoomFactor:withRate: not bound
+!missing-selector! AVCaptureDevice::setExposureModeCustomWithDuration:ISO:completionHandler: not bound
+!missing-selector! AVCaptureDevice::setExposureTargetBias:completionHandler: not bound
+!missing-selector! AVCaptureDevice::setFocusModeLockedWithLensPosition:completionHandler: not bound
+!missing-selector! AVCaptureDevice::setSmoothAutoFocusEnabled: not bound
+!missing-selector! AVCaptureDevice::setSubjectAreaChangeMonitoringEnabled: not bound
+!missing-selector! AVCaptureDevice::setTorchModeOnWithLevel:error: not bound
+!missing-selector! AVCaptureDevice::setVideoHDREnabled: not bound
+!missing-selector! AVCaptureDevice::setVideoZoomFactor: not bound
+!missing-selector! AVCaptureDevice::setWhiteBalanceModeLockedWithDeviceWhiteBalanceGains:completionHandler: not bound
+!missing-selector! AVCaptureDevice::temperatureAndTintValuesForDeviceWhiteBalanceGains: not bound
+!missing-selector! AVCaptureDevice::torchLevel not bound
+!missing-selector! AVCaptureDevice::transportControlsSpeed not bound
+!missing-selector! AVCaptureDevice::videoZoomFactor not bound
+!missing-selector! AVCaptureMetadataOutput::availableMetadataObjectTypes not bound
+!missing-selector! AVCaptureMetadataOutput::metadataObjectTypes not bound
+!missing-selector! AVCaptureMetadataOutput::metadataObjectsCallbackQueue not bound
+!missing-selector! AVCaptureMetadataOutput::metadataObjectsDelegate not bound
+!missing-selector! AVCaptureMetadataOutput::rectOfInterest not bound
+!missing-selector! AVCaptureMetadataOutput::setMetadataObjectTypes: not bound
+!missing-selector! AVCaptureMetadataOutput::setMetadataObjectsDelegate:queue: not bound
+!missing-selector! AVCaptureMetadataOutput::setRectOfInterest: not bound
+!missing-selector! AVCaptureMetadataInput::appendTimedMetadataGroup:error: not bound
+!missing-selector! AVCaptureMetadataInput::initWithFormatDescription:clock: not bound
+!missing-selector! AVCaptureOutput::metadataOutputRectOfInterestForRect: not bound
+!missing-selector! AVCaptureOutput::rectForMetadataOutputRectOfInterest: not bound
+!missing-selector! AVCaptureOutput::transformedMetadataObjectForMetadataObject:connection: not bound
+!missing-selector! AVCaptureVideoDataOutput::recommendedVideoSettingsForAssetWriterWithOutputFileType: not bound
+!missing-selector! AVCaptureVideoPreviewLayer::captureDevicePointOfInterestForPoint: not bound
+!missing-selector! AVCaptureVideoPreviewLayer::metadataOutputRectOfInterestForRect: not bound
+!missing-selector! AVCaptureVideoPreviewLayer::pointForCaptureDevicePointOfInterest: not bound
+!missing-selector! AVCaptureVideoPreviewLayer::rectForMetadataOutputRectOfInterest: not bound
+!missing-selector! AVCaptureVideoPreviewLayer::transformedMetadataObjectForMetadataObject: not bound
+!missing-selector! AVMetadataMachineReadableCodeObject::corners not bound
+!missing-selector! AVMetadataMachineReadableCodeObject::stringValue not bound
+!missing-selector! AVPlayer::setUsesExternalPlaybackWhileExternalScreenIsActive: not bound
+!missing-selector! AVPlayer::usesExternalPlaybackWhileExternalScreenIsActive not bound
+!missing-protocol! AVCaptureMetadataOutputObjectsDelegate not bound
+!missing-type! AVCaptureMetadataInput not bound
+!missing-type! AVMetadataMachineReadableCodeObject not bound
+!missing-type! AVCaptureMetadataOutput not bound
+
+# Manually bound
+!missing-field! AVOutputSettingsPreset1280x720 not bound
+!missing-field! AVOutputSettingsPreset1920x1080 not bound
+!missing-field! AVOutputSettingsPreset3840x2160 not bound
+!missing-field! AVOutputSettingsPreset640x480 not bound
+!missing-field! AVOutputSettingsPreset960x540 not bound
+
+# Deprecated so won't bind it
+!missing-selector! AVAudioUnitComponent::componentURL not bound
+!missing-selector! AVCaptureConnection::isVideoMaxFrameDurationSupported not bound
+!missing-selector! AVCaptureConnection::setVideoMaxFrameDuration: not bound
+!missing-selector! AVCaptureConnection::videoMaxFrameDuration not bound
+
+# TODO: Verify Later, could not find it on header
+!missing-selector! AVAssetReaderTrackOutput::setAudioTimePitchAlgorithm: not bound
+!missing-selector! AVPlayerItem::contentAuthorizationRequestStatus not bound
+!missing-selector! AVPlayerItem::isApplicationAuthorizedForPlayback not bound
+!missing-selector! AVPlayerItem::isAuthorizationRequiredForPlayback not bound
+!missing-selector! AVPlayerItem::isContentAuthorizedForPlayback not bound
+!missing-selector! AVPlayerItem::requestContentAuthorizationAsynchronouslyWithTimeoutInterval:completionHandler: not bound
+
+# TODO: Not bound, needed unbound type
+!missing-selector! AVPlayerItemOutput::itemTimeForCVTimeStamp: not bound
+!missing-selector! AVAudioEngine::musicSequence not bound
+!missing-selector! AVAudioEngine::setMusicSequence: not bound
+
+# --- End of AVFoundation - AVKit ---
 
 # OSX only - API not exposed in XI even if it's in the header files
 !missing-selector! NEVPNProtocol::identityReference is not bound

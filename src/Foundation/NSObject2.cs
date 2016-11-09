@@ -134,7 +134,7 @@ namespace XamCore.Foundation {
 			GC.SuppressFinalize (this);
 		}
 
-		internal static IntPtr Initialize (ref Runtime.InitializationOptions options)
+		internal static IntPtr Initialize ()
 		{
 			return class_ptr;
 		}

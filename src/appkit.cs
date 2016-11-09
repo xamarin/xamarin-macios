@@ -7401,7 +7401,7 @@ namespace XamCore.AppKit {
 		void RemoveItem (NSMenuItem item);
 
 		[Export ("setSubmenu:forItem:")]
-		void SetSubmenu (NSMenu aMenu, NSMenuItem anItem);
+		void SetSubmenu ([NullAllowed] NSMenu aMenu, NSMenuItem anItem);
 
 		[Export ("removeAllItems")]
 		[PostSnippet ("__mt_items_var = ItemArray();")]
@@ -7414,6 +7414,7 @@ namespace XamCore.AppKit {
 		nint Count { get; }
 
 		[Export ("itemAtIndex:")]
+		[return: NullAllowed]
 		NSMenuItem ItemAt (nint index);
 
 		[Export ("indexOfItem:")]
@@ -7429,15 +7430,17 @@ namespace XamCore.AppKit {
 		nint IndexOfItem (NSObject obj);
 
 		[Export ("indexOfItemWithSubmenu:")]
-		nint IndexOfItem (NSMenu submenu);
+		nint IndexOfItem ([NullAllowed] NSMenu submenu);
 
 		[Export ("indexOfItemWithTarget:andAction:")]
-		nint IndexOfItem (NSObject target, Selector actionSelector);
+		nint IndexOfItem ([NullAllowed] NSObject target, [NullAllowed] Selector actionSelector);
 
 		[Export ("itemWithTitle:")]
+		[return: NullAllowed]
 		NSMenuItem ItemWithTitle (string title);
 
 		[Export ("itemWithTag:")]
+		[return: NullAllowed]
 		NSMenuItem ItemWithTag (nint tag);
 
 		[Export ("update")]
@@ -7462,6 +7465,7 @@ namespace XamCore.AppKit {
 		void CancelTrackingWithoutAnimation ();
 
 		[Export ("highlightedItem")]
+		[NullAllowed]
 		NSMenuItem HighlightedItem { get; }
 
 		[Export ("size")]
@@ -7485,7 +7489,7 @@ namespace XamCore.AppKit {
 		[Export ("menuBarVisible")]
 		bool MenuBarVisible { get; set; }
 
-		[Export ("supermenu")]
+		[NullAllowed, Export ("supermenu", ArgumentSemantic.Assign)]
 		NSMenu Supermenu { get; set; }
 
 		[Export ("autoenablesItems")]
@@ -7496,6 +7500,7 @@ namespace XamCore.AppKit {
 
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
+		[NullAllowed]
 		NSMenuDelegate Delegate { get; set; }
 		
 		[Export ("minimumWidth")]

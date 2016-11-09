@@ -266,4 +266,61 @@ namespace XamCore.AVFoundation {
 		}
 	}
 #endif
+
+	[Mac (10, 10), NoiOS, NoWatch, NoTV]
+	[StructLayout (LayoutKind.Sequential)]
+	public struct AVSampleCursorSyncInfo {
+		[MarshalAs (UnmanagedType.I1)]
+		public bool IsFullSync;
+
+		[MarshalAs (UnmanagedType.I1)]
+		public bool IsPartialSync;
+
+		[MarshalAs (UnmanagedType.I1)]
+		public bool IsDroppable;
+	}
+
+	[Mac (10, 10), NoiOS, NoWatch, NoTV]
+	[StructLayout (LayoutKind.Sequential)]
+	public struct AVSampleCursorDependencyInfo {
+		[MarshalAs (UnmanagedType.I1)]
+		public bool IndicatesWhetherItHasDependentSamples;
+
+		[MarshalAs (UnmanagedType.I1)]
+		public bool HasDependentSamples;
+
+		[MarshalAs (UnmanagedType.I1)]
+		public bool IndicatesWhetherItDependsOnOthers;
+
+		[MarshalAs (UnmanagedType.I1)]
+		public bool DependsOnOthers;
+
+		[MarshalAs (UnmanagedType.I1)]
+		public bool IndicatesWhetherItHasRedundantCoding;
+
+		[MarshalAs (UnmanagedType.I1)]
+		public bool HasRedundantCoding;
+	}
+
+	[Mac (10, 10), NoiOS, NoWatch, NoTV]
+	[StructLayout (LayoutKind.Sequential)]
+	public struct AVSampleCursorStorageRange {
+		public long Offset;
+		public long Length;
+	}
+
+	[Mac (10, 10), NoiOS, NoWatch, NoTV]
+	[StructLayout (LayoutKind.Sequential)]
+	public struct AVSampleCursorChunkInfo {
+		public long SampleCount;
+
+		[MarshalAs (UnmanagedType.I1)]
+		public bool HasUniformSampleSizes;
+
+		[MarshalAs (UnmanagedType.I1)]
+		public bool HasUniformSampleDurations;
+
+		[MarshalAs (UnmanagedType.I1)]
+		public bool HasUniformFormatDescriptions;
+	}
 }
