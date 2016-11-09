@@ -115,7 +115,7 @@ namespace XamCore.CoreFoundation {
 			if (cfUserInfo != IntPtr.Zero) {
 				using (var userInfo = new NSDictionary (cfUserInfo)) {
 					foreach (var i in userInfo)
-						e.Data.Add (i.Key, i.Value);
+						e.Data.Add (i.Key?.ToString (), i.Value?.ToString ());
 				}
 			}
 			if (release)
