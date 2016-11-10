@@ -8,7 +8,7 @@ namespace XamCore.CoreGraphics
 {
 	public enum CGCaptureOptions : uint
 	{
-		NoOptions = 0,
+		None = 0,
 		NoFill = 1 << 0
 	}
 
