@@ -472,13 +472,6 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir => {
 				foreach (bool xm45 in new bool [] {false, true})
 				{
-					// For this test to work, we have to lie a bit. We are generating a csproj
-					// with a garbage mmp extra arg to cause a failure (so we get a half generated bundle)
-					// then we fix it and build again.
-					// However, normally using GenerateUnifiedExecutableProject would mess the timestamps up
-					// So we save the timestamp of the csproj and cs file and restore it after generation
-					// then when we genereate a "fixed" project we do use that same time again.
-					
 					// First build with a Non-existant file to force us to error inside mmp test
 					TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--resource=Foo.bar</MonoBundlingExtraArgs>", XM45 = xm45 };
 					TI.GenerateAndBuildUnifiedExecutable (test, shouldFail: true);
@@ -486,16 +479,9 @@ namespace Xamarin.MMP.Tests
 					string generatedProjectPath = Path.Combine (tmpDir, TI.GetUnifiedExecutableProjectName (test));
 					string generatedMainPath = Path.Combine (tmpDir, "main.cs");
 
-					DateTime projectTimestamp = File.GetLastWriteTime (generatedProjectPath);
-					DateTime mainTimeStamp = File.GetLastWriteTime (generatedMainPath);
-
 					// Next, build again without the error MonoBundlingExtraArgs
 					test.CSProjConfig = "";
 					TI.GenerateUnifiedExecutableProject (test);
-
-					// Set the timestamp so msbuild wouldn't have a reason to rebuild everythihng
-					File.SetLastWriteTime (generatedProjectPath, projectTimestamp);
-					File.SetLastWriteTime (generatedMainPath, mainTimeStamp);
 
 					// And try again. 
 					// If we fail, we'll likley fail with "did not generate an exe" before returning but let's check anyway
