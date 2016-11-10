@@ -1332,7 +1332,6 @@ namespace XamCore.NetworkExtension {
 
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NETunnelProvider))]
-	[DisableDefaultCtor] // no valid handle when `init` is called
 	interface NEPacketTunnelProvider {
 		[Export ("startTunnelWithOptions:completionHandler:")]
 		[Async]
