@@ -388,6 +388,7 @@ COREGRAPHICS_CORE_SOURCES = \
 	CoreGraphics/CGColor.cs \
 	CoreGraphics/CGColorSpace.cs \
 	CoreGraphics/CGContext.cs \
+	CoreGraphics/CGDisplay.cs \
 	CoreGraphics/CGGeometry.cs \
 	CoreGraphics/CGGradient.cs \
 	CoreGraphics/CGImage.cs \
