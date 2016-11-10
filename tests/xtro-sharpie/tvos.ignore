@@ -272,6 +272,8 @@
 !missing-selector! MPMusicPlayerController::setQueueWithStoreIDs: not bound
 !missing-selector! MPMusicPlayerController::setVolume: not bound
 !missing-selector! MPMusicPlayerController::volume not bound
+!missing-selector! MPMusicPlayerController::prepareToPlayWithCompletionHandler: not bound
+!missing-selector! MPMusicPlayerController::setQueueWithDescriptor: not bound
 
 ## from (unmarked) MPMediaItem_MPMediaQueryAdditions but MPMediaItem is not in tvOS
 !missing-selector! +MPMediaItem::persistentIDPropertyForGroupingType: not bound

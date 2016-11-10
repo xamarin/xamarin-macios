@@ -451,6 +451,14 @@ namespace XamCore.MediaPlayer {
 		MPMediaItem [] SeedItems { get; }		
 
 		[iOS (9,3)]
+		[NullAllowed, Export ("descriptionText")]
+		string DescriptionText { get; }
+
+		[iOS (9,3)]
+		[NullAllowed, Export ("authorDisplayName")]
+		string AuthorDisplayName { get; }
+
+		[iOS (9,3)]
 		[Async]
 		[Export ("addItemWithProductID:completionHandler:")]
 		void AddItem (string productID, [NullAllowed] Action<NSError> completionHandler);
@@ -1162,12 +1170,10 @@ namespace XamCore.MediaPlayer {
 		[Export ("setQueueWithStoreIDs:")]
 		void SetQueue (string[] storeIDs);
 
-		[TV (10,1)]
 		[iOS (10,1)]
 		[Export ("setQueueWithDescriptor:")]
 		void SetQueue (MPMusicPlayerQueueDescriptor descriptor);
 
-		[TV (10,1)]
 		[iOS (10,1)]
 		[Async]
 		[Export ("prepareToPlayWithCompletionHandler:")]
