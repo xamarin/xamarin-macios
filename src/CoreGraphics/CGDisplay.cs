@@ -6,6 +6,12 @@ using XamCore.Foundation;
 
 namespace XamCore.CoreGraphics
 {
+	public enum CGCaptureOptions : uint
+	{
+		NoOptions = 0,
+		NoFill = 1 << 0
+	}
+
 	public static class CGDisplay
 	{
 #if !COREBUILD
@@ -82,11 +88,11 @@ namespace XamCore.CoreGraphics
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		static extern int CGDisplayCaptureWithOptions (uint display, uint options);
+		static extern int CGDisplayCaptureWithOptions (uint display, CGCaptureOptions options);
 
-		public static int Capture (int display, int options)
+		public static int Capture (int display, CGCaptureOptions options)
 		{
-			return CGDisplayCaptureWithOptions ((uint)display, (uint)options);
+			return CGDisplayCaptureWithOptions ((uint)display, options);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -100,13 +106,9 @@ namespace XamCore.CoreGraphics
 		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint = "CGCaptureAllDisplays")]
 		public static extern int CaptureAllDisplays ();
 
-		[DllImport (Constants.CoreGraphicsLibrary)]
-		static extern int CGCaptureAllDisplaysWithOptions (uint options);
+		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint="CGCaptureAllDisplaysWithOptions")]
+		static extern int CaptureAllDisplays (CGCaptureOptions options);
 
-		public static int CaptureAllDisplays (int options)
-		{
-			return CGCaptureAllDisplaysWithOptions ((uint)options);
-		}
 
 		[DllImport (Constants.CoreGraphicsLibrary, EntryPoint = "CGReleaseAllDisplays")]
 		public static extern int ReleaseAllDisplays ();
