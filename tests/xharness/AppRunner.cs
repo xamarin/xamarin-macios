@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Xsl;
 
 namespace xharness
 {
@@ -309,6 +311,25 @@ namespace xharness
 			}
 		}
 
+		void GenerateHumanReadableLogs (string finalPath, string logHeader, XmlDocument doc){
+			// load the resource that contains the xslt and apply it to the doc and write the logs
+			if (File.Exists (finalPath)) {
+				// if the file does exist, remove it
+				File.Delete (finalPath);
+			}
+
+			using (var strm = Assembly.GetExecutingAssembly ().GetManifestResourceStream ("xharness.nunit-summary.xslt"))
+			using (var xsltReader = XmlReader.Create (strm)) 
+			using (var xmlReader = new XmlNodeReader (doc)) 
+			using (var writer = new StreamWriter (finalPath)) {
+				writer.Write (logHeader);
+ 	   			var xslt = new XslCompiledTransform ();
+				xslt.Load (xsltReader);
+				xslt.Transform (xmlReader, null, writer);
+				writer.Flush ();
+			}
+		}
+
 		public bool TestsSucceeded (LogStream listener_log, bool timed_out, bool crashed) {
 			string log;
 			using (var reader = listener_log.GetReader ())
@@ -320,6 +341,7 @@ namespace xharness
 				if (log.Contains ("test-results")) {
 					// remove any possible extra info
 					var index = log.IndexOf ("<test-results");
+					var header = log.Substring(0, index - 1);
 					log = log.Remove (0, index - 1);
 					var testsResults = new XmlDocument ();
 					testsResults.LoadXml (log);
@@ -337,6 +359,9 @@ namespace xharness
 					var path = listener_log.FullPath;
 					path = path.Replace (".log", ".xml");
 					testsResults.Save (path);
+
+					// we want to keep the old TestResult page,
+					GenerateHumanReadableLogs (listener_log.FullPath, header, testsResults);
 					
 					int ignored = Convert.ToInt16(mainResultNode.Attributes["ignored"].Value);
 					int invalid = Convert.ToInt16(mainResultNode.Attributes["invalid"].Value);
@@ -344,6 +369,8 @@ namespace xharness
 					int errors = Convert.ToInt16(mainResultNode.Attributes["errors"].Value);
 					int failures = Convert.ToInt16(mainResultNode.Attributes["failures"].Value);
 					int totalTests = Convert.ToInt16(mainResultNode.Attributes["total"].Value);
+
+					// generate human readable logs
 					var failed = errors != 0 || failures != 0;
 					if (failed) {
 						Harness.LogWrench ($"@MonkeyWrench: AddSummary: <b>{mode} failed: Test run: {totalTests} Passed: {totalTests - invalid - inconclusive - ignored} Inconclusive: {inconclusive} Failed: {errors + failures} Ignored: {ignored}</b><br/>");
