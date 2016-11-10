@@ -935,10 +935,7 @@ namespace XamCore.HomeKit {
 		Fan,
 
 #if !WATCH && !TVOS
-		//https://bugzilla.xamarin.com/show_bug.cgi?id=46292: [generator] Obsolete attribute doesn't make it to generated file for smart enums
 		[Obsolete ("Use GarageDoorOpener instead")]
-		//https://bugzilla.xamarin.com/show_bug.cgi?id=46285: [generator] Smart enum does not handle 2 equal values
-		//[Field ("HMAccessoryCategoryTypeGarageDoorOpener")]
 		DoorOpener,
 
 		[Field ("HMAccessoryCategoryTypeGarageDoorOpener")]
