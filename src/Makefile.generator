@@ -53,7 +53,7 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bwatch: Makefile.generator
 	$(Q) chmod +x $@
 
 $(WATCH_BUILD_DIR)/bwatch.exe: $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.dll $(GENERATOR_SOURCES) Makefile.generator
-	$(call Q_PROF_PMCS,watch) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/watch" -compiler:$(SYSTEM_MCS) -nostdlib -r:mscorlib -lib:$(WATCH_LIBDIR)/repl -global-replace:"^XamCore.=" -debug $(GENERATOR_DEFINES) -define:XAMCORE_2_0,XAMCORE_3_0,__UNIFIED__ -d:WATCH -d:__WATCHOS__ -d:NO_SYSTEM_DRAWING -out:$@ $(GENERATOR_SOURCES) -r:$<
+	$(call Q_PROF_PMCS,watch) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/watch" -compiler:$(SYSTEM_MCS) -nostdlib -r:mscorlib -lib:$(WATCH_LIBDIR)/repl -global-replace:"^XamCore.=" -debug $(GENERATOR_DEFINES) -define:XAMCORE_2_0,XAMCORE_3_0,__UNIFIED__ -d:WATCH -d:__WATCHOS__ -out:$@ $(GENERATOR_SOURCES) -r:$<
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bwatch/%.exe: $(WATCH_BUILD_DIR)/%.exe | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bwatch
 	$(Q) install -m 0755 $< $@
