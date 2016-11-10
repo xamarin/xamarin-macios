@@ -415,6 +415,16 @@ namespace XamCore.PrintCore {
 			}
 		}
 
+		[DllImport (Constants.PrintCoreLibrary)]
+		extern static PMStatusCode PMGetAdjustedPaperRect (IntPtr pageFormat, out PMRect pageRect);
+		public PMRect AdjustedPaperRect {
+			get {
+				PMRect rect;
+				if (PMGetAdjustedPaperRect (handle, out rect) == PMStatusCode.Ok)
+					return rect;
+				return new PMRect (0, 0, 0, 0);
+			}
+		}
 	}
 
 	public class PMPaper : PMPrintCoreBase {
