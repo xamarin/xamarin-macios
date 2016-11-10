@@ -8790,429 +8790,429 @@ namespace XamCore.AppKit {
 
 	public enum NSImageName 
 	{
-		[Internal, Field ("NSImageNameQuickLookTemplate")]
+		[Field ("NSImageNameQuickLookTemplate")]
 		QuickLookTemplate,
 
-		[Internal, Field ("NSImageNameBluetoothTemplate")]
+		[Field ("NSImageNameBluetoothTemplate")]
 		BluetoothTemplate,
 
-		[Internal, Field ("NSImageNameIChatTheaterTemplate")]
+		[Field ("NSImageNameIChatTheaterTemplate")]
 		IChatTheaterTemplate,
 
-		[Internal, Field ("NSImageNameSlideshowTemplate")]
+		[Field ("NSImageNameSlideshowTemplate")]
 		SlideshowTemplate,
 
-		[Internal, Field ("NSImageNameActionTemplate")]
+		[Field ("NSImageNameActionTemplate")]
 		ActionTemplate,
 
-		[Internal, Field ("NSImageNameSmartBadgeTemplate")]
+		[Field ("NSImageNameSmartBadgeTemplate")]
 		SmartBadgeTemplate,
 
-		[Internal, Field ("NSImageNamePathTemplate")]
+		[Field ("NSImageNamePathTemplate")]
 		PathTemplate,
 
-		[Internal, Field ("NSImageNameInvalidDataFreestandingTemplate")]
+		[Field ("NSImageNameInvalidDataFreestandingTemplate")]
 		InvalidDataFreestandingTemplate,
 
-		[Internal, Field ("NSImageNameLockLockedTemplate")]
+		[Field ("NSImageNameLockLockedTemplate")]
 		LockLockedTemplate,
 
-		[Internal, Field ("NSImageNameLockUnlockedTemplate")]
+		[Field ("NSImageNameLockUnlockedTemplate")]
 		LockUnlockedTemplate,
 
-		[Internal, Field ("NSImageNameGoRightTemplate")]
+		[Field ("NSImageNameGoRightTemplate")]
 		GoRightTemplate,
 
-		[Internal, Field ("NSImageNameGoLeftTemplate")]
+		[Field ("NSImageNameGoLeftTemplate")]
 		GoLeftTemplate,
 
-		[Internal, Field ("NSImageNameRightFacingTriangleTemplate")]
+		[Field ("NSImageNameRightFacingTriangleTemplate")]
 		RightFacingTriangleTemplate,
 
-		[Internal, Field ("NSImageNameLeftFacingTriangleTemplate")]
+		[Field ("NSImageNameLeftFacingTriangleTemplate")]
 		LeftFacingTriangleTemplate,
 
-		[Internal, Field ("NSImageNameAddTemplate")]
+		[Field ("NSImageNameAddTemplate")]
 		AddTemplate,
 
-		[Internal, Field ("NSImageNameRemoveTemplate")]
+		[Field ("NSImageNameRemoveTemplate")]
 		RemoveTemplate,
 
-		[Internal, Field ("NSImageNameRevealFreestandingTemplate")]
+		[Field ("NSImageNameRevealFreestandingTemplate")]
 		RevealFreestandingTemplate,
 
-		[Internal, Field ("NSImageNameFollowLinkFreestandingTemplate")]
+		[Field ("NSImageNameFollowLinkFreestandingTemplate")]
 		FollowLinkFreestandingTemplate,
 
-		[Internal, Field ("NSImageNameEnterFullScreenTemplate")]
+		[Field ("NSImageNameEnterFullScreenTemplate")]
 		EnterFullScreenTemplate,
 
-		[Internal, Field ("NSImageNameExitFullScreenTemplate")]
+		[Field ("NSImageNameExitFullScreenTemplate")]
 		ExitFullScreenTemplate,
 
-		[Internal, Field ("NSImageNameStopProgressTemplate")]
+		[Field ("NSImageNameStopProgressTemplate")]
 		StopProgressTemplate,
 
-		[Internal, Field ("NSImageNameStopProgressFreestandingTemplate")]
+		[Field ("NSImageNameStopProgressFreestandingTemplate")]
 		StopProgressFreestandingTemplate,
 
-		[Internal, Field ("NSImageNameRefreshTemplate")]
+		[Field ("NSImageNameRefreshTemplate")]
 		RefreshTemplate,
 
-		[Internal, Field ("NSImageNameRefreshFreestandingTemplate")]
+		[Field ("NSImageNameRefreshFreestandingTemplate")]
 		RefreshFreestandingTemplate,
 
-		[Internal, Field ("NSImageNameFolder")]
+		[Field ("NSImageNameFolder")]
 		Folder,
 
-		[Internal, Field ("NSImageNameTrashEmpty")]
+		[Field ("NSImageNameTrashEmpty")]
 		TrashEmpty,
 
-		[Internal, Field ("NSImageNameTrashFull")]
+		[Field ("NSImageNameTrashFull")]
 		TrashFull,
 
-		[Internal, Field ("NSImageNameHomeTemplate")]
+		[Field ("NSImageNameHomeTemplate")]
 		HomeTemplate,
 
-		[Internal, Field ("NSImageNameBookmarksTemplate")]
+		[Field ("NSImageNameBookmarksTemplate")]
 		BookmarksTemplate,
 
-		[Internal, Field ("NSImageNameCaution")]
+		[Field ("NSImageNameCaution")]
 		Caution,
 
-		[Internal, Field ("NSImageNameStatusAvailable")]
+		[Field ("NSImageNameStatusAvailable")]
 		StatusAvailable,
 
-		[Internal, Field ("NSImageNameStatusPartiallyAvailable")]
+		[Field ("NSImageNameStatusPartiallyAvailable")]
 		StatusPartiallyAvailable,
 
-		[Internal, Field ("NSImageNameStatusUnavailable")]
+		[Field ("NSImageNameStatusUnavailable")]
 		StatusUnavailable,
 
-		[Internal, Field ("NSImageNameStatusNone")]
+		[Field ("NSImageNameStatusNone")]
 		StatusNone,
 
-		[Internal, Field ("NSImageNameApplicationIcon")]
+		[Field ("NSImageNameApplicationIcon")]
 		ApplicationIcon,
 
-		[Internal, Field ("NSImageNameMenuOnStateTemplate")]
+		[Field ("NSImageNameMenuOnStateTemplate")]
 		MenuOnStateTemplate,
 
-		[Internal, Field ("NSImageNameMenuMixedStateTemplate")]
+		[Field ("NSImageNameMenuMixedStateTemplate")]
 		MenuMixedStateTemplate,
 
-		[Internal, Field ("NSImageNameUserGuest")]
+		[Field ("NSImageNameUserGuest")]
 		UserGuest,
 
-		[Internal, Field ("NSImageNameMobileMe")]
+		[Field ("NSImageNameMobileMe")]
 		MobileMe,
 
 		[Mac (10, 8)]
-		[Internal, Field ("NSImageNameShareTemplate")]
+		[Field ("NSImageNameShareTemplate")]
 		ShareTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarAddDetailTemplate")]
+		[Field ("NSImageNameTouchBarAddDetailTemplate")]
 		TouchBarAddDetailTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarAddTemplate")]
+		[Field ("NSImageNameTouchBarAddTemplate")]
 		TouchBarAddTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarAlarmTemplate")]
+		[Field ("NSImageNameTouchBarAlarmTemplate")]
 		TouchBarAlarmTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarAudioInputMuteTemplate")]
+		[Field ("NSImageNameTouchBarAudioInputMuteTemplate")]
 		TouchBarAudioInputMuteTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarAudioInputTemplate")]
+		[Field ("NSImageNameTouchBarAudioInputTemplate")]
 		TouchBarAudioInputTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarAudioOutputMuteTemplate")]
+		[Field ("NSImageNameTouchBarAudioOutputMuteTemplate")]
 		TouchBarAudioOutputMuteTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarAudioOutputVolumeHighTemplate")]
+		[Field ("NSImageNameTouchBarAudioOutputVolumeHighTemplate")]
 		TouchBarAudioOutputVolumeHighTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarAudioOutputVolumeLowTemplate")]
+		[Field ("NSImageNameTouchBarAudioOutputVolumeLowTemplate")]
 		TouchBarAudioOutputVolumeLowTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarAudioOutputVolumeMediumTemplate")]
+		[Field ("NSImageNameTouchBarAudioOutputVolumeMediumTemplate")]
 		TouchBarAudioOutputVolumeMediumTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarAudioOutputVolumeOffTemplate")]
+		[Field ("NSImageNameTouchBarAudioOutputVolumeOffTemplate")]
 		TouchBarAudioOutputVolumeOffTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarBookmarksTemplate")]
+		[Field ("NSImageNameTouchBarBookmarksTemplate")]
 		TouchBarBookmarksTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarColorPickerFill")]
+		[Field ("NSImageNameTouchBarColorPickerFill")]
 		TouchBarColorPickerFill,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarColorPickerFont")]
+		[Field ("NSImageNameTouchBarColorPickerFont")]
 		TouchBarColorPickerFont,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarColorPickerStroke")]
+		[Field ("NSImageNameTouchBarColorPickerStroke")]
 		TouchBarColorPickerStroke,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarCommunicationAudioTemplate")]
+		[Field ("NSImageNameTouchBarCommunicationAudioTemplate")]
 		TouchBarCommunicationAudioTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarCommunicationVideoTemplate")]
+		[Field ("NSImageNameTouchBarCommunicationVideoTemplate")]
 		TouchBarCommunicationVideoTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarComposeTemplate")]
+		[Field ("NSImageNameTouchBarComposeTemplate")]
 		TouchBarComposeTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarDeleteTemplate")]
+		[Field ("NSImageNameTouchBarDeleteTemplate")]
 		TouchBarDeleteTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarDownloadTemplate")]
+		[Field ("NSImageNameTouchBarDownloadTemplate")]
 		TouchBarDownloadTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarEnterFullScreenTemplate")]
+		[Field ("NSImageNameTouchBarEnterFullScreenTemplate")]
 		TouchBarEnterFullScreenTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarExitFullScreenTemplate")]
+		[Field ("NSImageNameTouchBarExitFullScreenTemplate")]
 		TouchBarExitFullScreenTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarFastForwardTemplate")]
+		[Field ("NSImageNameTouchBarFastForwardTemplate")]
 		TouchBarFastForwardTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarFolderCopyToTemplate")]
+		[Field ("NSImageNameTouchBarFolderCopyToTemplate")]
 		TouchBarFolderCopyToTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarFolderMoveToTemplate")]
+		[Field ("NSImageNameTouchBarFolderMoveToTemplate")]
 		TouchBarFolderMoveToTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarFolderTemplate")]
+		[Field ("NSImageNameTouchBarFolderTemplate")]
 		TouchBarFolderTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarGetInfoTemplate")]
+		[Field ("NSImageNameTouchBarGetInfoTemplate")]
 		TouchBarGetInfoTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarGoBackTemplate")]
+		[Field ("NSImageNameTouchBarGoBackTemplate")]
 		TouchBarGoBackTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarGoDownTemplate")]
+		[Field ("NSImageNameTouchBarGoDownTemplate")]
 		TouchBarGoDownTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarGoForwardTemplate")]
+		[Field ("NSImageNameTouchBarGoForwardTemplate")]
 		TouchBarGoForwardTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarGoUpTemplate")]
+		[Field ("NSImageNameTouchBarGoUpTemplate")]
 		TouchBarGoUpTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarHistoryTemplate")]
+		[Field ("NSImageNameTouchBarHistoryTemplate")]
 		TouchBarHistoryTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarIconViewTemplate")]
+		[Field ("NSImageNameTouchBarIconViewTemplate")]
 		TouchBarIconViewTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarListViewTemplate")]
+		[Field ("NSImageNameTouchBarListViewTemplate")]
 		TouchBarListViewTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarMailTemplate")]
+		[Field ("NSImageNameTouchBarMailTemplate")]
 		TouchBarMailTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarNewFolderTemplate")]
+		[Field ("NSImageNameTouchBarNewFolderTemplate")]
 		TouchBarNewFolderTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarNewMessageTemplate")]
+		[Field ("NSImageNameTouchBarNewMessageTemplate")]
 		TouchBarNewMessageTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarOpenInBrowserTemplate")]
+		[Field ("NSImageNameTouchBarOpenInBrowserTemplate")]
 		TouchBarOpenInBrowserTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarPauseTemplate")]
+		[Field ("NSImageNameTouchBarPauseTemplate")]
 		TouchBarPauseTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarPlayheadTemplate")]
+		[Field ("NSImageNameTouchBarPlayheadTemplate")]
 		TouchBarPlayheadTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarPlayPauseTemplate")]
+		[Field ("NSImageNameTouchBarPlayPauseTemplate")]
 		TouchBarPlayPauseTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarPlayTemplate")]
+		[Field ("NSImageNameTouchBarPlayTemplate")]
 		TouchBarPlayTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarQuickLookTemplate")]
+		[Field ("NSImageNameTouchBarQuickLookTemplate")]
 		TouchBarQuickLookTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarRecordStartTemplate")]
+		[Field ("NSImageNameTouchBarRecordStartTemplate")]
 		TouchBarRecordStartTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarRecordStopTemplate")]
+		[Field ("NSImageNameTouchBarRecordStopTemplate")]
 		TouchBarRecordStopTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarRefreshTemplate")]
+		[Field ("NSImageNameTouchBarRefreshTemplate")]
 		TouchBarRefreshTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarRewindTemplate")]
+		[Field ("NSImageNameTouchBarRewindTemplate")]
 		TouchBarRewindTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarRotateLeftTemplate")]
+		[Field ("NSImageNameTouchBarRotateLeftTemplate")]
 		TouchBarRotateLeftTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarRotateRightTemplate")]
+		[Field ("NSImageNameTouchBarRotateRightTemplate")]
 		TouchBarRotateRightTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarSearchTemplate")]
+		[Field ("NSImageNameTouchBarSearchTemplate")]
 		TouchBarSearchTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarShareTemplate")]
+		[Field ("NSImageNameTouchBarShareTemplate")]
 		TouchBarShareTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarSidebarTemplate")]
+		[Field ("NSImageNameTouchBarSidebarTemplate")]
 		TouchBarSidebarTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarSkipAhead15SecondsTemplate")]
+		[Field ("NSImageNameTouchBarSkipAhead15SecondsTemplate")]
 		TouchBarSkipAhead15SecondsTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarSkipAhead30SecondsTemplate")]
+		[Field ("NSImageNameTouchBarSkipAhead30SecondsTemplate")]
 		TouchBarSkipAhead30SecondsTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarSkipAheadTemplate")]
+		[Field ("NSImageNameTouchBarSkipAheadTemplate")]
 		TouchBarSkipAheadTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarSkipBack15SecondsTemplate")]
+		[Field ("NSImageNameTouchBarSkipBack15SecondsTemplate")]
 		TouchBarSkipBack15SecondsTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarSkipBack30SecondsTemplate")]
+		[Field ("NSImageNameTouchBarSkipBack30SecondsTemplate")]
 		TouchBarSkipBack30SecondsTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarSkipBackTemplate")]
+		[Field ("NSImageNameTouchBarSkipBackTemplate")]
 		TouchBarSkipBackTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarSkipToEndTemplate")]
+		[Field ("NSImageNameTouchBarSkipToEndTemplate")]
 		TouchBarSkipToEndTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarSkipToStartTemplate")]
+		[Field ("NSImageNameTouchBarSkipToStartTemplate")]
 		TouchBarSkipToStartTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarSlideshowTemplate")]
+		[Field ("NSImageNameTouchBarSlideshowTemplate")]
 		TouchBarSlideshowTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarTagIconTemplate")]
+		[Field ("NSImageNameTouchBarTagIconTemplate")]
 		TouchBarTagIconTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarTextBoldTemplate")]
+		[Field ("NSImageNameTouchBarTextBoldTemplate")]
 		TouchBarTextBoldTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarTextBoxTemplate")]
+		[Field ("NSImageNameTouchBarTextBoxTemplate")]
 		TouchBarTextBoxTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarTextCenterAlignTemplate")]
+		[Field ("NSImageNameTouchBarTextCenterAlignTemplate")]
 		TouchBarTextCenterAlignTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarTextItalicTemplate")]
+		[Field ("NSImageNameTouchBarTextItalicTemplate")]
 		TouchBarTextItalicTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarTextJustifiedAlignTemplate")]
+		[Field ("NSImageNameTouchBarTextJustifiedAlignTemplate")]
 		TouchBarTextJustifiedAlignTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarTextLeftAlignTemplate")]
+		[Field ("NSImageNameTouchBarTextLeftAlignTemplate")]
 		TouchBarTextLeftAlignTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarTextListTemplate")]
+		[Field ("NSImageNameTouchBarTextListTemplate")]
 		TouchBarTextListTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarTextRightAlignTemplate")]
+		[Field ("NSImageNameTouchBarTextRightAlignTemplate")]
 		TouchBarTextRightAlignTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarTextStrikethroughTemplate")]
+		[Field ("NSImageNameTouchBarTextStrikethroughTemplate")]
 		TouchBarTextStrikethroughTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarTextUnderlineTemplate")]
+		[Field ("NSImageNameTouchBarTextUnderlineTemplate")]
 		TouchBarTextUnderlineTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarUserAddTemplate")]
+		[Field ("NSImageNameTouchBarUserAddTemplate")]
 		TouchBarUserAddTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarUserGroupTemplate")]
+		[Field ("NSImageNameTouchBarUserGroupTemplate")]
 		TouchBarUserGroupTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarUserTemplate")]
+		[Field ("NSImageNameTouchBarUserTemplate")]
 		TouchBarUserTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarVolumeDownTemplate")]
+		[Field ("NSImageNameTouchBarVolumeDownTemplate")]
 		TouchBarVolumeDownTemplate,
 
 		[Mac (10, 12, 1)]
-		[Internal, Field ("NSImageNameTouchBarVolumeUpTemplate")]
+		[Field ("NSImageNameTouchBarVolumeUpTemplate")]
 		TouchBarVolumeUpTemplate,
 	}
 
