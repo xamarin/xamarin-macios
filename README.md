@@ -3,15 +3,9 @@
 |              | Status                                    |
 |--------------|-------------------------------------------|
 | master       | [![xamarin-macios-builds-master][1]][2]   |
-| xcode8.2     | [![xamarin-macios-builds-xcode8.2][3]][4] |
-| pr-builder   | [![xamarin-macios-pr-builder][5]][6]      |
 
 [1]: https://jenkins.mono-project.com/view/Xamarin.MaciOS/job/xamarin-macios-builds-master/badge/icon
 [2]: https://jenkins.mono-project.com/view/Xamarin.MaciOS/job/xamarin-macios-builds-master
-[3]: https://jenkins.mono-project.com/view/Xamarin.MaciOS/job/xamarin-macios-builds-xcode8.2/badge/icon
-[4]: https://jenkins.mono-project.com/view/Xamarin.MaciOS/job/xamarin-macios-builds-xcode8.2
-[5]: https://jenkins.mono-project.com/view/Xamarin.MaciOS/job/xamarin-macios-pr-builder/badge/icon
-[6]: https://jenkins.mono-project.com/view/Xamarin.MaciOS/job/xamarin-macios-pr-builder
 
 **Welcome!**
 
