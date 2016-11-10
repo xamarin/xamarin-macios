@@ -1294,6 +1294,9 @@ namespace XamCore.NetworkExtension {
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NETunnelNetworkSettings))]
 	interface NEPacketTunnelNetworkSettings {
+		[Export ("initWithTunnelRemoteAddress:")]
+		IntPtr Constructor (string address);
+
 		[Export ("IPv4Settings", ArgumentSemantic.Copy)]
 		[NullAllowed]
 		NEIPv4Settings IPv4Settings { get; set; }
