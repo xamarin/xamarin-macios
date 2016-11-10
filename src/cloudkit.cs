@@ -119,6 +119,7 @@ namespace XamCore.CloudKit {
 		[Export ("publicPermission", ArgumentSemantic.Assign)]
 		CKShareParticipantPermission PublicPermission { get; set; }
 
+		[NullAllowed]
 		[Export ("URL", ArgumentSemantic.Copy)]
 		NSUrl Url { get; }
 
@@ -205,6 +206,7 @@ namespace XamCore.CloudKit {
 		[Export ("publicCloudDatabase")]
 		CKDatabase PublicCloudDatabase { get; }
 
+		[iOS (10, 0)][Mac (10,12)]
 		[Export ("sharedCloudDatabase")]
 		CKDatabase SharedCloudDatabase { get; }
 
@@ -593,6 +595,7 @@ namespace XamCore.CloudKit {
 		[Export ("initWithRecordZoneIDs:optionsByRecordZoneID:")]
 		IntPtr Constructor (CKRecordZoneID[] recordZoneIDs, [NullAllowed] NSDictionary<CKRecordZoneID, CKFetchRecordZoneChangesOptions> optionsByRecordZoneID);
 
+		[NullAllowed]
 		[Export ("recordZoneIDs", ArgumentSemantic.Copy)]
 		CKRecordZoneID[] RecordZoneIDs { get; set; }
 
@@ -762,6 +765,7 @@ namespace XamCore.CloudKit {
 		[Export ("initWithNotificationIDsToMarkRead:")]
 		IntPtr Constructor (CKNotificationID [] notificationIds);
 
+		[NullAllowed]
 		[Export ("notificationIDs", ArgumentSemantic.Copy)]
 		CKNotificationID [] NotificationIds { get; set; }
 
@@ -1069,6 +1073,7 @@ namespace XamCore.CloudKit {
 
 		[iOS (9,3)][Mac (10,11,4)]
 		[TV (9,2)]
+		[NullAllowed]
 		[Export ("longLivedOperationWasPersistedBlock", ArgumentSemantic.Strong)]
 		Action LongLivedOperationWasPersistedCallback { get; set; }		
 	}
@@ -1573,6 +1578,7 @@ namespace XamCore.CloudKit {
 		[Export ("initWithUserIdentityLookupInfos:")]
 		IntPtr Constructor (CKUserIdentityLookupInfo[] userIdentityLookupInfos);
 
+		[NullAllowed]
 		[Export ("userIdentityLookupInfos", ArgumentSemantic.Copy)]
 		CKUserIdentityLookupInfo[] UserIdentityLookupInfos { get; set; }
 
@@ -1594,6 +1600,7 @@ namespace XamCore.CloudKit {
 		IntPtr Constructor (CKShareMetadata[] shareMetadatas);
 
 		[Export ("shareMetadatas", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		CKShareMetadata[] ShareMetadatas { get; set; }
 
 		[NullAllowed, Export ("perShareCompletionBlock", ArgumentSemantic.Copy)]
@@ -1613,6 +1620,7 @@ namespace XamCore.CloudKit {
 		[Export ("initWithShareURLs:")]
 		IntPtr Constructor (NSUrl[] shareUrls);
 
+		[NullAllowed]
 		[Export ("shareURLs", ArgumentSemantic.Copy)]
 		NSUrl[] ShareUrls { get; set; }
 
