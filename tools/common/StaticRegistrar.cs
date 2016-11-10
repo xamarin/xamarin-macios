@@ -1442,12 +1442,14 @@ namespace XamCore.Registrar {
 			var rv = Driver.SDKVersion;
 
 #if MMP
-			// Xcode 7.3 ships with a MacOSX SDK for 10.11.4, but that
-			// third number is not given to us by apps (nor can we look
+			// There are a number of APIs added in 'dot' releases but the third number
+			// is not given to us by us by apps (nor can we look
 			// it up somewhere), so hardcode it.
-			if (rv.Major == 10 && rv.Minor == 11 && (rv.Revision == 0 || rv.Revision == -1)) {
-				if (Driver.XcodeVersion >= new Version (7, 3))
+			if (rv.Major == 10 && (rv.Revision == 0 || rv.Revision == -1)) {
+				if (rv.Minor == 11 && Driver.XcodeVersion >= new Version (7, 3))
 					rv = new Version (rv.Major, rv.Minor, 4);
+				if (rv.Minor == 12 && Driver.XcodeVersion >= new Version (8, 2))
+					rv = new Version (rv.Major, rv.Minor, 1);
 			}
 #endif
 			return rv;
