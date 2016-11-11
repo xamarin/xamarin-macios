@@ -1567,20 +1567,16 @@ public class TestApp {
 
 			// #20607
 
-			var testDir = GetTempDirectory ();
+			using (var tool = new MTouchTool ()) {
+				tool.CreateTemporaryCacheDirectory ();
+				tool.CreateTemporaryApp ();
 
-			try {
-				var app = Path.Combine (testDir, "testApp.app");
-				Directory.CreateDirectory (Path.Combine (app, "NOTICE"));
+				// Create a NOTICE directory
+				var notice = Path.Combine (tool.AppPath, "NOTICE");
+				Directory.CreateDirectory (notice);
 
-				var exe = CompileTestAppExecutable (testDir);
-				var cache = Path.Combine (testDir, "mtouch-cache");
-
-				var args = string.Format ("-sdkroot " + Configuration.xcode_root + " --nolink --dev {0} -sdk {4} -targetver {4} --abi=armv7 {1} --cache={2} --r:{3} ", app, exe, cache, Configuration.XamarinIOSDll, Configuration.sdk_version);
-				Asserts.ThrowsPattern<TestExecutionException> (() => ExecutionHelper.Execute (TestTarget.ToolPath, args, hide_output: false), 
-					"Xamarin.iOS .* using framework:.*\nerror MT1016: Failed to create the NOTICE file because a directory already exists with the same name.\n");
-			} finally {
-				Directory.Delete (testDir, true);
+				tool.AssertExecuteFailure (MTouchAction.BuildDev);
+				tool.AssertError (1016, "Failed to create the NOTICE file because a directory already exists with the same name.");
 			}
 		}
 
@@ -1591,22 +1587,17 @@ public class TestApp {
 
 			// #20607
 
-			var testDir = GetTempDirectory ();
+			using (var tool = new MTouchTool ()) {
+				tool.CreateTemporaryCacheDirectory ();
+				tool.CreateTemporaryApp ();
 
-			try {
-				var app = Path.Combine (testDir, "testApp.app");
-				Directory.CreateDirectory (app);
-				File.WriteAllText (Path.Combine (app, "NOTICE"), "contents");
-				var fi = new FileInfo (Path.Combine (app, "NOTICE"));
-				fi.IsReadOnly = true;
+				// Create a readonly NOTICE file
+				var notice = Path.Combine (tool.AppPath, "NOTICE");
+				File.WriteAllText (notice, "contents");
+				new FileInfo (notice).IsReadOnly = true;
 
-				var exe = CompileTestAppExecutable (testDir);
-				var cache = Path.Combine (testDir, "mtouch-cache");
-
-				var args = string.Format ("-sdkroot " + Configuration.xcode_root + " --nolink --dev {0} -sdk {4} -targetver {4} --abi=armv7 {1} --cache={2} --r:{3}", app, exe, cache, Configuration.XamarinIOSDll, Configuration.sdk_version);
-				ExecutionHelper.Execute (TestTarget.ToolPath, args, hide_output: false);
-			} finally {
-				Directory.Delete (testDir, true);
+				tool.AssertExecute (MTouchAction.BuildDev);
+				Assert.AreNotEqual ("contents", File.ReadAllText (notice), "NOTICE file written successfully");
 			}
 		}
 
