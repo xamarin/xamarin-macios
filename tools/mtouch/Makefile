@@ -316,7 +316,7 @@ SdkVersions.cs: SdkVersions.cs.in Makefile $(TOP)/Make.config
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SdkVersions.plist: SdkVersions.plist.in Makefile $(TOP)/Make.config Sdkversions-check.cs
 		$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' $< > $@
-		$(Q) ./Sdkversions-check.cs "$(IOS_SDK_VERSION)" "$(TVOS_SDK_VERSION)" "$(WATCH_SDK_VERSION)"
+		$(Q) ./Sdkversions-check.cs $@ "$(MIN_IOS_SDK_VERSION)" "$(IOS_SDK_VERSION)" "$(MIN_TVOS_SDK_VERSION)" "$(TVOS_SDK_VERSION)" "$(MIN_WATCHOS_SDK_VERSION)" "$(WATCH_SDK_VERSION)"
 
 # bin/Makefile/mtouch.exe is what we build from the makefile (and end up releasing)
 bin/Makefile/mtouch.exe: $(MTOUCH_COMPILE_DEPS)
