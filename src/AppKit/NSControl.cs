@@ -32,7 +32,6 @@ using XamCore.Foundation;
 namespace XamCore.AppKit {
 
 	public partial class NSControl {
-		// If you modify, also search for other other XM_ACTIVATED_COPY and update as well
 		NSObject target;
 		Selector action;
 

@@ -29,6 +29,49 @@ using XamCore.CoreGraphics;
 
 namespace XamCore.AppKit {
 
+	public enum NSImageName {
+		QuickLookTemplate,
+		BluetoothTemplate,
+		IChatTheaterTemplate,
+		SlideshowTemplate,
+		ActionTemplate,
+		SmartBadgeTemplate,
+		PathTemplate,
+		InvalidDataFreestandingTemplate,
+		LockLockedTemplate,
+		LockUnlockedTemplate,
+		GoRightTemplate,
+		GoLeftTemplate,
+		RightFacingTriangleTemplate,
+		LeftFacingTriangleTemplate,
+		AddTemplate,
+		RemoveTemplate,
+		RevealFreestandingTemplate,
+		FollowLinkFreestandingTemplate,
+		EnterFullScreenTemplate,
+		ExitFullScreenTemplate,
+		StopProgressTemplate,
+		StopProgressFreestandingTemplate,
+		RefreshTemplate,
+		RefreshFreestandingTemplate,
+		Folder,
+		TrashEmpty,
+		TrashFull,
+		HomeTemplate,
+		BookmarksTemplate,
+		Caution,
+		StatusAvailable,
+		StatusPartiallyAvailable,
+		StatusUnavailable,
+		StatusNone,
+		ApplicationIcon,
+		MenuOnStateTemplate,
+		MenuMixedStateTemplate,
+		UserGuest,
+		MobileMe,
+		ShareTemplate
+	}
+
 	public partial class NSImage {
 		object __mt_reps_var;
 		
@@ -72,7 +115,90 @@ namespace XamCore.AppKit {
 
 		public static NSImage ImageNamed (NSImageName name)
 		{
-			return ImageNamed (name.GetConstant ()); 
+			switch (name) {
+			case NSImageName.QuickLookTemplate:
+				return ImageNamed (NSImageNameQuickLookTemplate);
+			case NSImageName.BluetoothTemplate:
+				return ImageNamed (NSImageNameBluetoothTemplate);
+			case NSImageName.IChatTheaterTemplate:
+				return ImageNamed (NSImageNameIChatTheaterTemplate);
+			case NSImageName.SlideshowTemplate:
+				return ImageNamed (NSImageNameSlideshowTemplate);
+			case NSImageName.ActionTemplate:
+				return ImageNamed (NSImageNameActionTemplate);
+			case NSImageName.SmartBadgeTemplate:
+				return ImageNamed (NSImageNameSmartBadgeTemplate);
+			case NSImageName.PathTemplate:
+				return ImageNamed (NSImageNamePathTemplate);
+			case NSImageName.InvalidDataFreestandingTemplate:
+				return ImageNamed (NSImageNameInvalidDataFreestandingTemplate);
+			case NSImageName.LockLockedTemplate:
+				return ImageNamed (NSImageNameLockLockedTemplate);
+			case NSImageName.LockUnlockedTemplate:
+				return ImageNamed (NSImageNameLockUnlockedTemplate);
+			case NSImageName.GoRightTemplate:
+				return ImageNamed (NSImageNameGoRightTemplate);
+			case NSImageName.GoLeftTemplate:
+				return ImageNamed (NSImageNameGoLeftTemplate);
+			case NSImageName.RightFacingTriangleTemplate:
+				return ImageNamed (NSImageNameRightFacingTriangleTemplate);
+			case NSImageName.LeftFacingTriangleTemplate:
+				return ImageNamed (NSImageNameLeftFacingTriangleTemplate);
+			case NSImageName.AddTemplate:
+				return ImageNamed (NSImageNameAddTemplate);
+			case NSImageName.RemoveTemplate:
+				return ImageNamed (NSImageNameRemoveTemplate);
+			case NSImageName.RevealFreestandingTemplate:
+				return ImageNamed (NSImageNameRevealFreestandingTemplate);
+			case NSImageName.FollowLinkFreestandingTemplate:
+				return ImageNamed (NSImageNameFollowLinkFreestandingTemplate);
+			case NSImageName.EnterFullScreenTemplate:
+				return ImageNamed (NSImageNameEnterFullScreenTemplate);
+			case NSImageName.ExitFullScreenTemplate:
+				return ImageNamed (NSImageNameExitFullScreenTemplate);
+			case NSImageName.StopProgressTemplate:
+				return ImageNamed (NSImageNameStopProgressTemplate);
+			case NSImageName.StopProgressFreestandingTemplate:
+				return ImageNamed (NSImageNameStopProgressFreestandingTemplate);
+			case NSImageName.RefreshTemplate:
+				return ImageNamed (NSImageNameRefreshTemplate);
+			case NSImageName.RefreshFreestandingTemplate:
+				return ImageNamed (NSImageNameRefreshFreestandingTemplate);
+			case NSImageName.Folder:
+				return ImageNamed (NSImageNameFolder);
+			case NSImageName.TrashEmpty:
+				return ImageNamed (NSImageNameTrashEmpty);
+			case NSImageName.TrashFull:
+				return ImageNamed (NSImageNameTrashFull);
+			case NSImageName.HomeTemplate:
+				return ImageNamed (NSImageNameHomeTemplate);
+			case NSImageName.BookmarksTemplate:
+				return ImageNamed (NSImageNameBookmarksTemplate);
+			case NSImageName.Caution:
+				return ImageNamed (NSImageNameCaution);
+			case NSImageName.StatusAvailable:
+				return ImageNamed (NSImageNameStatusAvailable);
+			case NSImageName.StatusPartiallyAvailable:
+				return ImageNamed (NSImageNameStatusPartiallyAvailable);
+			case NSImageName.StatusUnavailable:
+				return ImageNamed (NSImageNameStatusUnavailable);
+			case NSImageName.StatusNone:
+				return ImageNamed (NSImageNameStatusNone);
+			case NSImageName.ApplicationIcon:
+				return ImageNamed (NSImageNameApplicationIcon);
+			case NSImageName.MenuOnStateTemplate:
+				return ImageNamed (NSImageNameMenuOnStateTemplate);
+			case NSImageName.MenuMixedStateTemplate:
+				return ImageNamed (NSImageNameMenuMixedStateTemplate);
+			case NSImageName.UserGuest:
+				return ImageNamed (NSImageNameUserGuest);
+			case NSImageName.MobileMe:
+				return ImageNamed (NSImageNameMobileMe);
+			case NSImageName.ShareTemplate:
+				return ImageNamed (NSImageNameShareTemplate);
+			}
+
+			throw new ArgumentException ("Invalid enum value", "name");
 		}
 	}
 

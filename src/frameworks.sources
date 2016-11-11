@@ -144,9 +144,7 @@ APPKIT_SOURCES = \
 	AppKit/NSCollectionView.cs \
 	AppKit/NSTextTableBlock.cs \
 	AppKit/NSMutableFontCollection.cs \
-	AppKit/NSCollectionViewLayout.cs \
-	AppKit/NSColorPickerTouchBarItem.cs \
-	AppKit/NSSliderTouchBarItem.cs
+	AppKit/NSCollectionViewLayout.cs
 
 # AssetsLibrary
 
