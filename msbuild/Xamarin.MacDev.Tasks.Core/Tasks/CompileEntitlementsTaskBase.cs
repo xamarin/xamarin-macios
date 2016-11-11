@@ -250,7 +250,7 @@ namespace Xamarin.MacDev.Tasks
 			return archived;
 		}
 
-		static MobileProvision GetMobileProvision (MobileProvisionPlatform platform, string uuid)
+		protected virtual MobileProvision GetMobileProvision (MobileProvisionPlatform platform, string uuid)
 		{
 			var extension = MobileProvision.GetFileExtension (platform);
 			var path = Path.Combine (MobileProvision.ProfileDirectory, uuid + extension);
