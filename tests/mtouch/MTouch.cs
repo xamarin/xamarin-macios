@@ -1604,8 +1604,7 @@ public class TestApp {
 				var cache = Path.Combine (testDir, "mtouch-cache");
 
 				var args = string.Format ("-sdkroot " + Configuration.xcode_root + " --nolink --dev {0} -sdk {4} -targetver {4} --abi=armv7 {1} --cache={2} --r:{3}", app, exe, cache, Configuration.XamarinIOSDll, Configuration.sdk_version);
-				Asserts.ThrowsPattern<TestExecutionException> (() => ExecutionHelper.Execute (TestTarget.ToolPath, args, hide_output: false), 
-					"Xamarin.iOS .* using framework:.*\nerror MT1017: Failed to create the NOTICE file: Access to the path \".*/testApp.app/NOTICE\" is denied.\n");
+				ExecutionHelper.Execute (TestTarget.ToolPath, args, hide_output: false);
 			} finally {
 				Directory.Delete (testDir, true);
 			}
