@@ -1448,7 +1448,7 @@ namespace XamCore.Registrar {
 			if (rv.Major == 10 && (rv.Revision == 0 || rv.Revision == -1)) {
 				if (rv.Minor == 11 && Driver.XcodeVersion >= new Version (7, 3))
 					rv = new Version (rv.Major, rv.Minor, 4);
-				if (rv.Minor == 12 && Driver.XcodeVersion >= new Version (8, 2))
+				if (rv.Minor == 12 && Driver.XcodeVersion >= new Version (8, 1))
 					rv = new Version (rv.Major, rv.Minor, 1);
 			}
 #endif
