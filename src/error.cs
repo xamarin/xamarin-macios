@@ -76,6 +76,8 @@ using System.Collections.Generic;
 //		BI1112 Property {0} should be renamed to 'Delegate' for BaseType.Events and BaseType.Delegates to work.
 //		BI1113  BaseType.Delegates were set but no properties could be found. Do ensure that the WrapAttribute is used on the right properties.
 //		BI1114 Binding error: test unable to find property: {0} on {1}.
+//		BI1115 The parameter '{0}' in the delegate '{1}' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback].
+//		BI1116 The parameter '{0}' in the delegate '{1}' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback]. Declare a custom delegate instead of using System.Action / System.Func and add the attribute on the corresponding parameter.
 // BI2xxx	reserved
 // BI3xxx	reserved
 // BI4xxx	reserved
