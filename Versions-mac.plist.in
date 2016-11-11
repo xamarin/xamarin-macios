@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>KnownVersions</key>
+	<dict>
+		<key>macOS</key>
+		<array>
+			<string>10.7</string>
+			<string>10.8</string>
+			<string>10.9</string>
+			<string>10.10</string>
+			<string>10.11</string>
+			<string>10.12</string>
+		</array>
+	</dict>
+	<key>RecommendedXcodeVersion</key>
+	<string>@XCODE_VERSION@</string>
+	<key>MinExtensionVersion</key>
+	<dict>
+		<key>macOS</key>
+		<dict>
+			<!-- TODO -->
+		</dict>
+	</dict>
+</dict>
+</plist>

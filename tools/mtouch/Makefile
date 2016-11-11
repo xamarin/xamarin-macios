@@ -314,10 +314,6 @@ SdkVersions.cs: SdkVersions.cs.in Makefile $(TOP)/Make.config
 		-e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' \
 		$< > $@ 
 
-$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SdkVersions.plist: SdkVersions.plist.in Makefile $(TOP)/Make.config Sdkversions-check.cs
-		$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' $< > $@
-		$(Q) ./Sdkversions-check.cs $@ "$(MIN_IOS_SDK_VERSION)" "$(IOS_SDK_VERSION)" "$(MIN_TVOS_SDK_VERSION)" "$(TVOS_SDK_VERSION)" "$(MIN_WATCHOS_SDK_VERSION)" "$(WATCH_SDK_VERSION)"
-
 # bin/Makefile/mtouch.exe is what we build from the makefile (and end up releasing)
 bin/Makefile/mtouch.exe: $(MTOUCH_COMPILE_DEPS)
 	$(Q) mkdir -p $(dir $@)
@@ -366,7 +362,6 @@ bin/Makefile/Mono.Cecil.Mdb.dll: $(MONO_CECIL_MDB_DLL) | bin/Makefile
 	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATORTV_CFLAGS)    -x objective-c++ -o $@ -c $< -Wall -I$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/include
 
 TARGETS = \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SdkVersions.plist                                   \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch                                          \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/mtouch.exe                               \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.dll                           \
