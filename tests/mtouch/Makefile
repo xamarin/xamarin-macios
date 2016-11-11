@@ -14,6 +14,11 @@ all-local::
 	$(MAKE) dependencies
 	$(MAKE) run-tests
 
+# example command to run a single test:
+#     make run-tests TEST_FIXTURE=-test=Xamarin.MTouch.MT1016
+# or multiple tests:
+#     make run-tests TEST_FIXTURE="-test=Xamarin.MTouch.MT1016,Xamarin.MTouch.MT1017"
+
 run-tests: test.config
 	rm -f .failed-stamp
 	$(SYSTEM_MONO) --debug $(TOP)/packages/NUnit.ConsoleRunner.3.5.0/tools/nunit3-console.exe $(abspath $(TOP)/tests/mtouch/bin/Debug/mtouch.dll) "--result=$(abspath $(CURDIR)/TestResult.xml);format=nunit2" $(TEST_FIXTURE) --labels=All || touch $(CURDIR)/.failed-stamp
@@ -27,9 +32,6 @@ build:
 	$(Q) $(SYSTEM_MONO) /Library/Frameworks//Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore mtouch.sln
 	$(SYSTEM_XBUILD) mtouch.csproj $(XBUILD_VERBOSITY)
 	$(Q) rm -f .failed-stamp
-
-mt9000: build
-	/Library/Frameworks/Mono.framework/Commands/nunit-console4 -labels bin/Debug/*.dll -noshadow -fixture=MTouchTests.MTouch -run MTouchTests.MTouch.MT9008 || touch .failed-stamp
 
 test.config: $(TOP)/Make.config Makefile
 	@rm -f $@
