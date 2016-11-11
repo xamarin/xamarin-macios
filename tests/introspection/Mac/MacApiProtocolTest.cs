@@ -171,13 +171,6 @@ namespace Introspection {
 					return true; 
 				}
 				break;
-			case "NSCandidateListTouchBarItemDelegate":
-			case "NSTouchBarDelegate":
-				switch (type.Name) {
-				case "NSTextView":
-					return true;
-				}
-				break;
 			}
 
 			switch (type.Name) {
