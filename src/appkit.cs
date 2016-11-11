@@ -24353,30 +24353,6 @@ namespace XamCore.AppKit {
 		void Draw (NSOpenGLContext context, NSOpenGLPixelFormat pixelFormat, double t, ref CVTimeStamp ts);
 	}
 
-	[Protocol (IsInformal=true)]
-	interface NSToolTipOwner
-	{
-		[Abstract]
-		[Export ("view:stringForToolTip:point:userData:")]
-		string GetStringForToolTip (NSView view, nint tag, CGPoint point, IntPtr data);
-	}
-
-	[Protocol]
-	interface NSUserInterfaceValidations
-	{
-		[Abstract]
-		[Export ("validateUserInterfaceItem:")]
-		bool ValidateUserInterfaceItem (INSValidatedUserInterfaceItem item);
-	}
-
-	[Protocol (IsInformal=true)]
-	interface NSMenuValidation
-	{
-		[Abstract]
-		[Export ("validateMenuItem:")]
-		bool ValidateMenuItem (NSMenuItem menuItem);
-	}
-
 	public interface INSCandidateListTouchBarItemDelegate {}
 
 	delegate NSAttributedString AttributedStringForCandidateHandler (NSObject candidate, nint index);
