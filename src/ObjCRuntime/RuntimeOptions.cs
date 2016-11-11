@@ -46,7 +46,6 @@ namespace XamCore.ObjCRuntime {
 		const string AppleTlsProviderValue = "appletls";
 
 		string http_message_handler;
-		string tls_provider;
 
 #if MTOUCH || MMP
 		/*
@@ -56,7 +55,7 @@ namespace XamCore.ObjCRuntime {
 		{
 			var options = new RuntimeOptions ();
 			options.http_message_handler = ParseHttpMessageHandler (http_message_handler);
-			options.tls_provider = ParseTlsProvider (tls_provider);
+			ParseTlsProvider (tls_provider);
 			return options;
 		}
 
