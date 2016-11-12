@@ -96,25 +96,6 @@ namespace Xamarin.MacDev.Tasks
 
 			var expanded = StringParserService.Parse (pstr.Value, customTags);
 
-			if (expanded.IndexOf ('*') != -1) {
-				int asterisk = expanded.IndexOf ('*');
-				string prefix;
-
-				if (expanded.StartsWith (TeamIdentifierPrefix, StringComparison.Ordinal))
-					prefix = TeamIdentifierPrefix;
-				else if (expanded.StartsWith (AppIdentifierPrefix, StringComparison.Ordinal))
-					prefix = AppIdentifierPrefix;
-				else
-					prefix = string.Empty;
-
-				var baseBundleIdentifier = expanded.Substring (prefix.Length, asterisk - prefix.Length);
-
-				if (!BundleIdentifier.StartsWith (baseBundleIdentifier, StringComparison.Ordinal))
-					expanded = expanded.Replace ("*", BundleIdentifier);
-				else
-					expanded = prefix + BundleIdentifier;
-			}
-
 			return new PString (expanded);
 		}
 
@@ -296,6 +277,11 @@ namespace Xamarin.MacDev.Tasks
 			return archived;
 		}
 
+		protected virtual MobileProvision GetMobileProvision (MobileProvisionPlatform platform, string name)
+		{
+			return MobileProvisionIndex.GetMobileProvision (platform, name);
+		}
+
 		public override bool Execute ()
 		{
 			Log.LogTaskName ("CompileEntitlements");
@@ -316,7 +302,7 @@ namespace Xamarin.MacDev.Tasks
 			bool save;
 
 			if (!string.IsNullOrEmpty (ProvisioningProfile)) {
-				if ((profile = MobileProvisionIndex.GetMobileProvision (Platform, ProvisioningProfile)) == null) {
+				if ((profile = GetMobileProvision (Platform, ProvisioningProfile)) == null) {
 					Log.LogError ("Could not locate the provisioning profile with a UUID of {0}.", ProvisioningProfile);
 					return false;
 				}
