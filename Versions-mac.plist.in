@@ -20,7 +20,12 @@
 	<dict>
 		<key>macOS</key>
 		<dict>
-			<!-- TODO -->
+			<key>com.apple.FinderSync</key>
+			<string>10.10</string>
+			<key>com.apple.share-services</key>
+			<string>10.10</string>
+			<key>com.apple.widget-extension</key>
+			<string>10.10</string>
 		</dict>
 	</dict>
 </dict>
