@@ -132,4 +132,3 @@ We use [Mono's Coding Guidelines](http://www.mono-project.com/community/contribu
 ### Reporting Bugs
 
 We use [Bugzilla](https://bugzilla.xamarin.com/newbug) to track issues.
-
