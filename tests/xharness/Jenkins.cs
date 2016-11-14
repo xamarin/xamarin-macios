@@ -117,12 +117,101 @@ namespace xharness
 			return Path.Combine (Path.GetDirectoryName (path), Path.GetFileNameWithoutExtension (path) + suffix + Path.GetExtension (path));
 		}
 
+		void SelectTests ()
+		{
+			int pull_request;
+
+			if (!int.TryParse (Environment.GetEnvironmentVariable ("ghprbPullId"), out pull_request)) {
+				MainLog.WriteLine ("The environment variable 'ghprbPullId' was not found, so no pull requests will be checked for test selection.");
+				return;
+			}
+
+			// First check if can auto-select any tests based on which files were modified.
+			// This will only enable additional tests, never disable tests.
+			SelectTestsByModifiedFiles (pull_request);
+			// Then we check for labels. Labels are manually set, so those override
+			// whatever we did automatically.
+			SelectTestsByLabel (pull_request);
+		}
+
+		void SelectTestsByModifiedFiles (int pull_request)
+		{
+			var files = GitHub.GetModifiedFiles (Harness, pull_request);
+
+			MainLog.WriteLine ("Found {0} modified file(s) in the pull request #{1}.", files.Count (), pull_request);
+			foreach (var f in files)
+				MainLog.WriteLine ("    {0}", f);
+
+			// We select tests based on a prefix of the modified files.
+			// Add entries here to check for more prefixes.
+			var mtouch_prefixes = new string [] {
+				"tests/mtouch",
+				"tools/mtouch",
+				"tools/common",
+				"tools/linker",
+				"src/ObjCRuntime/Registrar.cs",
+				"external/mono",
+			};
+			var mmp_prefixes = new string [] {
+				"tests/mmptest",
+				"tools/mmp",
+				"tools/common",
+				"tools/linker",
+				"src/ObjCRuntime/Registrar.cs",
+				"external/mono",
+			};
+			var bcl_prefixes = new string [] {
+				"tests/bcl-test",
+				"external/mono",
+			};
+
+			SetEnabled (files, mtouch_prefixes, "mtouch", ref IncludeMtouch);
+			SetEnabled (files, mmp_prefixes, "mmp", ref IncludeMmpTest);
+			SetEnabled (files, bcl_prefixes, "bcl", ref IncludeBcl);
+		}
+
+		void SetEnabled (IEnumerable<string> files, string [] prefixes, string testname, ref bool value)
+		{
+			foreach (var file in files) {
+				foreach (var prefix in prefixes) {
+					if (file.StartsWith (prefix, StringComparison.Ordinal)) {
+						value = true;
+						MainLog.WriteLine ("Enabled '{0}' tests because the modified file '{1}' matches prefix '{2}'", testname, file, prefix);
+						return;
+					}
+				}
+			}
+		}
+
+		void SelectTestsByLabel (int pull_request)
+		{
+			var labels = GitHub.GetLabels (Harness, pull_request);
+
+			MainLog.WriteLine ("Found {1} label(s) in the pull request #{2}: {0}", string.Join (", ", labels.ToArray ()), labels.Count (), pull_request);
+
+			// disabled by default
+			SetEnabled (labels, "mtouch", ref IncludeMtouch);
+			SetEnabled (labels, "mmp", ref IncludeMmpTest);
+			SetEnabled (labels, "bcl", ref IncludeBcl);
+
+			// enabled by default
+			SetEnabled (labels, "ios", ref IncludeiOS);
+			SetEnabled (labels, "tvos", ref IncludetvOS);
+			SetEnabled (labels, "watchos", ref IncludewatchOS);
+			SetEnabled (labels, "mac", ref IncludeMac);
+			SetEnabled (labels, "mac-classic", ref IncludeClassicMac);
+			SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
+		}
+
 		void SetEnabled (IEnumerable<string> labels, string testname, ref bool value)
 		{
-			if (labels.Contains ("skip-" + testname + "-tests"))
+			if (labels.Contains ("skip-" + testname + "-tests")) {
+				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-{0}-tests' is set.", testname);
 				value = false;
-			else if (labels.Contains ("run-" + testname + "-tests"))
+			} else if (labels.Contains ("run-" + testname + "-tests")) {
+				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-{0}-tests' is set.", testname);
 				value = true;
+			}
 			// respect any default value
 		}
 
@@ -132,25 +221,7 @@ namespace xharness
 			// api-diff
 			// msbuild tests
 
-			int pull_request;
-			if (int.TryParse (Environment.GetEnvironmentVariable ("ghprbPullId"), out pull_request)) {
-				var labels = GitHub.GetLabels (Harness, pull_request);
-
-				MainLog.WriteLine ("Found pull request labels: {0}", string.Join (", ", labels.ToArray ()));
-
-				// disabled by default
-				SetEnabled (labels, "mtouch", ref IncludeMtouch);
-				SetEnabled (labels, "mmp", ref IncludeMmpTest);
-				SetEnabled (labels, "bcl", ref IncludeBcl);
-
-				// enabled by default
-				SetEnabled (labels, "ios", ref IncludeiOS);
-				SetEnabled (labels, "tvos", ref IncludetvOS);
-				SetEnabled (labels, "watchos", ref IncludewatchOS);
-				SetEnabled (labels, "mac", ref IncludeMac);
-				SetEnabled (labels, "mac-classic", ref IncludeClassicMac);
-				SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
-			}
+			SelectTests ();
 
 			if (IncludeiOS || IncludetvOS || IncludewatchOS) {
 				var runSimulatorTasks = new List<RunSimulatorTask> ();
