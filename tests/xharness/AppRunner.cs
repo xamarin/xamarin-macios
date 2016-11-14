@@ -311,7 +311,8 @@ namespace xharness
 			}
 		}
 
-		void GenerateHumanReadableLogs (string finalPath, string logHeader, XmlDocument doc){
+		void GenerateHumanReadableLogs (string finalPath, string logHeader, XmlDocument doc)
+		{
 			// load the resource that contains the xslt and apply it to the doc and write the logs
 			if (File.Exists (finalPath)) {
 				// if the file does exist, remove it
@@ -330,7 +331,8 @@ namespace xharness
 			}
 		}
 
-		public bool TestsSucceeded (LogStream listener_log, bool timed_out, bool crashed) {
+		public bool TestsSucceeded (LogStream listener_log, bool timed_out, bool crashed)
+		{
 			string log;
 			using (var reader = listener_log.GetReader ())
 				log = reader.ReadToEnd ();
@@ -683,6 +685,10 @@ namespace xharness
 				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} never launched</i></b><br/>", mode);
 				main_log.WriteLine ("Test run never launched");
 				success = false;
+			} else if (launch_failure) {
+ 					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} failed to launch</i></b><br/>", mode);
+ 					main_log.WriteLine ("Test run failed to launch");
+ 					success = false;
 			} else {
 				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed at startup (no log)</i></b><br/>", mode);
 				main_log.WriteLine ("Test run crashed before it started (no log file produced)");
