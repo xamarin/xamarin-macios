@@ -29,3 +29,6 @@
 [submodule "external/guiunit"]
 	path = external/guiunit
 	url = ../../mono/guiunit.git
+[submodule "external/linker"]
+	path = external/linker
+	url = ../../mono/linker.git
