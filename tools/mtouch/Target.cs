@@ -603,7 +603,7 @@ namespace Xamarin.Bundler
 			if (!Directory.Exists (LinkDirectory))
 				Directory.CreateDirectory (LinkDirectory);
 
-			PreBuildDirectory = Path.Combine (ArchDirectory, "BPreuild");
+			PreBuildDirectory = Path.Combine (ArchDirectory, "PreBuild");
 			if (!Directory.Exists (PreBuildDirectory))
 				Directory.CreateDirectory (PreBuildDirectory);
 			
