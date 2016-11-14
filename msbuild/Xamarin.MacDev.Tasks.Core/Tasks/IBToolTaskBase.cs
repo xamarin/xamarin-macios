@@ -221,6 +221,7 @@ namespace Xamarin.MacDev.Tasks
 			var outputManifests = new List<ITaskItem> ();
 			var compiled = new List<ITaskItem> ();
 			bool changed = false;
+			int rc;
 
 			if (InterfaceDefinitions.Length > 0) {
 				if (AppManifest != null) {
@@ -246,7 +247,6 @@ namespace Xamarin.MacDev.Tasks
 				var resourceTags = item.GetMetadata ("ResourceTags");
 				ITaskItem expected, output;
 				string rpath, outputDir;
-				int rc;
 
 				if (!File.Exists (item.ItemSpec)) {
 					Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, "The file '{0}' does not exist.", item.ItemSpec);
@@ -341,9 +341,30 @@ namespace Xamarin.MacDev.Tasks
 
 					Link = true;
 
-					if (Compile (compiled.ToArray (), output, manifest) != 0) {
-						if (File.Exists (manifest.ItemSpec))
+					if ((rc = Compile (compiled.ToArray (), output, manifest)) != 0) {
+						if (File.Exists (manifest.ItemSpec)) {
+							try {
+								var log = PDictionary.FromFile (manifest.ItemSpec);
+
+								LogWarningsAndErrors (log, compiled[0]);
+							} catch {
+								Log.LogError ("ibtool exited with code {0}", rc);
+							}
+
 							File.Delete (manifest.ItemSpec);
+						}
+
+						return false;
+					}
+
+					try {
+						var dict = PDictionary.FromFile (manifest.ItemSpec);
+
+						LogWarningsAndErrors (dict, compiled[0]);
+					} catch (Exception ex) {
+						Log.LogError ("Failed to load output manifest for {0}: {1}", ToolName, ex.Message);
+						if (File.Exists (manifest.ItemSpec))
+							Log.LogError ("Output manifest contents: {0}", File.ReadAllText (manifest.ItemSpec));
 
 						return false;
 					}
