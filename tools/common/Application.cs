@@ -80,7 +80,7 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static bool IsUptodate (string source, string target)
+		public static bool IsUptodate (string source, string target, bool check_contents = false)
 		{
 			if (Driver.Force)
 				return false;
@@ -97,10 +97,15 @@ namespace Xamarin.Bundler {
 			if (sfi.LastWriteTimeUtc <= tfi.LastWriteTimeUtc) {
 				Driver.Log (3, "Prerequisite '{0}' is older than the target '{1}'.", source, target);
 				return true;
-			} else {
-				Driver.Log (3, "Prerequisite '{0}' is newer than the target '{1}'.", source, target);
-				return false;
 			}
+
+			if (check_contents && Cache.CompareFiles (source, target)) {
+				Driver.Log (3, "Prerequisite '{0}' is newer than the target '{1}', but the contents are identical.", source, target);
+				return true;
+			}
+
+			Driver.Log (3, "Prerequisite '{0}' is newer than the target '{1}'.", source, target);
+			return false;
 		}
 
 		public static void RemoveResource (ModuleDefinition module, string name)
@@ -257,9 +262,9 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static void UpdateFile (string source, string target)
+		public static void UpdateFile (string source, string target, bool check_contents = false)
 		{
-			if (!Application.IsUptodate (source, target))
+			if (!Application.IsUptodate (source, target, check_contents))
 				CopyFile (source, target);
 			else
 				Driver.Log (3, "Target '{0}' is up-to-date", target);
