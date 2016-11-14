@@ -6,7 +6,7 @@ using System.Text;
 
 namespace xharness
 {
-	public abstract class Log : IDisposable
+	public abstract class Log : TextWriter
 	{
 		public string Description;
 		public bool Timestamp;
@@ -34,19 +34,19 @@ namespace xharness
 			throw new NotSupportedException ();
 		}
 
-		public void Write (string value)
+		public override void Write (string value)
 		{
 			if (Timestamp)
 				value = DateTime.Now.ToString ("HH:mm:ss.fffffff") + " " + value;
 			WriteImpl (value);
 		}
 
-		public void WriteLine (string value)
+		public override void WriteLine (string value)
 		{
 			Write (value + "\n");
 		}
 
-		public void WriteLine (string format, params object [] args)
+		public override void WriteLine (string format, params object [] args)
 		{
 			Write (string.Format (format, args) + "\n");
 		}
@@ -56,20 +56,15 @@ namespace xharness
 			return Description;
 		}
 
-		public virtual void Flush ()
+		public override void Flush ()
 		{
 		}
 
-#region IDisposable Support
-		protected virtual void Dispose (bool disposing)
-		{
+		public override Encoding Encoding {
+			get {
+				return System.Text.Encoding.UTF8;
+			}
 		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-		}
-#endregion
 	}
 
 	public class LogFile : Log
