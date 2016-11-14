@@ -18709,6 +18709,7 @@ namespace XamCore.AppKit {
 		bool Autovalidates { get; set; }
 	}
 
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface NSTouch : NSCopying {
 		[Export ("identity", ArgumentSemantic.Retain)]
