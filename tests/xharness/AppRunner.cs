@@ -341,7 +341,7 @@ namespace xharness
 				if (log.Contains ("test-results")) {
 					// remove any possible extra info
 					var index = log.IndexOf ("<test-results");
-					var header = log.Substring(0, index - 1);
+					var header = log.Substring(0, log.IndexOf ('<'));
 					log = log.Remove (0, index - 1);
 					var testsResults = new XmlDocument ();
 					testsResults.LoadXml (log);
