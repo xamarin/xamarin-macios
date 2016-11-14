@@ -356,18 +356,6 @@ namespace Xamarin.MacDev.Tasks
 
 						return false;
 					}
-
-					try {
-						var dict = PDictionary.FromFile (manifest.ItemSpec);
-
-						LogWarningsAndErrors (dict, compiled[0]);
-					} catch (Exception ex) {
-						Log.LogError ("Failed to load output manifest for {0}: {1}", ToolName, ex.Message);
-						if (File.Exists (manifest.ItemSpec))
-							Log.LogError ("Output manifest contents: {0}", File.ReadAllText (manifest.ItemSpec));
-
-						return false;
-					}
 				}
 
 				output = new TaskItem (linkOutputDir);
