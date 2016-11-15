@@ -58,6 +58,13 @@ namespace Xamarin.Bundler {
 		Static,
 	}
 
+	enum Action {
+		None,
+		Help,
+		Version,
+		RunRegistrar,
+	}
+
 	public static partial class Driver {
 		internal static Application App = new Application ();
 		static Target BuildTarget = new Target (App);
@@ -68,10 +75,9 @@ namespace Xamarin.Bundler {
 		static List<string> native_references = new List<string> ();
 		static List<string> native_libraries_copied_in = new List<string> ();
 
+		static Action action;
 		static string output_dir;
 		static string app_name;
-		static bool show_help = false;
-		static bool show_version;
 		static bool generate_plist;
 		static RegistrarMode registrar = RegistrarMode.Default;
 		static bool no_executable;
@@ -110,7 +116,6 @@ namespace Xamarin.Bundler {
 
 		static bool is_extension;
 		static bool frameworks_copied_to_bundle_dir;	// Have we copied any frameworks to Foo.app/Contents/Frameworks?
-		static bool just_run_registrar;
 
 		// This must be kept in sync with the system launcher's minimum mono version (in launcher/launcher-system.m)
 		static Version MinimumMonoVersion = new Version (4, 2, 0);
@@ -204,8 +209,8 @@ namespace Xamarin.Bundler {
 		static void Main2 (string [] args)
 		{
 			var os = new OptionSet () {
-				{ "h|?|help", "Displays the help", v => show_help = true },
-				{ "version", "Output version information and exit.", v => show_version = true },
+				{ "h|?|help", "Displays the help", v => action = Action.Help },
+				{ "version", "Output version information and exit.", v => action = Action.Version },
 				{ "f|force", "Forces the recompilation of code, regardless of timestamps", v=> Force = true },
 				{ "cache=", "Specify the directory where temporary build files will be cached", v => Cache.Location = v },
 				{ "a|assembly=", "Add an assembly to be processed", v => references.Add (v) },
@@ -317,7 +322,7 @@ namespace Xamarin.Bundler {
 				{ "machine-config=", "Custom machine.config file to copy into MonoBundle/mono/4.5/machine.config. Pass \"\" to copy in a valid \"empty\" config file.", v => machine_config_path = v },
 				{ "runregistrar:", "Runs the registrar on the input assembly and outputs a corresponding native library.",
 					v => {
-						just_run_registrar = true;
+						action = Action.RunRegistrar;
 						App.RegistrarOutputLibrary = v;
 					},
 					true /* this is an internal option */
@@ -348,10 +353,10 @@ namespace Xamarin.Bundler {
 				watch.Start ();
 			}
 
-			if (show_help || (args.Length == 0)) {
+			if (action == Action.Help || (args.Length == 0)) {
 				ShowHelp (os);
 				return;
-			} else if (show_version) {
+			} else if (action == Action.Version) {
 				Console.Write ("mmp {0}.{1}", Constants.Version, Constants.Revision);
 				Console.WriteLine ();
 				return;
@@ -438,9 +443,8 @@ namespace Xamarin.Bundler {
 			if (verbose > 0)
 				Console.WriteLine ("Selected target framework: {0}; API: {1}", targetFramework, IsClassic ? "Classic" : "Unified");
 
-			if (just_run_registrar)
+			if (action == Action.RunRegistrar)
 			{
-				App.AllowStaticRegistrarSingleArch = true;
 				App.RootAssembly = unprocessed [0];
 				App.AppDirectory = output_dir;
 				App.Registrar = RegistrarMode.Static;

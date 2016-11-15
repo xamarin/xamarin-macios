@@ -1,6 +1,7 @@
 namespace Xamarin.Bundler {
 	public partial class Application
 	{
-		public bool AllowStaticRegistrarSingleArch { get; set; }
+		public bool Is32Build => !Driver.Is64Bit; 
+		public bool Is64Build => Driver.Is64Bit; 
 	}
 }
