@@ -882,7 +882,6 @@ namespace XamCore.CloudKit {
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKModifySubscriptionsOperation {
 
-		[DesignatedInitializer]
 		[Export ("initWithSubscriptionsToSave:subscriptionIDsToDelete:")]
 		IntPtr Constructor ([NullAllowed] CKSubscription [] subscriptionsToSave, [NullAllowed] string [] subscriptionIdsToDelete);
 
@@ -960,11 +959,7 @@ namespace XamCore.CloudKit {
 
 		[Static]
 		[Export ("notificationFromRemoteNotificationDictionary:")]
-#if XAMCORE_4_0
-		CKNotification FromRemoteNotificationDictionary (NSDictionary<NSString, NSObject> notificationDictionary);
-#else
 		CKNotification FromRemoteNotificationDictionary (NSDictionary notificationDictionary);
-#endif
 
 		[iOS (9,0)][Mac (10,11)]
 		[NullAllowed, Export ("subscriptionID")]
@@ -1530,7 +1525,6 @@ namespace XamCore.CloudKit {
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKFetchWebAuthTokenOperation {
 
-		[DesignatedInitializer]
 		[Export ("initWithAPIToken:")]
 		IntPtr Constructor (string token);
 
