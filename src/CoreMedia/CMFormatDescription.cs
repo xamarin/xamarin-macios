@@ -840,7 +840,7 @@ namespace XamCore.CoreMedia {
 #endif
 	}
 
-	public partial class CMMuxedFormatDescription : CMFormatDescription {
+	public class CMMuxedFormatDescription : CMFormatDescription {
 		internal CMMuxedFormatDescription (IntPtr handle)
 			: base (handle)
 		{

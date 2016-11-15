@@ -214,6 +214,9 @@ namespace Introspection {
 			case "CMFormatDescription":
 			case "CMAudioFormatDescription":
 			case "CMVideoFormatDescription":
+			case "CMMuxedFormatDescription":
+			case "CMTimeCodeFormatDescription":
+			case "CMMetadataFormatDescription":
 			case "CMBlockBuffer":
 			case "CMSampleBuffer":
 			case "CVBuffer": // DOES support the API, but it has its own version and is already in the bindings, so no need ATM
