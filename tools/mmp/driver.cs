@@ -1147,7 +1147,7 @@ namespace Xamarin.Bundler {
 				}
 
 				if (UsesPartialRegistrar) {
-					args.Append (Path.Combine (GetXamMacPrefix (), "lib", "mmp/Xamarin.Mac.registrar.mac.a "));
+					args.Append (Path.Combine (GetXamMacPrefix (), "lib", string.Format ("mmp/Xamarin.Mac.registrar.{0}.a ", IsUnifiedMobile ? "mobile" : "full")));
 					args.Append ("-framework Quartz ");
 				}
 
