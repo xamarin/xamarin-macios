@@ -70,5 +70,10 @@
     <Compile Include="Log.cs" />
     <Compile Include="GitHub.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\jenkins\nunit-summary.xslt">
+      <Link>nunit-summary.xslt</Link>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
