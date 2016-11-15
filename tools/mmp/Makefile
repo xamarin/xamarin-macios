@@ -160,19 +160,19 @@ $(MMP_DIRECTORIES):
 
 Xamarin.Mac.registrar.mobile.i386.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.dll mmp.exe
 	$(Q_GEN) $(SYSTEM_MONO) --debug mmp.exe --xamarin-framework-directory=$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(OSX_SDK_VERSION)   $< --registrar:static --target-framework Xamarin.Mac,v1.0 --arch=i386
-	$(Q) touch Xamarin.Mac.registrar.mac.i386.m Xamarin.Mac.registrar.mac.i386.h
+	$(Q) touch Xamarin.Mac.registrar.mobile.i386.m Xamarin.Mac.registrar.mobile.i386.h
 
 Xamarin.Mac.registrar.mobile.x86_64.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.dll mmp.exe
 	$(Q_GEN) $(SYSTEM_MONO) --debug mmp.exe --xamarin-framework-directory=$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(OSX_SDK_VERSION)   $< --registrar:static --target-framework Xamarin.Mac,v1.0 --arch=x86_6
-	$(Q) touch Xamarin.Mac.registrar.mac.x86_64.m Xamarin.Mac.registrar.mac.x86_64.h
+	$(Q) touch Xamarin.Mac.registrar.mobile.x86_64.m Xamarin.Mac.registrar.mobile.x86_64.h
 
 Xamarin.Mac.registrar.full.i386.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.dll mmp.exe
 	$(Q_GEN) $(SYSTEM_MONO) --debug mmp.exe --xamarin-framework-directory=$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(OSX_SDK_VERSION)   $< --registrar:static --target-framework 4.5 --arch=i386
-	$(Q) touch Xamarin.Mac.registrar.mac.i386.m Xamarin.Mac.registrar.mac.i386.h
+	$(Q) touch Xamarin.Mac.registrar.full.i386.m Xamarin.Mac.registrar.full.i386.h
 
 Xamarin.Mac.registrar.full.x86_64.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.dll mmp.exe
 	$(Q_GEN) $(SYSTEM_MONO) --debug mmp.exe --xamarin-framework-directory=$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(OSX_SDK_VERSION)   $< --registrar:static --target-framework 4.5 --arch=x86_64
-	$(Q) touch Xamarin.Mac.registrar.mac.x86_64.m Xamarin.Mac.registrar.mac.x86_64.h
+	$(Q) touch Xamarin.Mac.registrar.full.x86_64.m Xamarin.Mac.registrar.full.x86_64.h
 
 Xamarin.Mac.registrar.%.i386.a:   Xamarin.Mac.registrar.%.i386.m
 	$(Q_CC) xcrun -sdk macosx clang -DDEBUG -g -gdwarf-2 -x objective-c++ -o $@ -c -arch i386 $< -Wall -I$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/include -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -fobjc-runtime=macosx
