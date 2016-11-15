@@ -12,6 +12,3 @@ security set-keychain-settings -lut 7200
 
 # Run tests
 make -C tests jenkins
-
-# Lock
-security lock-keychain
