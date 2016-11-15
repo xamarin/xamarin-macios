@@ -827,6 +827,7 @@ INTENTS_SOURCES = \
 	Intents/INSetProfileInCarIntent.cs \
 	Intents/INSetSeatSettingsInCarIntent.cs \
 	Intents/INStartWorkoutIntent.cs \
+	Intents/INSaveProfileInCarIntent.cs \
 
 # JavaScriptCore
 
