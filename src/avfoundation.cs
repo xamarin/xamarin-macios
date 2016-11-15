@@ -2573,7 +2573,7 @@ namespace XamCore.AVFoundation {
 		NSString WasDefragmentedNotification { get; }
 #endif
 
-		[iOS (10, 3), Mac (10,12), TV (10, 3)]
+		[iOS (10, 2), Mac (10,12,2), TV (10, 2)]
 		[Export ("overallDurationHint")]
 		CMTime OverallDurationHint { get; }
 	}
