@@ -107,7 +107,20 @@ namespace xharness
 				await sims.LoadAsync (Logs.CreateStream (LogDirectory, "simulator-list.log", "Simulator list"));
 			}).Wait ();
 
-			var devices = sims.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == simulator_runtime && simulator_devicetypes.Contains (v.SimDeviceType));
+			var devices = sims.AvailableDevices.Where ((SimDevice v) =>
+			{
+				if (v.SimRuntime != simulator_runtime)
+					return false;
+
+				if (!simulator_devicetypes.Contains (v.SimDeviceType))
+					return false;
+
+				if (Target == "watchos-simulator")
+					return sims.AvailableDevicePairs.Any ((SimDevicePair pair) => pair.Companion == v.UDID || pair.Gizmo == v.UDID);
+
+				return true;
+			});
+
 			SimDevice candidate = null;
 			simulators = null;
 			foreach (var device in devices) {
