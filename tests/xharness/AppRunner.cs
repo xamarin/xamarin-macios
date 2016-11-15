@@ -686,9 +686,9 @@ namespace xharness
 				main_log.WriteLine ("Test run never launched");
 				success = false;
 			} else if (launch_failure) {
- 					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} failed to launch</i></b><br/>", mode);
- 					main_log.WriteLine ("Test run failed to launch");
- 					success = false;
+ 				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} failed to launch</i></b><br/>", mode);
+ 				main_log.WriteLine ("Test run failed to launch");
+ 				success = false;
 			} else {
 				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed at startup (no log)</i></b><br/>", mode);
 				main_log.WriteLine ("Test run crashed before it started (no log file produced)");
