@@ -13,6 +13,19 @@ using System.Xml.Xsl;
 
 namespace xharness
 {
+	public enum AppRunnerTarget
+	{
+		None,
+		Simulator_iOS,
+		Simulator_iOS32,
+		Simulator_iOS64,
+		Simulator_tvOS,
+		Simulator_watchOS,
+		Device_iOS,
+		Device_tvOS,
+		Device_watchOS,
+	}
+
 	public class AppRunner
 	{
 		public Harness Harness;
@@ -35,9 +48,9 @@ namespace xharness
 		SimDevice simulator { get { return simulators [0]; } }
 		SimDevice companion_simulator { get { return simulators.Length == 2 ? simulators [1] : null; } }
 
-		string target;
-		public string Target {
-			get { return target ?? Harness.Target; }
+		AppRunnerTarget target;
+		public AppRunnerTarget Target {
+			get { return target == AppRunnerTarget.None ? Harness.Target : target; }
 			set { target = value; }
 		}
 
@@ -68,97 +81,18 @@ namespace xharness
 
 		string mode;
 
-		void FindSimulator ()
+		async Task<bool> FindSimulatorAsync ()
 		{
 			if (simulators != null)
-				return;
+				return true;
 			
-			string [] simulator_devicetypes;
-			string simulator_runtime;
-
-			switch (Target) {
-			case "ios-simulator-32":
-				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5" };
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
-				break;
-			case "ios-simulator-64":
-				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5s" };
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
-				break;
-			case "ios-simulator":
-				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5" };
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
-				break;
-			case "tvos-simulator":
-				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.Apple-TV-1080p" };
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.tvOS-" + Xamarin.SdkVersions.TVOS.Replace ('.', '-');
-				break;
-			case "watchos-simulator":
-				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-38mm", "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-2-38mm" };
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.watchOS-" + Xamarin.SdkVersions.WatchOS.Replace ('.', '-');
-				break;
-			default:
-				throw new Exception (string.Format ("Unknown simulator target: {0}", Harness.Target));
-			}
-
 			var sims = new Simulators () {
 				Harness = Harness,
 			};
-			Task.Run (async () =>
-			{
-				await sims.LoadAsync (Logs.CreateStream (LogDirectory, "simulator-list.log", "Simulator list"));
-			}).Wait ();
+			await sims.LoadAsync (Logs.CreateStream (LogDirectory, "simulator-list.log", "Simulator list"));
+			simulators = await sims.FindAsync (target, main_log);
 
-			var devices = sims.AvailableDevices.Where ((SimDevice v) =>
-			{
-				if (v.SimRuntime != simulator_runtime)
-					return false;
-
-				if (!simulator_devicetypes.Contains (v.SimDeviceType))
-					return false;
-
-				if (Target == "watchos-simulator")
-					return sims.AvailableDevicePairs.Any ((SimDevicePair pair) => pair.Companion == v.UDID || pair.Gizmo == v.UDID);
-
-				return true;
-			});
-
-			SimDevice candidate = null;
-			simulators = null;
-			foreach (var device in devices) {
-				var data = device;
-				var secondaryData = (SimDevice) null;
-				var nodeCompanions = sims.AvailableDevicePairs.Where ((SimDevicePair v) => v.Companion == device.UDID);
-				var nodeGizmos = sims.AvailableDevicePairs.Where ((SimDevicePair v) => v.Gizmo == device.UDID);
-
-				if (nodeCompanions.Any ()) {
-					var gizmo_udid = nodeCompanions.First ().Gizmo;
-					var node = sims.AvailableDevices.Where ((SimDevice v) => v.UDID == gizmo_udid);
-					secondaryData = node.First ();
-				} else if (nodeGizmos.Any ()) {
-					var companion_udid = nodeGizmos.First ().Companion;
-					var node = sims.AvailableDevices.Where ((SimDevice v) => v.UDID == companion_udid);
-					secondaryData = node.First ();
-				}
-				if (secondaryData != null) {
-					simulators = new SimDevice [] { data, secondaryData };
-					break;
-				} else {
-					candidate = data;
-				}
-			}
-			if (simulators == null) {
-				if (candidate == null)
-					throw new Exception ($"Could not find simulator for runtime={simulator_runtime} and device type={string.Join (";", simulator_devicetypes)}.");
-				simulators = new SimDevice [] { candidate };
-			}
-
-			if (simulators == null)
-				throw new Exception ("Could not find simulator");
-
-			main_log.WriteLine ("Found simulator: {0} {1}", simulators [0].Name, simulators [0].UDID);
-			if (simulators.Length > 1)
-				main_log.WriteLine ("Found companion simulator: {0} {1}", simulators [1].Name, simulators [1].UDID);
+			return simulators != null;
 		}
 
 		void FindDevice ()
@@ -231,42 +165,42 @@ namespace xharness
 			bundle_identifier = info_plist.GetCFBundleIdentifier ();
 
 			switch (Target) {
-			case "ios-simulator-32":
+			case AppRunnerTarget.Simulator_iOS32:
 				mode = "sim32";
 				platform = "iPhoneSimulator";
 				isSimulator = true;
 				break;
-			case "ios-simulator-64":
+			case AppRunnerTarget.Simulator_iOS64:
 				mode = "sim64";
 				platform = "iPhoneSimulator";
 				isSimulator = true;
 				break;
-			case "ios-simulator":
+			case AppRunnerTarget.Simulator_iOS:
 				mode = "classic";
 				platform = "iPhoneSimulator";
 				isSimulator = true;
 				break;
-			case "ios-device":
+			case AppRunnerTarget.Device_iOS:
 				mode = "ios";
 				platform = "iPhone";
 				isSimulator = false;
 				break;
-			case "tvos-simulator":
+			case AppRunnerTarget.Simulator_tvOS:
 				mode = "tvos";
 				platform = "iPhoneSimulator";
 				isSimulator = true;
 				break;
-			case "tvos-device":
+			case AppRunnerTarget.Device_tvOS:
 				mode = "tvos";
 				platform = "iPhone";
 				isSimulator = false;
 				break;
-			case "watchos-simulator":
+			case AppRunnerTarget.Simulator_watchOS:
 				mode = "watchos";
 				platform = "iPhoneSimulator";
 				isSimulator = true;
 				break;
-			case "watchos-device":
+			case AppRunnerTarget.Device_watchOS:
 				mode = "watchos";
 				platform = "iPhone";
 				isSimulator = false;
@@ -369,7 +303,7 @@ namespace xharness
 					}
 					// update the information of the main node to add information about the mode and the test that is excuted. This will later create
 					// nicer reports in jenkins
-					mainResultNode.Attributes["name"].Value = Target;
+					mainResultNode.Attributes["name"].Value = Target.AsString ();
 					// store a clean version of the logs, later this will be used by the bots to show results in github/web
 					var path = listener_log.FullPath;
 					path = path.Replace (".log", ".xml");
@@ -532,7 +466,8 @@ namespace xharness
 			bool launch_failure = false;
 
 			if (isSimulator) {
-				FindSimulator ();
+				if (!await FindSimulatorAsync ())
+					return 1;
 
 				if (mode != "watchos") {
 					var stderr_tty = Marshal.PtrToStringAuto (ttyname (2));

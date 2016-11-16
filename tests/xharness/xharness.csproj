@@ -69,6 +69,7 @@
     <Compile Include="TestProject.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="GitHub.cs" />
+    <Compile Include="Extensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\jenkins\nunit-summary.xslt">
