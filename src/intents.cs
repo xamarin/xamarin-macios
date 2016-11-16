@@ -36,6 +36,8 @@ namespace XamCore.Intents {
 		FailureRequiringAppLaunchServiceTemporarilyUnavailable
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[Native]
 	[Flags]
 	public enum INCallCapabilityOptions : nuint {
@@ -43,6 +45,8 @@ namespace XamCore.Intents {
 		VideoCall = (1 << 1)
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[Native]
 	public enum INCallRecordType : nint {
 		Unknown = 0,
@@ -242,6 +246,8 @@ namespace XamCore.Intents {
 		FailureRequiringAppLaunchPreviousRideNeedsCompletion
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[Native]
 	public enum INMessageAttribute : nint {
 		Unknown = 0,
@@ -251,6 +257,8 @@ namespace XamCore.Intents {
 		Unflagged
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[Native]
 	[Flags]
 	public enum INMessageAttributeOptions : nuint {
@@ -347,6 +355,8 @@ namespace XamCore.Intents {
 		Dab
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INRelativeReference : nint {
 		Unknown = 0,
@@ -354,6 +364,8 @@ namespace XamCore.Intents {
 		Previous
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INRelativeSetting : nint {
 		Unknown = 0,
@@ -859,6 +871,9 @@ namespace XamCore.Intents {
 	[Introduced (PlatformName.iOS, 10, 2)]
 	[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
 	enum INPersonRelationship {
+		[Field (null)]
+		None,
+
 		[Field ("INPersonRelationshipFather")]
 		Father,
 
@@ -2281,6 +2296,16 @@ namespace XamCore.Intents {
 
 		[NullAllowed, Export ("customIdentifier")]
 		string CustomIdentifier { get; }
+
+		[Introduced (PlatformName.iOS, 10, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
+		[NullAllowed, Export ("relationship"), Protected]
+		NSString WeakRelationship { get; }
+
+		[Introduced (PlatformName.iOS, 10, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
+		[Wrap ("INPersonRelationshipExtensions.GetValue (WeakRelationship)")]
+		INPersonRelationship Relationship { get; }
 
 		// Inlined from INInteraction (INPerson) Category
 
@@ -4095,6 +4120,7 @@ namespace XamCore.Intents {
 		IntPtr Constructor (string identifier, string spokenPhrase, [NullAllowed] string pronunciationHint);
 
 		[Introduced (PlatformName.iOS, 10, 2)]
+		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
 		[Export ("initWithSpokenPhrase:")]
 		IntPtr Constructor (string spokenPhrase);
 	}
