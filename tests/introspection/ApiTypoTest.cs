@@ -347,7 +347,6 @@ namespace Introspection
 			"Subsec",
 			"Suica", // Japanese contactless smart card type
 			"Superentity",
-			"Suplhur",
 			"Sym",
 			"Synchronizable",
 			"Tanh",
