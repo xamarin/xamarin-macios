@@ -171,7 +171,7 @@ namespace Xamarin.MacDev.Tasks
 
 					Log.LogMessage (MessageImportance.Low, "Tool {0} execution finished (exit code = {1}).", startInfo.FileName, exitCode);
 
-					if (exitCode != 0)
+					if (exitCode != 0 && errors.Length > 0)
 						Log.LogError (null, null, null, items[0].ItemSpec, 0, 0, 0, 0, "{0}", errors);
 
 					return exitCode;
