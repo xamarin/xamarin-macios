@@ -186,7 +186,7 @@ namespace Xamarin.MacDev.Tasks
 
 						LogWarningsAndErrors (plist, items[0]);
 					} catch (FormatException) {
-						Log.LogError ("{0} exited with code {0}", ToolName, exitCode);
+						Log.LogError ("{0} exited with code {1}", ToolName, exitCode);
 					}
 
 					File.Delete (manifest.ItemSpec);

@@ -221,7 +221,6 @@ namespace Xamarin.MacDev.Tasks
 			var outputManifests = new List<ITaskItem> ();
 			var compiled = new List<ITaskItem> ();
 			bool changed = false;
-			int rc;
 
 			if (InterfaceDefinitions.Length > 0) {
 				if (AppManifest != null) {
@@ -276,7 +275,7 @@ namespace Xamarin.MacDev.Tasks
 					Directory.CreateDirectory (manifestDir);
 					Directory.CreateDirectory (outputDir);
 
-					if ((rc = Compile (new[] { item }, output, manifest)) != 0)
+					if ((Compile (new[] { item }, output, manifest)) != 0)
 						return false;
 
 					changed = true;
@@ -328,7 +327,7 @@ namespace Xamarin.MacDev.Tasks
 
 					Link = true;
 
-					if ((rc = Compile (compiled.ToArray (), output, manifest)) != 0)
+					if ((Compile (compiled.ToArray (), output, manifest)) != 0)
 						return false;
 				}
 

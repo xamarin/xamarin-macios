@@ -250,7 +250,6 @@ namespace Xamarin.MacDev.Tasks
 			string bundleIdentifier = null;
 			var knownSpecs = new HashSet<string> ();
 			var specs = new PArray ();
-			int rc;
 
 			Log.LogTaskName ("ACTool");
 			Log.LogTaskProperty ("AppManifest", AppManifest);
@@ -379,7 +378,7 @@ namespace Xamarin.MacDev.Tasks
 			Directory.CreateDirectory (intermediateBundleDir);
 
 			// Note: Compile() will set the PartialAppManifest property if it is used...
-			if ((rc = Compile (catalogs.ToArray (), output, manifest)) != 0)
+			if ((Compile (catalogs.ToArray (), output, manifest)) != 0)
 				return false;
 
 			if (PartialAppManifest != null && !File.Exists (PartialAppManifest.GetMetadata ("FullPath")))
