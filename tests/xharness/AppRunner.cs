@@ -90,7 +90,7 @@ namespace xharness
 				Harness = Harness,
 			};
 			await sims.LoadAsync (Logs.CreateStream (LogDirectory, "simulator-list.log", "Simulator list"));
-			simulators = await sims.FindAsync (target, main_log);
+			simulators = await sims.FindAsync (Target, main_log);
 
 			return simulators != null;
 		}
