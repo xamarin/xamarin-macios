@@ -114,7 +114,7 @@ namespace xharness
 				companion_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
 				break;
 			default:
-				throw new Exception (string.Format ("Unknown simulator target: {0}", Harness.Target));
+				throw new Exception (string.Format ("Unknown simulator target: {0}", target));
 			}
 
 			var devices = AvailableDevices.Where ((SimDevice v) =>
