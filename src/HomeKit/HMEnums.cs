@@ -420,6 +420,10 @@ namespace XamCore.HomeKit {
 		CurrentAirPurifierState,
 
 		[iOS (10,2), Watch (3,1,1), TV (10,1)]
+		[Field ("HMCharacteristicTypeTargetAirPurifierState")]
+		TargetAirPurifierState,
+
+		[iOS (10,2), Watch (3,1,1), TV (10,1)]
 		[Field ("HMCharacteristicTypeCurrentFanState")]
 		CurrentFanState,
 
@@ -492,8 +496,8 @@ namespace XamCore.HomeKit {
 		NitrogenDioxideDensity,
 
 		[iOS (10,2), Watch (3,1,1), TV (10,1)]
-		[Field ("HMCharacteristicTypeSuplhurDioxideDensity")]
-		SuplhurDioxideDensity,
+		[Field ("HMCharacteristicTypeSulphurDioxideDensity")]
+		SulphurDioxideDensity,
 
 		[iOS (10,2), Watch (3,1,1), TV (10,1)]
 		[Field ("HMCharacteristicTypePM2_5Density")]
@@ -686,8 +690,8 @@ namespace XamCore.HomeKit {
 		HumidifierDehumidifier,
 
 		[iOS (10,2), Watch (3,1,1), TV (10,1)]
-		[Field ("HMServiceTypeSlat")]
-		Slat,
+		[Field ("HMServiceTypeSlats")]
+		Slats,
 	}
 
 	// conveniance enum (ObjC uses NSString)

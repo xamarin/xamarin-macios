@@ -75,8 +75,8 @@ namespace XamCore.HomeKit {
 				arr.Add (HMServiceType.HeaterCooler.GetConstant ());
 			if ((serviceTypes & HMServiceType.HumidifierDehumidifier) == HMServiceType.HumidifierDehumidifier)
 				arr.Add (HMServiceType.HumidifierDehumidifier.GetConstant ());
-			if ((serviceTypes & HMServiceType.Slat) == HMServiceType.Slat)
-				arr.Add (HMServiceType.Slat.GetConstant ());
+			if ((serviceTypes & HMServiceType.Slats) == HMServiceType.Slats)
+				arr.Add (HMServiceType.Slats.GetConstant ());
 
 			return _ServicesWithTypes (arr.ToArray ());
 		}
