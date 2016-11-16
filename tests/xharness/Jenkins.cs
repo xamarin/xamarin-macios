@@ -1153,7 +1153,7 @@ function toggleContainerVisibility (containerName)
 		public SimDevice Device;
 		public SimDevice CompanionDevice;
 		public XBuildTask BuildTask;
-		public string AppRunnerTarget;
+		public AppRunnerTarget AppRunnerTarget;
 
 		AppRunner runner;
 
@@ -1228,11 +1228,11 @@ function toggleContainerVisibility (containerName)
 
 			var project = Path.GetFileNameWithoutExtension (ProjectFile);
 			if (project.EndsWith ("-tvos", StringComparison.Ordinal)) {
-				AppRunnerTarget = "tvos-simulator";
+				AppRunnerTarget = AppRunnerTarget.Simulator_tvOS;
 			} else if (project.EndsWith ("-watchos", StringComparison.Ordinal)) {
-				AppRunnerTarget = "watchos-simulator";
+				AppRunnerTarget = AppRunnerTarget.Simulator_watchOS;
 			} else {
-				AppRunnerTarget = "ios-simulator";
+				AppRunnerTarget = AppRunnerTarget.Simulator_iOS;
 			}
 		}
 

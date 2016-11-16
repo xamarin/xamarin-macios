@@ -13,6 +13,19 @@ using System.Xml.Xsl;
 
 namespace xharness
 {
+	public enum AppRunnerTarget
+	{
+		None,
+		Simulator_iOS,
+		Simulator_iOS32,
+		Simulator_iOS64,
+		Simulator_tvOS,
+		Simulator_watchOS,
+		Device_iOS,
+		Device_tvOS,
+		Device_watchOS,
+	}
+
 	public class AppRunner
 	{
 		public Harness Harness;
@@ -35,9 +48,9 @@ namespace xharness
 		SimDevice simulator { get { return simulators [0]; } }
 		SimDevice companion_simulator { get { return simulators.Length == 2 ? simulators [1] : null; } }
 
-		string target;
-		public string Target {
-			get { return target ?? Harness.Target; }
+		AppRunnerTarget target;
+		public AppRunnerTarget Target {
+			get { return target == AppRunnerTarget.None ? Harness.Target : target; }
 			set { target = value; }
 		}
 
@@ -79,23 +92,23 @@ namespace xharness
 			string companion_runtime = null;
 
 			switch (Target) {
-			case "ios-simulator-32":
+			case AppRunnerTarget.Simulator_iOS32:
 				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5" };
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
 				break;
-			case "ios-simulator-64":
+			case AppRunnerTarget.Simulator_iOS64:
 				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5s" };
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
 				break;
-			case "ios-simulator":
+			case AppRunnerTarget.Simulator_iOS:
 				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5" };
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
 				break;
-			case "tvos-simulator":
+			case AppRunnerTarget.Simulator_tvOS:
 				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.Apple-TV-1080p" };
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.tvOS-" + Xamarin.SdkVersions.TVOS.Replace ('.', '-');
 				break;
-			case "watchos-simulator":
+			case AppRunnerTarget.Simulator_watchOS:
 				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-38mm", "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-2-38mm" };
 				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.watchOS-" + Xamarin.SdkVersions.WatchOS.Replace ('.', '-');
 				companion_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-6s" };
@@ -121,7 +134,7 @@ namespace xharness
 				if (!simulator_devicetypes.Contains (v.SimDeviceType))
 					return false;
 
-				if (Target == "watchos-simulator")
+				if (Target == AppRunnerTarget.Simulator_watchOS)
 					return sims.AvailableDevicePairs.Any ((SimDevicePair pair) => pair.Companion == v.UDID || pair.Gizmo == v.UDID);
 
 				return true;
@@ -152,7 +165,7 @@ namespace xharness
 				}
 			}
 
-			if (simulators == null && candidate == null && Target == "watchos-simulator") {
+			if (simulators == null && candidate == null && Target == AppRunnerTarget.Simulator_watchOS) {
 				// We might be only missing device pairs to match phone + watch.
 				var watchDevices = sims.AvailableDevices.Where ((SimDevice v) => { return v.SimRuntime == simulator_runtime && simulator_devicetypes.Contains (v.SimDeviceType); });
 				var companionDevices = sims.AvailableDevices.Where ((SimDevice v) => { return v.SimRuntime == companion_runtime && companion_devicetypes.Contains (v.SimDeviceType); });
@@ -262,42 +275,42 @@ namespace xharness
 			bundle_identifier = info_plist.GetCFBundleIdentifier ();
 
 			switch (Target) {
-			case "ios-simulator-32":
+			case AppRunnerTarget.Simulator_iOS32:
 				mode = "sim32";
 				platform = "iPhoneSimulator";
 				isSimulator = true;
 				break;
-			case "ios-simulator-64":
+			case AppRunnerTarget.Simulator_iOS64:
 				mode = "sim64";
 				platform = "iPhoneSimulator";
 				isSimulator = true;
 				break;
-			case "ios-simulator":
+			case AppRunnerTarget.Simulator_iOS:
 				mode = "classic";
 				platform = "iPhoneSimulator";
 				isSimulator = true;
 				break;
-			case "ios-device":
+			case AppRunnerTarget.Device_iOS:
 				mode = "ios";
 				platform = "iPhone";
 				isSimulator = false;
 				break;
-			case "tvos-simulator":
+			case AppRunnerTarget.Simulator_tvOS:
 				mode = "tvos";
 				platform = "iPhoneSimulator";
 				isSimulator = true;
 				break;
-			case "tvos-device":
+			case AppRunnerTarget.Device_tvOS:
 				mode = "tvos";
 				platform = "iPhone";
 				isSimulator = false;
 				break;
-			case "watchos-simulator":
+			case AppRunnerTarget.Simulator_watchOS:
 				mode = "watchos";
 				platform = "iPhoneSimulator";
 				isSimulator = true;
 				break;
-			case "watchos-device":
+			case AppRunnerTarget.Device_watchOS:
 				mode = "watchos";
 				platform = "iPhone";
 				isSimulator = false;
@@ -400,7 +413,7 @@ namespace xharness
 					}
 					// update the information of the main node to add information about the mode and the test that is excuted. This will later create
 					// nicer reports in jenkins
-					mainResultNode.Attributes["name"].Value = Target;
+					mainResultNode.Attributes["name"].Value = Target.AsString ();
 					// store a clean version of the logs, later this will be used by the bots to show results in github/web
 					var path = listener_log.FullPath;
 					path = path.Replace (".log", ".xml");

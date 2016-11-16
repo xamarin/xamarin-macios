@@ -36,7 +36,7 @@ namespace xharness
 					}
 				},
 				{ "sdkroot=", "Where Xcode is", (v) => harness.SdkRoot = v },
-				{ "target=", "Where to run the project ([ios|watchos|tvos]-[device|simulator|simulator-32|simulator-64]).", (v) => harness.Target = v },
+				{ "target=", "Where to run the project ([ios|watchos|tvos]-[device|simulator|simulator-32|simulator-64]).", (v) => harness.Target = v.ParseAsAppRunnerTarget () },
 				{ "configuration=", "Which configuration to run (defaults to Debug).", (v) => harness.Configuration = v },
 				{ "logdirectory=", "Where to store logs.", (v) => harness.LogDirectory = v },
 				{ "logfile=", "Where to store the log.", (v) => harness.LogFile = v },

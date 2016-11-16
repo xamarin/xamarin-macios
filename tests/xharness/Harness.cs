@@ -57,7 +57,7 @@ namespace xharness
 		public string IOS_DESTDIR { get; set; }
 
 		// Run
-		public string Target { get; set; }
+		public AppRunnerTarget Target { get; set; }
 		public string SdkRoot { get; set; } = "/Applications/Xcode.app";
 		public string Configuration { get; set; } = "Debug";
 		public string LogFile { get; set; }
