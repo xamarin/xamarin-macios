@@ -436,6 +436,9 @@ namespace Xamarin.Bundler {
 			if (!IsUnifiedMobile && tls_provider != null)
 				throw new MonoMacException (2011, true, "Selecting a TLS Provider is only supported in the Unified Mobile profile");
 
+
+			ValidateXcode ();
+
 			App.InitializeCommon ();
 
 			Log ("Xamarin.Mac {0}{1}", Constants.Version, verbose > 0 ? "." + Constants.Revision : string.Empty);
@@ -502,6 +505,36 @@ namespace Xamarin.Bundler {
 					return bool.Parse (value);
 				} catch (Exception ex) {
 					throw ErrorHelper.CreateError (26, ex, "Could not parse the command line argument '-{0}:{1}': {2}", name, value, ex.Message);
+				}
+			}
+		}
+
+
+		static void ValidateXcode ()
+		{
+			var plist_path = Path.Combine (Path.GetDirectoryName (DeveloperDirectory), "version.plist");
+			if (xcode_version == null) {
+				if (File.Exists (plist_path)) {
+					bool nextElement = false;
+					XmlReaderSettings settings = new XmlReaderSettings ();
+					settings.DtdProcessing = DtdProcessing.Ignore;
+					using (XmlReader reader = XmlReader.Create (plist_path, settings)) {
+						while (reader.Read()) {
+							// We want the element after CFBundleShortVersionString
+							if (reader.NodeType == XmlNodeType.Element) {
+								if (reader.Name == "key") {
+									if (reader.ReadElementContentAsString() == "CFBundleShortVersionString")
+										nextElement = true;
+								}
+								if (nextElement && reader.Name == "string") {
+									nextElement = false;
+									xcode_version = new Version (reader.ReadElementContentAsString());
+								}
+							}
+						}
+					}
+				} else {
+					throw ErrorHelper.CreateError (58, "The Xcode.app '{0}' is invalid (the file '{1}' does not exist).", Path.GetDirectoryName (Path.GetDirectoryName (DeveloperDirectory)), plist_path);
 				}
 			}
 		}
@@ -733,33 +766,6 @@ namespace Xamarin.Bundler {
 			get {
 				if (sdk_root == null)
 					sdk_root = LocateXcode ();
-
-				var plist_path = Path.Combine (Path.GetDirectoryName (sdk_root), "version.plist");
-				if (xcode_version == null) {
-					if (File.Exists (plist_path)) {
-						bool nextElement = false;
-						XmlReaderSettings settings = new XmlReaderSettings ();
-						settings.DtdProcessing = DtdProcessing.Ignore;
-						using (XmlReader reader = XmlReader.Create (plist_path, settings)) {
-							while (reader.Read()) {
-								// We want the element after CFBundleShortVersionString
-								if (reader.NodeType == XmlNodeType.Element) {
-									if (reader.Name == "key") {
-										if (reader.ReadElementContentAsString() == "CFBundleShortVersionString")
-											nextElement = true;
-									}
-									if (nextElement && reader.Name == "string") {
-										nextElement = false;
-										xcode_version = new Version (reader.ReadElementContentAsString());
-									}
-								}
-							}
-						}
-					} else {
-						throw ErrorHelper.CreateError (58, "The Xcode.app '{0}' is invalid (the file '{1}' does not exist).", Path.GetDirectoryName (Path.GetDirectoryName (sdk_root)), plist_path);
-					}
-
-				} 
 				return sdk_root;
 			}
 		}
