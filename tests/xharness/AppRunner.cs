@@ -86,123 +86,13 @@ namespace xharness
 			if (simulators != null)
 				return true;
 			
-			string [] simulator_devicetypes;
-			string simulator_runtime;
-			string [] companion_devicetypes = null;
-			string companion_runtime = null;
-
-			switch (Target) {
-			case AppRunnerTarget.Simulator_iOS32:
-				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5" };
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
-				break;
-			case AppRunnerTarget.Simulator_iOS64:
-				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5s" };
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
-				break;
-			case AppRunnerTarget.Simulator_iOS:
-				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5" };
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
-				break;
-			case AppRunnerTarget.Simulator_tvOS:
-				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.Apple-TV-1080p" };
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.tvOS-" + Xamarin.SdkVersions.TVOS.Replace ('.', '-');
-				break;
-			case AppRunnerTarget.Simulator_watchOS:
-				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-38mm", "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-2-38mm" };
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.watchOS-" + Xamarin.SdkVersions.WatchOS.Replace ('.', '-');
-				companion_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-6s" };
-				companion_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
-				break;
-			default:
-				throw new Exception (string.Format ("Unknown simulator target: {0}", Harness.Target));
-			}
-
 			var sims = new Simulators () {
 				Harness = Harness,
 			};
-			Task.Run (async () =>
-			{
-				await sims.LoadAsync (Logs.CreateStream (LogDirectory, "simulator-list.log", "Simulator list"));
-			}).Wait ();
+			await sims.LoadAsync (Logs.CreateStream (LogDirectory, "simulator-list.log", "Simulator list"));
+			simulators = await sims.FindAsync (target, main_log);
 
-			var devices = sims.AvailableDevices.Where ((SimDevice v) =>
-			{
-				if (v.SimRuntime != simulator_runtime)
-					return false;
-
-				if (!simulator_devicetypes.Contains (v.SimDeviceType))
-					return false;
-
-				if (Target == AppRunnerTarget.Simulator_watchOS)
-					return sims.AvailableDevicePairs.Any ((SimDevicePair pair) => pair.Companion == v.UDID || pair.Gizmo == v.UDID);
-
-				return true;
-			});
-
-			SimDevice candidate = null;
-			simulators = null;
-			foreach (var device in devices) {
-				var data = device;
-				var secondaryData = (SimDevice) null;
-				var nodeCompanions = sims.AvailableDevicePairs.Where ((SimDevicePair v) => v.Companion == device.UDID);
-				var nodeGizmos = sims.AvailableDevicePairs.Where ((SimDevicePair v) => v.Gizmo == device.UDID);
-
-				if (nodeCompanions.Any ()) {
-					var gizmo_udid = nodeCompanions.First ().Gizmo;
-					var node = sims.AvailableDevices.Where ((SimDevice v) => v.UDID == gizmo_udid);
-					secondaryData = node.First ();
-				} else if (nodeGizmos.Any ()) {
-					var companion_udid = nodeGizmos.First ().Companion;
-					var node = sims.AvailableDevices.Where ((SimDevice v) => v.UDID == companion_udid);
-					secondaryData = node.First ();
-				}
-				if (secondaryData != null) {
-					simulators = new SimDevice [] { data, secondaryData };
-					break;
-				} else {
-					candidate = data;
-				}
-			}
-
-			if (simulators == null && candidate == null && Target == AppRunnerTarget.Simulator_watchOS) {
-				// We might be only missing device pairs to match phone + watch.
-				var watchDevices = sims.AvailableDevices.Where ((SimDevice v) => { return v.SimRuntime == simulator_runtime && simulator_devicetypes.Contains (v.SimDeviceType); });
-				var companionDevices = sims.AvailableDevices.Where ((SimDevice v) => { return v.SimRuntime == companion_runtime && companion_devicetypes.Contains (v.SimDeviceType); });
-				if (!watchDevices.Any () || !companionDevices.Any ()) {
-					main_log.WriteLine ($"Could not find both watch devices for <runtime={simulator_runtime} and device type={string.Join (";", simulator_devicetypes)}> and companion device for <runtime={companion_runtime} and device type {string.Join (";", companion_devicetypes)}>");
-					return false;
-				}
-				var watchDevice = watchDevices.First ();
-				var companionDevice = companionDevices.First ();
-
-				main_log.WriteLine ($"Creating device pair for '{watchDevice.Name}' and '{companionDevice.Name}'");
-				var rv = await Harness.ExecuteXcodeCommandAsync ("simctl", $"pair {watchDevice.UDID} {companionDevice.UDID}", main_log, TimeSpan.FromMinutes (1));
-				if (!rv.Succeeded) {
-					main_log.WriteLine ($"Could not create device pair, so could not find simulator for runtime={simulator_runtime} and device type={string.Join ("; ", simulator_devicetypes)}.");
-					return false;
-				}
-				simulators = new SimDevice [] { watchDevice, companionDevice };
-			}
-
-			if (simulators == null) {
-				if (candidate == null) {
-					main_log.WriteLine ($"Could not find simulator for runtime={simulator_runtime} and device type={string.Join (";", simulator_devicetypes)}.");
-					return false;
-				}
-				simulators = new SimDevice [] { candidate };
-			}
-
-			if (simulators == null) {
-				main_log.WriteLine ("Could not find simulator");
-				return false;
-			}
-
-			main_log.WriteLine ("Found simulator: {0} {1}", simulators [0].Name, simulators [0].UDID);
-			if (simulators.Length > 1)
-				main_log.WriteLine ("Found companion simulator: {0} {1}", simulators [1].Name, simulators [1].UDID);
-
-			return true;
+			return simulators != null;
 		}
 
 		void FindDevice ()

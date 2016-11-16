@@ -57,56 +57,42 @@ namespace xharness
 			}
 
 			var fn = Path.GetFileNameWithoutExtension (buildTask.ProjectFile);
-			if (fn.EndsWith ("-tvos", StringComparison.Ordinal)) {
-				var latesttvOSRuntime =
-					Simulators.SupportedRuntimes.
-							  Where ((SimRuntime v) => v.Identifier.StartsWith ("com.apple.CoreSimulator.SimRuntime.tvOS-", StringComparison.Ordinal)).
-							  OrderBy ((SimRuntime v) => v.Version).
-							  Last ();
-				var tvOSDeviceType =
-					Simulators.SupportedDeviceTypes.
-							  Where ((SimDeviceType v) => v.ProductFamilyId == "TV").
-							  First ();
-				var device =
-					Simulators.AvailableDevices.
-							  Where ((SimDevice v) => v.SimRuntime == latesttvOSRuntime.Identifier && v.SimDeviceType == tvOSDeviceType.Identifier).
-							  First ();
-				runtasks.Add (new RunSimulatorTask (buildTask, device) { Platform = TestPlatform.tvOS });
-			} else if (fn.EndsWith ("-watchos", StringComparison.Ordinal)) {
-				var latestwatchOSRuntime =
-					Simulators.SupportedRuntimes.
-							  Where ((SimRuntime v) => v.Identifier.StartsWith ("com.apple.CoreSimulator.SimRuntime.watchOS-", StringComparison.Ordinal)).
-							  OrderBy ((SimRuntime v) => v.Version).
-							  Last ();
-				var watchOSDeviceTypes =
-					Simulators.SupportedDeviceTypes.
-							  Where ((SimDeviceType v) => v.ProductFamilyId == "Watch");
-				var devices = 
-					Simulators.AvailableDevices.
-					          Where ((SimDevice d) => d.SimRuntime == latestwatchOSRuntime.Identifier && watchOSDeviceTypes.Any ((v) => d.SimDeviceType == v.Identifier));
-				var pair = Simulators.AvailableDevicePairs.
-				              FirstOrDefault ((SimDevicePair v) => devices.Any ((SimDevice d) => d.UDID == v.Gizmo));
-				if (pair == null) {
-					var msg = string.Format ("Could not find a device pair for any of these devices: {0}", string.Join (", ", devices.Select ((v) => v.Name).ToArray ()));
-					SimulatorLoadLog.WriteLine (msg);
-					throw new Exception (msg);
-				}
-				var device =
-					Simulators.AvailableDevices.
-							  FirstOrDefault ((SimDevice v) => pair.Gizmo == v.UDID); // select the device in the device pair.
-				var companion =
-					Simulators.AvailableDevices.
-							  FirstOrDefault ((SimDevice v) => pair.Companion == v.UDID);
-				runtasks.Add (new RunSimulatorTask (buildTask, device, companion) { Platform = TestPlatform.watchOS });
-			} else {
-				var latestiOSRuntime =
-					Simulators.SupportedRuntimes.
-							  Where ((SimRuntime v) => v.Identifier.StartsWith ("com.apple.CoreSimulator.SimRuntime.iOS-", StringComparison.Ordinal)).
-							  OrderBy ((SimRuntime v) => v.Version).
-							  Last ();
+			AppRunnerTarget [] targets;
+			TestPlatform [] platforms;
+			SimDevice [] devices;
 
-				runtasks.Add (new RunSimulatorTask (buildTask, Simulators.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == latestiOSRuntime.Identifier && v.SimDeviceType == "com.apple.CoreSimulator.SimDeviceType.iPhone-5").First ()) { Platform = TestPlatform.iOS_Unified32 });
-				runtasks.Add (new RunSimulatorTask (buildTask, Simulators.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == latestiOSRuntime.Identifier && v.SimDeviceType == "com.apple.CoreSimulator.SimDeviceType.iPhone-6s").First ()) { Platform = TestPlatform.iOS_Unified64 });
+			if (fn.EndsWith ("-tvos", StringComparison.Ordinal)) {
+				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_tvOS };
+				platforms = new TestPlatform [] { TestPlatform.tvOS };
+			} else if (fn.EndsWith ("-watchos", StringComparison.Ordinal)) {
+				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_watchOS };
+				platforms = new TestPlatform [] { TestPlatform.watchOS };
+			} else {
+				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_iOS32, AppRunnerTarget.Simulator_iOS64 };
+				platforms = new TestPlatform [] { TestPlatform.iOS_Unified32, TestPlatform.iOS_Unified64 };
+			}
+
+			for (int i = 0; i < targets.Length; i++) {
+				try {
+					devices = await Simulators.FindAsync (targets [i], SimulatorLoadLog);
+					if (devices == null) {
+						SimulatorLoadLog.WriteLine ($"Failed to find simulator for {targets [i]}.");
+						var task = new RunSimulatorTask (buildTask) { ExecutionResult = TestExecutingResult.Failed };
+						var log = task.Logs.CreateFile ("Run log", Path.Combine (task.LogDirectory, "run-" + DateTime.Now.Ticks + ".log"));
+						File.WriteAllText (log.Path, "Failed to find simulators.");
+						runtasks.Add (task);
+						continue;
+					}
+				} catch (Exception e) {
+					SimulatorLoadLog.WriteLine ($"Failed to find simulator for {targets [i]}");
+					SimulatorLoadLog.WriteLine (e);
+					var task = new RunSimulatorTask (buildTask) { ExecutionResult = TestExecutingResult.Failed };
+					var log = task.Logs.CreateFile ("Run log", Path.Combine (task.LogDirectory, "run-" + DateTime.Now.Ticks + ".log"));
+					File.WriteAllText (log.Path, "Failed to find simulators.");
+					runtasks.Add (task);
+					continue;
+				}
+				runtasks.Add (new RunSimulatorTask (buildTask, devices [0], devices.Length > 1 ? devices [1] : null) { Platform = platforms [i] });
 			}
 
 			return runtasks;
