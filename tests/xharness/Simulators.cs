@@ -131,11 +131,25 @@ namespace xharness
 			await Harness.ExecuteXcodeCommandAsync ("simctl", "shutdown " + UDID, log, TimeSpan.FromMinutes (1));
 		}
 
-		public static Task KillEverythingAsync (Log log)
+		public static async Task KillEverythingAsync (Log log)
 		{
+			await ProcessHelper.ExecuteCommandAsync ("launchctl", "remove com.apple.CoreSimulator.CoreSimulatorService", log, TimeSpan.FromSeconds (10));
+
 			var to_kill = new string [] { "iPhone Simulator", "iOS Simulator", "Simulator", "Simulator (Watch)", "com.apple.CoreSimulator.CoreSimulatorService" };
 
-			return ProcessHelper.ExecuteCommandAsync ("killall", "-9 " + string.Join (" ", to_kill.Select ((v) => Harness.Quote (v)).ToArray ()), log, TimeSpan.FromSeconds (10));
+			await ProcessHelper.ExecuteCommandAsync ("killall", "-9 " + string.Join (" ", to_kill.Select ((v) => Harness.Quote (v)).ToArray ()), log, TimeSpan.FromSeconds (10));
+
+			foreach (var dir in new string [] {
+				Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), "Library", "Saved Application State", "com.apple.watchsimulator.savedState"),
+				Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), "Library", "Saved Application State", "com.apple.iphonesimulator.savedState"),
+			}) {
+				try {
+					if (Directory.Exists (dir))
+						Directory.Delete (dir, true);
+				} catch (Exception e) {
+					log.WriteLine ("Could not delete the directory '{0}': {1}", dir, e.Message);
+				}
+			}
 		}
 
 		public async Task AgreeToPromptsAsync (Log log, params string[] bundle_identifiers)

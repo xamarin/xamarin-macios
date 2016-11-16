@@ -396,6 +396,7 @@ namespace xharness
 
 				Task.Run (async () =>
 				{
+					await SimDevice.KillEverythingAsync (MainLog);
 					await PopulateTasksAsync ();
 				}).Wait ();
 				var tasks = new List<Task> ();
