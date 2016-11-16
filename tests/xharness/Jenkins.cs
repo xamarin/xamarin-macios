@@ -57,56 +57,42 @@ namespace xharness
 			}
 
 			var fn = Path.GetFileNameWithoutExtension (buildTask.ProjectFile);
-			if (fn.EndsWith ("-tvos", StringComparison.Ordinal)) {
-				var latesttvOSRuntime =
-					Simulators.SupportedRuntimes.
-							  Where ((SimRuntime v) => v.Identifier.StartsWith ("com.apple.CoreSimulator.SimRuntime.tvOS-", StringComparison.Ordinal)).
-							  OrderBy ((SimRuntime v) => v.Version).
-							  Last ();
-				var tvOSDeviceType =
-					Simulators.SupportedDeviceTypes.
-							  Where ((SimDeviceType v) => v.ProductFamilyId == "TV").
-							  First ();
-				var device =
-					Simulators.AvailableDevices.
-							  Where ((SimDevice v) => v.SimRuntime == latesttvOSRuntime.Identifier && v.SimDeviceType == tvOSDeviceType.Identifier).
-							  First ();
-				runtasks.Add (new RunSimulatorTask (buildTask, device) { Platform = TestPlatform.tvOS });
-			} else if (fn.EndsWith ("-watchos", StringComparison.Ordinal)) {
-				var latestwatchOSRuntime =
-					Simulators.SupportedRuntimes.
-							  Where ((SimRuntime v) => v.Identifier.StartsWith ("com.apple.CoreSimulator.SimRuntime.watchOS-", StringComparison.Ordinal)).
-							  OrderBy ((SimRuntime v) => v.Version).
-							  Last ();
-				var watchOSDeviceTypes =
-					Simulators.SupportedDeviceTypes.
-							  Where ((SimDeviceType v) => v.ProductFamilyId == "Watch");
-				var devices = 
-					Simulators.AvailableDevices.
-					          Where ((SimDevice d) => d.SimRuntime == latestwatchOSRuntime.Identifier && watchOSDeviceTypes.Any ((v) => d.SimDeviceType == v.Identifier));
-				var pair = Simulators.AvailableDevicePairs.
-				              FirstOrDefault ((SimDevicePair v) => devices.Any ((SimDevice d) => d.UDID == v.Gizmo));
-				if (pair == null) {
-					var msg = string.Format ("Could not find a device pair for any of these devices: {0}", string.Join (", ", devices.Select ((v) => v.Name).ToArray ()));
-					SimulatorLoadLog.WriteLine (msg);
-					throw new Exception (msg);
-				}
-				var device =
-					Simulators.AvailableDevices.
-							  FirstOrDefault ((SimDevice v) => pair.Gizmo == v.UDID); // select the device in the device pair.
-				var companion =
-					Simulators.AvailableDevices.
-							  FirstOrDefault ((SimDevice v) => pair.Companion == v.UDID);
-				runtasks.Add (new RunSimulatorTask (buildTask, device, companion) { Platform = TestPlatform.watchOS });
-			} else {
-				var latestiOSRuntime =
-					Simulators.SupportedRuntimes.
-							  Where ((SimRuntime v) => v.Identifier.StartsWith ("com.apple.CoreSimulator.SimRuntime.iOS-", StringComparison.Ordinal)).
-							  OrderBy ((SimRuntime v) => v.Version).
-							  Last ();
+			AppRunnerTarget [] targets;
+			TestPlatform [] platforms;
+			SimDevice [] devices;
 
-				runtasks.Add (new RunSimulatorTask (buildTask, Simulators.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == latestiOSRuntime.Identifier && v.SimDeviceType == "com.apple.CoreSimulator.SimDeviceType.iPhone-5").First ()) { Platform = TestPlatform.iOS_Unified32 });
-				runtasks.Add (new RunSimulatorTask (buildTask, Simulators.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == latestiOSRuntime.Identifier && v.SimDeviceType == "com.apple.CoreSimulator.SimDeviceType.iPhone-6s").First ()) { Platform = TestPlatform.iOS_Unified64 });
+			if (fn.EndsWith ("-tvos", StringComparison.Ordinal)) {
+				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_tvOS };
+				platforms = new TestPlatform [] { TestPlatform.tvOS };
+			} else if (fn.EndsWith ("-watchos", StringComparison.Ordinal)) {
+				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_watchOS };
+				platforms = new TestPlatform [] { TestPlatform.watchOS };
+			} else {
+				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_iOS32, AppRunnerTarget.Simulator_iOS64 };
+				platforms = new TestPlatform [] { TestPlatform.iOS_Unified32, TestPlatform.iOS_Unified64 };
+			}
+
+			for (int i = 0; i < targets.Length; i++) {
+				try {
+					devices = await Simulators.FindAsync (targets [i], SimulatorLoadLog);
+					if (devices == null) {
+						SimulatorLoadLog.WriteLine ($"Failed to find simulator for {targets [i]}.");
+						var task = new RunSimulatorTask (buildTask) { ExecutionResult = TestExecutingResult.Failed };
+						var log = task.Logs.CreateFile ("Run log", Path.Combine (task.LogDirectory, "run-" + DateTime.Now.Ticks + ".log"));
+						File.WriteAllText (log.Path, "Failed to find simulators.");
+						runtasks.Add (task);
+						continue;
+					}
+				} catch (Exception e) {
+					SimulatorLoadLog.WriteLine ($"Failed to find simulator for {targets [i]}");
+					SimulatorLoadLog.WriteLine (e);
+					var task = new RunSimulatorTask (buildTask) { ExecutionResult = TestExecutingResult.Failed };
+					var log = task.Logs.CreateFile ("Run log", Path.Combine (task.LogDirectory, "run-" + DateTime.Now.Ticks + ".log"));
+					File.WriteAllText (log.Path, "Failed to find simulators.");
+					runtasks.Add (task);
+					continue;
+				}
+				runtasks.Add (new RunSimulatorTask (buildTask, devices [0], devices.Length > 1 ? devices [1] : null) { Platform = platforms [i] });
 			}
 
 			return runtasks;
@@ -117,12 +103,101 @@ namespace xharness
 			return Path.Combine (Path.GetDirectoryName (path), Path.GetFileNameWithoutExtension (path) + suffix + Path.GetExtension (path));
 		}
 
+		void SelectTests ()
+		{
+			int pull_request;
+
+			if (!int.TryParse (Environment.GetEnvironmentVariable ("ghprbPullId"), out pull_request)) {
+				MainLog.WriteLine ("The environment variable 'ghprbPullId' was not found, so no pull requests will be checked for test selection.");
+				return;
+			}
+
+			// First check if can auto-select any tests based on which files were modified.
+			// This will only enable additional tests, never disable tests.
+			SelectTestsByModifiedFiles (pull_request);
+			// Then we check for labels. Labels are manually set, so those override
+			// whatever we did automatically.
+			SelectTestsByLabel (pull_request);
+		}
+
+		void SelectTestsByModifiedFiles (int pull_request)
+		{
+			var files = GitHub.GetModifiedFiles (Harness, pull_request);
+
+			MainLog.WriteLine ("Found {0} modified file(s) in the pull request #{1}.", files.Count (), pull_request);
+			foreach (var f in files)
+				MainLog.WriteLine ("    {0}", f);
+
+			// We select tests based on a prefix of the modified files.
+			// Add entries here to check for more prefixes.
+			var mtouch_prefixes = new string [] {
+				"tests/mtouch",
+				"tools/mtouch",
+				"tools/common",
+				"tools/linker",
+				"src/ObjCRuntime/Registrar.cs",
+				"external/mono",
+			};
+			var mmp_prefixes = new string [] {
+				"tests/mmptest",
+				"tools/mmp",
+				"tools/common",
+				"tools/linker",
+				"src/ObjCRuntime/Registrar.cs",
+				"external/mono",
+			};
+			var bcl_prefixes = new string [] {
+				"tests/bcl-test",
+				"external/mono",
+			};
+
+			SetEnabled (files, mtouch_prefixes, "mtouch", ref IncludeMtouch);
+			SetEnabled (files, mmp_prefixes, "mmp", ref IncludeMmpTest);
+			SetEnabled (files, bcl_prefixes, "bcl", ref IncludeBcl);
+		}
+
+		void SetEnabled (IEnumerable<string> files, string [] prefixes, string testname, ref bool value)
+		{
+			foreach (var file in files) {
+				foreach (var prefix in prefixes) {
+					if (file.StartsWith (prefix, StringComparison.Ordinal)) {
+						value = true;
+						MainLog.WriteLine ("Enabled '{0}' tests because the modified file '{1}' matches prefix '{2}'", testname, file, prefix);
+						return;
+					}
+				}
+			}
+		}
+
+		void SelectTestsByLabel (int pull_request)
+		{
+			var labels = GitHub.GetLabels (Harness, pull_request);
+
+			MainLog.WriteLine ("Found {1} label(s) in the pull request #{2}: {0}", string.Join (", ", labels.ToArray ()), labels.Count (), pull_request);
+
+			// disabled by default
+			SetEnabled (labels, "mtouch", ref IncludeMtouch);
+			SetEnabled (labels, "mmp", ref IncludeMmpTest);
+			SetEnabled (labels, "bcl", ref IncludeBcl);
+
+			// enabled by default
+			SetEnabled (labels, "ios", ref IncludeiOS);
+			SetEnabled (labels, "tvos", ref IncludetvOS);
+			SetEnabled (labels, "watchos", ref IncludewatchOS);
+			SetEnabled (labels, "mac", ref IncludeMac);
+			SetEnabled (labels, "mac-classic", ref IncludeClassicMac);
+			SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
+		}
+
 		void SetEnabled (IEnumerable<string> labels, string testname, ref bool value)
 		{
-			if (labels.Contains ("skip-" + testname + "-tests"))
+			if (labels.Contains ("skip-" + testname + "-tests")) {
+				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-{0}-tests' is set.", testname);
 				value = false;
-			else if (labels.Contains ("run-" + testname + "-tests"))
+			} else if (labels.Contains ("run-" + testname + "-tests")) {
+				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-{0}-tests' is set.", testname);
 				value = true;
+			}
 			// respect any default value
 		}
 
@@ -132,25 +207,7 @@ namespace xharness
 			// api-diff
 			// msbuild tests
 
-			int pull_request;
-			if (int.TryParse (Environment.GetEnvironmentVariable ("ghprbPullId"), out pull_request)) {
-				var labels = GitHub.GetLabels (Harness, pull_request);
-
-				MainLog.WriteLine ("Found pull request labels: {0}", string.Join (", ", labels.ToArray ()));
-
-				// disabled by default
-				SetEnabled (labels, "mtouch", ref IncludeMtouch);
-				SetEnabled (labels, "mmp", ref IncludeMmpTest);
-				SetEnabled (labels, "bcl", ref IncludeBcl);
-
-				// enabled by default
-				SetEnabled (labels, "ios", ref IncludeiOS);
-				SetEnabled (labels, "tvos", ref IncludetvOS);
-				SetEnabled (labels, "watchos", ref IncludewatchOS);
-				SetEnabled (labels, "mac", ref IncludeMac);
-				SetEnabled (labels, "mac-classic", ref IncludeClassicMac);
-				SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
-			}
+			SelectTests ();
 
 			if (IncludeiOS || IncludetvOS || IncludewatchOS) {
 				var runSimulatorTasks = new List<RunSimulatorTask> ();
@@ -325,6 +382,7 @@ namespace xharness
 
 				Task.Run (async () =>
 				{
+					await SimDevice.KillEverythingAsync (MainLog);
 					await PopulateTasksAsync ();
 				}).Wait ();
 				var tasks = new List<Task> ();
@@ -1082,7 +1140,7 @@ function toggleContainerVisibility (containerName)
 		public SimDevice Device;
 		public SimDevice CompanionDevice;
 		public XBuildTask BuildTask;
-		public string AppRunnerTarget;
+		public AppRunnerTarget AppRunnerTarget;
 
 		AppRunner runner;
 
@@ -1157,11 +1215,11 @@ function toggleContainerVisibility (containerName)
 
 			var project = Path.GetFileNameWithoutExtension (ProjectFile);
 			if (project.EndsWith ("-tvos", StringComparison.Ordinal)) {
-				AppRunnerTarget = "tvos-simulator";
+				AppRunnerTarget = AppRunnerTarget.Simulator_tvOS;
 			} else if (project.EndsWith ("-watchos", StringComparison.Ordinal)) {
-				AppRunnerTarget = "watchos-simulator";
+				AppRunnerTarget = AppRunnerTarget.Simulator_watchOS;
 			} else {
-				AppRunnerTarget = "ios-simulator";
+				AppRunnerTarget = AppRunnerTarget.Simulator_iOS;
 			}
 		}
 

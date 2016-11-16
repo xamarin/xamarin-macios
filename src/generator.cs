@@ -2042,8 +2042,12 @@ public partial class Generator : IMemberGatherer {
 					invoke.AppendFormat ("NID{0}.Create ({1})", MakeTrampolineName (pi.ParameterType), pi.Name.GetSafeParamName ());
 					// The trampoline will eventually be generated in the final loop
 				} else {
-					if (!HasAttribute (pi, typeof (CCallbackAttribute))){
-						Console.WriteLine ("WARNING: the parameter {0} in {1} does not contain a [CCallback] or [BlockCallback] attribute, defaulting to CCallback", pi.Name.GetSafeParamName (), t.FullName);
+					if (!HasAttribute (pi, typeof (CCallbackAttribute))) {
+						if (t.FullName.StartsWith ("System.Action`", StringComparison.Ordinal) || t.FullName.StartsWith ("System.Func`", StringComparison.Ordinal)) {
+							ErrorHelper.Show (new BindingException (1116, "The parameter '{0}' in the delegate '{1}' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback]. Declare a custom delegate instead of using System.Action / System.Func and add the attribute on the corresponding parameter.", pi.Name.GetSafeParamName (), t.FullName));
+						} else {
+							ErrorHelper.Show (new BindingException (1115, "The parameter '{0}' in the delegate '{1}' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback].", pi.Name.GetSafeParamName (), t.FullName));
+						}
 					}
 					pars.AppendFormat ("IntPtr {0}", pi.Name.GetSafeParamName ());
 					invoke.AppendFormat ("({0}) Marshal.GetDelegateForFunctionPointer ({1}, typeof ({0}))", pi.ParameterType, pi.Name.GetSafeParamName ());

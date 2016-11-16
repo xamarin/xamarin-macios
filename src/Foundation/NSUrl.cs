@@ -23,6 +23,13 @@ using System;
 
 namespace XamCore.Foundation {
 
+#if XAMCORE_2_0
+		// Equals(Object) and GetHashCode are provided by NSObject
+		// NSObject.GetHashCode calls GetNativeHash, which means it matches Equals (NSUrl)' behavior (which also calls the native implementation), so there's no need to override it.
+		// NSObject.Equals calls the native isEqual: implementation, so that's fine as well, and no need to override.
+#pragma warning disable 660 // `Foundation.NSUrl' defines operator == or operator != but does not override Object.Equals(object o)
+#pragma warning disable 661 // `Foundation.NSUrl' defines operator == or operator != but does not override Object.GetHashCode()
+#endif
 	public partial class NSUrl : IEquatable<NSUrl> {
 
 		public NSUrl (string path, string relativeToUrl)
@@ -30,7 +37,6 @@ namespace XamCore.Foundation {
 		{
 		}
 
-		// Equals(Object) and GetHashCode are now provided by NSObject
 #if !XAMCORE_2_0
 		public override bool Equals (object t)
 		{

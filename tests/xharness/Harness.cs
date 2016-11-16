@@ -57,7 +57,7 @@ namespace xharness
 		public string IOS_DESTDIR { get; set; }
 
 		// Run
-		public string Target { get; set; }
+		public AppRunnerTarget Target { get; set; }
 		public string SdkRoot { get; set; } = "/Applications/Xcode.app";
 		public string Configuration { get; set; } = "Debug";
 		public string LogFile { get; set; }
@@ -498,7 +498,15 @@ namespace xharness
 
 		public bool InWrench {
 			get {
-				return !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
+				var buildRev = Environment.GetEnvironmentVariable ("BUILD_REVISION");
+				return !string.IsNullOrEmpty (buildRev) && buildRev != "jenkins";
+			}
+		}
+		
+		public bool InJenkins {
+			get {
+				var buildRev = Environment.GetEnvironmentVariable ("BUILD_REVISION");
+				return !string.IsNullOrEmpty (buildRev) && buildRev == "jenkins";
 			}
 		}
 

@@ -303,7 +303,7 @@ namespace Xamarin.MMP.Tests
 					References = string.Format (" <Reference Include=\"a\" > <HintPath>{0}/a.dll</HintPath> </Reference> ", tmpDir),
 					TestCode = "System.Console.WriteLine (typeof (A));",
 				};
-				TI.BuildUnifiedExecutable (test, shouldFail: false);
+				TI.GenerateAndBuildUnifiedExecutable (test, shouldFail: false);
 			});
 		}
 
@@ -329,10 +329,10 @@ namespace Xamarin.MMP.Tests
 					References = string.Format (" <Reference Include=\"b\" > <HintPath>{0}</HintPath> </Reference> ", assemblyPath),
 					TestCode = "System.Console.WriteLine (typeof (B));",
 				};
-				TI.BuildUnifiedExecutable (test, shouldFail: false);
+				TI.GenerateAndBuildUnifiedExecutable (test, shouldFail: false);
 
 				test.CSProjConfig = "<LinkMode>SdkOnly</LinkMode>";
-				TI.BuildUnifiedExecutable (test, shouldFail: false);
+				TI.GenerateAndBuildUnifiedExecutable (test, shouldFail: false);
 			});
 		}
 
@@ -467,6 +467,31 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
+		public void Unified_FailedBuild_ShouldRequireAnotherBuildNotSkipMMP ()
+		{
+			RunMMPTest (tmpDir => {
+				foreach (bool xm45 in new bool [] {false, true})
+				{
+					// First build with a Non-existant file to force us to error inside mmp test
+					TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--resource=Foo.bar</MonoBundlingExtraArgs>", XM45 = xm45 };
+					TI.GenerateAndBuildUnifiedExecutable (test, shouldFail: true);
+
+					string generatedProjectPath = Path.Combine (tmpDir, TI.GetUnifiedExecutableProjectName (test));
+					string generatedMainPath = Path.Combine (tmpDir, "main.cs");
+
+					// Next, build again without the error MonoBundlingExtraArgs
+					test.CSProjConfig = "";
+					TI.GenerateUnifiedExecutableProject (test);
+
+					// And try again. 
+					// If we fail, we'll likley fail with "did not generate an exe" before returning but let's check anyway
+					string secondBuildOutput = TI.BuildProject (Path.Combine (tmpDir, TI.GetUnifiedExecutableProjectName (test)), true, diagnosticMSBuild: true);
+					Assert.IsTrue (!secondBuildOutput.Contains ("Skipping target \"_CompileToNative"), "Did not skip");
+					Assert.IsTrue (secondBuildOutput.Contains ("CompileToNative needs to be built as output file"), "Did need to build");
+				}
+			});
+		}	
+				
 		public void UnifiedWithDepNativeRefLib_ShouldHaveItRemoved_OnceInBundle ()
 		{
 			RunMMPTest (tmpDir =>
