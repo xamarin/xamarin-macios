@@ -153,14 +153,13 @@ namespace Xamarin.MacDev.Tasks
 				args.AddQuoted (item.GetMetadata ("FullPath"));
 
 			var startInfo = GetProcessStartInfo (environment, GetFullPathToTool (), args.ToString ());
+			var errors = new StringBuilder ();
+			int exitCode;
 
 			try {
 				Log.LogMessage (MessageImportance.Normal, "Tool {0} execution started with arguments: {1}", startInfo.FileName, startInfo.Arguments);
 
 				using (var stdout = File.CreateText (manifest.ItemSpec)) {
-					var errors = new StringBuilder ();
-					int exitCode;
-
 					using (var stderr = new StringWriter (errors)) {
 						var process = ProcessUtils.StartProcess (startInfo, stdout, stderr);
 
@@ -170,17 +169,31 @@ namespace Xamarin.MacDev.Tasks
 					}
 
 					Log.LogMessage (MessageImportance.Low, "Tool {0} execution finished (exit code = {1}).", startInfo.FileName, exitCode);
-
-					if (exitCode != 0 && errors.Length > 0)
-						Log.LogError (null, null, null, items[0].ItemSpec, 0, 0, 0, 0, "{0}", errors);
-
-					return exitCode;
 				}
 			} catch (Exception ex) {
 				Log.LogError ("Error executing tool '{0}': {1}", startInfo.FileName, ex.Message);
 				File.Delete (manifest.ItemSpec);
 				return -1;
 			}
+
+			if (exitCode != 0) {
+				if (errors.Length > 0)
+					Log.LogError (null, null, null, items[0].ItemSpec, 0, 0, 0, 0, "{0}", errors);
+
+				if (File.Exists (manifest.ItemSpec)) {
+					try {
+						var plist = PDictionary.FromFile (manifest.ItemSpec);
+
+						LogWarningsAndErrors (plist, items[0]);
+					} catch (FormatException) {
+						Log.LogError ("{0} exited with code {0}", ToolName, exitCode);
+					}
+
+					File.Delete (manifest.ItemSpec);
+				}
+			}
+
+			return exitCode;
 		}
 
 		protected void LogWarningsAndErrors (PDictionary plist, ITaskItem file)

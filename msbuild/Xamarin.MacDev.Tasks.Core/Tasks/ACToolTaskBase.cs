@@ -379,21 +379,8 @@ namespace Xamarin.MacDev.Tasks
 			Directory.CreateDirectory (intermediateBundleDir);
 
 			// Note: Compile() will set the PartialAppManifest property if it is used...
-			if ((rc = Compile (catalogs.ToArray (), output, manifest)) != 0) {
-				if (File.Exists (manifest.ItemSpec)) {
-					try {
-						var log = PDictionary.FromFile (manifest.ItemSpec);
-
-						LogWarningsAndErrors (log, catalogs[0]);
-					} catch (FormatException) {
-						Log.LogError ("actool exited with code {0}", rc);
-					}
-
-					File.Delete (manifest.ItemSpec);
-				}
-
+			if ((rc = Compile (catalogs.ToArray (), output, manifest)) != 0)
 				return false;
-			}
 
 			if (PartialAppManifest != null && !File.Exists (PartialAppManifest.GetMetadata ("FullPath")))
 				Log.LogError ("Partial Info.plist file was not generated: {0}", PartialAppManifest.GetMetadata ("FullPath"));

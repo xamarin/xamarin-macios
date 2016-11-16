@@ -276,21 +276,8 @@ namespace Xamarin.MacDev.Tasks
 					Directory.CreateDirectory (manifestDir);
 					Directory.CreateDirectory (outputDir);
 
-					if ((rc = Compile (new [] { item }, output, manifest)) != 0) {
-						if (File.Exists (manifest.ItemSpec)) {
-							try {
-								var log = PDictionary.FromFile (manifest.ItemSpec);
-
-								LogWarningsAndErrors (log, item);
-							} catch {
-								Log.LogError ("ibtool exited with code {0}", rc);
-							}
-
-							File.Delete (manifest.ItemSpec);
-						}
-
+					if ((rc = Compile (new[] { item }, output, manifest)) != 0)
 						return false;
-					}
 
 					changed = true;
 				} else {
@@ -341,21 +328,8 @@ namespace Xamarin.MacDev.Tasks
 
 					Link = true;
 
-					if ((rc = Compile (compiled.ToArray (), output, manifest)) != 0) {
-						if (File.Exists (manifest.ItemSpec)) {
-							try {
-								var log = PDictionary.FromFile (manifest.ItemSpec);
-
-								LogWarningsAndErrors (log, compiled[0]);
-							} catch {
-								Log.LogError ("ibtool exited with code {0}", rc);
-							}
-
-							File.Delete (manifest.ItemSpec);
-						}
-
+					if ((rc = Compile (compiled.ToArray (), output, manifest)) != 0)
 						return false;
-					}
 				}
 
 				output = new TaskItem (linkOutputDir);
