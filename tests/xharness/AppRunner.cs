@@ -68,10 +68,10 @@ namespace xharness
 
 		string mode;
 
-		void FindSimulator ()
+		bool FindSimulator ()
 		{
 			if (simulators != null)
-				return;
+				return true;
 			
 			string [] simulator_devicetypes;
 			string simulator_runtime;
@@ -148,17 +148,23 @@ namespace xharness
 				}
 			}
 			if (simulators == null) {
-				if (candidate == null)
-					throw new Exception ($"Could not find simulator for runtime={simulator_runtime} and device type={string.Join (";", simulator_devicetypes)}.");
+				if (candidate == null) {
+					main_log.WriteLine ($"Could not find simulator for runtime={simulator_runtime} and device type={string.Join (";", simulator_devicetypes)}.");
+					return false;
+				}
 				simulators = new SimDevice [] { candidate };
 			}
 
-			if (simulators == null)
-				throw new Exception ("Could not find simulator");
+			if (simulators == null) {
+				main_log.WriteLine ("Could not find simulator");
+				return false;
+			}
 
 			main_log.WriteLine ("Found simulator: {0} {1}", simulators [0].Name, simulators [0].UDID);
 			if (simulators.Length > 1)
 				main_log.WriteLine ("Found companion simulator: {0} {1}", simulators [1].Name, simulators [1].UDID);
+
+			return true;
 		}
 
 		void FindDevice ()
@@ -532,7 +538,8 @@ namespace xharness
 			bool launch_failure = false;
 
 			if (isSimulator) {
-				FindSimulator ();
+				if (!FindSimulator ())
+					return 1;
 
 				if (mode != "watchos") {
 					var stderr_tty = Marshal.PtrToStringAuto (ttyname (2));
