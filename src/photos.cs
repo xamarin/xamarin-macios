@@ -1005,14 +1005,6 @@ namespace XamCore.Photos
 		[Export ("performChangesAndWait:error:")]
 		bool PerformChangesAndWait (Action changeHandler, out NSError error);
 
-		[iOS (10,2), TV (10,1)]
-		[Export ("performCancellableChanges:completionHandler:")]
-		void PerformChanges (PHPhotoLibraryCancellableChangeHandler cancellableChangeHandler, Action<bool, NSError> completionHandler);
-
-		[iOS (10,2), TV (10,1)]
-		[Export ("performCancellableChangesAndWait:error:")]
-		bool PerformChangesAndWait (PHPhotoLibraryCancellableChangeHandler cancellableChangeHandler, out NSError error);
-
 		[Export ("registerChangeObserver:")]
 		void RegisterChangeObserver ([Protocolize] PHPhotoLibraryChangeObserver observer);
 
