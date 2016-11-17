@@ -99,6 +99,7 @@ namespace Xamarin.Mac.Tests
 		bool Skip (Type t)
 		{
 			switch (t.Name) {
+			case "IKPictureTaker": // radar://29311598
 			case "AVAssetResourceLoader":
 			case "AVAssetResourceLoadingRequest":
 			case "AVAssetResourceLoadingContentInformationRequest":
