@@ -159,7 +159,6 @@ $(MMP_DIRECTORIES):
 	$(Q) mkdir -p $@
 
 GENERATE_PART_REGISTRAR = $(Q_GEN) $(SYSTEM_MONO) --debug mmp.exe --xamarin-framework-directory=$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(OSX_SDK_VERSION)   $< --registrar:static 
---target-framework Xamarin.Mac,v1.0 --arch=i386
 
 Xamarin.Mac.registrar.mobile.i386.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.dll mmp.exe
 	$(GENERATE_PART_REGISTRAR) --target-framework Xamarin.Mac,v1.0 --arch=i386
@@ -169,12 +168,12 @@ Xamarin.Mac.registrar.mobile.x86_64.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT
 	$(GENERATE_PART_REGISTRAR) --target-framework Xamarin.Mac,v1.0 --arch=x86_64
 	$(Q) touch Xamarin.Mac.registrar.mobile.x86_64.m Xamarin.Mac.registrar.mobile.x86_64.h
 
-Xamarin.Mac.registrar.full.i386.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.dll mmp.exe
-	$(GENERATE_PART_REGISTRAR) --target-framework 4.5 --arch=i386
+Xamarin.Mac.registrar.full.i386.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.dll mmp.exe
+	$(GENERATE_PART_REGISTRAR) --target-framework 4.5 --arch=i386 -a=$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.dll --nolink
 	$(Q) touch Xamarin.Mac.registrar.full.i386.m Xamarin.Mac.registrar.full.i386.h
 
-Xamarin.Mac.registrar.full.x86_64.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.dll mmp.exe
-	$(GENERATE_PART_REGISTRAR) --target-framework 4.5 --arch=x86_64
+Xamarin.Mac.registrar.full.x86_64.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.dll mmp.exe
+	$(GENERATE_PART_REGISTRAR) --target-framework 4.5 --arch=x86_64 -a=$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.dll --nolink
 	$(Q) touch Xamarin.Mac.registrar.full.x86_64.m Xamarin.Mac.registrar.full.x86_64.h
 
 Xamarin.Mac.registrar.%.i386.a:   Xamarin.Mac.registrar.%.i386.m
@@ -197,6 +196,7 @@ clean-local::
 	rm -f mmp.stub.c mmp.helper.o
 	rm -f output/*
 	rm -f Mono.Touch.Common.dll*
+	rm -f Xamarin.Mac.registrar.*
 	$(SYSTEM_XBUILD) /t:Clean /p:Configuration=$(CECIL_CONFIG) $(CECIL_PATH)/Mono.Cecil.csproj
 	$(SYSTEM_XBUILD) /t:Clean /p:Configuration=$(CECIL_CONFIG) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj
 
@@ -204,5 +204,5 @@ include $(TOP)/mk/rules.mk
 
 # make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
 # marking those files as .SECONDARY will prevent that deletion.
-.SECONDARY: $(foreach ext,h m,Xamarin.Mac.registrar.mobile.i386.$(ext) Xamarin.Mac.registrar.mobile.x86_64.$(ext) Xamarin.Mac.registrar.full.i386.$(ext) Xamarin.Mac.registrar.full.x86_64.$(ext))
+.SECONDARY: $(foreach ext,h m a,Xamarin.Mac.registrar.mobile.i386.$(ext) Xamarin.Mac.registrar.mobile.x86_64.$(ext) Xamarin.Mac.registrar.full.i386.$(ext) Xamarin.Mac.registrar.full.x86_64.$(ext))
 .SECONDARY: Xamarin.Mac.registrar.mobile.a Xamarin.Mac.registrar.full.a

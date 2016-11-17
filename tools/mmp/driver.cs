@@ -157,8 +157,18 @@ namespace Xamarin.Bundler {
 		public static Version MinOSVersion { get { return minos; } }
 
 		public static string ProductAssembly => "Xamarin.Mac";
-		public static string PlatformFrameworkDirectory =>
-					Path.Combine (MMPDirectory, "lib", "mono", "Xamarin.Mac");
+		public static string PlatformFrameworkDirectory
+		{
+			get
+			{
+				if (IsUnifiedMobile)
+					return Path.Combine (MMPDirectory, "lib", "mono", "Xamarin.Mac");
+				else if (IsUnifiedFullXamMacFramework)
+					return Path.Combine (MMPDirectory, "lib", "mono", "4.5");
+				throw new InvalidOperationException ("PlatformFrameworkDirectory when not Mobile or Full?");
+			}
+		}
+					
 
 		static int watch_level;
 		static Stopwatch watch;
@@ -449,7 +459,6 @@ namespace Xamarin.Bundler {
 			if (action == Action.RunRegistrar)
 			{
 				App.RootAssembly = unprocessed [0];
-				App.AppDirectory = output_dir;
 				App.Registrar = RegistrarMode.Static;
 				App.RunRegistrar ();
 				return;
