@@ -335,7 +335,8 @@ namespace XamCore.Security.Tls
 
 			connectionInfo = new MonoTlsConnectionInfo {
 				CipherSuiteCode = (CipherSuiteCode)cipher,
-				ProtocolVersion = GetProtocol (protocol)
+				ProtocolVersion = GetProtocol (protocol),
+				PeerDomainName = PeerDomainName
 			};
 		}
 
@@ -604,7 +605,11 @@ namespace XamCore.Security.Tls
 				var bytes = new byte [length];
 				result = SSLGetPeerDomainName (Handle, bytes, ref length);
 				CheckStatusAndThrow (result);
-				return result == SslStatus.Success ? Encoding.UTF8.GetString (bytes) : String.Empty;
+				if (result != SslStatus.Success)
+					return string.Empty;
+				if (length > 0 && bytes [length-1] == 0)
+					length--;
+				return Encoding.UTF8.GetString (bytes, 0, (int)length);
 			}
 			set {
 				SslStatus result;
