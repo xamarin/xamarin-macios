@@ -277,6 +277,7 @@ namespace xharness
 					WorkingDirectory = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners.2.6.4", "tools", "lib"),
 					Platform = TestPlatform.iOS,
 					TestName = "MSBuild tests - iOS",
+					Timeout = TimeSpan.FromMinutes (30),
 				};
 				Tasks.Add (nunitExecution);
 			}
