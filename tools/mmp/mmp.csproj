@@ -52,12 +52,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Security" />
-    <Reference Include="Mono.Cecil.Mdb">
-      <HintPath>..\..\external\mono\external\cecil\bin\net_4_0_Release\Mono.Cecil.Mdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil">
-      <HintPath>..\..\external\mono\external\cecil\bin\net_4_0_Release\Mono.Cecil.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="driver.cs" />
@@ -287,6 +281,9 @@
     <Compile Include="..\common\Frameworks.cs">
       <Link>external\Frameworks.cs</Link>
     </Compile>
+    <Compile Include="..\common\Application.cs">
+      <Link>external\Application.cs</Link>
+    </Compile>
     <Compile Include="..\common\Assembly.cs">
       <Link>external\Assembly.cs</Link>
     </Compile>
@@ -323,12 +320,6 @@
     <Compile Include="..\linker\RemoveUserResourcesSubStep.cs">
       <Link>Xamarin.Linker\RemoveUserResourcesSubStep.cs</Link>
     </Compile>
-    <Compile Include="..\common\Application.cs">
-      <Link>external\Common\Application.cs</Link>
-    </Compile>
-    <Compile Include="Application.cs">
-      <Link>external\Application.cs</Link>
-    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -350,9 +341,18 @@
     <Folder Include="Resources\" />
     <Folder Include="MonoMac.Tuner\" />
     <Folder Include="Xamarin.Linker\" />
-    <Folder Include="external\Common\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\external\mono\external\cecil\Mono.Cecil.csproj">
+      <Project>{D68133BD-1E63-496E-9EDE-4FBDBF77B486}</Project>
+      <Name>Mono.Cecil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\external\mono\external\cecil\symbols\mdb\Mono.Cecil.Mdb.csproj">
+      <Project>{8559DD7F-A16F-46D0-A05A-9139FAEBA8FD}</Project>
+      <Name>Mono.Cecil.Mdb</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
