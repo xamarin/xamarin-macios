@@ -798,10 +798,8 @@ xamarin_open_assembly (const char *name)
 #if MONOMAC
 	if (xamarin_get_is_mkbundle ()) {
 		assembly = mono_assembly_open (name, NULL);
-		if (assembly == NULL) {
-			PRINT (PRODUCT ": Could not find the required assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: http://bugzilla.xamarin.com", name);
-			exit (1);
-		}
+		if (assembly == NULL)
+			xamarin_assertion_message ("Could not find the required assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: http://bugzilla.xamarin.com", name);
 		return assembly;
 	}
 #endif
@@ -827,23 +825,18 @@ xamarin_open_assembly (const char *name)
 		mono_assembly_name_free (aname);
 		if (assembly)
 			return assembly;
-		
-		PRINT (PRODUCT ": Could not find the assembly '%s' in the app nor as an already loaded assembly. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: http://bugzilla.xamarin.com", name);
-		exit (1);
+
+		xamarin_assertion_message ("Could not find the assembly '%s' in the app nor as an already loaded assembly. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: http://bugzilla.xamarin.com", name);
 	}
 #endif
 
-	if (!xamarin_file_exists (path)) {
-		PRINT (PRODUCT ": Could not find the assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: http://bugzilla.xamarin.com", name);
-		exit (1);
-	}
+	if (!xamarin_file_exists (path))
+		xamarin_assertion_message ("Could not find the assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: http://bugzilla.xamarin.com", name);
 
 	assembly = mono_assembly_open (path, NULL);
-	if (assembly == NULL) {
-		PRINT (PRODUCT ": Could not find the required assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: http://bugzilla.xamarin.com", name);
-		exit (1);
-	}
-		
+	if (assembly == NULL)
+		xamarin_assertion_message ("Could not find the required assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: http://bugzilla.xamarin.com", name);
+
 	return assembly;
 }
 
