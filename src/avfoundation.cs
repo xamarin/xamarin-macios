@@ -2573,7 +2573,7 @@ namespace XamCore.AVFoundation {
 		NSString WasDefragmentedNotification { get; }
 #endif
 
-		[iOS (10, 2), Mac (10,12,2), TV (10, 2)]
+		[iOS (10, 3), Mac (10,12,3), TV (10, 3)]
 		[Export ("overallDurationHint")]
 		CMTime OverallDurationHint { get; }
 	}
@@ -7957,6 +7957,10 @@ namespace XamCore.AVFoundation {
 
 		[NullAllowed, Export ("previewPhotoFormat", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, NSObject> PreviewPhotoFormat { get; set; }
+
+		[iOS (10, 2)]
+		[Export ("autoDualCameraFusionEnabled")]
+		bool AutoDualCameraFusionEnabled { [Bind ("isAutoDualCameraFusionEnabled")] get; set; }
 	}
 	
 #if !MONOMAC
@@ -8118,10 +8122,6 @@ namespace XamCore.AVFoundation {
 		[iOS (10, 2)]
 		[Export ("dualCameraFusionSupported")]
 		bool DualCameraFusionSupported { [Bind ("isDualCameraFusionSupported")] get; }
-
-		[iOS (10, 2)]
-		[Export ("autoDualCameraFusionEnabled")]
-		bool AutoDualCameraFusionEnabled { [Bind ("isAutoDualCameraFusionEnabled")] get; set; }
 
 	}
 #endif
