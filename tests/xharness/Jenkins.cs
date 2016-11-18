@@ -197,6 +197,12 @@ namespace xharness
 			} else if (labels.Contains ("run-" + testname + "-tests")) {
 				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-{0}-tests' is set.", testname);
 				value = true;
+			} else if (labels.Contains ("skip-all-tests")) {
+				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-all-tests' is set.", testname);
+				value = false;
+			} else if (labels.Contains ("run-all-tests")) {
+				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-all-tests' is set.", testname);
+				value = true;
 			}
 			// respect any default value
 		}
