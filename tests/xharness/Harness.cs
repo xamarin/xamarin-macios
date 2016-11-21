@@ -87,6 +87,7 @@ namespace xharness
 			}
 		}
 
+		object mlaunch_lock = new object ();
 		string DownloadMlaunch ()
 		{
 			// NOTE: the filename part in the url must be unique so that the caching logic works properly.
@@ -94,39 +95,41 @@ namespace xharness
 			var extraction_dir = Path.Combine (Path.GetTempPath (), Path.GetFileNameWithoutExtension (mlaunch_url));
 			var mlaunch_path = Path.Combine (extraction_dir, "bin", "mlaunch");
 
-			if (File.Exists (mlaunch_path))
-				return mlaunch_path;
+			lock (mlaunch_lock) {
+				if (File.Exists (mlaunch_path))
+					return mlaunch_path;
 
-			try {
-				var local_zip = extraction_dir + ".zip";
-				Log ("Downloading mlaunch to: {0}", local_zip);
-				var wc = new System.Net.WebClient ();
-				wc.DownloadFile (mlaunch_url, local_zip);
-				Log ("Downloaded mlaunch.");
+				try {
+					var local_zip = extraction_dir + ".zip";
+					Log ("Downloading mlaunch to: {0}", local_zip);
+					var wc = new System.Net.WebClient ();
+					wc.DownloadFile (mlaunch_url, local_zip);
+					Log ("Downloaded mlaunch.");
 
-				var tmp_extraction_dir = extraction_dir + ".tmp";
-				if (Directory.Exists (tmp_extraction_dir))
-					Directory.Delete (tmp_extraction_dir, true);
+					var tmp_extraction_dir = extraction_dir + ".tmp";
+					if (Directory.Exists (tmp_extraction_dir))
+						Directory.Delete (tmp_extraction_dir, true);
 
-				Log ("Extracting mlaunch...");
-				using (var p = new Process ()) {
-					p.StartInfo.FileName = "unzip";
-					p.StartInfo.Arguments = $"-d {Quote (tmp_extraction_dir)} {Quote (local_zip)}";
-					Log ("{0} {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
-					p.Start ();
-					p.WaitForExit ();
-					if (p.ExitCode != 0) {
-						Log ("Could not unzip mlaunch, exit code: {0}", p.ExitCode);
-						return mlaunch_path;
+					Log ("Extracting mlaunch...");
+					using (var p = new Process ()) {
+						p.StartInfo.FileName = "unzip";
+						p.StartInfo.Arguments = $"-d {Quote (tmp_extraction_dir)} {Quote (local_zip)}";
+						Log ("{0} {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
+						p.Start ();
+						p.WaitForExit ();
+						if (p.ExitCode != 0) {
+							Log ("Could not unzip mlaunch, exit code: {0}", p.ExitCode);
+							return mlaunch_path;
+						}
 					}
-				}
-				Directory.Move (tmp_extraction_dir, extraction_dir);
+					Directory.Move (tmp_extraction_dir, extraction_dir);
 
-				Log ("Final mlaunch path: {0}", mlaunch_path);
-			} catch (Exception e) {
-				Log ("Could not download mlaunch: {0}", e);
+					Log ("Final mlaunch path: {0}", mlaunch_path);
+				} catch (Exception e) {
+					Log ("Could not download mlaunch: {0}", e);
+				}
+				return mlaunch_path;
 			}
-			return mlaunch_path;
 		}
 
 		string mlaunch;
