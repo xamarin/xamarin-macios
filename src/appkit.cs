@@ -24962,7 +24962,7 @@ namespace XamCore.AppKit {
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface NSSliderAccessory : NSCoding, NSAccessibility, NSAccessibilityElement
+	interface NSSliderAccessory : NSCoding, NSAccessibility, NSAccessibilityElementProtocol
 	{
 		[Static]
 		[Export ("accessoryWithImage:")]
