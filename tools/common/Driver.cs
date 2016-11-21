@@ -239,6 +239,7 @@ namespace Xamarin.Bundler {
 
 			try {
 				if (!File.Exists (path)) {
+					Directory.CreateDirectory (Path.GetDirectoryName (path));
 					File.WriteAllText (path, contents);
 					Log (3, "File '{0}' does not exist, creating it.", path);
 					return;
