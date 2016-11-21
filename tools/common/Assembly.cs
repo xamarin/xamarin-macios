@@ -42,10 +42,10 @@ namespace Xamarin.Bundler {
 		public bool EnableCxx;
 		public bool NeedsGccExceptionHandling;
 		public bool ForceLoad;
-		public HashSet<string> Frameworks;
-		public HashSet<string> WeakFrameworks;
-		public List<string> LinkerFlags; // list of extra linker flags
-		public List<string> LinkWith; // list of paths to native libraries to link with.
+		public HashSet<string> Frameworks = new HashSet<string> ();
+		public HashSet<string> WeakFrameworks = new HashSet<string> ();
+		public List<string> LinkerFlags = new List<string> (); // list of extra linker flags
+		public List<string> LinkWith = new List<string> (); // list of paths to native libraries to link with.
 		public HashSet<ModuleReference> UnresolvedModuleReferences;
 
 		bool? symbols_loaded;
@@ -203,8 +203,6 @@ namespace Xamarin.Bundler {
 								throw ErrorHelper.CreateError (1303, "Could not decompress the native framework '{0}' from '{1}'. Please review the build log for more information from the native 'unzip' command.", libraryName, zipPath);
 						}
 
-						if (Frameworks == null)
-							Frameworks = new HashSet<string> ();
 						Frameworks.Add (path);
 					} else {
 						if (!Application.IsUptodate (FullPath, path)) {
@@ -221,8 +219,6 @@ namespace Xamarin.Bundler {
 							"(if the assembly was built using a binding project, the native library must be included in the project, and its Build Action must be 'ObjcBindingNativeLibrary').",
 								libraryName, path);
 
-						if (LinkWith == null)
-							LinkWith = new List<string> ();
 						LinkWith.Add (path);
 					}
 				}
@@ -334,37 +330,25 @@ namespace Xamarin.Bundler {
 					case "libsystem_kernel":
 						break;
 					case "sqlite3":
-						if (LinkerFlags == null)
-							LinkerFlags = new List<string> ();
 						LinkerFlags.Add ("-lsqlite3");
 						Driver.Log (3, "Linking with {0} because it's referenced by a module reference in {1}", file, FileName);
 						break;
 					case "libsqlite3":
 						// remove lib prefix
-						if (LinkerFlags == null)
-							LinkerFlags = new List<string> ();
 						LinkerFlags.Add ("-l" + file.Substring (3));
 						Driver.Log (3, "Linking with {0} because it's referenced by a module reference in {1}", file, FileName);
 					break;
 					case "libGLES":
 					case "libGLESv2":
 						// special case for OpenGLES.framework
-						if (Frameworks == null)
-							Frameworks = new HashSet<string> ();
-						if (!Frameworks.Contains ("OpenGLES")) {
-							Frameworks.Add ("OpenGLES");
+						if (Frameworks.Add ("OpenGLES"))
 							Driver.Log (3, "Linking with the framework OpenGLES because {0} is referenced by a module reference in {1}", file, FileName);
-						}
 						break;
 					case "vImage":
 					case "vecLib":
 						// sub-frameworks
-						if (Frameworks == null)
-							Frameworks = new HashSet<string> ();
-						if (!Frameworks.Contains ("Accelerate")) {
-							Frameworks.Add ("Accelerate");
+						if (Frameworks.Add ("Accelerate"))
 							Driver.Log (3, "Linking with the framework Accelerate because {0} is referenced by a module reference in {1}", file, FileName);
-						}
 						break;
 					case "CoreAudioKit":
 					case "Metal":
@@ -374,31 +358,22 @@ namespace Xamarin.Bundler {
 #if MTOUCH
 						if (!App.IsSimulatorBuild) {
 #endif
-							if (Frameworks == null)
-								Frameworks = new HashSet<string> ();
-							if (!Frameworks.Contains (file)) {
-								Frameworks.Add (file);
+							if (Frameworks.Add (file))
 								Driver.Log (3, "Linking with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
-							}
 #if MTOUCH
 						}
 #endif
 						break;
 					case "openal32":
-						if (Frameworks == null)
-							Frameworks = new HashSet<string> ();
-						Frameworks.Add ("OpenAL");
+						if (Frameworks.Add ("OpenAL"))
+							Driver.Log (3, "Linking with the framework OpenAL because {0} is referenced by a module reference in {1}", file, FileName);
 						break;
 					default:
 						// detect frameworks
 						int f = name.IndexOf (".framework/", StringComparison.Ordinal);
 						if (f > 0) {
-							if (Frameworks == null)
-								Frameworks = new HashSet<string> ();
-							if (!Frameworks.Contains (file)) {
-								Frameworks.Add (file);
+							if (Frameworks.Add (file))
 								Driver.Log (3, "Linking with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
-							}
 						} else {
 							if (UnresolvedModuleReferences == null)
 								UnresolvedModuleReferences = new HashSet<ModuleReference> ();
