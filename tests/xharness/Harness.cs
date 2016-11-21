@@ -109,6 +109,8 @@ namespace xharness
 					var tmp_extraction_dir = extraction_dir + ".tmp";
 					if (Directory.Exists (tmp_extraction_dir))
 						Directory.Delete (tmp_extraction_dir, true);
+					if (Directory.Exists (extraction_dir))
+						Directory.Delete (extraction_dir, true);
 
 					Log ("Extracting mlaunch...");
 					using (var p = new Process ()) {
