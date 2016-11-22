@@ -338,6 +338,8 @@ namespace Xamarin.Bundler {
 					true /* this is an internal option */
 				},
 				{ "xamarin-framework-directory=", "The framework directory", v => { xm_framework_dir = v; }, true },
+				{ "xamarin-full-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullXamMacFramework = true; } },
+				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullSystemFramework = true; } },
 
 			};
 
@@ -379,7 +381,10 @@ namespace Xamarin.Bundler {
 
 			if (TargetFramework.Identifier == TargetFramework.Xamarin_Mac_2_0.Identifier) {
 				IsUnifiedMobile = true;
-			} else {
+			} else if (!IsUnifiedFullXamMacFramework && !IsUnifiedFullSystemFramework) {
+				// This is a total hack. Instead of passing in an argument, we walk the refernces looking for
+				// the "right" Xamarin.Mac and assume you are doing something
+				// Skip it if xamarin-full-framework or xamarin-system-framework passed in 
 				foreach (var asm in references) {
 					if (asm.EndsWith ("reference/full/Xamarin.Mac.dll", StringComparison.Ordinal)) {
 						IsUnifiedFullSystemFramework = true;
