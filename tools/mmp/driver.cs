@@ -157,15 +157,33 @@ namespace Xamarin.Bundler {
 		public static Version MinOSVersion { get { return minos; } }
 
 		public static string ProductAssembly => "Xamarin.Mac";
-		public static string PlatformFrameworkDirectory
-		{
-			get
-			{
+		public static string PlatformFrameworkDirectory	{
+			get {
 				if (IsUnifiedMobile)
 					return Path.Combine (MMPDirectory, "lib", "mono", "Xamarin.Mac");
 				else if (IsUnifiedFullXamMacFramework)
 					return Path.Combine (MMPDirectory, "lib", "mono", "4.5");
 				throw new InvalidOperationException ("PlatformFrameworkDirectory when not Mobile or Full?");
+			}
+		}
+
+		public static string Arch32Directory {
+			get {
+				if (IsUnifiedMobile)
+					return Path.Combine (MMPDirectory, "lib", "i386", "mobile");
+				else if (IsUnifiedFullXamMacFramework)
+					return Path.Combine (MMPDirectory, "lib", "i386", "full");
+				throw new InvalidOperationException ("Arch32Directory when not Mobile or Full?");
+			}
+		}
+		
+		public static string Arch64Directory {
+			get {
+				if (IsUnifiedMobile)
+					return Path.Combine (MMPDirectory, "lib", "x86_64", "mobile");
+				else if (IsUnifiedFullXamMacFramework)
+					return Path.Combine (MMPDirectory, "lib", "x86_64", "full");
+				throw new InvalidOperationException ("Arch64Directory when not Mobile or Full?");
 			}
 		}
 					
@@ -986,7 +1004,7 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ();
 
 				if (UsesPartialRegistrar)
-					sw.WriteLine ("xamarin_create_classes_Xamarin_Mac ();");
+					sw.WriteLine ("\txamarin_create_classes_Xamarin_Mac ();");
 
 				if (Driver.registrar == RegistrarMode.Static)
 					sw.WriteLine ("\txamarin_create_classes ();");

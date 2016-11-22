@@ -423,15 +423,13 @@ namespace Xamarin.Bundler {
 				RootDirectory = Path.GetDirectoryName (RootAssembly),
 			};
 
-#if MONOTOUCH
-			if (Driver.App.Platform == ApplePlatform.iOS) {
+			if (Driver.App.Platform == ApplePlatform.iOS || Driver.App.Platform == ApplePlatform.MacOSX) {
 				if (Driver.App.Is32Build) {
 					resolver.ArchDirectory = Driver.Arch32Directory;
 				} else {
 					resolver.ArchDirectory = Driver.Arch64Directory;
 				}
 			}
-#endif
 
 			var ps = new ReaderParameters ();
 			ps.AssemblyResolver = resolver;

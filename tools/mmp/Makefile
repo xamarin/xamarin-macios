@@ -164,7 +164,7 @@ Xamarin.Mac.registrar.mobile.i386.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_D
 	$(GENERATE_PART_REGISTRAR) --target-framework Xamarin.Mac,v1.0 --arch=i386
 	$(Q) touch Xamarin.Mac.registrar.mobile.i386.m Xamarin.Mac.registrar.mobile.i386.h
 
-Xamarin.Mac.registrar.mobile.x86_64.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full/Xamarin.Mac.dll mmp.exe
+Xamarin.Mac.registrar.mobile.x86_64.m:     $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile/Xamarin.Mac.dll mmp.exe
 	$(GENERATE_PART_REGISTRAR) --target-framework Xamarin.Mac,v1.0 --arch=x86_64
 	$(Q) touch Xamarin.Mac.registrar.mobile.x86_64.m Xamarin.Mac.registrar.mobile.x86_64.h
 
