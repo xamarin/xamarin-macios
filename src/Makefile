@@ -28,6 +28,8 @@ include ./OpenGLES/Makefile.include
 include ./OpenGLES/Makefile-1.0.include
 include ./Makefile.generator
 
+include ./generator-diff.mk
+
 COMMON_TARGET_DIRS = \
 	build/common             \
 	build/common/NativeTypes \
