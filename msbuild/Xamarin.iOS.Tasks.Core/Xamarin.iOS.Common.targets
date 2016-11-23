@@ -800,7 +800,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		>
 		</DSymUtil>
 
-		<!--- strip the main executable -->
+		<!--- strip the debug symbols from the $(_NativeExecutable) -->
 		<SymbolStrip
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '$(MtouchDebug)' == 'false' And '$(MtouchNoSymbolStrip)' == 'false'"
@@ -809,6 +809,14 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			SymbolFile="$(_MtouchSymbolsList)"
 		>
 		</SymbolStrip>
+
+		<!-- touch the dSYM Info.plist so that its mtime is newer than the stripped $(_NativeExecutable) -->
+		<Touch
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(MtouchDebug)' == 'false' And '$(MtouchNoSymbolStrip)' == 'false'"
+			Files="$(AppBundleDir).dSYM\Contents\Info.plist"
+		>
+		</Touch>
 
 		<!-- make sure spotlight indexes everything we've built -->
 		<SpotlightIndexer
@@ -867,7 +875,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			OutputImages="@(_PngImage -> '$(DeviceSpecificIntermediateOutputPath)optimized\%(LogicalName)')">
 			<Output TaskParameter="OutputImages" ItemName="FileWrites" />
 		</OptimizeImage>
-  </Target>
+	</Target>
 
 	<Target Name="_AfterCoreOptimizePngImages" Condition="'@(_PngImage)' != ''">
 		<ItemGroup>
@@ -1569,7 +1577,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<Touch
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' And '$(_RequireCodeSigning)' == 'true' And Exists ('$(AppBundleDir).dSYM\Contents\Info.plist')"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_RequireCodeSigning)' == 'true' And Exists ('$(AppBundleDir).dSYM\Contents\Info.plist')"
 			Files="$(AppBundleDir).dSYM\Contents\Info.plist"
 		/>
 	</Target>

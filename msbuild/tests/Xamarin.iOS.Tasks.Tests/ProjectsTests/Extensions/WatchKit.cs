@@ -18,7 +18,7 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void BasicTest () 
 		{
-			this.BuildExtension ("MyWatchApp", "MyWatchKitExtension", Platform);
+			this.BuildExtension ("MyWatchApp", "MyWatchKitExtension", Platform, "Debug");
 		}
 
 		[Test]

@@ -13,7 +13,7 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void BasicTest ()
 		{
-			this.BuildExtension ("MyMasterDetailApp", "MyShareExtension", Platform);
+			this.BuildExtension ("MyMasterDetailApp", "MyShareExtension", Platform, "Debug");
 
 			// Verify that Mono.frameworks is in the app
 			Assert.That (Directory.Exists (Path.Combine (AppBundlePath, "Frameworks")), "Frameworks exists");
