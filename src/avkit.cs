@@ -23,7 +23,9 @@ namespace XamCore.AVKit {
 	[iOS (9,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
+#if XAMCORE_4_0
 	[Sealed] // Apple docs: Do not subclass AVPictureInPictureController. Overriding this class’s methods is unsupported and results in undefined behavior.
+#endif
 	interface AVPictureInPictureController
 	{
 		[Static]

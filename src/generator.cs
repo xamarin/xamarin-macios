@@ -1291,7 +1291,7 @@ public class MemberInformation
 		this.is_model = is_model;
 		this.mi = mi;
 		
-		if (is_interface_impl || is_extension_method) {
+		if (is_interface_impl || is_extension_method || Generator.HasAttribute (type, typeof (SealedAttribute))) {
 			is_abstract = false;
 			is_virtual_method = false;
 		}
@@ -1359,7 +1359,7 @@ public class MemberInformation
 		if (category_extension_type != null)
 			is_category_extension = true;
 
-		if (is_static || is_category_extension || is_interface_impl || is_extension_method)
+		if (is_static || is_category_extension || is_interface_impl || is_extension_method || Generator.HasAttribute (type, typeof (SealedAttribute)))
 			is_virtual_method = false;
 	}
 
@@ -1373,7 +1373,7 @@ public class MemberInformation
 		if (export != null)
 			selector = export.Selector;
 
-		if (wrap_method != null || is_interface_impl)
+		if (wrap_method != null || is_interface_impl || Generator.HasAttribute (type, typeof (SealedAttribute)))
 			is_virtual_method = false;
 		else
 			is_virtual_method = !is_static;
@@ -5882,6 +5882,7 @@ public partial class Generator : IMemberGatherer {
 			bool is_model = type.GetCustomAttributes (typeof (ModelAttribute), true).Length > 0;
 			bool is_protocol = HasAttribute (type, typeof (ProtocolAttribute));
 			bool is_abstract = HasAttribute (type, typeof (AbstractAttribute));
+			bool is_sealed = HasAttribute (type, typeof (SealedAttribute));
 			string class_visibility = type.IsInternal () ? "internal" : "public";
 
 			var default_ctor_visibility = GetAttribute<DefaultCtorVisibilityAttribute> (type);
@@ -5925,6 +5926,8 @@ public partial class Generator : IMemberGatherer {
 					print ("[Register(\"{0}\", {1})]", objc_type_name, HasAttribute (type, typeof (SyntheticAttribute)) || is_model ? "false" : "true");
 				if (is_abstract || need_abstract.ContainsKey (type))
 					class_mod = "abstract ";
+				else if (is_sealed)
+					class_mod = "sealed ";
 			} 
 			
 			if (is_model){
@@ -6155,15 +6158,17 @@ public partial class Generator : IMemberGatherer {
 							sw.WriteLine ();
 						}
 					}
-					GeneratedCode (sw, 2);
-					sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
-					sw.WriteLine ("\t\t{0} {1} (NSObjectFlag t) : base (t)", UnifiedAPI ? "protected" : "public", TypeName);
-					sw.WriteLine ("\t\t{");
-					if (BindThirdPartyLibrary)
-						sw.WriteLine ("\t\t\t{0}", init_binding_type);
-					WriteMarkDirtyIfDerived (sw, type);
-					sw.WriteLine ("\t\t}");
-					sw.WriteLine ();
+					if (!is_sealed) {
+						GeneratedCode (sw, 2);
+						sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
+						sw.WriteLine ("\t\t{0} {1} (NSObjectFlag t) : base (t)", UnifiedAPI ? "protected" : "public", TypeName);
+						sw.WriteLine ("\t\t{");
+						if (BindThirdPartyLibrary)
+							sw.WriteLine ("\t\t\t{0}", init_binding_type);
+						WriteMarkDirtyIfDerived (sw, type);
+						sw.WriteLine ("\t\t}");
+						sw.WriteLine ();
+					}
 					GeneratedCode (sw, 2);
 					sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 					sw.WriteLine ("\t\t{0} {1} (IntPtr handle) : base (handle)", UnifiedAPI ? "protected internal" : "public", TypeName);
