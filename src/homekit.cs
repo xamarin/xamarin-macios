@@ -319,6 +319,9 @@ namespace XamCore.HomeKit {
 		[Export ("characteristicType", ArgumentSemantic.Copy)]
 		NSString _CharacteristicType { get; }
 
+		[Wrap ("HMCharacteristicTypeExtensions.GetValue (_CharacteristicType)")]
+		HMCharacteristicType CharacteristicType { get; }
+
 		[Export ("service", ArgumentSemantic.Weak)]
 		HMService Service { get; }
 
@@ -829,6 +832,9 @@ namespace XamCore.HomeKit {
 		[Export ("serviceType", ArgumentSemantic.Copy)]
 		NSString _ServiceType { get; }
 
+		[Wrap ("HMServiceTypeExtensions.GetValue (_ServiceType)")]
+		HMServiceType ServiceType { get; }
+
 		[Export ("name")]
 		string Name { get; }
 
@@ -1094,6 +1100,9 @@ namespace XamCore.HomeKit {
 		[Internal]
 		[Export ("categoryType")]
 		NSString _CategoryType { get; }
+
+		[Wrap ("HMAccessoryCategoryTypeExtensions.GetValue (_CategoryType)")]
+		HMAccessoryCategoryType CategoryType { get; }
 
 		[Export ("localizedDescription")]
 		string LocalizedDescription { get; }
