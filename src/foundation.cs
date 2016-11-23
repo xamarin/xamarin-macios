@@ -12031,7 +12031,7 @@ namespace XamCore.Foundation
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	[BaseType (typeof (NSDimension))]
 	[DisableDefaultCtor] // base type has a designated initializer
-	interface NSUnitTemperature : NSSecureCoding {
+	interface NSUnitTemperature : NSUnit, NSSecureCoding {
 		// inline from base type
 		[Export ("initWithSymbol:converter:")]
 		[DesignatedInitializer]
@@ -12053,6 +12053,10 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("baseUnit")]
 		NSDimension BaseUnit { get; }
+
+		[Override]
+		[Export ("symbol")]
+		new string Symbol { get; }
 	}
 
 #if MONOMAC
