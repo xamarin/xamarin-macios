@@ -178,6 +178,8 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "NSExtensionRequestHandling":
+				return IntPtr.Size == 4;
 			}
 
 			switch (type.Name) {

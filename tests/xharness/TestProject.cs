@@ -19,6 +19,18 @@ namespace xharness
 		}
 	}
 
+	public class MacTestProject : TestProject
+	{
+		public bool SkipXMVariations;
 
+		public MacTestProject () : base ()
+		{
+		}
+
+		public MacTestProject (string path, bool isExecutableProject = true, bool generateVariations = true, bool skipXMVariations = false) : base (path, isExecutableProject, generateVariations)
+		{
+			SkipXMVariations = skipXMVariations;
+		}
+	}
 }
 

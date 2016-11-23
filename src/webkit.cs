@@ -1890,6 +1890,7 @@ namespace XamCore.WebKit {
 		/* JSGlobalContextRef */ IntPtr GlobalContext { get; }
 
 #if XAMCORE_2_0
+		[Mac (10,10, onlyOn64 : true)]
                 [Export ("javaScriptContext", ArgumentSemantic.Strong)]
                 JSContext JavaScriptContext { get; }
 #endif
@@ -2404,6 +2405,7 @@ namespace XamCore.WebKit {
 		void SetException (string description);
 
 #if XAMCORE_2_0
+		[Mac (10,10, onlyOn64 : true)]
                 [Export ("JSValue")]
                 JSValue JSValue { get; }
 #endif
