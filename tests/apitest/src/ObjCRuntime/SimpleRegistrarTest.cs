@@ -14,25 +14,21 @@ using ObjCRuntime;
 namespace Xamarin.Mac.Tests
 {
 	[Register ("RegistrarTestClass")]
-	class RegistrarTestClass : NSObject
+	class RegistrarTestClass : NSObject 
 	{
-		public virtual string Value
-		{
+		public virtual string Value {
 			[Export ("value")]
-			get
-			{
+			get {
 				return "RegistrarTestClass";
 			}
 		}
 	}
 
 	[Register ("RegistrarTestDerivedClass")]
-	class RegistrarTestDerivedClass : RegistrarTestClass
+	class RegistrarTestDerivedClass : RegistrarTestClass 
 	{
-		public override string Value
-		{
-			get
-			{
+		public override string Value {
+			get {
 				return "RegistrarTestDerivedClass";
 			}
 		}

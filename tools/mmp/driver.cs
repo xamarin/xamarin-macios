@@ -479,8 +479,7 @@ namespace Xamarin.Bundler {
 			if (verbose > 0)
 				Console.WriteLine ("Selected target framework: {0}; API: {1}", targetFramework, IsClassic ? "Classic" : "Unified");
 
-			if (action == Action.RunRegistrar)
-			{
+			if (action == Action.RunRegistrar) {
 				App.RootAssembly = unprocessed [0];
 				App.Registrar = RegistrarMode.Static;
 				App.RunRegistrar ();
