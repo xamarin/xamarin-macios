@@ -324,7 +324,52 @@ namespace Xamarin.Bundler {
 	//					MT6001	Running version of Cecil doesn't support assembly stripping
 	//					MT6002	Could not strip assembly `{0}`.
 	//					MT6003  [UnauthorizedAccessException message]
-	// MT7xxx	reserved
+	// MT7xxx	msbuild reserved
+	//			MT700x	misc
+	//					MT7001	Could not resolve host IPs for WiFi debugger settings.
+	//					MT7002	This machine does not have any network adapters. This is required when debugging or profiling on device over WiFi.
+	//					MT7003	The App Extension '*' does not contain an Info.plist.
+	//					MT7004	The App Extension '*' does not specify a CFBundleIdentifier.
+	//					MT7005	The App Extension '*' does not specify a CFBundleExecutable.
+	//					MT7006	The App Extension '*' has an invalid CFBundleIdentifier (*), it does not begin with the main app bundle's CFBundleIdentifier (*).
+	//					MT7007	The App Extension '*' has a CFBundleIdentifier (*) that ends with the illegal suffix ".key".
+	//					MT7008	The App Extension '*' does not specify a CFBundleShortVersionString.
+	//					MT7009	The App Extension '*' has an invalid Info.plist: it does not contain an NSExtension dictionary.
+	//					MT7010	The App Extension '*' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionPointIdentifier value.
+	//					MT7011	The WatchKit Extension '*' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionAttributes dictionary.
+	//					MT7012	The WatchKit Extension '*' does not have exactly one watch app.
+	//					MT7013	The WatchKit Extension '*' has an invalid Info.plist: UIRequiredDeviceCapabilities must contain the 'watch-companion' capability.
+	//					MT7014	The Watch App '*' does not contain an Info.plist.
+	//					MT7015	The Watch App '*' does not specify a CFBundleIdentifier.
+	//					MT7016	The Watch App '*' has an invalid CFBundleIdentifier (*), it does not begin with the main app bundle's CFBundleIdentifier (*).
+	//					MT7017	The Watch App '*' does not have a valid UIDeviceFamily value. Expected 'Watch (4)' but found '* (*)'.
+	//					MT7018	The Watch App '*' does not specify a CFBundleExecutable
+	//					MT7019	The Watch App '*' has an invalid WKCompanionAppBundleIdentifier value ('*'), it does not match the main app bundle's CFBundleIdentifier ('*').
+	//					MT7020	The Watch App '*' has an invalid Info.plist: the WKWatchKitApp key must be present and have a value of 'true'.
+	//					MT7021	The Watch App '*' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.
+	//					MT7022	The Watch App '*' does not contain a Watch Extension.
+	//					MT7023	The Watch Extension '*' does not contain an Info.plist.
+	//					MT7024	The Watch Extension '*' does not specify a CFBundleIdentifier.
+	//					MT7025	The Watch Extension '*' does not specify a CFBundleExecutable.
+	//					MT7026	The Watch Extension '*' has an invalid CFBundleIdentifier (*), it does not begin with the main app bundle's CFBundleIdentifier (*).
+	//					MT7027	The Watch Extension '*' has a CFBundleIdentifier (*) that ends with the illegal suffix ".key".
+	//					MT7028	The Watch Extension '*' has an invalid Info.plist: it does not contain an NSExtension dictionary.
+	//					MT7029	The Watch Extension '*' has an invalid Info.plist: the NSExtensionPointIdentifier must be "com.apple.watchkit".
+	//					MT7030	The Watch Extension '*' has an invalid Info.plist: the NSExtension dictionary must contain NSExtensionAttributes.
+	//					MT7031	The Watch Extension '*' has an invalid Info.plist: the NSExtensionAttributes dictionary must contain a WKAppBundleIdentifier.
+	//					MT7032	The WatchKit Extension '*' has an invalid Info.plist: UIRequiredDeviceCapabilities should not contain the 'watch-companion' capability.
+	//					MT7033	The Watch App '*' does not contain an Info.plist.
+	//					MT7034	The Watch App '*' does not specify a CFBundleIdentifier.
+	//					MT7035	The Watch App '*' does not have a valid UIDeviceFamily value. Expected '*' but found '* (*)'.
+	//					MT7036	The Watch App '*' does not specify a CFBundleExecutable.
+	//					MT7037	The WatchKit Extension '{extensionName}' has an invalid WKAppBundleIdentifier value ('*'), it does not match the Watch App's CFBundleIdentifier ('*').
+	//					MT7038	The Watch App '*' has an invalid Info.plist: the WKCompanionAppBundleIdentifier must exist and must match the main app bundle's CFBundleIdentifier.
+	//					MT7039	The Watch App '*' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.
+	//					MT7040	The app bundle {AppBundlePath} does not contain an Info.plist.
+	//					MT7041	Main Info.plist path does not specify a CFBundleIdentifier.
+	//					MT7042	Main Info.plist path does not specify a CFBundleExecutable.
+	//					MT7043	Main Info.plist path does not specify a CFBundleSupportedPlatforms.
+	//					MT7044	Main Info.plist path does not specify a UIDeviceFamily.
 	// MT8xxx	runtime
 	//			MT800x	misc
 	//					MT8001	Version mismatch between the native Xamarin.iOS runtime and monotouch.dll. Please reinstall Xamarin.iOS.

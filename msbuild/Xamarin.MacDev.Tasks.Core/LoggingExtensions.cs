@@ -55,5 +55,17 @@ namespace Xamarin.MacDev.Tasks
 		{
 			log.LogMessage (TaskPropertyImportance, "{0} Task", taskName);
 		}
+
+		/// <summary>
+		/// Creates an MSBuild error following our MTErrors convention.</summary>
+		/// <remarks>
+		/// For every new error we need to update "docs/website/mtouch-errors.md" and "tools/mtouch/error.cs".</remarks>
+		/// <param name="errorCode">In the 7xxx range for MSBuild error.</param>
+		/// <param name="message">The error's message to be displayed in the error pad.</param>
+		/// <param name="filePath">Path to the known guilty file or MSBuild by default so we display something nice in the error pad.</param>
+		public static void MTError (this TaskLoggingHelper log, int errorCode, string message, string filePath = "MSBuild")
+		{
+			log.LogError (null, $"MT{errorCode}", null, filePath, 0, 0, 0, 0, message);
+		}
 	}
 }

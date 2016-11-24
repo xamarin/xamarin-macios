@@ -1391,8 +1391,103 @@ An error occurred when stripping managed code(removing the IL code) from the ass
 A security error ocurred while stripping debugging symbols from the application.
 
 <!--
- MT7xxx reserved
+ MT7xxx msbuild errors
   -->
+
+<h3><a name="MT7001"/>MT7001: Could not resolve host IPs for WiFi debugger settings.</h3>
+
+Troubleshooting steps:  
+
+- try to run `csharp -e 'System.Net.Dns.GetHostEntry (System.Net.Dns.GetHostName ()).AddressList'` (that should give you an IP address and not an error obviously).
+- try to run "ping \`hostname\`" which might give you more information, like: `cannot resolve MyHost.local: Unknown host`
+
+In some cases, it's a "local network" issue and it can be addressed by adding the unknown host `127.0.0.1	MyHost.local` in `/etc/hosts`.
+
+<h3><a name="MT7002"/>MT7002: This machine does not have any network adapters. This is required when debugging or profiling on device over WiFi.</h3>
+
+<h3><a name="MT7003"/>MT7003: The App Extension '*' does not contain an Info.plist.</h3>
+
+<h3><a name="MT7004"/>MT7004: The App Extension '*' does not specify a CFBundleIdentifier.</h3>
+
+<h3><a name="MT7005"/>MT7005: The App Extension '*' does not specify a CFBundleExecutable.</h3>
+
+<h3><a name="MT7006"/>MT7006: The App Extension '*' has an invalid CFBundleIdentifier (*), it does not begin with the main app bundle's CFBundleIdentifier (*).</h3>
+
+<h3><a name="MT7007"/>MT7007: The App Extension '*' has a CFBundleIdentifier (*) that ends with the illegal suffix ".key".</h3>
+
+<h3><a name="MT7008"/>MT7008: The App Extension '*' does not specify a CFBundleShortVersionString.</h3>
+
+<h3><a name="MT7009"/>MT7009: The App Extension '*' has an invalid Info.plist: it does not contain an NSExtension dictionary.</h3>
+
+<h3><a name="MT7010"/>MT7010: The App Extension '*' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionPointIdentifier value.</h3>
+
+<h3><a name="MT7011"/>MT7011: The WatchKit Extension '*' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionAttributes dictionary.</h3>
+
+<h3><a name="MT7012"/>MT7012: The WatchKit Extension '*' does not have exactly one watch app.</h3>
+
+<h3><a name="MT7013"/>MT7013: The WatchKit Extension '*' has an invalid Info.plist: UIRequiredDeviceCapabilities must contain the 'watch-companion' capability.</h3>
+
+<h3><a name="MT7014"/>MT7014: The Watch App '*' does not contain an Info.plist.</h3>
+
+<h3><a name="MT7015"/>MT7015: The Watch App '*' does not specify a CFBundleIdentifier.</h3>
+
+<h3><a name="MT7016"/>MT7016: The Watch App '*' has an invalid CFBundleIdentifier (*), it does not begin with the main app bundle's CFBundleIdentifier (*).</h3>
+
+<h3><a name="MT7017"/>MT7017: The Watch App '*' does not have a valid UIDeviceFamily value. Expected 'Watch (4)' but found '* (*)'.</h3>
+
+<h3><a name="MT7018"/>MT7018: The Watch App '*' does not specify a CFBundleExecutable</h3>
+
+<h3><a name="MT7019"/>MT7019: The Watch App '*' has an invalid WKCompanionAppBundleIdentifier value ('*'), it does not match the main app bundle's CFBundleIdentifier ('*').</h3>
+
+<h3><a name="MT7020"/>MT7020: The Watch App '*' has an invalid Info.plist: the WKWatchKitApp key must be present and have a value of 'true'.</h3>
+
+<h3><a name="MT7021"/>MT7021: The Watch App '*' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.</h3>
+
+<h3><a name="MT7022"/>MT7022: The Watch App '*' does not contain a Watch Extension.</h3>
+
+<h3><a name="MT7023"/>MT7023: The Watch Extension '*' does not contain an Info.plist.</h3>
+
+<h3><a name="MT7024"/>MT7024: The Watch Extension '*' does not specify a CFBundleIdentifier.</h3>
+
+<h3><a name="MT7025"/>MT7025: The Watch Extension '*' does not specify a CFBundleExecutable.</h3>
+
+<h3><a name="MT7026"/>MT7026: The Watch Extension '*' has an invalid CFBundleIdentifier (*), it does not begin with the main app bundle's CFBundleIdentifier (*).</h3>
+
+<h3><a name="MT7027"/>MT7027: The Watch Extension '*' has a CFBundleIdentifier (*) that ends with the illegal suffix ".key".</h3>
+
+<h3><a name="MT7028"/>MT7028: The Watch Extension '*' has an invalid Info.plist: it does not contain an NSExtension dictionary.</h3>
+
+<h3><a name="MT7029"/>MT7029: The Watch Extension '*' has an invalid Info.plist: the NSExtensionPointIdentifier must be "com.apple.watchkit".</h3>
+
+<h3><a name="MT7030"/>MT7030: The Watch Extension '*' has an invalid Info.plist: the NSExtension dictionary must contain NSExtensionAttributes.</h3>
+
+<h3><a name="MT7031"/>MT7031: The Watch Extension '*' has an invalid Info.plist: the NSExtensionAttributes dictionary must contain a WKAppBundleIdentifier.</h3>
+
+<h3><a name="MT7032"/>MT7032: The WatchKit Extension '*' has an invalid Info.plist: UIRequiredDeviceCapabilities should not contain the 'watch-companion' capability.</h3>
+
+<h3><a name="MT7033"/>MT7033: The Watch App '*' does not contain an Info.plist.</h3>
+
+<h3><a name="MT7034"/>MT7034: The Watch App '*' does not specify a CFBundleIdentifier.</h3>
+
+<h3><a name="MT7035"/>MT7035: The Watch App '*' does not have a valid UIDeviceFamily value. Expected '*' but found '* (*)'.</h3>
+
+<h3><a name="MT7036"/>MT7036: The Watch App '*' does not specify a CFBundleExecutable.</h3>
+
+<h3><a name="MT7037"/>MT7037: The WatchKit Extension '{extensionName}' has an invalid WKAppBundleIdentifier value ('*'), it does not match the Watch App's CFBundleIdentifier ('*').</h3>
+
+<h3><a name="MT7038"/>MT7038: The Watch App '*' has an invalid Info.plist: the WKCompanionAppBundleIdentifier must exist and must match the main app bundle's CFBundleIdentifier.</h3>
+
+<h3><a name="MT7039"/>MT7039: The Watch App '*' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.</h3>
+
+<h3><a name="MT7040"/>MT7040: The app bundle {AppBundlePath} does not contain an Info.plist.</h3>
+
+<h3><a name="MT7041"/>MT7041: Main Info.plist path does not specify a CFBundleIdentifier.</h3>
+
+<h3><a name="MT7042"/>MT7042: Main Info.plist path does not specify a CFBundleExecutable.</h3>
+
+<h3><a name="MT7043"/>MT7043: Main Info.plist path does not specify a CFBundleSupportedPlatforms.</h3>
+
+<h3><a name="MT7044"/>MT7044: Main Info.plist path does not specify a UIDeviceFamily.</h3>
 
 <!--
  MT8xxx runtime
