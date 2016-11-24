@@ -217,51 +217,6 @@ namespace Xamarin
 		}
 
 		[Test]
-		public void MT0016 ()
-		{
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			var deprecated_list = new string [] {
-				"-d={0}", "--dir={0}", "--cp", "--crossprefix", "--libdir", "-n", "--keeptemp", 
-				"--main", "--nomanifest", "--mapinject", "--nosign", "--displayname", "--bundleid",
-				"--mainnib", "--icon", "-c", "--certificate", "--enable-background-fetch",
-				"--llvm", "--thumb", "--armv7", "--noregistrar", "--unsupported--enable-generics-in-registrar" 
-			};
-
-
-			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.iOS);
-				var args = string.Format (string.Join (" ", deprecated_list), app);
-
-				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("--sdkroot {5} --dev {0} {1} -r:{2} {3} --sdk {4}", app, exe, Configuration.XamarinIOSDll, args, Configuration.sdk_version, Configuration.xcode_root), hide_output: false),
-					"Xamarin.iOS .* using framework:.*\n" +
-					"error MT0016: The option '--dir' has been deprecated.\n" +
-					"error MT0016: The option '--dir' has been deprecated.\n" +
-					"error MT0016: The option '--crossprefix' has been deprecated.\n" +
-					"error MT0016: The option '--libdir' has been deprecated.\n" +
-					"error MT0016: The option '-n' has been deprecated.\n" +
-					"error MT0016: The option '--keeptemp' has been deprecated.\n" +
-					"error MT0016: The option '--main' has been deprecated.\n" +
-					"error MT0016: The option '--mapinject' has been deprecated.\n" +
-					"error MT0016: The option '--nosign' has been deprecated.\n" +
-					"error MT0016: The option '--displayname' has been deprecated.\n" +
-					"error MT0016: The option '--mainnib' has been deprecated.\n" +
-					"error MT0016: The option '--certificate' has been deprecated.\n" +
-					"error MT0016: The option '--llvm' has been deprecated.\n" +
-					"error MT0016: The option '--thumb' has been deprecated.\n" +
-					"error MT0016: The option '--armv7' has been deprecated.\n" +
-					"error MT0016: The option '--noregistrar' has been deprecated.\n" +
-					"error MT0016: The option '--unsupported--enable-generics-in-registrar' has been deprecated.\n");
-			} finally {
-				Directory.Delete (testDir, true);
-			}
-
-		}
-
-		[Test]
 		[TestCase (Profile.iOS, Profile.tvOS)]
 		[TestCase (Profile.iOS, Profile.watchOS)]
 		[TestCase (Profile.tvOS, Profile.iOS)]
@@ -327,23 +282,6 @@ namespace Xamarin
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
 					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 400.0.0 --abi=armv7s,arm64 {1} -debug -r:" + Configuration.XamarinIOSDll, app, exe)),
 					string.Format ("Xamarin.iOS .* using framework:.*\nerror MT0074: Xamarin.iOS .* does not support a deployment target of 400.0.0 for iOS .the maximum is " + Configuration.sdk_version + ".. Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.iOS.\n", Configuration.sdk_version));
-			} finally {
-				Directory.Delete (testDir, true);
-			}
-		}
-
-		[Test]
-		public void MT0048 ()
-		{
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.iOS);
-
-				Asserts.ThrowsPattern<TestExecutionException> (() => ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 6.0 --abi=armv7s {1} -debug -r:{2} --crashreporting-api-key APIKEY", app, exe, Configuration.XamarinIOSDll), hide_output: false),
-					"error MT0016: The option '--crashreporting-api-key' has been deprecated.");
 			} finally {
 				Directory.Delete (testDir, true);
 			}
