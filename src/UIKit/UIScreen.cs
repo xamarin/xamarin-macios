@@ -37,6 +37,18 @@ namespace XamCore.UIKit {
 
 		public UIImage Capture ()
 		{
+			if (UIDevice.CurrentDevice.CheckSystemVersion (7, 0)) {
+				// This is from https://developer.apple.com/library/content/qa/qa1817/_index.html
+				try {
+					var view = UIApplication.SharedApplication.KeyWindow;
+					UIGraphics.BeginImageContextWithOptions (view.Bounds.Size, view.Opaque, 0);
+					view.DrawViewHierarchy (view.Bounds, true);
+					return UIGraphics.GetImageFromCurrentImageContext ();
+				} finally {
+					UIGraphics.EndImageContext ();
+				}
+			} 
+
 			// This is from: https://developer.apple.com/library/ios/#qa/qa2010/qa1703.html
 			var selScreen = new Selector ("screen");
 			var size = Bounds.Size;
