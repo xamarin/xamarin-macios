@@ -49,7 +49,6 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		<I18n Condition="'$(I18n)' == ''"></I18n>
 		<IncludeMonoRuntime Condition="'$(IncludeMonoRuntime)' == ''">true</IncludeMonoRuntime>
 		<MonoBundlingExtraArgs Condition="'$(MonoBundlingExtraArgs)' == ''"></MonoBundlingExtraArgs>
-		<TlsProvider Condition="'$(TlsProvider)' == ''">Default</TlsProvider>
 		<LinkMode Condition="'$(LinkMode)' == ''">None</LinkMode>
 		<XamMacArch Condition="'$(XamMacArch)' == ''">x86_64</XamMacArch>
 		<MonoMacResourcePrefix Condition="'$(MonoMacResourcePrefix)' == ''">Resources</MonoMacResourcePrefix>

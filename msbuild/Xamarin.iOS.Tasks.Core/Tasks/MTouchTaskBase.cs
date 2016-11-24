@@ -149,9 +149,6 @@ namespace Xamarin.iOS.Tasks
 		public string TargetFrameworkVersion { get; set; }
 
 		[Required]
-		public string TLSProvider { get; set; }
-
-		[Required]
 		public bool UseLlvm { get; set; }
 
 		[Required]
@@ -453,9 +450,6 @@ namespace Xamarin.iOS.Tasks
 			if (!string.IsNullOrEmpty (HttpClientHandler))
 				args.Add (string.Format ("--http-message-handler={0}", HttpClientHandler));
 
-			if (!string.IsNullOrEmpty (TLSProvider))
-				args.Add (string.Format ("--tls-provider={0}", TLSProvider.ToLowerInvariant()));
-
 			string thumb = UseThumb && UseLlvm ? "+thumb2" : "";
 			string llvm = UseLlvm ? "+llvm" : "";
 			string abi = "";
@@ -667,7 +661,6 @@ namespace Xamarin.iOS.Tasks
 			Log.LogTaskProperty ("SdkVersion", SdkVersion);
 			Log.LogTaskProperty ("SymbolsList", SymbolsList);
 			Log.LogTaskProperty ("TargetFrameworkIdentifier", TargetFrameworkIdentifier);
-			Log.LogTaskProperty ("TLSProvider", TLSProvider);
 			Log.LogTaskProperty ("UseFloat32", UseFloat32);
 			Log.LogTaskProperty ("UseLlvm", UseLlvm);
 			Log.LogTaskProperty ("UseThumb", UseThumb);

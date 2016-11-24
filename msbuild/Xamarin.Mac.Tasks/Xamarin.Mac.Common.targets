@@ -517,7 +517,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			LinkMode="$(LinkMode)"
 			Debug="$(DebugSymbols)"
 			HttpClientHandler="$(HttpClientHandler)"
-			TLSProvider="$(TlsProvider)"
 			I18n="$(I18n)"
 			Profiling="$(Profiling)"
 			ExtraArguments="$(MonoBundlingExtraArgs)"
