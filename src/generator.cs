@@ -1249,6 +1249,7 @@ public class MemberInformation
 	public readonly Type type;
 	public readonly Type category_extension_type;
 	public readonly bool is_abstract, is_protected, is_internal, is_unified_internal, is_override, is_new, is_sealed, is_static, is_thread_static, is_autorelease, is_wrapper, is_forced;
+	public readonly bool is_type_sealed;
 	public readonly Generator.ThreadCheck threadCheck;
 	public bool is_unsafe, is_virtual_method, is_export, is_category_extension, is_variadic, is_interface_impl, is_extension_method, is_appearance, is_model, is_ctor;
 	public bool is_return_release;
@@ -1274,6 +1275,7 @@ public class MemberInformation
 		is_thread_static = Generator.HasAttribute (mi, typeof (IsThreadStaticAttribute));
 		is_autorelease = Generator.HasAttribute (mi, typeof (AutoreleaseAttribute));
 		is_wrapper = !Generator.HasAttribute (mi.DeclaringType, typeof(SyntheticAttribute));
+		is_type_sealed = Generator.HasAttribute (mi.DeclaringType, typeof (SealedAttribute));
 		is_return_release = method != null && Generator.HasAttribute (method.ReturnTypeCustomAttributes, typeof (ReleaseAttribute));
 		is_forced = Generator.HasForcedAttribute (mi, out is_forced_owns);
 
@@ -1291,7 +1293,7 @@ public class MemberInformation
 		this.is_model = is_model;
 		this.mi = mi;
 		
-		if (is_interface_impl || is_extension_method || Generator.HasAttribute (type, typeof (SealedAttribute))) {
+		if (is_interface_impl || is_extension_method || is_type_sealed) {
 			is_abstract = false;
 			is_virtual_method = false;
 		}
@@ -1359,7 +1361,7 @@ public class MemberInformation
 		if (category_extension_type != null)
 			is_category_extension = true;
 
-		if (is_static || is_category_extension || is_interface_impl || is_extension_method || Generator.HasAttribute (type, typeof (SealedAttribute)))
+		if (is_static || is_category_extension || is_interface_impl || is_extension_method || is_type_sealed)
 			is_virtual_method = false;
 	}
 
@@ -1373,7 +1375,7 @@ public class MemberInformation
 		if (export != null)
 			selector = export.Selector;
 
-		if (wrap_method != null || is_interface_impl || Generator.HasAttribute (type, typeof (SealedAttribute)))
+		if (wrap_method != null || is_interface_impl || is_type_sealed)
 			is_virtual_method = false;
 		else
 			is_virtual_method = !is_static;
