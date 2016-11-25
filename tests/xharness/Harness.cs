@@ -132,6 +132,12 @@ namespace xharness
 			}
 		}
 
+		public string MtouchPath {
+			get {
+				return Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mtouch");
+			}
+		}
+
 		string mlaunch;
 		public string MlaunchPath {
 			get {
@@ -145,6 +151,12 @@ namespace xharness
 					}
 
 					string path = string.Empty;
+
+					// check next to mtouch
+					path = Path.Combine (Path.GetDirectoryName (MtouchPath), "mlaunch");
+					if (File.Exists (path))
+						return mlaunch = path;
+
 					Log ("Could not find mlaunch locally, will try downloading it.");
 					try {
 						path = DownloadMlaunch ();
@@ -200,7 +212,7 @@ namespace xharness
 			}
 		}
 
-		void AutoConfigureCommon ()
+		void LoadConfig ()
 		{
 			ParseConfigFiles ();
 			var src_root = Path.GetDirectoryName (RootDirectory);
@@ -236,8 +248,6 @@ namespace xharness
 			//TestProjects.Add (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + ".csproj")));
 
 			// BclTests.AddRange (bcl_suites);
-
-			AutoConfigureCommon ();
 		}
 
 		void AutoConfigureIOS ()
@@ -269,8 +279,6 @@ namespace xharness
 			WatchOSContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "watchos/Container"));
 			WatchOSAppTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "watchos/App"));
 			WatchOSExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "watchos/Extension"));
-
-			AutoConfigureCommon ();
 		}
 
 		static Dictionary<string, string> make_config = new Dictionary<string, string> ();
@@ -515,6 +523,7 @@ namespace xharness
 
 		public int Execute ()
 		{
+			LoadConfig ();
 			switch (Action) {
 			case HarnessAction.Configure:
 				return Configure ();
