@@ -1,4 +1,5 @@
 using XamCore.ObjCRuntime;
+using XamCore.Foundation;
 
 namespace XamCore.AVKit {
 
@@ -22,6 +23,19 @@ namespace XamCore.AVKit {
 		None = 0,
 		Unknown = -1000,
 		PictureInPictureStartFailed = -1001
+	}
+#endif
+
+#if TVOS
+	// this enum only exists for TVOS
+	[TV (10,1)]
+	public enum AVKitMetadataIdentifier : nint {
+		[Field ("AVKitMetadataIdentifierExternalContentIdentifier")]
+		ExternalContentIdentifier,
+		[Field ("AVKitMetadataIdentifierExternalUserProfileIdentifier")]
+		ExternalUserProfileIdentifier,
+		[Field ("AVKitMetadataIdentifierPlaybackProgress")]
+		PlaybackProgress,
 	}
 #endif
 }	
