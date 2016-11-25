@@ -26,16 +26,4 @@ namespace XamCore.AVKit {
 	}
 #endif
 
-#if TVOS
-	// this enum only exists for TVOS
-	[TV (10,1)]
-	public enum AVKitMetadataIdentifier : nint {
-		[Field ("AVKitMetadataIdentifierExternalContentIdentifier")]
-		ExternalContentIdentifier,
-		[Field ("AVKitMetadataIdentifierExternalUserProfileIdentifier")]
-		ExternalUserProfileIdentifier,
-		[Field ("AVKitMetadataIdentifierPlaybackProgress")]
-		PlaybackProgress,
-	}
-#endif
 }	
