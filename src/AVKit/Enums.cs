@@ -1,4 +1,5 @@
 using XamCore.ObjCRuntime;
+using XamCore.Foundation;
 
 namespace XamCore.AVKit {
 
@@ -24,4 +25,5 @@ namespace XamCore.AVKit {
 		PictureInPictureStartFailed = -1001
 	}
 #endif
+
 }	
