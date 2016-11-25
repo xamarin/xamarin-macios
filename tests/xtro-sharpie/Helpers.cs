@@ -63,6 +63,8 @@ namespace Extrospection {
 			{ "UITableViewCellAccessoryType", "UITableViewCellAccessory" },
 			{ "UITableViewCellStateMask", "UITableViewCellState" },
 			{ "WatchKitErrorCode", "WKErrorCode" }, // WebKit already had that name
+			// not enums
+			{ "NSMutableURLRequest", "NSMutableUrlRequest" },
 		};
 
 		public static string GetManagedName (string nativeName)
