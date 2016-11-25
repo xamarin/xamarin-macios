@@ -1519,12 +1519,16 @@ namespace XamCore.CloudKit {
 	[iOS (9,2), Mac (10,11,2, onlyOn64 : true)]
 	[TV (9,1)]
 	[Watch (3,0)]
-#if XAMCORE_4_0 || WATCH // does not work on watchOS - existiong init* does not allow null to be used to fake it
+#if WATCH // does not work on watchOS - existiong init* does not allow null to be used to fake it
 	[DisableDefaultCtor]
 #endif
 	[BaseType (typeof (CKDatabaseOperation))]
 	interface CKFetchWebAuthTokenOperation {
 
+#if WATCH
+		// it might be because Xcode 8.2 headers were not updated for watchOS *or* because `init` does not work
+		[DesignatedInitializer]
+#endif
 		[Export ("initWithAPIToken:")]
 		IntPtr Constructor (string token);
 
