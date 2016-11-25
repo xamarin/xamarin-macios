@@ -679,6 +679,9 @@ WATCHOS_EXTRA_CORE_SOURCES = \
     CoreVideo/CVPixelFormatType.cs     \
     AudioToolbox/AudioType.cs          \
 	$(SHARED_SYSTEM_DRAWING_SOURCES)   \
+	$(MONO_PATH)/mcs/class/System.Drawing/System.Drawing/Color.cs \
+	$(MONO_PATH)/mcs/class/System.Drawing/System.Drawing/KnownColor.cs \
+	$(MONO_PATH)/mcs/class/System.Drawing/System.Drawing/KnownColors.cs
 
 WATCHOS_CORE_SOURCES +=           \
     $(WATCHOS_EXTRA_CORE_SOURCES) \
