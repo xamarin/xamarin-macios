@@ -178,6 +178,7 @@ namespace Xamarin.Linker {
 			"System.Xml.XmlDocument",
 			"System.Xml.XmlSerializer",
 			"System.Xml.Xsl.Primitives",
+			"netstandard"
 		};
 
 		protected override bool IsSdk (string assemblyName)
