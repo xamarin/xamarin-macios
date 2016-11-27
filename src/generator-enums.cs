@@ -152,23 +152,25 @@ public partial class Generator {
 		}
 
 		if (fields.Count > 0) {
+			print ("static IntPtr[] values = new IntPtr [{0}];", fields.Count);
+			print ("");
+
+			int n = 0;
 			foreach (var kvp in fields) {
 				var f = kvp.Key;
 				var fa = kvp.Value;
-				print ("[Field (\"{0}\", \"{1}\")]", fa.SymbolName, fa.LibraryName ?? library_name);
-				print ("static NSString _{0};", fa.SymbolName);
-				print ("");
 				// the attributes (availability and field) are important for our tests
 				PrintPlatformAttributes (f);
-				print ("internal static NSString {0} {{", fa.SymbolName);
+				var libname = fa.LibraryName ?? library_name;
+				print ("[Field (\"{0}\", \"{1}\")]", fa.SymbolName, libname);
+				print ("internal unsafe static IntPtr {0} {{", fa.SymbolName);
 				indent++;
 				print ("get {");
 				indent++;
-				print ("if (_{0} == null)", fa.SymbolName);
+				print ("fixed (IntPtr *storage = &values [{0}])", n++);
 				indent++;
-				print ("_{0} = Dlfcn.GetStringConstant (Libraries.{1}.Handle, \"{0}\");", fa.SymbolName, fa.LibraryName ?? library_name);
+				print ("return Dlfcn.CachePointer (Libraries.{0}.Handle, \"{1}\", storage);", libname, fa.SymbolName);
 				indent--;
-				print ("return _{0};", fa.SymbolName);
 				indent--;
 				print ("}");
 				indent--;
@@ -179,6 +181,7 @@ public partial class Generator {
 			print ("public static NSString GetConstant (this {0} self)", type.Name);
 			print ("{");
 			indent++;
+			print ("IntPtr ptr = IntPtr.Zero;");
 			print ("switch (({0}) self) {{", underlying_type);
 			var default_symbol_name = default_symbol?.Item2.SymbolName;
 			// more than one enum member can share the same numeric value - ref: #46285
@@ -188,14 +191,12 @@ public partial class Generator {
 				if (sn == default_symbol_name)
 					print ("default:");
 				indent++;
-				print ("return {0};", sn);
+				print ("ptr = {0};", sn);
+				print ("break;");
 				indent--;
 			}
 			print ("}");
-			if (default_symbol_name == null) {
-				// note: a `[Field (null)]` does not need extra code
-				print ("return null;");
-			}
+			print ("return (NSString) Runtime.GetNSObject (ptr);");
 			indent--;
 			print ("}");
 			
@@ -213,7 +214,7 @@ public partial class Generator {
 				print ("return {0}.{1};", type.Name, null_field.Item1.Name);
 			indent--;
 			foreach (var kvp in fields) {
-				print ("else if (constant == {0})", kvp.Value.SymbolName);
+				print ("if (constant.IsEqualTo ({0}))", kvp.Value.SymbolName);
 				indent++;
 				print ("return {0}.{1};", type.Name, kvp.Key.Name);
 				indent--;

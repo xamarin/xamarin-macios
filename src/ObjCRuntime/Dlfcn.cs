@@ -29,6 +29,7 @@
 //
 //
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 #if !COREBUILD
 using XamCore.Foundation;
@@ -409,5 +410,12 @@ namespace XamCore.ObjCRuntime {
 			}
 		}
 #endif // !COREBUILD
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		public static unsafe IntPtr CachePointer (IntPtr handle, string constant, IntPtr* storage)
+		{
+			if (*storage == IntPtr.Zero)
+				*storage = Dlfcn.GetIntPtr (handle, constant);
+			return *storage;
+		}
 	}
 }
