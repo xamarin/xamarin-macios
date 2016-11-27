@@ -751,6 +751,7 @@ namespace XamCore.AVFoundation {
 	}
 
 	// Convience enum for native string values 
+	[NoWatch]
 	public enum AVAssetExportSessionPreset {
 		[Mac(10,11)]
 		[Field ("AVAssetExportPresetLowQuality")]
@@ -769,12 +770,12 @@ namespace XamCore.AVFoundation {
 		Preset1280x720 = 5, // AVAssetExportPreset1280x720
 		[Field ("AVAssetExportPreset1920x1080")]
 		Preset1920x1080 = 6, // AVAssetExportPreset1920x1080
-	#if !MONOMAC
+
 		[iOS (9,0)]
 		[Mac (10,10)]
 		[Field ("AVAssetExportPreset3840x2160")]
 		Preset3840x2160 = 7, // AVAssetExportPreset3840x2160
-	#endif
+
 		[Field ("AVAssetExportPresetAppleM4A")]
 		AppleM4A = 8, // AVAssetExportPresetAppleM4A
 		[Field ("AVAssetExportPresetPassthrough")]
