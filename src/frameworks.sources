@@ -144,7 +144,9 @@ APPKIT_SOURCES = \
 	AppKit/NSCollectionView.cs \
 	AppKit/NSTextTableBlock.cs \
 	AppKit/NSMutableFontCollection.cs \
-	AppKit/NSCollectionViewLayout.cs
+	AppKit/NSCollectionViewLayout.cs \
+	AppKit/NSColorPickerTouchBarItem.cs \
+	AppKit/NSSliderTouchBarItem.cs
 
 # AssetsLibrary
 
@@ -386,6 +388,7 @@ COREGRAPHICS_CORE_SOURCES = \
 	CoreGraphics/CGColor.cs \
 	CoreGraphics/CGColorSpace.cs \
 	CoreGraphics/CGContext.cs \
+	CoreGraphics/CGDisplay.cs \
 	CoreGraphics/CGGeometry.cs \
 	CoreGraphics/CGGradient.cs \
 	CoreGraphics/CGImage.cs \
@@ -608,7 +611,6 @@ FOUNDATION_CORE_SOURCES = \
 	Foundation/NSDecimal.cs \
 	Foundation/NSDimension.cs \
 	Foundation/NSError.cs \
-	Foundation/NSNumber.cs \
 	Foundation/NSObject2.cs \
 	Foundation/NSRange.cs \
 	Foundation/NSString.cs \
@@ -1069,6 +1071,11 @@ PHOTOS_SOURCES = \
 PHOTOSUI_CORE_SOURCES = \
 	PhotosUI/PHEnums.cs \
 
+# PrintCode
+PRINTCORE_SOURCES = \
+	PrintCore/Defs.cs	\
+	PrintCore/PrintCore.cs
+	
 # QTKit
 
 QTKIT_CORE_SOURCES = \
@@ -1456,7 +1463,6 @@ SHARED_SOURCES = \
 	ObjCRuntime/ErrorHelper.cs \
 	ObjCRuntime/Exceptions.cs \
 	ObjCRuntime/ExceptionMode.cs \
-	ObjCRuntime/IDynamicRegistrar.cs \
 	ObjCRuntime/Method.cs \
 	ObjCRuntime/MethodDescription.cs \
 	ObjCRuntime/NSStringMarshal.cs \
@@ -1510,7 +1516,7 @@ MAC_FRAMEWORKS =            \
 	CFNetwork               \
 	CloudKit                \
 	Contacts                \
-	ContactsUI.Mac			\
+	ContactsUI.Mac		\
 	CoreAnimation           \
 	CoreAudioKit            \
 	CoreBluetooth           \
@@ -1548,6 +1554,7 @@ MAC_FRAMEWORKS =            \
 	OpenGL                  \
 	PdfKit                  \
 	Photos                  \
+	PrintCore		\
 	QTKit                   \
 	QuartzComposer          \
 	QuickLook               \

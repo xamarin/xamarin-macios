@@ -28,8 +28,6 @@
 #include "../tools/mtouch/monotouch-fixes.c"
 #endif
 
-const char *monotouch_dll = NULL; // NULL = try Xamarin.iOS.dll first, then monotouch.dll.
-
 static unsigned char *
 xamarin_load_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void **out_handle)
 {
@@ -273,8 +271,6 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 	// see http://bugzilla.xamarin.com/show_bug.cgi?id=820
 	// take this line out once the bug is fixed
 	mini_parse_debug_option ("no-gdb-backtrace");
-	if (xamarin_compact_seq_points)
-		mini_parse_debug_option ("gen-compact-seq-points");
 
 	DEBUG_LAUNCH_TIME_PRINT ("Spin-up time");
 

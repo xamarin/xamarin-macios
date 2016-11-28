@@ -102,7 +102,7 @@ namespace XamCore.CoreFoundation {
 		public static CFException FromCFError (IntPtr cfErrorHandle, bool release)
 		{
 			if (cfErrorHandle == IntPtr.Zero)
-				throw new ArgumentException ("cfErrorHandle must not be null.", "cfErrorHandle");
+				throw new ArgumentNullException (nameof (cfErrorHandle));
 
 			var e = new CFException (
 					CFString.FetchString (CFErrorCopyDescription (cfErrorHandle), releaseHandle: true),
@@ -115,7 +115,7 @@ namespace XamCore.CoreFoundation {
 			if (cfUserInfo != IntPtr.Zero) {
 				using (var userInfo = new NSDictionary (cfUserInfo)) {
 					foreach (var i in userInfo)
-						e.Data.Add (i.Key, i.Value);
+						e.Data.Add (i.Key?.ToString (), i.Value?.ToString ());
 				}
 			}
 			if (release)

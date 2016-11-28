@@ -66,7 +66,8 @@ namespace XamCore.WatchKit {
 		[Export ("handleActionWithIdentifier:forLocalNotification:")]
 		void HandleLocalNotificationAction ([NullAllowed] string identifier, UILocalNotification localNotification);
 
-		[Watch (3,0)][iOS (10,0)]
+		[iOS (10,0)]
+		[NoWatch]
 		[Export ("handleActionWithIdentifier:forNotification:")]
 		void HandleAction ([NullAllowed] string identifier, UNNotification notification);
 
@@ -1020,7 +1021,7 @@ namespace XamCore.WatchKit {
 		bool ReturnToDefaultState { get; }
 
 		[Export ("setTaskCompletedWithDefaultStateRestored:estimatedSnapshotExpiration:userInfo:")]
-		void SetTaskCompleted (bool restoredDefaultState, NSDate estimatedSnapshotExpiration, [NullAllowed] INSSecureCoding userInfo);
+		void SetTaskCompleted (bool restoredDefaultState, [NullAllowed] NSDate estimatedSnapshotExpiration, [NullAllowed] INSSecureCoding userInfo);
 	}
 
 	[Watch (3,0)][NoiOS]

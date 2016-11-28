@@ -155,6 +155,16 @@ namespace Xamarin.Bundler {
 		List<Abi> abis;
 		HashSet<Abi> all_architectures; // all Abis used in the app, including extensions.
 
+		public void SetDlsymOption (string asm, bool dlsym)
+		{
+			if (DlsymAssemblies == null)
+				DlsymAssemblies = new List<Tuple<string, bool>> ();
+
+			DlsymAssemblies.Add (new Tuple<string, bool> (Path.GetFileNameWithoutExtension (asm), dlsym));
+
+			DlsymOptions = DlsymOptions.Custom;
+		}
+
 		public void ParseDlsymOptions (string options)
 		{
 			bool dlsym;
@@ -186,19 +196,19 @@ namespace Xamarin.Bundler {
 		{
 			string asm;
 
-			switch (DlsymOptions) {
-			case DlsymOptions.All:
-				return true;
-			case DlsymOptions.None:
-				return false;
-			}
-
 			if (DlsymAssemblies != null) {
 				asm = Path.GetFileNameWithoutExtension (assembly);
 				foreach (var tuple in DlsymAssemblies) {
 					if (string.Equals (tuple.Item1, asm, StringComparison.Ordinal))
 						return tuple.Item2;
 				}
+			}
+
+			switch (DlsymOptions) {
+			case DlsymOptions.All:
+				return true;
+			case DlsymOptions.None:
+				return false;
 			}
 
 			if (EnableLLVMOnlyBitCode)
@@ -502,33 +512,29 @@ namespace Xamarin.Bundler {
 			var registrar_m = RegistrarOutputLibrary;
 
 			var resolvedAssemblies = new List<AssemblyDefinition> ();
-			var ps = new ReaderParameters ();
-			ps.AssemblyResolver = new MonoTouchResolver () {
+			var resolver = new MonoTouchResolver () {
 				FrameworkDirectory = Driver.PlatformFrameworkDirectory,
 				RootDirectory = Path.GetDirectoryName (RootAssembly),
 			};
+
+			if (Driver.App.Platform == ApplePlatform.iOS) {
+				if (Driver.App.Is32Build) {
+					resolver.ArchDirectory = Driver.Arch32Directory;
+				} else {
+					resolver.ArchDirectory = Driver.Arch64Directory;
+				}
+			}
+
+			var ps = new ReaderParameters ();
+			ps.AssemblyResolver = resolver;
 			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve ("mscorlib"));
 
 			var rootName = Path.GetFileNameWithoutExtension (RootAssembly);
-			switch (rootName) {
-			// MonoTouch.NUnitLite doesn't quite work yet, because its generated registrar code uses types
-			// from the generated registrar code for MonoTouch.Dialog-1 (and there is no header file (yet)
-			// for those types).
-//			case "MonoTouch.NUnitLite":
-//				resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (rootName));
-//				goto case "MonoTouch.Dialog-1";
-			case "MonoTouch.Dialog-1":
-				resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (rootName));
-				resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (Driver.ProductAssembly));
-				break;
-			default:
-				if (rootName == Driver.ProductAssembly) {
-					resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (rootName));
-				} else {
-					throw new MonoTouchException (66, "Invalid build registrar assembly: {0}", RootAssembly);
-				}
-				break;
-			}
+			if (rootName != Driver.ProductAssembly)
+				throw new MonoTouchException (66, "Invalid build registrar assembly: {0}", RootAssembly);
+
+			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (rootName));
+			Driver.Log (3, "Loaded {0}", resolvedAssemblies [resolvedAssemblies.Count - 1].MainModule.FileName);
 
 			BuildTarget = BuildTarget.Simulator;
 
@@ -541,8 +547,10 @@ namespace Xamarin.Bundler {
 			if (Driver.Force) {
 				Driver.Log (3, "A full rebuild has been forced by the command line argument -f.");
 				Cache.Clean ();
-			} else if (!Cache.VerifyCache ()) {
-				Driver.Force = true;
+			} else {
+				// this will destroy the cache if invalid, which makes setting Driver.Force to true mostly unneeded
+				// in fact setting it means some actions (like extract native resource) gets duplicate for fat builds
+				Cache.VerifyCache ();
 			}
 
 			Initialize ();
@@ -653,13 +661,13 @@ namespace Xamarin.Bundler {
 				target32.ArchDirectory = Path.Combine (Cache.Location, "32");
 				target32.TargetDirectory = IsSimulatorBuild ? Path.Combine (AppDirectory, ".monotouch-32") : Path.Combine (target32.ArchDirectory, "Output");
 				target32.AppTargetDirectory = Path.Combine (AppDirectory, ".monotouch-32");
-				target32.Resolver.ArchDirectory = Path.Combine (Driver.PlatformFrameworkDirectory, "..", "..", "32bits");
+				target32.Resolver.ArchDirectory = Driver.Arch32Directory;
 				target32.Abis = SelectAbis (abis, Abi.Arch32Mask);
 
 				target64.ArchDirectory = Path.Combine (Cache.Location, "64");
 				target64.TargetDirectory = IsSimulatorBuild ? Path.Combine (AppDirectory, ".monotouch-64") : Path.Combine (target64.ArchDirectory, "Output");
 				target64.AppTargetDirectory = Path.Combine (AppDirectory, ".monotouch-64");
-				target64.Resolver.ArchDirectory = Path.Combine (Driver.PlatformFrameworkDirectory, "..", "..", "64bits");
+				target64.Resolver.ArchDirectory = Driver.Arch64Directory;
 				target64.Abis = SelectAbis (abis, Abi.Arch64Mask);
 
 				Targets.Add (target64);
@@ -781,8 +789,21 @@ namespace Xamarin.Bundler {
 			}
 
 			if (Frameworks.Count > 0) {
-				if (DeploymentTarget < new Version (8, 0))
-					throw ErrorHelper.CreateError (65, "Xamarin.iOS only supports embedded frameworks when deployment target is at least 8.0 (current deployment target: '{0}'; embedded frameworks: '{1}')", DeploymentTarget, string.Join (", ", Frameworks.ToArray ()));
+				switch (Platform) {
+				case ApplePlatform.iOS:
+					if (DeploymentTarget < new Version (8, 0))
+						throw ErrorHelper.CreateError (65, "Xamarin.iOS only supports embedded frameworks when deployment target is at least 8.0 (current deployment target: '{0}'; embedded frameworks: '{1}')", DeploymentTarget, string.Join (", ", Frameworks.ToArray ()));
+					break;
+				case ApplePlatform.WatchOS:
+					if (DeploymentTarget < new Version (2, 0))
+						throw ErrorHelper.CreateError (65, "Xamarin.iOS only supports embedded frameworks when deployment target is at least 2.0 (current deployment target: '{0}'; embedded frameworks: '{1}')", DeploymentTarget, string.Join (", ", Frameworks.ToArray ()));
+					break;
+				case ApplePlatform.TVOS:
+					// All versions of tvOS support extensions
+					break;
+				default:
+					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", Platform);
+				}
 			}
 
 			if (IsDeviceBuild) {
@@ -927,13 +948,7 @@ namespace Xamarin.Bundler {
 				sb.Append ("Xamarin built applications contain open source software.  ");
 				sb.Append ("For detailed attribution and licensing notices, please visit...");
 				sb.AppendLine ().AppendLine ().Append ("http://xamarin.com/mobile-licensing").AppendLine ();
-				var filename = Path.Combine (AppDirectory, "NOTICE");
-				if (!File.Exists (filename) || File.ReadAllText (filename) != sb.ToString ()) {
-					File.WriteAllText (Path.Combine (AppDirectory, "NOTICE"), sb.ToString ());
-					Driver.Log (3, "Wrote '{0}'.", filename);
-				} else {
-					Driver.Log (3, "Target '{0}' is up-to-date.", filename);
-				}
+				Driver.WriteIfDifferent (Path.Combine (AppDirectory, "NOTICE"), sb.ToString ());
 			} catch (Exception ex) {
 				throw new MonoTouchException (1017, true, ex, "Failed to create the NOTICE file: {0}", ex.Message);
 			}
@@ -1067,7 +1082,7 @@ namespace Xamarin.Bundler {
 			}
 
 			// Copy frameworks to the app bundle.
-			if (!IsExtension) {
+			if (!IsExtension || IsWatchExtension) {
 				var all_frameworks = new HashSet<string> ();
 				all_frameworks.UnionWith (Frameworks);
 				all_frameworks.UnionWith (WeakFrameworks);
@@ -1087,6 +1102,17 @@ namespace Xamarin.Bundler {
 					all_frameworks.Add (Path.Combine (Driver.ProductSdkDirectory, "Frameworks", "Mono.framework"));
 				}
 				
+				foreach (var appex in Extensions) {
+					var f_path = Path.Combine (appex, "..", "frameworks.txt");
+					if (!File.Exists (f_path))
+						continue;
+
+					foreach (var fw in File.ReadAllLines (f_path)) {
+						Driver.Log (3, "Copying {0} to the app's Frameworks directory because it's used by the extension {1}", fw, Path.GetFileName (appex));
+						all_frameworks.Add (fw);
+					}
+				}
+
 				foreach (var fw in all_frameworks) {
 					if (!fw.EndsWith (".framework", StringComparison.Ordinal))
 						continue;
@@ -1104,6 +1130,13 @@ namespace Xamarin.Bundler {
 						// Remove architectures we don't care about.
 						Xamarin.MachO.SelectArchitectures (Path.Combine (AppDirectory, "Frameworks", Path.GetFileName (fw), Path.GetFileNameWithoutExtension (fw)), AllArchitectures);
 					}
+				}
+			} else {
+				if (!IsWatchExtension) {
+					// In extensions we need to save a list of the frameworks we need so that the main app can get them.
+					var all_frameworks = Frameworks.Union (WeakFrameworks);
+					if (all_frameworks.Count () > 0)
+						Driver.WriteIfDifferent (Path.Combine (Path.GetDirectoryName (AppDirectory), "frameworks.txt"), string.Join ("\n", all_frameworks.ToArray ()));
 				}
 			}
 
@@ -1532,12 +1565,12 @@ namespace Xamarin.Bundler {
 
 			if (is_assembly) {
 				equal = Cache.CompareAssemblies (f1, f2, true, true);
-				if (!equal && Driver.Verbosity > 0)
-					Console.WriteLine ("Assemblies {0} and {1} not found to be identical, cannot replace one with a symlink to the other.", f1, f2);
+				if (!equal)
+					Driver.Log (1, "Assemblies {0} and {1} not found to be identical, cannot replace one with a symlink to the other.", f1, f2);
 			} else {
 				equal = Cache.CompareFiles (f1, f2, true);
-				if (!equal && Driver.Verbosity > 0)
-					Console.WriteLine ("Targets {0} and {1} not found to be identical, cannot replace one with a symlink to the other.", f1, f2);
+				if (!equal)
+					Driver.Log (1, "Targets {0} and {1} not found to be identical, cannot replace one with a symlink to the other.", f1, f2);
 			}
 			if (!equal)
 				return;
@@ -1547,8 +1580,7 @@ namespace Xamarin.Bundler {
 			if (!Driver.Symlink (dest, f2)) {
 				File.Copy (f1, f2);
 			} else {
-				if (Driver.Verbosity > 0)
-					Console.WriteLine ("Targets {0} and {1} found to be identical, the later has been replaced with a symlink to the former.", f1, f2);
+				Driver.Log (1, "Targets {0} and {1} found to be identical, the later has been replaced with a symlink to the former.", f1, f2);
 			}
 		}
 

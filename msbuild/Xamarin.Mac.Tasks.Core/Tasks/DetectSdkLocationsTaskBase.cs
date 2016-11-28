@@ -89,14 +89,14 @@ namespace Xamarin.Mac.Tasks
 		void EnsureAppleSdkRoot ()
 		{
 			if (!MacOSXSdks.Native.IsInstalled) {
-				Log.LogError ("  Could not find valid a usable Xcode app bundle");
+				Log.LogError ("Could not find a valid Xcode app bundle");
 			} else {
-				Log.LogMessage (MessageImportance.Low, "  DeveloperRoot: {0}", MacOSXSdks.Native.DeveloperRoot);
-				Log.LogMessage (MessageImportance.Low, "  GetPlatformPath: {0}", MacOSXSdks.Native.GetPlatformPath ());
+				Log.LogMessage (MessageImportance.Low, "DeveloperRoot: {0}", MacOSXSdks.Native.DeveloperRoot);
+				Log.LogMessage (MessageImportance.Low, "GetPlatformPath: {0}", MacOSXSdks.Native.GetPlatformPath ());
 
 				SdkDevPath = MacOSXSdks.Native.DeveloperRoot;
 				if (string.IsNullOrEmpty (SdkDevPath))
-					Log.LogError ("  Could not find valid a usable Xcode developer path");
+					Log.LogError ("Could not find a valid Xcode developer path");
 			}
 		}
 
@@ -106,7 +106,7 @@ namespace Xamarin.Mac.Tasks
 				XamarinSdkRoot = MacOSXSdks.XamMac.FrameworkDirectory;
 
 			if (string.IsNullOrEmpty (XamarinSdkRoot) || !Directory.Exists (XamarinSdkRoot))
-				Log.LogError ("  Could not find 'Xamarin.Mac'");
+				Log.LogError ("Could not find 'Xamarin.Mac'");
 		}
 
 		string DirExists (string checkingFor, params string[] paths)
@@ -116,7 +116,7 @@ namespace Xamarin.Mac.Tasks
 					return null;
 
 				var path = Path.GetFullPath (Path.Combine (paths));
-				Log.LogMessage (MessageImportance.Low, "  Searching for '{0}' in '{1}'", checkingFor, path);
+				Log.LogMessage (MessageImportance.Low, "Searching for '{0}' in '{1}'", checkingFor, path);
 				return Directory.Exists (path) ? path : null;
 			} catch {
 				return null;

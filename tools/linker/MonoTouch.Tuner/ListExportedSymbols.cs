@@ -20,10 +20,12 @@ namespace MonoTouch.Tuner
 	public class ListExportedSymbols : BaseStep
 	{
 		PInvokeWrapperGenerator state;
+		bool skip_sdk_assemblies;
 
-		internal ListExportedSymbols (PInvokeWrapperGenerator state)
+		internal ListExportedSymbols (PInvokeWrapperGenerator state, bool skip_sdk_assemblies = false)
 		{
 			this.state = state;
+			this.skip_sdk_assemblies = skip_sdk_assemblies;
 		}
 
 		protected override void ProcessAssembly (AssemblyDefinition assembly)
@@ -31,6 +33,9 @@ namespace MonoTouch.Tuner
 			base.ProcessAssembly (assembly);
 
 			if (Context.Annotations.GetAction (assembly) == AssemblyAction.Delete)
+				return;
+
+			if (skip_sdk_assemblies && Profile.IsSdkAssembly (assembly))
 				return;
 
 			if (!assembly.MainModule.HasTypes)

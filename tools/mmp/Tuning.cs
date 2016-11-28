@@ -32,6 +32,7 @@ namespace MonoMac.Tuner {
 		public string Architecture { get; set; }
 		internal PInvokeWrapperGenerator MarshalNativeExceptionsState { get; set; }
 		internal RuntimeOptions RuntimeOptions { get; set; }
+		public bool SkipExportedSymbolsInSdkAssemblies { get; set; }
 
 		public static I18nAssemblies ParseI18nAssemblies (string i18n)
 		{
@@ -158,9 +159,9 @@ namespace MonoMac.Tuner {
 					new ApplyPreserveAttribute (),
 					new CoreRemoveSecurity (),
 					new OptimizeGeneratedCodeSubStep (options.EnsureUIThread),
+					new RemoveUserResourcesSubStep (),
 					new CoreRemoveAttributes (),
 					new CoreHttpMessageHandler (options),
-					new CoreTlsProviderStep (options),
 					new MarkNSObjects (),
 				});
 
@@ -176,9 +177,14 @@ namespace MonoMac.Tuner {
 				pipeline.AppendStep (new RemoveSelectors ());
 
 				pipeline.AppendStep (new RegenerateGuidStep ());
+			} else {
+				SubStepDispatcher sub = new SubStepDispatcher () {
+					new RemoveUserResourcesSubStep ()
+				};
+				pipeline.AppendStep (sub);
 			}
 
-			pipeline.AppendStep (new ListExportedSymbols (options.MarshalNativeExceptionsState));
+			pipeline.AppendStep (new ListExportedSymbols (options.MarshalNativeExceptionsState, options.SkipExportedSymbolsInSdkAssemblies));
 
 			pipeline.AppendStep (new OutputStep ());
 

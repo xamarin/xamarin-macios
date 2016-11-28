@@ -52,6 +52,9 @@ namespace XamCore.ReplayKit {
 	[TV (10,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
+#if XAMCORE_4_0
+	[Sealed]
+#endif
 	interface RPScreenRecorder {
 
 		[Static]

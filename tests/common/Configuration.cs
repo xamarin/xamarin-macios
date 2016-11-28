@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
+using NUnit.Framework;
+
 namespace Xamarin.Tests
 {
 	class Configuration
@@ -15,6 +17,8 @@ namespace Xamarin.Tests
 			{ "DYLD_FALLBACK_LIBRARY_PATH", "/Library/Frameworks/Mono.framework/Versions/Current/lib:/lib:/usr/lib:/Applications/Xamarin Studio.app/Contents/MacOS" },
 			{ "PKG_CONFIG_PATH", "/Applications/Xamarin Studio.app/Contents/MacOS" }
 		};
+
+		const string XS_PATH = "/Applications/Xamarin Studio.app/Contents/Resources";
 
 		static string mt_root;
 		static string ios_destdir;
@@ -48,7 +52,7 @@ namespace Xamarin.Tests
 
 		static IEnumerable<string> FindConfigFiles (string name)
 		{
-			var dir = Environment.CurrentDirectory;
+			var dir = TestAssemblyDirectory;
 			while (dir != "/") {
 				var file = Path.Combine (dir, name);
 				if (File.Exists (file))
@@ -160,7 +164,7 @@ namespace Xamarin.Tests
 
 		public static string RootPath {
 			get {
-				var dir = Environment.CurrentDirectory;
+				var dir = TestAssemblyDirectory;
 				var path = Path.Combine (dir, ".git");
 				while (!Directory.Exists (path) && path.Length > 3) {
 					dir = Path.GetDirectoryName (dir);
@@ -173,14 +177,20 @@ namespace Xamarin.Tests
 			}
 		}
 			
+		static string TestAssemblyDirectory {
+			get {
+				return TestContext.CurrentContext.TestDirectory;
+			}
+		}
+
 		public static string SourceRoot {
 			get {
 				// might need tweaking.
 				if (mt_src_root == null)
 #if MONOMAC
-					mt_src_root = Path.GetFullPath (Path.Combine (Environment.CurrentDirectory, "../../.."));
+					mt_src_root = Path.GetFullPath (Path.Combine (TestAssemblyDirectory, "../../.."));
 #else
-					mt_src_root = Path.GetFullPath (Path.Combine (Environment.CurrentDirectory, "../../../.."));
+					mt_src_root = Path.GetFullPath (Path.Combine (TestAssemblyDirectory, "../../../.."));
 #endif
 				return mt_src_root;
 			}
@@ -232,6 +242,12 @@ namespace Xamarin.Tests
 			}
 		}
 
+		static string XSIphoneDir {
+			get {
+				return Path.Combine (XS_PATH, "lib", "monodevelop", "AddIns", "MonoDevelop.IPhone");
+			}
+		}
+
 		public static string SmcsPath {
 			get {
 				return Path.Combine (SdkBinDir, "smcs");
@@ -253,6 +269,12 @@ namespace Xamarin.Tests
 		public static string MtouchPath {
 			get {
 				return Path.Combine (BinDirXI, "mtouch");
+			}
+		}
+
+		public static string MlaunchPath {
+			get {
+				return Path.Combine (XSIphoneDir, "mlaunch.app", "Contents", "MacOS", "mlaunch");
 			}
 		}
 	}

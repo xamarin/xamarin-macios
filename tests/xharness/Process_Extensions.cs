@@ -37,7 +37,7 @@ namespace xharness
 			using (var p = new Process ()) {
 				p.StartInfo.FileName = filename;
 				p.StartInfo.Arguments = args;
-				return await p.RunAsync (output, output, timeout, environment_variables, cancellation_token);
+				return await p.RunAsync (output, output, output, timeout, environment_variables, cancellation_token);
 			}
 		}
 
@@ -70,7 +70,7 @@ namespace xharness
 		public static async Task<ProcessExecutionResult> RunAsync (this Process process, Log log, CancellationToken? cancellation_token = null)
 		{
 			var stream = log.GetWriter ();
-			return await RunAsync (process, stream, stream, cancellation_token: cancellation_token);
+			return await RunAsync (process, log, stream, stream, cancellation_token: cancellation_token);
 		}
 
 		public static async Task<ProcessExecutionResult> RunAsync (this Process process, string outputFile, bool append, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
@@ -78,17 +78,17 @@ namespace xharness
 			Directory.CreateDirectory (Path.GetDirectoryName (outputFile));
 			using (var fs = new FileStream (outputFile, append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.Read)) {
 				using (var stream = new StreamWriter (fs))
-					return await RunAsync (process, stream, stream, timeout, environment_variables, cancellation_token);
+					return await RunAsync (process, stream, stream, stream, timeout, environment_variables, cancellation_token);
 			}
 		}
 
 		public static Task<ProcessExecutionResult> RunAsync (this Process process, Log log, bool append, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
 		{
 			var writer = log.GetWriter ();
-			return RunAsync (process, writer, writer, timeout, environment_variables, cancellation_token);
+			return RunAsync (process, log, writer, writer, timeout, environment_variables, cancellation_token);
 		}
 
-		public static async Task<ProcessExecutionResult> RunAsync (this Process process, TextWriter StdoutStream, TextWriter StderrStream, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
+		public static async Task<ProcessExecutionResult> RunAsync (this Process process, TextWriter log, TextWriter StdoutStream, TextWriter StderrStream, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
 		{
 			var stdout_completion = new TaskCompletionSource<bool> ();
 			var stderr_completion = new TaskCompletionSource<bool> ();
@@ -129,7 +129,7 @@ namespace xharness
 			};
 
 
-			StdoutStream.WriteLine ("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
+			log.WriteLine ("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
 			process.Start ();
 
 			process.BeginErrorReadLine ();
@@ -150,7 +150,7 @@ namespace xharness
 						process.WaitForExit ((int) TimeSpan.FromSeconds (5).TotalMilliseconds); // Wait 5s for the kill to work
 						rv.TimedOut = true;
 						lock (StderrStream)
-							StderrStream.WriteLine ($"Execution timed out after {timeout.Value.TotalSeconds} seconds and the process was killed.");
+							log.WriteLine ($"Execution timed out after {timeout.Value.TotalSeconds} seconds and the process was killed.");
 					}
 				} else {
 					process.WaitForExit ();

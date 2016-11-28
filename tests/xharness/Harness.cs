@@ -57,7 +57,7 @@ namespace xharness
 		public string IOS_DESTDIR { get; set; }
 
 		// Run
-		public string Target { get; set; }
+		public AppRunnerTarget Target { get; set; }
 		public string SdkRoot { get; set; } = "/Applications/Xcode.app";
 		public string Configuration { get; set; } = "Debug";
 		public string LogFile { get; set; }
@@ -87,27 +87,57 @@ namespace xharness
 			}
 		}
 
+		object mlaunch_lock = new object ();
 		string DownloadMlaunch ()
 		{
-			// Just hardcode this for now. We should be able to switch to a shipped version of XS soon.
 			// NOTE: the filename part in the url must be unique so that the caching logic works properly.
-			var mlaunch_url = "http://bosstoragemirror.blob.core.windows.net/public-builder/mlaunch-307d345a06bd3f13994877ee5a4f316f5e6a7940";
-			var mlaunch_path = Path.Combine (Path.GetTempPath (), Path.GetFileName (mlaunch_url), "mlaunch");
-			if (File.Exists (mlaunch_path))
+			var mlaunch_url = "http://bosstoragemirror.blob.core.windows.net/public-builder/mlaunch/mlaunch-320d91b71c71c4768184c2d2b1ce553c1364970f.zip";
+			var extraction_dir = Path.Combine (Path.GetTempPath (), Path.GetFileNameWithoutExtension (mlaunch_url));
+			var mlaunch_path = Path.Combine (extraction_dir, "bin", "mlaunch");
+
+			lock (mlaunch_lock) {
+				if (File.Exists (mlaunch_path))
+					return mlaunch_path;
+
+				try {
+					var local_zip = extraction_dir + ".zip";
+					Log ("Downloading mlaunch to: {0}", local_zip);
+					var wc = new System.Net.WebClient ();
+					wc.DownloadFile (mlaunch_url, local_zip);
+					Log ("Downloaded mlaunch.");
+
+					var tmp_extraction_dir = extraction_dir + ".tmp";
+					if (Directory.Exists (tmp_extraction_dir))
+						Directory.Delete (tmp_extraction_dir, true);
+					if (Directory.Exists (extraction_dir))
+						Directory.Delete (extraction_dir, true);
+
+					Log ("Extracting mlaunch...");
+					using (var p = new Process ()) {
+						p.StartInfo.FileName = "unzip";
+						p.StartInfo.Arguments = $"-d {Quote (tmp_extraction_dir)} {Quote (local_zip)}";
+						Log ("{0} {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
+						p.Start ();
+						p.WaitForExit ();
+						if (p.ExitCode != 0) {
+							Log ("Could not unzip mlaunch, exit code: {0}", p.ExitCode);
+							return mlaunch_path;
+						}
+					}
+					Directory.Move (tmp_extraction_dir, extraction_dir);
+
+					Log ("Final mlaunch path: {0}", mlaunch_path);
+				} catch (Exception e) {
+					Log ("Could not download mlaunch: {0}", e);
+				}
 				return mlaunch_path;
-			try {
-				Log ("Downloading mlaunch...");
-				Directory.CreateDirectory (Path.GetDirectoryName (mlaunch_path));
-				var wc = new System.Net.WebClient ();
-				wc.DownloadFile (mlaunch_url, mlaunch_path + ".tmp");
-				new Mono.Unix.UnixFileInfo (mlaunch_path + ".tmp").FileAccessPermissions |= Mono.Unix.FileAccessPermissions.UserExecute;
-				File.Delete (mlaunch_path);
-				File.Move (mlaunch_path + ".tmp", mlaunch_path);
-				Log ("Downloaded mlaunch.");
-			} catch (Exception e) {
-				Log ("Could not download mlaunch: {0}", e);
 			}
-			return mlaunch_path;
+		}
+
+		public string MtouchPath {
+			get {
+				return Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mtouch");
+			}
 		}
 
 		string mlaunch;
@@ -123,6 +153,12 @@ namespace xharness
 					}
 
 					string path = string.Empty;
+
+					// check next to mtouch
+					path = Path.Combine (Path.GetDirectoryName (MtouchPath), "mlaunch");
+					if (File.Exists (path))
+						return mlaunch = path;
+
 					Log ("Could not find mlaunch locally, will try downloading it.");
 					try {
 						path = DownloadMlaunch ();
@@ -178,7 +214,7 @@ namespace xharness
 			}
 		}
 
-		void AutoConfigureCommon ()
+		void LoadConfig ()
 		{
 			ParseConfigFiles ();
 			var src_root = Path.GetDirectoryName (RootDirectory);
@@ -214,8 +250,6 @@ namespace xharness
 			//TestProjects.Add (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + ".csproj")));
 
 			// BclTests.AddRange (bcl_suites);
-
-			AutoConfigureCommon ();
 		}
 
 		void AutoConfigureIOS ()
@@ -247,8 +281,6 @@ namespace xharness
 			WatchOSContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "watchos/Container"));
 			WatchOSAppTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "watchos/App"));
 			WatchOSExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "watchos/Extension"));
-
-			AutoConfigureCommon ();
 		}
 
 		static Dictionary<string, string> make_config = new Dictionary<string, string> ();
@@ -479,12 +511,21 @@ namespace xharness
 
 		public bool InWrench {
 			get {
-				return !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
+				var buildRev = Environment.GetEnvironmentVariable ("BUILD_REVISION");
+				return !string.IsNullOrEmpty (buildRev) && buildRev != "jenkins";
+			}
+		}
+		
+		public bool InJenkins {
+			get {
+				var buildRev = Environment.GetEnvironmentVariable ("BUILD_REVISION");
+				return !string.IsNullOrEmpty (buildRev) && buildRev == "jenkins";
 			}
 		}
 
 		public int Execute ()
 		{
+			LoadConfig ();
 			switch (Action) {
 			case HarnessAction.Configure:
 				return Configure ();

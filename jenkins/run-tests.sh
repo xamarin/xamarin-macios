@@ -1,5 +1,6 @@
 #!/bin/bash -e
 
+export BUILD_REVISION=jenkins
 cd $WORKSPACE
 # Unlock
 security default-keychain -s builder.keychain
@@ -11,6 +12,3 @@ security set-keychain-settings -lut 7200
 
 # Run tests
 make -C tests jenkins
-
-# Lock
-security lock-keychain

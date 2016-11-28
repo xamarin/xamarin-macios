@@ -97,25 +97,6 @@ namespace Xamarin.MacDev.Tasks
 
 			var expanded = StringParserService.Parse (pstr.Value, customTags);
 
-			if (expanded.IndexOf ('*') != -1) {
-				int asterisk = expanded.IndexOf ('*');
-				string prefix;
-
-				if (expanded.StartsWith (TeamIdentifierPrefix, StringComparison.Ordinal))
-					prefix = TeamIdentifierPrefix;
-				else if (expanded.StartsWith (AppIdentifierPrefix, StringComparison.Ordinal))
-					prefix = AppIdentifierPrefix;
-				else
-					prefix = string.Empty;
-
-				var baseBundleIdentifier = expanded.Substring (prefix.Length, asterisk - prefix.Length);
-
-				if (!BundleIdentifier.StartsWith (baseBundleIdentifier, StringComparison.Ordinal))
-					expanded = expanded.Replace ("*", BundleIdentifier);
-				else
-					expanded = prefix + BundleIdentifier;
-			}
-
 			return new PString (expanded);
 		}
 
@@ -269,7 +250,7 @@ namespace Xamarin.MacDev.Tasks
 			return archived;
 		}
 
-		static MobileProvision GetMobileProvision (MobileProvisionPlatform platform, string uuid)
+		protected virtual MobileProvision GetMobileProvision (MobileProvisionPlatform platform, string uuid)
 		{
 			var extension = MobileProvision.GetFileExtension (platform);
 			var path = Path.Combine (MobileProvision.ProfileDirectory, uuid + extension);

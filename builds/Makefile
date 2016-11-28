@@ -1880,19 +1880,11 @@ install-llvm64: .stamp-build-llvm64 $(LLVM_TARGETS)
 llvm: setup-llvm build-llvm install-llvm
 llvm64: install-llvm64
 
-ifneq ($(WATCH_MONO_PATH),$(MONO_PATH))
-$(MONO_PATH)/tools/offsets-tool/.stamp-clone $(WATCH_MONO_PATH)/tools/offsets-tool/.stamp-clone:
-else
-$(MONO_PATH)/tools/offsets-tool/.stamp-clone:
-endif
-	@echo Cloning for offsets-tool in $(dir $@)
-	$(Q) $(MAKE) -C $(dir $@) .stamp-clone
-
-$(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(MONO_PATH)/tools/offsets-tool/.stamp-clone $(wildcard $(MONO_PATH)/tools/offsets-tool/*.cs)
+$(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(wildcard $(MONO_PATH)/tools/offsets-tool/*.cs)
 	$(Q) $(MAKE) -C $(dir $@) MonoAotOffsetsDumper.exe
 
 ifneq ($(WATCH_MONO_PATH),$(MONO_PATH))
-$(WATCH_MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(WATCH_MONO_PATH)/tools/offsets-tool/.stamp-clone $(wildcard $(WATCH_MONO_PATH)/tools/offsets-tool/*.cs)
+$(WATCH_MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(wildcard $(WATCH_MONO_PATH)/tools/offsets-tool/*.cs)
 	$(Q) $(MAKE) -C $(dir $@) MonoAotOffsetsDumper.exe
 endif
 
@@ -1908,7 +1900,7 @@ targetwatch/mono/arch/arm/arm_dpimacros.h: setup-targetwatch
 #  $(2): output directory
 #  $(3): build
 define GenerateCrossOffsets
-$(3)/$(1).h: .stamp-configure-$(3) target7/mono/arch/arm/arm_dpimacros.h targetwatch/mono/arch/arm/arm_dpimacros.h $(4)/tools/offsets-tool/.stamp-clone $(4)/tools/offsets-tool/MonoAotOffsetsDumper.exe
+$(3)/$(1).h: .stamp-configure-$(3) target7/mono/arch/arm/arm_dpimacros.h targetwatch/mono/arch/arm/arm_dpimacros.h $(4)/tools/offsets-tool/MonoAotOffsetsDumper.exe
 	$(Q) MONO_PATH=$(4)/tools/offsets-tool/CppSharp/osx_32 \
 	$(SYSTEM_MONO) $(4)/tools/offsets-tool/MonoAotOffsetsDumper.exe --abi $(1) --out $(2) --mono $(abspath $(4)) --maccore $(abspath $(TOP))
 endef

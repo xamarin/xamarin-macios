@@ -115,7 +115,7 @@ namespace XamCore.ObjCRuntime {
 			LookupInternalFunction<initialize_func> ("xamarin_initialize") ();
 		}
 
-		static void InitializePlatform (ref InitializationOptions options)
+		unsafe static void InitializePlatform (InitializationOptions* options)
 		{
 			// BaseDirectory may not be set in some Mono embedded environments
 			// so try some reasonable fallbacks in these cases.
@@ -136,11 +136,6 @@ namespace XamCore.ObjCRuntime {
 
 			ResourcesPath = Path.Combine (basePath, "Resources");
 			FrameworksPath = Path.Combine (basePath, "Frameworks");
-		}
-
-		static void CreateRegistrar (InitializationOptions options)
-		{
-			Registrar = new DynamicRegistrar ();
 		}
 #endif // !COREBUILD
 	}

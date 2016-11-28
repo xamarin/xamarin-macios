@@ -34,6 +34,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Web" />
     <Reference Include="Mono.Posix" />
+    <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -67,6 +68,13 @@
     <Compile Include="Simulators.cs" />
     <Compile Include="TestProject.cs" />
     <Compile Include="Log.cs" />
+    <Compile Include="GitHub.cs" />
+    <Compile Include="Extensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\jenkins\nunit-summary.xslt">
+      <Link>nunit-summary.xslt</Link>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -218,7 +218,7 @@ namespace XamCore.CoreMedia {
 		{
 			if (Handle == IntPtr.Zero)
 				throw new ObjectDisposedException ("BlockBuffer");
-			if (Handle == IntPtr.Zero)
+			if (sourceBytes == null)
 				throw new ArgumentNullException (nameof (sourceBytes));
 
 			GCHandle replacePinned = GCHandle.Alloc (sourceBytes, GCHandleType.Pinned);

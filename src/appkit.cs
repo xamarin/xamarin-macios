@@ -904,6 +904,22 @@ namespace XamCore.AppKit {
 		void UserDidAcceptCloudKitShare (NSApplication application, CKShareMetadata metadata);
 #endif
 	}
+
+	[Mac (10, 12, 1)]
+	[Category]
+	[BaseType (typeof(NSApplication))]
+	interface NSApplication_NSTouchBarCustomization
+	{
+		[Export ("isAutomaticCustomizeTouchBarMenuItemEnabled")]
+		bool GetAutomaticCustomizeTouchBarMenuItemEnabled ();
+
+		[Export ("setAutomaticCustomizeTouchBarMenuItemEnabled:")]
+		void SetAutomaticCustomizeTouchBarMenuItemEnabled (bool enabled);
+
+		[Export ("toggleTouchBarCustomizationPalette:")]
+		void ToggleTouchBarCustomizationPalette ([NullAllowed] NSObject sender);
+	}
+
 		
 	[BaseType (typeof (NSObjectController))]
 	interface NSArrayController {
@@ -2136,6 +2152,10 @@ namespace XamCore.AppKit {
 		[Mac (10,5)]
 		[Export ("imageScaling")]
 		NSImageScale ImageScaling { get; set; }
+
+		[Mac (10, 12, 1)]
+		[NullAllowed, Export ("bezelColor", ArgumentSemantic.Copy)]
+		NSColor BezelColor { get; set; }
 	}
 	
 	[BaseType (typeof (NSImageRep))]
@@ -2508,6 +2528,10 @@ namespace XamCore.AppKit {
 
 		[Export ("numberOfClicksRequired")]
 		nint NumberOfClicksRequired { get; set; }
+
+		[Mac (10, 12, 1)]
+		[Export ("numberOfTouchesRequired")]
+		nint NumberOfTouchesRequired { get; set; }
 	}
 	
 	[BaseType (typeof (NSView))]
@@ -3800,6 +3824,11 @@ namespace XamCore.AppKit {
 		[Static]
 		[Export ("colorWithColorSpace:hue:saturation:brightness:alpha:")]
 		NSColor FromColor (NSColorSpace space, nfloat hue, nfloat saturation, nfloat brightness, nfloat alpha);
+
+		[Mac (10, 12, 1)]
+		[Static]
+		[Export ("scrubberTexturedBackgroundColor", ArgumentSemantic.Strong)]
+		NSColor ScrubberTexturedBackgroundColor { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -7208,6 +7237,18 @@ namespace XamCore.AppKit {
 		[Mac (10,10,3)]
 		[Export ("associatedEventsMask")]
 		NSEventMask AssociatedEventsMask { get; }
+
+		[Mac (10, 12)]
+		[Export ("allTouches")]
+		NSSet<NSTouch> AllTouches { get; }
+
+		[Mac (10,12)]
+		[Export ("touchesForView:")]
+		NSSet<NSTouch> GetTouches (NSView view);
+
+		[Mac (10,12,1)]
+		[Export ("coalescedTouchesForTouch:")]
+		NSTouch[] GetCoalescedTouches (NSTouch touch);
 	}
 
 	[Mac (10,10)]
@@ -7329,6 +7370,22 @@ namespace XamCore.AppKit {
 		[Mac (10,11)]
 		[Export ("pressureConfiguration", ArgumentSemantic.Strong)]
 		NSPressureConfiguration PressureConfiguration { get; set; }
+
+		[Mac (10,12,1)]
+		[Export ("touchesBeganWithEvent:")]
+		void TouchesBegan (NSEvent touchEvent);
+
+		[Mac (10,12,1)]
+		[Export ("touchesMovedWithEvent:")]
+		void TouchesMoved (NSEvent touchEvent);
+
+		[Mac (10,12,1)]
+		[Export ("touchesEndedWithEvent:")]
+		void TouchesEnded (NSEvent touchEvent);
+
+		[Mac (10,12,1)]
+		[Export ("touchesCancelledWithEvent:")]
+		void TouchesCancelled (NSEvent touchEvent);
 	}
 
 	[Mac (10,10)]
@@ -7356,6 +7413,10 @@ namespace XamCore.AppKit {
 		[Mac (10,11)]
 		[Export ("gestureRecognizer:shouldAttemptToRecognizeWithEvent:"), DelegateName ("NSGestureEvent"), DefaultValue (true)]
 		bool ShouldAttemptToRecognize (NSGestureRecognizer gestureRecognizer, NSEvent theEvent);
+
+		[Mac (10,12,1)]
+		[Export ("gestureRecognizer:shouldReceiveTouch:"), DelegateName ("NSTouchEvent"), DefaultValue (true)]
+		bool ShouldReceiveTouch (NSGestureRecognizer gestureRecognizer, NSTouch touch);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -7401,7 +7462,7 @@ namespace XamCore.AppKit {
 		void RemoveItem (NSMenuItem item);
 
 		[Export ("setSubmenu:forItem:")]
-		void SetSubmenu (NSMenu aMenu, NSMenuItem anItem);
+		void SetSubmenu ([NullAllowed] NSMenu aMenu, NSMenuItem anItem);
 
 		[Export ("removeAllItems")]
 		[PostSnippet ("__mt_items_var = ItemArray();")]
@@ -7414,6 +7475,7 @@ namespace XamCore.AppKit {
 		nint Count { get; }
 
 		[Export ("itemAtIndex:")]
+		[return: NullAllowed]
 		NSMenuItem ItemAt (nint index);
 
 		[Export ("indexOfItem:")]
@@ -7429,15 +7491,17 @@ namespace XamCore.AppKit {
 		nint IndexOfItem (NSObject obj);
 
 		[Export ("indexOfItemWithSubmenu:")]
-		nint IndexOfItem (NSMenu submenu);
+		nint IndexOfItem ([NullAllowed] NSMenu submenu);
 
 		[Export ("indexOfItemWithTarget:andAction:")]
-		nint IndexOfItem (NSObject target, Selector actionSelector);
+		nint IndexOfItem ([NullAllowed] NSObject target, [NullAllowed] Selector actionSelector);
 
 		[Export ("itemWithTitle:")]
+		[return: NullAllowed]
 		NSMenuItem ItemWithTitle (string title);
 
 		[Export ("itemWithTag:")]
+		[return: NullAllowed]
 		NSMenuItem ItemWithTag (nint tag);
 
 		[Export ("update")]
@@ -7462,6 +7526,7 @@ namespace XamCore.AppKit {
 		void CancelTrackingWithoutAnimation ();
 
 		[Export ("highlightedItem")]
+		[NullAllowed]
 		NSMenuItem HighlightedItem { get; }
 
 		[Export ("size")]
@@ -7485,7 +7550,7 @@ namespace XamCore.AppKit {
 		[Export ("menuBarVisible")]
 		bool MenuBarVisible { get; set; }
 
-		[Export ("supermenu")]
+		[NullAllowed, Export ("supermenu", ArgumentSemantic.Assign)]
 		NSMenu Supermenu { get; set; }
 
 		[Export ("autoenablesItems")]
@@ -7496,6 +7561,7 @@ namespace XamCore.AppKit {
 
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
+		[NullAllowed]
 		NSMenuDelegate Delegate { get; set; }
 		
 		[Export ("minimumWidth")]
@@ -8718,127 +8784,6 @@ namespace XamCore.AppKit {
 		[Export ("resizingMode")]
 		NSImageResizingMode ResizingMode { get; set; }
 
-		[Internal, Field ("NSImageNameQuickLookTemplate")]
-		NSString NSImageNameQuickLookTemplate { get; }
-
-		[Internal, Field ("NSImageNameBluetoothTemplate")]
-		NSString NSImageNameBluetoothTemplate { get; }
-
-		[Internal, Field ("NSImageNameIChatTheaterTemplate")]
-		NSString NSImageNameIChatTheaterTemplate { get; }
-
-		[Internal, Field ("NSImageNameSlideshowTemplate")]
-		NSString NSImageNameSlideshowTemplate { get; }
-
-		[Internal, Field ("NSImageNameActionTemplate")]
-		NSString NSImageNameActionTemplate { get; }
-
-		[Internal, Field ("NSImageNameSmartBadgeTemplate")]
-		NSString NSImageNameSmartBadgeTemplate { get; }
-
-		[Internal, Field ("NSImageNamePathTemplate")]
-		NSString NSImageNamePathTemplate { get; }
-
-		[Internal, Field ("NSImageNameInvalidDataFreestandingTemplate")]
-		NSString NSImageNameInvalidDataFreestandingTemplate { get; }
-
-		[Internal, Field ("NSImageNameLockLockedTemplate")]
-		NSString NSImageNameLockLockedTemplate { get; }
-
-		[Internal, Field ("NSImageNameLockUnlockedTemplate")]
-		NSString NSImageNameLockUnlockedTemplate { get; }
-
-		[Internal, Field ("NSImageNameGoRightTemplate")]
-		NSString NSImageNameGoRightTemplate { get; }
-
-		[Internal, Field ("NSImageNameGoLeftTemplate")]
-		NSString NSImageNameGoLeftTemplate { get; }
-
-		[Internal, Field ("NSImageNameRightFacingTriangleTemplate")]
-		NSString NSImageNameRightFacingTriangleTemplate { get; }
-
-		[Internal, Field ("NSImageNameLeftFacingTriangleTemplate")]
-		NSString NSImageNameLeftFacingTriangleTemplate { get; }
-
-		[Internal, Field ("NSImageNameAddTemplate")]
-		NSString NSImageNameAddTemplate { get; }
-
-		[Internal, Field ("NSImageNameRemoveTemplate")]
-		NSString NSImageNameRemoveTemplate { get; }
-
-		[Internal, Field ("NSImageNameRevealFreestandingTemplate")]
-		NSString NSImageNameRevealFreestandingTemplate { get; }
-
-		[Internal, Field ("NSImageNameFollowLinkFreestandingTemplate")]
-		NSString NSImageNameFollowLinkFreestandingTemplate { get; }
-
-		[Internal, Field ("NSImageNameEnterFullScreenTemplate")]
-		NSString NSImageNameEnterFullScreenTemplate { get; }
-
-		[Internal, Field ("NSImageNameExitFullScreenTemplate")]
-		NSString NSImageNameExitFullScreenTemplate { get; }
-
-		[Internal, Field ("NSImageNameStopProgressTemplate")]
-		NSString NSImageNameStopProgressTemplate { get; }
-
-		[Internal, Field ("NSImageNameStopProgressFreestandingTemplate")]
-		NSString NSImageNameStopProgressFreestandingTemplate { get; }
-
-		[Internal, Field ("NSImageNameRefreshTemplate")]
-		NSString NSImageNameRefreshTemplate { get; }
-
-		[Internal, Field ("NSImageNameRefreshFreestandingTemplate")]
-		NSString NSImageNameRefreshFreestandingTemplate { get; }
-
-		[Internal, Field ("NSImageNameFolder")]
-		NSString NSImageNameFolder { get; }
-
-		[Internal, Field ("NSImageNameTrashEmpty")]
-		NSString NSImageNameTrashEmpty { get; }
-
-		[Internal, Field ("NSImageNameTrashFull")]
-		NSString NSImageNameTrashFull { get; }
-
-		[Internal, Field ("NSImageNameHomeTemplate")]
-		NSString NSImageNameHomeTemplate { get; }
-
-		[Internal, Field ("NSImageNameBookmarksTemplate")]
-		NSString NSImageNameBookmarksTemplate { get; }
-
-		[Internal, Field ("NSImageNameCaution")]
-		NSString NSImageNameCaution { get; }
-
-		[Internal, Field ("NSImageNameStatusAvailable")]
-		NSString NSImageNameStatusAvailable { get; }
-
-		[Internal, Field ("NSImageNameStatusPartiallyAvailable")]
-		NSString NSImageNameStatusPartiallyAvailable { get; }
-
-		[Internal, Field ("NSImageNameStatusUnavailable")]
-		NSString NSImageNameStatusUnavailable { get; }
-
-		[Internal, Field ("NSImageNameStatusNone")]
-		NSString NSImageNameStatusNone { get; }
-
-		[Internal, Field ("NSImageNameApplicationIcon")]
-		NSString NSImageNameApplicationIcon { get; }
-
-		[Internal, Field ("NSImageNameMenuOnStateTemplate")]
-		NSString NSImageNameMenuOnStateTemplate { get; }
-
-		[Internal, Field ("NSImageNameMenuMixedStateTemplate")]
-		NSString NSImageNameMenuMixedStateTemplate { get; }
-
-		[Internal, Field ("NSImageNameUserGuest")]
-		NSString NSImageNameUserGuest { get; }
-
-		[Internal, Field ("NSImageNameMobileMe")]
-		NSString NSImageNameMobileMe { get; }
-
-		[Mac (10, 8)]
-		[Internal, Field ("NSImageNameShareTemplate")]
-		NSString NSImageNameShareTemplate { get; }
-
 		[Mac (10,7)]
 		[Export ("recommendedLayerContentsScale:")]
 		nfloat GetRecommendedLayerContentsScale (nfloat preferredContentsScale);
@@ -8846,7 +8791,434 @@ namespace XamCore.AppKit {
 		[Mac (10,7)]
 		[Export ("layerContentsForContentsScale:")]
 		NSObject GetLayerContentsForContentsScale (nfloat layerContentsScale);
-		
+	}
+
+	public enum NSImageName 
+	{
+		[Field ("NSImageNameQuickLookTemplate")]
+		QuickLookTemplate,
+
+		[Field ("NSImageNameBluetoothTemplate")]
+		BluetoothTemplate,
+
+		[Field ("NSImageNameIChatTheaterTemplate")]
+		IChatTheaterTemplate,
+
+		[Field ("NSImageNameSlideshowTemplate")]
+		SlideshowTemplate,
+
+		[Field ("NSImageNameActionTemplate")]
+		ActionTemplate,
+
+		[Field ("NSImageNameSmartBadgeTemplate")]
+		SmartBadgeTemplate,
+
+		[Field ("NSImageNamePathTemplate")]
+		PathTemplate,
+
+		[Field ("NSImageNameInvalidDataFreestandingTemplate")]
+		InvalidDataFreestandingTemplate,
+
+		[Field ("NSImageNameLockLockedTemplate")]
+		LockLockedTemplate,
+
+		[Field ("NSImageNameLockUnlockedTemplate")]
+		LockUnlockedTemplate,
+
+		[Field ("NSImageNameGoRightTemplate")]
+		GoRightTemplate,
+
+		[Field ("NSImageNameGoLeftTemplate")]
+		GoLeftTemplate,
+
+		[Field ("NSImageNameRightFacingTriangleTemplate")]
+		RightFacingTriangleTemplate,
+
+		[Field ("NSImageNameLeftFacingTriangleTemplate")]
+		LeftFacingTriangleTemplate,
+
+		[Field ("NSImageNameAddTemplate")]
+		AddTemplate,
+
+		[Field ("NSImageNameRemoveTemplate")]
+		RemoveTemplate,
+
+		[Field ("NSImageNameRevealFreestandingTemplate")]
+		RevealFreestandingTemplate,
+
+		[Field ("NSImageNameFollowLinkFreestandingTemplate")]
+		FollowLinkFreestandingTemplate,
+
+		[Field ("NSImageNameEnterFullScreenTemplate")]
+		EnterFullScreenTemplate,
+
+		[Field ("NSImageNameExitFullScreenTemplate")]
+		ExitFullScreenTemplate,
+
+		[Field ("NSImageNameStopProgressTemplate")]
+		StopProgressTemplate,
+
+		[Field ("NSImageNameStopProgressFreestandingTemplate")]
+		StopProgressFreestandingTemplate,
+
+		[Field ("NSImageNameRefreshTemplate")]
+		RefreshTemplate,
+
+		[Field ("NSImageNameRefreshFreestandingTemplate")]
+		RefreshFreestandingTemplate,
+
+		[Field ("NSImageNameFolder")]
+		Folder,
+
+		[Field ("NSImageNameTrashEmpty")]
+		TrashEmpty,
+
+		[Field ("NSImageNameTrashFull")]
+		TrashFull,
+
+		[Field ("NSImageNameHomeTemplate")]
+		HomeTemplate,
+
+		[Field ("NSImageNameBookmarksTemplate")]
+		BookmarksTemplate,
+
+		[Field ("NSImageNameCaution")]
+		Caution,
+
+		[Field ("NSImageNameStatusAvailable")]
+		StatusAvailable,
+
+		[Field ("NSImageNameStatusPartiallyAvailable")]
+		StatusPartiallyAvailable,
+
+		[Field ("NSImageNameStatusUnavailable")]
+		StatusUnavailable,
+
+		[Field ("NSImageNameStatusNone")]
+		StatusNone,
+
+		[Field ("NSImageNameApplicationIcon")]
+		ApplicationIcon,
+
+		[Field ("NSImageNameMenuOnStateTemplate")]
+		MenuOnStateTemplate,
+
+		[Field ("NSImageNameMenuMixedStateTemplate")]
+		MenuMixedStateTemplate,
+
+		[Field ("NSImageNameUserGuest")]
+		UserGuest,
+
+		[Field ("NSImageNameMobileMe")]
+		MobileMe,
+
+		[Mac (10, 8)]
+		[Field ("NSImageNameShareTemplate")]
+		ShareTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarAddDetailTemplate")]
+		TouchBarAddDetailTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarAddTemplate")]
+		TouchBarAddTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarAlarmTemplate")]
+		TouchBarAlarmTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarAudioInputMuteTemplate")]
+		TouchBarAudioInputMuteTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarAudioInputTemplate")]
+		TouchBarAudioInputTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarAudioOutputMuteTemplate")]
+		TouchBarAudioOutputMuteTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarAudioOutputVolumeHighTemplate")]
+		TouchBarAudioOutputVolumeHighTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarAudioOutputVolumeLowTemplate")]
+		TouchBarAudioOutputVolumeLowTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarAudioOutputVolumeMediumTemplate")]
+		TouchBarAudioOutputVolumeMediumTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarAudioOutputVolumeOffTemplate")]
+		TouchBarAudioOutputVolumeOffTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarBookmarksTemplate")]
+		TouchBarBookmarksTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarColorPickerFill")]
+		TouchBarColorPickerFill,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarColorPickerFont")]
+		TouchBarColorPickerFont,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarColorPickerStroke")]
+		TouchBarColorPickerStroke,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarCommunicationAudioTemplate")]
+		TouchBarCommunicationAudioTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarCommunicationVideoTemplate")]
+		TouchBarCommunicationVideoTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarComposeTemplate")]
+		TouchBarComposeTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarDeleteTemplate")]
+		TouchBarDeleteTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarDownloadTemplate")]
+		TouchBarDownloadTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarEnterFullScreenTemplate")]
+		TouchBarEnterFullScreenTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarExitFullScreenTemplate")]
+		TouchBarExitFullScreenTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarFastForwardTemplate")]
+		TouchBarFastForwardTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarFolderCopyToTemplate")]
+		TouchBarFolderCopyToTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarFolderMoveToTemplate")]
+		TouchBarFolderMoveToTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarFolderTemplate")]
+		TouchBarFolderTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarGetInfoTemplate")]
+		TouchBarGetInfoTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarGoBackTemplate")]
+		TouchBarGoBackTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarGoDownTemplate")]
+		TouchBarGoDownTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarGoForwardTemplate")]
+		TouchBarGoForwardTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarGoUpTemplate")]
+		TouchBarGoUpTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarHistoryTemplate")]
+		TouchBarHistoryTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarIconViewTemplate")]
+		TouchBarIconViewTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarListViewTemplate")]
+		TouchBarListViewTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarMailTemplate")]
+		TouchBarMailTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarNewFolderTemplate")]
+		TouchBarNewFolderTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarNewMessageTemplate")]
+		TouchBarNewMessageTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarOpenInBrowserTemplate")]
+		TouchBarOpenInBrowserTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarPauseTemplate")]
+		TouchBarPauseTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarPlayheadTemplate")]
+		TouchBarPlayheadTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarPlayPauseTemplate")]
+		TouchBarPlayPauseTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarPlayTemplate")]
+		TouchBarPlayTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarQuickLookTemplate")]
+		TouchBarQuickLookTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarRecordStartTemplate")]
+		TouchBarRecordStartTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarRecordStopTemplate")]
+		TouchBarRecordStopTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarRefreshTemplate")]
+		TouchBarRefreshTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarRewindTemplate")]
+		TouchBarRewindTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarRotateLeftTemplate")]
+		TouchBarRotateLeftTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarRotateRightTemplate")]
+		TouchBarRotateRightTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarSearchTemplate")]
+		TouchBarSearchTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarShareTemplate")]
+		TouchBarShareTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarSidebarTemplate")]
+		TouchBarSidebarTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarSkipAhead15SecondsTemplate")]
+		TouchBarSkipAhead15SecondsTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarSkipAhead30SecondsTemplate")]
+		TouchBarSkipAhead30SecondsTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarSkipAheadTemplate")]
+		TouchBarSkipAheadTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarSkipBack15SecondsTemplate")]
+		TouchBarSkipBack15SecondsTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarSkipBack30SecondsTemplate")]
+		TouchBarSkipBack30SecondsTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarSkipBackTemplate")]
+		TouchBarSkipBackTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarSkipToEndTemplate")]
+		TouchBarSkipToEndTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarSkipToStartTemplate")]
+		TouchBarSkipToStartTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarSlideshowTemplate")]
+		TouchBarSlideshowTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarTagIconTemplate")]
+		TouchBarTagIconTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarTextBoldTemplate")]
+		TouchBarTextBoldTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarTextBoxTemplate")]
+		TouchBarTextBoxTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarTextCenterAlignTemplate")]
+		TouchBarTextCenterAlignTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarTextItalicTemplate")]
+		TouchBarTextItalicTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarTextJustifiedAlignTemplate")]
+		TouchBarTextJustifiedAlignTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarTextLeftAlignTemplate")]
+		TouchBarTextLeftAlignTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarTextListTemplate")]
+		TouchBarTextListTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarTextRightAlignTemplate")]
+		TouchBarTextRightAlignTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarTextStrikethroughTemplate")]
+		TouchBarTextStrikethroughTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarTextUnderlineTemplate")]
+		TouchBarTextUnderlineTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarUserAddTemplate")]
+		TouchBarUserAddTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarUserGroupTemplate")]
+		TouchBarUserGroupTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarUserTemplate")]
+		TouchBarUserTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarVolumeDownTemplate")]
+		TouchBarVolumeDownTemplate,
+
+		[Mac (10, 12, 1)]
+		[Field ("NSImageNameTouchBarVolumeUpTemplate")]
+		TouchBarVolumeUpTemplate,
 	}
 
 	interface NSStringAttributes {
@@ -10480,6 +10852,10 @@ namespace XamCore.AppKit {
 
 		[Export ("velocityInView:")]
 		CGPoint VelocityInView (NSView view);
+
+		[Mac (10, 12, 1)]
+		[Export ("numberOfTouchesRequired")]
+		nint NumberOfTouchesRequired { get; set; }
 	}
 
 	[Mac (10,10)]
@@ -10496,6 +10872,10 @@ namespace XamCore.AppKit {
 
 		[Export ("allowableMovement")]
 		nfloat AllowableMovement { get; set; }
+
+		[Mac (10, 12, 1)]
+		[Export ("numberOfTouchesRequired")]
+		nint NumberOfTouchesRequired { get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -11694,7 +12074,7 @@ namespace XamCore.AppKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	partial interface NSResponder : NSCoding {
+	partial interface NSResponder : NSCoding, NSTouchBarProvider {
 		[Export ("tryToPerform:with:")]
 		bool TryToPerformwith (Selector anAction, [NullAllowed] NSObject anObject);
 
@@ -11878,6 +12258,23 @@ namespace XamCore.AppKit {
 		[Sealed]
 		[Export ("presentError:modalForWindow:delegate:didPresentSelector:contextInfo:")]
 		void PresentError (NSError error, NSWindow window, [NullAllowed] NSObject @delegate, [NullAllowed] Selector didPresentSelector, IntPtr contextInfo);
+	}
+
+	[Category]
+	[BaseType (typeof(NSResponder))]
+	interface NSResponder_NSTouchBarProvider : INSTouchBarProvider
+	{
+		[Mac (10, 12, 1)]
+		[NullAllowed, Export ("touchBar")]
+		NSTouchBar GetTouchBar ();
+
+		[Mac (10, 12, 1)]
+		[Export ("setTouchBar:")]
+		void SetTouchBar ([NullAllowed]NSTouchBar bar);
+
+		[Mac (10, 12, 1)]
+		[NullAllowed, Export ("makeTouchBar")]
+		NSTouchBar MakeTouchBar ();
 	}
 
 	[Mac (10,10)]
@@ -12642,6 +13039,10 @@ namespace XamCore.AppKit {
 		[Internal]
 		[Export ("segmentedControlWithImages:trackingMode:target:action:")]
 		NSSegmentedControl _FromImages (NSImage[] images, NSSegmentSwitchTracking trackingMode, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Mac (10, 12, 1)]
+		[NullAllowed, Export ("selectedSegmentBezelColor", ArgumentSemantic.Copy)]
+		NSColor SelectedSegmentBezelColor { get; set; }
 	}
 	
 	[BaseType (typeof (NSActionCell))]
@@ -12821,6 +13222,10 @@ namespace XamCore.AppKit {
 		[Internal]
 		[Export ("sliderWithValue:minValue:maxValue:target:action:")]
 		NSSlider _FromValue (double value, double minValue, double maxValue, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Mac (10, 12, 1)]
+		[NullAllowed, Export ("trackFillColor", ArgumentSemantic.Copy)]
+		NSColor TrackFillColor { get; set; }
 	}
 	
 	[BaseType (typeof (NSActionCell))]
@@ -12912,6 +13317,40 @@ namespace XamCore.AppKit {
 		[Mac (10,9)]
 		[Export ("barRectFlipped:")]
 		CGRect BarRectFlipped (bool flipped);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSTouchBarItem))]
+	[DisableDefaultCtor]
+	interface NSSliderTouchBarItem
+	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
+		[Export ("slider", ArgumentSemantic.Strong)]
+		NSSlider Slider { get; set; }
+
+		[NullAllowed, Export ("label")]
+		string Label { get; set; }
+
+		[NullAllowed, Export ("minimumValueAccessory", ArgumentSemantic.Strong)]
+		NSSliderAccessory MinimumValueAccessory { get; set; }
+
+		[NullAllowed, Export ("maximumValueAccessory", ArgumentSemantic.Strong)]
+		NSSliderAccessory MaximumValueAccessory { get; set; }
+
+		[Export ("valueAccessoryWidth")]
+		double ValueAccessoryWidth { get; set; }
+
+		[NullAllowed, Export ("target", ArgumentSemantic.Weak)]
+		NSObject Target { get; set; }
+
+		[NullAllowed, Export ("action", ArgumentSemantic.Assign)]
+		Selector Action { get; set; }
+
+		[Export ("customizationLabel")]
+		string CustomizationLabel { get; set; }
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -13220,6 +13659,21 @@ namespace XamCore.AppKit {
 		[Mac (10,12)]
 		[Export ("preventsAutocorrectionBeforeString:language:")]
 		bool PreventsAutocorrectionBefore (string aString, [NullAllowed] string language);
+
+		[Mac (10, 12, 1)]
+		[Static]
+		[Export ("isAutomaticTextCompletionEnabled")]
+		bool IsAutomaticTextCompletionEnabled { get; }
+
+		[Mac (10,12,1)]
+		[Async (ResultTypeName="NSSpellCheckerCanidates")]
+		[Export ("requestCandidatesForSelectedRange:inString:types:options:inSpellDocumentWithTag:completionHandler:")]
+		nint RequestCandidates (NSRange selectedRange, string stringToCheck, ulong checkingTypes, [NullAllowed] NSDictionary<NSString, NSObject> options, nint tag, [NullAllowed] Action<nint, NSTextCheckingResult []> completionHandler);
+
+		[Mac (10,12,1)]
+		[Export ("deletesAutospaceBetweenString:andString:language:")]
+		bool DeletesAutospace (string precedingString, string followingString, [NullAllowed] string language);
+
 	}
 
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSSoundDelegate) })]
@@ -14610,6 +15064,7 @@ namespace XamCore.AppKit {
 		[Export ("needsDisplay")]
 		bool NeedsDisplay { get; set; }
 
+		[Deprecated (PlatformName.MacOSX, 10, 12, 1)]
 		[Export ("acceptsTouchEvents")]
 		bool AcceptsTouchEvents { get; set; }
 
@@ -15112,7 +15567,18 @@ namespace XamCore.AppKit {
 		[Field ("NSViewAnimationFadeOutEffect")]
 		NSString FadeOutEffect { get; }
 	}
-	
+
+	[Category]
+	[BaseType (typeof(NSView))]
+	interface NSView_NSTouchBar
+	{
+		[Mac (10, 12, 1)]
+		[Export ("allowedTouchTypes")]
+		NSTouchTypeMask GetAllowedTouchTypes ();
+
+		[Export ("setAllowedTouchTypes:")]
+		void SetAllowedTouchTypes (NSTouchTypeMask touchTypes);
+	}
 
 	[BaseType (typeof (NSResponder))]
 	interface NSViewController : NSUserInterfaceItemIdentification, NSCoding, NSSeguePerforming
@@ -16917,6 +17383,25 @@ namespace XamCore.AppKit {
 		NSTextField CreateTextField ([NullAllowed] string stringValue);
 	}
 
+	[Mac (10, 12, 1)]
+	[Category]
+	[BaseType (typeof(NSTextField))]
+	interface NSTextField_NSTouchBar
+	{
+		[Export ("isAutomaticTextCompletionEnabled")]
+		bool GetAutomaticTextCompletionEnabled ();
+
+		[Export ("automaticTextCompletionEnabled:")]
+		void SetAutomaticTextCompletionEnabled (bool enabled);
+
+		[Export ("allowsCharacterPickerTouchBarItem")]
+		bool GetAllowsCharacterPickerTouchBarItem ();
+
+		[Export ("setAllowsCharacterPickerTouchBarItem:")]
+		void SetAllowsCharacterPickerTouchBarItem (bool allows);
+	}
+
+
 	[BaseType (typeof (NSTextField))]
 	interface NSSecureTextField {
 		[Export ("initWithFrame:")]
@@ -16957,7 +17442,20 @@ namespace XamCore.AppKit {
 		void Changed (NSNotification notification);
 
 		[Export ("controlTextDidBeginEditing:"), EventArgs ("NSNotification")]
-		void EditingBegan (NSNotification notification);	
+		void EditingBegan (NSNotification notification);
+
+		[Mac (10,12,1)]
+		[Export ("textField:textView:candidatesForSelectedRange:"), DelegateName ("NSTextFieldGetCandidates"), DefaultValue (null)]
+		[return: NullAllowed]
+		NSObject[] GetCandidates (NSTextField textField, NSTextView textView, NSRange selectedRange);
+
+		[Mac (10,12,1)]
+		[Export ("textField:textView:candidates:forSelectedRange:"), DelegateName ("NSTextFieldTextCheckingResults"), DefaultValue (null)]
+		NSTextCheckingResult[] GetTextCheckingResults (NSTextField textField, NSTextView textView, NSTextCheckingResult[] candidates, NSRange selectedRange);
+
+		[Mac (10,12,1)]
+		[Export ("textField:textView:shouldSelectCandidateAtIndex:"), DelegateName ("NSTextFieldSelectCandidate"), DefaultValue (false)]
+		bool ShouldSelectCandidate (NSTextField textField, NSTextView textView, nuint index);
 	}
 	
 	[BaseType (typeof (NSTextFieldDelegate))]
@@ -17305,7 +17803,7 @@ namespace XamCore.AppKit {
 	}
 
 	[BaseType (typeof (NSText), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTextViewDelegate)})]
-	partial interface NSTextView : NSTextInputClient, NSDraggingSource, NSTextFinderClient, NSAccessibilityNavigableStaticText {
+	partial interface NSTextView : NSTextInputClient, NSDraggingSource, NSTextFinderClient, NSAccessibilityNavigableStaticText, NSCandidateListTouchBarItemDelegate, NSTouchBarDelegate {
 		[Export ("initWithFrame:textContainer:")]
 		IntPtr Constructor (CGRect frameRect, NSTextContainer container);
 
@@ -17791,6 +18289,34 @@ namespace XamCore.AppKit {
 		[Static]
 		[Export ("stronglyReferencesTextStorage")]
 		bool StronglyReferencesTextStorage { get; }
+
+		[Mac (10, 12, 1)]
+		[Export ("automaticTextCompletionEnabled")]
+		bool AutomaticTextCompletionEnabled { [Bind ("isAutomaticTextCompletionEnabled")] get; set; }
+
+		[Mac (10, 12, 1)]
+		[Export ("toggleAutomaticTextCompletion:")]
+		void ToggleAutomaticTextCompletion ([NullAllowed] NSObject sender);
+
+		[Mac (10, 12, 1)]
+		[Export ("allowsCharacterPickerTouchBarItem")]
+		bool AllowsCharacterPickerTouchBarItem { get; set; }
+
+		[Mac (10, 12, 1)]
+		[Export ("updateTouchBarItemIdentifiers")]
+		void UpdateTouchBarItemIdentifiers ();
+
+		[Mac (10, 12, 1)]
+		[Export ("updateTextTouchBarItems")]
+		void UpdateTextTouchBarItems ();
+
+		[Mac (10, 12, 1)]
+		[Export ("updateCandidates")]
+		void UpdateCandidates ();
+
+		[Mac (10, 12, 1)]
+		[NullAllowed, Export ("candidateListTouchBarItem", ArgumentSemantic.Strong)]
+		NSCandidateListTouchBarItem CandidateListTouchBarItem { get; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -17911,6 +18437,24 @@ namespace XamCore.AppKit {
 
 		[Export ("undoManagerForTextView:"), DelegateName ("NSTextViewGetUndoManager"), DefaultValue (null)]
 		NSUndoManager GetUndoManager (NSTextView view);
+
+		[Mac (10,12,1)]
+		[Export ("textView:shouldUpdateTouchBarItemIdentifiers:"), DelegateName ("NSTextViewUpdateTouchBarItemIdentifiers"), DefaultValue (null)]
+		string[] ShouldUpdateTouchBarItemIdentifiers (NSTextView textView, string[] identifiers);
+
+		[Mac (10,12,1)]
+		[Export ("textView:candidatesForSelectedRange:"), DelegateName ("NSTextViewGetCandidates"), DefaultValue (null)]
+		[return: NullAllowed]
+		NSObject[] GetCandidates (NSTextView textView, NSRange selectedRange);
+
+		[Mac (10,12,1)]
+		[Export ("textView:candidates:forSelectedRange:"), DelegateName ("NSTextViewTextCheckingResults"), DefaultValue (null)]
+		NSTextCheckingResult[] GetTextCheckingCandidates (NSTextView textView, NSTextCheckingResult[] candidates, NSRange selectedRange);
+
+		[Mac (10,12,1)]
+		[Export ("textView:shouldSelectCandidateAtIndex:"), DelegateName ("NSTextViewSelectCandidate"), DefaultValue (false)]
+		bool ShouldSelectCandidates (NSTextView textView, nuint index);
+
 	}
 	
 	
@@ -18185,6 +18729,141 @@ namespace XamCore.AppKit {
 		[Export ("deviceSize")]
 		CGSize DeviceSize { get; }
 	}
+
+	[Mac (10, 12, 1)]
+	[Category]
+	[BaseType (typeof(NSTouch))]
+	interface NSTouch_NSTouchBar
+	{
+		[Export ("type")]
+		NSTouchType GetTouchType ();
+
+		[Export ("locationInView:")]
+		CGPoint GetLocation ([NullAllowed] NSView view);
+
+		[Export ("previousLocationInView:")]
+		CGPoint GetPreviousLocation ([NullAllowed] NSView view);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSObject), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NSTouchBarDelegate)})]
+	interface NSTouchBar : NSCoding
+	{
+		[NullAllowed, Export ("customizationIdentifier")]
+		string CustomizationIdentifier { get; set; }
+
+		[Export ("customizationAllowedItemIdentifiers", ArgumentSemantic.Copy)]
+		string[] CustomizationAllowedItemIdentifiers { get; set; }
+
+		[Export ("customizationRequiredItemIdentifiers", ArgumentSemantic.Copy)]
+		string[] CustomizationRequiredItemIdentifiers { get; set; }
+
+		[Export ("defaultItemIdentifiers", ArgumentSemantic.Copy)]
+		string[] DefaultItemIdentifiers { get; set; }
+
+		[NullAllowed, Export ("principalItemIdentifier")]
+		string PrincipalItemIdentifier { get; set; }
+
+		[Export ("templateItems", ArgumentSemantic.Copy)]
+		NSSet<NSTouchBarItem> TemplateItems { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		INSTouchBarDelegate Delegate { get; set; }
+
+		[Export ("itemForIdentifier:")]
+		NSTouchBarItem GetItemForIdentifier (string identifier);
+
+		[Export ("visible")]
+		bool Visible { [Bind ("isVisible")] get; }
+	}
+
+	interface INSTouchBarDelegate { }
+
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface NSTouchBarDelegate
+	{
+		[Export ("touchBar:makeItemForIdentifier:"), DelegateName ("NSTouchBarMakeItem"), DefaultValue (null)]
+		[return: NullAllowed]
+		NSTouchBarItem MakeItem (NSTouchBar touchBar, string identifier);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSTouchBarItem : NSCoding
+	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
+		[Wrap ("this (identifier.GetConstant ())")]
+		IntPtr Constructor (NSTouchBarItemIdentifier identifier);
+
+		[Export ("identifier")]
+		string Identifier { get; }
+
+		[Export ("visibilityPriority")]
+		float VisibilityPriority { get; set; }
+
+		[NullAllowed, Export ("view")]
+		NSView View { get; }
+
+		[NullAllowed, Export ("viewController")]
+		NSViewController ViewController { get; }
+
+		[Export ("customizationLabel")]
+		string CustomizationLabel { get; }
+
+		[Export ("visible")]
+		bool Visible { [Bind ("isVisible")] get; }
+	}
+
+	[Mac (10,12,1)]
+	public enum NSTouchBarItemIdentifier
+	{
+		[Field ("NSTouchBarItemIdentifierFixedSpaceSmall")]
+		FixedSpaceSmall,
+
+		[Field ("NSTouchBarItemIdentifierFixedSpaceLarge")]
+		FixedSpaceLarge,
+
+		[Field ("NSTouchBarItemIdentifierFlexibleSpace")]
+		FlexibleSpace,
+
+		[Field ("NSTouchBarItemIdentifierOtherItemsProxy")]
+		OtherItemsProxy,
+
+		[Field ("NSTouchBarItemIdentifierCharacterPicker")]
+		CharacterPicker,
+
+		[Field ("NSTouchBarItemIdentifierTextColorPicker")]
+		TextColorPicker,
+
+		[Field ("NSTouchBarItemIdentifierTextStyle")]
+		TextStyle,
+
+		[Field ("NSTouchBarItemIdentifierTextAlignment")]
+		TextAlignment,
+
+		[Field ("NSTouchBarItemIdentifierTextList")]
+		TextList,
+
+		[Field ("NSTouchBarItemIdentifierTextFormat")]
+		TextFormat,
+
+	}
+
+	[Mac (10, 12, 1)]
+	[Protocol]
+	interface NSTouchBarProvider
+	{
+		[Abstract]
+		[NullAllowed, Export ("touchBar", ArgumentSemantic.Strong)]
+		NSTouchBar TouchBar { get; }
+	}
+
+	interface INSTouchBarProvider { }
 
 	[BaseType (typeof (NSObject))]
 	interface NSTrackingArea : NSCoding, NSCopying {
@@ -20330,7 +21009,9 @@ namespace XamCore.AppKit {
 		[Export ("showRelativeToRect:ofView:preferredEdge:")]
 		void ShowRelativeToRect (CGRect rect, NSView view, NSRectEdge preferredEdge);
 	}
-	
+
+	interface INSSharingServicePickerDelegate {}
+
 	[MountainLion]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -21035,6 +21716,11 @@ namespace XamCore.AppKit {
 		[Field ("NSSpellCheckerDidChangeAutomaticPeriodSubstitutionNotification")]
 		[Notification]
 		NSString DidChangeAutomaticPeriodSubstitutionNotification { get; }
+
+		[Mac (10, 12, 1)]
+		[Field ("NSSpellCheckerDidChangeAutomaticTextCompletionNotification")]
+		[Notification]
+		NSString DidChangeAutomaticTextCompletionNotification { get; }
 	}
 
 	partial interface NSTextViewDidChangeSelectionEventArgs {
@@ -21551,6 +22237,9 @@ namespace XamCore.AppKit {
 		[Notification, Field ("NSImageRepRegistryDidChangeNotification")]
 		NSString RegistryDidChangeNotification { get; }
 	}
+
+	interface INSAccessibility {};
+	interface INSAccessibilityElement {};
 
 	[Mac (10,10)]
 	[Protocol]
@@ -23720,5 +24409,605 @@ namespace XamCore.AppKit {
 		[Abstract]
 		[Export ("validateMenuItem:")]
 		bool ValidateMenuItem (NSMenuItem menuItem);
+	}
+
+	public interface INSCandidateListTouchBarItemDelegate {}
+
+	delegate NSAttributedString AttributedStringForCandidateHandler (NSObject candidate, nint index);
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSTouchBarItem))]
+	[DisableDefaultCtor]
+	interface NSCandidateListTouchBarItem
+	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
+		[NullAllowed, Export ("client", ArgumentSemantic.Weak)]
+		INSTextInputClient Client { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		INSCandidateListTouchBarItemDelegate Delegate { get; set; }
+
+		[Export ("collapsed")]
+		bool Collapsed { [Bind ("isCollapsed")] get; set; }
+
+		[Export ("allowsCollapsing")]
+		bool AllowsCollapsing { get; set; }
+
+		[Export ("candidateListVisible")]
+		bool CandidateListVisible { [Bind ("isCandidateListVisible")] get; }
+
+		[Export ("updateWithInsertionPointVisibility:")]
+		void UpdateWithInsertionPointVisibility (bool isVisible);
+
+		[Export ("allowsTextInputContextCandidates")]
+		bool AllowsTextInputContextCandidates { get; set; }
+
+		[NullAllowed, Export ("attributedStringForCandidate", ArgumentSemantic.Copy)]
+		AttributedStringForCandidateHandler AttributedStringForCandidate { get; set; }
+
+		[Export ("candidates", ArgumentSemantic.Copy)]
+		NSObject[] Candidates { get; }
+
+		[Export ("setCandidates:forSelectedRange:inString:")]
+		void SetCandidates (NSObject[] candidates, NSRange selectedRange, [NullAllowed] string originalString);
+
+		[Export ("customizationLabel")]
+		string CustomizationLabel { get; set; }
+	}
+
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface NSCandidateListTouchBarItemDelegate
+	{
+		[Mac (10,12,1)]
+		[Export ("candidateListTouchBarItem:beginSelectingCandidateAtIndex:")]
+		void BeginSelectingCandidate (NSCandidateListTouchBarItem anItem, nint index);
+
+		[Mac (10,12,1)]
+		[Export ("candidateListTouchBarItem:changeSelectionFromCandidateAtIndex:toIndex:")]
+		void ChangeSelectionFromCandidate (NSCandidateListTouchBarItem anItem, nint previousIndex, nint index);
+
+		[Mac (10,12,1)]
+		[Export ("candidateListTouchBarItem:endSelectingCandidateAtIndex:")]
+		void EndSelectingCandidate (NSCandidateListTouchBarItem anItem, nint index);
+
+		[Mac (10,12,1)]
+		[Export ("candidateListTouchBarItem:changedCandidateListVisibility:")]
+		void ChangedCandidateListVisibility (NSCandidateListTouchBarItem anItem, bool isVisible);
+	}
+
+	[Category]
+	[BaseType (typeof(NSView))]
+	interface NSView_NSCandidateListTouchBarItem
+	{
+		[Mac (10, 12, 1)]
+		[NullAllowed, Export ("candidateListTouchBarItem")]
+		NSCandidateListTouchBarItem GetCandidateListTouchBarItem (); 
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSTouchBarItem))]
+	[DisableDefaultCtor]
+	interface NSColorPickerTouchBarItem
+	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
+		[Static]
+		[Export ("colorPickerWithIdentifier:")]
+		NSColorPickerTouchBarItem CreateColorPicker(string identifier);
+
+		[Static]
+		[Export ("textColorPickerWithIdentifier:")]
+		NSColorPickerTouchBarItem CreateTextColorPicker (string identifier);
+
+		[Static]
+		[Export ("strokeColorPickerWithIdentifier:")]
+		NSColorPickerTouchBarItem CreateStrokeColorPicker(string identifier);
+
+		[Static]
+		[Export ("colorPickerWithIdentifier:buttonImage:")]
+		NSColorPickerTouchBarItem CreateColorPicker (string identifier, NSImage image);
+
+		[Export ("color", ArgumentSemantic.Copy)]
+		NSColor Color { get; set; }
+
+		[Export ("showsAlpha")]
+		bool ShowsAlpha { get; set; }
+
+		[Export ("colorList", ArgumentSemantic.Strong)]
+		NSColorList ColorList { get; set; }
+
+		[Export ("customizationLabel")]
+		string CustomizationLabel { get; set; }
+
+		[NullAllowed, Export ("target", ArgumentSemantic.Weak)]
+		NSObject Target { get; set; }
+
+		[NullAllowed, Export ("action", ArgumentSemantic.Assign)]
+		Selector Action { get; set; }
+
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSTouchBarItem))]
+	[DisableDefaultCtor]
+	interface NSCustomTouchBarItem
+	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
+		[Export ("view", ArgumentSemantic.Strong)]
+		NSView View { get; set; }
+
+		[Export ("viewController", ArgumentSemantic.Strong)]
+		NSViewController ViewController { get; set; }
+
+		[Export ("customizationLabel")]
+		string CustomizationLabel { get; set; }
+	}
+
+	[Category]
+	[BaseType (typeof(NSGestureRecognizer))]
+	interface NSGestureRecognizer_NSTouchBar
+	{
+		[Mac (10, 12, 1)]
+		[Export ("allowedTouchTypes", ArgumentSemantic.Assign)]
+		NSTouchTypeMask GetAllowedTouchTypes ();
+
+		[Mac (10, 12, 1)]
+		[Export ("setAllowedTouchTypes:", ArgumentSemantic.Assign)]
+		void SetAllowedTouchTypes (NSTouchTypeMask types);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSTouchBarItem))]
+	[DisableDefaultCtor]
+	interface NSGroupTouchBarItem
+	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
+		[Static]
+		[Export ("groupItemWithIdentifier:items:")]
+		NSGroupTouchBarItem CreateGroupItem (string identifier, NSTouchBarItem[] items);
+
+		[Export ("groupTouchBar", ArgumentSemantic.Strong)]
+		NSTouchBar GroupTouchBar { get; set; }
+
+		[Export ("customizationLabel")]
+		string CustomizationLabel { get; set; }
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSTouchBarItem))]
+	[DisableDefaultCtor]
+	interface NSPopoverTouchBarItem
+	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
+		[Export ("popoverTouchBar", ArgumentSemantic.Strong)]
+		NSTouchBar PopoverTouchBar { get; set; }
+
+		[Export ("customizationLabel")]
+		string CustomizationLabel { get; set; }
+
+		[Export ("collapsedRepresentation", ArgumentSemantic.Strong)]
+		NSView CollapsedRepresentation { get; set; }
+
+		[NullAllowed, Export ("collapsedRepresentationImage", ArgumentSemantic.Strong)]
+		NSImage CollapsedRepresentationImage { get; set; }
+
+		[Export ("collapsedRepresentationLabel", ArgumentSemantic.Strong)]
+		string CollapsedRepresentationLabel { get; set; }
+
+		[NullAllowed, Export ("pressAndHoldTouchBar", ArgumentSemantic.Strong)]
+		NSTouchBar PressAndHoldTouchBar { get; set; }
+
+		[Export ("showsCloseButton")]
+		bool ShowsCloseButton { get; set; }
+
+		[Export ("showPopover:")]
+		void ShowPopover ([NullAllowed] NSObject sender);
+
+		[Export ("dismissPopover:")]
+		void DismissPopover ([NullAllowed] NSObject sender);
+
+		[Export ("makeStandardActivatePopoverGestureRecognizer")]
+		NSGestureRecognizer MakeStandardActivatePopoverGestureRecognizer ();
+	}
+	
+	interface INSScrubberDataSource {}
+	interface INSScrubberDelegate {}
+
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface NSScrubberDataSource
+	{
+		[Mac (10,12,1)]
+		[Abstract]
+		[Export ("numberOfItemsForScrubber:")]
+		nint GetNumberOfItems (NSScrubber scrubber);
+
+		[Mac (10,12,1)]
+		[Abstract]
+		[Export ("scrubber:viewForItemAtIndex:")]
+		NSScrubberItemView GetViewForItem (NSScrubber scrubber, nint index);
+	}
+
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface NSScrubberDelegate
+	{
+		[Mac (10,12,1)]
+		[Export ("scrubber:didSelectItemAtIndex:")]
+		void DidSelectItem (NSScrubber scrubber, nint selectedIndex);
+
+		[Mac (10,12,1)]
+		[Export ("scrubber:didHighlightItemAtIndex:")]
+		void DidHighlightItem (NSScrubber scrubber, nint highlightedIndex);
+
+		[Mac (10,12,1)]
+		[Export ("scrubber:didChangeVisibleRange:")]
+		void DidChangeVisible (NSScrubber scrubber, NSRange visibleRange);
+
+		[Mac (10,12,1)]
+		[Export ("didBeginInteractingWithScrubber:")]
+		void DidBeginInteracting (NSScrubber scrubber);
+
+		[Mac (10,12,1)]
+		[Export ("didFinishInteractingWithScrubber:")]
+		void DidFinishInteracting (NSScrubber scrubber);
+
+		[Mac (10,12,1)]
+		[Export ("didCancelInteractingWithScrubber:")]
+		void DidCancelInteracting (NSScrubber scrubber);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSObject))]
+	interface NSScrubberSelectionStyle : NSCoding
+	{
+		[Static]
+		[Export ("outlineOverlayStyle", ArgumentSemantic.Strong)]
+		NSScrubberSelectionStyle OutlineOverlayStyle { get; }
+
+		[Static]
+		[Export ("roundedBackgroundStyle", ArgumentSemantic.Strong)]
+		NSScrubberSelectionStyle RoundedBackgroundStyle { get; }
+
+		[Export ("makeSelectionView")]
+		NSScrubberSelectionView MakeSelectionView ();
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSView))]
+	interface NSScrubber
+	{
+		[NullAllowed, Export ("dataSource", ArgumentSemantic.Weak)]
+		INSScrubberDataSource DataSource { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		INSScrubberDelegate Delegate { get; set; }
+
+		[Export ("scrubberLayout", ArgumentSemantic.Strong)]
+		NSScrubberLayout ScrubberLayout { get; set; }
+
+		[Export ("numberOfItems")]
+		nint NumberOfItems { get; }
+
+		[Export ("highlightedIndex")]
+		nint HighlightedIndex { get; }
+
+		[Export ("selectedIndex")]
+		nint SelectedIndex { get; set; }
+
+		[Export ("mode", ArgumentSemantic.Assign)]
+		NSScrubberMode Mode { get; set; }
+
+		[Export ("itemAlignment", ArgumentSemantic.Assign)]
+		NSScrubberAlignment ItemAlignment { get; set; }
+
+		[Export ("continuous")]
+		bool Continuous { [Bind ("isContinuous")] get; set; }
+
+		[Export ("floatsSelectionViews")]
+		bool FloatsSelectionViews { get; set; }
+
+		[NullAllowed, Export ("selectionBackgroundStyle", ArgumentSemantic.Strong)]
+		NSScrubberSelectionStyle SelectionBackgroundStyle { get; set; }
+
+		[NullAllowed, Export ("selectionOverlayStyle", ArgumentSemantic.Strong)]
+		NSScrubberSelectionStyle SelectionOverlayStyle { get; set; }
+
+		[Export ("showsArrowButtons")]
+		bool ShowsArrowButtons { get; set; }
+
+		[Export ("showsAdditionalContentIndicators")]
+		bool ShowsAdditionalContentIndicators { get; set; }
+
+		[NullAllowed, Export ("backgroundColor", ArgumentSemantic.Copy)]
+		NSColor BackgroundColor { get; set; }
+
+		[NullAllowed, Export ("backgroundView", ArgumentSemantic.Strong)]
+		NSView BackgroundView { get; set; }
+
+		[Export ("initWithFrame:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (CGRect frameRect);
+
+		[Export ("reloadData")]
+		void ReloadData ();
+
+		[Export ("performSequentialBatchUpdates:")]
+		void PerformSequentialBatchUpdates (Action updateHandler);
+
+		[Export ("insertItemsAtIndexes:")]
+		void InsertItems (NSIndexSet indexes);
+
+		[Export ("removeItemsAtIndexes:")]
+		void RemoveItems (NSIndexSet indexes);
+
+		[Export ("reloadItemsAtIndexes:")]
+		void ReloadItems (NSIndexSet indexes);
+
+		[Export ("moveItemAtIndex:toIndex:")]
+		void MoveItem (nint oldIndex, nint newIndex);
+
+		[Export ("scrollItemAtIndex:toAlignment:")]
+		void ScrollItem (nint index, NSScrubberAlignment alignment);
+
+		[Export ("itemViewForItemAtIndex:")]
+		NSScrubberItemView GetItemViewForItem(nint index);
+
+		[Export ("registerClass:forItemIdentifier:")]
+		void RegisterClass ([NullAllowed] Class itemViewClass, string itemIdentifier);
+
+		[Export ("registerNib:forItemIdentifier:")]
+		void RegisterNib ([NullAllowed] NSNib nib, string itemIdentifier);
+
+		[Export ("makeItemWithIdentifier:owner:")]
+		NSScrubberItemView MakeItem (string itemIdentifier, [NullAllowed] NSObject owner);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSView))]
+	interface NSScrubberArrangedView
+	{
+		[Export ("selected")]
+		bool Selected { [Bind ("isSelected")] get; set; }
+
+		[Export ("highlighted")]
+		bool Highlighted { [Bind ("isHighlighted")] get; set; }
+
+		[Export ("applyLayoutAttributes:")]
+		void ApplyLayoutAttributes (NSScrubberLayoutAttributes layoutAttributes);
+	}
+
+	// These are empty but types used in other bindings
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSScrubberArrangedView))]
+	interface NSScrubberItemView
+	{
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSScrubberArrangedView))]
+	interface NSScrubberSelectionView
+	{
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSScrubberItemView))]
+	interface NSScrubberTextItemView
+	{
+		[Export ("textField", ArgumentSemantic.Strong)]
+		NSTextField TextField { get; }
+
+		[Export ("title")]
+		string Title { get; set; }
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSScrubberItemView))]
+	interface NSScrubberImageItemView
+	{
+		[Export ("imageView", ArgumentSemantic.Strong)]
+		NSImageView ImageView { get; }
+
+		[Export ("image", ArgumentSemantic.Copy)]
+		NSImage Image { get; set; }
+
+		[Export ("imageAlignment", ArgumentSemantic.Assign)]
+		NSImageAlignment ImageAlignment { get; set; }
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSObject))]
+	interface NSScrubberLayoutAttributes : NSCopying
+	{
+		[Export ("itemIndex")]
+		nint ItemIndex { get; set; }
+
+		[Export ("frame", ArgumentSemantic.Assign)]
+		CGRect Frame { get; set; }
+
+		[Export ("alpha")]
+		nfloat Alpha { get; set; }
+
+		[Static]
+		[Export ("layoutAttributesForItemAtIndex:")]
+		NSScrubberLayoutAttributes CreateLayoutAttributes (nint index);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSObject))]
+	interface NSScrubberLayout : NSCoding
+	{
+		[Static]
+		[Export ("layoutAttributesClass")]
+		Class LayoutAttributesClass { get; }
+
+		[NullAllowed, Export ("scrubber", ArgumentSemantic.Weak)]
+		NSScrubber Scrubber { get; }
+
+		[Export ("visibleRect")]
+		CGRect VisibleRect { get; }
+
+		[Export ("invalidateLayout")]
+		void InvalidateLayout ();
+
+		[Export ("prepareLayout")]
+		void PrepareLayout ();
+
+		[Export ("scrubberContentSize")]
+		CGSize ScrubberContentSize { get; }
+
+		[Export ("layoutAttributesForItemAtIndex:")]
+		NSScrubberLayoutAttributes LayoutAttributesForItem (nint index);
+
+		[Export ("layoutAttributesForItemsInRect:")]
+		NSSet<NSScrubberLayoutAttributes> LayoutAttributesForItems (CGRect rect);
+
+		[Export ("shouldInvalidateLayoutForSelectionChange")]
+		bool ShouldInvalidateLayoutForSelectionChange ();
+
+		[Export ("shouldInvalidateLayoutForHighlightChange")]
+		bool ShouldInvalidateLayoutForHighlightChange ();
+
+		[Export ("shouldInvalidateLayoutForChangeFromVisibleRect:toVisibleRect:")]
+		bool ShouldInvalidateLayoutForChangeFromVisibleRect (CGRect fromVisibleRect, CGRect toVisibleRect);
+
+		[Export ("automaticallyMirrorsInRightToLeftLayout")]
+		bool AutomaticallyMirrorsInRightToLeftLayout { get; }
+	}
+
+	[BaseType (typeof (NSObject))]
+	[Protocol, Model]
+	interface NSScrubberFlowLayoutDelegate : NSScrubberDelegate
+	{
+		[Export ("scrubber:layout:sizeForItemAtIndex:")]
+		CGSize Layout (NSScrubber scrubber, NSScrubberFlowLayout layout, nint itemIndex);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSScrubberLayout))]
+	interface NSScrubberFlowLayout
+	{
+		[Export ("itemSpacing")]
+		nfloat ItemSpacing { get; set; }
+
+		[Export ("itemSize", ArgumentSemantic.Assign)]
+		CGSize ItemSize { get; set; }
+
+		[Export ("invalidateLayoutForItemsAtIndexes:")]
+		void InvalidateLayoutForItems (NSIndexSet invalidItemIndexes);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSScrubberLayout))]
+	interface NSScrubberProportionalLayout
+	{
+		[Export ("numberOfVisibleItems")]
+		nint NumberOfVisibleItems { get; set; }
+
+		[Export ("initWithNumberOfVisibleItems:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (nint numberOfVisibleItems);
+	}
+
+	public interface INSSharingServicePickerTouchBarItemDelegate {}
+
+	[BaseType (typeof (NSObject))]
+	[Protocol, Model]
+	interface NSSharingServicePickerTouchBarItemDelegate : NSSharingServicePickerDelegate
+	{
+		[Abstract]
+		[Export ("itemsForSharingServicePickerTouchBarItem:")]
+		INSPasteboardWriting [] ItemsForSharingServicePickerTouchBarItem (NSSharingServicePickerTouchBarItem pickerTouchBarItem);
+	}
+
+	[Mac (10,12,1)]
+	[BaseType (typeof(NSTouchBarItem))]
+	[DisableDefaultCtor]
+	interface NSSharingServicePickerTouchBarItem
+	{
+		[Export ("initWithIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string identifier);
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		INSSharingServicePickerTouchBarItemDelegate Delegate { get; set; }
+
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+
+		[Export ("buttonTitle")]
+		string ButtonTitle { get; set; }
+
+		[NullAllowed, Export ("buttonImage", ArgumentSemantic.Retain)]
+		NSImage ButtonImage { get; set; }
+	}
+
+	[Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface NSSliderAccessory : NSCoding, NSAccessibility, NSAccessibilityElementProtocol
+	{
+		[Static]
+		[Export ("accessoryWithImage:")]
+		NSSliderAccessory CreateAccessory (NSImage image);
+
+		[Export ("behavior", ArgumentSemantic.Copy)]
+		NSSliderAccessoryBehavior Behavior { get; set; }
+
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+
+		[Mac (10, 12, 1)]
+		[Field ("NSSliderAccessoryWidthDefault")]
+		double DefaultWidth { get; }
+
+		[Mac (10, 12, 1)]
+		[Field ("NSSliderAccessoryWidthWide")]
+		double WidthWide { get; }
+	}
+
+	[Mac (10,12)]
+	[BaseType (typeof(NSObject))]
+	interface NSSliderAccessoryBehavior : NSCoding, NSCopying
+	{
+		[Static]
+		[Export ("automaticBehavior", ArgumentSemantic.Copy)]
+		NSSliderAccessoryBehavior AutomaticBehavior { get; }
+
+		[Static]
+		[Export ("valueStepBehavior", ArgumentSemantic.Copy)]
+		NSSliderAccessoryBehavior ValueStepBehavior { get; }
+
+		[Static]
+		[Export ("valueResetBehavior", ArgumentSemantic.Copy)]
+		NSSliderAccessoryBehavior ValueResetBehavior { get; }
+
+		[Static]
+		[Export ("behaviorWithTarget:action:")]
+		NSSliderAccessoryBehavior CreateBehavior ([NullAllowed] NSObject target, Selector action);
+
+		[Static]
+		[Export ("behaviorWithHandler:")]
+		NSSliderAccessoryBehavior CreateBehavior (Action<NSSliderAccessory> handler);
+
+		[Export ("handleAction:")]
+		void HandleAction (NSSliderAccessory sender);
 	}
 }

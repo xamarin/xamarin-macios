@@ -168,10 +168,10 @@ killall:
 	@killall "iOS Simulator" >/dev/null 2>&1 || true
 	@killall Touch.Server >/dev/null 2>&1 || true
 
-NUNIT_MSBUILD_DIR=$(TOP)/msbuild/packages/NUnit.Runners.2.6.4/tools/lib
+NUNIT_MSBUILD_DIR=$(TOP)/packages/NUnit.Runners.2.6.4/tools/lib
 test-ios-tasks:
 	$(SYSTEM_XBUILD) $(TOP)/msbuild/Xamarin.MacDev.Tasks.sln
-	cd $(NUNIT_MSBUILD_DIR) && $(SYSTEM_MONO) ../nunit-console.exe ../../../../tests/bin/Xamarin.iOS.Tasks.Tests.dll -xml=TestResults_Xamarin.iOS.Tasks.Tests.xml -labels $(TEST_FIXTURE) || touch .failed-stamp
+	cd $(NUNIT_MSBUILD_DIR) && $(SYSTEM_MONO) ../nunit-console.exe ../../../../msbuild/tests/bin/Xamarin.iOS.Tasks.Tests.dll -xml=TestResults_Xamarin.iOS.Tasks.Tests.xml -labels $(TEST_FIXTURE) || touch .failed-stamp
 	@[[ -z "$$BUILD_REPOSITORY" ]] || ( xsltproc $(TOP)/tests/HtmlTransform.xslt $(NUNIT_MSBUILD_DIR)/TestResults_Xamarin.iOS.Tasks.Tests.xml > $(TOP)/tests/index.html && echo "@MonkeyWrench: AddFile: $$PWD/index.html" )
 	@if test -e $(NUNIT_MSBUILD_DIR)/.failed-stamp; then rm $(NUNIT_MSBUILD_DIR)/.failed-stamp; exit 1; fi
 
@@ -195,7 +195,8 @@ endif
 	$(Q) cp $(TOP)/tests/test-libraries/.libs/ios/libtest.a $@.tmpdir/ios
 	$(Q) cp $(TOP)/tests/test-libraries/.libs/ios/libtest.dylib $@.tmpdir/ios
 	$(Q) cp -a $(TOP)/tests/test-libraries/.libs/ios/XTest.framework $@.tmpdir/ios
-	$(Q) cp $(MACCORE_PATH)/tools/mlaunch/mlaunch $@.tmpdir
+	$(Q) printf '#!/bin/bash -e\n\n/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch "$$@"\n' > $@.tmpdir/mlaunch
+	$(Q) chmod +x $@.tmpdir/mlaunch
 	@# Generate zip
 	$(Q_GEN) cd $@.tmpdir && zip -9r $(abspath $@) .
 	@# Cleanup
@@ -301,8 +302,7 @@ endif
 wrench-docs:
 ifdef ENABLE_XAMARIN
 ifdef INCLUDE_IOS
-	@echo "Documentation process must be ported to not use XI/Classic, and not use system XI. In the meantime disable the docs tests."
-	@#$(MAKE) -C $(MACCORE_PATH) update-docs
+	$(MAKE) -C $(MACCORE_PATH) update-docs
 else
 	@echo "iOS tests have been disabled [$@]"
 endif

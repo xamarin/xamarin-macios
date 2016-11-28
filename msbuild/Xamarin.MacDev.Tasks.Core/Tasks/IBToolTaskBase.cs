@@ -246,7 +246,6 @@ namespace Xamarin.MacDev.Tasks
 				var resourceTags = item.GetMetadata ("ResourceTags");
 				ITaskItem expected, output;
 				string rpath, outputDir;
-				int rc;
 
 				if (!File.Exists (item.ItemSpec)) {
 					Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, "The file '{0}' does not exist.", item.ItemSpec);
@@ -276,21 +275,8 @@ namespace Xamarin.MacDev.Tasks
 					Directory.CreateDirectory (manifestDir);
 					Directory.CreateDirectory (outputDir);
 
-					if ((rc = Compile (new [] { item }, output, manifest)) != 0) {
-						if (File.Exists (manifest.ItemSpec)) {
-							try {
-								var log = PDictionary.FromFile (manifest.ItemSpec);
-
-								LogWarningsAndErrors (log, item);
-							} catch {
-								Log.LogError ("ibtool exited with code {0}", rc);
-							}
-
-							File.Delete (manifest.ItemSpec);
-						}
-
+					if ((Compile (new[] { item }, output, manifest)) != 0)
 						return false;
-					}
 
 					changed = true;
 				} else {
@@ -341,12 +327,8 @@ namespace Xamarin.MacDev.Tasks
 
 					Link = true;
 
-					if (Compile (compiled.ToArray (), output, manifest) != 0) {
-						if (File.Exists (manifest.ItemSpec))
-							File.Delete (manifest.ItemSpec);
-
+					if ((Compile (compiled.ToArray (), output, manifest)) != 0)
 						return false;
-					}
 				}
 
 				output = new TaskItem (linkOutputDir);

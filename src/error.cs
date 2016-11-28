@@ -60,6 +60,7 @@ using System.Collections.Generic;
 //		BI1043 Repeated overload {mi.Name} and no [DelegateApiNameAttribute] provided to generate property name on host class.
 //		BI1044 Repeated name '{apiName.Name}' provided in [DelegateApiNameAttribute].
 //		BI1045 Only a single [DefaultEnumValue] attribute can be used inside enum {type.Name}.
+//		BI1046 The [Field] constant {fa.SymbolName} cannot only be used once inside enum {type.Name}.
 //	BI11xx	warnings
 //		BI1101 Trying to use a string as a [Target]
 //		BI1102 Using the deprecated EventArgs for a delegate signature in {0}.{1}, please use DelegateName instead
@@ -75,6 +76,8 @@ using System.Collections.Generic;
 //		BI1112 Property {0} should be renamed to 'Delegate' for BaseType.Events and BaseType.Delegates to work.
 //		BI1113  BaseType.Delegates were set but no properties could be found. Do ensure that the WrapAttribute is used on the right properties.
 //		BI1114 Binding error: test unable to find property: {0} on {1}.
+//		BI1115 The parameter '{0}' in the delegate '{1}' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback].
+//		BI1116 The parameter '{0}' in the delegate '{1}' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback]. Declare a custom delegate instead of using System.Action / System.Func and add the attribute on the corresponding parameter.
 // BI2xxx	reserved
 // BI3xxx	reserved
 // BI4xxx	reserved

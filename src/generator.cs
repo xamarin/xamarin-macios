@@ -1249,6 +1249,7 @@ public class MemberInformation
 	public readonly Type type;
 	public readonly Type category_extension_type;
 	public readonly bool is_abstract, is_protected, is_internal, is_unified_internal, is_override, is_new, is_sealed, is_static, is_thread_static, is_autorelease, is_wrapper, is_forced;
+	public readonly bool is_type_sealed;
 	public readonly Generator.ThreadCheck threadCheck;
 	public bool is_unsafe, is_virtual_method, is_export, is_category_extension, is_variadic, is_interface_impl, is_extension_method, is_appearance, is_model, is_ctor;
 	public bool is_return_release;
@@ -1274,6 +1275,7 @@ public class MemberInformation
 		is_thread_static = Generator.HasAttribute (mi, typeof (IsThreadStaticAttribute));
 		is_autorelease = Generator.HasAttribute (mi, typeof (AutoreleaseAttribute));
 		is_wrapper = !Generator.HasAttribute (mi.DeclaringType, typeof(SyntheticAttribute));
+		is_type_sealed = Generator.HasAttribute (mi.DeclaringType, typeof (SealedAttribute));
 		is_return_release = method != null && Generator.HasAttribute (method.ReturnTypeCustomAttributes, typeof (ReleaseAttribute));
 		is_forced = Generator.HasForcedAttribute (mi, out is_forced_owns);
 
@@ -1291,7 +1293,7 @@ public class MemberInformation
 		this.is_model = is_model;
 		this.mi = mi;
 		
-		if (is_interface_impl || is_extension_method) {
+		if (is_interface_impl || is_extension_method || is_type_sealed) {
 			is_abstract = false;
 			is_virtual_method = false;
 		}
@@ -1359,7 +1361,7 @@ public class MemberInformation
 		if (category_extension_type != null)
 			is_category_extension = true;
 
-		if (is_static || is_category_extension || is_interface_impl || is_extension_method)
+		if (is_static || is_category_extension || is_interface_impl || is_extension_method || is_type_sealed)
 			is_virtual_method = false;
 	}
 
@@ -1373,7 +1375,7 @@ public class MemberInformation
 		if (export != null)
 			selector = export.Selector;
 
-		if (wrap_method != null || is_interface_impl)
+		if (wrap_method != null || is_interface_impl || is_type_sealed)
 			is_virtual_method = false;
 		else
 			is_virtual_method = !is_static;
@@ -2042,8 +2044,12 @@ public partial class Generator : IMemberGatherer {
 					invoke.AppendFormat ("NID{0}.Create ({1})", MakeTrampolineName (pi.ParameterType), pi.Name.GetSafeParamName ());
 					// The trampoline will eventually be generated in the final loop
 				} else {
-					if (!HasAttribute (pi, typeof (CCallbackAttribute))){
-						Console.WriteLine ("WARNING: the parameter {0} in {1} does not contain a [CCallback] or [BlockCallback] attribute, defaulting to CCallback", pi.Name.GetSafeParamName (), t.FullName);
+					if (!HasAttribute (pi, typeof (CCallbackAttribute))) {
+						if (t.FullName.StartsWith ("System.Action`", StringComparison.Ordinal) || t.FullName.StartsWith ("System.Func`", StringComparison.Ordinal)) {
+							ErrorHelper.Show (new BindingException (1116, "The parameter '{0}' in the delegate '{1}' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback]. Declare a custom delegate instead of using System.Action / System.Func and add the attribute on the corresponding parameter.", pi.Name.GetSafeParamName (), t.FullName));
+						} else {
+							ErrorHelper.Show (new BindingException (1115, "The parameter '{0}' in the delegate '{1}' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback].", pi.Name.GetSafeParamName (), t.FullName));
+						}
 					}
 					pars.AppendFormat ("IntPtr {0}", pi.Name.GetSafeParamName ());
 					invoke.AppendFormat ("({0}) Marshal.GetDelegateForFunctionPointer ({1}, typeof ({0}))", pi.ParameterType, pi.Name.GetSafeParamName ());
@@ -2177,7 +2183,7 @@ public partial class Generator : IMemberGatherer {
 		if (HasAttribute (pi, typeof (NullAllowedAttribute)))
 			return false;
 
-		if (mi.IsSpecialName && mi.Name.StartsWith ("set_")){
+		if (mi.IsSpecialName && mi.Name.StartsWith ("set_", StringComparison.Ordinal)){
 			if (HasAttribute (mi, typeof (NullAllowedAttribute))){
 				return false;
 			}
@@ -2337,7 +2343,7 @@ public partial class Generator : IMemberGatherer {
 		var marshalDirective = GetAttribute<MarshalDirectiveAttribute> (mi);
 		if (marshalDirective != null && marshalDirective.Library != null) {
 			print (m, "\t\t[DllImport (\"{0}\", EntryPoint=\"{1}\")]", marshalDirective.Library, method_name);
-		} else if (method_name.StartsWith ("xamarin_")) {
+		} else if (method_name.StartsWith ("xamarin_", StringComparison.Ordinal)) {
 			print (m, "\t\t[DllImport (\"__Internal\", EntryPoint=\"{0}\")]", method_name);
 		} else {
 			print (m, "\t\t[DllImport (LIBOBJC_DYLIB, EntryPoint=\"{0}\")]", entry_point);
@@ -3055,7 +3061,7 @@ public partial class Generator : IMemberGatherer {
 		print ("namespace {0} {{", ns.CoreObjCRuntime); indent++;
 		print ("[CompilerGenerated]");
 		print ("static partial class Libraries {"); indent++;
-		foreach (var library_info in libraries.OrderBy (v => v.Key)) {
+		foreach (var library_info in libraries.OrderBy (v => v.Key, StringComparer.Ordinal)) {
 			var library_name = library_info.Key;
 			var library_path = library_info.Value;
 			print ("static public class {0} {{", library_name.Replace (".", string.Empty)); indent++;
@@ -3201,7 +3207,7 @@ public partial class Generator : IMemberGatherer {
 						} else if (pi.PropertyType == typeof (string)){
 							getter = "GetStringValue ({0})";
 							setter = "SetStringValue ({0}, value)";
-						} else if (pi.PropertyType.Name.StartsWith ("NSDictionary")){
+						} else if (pi.PropertyType.Name.StartsWith ("NSDictionary", StringComparison.Ordinal)){
 							if (pi.PropertyType.IsGenericType) {
 								var genericParameters = pi.PropertyType.GetGenericArguments ();
 								// we want to keep {0} for later yet add the params for the template.
@@ -3428,7 +3434,7 @@ public partial class Generator : IMemberGatherer {
 	{
 		string prefix = new string ('\t', level);
 		Console.WriteLine ("{2} {0} - {1}", gt.Type.Name, gt.ImplementsAppearance ? "APPEARANCE" : "", prefix);
-		foreach (var c in (from s in gt.Children orderby s.Type.FullName select s))
+		foreach (var c in (from s in gt.Children .OrderBy ( s => s.Type.FullName, StringComparer.Ordinal) select s))
 			DumpChildren (level+1, c);
 	}
 	
@@ -3741,9 +3747,9 @@ public partial class Generator : IMemberGatherer {
 		}
 		// Unified internal methods automatically get a _ appended
 		if (minfo.is_extension_method && minfo.method.IsSpecialName) {
-			if (name.StartsWith ("get_"))
+			if (name.StartsWith ("get_", StringComparison.Ordinal))
 				name = "Get" + name.Substring (4);
-			else if (name.StartsWith ("set_"))
+			else if (name.StartsWith ("set_", StringComparison.Ordinal))
 				name = "Set" + name.Substring (4);
 		}
 		sb.Append (name);
@@ -3821,7 +3827,7 @@ public partial class Generator : IMemberGatherer {
 		print (w, "//\n// Auto-generated from generator.cs, do not edit\n//");
 		print (w, "// We keep references to objects, so warning 414 is expected\n");
 		print (w, "#pragma warning disable 414\n");
-		print (w, ns.ImplicitNamespaces.OrderByDescending (n => n.StartsWith ("System")).ThenBy (n => n.Length).Select (n => "using " + n + ";"));
+		print (w, ns.ImplicitNamespaces.OrderByDescending (n => n.StartsWith ("System", StringComparison.Ordinal)).ThenBy (n => n.Length).Select (n => "using " + n + ";"));
 		print (w, "");
 	}
 
@@ -4972,7 +4978,7 @@ public partial class Generator : IMemberGatherer {
 				// If we're doing a setter for a weak property that is protocolized event back
 				// we need to put in a check to verify you aren't stomping the "internal underscore"
 				// generated delegate. We check CheckForEventAndDelegateMismatches global to disable the checks
-				if (pi.Name.StartsWith ("Weak")) {
+				if (pi.Name.StartsWith ("Weak", StringComparison.Ordinal)) {
 					string delName = pi.Name.Substring(4);
 					if (SafeIsProtocolizedEventBacked (delName, type))
 						print ("\t{0}.EnsureDelegateAssignIsNotOverwritingInternalDelegate ({1}, value, {2});", ApplicationClassName, string.IsNullOrEmpty (var_name) ? "null" : var_name, GetDelegateTypePropertyName (delName));
@@ -5386,18 +5392,18 @@ public partial class Generator : IMemberGatherer {
 			group fullname by ns into g
 			select new {Namespace = g.Key, Fullname=g};
 		
-		foreach (var group in groupedTypes.OrderBy (v => v.Namespace)) {
+		foreach (var group in groupedTypes.OrderBy (v => v.Namespace, StringComparer.Ordinal)) {
 			if (group.Namespace != null) {
 				print ("namespace {0} {{", group.Namespace);
 				indent++;
 			}
 
-			foreach (var deltype in group.Fullname.OrderBy (v => v)) {
-				int p = deltype.LastIndexOf (".");
+			foreach (var deltype in group.Fullname.OrderBy (v => v, StringComparer.Ordinal)) {
+				int p = deltype.LastIndexOf (".", StringComparison.Ordinal);
 				var shortName = deltype.Substring (p+1);
 				var mi = delegateTypes [deltype];
 
-				if (shortName.StartsWith ("Func<"))
+				if (shortName.StartsWith ("Func<", StringComparison.Ordinal))
 					continue;
 
 				var del = mi.DeclaringType;
@@ -5518,7 +5524,7 @@ public partial class Generator : IMemberGatherer {
 	{
 		var allProtocolMethods = new List<MethodInfo> ();
 		var allProtocolProperties = new List<PropertyInfo> ();
-		var ifaces = (IEnumerable<Type>) type.GetInterfaces ().Concat (new Type [] { ReflectionExtensions.GetBaseType (type) }).OrderBy (v => v.FullName);
+		var ifaces = (IEnumerable<Type>) type.GetInterfaces ().Concat (new Type [] { ReflectionExtensions.GetBaseType (type) }).OrderBy (v => v.FullName, StringComparer.Ordinal);
 		
 		if (type.Namespace != null) {
 			print ("namespace {0} {{", type.Namespace);
@@ -5878,6 +5884,7 @@ public partial class Generator : IMemberGatherer {
 			bool is_model = type.GetCustomAttributes (typeof (ModelAttribute), true).Length > 0;
 			bool is_protocol = HasAttribute (type, typeof (ProtocolAttribute));
 			bool is_abstract = HasAttribute (type, typeof (AbstractAttribute));
+			bool is_sealed = HasAttribute (type, typeof (SealedAttribute));
 			string class_visibility = type.IsInternal () ? "internal" : "public";
 
 			var default_ctor_visibility = GetAttribute<DefaultCtorVisibilityAttribute> (type);
@@ -5921,6 +5928,8 @@ public partial class Generator : IMemberGatherer {
 					print ("[Register(\"{0}\", {1})]", objc_type_name, HasAttribute (type, typeof (SyntheticAttribute)) || is_model ? "false" : "true");
 				if (is_abstract || need_abstract.ContainsKey (type))
 					class_mod = "abstract ";
+				else if (is_sealed)
+					class_mod = "sealed ";
 			} 
 			
 			if (is_model){
@@ -5967,7 +5976,7 @@ public partial class Generator : IMemberGatherer {
 					implements_list.Add (iface);
 			}
 
-			implements_list.Sort ();
+			implements_list.Sort (StringComparer.Ordinal);
 
 			if (is_protocol)
 				implements_list.Insert (0, "I" + type.Name);
@@ -6025,7 +6034,7 @@ public partial class Generator : IMemberGatherer {
 			indent++;
 			
 			if (!is_model && !is_partial) {
-				foreach (var ea in selectors [type].OrderBy (s => s)) {
+				foreach (var ea in selectors [type].OrderBy (s => s, StringComparer.Ordinal)) {
 					var selectorField = SelectorField (ea, true);
 					if (!InlineSelectors) {
 						selectorField = selectorField.Substring (0, selectorField.Length - 6 /* Handle */);
@@ -6151,15 +6160,17 @@ public partial class Generator : IMemberGatherer {
 							sw.WriteLine ();
 						}
 					}
-					GeneratedCode (sw, 2);
-					sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
-					sw.WriteLine ("\t\t{0} {1} (NSObjectFlag t) : base (t)", UnifiedAPI ? "protected" : "public", TypeName);
-					sw.WriteLine ("\t\t{");
-					if (BindThirdPartyLibrary)
-						sw.WriteLine ("\t\t\t{0}", init_binding_type);
-					WriteMarkDirtyIfDerived (sw, type);
-					sw.WriteLine ("\t\t}");
-					sw.WriteLine ();
+					if (!is_sealed) {
+						GeneratedCode (sw, 2);
+						sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
+						sw.WriteLine ("\t\t{0} {1} (NSObjectFlag t) : base (t)", UnifiedAPI ? "protected" : "public", TypeName);
+						sw.WriteLine ("\t\t{");
+						if (BindThirdPartyLibrary)
+							sw.WriteLine ("\t\t\t{0}", init_binding_type);
+						WriteMarkDirtyIfDerived (sw, type);
+						sw.WriteLine ("\t\t}");
+						sw.WriteLine ();
+					}
 					GeneratedCode (sw, 2);
 					sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 					sw.WriteLine ("\t\t{0} {1} (IntPtr handle) : base (handle)", UnifiedAPI ? "protected internal" : "public", TypeName);
@@ -6174,12 +6185,12 @@ public partial class Generator : IMemberGatherer {
 			
 			var bound_methods = new List<string> (); // List of methods bound on the class itself (not via protocols)
 			var generated_methods = new List<MemberInformation> (); // All method that have been generated
-			foreach (var mi in GetTypeContractMethods (type).OrderByDescending (m => m.Name == "Constructor").ThenBy (m => m.Name)) {
+			foreach (var mi in GetTypeContractMethods (type).OrderByDescending (m => m.Name == "Constructor").ThenBy (m => m.Name, StringComparer.Ordinal)) {
 				if (mi.IsSpecialName || (mi.Name == "Constructor" && type != mi.DeclaringType))
 					continue;
 
 #if RETAIN_AUDITING
-				if (mi.Name.StartsWith ("Set"))
+				if (mi.Name.StartsWith ("Set", StringComparison.Ordinal))
 					foreach (ParameterInfo pi in mi.GetParameters ())
 						if (IsWrappedType (pi.ParameterType) || pi.ParameterType.IsArray) {
 							Console.WriteLine ("AUDIT: {0}", mi);
@@ -6248,7 +6259,7 @@ public partial class Generator : IMemberGatherer {
 			var bound_properties = new List<string> (); // List of properties bound on the class itself (not via protocols)
 			var generated_properties = new List<string> (); // All properties that have been generated
 
-			foreach (var pi in GetTypeContractProperties (type).OrderBy (p => p.Name)) {
+			foreach (var pi in GetTypeContractProperties (type).OrderBy (p => p.Name, StringComparer.Ordinal)) {
 
 #if !XAMCORE_2_0
 				if (HasAttribute (pi, typeof (AlphaAttribute)) && Alpha == false)
@@ -6304,7 +6315,7 @@ public partial class Generator : IMemberGatherer {
 			}
 			
 			if (field_exports.Count != 0){
-				foreach (var field_pi in field_exports.OrderBy (f => f.Name)) {
+				foreach (var field_pi in field_exports.OrderBy (f => f.Name, StringComparer.Ordinal)) {
 					var fieldAttr = (FieldAttribute) field_pi.GetCustomAttributes (typeof (FieldAttribute), true) [0];
 					string library_name; 
 					string library_path = null;
@@ -6336,7 +6347,7 @@ public partial class Generator : IMemberGatherer {
 					} else {
 						library_name = type.Namespace;
 						// note: not every binding namespace will start with ns.Prefix (e.g. MonoTouch.)
-						if (!String.IsNullOrEmpty (ns.Prefix) && library_name.StartsWith (ns.Prefix)) {
+						if (!String.IsNullOrEmpty (ns.Prefix) && library_name.StartsWith (ns.Prefix, StringComparison.Ordinal)) {
 							library_name = library_name.Substring (ns.Prefix.Length + 1);
 							library_name = library_name.Replace (".", string.Empty); // Remove dots from namespaces
 						}
@@ -6481,7 +6492,7 @@ public partial class Generator : IMemberGatherer {
 				int delidx = 0;
 				foreach (var dtype in bta.Events) {
 					string delName = bta.Delegates [delidx++];
-					delName = delName.StartsWith ("Weak") ? delName.Substring(4) : delName;
+					delName = delName.StartsWith ("Weak", StringComparison.Ordinal) ? delName.Substring(4) : delName;
 
 					// Here's the problem:
 					//    If you have two or more types in an inheritence structure in the binding that expose events
@@ -6596,7 +6607,7 @@ public partial class Generator : IMemberGatherer {
 
 					string previous_miname = null;
 					int miname_count = 0;
-					foreach (var mi in dtype.GatherMethods ().OrderBy (m => m.Name)) {
+					foreach (var mi in dtype.GatherMethods ().OrderBy (m => m.Name, StringComparer.Ordinal)) {
 						if (ShouldSkipEventGeneration (mi))
 							continue;
 						
@@ -6742,7 +6753,7 @@ public partial class Generator : IMemberGatherer {
 						print ("return false;");
 						--indent;
 						print ("IntPtr selHandle = sel == null ? IntPtr.Zero : sel.Handle;");
-						foreach (var mi in noDefaultValue.OrderBy (m => m.Name)) {
+						foreach (var mi in noDefaultValue.OrderBy (m => m.Name, StringComparer.Ordinal)) {
 							if (InlineSelectors) {
 								var eattrs = mi.GetCustomAttributes (typeof (ExportAttribute), false);
 								var export = (ExportAttribute)eattrs[0];
@@ -6778,8 +6789,8 @@ public partial class Generator : IMemberGatherer {
 				int minameCount = 0;
 				repeatedDelegateApiNames.Clear ();
 				// Now add the instance vars and event handlers
-				foreach (var dtype in bta.Events.OrderBy (d => d.Name)) {
-					foreach (var mi in dtype.GatherMethods ().OrderBy (m => m.Name)) {
+				foreach (var dtype in bta.Events.OrderBy (d => d.Name, StringComparer.Ordinal)) {
+					foreach (var mi in dtype.GatherMethods ().OrderBy (m => m.Name, StringComparer.Ordinal)) {
 						if (ShouldSkipEventGeneration (mi))
 							continue;
 
@@ -6834,7 +6845,7 @@ public partial class Generator : IMemberGatherer {
 					if (instance_fields_to_clear_on_dispose.Count > 0) {
 						print ("if (Handle == IntPtr.Zero) {");
 						indent++;
-						foreach (var field in instance_fields_to_clear_on_dispose.OrderBy (f => f))
+						foreach (var field in instance_fields_to_clear_on_dispose.OrderBy (f => f, StringComparer.Ordinal))
 							print ("{0} = null;", field);
 						indent--;
 						print ("}");
@@ -6867,7 +6878,7 @@ public partial class Generator : IMemberGatherer {
 				if (appearance_selectors != null){
 					var currently_ignored_fields = new List<string> ();
 					
-					foreach (MemberInfo mi in appearance_selectors.OrderBy (m => m.Name)) {
+					foreach (MemberInfo mi in appearance_selectors.OrderBy (m => m.Name, StringComparer.Ordinal)) {
 						if (mi is MethodInfo)
 							GenerateMethod (type, mi as MethodInfo,
 									is_model: false,
@@ -6933,7 +6944,7 @@ public partial class Generator : IMemberGatherer {
 				print ("//");
 			
 				print ("public static partial class Notifications {\n");
-				foreach (var property in notifications.OrderBy (p => p.Name)) {
+				foreach (var property in notifications.OrderBy (p => p.Name, StringComparer.Ordinal)) {
 					string notification_name = GetNotificationName (property);
 					string notification_center = GetNotificationCenter (property);
 
@@ -6959,7 +6970,7 @@ public partial class Generator : IMemberGatherer {
 			// Copy delegates from the API files into the output if they were declared there
 			//
 			var rootAssembly = types [0].Assembly;
-			foreach (var deltype in trampolines.Keys.OrderBy (d => d.Name)) {
+			foreach (var deltype in trampolines.Keys.OrderBy (d => d.Name, StringComparer.Ordinal)) {
 				if (deltype.Assembly != rootAssembly)
 					continue;
 
@@ -6974,7 +6985,7 @@ public partial class Generator : IMemberGatherer {
 				print ("//");
 			}
 			// Now add the EventArgs classes
-			foreach (var eaclass in eventArgTypes.Keys.OrderBy (e => e)) {
+			foreach (var eaclass in eventArgTypes.Keys.OrderBy (e => e, StringComparer.Ordinal)) {
 				if (skipGeneration.ContainsKey (eaclass)){
 					continue;
 				}
@@ -6986,14 +6997,14 @@ public partial class Generator : IMemberGatherer {
 				print ("public {0} ({1})", eaclass, RenderParameterDecl (pars.Skip (1), true));
 				print ("{");
 				indent++;
-				foreach (var p in pars.Skip (minPars).OrderBy (p => p.Name)) {
+				foreach (var p in pars.Skip (minPars).OrderBy (p => p.Name, StringComparer.Ordinal)) {
 					print ("this.{0} = {1};", GetPublicParameterName (p), p.Name);
 				}
 				indent--;
 				print ("}");
 				
 				// Now print the properties
-				foreach (var p in pars.Skip (minPars).OrderBy (p => p.Name)) {
+				foreach (var p in pars.Skip (minPars).OrderBy (p => p.Name, StringComparer.Ordinal)) {
 					var bareType = p.ParameterType.IsByRef ? p.ParameterType.GetElementType () : p.ParameterType;
 
 					print ("public {0} {1} {{ get; set; }}", RenderType (bareType), GetPublicParameterName (p));
@@ -7008,7 +7019,7 @@ public partial class Generator : IMemberGatherer {
 				print ("//");
 			}
 
-			foreach (var async_type in async_result_types.OrderBy (t => t.Item1)) {
+			foreach (var async_type in async_result_types.OrderBy (t => t.Item1, StringComparer.Ordinal)) {
 				if (async_result_types_emitted.Contains (async_type.Item1))
 					continue;
 				async_result_types_emitted.Add (async_type.Item1);
@@ -7146,7 +7157,7 @@ public partial class Generator : IMemberGatherer {
 	bool ShouldSkipEventGeneration (MethodInfo mi)
 	{
 		// Skip property getter/setters
-		if (mi.IsSpecialName && (mi.Name.StartsWith ("get_") || mi.Name.StartsWith ("set_")))
+		if (mi.IsSpecialName && (mi.Name.StartsWith ("get_", StringComparison.Ordinal) || mi.Name.StartsWith ("set_", StringComparison.Ordinal)))
 			return true;
 
 		if (mi.IsUnavailable ())
@@ -7167,8 +7178,8 @@ public partial class Generator : IMemberGatherer {
 	// Safely strips away any Weak from the beginning of either delegate and returns if they match
 	static bool CompareTwoDelegateNames (string lhsDel, string rhsDel)
 	{
-		lhsDel = lhsDel.StartsWith ("Weak") ? lhsDel.Substring (4): lhsDel;
-		rhsDel = rhsDel.StartsWith ("Weak") ? rhsDel.Substring (4): rhsDel;
+		lhsDel = lhsDel.StartsWith ("Weak", StringComparison.Ordinal) ? lhsDel.Substring (4): lhsDel;
+		rhsDel = rhsDel.StartsWith ("Weak", StringComparison.Ordinal) ? rhsDel.Substring (4): rhsDel;
 		return lhsDel == rhsDel;
 	}
 
@@ -7216,7 +7227,7 @@ public partial class Generator : IMemberGatherer {
 
 	static string Capitalize (string str)
 	{
-		if (str.StartsWith ("@"))
+		if (str.StartsWith ("@", StringComparison.Ordinal))
 			return char.ToUpper (str[1]) + str.Substring (2);
 	
 		return char.ToUpper (str[0]) + str.Substring (1);
@@ -7235,7 +7246,7 @@ public partial class Generator : IMemberGatherer {
 	{
 		// TODO: fetch the NotificationAttribute, see if there is an override there.
 		var name = pi.Name;
-		if (name.EndsWith ("Notification"))
+		if (name.EndsWith ("Notification", StringComparison.Ordinal))
 			return name.Substring (0, name.Length-"Notification".Length);
 		return name;
 	}
@@ -7346,7 +7357,7 @@ public partial class Generator : IMemberGatherer {
 			throw new BindingException (1004, true, "The delegate method {0}.{1} is missing the [EventArgs] attribute (has {2} parameters)", mi.DeclaringType.FullName, mi.Name, mi.GetParameters ().Length);
 
 		var ea = (EventArgsAttribute) a;
-		if (ea.ArgName.EndsWith ("EventArgs"))
+		if (ea.ArgName.EndsWith ("EventArgs", StringComparison.Ordinal))
 			throw new BindingException (1005, true, "EventArgs in {0}.{1} attribute should not include the text `EventArgs' at the end", mi.DeclaringType.FullName, mi.Name);
 		
 		if (ea.SkipGeneration){

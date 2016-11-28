@@ -48,10 +48,15 @@ namespace Xamarin.Tests
 
 		public int Execute (string arguments, params string [] args)
 		{
+			return Execute (Configuration.MtouchPath, arguments, args);
+		}
+
+		public int Execute (string toolPath, string arguments, params string [] args)
+		{
 			output.Clear ();
 			output_lines = null;
 
-			var rv = ExecutionHelper.Execute (TestTarget.ToolPath, string.Format (arguments, args), EnvironmentVariables, output, output);
+			var rv = ExecutionHelper.Execute (toolPath, string.Format (arguments, args), EnvironmentVariables, output, output);
 
 			if (rv != 0) {
 				if (output.Length > 0)
@@ -174,9 +179,9 @@ namespace Xamarin.Tests
 			}
 		}
 
-		public static void Build (string project, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null)
+		public static void Build (string project, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null)
 		{
-			ExecutionHelper.Execute (ToolPath, string.Format ("/p:Configuration={0} /p:Platform={1} {2} \"{3}\"", configuration, platform, verbosity == null ? string.Empty : "/verbosity:" + verbosity, project));
+			ExecutionHelper.Execute (ToolPath, string.Format ("/p:Configuration={0} /p:Platform={1} {2} \"{3}\"", configuration, platform, verbosity == null ? string.Empty : "/verbosity:" + verbosity, project), timeout: timeout);
 		}
 	}
 

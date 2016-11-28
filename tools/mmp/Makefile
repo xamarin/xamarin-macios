@@ -73,7 +73,6 @@ tuner_sources = \
 	$(TOP)/tools/linker/CorePreserveCode.cs		\
 	$(TOP)/tools/linker/CoreRemoveAttributes.cs		\
 	$(TOP)/tools/linker/CoreHttpMessageHandler.cs		\
-	$(TOP)/tools/linker/CoreTlsProviderStep.cs		\
 	$(TOP)/tools/linker/CoreRemoveSecurity.cs		\
 	$(TOP)/tools/linker/ObjCExtensions.cs			\
 	$(TOP)/tools/linker/MarkNSObjects.cs			\
@@ -84,7 +83,7 @@ tuner_sources = \
 	$(TOP)/tools/linker/MobileSweepStep.cs			\
 	$(TOP)/tools/linker/RemoveSelectors.cs			\
 	$(TOP)/tools/linker/ExceptionalSubStep.cs		\
-	../linker/MonoTouch.Tuner/RemoveMonoTouchResources.cs	\
+	$(TOP)/tools/linker/RemoveUserResourcesSubStep.cs \
 	../linker/MonoTouch.Tuner/Extensions.cs	\
 	../linker/MonoTouch.Tuner/ListExportedSymbols.cs	\
 	../linker/MonoTouch.Tuner/ProcessExportedFields.cs	\

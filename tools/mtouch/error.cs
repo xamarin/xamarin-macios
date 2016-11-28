@@ -202,12 +202,14 @@ namespace Xamarin.Bundler {
 	//					MT2007	** reserved Xamarin.Mac **
 	//					MT2009  ** reserved Xamarin.Mac **
 	//					MT2010	Unknown HttpMessageHandler `{0}`. Valid values are HttpClientHandler (default), CFNetworkHandler or NSUrlSessionHandler
-	//					MT2011	Unknown TlsProvider `{0}`.  Valid values are default, legacy or appletls.
+	//					MT2011	Unknown TlsProvider `{0}`.  Valid values are default or appletls.
 	//					MT2012  ** reserved Xamarin.Mac **
 	//					MT2013	** reserved Xamarin.Mac **
 	//					MT2014	** reserved Xamarin.Mac **
-	//					MT2015	Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.
+	//		Warning		MT2015	Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.
+	//		Warning		MT2016  Invalid TlsProvider `{0}` option. The only valid value `{1}` will be used.
 	//					MT202x	Binding Optimizer failed processing `...`.
+	//					MT203x	Removing User Resources failed processing `...`.
 	// MT3xxx	AOT
 	//			MT30xx	AOT (general) errors
 	//					MT3001	Could not AOT the assembly '{0}'
@@ -285,6 +287,9 @@ namespace Xamarin.Bundler {
 	//					MT4162	The type '{0}' (used as {1} {2}) is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer iOS SDK (usually done by using the most recent version of Xcode.
 	//					MT4163	Internal error in the registrar ({0}). Please file a bug report at http://bugzilla.xamarin.com
 	//					MT4164	Cannot export the property '{0}' because its selector '{1}' is an Objective-C keyword. Please use a different name.
+	//					MT4165	The registrar couldn't find the type 'System.Void' in any of the referenced assemblies.
+	//					MT4166	Cannot register the method '{0}' because the signature contains a type ({1}) that isn't a reference type.
+	//					MT4167	Cannot register the method '{0}' because the signature contains a generic type ({1}) with a generic argument type that isn't an NSObject subclass ({2}).
 	// MT5xxx	GCC and toolchain
 	//			MT51xx	compilation
 	//					MT5101	Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component
@@ -340,6 +345,11 @@ namespace Xamarin.Bundler {
 	//					MT8016	Unable to convert delegate to block for the return value for the method {0}.{1}, because the input isn't a delegate, it's a {1}. Please file a bug at http://bugzilla.xamarin.com.
 	//					MT8017	** reserved Xamarin.Mac **
 	//					MT8018	Internal consistency error. Please file a bug report at http://bugzilla.xamarin.com.
+	//					MT8019	Could not find the assembly {0} in the loaded assemblies.
+	//					MT8020	Could not find the module with MetadataToken {0} in the assembly {1}.
+	//					MT8021	Unknown implicit token type: 0x{0}.
+	//					MT8022	Expected the token reference 0x{0} to be a {1}, but it's a {2}. Please file a bug report at http://bugzilla.xamarin.com.
+	//					MT8023	An instance object is required to construct a closed generic method for the open generic method: {0}.{1} (token reference: 0x{2}). Please file a bug report at http://bugzilla.xamarin.com.
 	// MT9xxx	Licensing
 	//
 

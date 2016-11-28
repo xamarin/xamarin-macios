@@ -39,7 +39,7 @@
     <Reference Include="Mono.Cecil, Version=0.9.5.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
     <Reference Include="System.Xml" />
     <Reference Include="nunit.framework">
-      <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+      <HintPath>..\..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +102,10 @@
     <Compile Include="TaskTests\SymbolStripTaskTests.cs" />
     <Compile Include="TaskTests\ValidateAppBundleTaskTests.cs" />
     <Compile Include="ProjectsTests\IBToolLinking.cs" />
+    <Compile Include="TaskTests\CompileEntitlementsTaskTests.cs" />
+    <Compile Include="TaskTests\GeneratePlistTaskTests\GeneratePlistTaskTests_iOS_WatchKitExtension.cs" />
+    <Compile Include="TaskTests\GeneratePlistTaskTests\GeneratePlistTaskTests_watchOS_WatchKitExtension.cs" />
+    <Compile Include="TaskTests\GeneratePlistTaskTests\GeneratePlistTaskTests_watchOS.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -110,8 +114,15 @@
     <Folder Include="ProjectsTests\Extensions\" />
     <Folder Include="ProjectsTests\TVOS\" />
     <Folder Include="TaskTests\GeneratePlistTaskTests\" />
+    <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\Entitlements.plist">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\profile.mobileprovision">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

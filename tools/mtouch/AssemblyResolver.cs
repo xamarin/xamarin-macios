@@ -48,7 +48,7 @@ namespace MonoTouch.Tuner {
 
 		public MonoTouchResolver ()
 		{
-			cache = new Dictionary<string, AssemblyDefinition> (StringComparer.InvariantCultureIgnoreCase);
+			cache = new Dictionary<string, AssemblyDefinition> (StringComparer.OrdinalIgnoreCase);
 		}
 
 		ReaderParameters CreateParameters (string path)
@@ -61,7 +61,7 @@ namespace MonoTouch.Tuner {
 
 		public IDictionary ToResolverCache ()
 		{
-			var resolver_cache = new Hashtable (StringComparer.InvariantCultureIgnoreCase);
+			var resolver_cache = new Hashtable (StringComparer.OrdinalIgnoreCase);
 			foreach (var pair in cache)
 				resolver_cache.Add (pair.Key, pair.Value);
 
@@ -155,19 +155,18 @@ namespace MonoTouch.Tuner {
 			if (assembly != null)
 				return assembly;
 
+			assembly = SearchDirectory (aname, RootDirectory, ".exe");
+			if (assembly != null)
+				return assembly;
+
 			return null;
 		}
 
-		AssemblyDefinition SearchDirectory (string name, string directory)
+		AssemblyDefinition SearchDirectory (string name, string directory, string extension = ".dll")
 		{
-			var file = DirectoryGetFile (directory, name + ".dll");
+			var file = DirectoryGetFile (directory, name + extension);
 			if (file.Length > 0)
 				return Load (file);
-
-			file = DirectoryGetFile (directory, name + ".exe");
-			if (file.Length > 0)
-				return Load (file);
-
 			return null;
 		}
 

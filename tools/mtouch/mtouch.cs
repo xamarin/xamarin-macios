@@ -283,6 +283,28 @@ namespace Xamarin.Bundler
 			}
 		}
 
+		public static string Arch32Directory {
+			get {
+				switch (app.Platform) {
+				case ApplePlatform.iOS:
+					return Path.Combine (Driver.PlatformFrameworkDirectory, "..", "..", "32bits");
+				default:
+					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
+				}
+			}
+		}
+
+		public static string Arch64Directory {
+			get {
+				switch (app.Platform) {
+				case ApplePlatform.iOS:
+					return Path.Combine (Driver.PlatformFrameworkDirectory, "..", "..", "64bits");
+				default:
+					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
+				}
+			}
+		}
+
 		public static string ProductSdkDirectory {
 			get {
 				switch (app.Platform) {
@@ -668,12 +690,12 @@ namespace Xamarin.Bundler
 					if (app.EnableDebug)
 						sw.WriteLine ("\txamarin_gc_pump = {0};", debug_track.Value ? "TRUE" : "FALSE");
 					sw.WriteLine ("\txamarin_init_mono_debug = {0};", app.PackageMdb ? "TRUE" : "FALSE");
-					sw.WriteLine ("\txamarin_compact_seq_points = {0};", app.EnableMSym ? "TRUE" : "FALSE");
 					sw.WriteLine ("\txamarin_executable_name = \"{0}\";", assembly_name);
 					sw.WriteLine ("\tmono_use_llvm = {0};", enable_llvm ? "TRUE" : "FALSE");
 					sw.WriteLine ("\txamarin_log_level = {0};", verbose);
 					sw.WriteLine ("\txamarin_arch_name = \"{0}\";", abi.AsArchString ());
-					sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", app.MarshalManagedExceptions);
+					if (!app.IsDefaultMarshalManagedExceptionMode)
+						sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", app.MarshalManagedExceptions);
 					sw.WriteLine ("\txamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionMode{0};", app.MarshalObjectiveCExceptions);
 					if (app.EnableDebug)
 						sw.WriteLine ("\txamarin_debug_mode = TRUE;");
@@ -1326,7 +1348,7 @@ namespace Xamarin.Bundler
 			{ "mono:", "Comma-separated list of options for how the Mono runtime should be included. Possible values: 'static' (link statically), 'framework' (linked as a user framework), '[no-]package-framework' (if the Mono.framework should be copied to the app bundle or not. The default value is 'framework' for extensions, and main apps if the app targets iOS 8.0 or later and contains extensions, otherwise 'static'. The Mono.framework will be copied to the app bundle if mtouch detects it's needed, but this may be overridden if the default values for 'framework' vs 'static' is overwridden.", v =>
 				{
 					foreach (var opt in v.Split (new char [] { ',' })) {
-						switch (v) {
+						switch (opt) {
 						case "static":
 							app.UseMonoFramework = false;
 							break;

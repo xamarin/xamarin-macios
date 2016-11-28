@@ -24,7 +24,7 @@
     <Reference Include="Mono.Posix" />
     <Reference Include="System.Xml" />
     <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+      <HintPath>..\..\packages\NUnit.3.5.0\lib\net40\nunit.framework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -45,9 +45,11 @@
     </Compile>
     <Compile Include="SdkTest.cs" />
     <Compile Include="MTouchTool.cs" />
+    <Compile Include="TimingTests.cs" />
+    <Compile Include="MLaunchTool.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

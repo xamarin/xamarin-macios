@@ -28,6 +28,12 @@ include ./OpenGLES/Makefile.include
 include ./OpenGLES/Makefile-1.0.include
 include ./Makefile.generator
 
+include ./generator-diff.mk
+
+COMMON_TARGET_DIRS = \
+	build/common             \
+	build/common/NativeTypes \
+
 #
 # Xamarin.iOS
 #
@@ -1090,14 +1096,13 @@ SHARED_PATH := ../runtime
 $(SHARED_PATH)/Delegates.generated.cs: $(SHARED_PATH)/Delegates.cs.t4 $(SHARED_PATH)/delegates.t4
 	$(Q) $(MAKE) -C $(SHARED_PATH) Delegates.generated.cs
 
-build/common/NativeTypes:
-	$(Q) mkdir -p $@
-
 build/common/NativeTypes/%.cs: $(TOP)/src/NativeTypes/%.tt | build/common/NativeTypes
 	$(Q_GEN) $(TT) $< -o $@ 1>/dev/null
 
-$(PMCS_EXE): $(PMCS_SOURCES)
-	$(Q) mkdir -p build
+$(COMMON_TARGET_DIRS):
+	$(Q) mkdir -p $@
+
+$(PMCS_EXE): $(PMCS_SOURCES) | build/common
 	$(Q_MCS) $(SYSTEM_MCS) -unsafe -debug -out:$@ -r:Mono.CompilerServices.SymbolWriter $+
 
 install-local:: $(INSTALL_TARGETS)

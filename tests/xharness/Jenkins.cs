@@ -20,6 +20,7 @@ namespace xharness
 		public bool IncludewatchOS = true;
 		public bool IncludeMmpTest;
 		public bool IncludeiOSMSBuild = true;
+		public bool IncludeMtouch;
 
 		public Logs Logs = new Logs ();
 		public Log MainLog;
@@ -56,56 +57,42 @@ namespace xharness
 			}
 
 			var fn = Path.GetFileNameWithoutExtension (buildTask.ProjectFile);
-			if (fn.EndsWith ("-tvos", StringComparison.Ordinal)) {
-				var latesttvOSRuntime =
-					Simulators.SupportedRuntimes.
-							  Where ((SimRuntime v) => v.Identifier.StartsWith ("com.apple.CoreSimulator.SimRuntime.tvOS-", StringComparison.Ordinal)).
-							  OrderBy ((SimRuntime v) => v.Version).
-							  Last ();
-				var tvOSDeviceType =
-					Simulators.SupportedDeviceTypes.
-							  Where ((SimDeviceType v) => v.ProductFamilyId == "TV").
-							  First ();
-				var device =
-					Simulators.AvailableDevices.
-							  Where ((SimDevice v) => v.SimRuntime == latesttvOSRuntime.Identifier && v.SimDeviceType == tvOSDeviceType.Identifier).
-							  First ();
-				runtasks.Add (new RunSimulatorTask (buildTask, device) { Platform = TestPlatform.tvOS });
-			} else if (fn.EndsWith ("-watchos", StringComparison.Ordinal)) {
-				var latestwatchOSRuntime =
-					Simulators.SupportedRuntimes.
-							  Where ((SimRuntime v) => v.Identifier.StartsWith ("com.apple.CoreSimulator.SimRuntime.watchOS-", StringComparison.Ordinal)).
-							  OrderBy ((SimRuntime v) => v.Version).
-							  Last ();
-				var watchOSDeviceTypes =
-					Simulators.SupportedDeviceTypes.
-							  Where ((SimDeviceType v) => v.ProductFamilyId == "Watch");
-				var devices = 
-					Simulators.AvailableDevices.
-					          Where ((SimDevice d) => d.SimRuntime == latestwatchOSRuntime.Identifier && watchOSDeviceTypes.Any ((v) => d.SimDeviceType == v.Identifier));
-				var pair = Simulators.AvailableDevicePairs.
-				              FirstOrDefault ((SimDevicePair v) => devices.Any ((SimDevice d) => d.UDID == v.Gizmo));
-				if (pair == null) {
-					var msg = string.Format ("Could not find a device pair for any of these devices: {0}", string.Join (", ", devices.Select ((v) => v.Name).ToArray ()));
-					SimulatorLoadLog.WriteLine (msg);
-					throw new Exception (msg);
-				}
-				var device =
-					Simulators.AvailableDevices.
-							  FirstOrDefault ((SimDevice v) => pair.Gizmo == v.UDID); // select the device in the device pair.
-				var companion =
-					Simulators.AvailableDevices.
-							  FirstOrDefault ((SimDevice v) => pair.Companion == v.UDID);
-				runtasks.Add (new RunSimulatorTask (buildTask, device, companion) { Platform = TestPlatform.watchOS });
-			} else {
-				var latestiOSRuntime =
-					Simulators.SupportedRuntimes.
-							  Where ((SimRuntime v) => v.Identifier.StartsWith ("com.apple.CoreSimulator.SimRuntime.iOS-", StringComparison.Ordinal)).
-							  OrderBy ((SimRuntime v) => v.Version).
-							  Last ();
+			AppRunnerTarget [] targets;
+			TestPlatform [] platforms;
+			SimDevice [] devices;
 
-				runtasks.Add (new RunSimulatorTask (buildTask, Simulators.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == latestiOSRuntime.Identifier && v.SimDeviceType == "com.apple.CoreSimulator.SimDeviceType.iPhone-5").First ()) { Platform = TestPlatform.iOS_Unified32 });
-				runtasks.Add (new RunSimulatorTask (buildTask, Simulators.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == latestiOSRuntime.Identifier && v.SimDeviceType == "com.apple.CoreSimulator.SimDeviceType.iPhone-6s").First ()) { Platform = TestPlatform.iOS_Unified64 });
+			if (fn.EndsWith ("-tvos", StringComparison.Ordinal)) {
+				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_tvOS };
+				platforms = new TestPlatform [] { TestPlatform.tvOS };
+			} else if (fn.EndsWith ("-watchos", StringComparison.Ordinal)) {
+				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_watchOS };
+				platforms = new TestPlatform [] { TestPlatform.watchOS };
+			} else {
+				targets = new AppRunnerTarget [] { AppRunnerTarget.Simulator_iOS32, AppRunnerTarget.Simulator_iOS64 };
+				platforms = new TestPlatform [] { TestPlatform.iOS_Unified32, TestPlatform.iOS_Unified64 };
+			}
+
+			for (int i = 0; i < targets.Length; i++) {
+				try {
+					devices = await Simulators.FindAsync (targets [i], SimulatorLoadLog);
+					if (devices == null) {
+						SimulatorLoadLog.WriteLine ($"Failed to find simulator for {targets [i]}.");
+						var task = new RunSimulatorTask (buildTask) { ExecutionResult = TestExecutingResult.Failed };
+						var log = task.Logs.CreateFile ("Run log", Path.Combine (task.LogDirectory, "run-" + DateTime.Now.Ticks + ".log"));
+						File.WriteAllText (log.Path, "Failed to find simulators.");
+						runtasks.Add (task);
+						continue;
+					}
+				} catch (Exception e) {
+					SimulatorLoadLog.WriteLine ($"Failed to find simulator for {targets [i]}");
+					SimulatorLoadLog.WriteLine (e);
+					var task = new RunSimulatorTask (buildTask) { ExecutionResult = TestExecutingResult.Failed };
+					var log = task.Logs.CreateFile ("Run log", Path.Combine (task.LogDirectory, "run-" + DateTime.Now.Ticks + ".log"));
+					File.WriteAllText (log.Path, "Failed to find simulators.");
+					runtasks.Add (task);
+					continue;
+				}
+				runtasks.Add (new RunSimulatorTask (buildTask, devices [0], devices.Length > 1 ? devices [1] : null) { Platform = platforms [i] });
 			}
 
 			return runtasks;
@@ -116,11 +103,117 @@ namespace xharness
 			return Path.Combine (Path.GetDirectoryName (path), Path.GetFileNameWithoutExtension (path) + suffix + Path.GetExtension (path));
 		}
 
+		void SelectTests ()
+		{
+			int pull_request;
+
+			if (!int.TryParse (Environment.GetEnvironmentVariable ("ghprbPullId"), out pull_request)) {
+				MainLog.WriteLine ("The environment variable 'ghprbPullId' was not found, so no pull requests will be checked for test selection.");
+				return;
+			}
+
+			// First check if can auto-select any tests based on which files were modified.
+			// This will only enable additional tests, never disable tests.
+			SelectTestsByModifiedFiles (pull_request);
+			// Then we check for labels. Labels are manually set, so those override
+			// whatever we did automatically.
+			SelectTestsByLabel (pull_request);
+		}
+
+		void SelectTestsByModifiedFiles (int pull_request)
+		{
+			var files = GitHub.GetModifiedFiles (Harness, pull_request);
+
+			MainLog.WriteLine ("Found {0} modified file(s) in the pull request #{1}.", files.Count (), pull_request);
+			foreach (var f in files)
+				MainLog.WriteLine ("    {0}", f);
+
+			// We select tests based on a prefix of the modified files.
+			// Add entries here to check for more prefixes.
+			var mtouch_prefixes = new string [] {
+				"tests/mtouch",
+				"tools/mtouch",
+				"tools/common",
+				"tools/linker",
+				"src/ObjCRuntime/Registrar.cs",
+				"external/mono",
+			};
+			var mmp_prefixes = new string [] {
+				"tests/mmptest",
+				"tools/mmp",
+				"tools/common",
+				"tools/linker",
+				"src/ObjCRuntime/Registrar.cs",
+				"external/mono",
+			};
+			var bcl_prefixes = new string [] {
+				"tests/bcl-test",
+				"external/mono",
+			};
+
+			SetEnabled (files, mtouch_prefixes, "mtouch", ref IncludeMtouch);
+			SetEnabled (files, mmp_prefixes, "mmp", ref IncludeMmpTest);
+			SetEnabled (files, bcl_prefixes, "bcl", ref IncludeBcl);
+		}
+
+		void SetEnabled (IEnumerable<string> files, string [] prefixes, string testname, ref bool value)
+		{
+			foreach (var file in files) {
+				foreach (var prefix in prefixes) {
+					if (file.StartsWith (prefix, StringComparison.Ordinal)) {
+						value = true;
+						MainLog.WriteLine ("Enabled '{0}' tests because the modified file '{1}' matches prefix '{2}'", testname, file, prefix);
+						return;
+					}
+				}
+			}
+		}
+
+		void SelectTestsByLabel (int pull_request)
+		{
+			var labels = GitHub.GetLabels (Harness, pull_request);
+
+			MainLog.WriteLine ("Found {1} label(s) in the pull request #{2}: {0}", string.Join (", ", labels.ToArray ()), labels.Count (), pull_request);
+
+			// disabled by default
+			SetEnabled (labels, "mtouch", ref IncludeMtouch);
+			SetEnabled (labels, "mmp", ref IncludeMmpTest);
+			SetEnabled (labels, "bcl", ref IncludeBcl);
+
+			// enabled by default
+			SetEnabled (labels, "ios", ref IncludeiOS);
+			SetEnabled (labels, "tvos", ref IncludetvOS);
+			SetEnabled (labels, "watchos", ref IncludewatchOS);
+			SetEnabled (labels, "mac", ref IncludeMac);
+			SetEnabled (labels, "mac-classic", ref IncludeClassicMac);
+			SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
+		}
+
+		void SetEnabled (IEnumerable<string> labels, string testname, ref bool value)
+		{
+			if (labels.Contains ("skip-" + testname + "-tests")) {
+				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-{0}-tests' is set.", testname);
+				value = false;
+			} else if (labels.Contains ("run-" + testname + "-tests")) {
+				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-{0}-tests' is set.", testname);
+				value = true;
+			} else if (labels.Contains ("skip-all-tests")) {
+				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-all-tests' is set.", testname);
+				value = false;
+			} else if (labels.Contains ("run-all-tests")) {
+				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-all-tests' is set.", testname);
+				value = true;
+			}
+			// respect any default value
+		}
+
 		async Task PopulateTasksAsync ()
 		{
 			// Missing:
 			// api-diff
 			// msbuild tests
+
+			SelectTests ();
 
 			if (IncludeiOS || IncludetvOS || IncludewatchOS) {
 				var runSimulatorTasks = new List<RunSimulatorTask> ();
@@ -186,10 +279,11 @@ namespace xharness
 					Jenkins = this,
 					BuildTask = build,
 					TestLibrary = Path.Combine (Harness.RootDirectory, "..", "msbuild", "tests", "bin", "Xamarin.iOS.Tasks.Tests.dll"),
-					TestExecutable = Path.Combine (Harness.RootDirectory, "..", "msbuild", "packages", "NUnit.Runners.2.6.4", "tools", "nunit-console.exe"),
-					WorkingDirectory = Path.Combine (Harness.RootDirectory, "..", "msbuild", 	"packages", "NUnit.Runners.2.6.4", "tools", "lib"),
+					TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners.2.6.4", "tools", "nunit-console.exe"),
+					WorkingDirectory = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners.2.6.4", "tools", "lib"),
 					Platform = TestPlatform.iOS,
 					TestName = "MSBuild tests - iOS",
+					Timeout = TimeSpan.FromMinutes (30),
 				};
 				Tasks.Add (nunitExecution);
 			}
@@ -233,6 +327,31 @@ namespace xharness
 					}
 				}
 			}
+
+			if (IncludeMtouch) {
+				var build = new MakeTask ()
+				{
+					Jenkins = this,
+					ProjectFile = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "mtouch", "mtouch.sln")),
+					SpecifyPlatform = false,
+					SpecifyConfiguration = false,
+					Platform = TestPlatform.iOS,
+					Target = "dependencies",
+					WorkingDirectory = Path.GetFullPath (Path.Combine (Harness.RootDirectory, "mtouch")),
+				};
+				var nunitExecution = new NUnitExecuteTask ()
+				{
+					Jenkins = this,
+					BuildTask = build,
+					TestLibrary = Path.Combine (Harness.RootDirectory, "mtouch", "bin", "Debug", "mtouch.dll"),
+					TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.ConsoleRunner.3.5.0", "tools", "nunit3-console.exe"),
+					WorkingDirectory = Path.Combine (Harness.RootDirectory, "mtouch", "bin", "Debug"),
+					Platform = TestPlatform.iOS,
+					TestName = "MTouch tests",
+					Timeout = TimeSpan.FromMinutes (120),
+				};
+				Tasks.Add (nunitExecution);
+			}
 		}
 
 		static MacExecuteTask CloneExecuteTask (MacExecuteTask task, TestPlatform platform, string suffix)
@@ -270,6 +389,7 @@ namespace xharness
 
 				Task.Run (async () =>
 				{
+					await SimDevice.KillEverythingAsync (MainLog);
 					await PopulateTasksAsync ();
 				}).Wait ();
 				var tasks = new List<Task> ();
@@ -732,6 +852,47 @@ function toggleContainerVisibility (containerName)
 		}
 	}
 
+	class MakeTask : BuildToolTask
+	{
+		public string Target;
+		public string WorkingDirectory;
+
+		protected override async Task ExecuteAsync ()
+		{
+			using (var resource = await Jenkins.DesktopResource.AcquireConcurrentAsync ()) {
+				using (var make = new Process ()) {
+					make.StartInfo.FileName = "make";
+					make.StartInfo.WorkingDirectory = WorkingDirectory;
+					make.StartInfo.Arguments = Target;
+					Jenkins.MainLog.WriteLine ("Making {0} in {1}", Target, WorkingDirectory);
+					SetEnvironmentVariables (make);
+					var log = Logs.CreateStream (LogDirectory, "make-" + Platform + ".txt", "Build log");
+					foreach (string key in make.StartInfo.EnvironmentVariables.Keys)
+						log.WriteLine ("{0}={1}", key, make.StartInfo.EnvironmentVariables [key]);
+					log.WriteLine ("{0} {1}", make.StartInfo.FileName, make.StartInfo.Arguments);
+					if (!Harness.DryRun) {
+						try {
+							var timeout = TimeSpan.FromMinutes (5);
+							var result = await make.RunAsync (log, true, timeout);
+							if (result.TimedOut) {
+								ExecutionResult = TestExecutingResult.TimedOut;
+								log.WriteLine ("Make timed out after {0} seconds.", timeout.TotalSeconds);
+							} else if (result.Succeeded) {
+								ExecutionResult = TestExecutingResult.Succeeded;
+							} else {
+								ExecutionResult = TestExecutingResult.Failed;
+							}
+						} catch (Exception e) {
+							log.WriteLine ("Harness exception: {0}", e);
+							ExecutionResult = TestExecutingResult.HarnessException;
+						}
+					}
+					Jenkins.MainLog.WriteLine ("Made {0} ({1})", TestName, Mode);
+				}
+			}
+		}
+	}
+
 	class XBuildTask : BuildToolTask
 	{
 		protected override async Task ExecuteAsync ()
@@ -779,12 +940,18 @@ function toggleContainerVisibility (containerName)
 
 	class NUnitExecuteTask : TestTask
 	{
-		public XBuildTask BuildTask;
+		public BuildToolTask BuildTask;
 		public string TestLibrary;
 		public string TestExecutable;
 		public string WorkingDirectory;
 		public bool ProduceHtmlReport = true;
+		public TimeSpan Timeout = TimeSpan.FromMinutes (10);
 
+		public bool IsNUnit3 {
+			get {
+				return Path.GetFileName (TestExecutable) == "nunit3-console.exe";
+			}
+		}
 		public override IEnumerable<Log> AggregatedLogs {
 			get {
 				return base.AggregatedLogs.Union (BuildTask.Logs);
@@ -821,18 +988,22 @@ function toggleContainerVisibility (containerName)
 					var args = new StringBuilder ();
 					args.Append (Harness.Quote (Path.GetFullPath (TestExecutable))).Append (' ');
 					args.Append (Harness.Quote (Path.GetFullPath (TestLibrary))).Append (' ');
-					args.Append ("-xml=" + Harness.Quote (xmlLog.FullPath)).Append (' ');
-					args.Append ("-labels ");
+					if (IsNUnit3) {
+						args.Append ("-result=").Append (Harness.Quote (xmlLog.FullPath)).Append (";format=nunit2 ");
+						args.Append ("--labels=All ");
+					} else {
+						args.Append ("-xml=" + Harness.Quote (xmlLog.FullPath)).Append (' ');
+						args.Append ("-labels ");
+					}
 					proc.StartInfo.Arguments = args.ToString ();
 					SetEnvironmentVariables (proc);
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
 						try {
-							var timeout = TimeSpan.FromMinutes (10);
-							var result = await proc.RunAsync (log, true, timeout);
+							var result = await proc.RunAsync (log, true, Timeout);
 							if (result.TimedOut) {
-								log.WriteLine ("Execution timed out after {0} seconds.", timeout.TotalSeconds);
+								log.WriteLine ("Execution timed out after {0} minutes.", Timeout.Minutes);
 								ExecutionResult = TestExecutingResult.TimedOut;
 							} else if (result.Succeeded) {
 								ExecutionResult = TestExecutingResult.Succeeded;
@@ -976,7 +1147,7 @@ function toggleContainerVisibility (containerName)
 		public SimDevice Device;
 		public SimDevice CompanionDevice;
 		public XBuildTask BuildTask;
-		public string AppRunnerTarget;
+		public AppRunnerTarget AppRunnerTarget;
 
 		AppRunner runner;
 
@@ -1051,11 +1222,11 @@ function toggleContainerVisibility (containerName)
 
 			var project = Path.GetFileNameWithoutExtension (ProjectFile);
 			if (project.EndsWith ("-tvos", StringComparison.Ordinal)) {
-				AppRunnerTarget = "tvos-simulator";
+				AppRunnerTarget = AppRunnerTarget.Simulator_tvOS;
 			} else if (project.EndsWith ("-watchos", StringComparison.Ordinal)) {
-				AppRunnerTarget = "watchos-simulator";
+				AppRunnerTarget = AppRunnerTarget.Simulator_watchOS;
 			} else {
-				AppRunnerTarget = "ios-simulator";
+				AppRunnerTarget = AppRunnerTarget.Simulator_iOS;
 			}
 		}
 

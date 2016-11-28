@@ -303,7 +303,7 @@ namespace Xamarin.MMP.Tests
 					References = string.Format (" <Reference Include=\"a\" > <HintPath>{0}/a.dll</HintPath> </Reference> ", tmpDir),
 					TestCode = "System.Console.WriteLine (typeof (A));",
 				};
-				TI.BuildUnifiedExecutable (test, shouldFail: false);
+				TI.GenerateAndBuildUnifiedExecutable (test, shouldFail: false);
 			});
 		}
 
@@ -329,10 +329,10 @@ namespace Xamarin.MMP.Tests
 					References = string.Format (" <Reference Include=\"b\" > <HintPath>{0}</HintPath> </Reference> ", assemblyPath),
 					TestCode = "System.Console.WriteLine (typeof (B));",
 				};
-				TI.BuildUnifiedExecutable (test, shouldFail: false);
+				TI.GenerateAndBuildUnifiedExecutable (test, shouldFail: false);
 
 				test.CSProjConfig = "<LinkMode>SdkOnly</LinkMode>";
-				TI.BuildUnifiedExecutable (test, shouldFail: false);
+				TI.GenerateAndBuildUnifiedExecutable (test, shouldFail: false);
 			});
 		}
 
@@ -463,6 +463,88 @@ namespace Xamarin.MMP.Tests
 				Assert.IsTrue (File.Exists (Path.Combine (tmpDir, machineConfigXM45Location)));
 				text = File.ReadAllLines (Path.Combine (tmpDir, machineConfigXM45Location));
 				Assert.IsTrue (text.Length == 1 && text[0] == configText);
+			});
+		}
+
+		[Test]
+		public void Unified_FailedBuild_ShouldRequireAnotherBuildNotSkipMMP ()
+		{
+			RunMMPTest (tmpDir => {
+				foreach (bool xm45 in new bool [] {false, true})
+				{
+					// First build with a Non-existant file to force us to error inside mmp test
+					TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { CSProjConfig = "<MonoBundlingExtraArgs>--resource=Foo.bar</MonoBundlingExtraArgs>", XM45 = xm45 };
+					TI.GenerateAndBuildUnifiedExecutable (test, shouldFail: true);
+
+					string generatedProjectPath = Path.Combine (tmpDir, TI.GetUnifiedExecutableProjectName (test));
+					string generatedMainPath = Path.Combine (tmpDir, "main.cs");
+
+					// Next, build again without the error MonoBundlingExtraArgs
+					test.CSProjConfig = "";
+					TI.GenerateUnifiedExecutableProject (test);
+
+					// And try again. 
+					// If we fail, we'll likley fail with "did not generate an exe" before returning but let's check anyway
+					string secondBuildOutput = TI.BuildProject (Path.Combine (tmpDir, TI.GetUnifiedExecutableProjectName (test)), true, diagnosticMSBuild: true);
+					Assert.IsTrue (!secondBuildOutput.Contains ("Skipping target \"_CompileToNative"), "Did not skip");
+					Assert.IsTrue (secondBuildOutput.Contains ("CompileToNative needs to be built as output file"), "Did need to build");
+				}
+			});
+		}	
+				
+		public void UnifiedWithDepNativeRefLib_ShouldHaveItRemoved_OnceInBundle ()
+		{
+			RunMMPTest (tmpDir =>
+			{
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir)
+				{
+					ProjectName = "MobileBinding.csproj",
+					ItemGroup = string.Format (NativeReferenceTemplate, Path.GetFullPath (SimpleDylibPath), "Dynamic"),
+					StructsAndEnumsConfig = "public class UnifiedWithDepNativeRefLibTestClass {}"
+				};
+
+				string projectPath = TI.GenerateBindingLibraryProject (test);
+				TI.BuildProject (projectPath, true);
+
+				string referenceCode = string.Format (@"<Reference Include=""MobileBinding""><HintPath>{0}</HintPath></Reference>", Path.Combine (tmpDir, "bin/Debug", "MobileBinding.dll"));
+
+				test = new TI.UnifiedTestConfig (tmpDir) { References = referenceCode, TestCode = "System.Console.WriteLine (typeof (ExampleBinding.UnifiedWithDepNativeRefLibTestClass));" };
+				TI.TestUnifiedExecutable (test);
+
+				string libPath = Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MonoBundle/MobileBinding.dll");
+				Assert.True (File.Exists (libPath));
+				string monoDisResults = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/monodis", new StringBuilder ("--presources " + libPath), "monodis");
+				Assert.IsFalse (monoDisResults.Contains ("SimpleClassDylib.dylib"));
+			});
+		}
+
+		public const string BundleResourceTemplate = "<ItemGroup><BundleResource Include=\"{0}\" /></ItemGroup>";
+
+		[Test]
+		public void UnifiedWithDepLib_ThatContainsUserResource_ShouldBeRemovedUnderFullLink ()
+		{
+			RunMMPTest (tmpDir =>
+			{
+				string resoucePath = Path.Combine (tmpDir, "foo.xml");
+				File.Create (resoucePath);
+
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir)
+				{
+					ProjectName = "UnifiedLibrary",
+					ItemGroup = string.Format (BundleResourceTemplate, resoucePath),
+				};
+				var libProject = TI.GenerateUnifiedLibraryProject (test);
+				TI.BuildProject (libProject, true);
+
+				string referenceCode = string.Format (@"<Reference Include=""UnifiedLibrary""><HintPath>{0}</HintPath></Reference>", Path.Combine (tmpDir, "bin/Debug", "UnifiedLibrary.dll"));
+
+				test = new TI.UnifiedTestConfig (tmpDir) { References = referenceCode, TestCode = "System.Console.WriteLine (typeof (Library.MyClass));" };
+				TI.TestUnifiedExecutable (test);
+
+				string libPath = Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MonoBundle/UnifiedLibrary.dll");
+				Assert.True (File.Exists (libPath));
+				string monoDisResults = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/monodis", new StringBuilder ("--presources " + libPath), "monodis");
+				Assert.IsFalse (monoDisResults.Contains ("foo.xml"));
 			});
 		}
 	}
