@@ -1377,6 +1377,7 @@ public class MyClass {
    [..]
    public Notifications {
       public static NSObject ObserveDidStart (EventHandler<NSNotificationEventArgs> handler)
+      public static NSObject ObserveDidStart (NSObject objectToObserve, EventHandler<NSNotificationEventArgs> handler)
    }
 }
 ```
@@ -1389,6 +1390,14 @@ by using code like this:
 ```
 var token = MyClass.Notifications.ObserverDidStart ((notification) => { 
     Console.WriteLine ("Observed the 'DidStart' event!");
+});
+```
+
+Or to set a specific object to observe. If you pass `null` to `objectToObserve` this method will behave just like its other peer.
+
+```
+var token = MyClass.Notifications.ObserverDidStart (objectToObserve, (notification) => { 
+    Console.WriteLine ("Observed the 'DidStart' event on objectToObserve!");
 });
 ```
 
