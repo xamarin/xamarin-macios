@@ -6988,7 +6988,8 @@ namespace XamCore.Foundation
 		[Export ("length")]
 		nint Length {get;}
 
-		[Export ("isEqualToString:"), Internal]
+		[Sealed]
+		[Export ("isEqualToString:")]
 		bool IsEqualTo (IntPtr handle);
 		
 		[Export ("compare:")]
