@@ -35,6 +35,7 @@ namespace Xamarin.MMP.Tests
 			public bool DiagnosticMSBuild { get; set; }
 			public string ProjectName { get; set; }
 			public string TestCode { get; set; }
+			public string TestDecl { get; set; }
 			public string CSProjConfig { get; set; }
 			public string References { get; set; }
 			public string AssemblyName { get; set; }
@@ -53,6 +54,7 @@ namespace Xamarin.MMP.Tests
 				TmpDir = tmpDir;
 				ProjectName = "";
 				TestCode = "";
+				TestDecl = "";
 				CSProjConfig = "";
 				References = "";
 				AssemblyName = "";
@@ -144,7 +146,7 @@ namespace Xamarin.MMP.Tests
 
 		public static string GenerateEXEProject (UnifiedTestConfig config)
 		{
-			WriteMainFile (config.TestCode, true, config.FSharp, Path.Combine (config.TmpDir, config.FSharp ? "Main.fs" : "Main.cs"));
+			WriteMainFile (config.TestDecl, config.TestCode, true, config.FSharp, Path.Combine (config.TmpDir, config.FSharp ? "Main.fs" : "Main.cs"));
 
 			string sourceDir = FindSourceDirectory ();
 			File.Copy (Path.Combine (sourceDir, "Info-Unified.plist"), Path.Combine (config.TmpDir, "Info.plist"), true);
@@ -258,7 +260,7 @@ namespace Xamarin.MMP.Tests
 
 		public static string GenerateClassicEXEProject (string tmpDir, string projectName, string testCode, string csprojConfig = "", string references = "", string assemblyName = null)
 		{
-			WriteMainFile (testCode, false, false, Path.Combine (tmpDir, "Main.cs"));
+			WriteMainFile ("", testCode, false, false, Path.Combine (tmpDir, "Main.cs"));
 
 			string sourceDir = FindSourceDirectory ();
 			File.Copy (Path.Combine (sourceDir, "Info-Classic.plist"), Path.Combine (tmpDir, "Info.plist"), true);
@@ -277,7 +279,7 @@ namespace Xamarin.MMP.Tests
 
 		public static string GenerateSystemMonoEXEProject (UnifiedTestConfig config)
 		{
-			WriteMainFile (config.TestCode, true, false, Path.Combine (config.TmpDir, "Main.cs"));
+			WriteMainFile (config.TestDecl, config.TestCode, true, false, Path.Combine (config.TmpDir, "Main.cs"));
 
 			string sourceDir = FindSourceDirectory ();
 			File.Copy (Path.Combine (sourceDir, "Info-Unified.plist"), Path.Combine (config.TmpDir, "Info.plist"), true);
@@ -325,7 +327,7 @@ namespace Xamarin.MMP.Tests
 			}
 		}
 
-		static void WriteMainFile (string content, bool isUnified, bool fsharp, string location)
+		static void WriteMainFile (string decl, string content, bool isUnified, bool fsharp, string location)
 		{
 			const string FSharpMainTemplate = @"
 namespace FSharpUnifiedExample
@@ -333,6 +335,8 @@ open System
 open AppKit
 
 module main =
+    %DECL%
+ 
     [<EntryPoint>]
     let main args =
         NSApplication.Init ()
@@ -347,6 +351,8 @@ namespace TestCase
 {
 	class MainClass
 	{
+		%DECL%
+
 		static void Main (string[] args)
 		{
 			NSApplication.Init ();
@@ -355,7 +361,7 @@ namespace TestCase
 	}
 }";
 			string currentTemplate = fsharp ? FSharpMainTemplate : MainTemplate;
-			string testCase = currentTemplate.Replace("%CODE%", content);
+			string testCase = currentTemplate.Replace ("%CODE%", content).Replace ("%DECL%", decl);
 			if (isUnified)
 				testCase = testCase.Replace ("MonoMac.", string.Empty);
 			using (StreamWriter s = new StreamWriter (location))

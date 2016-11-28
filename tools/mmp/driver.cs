@@ -612,10 +612,16 @@ namespace Xamarin.Bundler {
 				var linked_native_libs = Link ();
 				foreach (var kvp in linked_native_libs) {
 					List<MethodDefinition> methods;
-					if (native_libs.TryGetValue (kvp.Key, out methods))
+					if (native_libs.TryGetValue (kvp.Key, out methods)) {
+						if (methods == null) {
+							methods = new List<MethodDefinition> (); 
+							native_libs [kvp.Key] = methods;
+						}
 						methods.AddRange (kvp.Value);
-					else
+					}
+					else {
 						native_libs.Add (kvp.Key, kvp.Value);
+					}
 				}
 				internalSymbols.UnionWith (BuildTarget.LinkContext.RequiredSymbols.Keys);
 				Watch (string.Format ("Linking (mode: '{0}')", App.LinkMode), 1);
