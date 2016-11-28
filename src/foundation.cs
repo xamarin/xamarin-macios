@@ -7149,70 +7149,6 @@ namespace XamCore.Foundation
 		[return: NullAllowed]
 		NSString TransliterateString (NSString transform, bool reverse);
 
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformLatinToKatakana"), Internal]
-		NSString NSStringTransformLatinToKatakana { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformLatinToHiragana"), Internal]
-		NSString NSStringTransformLatinToHiragana { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformLatinToHangul"), Internal]
-		NSString NSStringTransformLatinToHangul { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformLatinToArabic"), Internal]
-		NSString NSStringTransformLatinToArabic { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformLatinToHebrew"), Internal]
-		NSString NSStringTransformLatinToHebrew { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformLatinToThai"), Internal]
-		NSString NSStringTransformLatinToThai { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformLatinToCyrillic"), Internal]
-		NSString NSStringTransformLatinToCyrillic { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformLatinToGreek"), Internal]
-		NSString NSStringTransformLatinToGreek { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformToLatin"), Internal]
-		NSString NSStringTransformToLatin { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformMandarinToLatin"), Internal]
-		NSString NSStringTransformMandarinToLatin { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformHiraganaToKatakana"), Internal]
-		NSString NSStringTransformHiraganaToKatakana { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformFullwidthToHalfwidth"), Internal]
-		NSString NSStringTransformFullwidthToHalfwidth { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformToXMLHex"), Internal]
-		NSString NSStringTransformToXMLHex { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformToUnicodeName"), Internal]
-		NSString NSStringTransformToUnicodeName { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformStripCombiningMarks"), Internal]
-		NSString NSStringTransformStripCombiningMarks { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformStripDiacritics"), Internal]
-		NSString NSStringTransformStripDiacritics { get; }
-
 		[Export ("hasPrefix:")]
 		bool HasPrefix (NSString prefix);
 
@@ -7262,8 +7198,13 @@ namespace XamCore.Foundation
 		nuint ReplaceOcurrences (NSString target, NSString replacement, NSStringCompareOptions options, NSRange range);
 
 		[iOS (9,0), Mac(10,11)]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("applyTransform:reverse:range:updatedRange:")]
 		bool ApplyTransform (NSString transform, bool reverse, NSRange range, out NSRange resultingRange);
+
+		[iOS (9,0)][Mac (10,11)]
+		[Wrap ("ApplyTransform (transform.GetConstant (), reverse, range, out resultingRange)")]
+		bool ApplyTransform (NSStringTransform transform, bool reverse, NSRange range, out NSRange resultingRange);
 
 		[Export ("replaceCharactersInRange:withString:")]
 		void ReplaceCharactersInRange (NSRange range, NSString aString);
