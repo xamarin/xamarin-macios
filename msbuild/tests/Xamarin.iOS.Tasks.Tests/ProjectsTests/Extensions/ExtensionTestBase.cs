@@ -28,7 +28,7 @@ namespace Xamarin.iOS.Tasks
 
 		public void BuildExtension (string hostAppName, string extensionName, string bundlePath, string platform, string config, int expectedErrorCount = 0)
 		{
-			var mtouchPaths = SetupProjectPaths (hostAppName, "../", true, platform, config);
+			var mtouchPaths = SetupProjectPaths (hostAppName, "../", true, bundlePath, config);
 
 			var proj = SetupProject (Engine, mtouchPaths ["project_csprojpath"]);
 
