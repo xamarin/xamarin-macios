@@ -42,12 +42,24 @@ class BindingTouch {
 
 #if MONOMAC
 	public static PlatformName CurrentPlatform = PlatformName.MacOSX;
+#if XAMCORE_2_0
+	public static bool Unified = true;
+#else
+	public static bool Unified = false;
+#endif
 #elif WATCH
 	public static PlatformName CurrentPlatform = PlatformName.WatchOS;
+	public static bool Unified = true;
 #elif TVOS
 	public static PlatformName CurrentPlatform = PlatformName.TvOS;
+	public static bool Unified = true;
 #elif IOS
 	public static PlatformName CurrentPlatform = PlatformName.iOS;
+#if XAMCORE_2_0
+	public static bool Unified = true;
+#else
+	public static bool Unified = false;
+#endif
 #else
 	#error Invalid platform.
 #endif
@@ -80,13 +92,6 @@ class BindingTouch {
 #error Unknown platform
 #endif
 	static char shellQuoteChar;
-#if IOS || MONOMAC
-#if XAMCORE_2_0
-	static bool buildNewStyle = true;
-#else
-	static bool buildNewStyle = false;
-#endif
-#endif
 
 	public static string ToolName {
 		get { return tool_name; }
@@ -407,14 +412,21 @@ class BindingTouch {
 				false;
 #endif
 
+			string nsManagerPrefix;
+			switch (CurrentPlatform) {
+			case PlatformName.MacOSX:
+				nsManagerPrefix = Unified ? null : "MonoMac";
+				break;
+			case PlatformName.iOS:
+				nsManagerPrefix = Unified ? null : "MonoTouch";
+				break;
+			default:
+				nsManagerPrefix = null;
+				break;
+			}
+
 			var nsManager = new NamespaceManager (
-#if MONOMAC
-				buildNewStyle ? null : "MonoMac",
-#elif IOS
-				buildNewStyle ? null : "MonoTouch",
-#else
-				null,
-#endif
+				nsManagerPrefix,
 				ns == null ? firstApiDefinitionName : ns,
 				addSystemDrawingReferences
 			);
@@ -428,11 +440,7 @@ class BindingTouch {
 #if MONOMAC
 				OnlyDesktop = true,
 #endif
-#if IOS || MONOMAC
-				Compat = !buildNewStyle,
-#else
-				Compat = false,
-#endif
+				Compat = !Unified,
 #if !XAMCORE_2_0
 				Alpha = alpha,
 #endif
@@ -441,7 +449,7 @@ class BindingTouch {
 			};
 
 #if IOS || MONOMAC
-			if (!buildNewStyle && !binding_third_party) {
+			if (!Unified && !binding_third_party) {
 				foreach (var mi in baselib.GetType (nsManager.CoreObjCRuntime + ".Messaging").GetMethods ()){
 					if (mi.Name.IndexOf ("_objc_msgSend") != -1)
 						g.RegisterMethodName (mi.Name);
