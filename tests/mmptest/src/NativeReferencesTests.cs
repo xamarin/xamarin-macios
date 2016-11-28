@@ -145,5 +145,25 @@ namespace Xamarin.MMP.Tests
 			if (libraryName != null)
 				Assert.IsTrue (Directory.GetFiles (xm45BundlePath).Any (x => x.Contains (libraryName) == !libraryShouldNotBeCopied), string.Format ("{0} - XM45 - We did not pull in native lib: {1}", testName, libraryName));
 		}
+
+		[Test]
+		public void NativeReference_WithDllImportOfSamePath_Builds ()
+		{
+			RunMMPTest (tmpDir =>
+			{
+				string dylibPath = Path.Combine (tmpDir, "dll/");
+				string filePath = Path.Combine (dylibPath, "SimpleClassDylib.dylib");
+				Directory.CreateDirectory (dylibPath);
+				File.Copy (Path.Combine (TI.AssemblyDirectory, TI.TestDirectory + "mac-binding-project/bin/SimpleClassDylib.dylib"), filePath);
+
+				// Use absolute path here and in TestDecl to trigger bug
+				string itemGroup = string.Format ("<ItemGroup><NativeReference Include=\"{0}\"> <IsCxx>False</IsCxx><Kind>Dynamic</Kind> </NativeReference> </ItemGroup>", filePath);
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { ProjectName = "UnifiedExample.csproj", ItemGroup = itemGroup };
+
+				test.TestDecl = string.Format ("[System.Runtime.InteropServices.DllImport (\"{0}\")]public static extern int GetFour ();", filePath);
+				test.TestCode = "GetFour ();";
+				NativeReferenceTestCore (tmpDir, test, "NativeReference_WithDllImportOfSamePath_Builds", null, true, true);
+			});
+		}
 	}
 }
