@@ -1191,26 +1191,6 @@ namespace XamCore.Foundation  {
 		Abbreviated
 	}
 
-	// Xamarin specific
-	public enum NSStringTransform {
-		LatinToKatakana,
-		LatinToHiragana,
-		LatinToHangul,
-		LatinToArabic,
-		LatinToHebrew,
-		LatinToThai,
-		LatinToCyrillic,
-		LatinToGreek,
-		ToLatin,
-		MandarinToLatin,
-		HiraganaToKatakana,
-		FullwidthToHalfwidth,
-		ToXmlHex,
-		ToUnicodeName,
-		StripCombiningMarks,
-		StripDiacritics,
-	}
-
 #if MONOMAC
 	[Mac(10,11)]
 	[Native]
