@@ -15,8 +15,8 @@ $(MONO_CECIL_MDB_DLL): $(MONO_CECIL_DLL) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Md
 
 BCL_LOCATION=$(MONO_PATH)/mcs/class/lib/xammac_net_4_5
 
-LINKER_DIR=$(LINKER_TOOLS_DIR)/linker
-TUNER_DIR=$(LINKER_TOOLS_DIR)/tuner
+LINKER_DIR=$(LINKER_TOOLS_PATH)/linker
+TUNER_DIR=$(LINKER_TOOLS_PATH)/tuner
 
 linker_sources = \
 	$(LINKER_DIR)/Mono.Linker/Pipeline.cs				\
