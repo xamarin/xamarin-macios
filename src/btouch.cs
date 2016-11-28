@@ -34,15 +34,24 @@ using System.Text;
 using Mono.Options;
 using System.Runtime.InteropServices;
 
-#if !MONOMAC
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
-#else
-using XamCore.Foundation;
-#endif
 
 class BindingTouch {
 	static Type CoreObject = typeof (XamCore.Foundation.NSObject);
+
+#if MONOMAC
+	public static PlatformName CurrentPlatform = PlatformName.MacOSX;
+#elif WATCH
+	public static PlatformName CurrentPlatform = PlatformName.WatchOS;
+#elif TVOS
+	public static PlatformName CurrentPlatform = PlatformName.TvOS;
+#elif IOS
+	public static PlatformName CurrentPlatform = PlatformName.iOS;
+#else
+	#error Invalid platform.
+#endif
+
 #if MONOMAC
 	static string baselibdll = "MonoMac.dll";
 	static string tool_name = "bmac";
@@ -410,6 +419,7 @@ class BindingTouch {
 				addSystemDrawingReferences
 			);
 
+			Generator.CurrentPlatform = CurrentPlatform;
 			var g = new Generator (nsManager, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()){
 				BindThirdPartyLibrary = binding_third_party,
 				CoreNSObject = CoreObject,

@@ -1585,17 +1585,14 @@ public partial class Generator : IMemberGatherer {
 	public bool Compat;
 	public bool SkipSystemDrawing;
 
+	public static PlatformName CurrentPlatform;
 #if MONOMAC
-	public const PlatformName CurrentPlatform = PlatformName.MacOSX;
 	const string ApplicationClassName = "NSApplication";
 #elif WATCH
-	public const PlatformName CurrentPlatform = PlatformName.WatchOS;
 	const string ApplicationClassName = "UIApplication";
 #elif TVOS
-	public const PlatformName CurrentPlatform = PlatformName.TvOS;
 	const string ApplicationClassName = "UIApplication";
 #else
-	public const PlatformName CurrentPlatform = PlatformName.iOS;
 	const string ApplicationClassName = "UIApplication";
 #endif
 
