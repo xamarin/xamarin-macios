@@ -8,12 +8,10 @@ namespace xharness
 		public bool Mobile { get; private set; }
 
 		bool SkipProjectGeneration;
-		bool ThirtyTwoBit;
 
-		public MacUnifiedTarget (bool mobile, bool thirtyTwoBit, bool shouldSkipProjectGeneration = false) : base ()
+		public MacUnifiedTarget (bool mobile, bool shouldSkipProjectGeneration = false) : base ()
 		{
 			Mobile = mobile;
-			ThirtyTwoBit = thirtyTwoBit;
 			SkipProjectGeneration = shouldSkipProjectGeneration;
 		}
 
@@ -29,7 +27,7 @@ namespace xharness
 			get {
 				if (SkipProjectGeneration)
 					return "";
-				return "-unified" + (Mobile ? "" : "XM45") + (ThirtyTwoBit ? "-32" : "");
+				return "-unified" + (Mobile ? "" : "XM45");
 			}
 		}
 			
@@ -83,7 +81,7 @@ namespace xharness
 
 		public override string MakefileWhereSuffix {
 			get {
-				return "unified" + (Mobile ? "" : "XM45") + (ThirtyTwoBit ? "32" : "");
+				return "unified" + (Mobile ? "" : "XM45");
 			}
 		}
 
@@ -97,21 +95,10 @@ namespace xharness
 		{
 			get 
 			{
-				var props = new Dictionary<string, string> ();
-
-
 				if (Mobile)
-				{
-					props.Add ("TargetFrameworkVersion", "v2.0");
-				}
+					return new Dictionary<string, string> () { { "TargetFrameworkVersion", "v2.0" } };
 				else
-				{
-					props.Add ("TargetFrameworkVersion", "v4.5");
-					props.Add ("UseXamMacFullFramework", "true");
-				}
-
-				props.Add ("XamMacArch", ThirtyTwoBit ? "i386" : "x86_64");
-				return props;
+					return new Dictionary<string, string> () { { "TargetFrameworkVersion", "v4.5" }, { "UseXamMacFullFramework", "true" } };
 			}
 		}
 	}

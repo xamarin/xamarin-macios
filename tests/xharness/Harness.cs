@@ -336,25 +336,20 @@ namespace xharness
 				var file = proj.Path;
  				if (!File.Exists (file))
  					throw new FileNotFoundException (file);
-
-				foreach (bool thirtyTwoBit in new bool[] { false, true })
-				{
-					var unifiedMobile = new MacUnifiedTarget (true, thirtyTwoBit)
-					{
-						TemplateProjectPath = file,
-						Harness = this,
-					};
-					unifiedMobile.Execute ();
-					unified_targets.Add (unifiedMobile);
-
-					var unifiedXM45 = new MacUnifiedTarget (false, thirtyTwoBit)
-					{
-						TemplateProjectPath = file,
-						Harness = this,
-					};
-					unifiedXM45.Execute ();
-					unified_targets.Add (unifiedXM45);
-				}
+								
+				var unifiedMobile = new MacUnifiedTarget (true) {
+ 					TemplateProjectPath = file,
+ 					Harness = this,
+ 				};
+				unifiedMobile.Execute ();
+				unified_targets.Add (unifiedMobile);
+ 
+				var unifiedXM45 = new MacUnifiedTarget (false) {
+ 					TemplateProjectPath = file,
+ 					Harness = this,
+ 				};
+				unifiedXM45.Execute ();
+				unified_targets.Add (unifiedXM45);
  
 				var classic = new MacClassicTarget () {
  					TemplateProjectPath = file,
@@ -366,7 +361,7 @@ namespace xharness
  
 			foreach (var proj in MacTestProjects.Where ((v) => !v.GenerateVariations)) {
 				var file = proj.Path;
-				var unifiedMobile = new MacUnifiedTarget (true, false, true)
+				var unifiedMobile = new MacUnifiedTarget (true, true)
 				{
  					TemplateProjectPath = file,
  					Harness = this,

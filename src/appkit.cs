@@ -15730,7 +15730,7 @@ namespace XamCore.AppKit {
 		NSStoryboard Storyboard { get; }
 
 #if XAMCORE_2_0
-		[Mac (10,10, onlyOn64 : true)]
+		[Mac (10,10)]
 		[Export ("presentViewControllerInWidget:")]
 		void PresentViewControllerInWidget (NSViewController viewController);
 

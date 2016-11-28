@@ -12,7 +12,7 @@ using XamCore.AppKit;
 
 namespace XamCore.NotificationCenter {
 #if XAMCORE_2_0 || !MONOMAC
-	[iOS (8,0)][Mac (10,10, onlyOn64 : true)]
+	[iOS (8,0)][Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // not meant to be user created
 	interface NCWidgetController {
@@ -25,7 +25,7 @@ namespace XamCore.NotificationCenter {
 		void SetHasContent (bool flag, string bundleID);
 	}
 
-	[iOS (8,0)][Mac (10,10, onlyOn64 : true)]
+	[iOS (8,0)][Mac (10,10)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface NCWidgetProviding {
@@ -109,7 +109,7 @@ namespace XamCore.NotificationCenter {
 #endif
 
 #if MONOMAC
-	[Mac (10,10, onlyOn64 : true)]
+	[Mac (10,10)]
 	[BaseType (typeof(NSViewController), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NCWidgetListViewDelegate)})]
 	interface NCWidgetListViewController
 	{
@@ -140,7 +140,7 @@ namespace XamCore.NotificationCenter {
 
 	interface INCWidgetListViewDelegate {}
 
-	[Mac (10, 10, onlyOn64 : true)]
+	[Mac (10, 10)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface NCWidgetListViewDelegate
@@ -165,7 +165,7 @@ namespace XamCore.NotificationCenter {
 		void DidRemoveRow (NCWidgetListViewController list, nuint row);
 	}
 
-	[Mac (10,10, onlyOn64 : true)]
+	[Mac (10,10)]
 	[BaseType (typeof(NSViewController), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NCWidgetSearchViewDelegate)})]
 	interface NCWidgetSearchViewController
 	{
@@ -187,7 +187,7 @@ namespace XamCore.NotificationCenter {
 
 	interface INCWidgetSearchViewDelegate {}
 
-	[Mac (10,10, onlyOn64 : true)]
+	[Mac (10,10)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface NCWidgetSearchViewDelegate
