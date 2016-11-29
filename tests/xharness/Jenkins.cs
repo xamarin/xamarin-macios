@@ -316,8 +316,11 @@ namespace xharness
 
 					if (project.GenerateVariations) {
 						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified, "-unified"));
-						if (!project.SkipXMVariations)
+						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified, "-unified-32"));
+						if (!project.SkipXMVariations) {
 							Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45"));
+							Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45-32"));
+						}
 					}
 				}
 			}
