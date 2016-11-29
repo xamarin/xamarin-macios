@@ -819,6 +819,7 @@ IMAGEKIT_CORE_SOURCES = \
 # Intents
 
 INTENTS_SOURCES = \
+	Intents/INCompat.cs \
 	Intents/INIntentResolutionResult.cs \
 	Intents/INPriceRange.cs \
 	Intents/INRideOption.cs \
