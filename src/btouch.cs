@@ -158,9 +158,7 @@ class BindingTouch {
 #endif
 		List<string> sources;
 		var resources = new List<string> ();
-#if !MONOMAC
 		var linkwith = new List<string> ();
-#endif
 		var references = new List<string> ();
 		var libs = new List<string> ();
 		var api_sources = new List<string> ();
@@ -210,7 +208,6 @@ class BindingTouch {
 				v => inline_selectors = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v)
 			},
 			{ "process-enums", "Process enums as bindings, not external, types.", v => process_enums = true },
-#if !MONOMAC
 			{ "link-with=,", "Link with a native library {0:FILE} to the binding, embedded as a resource named {1:ID}",
 				(path, id) => {
 					if (path == null || path.Length == 0)
@@ -226,7 +223,6 @@ class BindingTouch {
 					linkwith.Add (id);
 				}
 			},
-#endif
 			{ "unified-full-profile", "Launches compiler pointing to XM Full Profile", l => { /* no-op*/ }, true },
 			{ "unified-mobile-profile", "Launches compiler pointing to XM Mobile Profile", l => { /* no-op*/ }, true },
 		};
@@ -347,7 +343,6 @@ class BindingTouch {
 			GC.KeepAlive (baselib); // Fixes a compiler warning (unused variable).
 #endif
 				
-#if !MONOMAC
 			foreach (object attr in api.GetCustomAttributes (typeof (LinkWithAttribute), true)) {
 				LinkWithAttribute linkWith = (LinkWithAttribute) attr;
 				
@@ -356,7 +351,6 @@ class BindingTouch {
 					return 1;
 				}
 			}
-#endif
 
 			foreach (var r in references) {
 				if (File.Exists (r)) {
