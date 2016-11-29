@@ -196,14 +196,20 @@ namespace Xamarin.MMP.Tests
 		{
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir);
+
+				// Due to https://bugzilla.xamarin.com/show_bug.cgi?id=48311 we can get warnings related to the registrar
+				// So ignore anything with registrar.m or gl3.h in the line
+				Func<string, bool> hasLegitWarning = results =>
+					results.Split (Environment.NewLine.ToCharArray ()).Any (x => x.Contains ("warning") && !x.Contains ("registrar.m") && !x.Contains ("gl3.h"));
+
 				// Mobile
 				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-				Assert.IsTrue (!buildResults.Contains ("warning"), "Unified_HelloWorld_ShouldHaveNoWarnings - Mobile had warning: \n" + buildResults);
+				Assert.IsTrue (!hasLegitWarning (buildResults), "Unified_HelloWorld_ShouldHaveNoWarnings - Mobile had warning: \n" + buildResults);
 
 				// XM45
 				test.XM45 = true;
 				buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-				Assert.IsTrue (!buildResults.Contains ("warning"), "Unified_HelloWorld_ShouldHaveNoWarnings - XM45 had warning: \n" + buildResults);
+				Assert.IsTrue (!hasLegitWarning (buildResults), "Unified_HelloWorld_ShouldHaveNoWarnings - XM45 had warning: \n" + buildResults);
 			});
 		}
 
