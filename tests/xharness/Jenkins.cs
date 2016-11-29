@@ -316,10 +316,10 @@ namespace xharness
 
 					if (project.GenerateVariations) {
 						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified, "-unified"));
-						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified, "-unified-32"));
+						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified32, "-unified-32"));
 						if (!project.SkipXMVariations) {
 							Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45"));
-							Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45-32"));
+							Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32"));
 						}
 					}
 				}
@@ -690,15 +690,13 @@ function toggleContainerVisibility (containerName)
 				case TestPlatform.Mac_Classic:
 					return rv;
 				case TestPlatform.Mac_Unified:
-				{
-					int suffixLength = "-unified".Length + (rv.EndsWith ("-32", StringComparison.Ordinal) ? 3 : 0);
-					return rv.Substring (0, rv.Length - suffixLength);
-				}
+					return rv.Substring (0, rv.Length - "-unified".Length);
+				case TestPlatform.Mac_Unified32:
+					return rv.Substring (0, rv.Length - "-unified-32".Length);
 				case TestPlatform.Mac_UnifiedXM45:
-				{
-					int suffixLength = "-unifiedXM45".Length + (rv.EndsWith ("-32", StringComparison.Ordinal) ? 3 : 0);
-					return rv.Substring (0, rv.Length - suffixLength);
-				}
+					return rv.Substring (0, rv.Length - "-unifiedXM45".Length);
+				case TestPlatform.Mac_UnifiedXM45_32:
+					return rv.Substring (0, rv.Length - "-unifiedXM45-32".Length);
 				default:
 					if (rv.EndsWith ("-watchos", StringComparison.Ordinal)) {
 						return rv.Substring (0, rv.Length - 8);
@@ -790,7 +788,9 @@ function toggleContainerVisibility (containerName)
 			case TestPlatform.Mac:
 			case TestPlatform.Mac_Classic:
 			case TestPlatform.Mac_Unified:
+			case TestPlatform.Mac_Unified32:
 			case TestPlatform.Mac_UnifiedXM45:
+			case TestPlatform.Mac_UnifiedXM45_32:
 				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = Harness.XcodeRoot;
 				process.StartInfo.EnvironmentVariables ["XBUILD_FRAMEWORK_FOLDERS_PATH"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
 				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
@@ -1059,8 +1059,12 @@ function toggleContainerVisibility (containerName)
 					return "Classic";
 				case TestPlatform.Mac_Unified:
 					return "Unified";
+				case TestPlatform.Mac_Unified32:
+					return "Unified 32-bit";
 				case TestPlatform.Mac_UnifiedXM45:
 					return "Unified XM45";
+				case TestPlatform.Mac_UnifiedXM45_32:
+					return "Unified XM45 32-bit";
 				default:
 					throw new NotImplementedException ();
 				}
@@ -1102,8 +1106,14 @@ function toggleContainerVisibility (containerName)
 			case TestPlatform.Mac_Unified:
 				suffix = "-unified";
 				break;
+			case TestPlatform.Mac_Unified32:
+				suffix = "-unified-32";
+				break;
 			case TestPlatform.Mac_UnifiedXM45:
 				suffix = "-unifiedXM45";
+				break;
+			case TestPlatform.Mac_UnifiedXM45_32:
+				suffix = "-unifiedXM45-32";
 				break;
 			}
 			Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), "bin", BuildTask.ProjectPlatform, BuildTask.ProjectConfiguration + suffix, name + ".app", "Contents", "MacOS", name);
@@ -1442,6 +1452,8 @@ function toggleContainerVisibility (containerName)
 		Mac_Classic,
 		Mac_Unified,
 		Mac_UnifiedXM45,
+		Mac_Unified32,
+		Mac_UnifiedXM45_32,
 	}
 
 	[Flags]
