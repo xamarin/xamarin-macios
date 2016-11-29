@@ -154,6 +154,7 @@
       <LogicalName>Info.plist</LogicalName>
     </None>
     <None Include="Entitlements.plist" />
+    <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -645,6 +646,7 @@
     <Compile Include="PassKit\LabeledValueTest.cs" />
     <Compile Include="System.Net.Http\MessageHandlers.cs" />
     <Compile Include="AVFoundation\PlayerItemVideoOutputTest.cs" />
+    <Compile Include="mono\ConfigTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
