@@ -10,7 +10,8 @@ namespace Xamarin.iOS.Tasks
 
 		public ExtensionTestBase () { }
 
-		public ExtensionTestBase (string platform) {
+		public ExtensionTestBase (string platform)
+		{
 			Platform = platform;
 		}
 
@@ -20,20 +21,21 @@ namespace Xamarin.iOS.Tasks
 			Platform = platform;
 		}
 
-		public void BuildExtension (string hostAppName, string extensionName, string platform, int expectedErrorCount = 0)
+		public void BuildExtension (string hostAppName, string extensionName, string platform, string config, int expectedErrorCount = 0)
 		{
-			BuildExtension (hostAppName, extensionName, platform, platform, expectedErrorCount);
+			BuildExtension (hostAppName, extensionName, platform, platform, config, expectedErrorCount);
 		}
 
-		public void BuildExtension (string hostAppName, string extensionName, string bundlePath, string platform, int expectedErrorCount = 0)
+		public void BuildExtension (string hostAppName, string extensionName, string bundlePath, string platform, string config, int expectedErrorCount = 0)
 		{
-			var mtouchPaths = SetupProjectPaths (hostAppName, "../", true, bundlePath);
+			var mtouchPaths = SetupProjectPaths (hostAppName, "../", true, bundlePath, config);
 
 			var proj = SetupProject (Engine, mtouchPaths ["project_csprojpath"]);
 
 			AppBundlePath = mtouchPaths ["app_bundlepath"];
 			string extensionPath = Path.Combine(AppBundlePath, "PlugIns", extensionName + ".appex");
 			Engine.GlobalProperties.SetProperty ("Platform", platform);
+			Engine.GlobalProperties.SetProperty ("Configuration", config);
 
 			RunTarget (proj, "Clean");
 			Assert.IsFalse (Directory.Exists (AppBundlePath), "{1}: App bundle exists after cleanup: {0} ", AppBundlePath, bundlePath);
@@ -55,14 +57,15 @@ namespace Xamarin.iOS.Tasks
 			TestFilesExists (AppBundlePath, ExpectedAppFiles);
 			TestFilesDoNotExist (AppBundlePath, UnexpectedAppFiles);
 
-			var coreFiles = platform == "iPhone" ? CoreAppFiles : CoreAppFiles.Union (new string [] { hostAppName + ".exe", hostAppName }).ToArray ();
-			if (IsTVOS)
+			var coreFiles = GetCoreAppFiles (platform, config, hostAppName + ".exe", hostAppName);
+			if (IsTVOS) {
 				TestFilesExists (platform == "iPhone" ? Path.Combine (AppBundlePath, ".monotouch-64") : AppBundlePath, coreFiles);
-			else if (IsWatchOS) {
-				coreFiles = platform == "iPhone" ? CoreAppFiles : CoreAppFiles.Union (new string [] { extensionName + ".dll", Path.GetFileNameWithoutExtension (extensionPath) }).ToArray ();
+			} else if (IsWatchOS) {
+				coreFiles = GetCoreAppFiles (platform, config, extensionName + ".dll", Path.GetFileNameWithoutExtension (extensionPath));
 				TestFilesExists (platform == "iPhone" ? Path.Combine (extensionPath, ".monotouch-32") : extensionPath, coreFiles);
-			} else
+			} else {
 				TestFilesExists (platform == "iPhone" ? Path.Combine (AppBundlePath, ".monotouch-32") : AppBundlePath, coreFiles);
+			}
 		}
 
 		public void SetupPaths (string appName, string platform) 

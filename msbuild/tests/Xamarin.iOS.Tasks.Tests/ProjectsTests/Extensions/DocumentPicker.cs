@@ -13,7 +13,7 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void BasicTest () 
 		{
-			this.BuildExtension ("MyWebViewApp", "MyDocumentPickerExtension", Platform);
+			this.BuildExtension ("MyWebViewApp", "MyDocumentPickerExtension", Platform, "Debug");
 			this.TestStoryboardC (AppBundlePath);
 		}
 	}

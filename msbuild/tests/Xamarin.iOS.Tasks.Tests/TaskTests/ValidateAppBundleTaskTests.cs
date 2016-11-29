@@ -21,7 +21,7 @@ namespace Xamarin.iOS.Tasks
 			base.Setup ();
 
 			var extensionName = "MyActionExtension";
-			BuildExtension ("MyTabbedApplication", extensionName, "iPhoneSimulator");
+			BuildExtension ("MyTabbedApplication", extensionName, "iPhoneSimulator", "Debug");
 
 			task = CreateTask<ValidateAppBundleTask> ();
 			task.AppBundlePath = AppBundlePath;

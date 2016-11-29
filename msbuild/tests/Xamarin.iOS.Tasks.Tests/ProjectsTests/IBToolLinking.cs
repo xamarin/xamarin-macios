@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -16,7 +13,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void BuildTest ()
 		{
-			BuildProject ("MyIBToolLinkTest", Platform);
+			BuildProject ("MyIBToolLinkTest", Platform, "Debug");
 		}
 	}
 }
