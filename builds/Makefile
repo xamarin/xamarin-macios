@@ -236,7 +236,7 @@ MAC_DIRECTORIES += \
 	$$(BUILD_DESTDIR)/mac/$(2)/bcl/Facades \
 	$$(BUILD_DESTDIR)/mac/$(2)/bcl         \
 
-# copy to temporary directory before signing / mdb-rebasing,
+# copy to temporary directory before signing,
 # otherwise we end up re-signing if installing into a different directory.
 $$(BUILD_DESTDIR)/mac/$(2)/bcl/Facades/%.dll: $$(MONO_PATH)/mcs/class/lib/$(2)/Facades/%.dll | $$(BUILD_DESTDIR)/mac/$(2)/bcl/Facades
 	@# sign the Facade assembly
@@ -566,7 +566,7 @@ IOS_ASSEMBLIES = I18N.CJK I18N.MidEast I18N.Other I18N.Rare I18N.West I18N Mono.
 	System.Net.Http.WinHttpHandler \
 	System.Numerics.Vectors System.Reflection.Context System.Reflection.DispatchProxy \
 	System.Runtime.InteropServices.RuntimeInformation System.Security System.Xml.XPath.XmlDocument \
-	System.Windows System.Xml.Serialization System.Net Mono.Dynamic.Interpreter \
+	System.Windows System.Xml.Serialization System.Net \
 	Microsoft.CSharp Mono.CSharp
 
 IOS_REPL_ASSEMBLIES = mscorlib System System.Core System.Xml Mono.CSharp
