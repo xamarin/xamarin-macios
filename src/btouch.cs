@@ -232,10 +232,8 @@ class BindingTouch {
 				}
 			},
 #endif
-#if MONOMAC
-			{ "unified-full-profile", "Launches compiler pointing to XM Full Profile", l => { /* no-op*/ } },
-			{ "unified-mobile-profile", "Launches compiler pointing to XM Mobile Profile", l => { /* no-op*/ } },
-#endif
+			{ "unified-full-profile", "Launches compiler pointing to XM Full Profile", l => { /* no-op*/ }, true },
+			{ "unified-mobile-profile", "Launches compiler pointing to XM Mobile Profile", l => { /* no-op*/ }, true },
 		};
 
 		try {
