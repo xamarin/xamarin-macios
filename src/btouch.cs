@@ -193,20 +193,12 @@ class BindingTouch {
 			{ "sourceonly=", "Only generates the source", v => generate_file_list = v },
 			{ "ns=", "Sets the namespace for storing helper classes", v => ns = v },
 			{ "unsafe", "Sets the unsafe flag for the build", v=> unsafef = true },
-#if MONOMAC
-			{ "core", "Use this to build monomac.dll", v => binding_third_party = false },
-#else
-			{ "core", "Use this to build monotouch.dll", v => binding_third_party = false },
-#endif
+			{ "core", "Use this to build product assemblies", v => binding_third_party = false },
 			{ "r=", "Adds a reference", v => references.Add (v) },
 			{ "lib=", "Adds the directory to the search path for the compiler", v => libs.Add (Quote (v)) },
 			{ "compiler=", "Sets the compiler to use", v => compiler = v },
 			{ "sdk=", "Sets the .NET SDK to use", v => net_sdk = v },
-#if MONOMAC
-			{ "new-style", "Build for new-style/64-bit-compatible Xamarin.Mac (Xamarin.Mac.dll instead of XamMac.dll)", v => { Console.WriteLine ("new-style is obsolete on Xamarin.Mac. Please move to unified-mobile-profile."); }, true},
-#elif !WATCH
-			{ "new-style", "Build for new-style/64-bit-compatible Xamarin.iOS (Xamarin.iOS.dll instead of monotouch.dll)", v => { /* no-op*/ }, true },
-#endif
+			{ "new-style", "Build for Unified (Obsolete).", v => { Console.WriteLine ("The --new-style option is obsolete and ignored."); }, true},
 			{ "d=", "Defines a symbol", v => defines.Add (v) },
 			{ "api=", "Adds a API definition source file", v => api_sources.Add (Quote (v)) },
 			{ "s=", "Adds a source file required to build the API", v => core_sources.Add (Quote (v)) },
@@ -219,11 +211,7 @@ class BindingTouch {
 			{ "nostdlib", "Does not reference mscorlib.dll library", l => nostdlib = true },
 			{ "no-mono-path", "Launches compiler with empty MONO_PATH", l => { } },
 			{ "native-exception-marshalling", "Enable the marshalling support for Objective-C exceptions", (v) => { /* no-op */} },
-#if XAMCORE_2_0 && !MONOMAC
-			{ "inline-selectors:", "If Selector.GetHandle is inlined and does not need to be cached (default: true)", 
-#else
-			{ "inline-selectors:", "If Selector.GetHandle is inlined and does not need to be cached (default: false)", 
-#endif
+			{ "inline-selectors:", "If Selector.GetHandle is inlined and does not need to be cached (enabled by default in Xamarin.iOS, disabled in Xamarin.Mac)", 
 				v => inline_selectors = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v)
 			},
 			{ "process-enums", "Process enums as bindings, not external, types.", v => process_enums = true },
