@@ -1578,9 +1578,6 @@ public partial class Generator : IMemberGatherer {
 	//
 	Dictionary<string,MethodInfo> delegate_types = new Dictionary<string,MethodInfo> ();
 
-#if !XAMCORE_2_0
-	public bool Alpha;
-#endif
 	public bool OnlyDesktop;
 	public bool Compat;
 	public bool SkipSystemDrawing;
@@ -2512,11 +2509,6 @@ public partial class Generator : IMemberGatherer {
 
 	bool SkipGenerationOfType (Type t)
 	{
-#if !XAMCORE_2_0
-		if (HasAttribute (t, typeof (AlphaAttribute)) && Alpha == false)
-			return true;
-#endif
-
 		if (t.IsUnavailable ())
 			return true;
 
@@ -2632,11 +2624,6 @@ public partial class Generator : IMemberGatherer {
 			var tselectors = new List<string> ();
 			
 			foreach (var pi in GetTypeContractProperties (t)){
-#if !XAMCORE_2_0
-				if (HasAttribute (pi, typeof (AlphaAttribute)) && Alpha == false)
-					continue;
-#endif
-
 				if (pi.IsUnavailable ())
 					continue;
 
@@ -2689,10 +2676,6 @@ public partial class Generator : IMemberGatherer {
 				if (mi.IsSpecialName)
 					continue;
 
-#if !XAMCORE_2_0
-				if (HasAttribute (mi, typeof (AlphaAttribute)) && Alpha == false)
-					continue;
-#endif
 				if (mi.IsUnavailable ())
 					continue;
 
@@ -2728,10 +2711,6 @@ public partial class Generator : IMemberGatherer {
 					} else if (attr is NoDefaultValueAttribute) {
 						seenNoDefaultValue = true;
 						continue;
-#if !XAMCORE_2_0
-					} else if (attr is AlphaAttribute) {
-						continue;
-#endif
 					} else if (attr is SealedAttribute || attr is EventArgsAttribute || attr is DelegateNameAttribute || attr is EventNameAttribute || attr is IgnoredInDelegateAttribute || attr is ObsoleteAttribute || attr is NewAttribute || attr is PostGetAttribute || attr is NullAllowedAttribute || attr is CheckDisposedAttribute || attr is SnippetAttribute || attr is AppearanceAttribute || attr is ThreadSafeAttribute || attr is AutoreleaseAttribute || attr is EditorBrowsableAttribute || attr is AdviceAttribute || attr is OverrideAttribute || attr is DelegateApiNameAttribute || attr is ForcedTypeAttribute)
 						continue;
 					else if (attr is MarshalNativeExceptionsAttribute)
@@ -2775,10 +2754,6 @@ public partial class Generator : IMemberGatherer {
 			}
 
 			foreach (var pi in t.GatherProperties (BindingFlags.Instance | BindingFlags.Public)){
-#if !XAMCORE_2_0
-				if (HasAttribute (pi, typeof (AlphaAttribute)) && Alpha == false)
-					continue;
-#endif
 				if (pi.IsUnavailable ())
 					continue;
 
@@ -6194,11 +6169,6 @@ public partial class Generator : IMemberGatherer {
 						}
 #endif
 
-#if !XAMCORE_2_0
-				if (HasAttribute (mi, typeof (AlphaAttribute)) && Alpha == false)
-					continue;
-#endif
-
 				if (mi.IsUnavailable ())
 					continue;
 
@@ -6257,11 +6227,6 @@ public partial class Generator : IMemberGatherer {
 			var generated_properties = new List<string> (); // All properties that have been generated
 
 			foreach (var pi in GetTypeContractProperties (type).OrderBy (p => p.Name, StringComparer.Ordinal)) {
-
-#if !XAMCORE_2_0
-				if (HasAttribute (pi, typeof (AlphaAttribute)) && Alpha == false)
-					continue;
-#endif
 
 				if (pi.IsUnavailable ())
 					continue;
@@ -7171,11 +7136,6 @@ public partial class Generator : IMemberGatherer {
 		var customAttrs = mi.GetCustomAttributes (true);
 		if (customAttrs.OfType<IgnoredInDelegateAttribute> ().Any ())
 			return true;
-#if !XAMCORE_2_0
-		if (customAttrs.OfType<AlphaAttribute> ().Any ())
-			return true;
-#endif
-
 		return false;
 	}
 

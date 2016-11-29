@@ -141,9 +141,6 @@ class BindingTouch {
 	{
 		bool show_help = false;
 		bool zero_copy = false;
-#if !XAMCORE_2_0
-		bool alpha = false;
-#endif
 		string basedir = null;
 		string tmpdir = null;
 		string ns = null;
@@ -183,9 +180,7 @@ class BindingTouch {
 
 		var os = new OptionSet () {
 			{ "h|?|help", "Displays the help", v => show_help = true },
-#if !XAMCORE_2_0
-			{ "a", "Include alpha bindings", v => alpha = true },
-#endif
+			{ "a", "Include alpha bindings (Obsolete).", v => {}, true },
 			{ "outdir=", "Sets the output directory for the temporary binding files", v => { basedir = v; }},
 			{ "o|out=", "Sets the name of the output library", v => outfile = v },
 			{ "tmpdir=", "Sets the working directory for temp files", v => { tmpdir = v; delete_temp = false; }},
@@ -261,11 +256,6 @@ class BindingTouch {
 			return 1;
 		}
 
-#if !XAMCORE_2_0
-		if (alpha)
-			defines.Add ("ALPHA");
-#endif
-		
 		if (tmpdir == null)
 			tmpdir = GetWorkDir ();
 
@@ -427,9 +417,6 @@ class BindingTouch {
 				OnlyDesktop = true,
 #endif
 				Compat = !Unified,
-#if !XAMCORE_2_0
-				Alpha = alpha,
-#endif
 				InlineSelectors = inline_selectors,
 				SkipSystemDrawing = addSystemDrawingReferences
 			};
