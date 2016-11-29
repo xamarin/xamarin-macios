@@ -690,9 +690,15 @@ function toggleContainerVisibility (containerName)
 				case TestPlatform.Mac_Classic:
 					return rv;
 				case TestPlatform.Mac_Unified:
-					return rv.Substring (0, rv.Length - "-unified".Length);
+				{
+					int suffixLength = "-unified".Length + (rv.EndsWith ("-32", StringComparison.Ordinal) ? 3 : 0);
+					return rv.Substring (0, rv.Length - suffixLength);
+				}
 				case TestPlatform.Mac_UnifiedXM45:
-					return rv.Substring (0, rv.Length - "-unifiedXM45".Length);
+				{
+					int suffixLength = "-unifiedXM45".Length + (rv.EndsWith ("-32", StringComparison.Ordinal) ? 3 : 0);
+					return rv.Substring (0, rv.Length - suffixLength);
+				}
 				default:
 					if (rv.EndsWith ("-watchos", StringComparison.Ordinal)) {
 						return rv.Substring (0, rv.Length - 8);
