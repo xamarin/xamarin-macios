@@ -151,11 +151,7 @@ class BindingTouch {
 		bool external = false;
 		bool public_mode = true;
 		bool nostdlib = false;
-#if XAMCORE_2_0 && !MONOMAC
-		bool inline_selectors = true;
-#else
-		bool inline_selectors = false;
-#endif
+		bool inline_selectors = Unified && CurrentPlatform != PlatformName.MacOSX;
 		List<string> sources;
 		var resources = new List<string> ();
 		var linkwith = new List<string> ();
