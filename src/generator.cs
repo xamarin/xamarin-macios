@@ -2111,14 +2111,7 @@ public partial class Generator : IMemberGatherer {
 					else
 						return String.Format ("(IntPtr)(&_s{0})", pi.Name);
 				} else {
-#if false
-					if (allow_null)
-						return String.Format ("ns{0} == null ? IntPtr.Zero : ns{0}.Handle", pi.Name);
-					else 
-						return "ns" + pi.Name + ".Handle";
-#else
 					return "ns" + pi.Name;
-#endif
 				}
 			}
 		}
@@ -2439,15 +2432,6 @@ public partial class Generator : IMemberGatherer {
 	public static ExportAttribute GetExportAttribute (MemberInfo mo, out string wrap)
 	{
 		wrap = null;
-#if debug
-		object [] jattrs = mo.GetCustomAttributes (true);
-		Console.WriteLine ("On: {0}", mo);
-		foreach (var x in jattrs){
-			Console.WriteLine ("    -> {0} ", x);
-			Console.WriteLine ("   On: {0} ", x.GetType ().Assembly);
-			Console.WriteLine ("   Ex: {0}", typeof (ExportAttribute).Assembly);
-		}
-#endif
 		object [] attrs = mo.GetCustomAttributes (typeof (ExportAttribute), true);
 		if (attrs.Length == 0){
 			attrs = mo.GetCustomAttributes (typeof (WrapAttribute), true);
@@ -4116,14 +4100,7 @@ public partial class Generator : IMemberGatherer {
 	public string GenerateMarshalString (bool probe_null, bool must_copy)
 	{
 		if (must_copy){
-#if false
-			if (probe_null)
-				return "var ns{0} = {0} == null ? null : new NSString ({0});\n";
-			else
-				return "var ns{0} = new NSString ({0});\n";
-#else
 			return "var ns{0} = NSString.CreateNative ({1});\n";
-#endif
 		}
 		return
 			ns.CoreObjCRuntime + ".NSStringStruct _s{0}; Console.WriteLine (\"" + CurrentMethod + ": Marshalling: {{1}}\", {1}); \n" +
@@ -4136,14 +4113,7 @@ public partial class Generator : IMemberGatherer {
 	public string GenerateDisposeString (bool probe_null, bool must_copy)
 	{
 		if (must_copy){
-#if false
-			if (probe_null)
-				return "if (ns{0} != null)\n" + "\tns{0}.Dispose ();";
-			else
-				return "ns{0}.Dispose ();\n";
-#else
 			return "NSString.ReleaseNative (ns{0});\n";
-#endif
 		} else 
 			return "if (_s{0}.Flags != 0x010007d1) throw new Exception (\"String was retained, not copied\");";
 	}
@@ -6160,14 +6130,6 @@ public partial class Generator : IMemberGatherer {
 			foreach (var mi in GetTypeContractMethods (type).OrderByDescending (m => m.Name == "Constructor").ThenBy (m => m.Name, StringComparer.Ordinal)) {
 				if (mi.IsSpecialName || (mi.Name == "Constructor" && type != mi.DeclaringType))
 					continue;
-
-#if RETAIN_AUDITING
-				if (mi.Name.StartsWith ("Set", StringComparison.Ordinal))
-					foreach (ParameterInfo pi in mi.GetParameters ())
-						if (IsWrappedType (pi.ParameterType) || pi.ParameterType.IsArray) {
-							Console.WriteLine ("AUDIT: {0}", mi);
-						}
-#endif
 
 				if (mi.IsUnavailable ())
 					continue;
