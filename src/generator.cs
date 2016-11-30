@@ -1578,7 +1578,6 @@ public partial class Generator : IMemberGatherer {
 	//
 	Dictionary<string,MethodInfo> delegate_types = new Dictionary<string,MethodInfo> ();
 
-	public bool OnlyDesktop;
 	public bool Compat;
 	public bool SkipSystemDrawing;
 
@@ -3982,7 +3981,7 @@ public partial class Generator : IMemberGatherer {
 		bool x86_stret = Stret.X86NeedStret (mi);
 		bool aligned = HasAttribute (mi, typeof(AlignAttribute));
 
-		if (OnlyDesktop){
+		if (CurrentPlatform == PlatformName.MacOSX) {
 			GenerateInvoke (x86_stret, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, aligned && x86_stret);
 			return;
 		}
@@ -4014,7 +4013,7 @@ public partial class Generator : IMemberGatherer {
 		bool aligned = HasAttribute (mi, typeof(AlignAttribute));
 		int index64 = dual_enum ? 1 : 0;
 
-		if (OnlyDesktop) {
+		if (CurrentPlatform == PlatformName.MacOSX) {
 			if (need_multi_path) {
 				print ("if (IntPtr.Size == 8) {");
 				indent++;
