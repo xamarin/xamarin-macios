@@ -970,6 +970,7 @@ NETWORKEXTENSION_CORE_SOURCES = \
 	NetworkExtension/NEVpnConnectionStartOptions.cs \
 
 NETWORKEXTENSION_SOURCES = \
+	NetworkExtension/NECompat.cs \
 	NetworkExtension/NEFilterFlow.cs \
 	NetworkExtension/NEFilterProvider.cs \
 
