@@ -86,7 +86,7 @@ namespace Xamarin.Bundler {
 		static bool? thread_check = null;
 		static string link_flags = null;
 		static LinkerOptions linker_options;
-		static bool disable_lldb_attach = false;
+		static bool? disable_lldb_attach = null;
 		static string machine_config_path = null;
 
 		static bool arch_set = false;
@@ -615,7 +615,7 @@ namespace Xamarin.Bundler {
 			HashSet<string> internalSymbols = new HashSet<string> ();
 
 			if (registrar == RegistrarMode.Default)
-				registrar = RegistrarMode.Dynamic;
+				registrar = App.EnableDebug ? RegistrarMode.Dynamic : RegistrarMode.Static;
 			if (is_extension)
 				registrar = RegistrarMode.Static;
 			
@@ -723,10 +723,16 @@ namespace Xamarin.Bundler {
 				var linked_native_libs = Link ();
 				foreach (var kvp in linked_native_libs) {
 					List<MethodDefinition> methods;
-					if (native_libs.TryGetValue (kvp.Key, out methods))
+					if (native_libs.TryGetValue (kvp.Key, out methods)) {
+						if (methods == null) {
+							methods = new List<MethodDefinition> (); 
+							native_libs [kvp.Key] = methods;
+						}
 						methods.AddRange (kvp.Value);
-					else
+					}
+					else {
 						native_libs.Add (kvp.Key, kvp.Value);
+					}
 				}
 				internalSymbols.UnionWith (BuildTarget.LinkContext.RequiredSymbols.Keys);
 				Watch (string.Format ("Linking (mode: '{0}')", App.LinkMode), 1);
@@ -998,7 +1004,7 @@ namespace Xamarin.Bundler {
 				if (!App.IsDefaultMarshalManagedExceptionMode)
 					sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", App.MarshalManagedExceptions);
 				sw.WriteLine ("\txamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionMode{0};", App.MarshalObjectiveCExceptions);
-				if (disable_lldb_attach)
+				if (disable_lldb_attach.HasValue ? disable_lldb_attach.Value : !App.EnableDebug)
 					sw.WriteLine ("\txamarin_disable_lldb_attach = true;");
 				sw.WriteLine ();
 

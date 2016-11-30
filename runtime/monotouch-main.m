@@ -28,8 +28,6 @@
 #include "../tools/mtouch/monotouch-fixes.c"
 #endif
 
-const char *monotouch_dll = NULL; // NULL = try Xamarin.iOS.dll first, then monotouch.dll.
-
 static unsigned char *
 xamarin_load_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void **out_handle)
 {

@@ -12,7 +12,7 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void BasicTest ()
 		{
-			this.BuildExtension ("MyOpenGLApp", "MyTodayExtension", Platform);
+			this.BuildExtension ("MyOpenGLApp", "MyTodayExtension", Platform, "Debug");
 		}
 	}
 }

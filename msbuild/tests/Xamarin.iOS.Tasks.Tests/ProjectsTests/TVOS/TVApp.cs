@@ -13,7 +13,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void BasicTest()
 		{
-			BuildExtension("MyTVApp", "MyTVServicesExtension", BundlePath, Platform);
+			BuildExtension("MyTVApp", "MyTVServicesExtension", BundlePath, Platform, "Debug");
 		}
 
 		public override string TargetFrameworkIdentifier {

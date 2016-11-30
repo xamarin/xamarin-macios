@@ -1275,7 +1275,7 @@ namespace Xamarin
 			}
 			var platform = target == Target.Dev ? "iPhone" : "iPhoneSimulator";
 			var csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname, testname + GetProjectSuffix (profile) + ".csproj");
-			XBuild.Build (csproj, configuration, platform);
+			XBuild.Build (csproj, configuration, platform, timeout: TimeSpan.FromMinutes (10));
 		}
 
 		[Test]

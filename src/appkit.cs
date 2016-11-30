@@ -15730,7 +15730,7 @@ namespace XamCore.AppKit {
 		NSStoryboard Storyboard { get; }
 
 #if XAMCORE_2_0
-		[Mac (10,10)]
+		[Mac (10,10, onlyOn64 : true)]
 		[Export ("presentViewControllerInWidget:")]
 		void PresentViewControllerInWidget (NSViewController viewController);
 
@@ -24962,7 +24962,7 @@ namespace XamCore.AppKit {
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface NSSliderAccessory : NSCoding, NSAccessibility, NSAccessibilityElement
+	interface NSSliderAccessory : NSCoding, NSAccessibility, NSAccessibilityElementProtocol
 	{
 		[Static]
 		[Export ("accessoryWithImage:")]

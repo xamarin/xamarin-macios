@@ -1249,6 +1249,7 @@ public class MemberInformation
 	public readonly Type type;
 	public readonly Type category_extension_type;
 	public readonly bool is_abstract, is_protected, is_internal, is_unified_internal, is_override, is_new, is_sealed, is_static, is_thread_static, is_autorelease, is_wrapper, is_forced;
+	public readonly bool is_type_sealed;
 	public readonly Generator.ThreadCheck threadCheck;
 	public bool is_unsafe, is_virtual_method, is_export, is_category_extension, is_variadic, is_interface_impl, is_extension_method, is_appearance, is_model, is_ctor;
 	public bool is_return_release;
@@ -1274,6 +1275,7 @@ public class MemberInformation
 		is_thread_static = Generator.HasAttribute (mi, typeof (IsThreadStaticAttribute));
 		is_autorelease = Generator.HasAttribute (mi, typeof (AutoreleaseAttribute));
 		is_wrapper = !Generator.HasAttribute (mi.DeclaringType, typeof(SyntheticAttribute));
+		is_type_sealed = Generator.HasAttribute (mi.DeclaringType, typeof (SealedAttribute));
 		is_return_release = method != null && Generator.HasAttribute (method.ReturnTypeCustomAttributes, typeof (ReleaseAttribute));
 		is_forced = Generator.HasForcedAttribute (mi, out is_forced_owns);
 
@@ -1291,7 +1293,7 @@ public class MemberInformation
 		this.is_model = is_model;
 		this.mi = mi;
 		
-		if (is_interface_impl || is_extension_method) {
+		if (is_interface_impl || is_extension_method || is_type_sealed) {
 			is_abstract = false;
 			is_virtual_method = false;
 		}
@@ -1359,7 +1361,7 @@ public class MemberInformation
 		if (category_extension_type != null)
 			is_category_extension = true;
 
-		if (is_static || is_category_extension || is_interface_impl || is_extension_method)
+		if (is_static || is_category_extension || is_interface_impl || is_extension_method || is_type_sealed)
 			is_virtual_method = false;
 	}
 
@@ -1373,7 +1375,7 @@ public class MemberInformation
 		if (export != null)
 			selector = export.Selector;
 
-		if (wrap_method != null || is_interface_impl)
+		if (wrap_method != null || is_interface_impl || is_type_sealed)
 			is_virtual_method = false;
 		else
 			is_virtual_method = !is_static;
@@ -1576,24 +1578,18 @@ public partial class Generator : IMemberGatherer {
 	//
 	Dictionary<string,MethodInfo> delegate_types = new Dictionary<string,MethodInfo> ();
 
-#if !XAMCORE_2_0
-	public bool Alpha;
-#endif
 	public bool OnlyDesktop;
 	public bool Compat;
 	public bool SkipSystemDrawing;
 
+	public static PlatformName CurrentPlatform;
 #if MONOMAC
-	public const PlatformName CurrentPlatform = PlatformName.MacOSX;
 	const string ApplicationClassName = "NSApplication";
 #elif WATCH
-	public const PlatformName CurrentPlatform = PlatformName.WatchOS;
 	const string ApplicationClassName = "UIApplication";
 #elif TVOS
-	public const PlatformName CurrentPlatform = PlatformName.TvOS;
 	const string ApplicationClassName = "UIApplication";
 #else
-	public const PlatformName CurrentPlatform = PlatformName.iOS;
 	const string ApplicationClassName = "UIApplication";
 #endif
 
@@ -2513,11 +2509,6 @@ public partial class Generator : IMemberGatherer {
 
 	bool SkipGenerationOfType (Type t)
 	{
-#if !XAMCORE_2_0
-		if (HasAttribute (t, typeof (AlphaAttribute)) && Alpha == false)
-			return true;
-#endif
-
 		if (t.IsUnavailable ())
 			return true;
 
@@ -2633,11 +2624,6 @@ public partial class Generator : IMemberGatherer {
 			var tselectors = new List<string> ();
 			
 			foreach (var pi in GetTypeContractProperties (t)){
-#if !XAMCORE_2_0
-				if (HasAttribute (pi, typeof (AlphaAttribute)) && Alpha == false)
-					continue;
-#endif
-
 				if (pi.IsUnavailable ())
 					continue;
 
@@ -2690,10 +2676,6 @@ public partial class Generator : IMemberGatherer {
 				if (mi.IsSpecialName)
 					continue;
 
-#if !XAMCORE_2_0
-				if (HasAttribute (mi, typeof (AlphaAttribute)) && Alpha == false)
-					continue;
-#endif
 				if (mi.IsUnavailable ())
 					continue;
 
@@ -2729,10 +2711,6 @@ public partial class Generator : IMemberGatherer {
 					} else if (attr is NoDefaultValueAttribute) {
 						seenNoDefaultValue = true;
 						continue;
-#if !XAMCORE_2_0
-					} else if (attr is AlphaAttribute) {
-						continue;
-#endif
 					} else if (attr is SealedAttribute || attr is EventArgsAttribute || attr is DelegateNameAttribute || attr is EventNameAttribute || attr is IgnoredInDelegateAttribute || attr is ObsoleteAttribute || attr is NewAttribute || attr is PostGetAttribute || attr is NullAllowedAttribute || attr is CheckDisposedAttribute || attr is SnippetAttribute || attr is AppearanceAttribute || attr is ThreadSafeAttribute || attr is AutoreleaseAttribute || attr is EditorBrowsableAttribute || attr is AdviceAttribute || attr is OverrideAttribute || attr is DelegateApiNameAttribute || attr is ForcedTypeAttribute)
 						continue;
 					else if (attr is MarshalNativeExceptionsAttribute)
@@ -2776,10 +2754,6 @@ public partial class Generator : IMemberGatherer {
 			}
 
 			foreach (var pi in t.GatherProperties (BindingFlags.Instance | BindingFlags.Public)){
-#if !XAMCORE_2_0
-				if (HasAttribute (pi, typeof (AlphaAttribute)) && Alpha == false)
-					continue;
-#endif
 				if (pi.IsUnavailable ())
 					continue;
 
@@ -5882,6 +5856,7 @@ public partial class Generator : IMemberGatherer {
 			bool is_model = type.GetCustomAttributes (typeof (ModelAttribute), true).Length > 0;
 			bool is_protocol = HasAttribute (type, typeof (ProtocolAttribute));
 			bool is_abstract = HasAttribute (type, typeof (AbstractAttribute));
+			bool is_sealed = HasAttribute (type, typeof (SealedAttribute));
 			string class_visibility = type.IsInternal () ? "internal" : "public";
 
 			var default_ctor_visibility = GetAttribute<DefaultCtorVisibilityAttribute> (type);
@@ -5925,6 +5900,8 @@ public partial class Generator : IMemberGatherer {
 					print ("[Register(\"{0}\", {1})]", objc_type_name, HasAttribute (type, typeof (SyntheticAttribute)) || is_model ? "false" : "true");
 				if (is_abstract || need_abstract.ContainsKey (type))
 					class_mod = "abstract ";
+				else if (is_sealed)
+					class_mod = "sealed ";
 			} 
 			
 			if (is_model){
@@ -6155,15 +6132,17 @@ public partial class Generator : IMemberGatherer {
 							sw.WriteLine ();
 						}
 					}
-					GeneratedCode (sw, 2);
-					sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
-					sw.WriteLine ("\t\t{0} {1} (NSObjectFlag t) : base (t)", UnifiedAPI ? "protected" : "public", TypeName);
-					sw.WriteLine ("\t\t{");
-					if (BindThirdPartyLibrary)
-						sw.WriteLine ("\t\t\t{0}", init_binding_type);
-					WriteMarkDirtyIfDerived (sw, type);
-					sw.WriteLine ("\t\t}");
-					sw.WriteLine ();
+					if (!is_sealed) {
+						GeneratedCode (sw, 2);
+						sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
+						sw.WriteLine ("\t\t{0} {1} (NSObjectFlag t) : base (t)", UnifiedAPI ? "protected" : "public", TypeName);
+						sw.WriteLine ("\t\t{");
+						if (BindThirdPartyLibrary)
+							sw.WriteLine ("\t\t\t{0}", init_binding_type);
+						WriteMarkDirtyIfDerived (sw, type);
+						sw.WriteLine ("\t\t}");
+						sw.WriteLine ();
+					}
 					GeneratedCode (sw, 2);
 					sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 					sw.WriteLine ("\t\t{0} {1} (IntPtr handle) : base (handle)", UnifiedAPI ? "protected internal" : "public", TypeName);
@@ -6188,11 +6167,6 @@ public partial class Generator : IMemberGatherer {
 						if (IsWrappedType (pi.ParameterType) || pi.ParameterType.IsArray) {
 							Console.WriteLine ("AUDIT: {0}", mi);
 						}
-#endif
-
-#if !XAMCORE_2_0
-				if (HasAttribute (mi, typeof (AlphaAttribute)) && Alpha == false)
-					continue;
 #endif
 
 				if (mi.IsUnavailable ())
@@ -6253,11 +6227,6 @@ public partial class Generator : IMemberGatherer {
 			var generated_properties = new List<string> (); // All properties that have been generated
 
 			foreach (var pi in GetTypeContractProperties (type).OrderBy (p => p.Name, StringComparer.Ordinal)) {
-
-#if !XAMCORE_2_0
-				if (HasAttribute (pi, typeof (AlphaAttribute)) && Alpha == false)
-					continue;
-#endif
 
 				if (pi.IsUnavailable ())
 					continue;
@@ -6364,6 +6333,9 @@ public partial class Generator : IMemberGatherer {
 					if (Generator.HasAttribute (field_pi, typeof (AdvancedAttribute))){
 						print ("[EditorBrowsable (EditorBrowsableState.Advanced)]");
 					}
+					// Check if this is a notification and print Advice to use our Notification API
+					if (HasAttribute (field_pi, typeof (NotificationAttribute)))
+						print ($"[Advice (\"Use {type.Name}.Notifications.Observe{GetNotificationName (field_pi)} helper method instead.\")]");
 					
 					print ("{0} static unsafe {1} {2}{3} {{", field_pi.IsInternal () ? "internal" : "public", fieldTypeName,
 					       field_pi.Name,
@@ -6951,6 +6923,10 @@ public partial class Generator : IMemberGatherer {
 						print ("\t{");
 						print ("\t\treturn {0}.AddObserver ({1}, notification => handler (null, new {2} (notification)));", notification_center, property.Name, event_name);
 						print ("\t}");
+						print ("\tpublic static NSObject Observe{0} (NSObject objectToObserve, EventHandler<{1}> handler)", notification_name, event_name);
+						print ("\t{");
+						print ("\t\treturn {0}.AddObserver ({1}, notification => handler (null, new {2} (notification)), objectToObserve);", notification_center, property.Name, event_name);
+						print ("\t}");
 					}
 				}
 				print ("\n}");
@@ -7160,11 +7136,6 @@ public partial class Generator : IMemberGatherer {
 		var customAttrs = mi.GetCustomAttributes (true);
 		if (customAttrs.OfType<IgnoredInDelegateAttribute> ().Any ())
 			return true;
-#if !XAMCORE_2_0
-		if (customAttrs.OfType<AlphaAttribute> ().Any ())
-			return true;
-#endif
-
 		return false;
 	}
 

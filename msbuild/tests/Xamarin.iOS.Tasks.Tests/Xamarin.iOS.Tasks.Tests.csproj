@@ -103,6 +103,10 @@
     <Compile Include="TaskTests\ValidateAppBundleTaskTests.cs" />
     <Compile Include="ProjectsTests\IBToolLinking.cs" />
     <Compile Include="TaskTests\CompileEntitlementsTaskTests.cs" />
+    <Compile Include="TaskTests\GeneratePlistTaskTests\GeneratePlistTaskTests_iOS_WatchKitExtension.cs" />
+    <Compile Include="TaskTests\GeneratePlistTaskTests\GeneratePlistTaskTests_watchOS_WatchKitExtension.cs" />
+    <Compile Include="TaskTests\GeneratePlistTaskTests\GeneratePlistTaskTests_watchOS.cs" />
+    <Compile Include="ProjectsTests\ReleaseBuild.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

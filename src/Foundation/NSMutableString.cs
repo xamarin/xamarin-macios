@@ -19,10 +19,5 @@ namespace XamCore.Foundation {
 			if (index < 0 || index > Length)
 				throw new ArgumentOutOfRangeException ("index");
 		}
-
-		public bool ApplyTransform (NSStringTransform transform, bool reverse, NSRange range, out NSRange resultingRange)
-		{
-			return ApplyTransform (NSString.NSStringTransformToCode (transform), reverse, range, out resultingRange);
-		}
 	}
 }

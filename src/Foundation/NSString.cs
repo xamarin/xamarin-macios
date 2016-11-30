@@ -208,45 +208,6 @@ namespace XamCore.Foundation {
 			return Equals (this, obj as NSString);
 		}
 
-		static internal NSString NSStringTransformToCode (NSStringTransform transform)
-		{
-			switch (transform){
-			case NSStringTransform.LatinToKatakana:
-				return NSString.NSStringTransformLatinToKatakana;
-			case NSStringTransform.LatinToHiragana:
-				return NSString.NSStringTransformLatinToHiragana;
-			case NSStringTransform.LatinToHangul:
-				return NSString.NSStringTransformLatinToHangul;
-			case NSStringTransform.LatinToArabic:
-				return NSString.NSStringTransformLatinToArabic;
-			case NSStringTransform.LatinToHebrew:
-				return NSString.NSStringTransformLatinToHebrew;
-			case NSStringTransform.LatinToThai:
-				return NSString.NSStringTransformLatinToThai;
-			case NSStringTransform.LatinToCyrillic:
-				return NSString.NSStringTransformLatinToCyrillic;
-			case NSStringTransform.LatinToGreek:
-				return NSString.NSStringTransformLatinToGreek;
-			case NSStringTransform.ToLatin:
-				return NSString.NSStringTransformToLatin;
-			case NSStringTransform.MandarinToLatin:
-				return NSString.NSStringTransformMandarinToLatin;
-			case NSStringTransform.HiraganaToKatakana:
-				return NSString.NSStringTransformHiraganaToKatakana;
-			case NSStringTransform.FullwidthToHalfwidth:
-				return NSString.NSStringTransformFullwidthToHalfwidth;
-			case NSStringTransform.ToXmlHex:
-				return NSString.NSStringTransformToXMLHex;
-			case NSStringTransform.ToUnicodeName:
-				return NSString.NSStringTransformToUnicodeName;
-			case NSStringTransform.StripCombiningMarks:
-				return NSString.NSStringTransformStripCombiningMarks;
-			case NSStringTransform.StripDiacritics:
-				return NSString.NSStringTransformStripDiacritics;
-			}
-			return null;
-		}
-
 		[DllImport ("__Internal")]
 		extern static IntPtr xamarin_localized_string_format (IntPtr fmt);
 		[DllImport ("__Internal")]
@@ -314,7 +275,7 @@ namespace XamCore.Foundation {
 
 		public NSString TransliterateString (NSStringTransform transform, bool reverse)
 		{
-			return TransliterateString (NSStringTransformToCode (transform), reverse);
+			return TransliterateString (transform.GetConstant (), reverse);
 		}
 		
 		public override int GetHashCode ()

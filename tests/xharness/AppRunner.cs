@@ -488,7 +488,8 @@ namespace xharness
 					main_log.WriteLine ("System log for the '{1}' simulator is: {0}", sim.SystemLog, sim.Name);
 					bool isCompanion = sim != simulator;
 
-					var log = new CaptureLog (sim.SystemLog) {
+					var log = new CaptureLog (sim.SystemLog, entire_file: Harness.Action != HarnessAction.Jenkins)
+					{
 						Path = Path.Combine (LogDirectory, sim.Name + ".log"),
 						Description = isCompanion ? "System log (companion)" : "System log",
 					};
@@ -617,8 +618,7 @@ namespace xharness
 				// Upload the system log
 				if (File.Exists (device_system_log.FullPath)) {
 					main_log.WriteLine ("A capture of the device log is: {0}", device_system_log.FullPath);
-					if (Harness.InWrench)
-						Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", device_system_log.FullPath);
+					Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", device_system_log.FullPath);
 				}
 			}
 

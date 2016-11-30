@@ -98,5 +98,21 @@ namespace MonoTouchFixtures.Foundation {
 			}
 	
 		}
+
+#if XAMCORE_2_0 && __IOS__
+		[Test]
+		public void TargetedNotificationsTest ()
+		{
+			bool called = false;
+			using (var txt = new global::UIKit.UITextField ())
+			using (var notification = global::UIKit.UITextField.Notifications.ObserveTextFieldTextDidChange (txt, (sender, e) => called = true)) {
+				NSNotificationCenter.DefaultCenter.PostNotificationName (global::UIKit.UITextField.TextFieldTextDidChangeNotification, null);
+				Assert.False (called, "Notification should not be called");
+
+				NSNotificationCenter.DefaultCenter.PostNotificationName (global::UIKit.UITextField.TextFieldTextDidChangeNotification, txt);
+				Assert.True (called,  "Notification should have been called");
+			}
+		}
+#endif
 	}
 }

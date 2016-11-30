@@ -302,8 +302,7 @@ endif
 wrench-docs:
 ifdef ENABLE_XAMARIN
 ifdef INCLUDE_IOS
-	@echo "Documentation process must be ported to not use XI/Classic, and not use system XI. In the meantime disable the docs tests."
-	@#$(MAKE) -C $(MACCORE_PATH) update-docs
+	$(MAKE) -C $(MACCORE_PATH) update-docs
 else
 	@echo "iOS tests have been disabled [$@]"
 endif
