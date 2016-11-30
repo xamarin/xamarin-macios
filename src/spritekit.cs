@@ -2747,7 +2747,7 @@ namespace XamCore.SpriteKit {
 		void Resolve ();
 	}
 
-	[iOS (9,0)][Mac (10,11)]
+	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface SKAttribute : NSCoding
@@ -2767,7 +2767,7 @@ namespace XamCore.SpriteKit {
 		SKAttributeType Type { get; }
 	}
 
-	[iOS (9,0)][Mac (10,11)]
+	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	interface SKAttributeValue : NSCoding
 	{
@@ -2813,7 +2813,7 @@ namespace XamCore.SpriteKit {
 	}
 
 	[Watch (3,0)]
-	[iOS (10,0)][Mac (10,12)]
+	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -2886,7 +2886,7 @@ namespace XamCore.SpriteKit {
 	}
 
 	[Watch (3,0)]
-	[iOS (10,0)][Mac (10,12)]
+	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[BaseType (typeof(SKNode))]
 	interface SKTileMapNode : NSCopying, NSCoding
@@ -2984,7 +2984,7 @@ namespace XamCore.SpriteKit {
 	}
 
 	[Watch (3,0)]
-	[iOS (10,0)][Mac (10,12)]
+	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
 	interface SKTileSet : NSCopying, NSCoding
@@ -3030,7 +3030,7 @@ namespace XamCore.SpriteKit {
 	}
 
 	[Watch (3,0)]
-	[iOS (10,0)][Mac (10,12)]
+	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
 	interface SKTileGroup : NSCopying, NSCoding
@@ -3061,7 +3061,7 @@ namespace XamCore.SpriteKit {
 	}
 
 	[Watch (3,0)]
-	[iOS (10,0)][Mac (10,12)]
+	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
 	interface SKTileGroupRule : NSCopying, NSCoding
@@ -3084,13 +3084,13 @@ namespace XamCore.SpriteKit {
 	}
 
 	[Watch (3,0)]
-	[iOS (10,0)][Mac (10,12)]
+	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
 	interface SKWarpGeometry : NSCopying, NSCoding {}
 
 	[Watch (3,0)]
-	[iOS (10,0)][Mac (10,12)]
+	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[Protocol]
 	interface SKWarpable
@@ -3105,7 +3105,7 @@ namespace XamCore.SpriteKit {
 	}
 
 	[Watch (3,0)]
-	[iOS (10,0)][Mac (10,12)]
+	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[BaseType (typeof(SKWarpGeometry))]
 	[DisableDefaultCtor]

@@ -12,8 +12,12 @@ build
 *-tvos.plist
 *-watchos.plist
 *-unified.?sproj
+*-unified-32.?sproj
 *-unifiedXM45.?sproj
+*-unifiedXM45-32.?sproj
 *-unifiedXM45.sln
+*-unified-32.sln
+*-unifiedXM45-32.sln
 Makefile-mac.inc
 .stamp*
 Info-*.plist
