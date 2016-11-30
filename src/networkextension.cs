@@ -1293,6 +1293,7 @@ namespace XamCore.NetworkExtension {
 				
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof (NETunnelNetworkSettings))]
+	[DisableDefaultCtor]
 	interface NEPacketTunnelNetworkSettings {
 		[Export ("initWithTunnelRemoteAddress:")]
 		IntPtr Constructor (string address);
