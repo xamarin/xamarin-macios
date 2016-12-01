@@ -17,11 +17,11 @@ namespace XamCore.CoreMedia {
 
 	public class CMCustomBlockAllocator : IDisposable {
 
-		internal GCHandle gch;
+		GCHandle gch;
 
 		public CMCustomBlockAllocator ()
 		{
-			gch = GCHandle.Alloc (this, GCHandleType.Pinned);
+			gch = GCHandle.Alloc (this);
 			// kCMBlockBufferCustomBlockSourceVersion = 0 <- this is the only and current value
 			Cblock.Version = 0;
 			Cblock.Allocate = static_AllocateCallback;
