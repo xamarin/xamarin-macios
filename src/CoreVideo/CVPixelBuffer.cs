@@ -301,14 +301,15 @@ namespace XamCore.CoreVideo {
 			}
 			data_handle = GCHandle.Alloc (data);
 
+			IntPtr data_handle_ptr = GCHandle.ToIntPtr (data_handle);
 			status = CVPixelBufferCreateWithPlanarBytes (IntPtr.Zero, 
 			                                             width, height, pixelFormatType, IntPtr.Zero, 0, 
 			                                             planeCount, addresses, planeWidths, planeHeights, planeBytesPerRow, 
-			                                             releasePlanarBytesCallback, GCHandle.ToIntPtr (data_handle), 
+			                                             releasePlanarBytesCallback, data_handle_ptr,
 			                                             DictionaryContainerHelper.GetHandle (pixelBufferAttributes), out handle);
 
 			if (status != CVReturn.Success) {
-				data_handle.Free ();
+				ReleasePlanarBytesCallback (data_handle_ptr, IntPtr.Zero, 0, 0, IntPtr.Zero);
 				return null;
 			}
 
