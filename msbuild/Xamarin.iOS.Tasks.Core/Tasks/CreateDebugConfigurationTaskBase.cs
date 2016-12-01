@@ -51,8 +51,8 @@ namespace Xamarin.iOS.Tasks
 					if (added.Contains (ip))
 						continue;
 
-					builder.AppendFormat ("IP: {0}", ip);
-					builder.AppendLine ();
+					builder.Append ("IP: ");
+					builder.AppendLine (ip);
 					added.Add (ip);
 				}
 			}
@@ -60,8 +60,8 @@ namespace Xamarin.iOS.Tasks
 			if (!DebugOverWiFi && !SdkIsSimulator)
 				builder.AppendLine ("USB Debugging: 1");
 
-			builder.AppendFormat ("Port: {0}", DebuggerPort);
-			builder.AppendLine ();
+			builder.Append ("Port: ");
+			builder.AppendLine (DebuggerPort);
 
 			var text = builder.ToString ();
 
