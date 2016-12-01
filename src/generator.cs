@@ -6298,7 +6298,7 @@ public partial class Generator : IMemberGatherer {
 					if (HasAttribute (field_pi, typeof (NotificationAttribute)))
 						print ($"[Advice (\"Use {type.Name}.Notifications.Observe{GetNotificationName (field_pi)} helper method instead.\")]");
 					
-					print ("{0} static unsafe {1} {2}{3} {{", field_pi.IsInternal () ? "internal" : "public", fieldTypeName,
+					print ("{0} static {1} {2}{3} {{", field_pi.IsInternal () ? "internal" : "public", fieldTypeName,
 					       field_pi.Name,
 					       is_unified_internal ? "_" : "");
 					indent++;

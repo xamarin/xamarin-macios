@@ -385,6 +385,7 @@ namespace XamCore.HomeKit {
 		[Field ("HMCharacteristicPropertyHidden")]
 		NSString Hidden { get; }
 
+		[Notification]
 		[Field ("HMCharacteristicPropertySupportsEventNotification")]
 		NSString SupportsEventNotification { get; }		
 	}
