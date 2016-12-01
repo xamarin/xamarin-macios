@@ -5221,7 +5221,7 @@ public partial class Generator : IMemberGatherer {
 		// it does not make sense on every properties, depending on the their types
 		if (output_semantics && (minfo.mi is PropertyInfo)) {
 			var t = minfo.property.PropertyType;
-			output_semantics = t.IsPrimitive ? t == typeof (IntPtr) : t != typeof (string);
+			output_semantics = !t.IsPrimitive || t == typeof (IntPtr);
 		}
 		
 		if (output_semantics)
