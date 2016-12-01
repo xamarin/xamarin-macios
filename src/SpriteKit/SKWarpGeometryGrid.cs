@@ -29,8 +29,8 @@ namespace XamCore.SpriteKit
 			if (destPositions.Length < ((cols + 1) * (rows + 1)))
 				throw new InvalidOperationException ("destPositions should have a minimum lenght of (cols + 1) * (rows + 1)");
 
-			fixed (Vector2* source_ptr = &sourcePositions [0])
-				fixed (Vector2* dest_ptr = &destPositions [0])
+			fixed (Vector2* source_ptr = sourcePositions)
+				fixed (Vector2* dest_ptr = destPositions)
 					return GridWithColumns (cols, rows, (IntPtr) source_ptr, (IntPtr) dest_ptr);
 		}
 
@@ -46,8 +46,8 @@ namespace XamCore.SpriteKit
 			if (destPositions.Length < ((cols + 1) * (rows + 1)))
 				throw new InvalidOperationException ("destPositions should have a minimum lenght of (cols + 1) * (rows + 1)");
 
-			fixed (Vector2* source_ptr = &sourcePositions [0])
-				fixed (Vector2* dest_ptr = &destPositions [0])
+			fixed (Vector2* source_ptr = sourcePositions)
+				fixed (Vector2* dest_ptr = destPositions)
 					InitializeHandle (InitWithColumns (cols, rows, (IntPtr) source_ptr, (IntPtr) dest_ptr), "initWithColumns:rows:sourcePositions:destPositions:");
 		}
 
@@ -59,7 +59,7 @@ namespace XamCore.SpriteKit
 			if (sourcePositions.Length < ((NumberOfColumns + 1) * (NumberOfRows + 1)))
 				throw new InvalidOperationException ("sourcePositions should have a minimum lenght of (NumberOfColumns + 1) * (NumberOfRows + 1)");
 
-			fixed (Vector2* ptr = &sourcePositions [0])
+			fixed (Vector2* ptr = sourcePositions)
 				return _GridByReplacingSourcePositions ((IntPtr) ptr);
 		}
 
@@ -71,7 +71,7 @@ namespace XamCore.SpriteKit
 			if (destPositions.Length < ((NumberOfColumns + 1) * (NumberOfRows + 1)))
 				throw new InvalidOperationException ("destPositions should have a minimum lenght of (NumberOfColumns + 1) * (NumberOfRows + 1)");
 
-			fixed (Vector2* ptr = &destPositions [0])
+			fixed (Vector2* ptr = destPositions)
 				return _GridByReplacingDestPositions ((IntPtr) ptr);
 		}
 	}

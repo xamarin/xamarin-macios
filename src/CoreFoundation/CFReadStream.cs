@@ -151,7 +151,7 @@ namespace XamCore.CoreFoundation {
 				throw new ArgumentException ();
 			if (offset + count > buffer.Length)
 				throw new ArgumentException ();
-			fixed (byte* ptr = &buffer [0])
+			fixed (byte* ptr = buffer)
 				return CFReadStreamRead (Handle, ((IntPtr) ptr) + offset, count);
 		}
 
