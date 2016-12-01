@@ -111,6 +111,7 @@ namespace Introspection {
 			if (properties != null)
 				return properties;
 
+			properties = new List<PropertyInfo> ();
 			foreach (Type t in Assembly.GetTypes ()) {
 				if (Skip (t) || SkipDueToAttribute (t))
 					continue;
