@@ -140,7 +140,7 @@ namespace XamCore.CoreFoundation {
 			return Read (buffer, 0, buffer.Length);
 		}
 
-		public nint Read (byte[] buffer, int offset, int count)
+		public unsafe nint Read (byte[] buffer, int offset, int count)
 		{
 			if (buffer == null)
 				throw new ArgumentNullException ("buffer");
@@ -151,14 +151,8 @@ namespace XamCore.CoreFoundation {
 				throw new ArgumentException ();
 			if (offset + count > buffer.Length)
 				throw new ArgumentException ();
-			var gch = GCHandle.Alloc (buffer, GCHandleType.Pinned);
-			try {
-				var addr = gch.AddrOfPinnedObject ();
-				var ptr = new IntPtr (addr.ToInt64 () + offset);
-				return CFReadStreamRead (Handle, ptr, count);
-			} finally {
-				gch.Free ();
-			}
+			fixed (byte* ptr = &buffer [0])
+				return CFReadStreamRead (Handle, ((IntPtr) ptr) + offset, count);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]

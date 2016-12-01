@@ -100,7 +100,7 @@ namespace XamCore.CoreFoundation {
 			return Write (buffer, 0, buffer.Length);
 		}
 
-		public int Write (byte[] buffer, nint offset, nint count)
+		public unsafe int Write (byte[] buffer, nint offset, nint count)
 		{
 			if (buffer == null)
 				throw new ArgumentNullException ("buffer");
@@ -111,14 +111,8 @@ namespace XamCore.CoreFoundation {
 				throw new ArgumentException ();
 			if (offset + count > buffer.Length)
 				throw new ArgumentException ();
-			var gch = GCHandle.Alloc (buffer, GCHandleType.Pinned);
-			try {
-				var addr = gch.AddrOfPinnedObject ();
-				var ptr = new IntPtr (addr.ToInt64 () + offset);
-				return (int) CFWriteStreamWrite (Handle, ptr, count);
-			} finally {
-				gch.Free ();
-			}
+			fixed (byte* ptr = &buffer [0])
+				return (int) CFWriteStreamWrite (Handle, ((IntPtr) ptr) + (int) offset, count);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
