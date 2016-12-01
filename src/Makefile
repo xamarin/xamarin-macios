@@ -130,7 +130,7 @@ $(IOS_BUILD_DIR)/$(1)/generated_sources: $(IOS_BUILD_DIR)/$(1)/generator.exe $$(
 		$$(IOS_APIS)
 endef
 $(eval $(call IOS_GENERATOR_template,compat,--ns=MonoTouch.ObjCRuntime -p,compat-ios))
-$(eval $(call IOS_GENERATOR_template,native,--ns=ObjCRuntime -new-style,native))
+$(eval $(call IOS_GENERATOR_template,native,--ns=ObjCRuntime,native))
 
 define IOS_TARGETS_template
 IOS_VARIANTS_TARGETS += $(IOS_BUILD_DIR)/$(1)/$(3)
@@ -149,8 +149,8 @@ $(IOS_BUILD_DIR)/$(1)/$(3).mdb: $(IOS_BUILD_DIR)/$(1)/$(3)
 endef
 
 $(eval $(call IOS_TARGETS_template,compat,--ns=MonoTouch.ObjCRuntime,monotouch.dll,compat,compat-ios))
-$(eval $(call IOS_TARGETS_template,native-32,--ns=ObjCRuntime -new-style,Xamarin.iOS.dll,native,native-32))
-$(eval $(call IOS_TARGETS_template,native-64,--ns=ObjCRuntime -new-style,Xamarin.iOS.dll,native,native-64))
+$(eval $(call IOS_TARGETS_template,native-32,--ns=ObjCRuntime,Xamarin.iOS.dll,native,native-32))
+$(eval $(call IOS_TARGETS_template,native-64,--ns=ObjCRuntime,Xamarin.iOS.dll,native,native-64))
 
 define IOS_LIBS_template
 IOS_VARIANTS_TARGETS += $(addprefix $(IOS_BUILD_DIR)/$(1)/,$(4) $(5))
@@ -186,7 +186,7 @@ $(IOS_BUILD_DIR)/$(1)/System.Drawing.dll: $$(IOS_SYSTEM_DRAWING_SOURCES) monotou
 endef
 
 $(eval $(call IOS_LIBS_template,compat,--ns=MonoTouch.ObjCRuntime,monotouch.dll,MonoTouch.Dialog-1.dll,MonoTouch.NUnitLite.dll))
-$(eval $(call IOS_LIBS_template,reference,--ns=ObjCRuntime -new-style,Xamarin.iOS.dll,MonoTouch.Dialog-1.dll,MonoTouch.NUnitLite.dll,-define:XAMCORE_2_0 -define:__UNIFIED__))
+$(eval $(call IOS_LIBS_template,reference,--ns=ObjCRuntime,Xamarin.iOS.dll,MonoTouch.Dialog-1.dll,MonoTouch.NUnitLite.dll,-define:XAMCORE_2_0 -define:__UNIFIED__))
 
 $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.dll
 	@mkdir -p $(dir $@)

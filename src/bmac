@@ -23,9 +23,6 @@ for arg in "$@"; do
 		if [[ $sdk == $arg ]]; then
 			sdk=next-arg
 		fi
-	elif [[ $arg =~ ^(/|-{1,2})new-style$ ]]; then
-		new_style=1
-		mobile_profile=1
 	elif [[ $arg =~ ^(/|-{1,2})unified-full-profile$ ]]; then
 		full_profile=1
 		new_style=1
