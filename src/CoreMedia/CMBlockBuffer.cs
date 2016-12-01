@@ -184,18 +184,17 @@ namespace XamCore.CoreMedia {
 			return CMBlockBufferCopyDataBytes (handle, offsetToData, dataLength, destination);
 		}
 
-		public CMBlockBufferError CopyDataBytes (nuint offsetToData, nuint dataLength, out byte [] destination)
+		public unsafe CMBlockBufferError CopyDataBytes (nuint offsetToData, nuint dataLength, out byte [] destination)
 		{
 			if (Handle == IntPtr.Zero)
 				throw new ObjectDisposedException ("BlockBuffer");
 
 			destination = new byte [dataLength];
-			GCHandle destPinned = GCHandle.Alloc (destination, GCHandleType.Pinned);
-			IntPtr destPtr = destPinned.AddrOfPinnedObject ();
-			var error = CMBlockBufferCopyDataBytes (handle, offsetToData, dataLength, destPtr);
+			CMBlockBufferError error;
+			fixed (byte* ptr = &destination [0])
+				error = CMBlockBufferCopyDataBytes (handle, offsetToData, dataLength, (IntPtr) ptr);
 			if (error != CMBlockBufferError.None)
 				destination = default (byte []);
-			destPinned.Free ();
 			return error;
 		}
 
@@ -214,19 +213,15 @@ namespace XamCore.CoreMedia {
 			return CMBlockBufferReplaceDataBytes (sourceBytes, handle, offsetIntoDestination, dataLength);
 		}
 
-		public CMBlockBufferError ReplaceDataBytes (byte [] sourceBytes, nuint offsetIntoDestination)
+		public unsafe CMBlockBufferError ReplaceDataBytes (byte [] sourceBytes, nuint offsetIntoDestination)
 		{
 			if (Handle == IntPtr.Zero)
 				throw new ObjectDisposedException ("BlockBuffer");
 			if (sourceBytes == null)
 				throw new ArgumentNullException (nameof (sourceBytes));
 
-			GCHandle replacePinned = GCHandle.Alloc (sourceBytes, GCHandleType.Pinned);
-			IntPtr replacePtr = replacePinned.AddrOfPinnedObject ();
-
-			var error = ReplaceDataBytes (replacePtr, offsetIntoDestination, (nuint) sourceBytes.Length);
-			replacePinned.Free ();
-			return error;
+			fixed (byte* ptr = &sourceBytes [0])
+				return ReplaceDataBytes ((IntPtr) ptr, offsetIntoDestination, (nuint) sourceBytes.Length);
 		}
 
 		[DllImport(Constants.CoreMediaLibrary)]
