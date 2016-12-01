@@ -38,6 +38,8 @@ namespace Xamarin.Bundler {
 
 		public string FrameworkDirectory { get; set; }
 		public string RootDirectory { get; set; }
+		public string ArchDirectory { get; set; }
+
 		public List <string> CommandLineAssemblies { get; set; }
 		public List<Exception> Exceptions = new List<Exception> ();
 
@@ -113,6 +115,12 @@ namespace Xamarin.Bundler {
 					return String.Compare (name, Path.GetFileNameWithoutExtension (t), StringComparison.Ordinal) == 0;
 				});
 				assembly = String.IsNullOrEmpty (cmdasm) ? null : AddAssembly (cmdasm);
+				if (assembly != null)
+					return assembly;
+			}
+
+			if (ArchDirectory != null) {
+				assembly = SearchDirectory (name, ArchDirectory);
 				if (assembly != null)
 					return assembly;
 			}

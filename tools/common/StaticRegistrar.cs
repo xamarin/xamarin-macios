@@ -643,7 +643,7 @@ namespace XamCore.Registrar {
 		protected override bool Is64Bits {
 			get {
 				if (IsSingleAssembly)
-					throw new InvalidOperationException ("Can't emit size-specific code in single assembly mode.");
+					return App.Is64Build;
 				return Target.Is64Build;
 			}
 		}
