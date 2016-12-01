@@ -190,6 +190,10 @@ namespace XamCore.CoreMedia {
 				throw new ObjectDisposedException ("BlockBuffer");
 
 			destination = new byte [dataLength];
+
+			if (dataLength == 0)
+				return CMBlockBufferError.None;
+
 			CMBlockBufferError error;
 			fixed (byte* ptr = &destination [0])
 				error = CMBlockBufferCopyDataBytes (handle, offsetToData, dataLength, (IntPtr) ptr);
@@ -219,6 +223,9 @@ namespace XamCore.CoreMedia {
 				throw new ObjectDisposedException ("BlockBuffer");
 			if (sourceBytes == null)
 				throw new ArgumentNullException (nameof (sourceBytes));
+
+			if (sourceBytes.Length == 0)
+				return ReplaceDataBytes (IntPtr.Zero, offsetIntoDestination, 0);
 
 			fixed (byte* ptr = &sourceBytes [0])
 				return ReplaceDataBytes ((IntPtr) ptr, offsetIntoDestination, (nuint) sourceBytes.Length);

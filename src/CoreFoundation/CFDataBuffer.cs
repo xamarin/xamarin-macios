@@ -43,9 +43,12 @@ namespace XamCore.CoreFoundation {
 			/*
 			 * Copy the buffer to allow the native side to take ownership.
 			 */
-
-			fixed (byte* ptr = &buffer [0])
-				data = CFData.FromData ((IntPtr) ptr, buffer.Length);
+			if (buffer.Length == 0) {
+				data = CFData.FromData (IntPtr.Zero, 0);
+			} else {
+				fixed (byte* ptr = &buffer [0])
+					data = CFData.FromData ((IntPtr) ptr, buffer.Length);
+			}
 		}
 
 		public CFDataBuffer (IntPtr ptr)

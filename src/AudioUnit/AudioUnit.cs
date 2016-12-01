@@ -1102,6 +1102,10 @@ namespace XamCore.AudioUnit
 				throw new ArgumentNullException (nameof (audioFiles));
 
 			int count = audioFiles.Length;
+
+			if (count == 0)
+				return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.ScheduledFileIDs, AudioUnitScopeType.Global, 0, IntPtr.Zero, 0);
+
 			IntPtr[] handles = new IntPtr[count];
 			for (int i = 0; i < count; i++)
 				handles [i] = audioFiles [i].Handle;
