@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Net;
+using System.Text;
 using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
@@ -34,8 +34,6 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			var path = Path.Combine (AppBundleDir, "MonoTouchDebugConfiguration.txt");
-
 			Log.LogTaskName ("CreateDebugConfiguration");
 			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
 			Log.LogTaskProperty ("DebugOverWiFi", DebugOverWiFi);
@@ -44,29 +42,32 @@ namespace Xamarin.iOS.Tasks
 			Log.LogTaskProperty ("SdkIsSimulator", SdkIsSimulator);
 
 			var ips = DebugIPAddresses?.Split (new char [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+			var path = Path.Combine (AppBundleDir, "MonoTouchDebugConfiguration.txt");
+			var added = new HashSet<string> ();
+			var builder = new StringBuilder ();
+
+			if (ips != null) {
+				foreach (var ip in ips) {
+					if (added.Contains (ip))
+						continue;
+
+					builder.AppendFormat ("IP: {0}", ip);
+					builder.AppendLine ();
+					added.Add (ip);
+				}
+			}
+
+			if (!DebugOverWiFi && !SdkIsSimulator)
+				builder.AppendLine ("USB Debugging: 1");
+
+			builder.AppendFormat ("Port: {0}", DebuggerPort);
+			builder.AppendLine ();
+
+			var text = builder.ToString ();
 
 			try {
-				using (var stream = new FileStream (path, FileMode.Create, FileAccess.Write)) {
-					using (var writer = new StreamWriter (stream)) {
-						var added = new HashSet<string> ();
-						if (ips != null) {
-							foreach (var ip in ips) {
-								string str = ip.ToString ();
-
-								if (added.Contains (str))
-									continue;
-
-								writer.WriteLine ("IP: {0}", str);
-								added.Add (str);
-							}
-						}
-
-						if (!DebugOverWiFi && !SdkIsSimulator)
-							writer.WriteLine ("USB Debugging: 1");
-
-						writer.WriteLine ("Port: {0}", DebuggerPort);
-					}
-				}
+				if (!File.Exists (path) || File.ReadAllText (path) != text)
+					File.WriteAllText (path, text);
 			} catch (Exception ex) {
 				Log.LogError (ex.Message);
 			}
