@@ -467,7 +467,7 @@ namespace XamCore.CoreMedia {
 				var parameterSetPtrs = new IntPtr [parameterSets.Count];
 
 				for (int i = 0; i < parameterSets.Count; i++) {
-					handles [i] = GCHandle.Alloc (parameterSets [i], GCHandleType.Pinned);
+					handles [i] = GCHandle.Alloc (parameterSets [i], GCHandleType.Pinned); // This can't use unsafe code because we need to get the pointer for an unbound number of objects.
 					parameterSetPtrs [i] = handles [i].AddrOfPinnedObject ();
 					parameterSetSizes [i] = (nuint)parameterSets [i].Length;
 				}

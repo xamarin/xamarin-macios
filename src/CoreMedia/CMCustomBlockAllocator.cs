@@ -98,7 +98,7 @@ namespace XamCore.CoreMedia {
 		GCHandle dataHandle;
 		public CMManagedArrayBlockAllocator (byte [] data)
 		{
-			dataHandle = GCHandle.Alloc (data, GCHandleType.Pinned);
+			dataHandle = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, because unsafe code is scoped to the current block, and the address of the byte array will be used after this function returns.
 		}
 
 		public override IntPtr Allocate (nuint sizeInBytes)

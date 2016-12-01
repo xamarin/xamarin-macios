@@ -75,14 +75,14 @@ namespace XamCore.CoreGraphics {
 		public CGBitmapContext (byte [] data, nint width, nint height, nint bitsPerComponent, nint bytesPerRow, CGColorSpace colorSpace, CGImageAlphaInfo bitmapInfo)
 		{
 			if (data != null)
-				buffer = GCHandle.Alloc (data, GCHandleType.Pinned);
+				buffer = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, because unsafe code is scoped to the current block, and the address of the byte array will be used after this function returns.
 			Handle = CGBitmapContextCreate (data, width, height, bitsPerComponent, bytesPerRow, GetHandle (colorSpace), (uint) bitmapInfo);
 		}
 
 		public CGBitmapContext (byte [] data, nint width, nint height, nint bitsPerComponent, nint bytesPerRow, CGColorSpace colorSpace, CGBitmapFlags bitmapInfo)
 		{
 			if (data != null)
-				buffer = GCHandle.Alloc (data, GCHandleType.Pinned);
+				buffer = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, because unsafe code is scoped to the current block, and the address of the byte array will be used after this function returns.
 			Handle = CGBitmapContextCreate (data, width, height, bitsPerComponent, bytesPerRow, GetHandle (colorSpace), (uint) bitmapInfo);
 		}
 
