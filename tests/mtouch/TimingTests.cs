@@ -14,7 +14,7 @@ namespace Xamarin.Profiler
 		StringBuilder sb;
 		int starsLenght;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init ()
 		{
 			sb = new StringBuilder ();
@@ -117,7 +117,7 @@ namespace Xamarin.Profiler
 			}
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void PrintLogs ()
 		{
 			sb.AppendLine (new string ('*', starsLenght));
