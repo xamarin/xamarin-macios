@@ -403,9 +403,6 @@ class BindingTouch {
 				CoreNSObject = CoreObject,
 				BaseDir = basedir != null ? basedir : tmpdir,
 				ZeroCopyStrings = zero_copy,
-#if MONOMAC
-				OnlyDesktop = true,
-#endif
 				Compat = !Unified,
 				InlineSelectors = inline_selectors,
 				SkipSystemDrawing = addSystemDrawingReferences
