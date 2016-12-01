@@ -13,16 +13,16 @@ namespace XamCore.AVFoundation {
 		enum InitMode {
 			PixelAttributes,
 			OutputSettings
-		} 
+		}
 
-		AVPlayerItemVideoOutput (NSDictionary data, AVPlayerItemVideoOutput.InitMode mode) : this (IntPtr.Zero)
+		AVPlayerItemVideoOutput (NSDictionary data, AVPlayerItemVideoOutput.InitMode mode) : this ()
 		{
 			switch (mode) {
 			case InitMode.PixelAttributes:
-				Handle = _FromPixelBufferAttributes (data);
+				InitializeHandle (_FromPixelBufferAttributes (data), "initWithPixelBufferAttributes:");
 				break;
 			case InitMode.OutputSettings:
-				Handle = _FromOutputSettings (data);
+				InitializeHandle (_FromOutputSettings (data), "initWithOutputSettings:");
 				break;
 			default:
 				throw new ArgumentException (nameof (mode));
@@ -30,7 +30,7 @@ namespace XamCore.AVFoundation {
 		}
 
 		[DesignatedInitializer]
-		[Advice ("Please use the constructor that uses one of the available StrongDictionaries. This constructor expects Pixelbugger attributes.")]
+		[Advice ("Please use the constructor that uses one of the available StrongDictionaries. This constructor expects PixelBuffer attributes.")]
 		protected AVPlayerItemVideoOutput (NSDictionary pixelBufferAttributes) : this (pixelBufferAttributes, InitMode.PixelAttributes) {}
 	}
 }
