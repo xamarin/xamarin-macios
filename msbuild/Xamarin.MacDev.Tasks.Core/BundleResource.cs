@@ -68,8 +68,14 @@ namespace Xamarin.MacDev
 			}
 
 			// HACK: This is for Visual Studio iOS projects
-			if (isVSBuild)
-				return item.ItemSpec;
+			if (isVSBuild) {
+				if (item.GetMetadata("DefiningProjectFullPath") != item.GetMetadata("MSBuildProjectFullPath")) {
+					return item.GetMetadata("FullPath").Replace(item.GetMetadata ("DefiningProjectDirectory"), string.Empty);
+				}
+				else {
+					return item.ItemSpec;
+				}
+			}
 
 			var definingProjectFullPath = item.GetMetadata ("DefiningProjectFullPath");
 			var path = item.GetMetadata ("FullPath");
