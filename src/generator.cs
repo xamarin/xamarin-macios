@@ -4854,7 +4854,7 @@ public partial class Generator : IMemberGatherer {
 
 			if (!minfo.is_sealed || !minfo.is_wrapper) {
 				PrintDelegateProxy (pi.GetGetMethod ());
-				PrintExport (sel, export.ArgumentSemantic);
+				PrintExport (minfo, sel, export.ArgumentSemantic);
 			}
 
 			PrintPreserveAttribute (pi.GetGetMethod());
@@ -4906,7 +4906,7 @@ public partial class Generator : IMemberGatherer {
 			PrintPlatformAttributes (pi.GetSetMethod ());
 
 			if (not_implemented_attr == null && (!minfo.is_sealed || !minfo.is_wrapper))
-				PrintExport (sel, export.ArgumentSemantic);
+				PrintExport (minfo, sel, export.ArgumentSemantic);
 
 			PrintPreserveAttribute (pi.GetSetMethod());
 			if (minfo.is_abstract){
@@ -5209,14 +5209,21 @@ public partial class Generator : IMemberGatherer {
 			print ("[Export (\"{0}\"{1})]", minfo.selector, minfo.is_variadic ? ", IsVariadic = true" : string.Empty);
 	}
 
-	void PrintExport (ExportAttribute ea)
+	void PrintExport (MemberInformation minfo, ExportAttribute ea)
 	{
-		PrintExport (ea.Selector, ea.ArgumentSemantic);
+		PrintExport (minfo, ea.Selector, ea.ArgumentSemantic);
 	}
 
-	void PrintExport (string sel, ArgumentSemantic semantic)
+	void PrintExport (MemberInformation minfo, string sel, ArgumentSemantic semantic)
 	{
-		if (semantic != ArgumentSemantic.None)
+		bool output_semantics = semantic != ArgumentSemantic.None;
+		// it does not make sense on every properties, depending on the their types
+		if (output_semantics && (minfo.mi is PropertyInfo)) {
+			var t = minfo.property.PropertyType;
+			output_semantics = !t.IsPrimitive || t == typeof (IntPtr);
+		}
+		
+		if (output_semantics)
 			print ("[Export (\"{0}\", ArgumentSemantic.{1})]", sel, semantic);
 		else
 			print ("[Export (\"{0}\")]", sel);
@@ -5613,15 +5620,15 @@ public partial class Generator : IMemberGatherer {
 				PrintDelegateProxy (pi.GetGetMethod ());
 				if (!HasAttribute (pi.GetGetMethod (), typeof (NotImplementedAttribute))) {
 					if (ba != null)
-						PrintExport (ba.Selector, ea.ArgumentSemantic);
+						PrintExport (minfo, ba.Selector, ea.ArgumentSemantic);
 					else
-						PrintExport (ea);
+						PrintExport (minfo, ea);
 				}
 				print ("get;");
 			}
 			if (pi.CanWrite) {
 				if (!HasAttribute (pi.GetSetMethod (), typeof (NotImplementedAttribute)))
-					PrintExport (GetSetterExportAttribute (pi));
+					PrintExport (minfo, GetSetterExportAttribute (pi));
 				print ("set;");
 			}
 			indent--;
