@@ -6,8 +6,8 @@ using System.Text;
 
 namespace Xamarin.Profiler
 {
-	[TestFixture (MTouch.Profile.Unified)]
-	[TestFixture (MTouch.Profile.TVOS)]
+	[TestFixture (MTouch.Profile.iOS)]
+	[TestFixture (MTouch.Profile.tvOS)]
 	public class TimingTests
 	{
 		MTouch.Profile profile;
