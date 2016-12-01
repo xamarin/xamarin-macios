@@ -335,9 +335,7 @@ class BindingTouch {
 				Console.Error.WriteLine ("Error loading base library {0}", baselibdll);
 				return 1;
 			}
-#if !(IOS || MONOMAC)
 			GC.KeepAlive (baselib); // Fixes a compiler warning (unused variable).
-#endif
 				
 			foreach (object attr in api.GetCustomAttributes (typeof (LinkWithAttribute), true)) {
 				LinkWithAttribute linkWith = (LinkWithAttribute) attr;
@@ -408,14 +406,12 @@ class BindingTouch {
 				SkipSystemDrawing = addSystemDrawingReferences
 			};
 
-#if IOS || MONOMAC
 			if (!Unified && !binding_third_party) {
 				foreach (var mi in baselib.GetType (nsManager.CoreObjCRuntime + ".Messaging").GetMethods ()){
 					if (mi.Name.IndexOf ("_objc_msgSend") != -1)
 						g.RegisterMethodName (mi.Name);
 				}
 			}
-#endif
 
 			g.Go ();
 
