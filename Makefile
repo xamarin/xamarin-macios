@@ -26,6 +26,7 @@ IOS_TARGETS += \
 	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo \
 	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Version \
 	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/updateinfo \
+	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist \
 
 $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current: | $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions
 	$(Q_LN) ln -hfs $(IOS_INSTALL_VERSION) $@
@@ -60,6 +61,10 @@ $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Version: Make.config
 $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/updateinfo: Make.config
 	$(Q) echo "4569c276-1397-4adb-9485-82a7696df22e $(IOS_PACKAGE_UPDATE_ID)" > $@
 
+$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist: Versions-ios.plist.in Makefile $(TOP)/Make.config versions-check.csharp
+	$(Q) ./versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(IOS_SDK_VERSION)" "$(MIN_TVOS_SDK_VERSION)" "$(TVOS_SDK_VERSION)" "$(MIN_WATCHOS_SDK_VERSION)" "$(WATCH_SDK_VERSION)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)"
+	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' $< > $@
+
 ifdef INCLUDE_IOS
 TARGETS += $(IOS_TARGETS)
 DIRECTORIES += $(IOS_DIRECTORIES)
@@ -79,6 +84,7 @@ MAC_TARGETS += \
 	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/buildinfo \
 	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Version \
 	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/updateinfo \
+	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist \
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions/Current: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions
 	$(Q_LN) ln -hfs $(MAC_INSTALL_VERSION) $@
@@ -97,6 +103,10 @@ $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/updateinfo: Make.config
 
 $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Version: Make.config
 	$(Q) echo $(MAC_PACKAGE_VERSION) > $@
+
+$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist: Versions-mac.plist.in Makefile $(TOP)/Make.config versions-check.csharp
+	$(Q) ./versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(IOS_SDK_VERSION)" "$(MIN_TVOS_SDK_VERSION)" "$(TVOS_SDK_VERSION)" "$(MIN_WATCHOS_SDK_VERSION)" "$(WATCH_SDK_VERSION)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)"
+	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' $< > $@
 
 ifdef INCLUDE_MAC
 TARGETS += $(MAC_TARGETS)
