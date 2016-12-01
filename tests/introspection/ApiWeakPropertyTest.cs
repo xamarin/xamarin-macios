@@ -39,6 +39,11 @@ namespace Introspection {
 		/// <param name="property">Property candidate.</param>
 		protected virtual bool Skip (PropertyInfo property)
 		{
+			switch (property.Name) {
+			// the selector starts with `weak`
+			case "WeakRelatedUniqueIdentifier":
+				return property.DeclaringType.Name == "CSSearchableItemAttributeSet";
+			}
 			return false;
 		}
 
@@ -68,7 +73,7 @@ namespace Introspection {
 						continue;
 
 					string name = p.Name;
-					if (!name.StartsWith ("Weak"))
+					if (!name.StartsWith ("Weak", StringComparison.Ordinal))
 						continue;
 
 					string error;
