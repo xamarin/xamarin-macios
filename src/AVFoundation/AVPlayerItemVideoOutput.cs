@@ -15,7 +15,7 @@ namespace XamCore.AVFoundation {
 			OutputSettings
 		}
 
-		AVPlayerItemVideoOutput (NSDictionary data, AVPlayerItemVideoOutput.InitMode mode) : this ()
+		AVPlayerItemVideoOutput (NSDictionary data, AVPlayerItemVideoOutput.InitMode mode) : base (NSObjectFlag.Empty)
 		{
 			switch (mode) {
 			case InitMode.PixelAttributes:
