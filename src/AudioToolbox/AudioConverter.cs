@@ -659,7 +659,7 @@ namespace XamCore.AudioToolbox
 				return null;
 
 			var data = new T [size / elementSize];
-			var array_handle = GCHandle.Alloc (data, GCHandleType.Pinned);
+			var array_handle = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, since it's not possible to use unsafe code to get the address of a generic object.
 
 			try {
 				var ptr = array_handle.AddrOfPinnedObject ();
