@@ -275,13 +275,14 @@ class BindingTouch {
 			// -nowarn:436 is to avoid conflicts in definitions between core.dll and the sources
 			// Keep source files at the end of the command line - csc will create TWO assemblies if any sources preceed the -out parameter
 			var cargs = new StringBuilder ();
-#if MONOMAC
-			if (!string.IsNullOrEmpty (net_sdk) && net_sdk != "mobile") 
-				cargs.Append ("-sdk:").Append (net_sdk).Append (' ');
-#else
-			if (!string.IsNullOrEmpty (net_sdk))
-				cargs.Append ("-sdk:").Append (net_sdk).Append (' ');
-#endif
+
+			if (CurrentPlatform == PlatformName.MacOSX) {
+				if (!string.IsNullOrEmpty (net_sdk) && net_sdk != "mobile")
+					cargs.Append ("-sdk:").Append (net_sdk).Append (' ');
+			} else {
+				if (!string.IsNullOrEmpty (net_sdk))
+					cargs.Append ("-sdk:").Append (net_sdk).Append (' ');
+			}
 			cargs.Append ("-debug -unsafe -target:library -nowarn:436").Append (' ');
 			cargs.Append ("-out:").Append (Quote (tmpass)).Append (' ');
 			cargs.Append ("-r:").Append (Environment.GetCommandLineArgs ()[0]).Append (' ');

@@ -1668,13 +1668,36 @@ public partial class Generator : IMemberGatherer {
 #if !WATCH
 	public Type SampleBufferType = typeof (CMSampleBuffer);
 #endif
-#if MONOMAC
-	const string CoreImageMap = "Quartz";
-	const string CoreServicesMap = "CoreServices";
-#else
-	const string CoreImageMap = "CoreImage";
-	const string CoreServicesMap = "MobileCoreServices";
-#endif
+
+	static string CoreImageMap {
+		get {
+			switch (CurrentPlatform) {
+			case PlatformName.iOS:
+			case PlatformName.WatchOS:
+			case PlatformName.TvOS:
+				return "CoreImage";
+			case PlatformName.MacOSX:
+				return "Quartz";
+			default:
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+			}
+		}
+	}
+
+	static string CoreServicesMap {
+		get {
+			switch (CurrentPlatform) {
+			case PlatformName.iOS:
+			case PlatformName.WatchOS:
+			case PlatformName.TvOS:
+				return "MobileCoreServices";
+			case PlatformName.MacOSX:
+				return "CoreServices";
+			default:
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+			}
+		}
+	}
 
 	//
 	// We inject thread checks to MonoTouch.UIKit types, unless there is a [ThreadSafe] attribuet on the type.
@@ -4296,20 +4319,25 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 		
-#if !MONOMAC
 	// undecorated code is assumed to be iOS 2.0
 	static AvailabilityBaseAttribute iOSIntroducedDefault = new IntroducedAttribute (PlatformName.iOS, 2, 0);
-#endif
 
 	string CurrentMethod;
 
 	void GenerateThreadCheck ()
 	{
-#if MONOMAC
-			print ("global::{0}.NSApplication.EnsureUIThread ();", ns.Get ("AppKit"));
-#else
-			print ("global::{0}.UIApplication.EnsureUIThread ();", ns.Get ("UIKit"));
-#endif
+		switch (CurrentPlatform) {
+			case PlatformName.iOS:
+			case PlatformName.WatchOS:
+			case PlatformName.TvOS:
+				print ("global::{0}.UIApplication.EnsureUIThread ();", ns.Get ("UIKit"));
+				break;
+			case PlatformName.MacOSX:
+				print ("global::{0}.NSApplication.EnsureUIThread ();", ns.Get ("AppKit"));
+				break;
+			default:
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+		}
 	}
 
 	//
@@ -4518,26 +4546,27 @@ public partial class Generator : IMemberGatherer {
 				if (postget [i].IsDisableForNewRefCount (type))
 					continue;
 
-#if !MONOMAC
-				// bug #7742: if this code, e.g. existing in iOS 2.0, 
-				// tries to call a property available since iOS 5.0, 
-				// then it will fail when executing in iOS 4.3
+
 				bool version_check = false;
-				var postget_avail = GetIntroduced (type, postget [i].MethodName);
-				if (postget_avail != null) {
-					var caller_avail = GetIntroduced (mi, propInfo) ?? iOSIntroducedDefault;
-					if (caller_avail.Version < postget_avail.Version) {
-						version_check = true;
-						print ("var postget{0} = {4}.UIDevice.CurrentDevice.CheckSystemVersion ({1},{2}) ? {3} : null;",
-							i,
-							postget_avail.Version.Major,
-							postget_avail.Version.Minor,
-							postget [i].MethodName,
-							ns.Get ("UIKit"));
+				if (CurrentPlatform != PlatformName.MacOSX) {
+					// bug #7742: if this code, e.g. existing in iOS 2.0, 
+					// tries to call a property available since iOS 5.0, 
+					// then it will fail when executing in iOS 4.3
+					var postget_avail = GetIntroduced (type, postget [i].MethodName);
+					if (postget_avail != null) {
+						var caller_avail = GetIntroduced (mi, propInfo) ?? iOSIntroducedDefault;
+						if (caller_avail.Version < postget_avail.Version) {
+							version_check = true;
+							print ("var postget{0} = {4}.UIDevice.CurrentDevice.CheckSystemVersion ({1},{2}) ? {3} : null;",
+								i,
+								postget_avail.Version.Major,
+								postget_avail.Version.Minor,
+								postget [i].MethodName,
+								ns.Get ("UIKit"));
+						}
 					}
 				}
 				if (!version_check)
-#endif
 					print ("var postget{0} = {1};", i, postget [i].MethodName);
 			}
 			print ("#pragma warning restore 168");
