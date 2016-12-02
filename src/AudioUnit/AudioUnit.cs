@@ -1093,7 +1093,7 @@ namespace XamCore.AudioUnit
 		static extern AudioUnitStatus AudioUnitSetProperty (IntPtr inUnit, AudioUnitPropertyIDType inID, AudioUnitScopeType inScope, uint inElement,
 			IntPtr inData, int inDataSize);
 
-		public AudioUnitStatus SetScheduledFiles (AudioFile[] audioFiles)
+		public unsafe AudioUnitStatus SetScheduledFiles (AudioFile[] audioFiles)
 		{
 			if (Handle == IntPtr.Zero)
 				throw new ObjectDisposedException ("AudioUnit");
@@ -1106,13 +1106,8 @@ namespace XamCore.AudioUnit
 			for (int i = 0; i < count; i++)
 				handles [i] = audioFiles [i].Handle;
 
-			GCHandle gch = GCHandle.Alloc (handles, GCHandleType.Pinned);
-			IntPtr ptr = gch.AddrOfPinnedObject ();
-
-			var status = AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.ScheduledFileIDs, AudioUnitScopeType.Global, 0, ptr,  Marshal.SizeOf (ptr) * count);
-
-			gch.Free ();
-			return status;
+			fixed (IntPtr* ptr = handles)
+				return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.ScheduledFileIDs, AudioUnitScopeType.Global, 0, (IntPtr) ptr,  IntPtr.Size * count);
 		}
 
 #endif // !COREBUILD
