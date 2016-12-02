@@ -1227,10 +1227,12 @@ namespace XamCore.MediaPlayer {
 		UIImage VolumeWarningSliderImage { get; set; }
 
 		[Since (7,0)]
+		[Notification]
 		[Field ("MPVolumeViewWirelessRoutesAvailableDidChangeNotification")]
 		NSString WirelessRoutesAvailableDidChangeNotification { get; }
 
 		[Since (7,0)]
+		[Notification]
 		[Field ("MPVolumeViewWirelessRouteActiveDidChangeNotification")]
 		NSString WirelessRouteActiveDidChangeNotification { get; }
 	}	

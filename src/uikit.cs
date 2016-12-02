@@ -7045,16 +7045,6 @@ namespace XamCore.UIKit {
 		[Field ("UIWindowDidResignKeyNotification")]
 		[Notification]
 		NSString DidResignKeyNotification { get; }
-		
-		[NoTV]
-		[Since (5,0)]
-		[Field("UIKeyboardWillChangeFrameNotification")]
-		NSString KeyboardWillChangeFrameNotification { get; }
-		
-		[NoTV]
-		[Since (5,0)]
-		[Field("UIKeyboardDidChangeFrameNotification")]
-		NSString KeyboardDidChangeFrameNotification { get; }
 	}
 
 	[BaseType (typeof (UIView))]
