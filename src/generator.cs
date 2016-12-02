@@ -1582,15 +1582,21 @@ public partial class Generator : IMemberGatherer {
 	public bool SkipSystemDrawing;
 
 	public static PlatformName CurrentPlatform;
-#if MONOMAC
-	const string ApplicationClassName = "NSApplication";
-#elif WATCH
-	const string ApplicationClassName = "UIApplication";
-#elif TVOS
-	const string ApplicationClassName = "UIApplication";
-#else
-	const string ApplicationClassName = "UIApplication";
-#endif
+
+	public static string ApplicationClassName {
+		get {
+			switch (CurrentPlatform) {
+			case PlatformName.iOS:
+			case PlatformName.WatchOS:
+			case PlatformName.TvOS:
+				return "UIApplication";
+			case PlatformName.MacOSX:
+				return "NSApplication";
+			default:
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+			}
+		}
+	}
 
 	// Static version of the above (!Compat) field, set on each Go invocation, needed because some static
 	// helper methods need to access this.   This is the exact opposite of Compat.
