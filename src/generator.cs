@@ -2817,9 +2817,9 @@ public partial class Generator : IMemberGatherer {
 
 	static Type GetCorrectGenericType (Type type)
 	{
-#if XAMCORE_2_0
-		return type;
-#else
+		if (UnifiedAPI)
+			return type;
+
 		if (type != null && type.IsGenericType) {
 			// for compat we expose NSSet/NSDictionary instead of NSSet<TKey>/NSDictionary<TKey,TValue>
 			var bt = type.GetGenericTypeDefinition ();
@@ -2845,7 +2845,6 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 		return type;
-#endif
 	}
 
 	void GenerateIndirectDelegateFile ()
@@ -6108,13 +6107,8 @@ public partial class Generator : IMemberGatherer {
 						}
 						// old monotouch.dll (and MonoMac.dll, XamMac.dll) always included this .ctor even if the
 						// type did not conform to NSCopying. That made the .ctor throw a (native) exception and crash
-#if XAMCORE_2_0
-						var compat = false;
-#else
-						var compat = true;
-#endif
 						var nscoding = ConformToNSCoding (type);
-						if (compat || nscoding) {
+						if (Compat || nscoding) {
 							// for compatibility we continue to include the .ctor(NSCoder) in the compat assemblies
 							// but we make it throw an InvalidOperationException if the type does not implement NSCoding
 							// because it's easier to catch (and won't crash on devices)
