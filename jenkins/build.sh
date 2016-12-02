@@ -13,8 +13,10 @@ else
 		cat .tmp-files | sed 's/^/    /' || true
 		if grep 'external/mono' .tmp-files > /dev/null; then
 			echo "Enabling device build because mono was bumped."
+		elif grep 'external/llvm' .tmp-files > /dev/null; then
+			echo "Enabling device build because llvm was bumped."
 		else
-			echo "Not enabling device build; mono was not bumped."
+			echo "Not enabling device build; neither mono nor llvm was bumped."
 		fi
 	fi
 	rm -f .tmp-files
