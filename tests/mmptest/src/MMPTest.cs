@@ -547,5 +547,18 @@ namespace Xamarin.MMP.Tests
 				Assert.IsFalse (monoDisResults.Contains ("foo.xml"));
 			});
 		}
+
+		[Test]
+		public void Unified_SideBySideXamMac_ConsoleTest ()
+		{
+			RunMMPTest (tmpDir =>
+			{
+				string testPath = Path.Combine (TI.FindSourceDirectory (), @"ConsoleXMApp.csproj");
+				TI.BuildProject (testPath, isUnified: true);
+				string exePath = Path.Combine (TI.FindSourceDirectory (), @"bin/Debug/ConsoleXMApp.exe");
+				var output = TI.RunAndAssert ("/usr/local/bin/mono64", new StringBuilder (exePath), "RunSideBySizeXamMac");
+				Assert.IsTrue (output.Split (Environment.NewLine.ToCharArray ()).Any (x => x.Contains ("True")), "Unified_SideBySideXamMac_ConsoleTest run"); 
+			});
+		}
 	}
 }
