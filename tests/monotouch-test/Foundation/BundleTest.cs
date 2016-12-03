@@ -11,7 +11,11 @@ using System;
 using System.Net;
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
@@ -82,7 +86,12 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void LoadNibWithOptions ()
 		{
+#if MONOMAC
+			NSArray objects;
+			Assert.NotNull (main.LoadNibNamed ("EmptyNib", main, out objects));
+#else
 			Assert.NotNull (main.LoadNib ("EmptyNib", main, null));
+#endif
 		}
 #endif // !__WATCHOS__
 

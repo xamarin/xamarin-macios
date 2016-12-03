@@ -4,7 +4,11 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using Security;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.Foundation;
 using MonoTouch.Security;
@@ -293,6 +297,7 @@ namespace MonoTouchFixtures.Security {
 			}
 		}
 
+#if !MONOMAC // Works different on Mac
 		[Test]
 		public void SecRecordRecordTest ()
 		{
@@ -331,5 +336,6 @@ namespace MonoTouchFixtures.Security {
 				}
 			}
 		}
+#endif
 	}
 }

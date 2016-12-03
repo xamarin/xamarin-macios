@@ -25,7 +25,8 @@ namespace monotouchtest
 {
 	[TestFixture]
 	public class NSMutableDictionaryTest {
-		
+		//Messaging is unavailable on mac
+#if !MONOMAC
 		[Test]
 		public void IndexerTest ()
 		{
@@ -82,6 +83,7 @@ namespace monotouchtest
 				Marshal.FreeHGlobal (strobjptr);
 			}
 		}
+#endif
 
 		[Test]
 		public void Bug39993 ()

@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{22BF080C-AFAD-445B-8BB5-42B9E7FDBC68}</ProjectGuid>
+    <ProjectTypeGuids>{42C0BBD9-55CE-4FC1-8D90-A7348ABAFB23};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>dontlink</RootNamespace>
+    <AssemblyName>xammac_tests</AssemblyName>
+    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>__UNIFIED__;DEBUG;MONOMAC;XAMCORE_2_0</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CreatePackage>false</CreatePackage>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <UseSGen>false</UseSGen>
+    <HttpClientHandler>HttpClientHandler</HttpClientHandler>
+    <TlsProvider>Default</TlsProvider>
+    <LinkMode>None</LinkMode>
+    <XamMacArch>x86_64</XamMacArch>
+    <CodeSigningKey>Mac Developer</CodeSigningKey>
+    <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <DefineConstants></DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CreatePackage>false</CreatePackage>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <UseSGen>false</UseSGen>
+    <HttpClientHandler>HttpClientHandler</HttpClientHandler>
+    <TlsProvider>Default</TlsProvider>
+    <LinkMode>None</LinkMode>
+    <XamMacArch></XamMacArch>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="GuiUnit">
+      <HintPath>..\..\external\guiunit\bin\net_4_5\GuiUnit.exe</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Mac">
+      <HintPath>..\..\..\..\..\..\..\..\Library\Frameworks\Xamarin.Mac.framework\Versions\2.10.0.113\lib\reference\mobile\Xamarin.Mac.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\monotouch-test\GameKit\LeaderboardTest.cs">
+      <Link>GameKit\LeaderboardTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\GameKit\LeaderboardViewControllerTest.cs">
+      <Link>GameKit\LeaderboardViewControllerTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\GameKit\NotificationBannerTest.cs">
+      <Link>GameKit\NotificationBannerTest.cs</Link>
+    </Compile>
+    <Compile Include="..\common\TestRuntime.cs">
+      <Link>TestRuntime.cs</Link>
+    </Compile>
+    <Compile Include="..\common\mac\MacTestMain.cs">
+      <Link>MacTestMain.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\ArrayTest.cs">
+      <Link>Foundation\ArrayTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\AttributedStringTest.cs">
+      <Link>Foundation\AttributedStringTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\BlockOperationTest.cs">
+      <Link>Foundation\BlockOperationTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\BundleTest.cs">
+      <Link>Foundation\BundleTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\CachedUrlResponseTest.cs">
+      <Link>Foundation\CachedUrlResponseTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\CalendarTest.cs">
+      <Link>Foundation\CalendarTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\CoderTest.cs">
+      <Link>Foundation\CoderTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\CookieTest.cs">
+      <Link>Foundation\CookieTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\DateFormatterTest.cs">
+      <Link>Foundation\DateFormatterTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\DateTest.cs">
+      <Link>Foundation\DateTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\DecimalNumberTest.cs">
+      <Link>Foundation\DecimalNumberTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\DecimalTest.cs">
+      <Link>Foundation\DecimalTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\DictionaryContainerTest.cs">
+      <Link>Foundation\DictionaryContainerTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\DimensionTest.cs">
+      <Link>Foundation\DimensionTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\EncodingDetectionOptionsTest.cs">
+      <Link>Foundation\EncodingDetectionOptionsTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\FileCoordinatorTest.cs">
+      <Link>Foundation\FileCoordinatorTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\FileHandleTest.cs">
+      <Link>Foundation\FileHandleTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\FileManagerTest.cs">
+      <Link>Foundation\FileManagerTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\FormatterTests.cs">
+      <Link>Foundation\FormatterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\IndexPathTest.cs">
+      <Link>Foundation\IndexPathTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\KeyedUnarchiverTest.cs">
+      <Link>Foundation\KeyedUnarchiverTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\LocaleTest.cs">
+      <Link>Foundation\LocaleTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\MutableAttributedStringTest.cs">
+      <Link>Foundation\MutableAttributedStringTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\MutableDataTest.cs">
+      <Link>Foundation\MutableDataTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\MutableStringTest.cs">
+      <Link>Foundation\MutableStringTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NSArray1Test.cs">
+      <Link>Foundation\NSArray1Test.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NSCharacterSetTest.cs">
+      <Link>Foundation\NSCharacterSetTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NSDataTest.cs">
+      <Link>Foundation\NSDataTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NSDictionary2Test.cs">
+      <Link>Foundation\NSDictionary2Test.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NSDictionaryTest.cs">
+      <Link>Foundation\NSDictionaryTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NSExpressionTest.cs">
+      <Link>Foundation\NSExpressionTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NSLocaleTest.cs">
+      <Link>Foundation\NSLocaleTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NSMutableArray1Test.cs">
+      <Link>Foundation\NSMutableArray1Test.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NSMutableDictionary2Test.cs">
+      <Link>Foundation\NSMutableDictionary2Test.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NSMutableDictionaryTest.cs">
+      <Link>Foundation\NSMutableDictionaryTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NSMutableOrderedSet1Test.cs">
+      <Link>Foundation\NSMutableOrderedSet1Test.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NSMutableOrderedSetTest.cs">
+      <Link>Foundation\NSMutableOrderedSetTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NSMutableSet1Test.cs">
+      <Link>Foundation\NSMutableSet1Test.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NSMutableSetTest.cs">
+      <Link>Foundation\NSMutableSetTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NSOrderedSet1Test.cs">
+      <Link>Foundation\NSOrderedSet1Test.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NSOrderedSetTest.cs">
+      <Link>Foundation\NSOrderedSetTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NSSet1Test.cs">
+      <Link>Foundation\NSSet1Test.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NSSetTest.cs">
+      <Link>Foundation\NSSetTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NSStreamTest.cs">
+      <Link>Foundation\NSStreamTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NSStringTest.cs">
+      <Link>Foundation\NSStringTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NSTimeZoneTest.cs">
+      <Link>Foundation\NSTimeZoneTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NetServiceTest.cs">
+      <Link>Foundation\NetServiceTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NotificationCenter.cs">
+      <Link>Foundation\NotificationCenter.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NotificationQueueTest.cs">
+      <Link>Foundation\NotificationQueueTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\NumberTest.cs">
+      <Link>Foundation\NumberTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\ObjectTest.cs">
+      <Link>Foundation\ObjectTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\OperationQueueTest.cs">
+      <Link>Foundation\OperationQueueTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\ProtocolAttributeTest.cs">
+      <Link>Foundation\ProtocolAttributeTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\StringTest.cs">
+      <Link>Foundation\StringTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\ThreadTest.cs">
+      <Link>Foundation\ThreadTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\TimerTest.cs">
+      <Link>Foundation\TimerTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\UbiquitousKeyValueStoreTest.cs">
+      <Link>Foundation\UbiquitousKeyValueStoreTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\UrlConnectionTest.cs">
+      <Link>Foundation\UrlConnectionTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\UrlCredentialTest.cs">
+      <Link>Foundation\UrlCredentialTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\UrlProtectionSpaceTest.cs">
+      <Link>Foundation\UrlProtectionSpaceTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\UrlProtocolTest.cs">
+      <Link>Foundation\UrlProtocolTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\UrlRequestTest.cs">
+      <Link>Foundation\UrlRequestTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\UrlSessionConfigurationTest.cs">
+      <Link>Foundation\UrlSessionConfigurationTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\UrlSessionTaskMetricsTest.cs">
+      <Link>Foundation\UrlSessionTaskMetricsTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\UrlSessionTaskTest.cs">
+      <Link>Foundation\UrlSessionTaskTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\UrlSessionTaskTransactionMetricsTest.cs">
+      <Link>Foundation\UrlSessionTaskTransactionMetricsTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\UrlSessionTest.cs">
+      <Link>Foundation\UrlSessionTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\UrlTest.cs">
+      <Link>Foundation\UrlTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\UserDefaultsTest.cs">
+      <Link>Foundation\UserDefaultsTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\UuidTest.cs">
+      <Link>Foundation\UuidTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Foundation\ZoneTest.cs">
+      <Link>Foundation\ZoneTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\Security\CertificateTest.cs">
+      <Link>Security\CertificateTest.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+</Project>

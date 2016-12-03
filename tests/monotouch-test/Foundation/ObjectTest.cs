@@ -16,9 +16,15 @@ using System.Threading;
 using Foundation;
 using CoreGraphics;
 using ObjCRuntime;
-using MonoTouchException=Foundation.MonoTouchException;
 using Security;
+#if MONOMAC
+using AppKit;
+using MonoTouchException = Foundation.ObjCException;
+using UIView = AppKit.NSView;
+#else
 using UIKit;
+using MonoTouchException=Foundation.MonoTouchException;
+#endif
 #else
 using MonoTouch.CoreGraphics;
 using MonoTouch.Foundation;

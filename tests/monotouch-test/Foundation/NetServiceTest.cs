@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSNetService
 //
 // Authors:
@@ -12,7 +12,11 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
@@ -28,7 +32,14 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void DefaultCtor ()
 		{
-			using (var ns = new NSNetService ("d", "_test._tcp", UIDevice.CurrentDevice.Name, 1234)) {
+			using (var ns = new NSNetService ("d", 
+			                                  "_test._tcp",
+#if MONOMAC
+			                                  "DeviceName",
+#else
+											  UIDevice.CurrentDevice.Name, 
+#endif
+			                                  1234)) {
 				Assert.That (ns.Domain, Is.EqualTo ("d"), "Domain");
 				Assert.That (ns.Type, Is.EqualTo ("_test._tcp"), "Type");
 				Assert.That (ns.Port, Is.EqualTo (1234), "Port");

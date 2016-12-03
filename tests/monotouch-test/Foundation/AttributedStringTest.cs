@@ -2,7 +2,12 @@ using System;
 using NUnit.Framework;
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+using UIColor = AppKit.NSColor;
+#else
 using UIKit;
+#endif
 using CoreGraphics;
 using ObjCRuntime;
 #if !__WATCHOS__
@@ -154,6 +159,7 @@ namespace MonoTouchFixtures.Foundation {
 					Assert.That (copy.RetainCount, Is.EqualTo ((nint) 1), "Copy retaincount 1");
 				using (var copy = ((INSMutableCopying) s1).MutableCopy (NSZone.Default))
 					Assert.That (copy.RetainCount, Is.EqualTo ((nint) 1), "Copy retaincount 2");
+
 			}
 		}
 

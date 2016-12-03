@@ -557,6 +557,7 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.AreEqual (2, c, "Enumerator Count");
 		}
 
+#if !MONOMAC // TODO: Messaging is internal on mac
 		[Test]
 		public void InvalidType ()
 		{
@@ -578,6 +579,7 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.Throws<InvalidCastException> (() => GC.KeepAlive (dictK.Keys), "K Keys");
 			Assert.Throws<InvalidCastException> (() => dictK.KeysForObject (kv), "K KeysForObject");
 		}
+#endif
 	}
 }
 

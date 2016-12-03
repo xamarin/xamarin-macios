@@ -14,8 +14,13 @@ using System.IO;
 #if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
+#if MONOMAC
+using AppKit;
+using MonoTouchException=Foundation.ObjCException;
+#else
 using UIKit;
 using MonoTouchException=Foundation.MonoTouchException;
+#endif
 #else
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;

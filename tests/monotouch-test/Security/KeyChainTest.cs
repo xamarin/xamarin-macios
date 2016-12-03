@@ -41,6 +41,7 @@ namespace MonoTouchFixtures.Security {
 			Assert.IsTrue (rc == SecStatusCode.Success || rc == SecStatusCode.DuplicateItem, "Add_Certificate");
 		}
 
+#if !MONOMAC // No QueryAsConcreteType on Mac
 		[Test]
 		public void AddQueryRemove_Identity ()
 		{
@@ -71,6 +72,7 @@ namespace MonoTouchFixtures.Security {
 				Assert.Null (match, "match-3");
 			}
 		}
+#endif
 
 		[DllImport ("/System/Library/Frameworks/Security.framework/Security")]
 		internal extern static SecStatusCode SecItemAdd (IntPtr cfDictRef, IntPtr result);

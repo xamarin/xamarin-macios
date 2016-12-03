@@ -14,7 +14,11 @@ using System.IO;
 using System.Threading;
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 using GameKit;
 #else
 using MonoTouch.Foundation;

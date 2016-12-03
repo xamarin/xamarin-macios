@@ -18,6 +18,10 @@ using nint=global::System.Int32;
 using nuint=global::System.UInt32;
 #endif
 
+#if MONOMAC
+using MonoTouchException = Foundation.ObjCException;
+#endif
+
 namespace MonoTouchFixtures.Foundation {
 	
 	[TestFixture]

@@ -15,7 +15,11 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 using Security;
 using ObjCRuntime;
 #else
