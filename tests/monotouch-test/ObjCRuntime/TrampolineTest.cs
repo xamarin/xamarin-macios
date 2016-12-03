@@ -27,22 +27,29 @@ using OpenTK;
 using NUnit.Framework;
 
 #if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
+using RectangleF = CoreGraphics.CGRect;
+using SizeF = CoreGraphics.CGSize;
+using PointF = CoreGraphics.CGPoint;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
 #endif
 
-namespace MonoTouchFixtures.ObjCRuntime {
-	
+namespace MonoTouchFixtures.ObjCRuntime
+{
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class TrampolineTest {
+	public class TrampolineTest
+	{
 		public static readonly nfloat pi = 3.14159f;
-
+#if MONOMAC
+		public static bool IsSim64 { get { return false; } }
+		public static bool IsSim32 { get { return false; } }
+		public static bool IsArm64 { get { return false; } }
+		public static bool IsArm32 { get { return false; } }
+#else
 		public static bool IsSim64 { get { return IntPtr.Size == 8 && Runtime.Arch == Arch.SIMULATOR; } }
 		public static bool IsSim32 { get { return IntPtr.Size == 4 && Runtime.Arch == Arch.SIMULATOR; } }
 		public static bool IsArm64 { get { return IntPtr.Size == 8 && Runtime.Arch == Arch.DEVICE; } }
@@ -55,6 +62,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #endif
 			}
 		}
+#endif
 
 		public static bool IsArmv7k {
 			get {

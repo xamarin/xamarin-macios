@@ -12,7 +12,9 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
+#if !MONOMAC
 using UIKit;
+#endif
 using GameController;
 #else
 using MonoTouch.Foundation;
@@ -21,17 +23,21 @@ using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.GameController {
+namespace MonoTouchFixtures.GameController
+{
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class GamepadSnapshotTest {
+	public class GamepadSnapshotTest
+	{
 
 		[Test]
 		public void Nullability ()
 		{
+#if !MONOMAC
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (7, 0))
 				Assert.Inconclusive ("GameController is iOS7+");
+#endif
 			
 			GCGamepadSnapShotDataV100 data;
 			Assert.False (GCGamepadSnapshot.TryGetSnapshotData (null, out data), "TryGetSnapshotData");

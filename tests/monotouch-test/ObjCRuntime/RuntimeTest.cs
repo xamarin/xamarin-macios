@@ -12,7 +12,9 @@ using ObjCRuntime;
 #if !__WATCHOS__
 using SpriteKit;
 #endif
+#if !MONOMAC
 using UIKit;
+#endif
 #else
 using MonoTouch;
 using MonoTouch.Foundation;
@@ -23,24 +25,27 @@ using MonoTouch.UIKit;
 using NUnit.Framework;
 
 #if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
+using RectangleF = CoreGraphics.CGRect;
+using SizeF = CoreGraphics.CGSize;
+using PointF = CoreGraphics.CGPoint;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
 #endif
 
-namespace MonoTouchFixtures.ObjCRuntime {
+namespace MonoTouchFixtures.ObjCRuntime
+{
 
-	static class AssociatedObjects {
-		public enum AssociationPolicy { // uintptr_t
-			Assign			= 0,
-			RetainNonAtomic	= 1,
-			CopyNonAtomic	= 3,
-			Retain			= 0x301,
-			Copy			= 0x303,
+	static class AssociatedObjects
+	{
+		public enum AssociationPolicy
+		{ // uintptr_t
+			Assign = 0,
+			RetainNonAtomic = 1,
+			CopyNonAtomic = 3,
+			Retain = 0x301,
+			Copy = 0x303,
 		}
 
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
@@ -48,7 +53,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		public static void SetAssociatedObject (this NSObject self, IntPtr key, NSObject value, AssociationPolicy policy)
 		{
-			objc_setAssociatedObject (self.Handle, key, value.Handle, new IntPtr ((int) policy));
+			objc_setAssociatedObject (self.Handle, key, value.Handle, new IntPtr ((int)policy));
 		}
 
 		public static IntPtr GetAssociatedPointer (this NSObject self, IntPtr key)
@@ -64,7 +69,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class RuntimeTest {
+	public class RuntimeTest
+	{
 		static bool connectMethodTestDone;
 		[Test]
 		public void ConnectMethodTest ()
@@ -76,8 +82,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Runtime.ConnectMethod (typeof (ConnectMethodClass).GetMethod ("Method"), new Selector ("method"));
 		}
 
-		class ConnectMethodClass : NSObject { 
-			public void Method () {	}
+		class ConnectMethodClass : NSObject
+		{
+			public void Method () { }
 		}
 
 		[Test]
@@ -93,7 +100,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Runtime.RegisterAssembly (null);
 		}
 
-#if !__WATCHOS__ && !__TVOS__
+#if !__WATCHOS__ && !__TVOS__ && !MONOMAC
 		[Test]
 		public void StartWWAN ()
 		{
@@ -171,10 +178,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 			var notifierHandle = IntPtr.Zero;
 
-//			bool isDeallocated = false;
+			//			bool isDeallocated = false;
 			Action deallocated = () => {
 				//Console.WriteLine ("Final release!");
-//				isDeallocated = true;
+				//				isDeallocated = true;
 			};
 
 			ManualResetEvent isCollected = new ManualResetEvent (false);
@@ -224,16 +231,17 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			NSRunLoop.Main.RunUntil (NSDate.Now.AddSeconds (0.1));
 			// Don't verify cleanup, it's not consistent.
 			// And in any case it's not what this test is about.
-//			Assert.IsTrue (isDeallocated, "released");
+			//			Assert.IsTrue (isDeallocated, "released");
 
 			return true;
 		}
 
-		class Notifier : NSObject {
+		class Notifier : NSObject
+		{
 			Action collected;
 			Action notified;
 
-			public Notifier (Action collected, Action notified) 
+			public Notifier (Action collected, Action notified)
 			{
 				this.collected = collected;
 				this.notified = notified;
@@ -252,8 +260,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-		class Level1 : NSObject {} // we need two levels of subclassing, since the XI will override 'release' on the first one, and we need to override it as well.
-		class ReleaseNotifier : Level1 {
+		class Level1 : NSObject { } // we need two levels of subclassing, since the XI will override 'release' on the first one, and we need to override it as well.
+		class ReleaseNotifier : Level1
+		{
 			Action deallocated;
 			bool enabled;
 
@@ -290,7 +299,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			if ((IntPtr.Size == 8) && TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("NSString retainCount is nuint.MaxValue, so we won't collect them");
-			
+
 #if __WATCHOS__
 			if (Runtime.Arch == Arch.DEVICE)
 				Assert.Ignore ("This test uses too much memory for the watch.");
@@ -299,11 +308,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			NSDictionary dict = null;
 
 			var thread = new Thread (() => {
-				dict = new NSMutableDictionary();
-				dict["Hello"] = new NSString(@"World");
-				dict["Bye"] = new NSString(@"Bye");
-			})
-			{ 
+				dict = new NSMutableDictionary ();
+				dict ["Hello"] = new NSString (@"World");
+				dict ["Bye"] = new NSString (@"Bye");
+			}) {
 				IsBackground = true
 			};
 			thread.Start ();
@@ -321,17 +329,17 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 				while (broken == 0 && watch.ElapsedMilliseconds < 10000) {
 					// try getting using Systen.String key
-					string hello = getter1("Hello");
+					string hello = getter1 ("Hello");
 					if (hello == null)
 						broken = 1;
 
-					string bye = getter1("Bye");
+					string bye = getter1 ("Bye");
 					if (bye == null)
 						broken = 2;
 
 					// try getting using NSString key
-					string nHello = getter2(new NSString(@"Hello"));
-					string nBye = getter2(new NSString(@"Bye"));
+					string nHello = getter2 (new NSString (@"Hello"));
+					string nBye = getter2 (new NSString (@"Bye"));
 
 					if (nHello == null)
 						broken = 3;
@@ -359,7 +367,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.Throws<ArgumentNullException> (() => Runtime.ConnectMethod (minfo, null), "2");
 			Assert.Throws<ArgumentNullException> (() => Runtime.ConnectMethod (null, minfo, new ExportAttribute ("foo")), "3");
 			Assert.Throws<ArgumentNullException> (() => Runtime.ConnectMethod (typeof (RuntimeTest), null, new ExportAttribute ("foo")), "4");
-			Assert.Throws<ArgumentNullException> (() => Runtime.ConnectMethod (typeof (RuntimeTest), minfo, (ExportAttribute) null), "5");
+			Assert.Throws<ArgumentNullException> (() => Runtime.ConnectMethod (typeof (RuntimeTest), minfo, (ExportAttribute)null), "5");
 
 			Assert.Throws<ArgumentException> (() => Runtime.ConnectMethod (typeof (RuntimeTest), minfo, new Selector ("foo")), "6");
 			Assert.Throws<ArgumentException> (() => Runtime.ConnectMethod (typeof (A), minfo, new Selector ("foo")), "7");
@@ -421,8 +429,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			calledTest3 = true;
 		}
 
-		class A : NSObject {
-			public void Test() {
+		class A : NSObject
+		{
+			public void Test ()
+			{
 				Console.WriteLine ("Tested!");
 			}
 		}
@@ -442,11 +452,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 				valueptr = Messaging.IntPtr_objc_msgSend_IntPtr (Class.GetHandle (typeof (NSString)), Selector.GetHandle ("stringWithUTF8String:"), strptr);
 				obj = Runtime.GetINativeObject<NSObject> (valueptr, false) as NSString;
-				Assert.AreEqual ("value", (string) obj, "NSObject");
+				Assert.AreEqual ("value", (string)obj, "NSObject");
 
 				valueptr = Messaging.IntPtr_objc_msgSend_IntPtr (Class.GetHandle (typeof (NSString)), Selector.GetHandle ("stringWithUTF8String:"), strptr);
 				obj = Runtime.GetINativeObject<NSString> (valueptr, false) as NSString;
-				Assert.AreEqual ("value", (string) obj, "NSString");
+				Assert.AreEqual ("value", (string)obj, "NSString");
 
 				valueptr = Messaging.IntPtr_objc_msgSend_IntPtr (Class.GetHandle (typeof (NSString)), Selector.GetHandle ("stringWithUTF8String:"), strptr);
 				var nscopying = Runtime.GetINativeObject<INSCopying> (valueptr, false);
@@ -479,7 +489,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			// decreased to 1
 			var max_iterations = 100;
 			var iterations = 0;
-			while ((long) obj.RetainCount > (long) count / 2 && iterations++ < max_iterations) {
+			while ((long)obj.RetainCount > (long)count / 2 && iterations++ < max_iterations) {
 				Thread.Sleep (100);
 			}
 			Assert.That (obj.RetainCount, Is.Not.GreaterThan (count / 2), "RC. Iterations: " + iterations);
@@ -488,7 +498,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 
-		class ResurrectedObjectsDisposedTestClass : NSObject {
+		class ResurrectedObjectsDisposedTestClass : NSObject
+		{
 			[Export ("invokeMe:wait:")]
 			static bool InvokeMe (NSObject obj, int invokerWait)
 			{
@@ -499,7 +510,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
+#if !MONOMAC // Failing with 10 broken
 		[TestCase (typeof (NSObject))]
+#endif
 		[TestCase (typeof (ResurrectedObjectsDisposedTestClass))]
 		public void ResurrectedObjectsDisposedTest (Type type)
 		{

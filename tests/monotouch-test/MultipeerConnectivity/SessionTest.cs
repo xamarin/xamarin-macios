@@ -12,7 +12,9 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
+#if !MONOMAC
 using UIKit;
+#endif
 using MultipeerConnectivity;
 using ObjCRuntime;
 using Security;
@@ -28,20 +30,22 @@ using NUnit.Framework;
 using MonoTouchFixtures.Security;
 
 #if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
+using RectangleF = CoreGraphics.CGRect;
+using SizeF = CoreGraphics.CGSize;
+using PointF = CoreGraphics.CGPoint;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
 #endif
-namespace MonoTouchFixtures.MultipeerConnectivity {
+namespace MonoTouchFixtures.MultipeerConnectivity
+{
 
 	[TestFixture]
 	// we want the test to be availble if we use the linker
 	[Preserve (AllMembers = true)]
-	public class SessionTest {
+	public class SessionTest
+	{
 
 		[Test]
 		public void CtorPeer ()
@@ -53,7 +57,11 @@ namespace MonoTouchFixtures.MultipeerConnectivity {
 			using (var s = new MCSession (peer)) {
 				Assert.AreSame (s.MyPeerID, peer, "MyPeerID");
 				Assert.Null (s.SecurityIdentity, "SecurityIdentity");
+#if MONOMAC
+				var pref = MCEncryptionPreference.Required;
+#else
 				var pref = UIDevice.CurrentDevice.CheckSystemVersion (9,0) ? MCEncryptionPreference.Required : MCEncryptionPreference.Optional;
+#endif
 				Assert.That (s.EncryptionPreference, Is.EqualTo (pref), "EncryptionPreference");
 				Assert.That (s.ConnectedPeers, Is.Empty, "ConnectedPeers");
 			}

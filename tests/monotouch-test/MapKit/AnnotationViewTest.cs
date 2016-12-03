@@ -8,7 +8,12 @@ using System.Reflection;
 #if XAMCORE_2_0
 using Foundation;
 using MapKit;
+#if MONOMAC
+using UIImage = AppKit.NSImage;
+using UIView = AppKit.NSView;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.Foundation;
 using MonoTouch.MapKit;

@@ -17,7 +17,11 @@ using System.Runtime.InteropServices;
 #if XAMCORE_2_0
 using Foundation;
 using VideoToolbox;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 using CoreMedia;
 using AVFoundation;
 using CoreFoundation;
@@ -39,20 +43,22 @@ using MonoTouch.ObjCRuntime;
 using NUnit.Framework;
 
 #if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
+using RectangleF = CoreGraphics.CGRect;
+using SizeF = CoreGraphics.CGSize;
+using PointF = CoreGraphics.CGPoint;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
 #endif
 
-namespace MonoTouchFixtures.VideoToolbox {
+namespace MonoTouchFixtures.VideoToolbox
+{
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class VTUtilitiesTests {
+	public class VTUtilitiesTests
+	{
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static int CFGetRetainCount (IntPtr handle);
@@ -63,7 +69,11 @@ namespace MonoTouchFixtures.VideoToolbox {
 			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))
 				Assert.Ignore ("Ignoring VideoToolbox.VTUtilitiesTests: Requires iOS9+");
 
+#if MONOMAC
+			var originalImage = new NSImage (NSBundle.MainBundle.PathForResource ("Xam", "png", "CoreImage"));
+#else
 			var originalImage = UIImage.FromBundle ("CoreImage/Xam.png");
+#endif
 			var originalCGImage = originalImage.CGImage;
 
 			var pxbuffer = new CVPixelBuffer (originalCGImage.Width, originalCGImage.Height, CVPixelFormatType.CV32ARGB,

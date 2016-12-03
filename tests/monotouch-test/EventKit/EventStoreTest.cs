@@ -23,8 +23,9 @@ using NUnit.Framework;
 using System.Threading;
 using System.Linq;
 
-namespace MonoTouchFixtures.EventKit {
-	
+namespace MonoTouchFixtures.EventKit
+{
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class EventStoreTest
@@ -36,7 +37,9 @@ namespace MonoTouchFixtures.EventKit {
 			var store = new EKEventStore ();
 			Assert.AreEqual ("Calendar", store.DefaultCalendarForNewEvents.Title, "DefaultCalendarForNewEvents");
 			Assert.IsNull (store.DefaultCalendarForNewReminders, "DefaultCalendarForNewReminders");
+#if !MONOMAC // Not available on Mac
 			Assert.IsNotNull (store.Calendars, "Calendars");
+#endif
 			Assert.IsNotNull (store.Sources, "Sources");
 		}
 

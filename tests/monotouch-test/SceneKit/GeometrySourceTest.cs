@@ -1,4 +1,4 @@
-﻿// Copyright 2015 Xamarin Inc. All rights reserved.
+// Copyright 2015 Xamarin Inc. All rights reserved.
 
 #if !__WATCHOS__
 
@@ -8,7 +8,11 @@ using Foundation;
 using Metal;
 using ObjCRuntime;
 using SceneKit;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.Foundation;
 using MonoTouch.Metal;
@@ -19,29 +23,36 @@ using MonoTouch.UIKit;
 using NUnit.Framework;
 
 #if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
+using RectangleF = CoreGraphics.CGRect;
+using SizeF = CoreGraphics.CGSize;
+using PointF = CoreGraphics.CGPoint;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
 #endif
 
-namespace MonoTouchFixtures.SceneKit {
+namespace MonoTouchFixtures.SceneKit
+{
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class GeometrySourceTest {
+	public class GeometrySourceTest
+	{
 
 		[Test]
 		public void FromMetalBuffer ()
 		{
+#if MONOMAC
+			if (!TestRuntime.CheckMacSystemVersion (10, 11))
+				Assert.Inconclusive ("macOS 10.11+ required");
+#else
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (9,0))
 				Assert.Inconclusive ("iOS 9+ required");
 			if (Runtime.Arch != Arch.DEVICE)
 				Assert.Inconclusive ("Metal tests only works on device so far");
-
+#endif
+			
 			var device = MTLDevice.SystemDefault;
 			if (device == null)
 				Assert.Inconclusive ("Device does not support Metal");

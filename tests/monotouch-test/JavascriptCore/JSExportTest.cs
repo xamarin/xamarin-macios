@@ -7,7 +7,6 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
-using UIKit;
 using JavaScriptCore;
 using ObjCRuntime;
 #else
@@ -21,7 +20,8 @@ using NUnit.Framework;
 using XamarinTests.ObjCRuntime;
 using MonoTouchFixtures.ObjCRuntime;
 
-namespace MonoTouchFixtures.JavascriptCore {
+namespace MonoTouchFixtures.JavascriptCore
+{
 
 	// we want the test to be availble if we use the linker
 	[Preserve (AllMembers = true)]

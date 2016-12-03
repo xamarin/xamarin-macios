@@ -4,7 +4,11 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using Security;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.Foundation;
 using MonoTouch.Security;
@@ -14,11 +18,13 @@ using NUnit.Framework;
 using NUnit.Framework.Internal;
 using System.Security.Cryptography.X509Certificates;
 
-namespace MonoTouchFixtures.Security {
+namespace MonoTouchFixtures.Security
+{
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class RecordTest {
+	public class RecordTest
+	{
 
 		[Test]
 		public void Identity ()
@@ -70,7 +76,7 @@ namespace MonoTouchFixtures.Security {
 			Assert.Null (rec.MatchItemList, "MatchItemList");
 
 			using (var data = new NSData ()) {
-				rec.MatchIssuers = new NSData[] { data };
+				rec.MatchIssuers = new NSData [] { data };
 				Assert.AreSame (rec.MatchIssuers [0], data, "MatchIssuers [0]");
 			}
 
@@ -82,6 +88,9 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
+#if MONOMAC
+		[Ignore ("Returns SecAccessible.Invalid")]
+#endif
 		public void Accessible_17579 ()
 		{
 			Accessible (SecAccessible.AfterFirstUnlock);
@@ -224,10 +233,10 @@ namespace MonoTouchFixtures.Security {
 			string password = null;
 			var searchRecord = new SecRecord (SecKind.InternetPassword) {
 				Server = "Test1",
-				Account = username.ToLower()
+				Account = username.ToLower ()
 			};
 			SecStatusCode code;
-			var record = SecKeyChain.QueryAsRecord(searchRecord, out code);
+			var record = SecKeyChain.QueryAsRecord (searchRecord, out code);
 			if (code == SecStatusCode.Success && record != null)
 				password = NSString.FromData (record.ValueData, NSStringEncoding.UTF8);
 			return password;
@@ -277,6 +286,9 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
+#if MONOMAC
+		[Ignore ("SecStatusCode code = SecKeyChain.Add (rec); returns SecStatusCode.Param")]
+#endif
 		public void IdentityRecordTest ()
 		{
 			using (var identity = IdentityTest.GetIdentity ())
@@ -293,6 +305,7 @@ namespace MonoTouchFixtures.Security {
 			}
 		}
 
+#if !MONOMAC // Works different on Mac
 		[Test]
 		public void SecRecordRecordTest ()
 		{
@@ -331,5 +344,6 @@ namespace MonoTouchFixtures.Security {
 				}
 			}
 		}
+#endif
 	}
 }

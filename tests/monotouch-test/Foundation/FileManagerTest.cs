@@ -12,7 +12,11 @@ using System.IO;
 using System.Threading;
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
@@ -36,8 +40,10 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void GetUrlForUbiquityContainer ()
 		{
+#if !MONOMAC
 			if ((Runtime.Arch == Arch.SIMULATOR) && RunningOnSnowLeopard)
 				Assert.Inconclusive ("sometimes crash under the iOS simulator (generally on the SL/iOS5 bots)");
+#endif
 
 			NSFileManager fm = new NSFileManager ();
 			if (TestRuntime.CheckXcodeVersion (4, 5) && fm.UbiquityIdentityToken == null) {
@@ -81,6 +87,8 @@ namespace MonoTouchFixtures.Foundation {
 				// aborting is evil, so don't bother aborting the thread, just let it run its course
 			}
 		}
+		//GetSkipBackupAttribute doesn't exist on Mac
+#if !MONOMAC
 		
 		[Test]
 		public void GetSkipBackupAttribute ()
@@ -111,6 +119,7 @@ namespace MonoTouchFixtures.Foundation {
 				File.Delete (filename);
 			}
 		}
+#endif
 
 		[Test]
 		public void DefaultManager ()
@@ -120,6 +129,9 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
+#if MONOMAC
+		[Ignore ("DocumentsDirectory and MyDocuments point to different locations on mac")]
+#endif
 		public void DocumentDirectory ()
 		{
 			var path = NSFileManager.DefaultManager.GetUrls (NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomain.User) [0].Path;
@@ -137,6 +149,9 @@ namespace MonoTouchFixtures.Foundation {
 		}
 
 		[Test]
+#if MONOMAC
+		[Ignore ("Environment.SpecialFolder.Resources is empty string on mac")]
+#endif
 		public void LibraryDirectory ()
 		{
 			var path = NSFileManager.DefaultManager.GetUrls (NSSearchPathDirectory.LibraryDirectory, NSSearchPathDomain.User) [0].Path;

@@ -13,7 +13,9 @@ using System;
 #if XAMCORE_2_0
 using CoreGraphics;
 using Foundation;
+#if !MONOMAC
 using UIKit;
+#endif
 #if !__TVOS__
 using MultipeerConnectivity;
 #endif
@@ -32,15 +34,21 @@ using MonoTouch.ObjCRuntime;
 using OpenTK;
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.ModelIO {
+namespace MonoTouchFixtures.ModelIO
+{
 
 	[TestFixture]
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
-	public class MDLLightTest {
+	public class MDLLightTest
+	{
 		[TestFixtureSetUp]
 		public void Setup ()
 		{
+#if MONOMAC
+			if (!TestRuntime.CheckMacSystemVersion (10, 11))
+				Assert.Ignore ("Requires macOS 10.11+");
+#else
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (9, 0))
 				Assert.Ignore ("Requires iOS9+");
 			
@@ -53,6 +61,7 @@ namespace MonoTouchFixtures.ModelIO {
 					obj.GetIrradiance (Vector3.Zero, CGColorSpace.CreateGenericRgb ());
 				}
 			}
+#endif
 		}
 
 		[Test]
@@ -60,20 +69,28 @@ namespace MonoTouchFixtures.ModelIO {
 		{
 			using (var obj = new MDLLight ()) {
 				var color = obj.GetIrradiance (new Vector3 (1, 2, 3));
+#if MONOMAC
+				Assert.IsNotNull (color, "color 1");
+#else
 				if (Runtime.Arch == Arch.SIMULATOR && Environment.OSVersion.Version.Major < 15) {
 					Assert.IsNull (color, "color 1");
 				} else {
 					Assert.IsNotNull (color, "color 1");
 				}
+#endif
 			}
 
 			using (var obj = new MDLLight ()) {
 				var color = obj.GetIrradiance (new Vector3 (1, 2, 3), CGColorSpace.CreateGenericRgb ());
+#if MONOMAC
+				Assert.IsNotNull (color, "color 2");
+#else
 				if (Runtime.Arch == Arch.SIMULATOR && Environment.OSVersion.Version.Major < 15) {
 					Assert.IsNull (color, "color 2");
 				} else {
 					Assert.IsNotNull (color, "color 2");
 				}
+#endif
 			}
 		}
 	}

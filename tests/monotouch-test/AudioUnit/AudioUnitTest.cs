@@ -34,10 +34,13 @@ namespace MonoTouchFixtures.AudioUnit
 			// Test case from bxc #5410
 
 			// Create instance of AudioUnit object
-			AudioComponentDescription cd = new AudioComponentDescription ()
-			{
+			AudioComponentDescription cd = new AudioComponentDescription () {
 				ComponentType = AudioComponentType.Output,
+#if MONOMAC
+				ComponentSubType = (int)AudioUnitSubType.VoiceProcessingIO,
+#else
 				ComponentSubType = 0x72696f63, // Remote_IO
+#endif
 				ComponentManufacturer = AudioComponentManufacturerType.Apple
 			};
 			AudioComponent component = AudioComponent.FindComponent (ref cd);

@@ -4,7 +4,6 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
-using UIKit;
 using SpriteKit;
 #else
 using MonoTouch.Foundation;

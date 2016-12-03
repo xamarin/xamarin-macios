@@ -5,7 +5,9 @@ using System;
 #if XAMCORE_2_0
 using CoreMedia;
 using Foundation;
+#if !MONOMAC
 using UIKit;
+#endif
 using MediaToolbox;
 #else
 using MonoTouch.Foundation;
@@ -15,19 +17,26 @@ using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.MediaToolbox {
-	
+namespace MonoTouchFixtures.MediaToolbox
+{
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class FormatNamesTest {
+	public class FormatNamesTest
+	{
 
 		[Test]
 		[Culture ("en")]
 		public void LocalizedNameForMediaType ()
 		{
+#if MONOMAC
+			if (!TestRuntime.CheckMacSystemVersion (10, 11))
+				Assert.Ignore ("Requires macOS 10.11");
+#else
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (9, 0))
 				Assert.Ignore ("Requires iOS 9.0");
-			
+#endif
+
 			Assert.That (CMMediaType.Audio.GetLocalizedName (), Is.EqualTo ("Sound"), "Audio");
 			Assert.That (CMMediaType.ClosedCaption.GetLocalizedName (), Is.EqualTo ("Closed Caption"), "ClosedCaption");
 			Assert.That (CMMediaType.Metadata.GetLocalizedName (), Is.EqualTo ("meta"), "Metadata");
@@ -45,9 +54,14 @@ namespace MonoTouchFixtures.MediaToolbox {
 		[Culture ("en")]
 		public void LocalizedNameForMediaSubType ()
 		{
+#if MONOMAC
+			if (!TestRuntime.CheckMacSystemVersion (10, 11))
+				Assert.Ignore ("Requires macOS 10.11");
+#else
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (9, 0))
 				Assert.Ignore ("Requires iOS 9.0");
-
+#endif
+			
 			Assert.That (CMMediaType.ClosedCaption.GetLocalizedName ((uint) CMClosedCaptionFormatType.ATSC), Is.EqualTo ("ATSC/52 part-4"), "ATSC");
 			Assert.That (CMMediaType.ClosedCaption.GetLocalizedName ((uint) CMClosedCaptionFormatType.CEA608), Is.EqualTo ("CEA 608"), "CEA608");
 			Assert.That (CMMediaType.ClosedCaption.GetLocalizedName ((uint) CMClosedCaptionFormatType.CEA708), Is.EqualTo ("CEA 708"), "CEA708");

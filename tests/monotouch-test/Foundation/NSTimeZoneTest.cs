@@ -49,10 +49,12 @@ namespace MonoTouchFixtures.Foundation {
 			foreach (var name in NSTimeZone.KnownTimeZoneNames) {
 				// simulator uses OSX to get timezones which might have some holes,
 				// e.g. @"Pacific/Bougainville" does not seems to be available in Mavericks
+#if !MONOMAC
 				if (Runtime.Arch == Arch.SIMULATOR) {
 					if (!File.Exists (Path.Combine ("/usr/share/zoneinfo/", name)))
 						continue;
 				}
+#endif
 				TimeZoneInfo tzi = TimeZoneInfo.FindSystemTimeZoneById (name);
 				Assert.NotNull (tzi.GetUtcOffset (DateTime.Now), name);
 			}

@@ -13,7 +13,6 @@ using System;
 using System.IO;
 #if XAMCORE_2_0
 using Foundation;
-using MediaPlayer;
 using AudioToolbox;
 using CoreFoundation;
 #else
@@ -25,8 +24,9 @@ using MonoTouch.CoreFoundation;
 using NUnit.Framework;
 using System.Threading;
 
-namespace MonoTouchFixtures.AudioToolbox {
-	
+namespace MonoTouchFixtures.AudioToolbox
+{
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class SystemSoundTest
@@ -34,11 +34,15 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void FromFile ()
 		{
+#if MONOMAC
+			var path = NSBundle.MainBundle.PathForResource ("1", "caf", "AudioToolbox");
+#else
 			var path = Path.GetFullPath (Path.Combine ("AudioToolbox", "1.caf"));
+#endif
 
 			using (var ss = SystemSound.FromFile (NSUrl.FromFilename (path))) {
 				Assert.AreEqual (AudioServicesError.None, ss.AddSystemSoundCompletion (delegate {
-					}));
+				}));
 
 				ss.PlaySystemSound ();
 			}
@@ -47,7 +51,11 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void Properties ()
 		{
+#if MONOMAC
+			var path = NSBundle.MainBundle.PathForResource ("1", "caf", "AudioToolbox");
+#else
 			var path = Path.GetFullPath (Path.Combine ("AudioToolbox", "1.caf"));
+#endif
 
 			using (var ss = SystemSound.FromFile (NSUrl.FromFilename (path))) {
 				Assert.That (ss.IsUISound, Is.True, "#1");
@@ -55,6 +63,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 			}
 		}
 
+#if !MONOMAC // Currently no AppDelegate in xammac_test
 		[Test]
 		public void TestCallbackPlaySystem ()
 		{
@@ -94,11 +103,16 @@ namespace MonoTouchFixtures.AudioToolbox {
 				), () => completed), "TestCallbackPlayAlert");
 			}
 		}
+#endif
 
 		[Test]
 		public void DisposeTest ()
 		{
+#if MONOMAC
+			var path = NSBundle.MainBundle.PathForResource ("1", "caf", "AudioToolbox");
+#else
 			var path = Path.GetFullPath (Path.Combine ("AudioToolbox", "1.caf"));
+#endif
 
 			var ss = SystemSound.FromFile (NSUrl.FromFilename (path));
 			Assert.That (ss.Handle, Is.Not.EqualTo (IntPtr.Zero), "DisposeTest");

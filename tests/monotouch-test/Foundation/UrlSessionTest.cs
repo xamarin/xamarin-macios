@@ -12,7 +12,11 @@ using System.IO;
 
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
@@ -27,6 +31,8 @@ namespace MonoTouchFixtures.Foundation {
 	[Preserve (AllMembers = true)]
 	public class UrlSessionTest {
 
+		//TODO: TestRuntime.RunAsync is not on mac currently
+#if !MONOMAC
 		// FIXME all test cases are failing on bots with Xcode 8 / watchOS 3
 #if !__WATCHOS__
 		[Test]
@@ -136,6 +142,7 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.IsNull (ex, "Exception");
 			Assert.AreEqual (-1, failed_iteration, "Failed");
 		}
+#endif
 
 		[Test]
 		public void SharedSession ()

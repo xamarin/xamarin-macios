@@ -11,7 +11,11 @@ using System;
 using System.Drawing;
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 using CoreGraphics;
 #else
 using MonoTouch.CoreGraphics;
@@ -22,20 +26,22 @@ using MonoTouch.UIKit;
 using NUnit.Framework;
 
 #if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
+using RectangleF = CoreGraphics.CGRect;
+using SizeF = CoreGraphics.CGSize;
+using PointF = CoreGraphics.CGPoint;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
 #endif
 
-namespace MonoTouchFixtures.CoreGraphics {
-	
+namespace MonoTouchFixtures.CoreGraphics
+{
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class PDFInfoTest {
+	public class PDFInfoTest
+	{
 
 		static public CGPDFInfo GetInfo ()
 		{
@@ -53,6 +59,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			};
 		}
 
+#if !MONOMAC // Not on mac
 		[Test]
 		public void ToDictionary ()
 		{
@@ -60,5 +67,6 @@ namespace MonoTouchFixtures.CoreGraphics {
 			var info = GetInfo ();
 			UIGraphics.BeginPDFContext("file", RectangleF.Empty, info); 
 		}
+#endif
 	}
 }

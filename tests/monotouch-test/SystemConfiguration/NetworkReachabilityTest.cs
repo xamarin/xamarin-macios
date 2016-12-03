@@ -12,7 +12,9 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
+#if !MONOMAC
 using UIKit;
+#endif
 using ObjCRuntime;
 using SystemConfiguration;
 #else
@@ -24,7 +26,8 @@ using MonoTouch.UIKit;
 using NUnit.Framework;
 using System.Net;
 
-namespace MonoTouchFixtures.SystemConfiguration {
+namespace MonoTouchFixtures.SystemConfiguration
+{
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
@@ -33,8 +36,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		[Test]
 		public void CtorNameAddress ()
 		{
-			using (var nr = new NetworkReachability ("apple.com"))
-			{
+			using (var nr = new NetworkReachability ("apple.com")) {
 				NetworkReachabilityFlags flags;
 
 				Assert.IsTrue (nr.TryGetFlags (out flags));
@@ -45,8 +47,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		[Test]
 		public void CtorIPAddress ()
 		{
-			using (var nr = new NetworkReachability (IPAddress.Loopback))
-			{
+			using (var nr = new NetworkReachability (IPAddress.Loopback)) {
 				NetworkReachabilityFlags flags;
 
 				Assert.IsTrue (nr.TryGetFlags (out flags), "#1");
@@ -59,16 +60,14 @@ namespace MonoTouchFixtures.SystemConfiguration {
 				Assert.True ((flags & NetworkReachabilityFlags.Reachable) != 0, "Reachable");
 			}
 
-			using (var nr = new NetworkReachability (new IPAddress (new byte[] { 10, 99, 99, 99 })))
-			{
+			using (var nr = new NetworkReachability (new IPAddress (new byte [] { 10, 99, 99, 99 }))) {
 				NetworkReachabilityFlags flags;
 
 				Assert.IsTrue (nr.TryGetFlags (out flags), "#2");
 				//Assert.That (flags, Is.EqualTo (NetworkReachabilityFlags.Reachable), "#2 Reachable");
 			}
 
-			using (var nr = new NetworkReachability (IPAddress.IPv6Loopback))
-			{
+			using (var nr = new NetworkReachability (IPAddress.IPv6Loopback)) {
 				NetworkReachabilityFlags flags;
 
 				Assert.IsTrue (nr.TryGetFlags (out flags), "#3");
@@ -76,8 +75,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 				//	NetworkReachabilityFlags.TransientConnection | NetworkReachabilityFlags.Reachable | NetworkReachabilityFlags.ConnectionRequired), "#3 Reachable");
 			}
 
-			using (var nr = new NetworkReachability (IPAddress.Parse ("2001:4860:4860::8844")))
-			{
+			using (var nr = new NetworkReachability (IPAddress.Parse ("2001:4860:4860::8844"))) {
 				NetworkReachabilityFlags flags;
 
 				Assert.IsTrue (nr.TryGetFlags (out flags), "#4");
@@ -92,33 +90,35 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		[Test]
 		public void CtorIPAddressPair ()
 		{
-			var address = Dns.GetHostAddresses ("apple.com")[0];
-			using (var nr = new NetworkReachability (IPAddress.Loopback, address))
-			{
+			var address = Dns.GetHostAddresses ("apple.com") [0];
+			using (var nr = new NetworkReachability (IPAddress.Loopback, address)) {
 				NetworkReachabilityFlags flags;
 
 				Assert.IsTrue (nr.TryGetFlags (out flags), "#1");
 				// using Loopback iOS 10 / tvOS 10 returns no flags (0) on devices
-				if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (8,0))
-					Assert.That ((int) flags, Is.EqualTo (0), "#1 Reachable");
+#if !MONOMAC
+				if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (8, 0))
+					Assert.That ((int)flags, Is.EqualTo (0), "#1 Reachable");
 				else
-					Assert.That (flags, Is.EqualTo (NetworkReachabilityFlags.Reachable), "#1 Reachable");
+#endif
+				Assert.That (flags, Is.EqualTo (NetworkReachabilityFlags.Reachable), "#1 Reachable");
 			}
 
-			using (var nr = new NetworkReachability (null, address))
-			{
+			using (var nr = new NetworkReachability (null, address)) {
 				NetworkReachabilityFlags flags;
 
 				Assert.IsTrue (nr.TryGetFlags (out flags), "#2");
 				Assert.That (flags, Is.EqualTo (NetworkReachabilityFlags.Reachable), "#2 Reachable");
 			}
 
-			using (var nr = new NetworkReachability (IPAddress.Loopback, null))
-			{
+			using (var nr = new NetworkReachability (IPAddress.Loopback, null)) {
 				NetworkReachabilityFlags flags;
 
 				Assert.IsTrue (nr.TryGetFlags (out flags), "#3");
-				// using Loopback iOS 10 / tvOS 10 returns no flags (0) on devices
+				// using Loopback iOS 10 / tvOS 10 / macOS 10.12 returns no flags (0) on devices
+#if MONOMAC
+				Assert.That ((int)flags, Is.EqualTo (0), "#3 Reachable");
+#else
 				if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (8, 0))
 					Assert.That ((int)flags, Is.EqualTo (0), "#3 Reachable");
 				else {
@@ -127,6 +127,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 						expected |= NetworkReachabilityFlags.IsLocalAddress;
 					Assert.That (flags, Is.EqualTo (expected), "#3 Reachable");
 				}
+#endif
 			}
 		}
 

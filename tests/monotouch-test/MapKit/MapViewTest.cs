@@ -8,7 +8,9 @@ using System.Drawing;
 using System.Reflection;
 #if XAMCORE_2_0
 using Foundation;
+#if !MONOMAC
 using UIKit;
+#endif
 using MapKit;
 #else
 using MonoTouch.Foundation;
@@ -18,23 +20,25 @@ using MonoTouch.UIKit;
 using NUnit.Framework;
 
 #if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
+using RectangleF = CoreGraphics.CGRect;
+using SizeF = CoreGraphics.CGSize;
+using PointF = CoreGraphics.CGPoint;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
 #endif
 
-namespace MonoTouchFixtures.MapKit {
-	
-	class MapViewPoker : MKMapView {
+namespace MonoTouchFixtures.MapKit
+{
+
+	class MapViewPoker : MKMapView
+	{
 
 		static FieldInfo bkAnnotations;
 		static FieldInfo bkSelectedAnnotations;
 		static FieldInfo bkOverlays;
-		
+
 		static MapViewPoker ()
 		{
 			var t = typeof (MKMapView);
@@ -42,44 +46,45 @@ namespace MonoTouchFixtures.MapKit {
 			bkSelectedAnnotations = t.GetField ("__mt_SelectedAnnotations_var", BindingFlags.Instance | BindingFlags.NonPublic);
 			bkOverlays = t.GetField ("__mt_Overlays_var", BindingFlags.Instance | BindingFlags.NonPublic);
 		}
-		
+
 		public MapViewPoker ()
 		{
 		}
-		
+
 		// if created (and even if unused) iOS will call it back later (retain)
 		public MapViewPoker (IntPtr p) : base (p)
 		{
 		}
-		
+
 		public static bool NewRefcountEnabled ()
 		{
 			return NSObject.IsNewRefcountEnabled ();
 		}
-		
+
 		public NSObject [] AnnotationsBackingField {
 			get {
-				return (NSObject []) bkAnnotations.GetValue (this);
+				return (NSObject [])bkAnnotations.GetValue (this);
 			}
 		}
 
 		public NSObject [] SelectedAnnotationsBackingField {
 			get {
-				return (NSObject []) bkSelectedAnnotations.GetValue (this);
+				return (NSObject [])bkSelectedAnnotations.GetValue (this);
 			}
 		}
 
 		public NSObject [] OverlaysBackingField {
 			get {
-				return (NSObject []) bkOverlays.GetValue (this);
+				return (NSObject [])bkOverlays.GetValue (this);
 			}
 		}
 	}
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class MapViewTest {
-		
+	public class MapViewTest
+	{
+
 		[Test]
 		public void InitWithFrame ()
 		{
@@ -94,10 +99,10 @@ namespace MonoTouchFixtures.MapKit {
 		{
 			if (MapViewPoker.NewRefcountEnabled ())
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
-			
-			using (var a = new MKCircle ()) 	// MKAnnotation is abstract
+
+			using (var a = new MKCircle ())     // MKAnnotation is abstract
 #if XAMCORE_2_0
-			using (var o1 = new MKPolygon ())	// it must export 'coordinate' or this will fail
+			using (var o1 = new MKPolygon ())   // it must export 'coordinate' or this will fail
 			using (var o2 = new MKPolyline ())
 #else
 			using (NSObject o1 = new MKPolygon ())	// it must export 'coordinate' or this will fail
@@ -106,7 +111,7 @@ namespace MonoTouchFixtures.MapKit {
 			using (var mv = new MapViewPoker ()) {
 				Assert.Null (mv.AnnotationsBackingField, "1a");
 				Assert.That (mv.Annotations, Is.Empty, "1b");
-				
+
 				mv.AddAnnotation (a);
 				Assert.AreSame (a, mv.AnnotationsBackingField [0], "2a");
 				Assert.AreSame (a, mv.Annotations [0], "2b");
@@ -128,7 +133,7 @@ namespace MonoTouchFixtures.MapKit {
 				Assert.That (mv.Annotations, Is.Empty, "5b");
 
 #if XAMCORE_2_0
-				mv.AddAnnotations (new IMKAnnotation[] { o1, o2 });
+				mv.AddAnnotations (new IMKAnnotation [] { o1, o2 });
 #else
 				mv.AddAnnotationObjects (new NSObject[] { o1, o2 });
 #endif
@@ -137,7 +142,7 @@ namespace MonoTouchFixtures.MapKit {
 				Assert.That (mv.Annotations.Length, Is.EqualTo (2), "6b");
 
 #if XAMCORE_2_0
-				mv.RemoveAnnotations (new IMKAnnotation[] { o2, o1 });
+				mv.RemoveAnnotations (new IMKAnnotation [] { o2, o1 });
 #else
 				mv.RemoveAnnotations (new NSObject[] { o2, o1 });
 #endif
@@ -152,6 +157,7 @@ namespace MonoTouchFixtures.MapKit {
 			if (MapViewPoker.NewRefcountEnabled ())
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
 
+#if !MONOMAC
 			if (UIDevice.CurrentDevice.CheckSystemVersion (7, 0)) {
 				// This test selects annotations on a map view, but according to apple's docs
 				// and a lot of googling this will not necessarily work until the map view is
@@ -159,7 +165,8 @@ namespace MonoTouchFixtures.MapKit {
 				// but ignoring this test. For now I've only seen it fail on iOS 7 DP4.
 				Assert.Inconclusive ("This test is not deterministic on iOS7 DP4.");
 			}
-
+#endif
+			
 			using (var a = new MKCircle ()) 	// MKAnnotation is abstract
 #if XAMCORE_2_0
 			using (var o1 = new MKPolygon ())	// it must export 'coordinate' or this will fail

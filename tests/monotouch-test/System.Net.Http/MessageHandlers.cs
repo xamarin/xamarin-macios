@@ -21,7 +21,7 @@ namespace MonoTests.System.Net.Http
 	{
 		HttpMessageHandler GetHandler (Type handler_type)
 		{
-			return (HttpMessageHandler) Activator.CreateInstance (handler_type);
+			return (HttpMessageHandler)Activator.CreateInstance (handler_type);
 		}
 
 		[Test]
@@ -29,7 +29,9 @@ namespace MonoTests.System.Net.Http
 		[TestCase (typeof (HttpClientHandler))]
 		[TestCase (typeof (CFNetworkHandler))]
 #endif
+#if !MONOMAC
 		[TestCase (typeof (NSUrlSessionHandler))]
+#endif
 		public void DnsFailure (Type handlerType)
 		{
 			bool done = false;

@@ -5,7 +5,6 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using MapKit;
-using UIKit;
 using CoreGraphics;
 #else
 using MonoTouch.Foundation;

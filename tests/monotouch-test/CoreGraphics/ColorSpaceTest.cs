@@ -11,7 +11,11 @@ using System;
 using System.IO;
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 using CoreGraphics;
 #else
 using MonoTouch.CoreGraphics;
@@ -21,24 +25,26 @@ using MonoTouch.UIKit;
 using NUnit.Framework;
 
 #if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
+using RectangleF = CoreGraphics.CGRect;
+using SizeF = CoreGraphics.CGSize;
+using PointF = CoreGraphics.CGPoint;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
 #endif
 
-namespace MonoTouchFixtures.CoreGraphics {
-	
+namespace MonoTouchFixtures.CoreGraphics
+{
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class ColorSpaceTest {
-		
+	public class ColorSpaceTest
+	{
+
 		void CheckUnknown (CGColorSpace cs)
 		{
-			Assert.That (cs.Components, Is.EqualTo ((nint) 0), "Unknown-0");
+			Assert.That (cs.Components, Is.EqualTo ((nint)0), "Unknown-0");
 			Assert.That (cs.Handle, Is.EqualTo (IntPtr.Zero), "Unknown-Handle");
 			Assert.That (cs.Model, Is.EqualTo (CGColorSpaceModel.Unknown), "Unknown-Model");
 			Assert.That (cs.GetColorTable ().Length, Is.EqualTo (0), "Unknown-GetColorTable");
@@ -51,12 +57,12 @@ namespace MonoTouchFixtures.CoreGraphics {
 			CheckUnknown (CGColorSpace.Null);
 		}
 #endif
-		
+
 		[Test]
 		public void CreateDeviceGray ()
 		{
 			using (var cs = CGColorSpace.CreateDeviceGray ()) {
-				Assert.That (cs.Components, Is.EqualTo ((nint) 1), "1");
+				Assert.That (cs.Components, Is.EqualTo ((nint)1), "1");
 				Assert.That (cs.Model, Is.EqualTo (CGColorSpaceModel.Monochrome), "Monochrome");
 				Assert.Null (cs.GetBaseColorSpace (), "GetBaseColorSpace");
 				// not indexed so no color table
@@ -79,7 +85,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		public void CreateDeviceRGB ()
 		{
 			using (var cs = CGColorSpace.CreateDeviceRGB ()) {
-				Assert.That (cs.Components, Is.EqualTo ((nint) 3), "3");
+				Assert.That (cs.Components, Is.EqualTo ((nint)3), "3");
 				Assert.That (cs.Model, Is.EqualTo (CGColorSpaceModel.RGB), "RGB");
 				Assert.Null (cs.GetBaseColorSpace (), "GetBaseColorSpace");
 				// not indexed so no color table
@@ -102,7 +108,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		public void CreateDeviceCMYK ()
 		{
 			using (var cs = CGColorSpace.CreateDeviceCmyk ()) {
-				Assert.That (cs.Components, Is.EqualTo ((nint) 4), "4");
+				Assert.That (cs.Components, Is.EqualTo ((nint)4), "4");
 				Assert.That (cs.Model, Is.EqualTo (CGColorSpaceModel.CMYK), "CMYK");
 				Assert.Null (cs.GetBaseColorSpace (), "GetBaseColorSpace");
 				// not indexed so no color table
@@ -129,10 +135,10 @@ namespace MonoTouchFixtures.CoreGraphics {
 			nint m = 3; // RGB
 			const int lastIndex = 2;
 			// An array of m*(lastIndex+1) bytes
-			byte[] table = new byte [3 * (lastIndex + 1)] { 1, 2, 3, 4, 5, 6, 255, 255, 255 };
+			byte [] table = new byte [3 * (lastIndex + 1)] { 1, 2, 3, 4, 5, 6, 255, 255, 255 };
 			using (var base_cs = CGColorSpace.CreateDeviceRGB ())
 			using (var cs = CGColorSpace.CreateIndexed (base_cs, lastIndex, table)) {
-				Assert.That (cs.Components, Is.EqualTo ((nint) 1), "1");
+				Assert.That (cs.Components, Is.EqualTo ((nint)1), "1");
 				Assert.That (cs.Model, Is.EqualTo (CGColorSpaceModel.Indexed), "Indexed");
 				var bcs = cs.GetBaseColorSpace ();
 				Assert.That (bcs.Components, Is.EqualTo (m), "Components");
@@ -157,7 +163,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		{
 			if (!TestRuntime.CheckXcodeVersion (8, 0))
 				Assert.Ignore ("Requires iOS 10+");
-			
+
 			using (var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.ExtendedSrgb)) {
 				Assert.That (cs.Components, Is.EqualTo ((nint)3), "3");
 				Assert.That (cs.Model, Is.EqualTo (CGColorSpaceModel.RGB), "RGB");
@@ -182,7 +188,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 		{
 			if (!TestRuntime.CheckXcodeVersion (8, 0))
 				Assert.Ignore ("Requires iOS 10+");
-			
+
 			var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.ExtendedSrgb);
 			cs.Dispose ();
 
@@ -207,7 +213,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			// has the file(s) so we're not trying (and fialing) to copy it into the bundle
 			using (var icc = NSData.FromFile (Path.Combine (NSBundle.MainBundle.ResourcePath, "LL-171A-B-B797E457-16AB-C708-1E0F-32C19DBD47B5.icc")))
 			using (var cs = CGColorSpace.CreateICCProfile (icc)) {
-				Assert.That (cs.Components, Is.EqualTo ((nint) 3), "Components");
+				Assert.That (cs.Components, Is.EqualTo ((nint)3), "Components");
 				Assert.That (cs.Model, Is.EqualTo (CGColorSpaceModel.RGB), "Model");
 				Assert.Null (cs.GetBaseColorSpace (), "GetBaseColorSpace");
 				// not indexed so no color table
@@ -231,19 +237,23 @@ namespace MonoTouchFixtures.CoreGraphics {
 		void CheckIndexedFile (CGImage img)
 		{
 			CGColorSpace cs = img.ColorSpace;
-			Assert.That (cs.Components, Is.EqualTo ((nint) 1), "Components");
+			Assert.That (cs.Components, Is.EqualTo ((nint)1), "Components");
 			Assert.That (cs.Model, Is.EqualTo (CGColorSpaceModel.Indexed), "GetBaseColorSpace");
 			var table = cs.GetColorTable ();
 			Assert.That (table.Length, Is.EqualTo (768), "GetColorTable");
 			cs.Dispose ();
 		}
-		
+
 		[Test]
 		public void Indexed_UIImage ()
 		{
 			// downloaded from http://www.schaik.com/pngsuite/#palette
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png");
+#if MONOMAC
+			using (var img = new NSImage (file)) {
+#else
 			using (var img = UIImage.FromFile (file)) {
+#endif
 				using (var cgimg = img.CGImage)
 					CheckIndexedFile (cgimg);
 			}

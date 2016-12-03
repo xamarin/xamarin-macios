@@ -16,10 +16,12 @@ using NUnit.Framework;
 using Foundation;
 using AudioUnit;
 
-namespace MonoTouchFixtures.AudioUnit {
+namespace MonoTouchFixtures.AudioUnit
+{
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AUAudioUnitFactoryTest {
+	public class AUAudioUnitFactoryTest
+	{
 		[Test]
 		public void CreateAudioUnit ()
 		{
@@ -29,7 +31,11 @@ namespace MonoTouchFixtures.AudioUnit {
 			const string expectedManufacturer = "Apple";
 			var desc = new AudioComponentDescription {
 				ComponentType = AudioComponentType.Output,
+#if MONOMAC
+				ComponentSubType = (int)AudioUnitSubType.VoiceProcessingIO,
+#else
 				ComponentSubType = 0x72696f63, // Remote_IO
+#endif
 				ComponentManufacturer = AudioComponentManufacturerType.Apple
 			};
 

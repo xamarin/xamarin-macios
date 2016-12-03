@@ -18,8 +18,13 @@ using CoreImage;
 using CoreGraphics;
 using CoreVideo;
 using ObjCRuntime;
-using OpenGLES;
+#if MONOMAC
+using AppKit;
+using OpenGL;
+#else
 using UIKit;
+using OpenGLES;
+#endif
 #else
 using MonoTouch.CoreImage;
 using MonoTouch.CoreGraphics;
@@ -33,30 +38,36 @@ using MonoTouch.UIKit;
 using NUnit.Framework;
 
 #if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
+using RectangleF = CoreGraphics.CGRect;
+using SizeF = CoreGraphics.CGSize;
+using PointF = CoreGraphics.CGPoint;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
 #endif
 
-namespace MonoTouchFixtures.CoreImage {
-	
+namespace MonoTouchFixtures.CoreImage
+{
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CIContextTest {
-		
+	public class CIContextTest
+	{
+
 		[Test]
 		public void CreateRefCount ()
 		{
 			// Bug #7117
-			
+
 			CIImage img = new CIImage (CIColor.FromRgb (0.5f, 0.5f, 0.5f));
 			Selector retainCount = new Selector ("retainCount");
 
+#if MONOMAC
+			using (var ctx = new CIContext (null)) {
+#else
 			using (var ctx = CIContext.Create ()) {
+#endif
 				using (var v = ctx.CreateCGImage (img, new RectangleF (0, 0, 5, 5))) {
 					int rc = Messaging.int_objc_msgSend (v.Handle, retainCount.Handle);
 					Assert.AreEqual (1, rc, "CreateCGImage #a1");
@@ -66,14 +77,17 @@ namespace MonoTouchFixtures.CoreImage {
 					int rc = Messaging.int_objc_msgSend (v.Handle, retainCount.Handle);
 					Assert.AreEqual (1, rc, "CreateCGImage #b1");
 				}
-				
-				using (var v = ctx.CreateCGImage (img, new RectangleF (0, 0, 5, 5), CIFormat.ARGB8, null)) {
+
+#if !MONOMAC // CreateCGImage returning null on mac
+				using (var v = ctx.CreateCGImage (img, new RectangleF (0, 0, 5, 5), CIFormat.ARGB8, null, false)) {
 					int rc = Messaging.int_objc_msgSend (v.Handle, retainCount.Handle);
 					Assert.AreEqual (1, rc, "CreateCGImage #c1");
 				}
+#endif
 			}
 		}
 
+#if !MONOMAC // No EAGLContext for Mac
 		[Test]
 		public void FromContext_13983 ()
 		{
@@ -96,6 +110,7 @@ namespace MonoTouchFixtures.CoreImage {
 				ci.Render (img, cv, RectangleF.Empty, null);
 			}
 		}
+#endif
 	}
 }
 

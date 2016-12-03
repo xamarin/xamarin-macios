@@ -17,7 +17,11 @@ using System.IO;
 using Foundation;
 using CoreImage;
 using CoreGraphics;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.CoreImage;
 using MonoTouch.CoreGraphics;

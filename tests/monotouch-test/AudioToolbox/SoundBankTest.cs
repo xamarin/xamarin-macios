@@ -12,7 +12,6 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
-using UIKit;
 using AudioToolbox;
 using CoreFoundation;
 using ObjCRuntime;
@@ -26,20 +25,22 @@ using MonoTouch.UIKit;
 using NUnit.Framework;
 
 #if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
+using RectangleF = CoreGraphics.CGRect;
+using SizeF = CoreGraphics.CGSize;
+using PointF = CoreGraphics.CGPoint;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
 #endif
 
-namespace MonoTouchFixtures.AudioToolbox {
+namespace MonoTouchFixtures.AudioToolbox
+{
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class SoundBankTest {
+	public class SoundBankTest
+	{
 
 		const string local_dls = "file:///System/Library/Components/CoreAudio.component/Contents/Resources/gs_instruments.dls";
 
@@ -56,6 +57,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 			}
 		}
 
+#if !MONOMAC // No sim on mac
 		[Test]
 		public void GetName_DLS_SimOnly ()
 		{
@@ -68,6 +70,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 				Assert.That (SoundBank.GetName (url), Is.EqualTo ("QuickTime Music Synthesizer  "), "Name");
 			}
 		}
+#endif
 
 		[Test]
 		public void GetInstrumentInfo ()
@@ -82,6 +85,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 			}
 		}
 
+#if !MONOMAC // No sim on mac
 		[Test]
 		public void GetInstrumentInfo_DLS_SimOnly ()
 		{
@@ -109,6 +113,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 				Assert.That ((last [InstrumentInfo.ProgramKey] as NSNumber).Int32Value, Is.EqualTo (56), "last.Program");
 			}
 		}
+#endif
 	}
 }
 

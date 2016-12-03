@@ -7,7 +7,11 @@ using System.Threading;
 
 #if XAMCORE_2_0
 using Foundation;
+#if !MONOMAC
 using UIKit;
+using NativeException = Foundation.MonoTouchException;
+using Bindings.Test;
+#endif
 using ObjCRuntime;
 #if !__TVOS__
 using MapKit;
@@ -17,8 +21,7 @@ using CoreAnimation;
 #endif
 using CoreGraphics;
 using CoreLocation;
-using MonoTouchException=ObjCRuntime.RuntimeException;
-using NativeException=Foundation.MonoTouchException;
+using MonoTouchException = ObjCRuntime.RuntimeException;
 #else
 using MonoTouch;
 using MonoTouch.Foundation;
@@ -35,7 +38,6 @@ using NativeException=MonoTouch.Foundation.MonoTouchException;
 #endif
 using OpenTK;
 using NUnit.Framework;
-using Bindings.Test;
 
 #if XAMCORE_2_0
 using RectangleF=CoreGraphics.CGRect;
@@ -113,7 +115,7 @@ namespace MonoTouchFixtures {
 			}
 		}
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !MONOMAC
 		[Test]
 		public void NavigationControllerOverride ()
 		{
@@ -137,7 +139,7 @@ namespace MonoTouchFixtures {
 #endif // !__WATCHOS__
 	}
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !MONOMAC
 	[CatAttrib (typeof (UINavigationController))]
 	static class Rotation_IOS6 {
 		public static Action ShouldAutoRotateCallback;

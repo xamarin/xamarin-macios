@@ -16,11 +16,13 @@ using NUnit.Framework;
 using Foundation;
 using Intents;
 
-namespace MonoTouchFixtures.Intents {
+namespace MonoTouchFixtures.Intents
+{
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class INIntentResolutionResultTests {
+	public class INIntentResolutionResultTests
+	{
 
 		[SetUp]
 		public void Setup ()
@@ -37,22 +39,6 @@ namespace MonoTouchFixtures.Intents {
 		}
 
 		[Test]
-		public void INBooleanResolutionResultPropertyTest ()
-		{
-			using (var needsValue = INBooleanResolutionResult.NeedsValue)
-			using (var notRequired = INBooleanResolutionResult.NotRequired)
-			using (var unsupported = INBooleanResolutionResult.Unsupported) {
-				Assert.NotNull (needsValue, "NeedsValue Null");
-				Assert.NotNull (notRequired, "NotRequired Null");
-				Assert.NotNull (unsupported, "Unsupported Null");
-
-				Assert.IsInstanceOfType (typeof (INBooleanResolutionResult), needsValue, "NeedsValue");
-				Assert.IsInstanceOfType (typeof (INBooleanResolutionResult), notRequired, "NotRequired");
-				Assert.IsInstanceOfType (typeof (INBooleanResolutionResult), unsupported, "Unsupported");
-			}
-		}
-
-		[Test]
 		public void INCallRecordTypeResolutionResultPropertyTest ()
 		{
 			using (var needsValue = INCallRecordTypeResolutionResult.NeedsValue)
@@ -65,6 +51,135 @@ namespace MonoTouchFixtures.Intents {
 				Assert.IsInstanceOfType (typeof (INCallRecordTypeResolutionResult), needsValue, "NeedsValue");
 				Assert.IsInstanceOfType (typeof (INCallRecordTypeResolutionResult), notRequired, "NotRequired");
 				Assert.IsInstanceOfType (typeof (INCallRecordTypeResolutionResult), unsupported, "Unsupported");
+			}
+		}
+
+		[Test]
+		public void INDateComponentsRangeResolutionResultPropertyTest ()
+		{
+			using (var needsValue = INDateComponentsRangeResolutionResult.NeedsValue)
+			using (var notRequired = INDateComponentsRangeResolutionResult.NotRequired)
+			using (var unsupported = INDateComponentsRangeResolutionResult.Unsupported) {
+				Assert.NotNull (needsValue, "NeedsValue Null");
+				Assert.NotNull (notRequired, "NotRequired Null");
+				Assert.NotNull (unsupported, "Unsupported Null");
+
+				Assert.IsInstanceOfType (typeof (INDateComponentsRangeResolutionResult), needsValue, "NeedsValue");
+				Assert.IsInstanceOfType (typeof (INDateComponentsRangeResolutionResult), notRequired, "NotRequired");
+				Assert.IsInstanceOfType (typeof (INDateComponentsRangeResolutionResult), unsupported, "Unsupported");
+			}
+		}
+
+		[Test]
+		public void INMessageAttributeOptionsResolutionResultPropertyTest ()
+		{
+			using (var needsValue = INMessageAttributeOptionsResolutionResult.NeedsValue)
+			using (var notRequired = INMessageAttributeOptionsResolutionResult.NotRequired)
+			using (var unsupported = INMessageAttributeOptionsResolutionResult.Unsupported) {
+				Assert.NotNull (needsValue, "NeedsValue Null");
+				Assert.NotNull (notRequired, "NotRequired Null");
+				Assert.NotNull (unsupported, "Unsupported Null");
+
+				Assert.IsInstanceOfType (typeof (INMessageAttributeOptionsResolutionResult), needsValue, "NeedsValue");
+				Assert.IsInstanceOfType (typeof (INMessageAttributeOptionsResolutionResult), notRequired, "NotRequired");
+				Assert.IsInstanceOfType (typeof (INMessageAttributeOptionsResolutionResult), unsupported, "Unsupported");
+			}
+		}
+
+		[Test]
+		public void INMessageAttributeResolutionResultPropertyTest ()
+		{
+			using (var needsValue = INMessageAttributeResolutionResult.NeedsValue)
+			using (var notRequired = INMessageAttributeResolutionResult.NotRequired)
+			using (var unsupported = INMessageAttributeResolutionResult.Unsupported) {
+				Assert.NotNull (needsValue, "NeedsValue Null");
+				Assert.NotNull (notRequired, "NotRequired Null");
+				Assert.NotNull (unsupported, "Unsupported Null");
+
+				Assert.IsInstanceOfType (typeof (INMessageAttributeResolutionResult), needsValue, "NeedsValue");
+				Assert.IsInstanceOfType (typeof (INMessageAttributeResolutionResult), notRequired, "NotRequired");
+				Assert.IsInstanceOfType (typeof (INMessageAttributeResolutionResult), unsupported, "Unsupported");
+			}
+		}
+
+		[Test]
+		public void INPersonResolutionResultPropertyTest ()
+		{
+			using (var needsValue = INPersonResolutionResult.NeedsValue)
+			using (var notRequired = INPersonResolutionResult.NotRequired)
+			using (var unsupported = INPersonResolutionResult.Unsupported) {
+				Assert.NotNull (needsValue, "NeedsValue Null");
+				Assert.NotNull (notRequired, "NotRequired Null");
+				Assert.NotNull (unsupported, "Unsupported Null");
+
+				Assert.IsInstanceOfType (typeof (INPersonResolutionResult), needsValue, "NeedsValue");
+				Assert.IsInstanceOfType (typeof (INPersonResolutionResult), notRequired, "NotRequired");
+				Assert.IsInstanceOfType (typeof (INPersonResolutionResult), unsupported, "Unsupported");
+			}
+		}
+
+		[Test]
+		public void INPlacemarkResolutionResultPropertyTest ()
+		{
+			using (var needsValue = INPlacemarkResolutionResult.NeedsValue)
+			using (var notRequired = INPlacemarkResolutionResult.NotRequired)
+			using (var unsupported = INPlacemarkResolutionResult.Unsupported) {
+				Assert.NotNull (needsValue, "NeedsValue Null");
+				Assert.NotNull (notRequired, "NotRequired Null");
+				Assert.NotNull (unsupported, "Unsupported Null");
+
+				Assert.IsInstanceOfType (typeof (INPlacemarkResolutionResult), needsValue, "NeedsValue");
+				Assert.IsInstanceOfType (typeof (INPlacemarkResolutionResult), notRequired, "NotRequired");
+				Assert.IsInstanceOfType (typeof (INPlacemarkResolutionResult), unsupported, "Unsupported");
+			}
+		}
+
+		[Test]
+		public void INSpeakableStringResolutionResultPropertyTest ()
+		{
+			using (var needsValue = INSpeakableStringResolutionResult.NeedsValue)
+			using (var notRequired = INSpeakableStringResolutionResult.NotRequired)
+			using (var unsupported = INSpeakableStringResolutionResult.Unsupported) {
+				Assert.NotNull (needsValue, "NeedsValue Null");
+				Assert.NotNull (notRequired, "NotRequired Null");
+				Assert.NotNull (unsupported, "Unsupported Null");
+
+				Assert.IsInstanceOfType (typeof (INSpeakableStringResolutionResult), needsValue, "NeedsValue");
+				Assert.IsInstanceOfType (typeof (INSpeakableStringResolutionResult), notRequired, "NotRequired");
+				Assert.IsInstanceOfType (typeof (INSpeakableStringResolutionResult), unsupported, "Unsupported");
+			}
+		}
+
+		[Test]
+		public void INStringResolutionResultPropertyTest ()
+		{
+			using (var needsValue = INStringResolutionResult.NeedsValue)
+			using (var notRequired = INStringResolutionResult.NotRequired)
+			using (var unsupported = INStringResolutionResult.Unsupported) {
+				Assert.NotNull (needsValue, "NeedsValue Null");
+				Assert.NotNull (notRequired, "NotRequired Null");
+				Assert.NotNull (unsupported, "Unsupported Null");
+
+				Assert.IsInstanceOfType (typeof (INStringResolutionResult), needsValue, "NeedsValue");
+				Assert.IsInstanceOfType (typeof (INStringResolutionResult), notRequired, "NotRequired");
+				Assert.IsInstanceOfType (typeof (INStringResolutionResult), unsupported, "Unsupported");
+			}
+		}
+
+#if !MONOMAC // iOS only Result types
+		[Test]
+		public void INBooleanResolutionResultPropertyTest ()
+		{
+			using (var needsValue = INBooleanResolutionResult.NeedsValue)
+			using (var notRequired = INBooleanResolutionResult.NotRequired)
+			using (var unsupported = INBooleanResolutionResult.Unsupported) {
+				Assert.NotNull (needsValue, "NeedsValue Null");
+				Assert.NotNull (notRequired, "NotRequired Null");
+				Assert.NotNull (unsupported, "Unsupported Null");
+
+				Assert.IsInstanceOfType (typeof (INBooleanResolutionResult), needsValue, "NeedsValue");
+				Assert.IsInstanceOfType (typeof (INBooleanResolutionResult), notRequired, "NotRequired");
+				Assert.IsInstanceOfType (typeof (INBooleanResolutionResult), unsupported, "Unsupported");
 			}
 		}
 
@@ -149,22 +264,6 @@ namespace MonoTouchFixtures.Intents {
 		}
 
 		[Test]
-		public void INDateComponentsRangeResolutionResultPropertyTest ()
-		{
-			using (var needsValue = INDateComponentsRangeResolutionResult.NeedsValue)
-			using (var notRequired = INDateComponentsRangeResolutionResult.NotRequired)
-			using (var unsupported = INDateComponentsRangeResolutionResult.Unsupported) {
-				Assert.NotNull (needsValue, "NeedsValue Null");
-				Assert.NotNull (notRequired, "NotRequired Null");
-				Assert.NotNull (unsupported, "Unsupported Null");
-
-				Assert.IsInstanceOfType (typeof (INDateComponentsRangeResolutionResult), needsValue, "NeedsValue");
-				Assert.IsInstanceOfType (typeof (INDateComponentsRangeResolutionResult), notRequired, "NotRequired");
-				Assert.IsInstanceOfType (typeof (INDateComponentsRangeResolutionResult), unsupported, "Unsupported");
-			}
-		}
-
-		[Test]
 		public void INDoubleResolutionResultPropertyTest ()
 		{
 			using (var needsValue = INDoubleResolutionResult.NeedsValue)
@@ -209,70 +308,6 @@ namespace MonoTouchFixtures.Intents {
 				Assert.IsInstanceOfType (typeof (INIntegerResolutionResult), needsValue, "NeedsValue");
 				Assert.IsInstanceOfType (typeof (INIntegerResolutionResult), notRequired, "NotRequired");
 				Assert.IsInstanceOfType (typeof (INIntegerResolutionResult), unsupported, "Unsupported");
-			}
-		}
-
-		[Test]
-		public void INMessageAttributeOptionsResolutionResultPropertyTest ()
-		{
-			using (var needsValue = INMessageAttributeOptionsResolutionResult.NeedsValue)
-			using (var notRequired = INMessageAttributeOptionsResolutionResult.NotRequired)
-			using (var unsupported = INMessageAttributeOptionsResolutionResult.Unsupported) {
-				Assert.NotNull (needsValue, "NeedsValue Null");
-				Assert.NotNull (notRequired, "NotRequired Null");
-				Assert.NotNull (unsupported, "Unsupported Null");
-
-				Assert.IsInstanceOfType (typeof (INMessageAttributeOptionsResolutionResult), needsValue, "NeedsValue");
-				Assert.IsInstanceOfType (typeof (INMessageAttributeOptionsResolutionResult), notRequired, "NotRequired");
-				Assert.IsInstanceOfType (typeof (INMessageAttributeOptionsResolutionResult), unsupported, "Unsupported");
-			}
-		}
-
-		[Test]
-		public void INMessageAttributeResolutionResultPropertyTest ()
-		{
-			using (var needsValue = INMessageAttributeResolutionResult.NeedsValue)
-			using (var notRequired = INMessageAttributeResolutionResult.NotRequired)
-			using (var unsupported = INMessageAttributeResolutionResult.Unsupported) {
-				Assert.NotNull (needsValue, "NeedsValue Null");
-				Assert.NotNull (notRequired, "NotRequired Null");
-				Assert.NotNull (unsupported, "Unsupported Null");
-
-				Assert.IsInstanceOfType (typeof (INMessageAttributeResolutionResult), needsValue, "NeedsValue");
-				Assert.IsInstanceOfType (typeof (INMessageAttributeResolutionResult), notRequired, "NotRequired");
-				Assert.IsInstanceOfType (typeof (INMessageAttributeResolutionResult), unsupported, "Unsupported");
-			}
-		}
-
-		[Test]
-		public void INPersonResolutionResultPropertyTest ()
-		{
-			using (var needsValue = INPersonResolutionResult.NeedsValue)
-			using (var notRequired = INPersonResolutionResult.NotRequired)
-			using (var unsupported = INPersonResolutionResult.Unsupported) {
-				Assert.NotNull (needsValue, "NeedsValue Null");
-				Assert.NotNull (notRequired, "NotRequired Null");
-				Assert.NotNull (unsupported, "Unsupported Null");
-
-				Assert.IsInstanceOfType (typeof (INPersonResolutionResult), needsValue, "NeedsValue");
-				Assert.IsInstanceOfType (typeof (INPersonResolutionResult), notRequired, "NotRequired");
-				Assert.IsInstanceOfType (typeof (INPersonResolutionResult), unsupported, "Unsupported");
-			}
-		}
-
-		[Test]
-		public void INPlacemarkResolutionResultPropertyTest ()
-		{
-			using (var needsValue = INPlacemarkResolutionResult.NeedsValue)
-			using (var notRequired = INPlacemarkResolutionResult.NotRequired)
-			using (var unsupported = INPlacemarkResolutionResult.Unsupported) {
-				Assert.NotNull (needsValue, "NeedsValue Null");
-				Assert.NotNull (notRequired, "NotRequired Null");
-				Assert.NotNull (unsupported, "Unsupported Null");
-
-				Assert.IsInstanceOfType (typeof (INPlacemarkResolutionResult), needsValue, "NeedsValue");
-				Assert.IsInstanceOfType (typeof (INPlacemarkResolutionResult), notRequired, "NotRequired");
-				Assert.IsInstanceOfType (typeof (INPlacemarkResolutionResult), unsupported, "Unsupported");
 			}
 		}
 
@@ -357,38 +392,6 @@ namespace MonoTouchFixtures.Intents {
 		}
 
 		[Test]
-		public void INSpeakableStringResolutionResultPropertyTest ()
-		{
-			using (var needsValue = INSpeakableStringResolutionResult.NeedsValue)
-			using (var notRequired = INSpeakableStringResolutionResult.NotRequired)
-			using (var unsupported = INSpeakableStringResolutionResult.Unsupported) {
-				Assert.NotNull (needsValue, "NeedsValue Null");
-				Assert.NotNull (notRequired, "NotRequired Null");
-				Assert.NotNull (unsupported, "Unsupported Null");
-
-				Assert.IsInstanceOfType (typeof (INSpeakableStringResolutionResult), needsValue, "NeedsValue");
-				Assert.IsInstanceOfType (typeof (INSpeakableStringResolutionResult), notRequired, "NotRequired");
-				Assert.IsInstanceOfType (typeof (INSpeakableStringResolutionResult), unsupported, "Unsupported");
-			}
-		}
-
-		[Test]
-		public void INStringResolutionResultPropertyTest ()
-		{
-			using (var needsValue = INStringResolutionResult.NeedsValue)
-			using (var notRequired = INStringResolutionResult.NotRequired)
-			using (var unsupported = INStringResolutionResult.Unsupported) {
-				Assert.NotNull (needsValue, "NeedsValue Null");
-				Assert.NotNull (notRequired, "NotRequired Null");
-				Assert.NotNull (unsupported, "Unsupported Null");
-
-				Assert.IsInstanceOfType (typeof (INStringResolutionResult), needsValue, "NeedsValue");
-				Assert.IsInstanceOfType (typeof (INStringResolutionResult), notRequired, "NotRequired");
-				Assert.IsInstanceOfType (typeof (INStringResolutionResult), unsupported, "Unsupported");
-			}
-		}
-
-		[Test]
 		public void INTemperatureResolutionResultPropertyTest ()
 		{
 			using (var needsValue = INTemperatureResolutionResult.NeedsValue)
@@ -435,6 +438,7 @@ namespace MonoTouchFixtures.Intents {
 				Assert.IsInstanceOfType (typeof (INWorkoutLocationTypeResolutionResult), unsupported, "Unsupported");
 			}
 		}
+#endif
 	}
 }
 #endif

@@ -15,7 +15,6 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using VideoToolbox;
-using UIKit;
 using CoreMedia;
 using AVFoundation;
 using CoreFoundation;

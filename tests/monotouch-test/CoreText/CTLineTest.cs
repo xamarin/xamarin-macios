@@ -12,7 +12,12 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+using UIColor = AppKit.NSColor;
+#else
 using UIKit;
+#endif
 using CoreGraphics;
 using CoreText;
 #else
@@ -25,9 +30,9 @@ using NUnit.Framework;
 using System.Drawing;
 
 #if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
+using RectangleF = CoreGraphics.CGRect;
+using SizeF = CoreGraphics.CGSize;
+using PointF = CoreGraphics.CGPoint;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
@@ -43,8 +48,13 @@ namespace MonoTouchFixtures.CoreText
 		[Test]
 		public void EnumerateCaretOffsets ()
 		{
+#if MONOMAC
+			if (!TestRuntime.CheckMacSystemVersion (10, 11))
+				Assert.Ignore ("Requires macOS 10.11+");
+#else
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (9, 0))
 				Assert.Ignore ("Requires iOS9+");
+#endif
 
 			var sa = new CTStringAttributes ();
 			sa.ForegroundColor = UIColor.Blue.CGColor;

@@ -14,7 +14,11 @@ using System.IO;
 
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 using CoreImage;
 using CoreGraphics;
 using ObjCRuntime;
@@ -28,21 +32,23 @@ using MonoTouch.ObjCRuntime;
 using NUnit.Framework;
 
 #if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
+using RectangleF = CoreGraphics.CGRect;
+using SizeF = CoreGraphics.CGSize;
+using PointF = CoreGraphics.CGPoint;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
 #endif
 
-namespace MonoTouchFixtures.CoreImage {
-	
+namespace MonoTouchFixtures.CoreImage
+{
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class ImageTest {
-		
+	public class ImageTest
+	{
+
 		[Test]
 		public void EmptyImage ()
 		{
@@ -69,6 +75,7 @@ namespace MonoTouchFixtures.CoreImage {
 			}
 		}
 
+#if !MONOMAC // Testing an issue with UIImage.CIImage, iOS specific (NSImage has no CIImage property)
 		[Test]
 		public void UIImageInterop ()
 		{
@@ -80,6 +87,7 @@ namespace MonoTouchFixtures.CoreImage {
 				Assert.IsNotNull (ui.CIImage, "CIImage");
 			}
 		}
+#endif
 
 		[Test]
 		public void AreaHistogram ()
@@ -100,7 +108,7 @@ namespace MonoTouchFixtures.CoreImage {
 			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Inconclusive ("requires iOS9+");
 
-			using (var cgimage = new CIImage (NSUrl.FromFilename ("xamarin1.png")))
+			using (var cgimage = new CIImage (NSBundle.MainBundle.GetUrlForResource ("xamarin1", "png")))
 			using (var cs = cgimage.ColorSpace) {
 				Assert.NotNull (cs, "ColorSpace should not be null");
 				if (TestRuntime.CheckXcodeVersion (8, 0)) {

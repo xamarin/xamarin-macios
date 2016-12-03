@@ -14,7 +14,11 @@ using System.IO;
 #if XAMCORE_2_0
 using Foundation;
 using CoreText;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.CoreText;
 using MonoTouch.Foundation;
@@ -24,20 +28,22 @@ using NUnit.Framework;
 using System.Linq;
 
 #if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
+using RectangleF = CoreGraphics.CGRect;
+using SizeF = CoreGraphics.CGSize;
+using PointF = CoreGraphics.CGPoint;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
 #endif
 
-namespace MonoTouchFixtures.CoreText {
+namespace MonoTouchFixtures.CoreText
+{
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class FontManagerTest {
+	public class FontManagerTest
+	{
 
 		[Test]
 		public void RegisterTTF ()
@@ -87,16 +93,20 @@ namespace MonoTouchFixtures.CoreText {
 		[ExpectedException (typeof (ArgumentNullException))]
 		public void GetFontsNullUrl ()
 		{
+#if !MONOMAC
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (7,0))
 				Assert.Ignore ("Requires iOS 7.0+");
+#endif
 			var fonts = CTFontManager.GetFonts (null);
 		}
 
 		[Test]
 		public void GetFontsPresent ()
 		{
+#if !MONOMAC
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (7,0))
 				Assert.Ignore ("Requires iOS 7.0+");
+#endif
 			var ttf = Path.GetFullPath ("Pacifico.ttf");
 			if (!File.Exists (ttf))
 				Assert.Ignore ("Could not find the font file {0}", ttf);
@@ -108,7 +118,7 @@ namespace MonoTouchFixtures.CoreText {
 			// method under test
 			var fonts = CTFontManager.GetFonts (url);
 			Assert.AreEqual (1, fonts.Length);
-			Assert.AreEqual ("Pacifico", fonts[0].GetAttributes().Name?.ToString ());
+			Assert.AreEqual ("Pacifico", fonts [0].GetAttributes ().Name?.ToString ());
 
 			err = CTFontManager.UnregisterFontsForUrl (url, CTFontManagerScope.Process);
 			Assert.IsNull (err, "Unregister error");
@@ -117,8 +127,10 @@ namespace MonoTouchFixtures.CoreText {
 		[Test]
 		public void GetFontsMissing ()
 		{
+#if !MONOMAC
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (7,0))
 				Assert.Ignore ("Requires iOS 7.0+");
+#endif
 			var ttf = Path.GetFullPath ("NonExistent.ttf");
 			if (!File.Exists (ttf))
 				Assert.Ignore ("Could not find the font file {0}", ttf);

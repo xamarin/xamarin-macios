@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for SCN* structures
 //
 // Authors:
@@ -14,7 +14,11 @@ using System;
 using CoreAnimation;
 using Foundation;
 using SceneKit;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.CoreAnimation;
 using MonoTouch.Foundation;

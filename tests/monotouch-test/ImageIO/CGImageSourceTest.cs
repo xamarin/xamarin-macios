@@ -7,7 +7,6 @@ using Foundation;
 using CoreGraphics;
 using ImageIO;
 using ObjCRuntime;
-using UIKit;
 #else
 using MonoTouch;
 using MonoTouch.CoreGraphics;
@@ -18,73 +17,109 @@ using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.ImageIO {
-	
+namespace MonoTouchFixtures.ImageIO
+{
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CGImageSourceTest {
+	public class CGImageSourceTest
+	{
 		const string filename = "xamarin2.png";
-		
+		NSUrl fileUrl = NSBundle.MainBundle.GetUrlForResource ("xamarin2", "png");
+
 		[Test]
 		public void FromUrlTest ()
 		{
+#if MONOMAC
+			using (var img = CGImageSource.FromUrl (fileUrl)) {
+#else
 			using (var img = CGImageSource.FromUrl (NSUrl.FromFilename (filename))) {
+#endif
 				Assert.NotNull (img, "#a1");
 			}
-			
+
+#if MONOMAC
+			using (var img = CGImageSource.FromUrl (fileUrl, new CGImageOptions ())) {
+#else
 			using (var img = CGImageSource.FromUrl (NSUrl.FromFilename (filename), new CGImageOptions ())) {
+#endif
 				Assert.NotNull (img, "#b1");
 			}
-			
+
+#if MONOMAC
+			using (var img = CGImageSource.FromUrl (fileUrl, null)) {
+#else
 			using (var img = CGImageSource.FromUrl (NSUrl.FromFilename (filename), null)) {
+#endif
 				Assert.NotNull (img, "#c1");
 			}
 		}
-		
+
 		[Test]
 		public void FromDataProviderTest ()
 		{
+			var file = NSBundle.MainBundle.PathForResource ("xamarin2", "png");
+#if MONOMAC
+			using (var dp = new CGDataProvider (file)) {
+#else
 			using (var dp = new CGDataProvider (filename)) {
+#endif
 				using (var img = CGImageSource.FromDataProvider (dp)) {
 					Assert.NotNull (img, "#a1");
 				}
 			}
-			
+
+#if MONOMAC
+			using (var dp = new CGDataProvider (file)) {
+#else
 			using (var dp = new CGDataProvider (filename)) {
+#endif
 				using (var img = CGImageSource.FromDataProvider (dp, new CGImageOptions ())) {
 					Assert.NotNull (img, "#b1");
 				}
 			}
-			
+
+#if MONOMAC
+			using (var dp = new CGDataProvider (file)) {
+#else
 			using (var dp = new CGDataProvider (filename)) {
+#endif
 				using (var img = CGImageSource.FromDataProvider (dp, null)) {
 					Assert.NotNull (img, "#c1");
 				}
 			}
 		}
-		
+
 		[Test]
 		public void FromDataTest ()
 		{
+#if MONOMAC
+			NSData data = NSData.FromFile (NSBundle.MainBundle.PathForResource ("xamarin2", "png"));
+#else
 			NSData data = NSData.FromFile (filename);
-			
+#endif
+
 			using (var img = CGImageSource.FromData (data)) {
 				Assert.NotNull (img, "#a1");
 			}
-			
+
 			using (var img = CGImageSource.FromData (data, new CGImageOptions ())) {
 				Assert.NotNull (img, "#b1");
 			}
-			
+
 			using (var img = CGImageSource.FromData (data, null)) {
 				Assert.NotNull (img, "#c1");
 			}
 		}
-		
+
 		[Test]
 		public void CreateImageTest ()
 		{
+#if MONOMAC
+			using (var imgsrc = CGImageSource.FromUrl (fileUrl)) {
+#else
 			using (var imgsrc = CGImageSource.FromUrl (NSUrl.FromFilename (filename))) {
+#endif
 				using (var img = imgsrc.CreateImage (0, null)) {
 					Assert.NotNull (img, "#a1");
 				}
@@ -93,11 +128,15 @@ namespace MonoTouchFixtures.ImageIO {
 				}
 			}
 		}
-		
+
 		[Test]
 		public void CreateThumbnailTest ()
 		{
+#if MONOMAC
+			using (var imgsrc = CGImageSource.FromUrl (fileUrl)) {
+#else
 			using (var imgsrc = CGImageSource.FromUrl (NSUrl.FromFilename (filename))) {
+#endif
 				using (var img = imgsrc.CreateThumbnail (0, null)) {
 					Assert.NotNull (img, "#a1");
 				}
@@ -106,14 +145,14 @@ namespace MonoTouchFixtures.ImageIO {
 				}
 			}
 		}
-		
+
 		[Test]
 		public void CreateIncrementalTest ()
 		{
 			using (var img = CGImageSource.CreateIncremental (null)) {
 				Assert.NotNull (img, "#a1");
 			}
-			
+
 			using (var img = CGImageSource.CreateIncremental (new CGImageOptions ())) {
 				Assert.NotNull (img, "#b1");
 			}
@@ -129,20 +168,23 @@ namespace MonoTouchFixtures.ImageIO {
 				NSString kCGImagePropertyPixelWidth = Dlfcn.GetStringConstant (lib, "kCGImagePropertyPixelWidth");
 				NSString kCGImagePropertyPixelHeight = Dlfcn.GetStringConstant (lib, "kCGImagePropertyPixelHeight");
 
+#if MONOMAC
+				using (var imageSource = CGImageSource.FromUrl (fileUrl)) {
+#else
 				using (var imageSource = CGImageSource.FromUrl (NSUrl.FromFilename (filename))) {
+#endif
 					using (var dict = new NSMutableDictionary ()) {
 						dict [kCGImageSourceShouldCache] = NSNumber.FromBoolean (false);
 						using (var props = imageSource.CopyProperties (dict)) {
 							Assert.Null (props.ValueForKey (kCGImagePropertyPixelWidth), "kCGImagePropertyPixelWidth");
 							Assert.Null (props.ValueForKey (kCGImagePropertyPixelHeight), "kCGImagePropertyPixelHeight");
-							NSNumber n = (NSNumber) props ["FileSize"];
+							NSNumber n = (NSNumber)props ["FileSize"];
 							// image is "optimized" for devices (and a lot bigger at 10351 bytes ;-)
-							Assert.That ((int) n, Is.AtLeast (7318), "FileSize");
+							Assert.That ((int)n, Is.AtLeast (7318), "FileSize");
 						}
 					}
 				}
-			}
-			finally {
+			} finally {
 				Dlfcn.dlclose (lib);
 			}
 		}
@@ -150,7 +192,11 @@ namespace MonoTouchFixtures.ImageIO {
 		[Test]
 		public void GetProperties ()
 		{
+#if MONOMAC
+			using (var imageSource = CGImageSource.FromUrl (fileUrl)) {
+#else
 			using (var imageSource = CGImageSource.FromUrl (NSUrl.FromFilename (filename))) {
+#endif
 				CGImageOptions options = new CGImageOptions () { ShouldCache = false };
 
 				var props = imageSource.GetProperties (options);
@@ -167,6 +213,7 @@ namespace MonoTouchFixtures.ImageIO {
 			}
 		}
 
+#if !MONOMAC // CopyMetadata and RemoveCache not available on mac
 		[Test]
 		public void CopyMetadata ()
 		{
@@ -189,5 +236,6 @@ namespace MonoTouchFixtures.ImageIO {
 				imageSource.RemoveCache (0);
 			}
 		}
+#endif
 	}
 }

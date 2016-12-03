@@ -13,9 +13,11 @@ using System;
 using System.Threading;
 #if XAMCORE_2_0
 using Foundation;
-using UIKit;
 using CoreBluetooth;
 using CoreFoundation;
+#if !MONOMAC
+using UIKit;
+#endif
 #else
 using MonoTouch.CoreBluetooth;
 using MonoTouch.Foundation;
@@ -124,14 +126,18 @@ namespace MonoTouchFixtures.CoreBluetooth {
 			}
 			if (mgr.State != CBCentralManagerState.PoweredOn)
 				Assert.Inconclusive ("Bluetooth is off and therefore the test cannot be ran. State == {0}.", mgr.State);
+#if !MONOMAC
 			if (UIDevice.CurrentDevice.CheckSystemVersion (9, 0)) {
+#endif
 				using (var uuid = new NSUuid ("B9401000-F5F8-466E-AFF9-25556B57FE6D"))
 					mgr.RetrievePeripheralsWithIdentifiers (uuid);
-			} else {
+#if !MONOMAC
+		} else {
 				// that API was deprecated in 7.0 and removed from 9.0
 				using (var uuid = CBUUID.FromString ("B9401000-F5F8-466E-AFF9-25556B57FE6D"))
 					mgr.RetrievePeripherals (uuid);
 			}
+#endif
 		}
 #endif // !XAMCORE_3_0
 	}

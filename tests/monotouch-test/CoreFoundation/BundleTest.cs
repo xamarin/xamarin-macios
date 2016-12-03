@@ -4,7 +4,6 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
-using UIKit;
 using CoreFoundation;
 #else
 using MonoTouch.CoreFoundation;
@@ -13,16 +12,23 @@ using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.CoreFoundation {
+namespace MonoTouchFixtures.CoreFoundation
+{
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class BundleTest {
+	public class BundleTest
+	{
+#if MONOMAC
+		const string ProjectName = "xammac_tests";
+#else
+		const string ProjectName = "monotouchtest";
+#endif
 
 #if __WATCHOS__
 		const string ExpectedAppName = "monotouchtest.appex";
 #else
-		const string ExpectedAppName = "monotouchtest.app";
+		const string ExpectedAppName = ProjectName + ".app";
 #endif
 
 		[Test]
@@ -32,7 +38,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			Assert.IsTrue (bundles.Length > 0);
 			foreach (CFBundle b in bundles) {
 				Assert.IsFalse (String.IsNullOrEmpty (b.Url.ToString ()),
-  						String.Format("Found bundle with null url and id {0}", b.Identifier));
+						String.Format("Found bundle with null url and id {0}", b.Identifier));
 			}
 		}
 
@@ -54,9 +60,9 @@ namespace MonoTouchFixtures.CoreFoundation {
 				if (!String.IsNullOrEmpty (id)) {
 					var otherBundle = CFBundle.Get (id);
 					Assert.AreEqual (b.Info.Type, otherBundle.Info.Type,
-  							 String.Format("Found bundle with diff type and id {0}", id));
+							 String.Format("Found bundle with diff type and id {0}", id));
 					Assert.AreEqual (b.Url.ToString (), otherBundle.Url.ToString (),
-  							 String.Format("Found bundle with diff url and id {0}", id));
+							 String.Format("Found bundle with diff url and id {0}", id));
 				}
 			}
 		}
@@ -76,7 +82,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 #if __WATCHOS__
 			var expectedBundleId = "com.xamarin.monotouch-test.watchkitapp.watchkitextension";
 #else
-			var expectedBundleId = "com.xamarin.monotouch-test";
+			var expectedBundleId = "com.xamarin." + ProjectName;
 #endif
 			Assert.AreEqual (expectedBundleId, main.Identifier);
 			Assert.IsTrue (main.HasLoadedExecutable);
@@ -86,14 +92,18 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void TestBuiltInPlugInsUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That(main.BuiltInPlugInsUrl.ToString (), Contains.Substring ("PlugIns/"));
+			Assert.That (main.BuiltInPlugInsUrl.ToString (), Contains.Substring ("PlugIns/"));
 		}
 
 		[Test]
 		public void TestExecutableUrl ()
 		{
 			var main = CFBundle.GetMain ();
+#if MONOMAC
+			Assert.That (main.ExecutableUrl.ToString (), Contains.Substring (ExpectedAppName + "/Contents/MacOS/xammac_tests"));
+#else
 			Assert.That(main.ExecutableUrl.ToString (), Contains.Substring (ExpectedAppName + "/monotouchtest"));
+#endif
 		}
 
 		[Test]

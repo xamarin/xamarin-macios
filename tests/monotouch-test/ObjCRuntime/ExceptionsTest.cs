@@ -8,7 +8,12 @@ using System.Threading;
 using Foundation;
 using ObjCRuntime;
 #if !__WATCHOS__
+#if MONOMAC
+using MonoTouchException = Foundation.ObjCException;
+#else
 using UIKit;
+using Bindings.Test;
+#endif
 #endif
 #else
 using MonoTouch;
@@ -18,13 +23,14 @@ using MonoTouch.UIKit;
 #endif
 
 using NUnit.Framework;
-using Bindings.Test;
 
-namespace MonoTouchFixtures.ObjCRuntime {
-	
+namespace MonoTouchFixtures.ObjCRuntime
+{
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class ExceptionsTest {
+	public class ExceptionsTest
+	{
 
 #if __WATCHOS__
 		MarshalObjectiveCExceptionMode defaultObjectiveCExceptionMode = MarshalObjectiveCExceptionMode.ThrowManagedException;
@@ -80,6 +86,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Runtime.MarshalObjectiveCException -= ObjExceptionHandler;
 		}
 
+#if !MONOMAC // Simulator only
 		[Test]
 		public void ObjCException ()
 		{
@@ -115,7 +122,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				UninstallHandlers ();
 			}
 		}
+#endif
 
+#if !MONOMAC // ObjCExceptionTest is from the iOS only Bindings.Test
 		class ManagedExceptionTest : ObjCExceptionTest {
 			public Exception Exception;
 			public override void ThrowManagedException ()
@@ -124,7 +133,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				throw Exception;
 			}
 		}
+#endif
 
+#if !MONOMAC // Simulator only test, mac doesn't have simulator.
 		[Test]
 		public void ManagedExceptionPassthrough ()
 		{
@@ -196,5 +207,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				UninstallHandlers ();      
 			}
 		}
+#endif
 	}
 }

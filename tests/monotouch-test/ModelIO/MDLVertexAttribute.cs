@@ -12,7 +12,6 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
-using UIKit;
 #if !__TVOS__
 using MultipeerConnectivity;
 #endif
@@ -30,15 +29,21 @@ using MonoTouch.ObjCRuntime;
 using OpenTK;
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.ModelIO {
+namespace MonoTouchFixtures.ModelIO
+{
 
 	[TestFixture]
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
-	public class MDLVertexAttributeTest {
+	public class MDLVertexAttributeTest
+	{
 		[TestFixtureSetUp]
 		public void Setup ()
 		{
+#if MONOMAC
+			if (!TestRuntime.CheckMacSystemVersion (10, 11))
+				Assert.Ignore ("Requires macOS 10.11+");
+#else
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (9, 0))
 				Assert.Ignore ("Requires iOS9+");
 
@@ -55,6 +60,7 @@ namespace MonoTouchFixtures.ModelIO {
 					dummy = obj.Offset;
 				}
 			}
+#endif
 		}
 
 		[Test]
