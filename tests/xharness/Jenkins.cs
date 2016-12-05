@@ -137,6 +137,7 @@ namespace xharness
 				"tools/linker",
 				"src/ObjCRuntime/Registrar.cs",
 				"external/mono",
+				"external/llvm",
 			};
 			var mmp_prefixes = new string [] {
 				"tests/mmptest",
@@ -149,6 +150,7 @@ namespace xharness
 			var bcl_prefixes = new string [] {
 				"tests/bcl-test",
 				"external/mono",
+				"external/llvm",
 			};
 
 			SetEnabled (files, mtouch_prefixes, "mtouch", ref IncludeMtouch);
@@ -257,11 +259,6 @@ namespace xharness
 						Jenkins = this,
 						Devices = taskGroup.First ().Simulators,
 					});
-				}
-
-				foreach (var task in runSimulatorTasks) {
-					if (task.TestName == "framework-test")
-						task.ExecutionResult = TestExecutingResult.Ignored;
 				}
 			}
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !__WATCHOS__
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -48,4 +49,4 @@ namespace frameworktest
 		}
 	}
 }
-
+#endif // !__WATCHOS__

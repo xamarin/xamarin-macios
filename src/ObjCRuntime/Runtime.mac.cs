@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.IO;
 
+using XamCore.AppKit;
 using XamCore.Foundation;
 using XamCore.Registrar;
 
@@ -91,6 +92,8 @@ namespace XamCore.ObjCRuntime {
 				rv = Dlfcn.dlsym (runtime_library, name);
 				if (rv == IntPtr.Zero) {
 					runtime_library = Dlfcn.dlopen ("libxammac.dylib", 0);
+					if (runtime_library == IntPtr.Zero)
+						runtime_library = Dlfcn.dlopen (Path.Combine (Path.GetDirectoryName (typeof (NSApplication).Assembly.Location), "libxammac.dylib"), 0);
 					if (runtime_library == IntPtr.Zero)
 						throw new DllNotFoundException ("Could not find the runtime library libxammac.dylib");
 					rv = Dlfcn.dlsym (runtime_library, name);
