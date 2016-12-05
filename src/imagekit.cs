@@ -197,12 +197,15 @@ namespace XamCore.ImageKit {
 		void Finish (NSObject sender);
 
 		//Check - Do we need Notifications strings?
+		[Notification]
 		[Field ("IKFilterBrowserFilterSelectedNotification")]
 		NSString FilterSelectedNotification { get; }
 
+		[Notification]
 		[Field ("IKFilterBrowserFilterDoubleClickNotification")]
 		NSString FilterDoubleClickNotification { get; }
 
+		[Notification]
 		[Field ("IKFilterBrowserWillPreviewFilterNotification")]
 		NSString WillPreviewFilterNotification { get; }
 

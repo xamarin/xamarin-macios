@@ -12867,6 +12867,7 @@ namespace XamCore.Foundation
 
 		// Fields
 		[Field ("NSTaskDidTerminateNotification")]
+		[Notification]
 		NSString NSTaskDidTerminateNotification { get; }
 	}
 

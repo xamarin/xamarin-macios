@@ -76,6 +76,16 @@ namespace Introspection {
 			return false;
 		}
 
+		/// <summary>
+		/// Override if you want to skip testing the specified constant during notification tests
+		/// </summary>
+		/// <param name="declaredType">Type declaring said notification.</param>
+		/// <param name="notificationName">Name of notification.</param>
+		protected virtual bool SkipNotification (Type declaredType, string notificationName)
+		{
+			return false;
+		}
+
 		// check generated code, which are static properties, e.g.
 		// [Field ("kCGImagePropertyIPTCObjectTypeReference")]
 		// NSString IPTCObjectTypeReference { get; }
@@ -129,10 +139,8 @@ namespace Introspection {
 			return properties;
 		}
 
+
 		[Test]
-#if MONOMAC
-		[Ignore ("Some API needs fixing - https://jenkins.mono-project.com/job/xamarin-macios-pr-builder/2188/Test_Report/")]
-#endif
 		public void Notifications ()
 		{
 			var failed_fields = new List<string> ();
@@ -149,6 +157,9 @@ namespace Introspection {
 
 				var name = f.SymbolName;
 				if (!name.EndsWith ("Notification", StringComparison.Ordinal))
+					continue;
+
+				if (SkipNotification (p.DeclaringType, name))
 					continue;
 
 				var nested = p.DeclaringType.GetNestedTypes ();

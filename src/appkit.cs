@@ -20485,6 +20485,11 @@ namespace XamCore.AppKit {
 		[Mac (10,10)]
 		[Export ("openURLs:withApplicationAtURL:options:configuration:error:")]
 		NSRunningApplication OpenURLs (NSUrl [] urls, NSUrl applicationURL, NSWorkspaceLaunchOptions options, NSDictionary configuration, out NSError error);
+
+		[Mac (10, 10)]
+		[Field ("NSWorkspaceAccessibilityDisplayOptionsDidChangeNotification")]
+		[Notification]
+		NSString DisplayOptionsDidChangeNotification { get; }
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -22973,6 +22978,146 @@ namespace XamCore.AppKit {
 		[Abstract]
 		[Export ("accessibilityRequired")]
 		bool AccessibilityRequired { [Bind ("isAccessibilityRequired")] get; set; }
+
+		[Notification]
+		[Field ("NSAccessibilityMainWindowChangedNotification")]
+		NSString MainWindowChangedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilityFocusedWindowChangedNotification")]
+		NSString FocusedWindowChangedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilityFocusedUIElementChangedNotification")]
+		NSString UIElementFocusedChangedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilityApplicationActivatedNotification")]
+		NSString ApplicationActivatedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilityApplicationDeactivatedNotification")]
+		NSString ApplicationDeactivatedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilityApplicationHiddenNotification")]
+		NSString ApplicationHiddenNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilityApplicationShownNotification")]
+		NSString ApplicationShownNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilityWindowCreatedNotification")]
+		NSString WindowCreatedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilityWindowMovedNotification")]
+		NSString WindowMovedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilityWindowResizedNotification")]
+		NSString WindowResizedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilityWindowMiniaturizedNotification")]
+		NSString WindowMiniaturizedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilityWindowDeminiaturizedNotification")]
+		NSString WindowDeminiaturizedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilityDrawerCreatedNotification")]
+		NSString DrawerCreatedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilitySheetCreatedNotification")]
+		NSString SheetCreatedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilityUIElementDestroyedNotification")]
+		NSString UIElementDestroyedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilityValueChangedNotification")]
+		NSString ValueChangedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilityTitleChangedNotification")]
+		NSString TitleChangedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilityResizedNotification")]
+		NSString ResizedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilityMovedNotification")]
+		NSString MovedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilityCreatedNotification")]
+		NSString CreatedNotification { get; }
+
+		[Mac (10, 9)]
+		[Notification]
+		[Field ("NSAccessibilityLayoutChangedNotification")]
+		NSString LayoutChangedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilityHelpTagCreatedNotification")]
+		NSString HelpTagCreatedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilitySelectedTextChangedNotification")]
+		NSString SelectedTextChangedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilityRowCountChangedNotification")]
+		NSString RowCountChangedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilitySelectedChildrenChangedNotification")]
+		NSString SelectedChildrenChangedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilitySelectedRowsChangedNotification")]
+		NSString SelectedRowsChangedNotification { get; }
+
+		[Notification]
+		[Field ("NSAccessibilitySelectedColumnsChangedNotification")]
+		NSString SelectedColumnsChangedNotification { get; }
+
+		[Mac (10, 6)]
+		[Notification]
+		[Field ("NSAccessibilityRowExpandedNotification")]
+		NSString RowExpandedNotification { get; }
+
+		[Mac (10, 6)]
+		[Notification]
+		[Field ("NSAccessibilityRowCollapsedNotification")]
+		NSString RowCollapsedNotification { get; }
+
+		[Mac (10, 6)]
+		[Notification]
+		[Field ("NSAccessibilitySelectedCellsChangedNotification")]
+		NSString SelectedCellsChangedNotification { get; }
+
+		[Mac (10, 6)]
+		[Notification]
+		[Field ("NSAccessibilityUnitsChangedNotification")]
+		NSString UnitsChangedNotification { get; }
+
+		[Mac (10, 6)]
+		[Notification]
+		[Field ("NSAccessibilitySelectedChildrenMovedNotification")]
+		NSString SelectedChildrenMovedNotification { get; }
+
+		[Mac (10, 7)]
+		[Notification]
+		[Field ("NSAccessibilityAnnouncementRequestedNotification")]
+		NSString AnnouncementRequestedNotification { get; }
+
 	}
 
 	[Protocol]
@@ -23779,6 +23924,7 @@ namespace XamCore.AppKit {
 		NSString DescriptionListSubrole { get; }
 	}
 
+#if !XAMCORE_4_0
 	[Static]
 	interface NSAccessibilityNotifications {
 		[Field ("NSAccessibilityMainWindowChangedNotification")]
@@ -23894,6 +24040,7 @@ namespace XamCore.AppKit {
 		[Field ("NSWorkspaceAccessibilityDisplayOptionsDidChangeNotification")]
 		NSString DisplayOptionsDidChangeNotification { get; }
 	}
+#endif
 
 	[Static]
 	interface NSAccessibilityNotificationUserInfoKeys {
