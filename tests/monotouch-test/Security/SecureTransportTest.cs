@@ -1,4 +1,4 @@
-//
+﻿//
 // SecureTransport Unit Tests
 //
 // Authors:

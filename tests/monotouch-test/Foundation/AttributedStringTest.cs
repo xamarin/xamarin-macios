@@ -159,7 +159,6 @@ namespace MonoTouchFixtures.Foundation {
 					Assert.That (copy.RetainCount, Is.EqualTo ((nint) 1), "Copy retaincount 1");
 				using (var copy = ((INSMutableCopying) s1).MutableCopy (NSZone.Default))
 					Assert.That (copy.RetainCount, Is.EqualTo ((nint) 1), "Copy retaincount 2");
-
 			}
 		}
 

@@ -4,12 +4,13 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{22BF080C-AFAD-445B-8BB5-42B9E7FDBC68}</ProjectGuid>
-    <ProjectTypeGuids>{42C0BBD9-55CE-4FC1-8D90-A7348ABAFB23};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
     <RootNamespace>dontlink</RootNamespace>
     <AssemblyName>xammac_tests</AssemblyName>
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -54,9 +55,8 @@
       <HintPath>..\..\external\guiunit\bin\net_4_5\GuiUnit.exe</HintPath>
     </Reference>
     <Reference Include="Xamarin.Mac">
-      <HintPath>..\..\..\..\..\..\..\..\Library\Frameworks\Xamarin.Mac.framework\Versions\2.10.0.113\lib\reference\mobile\Xamarin.Mac.dll</HintPath>
+      <HintPath>..\..\_mac-build\Library\Frameworks\Xamarin.Mac.framework\Versions\git\lib\reference\mobile\Xamarin.Mac.dll</HintPath>
     </Reference>
-    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\monotouch-test\GameKit\LeaderboardTest.cs">
@@ -289,6 +289,9 @@
     </Compile>
     <Compile Include="..\monotouch-test\Security\CertificateTest.cs">
       <Link>Security\CertificateTest.cs</Link>
+    </Compile>
+    <Compile Include="..\monotouch-test\ObjCRuntime\Messaging.cs">
+      <Link>ObjCRuntime\Messaging.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

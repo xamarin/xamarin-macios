@@ -28,7 +28,7 @@ namespace MonoTouchFixtures.Foundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class UrlSessionTaskTest {
-		
+
 		[Test]
 		public void Properties ()
 		{

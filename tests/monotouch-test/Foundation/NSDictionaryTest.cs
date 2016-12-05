@@ -222,8 +222,6 @@ namespace MonoTouchFixtures.Foundation {
 			}
 		}
 
-		//Messaging is internal on mac, so unavailable
-#if !MONOMAC
 		[Test]
 		public void IndexerTest ()
 		{
@@ -274,6 +272,5 @@ namespace MonoTouchFixtures.Foundation {
 				Marshal.FreeHGlobal (strobjptr);
 			}
 		}
-#endif
 	}
 }

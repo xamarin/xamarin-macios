@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 #if XAMCORE_2_0
 using Foundation;
 #if MONOMAC

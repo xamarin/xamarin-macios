@@ -87,15 +87,15 @@ namespace MonoTouchFixtures.Foundation {
 				// aborting is evil, so don't bother aborting the thread, just let it run its course
 			}
 		}
-
 		//GetSkipBackupAttribute doesn't exist on Mac
 #if !MONOMAC
+		
 		[Test]
 		public void GetSkipBackupAttribute ()
 		{
 			if ((Runtime.Arch == Arch.SIMULATOR) && RunningOnSnowLeopard)
 				Assert.Inconclusive ("iOS simulator did not get libsystem_kernel.dylib before Lion");
-
+			
 			Assert.False (NSFileManager.GetSkipBackupAttribute (NSBundle.MainBundle.ExecutableUrl.ToString ()), "MainBundle");
 
 			string filename = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), "DoNotBackupMe-NSFileManager");

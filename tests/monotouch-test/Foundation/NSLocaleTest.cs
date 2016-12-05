@@ -13,8 +13,7 @@ using MonoTouch.ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
-
-#if !MONOMAC //TODO: Messaging is internal on mac
+	
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NSLocaleTest {
@@ -60,5 +59,4 @@ namespace MonoTouchFixtures.Foundation {
 #endif
 		}
 	}
-#endif
 }

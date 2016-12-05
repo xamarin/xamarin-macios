@@ -534,17 +534,9 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
-#if MONOMAC
-		[Ignore ("For some reason cert.Handle is coming back as IntPtr.Zero in test.  Works fine in a normal mac app.")]
-#endif
 		public void MailX1 ()
 		{
-#if MONOMAC // Not disposable on mac
-
-			var cert = new X509Certificate (mail_google_com);
-#else
 			using (var cert = new X509Certificate (mail_google_com)) 
-#endif
 			{
 				/*
 				 * This X509Certificate constructor will use SecCertificateCreateWithData() and
@@ -564,11 +556,8 @@ namespace MonoTouchFixtures.Security {
 		[Ignore ("https://bugzilla.xamarin.com/show_bug.cgi?id=39952")]
 		public void MailX2 ()
 		{
-#if MONOMAC // Not disposable on mac
-			var cert = new X509Certificate2 (mail_google_com);
-#else
+
 			using (var cert = new X509Certificate2 (mail_google_com)) 
-#endif
 			{
 				/*
 				 * FIXME: This X509Certificate2 constructor will use Mono.Security to parse the
