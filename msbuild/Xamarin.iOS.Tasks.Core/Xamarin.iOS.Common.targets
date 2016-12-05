@@ -1514,7 +1514,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="_CollectFrameworks" Condition="'$(_IsContainerApp)' == 'true'" DependsOnTargets="_CompileToNative">
+	<Target Name="_CollectFrameworks" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_CompileToNative">
 		<CollectFrameworks
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -1542,8 +1542,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		</Codesign>
 	</Target>
 
-	<!-- Note: Always codesign user Frameworks even for Simulator builds. We use $(_IsContainerApp) instead of $(_CanOutputAppBundle) as an optimization because only the container app can contain user Frameworks. -->
-	<Target Name="_CodesignFrameworks" Condition="'$(_IsContainerApp)' == 'true'" DependsOnTargets="_DetectSigningIdentity;_CollectFrameworks">
+	<Target Name="_CodesignFrameworks" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_DetectSigningIdentity;_CollectFrameworks">
 		<Codesign
 			Condition="'$(IsMacEnabled)' == 'true' And '@(_Frameworks)' != '' And '$(_CodeSigningKey)' != ''"
 			SessionId="$(BuildSessionId)"
