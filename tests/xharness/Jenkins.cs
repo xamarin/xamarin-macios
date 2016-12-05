@@ -260,11 +260,6 @@ namespace xharness
 						Devices = taskGroup.First ().Simulators,
 					});
 				}
-
-				foreach (var task in runSimulatorTasks) {
-					if (task.TestName == "framework-test")
-						task.ExecutionResult = TestExecutingResult.Ignored;
-				}
 			}
 
 			if (IncludeiOSMSBuild) {
