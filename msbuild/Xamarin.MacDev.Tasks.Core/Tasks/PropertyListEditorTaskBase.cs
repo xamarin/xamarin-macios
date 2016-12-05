@@ -449,8 +449,7 @@ namespace Xamarin.MacDev.Tasks
 					}
 
 					try {
-						using (var stream = File.OpenRead (Value))
-							value = PObject.FromStream (stream);
+						value = PObject.FromFile (Value);
 					} catch {
 						Log.LogError (null, null, null, Value, 0, 0, 0, 0, "Merge: Error Reading File: {0}", Value);
 						return false;
@@ -470,8 +469,7 @@ namespace Xamarin.MacDev.Tasks
 					}
 
 					try {
-						using (var stream = File.OpenRead (Value))
-							value = PObject.FromStream (stream);
+						value = PObject.FromFile (Value);
 					} catch {
 						Log.LogError (null, null, null, Value, 0, 0, 0, 0, "Merge: Error Reading File: {0}", Value);
 						return false;
@@ -486,8 +484,7 @@ namespace Xamarin.MacDev.Tasks
 				PObject value;
 
 				try {
-					using (var stream = File.OpenRead (Value))
-						value = PObject.FromStream (stream);
+					value = PObject.FromFile (Value);
 				} catch {
 					Log.LogError (null, null, null, Value, 0, 0, 0, 0, "Merge: Error Reading File: {0}", Value);
 					return false;
@@ -599,13 +596,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			if (File.Exists (PropertyList)) {
-				try {
-					plist = PDictionary.FromFile (PropertyList, out binary);
-				} catch (FormatException) {
-					using (var stream = File.OpenRead (PropertyList))
-						plist = PObject.FromStream (stream);
-					binary = false;
-				}
+				plist = PObject.FromFile (PropertyList, out binary);
 			} else {
 				Log.LogMessage (MessageImportance.Low, "File Doesn't Exist, Will Create: {0}", PropertyList);
 				plist = new PDictionary ();

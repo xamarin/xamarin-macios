@@ -82,10 +82,7 @@ namespace Xamarin.iOS.Tasks
 
 				Assert.IsTrue (task.Execute (), "Task was expected to execute successfully.");
 
-				PObject output;
-
-				using (var stream = File.OpenRead (task.PropertyList))
-					output = PObject.FromStream (stream);
+				var output = PObject.FromFile (task.PropertyList);
 
 				Assert.AreEqual (expected.Type, output.Type, "Task produced the incorrect plist output.");
 
@@ -244,8 +241,11 @@ namespace Xamarin.iOS.Tasks
 			TestExecuteTask (plist, PropertyListEditorAction.Clear, null, null, null, new PDictionary ());
 			TestExecuteTask (plist, PropertyListEditorAction.Clear, null, "dict", null, new PDictionary ());
 			TestExecuteTask (plist, PropertyListEditorAction.Clear, null, "array", null, new PArray ());
-
-			// TODO: once PObject supports writing other types, make sure Clear works with non-container types
+			TestExecuteTask (plist, PropertyListEditorAction.Clear, null, "bool", null, new PBoolean (false));
+			TestExecuteTask (plist, PropertyListEditorAction.Clear, null, "integer", null, new PNumber (0));
+			TestExecuteTask (plist, PropertyListEditorAction.Clear, null, "real", null, new PReal (0));
+			TestExecuteTask (plist, PropertyListEditorAction.Clear, null, "string", null, new PString (string.Empty));
+			TestExecuteTask (plist, PropertyListEditorAction.Clear, null, "data", null, new PData (new byte[0]));
 		}
 
 		[Test]
