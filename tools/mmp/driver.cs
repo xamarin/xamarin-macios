@@ -55,6 +55,7 @@ namespace Xamarin.Bundler {
 	public enum RegistrarMode {
 		Default,
 		Dynamic,
+		PartialStatic,
 		Static,
 	}
 
@@ -140,8 +141,6 @@ namespace Xamarin.Bundler {
 		public static bool IsUnifiedMobile { get; private set; }
 		public static bool IsUnified { get { return IsUnifiedFullSystemFramework || IsUnifiedMobile || IsUnifiedFullXamMacFramework; } }
 		public static bool IsClassic { get { return !IsUnified; } }
-
-		public static bool UsesPartialRegistrar => IsUnified && (registrar == RegistrarMode.Dynamic || registrar == RegistrarMode.Default) && App.LinkMode == LinkMode.None;
 
 		public static bool Is64Bit { 
 			get {
@@ -302,6 +301,10 @@ namespace Xamarin.Bundler {
 						case "dynamic":
 							registrar = RegistrarMode.Dynamic;
 							break;
+						case "partial":
+						case "partial-static":
+							registrar = RegistrarMode.PartialStatic;
+							break;
 						case "il":
 							registrar = RegistrarMode.Dynamic;
 							break;
@@ -358,7 +361,6 @@ namespace Xamarin.Bundler {
 				{ "xamarin-framework-directory=", "The framework directory", v => { xm_framework_dir = v; }, true },
 				{ "xamarin-full-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullXamMacFramework = true; } },
 				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullSystemFramework = true; } },
-
 			};
 
 			AddSharedOptions (os);
@@ -615,7 +617,14 @@ namespace Xamarin.Bundler {
 			HashSet<string> internalSymbols = new HashSet<string> ();
 
 			if (registrar == RegistrarMode.Default)
-				registrar = App.EnableDebug ? RegistrarMode.Dynamic : RegistrarMode.Static;
+			{
+				if (!App.EnableDebug)
+					registrar = RegistrarMode.Static;
+				else if (IsUnified && App.LinkMode == LinkMode.None && embed_mono)
+					registrar = RegistrarMode.PartialStatic;
+				else
+					registrar = RegistrarMode.Dynamic;
+			}
 			if (is_extension)
 				registrar = RegistrarMode.Static;
 			
@@ -989,7 +998,7 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("#include <xamarin/xamarin.h>");
 				sw.WriteLine ("#import <AppKit/NSAlert.h>");
 				sw.WriteLine ("#import <Foundation/NSDate.h>"); // 10.7 wants this even if not needed on 10.9
-				if (UsesPartialRegistrar)
+				if (Driver.registrar == RegistrarMode.PartialStatic)
 					sw.WriteLine ("extern int xamarin_create_classes_Xamarin_Mac ();");
 				sw.WriteLine ();
 				sw.WriteLine ();
@@ -1008,11 +1017,11 @@ namespace Xamarin.Bundler {
 					sw.WriteLine ("\txamarin_disable_lldb_attach = true;");
 				sw.WriteLine ();
 
-				if (UsesPartialRegistrar)
-					sw.WriteLine ("\txamarin_create_classes_Xamarin_Mac ();");
 
 				if (Driver.registrar == RegistrarMode.Static)
 					sw.WriteLine ("\txamarin_create_classes ();");
+				else if (Driver.registrar == RegistrarMode.PartialStatic)
+					sw.WriteLine ("\txamarin_create_classes_Xamarin_Mac ();");
 
 				if (App.EnableDebug)
 					sw.WriteLine ("\txamarin_debug_mode = TRUE;");
@@ -1189,7 +1198,7 @@ namespace Xamarin.Bundler {
 					}
 				}
 
-				if (UsesPartialRegistrar) {
+				if (registrar == RegistrarMode.PartialStatic) {
 					args.Append (Path.Combine (GetXamMacPrefix (), "lib", string.Format ("mmp/Xamarin.Mac.registrar.{0}.a ", IsUnifiedMobile ? "mobile" : "full")));
 					args.Append ("-framework Quartz ");
 				}
