@@ -596,7 +596,12 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			if (File.Exists (PropertyList)) {
-				plist = PObject.FromFile (PropertyList, out binary);
+				try {
+					plist = PObject.FromFile (PropertyList, out binary);
+				} catch (Exception ex) {
+					Log.LogError (null, null, null, PropertyList, 0, 0, 0, 0, "Error loading '{0}': {1}", PropertyList, ex.Message);
+					return false;
+				}
 			} else {
 				Log.LogMessage (MessageImportance.Low, "File Doesn't Exist, Will Create: {0}", PropertyList);
 				plist = new PDictionary ();
