@@ -620,7 +620,7 @@ namespace Xamarin.Bundler {
 			{
 				if (!App.EnableDebug)
 					registrar = RegistrarMode.Static;
-				else if (IsUnified && App.LinkMode == LinkMode.None)
+				else if (IsUnified && App.LinkMode == LinkMode.None && embed_mono)
 					registrar = RegistrarMode.PartialStatic;
 				else
 					registrar = RegistrarMode.Dynamic;
