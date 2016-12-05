@@ -19,8 +19,6 @@ namespace Xamarin.MacDev.Tasks
 
 	public abstract class PropertyListEditorTaskBase : Task
 	{
-		public string SessionId { get; set; }
-
 		[Required]
 		public string PropertyList { get; set; }
 
