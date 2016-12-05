@@ -87,6 +87,7 @@ namespace Xamarin.Bundler {
 		static string link_flags = null;
 		static LinkerOptions linker_options;
 		static bool? disable_lldb_attach = null;
+		static bool? disable_partial_static_registrar = null;
 		static string machine_config_path = null;
 
 		static bool arch_set = false;
@@ -141,7 +142,15 @@ namespace Xamarin.Bundler {
 		public static bool IsUnified { get { return IsUnifiedFullSystemFramework || IsUnifiedMobile || IsUnifiedFullXamMacFramework; } }
 		public static bool IsClassic { get { return !IsUnified; } }
 
-		public static bool UsesPartialRegistrar => IsUnified && (registrar == RegistrarMode.Dynamic || registrar == RegistrarMode.Default) && App.LinkMode == LinkMode.None;
+		public static bool UsesPartialRegistrar
+		{
+			get
+			{
+				if (disable_partial_static_registrar.HasValue)
+					return false;
+				return IsUnified && (registrar == RegistrarMode.Dynamic || registrar == RegistrarMode.Default) && App.LinkMode == LinkMode.None;
+			}
+		}
 
 		public static bool Is64Bit { 
 			get {
@@ -358,6 +367,7 @@ namespace Xamarin.Bundler {
 				{ "xamarin-framework-directory=", "The framework directory", v => { xm_framework_dir = v; }, true },
 				{ "xamarin-full-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullXamMacFramework = true; } },
 				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullSystemFramework = true; } },
+				{ "disable-partial-static-registrar", "Disable use of partial static registrar.", v => disable_partial_static_registrar = true },
 
 			};
 

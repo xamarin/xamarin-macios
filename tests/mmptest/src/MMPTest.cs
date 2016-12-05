@@ -553,5 +553,28 @@ namespace Xamarin.MMP.Tests
 				Assert.IsFalse (monoDisResults.Contains ("foo.xml"));
 			});
 		}
+
+		[Test]
+		public void UnifiedDebugBuilds_ShouldLinkToPartialStatic_UnlessDisabled ()
+		{
+			RunMMPTest (tmpDir =>
+			{
+				foreach (bool xm45 in new bool[] { false, true })
+				{
+					TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = xm45 };
+
+					string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
+					Assert.IsFalse (buildResults.Contains ("Xamarin.Mac.registrar"), "Release build should not use partial static registrar");
+
+					test.CSProjConfig = "<DebugSymbols>true</DebugSymbols>";
+					buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
+					Assert.IsTrue (buildResults.Contains ("Xamarin.Mac.registrar"), "Debug build should use partial static registrar" );
+
+					test.CSProjConfig = "<DebugSymbols>true</DebugSymbols><MonoBundlingExtraArgs>--disable-partial-static-registrar</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>";
+					buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
+					Assert.IsFalse (buildResults.Contains ("Xamarin.Mac.registrar"), "disable-partial-static-registrar build should not use partial static registrar");
+				}
+			});
+		}
 	}
 }
