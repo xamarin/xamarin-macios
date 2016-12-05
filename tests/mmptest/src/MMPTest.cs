@@ -570,9 +570,13 @@ namespace Xamarin.MMP.Tests
 					buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
 					Assert.IsTrue (buildResults.Contains ("Xamarin.Mac.registrar"), "Debug build should use partial static registrar" );
 
-					test.CSProjConfig = "<DebugSymbols>true</DebugSymbols><MonoBundlingExtraArgs>--disable-partial-static-registrar</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>";
+					test.CSProjConfig = "<DebugSymbols>true</DebugSymbols><MonoBundlingExtraArgs>--registrar=dynamic</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>";
 					buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
-					Assert.IsFalse (buildResults.Contains ("Xamarin.Mac.registrar"), "disable-partial-static-registrar build should not use partial static registrar");
+					Assert.IsFalse (buildResults.Contains ("Xamarin.Mac.registrar"), "registrar=dynamic build should not use partial static registrar");
+
+					test.CSProjConfig = "<DebugSymbols>true</DebugSymbols><MonoBundlingExtraArgs>--registrar=partial</MonoBundlingExtraArgs><XamMacArch>x86_64</XamMacArch>";
+					buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
+					Assert.IsTrue (buildResults.Contains ("Xamarin.Mac.registrar"), "registrar=partial build should use partial static registrar");
 				}
 			});
 		}
