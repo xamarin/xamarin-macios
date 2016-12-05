@@ -391,7 +391,7 @@ namespace Xamarin.iOS.Tasks
 				args.Add ("--extension");
 
 			if (Debug) {
-				if (FastDev && IPhoneSdks.MonoTouch.SupportsFastDev)
+				if (FastDev)
 					args.Add ("--fastdev");
 
 				args.Add ("--debug");
@@ -427,10 +427,8 @@ namespace Xamarin.iOS.Tasks
 			if (UseFloat32 /* We want to compile 32-bit floating point code to use 32-bit floating point operations */)
 				args.Add ("--aot-options=-O=float32");
 
-			if (IPhoneSdks.MonoTouch.SupportsGenericValueTypeSharing) {
-				if (!EnableGenericValueTypeSharing)
-					args.Add ("--gsharedvt=false");
-			}
+			if (!EnableGenericValueTypeSharing)
+				args.Add ("--gsharedvt=false");
 
 			if (LinkDescriptions != null) {
 				foreach (var desc in LinkDescriptions)
