@@ -1509,7 +1509,6 @@ MAC_FRAMEWORKS =            \
 	$(COMMON_FRAMEWORKS)    \
 	Accelerate              \
 	Accounts                \
-	AddressBook             \
 	AppKit                  \
 	AudioToolbox            \
 	AudioUnit               \
