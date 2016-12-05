@@ -4731,23 +4731,23 @@ public partial class Generator : IMemberGatherer {
 		var mod = minfo.GetVisibility ();
 		minfo.protocolize = Protocolize (pi);
 
-#if XAMCORE_2_0 // We have some sub-optimal bindings in compat that trigger this exception, so we just don't fix those
-		// So we don't hide the get or set of a parent property with the same name, we need to see if we have a parent declaring the same property
-		PropertyInfo parentBaseType = GetParentTypeWithSameNamedProperty (ReflectionExtensions.GetBaseTypeAttribute(type), pi.Name);
+		if (UnifiedAPI) { // We have some sub-optimal bindings in compat that trigger this exception, so we just don't fix those
+			// So we don't hide the get or set of a parent property with the same name, we need to see if we have a parent declaring the same property
+			PropertyInfo parentBaseType = GetParentTypeWithSameNamedProperty (ReflectionExtensions.GetBaseTypeAttribute(type), pi.Name);
 
-		// If so, we're not static, and we can't both read and write, but they can
-		if (!minfo.is_static && !(pi.CanRead && pi.CanWrite) && (parentBaseType != null && parentBaseType.CanRead && parentBaseType.CanWrite)) {
-			// Make sure the selector matches, sanity check that we aren't hiding something of a different type
-			// We skip this for wrap'ed properties, as those get complicated to resolve the correct export
-			if (wrap == null &&
-				((pi.CanRead && (GetGetterExportAttribute (pi).Selector != GetGetterExportAttribute (parentBaseType).Selector)) ||
-				 pi.CanWrite && (GetSetterExportAttribute (pi).Selector != GetSetterExportAttribute (parentBaseType).Selector))) {
-				throw new BindingException (1035, true, "The property {0} on class {1} is hiding a property from a parent class {2} but the selectors do not match.", pi.Name, type, parentBaseType.DeclaringType);
+			// If so, we're not static, and we can't both read and write, but they can
+			if (!minfo.is_static && !(pi.CanRead && pi.CanWrite) && (parentBaseType != null && parentBaseType.CanRead && parentBaseType.CanWrite)) {
+				// Make sure the selector matches, sanity check that we aren't hiding something of a different type
+				// We skip this for wrap'ed properties, as those get complicated to resolve the correct export
+				if (wrap == null &&
+					((pi.CanRead && (GetGetterExportAttribute (pi).Selector != GetGetterExportAttribute (parentBaseType).Selector)) ||
+					 pi.CanWrite && (GetSetterExportAttribute (pi).Selector != GetSetterExportAttribute (parentBaseType).Selector))) {
+					throw new BindingException (1035, true, "The property {0} on class {1} is hiding a property from a parent class {2} but the selectors do not match.", pi.Name, type, parentBaseType.DeclaringType);
+				}
+				// Then let's not write out our copy, since we'll reduce visibility
+				return;
 			}
-			// Then let's not write out our copy, since we'll reduce visibility
-			return;
 		}
-#endif
 
 		if (UnifiedAPI && !BindThirdPartyLibrary) {
 			var elType = pi.PropertyType.IsArray ? pi.PropertyType.GetElementType () : pi.PropertyType;
