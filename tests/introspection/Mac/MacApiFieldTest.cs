@@ -184,6 +184,10 @@ namespace Introspection {
 			case "NSWorkspaceAccessibilityNotifications":
 			case "NSAccessibilityNotifications":
 				return true;
+			case "AVFragmentedMovieTrack":
+				return notificationName == "AVFragmentedMovieTrackTimeRangeDidChangeNotification";
+			case "NSTask":
+				return notificationName == "NSTaskDidTerminateNotification";
 #endif
 			}
 			return base.SkipNotification (declaredType, notificationName);

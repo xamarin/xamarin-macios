@@ -12865,10 +12865,14 @@ namespace XamCore.Foundation
 		[Export ("terminationReason")]
 		NSTaskTerminationReason TerminationReason { get; }
 
-		// Fields
+#if !XAMCORE_4_0
+		[Field ("NSTaskDidTerminateNotification")]
+		NSString NSTaskDidTerminateNotification { get; }
+#endif
+
 		[Field ("NSTaskDidTerminateNotification")]
 		[Notification]
-		NSString NSTaskDidTerminateNotification { get; }
+		NSString DidTerminateNotification { get; }
 	}
 
 	[MountainLion]
