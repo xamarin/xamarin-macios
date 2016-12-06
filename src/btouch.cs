@@ -36,10 +36,12 @@ using System.Runtime.InteropServices;
 
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
+using Xamarin.Utils;
 
 class BindingTouch {
 	static Type CoreObject = typeof (XamCore.Foundation.NSObject);
 
+	static TargetFramework? target_framework;
 #if MONOMAC
 	public static PlatformName CurrentPlatform = PlatformName.MacOSX;
 #if XAMCORE_2_0
@@ -142,6 +144,17 @@ class BindingTouch {
 		}
 	}
 
+	static void SetTargetFramework (string fx)
+	{
+		TargetFramework tf;
+		if (!TargetFramework.TryParse (fx, out tf))
+			throw ErrorHelper.CreateError (68, "Invalid value for target framework: {0}.", fx);
+		target_framework = tf;
+
+		if (Array.IndexOf (TargetFramework.ValidFrameworks, target_framework.Value) == -1)
+			throw ErrorHelper.CreateError (70, "Invalid target framework: {0}. Valid target frameworks are: {1}.", target_framework.Value, string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
+	}
+
 	static int Main2 (string [] args)
 	{
 		bool show_help = false;
@@ -226,6 +239,7 @@ class BindingTouch {
 			},
 			{ "unified-full-profile", "Launches compiler pointing to XM Full Profile", l => { /* no-op*/ }, true },
 			{ "unified-mobile-profile", "Launches compiler pointing to XM Mobile Profile", l => { /* no-op*/ }, true },
+			{ "target-framework=", "Specify target framework to use. Only applicable to Xamarin.Mac, and the currently supported values are: 'Xamarin.Mac,Version=v2.0,Profile=Mobile', 'Xamarin.Mac,Version=v4.5,Profile=Full' and 'Xamarin.Mac,Version=v4.5,Profile=System')", v => SetTargetFramework (v) },
 		};
 
 		try {
@@ -393,6 +407,11 @@ class BindingTouch {
 			default:
 				nsManagerPrefix = null;
 				break;
+			}
+
+			if (CurrentPlatform == PlatformName.MacOSX && Unified) {
+				if (!target_framework.HasValue)
+					throw ErrorHelper.CreateError (86, "A target framework (--target-framework) must be specified when building for Xamarin.Mac.");
 			}
 
 			var nsManager = new NamespaceManager (
