@@ -47,11 +47,11 @@ mobile|xamarin.mac|xammac)
 		export MONO_PATH=$ROOT_DIR/lib/mono
 	else
 		if [[ "$full_profile" -eq 1 ]]; then
-			refs="-baselib:$ROOT_DIR/lib/reference/full/Xamarin.Mac.dll"
+			refs="-baselib:$ROOT_DIR/lib/reference/full/Xamarin.Mac.dll --unified-full-profile"
 			bmac=bmac-full.exe
 			export MONO_PATH=$ROOT_DIR/lib/reference/full
 		elif [[ "$mobile_profile" -eq 1 ]]; then
-			refs="-baselib:$ROOT_DIR/lib/reference/mobile/Xamarin.Mac.dll"
+			refs="-baselib:$ROOT_DIR/lib/reference/mobile/Xamarin.Mac.dll --unified-mobile-profile"
 			bmac=bmac-mobile.exe
 			export MONO_PATH=$ROOT_DIR/lib/mono/Xamarin.Mac
 			mono="$ROOT_DIR/bin/bmac-mobile-mono"
