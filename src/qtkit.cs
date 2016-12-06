@@ -86,15 +86,19 @@ namespace XamCore.QTKit
 		[Export ("connectionAttributes")]
 		NSDictionary ConnectionAttributes { get; set; }
 
+		[Notification]
 		[Field ("QTCaptureConnectionFormatDescriptionWillChangeNotification")]
 		NSString FormatDescriptionWillChangeNotification { get; }
 
+		[Notification]
 		[Field ("QTCaptureConnectionFormatDescriptionDidChangeNotification")]
 		NSString FormatDescriptionDidChangeNotification { get; }
 
+		[Notification]
 		[Field ("QTCaptureConnectionAttributeWillChangeNotification")]
 		NSString AttributeWillChangeNotification { get; }
 
+		[Notification]
 		[Field ("QTCaptureConnectionAttributeDidChangeNotification")]
 		NSString AttributeDidChangeNotification { get; }
 
@@ -213,21 +217,27 @@ namespace XamCore.QTKit
 		[Export ("deviceAttributes")]
 		NSDictionary DeviceAttributes { get; set; }
 
+		[Notification]
 		[Field ("QTCaptureDeviceWasConnectedNotification")]
 		NSString WasConnectedNotification { get; }
-		
+
+		[Notification]
 		[Field ("QTCaptureDeviceWasDisconnectedNotification")]
 		NSString WasDisconnectedNotification { get; }
 
+		[Notification]
 		[Field ("QTCaptureDeviceFormatDescriptionsWillChangeNotification")]
 		NSString FormatDescriptionsWillChangeNotification { get; }
-		
+
+		[Notification]
 		[Field ("QTCaptureDeviceFormatDescriptionsDidChangeNotification")]
 		NSString FormatDescriptionsDidChangeNotification { get; }
-			
+
+		[Notification]
 		[Field ("QTCaptureDeviceAttributeWillChangeNotification")]
 		NSString AttributeWillChangeNotification { get; }
-		
+
+		[Notification]
 		[Field ("QTCaptureDeviceAttributeDidChangeNotification")]
 		NSString AttributeDidChangeNotification { get; }
 
@@ -428,6 +438,7 @@ namespace XamCore.QTKit
 		[Export ("stopRunning")]
 		void StopRunning ();
 
+		[Notification]
 		[Field ("QTCaptureSessionRuntimeErrorNotification")]
 		NSString RuntimeErrorNotification { get; }
 
@@ -1186,40 +1197,79 @@ namespace XamCore.QTKit
 		//
 		// Notifications
 		//
+
+
+		[Notification]
 		[Field ("QTMovieEditabilityDidChangeNotification")]
 		NSString EditabilityDidChangeNotification { get; }
+
+		[Notification]
 		[Field ("QTMovieEditedNotification")]
 		NSString EditedNotification { get; }
+
+		[Notification]
 		[Field ("QTMovieLoadStateDidChangeNotification")]
 		NSString LoadStateDidChangeNotification { get; }
+
+		[Notification]
 		[Field ("QTMovieLoopModeDidChangeNotification")]
 		NSString LoopModeDidChangeNotification { get; }
+
+		[Notification]
 		[Field ("QTMovieMessageStringPostedNotification")]
 		NSString MessageStringPostedNotification { get; }
+
+		[Notification]
 		[Field ("QTMovieRateDidChangeNotification")]
 		NSString RateDidChangeNotification { get; }
+
+		[Notification]
 		[Field ("QTMovieSelectionDidChangeNotification")]
 		NSString SelectionDidChangeNotification { get; }
+
+		[Notification]
 		[Field ("QTMovieSizeDidChangeNotification")]
 		NSString SizeDidChangeNotification { get; }
+
+		[Notification]
 		[Field ("QTMovieStatusStringPostedNotification")]
 		NSString StatusStringPostedNotification { get; }
+
+
+		[Notification]
 		[Field ("QTMovieTimeDidChangeNotification")]
 		NSString TimeDidChangeNotification { get; }
+
+		[Notification]
 		[Field ("QTMovieVolumeDidChangeNotification")]
 		NSString VolumeDidChangeNotification { get; }
+
+		[Notification]
 		[Field ("QTMovieDidEndNotification")]
 		NSString DidEndNotification { get; }
+
+		[Notification]
 		[Field ("QTMovieChapterDidChangeNotification")]
 		NSString ChapterDidChangeNotification { get; }
+
+		[Notification]
 		[Field ("QTMovieChapterListDidChangeNotification")]
 		NSString ChapterListDidChangeNotification { get; }
+
+
+		[Notification]
 		[Field ("QTMovieEnterFullScreenRequestNotification")]
 		NSString EnterFullScreenRequestNotification { get; }
+
+		[Notification]
 		[Field ("QTMovieExitFullScreenRequestNotification")]
 		NSString ExitFullScreenRequestNotification { get; }
+
+		[Notification]
 		[Field ("QTMovieCloseWindowRequestNotification")]
 		NSString CloseWindowRequestNotification { get; }
+
+		[Notification]
 		[Field ("QTMovieApertureModeDidChangeNotification")]
 		NSString ApertureModeDidChangeNotification { get; }
 

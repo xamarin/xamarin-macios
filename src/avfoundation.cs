@@ -6227,12 +6227,15 @@ namespace XamCore.AVFoundation {
 		[Export ("tracks")]
 		AVFragmentedMovieTrack[] Tracks { get; }
 
+		[Notification]
 		[Field ("AVFragmentedMovieContainsMovieFragmentsDidChangeNotification")]
 		NSString ContainsMovieFragmentsDidChangeNotification { get; }
 
+		[Notification]
 		[Field ("AVFragmentedMovieDurationDidChangeNotification")]
 		NSString DurationDidChangeNotification { get; }
 
+		[Notification]
 		[Field ("AVFragmentedMovieWasDefragmentedNotification")]
 		NSString WasDefragmentedNotification { get; }
 	}
@@ -6414,11 +6417,19 @@ namespace XamCore.AVFoundation {
 	[DisableDefaultCtor]
 	interface AVFragmentedMovieTrack
 	{
+#if !XAMCORE_4_0
 		[Mac (10, 10)]
 		[Field ("AVFragmentedMovieTrackTimeRangeDidChangeNotification")]
 		NSString ATimeRangeDidChangeNotification { get; }
+#endif
 
 		[Mac (10, 10)]
+		[Field ("AVFragmentedMovieTrackTimeRangeDidChangeNotification")]
+		[Notification]
+		NSString TimeRangeDidChangeNotification { get; }
+
+		[Mac (10, 10)]
+		[Notification]
 		[Field ("AVFragmentedMovieTrackSegmentsDidChangeNotification")]
 		NSString SegmentsDidChangeNotification { get; }
 
