@@ -46,17 +46,22 @@ class BindingTouch {
 	public static PlatformName CurrentPlatform = PlatformName.MacOSX;
 #if XAMCORE_2_0
 	public static bool Unified = true;
+	public static bool skipSystemDrawing /* full: yes, mobile: no */;
 #else
 	public static bool Unified = false;
+	public static bool skipSystemDrawing = false;
 #endif
 #elif WATCH
 	public static PlatformName CurrentPlatform = PlatformName.WatchOS;
 	public static bool Unified = true;
+	public static bool skipSystemDrawing = false;
 #elif TVOS
 	public static PlatformName CurrentPlatform = PlatformName.TvOS;
 	public static bool Unified = true;
+	public static bool skipSystemDrawing = false;
 #elif IOS
 	public static PlatformName CurrentPlatform = PlatformName.iOS;
+	public static bool skipSystemDrawing = false;
 #if XAMCORE_2_0
 	public static bool Unified = true;
 #else
@@ -389,13 +394,6 @@ class BindingTouch {
 					strong_dictionaries.Add (t);
 			}
 
-			bool addSystemDrawingReferences =
-#if NO_SYSTEM_DRAWING
-				true;
-#else
-				false;
-#endif
-
 			string nsManagerPrefix;
 			switch (CurrentPlatform) {
 			case PlatformName.MacOSX:
@@ -412,12 +410,13 @@ class BindingTouch {
 			if (CurrentPlatform == PlatformName.MacOSX && Unified) {
 				if (!target_framework.HasValue)
 					throw ErrorHelper.CreateError (86, "A target framework (--target-framework) must be specified when building for Xamarin.Mac.");
+				skipSystemDrawing = target_framework == TargetFramework.Xamarin_Mac_4_5_Full;
 			}
 
 			var nsManager = new NamespaceManager (
 				nsManagerPrefix,
 				ns == null ? firstApiDefinitionName : ns,
-				addSystemDrawingReferences
+				skipSystemDrawing
 			);
 
 			Generator.CurrentPlatform = CurrentPlatform;
@@ -428,7 +427,6 @@ class BindingTouch {
 				ZeroCopyStrings = zero_copy,
 				Compat = !Unified,
 				InlineSelectors = inline_selectors,
-				SkipSystemDrawing = addSystemDrawingReferences
 			};
 
 			if (!Unified && !binding_third_party) {
