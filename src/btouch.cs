@@ -37,24 +37,36 @@ using System.Runtime.InteropServices;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 
+enum MacProfile {
+	Unknown,
+	Full,
+	Mobile,
+}
+
 class BindingTouch {
 	static Type CoreObject = typeof (XamCore.Foundation.NSObject);
+	public static MacProfile MacProfile;
 
 #if MONOMAC
 	public static PlatformName CurrentPlatform = PlatformName.MacOSX;
 #if XAMCORE_2_0
 	public static bool Unified = true;
+	public static bool skipSystemDrawing /* full: yes, mobile: no */;
 #else
 	public static bool Unified = false;
+	public static bool skipSystemDrawing = false;
 #endif
 #elif WATCH
 	public static PlatformName CurrentPlatform = PlatformName.WatchOS;
 	public static bool Unified = true;
+	public static bool skipSystemDrawing = false;
 #elif TVOS
 	public static PlatformName CurrentPlatform = PlatformName.TvOS;
 	public static bool Unified = true;
+	public static bool skipSystemDrawing = false;
 #elif IOS
 	public static PlatformName CurrentPlatform = PlatformName.iOS;
+	public static bool skipSystemDrawing = false;
 #if XAMCORE_2_0
 	public static bool Unified = true;
 #else
@@ -224,8 +236,8 @@ class BindingTouch {
 					linkwith.Add (id);
 				}
 			},
-			{ "unified-full-profile", "Launches compiler pointing to XM Full Profile", l => { /* no-op*/ }, true },
-			{ "unified-mobile-profile", "Launches compiler pointing to XM Mobile Profile", l => { /* no-op*/ }, true },
+			{ "unified-full-profile", "Launches compiler pointing to XM Full Profile", l => { MacProfile = MacProfile.Full; }, true },
+			{ "unified-mobile-profile", "Launches compiler pointing to XM Mobile Profile", l => { MacProfile = MacProfile.Mobile; }, true },
 		};
 
 		try {
@@ -375,13 +387,6 @@ class BindingTouch {
 					strong_dictionaries.Add (t);
 			}
 
-			bool addSystemDrawingReferences =
-#if NO_SYSTEM_DRAWING
-				true;
-#else
-				false;
-#endif
-
 			string nsManagerPrefix;
 			switch (CurrentPlatform) {
 			case PlatformName.MacOSX:
@@ -395,10 +400,13 @@ class BindingTouch {
 				break;
 			}
 
+			if (CurrentPlatform == PlatformName.MacOSX && Unified)
+				skipSystemDrawing = MacProfile == MacProfile.Full;
+
 			var nsManager = new NamespaceManager (
 				nsManagerPrefix,
 				ns == null ? firstApiDefinitionName : ns,
-				addSystemDrawingReferences
+				skipSystemDrawing
 			);
 
 			Generator.CurrentPlatform = CurrentPlatform;
@@ -409,7 +417,6 @@ class BindingTouch {
 				ZeroCopyStrings = zero_copy,
 				Compat = !Unified,
 				InlineSelectors = inline_selectors,
-				SkipSystemDrawing = addSystemDrawingReferences
 			};
 
 			if (!Unified && !binding_third_party) {
