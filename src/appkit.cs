@@ -10049,6 +10049,9 @@ namespace XamCore.AppKit {
 		[NullAllowed, Export ("secondAnchor", ArgumentSemantic.Copy)]
 		NSLayoutAnchor<NSObject> SecondAnchor { get; }
 #endif
+
+		[NullAllowed, Export ("identifier")]
+		string Identifier { get; set; }
 	}
 
 	[Mac (10,11)]
