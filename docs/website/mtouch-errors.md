@@ -1,11 +1,13 @@
 id:{9F76162B-D622-45DA-996B-2FBF8017E208}  
-title:mtouch errors  
+title:Xamarin.iOS errors
 
 [//]: # (The original file resides under https://github.com/xamarin/xamarin-macios/tree/master/docs/website/)
 [//]: # (This allows all contributors (including external) to submit, using a PR, updates to the documentation that match the tools changes)
 [//]: # (Modifications outside of xamarin-macios/master will be lost on future updates)
 
-# mtouch error messages
+# MT0xxx: mtouch error messages
+
+E.g. parameters, environment, missing tools.
 
 <!-- 
  MT0xxx mtouch itself, e.g. parameters, environment (e.g. missing tools)
@@ -358,6 +360,11 @@ A last-straw solution would be to use a different version of Xamarin.iOS, one th
 <h3><a name="MT0093"/>MT0093: Aot symbolication files could not be copied to the destination directory. Symbolication will not work with the application.</h3>
 
 <h3><a name="MT0096"/>MT0096: No reference to Xamarin.iOS.dll was found.</h3>
+
+# MT1xxx: Project related error messages
+
+### MT10xx: Installer / mtouch
+
 <!--
  MT1xxx file copy / symlinks (project related)
   MT10xx installer.cs / mtouch.cs
@@ -537,6 +544,8 @@ It's recommended to pass the path to the app to launch on device instead of just
 
 Please unlock the device and try again.
 
+### MT11xx: Debug Service
+
 <!--
   MT11xx DebugService.cs
   -->
@@ -591,6 +600,8 @@ Please check if your device is locked.
 
 If you're deploying an enterprise app or using a free provisioning profile, you might have trust the developer (this is explained <a href="http://stackoverflow.com/a/30726375/183422">here</a>).
 
+### MT12xx: Simulator
+
 <!--
   MT12xx simcontroller.cs
   -->
@@ -630,6 +641,8 @@ When launching a WatchOS app in a WatchOS simulator, there must be a paired iOS 
 
 Watch simulators can be paired with iOS Simulators using Xcode's Devices UI (menu Window -> Devices).
 
+### MT13xx: [LinkWith]
+
 <!--
   MT13xx [LinkWith]
   -->
@@ -658,6 +671,8 @@ Please make sure the framework is valid.
 The specified binding library contains an embedded framework, but Xamarin.iOS only supports embedded frameworks on iOS 8.0 or later.
 
 Please set the deployment target in the Info.plist file to at least 8.0 to solve this error (or don't use embedded frameworks).
+
+### MT14xx: Crash Reports
 
 <!--
   MT14xx	CrashReports.cs
@@ -747,6 +762,8 @@ Things to try to solve this:
 * Reboot the Mac.
 * Synchronize the device with iTunes (this will remove any crash reports from the device).
 
+### MT16xx: MachO
+
 <!--
   MT16xx	MachO.cs
   -->
@@ -800,6 +817,8 @@ Please make sure the file is a valid Mach-O dynamic library.
 The format of a file can be verified using the `file` command from a terminal:
 
     file -arch all -l /path/to/file
+
+# MT2xxx: Linker error messages
 
 <!--
  MT2xxx Linker
@@ -875,6 +894,8 @@ User resources are files included inside assemblies (as resources) that needs to
 * `__monotouch_content_*` and `__monotouch_pages_*` resources; and
 * Native libraries embedded inside a binding assembly;
 
+# MT3xxx: AOT error messages
+
 <!--
  MT3xxx AOT
   MT30xx AOT (general) errors
@@ -916,6 +937,10 @@ Bitcode support requires the use of the LLVM AOT backend (--llvm).
 
 Either disable Bitcode support or enable LLVM.
 
+# MT4xxx: Code generation error messages
+
+### MT40xx: Main
+
 <!--
  MT4xxx code generation
   MT40xx main.m
@@ -928,6 +953,8 @@ An error occurred when generating main.m. Please file a bug at [http://bugzilla.
 <h3><a name="MT4002"/>MT4002 Failed to compile the generated code for P/Invoke methods. Please file a bug report at http://bugzilla.xamarin.com</h3>
 
 Failed to compile the generated code for P/Invoke methods. Please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
+### MT41xx: Registrar
 
 <!--
   MT41xx registrar.m
@@ -1171,6 +1198,10 @@ This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzil
 
 This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
+# MT5xxx: GCC and toolchain error messages
+
+### MT51xx: Compilation
+
 <!--
  MT5xxx GCC and toolchain
   MT51xx compilation
@@ -1190,6 +1221,7 @@ This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzil
 
 <h3><a name="MT5104"/>MT5104 Could not find neither the '*' nor the '*' compiler. Please install Xcode 'Command-Line Tools' component</h3>
 
+### MT52xx: Linking
 
 <!--
   MT52xx linking
@@ -1340,6 +1372,8 @@ There are a few possible solutions:
 
 This is a warning, indicating that a P/Invoke was detected to reference the library in question, but the app is not linking with it.
 
+### MT53xx: Other tools
+
 <!--
   MT53xx other tools
   -->
@@ -1375,6 +1409,10 @@ An error occurred when signing the application. Please review the build log to s
 <!-- 5308 is used by mmp -->
 <!-- 5309 is used by mmp -->
 
+# MT6xxx: mtouch internal tools error messages
+
+### MT600x: Stripper
+
 <!--
  MT6xxx mtouch internal tools
   MT600x Stripper
@@ -1389,6 +1427,8 @@ An error occurred when stripping managed code(removing the IL code) from the ass
 <h3><a name="MT6003"/>MT6003: [UnauthorizedAccessException message]</h3>
 
 A security error ocurred while stripping debugging symbols from the application.
+
+# MT7xxx: MSBuild error messages
 
 <!--
  MT7xxx msbuild errors
@@ -1488,6 +1528,8 @@ In some cases, it's a "local network" issue and it can be addressed by adding th
 <h3><a name="MT7043"/>MT7043: Main Info.plist path does not specify a CFBundleSupportedPlatforms.</h3>
 
 <h3><a name="MT7044"/>MT7044: Main Info.plist path does not specify a UIDeviceFamily.</h3>
+
+# MT8xxx: Runtime error messages
 
 <!--
  MT8xxx runtime
