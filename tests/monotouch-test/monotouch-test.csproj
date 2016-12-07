@@ -644,6 +644,7 @@
     <Compile Include="AVFoundation\CaptureDeviceTest.cs" />
     <Compile Include="PassKit\LabeledValueTest.cs" />
     <Compile Include="System.Net.Http\MessageHandlers.cs" />
+    <Compile Include="AVFoundation\PlayerItemVideoOutputTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
