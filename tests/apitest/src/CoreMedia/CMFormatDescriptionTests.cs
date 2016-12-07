@@ -28,46 +28,6 @@ namespace Xamarin.Mac.Tests
 	[TestFixture]
 	public class CMFormatDescriptionTests
 	{
-		public CMFormatDescriptionTests ()
-		{
-			//var videoDesc = CMFormatDescription.Create (CMMediaType.Video, 61766331, out error);
-			//if (error != CMFormatDescriptionError.None)
-			//	Console.WriteLine (error);Desc.MediaType;
-			//var videoType = videoDesc.MediaType;
-
-			//var videoSub = videoDesc.MediaSubType;
-
-			//var typeId = CMFormatDescription.GetTypeID ();
-
-
-			//AudioStreamBasicDescription description = new AudioStreamBasicDescription (AudioFormatType.LinearPCM) {
-			//	SampleRate = 44100,
-			//	FormatFlags = AudioFormatFlags.IsSignedInteger | AudioFormatFlags.IsPacked,
-			//	FramesPerPacket = 1,
-			//	ChannelsPerFrame = 2,
-			//	BitsPerChannel = 16,
-			//	BytesPerPacket = 4,
-			//	BytesPerFrame = 4
-			//};
-
-			////			var audioDescription1 = CMAudioFormatDescription.Create (CMMediaType.Audio, 61616320, out error);
-			//var audioDescription1 = new CMAudioFormatDescription (ref description);
-
-			//var layout = audioDescription1.ChannelLayout;
-
-			//var magicCookie = audioDescription1.MagicCookie;
-
-			//var formatList = audioDescription1.Formats;
-
-			//var item = audioDescription1.MostCompatibleFormat;
-
-			//var format = audioDescription1.RichestDecodableFormat;
-
-			//var returnedDesc = audioDescription1.StreamBasicDescription;
-
-			//var audioDescription2 = new CMAudioFormatDescription (ref description, new AudioChannelLayout { Tag = 0, Bitmap = 1, Channels = new AudioChannelDescription [] { new AudioChannelDescription () } });
-		}
-
 		[Test]
 		public void CMAudioFormatDescriptionTest ()
 		{

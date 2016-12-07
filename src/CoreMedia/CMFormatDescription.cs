@@ -326,12 +326,12 @@ namespace XamCore.CoreMedia {
 			}
 		}
 
-		public AudioFormat? AudioRichestDecodableFormat {
+		public AudioFormat AudioRichestDecodableFormat {
 			get {
 				unsafe {
 					var ret = (AudioFormat *) CMAudioFormatDescriptionGetRichestDecodableFormat (handle);
 					if (ret == null)
-						return null;
+						return new AudioFormat ();
 					return *ret;
 				}
 			}
@@ -540,7 +540,9 @@ namespace XamCore.CoreMedia {
 				Marshal.StructureToPtr (layout.NativeStruct, ptr, false);
 			}
 			var error = CMAudioFormatDescriptionCreate (IntPtr.Zero, ref asbd, (nuint) size, ptr, (nuint) magicCookieSize, magicCookie, extensions != null ? extensions.Handle : IntPtr.Zero, out handle);
-			
+
+			Marshal.FreeHGlobal (ptr);
+
 			if (error != CMFormatDescriptionError.None)
 				throw new ArgumentException (error.ToString ());
 		}
