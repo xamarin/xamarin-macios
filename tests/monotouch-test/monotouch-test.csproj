@@ -575,6 +575,7 @@
     <Compile Include="HealthKit\CdaDocumentSampleTest.cs" />
     <Compile Include="Metal\HeapDescriptorTest.cs" />
     <Compile Include="PassKit\LabeledValueTest.cs" />
+    <Compile Include="AVFoundation\PlayerItemVideoOutputTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>

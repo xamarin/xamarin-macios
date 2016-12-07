@@ -9598,11 +9598,11 @@ namespace XamCore.AVFoundation {
 		[Export ("delegateQueue"), NullAllowed]
 		DispatchQueue DelegateQueue { get;  }
 
-		[Internal, Static]
+		[Internal]
 		[Export ("initWithPixelBufferAttributes:")]
 		IntPtr _FromPixelBufferAttributes ([NullAllowed] NSDictionary pixelBufferAttributes);
 
-		[Internal, Static]
+		[Internal]
 		[Export ("initWithOutputSettings:")]
 		IntPtr _FromOutputSettings ([NullAllowed] NSDictionary outputSettings);
 
