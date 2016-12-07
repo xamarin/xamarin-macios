@@ -45,6 +45,7 @@ namespace XamCore.AppKit {
 		Regular, Accessory, Prohibited
 	}
 	
+	[Flags]
 	[Native]
 	public enum NSApplicationPresentationOptions : nuint_compat_int {
 		Default                    = 0,
@@ -907,6 +908,7 @@ namespace XamCore.AppKit {
 		[Mac (10, 11)] FullScreenDisallowsTiling = 1 << 12
 	}
 
+	[Flags]
 #if !XAMCORE_4_0
 	[Native]
 	public enum NSWindowNumberListOptions : nuint_compat_int {
@@ -1463,6 +1465,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,11)]
 	[Native]
+	[Flags]
 	public enum NSTextStorageEditActions : nuint
 	{
 		Attributes = (1 << 0),
@@ -1867,6 +1870,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,11)] // Not marked 10.11 in the headers, but doesn't exist in the 10.10 headers
 	[Native]
+	[Flags]
 	public enum NSCollectionViewScrollPosition : nuint
 	{
 		None = 0,
@@ -2244,6 +2248,7 @@ namespace XamCore.AppKit {
 		[Mac (10,11)] FirstBaseline,
 	}
 
+	[Flags]
 	[Native]
 	public enum NSLayoutFormatOptions : nuint_compat_int {
 		None = 0,
@@ -2547,6 +2552,7 @@ namespace XamCore.AppKit {
 		Emphasized
 	}
 
+	[Flags]
 	[Mac (10,11)]
 	[Native]
 	public enum NSSpringLoadingOptions : nuint
@@ -2567,6 +2573,7 @@ namespace XamCore.AppKit {
 		NonBaseCharacter = (1 << 3)
 	}
 
+	[Flags]
 	[Mac (10,11)]
 	[Native]
 	public enum NSControlCharacterAction : nint
@@ -2579,6 +2586,7 @@ namespace XamCore.AppKit {
 		ContainerBreak = (1 << 5)
 	}
 
+	[Flags]
 	[Mac (10,12)]
 	[Native]
 	public enum NSWindowListOptions : nint {
