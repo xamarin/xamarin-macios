@@ -125,46 +125,44 @@ namespace Xamarin
 		[TestCase (Target.Sim, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  false, "")]
 		[TestCase (Target.Sim, Config.Debug,   PackageMdb.WoutMdb, MSym.Default,  false, false, "--nofastsim --nolink")]
 		// Device
-		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  false, "")]
+		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  true,  "")]
 		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.WoutMSym, true,  false, "")]
-		[TestCase (Target.Dev, Config.Release, PackageMdb.Default, MSym.Default,  false, false, "--abi:armv7,arm64")]
+		[TestCase (Target.Dev, Config.Release, PackageMdb.Default, MSym.Default,  false, true,  "--abi:armv7,arm64")]
 		[TestCase (Target.Dev, Config.Debug,   PackageMdb.WoutMdb, MSym.Default,  false, false, "")]
 		[TestCase (Target.Dev, Config.Debug,   PackageMdb.WoutMdb, MSym.WithMSym, false, true,  "")]
-		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  false, "--abi:armv7+llvm")]
+		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  true,  "--abi:armv7+llvm")]
 		public void SymbolicationData (Target target, Config configuration, PackageMdb package_mdb, MSym msym, bool has_mdb, bool has_msym, string extra_mtouch_args)
 		{
 			if (target == Target.Dev)
 				AssertDeviceAvailable ();
-			
-			var testDir = GetTempDirectory ();
-			var appDir = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (appDir);
 
-			try {
-				var is_sim = target == Target.Sim;
-				var exe = CompileUnifiedTestAppExecutable (testDir);
-				var msymDir = appDir + ".msym";
-				var args = extra_mtouch_args;
-
-				args += is_sim ? " --sim {0} " : " --dev {0} ";
-
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = Profile.iOS;
+				mtouch.CreateTemporaryApp (hasPlist: true);
+				switch (package_mdb) {
+				case PackageMdb.WithMdb:
+					mtouch.PackageMdb = true;
+					break;
+				case PackageMdb.WoutMdb:
+					mtouch.PackageMdb = false;
+					break;
+				}
+				switch (msym) {
+				case MSym.WithMSym:
+					mtouch.MSym = true;
+					break;
+				case MSym.WoutMSym:
+					mtouch.MSym = false;
+					break;
+				}
 				if (configuration == Config.Debug)
-					args += "--debug ";
+					mtouch.Debug = true;
 
-				if (package_mdb == PackageMdb.WithMdb)
-					args += "--package-mdb:true ";
-				else if (package_mdb == PackageMdb.WoutMdb)
-					args += "--package-mdb:false ";
+				var is_sim = target == Target.Sim;
+				mtouch.AssertExecute (is_sim ? MTouchAction.BuildSim : MTouchAction.BuildDev, "build");
 
-				if (msym == MSym.WithMSym)
-					args += "--msym:true ";
-				else if (msym == MSym.WoutMSym)
-					args += "--msym:false ";
-				
-				args += " --sdkroot {2} -v -v -v -sdk {3} {1} -r:{4}";
-
-				ExecutionHelper.Execute (TestTarget.ToolPath, string.Format (args, appDir, exe, Configuration.xcode_root, Configuration.sdk_version, Configuration.XamarinIOSDll));
-
+				var appDir = mtouch.AppPath;
+				var msymDir = appDir + ".mSYM";
 				if (is_sim) {
 					Assert.AreEqual (has_mdb, File.Exists (Path.Combine (appDir, "mscorlib.dll.mdb")), "#mdb");
 				} else {
@@ -183,9 +181,12 @@ namespace Xamarin
 						}
 					}
 					Assert.AreEqual (has_msym, msymFiles.Contains ("mscorlib.dll.msym"));
-				} 
-			} finally {
-				Directory.Delete (testDir, true);
+					var manifest = new XmlDocument ();
+					manifest.Load (Path.Combine (msymDir, "manifest.xml"));
+					Assert.AreEqual ("com.xamarin.testApp", manifest.SelectSingleNode ("/mono-debug/app-id").InnerText, "app-id");
+				} else {
+					DirectoryAssert.DoesNotExist (msymDir, "mSYM found when not expected");
+				}
 			}
 		}
 
