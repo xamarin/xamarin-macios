@@ -36,7 +36,7 @@ namespace xharness
 
 		List<TestTask> Tasks = new List<TestTask> ();
 
-		internal static Resource DesktopResource = new Resource ("Desktop", Environment.ProcessorCount);
+		internal static Resource DesktopResource = new Resource ("Desktop", 1);
 
 		async Task<IEnumerable<RunSimulatorTask>> CreateRunSimulatorTaskAsync (XBuildTask buildTask)
 		{
