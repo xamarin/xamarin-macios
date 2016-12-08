@@ -132,6 +132,8 @@ There are several options for mtouch that can't be used simultaneously:
 
 Remove both the options `--unsupported--enable-generics-in-registrar` and `--registrar`. Starting with Xamarin.iOS 7.2.1 the default registrar supports generics.
 
+This error is no longer shown (the command-line argument `--unsupported--enable-generics-in-registrar` has been removed from mtouch).
+
 <h3><a name="MT0023"/>MT0023 Application name '*.exe' conflicts with another user assembly.</h3>
 
 The executable assembly's name and the application's name can't match the name of any dll in the app. Please modify the name of your executable.
