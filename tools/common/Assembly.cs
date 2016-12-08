@@ -334,16 +334,16 @@ namespace Xamarin.Bundler {
 					case "libsystem_kernel":
 						break;
 					case "sqlite3":
-						if (LinkWith == null)
-							LinkWith = new List<string> ();
-						LinkWith.Add ("-lsqlite3");
+						if (LinkerFlags == null)
+							LinkerFlags = new List<string> ();
+						LinkerFlags.Add ("-lsqlite3");
 						Driver.Log (3, "Linking with {0} because it's referenced by a module reference in {1}", file, FileName);
 						break;
 					case "libsqlite3":
 						// remove lib prefix
-						if (LinkWith == null)
-							LinkWith = new List<string> ();
-						LinkWith.Add ("-l" + file.Substring (3));
+						if (LinkerFlags == null)
+							LinkerFlags = new List<string> ();
+						LinkerFlags.Add ("-l" + file.Substring (3));
 						Driver.Log (3, "Linking with {0} because it's referenced by a module reference in {1}", file, FileName);
 					break;
 					case "libGLES":
