@@ -17667,7 +17667,7 @@ namespace XamCore.AppKit {
 		[Export ("layoutManager")]
 		NSLayoutManager LayoutManager { get; set; }
 
-		[Export ("textView", ArgumentSemantic.Retain)]
+		[Export ("textView", ArgumentSemantic.Weak)]
 		NSTextView TextView { get; set; }
 
 		[Export ("widthTracksTextView")]
