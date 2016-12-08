@@ -22,6 +22,7 @@ namespace xharness
 		public bool IncludeiOSMSBuild = true;
 		public bool IncludeMtouch;
 		public bool IncludeBtouch;
+		public bool IncludeMacBindingProject;
 
 		public Logs Logs = new Logs ();
 		public Log MainLog;
@@ -159,11 +160,16 @@ namespace xharness
 				"src/generator-enums.cs",
 				"src/generator-filters.cs",
 			};
+			var mac_binding_project = new string [] {
+				"msbuild",
+				"tests/mac-binding-project",
+			}.Intersect (btouch_prefixes).ToArray ();
 
 			SetEnabled (files, mtouch_prefixes, "mtouch", ref IncludeMtouch);
 			SetEnabled (files, mmp_prefixes, "mmp", ref IncludeMmpTest);
 			SetEnabled (files, bcl_prefixes, "bcl", ref IncludeBcl);
 			SetEnabled (files, btouch_prefixes, "btouch", ref IncludeBtouch);
+			SetEnabled (files, mac_binding_project, "mac-binding-project", ref IncludeMacBindingProject);
 		}
 
 		void SetEnabled (IEnumerable<string> files, string [] prefixes, string testname, ref bool value)
@@ -190,6 +196,7 @@ namespace xharness
 			SetEnabled (labels, "mmp", ref IncludeMmpTest);
 			SetEnabled (labels, "bcl", ref IncludeBcl);
 			SetEnabled (labels, "btouch", ref IncludeBtouch);
+			SetEnabled (labels, "mac-binding-project", ref IncludeMacBindingProject);
 
 			// enabled by default
 			SetEnabled (labels, "ios", ref IncludeiOS);
@@ -372,6 +379,18 @@ namespace xharness
 					Target = "wrench-btouch",
 					WorkingDirectory = Harness.RootDirectory,
 
+				};
+				Tasks.Add (run);
+			}
+
+			if (IncludeMacBindingProject) {
+				var run = new MakeTask
+				{
+					Jenkins = this,
+					Platform = TestPlatform.Mac,
+					TestName = "Mac Binding Projects",
+					Target = "all",
+					WorkingDirectory = Path.Combine (Harness.RootDirectory, "mac-binding-project"),
 				};
 				Tasks.Add (run);
 			}
