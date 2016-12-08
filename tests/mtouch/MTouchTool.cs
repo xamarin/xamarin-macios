@@ -76,6 +76,8 @@ namespace Xamarin
 		public List<string> AppExtensions = new List<string> ();
 		public List<string> Frameworks = new List<string> ();
 		public string HttpMessageHandler;
+		public bool? PackageMdb;
+		public bool? MSym;
 #pragma warning restore 649
 
 		// These are a bit smarter
@@ -191,6 +193,12 @@ namespace Xamarin
 
 			if (FastDev.HasValue && FastDev.Value)
 				sb.Append (" --fastdev");
+
+			if (PackageMdb.HasValue)
+				sb.Append (" --package-mdb:").Append (PackageMdb.Value ? "true" : "false");
+
+			if (MSym.HasValue)
+				sb.Append (" --msym:").Append (MSym.Value ? "true" : "false");
 
 			if (Extension == true)
 				sb.Append (" --extension");

@@ -1156,7 +1156,7 @@ namespace Xamarin.Bundler
 			// Bundle configuration
 			//
 			{ "displayname=", "Specifies the display name [Deprecated]", v => { app.BundleDisplayName = v; classic_only_arguments.Add ("--displayname"); }, true },
-			{ "bundleid=", "Specifies the bundle identifier (com.foo.exe) [Deprecated]", v => { app.BundleId = v; classic_only_arguments.Add ("--bundleid"); }, true },
+			{ "bundleid=", "Specifies the bundle identifier (com.foo.exe) [Deprecated]", v => { classic_only_arguments.Add ("--bundleid"); }, true },
 			{ "mainnib=", "Specifies the name of the main Nib file to load [Deprecated]", v => { app.MainNib = v; classic_only_arguments.Add ("--mainnib"); }, true },
 			{ "icon=", "Specifies the name of the icon to use [Deprecated]", v => { app.Icon = v; classic_only_arguments.Add ("--icon"); }, true },
 				
