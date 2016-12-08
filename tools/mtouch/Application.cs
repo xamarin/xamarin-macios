@@ -142,7 +142,6 @@ namespace Xamarin.Bundler {
 		// Bundle config
 		//
 		public string BundleDisplayName;
-		public string BundleId = "com.yourcompany.sample";
 		public string MainNib = "MainWindow";
 		public string Icon;
 		public string CertificateName;
@@ -310,9 +309,15 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public string BundleId {
+			get {
+				return GetStringFromInfoPList ("CFBundleIdentifier");
+			}
+		}
+
 		string GetStringFromInfoPList (string key)
 		{
-			return GetStringFromInfoPList (AppDirectory, "Info.plist");
+			return GetStringFromInfoPList (AppDirectory, key);
 		}
 
 		string GetStringFromInfoPList (string directory, string key)
