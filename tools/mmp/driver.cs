@@ -88,6 +88,7 @@ namespace Xamarin.Bundler {
 		static LinkerOptions linker_options;
 		static bool? disable_lldb_attach = null;
 		static string machine_config_path = null;
+		static bool? experimental_xm_aot = null;
 
 		static bool arch_set = false;
 		static string arch = "i386";
@@ -358,6 +359,7 @@ namespace Xamarin.Bundler {
 				{ "xamarin-framework-directory=", "The framework directory", v => { xm_framework_dir = v; }, true },
 				{ "xamarin-full-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullXamMacFramework = true; } },
 				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullSystemFramework = true; } },
+				{ "experimental-xm-aot", "Enable experimental AOT Xamarin.Mac support. Careful, the pieces might be sharp.", v => { experimental_xm_aot = true; }, true }, // Experimental - If it breaks for now you get to keep the pieces 
 
 			};
 
@@ -771,9 +773,32 @@ namespace Xamarin.Bundler {
 			if (App.LinkMode != LinkMode.All && App.RuntimeOptions != null)
 				App.RuntimeOptions.Write (App.AppDirectory);
 
+			if (experimental_xm_aot.HasValue && experimental_xm_aot.Value && IsUnified) {
+				AOTBundle ();
+				Watch ("AOT Compile", 1);
+			}
+
 			if (!string.IsNullOrEmpty (certificate_name)) {
 				CodeSign ();
 				Watch ("Code Sign", 1);
+			}
+		}
+
+		static void AOTBundle ()
+		{
+			string monoExe = Is64Bit ? "/usr/local/bin/mono64" : "/usr/local/bin/mono";
+			var dirInfo = new DirectoryInfo (mmp_dir);
+
+			Func <FileInfo, bool> aotableFile = x => {
+				string extension = x.Extension.ToLowerInvariant ();
+				return extension == ".exe" || extension == ".dll";
+			};
+
+			string quotedFileList = string.Join (" ", dirInfo.EnumerateFiles ().Where (aotableFile).Select (x => Quote(x.ToString ())));
+			foreach (var file in dirInfo.EnumerateFiles ().Where (aotableFile))
+			{
+				if (RunCommand (monoExe, String.Format ("--aot=hybrid {0}", Quote (file.ToString ())), new string [] {"MONO_PATH", mmp_dir }) > 0)
+					ErrorHelper.Warning (1337, string.Format ("AOT failed on {0}", file));
 			}
 		}
 
@@ -986,6 +1011,7 @@ namespace Xamarin.Bundler {
 		{
 			var sb = new StringBuilder ();
 			using (var sw = new StringWriter (sb)) {
+				sw.WriteLine ("#define MONOMAC 1");
 				sw.WriteLine ("#include <xamarin/xamarin.h>");
 				sw.WriteLine ("#import <AppKit/NSAlert.h>");
 				sw.WriteLine ("#import <Foundation/NSDate.h>"); // 10.7 wants this even if not needed on 10.9
@@ -1016,6 +1042,9 @@ namespace Xamarin.Bundler {
 
 				if (App.EnableDebug)
 					sw.WriteLine ("\txamarin_debug_mode = TRUE;");
+
+				if (experimental_xm_aot.HasValue && experimental_xm_aot.Value)
+					sw.WriteLine ("\txamarin_mac_aot = TRUE;");
 
 				sw.WriteLine ("\treturn 0;");
 				sw.WriteLine ("}");
