@@ -781,10 +781,12 @@ function toggleContainerVisibility (containerName)
 
 			Started = DateTime.Now;
 
-			build_task = ExecuteAsync ();
-			await build_task;
-
-			Stopped = DateTime.Now;
+			try {
+				build_task = ExecuteAsync ();
+				await build_task;
+			} finally {
+				Stopped = DateTime.Now;
+			}
 
 			ExecutionResult = (ExecutionResult & ~TestExecutingResult.StateMask) | TestExecutingResult.Finished;
 			if ((ExecutionResult & ~TestExecutingResult.StateMask) == 0)
