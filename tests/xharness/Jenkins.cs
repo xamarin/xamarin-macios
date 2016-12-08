@@ -389,8 +389,8 @@ namespace xharness
 					Jenkins = this,
 					Platform = TestPlatform.Mac,
 					TestName = "Mac Binding Projects",
-					Target = "wrench-mac-binding-project",
-					WorkingDirectory = Harness.RootDirectory,
+					Target = "all",
+					WorkingDirectory = Path.Combine (Harness.RootDirectory, "mac-binding-project"),
 				};
 				Tasks.Add (run);
 			}
