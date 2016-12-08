@@ -2085,6 +2085,34 @@ class C {
 			}
 		}
 
+		[Test]
+		public void AutoLinkWithSqlite ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = Profile.iOS;
+				mtouch.CreateTemporaryApp (code: @"
+using System.Runtime.InteropServices;
+using Foundation;
+using ObjCRuntime;
+
+[assembly: LinkWith (ForceLoad = true)]
+
+[Preserve (AllMembers = true)]
+public class TestApp {
+	[DllImport (""sqlite3"")]
+	static extern void sqlite3_exec ();
+
+	static void Main ()
+	{
+		System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ());
+	}
+}
+");
+				mtouch.Linker = MTouchLinker.DontLink; // just to make the test run faster.
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+			}
+		}
+
 #region Helper functions
 		static string CompileUnifiedTestAppExecutable (string targetDirectory, string code = null, string extraArg = "")
 		{
