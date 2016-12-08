@@ -709,7 +709,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ExtraArgs="$(MtouchExtraArgs)"
 			FastDev="$(MtouchFastDev)"
 			HttpClientHandler="$(MtouchHttpClientHandler)"
-			TLSProvider="$(MtouchTlsProvider)"
 			I18n="$(MtouchI18n)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)mtouch-cache"
 			IsAppExtension="$(IsAppExtension)"

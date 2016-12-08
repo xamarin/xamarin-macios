@@ -48,9 +48,6 @@ namespace Xamarin.Mac.Tasks
 		public string TargetFrameworkVersion { get; set; }
 
 		[Required]
-		public string TLSProvider {	get; set; }
-
-		[Required]
 		public string SdkRoot {	get; set; }
 
 		[Required]
@@ -149,9 +146,6 @@ namespace Xamarin.Mac.Tasks
 					Log.LogWarning (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Error loading '{0}': {1}", AppManifest.ItemSpec, ex.Message);
 				}
 			}
-
-			if (TargetFrameworkIdentifier == "Xamarin.Mac" && !string.IsNullOrEmpty (TLSProvider))
-				args.Add (string.Format ("--tls-provider={0}", TLSProvider.ToLowerInvariant()));
 
 			if (Profiling)
 				args.Add ("/profiling");
@@ -256,7 +250,6 @@ namespace Xamarin.Mac.Tasks
 			Log.LogTaskProperty ("SdkRoot", SdkRoot);
 			Log.LogTaskProperty ("TargetFrameworkIdentifier", TargetFrameworkIdentifier);
 			Log.LogTaskProperty ("TargetFrameworkVersion", TargetFrameworkVersion);
-			Log.LogTaskProperty ("TLSProvider", TLSProvider);
 			Log.LogTaskProperty ("UseXamMacFullFramework", UseXamMacFullFramework);
 			Log.LogTaskProperty ("Profiling", Profiling);
 			Log.LogTaskProperty ("AppManifest", AppManifest);
