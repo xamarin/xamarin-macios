@@ -21,6 +21,7 @@ namespace xharness
 		public bool IncludeMmpTest;
 		public bool IncludeiOSMSBuild = true;
 		public bool IncludeMtouch;
+		public bool IncludeBtouch;
 
 		public Logs Logs = new Logs ();
 		public Log MainLog;
@@ -152,10 +153,17 @@ namespace xharness
 				"external/mono",
 				"external/llvm",
 			};
+			var btouch_prefixes = new string [] {
+				"src/btouch.cs",
+				"src/generator.cs",
+				"src/generator-enums.cs",
+				"src/generator-filters.cs",
+			};
 
 			SetEnabled (files, mtouch_prefixes, "mtouch", ref IncludeMtouch);
 			SetEnabled (files, mmp_prefixes, "mmp", ref IncludeMmpTest);
 			SetEnabled (files, bcl_prefixes, "bcl", ref IncludeBcl);
+			SetEnabled (files, btouch_prefixes, "btouch", ref IncludeBtouch);
 		}
 
 		void SetEnabled (IEnumerable<string> files, string [] prefixes, string testname, ref bool value)
@@ -181,6 +189,7 @@ namespace xharness
 			SetEnabled (labels, "mtouch", ref IncludeMtouch);
 			SetEnabled (labels, "mmp", ref IncludeMmpTest);
 			SetEnabled (labels, "bcl", ref IncludeBcl);
+			SetEnabled (labels, "btouch", ref IncludeBtouch);
 
 			// enabled by default
 			SetEnabled (labels, "ios", ref IncludeiOS);
@@ -353,6 +362,19 @@ namespace xharness
 				};
 				Tasks.Add (nunitExecution);
 			}
+
+			if (IncludeBtouch) {
+				var run = new MakeTask
+				{
+					Jenkins = this,
+					Platform = TestPlatform.iOS,
+					TestName = "BTouch tests",
+					Target = "wrench-btouch",
+					WorkingDirectory = Harness.RootDirectory,
+
+				};
+				Tasks.Add (run);
+			}
 		}
 
 		static MacExecuteTask CloneExecuteTask (MacExecuteTask task, TestPlatform platform, string suffix)
@@ -507,6 +529,7 @@ function toggleContainerVisibility (containerName)
 					var allSimulatorTasks = new List<RunSimulatorTask> ();
 					var allExecuteTasks = new List<MacExecuteTask> ();
 					var allNUnitTasks = new List<NUnitExecuteTask> ();
+					var allMakeTasks = new List<MakeTask> ();
 					foreach (var task in Tasks) {
 						var aggregated = task as AggregatedRunSimulatorTask;
 						if (aggregated != null) {
@@ -526,6 +549,11 @@ function toggleContainerVisibility (containerName)
 							continue;
 						}
 
+						var make = task as MakeTask;
+						if (make != null) {
+							allMakeTasks.Add (make);
+							continue;
+						}
 
 						throw new NotImplementedException ();
 					}
@@ -534,6 +562,7 @@ function toggleContainerVisibility (containerName)
 					allTasks.AddRange (allExecuteTasks);
 					allTasks.AddRange (allSimulatorTasks);
 					allTasks.AddRange (allNUnitTasks);
+					allTasks.AddRange (allMakeTasks);
 
 					var failedTests = allTasks.Where ((v) => v.Failed);
 					var stillInProgress = allTasks.Any ((v) => v.InProgress);
