@@ -30,7 +30,7 @@ namespace Xamarin.Bundler {
 	//					MT0019	Only one --[log|install|kill|launch]dev or --[launch|debug]sim option can be used.
 	//					MT0020	The valid options for '{0}' are '{1}'.
 	//					MT0021	Cannot compile using gcc/g++ (--use-gcc) when using the static registrar (this is the default when compiling for device). Either remove the --use-gcc flag or use the dynamic registrar (--registrar:dynamic).
-	//					MT0022  The options '--unsupported--enable-generics-in-registrar' and '--registrar' are not compatible.
+	//					MT0022  <unused>
 	//					MT0023	Application name '{0}.exe' conflicts with another user assembly.
 	//					MT0024  Could not find required file '{0}'.
 	//					MT0025	No SDK version was provided. Please add --sdk=X.Y to specify which iOS SDK should be used to build your application.
