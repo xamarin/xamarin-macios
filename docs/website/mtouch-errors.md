@@ -1531,6 +1531,55 @@ In some cases, it's a "local network" issue and it can be addressed by adding th
 
 <h3><a name="MT7044"/>MT7044: Main Info.plist path does not specify a UIDeviceFamily.</h3>
 
+<h3><a name="MT7045"/>MT7045: Unrecognized Type: *.</h3>
+
+<h3><a name="MT7046"/>MT7046: Add: Entry, *, Incorrectly Specified.</h3>
+
+<h3><a name="MT7047"/>MT7047: Add: Entry, *, Contains Invalid Array Index.</h3>
+
+<h3><a name="MT7048"/>MT7048: Add: * Entry Already Exists.</h3>
+
+<h3><a name="MT7049"/>MT7049: Add: Can't Add Entry, *, to Parent.</h3>
+
+<h3><a name="MT7050"/>MT7050: Delete: Can't Delete Entry, *, from Parent.</h3>
+
+<h3><a name="MT7051"/>MT7051: Delete: Entry, *, Contains Invalid Array Index.</h3>
+
+<h3><a name="MT7052"/>MT7052: Delete: Entry, *, Does Not Exist.</h3>
+
+<h3><a name="MT7053"/>MT7053: Import: Entry, *, Incorrectly Specified.</h3>
+
+<h3><a name="MT7054"/>MT7054: Import: Entry, *, Contains Invalid Array Index.</h3>
+
+<h3><a name="MT7055"/>MT7055: Import: Error Reading File: *.</h3>
+
+<h3><a name="MT7056"/>MT7056: Import: Can't Add Entry, *, to Parent.</h3>
+
+<h3><a name="MT7057"/>MT7057: Merge: Can't Add array Entries to dict.</h3>
+
+<h3><a name="MT7058"/>MT7058: Merge: Specified Entry Must Be a Container.</h3>
+
+<h3><a name="MT7059"/>MT7059: Merge: Entry, *, Contains Invalid Array Index.</h3>
+
+<h3><a name="MT7060"/>MT7060: Merge: Entry, *, Does Not Exist.</h3>
+
+<h3><a name="MT7061"/>MT7061: Merge: Error Reading File: *.</h3>
+
+<h3><a name="MT7062"/>MT7062: Set: Entry, *, Incorrectly Specified.</h3>
+
+<h3><a name="MT7063"/>MT7063: Set: Entry, *, Contains Invalid Array Index.</h3>
+
+<h3><a name="MT7064"/>MT7064: Set: Entry, *, Does Not Exist.</h3>
+
+<h3><a name="MT7064"/>MT7064: Set: Entry, *, Does Not Exist.</h3>
+
+<h3><a name="MT7065"/>MT7065: Unknown PropertyList editor action: *.</h3>
+
+<h3><a name="MT7066"/>MT7066: Error loading '*': *.</h3>
+
+<h3><a name="MT7067"/>MT7067: Error saving '*': *.</h3>
+
+
 # MT8xxx: Runtime error messages
 
 <!--
