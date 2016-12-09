@@ -390,7 +390,6 @@ namespace Xamarin.Bundler {
 	//					MT7062	Set: Entry, *, Incorrectly Specified.
 	//					MT7063	Set: Entry, *, Contains Invalid Array Index.
 	//					MT7064	Set: Entry, *, Does Not Exist.
-	//					MT7064	Set: Entry, *, Does Not Exist.
 	//					MT7065	Unknown PropertyList editor action: *.
 	//					MT7066	Error loading '*': *.
 	//					MT7067	Error saving '*': *.

@@ -1438,6 +1438,8 @@ A security error ocurred while stripping debugging symbols from the application.
 
 <h3><a name="MT7001"/>MT7001: Could not resolve host IPs for WiFi debugger settings.</h3>
 
+*MSBuild task: DetectDebugNetworkConfigurationTaskBase*
+
 Troubleshooting steps:  
 
 - try to run `csharp -e 'System.Net.Dns.GetHostEntry (System.Net.Dns.GetHostName ()).AddressList'` (that should give you an IP address and not an error obviously).
@@ -1447,137 +1449,278 @@ In some cases, it's a "local network" issue and it can be addressed by adding th
 
 <h3><a name="MT7002"/>MT7002: This machine does not have any network adapters. This is required when debugging or profiling on device over WiFi.</h3>
 
+*MSBuild task: DetectDebugNetworkConfigurationTaskBase*
+
 <h3><a name="MT7003"/>MT7003: The App Extension '*' does not contain an Info.plist.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
 
 <h3><a name="MT7004"/>MT7004: The App Extension '*' does not specify a CFBundleIdentifier.</h3>
 
+*MSBuild task: ValidateAppBundleTaskBase*
+
 <h3><a name="MT7005"/>MT7005: The App Extension '*' does not specify a CFBundleExecutable.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
 
 <h3><a name="MT7006"/>MT7006: The App Extension '*' has an invalid CFBundleIdentifier (*), it does not begin with the main app bundle's CFBundleIdentifier (*).</h3>
 
+*MSBuild task: ValidateAppBundleTaskBase*
+
 <h3><a name="MT7007"/>MT7007: The App Extension '*' has a CFBundleIdentifier (*) that ends with the illegal suffix ".key".</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
 
 <h3><a name="MT7008"/>MT7008: The App Extension '*' does not specify a CFBundleShortVersionString.</h3>
 
+*MSBuild task: ValidateAppBundleTaskBase*
+
 <h3><a name="MT7009"/>MT7009: The App Extension '*' has an invalid Info.plist: it does not contain an NSExtension dictionary.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
 
 <h3><a name="MT7010"/>MT7010: The App Extension '*' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionPointIdentifier value.</h3>
 
+*MSBuild task: ValidateAppBundleTaskBase*
+
 <h3><a name="MT7011"/>MT7011: The WatchKit Extension '*' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionAttributes dictionary.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
 
 <h3><a name="MT7012"/>MT7012: The WatchKit Extension '*' does not have exactly one watch app.</h3>
 
+*MSBuild task: ValidateAppBundleTaskBase*
+
 <h3><a name="MT7013"/>MT7013: The WatchKit Extension '*' has an invalid Info.plist: UIRequiredDeviceCapabilities must contain the 'watch-companion' capability.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
 
 <h3><a name="MT7014"/>MT7014: The Watch App '*' does not contain an Info.plist.</h3>
 
+*MSBuild task: ValidateAppBundleTaskBase*
+
 <h3><a name="MT7015"/>MT7015: The Watch App '*' does not specify a CFBundleIdentifier.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
 
 <h3><a name="MT7016"/>MT7016: The Watch App '*' has an invalid CFBundleIdentifier (*), it does not begin with the main app bundle's CFBundleIdentifier (*).</h3>
 
+*MSBuild task: ValidateAppBundleTaskBase*
+
 <h3><a name="MT7017"/>MT7017: The Watch App '*' does not have a valid UIDeviceFamily value. Expected 'Watch (4)' but found '* (*)'.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
 
 <h3><a name="MT7018"/>MT7018: The Watch App '*' does not specify a CFBundleExecutable</h3>
 
+*MSBuild task: ValidateAppBundleTaskBase*
+
 <h3><a name="MT7019"/>MT7019: The Watch App '*' has an invalid WKCompanionAppBundleIdentifier value ('*'), it does not match the main app bundle's CFBundleIdentifier ('*').</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
 
 <h3><a name="MT7020"/>MT7020: The Watch App '*' has an invalid Info.plist: the WKWatchKitApp key must be present and have a value of 'true'.</h3>
 
+*MSBuild task: ValidateAppBundleTaskBase*
+
 <h3><a name="MT7021"/>MT7021: The Watch App '*' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
 
 <h3><a name="MT7022"/>MT7022: The Watch App '*' does not contain a Watch Extension.</h3>
 
+*MSBuild task: ValidateAppBundleTaskBase*
+
 <h3><a name="MT7023"/>MT7023: The Watch Extension '*' does not contain an Info.plist.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
 
 <h3><a name="MT7024"/>MT7024: The Watch Extension '*' does not specify a CFBundleIdentifier.</h3>
 
+*MSBuild task: ValidateAppBundleTaskBase*
+
 <h3><a name="MT7025"/>MT7025: The Watch Extension '*' does not specify a CFBundleExecutable.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
 
 <h3><a name="MT7026"/>MT7026: The Watch Extension '*' has an invalid CFBundleIdentifier (*), it does not begin with the main app bundle's CFBundleIdentifier (*).</h3>
 
+*MSBuild task: ValidateAppBundleTaskBase*
+
 <h3><a name="MT7027"/>MT7027: The Watch Extension '*' has a CFBundleIdentifier (*) that ends with the illegal suffix ".key".</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
 
 <h3><a name="MT7028"/>MT7028: The Watch Extension '*' has an invalid Info.plist: it does not contain an NSExtension dictionary.</h3>
 
+*MSBuild task: ValidateAppBundleTaskBase*
+
 <h3><a name="MT7029"/>MT7029: The Watch Extension '*' has an invalid Info.plist: the NSExtensionPointIdentifier must be "com.apple.watchkit".</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
 
 <h3><a name="MT7030"/>MT7030: The Watch Extension '*' has an invalid Info.plist: the NSExtension dictionary must contain NSExtensionAttributes.</h3>
 
+*MSBuild task: ValidateAppBundleTaskBase*
+
 <h3><a name="MT7031"/>MT7031: The Watch Extension '*' has an invalid Info.plist: the NSExtensionAttributes dictionary must contain a WKAppBundleIdentifier.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
 
 <h3><a name="MT7032"/>MT7032: The WatchKit Extension '*' has an invalid Info.plist: UIRequiredDeviceCapabilities should not contain the 'watch-companion' capability.</h3>
 
+*MSBuild task: ValidateAppBundleTaskBase*
+
 <h3><a name="MT7033"/>MT7033: The Watch App '*' does not contain an Info.plist.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
 
 <h3><a name="MT7034"/>MT7034: The Watch App '*' does not specify a CFBundleIdentifier.</h3>
 
+*MSBuild task: ValidateAppBundleTaskBase*
+
 <h3><a name="MT7035"/>MT7035: The Watch App '*' does not have a valid UIDeviceFamily value. Expected '*' but found '* (*)'.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
 
 <h3><a name="MT7036"/>MT7036: The Watch App '*' does not specify a CFBundleExecutable.</h3>
 
+*MSBuild task: ValidateAppBundleTaskBase*
+
 <h3><a name="MT7037"/>MT7037: The WatchKit Extension '{extensionName}' has an invalid WKAppBundleIdentifier value ('*'), it does not match the Watch App's CFBundleIdentifier ('*').</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
 
 <h3><a name="MT7038"/>MT7038: The Watch App '*' has an invalid Info.plist: the WKCompanionAppBundleIdentifier must exist and must match the main app bundle's CFBundleIdentifier.</h3>
 
+*MSBuild task: ValidateAppBundleTaskBase*
+
 <h3><a name="MT7039"/>MT7039: The Watch App '*' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
 
 <h3><a name="MT7040"/>MT7040: The app bundle {AppBundlePath} does not contain an Info.plist.</h3>
 
+*MSBuild task: ValidateAppBundleTaskBase*
+
 <h3><a name="MT7041"/>MT7041: Main Info.plist path does not specify a CFBundleIdentifier.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
 
 <h3><a name="MT7042"/>MT7042: Main Info.plist path does not specify a CFBundleExecutable.</h3>
 
+*MSBuild task: ValidateAppBundleTaskBase*
+
 <h3><a name="MT7043"/>MT7043: Main Info.plist path does not specify a CFBundleSupportedPlatforms.</h3>
+
+*MSBuild task: ValidateAppBundleTaskBase*
 
 <h3><a name="MT7044"/>MT7044: Main Info.plist path does not specify a UIDeviceFamily.</h3>
 
-<h3><a name="MT7045"/>MT7045: Unrecognized Type: *.</h3>
+*MSBuild task: ValidateAppBundleTaskBase*
+
+<h3><a name="MT7045"/>MT7045: Unrecognized Format: *.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
+
+Where * can be:  
+
+- string
+- array
+- dict
+- bool
+- real
+- integer
+- date
+- data
 
 <h3><a name="MT7046"/>MT7046: Add: Entry, *, Incorrectly Specified.</h3>
 
+*MSBuild task: PropertyListEditorTaskBase*
+
 <h3><a name="MT7047"/>MT7047: Add: Entry, *, Contains Invalid Array Index.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
 
 <h3><a name="MT7048"/>MT7048: Add: * Entry Already Exists.</h3>
 
+*MSBuild task: PropertyListEditorTaskBase*
+
 <h3><a name="MT7049"/>MT7049: Add: Can't Add Entry, *, to Parent.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
 
 <h3><a name="MT7050"/>MT7050: Delete: Can't Delete Entry, *, from Parent.</h3>
 
+*MSBuild task: PropertyListEditorTaskBase*
+
 <h3><a name="MT7051"/>MT7051: Delete: Entry, *, Contains Invalid Array Index.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
 
 <h3><a name="MT7052"/>MT7052: Delete: Entry, *, Does Not Exist.</h3>
 
+*MSBuild task: PropertyListEditorTaskBase*
+
 <h3><a name="MT7053"/>MT7053: Import: Entry, *, Incorrectly Specified.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
 
 <h3><a name="MT7054"/>MT7054: Import: Entry, *, Contains Invalid Array Index.</h3>
 
+*MSBuild task: PropertyListEditorTaskBase*
+
 <h3><a name="MT7055"/>MT7055: Import: Error Reading File: *.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
 
 <h3><a name="MT7056"/>MT7056: Import: Can't Add Entry, *, to Parent.</h3>
 
+*MSBuild task: PropertyListEditorTaskBase*
+
 <h3><a name="MT7057"/>MT7057: Merge: Can't Add array Entries to dict.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
 
 <h3><a name="MT7058"/>MT7058: Merge: Specified Entry Must Be a Container.</h3>
 
+*MSBuild task: PropertyListEditorTaskBase*
+
 <h3><a name="MT7059"/>MT7059: Merge: Entry, *, Contains Invalid Array Index.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
 
 <h3><a name="MT7060"/>MT7060: Merge: Entry, *, Does Not Exist.</h3>
 
+*MSBuild task: PropertyListEditorTaskBase*
+
 <h3><a name="MT7061"/>MT7061: Merge: Error Reading File: *.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
 
 <h3><a name="MT7062"/>MT7062: Set: Entry, *, Incorrectly Specified.</h3>
 
+*MSBuild task: PropertyListEditorTaskBase*
+
 <h3><a name="MT7063"/>MT7063: Set: Entry, *, Contains Invalid Array Index.</h3>
 
-<h3><a name="MT7064"/>MT7064: Set: Entry, *, Does Not Exist.</h3>
+*MSBuild task: PropertyListEditorTaskBase*
 
 <h3><a name="MT7064"/>MT7064: Set: Entry, *, Does Not Exist.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
 
 <h3><a name="MT7065"/>MT7065: Unknown PropertyList editor action: *.</h3>
 
+*MSBuild task: PropertyListEditorTaskBase*
+
 <h3><a name="MT7066"/>MT7066: Error loading '*': *.</h3>
 
+*MSBuild task: PropertyListEditorTaskBase*
+
 <h3><a name="MT7067"/>MT7067: Error saving '*': *.</h3>
+
+*MSBuild task: PropertyListEditorTaskBase*
 
 
 # MT8xxx: Runtime error messages
