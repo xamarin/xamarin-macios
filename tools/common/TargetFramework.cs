@@ -122,7 +122,7 @@ namespace Xamarin.Utils
 		{
 			var hash = 0;
 			if (Identifier != null)
-				hash ^= Identifier.GetHashCode ();
+				hash ^= Identifier.ToLowerInvariant ().GetHashCode ();
 			if (Version != null)
 				hash ^= Version.GetHashCode ();
 			return hash;
