@@ -979,6 +979,8 @@ namespace XamCore.Photos
 		void PhotoLibraryDidChange (PHChange changeInstance);
 	}
 
+	delegate void PHPhotoLibraryCancellableChangeHandler (out bool cancel);
+
 	[iOS (8,0)]
 	[TV (10,0)]
 	[NoMac]

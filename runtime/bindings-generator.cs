@@ -514,6 +514,44 @@ namespace Xamarin.BindingMethods.Generator
 
 			data.Add (
 				new FunctionData {
+					Comment = " // IntPtr func (float, Vector2, nuint, nuint, nuint, int, bool, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Float },
+						new ParameterData { TypeData = Types.Vector2 },
+						new ParameterData { TypeData = Types.NUInt },
+						new ParameterData { TypeData = Types.NUInt },
+						new ParameterData { TypeData = Types.NUInt },
+						new ParameterData { TypeData = Types.Int32 },
+						new ParameterData { TypeData = Types.Bool },
+						new ParameterData { TypeData = Types.IntPtr },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
+					Comment = " // IntPtr func (float, Vector2, nuint, nuint, nuint, Int64, bool, IntPtr)",
+					Prefix = "simd__",
+					Variants = Variants.NonStret,
+					ReturnType = Types.IntPtr,
+					Parameters = new ParameterData[] {
+						new ParameterData { TypeData = Types.Float },
+						new ParameterData { TypeData = Types.Vector2 },
+						new ParameterData { TypeData = Types.NUInt },
+						new ParameterData { TypeData = Types.NUInt },
+						new ParameterData { TypeData = Types.NUInt },
+						new ParameterData { TypeData = Types.Int64 },
+						new ParameterData { TypeData = Types.Bool },
+						new ParameterData { TypeData = Types.IntPtr },
+					},
+				}
+			);
+
+			data.Add (
+				new FunctionData {
 					Comment = " // bool func (Vector2i, IntPtr, IntPtr, IntPtr, IntPtr)",
 					Prefix = "simd__",
 					Variants = Variants.NonStret,

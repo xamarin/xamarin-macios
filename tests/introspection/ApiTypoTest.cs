@@ -115,6 +115,7 @@ namespace Introspection
 			"Connnect",
 			"Counterclock",
 			"Craete",
+			"Crosstraining",
 			"Cubemap",
 			"Cmyk", // acronym: Cyan, magenta, yellow and key
 			"Daap",
@@ -191,6 +192,9 @@ namespace Introspection
 			"Imap",
 			"Imaps",
 			"Img",
+			"Indoorrun",
+			"Indoorcycle",
+			"Indoorwalk",
 			"Inser",
 			"Interac",
 			"Interframe",
