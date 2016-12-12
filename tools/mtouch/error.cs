@@ -370,6 +370,29 @@ namespace Xamarin.Bundler {
 	//					MT7042	Main Info.plist path does not specify a CFBundleExecutable.
 	//					MT7043	Main Info.plist path does not specify a CFBundleSupportedPlatforms.
 	//					MT7044	Main Info.plist path does not specify a UIDeviceFamily.
+	//					MT7045	Unrecognized Type: *.
+	//					MT7046	Add: Entry, *, Incorrectly Specified.
+	//					MT7047	Add: Entry, *, Contains Invalid Array Index.
+	//					MT7048	Add: * Entry Already Exists.
+	//					MT7049	Add: Can't Add Entry, *, to Parent.
+	//					MT7050	Delete: Can't Delete Entry, *, from Parent.
+	//					MT7051	Delete: Entry, *, Contains Invalid Array Index.
+	//					MT7052	Delete: Entry, *, Does Not Exist.
+	//					MT7053	Import: Entry, *, Incorrectly Specified.
+	//					MT7054	Import: Entry, *, Contains Invalid Array Index.
+	//					MT7055	Import: Error Reading File: *.
+	//					MT7056	Import: Can't Add Entry, *, to Parent.
+	//					MT7057	Merge: Can't Add array Entries to dict.
+	//					MT7058	Merge: Specified Entry Must Be a Container.
+	//					MT7059	Merge: Entry, *, Contains Invalid Array Index.
+	//					MT7060	Merge: Entry, *, Does Not Exist.
+	//					MT7061	Merge: Error Reading File: *.
+	//					MT7062	Set: Entry, *, Incorrectly Specified.
+	//					MT7063	Set: Entry, *, Contains Invalid Array Index.
+	//					MT7064	Set: Entry, *, Does Not Exist.
+	//					MT7065	Unknown PropertyList editor action: *.
+	//					MT7066	Error loading '*': *.
+	//					MT7067	Error saving '*': *.
 	// MT8xxx	runtime
 	//			MT800x	misc
 	//					MT8001	Version mismatch between the native Xamarin.iOS runtime and monotouch.dll. Please reinstall Xamarin.iOS.
