@@ -1084,9 +1084,8 @@ namespace Xamarin.Bundler {
 
 					if (!Cache.CompareAssemblies (f1, f2, true))
 						continue;
-						
-					if (Driver.Verbosity > 0)
-						Console.WriteLine ("Targets {0} and {1} found to be identical", f1, f2);
+
+					Driver.Log (1, "Targets {0} and {1} found to be identical", f1, f2);
 					// Don't use symlinks, since it just gets more complicated
 					// For instance: on rebuild, when should the symlink be updated and when
 					// should the target of the symlink be updated? And all the usages
