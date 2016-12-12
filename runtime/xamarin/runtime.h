@@ -98,6 +98,16 @@ enum NSObjectFlags {
 	NSObjectFlagsHasManagedRef = 32,
 };
 
+struct AssemblyLocation {
+	const char *assembly_name; // base name (without extension) of the assembly
+	const char *location; // the directory where the assembly is
+};
+
+struct AssemblyLocations {
+	int length;
+	struct AssemblyLocation *locations;
+};
+
 void xamarin_initialize ();
 
 void			xamarin_assertion_message (const char *msg, ...) __attribute__((__noreturn__));
@@ -172,6 +182,12 @@ void			xamarin_throw_product_exception (int code, const char *message);
 id				xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_impl);
 
 bool			xamarin_is_managed_exception_marshaling_disabled ();
+
+const char *	xamarin_find_assembly_directory (const char *assembly_name);
+void			xamarin_set_assembly_directories (struct AssemblyLocations *directories);
+void			xamarin_get_assembly_name_without_extension (const char *aname, char *name, int namelen);
+bool			xamarin_locate_assembly_resource_for_name (MonoAssemblyName *assembly_name, const char *resource, char *path, int pathlen);
+bool			xamarin_locate_assembly_resource (const char *assembly_name, const char *culture, const char *resource, char *path, int pathlen);
 
 // this functions support NSLog/NSString-style format specifiers.
 void			xamarin_printf (const char *format, ...);

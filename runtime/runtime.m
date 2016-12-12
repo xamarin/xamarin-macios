@@ -138,6 +138,7 @@ struct InitializationOptions {
 	struct MTRegistrationMap* RegistrationData;
 	enum MarshalObjectiveCExceptionMode MarshalObjectiveCExceptionMode;
 	enum MarshalManagedExceptionMode MarshalManagedExceptionMode;
+	struct AssemblyLocations* AssemblyLocations;
 };
 
 static struct Trampolines trampolines = {
@@ -805,23 +806,13 @@ xamarin_open_assembly (const char *name)
 	}
 #endif
 
-	if (xamarin_use_new_assemblies) {
-		snprintf (path, sizeof (path), "%s/" ARCH_SUBDIR "/%s", xamarin_get_bundle_path (), name);
-		exists = xamarin_file_exists (path);
-	}
-	if (!exists)
-		snprintf (path, sizeof (path), "%s/%s", xamarin_get_bundle_path (), name);
-	
+	exists = xamarin_locate_assembly_resource (name, NULL, name, path, sizeof (path));
+
 #if MONOMAC && DYLIB
-	if (!xamarin_file_exists (path)) {
+	if (!exists) {
 		// Check if we already have the assembly in memory
-		char path2 [1024];
-		snprintf (path2, sizeof (path2), "%s", name);
-		// strip off the extension
-		char *dot = strrchr (path2, '.');
-		if (strncmp (dot, ".dll", 4) == 0)
-			*dot = 0;
-		MonoAssemblyName *aname = mono_assembly_name_new (path2);
+		xamarin_get_assembly_name_without_extension (name, path, sizeof (path));
+		MonoAssemblyName *aname = mono_assembly_name_new (path);
 		assembly = mono_assembly_loaded (aname);
 		mono_assembly_name_free (aname);
 		if (assembly)
@@ -831,7 +822,7 @@ xamarin_open_assembly (const char *name)
 	}
 #endif
 
-	if (!xamarin_file_exists (path))
+	if (!exists)
 		xamarin_assertion_message ("Could not find the assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: http://bugzilla.xamarin.com", name);
 
 	assembly = mono_assembly_open (path, NULL);
@@ -2191,6 +2182,168 @@ xamarin_vprintf (const char *format, va_list args)
 
 	[message release];
 }
+
+/*
+ * File/resource lookup for assemblies
+ *
+ * Assemblies can be found in several locations:
+ * 1. If the assembly is compiled to a framework, in the framework's MonoBundle directory.
+ *    For extensions the framework may be in the containing app's Frameworks directory.
+ *    A framework may contain multiple assemblies, so it's not possible to deduce the framework name from the assembly name.
+ * 2. If the assembly is not a framework, in the app's root directory.
+ *
+ * The platform assembly (Xamarin.[iOS|TVOS|WatchOS].dll) and any assemblies
+ * the platform assembly references (mscorlib.dll, System.dll) may be in a
+ * pointer-size subdirectory (ARCH_SUBDIR).
+ * 
+ * AOT data files will have an arch-specific infix.
+ */
+
+void
+xamarin_get_assembly_name_without_extension (const char *aname, char *name, int namelen)
+{
+	int len = strlen (aname);
+	strlcpy (name, aname, namelen);
+	if (namelen <= 4 || len <= 4)
+		return;
+	const char *ext = name + (len - 4);
+	if (!strncmp (".exe", ext, 4) || !strncmp (".dll", ext, 4))
+		name [len - 4] = 0; // strip off any extensions.
+}
+
+static bool
+xamarin_locate_assembly_resource_for_root (const char *root, const char *culture, const char *resource, char *path, int pathlen)
+{
+	if (culture != NULL && *culture != 0) {
+		// culture-specific directory
+		if (snprintf (path, pathlen, "%s/%s/%s", root, culture, resource) < 0) {
+			LOG (PRODUCT ": Failed to construct path for assembly resource (root directory: '%s', culture: '%s', resource: '%s'): %s", root, culture, resource, strerror (errno));
+			return false;
+		} else if (xamarin_file_exists (path)) {
+			return true;
+		}
+	}
+
+	// arch-specific extension
+	if (snprintf (path, pathlen, "%s/%s.%s", root, resource, xamarin_arch_name) < 0) {
+		LOG (PRODUCT ": Failed to construct path for resource: %s (4): %s", resource, strerror (errno));
+		return false;
+	} else if (xamarin_file_exists (path)) {
+		return true;
+	}
+
+#if !MONOMAC
+	// pointer-size subdirectory with arch-specific extension
+	if (snprintf (path, pathlen, "%s/%s/%s.%s", root, ARCH_SUBDIR, resource, xamarin_arch_name) < 0) {
+		LOG (PRODUCT ": Failed to construct path for resource: %s (5): %s", resource, strerror (errno));
+		return false;
+	} else if (xamarin_file_exists (path)) {
+		return true;
+	}
+
+	// pointer-size subdirectory
+	if (snprintf (path, pathlen, "%s/%s/%s", root, ARCH_SUBDIR, resource) < 0) {
+		LOG (PRODUCT ": Failed to construct path for resource: %s (5): %s", resource, strerror (errno));
+		return false;
+	} else if (xamarin_file_exists (path)) {
+		return true;
+	}
+#endif // !MONOMAC
+
+	// just the file, no extensions, etc.
+	if (snprintf (path, pathlen, "%s/%s", root, resource) < 0) {
+		LOG (PRODUCT ": Failed to construct path for resource: %s (6): %s", resource, strerror (errno));
+		return false;
+	} else if (xamarin_file_exists (path)) {
+		return true;
+	}
+
+	return false;
+}
+
+bool
+xamarin_locate_assembly_resource_for_name (MonoAssemblyName *assembly_name, const char *resource, char *path, int pathlen)
+{
+	const char *culture = mono_assembly_name_get_culture (assembly_name);
+	const char *aname = mono_assembly_name_get_name (assembly_name);
+	return xamarin_locate_assembly_resource (aname, culture, resource, path, pathlen);
+}
+
+// #define LOG_RESOURCELOOKUP(...) do { NSLog (@ __VA_ARGS__); } while (0);
+#define LOG_RESOURCELOOKUP(...)
+
+
+bool
+xamarin_locate_assembly_resource (const char *assembly_name, const char *culture, const char *resource, char *path, int pathlen)
+{
+	char root [1024];
+	char aname [256];
+	const char *app_path;
+
+	LOG_RESOURCELOOKUP (PRODUCT ": Locating the resource '%s' for the assembly '%s' (culture: '%s').", resource, assembly_name, culture);
+
+	app_path = xamarin_get_bundle_path ();
+
+	xamarin_get_assembly_name_without_extension (assembly_name, aname, sizeof (aname));
+
+	// First check if the directory is explicitly set. This directory is relative to the app bundle.
+	// For extensions this might be a relative path that points to container app (../../Frameworks/...).
+	const char *explicit_location = xamarin_find_assembly_directory (aname);
+	if (explicit_location) {
+		snprintf (root, sizeof (root), "%s/%s", app_path, explicit_location);
+		if (xamarin_locate_assembly_resource_for_root (root, culture, resource, path, pathlen)) {
+			LOG_RESOURCELOOKUP (PRODUCT ": Located resource '%s' from explicit path '%s': %s\n", resource, explicit_location, path);
+			return true;
+		}
+		// If we have an explicit location, then that's where the assembly must be.
+		LOG_RESOURCELOOKUP (PRODUCT ": Could not find the resource '%s' for the assembly '%s' (culture: '%s') in the explicit path '%s'.", resource, assembly_name, culture, explicit_location);
+		return false;
+	}
+
+	// The root app directory
+	if (xamarin_locate_assembly_resource_for_root (app_path, culture, resource, path, pathlen)) {
+		LOG_RESOURCELOOKUP (PRODUCT ": Located resource '%s' from app bundle: %s\n", resource, path);
+		return true;
+	}
+
+	// Then in a framework named as the assembly
+	snprintf (root, sizeof (root), "%s/Frameworks/%s.framework/%s.framework/MonoBundle", app_path, aname, aname);
+	if (xamarin_locate_assembly_resource_for_root (root, culture, resource, path, pathlen)) {
+		LOG_RESOURCELOOKUP (PRODUCT ": Located resource '%s' from framework '%s': %s\n", resource, aname, path);
+		return true;
+	}
+
+	return false;
+}
+
+void
+xamarin_set_assembly_directories (struct AssemblyLocations *directories)
+{
+	if (options.AssemblyLocations)
+		xamarin_assertion_message ("Assembly directories already set.");
+
+	options.AssemblyLocations = directories;
+}
+
+static int
+compare_assembly_location (const void *key, const void *value)
+{
+	return strcmp ((const char *) key, ((struct AssemblyLocation *) value)->assembly_name);
+}
+
+const char *
+xamarin_find_assembly_directory (const char *assembly_name)
+{
+	if (options.AssemblyLocations == NULL)
+		return NULL;
+
+	struct AssemblyLocation *entry;
+
+	entry = (struct AssemblyLocation *) bsearch (assembly_name, options.AssemblyLocations->locations, options.AssemblyLocations->length, sizeof (struct AssemblyLocation), compare_assembly_location);
+
+	return entry ? entry->location : NULL;
+}
+
 /*
  * Object unregistration:
  *

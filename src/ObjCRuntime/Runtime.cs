@@ -107,6 +107,7 @@ namespace XamCore.ObjCRuntime {
 			public MTRegistrationMap *RegistrationMap;
 			public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptionMode;
 			public MarshalManagedExceptionMode MarshalManagedExceptionMode;
+			IntPtr AssemblyLocations;
 
 			public bool IsSimulator {
 				get {
