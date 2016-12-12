@@ -626,7 +626,6 @@ namespace Xamarin.Bundler
 				StringBuilder sb = new StringBuilder ();
 				using (var sw = new StringWriter (sb)) {
 					sw.WriteLine ("#include \"xamarin/xamarin.h\"");
-					// Trial builds are only executable in the next 24 hours
 					
 					sw.WriteLine ();
 					sw.WriteLine (assembly_externs);
