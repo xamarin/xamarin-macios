@@ -356,4 +356,7 @@
       <LogicalName>mscorlib.xml</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
+  <Target Name="AfterBuild">
+    <Exec Command="make mtouch" />
+  </Target>
 </Project>
