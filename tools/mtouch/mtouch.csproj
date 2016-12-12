@@ -355,8 +355,5 @@
       <Link>mscorlib.xml</Link>
       <LogicalName>mscorlib.xml</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Info.plist.tmpl">
-      <LogicalName>Info.plist.tmpl</LogicalName>
-    </EmbeddedResource>
   </ItemGroup>
 </Project>
