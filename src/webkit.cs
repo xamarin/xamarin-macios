@@ -2593,6 +2593,7 @@ namespace XamCore.WebKit {
 		string PreferencesIdentifier { get; set; }
 
 		[Export ("hostWindow", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		NSWindow HostWindow { get; set; }
 
 		[Export ("groupName")]
