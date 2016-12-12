@@ -25,7 +25,7 @@ namespace Xamarin
 
 		// These are a bit smarter
 		public MLaunchAction Action = MLaunchAction.Sim;
-		public MTouch.Profile Profile = MTouch.Profile.iOS;
+		public Profile Profile = Profile.iOS;
 
 		string GetVerbosity ()
 		{
@@ -79,11 +79,11 @@ namespace Xamarin
 			string simType = null;
 
 			switch (Profile) {
-			case MTouch.Profile.iOS:
+			case Profile.iOS:
 				platformName = "iOS";
 				simType = "iPhone-SE";
 				break;
-			case MTouch.Profile.tvOS:
+			case Profile.tvOS:
 				platformName = "tvOS";
 				simType = "Apple-TV-1080p";
 				break;
