@@ -398,7 +398,7 @@ namespace Xamarin.Bundler {
 			var assembly = Path.Combine (build_dir, FileName);
 
 			if (App.FastDev)
-				Dylib = Path.Combine (App.AppDirectory, Driver.Quote ("lib" + Path.GetFileName (FullPath) + ".dylib"));
+				Dylib = Path.Combine (App.AppDirectory, "lib" + Path.GetFileName (FullPath) + ".dylib");
 
 			foreach (var abi in abis) {
 				var task = CreateManagedToAssemblyTasks (assembly, abi, build_dir);
