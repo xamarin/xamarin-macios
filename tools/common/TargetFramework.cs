@@ -62,22 +62,52 @@ namespace Xamarin.Utils
 			s = s.Trim ();
 
 			string identifier = null;
-			Version version = null;
+			string version = null;
+			string profile = null;
 
-			var comma = s.IndexOf (',');
-			if (comma >= 0) {
-				identifier = s.Substring (0, comma).Trim ();
-				s = s.Substring (comma + 1);
+			var fields = targetFrameworkString.Split (new char [] { ',' });
+			switch (fields.Length) {
+			case 1:
+				// This is just a version number, in which case default identifier to .NETFramework.
+				identifier = ".NETFramework";
+				version = fields [0];
+				break;
+			case 2:
+				identifier = fields [0];
+				version = fields [1];
+				break;
+			case 3:
+				identifier = fields [0];
+				version = fields [1];
+				profile = fields [2];
+				break;
+			default:
+				throw new Exception ();
 			}
 
-			s = s.Trim ();
-			if (s.Length >= 1 && Char.ToLowerInvariant (s [0]) == 'v')
-				s = s.Substring (1);
+			identifier = identifier.Trim ();
+			version = version.Trim ();
+			profile = profile?.Trim ();
 
-			if (!Version.TryParse (s.Trim (), out version))
+			// Parse version.
+			// It can optionally start with 'Version=' or 'v' (or 'Version=v')
+			if (version.StartsWith ("Version=", StringComparison.Ordinal))
+				version = version.Substring ("Version=".Length);
+			if (version.StartsWith ("v", StringComparison.OrdinalIgnoreCase))
+				version = version.Substring (1);
+			Version parsed_version;
+			if (!Version.TryParse (version, out parsed_version))
 				return false;
 
-			targetFramework = new TargetFramework (identifier, version);
+			// If we got a profile, then the 'Profile=' part is mandatory.
+			if (profile != null) {
+				if (!profile.StartsWith ("Profile=", StringComparison.Ordinal))
+					return false;
+
+				profile = profile.Substring ("Profile=".Length);
+			}
+
+			targetFramework = new TargetFramework (identifier, parsed_version, profile);
 			return true;
 		}
 
@@ -91,10 +121,16 @@ namespace Xamarin.Utils
 			get { return version; }
 		}
 
-		public TargetFramework (string identifier, Version version)
+		readonly string profile;
+		public string Profile {
+			get { return profile; }
+		}
+
+		public TargetFramework (string identifier, Version version, string profile = null)
 		{
 			this.identifier = identifier != null ? identifier.Trim () : null;
 			this.version = version;
+			this.profile = profile;
 		}
 
 		public static bool operator == (TargetFramework a, TargetFramework b)
@@ -109,8 +145,9 @@ namespace Xamarin.Utils
 
 		public bool Equals (TargetFramework other)
 		{
-			return String.Equals (other.Identifier, Identifier,
-				StringComparison.OrdinalIgnoreCase) && other.Version == Version;
+			return String.Equals (other.Identifier, Identifier, StringComparison.OrdinalIgnoreCase)
+				&& other.Version == Version
+				&& other.Profile == Profile;
 		}
 
 		public override bool Equals (object obj)
@@ -125,19 +162,20 @@ namespace Xamarin.Utils
 				hash ^= Identifier.ToLowerInvariant ().GetHashCode ();
 			if (Version != null)
 				hash ^= Version.GetHashCode ();
+			if (Profile != null)
+				hash ^= Profile.GetHashCode ();
 			return hash;
 		}
 
 		public override string ToString ()
 		{
 			var id = Identifier;
-			if (String.IsNullOrEmpty (id) ||
-				String.Equals (id, ".NETFramework", StringComparison.OrdinalIgnoreCase))
+			if (String.Equals (id, ".NETFramework", StringComparison.OrdinalIgnoreCase))
 				id = ".NETFramework";
 			else if (String.Equals (id, "Xamarin.Mac", StringComparison.OrdinalIgnoreCase))
 				id = "Xamarin.Mac";
 
-			return String.Format ("{0},v{1}", id, Version == null ? "0.0" : Version.ToString ());
+			return String.Format ("{0},Version=v{1}{2}", id, Version == null ? "0.0" : Version.ToString (), Profile == null ? string.Empty : (",Profile=" + Profile));
 		}
 
 		public string MonoFrameworkDirectory {
