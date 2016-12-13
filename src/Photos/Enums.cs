@@ -162,6 +162,8 @@ namespace XamCore.Photos
 		SmartAlbumSelfPortraits = 210,
 		[iOS (9,0)]
 		SmartAlbumScreenshots   = 211,
+		[iOS (10,2), TV (10,1)]
+		SmartAlbumDepthEffect   = 212,
 #if XAMCORE_2_0
 		Any           = Int64.MaxValue
 #else
@@ -205,6 +207,8 @@ namespace XamCore.Photos
 		PhotoHDR           = (1 << 1),
 		Screenshot         = (1 << 2),
 		PhotoLive          = (1 << 3),
+		[iOS (10,2), TV (10,1)]
+		PhotoDepthEffect   = (1 << 4),
 		VideoStreamed      = (1 << 16),
 		VideoHighFrameRate = (1 << 17),
 		VideoTimelapse     = (1 << 18),

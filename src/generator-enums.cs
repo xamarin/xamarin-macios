@@ -21,6 +21,14 @@ public class ErrorDomainAttribute : Attribute {
 	public string ErrorDomain { get; set; }
 }
 
+[AttributeUsage (AttributeTargets.Field)]
+public class DefaultEnumValueAttribute : Attribute {
+
+	public DefaultEnumValueAttribute ()
+	{
+	}
+}
+
 public partial class Generator {
 
 	static string GetCSharpTypeName (Type type)
@@ -47,6 +55,12 @@ public partial class Generator {
 		}
 	}
 
+	void CopyObsolete (ICustomAttributeProvider provider)
+	{
+		foreach (ObsoleteAttribute oa in provider.GetCustomAttributes (typeof (ObsoleteAttribute), false))
+			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
+	}
+
 	// caller already:
 	//	- setup the header and namespace
 	//	- call/emit PrintPlatformAttributes on the type
@@ -62,25 +76,44 @@ public partial class Generator {
 			else
 				print ("[Native (\"{0}\")]", native.NativeName);
 		}
+		CopyObsolete (type);
 
+		var unique_constants = new HashSet<string> ();
 		var fields = new Dictionary<FieldInfo, FieldAttribute> ();
-		print ("public enum {0} : {1} {{", type.Name, GetCSharpTypeName (Enum.GetUnderlyingType (type)));
+		Tuple<FieldInfo, FieldAttribute> null_field = null;
+		Tuple<FieldInfo, FieldAttribute> default_symbol = null;
+		var underlying_type = GetCSharpTypeName (Enum.GetUnderlyingType (type));
+		print ("public enum {0} : {1} {{", type.Name, underlying_type);
 		indent++;
 		foreach (var f in type.GetFields ()) {
 			// skip value__ field 
 			if (f.IsSpecialName)
 				continue;
 			PrintPlatformAttributes (f);
+			CopyObsolete (f);
 			print ("{0} = {1},", f.Name, f.GetRawConstantValue ());
 			var fa = GetAttribute<FieldAttribute> (f);
 			if (fa == null)
 				continue;
 			if (f.IsUnavailable ())
 				continue;
-			fields.Add (f, fa);
+			if (fa.SymbolName == null)
+				null_field = new Tuple<FieldInfo, FieldAttribute> (f, fa);
+			else if (unique_constants.Contains (fa.SymbolName))
+				throw new BindingException (1046, true, $"The [Field] constant {fa.SymbolName} cannot only be used once inside enum {type.Name}.");
+			else {
+				fields.Add (f, fa);
+				unique_constants.Add (fa.SymbolName);
+			}
+			if (GetAttribute<DefaultEnumValueAttribute> (f) != null) {
+				if (default_symbol != null)
+					throw new BindingException (1045, true, $"Only a single [DefaultEnumValue] attribute can be used inside enum {type.Name}.");
+				default_symbol = new Tuple<FieldInfo, FieldAttribute> (f, fa);
+			}
 		}
 		indent--;
 		print ("}");
+		unique_constants.Clear ();
 
 		var library_name = type.Namespace;
 		var error = GetAttribute<ErrorDomainAttribute> (type);
@@ -89,7 +122,7 @@ public partial class Generator {
 			// the *Extensions has the same version requirement as the enum itself
 			PrintPlatformAttributes (type);
 			print ("[CompilerGenerated]");
-			print ("static public class {0}Extensions {{", type.Name);
+			print ("static public partial class {0}Extensions {{", type.Name);
 			indent++;
 
 			// note: not every binding namespace will start with ns.Prefix (e.g. MonoTouch.)
@@ -146,13 +179,23 @@ public partial class Generator {
 			print ("public static NSString GetConstant (this {0} self)", type.Name);
 			print ("{");
 			indent++;
+			print ("switch (({0}) self) {{", underlying_type);
+			var default_symbol_name = default_symbol?.Item2.SymbolName;
+			// more than one enum member can share the same numeric value - ref: #46285
 			foreach (var kvp in fields) {
-				print ("if (self == {0}.{1})", type.Name, kvp.Key.Name);
+				print ("case {0}: // {1}.{2}", Convert.ToInt64 (kvp.Key.GetValue (null)), type.Name, kvp.Key.Name);
+				var sn = kvp.Value.SymbolName;
+				if (sn == default_symbol_name)
+					print ("default:");
 				indent++;
-				print ("return {0};", kvp.Value.SymbolName);
+				print ("return {0};", sn);
 				indent--;
 			}
-			print ("return null;");
+			print ("}");
+			if (default_symbol_name == null) {
+				// note: a `[Field (null)]` does not need extra code
+				print ("return null;");
+			}
 			indent--;
 			print ("}");
 			
@@ -163,7 +206,11 @@ public partial class Generator {
 			indent++;
 			print ("if (constant == null)");
 			indent++;
-			print ("throw new ArgumentNullException (nameof (constant));");
+			// if we do not have a enum value that maps to a null field then we throw
+			if (null_field == null)
+				print ("throw new ArgumentNullException (nameof (constant));");
+			else
+				print ("return {0}.{1};", type.Name, null_field.Item1.Name);
 			indent--;
 			foreach (var kvp in fields) {
 				print ("else if (constant == {0})", kvp.Value.SymbolName);
@@ -171,7 +218,11 @@ public partial class Generator {
 				print ("return {0}.{1};", type.Name, kvp.Key.Name);
 				indent--;
 			}
-			print ("throw new NotSupportedException (constant + \" has no associated enum value in \" + nameof ({0}) + \" on this platform.\");", type.Name);
+			// if there's no default then we throw on unknown constants
+			if (default_symbol == null)
+				print ("throw new NotSupportedException (constant + \" has no associated enum value in \" + nameof ({0}) + \" on this platform.\");", type.Name);
+			else
+				print ("return {0}.{1};", type.Name, default_symbol.Item1.Name);
 			indent--;
 			print ("}");
 		}

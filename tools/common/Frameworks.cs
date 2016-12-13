@@ -17,25 +17,30 @@ public class Frameworks : Dictionary <string, Framework>
 {
 	public void Add (string @namespace, int major_version)
 	{
-		Add (@namespace, @namespace, major_version, 0);
+		Add (@namespace, @namespace, major_version, 0, 0);
 	}
 
 	public void Add (string @namespace, string framework, int major_version)
 	{
-		Add (@namespace, framework, major_version, 0);
+		Add (@namespace, framework, major_version, 0, 0);
 	}
 
 	public void Add (string @namespace, int major_version, int minor_version)
 	{
-		Add (@namespace, @namespace, major_version, minor_version);
+		Add (@namespace, @namespace, major_version, minor_version, 0);
 	}
 
 	public void Add (string @namespace, string framework, int major_version, int minor_version)
 	{
+		Add(@namespace, framework, major_version, minor_version, 0);
+	}
+
+	public void Add (string @namespace, string framework, int major_version, int minor_version, int build_version)
+	{
 		var fr = new Framework () {
 			Namespace = Driver.IsUnified ? @namespace : XamCore.Registrar.Registrar.CompatNamespace + "." + @namespace,
 			Name = framework,
-			Version = new Version (major_version, minor_version)
+			Version = new Version (major_version, minor_version, build_version)
 		};
 		base.Add (fr.Namespace, fr);
 	}
@@ -127,6 +132,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "Intents", 10, 12 },
 					{ "SafariServices", "SafariServices", 10, 12 },
+					{ "MediaPlayer", "MediaPlayer", 10, 12, 1 },
 				};
 			}
 			return mac_frameworks;
