@@ -93,7 +93,6 @@ namespace Xamarin.Bundler {
 		static bool arch_set = false;
 		static string arch = "i386";
 		static Version minos = new Version (10, 7);
-		static Version sdk_version;
 		static string contents_dir;
 		static string frameworks_dir;
 		static string macos_dir;
@@ -151,7 +150,7 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static Version SDKVersion { get { return sdk_version; } }
+		public static Version SDKVersion { get; private set; }
 
 		public static Version MinOSVersion { get { return minos; } }
 
@@ -319,7 +318,7 @@ namespace Xamarin.Bundler {
 				{ "sdk=", "Specifies the SDK version to compile against (version, for example \"10.9\")",
 					v => {
 						try {
-							sdk_version = Version.Parse (v);
+							SDKVersion = Version.Parse (v);
 						} catch (Exception ex) {
 							ErrorHelper.Error (26, ex, "Could not parse the command line argument '{0}': {1}", "-sdk", ex.Message);
 						}
@@ -481,6 +480,8 @@ namespace Xamarin.Bundler {
 			if (verbose > 0)
 				Console.WriteLine ("Selected target framework: {0}; API: {1}", targetFramework, IsClassic ? "Classic" : "Unified");
 
+			ValidateSDKVersion ();
+
 			if (action == Action.RunRegistrar) {
 				App.RootAssembly = unprocessed [0];
 				App.Registrar = RegistrarMode.Static;
@@ -572,10 +573,29 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		static void SetSDKVersion ()
+		// SDK versions are only passed in as X.Y but some frameworks/APIs require X.Y.Z
+		// Mutate them if we have a new enough Xcode
+		static Version MutateSDKVersionToPointRelease (Version rv)
 		{
-			if (sdk_version != null)
+			if (rv.Major == 10 && (rv.Revision == 0 || rv.Revision == -1)) {
+				if (rv.Minor == 12 && XcodeVersion >= new Version (8, 2))
+					return new Version (rv.Major, rv.Minor, 2);
+				if (rv.Minor == 12 && XcodeVersion >= new Version (8, 1))
+					return new Version (rv.Major, rv.Minor, 1);
+				if (rv.Minor == 11 && XcodeVersion >= new Version (7, 3))
+					return new Version (rv.Major, rv.Minor, 4);
+			}
+			return rv;
+		}
+
+		// Validates that sdk_version is set to a reasonable value before compile
+		static void ValidateSDKVersion ()
+		{
+			if (SDKVersion != null) {
+				// We can't do mutation while parsing command line args as XcodeVersion isn't set yet
+				SDKVersion = MutateSDKVersionToPointRelease (SDKVersion);
 				return;
+			}
 
 			if (string.IsNullOrEmpty (DeveloperDirectory))
 				return;
@@ -593,7 +613,7 @@ namespace Xamarin.Bundler {
 			if (sdks.Count > 0) {
 				sdks.Sort ();
 				// select the highest.
-				sdk_version = sdks [sdks.Count - 1];
+				SDKVersion = sdks [sdks.Count - 1];
 			}
 		}
 
@@ -1068,7 +1088,6 @@ namespace Xamarin.Bundler {
 			string mainSource = GenerateMain ();
 			string registrarPath = null;
 
-			SetSDKVersion ();
 			if (registrar == RegistrarMode.Static) {
 				registrarPath = Path.Combine (Cache.Location, "registrar.m");
 				var registrarH = Path.Combine (Cache.Location, "registrar.h");
@@ -1211,7 +1230,7 @@ namespace Xamarin.Bundler {
 				if (link_flags != null)
 					args.Append (link_flags + " ");
 				if (!string.IsNullOrEmpty (DeveloperDirectory))
-					args.Append ("-isysroot ").Append (Quote (Path.Combine (DeveloperDirectory, "Platforms", "MacOSX.platform", "Developer", "SDKs", "MacOSX" + sdk_version + ".sdk"))).Append (' ');
+					args.Append ("-isysroot ").Append (Quote (Path.Combine (DeveloperDirectory, "Platforms", "MacOSX.platform", "Developer", "SDKs", "MacOSX" + SDKVersion + ".sdk"))).Append (' ');
 
 				if (App.RequiresPInvokeWrappers) {
 					var state = linker_options.MarshalNativeExceptionsState;
