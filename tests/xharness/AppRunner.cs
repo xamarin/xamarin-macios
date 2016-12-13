@@ -132,8 +132,16 @@ namespace xharness
 			if (selected.Count () == 0) {
 				throw new Exception ($"Could not find any applicable devices with device class(es): {string.Join (", ", deviceClasses)}");
 			} else if (selected.Count () > 1) {
-				selected_data = selected.First ();
-				main_log.WriteLine ("Found {0} devices for device class(es) {1}: {2}. Selected: '{3}'", selected.Count (), string.Join (", ", deviceClasses), string.Join (", ", selected.Select ((v) => v.Name).ToArray ()), selected_data.Name);
+				selected_data = selected
+					.OrderBy ((dev) =>
+					{
+						Version v;
+						if (Version.TryParse (dev.ProductVersion, out v))
+							return v;
+						return new Version ();
+					})
+					.First ();
+				main_log.WriteLine ("Found {0} devices for device class(es) '{1}': '{2}'. Selected: '{3}' (because it has the lowest version).", selected.Count (), string.Join ("', '", deviceClasses), string.Join ("', '", selected.Select ((v) => v.Name).ToArray ()), selected_data.Name);
 			} else {
 				selected_data = selected.First ();
 			}
