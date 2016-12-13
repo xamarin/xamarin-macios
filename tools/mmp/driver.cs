@@ -529,7 +529,7 @@ namespace Xamarin.Bundler {
 			if (sdks.Count > 0) {
 				sdks.Sort ();
 				// select the highest.
-				SDKVersion = sdks [sdks.Count - 1];
+				SDKVersion = MutateSDKVersionToPointRelease (sdks [sdks.Count - 1]);
 			}
 		}
 
