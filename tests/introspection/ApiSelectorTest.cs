@@ -176,6 +176,13 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "MDLNoiseTexture":
+				switch (selectorName) {
+				case "initCellularNoiseWithFrequency:name:textureDimensions:channelEncoding:":
+				case "initVectorNoiseWithSmoothness:name:textureDimensions:channelEncoding:":
+					return true;
+				}
+				break;
 			case "NSImage":
 				switch (selectorName) {
 				case "initByReferencingFile:":
@@ -507,6 +514,11 @@ namespace Introspection {
 			case "initWithLeaderboardIdentifier:":
 			// MCSession
 			case "initWithPeer:securityIdentity:encryptionPreference:":
+			// INSetProfileInCarIntent and INSaveProfileInCarIntent
+			case "initWithProfileNumber:profileName:defaultProfile:":
+			case "initWithProfileNumber:profileLabel:defaultProfile:":
+			case "initWithProfileNumber:profileName:":
+			case "initWithProfileNumber:profileLabel:":
 			// UISegmentedControl
 			case "initWithItems:":
 				var mi = m as MethodInfo;

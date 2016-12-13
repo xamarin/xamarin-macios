@@ -74,7 +74,10 @@ namespace Introspection {
 			// even if we specify an NSUserActivityTypes in the Info.plist - might be a bug or there's a new (undocumented) requirement
 			case "NSUserActivity":
 				return true;
+			case "NEPacketTunnelProvider":
+				return true;
 			}
+
 			return SkipDueToAttribute (type);
 		}
 

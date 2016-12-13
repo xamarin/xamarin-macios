@@ -851,6 +851,14 @@ namespace XamCore.Security {
 
 		[Field ("kSSLSessionConfig_anonymous")]
 		Anonymous,
+
+		[iOS (10,2)][TV (10,1)][NoWatch][Mac (10,12,2)]
+		[Field ("kSSLSessionConfig_3DES_fallback")]
+		ThreeDesFallback,
+
+		[iOS (10,2)][TV (10,1)][NoWatch][Mac (10,12,2)]
+		[Field ("kSSLSessionConfig_TLSv1_3DES_fallback")]
+		Tls1ThreeDesFallback,
 	}
 
 	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]
