@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text;
 ﻿
 using Xamarin.MacDev.Tasks;
 using Microsoft.Build.Framework;
@@ -38,7 +39,17 @@ namespace Xamarin.Mac.Tasks
 				"MONO_PATH=" + string.Format ("{0}/lib/mono/{1}", FrameworkRoot, isMobile ? "Xamarin.Mac" : "4.5")
 			};
 
-			return string.Format ("{0}/lib/bmac/bmac-{1}.exe ", FrameworkRoot, isMobile ? "mobile" : "full") + "-nostdlib " + base.GenerateCommandLineCommands ();
+			var sb = new StringBuilder ();
+			if (isMobile) {
+				sb.Append (Path.Combine (FrameworkRoot, "lib", "bmac", "bmac-mobile.exe"));
+				sb.Append (" --unified-mobile-profile ");
+			} else {
+				sb.Append (Path.Combine (FrameworkRoot, "lib", "bmac", "bmac-full.exe"));
+				sb.Append (" --unified-full-profile ");
+			}
+			sb.Append ("-nostdlib ");
+			sb.Append (base.GenerateCommandLineCommands ());
+			return sb.ToString ();
 		}
 	}
 }
