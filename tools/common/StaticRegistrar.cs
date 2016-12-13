@@ -1446,10 +1446,12 @@ namespace XamCore.Registrar {
 			// is not given to us by us by apps (nor can we look
 			// it up somewhere), so hardcode it.
 			if (rv.Major == 10 && (rv.Revision == 0 || rv.Revision == -1)) {
-				if (rv.Minor == 11 && Driver.XcodeVersion >= new Version (7, 3))
-					rv = new Version (rv.Major, rv.Minor, 4);
+				if (rv.Minor == 12 && Driver.XcodeVersion >= new Version (8, 2))
+					return new Version (rv.Major, rv.Minor, 2);
 				if (rv.Minor == 12 && Driver.XcodeVersion >= new Version (8, 1))
-					rv = new Version (rv.Major, rv.Minor, 1);
+					return new Version (rv.Major, rv.Minor, 1);
+				if (rv.Minor == 11 && Driver.XcodeVersion >= new Version (7, 3))
+					return new Version (rv.Major, rv.Minor, 4);
 			}
 #endif
 			return rv;
