@@ -1230,7 +1230,10 @@ namespace Xamarin.Bundler {
 				if (link_flags != null)
 					args.Append (link_flags + " ");
 				if (!string.IsNullOrEmpty (DeveloperDirectory))
-					args.Append ("-isysroot ").Append (Quote (Path.Combine (DeveloperDirectory, "Platforms", "MacOSX.platform", "Developer", "SDKs", "MacOSX" + SDKVersion + ".sdk"))).Append (' ');
+				{
+					var sysRootSDKVersion = new Version (SDKVersion.Major, SDKVersion.Minor); // Sys Root SDKs do not have X.Y.Z, just X.Y 
+					args.Append ("-isysroot ").Append (Quote (Path.Combine (DeveloperDirectory, "Platforms", "MacOSX.platform", "Developer", "SDKs", "MacOSX" + sysRootSDKVersion + ".sdk"))).Append (' ');
+				}
 
 				if (App.RequiresPInvokeWrappers) {
 					var state = linker_options.MarshalNativeExceptionsState;
