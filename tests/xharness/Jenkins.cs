@@ -933,7 +933,7 @@ function toggleContainerVisibility (containerName)
 	{
 		public bool SupportsParallelBuilds {
 			get {
-				return Platform != TestPlatform.watchOS;
+				return Platform.ToString ().StartsWith ("Mac", StringComparison.Ordinal);
 			}
 		}
 
