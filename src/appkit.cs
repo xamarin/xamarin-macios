@@ -13669,7 +13669,7 @@ namespace XamCore.AppKit {
 		bool IsAutomaticTextCompletionEnabled { get; }
 
 		[Mac (10,12,1)]
-		[Async (ResultTypeName="NSSpellCheckerCanidates")]
+		[Async (ResultTypeName="NSSpellCheckerCandidates")]
 		[Export ("requestCandidatesForSelectedRange:inString:types:options:inSpellDocumentWithTag:completionHandler:")]
 		nint RequestCandidates (NSRange selectedRange, string stringToCheck, ulong checkingTypes, [NullAllowed] NSDictionary<NSString, NSObject> options, nint tag, [NullAllowed] Action<nint, NSTextCheckingResult []> completionHandler);
 
