@@ -344,6 +344,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_CleanAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_AppBundlePath)" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'true'" Files="$(AppBundleDir)\..\codesign.items" />
 	</Target>
 
 	<Target Name="_CleanUploaded" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
@@ -1571,7 +1572,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_CodesignAppExtensions" Condition="'$(_RequireCodeSigning)' == 'true' And '$(IsAppExtension)' == 'false' And ('$(OutputType)' == 'Exe' Or '$(IsWatchApp)' == 'true')" DependsOnTargets="_DetectSigningIdentity;_ReadAppExtensionCodesignProperties">
 		<Codesign
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'false' And '@(_AppExtensionCodesignProperties)' != ''"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_AppExtensionCodesignProperties)' != ''"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="%(_AppExtensionCodesignProperties.CodesignAllocate)"
@@ -1579,7 +1580,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Keychain="%(_AppExtensionCodesignProperties.Keychain)"
 			Entitlements="%(_AppExtensionCodesignProperties.Entitlements)"
 			ResourceRules="%(_AppExtensionCodesignProperties.ResourceRules)"
-			Resource="$(AppBundleDir)\PlugIns\%(_AppExtensionCodesignProperties.Filename)%(_AppExtensionCodesignProperties.Extension)"
+			Resource="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)"
 			SigningKey="%(_AppExtensionCodesignProperties.SigningKey)"
 			ExtraArgs="%(_AppExtensionCodesignProperties.ExtraArgs)"
 			>
@@ -1587,8 +1588,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 		<Touch
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_RequireCodeSigning)' == 'true' And Exists ('$(AppBundleDir)\..\%(_AppExtensionCodesignProperties.Filename)%(_AppExtensionCodesignProperties.Extension).dSYM\Contents\Info.plist')"
-			Files="$(AppBundleDir)\..\%(_AppExtensionCodesignProperties.Filename)%(_AppExtensionCodesignProperties.Extension).dSYM\Contents\Info.plist"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_RequireCodeSigning)' == 'true' And Exists ('$(AppBundleDir)\..\%(_AppExtensionCodesignProperties.Identity).dSYM\Contents\Info.plist')"
+			Files="$(AppBundleDir)\..\%(_AppExtensionCodesignProperties.Identity).dSYM\Contents\Info.plist"
 		/>
 	</Target>
 
