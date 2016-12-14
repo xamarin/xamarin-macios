@@ -1604,15 +1604,17 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<_ResourceRulesFullPath Condition="'$(_PreparedResourceRules)' != ''">$([System.IO.Path]::GetFullPath('$(_PreparedResourceRules)'))</_ResourceRulesFullPath>
 		</PropertyGroup>
 
-		<CreateItem Include="$(_AppBundleFileName)" AdditionalMetadata="CodesignAllocate=$(_CodesignAllocate);
-					DisableTimestamp=$(_SdkIsSimulator);
-					Keychain=$(CodesignKeychain);
-					Entitlements=$(_EntitlementsFullPath);
-					ResourceRules=$(_ResourceRulesFullPath);
-					SigningKey=$(_CodeSigningKey);
-					ExtraArgs=$(CodesignExtraArgs)">
-			<Output TaskParameter="Include" ItemName="_AppExtensionCodesignProperties" />
-		</CreateItem>
+		<ItemGroup>
+			<_AppExtensionCodesignProperties Include="$(_AppBundleFileName)">
+				<CodesignAllocate>$(_CodesignAllocate)</CodesignAllocate>
+				<DisableTimestamp>$(_SdkIsSimulator)</DisableTimestamp>
+				<Entitlements>$(_EntitlementsFullPath)</Entitlements>
+				<ResourceRules>$(_ResourceRulesFullPath)</ResourceRules>
+				<Keychain>$(CodesignKeychain)</Keychain>
+				<SigningKey>$(_CodeSigningKey)</SigningKey>
+				<ExtraArgs>$(CodesignExtraArgs)</ExtraArgs>
+			</_AppExtensionCodesignProperties>
+		</ItemGroup>
 
 		<WriteItemsToFile
 			Condition="'$(IsMacEnabled)' == 'true'"
