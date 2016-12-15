@@ -420,7 +420,8 @@ namespace XamCore.AppKit {
 
 		SmartMagnify = 32,
 		QuickLook = 33,
-		Pressure = 34 // 10.10.3, 64-bit-only
+		Pressure = 34, // 10.10.3, 64-bit-only
+		DirectTouch = 37 // 10.10
 	}
 
 	[Flags]
@@ -456,6 +457,7 @@ namespace XamCore.AppKit {
 		EventEndGesture       = 1UL << (int)NSEventType.EndGesture,
 		SmartMagnify          = 1UL << (int)NSEventType.SmartMagnify,
 		Pressure              = 1UL << (int)NSEventType.Pressure, // 10.10.3, 64-bit-only
+		DirectTouch           = 1UL << (int)NSEventType.DirectTouch, // 10.10
 		AnyEvent              = unchecked ((nuint)UInt64.MaxValue)
 	}
 
@@ -2686,4 +2688,41 @@ namespace XamCore.AppKit {
 	{
 		CurrentHostOnly = 1,
 	}
+
+
+	[Mac (10,12,1)]
+	[Native]
+	public enum NSTouchType : nint
+	{
+		Direct,
+		Indirect
+	}
+
+	[Mac (10,12,1)]
+	[Native]
+	[Flags]
+	public enum NSTouchTypeMask : nuint
+	{
+		Direct = (1 << (int)NSTouchType.Direct),
+		Indirect = (1 << (int)NSTouchType.Indirect)
+	}
+
+	[Mac (10,12,1)]
+	[Native]
+	public enum NSScrubberMode : nint
+	{
+		Fixed = 0,
+		Free
+	}
+
+	[Mac (10,12,1)]
+	[Native]
+	public enum NSScrubberAlignment : nint
+	{
+		None = 0,
+		Leading,
+		Trailing,
+		Center
+	}
+
 }
