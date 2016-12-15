@@ -132,7 +132,7 @@ namespace Xamarin
 		public void SymbolicationData (Target target, Config configuration, PackageMdb package_mdb, MSym msym, bool has_mdb, bool has_msym, string extra_mtouch_args)
 		{
 			using (var mtouch = new MTouchTool ()) {
-				mtouch.Profile = Profile.iOS;
+				mtouch.Profile = Profile.Unified;
 				mtouch.CreateTemporaryApp (hasPlist: true);
 				switch (package_mdb) {
 				case PackageMdb.WithMdb:
@@ -180,7 +180,7 @@ namespace Xamarin
 					manifest.Load (Path.Combine (msymDir, "manifest.xml"));
 					Assert.AreEqual ("com.xamarin.testApp", manifest.SelectSingleNode ("/mono-debug/app-id").InnerText, "app-id");
 				} else {
-					DirectoryAssert.DoesNotExist (msymDir, "mSYM found when not expected");
+					Assert.IsFalse (Directory.Exists (msymDir), "mSYM found when not expected");
 				}
 			}
 		}
@@ -2090,7 +2090,7 @@ class C {
 		public void AutoLinkWithSqlite ()
 		{
 			using (var mtouch = new MTouchTool ()) {
-				mtouch.Profile = Profile.iOS;
+				mtouch.Profile = Profile.Unified;
 				mtouch.CreateTemporaryApp (code: @"
 using System.Runtime.InteropServices;
 using Foundation;
