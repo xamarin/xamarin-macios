@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
@@ -250,15 +249,9 @@ namespace Xamarin.MacDev.Tasks
 			return archived;
 		}
 
-		protected virtual MobileProvision GetMobileProvision (MobileProvisionPlatform platform, string uuid)
+		protected virtual MobileProvision GetMobileProvision (MobileProvisionPlatform platform, string name)
 		{
-			var extension = MobileProvision.GetFileExtension (platform);
-			var path = Path.Combine (MobileProvision.ProfileDirectory, uuid + extension);
-
-			if (File.Exists (path))
-				return MobileProvision.LoadFromFile (path);
-
-			return MobileProvision.GetAllInstalledProvisions (platform, true).FirstOrDefault (x => x.Uuid == uuid);
+			return MobileProvisionIndex.GetMobileProvision (platform, name);
 		}
 
 		public override bool Execute ()
@@ -281,7 +274,7 @@ namespace Xamarin.MacDev.Tasks
 
 			if (!string.IsNullOrEmpty (ProvisioningProfile)) {
 				if ((profile = GetMobileProvision (Platform, ProvisioningProfile)) == null) {
-					Log.LogError ("Could not locate the provisioning profile with a UUID of {0}.", ProvisioningProfile);
+					Log.LogError ("Could not locate the provisioning profile with a Name or UUID of {0}.", ProvisioningProfile);
 					return false;
 				}
 			} else if (Platform == MobileProvisionPlatform.iOS) {
