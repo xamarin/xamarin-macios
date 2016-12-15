@@ -639,19 +639,14 @@ namespace xharness
 			}
 		}
 
-		public Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, string args, TextWriter output, TimeSpan timeout)
-		{
-			return ProcessHelper.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, output, timeout: timeout);
-		}
-
 		public Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, string args, Log log, TimeSpan timeout)
 		{
-			return ProcessHelper.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, log.GetWriter () , timeout: timeout);
+			return ProcessHelper.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, log, timeout: timeout);
 		}
 
 		public async Task ShowSimulatorList (LogStream log)
 		{
-			await ExecuteXcodeCommandAsync ("simctl", "list", log.GetWriter (), TimeSpan.FromSeconds (10));
+			await ExecuteXcodeCommandAsync ("simctl", "list", log, TimeSpan.FromSeconds (10));
 		}
 
 		public async Task<LogFile> SymbolicateCrashReportAsync (Log log, LogFile report)
