@@ -24,15 +24,15 @@ namespace Xamarin.iOS.Tasks
 
 		#endregion
 
-		public static MobileProvision GetMobileProvision (MobileProvisionPlatform platform, string uuid)
+		public static MobileProvision GetMobileProvision (MobileProvisionPlatform platform, string name)
 		{
 			var extension = MobileProvision.GetFileExtension (platform);
-			var path = Path.Combine (MobileProvision.ProfileDirectory, uuid + extension);
+			var path = Path.Combine (MobileProvision.ProfileDirectory, name + extension);
 
 			if (File.Exists (path))
 				return MobileProvision.LoadFromFile (path);
 
-			return MobileProvision.GetAllInstalledProvisions (platform, true).FirstOrDefault (x => x.Uuid == uuid);
+			return MobileProvisionIndex.GetMobileProvision (platform, name);
 		}
 
 		public override bool Execute ()
@@ -44,7 +44,7 @@ namespace Xamarin.iOS.Tasks
 			var profile = GetMobileProvision (MobileProvisionPlatform.iOS, ProvisioningProfile);
 
 			if (profile == null) {
-				Log.LogError ("Could not locate the provisioning profile with a UUID of {0}.", ProvisioningProfile);
+				Log.LogError ("Could not locate the provisioning profile with a Name or UUID of {0}.", ProvisioningProfile);
 				return false;
 			}
 
