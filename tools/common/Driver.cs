@@ -119,7 +119,7 @@ namespace Xamarin.Bundler {
 #endif
 		}
 
-		public static int RunCommand (string path, string args, string[] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
+		public static int RunCommand (string path, string args, string[] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false, int timeout = -1)
 		{
 			Exception stdin_exc = null;
 			var info = new ProcessStartInfo (path, args);
@@ -167,7 +167,7 @@ namespace Xamarin.Bundler {
 				p.BeginOutputReadLine ();
 				p.BeginErrorReadLine ();
 
-				p.WaitForExit ();
+				p.WaitForExit (timeout);
 
 				stderr_completed.WaitOne (TimeSpan.FromSeconds (1));
 				stdout_completed.WaitOne (TimeSpan.FromSeconds (1));
