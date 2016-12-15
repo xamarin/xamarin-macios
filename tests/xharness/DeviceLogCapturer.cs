@@ -58,10 +58,7 @@ namespace xharness
 			if (process.HasExited)
 				return;
 			
-			process.Kill ();
-			if (!streamEnds.Wait (TimeSpan.FromSeconds (5))) {
-				Harness.Log ("Could not kill 'mtouch --logdev' process in 5 seconds.");
-			}
+			process.KillTreeAsync (Harness.HarnessLog).Wait ();
 			process.Dispose ();
 		}
 	}
