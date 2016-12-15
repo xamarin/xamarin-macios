@@ -1607,7 +1607,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<!-- Note: Always codesign *.dylibs even for Simulator builds. We use $(_CanOutputAppBundle) because dylibs can exist in app extensions as well. -->
 	<Target Name="_CodesignNativeLibraries" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_DetectSigningIdentity">
 		<Codesign
-			Condition="'$(IsMacEnabled)' == 'true' And '@(_NativeLibrary)' != '' And '$(_CodeSigningKey)' != '' And '$(IsAppExtension)' == 'false'"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_NativeLibrary)' != '' And '$(_CodeSigningKey)' != ''"
 			SessionId="$(BuildSessionId)"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
@@ -1623,7 +1623,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_CodesignFrameworks" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_DetectSigningIdentity;_CollectFrameworks">
 		<Codesign
-			Condition="'$(IsMacEnabled)' == 'true' And '@(_Frameworks)' != '' And '$(_CodeSigningKey)' != '' And '$(IsAppExtension)' == 'false'"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_Frameworks)' != '' And '$(_CodeSigningKey)' != ''"
 			SessionId="$(BuildSessionId)"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
