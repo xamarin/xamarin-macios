@@ -2298,12 +2298,12 @@ namespace XamCore.Intents {
 		string CustomIdentifier { get; }
 
 		[Introduced (PlatformName.iOS, 10, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
+		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
 		[NullAllowed, Export ("relationship"), Protected]
 		NSString WeakRelationship { get; }
 
 		[Introduced (PlatformName.iOS, 10, 0)]
-		[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
+		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
 		[Wrap ("INPersonRelationshipExtensions.GetValue (WeakRelationship)")]
 		INPersonRelationship Relationship { get; }
 
