@@ -33,6 +33,7 @@
 		</array>
 		<key>watchOS</key>
 		<array>
+			<string>1.0</string>
 			<string>2.0</string>
 			<string>2.1</string>
 			<string>2.2</string>
@@ -63,7 +64,7 @@
 			<key>com.apple.widget-extension</key>
 			<string>8.0</string>
 			<key>com.apple.watchkit</key>
-			<string>8.0</string>
+			<string>8.2</string>
 			<key>com.apple.AudioUnit-UI</key>
 			<string>8.0</string>
 			<key>com.apple.Safari.content-blocker</key>
@@ -93,7 +94,10 @@
 			<string>9.0</string>
 		</dict>
 		<key>watchOS</key>
-		<dict />
+		<dict>
+			<key>com.apple.watchkit</key>
+			<string>2.0</string>
+		</dict>
 	</dict>
 </dict>
 </plist>
