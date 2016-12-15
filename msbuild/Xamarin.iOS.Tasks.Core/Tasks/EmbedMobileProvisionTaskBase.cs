@@ -24,15 +24,15 @@ namespace Xamarin.iOS.Tasks
 
 		#endregion
 
-		public static MobileProvision GetMobileProvision (MobileProvisionPlatform platform, string uuid)
+		public static MobileProvision GetMobileProvision (MobileProvisionPlatform platform, string name)
 		{
 			var extension = MobileProvision.GetFileExtension (platform);
-			var path = Path.Combine (MobileProvision.ProfileDirectory, uuid + extension);
+			var path = Path.Combine (MobileProvision.ProfileDirectory, name + extension);
 
 			if (File.Exists (path))
 				return MobileProvision.LoadFromFile (path);
 
-			return MobileProvision.GetAllInstalledProvisions (platform, true).FirstOrDefault (x => x.Uuid == uuid);
+			return MobileProvisionIndex.GetMobileProvision (platform, name);
 		}
 
 		public override bool Execute ()
