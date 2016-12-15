@@ -62,7 +62,7 @@ namespace xharness
 		public string Configuration { get; set; } = "Debug";
 		public string LogFile { get; set; }
 		public string LogDirectory { get; set; } = Environment.CurrentDirectory;
-		public double Timeout { get; set; } = 10; // in minutes
+		public double Timeout { get; set; } = 20; // in minutes
 		public double LaunchTimeout { get; set; } // in minutes
 		public bool DryRun { get; set; } // Most things don't support this. If you need it somewhere, implement it!
 		public string JenkinsConfiguration { get; set; }
