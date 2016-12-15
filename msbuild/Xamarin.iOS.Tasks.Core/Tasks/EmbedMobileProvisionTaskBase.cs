@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -38,6 +36,13 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			var embedded = Path.Combine (AppBundleDir, "embedded.mobileprovision");
+
+			if (File.Exists (embedded)) {
+				var embeddedProfile = MobileProvision.LoadFromFile (embedded);
+
+				if (embeddedProfile.Uuid == profile.Uuid)
+					return true;
+			}
 
 			Directory.CreateDirectory (AppBundleDir);
 			profile.Save (embedded);

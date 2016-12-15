@@ -263,7 +263,6 @@ namespace Xamarin.iOS.Tasks
 		}
 
 		[Test]
-		[Ignore ("This test fails due to bugs in our implementation")]
 		public void RebuildExecutable_NoModifications ()
 		{
 			// Put a thread.sleep so that the initial build happens a noticable amount of time after we copy
@@ -272,11 +271,11 @@ namespace Xamarin.iOS.Tasks
 			// execution of the test fixture 'setup' method.
 			Thread.Sleep (1000);
 			RunTarget (MonoTouchProject, TargetName.Build);
-			var timestamps = ExpectedExecutableFiles.ToDictionary (file => file, file => GetLastModified (file));
+			var timestamps = Directory.EnumerateFiles (AppBundlePath, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
 
 			Thread.Sleep (1000);
 			RunTarget (MonoTouchProject, TargetName.Build);
-			var newTimestamps = ExpectedExecutableFiles.ToDictionary (file => file, file => GetLastModified (file));
+			var newTimestamps = Directory.EnumerateFiles (AppBundlePath, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
 
 			foreach (var file in timestamps.Keys)
 				Assert.AreEqual (timestamps [file], newTimestamps [file], "#1: " + file);

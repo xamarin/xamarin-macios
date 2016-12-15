@@ -148,11 +148,24 @@ namespace Xamarin.MacDev.Tasks
 			return result;
 		}
 
+		static bool AreEqual (byte[] x, byte[] y)
+		{
+			if (x.Length != y.Length)
+				return false;
+
+			for (int i = 0; i < x.Length; i++) {
+				if (x[i] != y[i])
+					return false;
+			}
+
+			return true;
+		}
+
 		static void WriteXcent (PObject doc, string path)
 		{
 			var buf = doc.ToByteArray (false);
 
-			using (var stream = File.Open (path, FileMode.Create)) {
+			using (var stream = new MemoryStream ()) {
 				if (AppleSdkSettings.XcodeVersion < new Version (4, 4, 1)) {
 					// write the xcent file with the magic header, length, and the plist
 					var length = Mono.DataConverter.BigEndian.GetBytes ((uint) buf.Length + 8); // 8 = magic.length + magicLen.Length
@@ -162,6 +175,21 @@ namespace Xamarin.MacDev.Tasks
 				}
 
 				stream.Write (buf, 0, buf.Length);
+
+				var src = stream.ToArray ();
+				bool save;
+
+				// Note: if the destination file already exists, only re-write it if the content will change
+				if (File.Exists (path)) {
+					var dest = File.ReadAllBytes (path);
+
+					save = !AreEqual (src, dest);
+				} else {
+					save = true;
+				}
+
+				if (save)
+					File.WriteAllBytes (path, src);
 			}
 		}
 
@@ -271,6 +299,7 @@ namespace Xamarin.MacDev.Tasks
 			PDictionary compiled;
 			PDictionary archived;
 			string path;
+			bool save;
 
 			if (!string.IsNullOrEmpty (ProvisioningProfile)) {
 				if ((profile = GetMobileProvision (Platform, ProvisioningProfile)) == null) {
@@ -313,11 +342,25 @@ namespace Xamarin.MacDev.Tasks
 				return false;
 			}
 
-			try {
-				archived.Save (Path.Combine (EntitlementBundlePath, "archived-expanded-entitlements.xcent"), true);
-			} catch (Exception ex) {
-				Log.LogError ("Error writing archived-expanded-entitlements.xcent file: {0}", ex.Message);
-				return false;
+			path = Path.Combine (EntitlementBundlePath, "archived-expanded-entitlements.xcent");
+
+			if (File.Exists (path)) {
+				var plist = PDictionary.FromFile (path);
+				var src = archived.ToXml ();
+				var dest = plist.ToXml ();
+
+				save = src != dest;
+			} else {
+				save = true;
+			}
+
+			if (save) {
+				try {
+					archived.Save (path, true);
+				} catch (Exception ex) {
+					Log.LogError ("Error writing archived-expanded-entitlements.xcent file: {0}", ex.Message);
+					return false;
+				}
 			}
 
 			return !Log.HasLoggedErrors;
