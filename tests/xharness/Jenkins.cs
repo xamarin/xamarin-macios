@@ -954,7 +954,7 @@ function toggleContainerVisibility (containerName)
 		{
 			using (var resource = await Jenkins.DesktopResource.AcquireConcurrentAsync ()) {
 				using (var xbuild = new Process ()) {
-					xbuild.StartInfo.FileName = "xbuild";
+					xbuild.StartInfo.FileName = "msbuild";
 					var args = new StringBuilder ();
 					args.Append ("/verbosity:diagnostic ");
 					if (SpecifyPlatform)

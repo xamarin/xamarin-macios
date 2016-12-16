@@ -175,7 +175,7 @@ namespace Xamarin.Tests
 		public static string ToolPath {
 			get
 			{
-				return "/Library/Frameworks/Mono.framework/Commands/xbuild";
+				return "/Library/Frameworks/Mono.framework/Commands/msbuild";
 			}
 		}
 

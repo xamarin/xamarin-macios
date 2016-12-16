@@ -14,7 +14,7 @@ clean-local::
 	rm -rf *os*.pch*
 	
 bin/Debug/xtro-sharpie.exe ./bin/Debug/xtro-plugin.dll build:
-	xbuild
+	msbuild
 
 	
 XIOS ?= /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/Xamarin.iOS.dll
