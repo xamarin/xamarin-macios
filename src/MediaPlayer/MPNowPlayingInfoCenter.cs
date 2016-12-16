@@ -7,7 +7,7 @@
 // Copyright 2011, Xamarin Inc
 //
 
-#if !TVOS
+#if !TVOS && !MONOMAC
 
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;

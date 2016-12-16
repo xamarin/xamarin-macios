@@ -165,3 +165,6 @@
 ## enums only exposed from properties marked with UIKIT_CLASS_AVAILABLE_IOS_ONLY(10_0)
 !missing-enum! UIImpactFeedbackStyle not bound
 !missing-enum! UINotificationFeedbackType not bound
+
+## Marked as not in tvOS in Xcode 8.2 beta 1 but it's a breaking change and it's fixed only in XAMCORE_4_0
+!unknown-native-enum! UICloudSharingPermissionOptions bound

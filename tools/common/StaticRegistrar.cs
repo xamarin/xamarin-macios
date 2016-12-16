@@ -1439,20 +1439,7 @@ namespace XamCore.Registrar {
 
 		protected override Version GetSDKVersion ()
 		{
-			var rv = Driver.SDKVersion;
-
-#if MMP
-			// There are a number of APIs added in 'dot' releases but the third number
-			// is not given to us by us by apps (nor can we look
-			// it up somewhere), so hardcode it.
-			if (rv.Major == 10 && (rv.Revision == 0 || rv.Revision == -1)) {
-				if (rv.Minor == 11 && Driver.XcodeVersion >= new Version (7, 3))
-					rv = new Version (rv.Major, rv.Minor, 4);
-				if (rv.Minor == 12 && Driver.XcodeVersion >= new Version (8, 1))
-					rv = new Version (rv.Major, rv.Minor, 1);
-			}
-#endif
-			return rv;
+			return Driver.SDKVersion;
 		}
 
 		protected override Dictionary<MethodDefinition, List<MethodDefinition>> PrepareMethodMapping (TypeReference type)
@@ -2283,7 +2270,7 @@ namespace XamCore.Registrar {
 						continue;
 				}
 
-				if (IsQTKitType (@class) && GetSDKVersion () >= new Version (10,12))
+				if (IsQTKitType (@class) && Driver.SDKVersion >= new Version (10,12))
 					continue; // QTKit header was removed in 10.12 SDK
 
 				// These are 64-bit frameworks that extend NSExtensionContext / NSUserActivity, which you can't do

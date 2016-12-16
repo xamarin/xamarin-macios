@@ -1183,7 +1183,7 @@ function toggleContainerVisibility (containerName)
 						await snapshot.StartCaptureAsync ();
 
 						try {
-							var timeout = TimeSpan.FromMinutes (10);
+							var timeout = TimeSpan.FromMinutes (20);
 
 							var result = await proc.RunAsync (log, true, timeout);
 							if (result.TimedOut) {

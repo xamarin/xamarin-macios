@@ -140,6 +140,12 @@
 !missing-selector! UIColor::initWithDisplayP3Red:green:blue:alpha: not bound
 
 
+# WatchKit
+
+## Xcode 8.2 beta 1 iOS headers marked it as not available on watchOS, OTOH watchOS headers were not updated (fix in C9)
+!missing-selector! WKInterfaceController::handleActionWithIdentifier:forNotification: not bound
+
+
 # others
 
 ## might not be usable unless our ToString output is parsable as an input (includes locale issues)
