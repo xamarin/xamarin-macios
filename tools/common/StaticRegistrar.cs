@@ -525,6 +525,10 @@ namespace XamCore.Registrar {
 		Mono.Linker.LinkContext link_context;
 		Dictionary<IMetadataTokenProvider, object> availability_annotations;
 
+#if MONOMAC
+		readonly Version MacOSTenTwelveVersion = new Version (10,12);
+#endif
+
 		public Mono.Linker.LinkContext LinkContext {
 			get {
 				return link_context;
@@ -1797,7 +1801,7 @@ namespace XamCore.Registrar {
 				return;
 			case "QTKit":
 #if MONOMAC
-				if (Driver.SDKVersion >= new Version (10,12))
+				if (Driver.SDKVersion >= MacOSTenTwelveVersion)
 					return; // 10.12 removed the header files for QTKit
 #endif
 				goto default;
@@ -2270,7 +2274,7 @@ namespace XamCore.Registrar {
 						continue;
 				}
 
-				if (IsQTKitType (@class) && Driver.SDKVersion >= new Version (10,12))
+				if (IsQTKitType (@class) && Driver.SDKVersion >= MacOSTenTwelveVersion)
 					continue; // QTKit header was removed in 10.12 SDK
 
 				// These are 64-bit frameworks that extend NSExtensionContext / NSUserActivity, which you can't do
