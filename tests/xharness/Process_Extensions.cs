@@ -158,7 +158,7 @@ namespace xharness
 				using (var ps = new Process ()) {
 					log.WriteLine ("Writing process list:");
 					ps.StartInfo.FileName = "ps";
-					ps.StartInfo.Arguments = "aux";
+					ps.StartInfo.Arguments = "-A -o pid,ruser,ppid,pgid,%cpu=%CPU,%mem=%MEM,flags=FLAGS,lstart,rss,vsz,tty,state,time,command";
 					await ps.RunAsync (log, true, TimeSpan.FromSeconds (5));
 				}
 
