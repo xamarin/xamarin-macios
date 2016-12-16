@@ -136,15 +136,6 @@ namespace Xamarin.Bundler {
 
 		public List<Target> Targets = new List<Target> ();
 
-		//
-		// Bundle config
-		//
-		public string BundleDisplayName;
-		public string BundleId = "com.yourcompany.sample";
-		public string MainNib = "MainWindow";
-		public string Icon;
-		public string CertificateName;
-
 		public string UserGccFlags;
 
 		// If we didn't link the final executable because the existing binary is up-to-date.
@@ -308,9 +299,15 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public string BundleId {
+			get {
+				return GetStringFromInfoPList ("CFBundleIdentifier");
+			}
+		}
+
 		string GetStringFromInfoPList (string key)
 		{
-			return GetStringFromInfoPList (AppDirectory, "Info.plist");
+			return GetStringFromInfoPList (AppDirectory, key);
 		}
 
 		string GetStringFromInfoPList (string directory, string key)
@@ -703,14 +700,6 @@ namespace Xamarin.Bundler {
 				DeploymentTarget = new Version (8, 0);
 			}
 
-			if (Driver.classic_only_arguments.Count > 0) {
-				var exceptions = new List<Exception> ();
-				foreach (var deprecated in Driver.classic_only_arguments) {
-					exceptions.Add (new MonoTouchException (16, true, "The option '{0}' has been deprecated.", deprecated));
-				}
-				ErrorHelper.Show (exceptions);
-			}
-
 			if (!package_mdb.HasValue) {
 				package_mdb = EnableDebug;
 			} else if (package_mdb.Value && IsLLVM) {
@@ -799,9 +788,6 @@ namespace Xamarin.Bundler {
 		{
 			// If the default values are changed, remember to update CanWeSymlinkTheApplication
 			// and main.m (default value for xamarin_use_old_dynamic_registrar must match).
-			if (Driver.enable_generic_nsobject && Registrar != RegistrarMode.Default)
-				throw new MonoTouchException (22, true, "The options '--unsupported--enable-generics-in-registrar' and '--registrar' are not compatible.");
-
 			if (Registrar == RegistrarMode.Default) {
 				if (IsDeviceBuild) {
 					Registrar = RegistrarMode.Static;
@@ -1659,11 +1645,8 @@ namespace Xamarin.Bundler {
 
 		protected int Start ()
 		{
-			if (Driver.Verbosity > 0 || Driver.DryRun)
+			if (Driver.Verbosity > 0)
 				Console.WriteLine (Command);
-			
-			if (Driver.DryRun)
-				return 0;
 			
 			var info = ProcessStartInfo;
 			var stdout_completed = new ManualResetEvent (false);

@@ -559,7 +559,10 @@ namespace xharness
 					}
 					if (pid > 0) {
 						var launchTimedout = cancellation_source.IsCancellationRequested;
-						await KillPidAsync (main_log, pid, TimeSpan.FromSeconds (5), TimeSpan.FromMinutes (launchTimedout ? Harness.LaunchTimeout : Harness.Timeout), launchTimedout ? "Launch" : "Completion");
+						var timeoutType = launchTimedout ? "Launch" : "Completion";
+						var timeoutValue = launchTimedout ? Harness.LaunchTimeout : Harness.Timeout;
+						main_log.WriteLine ($"{timeoutType} timed out after {timeoutValue}");
+						await Process_Extensions.KillTreeAsync (pid, main_log, true);
 					} else {
 						main_log.WriteLine ("Could not find pid in mtouch output.");
 					}
@@ -672,25 +675,6 @@ namespace xharness
 				args.Append (" --devname ");
 				args.Append (Harness.Quote (device_name));
 			}
-		}
-
-		[DllImport ("/usr/lib/libc.dylib")]
-		static extern void kill (int pid, int sig);
-
-		async Task KillPidAsync (Log log, int pid, TimeSpan kill_separation, TimeSpan timeout, string type)
-		{
-			log.WriteLine ("{2} timeout ({1} s) reached, will now send SIGQUIT to the app (PID: {0})", pid, timeout.TotalSeconds, type);
-			kill (pid, 3 /* SIGQUIT */); // print managed stack traces.
-			if (await ProcessHelper.PollForExitAsync (pid, kill_separation /* wait for at most 5 seconds to see if something happens */))
-				return;
-			
-			log.WriteLine ("{2} timeout ({1} s) reached, will now send SIGABRT to the app (PID: {0})", pid, timeout.TotalSeconds, type);
-			kill (pid, 6 /* SIGABRT */); // print native stack traces.
-			if (await ProcessHelper.PollForExitAsync (pid, kill_separation /* wait another 5 seconds */))
-				return;
-			
-			log.WriteLine ("{2} timeout ({1} s) reached, will now send SIGKILL to the app (PID: {0})", pid, timeout.TotalSeconds, type);
-			kill (pid, 9 /* SIGKILL */); // terminate unconditionally.
 		}
 	}
 }

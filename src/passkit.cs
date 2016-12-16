@@ -113,7 +113,7 @@ namespace XamCore.PassKit {
 		bool CanAddPaymentPass (string primaryAccountIdentifier);
 
 		[iOS (10,1)]
-		[NoWatch] // Radar: https://trello.com/c/MvaHEZlc
+		[Watch (3,1)]
 		[Export ("canAddFelicaPass")]
 		bool CanAddFelicaPass { get; }
 

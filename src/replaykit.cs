@@ -262,5 +262,9 @@ namespace XamCore.ReplayKit {
 
 		[Export ("processSampleBuffer:withType:")]
 		void ProcessSampleBuffer (CMSampleBuffer sampleBuffer, RPSampleBufferType sampleBufferType);
+
+		[iOS (10,2)][TV (10,1)]
+		[Export ("finishBroadcastWithError:")]
+		void FinishBroadcast (NSError error);
 	}
 }

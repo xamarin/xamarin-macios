@@ -55,6 +55,7 @@ namespace Xamarin.Bundler {
 	public enum RegistrarMode {
 		Default,
 		Dynamic,
+		PartialStatic,
 		Static,
 	}
 
@@ -93,7 +94,6 @@ namespace Xamarin.Bundler {
 		static bool arch_set = false;
 		static string arch = "i386";
 		static Version minos = new Version (10, 7);
-		static Version sdk_version;
 		static string contents_dir;
 		static string frameworks_dir;
 		static string macos_dir;
@@ -142,8 +142,6 @@ namespace Xamarin.Bundler {
 		public static bool IsUnified { get { return IsUnifiedFullSystemFramework || IsUnifiedMobile || IsUnifiedFullXamMacFramework; } }
 		public static bool IsClassic { get { return !IsUnified; } }
 
-		public static bool UsesPartialRegistrar => IsUnified && (registrar == RegistrarMode.Dynamic || registrar == RegistrarMode.Default) && App.LinkMode == LinkMode.None;
-
 		public static bool Is64Bit { 
 			get {
 				if (IsUnified && !arch_set)
@@ -153,7 +151,7 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static Version SDKVersion { get { return sdk_version; } }
+		public static Version SDKVersion { get; private set; }
 
 		public static Version MinOSVersion { get { return minos; } }
 
@@ -303,6 +301,10 @@ namespace Xamarin.Bundler {
 						case "dynamic":
 							registrar = RegistrarMode.Dynamic;
 							break;
+						case "partial":
+						case "partial-static":
+							registrar = RegistrarMode.PartialStatic;
+							break;
 						case "il":
 							registrar = RegistrarMode.Dynamic;
 							break;
@@ -317,7 +319,7 @@ namespace Xamarin.Bundler {
 				{ "sdk=", "Specifies the SDK version to compile against (version, for example \"10.9\")",
 					v => {
 						try {
-							sdk_version = Version.Parse (v);
+							SDKVersion = Version.Parse (v);
 						} catch (Exception ex) {
 							ErrorHelper.Error (26, ex, "Could not parse the command line argument '{0}': {1}", "-sdk", ex.Message);
 						}
@@ -360,7 +362,6 @@ namespace Xamarin.Bundler {
 				{ "xamarin-full-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullXamMacFramework = true; } },
 				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullSystemFramework = true; } },
 				{ "experimental-xm-aot", "Enable experimental AOT Xamarin.Mac support. Careful, the pieces might be sharp.", v => { experimental_xm_aot = true; }, true }, // Experimental - If it breaks for now you get to keep the pieces 
-
 			};
 
 			AddSharedOptions (os);
@@ -481,6 +482,8 @@ namespace Xamarin.Bundler {
 			if (verbose > 0)
 				Console.WriteLine ("Selected target framework: {0}; API: {1}", targetFramework, IsClassic ? "Classic" : "Unified");
 
+			ValidateSDKVersion ();
+
 			if (action == Action.RunRegistrar) {
 				App.RootAssembly = unprocessed [0];
 				App.Registrar = RegistrarMode.Static;
@@ -572,10 +575,29 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		static void SetSDKVersion ()
+		// SDK versions are only passed in as X.Y but some frameworks/APIs require X.Y.Z
+		// Mutate them if we have a new enough Xcode
+		static Version MutateSDKVersionToPointRelease (Version rv)
 		{
-			if (sdk_version != null)
+			if (rv.Major == 10 && (rv.Revision == 0 || rv.Revision == -1)) {
+				if (rv.Minor == 12 && XcodeVersion >= new Version (8, 2))
+					return new Version (rv.Major, rv.Minor, 2);
+				if (rv.Minor == 12 && XcodeVersion >= new Version (8, 1))
+					return new Version (rv.Major, rv.Minor, 1);
+				if (rv.Minor == 11 && XcodeVersion >= new Version (7, 3))
+					return new Version (rv.Major, rv.Minor, 4);
+			}
+			return rv;
+		}
+
+		// Validates that sdk_version is set to a reasonable value before compile
+		static void ValidateSDKVersion ()
+		{
+			if (SDKVersion != null) {
+				// We can't do mutation while parsing command line args as XcodeVersion isn't set yet
+				SDKVersion = MutateSDKVersionToPointRelease (SDKVersion);
 				return;
+			}
 
 			if (string.IsNullOrEmpty (DeveloperDirectory))
 				return;
@@ -593,7 +615,7 @@ namespace Xamarin.Bundler {
 			if (sdks.Count > 0) {
 				sdks.Sort ();
 				// select the highest.
-				sdk_version = sdks [sdks.Count - 1];
+				SDKVersion = MutateSDKVersionToPointRelease (sdks [sdks.Count - 1]);
 			}
 		}
 
@@ -617,7 +639,14 @@ namespace Xamarin.Bundler {
 			HashSet<string> internalSymbols = new HashSet<string> ();
 
 			if (registrar == RegistrarMode.Default)
-				registrar = App.EnableDebug ? RegistrarMode.Dynamic : RegistrarMode.Static;
+			{
+				if (!App.EnableDebug)
+					registrar = RegistrarMode.Static;
+				else if (IsUnified && App.LinkMode == LinkMode.None && embed_mono)
+					registrar = RegistrarMode.PartialStatic;
+				else
+					registrar = RegistrarMode.Dynamic;
+			}
 			if (is_extension)
 				registrar = RegistrarMode.Static;
 			
@@ -1015,7 +1044,7 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("#include <xamarin/xamarin.h>");
 				sw.WriteLine ("#import <AppKit/NSAlert.h>");
 				sw.WriteLine ("#import <Foundation/NSDate.h>"); // 10.7 wants this even if not needed on 10.9
-				if (UsesPartialRegistrar)
+				if (Driver.registrar == RegistrarMode.PartialStatic)
 					sw.WriteLine ("extern int xamarin_create_classes_Xamarin_Mac ();");
 				sw.WriteLine ();
 				sw.WriteLine ();
@@ -1034,11 +1063,11 @@ namespace Xamarin.Bundler {
 					sw.WriteLine ("\txamarin_disable_lldb_attach = true;");
 				sw.WriteLine ();
 
-				if (UsesPartialRegistrar)
-					sw.WriteLine ("\txamarin_create_classes_Xamarin_Mac ();");
 
 				if (Driver.registrar == RegistrarMode.Static)
 					sw.WriteLine ("\txamarin_create_classes ();");
+				else if (Driver.registrar == RegistrarMode.PartialStatic)
+					sw.WriteLine ("\txamarin_create_classes_Xamarin_Mac ();");
 
 				if (App.EnableDebug)
 					sw.WriteLine ("\txamarin_debug_mode = TRUE;");
@@ -1088,7 +1117,6 @@ namespace Xamarin.Bundler {
 			string mainSource = GenerateMain ();
 			string registrarPath = null;
 
-			SetSDKVersion ();
 			if (registrar == RegistrarMode.Static) {
 				registrarPath = Path.Combine (Cache.Location, "registrar.m");
 				var registrarH = Path.Combine (Cache.Location, "registrar.h");
@@ -1218,7 +1246,7 @@ namespace Xamarin.Bundler {
 					}
 				}
 
-				if (UsesPartialRegistrar) {
+				if (registrar == RegistrarMode.PartialStatic) {
 					args.Append (Path.Combine (GetXamMacPrefix (), "lib", string.Format ("mmp/Xamarin.Mac.registrar.{0}.a ", IsUnifiedMobile ? "mobile" : "full")));
 					args.Append ("-framework Quartz ");
 				}
@@ -1231,7 +1259,10 @@ namespace Xamarin.Bundler {
 				if (link_flags != null)
 					args.Append (link_flags + " ");
 				if (!string.IsNullOrEmpty (DeveloperDirectory))
-					args.Append ("-isysroot ").Append (Quote (Path.Combine (DeveloperDirectory, "Platforms", "MacOSX.platform", "Developer", "SDKs", "MacOSX" + sdk_version + ".sdk"))).Append (' ');
+				{
+					var sysRootSDKVersion = new Version (SDKVersion.Major, SDKVersion.Minor); // Sys Root SDKs do not have X.Y.Z, just X.Y 
+					args.Append ("-isysroot ").Append (Quote (Path.Combine (DeveloperDirectory, "Platforms", "MacOSX.platform", "Developer", "SDKs", "MacOSX" + sysRootSDKVersion + ".sdk"))).Append (' ');
+				}
 
 				if (App.RequiresPInvokeWrappers) {
 					var state = linker_options.MarshalNativeExceptionsState;

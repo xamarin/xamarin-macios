@@ -111,6 +111,8 @@ namespace XamCore.PassKit {
 		SetUp,
 		[iOS (10,0)]
 		InStore,
+		[iOS (10,2)]
+		Donate,
 	}
 
 	[Watch (3,0)]

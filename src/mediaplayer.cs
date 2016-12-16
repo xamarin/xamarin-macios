@@ -13,11 +13,16 @@ using XamCore.Foundation;
 using XamCore.CoreFoundation;
 using XamCore.CoreGraphics;
 using XamCore.CoreLocation;
+#if MONOMAC
+using XamCore.AppKit;
+#else
 using XamCore.UIKit;
+#endif
 using System;
 
 namespace XamCore.MediaPlayer {
 
+	[NoMac]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
 #if XAMCORE_2_0
@@ -47,6 +52,7 @@ namespace XamCore.MediaPlayer {
 #if XAMCORE_2_0
 	}
 
+	[NoMac]
 	[NoTV]
 	[BaseType (typeof (MPMediaEntity))]
 	interface MPMediaItem {
@@ -245,9 +251,11 @@ namespace XamCore.MediaPlayer {
 		NSString DateAddedProperty { get; }
 	}
 
+	[Mac (10,12,2)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MPMediaItemArtwork {
+#if !MONOMAC
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Export ("initWithBoundsSize:requestHandler:")]
@@ -261,15 +269,26 @@ namespace XamCore.MediaPlayer {
 		[Export ("imageWithSize:")]
 		[return: NullAllowed]
 		UIImage ImageWithSize (CGSize size);
+#else
+		[Export ("initWithBoundsSize:requestHandler:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (CGSize boundsSize, Func<CGSize, NSImage> requestHandler);
+
+		[Export ("imageWithSize:")]
+		[return: NullAllowed]
+		NSImage ImageWithSize (CGSize size);
+#endif
 
 		[Export ("bounds")]
 		CGRect Bounds { get; }
 
+		[NoMac]
 		[Deprecated (PlatformName.iOS, 10, 0)]
 		[Export ("imageCropRect")]
 		CGRect ImageCropRectangle { get; }
 	}
 
+	[NoMac]
 	[NoTV]
 	// Objective-C exception thrown.  Name: MPMediaItemCollectionInitException Reason: -init is not supported, use -initWithItems:
 	[DisableDefaultCtor]
@@ -306,6 +325,7 @@ namespace XamCore.MediaPlayer {
 		MPMediaType MediaTypes { get; }
 	}
 
+	[NoMac]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
 	interface MPMediaLibrary : NSSecureCoding {
@@ -352,6 +372,7 @@ namespace XamCore.MediaPlayer {
 		void GetPlaylist (NSUuid uuid, [NullAllowed] MPMediaPlaylistCreationMetadata creationMetadata, Action<MPMediaPlaylist, NSError> completionHandler);
 	}
 
+#if !MONOMAC
 	[NoTV]
 	[BaseType (typeof (UIViewController), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(MPMediaPickerControllerDelegate)})]
 	interface MPMediaPickerController {
@@ -396,7 +417,9 @@ namespace XamCore.MediaPlayer {
 		[Export ("mediaPickerDidCancel:"), EventArgs ("MPMediaPickerController"), EventName ("DidCancel")]
 		void MediaPickerDidCancel (MPMediaPickerController sender);
 	}
+#endif
 
+	[NoMac]
 	[NoTV]
 	[BaseType (typeof (MPMediaItemCollection))]
 	// Objective-C exception thrown.  Name: MPMediaItemCollectionInitException Reason: -init is not supported, use -initWithItems:
@@ -428,6 +451,14 @@ namespace XamCore.MediaPlayer {
 		MPMediaItem [] SeedItems { get; }		
 
 		[iOS (9,3)]
+		[NullAllowed, Export ("descriptionText")]
+		string DescriptionText { get; }
+
+		[iOS (9,3)]
+		[NullAllowed, Export ("authorDisplayName")]
+		string AuthorDisplayName { get; }
+
+		[iOS (9,3)]
 		[Async]
 		[Export ("addItemWithProductID:completionHandler:")]
 		void AddItem (string productID, [NullAllowed] Action<NSError> completionHandler);
@@ -438,6 +469,7 @@ namespace XamCore.MediaPlayer {
 		void AddMediaItems (MPMediaItem[] mediaItems, [NullAllowed] Action<NSError> completionHandler);
 	}
 
+	[NoMac]
 	[Static]
 	interface MPMediaPlaylistProperty {
 		[Field ("MPMediaPlaylistPropertyPersistentID")]
@@ -463,6 +495,7 @@ namespace XamCore.MediaPlayer {
 		NSString AuthorDisplayName { get; }
 	}
 
+	[NoMac]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
 	interface MPMediaQuery : NSSecureCoding, NSCopying {
@@ -552,11 +585,13 @@ namespace XamCore.MediaPlayer {
 		MPMediaQuerySection [] ItemSections { get; }
 	}
 
+	[NoMac]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
 	interface MPMediaPredicate : NSSecureCoding {
 	}
 
+	[NoMac]
 	[NoTV]
 	[BaseType (typeof (MPMediaPredicate))]
 	interface MPMediaPropertyPredicate {
@@ -576,6 +611,7 @@ namespace XamCore.MediaPlayer {
 		MPMediaPredicateComparison ComparisonType { get; }
 	}
 
+	[NoMac]
 	[NoTV]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[BaseType (typeof (NSObject))]
@@ -590,6 +626,7 @@ namespace XamCore.MediaPlayer {
 		NSData ExtendedLogData { get; }
 	}
 
+	[NoMac]
 	[NoTV]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[BaseType (typeof (NSObject))]
@@ -604,6 +641,7 @@ namespace XamCore.MediaPlayer {
 		NSData ExtendedLogData { get; }
 	}
 
+	[NoMac]
 	[NoTV]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[BaseType (typeof (NSObject))]
@@ -651,6 +689,7 @@ namespace XamCore.MediaPlayer {
 		nint DroppedVideoFrameCount { get; }
 	}
 
+	[NoMac]
 	[NoTV]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[BaseType (typeof (NSObject))]
@@ -677,12 +716,14 @@ namespace XamCore.MediaPlayer {
 		string ErrorComment { get; }
 	}
 
+	[NoMac]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	interface MPMoviePlayerFinishedEventArgs {
 		[Export ("MPMoviePlayerPlaybackDidFinishReasonUserInfoKey")]
 		MPMovieFinishReason FinishReason { get; }
 	}
 
+#if !MONOMAC
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	interface MPMoviePlayerFullScreenEventArgs {
 		[Export ("MPMoviePlayerFullscreenAnimationDurationUserInfoKey")]
@@ -703,7 +744,9 @@ namespace XamCore.MediaPlayer {
 		[Export ("MPMoviePlayerThumbnailErrorKey")]
 		NSError Error { get; }
 	}
+#endif
 
+	[NoMac]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	interface MPMoviePlayerTimedMetadataEventArgs {
 		[Export ("MPMoviePlayerTimedMetadataUserInfoKey")]
@@ -711,6 +754,7 @@ namespace XamCore.MediaPlayer {
 	}
 
 	// no [Model] yet... it can be easily created in user code (all abstract) if needed
+	[NoMac]
 	[Protocol]
 	interface MPMediaPlayback {
 		[Abstract]
@@ -762,6 +806,7 @@ namespace XamCore.MediaPlayer {
 		void EndSeeking ();
 	}
 
+#if !MONOMAC
 	[NoTV]
 	[Availability (Deprecated = Platform.iOS_9_0)]
 	[BaseType (typeof (NSObject))]
@@ -1032,7 +1077,9 @@ namespace XamCore.MediaPlayer {
 		[Notification]
 		NSString MPMoviePlayerIsAirPlayVideoActiveDidChangeNotification { get; }
 	}
+#endif
 
+	[NoMac]
 	[NoTV]
 	[Availability (Introduced = Platform.iOS_4_0, Deprecated = Platform.iOS_9_0)]
 	[BaseType (typeof (NSObject))]
@@ -1059,6 +1106,7 @@ namespace XamCore.MediaPlayer {
 		NSDictionary AllMetadata { get;  }
 	}
 
+#if !MONOMAC
 	[NoTV]
 	[BaseType (typeof (UIViewController))]
 	[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_9_0)]
@@ -1075,7 +1123,9 @@ namespace XamCore.MediaPlayer {
 		[Export ("shouldAutorotateToInterfaceOrientation:")]
 		bool ShouldAutorotateToInterfaceOrientation (UIInterfaceOrientation orientation);
 	}
+#endif
 
+	[NoMac]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
 	interface MPMusicPlayerController : MPMediaPlayback {
@@ -1157,6 +1207,7 @@ namespace XamCore.MediaPlayer {
 		NSString VolumeDidChangeNotification { get; }
 	}
 
+#if !MONOMAC
 	[NoTV]
 	[BaseType (typeof (UIView))]
 	interface MPVolumeView {
@@ -1236,7 +1287,9 @@ namespace XamCore.MediaPlayer {
 		[Field ("MPVolumeViewWirelessRouteActiveDidChangeNotification")]
 		NSString WirelessRouteActiveDidChangeNotification { get; }
 	}	
+#endif
 
+	[NoMac]
 	[NoTV]
 	[Since (4,2)]
 	[BaseType (typeof (NSObject))]
@@ -1250,6 +1303,7 @@ namespace XamCore.MediaPlayer {
 		string Title { get; }
 	}
 
+	[Mac (10,12,2)]
 	[Since (5,0)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -init is not supported, use +defaultCenter
@@ -1261,6 +1315,11 @@ namespace XamCore.MediaPlayer {
 		[Static]
 		[Export ("defaultCenter")]
 		MPNowPlayingInfoCenter DefaultCenter { get; }
+
+		[NoiOS]
+		[NoTV]
+		[Export ("playbackState", ArgumentSemantic.Assign)]
+		MPNowPlayingPlaybackState PlaybackState { get; set; }
 
 		[Internal]
  		[Field ("MPNowPlayingInfoPropertyElapsedPlaybackTime")]
@@ -1332,6 +1391,7 @@ namespace XamCore.MediaPlayer {
 		NSString PropertyIsLiveStream { get; }
 	}
 
+	[Mac (10,12,2)]
 	[Since (7,1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash if used
@@ -1356,11 +1416,13 @@ namespace XamCore.MediaPlayer {
 		[Export ("title")]
 		string Title { get; set; }
 
+		[NoMac]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Export ("streamingContent")]
 		bool StreamingContent { [Bind ("isStreamingContent")] get; set; }
 
+		[NoMac]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Export ("explicitContent")]
@@ -1373,6 +1435,7 @@ namespace XamCore.MediaPlayer {
 		bool Playable { [Bind ("isPlayable")] get; set; }
 	}
 
+	[NoMac]
 	[NoTV]
 	[Since (7,1)]
 	[BaseType (typeof (NSObject))]
@@ -1402,6 +1465,7 @@ namespace XamCore.MediaPlayer {
 		[Export ("numberOfChildItemsAtIndexPath:")]
 		nint NumberOfChildItems (NSIndexPath indexPath);
 
+		[NoMac]
 		[iOS (10,0)]
 		[Async]
 		[Export ("contentItemForIdentifier:completionHandler:")]
@@ -1411,6 +1475,7 @@ namespace XamCore.MediaPlayer {
 	interface IMPPlayableContentDataSource {
 	}
 
+	[NoMac]
 	[NoTV]
 	[Since (7,1)]
 	[BaseType (typeof (NSObject))]
@@ -1434,6 +1499,7 @@ namespace XamCore.MediaPlayer {
 		void InitializePlaybackQueue (MPPlayableContentManager contentManager, [NullAllowed] MPContentItem[] contentItems, Action<NSError> completionHandler);
 	}
 
+	[NoMac]
 	[NoTV]
 	[Since (7,1)]
 	[BaseType (typeof (NSObject))]
@@ -1476,6 +1542,7 @@ namespace XamCore.MediaPlayer {
 		string[] NowPlayingIdentifiers { get; set; }
 	}
 
+	[NoMac]
 	[NoTV]
 	[iOS (8,4)]
 	[BaseType (typeof(NSObject))]
@@ -1499,6 +1566,7 @@ namespace XamCore.MediaPlayer {
 		bool EndpointAvailable { get; }
 	}
 
+	[Mac (10,12,2)]
 	[Since (7,1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRemoteCommands cannot be initialized externally.
@@ -1520,6 +1588,7 @@ namespace XamCore.MediaPlayer {
 		void RemoveTarget ([NullAllowed] NSObject target, Selector action);
 	}
 
+	[Mac (10,12,2)]
 	[Since (7,1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangePlaybackRateCommands cannot be initialized externally.
@@ -1529,6 +1598,7 @@ namespace XamCore.MediaPlayer {
 		NSNumber[] SupportedPlaybackRates { get; set; }
 	}
 
+	[Mac (10,12,2)]
 	[iOS (8,0)]
 	[BaseType (typeof(MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeShuffleModeCommand cannot be initialized externally.
@@ -1538,6 +1608,7 @@ namespace XamCore.MediaPlayer {
 		MPShuffleType CurrentShuffleType { get; set; }
 	}
 
+	[Mac (10,12,2)]
 	[iOS (8,0)]
 	[BaseType (typeof(MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeRepeatModeCommand cannot be initialized externally.
@@ -1547,6 +1618,7 @@ namespace XamCore.MediaPlayer {
 		MPRepeatType CurrentRepeatType { get; set; }
 	}
 
+	[Mac (10,12,2)]
 	[Since (7,1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPFeedbackCommands cannot be initialized externally.
@@ -1558,11 +1630,13 @@ namespace XamCore.MediaPlayer {
 		[Export ("localizedTitle")]
 		string LocalizedTitle { get; set; }
 
+		[NoMac]
 		[iOS (8,2)] // added in 8.2, shown as NS_AVAILABLE_IOS(8_0)
 		[Export ("localizedShortTitle")]
 		string LocalizedShortTitle { get; set; }
 	}
 
+	[Mac (10,12,2)]
 	[Since (7,1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRatingCommands cannot be initialized externally.
@@ -1575,6 +1649,7 @@ namespace XamCore.MediaPlayer {
 		float MinimumRating { get; set; } /* float, not CGFloat */
 	}
 
+	[Mac (10,12,2)]
 	[Since (7,1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPSkipIntervalCommands cannot be initialized externally.
@@ -1587,6 +1662,7 @@ namespace XamCore.MediaPlayer {
 		NSArray _PreferredIntervals { get; set; }
 	}
 
+	[Mac (10,12,2)]
 	[Since (7,1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1662,6 +1738,7 @@ namespace XamCore.MediaPlayer {
 		MPChangePlaybackPositionCommand ChangePlaybackPositionCommand { get; }
 	}
 	
+	[Mac (10,12,2)]
 	[Since (7,1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRemoteCommandEvents cannot be initialized externally.
@@ -1674,6 +1751,7 @@ namespace XamCore.MediaPlayer {
 		double /* NSTimeInterval */ Timestamp { get; }
 	}
 
+	[Mac (10,12,2)]
 	[Since (7,1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangePlaybackRateCommandEvents cannot be initialized externally.
@@ -1683,6 +1761,7 @@ namespace XamCore.MediaPlayer {
 		float PlaybackRate { get; } // float, not CGFloat
 	}
 
+	[Mac (10,12,2)]
 	[Since (7,1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRatingCommandEvents cannot be initialized externally.
@@ -1692,6 +1771,7 @@ namespace XamCore.MediaPlayer {
 		float Rating { get; } // float, not CGFloat
 	}
 
+	[Mac (10,12,2)]
 	[Since (7,1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // Name: NSGenericException Reason: MPSeekCommandEvents cannot be initialized externally.
@@ -1701,6 +1781,7 @@ namespace XamCore.MediaPlayer {
 		MPSeekCommandEventType Type { get; }
 	}
 
+	[Mac (10,12,2)]
 	[Since (7,1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPSkipIntervalCommandEvents cannot be initialized externally.
@@ -1710,6 +1791,7 @@ namespace XamCore.MediaPlayer {
 		double /* NSTimeInterval */ Interval { get; }
 	}
 
+	[Mac (10,12,2)]
 	[Since (7,1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor]
@@ -1719,6 +1801,7 @@ namespace XamCore.MediaPlayer {
 		bool Negative { [Bind ("isNegative")] get; }
 	}
 
+	[Mac (10,12,2)]
 	[iOS (9,0)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeLanguageOptionCommandEvents cannot be initialized externally.
@@ -1732,6 +1815,7 @@ namespace XamCore.MediaPlayer {
 		MPChangeLanguageOptionSetting Setting { get; }
 	}
 
+	[Mac (10,12,2)]
 	[iOS (8,0)]
 	[BaseType (typeof(MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeShuffleModeCommandEvent cannot be initialized externally.
@@ -1746,6 +1830,7 @@ namespace XamCore.MediaPlayer {
 		bool PreservesShuffleMode { get; }
 	}
 
+	[Mac (10,12,2)]
 	[iOS (8,0)]
 	[BaseType (typeof(MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeRepeatModeCommandEvent cannot be initialized externally.
@@ -1760,6 +1845,7 @@ namespace XamCore.MediaPlayer {
 		bool PreservesRepeatMode { get; }
 	}
 
+	[Mac (10,12,2)]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // pre-emptive
@@ -1792,6 +1878,7 @@ namespace XamCore.MediaPlayer {
 		bool IsAutomaticAudibleLanguageOption { get; }
 	}
 
+	[Mac (10,12,2)]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // pre-emptive
@@ -1809,6 +1896,7 @@ namespace XamCore.MediaPlayer {
 		bool AllowEmptySelection { get; }
 	}
 
+	[Mac (10,12,2)]
 	[iOS (9,0)]
 	[Static]
 	// not [Internal] since they are exposed as an NSString[] property in MPNowPlayingInfoLanguageOption
@@ -1844,12 +1932,14 @@ namespace XamCore.MediaPlayer {
 		NSString VoiceOverTranslation { get; }
 	}
 
+	[Mac (10,12,2)]
 	[iOS (9,1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // Objective-C exception thrown.  Name: NSGenericException Reason: MPChangePlaybackPositionCommands cannot be initialized externally.
 	interface MPChangePlaybackPositionCommand {
 	}
 
+	[Mac (10,12,2)]
 	[iOS (9,1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // Objective-C exception thrown.  Name: NSGenericException Reason: MPChangePlaybackPositionCommandEvents cannot be initialized externally.
@@ -1858,6 +1948,7 @@ namespace XamCore.MediaPlayer {
 		double PositionTime { get; }
 	}
 
+	[NoMac]
 	[NoTV][iOS (9,3)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1877,11 +1968,13 @@ namespace XamCore.MediaPlayer {
 		string DescriptionText { get; set; }
 	}
 
+	[NoMac]
 	[NoTV]
 	[iOS (10,1)]
 	[BaseType (typeof (NSObject))]
 	interface MPMusicPlayerQueueDescriptor : NSSecureCoding {}
 
+	[NoMac]
 	[NoTV]
 	[iOS (10,1)]
 	[BaseType (typeof(MPMusicPlayerQueueDescriptor))]
@@ -1909,6 +2002,7 @@ namespace XamCore.MediaPlayer {
 		void SetEndTime (double endTime, MPMediaItem mediaItem);
 	}
 
+	[NoMac]
 	[NoTV]
 	[iOS (10,1)]
 	[BaseType (typeof(MPMusicPlayerQueueDescriptor))]

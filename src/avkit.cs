@@ -414,5 +414,18 @@ namespace XamCore.AVKit {
 		[Export ("dismissContentProposalForAction:animated:completion:")]
 		void DismissContentProposal (AVContentProposalAction action, bool animated, [NullAllowed] Action block);
 	}
+
+	[Static]
+	[NoiOS, TV (10,1), NoWatch, NoMac]
+	interface AVKitMetadataIdentifier {
+
+		[Field ("AVKitMetadataIdentifierExternalContentIdentifier")]
+		NSString ExternalContentIdentifier { get; }
+		[Field ("AVKitMetadataIdentifierExternalUserProfileIdentifier")]
+		NSString ExternalUserProfileIdentifier { get; }
+		[Field ("AVKitMetadataIdentifierPlaybackProgress")]
+		NSString PlaybackProgress { get; }
+	}
+
 #endif
 }

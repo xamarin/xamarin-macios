@@ -125,46 +125,44 @@ namespace Xamarin
 		[TestCase (Target.Sim, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  false, "")]
 		[TestCase (Target.Sim, Config.Debug,   PackageMdb.WoutMdb, MSym.Default,  false, false, "--nofastsim --nolink")]
 		// Device
-		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  false, "")]
+		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  true,  "")]
 		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.WoutMSym, true,  false, "")]
-		[TestCase (Target.Dev, Config.Release, PackageMdb.Default, MSym.Default,  false, false, "--abi:armv7,arm64")]
+		[TestCase (Target.Dev, Config.Release, PackageMdb.Default, MSym.Default,  false, true,  "--abi:armv7,arm64")]
 		[TestCase (Target.Dev, Config.Debug,   PackageMdb.WoutMdb, MSym.Default,  false, false, "")]
 		[TestCase (Target.Dev, Config.Debug,   PackageMdb.WoutMdb, MSym.WithMSym, false, true,  "")]
-		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  false, "--abi:armv7+llvm")]
+		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  true,  "--abi:armv7+llvm")]
 		public void SymbolicationData (Target target, Config configuration, PackageMdb package_mdb, MSym msym, bool has_mdb, bool has_msym, string extra_mtouch_args)
 		{
 			if (target == Target.Dev)
 				AssertDeviceAvailable ();
-			
-			var testDir = GetTempDirectory ();
-			var appDir = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (appDir);
 
-			try {
-				var is_sim = target == Target.Sim;
-				var exe = CompileUnifiedTestAppExecutable (testDir);
-				var msymDir = appDir + ".msym";
-				var args = extra_mtouch_args;
-
-				args += is_sim ? " --sim {0} " : " --dev {0} ";
-
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = Profile.iOS;
+				mtouch.CreateTemporaryApp (hasPlist: true);
+				switch (package_mdb) {
+				case PackageMdb.WithMdb:
+					mtouch.PackageMdb = true;
+					break;
+				case PackageMdb.WoutMdb:
+					mtouch.PackageMdb = false;
+					break;
+				}
+				switch (msym) {
+				case MSym.WithMSym:
+					mtouch.MSym = true;
+					break;
+				case MSym.WoutMSym:
+					mtouch.MSym = false;
+					break;
+				}
 				if (configuration == Config.Debug)
-					args += "--debug ";
+					mtouch.Debug = true;
 
-				if (package_mdb == PackageMdb.WithMdb)
-					args += "--package-mdb:true ";
-				else if (package_mdb == PackageMdb.WoutMdb)
-					args += "--package-mdb:false ";
+				var is_sim = target == Target.Sim;
+				mtouch.AssertExecute (is_sim ? MTouchAction.BuildSim : MTouchAction.BuildDev, "build");
 
-				if (msym == MSym.WithMSym)
-					args += "--msym:true ";
-				else if (msym == MSym.WoutMSym)
-					args += "--msym:false ";
-				
-				args += " --sdkroot {2} -v -v -v -sdk {3} {1} -r:{4}";
-
-				ExecutionHelper.Execute (TestTarget.ToolPath, string.Format (args, appDir, exe, Configuration.xcode_root, Configuration.sdk_version, Configuration.XamarinIOSDll));
-
+				var appDir = mtouch.AppPath;
+				var msymDir = appDir + ".mSYM";
 				if (is_sim) {
 					Assert.AreEqual (has_mdb, File.Exists (Path.Combine (appDir, "mscorlib.dll.mdb")), "#mdb");
 				} else {
@@ -183,9 +181,12 @@ namespace Xamarin
 						}
 					}
 					Assert.AreEqual (has_msym, msymFiles.Contains ("mscorlib.dll.msym"));
-				} 
-			} finally {
-				Directory.Delete (testDir, true);
+					var manifest = new XmlDocument ();
+					manifest.Load (Path.Combine (msymDir, "manifest.xml"));
+					Assert.AreEqual ("com.xamarin.testApp", manifest.SelectSingleNode ("/mono-debug/app-id").InnerText, "app-id");
+				} else {
+					DirectoryAssert.DoesNotExist (msymDir, "mSYM found when not expected");
+				}
 			}
 		}
 
@@ -213,51 +214,6 @@ namespace Xamarin
 			Asserts.Throws<TestExecutionException> (() =>
 				ExecutionHelper.Execute (TestTarget.ToolPath, "--abi invalid-arm"),
 				"error MT0015: Invalid ABI: invalid-arm. Supported ABIs are: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, armv7k+llvm, arm64 and arm64+llvm.\n");
-		}
-
-		[Test]
-		public void MT0016 ()
-		{
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			var deprecated_list = new string [] {
-				"-d={0}", "--dir={0}", "--cp", "--crossprefix", "--libdir", "-n", "--keeptemp", 
-				"--main", "--nomanifest", "--mapinject", "--nosign", "--displayname", "--bundleid",
-				"--mainnib", "--icon", "-c", "--certificate", "--enable-background-fetch",
-				"--llvm", "--thumb", "--armv7", "--noregistrar", "--unsupported--enable-generics-in-registrar" 
-			};
-
-
-			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.iOS);
-				var args = string.Format (string.Join (" ", deprecated_list), app);
-
-				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("--sdkroot {5} --dev {0} {1} -r:{2} {3} --sdk {4}", app, exe, Configuration.XamarinIOSDll, args, Configuration.sdk_version, Configuration.xcode_root), hide_output: false),
-					"Xamarin.iOS .* using framework:.*\n" +
-					"error MT0016: The option '--dir' has been deprecated.\n" +
-					"error MT0016: The option '--dir' has been deprecated.\n" +
-					"error MT0016: The option '--crossprefix' has been deprecated.\n" +
-					"error MT0016: The option '--libdir' has been deprecated.\n" +
-					"error MT0016: The option '-n' has been deprecated.\n" +
-					"error MT0016: The option '--keeptemp' has been deprecated.\n" +
-					"error MT0016: The option '--main' has been deprecated.\n" +
-					"error MT0016: The option '--mapinject' has been deprecated.\n" +
-					"error MT0016: The option '--nosign' has been deprecated.\n" +
-					"error MT0016: The option '--displayname' has been deprecated.\n" +
-					"error MT0016: The option '--mainnib' has been deprecated.\n" +
-					"error MT0016: The option '--certificate' has been deprecated.\n" +
-					"error MT0016: The option '--llvm' has been deprecated.\n" +
-					"error MT0016: The option '--thumb' has been deprecated.\n" +
-					"error MT0016: The option '--armv7' has been deprecated.\n" +
-					"error MT0016: The option '--noregistrar' has been deprecated.\n" +
-					"error MT0016: The option '--unsupported--enable-generics-in-registrar' has been deprecated.\n");
-			} finally {
-				Directory.Delete (testDir, true);
-			}
-
 		}
 
 		[Test]
@@ -326,23 +282,6 @@ namespace Xamarin
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
 					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 400.0.0 --abi=armv7s,arm64 {1} -debug -r:" + Configuration.XamarinIOSDll, app, exe)),
 					string.Format ("Xamarin.iOS .* using framework:.*\nerror MT0074: Xamarin.iOS .* does not support a deployment target of 400.0.0 for iOS .the maximum is " + Configuration.sdk_version + ".. Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.iOS.\n", Configuration.sdk_version));
-			} finally {
-				Directory.Delete (testDir, true);
-			}
-		}
-
-		[Test]
-		public void MT0048 ()
-		{
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.iOS);
-
-				Asserts.ThrowsPattern<TestExecutionException> (() => ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 6.0 --abi=armv7s {1} -debug -r:{2} --crashreporting-api-key APIKEY", app, exe, Configuration.XamarinIOSDll), hide_output: false),
-					"error MT0016: The option '--crashreporting-api-key' has been deprecated.");
 			} finally {
 				Directory.Delete (testDir, true);
 			}
@@ -1275,7 +1214,7 @@ namespace Xamarin
 			}
 			var platform = target == Target.Dev ? "iPhone" : "iPhoneSimulator";
 			var csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname, testname + GetProjectSuffix (profile) + ".csproj");
-			XBuild.Build (csproj, configuration, platform, timeout: TimeSpan.FromMinutes (10));
+			XBuild.Build (csproj, configuration, platform, timeout: TimeSpan.FromMinutes (15));
 		}
 
 		[Test]
@@ -2169,6 +2108,34 @@ class C {
 				mtouch.HttpMessageHandler = "Dummy";
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim);
 				mtouch.AssertError (2015, "Invalid HttpMessageHandler `Dummy` for watchOS. The only valid value is NSUrlSessionHandler.");
+			}
+		}
+
+		[Test]
+		public void AutoLinkWithSqlite ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = Profile.iOS;
+				mtouch.CreateTemporaryApp (code: @"
+using System.Runtime.InteropServices;
+using Foundation;
+using ObjCRuntime;
+
+[assembly: LinkWith (ForceLoad = true)]
+
+[Preserve (AllMembers = true)]
+public class TestApp {
+	[DllImport (""sqlite3"")]
+	static extern void sqlite3_exec ();
+
+	static void Main ()
+	{
+		System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ());
+	}
+}
+");
+				mtouch.Linker = MTouchLinker.DontLink; // just to make the test run faster.
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
 			}
 		}
 

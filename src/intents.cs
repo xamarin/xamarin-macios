@@ -36,6 +36,8 @@ namespace XamCore.Intents {
 		FailureRequiringAppLaunchServiceTemporarilyUnavailable
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[Native]
 	[Flags]
 	public enum INCallCapabilityOptions : nuint {
@@ -43,6 +45,8 @@ namespace XamCore.Intents {
 		VideoCall = (1 << 1)
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[Native]
 	public enum INCallRecordType : nint {
 		Unknown = 0,
@@ -242,6 +246,8 @@ namespace XamCore.Intents {
 		FailureRequiringAppLaunchPreviousRideNeedsCompletion
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[Native]
 	public enum INMessageAttribute : nint {
 		Unknown = 0,
@@ -251,6 +257,8 @@ namespace XamCore.Intents {
 		Unflagged
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Introduced (PlatformName.MacOSX, 10, 12, PlatformArchitecture.Arch64)]
 	[Native]
 	[Flags]
 	public enum INMessageAttributeOptions : nuint {
@@ -347,6 +355,8 @@ namespace XamCore.Intents {
 		Dab
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INRelativeReference : nint {
 		Unknown = 0,
@@ -354,6 +364,8 @@ namespace XamCore.Intents {
 		Previous
 	}
 
+	[Introduced (PlatformName.iOS, 10, 0)]
+	[Unavailable (PlatformName.MacOSX)]
 	[Native]
 	public enum INRelativeSetting : nint {
 		Unknown = 0,
@@ -450,7 +462,10 @@ namespace XamCore.Intents {
 		Ready,
 		ContinueInApp,
 		Failure,
-		FailureRequiringAppLaunch
+		FailureRequiringAppLaunch,
+		[Introduced (PlatformName.iOS, 10, 2)]
+		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
+		FailureAppConfigurationRequired,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -474,7 +489,10 @@ namespace XamCore.Intents {
 		Ready,
 		ContinueInApp,
 		Failure,
-		FailureRequiringAppLaunch
+		FailureRequiringAppLaunch,
+		[Introduced (PlatformName.iOS, 10, 2)]
+		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
+		FailureAppConfigurationRequired,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -613,7 +631,13 @@ namespace XamCore.Intents {
 		Ready,
 		ContinueInApp,
 		Failure,
-		FailureRequiringAppLaunch
+		FailureRequiringAppLaunch,
+		[Introduced (PlatformName.iOS, 10, 2)]
+		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
+		FailureAppConfigurationRequired,
+		[Introduced (PlatformName.iOS, 10, 2)]
+		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
+		FailureCallingServiceNotAvailable,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -624,7 +648,9 @@ namespace XamCore.Intents {
 		Ready,
 		ContinueInApp,
 		Failure,
-		FailureRequiringAppLaunch
+		FailureRequiringAppLaunch,
+		[Introduced (PlatformName.iOS, 10, 2)]
+		FailureAppConfigurationRequired,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -635,7 +661,13 @@ namespace XamCore.Intents {
 		Ready,
 		ContinueInApp,
 		Failure,
-		FailureRequiringAppLaunch
+		FailureRequiringAppLaunch,
+		[Introduced (PlatformName.iOS, 10, 2)]
+		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
+		FailureAppConfigurationRequired,
+		[Introduced (PlatformName.iOS, 10, 2)]
+		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
+		FailureCallingServiceNotAvailable,
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -800,6 +832,138 @@ namespace XamCore.Intents {
 		[Unavailable (PlatformName.MacOSX)]
 		[Field ("INGetRideStatusIntentIdentifier")]
 		GetRideStatus
+	}
+
+	[Introduced (PlatformName.iOS, 10, 2)]
+	[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
+	enum INPersonHandleLabel {
+		[Field (null)]
+		None,
+
+		[Field ("INPersonHandleLabelHome")]
+		Home,
+
+		[Field ("INPersonHandleLabelWork")]
+		Work,
+
+		[Field ("INPersonHandleLabeliPhone")]
+		iPhone,
+
+		[Field ("INPersonHandleLabelMobile")]
+		Mobile,
+
+		[Field ("INPersonHandleLabelMain")]
+		Main,
+
+		[Field ("INPersonHandleLabelHomeFax")]
+		HomeFax,
+
+		[Field ("INPersonHandleLabelWorkFax")]
+		WorkFax,
+
+		[Field ("INPersonHandleLabelPager")]
+		Pager,
+
+		[Field ("INPersonHandleLabelOther")]
+		Other,
+	}
+
+	[Introduced (PlatformName.iOS, 10, 2)]
+	[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
+	enum INPersonRelationship {
+		[Field (null)]
+		None,
+
+		[Field ("INPersonRelationshipFather")]
+		Father,
+
+		[Field ("INPersonRelationshipMother")]
+		Mother,
+
+		[Field ("INPersonRelationshipParent")]
+		Parent,
+
+		[Field ("INPersonRelationshipBrother")]
+		Brother,
+
+		[Field ("INPersonRelationshipSister")]
+		Sister,
+
+		[Field ("INPersonRelationshipChild")]
+		Child,
+
+		[Field ("INPersonRelationshipFriend")]
+		Friend,
+
+		[Field ("INPersonRelationshipSpouse")]
+		Spouse,
+
+		[Field ("INPersonRelationshipPartner")]
+		Partner,
+
+		[Field ("INPersonRelationshipAssistant")]
+		Assistant,
+
+		[Field ("INPersonRelationshipManager")]
+		Manager,
+	}
+
+	[Introduced (PlatformName.iOS, 10, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	enum INWorkoutNameIdentifier {
+		[Field ("INWorkoutNameIdentifierRun")]
+		Run,
+
+		[Field ("INWorkoutNameIdentifierSit")]
+		Sit,
+
+		[Field ("INWorkoutNameIdentifierSteps")]
+		Steps,
+
+		[Field ("INWorkoutNameIdentifierStand")]
+		Stand,
+
+		[Field ("INWorkoutNameIdentifierMove")]
+		Move,
+
+		[Field ("INWorkoutNameIdentifierWalk")]
+		Walk,
+
+		[Field ("INWorkoutNameIdentifierYoga")]
+		Yoga,
+
+		[Field ("INWorkoutNameIdentifierDance")]
+		Dance,
+
+		[Field ("INWorkoutNameIdentifierCrosstraining")]
+		Crosstraining,
+
+		[Field ("INWorkoutNameIdentifierElliptical")]
+		Elliptical,
+
+		[Field ("INWorkoutNameIdentifierRower")]
+		Rower,
+
+		[Field ("INWorkoutNameIdentifierCycle")]
+		Cycle,
+
+		[Field ("INWorkoutNameIdentifierStairs")]
+		Stairs,
+
+		[Field ("INWorkoutNameIdentifierOther")]
+		Other,
+
+		[Field ("INWorkoutNameIdentifierIndoorrun")]
+		Indoorrun,
+
+		[Field ("INWorkoutNameIdentifierIndoorcycle")]
+		Indoorcycle,
+
+		[Field ("INWorkoutNameIdentifierIndoorwalk")]
+		Indoorwalk,
+
+		[Field ("INWorkoutNameIdentifierExercise")]
+		Exercise,
 	}
 
 	// End of enums
@@ -2133,6 +2297,16 @@ namespace XamCore.Intents {
 		[NullAllowed, Export ("customIdentifier")]
 		string CustomIdentifier { get; }
 
+		[Introduced (PlatformName.iOS, 10, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
+		[NullAllowed, Export ("relationship"), Protected]
+		NSString WeakRelationship { get; }
+
+		[Introduced (PlatformName.iOS, 10, 0)]
+		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
+		[Wrap ("INPersonRelationshipExtensions.GetValue (WeakRelationship)")]
+		INPersonRelationship Relationship { get; }
+
 		// Inlined from INInteraction (INPerson) Category
 
 		[NullAllowed, Export ("aliases", ArgumentSemantic.Copy)]
@@ -2156,6 +2330,28 @@ namespace XamCore.Intents {
 
 		[Export ("type")]
 		INPersonHandleType Type { get; }
+
+		[Introduced (PlatformName.iOS, 10, 2)]
+		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
+		[Export ("label"), NullAllowed, Protected]
+		NSString WeakLabel { get; }
+
+		[Introduced (PlatformName.iOS, 10, 2)]
+		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
+		[Wrap ("INPersonHandleLabelExtensions.GetValue (WeakLabel)")]
+		INPersonHandleLabel Label { get; }
+
+		[Introduced (PlatformName.iOS, 10, 2)]
+		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
+		[Wrap ("this (value, type, label.GetConstant ())")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string value, INPersonHandleType type, INPersonHandleLabel label);
+
+		[Introduced (PlatformName.iOS, 10, 2)]
+		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
+		[Export ("initWithValue:type:label:"), Protected]
+		[DesignatedInitializer]
+		IntPtr Constructor (string value, INPersonHandleType type, [NullAllowed] NSString stringLabel);
 
 		[Export ("initWithValue:type:")]
 		[DesignatedInitializer]
@@ -2836,11 +3032,17 @@ namespace XamCore.Intents {
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Unavailable (PlatformName.MacOSX)] // xtro mac !unknown-type! INRideDriver bound
 	[BaseType (typeof (INPerson))]
+	[DisableDefaultCtor] // xcode 8.2 beta 1 -> NSInvalidArgumentException Reason: *** -[__NSPlaceholderDictionary initWithObjects:forKeys:count:]: attempt to insert nil object from objects[1]
 	interface INRideDriver : NSCopying, NSSecureCoding {
 
 		[Export ("initWithPersonHandle:nameComponents:displayName:image:rating:phoneNumber:")]
-		[DesignatedInitializer]
+		[Deprecated (PlatformName.iOS, 10,2, message:"Use the overload signature instead")]
 		IntPtr Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string rating, [NullAllowed] string phoneNumber);
+
+		[Export ("initWithPhoneNumber:nameComponents:displayName:image:rating:")]
+		[Introduced (PlatformName.iOS, 10,2)]
+		[DesignatedInitializer]
+		IntPtr Constructor (string phoneNumber, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string rating);
 
 		[NullAllowed, Export ("rating")]
 		string Rating { get; }
@@ -2941,6 +3143,7 @@ namespace XamCore.Intents {
 	[Introduced (PlatformName.WatchOS, 3, 0)]
 	[Unavailable (PlatformName.MacOSX)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // xcode 8.2 beta 1 -> NSInvalidArgumentException Reason: *** -[__NSPlaceholderDictionary initWithObjects:forKeys:count:]: attempt to insert nil object from objects[1]
 	interface INRideStatus : NSCopying, NSSecureCoding {
 
 		[NullAllowed, Export ("rideIdentifier")]
@@ -3013,15 +3216,24 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSaveProfileInCarIntent {
 
-		[Export ("initWithProfileNumber:profileLabel:")]
-		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileLabel);
+		[Deprecated (PlatformName.iOS, 10, 2)]
+		[Export ("initWithProfileNumber:profileLabel:"), Internal]
+		IntPtr InitWithProfileNumberLabel ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileLabel);
+
+		[Introduced (PlatformName.iOS, 10, 2)]
+		[Export ("initWithProfileNumber:profileName:"), Internal]
+		IntPtr InitWithProfileNumberName ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileName);
 
 		[NullAllowed, Export ("profileNumber", ArgumentSemantic.Copy)]
 		NSNumber ProfileNumber { get; }
 
+		[Deprecated (PlatformName.iOS, 10,2, message:"Use ProfileName instead")]
 		[NullAllowed, Export ("profileLabel")]
 		string ProfileLabel { get; }
+
+		[Introduced (PlatformName.iOS, 10, 2)]
+		[NullAllowed, Export ("profileName")]
+		string ProfileName { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -3038,6 +3250,10 @@ namespace XamCore.Intents {
 
 		[Export ("resolveProfileNumberForSaveProfileInCar:withCompletion:")]
 		void ResolveProfileNumber (INSaveProfileInCarIntent intent, Action<INIntegerResolutionResult> completion);
+
+		[Introduced (PlatformName.iOS, 10, 2)]
+		[Export ("resolveProfileNameForSaveProfileInCar:withCompletion:")]
+		void ResolveProfileName (INSaveProfileInCarIntent intent, Action<INStringResolutionResult> completion);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -3670,16 +3886,24 @@ namespace XamCore.Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSetProfileInCarIntent {
 
-		[Protected]
-		[Export ("initWithProfileNumber:profileLabel:defaultProfile:")]
-		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileLabel, [NullAllowed] NSNumber defaultProfile);
+		[Deprecated (PlatformName.iOS, 10, 2)]
+		[Export ("initWithProfileNumber:profileLabel:defaultProfile:"), Internal]
+		IntPtr InitWithProfileNumberLabel ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileLabel, [NullAllowed] NSNumber defaultProfile);
+
+		[Introduced (PlatformName.iOS, 10, 2)]
+		[Export ("initWithProfileNumber:profileName:defaultProfile:"), Internal]
+		IntPtr InitWithProfileNumberName ([NullAllowed] NSNumber profileNumber, [NullAllowed] string profileName, [NullAllowed] NSNumber defaultProfile);
 
 		[NullAllowed, Export ("profileNumber", ArgumentSemantic.Copy)]
 		NSNumber ProfileNumber { get; }
 
+		[Deprecated (PlatformName.iOS, 10, 2, message: "Use ProfileName instead")]
 		[NullAllowed, Export ("profileLabel")]
 		string ProfileLabel { get; }
+
+		[Introduced (PlatformName.iOS, 10, 2)]
+		[NullAllowed, Export ("profileName")]
+		string ProfileName { get; }
 
 		[Internal]
 		[NullAllowed, Export ("defaultProfile", ArgumentSemantic.Copy)]
@@ -3703,6 +3927,10 @@ namespace XamCore.Intents {
 
 		[Export ("resolveDefaultProfileForSetProfileInCar:withCompletion:")]
 		void ResolveDefaultProfile (INSetProfileInCarIntent intent, Action<INBooleanResolutionResult> completion);
+
+		[Introduced (PlatformName.iOS, 10, 2)]
+		[Export ("resolveProfileNameForSetProfileInCar:withCompletion:")]
+		void ResolveProfileName (INSetProfileInCarIntent intent, Action<INStringResolutionResult> completion);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -3890,6 +4118,11 @@ namespace XamCore.Intents {
 		[Export ("initWithIdentifier:spokenPhrase:pronunciationHint:")]
 		[DesignatedInitializer]
 		IntPtr Constructor (string identifier, string spokenPhrase, [NullAllowed] string pronunciationHint);
+
+		[Introduced (PlatformName.iOS, 10, 2)]
+		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
+		[Export ("initWithSpokenPhrase:")]
+		IntPtr Constructor (string spokenPhrase);
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]

@@ -96,7 +96,6 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir).dSYM" />
 	</Target>
 
-	<Target Name="CopyFilesToOutputDirectory" />
 	<Target Name="CreateIpa"/>
 
 	<ItemGroup>
