@@ -400,3 +400,59 @@
 !missing-selector! CLLocationManager::startMonitoringForRegion:desiredAccuracy: not bound
 !missing-selector! CLLocationManager::startRangingBeaconsInRegion: not bound
 !missing-selector! CLLocationManager::stopRangingBeaconsInRegion: not bound
+
+# MediaPlayer API macOS 10.12.2
+
+# These are not available on macOS even if xtro says so.
+!missing-type! MPMediaEntity not bound
+!missing-type! MPMediaItem not bound
+
+!missing-enum! MPErrorCode not bound
+!missing-enum! MPMediaType not bound
+
+!missing-field! MPErrorDomain not bound
+!missing-field! MPMediaEntityPropertyPersistentID not bound
+
+!missing-field! MPMediaItemPropertyAlbumArtist not bound
+!missing-field! MPMediaItemPropertyAlbumArtistPersistentID not bound
+!missing-field! MPMediaItemPropertyAlbumPersistentID not bound
+!missing-field! MPMediaItemPropertyAlbumTitle not bound
+!missing-field! MPMediaItemPropertyAlbumTrackCount not bound
+!missing-field! MPMediaItemPropertyAlbumTrackNumber not bound
+!missing-field! MPMediaItemPropertyArtist not bound
+!missing-field! MPMediaItemPropertyArtistPersistentID not bound
+!missing-field! MPMediaItemPropertyArtwork not bound
+!missing-field! MPMediaItemPropertyAssetURL not bound
+!missing-field! MPMediaItemPropertyBeatsPerMinute not bound
+!missing-field! MPMediaItemPropertyBookmarkTime not bound
+!missing-field! MPMediaItemPropertyComments not bound
+!missing-field! MPMediaItemPropertyComposer not bound
+!missing-field! MPMediaItemPropertyComposerPersistentID not bound
+!missing-field! MPMediaItemPropertyDateAdded not bound
+!missing-field! MPMediaItemPropertyDiscCount not bound
+!missing-field! MPMediaItemPropertyDiscNumber not bound
+!missing-field! MPMediaItemPropertyGenre not bound
+!missing-field! MPMediaItemPropertyGenrePersistentID not bound
+!missing-field! MPMediaItemPropertyHasProtectedAsset not bound
+!missing-field! MPMediaItemPropertyIsCloudItem not bound
+!missing-field! MPMediaItemPropertyIsCompilation not bound
+!missing-field! MPMediaItemPropertyIsExplicit not bound
+!missing-field! MPMediaItemPropertyLastPlayedDate not bound
+!missing-field! MPMediaItemPropertyLyrics not bound
+!missing-field! MPMediaItemPropertyMediaType not bound
+!missing-field! MPMediaItemPropertyPersistentID not bound
+!missing-field! MPMediaItemPropertyPlayCount not bound
+!missing-field! MPMediaItemPropertyPlaybackDuration not bound
+!missing-field! MPMediaItemPropertyPodcastPersistentID not bound
+!missing-field! MPMediaItemPropertyPodcastTitle not bound
+!missing-field! MPMediaItemPropertyRating not bound
+!missing-field! MPMediaItemPropertyReleaseDate not bound
+!missing-field! MPMediaItemPropertySkipCount not bound
+!missing-field! MPMediaItemPropertyTitle not bound
+!missing-field! MPMediaItemPropertyUserGrouping not bound
+
+!missing-selector! +MPMediaEntity::canFilterByProperty: not bound
+!missing-selector! MPMediaEntity::enumerateValuesForProperties:usingBlock: not bound
+!missing-selector! MPMediaEntity::objectForKeyedSubscript: not bound
+!missing-selector! MPMediaEntity::valueForProperty: not bound
+!missing-selector! MPMediaItemArtwork::imageCropRect not bound
