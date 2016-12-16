@@ -40,6 +40,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Xml;
+using System.Threading.Tasks;
 
 using Mono.Cecil;
 using Mono.Linker;
@@ -89,7 +90,7 @@ namespace Xamarin.Bundler {
 		static LinkerOptions linker_options;
 		static bool? disable_lldb_attach = null;
 		static string machine_config_path = null;
-		static bool? experimental_xm_aot = null;
+		static bool? aot = null;
 
 		static bool arch_set = false;
 		static string arch = "i386";
@@ -361,7 +362,7 @@ namespace Xamarin.Bundler {
 				{ "xamarin-framework-directory=", "The framework directory", v => { xm_framework_dir = v; }, true },
 				{ "xamarin-full-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullXamMacFramework = true; } },
 				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullSystemFramework = true; } },
-				{ "experimental-xm-aot", "Enable experimental AOT Xamarin.Mac support. Careful, the pieces might be sharp.", v => { experimental_xm_aot = true; }, true }, // Experimental - If it breaks for now you get to keep the pieces 
+				{ "aot", "Enable experimental AOT Xamarin.Mac support", v => { aot = true; } },
 			};
 
 			AddSharedOptions (os);
@@ -802,7 +803,10 @@ namespace Xamarin.Bundler {
 			if (App.LinkMode != LinkMode.All && App.RuntimeOptions != null)
 				App.RuntimeOptions.Write (App.AppDirectory);
 
-			if (experimental_xm_aot.HasValue && experimental_xm_aot.Value && IsUnified) {
+			if (aot.HasValue && aot.Value) {
+				if (!IsUnified)
+					throw new MonoMacException (98, true, "AOT compilation is only available on Unified", ret);
+
 				AOTBundle ();
 				Watch ("AOT Compile", 1);
 			}
@@ -815,7 +819,7 @@ namespace Xamarin.Bundler {
 
 		static void AOTBundle ()
 		{
-			string monoExe = Is64Bit ? "/usr/local/bin/mono64" : "/usr/local/bin/mono";
+			string monoExe = $"/Library/Frameworks/Mono.framework/Commands/mono" + (Is64Bit ? "64" : "32");
 			var dirInfo = new DirectoryInfo (mmp_dir);
 
 			Func <FileInfo, bool> aotableFile = x => {
@@ -823,12 +827,10 @@ namespace Xamarin.Bundler {
 				return extension == ".exe" || extension == ".dll";
 			};
 
-			string quotedFileList = string.Join (" ", dirInfo.EnumerateFiles ().Where (aotableFile).Select (x => Quote(x.ToString ())));
-			foreach (var file in dirInfo.EnumerateFiles ().Where (aotableFile))
-			{
+			Parallel.ForEach (dirInfo.EnumerateFiles ().Where (aotableFile), new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency }, file => {
 				if (RunCommand (monoExe, String.Format ("--aot=hybrid {0}", Quote (file.ToString ())), new string [] {"MONO_PATH", mmp_dir }) > 0)
 					ErrorHelper.Warning (1337, string.Format ("AOT failed on {0}", file));
-			}
+			});
 		}
 
 		static void ExtractNativeLinkInfo ()
@@ -1072,7 +1074,7 @@ namespace Xamarin.Bundler {
 				if (App.EnableDebug)
 					sw.WriteLine ("\txamarin_debug_mode = TRUE;");
 
-				if (experimental_xm_aot.HasValue && experimental_xm_aot.Value)
+				if (aot.HasValue && aot.Value)
 					sw.WriteLine ("\txamarin_mac_aot = TRUE;");
 
 				sw.WriteLine ("\treturn 0;");

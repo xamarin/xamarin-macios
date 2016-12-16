@@ -36,6 +36,7 @@ namespace Xamarin.Bundler {
 	//					MM0088	** Reserved mtouch **
 	//					MM0089	** Reserved mtouch **
 	//					MM0097	machine.config file '{0}' can not be found.
+	//					MM0098	AOT compilation is only available on Unified 
 	// MM1xxx	file copy / symlinks (project related)
 	//			MM14xx	Product assemblies
 	//					MM1401	The required '{0}' assembly is missing from the references

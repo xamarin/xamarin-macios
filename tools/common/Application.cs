@@ -60,6 +60,8 @@ namespace Xamarin.Bundler {
 		public string RootAssembly;
 		public string RegistrarOutputLibrary;
 
+		public static int Concurrency => Driver.Concurrency;
+
 		public bool RequiresPInvokeWrappers {
 			get {
 #if MTOUCH
