@@ -1,0 +1,9 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <IsXBuild Condition="'$(MSBuildRuntimeVersion)' == ''">true</IsXBuild>
+    <MSBuild_OSS_BinDir Condition="'$(OS)' == 'Windows_NT'">$(MSBuildToolsPath)\</MSBuild_OSS_BinDir>
+
+    <!-- when building with msbuild on Unix, $(MSBuildToolsPath) is like `$prefix/lib/mono/msbuild/*/bin` -->
+    <MSBuild_OSS_BinDir Condition="'$(OS)' == 'Unix' and '$(MSBuild_OSS_BinDir)' == '' and '$(IsXBuild)' != 'true' and Exists('$(MSBuildToolsPath)\..\..\..\msbuild\15.0\bin\MSBuild.dll')">$(MSBuildToolsPath)\..\..\..\msbuild\15.0\bin\</MSBuild_OSS_BinDir>
+  </PropertyGroup>
+</Project>
