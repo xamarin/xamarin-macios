@@ -40,8 +40,8 @@ namespace Xamarin.iOS.Tasks
 			var proj = SetupProject (Engine, mtouchPaths ["project_csprojpath"]);
 
 			AppBundlePath = mtouchPaths ["app_bundlepath"];
-			Engine.GlobalProperties.SetProperty("Platform", platform);
-			Engine.GlobalProperties.SetProperty("Configuration", config);
+			Engine.ProjectCollection.SetGlobalProperty("Platform", platform);
+			Engine.ProjectCollection.SetGlobalProperty("Configuration", config);
 
 			RunTarget (proj, "Clean");
 			Assert.IsFalse (Directory.Exists (AppBundlePath), "App bundle exists after cleanup: {0} ", AppBundlePath);

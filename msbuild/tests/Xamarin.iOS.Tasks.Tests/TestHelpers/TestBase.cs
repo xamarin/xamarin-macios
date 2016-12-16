@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Build.BuildEngine;
+//using Microsoft.Build.BuildEngine;
+using Microsoft.Build.Evaluation;
 using Microsoft.Build.Utilities;
 using NUnit.Framework;
 using Xamarin.MacDev;
@@ -148,12 +149,9 @@ namespace Xamarin.iOS.Tasks
 			Engine = new TestEngine ();
 		}
 
-		public Project SetupProject (Engine engine, string projectPath) 
+		public Project SetupProject (TestEngine engine, string projectPath) 
 		{
-			var proj = new Project (engine);
-			proj.Load (projectPath);
-
-			return proj;
+			return engine.ProjectCollection.LoadProject (projectPath);
 		}
 
 		public virtual string TargetFrameworkIdentifier {
@@ -191,6 +189,8 @@ namespace Xamarin.iOS.Tasks
 				File.SetLastWriteTime (file, DateTime.Now);
 			foreach (var file in Directory.GetFiles (LibraryProjectPath, "*.*", SearchOption.AllDirectories))
 				File.SetLastWriteTime (file, DateTime.Now);
+
+			Engine.UnloadAllProjects ();
 		}
 
 		protected void SafeDelete (string path)
@@ -285,8 +285,7 @@ namespace Xamarin.iOS.Tasks
 
 		protected void RemoveItemsByName (Project project, string itemName)
 		{
-			foreach (var item in project.GetEvaluatedItemsByName (itemName).ToArray ())
-				project.RemoveItem (item);
+			project.RemoveItems (project.GetItems (itemName));
 		}
 
 		protected string SetPListKey (string key, PObject value)
@@ -315,7 +314,7 @@ namespace Xamarin.iOS.Tasks
 
 		public void RunTarget (Project project, string target, int expectedErrorCount = 0)
 		{
-			Engine.BuildProject (project, new [] { target }, new Hashtable { {"Platform", "iPhone"} }, BuildSettings.None);
+			Engine.BuildProject (project, new [] { target }, new Hashtable { {"Platform", "iPhone"} });//, BuildSettings.None);
 			if (expectedErrorCount != Engine.Logger.ErrorEvents.Count) {
 				string messages = string.Empty;
 				if (Engine.Logger.ErrorEvents.Count > 0) {
@@ -327,7 +326,7 @@ namespace Xamarin.iOS.Tasks
 
 		public void RunTarget_WithErrors (Project project, string target)
 		{
-			Engine.BuildProject (project, new [] { target }, new Hashtable (), BuildSettings.None);
+			Engine.BuildProject (project, new [] { target }, new Hashtable ());//, BuildSettings.None);
 			Assert.IsTrue (Engine.Logger.ErrorEvents.Count > 0, "#RunTarget-HasExpectedErrors");
 		}
 
