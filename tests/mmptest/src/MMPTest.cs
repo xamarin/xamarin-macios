@@ -595,5 +595,18 @@ namespace Xamarin.MMP.Tests
 		}
 
 
+		[Test]
+		public void Unified_SmokeTest_WithAOT ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = "<MonoBundlingExtraArgs>--aot</MonoBundlingExtraArgs>"
+				};
+				foreach (bool xm45 in new bool[] { false, true }) {
+					test.XM45 = true;
+					TI.TestUnifiedExecutable (test);
+				}
+			});
+		}
 	}
 }
