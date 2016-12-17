@@ -84,11 +84,11 @@ namespace Xamarin.MMP.Tests
 			return new Version (versionRegex.Match (output).Value.Split (' ')[2]);
 		}
 
-		public static string RunAndAssert (string exe, StringBuilder args, string stepName, bool shouldFail = false, Func<string> getAdditionalFailInfo = null)
+		public static string RunAndAssert (string exe, StringBuilder args, string stepName, bool shouldFail = false, Func<string> getAdditionalFailInfo = null, int timeout = -1)
 		{
 			StringBuilder output = new StringBuilder ();
 			Environment.SetEnvironmentVariable ("MONO_PATH", null);
-			int compileResult = Xamarin.Bundler.Driver.RunCommand (exe, args != null ? args.ToString() : string.Empty, MonoDevelopLike, output, suppressPrintOnErrors: shouldFail);
+			int compileResult = Xamarin.Bundler.Driver.RunCommand (exe, args != null ? args.ToString() : string.Empty, MonoDevelopLike, output, suppressPrintOnErrors: shouldFail, timeout: timeout);
 			Func<string> getInfo = () => getAdditionalFailInfo != null ? getAdditionalFailInfo() : "";
 			if (!shouldFail)
 				Assert.AreEqual (0, compileResult, stepName + " failed:\n\n'" + output + "' " + exe + " " + args + getInfo ());
@@ -139,7 +139,7 @@ namespace Xamarin.MMP.Tests
 		{
 			// Assert that the program actually runs and returns our guid
 			Assert.IsTrue (File.Exists (path), string.Format ("{0} did not generate an exe?", path));
-			string output = RunAndAssert (path, null, "Run");
+			string output = RunAndAssert (path, null, "Run", timeout: 5000);
 			Assert.IsTrue(File.Exists (Path.Combine (tmpDir, guid.ToString ())), "Generated program did not create expected guid file: " + output);
 			return output;
 		}
@@ -414,7 +414,7 @@ namespace Xamarin.Bundler {
 	public static partial class Driver
 	{
 		public static int verbose { get { return 0; } }
-		public static int RunCommand (string path, string args, string[] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false)
+		public static int RunCommand (string path, string args, string[] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false, int timeout = -1)
 		{
 			Exception stdin_exc = null;
 			var info = new ProcessStartInfo (path, args);
@@ -462,7 +462,8 @@ namespace Xamarin.Bundler {
 				p.BeginOutputReadLine ();
 				p.BeginErrorReadLine ();
 
-				p.WaitForExit ();
+				if (!p.WaitForExit (timeout))
+					throw new Exception ($"Command {path} {args.ToString()} timed out with timeout {timeout}");
 
 				stderr_completed.WaitOne (TimeSpan.FromSeconds (1));
 				stdout_completed.WaitOne (TimeSpan.FromSeconds (1));
