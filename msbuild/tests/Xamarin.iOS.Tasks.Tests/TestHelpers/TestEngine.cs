@@ -8,6 +8,7 @@ using System.Threading;
 //using Microsoft.Build.BuildEngine;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Evaluation;
+using Microsoft.Build.Execution;
 using Microsoft.Build.Logging;
 using NUnit.Framework;
 using Microsoft.Build.Utilities;
@@ -31,6 +32,8 @@ namespace Xamarin.iOS.Tasks
 			var printer = new ConsoleReportPrinter ();
 			var cl = new ConsoleLogger (LoggerVerbosity.Diagnostic, printer.Print, printer.SetForeground, printer.ResetColor);
 			ProjectCollection.RegisterLogger (cl);
+
+			ProjectCollection.SetGlobalProperty ("CodesignEntitlements", "");
 		}
 
 		public bool BuildProjectFile (string projectFileName, string[] targetNames, IDictionary globalProperties, IDictionary targetOutputs)
@@ -40,10 +43,34 @@ namespace Xamarin.iOS.Tasks
 
 		public bool BuildProject (Project project, string[] targetNames, IDictionary globalProperties)
 		{
-			foreach (DictionaryEntry de in globalProperties)
-				project.SetGlobalProperty ((string)de.Key, (string)de.Value);
+			//FIXME: .. this is setting global propeties for all the projects .. 
+			//should they be removed after the build?
+			foreach (DictionaryEntry de in globalProperties) {
+				//project.SetGlobalProperty ((string)de.Key, (string)de.Value);
+				//FIXME: trying to set this on the project causes the project to be added to the PC
+				//again, which of course, fails :/
+				ProjectCollection.SetGlobalProperty ((string)de.Key, (string)de.Value);
+				//instance.SetProperty ((string)de.Key, (string)de.Value);
+			}
+			
+			var instance = project.CreateProjectInstance ();
+			return BuildProject (instance, targetNames, null);
+		}
 
-			return project.Build (targetNames);
+		public bool BuildProject (ProjectInstance instance, string[] targetNames, IDictionary globalProperties)
+		{
+			if (globalProperties != null) {
+				foreach (DictionaryEntry de in globalProperties)
+					//project.SetGlobalProperty ((string)de.Key, (string)de.Value);
+					//FIXME: trying to set this on the project causes the project to be added to the PC
+					//again, which of course, fails :/
+					//ProjectCollection.SetGlobalProperty ((string)de.Key, (string)de.Value);
+					instance.SetProperty ((string)de.Key, (string)de.Value);
+			}
+
+			Console.WriteLine ($"** instance.Build for {targetNames[0]}");
+			//FIXME: assumption that we are still using the same PC!
+			return instance.Build (targetNames, ProjectCollection.Loggers);
 		}
 
 		public void LogCustomEvent (CustomBuildEventArgs e)
