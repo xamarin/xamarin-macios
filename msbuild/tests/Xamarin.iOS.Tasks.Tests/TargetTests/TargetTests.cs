@@ -265,8 +265,6 @@ namespace Xamarin.iOS.Tasks
 		}
 
 		[Test]
-		//FIXME: jeff, Is it correct that we want two separate builds here, as if invoked separately
-		//	 on the command line, hence using a new instace for every build?
 		public void RebuildExecutable_NoModifications ()
 		{
 			// Put a thread.sleep so that the initial build happens a noticable amount of time after we copy
@@ -291,15 +289,14 @@ namespace Xamarin.iOS.Tasks
 			RunTarget (MonoTouchProject, TargetName.Build);
 			var timestamps = ExpectedExecutableFiles.ToDictionary (file => file, file => GetLastModified (file));
 
-			Touch (Path.Combine (LibraryProjectBinPath, "MyLibrary.dll"));
 			// msbuild just copies from obj -> bin, so we need to touch the dll   
-			// on obj directory!
+			// in obj, instead of bin directory!
 			Touch (Path.Combine (LibraryProjectObjPath, "MyLibrary.dll"));
 
-            RunTarget (MonoTouchProject, TargetName.Build);
+			RunTarget (MonoTouchProject, TargetName.Build);
 			var newTimestamps = ExpectedExecutableFiles.ToDictionary (file => file, file => GetLastModified (file));
 
-            // At least some files should be modified now
+			// At least some files should be modified now
 			Assert.IsTrue (timestamps.Keys.Any (key => timestamps [key] != newTimestamps [key]), "#1");
 		}
 
@@ -520,13 +517,6 @@ namespace Xamarin.iOS.Tasks
 			RunTarget (projectInstance, TargetName.CompileImageAssets, 0);
 
 			var bundleItemsWithAppIcon = projectInstance.GetItems ("_BundleResourceWithLogicalName").ToArray ();
-			foreach (var iconItem in bundleItemsWithAppIcon)
-				Console.WriteLine ($"** iconItem: EvaluatedInclude: {iconItem.EvaluatedInclude}, LogicalName: {iconItem.GetMetadataValue("LogicalName")}");
-			Console.WriteLine ($"** ALL ITEMS");
-			foreach (var item in projectInstance.Items)
-				Console.WriteLine ($"** item: ItemType: {item.ItemType}, {item.EvaluatedInclude}");
-			Console.WriteLine ($"** path: {Path.Combine(actool, "AppIcons60x60@2x.png")}");
-
 			Assert.IsTrue (bundleItemsWithAppIcon.Any (i => i.EvaluatedInclude == Path.Combine (actool, "AppIcons60x60@2x.png") && i.GetMetadataValue ("LogicalName") == "AppIcons60x60@2x.png"), "#2");
 		}
 
@@ -605,7 +595,6 @@ namespace Xamarin.iOS.Tasks
 			MonoTouchProjectInstance = MonoTouchProject.CreateProjectInstance ();
 
 			var item = MonoTouchProjectInstance.AddItem ("None", linkedPlist);
-			//group.ToArray ().Last ().SetMetadata ("Link", "Info.plist");
 			item.SetMetadata ("Link", "Info.plist");
 
 			RunTarget (MonoTouchProjectInstance, TargetName.DetectAppManifest);
