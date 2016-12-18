@@ -265,6 +265,8 @@ namespace Xamarin.iOS.Tasks
 		}
 
 		[Test]
+		//FIXME: jeff, Is it correct that we want two separate builds here, as if invoked separately
+		//	 on the command line, hence using a new instace for every build?
 		public void RebuildExecutable_NoModifications ()
 		{
 			// Put a thread.sleep so that the initial build happens a noticable amount of time after we copy
@@ -272,11 +274,11 @@ namespace Xamarin.iOS.Tasks
 			// part of the original build will definitely be newer than the timestamps written during the
 			// execution of the test fixture 'setup' method.
 			Thread.Sleep (1000);
-			RunTarget (MonoTouchProjectInstance, TargetName.Build);
+			RunTarget (MonoTouchProject, TargetName.Build);
 			var timestamps = Directory.EnumerateFiles (AppBundlePath, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
 
 			Thread.Sleep (1000);
-			RunTarget (MonoTouchProjectInstance, TargetName.Build);
+			RunTarget (MonoTouchProject, TargetName.Build);
 			var newTimestamps = Directory.EnumerateFiles (AppBundlePath, "*.*", SearchOption.AllDirectories).ToDictionary (file => file, file => GetLastModified (file));
 
 			foreach (var file in timestamps.Keys)
@@ -286,14 +288,18 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void RebuildExecutable_TouchLibraryDll ()
 		{
-			RunTarget (MonoTouchProjectInstance, TargetName.Build);
+			RunTarget (MonoTouchProject, TargetName.Build);
 			var timestamps = ExpectedExecutableFiles.ToDictionary (file => file, file => GetLastModified (file));
 
 			Touch (Path.Combine (LibraryProjectBinPath, "MyLibrary.dll"));
-			RunTarget (MonoTouchProjectInstance, TargetName.Build);
+			// msbuild just copies from obj -> bin, so we need to touch the dll   
+			// on obj directory!
+			Touch (Path.Combine (LibraryProjectObjPath, "MyLibrary.dll"));
+
+            RunTarget (MonoTouchProject, TargetName.Build);
 			var newTimestamps = ExpectedExecutableFiles.ToDictionary (file => file, file => GetLastModified (file));
 
-			// At least some files should be modified now
+            // At least some files should be modified now
 			Assert.IsTrue (timestamps.Keys.Any (key => timestamps [key] != newTimestamps [key]), "#1");
 		}
 
@@ -302,11 +308,11 @@ namespace Xamarin.iOS.Tasks
 		{
 			var libraryPath = Path.Combine (LibraryProjectBinPath, "MyLibrary.dll");
 
-			RunTarget (LibraryProjectInstance, TargetName.Build);
+			RunTarget (LibraryProject, TargetName.Build);
 			var timestamp = GetLastModified (libraryPath);
 
 			Thread.Sleep (1000);
-			RunTarget (LibraryProjectInstance, TargetName.Build);
+			RunTarget (LibraryProject, TargetName.Build);
 			Assert.AreEqual (timestamp, GetLastModified (libraryPath));
 		}
 
@@ -315,11 +321,11 @@ namespace Xamarin.iOS.Tasks
 		{
 			var libraryPath = Path.Combine (LibraryProjectBinPath, "MyLibrary.dll");
 
-			RunTarget (LibraryProjectInstance, TargetName.Build);
+			RunTarget (LibraryProject, TargetName.Build);
 			var timestamp = GetLastModified (libraryPath);
 
 			Touch (Path.Combine (LibraryProjectPath, "MyLibraryFolder", "LibraryBundleResource.txt"));
-			RunTarget (LibraryProjectInstance, TargetName.Build);
+			RunTarget (LibraryProject, TargetName.Build);
 			Assert.AreNotEqual (timestamp, GetLastModified (libraryPath));
 		}
 
@@ -328,11 +334,11 @@ namespace Xamarin.iOS.Tasks
 		{
 			var libraryPath = Path.Combine (LibraryProjectBinPath, "MyLibrary.dll");
 
-			RunTarget (LibraryProjectInstance, TargetName.Build);
+			RunTarget (LibraryProject, TargetName.Build);
 			var timestamp = GetLastModified (libraryPath);
 
 			Touch (Path.Combine (LibraryProjectPath, "MyLibraryFolder", "LibraryEmbeddedResource.txt"));
-			RunTarget (LibraryProjectInstance, TargetName.Build);
+			RunTarget (LibraryProject, TargetName.Build);
 			Assert.AreNotEqual (timestamp, GetLastModified (libraryPath));
 		}
 
@@ -341,11 +347,11 @@ namespace Xamarin.iOS.Tasks
 		{
 			var libraryPath = Path.Combine (LibraryProjectBinPath, "MyLibrary.dll");
 			
-			RunTarget (LibraryProjectInstance, TargetName.Build);
+			RunTarget (LibraryProject, TargetName.Build);
 			var timestamp = GetLastModified (libraryPath);
 			
 			Touch (Path.Combine (LibraryProjectPath, "LibraryStoryboard.storyboard"));
-			RunTarget (LibraryProjectInstance, TargetName.Build);
+			RunTarget (LibraryProject, TargetName.Build);
 			Assert.AreNotEqual (timestamp, GetLastModified (libraryPath));
 		}
 

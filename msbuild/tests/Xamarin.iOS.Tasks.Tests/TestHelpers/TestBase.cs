@@ -202,7 +202,6 @@ namespace Xamarin.iOS.Tasks
 			foreach (var file in Directory.GetFiles (LibraryProjectPath, "*.*", SearchOption.AllDirectories))
 				File.SetLastWriteTime (file, DateTime.Now);
 
-			Console.WriteLine ($"** calling UnloadAllProjects");
 			Engine.UnloadAllProjects ();
 			Engine = new TestEngine ();
 		}
