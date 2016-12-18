@@ -138,7 +138,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void GetReferencedAssemblies_Executable ()
 		{
-			RunTarget (MonoTouchProjectInstance, TargetName.ResolveReferences);
+			RunTargetOnInstance (MonoTouchProjectInstance, TargetName.ResolveReferences);
 			var references = MonoTouchProjectInstance.GetItems ("ReferencePath").ToArray ();
 
 			Assert.AreEqual (6, references.Length, "#1");
@@ -153,7 +153,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void GetReferencedAssemblies_Library ()
 		{
-			RunTarget (LibraryProjectInstance, TargetName.ResolveReferences);
+			RunTargetOnInstance (LibraryProjectInstance, TargetName.ResolveReferences);
 			var references = LibraryProjectInstance.GetItems ("ReferencePath").ToArray ();
 
 			Assert.AreEqual (5, references.Length, "#1");
@@ -170,7 +170,7 @@ namespace Xamarin.iOS.Tasks
 			var expectedFiles = ExpectedExecutableFiles;
 			int extra = 0;
 
-			RunTarget (MonoTouchProjectInstance, TargetName.Build);
+			RunTargetOnInstance (MonoTouchProjectInstance, TargetName.Build);
 
 			Assert.IsTrue (Directory.Exists (AppBundlePath), "#1");
 			foreach (var file in expectedFiles)
@@ -190,7 +190,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void CopyContentToBundle ()
 		{
-			RunTarget (MonoTouchProjectInstance, TargetName.CopyResourcesToBundle);
+			RunTargetOnInstance (MonoTouchProjectInstance, TargetName.CopyResourcesToBundle);
 
 			foreach (var v in ExpectedExecutableBundleResources)
 				Assert.IsTrue (File.Exists (v) || Directory.Exists (v), string.Format ("{0} was not copied to the bundle", Path.GetFullPath (v)));
@@ -199,12 +199,12 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void CleanExecutable ()
 		{
-			RunTarget (MonoTouchProjectInstance, TargetName.Clean);
+			RunTargetOnInstance (MonoTouchProjectInstance, TargetName.Clean);
 			Assert.IsFalse (Directory.Exists (MonoTouchProjectBinPath), "#1a");
 			Assert.IsFalse (Directory.Exists (MonoTouchProjectObjPath), "#1b");
 
-			RunTarget (MonoTouchProjectInstance, TargetName.Build);
-			RunTarget (MonoTouchProjectInstance, TargetName.Clean);
+			RunTargetOnInstance (MonoTouchProjectInstance, TargetName.Build);
+			RunTargetOnInstance (MonoTouchProjectInstance, TargetName.Clean);
 			Assert.IsEmpty (Directory.GetDirectories (MonoTouchProjectBinPath, "*.dSYM", SearchOption.AllDirectories), "#2a");
 			Assert.IsEmpty (Directory.GetFiles (MonoTouchProjectBinPath, "*.*", SearchOption.AllDirectories), "#2b");
 			Assert.IsFalse (Directory.Exists (MonoTouchProjectObjPath), "#2c");
@@ -213,12 +213,12 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void CleanLibrary ()
 		{
-			RunTarget (LibraryProjectInstance, TargetName.Clean);
+			RunTargetOnInstance (LibraryProjectInstance, TargetName.Clean);
 			Assert.IsFalse (Directory.Exists (LibraryProjectBinPath), "#1a");
 			Assert.IsFalse (Directory.Exists (LibraryProjectObjPath), "#1b");
 
-			RunTarget (LibraryProjectInstance, TargetName.Build);
-			RunTarget (LibraryProjectInstance, TargetName.Clean);
+			RunTargetOnInstance (LibraryProjectInstance, TargetName.Build);
+			RunTargetOnInstance (LibraryProjectInstance, TargetName.Clean);
 			Assert.IsEmpty (Directory.GetFiles (LibraryProjectBinPath, "*.*", SearchOption.AllDirectories), "#2a");
 			Assert.IsFalse (Directory.Exists (LibraryProjectObjPath), "#2b");
 		}
@@ -226,7 +226,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void CompileInterfaceDefinitions_Library ()
 		{
-			RunTarget (LibraryProjectInstance, TargetName.CompileInterfaceDefinitions);
+			RunTargetOnInstance (LibraryProjectInstance, TargetName.CompileInterfaceDefinitions);
 			Assert.IsNotEmpty (Directory.GetFiles (LibraryProjectObjPath, "*.*", SearchOption.AllDirectories), "#1");
 		}
 
@@ -255,7 +255,7 @@ namespace Xamarin.iOS.Tasks
 			var originalFile = Path.Combine (MonoTouchProjectPath, "Resources", "image.png");
 			var optimisedFile = Path.Combine (AppBundlePath, "image.png");
 
-			RunTarget (MonoTouchProjectInstance, TargetName.Build);
+			RunTargetOnInstance (MonoTouchProjectInstance, TargetName.Build);
 
 			Assert.IsTrue (File.Exists (optimisedFile), "#1");
 			if (shouldBeDifferent)
@@ -371,7 +371,7 @@ namespace Xamarin.iOS.Tasks
 		void BuildLibraryCore (string[] expectedResources)
 		{
 			var library = Path.Combine (LibraryProjectBinPath, "MyLibrary.dll");
-			RunTarget (LibraryProjectInstance, TargetName.Build);
+			RunTargetOnInstance (LibraryProjectInstance, TargetName.Build);
 			
 			Assert.IsTrue (string.IsNullOrEmpty (LibraryProjectInstance.GetPropertyValue ("AppBundleDir")), "#1");
 			var entries = Directory.GetFileSystemEntries (LibraryProjectBinPath);
@@ -395,7 +395,7 @@ namespace Xamarin.iOS.Tasks
 			Assert.IsTrue (string.IsNullOrEmpty (MonoTouchProjectInstance.GetPropertyValue ("AppBundleDir")), "#2");
 
 			// Now we should have an AppBundleDir
-			RunTarget (MonoTouchProjectInstance, TargetName.GenerateBundleName);
+			RunTargetOnInstance (MonoTouchProjectInstance, TargetName.GenerateBundleName);
 			//FIXME: this path is showing up with windows paths on msbuild/osx, original path i guess
 			Assert.AreEqual ("bin/iPhoneSimulator/Debug/MySingleView.app", MonoTouchProjectInstance.GetPropertyValue ("AppBundleDir"), "#3");
 		}
@@ -403,7 +403,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void PackLibraryResources_ExecutableProject ()
 		{
-			RunTarget (MonoTouchProjectInstance, TargetName.PackLibraryResources);
+			RunTargetOnInstance (MonoTouchProjectInstance, TargetName.PackLibraryResources);
 			var embeddedResources = MonoTouchProjectInstance.GetItems ("EmbeddedResource").ToArray ();
 			Assert.AreEqual (2, embeddedResources.Length, "#1");
 			Assert.IsTrue (embeddedResources.Any (i => i.EvaluatedInclude == "LinkedEmbeddedResource.txt"), "#1"); 
@@ -413,7 +413,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void PackLibraryResources_LibraryProject ()
 		{
-			RunTarget (LibraryProjectInstance, TargetName.PackLibraryResources);
+			RunTargetOnInstance (LibraryProjectInstance, TargetName.PackLibraryResources);
 			var embeddedResources = LibraryProjectInstance.GetItems ("EmbeddedResource").ToArray ();
 			Assert.AreEqual (13, embeddedResources.Length, "#1");
 		}
@@ -422,7 +422,7 @@ namespace Xamarin.iOS.Tasks
 		public void UnpackLibraryResources_ExecutableProject ()
 		{
 			// We unpack 4 embedded resources from the library project into BundleResources
-			RunTarget (MonoTouchProjectInstance, TargetName.Build);
+			RunTargetOnInstance (MonoTouchProjectInstance, TargetName.Build);
 			var bundleResources = MonoTouchProjectInstance.GetItems ("_BundleResourceWithLogicalName").ToArray ();
 			Assert.IsTrue (bundleResources.Length >= 33, "#1");
 		}
@@ -431,7 +431,7 @@ namespace Xamarin.iOS.Tasks
 		public void UnpackLibraryResources_LibraryProject ()
 		{
 			// We should not unpack any EmbeddedResources into BundleResources
-			RunTarget (LibraryProjectInstance, TargetName.Build);
+			RunTargetOnInstance (LibraryProjectInstance, TargetName.Build);
 			var bundleResources = LibraryProjectInstance.GetItems ("_BundleResourceWithLogicalName").ToArray ();
 			Assert.AreEqual (11, bundleResources.Length, "#1");
 		}
@@ -452,7 +452,7 @@ namespace Xamarin.iOS.Tasks
 			plist.SetMinimumOSVersion ("6.1");
 			plist.Save (path, true);
 
-			RunTarget (MonoTouchProjectInstance, TargetName.CollectBundleResources);
+			RunTargetOnInstance (MonoTouchProjectInstance, TargetName.CollectBundleResources);
 
 			var bundleItems = MonoTouchProjectInstance.GetItems ("_BundleResourceWithLogicalName").ToArray ();
 			Assert.IsTrue (bundleItems.Any (i => i.EvaluatedInclude == Path.Combine ("Folder", "BundleResource.txt") && i.GetMetadataValue ("LogicalName") == "Folder/BundleResource.txt"), "#1");
@@ -498,7 +498,7 @@ namespace Xamarin.iOS.Tasks
 			plist.Save (path, true);
 
 			var projectInstance = project.CreateProjectInstance ();
-			RunTarget (projectInstance, TargetName.CompileImageAssets, 0);
+			RunTargetOnInstance (projectInstance, TargetName.CompileImageAssets, 0);
 
 			var bundleItemsNoAppIcon = projectInstance.GetItems ("_BundleResourceWithLogicalName").ToArray ();
 			Assert.IsFalse (bundleItemsNoAppIcon.Any (i => i.EvaluatedInclude == Path.Combine (actool, "AppIcons60x60@2x.png") && i.GetMetadataValue ("LogicalName") == "AppIcons60x60@2x.png"), "#1");
@@ -514,7 +514,7 @@ namespace Xamarin.iOS.Tasks
 
 			// Re-run the task with app icon set this time and no clean.
 			// The task should be aware the app icon is now being used.
-			RunTarget (projectInstance, TargetName.CompileImageAssets, 0);
+			RunTargetOnInstance (projectInstance, TargetName.CompileImageAssets, 0);
 
 			var bundleItemsWithAppIcon = projectInstance.GetItems ("_BundleResourceWithLogicalName").ToArray ();
 			Assert.IsTrue (bundleItemsWithAppIcon.Any (i => i.EvaluatedInclude == Path.Combine (actool, "AppIcons60x60@2x.png") && i.GetMetadataValue ("LogicalName") == "AppIcons60x60@2x.png"), "#2");
@@ -557,7 +557,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void DetectAppManifest_ExecutableProject ()
 		{
-			RunTarget (MonoTouchProjectInstance, TargetName.DetectAppManifest);
+			RunTargetOnInstance (MonoTouchProjectInstance, TargetName.DetectAppManifest);
 			Assert.IsFalse (string.IsNullOrEmpty(MonoTouchProjectInstance.GetPropertyValue ("_AppManifest")), "#1");
 		}
 
@@ -582,7 +582,7 @@ namespace Xamarin.iOS.Tasks
 			MonoTouchProjectInstance.AddItem ("None", "Fake/Info.plist");
 			MonoTouchProjectInstance.AddItem ("None", "Info.plist");
 
-			RunTarget (MonoTouchProjectInstance, TargetName.DetectAppManifest);
+			RunTargetOnInstance (MonoTouchProjectInstance, TargetName.DetectAppManifest);
 			Assert.AreEqual ("Info.plist", MonoTouchProjectInstance.GetPropertyValue ("_AppManifest"), "#1");
 		}
 
@@ -597,7 +597,7 @@ namespace Xamarin.iOS.Tasks
 			var item = MonoTouchProjectInstance.AddItem ("None", linkedPlist);
 			item.SetMetadata ("Link", "Info.plist");
 
-			RunTarget (MonoTouchProjectInstance, TargetName.DetectAppManifest);
+			RunTargetOnInstance (MonoTouchProjectInstance, TargetName.DetectAppManifest);
 			Assert.AreEqual (linkedPlist, MonoTouchProjectInstance.GetPropertyValue ("_AppManifest"), "#1");
 		}
 
@@ -613,14 +613,14 @@ namespace Xamarin.iOS.Tasks
 			var item = MonoTouchProjectInstance.AddItem ("None", logicalPlist);
 			item.SetMetadata ("LogicalName", "Info.plist");
 
-			RunTarget (MonoTouchProjectInstance, TargetName.DetectAppManifest);
+			RunTargetOnInstance (MonoTouchProjectInstance, TargetName.DetectAppManifest);
 			Assert.AreEqual (logicalPlist, MonoTouchProjectInstance.GetPropertyValue ("_AppManifest"), "#1");
 		}
 
 		[Test]
 		public void DetectAppManifest_LibraryProject ()
 		{
-			RunTarget (LibraryProjectInstance, TargetName.DetectAppManifest);
+			RunTargetOnInstance (LibraryProjectInstance, TargetName.DetectAppManifest);
 			Assert.IsNullOrEmpty (LibraryProjectInstance.GetPropertyValue ("_AppManifest"), "#1");
 		}
 	}

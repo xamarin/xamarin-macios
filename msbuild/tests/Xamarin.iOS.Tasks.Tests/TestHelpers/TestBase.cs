@@ -327,10 +327,10 @@ namespace Xamarin.iOS.Tasks
 
 		public void RunTarget (Project project, string target, int expectedErrorCount = 0)
 		{
-			RunTarget (project.CreateProjectInstance (), target, expectedErrorCount);
+			RunTargetOnInstance (project.CreateProjectInstance (), target, expectedErrorCount);
 		}
 
-		public void RunTarget (ProjectInstance instance, string target, int expectedErrorCount = 0)
+		public void RunTargetOnInstance (ProjectInstance instance, string target, int expectedErrorCount = 0)
 		{
 			Engine.BuildProject (instance, new [] { target }, new Hashtable { {"Platform", "iPhone"} });
 			if (expectedErrorCount != Engine.Logger.ErrorEvents.Count) {
