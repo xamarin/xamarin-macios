@@ -77,8 +77,7 @@ namespace Xamarin.iOS.Tasks {
 			Assert.IsNotEmpty (((PString)plist["CFBundleExecutable"]).Value);
 			Assert.IsNotEmpty (((PString)plist["CFBundleVersion"]).Value);
 
-			var ipaOutputDir = Directory.EnumerateDirectories (mtouchPaths.ProjectBinPath, hostAppName + " *").FirstOrDefault ();
-			var ipaPath = Path.Combine (ipaOutputDir, hostAppName +  ".ipa");
+			var ipaPath = Path.Combine (mtouchPaths.ProjectBinPath, hostAppName +  ".ipa");
 			var payloadPath = "Payload/";
 			var watchkitSupportPath = "WatchKitSupport/";
 
@@ -104,7 +103,5 @@ namespace Xamarin.iOS.Tasks {
 			var ipaIncludeArtwork = proj.GetEvaluatedProperty ("IpaIncludeArtwork");
 			Assert.IsTrue (output.Contains ("iTunesMetadata.plist"), string.Format ("The ipa should contain at least one iTunesMetadata.plist file if we are using an AppStore config and IpaIncludeArtwork is true. IpaIncludeArtwork: {0}", ipaIncludeArtwork));
 		}
-
 	}
 }
-
