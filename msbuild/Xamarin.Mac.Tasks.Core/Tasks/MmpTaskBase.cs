@@ -36,7 +36,7 @@ namespace Xamarin.Mac.Tasks
 		public string OutputPath { get; set; }
 
 		[Required]
-		public string ApplicationAssembly { get; set; }
+		public ITaskItem ApplicationAssembly { get; set; }
 
 		[Required]
 		public string HttpClientHandler { get; set; }
@@ -69,8 +69,8 @@ namespace Xamarin.Mac.Tasks
 		public string I18n { get; set; }
 		public string ExtraArguments { get; set; }
 
-		public string [] ExplicitReferences { get; set; }
-		public string [] NativeReferences { get; set; }
+		public ITaskItem [] ExplicitReferences { get; set; }
+		public ITaskItem [] NativeReferences { get; set; }
 
 		public string IntermediateOutputPath { get; set; }
 
@@ -166,11 +166,11 @@ namespace Xamarin.Mac.Tasks
 
 			if (ExplicitReferences != null) {
 				foreach (var asm in ExplicitReferences)
-					args.AddQuoted ("/assembly:" + Path.GetFullPath (asm));
+					args.AddQuoted ("/assembly:" + Path.GetFullPath (asm.ItemSpec));
 			}
 
-			if (!string.IsNullOrEmpty (ApplicationAssembly)) {
-				args.AddQuoted (Path.GetFullPath (ApplicationAssembly + (IsAppExtension ? ".dll" : ".exe")));
+			if (!string.IsNullOrEmpty (ApplicationAssembly.ItemSpec)) {
+				args.AddQuoted (Path.GetFullPath (ApplicationAssembly.ItemSpec));
 			}
 
 			if (!string.IsNullOrWhiteSpace (ExtraArguments))
@@ -178,7 +178,7 @@ namespace Xamarin.Mac.Tasks
 
 			if (NativeReferences != null) {
 				foreach (var nr in NativeReferences)
-					args.AddQuoted ("/native-reference:" + Path.GetFullPath (nr));
+					args.AddQuoted ("/native-reference:" + Path.GetFullPath (nr.ItemSpec));
 			}
 				
 			if (IsAppExtension)
@@ -235,7 +235,7 @@ namespace Xamarin.Mac.Tasks
 		{
 			Log.LogTaskName ("Mmp");
 			Log.LogTaskProperty ("AppBundleDir", AppBundleDir);
-			Log.LogTaskProperty ("ApplicationAssembly", ApplicationAssembly + (IsAppExtension ? ".dll" : ".exe"));
+			Log.LogTaskProperty ("ApplicationAssembly", ApplicationAssembly);
 			Log.LogTaskProperty ("ApplicationName", ApplicationName);
 			Log.LogTaskProperty ("Architecture", Architecture);
 			Log.LogTaskProperty ("ArchiveSymbols", ArchiveSymbols);
