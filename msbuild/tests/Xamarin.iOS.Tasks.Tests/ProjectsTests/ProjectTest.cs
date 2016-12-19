@@ -42,6 +42,8 @@ namespace Xamarin.iOS.Tasks
 
 			RunTarget (proj, "Clean");
 			Assert.IsFalse (Directory.Exists (AppBundlePath), "App bundle exists after cleanup: {0} ", AppBundlePath);
+			Assert.IsFalse (Directory.Exists (AppBundlePath + ".dSYM"), "App bundle .dSYM exists after cleanup: {0} ", AppBundlePath + ".dSYM");
+			Assert.IsFalse (Directory.Exists (AppBundlePath + ".mSYM"), "App bundle .mSYM exists after cleanup: {0} ", AppBundlePath + ".mSYM");
 
 			proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
 			RunTarget (proj, "Build", expectedErrorCount);
