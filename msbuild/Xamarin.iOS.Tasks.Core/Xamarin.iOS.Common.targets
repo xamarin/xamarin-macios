@@ -347,7 +347,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_CleanAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_AppBundlePath)" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'true'" Files="$(AppBundleDir)\..\codesign.items" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'true'" Files="$(DeviceSpecificOutputPath)codesign.items" />
 	</Target>
 
 	<Target Name="_CleanUploaded" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
@@ -357,7 +357,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_CleanDebugSymbols" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(AppBundleDir).dSYM" />
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'false'" Files="$(DeviceSpecificOutputPath)*.bcsymbolmap" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'true'" Files="$(AppBundleDir)\..\dsym.items" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(IsAppExtension)' == 'true'" Files="$(DeviceSpecificOutputPath)dsym.items" />
 	</Target>
 
 	<Target Name="_CleanITunesArtwork" Condition="'$(_CanArchive)' == 'true'">
@@ -836,7 +836,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_PrepareDebugSymbolGeneration" Condition="'$(ComputedPlatform)' == 'iPhone' And '$(IsAppExtension)' == 'true' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_CompileToNative;_ParseExtraMtouchArgs"
-			Inputs="$(_NativeExecutable)" Outputs="$(AppBundleDir)\..\dsym.items">
+			Inputs="$(_NativeExecutable)" Outputs="$(DeviceSpecificOutputPath)dsym.items">
 		<!-- For App Extensions, we delay running dsymutil & strip until it has been copied into the main app bundle... -->
 		<PropertyGroup>
 			<_NativeExecutableFileName>$([System.IO.Path]::GetFileName('$(_NativeExecutable)'))</_NativeExecutableFileName>
@@ -859,7 +859,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true'"
 			Items="@(_AppExtensionDebugSymbolProperties)"
 			ItemName="_AppExtensionDebugSymbolProperties"
-			File="$(AppBundleDir)\..\dsym.items"
+			File="$(DeviceSpecificOutputPath)dsym.items"
 			IncludeMetadata="true"
 			Overwrite="true"
 		/>
@@ -1736,7 +1736,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true'"
 			Items="@(_AppExtensionCodesignProperties)"
 			ItemName="_AppExtensionCodesignProperties"
-			File="$(AppBundleDir)\..\codesign.items"
+			File="$(DeviceSpecificOutputPath)codesign.items"
 			IncludeMetadata="true"
 			Overwrite="true"
 		/>
