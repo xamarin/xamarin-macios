@@ -281,8 +281,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_PrepareResourceRules;
 			_CompileEntitlements;
 			_CompileAppManifest;
-			_GetNativeExecutableName;
-			_CompileToNative;
 			_CompileITunesMetadata;
 			_CollectITunesArtwork;
 			_CopyITunesArtwork;
@@ -292,6 +290,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_CopyAppExtensionsToBundle;
 			_CopyWatchOS1AppsToBundle;
 			_CopyWatchOS2AppsToBundle;
+			_GetNativeExecutableName;
+			_CompileToNative;
 			_GenerateDebugSymbols;
 			_ValidateAppBundle;
 		</CreateAppBundleDependsOn>
