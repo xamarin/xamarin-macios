@@ -382,7 +382,12 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 					$(DeviceSpecificIntermediateOutputPath)TextureAtlas;
 					$(DeviceSpecificIntermediateOutputPath)mtouch-cache;
 					$(DeviceSpecificIntermediateOutputPath)" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)*.ipa" />
+
+		<ItemGroup>
+			<_IpaPackageFile Include="$(DeviceSpecificOutputPath)*.ipa" />
+		</ItemGroup>
+
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="@(_IpaPackageFile)" />
 	</Target>
 
 	<PropertyGroup>
