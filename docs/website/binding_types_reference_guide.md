@@ -249,7 +249,7 @@ output.
 
 These properties are used to drive the generation of C#-style Events in the
 generated classes. They are used to link a given class with its Objective-C
-delegate class. You will encounter many cases where a a class uses a delegate
+delegate class. You will encounter many cases where a class uses a delegate
 class to send notifications and events. For example a `BarcodeScanner` would have
 a companion `BardodeScannerDelegate` class. The `BarcodeScanner` class would
 typically have a "delegate" property that you would assign an instance of
