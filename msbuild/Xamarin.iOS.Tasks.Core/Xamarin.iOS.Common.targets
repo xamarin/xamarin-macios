@@ -2024,7 +2024,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			OutputFile="$(IpaPackagePath)"
 			WorkingDirectory="$(DeviceSpecificIntermediateOutputPath)ipa"
 			>
-			<Output TaskProperty="OutputFile" ItemName="FileWrites" />
+			<Output TaskParameter="OutputFile" ItemName="FileWrites" />
 		</Zip>
 	</Target>
 
