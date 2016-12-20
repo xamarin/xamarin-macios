@@ -220,6 +220,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_CleanAppBundle;
 			_CleanDebugSymbols;
 			_CleanITunesArtwork;
+			_CleanDeviceSpecificOutput;
 			_CleanIntermediateToolOutput;
 		</CleanDependsOn>
 	</PropertyGroup>
@@ -361,6 +362,10 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_CleanITunesArtwork" Condition="'$(_CanArchive)' == 'true'">
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)iTunesMetadata.plist;$(DeviceSpecificOutputPath)iTunesArtwork@2x;$(DeviceSpecificOutputPath)iTunesArtwork" />
+	</Target>
+
+	<Target Name="_CleanDeviceSpecificOutput" Condition="'$(_CanOutputAppBundle)' == 'true'">
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(IntermediateOutputPath)device-builds;$(OutputPath)device-builds" />
 	</Target>
 
 	<Target Name="_CleanIntermediateToolOutput">
