@@ -18712,6 +18712,14 @@ namespace XamCore.AppKit {
 		bool Autovalidates { get; set; }
 	}
 
+	[Mac (10,5)]
+	[BaseType (typeof(NSToolbarItem))]
+	interface NSToolbarItemGroup
+	{
+		[Export ("subitems", ArgumentSemantic.Copy)]
+		NSToolbarItem[] Subitems { get; set; }
+	}
+
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface NSTouch : NSCopying {
