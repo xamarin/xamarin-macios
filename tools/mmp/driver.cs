@@ -67,6 +67,13 @@ namespace Xamarin.Bundler {
 		RunRegistrar,
 	}
 
+	enum AotType {
+		None,
+		All,
+		Platform,
+		Explicit
+	}
+
 	public static partial class Driver {
 		internal static Application App = new Application ();
 		static Target BuildTarget = new Target (App);
@@ -90,7 +97,10 @@ namespace Xamarin.Bundler {
 		static LinkerOptions linker_options;
 		static bool? disable_lldb_attach = null;
 		static string machine_config_path = null;
-		static bool? aot = null;
+
+		static AotType aot = AotType.None;
+		static List<string> aot_explicit_reference = new List<string> ();
+		static List<string> aot_ignore = new List<string> ();
 
 		static bool arch_set = false;
 		static string arch = "i386";
@@ -362,7 +372,28 @@ namespace Xamarin.Bundler {
 				{ "xamarin-framework-directory=", "The framework directory", v => { xm_framework_dir = v; }, true },
 				{ "xamarin-full-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullXamMacFramework = true; } },
 				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullSystemFramework = true; } },
-				{ "aot", "Enable experimental AOT Xamarin.Mac support", v => { aot = true; } },
+				{ "aot:", "Specify assemblies that should be compiled via experimental AOT.\n- none - No AOT (default)\n- all - Every assembly in MonoBundle not ignored\n- platform - Just Xamarin.Mac.dll, System.dll, and mscorlib.dll\n- explicit - Just the assemblies you pass in to --aot-reference)",
+					v => {
+						switch (v) {
+						case "none":
+							aot = AotType.None;
+							break;
+						case "all":
+							aot = AotType.All;
+							break;
+						case "platform":
+							aot = AotType.Platform;
+							break;
+						case "explicit":
+							aot = AotType.Explicit;
+							break;
+						default:
+							throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "none, all, platform, and explicit");
+						}
+					} 
+				},
+				{ "aot-reference=", "Specific assemblies to AOT when --aot=explicit",  v => aot_explicit_reference.Add (v) },
+				{ "aot-ignore=", "Specific assemblies to never AOT",  v => aot_ignore.Add (v) },
 			};
 
 			AddSharedOptions (os);
@@ -803,7 +834,7 @@ namespace Xamarin.Bundler {
 			if (App.LinkMode != LinkMode.All && App.RuntimeOptions != null)
 				App.RuntimeOptions.Write (App.AppDirectory);
 
-			if (aot.HasValue && aot.Value) {
+			if (aot != AotType.None) {
 				if (!IsUnified)
 					throw new MonoMacException (98, true, "AOT compilation is only available on Unified", ret);
 
@@ -824,7 +855,25 @@ namespace Xamarin.Bundler {
 
 			Func <FileInfo, bool> aotableFile = x => {
 				string extension = x.Extension.ToLowerInvariant ();
-				return extension == ".exe" || extension == ".dll";
+				if (extension != ".exe" && extension != ".dll")
+					return false;
+
+				Console.WriteLine (x.Name);
+				if (aot_ignore.Contains (x.Name))
+					return false; 
+				if (aot_ignore.Count > 0)
+					Console.WriteLine (aot_ignore[0]);
+
+				switch (aot) {
+				case AotType.All:
+					return true;
+				case AotType.Platform:
+					return x.Name == "Xamarin.Mac.dll" || x.Name == "System.dll" || x.Name == "mscorlib.dll";
+				case AotType.Explicit:
+					return aot_explicit_reference.Contains (x.Name);
+				default:
+					throw new InvalidOperationException ($"AOTBundle with aot: {aot}?");
+				}
 			};
 
 			Parallel.ForEach (dirInfo.EnumerateFiles ().Where (aotableFile), new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency }, file => {
@@ -1074,7 +1123,7 @@ namespace Xamarin.Bundler {
 				if (App.EnableDebug)
 					sw.WriteLine ("\txamarin_debug_mode = TRUE;");
 
-				if (aot.HasValue && aot.Value)
+				if (aot != AotType.None)
 					sw.WriteLine ("\txamarin_mac_aot = TRUE;");
 
 				sw.WriteLine ("\treturn 0;");

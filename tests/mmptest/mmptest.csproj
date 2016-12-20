@@ -81,6 +81,7 @@
     </Compile>
     <Compile Include="src\ExtensionTests.cs" />
     <Compile Include="src\RemotingConfigurationTests.cs" />
+    <Compile Include="src\AOTTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
