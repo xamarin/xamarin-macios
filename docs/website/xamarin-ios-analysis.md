@@ -1,5 +1,5 @@
 id:{c29b69f5-08e4-4dcc-831e-7fd692ab0886}
-title:Xamarin Analysis rules
+title:Xamarin.iOS Analysis Rules
 
 [//]: # (The original file resides under https://github.com/xamarin/xamarin-macios/tree/master/docs/website/)
 [//]: # (This allows all contributors (including external) to submit, using a PR, updates to the documentation that match the tools changes)

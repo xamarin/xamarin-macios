@@ -30,7 +30,7 @@ namespace XamarinAnalysisDoc
 		static void GenerateAnalysisDoc (string path)
 		{
 			var section = "id:{c29b69f5-08e4-4dcc-831e-7fd692ab0886}\n";
-			section += "title:Xamarin Analysis rules\n\n";
+			section += "title:Xamarin.iOS Analysis Rules\n\n";
 			section += "[//]: # (The original file resides under https://github.com/xamarin/xamarin-macios/tree/master/docs/website/)\n";
 			section += "[//]: # (This allows all contributors (including external) to submit, using a PR, updates to the documentation that match the tools changes)\n";
 			section += "[//]: # (Modifications outside of xamarin-macios/master will be lost on future updates)\n\n";
@@ -56,7 +56,7 @@ namespace XamarinAnalysisDoc
 				section += "\n";
 			}
 
-			File.WriteAllText ("xamarin-analysis.md", section);
+			File.WriteAllText ("xamarin-ios-analysis.md", section);
 		}
 	}
 }
