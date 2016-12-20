@@ -18716,6 +18716,10 @@ namespace XamCore.AppKit {
 	[BaseType (typeof(NSToolbarItem))]
 	interface NSToolbarItemGroup
 	{
+		[Export ("initWithItemIdentifier:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string itemIdentifier);
+
 		[Export ("subitems", ArgumentSemantic.Copy)]
 		NSToolbarItem[] Subitems { get; set; }
 	}
