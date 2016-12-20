@@ -366,6 +366,10 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 					$(OutputPath)build-*" />
 	</Target>
 
+	<Target Name="_CleanDeviceSpecificOutput" Condition="'$(_CanOutputAppBundle)' == 'true'">
+		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(IntermediateOutputPath)device-builds;$(OutputPath)device-builds" />
+	</Target>
+
 	<Target Name="_CleanIntermediateToolOutput">
 		<RemoveDir SessionId="$(BuildSessionId)" 
 			Condition="'$(IsMacEnabled)' == 'true'" 
