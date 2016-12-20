@@ -2023,7 +2023,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Sources="@(_IpaPackageSource)"
 			OutputFile="$(IpaPackagePath)"
 			WorkingDirectory="$(DeviceSpecificIntermediateOutputPath)ipa"
-		/>
+			>
+			<Output TaskProperty="OutputFile" ItemName="FileWrites" />
+		</Zip>
 	</Target>
 
 	<Target Name="_CoreArchive" Condition="'$(ArchiveOnBuild)' == 'true'" DependsOnTargets="$(Codesign)">
