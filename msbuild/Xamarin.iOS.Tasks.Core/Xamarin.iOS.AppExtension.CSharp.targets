@@ -21,13 +21,6 @@ Copyright (C) 2014-2016 Xamarin. All rights reserved.
 		<!-- Version/fx properties -->
 		<TargetFrameworkIdentifier Condition="'$(TargetFrameworkIdentifier)' == ''">Xamarin.iOS</TargetFrameworkIdentifier>
 		<TargetFrameworkVersion Condition="'$(TargetFrameworkVersion)' == ''">v1.0</TargetFrameworkVersion>
-		<CscToolPath Condition="'$(CscToolPath)' == '' And '$(MD_MTOUCH_SDK_ROOT)' != '' And Exists('$(MD_MTOUCH_SDK_ROOT)/bin/mtouch')">$(MD_MTOUCH_SDK_ROOT)/bin</CscToolPath>
-		<CscToolPath Condition="'$(CscToolPath)' == '' And '$(MD_MTOUCH_SDK_ROOT)' != '' And Exists('$(MD_MTOUCH_SDK_ROOT)/usr/bin/mtouch')">$(MD_MTOUCH_SDK_ROOT)/usr/bin</CscToolPath>
-		<CscToolPath Condition="'$(CscToolPath)' == '' And Exists('/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mtouch')">/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin</CscToolPath>
-		<CscToolPath Condition="'$(CscToolPath)' == ''">/Developer/MonoTouch/usr/bin</CscToolPath>
-		<CscToolExe Condition="'$(CscToolExe)' == ''">smcs</CscToolExe>
-		<!-- We default to smcs compiler above, so, select the .mdb as the debug ext -->
-		<CscDebugFileExt Condition="'$(CscDebugFileExt)' == ''">.mdb</CscDebugFileExt>
 
 		<DefineConstants>__UNIFIED__;__MOBILE__;__IOS__;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>
