@@ -173,7 +173,7 @@ namespace Xamarin.Bundler {
 					return Path.Combine (MMPDirectory, "lib", "mono", "Xamarin.Mac");
 				else if (IsUnifiedFullXamMacFramework)
 					return Path.Combine (MMPDirectory, "lib", "mono", "4.5");
-				throw new InvalidOperationException ("PlatformFrameworkDirectory when not Mobile or Full?");
+				throw ErrorHelper.CreateError (0099, "Internal error \"PlatformFrameworkDirectory when not Mobile or Full?\" Please file a bug report with a test case (http://bugzilla.xamarin.com).");
 			}
 		}
 
@@ -183,7 +183,7 @@ namespace Xamarin.Bundler {
 					return Path.Combine (MMPDirectory, "lib", "i386", "mobile");
 				else if (IsUnifiedFullXamMacFramework)
 					return Path.Combine (MMPDirectory, "lib", "i386", "full");
-				throw new InvalidOperationException ("Arch32Directory when not Mobile or Full?");
+				throw ErrorHelper.CreateError (0099, "Internal error \"Arch32Directory when not Mobile or Full\" Please file a bug report with a test case (http://bugzilla.xamarin.com).");
 			}
 		}
 		
@@ -193,7 +193,7 @@ namespace Xamarin.Bundler {
 					return Path.Combine (MMPDirectory, "lib", "x86_64", "mobile");
 				else if (IsUnifiedFullXamMacFramework)
 					return Path.Combine (MMPDirectory, "lib", "x86_64", "full");
-				throw new InvalidOperationException ("Arch64Directory when not Mobile or Full?");
+				throw ErrorHelper.CreateError (0099, "Internal error \"Arch64Directory when not Mobile or Full\" Please file a bug report with a test case (http://bugzilla.xamarin.com).");
 			}
 		}
 					
@@ -872,7 +872,7 @@ namespace Xamarin.Bundler {
 				case AotType.Explicit:
 					return aot_explicit_reference.Contains (x.Name);
 				default:
-					throw new InvalidOperationException ($"AOTBundle with aot: {aot}?");
+					throw ErrorHelper.CreateError (0099, "Internal error \"AOTBundle with aot: {0}\" Please file a bug report with a test case (http://bugzilla.xamarin.com).", aot);
 				}
 			};
 
