@@ -26,7 +26,12 @@ using NUnit.Framework;
 [assembly: Debuggable (DebuggableAttribute.DebuggingModes.Default)]
 
 [assembly: LinkAll.Attributes.CustomAttributeArray (typeof (LinkAll.Attributes.CustomTypeA))]
+[assembly: LinkAll.Attributes.CustomAttributeArray (typeof (LinkAll.Attributes.CustomTypeAA[][]))]
+[assembly: LinkAll.Attributes.CustomAttributeArray (typeof (LinkAll.Attributes.CustomTypeAAA[,]))]
+//[assembly: LinkAll.Attributes.CustomAttributeArray (new object [] { typeof (LinkAll.Attributes.CustomTypeAAAA) })]
 [assembly: LinkAll.Attributes.CustomAttribute (typeof (LinkAll.Attributes.CustomType))]
+[assembly: LinkAll.Attributes.CustomAttribute (typeof (List<LinkAll.Attributes.CustomTypeG>))]
+//[assembly: LinkAll.Attributes.CustomAttributeObject (typeof (LinkAll.Attributes.CustomTypeO))]
 
 namespace LinkAll.Attributes {
 
@@ -48,6 +53,7 @@ namespace LinkAll.Attributes {
 		public int Property { get; set; }
 	}
 
+	[AttributeUsage (AttributeTargets.All, AllowMultiple = true)]
 	public class CustomAttributeArray : Attribute {
 		readonly Type[] _types;
 
@@ -55,11 +61,26 @@ namespace LinkAll.Attributes {
 		{
 			_types = types;
 		}
+
+		public CustomAttributeArray (params object [] types)
+		{
+			_types = (Type[]) types;
+		}
 	}
 
 	public class CustomTypeA {
 	}
 
+	public class CustomTypeAA {
+	}
+
+	public class CustomTypeAAA {
+	}
+
+	public class CustomTypeAAAA {
+	}
+
+	[AttributeUsage (AttributeTargets.All, AllowMultiple = true)]
 	public class CustomAttribute : Attribute {
 		readonly Type _type;
 
@@ -70,6 +91,23 @@ namespace LinkAll.Attributes {
 	}
 
 	public class CustomType {
+	}
+
+	public class CustomTypeG {
+	}
+
+	[AttributeUsage (AttributeTargets.All, AllowMultiple = true)]
+	public class CustomAttributeObject : Attribute
+	{
+		readonly Type _type;
+
+		public CustomAttributeObject (object type)
+		{
+			_type = (Type)type;
+		}
+	}
+
+	public class CustomTypeO {
 	}
 
 	[FileIOPermission (SecurityAction.LinkDemand, AllLocalFiles = FileIOPermissionAccess.AllAccess)]
@@ -165,12 +203,20 @@ namespace LinkAll.Attributes {
 		{
 			var assembly = GetType ().Assembly;
 			var ta = assembly.GetCustomAttributes<CustomAttributeArray> ();
-			Assert.That (ta.Count (), Is.EqualTo (1), "Type[]");
+			Assert.That (ta.Count (), Is.EqualTo (3), "Type[]");
 			Assert.NotNull (Type.GetType ("LinkAll.Attributes.CustomTypeA"), "CustomTypeA");
+			Assert.NotNull (Type.GetType ("LinkAll.Attributes.CustomTypeAA"), "CustomTypeAA");
+			Assert.NotNull (Type.GetType ("LinkAll.Attributes.CustomTypeAAA"), "CustomTypeAAA");
+			//Assert.NotNull (Type.GetType ("LinkAll.Attributes.CustomTypeAAAA"), "CustomTypeAAAA");
 
 			var t = assembly.GetCustomAttributes<CustomAttribute>();
-			Assert.That (t.Count (), Is.EqualTo (1), "Type");
+			Assert.That (t.Count (), Is.EqualTo (2), "Type");
 			Assert.NotNull (Type.GetType ("LinkAll.Attributes.CustomType"), "CustomType");
+			Assert.NotNull (Type.GetType ("LinkAll.Attributes.CustomTypeG"), "CustomTypeG");
+
+			//var to = assembly.GetCustomAttributes<CustomAttributeObject> ();
+			//Assert.That (to.Count (), Is.EqualTo (1), "Object");
+			//Assert.NotNull (Type.GetType ("LinkAll.Attributes.CustomTypeO"), "CustomTypeO");
 		}
 
 		[Test]
