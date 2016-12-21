@@ -1579,7 +1579,6 @@ public partial class Generator : IMemberGatherer {
 	Dictionary<string,MethodInfo> delegate_types = new Dictionary<string,MethodInfo> ();
 
 	public bool Compat;
-	public bool SkipSystemDrawing;
 
 	public static PlatformName CurrentPlatform;
 
