@@ -35,19 +35,19 @@ namespace Xamarin.iOS.Tasks
 					"Xamarin.iOS.dll",
 					"Xamarin.iOS.dll.mdb",
 					"mscorlib.dll",
-					"mscorlib.dll.mdb",
+					"mscorlib.pdb",
 				};
 				var xw = new string [] {
 					"Xamarin.WatchOS.dll",
 					"Xamarin.WatchOS.dll.mdb",
 					"mscorlib.dll",
-					"mscorlib.dll.mdb",
+					"mscorlib.pdb",
 				};
 				var xt = new string [] {
 					"Xamarin.TVOS.dll",
 					"Xamarin.TVOS.dll.mdb",
 					"mscorlib.dll",
-					"mscorlib.dll.mdb",
+					"mscorlib.pdb",
 				};
 
 				if (TargetFrameworkIdentifier == "Xamarin.WatchOS") {
