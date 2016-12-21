@@ -140,11 +140,11 @@ MAC_4_5_ASSEMBLY_NAMES = $(MAC_ASSEMBLY_NAMES) $(MAC_4_5_ADDITIONAL_ASSEMBLY_NAM
 
 MAC_4_5_FACADE_ASSEMBLY_NAMES = $(xammac_net_4_5_PARALLEL_SUBDIRS) $(xammac_net_4_5_SUBDIRS)
 
-MAC_ASSEMBLIES = $(addsuffix .dll,$(MAC_ASSEMBLY_NAMES))
-MAC_FACADE_ASSEMBLIES = $(addsuffix .dll,$(MAC_FACADE_ASSEMBLY_NAMES))
-MAC_NO_MDB_ASSEMBLIES = System.Windows.dll System.Xml.Serialization.dll
-MAC_4_5_ASSEMBLIES = $(addsuffix .dll,$(MAC_4_5_ASSEMBLY_NAMES))
-MAC_4_5_FACADE_ASSEMBLIES = $(addsuffix .dll,$(MAC_4_5_FACADE_ASSEMBLY_NAMES))
+MAC_ASSEMBLIES = $(MAC_ASSEMBLY_NAMES)
+MAC_FACADE_ASSEMBLIES = $(MAC_FACADE_ASSEMBLY_NAMES)
+MAC_NO_MDB_ASSEMBLIES = System.Windows System.Xml.Serialization
+MAC_4_5_ASSEMBLIES = $(MAC_4_5_ASSEMBLY_NAMES)
+MAC_4_5_FACADE_ASSEMBLIES = $(MAC_4_5_FACADE_ASSEMBLY_NAMES)
 
 MAC_DIRECTORIES = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin \
@@ -158,12 +158,12 @@ MAC_DIRECTORIES = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System \
 
 MAC_BCL_TARGETS = \
-	$(foreach file,$(MAC_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/$(file))                \
-	$(foreach file,$(filter-out $(MAC_NO_MDB_ASSEMBLIES),$(MAC_ASSEMBLIES)),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/$(file).mdb)            \
-	$(foreach file,$(MAC_FACADE_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Facades/$(file)) \
-	$(foreach file,$(MAC_4_5_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/$(file))                    \
-	$(foreach file,$(filter-out $(MAC_NO_MDB_ASSEMBLIES),$(MAC_4_5_ASSEMBLIES)),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/$(file).mdb)                \
-	$(foreach file,$(MAC_4_5_FACADE_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Facades/$(file))     \
+	$(foreach file,$(MAC_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/$(file).dll)                \
+	$(foreach file,$(filter-out $(MAC_NO_MDB_ASSEMBLIES),$(MAC_ASSEMBLIES)),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/$(file).pdb)            \
+	$(foreach file,$(MAC_FACADE_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Facades/$(file).dll) \
+	$(foreach file,$(MAC_4_5_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/$(file).dll)                    \
+	$(foreach file,$(filter-out $(MAC_NO_MDB_ASSEMBLIES),$(MAC_4_5_ASSEMBLIES)),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/$(file).pdb)                \
+	$(foreach file,$(MAC_4_5_FACADE_ASSEMBLIES),$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Facades/$(file).dll)     \
 
 MAC_TARGETS = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/libmono-profiler-log.a \
@@ -248,13 +248,13 @@ $$(BUILD_DESTDIR)/mac/$(2)/bcl/%.dll: $$(MONO_PATH)/mcs/class/lib/$(2)/%.dll | $
 	$$(Q) cp $$< $$@
 	$$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $$@ $$(PRODUCT_KEY_PATH)
 
-$$(BUILD_DESTDIR)/mac/$(2)/bcl/%.mdb: $$(MONO_PATH)/mcs/class/lib/$(2)/%.mdb .stamp-build-tools64 | $$(BUILD_DESTDIR)/mac/$(2)/bcl
+$$(BUILD_DESTDIR)/mac/$(2)/bcl/%.pdb: $$(MONO_PATH)/mcs/class/lib/$(2)/%.pdb .stamp-build-tools64 | $$(BUILD_DESTDIR)/mac/$(2)/bcl
 	$$(Q) cp $$< $$@
 
 $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/%.dll: $$(BUILD_DESTDIR)/mac/$(2)/bcl/%.dll | $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/Facades
 	$$(Q) install -m 0755 $$< $$@
 
-$$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/%.mdb: $$(BUILD_DESTDIR)/mac/$(2)/bcl/%.mdb | $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/Facades
+$$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/%.pdb: $$(BUILD_DESTDIR)/mac/$(2)/bcl/%.pdb | $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/Facades
 	$$(Q) install -m 0644 $$< $$@
 	$$(Q_MDB) $$(MDB_REBASE) -q -i $$(abspath $$(MONO_PATH))/ -o $$(MAC_TARGETDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/src/mono/ $$@
 	$$(Q) chmod 0644 $$@
@@ -269,7 +269,7 @@ $(MAC_DIRECTORIES) $(BUILD_DESTDIR):
 mac-facade-check:
 	$(Q) rm -f .$@*
 	$(Q) echo $(MAC_4_5_FACADE_ASSEMBLIES) | tr ' ' '\n' | sort > .$@1
-	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/xammac_net_4_5/Facades | grep dll$$ | sort > .$@2
+	$(Q) ls -1 $(MONO_PATH)/mcs/class/lib/xammac_net_4_5/Facades | grep dll$$ | sed 's/[.]dll//' | sort > .$@2
 	$(Q) if ! diff -u .$@1 .$@2; then echo "\n*** There are Facade assemblies in "$(MONO_PATH)/mcs/class/lib/xammac_net_4_5/Facades " not defined in "$(FACADE_SUBDIRS_MK)" ***\n"; exit 1; fi
 	$(Q) rm -f .$@*
 
@@ -636,38 +636,38 @@ TVOS_BCL_TARGETS_DIRS +=                    \
 
 IOS_BCL_TARGETS +=                                                                                                  \
 	$(foreach file,$(IOS_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/$(file).dll)                                                \
-	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(IOS_ASSEMBLIES)),$(PREFIX)/lib/mono/2.1/$(file).dll.mdb)         \
+	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(IOS_ASSEMBLIES)),$(PREFIX)/lib/mono/2.1/$(file).pdb)         \
 	$(foreach file,$(IOS_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/$(file).dll)                                        \
-	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(IOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.iOS/$(file).dll.mdb) \
+	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(IOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.iOS/$(file).pdb) \
 	$(PREFIX)/lib/mono/Xamarin.iOS/mscorlib.dll                                                                     \
 	$(PREFIX)/lib/mono/2.1/mscorlib.dll                                                                             \
 	$(PREFIX)/bin/btouch-mono                                                                                       \
 	$(foreach file,$(IOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/Facades/$(file).dll)                                 \
 	$(foreach file,$(IOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/Facades/$(file).dll)                         \
 	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/repl/$(file).dll)                                      \
-	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/repl/$(file).dll.mdb)                                  \
+	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/repl/$(file).pdb)                                  \
 	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/repl/$(file).dll)                              \
-	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/repl/$(file).dll.mdb)                          \
+	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/repl/$(file).pdb)                          \
 
 WATCH_BCL_TARGETS += \
 	$(foreach file,$(WATCHOS_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/$(file).dll)                                        \
-	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(WATCHOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.WatchOS/$(file).dll.mdb) \
+	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(WATCHOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.WatchOS/$(file).pdb) \
 	$(PREFIX)/lib/mono/Xamarin.WatchOS/mscorlib.dll                                                                             \
 	$(PREFIX)/bin/bwatch-mono                                                                                                   \
 	$(foreach file,$(WATCHOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/Facades/$(file).dll)                         \
 	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/repl/$(file).dll)                              \
-	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/repl/$(file).dll.mdb)                          \
+	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/repl/$(file).pdb)                          \
 
 TVOS_BCL_TARGETS += \
 	$(foreach file,$(TVOS_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/$(file).dll)                                        \
-	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(TVOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.TVOS/$(file).dll.mdb) \
+	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(TVOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.TVOS/$(file).pdb) \
 	$(PREFIX)/lib/mono/Xamarin.TVOS/mscorlib.dll                                                                          \
 	$(PREFIX)/bin/btv-mono                                                                                                \
 	$(foreach file,$(TVOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/Facades/$(file).dll)                         \
 	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).dll)                              \
-	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).dll.mdb)                          \
+	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).pdb)                          \
 
-$(PREFIX)/lib/mono/Xamarin.iOS/%.mdb: $(BUILD_DESTDIR)/ios/bcl/%.mdb | $(PREFIX)/lib/mono/Xamarin.iOS $(PREFIX)/lib/mono/Xamarin.iOS/repl
+$(PREFIX)/lib/mono/Xamarin.iOS/%.pdb: $(BUILD_DESTDIR)/ios/bcl/%.pdb | $(PREFIX)/lib/mono/Xamarin.iOS $(PREFIX)/lib/mono/Xamarin.iOS/repl
 	$(Q) install -m 0644 $< $@
 	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 	$(Q) chmod 0644 $@
@@ -687,7 +687,7 @@ $(PREFIX)/lib/mono/2.1/Facades/%.dll: $(BUILD_DESTDIR)/ios/bcl/Facades/%.dll | $
 $(PREFIX)/lib/mono/2.1/%.dll: $(BUILD_DESTDIR)/ios/bcl/%.dll | $(PREFIX)/lib/mono/2.1 $(PREFIX)/lib/mono/2.1/repl
 	$(Q) install -m 0755 $< $@
 
-$(PREFIX)/lib/mono/2.1/%.mdb: $(BUILD_DESTDIR)/ios/bcl/%.mdb | $(PREFIX)/lib/mono/2.1 $(PREFIX)/lib/mono/2.1/repl
+$(PREFIX)/lib/mono/2.1/%.pdb: $(BUILD_DESTDIR)/ios/bcl/%.pdb | $(PREFIX)/lib/mono/2.1 $(PREFIX)/lib/mono/2.1/repl
 	$(Q) install -m 0644 $< $@
 	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 	$(Q) chmod 0644 $@
@@ -701,7 +701,7 @@ $(PREFIX)/lib/mono/Xamarin.WatchOS/Facades/%.dll: $(BUILD_DESTDIR)/watchos/bcl/F
 $(PREFIX)/lib/mono/Xamarin.WatchOS/%.dll: $(BUILD_DESTDIR)/watchos/bcl/%.dll | $(PREFIX)/lib/mono/Xamarin.WatchOS $(PREFIX)/lib/mono/Xamarin.WatchOS/repl
 	$(Q) install -m 0755 $< $@
 
-$(PREFIX)/lib/mono/Xamarin.WatchOS/%.mdb: $(BUILD_DESTDIR)/watchos/bcl/%.mdb | $(PREFIX)/lib/mono/Xamarin.WatchOS $(PREFIX)/lib/mono/Xamarin.WatchOS/repl
+$(PREFIX)/lib/mono/Xamarin.WatchOS/%.pdb: $(BUILD_DESTDIR)/watchos/bcl/%.pdb | $(PREFIX)/lib/mono/Xamarin.WatchOS $(PREFIX)/lib/mono/Xamarin.WatchOS/repl
 	$(Q) install -m 0644 $< $@
 	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 	$(Q) chmod 0644 $@
@@ -712,7 +712,7 @@ $(PREFIX)/lib/mono/Xamarin.TVOS/Facades/%.dll: $(BUILD_DESTDIR)/tvos/bcl/Facades
 $(PREFIX)/lib/mono/Xamarin.TVOS/%.dll: $(BUILD_DESTDIR)/tvos/bcl/%.dll | $(PREFIX)/lib/mono/Xamarin.TVOS $(PREFIX)/lib/mono/Xamarin.TVOS/repl
 	$(Q) install -m 0755 $< $@
 
-$(PREFIX)/lib/mono/Xamarin.TVOS/%.mdb: $(BUILD_DESTDIR)/tvos/bcl/%.mdb | $(PREFIX)/lib/mono/Xamarin.TVOS $(PREFIX)/lib/mono/Xamarin.TVOS/repl
+$(PREFIX)/lib/mono/Xamarin.TVOS/%.pdb: $(BUILD_DESTDIR)/tvos/bcl/%.pdb | $(PREFIX)/lib/mono/Xamarin.TVOS $(PREFIX)/lib/mono/Xamarin.TVOS/repl
 	$(Q) install -m 0644 $< $@
 	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 	$(Q) chmod 0644 $@
@@ -744,10 +744,10 @@ $(BUILD_DESTDIR)/ios/bcl/repl/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch_runtim
 	$(Q) cp $< $@
 	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
-$(BUILD_DESTDIR)/ios/bcl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch/%.mdb .stamp-build-tools64 | $(BUILD_DESTDIR)/ios/bcl
+$(BUILD_DESTDIR)/ios/bcl/%.pdb: $(MONO_PATH)/mcs/class/lib/monotouch/%.pdb .stamp-build-tools64 | $(BUILD_DESTDIR)/ios/bcl
 	$(Q) cp $< $@
 
-$(BUILD_DESTDIR)/ios/bcl/repl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_runtime/%.mdb .stamp-build-tools64 | $(BUILD_DESTDIR)/ios/bcl/repl
+$(BUILD_DESTDIR)/ios/bcl/repl/%.pdb: $(MONO_PATH)/mcs/class/lib/monotouch_runtime/%.pdb .stamp-build-tools64 | $(BUILD_DESTDIR)/ios/bcl/repl
 	$(Q) cp $< $@
 
 $(BUILD_DESTDIR)/watchos/bcl/Facades/%.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/Facades/%.dll | $(BUILD_DESTDIR)/watchos/bcl/Facades
@@ -765,10 +765,10 @@ $(BUILD_DESTDIR)/watchos/bcl/repl/%.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monoto
 	$(Q) cp $< $@
 	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
-$(BUILD_DESTDIR)/watchos/bcl/%.mdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/%.mdb .stamp-build-watchbcl .stamp-build-tools64 | $(BUILD_DESTDIR)/watchos/bcl
+$(BUILD_DESTDIR)/watchos/bcl/%.pdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/%.pdb .stamp-build-watchbcl .stamp-build-tools64 | $(BUILD_DESTDIR)/watchos/bcl
 	$(Q) cp $< $@
 
-$(BUILD_DESTDIR)/watchos/bcl/repl/%.mdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch_runtime/%.mdb .stamp-build-watchbcl .stamp-build-tools64 | $(BUILD_DESTDIR)/watchos/bcl/repl
+$(BUILD_DESTDIR)/watchos/bcl/repl/%.pdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch_runtime/%.pdb .stamp-build-watchbcl .stamp-build-tools64 | $(BUILD_DESTDIR)/watchos/bcl/repl
 	$(Q) cp $< $@
 
 $(BUILD_DESTDIR)/tvos/bcl/Facades/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch_tv/Facades/%.dll | $(BUILD_DESTDIR)/tvos/bcl/Facades
@@ -786,35 +786,35 @@ $(BUILD_DESTDIR)/tvos/bcl/repl/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch_tv_ru
 	$(Q) cp $< $@
 	$(Q_SN) MONO_CFG_DIR=$(TOP) $(SYSTEM_SN) -q -R $@ $(PRODUCT_KEY_PATH)
 
-$(BUILD_DESTDIR)/tvos/bcl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv/%.mdb .stamp-build-tools64 | $(BUILD_DESTDIR)/tvos/bcl
+$(BUILD_DESTDIR)/tvos/bcl/%.pdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv/%.pdb .stamp-build-tools64 | $(BUILD_DESTDIR)/tvos/bcl
 	$(Q) cp $< $@
 
-$(BUILD_DESTDIR)/tvos/bcl/repl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv_runtime/%.mdb .stamp-build-tools64 | $(BUILD_DESTDIR)/tvos/bcl/repl
+$(BUILD_DESTDIR)/tvos/bcl/repl/%.pdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv_runtime/%.pdb .stamp-build-tools64 | $(BUILD_DESTDIR)/tvos/bcl/repl
 	$(Q) cp $< $@
 
 $(IOS_BCL_TARGETS_DIRS) $(WATCH_BCL_TARGETS_DIRS) $(TVOS_BCL_TARGETS_DIRS):
 	$(Q) mkdir -p $@
 
-.SECONDARY: $(foreach file,$(IOS_FACADE_ASSEMBLIES),$(BUILD_DESTDIR)/ios/bcl/Facades/$(file).dll) $(foreach file,$(IOS_ASSEMBLIES),$(BUILD_DESTDIR)/ios/bcl/$(file).dll.mdb) $(foreach file,$(IOS_ASSEMBLIES),$(BUILD_DESTDIR)/ios/bcl/$(file).dll)
+.SECONDARY: $(foreach file,$(IOS_FACADE_ASSEMBLIES),$(BUILD_DESTDIR)/ios/bcl/Facades/$(file).dll) $(foreach file,$(IOS_ASSEMBLIES),$(BUILD_DESTDIR)/ios/bcl/$(file).pdb) $(foreach file,$(IOS_ASSEMBLIES),$(BUILD_DESTDIR)/ios/bcl/$(file).dll)
 .SECONDARY: \
-	$(foreach file,$(MAC_FACADE_ASSEMBLIES),$(BUILD_DESTDIR)/mac/xammac/bcl/Facades/$(file)) \
-	$(foreach file,$(MAC_ASSEMBLIES),$(BUILD_DESTDIR)/mac/xammac/bcl/$(file).mdb) \
-	$(foreach file,$(MAC_ASSEMBLIES),$(BUILD_DESTDIR)/mac/xammac/bcl/$(file)) \
-	$(foreach file,$(MAC_FACADE_ASSEMBLIES),$(BUILD_DESTDIR)/mac/net_4_5/bcl/Facades/$(file)) \
-	$(foreach file,$(MAC_4_5_ASSEMBLIES),$(BUILD_DESTDIR)/mac/net_4_5/bcl/$(file).mdb) \
-	$(foreach file,$(MAC_4_5_ASSEMBLIES),$(BUILD_DESTDIR)/mac/net_4_5/bcl/$(file)) \
+	$(foreach file,$(MAC_FACADE_ASSEMBLIES),$(BUILD_DESTDIR)/mac/xammac/bcl/Facades/$(file).dll) \
+	$(foreach file,$(MAC_ASSEMBLIES),$(BUILD_DESTDIR)/mac/xammac/bcl/$(file).pdb) \
+	$(foreach file,$(MAC_ASSEMBLIES),$(BUILD_DESTDIR)/mac/xammac/bcl/$(file).dll) \
+	$(foreach file,$(MAC_FACADE_ASSEMBLIES),$(BUILD_DESTDIR)/mac/net_4_5/bcl/Facades/$(file).dll) \
+	$(foreach file,$(MAC_4_5_ASSEMBLIES),$(BUILD_DESTDIR)/mac/net_4_5/bcl/$(file).pdb) \
+	$(foreach file,$(MAC_4_5_ASSEMBLIES),$(BUILD_DESTDIR)/mac/net_4_5/bcl/$(file).dll) \
 
 .SECONDARY: \
 	$(foreach file,$(WATCHOS_FACADE_ASSEMBLIES),$(BUILD_DESTDIR)/watchos/bcl/Facades/$(file).dll)    \
-	$(foreach file,$(WATCHOS_ASSEMBLIES),$(BUILD_DESTDIR)/watchos/bcl/$(file).dll.mdb)               \
+	$(foreach file,$(WATCHOS_ASSEMBLIES),$(BUILD_DESTDIR)/watchos/bcl/$(file).pdb)               \
 	$(foreach file,$(WATCHOS_ASSEMBLIES),$(BUILD_DESTDIR)/watchos/bcl/$(file).dll)                   \
 	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(BUILD_DESTDIR)/watchos/bcl/repl/$(file).dll)         \
-	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(BUILD_DESTDIR)/watchos/bcl/repl/$(file).dll.mdb)     \
+	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(BUILD_DESTDIR)/watchos/bcl/repl/$(file).pdb)     \
 	$(foreach file,$(TVOS_FACADE_ASSEMBLIES),$(BUILD_DESTDIR)/tvos/bcl/Facades/$(file).dll)          \
-	$(foreach file,$(TVOS_ASSEMBLIES),$(BUILD_DESTDIR)/tvos/bcl/$(file).dll.mdb)                     \
+	$(foreach file,$(TVOS_ASSEMBLIES),$(BUILD_DESTDIR)/tvos/bcl/$(file).pdb)                     \
 	$(foreach file,$(TVOS_ASSEMBLIES),$(BUILD_DESTDIR)/tvos/bcl/$(file).dll)                         \
 	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(BUILD_DESTDIR)/tvos/bcl/repl/$(file).dll)               \
-	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(BUILD_DESTDIR)/tvos/bcl/repl/$(file).dll.mdb)           \
+	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(BUILD_DESTDIR)/tvos/bcl/repl/$(file).pdb)           \
 
 install-tools-tvos: $(TVOS_BCL_TARGETS)
 	$(Q) $(MAKE) tvos-facade-check

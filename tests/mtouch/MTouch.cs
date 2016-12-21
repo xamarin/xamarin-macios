@@ -187,9 +187,9 @@ namespace Xamarin
 				var appDir = mtouch.AppPath;
 				var msymDir = appDir + ".mSYM";
 				if (is_sim) {
-					Assert.AreEqual (has_mdb, File.Exists (Path.Combine (appDir, "mscorlib.dll.mdb")), "#mdb");
+					Assert.AreEqual (has_mdb, File.Exists (Path.Combine (appDir, "mscorlib.pdb")), "#pdb");
 				} else {
-					Assert.AreEqual (has_mdb, File.Exists (Path.Combine (appDir, ".monotouch-32", "mscorlib.dll.mdb")), "#mdb");
+					Assert.AreEqual (has_mdb, File.Exists (Path.Combine (appDir, ".monotouch-32", "mscorlib.pdb")), "#pdb");
 				}
 
 				if (has_msym) {

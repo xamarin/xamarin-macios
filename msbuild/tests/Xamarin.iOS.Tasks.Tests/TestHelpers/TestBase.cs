@@ -49,7 +49,7 @@ namespace Xamarin.iOS.Tasks
 
 			coreFiles.Add ("mscorlib.dll");
 			if (config == "Debug")
-				coreFiles.Add ("mscorlib.dll.mdb");
+				coreFiles.Add ("mscorlib.pdb");
 
 			coreFiles.Add (managedExe);
 			if (config == "Debug")
