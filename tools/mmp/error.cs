@@ -77,7 +77,10 @@ namespace Xamarin.Bundler {
 	// MM5xxx	GCC and toolchain
 	//			MM51xx	compilation
 	//					MM5101  Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component.
+	//					MM5102  ** reserved mtouch **
 	//					MM5103	Failed to compile. Error code - {0}. Please file a bug report at http://bugzilla.xamarin.com
+	//					MM5104  ** reserved mtouch **
+	//					MM5105	Failed to AOT compile. Error code - {0}. Please file a bug report at http://bugzilla.xamarin.com
 	//			MM52xx	linking
 	//					MM5202	Mono.framework MDK is missing. Please install the MDK for your Mono.framework version from http://mono-project.com/Downloads
 	//					MM5203  Can't find libxammac.a, likely because of a corrupted Xamarin.Mac installation. Please reinstall Xamarin.Mac.
