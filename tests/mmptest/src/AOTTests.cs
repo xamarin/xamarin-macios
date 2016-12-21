@@ -15,8 +15,8 @@ namespace Xamarin.MMP.Tests
 		enum AotType {
 			None,
 			All,
-			Platform,
-			PlatformWithIgnore,
+			SDK,
+			SDKWithIgnore,
 			Explicit
 		}
 
@@ -34,10 +34,10 @@ namespace Xamarin.MMP.Tests
 						case AotType.Explicit:
 							shouldBeAOT = file.Name == "Xamarin.Mac.dll"; // Arbitrary file chosen for test
 							break;
-						case AotType.Platform:
+						case AotType.SDK:
 							shouldBeAOT = (file.Name == "Xamarin.Mac.dll" || file.Name == "System.dll" || file.Name == "mscorlib.dll");
 							break;
-						case AotType.PlatformWithIgnore:
+						case AotType.SDKWithIgnore:
 							shouldBeAOT = (file.Name == "System.dll" || file.Name == "mscorlib.dll");
 							break;
 						case AotType.None:
@@ -74,12 +74,12 @@ namespace Xamarin.MMP.Tests
 		public void Unified_AOTPlatform_RunsAndCompilesPlatform () {
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = "<MonoBundlingExtraArgs>--aot=platform</MonoBundlingExtraArgs>"
+					CSProjConfig = "<MonoBundlingExtraArgs>--aot=sdk</MonoBundlingExtraArgs>"
 				};
 				foreach (bool xm45 in new bool[] { false, true }) {
 					test.XM45 = xm45;
 					TI.TestUnifiedExecutable (test);
-					ValidateAOTState (AotType.Platform, GetMonoBundlePath (tmpDir, xm45));
+					ValidateAOTState (AotType.SDK, GetMonoBundlePath (tmpDir, xm45));
 				}
 			});
 		}
@@ -88,12 +88,12 @@ namespace Xamarin.MMP.Tests
 		public void Unified_AOTIgnore_IgnoresSpecificAssembly () {
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = "<MonoBundlingExtraArgs>--aot=platform --aot-ignore=Xamarin.Mac.dll</MonoBundlingExtraArgs>"
+					CSProjConfig = "<MonoBundlingExtraArgs>--aot=sdk --aot-ignore=Xamarin.Mac.dll</MonoBundlingExtraArgs>"
 				};
 				foreach (bool xm45 in new bool[] { false, true }) {
 					test.XM45 = xm45;
 					TI.TestUnifiedExecutable (test);
-					ValidateAOTState (AotType.PlatformWithIgnore, GetMonoBundlePath (tmpDir, xm45));
+					ValidateAOTState (AotType.SDKWithIgnore, GetMonoBundlePath (tmpDir, xm45));
 				}
 			});
 		}
