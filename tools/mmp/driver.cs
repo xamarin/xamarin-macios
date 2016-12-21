@@ -66,14 +66,6 @@ namespace Xamarin.Bundler {
 		Version,
 		RunRegistrar,
 	}
-
-	enum AotType {
-		None,
-		All,
-		SDK,
-		Explicit
-	}
-
 	public static partial class Driver {
 		internal static Application App = new Application ();
 		static Target BuildTarget = new Target (App);
@@ -97,11 +89,6 @@ namespace Xamarin.Bundler {
 		static LinkerOptions linker_options;
 		static bool? disable_lldb_attach = null;
 		static string machine_config_path = null;
-
-		static AotType aot = AotType.None;
-		static List<string> aot_explicit_reference = new List<string> ();
-		static List<string> aot_ignore = new List<string> ();
-
 		static bool arch_set = false;
 		static string arch = "i386";
 		static Version minos = new Version (10, 7);
@@ -196,10 +183,11 @@ namespace Xamarin.Bundler {
 				throw ErrorHelper.CreateError (0099, "Internal error \"Arch64Directory when not Mobile or Full\" Please file a bug report with a test case (http://bugzilla.xamarin.com).");
 			}
 		}
-					
 
 		static int watch_level;
 		static Stopwatch watch;
+
+		static AOTCompiler aot = new AOTCompiler ();
 
 		static string xm_framework_dir;
 		public static string MMPDirectory {
@@ -374,26 +362,9 @@ namespace Xamarin.Bundler {
 				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullSystemFramework = true; } },
 				{ "aot:", "Specify assemblies that should be compiled via experimental AOT.\n- none - No AOT (default)\n- all - Every assembly in MonoBundle not ignored\n- sdk - Just Xamarin.Mac.dll, System.dll, and mscorlib.dll\n- explicit - Just the assemblies you pass in to --aot-reference)",
 					v => {
-						switch (v) {
-						case "none":
-							aot = AotType.None;
-							break;
-						case "all":
-							aot = AotType.All;
-							break;
-						case "sdk":
-							aot = AotType.SDK;
-							break;
-						case "explicit":
-							aot = AotType.Explicit;
-							break;
-						default:
-							throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "none, all, sdk, and explicit");
-						}
-					} 
+						aot.Parse (v);
+					}
 				},
-				{ "aot-reference=", "Specific assemblies to AOT when --aot=explicit",  v => aot_explicit_reference.Add (v) },
-				{ "aot-ignore=", "Specific assemblies to never AOT",  v => aot_ignore.Add (v) },
 			};
 
 			AddSharedOptions (os);
@@ -576,7 +547,6 @@ namespace Xamarin.Bundler {
 				}
 			}
 		}
-
 
 		static void ValidateXcode ()
 		{
@@ -834,11 +804,11 @@ namespace Xamarin.Bundler {
 			if (App.LinkMode != LinkMode.All && App.RuntimeOptions != null)
 				App.RuntimeOptions.Write (App.AppDirectory);
 
-			if (aot != AotType.None) {
-				if (!IsUnified)
-					throw new MonoMacException (98, true, "AOT compilation is only available on Unified", ret);
+			if (aot.IsAOT) {
+				if (!IsUnified || !Is64Bit)
+					throw new MonoMacException (98, true, "AOT compilation is only available on Unified 64-bit", ret);
 
-				AOTBundle ();
+				aot.Compile (mmp_dir);
 				Watch ("AOT Compile", 1);
 			}
 
@@ -846,38 +816,6 @@ namespace Xamarin.Bundler {
 				CodeSign ();
 				Watch ("Code Sign", 1);
 			}
-		}
-
-		static void AOTBundle ()
-		{
-			string monoExe = $"/Library/Frameworks/Mono.framework/Commands/mono" + (Is64Bit ? "64" : "32");
-			var dirInfo = new DirectoryInfo (mmp_dir);
-
-			Func <FileInfo, bool> aotableFile = x => {
-				string extension = x.Extension.ToLowerInvariant ();
-				if (extension != ".exe" && extension != ".dll")
-					return false;
-
-				if (aot_ignore.Contains (x.Name))
-					return false; 
-
-				switch (aot) {
-				case AotType.All:
-					return true;
-				case AotType.SDK:
-					return x.Name == "Xamarin.Mac.dll" || x.Name == "System.dll" || x.Name == "mscorlib.dll";
-				case AotType.Explicit:
-					return aot_explicit_reference.Contains (x.Name);
-				default:
-					throw ErrorHelper.CreateError (0099, "Internal error \"AOTBundle with aot: {0}\" Please file a bug report with a test case (http://bugzilla.xamarin.com).", aot);
-				}
-			};
-
-			Parallel.ForEach (dirInfo.EnumerateFiles ().Where (aotableFile), new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency }, file => {
-				int ret = RunCommand (monoExe, String.Format ("--aot=hybrid {0}", Quote (file.ToString ())), new string [] {"MONO_PATH", mmp_dir });
-				if (ret != 0)
-					ErrorHelper.Warning (5105, "Failed to AOT compile. Error code - {0}. Please file a bug report at http://bugzilla.xamarin.com", ret);
-			});
 		}
 
 		static void ExtractNativeLinkInfo ()
@@ -1121,7 +1059,7 @@ namespace Xamarin.Bundler {
 				if (App.EnableDebug)
 					sw.WriteLine ("\txamarin_debug_mode = TRUE;");
 
-				if (aot != AotType.None)
+				if (aot.IsAOT)
 					sw.WriteLine ("\txamarin_mac_aot = TRUE;");
 
 				sw.WriteLine ("\treturn 0;");

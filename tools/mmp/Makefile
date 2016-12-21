@@ -96,6 +96,7 @@ linker_resources = \
 mmp_sources = \
 	$(TOP)/tools/common/cache.cs    \
 	driver.cs 	\
+	aot.cs 	\
 	$(TOP)/src/ObjCRuntime/ErrorHelper.cs \
 	$(TOP)/src/ObjCRuntime/ExceptionMode.cs \
 	error.cs	\
@@ -201,6 +202,9 @@ clean-local::
 	$(SYSTEM_XBUILD) /t:Clean /p:Configuration=$(CECIL_CONFIG) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj
 
 include $(TOP)/mk/rules.mk
+
+run::
+	$(Q) make -C tests
 
 # make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
 # marking those files as .SECONDARY will prevent that deletion.

@@ -221,6 +221,8 @@ namespace Xamarin.Bundler {
 	//					MT3006  Could not compute a complete dependency map for the project. This will result in slower build times because Xamarin.iOS can't properly detect what needs to be rebuilt (and what does not need to be rebuilt). Please review previous warnings for more details.
 	//		Warning		MT3007	Debug info files (*.mdb) will not be loaded when llvm is enabled.
 	//					MT3008	Bitcode support requires the use of the LLVM AOT backend (--llvm)
+	//					MM3009	** reserved Xamarin.Mac **
+	//					MM3010	** reserved Xamarin.Mac **
 	// MT4xxx	code generation
 	// 			MT40xx	main.m
 	//					MT4001	The main template could not be expanded to `{0}`.

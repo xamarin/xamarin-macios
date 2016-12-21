@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="driver.cs" />
+    <Compile Include="aot.cs" />
     <Compile Include="resolver.cs" />
     <Compile Include="Tuning.cs" />
     <Compile Include="Assembly.cs" />
