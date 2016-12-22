@@ -74,7 +74,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		{
 			var main = CFBundle.GetMain ();
 #if __WATCHOS__
-			var expectedBundleId = "com.xamarin.monotouch-test.watchkitapp.watchkitextension";
+			var expectedBundleId = "com.xamarin.monotouch-test-watch.watchkitapp.watchkitextension";
 #elif MONOMAC
 			var expectedBundleId = "com.xamarin.xammac_tests";
 #else

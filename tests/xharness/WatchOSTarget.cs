@@ -90,7 +90,7 @@ namespace xharness
 			XmlDocument info_plist = new XmlDocument ();
 			var target_info_plist = Path.Combine (TargetDirectory, "Info-watchos-extension.plist");
 			info_plist.LoadWithoutNetworkAccess (Path.Combine (TargetDirectory, "Info.plist"));
-			BundleIdentifier = info_plist.GetCFBundleIdentifier ();
+			BundleIdentifier = info_plist.GetCFBundleIdentifier () + "-watch";
 			info_plist.SetCFBundleIdentifier (BundleIdentifier + ".watchkitapp.watchkitextension");
 			info_plist.SetMinimumOSVersion ("2.0");
 			info_plist.SetUIDeviceFamily (4);
