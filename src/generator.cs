@@ -1578,9 +1578,9 @@ public partial class Generator : IMemberGatherer {
 	//
 	Dictionary<string,MethodInfo> delegate_types = new Dictionary<string,MethodInfo> ();
 
-	public bool Compat;
+	public bool Compat { get { return !UnifiedAPI; } }
 
-	public static PlatformName CurrentPlatform;
+	public static PlatformName CurrentPlatform { get { return BindingTouch.CurrentPlatform; } }
 
 	public static string ApplicationClassName {
 		get {
@@ -1599,7 +1599,7 @@ public partial class Generator : IMemberGatherer {
 
 	// Static version of the above (!Compat) field, set on each Go invocation, needed because some static
 	// helper methods need to access this.   This is the exact opposite of Compat.
-	static public bool UnifiedAPI;
+	public static bool UnifiedAPI { get { return BindingTouch.Unified; } }
 
 	Type [] types, strong_dictionaries;
 	bool debug;
@@ -2535,7 +2535,6 @@ public partial class Generator : IMemberGatherer {
 
 	public void Go ()
 	{
-		UnifiedAPI = !Compat;
 		marshal_types.AddRange (new MarshalType [] {
 			new MarshalType (typeof (NSObject), create: "Runtime.GetNSObject ("),
 			new MarshalType (typeof (Selector), create: "Selector.FromHandle ("),
