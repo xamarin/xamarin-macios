@@ -63,26 +63,8 @@ namespace Xamarin.iOS.Tasks
 			TestFilesDoNotExist (AppBundlePath, UnexpectedAppFiles);
 
 			var coreFiles = GetCoreAppFiles (platform, config, appName + ".exe", appName);
-			if (IsTVOS) {
-				TestFilesExists (platform == "iPhone" ? Path.Combine (AppBundlePath, ".monotouch-64") : AppBundlePath, coreFiles);
-			} else {
-				bool exists = false;
-
-				var baseDir = Path.Combine (AppBundlePath, ".monotouch-32");
-				if (Directory.Exists (baseDir)) {
-					TestFilesExists (baseDir, coreFiles);
-					exists = true;
-				}
-
-				baseDir = Path.Combine (AppBundlePath, ".monotouch-64");
-				if (Directory.Exists (baseDir)) {
-					TestFilesExists (baseDir, coreFiles);
-					exists = true;
-				}
-
-				if (!exists)
-					TestFilesExists (AppBundlePath, coreFiles);
-			}
+			var baseDirs = new string [] { Path.Combine (AppBundlePath, ".monotouch-32"), Path.Combine (AppBundlePath, ".monotouch-64"), AppBundlePath }; 
+			TestFilesExists (baseDirs, coreFiles);
 
 			if (platform == "iPhone") {
 				var dSYMInfoPlist = Path.Combine (AppBundlePath + ".dSYM", "Contents", "Info.plist");

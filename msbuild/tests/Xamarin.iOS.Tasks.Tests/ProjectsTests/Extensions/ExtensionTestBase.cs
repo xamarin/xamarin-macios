@@ -1,5 +1,6 @@
 ﻿using System.IO;
-
+using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 
 namespace Xamarin.iOS.Tasks
@@ -57,15 +58,18 @@ namespace Xamarin.iOS.Tasks
 			TestFilesExists (AppBundlePath, ExpectedAppFiles);
 			TestFilesDoNotExist (AppBundlePath, UnexpectedAppFiles);
 
-			var coreFiles = GetCoreAppFiles (platform, config, hostAppName + ".exe", hostAppName);
-			if (IsTVOS) {
-				TestFilesExists (platform == "iPhone" ? Path.Combine (AppBundlePath, ".monotouch-64") : AppBundlePath, coreFiles);
-			} else if (IsWatchOS) {
+			string [] coreFiles;
+			var basedirs = new List<string> ();
+			if (IsWatchOS) {
+				basedirs.Add (extensionPath);
 				coreFiles = GetCoreAppFiles (platform, config, extensionName + ".dll", Path.GetFileNameWithoutExtension (extensionPath));
-				TestFilesExists (platform == "iPhone" ? Path.Combine (extensionPath, ".monotouch-32") : extensionPath, coreFiles);
 			} else {
-				TestFilesExists (platform == "iPhone" ? Path.Combine (AppBundlePath, ".monotouch-32") : AppBundlePath, coreFiles);
+				basedirs.Add (AppBundlePath);
+				if (platform == "iPhone")
+					basedirs.Add (Path.Combine (AppBundlePath, ".monotouch-32"));
+				coreFiles = GetCoreAppFiles (platform, config, hostAppName + ".exe", hostAppName);
 			}
+			TestFilesExists (basedirs.ToArray (), coreFiles);
 		}
 
 		public void SetupPaths (string appName, string platform) 
