@@ -60,14 +60,10 @@ ALL_TESTS = \
 
 all-local:: run
 
-remove-license:
-	rm -f ~/Library/Xamarin.Mac/License.trial
-	rm -f ~/Library/Xamarin.Mac/License
-
 embedded-mono/bin system-mono/bin embedded-mono-profile/bin system-mono-profile/bin $(foreach test,$(TESTS_UNIFIED),$(test)/bin): dylib/libTest.dylib
 	DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) XAMMAC_FRAMEWORK_PATH=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)) $(SYSTEM_XBUILD)  $(@D)/$(@D).csproj
 
-%/bin: remove-license dylib/libTest.dylib
+%/bin: dylib/libTest.dylib
 	DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT) XAMMAC_FRAMEWORK_PATH=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)) $(MDTOOL) build $*/$*.csproj
 
 dylib/libTest.dylib: dylib/src.c
