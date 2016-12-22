@@ -35,6 +35,7 @@ namespace MonoTouch.Tuner {
 		internal RuntimeOptions RuntimeOptions { get; set; }
 
 		public MonoTouchLinkContext LinkContext { get; set; }
+		public Application Application { get; set; }
 
 		public static I18nAssemblies ParseI18nAssemblies (string i18n)
 		{

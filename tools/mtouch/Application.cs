@@ -88,7 +88,6 @@ namespace Xamarin.Bundler {
 		public string ExecutableName;
 		public BuildTarget BuildTarget;
 
-		public Version DeploymentTarget;
 		public bool EnableCxx;
 		public bool EnableProfiling;
 		bool? package_mdb;
@@ -119,6 +118,23 @@ namespace Xamarin.Bundler {
 		public List<Tuple<string, bool>> DlsymAssemblies;
 		public bool? UseMonoFramework;
 		public bool? PackageMonoFramework;
+
+		public bool NoFastSim;
+
+		// The list of assemblies that we do generate debugging info for.
+		public bool DebugAll;
+		public List<string> DebugAssemblies = new List<string> ();
+
+		public bool? DebugTrack;
+
+		public string Compiler = string.Empty;
+		public string CompilerPath;
+
+		public string AotArguments = "static,asmonly,direct-icalls,";
+		public string AotOtherArguments = string.Empty;
+		public bool? LLVMAsmWriter;
+
+		public Dictionary<string, string> EnvironmentVariables = new Dictionary<string, string> ();
 
 		//
 		// Linker config
@@ -585,7 +601,7 @@ namespace Xamarin.Bundler {
 			var platformAssemblyReference = false;
 			foreach (var reference in References) {
 				var name = Path.GetFileNameWithoutExtension (reference);
-				if (name == Driver.ProductAssembly) {
+				if (name == Driver.GetProductAssembly (this)) {
 					platformAssemblyReference = true;
 				} else {
 					switch (name) {
@@ -597,14 +613,14 @@ namespace Xamarin.Bundler {
 				}
 			}
 			if (!platformAssemblyReference) {
-				ErrorHelper.Warning (85, "No reference to '{0}' was found. It will be added automatically.", Driver.ProductAssembly + ".dll");
-				References.Add (Path.Combine (Driver.PlatformFrameworkDirectory, Driver.ProductAssembly + ".dll"));
+				ErrorHelper.Warning (85, "No reference to '{0}' was found. It will be added automatically.", Driver.GetProductAssembly (this) + ".dll");
+				References.Add (Path.Combine (Driver.GetPlatformFrameworkDirectory (this), Driver.GetProductAssembly (this) + ".dll"));
 			}
 
-			var FrameworkDirectory = Driver.PlatformFrameworkDirectory;
+			var FrameworkDirectory = Driver.GetPlatformFrameworkDirectory (this);
 			var RootDirectory = Path.GetDirectoryName (Path.GetFullPath (RootAssembly));
 
-			((MonoTouchProfile) Profile.Current).SetProductAssembly (Driver.ProductAssembly);
+			((MonoTouchProfile) Profile.Current).SetProductAssembly (Driver.GetProductAssembly (this));
 
 			string root_wo_ext = Path.GetFileNameWithoutExtension (RootAssembly);
 			if (Profile.IsSdkAssembly (root_wo_ext) || Profile.IsProductAssembly (root_wo_ext))
@@ -617,13 +633,13 @@ namespace Xamarin.Bundler {
 				target32.ArchDirectory = Path.Combine (Cache.Location, "32");
 				target32.TargetDirectory = IsSimulatorBuild ? Path.Combine (AppDirectory, ".monotouch-32") : Path.Combine (target32.ArchDirectory, "Output");
 				target32.AppTargetDirectory = Path.Combine (AppDirectory, ".monotouch-32");
-				target32.Resolver.ArchDirectory = Driver.Arch32Directory;
+				target32.Resolver.ArchDirectory = Driver.GetArch32Directory (this);
 				target32.Abis = SelectAbis (abis, Abi.Arch32Mask);
 
 				target64.ArchDirectory = Path.Combine (Cache.Location, "64");
 				target64.TargetDirectory = IsSimulatorBuild ? Path.Combine (AppDirectory, ".monotouch-64") : Path.Combine (target64.ArchDirectory, "Output");
 				target64.AppTargetDirectory = Path.Combine (AppDirectory, ".monotouch-64");
-				target64.Resolver.ArchDirectory = Driver.Arch64Directory;
+				target64.Resolver.ArchDirectory = Driver.GetArch64Directory (this);
 				target64.Abis = SelectAbis (abis, Abi.Arch64Mask);
 
 				Targets.Add (target64);
@@ -634,7 +650,7 @@ namespace Xamarin.Bundler {
 				target.TargetDirectory = AppDirectory;
 				target.AppTargetDirectory = IsSimulatorBuild ? AppDirectory : Path.Combine (AppDirectory, Is64Build ? ".monotouch-64" : ".monotouch-32");
 				target.ArchDirectory = Cache.Location;
-				target.Resolver.ArchDirectory = Path.Combine (Driver.PlatformFrameworkDirectory, "..", "..", Is32Build ? "32bits" : "64bits");
+				target.Resolver.ArchDirectory = Path.Combine (FrameworkDirectory, "..", "..", Is32Build ? "32bits" : "64bits");
 				target.Abis = abis;
 
 				Targets.Add (target);
@@ -651,7 +667,7 @@ namespace Xamarin.Bundler {
 			}
 
 			foreach (var target in Targets) {
-				target.Resolver.FrameworkDirectory = Driver.PlatformFrameworkDirectory;
+				target.Resolver.FrameworkDirectory = FrameworkDirectory;
 				target.Resolver.RootDirectory = RootDirectory;
 				target.Resolver.EnableRepl = EnableRepl;
 				target.ManifestResolver.EnableRepl = EnableRepl;
@@ -673,7 +689,7 @@ namespace Xamarin.Bundler {
 				ErrorHelper.Warning (30, "The executable name ({0}) and the app name ({1}) are different, this may prevent crash logs from getting symbolicated properly.",
 					ExecutableName, Path.GetFileName (AppDirectory));
 			
-			if (IsExtension && Platform == ApplePlatform.iOS && Driver.SDKVersion < new Version (8, 0))
+			if (IsExtension && Platform == ApplePlatform.iOS && SdkVersion < new Version (8, 0))
 				throw new MonoTouchException (45, true, "--extension is only supported when using the iOS 8.0 (or later) SDK.");
 
 			if (IsExtension && Platform != ApplePlatform.iOS && Platform != ApplePlatform.WatchOS && Platform != ApplePlatform.TVOS)
@@ -723,7 +739,7 @@ namespace Xamarin.Bundler {
 				UseMonoFramework = false;
 			
 			if (UseMonoFramework.Value)
-				Frameworks.Add (Path.Combine (Driver.ProductFrameworksDirectory, "Mono.framework"));
+				Frameworks.Add (Path.Combine (Driver.GetProductFrameworksDirectory (this), "Mono.framework"));
 
 			if (!PackageMonoFramework.HasValue) {
 				if (!IsExtension && Extensions.Count > 0 && !UseMonoFramework.Value) {
@@ -774,7 +790,7 @@ namespace Xamarin.Bundler {
 			if (EnableBitCode && IsSimulatorBuild)
 				throw ErrorHelper.CreateError (84, "Bitcode is not supported in the simulator. Do not pass --bitcode when building for the simulator.");
 
-			if (LinkMode == LinkMode.None && Driver.SDKVersion < SdkVersions.GetVersion (Platform))
+			if (LinkMode == LinkMode.None && SdkVersion < SdkVersions.GetVersion (Platform))
 				throw ErrorHelper.CreateError (91, "This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker.", PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode);
 
 			Namespaces.Initialize ();
@@ -1002,7 +1018,7 @@ namespace Xamarin.Bundler {
 		void BuildFinalExecutable ()
 		{
 			if (FastDev) {
-				var libdir = Path.Combine (Driver.ProductSdkDirectory, "usr", "lib");
+				var libdir = Path.Combine (Driver.GetProductSdkDirectory (this), "usr", "lib");
 				var libmono_name = LibMono;
 				if (!UseMonoFramework.Value) {
 					var libmono_target = Path.Combine (AppDirectory, libmono_name);
@@ -1017,7 +1033,7 @@ namespace Xamarin.Bundler {
 
 				// Copy libXamarin.dylib to the app
 				var libxamarin_target = Path.Combine (AppDirectory, LibXamarin);
-				Application.UpdateFile (Path.Combine (Driver.MonoTouchLibDirectory, LibXamarin), libxamarin_target);
+				Application.UpdateFile (Path.Combine (Driver.GetMonoTouchLibDirectory (this), LibXamarin), libxamarin_target);
 
 				if (UseMonoFramework.Value) {
 					if (EnableProfiling)
@@ -1044,7 +1060,7 @@ namespace Xamarin.Bundler {
 					
 				if (PackageMonoFramework.Value) {
 					// We may have to copy the Mono framework to the bundle even if we're not linking with it.
-					all_frameworks.Add (Path.Combine (Driver.ProductSdkDirectory, "Frameworks", "Mono.framework"));
+					all_frameworks.Add (Path.Combine (Driver.GetProductSdkDirectory (this), "Frameworks", "Mono.framework"));
 				}
 				
 				foreach (var appex in Extensions) {
@@ -1138,7 +1154,7 @@ namespace Xamarin.Bundler {
 				}
 			}
 
-			Driver.CalculateCompilerPath ();
+			Driver.CalculateCompilerPath (this);
 		}
 
 		public string LibMono {
@@ -1704,7 +1720,7 @@ namespace Xamarin.Bundler {
 			var files = assemblies.Select (v => v.FullPath);
 
 			if (!Application.IsUptodate (files, new string [] { ifile })) {
-				Driver.GenerateMain (assemblies, assemblyName, abi, ifile, registration_methods);
+				Driver.GenerateMain (target.App, assemblies, assemblyName, abi, ifile, registration_methods);
 			} else {
 				Driver.Log (3, "Target '{0}' is up-to-date.", ifile);
 			}
@@ -1747,7 +1763,7 @@ namespace Xamarin.Bundler {
 		public static void Create (List<BuildTask> tasks, Abi abi, Target target, string ifile)
 		{
 			var arch = abi.AsArchString ();
-			var ext = Driver.App.FastDev ? ".dylib" : ".o";
+			var ext = target.App.FastDev ? ".dylib" : ".o";
 			var ofile = Path.Combine (Cache.Location, "lib" + Path.GetFileNameWithoutExtension (ifile) + "." + arch + ext);
 
 			if (!Application.IsUptodate (ifile, ofile)) {
@@ -1757,10 +1773,10 @@ namespace Xamarin.Bundler {
 					Abi = abi,
 					InputFile = ifile,
 					OutputFile = ofile,
-					SharedLibrary = Driver.App.FastDev,
+					SharedLibrary = target.App.FastDev,
 					Language = "objective-c++",
 				};
-				if (Driver.App.FastDev) {
+				if (target.App.FastDev) {
 					task.InstallName = "lib" + Path.GetFileNameWithoutExtension (ifile) + ext;
 					task.CompilerFlags.AddFramework ("Foundation");
 					task.CompilerFlags.LinkWithXamarin ();
@@ -1812,7 +1828,7 @@ namespace Xamarin.Bundler {
 
 		protected override void Build ()
 		{
-			if (Driver.IsUsingClang) {
+			if (Driver.GetIsUsingClang (App)) {
 				// This is because iOS has a forward declaration of NSPortMessage, but no actual declaration.
 				// They still use NSPortMessage in other API though, so it can't just be removed from our bindings.
 				CompilerFlags.AddOtherFlag ("-Wno-receiver-forward-class");
@@ -1890,7 +1906,7 @@ namespace Xamarin.Bundler {
 				flags.AddOtherFlag ("-mthumb");
 		}
 
-		public static void GetCompilerFlags (CompilerFlags flags, string ifile, string language = null)
+		public static void GetCompilerFlags (Application app, CompilerFlags flags, string ifile, string language = null)
 		{
 			if (string.IsNullOrEmpty (ifile) || !ifile.EndsWith (".s", StringComparison.Ordinal))
 				flags.AddOtherFlag ("-gdwarf-2");
@@ -1900,17 +1916,17 @@ namespace Xamarin.Bundler {
 					// error: invalid argument '-std=c99' not allowed with 'C++/ObjC++'
 					flags.AddOtherFlag ("-std=c99");
 				}
-				flags.AddOtherFlag ($"-I{Driver.Quote (Path.Combine (Driver.ProductSdkDirectory, "usr", "include"))}");
+				flags.AddOtherFlag ($"-I{Driver.Quote (Path.Combine (Driver.GetProductSdkDirectory (app), "usr", "include"))}");
 			}
-			flags.AddOtherFlag ($"-isysroot {Driver.Quote (Driver.FrameworkDirectory)}");
+			flags.AddOtherFlag ($"-isysroot {Driver.Quote (Driver.GetFrameworkDirectory (app))}");
 			flags.AddOtherFlag ("-Qunused-arguments"); // don't complain about unused arguments (clang reports -std=c99 and -Isomething as unused).
 		}
 		
 		public static void GetSimulatorCompilerFlags (CompilerFlags flags, string ifile, Application app, string language = null)
 		{
-			GetCompilerFlags (flags, ifile, language);
+			GetCompilerFlags (app, flags, ifile, language);
 
-			string sim_platform = Driver.PlatformDirectory;
+			string sim_platform = Driver.GetPlatformDirectory (app);
 			string plist = Path.Combine (sim_platform, "Info.plist");
 
 			var dict = Driver.FromPList (plist);
@@ -1921,8 +1937,8 @@ namespace Xamarin.Bundler {
 			if (!String.IsNullOrWhiteSpace (objc_abi))
 				flags.AddOtherFlag ($"-fobjc-abi-version={objc_abi}");
 			
-			plist = Path.Combine (Driver.FrameworkDirectory, "SDKSettings.plist");
-			string min_prefix = Driver.CompilerPath.Contains ("clang") ? Driver.TargetMinSdkName : "iphoneos";
+			plist = Path.Combine (Driver.GetFrameworkDirectory (app), "SDKSettings.plist");
+			string min_prefix = app.CompilerPath.Contains ("clang") ? Driver.GetTargetMinSdkName (app) : "iphoneos";
 			dict = Driver.FromPList (plist);
 			dp = dict.Get<PDictionary> ("DefaultProperties");
 			if (app.DeploymentTarget == new Version ()) {
@@ -1939,9 +1955,9 @@ namespace Xamarin.Bundler {
 		
 		void GetDeviceCompilerFlags (CompilerFlags flags, string ifile)
 		{
-			GetCompilerFlags (flags, ifile, Language);
+			GetCompilerFlags (App, flags, ifile, Language);
 			
-			flags.AddOtherFlag ($"-m{Driver.TargetMinSdkName}-version-min={App.DeploymentTarget.ToString ()}");
+			flags.AddOtherFlag ($"-m{Driver.GetTargetMinSdkName (App)}-version-min={App.DeploymentTarget.ToString ()}");
 
 			if (App.EnableLLVMOnlyBitCode)
 				// The AOT compiler doesn't optimize the bitcode so clang will do it
@@ -2005,7 +2021,7 @@ namespace Xamarin.Bundler {
 
 			CompilerFlags.AddOtherFlag (Driver.Quote (InputFile));
 
-			var rv = Driver.RunCommand (Driver.CompilerPath, CompilerFlags.ToString (), null, null);
+			var rv = Driver.RunCommand (App.CompilerPath, CompilerFlags.ToString (), null, null);
 			
 			return rv;
 		}

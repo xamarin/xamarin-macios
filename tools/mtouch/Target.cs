@@ -71,6 +71,7 @@ namespace Xamarin.Bundler
 				if (pinvoke_state == null) {
 					pinvoke_state = new PInvokeWrapperGenerator ()
 					{
+						App = App,
 						SourcePath = Path.Combine (ArchDirectory, "pinvokes.m"),
 						HeaderPath = Path.Combine (ArchDirectory, "pinvokes.h"),
 						Registrar = (StaticRegistrar) StaticRegistrar,
@@ -106,7 +107,7 @@ namespace Xamarin.Bundler
 					ErrorHelper.Show (new MonoTouchException (11, false, "{0} was built against a more recent runtime ({1}) than Xamarin.iOS supports.", Path.GetFileName (reference), ad.MainModule.Runtime));
 
 				// Figure out if we're referencing Xamarin.iOS or monotouch.dll
-				if (Path.GetFileNameWithoutExtension (ad.MainModule.FileName) == Driver.ProductAssembly)
+				if (Path.GetFileNameWithoutExtension (ad.MainModule.FileName) == Driver.GetProductAssembly (App))
 					ProductAssembly = ad;
 			}
 
@@ -267,7 +268,7 @@ namespace Xamarin.Bundler
 				case "Xamarin.iOS":
 				case "Xamarin.TVOS":
 				case "Xamarin.WatchOS":
-					if (reference.Name != Driver.ProductAssembly)
+					if (reference.Name != Driver.GetProductAssembly (App))
 						exceptions.Add (ErrorHelper.CreateError (34, "Cannot reference '{0}.dll' in a {1} project - it is implicitly referenced by '{2}'.", reference.Name, Driver.TargetFramework.Identifier, assembly.FullName));
 					break;
 				}
@@ -408,6 +409,7 @@ namespace Xamarin.Bundler
 				DumpDependencies = App.LinkerDumpDependencies,
 				RuntimeOptions = App.RuntimeOptions,
 				MarshalNativeExceptionsState = MarshalNativeExceptionsState,
+				Application = App,
 			};
 
 			MonoTouch.Tuner.Linker.Process (LinkerOptions, out link_context, out assemblies);
@@ -714,7 +716,7 @@ namespace Xamarin.Bundler
 				}
 
 				registration_methods.Add (method);
-				link_with.Add (Path.Combine (Driver.ProductSdkDirectory, "usr", "lib", library));
+				link_with.Add (Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib", library));
 			}
 
 			// The main method.
@@ -777,8 +779,8 @@ namespace Xamarin.Bundler
 
 			CompileTask.GetArchFlags (compiler_flags, Abis);
 			if (App.IsDeviceBuild) {
-				compiler_flags.AddOtherFlag ($"-m{Driver.TargetMinSdkName}-version-min={App.DeploymentTarget}");
-				compiler_flags.AddOtherFlag ($"-isysroot {Driver.Quote (Driver.FrameworkDirectory)}");
+				compiler_flags.AddOtherFlag ($"-m{Driver.GetTargetMinSdkName (App)}-version-min={App.DeploymentTarget}");
+				compiler_flags.AddOtherFlag ($"-isysroot {Driver.Quote (Driver.GetFrameworkDirectory (App))}");
 			} else {
 				CompileTask.GetSimulatorCompilerFlags (compiler_flags, null, App);
 			}
@@ -820,7 +822,7 @@ namespace Xamarin.Bundler
 			} else {
 				mainlib = "libapp.a";
 			}
-			var libdir = Path.Combine (Driver.ProductSdkDirectory, "usr", "lib");
+			var libdir = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib");
 			var libmain = Path.Combine (libdir, mainlib);
 			compiler_flags.AddLinkWith (libmain, true);
 
@@ -846,7 +848,7 @@ namespace Xamarin.Bundler
 			if (App.IsExtension) {
 				if (App.Platform == ApplePlatform.iOS && Driver.XcodeVersion.Major < 7) {
 					compiler_flags.AddOtherFlag ("-lpkstart");
-					compiler_flags.AddOtherFlag ($"-F {Driver.Quote (Path.Combine (Driver.FrameworkDirectory, "System/Library/PrivateFrameworks"))} -framework PlugInKit");
+					compiler_flags.AddOtherFlag ($"-F {Driver.Quote (Path.Combine (Driver.GetFrameworkDirectory (App), "System/Library/PrivateFrameworks"))} -framework PlugInKit");
 				}
 				compiler_flags.AddOtherFlag ("-fapplication-extension");
 			}
@@ -859,7 +861,7 @@ namespace Xamarin.Bundler
 				// and very hard to diagnose otherwise when hidden from the build output. Ref: bug #2430
 				var linker_errors = new List<Exception> ();
 				var output = new StringBuilder ();
-				var code = Driver.RunCommand (Driver.CompilerPath, flags, null, output);
+				var code = Driver.RunCommand (App.CompilerPath, flags, null, output);
 
 				Application.ProcessNativeLinkerOutput (this, output.ToString (), link_with, linker_errors, code != 0);
 
@@ -914,7 +916,7 @@ namespace Xamarin.Bundler
 
 		public bool CanWeSymlinkTheApplication ()
 		{
-			if (!Driver.CanWeSymlinkTheApplication ())
+			if (!Driver.CanWeSymlinkTheApplication (App))
 				return false;
 
 			foreach (var a in Assemblies)

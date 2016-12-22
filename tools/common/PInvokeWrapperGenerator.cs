@@ -12,6 +12,7 @@ namespace Xamarin.Bundler
 {
 	class PInvokeWrapperGenerator
 	{
+		public Application App;
 		public Dictionary<string,string> signatures = new Dictionary<string, string> ();
 		public List<Exception> exceptions = new List<Exception> ();
 		public StringBuilder signature = new StringBuilder ();
@@ -36,7 +37,7 @@ namespace Xamarin.Bundler
 
 		public void Start ()
 		{							
-			if (Driver.EnableDebug)
+			if (App.EnableDebug)
 				hdr.WriteLine ("#define DEBUG 1");
 
 			hdr.WriteLine ("#include <stdarg.h>");
