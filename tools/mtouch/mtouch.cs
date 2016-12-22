@@ -807,22 +807,6 @@ namespace Xamarin.Bundler
 			return true;
 		}
 
-		static List<string> mdbs = new List<string> ();
-
-		public static void DeleteDebugInfos ()
-		{
-			foreach (var mdb in mdbs) {
-				if (File.Exists (mdb)) {
-					try {
-						File.Delete (mdb);
-					} catch {
-						// Ignore any exceptions
-					}
-				}
-			}
-		}
-
-
 		public static string Quote (string f)
 		{
 			if (f.IndexOf (' ') == -1 && f.IndexOf ('\'') == -1 && f.IndexOf (',') == -1)
@@ -1021,7 +1005,6 @@ namespace Xamarin.Bundler
 				return Main2 (args);
 			}
 			catch (Exception e) {
-				ErrorHelper.ExitCallback = (int exitCode) => Exit (exitCode);
 				ErrorHelper.Show (e);
 			}
 			finally {
@@ -1051,26 +1034,6 @@ namespace Xamarin.Bundler
 			default:
 				throw new MonoTouchException (19, true, "Only one --[log|install|kill|launch]dev or --[launch|debug|list]sim option can be used.");
 			}
-		}
-
-
-		[DllImport ("/usr/lib/libSystem.dylib")]
-		static extern void exit (int exitcode);
-
-		public static void Exit (int exitCode = 0)
-		{
-			// This is ugly. *Very* ugly. The problem is that:
-			//
-			// * The Apple API we use will create background threads to process messages.
-			// * Those messages are delivered to managed code, which means the mono runtime
-			//   starts tracking those threads.
-			// * The mono runtime will not terminate those threads (in fact the mono runtime
-			//   will do nothing at all to those threads, since they're not running managed
-			//   code) upon shutdown. But the mono runtime will wait for those threads to
-			//   exit before exiting the process. This means mtouch will never exit.
-			// 
-			// So just go the nuclear route.
-			exit (exitCode);
 		}
 
 		static int Main2 (string [] args)
