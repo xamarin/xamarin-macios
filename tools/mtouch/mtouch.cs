@@ -409,7 +409,7 @@ namespace Xamarin.Bundler
 			return GetFrameworkDir (GetPlatform (app), app.SdkVersion);
 		}
 
-		public static bool GetIsUsingClang (Application app)
+		public static bool IsUsingClang (Application app)
 		{
 			return app.CompilerPath.EndsWith ("clang", StringComparison.Ordinal) || app.CompilerPath.EndsWith ("clang++", StringComparison.Ordinal);
 		}

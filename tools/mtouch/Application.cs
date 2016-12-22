@@ -1828,7 +1828,7 @@ namespace Xamarin.Bundler {
 
 		protected override void Build ()
 		{
-			if (Driver.GetIsUsingClang (App)) {
+			if (Driver.IsUsingClang (App)) {
 				// This is because iOS has a forward declaration of NSPortMessage, but no actual declaration.
 				// They still use NSPortMessage in other API though, so it can't just be removed from our bindings.
 				CompilerFlags.AddOtherFlag ("-Wno-receiver-forward-class");
