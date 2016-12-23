@@ -138,6 +138,7 @@ namespace Xamarin.Bundler {
 	//					MT1030	Launching applications on device using a bundle identifier is deprecated. Please pass the full path to the bundle to launch.
 	//					MT1031	Could not launch the app '{0}' on the device '{1}' because the device is locked. Please unlock the device and try again.
 	//		Warning			MT1032	This application executable might be too large ({0} MB) to execute on device. If bitcode was enabled you might want to disable it for development, it is only required to submit applications to Apple.
+	//					MT1033	Could not uninstall the application '{0}' from the device '{1}': {2}
 	//			MT11xx	DebugService.cs
 	//					MT1101	Could not start app: {0}
 	//					MT1102	Could not attach to the app (to kill it): {0}

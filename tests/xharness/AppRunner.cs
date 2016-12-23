@@ -256,6 +256,29 @@ namespace xharness
 			return rv.Succeeded ? 0 : 1;
 		}
 
+		public int Uninstall (Log log)
+		{
+			Initialize ();
+
+			if (isSimulator)
+				throw new Exception ("Uninstalling from a simulator is not supported.");
+
+			FindDevice ();
+
+			var args = new StringBuilder ();
+			if (!string.IsNullOrEmpty (Harness.XcodeRoot))
+				args.Append (" --sdkroot ").Append (Harness.XcodeRoot);
+			for (int i = -1; i < Harness.Verbosity; i++)
+				args.Append (" -v ");
+
+			args.Append (" --uninstalldevbundleid");
+			args.AppendFormat (" \"{0}\" ", bundle_identifier);
+			AddDeviceName (args, companion_device_name ?? device_name);
+
+			var rv = ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), log, TimeSpan.FromMinutes (1)).Result;
+			return rv.Succeeded ? 0 : 1;
+		}
+
 		bool ensure_clean_simulator_state = true;
 		public bool EnsureCleanSimulatorState {
 			get {

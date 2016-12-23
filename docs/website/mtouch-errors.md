@@ -546,6 +546,10 @@ It's recommended to pass the path to the app to launch on device instead of just
 
 Please unlock the device and try again.
 
+<h3><a name="MT1032"/>MT1032: This application executable might be too large (* MB) to execute on device. If bitcode was enabled you might want to disable it for development, it is only required to submit applications to Apple.</h3>
+
+<h3><a name="MT1033"/>MT1033: Could not uninstall the application '*' from the device '*': *</h3>
+
 ### MT11xx: Debug Service
 
 <!--

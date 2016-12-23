@@ -35,6 +35,12 @@ namespace xharness
 						harness.IOSTestProjects.Add (new TestProject (v));
 					}
 				},
+				{ "uninstall=", "Uninstalls a project.", (v) =>
+					{
+						harness.Action = HarnessAction.Uninstall;
+						harness.IOSTestProjects.Add (new TestProject (v));
+					}
+				},
 				{ "sdkroot=", "Where Xcode is", (v) => harness.SdkRoot = v },
 				{ "target=", "Where to run the project ([ios|watchos|tvos]-[device|simulator|simulator-32|simulator-64]).", (v) => harness.Target = v.ParseAsAppRunnerTarget () },
 				{ "configuration=", "Which configuration to run (defaults to Debug).", (v) => harness.Configuration = v },
