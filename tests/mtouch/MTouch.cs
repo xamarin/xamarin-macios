@@ -363,6 +363,25 @@ namespace Xamarin
 				Directory.Delete (testDir, true);
 			}
 		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		[TestCase (Profile.watchOS)]
+		[TestCase (Profile.tvOS)]
+		public void MT0025 (Profile profile)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = profile;
+				mtouch.CreateTemporaryApp ();
+				mtouch.Sdk = MTouchTool.None;
+
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build dev");
+				mtouch.AssertError (25, $"No SDK version was provided. Please add --sdk=X.Y to specify which {GetPlatformSimpleName (profile)} SDK should be used to build your application.");
+
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build dev");
+				mtouch.AssertError (25, $"No SDK version was provided. Please add --sdk=X.Y to specify which {GetPlatformSimpleName (profile)} SDK should be used to build your application.");
+			}
+		}
 			
 		[Test]
 		public void MT0051 ()
@@ -689,6 +708,20 @@ namespace Xamarin
 				return "Xamarin.TVOS";
 			case Profile.watchOS:
 				return "Xamarin.WatchOS";
+			default:
+				throw new NotImplementedException ();
+			}
+		}
+
+		static string GetPlatformSimpleName (Profile profile)
+		{
+			switch (profile) {
+			case Profile.iOS:
+				return "iOS";
+			case Profile.tvOS:
+				return "tvOS";
+			case Profile.watchOS:
+				return "watchOS";
 			default:
 				throw new NotImplementedException ();
 			}
