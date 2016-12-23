@@ -123,7 +123,7 @@ namespace Xamarin.Bundler
 		//
 		// iPhone Developer platform
 		static string framework_dir;
-		static Version sdk_version = new Version ();
+		static Version sdk_version;
 		static string compiler = string.Empty;
 		static string compiler_path;
 		static bool xcode_version_check = true;
@@ -1389,6 +1389,9 @@ namespace Xamarin.Bundler
 			case Action.ListSimulators:
 				return CallMlaunch ();
 			}
+
+			if (sdk_version == null)
+				throw new MonoTouchException (25, true, "No SDK version was provided. Please add --sdk=X.Y to specify which {0} SDK should be used to build your application.", app.PlatformName);
 
 			framework_dir = GetFrameworkDir (Platform, sdk_version);
 			Driver.Log ("Xamarin.iOS {0}{1} using framework: {2}", Constants.Version, verbose > 1 ? "." + Constants.Revision : string.Empty, framework_dir);

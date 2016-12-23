@@ -1910,9 +1910,6 @@ namespace Xamarin.Bundler {
 		{
 			GetCompilerFlags (flags, ifile, language);
 
-			if (Driver.SDKVersion == new Version ())
-				throw new MonoTouchException (25, true, "No SDK version was provided. Please add --sdk=X.Y to specify which iOS SDK should be used to build your application.");
-
 			string sim_platform = Driver.PlatformDirectory;
 			string plist = Path.Combine (sim_platform, "Info.plist");
 

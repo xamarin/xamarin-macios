@@ -363,6 +363,25 @@ namespace Xamarin
 				Directory.Delete (testDir, true);
 			}
 		}
+
+		[Test]
+		[TestCase (Profile.iOS)]
+		[TestCase (Profile.watchOS)]
+		[TestCase (Profile.tvOS)]
+		public void MT0025 (Profile profile)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = profile;
+				mtouch.CreateTemporaryApp ();
+				mtouch.Sdk = MTouchTool.None;
+
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build dev");
+				mtouch.AssertError (25, $"No SDK version was provided. Please add --sdk=X.Y to specify which {GetPlatformSimpleName (profile)} SDK should be used to build your application.");
+
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build dev");
+				mtouch.AssertError (25, $"No SDK version was provided. Please add --sdk=X.Y to specify which {GetPlatformSimpleName (profile)} SDK should be used to build your application.");
+			}
+		}
 			
 		[Test]
 		public void MT0051 ()
@@ -391,36 +410,29 @@ namespace Xamarin
 		[Test]
 		public void MT0060 ()
 		{
-			var msg = string.Empty;
-			if (!Directory.Exists ("/Applications/Xcode.app")) {
-				msg = "warning MT0060: Could not find the currently selected Xcode on the system. 'xcode-select --print-path' returned '/dir/that/does/not/exist', but that directory does not exist.\n" +
-				"error MT0056: Cannot find Xcode in the default location ./Applications/Xcode.app.. Please install Xcode, or pass a custom path using --sdkroot <path>.\n";
-			} else {
-				msg = "warning MT0060: Could not find the currently selected Xcode on the system. 'xcode-select --print-path' returned '/dir/that/does/not/exist', but that directory does not exist.\n" +
-				"warning MT0062: No Xcode.app specified .using --sdkroot or 'xcode-select --print-path'., using the default Xcode instead: /Applications/Xcode.app\n" +
-				"Xamarin.iOS .* using framework: .*\n" +
-				"error MT0052: No command specified.";
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.EnvironmentVariables = new Dictionary<string, string> { { "DEVELOPER_DIR", "/dir/that/does/not/exist" } };
+				mtouch.SdkRoot = MTouchTool.None;
+				mtouch.AssertExecuteFailure (MTouchAction.None, "build");
+				mtouch.AssertWarning (60, "Could not find the currently selected Xcode on the system. 'xcode-select --print-path' returned '/dir/that/does/not/exist', but that directory does not exist.");
+				if (!Directory.Exists ("/Applications/Xcode.app")) {
+					mtouch.AssertError (56, "Cannot find Xcode in the default location (/Applications/Xcode.app). Please install Xcode, or pass a custom path using --sdkroot <path>.");
+				} else {
+					mtouch.AssertWarning (62, "No Xcode.app specified (using --sdkroot or 'xcode-select --print-path'), using the default Xcode instead: /Applications/Xcode.app");
+					mtouch.AssertError (52, "No command specified.");
+				}
 			}
-
-			Asserts.ThrowsPattern<TestExecutionException> (() => {
-				var envvars = new Dictionary<string, string> 
-				{
-					{ "DEVELOPER_DIR", "/dir/that/does/not/exist" }
-				};
-				ExecutionHelper.Execute (TestTarget.ToolPath, "", environmentVariables: envvars);
-			},  msg);
 		}
 
 		[Test]
 		public void MT0061 ()
 		{
-			// The MT0070 warning depends on system configuration, so it's optional in the regexp
-			Asserts.ThrowsPattern<TestExecutionException> (() => {
-				ExecutionHelper.Execute (TestTarget.ToolPath, "");
-			}, "warning MT0061: No Xcode.app specified .using --sdkroot., using the system Xcode as reported by 'xcode-select --print-path': .*\n" +
-				"(warning MT0078: The recommended Xcode version for Xamarin.iOS [0-9.]* is Xcode [0-9.]* or later. The current Xcode version .found in .* is .*)?\\s?" +
-				"Xamarin.iOS .* using framework: .*\n" +
-				"error MT0052: No command specified.");
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.SdkRoot = MTouchTool.None;
+				mtouch.AssertExecuteFailure (MTouchAction.None, "build");
+				mtouch.AssertWarningPattern (61, "No Xcode.app specified .using --sdkroot., using the system Xcode as reported by 'xcode-select --print-path': .*");
+				mtouch.AssertError (52, "No command specified.");
+			}
 		}
 
 		public void MT0062 ()
@@ -689,6 +701,20 @@ namespace Xamarin
 				return "Xamarin.TVOS";
 			case Profile.watchOS:
 				return "Xamarin.WatchOS";
+			default:
+				throw new NotImplementedException ();
+			}
+		}
+
+		static string GetPlatformSimpleName (Profile profile)
+		{
+			switch (profile) {
+			case Profile.iOS:
+				return "iOS";
+			case Profile.tvOS:
+				return "tvOS";
+			case Profile.watchOS:
+				return "watchOS";
 			default:
 				throw new NotImplementedException ();
 			}
