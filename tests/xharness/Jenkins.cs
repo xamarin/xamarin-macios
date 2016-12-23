@@ -624,6 +624,8 @@ function toggleContainerVisibility (containerName)
 								writer.WriteLine ("{0} (<span style='color: {3}'>{1}</span>) <a id='button_{2}' href=\"javascript: toggleLogVisibility ('{2}');\">Show details</a><br />", test.Mode, state, log_id, GetTestColor (test));
 								writer.WriteLine ("<div id='logs_{0}' style='display: none; padding-bottom: 10px; padding-top: 10px; padding-left: 20px;'>", log_id);
 							}
+							writer.WriteLine ("Started: {0} <br />", test.Started.ToString ("u"));
+							writer.WriteLine ("Stopped: {0} <br />", test.Stopped.ToString ("u"));
 							writer.WriteLine ("Duration: {0} <br />", test.Duration);
 							var logs = test.AggregatedLogs;
 							if (logs.Count () > 0) {
@@ -693,10 +695,11 @@ function toggleContainerVisibility (containerName)
 		public string ProjectConfiguration;
 		public string ProjectPlatform;
 
-		Stopwatch duration = new Stopwatch ();
+		public DateTime Started { get; private set; }
+		public DateTime Stopped { get; private set; }
 		public TimeSpan Duration { 
 			get {
-				return duration.Elapsed;
+				return Stopped - Started;
 			}
 		}
 
@@ -795,12 +798,14 @@ function toggleContainerVisibility (containerName)
 
 			Jenkins.GenerateReport ();
 
-			duration.Start ();
+			Started = DateTime.Now;
 
-			build_task = ExecuteAsync ();
-			await build_task;
-
-			duration.Stop ();
+			try {
+				build_task = ExecuteAsync ();
+				await build_task;
+			} finally {
+				Stopped = DateTime.Now;
+			}
 
 			ExecutionResult = (ExecutionResult & ~TestExecutingResult.StateMask) | TestExecutingResult.Finished;
 			if ((ExecutionResult & ~TestExecutingResult.StateMask) == 0)
