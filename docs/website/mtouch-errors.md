@@ -46,6 +46,8 @@ Starting with Xamarin.iOS 7.2.1 this requirement has been lifted, the new refcou
 
 Please create the directory.
 
+This error is not generated anymore, mtouch will automatically create the directory if it doesn't exist.
+
 <h3><a name="MT0006"/>MT0006: There is no devel platform at *, use --platform=PLAT to specify the SDK.</h3>
 
 Xamarin.iOS cannot find the SDK directory at the location mentioned in the error message. Please verify that the path is correct.
