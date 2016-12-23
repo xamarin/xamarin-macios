@@ -148,6 +148,40 @@ namespace Xamarin.Tests
 			Assert.Fail (string.Format ("The error '{0}{1:0000}: {2}' was not found in the output:\n{3}", prefix, number, message, string.Join ("\n", details.ToArray ())));
 		}
 
+		public void AssertWarningPattern (int number, string messagePattern)
+		{
+			AssertWarningPattern ("MT", number, messagePattern);
+		}
+
+		public void AssertWarningPattern (string prefix, int number, string messagePattern)
+		{
+			if (!messages.Any ((msg) => msg.Prefix == prefix && msg.Number == number))
+				Assert.Fail (string.Format ("The warning '{0}{1:0000}' was not found in the output.", prefix, number));
+
+			if (messages.Any ((msg) => Regex.IsMatch (msg.Message, messagePattern)))
+				return;
+
+			var details = messages.Where ((msg) => msg.Prefix == prefix && msg.Number == number && !Regex.IsMatch (msg.Message, messagePattern)).Select ((msg) => string.Format ("\tThe message '{0}' did not match the pattern '{1}'.", msg.Message, messagePattern));
+			Assert.Fail (string.Format ("The warning '{0}{1:0000}: {2}' was not found in the output:\n{3}", prefix, number, messagePattern, string.Join ("\n", details.ToArray ())));
+		}
+
+		public void AssertWarning (int number, string message)
+		{
+			AssertWarning ("MT", number, message);
+		}
+
+		public void AssertWarning (string prefix, int number, string message)
+		{
+			if (!messages.Any ((msg) => msg.Prefix == prefix && msg.Number == number))
+				Assert.Fail (string.Format ("The warning '{0}{1:0000}' was not found in the output.", prefix, number));
+
+			if (messages.Any ((msg) => msg.Message == message))
+				return;
+
+			var details = messages.Where ((msg) => msg.Prefix == prefix && msg.Number == number && msg.Message != message).Select ((msg) => string.Format ("\tMessage #{2} did not match:\n\t\tactual:   '{0}'\n\t\texpected: '{1}'", msg.Message, message, messages.IndexOf (msg) + 1));
+			Assert.Fail (string.Format ("The warning '{0}{1:0000}: {2}' was not found in the output:\n{3}", prefix, number, message, string.Join ("\n", details.ToArray ())));
+		}
+
 		public bool HasOutput (string line)
 		{
 			return OutputLines.Contains (line);
