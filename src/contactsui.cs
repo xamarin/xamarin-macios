@@ -11,11 +11,17 @@ using System;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 using XamCore.Contacts;
+using XamCore.CoreGraphics;
+#if MONOMAC
+using XamCore.AppKit;
+#else
 using XamCore.UIKit;
+#endif
 
 namespace XamCore.ContactsUI {
 
 #if XAMCORE_2_0 // The Contacts framework uses generics heavily, which is only supported in Unified (for now at least)
+#if !MONOMAC
 	[iOS (9,0)]
 	[BaseType (typeof (UIViewController))]
 	interface CNContactPickerViewController {
@@ -42,9 +48,29 @@ namespace XamCore.ContactsUI {
 		[Export ("predicateForSelectionOfProperty", ArgumentSemantic.Copy)]
 		NSPredicate PredicateForSelectionOfProperty { get; set; }
 	}
+#endif
 
 	interface ICNContactPickerDelegate {}
 
+#if MONOMAC
+	[Mac (10,11, onlyOn64: true)]
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface CNContactPickerDelegate
+	{
+		[Export ("contactPicker:didSelectContact:")]
+		void ContactSelected (CNContactPicker picker, CNContact contact);
+
+		[Export ("contactPicker:didSelectContactProperty:")]
+		void ContactPropertySelected (CNContactPicker picker, CNContactProperty contactProperty);
+
+		[Export ("contactPickerWillClose:")]
+		void WillClose (CNContactPicker picker);
+
+		[Export ("contactPickerDidClose:")]
+		void DidClose (CNContactPicker picker);
+	}
+#else
 	[iOS (9,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -65,7 +91,21 @@ namespace XamCore.ContactsUI {
 		[Export ("contactPicker:didSelectContactProperties:")]
 		void DidSelectContactProperties (CNContactPickerViewController picker, CNContactProperty [] contactProperties);
 	}
+#endif // MONOMAC
 
+#if MONOMAC
+	[Mac (10,11, onlyOn64: true)]
+	[BaseType (typeof(NSViewController))]
+	interface CNContactViewController
+	{
+		[Static]
+		[Export ("descriptorForRequiredKeys")]
+		ICNKeyDescriptor DescriptorForRequiredKeys { get; }
+
+		[NullAllowed, Export ("contact", ArgumentSemantic.Copy)]
+		CNContact Contact { get; set; }
+	}
+#else
 	[iOS (9,0)]
 	[BaseType (typeof (UIViewController))]
 	interface CNContactViewController {
@@ -131,10 +171,12 @@ namespace XamCore.ContactsUI {
 		[Export ("highlightPropertyWithKey:identifier:")] //TODO: Maybe we can mNullallowedake a strongly type version
 		void HighlightProperty (NSString key, [NullAllowed] string identifier);
 	}
+#endif
 
 	interface ICNContactViewControllerDelegate {}
 
 	[iOS (9,0)]
+	[NoMac]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface CNContactViewControllerDelegate {
@@ -145,6 +187,26 @@ namespace XamCore.ContactsUI {
 		[Export ("contactViewController:didCompleteWithContact:")]
 		void DidComplete (CNContactViewController viewController, [NullAllowed] CNContact contact);
 	}
+
+#if MONOMAC
+	[Mac (10,11, onlyOn64: true)]
+	[BaseType (typeof (NSObject))]
+	interface CNContactPicker
+	{
+		[Export ("displayedKeys", ArgumentSemantic.Copy)]
+		string[] DisplayedKeys { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		[Protocolize]
+		CNContactPickerDelegate Delegate { get; set; }
+
+		[Export ("showRelativeToRect:ofView:preferredEdge:")]
+		void Show (CGRect positioningRect, NSView positioningView, NSRectEdge preferredEdge);
+
+		[Export ("close")]
+		void Close ();
+	}
+#endif // MONOMAC
 #endif // XAMCORE_2_0
 }
 
