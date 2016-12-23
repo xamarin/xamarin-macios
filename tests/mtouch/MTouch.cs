@@ -994,9 +994,9 @@ namespace Xamarin
 				var bin = mtouch.NativeExecutablePath;
 				VerifyArchitectures (bin, "arm7s/64", "armv7", "arm64");
 				foreach (var dylib in Directory.GetFileSystemEntries (mtouch.AppPath, "*.dylib")) {
-					if (Path.GetFileName (dylib).StartsWith ("libmono"))
+					if (Path.GetFileName (dylib).StartsWith ("libmono", StringComparison.Ordinal))
 						continue;
-					if (Path.GetFileName (dylib).StartsWith ("libxamarin"))
+					if (Path.GetFileName (dylib).StartsWith ("libxamarin", StringComparison.Ordinal))
 						continue;
 					VerifyArchitectures (dylib, dylib + ": arm7s/64", "armv7", "arm64");
 				}
@@ -1391,8 +1391,8 @@ public class TestApp {
 					var found_field = false;
 					var found_pinvoke = false;
 					foreach (var line in lines) {
-						found_field |= line.EndsWith (" S _dummy_field");
-						found_pinvoke |= line.EndsWith (" T _DummyMethod");
+						found_field |= line.EndsWith (" S _dummy_field", StringComparison.Ordinal);
+						found_pinvoke |= line.EndsWith (" T _DummyMethod", StringComparison.Ordinal);
 						if (found_field && found_pinvoke)
 							break;
 					}
@@ -2240,7 +2240,7 @@ using ObjCRuntime;
 				var args = new StringBuilder ();
 				var compiler = GetCompiler (profile, args);
 
-				args.Append (" -target:").Append (outputPath.EndsWith (".dll") ? "library" : "exe");
+				args.Append (" -target:").Append (outputPath.EndsWith (".dll", StringComparison.Ordinal) ? "library" : "exe");
 				args.Append (" -r:").Append (Quote (GetBaseLibrary (profile)));
 				args.Append (" -out:").Append (Quote (outputPath));
 				args.Append (" ").Append (Quote (tmpFile));
