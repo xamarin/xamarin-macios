@@ -75,7 +75,7 @@ namespace Xamarin.Bundler {
 
 				if (s.StartsWith (".asciz", StringComparison.Ordinal) || s.StartsWith (".ascii", StringComparison.Ordinal))
 					s = FixAsciz (s, line);
-				else if (s.StartsWith (".file"))
+				else if (s.StartsWith (".file", StringComparison.Ordinal))
 					s = FixFile (s, line);
 				else if (s.Contains ("\""))
 					s = s.Replace ("\"", "\\22");

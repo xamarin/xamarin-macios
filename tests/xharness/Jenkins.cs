@@ -21,6 +21,8 @@ namespace xharness
 		public bool IncludeMmpTest;
 		public bool IncludeiOSMSBuild = true;
 		public bool IncludeMtouch;
+		public bool IncludeBtouch;
+		public bool IncludeMacBindingProject;
 
 		public Logs Logs = new Logs ();
 		public Log MainLog;
@@ -137,6 +139,7 @@ namespace xharness
 				"tools/linker",
 				"src/ObjCRuntime/Registrar.cs",
 				"external/mono",
+				"external/llvm",
 			};
 			var mmp_prefixes = new string [] {
 				"tests/mmptest",
@@ -149,11 +152,24 @@ namespace xharness
 			var bcl_prefixes = new string [] {
 				"tests/bcl-test",
 				"external/mono",
+				"external/llvm",
 			};
+			var btouch_prefixes = new string [] {
+				"src/btouch.cs",
+				"src/generator.cs",
+				"src/generator-enums.cs",
+				"src/generator-filters.cs",
+			};
+			var mac_binding_project = new string [] {
+				"msbuild",
+				"tests/mac-binding-project",
+			}.Intersect (btouch_prefixes).ToArray ();
 
 			SetEnabled (files, mtouch_prefixes, "mtouch", ref IncludeMtouch);
 			SetEnabled (files, mmp_prefixes, "mmp", ref IncludeMmpTest);
 			SetEnabled (files, bcl_prefixes, "bcl", ref IncludeBcl);
+			SetEnabled (files, btouch_prefixes, "btouch", ref IncludeBtouch);
+			SetEnabled (files, mac_binding_project, "mac-binding-project", ref IncludeMacBindingProject);
 		}
 
 		void SetEnabled (IEnumerable<string> files, string [] prefixes, string testname, ref bool value)
@@ -179,6 +195,8 @@ namespace xharness
 			SetEnabled (labels, "mtouch", ref IncludeMtouch);
 			SetEnabled (labels, "mmp", ref IncludeMmpTest);
 			SetEnabled (labels, "bcl", ref IncludeBcl);
+			SetEnabled (labels, "btouch", ref IncludeBtouch);
+			SetEnabled (labels, "mac-binding-project", ref IncludeMacBindingProject);
 
 			// enabled by default
 			SetEnabled (labels, "ios", ref IncludeiOS);
@@ -258,11 +276,6 @@ namespace xharness
 						Devices = taskGroup.First ().Simulators,
 					});
 				}
-
-				foreach (var task in runSimulatorTasks) {
-					if (task.TestName == "framework-test")
-						task.ExecutionResult = TestExecutingResult.Ignored;
-				}
 			}
 
 			if (IncludeiOSMSBuild) {
@@ -323,7 +336,11 @@ namespace xharness
 
 					if (project.GenerateVariations) {
 						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified, "-unified"));
-						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45"));
+						Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_Unified32, "-unified-32"));
+						if (!project.SkipXMVariations) {
+							Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45, "-unifiedXM45"));
+							Tasks.Add (CloneExecuteTask (exec, TestPlatform.Mac_UnifiedXM45_32, "-unifiedXM45-32"));
+						}
 					}
 				}
 			}
@@ -351,6 +368,31 @@ namespace xharness
 					Timeout = TimeSpan.FromMinutes (120),
 				};
 				Tasks.Add (nunitExecution);
+			}
+
+			if (IncludeBtouch) {
+				var run = new MakeTask
+				{
+					Jenkins = this,
+					Platform = TestPlatform.iOS,
+					TestName = "BTouch tests",
+					Target = "wrench-btouch",
+					WorkingDirectory = Harness.RootDirectory,
+
+				};
+				Tasks.Add (run);
+			}
+
+			if (IncludeMacBindingProject) {
+				var run = new MakeTask
+				{
+					Jenkins = this,
+					Platform = TestPlatform.Mac,
+					TestName = "Mac Binding Projects",
+					Target = "all",
+					WorkingDirectory = Path.Combine (Harness.RootDirectory, "mac-binding-project"),
+				};
+				Tasks.Add (run);
 			}
 		}
 
@@ -506,6 +548,7 @@ function toggleContainerVisibility (containerName)
 					var allSimulatorTasks = new List<RunSimulatorTask> ();
 					var allExecuteTasks = new List<MacExecuteTask> ();
 					var allNUnitTasks = new List<NUnitExecuteTask> ();
+					var allMakeTasks = new List<MakeTask> ();
 					foreach (var task in Tasks) {
 						var aggregated = task as AggregatedRunSimulatorTask;
 						if (aggregated != null) {
@@ -525,6 +568,11 @@ function toggleContainerVisibility (containerName)
 							continue;
 						}
 
+						var make = task as MakeTask;
+						if (make != null) {
+							allMakeTasks.Add (make);
+							continue;
+						}
 
 						throw new NotImplementedException ();
 					}
@@ -533,6 +581,7 @@ function toggleContainerVisibility (containerName)
 					allTasks.AddRange (allExecuteTasks);
 					allTasks.AddRange (allSimulatorTasks);
 					allTasks.AddRange (allNUnitTasks);
+					allTasks.AddRange (allMakeTasks);
 
 					var failedTests = allTasks.Where ((v) => v.Failed);
 					var stillInProgress = allTasks.Any ((v) => v.InProgress);
@@ -694,8 +743,12 @@ function toggleContainerVisibility (containerName)
 					return rv;
 				case TestPlatform.Mac_Unified:
 					return rv.Substring (0, rv.Length - "-unified".Length);
+				case TestPlatform.Mac_Unified32:
+					return rv.Substring (0, rv.Length - "-unified-32".Length);
 				case TestPlatform.Mac_UnifiedXM45:
 					return rv.Substring (0, rv.Length - "-unifiedXM45".Length);
+				case TestPlatform.Mac_UnifiedXM45_32:
+					return rv.Substring (0, rv.Length - "-unifiedXM45-32".Length);
 				default:
 					if (rv.EndsWith ("-watchos", StringComparison.Ordinal)) {
 						return rv.Substring (0, rv.Length - 8);
@@ -787,7 +840,9 @@ function toggleContainerVisibility (containerName)
 			case TestPlatform.Mac:
 			case TestPlatform.Mac_Classic:
 			case TestPlatform.Mac_Unified:
+			case TestPlatform.Mac_Unified32:
 			case TestPlatform.Mac_UnifiedXM45:
+			case TestPlatform.Mac_UnifiedXM45_32:
 				process.StartInfo.EnvironmentVariables ["MD_APPLE_SDK_ROOT"] = Harness.XcodeRoot;
 				process.StartInfo.EnvironmentVariables ["XBUILD_FRAMEWORK_FOLDERS_PATH"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
 				process.StartInfo.EnvironmentVariables ["MSBuildExtensionsPath"] = Path.Combine (Harness.MAC_DESTDIR, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
@@ -1056,8 +1111,12 @@ function toggleContainerVisibility (containerName)
 					return "Classic";
 				case TestPlatform.Mac_Unified:
 					return "Unified";
+				case TestPlatform.Mac_Unified32:
+					return "Unified 32-bit";
 				case TestPlatform.Mac_UnifiedXM45:
 					return "Unified XM45";
+				case TestPlatform.Mac_UnifiedXM45_32:
+					return "Unified XM45 32-bit";
 				default:
 					throw new NotImplementedException ();
 				}
@@ -1099,8 +1158,14 @@ function toggleContainerVisibility (containerName)
 			case TestPlatform.Mac_Unified:
 				suffix = "-unified";
 				break;
+			case TestPlatform.Mac_Unified32:
+				suffix = "-unified-32";
+				break;
 			case TestPlatform.Mac_UnifiedXM45:
 				suffix = "-unifiedXM45";
+				break;
+			case TestPlatform.Mac_UnifiedXM45_32:
+				suffix = "-unifiedXM45-32";
 				break;
 			}
 			Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), "bin", BuildTask.ProjectPlatform, BuildTask.ProjectConfiguration + suffix, name + ".app", "Contents", "MacOS", name);
@@ -1118,7 +1183,7 @@ function toggleContainerVisibility (containerName)
 						await snapshot.StartCaptureAsync ();
 
 						try {
-							var timeout = TimeSpan.FromMinutes (10);
+							var timeout = TimeSpan.FromMinutes (20);
 
 							var result = await proc.RunAsync (log, true, timeout);
 							if (result.TimedOut) {
@@ -1439,6 +1504,8 @@ function toggleContainerVisibility (containerName)
 		Mac_Classic,
 		Mac_Unified,
 		Mac_UnifiedXM45,
+		Mac_Unified32,
+		Mac_UnifiedXM45_32,
 	}
 
 	[Flags]

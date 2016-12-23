@@ -29,35 +29,38 @@ namespace Xamarin.iOS.Tasks
 		public string [] ExpectedAppFiles = { };
 		public string [] UnexpectedAppFiles = { "monotouch.dll" };
 
-		public string[] CoreAppFiles {
-			get {
-				var xi = new string [] {
-					"Xamarin.iOS.dll",
-					"Xamarin.iOS.dll.mdb",
-					"mscorlib.dll",
-					"mscorlib.pdb",
-				};
-				var xw = new string [] {
-					"Xamarin.WatchOS.dll",
-					"Xamarin.WatchOS.dll.mdb",
-					"mscorlib.dll",
-					"mscorlib.pdb",
-				};
-				var xt = new string [] {
-					"Xamarin.TVOS.dll",
-					"Xamarin.TVOS.dll.mdb",
-					"mscorlib.dll",
-					"mscorlib.pdb",
-				};
+		public string[] GetCoreAppFiles (string platform, string config, string managedExe, string nativeExe)
+		{
+			var coreFiles = new List<string> ();
 
-				if (TargetFrameworkIdentifier == "Xamarin.WatchOS") {
-					return xw;
-				} else if (TargetFrameworkIdentifier == "Xamarin.TVOS") {
-					return xt;
-				} else {
-					return xi;
-				}
+			if (TargetFrameworkIdentifier == "Xamarin.WatchOS") {
+				coreFiles.Add ("Xamarin.WatchOS.dll");
+				if (config == "Debug")
+					coreFiles.Add ("Xamarin.WatchOS.dll.mdb");
+			} else if (TargetFrameworkIdentifier == "Xamarin.TVOS") {
+				coreFiles.Add ("Xamarin.TVOS.dll");
+				if (config == "Debug")
+					coreFiles.Add ("Xamarin.TVOS.dll.mdb");
+			} else {
+				coreFiles.Add ("Xamarin.iOS.dll");
+				if (config == "Debug")
+					coreFiles.Add ("Xamarin.iOS.dll.mdb");
 			}
+
+			coreFiles.Add ("mscorlib.dll");
+			if (config == "Debug")
+				coreFiles.Add ("mscorlib.pdb");
+
+			coreFiles.Add (managedExe);
+			if (config == "Debug")
+				coreFiles.Add (managedExe + ".mdb");
+
+			if (platform == "iPhone")
+				coreFiles.Add (Path.Combine ("..", nativeExe));
+			else
+				coreFiles.Add (nativeExe);
+
+			return coreFiles.ToArray ();
 		}
 
 		public Logger Logger {

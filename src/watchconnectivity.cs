@@ -174,6 +174,7 @@ namespace XamCore.WatchConnectivity {
 	[DisableDefaultCtor] // no handle, doc: You do not create instances of this class directly.
 	interface WCSessionFile {
 
+		[NullAllowed]
 		[Export ("fileURL")]
 		NSUrl FileUrl { get; }
 

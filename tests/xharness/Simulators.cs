@@ -412,6 +412,8 @@ namespace xharness
 							DeviceClass = dev.SelectSingleNode ("DeviceClass")?.InnerText,
 							CompanionIdentifier = dev.SelectSingleNode ("CompanionIdentifier")?.InnerText,
 							Name = dev.SelectSingleNode ("Name")?.InnerText,
+							BuildVersion = dev.SelectSingleNode ("BuildVersion")?.InnerText,
+							ProductVersion = dev.SelectSingleNode ("ProductVersion")?.InnerText,
 						});
 					}
 				}
@@ -427,6 +429,8 @@ namespace xharness
 		public string DeviceClass;
 		public string CompanionIdentifier;
 		public string Name;
+		public string BuildVersion;
+		public string ProductVersion;
 	}
 }
 

@@ -39,7 +39,7 @@ namespace xharness
 		}
 
 		public List<TestProject> IOSTestProjects { get; set; } = new List<TestProject> ();
-		public List<TestProject> MacTestProjects { get; set; } = new List<TestProject> ();
+		public List<MacTestProject> MacTestProjects { get; set; } = new List<MacTestProject> ();
 		public List<string> BclTests { get; set; } = new List<string> ();
 
 		// Configure
@@ -91,7 +91,7 @@ namespace xharness
 		string DownloadMlaunch ()
 		{
 			// NOTE: the filename part in the url must be unique so that the caching logic works properly.
-			var mlaunch_url = "http://bosstoragemirror.blob.core.windows.net/public-builder/mlaunch/mlaunch-320d91b71c71c4768184c2d2b1ce553c1364970f.zip";
+			var mlaunch_url = "http://bosstoragemirror.blob.core.windows.net/public-builder/mlaunch/mlaunch-63121a575eff6fa291c28d0f70bacff97b0ecc72.zip";
 			var extraction_dir = Path.Combine (Path.GetTempPath (), Path.GetFileNameWithoutExtension (mlaunch_url));
 			var mlaunch_path = Path.Combine (extraction_dir, "bin", "mlaunch");
 
@@ -236,10 +236,10 @@ namespace xharness
 			//var fsharp_library_projects = new string[] { "fsharplibrary" };
 			//var bcl_suites = new string[] { "mscorlib", "System", "System.Core", "System.Data", "System.Net.Http", "System.Numerics", "System.Runtime.Serialization", "System.Transactions", "System.Web.Services", "System.Xml", "System.Xml.Linq", "Mono.Security", "System.ComponentModel.DataAnnotations", "System.Json", "System.ServiceModel.Web", "Mono.Data.Sqlite" };
 			foreach (var p in test_suites)
-				MacTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj"))));
-			MacTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj"))));
+				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj"))));
+			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), skipXMVariations : true));
 			foreach (var p in hard_coded_test_suites)
-				MacTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj")), generateVariations: false));
+				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj")), generateVariations: false));
 			//foreach (var p in fsharp_test_suites)
 			//	TestProjects.Add (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")));
 			//foreach (var p in library_projects)
@@ -349,20 +349,27 @@ namespace xharness
 				var file = proj.Path;
  				if (!File.Exists (file))
  					throw new FileNotFoundException (file);
-								
-				var unifiedMobile = new MacUnifiedTarget (true) {
- 					TemplateProjectPath = file,
- 					Harness = this,
- 				};
-				unifiedMobile.Execute ();
-				unified_targets.Add (unifiedMobile);
- 
-				var unifiedXM45 = new MacUnifiedTarget (false) {
- 					TemplateProjectPath = file,
- 					Harness = this,
- 				};
-				unifiedXM45.Execute ();
-				unified_targets.Add (unifiedXM45);
+
+				foreach (bool thirtyTwoBit in new bool[] { false, true })
+				{
+					var unifiedMobile = new MacUnifiedTarget (true, thirtyTwoBit)
+					{
+						TemplateProjectPath = file,
+						Harness = this,
+					};
+					unifiedMobile.Execute ();
+					unified_targets.Add (unifiedMobile);
+
+					if (!proj.SkipXMVariations) {
+						var unifiedXM45 = new MacUnifiedTarget (false, thirtyTwoBit)
+						{
+							TemplateProjectPath = file,
+							Harness = this,
+						};
+						unifiedXM45.Execute ();
+						unified_targets.Add (unifiedXM45);
+					}
+				}
  
 				var classic = new MacClassicTarget () {
  					TemplateProjectPath = file,
@@ -374,7 +381,7 @@ namespace xharness
  
 			foreach (var proj in MacTestProjects.Where ((v) => !v.GenerateVariations)) {
 				var file = proj.Path;
-				var unifiedMobile = new MacUnifiedTarget (true, true)
+				var unifiedMobile = new MacUnifiedTarget (true, false, true)
 				{
  					TemplateProjectPath = file,
  					Harness = this,
@@ -632,19 +639,14 @@ namespace xharness
 			}
 		}
 
-		public Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, string args, TextWriter output, TimeSpan timeout)
-		{
-			return ProcessHelper.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, output, timeout: timeout);
-		}
-
 		public Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, string args, Log log, TimeSpan timeout)
 		{
-			return ProcessHelper.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, log.GetWriter () , timeout: timeout);
+			return ProcessHelper.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, log, timeout: timeout);
 		}
 
 		public async Task ShowSimulatorList (LogStream log)
 		{
-			await ExecuteXcodeCommandAsync ("simctl", "list", log.GetWriter (), TimeSpan.FromSeconds (10));
+			await ExecuteXcodeCommandAsync ("simctl", "list", log, TimeSpan.FromSeconds (10));
 		}
 
 		public async Task<LogFile> SymbolicateCrashReportAsync (Log log, LogFile report)

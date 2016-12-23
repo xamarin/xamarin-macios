@@ -27,7 +27,7 @@ namespace Xamarin.MMP.Tests
 
 		const string RemotingTestCode = "System.Runtime.Remoting.RemotingConfiguration.Configure(\"remoting.config\", false);";
 
-		[Test]
+		//[Test] Disabled due to https://bugzilla.xamarin.com/show_bug.cgi?id=50230
 		public void RemotingConfigruation_RemoteConfigTests ()
 		{
 			RunMMPTest (tmpDir =>

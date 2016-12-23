@@ -21,7 +21,7 @@ namespace Xamarin.Bundler {
 		static void AddSharedOptions (Mono.Options.OptionSet options)
 		{
 			options.Add ("coop:", "If the GC should run in cooperative mode.", v => { App.EnableCoopGC = ParseBool (v, "coop"); }, hidden: true);
-			options.Add ("marshal-objectivec-exceptions:", v => {
+			options.Add ("marshal-objectivec-exceptions:", "Specify how Objective-C exceptions should be marshalled. Valid values: default, unwindmanagedcode, throwmanagedexception, abort and disable. The default depends on the target platform (on watchOS the default is 'throwmanagedexception', while on all other platforms it's 'disable').", v => {
 				switch (v) {
 				case "default":
 					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Default;
@@ -41,10 +41,10 @@ namespace Xamarin.Bundler {
 					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Disable;
 					break;
 				default:
-					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--marshal-objective-exceptions", "Invalid value: " + v);
+					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--marshal-objective-exceptions", $"Invalid value: {v}. Valid values are: default, unwindmanagedcode, throwmanagedexception, abort and disable.");
 				}
 			});
-			options.Add ("marshal-managed-exceptions:", v => {
+			options.Add ("marshal-managed-exceptions:", "Specify how managed exceptions should be marshalled. Valid values: default, unwindnativecode, throwobjectivecexception, abort and disable. The default depends on the target platform (on watchOS the default is 'throwobjectivecexception', while on all other platform it's 'disable').", v => {
 				switch (v) {
 				case "default":
 					App.MarshalManagedExceptions = MarshalManagedExceptionMode.Default;
@@ -64,7 +64,7 @@ namespace Xamarin.Bundler {
 					App.MarshalManagedExceptions = MarshalManagedExceptionMode.Disable;
 					break;
 				default:
-					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--marshal-managed-exceptions", "Invalid value: " + v);
+					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--marshal-managed-exceptions", $"Invalid value: {v}. Valid values are: default, unwindnativecode, throwobjectivecexception, abort and disable.");
 				}
 			});
 		}

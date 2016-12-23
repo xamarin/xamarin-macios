@@ -347,17 +347,22 @@ namespace xharness
 
 		public static void FixTestLibrariesReferences (this XmlDocument csproj, string platform)
 		{
-			var nodes = csproj.SelectNodes ("//*[local-name() = 'ObjcBindingNativeLibrary']");
+			var nodes = csproj.SelectNodes ("//*[local-name() = 'ObjcBindingNativeLibrary' or local-name() = 'ObjcBindingNativeFramework']");
+			var test_libraries = new string [] { "libtest.a", "XTest.framework", "XStaticArTest.framework", "XStaticObjectTest.framework" };
 			foreach (XmlNode node in nodes) {
 				var includeAttribute = node.Attributes ["Include"];
-				if (includeAttribute != null)
-					includeAttribute.Value = includeAttribute.Value.Replace ("test-libraries\\.libs\\ios\\libtest.a", "test-libraries\\.libs\\" + platform + "\\libtest.a");
+				if (includeAttribute != null) {
+					foreach (var tl in test_libraries)
+						includeAttribute.Value = includeAttribute.Value.Replace ($"test-libraries\\.libs\\ios\\{tl}", $"test-libraries\\.libs\\{platform}\\{tl}");
+				}
 			}
 			nodes = csproj.SelectNodes ("//*[local-name() = 'Target' and @Name = 'BeforeBuild']");
 			foreach (XmlNode node in nodes) {
 				var outputsAttribute = node.Attributes ["Outputs"];
-				if (outputsAttribute != null)
-					outputsAttribute.Value = outputsAttribute.Value.Replace ("test-libraries\\.libs\\ios\\libtest.a", "test-libraries\\.libs\\" + platform + "\\libtest.a");
+				if (outputsAttribute != null) {
+					foreach (var tl in test_libraries)
+						outputsAttribute.Value = outputsAttribute.Value.Replace ($"test-libraries\\.libs\\ios\\${tl}", $"test-libraries\\.libs\\{platform}\\${tl}");
+				}
 			}
 		}
 

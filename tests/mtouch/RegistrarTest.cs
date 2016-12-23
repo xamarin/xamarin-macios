@@ -204,7 +204,7 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 				Assert.Ignore ("Xcode 6 ({0}) is required for this test.", Configuration.xcode6_root);
 			
 			// This test will have to be updated when new frameworks are introduced.
-			VerifyWithXcode (R.Static, MTouch.Profile.Unified, string.Empty, false, Configuration.xcode6_root, "8.0",
+			VerifyWithXcode (R.Static, MTouch.Profile.iOS, string.Empty, false, Configuration.xcode6_root, "8.0",
 				"warning MT0079: The recommended Xcode version for Xamarin.iOS .* is Xcode .* or later. The current Xcode version .found in " + Configuration.xcode6_root + ". is 6.*.",
 				"error MT4134: Your application is using the 'Contacts' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 9.0, while you're building with the iOS 8.0 SDK.) This configuration is only supported with the legacy registrar (pass --registrar:legacy as an additional mtouch argument in your project's iOS Build option to select). Alternatively select a newer SDK in your app's iOS Build options.",
 				"error MT4134: Your application is using the 'CoreSpotlight' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS 9.0, while you're building with the iOS 8.0 SDK.) This configuration is only supported with the legacy registrar (pass --registrar:legacy as an additional mtouch argument in your project's iOS Build option to select). Alternatively select a newer SDK in your app's iOS Build options.",
@@ -531,8 +531,8 @@ public struct FooF { public NSObject Obj; }
 
 
 		[Test]
-		[TestCase (MTouch.Profile.Unified, "iOS")]
-		[TestCase (MTouch.Profile.TVOS, "tvOS")]
+		[TestCase (MTouch.Profile.iOS, "iOS")]
+		[TestCase (MTouch.Profile.tvOS, "tvOS")]
 		//[TestCase (MTouch.Profile.WatchOS, "watchOS")] // MT0077 interferes
 		public void MT4162 (MTouch.Profile profile, string name)
 		{
@@ -646,7 +646,7 @@ public struct FooF { public NSObject Obj; }
 	}
 ";
 
-			Verify (R.Static, MTouch.Profile.Unified, code, false, MTouch.Target.Sim,
+			Verify (R.Static, MTouch.Profile.iOS, code, false, MTouch.Target.Sim,
 			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Auto' because its selector 'auto' is an Objective-C keyword. Please use a different name.",
 			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Break' because its selector 'break' is an Objective-C keyword. Please use a different name.",
 			        ".*/Test.cs(.*): error MT4164: Cannot export the property 'Case' because its selector 'case' is an Objective-C keyword. Please use a different name.",
@@ -727,7 +727,7 @@ class H : G {
 
 		void Verify (R registrars, string code, bool success, params string [] expected_messages)
 		{
-			VerifyWithXcode (registrars,  MTouch.Profile.Unified, code, success, Configuration.xcode_root, Configuration.sdk_version, expected_messages);
+			VerifyWithXcode (registrars,  MTouch.Profile.iOS, code, success, Configuration.xcode_root, Configuration.sdk_version, expected_messages);
 		}
 
 		void Verify (R registrars, MTouch.Profile profile, string code, bool success, params string [] expected_messages)
@@ -742,12 +742,12 @@ class H : G {
 
 		void VerifyWithXode (R registrars, string code, bool success, params string [] expected_messages)
 		{
-			VerifyWithXcode (registrars, MTouch.Profile.Unified, code, success, Configuration.xcode_root, Configuration.sdk_version, expected_messages);
+			VerifyWithXcode (registrars, MTouch.Profile.iOS, code, success, Configuration.xcode_root, Configuration.sdk_version, expected_messages);
 		}
 
 		void VerifyWithXcode (R registrars, string code, bool success, string xcode, string sdk_version, params string [] expected_messages)
 		{
-			VerifyWithXcode (registrars, MTouch.Profile.Unified, code, success, xcode, sdk_version, expected_messages);
+			VerifyWithXcode (registrars, MTouch.Profile.iOS, code, success, xcode, sdk_version, expected_messages);
 		}
 
 		void VerifyWithXcode (R registrars, MTouch.Profile profile, string code, bool success, string xcode, string sdk_version, params string [] expected_messages)
@@ -1191,7 +1191,7 @@ class CTP4 : CTP3 {
 
 		// Compile the filename with mcs
 		// Does not clean up anything.
-		static void Compile (string filename, MTouch.Profile profile = MTouch.Profile.Unified)
+		static void Compile (string filename, MTouch.Profile profile = MTouch.Profile.iOS)
 		{			
 			StringBuilder output = new StringBuilder ();
 			using (var p = new Process ()) {

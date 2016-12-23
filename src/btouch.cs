@@ -36,25 +36,32 @@ using System.Runtime.InteropServices;
 
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
+using Xamarin.Utils;
 
 class BindingTouch {
 	static Type CoreObject = typeof (XamCore.Foundation.NSObject);
 
+	static TargetFramework? target_framework;
 #if MONOMAC
 	public static PlatformName CurrentPlatform = PlatformName.MacOSX;
 #if XAMCORE_2_0
 	public static bool Unified = true;
+	public static bool skipSystemDrawing /* full: yes, mobile: no */;
 #else
 	public static bool Unified = false;
+	public static bool skipSystemDrawing = false;
 #endif
 #elif WATCH
 	public static PlatformName CurrentPlatform = PlatformName.WatchOS;
 	public static bool Unified = true;
+	public static bool skipSystemDrawing = false;
 #elif TVOS
 	public static PlatformName CurrentPlatform = PlatformName.TvOS;
 	public static bool Unified = true;
+	public static bool skipSystemDrawing = false;
 #elif IOS
 	public static PlatformName CurrentPlatform = PlatformName.iOS;
+	public static bool skipSystemDrawing = false;
 #if XAMCORE_2_0
 	public static bool Unified = true;
 #else
@@ -122,28 +129,41 @@ class BindingTouch {
 		}
 	}
 
-#if !MONOMAC
 	static string GetSDKRoot ()
 	{
-		var sdkRoot = Environment.GetEnvironmentVariable ("MD_MTOUCH_SDK_ROOT");
-		if (string.IsNullOrEmpty (sdkRoot)) {
-			if (Directory.Exists ("/Library/Frameworks/Xamarin.iOS.framework/Versions/Current")) {
-				sdkRoot = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current";
-			} else {
-				sdkRoot = "/Developer/MonoTouch/usr";
+		switch (CurrentPlatform) {
+		case PlatformName.iOS:
+		case PlatformName.WatchOS:
+		case PlatformName.TvOS:
+			var sdkRoot = Environment.GetEnvironmentVariable ("MD_MTOUCH_SDK_ROOT");
+			if (string.IsNullOrEmpty (sdkRoot)) {
+				if (Directory.Exists ("/Library/Frameworks/Xamarin.iOS.framework/Versions/Current")) {
+					sdkRoot = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current";
+				} else {
+					sdkRoot = "/Developer/MonoTouch/usr";
+				}
 			}
+			return sdkRoot;
+		default:
+			throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
 		}
-		return sdkRoot;
 	}
-#endif
+
+	static void SetTargetFramework (string fx)
+	{
+		TargetFramework tf;
+		if (!TargetFramework.TryParse (fx, out tf))
+			throw ErrorHelper.CreateError (68, "Invalid value for target framework: {0}.", fx);
+		target_framework = tf;
+
+		if (Array.IndexOf (TargetFramework.ValidFrameworks, target_framework.Value) == -1)
+			throw ErrorHelper.CreateError (70, "Invalid target framework: {0}. Valid target frameworks are: {1}.", target_framework.Value, string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
+	}
 
 	static int Main2 (string [] args)
 	{
 		bool show_help = false;
 		bool zero_copy = false;
-#if !XAMCORE_2_0
-		bool alpha = false;
-#endif
 		string basedir = null;
 		string tmpdir = null;
 		string ns = null;
@@ -154,16 +174,10 @@ class BindingTouch {
 		bool external = false;
 		bool public_mode = true;
 		bool nostdlib = false;
-#if XAMCORE_2_0 && !MONOMAC
-		bool inline_selectors = true;
-#else
-		bool inline_selectors = false;
-#endif
+		bool inline_selectors = Unified && CurrentPlatform != PlatformName.MacOSX;
 		List<string> sources;
 		var resources = new List<string> ();
-#if !MONOMAC
 		var linkwith = new List<string> ();
-#endif
 		var references = new List<string> ();
 		var libs = new List<string> ();
 		var api_sources = new List<string> ();
@@ -183,9 +197,7 @@ class BindingTouch {
 
 		var os = new OptionSet () {
 			{ "h|?|help", "Displays the help", v => show_help = true },
-#if !XAMCORE_2_0
-			{ "a", "Include alpha bindings", v => alpha = true },
-#endif
+			{ "a", "Include alpha bindings (Obsolete).", v => {}, true },
 			{ "outdir=", "Sets the output directory for the temporary binding files", v => { basedir = v; }},
 			{ "o|out=", "Sets the name of the output library", v => outfile = v },
 			{ "tmpdir=", "Sets the working directory for temp files", v => { tmpdir = v; delete_temp = false; }},
@@ -193,20 +205,12 @@ class BindingTouch {
 			{ "sourceonly=", "Only generates the source", v => generate_file_list = v },
 			{ "ns=", "Sets the namespace for storing helper classes", v => ns = v },
 			{ "unsafe", "Sets the unsafe flag for the build", v=> unsafef = true },
-#if MONOMAC
-			{ "core", "Use this to build monomac.dll", v => binding_third_party = false },
-#else
-			{ "core", "Use this to build monotouch.dll", v => binding_third_party = false },
-#endif
+			{ "core", "Use this to build product assemblies", v => binding_third_party = false },
 			{ "r=", "Adds a reference", v => references.Add (v) },
 			{ "lib=", "Adds the directory to the search path for the compiler", v => libs.Add (Quote (v)) },
 			{ "compiler=", "Sets the compiler to use", v => compiler = v },
 			{ "sdk=", "Sets the .NET SDK to use", v => net_sdk = v },
-#if MONOMAC
-			{ "new-style", "Build for new-style/64-bit-compatible Xamarin.Mac (Xamarin.Mac.dll instead of XamMac.dll)", v => { Console.WriteLine ("new-style is obsolete on Xamarin.Mac. Please move to unified-mobile-profile."); }, true},
-#elif !WATCH
-			{ "new-style", "Build for new-style/64-bit-compatible Xamarin.iOS (Xamarin.iOS.dll instead of monotouch.dll)", v => { /* no-op*/ }, true },
-#endif
+			{ "new-style", "Build for Unified (Obsolete).", v => { Console.WriteLine ("The --new-style option is obsolete and ignored."); }, true},
 			{ "d=", "Defines a symbol", v => defines.Add (v) },
 			{ "api=", "Adds a API definition source file", v => api_sources.Add (Quote (v)) },
 			{ "s=", "Adds a source file required to build the API", v => core_sources.Add (Quote (v)) },
@@ -219,15 +223,10 @@ class BindingTouch {
 			{ "nostdlib", "Does not reference mscorlib.dll library", l => nostdlib = true },
 			{ "no-mono-path", "Launches compiler with empty MONO_PATH", l => { } },
 			{ "native-exception-marshalling", "Enable the marshalling support for Objective-C exceptions", (v) => { /* no-op */} },
-#if XAMCORE_2_0 && !MONOMAC
-			{ "inline-selectors:", "If Selector.GetHandle is inlined and does not need to be cached (default: true)", 
-#else
-			{ "inline-selectors:", "If Selector.GetHandle is inlined and does not need to be cached (default: false)", 
-#endif
+			{ "inline-selectors:", "If Selector.GetHandle is inlined and does not need to be cached (enabled by default in Xamarin.iOS, disabled in Xamarin.Mac)", 
 				v => inline_selectors = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v)
 			},
 			{ "process-enums", "Process enums as bindings, not external, types.", v => process_enums = true },
-#if !MONOMAC
 			{ "link-with=,", "Link with a native library {0:FILE} to the binding, embedded as a resource named {1:ID}",
 				(path, id) => {
 					if (path == null || path.Length == 0)
@@ -243,11 +242,9 @@ class BindingTouch {
 					linkwith.Add (id);
 				}
 			},
-#endif
-#if MONOMAC
-			{ "unified-full-profile", "Launches compiler pointing to XM Full Profile", l => { /* no-op*/ } },
-			{ "unified-mobile-profile", "Launches compiler pointing to XM Mobile Profile", l => { /* no-op*/ } },
-#endif
+			{ "unified-full-profile", "Launches compiler pointing to XM Full Profile", l => { /* no-op*/ }, true },
+			{ "unified-mobile-profile", "Launches compiler pointing to XM Mobile Profile", l => { /* no-op*/ }, true },
+			{ "target-framework=", "Specify target framework to use. Only applicable to Xamarin.Mac, and the currently supported values are: 'Xamarin.Mac,Version=v2.0,Profile=Mobile', 'Xamarin.Mac,Version=v4.5,Profile=Full' and 'Xamarin.Mac,Version=v4.5,Profile=System')", v => SetTargetFramework (v) },
 		};
 
 		try {
@@ -275,11 +272,6 @@ class BindingTouch {
 			return 1;
 		}
 
-#if !XAMCORE_2_0
-		if (alpha)
-			defines.Add ("ALPHA");
-#endif
-		
 		if (tmpdir == null)
 			tmpdir = GetWorkDir ();
 
@@ -302,13 +294,14 @@ class BindingTouch {
 			// -nowarn:436 is to avoid conflicts in definitions between core.dll and the sources
 			// Keep source files at the end of the command line - csc will create TWO assemblies if any sources preceed the -out parameter
 			var cargs = new StringBuilder ();
-#if MONOMAC
-			if (!string.IsNullOrEmpty (net_sdk) && net_sdk != "mobile") 
-				cargs.Append ("-sdk:").Append (net_sdk).Append (' ');
-#else
-			if (!string.IsNullOrEmpty (net_sdk))
-				cargs.Append ("-sdk:").Append (net_sdk).Append (' ');
-#endif
+
+			if (CurrentPlatform == PlatformName.MacOSX) {
+				if (!string.IsNullOrEmpty (net_sdk) && net_sdk != "mobile")
+					cargs.Append ("-sdk:").Append (net_sdk).Append (' ');
+			} else {
+				if (!string.IsNullOrEmpty (net_sdk))
+					cargs.Append ("-sdk:").Append (net_sdk).Append (' ');
+			}
 			cargs.Append ("-debug -unsafe -target:library -nowarn:436").Append (' ');
 			cargs.Append ("-out:").Append (Quote (tmpass)).Append (' ');
 			cargs.Append ("-r:").Append (Environment.GetCommandLineArgs ()[0]).Append (' ');
@@ -367,11 +360,8 @@ class BindingTouch {
 				Console.Error.WriteLine ("Error loading base library {0}", baselibdll);
 				return 1;
 			}
-#if !(IOS || MONOMAC)
 			GC.KeepAlive (baselib); // Fixes a compiler warning (unused variable).
-#endif
 				
-#if !MONOMAC
 			foreach (object attr in api.GetCustomAttributes (typeof (LinkWithAttribute), true)) {
 				LinkWithAttribute linkWith = (LinkWithAttribute) attr;
 				
@@ -380,7 +370,6 @@ class BindingTouch {
 					return 1;
 				}
 			}
-#endif
 
 			foreach (var r in references) {
 				if (File.Exists (r)) {
@@ -405,13 +394,6 @@ class BindingTouch {
 					strong_dictionaries.Add (t);
 			}
 
-			bool addSystemDrawingReferences =
-#if NO_SYSTEM_DRAWING
-				true;
-#else
-				false;
-#endif
-
 			string nsManagerPrefix;
 			switch (CurrentPlatform) {
 			case PlatformName.MacOSX:
@@ -425,37 +407,32 @@ class BindingTouch {
 				break;
 			}
 
+			if (CurrentPlatform == PlatformName.MacOSX && Unified) {
+				if (!target_framework.HasValue)
+					throw ErrorHelper.CreateError (86, "A target framework (--target-framework) must be specified when building for Xamarin.Mac.");
+				skipSystemDrawing = target_framework == TargetFramework.Xamarin_Mac_4_5_Full;
+			}
+
 			var nsManager = new NamespaceManager (
 				nsManagerPrefix,
 				ns == null ? firstApiDefinitionName : ns,
-				addSystemDrawingReferences
+				skipSystemDrawing
 			);
 
-			Generator.CurrentPlatform = CurrentPlatform;
 			var g = new Generator (nsManager, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()){
 				BindThirdPartyLibrary = binding_third_party,
 				CoreNSObject = CoreObject,
 				BaseDir = basedir != null ? basedir : tmpdir,
 				ZeroCopyStrings = zero_copy,
-#if MONOMAC
-				OnlyDesktop = true,
-#endif
-				Compat = !Unified,
-#if !XAMCORE_2_0
-				Alpha = alpha,
-#endif
 				InlineSelectors = inline_selectors,
-				SkipSystemDrawing = addSystemDrawingReferences
 			};
 
-#if IOS || MONOMAC
 			if (!Unified && !binding_third_party) {
 				foreach (var mi in baselib.GetType (nsManager.CoreObjCRuntime + ".Messaging").GetMethods ()){
 					if (mi.Name.IndexOf ("_objc_msgSend") != -1)
 						g.RegisterMethodName (mi.Name);
 				}
 			}
-#endif
 
 			g.Go ();
 

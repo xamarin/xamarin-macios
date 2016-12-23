@@ -17,11 +17,11 @@ namespace XamCore.CoreMedia {
 
 	public class CMCustomBlockAllocator : IDisposable {
 
-		internal GCHandle gch;
+		GCHandle gch;
 
 		public CMCustomBlockAllocator ()
 		{
-			gch = GCHandle.Alloc (this, GCHandleType.Pinned);
+			gch = GCHandle.Alloc (this);
 			// kCMBlockBufferCustomBlockSourceVersion = 0 <- this is the only and current value
 			Cblock.Version = 0;
 			Cblock.Allocate = static_AllocateCallback;
@@ -98,7 +98,7 @@ namespace XamCore.CoreMedia {
 		GCHandle dataHandle;
 		public CMManagedArrayBlockAllocator (byte [] data)
 		{
-			dataHandle = GCHandle.Alloc (data, GCHandleType.Pinned);
+			dataHandle = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, because unsafe code is scoped to the current block, and the address of the byte array will be used after this function returns.
 		}
 
 		public override IntPtr Allocate (nuint sizeInBytes)

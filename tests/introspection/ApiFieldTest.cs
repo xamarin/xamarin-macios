@@ -76,6 +76,16 @@ namespace Introspection {
 			return false;
 		}
 
+		/// <summary>
+		/// Override if you want to skip testing the specified constant during notification tests
+		/// </summary>
+		/// <param name="declaredType">Type declaring said notification.</param>
+		/// <param name="notificationName">Name of notification.</param>
+		protected virtual bool SkipNotification (Type declaredType, string notificationName)
+		{
+			return false;
+		}
+
 		// check generated code, which are static properties, e.g.
 		// [Field ("kCGImagePropertyIPTCObjectTypeReference")]
 		// NSString IPTCObjectTypeReference { get; }
@@ -103,6 +113,84 @@ namespace Introspection {
 				return false;
 			}
 		}
+
+		static List<PropertyInfo> properties;
+
+		IEnumerable<PropertyInfo> AllProperties ()
+		{
+			if (properties != null)
+				return properties;
+
+			properties = new List<PropertyInfo> ();
+			foreach (Type t in Assembly.GetTypes ()) {
+				if (Skip (t) || SkipDueToAttribute (t))
+					continue;
+
+				foreach (var p in t.GetProperties (BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)) {
+					// looking for properties with getters only
+					if (p.CanWrite || !p.CanRead)
+						continue;
+					if (SkipDueToAttribute (p))
+						continue;
+
+					properties.Add (p);
+				}
+			}
+			return properties;
+		}
+
+
+		[Test]
+		public void Notifications ()
+		{
+			var failed_fields = new List<string> ();
+
+			Errors = 0;
+			int c = 0, n = 0;
+			foreach (var p in AllProperties ()) {
+				if (p.PropertyType.FullName != NSStringType)
+					continue;
+				
+				var f = p.GetCustomAttribute<FieldAttribute> ();
+				if (f == null)
+					continue;
+
+				var name = f.SymbolName;
+				if (!name.EndsWith ("Notification", StringComparison.Ordinal))
+					continue;
+
+				if (SkipNotification (p.DeclaringType, name))
+					continue;
+
+				var nested = p.DeclaringType.GetNestedTypes ();
+				if (nested.Length == 0) {
+					ReportError (name);
+					failed_fields.Add (name);
+				} else {
+					bool found = false;
+					foreach (var nt in nested) {
+						if (nt.Name != "Notifications")
+							continue;
+						// look for the associated methods
+						name = "Observe" + p.Name;
+						if (name.EndsWith ("Notification", StringComparison.Ordinal))
+							name = name.Substring (0, name.Length - "Notification".Length);
+						foreach (var m in nt.GetMethods (BindingFlags.Static | BindingFlags.Public)) {
+							if (name == m.Name) {
+								found = true;
+								break;
+							}
+						}
+					}
+					if (!found) {
+						ReportError (name);
+						failed_fields.Add (name);
+					}
+				}
+				n++;
+			}
+			Assert.AreEqual (0, Errors, "{0} errors found in {1} fields validated: {2}", Errors, n, string.Join (", ", failed_fields));
+		}
 		
 		[Test]
 		public void NonNullNSStringFields ()
@@ -110,33 +198,18 @@ namespace Introspection {
 			var failed_fields = new List<string> ();
 
 			Errors = 0;
-			int c = 0, n = 0;
-			foreach (Type t in Assembly.GetTypes ()) {
-				if (Skip (t) || SkipDueToAttribute (t))
+			int n = 0;
+			foreach (var p in AllProperties ()) {
+				if (p.PropertyType.FullName != NSStringType)
 					continue;
 
-				if (LogProgress)
-					Console.WriteLine ("{0}. {1}", c++, t.FullName);
-
-				foreach (var p in t.GetProperties (BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)) {
-					// looking for properties with getters only
-					if (p.CanWrite || !p.CanRead)
-						continue;
-					
-					if (p.PropertyType.FullName != NSStringType)
-						continue;
-
-					if (SkipDueToAttribute (p))
-						continue;
-
-					string name;
-					bool result = CheckAgainstNull (p, out name);
-					if (!result) {
-						ReportError (name);
-						failed_fields.Add (name);
-					}
-					n++;
+				string name;
+				bool result = CheckAgainstNull (p, out name);
+				if (!result) {
+					ReportError (name);
+					failed_fields.Add (name);
 				}
+				n++;
 			}
 			Assert.AreEqual (0, Errors, "{0} errors found in {1} fields validated: {2}", Errors, n, string.Join (", ", failed_fields));
 		}
@@ -147,39 +220,24 @@ namespace Introspection {
 			var failed_fields = new List<string> ();
 
 			Errors = 0;
-			int c = 0, n = 0;
-			foreach (Type t in Assembly.GetTypes ()) {
-				if (Skip (t) || SkipDueToAttribute (t))
+			int n = 0;
+			foreach (var p in AllProperties ()) {
+				var f = p.GetCustomAttribute<FieldAttribute> ();
+				if (f == null)
 					continue;
 
-				if (LogProgress)
-					Console.WriteLine ("{0}. {1}", c++, t.FullName);
+				string name = f.SymbolName;
+				if (Skip (name))
+					continue;
 
-				foreach (var p in t.GetProperties (BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)) {
-					// looking for properties with getters only
-					if (p.CanWrite || !p.CanRead)
-						continue;
-
-					if (SkipDueToAttribute (p))
-						continue;
-
-					var f = p.GetCustomAttribute<FieldAttribute> ();
-					if (f == null)
-						continue;
-
-					string name = f.SymbolName;
-					if (Skip (name))
-						continue;
-
-					string path = FindLibrary (f.LibraryName);
-					IntPtr lib = Dlfcn.dlopen (path, 0);
-					if (Dlfcn.GetIndirect (lib, name) == IntPtr.Zero) {
-						ReportError ("Could not find the field '{0}' in {1}", name, path);
-						failed_fields.Add (name);
-					}
-					Dlfcn.dlclose (lib);
-					n++;
+				string path = FindLibrary (f.LibraryName);
+				IntPtr lib = Dlfcn.dlopen (path, 0);
+				if (Dlfcn.GetIndirect (lib, name) == IntPtr.Zero) {
+					ReportError ("Could not find the field '{0}' in {1}", name, path);
+					failed_fields.Add (name);
 				}
+				Dlfcn.dlclose (lib);
+				n++;
 			}
 			Assert.AreEqual (0, Errors, "{0} errors found in {1} fields validated: {2}", Errors, n, string.Join (", ", failed_fields));
 		}

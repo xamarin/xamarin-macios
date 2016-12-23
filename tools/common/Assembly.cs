@@ -176,7 +176,7 @@ namespace Xamarin.Bundler {
 					path = Path.Combine (Cache.Location, libraryName);
 					if (path.EndsWith (".framework", StringComparison.Ordinal)) {
 #if MONOTOUCH
-						if (App.DeploymentTarget.Major < 8) {
+						if (App.Platform == Xamarin.Utils.ApplePlatform.iOS && App.DeploymentTarget.Major < 8) {
 							throw ErrorHelper.CreateError (1305, "The binding library '{0}' contains a user framework ({0}), but embedded user frameworks require iOS 8.0 (the deployment target is {1}). Please set the deployment target in the Info.plist file to at least 8.0.",
 								FileName, Path.GetFileName (path), App.DeploymentTarget);
 						}
@@ -334,16 +334,16 @@ namespace Xamarin.Bundler {
 					case "libsystem_kernel":
 						break;
 					case "sqlite3":
-						if (LinkWith == null)
-							LinkWith = new List<string> ();
-						LinkWith.Add ("-lsqlite3");
+						if (LinkerFlags == null)
+							LinkerFlags = new List<string> ();
+						LinkerFlags.Add ("-lsqlite3");
 						Driver.Log (3, "Linking with {0} because it's referenced by a module reference in {1}", file, FileName);
 						break;
 					case "libsqlite3":
 						// remove lib prefix
-						if (LinkWith == null)
-							LinkWith = new List<string> ();
-						LinkWith.Add ("-l" + file.Substring (3));
+						if (LinkerFlags == null)
+							LinkerFlags = new List<string> ();
+						LinkerFlags.Add ("-l" + file.Substring (3));
 						Driver.Log (3, "Linking with {0} because it's referenced by a module reference in {1}", file, FileName);
 					break;
 					case "libGLES":

@@ -90,7 +90,7 @@ namespace Xamarin
 		public void RebuildTest_Intl ()
 		{
 			using (var tool = new MTouchTool ()) {
-				tool.Profile = Profile.Unified;
+				tool.Profile = Profile.iOS;
 				tool.I18N = I18N.West;
 				tool.Verbosity = 5;
 				tool.Cache = Path.Combine (tool.CreateTemporaryDirectory (), "mtouch-test-cache");
@@ -115,7 +115,7 @@ namespace Xamarin
 		public enum Config { Debug, Release }
 		public enum PackageMdb { Default, WithMdb, WoutMdb }
 		public enum MSym { Default, WithMSym, WoutMSym }
-		public enum Profile { Unified, TVOS, WatchOS }
+		public enum Profile { iOS, tvOS, watchOS }
 
 		[Test]
 		// Simulator
@@ -125,46 +125,44 @@ namespace Xamarin
 		[TestCase (Target.Sim, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  false, "")]
 		[TestCase (Target.Sim, Config.Debug,   PackageMdb.WoutMdb, MSym.Default,  false, false, "--nofastsim --nolink")]
 		// Device
-		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  false, "")]
+		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  true,  "")]
 		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.WoutMSym, true,  false, "")]
-		[TestCase (Target.Dev, Config.Release, PackageMdb.Default, MSym.Default,  false, false, "--abi:armv7,arm64")]
+		[TestCase (Target.Dev, Config.Release, PackageMdb.Default, MSym.Default,  false, true,  "--abi:armv7,arm64")]
 		[TestCase (Target.Dev, Config.Debug,   PackageMdb.WoutMdb, MSym.Default,  false, false, "")]
 		[TestCase (Target.Dev, Config.Debug,   PackageMdb.WoutMdb, MSym.WithMSym, false, true,  "")]
-		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  false, "--abi:armv7+llvm")]
+		[TestCase (Target.Dev, Config.Release, PackageMdb.WithMdb, MSym.Default,  true,  true,  "--abi:armv7+llvm")]
 		public void SymbolicationData (Target target, Config configuration, PackageMdb package_mdb, MSym msym, bool has_mdb, bool has_msym, string extra_mtouch_args)
 		{
 			if (target == Target.Dev)
 				AssertDeviceAvailable ();
-			
-			var testDir = GetTempDirectory ();
-			var appDir = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (appDir);
 
-			try {
-				var is_sim = target == Target.Sim;
-				var exe = CompileUnifiedTestAppExecutable (testDir);
-				var msymDir = appDir + ".msym";
-				var args = extra_mtouch_args;
-
-				args += is_sim ? " --sim {0} " : " --dev {0} ";
-
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = Profile.iOS;
+				mtouch.CreateTemporaryApp (hasPlist: true);
+				switch (package_mdb) {
+				case PackageMdb.WithMdb:
+					mtouch.PackageMdb = true;
+					break;
+				case PackageMdb.WoutMdb:
+					mtouch.PackageMdb = false;
+					break;
+				}
+				switch (msym) {
+				case MSym.WithMSym:
+					mtouch.MSym = true;
+					break;
+				case MSym.WoutMSym:
+					mtouch.MSym = false;
+					break;
+				}
 				if (configuration == Config.Debug)
-					args += "--debug ";
+					mtouch.Debug = true;
 
-				if (package_mdb == PackageMdb.WithMdb)
-					args += "--package-mdb:true ";
-				else if (package_mdb == PackageMdb.WoutMdb)
-					args += "--package-mdb:false ";
+				var is_sim = target == Target.Sim;
+				mtouch.AssertExecute (is_sim ? MTouchAction.BuildSim : MTouchAction.BuildDev, "build");
 
-				if (msym == MSym.WithMSym)
-					args += "--msym:true ";
-				else if (msym == MSym.WoutMSym)
-					args += "--msym:false ";
-				
-				args += " --sdkroot {2} -v -v -v -sdk {3} {1} -r:{4}";
-
-				ExecutionHelper.Execute (TestTarget.ToolPath, string.Format (args, appDir, exe, Configuration.xcode_root, Configuration.sdk_version, Configuration.XamarinIOSDll));
-
+				var appDir = mtouch.AppPath;
+				var msymDir = appDir + ".mSYM";
 				if (is_sim) {
 					Assert.AreEqual (has_mdb, File.Exists (Path.Combine (appDir, "mscorlib.pdb")), "#pdb");
 				} else {
@@ -183,9 +181,12 @@ namespace Xamarin
 						}
 					}
 					Assert.AreEqual (has_msym, msymFiles.Contains ("mscorlib.dll.msym"));
-				} 
-			} finally {
-				Directory.Delete (testDir, true);
+					var manifest = new XmlDocument ();
+					manifest.Load (Path.Combine (msymDir, "manifest.xml"));
+					Assert.AreEqual ("com.xamarin.testApp", manifest.SelectSingleNode ("/mono-debug/app-id").InnerText, "app-id");
+				} else {
+					DirectoryAssert.DoesNotExist (msymDir, "mSYM found when not expected");
+				}
 			}
 		}
 
@@ -216,57 +217,12 @@ namespace Xamarin
 		}
 
 		[Test]
-		public void MT0016 ()
-		{
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			var deprecated_list = new string [] {
-				"-d={0}", "--dir={0}", "--cp", "--crossprefix", "--libdir", "-n", "--keeptemp", 
-				"--main", "--nomanifest", "--mapinject", "--nosign", "--displayname", "--bundleid",
-				"--mainnib", "--icon", "-c", "--certificate", "--enable-background-fetch",
-				"--llvm", "--thumb", "--armv7", "--noregistrar", "--unsupported--enable-generics-in-registrar" 
-			};
-
-
-			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.Unified);
-				var args = string.Format (string.Join (" ", deprecated_list), app);
-
-				Asserts.ThrowsPattern<TestExecutionException> (() =>
-					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("--sdkroot {5} --dev {0} {1} -r:{2} {3} --sdk {4}", app, exe, Configuration.XamarinIOSDll, args, Configuration.sdk_version, Configuration.xcode_root), hide_output: false),
-					"Xamarin.iOS .* using framework:.*\n" +
-					"error MT0016: The option '--dir' has been deprecated.\n" +
-					"error MT0016: The option '--dir' has been deprecated.\n" +
-					"error MT0016: The option '--crossprefix' has been deprecated.\n" +
-					"error MT0016: The option '--libdir' has been deprecated.\n" +
-					"error MT0016: The option '-n' has been deprecated.\n" +
-					"error MT0016: The option '--keeptemp' has been deprecated.\n" +
-					"error MT0016: The option '--main' has been deprecated.\n" +
-					"error MT0016: The option '--mapinject' has been deprecated.\n" +
-					"error MT0016: The option '--nosign' has been deprecated.\n" +
-					"error MT0016: The option '--displayname' has been deprecated.\n" +
-					"error MT0016: The option '--mainnib' has been deprecated.\n" +
-					"error MT0016: The option '--certificate' has been deprecated.\n" +
-					"error MT0016: The option '--llvm' has been deprecated.\n" +
-					"error MT0016: The option '--thumb' has been deprecated.\n" +
-					"error MT0016: The option '--armv7' has been deprecated.\n" +
-					"error MT0016: The option '--noregistrar' has been deprecated.\n" +
-					"error MT0016: The option '--unsupported--enable-generics-in-registrar' has been deprecated.\n");
-			} finally {
-				Directory.Delete (testDir, true);
-			}
-
-		}
-
-		[Test]
-		[TestCase (Profile.Unified, Profile.TVOS)]
-		[TestCase (Profile.Unified, Profile.WatchOS)]
-		[TestCase (Profile.TVOS, Profile.Unified)]
-		[TestCase (Profile.TVOS, Profile.WatchOS)]
-		[TestCase (Profile.WatchOS, Profile.Unified)]
-		[TestCase (Profile.WatchOS, Profile.TVOS)]
+		[TestCase (Profile.iOS, Profile.tvOS)]
+		[TestCase (Profile.iOS, Profile.watchOS)]
+		[TestCase (Profile.tvOS, Profile.iOS)]
+		[TestCase (Profile.tvOS, Profile.watchOS)]
+		[TestCase (Profile.watchOS, Profile.iOS)]
+		[TestCase (Profile.watchOS, Profile.tvOS)]
 		public void MT0041 (Profile profile, Profile other)
 		{
 			using (var mtouch = new MTouchTool ()) {
@@ -291,7 +247,7 @@ namespace Xamarin
 			Directory.CreateDirectory (app);
 
 			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.Unified);
+				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.iOS);
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
 					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 3.1 --abi=armv7s,arm64 {1} -debug -r:" + Configuration.XamarinIOSDll, app, exe)),
@@ -321,7 +277,7 @@ namespace Xamarin
 			Directory.CreateDirectory (app);
 
 			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.Unified);
+				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.iOS);
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
 					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 400.0.0 --abi=armv7s,arm64 {1} -debug -r:" + Configuration.XamarinIOSDll, app, exe)),
@@ -332,29 +288,12 @@ namespace Xamarin
 		}
 
 		[Test]
-		public void MT0048 ()
-		{
-			var testDir = GetTempDirectory ();
-			var app = Path.Combine (testDir, "testApp.app");
-			Directory.CreateDirectory (app);
-
-			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.Unified);
-
-				Asserts.ThrowsPattern<TestExecutionException> (() => ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 6.0 --abi=armv7s {1} -debug -r:{2} --crashreporting-api-key APIKEY", app, exe, Configuration.XamarinIOSDll), hide_output: false),
-					"error MT0016: The option '--crashreporting-api-key' has been deprecated.");
-			} finally {
-				Directory.Delete (testDir, true);
-			}
-		}
-
-		[Test]
-		[TestCase (Profile.Unified, Profile.TVOS)]
-		[TestCase (Profile.Unified, Profile.WatchOS)]
-		[TestCase (Profile.TVOS, Profile.Unified)]
-		[TestCase (Profile.TVOS, Profile.WatchOS)]
-		[TestCase (Profile.WatchOS, Profile.Unified)]
-		[TestCase (Profile.WatchOS, Profile.TVOS)]
+		[TestCase (Profile.iOS, Profile.tvOS)]
+		[TestCase (Profile.iOS, Profile.watchOS)]
+		[TestCase (Profile.tvOS, Profile.iOS)]
+		[TestCase (Profile.tvOS, Profile.watchOS)]
+		[TestCase (Profile.watchOS, Profile.iOS)]
+		[TestCase (Profile.watchOS, Profile.tvOS)]
 		public void MT0034 (Profile exe_profile, Profile dll_profile)
 		{
 			using (var mtouch = new MTouchTool ()) {
@@ -399,7 +338,7 @@ namespace Xamarin
 			Directory.CreateDirectory (app);
 
 			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.Unified);
+				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.iOS);
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
 					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --registrar:oldstatic --targetver 6.0 --abi=arm64 {1} -debug -r:{2} ", app, exe, Configuration.XamarinIOSDll)),
@@ -535,13 +474,13 @@ namespace Xamarin
 			Directory.CreateDirectory (app);
 
 			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.WatchOS);
+				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.watchOS);
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
 					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot {3} --dev {0} -sdk {4} -r:{2} {1} --target-framework Xamarin.WatchOS,v1.0", app, exe, Configuration.XamarinWatchOSDll, Configuration.xcode_root, Configuration.watchos_sdk_version), hide_output: false),
 					"error MT0076: No architecture specified .using the --abi argument.. An architecture is required for Xamarin.WatchOS projects.");
 				
-				exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.TVOS);
+				exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.tvOS);
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
 					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot {3} --dev {0} -sdk {4} -r:{2} {1} --target-framework Xamarin.TVOS,v1.0", app, exe, Configuration.XamarinTVOSDll, Configuration.xcode_root, Configuration.tvos_sdk_version), hide_output: false),
@@ -562,7 +501,7 @@ namespace Xamarin
 			Directory.CreateDirectory (app);
 
 			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.WatchOS);
+				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.watchOS);
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
 					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot {3} --dev {0} -sdk {4} -r:{2} {1} --target-framework Xamarin.WatchOS,v1.0 --abi armv7k", app, exe, Configuration.XamarinWatchOSDll, Configuration.xcode_root, Configuration.watchos_sdk_version), hide_output: false),
@@ -573,9 +512,9 @@ namespace Xamarin
 		}
 
 		[Test]
-		[TestCase (Profile.TVOS)]
+		[TestCase (Profile.tvOS)]
 		//[TestCase (Profile.WatchOS)] MT0077 interferring.
-		[TestCase (Profile.Unified)]
+		[TestCase (Profile.iOS)]
 		public void MT0085 (Profile profile)
 		{
 			using (var mtouch = new MTouchTool ()) {
@@ -588,8 +527,8 @@ namespace Xamarin
 		}
 
 		[Test]
-		[TestCase (Profile.TVOS)]
-		[TestCase (Profile.WatchOS)]
+		[TestCase (Profile.tvOS)]
+		[TestCase (Profile.watchOS)]
 		public void MT0086 (Profile profile)
 		{
 			using (var mtouch = new MTouchTool ()) {
@@ -601,8 +540,8 @@ namespace Xamarin
 		}
 
 		[Test]
-		[TestCase (Profile.TVOS, "tvOS")]
-		[TestCase (Profile.Unified, "iOS")]
+		[TestCase (Profile.tvOS, "tvOS")]
+		[TestCase (Profile.iOS, "iOS")]
 		public void MT0091 (Profile profile, string name)
 		{
 			// Any old Xcode would do.
@@ -664,11 +603,11 @@ namespace Xamarin
 		public static string GetBaseLibrary (Profile profile)
 		{
 			switch (profile) {
-			case Profile.Unified:
+			case Profile.iOS:
 				return Configuration.XamarinIOSDll;
-			case Profile.TVOS:
+			case Profile.tvOS:
 				return Configuration.XamarinTVOSDll;
-			case Profile.WatchOS:
+			case Profile.watchOS:
 				return Configuration.XamarinWatchOSDll;
 			default:
 				throw new NotImplementedException ();
@@ -684,11 +623,11 @@ namespace Xamarin
 		static string GetConfiguration (Profile profile)
 		{
 			switch (profile) {
-			case Profile.Unified:
+			case Profile.iOS:
 				return "Debug-unified";
-			case Profile.TVOS:
+			case Profile.tvOS:
 				return "Debug-tvos";
-			case Profile.WatchOS:
+			case Profile.watchOS:
 				return "Debug-watchos";
 			default:
 				throw new NotImplementedException ();
@@ -698,11 +637,11 @@ namespace Xamarin
 		public static string GetTargetFramework (Profile profile)
 		{
 			switch (profile) {
-			case Profile.Unified:
+			case Profile.iOS:
 				return "Xamarin.iOS,v1.0";
-			case Profile.TVOS:
+			case Profile.tvOS:
 				return "Xamarin.TVOS,v1.0";
-			case Profile.WatchOS:
+			case Profile.watchOS:
 				return "Xamarin.WatchOS,v1.0";
 			default:
 				throw new NotImplementedException ();
@@ -712,11 +651,11 @@ namespace Xamarin
 		public static string GetDeviceArchitecture (Profile profile)
 		{
 			switch (profile) {
-			case Profile.Unified:
+			case Profile.iOS:
 				return "armv7";
-			case Profile.TVOS:
+			case Profile.tvOS:
 				return "arm64";
-			case Profile.WatchOS:
+			case Profile.watchOS:
 				return "armv7k";
 			default:
 				throw new NotImplementedException ();
@@ -726,10 +665,10 @@ namespace Xamarin
 		public static string GetSimulatorArchitecture (Profile profile)
 		{
 			switch (profile) {
-			case Profile.Unified:
-			case Profile.WatchOS:
+			case Profile.iOS:
+			case Profile.watchOS:
 				return "i386";
-			case Profile.TVOS:
+			case Profile.tvOS:
 				return "x86_64";
 			default:
 				throw new NotImplementedException ();
@@ -744,11 +683,11 @@ namespace Xamarin
 		static string GetPlatformName (Profile profile)
 		{
 			switch (profile) {
-			case Profile.Unified:
+			case Profile.iOS:
 				return "Xamarin.iOS";
-			case Profile.TVOS:
+			case Profile.tvOS:
 				return "Xamarin.TVOS";
-			case Profile.WatchOS:
+			case Profile.watchOS:
 				return "Xamarin.WatchOS";
 			default:
 				throw new NotImplementedException ();
@@ -758,11 +697,11 @@ namespace Xamarin
 		static string GetProjectSuffix (Profile profile)
 		{
 			switch (profile) {
-			case Profile.Unified:
+			case Profile.iOS:
 				return string.Empty;
-			case Profile.TVOS:
+			case Profile.tvOS:
 				return "-tvos";
-			case Profile.WatchOS:
+			case Profile.watchOS:
 				return "-watchos";
 			default:
 				throw new NotImplementedException ();
@@ -772,11 +711,11 @@ namespace Xamarin
 		public static string GetSdkVersion (Profile profile)
 		{
 			switch (profile) {
-			case Profile.Unified:
+			case Profile.iOS:
 				return Configuration.sdk_version;
-			case Profile.TVOS:
+			case Profile.tvOS:
 				return Configuration.tvos_sdk_version;
-			case Profile.WatchOS:
+			case Profile.watchOS:
 				return Configuration.watchos_sdk_version;
 			default:
 				throw new NotImplementedException ();
@@ -809,8 +748,8 @@ namespace Xamarin
 		}
 
 		[Test]
-		[TestCase (Profile.Unified)]
-		[TestCase (Profile.TVOS)]
+		[TestCase (Profile.iOS)]
+		[TestCase (Profile.tvOS)]
 		//[TestCase (Profile.WatchOS)] // needs testing improvement
 		public void FastDev_LinkWithTest (Profile profile)
 		{
@@ -844,8 +783,8 @@ namespace Xamarin
 		}
 
 		[Test]
-		[TestCase (Profile.Unified)]
-		[TestCase (Profile.TVOS)]
+		[TestCase (Profile.iOS)]
+		[TestCase (Profile.tvOS)]
 		//[TestCase (Profile.WatchOS)] // needs testing improvement
 		public void FastDev_NoFastSim_NoLink (Profile profile)
 		{
@@ -873,8 +812,8 @@ namespace Xamarin
 		}
 		
 		[Test]
-		[TestCase (Profile.Unified)]
-		[TestCase (Profile.TVOS)]
+		[TestCase (Profile.iOS)]
+		[TestCase (Profile.tvOS)]
 		//[TestCase (Profile.WatchOS)] // needs testing improvement
 		public void FastDev_NoFastSim_LinkAll (Profile profile)
 		{
@@ -901,8 +840,8 @@ namespace Xamarin
 		}
 		
 		[Test]
-		[TestCase (Profile.Unified)]
-		[TestCase (Profile.TVOS)]
+		[TestCase (Profile.iOS)]
+		[TestCase (Profile.tvOS)]
 		//[TestCase (Profile.WatchOS)] // needs testing improvement
 		public void FastDev_NoFastSim_LinkSDK (Profile profile)
 		{
@@ -930,8 +869,8 @@ namespace Xamarin
 		}
 
 		[Test]
-		[TestCase (Profile.Unified)]
-		[TestCase (Profile.TVOS)]
+		[TestCase (Profile.iOS)]
+		[TestCase (Profile.tvOS)]
 		//[TestCase (Profile.WatchOS)] // needs testing improvement
 		public void FastDev_Sim (Profile profile)
 		{
@@ -957,8 +896,8 @@ namespace Xamarin
 		}
 
 		[Test]
-		[TestCase (Profile.Unified)]
-		[TestCase (Profile.TVOS)]
+		[TestCase (Profile.iOS)]
+		[TestCase (Profile.tvOS)]
 		//[TestCase (Profile.WatchOS)] // needs testing improvement
 		public void FastDev_LinkAll (Profile profile)
 		{
@@ -975,8 +914,8 @@ namespace Xamarin
 		}
 		
 		[Test]
-		[TestCase (Profile.Unified)]
-		[TestCase (Profile.TVOS)]
+		[TestCase (Profile.iOS)]
+		[TestCase (Profile.tvOS)]
 		//[TestCase (Profile.WatchOS)] // needs testing improvement
 		public void FastDev_NoLink (Profile profile)
 		{
@@ -996,8 +935,8 @@ namespace Xamarin
 		}
 		
 		[Test]
-		[TestCase (Profile.Unified)]
-		[TestCase (Profile.TVOS)]
+		[TestCase (Profile.iOS)]
+		[TestCase (Profile.tvOS)]
 		//[TestCase (Profile.WatchOS)] // needs testing improvement
 		public void FastDev_LinkAll_Then_NoLink (Profile profile)
 		{
@@ -1020,8 +959,8 @@ namespace Xamarin
 		}
 
 		[Test]
-		[TestCase (Profile.Unified)]
-		[TestCase (Profile.TVOS)]
+		[TestCase (Profile.iOS)]
+		[TestCase (Profile.tvOS)]
 		//[TestCase (Profile.WatchOS)] // needs testing improvement
 		public void FastDev_LinkSDK (Profile profile)
 		{
@@ -1045,7 +984,7 @@ namespace Xamarin
 		{
 			using (var mtouch = new MTouchTool ()
 			{
-				Profile = Profile.Unified,
+				Profile = Profile.iOS,
 				FastDev = true,
 				Abi = "armv7,arm64",
 			}) {
@@ -1065,7 +1004,7 @@ namespace Xamarin
 		}
 
 		[Test]
-		[TestCase (Profile.Unified)]
+		[TestCase (Profile.iOS)]
 		public void FastSim (Profile profile)
 		{
 			using (var tool = new MTouchTool ()) {
@@ -1094,7 +1033,7 @@ namespace Xamarin
 		public void Architectures_Unified (Target target, string abi)
 		{
 			using (var mtouch = new MTouchTool ()) {
-				mtouch.Profile = Profile.Unified;
+				mtouch.Profile = Profile.iOS;
 				mtouch.CreateTemporaryApp ();
 
 				mtouch.Abi = abi;
@@ -1111,7 +1050,7 @@ namespace Xamarin
 		public void Architectures_Unified_FatSimulator ()
 		{
 			using (var mtouch = new MTouchTool ()) {
-				mtouch.Profile = Profile.Unified;
+				mtouch.Profile = Profile.iOS;
 				mtouch.CreateTemporaryApp ();
 
 				mtouch.Abi = "i386,x86_64";
@@ -1132,7 +1071,7 @@ namespace Xamarin
 		public void Architectures_Unified_Invalid ()
 		{
 			using (var mtouch = new MTouchTool ()) {
-				mtouch.Profile = Profile.Unified;
+				mtouch.Profile = Profile.iOS;
 				mtouch.CreateTemporaryApp ();
 
 				mtouch.Abi = "armv6";
@@ -1154,7 +1093,7 @@ namespace Xamarin
 			AssertDeviceAvailable ();
 
 			using (var mtouch = new MTouchTool ()) {
-				mtouch.Profile = MTouch.Profile.TVOS;
+				mtouch.Profile = MTouch.Profile.tvOS;
 				mtouch.Abi = abi;
 				mtouch.CreateTemporaryApp ();
 				      
@@ -1171,7 +1110,7 @@ namespace Xamarin
 			AssertDeviceAvailable ();
 
 			using (var mtouch = new MTouchTool ()) {
-				mtouch.Profile = Profile.TVOS;
+				mtouch.Profile = Profile.tvOS;
 				mtouch.CreateTemporaryApp ();
 
 				mtouch.Abi = "armv7";
@@ -1189,7 +1128,7 @@ namespace Xamarin
 			Directory.CreateDirectory (app);
 			try {
 				var code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (UIKit.UIWindow).ToString ()); } }";
-				var exe = CompileTestAppExecutable (testDir, code: code, profile: MTouch.Profile.Unified);
+				var exe = CompileTestAppExecutable (testDir, code: code, profile: MTouch.Profile.iOS);
 				var bin = Path.Combine (app, Path.GetFileNameWithoutExtension (exe));
 				var common_args = string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk " + Configuration.sdk_version + " --targetver 6.0 --abi=i386 {1} -debug -gcc_flags -Wl,-w ", app, exe);
 				var newstyle_args = common_args + "-r:" + Configuration.XamarinIOSDll;
@@ -1249,12 +1188,12 @@ namespace Xamarin
 		}
 
 		[Test]
-		[TestCase (Target.Dev, Profile.Unified, "dont link", "Release64")]
-		[TestCase (Target.Dev, Profile.Unified, "link all", "Release64")]
-		[TestCase (Target.Dev, Profile.Unified, "link sdk", "Release64")]
-		[TestCase (Target.Dev, Profile.Unified, "monotouch-test", "Release64")]
-		[TestCase (Target.Dev, Profile.Unified, "mscorlib", "Release64")]
-		[TestCase (Target.Dev, Profile.Unified, "System.Core", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "dont link", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "link all", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "link sdk", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "monotouch-test", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "mscorlib", "Release64")]
+		[TestCase (Target.Dev, Profile.iOS, "System.Core", "Release64")]
 		public void BuildTestProject (Target target, Profile profile, string testname, string configuration)
 		{
 			if (target == Target.Dev)
@@ -1275,7 +1214,7 @@ namespace Xamarin
 			}
 			var platform = target == Target.Dev ? "iPhone" : "iPhoneSimulator";
 			var csproj = Path.Combine (Configuration.SourceRoot, "tests" + subdir, testname, testname + GetProjectSuffix (profile) + ".csproj");
-			XBuild.Build (csproj, configuration, platform, timeout: TimeSpan.FromMinutes (10));
+			XBuild.Build (csproj, configuration, platform, timeout: TimeSpan.FromMinutes (15));
 		}
 
 		[Test]
@@ -1741,7 +1680,7 @@ class Test {
 	}
 }
 ";
-				var exe = CompileTestAppExecutable (testDir, code, profile: MTouch.Profile.Unified);
+				var exe = CompileTestAppExecutable (testDir, code, profile: MTouch.Profile.iOS);
 				var cache = Path.Combine (testDir, "mtouch-cache");
 
 				var mtouch = new MTouchTool ();
@@ -1968,7 +1907,7 @@ class Test {
 		}
 
 		[Test]
-		[TestCase (Profile.Unified)]
+		[TestCase (Profile.iOS)]
 		public void DlsymDisabled (Profile profile)
 		{
 			using (var tool = new MTouchTool ()) {
@@ -1987,7 +1926,7 @@ class Test {
 		public void PInvokeWrapperGenerationTest ()
 		{
 			using (var tool = new MTouchTool ()) {
-				tool.Profile = Profile.WatchOS;
+				tool.Profile = Profile.watchOS;
 				tool.CreateTemporaryCacheDirectory ();
 				tool.Verbosity = 5;
 				tool.Extension = true;
@@ -2017,7 +1956,7 @@ class Test {
 		public void LinkWithNoLibrary ()
 		{
 			using (var tool = new MTouchTool ()) {
-				tool.Profile = Profile.Unified;
+				tool.Profile = Profile.iOS;
 				tool.CreateTemporaryApp (code: @"
 using System;
 using System.Runtime.InteropServices;
@@ -2042,7 +1981,7 @@ class C {
 		public void WatchExtensionWithFramework ()
 		{
 			using (var exttool = new MTouchTool ()) {
-				exttool.Profile = Profile.WatchOS;
+				exttool.Profile = Profile.watchOS;
 				exttool.CreateTemporaryCacheDirectory ();
 				exttool.Verbosity = 5;
 
@@ -2052,7 +1991,7 @@ class C {
 				exttool.AssertExecute (MTouchAction.BuildSim, "build extension");
 
 				using (var apptool = new MTouchTool ()) {
-					apptool.Profile = Profile.Unified;
+					apptool.Profile = Profile.iOS;
 					apptool.CreateTemporaryCacheDirectory ();
 					apptool.Verbosity = exttool.Verbosity;
 					apptool.CreateTemporaryApp ();
@@ -2071,7 +2010,7 @@ class C {
 			// if an extension references a framework, and the main app does not,
 			// the framework should still be copied to the main app's Framework directory.
 			using (var exttool = new MTouchTool ()) {
-				exttool.Profile = Profile.Unified;
+				exttool.Profile = Profile.iOS;
 				exttool.CreateTemporaryCacheDirectory ();
 				exttool.Verbosity = 5;
 
@@ -2081,7 +2020,7 @@ class C {
 				exttool.AssertExecute (MTouchAction.BuildSim, "build extension");
 
 				using (var apptool = new MTouchTool ()) {
-					apptool.Profile = Profile.Unified;
+					apptool.Profile = Profile.iOS;
 					apptool.CreateTemporaryCacheDirectory ();
 					apptool.Verbosity = exttool.Verbosity;
 					apptool.CreateTemporaryApp ();
@@ -2101,7 +2040,7 @@ class C {
 		public void OnlyDebugFileChange (MTouchLinker linker_options)
 		{
 			using (var mtouch = new MTouchTool ()) {
-				mtouch.Profile = Profile.Unified;
+				mtouch.Profile = Profile.iOS;
 				mtouch.Verbosity = 23;
 				var tmp = mtouch.CreateTemporaryDirectory ();
 				mtouch.CreateTemporaryCacheDirectory ();
@@ -2136,8 +2075,8 @@ class C {
 			}
 		}
 
-		[TestCase (Profile.Unified)]
-		[TestCase (Profile.TVOS)]
+		[TestCase (Profile.iOS)]
+		[TestCase (Profile.tvOS)]
 		public void MT2010 (Profile profile)
 		{
 			using (var mtouch = new MTouchTool ()) {
@@ -2154,7 +2093,7 @@ class C {
 		public void MT2015 ()
 		{
 			using (var mtouch = new MTouchTool ()) {
-				mtouch.Profile = Profile.WatchOS;
+				mtouch.Profile = Profile.watchOS;
 				mtouch.CreateTemporaryWatchKitExtension ();
 				mtouch.Extension = true;
 
@@ -2172,13 +2111,41 @@ class C {
 			}
 		}
 
+		[Test]
+		public void AutoLinkWithSqlite ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = Profile.iOS;
+				mtouch.CreateTemporaryApp (code: @"
+using System.Runtime.InteropServices;
+using Foundation;
+using ObjCRuntime;
+
+[assembly: LinkWith (ForceLoad = true)]
+
+[Preserve (AllMembers = true)]
+public class TestApp {
+	[DllImport (""sqlite3"")]
+	static extern void sqlite3_exec ();
+
+	static void Main ()
+	{
+		System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ());
+	}
+}
+");
+				mtouch.Linker = MTouchLinker.DontLink; // just to make the test run faster.
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+			}
+		}
+
 #region Helper functions
 		static string CompileUnifiedTestAppExecutable (string targetDirectory, string code = null, string extraArg = "")
 		{
-			return CompileTestAppExecutable (targetDirectory, code, extraArg, profile: MTouch.Profile.Unified);
+			return CompileTestAppExecutable (targetDirectory, code, extraArg, profile: MTouch.Profile.iOS);
 		}
 
-		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.Unified, string appName = "testApp")
+		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp")
 		{
 			if (code == null)
 				code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
@@ -2186,12 +2153,12 @@ class C {
 			return CompileTestAppCode ("exe", targetDirectory, code, extraArg, profile, appName);
 		}
 
-		public static string CompileTestAppLibrary (string targetDirectory, string code, string extraArg = null, Profile profile = Profile.Unified)
+		public static string CompileTestAppLibrary (string targetDirectory, string code, string extraArg = null, Profile profile = Profile.iOS)
 		{
 			return CompileTestAppCode ("library", targetDirectory, code, extraArg, profile);
 		}
 
-		public static string CompileTestAppCode (string target, string targetDirectory, string code, string extraArg = "", Profile profile = Profile.Unified, string appName = "testApp")
+		public static string CompileTestAppCode (string target, string targetDirectory, string code, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp")
 		{
 			var ext = target == "exe" ? "exe" : "dll";
 			var cs = Path.Combine (targetDirectory, "testApp.cs");
@@ -2288,7 +2255,7 @@ using ObjCRuntime;
 		}
 
 		static Dictionary<Profile, string> compiled_linkwith_apps = new Dictionary<Profile, string> ();
-		public static string CompileTestAppExecutableLinkWith (string targetDirectory, Profile profile = Profile.Unified)
+		public static string CompileTestAppExecutableLinkWith (string targetDirectory, Profile profile = Profile.iOS)
 		{
 			string compiled_linkwith_app;
 			if (compiled_linkwith_apps.TryGetValue (profile, out compiled_linkwith_app) && File.Exists (compiled_linkwith_app))

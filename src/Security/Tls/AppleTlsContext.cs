@@ -320,7 +320,7 @@ namespace XamCore.Security.Tls
 			IPAddress address;
 			if (!IsServer && !string.IsNullOrEmpty (TargetHost) &&
 			    !IPAddress.TryParse (TargetHost, out address)) {
-				PeerDomainName = TargetHost;
+				PeerDomainName = ServerName;
 			}
 		}
 

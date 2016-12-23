@@ -12,9 +12,14 @@
 using System;
 using System.Collections.Generic;
 
+using ProductException=BindingException;
+
 // Error allocation
 //
 // BI0xxx	the generator itself, e.g. parameters, environment
+//		BI0068	Invalid value for target framework: {0}. [same error number/message as mtouch/mmp]
+//		BI0070	Invalid target framework: {0}. Valid target frameworks are: {1}. [same error number/message as mtouch/mmp]
+//		BI0086  A target framework (--target-framework) must be specified when building for Xamarin.Mac. [same error number/message as mtouch/mmp]
 // BI1xxx	code generation
 //	BI10xx	errors
 //		BI1001 Do not know how to make a trampoline for {0}
@@ -61,6 +66,7 @@ using System.Collections.Generic;
 //		BI1044 Repeated name '{apiName.Name}' provided in [DelegateApiNameAttribute].
 //		BI1045 Only a single [DefaultEnumValue] attribute can be used inside enum {type.Name}.
 //		BI1046 The [Field] constant {fa.SymbolName} cannot only be used once inside enum {type.Name}.
+//		BI1047 Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.
 //	BI11xx	warnings
 //		BI1101 Trying to use a string as a [Target]
 //		BI1102 Using the deprecated EventArgs for a delegate signature in {0}.{1}, please use DelegateName instead
@@ -122,6 +128,11 @@ public static class ErrorHelper {
 	
 	static public int Verbosity { get; set; }
 	
+	public static ProductException CreateError (int code, string message, params object[] args)
+	{
+		return new ProductException (code, true, message, args);
+	}
+
 	static public void Show (Exception e)
 	{
 		List<Exception> exceptions = new List<Exception> ();
