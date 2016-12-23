@@ -419,13 +419,11 @@ class BindingTouch {
 				skipSystemDrawing
 			);
 
-			Generator.CurrentPlatform = CurrentPlatform;
 			var g = new Generator (nsManager, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()){
 				BindThirdPartyLibrary = binding_third_party,
 				CoreNSObject = CoreObject,
 				BaseDir = basedir != null ? basedir : tmpdir,
 				ZeroCopyStrings = zero_copy,
-				Compat = !Unified,
 				InlineSelectors = inline_selectors,
 			};
 
