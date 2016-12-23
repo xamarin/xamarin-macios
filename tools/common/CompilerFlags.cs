@@ -85,22 +85,22 @@ namespace Xamarin.Utils
 		{
 			// link with the exact path to libmono
 			if (Application.UseMonoFramework.Value) {
-				AddFramework (Path.Combine (Driver.ProductFrameworksDirectory, "Mono.framework"));
+				AddFramework (Path.Combine (Driver.GetProductFrameworksDirectory (Application), "Mono.framework"));
 			} else {
-				AddLinkWith (Path.Combine (Driver.MonoTouchLibDirectory, Application.LibMono));
+				AddLinkWith (Path.Combine (Driver.GetMonoTouchLibDirectory (Application), Application.LibMono));
 			}
 		}
 
 		public void LinkWithXamarin ()
 		{
-			AddLinkWith (Path.Combine (Driver.MonoTouchLibDirectory, Application.LibXamarin));
+			AddLinkWith (Path.Combine (Driver.GetMonoTouchLibDirectory (Application), Application.LibXamarin));
 			AddFramework ("Foundation");
 			AddOtherFlag ("-lz");
 		}
 
 		public void LinkWithPInvokes (Abi abi)
 		{
-			if (!Driver.App.FastDev || !Driver.App.RequiresPInvokeWrappers)
+			if (!Application.FastDev || !Application.RequiresPInvokeWrappers)
 				return;
 
 			AddOtherFlag (Path.Combine (Cache.Location, "libpinvokes." + abi.AsArchString () + ".dylib"));
@@ -139,9 +139,9 @@ namespace Xamarin.Utils
 				foreach (var fwk in Frameworks) {
 					if (!fwk.EndsWith (".framework", StringComparison.Ordinal)) {
 						var add_to = WeakFrameworks;
-						var framework = Driver.Frameworks.Find (fwk);
+						var framework = Driver.GetFrameworks (Application).Find (fwk);
 						if (framework != null) {
-							if (framework.Version > Driver.SDKVersion)
+							if (framework.Version > Application.SdkVersion)
 								continue;
 							add_to = Application.DeploymentTarget >= framework.Version ? Frameworks : WeakFrameworks;
 						}

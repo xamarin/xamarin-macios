@@ -197,7 +197,7 @@ namespace Xamarin.Bundler {
 			var data = Path.Combine (asm_dir, Path.GetFileNameWithoutExtension (s)) + "." + arch + ".aotdata";
 			string llvm_ofile, llvm_aot_ofile = "";
 			var is_llvm = (abi & Abi.LLVM) == Abi.LLVM;
-			bool assemble_llvm = is_llvm && Driver.LLVMAsmWriter;
+			bool assemble_llvm = is_llvm && Driver.GetLLVMAsmWriter (App);
 
 			if (!File.Exists (s))
 				throw new MonoTouchException (3004, true, "Could not AOT the assembly '{0}' because it doesn't exist.", s);
@@ -215,7 +215,7 @@ namespace Xamarin.Bundler {
 			} else {
 				deps = new List<string> (dependencies.ToArray ());
 				deps.Add (s);
-				deps.Add (Driver.GetAotCompiler (Target.Is64Build));
+				deps.Add (Driver.GetAotCompiler (App, Target.Is64Build));
 			}
 
 			if (App.EnableLLVMOnlyBitCode) {
@@ -253,8 +253,8 @@ namespace Xamarin.Bundler {
 				Driver.Log (3, "Target {0} needs to be rebuilt.", asm);
 			}
 
-			var aotCompiler = Driver.GetAotCompiler (Target.Is64Build);
-			var aotArgs = Driver.GetAotArguments (s, abi, build_dir, asm, llvm_aot_ofile, data);
+			var aotCompiler = Driver.GetAotCompiler (App, Target.Is64Build);
+			var aotArgs = Driver.GetAotArguments (App, s, abi, build_dir, asm, llvm_aot_ofile, data);
 			Driver.Log (3, "Aot compiler: {0} {1}", aotCompiler, aotArgs);
 
 			AotDataFiles.Add (data);
@@ -268,7 +268,7 @@ namespace Xamarin.Bundler {
 			return new BuildTask [] { new AOTTask ()
 				{
 					AssemblyName = s,
-					ProcessStartInfo = Driver.CreateStartInfo (aotCompiler, aotArgs, Path.GetDirectoryName (s)),
+					ProcessStartInfo = Driver.CreateStartInfo (App, aotCompiler, aotArgs, Path.GetDirectoryName (s)),
 					NextTasks = nextTasks
 				}
 			};
@@ -290,7 +290,7 @@ namespace Xamarin.Bundler {
 				Target.LinkWith (ofile);
 			}
 
-			if (Application.IsUptodate (new string [] { infile_path, Driver.CompilerPath }, new string [] { ofile })) {
+			if (Application.IsUptodate (new string [] { infile_path, App.CompilerPath }, new string [] { ofile })) {
 				Driver.Log (3, "Target {0} is up-to-date.", ofile);
 				return null;
 			} else {
@@ -374,7 +374,7 @@ namespace Xamarin.Bundler {
 			string target = Path.Combine (Target.TargetDirectory, Path.GetFileName (FullPath));
 			string source = FullPath;
 
-			if (!Driver.SymlinkAssembly (source, target, Path.GetDirectoryName (target))) {
+			if (!Driver.SymlinkAssembly (App, source, target, Path.GetDirectoryName (target))) {
 				symlink_failed = true;
 				CopyAssembly (source, target);
 			}
@@ -384,7 +384,7 @@ namespace Xamarin.Bundler {
 					string s_target_dir = Path.Combine (Target.TargetDirectory, Path.GetFileName (Path.GetDirectoryName (a)));
 					string s_target = Path.Combine (s_target_dir, Path.GetFileName (a));
 
-					if (!Driver.SymlinkAssembly (a, s_target, s_target_dir)) {
+					if (!Driver.SymlinkAssembly (App, a, s_target, s_target_dir)) {
 						CopyAssembly (a, s_target);
 					}
 				}

@@ -35,7 +35,7 @@ namespace Xamarin.Bundler {
 
 	public partial class Application
 	{
-		public string AppDirectory;
+		public string AppDirectory = ".";
 		public bool DeadStrip = true;
 		public bool EnableDebug;
 		internal RuntimeOptions RuntimeOptions;
@@ -59,6 +59,9 @@ namespace Xamarin.Bundler {
 		public bool IsDefaultMarshalManagedExceptionMode;
 		public string RootAssembly;
 		public string RegistrarOutputLibrary;
+
+		public Version DeploymentTarget;
+		public Version SdkVersion;
 
 		public bool RequiresPInvokeWrappers {
 			get {
@@ -419,15 +422,15 @@ namespace Xamarin.Bundler {
 
 			var resolvedAssemblies = new List<AssemblyDefinition> ();
 			var resolver = new PlatformResolver () {
-				FrameworkDirectory = Driver.PlatformFrameworkDirectory,
+				FrameworkDirectory = Driver.GetPlatformFrameworkDirectory (this),
 				RootDirectory = Path.GetDirectoryName (RootAssembly),
 			};
 
-			if (Driver.App.Platform == ApplePlatform.iOS || Driver.App.Platform == ApplePlatform.MacOSX) {
-				if (Driver.App.Is32Build) {
-					resolver.ArchDirectory = Driver.Arch32Directory;
+			if (Platform == ApplePlatform.iOS || Platform == ApplePlatform.MacOSX) {
+				if (Is32Build) {
+					resolver.ArchDirectory = Driver.GetArch32Directory (this);
 				} else {
-					resolver.ArchDirectory = Driver.Arch64Directory;
+					resolver.ArchDirectory = Driver.GetArch64Directory (this);
 				}
 			}
 
@@ -436,7 +439,7 @@ namespace Xamarin.Bundler {
 			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve ("mscorlib"));
 
 			var rootName = Path.GetFileNameWithoutExtension (RootAssembly);
-			if (rootName != Driver.ProductAssembly)
+			if (rootName != Driver.GetProductAssembly (this))
 				throw new PlatformException (66, "Invalid build registrar assembly: {0}", RootAssembly);
 
 			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (rootName));

@@ -113,38 +113,17 @@ namespace Xamarin.Bundler
 			LaunchWatchApp,
 		}
 
-		static Application app = new Application ();
 		static Action action;
 
-		// The list of assemblies that we do generate debugging info for.
-		static bool debug_all = false;
-		static List<string> debug_assemblies = new List<string> ();
-
-		//
-		// iPhone Developer platform
-		static string framework_dir;
-		static Version sdk_version;
-		static string compiler = string.Empty;
-		static string compiler_path;
 		static bool xcode_version_check = true;
 
 		//
 		// Output generation
-		static bool fast_sim = true;
 		static bool force = false;
-		static bool? llvm_asmwriter;
 		static string cross_prefix = Environment.GetEnvironmentVariable ("MONO_CROSS_PREFIX");
 		static string extra_args = Environment.GetEnvironmentVariable ("MTOUCH_ENV_OPTIONS");
 
-		//
-		// Where we output the generated code (source or compiled, depending on mode)
-		//
-		static string output_dir = ".";
-		static string aot_args = "static,asmonly,direct-icalls,";
-		static string aot_other_args = "";
 		static int verbose = GetDefaultVerbosity ();
-		static bool? debug_track;
-		static Dictionary<string, string> environment_variables = new Dictionary<string, string> ();
 
 		static int Jobs;
 		public static int Concurrency {
@@ -187,12 +166,6 @@ namespace Xamarin.Bundler
 			Console.WriteLine (format, args);
 		}
 
-		public static bool EnableDebug {
-			get {
-				return app.EnableDebug;
-			}
-		}
-
 		public static bool IsUnified {
 			get { return true; }
 		}
@@ -206,29 +179,23 @@ namespace Xamarin.Bundler
 			set { force = value; }
 		}
 
-		static string Platform {
-			get {
-				switch (app.Platform) {
-				case ApplePlatform.iOS:
-					return app.IsDeviceBuild ? "iPhoneOS" : "iPhoneSimulator";
-				case ApplePlatform.WatchOS:
-					return app.IsDeviceBuild ? "WatchOS" : "WatchSimulator";
-				case ApplePlatform.TVOS:
-					return app.IsDeviceBuild ? "AppleTVOS" : "AppleTVSimulator";
-				default:
-					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
-				}
+		static string GetPlatform (Application app)
+		{
+			switch (app.Platform) {
+			case ApplePlatform.iOS:
+				return app.IsDeviceBuild ? "iPhoneOS" : "iPhoneSimulator";
+			case ApplePlatform.WatchOS:
+				return app.IsDeviceBuild ? "WatchOS" : "WatchSimulator";
+			case ApplePlatform.TVOS:
+				return app.IsDeviceBuild ? "AppleTVOS" : "AppleTVSimulator";
+			default:
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
 			}
 		}
 
-		public static Application App {
-			get { return app; }
-		}
-
-		public static string MonoTouchLibDirectory {
-			get {
-				return Path.Combine (ProductSdkDirectory, "usr", "lib");
-			}
+		public static string GetMonoTouchLibDirectory (Application app)
+		{
+			return Path.Combine (GetProductSdkDirectory (app), "usr", "lib");
 		}
 
 		public static string DriverBinDirectory {
@@ -260,108 +227,100 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		public static string PlatformFrameworkDirectory {
-			get {
-				switch (app.Platform) {
-				case ApplePlatform.iOS:
-					return Path.Combine (MonoTouchDirectory, "lib", "mono", "Xamarin.iOS");
-				case ApplePlatform.WatchOS:
-					return Path.Combine (MonoTouchDirectory, "lib", "mono", "Xamarin.WatchOS");
-				case ApplePlatform.TVOS:
-					return Path.Combine (MonoTouchDirectory, "lib", "mono", "Xamarin.TVOS");
-				default:
-					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
-				}
+		public static string GetPlatformFrameworkDirectory (Application app)
+		{
+			switch (app.Platform) {
+			case ApplePlatform.iOS:
+				return Path.Combine (MonoTouchDirectory, "lib", "mono", "Xamarin.iOS");
+			case ApplePlatform.WatchOS:
+				return Path.Combine (MonoTouchDirectory, "lib", "mono", "Xamarin.WatchOS");
+			case ApplePlatform.TVOS:
+				return Path.Combine (MonoTouchDirectory, "lib", "mono", "Xamarin.TVOS");
+			default:
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
 			}
 		}
 
-		public static string Arch32Directory {
-			get {
-				switch (app.Platform) {
-				case ApplePlatform.iOS:
-					return Path.Combine (Driver.PlatformFrameworkDirectory, "..", "..", "32bits");
-				default:
-					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
-				}
+		public static string GetArch32Directory (Application app)
+		{
+			switch (app.Platform) {
+			case ApplePlatform.iOS:
+				return Path.Combine (GetPlatformFrameworkDirectory (app), "..", "..", "32bits");
+			default:
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
 			}
 		}
 
-		public static string Arch64Directory {
-			get {
-				switch (app.Platform) {
-				case ApplePlatform.iOS:
-					return Path.Combine (Driver.PlatformFrameworkDirectory, "..", "..", "64bits");
-				default:
-					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
-				}
+		public static string GetArch64Directory (Application app)
+		{
+			switch (app.Platform) {
+			case ApplePlatform.iOS:
+				return Path.Combine (GetPlatformFrameworkDirectory (app), "..", "..", "64bits");
+			default:
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
 			}
 		}
 
-		public static string ProductSdkDirectory {
-			get {
-				switch (app.Platform) {
-				case ApplePlatform.iOS:
-					return Path.Combine (MonoTouchDirectory, "SDKs", app.IsDeviceBuild ? "MonoTouch.iphoneos.sdk" : "MonoTouch.iphonesimulator.sdk");
-				case ApplePlatform.WatchOS:
-					return Path.Combine (MonoTouchDirectory, "SDKs", app.IsDeviceBuild ? "Xamarin.WatchOS.sdk" : "Xamarin.WatchSimulator.sdk");
-				case ApplePlatform.TVOS:
-					return Path.Combine (MonoTouchDirectory, "SDKs", app.IsDeviceBuild ? "Xamarin.AppleTVOS.sdk" : "Xamarin.AppleTVSimulator.sdk");
-				default:
-					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
-				}
+		public static string GetProductSdkDirectory (Application app)
+		{
+			switch (app.Platform) {
+			case ApplePlatform.iOS:
+				return Path.Combine (MonoTouchDirectory, "SDKs", app.IsDeviceBuild ? "MonoTouch.iphoneos.sdk" : "MonoTouch.iphonesimulator.sdk");
+			case ApplePlatform.WatchOS:
+				return Path.Combine (MonoTouchDirectory, "SDKs", app.IsDeviceBuild ? "Xamarin.WatchOS.sdk" : "Xamarin.WatchSimulator.sdk");
+			case ApplePlatform.TVOS:
+				return Path.Combine (MonoTouchDirectory, "SDKs", app.IsDeviceBuild ? "Xamarin.AppleTVOS.sdk" : "Xamarin.AppleTVSimulator.sdk");
+			default:
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
 			}
 		}
 
-		public static string ProductFrameworksDirectory {
-			get {
-				return Path.Combine (Driver.ProductSdkDirectory, "Frameworks");
-			}
+		public static string GetProductFrameworksDirectory (Application app)
+		{
+			return Path.Combine (GetProductSdkDirectory (app), "Frameworks");
 		}
 
 		// This is for the -mX-version-min=A.B compiler flag
-		public static string TargetMinSdkName {
-			get {
-				switch (app.Platform) {
-				case ApplePlatform.iOS:
-					return app.IsDeviceBuild ? "iphoneos" : "ios-simulator";
-				case ApplePlatform.WatchOS:
-					return app.IsDeviceBuild ? "watchos" : "watchos-simulator";
-				case ApplePlatform.TVOS:
-					return app.IsDeviceBuild ? "tvos" : "tvos-simulator";
-				default:
-					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
-				}
+		public static string GetTargetMinSdkName (Application app)
+		{
+			switch (app.Platform) {
+			case ApplePlatform.iOS:
+				return app.IsDeviceBuild ? "iphoneos" : "ios-simulator";
+			case ApplePlatform.WatchOS:
+				return app.IsDeviceBuild ? "watchos" : "watchos-simulator";
+			case ApplePlatform.TVOS:
+				return app.IsDeviceBuild ? "tvos" : "tvos-simulator";
+			default:
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
 			}
 		}
 
-		public static string ProductAssembly {
-			get {
-				switch (app.Platform) {
-				case ApplePlatform.iOS:
-					return "Xamarin.iOS";
-				case ApplePlatform.WatchOS:
-					return "Xamarin.WatchOS";
-				case ApplePlatform.TVOS:
-					return "Xamarin.TVOS";
-				default:
-					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
-				}
+		public static string GetProductAssembly (Application app)
+		{
+			switch (app.Platform) {
+			case ApplePlatform.iOS:
+				return "Xamarin.iOS";
+			case ApplePlatform.WatchOS:
+				return "Xamarin.WatchOS";
+			case ApplePlatform.TVOS:
+				return "Xamarin.TVOS";
+			default:
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
 			}
 		}
 
-		public static bool LLVMAsmWriter {
-			get {
-				if (llvm_asmwriter.HasValue)
-					return llvm_asmwriter.Value;
-				switch (app.Platform) {
-				case ApplePlatform.iOS:
-					return false;
-				case ApplePlatform.TVOS:
-				case ApplePlatform.WatchOS:
-					return true;
-				default:
-					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
-				}
+		public static bool GetLLVMAsmWriter (Application app)
+		{
+			if (app.LLVMAsmWriter.HasValue)
+				return app.LLVMAsmWriter.Value;
+			switch (app.Platform) {
+			case ApplePlatform.iOS:
+				return false;
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return true;
+			default:
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
 			}
 		}
 
@@ -445,19 +404,15 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		public static string FrameworkDirectory {
-			get { return framework_dir; }
+		public static string GetFrameworkDirectory (Application app)
+		{
+			return GetFrameworkDir (GetPlatform (app), app.SdkVersion);
 		}
 
-		public static bool IsUsingClang {
-			get { return compiler_path.EndsWith ("clang", StringComparison.Ordinal) || compiler_path.EndsWith ("clang++", StringComparison.Ordinal); }
+		public static bool IsUsingClang (Application app)
+		{
+			return app.CompilerPath.EndsWith ("clang", StringComparison.Ordinal) || app.CompilerPath.EndsWith ("clang++", StringComparison.Ordinal);
 		}
-
-		public static string CompilerPath {
-			get { return compiler_path; }
-		}
-
-		public static Version SDKVersion { get { return sdk_version; } }
 
 		public static string PlatformsDirectory {
 			get {
@@ -465,10 +420,9 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		public static string PlatformDirectory {
-			get {
-				return Path.Combine (PlatformsDirectory, Platform + ".platform");
-			}
+		public static string GetPlatformDirectory (Application app)
+		{
+			return Path.Combine (PlatformsDirectory, GetPlatform (app) + ".platform");
 		}
 
 		public static int XcodeRun (string command, string args, StringBuilder output = null)
@@ -483,7 +437,7 @@ namespace Xamarin.Bundler
 			return ret;
 		}
 
-		public static string GetAotCompiler (bool is64bits)
+		public static string GetAotCompiler (Application app, bool is64bits)
 		{
 			switch (app.Platform) {
 			case ApplePlatform.iOS:
@@ -501,7 +455,7 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		public static string GetAotArguments (string filename, Abi abi, string outputDir, string outputFile, string llvmOutputFile, string dataFile)
+		public static string GetAotArguments (Application app, string filename, Abi abi, string outputDir, string outputFile, string llvmOutputFile, string dataFile)
 		{
 			string fname = Path.GetFileName (filename);
 			StringBuilder args = new StringBuilder ();
@@ -519,12 +473,12 @@ namespace Xamarin.Bundler
 
 			if (!llvm_only)
 				args.Append ("-O=gsharedvt ");
-			args.Append (aot_other_args).Append (" ");
+			args.Append (app.AotOtherArguments).Append (" ");
 			args.Append ("--aot=mtriple=");
 			args.Append (enable_thumb ? arch.Replace ("arm", "thumb") : arch);
 			args.Append ("-ios,");
 			args.Append ("data-outfile=").Append (Quote (dataFile)).Append (",");
-			args.Append (aot_args);
+			args.Append (app.AotArguments);
 			if (llvm_only)
 				args.Append ("llvmonly,");
 			else
@@ -537,7 +491,7 @@ namespace Xamarin.Bundler
 				args.Append ("nodebug,");
 			else if (!(enable_debug || enable_mdb))
 				args.Append ("nodebug,");
-			else if (debug_all || debug_assemblies.Contains (fname) || !sdk_or_product)
+			else if (app.DebugAll || app.DebugAssemblies.Contains (fname) || !sdk_or_product)
 				args.Append ("soft-debug,");
 
 			args.Append ("dwarfdebug,");
@@ -567,7 +521,7 @@ namespace Xamarin.Bundler
 			return args.ToString ();
 		}
 
-		public static ProcessStartInfo CreateStartInfo (string file_name, string arguments, string mono_path, string mono_debug = null)
+		public static ProcessStartInfo CreateStartInfo (Application app, string file_name, string arguments, string mono_path, string mono_debug = null)
 		{
 			var info = new ProcessStartInfo (file_name, arguments);
 			info.UseShellExecute = false;
@@ -600,7 +554,7 @@ namespace Xamarin.Bundler
 		}
 
 		// note: this is executed under Parallel.ForEach
-		public static string GenerateMain (IEnumerable<Assembly> assemblies, string assembly_name, Abi abi, string main_source, IList<string> registration_methods)
+		public static string GenerateMain (Application app, IEnumerable<Assembly> assemblies, string assembly_name, Abi abi, string main_source, IList<string> registration_methods)
 		{
 			var assembly_externs = new StringBuilder ();
 			var assembly_aot_modules = new StringBuilder ();
@@ -654,7 +608,7 @@ namespace Xamarin.Bundler
 					// On iOS we can pass -u to the native linker, but that doesn't work on tvOS, where
 					// we're building with bitcode (even when bitcode is disabled, we still build with the
 					// bitcode marker, which makes the linker reject -u).
-					if (App.EnableProfiling) {
+					if (app.EnableProfiling) {
 						sw.WriteLine ("extern \"C\" { void mono_profiler_startup_log (); }");
 						sw.WriteLine ("typedef void (*xamarin_profiler_symbol_def)();");
 						sw.WriteLine ("extern xamarin_profiler_symbol_def xamarin_profiler_symbol;");
@@ -664,10 +618,10 @@ namespace Xamarin.Bundler
 					sw.WriteLine ("void xamarin_setup_impl ()");
 					sw.WriteLine ("{");
 
-					if (App.EnableProfiling)
+					if (app.EnableProfiling)
 						sw.WriteLine ("\txamarin_profiler_symbol = mono_profiler_startup_log;");
 
-					if (App.EnableLLVMOnlyBitCode)
+					if (app.EnableLLVMOnlyBitCode)
 						sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_LLVMONLY);");
 					
 					if (registration_methods != null) {
@@ -679,7 +633,7 @@ namespace Xamarin.Bundler
 					}
 
 					if (app.EnableDebug)
-						sw.WriteLine ("\txamarin_gc_pump = {0};", debug_track.Value ? "TRUE" : "FALSE");
+						sw.WriteLine ("\txamarin_gc_pump = {0};", app.DebugTrack.Value ? "TRUE" : "FALSE");
 					sw.WriteLine ("\txamarin_init_mono_debug = {0};", app.PackageMdb ? "TRUE" : "FALSE");
 					sw.WriteLine ("\txamarin_executable_name = \"{0}\";", assembly_name);
 					sw.WriteLine ("\tmono_use_llvm = {0};", enable_llvm ? "TRUE" : "FALSE");
@@ -692,7 +646,7 @@ namespace Xamarin.Bundler
 						sw.WriteLine ("\txamarin_debug_mode = TRUE;");
 					if (!string.IsNullOrEmpty (app.MonoGCParams))
 						sw.WriteLine ("\tsetenv (\"MONO_GC_PARAMS\", \"{0}\", 1);", app.MonoGCParams);
-					foreach (var kvp in environment_variables)
+					foreach (var kvp in app.EnvironmentVariables)
 						sw.WriteLine ("\tsetenv (\"{0}\", \"{1}\", 1);", kvp.Key.Replace ("\"", "\\\""), kvp.Value.Replace ("\"", "\\\""));
 					sw.WriteLine ("}");
 					sw.WriteLine ();
@@ -775,7 +729,7 @@ namespace Xamarin.Bundler
 				File.Copy (sdebug, tdebug);
 		}
 
-		public static bool SymlinkAssembly (string source, string target, string target_dir)
+		public static bool SymlinkAssembly (Application app, string source, string target, string target_dir)
 		{
 			if (app.IsSimulatorBuild && Driver.XcodeVersion >= new Version (6, 0)) {
 				// Don't symlink with Xcode 6, it has a broken simulator (at least in
@@ -827,6 +781,7 @@ namespace Xamarin.Bundler
 
 		public static void GatherFrameworks (Target target, HashSet<string> frameworks, HashSet<string> weak_frameworks)
 		{
+			var app = target.App;
 			AssemblyDefinition monotouch = null;
 
 			foreach (var assembly in target.Assemblies) {
@@ -851,12 +806,12 @@ namespace Xamarin.Bundler
 					processed.Add (nspace);
 
 					Framework framework;
-					if (Driver.Frameworks.TryGetValue (nspace, out framework)) {
+					if (Driver.GetFrameworks (app).TryGetValue (nspace, out framework)) {
 						// framework specific processing
 						switch (framework.Name) {
 						case "CoreAudioKit":
 							// CoreAudioKit seems to be functional in the iOS 9 simulator.
-							if (app.IsSimulatorBuild && SDKVersion.Major < 9)
+							if (app.IsSimulatorBuild && app.SdkVersion.Major < 9)
 								continue;
 							break;
 						case "Metal":
@@ -877,7 +832,7 @@ namespace Xamarin.Bundler
 							break;
 						}
 
-						if (sdk_version >= framework.Version) {
+						if (app.SdkVersion >= framework.Version) {
 							var add_to = app.DeploymentTarget >= framework.Version ? frameworks : weak_frameworks;
 							add_to.Add (framework.Name);
 							continue;
@@ -887,7 +842,7 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		public static bool CanWeSymlinkTheApplication ()
+		public static bool CanWeSymlinkTheApplication (Application app)
 		{
 			if (app.Platform != ApplePlatform.iOS)
 				return false;
@@ -910,7 +865,7 @@ namespace Xamarin.Bundler
 				return false;
 
 			//mtouch was invoked with --nofastsim, eg symlinking was explicit disabled
-			if (!fast_sim)
+			if (app.NoFastSim)
 				return false;
 
 			//Can't symlink if we are running the linker since the assemblies content will change
@@ -922,7 +877,7 @@ namespace Xamarin.Bundler
 				return false;
 
 			// Setting environment variables is done in the generated main.m, so we can't symlink in this case.
-			if (environment_variables.Count > 0)
+			if (app.EnvironmentVariables.Count > 0)
 				return false;
 
 			if (app.Registrar == RegistrarMode.Static)
@@ -1037,6 +992,7 @@ namespace Xamarin.Bundler
 
 		static int Main2 (string [] args)
 		{
+			var app = new Application ();
 			var assemblies = new List<string> ();
 
 			if (extra_args != null) {
@@ -1056,13 +1012,13 @@ namespace Xamarin.Bundler
 			{ "f|force", "Forces the recompilation of code, regardless of timestamps", v=>force = true },
 			{ "cache=", "Specify the directory where object files will be cached", v => Cache.Location = v },
 			{ "aot=", "Arguments to the static compiler",
-				v => aot_args = v + (v.EndsWith (",", StringComparison.Ordinal) ? String.Empty : ",") + aot_args
+				v => app.AotArguments = v + (v.EndsWith (",", StringComparison.Ordinal) ? String.Empty : ",") + app.AotArguments
 			},
 			{ "aot-options=", "Non AOT arguments to the static compiler",
 				v => {
 					if (v.Contains ("--profile") || v.Contains ("--attach"))
 						throw new Exception ("Unsupported flag to -aot-options");
-					aot_other_args = v + " " + aot_other_args;
+					app.AotOtherArguments = v + " " + app.AotOtherArguments;
 				}
 			},
 			{ "gsharedvt:", "Generic sharing for value-types - always enabled [Deprecated]", v => {} },
@@ -1070,10 +1026,10 @@ namespace Xamarin.Bundler
 			{ "q", "Quiet", v => verbose-- },
 			{ "time", v => watch_level++ },
 			{ "executable=", "Specifies the native executable name to output", v => app.ExecutableName = v },
-			{ "nofastsim", "Do not run the simulator fast-path build", v => fast_sim = false },
+			{ "nofastsim", "Do not run the simulator fast-path build", v => app.NoFastSim = true },
 			{ "nolink", "Do not link the assemblies", v => app.LinkMode = LinkMode.None },
-			{ "nodebugtrack", "Disable debug tracking of object resurrection bugs", v => debug_track = false },
-			{ "debugtrack:", "Enable debug tracking of object resurrection bugs (enabled by default for the simulator)", v => { debug_track = ParseBool (v, "--debugtrack"); } },
+			{ "nodebugtrack", "Disable debug tracking of object resurrection bugs", v => app.DebugTrack = false },
+			{ "debugtrack:", "Enable debug tracking of object resurrection bugs (enabled by default for the simulator)", v => { app.DebugTrack = ParseBool (v, "--debugtrack"); } },
 			{ "linkerdumpdependencies", "Dump linker dependencies for linker-analyzer tool", v => app.LinkerDumpDependencies = true },
 			{ "linksdkonly", "Link only the SDK assemblies", v => app.LinkMode = LinkMode.SDKOnly },
 			{ "linkskip=", "Skip linking of the specified assembly", v => app.LinkSkipped.Add (v) },
@@ -1101,13 +1057,13 @@ namespace Xamarin.Bundler
 			{ "sim=", "Compile for the Simulator, specify the output directory for code", v =>
 				{
 					SetAction (Action.Build);
-					output_dir = v;
+					app.AppDirectory = v;
 					app.BuildTarget = BuildTarget.Simulator;
 				}
 			},
 			{ "dev=", "Compile for the Device, specify the output directory for the code", v => {
 					SetAction (Action.Build);
-					output_dir = v;
+					app.AppDirectory = v;
 					app.BuildTarget = BuildTarget.Device;
 				}
 			},
@@ -1115,7 +1071,7 @@ namespace Xamarin.Bundler
 			{ "sdk=", "Specifies the name of the SDK to compile against (version, for example \"3.2\")",
 				v => {
 					try {
-						sdk_version = Version.Parse (v);
+						app.SdkVersion = Version.Parse (v);
 					} catch (Exception ex) {
 						ErrorHelper.Error (26, ex, "Could not parse the command line argument '{0}': {1}", "-sdk", ex.Message);
 					}
@@ -1168,7 +1124,7 @@ namespace Xamarin.Bundler
 						throw new MonoTouchException (2, true, "Could not parse the environment variable '{0}'", v);
 					string name = v.Substring (0, eq);
 					string value = v.Substring (eq + 1);
-					environment_variables.Add (name, value);
+					app.EnvironmentVariables.Add (name, value);
 				}
 			},
 			{ "sgen:", "Enable the SGen garbage collector",
@@ -1196,7 +1152,7 @@ namespace Xamarin.Bundler
 			{ "cxx", "Enable C++ support", v => { app.EnableCxx = true; }},
 			{ "enable-repl:", "Enable REPL support (simulator and not linking only)", v => { app.EnableRepl = ParseBool (v, "enable-repl"); }, true /* this is a hidden option until we've actually used it and made sure it works as expected */ },
 			{ "pie:", "Enable (default) or disable PIE (Position Independent Executable).", v => { app.EnablePie = ParseBool (v, "pie"); }},
-			{ "compiler=", "Specify the Objective-C compiler to use (valid values are gcc, g++, clang, clang++ or the full path to a GCC-compatible compiler).", v => { compiler = v; }},
+			{ "compiler=", "Specify the Objective-C compiler to use (valid values are gcc, g++, clang, clang++ or the full path to a GCC-compatible compiler).", v => { app.Compiler = v; }},
 			{ "fastdev", "Build an app that supports fastdev (this app will only work when launched using Xamarin Studio)", v => { app.FastDev = true; }},
 			{ "force-thread-check", "Keep UI thread checks inside (even release) builds", v => { app.ThreadCheck = true; }},
 			{ "disable-thread-check", "Remove UI thread checks inside (even debug) builds", v => { app.ThreadCheck = false; }},
@@ -1205,10 +1161,10 @@ namespace Xamarin.Bundler
 					app.EnableDebug = true;
 					if (v != null){
 						if (v == "all"){
-							debug_all = true;
+							app.DebugAll = true;
 							return;
 						}
-						debug_assemblies.Add (Path.GetFileName (v));
+						app.DebugAssemblies.Add (Path.GetFileName (v));
 					}
 				}
 			},
@@ -1302,7 +1258,7 @@ namespace Xamarin.Bundler
 					}
 				}
 			},
-			{ "llvm-asm", "Make the LLVM compiler emit assembly files instead of object files. [Deprecated]", v => { llvm_asmwriter = true; }, true},
+			{ "llvm-asm", "Make the LLVM compiler emit assembly files instead of object files. [Deprecated]", v => { app.LLVMAsmWriter = true; }, true},
 			{ "http-message-handler=", "Specify the default HTTP message handler for HttpClient", v => { http_message_handler = v; }},
 			{ "output-format=", "Specify the output format for some commands. Possible values: Default, XML", v =>
 				{
@@ -1312,7 +1268,7 @@ namespace Xamarin.Bundler
 			{ "xamarin-framework-directory=", "The framework directory", v => { mtouch_dir = v; }, true },
 		};
 
-			AddSharedOptions (os);
+			AddSharedOptions (app, os);
 
 			try {
 				assemblies = os.Parse (args);
@@ -1347,23 +1303,23 @@ namespace Xamarin.Bundler
 			if (!app.IsLLVM && (app.EnableAsmOnlyBitCode || app.EnableLLVMOnlyBitCode))
 				ErrorHelper.Error (3008, "Bitcode support requires the use of LLVM (--abi=arm64+llvm etc.)");
 
-			if (EnableDebug) {
-				if (!debug_track.HasValue) {
-					debug_track = app.IsSimulatorBuild;
+			if (app.EnableDebug) {
+				if (!app.DebugTrack.HasValue) {
+					app.DebugTrack = app.IsSimulatorBuild;
 				}
 			} else {
-				if (debug_track.HasValue) {
+				if (app.DebugTrack.HasValue) {
 					ErrorHelper.Warning (32, "The option '--debugtrack' is ignored unless '--debug' is also specified.");
 				}
-				debug_track = false;
+				app.DebugTrack = false;
 			}
 
 			if (app.EnableAsmOnlyBitCode)
-				llvm_asmwriter = true;
+				app.LLVMAsmWriter = true;
 
 			ErrorHelper.Verbosity = verbose;
 
-			app.RuntimeOptions = RuntimeOptions.Create (http_message_handler, tls_provider);
+			app.RuntimeOptions = RuntimeOptions.Create (app, http_message_handler, tls_provider);
 
 			ValidateXcode ();
 
@@ -1390,10 +1346,10 @@ namespace Xamarin.Bundler
 				return CallMlaunch ();
 			}
 
-			if (sdk_version == null)
+			if (app.SdkVersion == null)
 				throw new MonoTouchException (25, true, "No SDK version was provided. Please add --sdk=X.Y to specify which {0} SDK should be used to build your application.", app.PlatformName);
 
-			framework_dir = GetFrameworkDir (Platform, sdk_version);
+			var framework_dir = GetFrameworkDirectory (app);
 			Driver.Log ("Xamarin.iOS {0}{1} using framework: {2}", Constants.Version, verbose > 1 ? "." + Constants.Revision : string.Empty, framework_dir);
 
 			if (action == Action.None)
@@ -1404,27 +1360,27 @@ namespace Xamarin.Bundler
 				ErrorHelper.Show (new MonoTouchException (2003, false, "Option '{0}' will be ignored since linking is disabled", "-disable-thread-check"));
 			}
 
-			if (sdk_version < new Version (6, 0) && app.IsArchEnabled (Abi.ARMv7s))
-				throw new MonoTouchException (14, true, "The iOS {0} SDK does not support building applications targeting {1}", sdk_version, "ARMv7s");
+			if (app.SdkVersion < new Version (6, 0) && app.IsArchEnabled (Abi.ARMv7s))
+				throw new MonoTouchException (14, true, "The iOS {0} SDK does not support building applications targeting {1}", app.SdkVersion, "ARMv7s");
 
-			if (sdk_version < new Version (7, 0) && app.IsArchEnabled (Abi.ARM64))
-				throw new MonoTouchException (14, true, "The iOS {0} SDK does not support building applications targeting {1}", sdk_version, "ARM64");
+			if (app.SdkVersion < new Version (7, 0) && app.IsArchEnabled (Abi.ARM64))
+				throw new MonoTouchException (14, true, "The iOS {0} SDK does not support building applications targeting {1}", app.SdkVersion, "ARM64");
 
-			if (sdk_version < new Version (7, 0) && app.IsArchEnabled (Abi.x86_64))
-				throw new MonoTouchException (14, true, "The iOS {0} SDK does not support building applications targeting {1}", sdk_version, "x86_64");
+			if (app.SdkVersion < new Version (7, 0) && app.IsArchEnabled (Abi.x86_64))
+				throw new MonoTouchException (14, true, "The iOS {0} SDK does not support building applications targeting {1}", app.SdkVersion, "x86_64");
 
 			if (!Directory.Exists (framework_dir)) {
 				Console.WriteLine ("Framework does not exist {0}", framework_dir);
-				Console.WriteLine ("   Platform = {0}", Platform);
-				Console.WriteLine ("   SDK = {0}", sdk_version);
+				Console.WriteLine ("   Platform = {0}", GetPlatform (app));
+				Console.WriteLine ("   SDK = {0}", app.SdkVersion);
 				Console.WriteLine ("   Deployment Version: {0}", app.DeploymentTarget);
 			}
 
-			if (!Directory.Exists (PlatformDirectory))
-				throw new MonoTouchException (6, true, "There is no devel platform at {0}, use --platform=PLAT to specify the SDK", PlatformDirectory);
+			if (!Directory.Exists (GetPlatformDirectory (app)))
+				throw new MonoTouchException (6, true, "There is no devel platform at {0}, use --platform=PLAT to specify the SDK", GetPlatformDirectory (app));
 
-			if (!Directory.Exists (output_dir))
-				throw new MonoTouchException (5, true, "The output directory '{0}' does not exist", output_dir);
+			if (!Directory.Exists (app.AppDirectory))
+				throw new MonoTouchException (5, true, "The output directory '{0}' does not exist", app.AppDirectory);
 
 			if (assemblies.Count != 1) {
 				var exceptions = new List<Exception> ();
@@ -1455,7 +1411,6 @@ namespace Xamarin.Bundler
 			Watch ("Setup", 1);
 
 			app.RootAssembly = assemblies [0];
-			app.AppDirectory = output_dir;
 			if (action == Action.RunRegistrar) {
 				app.RunRegistrar ();
 			} else {
@@ -1530,9 +1485,9 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		static string FindGcc (bool gpp)
+		static string FindGcc (Application app, bool gpp)
 		{
-			var usr_bin = Path.Combine (PlatformsDirectory, Platform + ".platform", "Developer", "usr", "bin");
+			var usr_bin = Path.Combine (GetPlatformDirectory (app), GetPlatform (app) + ".platform", "Developer", "usr", "bin");
 			var gcc = (gpp ? "g++" : "gcc");
 			var compiler_path = Path.Combine (usr_bin, gcc + "-4.2");
 
@@ -1544,7 +1499,7 @@ namespace Xamarin.Bundler
 			return compiler_path;
 		}
 
-		public static void CalculateCompilerPath ()
+		public static void CalculateCompilerPath (Application app)
 		{
 			var fallback_to_clang = false;
 			var original_compiler = string.Empty;
@@ -1554,53 +1509,53 @@ namespace Xamarin.Bundler
 			// we try again with clang.
 			//
 
-			if (string.IsNullOrEmpty (compiler)) {
+			if (string.IsNullOrEmpty (app.Compiler)) {
 				// by default we use `gcc` before iOS7 SDK, falling back to `clang`. Otherwise we go directly to `clang`
 				// so we don't get bite by the fact that Xcode5 has a gcc compiler (which calls `clang`, even if not 100% 
 				// compitable wrt options) for the simulator but not for devices!
 				// ref: https://bugzilla.xamarin.com/show_bug.cgi?id=13838
 				if (app.Platform == ApplePlatform.iOS) {
-					fallback_to_clang = sdk_version < new Version (7, 0);
+					fallback_to_clang = app.SdkVersion < new Version (7, 0);
 				} else {
 					fallback_to_clang = false;
 				}
 				if (fallback_to_clang)
-					compiler = app.EnableCxx ? "g++" : "gcc";
+					app.Compiler = app.EnableCxx ? "g++" : "gcc";
 				else
-					compiler = app.EnableCxx ? "clang++" : "clang";
+					app.Compiler = app.EnableCxx ? "clang++" : "clang";
 			}
 
 		tryagain:
-			switch (compiler) {
+			switch (app.Compiler) {
 			case "clang++":
-				compiler_path = Path.Combine (DeveloperDirectory, "Toolchains", "XcodeDefault.xctoolchain", "usr", "bin", "clang++");
+				app.CompilerPath = Path.Combine (DeveloperDirectory, "Toolchains", "XcodeDefault.xctoolchain", "usr", "bin", "clang++");
 				break;
 			case "clang":
-				compiler_path = Path.Combine (DeveloperDirectory, "Toolchains", "XcodeDefault.xctoolchain", "usr", "bin", "clang");
+				app.CompilerPath = Path.Combine (DeveloperDirectory, "Toolchains", "XcodeDefault.xctoolchain", "usr", "bin", "clang");
 				break;
 			case "gcc":
-				compiler_path = FindGcc (false);
+				app.CompilerPath = FindGcc (app, false);
 				break;
 			case "g++":
-				compiler_path = FindGcc (true);
+				app.CompilerPath = FindGcc (app, true);
 				break;
 			default: // This is the full path to a compiler.
-				compiler_path = compiler;
+				app.CompilerPath = app.Compiler;
 				break;
 			}
 
-			if (!File.Exists (compiler_path)) {
+			if (!File.Exists (app.CompilerPath)) {
 				if (fallback_to_clang) {
 					// Couldn't find gcc, try to find clang.
-					original_compiler = compiler;
-					compiler = app.EnableCxx ? "clang++" : "clang";
+					original_compiler = app.Compiler;
+					app.Compiler = app.EnableCxx ? "clang++" : "clang";
 					fallback_to_clang = false;
 					goto tryagain;
 				}
 				if (string.IsNullOrEmpty (original_compiler)) {
-					throw new MonoTouchException (5101, true, "Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component", compiler);
+					throw new MonoTouchException (5101, true, "Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component", app.Compiler);
 				} else {
-					throw new MonoTouchException (5103, true, "Could not find neither the '{0}' nor the '{1}' compiler. Please install Xcode 'Command-Line Tools' component", compiler, original_compiler);
+					throw new MonoTouchException (5103, true, "Could not find neither the '{0}' nor the '{1}' compiler. Please install Xcode 'Command-Line Tools' component", app.Compiler, original_compiler);
 				}
 			}
 		}
@@ -1670,7 +1625,7 @@ namespace Xamarin.Bundler
 
 		static string GetFrameworkDir (string platform, Version iphone_sdk)
 		{
-			return Path.Combine (PlatformsDirectory, platform + ".platform", "Developer", "SDKs", platform + sdk_version.ToString () + ".sdk");
+			return Path.Combine (PlatformsDirectory, platform + ".platform", "Developer", "SDKs", platform + iphone_sdk.ToString () + ".sdk");
 		}
 
 		static bool IsBoundAssembly (Assembly s)
@@ -1728,24 +1683,17 @@ namespace Xamarin.Bundler
 			return (buf.st_mode & S_IFLNK) == S_IFLNK;
 		}
 
-		public static Frameworks Frameworks {
-			get {
-				switch (app.Platform) {
-				case ApplePlatform.iOS:
-					return Frameworks.iOSFrameworks;
-				case ApplePlatform.WatchOS:
-					return Frameworks.WatchFrameworks;
-				case ApplePlatform.TVOS:
-					return Frameworks.TVOSFrameworks;
-				default:
-					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
-				}
-			}
-		}
-
-		public static Version MinOSVersion {
-			get {
-				return app.DeploymentTarget;
+		public static Frameworks GetFrameworks (Application app)
+		{
+			switch (app.Platform) {
+			case ApplePlatform.iOS:
+				return Frameworks.GetiOSFrameworks (app);
+			case ApplePlatform.WatchOS:
+				return Frameworks.WatchFrameworks;
+			case ApplePlatform.TVOS:
+				return Frameworks.TVOSFrameworks;
+			default:
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", app.Platform);
 			}
 		}
 	}
