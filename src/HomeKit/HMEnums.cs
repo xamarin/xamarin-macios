@@ -971,15 +971,12 @@ namespace XamCore.HomeKit {
 		[Field ("HMAccessoryCategoryTypeFan")]
 		Fan,
 
-#if !WATCH && !TVOS
-		[Obsolete ("Use GarageDoorOpener instead")]
-		DoorOpener,
-
-		[Field ("HMAccessoryCategoryTypeGarageDoorOpener")]
-		GarageDoorOpener = DoorOpener,
-#else
 		[Field ("HMAccessoryCategoryTypeGarageDoorOpener")]
 		GarageDoorOpener,
+
+#if !WATCH && !TVOS
+		[Obsolete ("Use GarageDoorOpener instead")]
+		DoorOpener = GarageDoorOpener,
 #endif
 
 		[Field ("HMAccessoryCategoryTypeLightbulb")]
