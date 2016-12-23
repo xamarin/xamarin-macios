@@ -320,6 +320,24 @@ public class ForcedTypeAttribute : Attribute {
 	public bool Owns;
 }
 
+//
+// BindAsAttribute
+//
+// // TODO Alex: finish documenting this 
+// The BindAsAttribute allows binding a container type (i.e. NSNumber) into a more accurate types
+// like bool?.
+//
+[AttributeUsage (AttributeTargets.ReturnValue | AttributeTargets.Property, AllowMultiple = false)]
+public class BindAsAttribute : Attribute {
+	public BindAsAttribute (Type type)
+	{
+		Type = type;
+		IsNullable = Nullable.GetUnderlyingType (type) != null;
+	}
+	public Type Type;
+	internal readonly bool IsNullable;
+}
+
 // Used to flag a type as needing to be turned into a protocol on output for Unified
 // For example:
 //   [Protocolize, Wrap ("WeakDelegate")]
@@ -1248,13 +1266,14 @@ public class MemberInformation
 	public readonly MemberInfo mi;
 	public readonly Type type;
 	public readonly Type category_extension_type;
-	public readonly bool is_abstract, is_protected, is_internal, is_unified_internal, is_override, is_new, is_sealed, is_static, is_thread_static, is_autorelease, is_wrapper, is_forced;
+	public readonly bool is_abstract, is_protected, is_internal, is_unified_internal, is_override, is_new, is_sealed, is_static, is_thread_static, is_autorelease, is_wrapper, is_forced, is_bindAs, is_bindAs_nullable;
 	public readonly bool is_type_sealed;
 	public readonly Generator.ThreadCheck threadCheck;
 	public bool is_unsafe, is_virtual_method, is_export, is_category_extension, is_variadic, is_interface_impl, is_extension_method, is_appearance, is_model, is_ctor;
 	public bool is_return_release;
 	public bool protocolize;
 	public string selector, wrap_method, is_forced_owns;
+	public readonly Type bindAs;
 
 	public MethodInfo method { get { return (MethodInfo) mi; } }
 	public PropertyInfo property { get { return (PropertyInfo) mi; } }
@@ -1278,6 +1297,7 @@ public class MemberInformation
 		is_type_sealed = Generator.HasAttribute (mi.DeclaringType, typeof (SealedAttribute));
 		is_return_release = method != null && Generator.HasAttribute (method.ReturnTypeCustomAttributes, typeof (ReleaseAttribute));
 		is_forced = Generator.HasForcedAttribute (mi, out is_forced_owns);
+		is_bindAs = Generator.HasBindAsAttribute (mi, out bindAs, out is_bindAs_nullable);
 
 		var tsa = Generator.GetAttribute<ThreadSafeAttribute> (mi);
 		// if there's an attribute then it overrides the parent (e.g. type attribute) or namespace default
@@ -1916,6 +1936,222 @@ public partial class Generator : IMemberGatherer {
 
 		owns = att.Owns ? "true" : "false";
 		return true;
+	}
+
+	public static bool HasBindAsAttribute (ICustomAttributeProvider cu, out Type bindAs, out bool isNullable)
+	{
+		var att = GetAttribute<BindAsAttribute> (cu) ?? GetAttribute<BindAsAttribute> ((cu as MethodInfo)?.ReturnParameter);
+
+		if (att == null) {
+			bindAs = null;
+			isNullable = false;
+			return false;
+		}
+
+		bindAs = att.Type;
+		isNullable = att.IsNullable;
+		return true;
+	}
+
+	void GetBindAsSetterWrapper (MemberInformation minfo, ref string args)
+	{
+		var retType = Nullable.GetUnderlyingType (minfo.bindAs) ?? minfo.bindAs;
+		var isNullable = minfo.is_bindAs_nullable;
+		var isValueType = retType.IsValueType;
+		var property = minfo.mi as PropertyInfo;
+		var method = minfo.mi as MethodInfo;
+		var className = method?.ReturnType?.Name ?? property?.PropertyType?.Name;
+		var temp = ", ";
+
+		if (isNullable || !isValueType)
+			temp += "value == null ? IntPtr.Zero : ";
+
+		if (className == "NSNumber")
+			temp += string.Format ("new NSNumber (value{0}).Handle", isNullable ? ".Value" : string.Empty);
+
+		else if (className == "NSValue") {
+			switch (retType.Name) {
+			case "CATransform3D":
+				temp += string.Format ("NSValue.FromCATransform3D (value{0}).Handle", isNullable ? ".Value" : string.Empty);
+				break;
+			case "CGAffineTransform":
+				temp += string.Format ("NSValue.FromCGAffineTransform (value{0}).Handle", isNullable ? ".Value" : string.Empty);
+				break;
+			case "CGPoint":
+				temp += string.Format ("NSValue.FromCGPoint (value{0}).Handle", isNullable ? ".Value" : string.Empty);
+				break;
+			case "CGRect":
+				temp += string.Format ("NSValue.FromCGRect (value{0}).Handle", isNullable ? ".Value" : string.Empty);
+				break;
+			case "CGSize":
+				temp += string.Format ("NSValue.FromCGSize (value{0}).Handle", isNullable ? ".Value" : string.Empty);
+				break;
+			case "CGVector":
+				temp += string.Format ("NSValue.FromCGVector (value{0}).Handle", isNullable ? ".Value" : string.Empty);
+				break;
+			case "CMTimeMapping":
+				temp += string.Format ("NSValue.FromCMTimeMapping (value{0}).Handle", isNullable ? ".Value" : string.Empty);
+				break;
+			case "CMTimeRange":
+				temp += string.Format ("NSValue.FromCMTimeRange (value{0}).Handle", isNullable ? ".Value" : string.Empty);
+				break;
+			case "CMTime":
+				temp += string.Format ("NSValue.FromCMTime (value{0}).Handle", isNullable ? ".Value" : string.Empty);
+				break;
+			case "MKCoordinateSpan":
+				temp += string.Format ("NSValue.FromMKCoordinateSpan (value{0}).Handle", isNullable ? ".Value" : string.Empty);
+				break;
+			case "CLLocationCoordinate2D":
+				temp += string.Format ("NSValue.FromCLLocationCoordinate2D (value{0}).Handle", isNullable ? ".Value" : string.Empty);
+				break;
+			case "PointF":
+				temp += string.Format ("NSValue.FromPointF (value{0}).Handle", isNullable ? ".Value" : string.Empty);
+				break;
+			case "NSRange":
+				temp += string.Format ("NSValue.FromRange (value{0}).Handle", isNullable ? ".Value" : string.Empty);
+				break;
+			case "RectangleF":
+				temp += string.Format ("NSValue.FromRectangleF (value{0}).Handle", isNullable ? ".Value" : string.Empty);
+				break;
+			case "SCNMatrix4":
+				temp += string.Format ("NSValue.FromSCNMatrix4 (value{0}).Handle", isNullable ? ".Value" : string.Empty);
+				break;
+			case "SizeF":
+				temp += string.Format ("NSValue.FromSizeF (value{0}).Handle", isNullable ? ".Value" : string.Empty);
+				break;
+			case "UIEdgeInsets":
+				temp += string.Format ("NSValue.FromUIEdgeInsets (value{0}).Handle", isNullable ? ".Value" : string.Empty);
+				break;
+			case "UIOffset":
+				temp += string.Format ("NSValue.FromUIOffset (value{0}).Handle", isNullable ? ".Value" : string.Empty);
+				break;
+			case "SCNVector3":
+				temp += string.Format ("NSValue.FromVector (value{0}).Handle", isNullable ? ".Value" : string.Empty);
+				break;
+			case "SCNVector4":
+				temp += string.Format ("NSValue.FromVector (value{0}).Handle", isNullable ? ".Value" : string.Empty);
+				break;
+			default:
+				throw new BindingException (1048, true, "Could not box type {0} into {1} container used on {2} member decorated with [BindAsAtrribute].", retType.Name, "NSValue", minfo.mi.Name);
+			}
+		} else if (isValueType) {
+			// Magic for enums/smart enums
+		}
+		args = temp;
+	}
+
+	void GetBindAsWrapper (MemberInformation minfo, ref string cast_b)
+	{
+		var retType = Nullable.GetUnderlyingType (minfo.bindAs) ?? minfo.bindAs;
+		var isValueType = retType.IsValueType;
+		var append = string.Empty;
+		var property = minfo.mi as PropertyInfo;
+		var method = minfo.mi as MethodInfo;
+
+		if (method?.ReturnType?.Name == "NSNumber" || property?.PropertyType?.Name == "NSNumber") {
+			// I wish C# 7 was a thing today :)
+			if (retType == typeof (bool))
+				append = ".BoolValue";
+			else if (retType == typeof (byte))
+				append = ".ByteValue";
+			else if (retType == typeof (double))
+				append = ".DoubleValue";
+			else if (retType == typeof (float))
+				append = ".FloatValue";
+			else if (retType == typeof (short))
+				append = ".Int16Value";
+			else if (retType == typeof (int))
+				append = ".Int32Value";
+			else if (retType == typeof (long))
+				append = ".Int64Value";
+			else if (retType == typeof (sbyte))
+				append = ".SByteValue";
+			else if (retType == typeof (ushort))
+				append = ".UInt16Value";
+			else if (retType == typeof (uint))
+				append = ".UInt32Value";
+			else if (retType == typeof (ulong))
+				append = ".UInt64Value";
+#if XAMCORE_2_0
+			else if (retType == typeof (nfloat))
+				append = ".NFloatValue";
+			else if (retType == typeof (nint))
+				append = ".NIntValue";
+			else if (retType == typeof (nuint))
+				append = ".NUIntValue";
+#endif
+			else
+				throw new BindingException (1048, true, "Could not unbox type {0} from {1} container used on {2} member decorated with [BindAsAtrribute].", retType.Name, "NSNumber", minfo.mi.Name);
+
+		} else if (method?.ReturnType.Name == "NSValue" || property?.PropertyType.Name == "NSValue") {
+			switch (retType.Name) {
+			case "CATransform3D":
+				append = ".CATransform3DValue";
+				break;
+			case "CGAffineTransform":
+				append = ".CGAffineTransformValue";
+				break;
+			case "CGPoint":
+				append = ".CGPointValue";
+				break;
+			case "CGRect":
+				append = ".CGRectValue";
+				break;
+			case "CGSize":
+				append = ".CGSizeValue";
+				break;
+			case "CGVector":
+				append = ".CGVectorValue";
+				break;
+			case "CMTimeMapping":
+				append = ".CMTimeMappingValue";
+				break;
+			case "CMTimeRange":
+				append = ".CMTimeRangeValue";
+				break;
+			case "CMTime":
+				append = ".CMTimeValue";
+				break;
+			case "MKCoordinateSpan":
+				append = ".CoordinateSpanValue";
+				break;
+			case "CLLocationCoordinate2D":
+				append = ".CoordinateValue";
+				break;
+			case "PointF":
+				append = ".PointFValue";
+				break;
+			case "NSRange":
+				append = ".RangeValue";
+				break;
+			case "RectangleF":
+				append = ".RectangleFValue";
+				break;
+			case "SCNMatrix4":
+				append = ".SCNMatrix4Value";
+				break;
+			case "SizeF":
+				append = ".SizeFValue";
+				break;
+			case "UIEdgeInsets":
+				append = ".UIEdgeInsetsValue";
+				break;
+			case "UIOffset":
+				append = ".UIOffsetValue";
+				break;
+			case "SCNVector3":
+				append = ".Vector3Value";
+				break;
+			case "SCNVector4":
+				append = ".Vector4Value";
+				break;
+			default:
+				throw new BindingException (1048, true, "Could not unbox type {0} from {1} container used on {2} member decorated with [BindAsAtrribute].", retType.Name, "NSValue", minfo.mi.Name);
+			}
+		} else if (isValueType) {
+			// Magic for enums/smart enums
+		}
+		cast_b += append;
 	}
 
 	public string MakeTrampolineName (Type t)
@@ -3723,7 +3959,11 @@ public partial class Generator : IMemberGatherer {
 					ErrorHelper.Show (new BindingException (1107, false, "The return type of the method {0}.{1} exposes a model ({2}). Please expose the corresponding protocol type instead ({3}.I{4}).", minfo.method.DeclaringType, minfo.method.Name, minfo.method.ReturnType, minfo.method.ReturnType.Namespace, minfo.method.ReturnType.Name));
 			}
 			
-			sb.Append (prefix + FormatType (mi.DeclaringType, GetCorrectGenericType (mi.ReturnType)));
+			if (minfo.is_bindAs)
+				sb.Append (prefix + FormatType (minfo.bindAs.DeclaringType, GetCorrectGenericType (minfo.bindAs)));
+			else
+				sb.Append (prefix + FormatType (mi.DeclaringType, GetCorrectGenericType (mi.ReturnType)));
+			
 			sb.Append (" ");
 		}
 		// Unified internal methods automatically get a _ appended
@@ -3960,6 +4200,13 @@ public partial class Generator : IMemberGatherer {
 			else if (mi.Name == "Constructor") {
 				cast_a = "InitializeHandle (";
 				cast_b = ", \"" + selector + "\")";
+			}
+
+			if (minfo.is_bindAs) {
+				if (mi.IsSpecialName && mi.Name.StartsWith ("set_", StringComparison.Ordinal))
+					GetBindAsSetterWrapper (minfo, ref args); // Here we are sure we can own the args param
+				else
+					GetBindAsWrapper (minfo, ref cast_b);
 			}
 
 			if (minfo.is_static)
@@ -4462,7 +4709,7 @@ public partial class Generator : IMemberGatherer {
 			} else if (needsPtrZeroCheck) {
 				print ("IntPtr ret;");
 			} else
-				print ("{0} ret;", FormatType (mi.DeclaringType, GetCorrectGenericType (mi.ReturnType))); //  = new {0} ();"
+				print ("{0} ret;", minfo.is_bindAs ? FormatType (minfo.bindAs.DeclaringType, GetCorrectGenericType (minfo.bindAs)) : FormatType (mi.DeclaringType, GetCorrectGenericType (mi.ReturnType))); //  = new {0} ();"
 		}
 		
 		bool needs_temp = use_temp_return || disposes.Length > 0;
@@ -4849,7 +5096,7 @@ public partial class Generator : IMemberGatherer {
 		if (minfo.protocolize) {
 			propertyTypeName = FindProtocolInterface (pi.PropertyType, pi);
 		} else {
-			propertyTypeName = FormatType (pi.DeclaringType, GetCorrectGenericType (pi.PropertyType));
+			propertyTypeName = minfo.is_bindAs ? FormatType (minfo.bindAs.DeclaringType, GetCorrectGenericType (minfo.bindAs)) : FormatType (pi.DeclaringType, GetCorrectGenericType (pi.PropertyType));
 		}
 
 		print ("{0} {1}{2} {3}{4} {{",
@@ -4924,7 +5171,7 @@ public partial class Generator : IMemberGatherer {
 		if (pi.CanWrite){
 			var setter = pi.GetSetMethod ();
 			var ba = GetBindAttribute (setter);
-			bool null_allowed = HasAttribute (pi, typeof (NullAllowedAttribute)) || HasAttribute (setter, typeof (NullAllowedAttribute));
+			bool null_allowed = HasAttribute (pi, typeof (NullAllowedAttribute)) || HasAttribute (setter, typeof (NullAllowedAttribute)) || (minfo.is_bindAs && !minfo.is_bindAs_nullable);
 			var not_implemented_attr = GetAttribute<NotImplementedAttribute> (setter);
 			string sel;
 
