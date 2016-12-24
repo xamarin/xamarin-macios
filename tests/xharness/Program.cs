@@ -66,6 +66,10 @@ namespace xharness
 				throw new Exception (string.Format ("Unknown arguments: {0}", string.Join (", ", input.ToArray ())));
 			if (harness.Action == HarnessAction.None)
 				showHelp ();
+
+			// XS sets this, which breaks pretty much everything if it doesn't match what was passed to --sdkroot.
+			Environment.SetEnvironmentVariable ("XCODE_DEVELOPER_DIR_PATH", null);
+
 			return harness.Execute ();
 		}
 	}
