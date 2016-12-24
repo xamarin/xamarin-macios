@@ -13,7 +13,7 @@ namespace Xamarin.Bundler {
 	//					MT0002	Could not parse the environment variable '{0}'.
 	//					MT0003	Application name '{0}.exe' conflicts with an SDK or product assembly (.dll) name.
 	//					MT0004	<unused>
-	//					MT0005	The output directory '{0}' does not exist
+	//					MT0005	<unused>
 	//					MT0006	There is no devel platform at '{0}', use --platform=PLAT to specify the SDK
 	//					MT0007	The root assembly '{0}' does not exist
 	//					MT0008	You should provide one root assembly only, found {0} assemblies: '{1}'
