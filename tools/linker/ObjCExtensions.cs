@@ -67,6 +67,7 @@ namespace Xamarin.Linker {
 			SceneKit = profile.GetNamespace ("SceneKit");
 			ScriptingBridge = profile.GetNamespace ("ScriptingBridge");
 			WebKit = profile.GetNamespace ("WebKit");
+			MediaPlayer = profile.GetNamespace ("MediaPlayer");
 #else
 			Registrar = profile.GetNamespace ("Registrar");
 			UIKit = profile.GetNamespace ("UIKit");
@@ -147,6 +148,7 @@ namespace Xamarin.Linker {
 		public static string ScriptingBridge { get; private set; }
 
 		public static string WebKit { get; private set; }
+		public static string MediaPlayer { get; private set; }
 #else
 		public static string Registrar { get; private set; }
 
