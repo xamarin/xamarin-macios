@@ -66,6 +66,7 @@ namespace Xamarin.Bundler {
 		Version,
 		RunRegistrar,
 	}
+
 	public static partial class Driver {
 		internal static Application App = new Application ();
 		static Target BuildTarget = new Target (App);
@@ -89,6 +90,7 @@ namespace Xamarin.Bundler {
 		static LinkerOptions linker_options;
 		static bool? disable_lldb_attach = null;
 		static string machine_config_path = null;
+
 		static bool arch_set = false;
 		static string arch = "i386";
 		static Version minos = new Version (10, 7);
@@ -154,36 +156,6 @@ namespace Xamarin.Bundler {
 			return "Xamarin.Mac";
 		}
 
-		public static string ProductAssembly => "Xamarin.Mac";
-		public static string PlatformFrameworkDirectory	{
-			get {
-				if (IsUnifiedMobile)
-					return Path.Combine (MMPDirectory, "lib", "mono", "Xamarin.Mac");
-				else if (IsUnifiedFullXamMacFramework)
-					return Path.Combine (MMPDirectory, "lib", "mono", "4.5");
-				throw ErrorHelper.CreateError (0099, "Internal error \"PlatformFrameworkDirectory when not Mobile or Full?\" Please file a bug report with a test case (http://bugzilla.xamarin.com).");
-			}
-		}
-
-		public static string Arch32Directory {
-			get {
-				if (IsUnifiedMobile)
-					return Path.Combine (MMPDirectory, "lib", "i386", "mobile");
-				else if (IsUnifiedFullXamMacFramework)
-					return Path.Combine (MMPDirectory, "lib", "i386", "full");
-				throw ErrorHelper.CreateError (0099, "Internal error \"Arch32Directory when not Mobile or Full\" Please file a bug report with a test case (http://bugzilla.xamarin.com).");
-			}
-		}
-		
-		public static string Arch64Directory {
-			get {
-				if (IsUnifiedMobile)
-					return Path.Combine (MMPDirectory, "lib", "x86_64", "mobile");
-				else if (IsUnifiedFullXamMacFramework)
-					return Path.Combine (MMPDirectory, "lib", "x86_64", "full");
-				throw ErrorHelper.CreateError (0099, "Internal error \"Arch64Directory when not Mobile or Full\" Please file a bug report with a test case (http://bugzilla.xamarin.com).");
-			}
-		}
 
 		public static string GetPlatformFrameworkDirectory (Application app)
 		{
@@ -575,6 +547,7 @@ namespace Xamarin.Bundler {
 				}
 			}
 		}
+
 
 		static void ValidateXcode ()
 		{
