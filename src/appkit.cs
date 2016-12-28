@@ -18713,7 +18713,7 @@ namespace XamCore.AppKit {
 	}
 
 	[Mac (10,5)]
-	[BaseType (typeof(NSToolbarItem))]
+	[BaseType (typeof (NSToolbarItem))]
 	interface NSToolbarItemGroup
 	{
 		[Export ("initWithItemIdentifier:")]
