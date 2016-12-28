@@ -88,6 +88,7 @@ namespace Xamarin.MMP.Tests
 		{
 			StringBuilder output = new StringBuilder ();
 			Environment.SetEnvironmentVariable ("MONO_PATH", null);
+			Console.WriteLine ($"{exe} {args != null ? args.ToString() : ""}");
 			int compileResult = Xamarin.Bundler.Driver.RunCommand (exe, args != null ? args.ToString() : string.Empty, MonoDevelopLike, output, suppressPrintOnErrors: shouldFail);
 			Func<string> getInfo = () => getAdditionalFailInfo != null ? getAdditionalFailInfo() : "";
 			if (!shouldFail)
