@@ -154,7 +154,6 @@ namespace Xamarin.Bundler {
 			return "Xamarin.Mac";
 		}
 
-<<<<<<< HEAD
 		public static string ProductAssembly => "Xamarin.Mac";
 		public static string PlatformFrameworkDirectory	{
 			get {
@@ -184,7 +183,8 @@ namespace Xamarin.Bundler {
 					return Path.Combine (MMPDirectory, "lib", "x86_64", "full");
 				throw ErrorHelper.CreateError (0099, "Internal error \"Arch64Directory when not Mobile or Full\" Please file a bug report with a test case (http://bugzilla.xamarin.com).");
 			}
-=======
+		}
+
 		public static string GetPlatformFrameworkDirectory (Application app)
 		{
 			if (IsUnifiedMobile)
