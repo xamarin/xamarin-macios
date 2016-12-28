@@ -33,7 +33,7 @@ namespace Xamarin.iOS.Tasks
 			SetupEngine ();
 		}
 
-		public void BuildProject (string appName, string platform, string config, int expectedErrorCount = 0) 
+		public void BuildProject (string appName, string platform, string config, int expectedErrorCount = 0, bool clean = true) 
 		{
 			var mtouchPaths = SetupProjectPaths (appName, "../", true, platform, config);
 
@@ -43,8 +43,12 @@ namespace Xamarin.iOS.Tasks
 			Engine.GlobalProperties.SetProperty("Platform", platform);
 			Engine.GlobalProperties.SetProperty("Configuration", config);
 
-			RunTarget (proj, "Clean");
-			Assert.IsFalse (Directory.Exists (AppBundlePath), "App bundle exists after cleanup: {0} ", AppBundlePath);
+			if (clean) {
+				RunTarget (proj, "Clean");
+				Assert.IsFalse (Directory.Exists (AppBundlePath), "App bundle exists after cleanup: {0} ", AppBundlePath);
+				Assert.IsFalse (Directory.Exists (AppBundlePath + ".dSYM"), "App bundle .dSYM exists after cleanup: {0} ", AppBundlePath + ".dSYM");
+				Assert.IsFalse (Directory.Exists (AppBundlePath + ".mSYM"), "App bundle .mSYM exists after cleanup: {0} ", AppBundlePath + ".mSYM");
+			}
 
 			proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
 			RunTarget (proj, "Build", expectedErrorCount);

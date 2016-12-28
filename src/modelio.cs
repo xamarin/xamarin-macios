@@ -417,7 +417,7 @@ namespace XamCore.ModelIO {
 		[return: NullAllowed]
 		MDLMaterialProperty GetProperty (MDLMaterialSemantic semantic);
 
-		[iOS (10,2), Mac (10,12,1)]
+		[iOS (10,2), Mac (10,12,2)]
 		[Export ("propertiesWithSemantic:")]
 		MDLMaterialProperty[] GetProperties (MDLMaterialSemantic semantic);
 
@@ -653,7 +653,7 @@ namespace XamCore.ModelIO {
 		[Export ("vertexBuffers", ArgumentSemantic.Retain)]
 		IMDLMeshBuffer[] VertexBuffers {
 			get;
-			[iOS (10,2), Mac (10,12,1), TV (10,1)]
+			[iOS (10,2), Mac (10,12,2), TV (10,1)]
 			set;
 		}
 

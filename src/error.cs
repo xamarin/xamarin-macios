@@ -12,9 +12,14 @@
 using System;
 using System.Collections.Generic;
 
+using ProductException=BindingException;
+
 // Error allocation
 //
 // BI0xxx	the generator itself, e.g. parameters, environment
+//		BI0068	Invalid value for target framework: {0}. [same error number/message as mtouch/mmp]
+//		BI0070	Invalid target framework: {0}. Valid target frameworks are: {1}. [same error number/message as mtouch/mmp]
+//		BI0086  A target framework (--target-framework) must be specified when building for Xamarin.Mac. [same error number/message as mtouch/mmp]
 // BI1xxx	code generation
 //	BI10xx	errors
 //		BI1001 Do not know how to make a trampoline for {0}
@@ -123,6 +128,11 @@ public static class ErrorHelper {
 	
 	static public int Verbosity { get; set; }
 	
+	public static ProductException CreateError (int code, string message, params object[] args)
+	{
+		return new ProductException (code, true, message, args);
+	}
+
 	static public void Show (Exception e)
 	{
 		List<Exception> exceptions = new List<Exception> ();

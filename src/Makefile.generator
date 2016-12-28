@@ -3,9 +3,11 @@ GENERATOR_SOURCES =                                             \
 	$(TOP)/src/btouch.cs                               \
 	$(TOP)/src/error.cs                                \
 	$(TOP)/src/generator.cs                            \
+	$(TOP)/src/generator-attributes.cs                 \
 	$(TOP)/src/generator-enums.cs                      \
 	$(TOP)/src/generator-filters.cs                    \
 	$(TOP)/src/ObjCRuntime/Stret.cs                    \
+	$(TOP)/tools/common/TargetFramework.cs             \
 	$(MONO_PATH)/mcs/class/Mono.Options/Mono.Options/Options.cs \
 
 GENERATOR_DEFINES = -d:GENERATOR -d:NET_4_0

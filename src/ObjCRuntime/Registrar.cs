@@ -88,6 +88,10 @@ namespace XamCore.Registrar {
 	}
 
 	abstract partial class Registrar {
+#if MTOUCH || MMP
+		public Application App { get; protected set; }
+#endif
+
 		Dictionary<TAssembly, object> assemblies = new Dictionary<TAssembly, object> (); // Use Dictionary instead of HashSet to avoid pulling in System.Core.dll.
 		// locking: all accesses must lock 'types'.
 		Dictionary<TType, ObjCType> types = new Dictionary<TType, ObjCType> ();
@@ -885,9 +889,10 @@ namespace XamCore.Registrar {
 		internal const string CompatNamespace = "MonoTouch";
 		internal const string CompatAssemblyName = "monotouch";
 #if MTOUCH
-		internal static string DualAssemblyName {
+		internal string DualAssemblyName
+		{
 			get {
-				switch (Driver.App.Platform) {
+				switch (App.Platform) {
 				case Xamarin.Utils.ApplePlatform.iOS:
 					return "Xamarin.iOS";
 				case Xamarin.Utils.ApplePlatform.WatchOS:
@@ -895,7 +900,7 @@ namespace XamCore.Registrar {
 				case Xamarin.Utils.ApplePlatform.TVOS:
 					return "Xamarin.TVOS";
 				default:
-					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", Driver.App.Platform);
+					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", App.Platform);
 				}
 			}
 		}
@@ -923,7 +928,7 @@ namespace XamCore.Registrar {
 				internal const string INativeObject           =	"INativeObject";
 		}
 
-		internal static string PlatformAssembly {
+		internal string PlatformAssembly {
 			get {
 				return IsDualBuild ? DualAssemblyName : CompatAssemblyName;
 			}

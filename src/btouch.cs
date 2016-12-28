@@ -36,25 +36,32 @@ using System.Runtime.InteropServices;
 
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
+using Xamarin.Utils;
 
 class BindingTouch {
 	static Type CoreObject = typeof (XamCore.Foundation.NSObject);
 
+	static TargetFramework? target_framework;
 #if MONOMAC
 	public static PlatformName CurrentPlatform = PlatformName.MacOSX;
 #if XAMCORE_2_0
 	public static bool Unified = true;
+	public static bool skipSystemDrawing /* full: yes, mobile: no */;
 #else
 	public static bool Unified = false;
+	public static bool skipSystemDrawing = false;
 #endif
 #elif WATCH
 	public static PlatformName CurrentPlatform = PlatformName.WatchOS;
 	public static bool Unified = true;
+	public static bool skipSystemDrawing = false;
 #elif TVOS
 	public static PlatformName CurrentPlatform = PlatformName.TvOS;
 	public static bool Unified = true;
+	public static bool skipSystemDrawing = false;
 #elif IOS
 	public static PlatformName CurrentPlatform = PlatformName.iOS;
+	public static bool skipSystemDrawing = false;
 #if XAMCORE_2_0
 	public static bool Unified = true;
 #else
@@ -142,6 +149,17 @@ class BindingTouch {
 		}
 	}
 
+	static void SetTargetFramework (string fx)
+	{
+		TargetFramework tf;
+		if (!TargetFramework.TryParse (fx, out tf))
+			throw ErrorHelper.CreateError (68, "Invalid value for target framework: {0}.", fx);
+		target_framework = tf;
+
+		if (Array.IndexOf (TargetFramework.ValidFrameworks, target_framework.Value) == -1)
+			throw ErrorHelper.CreateError (70, "Invalid target framework: {0}. Valid target frameworks are: {1}.", target_framework.Value, string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
+	}
+
 	static int Main2 (string [] args)
 	{
 		bool show_help = false;
@@ -226,6 +244,7 @@ class BindingTouch {
 			},
 			{ "unified-full-profile", "Launches compiler pointing to XM Full Profile", l => { /* no-op*/ }, true },
 			{ "unified-mobile-profile", "Launches compiler pointing to XM Mobile Profile", l => { /* no-op*/ }, true },
+			{ "target-framework=", "Specify target framework to use. Only applicable to Xamarin.Mac, and the currently supported values are: 'Xamarin.Mac,Version=v2.0,Profile=Mobile', 'Xamarin.Mac,Version=v4.5,Profile=Full' and 'Xamarin.Mac,Version=v4.5,Profile=System')", v => SetTargetFramework (v) },
 		};
 
 		try {
@@ -375,13 +394,6 @@ class BindingTouch {
 					strong_dictionaries.Add (t);
 			}
 
-			bool addSystemDrawingReferences =
-#if NO_SYSTEM_DRAWING
-				true;
-#else
-				false;
-#endif
-
 			string nsManagerPrefix;
 			switch (CurrentPlatform) {
 			case PlatformName.MacOSX:
@@ -395,21 +407,24 @@ class BindingTouch {
 				break;
 			}
 
+			if (CurrentPlatform == PlatformName.MacOSX && Unified) {
+				if (!target_framework.HasValue)
+					throw ErrorHelper.CreateError (86, "A target framework (--target-framework) must be specified when building for Xamarin.Mac.");
+				skipSystemDrawing = target_framework == TargetFramework.Xamarin_Mac_4_5_Full;
+			}
+
 			var nsManager = new NamespaceManager (
 				nsManagerPrefix,
 				ns == null ? firstApiDefinitionName : ns,
-				addSystemDrawingReferences
+				skipSystemDrawing
 			);
 
-			Generator.CurrentPlatform = CurrentPlatform;
 			var g = new Generator (nsManager, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()){
 				BindThirdPartyLibrary = binding_third_party,
 				CoreNSObject = CoreObject,
 				BaseDir = basedir != null ? basedir : tmpdir,
 				ZeroCopyStrings = zero_copy,
-				Compat = !Unified,
 				InlineSelectors = inline_selectors,
-				SkipSystemDrawing = addSystemDrawingReferences
 			};
 
 			if (!Unified && !binding_third_party) {

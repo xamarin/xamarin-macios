@@ -149,10 +149,12 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static Version SDKVersion { get; private set; }
+		public static string GetProductAssembly (Application app)
+		{
+			return "Xamarin.Mac";
+		}
 
-		public static Version MinOSVersion { get { return minos; } }
-
+<<<<<<< HEAD
 		public static string ProductAssembly => "Xamarin.Mac";
 		public static string PlatformFrameworkDirectory	{
 			get {
@@ -182,6 +184,32 @@ namespace Xamarin.Bundler {
 					return Path.Combine (MMPDirectory, "lib", "x86_64", "full");
 				throw ErrorHelper.CreateError (0099, "Internal error \"Arch64Directory when not Mobile or Full\" Please file a bug report with a test case (http://bugzilla.xamarin.com).");
 			}
+=======
+		public static string GetPlatformFrameworkDirectory (Application app)
+		{
+			if (IsUnifiedMobile)
+				return Path.Combine (MMPDirectory, "lib", "mono", "Xamarin.Mac");
+			else if (IsUnifiedFullXamMacFramework)
+				return Path.Combine (MMPDirectory, "lib", "mono", "4.5");
+			throw new InvalidOperationException ("PlatformFrameworkDirectory when not Mobile or Full?");
+		}
+
+		public static string GetArch32Directory (Application app)
+		{
+			if (IsUnifiedMobile)
+				return Path.Combine (MMPDirectory, "lib", "i386", "mobile");
+			else if (IsUnifiedFullXamMacFramework)
+				return Path.Combine (MMPDirectory, "lib", "i386", "full");
+			throw new InvalidOperationException ("Arch32Directory when not Mobile or Full?");
+		}
+		
+		public static string GetArch64Directory (Application app)
+		{
+			if (IsUnifiedMobile)
+				return Path.Combine (MMPDirectory, "lib", "x86_64", "mobile");
+			else if (IsUnifiedFullXamMacFramework)
+				return Path.Combine (MMPDirectory, "lib", "x86_64", "full");
+			throw new InvalidOperationException ("Arch64Directory when not Mobile or Full?");
 		}
 
 		static int watch_level;
@@ -318,7 +346,7 @@ namespace Xamarin.Bundler {
 				{ "sdk=", "Specifies the SDK version to compile against (version, for example \"10.9\")",
 					v => {
 						try {
-							SDKVersion = Version.Parse (v);
+							App.SdkVersion = Version.Parse (v);
 						} catch (Exception ex) {
 							ErrorHelper.Error (26, ex, "Could not parse the command line argument '{0}': {1}", "-sdk", ex.Message);
 						}
@@ -367,7 +395,7 @@ namespace Xamarin.Bundler {
 				},
 			};
 
-			AddSharedOptions (os);
+			AddSharedOptions (App, os);
 
 			IList<string> unprocessed;
 			try {
@@ -380,7 +408,7 @@ namespace Xamarin.Bundler {
 				throw new MonoMacException (10, true, "Could not parse the command line arguments: {0}", e.Message);
 			}
 
-			App.RuntimeOptions = RuntimeOptions.Create (http_message_provider, tls_provider);
+			App.RuntimeOptions = RuntimeOptions.Create (App, http_message_provider, tls_provider);
 
 			ErrorHelper.Verbosity = verbose;
 
@@ -595,9 +623,9 @@ namespace Xamarin.Bundler {
 		// Validates that sdk_version is set to a reasonable value before compile
 		static void ValidateSDKVersion ()
 		{
-			if (SDKVersion != null) {
+			if (App.SdkVersion != null) {
 				// We can't do mutation while parsing command line args as XcodeVersion isn't set yet
-				SDKVersion = MutateSDKVersionToPointRelease (SDKVersion);
+				App.SdkVersion = MutateSDKVersionToPointRelease (App.SdkVersion);
 				return;
 			}
 
@@ -617,11 +645,14 @@ namespace Xamarin.Bundler {
 			if (sdks.Count > 0) {
 				sdks.Sort ();
 				// select the highest.
-				SDKVersion = MutateSDKVersionToPointRelease (sdks [sdks.Count - 1]);
+				App.SdkVersion = MutateSDKVersionToPointRelease (sdks [sdks.Count - 1]);
 			}
 		}
 
-		public static Frameworks Frameworks { get { return Frameworks.MacFrameworks; } }
+		public static Frameworks GetFrameworks (Application app)
+		{
+			return Frameworks.MacFrameworks;
+		}
 
 		static void CheckForUnknownCommandLineArguments (IList<Exception> exceptions, IList<string> arguments)
 		{
@@ -1110,8 +1141,8 @@ namespace Xamarin.Bundler {
 				BuildTarget.StaticRegistrar.LinkContext = BuildTarget.LinkContext;
 				BuildTarget.StaticRegistrar.Generate (BuildTarget.Resolver.ResolverCache.Values, registrarH, registrarPath);
 
-				var platform_assembly = BuildTarget.Resolver.ResolverCache.First ((v) => v.Value.Name.Name == XamCore.Registrar.Registrar.PlatformAssembly).Value;
-				Frameworks.Gather (platform_assembly, BuildTarget.Frameworks, BuildTarget.WeakFrameworks);
+				var platform_assembly = BuildTarget.Resolver.ResolverCache.First ((v) => v.Value.Name.Name == BuildTarget.StaticRegistrar.PlatformAssembly).Value;
+				Frameworks.Gather (App, platform_assembly, BuildTarget.Frameworks, BuildTarget.WeakFrameworks);
 			}
 
 			try {
@@ -1247,7 +1278,7 @@ namespace Xamarin.Bundler {
 					args.Append (link_flags + " ");
 				if (!string.IsNullOrEmpty (DeveloperDirectory))
 				{
-					var sysRootSDKVersion = new Version (SDKVersion.Major, SDKVersion.Minor); // Sys Root SDKs do not have X.Y.Z, just X.Y 
+					var sysRootSDKVersion = new Version (App.SdkVersion.Major, App.SdkVersion.Minor); // Sys Root SDKs do not have X.Y.Z, just X.Y 
 					args.Append ("-isysroot ").Append (Quote (Path.Combine (DeveloperDirectory, "Platforms", "MacOSX.platform", "Developer", "SDKs", "MacOSX" + sysRootSDKVersion + ".sdk"))).Append (' ');
 				}
 
@@ -1350,6 +1381,7 @@ namespace Xamarin.Bundler {
 				EnsureUIThread = thread_check.HasValue ? thread_check.Value : App.EnableDebug,
 				MarshalNativeExceptionsState = !App.RequiresPInvokeWrappers ? null : new PInvokeWrapperGenerator ()
 				{
+					App = App,
 					SourcePath = Path.Combine (Cache.Location, "pinvokes.m"),
 					HeaderPath = Path.Combine (Cache.Location, "pinvokes.h"),
 					Registrar = (StaticRegistrar) BuildTarget.StaticRegistrar,

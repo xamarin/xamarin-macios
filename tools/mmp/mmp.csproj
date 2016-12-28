@@ -54,6 +54,7 @@
     <Reference Include="Mono.Security" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application.cs" />
     <Compile Include="driver.cs" />
     <Compile Include="aot.cs" />
     <Compile Include="resolver.cs" />

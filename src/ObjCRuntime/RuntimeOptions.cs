@@ -51,15 +51,15 @@ namespace XamCore.ObjCRuntime {
 		/*
 		 * This section is only used by the tools
 		 */
-		internal static RuntimeOptions Create (string http_message_handler, string tls_provider)
+		internal static RuntimeOptions Create (Application app, string http_message_handler, string tls_provider)
 		{
 			var options = new RuntimeOptions ();
-			options.http_message_handler = ParseHttpMessageHandler (http_message_handler);
+			options.http_message_handler = ParseHttpMessageHandler (app, http_message_handler);
 			ParseTlsProvider (tls_provider);
 			return options;
 		}
 
-		static string ParseHttpMessageHandler (string value)
+		static string ParseHttpMessageHandler (Application app, string value)
 		{
 			switch (value) {
 			// default
@@ -67,7 +67,7 @@ namespace XamCore.ObjCRuntime {
 				return HttpClientHandlerValue;
 			case CFNetworkHandlerValue:
 			case HttpClientHandlerValue:
-				if (Driver.App.Platform == Utils.ApplePlatform.WatchOS) {
+				if (app.Platform == Utils.ApplePlatform.WatchOS) {
 					ErrorHelper.Warning (2015, "Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.", value);
 					return NSUrlSessionHandlerValue;
 				}
@@ -75,7 +75,7 @@ namespace XamCore.ObjCRuntime {
 			case NSUrlSessionHandlerValue:
 				return value;
 			default:
-				if (Driver.App.Platform == Utils.ApplePlatform.WatchOS) // This is value we don't know about at all, show as error instead of warning.
+				if (app.Platform == Utils.ApplePlatform.WatchOS) // This is value we don't know about at all, show as error instead of warning.
 					throw ErrorHelper.CreateError (2015, "Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.", value);
 				throw ErrorHelper.CreateError (2010, "Unknown HttpMessageHandler `{0}`. Valid values are HttpClientHandler (default), CFNetworkHandler or NSUrlSessionHandler", value);
 			}
@@ -138,13 +138,13 @@ namespace XamCore.ObjCRuntime {
 		}
 
 		// Called from CoreHttpMessageHandler
-		internal static TypeDefinition GetHttpMessageHandler (RuntimeOptions options, ModuleDefinition httpModule, ModuleDefinition platformModule = null)
+		internal static TypeDefinition GetHttpMessageHandler (Application app, RuntimeOptions options, ModuleDefinition httpModule, ModuleDefinition platformModule = null)
 		{
 			string handler;
 
 			if (options != null) {
 				handler = options.http_message_handler;
-			} else if (Driver.App.Platform == Utils.ApplePlatform.WatchOS) {
+			} else if (app.Platform == Utils.ApplePlatform.WatchOS) {
 				handler = NSUrlSessionHandlerValue;
 			} else {
 				handler = HttpClientHandlerValue;
@@ -163,7 +163,7 @@ namespace XamCore.ObjCRuntime {
 				break;
 #else
 			case HttpClientHandlerValue:
-				if (Driver.App.Platform == Utils.ApplePlatform.WatchOS) {
+				if (app.Platform == Utils.ApplePlatform.WatchOS) {
 					ErrorHelper.Warning (2015, "Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.", handler);
 					type = httpModule.GetType ("System.Net.Http", "NSUrlSessionHandler");
 				} else {
@@ -171,7 +171,7 @@ namespace XamCore.ObjCRuntime {
 				}
 				break;
 			case CFNetworkHandlerValue:
-				if (Driver.App.Platform == Utils.ApplePlatform.WatchOS) {
+				if (app.Platform == Utils.ApplePlatform.WatchOS) {
 					ErrorHelper.Warning (2015, "Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.", handler);
 					type = httpModule.GetType ("System.Net.Http", "NSUrlSessionHandler");
 				} else {
