@@ -64,7 +64,8 @@ namespace MonoMac.Tuner {
 		{ Constants.FinderSyncLibrary, Namespaces.FinderSync },
 		{ Constants.NotificationCenterLibrary, Namespaces.NotificationCenter },
 		{ Constants.SceneKitLibrary, Namespaces.SceneKit },
-		{ Constants.StoreKitLibrary, Namespaces.StoreKit } };
+		{ Constants.StoreKitLibrary, Namespaces.StoreKit },
+		{ Constants.MediaPlayerLibrary, Namespaces.MediaPlayer } };
 
 		public void Process (LinkContext context)
 		{
