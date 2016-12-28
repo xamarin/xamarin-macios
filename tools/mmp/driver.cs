@@ -156,7 +156,6 @@ namespace Xamarin.Bundler {
 			return "Xamarin.Mac";
 		}
 
-
 		public static string GetPlatformFrameworkDirectory (Application app)
 		{
 			if (IsUnifiedMobile)
@@ -183,6 +182,7 @@ namespace Xamarin.Bundler {
 				return Path.Combine (MMPDirectory, "lib", "x86_64", "full");
 			throw new InvalidOperationException ("Arch64Directory when not Mobile or Full?");
 		}
+
 
 		static int watch_level;
 		static Stopwatch watch;
