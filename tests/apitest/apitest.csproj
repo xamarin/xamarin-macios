@@ -90,6 +90,7 @@
     <Compile Include="src\AppKit\NSTextInputClient.cs" />
     <Compile Include="src\AppKit\NSTextView.cs" />
     <Compile Include="src\AppKit\NSToolbar.cs" />
+    <Compile Include="src\AppKit\NSToolbarItem.cs" />
     <Compile Include="src\AppKit\NSUserDefaultsController.cs" />
     <Compile Include="src\AppKit\NSView.cs" />
     <Compile Include="src\AppKit\NSViewController.cs" />
