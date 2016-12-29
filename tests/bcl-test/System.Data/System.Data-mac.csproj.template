@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BEF0140A-A6A6-4074-B55F-03856A6B5862}</ProjectGuid>
+    <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>BCL.Tests</RootNamespace>
+    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+    <AssemblyName>System.DataTests</AssemblyName>
+    <NoWarn>67,168,169,219,414,612,618,649,672</NoWarn>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseXamMacFullFramework>true</UseXamMacFullFramework>
+    <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
+    <DefineConstants>XAMCORE_2_0</DefineConstants>
+  </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;MONOMAC;DISABLE_CAS_USE;NO_GUI_TESTING;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <CodeSigningKey>Mac Developer</CodeSigningKey>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <CreatePackage>false</CreatePackage>
+    <LinkMode>None</LinkMode>
+    <XamMacArch>x86_64</XamMacArch>
+    <I18n>cjk,mideast,other,rare,west</I18n>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <DefineConstants>NET_1_1;NET_2_0;NET_3_0;NET_3_5;NET_4_0;NET_4_5;MONOMAC;DISABLE_CAS_USE;NO_GUI_TESTING;$(DefineConstants)</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <LinkMode>None</LinkMode>
+    <CreatePackage>false</CreatePackage>
+    <CodeSigningKey>Mac Developer</CodeSigningKey>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <I18n>cjk,mideast,other,rare,west</I18n>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="Xamarin.Mac" />
+    <Reference Include="GuiUnit">
+      <HintPath>..\..\..\external\guiunit\src\framework\obj\Debug\net-4.5\GuiUnit.exe</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info-mac.plist">
+      <LogicalName>Info.plist</LogicalName>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../../common/mac/MacTestMain.cs">
+      <Link>MacTestMain.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+#FILES#
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+  <Import Project="../SyncTestResources.targets" />  
+  <ItemGroup>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\binserialize\BS-tb1.bin">
+      <Link>Test\System.Data\binserialize\BS-tb1.bin</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\binserialize\BS-tb2.bin">
+      <Link>Test\System.Data\binserialize\BS-tb2.bin</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\binserialize\BS-tb3.bin">
+      <Link>Test\System.Data\binserialize\BS-tb3.bin</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\binserialize\BS-tb4.bin">
+      <Link>Test\System.Data\binserialize\BS-tb4.bin</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\binserialize\BS-tb5.bin">
+      <Link>Test\System.Data\binserialize\BS-tb5.bin</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\store.xsd">
+      <Link>Test\System.Data\store.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\store2.xsd">
+      <Link>Test\System.Data\store2.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\store3.xsd">
+      <Link>Test\System.Data\store3.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\store4.xsd">
+      <Link>Test\System.Data\store4.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\b582732.xml">
+      <Link>Test\System.Data\schemas\b582732.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\bug77248.xsd">
+      <Link>Test\System.Data\schemas\bug77248.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\Items.xsd">
+      <Link>Test\System.Data\schemas\Items.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test001.xsd">
+      <Link>Test\System.Data\schemas\test001.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test002.xsd">
+      <Link>Test\System.Data\schemas\test002.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test003.xsd">
+      <Link>Test\System.Data\schemas\test003.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test004.xsd">
+      <Link>Test\System.Data\schemas\test004.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test005.xsd">
+      <Link>Test\System.Data\schemas\test005.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test006.xsd">
+      <Link>Test\System.Data\schemas\test006.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test007.xsd">
+      <Link>Test\System.Data\schemas\test007.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test008.xsd">
+      <Link>Test\System.Data\schemas\test008.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test009.xsd">
+      <Link>Test\System.Data\schemas\test009.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test010.xsd">
+      <Link>Test\System.Data\schemas\test010.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test011.xsd">
+      <Link>Test\System.Data\schemas\test011.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test012.xsd">
+      <Link>Test\System.Data\schemas\test012.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test013.xsd">
+      <Link>Test\System.Data\schemas\test013.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test014.xsd">
+      <Link>Test\System.Data\schemas\test014.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test015.xsd">
+      <Link>Test\System.Data\schemas\test015.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test016.xsd">
+      <Link>Test\System.Data\schemas\test016.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test017.xsd">
+      <Link>Test\System.Data\schemas\test017.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test101.xsd">
+      <Link>Test\System.Data\schemas\test101.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test102.xsd">
+      <Link>Test\System.Data\schemas\test102.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\schemas\test103.xsd">
+      <Link>Test\System.Data\schemas\test103.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\region.xml">
+      <Link>Test\System.Data\region.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\own_schema.xsd">
+      <Link>Test\System.Data\own_schema.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\own_schema1.xsd">
+      <Link>Test\System.Data\own_schema1.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\own_schema2.xsd">
+      <Link>Test\System.Data\own_schema2.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\TypedDataSet.xml">
+      <Link>Test\System.Data\TypedDataSet.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Xml\region.xml">
+      <Link>Test\System.Xml\region.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Xml\region.xsd">
+      <Link>Test\System.Xml\region.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Xml\store.xsd">
+      <Link>Test\System.Xml\store.xsd</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\Mono.Data.SqlExpressions\dateComparisonTest.xml">
+      <Link>Test\Mono.Data.SqlExpressions\dateComparisonTest.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\TestMerge1.xml">
+      <Link>Test\System.Data\TestMerge1.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Xml\2books.xml">
+      <Link>Test\System.Xml\2books.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\TestReadXmlSchema1.xml">
+      <Link>Test\System.Data\TestReadXmlSchema1.xml</Link>
+    </Content>
+    <Content Include="..\..\..\external\mono\mcs\class\System.Data\Test\System.Data\TestReadXml1.xml">
+      <Link>Test\System.Data\TestReadXml1.xml</Link>
+    </Content>
+  </ItemGroup>
+</Project>
