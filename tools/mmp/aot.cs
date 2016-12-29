@@ -94,13 +94,13 @@ namespace Xamarin.Bundler {
 					continue;
 				}
 
-				if (option.StartsWith ("+", StringComparison.InvariantCulture)) {
+				if (option.StartsWith ("+", StringComparison.Ordinal)) {
 					if (aotType == AotType.Default)
 						aotType = AotType.Explicit;
 					includedAssemblies.Add (option.Substring (1), false);
 					continue;
 				}
-				if (option.StartsWith ("-", StringComparison.InvariantCulture)) {
+				if (option.StartsWith ("-", StringComparison.Ordinal)) {
 					if (aotType == AotType.Default)
 						aotType = AotType.Explicit;
 					excludedAssemblies.Add (option.Substring (1), false);
