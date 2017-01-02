@@ -136,13 +136,8 @@ class BindingTouch {
 		case PlatformName.WatchOS:
 		case PlatformName.TvOS:
 			var sdkRoot = Environment.GetEnvironmentVariable ("MD_MTOUCH_SDK_ROOT");
-			if (string.IsNullOrEmpty (sdkRoot)) {
-				if (Directory.Exists ("/Library/Frameworks/Xamarin.iOS.framework/Versions/Current")) {
-					sdkRoot = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current";
-				} else {
-					sdkRoot = "/Developer/MonoTouch/usr";
-				}
-			}
+			if (string.IsNullOrEmpty (sdkRoot))
+				sdkRoot = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current";
 			return sdkRoot;
 		default:
 			throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
