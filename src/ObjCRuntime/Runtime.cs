@@ -99,6 +99,7 @@ namespace XamCore.ObjCRuntime {
 			IsSimulator				= 0x10,
 		}
 
+		[StructLayout (LayoutKind.Sequential)]
 		internal unsafe struct InitializationOptions {
 			public int Size;
 			public InitializationFlags Flags;
