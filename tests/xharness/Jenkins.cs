@@ -950,9 +950,15 @@ function toggleContainerVisibility (containerName)
 
 	class XBuildTask : BuildToolTask
 	{
+		public bool SupportsParallelBuilds {
+			get {
+				return Platform.ToString ().StartsWith ("Mac", StringComparison.Ordinal);
+			}
+		}
+
 		protected override async Task ExecuteAsync ()
 		{
-			using (var resource = await Jenkins.DesktopResource.AcquireConcurrentAsync ()) {
+			using (var resource = await (SupportsParallelBuilds ? Jenkins.DesktopResource.AcquireConcurrentAsync () : Jenkins.DesktopResource.AcquireExclusiveAsync ())) {
 				using (var xbuild = new Process ()) {
 					xbuild.StartInfo.FileName = "xbuild";
 					var args = new StringBuilder ();
