@@ -113,8 +113,6 @@ namespace Xamarin.Bundler
 			LaunchWatchApp,
 		}
 
-		static Action action;
-
 		static bool xcode_version_check = true;
 
 		//
@@ -332,7 +330,7 @@ namespace Xamarin.Bundler
 			return output.ToString ().Trim ();
 		}
 
-		static void ValidateXcode ()
+		static void ValidateXcode (Action action)
 		{
 			// Allow a few actions, since these seem to always work no matter the Xcode version.
 			var accept_any_xcode_version = action == Action.ListDevices || action == Action.ListCrashReports || action == Action.ListApps || action == Action.LogDev;
@@ -960,31 +958,9 @@ namespace Xamarin.Bundler
 			return 0;
 		}
 
-		static void SetAction (Action value)
-		{
-			switch (action) {
-			case Action.None:
-				action = value;
-				break;
-			case Action.KillApp:
-				if (value == Action.LaunchDevice) {
-					action = Action.KillAndLaunch;
-					break;
-				}
-				goto default;
-			case Action.LaunchDevice:
-				if (value == Action.KillApp) {
-					action = Action.KillAndLaunch;
-					break;
-				}
-				goto default;
-			default:
-				throw new MonoTouchException (19, true, "Only one --[log|install|kill|launch]dev or --[launch|debug|list]sim option can be used.");
-			}
-		}
-
 		static int Main2 (string [] args)
 		{
+			var action = Action.None;
 			var app = new Application ();
 			var assemblies = new List<string> ();
 
@@ -997,6 +973,29 @@ namespace Xamarin.Bundler
 
 			string tls_provider = null;
 			string http_message_handler = null;
+
+			Action<Action> SetAction = (Action value) =>
+			{
+				switch (action) {
+				case Action.None:
+					action = value;
+					break;
+				case Action.KillApp:
+					if (value == Action.LaunchDevice) {
+						action = Action.KillAndLaunch;
+						break;
+					}
+					goto default;
+				case Action.LaunchDevice:
+					if (value == Action.KillApp) {
+						action = Action.KillAndLaunch;
+						break;
+					}
+					goto default;
+				default:
+					throw new MonoTouchException (19, true, "Only one --[log|install|kill|launch]dev or --[launch|debug|list]sim option can be used.");
+				}
+			};
 
 			var os = new OptionSet () {
 			{ "h|?|help", "Displays the help", v => SetAction (Action.Help) },
@@ -1293,7 +1292,7 @@ namespace Xamarin.Bundler
 
 			app.RuntimeOptions = RuntimeOptions.Create (app, http_message_handler, tls_provider);
 
-			ValidateXcode ();
+			ValidateXcode (action);
 
 			switch (action) {
 			/* Device actions */
