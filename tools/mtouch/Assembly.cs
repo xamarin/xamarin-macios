@@ -191,7 +191,7 @@ namespace Xamarin.Bundler {
 		IEnumerable<BuildTask> CreateManagedToAssemblyTasks (string s, Abi abi, string build_dir)
 		{
 			var arch = abi.AsArchString ();
-			var asm_dir = Cache.Location;
+			var asm_dir = App.Cache.Location;
 			var asm = Path.Combine (asm_dir, Path.GetFileName (s)) + "." + arch + ".s";
 			var llvm_asm = Path.Combine (asm_dir, Path.GetFileName (s)) + "." + arch + "-llvm.s";
 			var data = Path.Combine (asm_dir, Path.GetFileNameWithoutExtension (s)) + "." + arch + ".aotdata";

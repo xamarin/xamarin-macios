@@ -180,7 +180,7 @@ namespace Xamarin.Bundler
 			if (entry_points != null)  
 				return entry_points.Keys;
 
-			var cache_location = Path.Combine (Cache.Location, "entry-points.txt");
+			var cache_location = Path.Combine (App.Cache.Location, "entry-points.txt");
 			if (cached_link || !any_assembly_updated) {
 				entry_points = new Dictionary<string, MemberReference> ();
 				foreach (var ep in File.ReadAllLines (cache_location))
