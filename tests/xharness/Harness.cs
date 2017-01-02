@@ -16,6 +16,7 @@ namespace xharness
 		Configure,
 		Run,
 		Install,
+		Uninstall,
 		Jenkins,
 	}
 
@@ -456,6 +457,25 @@ namespace xharness
 			return 0;
 		}
 
+		public int Uninstall ()
+		{
+			if (HarnessLog == null)
+				HarnessLog = new ConsoleLog ();
+
+			foreach (var project in IOSTestProjects) {
+				var runner = new AppRunner ()
+				{
+					Harness = this,
+					ProjectFile = project.Path,
+					MainLog = HarnessLog,
+				};
+				var rv = runner.Uninstall (HarnessLog);
+				if (rv != 0)
+					return rv;
+			}
+			return 0;
+		}
+
 		public int Run ()
 		{
 			if (HarnessLog == null)
@@ -540,6 +560,8 @@ namespace xharness
 				return Run ();
 			case HarnessAction.Install:
 				return Install ();
+			case HarnessAction.Uninstall:
+				return Uninstall ();
 			case HarnessAction.Jenkins:
 				return Jenkins ();
 			default:
