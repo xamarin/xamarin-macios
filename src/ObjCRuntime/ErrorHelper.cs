@@ -84,7 +84,7 @@ namespace XamCore.ObjCRuntime {
 			ex.LineNumber = seq.StartLine;
 		}
 
-		public static ProductException CreateError (int code, Mono.Cecil.MemberReference member, string message, params object[] args)
+		public static ProductException CreateError (Application app, int code, Mono.Cecil.MemberReference member, string message, params object[] args)
 		{
 			Mono.Cecil.MethodReference method = member as Mono.Cecil.MethodReference;
 			if (method == null) {
@@ -95,7 +95,7 @@ namespace XamCore.ObjCRuntime {
 						method = property.SetMethod;
 				}
 			}
-			return CreateError (code, method == null ? null : method.Resolve (), message, args);
+			return CreateError (app, code, method == null ? null : method.Resolve (), message, args);
 		}
 
 		public static ProductException CreateError (Application app, int code, Mono.Cecil.MethodDefinition location, string message, params object[] args)
