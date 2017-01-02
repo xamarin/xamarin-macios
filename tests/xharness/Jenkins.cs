@@ -394,6 +394,19 @@ namespace xharness
 				};
 				Tasks.Add (run);
 			}
+
+			if (IncludeMmpTest) {
+				var run = new MakeTask
+				{
+					Jenkins = this,
+					Platform = TestPlatform.Mac,
+					TestName = "MMP Regression Tests",
+					Target = "all -j" + Environment.ProcessorCount,
+					WorkingDirectory = Path.Combine (Harness.RootDirectory, "mmptest", "regression"),
+				};
+				run.Environment.Add ("BUILD_REVISION", "jenkins"); // This will print "@MonkeyWrench: AddFile: <log path>" lines, which we can use to get the log filenames.
+				Tasks.Add (run);
+			}
 		}
 
 		static MacExecuteTask CloneExecuteTask (MacExecuteTask task, TestPlatform platform, string suffix)
@@ -692,6 +705,7 @@ function toggleContainerVisibility (containerName)
 		public string ProjectFile;
 		public string ProjectConfiguration;
 		public string ProjectPlatform;
+		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
 
 		Stopwatch duration = new Stopwatch ();
 		public TimeSpan Duration { 
@@ -852,6 +866,35 @@ function toggleContainerVisibility (containerName)
 			default:
 				throw new NotImplementedException ();
 			}
+
+			foreach (var kvp in Environment)
+				process.StartInfo.EnvironmentVariables [kvp.Key] = kvp.Value;
+		}
+
+		protected void AddWrenchLogFiles (StreamReader stream)
+		{
+			string line;
+			while ((line = stream.ReadLine ()) != null) {
+				if (!line.StartsWith ("@MonkeyWrench: ", StringComparison.Ordinal))
+					continue;
+
+				var cmd = line.Substring ("@MonkeyWrench:".Length).TrimStart ();
+				var colon = cmd.IndexOf (':');
+				if (colon <= 0)
+					continue;
+				var name = cmd.Substring (0, colon);
+				switch (name) {
+				case "AddFile":
+					var src = cmd.Substring (name.Length + 1).Trim ();
+					var tgt = Path.Combine (LogDirectory, Path.GetFileName (src));
+					File.Copy (src, tgt, true);
+					Logs.CreateFile (Path.GetFileName (tgt), tgt);
+					break;
+				default:
+					Harness.HarnessLog.WriteLine ("Unknown @MonkeyWrench command in {0}: {1}", TestName, name);
+					break;
+				}
+			}
 		}
 	}
 
@@ -942,6 +985,8 @@ function toggleContainerVisibility (containerName)
 							ExecutionResult = TestExecutingResult.HarnessException;
 						}
 					}
+					using (var reader = log.GetReader ())
+						AddWrenchLogFiles (reader);
 					Jenkins.MainLog.WriteLine ("Made {0} ({1})", TestName, Mode);
 				}
 			}
