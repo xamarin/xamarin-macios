@@ -732,7 +732,7 @@ class H : G {
 
 		void Verify (R registrars, MTouch.Profile profile, string code, bool success, params string [] expected_messages)
 		{
-			Verify (registrars, profile, code, success, MTouch.Target.Dev, expected_messages);
+			Verify (registrars, profile, code, success, MTouch.Target.Sim, expected_messages);
 		}
 
 		void Verify (R registrars, MTouch.Profile profile, string code, bool success, MTouch.Target target, params string [] expected_messages)
@@ -752,7 +752,7 @@ class H : G {
 
 		void VerifyWithXcode (R registrars, MTouch.Profile profile, string code, bool success, string xcode, string sdk_version, params string [] expected_messages)
 		{
-			VerifyWithXcode (registrars, profile, code, success, xcode, sdk_version, MTouch.Target.Dev, expected_messages);
+			VerifyWithXcode (registrars, profile, code, success, xcode, sdk_version, MTouch.Target.Sim, expected_messages);
 		}
 
 		void VerifyWithXcode (R registrars, MTouch.Profile profile, string code, bool success, string xcode, string sdk_version, MTouch.Target target, params string [] expected_messages)
