@@ -105,6 +105,7 @@ namespace Xamarin.Bundler {
 	//					MT0096 No reference to Xamarin.iOS.dll was found.
 	//					MT0097 <used by mmp>
 	//					MT0098 <used by mmp>
+	//					MT0099	Internal error {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).
 	// MT1xxx	file copy / symlinks (project related)
 	//			MT10xx	installer.cs / mtouch.cs
 	//					MT1001	Could not find an application at the specified directory: {0}

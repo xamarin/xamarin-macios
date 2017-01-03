@@ -365,6 +365,10 @@ A last-straw solution would be to use a different version of Xamarin.iOS, one th
 
 <h3><a name="MT0096"/>MT0096: No reference to Xamarin.iOS.dll was found.</h3>
 
+<h3><a name="MT0099"/>Internal error *. Please file a bug report with a test case (http://bugzilla.xamarin.com).</h3>
+
+This indicates a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
+
 # MT1xxx: Project related error messages
 
 ### MT10xx: Installer / mtouch

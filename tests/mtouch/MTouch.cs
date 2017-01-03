@@ -209,11 +209,44 @@ namespace Xamarin
 		}
 
 		[Test]
+		public void MT0008 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryAppDirectory ();
+				mtouch.CustomArguments = new string [] { "foo.exe", "bar.exe" };
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (8, "You should provide one root assembly only, found 2 assemblies: 'foo.exe', 'bar.exe'");
+			}
+		}
+
+		[Test]
 		public void MT0015 ()
 		{
 			Asserts.Throws<TestExecutionException> (() =>
 				ExecutionHelper.Execute (TestTarget.ToolPath, "--abi invalid-arm"),
 				"error MT0015: Invalid ABI: invalid-arm. Supported ABIs are: i386, x86_64, armv7, armv7+llvm, armv7+llvm+thumb2, armv7s, armv7s+llvm, armv7s+llvm+thumb2, armv7k, armv7k+llvm, arm64 and arm64+llvm.\n");
+		}
+
+		[Test]
+		public void MT0017 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryAppDirectory ();
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (17, "You should provide a root assembly.");
+			}
+		}
+
+		[Test]
+		public void MT0018 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CustomArguments = new string [] { "--unknown", "-unknown" };
+				mtouch.CreateTemporaryAppDirectory ();
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (18, "Unknown command line argument: '-unknown'");
+				mtouch.AssertError (18, "Unknown command line argument: '--unknown'");
+			}
 		}
 
 		[Test]
