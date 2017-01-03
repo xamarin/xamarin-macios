@@ -799,7 +799,20 @@ public partial class Generator : IMemberGatherer {
 	// Static version of the above (!Compat) field, set on each Go invocation, needed because some static
 	// helper methods need to access this.   This is the exact opposite of Compat.
 	public static bool UnifiedAPI { get { return BindingTouch.Unified; } }
-
+	public static int XamcoreVersion {
+		get {
+			switch (Generator.CurrentPlatform) {
+			case PlatformName.MacOSX:
+			case PlatformName.iOS:
+				return UnifiedAPI ? 2 : 1;
+			case PlatformName.TvOS:
+			case PlatformName.WatchOS:
+				return 3;
+			default:
+				return 4;
+			}
+		}
+	}
 	Type [] types, strong_dictionaries;
 	bool debug;
 	bool external;
@@ -2872,24 +2885,7 @@ public partial class Generator : IMemberGatherer {
 			return false;
 
 		var attrib = (ProtocolizeAttribute) attribs [0];
-		switch (attrib.Version) {
-		case 2:
-			return UnifiedAPI;
-		case 3:
-#if XAMCORE_3_0
-			return true;
-#else
-			return false;
-#endif
-		case 4:
-#if XAMCORE_4_0
-			return true;
-#else
-			return false;
-#endif
-		default:
-			throw new NotImplementedException (string.Format ("ProtocolizeAttribute with Version={0} not implemented", attrib.Version));
-		}
+		return Generator.XamcoreVersion >= attrib.Version;
 	}
 
 	public string MakeSignature (MemberInformation minfo, bool is_async, ParameterInfo[] parameters, string extra = "", bool alreadyPreserved = false)

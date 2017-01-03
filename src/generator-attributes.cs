@@ -792,11 +792,11 @@ public class CoreImageFilterAttribute : Attribute {
 		DefaultCtorVisibility = MethodAttributes.Public;
 
 		// since it was not generated code we never fixed the .ctor(IntPtr) visibility for unified
-#if XAMCORE_3_0
-		IntPtrCtorVisibility = MethodAttributes.FamORAssem;
-#else
-		IntPtrCtorVisibility = MethodAttributes.Public;
-#endif
+		if (Generator.XamcoreVersion >= 3) {
+			IntPtrCtorVisibility = MethodAttributes.FamORAssem;
+		} else {
+			IntPtrCtorVisibility = MethodAttributes.Public;
+		}
 		// not needed by default, automaticly `protected` if the type is abstract
 		StringCtorVisibility = MethodAttributes.PrivateScope;
 	}
