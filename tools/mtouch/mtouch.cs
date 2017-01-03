@@ -1400,7 +1400,31 @@ namespace Xamarin.Bundler
 			if (action == Action.RunRegistrar) {
 				app.RunRegistrar ();
 			} else if (action == Action.Build) {
-				app.Build ();
+				if (app.IsExtension && !app.IsWatchExtension) {
+					var sb = new StringBuilder ();
+					foreach (var arg in args)
+						sb.AppendLine (arg);
+					File.WriteAllText (Path.Combine (Path.GetDirectoryName (app.AppDirectory), "build-arguments.txt"), sb.ToString ());
+				} else {
+					foreach (var appex in app.Extensions) {
+						var f_path = Path.Combine (appex, "..", "build-arguments.txt");
+						if (!File.Exists (f_path))
+							continue;
+						Action app_action;
+						app.AppExtensions.Add (ParseArguments (File.ReadAllLines (f_path), out app_action));
+						if (app_action != Action.Build)
+							throw ErrorHelper.CreateError (99, "Internal error: Extension build action is '{0}' when it should be 'Build'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", app_action);
+					}
+
+					foreach (var appex in app.AppExtensions) {
+						Log ("Building {0}...", appex.BundleId);
+						appex.Build ();
+					}
+
+					if (app.AppExtensions.Count > 0)
+						Log ("Building {0}...", app.BundleId);
+					app.Build ();
+				}
 			} else {
 				throw ErrorHelper.CreateError (99, "Internal error: Invalid action: {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).", action);
 			}
