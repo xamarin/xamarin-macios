@@ -1289,26 +1289,6 @@ namespace Xamarin.Bundler
 			app.SetDefaultFramework ();
 			app.SetDefaultAbi ();
 
-			if (app.EnableDebug && app.IsLLVM)
-				ErrorHelper.Warning (3003, "Debugging is not supported when building with LLVM. Debugging has been disabled.");
-
-			if (!app.IsLLVM && (app.EnableAsmOnlyBitCode || app.EnableLLVMOnlyBitCode))
-				ErrorHelper.Error (3008, "Bitcode support requires the use of LLVM (--abi=arm64+llvm etc.)");
-
-			if (app.EnableDebug) {
-				if (!app.DebugTrack.HasValue) {
-					app.DebugTrack = app.IsSimulatorBuild;
-				}
-			} else {
-				if (app.DebugTrack.HasValue) {
-					ErrorHelper.Warning (32, "The option '--debugtrack' is ignored unless '--debug' is also specified.");
-				}
-				app.DebugTrack = false;
-			}
-
-			if (app.EnableAsmOnlyBitCode)
-				app.LLVMAsmWriter = true;
-
 			ErrorHelper.Verbosity = verbose;
 
 			app.RuntimeOptions = RuntimeOptions.Create (app, http_message_handler, tls_provider);
