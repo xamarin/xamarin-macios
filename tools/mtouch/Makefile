@@ -430,6 +430,12 @@ install-local:: $(TARGETS)
 all-local:: $(TARGETS)
 endif
 
+mtouch: \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch                                          \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/mtouch.exe                               \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.dll                           \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.Mdb.dll
+
 clean-local::
 	rm -Rf bin obj
 	rm -f $(SIMLAUNCHERS)
