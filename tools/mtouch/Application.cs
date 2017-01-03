@@ -1713,9 +1713,10 @@ namespace Xamarin.Bundler {
 	internal class MainTask : CompileTask {
 		public static void Create (List<BuildTask> tasks, Target target, Abi abi, IEnumerable<Assembly> assemblies, string assemblyName, IList<string> registration_methods)
 		{
+			var app = target.App;
 			var arch = abi.AsArchString ();
-			var ofile = Path.Combine (Cache.Location, "main." + arch + ".o");
-			var ifile = Path.Combine (Cache.Location, "main." + arch + ".m");
+			var ofile = Path.Combine (app.Cache.Location, "main." + arch + ".o");
+			var ifile = Path.Combine (app.Cache.Location, "main." + arch + ".m");
 
 			var files = assemblies.Select (v => v.FullPath);
 
@@ -1764,7 +1765,7 @@ namespace Xamarin.Bundler {
 		{
 			var arch = abi.AsArchString ();
 			var ext = target.App.FastDev ? ".dylib" : ".o";
-			var ofile = Path.Combine (Cache.Location, "lib" + Path.GetFileNameWithoutExtension (ifile) + "." + arch + ext);
+			var ofile = Path.Combine (target.App.Cache.Location, "lib" + Path.GetFileNameWithoutExtension (ifile) + "." + arch + ext);
 
 			if (!Application.IsUptodate (ifile, ofile)) {
 				var task = new PinvokesTask ()
@@ -1806,8 +1807,9 @@ namespace Xamarin.Bundler {
 
 		public static void Create (List<BuildTask> tasks, Abi abi, Target target, string ifile)
 		{
+			var app = target.App;
 			var arch = abi.AsArchString ();
-			var ofile = Path.Combine (Cache.Location, Path.GetFileNameWithoutExtension (ifile) + "." + arch + ".o");
+			var ofile = Path.Combine (app.Cache.Location, Path.GetFileNameWithoutExtension (ifile) + "." + arch + ".o");
 
 			if (!Application.IsUptodate (ifile, ofile)) {
 				tasks.Add (new RegistrarTask ()

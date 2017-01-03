@@ -7,7 +7,7 @@ using System.Text;
 
 using Xamarin.Bundler;
 
-static class Cache {
+public class Cache {
 #if MMP
 	const string NAME = "mmp";
 #elif MTOUCH
@@ -16,15 +16,15 @@ static class Cache {
 	#error Wrong defines
 #endif
 
-	static string cache_dir;
-	static bool temporary_cache;
+	string cache_dir;
+	bool temporary_cache;
 
-	public static bool IsCacheTemporary {
+	public bool IsCacheTemporary {
 		get { return temporary_cache; }
 	}
 	
 	// see --cache=DIR
-	static public string Location {
+	public string Location {
 		get {
 			if (cache_dir == null) {
 				do {
@@ -54,7 +54,7 @@ static class Cache {
 		}
 	}
 	
-	static public void Clean ()
+	public void Clean ()
 	{
 #if DEBUG
 		Console.WriteLine ("Cache.Clean: {0}" , Location);
@@ -63,7 +63,7 @@ static class Cache {
 		Directory.CreateDirectory (Location);
 	}
 	
-	static public bool Exists (string file)
+	public bool Exists (string file)
 	{
 		return File.Exists (Path.Combine (Location, file));
 	}
@@ -196,12 +196,12 @@ static class Cache {
 		return sb.ToString ();
 	}
 
-	static void Invalidate ()
+	void Invalidate ()
 	{
 		Clean ();
 	}
 
-	static bool IsCacheValid ()
+	bool IsCacheValid ()
 	{
 		var name = "arguments";
 		var pcache = Path.Combine (Location, name);
@@ -224,7 +224,7 @@ static class Cache {
 		return true;
 	}
 
-	public static bool VerifyCache ()
+	public bool VerifyCache ()
 	{
 		if (!IsCacheValid ()) {
 			Clean ();
@@ -234,7 +234,7 @@ static class Cache {
 		return true;
 	}
 
-	public static void ValidateCache ()
+	public void ValidateCache ()
 	{
 		var name = "arguments";
 		var pcache = Path.Combine (Location, name);

@@ -35,6 +35,7 @@ namespace Xamarin.Bundler {
 
 	public partial class Application
 	{
+		public Cache Cache = new Cache ();
 		public string AppDirectory = ".";
 		public bool DeadStrip = true;
 		public bool EnableDebug;

@@ -103,7 +103,7 @@ namespace Xamarin.Utils
 			if (!Application.FastDev || !Application.RequiresPInvokeWrappers)
 				return;
 
-			AddOtherFlag (Path.Combine (Cache.Location, "libpinvokes." + abi.AsArchString () + ".dylib"));
+			AddOtherFlag (Path.Combine (Application.Cache.Location, "libpinvokes." + abi.AsArchString () + ".dylib"));
 		}
 
 		public void AddFramework (string framework)

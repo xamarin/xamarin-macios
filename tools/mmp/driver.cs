@@ -235,7 +235,7 @@ namespace Xamarin.Bundler {
 				{ "h|?|help", "Displays the help", v => action = Action.Help },
 				{ "version", "Output version information and exit.", v => action = Action.Version },
 				{ "f|force", "Forces the recompilation of code, regardless of timestamps", v=> Force = true },
-				{ "cache=", "Specify the directory where temporary build files will be cached", v => Cache.Location = v },
+				{ "cache=", "Specify the directory where temporary build files will be cached", v => App.Cache.Location = v },
 				{ "a|assembly=", "Add an assembly to be processed", v => references.Add (v) },
 				{ "r|resource=", "Add a resource to be included", v => resources.Add (v) },
 				{ "o|output=", "Specify the output path", v => output_dir = v },
@@ -488,19 +488,19 @@ namespace Xamarin.Bundler {
 			try {
 				Pack (unprocessed);
 			} finally {
-				if (Cache.IsCacheTemporary) {
+				if (App.Cache.IsCacheTemporary) {
 					// If we used a temporary directory we created ourselves for the cache
 					// (in which case it's more a temporary location where we store the 
 					// temporary build products than a cache), it will not be used again,
 					// so just delete it.
 					try {
-						Directory.Delete (Cache.Location, true);
+						Directory.Delete (App.Cache.Location, true);
 					} catch {
 						// Don't care.
 					}
 				} else {
 					// Write the cache data as the last step, so there is no half-done/incomplete (but yet detected as valid) cache.
-					Cache.ValidateCache ();
+					App.Cache.ValidateCache ();
 				}
 			}
 
@@ -1089,8 +1089,8 @@ namespace Xamarin.Bundler {
 			string registrarPath = null;
 
 			if (registrar == RegistrarMode.Static) {
-				registrarPath = Path.Combine (Cache.Location, "registrar.m");
-				var registrarH = Path.Combine (Cache.Location, "registrar.h");
+				registrarPath = Path.Combine (App.Cache.Location, "registrar.m");
+				var registrarH = Path.Combine (App.Cache.Location, "registrar.h");
 				BuildTarget.StaticRegistrar.LinkContext = BuildTarget.LinkContext;
 				BuildTarget.StaticRegistrar.Generate (BuildTarget.Resolver.ResolverCache.Values, registrarH, registrarPath);
 
@@ -1192,7 +1192,7 @@ namespace Xamarin.Bundler {
 					args.Append ("-framework ").Append (f).Append (' ');
 				foreach (var f in BuildTarget.WeakFrameworks)
 					args.Append ("-weak_framework ").Append (f).Append (' ');
-				Driver.WriteIfDifferent (Path.Combine (Cache.Location, "exported-symbols-list"), string.Join ("\n", internalSymbols.Select ((symbol) => "_" + symbol).ToArray ()));
+				Driver.WriteIfDifferent (Path.Combine (App.Cache.Location, "exported-symbols-list"), string.Join ("\n", internalSymbols.Select ((symbol) => "_" + symbol).ToArray ()));
 				foreach (var symbol in internalSymbols)
 					args.Append ("-u _").Append (symbol).Append (' ');
 
@@ -1241,7 +1241,7 @@ namespace Xamarin.Bundler {
 					args.Append (Quote (state.SourcePath)).Append (' ');
 				}
 
-				var main = Path.Combine (Cache.Location, "main.m");
+				var main = Path.Combine (App.Cache.Location, "main.m");
 				File.WriteAllText (main, mainSource);
 				args.Append (Quote (main));
 
@@ -1335,8 +1335,8 @@ namespace Xamarin.Bundler {
 				MarshalNativeExceptionsState = !App.RequiresPInvokeWrappers ? null : new PInvokeWrapperGenerator ()
 				{
 					App = App,
-					SourcePath = Path.Combine (Cache.Location, "pinvokes.m"),
-					HeaderPath = Path.Combine (Cache.Location, "pinvokes.h"),
+					SourcePath = Path.Combine (App.Cache.Location, "pinvokes.m"),
+					HeaderPath = Path.Combine (App.Cache.Location, "pinvokes.h"),
 					Registrar = (StaticRegistrar) BuildTarget.StaticRegistrar,
 				},
 				SkipExportedSymbolsInSdkAssemblies = !embed_mono,

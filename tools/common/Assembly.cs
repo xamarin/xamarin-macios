@@ -173,7 +173,7 @@ namespace Xamarin.Bundler {
 #endif
 
 				if (!string.IsNullOrEmpty (libraryName)) {
-					path = Path.Combine (Cache.Location, libraryName);
+					path = Path.Combine (App.Cache.Location, libraryName);
 					if (path.EndsWith (".framework", StringComparison.Ordinal)) {
 #if MONOTOUCH
 						if (App.Platform == Xamarin.Utils.ApplePlatform.iOS && App.DeploymentTarget.Major < 8) {
