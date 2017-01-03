@@ -34,7 +34,8 @@ namespace Xamarin.MMP.Tests.Unit
 			compiler = new AOTCompiler ()
 			{
 				RunCommand = OnRunCommand,
-				ParallelOptions = new ParallelOptions () { MaxDegreeOfParallelism = 1 }
+				ParallelOptions = new ParallelOptions () { MaxDegreeOfParallelism = 1 },
+				XamarinMacPrefix = Driver.WalkUpDirHierarchyLookingForLocalBuild () // HACK - AOT test shouldn't need this from driver.cs 
 			};
 
 			commandsRun = new List<Tuple<string, string>> ();
@@ -53,7 +54,7 @@ namespace Xamarin.MMP.Tests.Unit
 			List<string> filesAOTed = new List<string> (); 
 
 			foreach (var command in commandsRun) {
-				Assert.AreEqual (command.Item1, "/Library/Frameworks/Xamarin.Mac.framework/Commands/bmac-mobile-mono", "Command should be bmac-mobile-mono");
+				Assert.IsTrue (command.Item1.EndsWith ("bmac-mobile-mono"), "Command should be bmac-mobile-mono");
 				Assert.AreEqual (command.Item2.Split (' ')[0], "--aot=hybrid", "First arg should be --aot=hybrid");
 				string fileName = command.Item2.Substring (command.Item2.IndexOf(' ') + 1).Replace ("\"", "");
 				filesAOTed.Add (fileName);
@@ -91,10 +92,11 @@ namespace Xamarin.MMP.Tests.Unit
 		}
 
 		readonly string [] FullAppFileList = { 
-			"Foo Bar.exe", "libMonoPosixHelper.dylib", "mscorlib.dll", "Xamarin.Mac.dll", "System.dll" 
+			"Foo Bar.exe", "libMonoPosixHelper.dylib", "mscorlib.dll", "Xamarin.Mac.dll", "System.dll", "System.Core.dll"
 		};
 
-		readonly string [] SDKFileList = { "mscorlib.dll", "Xamarin.Mac.dll", "System.dll" };
+		readonly string [] CoreXMFileList = { "mscorlib.dll", "Xamarin.Mac.dll", "System.dll" };
+		readonly string [] SDKFileList = { "mscorlib.dll", "Xamarin.Mac.dll", "System.dll", "System.Core.dll" };
 
 		[Test]
 		public void ParsingNone_DoesNoAOT ()
@@ -117,6 +119,17 @@ namespace Xamarin.MMP.Tests.Unit
 		}
 
 		[Test]
+		public void Core_ParsingJustCoreFiles()
+		{
+			compiler.Parse ("core");
+			Assert.IsTrue (compiler.IsAOT, "Should be IsAOT");
+
+			compiler.Compile (new TestFileEnumerator (FullAppFileList));
+
+			AssertFilesAOTed (CoreXMFileList);
+		}
+
+		[Test]
 		public void SDK_ParsingJustSDKFiles()
 		{
 			compiler.Parse ("sdk");
@@ -126,6 +139,7 @@ namespace Xamarin.MMP.Tests.Unit
 
 			AssertFilesAOTed (SDKFileList);
 		}
+
 
 		[Test]
 		public void ExplicitAssembly_JustAOTExplicitFile ()
@@ -139,9 +153,9 @@ namespace Xamarin.MMP.Tests.Unit
 		}
 
 		[Test]
-		public void SDKWithInclusionAndSubtraction ()
+		public void CoreWithInclusionAndSubtraction ()
 		{
-			compiler.Parse ("sdk,+Foo.dll,-Xamarin.Mac.dll");
+			compiler.Parse ("core,+Foo.dll,-Xamarin.Mac.dll");
 			Assert.IsTrue (compiler.IsAOT, "Should be IsAOT");
 		
 			string [] testFiles = { 
@@ -153,9 +167,9 @@ namespace Xamarin.MMP.Tests.Unit
 		}
 
 		[Test]
-		public void SDKWithFullPath_GivesFullPathCommands ()
+		public void CoreWithFullPath_GivesFullPathCommands ()
 		{
-			compiler.Parse ("sdk,-Xamarin.Mac.dll");
+			compiler.Parse ("core,-Xamarin.Mac.dll");
 			Assert.IsTrue (compiler.IsAOT, "Should be IsAOT");
 
 			compiler.Compile (new TestFileEnumerator (FullAppFileList.Select (x => TestRootDir + x)));
@@ -165,7 +179,7 @@ namespace Xamarin.MMP.Tests.Unit
 		[Test]
 		public void ExplicitNegativeFileWithNonExistantFiles_ThrowError ()
 		{
-			compiler.Parse ("sdk,-NonExistant.dll");
+			compiler.Parse ("core,-NonExistant.dll");
 			Assert.IsTrue (compiler.IsAOT, "Should be IsAOT");
 
 			AssertThrowErrorWithCode (() => compiler.Compile (new TestFileEnumerator (FullAppFileList)), 3010);
@@ -174,7 +188,7 @@ namespace Xamarin.MMP.Tests.Unit
 		[Test]
 		public void ExplicitPositiveFileWithNonExistantFiles_ThrowError ()
 		{
-			compiler.Parse ("sdk,+NonExistant.dll");
+			compiler.Parse ("core,+NonExistant.dll");
 			Assert.IsTrue (compiler.IsAOT, "Should be IsAOT");
 
 			AssertThrowErrorWithCode (() => compiler.Compile (new TestFileEnumerator (FullAppFileList)), 3009);

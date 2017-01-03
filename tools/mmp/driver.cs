@@ -360,7 +360,7 @@ namespace Xamarin.Bundler {
 				{ "xamarin-framework-directory=", "The framework directory", v => { xm_framework_dir = v; }, true },
 				{ "xamarin-full-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullXamMacFramework = true; } },
 				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullSystemFramework = true; } },
-				{ "aot:", "Specify assemblies that should be compiled via experimental AOT.\n- none - No AOT (default)\n- all - Every assembly in MonoBundle not ignored\n- sdk - Just Xamarin.Mac.dll, System.dll, and mscorlib.dll\nIndividual files can be included for AOT via +FileName.dll and excluded via -FileName.dll",
+				{ "aot:", "Specify assemblies that should be compiled via experimental AOT.\n- none - No AOT (default)\n- all - Every assembly in MonoBundle not ignored\n- core - Just Xamarin.Mac.dll, System.dll, and mscorlib.dll\n sdk - Xamarin.Mac.dll and all BCL assemblies\nIndividual files can be included for AOT via +FileName.dll and excluded via -FileName.dll",
 					v => {
 						aot.Parse (v);
 					}
@@ -976,7 +976,19 @@ namespace Xamarin.Bundler {
 		[DllImport ("/usr/lib/system/libdyld.dylib")]
 		static extern int _NSGetExecutablePath (byte[] buffer, ref uint bufsize);
 
-		static string GetXamMacPrefix ()
+		public static string WalkUpDirHierarchyLookingForLocalBuild ()
+		{
+			var path = System.Reflection.Assembly.GetExecutingAssembly ().Location;
+			var localPath = Path.GetDirectoryName (path);
+			while (localPath.Length > 1) {
+				if (Directory.Exists (Path.Combine (localPath, "_mac-build")))
+					return Path.Combine (localPath, "_mac-build", "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
+				localPath = Path.GetDirectoryName (localPath);
+			}
+			return null;
+		}
+
+		internal static string GetXamMacPrefix ()
 		{
 			var envFrameworkPath = Environment.GetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH");
 			if (!String.IsNullOrEmpty (envFrameworkPath) && Directory.Exists (envFrameworkPath))
@@ -985,12 +997,9 @@ namespace Xamarin.Bundler {
 			var path = System.Reflection.Assembly.GetExecutingAssembly ().Location;
 
 #if DEBUG
-			var localPath = Path.GetDirectoryName (path);
-			while (localPath.Length > 1) {
-				if (Directory.Exists (Path.Combine (localPath, "_mac-build")))
-					return Path.Combine (localPath, "_mac-build", "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
-				localPath = Path.GetDirectoryName (localPath);
-			}
+			var localPath = WalkUpDirHierarchyLookingForLocalBuild ();
+			if (localPath != null)
+				return localPath;
 #endif
 
 			path = GetRealPath (path);

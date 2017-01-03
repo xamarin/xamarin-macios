@@ -31,6 +31,8 @@ using System.Text;
 using System.IO;
 using System.Threading.Tasks;
 
+using Profile = Mono.Tuner.Profile;
+
 namespace Xamarin.Bundler {
 
 	public interface IFileEnumerator
@@ -60,6 +62,7 @@ namespace Xamarin.Bundler {
 			Default,
 			None,
 			All,
+			Core,
 			SDK,
 			Explicit
 		}
@@ -74,12 +77,13 @@ namespace Xamarin.Bundler {
 		// Allows tests to stub out actual compilation and parallelism
 		public RunCommandDelegate RunCommand { get; set; } = Driver.RunCommand; 
 		public ParallelOptions ParallelOptions { get; set; } = new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency };
+		public string XamarinMacPrefix { get; set; } = Driver.GetXamMacPrefix (); // GetXamMacPrefix assumes GetExecutingAssembly in ways that are not valid for tests, so we must stub out
 
 		public string Quote (string f) => Driver.Quote (f);
 
 		public void Parse (string options)
 		{
-			// Syntax - all,sdk,none or "" if explicit then optional list of +/-'ed assemblies
+			// Syntax - all,core,sdk,none or "" if explicit then optional list of +/-'ed assemblies
 			// Sections seperated by ,
 			foreach (var option in options.Split (',')) {
 				switch (option) {
@@ -91,6 +95,9 @@ namespace Xamarin.Bundler {
 					continue;
 				case "sdk":
 					aotType = AotType.SDK;
+					continue;
+				case "core":
+					aotType = AotType.Core;
 					continue;
 				}
 
@@ -106,10 +113,10 @@ namespace Xamarin.Bundler {
 					excludedAssemblies.Add (option.Substring (1), false);
 					continue;
 				}
-				throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "none, all, sdk, and an explicit list of assemblies.");
+				throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "none, all, core, sdk, and an explicit list of assemblies.");
 			}
 			if (aotType == AotType.Default)
-				throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "none, all, sdk, and an explicit list of assemblies.");
+				throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "none, all, core, sdk, and an explicit list of assemblies.");
 		}
 
 		List<string> GetFilesToAOT (IFileEnumerator files)
@@ -137,6 +144,11 @@ namespace Xamarin.Bundler {
 					aotFiles.Add (file);
 					break;
 				case AotType.SDK:
+					string fileNameNoExtension = Path.GetFileNameWithoutExtension (fileName);
+					if (Profile.IsSdkAssembly (fileNameNoExtension) || fileName == "Xamarin.Mac.dll")
+						aotFiles.Add (file);
+					break;
+				case AotType.Core:
 					if (fileName == "Xamarin.Mac.dll" || fileName == "System.dll" || fileName == "mscorlib.dll")
 						aotFiles.Add (file);
 					break;
@@ -168,11 +180,11 @@ namespace Xamarin.Bundler {
 			if (!IsAOT)
 				throw ErrorHelper.CreateError (0099, "Internal error \"AOTBundle with aot: {0}\" Please file a bug report with a test case (http://bugzilla.xamarin.com).", aotType);
 
-			const string MonoExePath = "/Library/Frameworks/Xamarin.Mac.framework/Commands/bmac-mobile-mono";
+			string monoExePath = Path.Combine (XamarinMacPrefix, "bin/bmac-mobile-mono");
 			var monoEnv = new string [] {"MONO_PATH", files.RootDir };
 
 			Parallel.ForEach (GetFilesToAOT (files), ParallelOptions, file => {
-				if (RunCommand (MonoExePath, String.Format ("--aot=hybrid {0}", Quote (file)), monoEnv) != 0)
+				if (RunCommand (monoExePath, String.Format ("--aot=hybrid {0}", Quote (file)), monoEnv) != 0)
 					throw ErrorHelper.CreateError (3001, "Could not AOT the assembly '{0}'", file);
 			});
 		}

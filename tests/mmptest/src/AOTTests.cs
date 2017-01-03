@@ -17,7 +17,7 @@ namespace Xamarin.MMP.Tests
 		public void AOT_SmokeTest () {
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = "<MonoBundlingExtraArgs>--aot=sdk,-Xamarin.Mac.dll</MonoBundlingExtraArgs>"
+					CSProjConfig = "<MonoBundlingExtraArgs>--aot=core,-Xamarin.Mac.dll</MonoBundlingExtraArgs>"
 				};
 				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
 
