@@ -17,7 +17,7 @@
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
     <DefineConstants>XAMCORE_2_0</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Debug32' Or '$(Configuration)' == 'Debug64' ">
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
@@ -27,7 +27,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release32' Or '$(Configuration)' == 'Release64' Or '$(Configuration)' == 'Release-bitcode' ">
     <DebugType>none</DebugType>
     <Optimize>True</Optimize>
     <OutputPath>bin\Any CPU\$(Configuration)-unified</OutputPath>
@@ -35,17 +35,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release-bitcode' ">
-    <DebugType>none</DebugType>
-    <Optimize>True</Optimize>
-    <OutputPath>bin\Any CPU\$(Configuration)-bitcode-unified</OutputPath>
-    <DefineConstants>DO_NOT_REMOVE;FRAMEWORK_TEST;$(DefineConstants)</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <MtouchExtraArgs>--bitcode:full</MtouchExtraArgs>
-    <MtouchUseLlvm>true</MtouchUseLlvm>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -85,7 +74,16 @@
       <Link>libframework.h</Link>
     </None>
   </ItemGroup>
-  <Target Name="BeforeBuild" Inputs="..\..\tests\test-libraries\libframework.m" Outputs="..\..\tests\test-libraries\.libs\ios\XTest.framework ..\..\tests\test-libraries\.libs\ios\XSharedObjectTest.framework ..\..\tests\test-libraries\.libs\ios\XSharedARTest.framework">
-    <Exec Command="make -j8 -C ..\..\tests\test-libraries" />
+  <ItemGroup>
+    <TestLibrariesInput Include="..\..\tests\test-libraries\libframework.m" />
+    <TestLibrariesOutput Include="..\..\tests\test-libraries\.libs\ios\XTest.framework" />
+    <TestLibrariesOutput Include="..\..\tests\test-libraries\.libs\ios\XSharedObjectTest.framework" />
+    <TestLibrariesOutput Include="..\..\tests\test-libraries\.libs\ios\XSharedARTest.framework" />
+  </ItemGroup>
+  <PropertyGroup>
+    <TestLibrariesDirectory>..\..\tests\test-libraries</TestLibrariesDirectory>
+  </PropertyGroup>
+  <Target Name="BeforeBuild" Inputs="@(TestLibrariesInput)" Outputs="@(TestLibrariesOutput)">
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
   </Target>
 </Project>

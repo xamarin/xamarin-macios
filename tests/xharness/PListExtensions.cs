@@ -50,6 +50,11 @@ namespace xharness
 			return GetPListStringValue (plist, "CFBundleIdentifier");
 		}
 
+		public static string GetNSExtensionPointIdentifier (this XmlDocument plist)
+		{
+			return plist.SelectSingleNode ("//dict/key[text()='NSExtensionPointIdentifier']")?.NextSibling?.InnerText;
+		}
+
 		public static string GetPListStringValue (this XmlDocument plist, string node)
 		{
 			return plist.SelectSingleNode ("//dict/key[text()='" + node + "']").NextSibling.InnerText;

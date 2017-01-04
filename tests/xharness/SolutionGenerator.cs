@@ -100,10 +100,17 @@ namespace xharness
 
 				// Add reference to MonoTouch.NUnitLite project
 				string configuration;
-				AddProjectToSolution (harness, sln_path, writer, Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.NUnitLite." + infix + ".csproj")), out configuration);
+				var proj_path = Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.NUnitLite." + infix + ".csproj"));
+				if (!File.Exists (proj_path))
+					proj_path = Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.NUnitLite.csproj"));
+				AddProjectToSolution (harness, sln_path, writer, proj_path, out configuration);
 				string configuration2 = string.Empty;
-				if (infix != "watchos")
-					AddProjectToSolution (harness, sln_path, writer, Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.Dialog-1." + infix + ".csproj")), out configuration2);
+				if (infix != "watchos") {
+					proj_path = Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.Dialog-1." + infix + ".csproj"));
+					if (!File.Exists (proj_path))
+						proj_path = Path.GetFullPath (Path.Combine (srcDirectory, "MonoTouch.Dialog-1.csproj"));
+					AddProjectToSolution (harness, sln_path, writer, proj_path, out configuration2);
+				}
 
 				writer.WriteLine ("Global");
 

@@ -76,7 +76,7 @@
     <ImageAsset Include="%WATCHAPP_PATH%Resources\Images.xcassets\AppIcons.appiconset\Contents.json" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Info-watchos-app.plist">
+    <None Include="Info.plist">
       <LogicalName>Info.plist</LogicalName>
     </None>
     <None Include="%WATCHAPP_PATH%Entitlements.plist" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -12,73 +13,93 @@ namespace xharness
 	{
 		public Harness Harness;
 
-		public List<SimRuntime> SupportedRuntimes = new List<SimRuntime> ();
-		public List<SimDeviceType> SupportedDeviceTypes = new List<SimDeviceType> ();
-		public List<SimDevice> AvailableDevices = new List<SimDevice> ();
-		public List<SimDevicePair> AvailableDevicePairs = new List<SimDevicePair> ();
+		bool loaded;
 
-		public async Task LoadAsync (Log log)
+		BlockingEnumerableCollection<SimRuntime> supported_runtimes = new BlockingEnumerableCollection<SimRuntime> ();
+		BlockingEnumerableCollection<SimDeviceType> supported_device_types = new BlockingEnumerableCollection<SimDeviceType> ();
+		BlockingEnumerableCollection<SimDevice> available_devices = new BlockingEnumerableCollection<SimDevice> ();
+		BlockingEnumerableCollection<SimDevicePair> available_device_pairs = new BlockingEnumerableCollection<SimDevicePair> ();
+
+		public IEnumerable<SimRuntime> SupportedRuntimes => supported_runtimes;
+		public IEnumerable<SimDeviceType> SupportedDeviceTypes => supported_device_types;
+		public IEnumerable<SimDevice> AvailableDevices => available_devices;
+		public IEnumerable<SimDevicePair> AvailableDevicePairs => available_device_pairs;
+
+		public Task LoadAsync (Log log)
 		{
-			if (SupportedRuntimes.Count > 0)
-				return;
-			
-			var tmpfile = Path.GetTempFileName ();
-			try {
-				using (var process = new Process ()) {
-					process.StartInfo.FileName = Harness.MlaunchPath;
-					process.StartInfo.Arguments = string.Format ("--sdkroot {0} --listsim {1}", Harness.XcodeRoot, tmpfile);
-					log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
-					var rv = await process.RunAsync (log, false);
-					if (!rv.Succeeded)
-						throw new Exception ("Failed to list simulators.");
-					log.WriteLine ("Result:");
-					log.WriteLine (File.ReadAllText (tmpfile));
-					var simulator_data = new XmlDocument ();
-					simulator_data.LoadWithoutNetworkAccess (tmpfile);
-					foreach (XmlNode sim in simulator_data.SelectNodes ("/MTouch/Simulator/SupportedRuntimes/SimRuntime")) {
-						SupportedRuntimes.Add (new SimRuntime ()
-						{
-							Name = sim.SelectSingleNode ("Name").InnerText,
-							Identifier = sim.SelectSingleNode ("Identifier").InnerText,
-							Version = long.Parse (sim.SelectSingleNode ("Version").InnerText),
-						});
-					}
-					foreach (XmlNode sim in simulator_data.SelectNodes ("/MTouch/Simulator/SupportedDeviceTypes/SimDeviceType")) {
-						SupportedDeviceTypes.Add (new SimDeviceType ()
-						{
-							Name = sim.SelectSingleNode ("Name").InnerText,
-							Identifier = sim.SelectSingleNode ("Identifier").InnerText,
-							ProductFamilyId = sim.SelectSingleNode ("ProductFamilyId").InnerText,
-							MinRuntimeVersion = long.Parse (sim.SelectSingleNode ("MinRuntimeVersion").InnerText),
-							MaxRuntimeVersion = long.Parse (sim.SelectSingleNode ("MaxRuntimeVersion").InnerText),
-							Supports64Bits = bool.Parse (sim.SelectSingleNode ("Supports64Bits").InnerText),
-						});
-					}
-					foreach (XmlNode sim in simulator_data.SelectNodes ("/MTouch/Simulator/AvailableDevices/SimDevice")) {
-						AvailableDevices.Add (new SimDevice ()
-						{
-							Harness = Harness,
-							Name = sim.Attributes ["Name"].Value,
-							UDID = sim.Attributes ["UDID"].Value,
-							SimRuntime = sim.SelectSingleNode ("SimRuntime").InnerText,
-							SimDeviceType = sim.SelectSingleNode ("SimDeviceType").InnerText,
-							DataPath = sim.SelectSingleNode ("DataPath").InnerText,
-							LogPath = sim.SelectSingleNode ("LogPath").InnerText,
-						});
-					}
-					foreach (XmlNode sim in simulator_data.SelectNodes ("/MTouch/Simulator/AvailableDevicePairs/SimDevicePair")) {
-						AvailableDevicePairs.Add (new SimDevicePair ()
-						{
-							UDID = sim.Attributes ["UDID"].Value,
-							Companion = sim.SelectSingleNode ("Companion").InnerText,
-							Gizmo = sim.SelectSingleNode ("Gizmo").InnerText,
+			if (loaded)
+				return Task.CompletedTask;
+			loaded = true;
 
-						});
+			Task.Run (async () =>
+			{
+				var tmpfile = Path.GetTempFileName ();
+				try {
+					using (var process = new Process ()) {
+						process.StartInfo.FileName = Harness.MlaunchPath;
+						process.StartInfo.Arguments = string.Format ("--sdkroot {0} --listsim {1}", Harness.XcodeRoot, tmpfile);
+						log.WriteLine ("Launching {0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
+						var rv = await process.RunAsync (log, false);
+						if (!rv.Succeeded)
+							throw new Exception ("Failed to list simulators.");
+						log.WriteLine ("Result:");
+						log.WriteLine (File.ReadAllText (tmpfile));
+						var simulator_data = new XmlDocument ();
+						simulator_data.LoadWithoutNetworkAccess (tmpfile);
+						foreach (XmlNode sim in simulator_data.SelectNodes ("/MTouch/Simulator/SupportedRuntimes/SimRuntime")) {
+							supported_runtimes.Add (new SimRuntime ()
+							{
+								Name = sim.SelectSingleNode ("Name").InnerText,
+								Identifier = sim.SelectSingleNode ("Identifier").InnerText,
+								Version = long.Parse (sim.SelectSingleNode ("Version").InnerText),
+							});
+						}
+						supported_runtimes.SetCompleted ();
+
+						foreach (XmlNode sim in simulator_data.SelectNodes ("/MTouch/Simulator/SupportedDeviceTypes/SimDeviceType")) {
+							supported_device_types.Add (new SimDeviceType ()
+							{
+								Name = sim.SelectSingleNode ("Name").InnerText,
+								Identifier = sim.SelectSingleNode ("Identifier").InnerText,
+								ProductFamilyId = sim.SelectSingleNode ("ProductFamilyId").InnerText,
+								MinRuntimeVersion = long.Parse (sim.SelectSingleNode ("MinRuntimeVersion").InnerText),
+								MaxRuntimeVersion = long.Parse (sim.SelectSingleNode ("MaxRuntimeVersion").InnerText),
+								Supports64Bits = bool.Parse (sim.SelectSingleNode ("Supports64Bits").InnerText),
+							});
+						}
+						supported_device_types.SetCompleted ();
+
+						foreach (XmlNode sim in simulator_data.SelectNodes ("/MTouch/Simulator/AvailableDevices/SimDevice")) {
+							available_devices.Add (new SimDevice ()
+							{
+								Harness = Harness,
+								Name = sim.Attributes ["Name"].Value,
+								UDID = sim.Attributes ["UDID"].Value,
+								SimRuntime = sim.SelectSingleNode ("SimRuntime").InnerText,
+								SimDeviceType = sim.SelectSingleNode ("SimDeviceType").InnerText,
+								DataPath = sim.SelectSingleNode ("DataPath").InnerText,
+								LogPath = sim.SelectSingleNode ("LogPath").InnerText,
+							});
+						}
+						available_devices.SetCompleted ();
+
+						foreach (XmlNode sim in simulator_data.SelectNodes ("/MTouch/Simulator/AvailableDevicePairs/SimDevicePair")) {
+							available_device_pairs.Add (new SimDevicePair ()
+							{
+								UDID = sim.Attributes ["UDID"].Value,
+								Companion = sim.SelectSingleNode ("Companion").InnerText,
+								Gizmo = sim.SelectSingleNode ("Gizmo").InnerText,
+
+							});
+						}
+						available_device_pairs.SetCompleted ();
 					}
+				} finally {
+					File.Delete (tmpfile);
 				}
-			} finally {
-				File.Delete (tmpfile);
-			}
+			});
+
+			return Task.CompletedTask;
 		}
 
 		public async Task<SimDevice []> FindAsync (AppRunnerTarget target, Log log)
@@ -173,7 +194,7 @@ namespace xharness
 					log.WriteLine ($"Could not create device pair, so could not find simulator for runtime={simulator_runtime} and device type={string.Join ("; ", simulator_devicetypes)}.");
 					return null;
 				}
-				AvailableDevicePairs.Add (new SimDevicePair ()
+				available_device_pairs.Add (new SimDevicePair ()
 				{
 					Companion = companionDevice.UDID,
 					Gizmo = watchDevice.UDID,
@@ -201,6 +222,80 @@ namespace xharness
 
 			return simulators;
 		}
+
+		public SimDevice FindCompanionDevice (Log log, SimDevice device)
+		{
+			var pair = available_device_pairs.Where ((v) => v.Gizmo == device.UDID).Single ();
+			return available_devices.Single ((v) => v.UDID == pair.Companion);
+		}
+
+		public IEnumerable<SimDevice> SelectDevices (AppRunnerTarget target, Log log)
+		{
+			return new SimulatorEnumerable
+			{
+				Simulators = this,
+				Target = target,
+				Log = log,
+			};
+		}
+
+		class SimulatorEnumerable : IEnumerable<SimDevice>
+		{
+			public Simulators Simulators;
+			public AppRunnerTarget Target;
+			public Log Log;
+
+			public IEnumerator<SimDevice> GetEnumerator ()
+			{
+				return new Enumerator ()
+				{
+					Enumerable = this,
+				};
+			}
+
+			IEnumerator IEnumerable.GetEnumerator ()
+			{
+				return GetEnumerator ();
+			}
+
+			class Enumerator : IEnumerator<SimDevice>
+			{
+				internal SimulatorEnumerable Enumerable;
+				SimDevice [] devices;
+				bool moved;
+
+				public SimDevice Current {
+					get {
+						return devices [0];
+					}
+				}
+
+				object IEnumerator.Current {
+					get {
+						return Current;
+					}
+				}
+
+				public void Dispose ()
+				{
+				}
+
+				public bool MoveNext ()
+				{
+					if (moved)
+						return false;
+					if (devices == null)
+						devices = Enumerable.Simulators.FindAsync (Enumerable.Target, Enumerable.Log).Result;
+					moved = true;
+					return moved;
+				}
+
+				public void Reset ()
+				{
+					moved = false;
+				}
+			}
+		}
 	}
 
 	public class SimRuntime
@@ -220,10 +315,10 @@ namespace xharness
 		public bool Supports64Bits;
 	}
 
-	public class SimDevice
+	public class SimDevice : IDevice
 	{
-		public string UDID;
-		public string Name;
+		public string UDID { get; set; }
+		public string Name { get; set; }
 		public string SimRuntime;
 		public string SimDeviceType;
 		public string DataPath;
@@ -384,53 +479,304 @@ namespace xharness
 		public string Gizmo;
 	}
 
+	public class SimDeviceSpecification
+	{
+		public SimDevice Main;
+		public SimDevice Companion; // the phone for watch devices
+	}
+
 	public class Devices
 	{
 		public Harness Harness;
 
-		public List<Device> ConnectedDevices = new List<Device> ();
+		bool loaded;
 
-		public async Task LoadAsync (Log log)
-		{
-			if (ConnectedDevices.Count > 0)
-				return;
-
-			var tmpfile = Path.GetTempFileName ();
-			try {
-				using (var process = new Process ()) {
-					process.StartInfo.FileName = Harness.MlaunchPath;
-					process.StartInfo.Arguments = string.Format ("--sdkroot {0} --listdev={1} --output-format=xml", Harness.XcodeRoot, tmpfile);
-					await process.RunAsync (log, false);
-
-					var doc = new XmlDocument ();
-					doc.LoadWithoutNetworkAccess (tmpfile);
-
-					foreach (XmlNode dev in doc.SelectNodes ("/MTouch/Device")) {
-						ConnectedDevices.Add (new Device ()
-						{
-							DeviceIdentifier = dev.SelectSingleNode ("DeviceIdentifier")?.InnerText,
-							DeviceClass = dev.SelectSingleNode ("DeviceClass")?.InnerText,
-							CompanionIdentifier = dev.SelectSingleNode ("CompanionIdentifier")?.InnerText,
-							Name = dev.SelectSingleNode ("Name")?.InnerText,
-							BuildVersion = dev.SelectSingleNode ("BuildVersion")?.InnerText,
-							ProductVersion = dev.SelectSingleNode ("ProductVersion")?.InnerText,
-						});
-					}
-				}
-			} finally {
-				File.Delete (tmpfile);
+		BlockingEnumerableCollection<Device> connected_devices = new BlockingEnumerableCollection<Device> ();
+		public IEnumerable<Device> ConnectedDevices {
+			get {
+				return connected_devices;
 			}
+		}
+
+		public Task LoadAsync (Log log, bool extra_data = false, bool removed_locked = false)
+		{
+			if (loaded)
+				return Task.FromResult (true);
+			loaded = true;
+
+			Task.Run (async () =>
+			{
+				var tmpfile = Path.GetTempFileName ();
+				try {
+					using (var process = new Process ()) {
+						process.StartInfo.FileName = Harness.MlaunchPath;
+						process.StartInfo.Arguments = string.Format ("--sdkroot {0} --listdev={1} {2} --output-format=xml", Harness.XcodeRoot, tmpfile, extra_data ? "--list-extra-data" : string.Empty);
+						var rv = await process.RunAsync (log, false);
+						if (!rv.Succeeded)
+							throw new Exception ("Failed to list devices.");
+
+						var doc = new XmlDocument ();
+						doc.LoadWithoutNetworkAccess (tmpfile);
+
+						foreach (XmlNode dev in doc.SelectNodes ("/MTouch/Device")) {
+							Device d = new Device
+							{
+								DeviceIdentifier = dev.SelectSingleNode ("DeviceIdentifier")?.InnerText,
+								DeviceClass = dev.SelectSingleNode ("DeviceClass")?.InnerText,
+								CompanionIdentifier = dev.SelectSingleNode ("CompanionIdentifier")?.InnerText,
+								Name = dev.SelectSingleNode ("Name")?.InnerText,
+								BuildVersion = dev.SelectSingleNode ("BuildVersion")?.InnerText,
+								ProductVersion = dev.SelectSingleNode ("ProductVersion")?.InnerText,
+								ProductType = dev.SelectSingleNode ("ProductType")?.InnerText,
+							};
+							bool.TryParse (dev.SelectSingleNode ("IsLocked")?.InnerText, out d.IsLocked);
+							if (removed_locked && d.IsLocked)
+								continue;
+							connected_devices.Add (d);
+						}
+
+						connected_devices.SetCompleted ();
+					}
+				} finally {
+					File.Delete (tmpfile);
+				}
+			});
+
+			return Task.FromResult (true);
+		}
+
+		public Device FindCompanionDevice (Log log, Device device)
+		{
+			var companion = ConnectedDevices.Where ((v) => v.DeviceIdentifier == device.CompanionIdentifier);
+			if (companion.Count () == 0)
+				throw new Exception ($"Could not find the companion device for '{device.Name}'");
+
+			if (companion.Count () > 1)
+				log.WriteLine ("Found {0} companion devices for {1}?!?", companion.Count (), device.Name);
+
+			return companion.First ();
 		}
 	}
 
-	public class Device
+	public enum Architecture
+	{
+		ARMv6,
+		ARMv7,
+		ARMv7k,
+		ARMv7s,
+		ARM64,
+		i386,
+		x86_64,
+	}
+
+	public enum DevicePlatform
+	{
+		iOS,
+		tvOS,
+		watchOS,
+	}
+
+	public class Device : IDevice
 	{
 		public string DeviceIdentifier;
 		public string DeviceClass;
 		public string CompanionIdentifier;
-		public string Name;
+		public string Name { get; set; }
 		public string BuildVersion;
 		public string ProductVersion;
+		public string ProductType;
+		public bool IsLocked;
+
+		public string UDID { get { return DeviceIdentifier; } set { DeviceIdentifier = value; } }
+
+		public DevicePlatform DevicePlatform {
+			get {
+				switch (DeviceClass) {
+				case "iPhone":
+				case "iPod":
+				case "iPad":
+					return DevicePlatform.iOS;
+				case "AppleTV":
+					return DevicePlatform.tvOS;
+				case "Watch":
+					return DevicePlatform.watchOS;
+				default:
+					throw new NotImplementedException ();
+				}
+			}
+		}
+		
+		public bool Supports64Bit {
+			get { return Architecture == Architecture.ARM64; }
+		}
+
+		public Architecture Architecture {
+			get {
+				var model = ProductType;
+
+				// https://www.theiphonewiki.com/wiki/Models
+				if (model.StartsWith ("iPhone", StringComparison.Ordinal)) {
+					var identifier = model.Substring ("iPhone".Length);
+					var values = identifier.Split (',');
+
+					switch (values [0]) {
+					case "1": // iPhone (1) and iPhone 3G (2)
+						return Architecture.ARMv6;
+					case "2": // iPhone 3GS (1)
+					case "3": // iPhone 4 (1-3)
+					case "4": // iPhone 4S (1)
+						return Architecture.ARMv7;
+					case "5": // iPhone 5 (1-2) and iPhone 5c (3-4)
+						return Architecture.ARMv7s;
+					case "6": // iPhone 5s (1-2)
+					case "7": // iPhone 6+ (1) and iPhone 6 (2)
+					case "8": // iPhone 6s (1), iPhone 6s+ (2), iPhoneSE (4)
+					case "9": // iPhone 7 (1,3) and iPhone 7+ (2,4)
+					default:
+						return Architecture.ARM64;
+					}
+				}
+
+				// https://www.theiphonewiki.com/wiki/List_of_iPads
+				if (model.StartsWith ("iPad", StringComparison.Ordinal)) {
+					var identifier = model.Substring ("iPad".Length);
+					var values = identifier.Split (',');
+
+					switch (values [0]) {
+					case "1": // iPad (1)
+					case "2": // iPad 2 (1-4) and iPad Mini (5-7)
+					case "3": // iPad 3 (1-3) and iPad 4 (4-6)
+						return Architecture.ARMv7;
+					case "4": // iPad Air (1-3), iPad Mini 2 (4-6) and iPad Mini 3 (7-9)
+					case "5": // iPad Air 2 (3-4)
+					case "6": // iPad Pro 9.7-inch (3-4), iPad Pro 12.9-inch (7-8)
+					default:
+						return Architecture.ARM64;
+					}
+				}
+
+				// https://www.theiphonewiki.com/wiki/List_of_iPod_touches
+				if (model.StartsWith ("iPod", StringComparison.Ordinal)) {
+					var identifier = model.Substring ("iPod".Length);
+					var values = identifier.Split (',');
+
+					switch (values [0]) {
+					case "1": // iPod touch (1)
+					case "2": // iPod touch 2G (1)
+						return Architecture.ARMv6;
+					case "3": // iPod touch 3G (1)
+					case "4": // iPod touch 4G (1)
+					case "5": // iPod touch 5G (1)
+						return Architecture.ARMv7;
+					case "7": // iPod touch 6G (1)
+					default:
+						return Architecture.ARM64;
+					}
+				}
+
+				// https://www.theiphonewiki.com/wiki/List_of_Apple_Watches
+				if (model.StartsWith ("Watch", StringComparison.Ordinal))
+					return Architecture.ARMv7k;
+
+				// https://www.theiphonewiki.com/wiki/List_of_Apple_TVs
+				if (model.StartsWith ("AppleTV", StringComparison.Ordinal))
+					return Architecture.ARM64;
+
+				throw new NotImplementedException ();
+			}
+		}
+	}
+
+	interface IDevice
+	{
+		string Name { get; set; }
+		string UDID { get; set; }
+	}
+
+
+	// This is a collection whose enumerator will wait enumerating until 
+	// the collection has been marked as completed (but the enumerator can still
+	// be created; this allows the creation of linq queries whose execution is
+	// delayed until later).
+	internal class BlockingEnumerableCollection<T> : IEnumerable<T> where T : class
+	{
+		List<T> list = new List<T> ();
+		TaskCompletionSource<bool> completed = new TaskCompletionSource<bool> ();
+
+		public int Count {
+			get {
+				WaitForCompletion ();
+				return list.Count;
+			}
+		}
+
+		public void Add (T device)
+		{
+			if (completed.Task.IsCompleted)
+				Console.WriteLine ("Adding to completed collection!");
+			list.Add (device);
+		}
+
+		public void SetCompleted ()
+		{
+			completed.TrySetResult (true);
+		}
+
+		void WaitForCompletion ()
+		{
+			completed.Task.Wait ();
+		}
+
+		public IEnumerator<T> GetEnumerator ()
+		{
+			return new Enumerator (this);
+		}
+
+		IEnumerator IEnumerable.GetEnumerator ()
+		{
+			return GetEnumerator ();
+		}
+
+		class Enumerator : IEnumerator<T>
+		{
+			BlockingEnumerableCollection<T> collection;
+			IEnumerator<T> enumerator;
+
+			public Enumerator (BlockingEnumerableCollection<T> collection)
+			{
+				this.collection = collection;
+			}
+
+			public T Current {
+				get {
+					return enumerator.Current;
+				}
+			}
+
+			object IEnumerator.Current {
+				get {
+					return enumerator.Current;
+				}
+			}
+
+			public void Dispose ()
+			{
+				enumerator.Dispose ();
+			}
+
+			public bool MoveNext ()
+			{
+				collection.WaitForCompletion ();
+				if (enumerator == null)
+					enumerator = collection.list.GetEnumerator ();
+				return enumerator.MoveNext ();
+			}
+
+			public void Reset ()
+			{
+				enumerator.Reset ();
+			}
+		}
 	}
 }
 
