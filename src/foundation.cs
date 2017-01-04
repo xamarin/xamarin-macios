@@ -6779,12 +6779,16 @@ namespace XamCore.Foundation
 
 #if XAMCORE_4_0
 		[Abstract]
+#else
+		[Protected]
 #endif
 		[Export ("propertyForKey:")]
 		NSObject GetProperty (NSString key);
 	
 #if XAMCORE_4_0
 		[Abstract]
+#else
+		[Protected]
 #endif
 		[Export ("setProperty:forKey:")]
 		bool SetProperty ([NullAllowed] NSObject property, NSString key);
