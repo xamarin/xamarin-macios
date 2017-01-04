@@ -708,7 +708,7 @@ specified selector is implemented in this class.
 [BaseType (typeof (NSObject))]
 [Model][Protocol]
 interface CameraDelegate {
-    [Export ("shouldDisplayPopup"), NoDefaultValoue]
+    [Export ("shouldDisplayPopup"), NoDefaultValue]
     bool ShouldUploadToServer ();
 }
 ```
