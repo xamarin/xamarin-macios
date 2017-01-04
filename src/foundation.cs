@@ -6777,11 +6777,17 @@ namespace XamCore.Foundation
 		[Protocolize]
 		NSStreamDelegate Delegate { get; set; }
 
-		[Export ("propertyForKey:"), Internal]
-		NSObject PropertyForKey (NSString key);
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("propertyForKey:")]
+		NSObject GetProperty (NSString key);
 	
-		[Export ("setProperty:forKey:"), Internal]
-		bool SetPropertyForKey ([NullAllowed] NSObject property, NSString key);
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Export ("setProperty:forKey:")]
+		bool SetProperty ([NullAllowed] NSObject property, NSString key);
 	
 #if XAMCORE_4_0
 		[Export ("scheduleInRunLoop:forMode:")]
@@ -7286,6 +7292,16 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("inputStreamWithURL:")]
 		NSInputStream FromUrl (NSUrl url);
+
+#if XAMCORE_4_0
+		[Export ("propertyForKey:"), Override]
+		NSObject GetProperty (NSString key);
+
+		[Export ("setProperty:forKey:"), Override]
+		bool SetProperty ([NullAllowed] NSObject property, NSString key);
+
+#endif
+
 	}
 
 	//
@@ -8058,6 +8074,15 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("outputStreamToFileAtPath:append:")]
 		NSOutputStream CreateFile (string path, bool shouldAppend);
+
+#if XAMCORE_4_0
+		[Export ("propertyForKey:"), Override]
+		NSObject GetProperty (NSString key);
+
+		[Export ("setProperty:forKey:"), Override]
+		bool SetProperty ([NullAllowed] NSObject property, NSString key);
+
+#endif
 	}
 
 	[BaseType (typeof (NSObject), Name="NSHTTPCookie")]
