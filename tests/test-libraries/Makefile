@@ -118,10 +118,10 @@ endef
 # 9: device min version
 $(eval $(call Template,ios,IOS,armv7 armv7s arm64 x86 x86_64,i386 x86_64,armv7 armv7s arm64,iPhoneSimulator,iPhoneOS,-mios-simulator-version-min=8.0,-miphoneos-version-min=8.0))
 ifdef INCLUDE_TVOS
-$(eval $(call Template,tvos,TVOS,arm64 x86_64,x86_64,arm64,AppleTVSimulator,AppleTVOS,-mtvos-simulator-version-min=9.0,-mtvos-version-min=9.0))
+$(eval $(call Template,tvos,TVOS,arm64 x86_64,x86_64,arm64,AppleTVSimulator,AppleTVOS,-mtvos-simulator-version-min=9.0,-mtvos-version-min=9.0 -fembed-bitcode))
 endif
 ifdef INCLUDE_WATCH
-$(eval $(call Template,watchos,WATCHOS,armv7k x86,i386,armv7k,WatchSimulator,WatchOS,-mwatchos-simulator-version-min=2.0,-mwatchos-version-min=2.0))
+$(eval $(call Template,watchos,WATCHOS,armv7k x86,i386,armv7k,WatchSimulator,WatchOS,-mwatchos-simulator-version-min=2.0,-mwatchos-version-min=2.0 -fembed-bitcode))
 endif
 
 define LibTemplate
