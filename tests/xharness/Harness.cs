@@ -284,10 +284,10 @@ namespace xharness
 			WatchOSExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "watchos/Extension"));
 		}
 
-		static Dictionary<string, string> make_config = new Dictionary<string, string> ();
-		static IEnumerable<string> FindConfigFiles (string name)
+		Dictionary<string, string> make_config = new Dictionary<string, string> ();
+		IEnumerable<string> FindConfigFiles (string name)
 		{
-			var dir = Environment.CurrentDirectory;
+			var dir = Path.GetFullPath (RootDirectory);
 			while (dir != "/") {
 				var file = Path.Combine (dir, name);
 				if (File.Exists (file))
@@ -296,20 +296,20 @@ namespace xharness
 			}
 		}
 
-		static void ParseConfigFiles ()
+		void ParseConfigFiles ()
 		{
 			ParseConfigFiles (FindConfigFiles ("test.config"));
 			ParseConfigFiles (FindConfigFiles ("Make.config.local"));
 			ParseConfigFiles (FindConfigFiles ("Make.config"));
 		}
 
-		static void ParseConfigFiles (IEnumerable<string> files)
+		void ParseConfigFiles (IEnumerable<string> files)
 		{
 			foreach (var file in files)
 				ParseConfigFile (file);
 		}
 
-		static void ParseConfigFile (string file)
+		void ParseConfigFile (string file)
 		{
 			if (string.IsNullOrEmpty (file))
 				return;
