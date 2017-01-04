@@ -24,6 +24,12 @@ namespace Xamarin.Tests {
 
 namespace Xamarin
 {
+	public enum Target { Sim, Dev }
+	public enum Config { Debug, Release }
+	public enum PackageMdb { Default, WithMdb, WoutMdb }
+	public enum MSym { Default, WithMSym, WoutMSym }
+	public enum Profile { iOS, tvOS, watchOS }
+
 	[TestFixture]
 	public class MTouch
 	{
@@ -110,12 +116,6 @@ namespace Xamarin
 				Assert.That (post_files, Is.EquivalentTo (pre_files), "files");
 			}
 		}
-
-		public enum Target { Sim, Dev }
-		public enum Config { Debug, Release }
-		public enum PackageMdb { Default, WithMdb, WoutMdb }
-		public enum MSym { Default, WithMSym, WoutMSym }
-		public enum Profile { iOS, tvOS, watchOS }
 
 		[Test]
 		// Simulator
@@ -247,7 +247,7 @@ namespace Xamarin
 			Directory.CreateDirectory (app);
 
 			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.iOS);
+				var exe = CompileTestAppExecutable (testDir, profile: Profile.iOS);
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
 					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 3.1 --abi=armv7s,arm64 {1} -debug -r:" + Configuration.XamarinIOSDll, app, exe)),
@@ -277,7 +277,7 @@ namespace Xamarin
 			Directory.CreateDirectory (app);
 
 			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.iOS);
+				var exe = CompileTestAppExecutable (testDir, profile: Profile.iOS);
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
 					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --targetver 400.0.0 --abi=armv7s,arm64 {1} -debug -r:" + Configuration.XamarinIOSDll, app, exe)),
@@ -338,7 +338,7 @@ namespace Xamarin
 			Directory.CreateDirectory (app);
 
 			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.iOS);
+				var exe = CompileTestAppExecutable (testDir, profile: Profile.iOS);
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
 					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot " + Configuration.xcode_root + " --dev {0} -sdk " + Configuration.sdk_version + " --registrar:oldstatic --targetver 6.0 --abi=arm64 {1} -debug -r:{2} ", app, exe, Configuration.XamarinIOSDll)),
@@ -486,13 +486,13 @@ namespace Xamarin
 			Directory.CreateDirectory (app);
 
 			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.watchOS);
+				var exe = CompileTestAppExecutable (testDir, profile: Profile.watchOS);
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
 					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot {3} --dev {0} -sdk {4} -r:{2} {1} --target-framework Xamarin.WatchOS,v1.0", app, exe, Configuration.XamarinWatchOSDll, Configuration.xcode_root, Configuration.watchos_sdk_version), hide_output: false),
 					"error MT0076: No architecture specified .using the --abi argument.. An architecture is required for Xamarin.WatchOS projects.");
 				
-				exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.tvOS);
+				exe = CompileTestAppExecutable (testDir, profile: Profile.tvOS);
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
 					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot {3} --dev {0} -sdk {4} -r:{2} {1} --target-framework Xamarin.TVOS,v1.0", app, exe, Configuration.XamarinTVOSDll, Configuration.xcode_root, Configuration.tvos_sdk_version), hide_output: false),
@@ -513,7 +513,7 @@ namespace Xamarin
 			Directory.CreateDirectory (app);
 
 			try {
-				var exe = CompileTestAppExecutable (testDir, profile: MTouch.Profile.watchOS);
+				var exe = CompileTestAppExecutable (testDir, profile: Profile.watchOS);
 
 				Asserts.ThrowsPattern<TestExecutionException> (() =>
 					ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("-sdkroot {3} --dev {0} -sdk {4} -r:{2} {1} --target-framework Xamarin.WatchOS,v1.0 --abi armv7k", app, exe, Configuration.XamarinWatchOSDll, Configuration.xcode_root, Configuration.watchos_sdk_version), hide_output: false),
@@ -1119,7 +1119,7 @@ namespace Xamarin
 			AssertDeviceAvailable ();
 
 			using (var mtouch = new MTouchTool ()) {
-				mtouch.Profile = MTouch.Profile.tvOS;
+				mtouch.Profile = Profile.tvOS;
 				mtouch.Abi = abi;
 				mtouch.CreateTemporaryApp ();
 				      
@@ -1154,7 +1154,7 @@ namespace Xamarin
 			Directory.CreateDirectory (app);
 			try {
 				var code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (UIKit.UIWindow).ToString ()); } }";
-				var exe = CompileTestAppExecutable (testDir, code: code, profile: MTouch.Profile.iOS);
+				var exe = CompileTestAppExecutable (testDir, code: code, profile: Profile.iOS);
 				var bin = Path.Combine (app, Path.GetFileNameWithoutExtension (exe));
 				var common_args = string.Format ("-sdkroot " + Configuration.xcode_root + " --sim {0} -sdk " + Configuration.sdk_version + " --targetver 6.0 --abi=i386 {1} -debug -gcc_flags -Wl,-w ", app, exe);
 				var newstyle_args = common_args + "-r:" + Configuration.XamarinIOSDll;
@@ -1706,7 +1706,7 @@ class Test {
 	}
 }
 ";
-				var exe = CompileTestAppExecutable (testDir, code, profile: MTouch.Profile.iOS);
+				var exe = CompileTestAppExecutable (testDir, code, profile: Profile.iOS);
 				var cache = Path.Combine (testDir, "mtouch-cache");
 
 				var mtouch = new MTouchTool ();
@@ -2168,7 +2168,7 @@ public class TestApp {
 #region Helper functions
 		static string CompileUnifiedTestAppExecutable (string targetDirectory, string code = null, string extraArg = "")
 		{
-			return CompileTestAppExecutable (targetDirectory, code, extraArg, profile: MTouch.Profile.iOS);
+			return CompileTestAppExecutable (targetDirectory, code, extraArg, profile: Profile.iOS);
 		}
 
 		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp")

@@ -6,11 +6,11 @@ using System.Text;
 
 namespace Xamarin.Profiler
 {
-	[TestFixture (MTouch.Profile.iOS)]
-	[TestFixture (MTouch.Profile.tvOS)]
+	[TestFixture (Profile.iOS)]
+	[TestFixture (Profile.tvOS)]
 	public class TimingTests
 	{
-		MTouch.Profile profile;
+		Profile profile;
 		StringBuilder sb;
 		int starsLenght;
 
@@ -23,7 +23,7 @@ namespace Xamarin.Profiler
 			sb.AppendLine (title);
 		}
 
-		public TimingTests (MTouch.Profile profile)
+		public TimingTests (Profile profile)
 		{
 			this.profile = profile;
 
