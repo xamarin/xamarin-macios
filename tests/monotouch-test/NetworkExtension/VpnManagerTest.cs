@@ -20,18 +20,16 @@ using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.NetworkExtension
-{
+namespace MonoTouchFixtures.NetworkExtension {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class VpnManagerTest
-	{
+	public class VpnManagerTest {
 
 		[Test]
 		public void SharedManager ()
 		{
-			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
+			if (!TestRuntime.CheckSystemAndSDKVersion (8,0))
 				Assert.Inconclusive ("Requires iOS 8.0+");
 
 			var shared = NEVpnManager.SharedManager;

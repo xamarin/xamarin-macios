@@ -29,9 +29,8 @@ using nuint = global::System.UInt32;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.CoreMedia
-{
-
+namespace MonoTouchFixtures.CoreMedia {
+	
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CMFormatDescriptionTest
@@ -40,9 +39,10 @@ namespace MonoTouchFixtures.CoreMedia
 		public void ClosedCaption ()
 		{
 			CMFormatDescriptionError fde;
-			using (var fd = CMFormatDescription.Create (CMMediaType.ClosedCaption, (uint)CMClosedCaptionFormatType.CEA608, out fde)) {
+			using (var fd = CMFormatDescription.Create (CMMediaType.ClosedCaption, (uint) CMClosedCaptionFormatType.CEA608, out fde))
+			{
 				Assert.AreEqual (CMFormatDescriptionError.None, fde, "#1");
-				Assert.AreEqual ((CMMuxedStreamType)0, fd.MuxedStreamType, "#2");
+				Assert.AreEqual ((CMMuxedStreamType) 0, fd.MuxedStreamType, "#2");
 				Assert.AreEqual (CMMediaType.ClosedCaption, fd.MediaType, "#3");
 				Assert.AreEqual (CMClosedCaptionFormatType.CEA608, fd.ClosedCaptionFormatType, "#4");
 			}
@@ -64,13 +64,13 @@ namespace MonoTouchFixtures.CoreMedia
 			case AVAuthorizationStatus.Denied:
 			case AVAuthorizationStatus.NotDetermined:
 				// We can't test the below, since the some other tests may have initialized whatever we need for the API to work correctly.
-				//				Assert.Null (CMFormatDescription.Create (CMMediaType.Video, (uint) CMVideoCodecType.H264, out fde), "null ({0})", auth);
-				//				Assert.That (fde, Is.EqualTo (CMFormatDescriptionError.InvalidParameter), "CMFormatDescriptionError");
+//				Assert.Null (CMFormatDescription.Create (CMMediaType.Video, (uint) CMVideoCodecType.H264, out fde), "null ({0})", auth);
+//				Assert.That (fde, Is.EqualTo (CMFormatDescriptionError.InvalidParameter), "CMFormatDescriptionError");
 				break;
 			case AVAuthorizationStatus.Authorized:
 				// We can't test the below, since the some other tests may have initialized whatever we need for the API to work correctly.
-				//				Assert.Null (CMFormatDescription.Create (CMMediaType.Video, (uint) CMVideoCodecType.H264, out fde), "null (authorized)");
-				//				Assert.That (fde, Is.EqualTo (CMFormatDescriptionError.InvalidParameter), "CMFormatDescriptionError (authorized)");
+//				Assert.Null (CMFormatDescription.Create (CMMediaType.Video, (uint) CMVideoCodecType.H264, out fde), "null (authorized)");
+//				Assert.That (fde, Is.EqualTo (CMFormatDescriptionError.InvalidParameter), "CMFormatDescriptionError (authorized)");
 
 				using (var captureSession = new AVCaptureSession ()) {
 					using (var videoDevice = AVCaptureDevice.DefaultDeviceWithMediaType (AVMediaType.Video)) {
@@ -81,7 +81,7 @@ namespace MonoTouchFixtures.CoreMedia
 					}
 				}
 
-				Assert.IsNotNull (CMFormatDescription.Create (CMMediaType.Video, (uint)CMVideoCodecType.H264, out fde), "not null (authorized)");
+				Assert.IsNotNull (CMFormatDescription.Create (CMMediaType.Video, (uint) CMVideoCodecType.H264, out fde), "not null (authorized)");
 				Assert.That (fde, Is.EqualTo (CMFormatDescriptionError.None), "CMFormatDescriptionError #2 (authorized)");
 				break;
 			}
@@ -92,7 +92,7 @@ namespace MonoTouchFixtures.CoreMedia
 		{
 			if (!TestRuntime.CheckSystemAndSDKVersion (7, 0))
 				Assert.Ignore ("This test uses iOS 7 API");
-
+			
 			// Bug #27205
 
 			var auth = AVCaptureDevice.GetAuthorizationStatus (AVMediaType.Video);

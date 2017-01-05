@@ -27,13 +27,11 @@ using MonoTouch.UIKit;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.CoreBluetooth
-{
-
+namespace MonoTouchFixtures.CoreBluetooth {
+	
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class UuidTest
-	{
+	public class UuidTest {
 
 		[Test]
 		public void Roundtrip_16bits ()

@@ -22,13 +22,11 @@ using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.Contacts
-{
+namespace MonoTouchFixtures.Contacts {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class ContactStoreTest
-	{
+	public class ContactStoreTest {
 
 		[SetUp]
 		public void MinimumSdkCheck ()

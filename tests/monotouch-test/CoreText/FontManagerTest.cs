@@ -28,22 +28,20 @@ using NUnit.Framework;
 using System.Linq;
 
 #if XAMCORE_2_0
-using RectangleF = CoreGraphics.CGRect;
-using SizeF = CoreGraphics.CGSize;
-using PointF = CoreGraphics.CGPoint;
+using RectangleF=CoreGraphics.CGRect;
+using SizeF=CoreGraphics.CGSize;
+using PointF=CoreGraphics.CGPoint;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
 #endif
 
-namespace MonoTouchFixtures.CoreText
-{
+namespace MonoTouchFixtures.CoreText {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class FontManagerTest
-	{
+	public class FontManagerTest {
 
 		[Test]
 		public void RegisterTTF ()
@@ -118,7 +116,7 @@ namespace MonoTouchFixtures.CoreText
 			// method under test
 			var fonts = CTFontManager.GetFonts (url);
 			Assert.AreEqual (1, fonts.Length);
-			Assert.AreEqual ("Pacifico", fonts [0].GetAttributes ().Name?.ToString ());
+			Assert.AreEqual ("Pacifico", fonts[0].GetAttributes().Name?.ToString ());
 
 			err = CTFontManager.UnregisterFontsForUrl (url, CTFontManagerScope.Process);
 			Assert.IsNull (err, "Unregister error");

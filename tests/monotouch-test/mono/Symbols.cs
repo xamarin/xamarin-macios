@@ -12,12 +12,10 @@ using MonoTouch.ObjCRuntime;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures
-{
+namespace MonoTouchFixtures {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public partial class Symbols
-	{
+	public partial class Symbols {
 		string [] symbols;
 
 		[Test]
@@ -25,7 +23,7 @@ namespace MonoTouchFixtures
 		{
 			if (Runtime.Arch != Arch.DEVICE)
 				Assert.Ignore ("This is a device-only test.");
-
+			
 			Collect ();
 			Assert.That (symbols [1], Contains.Substring ("MonoTouchFixtures_Symbols_Collect"), "#1");
 		}

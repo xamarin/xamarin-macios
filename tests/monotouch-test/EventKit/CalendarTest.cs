@@ -25,13 +25,11 @@ using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.EventKit
-{
-
+namespace MonoTouchFixtures.EventKit {
+	
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class EventKitCalendarTest
-	{
+	public class EventKitCalendarTest {
 
 		// note: default .ctor disable since it would thrown an objective-c exception telling us to use 'calendarWithEventStore:'
 		[Test]

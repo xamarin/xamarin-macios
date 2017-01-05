@@ -28,22 +28,20 @@ using MonoTouch.UIKit;
 using NUnit.Framework;
 
 #if XAMCORE_2_0
-using RectangleF = CoreGraphics.CGRect;
-using SizeF = CoreGraphics.CGSize;
-using PointF = CoreGraphics.CGPoint;
+using RectangleF=CoreGraphics.CGRect;
+using SizeF=CoreGraphics.CGSize;
+using PointF=CoreGraphics.CGPoint;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
 #endif
 
-namespace MonoTouchFixtures.SpriteKit
-{
+namespace MonoTouchFixtures.SpriteKit {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class SpriteNodeTest
-	{
+	public class SpriteNodeTest {
 
 		void CheckEmpty (SKSpriteNode n)
 		{
@@ -71,7 +69,7 @@ namespace MonoTouchFixtures.SpriteKit
 		[Test]
 		public void CtorColor ()
 		{
-			using (var n = new SKSpriteNode ((UIColor)null, SizeF.Empty)) {
+			using (var n = new SKSpriteNode ((UIColor) null, SizeF.Empty)) {
 				CheckEmpty (n);
 			}
 		}
@@ -79,13 +77,13 @@ namespace MonoTouchFixtures.SpriteKit
 		[Test]
 		public void CtorName ()
 		{
-			Assert.Throws<ArgumentNullException> (delegate { new SKSpriteNode ((string)null); }, "string");
+			Assert.Throws<ArgumentNullException> (delegate { new SKSpriteNode ((string) null); }, "string");
 		}
 
 		[Test]
 		public void CtorTexture ()
 		{
-			using (var n = new SKSpriteNode ((SKTexture)null)) {
+			using (var n = new SKSpriteNode ((SKTexture) null)) {
 				CheckEmpty (n);
 			}
 		}

@@ -25,9 +25,9 @@ using MonoTouch.UIKit;
 using NUnit.Framework;
 
 #if XAMCORE_2_0
-using RectangleF = CoreGraphics.CGRect;
-using SizeF = CoreGraphics.CGSize;
-using PointF = CoreGraphics.CGPoint;
+using RectangleF=CoreGraphics.CGRect;
+using SizeF=CoreGraphics.CGSize;
+using PointF=CoreGraphics.CGPoint;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
@@ -65,8 +65,10 @@ namespace MonoTouchFixtures.CoreImage
 #endif
 			}
 
-			public bool IsColorKernel {
-				get {
+			public bool IsColorKernel
+			{
+				get
+				{
 					switch (Type) {
 					case CustomerFilterType.NoOpColor:
 					case CustomerFilterType.NoOpColorWithParam:
@@ -75,7 +77,7 @@ namespace MonoTouchFixtures.CoreImage
 					case CustomerFilterType.NoOpWarpKernel:
 						return false;
 					}
-					throw new InvalidOperationException ();
+					throw new InvalidOperationException();
 				}
 			}
 
@@ -91,25 +93,25 @@ namespace MonoTouchFixtures.CoreImage
 				case CustomerFilterType.NoOpWarpKernel:
 					return NoOpWarpKernel;
 				}
-				throw new InvalidOperationException ();
+				throw new InvalidOperationException();
 			}
 
 			NSObject [] GetParms ()
 			{
 				switch (Type) {
 				case CustomerFilterType.NoOpColor:
-					return new NSObject [] { MyImage };
+					return new NSObject[] { MyImage };
 				case CustomerFilterType.NoOpColorWithParam:
-					return new NSObject [] { MyImage, new NSNumber (5) };
+					return new NSObject[] { MyImage, new NSNumber(5) };
 				case CustomerFilterType.ColorPositionKernel:
 					RectangleF dod = MyImage.Extent;
 					double radius = 0.5 * Math.Sqrt (Math.Pow (dod.Width, 2) + Math.Pow (dod.Height, 2));
 					CIVector centerOffset = new CIVector ((float)(dod.Size.Width * .5), (float)(dod.Size.Height * .5));
-					return new NSObject [] { MyImage, centerOffset, new NSNumber (radius) };
+					return new NSObject[] { MyImage, centerOffset, new NSNumber (radius) };
 				case CustomerFilterType.NoOpWarpKernel:
-					return new NSObject [] { };
+					return new NSObject[] { };
 				}
-				throw new InvalidOperationException ();
+				throw new InvalidOperationException();
 			}
 
 			CustomerFilterType Type { get; set; }
@@ -125,7 +127,8 @@ namespace MonoTouchFixtures.CoreImage
 							CallbackHit = true;
 							return rect;
 						}, GetParms ());
-					} else {
+					}
+					else {
 						CIWarpKernel warp = (CIWarpKernel)kernel;
 						return warp.ApplyWithExtent (MyImage.Extent, (index, rect) => {
 							CallbackHit = true;
@@ -159,11 +162,11 @@ namespace MonoTouchFixtures.CoreImage
 #endif
 
 
-				foreach (CustomerFilterType type in Enum.GetValues (typeof (CustomerFilterType))) {
-					MyCustomFilter filter = new MyCustomFilter (type);
-					filter.MyImage = ciImg;
+					foreach (CustomerFilterType type in Enum.GetValues(typeof(CustomerFilterType))) {
+						MyCustomFilter filter = new MyCustomFilter (type);
+						filter.MyImage = ciImg;
 
-					CIImage outputImage = filter.OutputImage;
+						CIImage outputImage = filter.OutputImage;
 
 					CGImage cgImage = context.CreateCGImage (outputImage, outputImage.Extent);
 #if MONOMAC

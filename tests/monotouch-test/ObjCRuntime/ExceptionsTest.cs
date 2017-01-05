@@ -24,13 +24,11 @@ using MonoTouch.UIKit;
 
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.ObjCRuntime
-{
-
+namespace MonoTouchFixtures.ObjCRuntime {
+	
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class ExceptionsTest
-	{
+	public class ExceptionsTest {
 
 #if __WATCHOS__
 		MarshalObjectiveCExceptionMode defaultObjectiveCExceptionMode = MarshalObjectiveCExceptionMode.ThrowManagedException;

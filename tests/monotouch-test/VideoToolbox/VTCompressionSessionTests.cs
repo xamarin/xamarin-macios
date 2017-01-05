@@ -28,8 +28,7 @@ using MonoTouch.CoreFoundation;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.VideoToolbox
-{
+namespace MonoTouchFixtures.VideoToolbox {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
@@ -41,7 +40,7 @@ namespace MonoTouchFixtures.VideoToolbox
 			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
 				Assert.Ignore ("Ignoring VideoToolbox tests: Requires iOS8+");
 
-			using (var session = CreateSession ()) {
+			using (var session = CreateSession ()){
 				Assert.IsNotNull (session, "Session should not be null");
 			}
 		}
@@ -52,7 +51,7 @@ namespace MonoTouchFixtures.VideoToolbox
 			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
 				Assert.Ignore ("Ignoring VideoToolbox tests: Requires iOS8+");
 
-			using (var session = CreateSession ()) {
+			using (var session = CreateSession ()){
 
 				var result = session.SetCompressionProperties (new VTCompressionProperties {
 					RealTime = true,
@@ -69,7 +68,7 @@ namespace MonoTouchFixtures.VideoToolbox
 			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
 				Assert.Ignore ("Ignoring VideoToolbox tests: Requires iOS8+");
 
-			using (var session = CreateSession ()) {
+			using (var session = CreateSession ()){
 
 				var result = session.SetProperties (new VTPropertyOptions {
 					ReadWriteStatus = VTReadWriteStatus.ReadWrite,
@@ -87,7 +86,7 @@ namespace MonoTouchFixtures.VideoToolbox
 				Assert.Ignore ("Ignoring VideoToolbox tests: Requires iOS8+");
 
 			using (var session = CreateSession ())
-			using (var storage = VTMultiPassStorage.Create ()) {
+			using (var storage = VTMultiPassStorage.Create ()){
 				var result = session.SetCompressionProperties (new VTCompressionProperties {
 					RealTime = false,
 					AllowFrameReordering = true,
@@ -116,8 +115,8 @@ namespace MonoTouchFixtures.VideoToolbox
 					if (dict == null) continue;
 
 					NSObject value;
-					if (dict.TryGetValue (key, out value) && value != null) {
-						var number = (NSNumber)value;
+					if (dict.TryGetValue (key, out value) && value != null ) {
+						var number = (NSNumber) value;
 						Assert.IsFalse (number.BoolValue, "CompressionSession GetSupportedPropertiesTest ShouldBeSerialized is True");
 					}
 				}

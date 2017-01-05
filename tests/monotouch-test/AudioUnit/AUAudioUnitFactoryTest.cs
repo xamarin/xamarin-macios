@@ -16,12 +16,10 @@ using NUnit.Framework;
 using Foundation;
 using AudioUnit;
 
-namespace MonoTouchFixtures.AudioUnit
-{
+namespace MonoTouchFixtures.AudioUnit {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AUAudioUnitFactoryTest
-	{
+	public class AUAudioUnitFactoryTest {
 		[Test]
 		public void CreateAudioUnit ()
 		{

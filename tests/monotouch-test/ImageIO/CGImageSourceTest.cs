@@ -145,14 +145,14 @@ namespace MonoTouchFixtures.ImageIO
 				}
 			}
 		}
-
+		
 		[Test]
 		public void CreateIncrementalTest ()
 		{
 			using (var img = CGImageSource.CreateIncremental (null)) {
 				Assert.NotNull (img, "#a1");
 			}
-
+			
 			using (var img = CGImageSource.CreateIncremental (new CGImageOptions ())) {
 				Assert.NotNull (img, "#b1");
 			}
@@ -178,13 +178,14 @@ namespace MonoTouchFixtures.ImageIO
 						using (var props = imageSource.CopyProperties (dict)) {
 							Assert.Null (props.ValueForKey (kCGImagePropertyPixelWidth), "kCGImagePropertyPixelWidth");
 							Assert.Null (props.ValueForKey (kCGImagePropertyPixelHeight), "kCGImagePropertyPixelHeight");
-							NSNumber n = (NSNumber)props ["FileSize"];
+							NSNumber n = (NSNumber) props ["FileSize"];
 							// image is "optimized" for devices (and a lot bigger at 10351 bytes ;-)
-							Assert.That ((int)n, Is.AtLeast (7318), "FileSize");
+							Assert.That ((int) n, Is.AtLeast (7318), "FileSize");
 						}
 					}
 				}
-			} finally {
+			}
+			finally {
 				Dlfcn.dlclose (lib);
 			}
 		}

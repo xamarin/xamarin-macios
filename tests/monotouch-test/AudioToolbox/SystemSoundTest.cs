@@ -24,9 +24,8 @@ using MonoTouch.CoreFoundation;
 using NUnit.Framework;
 using System.Threading;
 
-namespace MonoTouchFixtures.AudioToolbox
-{
-
+namespace MonoTouchFixtures.AudioToolbox {
+	
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class SystemSoundTest
@@ -42,7 +41,7 @@ namespace MonoTouchFixtures.AudioToolbox
 
 			using (var ss = SystemSound.FromFile (NSUrl.FromFilename (path))) {
 				Assert.AreEqual (AudioServicesError.None, ss.AddSystemSoundCompletion (delegate {
-				}));
+					}));
 
 				ss.PlaySystemSound ();
 			}

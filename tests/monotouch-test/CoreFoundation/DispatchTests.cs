@@ -29,23 +29,21 @@ using System.Drawing;
 using System.Threading;
 
 #if XAMCORE_2_0
-using RectangleF = CoreGraphics.CGRect;
-using SizeF = CoreGraphics.CGSize;
-using PointF = CoreGraphics.CGPoint;
+using RectangleF=CoreGraphics.CGRect;
+using SizeF=CoreGraphics.CGSize;
+using PointF=CoreGraphics.CGPoint;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
 #endif
 
-namespace MonoTouchFixtures.CoreFoundation
-{
-
+namespace MonoTouchFixtures.CoreFoundation {
+	
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class DispatchTests
-	{
-
+	public class DispatchTests {
+		
 		static bool RunningOnSnowLeopard {
 			get {
 #if !MONOMAC
@@ -193,7 +191,7 @@ namespace MonoTouchFixtures.CoreFoundation
 		public void NeverTooLate ()
 		{
 			Assert.That (DispatchTime.Now.Nanoseconds, Is.EqualTo (0), "Now");
-			Assert.That (DispatchTime.Forever.Nanoseconds, Is.EqualTo (unchecked((ulong)~0)), "Forever");
+			Assert.That (DispatchTime.Forever.Nanoseconds, Is.EqualTo (unchecked ((ulong) ~0)), "Forever");
 
 			var dt = new DispatchTime (1);
 			Assert.That (dt.Nanoseconds, Is.EqualTo (1), "1");

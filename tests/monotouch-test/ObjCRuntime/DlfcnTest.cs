@@ -18,14 +18,12 @@ using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.ObjCRuntime
-{
-
+namespace MonoTouchFixtures.ObjCRuntime {
+	
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class DlfcnTest
-	{
-
+	public class DlfcnTest {
+		
 		[Test]
 		public void OpenClose_libSystem ()
 		{

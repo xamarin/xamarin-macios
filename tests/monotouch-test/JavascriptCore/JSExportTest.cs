@@ -20,8 +20,7 @@ using NUnit.Framework;
 using XamarinTests.ObjCRuntime;
 using MonoTouchFixtures.ObjCRuntime;
 
-namespace MonoTouchFixtures.JavascriptCore
-{
+namespace MonoTouchFixtures.JavascriptCore {
 
 	// we want the test to be availble if we use the linker
 	[Preserve (AllMembers = true)]

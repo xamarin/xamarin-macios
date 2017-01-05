@@ -25,23 +25,21 @@ using MonoTouch.Foundation;
 using NUnit.Framework;
 
 #if XAMCORE_2_0
-using RectangleF = CoreGraphics.CGRect;
-using SizeF = CoreGraphics.CGSize;
-using PointF = CoreGraphics.CGPoint;
+using RectangleF=CoreGraphics.CGRect;
+using SizeF=CoreGraphics.CGSize;
+using PointF=CoreGraphics.CGPoint;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
 #endif
 
-namespace MonoTouchFixtures.AVFoundation
-{
-
+namespace MonoTouchFixtures.AVFoundation {
+	
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AVAssetImageGeneratorTest
-	{
-
+	public class AVAssetImageGeneratorTest {
+		
 		[Test]
 		public void Defaults ()
 		{
@@ -71,7 +69,6 @@ namespace MonoTouchFixtures.AVFoundation
 		[Test]
 		public void CopyCGImageAtTime ()
 		{
-			Console.WriteLine (video_asset_path);
 			// Mp4 file is supported by CopyCGImageAtTime so we can test out actual param
 			using (NSUrl video_url = NSUrl.FromFilename (video_asset_path))
 			using (AVAsset video_asset = AVAsset.FromUrl (video_url))

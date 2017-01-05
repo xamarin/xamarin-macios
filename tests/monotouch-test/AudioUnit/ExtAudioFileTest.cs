@@ -21,9 +21,8 @@ using MonoTouch.CoreFoundation;
 #endif
 using System.IO;
 
-namespace MonoTouchFixtures.AudioUnit
-{
-
+namespace MonoTouchFixtures.AudioUnit {
+	
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class ExtAudioFileTest

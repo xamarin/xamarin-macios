@@ -38,7 +38,7 @@ namespace MonoTouchFixtures.CoreFoundation
 			Assert.IsTrue (bundles.Length > 0);
 			foreach (CFBundle b in bundles) {
 				Assert.IsFalse (String.IsNullOrEmpty (b.Url.ToString ()),
-						String.Format("Found bundle with null url and id {0}", b.Identifier));
+  						String.Format("Found bundle with null url and id {0}", b.Identifier));
 			}
 		}
 
@@ -60,9 +60,9 @@ namespace MonoTouchFixtures.CoreFoundation
 				if (!String.IsNullOrEmpty (id)) {
 					var otherBundle = CFBundle.Get (id);
 					Assert.AreEqual (b.Info.Type, otherBundle.Info.Type,
-							 String.Format("Found bundle with diff type and id {0}", id));
+  							 String.Format("Found bundle with diff type and id {0}", id));
 					Assert.AreEqual (b.Url.ToString (), otherBundle.Url.ToString (),
-							 String.Format("Found bundle with diff url and id {0}", id));
+  							 String.Format("Found bundle with diff url and id {0}", id));
 				}
 			}
 		}

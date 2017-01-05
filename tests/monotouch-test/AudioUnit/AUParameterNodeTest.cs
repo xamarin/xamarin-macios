@@ -17,12 +17,10 @@ using NUnit.Framework;
 using Foundation;
 using AudioUnit;
 
-namespace monotouchtest
-{
+namespace monotouchtest {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AUParameterNodeTest
-	{
+	public class AUParameterNodeTest {
 		[Test]
 		public void CreateTokenByAddingParameterRecordingObserver ()
 		{
@@ -36,7 +34,7 @@ namespace monotouchtest
 			var completion = new ManualResetEvent (false);
 
 			using (var parameter = CreateAUParameter ()) {
-				using (var tree = AUParameterTree.CreateTree (new AUParameterNode [] { parameter })) {
+				using (var tree = AUParameterTree.CreateTree (new AUParameterNode[] { parameter })) {
 					var recordingObserver = tree.CreateTokenByAddingParameterRecordingObserver ((nint numberOfEvents, ref AURecordedParameterEvent events) => {
 						Assert.True (numberOfEvents == 1,
 							$"Number of events was wrong. Expected {1} but was {numberOfEvents}");
@@ -73,7 +71,7 @@ namespace monotouchtest
 			var completion = new ManualResetEvent (false);
 
 			using (var parameter = CreateAUParameter ()) {
-				using (var tree = AUParameterTree.CreateTree (new AUParameterNode [] { parameter })) {
+				using (var tree = AUParameterTree.CreateTree (new AUParameterNode[] { parameter })) {
 					var recordingObserver = tree.CreateTokenByAddingParameterRecordingObserver ((nint numberOfEvents, ref AURecordedParameterEvent events) => {
 						recordingObserverInvoked = true;
 						completion.Set ();

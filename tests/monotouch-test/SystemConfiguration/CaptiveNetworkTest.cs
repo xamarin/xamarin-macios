@@ -26,14 +26,12 @@ using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.SystemConfiguration
-{
+namespace MonoTouchFixtures.SystemConfiguration {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CaptiveNetworkTest
-	{
-
+	public class CaptiveNetworkTest {
+		
 		static bool RunningOnSnowLeopard {
 			get {
 				return !File.Exists ("/usr/lib/system/libsystem_kernel.dylib");
@@ -129,7 +127,7 @@ namespace MonoTouchFixtures.SystemConfiguration
 		{
 			Assert.False (CaptiveNetwork.MarkPortalOnline ("xamxam"));
 		}
-
+		
 		[Test]
 		[ExpectedException (typeof (ArgumentNullException))]
 		public void MarkPortalOffline_Null ()
@@ -142,7 +140,7 @@ namespace MonoTouchFixtures.SystemConfiguration
 		{
 			Assert.False (CaptiveNetwork.MarkPortalOffline ("xamxam"));
 		}
-
+		
 		[Test]
 		[ExpectedException (typeof (ArgumentNullException))]
 		public void SetSupportedSSIDs_Null ()

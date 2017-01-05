@@ -27,15 +27,13 @@ using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.ImageIO
-{
-
+namespace MonoTouchFixtures.ImageIO {
+	
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class ImageDestinationTest
-	{
+	public class ImageDestinationTest {
 
-		const string GoodUti = "public.jpeg"; // correct
+		const string GoodUti ="public.jpeg"; // correct
 		const string BadUti = "public.Jpeg"; // wrong 'J' is an upper letter
 
 		[Test]
@@ -126,7 +124,7 @@ namespace MonoTouchFixtures.ImageIO
 #else
 			using (var id = CGImageDestination.FromData (destData, GoodUti, 1)) {
 #endif
-				id.AddImage (img, (NSDictionary)null);
+				id.AddImage (img, (NSDictionary) null);
 			}
 		}
 
@@ -149,7 +147,7 @@ namespace MonoTouchFixtures.ImageIO
 			using (var id = CGImageDestination.FromData (destData, GoodUti, 1))
 #endif
 			using (var mutable = new CGMutableImageMetadata ()) {
-				id.AddImageAndMetadata (img, mutable, (NSDictionary)null);
+				id.AddImageAndMetadata (img, mutable, (NSDictionary) null);
 			}
 		}
 

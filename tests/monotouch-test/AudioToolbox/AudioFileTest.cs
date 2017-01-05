@@ -17,14 +17,12 @@ using MonoTouch.CoreFoundation;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.AudioToolbox
-{
-
+namespace MonoTouchFixtures.AudioToolbox {
+	
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class AudioFileTest
-	{
-
+	public class AudioFileTest {
+		
 		[Test]
 		public void ReadTest ()
 		{

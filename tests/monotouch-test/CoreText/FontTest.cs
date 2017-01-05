@@ -28,27 +28,25 @@ using MonoTouch.UIKit;
 using NUnit.Framework;
 
 #if XAMCORE_2_0
-using RectangleF = CoreGraphics.CGRect;
-using SizeF = CoreGraphics.CGSize;
-using PointF = CoreGraphics.CGPoint;
+using RectangleF=CoreGraphics.CGRect;
+using SizeF=CoreGraphics.CGSize;
+using PointF=CoreGraphics.CGPoint;
 #else
 using nfloat=global::System.Single;
 using nint=global::System.Int32;
 using nuint=global::System.UInt32;
 #endif
 
-namespace MonoTouchFixtures.CoreText
-{
+namespace MonoTouchFixtures.CoreText {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class A_FontTest
-	{
+	public class A_FontTest {
 
 		[Test]
 		public void CTFontCreateWithNameAndOptions ()
 		{
-			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertXcodeVersion (5,0);
 
 			using (var font = new CTFont ("HoeflerText-Regular", 10, CTFontOptions.Default)) {
 				Assert.That (font.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
@@ -58,7 +56,7 @@ namespace MonoTouchFixtures.CoreText
 		[Test]
 		public void CTFontCreateWithFontDescriptorAndOptions ()
 		{
-			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertXcodeVersion (5,0);
 
 			CTFontDescriptorAttributes fda = new CTFontDescriptorAttributes () {
 				FamilyName = "Courier",
@@ -74,7 +72,7 @@ namespace MonoTouchFixtures.CoreText
 		[Test]
 		public void GetCascadeList ()
 		{
-			TestRuntime.AssertXcodeVersion (5, 0);
+			TestRuntime.AssertXcodeVersion (5,0);
 
 			using (var font = new CTFont ("HoeflerText-Regular", 10, CTFontOptions.Default)) {
 				Assert.NotNull (font.GetDefaultCascadeList (null), "null");

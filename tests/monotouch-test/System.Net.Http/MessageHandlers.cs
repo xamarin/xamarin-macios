@@ -21,7 +21,7 @@ namespace MonoTests.System.Net.Http
 	{
 		HttpMessageHandler GetHandler (Type handler_type)
 		{
-			return (HttpMessageHandler)Activator.CreateInstance (handler_type);
+			return (HttpMessageHandler) Activator.CreateInstance (handler_type);
 		}
 
 		[Test]

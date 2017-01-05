@@ -17,14 +17,12 @@ using MonoTouch.Security;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.Security
-{
-
+namespace MonoTouchFixtures.Security {
+	
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class KeyChainTest
-	{
-
+	public class KeyChainTest {
+		
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static int CFGetRetainCount (IntPtr handle);
 

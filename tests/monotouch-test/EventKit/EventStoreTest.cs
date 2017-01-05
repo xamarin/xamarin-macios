@@ -23,9 +23,8 @@ using NUnit.Framework;
 using System.Threading;
 using System.Linq;
 
-namespace MonoTouchFixtures.EventKit
-{
-
+namespace MonoTouchFixtures.EventKit {
+	
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class EventStoreTest

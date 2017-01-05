@@ -18,13 +18,11 @@ using NUnit.Framework;
 using NUnit.Framework.Internal;
 using System.Security.Cryptography.X509Certificates;
 
-namespace MonoTouchFixtures.Security
-{
+namespace MonoTouchFixtures.Security {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class RecordTest
-	{
+	public class RecordTest {
 
 		[Test]
 		public void Identity ()
@@ -76,7 +74,7 @@ namespace MonoTouchFixtures.Security
 			Assert.Null (rec.MatchItemList, "MatchItemList");
 
 			using (var data = new NSData ()) {
-				rec.MatchIssuers = new NSData [] { data };
+				rec.MatchIssuers = new NSData[] { data };
 				Assert.AreSame (rec.MatchIssuers [0], data, "MatchIssuers [0]");
 			}
 
@@ -233,10 +231,10 @@ namespace MonoTouchFixtures.Security
 			string password = null;
 			var searchRecord = new SecRecord (SecKind.InternetPassword) {
 				Server = "Test1",
-				Account = username.ToLower ()
+				Account = username.ToLower()
 			};
 			SecStatusCode code;
-			var record = SecKeyChain.QueryAsRecord (searchRecord, out code);
+			var record = SecKeyChain.QueryAsRecord(searchRecord, out code);
 			if (code == SecStatusCode.Success && record != null)
 				password = NSString.FromData (record.ValueData, NSStringEncoding.UTF8);
 			return password;

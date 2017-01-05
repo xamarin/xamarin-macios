@@ -27,13 +27,11 @@ using nuint=global::System.UInt32;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.CoreMedia
-{
-
+namespace MonoTouchFixtures.CoreMedia {
+	
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CMClockTest
-	{
+	public class CMClockTest {
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static nint CFGetRetainCount (IntPtr handle);

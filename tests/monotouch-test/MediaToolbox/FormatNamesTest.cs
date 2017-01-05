@@ -17,13 +17,11 @@ using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.MediaToolbox
-{
-
+namespace MonoTouchFixtures.MediaToolbox {
+	
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class FormatNamesTest
-	{
+	public class FormatNamesTest {
 
 		[Test]
 		[Culture ("en")]

@@ -21,9 +21,8 @@ using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.AudioToolbox
-{
-
+namespace MonoTouchFixtures.AudioToolbox {
+	
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class AudioQueueTest

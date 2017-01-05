@@ -1,4 +1,4 @@
-//
+﻿//
 // MDLLight Unit Tests
 //
 // Authors:

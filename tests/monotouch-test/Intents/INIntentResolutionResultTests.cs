@@ -16,13 +16,11 @@ using NUnit.Framework;
 using Foundation;
 using Intents;
 
-namespace MonoTouchFixtures.Intents
-{
+namespace MonoTouchFixtures.Intents {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class INIntentResolutionResultTests
-	{
+	public class INIntentResolutionResultTests {
 
 		[SetUp]
 		public void Setup ()

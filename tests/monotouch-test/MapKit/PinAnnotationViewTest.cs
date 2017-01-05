@@ -26,14 +26,12 @@ using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.MapKit
-{
-
+namespace MonoTouchFixtures.MapKit {
+	
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class PinAnnotationViewTest
-	{
-
+	public class PinAnnotationViewTest {
+		
 		[Test]
 		public void Ctor_Annotation ()
 		{
