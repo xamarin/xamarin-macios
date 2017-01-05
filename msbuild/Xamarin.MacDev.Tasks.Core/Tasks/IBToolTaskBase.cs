@@ -129,14 +129,15 @@ namespace Xamarin.MacDev.Tasks
 
 		IEnumerable<ITaskItem> GetCompilationDirectoryOutput (ITaskItem expected)
 		{
-			var name = Path.GetFileNameWithoutExtension (expected.ItemSpec);
-			var extension = Path.GetExtension (expected.ItemSpec);
 			var dir = Path.GetDirectoryName (expected.ItemSpec);
-			var nibDir = expected.GetMetadata ("LogicalName");
-			var targets = GetTargetDevices (plist).ToList ();
 
 			if (!Directory.Exists (dir))
 				yield break;
+
+			var name = Path.GetFileNameWithoutExtension (expected.ItemSpec);
+			var extension = Path.GetExtension (expected.ItemSpec);
+			var nibDir = expected.GetMetadata ("LogicalName");
+			var targets = GetTargetDevices (plist).ToList ();
 
 			foreach (var path in Directory.GetFileSystemEntries (dir)) {
 				// check that the FileNameWithoutExtension matches *exactly*
