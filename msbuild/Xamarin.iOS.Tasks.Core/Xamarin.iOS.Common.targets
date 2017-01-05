@@ -1575,7 +1575,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_CodesignAppBundle" Condition="'$(_RequireCodeSigning)' == 'true'" DependsOnTargets="$(_CodesignAppBundleDependsOn)"
-		Inputs="%(_NativeExecutable.Identity);$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent;@(_BundleResourceWithLogicalName)"
+		Inputs="$(_NativeExecutable);$(_AppBundlePath)Info.plist;$(_AppBundlePath)embedded.mobileprovision;$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent;@(_BundleResourceWithLogicalName);@(_NativeLibrary);@(_Frameworks)"
 		Outputs="$(DeviceSpecificIntermediateOutputPath)codesign\$(_AppBundleName)$(AppBundleExtension)">
 		<Codesign
 			SessionId="$(BuildSessionId)"
