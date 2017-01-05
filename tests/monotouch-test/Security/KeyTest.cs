@@ -15,7 +15,11 @@ using System.Security.Cryptography.X509Certificates;
 #if XAMCORE_2_0
 using Foundation;
 using Security;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.Foundation;
 using MonoTouch.Security;

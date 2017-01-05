@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuiUnit_xammac_mobile", "..
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "apitest-unified", "apitest\apitest-unified.csproj", "{7A0EDA95-30A6-43E1-AD43-368AD95AC48B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xammac_tests", "xammac_tests\xammac_tests.csproj", "{22BF080C-AFAD-445B-8BB5-42B9E7FDBC68}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,5 +83,17 @@ Global
 		{7A0EDA95-30A6-43E1-AD43-368AD95AC48B}.Debug|x86.Build.0 = Debug|x86
 		{7A0EDA95-30A6-43E1-AD43-368AD95AC48B}.Release|x86.ActiveCfg = Release|x86
 		{7A0EDA95-30A6-43E1-AD43-368AD95AC48B}.Release|x86.Build.0 = Release|x86
+		{22BF080C-AFAD-445B-8BB5-42B9E7FDBC68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22BF080C-AFAD-445B-8BB5-42B9E7FDBC68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22BF080C-AFAD-445B-8BB5-42B9E7FDBC68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22BF080C-AFAD-445B-8BB5-42B9E7FDBC68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22BF080C-AFAD-445B-8BB5-42B9E7FDBC68}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{22BF080C-AFAD-445B-8BB5-42B9E7FDBC68}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{22BF080C-AFAD-445B-8BB5-42B9E7FDBC68}.AppStore|Any CPU.ActiveCfg = Debug|Any CPU
+		{22BF080C-AFAD-445B-8BB5-42B9E7FDBC68}.AppStore|Any CPU.Build.0 = Debug|Any CPU
+		{22BF080C-AFAD-445B-8BB5-42B9E7FDBC68}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{22BF080C-AFAD-445B-8BB5-42B9E7FDBC68}.Debug|x86.Build.0 = Debug|Any CPU
+		{22BF080C-AFAD-445B-8BB5-42B9E7FDBC68}.Release|x86.ActiveCfg = Release|Any CPU
+		{22BF080C-AFAD-445B-8BB5-42B9E7FDBC68}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
