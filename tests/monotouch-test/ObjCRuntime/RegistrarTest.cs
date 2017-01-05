@@ -1681,8 +1681,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Register ("FakeType1")]
-		class FakeType1 : NSObject
-		{
+		class FakeType1 : NSObject {
 			public FakeType1 (IntPtr ptr)
 				: base (ptr)
 			{
@@ -1740,8 +1739,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 #endif
 
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
-		class Test24970 : UIApplicationDelegate
-		{
+		class Test24970 : UIApplicationDelegate {
 			// This method uses the [Transient] attribute.
 			public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations (UIApplication application, UIWindow forWindow)
 			{

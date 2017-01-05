@@ -13,6 +13,9 @@ using System.Linq;
 using System.IO;
 
 using NUnit.Framework;
+#if MONOMAC
+using Foundation;
+#endif
 
 namespace MonoTests.System.Net.Http
 {
@@ -29,9 +32,7 @@ namespace MonoTests.System.Net.Http
 		[TestCase (typeof (HttpClientHandler))]
 		[TestCase (typeof (CFNetworkHandler))]
 #endif
-#if !MONOMAC
 		[TestCase (typeof (NSUrlSessionHandler))]
-#endif
 		public void DnsFailure (Type handlerType)
 		{
 			bool done = false;

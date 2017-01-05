@@ -37,7 +37,7 @@ namespace MonoTouchFixtures.Foundation {
 #if MONOMAC
 			                                  "DeviceName",
 #else
-											  UIDevice.CurrentDevice.Name, 
+			                                  UIDevice.CurrentDevice.Name,
 #endif
 			                                  1234)) {
 				Assert.That (ns.Domain, Is.EqualTo ("d"), "Domain");

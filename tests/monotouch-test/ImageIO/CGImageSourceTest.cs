@@ -17,13 +17,11 @@ using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.ImageIO
-{
+namespace MonoTouchFixtures.ImageIO {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CGImageSourceTest
-	{
+	public class CGImageSourceTest {
 		const string filename = "xamarin2.png";
 		NSUrl fileUrl = NSBundle.MainBundle.GetUrlForResource ("xamarin2", "png");
 

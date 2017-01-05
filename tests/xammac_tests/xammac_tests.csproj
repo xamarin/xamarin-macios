@@ -62,6 +62,7 @@
       <HintPath>..\..\_mac-build\Library\Frameworks\Xamarin.Mac.framework\Versions\git\lib\reference\mobile\Xamarin.Mac.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http" />
+    <Reference Include="OpenTK" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\monotouch-test\GameKit\LeaderboardTest.cs">

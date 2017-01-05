@@ -136,9 +136,9 @@ namespace MonoTouchFixtures.CoreMedia {
 #if !MONOMAC
 			if (UIDevice.CurrentDevice.CheckSystemVersion (9, 0)) {
 #endif
-			Assert.DoesNotThrow (() => { var x = CMTimeRange.InvalidMapping; }, "CMTimeRangeConstants - InvalidMapping");
-			Assert.DoesNotThrow (() => { var x = CMTimeRange.TimeMappingSourceKey; }, "CMTimeRangeConstants - TimeMappingSourceKey");
-			Assert.DoesNotThrow (() => { var x = CMTimeRange.TimeMappingTargetKey; }, "CMTimeRangeConstants - TimeMappingTargetKey");
+				Assert.DoesNotThrow (() => { var x = CMTimeRange.InvalidMapping; }, "CMTimeRangeConstants - InvalidMapping");
+				Assert.DoesNotThrow (() => { var x = CMTimeRange.TimeMappingSourceKey; }, "CMTimeRangeConstants - TimeMappingSourceKey");
+				Assert.DoesNotThrow (() => { var x = CMTimeRange.TimeMappingTargetKey; }, "CMTimeRangeConstants - TimeMappingTargetKey");
 #if !MONOMAC
 			}
 #endif

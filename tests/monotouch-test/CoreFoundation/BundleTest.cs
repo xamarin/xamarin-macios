@@ -12,13 +12,11 @@ using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.CoreFoundation
-{
+namespace MonoTouchFixtures.CoreFoundation {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class BundleTest
-	{
+	public class BundleTest {
 #if __WATCHOS__
 		const string ExpectedAppName = "monotouchtest.appex";
 #elif MONOMAC
@@ -90,7 +88,7 @@ namespace MonoTouchFixtures.CoreFoundation
 		public void TestBuiltInPlugInsUrl ()
 		{
 			var main = CFBundle.GetMain ();
-			Assert.That (main.BuiltInPlugInsUrl.ToString (), Contains.Substring ("PlugIns/"));
+			Assert.That(main.BuiltInPlugInsUrl.ToString (), Contains.Substring ("PlugIns/"));
 		}
 
 		[Test]

@@ -26,13 +26,11 @@ using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.CoreGraphics
-{
+namespace MonoTouchFixtures.CoreGraphics {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class CGImageTest
-	{
+	public class CGImageTest {
 
 		[Test]
 		public void FromPNG ()

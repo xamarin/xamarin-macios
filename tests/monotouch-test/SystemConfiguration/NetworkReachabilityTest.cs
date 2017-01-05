@@ -106,7 +106,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 					Assert.That ((int)flags, Is.EqualTo (0), "#1 Reachable");
 				else
 #endif
-				Assert.That (flags, Is.EqualTo (NetworkReachabilityFlags.Reachable), "#1 Reachable");
+					Assert.That (flags, Is.EqualTo (NetworkReachabilityFlags.Reachable), "#1 Reachable");
 			}
 
 			using (var nr = new NetworkReachability (null, address))

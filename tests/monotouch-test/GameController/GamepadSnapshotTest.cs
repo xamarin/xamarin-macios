@@ -23,13 +23,11 @@ using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
-namespace MonoTouchFixtures.GameController
-{
+namespace MonoTouchFixtures.GameController {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class GamepadSnapshotTest
-	{
+	public class GamepadSnapshotTest {
 
 		[Test]
 		public void Nullability ()

@@ -54,8 +54,7 @@ namespace Xamarin.Mac.Tests
 	}
 }
 
-partial class TestRuntime
-{
+partial class TestRuntime {
 	public static bool RunAsync (DateTime timeout, Action action, Func<bool> check_completed)
 	{
 		NSTimer.CreateScheduledTimer (0.01, (v) => action ());

@@ -393,7 +393,7 @@ namespace MonoTouchFixtures.Security {
 #else
 			using (var key = SecKey.CreateRandomKey (SecKeyType.RSA, 512, null, out error)) {
 #endif
-			Assert.Null (error, "RSA/error");
+				Assert.Null (error, "RSA/error");
 
 				using (var data = NSData.FromArray (new byte [] { 1, 2, 3 })) {
 					using (var sig = key.CreateSignature (SecKeyAlgorithm.RsaSignatureRaw, data, out error)) {

@@ -53,7 +53,7 @@ namespace MonoTouchFixtures.SpriteKit {
 #endif
 
 			// SK3Node loads SCNRenderer dynamically, so make sure it's actually loaded.
-			GC.KeepAlive (Class.GetHandle (typeof (SCNRenderer)));
+			GC.KeepAlive (Class.GetHandle (typeof(SCNRenderer)));
 
 			using (var node = new SK3DNode ()) {
 #if !MONOMAC

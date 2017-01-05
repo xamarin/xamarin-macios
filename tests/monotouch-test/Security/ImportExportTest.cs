@@ -65,7 +65,7 @@ namespace MonoTouchFixtures.Security {
 				case "chain":
 					Assert.True (x.Value is NSArray, "NSArray");
 					NSArray a = (x.Value as NSArray);
-					Assert.That (a.Count, Is.EqualTo ((nuint)1), "Count");
+					Assert.That (a.Count, Is.EqualTo ((nuint) 1), "Count");
 					break;
 #if MONOMAC
 				case "label":
@@ -88,7 +88,7 @@ namespace MonoTouchFixtures.Security {
 		{
 			using (NSMutableDictionary options = new NSMutableDictionary ()) {
 				options [SecImportExport.Passphrase] = new NSString ("b5");
-				NSDictionary [] array;
+				NSDictionary[] array;
 #if MONOMAC
 				Assert.That (SecImportExport.ImportPkcs12 (farscape_pfx, options, out array), Is.EqualTo (SecStatusCode.Pkcs12VerifyFailure), "AuthFailed");
 #else

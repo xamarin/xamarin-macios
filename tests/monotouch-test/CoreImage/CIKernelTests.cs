@@ -168,7 +168,7 @@ namespace MonoTouchFixtures.CoreImage
 
 						CIImage outputImage = filter.OutputImage;
 
-					CGImage cgImage = context.CreateCGImage (outputImage, outputImage.Extent);
+						CGImage cgImage = context.CreateCGImage (outputImage, outputImage.Extent);
 #if MONOMAC
 						UIImage finalImg = new UIImage (cgImage, new CGSize ());
 #else

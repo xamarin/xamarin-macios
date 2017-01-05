@@ -74,8 +74,8 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void AudioQueueTimePitchAlgorithmtest ()
 		{
-			Assert.That ((int)AudioQueueTimePitchAlgorithm.Spectral, Is.EqualTo (FourCC ("spec")), "Spectral");
-			Assert.That ((int)AudioQueueTimePitchAlgorithm.TimeDomain, Is.EqualTo (FourCC ("tido")), "TimeDomain");
+			Assert.That((int)AudioQueueTimePitchAlgorithm.Spectral, Is.EqualTo (FourCC ("spec")), "Spectral");
+			Assert.That((int)AudioQueueTimePitchAlgorithm.TimeDomain, Is.EqualTo (FourCC ("tido")), "TimeDomain");
 #if !MONOMAC // LowQualityZeroLatency is iOS only
 			Assert.That ((int) AudioQueueTimePitchAlgorithm.LowQualityZeroLatency, Is.EqualTo (FourCC ("lqzl")), "LowQualityZeroLatency");
 #endif
