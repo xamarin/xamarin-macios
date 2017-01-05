@@ -12,6 +12,9 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
+#if !MONOMAC
+using UIKit;
+#endif
 #if !__TVOS__
 using MultipeerConnectivity;
 #endif

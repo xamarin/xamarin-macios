@@ -16,6 +16,9 @@ using Foundation;
 using ModelIO;
 using ObjCRuntime;
 using SceneKit;
+#if !MONOMAC
+using UIKit;
+#endif
 #else
 using MonoTouch.CoreGraphics;
 using MonoTouch.Foundation;

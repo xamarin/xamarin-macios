@@ -19,16 +19,12 @@ namespace MonoTouchFixtures.CoreFoundation
 	[Preserve (AllMembers = true)]
 	public class BundleTest
 	{
-#if MONOMAC
-		const string ProjectName = "xammac_tests";
-#else
-		const string ProjectName = "monotouchtest";
-#endif
-
 #if __WATCHOS__
 		const string ExpectedAppName = "monotouchtest.appex";
+#elif MONOMAC
+		const string ExpectedAppName = "xammac_tests.app";
 #else
-		const string ExpectedAppName = ProjectName + ".app";
+		const string ExpectedAppName = "monotouchtest.app";
 #endif
 
 		[Test]
@@ -81,8 +77,10 @@ namespace MonoTouchFixtures.CoreFoundation
 			var main = CFBundle.GetMain ();
 #if __WATCHOS__
 			var expectedBundleId = "com.xamarin.monotouch-test.watchkitapp.watchkitextension";
+#elif MONOMAC
+			var expectedBundleId = "com.xamarin.xammac_tests";
 #else
-			var expectedBundleId = "com.xamarin." + ProjectName;
+			var expectedBundleId = "com.xamarin.monotouch-test";
 #endif
 			Assert.AreEqual (expectedBundleId, main.Identifier);
 			Assert.IsTrue (main.HasLoadedExecutable);
