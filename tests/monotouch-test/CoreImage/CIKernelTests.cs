@@ -11,9 +11,10 @@ using CoreGraphics;
 using ObjCRuntime;
 #if MONOMAC
 using AppKit;
-using UIImage = AppKit.NSImage;
+using PlatformImage = AppKit.NSImage;
 #else
 using UIKit;
+using PlatformImage = UIKit.UIImage;
 #endif
 #else
 using MonoTouch.CoreImage;
@@ -152,7 +153,7 @@ namespace MonoTouchFixtures.CoreImage
 			// only be created on the main thread). This is obviously an Apple bug,
 			// and a radar has been filed: 19249153. ObjC test case: https://github.com/rolfbjarne/CIKernelMKMapViewCrash
 			try {
-				UIImage uiImg = new UIImage (NSBundle.MainBundle.PathForResource ("Xam", "png", "CoreImage"));
+				PlatformImage uiImg = new PlatformImage (NSBundle.MainBundle.PathForResource ("Xam", "png", "CoreImage"));
 #if MONOMAC
 				CIImage ciImg = new CIImage (uiImg.CGImage);
 				CIContext context = new CIContext (null);
@@ -170,7 +171,7 @@ namespace MonoTouchFixtures.CoreImage
 
 						CGImage cgImage = context.CreateCGImage (outputImage, outputImage.Extent);
 #if MONOMAC
-						UIImage finalImg = new UIImage (cgImage, new CGSize ());
+						NSImage finalImg = new NSImage (cgImage, new CGSize ());
 #else
 						UIImage finalImg = new UIImage (cgImage);
 #endif

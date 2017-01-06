@@ -13,11 +13,11 @@ using Foundation;
 #if MONOMAC
 using AppKit;
 using UIColor = AppKit.NSColor;
-using MonoTouchException = ObjCRuntime.RuntimeException;
+using PlatformException = ObjCRuntime.RuntimeException;
 using NativeException = Foundation.ObjCException;
 #else
 using UIKit;
-using MonoTouchException = ObjCRuntime.RuntimeException;
+using PlatformException = ObjCRuntime.RuntimeException;
 using NativeException = Foundation.MonoTouchException;
 #endif
 using ObjCRuntime;
@@ -43,7 +43,7 @@ using MonoTouch.CoreAnimation;
 using MonoTouch.CoreGraphics;
 using MonoTouch.CoreLocation;
 using MonoTouch.UIKit;
-using MonoTouchException=MonoTouch.RuntimeException;
+using PlatformException=MonoTouch.RuntimeException;
 using NativeException=MonoTouch.Foundation.MonoTouchException;
 #endif
 using OpenTK;
@@ -459,7 +459,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			try {
 				handle = Messaging.IntPtr_objc_msgSend (handle, Selector.GetHandle ("init"));
 				Assert.Fail ("Expected [[Open_1 alloc] init] to fail.");
-			} catch (MonoTouchException mex) {
+			} catch (PlatformException mex) {
 				Assert.AreEqual ("Cannot construct an instance of the type 'MonoTouchFixtures.ObjCRuntime.RegistrarTest+Open`1' from Objective-C because the type is generic.", mex.Message);
 			} finally {
 				Messaging.void_objc_msgSend (handle, Selector.GetHandle ("release")); // or should this be dealloc directly?

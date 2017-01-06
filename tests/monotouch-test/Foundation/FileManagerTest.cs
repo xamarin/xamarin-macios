@@ -128,10 +128,9 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.NotNull (NSFileManager.DefaultManager, "DefaultManager");
 		}
 
+#if !MONOMAC // DocumentsDirectory and MyDocuments point to different locations on mac
 		[Test]
-#if MONOMAC
 		[Ignore ("DocumentsDirectory and MyDocuments point to different locations on mac")]
-#endif
 		public void DocumentDirectory ()
 		{
 			var path = NSFileManager.DefaultManager.GetUrls (NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomain.User) [0].Path;
@@ -148,10 +147,8 @@ namespace MonoTouchFixtures.Foundation {
 			}
 		}
 
+		// "Environment.SpecialFolder.Resources is empty string on mac"
 		[Test]
-#if MONOMAC
-		[Ignore ("Environment.SpecialFolder.Resources is empty string on mac")]
-#endif
 		public void LibraryDirectory ()
 		{
 			var path = NSFileManager.DefaultManager.GetUrls (NSSearchPathDirectory.LibraryDirectory, NSSearchPathDomain.User) [0].Path;
@@ -169,5 +166,6 @@ namespace MonoTouchFixtures.Foundation {
 				File.Delete (file);
 			}
 		}
+#endif
 	}
 }

@@ -19,7 +19,9 @@ using nuint=global::System.UInt32;
 #endif
 
 #if MONOMAC
-using MonoTouchException = Foundation.ObjCException;
+using PlatformException = Foundation.ObjCException;
+#else
+using PlatformException = Foundation.MonoTouchException;
 #endif
 
 namespace MonoTouchFixtures.Foundation {
@@ -363,13 +365,13 @@ namespace MonoTouchFixtures.Foundation {
 			RequiresIos8 ();
 
 			NSDateComponents nextYearComponent = new NSDateComponents ();
-			Assert.Throws<MonoTouchException> (() => 
+			Assert.Throws<PlatformException> (() => 
 				NSCalendar.CurrentCalendar.FindNextDateAfterDateMatching (NSDate.Now, nextYearComponent, NSCalendarOptions.None));
 
-			Assert.Throws<MonoTouchException> (() =>
+			Assert.Throws<PlatformException> (() =>
 				NSCalendar.CurrentCalendar.FindNextDateAfterDateMatching (NSDate.Now, NSCalendarUnit.Day, 8, NSCalendarOptions.None));
 
-			Assert.Throws<MonoTouchException> (() =>
+			Assert.Throws<PlatformException> (() =>
 				NSCalendar.CurrentCalendar.FindNextDateAfterDateMatching (NSDate.Now, 1, 2, 3, NSCalendarOptions.None));
 		}
 

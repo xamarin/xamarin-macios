@@ -92,7 +92,7 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
-#if MONOMAC
+#if MONOMAC // https://bugzilla.xamarin.com/show_bug.cgi?id=51277
 		[Ignore ("512 bit encryption fails on mac")]
 #endif
 		public void RoundtripRSA512PKCS1 ()
@@ -224,7 +224,7 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
-#if MONOMAC
+#if MONOMAC // https://bugzilla.xamarin.com/show_bug.cgi?id=51277
 		[Ignore ("512 bit encryption fails on mac")]
 #endif
 		public void SignVerifyRSA512PKCS1SHA1 ()

@@ -21,7 +21,7 @@ using CoreAnimation;
 #endif
 using CoreGraphics;
 using CoreLocation;
-using MonoTouchException = ObjCRuntime.RuntimeException;
+using PlatformException = ObjCRuntime.RuntimeException;
 #else
 using MonoTouch;
 using MonoTouch.Foundation;

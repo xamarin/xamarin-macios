@@ -13,7 +13,6 @@ using System.IO;
 using Foundation;
 #if MONOMAC
 using AppKit;
-using UIImage = AppKit.NSImage;
 #else
 using UIKit;
 #endif

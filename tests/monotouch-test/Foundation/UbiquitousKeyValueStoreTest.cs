@@ -32,6 +32,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Indexer ()
 		{
+			Assert.Ignore ("Doesn't work on watchOS");
 			using (var store = new NSUbiquitousKeyValueStore ()) {
 				using (var key = new NSString ("key")) {
 					using (var value = new NSString ("value")) {

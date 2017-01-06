@@ -8,9 +8,7 @@ using System.Threading;
 using Foundation;
 using ObjCRuntime;
 #if !__WATCHOS__
-#if MONOMAC
-using MonoTouchException = Foundation.ObjCException;
-#else
+#if !MONOMAC
 using UIKit;
 using Bindings.Test;
 #endif
