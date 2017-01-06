@@ -54,6 +54,7 @@ namespace Xamarin.Mac.Tests
 	}
 }
 
+#if XAMCORE_2_0
 partial class TestRuntime {
 	public static bool RunAsync (DateTime timeout, Action action, Func<bool> check_completed)
 	{
@@ -67,3 +68,4 @@ partial class TestRuntime {
 		return true;
 	}
 }
+#endif
