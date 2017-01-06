@@ -40,6 +40,8 @@ namespace Xamarin.Mac.Tests
 				args.Add ("-exclude=MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingInterpreter");
 			TestRunner.Main (args.ToArray ());
 #if NO_GUI_TESTING
+			// HACK - TestRunner.Main assumes you have a message pump spinning, but when I hack it out via NO_GUI_TESTING it returns right away
+			// We will exit via Environment.Exit in NSRunLoopIntegration
 			while (true) {
 				System.Threading.Thread.Sleep (1000);
 			}
