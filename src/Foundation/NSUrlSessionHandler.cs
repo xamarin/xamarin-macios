@@ -611,6 +611,17 @@ namespace Foundation {
 				return base.GetBuffer (out buffer, out len);
 			}
 
+			// NSInvalidArgumentException Reason: *** -propertyForKey: only defined for abstract class.  Define -[System_Net_Http_NSUrlSessionHandler_WrappedNSInputStream propertyForKey:]!
+			protected override NSObject GetProperty (NSString key)
+			{
+				return null;
+			}
+
+			protected override bool SetProperty (NSObject property, NSString key)
+			{
+				return false;
+			}
+
 			protected override bool SetCFClientFlags (CFStreamEventType inFlags, IntPtr inCallback, IntPtr inContextPtr)
 			{
 				// Just call the base implementation, which knows how to handle everything.
