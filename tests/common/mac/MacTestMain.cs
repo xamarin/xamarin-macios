@@ -37,7 +37,7 @@ namespace Xamarin.Mac.Tests
 				args.Add ($"-test={testName}");
 
 			if (System.Environment.GetEnvironmentVariable ("XM_BCL_TEST") != null)
-				args.Add ("-exclude=MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingInterpreter");
+				args.Add ("-exclude=MacNotWorking,MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingInterpreter");
 			TestRunner.Main (args.ToArray ());
 #if NO_GUI_TESTING
 			// HACK - TestRunner.Main assumes you have a message pump spinning, but when I hack it out via NO_GUI_TESTING it returns right away
