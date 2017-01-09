@@ -78,6 +78,7 @@ namespace Xamarin.Bundler {
 		public RunCommandDelegate RunCommand { get; set; } = Driver.RunCommand; 
 		public ParallelOptions ParallelOptions { get; set; } = new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency };
 		public string XamarinMacPrefix { get; set; } = Driver.GetXamMacPrefix (); // GetXamMacPrefix assumes GetExecutingAssembly in ways that are not valid for tests, so we must stub out
+		public bool Is64Bit { get; set; } = Driver.Is64Bit; 
 
 		public string Quote (string f) => Driver.Quote (f);
 
@@ -180,7 +181,7 @@ namespace Xamarin.Bundler {
 			if (!IsAOT)
 				throw ErrorHelper.CreateError (0099, "Internal error \"AOTBundle with aot: {0}\" Please file a bug report with a test case (http://bugzilla.xamarin.com).", aotType);
 
-			string monoExePath = Path.Combine (XamarinMacPrefix, "bin/bmac-mobile-mono");
+			string monoExePath = Path.Combine (XamarinMacPrefix, "bin/bmac-mobile-mono" + (Is64Bit ? "" : "-32"));
 			var monoEnv = new string [] {"MONO_PATH", files.RootDir };
 
 			Parallel.ForEach (GetFilesToAOT (files), ParallelOptions, file => {

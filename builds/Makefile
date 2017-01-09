@@ -172,6 +172,7 @@ MAC_TARGETS = \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/pkgconfig/mono-2.pc \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System/System.config \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac-mobile-mono \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac-mobile-mono-32 \
 	$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current \
 	$(MAC_DIRECTORIES) \
 
@@ -302,6 +303,9 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/etc/mono/assemblies/System/System.con
 	$(Q_CP) cp $< $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac-mobile-mono: install/mac64/bin/mono-sgen | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
+	$(Q) install -m 0755 $< $@
+
+$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac-mobile-mono-32: install/mac32/bin/mono-sgen | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
 	$(Q) install -m 0755 $< $@
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions/Current:

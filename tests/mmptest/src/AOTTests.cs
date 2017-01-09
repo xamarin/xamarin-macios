@@ -32,5 +32,26 @@ namespace Xamarin.MMP.Tests
 				}
 			});
 		}
+
+		[Test]
+		public void AOT_32Bit_SmokeTest ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = "<XamMacArch>i386</XamMacArch><MonoBundlingExtraArgs>--aot=sdk,-Xamarin.Mac.dll</MonoBundlingExtraArgs>"
+				};
+				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
+
+				var dirInfo = new DirectoryInfo (Path.Combine (tmpDir, "bin/Debug/UnifiedExample.app/Contents/MonoBundle/"));
+
+				foreach (var file in dirInfo.EnumerateFiles ()) {
+					string extension = file.Extension.ToLowerInvariant ();
+					if (extension == ".exe" || extension == ".dll") {
+						bool shouldBeAOT = (file.Name == "System.dll" || file.Name == "mscorlib.dll");
+						Assert.AreEqual (shouldBeAOT, File.Exists (file.FullName + ".dylib"), "{0} should {1} be AOT.\n{2}", file.FullName, shouldBeAOT ? "" : "not", buildResults);
+					}
+				}
+			});
+		}
 	}
 }

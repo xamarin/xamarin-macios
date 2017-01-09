@@ -35,7 +35,8 @@ namespace Xamarin.MMP.Tests.Unit
 			{
 				RunCommand = OnRunCommand,
 				ParallelOptions = new ParallelOptions () { MaxDegreeOfParallelism = 1 },
-				XamarinMacPrefix = Driver.WalkUpDirHierarchyLookingForLocalBuild () // HACK - AOT test shouldn't need this from driver.cs 
+				XamarinMacPrefix = Driver.WalkUpDirHierarchyLookingForLocalBuild (), // HACK - AOT test shouldn't need this from driver.cs 
+				Is64Bit = true
 			};
 
 			commandsRun = new List<Tuple<string, string>> ();
@@ -49,12 +50,12 @@ namespace Xamarin.MMP.Tests.Unit
 			return 0;
 		}
 
-		List<string> GetFiledAOTed ()
+		List<string> GetFiledAOTed (bool thirtyTwoBit = false)
 		{
 			List<string> filesAOTed = new List<string> (); 
 
 			foreach (var command in commandsRun) {
-				Assert.IsTrue (command.Item1.EndsWith ("bmac-mobile-mono"), "Command should be bmac-mobile-mono");
+				Assert.IsTrue (command.Item1.EndsWith ("bmac-mobile-mono" + (compiler.Is64Bit ? "" : "-32")), "Command should be bmac-mobile-mono");
 				Assert.AreEqual (command.Item2.Split (' ')[0], "--aot=hybrid", "First arg should be --aot=hybrid");
 				string fileName = command.Item2.Substring (command.Item2.IndexOf(' ') + 1).Replace ("\"", "");
 				filesAOTed.Add (fileName);
@@ -62,9 +63,9 @@ namespace Xamarin.MMP.Tests.Unit
 			return filesAOTed;
 		}
 
-		void AssertFilesAOTed (IEnumerable <string> expectedFiles)
+		void AssertFilesAOTed (IEnumerable <string> expectedFiles, bool thirtyTwoBit = false)
 		{
-			List<string> filesAOTed = GetFiledAOTed ();
+			List<string> filesAOTed = GetFiledAOTed (thirtyTwoBit);
 
 			Func<string> getErrorDetails = () => $"\n {String.Join (" ", filesAOTed)} \nvs\n {String.Join (" ", expectedFiles)}";
 
@@ -228,5 +229,19 @@ namespace Xamarin.MMP.Tests.Unit
 			compiler.Parse ("all");
 			AssertThrowErrorWithCode (() => compiler.Compile (new TestFileEnumerator (FullAppFileList)), 3001);
 		}
+
+		[Test]
+		public void AOT32Bit_ShouldInvokeCorrectMono ()
+		{
+			compiler.Is64Bit = false;
+
+			compiler.Parse ("sdk");
+			Assert.IsTrue (compiler.IsAOT, "Should be IsAOT");
+
+			compiler.Compile (new TestFileEnumerator (FullAppFileList));
+
+			AssertFilesAOTed (SDKFileList, thirtyTwoBit : true);
+		}
+
 	}
 }
