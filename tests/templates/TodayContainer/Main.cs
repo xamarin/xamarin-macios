@@ -32,7 +32,15 @@ public partial class AppDelegate : UIApplicationDelegate
 	}
 }
 
-
+// Adding a single test is a simple way to make it possible to launch
+// the app and test that it launches successfully (by using our existing
+// infrastructure for unit testing).
+// Also we can only launch today extensions if the today view is not already
+// open (the API we use to launch the today extension does nothing if the
+// extension is already visible and running), and one way to close the today
+// view is to launch an app - so before we launch the today extension, we launch
+// the container app, which will immediately auto-exit (since it only has a single
+// test).
 [TestFixture]
 class Dummy
 {
