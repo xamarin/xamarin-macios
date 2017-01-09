@@ -1116,13 +1116,16 @@ function oninitialload ()
 
 					// Test header for multiple tests
 					if (!singleTask) {
+						var autoExpand = !IsServerMode && group.Any ((v) => v.Failed);
+						var defaultExpander = autoExpand ? "-" : "+";
+						var defaultDisplay = autoExpand ? "block" : "none";
 						writer.Write ($"<div class='pdiv'>");
-						writer.Write ($"<span id='button_container2_{groupId}' class='expander' onclick='javascript: toggleContainerVisibility2 (\"{groupId}\");'>+</span>");
+						writer.Write ($"<span id='button_container2_{groupId}' class='expander' onclick='javascript: toggleContainerVisibility2 (\"{groupId}\");'>{defaultExpander}</span>");
 						writer.Write ($"<span id='x{id_counter++}' class='p1 autorefreshable' onclick='javascript: toggleContainerVisibility2 (\"{groupId}\");'>{group.Key}{RenderTextStates (group)}</span>");
 						if (IsServerMode)
 							writer.Write ($" <span><a class='runall' href='javascript: runtest (\"{string.Join (",", group.Select ((v) => v.ID.ToString ()))}\");'>Run all</a></span>");
 						writer.WriteLine ("</div>");
-						writer.WriteLine ($"<div id='test_container2_{groupId}' style='display: none; margin-left: 20px;'>");
+						writer.WriteLine ($"<div id='test_container2_{groupId}' style='display: {defaultDisplay}; margin-left: 20px;'>");
 					}
 
 					// Test data
@@ -1131,13 +1134,16 @@ function oninitialload ()
 						var multipleModes = modeGroup.Count () > 1;
 						if (multipleModes) {
 							var modeGroupId = id_counter++.ToString ();
+							var autoExpand = !IsServerMode && modeGroup.Any ((v) => v.Failed);
+							var defaultExpander = autoExpand ? "-" : "+";
+							var defaultDisplay = autoExpand ? "block" : "none";
 							writer.Write ($"<div class='pdiv'>");
-							writer.Write ($"<span id='button_container2_{modeGroupId}' class='expander' onclick='javascript: toggleContainerVisibility2 (\"{modeGroupId}\");'>+</span>");
+							writer.Write ($"<span id='button_container2_{modeGroupId}' class='expander' onclick='javascript: toggleContainerVisibility2 (\"{modeGroupId}\");'>{defaultExpander}</span>");
 							writer.Write ($"<span id='x{id_counter++}' class='p2 autorefreshable' onclick='javascript: toggleContainerVisibility2 (\"{modeGroupId}\");'>{modeGroup.Key}{RenderTextStates (modeGroup)}</span>");
 							writer.Write ($" <span><a class='runall' href='javascript: runtest (\"{string.Join (",", modeGroup.Select ((v) => v.ID.ToString ()))}\");'>Run all</a></span>");
 							writer.WriteLine ("</div>");
 
-							writer.WriteLine ($"<div id='test_container2_{modeGroupId}' style='display: none; margin-left: 20px;'>");
+							writer.WriteLine ($"<div id='test_container2_{modeGroupId}' style='display: {defaultDisplay}; margin-left: 20px;'>");
 						}
 						foreach (var test in modeGroup.OrderBy ((v) => v.Variation, StringComparer.OrdinalIgnoreCase)) {
 							var runTest = test as RunTestTask;
@@ -1154,13 +1160,17 @@ function oninitialload ()
 								title = test.Mode;
 							}
 
+							var autoExpand = !IsServerMode && test.Failed;
+							var defaultExpander = autoExpand ? "&nbsp;" : "+";
+							var defaultDisplay = autoExpand ? "block" : "none";
+
 							writer.Write ($"<div class='pdiv'>");
-							writer.Write ($"<span id='button_{log_id}' class='expander' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>&nbsp;</span>");
+							writer.Write ($"<span id='button_{log_id}' class='expander' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{defaultExpander}</span>");
 							writer.Write ($"<span id='x{id_counter++}' class='p3 autorefreshable' onclick='javascript: toggleLogVisibility (\"{log_id}\");'>{title} (<span style='color: {GetTestColor (test)}'>{state}</span>) </span>");
 							if (IsServerMode && !test.InProgress && !test.Waiting)
 								writer.Write ($" <span><a class='runall' href='javascript:runtest ({test.ID})'>Run</a></span> ");
 							writer.WriteLine ("</div>");
-							writer.WriteLine ($"<div id='logs_{log_id}' class='autorefreshable logs' data-onautorefresh='{log_id}' style='display: none;'>");
+							writer.WriteLine ($"<div id='logs_{log_id}' class='autorefreshable logs' data-onautorefresh='{log_id}' style='display: {defaultDisplay};'>");
 
 							if (!string.IsNullOrEmpty (test.FailureMessage))
 								writer.WriteLine ($"Failure: {System.Web.HttpUtility.HtmlEncode (test.FailureMessage).Replace ("\n", "<br />")} <br />");
