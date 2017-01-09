@@ -2130,8 +2130,11 @@ namespace XamCore.Foundation
 		[Export ("isPartialStringValid:newEditingString:errorDescription:")]
 		bool IsPartialStringValid (string partialString, out string newString, out NSString error);
 
+		//[Export ("isPartialStringValid:proposedSelectedRange:originalString:originalSelectedRange:errorDescription:")]
+		//unsafe bool IsPartialStringValid (out string partialString, out NSRange proposedSelRange, string origString, NSRange origSelRange, out NSString error);
+
 		[Export ("isPartialStringValid:proposedSelectedRange:originalString:originalSelectedRange:errorDescription:")]
-		unsafe bool IsPartialStringValid (out string partialString, out NSRange proposedSelRange, string origString, NSRange origSelRange, out NSString error);
+		unsafe bool IsPartialStringValid (ref NSString partialString, out NSRange proposedSelRange, string origString, NSRange origSelRange, out NSString error);
 	}
 
 	[BaseType (typeof (NSObject))]

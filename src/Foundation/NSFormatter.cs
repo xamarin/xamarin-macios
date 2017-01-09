@@ -1,0 +1,17 @@
+﻿using System;
+
+namespace XamCore.Foundation {
+	public partial class NSFormatter {
+#if !XAMCORE_4_0
+		[Obsolete ("Use IsPartialStringValid (ref NSString partialString, out NSRange proposedSelRange, string origString, NSRange origSelRange, out NSString error); instead")]
+		public unsafe virtual bool IsPartialStringValid (out string partialString, out NSRange proposedSelRange, string origString, NSRange origSelRange, out NSString error)
+		{
+			partialString = origString;
+			proposedSelRange = origSelRange;
+			error = null;
+
+			return true;
+		}
+	}
+#endif
+}
