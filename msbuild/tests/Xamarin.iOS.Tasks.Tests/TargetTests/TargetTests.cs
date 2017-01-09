@@ -66,8 +66,6 @@ namespace Xamarin.iOS.Tasks
 					"MonoTouchDebugConfiguration.txt",
 					"Info.plist",
 					Path.Combine ("Settings.bundle", "Root.plist"),
-					"Mono.Dynamic.Interpreter.dll",
-					"Mono.Dynamic.Interpreter.dll.mdb",
 					"MyLibrary.dll",
 					"MyLibrary.dll.mdb",
 					"MySingleView",
