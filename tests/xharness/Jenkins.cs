@@ -1084,12 +1084,26 @@ function oninitialload ()
 				writer.WriteLine ("</div>");
 
 				writer.WriteLine ("<div id='test-list' style='float:left'>");
-				// Put ignored tests at the end
-				// Then order alphabetically
-				var orderedTasks = allTasks.
-				                           GroupBy ((TestTask v) => v.TestName).
-				                           OrderBy ((v) => v.All ((t) => t.Ignored)).
-				                           ThenBy ((v) => v.Key, StringComparer.OrdinalIgnoreCase);
+				var orderedTasks = allTasks.GroupBy ((TestTask v) => v.TestName);
+
+				if (IsServerMode) {
+					// In server mode don't take into account anything that can change during a test run
+					// when ordering, since it's confusing to have the tests reorder by themselves while
+					// you're looking at the web page.
+					orderedTasks = orderedTasks.OrderBy ((v) => v.Key, StringComparer.OrdinalIgnoreCase);
+				} else {
+					// Put failed tests at the top and ignored tests at the end.
+					// Then order alphabetically.
+					orderedTasks = orderedTasks.OrderBy ((v) =>
+					 {
+						 if (v.Any ((t) => t.Failed))
+							 return -1;
+						 if (v.All ((t) => t.Ignored))
+							 return 1;
+						 return 0;
+					 }).
+					ThenBy ((v) => v.Key, StringComparer.OrdinalIgnoreCase);
+				}
 				foreach (var group in orderedTasks) {
 					var singleTask = group.Count () == 1;
 					var groupId = group.Key.Replace (' ', '-');
