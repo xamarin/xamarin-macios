@@ -1243,7 +1243,7 @@ function oninitialload ()
 			if (allIgnored) {
 				relevantGroup = tests;
 			} else {
-				relevantGroup = tests.Where ((v) => v.ExecutionResult != TestExecutingResult.Ignored && v.ExecutionResult != TestExecutingResult.NotStarted);
+				relevantGroup = tests.Where ((v) => v.ExecutionResult != TestExecutingResult.NotStarted);
 			}
 			if (!relevantGroup.Any ())
 				return string.Empty;
