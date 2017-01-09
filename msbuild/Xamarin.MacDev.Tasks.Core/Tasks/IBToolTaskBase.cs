@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
@@ -68,11 +69,11 @@ namespace Xamarin.MacDev.Tasks
 
 		string GetBundleRelativeOutputPath (ITaskItem input)
 		{
-			// Note: InterfaceDefinition files are *always* installed into the root of the app bundle
-			// InterfaceDefinition files that are contained within an .lproj translation directory
-			// will retain the .lproj directory as their parent, but the .lproj directory will be
+			// Note: InterfaceDefinition files are *always* installed into the root of the app bundle.
+			//
+			// InterfaceDefinition files that are contained within a *.lproj translation directory
+			// will retain the *.lproj directory as their parent, but the *.lproj directory will be
 			// in the root of the app bundle.
-			//var bundleName = BundleResource.GetLogicalName (ProjectDir, ResourcePrefixes, input);
 			var components = input.ItemSpec.Split (Path.DirectorySeparatorChar);
 			var bundleName = components[components.Length - 1];
 			if (components.Length > 1 && components[components.Length - 2].EndsWith (".lproj", StringComparison.Ordinal))
@@ -86,6 +87,236 @@ namespace Xamarin.MacDev.Tasks
 			default:
 				return bundleName;
 			}
+		}
+
+		static string GetPathWithoutExtension (string path)
+		{
+			int dot = path.LastIndexOf ('.');
+
+			return path.Substring (0, dot);
+		}
+
+		IEnumerable<ITaskItem> GetCompilationDirectoryOutput (string baseOutputDir, IDictionary<string, IDictionary> mapping)
+		{
+			var baseOutputDirs = new List<string> ();
+
+			baseOutputDirs.Add (baseOutputDir);
+
+			// Note: all storyboardc's/nib's will be found in the top-level or within a top-level *.lproj dir (if they've been translated)
+			for (int i = 0; i < baseOutputDirs.Count; i++) {
+				foreach (var path in Directory.EnumerateFileSystemEntries (baseOutputDirs[i])) {
+					if (i == 0 && path.EndsWith (".lproj", StringComparison.Ordinal) && Directory.Exists (path)) {
+						baseOutputDirs.Add (path);
+						continue;
+					}
+
+					IDictionary metadata;
+
+					if (!mapping.TryGetValue (path, out metadata))
+						continue;
+
+					var compiled = new TaskItem (path, metadata);
+
+					// adjust the LogicalName since the LogicalName metadata is based on the generic output name
+					// (e.g. it does not include things like ~ipad or ~iphone)
+					var logicalName = compiled.GetMetadata ("LogicalName");
+					var logicalDir = Path.GetDirectoryName (logicalName);
+					var fileName = Path.GetFileName (path);
+
+					compiled.SetMetadata ("LogicalName", Path.Combine (logicalDir, fileName));
+
+					yield return compiled;
+				}
+			}
+
+			yield break;
+		}
+
+		IEnumerable<ITaskItem> GetCompilationOutput (ITaskItem expected)
+		{
+			if (IsWatchApp) {
+				var logicalName = expected.GetMetadata ("LogicalName");
+
+				foreach (var extension in WatchAppExtensions) {
+					var path = GetPathWithoutExtension (expected.ItemSpec) + extension;
+					if (File.Exists (path)) {
+						var item = new TaskItem (path);
+						expected.CopyMetadataTo (item);
+						item.SetMetadata ("LogicalName", GetPathWithoutExtension (logicalName) + extension);
+						yield return item;
+					}
+				}
+			}
+
+			yield return expected;
+		}
+
+		static bool LogExists (string path)
+		{
+			if (!File.Exists (path))
+				return false;
+
+			try {
+				PDictionary.FromFile (path);
+				return true;
+			} catch {
+				File.Delete (path);
+				return false;
+			}
+		}
+
+		static bool InterfaceDefinitionChanged (ITaskItem interfaceDefinition, ITaskItem log)
+		{
+			return !LogExists (log.ItemSpec) || File.GetLastWriteTime (log.ItemSpec) < File.GetLastWriteTime (interfaceDefinition.ItemSpec);
+		}
+
+		bool CompileInterfaceDefinitions (string baseManifestDir, string baseOutputDir, List<ITaskItem> compiled, IList<ITaskItem> manifests, out bool changed)
+		{
+			var mapping = new Dictionary<string, IDictionary> ();
+			var unique = new Dictionary<string, ITaskItem> ();
+			var targets = GetTargetDevices (plist).ToList ();
+
+			changed = false;
+
+			foreach (var item in InterfaceDefinitions) {
+				var bundleName = GetBundleRelativeOutputPath (item);
+				var manifest = new TaskItem (Path.Combine (baseManifestDir, bundleName));
+				var manifestDir = Path.GetDirectoryName (manifest.ItemSpec);
+				ITaskItem duplicate;
+				string output;
+
+				if (!File.Exists (item.ItemSpec)) {
+					Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, "The file '{0}' does not exist.", item.ItemSpec);
+					continue;
+				}
+
+				if (unique.TryGetValue (bundleName, out duplicate)) {
+					Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, "The file '{0}' conflicts with '{1}'.", item.ItemSpec, duplicate.ItemSpec);
+					continue;
+				}
+
+				unique.Add (bundleName, item);
+
+				var resourceTags = item.GetMetadata ("ResourceTags");
+				var path = Path.Combine (baseOutputDir, bundleName);
+				var outputDir = Path.GetDirectoryName (path);
+				var name = GetPathWithoutExtension (path);
+				var extension = Path.GetExtension (path);
+				var expected = new TaskItem (path);
+
+				expected.SetMetadata ("InterfaceDefinition", item.ItemSpec);
+				expected.SetMetadata ("LogicalName", bundleName);
+				expected.SetMetadata ("Optimize", "false");
+
+				if (!string.IsNullOrEmpty (resourceTags))
+					expected.SetMetadata ("ResourceTags", resourceTags);
+
+				if (UseCompilationDirectory) {
+					// Note: When using --compilation-directory, we need to specify the output path as the parent directory
+					output = Path.GetDirectoryName (path);
+				} else {
+					output = expected.ItemSpec;
+				}
+
+				if (InterfaceDefinitionChanged (item, manifest)) {
+					Directory.CreateDirectory (manifestDir);
+					Directory.CreateDirectory (outputDir);
+
+					if ((Compile (new[] { item }, output, manifest)) != 0)
+						return false;
+
+					changed = true;
+				} else {
+					Log.LogMessage (MessageImportance.Low, "Skipping `{0}' as the output file, `{1}', is newer.", item.ItemSpec, manifest.ItemSpec);
+				}
+
+				try {
+					var dict = PDictionary.FromFile (manifest.ItemSpec);
+
+					LogWarningsAndErrors (dict, item);
+				} catch (Exception ex) {
+					Log.LogError ("Failed to load output log file for {0}: {1}", ToolName, ex.Message);
+					if (File.Exists (manifest.ItemSpec))
+						Log.LogError ("ibtool log: {0}", File.ReadAllText (manifest.ItemSpec));
+					continue;
+				}
+
+				if (UseCompilationDirectory) {
+					// Note: When using a compilation-directory, we'll scan dir the baseOutputDir later as
+					// an optimization to collect all of the compiled output in one fell swoop.
+					var metadata = expected.CloneCustomMetadata ();
+
+					foreach (var target in targets)
+						mapping.Add (name + "~" + target + extension, metadata);
+
+					mapping.Add (path, metadata);
+				} else {
+					compiled.AddRange (GetCompilationOutput (expected));
+				}
+
+				manifests.Add (manifest);
+			}
+
+			if (UseCompilationDirectory)
+				compiled.AddRange (GetCompilationDirectoryOutput (baseOutputDir, mapping));
+
+			return !Log.HasLoggedErrors;
+		}
+
+		bool LinkStoryboards (string baseManifestDir, string baseOutputDir, List<ITaskItem> storyboards, List<ITaskItem> linked, IList<ITaskItem> manifests, bool changed)
+		{
+			var manifest = new TaskItem (Path.Combine (baseManifestDir, "link"));
+			var mapping = new Dictionary<string, IDictionary> ();
+			var unique = new HashSet<string> ();
+			var items = new List<ITaskItem> ();
+
+			// Make sure that `Main.storyboardc` is listed *before* `Main~ipad.storyboardc` and `Main~iphone.storyboardc`,
+			// this is important for the next step to filter out the device-specific storyboards based on the same source.
+			storyboards.Sort ((x, y) => string.Compare (x.ItemSpec, y.ItemSpec, StringComparison.InvariantCultureIgnoreCase));
+
+			// Populate our metadata mapping table so we can properly restore the metadata to the linked items.
+			//
+			// While we are at it, we'll also filter out device-specific storyboards since ibtool doesn't
+			// require them if we have an equivalent generic version.
+			for (int i = 0; i < storyboards.Count; i++) {
+				var interfaceDefinition = storyboards[i].GetMetadata ("InterfaceDefinition");
+				var bundleName = storyboards[i].GetMetadata ("LogicalName");
+				var path = Path.Combine (baseOutputDir, bundleName);
+
+				storyboards[i].RemoveMetadata ("InterfaceDefinition");
+				var metadata = storyboards[i].CloneCustomMetadata ();
+				mapping.Add (path, metadata);
+
+				if (unique.Add (interfaceDefinition))
+					items.Add (storyboards[i]);
+			}
+
+			// We only need to run `ibtool --link` if storyboards have changed...
+			if (changed) {
+				if (Directory.Exists (baseOutputDir))
+					Directory.Delete (baseOutputDir, true);
+
+				if (File.Exists (manifest.ItemSpec))
+					File.Delete (manifest.ItemSpec);
+
+				Directory.CreateDirectory (baseManifestDir);
+				Directory.CreateDirectory (baseOutputDir);
+
+				try {
+					Link = true;
+
+					if ((Compile (items.ToArray (), baseOutputDir, manifest)) != 0)
+						return false;
+				} finally {
+					Link = false;
+				}
+			}
+
+			linked.AddRange (GetCompilationDirectoryOutput (baseOutputDir, mapping));
+
+			manifests.Add (manifest);
+
+			return true;
 		}
 
 		IEnumerable<ITaskItem> RecursivelyEnumerateFiles (ITaskItem output)
@@ -120,106 +351,38 @@ namespace Xamarin.MacDev.Tasks
 			yield break;
 		}
 
-		static string GetPathWithoutExtension (string path)
+		IEnumerable<ITaskItem> GetBundleResources (ITaskItem compiledItem)
 		{
-			int dot = path.LastIndexOf ('.');
+			var baseLogicalName = compiledItem.GetMetadata ("LogicalName");
+			var baseDir = compiledItem.ItemSpec;
 
-			return path.Substring (0, dot);
-		}
+			// Note: Watch App storyboards will be compiled to something like Interface.storyboardc/Interface.plist, but
+			// Interface.plist needs to be moved up 1 level (e.g. drop the "Interface.storyboardc").
+			// See https://bugzilla.xamarin.com/show_bug.cgi?id=33853 for details
+			if (IsWatchApp && baseLogicalName.EndsWith (".storyboardc", StringComparison.Ordinal))
+				baseLogicalName = Path.GetDirectoryName (baseLogicalName);
 
-		IEnumerable<ITaskItem> GetCompilationDirectoryOutput (ITaskItem expected)
-		{
-			var dir = Path.GetDirectoryName (expected.ItemSpec);
+			foreach (var path in Directory.EnumerateFiles (baseDir, "*.*", SearchOption.AllDirectories)) {
+				var rpath = PathUtils.AbsoluteToRelative (baseDir, Path.GetFullPath (path));
+				var bundleResource = new TaskItem (path);
+				string logicalName;
 
-			if (!Directory.Exists (dir))
-				yield break;
+				if (!string.IsNullOrEmpty (baseLogicalName))
+					logicalName = Path.Combine (baseLogicalName, rpath);
+				else
+					logicalName = rpath;
 
-			var name = Path.GetFileNameWithoutExtension (expected.ItemSpec);
-			var extension = Path.GetExtension (expected.ItemSpec);
-			var nibDir = expected.GetMetadata ("LogicalName");
-			var targets = GetTargetDevices (plist).ToList ();
+				compiledItem.CopyMetadataTo (bundleResource);
+				bundleResource.SetMetadata ("LogicalName", logicalName);
 
-			foreach (var path in Directory.GetFileSystemEntries (dir)) {
-				// check that the FileNameWithoutExtension matches *exactly*
-				if (string.Compare (path, dir.Length + 1, name, 0, name.Length) != 0)
-					continue;
-
-				int startIndex = dir.Length + 1 + name.Length;
-
-				// match against files that have a "~" + $target (iphone, ipad, etc)
-				if (path.Length > startIndex && path[startIndex] == '~') {
-					bool matched = false;
-
-					startIndex++;
-
-					foreach (var target in targets) {
-						// Note: we match the target case-insensitively because of https://bugzilla.xamarin.com/show_bug.cgi?id=44811
-						if (string.Compare (path, startIndex, target, 0, target.Length, StringComparison.OrdinalIgnoreCase) == 0) {
-							startIndex += target.Length;
-							matched = true;
-							break;
-						}
-					}
-
-					if (!matched)
-						continue;
-				}
-
-				// at this point, all that should be left is the file/directory extension
-				if (path.Length != startIndex + extension.Length || string.Compare (path, startIndex, extension, 0, extension.Length) != 0)
-					continue;
-
-				var fileName = Path.GetFileName (path);
-				var logicalName = !string.IsNullOrEmpty (nibDir) ? Path.Combine (nibDir, fileName) : fileName;
-				var item = new TaskItem (path);
-				expected.CopyMetadataTo (item);
-				item.SetMetadata ("LogicalName", logicalName);
-
-				yield return item;
+				yield return bundleResource;
 			}
 
 			yield break;
 		}
 
-		IEnumerable<ITaskItem> GetCompiledBundleResources (ITaskItem output)
-		{
-			if (IsWatchApp && !UseCompilationDirectory) {
-				var logicalName = output.GetMetadata ("LogicalName");
-
-				foreach (var extension in WatchAppExtensions) {
-					var path = GetPathWithoutExtension (output.ItemSpec) + extension;
-					if (File.Exists (path)) {
-						var item = new TaskItem (path);
-						item.SetMetadata ("LogicalName", GetPathWithoutExtension (logicalName) + extension);
-						item.SetMetadata ("Optimize", "false");
-						yield return item;
-					}
-				}
-			} else if (Directory.Exists (output.ItemSpec)) {
-				// Note: historically, only storyboard files compiled to directories containing the real nib files, but the new iOS 8 .xib's do as well.
-				foreach (var file in RecursivelyEnumerateFiles (output))
-					yield return file;
-
-				yield break;
-			}
-
-			yield return output;
-		}
-
-		static bool ManifestExists (string path)
-		{
-			if (!File.Exists (path))
-				return false;
-
-			try {
-				PDictionary.FromFile (path);
-				return true;
-			} catch {
-				File.Delete (path);
-				return false;
-			}
-		}
-
+		// TODO: add a unit test that includes multiple storyboards that get linked
+		// TODO: add a unit test that includes storyboards within *.lproj dirs
 		public override bool Execute ()
 		{
 			Log.LogTaskName ("IBTool");
@@ -242,12 +405,11 @@ namespace Xamarin.MacDev.Tasks
 				return !Log.HasLoggedErrors;
 			}
 
-			var ibtoolManifestDir = Path.Combine (IntermediateOutputPath, ToolName + "-manifests");
-			var ibtoolOutputDir = Path.Combine (IntermediateOutputPath, ToolName);
-			var bundleResources = new List<ITaskItem> ();
+			var ibtoolManifestDir = Path.Combine (IntermediateOutputPath, "ibtool-manifests");
+			var ibtoolOutputDir = Path.Combine (IntermediateOutputPath, "ibtool");
 			var outputManifests = new List<ITaskItem> ();
 			var compiled = new List<ITaskItem> ();
-			bool changed = false;
+			bool changed;
 
 			if (InterfaceDefinitions.Length > 0) {
 				if (AppManifest != null) {
@@ -265,104 +427,50 @@ namespace Xamarin.MacDev.Tasks
 				Directory.CreateDirectory (ibtoolManifestDir);
 				Directory.CreateDirectory (ibtoolOutputDir);
 			}
-				
-			foreach (var item in InterfaceDefinitions) {
-				var bundleName = GetBundleRelativeOutputPath (item);
-				var manifest = new TaskItem (Path.Combine (ibtoolManifestDir, bundleName));
-				var manifestDir = Path.GetDirectoryName (manifest.ItemSpec);
-				var resourceTags = item.GetMetadata ("ResourceTags");
-				ITaskItem expected, output;
-				string rpath, outputDir;
 
-				if (!File.Exists (item.ItemSpec)) {
-					Log.LogError (null, null, null, item.ItemSpec, 0, 0, 0, 0, "The file '{0}' does not exist.", item.ItemSpec);
-					continue;
+			if (!CompileInterfaceDefinitions (ibtoolManifestDir, ibtoolOutputDir, compiled, outputManifests, out changed))
+				return false;
+
+			if (CanLinkStoryboards) {
+				var storyboards = new List<ITaskItem> ();
+				var linked = new List<ITaskItem> ();
+				var unique = new HashSet<string> ();
+
+				for (int i = 0; i < compiled.Count; i++) {
+					// pretend that non-storyboardc items (e.g. *.nib) are already 'linked'
+					if (compiled[i].ItemSpec.EndsWith (".storyboardc", StringComparison.Ordinal)) {
+						var interfaceDefinition = compiled[i].GetMetadata ("InterfaceDefinition");
+						unique.Add (interfaceDefinition);
+						storyboards.Add (compiled[i]);
+						continue;
+					}
+
+					// just pretend any *nib's have already been 'linked'...
+					compiled[i].RemoveMetadata ("InterfaceDefinition");
+					linked.Add (compiled[i]);
 				}
 
-				rpath = Path.Combine (ibtoolOutputDir, bundleName);
-				outputDir = Path.GetDirectoryName (rpath);
-				expected = new TaskItem (rpath);
+				// only link the storyboards if there are multiple unique storyboards
+				if (unique.Count > 1) {
+					var linkOutputDir = Path.Combine (IntermediateOutputPath, "ibtool-link");
 
-				expected.SetMetadata ("LogicalName", bundleName);
-				expected.SetMetadata ("Optimize", "false");
-
-				if (!string.IsNullOrEmpty (resourceTags))
-					expected.SetMetadata ("ResourceTags", resourceTags);
-
-				if (UseCompilationDirectory) {
-					// Note: When using --compilation-directory, we need to specify the output path as the parent directory
-					output = new TaskItem (expected);
-					output.ItemSpec = Path.GetDirectoryName (output.ItemSpec);
-					output.SetMetadata ("LogicalName", Path.GetDirectoryName (bundleName));
-				} else {
-					output = expected;
-				}
-
-				if (!ManifestExists (manifest.ItemSpec) || File.GetLastWriteTime (manifest.ItemSpec) < File.GetLastWriteTime (item.ItemSpec)) {
-					Directory.CreateDirectory (manifestDir);
-					Directory.CreateDirectory (outputDir);
-
-					if ((Compile (new[] { item }, output, manifest)) != 0)
+					if (!LinkStoryboards (ibtoolManifestDir, linkOutputDir, storyboards, linked, outputManifests, changed))
 						return false;
 
-					changed = true;
-				} else {
-					Log.LogMessage (MessageImportance.Low, "Skipping `{0}' as the output file, `{1}', is newer.", item.ItemSpec, manifest.ItemSpec);
+					compiled = linked;
 				}
-
-				try {
-					var dict = PDictionary.FromFile (manifest.ItemSpec);
-
-					LogWarningsAndErrors (dict, item);
-				} catch (Exception ex) {
-					Log.LogError ("Failed to load output manifest for {0}: {1}", ToolName, ex.Message);
-					if (File.Exists (manifest.ItemSpec))
-						Log.LogError ("Output manifest contents: {0}", File.ReadAllText (manifest.ItemSpec));
-					continue;
-				}
-
-				if (UseCompilationDirectory)
-					compiled.AddRange (GetCompilationDirectoryOutput (expected));
-				else
-					bundleResources.AddRange (GetCompiledBundleResources (output));
-
-				outputManifests.Add (manifest);
+			} else {
+				for (int i = 0; i < compiled.Count; i++)
+					compiled[i].RemoveMetadata ("InterfaceDefinition");
 			}
 
-			if (InterfaceDefinitions.Length > 0 && UseCompilationDirectory) {
-				var output = new TaskItem (ibtoolOutputDir);
-				output.SetMetadata ("LogicalName", "");
+			var bundleResources = new List<ITaskItem> ();
 
-				if (!CanLinkStoryboards)
-					bundleResources.AddRange (GetCompiledBundleResources (output));
-			}
-
-			if (CanLinkStoryboards && compiled.Count > 0) {
-				var linkOutputDir = Path.Combine (IntermediateOutputPath, ToolName + "-link");
-				var manifest = new TaskItem (Path.Combine (ibtoolManifestDir, "link"));
-				var output = new TaskItem (linkOutputDir);
-
-				if (changed) {
-					if (Directory.Exists (output.ItemSpec))
-						Directory.Delete (output.ItemSpec, true);
-
-					if (File.Exists (manifest.ItemSpec))
-						File.Delete (manifest.ItemSpec);
-
-					Directory.CreateDirectory (Path.GetDirectoryName (manifest.ItemSpec));
-					Directory.CreateDirectory (output.ItemSpec);
-
-					Link = true;
-
-					if ((Compile (compiled.ToArray (), output, manifest)) != 0)
-						return false;
-				}
-
-				output = new TaskItem (linkOutputDir);
-				output.SetMetadata ("LogicalName", "");
-
-				bundleResources.AddRange (GetCompiledBundleResources (output));
-				outputManifests.Add (manifest);
+			foreach (var compiledItem in compiled) {
+				if (Directory.Exists (compiledItem.ItemSpec))
+					bundleResources.AddRange (GetBundleResources (compiledItem));
+				else if (File.Exists (compiledItem.ItemSpec))
+					bundleResources.Add (compiledItem);
 			}
 
 			BundleResources = bundleResources.ToArray ();

@@ -437,9 +437,10 @@ namespace Xamarin.iOS.Tasks
 			var plist = PDictionary.FromFile (path);
 			string ibtool;
 
-			if (AppleSdkSettings.XcodeVersion.Major >= 7)
-				ibtool = Path.Combine ("obj", "iPhoneSimulator", "Debug", "ibtool-link");
-			else
+			// Note: the files will only be in ibtool-link if there is more than 1 storyboard that *could* be linked
+			//if (AppleSdkSettings.XcodeVersion.Major >= 7)
+			//	ibtool = Path.Combine ("obj", "iPhoneSimulator", "Debug", "ibtool-link");
+			//else
 				ibtool = Path.Combine ("obj", "iPhoneSimulator", "Debug", "ibtool");
 
 			plist.SetMinimumOSVersion ("6.1");

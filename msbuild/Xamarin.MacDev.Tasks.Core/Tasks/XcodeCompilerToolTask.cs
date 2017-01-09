@@ -124,7 +124,7 @@ namespace Xamarin.MacDev.Tasks
 			return startInfo;
 		}
 
-		protected int Compile (ITaskItem[] items, ITaskItem output, ITaskItem manifest)
+		protected int Compile (ITaskItem[] items, string output, ITaskItem manifest)
 		{
 			var environment = new Dictionary<string, string> ();
 			var args = new ProcessArgumentBuilder ();
@@ -147,7 +147,7 @@ namespace Xamarin.MacDev.Tasks
 			else
 				args.Add ("--compile");
 
-			args.AddQuoted (output.GetMetadata ("FullPath"));
+			args.AddQuoted (Path.GetFullPath (output));
 
 			foreach (var item in items)
 				args.AddQuoted (item.GetMetadata ("FullPath"));
