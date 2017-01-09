@@ -951,7 +951,7 @@ function autorefresh()
 					
 					var evt = ar_obj.getAttribute ('data-onautorefresh');
 					if (evt != '') {
-						eval (evt);
+						autoshowdetailsmessage (evt);
 					}
 				} else {
 					console.log (""Could not find id "" + ar_obj.id + "" in updated page."");
@@ -964,9 +964,13 @@ function autorefresh()
 }
 setInterval(autorefresh, 1000);
 
-function autoshowdetailsmessage (input_id, message_id)
+function autoshowdetailsmessage (id)
 {
+	var input_id = 'logs_' + id;
+	var message_id = 'button_' + id;
 	var input_div = document.getElementById (input_id);
+	if (input_div == null)
+		return;
 	var message_div = document.getElementById (message_id);
 	var txt = input_div.innerText.trim ();
 	if (txt == '') {
@@ -987,7 +991,7 @@ function oninitialload ()
 	for (var i = 0; i < autorefreshable.length; i++) {
 		var evt = autorefreshable [i].getAttribute (""data-onautorefresh"");
 		if (evt != '')
-			eval (evt);
+			autoshowdetailsmessage (evt);
 	}
 }
 </script>");
@@ -1156,7 +1160,7 @@ function oninitialload ()
 							if (IsServerMode && !test.InProgress && !test.Waiting)
 								writer.Write ($" <span><a class='runall' href='javascript:runtest ({test.ID})'>Run</a></span> ");
 							writer.WriteLine ("</div>");
-							writer.WriteLine ($"<div id='logs_{log_id}' class='autorefreshable logs' data-onautorefresh='autoshowdetailsmessage(\"logs_{log_id}\", \"button_{log_id}\");' style='display: none;'>");
+							writer.WriteLine ($"<div id='logs_{log_id}' class='autorefreshable logs' data-onautorefresh='{log_id}' style='display: none;'>");
 
 							if (!string.IsNullOrEmpty (test.FailureMessage))
 								writer.WriteLine ($"Failure: {System.Web.HttpUtility.HtmlEncode (test.FailureMessage).Replace ("\n", "<br />")} <br />");
