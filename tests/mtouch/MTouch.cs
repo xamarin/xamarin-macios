@@ -2050,6 +2050,46 @@ class C {
 		}
 
 		[Test]
+		public void OnlyExtensionWithBindingFramework ()
+		{
+			// if an extension references a framework (from a binding library, and the main app does not,
+			// the framework should still be copied to the main app's Framework directory.
+			using (var exttool = new MTouchTool ()) {
+				exttool.Profile = Profile.Unified;
+				exttool.CreateTemporaryCacheDirectory ();
+				exttool.Verbosity = 5;
+
+				exttool.Extension = true;
+				exttool.References = new string []
+				{
+					Path.Combine (Configuration.SourceRoot, "tests/bindings-framework-test/bin/Any CPU/Debug-unified/bindings-framework-test.dll"),
+				};
+				exttool.CreateTemporararyServiceExtension (code: @"using UserNotifications;
+[Foundation.Register (""NotificationService"")]
+public partial class NotificationService : UNNotificationServiceExtension
+{
+	protected NotificationService (System.IntPtr handle) : base (handle)
+	{
+		System.Console.WriteLine (Bindings.Test.CFunctions.theUltimateAnswer ());
+	}
+}", extraArg: Quote ("-r:" + exttool.References [0]));
+				exttool.AssertExecute (MTouchAction.BuildSim, "build extension");
+
+				using (var apptool = new MTouchTool ()) {
+					apptool.Profile = Profile.Unified;
+					apptool.CreateTemporaryCacheDirectory ();
+					apptool.Verbosity = exttool.Verbosity;
+					apptool.CreateTemporaryApp ();
+					apptool.AppExtensions.Add (exttool.AppPath);
+					apptool.AssertExecute (MTouchAction.BuildSim, "build app");
+
+					Assert.IsTrue (Directory.Exists (Path.Combine (apptool.AppPath, "Frameworks", "XTest.framework")), "framework exists");
+					Assert.IsFalse (Directory.Exists (Path.Combine (exttool.AppPath, "Frameworks")), "extension framework inexistence");
+				}
+			}
+		}
+
+		[Test]
 		[TestCase (Profile.Unified)]
 		[TestCase (Profile.TVOS)]
 		public void MT2010 (Profile profile)
