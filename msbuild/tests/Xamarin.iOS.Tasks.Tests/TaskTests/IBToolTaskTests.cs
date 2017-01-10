@@ -106,5 +106,68 @@ namespace Xamarin.iOS.Tasks
 				Directory.Delete (tmp, true);
 			}
 		}
+
+		[Test]
+		public void TestAdvancedIBToolFunctionality ()
+		{
+			var tmp = Path.GetTempPath ();
+			IBTool ibtool;
+
+			Directory.CreateDirectory (tmp);
+
+			try {
+				ibtool = CreateIBToolTask (PlatformFramework.iOS, "../IBToolTaskTests/LinkedAndTranslated", tmp);
+				var bundleResources = new HashSet<string> ();
+
+				// Add some ResourceTags...
+				foreach (var storyboard in ibtool.InterfaceDefinitions) {
+					var tag = Path.GetFileNameWithoutExtension (storyboard.ItemSpec);
+					storyboard.SetMetadata ("ResourceTags", tag);
+				}
+
+				Assert.IsTrue (ibtool.Execute (), "Execution of IBTool task failed.");
+
+				foreach (var bundleResource in ibtool.BundleResources) {
+					var bundleName = bundleResource.GetMetadata ("LogicalName");
+					var tag = bundleResource.GetMetadata ("ResourceTags");
+
+					Assert.IsTrue (File.Exists (bundleResource.ItemSpec), "File does not exist: {0}", bundleResource.ItemSpec);
+					Assert.IsNotNullOrEmpty (bundleResource.GetMetadata ("LogicalName"), "The 'LogicalName' metadata must be set.");
+					Assert.IsNotNullOrEmpty (bundleResource.GetMetadata ("Optimize"), "The 'Optimize' metadata must be set.");
+
+					Assert.IsNotNullOrEmpty (tag, "The 'ResourceTags' metadata should be set.");
+					Assert.IsTrue (bundleName.Contains (".lproj/" + tag + ".storyboardc/"), "BundleResource does not have the proper ResourceTags set: {0}", bundleName);
+
+					bundleResources.Add (bundleName);
+				}
+
+				string[] expected = {
+					"Base.lproj/LaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib",
+					"Base.lproj/LaunchScreen.storyboardc/Info.plist",
+					"Base.lproj/LaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib",
+					"Base.lproj/Linked.storyboardc/5xv-Yx-H4r-view-gMo-tm-chA.nib",
+					"Base.lproj/Linked.storyboardc/Info.plist",
+					"Base.lproj/Linked.storyboardc/MyLinkedViewController.nib",
+					"Base.lproj/Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC.nib",
+					"Base.lproj/Main.storyboardc/Info.plist",
+					"Base.lproj/Main.storyboardc/MyLinkedViewController.nib",
+					"Base.lproj/Main.storyboardc/UIViewController-BYZ-38-t0r.nib",
+					"en.lproj/Linked.storyboardc/5xv-Yx-H4r-view-gMo-tm-chA.nib",
+					"en.lproj/Linked.storyboardc/Info.plist",
+					"en.lproj/Linked.storyboardc/MyLinkedViewController.nib",
+					"en.lproj/Main.storyboardc/BYZ-38-t0r-view-8bC-Xf-vdC.nib",
+					"en.lproj/Main.storyboardc/Info.plist",
+					"en.lproj/Main.storyboardc/MyLinkedViewController.nib",
+					"en.lproj/Main.storyboardc/UIViewController-BYZ-38-t0r.nib"
+				};
+
+				foreach (var bundleResource in expected)
+					Assert.IsTrue (bundleResources.Contains (bundleResource), "BundleResources should include '{0}'", bundleResource);
+
+				Assert.AreEqual (expected.Length, bundleResources.Count, "Unexpected number of BundleResources");
+			} finally {
+				Directory.Delete (tmp, true);
+			}
+		}
 	}
 }
