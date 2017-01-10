@@ -1642,7 +1642,7 @@ public partial class Generator : IMemberGatherer {
 					RegisterMethod (false, mi, MakeSig (mi, false, enum_mode: mode), false, mode);
 					RegisterMethod (false, mi, MakeSuperSig (mi, false, enum_mode: mode), false, mode);
 
-					if (Stret.NeedStret (mi)) {
+					if (CheckNeedStret (mi)) {
 						RegisterMethod (true, mi, MakeSig (mi, true, enum_mode: mode), false, mode);
 						RegisterMethod (true, mi, MakeSuperSig (mi, true, enum_mode: mode), false, mode);
 
@@ -3538,6 +3538,18 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
+	// Stret.NeedStret is shared between generator and X.I dll so in order to wrap the exception
+	// into a BindingException we need to set the try/catch here so we can provide a better message. Bugzilla ref 51212.
+	bool CheckNeedStret (MethodInfo mi)
+	{
+		try {
+			return Stret.NeedStret (mi);
+		}
+		catch (TypeLoadException ex) {
+			throw new BindingException (0001, true, $"The .NET runtime could not load the {mi.ReturnType.Name} type. Message: {ex.Message}");
+		}
+	}
+
 	//
 	// The NullAllowed can be applied on a property, to avoid the ugly syntax, we allow it on the property
 	// So we need to pass this as `null_allowed_override',   This should only be used by setters.
@@ -3634,7 +3646,7 @@ public partial class Generator : IMemberGatherer {
 
 		bool use_temp_return  =
 			minfo.is_return_release ||
-			(mi.Name != "Constructor" && (Stret.NeedStret (mi) || disposes.Length > 0 || postget != null) && mi.ReturnType != typeof (void)) ||
+			(mi.Name != "Constructor" && (CheckNeedStret (mi) || disposes.Length > 0 || postget != null) && mi.ReturnType != typeof (void)) ||
 			(HasAttribute (mi, typeof (FactoryAttribute))) ||
 			((body_options & BodyOption.NeedsTempReturn) == BodyOption.NeedsTempReturn) ||
 			(mi.ReturnType.IsSubclassOf (typeof (Delegate))) ||

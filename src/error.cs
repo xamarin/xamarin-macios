@@ -17,6 +17,7 @@ using ProductException=BindingException;
 // Error allocation
 //
 // BI0xxx	the generator itself, e.g. parameters, environment
+//		BI0001	The .NET runtime could not load the {mi.ReturnType.Name} type. Message: {ex.Message}
 //		BI0068	Invalid value for target framework: {0}. [same error number/message as mtouch/mmp]
 //		BI0070	Invalid target framework: {0}. Valid target frameworks are: {1}. [same error number/message as mtouch/mmp]
 //		BI0086  A target framework (--target-framework) must be specified when building for Xamarin.Mac. [same error number/message as mtouch/mmp]
