@@ -272,7 +272,7 @@ namespace Xamarin.MacDev.Tasks
 
 			// Make sure that `Main.storyboardc` is listed *before* `Main~ipad.storyboardc` and `Main~iphone.storyboardc`,
 			// this is important for the next step to filter out the device-specific storyboards based on the same source.
-			storyboards.Sort ((x, y) => string.Compare (x.ItemSpec, y.ItemSpec, StringComparison.InvariantCultureIgnoreCase));
+			storyboards.Sort ((x, y) => string.Compare (x.ItemSpec, y.ItemSpec, StringComparison.Ordinal));
 
 			// Populate our metadata mapping table so we can properly restore the metadata to the linked items.
 			//
