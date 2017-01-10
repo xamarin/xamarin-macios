@@ -543,6 +543,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Prefix="monotouch"
 			NoOverwrite="@(_BundleResourceWithLogicalName)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
+			TargetFrameworkDirectory="$(TargetFrameworkDirectory)"
 			ReferencedLibraries="@(ReferencePath);@(ReferenceDependencyPaths)">
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
 		</UnpackLibraryResources>
