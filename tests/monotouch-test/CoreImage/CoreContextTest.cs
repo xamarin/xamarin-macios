@@ -77,7 +77,7 @@ namespace MonoTouchFixtures.CoreImage {
 				}
 
 #if !MONOMAC // CreateCGImage returning null on mac
-				using (var v = ctx.CreateCGImage (img, new RectangleF (0, 0, 5, 5), CIFormat.ARGB8, null, false)) {
+				using (var v = ctx.CreateCGImage (img, new RectangleF (0, 0, 5, 5), CIFormat.ARGB8, null)) {
 					int rc = Messaging.int_objc_msgSend (v.Handle, retainCount.Handle);
 					Assert.AreEqual (1, rc, "CreateCGImage #c1");
 				}
