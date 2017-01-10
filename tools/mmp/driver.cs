@@ -809,6 +809,9 @@ namespace Xamarin.Bundler {
 				App.RuntimeOptions.Write (App.AppDirectory);
 
 			if (aot.IsAOT) {
+				if (!IsUnified)
+					throw new MonoMacException (98, true, "AOT compilation is only available on Unified");
+
 				aot.Compile (mmp_dir);
 				Watch ("AOT Compile", 1);
 			}
