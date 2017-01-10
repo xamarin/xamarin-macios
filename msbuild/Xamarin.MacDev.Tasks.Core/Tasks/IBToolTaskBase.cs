@@ -381,8 +381,6 @@ namespace Xamarin.MacDev.Tasks
 			yield break;
 		}
 
-		// TODO: add a unit test that includes multiple storyboards that get linked
-		// TODO: add a unit test that includes storyboards within *.lproj dirs
 		public override bool Execute ()
 		{
 			Log.LogTaskName ("IBTool");
