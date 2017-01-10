@@ -31,7 +31,7 @@ namespace Xamarin.MacDev.Tasks
 			if (!string.IsNullOrEmpty (ToolPath))
 				return Path.Combine (ToolPath, ToolExe);
 
-			var path = Path.Combine ("/usr/bin", ToolExe);
+			var path = Path.Combine (AppleSdkSettings.DeveloperRoot, "Toolchains", "XcodeDefault.xctoolchain", "usr", "bin", ToolExe);
 
 			return File.Exists (path) ? path : ToolExe;
 		}
