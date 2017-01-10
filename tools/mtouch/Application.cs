@@ -1095,8 +1095,7 @@ namespace Xamarin.Bundler {
 			} else {
 				if (!IsWatchExtension) {
 					// In extensions we need to save a list of the frameworks we need so that the main app can get them.
-					var all_frameworks = new HashSet<string> ();
-					all_frameworks.UnionWith (Frameworks);
+					var all_frameworks = new HashSet<string> (Frameworks);
 					all_frameworks.UnionWith (WeakFrameworks);
 					foreach (var t in Targets) {
 						all_frameworks.UnionWith (t.Frameworks);
