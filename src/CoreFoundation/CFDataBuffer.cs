@@ -36,17 +36,15 @@ namespace XamCore.CoreFoundation {
 		byte[] buffer;
 		CFData data;
 
-		public CFDataBuffer (byte[] buffer)
+		public unsafe CFDataBuffer (byte[] buffer)
 		{
 			this.buffer = buffer;
 
 			/*
 			 * Copy the buffer to allow the native side to take ownership.
 			 */
-
-			var gch = GCHandle.Alloc (buffer, GCHandleType.Pinned);
-			data = CFData.FromData (gch.AddrOfPinnedObject (), buffer.Length);
-			gch.Free ();
+			fixed (byte* ptr = buffer)
+				data = CFData.FromData ((IntPtr) ptr, buffer.Length);
 		}
 
 		public CFDataBuffer (IntPtr ptr)

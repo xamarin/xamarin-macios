@@ -80,6 +80,7 @@ namespace Xamarin.Pmcs.Profiles
 		protected XamCore2Common (ArchDefine arch)
 		{
 			CompilerOptions.Add ("-define:XAMCORE_2_0");
+			CompilerOptions.Add ("-define:__UNIFIED__");
 
 			if (arch != ArchDefine.None)
 				CompilerOptions.Add ("-define:" + arch.ToString ());

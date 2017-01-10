@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.InteropServices;
+
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
@@ -81,10 +83,19 @@ namespace XamCore.MetalPerformanceShaders {
 	}
 
 	// MPSImageHistogram.h
+	[StructLayout (LayoutKind.Explicit)]
 	public struct MPSImageHistogramInfo {
+		[FieldOffset (0)]
 		public nuint NumberOfHistogramEntries;
+#if ARCH_64
+		[FieldOffset (8)]
+#else
+		[FieldOffset (4)]
+#endif
 		public bool HistogramForAlpha;
+		[FieldOffset (16)]
 		public Vector4 MinPixelValue;
+		[FieldOffset (32)]
 		public Vector4 MaxPixelValue;
 	}
 

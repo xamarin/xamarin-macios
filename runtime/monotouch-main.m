@@ -28,8 +28,6 @@
 #include "../tools/mtouch/monotouch-fixes.c"
 #endif
 
-const char *monotouch_dll = NULL; // NULL = try Xamarin.iOS.dll first, then monotouch.dll.
-
 static unsigned char *
 xamarin_load_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void **out_handle)
 {
@@ -94,21 +92,21 @@ assembly_preload_hook (MonoAssemblyName *aname, char **assemblies_path, void* us
 	bool dual_check = false;
 
 	// add extensions if required.
-	strncpy (filename, name, 1024);
+	strlcpy (filename, name, sizeof (filename));
 	if (!has_extension) {	
 		// Figure out if we need to append 'dll' or 'exe'
 		if (xamarin_executable_name != NULL) {
 			// xamarin_executable_name already has the ".exe", so only compare the rest of the filename.
 			if (culture == NULL && !strncmp (xamarin_executable_name, filename, strlen (xamarin_executable_name) - 4)) {
-				strcat (filename, ".exe");
+				strlcat (filename, ".exe", sizeof (filename));
 			} else {
-				strcat (filename, ".dll");
+				strlcat (filename, ".dll", sizeof (filename));
 			}
 		} else {
 			// we need to check both :|
 			dual_check = true;
 			// start with .dll
-			strcat (filename, ".dll");
+			strlcat (filename, ".dll", sizeof (filename));
 		}
 	}
 
@@ -135,7 +133,7 @@ do_second_check:
 	if (dual_check) {
 		dual_check = false;
 		filename [strlen (filename) - 4] = 0;
-		strcat (filename, ".exe");
+		strlcat (filename, ".exe", sizeof (filename));
 		goto do_second_check;
 	}
 
@@ -145,11 +143,11 @@ do_second_check:
 }
 
 #ifdef DEBUG_LAUNCH_TIME
-guint64 startDate = 0;
-guint64 date = 0;
+uint64_t startDate = 0;
+uint64_t date = 0;
 void debug_launch_time_print (const char *msg)
 {
-	guint64 unow;
+	uint64_t unow;
 	struct timeval now;
 
 	gettimeofday (&now, NULL);
@@ -273,8 +271,6 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 	// see http://bugzilla.xamarin.com/show_bug.cgi?id=820
 	// take this line out once the bug is fixed
 	mini_parse_debug_option ("no-gdb-backtrace");
-	if (xamarin_compact_seq_points)
-		mini_parse_debug_option ("gen-compact-seq-points");
 
 	DEBUG_LAUNCH_TIME_PRINT ("Spin-up time");
 

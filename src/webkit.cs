@@ -27,6 +27,9 @@ using XamCore.Foundation;
 using XamCore.AppKit;
 using XamCore.CoreGraphics;
 using XamCore.ObjCRuntime;
+#if XAMCORE_2_0
+using JavaScriptCore;
+#endif
 
 namespace XamCore.WebKit {
 
@@ -1886,6 +1889,11 @@ namespace XamCore.WebKit {
 		[Export ("globalContext")]
 		/* JSGlobalContextRef */ IntPtr GlobalContext { get; }
 
+#if XAMCORE_2_0
+		[Mac (10,10, onlyOn64 : true)]
+                [Export ("javaScriptContext", ArgumentSemantic.Strong)]
+                JSContext JavaScriptContext { get; }
+#endif
 	}
 
 	[Model]
@@ -1933,6 +1941,11 @@ namespace XamCore.WebKit {
 
 		[Export ("webView:windowScriptObjectAvailable:"), EventArgs ("WebFrameScriptObject")]
 		void WindowScriptObjectAvailable (WebView webView, WebScriptObject windowScriptObject);
+
+#if XAMCORE_2_0
+                [Export ("webView:didCreateJavaScriptContext:forFrame:"), EventArgs ("WebFrameJavaScriptContext")]
+                void DidCreateJavaScriptContext (WebView webView, JSContext context, WebFrame frame);
+#endif
 	}
 
 	[BaseType (typeof (NSView))]
@@ -2390,6 +2403,12 @@ namespace XamCore.WebKit {
 
 		[Export ("setException:")]
 		void SetException (string description);
+
+#if XAMCORE_2_0
+		[Mac (10,10, onlyOn64 : true)]
+                [Export ("JSValue")]
+                JSValue JSValue { get; }
+#endif
 	}
 
 	[BaseType (typeof (NSView),
@@ -2574,6 +2593,7 @@ namespace XamCore.WebKit {
 		string PreferencesIdentifier { get; set; }
 
 		[Export ("hostWindow", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		NSWindow HostWindow { get; set; }
 
 		[Export ("groupName")]

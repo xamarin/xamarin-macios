@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.MacDev.Tasks", "Xam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Mac.Tasks", "Xamarin.Mac.Tasks\Xamarin.Mac.Tasks.csproj", "{C8D98DC1-5122-4B10-A152-17196C7BD9AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.ObjcBinding.Tasks", "Xamarin.ObjcBinding.Tasks\Xamarin.ObjcBinding.Tasks.csproj", "{C566CA0D-D0EF-4C33-86D3-049DDD9F1831}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.iOS.Tasks", "Xamarin.iOS.Tasks\Xamarin.iOS.Tasks.csproj", "{44605724-8002-48E1-895F-7CB068099B6A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.MacDev.Tasks.Core", "Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.csproj", "{7B095849-6FDB-4BD2-9B59-569D81A1A809}"
@@ -47,10 +45,6 @@ Global
 		{C8D98DC1-5122-4B10-A152-17196C7BD9AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8D98DC1-5122-4B10-A152-17196C7BD9AC}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{C8D98DC1-5122-4B10-A152-17196C7BD9AC}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{C566CA0D-D0EF-4C33-86D3-049DDD9F1831}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C566CA0D-D0EF-4C33-86D3-049DDD9F1831}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C566CA0D-D0EF-4C33-86D3-049DDD9F1831}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C566CA0D-D0EF-4C33-86D3-049DDD9F1831}.Release|Any CPU.Build.0 = Release|Any CPU
 		{44605724-8002-48E1-895F-7CB068099B6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{44605724-8002-48E1-895F-7CB068099B6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44605724-8002-48E1-895F-7CB068099B6A}.Release|Any CPU.ActiveCfg = Release|Any CPU

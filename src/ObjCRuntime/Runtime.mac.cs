@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.IO;
 
+using XamCore.AppKit;
 using XamCore.Foundation;
 using XamCore.Registrar;
 
@@ -92,6 +93,8 @@ namespace XamCore.ObjCRuntime {
 				if (rv == IntPtr.Zero) {
 					runtime_library = Dlfcn.dlopen ("libxammac.dylib", 0);
 					if (runtime_library == IntPtr.Zero)
+						runtime_library = Dlfcn.dlopen (Path.Combine (Path.GetDirectoryName (typeof (NSApplication).Assembly.Location), "libxammac.dylib"), 0);
+					if (runtime_library == IntPtr.Zero)
 						throw new DllNotFoundException ("Could not find the runtime library libxammac.dylib");
 					rv = Dlfcn.dlsym (runtime_library, name);
 				}
@@ -115,7 +118,7 @@ namespace XamCore.ObjCRuntime {
 			LookupInternalFunction<initialize_func> ("xamarin_initialize") ();
 		}
 
-		static void InitializePlatform (ref InitializationOptions options)
+		unsafe static void InitializePlatform (InitializationOptions* options)
 		{
 			// BaseDirectory may not be set in some Mono embedded environments
 			// so try some reasonable fallbacks in these cases.
@@ -136,11 +139,6 @@ namespace XamCore.ObjCRuntime {
 
 			ResourcesPath = Path.Combine (basePath, "Resources");
 			FrameworksPath = Path.Combine (basePath, "Frameworks");
-		}
-
-		static void CreateRegistrar (InitializationOptions options)
-		{
-			Registrar = new DynamicRegistrar ();
 		}
 #endif // !COREBUILD
 	}

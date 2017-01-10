@@ -112,6 +112,11 @@ namespace XamCore.PassKit {
 		[Export ("canAddPaymentPassWithPrimaryAccountIdentifier:")]
 		bool CanAddPaymentPass (string primaryAccountIdentifier);
 
+		[iOS (10,1)]
+		[Watch (3,1)]
+		[Export ("canAddFelicaPass")]
+		bool CanAddFelicaPass { get; }
+
 		[NoWatch]
 		[iOS(9,0)]
 		[Static]
@@ -479,6 +484,11 @@ namespace XamCore.PassKit {
 	
 		[NullAllowed, Export ("primaryAccountSuffix")]
 		string PrimaryAccountSuffix { get; set; }
+
+		[iOS (10,1)]
+		[NoWatch] // Radar: https://trello.com/c/MvaHEZlc
+		[Export ("cardDetails", ArgumentSemantic.Copy)]
+		PKLabeledValue[] CardDetails { get; set; }
 	
 		[NullAllowed, Export ("localizedDescription")]
 		string LocalizedDescription { get; set; }
@@ -488,6 +498,11 @@ namespace XamCore.PassKit {
 	
 		[NullAllowed, Export ("paymentNetwork")]
 		string PaymentNetwork { get; set; }
+
+		[iOS (10,1)]
+		[NoWatch] // Radar: https://trello.com/c/MvaHEZlc
+		[Export ("requiresFelicaSecureElement")]
+		bool RequiresFelicaSecureElement { get; set; }
 	}
 
 	[iOS (9,0)]
@@ -664,6 +679,14 @@ namespace XamCore.PassKit {
 		[iOS (9,0)]
 		[Field ("PKPaymentNetworkPrivateLabel")]
 		NSString PrivateLabel { get; }
+
+		[Watch (3,1), iOS (10,1)]
+		[Field ("PKPaymentNetworkJCB")]
+		NSString Jcb { get; }
+
+		[Watch (3,1), iOS (10,1)]
+		[Field ("PKPaymentNetworkSuica")]
+		NSString Suica { get; }
 	}
 
 #if !WATCH
@@ -772,5 +795,50 @@ namespace XamCore.PassKit {
 
 		[Export ("paymentAuthorizationController:didSelectPaymentMethod:completion:")]
 		void DidSelectPaymentMethod (PKPaymentAuthorizationController controller, PKPaymentMethod paymentMethod, Action<PKPaymentSummaryItem[]> completion);
+	}
+
+	[iOS (10,1)]
+	[NoWatch] // Radar: https://trello.com/c/MvaHEZlc
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor] // there's a designated initializer and it does not accept null
+	interface PKLabeledValue
+	{
+		[Export ("initWithLabel:value:")]
+		[DesignatedInitializer]
+		IntPtr Constructor (string label, string value);
+
+		[Export ("label")]
+		string Label { get; }
+
+		[Export ("value")]
+		string Value { get; }
+	}
+
+	[Watch (3,1), iOS (10,1)]
+	[BaseType (typeof(NSObject))]
+	interface PKSuicaPassProperties
+	{
+		[Static]
+		[Export ("passPropertiesForPass:")]
+		[return: NullAllowed]
+		PKSuicaPassProperties GetPassProperties (PKPass pass);
+
+		[Export ("transitBalance", ArgumentSemantic.Copy)]
+		NSDecimalNumber TransitBalance { get; }
+
+		[Export ("transitBalanceCurrencyCode")]
+		string TransitBalanceCurrencyCode { get; }
+
+		[Export ("inStation")]
+		bool InStation { [Bind ("isInStation")] get; }
+
+		[Export ("inShinkansenStation")]
+		bool InShinkansenStation { [Bind ("isInShinkansenStation")] get; }
+
+		[Export ("greenCarTicketUsed")]
+		bool GreenCarTicketUsed { [Bind ("isGreenCarTicketUsed")] get; }
+
+		[Export ("blacklisted")]
+		bool Blacklisted { [Bind ("isBlacklisted")] get; }
 	}
 }

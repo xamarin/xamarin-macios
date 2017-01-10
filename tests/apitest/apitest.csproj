@@ -90,6 +90,7 @@
     <Compile Include="src\AppKit\NSTextInputClient.cs" />
     <Compile Include="src\AppKit\NSTextView.cs" />
     <Compile Include="src\AppKit\NSToolbar.cs" />
+    <Compile Include="src\AppKit\NSToolbarItem.cs" />
     <Compile Include="src\AppKit\NSUserDefaultsController.cs" />
     <Compile Include="src\AppKit\NSView.cs" />
     <Compile Include="src\AppKit\NSViewController.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="src\NSScriptCommandDescriptionDictionaryTest.cs" />
     <Compile Include="src\ObjCRuntime\ClassTest.cs" />
     <Compile Include="src\ObjCRuntime\Messaging.cs" />
+    <Compile Include="src\ObjCRuntime\SimpleRegistrarTest.cs" />
     <Compile Include="src\SceneKit\SceneKit.cs" />
     <Compile Include="src\SceneKit\SCNGeometrySource.cs" />
     <Compile Include="src\SceneKit\SCNMaterial.cs" />
@@ -147,6 +149,10 @@
     </Compile>
     <Compile Include="..\common\mac\MacTestMain.cs">
       <Link>shared\MacTestMain.cs</Link>
+    </Compile>
+    <Compile Include="src\Foundation\NSMetadataItem.cs" />
+    <Compile Include="..\common\TestRuntime.cs">
+      <Link>shared\TestRuntime.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

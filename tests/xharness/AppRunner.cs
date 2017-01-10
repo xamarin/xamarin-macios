@@ -1,16 +1,31 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Xsl;
 
 namespace xharness
 {
+	public enum AppRunnerTarget
+	{
+		None,
+		Simulator_iOS,
+		Simulator_iOS32,
+		Simulator_iOS64,
+		Simulator_tvOS,
+		Simulator_watchOS,
+		Device_iOS,
+		Device_tvOS,
+		Device_watchOS,
+	}
+
 	public class AppRunner
 	{
 		public Harness Harness;
@@ -33,9 +48,9 @@ namespace xharness
 		SimDevice simulator { get { return simulators [0]; } }
 		SimDevice companion_simulator { get { return simulators.Length == 2 ? simulators [1] : null; } }
 
-		string target;
-		public string Target {
-			get { return target ?? Harness.Target; }
+		AppRunnerTarget target;
+		public AppRunnerTarget Target {
+			get { return target == AppRunnerTarget.None ? Harness.Target : target; }
 			set { target = value; }
 		}
 
@@ -66,84 +81,18 @@ namespace xharness
 
 		string mode;
 
-		void FindSimulator ()
+		async Task<bool> FindSimulatorAsync ()
 		{
 			if (simulators != null)
-				return;
+				return true;
 			
-			string [] simulator_devicetypes;
-			string simulator_runtime;
-
-			switch (Target) {
-			case "ios-simulator-32":
-				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5" };
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
-				break;
-			case "ios-simulator-64":
-				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5s" };
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
-				break;
-			case "ios-simulator":
-				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5" };
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
-				break;
-			case "tvos-simulator":
-				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.Apple-TV-1080p" };
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.tvOS-" + Xamarin.SdkVersions.TVOS.Replace ('.', '-');
-				break;
-			case "watchos-simulator":
-				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-38mm", "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-2-38mm" };
-				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.watchOS-" + Xamarin.SdkVersions.WatchOS.Replace ('.', '-');
-				break;
-			default:
-				throw new Exception (string.Format ("Unknown simulator target: {0}", Harness.Target));
-			}
-
 			var sims = new Simulators () {
 				Harness = Harness,
 			};
-			Task.Run (async () =>
-			{
-				await sims.LoadAsync (Logs.CreateStream (LogDirectory, "simulator-list.log", "Simulator list"));
-			}).Wait ();
+			await sims.LoadAsync (Logs.CreateStream (LogDirectory, "simulator-list.log", "Simulator list"));
+			simulators = await sims.FindAsync (Target, main_log);
 
-			var devices = sims.AvailableDevices.Where ((SimDevice v) => v.SimRuntime == simulator_runtime && simulator_devicetypes.Contains (v.SimDeviceType));
-			SimDevice candidate = null;
-			simulators = null;
-			foreach (var device in devices) {
-				var data = device;
-				var secondaryData = (SimDevice) null;
-				var nodeCompanions = sims.AvailableDevicePairs.Where ((SimDevicePair v) => v.Companion == device.UDID);
-				var nodeGizmos = sims.AvailableDevicePairs.Where ((SimDevicePair v) => v.Gizmo == device.UDID);
-
-				if (nodeCompanions.Any ()) {
-					var gizmo_udid = nodeCompanions.First ().Gizmo;
-					var node = sims.AvailableDevices.Where ((SimDevice v) => v.UDID == gizmo_udid);
-					secondaryData = node.First ();
-				} else if (nodeGizmos.Any ()) {
-					var companion_udid = nodeGizmos.First ().Companion;
-					var node = sims.AvailableDevices.Where ((SimDevice v) => v.UDID == companion_udid);
-					secondaryData = node.First ();
-				}
-				if (secondaryData != null) {
-					simulators = new SimDevice [] { data, secondaryData };
-					break;
-				} else {
-					candidate = data;
-				}
-			}
-			if (simulators == null) {
-				if (candidate == null)
-					throw new Exception ($"Could not find simulator for runtime={simulator_runtime} and device type={string.Join (";", simulator_devicetypes)}.");
-				simulators = new SimDevice [] { candidate };
-			}
-
-			if (simulators == null)
-				throw new Exception ("Could not find simulator");
-
-			main_log.WriteLine ("Found simulator: {0} {1}", simulators [0].Name, simulators [0].UDID);
-			if (simulators.Length > 1)
-				main_log.WriteLine ("Found companion simulator: {0} {1}", simulators [1].Name, simulators [1].UDID);
+			return simulators != null;
 		}
 
 		void FindDevice ()
@@ -183,8 +132,16 @@ namespace xharness
 			if (selected.Count () == 0) {
 				throw new Exception ($"Could not find any applicable devices with device class(es): {string.Join (", ", deviceClasses)}");
 			} else if (selected.Count () > 1) {
-				selected_data = selected.First ();
-				main_log.WriteLine ("Found {0} devices for device class(es) {1}: {2}. Selected: '{3}'", selected.Count (), string.Join (", ", deviceClasses), string.Join (", ", selected.Select ((v) => v.Name).ToArray ()), selected_data.Name);
+				selected_data = selected
+					.OrderBy ((dev) =>
+					{
+						Version v;
+						if (Version.TryParse (dev.ProductVersion, out v))
+							return v;
+						return new Version ();
+					})
+					.First ();
+				main_log.WriteLine ("Found {0} devices for device class(es) '{1}': '{2}'. Selected: '{3}' (because it has the lowest version).", selected.Count (), string.Join ("', '", deviceClasses), string.Join ("', '", selected.Select ((v) => v.Name).ToArray ()), selected_data.Name);
 			} else {
 				selected_data = selected.First ();
 			}
@@ -216,42 +173,42 @@ namespace xharness
 			bundle_identifier = info_plist.GetCFBundleIdentifier ();
 
 			switch (Target) {
-			case "ios-simulator-32":
+			case AppRunnerTarget.Simulator_iOS32:
 				mode = "sim32";
 				platform = "iPhoneSimulator";
 				isSimulator = true;
 				break;
-			case "ios-simulator-64":
+			case AppRunnerTarget.Simulator_iOS64:
 				mode = "sim64";
 				platform = "iPhoneSimulator";
 				isSimulator = true;
 				break;
-			case "ios-simulator":
+			case AppRunnerTarget.Simulator_iOS:
 				mode = "classic";
 				platform = "iPhoneSimulator";
 				isSimulator = true;
 				break;
-			case "ios-device":
+			case AppRunnerTarget.Device_iOS:
 				mode = "ios";
 				platform = "iPhone";
 				isSimulator = false;
 				break;
-			case "tvos-simulator":
+			case AppRunnerTarget.Simulator_tvOS:
 				mode = "tvos";
 				platform = "iPhoneSimulator";
 				isSimulator = true;
 				break;
-			case "tvos-device":
+			case AppRunnerTarget.Device_tvOS:
 				mode = "tvos";
 				platform = "iPhone";
 				isSimulator = false;
 				break;
-			case "watchos-simulator":
+			case AppRunnerTarget.Simulator_watchOS:
 				mode = "watchos";
 				platform = "iPhoneSimulator";
 				isSimulator = true;
 				break;
-			case "watchos-device":
+			case AppRunnerTarget.Device_watchOS:
 				mode = "watchos";
 				platform = "iPhone";
 				isSimulator = false;
@@ -299,6 +256,29 @@ namespace xharness
 			return rv.Succeeded ? 0 : 1;
 		}
 
+		public int Uninstall (Log log)
+		{
+			Initialize ();
+
+			if (isSimulator)
+				throw new Exception ("Uninstalling from a simulator is not supported.");
+
+			FindDevice ();
+
+			var args = new StringBuilder ();
+			if (!string.IsNullOrEmpty (Harness.XcodeRoot))
+				args.Append (" --sdkroot ").Append (Harness.XcodeRoot);
+			for (int i = -1; i < Harness.Verbosity; i++)
+				args.Append (" -v ");
+
+			args.Append (" --uninstalldevbundleid");
+			args.AppendFormat (" \"{0}\" ", bundle_identifier);
+			AddDeviceName (args, companion_device_name ?? device_name);
+
+			var rv = ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, args.ToString (), log, TimeSpan.FromMinutes (1)).Result;
+			return rv.Succeeded ? 0 : 1;
+		}
+
 		bool ensure_clean_simulator_state = true;
 		public bool EnsureCleanSimulatorState {
 			get {
@@ -309,6 +289,128 @@ namespace xharness
 			}
 		}
 
+		void GenerateHumanReadableLogs (string finalPath, string logHeader, XmlDocument doc)
+		{
+			// load the resource that contains the xslt and apply it to the doc and write the logs
+			if (File.Exists (finalPath)) {
+				// if the file does exist, remove it
+				File.Delete (finalPath);
+			}
+
+			using (var strm = Assembly.GetExecutingAssembly ().GetManifestResourceStream ("xharness.nunit-summary.xslt"))
+			using (var xsltReader = XmlReader.Create (strm)) 
+			using (var xmlReader = new XmlNodeReader (doc)) 
+			using (var writer = new StreamWriter (finalPath)) {
+				writer.Write (logHeader);
+ 	   			var xslt = new XslCompiledTransform ();
+				xslt.Load (xsltReader);
+				xslt.Transform (xmlReader, null, writer);
+				writer.Flush ();
+			}
+		}
+
+		public bool TestsSucceeded (LogStream listener_log, bool timed_out, bool crashed)
+		{
+			string log;
+			using (var reader = listener_log.GetReader ())
+				log = reader.ReadToEnd ();
+			// parsing the result is different if we are in jenkins or nor.
+			if (Harness.InJenkins) {
+				// we have to parse the xml result
+				crashed = false;
+				if (log.Contains ("test-results")) {
+					// remove any possible extra info
+					var index = log.IndexOf ("<test-results");
+					var header = log.Substring(0, log.IndexOf ('<'));
+					log = log.Remove (0, index - 1);
+					var testsResults = new XmlDocument ();
+					testsResults.LoadXml (log);
+
+					var mainResultNode = testsResults.SelectSingleNode("test-results");
+					if (mainResultNode == null) {
+						Harness.LogWrench ($"Node is null.");
+						crashed = true;
+						return false;
+					}
+					// update the information of the main node to add information about the mode and the test that is excuted. This will later create
+					// nicer reports in jenkins
+					mainResultNode.Attributes["name"].Value = Target.AsString ();
+					// store a clean version of the logs, later this will be used by the bots to show results in github/web
+					var path = listener_log.FullPath;
+					path = path.Replace (".log", ".xml");
+					testsResults.Save (path);
+
+					// we want to keep the old TestResult page,
+					GenerateHumanReadableLogs (listener_log.FullPath, header, testsResults);
+					
+					int ignored = Convert.ToInt16(mainResultNode.Attributes["ignored"].Value);
+					int invalid = Convert.ToInt16(mainResultNode.Attributes["invalid"].Value);
+					int inconclusive = Convert.ToInt16(mainResultNode.Attributes["inconclusive"].Value);
+					int errors = Convert.ToInt16(mainResultNode.Attributes["errors"].Value);
+					int failures = Convert.ToInt16(mainResultNode.Attributes["failures"].Value);
+					int totalTests = Convert.ToInt16(mainResultNode.Attributes["total"].Value);
+
+					// generate human readable logs
+					var failed = errors != 0 || failures != 0;
+					if (failed) {
+						Harness.LogWrench ($"@MonkeyWrench: AddSummary: <b>{mode} failed: Test run: {totalTests} Passed: {totalTests - invalid - inconclusive - ignored} Inconclusive: {inconclusive} Failed: {errors + failures} Ignored: {ignored}</b><br/>");
+						main_log.WriteLine ("Test run failed");
+						return false;
+					} else {
+						Harness.LogWrench ($"@MonkeyWrench: AddSummary: {mode} succeeded: Test run: {totalTests} Passed: {totalTests - invalid - inconclusive - ignored} Inconclusive: {inconclusive} Failed: 0 Ignored: {ignored}<br/>");
+						main_log.WriteLine ("Test run succeeded");
+						return true;
+					}
+				} else if (timed_out) {
+					Harness.LogWrench ($"@MonkeyWrench: AddSummary: <b><i>{mode} timed out</i></b><br/>");
+					return false;
+				} else {
+					Harness.LogWrench ($"@MonkeyWrench: AddSummary: <b><i>{mode} crashed</i></b><br/>");
+					main_log.WriteLine ("Test run crashed");
+					crashed = true;
+					return false;
+				}
+			} else {
+				// parsing the human readable results
+				if (log.Contains ("Tests run")) {
+					var tests_run = string.Empty;
+					var log_lines = log.Split ('\n');
+					var failed = false;
+					foreach (var line in log_lines) {
+						if (line.Contains ("Tests run:")) {
+							Console.WriteLine (line);
+							tests_run = line.Replace ("Tests run: ", "");
+							break;
+						} else if (line.Contains ("FAIL")) {
+							Console.WriteLine (line);
+							failed = true;
+						}
+					}
+
+					if (failed) {
+						Harness.LogWrench ("@MonkeyWrench: AddSummary: <b>{0} failed: {1}</b><br/>", mode, tests_run);
+						main_log.WriteLine ("Test run failed");
+						return false;
+					} else {
+						Harness.LogWrench ("@MonkeyWrench: AddSummary: {0} succeeded: {1}<br/>", mode, tests_run);
+						main_log.WriteLine ("Test run succeeded");
+						return true;
+					}
+				} else if (timed_out) {
+					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} timed out</i></b><br/>", mode);
+					return false;
+				} else {
+					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed</i></b><br/>", mode);
+					main_log.WriteLine ("Test run crashed");
+					crashed = true;
+					return false;
+				}
+			}
+		}
+
+		[DllImport ("/usr/lib/libc.dylib")]
+		extern static IntPtr ttyname (int filedes);
+
 		public async Task<int> RunAsync ()
 		{
 			CrashReportSnapshot crash_reports;
@@ -318,7 +420,18 @@ namespace xharness
 
 			Initialize ();
 
-			crash_reports = new CrashReportSnapshot () { Device = !isSimulator, Harness = Harness, Log = main_log, Logs = Logs, LogDirectory = LogDirectory };
+			if (!isSimulator)
+				FindDevice ();
+
+			crash_reports = new CrashReportSnapshot ()
+			{
+				Device = !isSimulator,
+				DeviceName = device_name,
+				Harness = Harness,
+				Log = main_log,
+				Logs = Logs,
+				LogDirectory = LogDirectory,
+			};
 
 			var args = new StringBuilder ();
 			if (!string.IsNullOrEmpty (Harness.XcodeRoot))
@@ -332,6 +445,10 @@ namespace xharness
 			args.Append (" -setenv=NUNIT_AUTOEXIT=true");
 			args.Append (" -argument=-app-arg:-enablenetwork");
 			args.Append (" -setenv=NUNIT_ENABLE_NETWORK=true");
+			// detect if we are using a jenkins bot.
+			if (Harness.InJenkins) 
+				args.Append (" -setenv=NUNIT_ENABLE_XML_OUTPUT=true");
+
 			if (isSimulator) {
 				args.Append (" -argument=-app-arg:-hostname:127.0.0.1");
 				args.Append (" -setenv=NUNIT_HOSTNAME=127.0.0.1");
@@ -362,7 +479,7 @@ namespace xharness
 			default:
 				throw new NotImplementedException ();
 			}
-			listener_log = Logs.CreateStream (LogDirectory, string.Format ("test-{0:yyyyMMdd_HHmmss}.log", DateTime.Now), "Test log");
+			listener_log = Logs.CreateStream (LogDirectory, string.Format ("test-{0}-{1:yyyyMMdd_HHmmss}.log", mode, DateTime.Now), "Test log");
 			listener.TestLog = listener_log;
 			listener.Log = main_log;
 			listener.AutoExit = true;
@@ -377,9 +494,24 @@ namespace xharness
 
 			bool? success = null;
 			bool timed_out = false;
+			bool launch_failure = false;
 
 			if (isSimulator) {
-				FindSimulator ();
+				if (!await FindSimulatorAsync ())
+					return 1;
+
+				if (mode != "watchos") {
+					var stderr_tty = Marshal.PtrToStringAuto (ttyname (2));
+					if (!string.IsNullOrEmpty (stderr_tty)) {
+						args.Append (" --stdout=").Append (Harness.Quote (stderr_tty));
+						args.Append (" --stderr=").Append (Harness.Quote (stderr_tty));
+					} else {
+						var stdout_log = Logs.CreateFile ("Standard output", Path.Combine (LogDirectory, "stdout.log"));
+						var stderr_log = Logs.CreateFile ("Standard error", Path.Combine (LogDirectory, "stderr.log"));
+						args.Append (" --stdout=").Append (Harness.Quote (stdout_log.FullPath));
+						args.Append (" --stderr=").Append (Harness.Quote (stderr_log.FullPath));
+					}
+				}
 
 				var systemLogs = new List<CaptureLog> ();
 				foreach (var sim in simulators) {
@@ -387,8 +519,9 @@ namespace xharness
 					main_log.WriteLine ("System log for the '{1}' simulator is: {0}", sim.SystemLog, sim.Name);
 					bool isCompanion = sim != simulator;
 
-					var log = new CaptureLog (sim.SystemLog) {
-						Path = Path.Combine (LogDirectory, sim.UDID + ".log"),
+					var log = new CaptureLog (sim.SystemLog, entire_file: Harness.Action != HarnessAction.Jenkins)
+					{
+						Path = Path.Combine (LogDirectory, sim.Name + ".log"),
 						Description = isCompanion ? "System log (companion)" : "System log",
 					};
 					log.StartCapture ();
@@ -450,12 +583,17 @@ namespace xharness
 								var pidstr = line.Substring (line.LastIndexOf (' '));
 								if (!int.TryParse (pidstr, out pid))
 									main_log.WriteLine ("Could not parse pid: {0}", pidstr);
+							} else if (line.Contains ("error MT1008")) {
+								launch_failure = true;
 							}
 						}
 					}
 					if (pid > 0) {
 						var launchTimedout = cancellation_source.IsCancellationRequested;
-						await KillPidAsync (main_log, pid, TimeSpan.FromSeconds (5), TimeSpan.FromMinutes (launchTimedout ? Harness.LaunchTimeout : Harness.Timeout), launchTimedout ? "Launch" : "Completion");
+						var timeoutType = launchTimedout ? "Launch" : "Completion";
+						var timeoutValue = launchTimedout ? Harness.LaunchTimeout : Harness.Timeout;
+						main_log.WriteLine ($"{timeoutType} timed out after {timeoutValue}");
+						await Process_Extensions.KillTreeAsync (pid, main_log, true);
 					} else {
 						main_log.WriteLine ("Could not find pid in mtouch output.");
 					}
@@ -471,9 +609,7 @@ namespace xharness
 					log.StopCapture ();
 				
 			} else {
-				FindDevice ();
-
-				main_log.WriteLine ("*** Executing {0}/{1} on device ***", appName, mode);
+				main_log.WriteLine ("*** Executing {0}/{1} on device '{2}' ***", appName, mode, device_name);
 
 				args.Append (" --launchdev");
 				args.AppendFormat (" \"{0}\" ", launchAppPath);
@@ -516,8 +652,7 @@ namespace xharness
 				// Upload the system log
 				if (File.Exists (device_system_log.FullPath)) {
 					main_log.WriteLine ("A capture of the device log is: {0}", device_system_log.FullPath);
-					if (Harness.InWrench)
-						Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", device_system_log.FullPath);
+					Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", device_system_log.FullPath);
 				}
 			}
 
@@ -527,46 +662,15 @@ namespace xharness
 			var crashed = false;
 			if (File.Exists (listener_log.FullPath)) {
 				Harness.LogWrench ("@MonkeyWrench: AddFile: {0}", listener_log.FullPath);
-				string log;
-				using (var reader = listener_log.GetReader ())
-					log = reader.ReadToEnd ();
-				if (log.Contains ("Tests run")) {
-					var tests_run = string.Empty;
-					var log_lines = log.Split ('\n');
-					var failed = false;
-					foreach (var line in log_lines) {
-						if (line.Contains ("Tests run:")) {
-							Console.WriteLine (line);
-							tests_run = line.Replace ("Tests run: ", "");
-							break;
-						} else if (line.Contains ("FAIL")) {
-							Console.WriteLine (line);
-							failed = true;
-						}
-					}
-
-					if (failed) {
-						Harness.LogWrench ("@MonkeyWrench: AddSummary: <b>{0} failed: {1}</b><br/>", mode, tests_run);
-						main_log.WriteLine ("Test run failed");
-						success = false;
-					} else {
-						Harness.LogWrench ("@MonkeyWrench: AddSummary: {0} succeeded: {1}<br/>", mode, tests_run);
-						main_log.WriteLine ("Test run succeeded");
-						success = true;
-					}
-				} else if (timed_out) {
-					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} timed out</i></b><br/>", mode);
-					success = false;
-				} else {
-					Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed</i></b><br/>", mode);
-					main_log.WriteLine ("Test run crashed");
-					crashed = true;
-					success = false;
-				}
+				success = TestsSucceeded (listener_log, timed_out, crashed);
 			} else if (timed_out) {
 				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} never launched</i></b><br/>", mode);
 				main_log.WriteLine ("Test run never launched");
 				success = false;
+			} else if (launch_failure) {
+ 				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} failed to launch</i></b><br/>", mode);
+ 				main_log.WriteLine ("Test run failed to launch");
+ 				success = false;
 			} else {
 				Harness.LogWrench ("@MonkeyWrench: AddSummary: <b><i>{0} crashed at startup (no log)</i></b><br/>", mode);
 				main_log.WriteLine ("Test run crashed before it started (no log file produced)");
@@ -588,7 +692,6 @@ namespace xharness
 			} else {
 				Result = TestExecutingResult.Failed;
 			}
-
 			return success.Value ? 0 : 1;
 		}
 
@@ -604,25 +707,5 @@ namespace xharness
 				args.Append (Harness.Quote (device_name));
 			}
 		}
-
-		[DllImport ("/usr/lib/libc.dylib")]
-		static extern void kill (int pid, int sig);
-
-		async Task KillPidAsync (Log log, int pid, TimeSpan kill_separation, TimeSpan timeout, string type)
-		{
-			log.WriteLine ("{2} timeout ({1} s) reached, will now send SIGQUIT to the app (PID: {0})", pid, timeout.TotalSeconds, type);
-			kill (pid, 3 /* SIGQUIT */); // print managed stack traces.
-			if (await ProcessHelper.PollForExitAsync (pid, kill_separation /* wait for at most 5 seconds to see if something happens */))
-				return;
-			
-			log.WriteLine ("{2} timeout ({1} s) reached, will now send SIGABRT to the app (PID: {0})", pid, timeout.TotalSeconds, type);
-			kill (pid, 6 /* SIGABRT */); // print native stack traces.
-			if (await ProcessHelper.PollForExitAsync (pid, kill_separation /* wait another 5 seconds */))
-				return;
-			
-			log.WriteLine ("{2} timeout ({1} s) reached, will now send SIGKILL to the app (PID: {0})", pid, timeout.TotalSeconds, type);
-			kill (pid, 9 /* SIGKILL */); // terminate unconditionally.
-		}
 	}
 }
-

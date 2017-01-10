@@ -74,7 +74,10 @@ namespace Introspection {
 			// even if we specify an NSUserActivityTypes in the Info.plist - might be a bug or there's a new (undocumented) requirement
 			case "NSUserActivity":
 				return true;
+			case "NEPacketTunnelProvider":
+				return true;
 			}
+
 			return SkipDueToAttribute (type);
 		}
 
@@ -288,6 +291,12 @@ namespace Introspection {
 			case "NSDataDetector":
 				// -[NSDataDetector initWithPattern:options:error:]: Not valid for NSDataDetector
 				if (ctor.ToString () == "Void .ctor(NSString, NSRegularExpressionOptions, NSError&)")
+					return true;
+				break;
+			case "SKStoreProductViewController":
+			case "SKCloudServiceSetupViewController":
+				// SKStoreProductViewController and SKCloudServiceSetupViewController are OS View Controllers which can't be customized. Therefore they shouldn't re-expose initWithNibName:bundle:
+				if (ctor.ToString () == "Void .ctor(String, NSBundle)")
 					return true;
 				break;
 #if __TVOS__

@@ -61,10 +61,10 @@ namespace XamCore.Foundation {
 	public partial class NSStream {
 		public NSObject this [NSString key] {
 			get {
-				return PropertyForKey (key);
+				return GetProperty (key);
 			}
 			set {
-				SetPropertyForKey (value, key);
+				SetProperty (value, key);
 			}
 		}
 

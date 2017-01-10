@@ -73,8 +73,10 @@ namespace Xamarin.Bundler {
 				if (s.Length == 0)
 					continue;
 
-				if (s.StartsWith (".asciz") || s.StartsWith (".ascii"))
+				if (s.StartsWith (".asciz", StringComparison.Ordinal) || s.StartsWith (".ascii", StringComparison.Ordinal))
 					s = FixAsciz (s, line);
+				else if (s.StartsWith (".file", StringComparison.Ordinal))
+					s = FixFile (s, line);
 				else if (s.Contains ("\""))
 					s = s.Replace ("\"", "\\22");
 
@@ -193,11 +195,34 @@ namespace Xamarin.Bundler {
 				res.Append (to_append.ToString ());
 			}
 
-			if (s.StartsWith (".asciz")) {
+			if (s.StartsWith (".asciz", StringComparison.Ordinal)) {
 				if (!first)
 					res.Append (", ");
 				res.Append ("0");
 			}
+			return res.ToString ();
+		}
+
+		string FixFile (string s, int line) {
+			var m = Regex.Match (s, "^.file\\s*(\\d+)\\s*\"(.*)\"$");
+			if (!m.Success)
+				return s;
+			var dbg_line = m.Groups [1].Value;
+			var str = m.Groups [2].Value;
+
+			var res = new StringBuilder (str.Length * 3);
+			res.Append (".file " + dbg_line + " " + "\\22");
+
+			for (int i = 0; i < str.Length; ++i) {
+				if (str [i] == '\\' && i + 1 < str.Length && str [i + 1] == '\\') {
+					i ++;
+					res.Append ("\\5c\\5c");
+				} else {
+					res.Append (str [i]);
+				}
+			}
+			res.Append ("\\22");
+
 			return res.ToString ();
 		}
 	}

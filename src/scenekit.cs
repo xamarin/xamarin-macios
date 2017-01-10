@@ -27,6 +27,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 
 using XamCore.AVFoundation;
 using XamCore.CoreFoundation;
@@ -49,13 +50,17 @@ using XamCore.Metal;
 #if MONOMAC
 using XamCore.AppKit;
 using OpenTK;
+
+using GLContext = global::XamCore.OpenGL.CGLContext;
 #else
 
 #if WATCH
+using GLContext = global::XamCore.Foundation.NSObject; // won't be used -> [NoWatch] but must compile
 using NSView = global::XamCore.Foundation.NSObject; // won't be used -> [NoWatch] but must compile
 #else
 using XamCore.OpenGLES;
 
+using GLContext = global::XamCore.OpenGLES.EAGLContext;
 using NSView = global::XamCore.UIKit.UIView;
 #endif
 
@@ -1600,7 +1605,7 @@ namespace XamCore.SceneKit {
 	[BaseType (typeof (NSObject))]
 	[Model, Protocol]
 	interface SCNProgramDelegate {
-#if !XAMCORE_2_0
+#if MONOMAC || !XAMCORE_2_0
 	#if XAMCORE_3_0
 		[Availability (Unavailable = Platform.iOS_Version)]
 	#endif
@@ -1619,7 +1624,7 @@ namespace XamCore.SceneKit {
 		[Export ("program:handleError:")]
 		void HandleError (SCNProgram program, NSError error);
 
-#if !XAMCORE_2_0
+#if MONOMAC || !XAMCORE_2_0
 	#if XAMCORE_3_0
 		[Availability (Unavailable = Platform.iOS_Version)]
 		[NoTV, NoWatch]
@@ -1669,6 +1674,13 @@ namespace XamCore.SceneKit {
 		// options: nothing today, it is reserved for future use
 		[Static, Export ("rendererWithContext:options:")]
 		SCNRenderer FromContext (IntPtr context, [NullAllowed] NSDictionary options);
+
+		[NoWatch]
+		[Static]
+		[Wrap ("FromContext (context.GetHandle (), options)")]
+		// GetHandle will return IntPtr.Zero is context is null
+		// GLContext == CGLContext on macOS and EAGLContext in iOS and tvOS (using on top of file)
+		SCNRenderer FromContext (GLContext context, [NullAllowed] NSDictionary options);
 
 		[NoWatch, NoTV]
 		[Export ("render")]
@@ -2307,6 +2319,7 @@ namespace XamCore.SceneKit {
 		[NoWatch]
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		[Export ("audioEnvironmentNode")]
+		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		AVAudioEnvironmentNode AudioEnvironmentNode { get; }
 
 #if XAMCORE_4_0
@@ -2314,6 +2327,7 @@ namespace XamCore.SceneKit {
 #endif
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		[NullAllowed, Export ("audioListener", ArgumentSemantic.Retain)]
+		[DebuggerBrowsable (DebuggerBrowsableState.Never)]
 		SCNNode AudioListener { get; set; }
 	}
 
@@ -2596,10 +2610,9 @@ namespace XamCore.SceneKit {
 		[Export ("snapshot")]
 		NSImage Snapshot ();
 
-#if !MONOMAC
+		[Mac (10,12)]
 		[Export ("preferredFramesPerSecond")]
 		nint PreferredFramesPerSecond { get; set; }
-#endif
 
 		[iOS (8,0)][Mac (10,10)]
 		[Export ("antialiasingMode")]

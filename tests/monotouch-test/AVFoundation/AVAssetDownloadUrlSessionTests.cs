@@ -11,6 +11,7 @@
 #if !__WATCHOS__ && !__TVOS__
 
 using System;
+using ObjCRuntime;
 
 #if XAMCORE_2_0
 using Foundation;
@@ -36,6 +37,20 @@ namespace monotouchtest {
 			Assert.Throws <NotSupportedException> (() => AVAssetDownloadUrlSession.FromConfiguration (NSUrlSessionConfiguration.DefaultSessionConfiguration), "FromConfiguration should throw NotSupportedException");
 			Assert.Throws <NotSupportedException> (() => AVAssetDownloadUrlSession.FromConfiguration (NSUrlSessionConfiguration.DefaultSessionConfiguration, new NSUrlSessionDelegate (), null), "FromConfiguration should throw NotSupportedException");
 			Assert.Throws <NotSupportedException> (() => AVAssetDownloadUrlSession.FromWeakConfiguration (NSUrlSessionConfiguration.DefaultSessionConfiguration, new NSObject (), null), "FromWeakConfiguration should throw NotSupportedException");
+		}
+
+		[Test]
+		public void CreateSessionTest ()
+		{
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Ignoring AVAssetDownloadUrlSession tests: Requires iOS9+");
+
+			if (Runtime.Arch == Arch.DEVICE)
+				Assert.Ignore ("Ignoring CreateSessionTest tests: Requires com.apple.developer.media-asset-download entitlement");
+
+			using (var backgroundConfiguration = NSUrlSessionConfiguration.CreateBackgroundSessionConfiguration ("HLS-Identifier")) {
+				Assert.DoesNotThrow (() => AVAssetDownloadUrlSession.CreateSession (backgroundConfiguration, null, NSOperationQueue.MainQueue), "Should not throw InvalidCastException");
+			}
 		}
 
 		// FIXME: Disabling this test from now, will reenable once apple releases docs on what is ecpected to have this entitlement key

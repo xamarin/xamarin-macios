@@ -16,6 +16,7 @@ namespace xharness
 		Configure,
 		Run,
 		Install,
+		Uninstall,
 		Jenkins,
 	}
 
@@ -39,7 +40,7 @@ namespace xharness
 		}
 
 		public List<TestProject> IOSTestProjects { get; set; } = new List<TestProject> ();
-		public List<TestProject> MacTestProjects { get; set; } = new List<TestProject> ();
+		public List<MacTestProject> MacTestProjects { get; set; } = new List<MacTestProject> ();
 		public List<string> BclTests { get; set; } = new List<string> ();
 
 		// Configure
@@ -57,7 +58,7 @@ namespace xharness
 		public string IOS_DESTDIR { get; set; }
 
 		// Run
-		public string Target { get; set; }
+		public AppRunnerTarget Target { get; set; }
 		public string SdkRoot { get; set; } = "/Applications/Xcode.app";
 		public string Configuration { get; set; } = "Debug";
 		public string LogFile { get; set; }
@@ -87,27 +88,57 @@ namespace xharness
 			}
 		}
 
+		object mlaunch_lock = new object ();
 		string DownloadMlaunch ()
 		{
-			// Just hardcode this for now. We should be able to switch to a shipped version of XS soon.
 			// NOTE: the filename part in the url must be unique so that the caching logic works properly.
-			var mlaunch_url = "http://bosstoragemirror.blob.core.windows.net/public-builder/mlaunch-307d345a06bd3f13994877ee5a4f316f5e6a7940";
-			var mlaunch_path = Path.Combine (Path.GetTempPath (), Path.GetFileName (mlaunch_url), "mlaunch");
-			if (File.Exists (mlaunch_path))
+			var mlaunch_url = "http://bosstoragemirror.blob.core.windows.net/public-builder/mlaunch/mlaunch-63121a575eff6fa291c28d0f70bacff97b0ecc72.zip";
+			var extraction_dir = Path.Combine (Path.GetTempPath (), Path.GetFileNameWithoutExtension (mlaunch_url));
+			var mlaunch_path = Path.Combine (extraction_dir, "bin", "mlaunch");
+
+			lock (mlaunch_lock) {
+				if (File.Exists (mlaunch_path))
+					return mlaunch_path;
+
+				try {
+					var local_zip = extraction_dir + ".zip";
+					Log ("Downloading mlaunch to: {0}", local_zip);
+					var wc = new System.Net.WebClient ();
+					wc.DownloadFile (mlaunch_url, local_zip);
+					Log ("Downloaded mlaunch.");
+
+					var tmp_extraction_dir = extraction_dir + ".tmp";
+					if (Directory.Exists (tmp_extraction_dir))
+						Directory.Delete (tmp_extraction_dir, true);
+					if (Directory.Exists (extraction_dir))
+						Directory.Delete (extraction_dir, true);
+
+					Log ("Extracting mlaunch...");
+					using (var p = new Process ()) {
+						p.StartInfo.FileName = "unzip";
+						p.StartInfo.Arguments = $"-d {Quote (tmp_extraction_dir)} {Quote (local_zip)}";
+						Log ("{0} {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
+						p.Start ();
+						p.WaitForExit ();
+						if (p.ExitCode != 0) {
+							Log ("Could not unzip mlaunch, exit code: {0}", p.ExitCode);
+							return mlaunch_path;
+						}
+					}
+					Directory.Move (tmp_extraction_dir, extraction_dir);
+
+					Log ("Final mlaunch path: {0}", mlaunch_path);
+				} catch (Exception e) {
+					Log ("Could not download mlaunch: {0}", e);
+				}
 				return mlaunch_path;
-			try {
-				Log ("Downloading mlaunch...");
-				Directory.CreateDirectory (Path.GetDirectoryName (mlaunch_path));
-				var wc = new System.Net.WebClient ();
-				wc.DownloadFile (mlaunch_url, mlaunch_path + ".tmp");
-				new Mono.Unix.UnixFileInfo (mlaunch_path + ".tmp").FileAccessPermissions |= Mono.Unix.FileAccessPermissions.UserExecute;
-				File.Delete (mlaunch_path);
-				File.Move (mlaunch_path + ".tmp", mlaunch_path);
-				Log ("Downloaded mlaunch.");
-			} catch (Exception e) {
-				Log ("Could not download mlaunch: {0}", e);
 			}
-			return mlaunch_path;
+		}
+
+		public string MtouchPath {
+			get {
+				return Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mtouch");
+			}
 		}
 
 		string mlaunch;
@@ -123,6 +154,12 @@ namespace xharness
 					}
 
 					string path = string.Empty;
+
+					// check next to mtouch
+					path = Path.Combine (Path.GetDirectoryName (MtouchPath), "mlaunch");
+					if (File.Exists (path))
+						return mlaunch = path;
+
 					Log ("Could not find mlaunch locally, will try downloading it.");
 					try {
 						path = DownloadMlaunch ();
@@ -178,7 +215,7 @@ namespace xharness
 			}
 		}
 
-		void AutoConfigureCommon ()
+		void LoadConfig ()
 		{
 			ParseConfigFiles ();
 			var src_root = Path.GetDirectoryName (RootDirectory);
@@ -200,10 +237,10 @@ namespace xharness
 			//var fsharp_library_projects = new string[] { "fsharplibrary" };
 			//var bcl_suites = new string[] { "mscorlib", "System", "System.Core", "System.Data", "System.Net.Http", "System.Numerics", "System.Runtime.Serialization", "System.Transactions", "System.Web.Services", "System.Xml", "System.Xml.Linq", "Mono.Security", "System.ComponentModel.DataAnnotations", "System.Json", "System.ServiceModel.Web", "Mono.Data.Sqlite" };
 			foreach (var p in test_suites)
-				MacTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj"))));
-			MacTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj"))));
+				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj"))));
+			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), skipXMVariations : true));
 			foreach (var p in hard_coded_test_suites)
-				MacTestProjects.Add (new TestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj")), generateVariations: false));
+				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj")), generateVariations: false));
 			//foreach (var p in fsharp_test_suites)
 			//	TestProjects.Add (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")));
 			//foreach (var p in library_projects)
@@ -214,8 +251,6 @@ namespace xharness
 			//TestProjects.Add (Path.GetFullPath (Path.Combine (RootDirectory, "bcl-test/" + p + "/" + p + ".csproj")));
 
 			// BclTests.AddRange (bcl_suites);
-
-			AutoConfigureCommon ();
 		}
 
 		void AutoConfigureIOS ()
@@ -247,14 +282,12 @@ namespace xharness
 			WatchOSContainerTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "watchos/Container"));
 			WatchOSAppTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "watchos/App"));
 			WatchOSExtensionTemplate = Path.GetFullPath (Path.Combine (RootDirectory, "watchos/Extension"));
-
-			AutoConfigureCommon ();
 		}
 
-		static Dictionary<string, string> make_config = new Dictionary<string, string> ();
-		static IEnumerable<string> FindConfigFiles (string name)
+		Dictionary<string, string> make_config = new Dictionary<string, string> ();
+		IEnumerable<string> FindConfigFiles (string name)
 		{
-			var dir = Environment.CurrentDirectory;
+			var dir = Path.GetFullPath (RootDirectory);
 			while (dir != "/") {
 				var file = Path.Combine (dir, name);
 				if (File.Exists (file))
@@ -263,20 +296,20 @@ namespace xharness
 			}
 		}
 
-		static void ParseConfigFiles ()
+		void ParseConfigFiles ()
 		{
 			ParseConfigFiles (FindConfigFiles ("test.config"));
 			ParseConfigFiles (FindConfigFiles ("Make.config.local"));
 			ParseConfigFiles (FindConfigFiles ("Make.config"));
 		}
 
-		static void ParseConfigFiles (IEnumerable<string> files)
+		void ParseConfigFiles (IEnumerable<string> files)
 		{
 			foreach (var file in files)
 				ParseConfigFile (file);
 		}
 
-		static void ParseConfigFile (string file)
+		void ParseConfigFile (string file)
 		{
 			if (string.IsNullOrEmpty (file))
 				return;
@@ -317,20 +350,27 @@ namespace xharness
 				var file = proj.Path;
  				if (!File.Exists (file))
  					throw new FileNotFoundException (file);
-								
-				var unifiedMobile = new MacUnifiedTarget (true) {
- 					TemplateProjectPath = file,
- 					Harness = this,
- 				};
-				unifiedMobile.Execute ();
-				unified_targets.Add (unifiedMobile);
- 
-				var unifiedXM45 = new MacUnifiedTarget (false) {
- 					TemplateProjectPath = file,
- 					Harness = this,
- 				};
-				unifiedXM45.Execute ();
-				unified_targets.Add (unifiedXM45);
+
+				foreach (bool thirtyTwoBit in new bool[] { false, true })
+				{
+					var unifiedMobile = new MacUnifiedTarget (true, thirtyTwoBit)
+					{
+						TemplateProjectPath = file,
+						Harness = this,
+					};
+					unifiedMobile.Execute ();
+					unified_targets.Add (unifiedMobile);
+
+					if (!proj.SkipXMVariations) {
+						var unifiedXM45 = new MacUnifiedTarget (false, thirtyTwoBit)
+						{
+							TemplateProjectPath = file,
+							Harness = this,
+						};
+						unifiedXM45.Execute ();
+						unified_targets.Add (unifiedXM45);
+					}
+				}
  
 				var classic = new MacClassicTarget () {
  					TemplateProjectPath = file,
@@ -342,7 +382,7 @@ namespace xharness
  
 			foreach (var proj in MacTestProjects.Where ((v) => !v.GenerateVariations)) {
 				var file = proj.Path;
-				var unifiedMobile = new MacUnifiedTarget (true, true)
+				var unifiedMobile = new MacUnifiedTarget (true, false, true)
 				{
  					TemplateProjectPath = file,
  					Harness = this,
@@ -356,7 +396,6 @@ namespace xharness
 
 		void ConfigureIOS ()
 		{
-			var classic_targets = new List<ClassicTarget> ();
 			var unified_targets = new List<UnifiedTarget> ();
 			var tvos_targets = new List<TVOSTarget> ();
 			var watchos_targets = new List<WatchOSTarget> ();
@@ -393,19 +432,11 @@ namespace xharness
 				};
 				unified.Execute ();
 				unified_targets.Add (unified);
-
-				var classic = new ClassicTarget () {
-					TemplateProjectPath = file,
-					Harness = this,
-				};
-				classic.Execute ();
-				classic_targets.Add (classic);
 			}
 
 			SolutionGenerator.CreateSolution (this, watchos_targets, "watchos");
 			SolutionGenerator.CreateSolution (this, tvos_targets, "tvos");
-			SolutionGenerator.CreateSolution (this, unified_targets, "unified");
-			MakefileGenerator.CreateMakefile (this, classic_targets, unified_targets, tvos_targets, watchos_targets);
+			MakefileGenerator.CreateMakefile (this, unified_targets, tvos_targets, watchos_targets);
 		}
 
 		public int Install ()
@@ -420,6 +451,25 @@ namespace xharness
 					MainLog = HarnessLog,
 				};
 				var rv = runner.Install (HarnessLog);
+				if (rv != 0)
+					return rv;
+			}
+			return 0;
+		}
+
+		public int Uninstall ()
+		{
+			if (HarnessLog == null)
+				HarnessLog = new ConsoleLog ();
+
+			foreach (var project in IOSTestProjects) {
+				var runner = new AppRunner ()
+				{
+					Harness = this,
+					ProjectFile = project.Path,
+					MainLog = HarnessLog,
+				};
+				var rv = runner.Uninstall (HarnessLog);
 				if (rv != 0)
 					return rv;
 			}
@@ -488,12 +538,21 @@ namespace xharness
 
 		public bool InWrench {
 			get {
-				return !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
+				var buildRev = Environment.GetEnvironmentVariable ("BUILD_REVISION");
+				return !string.IsNullOrEmpty (buildRev) && buildRev != "jenkins";
+			}
+		}
+		
+		public bool InJenkins {
+			get {
+				var buildRev = Environment.GetEnvironmentVariable ("BUILD_REVISION");
+				return !string.IsNullOrEmpty (buildRev) && buildRev == "jenkins";
 			}
 		}
 
 		public int Execute ()
 		{
+			LoadConfig ();
 			switch (Action) {
 			case HarnessAction.Configure:
 				return Configure ();
@@ -501,6 +560,8 @@ namespace xharness
 				return Run ();
 			case HarnessAction.Install:
 				return Install ();
+			case HarnessAction.Uninstall:
+				return Uninstall ();
 			case HarnessAction.Jenkins:
 				return Jenkins ();
 			default:
@@ -600,19 +661,14 @@ namespace xharness
 			}
 		}
 
-		public Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, string args, TextWriter output, TimeSpan timeout)
-		{
-			return ProcessHelper.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, output, timeout: timeout);
-		}
-
 		public Task<ProcessExecutionResult> ExecuteXcodeCommandAsync (string executable, string args, Log log, TimeSpan timeout)
 		{
-			return ProcessHelper.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, log.GetWriter () , timeout: timeout);
+			return ProcessHelper.ExecuteCommandAsync (Path.Combine (XcodeRoot, "Contents", "Developer", "usr", "bin", executable), args, log, timeout: timeout);
 		}
 
 		public async Task ShowSimulatorList (LogStream log)
 		{
-			await ExecuteXcodeCommandAsync ("simctl", "list", log.GetWriter (), TimeSpan.FromSeconds (10));
+			await ExecuteXcodeCommandAsync ("simctl", "list", log, TimeSpan.FromSeconds (10));
 		}
 
 		public async Task<LogFile> SymbolicateCrashReportAsync (Log log, LogFile report)
@@ -638,7 +694,7 @@ namespace xharness
 			}
 		}
 
-		public async Task<HashSet<string>> CreateCrashReportsSnapshotAsync (Log log, bool simulatorOrDesktop)
+		public async Task<HashSet<string>> CreateCrashReportsSnapshotAsync (Log log, bool simulatorOrDesktop, string device)
 		{
 			var rv = new HashSet<string> ();
 
@@ -649,7 +705,12 @@ namespace xharness
 			} else {
 				var tmp = Path.GetTempFileName ();
 				try {
-					var result = await ProcessHelper.ExecuteCommandAsync (MlaunchPath, "--list-crash-reports=" + tmp + " --sdkroot " + XcodeRoot, log, TimeSpan.FromMinutes (1));
+					var sb = new StringBuilder ();
+					sb.Append (" --list-crash-reports=").Append (Quote (tmp));
+					sb.Append (" --sdkroot ").Append (Quote (XcodeRoot));
+					if (!string.IsNullOrEmpty (device))
+						sb.Append (" --devname ").Append (Quote (device));
+					var result = await ProcessHelper.ExecuteCommandAsync (MlaunchPath, sb.ToString (), log, TimeSpan.FromMinutes (1));
 					if (result.Succeeded)
 						rv.UnionWith (File.ReadAllLines (tmp));
 				} finally {
@@ -668,13 +729,14 @@ namespace xharness
 		public Logs Logs { get; set; }
 		public string LogDirectory { get; set; }
 		public bool Device { get; set; }
+		public string DeviceName { get; set; }
 
 		public HashSet<string> InitialSet { get; private set; }
 		public IEnumerable<string> Reports { get; private set; }
 
 		public async Task StartCaptureAsync ()
 		{
-			InitialSet = await Harness.CreateCrashReportsSnapshotAsync (Log, !Device);
+			InitialSet = await Harness.CreateCrashReportsSnapshotAsync (Log, !Device, DeviceName);
 		}
 
 		public async Task EndCaptureAsync (TimeSpan timeout)
@@ -685,7 +747,7 @@ namespace xharness
 			var watch = new Stopwatch ();
 			watch.Start ();
 			do {
-				var end_crashes = await Harness.CreateCrashReportsSnapshotAsync (Log, !Device);
+				var end_crashes = await Harness.CreateCrashReportsSnapshotAsync (Log, !Device, DeviceName);
 				end_crashes.ExceptWith (InitialSet);
 				Reports = end_crashes;
 				if (end_crashes.Count > 0) {
@@ -704,7 +766,13 @@ namespace xharness
 						var downloaded_crash_reports = new List<LogFile> ();
 						foreach (var file in end_crashes) {
 							var crash_report_target = Logs.CreateFile ("Crash report: " + Path.GetFileName (file), Path.Combine (LogDirectory, Path.GetFileName (file)));
-							var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, "--download-crash-report=" + file + " --download-crash-report-to=" + crash_report_target.Path + " --sdkroot " + Harness.XcodeRoot, Log, TimeSpan.FromMinutes (1));
+							var sb = new StringBuilder ();
+							sb.Append (" --download-crash-report=").Append (Harness.Quote (file));
+							sb.Append (" --download-crash-report-to=").Append (Harness.Quote (crash_report_target.Path));
+							sb.Append (" --sdkroot ").Append (Harness.Quote (Harness.XcodeRoot));
+							if (!string.IsNullOrEmpty (DeviceName))
+								sb.Append (" --devname ").Append (Harness.Quote (DeviceName));
+							var result = await ProcessHelper.ExecuteCommandAsync (Harness.MlaunchPath, sb.ToString (), Log, TimeSpan.FromMinutes (1));
 							if (result.Succeeded) {
 								Log.WriteLine ("Downloaded crash report {0} to {1}", file, crash_report_target.Path);
 								crash_report_target = await Harness.SymbolicateCrashReportAsync (Log, crash_report_target);

@@ -60,12 +60,14 @@ ifeq ($(BUILD_REVISION)$(JENKINS_HOME),)
 XBUILD_VERBOSITY=/nologo /verbosity:quiet
 XBUILD_VERBOSITY_QUIET=/nologo /verbosity:quiet
 MMP_VERBOSITY=-q
+MTOUCH_VERBOSITY=-q
 MDTOOL_VERBOSITY=
 else
 # wrench build
 XBUILD_VERBOSITY=/nologo /verbosity:normal
 XBUILD_VERBOSITY_QUIET=/nologo /verbosity:quiet
 MMP_VERBOSITY=-vvvv
+MTOUCH_VERBOSITY=-vvvv
 MDTOOL_VERBOSITY=-v -v -v -v
 endif
 else
@@ -73,5 +75,6 @@ else
 XBUILD_VERBOSITY=/verbosity:diagnostic
 XBUILD_VERBOSITY_QUIET=/verbosity:diagnostic
 MMP_VERBOSITY=-vvvv
+MTOUCH_VERBOSITY=-vvvv
 MDTOOL_VERBOSITY=-v -v -v -v
 endif

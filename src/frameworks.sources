@@ -144,7 +144,9 @@ APPKIT_SOURCES = \
 	AppKit/NSCollectionView.cs \
 	AppKit/NSTextTableBlock.cs \
 	AppKit/NSMutableFontCollection.cs \
-	AppKit/NSCollectionViewLayout.cs
+	AppKit/NSCollectionViewLayout.cs \
+	AppKit/NSColorPickerTouchBarItem.cs \
+	AppKit/NSSliderTouchBarItem.cs
 
 # AssetsLibrary
 
@@ -386,6 +388,7 @@ COREGRAPHICS_CORE_SOURCES = \
 	CoreGraphics/CGColor.cs \
 	CoreGraphics/CGColorSpace.cs \
 	CoreGraphics/CGContext.cs \
+	CoreGraphics/CGDisplay.cs \
 	CoreGraphics/CGGeometry.cs \
 	CoreGraphics/CGGradient.cs \
 	CoreGraphics/CGImage.cs \
@@ -608,7 +611,6 @@ FOUNDATION_CORE_SOURCES = \
 	Foundation/NSDecimal.cs \
 	Foundation/NSDimension.cs \
 	Foundation/NSError.cs \
-	Foundation/NSNumber.cs \
 	Foundation/NSObject2.cs \
 	Foundation/NSRange.cs \
 	Foundation/NSString.cs \
@@ -782,11 +784,10 @@ HEALTHKIT_SOURCES = \
 
 # HomeKit
 
-HOMEKIT_CORE_SOURCES = \
+HOMEKIT_API_SOURCES = \
 	HomeKit/HMEnums.cs \
 
 HOMEKIT_SOURCES = \
-	HomeKit/HMAccessoryCategory.cs \
 	HomeKit/HMActionSet.cs \
 	HomeKit/HMCharacteristic.cs \
 	HomeKit/HMCharacteristicMetadata.cs \
@@ -821,6 +822,7 @@ IMAGEKIT_CORE_SOURCES = \
 # Intents
 
 INTENTS_SOURCES = \
+	Intents/INCompat.cs \
 	Intents/INIntentResolutionResult.cs \
 	Intents/INPriceRange.cs \
 	Intents/INRideOption.cs \
@@ -829,6 +831,7 @@ INTENTS_SOURCES = \
 	Intents/INSetProfileInCarIntent.cs \
 	Intents/INSetSeatSettingsInCarIntent.cs \
 	Intents/INStartWorkoutIntent.cs \
+	Intents/INSaveProfileInCarIntent.cs \
 
 # JavaScriptCore
 
@@ -947,6 +950,7 @@ MODELIO_CORE_SOURCES = \
 
 MODELIO_SOURCES = \
 	ModelIO/MDLAsset.cs \
+	ModelIO/MDLNoiseTexture.cs \
 	ModelIO/MDLVertexDescriptor.cs \
 	ModelIO/MDLMesh.cs \
 
@@ -969,6 +973,7 @@ NETWORKEXTENSION_CORE_SOURCES = \
 	NetworkExtension/NEVpnConnectionStartOptions.cs \
 
 NETWORKEXTENSION_SOURCES = \
+	NetworkExtension/NECompat.cs \
 	NetworkExtension/NEFilterFlow.cs \
 	NetworkExtension/NEFilterProvider.cs \
 
@@ -1069,6 +1074,11 @@ PHOTOS_SOURCES = \
 PHOTOSUI_CORE_SOURCES = \
 	PhotosUI/PHEnums.cs \
 
+# PrintCode
+PRINTCORE_SOURCES = \
+	PrintCore/Defs.cs	\
+	PrintCore/PrintCore.cs
+	
 # QTKit
 
 QTKIT_CORE_SOURCES = \
@@ -1339,6 +1349,8 @@ USERNOTIFICATIONS_SOURCES = \
 
 VIDEOSUBSCRIBERACCOUNT_SOURCES = \
 	VideoSubscriberAccount/VSAccountManager.cs \
+	VideoSubscriberAccount/VSAccountMetadataRequest.cs \
+	VideoSubscriberAccount/VSAccountProviderAuthenticationScheme.cs \
 
 # VideoToolbox
 
@@ -1408,7 +1420,7 @@ APPLETLS_SOURCES = \
 	Security/Tls/AppleTlsContext.cs \
 	Security/Tls/AppleTlsProvider.cs \
 	Security/Tls/AppleTlsStream.cs \
-	Security/Tls/MobileCertificateHelper.cs \
+	Security/Tls/AppleCertificateHelper.cs \
 	Security/Tls/OldTlsProvider.cs \
 
 #
@@ -1456,12 +1468,10 @@ SHARED_SOURCES = \
 	ObjCRuntime/ErrorHelper.cs \
 	ObjCRuntime/Exceptions.cs \
 	ObjCRuntime/ExceptionMode.cs \
-	ObjCRuntime/IDynamicRegistrar.cs \
 	ObjCRuntime/Method.cs \
 	ObjCRuntime/MethodDescription.cs \
 	ObjCRuntime/NSStringMarshal.cs \
 	ObjCRuntime/ObjectWrapper.cs \
-	ObjCRuntime/OldDynamicRegistrar.cs \
 	ObjCRuntime/PlatformAvailability.cs \
 	ObjCRuntime/Registrar.cs \
 	ObjCRuntime/ReleaseAttribute.cs \
@@ -1474,6 +1484,7 @@ SHARED_SOURCES = \
 	ObjCRuntime/Selector.iOS.cs \
 	ObjCRuntime/Selector.mac.cs \
 	ObjCRuntime/SelectorMarshaler.cs \
+	ObjCRuntime/Stret.cs \
 	ObjCRuntime/ThreadSafeAttribute.cs \
 	ObjCRuntime/TransientAttribute.cs \
 	ObjCRuntime/TypeConverter.cs \
@@ -1502,7 +1513,6 @@ MAC_FRAMEWORKS =            \
 	$(COMMON_FRAMEWORKS)    \
 	Accelerate              \
 	Accounts                \
-	AddressBook             \
 	AppKit                  \
 	AudioToolbox            \
 	AudioUnit               \
@@ -1510,7 +1520,7 @@ MAC_FRAMEWORKS =            \
 	CFNetwork               \
 	CloudKit                \
 	Contacts                \
-	ContactsUI.Mac			\
+	ContactsUI              \
 	CoreAnimation           \
 	CoreAudioKit            \
 	CoreBluetooth           \
@@ -1537,6 +1547,7 @@ MAC_FRAMEWORKS =            \
 	MapKit                  \
 	MediaAccessibility      \
 	MediaLibrary 		\
+	MediaPlayer             \
 	MediaToolbox            \
 	Metal                   \
 	MetalKit                \
@@ -1548,6 +1559,7 @@ MAC_FRAMEWORKS =            \
 	OpenGL                  \
 	PdfKit                  \
 	Photos                  \
+	PrintCore		\
 	QTKit                   \
 	QuartzComposer          \
 	QuickLook               \

@@ -45,6 +45,7 @@ namespace XamCore.AppKit {
 		Regular, Accessory, Prohibited
 	}
 	
+	[Flags]
 	[Native]
 	public enum NSApplicationPresentationOptions : nuint_compat_int {
 		Default                    = 0,
@@ -420,7 +421,8 @@ namespace XamCore.AppKit {
 
 		SmartMagnify = 32,
 		QuickLook = 33,
-		Pressure = 34 // 10.10.3, 64-bit-only
+		Pressure = 34, // 10.10.3, 64-bit-only
+		DirectTouch = 37 // 10.10
 	}
 
 	[Flags]
@@ -456,6 +458,7 @@ namespace XamCore.AppKit {
 		EventEndGesture       = 1UL << (int)NSEventType.EndGesture,
 		SmartMagnify          = 1UL << (int)NSEventType.SmartMagnify,
 		Pressure              = 1UL << (int)NSEventType.Pressure, // 10.10.3, 64-bit-only
+		DirectTouch           = 1UL << (int)NSEventType.DirectTouch, // 10.10
 		AnyEvent              = unchecked ((nuint)UInt64.MaxValue)
 	}
 
@@ -905,6 +908,7 @@ namespace XamCore.AppKit {
 		[Mac (10, 11)] FullScreenDisallowsTiling = 1 << 12
 	}
 
+	[Flags]
 #if !XAMCORE_4_0
 	[Native]
 	public enum NSWindowNumberListOptions : nuint_compat_int {
@@ -1461,6 +1465,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,11)]
 	[Native]
+	[Flags]
 	public enum NSTextStorageEditActions : nuint
 	{
 		Attributes = (1 << 0),
@@ -1865,6 +1870,7 @@ namespace XamCore.AppKit {
 
 	[Mac (10,11)] // Not marked 10.11 in the headers, but doesn't exist in the 10.10 headers
 	[Native]
+	[Flags]
 	public enum NSCollectionViewScrollPosition : nuint
 	{
 		None = 0,
@@ -2161,7 +2167,9 @@ namespace XamCore.AppKit {
 	[Native]
 	public enum NSRemoteNotificationType : nuint_compat_int {
 		None = 0,
-		Badge = 1
+		Badge = 1 << 0,
+		Sound = 1 << 1,
+		Alert = 1 << 2
 	}
 	
 	[Native]
@@ -2240,6 +2248,7 @@ namespace XamCore.AppKit {
 		[Mac (10,11)] FirstBaseline,
 	}
 
+	[Flags]
 	[Native]
 	public enum NSLayoutFormatOptions : nuint_compat_int {
 		None = 0,
@@ -2543,6 +2552,7 @@ namespace XamCore.AppKit {
 		Emphasized
 	}
 
+	[Flags]
 	[Mac (10,11)]
 	[Native]
 	public enum NSSpringLoadingOptions : nuint
@@ -2563,6 +2573,7 @@ namespace XamCore.AppKit {
 		NonBaseCharacter = (1 << 3)
 	}
 
+	[Flags]
 	[Mac (10,11)]
 	[Native]
 	public enum NSControlCharacterAction : nint
@@ -2575,6 +2586,7 @@ namespace XamCore.AppKit {
 		ContainerBreak = (1 << 5)
 	}
 
+	[Flags]
 	[Mac (10,12)]
 	[Native]
 	public enum NSWindowListOptions : nint {
@@ -2686,4 +2698,41 @@ namespace XamCore.AppKit {
 	{
 		CurrentHostOnly = 1,
 	}
+
+
+	[Mac (10,12,1)]
+	[Native]
+	public enum NSTouchType : nint
+	{
+		Direct,
+		Indirect
+	}
+
+	[Mac (10,12,1)]
+	[Native]
+	[Flags]
+	public enum NSTouchTypeMask : nuint
+	{
+		Direct = (1 << (int)NSTouchType.Direct),
+		Indirect = (1 << (int)NSTouchType.Indirect)
+	}
+
+	[Mac (10,12,1)]
+	[Native]
+	public enum NSScrubberMode : nint
+	{
+		Fixed = 0,
+		Free
+	}
+
+	[Mac (10,12,1)]
+	[Native]
+	public enum NSScrubberAlignment : nint
+	{
+		None = 0,
+		Leading,
+		Trailing,
+		Center
+	}
+
 }

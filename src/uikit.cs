@@ -217,7 +217,7 @@ namespace XamCore.UIKit {
 	[iOS (10,0), NoTV, NoWatch]
 	delegate void UICloudSharingControllerPreparationCompletionHandler ([NullAllowed] CKShare share, [NullAllowed] CKContainer container, [NullAllowed] NSError error);
 
-	[iOS (10,0), NoTV, NoWatch] //TODO: This is marked as available on tvOS 10 but it isn't radar: 27929711
+	[iOS (10,0), NoTV, NoWatch]
 	[BaseType (typeof (UIViewController))]
 	interface UICloudSharingController {
 
@@ -5230,46 +5230,48 @@ namespace XamCore.UIKit {
 		[Internal]
 		IntPtr _GetPreferredFontForTextStyle (NSString uiFontTextStyle, [NullAllowed] UITraitCollection traitCollection);
 #endif
-	
+	}
+
+	public enum UIFontTextStyle {
 		[Since (7,0)]
-		[Internal, Field ("UIFontTextStyleHeadline")]
-		NSString TextStyleHeadline { get; }
+		[Field ("UIFontTextStyleHeadline")]
+		Headline,
 
 		[Since (7,0)]
-		[Internal, Field ("UIFontTextStyleBody")]
-		NSString TextStyleBody { get; }
+		[Field ("UIFontTextStyleBody")]
+		Body,
 
 		[Since (7,0)]
-		[Internal, Field ("UIFontTextStyleSubheadline")]
-		NSString TextStyleSubheadline { get; }
+		[Field ("UIFontTextStyleSubheadline")]
+		Subheadline,
 
 		[Since (7,0)]
-		[Internal, Field ("UIFontTextStyleFootnote")]
-		NSString TextStyleFootnote { get; }
+		[Field ("UIFontTextStyleFootnote")]
+		Footnote,
 
 		[Since (7,0)]
-		[Internal, Field ("UIFontTextStyleCaption1")]
-		NSString TextStyleCaption1 { get; }
+		[Field ("UIFontTextStyleCaption1")]
+		Caption1,
 
 		[Since (7,0)]
-		[Internal, Field ("UIFontTextStyleCaption2")]
-		NSString TextStyleCaption2 { get; }
+		[Field ("UIFontTextStyleCaption2")]
+		Caption2,
 
 		[Since (9,0)]
-		[Internal, Field ("UIFontTextStyleTitle1")]
-		NSString TextStyleTitle1 { get; }
+		[Field ("UIFontTextStyleTitle1")]
+		Title1,
 		
 		[Since (9,0)]
-		[Internal, Field ("UIFontTextStyleTitle2")]
-		NSString TextStyleTitle2 { get; }
+		[Field ("UIFontTextStyleTitle2")]
+		Title2,
 		
 		[Since (9,0)]
-		[Internal, Field ("UIFontTextStyleTitle3")]
-		NSString TextStyleTitle3 { get; }
+		[Field ("UIFontTextStyleTitle3")]
+		Title3,
 		
 		[Since (9,0)]
-		[Internal, Field ("UIFontTextStyleCallout")]
-		NSString TextStyleCallout { get; }
+		[Field ("UIFontTextStyleCallout")]
+		Callout,
 	}
 
 	[Since (7,0)]
@@ -5316,12 +5318,21 @@ namespace XamCore.UIKit {
 		[Static, Export ("preferredFontDescriptorWithTextStyle:")]
 		UIFontDescriptor GetPreferredDescriptorForTextStyle (NSString uiFontTextStyle);
 
+		[Static]
+		[Wrap ("GetPreferredDescriptorForTextStyle (uiFontTextStyle.GetConstant ())")]
+		UIFontDescriptor GetPreferredDescriptorForTextStyle (UIFontTextStyle uiFontTextStyle);
+
 		// FIXME [Watch (3,0)] the API is present but UITraitCollection is not exposed / rdar #27785753
 #if !WATCH
 		[iOS (10,0), TV (10,0)]
 		[Static]
 		[Export ("preferredFontDescriptorWithTextStyle:compatibleWithTraitCollection:")]
 		UIFontDescriptor GetPreferredDescriptorForTextStyle (NSString uiFontTextStyle, [NullAllowed] UITraitCollection traitCollection);
+
+		[iOS (10,0), TV (10,0)]
+		[Static]
+		[Wrap ("GetPreferredDescriptorForTextStyle (uiFontTextStyle.GetConstant (), traitCollection)")]
+		UIFontDescriptor GetPreferredDescriptorForTextStyle (UIFontTextStyle uiFontTextStyle, [NullAllowed] UITraitCollection traitCollection);
 #endif
 	
 		[DesignatedInitializer]
@@ -7034,16 +7045,6 @@ namespace XamCore.UIKit {
 		[Field ("UIWindowDidResignKeyNotification")]
 		[Notification]
 		NSString DidResignKeyNotification { get; }
-		
-		[NoTV]
-		[Since (5,0)]
-		[Field("UIKeyboardWillChangeFrameNotification")]
-		NSString KeyboardWillChangeFrameNotification { get; }
-		
-		[NoTV]
-		[Since (5,0)]
-		[Field("UIKeyboardDidChangeFrameNotification")]
-		NSString KeyboardDidChangeFrameNotification { get; }
 	}
 
 	[BaseType (typeof (UIView))]
@@ -7496,12 +7497,12 @@ namespace XamCore.UIKit {
 
 		[Export ("initWithImage:")]
 		[PostGet ("Image")]
-		IntPtr Constructor (UIImage image);
+		IntPtr Constructor ([NullAllowed] UIImage image);
 
 		[Export ("initWithImage:highlightedImage:")]
 		[PostGet ("Image")]
 		[PostGet ("HighlightedImage")]
-		IntPtr Constructor (UIImage image, UIImage highlightedImage);
+		IntPtr Constructor ([NullAllowed] UIImage image, [NullAllowed] UIImage highlightedImage);
 
 		[Export ("image", ArgumentSemantic.Retain)][NullAllowed]
 		UIImage Image { get; set; }
@@ -13104,11 +13105,13 @@ namespace XamCore.UIKit {
 		UIModalPresentationStyle ModalPresentationStyle { get; set; }
 
 		// 3.2 extensions from MoviePlayer
+		[NoMac]
 		[NoTV]
 		[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_9_0)]
 		[Export ("presentMoviePlayerViewControllerAnimated:")]
 		void PresentMoviePlayerViewController (MPMoviePlayerViewController moviePlayerViewController);
 
+		[NoMac]
 		[NoTV]
 		[Availability (Introduced = Platform.iOS_3_2, Deprecated = Platform.iOS_9_0)]
 		[Export ("dismissMoviePlayerViewControllerAnimated")]

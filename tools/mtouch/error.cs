@@ -13,7 +13,7 @@ namespace Xamarin.Bundler {
 	//					MT0002	Could not parse the environment variable '{0}'.
 	//					MT0003	Application name '{0}.exe' conflicts with an SDK or product assembly (.dll) name.
 	//					MT0004	<unused>
-	//					MT0005	The output directory '{0}' does not exist
+	//					MT0005	<unused>
 	//					MT0006	There is no devel platform at '{0}', use --platform=PLAT to specify the SDK
 	//					MT0007	The root assembly '{0}' does not exist
 	//					MT0008	You should provide one root assembly only, found {0} assemblies: '{1}'
@@ -30,7 +30,7 @@ namespace Xamarin.Bundler {
 	//					MT0019	Only one --[log|install|kill|launch]dev or --[launch|debug]sim option can be used.
 	//					MT0020	The valid options for '{0}' are '{1}'.
 	//					MT0021	Cannot compile using gcc/g++ (--use-gcc) when using the static registrar (this is the default when compiling for device). Either remove the --use-gcc flag or use the dynamic registrar (--registrar:dynamic).
-	//					MT0022  The options '--unsupported--enable-generics-in-registrar' and '--registrar' are not compatible.
+	//					MT0022  <unused>
 	//					MT0023	Application name '{0}.exe' conflicts with another user assembly.
 	//					MT0024  Could not find required file '{0}'.
 	//					MT0025	No SDK version was provided. Please add --sdk=X.Y to specify which iOS SDK should be used to build your application.
@@ -45,11 +45,11 @@ namespace Xamarin.Bundler {
 	//					MT0034	Cannot reference '{0}.dll' in a {1} project - it is implicitly referenced by '{2}'.
 	//					MT0035	<unused>
 	//					MT0036	<unused>
-	//					MT0037	monotouch.dll is not 64-bit compatible. Either reference Xamarin.iOS.dll, or do not build for a 64-bit architecture (ARM64 and/or x86_64).
-	//					MT0038	The old registrars (--registrar:oldstatic|olddynamic) are not supported when referencing Xamarin.iOS.dll.
+	//					MT0037	<unused>
+	//					MT0038	<unused>
 	//					MT0040	Could not find the assembly '{0}', referenced by '{1}'.
-	//					MT0041	Cannot reference both 'monotouch.dll' and 'Xamarin.iOS.dll'.
-	//		Warning		MT0042	No reference to either monotouch.dll or Xamarin.iOS.dll was found. A reference to monotouch.dll will be added.
+	//					MT0041	<unused>
+	//					MT0042	<unused>
 	//		Warning		MT0043	The Boehm garbage collector is not supported. The SGen garbage collector has been selected instead.
 	//					MT0044	--listsim is only supported with Xcode 6.0 or later.
 	//					MT0045	--extension is only supported when using the iOS 8.0 (or later) SDK.
@@ -71,7 +71,7 @@ namespace Xamarin.Bundler {
 	//					MT0061	No Xcode.app specified (using --sdkroot), using the system Xcode as reported by 'xcode-select --print-path': {0}
 	//					MT0062	No Xcode.app specified (using --sdkroot or 'xcode-select --print-path'), using the default Xcode instead: {0}
 	//					MT0063	Cannot find the executable in the extension {0} (no CFBundleExecutable entry in its Info.plist)
-	//					MT0064	Xamarin.iOS only supports embedded frameworks with Unified projects.
+	//					MT0064	<unused>
 	//					MT0065	Xamarin.iOS only supports embedded frameworks when deployment target is at least 8.0 (current deployment target: {0} embedded frameworks: {1})
 	//					MT0066	Invalid build registrar assembly: {0}
 	//					MT0067	Invalid registrar: {0}
@@ -97,11 +97,13 @@ namespace Xamarin.Bundler {
 	//		Warning		MT0087	<unused>
 	//					MT0088	The GC must be in cooperative mode for watchOS apps. Please remove the --coop:false argument to mtouch.
 	//					MT0089	The option '{0}' cannot take the value '{1}' when cooperative mode is enabled for the GC.
-	//					MT0091	This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker. 
+	//					MT0091	This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker by changing the Linker behaviour to Link Framework SDKs Only.
 	//					MT0092	<used by Xamarin.Launcher> The option '{0}' is required.
 	//					MT0093	Could not find 'mlaunch'.
 	//		Warning		MT0094	<unused> Both profiling (--profiling) and incremental builds (--fastdev) are currently not supported when building for {0}, and incremental builds have been disabled (this will be fixed in a future release).
 	//					MT0095 Aot files could not be copied to the destination directory.
+	//					MT0096 No reference to Xamarin.iOS.dll was found.
+	//					MT0097 <used by mmp>
 	// MT1xxx	file copy / symlinks (project related)
 	//			MT10xx	installer.cs / mtouch.cs
 	//					MT1001	Could not find an application at the specified directory: {0}
@@ -136,6 +138,7 @@ namespace Xamarin.Bundler {
 	//					MT1030	Launching applications on device using a bundle identifier is deprecated. Please pass the full path to the bundle to launch.
 	//					MT1031	Could not launch the app '{0}' on the device '{1}' because the device is locked. Please unlock the device and try again.
 	//		Warning			MT1032	This application executable might be too large ({0} MB) to execute on device. If bitcode was enabled you might want to disable it for development, it is only required to submit applications to Apple.
+	//					MT1033	Could not uninstall the application '{0}' from the device '{1}': {2}
 	//			MT11xx	DebugService.cs
 	//					MT1101	Could not start app: {0}
 	//					MT1102	Could not attach to the app (to kill it): {0}
@@ -200,10 +203,14 @@ namespace Xamarin.Bundler {
 	//					MT2007	** reserved Xamarin.Mac **
 	//					MT2009  ** reserved Xamarin.Mac **
 	//					MT2010	Unknown HttpMessageHandler `{0}`. Valid values are HttpClientHandler (default), CFNetworkHandler or NSUrlSessionHandler
-	//					MT2011	Unknown TlsProvider `{0}`.  Valid values are default, legacy or appletls.
+	//					MT2011	Unknown TlsProvider `{0}`.  Valid values are default or appletls.
 	//					MT2012  ** reserved Xamarin.Mac **
 	//					MT2013	** reserved Xamarin.Mac **
 	//					MT2014	** reserved Xamarin.Mac **
+	//		Warning		MT2015	Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.
+	//		Warning		MT2016  Invalid TlsProvider `{0}` option. The only valid value `{1}` will be used.
+	//					MT202x	Binding Optimizer failed processing `...`.
+	//					MT203x	Removing User Resources failed processing `...`.
 	// MT3xxx	AOT
 	//			MT30xx	AOT (general) errors
 	//					MT3001	Could not AOT the assembly '{0}'
@@ -281,6 +288,9 @@ namespace Xamarin.Bundler {
 	//					MT4162	The type '{0}' (used as {1} {2}) is not available in {3} {4} (it was introduced in {3} {5}){6} Please build with a newer iOS SDK (usually done by using the most recent version of Xcode.
 	//					MT4163	Internal error in the registrar ({0}). Please file a bug report at http://bugzilla.xamarin.com
 	//					MT4164	Cannot export the property '{0}' because its selector '{1}' is an Objective-C keyword. Please use a different name.
+	//					MT4165	The registrar couldn't find the type 'System.Void' in any of the referenced assemblies.
+	//					MT4166	Cannot register the method '{0}' because the signature contains a type ({1}) that isn't a reference type.
+	//					MT4167	Cannot register the method '{0}' because the signature contains a generic type ({1}) with a generic argument type that isn't an NSObject subclass ({2}).
 	// MT5xxx	GCC and toolchain
 	//			MT51xx	compilation
 	//					MT5101	Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component
@@ -306,7 +316,7 @@ namespace Xamarin.Bundler {
 	//					MT5304	Failed to strip the final binary. Please review the build log.
 	//					MT5305  Missing 'lipo' tool. Please install Xcode 'Command-Line Tools' component
 	//					MT5306  Failed to create the a fat library. Please review the build log.
-	//					MT5307  Failed to sign the executable. Please review the build log.
+	//					MT5307  <unused>
 	//					MT5308  ** reserved Xamarin.Mac **
 	//					MT5309  ** reserved Xamarin.Mac **
 	//					MT5310  ** reserved Xamarin.Mac **
@@ -315,7 +325,75 @@ namespace Xamarin.Bundler {
 	//					MT6001	Running version of Cecil doesn't support assembly stripping
 	//					MT6002	Could not strip assembly `{0}`.
 	//					MT6003  [UnauthorizedAccessException message]
-	// MT7xxx	reserved
+	// MT7xxx	msbuild reserved
+	//			MT700x	misc
+	//					MT7001	Could not resolve host IPs for WiFi debugger settings.
+	//					MT7002	This machine does not have any network adapters. This is required when debugging or profiling on device over WiFi.
+	//					MT7003	The App Extension '*' does not contain an Info.plist.
+	//					MT7004	The App Extension '*' does not specify a CFBundleIdentifier.
+	//					MT7005	The App Extension '*' does not specify a CFBundleExecutable.
+	//					MT7006	The App Extension '*' has an invalid CFBundleIdentifier (*), it does not begin with the main app bundle's CFBundleIdentifier (*).
+	//					MT7007	The App Extension '*' has a CFBundleIdentifier (*) that ends with the illegal suffix ".key".
+	//					MT7008	The App Extension '*' does not specify a CFBundleShortVersionString.
+	//					MT7009	The App Extension '*' has an invalid Info.plist: it does not contain an NSExtension dictionary.
+	//					MT7010	The App Extension '*' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionPointIdentifier value.
+	//					MT7011	The WatchKit Extension '*' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionAttributes dictionary.
+	//					MT7012	The WatchKit Extension '*' does not have exactly one watch app.
+	//					MT7013	The WatchKit Extension '*' has an invalid Info.plist: UIRequiredDeviceCapabilities must contain the 'watch-companion' capability.
+	//					MT7014	The Watch App '*' does not contain an Info.plist.
+	//					MT7015	The Watch App '*' does not specify a CFBundleIdentifier.
+	//					MT7016	The Watch App '*' has an invalid CFBundleIdentifier (*), it does not begin with the main app bundle's CFBundleIdentifier (*).
+	//					MT7017	The Watch App '*' does not have a valid UIDeviceFamily value. Expected 'Watch (4)' but found '* (*)'.
+	//					MT7018	The Watch App '*' does not specify a CFBundleExecutable
+	//					MT7019	The Watch App '*' has an invalid WKCompanionAppBundleIdentifier value ('*'), it does not match the main app bundle's CFBundleIdentifier ('*').
+	//					MT7020	The Watch App '*' has an invalid Info.plist: the WKWatchKitApp key must be present and have a value of 'true'.
+	//					MT7021	The Watch App '*' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.
+	//					MT7022	The Watch App '*' does not contain a Watch Extension.
+	//					MT7023	The Watch Extension '*' does not contain an Info.plist.
+	//					MT7024	The Watch Extension '*' does not specify a CFBundleIdentifier.
+	//					MT7025	The Watch Extension '*' does not specify a CFBundleExecutable.
+	//					MT7026	The Watch Extension '*' has an invalid CFBundleIdentifier (*), it does not begin with the main app bundle's CFBundleIdentifier (*).
+	//					MT7027	The Watch Extension '*' has a CFBundleIdentifier (*) that ends with the illegal suffix ".key".
+	//					MT7028	The Watch Extension '*' has an invalid Info.plist: it does not contain an NSExtension dictionary.
+	//					MT7029	The Watch Extension '*' has an invalid Info.plist: the NSExtensionPointIdentifier must be "com.apple.watchkit".
+	//					MT7030	The Watch Extension '*' has an invalid Info.plist: the NSExtension dictionary must contain NSExtensionAttributes.
+	//					MT7031	The Watch Extension '*' has an invalid Info.plist: the NSExtensionAttributes dictionary must contain a WKAppBundleIdentifier.
+	//					MT7032	The WatchKit Extension '*' has an invalid Info.plist: UIRequiredDeviceCapabilities should not contain the 'watch-companion' capability.
+	//					MT7033	The Watch App '*' does not contain an Info.plist.
+	//					MT7034	The Watch App '*' does not specify a CFBundleIdentifier.
+	//					MT7035	The Watch App '*' does not have a valid UIDeviceFamily value. Expected '*' but found '* (*)'.
+	//					MT7036	The Watch App '*' does not specify a CFBundleExecutable.
+	//					MT7037	The WatchKit Extension '{extensionName}' has an invalid WKAppBundleIdentifier value ('*'), it does not match the Watch App's CFBundleIdentifier ('*').
+	//					MT7038	The Watch App '*' has an invalid Info.plist: the WKCompanionAppBundleIdentifier must exist and must match the main app bundle's CFBundleIdentifier.
+	//					MT7039	The Watch App '*' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.
+	//					MT7040	The app bundle {AppBundlePath} does not contain an Info.plist.
+	//					MT7041	Main Info.plist path does not specify a CFBundleIdentifier.
+	//					MT7042	Main Info.plist path does not specify a CFBundleExecutable.
+	//					MT7043	Main Info.plist path does not specify a CFBundleSupportedPlatforms.
+	//					MT7044	Main Info.plist path does not specify a UIDeviceFamily.
+	//					MT7045	Unrecognized Type: *.
+	//					MT7046	Add: Entry, *, Incorrectly Specified.
+	//					MT7047	Add: Entry, *, Contains Invalid Array Index.
+	//					MT7048	Add: * Entry Already Exists.
+	//					MT7049	Add: Can't Add Entry, *, to Parent.
+	//					MT7050	Delete: Can't Delete Entry, *, from Parent.
+	//					MT7051	Delete: Entry, *, Contains Invalid Array Index.
+	//					MT7052	Delete: Entry, *, Does Not Exist.
+	//					MT7053	Import: Entry, *, Incorrectly Specified.
+	//					MT7054	Import: Entry, *, Contains Invalid Array Index.
+	//					MT7055	Import: Error Reading File: *.
+	//					MT7056	Import: Can't Add Entry, *, to Parent.
+	//					MT7057	Merge: Can't Add array Entries to dict.
+	//					MT7058	Merge: Specified Entry Must Be a Container.
+	//					MT7059	Merge: Entry, *, Contains Invalid Array Index.
+	//					MT7060	Merge: Entry, *, Does Not Exist.
+	//					MT7061	Merge: Error Reading File: *.
+	//					MT7062	Set: Entry, *, Incorrectly Specified.
+	//					MT7063	Set: Entry, *, Contains Invalid Array Index.
+	//					MT7064	Set: Entry, *, Does Not Exist.
+	//					MT7065	Unknown PropertyList editor action: *.
+	//					MT7066	Error loading '*': *.
+	//					MT7067	Error saving '*': *.
 	// MT8xxx	runtime
 	//			MT800x	misc
 	//					MT8001	Version mismatch between the native Xamarin.iOS runtime and monotouch.dll. Please reinstall Xamarin.iOS.
@@ -335,6 +413,12 @@ namespace Xamarin.Bundler {
 	//					MT8015	Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: The DelegateType's ({2}) 'Handler' field is not a delegate, it's a {3}. Please file a bug at http://bugzilla.xamarin.com.
 	//					MT8016	Unable to convert delegate to block for the return value for the method {0}.{1}, because the input isn't a delegate, it's a {1}. Please file a bug at http://bugzilla.xamarin.com.
 	//					MT8017	** reserved Xamarin.Mac **
+	//					MT8018	Internal consistency error. Please file a bug report at http://bugzilla.xamarin.com.
+	//					MT8019	Could not find the assembly {0} in the loaded assemblies.
+	//					MT8020	Could not find the module with MetadataToken {0} in the assembly {1}.
+	//					MT8021	Unknown implicit token type: 0x{0}.
+	//					MT8022	Expected the token reference 0x{0} to be a {1}, but it's a {2}. Please file a bug report at http://bugzilla.xamarin.com.
+	//					MT8023	An instance object is required to construct a closed generic method for the open generic method: {0}.{1} (token reference: 0x{2}). Please file a bug report at http://bugzilla.xamarin.com.
 	// MT9xxx	Licensing
 	//
 

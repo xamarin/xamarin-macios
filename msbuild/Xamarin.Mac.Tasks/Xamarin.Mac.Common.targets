@@ -23,6 +23,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Ditto" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindItemWithLogicalName" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.PackLibraryResources" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.PropertyListEditor" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SmartCopy" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.UnpackLibraryResources" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.Mac.Tasks.ACTool" AssemblyFile="Xamarin.Mac.Tasks.dll" />
@@ -44,6 +45,14 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetPropertyListValue" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SymbolStrip" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Zip" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
+
+	<UsingTask TaskName="Microsoft.Build.Tasks.Copy" AssemblyFile="Xamarin.MacDev.Tasks.dll"/>
+	<UsingTask TaskName="Microsoft.Build.Tasks.Delete" AssemblyFile="Xamarin.MacDev.Tasks.dll"/>
+	<UsingTask TaskName="Microsoft.Build.Tasks.Exec" AssemblyFile="Xamarin.MacDev.Tasks.dll"/>
+	<UsingTask TaskName="Microsoft.Build.Tasks.MakeDir" AssemblyFile="Xamarin.MacDev.Tasks.dll"/>
+	<UsingTask TaskName="Microsoft.Build.Tasks.Move" AssemblyFile="Xamarin.MacDev.Tasks.dll" />
+	<UsingTask TaskName="Microsoft.Build.Tasks.RemoveDir" AssemblyFile="Xamarin.MacDev.Tasks.dll"/>
+	<UsingTask TaskName="Microsoft.Build.Tasks.Touch" AssemblyFile="Xamarin.MacDev.Tasks.dll"/>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.props"
 			Condition="'$(_XamarinCommonPropsHasBeenImported)' != 'true'" />
@@ -161,11 +170,21 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			_CodesignNativeLibraries;
 		</_CodesignAppBundleDependsOn>
 
-		<CodesignDependsOn>
+		<CoreCodesignDependsOn>
 			_CodesignAppBundle;
 			_CodesignVerify;
+		</CoreCodesignDependsOn>
+
+		<CodesignDependsOn>
+			BeforeCodeSign;
+			CoreCodeSign;
+			AfterCodeSign;
 		</CodesignDependsOn>
 	</PropertyGroup>
+
+	<Target Name="BeforeCodesign" />
+	<Target Name="CoreCodesign" DependsOnTargets="$(CoreCodesignDependsOn)" />
+	<Target Name="AfterCodesign" />
 
 	<Target Name="Codesign" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(CodesignDependsOn)" />
 
@@ -328,13 +347,13 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_SmeltMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(Metal)' != ''" DependsOnTargets="_DetectSdkLocations">
 		<Metal
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' and '%(Metal.Identity)' != ''"
 			SessionId="$(BuildSessionId)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(XamMacResourcePrefix)"
 			SdkDevPath="$(_SdkDevPath)"
-			SourceFile="%(Metal.Identity)">
+			SourceFile="@(Metal)">
 			<Output TaskParameter="OutputFile" ItemName="_SmeltedMetal" />
 		</Metal>
 	</Target>
@@ -490,7 +509,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_CompileToNative" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_GenerateBundleName;ResolveReferences;_CompileEntitlements;_CompileAppManifest"
 		Inputs="$(TargetDir)$(TargetFileName)"
-		Outputs="$(_AppBundlePath)Contents\MacOS\$(TargetFileName)">
+		Outputs="$(_AppBundlePath)Contents\MacOS\$(_AppBundleName)">
 		<Mmp
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
@@ -498,7 +517,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			AppBundleDir="$(AppBundleDir)"
 			OutputPath="$(OutputPath)"
 			ApplicationName="$(_AppBundleName)"
-			ApplicationAssembly="$(OutputPath)$(AssemblyName)"
+			ApplicationAssembly="$(OutputPath)$(TargetName)$(TargetExt)"
 			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
 			TargetFrameworkVersion="$(TargetFrameworkVersion)"
 			UseXamMacFullFramework="$(UseXamMacFullFramework)"
@@ -507,7 +526,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			LinkMode="$(LinkMode)"
 			Debug="$(DebugSymbols)"
 			HttpClientHandler="$(HttpClientHandler)"
-			TLSProvider="$(TlsProvider)"
 			I18n="$(I18n)"
 			Profiling="$(Profiling)"
 			ExtraArguments="$(MonoBundlingExtraArgs)"
@@ -705,13 +723,23 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	</Target>
 
 	<Target Name="_ResolveAppExtensionReferences" DependsOnTargets="_SplitAppExtensionReferencesByExistent">
-		<!-- If building from a .sln.proj or from IDE, then referenced projects have already
-		     been built, so just get the target paths -->
+		<PropertyGroup>
+			<IsXBuild Condition="'$(MSBuildRuntimeVersion)' == ''">true</IsXBuild>
+
+			<!-- When building a .sln with xbuild or building from IDE, the referenced projects are already built.  -->
+			<_BuildReferencedExtensionProjects Condition="'$(IsXBuild)' == 'true' and '$(BuildingSolutionFile)' != 'true' and '$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
+
+			<!-- When building a .sln with msbuild, the dependent projects may not be built. So, always build
+			     the referenced projects unless building from IDE. -->
+			<_BuildReferencedExtensionProjects Condition="'$(IsXBuild)' != 'true' and '$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
+		</PropertyGroup>
+
+		<!-- If the referenced projects have already been built, then just get the target paths -->
 		<MSBuild
 			Projects="@(_AppExtensionReferenceWithConfigurationExistent)"
 			Targets="GetBundleTargetPath"
 			Properties="%(_AppExtensionReferenceWithConfigurationExistent.SetConfiguration); %(_AppExtensionReferenceWithConfigurationExistent.SetPlatform)"
-			Condition="'@(_AppExtensionReferenceWithConfigurationExistent)' != '' and ('$(BuildingSolutionFile)' == 'true' or '$(BuildingInsideVisualStudio)' == 'true')">
+			Condition="'@(_AppExtensionReferenceWithConfigurationExistent)' != '' and '$(_BuildReferencedExtensionProjects)' != 'true'">
 
 			<Output TaskParameter="TargetOutputs" ItemName="_ResolvedAppExtensionReferences" Condition="'%(_AppExtensionReferenceWithConfigurationExistent.ReferenceOutputAssembly)' != 'false'"/>
 		</MSBuild>
@@ -720,7 +748,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<MSBuild
 			Projects="@(_AppExtensionReferenceWithConfigurationExistent)"
 			Properties="%(_AppExtensionReferenceWithConfigurationExistent.SetConfiguration); %(_AppExtensionReferenceWithConfigurationExistent.SetPlatform)"
-			Condition="'@(_AppExtensionReferenceWithConfigurationExistent)' != '' and '$(BuildingSolutionFile)' != 'true' and '$(BuildingInsideVisualStudio)' != 'true' ">
+			Condition="'@(_AppExtensionReferenceWithConfigurationExistent)' != '' and '$(_BuildReferencedExtensionProjects)' == 'true'">
 
 			<Output TaskParameter="TargetOutputs" ItemName="_ResolvedAppExtensionReferences" Condition="'%(_AppExtensionReferenceWithConfigurationExistent.ReferenceOutputAssembly)' != 'false'"/>
 		</MSBuild>
@@ -728,5 +756,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<Warning Text="Referenced Mac App Extension Project %(_AppExtensionReferenceWithConfigurationNonExistent.Identity) not found, ignoring."
 			 Condition="'@(_AppExtensionReferenceWithConfigurationNonExistent)' != ''"/>
 	</Target>
+
+	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
+			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>
 </Project>
 

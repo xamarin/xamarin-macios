@@ -17,25 +17,30 @@ public class Frameworks : Dictionary <string, Framework>
 {
 	public void Add (string @namespace, int major_version)
 	{
-		Add (@namespace, @namespace, major_version, 0);
+		Add (@namespace, @namespace, major_version, 0, 0);
 	}
 
 	public void Add (string @namespace, string framework, int major_version)
 	{
-		Add (@namespace, framework, major_version, 0);
+		Add (@namespace, framework, major_version, 0, 0);
 	}
 
 	public void Add (string @namespace, int major_version, int minor_version)
 	{
-		Add (@namespace, @namespace, major_version, minor_version);
+		Add (@namespace, @namespace, major_version, minor_version, 0);
 	}
 
 	public void Add (string @namespace, string framework, int major_version, int minor_version)
 	{
+		Add(@namespace, framework, major_version, minor_version, 0);
+	}
+
+	public void Add (string @namespace, string framework, int major_version, int minor_version, int build_version)
+	{
 		var fr = new Framework () {
 			Namespace = Driver.IsUnified ? @namespace : XamCore.Registrar.Registrar.CompatNamespace + "." + @namespace,
 			Name = framework,
-			Version = new Version (major_version, minor_version)
+			Version = new Version (major_version, minor_version, build_version)
 		};
 		base.Add (fr.Namespace, fr);
 	}
@@ -127,112 +132,113 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "Intents", 10, 12 },
 					{ "SafariServices", "SafariServices", 10, 12 },
+					{ "MediaPlayer", "MediaPlayer", 10, 12, 1 },
 				};
 			}
 			return mac_frameworks;
 		}
 	}
 
+#if MTOUCH
 	static Frameworks ios_frameworks;
-	public static Frameworks iOSFrameworks {
-		get {
-			if (ios_frameworks == null) {
-				ios_frameworks = new Frameworks () {
-					{ "AddressBook",  "AddressBook", 3 },
-					{ "Security", "Security", 3 },
-					{ "AudioUnit", "AudioToolbox", 3 },
-					{ "AddressBookUI", "AddressBookUI", 3 },
-					{ "AudioToolbox", "AudioToolbox", 3 },
-					{ "AVFoundation", "AVFoundation", 3 },
-					{ "CoreAnimation", "QuartzCore", 3 },
-					{ "CoreData", "CoreData", 3 },
-					{ "CoreGraphics", "CoreGraphics", 3 },
-					{ "CoreLocation", "CoreLocation", 3 },
-					{ "ExternalAccessory", "ExternalAccessory", 3 },
-					{ "Foundation", "Foundation", 3 },
-					{ "GameKit", "GameKit", 3 },
-					{ "MapKit", "MapKit", 3 },
-					{ "MediaPlayer", "MediaPlayer", 3 },
-					{ "MessageUI", "MessageUI", 3 },
-					{ "MobileCoreServices", "MobileCoreServices", 3 },
-					{ "StoreKit", "StoreKit", 3 },
-					{ "SystemConfiguration", "SystemConfiguration", 3 },
-					{ "OpenGLES", "OpenGLES", 3 },
-					{ "UIKit", "UIKit", 3 },
+	public static Frameworks GetiOSFrameworks (Application app)
+	{
+		if (ios_frameworks == null) {
+			ios_frameworks = new Frameworks () {
+				{ "AddressBook",  "AddressBook", 3 },
+				{ "Security", "Security", 3 },
+				{ "AudioUnit", "AudioToolbox", 3 },
+				{ "AddressBookUI", "AddressBookUI", 3 },
+				{ "AudioToolbox", "AudioToolbox", 3 },
+				{ "AVFoundation", "AVFoundation", 3 },
+				{ "CoreAnimation", "QuartzCore", 3 },
+				{ "CoreData", "CoreData", 3 },
+				{ "CoreGraphics", "CoreGraphics", 3 },
+				{ "CoreLocation", "CoreLocation", 3 },
+				{ "ExternalAccessory", "ExternalAccessory", 3 },
+				{ "Foundation", "Foundation", 3 },
+				{ "GameKit", "GameKit", 3 },
+				{ "MapKit", "MapKit", 3 },
+				{ "MediaPlayer", "MediaPlayer", 3 },
+				{ "MessageUI", "MessageUI", 3 },
+				{ "MobileCoreServices", "MobileCoreServices", 3 },
+				{ "StoreKit", "StoreKit", 3 },
+				{ "SystemConfiguration", "SystemConfiguration", 3 },
+				{ "OpenGLES", "OpenGLES", 3 },
+				{ "UIKit", "UIKit", 3 },
 
-					{ "Accelerate", "Accelerate", 4 },
-					{ "EventKit", "EventKit", 4 },
-					{ "EventKitUI", "EventKitUI", 4 },
-					{ "CoreMotion", "CoreMotion", 4 },
-					{ "CoreMedia", "CoreMedia", 4 },
-					{ "CoreVideo", "CoreVideo", 4 },
-					{ "CoreTelephony", "CoreTelephony", 4 },
-					{ "iAd", "iAd", 4 },
-					{ "QuickLook", "QuickLook", 4 },
-					{ "ImageIO", "ImageIO", 4 },
-					{ "AssetsLibrary", "AssetsLibrary", 4 },
-					{ "CoreText", "CoreText", 4 },
-					{ "CoreMidi", "CoreMIDI", 4 },
+				{ "Accelerate", "Accelerate", 4 },
+				{ "EventKit", "EventKit", 4 },
+				{ "EventKitUI", "EventKitUI", 4 },
+				{ "CoreMotion", "CoreMotion", 4 },
+				{ "CoreMedia", "CoreMedia", 4 },
+				{ "CoreVideo", "CoreVideo", 4 },
+				{ "CoreTelephony", "CoreTelephony", 4 },
+				{ "iAd", "iAd", 4 },
+				{ "QuickLook", "QuickLook", 4 },
+				{ "ImageIO", "ImageIO", 4 },
+				{ "AssetsLibrary", "AssetsLibrary", 4 },
+				{ "CoreText", "CoreText", 4 },
+				{ "CoreMidi", "CoreMIDI", 4 },
 
-					{ "Accounts", "Accounts", 5 },
-					{ "GLKit", "GLKit", 5 },
-					{ "NewsstandKit", "NewsstandKit", 5 },
-					{ "CoreImage", "CoreImage", 5 },
-					{ "CoreBluetooth", "CoreBluetooth", 5 },
-					{ "Twitter", "Twitter", 5 },
+				{ "Accounts", "Accounts", 5 },
+				{ "GLKit", "GLKit", 5 },
+				{ "NewsstandKit", "NewsstandKit", 5 },
+				{ "CoreImage", "CoreImage", 5 },
+				{ "CoreBluetooth", "CoreBluetooth", 5 },
+				{ "Twitter", "Twitter", 5 },
 
-					{ "MediaToolbox", "MediaToolbox", 6 },
-					{ "PassKit", "PassKit", 6 },
-					{ "Social", "Social", 6 },
-					{ "AdSupport", "AdSupport", 6 },
+				{ "MediaToolbox", "MediaToolbox", 6 },
+				{ "PassKit", "PassKit", 6 },
+				{ "Social", "Social", 6 },
+				{ "AdSupport", "AdSupport", 6 },
 
-					{ "GameController", "GameController", 7 },
-					{ "JavaScriptCore", "JavaScriptCore", 7 },
-					{ "MediaAccessibility", "MediaAccessibility", 7 },
-					{ "MultipeerConnectivity", "MultipeerConnectivity", 7 },
-					{ "SafariServices", "SafariServices", 7 },
-					{ "SpriteKit", "SpriteKit", 7 },
+				{ "GameController", "GameController", 7 },
+				{ "JavaScriptCore", "JavaScriptCore", 7 },
+				{ "MediaAccessibility", "MediaAccessibility", 7 },
+				{ "MultipeerConnectivity", "MultipeerConnectivity", 7 },
+				{ "SafariServices", "SafariServices", 7 },
+				{ "SpriteKit", "SpriteKit", 7 },
 
-					{ "HealthKit", "HealthKit", 8 },
-					{ "HomeKit", "HomeKit", 8 },
-					{ "LocalAuthentication", "LocalAuthentication", 8 },
-					{ "NotificationCenter", "NotificationCenter", 8 },
-					{ "PushKit", "PushKit", 8 },
-					{ "Photos", "Photos", 8 },
-					{ "PhotosUI", "PhotosUI", 8 },
-					{ "SceneKit", "SceneKit", 8 },
-					{ "CloudKit", "CloudKit", 8 },
-					{ "AVKit", "AVKit", 8 },
-					{ "CoreAudioKit", "CoreAudioKit", 8 },
-					{ "Metal", "Metal", 8 },
-					{ "WebKit", "WebKit", 8 },
-					{ "NetworkExtension", "NetworkExtension", 8 },
-					{ "VideoToolbox", "VideoToolbox", 8 },
-					{ "WatchKit", "WatchKit", 8,2 },
-					
-					{ "ReplayKit", "ReplayKit", 9 },
-					{ "Contacts", "Contacts", 9 },
-					{ "ContactsUI", "ContactsUI", 9 },
-					{ "CoreSpotlight", "CoreSpotlight", 9 },
-					{ "WatchConnectivity", "WatchConnectivity", 9 },
-					{ "ModelIO", "ModelIO", 9 },
-					{ "MetalKit", "MetalKit", 9 },
-					{ "MetalPerformanceShaders", "MetalPerformanceShaders", 9 },
-					{ "GameplayKit", "GameplayKit", 9 },
-					{ "HealthKitUI", "HealthKitUI", 9,3 },
+				{ "HealthKit", "HealthKit", 8 },
+				{ "HomeKit", "HomeKit", 8 },
+				{ "LocalAuthentication", "LocalAuthentication", 8 },
+				{ "NotificationCenter", "NotificationCenter", 8 },
+				{ "PushKit", "PushKit", 8 },
+				{ "Photos", "Photos", 8 },
+				{ "PhotosUI", "PhotosUI", 8 },
+				{ "SceneKit", "SceneKit", 8 },
+				{ "CloudKit", "CloudKit", 8 },
+				{ "AVKit", "AVKit", 8 },
+				{ "CoreAudioKit", "CoreAudioKit", app.IsSimulatorBuild ? 9 : 8 },
+				{ "Metal", "Metal", 8 },
+				{ "WebKit", "WebKit", 8 },
+				{ "NetworkExtension", "NetworkExtension", 8 },
+				{ "VideoToolbox", "VideoToolbox", 8 },
+				{ "WatchKit", "WatchKit", 8,2 },
 
-					{ "CallKit", "CallKit", 10 },
-					{ "Messages", "Messages", 10 },
-					{ "Speech", "Speech", 10 },
-					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
-					{ "UserNotifications", "UserNotifications", 10 },
-					{ "UserNotificationsUI", "UserNotificationsUI", 10 },
-					{ "Intents", "Intents", 10 },
-					{ "IntentsUI", "IntentsUI", 10 },
-				};
-			}
-			return ios_frameworks;
+				{ "ReplayKit", "ReplayKit", 9 },
+				{ "Contacts", "Contacts", 9 },
+				{ "ContactsUI", "ContactsUI", 9 },
+				{ "CoreSpotlight", "CoreSpotlight", 9 },
+				{ "WatchConnectivity", "WatchConnectivity", 9 },
+				{ "ModelIO", "ModelIO", 9 },
+				{ "MetalKit", "MetalKit", 9 },
+				{ "MetalPerformanceShaders", "MetalPerformanceShaders", 9 },
+				{ "GameplayKit", "GameplayKit", 9 },
+				{ "HealthKitUI", "HealthKitUI", 9,3 },
+
+				{ "CallKit", "CallKit", 10 },
+				{ "Messages", "Messages", 10 },
+				{ "Speech", "Speech", 10 },
+				{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
+				{ "UserNotifications", "UserNotifications", 10 },
+				{ "UserNotificationsUI", "UserNotificationsUI", 10 },
+				{ "Intents", "Intents", 10 },
+				{ "IntentsUI", "IntentsUI", 10 },
+			};
 		}
+		return ios_frameworks;
 	}
 
 	static Frameworks watch_frameworks;
@@ -336,8 +342,9 @@ public class Frameworks : Dictionary <string, Framework>
 			return tvos_frameworks;
 		}
 	}
+#endif
 
-	public static void Gather (AssemblyDefinition product_assembly, HashSet<string> frameworks, HashSet<string> weak_frameworks)
+	public static void Gather (Application app, AssemblyDefinition product_assembly, HashSet<string> frameworks, HashSet<string> weak_frameworks)
 	{
 		var namespaces = new HashSet<string> ();
 
@@ -349,9 +356,9 @@ public class Frameworks : Dictionary <string, Framework>
 		// Iterate over all the namespaces and check which frameworks we need to link with.
 		foreach (var nspace in namespaces) {
 			Framework framework;
-			if (Driver.Frameworks.TryGetValue (nspace, out framework)) {
-				if (Driver.SDKVersion >= framework.Version) {
-					var add_to = Driver.MinOSVersion >= framework.Version ? frameworks : weak_frameworks;
+			if (Driver.GetFrameworks (app).TryGetValue (nspace, out framework)) {
+				if (app.SdkVersion >= framework.Version) {
+					var add_to = app.DeploymentTarget >= framework.Version ? frameworks : weak_frameworks;
 					add_to.Add (framework.Name);
 					continue;
 				}

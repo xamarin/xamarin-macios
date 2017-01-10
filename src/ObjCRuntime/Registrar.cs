@@ -88,6 +88,10 @@ namespace XamCore.Registrar {
 	}
 
 	abstract partial class Registrar {
+#if MTOUCH || MMP
+		public Application App { get; protected set; }
+#endif
+
 		Dictionary<TAssembly, object> assemblies = new Dictionary<TAssembly, object> (); // Use Dictionary instead of HashSet to avoid pulling in System.Core.dll.
 		// locking: all accesses must lock 'types'.
 		Dictionary<TType, ObjCType> types = new Dictionary<TType, ObjCType> ();
@@ -566,53 +570,59 @@ namespace XamCore.Registrar {
 				get {
 					if (trampoline != Trampoline.None)
 						return trampoline;
-						
-					var isStaticTrampoline = IsStatic && !IsCategoryInstance;
-					trampoline = isStaticTrampoline ? Trampoline.Static : Trampoline.Normal;
 
-					var return_type = Registrar.GetReturnType (Method);
-					var is_value_type = Registrar.IsValueType (return_type) && !Registrar.IsEnum (return_type);
-					var is_corlib = is_value_type ? Registrar.IsCorlibType (return_type) : false;
+#if MTOUCH || MMP
+					throw ErrorHelper.CreateError (8018, "Internal consistency error. Please file a bug report at http://bugzilla.xamarin.com.");
+#else
+					var mi = (System.Reflection.MethodInfo) Method;
+					bool is_stret;
+#if __WATCHOS__
+					is_stret = Runtime.Arch == Arch.DEVICE ? Stret.ArmNeedStret (mi) : Stret.X86NeedStret (mi);
+#elif MONOMAC
+					is_stret = IntPtr.Size == 8 ? Stret.X86_64NeedStret (mi) : Stret.X86NeedStret (mi);
+#elif __IOS__
+					if (Runtime.Arch == Arch.DEVICE) {
+						is_stret = IntPtr.Size == 4 && Stret.ArmNeedStret (mi);
+					} else {
+						is_stret = IntPtr.Size == 4 ? Stret.X86NeedStret (mi) : Stret.X86_64NeedStret (mi);
+					}
+#elif __TVOS__
+					is_stret = Runtime.Arch == Arch.SIMULATOR && Stret.X86_64NeedStret (mi);
+#else
+	#error unknown architecture
+#endif
+					var is_static_trampoline = IsStatic && !IsCategoryInstance;
+					var is_value_type = Registrar.IsValueType (ReturnType) && !Registrar.IsEnum (ReturnType);
 
-					if (is_value_type && Registrar.IsGenericType (return_type))
-						throw Registrar.CreateException (4104, Method, "The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.", Registrar.GetTypeFullName (return_type), Registrar.GetTypeFullName (DeclaringType.Type), Registrar.GetDescriptiveMethodName (Method));
-
-					var size = is_value_type ? Registrar.GetValueTypeSize (return_type) : 0;
-
-					if (is_value_type && !is_corlib && (!Registrar.IsSimulatorOrDesktop || size > 4)) {
-						trampoline = isStaticTrampoline ? Trampoline.StaticStret : Trampoline.Stret;
-
-						if (Registrar.IsSimulatorOrDesktop) {
-							if (Registrar.Is64Bits) {
-								if (size > 16) {
-									trampoline = isStaticTrampoline ? Trampoline.StaticStret : Trampoline.Stret;
-								} else {
-									trampoline = isStaticTrampoline ? Trampoline.Static : Trampoline.Normal;
-								}
-							} else {
-								if (size > 8) {
-									trampoline = isStaticTrampoline ? Trampoline.X86_DoubleABI_StaticStretTrampoline : Trampoline.X86_DoubleABI_StretTrampoline;
-								} else {
-									trampoline = isStaticTrampoline ? Trampoline.StaticLong : Trampoline.Long;
-								}
-							}
+					if (is_value_type && Registrar.IsGenericType (ReturnType))
+						throw Registrar.CreateException (4104, Method, "The registrar cannot marshal the return value of type `{0}` in the method `{1}.{2}`.", Registrar.GetTypeFullName (ReturnType), Registrar.GetTypeFullName (DeclaringType.Type), Registrar.GetDescriptiveMethodName (Method));
+					
+					if (is_stret) {
+						if (Registrar.IsSimulatorOrDesktop && !Registrar.Is64Bits) {
+							trampoline = is_static_trampoline ? Trampoline.X86_DoubleABI_StaticStretTrampoline : Trampoline.X86_DoubleABI_StretTrampoline;
+						} else {
+							trampoline = is_static_trampoline ? Trampoline.StaticStret : Trampoline.Stret;
 						}
 					} else {
 						switch (Signature [0]) {
 						case 'Q':
 						case 'q':
-							trampoline = isStaticTrampoline ? Trampoline.StaticLong : Trampoline.Long;
+							trampoline = is_static_trampoline ? Trampoline.StaticLong : Trampoline.Long;
 							break;
 						case 'f':
-							trampoline = isStaticTrampoline ? Trampoline.StaticSingle : Trampoline.Single;
+							trampoline = is_static_trampoline ? Trampoline.StaticSingle : Trampoline.Single;
 							break;
 						case 'd':
-							trampoline = isStaticTrampoline ? Trampoline.StaticDouble : Trampoline.Double;
+							trampoline = is_static_trampoline ? Trampoline.StaticDouble : Trampoline.Double;
+							break;
+						default:
+							trampoline = is_static_trampoline ? Trampoline.Static : Trampoline.Normal;
 							break;
 						}
 					}
 					
 					return trampoline;
+#endif
 				}
 				set {
 					trampoline = value;
@@ -674,7 +684,7 @@ namespace XamCore.Registrar {
 					if (Method == null)
 						return false;
 					
-					return Method.IsSpecialName && (Method.Name.StartsWith ("get_") || Method.Name.StartsWith ("set_"));
+					return Method.IsSpecialName && (Method.Name.StartsWith ("get_", StringComparison.Ordinal) || Method.Name.StartsWith ("set_", StringComparison.Ordinal));
 				}
 			}
 		}
@@ -879,9 +889,10 @@ namespace XamCore.Registrar {
 		internal const string CompatNamespace = "MonoTouch";
 		internal const string CompatAssemblyName = "monotouch";
 #if MTOUCH
-		internal static string DualAssemblyName {
+		internal string DualAssemblyName
+		{
 			get {
-				switch (Driver.App.Platform) {
+				switch (App.Platform) {
 				case Xamarin.Utils.ApplePlatform.iOS:
 					return "Xamarin.iOS";
 				case Xamarin.Utils.ApplePlatform.WatchOS:
@@ -889,7 +900,7 @@ namespace XamCore.Registrar {
 				case Xamarin.Utils.ApplePlatform.TVOS:
 					return "Xamarin.TVOS";
 				default:
-					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", Driver.App.Platform);
+					throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", App.Platform);
 				}
 			}
 		}
@@ -917,7 +928,7 @@ namespace XamCore.Registrar {
 				internal const string INativeObject           =	"INativeObject";
 		}
 
-		internal static string PlatformAssembly {
+		internal string PlatformAssembly {
 			get {
 				return IsDualBuild ? DualAssemblyName : CompatAssemblyName;
 			}
@@ -2049,7 +2060,14 @@ namespace XamCore.Registrar {
 
 		protected string GetExportedTypeName (TType type, RegisterAttribute register_attribute)
 		{
-			var name = register_attribute != null && register_attribute.Name != null ? register_attribute.Name : GetTypeFullName (type);
+			string name = null;
+			if (register_attribute != null) {
+				if (register_attribute.SkipRegistration)
+					return GetExportedTypeName (GetBaseType (type));
+				name = register_attribute.Name;
+			}
+			if (name == null)
+				name = GetTypeFullName (type);
 			return SanitizeName (name);
 		}
 

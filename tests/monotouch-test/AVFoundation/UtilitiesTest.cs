@@ -11,6 +11,7 @@
 
 using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 #if XAMCORE_2_0
 using Foundation;
 using UIKit;
@@ -47,6 +48,23 @@ namespace MonoTouchFixtures.AVFoundation {
 			Assert.That (nfloat.IsNaN (r.Left), "Left");
 			Assert.That (nfloat.IsNaN (r.Width), "Width");
 			Assert.That (nfloat.IsNaN (r.Height), "Height");
+		}
+	}
+
+	[TestFixture]
+	[Preserve (AllMembers = true)]
+	public class AVStructTest {
+
+		[Test]
+		public void StructSizeTest ()
+		{
+			if (!TestRuntime.CheckXcodeVersion (6, 1))
+				Assert.Ignore ("Ignoring Tests: Requires Xcode 6.1+ API");
+
+			Assert.That (Marshal.SizeOf (typeof (AVSampleCursorSyncInfo)), Is.EqualTo (3), "AVSampleCursorSyncInfo Size");
+			Assert.That (Marshal.SizeOf (typeof (AVSampleCursorDependencyInfo)), Is.EqualTo (6), "AVSampleCursorDependencyInfo Size");
+			Assert.That (Marshal.SizeOf (typeof (AVSampleCursorStorageRange)), Is.EqualTo (16), "AVSampleCursorStorageRange Size");
+			Assert.That (Marshal.SizeOf (typeof (AVSampleCursorChunkInfo)), Is.EqualTo (IntPtr.Size == 8 ? 16 : 12), "AVSampleCursorChunkInfo Size");
 		}
 	}
 }

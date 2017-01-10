@@ -27,6 +27,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<CscToolPath Condition="'$(CscToolPath)' == ''">/Developer/MonoTouch/usr/bin</CscToolPath>
 		<CscToolExe Condition="'$(CscToolExe)' == '' And '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">smcs</CscToolExe>
 		<CscToolExe Condition="'$(CscToolExe)' == ''">/Library/Frameworks/Mono.framework/Commands/mcs</CscToolExe>
+		<!-- We default to *mcs compiler above, so, select the .mdb as the debug ext -->
+		<CscDebugFileExt Condition="'$(CscDebugFileExt)' == ''">.mdb</CscDebugFileExt>
 
 		<DefineConstants>__UNIFIED__;__MOBILE__;__IOS__;$(DefineConstants)</DefineConstants>
 	</PropertyGroup>

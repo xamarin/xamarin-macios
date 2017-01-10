@@ -25,12 +25,10 @@ namespace XamCore.PassKit {
 		None = 0,
 		InvalidData = 1,
 		UnsupportedVersion,
-#if XAMCORE_2_0
 		InvalidSignature,
-#else
+#if !XAMCORE_2_0
 		[Obsolete ("renamed to InvalidSignature")] // after betas?
-		CertificateRevoked,
-		InvalidSignature = CertificateRevoked,
+		CertificateRevoked = InvalidSignature,
 #endif
 		[iOS (8,0)]
 		NotEntitled
@@ -113,6 +111,8 @@ namespace XamCore.PassKit {
 		SetUp,
 		[iOS (10,0)]
 		InStore,
+		[iOS (10,2)]
+		Donate,
 	}
 
 	[Watch (3,0)]

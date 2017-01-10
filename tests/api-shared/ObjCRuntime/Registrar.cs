@@ -26,39 +26,25 @@ namespace XamarinTests.ObjCRuntime {
 
 	public enum Registrars {
 		Static = 1,
-		OldStatic = 2,
 		Dynamic = 4,
-		OldDynamic = 8,
-		AllStatic = Static | OldStatic,
-		AllDynamic = Dynamic | OldDynamic,
-		AllNew = Static | Dynamic,
-		AllOld = OldStatic | OldDynamic,
+		AllStatic = Static,
+		AllDynamic = Dynamic,
 	}
 		
 	public class Registrar {
 		[Register ("__registration_test_CLASS")]
 		class RegistrationTestClass : NSObject {}
 
-		static FieldInfo GetPrivateField (Type type, string name)
-		{
-			var fld = type.GetField (name, BindingFlags.Instance | BindingFlags.NonPublic);
-			if (fld != null)
-				return fld;
-			if (type.BaseType == null)
-				return null;
-			return GetPrivateField (type.BaseType, name);
-		}
-
 		public static Registrars CurrentRegistrar {
 			get {
-				var registrar = typeof(Runtime).GetField ("Registrar", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).GetValue (null);
-				var is_old = registrar.GetType ().Name.Contains ("Old");
-				var dict = (System.Collections.IDictionary) GetPrivateField (registrar.GetType (), "lazy_map").GetValue (registrar);
-				var is_static = dict.Contains (Class.GetHandle (typeof (RegistrationTestClass)));
+				var find_type = typeof (Class).GetMethod ("FindType", BindingFlags.Static | BindingFlags.NonPublic);
+				var type_to_find = typeof (RegistrationTestClass);
+				var type = (Type) find_type.Invoke (null, new object [] { Class.GetHandle (type_to_find), false });
+				var is_static = type_to_find == type;
 				if (is_static) {
-					return is_old ? Registrars.OldStatic : Registrars.Static;
+					return Registrars.Static;
 				} else {
-					return is_old ? Registrars.OldDynamic : Registrars.Dynamic;
+					return Registrars.Dynamic;
 				}
 			}
 		}

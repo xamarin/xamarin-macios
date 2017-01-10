@@ -14,7 +14,7 @@ include $(TOP)/Make.config
 IOS_CURRENT_DIR=$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current
 IOS_GENERATOR = $(IOS_CURRENT_DIR)/bin/btouch /baselib:$(IOS_CURRENT_DIR)/lib/mono/2.1/monotouch.dll /unsafe /compiler:$(IOS_CURRENT_DIR)/bin/smcs
 IOS_TESTS = bug15283 bug15307 bug15799 bug16036 sof20696157 bug23041 bug27430 bug27428 bug34042 btouch-with-hyphen-in-name property-redefination-ios arrayfromhandlebug bug36457 bug39614 bug40282 bug17232 bug24078-ignore-methods-events strong-dict-support-templated-dicts bug43579
-IOS_CUSTOM_TESTS = forum54078 desk63279 desk79124 multiple-api-definitions1 multiple-api-definitions2 bug29493 classNameCollision bi1036 bug37527 bug27986 bug35176
+IOS_CUSTOM_TESTS = forum54078 desk63279 desk79124 multiple-api-definitions1 multiple-api-definitions2 bug29493 classNameCollision bi1036 bug37527 bug27986 bug35176 bi1046
 
 MAC_CURRENT_DIR=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 MAC_GENERATOR = $(MAC_CURRENT_DIR)/bin/bmac
@@ -121,8 +121,33 @@ bug35176:
 		echo "Error: Expected 4 Introduced attributes in generated code."; exit 1; \
 	fi
 
+bug46292:
+	@rm -Rf $@.tmpdir
+	@mkdir -p $@.tmpdir
+	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) --sourceonly:$@.source -tmpdir=$@.tmpdir $@.cs --process-enums
+	@if ! grep -r Obsolete bug46292.tmpdir/BindingTests > /dev/null; then \
+		echo "error: Could not find Obsolete attribute in generated code."; exit 1; \
+	fi
+	@if [ `grep -r Obsolete bug46292.tmpdir/BindingTests | wc -l` -ne 2 ]; then \
+		echo "Error: Expected 2 Obsolete attributes in generated code."; exit 1; \
+	fi
+
+forcedtype:
+	@rm -Rf $@.tmpdir
+	@mkdir -p $@.tmpdir
+	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) --sourceonly:$@.source -tmpdir=$@.tmpdir $@.cs
+	@if ! grep -r GetINativeObject forcedtype.tmpdir > /dev/null; then \
+		echo "error: Could not find GetINativeObject usage in generated code."; exit 1; \
+	fi
+	@if [ `grep -r GetINativeObject forcedtype.tmpdir | wc -l` -ne 12 ]; then \
+		echo "Error: Expected 12 GetINativeObject usages in generated code."; exit 1; \
+	fi
+
 bi1036:
 	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) $@.cs | grep BI1036 >/dev/null 2>&1
+
+bi1046:
+	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) $@.cs --process-enums | grep BI1046 >/dev/null 2>&1
 
 clean-local::
 	rm -f *.dll *.source

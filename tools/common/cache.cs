@@ -7,7 +7,7 @@ using System.Text;
 
 using Xamarin.Bundler;
 
-static class Cache {
+public class Cache {
 #if MMP
 	const string NAME = "mmp";
 #elif MTOUCH
@@ -16,15 +16,15 @@ static class Cache {
 	#error Wrong defines
 #endif
 
-	static string cache_dir;
-	static bool temporary_cache;
+	string cache_dir;
+	bool temporary_cache;
 
-	public static bool IsCacheTemporary {
+	public bool IsCacheTemporary {
 		get { return temporary_cache; }
 	}
 	
 	// see --cache=DIR
-	static public string Location {
+	public string Location {
 		get {
 			if (cache_dir == null) {
 				do {
@@ -54,7 +54,7 @@ static class Cache {
 		}
 	}
 	
-	static public void Clean ()
+	public void Clean ()
 	{
 #if DEBUG
 		Console.WriteLine ("Cache.Clean: {0}" , Location);
@@ -63,7 +63,7 @@ static class Cache {
 		Directory.CreateDirectory (Location);
 	}
 	
-	static public bool Exists (string file)
+	public bool Exists (string file)
 	{
 		return File.Exists (Path.Combine (Location, file));
 	}
@@ -71,29 +71,21 @@ static class Cache {
 	public static bool CompareFiles (string a, string b, bool ignore_cache = false)
 	{
 		if (Driver.Force && !ignore_cache) {
-#if DEBUG_COMPARE
-			Console.WriteLine ("Files {0} and {1} are considered different because -f was passed to " + NAME + ".", a, b);
-#endif
+			Driver.Log (6, "Files {0} and {1} are considered different because -f was passed to " + NAME + ".", a, b);
 			return false;
 		}
 
 		if (!File.Exists (b)) {
-#if DEBUG_COMPARE
-		Console.WriteLine ("Files {0} and {1} are considered different because the latter doesn't exist.", a, b);
-#endif
+			Driver.Log (6, "Files {0} and {1} are considered different because the latter doesn't exist.", a, b);
 			return false;
 		}
 
 		using (var astream = new FileStream (a, FileMode.Open)) {
 			using (var bstream = new FileStream (b, FileMode.Open)) {
 				bool rv;
-#if DEBUG_COMPARE
-				Console.WriteLine ("Comparing files {0} and {1}...", a, b);
-#endif
+				Driver.Log (6, "Comparing files {0} and {1}...", a, b);
 				rv = CompareStreams (astream, bstream, ignore_cache);
-#if DEBUG_COMPARE
-				Console.WriteLine (" > {0}", rv ? "Identical" : "Different");
-#endif
+				Driver.Log (6, " > {0}", rv ? "Identical" : "Different");
 				return rv;
 			}
 		}
@@ -102,29 +94,21 @@ static class Cache {
 	public static bool CompareAssemblies (string a, string b, bool ignore_cache = false, bool compare_guids = false)
 	{
 		if (Driver.Force && !ignore_cache) {
-#if DEBUG_COMPARE
-			Console.WriteLine ("Assemblies {0} and {1} are considered different because -f was passed to " + NAME + ".", a, b);
-#endif
+			Driver.Log (6, "Assemblies {0} and {1} are considered different because -f was passed to " + NAME + ".", a, b);
 			return false;
 		}
 
 		if (!File.Exists (b)) {
-#if DEBUG_COMPARE
-			Console.WriteLine ("Assemblies {0} and {1} are considered different because the latter doesn't exist.", a, b);
-#endif
+			Driver.Log (6, "Assemblies {0} and {1} are considered different because the latter doesn't exist.", a, b);
 			return false;
 		}
 
 		using (var astream = new AssemblyReader (a) { CompareGUIDs = compare_guids }) {
 			using (var bstream = new AssemblyReader (b) { CompareGUIDs = compare_guids }) {
 				bool rv;
-#if DEBUG_COMPARE
-				Console.WriteLine ("Comparing assemblies {0} and {1}...", a, b);
-#endif
+				Driver.Log (6, "Comparing assemblies {0} and {1}...", a, b);
 				rv = CompareStreams (astream, bstream, ignore_cache);
-#if DEBUG_COMPARE
-				Console.WriteLine (" > {0}", rv ? "Identical" : "Different");
-#endif
+				Driver.Log (6, " > {0}", rv ? "Identical" : "Different");
 				return rv;
 			}
 		}
@@ -133,16 +117,12 @@ static class Cache {
 	public unsafe static bool CompareStreams (Stream astream, Stream bstream, bool ignore_cache = false)
 	{
 		if (Driver.Force && !ignore_cache) {
-#if DEBUG_COMPARE
-			Console.WriteLine (" > streams are considered different because -f was passed to " + NAME + ".");
-#endif
+			Driver.Log (6, " > streams are considered different because -f was passed to " + NAME + ".");
 			return false;
 		}
 
 		if (astream.Length != bstream.Length) {
-#if DEBUG_COMPARE
-			Console.WriteLine (" > streams are considered different because their lengths do not match.");
-#endif
+			Driver.Log (6, " > streams are considered different because their lengths do not match.");
 			return false;
 		}
 
@@ -154,9 +134,7 @@ static class Cache {
 			int br = bstream.Read (bb, 0, bb.Length);
 
 			if (ar != br) {
-#if DEBUG_COMPARE
-				Console.WriteLine (" > streams are considered different because their lengths do not match.");
-#endif
+				Driver.Log (6, " > streams are considered different because their lengths do not match.");
 				return false;
 			}
 
@@ -170,9 +148,7 @@ static class Cache {
 				// Compare one long at a time.
 				for (int i = 0; i < len / 8; i++) {
 					if (l1 [i] != l2 [i]) {
-#if DEBUG_COMPARE
-						Console.WriteLine (" > streams differ at index {0}-{1}", i, i + 8);
-#endif
+						Driver.Log (6, " > streams differ at index {0}-{1}", i, i + 8);
 						return false;
 					}
 				}
@@ -181,9 +157,7 @@ static class Cache {
 				if (mod > 0) {
 					for (int i = len - mod; i < len; i++) {
 						if (ab [i] != bb [i]) {						
-#if DEBUG_COMPARE
-							Console.WriteLine (" > streams differ at byte index {0}", i);
-#endif
+							Driver.Log (6, " > streams differ at byte index {0}", i);
 							return false;
 						}
 					}
@@ -222,12 +196,12 @@ static class Cache {
 		return sb.ToString ();
 	}
 
-	static void Invalidate ()
+	void Invalidate ()
 	{
 		Clean ();
 	}
 
-	static bool IsCacheValid ()
+	bool IsCacheValid ()
 	{
 		var name = "arguments";
 		var pcache = Path.Combine (Location, name);
@@ -250,7 +224,7 @@ static class Cache {
 		return true;
 	}
 
-	public static bool VerifyCache ()
+	public bool VerifyCache ()
 	{
 		if (!IsCacheValid ()) {
 			Clean ();
@@ -260,7 +234,7 @@ static class Cache {
 		return true;
 	}
 
-	public static void ValidateCache ()
+	public void ValidateCache ()
 	{
 		var name = "arguments";
 		var pcache = Path.Combine (Location, name);

@@ -86,7 +86,7 @@ namespace Xamarin.MacDev.Tasks
 
 			// group the atlas textures by their parent .atlas directories
 			foreach (var item in AtlasTextures) {
-				var atlas = Path.GetDirectoryName (BundleResource.GetVirtualProjectPath (ProjectDir, item));
+				var atlas = Path.GetDirectoryName (BundleResource.GetVirtualProjectPath (ProjectDir, item, !string.IsNullOrEmpty(SessionId)));
 				List<ITaskItem> items;
 
 				if (!atlases.TryGetValue (atlas, out items)) {

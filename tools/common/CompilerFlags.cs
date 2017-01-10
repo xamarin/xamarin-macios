@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -84,25 +85,25 @@ namespace Xamarin.Utils
 		{
 			// link with the exact path to libmono
 			if (Application.UseMonoFramework.Value) {
-				AddFramework (Path.Combine (Driver.ProductFrameworksDirectory, "Mono.framework"));
+				AddFramework (Path.Combine (Driver.GetProductFrameworksDirectory (Application), "Mono.framework"));
 			} else {
-				AddLinkWith (Path.Combine (Driver.MonoTouchLibDirectory, Application.LibMono));
+				AddLinkWith (Path.Combine (Driver.GetMonoTouchLibDirectory (Application), Application.LibMono));
 			}
 		}
 
 		public void LinkWithXamarin ()
 		{
-			AddLinkWith (Path.Combine (Driver.MonoTouchLibDirectory, Application.LibXamarin));
+			AddLinkWith (Path.Combine (Driver.GetMonoTouchLibDirectory (Application), Application.LibXamarin));
 			AddFramework ("Foundation");
 			AddOtherFlag ("-lz");
 		}
 
 		public void LinkWithPInvokes (Abi abi)
 		{
-			if (!Driver.App.FastDev || !Driver.App.RequiresPInvokeWrappers)
+			if (!Application.FastDev || !Application.RequiresPInvokeWrappers)
 				return;
 
-			AddOtherFlag (Path.Combine (Cache.Location, "pinvokes." + abi.AsArchString () + ".dylib"));
+			AddOtherFlag (Path.Combine (Application.Cache.Location, "libpinvokes." + abi.AsArchString () + ".dylib"));
 		}
 
 		public void AddFramework (string framework)
@@ -136,11 +137,11 @@ namespace Xamarin.Utils
 					WeakFrameworks = new HashSet<string> ();
 				
 				foreach (var fwk in Frameworks) {
-					if (!fwk.EndsWith (".framework")) {
+					if (!fwk.EndsWith (".framework", StringComparison.Ordinal)) {
 						var add_to = WeakFrameworks;
-						var framework = Driver.Frameworks.Find (fwk);
+						var framework = Driver.GetFrameworks (Application).Find (fwk);
 						if (framework != null) {
-							if (framework.Version > Driver.SDKVersion)
+							if (framework.Version > Application.SdkVersion)
 								continue;
 							add_to = Application.DeploymentTarget >= framework.Version ? Frameworks : WeakFrameworks;
 						}
@@ -228,7 +229,7 @@ namespace Xamarin.Utils
 		void ProcessFrameworkForArguments (StringBuilder args, string fw, bool is_weak, ref bool any_user_framework)
 		{
 			var name = Path.GetFileNameWithoutExtension (fw);
-			if (fw.EndsWith (".framework")) {
+			if (fw.EndsWith (".framework", StringComparison.Ordinal)) {
 				// user framework, we need to pass -F to the linker so that the linker finds the user framework.
 				any_user_framework = true;
 				AddInput (Path.Combine (fw, name));

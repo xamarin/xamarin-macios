@@ -65,18 +65,16 @@ LINKER_SOURCES = \
 	$(LINKER_DIR)/MonoTouch.Tuner/ProcessExportedFields.cs	\
 	$(LINKER_DIR)/MonoTouch.Tuner/RemoveAttributes.cs		\
 	$(LINKER_DIR)/MonoTouch.Tuner/RemoveCode.cs			\
-	$(LINKER_DIR)/MonoTouch.Tuner/RemoveExtraRegistrar.cs		\
-	$(LINKER_DIR)/MonoTouch.Tuner/RemoveMonoTouchResources.cs	\
 	$(LINKER_DIR)/MonoTouch.Tuner/SealerSubStep.cs	\
 	$(TOP)/tools/linker/ApplyPreserveAttribute.cs 		\
 	$(TOP)/tools/linker/BaseProfile.cs			\
 	$(TOP)/tools/linker/CoreHttpMessageHandler.cs	\
-	$(TOP)/tools/linker/CoreTlsProviderStep.cs		\
 	$(TOP)/tools/linker/CoreMarkStep.cs			\
 	$(TOP)/tools/linker/CoreOptimizeGeneratedCode.cs	\
 	$(TOP)/tools/linker/CorePreserveCode.cs		\
 	$(TOP)/tools/linker/CoreRemoveAttributes.cs		\
 	$(TOP)/tools/linker/CoreRemoveSecurity.cs		\
+	$(TOP)/tools/linker/ExceptionalSubStep.cs		\
 	$(TOP)/tools/linker/MarkNSObjects.cs			\
 	$(TOP)/tools/linker/MobileExtensions.cs		\
 	$(TOP)/tools/linker/MobileMarkStep.cs			\
@@ -85,7 +83,8 @@ LINKER_SOURCES = \
 	$(TOP)/tools/linker/MobileResolveMainAssemblyStep.cs	\
 	$(TOP)/tools/linker/MobileSweepStep.cs			\
 	$(TOP)/tools/linker/ObjCExtensions.cs			\
-	$(TOP)/tools/linker/RemoveSelectors.cs
+	$(TOP)/tools/linker/RemoveSelectors.cs			\
+	$(TOP)/tools/linker/RemoveUserResourcesSubStep.cs \
 
 
 COMMON_SOURCES = 											\
@@ -110,7 +109,6 @@ MTOUCH_SOURCES = \
 	$(TOP)/tools/common/Frameworks.cs	\
 	$(TOP)/tools/common/MachO.cs		\
 	mtouch.cs		\
-	OldStaticRegistrar.cs		\
 	$(TOP)/tools/common/PInvokeWrapperGenerator.cs	\
 	$(TOP)/tools/common/TargetFramework.cs	\
 	$(TOP)/tools/common/StaticRegistrar.cs	\
@@ -141,7 +139,7 @@ $(MONO_CECIL_DLL): $(CECIL_PATH)/Mono.Cecil.csproj
 $(MONO_CECIL_MDB_DLL): $(MONO_CECIL_DLL) $(CECIL_PATH)/symbols/mdb/Mono.Cecil.Mdb.csproj
 	$(Q_XBUILD) cd $(CECIL_PATH) && $(SYSTEM_XBUILD) /p:Configuration=$(CECIL_CONFIG) symbols/mdb/Mono.Cecil.Mdb.csproj $(XBUILD_VERBOSITY)
 
-SIMLAUNCHERS = simlauncher-sgen simlauncher32-sgen simlauncher64-sgen
+SIMLAUNCHERS = simlauncher32-sgen simlauncher64-sgen
 
 monotouch-fixes.i386.dylib: monotouch-fixes.c Makefile
 	$(SIMULATOR_CCOMPILE) -DDEBUG -Wl,-headerpad_max_install_names -g -dynamiclib -gdwarf-2 -I$(TOP)/runtime/.libs -L$(TOP)/runtime/.libs $(SIMULATOR86_CFLAGS) monotouch-fixes.c -o $@ -Wall
@@ -292,7 +290,6 @@ simlauncher$(5)$(1): simlauncher.m $(TOP)/runtime/.libs/ios/libxamarin.a $(BUILD
 
 endef
 
-$(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator86/lib/libmono-profiler-log.a -u _mono_profiler_startup,sgen,86,))
 $(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator86/lib/libmono-profiler-log.a -u _mono_profiler_startup -DXAMCORE_2_0 Xamarin.iOS.registrar.ios.a,sgen,86,32))
 $(eval $(call SimlauncherTemplate,-sgen,$(BUILD_DESTDIR)/simulator64/lib/libmono-profiler-log.a -u _mono_profiler_startup -DXAMCORE_2_0 Xamarin.iOS.registrar.ios.a,sgen,64,64))
 
@@ -303,7 +300,7 @@ MTOUCH_DEFINES= -define:ENABLE_BITCODE_ON_IOS
 endif
 
 MTOUCH_COMPILE_DEPS = $(MTOUCH_SOURCES) $(MONO_CECIL_DLL) $(MONO_CECIL_MDB_DLL) Makefile $(LINKER_RESOURCES)
-MTOUCH_COMPILE_ARGS = -unsafe $(IOS_DEFINES) -resource:Info.plist.tmpl -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:System.Xml.Linq.dll $(MTOUCH_SOURCES) -nowarn:0436 $(LINKER_RESOURCES:%=-resource:%) $(MTOUCH_DEFINES)
+MTOUCH_COMPILE_ARGS = -unsafe $(IOS_DEFINES) -r:$(MONO_CECIL_DLL) -r:$(MONO_CECIL_MDB_DLL) -r:System.Xml.Linq.dll $(MTOUCH_SOURCES) -nowarn:0436 $(LINKER_RESOURCES:%=-resource:%) $(MTOUCH_DEFINES) -debug
 
 # bin/Debug/mtouch.exe is used from mtouch.csproj when debugging
 bin/Debug/mtouch.exe: $(MTOUCH_COMPILE_DEPS)
@@ -333,25 +330,29 @@ bin/Makefile/Mono.Cecil.dll: $(MONO_CECIL_DLL) | bin/Makefile
 bin/Makefile/Mono.Cecil.Mdb.dll: $(MONO_CECIL_MDB_DLL) | bin/Makefile
 	$(Q) cp $<* $(dir $@)
 
-%.registrar.ios.m     %.registrar.ios.h:     $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.iOS/%.dll     $(LOCAL_MTOUCH)
-	$(Q_GEN) $(SYSTEM_MONO) --debug bin/Makefile/mtouch.exe --xamarin-framework-directory=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(IOS_SDK_VERSION)   $< --registrar:static --target-framework Xamarin.iOS,v1.0    --abi i386,x86_64
-	$(Q) touch $*.registrar.ios.m $*.registrar.ios.h
+%.registrar.ios.i386.m     %.registrar.ios.i386.h:     $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/%.dll     $(LOCAL_MTOUCH)
+	$(Q_GEN) $(SYSTEM_MONO) --debug bin/Makefile/mtouch.exe --xamarin-framework-directory=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) $(MTOUCH_VERBOSITY) --runregistrar:$(abspath $(basename $@).m) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(IOS_SDK_VERSION)   $< --registrar:static --target-framework Xamarin.iOS,v1.0    --abi i386
+	$(Q) touch $(basename $@).m $(basename $@).h
+
+%.registrar.ios.x86_64.m   %.registrar.ios.x86_64.h:   $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/%.dll     $(LOCAL_MTOUCH)
+	$(Q_GEN) $(SYSTEM_MONO) --debug bin/Makefile/mtouch.exe --xamarin-framework-directory=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) $(MTOUCH_VERBOSITY) --runregistrar:$(abspath $(basename $@).m) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(IOS_SDK_VERSION)   $< --registrar:static --target-framework Xamarin.iOS,v1.0    --abi x86_64
+	$(Q) touch $(basename $@).m $(basename $@).h
 
 %.registrar.watchos.m %.registrar.watchos.h: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/%.dll $(LOCAL_MTOUCH)
-	$(Q_GEN) $(SYSTEM_MONO) --debug bin/Makefile/mtouch.exe --xamarin-framework-directory=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(WATCH_SDK_VERSION) $< --registrar:static --target-framework Xamarin.WatchOS,1.0 --abi i386
-	$(Q) touch $*.registrar.watchos.m $*.registrar.watchos.h
+	$(Q_GEN) $(SYSTEM_MONO) --debug bin/Makefile/mtouch.exe --xamarin-framework-directory=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) $(MTOUCH_VERBOSITY) --runregistrar:$(abspath $(basename $@).m) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(WATCH_SDK_VERSION) $< --registrar:static --target-framework Xamarin.WatchOS,1.0 --abi i386
+	$(Q) touch $(basename $@).m $(basename $@).h
 
 %.registrar.tvos.m    %.registrar.tvos.h:    $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/%.dll    $(LOCAL_MTOUCH)
-	$(Q_GEN) $(SYSTEM_MONO) --debug bin/Makefile/mtouch.exe --xamarin-framework-directory=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) -q --runregistrar:$(abspath $@) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(TVOS_SDK_VERSION)  $< --registrar:static --target-framework Xamarin.TVOS,1.0    --abi x86_64
-	$(Q) touch $*.registrar.tvos.m $*.registrar.tvos.h
+	$(Q_GEN) $(SYSTEM_MONO) --debug bin/Makefile/mtouch.exe --xamarin-framework-directory=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) $(MTOUCH_VERBOSITY) --runregistrar:$(abspath $(basename $@).m) --sdkroot $(XCODE_DEVELOPER_ROOT) --sdk $(TVOS_SDK_VERSION)  $< --registrar:static --target-framework Xamarin.TVOS,1.0    --abi x86_64
+	$(Q) touch $(basename $@).m $(basename $@).h
 
 %.registrar.ios.a:        %.registrar.ios.i386.a %.registrar.ios.x86_64.a
 	$(Q_LIPO) $(DEVICE_BIN_PATH)/lipo -create -output $@ $^
 
-%.registrar.ios.i386.a:   %.registrar.ios.m      %.registrar.ios.h
+%.registrar.ios.i386.a:   %.registrar.ios.i386.m      %.registrar.ios.i386.h
 	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATOR86_CFLAGS)    -x objective-c++ -o $@ -c $< -Wall -I$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr/include
 
-%.registrar.ios.x86_64.a: %.registrar.ios.m     %.registrar.ios.h
+%.registrar.ios.x86_64.a: %.registrar.ios.x86_64.m    %.registrar.ios.x86_64.h
 	$(Q_CC) $(IOS_CC) -DDEBUG -g -gdwarf-2 $(SIMULATOR64_CFLAGS)    -x objective-c++ -o $@ -c $< -Wall -I$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr/include
 
 %.registrar.watchos.a:    %.registrar.watchos.m  %.registrar.watchos.h
@@ -368,8 +369,6 @@ TARGETS = \
 	$(foreach launcher,$(SIMLAUNCHERS),$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/$(launcher)) \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/monotouch-fixes.dylib                           \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr/lib/Xamarin.iOS.registrar.a         \
-	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr/lib/MonoTouch.Dialog-1.registrar.a  \
-#	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphonesimulator.sdk/usr/lib/MonoTouch.NUnitLite.registrar.a \
 
 ifdef INCLUDE_WATCH
 TARGETS += $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/Xamarin.WatchOS.registrar.a
@@ -378,7 +377,7 @@ endif
 ifdef INCLUDE_TVOS
 TARGETS +=	\
 	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/Xamarin.TVOS.registrar.a       \
-#	$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/MonoTouch.Dialog-1.registrar.a
+
 endif
 
 TARGET_DIRS = \
@@ -431,6 +430,12 @@ install-local:: $(TARGETS)
 all-local:: $(TARGETS)
 endif
 
+mtouch: \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch                                          \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/mtouch.exe                               \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.dll                           \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.Mdb.dll
+
 clean-local::
 	rm -Rf bin obj
 	rm -f $(SIMLAUNCHERS)
@@ -441,6 +446,6 @@ include $(TOP)/mk/rules.mk
 
 # make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
 # marking those files as .SECONDARY will prevent that deletion.
-.SECONDARY: $(foreach file,Xamarin.iOS MonoTouch.Dialog-1 MonoTouch.NUnitLite,$(file).registrar.ios.a $(file).registrar.ios.i386.a $(file).registrar.ios.x86_64.a $(file).registrar.ios.m $(file).registrar.ios.h)
-.SECONDARY: $(foreach file,Xamarin.WatchOS,$(file).registrar.watchos.a $(file).registrar.watchos.m $(file).registrar.watchos.h)
-.SECONDARY: $(foreach file,Xamarin.TVOS MonoTouch.Dialog-1,$(file).registrar.tvos.a $(file).registrar.tvos.m $(file).registrar.tvos.h)
+.SECONDARY: $(foreach ext,a h m,Xamarin.iOS.registrar.ios.i386.$(ext) Xamarin.iOS.registrar.ios.x86_64.$(ext))
+.SECONDARY: $(foreach ext,a h m,Xamarin.WatchOS.registrar.watchos.$(ext))
+.SECONDARY: $(foreach ext,a h m,Xamarin.TVOS.registrar.tvos.$(ext))

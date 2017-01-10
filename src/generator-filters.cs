@@ -5,42 +5,6 @@ using System.Reflection;
 
 using XamCore.Foundation;
 
-[AttributeUsage (AttributeTargets.Interface)]
-public class CoreImageFilterAttribute : Attribute {
-
-	public CoreImageFilterAttribute ()
-	{
-		// default is public - will be skipped for abstract types
-		DefaultCtorVisibility = MethodAttributes.Public;
-
-		// since it was not generated code we never fixed the .ctor(IntPtr) visibility for unified
-#if XAMCORE_3_0
-		IntPtrCtorVisibility = MethodAttributes.FamORAssem;
-#else
-		IntPtrCtorVisibility = MethodAttributes.Public;
-#endif
-		// not needed by default, automaticly `protected` if the type is abstract
-		StringCtorVisibility = MethodAttributes.PrivateScope;
-	}
-
-	public MethodAttributes DefaultCtorVisibility { get; set; }
-
-	public MethodAttributes IntPtrCtorVisibility { get; set; }
-
-	public MethodAttributes StringCtorVisibility { get; set; }
-}
-
-[AttributeUsage (AttributeTargets.Property)]
-public class CoreImageFilterPropertyAttribute : Attribute {
-
-	public CoreImageFilterPropertyAttribute (string name)
-	{
-		Name = name;
-	}
-
-	public string Name { get; private set; }
-}
-
 public partial class Generator {
 
 	List<string> filters = new List<string> ();

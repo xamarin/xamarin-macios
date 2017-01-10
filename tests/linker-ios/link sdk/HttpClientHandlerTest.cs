@@ -18,6 +18,7 @@ namespace LinkSdk.Net.Http {
 	[Preserve (AllMembers = true)]
 	public class HttpClientHandlerTest {
 
+#if !__WATCHOS__
 		[Test]
 		public void HttpClient ()
 		{
@@ -40,7 +41,6 @@ namespace LinkSdk.Net.Http {
 			}
 		}
 
-#if !__WATCHOS__
 		[Test]
 		public void CFNetwork ()
 		{

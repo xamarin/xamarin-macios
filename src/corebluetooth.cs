@@ -488,11 +488,11 @@ namespace XamCore.CoreBluetooth {
 		[Since (7,0), Mavericks]
 		[Export ("identifier")]
 		NSUuid Identifier { get; }
-#else
-		[iOS (9,0)]
+#endif
+
+		[iOS (9,0)][Mac (10,12)]
 		[Export ("maximumWriteValueLengthForType:")]
 		nuint GetMaximumWriteValueLength (CBCharacteristicWriteType type);
-#endif
 
 #if !XAMCORE_2_0
 		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0)]
@@ -731,11 +731,9 @@ namespace XamCore.CoreBluetooth {
 		NSString ServiceChangedString { get; }
 #endif // !XAMCORE_3_0
 
-#if !MONOMAC
-		[Since (7,1)]
+		[Since (7,1)][Mac (10,10)]
 		[Export ("UUIDString")]
 		string Uuid { get; }
-#endif
 	}
 		
 	[Since (6,0), Mac(10,9)]

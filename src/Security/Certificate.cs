@@ -27,6 +27,11 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#if XAMARIN_APPLETLS || __WATCHOS__
+#define NATIVE_APPLE_CERTIFICATE
+#endif
+
 using System;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
@@ -85,7 +90,7 @@ namespace XamCore.Security {
 			if (certificate == null)
 				throw new ArgumentNullException ("certificate");
 
-#if XAMARIN_APPLETLS
+#if NATIVE_APPLE_CERTIFICATE
 			/*
 			 * This requires a recent Mono runtime which has the lazily-initialized
 			 * certifciates in mscorlib.dll, so we can't use it on XM classic.
@@ -105,7 +110,7 @@ namespace XamCore.Security {
 			}
 		}
 
-#if XAMARIN_APPLETLS
+#if NATIVE_APPLE_CERTIFICATE
 		internal SecCertificate (X509CertificateImpl impl)
 		{
 			handle = impl.GetNativeAppleCertificate ();
@@ -125,7 +130,7 @@ namespace XamCore.Security {
 			if (certificate == null)
 				throw new ArgumentNullException ("certificate");
 
-#if XAMARIN_APPLETLS
+#if NATIVE_APPLE_CERTIFICATE
 			handle = certificate.Impl.GetNativeAppleCertificate ();
 			if (handle != IntPtr.Zero) {
 				CFObject.CFRetain (handle);
@@ -184,7 +189,7 @@ namespace XamCore.Security {
 
 		public X509Certificate ToX509Certificate ()
 		{
-#if XAMARIN_APPLETLS
+#if NATIVE_APPLE_CERTIFICATE
 			if (handle == IntPtr.Zero)
 				throw new ObjectDisposedException ("SecCertificate");
 
@@ -259,7 +264,7 @@ namespace XamCore.Security {
 				return new NSData (dataPtr);
 			}
 		}
-#elif XAMARIN_APPLETLS && (__IOS__ || __WATCHOS__ || __TVOS__)
+#elif NATIVE_APPLE_CERTIFICATE && (__IOS__ || __WATCHOS__ || __TVOS__)
 		//
 		// EXPERIMENTAL
 		// Needs some more testing before we can make this public.

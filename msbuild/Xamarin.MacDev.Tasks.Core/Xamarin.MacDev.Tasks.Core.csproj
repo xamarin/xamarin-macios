@@ -42,7 +42,7 @@
     <Reference Include="Mono.Posix" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -93,6 +93,7 @@
     <Compile Include="Tasks\OptimizePropertyListTaskBase.cs" />
     <Compile Include="Tasks\PackLibraryResourcesTaskBase.cs" />
     <Compile Include="Tasks\PrepareNativeReferencesTaskBase.cs" />
+    <Compile Include="Tasks\PropertyListEditorTaskBase.cs" />
     <Compile Include="Tasks\ScnToolTaskBase.cs" />
     <Compile Include="Tasks\ReadItemsFromFileBase.cs" />
     <Compile Include="Tasks\WriteItemsToFileBase.cs" />

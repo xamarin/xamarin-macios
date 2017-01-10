@@ -7,28 +7,6 @@ using System.Reflection;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
-// If the enum is used to represent error code then this attribute can be used to
-// generate an extension type that will return the associated error domain based
-// on the field name (given as a parameter)
-[AttributeUsage (AttributeTargets.Enum)]
-public class ErrorDomainAttribute : Attribute {
-
-	public ErrorDomainAttribute (string domain)
-	{
-		ErrorDomain = domain;
-	}
-
-	public string ErrorDomain { get; set; }
-}
-
-[AttributeUsage (AttributeTargets.Field)]
-public class DefaultEnumValueAttribute : Attribute {
-
-	public DefaultEnumValueAttribute ()
-	{
-	}
-}
-
 public partial class Generator {
 
 	static string GetCSharpTypeName (Type type)
@@ -55,6 +33,12 @@ public partial class Generator {
 		}
 	}
 
+	void CopyObsolete (ICustomAttributeProvider provider)
+	{
+		foreach (ObsoleteAttribute oa in provider.GetCustomAttributes (typeof (ObsoleteAttribute), false))
+			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
+	}
+
 	// caller already:
 	//	- setup the header and namespace
 	//	- call/emit PrintPlatformAttributes on the type
@@ -70,17 +54,21 @@ public partial class Generator {
 			else
 				print ("[Native (\"{0}\")]", native.NativeName);
 		}
+		CopyObsolete (type);
 
+		var unique_constants = new HashSet<string> ();
 		var fields = new Dictionary<FieldInfo, FieldAttribute> ();
 		Tuple<FieldInfo, FieldAttribute> null_field = null;
 		Tuple<FieldInfo, FieldAttribute> default_symbol = null;
-		print ("public enum {0} : {1} {{", type.Name, GetCSharpTypeName (Enum.GetUnderlyingType (type)));
+		var underlying_type = GetCSharpTypeName (Enum.GetUnderlyingType (type));
+		print ("public enum {0} : {1} {{", type.Name, underlying_type);
 		indent++;
 		foreach (var f in type.GetFields ()) {
 			// skip value__ field 
 			if (f.IsSpecialName)
 				continue;
 			PrintPlatformAttributes (f);
+			CopyObsolete (f);
 			print ("{0} = {1},", f.Name, f.GetRawConstantValue ());
 			var fa = GetAttribute<FieldAttribute> (f);
 			if (fa == null)
@@ -89,8 +77,12 @@ public partial class Generator {
 				continue;
 			if (fa.SymbolName == null)
 				null_field = new Tuple<FieldInfo, FieldAttribute> (f, fa);
-			else
+			else if (unique_constants.Contains (fa.SymbolName))
+				throw new BindingException (1046, true, $"The [Field] constant {fa.SymbolName} cannot only be used once inside enum {type.Name}.");
+			else {
 				fields.Add (f, fa);
+				unique_constants.Add (fa.SymbolName);
+			}
 			if (GetAttribute<DefaultEnumValueAttribute> (f) != null) {
 				if (default_symbol != null)
 					throw new BindingException (1045, true, $"Only a single [DefaultEnumValue] attribute can be used inside enum {type.Name}.");
@@ -99,6 +91,7 @@ public partial class Generator {
 		}
 		indent--;
 		print ("}");
+		unique_constants.Clear ();
 
 		var library_name = type.Namespace;
 		var error = GetAttribute<ErrorDomainAttribute> (type);
@@ -137,23 +130,25 @@ public partial class Generator {
 		}
 
 		if (fields.Count > 0) {
+			print ("static IntPtr[] values = new IntPtr [{0}];", fields.Count);
+			print ("");
+
+			int n = 0;
 			foreach (var kvp in fields) {
 				var f = kvp.Key;
 				var fa = kvp.Value;
-				print ("[Field (\"{0}\", \"{1}\")]", fa.SymbolName, fa.LibraryName ?? library_name);
-				print ("static NSString _{0};", fa.SymbolName);
-				print ("");
 				// the attributes (availability and field) are important for our tests
 				PrintPlatformAttributes (f);
-				print ("internal static NSString {0} {{", fa.SymbolName);
+				var libname = fa.LibraryName ?? library_name;
+				print ("[Field (\"{0}\", \"{1}\")]", fa.SymbolName, libname);
+				print ("internal unsafe static IntPtr {0} {{", fa.SymbolName);
 				indent++;
 				print ("get {");
 				indent++;
-				print ("if (_{0} == null)", fa.SymbolName);
+				print ("fixed (IntPtr *storage = &values [{0}])", n++);
 				indent++;
-				print ("_{0} = Dlfcn.GetStringConstant (Libraries.{1}.Handle, \"{0}\");", fa.SymbolName, fa.LibraryName ?? library_name);
+				print ("return Dlfcn.CachePointer (Libraries.{0}.Handle, \"{1}\", storage);", libname, fa.SymbolName);
 				indent--;
-				print ("return _{0};", fa.SymbolName);
 				indent--;
 				print ("}");
 				indent--;
@@ -164,22 +159,22 @@ public partial class Generator {
 			print ("public static NSString GetConstant (this {0} self)", type.Name);
 			print ("{");
 			indent++;
-			print ("switch (self) {");
+			print ("IntPtr ptr = IntPtr.Zero;");
+			print ("switch (({0}) self) {{", underlying_type);
 			var default_symbol_name = default_symbol?.Item2.SymbolName;
+			// more than one enum member can share the same numeric value - ref: #46285
 			foreach (var kvp in fields) {
-				print ("case {0}.{1}:", type.Name, kvp.Key.Name);
+				print ("case {0}: // {1}.{2}", Convert.ToInt64 (kvp.Key.GetValue (null)), type.Name, kvp.Key.Name);
 				var sn = kvp.Value.SymbolName;
 				if (sn == default_symbol_name)
 					print ("default:");
 				indent++;
-				print ("return {0};", sn);
+				print ("ptr = {0};", sn);
+				print ("break;");
 				indent--;
 			}
 			print ("}");
-			if (default_symbol_name == null) {
-				// note: a `[Field (null)]` does not need extra code
-				print ("return null;");
-			}
+			print ("return (NSString) Runtime.GetNSObject (ptr);");
 			indent--;
 			print ("}");
 			
@@ -197,7 +192,7 @@ public partial class Generator {
 				print ("return {0}.{1};", type.Name, null_field.Item1.Name);
 			indent--;
 			foreach (var kvp in fields) {
-				print ("else if (constant == {0})", kvp.Value.SymbolName);
+				print ("if (constant.IsEqualTo ({0}))", kvp.Value.SymbolName);
 				indent++;
 				print ("return {0}.{1};", type.Name, kvp.Key.Name);
 				indent--;

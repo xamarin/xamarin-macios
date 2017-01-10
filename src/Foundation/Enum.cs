@@ -487,6 +487,7 @@ namespace XamCore.Foundation  {
 	}
 #endif
 
+	[Flags]
 	[Native]
 	public enum NSStreamEvent : nuint {
 		None = 0,
@@ -663,6 +664,7 @@ namespace XamCore.Foundation  {
 		ByMoving = 1 << 0
 	}
 
+	[Flags]
 	[Native]
 	public enum NSFileVersionAddingOptions : nuint_compat_int {
 		ByMoving = 1 << 0
@@ -1000,6 +1002,7 @@ namespace XamCore.Foundation  {
 		Brief,
 	}
 
+	[Flags]
 	[Native]
 	[Availability (Introduced = Platform.Mac_10_10 | Platform.iOS_8_0)]
 	public enum NSDateComponentsFormatterZeroFormattingBehavior : nuint {
@@ -1114,12 +1117,8 @@ namespace XamCore.Foundation  {
 		Contains, Same, Other
 	}
 
-	public enum NSItemDownloadingStatus {
-		Unknown = -1,
-		Current, Downloaded, NotDownloaded
-	}
-
 	// NSTextCheckingResult.h:typedef NS_OPTIONS(uint64_t, NSTextCheckingType)
+	[Flags]
 	public enum NSTextCheckingType : ulong {
 		Orthography   = 1 << 0,
 		Spelling      = 1 << 1,
@@ -1196,29 +1195,10 @@ namespace XamCore.Foundation  {
 		Abbreviated
 	}
 
-	// Xamarin specific
-	public enum NSStringTransform {
-		LatinToKatakana,
-		LatinToHiragana,
-		LatinToHangul,
-		LatinToArabic,
-		LatinToHebrew,
-		LatinToThai,
-		LatinToCyrillic,
-		LatinToGreek,
-		ToLatin,
-		MandarinToLatin,
-		HiraganaToKatakana,
-		FullwidthToHalfwidth,
-		ToXmlHex,
-		ToUnicodeName,
-		StripCombiningMarks,
-		StripDiacritics,
-	}
-
 #if MONOMAC
 	[Mac(10,11)]
 	[Native]
+	[Flags]
 	public enum NSFileManagerUnmountOptions : nuint
 	{
 		AllPartitionsAndEjectDisk = 1 << 0,

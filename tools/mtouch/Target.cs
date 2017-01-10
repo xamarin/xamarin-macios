@@ -33,7 +33,6 @@ namespace Xamarin.Bundler
 		public string PreBuildDirectory;
 		public string BuildDirectory;
 		public string LinkDirectory;
-		public string NoResDirectory;
 
 		// Note that each 'Target' can have multiple abis: armv7+armv7s for instance.
 		public List<Abi> Abis;
@@ -60,6 +59,29 @@ namespace Xamarin.Bundler
 		public bool Is32Build { get { return Application.IsArchEnabled (Abis, Abi.Arch32Mask); } } // If we're targetting a 32 bit arch for this target.
 		public bool Is64Build { get { return Application.IsArchEnabled (Abis, Abi.Arch64Mask); } } // If we're targetting a 64 bit arch for this target.
 
+		List<string> link_with_and_ship = new List<string> ();
+		public IEnumerable<string> LibrariesToShip { get { return link_with_and_ship; } }
+
+		PInvokeWrapperGenerator pinvoke_state;
+		PInvokeWrapperGenerator MarshalNativeExceptionsState {
+			get {
+				if (!App.RequiresPInvokeWrappers)
+					return null;
+
+				if (pinvoke_state == null) {
+					pinvoke_state = new PInvokeWrapperGenerator ()
+					{
+						App = App,
+						SourcePath = Path.Combine (ArchDirectory, "pinvokes.m"),
+						HeaderPath = Path.Combine (ArchDirectory, "pinvokes.h"),
+						Registrar = (StaticRegistrar) StaticRegistrar,
+					};
+				}
+
+				return pinvoke_state;
+			}
+		}
+
 		public string Executable {
 			get {
 				return Path.Combine (TargetDirectory, App.ExecutableName);
@@ -85,7 +107,7 @@ namespace Xamarin.Bundler
 					ErrorHelper.Show (new MonoTouchException (11, false, "{0} was built against a more recent runtime ({1}) than Xamarin.iOS supports.", Path.GetFileName (reference), ad.MainModule.Runtime));
 
 				// Figure out if we're referencing Xamarin.iOS or monotouch.dll
-				if (Path.GetFileNameWithoutExtension (ad.MainModule.FileName) == Driver.ProductAssembly)
+				if (Path.GetFileNameWithoutExtension (ad.MainModule.FileName) == Driver.GetProductAssembly (App))
 					ProductAssembly = ad;
 			}
 
@@ -158,7 +180,7 @@ namespace Xamarin.Bundler
 			if (entry_points != null)  
 				return entry_points.Keys;
 
-			var cache_location = Path.Combine (Cache.Location, "entry-points.txt");
+			var cache_location = Path.Combine (App.Cache.Location, "entry-points.txt");
 			if (cached_link || !any_assembly_updated) {
 				entry_points = new Dictionary<string, MemberReference> ();
 				foreach (var ep in File.ReadAllLines (cache_location))
@@ -213,7 +235,7 @@ namespace Xamarin.Bundler
 			} catch (MonoTouchException mte) {
 				exceptions.Add (mte);
 			} catch (Exception e) {
-				exceptions.Add (new MonoTouchException (9, true, "Error while loading assemblies: {0}", e.Message));
+				exceptions.Add (new MonoTouchException (9, true, e, "Error while loading assemblies: {0}", e.Message));
 			}
 
 			if (App.LinkMode == LinkMode.None)
@@ -246,7 +268,7 @@ namespace Xamarin.Bundler
 				case "Xamarin.iOS":
 				case "Xamarin.TVOS":
 				case "Xamarin.WatchOS":
-					if (reference.Name != Driver.ProductAssembly)
+					if (reference.Name != Driver.GetProductAssembly (App))
 						exceptions.Add (ErrorHelper.CreateError (34, "Cannot reference '{0}.dll' in a {1} project - it is implicitly referenced by '{2}'.", reference.Name, Driver.TargetFramework.Identifier, assembly.FullName));
 					break;
 				}
@@ -381,28 +403,17 @@ namespace Xamarin.Bundler
 				// by default we keep the code to ensure we're executing on the UI thread (for UI code) for debug builds
 				// but this can be overridden to either (a) remove it from debug builds or (b) keep it in release builds
 				EnsureUIThread = App.ThreadCheck.HasValue ? App.ThreadCheck.Value : App.EnableDebug,
-				OldRegistrar = (App.Registrar == RegistrarMode.LegacyDynamic || App.Registrar == RegistrarMode.LegacyStatic),
 				DebugBuild = App.EnableDebug,
 				Arch = Is64Build ? 8 : 4,
 				IsDualBuild = App.IsDualBuild,
-				Unified = App.IsUnified,
 				DumpDependencies = App.LinkerDumpDependencies,
 				RuntimeOptions = App.RuntimeOptions,
-				MarshalNativeExceptionsState = !App.RequiresPInvokeWrappers ? null : new PInvokeWrapperGenerator ()
-				{
-					SourcePath = Path.Combine (ArchDirectory, "pinvokes.m"),
-					HeaderPath = Path.Combine (ArchDirectory, "pinvokes.h"),
-					Registrar = (StaticRegistrar) StaticRegistrar,
-				},
+				MarshalNativeExceptionsState = MarshalNativeExceptionsState,
+				Application = App,
 			};
 
 			MonoTouch.Tuner.Linker.Process (LinkerOptions, out link_context, out assemblies);
 
-			// reset resolver
-			foreach (var file in assemblies) {
-				/*				var assembly = */Resolver.Load (file);
-				// FIXME assembly.MainModule.AssemblyResolver = Resolver;
-			}
 			Driver.Watch ("Link Assemblies", 1);
 		}
 
@@ -431,10 +442,18 @@ namespace Xamarin.Bundler
 						cached_loaded.Add (a.FullPath);
 						input.Add (a.FullPath);
 						output.Add (Path.Combine (PreBuildDirectory, a.FileName));
+						if (File.Exists (a.FullPath + ".mdb")) {
+							// Debug files can change without the assemblies themselves changing
+							// This should also invalidate the cached linker results, since the non-linked mdbs can't be copied.
+							input.Add (a.FullPath + ".mdb");
+							output.Add (Path.Combine (PreBuildDirectory, a.FileName) + ".mdb");
+						}
+						
 						if (a.Satellites != null) {
 							foreach (var s in a.Satellites) {
 								input.Add (s);
 								output.Add (Path.Combine (PreBuildDirectory, Path.GetFileName (Path.GetDirectoryName (s)), Path.GetFileName (s)));
+								// No need to copy satellite mdb files, satellites are resource-only assemblies.
 							}
 						}
 					}
@@ -472,6 +491,7 @@ namespace Xamarin.Bundler
 						}
 
 						Driver.Watch ("Cached assemblies reloaded", 1);
+						Driver.Log ("Cached assemblies reloaded.");
 
 						return;
 					}
@@ -539,14 +559,6 @@ namespace Xamarin.Bundler
 			//   Link and save to PreBuildDirectory
 			//   If marshalling native exceptions:
 			//     * Generate/calculate P/Invoke wrappers and save to PreBuildDirectory
-			//   * Has resourced to be removed:
-			//     Remove resource and save to NoResDirectory
-			//     Copy to BuildDirectory. [Why not save directly to BuildDirectory? Because otherwise if we're rebuilding 
-			//                              and the only thing that changed is the resources we're removing in this step,
-			//                              we won't be able to detect that the remaining parts of the assembly
-			//                              haven't changed.]
-			//   * No resources to be removed:
-			//     Copy to BuildDirectory.
 			//   [AOT assemblies in BuildDirectory]
 			//   Strip managed code save to TargetDirectory (or just copy the file if stripping is disabled).
 			//
@@ -555,11 +567,7 @@ namespace Xamarin.Bundler
 			//     Generate/calculate P/Invoke wrappers and save to PreBuildDirectory.
 			//   If not marshalling native exceptions:
 			//     Copy assemblies to PreBuildDirectory
-			//   * Has resourced to be removed:
-			//     Remove resource and save to NoResDirectory
-			//     Copy to BuildDirectory.
-			//   * No resources to be removed:
-			//     Copy to BuildDirectory.
+			//     Copy unmodified assemblies to BuildDirectory
 			//   [AOT assemblies in BuildDirectory]
 			//   Strip managed code save to TargetDirectory (or just copy the file if stripping is disabled).
 			//
@@ -600,14 +608,10 @@ namespace Xamarin.Bundler
 			PreBuildDirectory = Path.Combine (ArchDirectory, "PreBuild");
 			if (!Directory.Exists (PreBuildDirectory))
 				Directory.CreateDirectory (PreBuildDirectory);
-
+			
 			BuildDirectory = Path.Combine (ArchDirectory, "Build");
 			if (!Directory.Exists (BuildDirectory))
 				Directory.CreateDirectory (BuildDirectory);
-
-			NoResDirectory = Path.Combine (ArchDirectory, "NoRes");
-			if (!Directory.Exists (NoResDirectory))
-				Directory.CreateDirectory (NoResDirectory);
 
 			if (!Directory.Exists (TargetDirectory))
 				Directory.CreateDirectory (TargetDirectory);
@@ -616,8 +620,13 @@ namespace Xamarin.Bundler
 
 			if (App.RequiresPInvokeWrappers) {
 				// Write P/Invokes
-				var state = LinkerOptions.MarshalNativeExceptionsState;
-				state.End ();
+				var state = MarshalNativeExceptionsState;
+				if (state.Started) {
+					// The generator is 'started' by the linker, which means it may not
+					// be started if the linker was not executed due to re-using cached results.
+					state.End ();
+				}
+				
 				PinvokesTask.Create (compile_tasks, Abis, this, state.SourcePath);
 
 				if (App.FastDev) {
@@ -630,29 +639,12 @@ namespace Xamarin.Bundler
 
 			// Now the assemblies are in PreBuildDirectory.
 
-			//
-			// PreBuildDirectory -> BuildDirectory [resource removal]
-			// 
-			// Resource removal
-			// * Remove any __monotouch_content_* or __monotouch_page_* resources
-			//   - This is already done in the linker, so there is no need to do it here if the linker is enabled (for user assemblies).
-			//   - It is only done for device-builds. Xamarin Studio requires the resources to be present (to extract
-			//     them) - which is not a problem for device-builds since we operate on a copied assembly, not the
-			//     original like Xamarin Studio does).
-			// * Remove any LinkWith-related resources
-			//
-
-			var remove_res = App.IsDeviceBuild && App.LinkMode != LinkMode.All;
 			foreach (var a in Assemblies) {
 				var target = Path.Combine (BuildDirectory, a.FileName);
-				if (!Application.IsUptodate (a.FullPath, target)) {
-					a.RemoveResources (remove_res, BuildDirectory, NoResDirectory);
-				} else {
-					a.FullPath = target;
+				if (!a.CopyAssembly (a.FullPath, target))
 					Driver.Log (3, "Target '{0}' is up-to-date.", target);
-				}
+				a.FullPath = target;
 			}
-			Driver.Watch ("Removing Resources", 1);
 
 			Driver.GatherFrameworks (this, Frameworks, WeakFrameworks);
 
@@ -664,11 +656,6 @@ namespace Xamarin.Bundler
 		public void SelectStaticRegistrar ()
 		{
 			switch (App.Registrar) {
-			case RegistrarMode.LegacyStatic:
-			case RegistrarMode.Legacy:
-			case RegistrarMode.LegacyDynamic:
-				StaticRegistrar = new OldStaticRegistrar ();
-				break;
 			case RegistrarMode.Static:
 			case RegistrarMode.Dynamic:
 			case RegistrarMode.Default:
@@ -690,7 +677,7 @@ namespace Xamarin.Bundler
 
 			// The static registrar.
 			List<string> registration_methods = null;
-			if (App.Registrar == RegistrarMode.Static || App.Registrar == RegistrarMode.LegacyStatic) {
+			if (App.Registrar == RegistrarMode.Static) {
 				var registrar_m = Path.Combine (ArchDirectory, "registrar.m");
 				var registrar_h = Path.Combine (ArchDirectory, "registrar.h");
 				if (!Application.IsUptodate (Assemblies.Select (v => v.FullPath), new string[] { registrar_m, registrar_h })) {
@@ -705,7 +692,7 @@ namespace Xamarin.Bundler
 				RegistrarTask.Create (compile_tasks, Abis, this, registrar_m);
 			}
 
-			if (App.Registrar == RegistrarMode.Dynamic && App.IsSimulatorBuild && App.LinkMode == LinkMode.None && App.IsUnified) {
+			if (App.Registrar == RegistrarMode.Dynamic && App.IsSimulatorBuild && App.LinkMode == LinkMode.None) {
 				if (registration_methods == null)
 					registration_methods = new List<string> ();
 
@@ -729,28 +716,7 @@ namespace Xamarin.Bundler
 				}
 
 				registration_methods.Add (method);
-				link_with.Add (Path.Combine (Driver.ProductSdkDirectory, "usr", "lib", library));
-			
-				if (App.Platform == ApplePlatform.iOS) {
-					foreach (var assembly in Assemblies) {
-						if (!assembly.IsFrameworkAssembly)
-							continue;
-
-						switch (Path.GetFileNameWithoutExtension (assembly.FileName)) {
-						case "MonoTouch.Dialog-1":
-							registration_methods.Add ("xamarin_create_classes_MonoTouch_Dialog_1");
-							link_with.Add (Path.Combine (Driver.ProductSdkDirectory, "usr", "lib", "MonoTouch.Dialog-1.registrar.a"));
-							break;
-							// MonoTouch.NUnitLite doesn't quite work yet, because its generated registrar code uses types
-							// from the generated registrar code for MonoTouch.Dialog-1 (and there is no header file (yet)
-							// for those types).
-	//					case "MonoTouch.NUnitLite":
-	//						registration_methods.Add ("xamarin_create_classes_MonoTouch_NUnitLite");
-	//						link_with.Add (Path.Combine (MTouch.MonoTouchIPhoneSimulatorDirectory, "usr", "lib", "MonoTouch.NUnitLite.registrar.a"));
-	//						break;
-						}
-					}
-				}
+				link_with.Add (Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib", library));
 			}
 
 			// The main method.
@@ -788,7 +754,8 @@ namespace Xamarin.Bundler
 			// Collect all LinkWith flags and frameworks from all assemblies.
 			foreach (var a in Assemblies) {
 				compiler_flags.AddFrameworks (a.Frameworks, a.WeakFrameworks);
-				compiler_flags.AddLinkWith (a.LinkWith, a.ForceLoad);
+				if (!App.FastDev || App.IsSimulatorBuild)
+					compiler_flags.AddLinkWith (a.LinkWith, a.ForceLoad);
 				compiler_flags.AddOtherFlags (a.LinkerFlags);
 			}
 
@@ -812,8 +779,8 @@ namespace Xamarin.Bundler
 
 			CompileTask.GetArchFlags (compiler_flags, Abis);
 			if (App.IsDeviceBuild) {
-				compiler_flags.AddOtherFlag ($"-m{Driver.TargetMinSdkName}-version-min={App.DeploymentTarget}");
-				compiler_flags.AddOtherFlag ($"-isysroot {Driver.Quote (Driver.FrameworkDirectory)}");
+				compiler_flags.AddOtherFlag ($"-m{Driver.GetTargetMinSdkName (App)}-version-min={App.DeploymentTarget}");
+				compiler_flags.AddOtherFlag ($"-isysroot {Driver.Quote (Driver.GetFrameworkDirectory (App))}");
 			} else {
 				CompileTask.GetSimulatorCompilerFlags (compiler_flags, null, App);
 			}
@@ -855,7 +822,7 @@ namespace Xamarin.Bundler
 			} else {
 				mainlib = "libapp.a";
 			}
-			var libdir = Path.Combine (Driver.ProductSdkDirectory, "usr", "lib");
+			var libdir = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib");
 			var libmain = Path.Combine (libdir, mainlib);
 			compiler_flags.AddLinkWith (libmain, true);
 
@@ -881,7 +848,7 @@ namespace Xamarin.Bundler
 			if (App.IsExtension) {
 				if (App.Platform == ApplePlatform.iOS && Driver.XcodeVersion.Major < 7) {
 					compiler_flags.AddOtherFlag ("-lpkstart");
-					compiler_flags.AddOtherFlag ($"-F {Driver.Quote (Path.Combine (Driver.FrameworkDirectory, "System/Library/PrivateFrameworks"))} -framework PlugInKit");
+					compiler_flags.AddOtherFlag ($"-F {Driver.Quote (Path.Combine (Driver.GetFrameworkDirectory (App), "System/Library/PrivateFrameworks"))} -framework PlugInKit");
 				}
 				compiler_flags.AddOtherFlag ("-fapplication-extension");
 			}
@@ -894,7 +861,7 @@ namespace Xamarin.Bundler
 				// and very hard to diagnose otherwise when hidden from the build output. Ref: bug #2430
 				var linker_errors = new List<Exception> ();
 				var output = new StringBuilder ();
-				var code = Driver.RunCommand (Driver.CompilerPath, flags, null, output);
+				var code = Driver.RunCommand (App.CompilerPath, flags, null, output);
 
 				Application.ProcessNativeLinkerOutput (this, output.ToString (), link_with, linker_errors, code != 0);
 
@@ -949,7 +916,7 @@ namespace Xamarin.Bundler
 
 		public bool CanWeSymlinkTheApplication ()
 		{
-			if (!Driver.CanWeSymlinkTheApplication ())
+			if (!Driver.CanWeSymlinkTheApplication (App))
 				return false;
 
 			foreach (var a in Assemblies)
@@ -971,14 +938,13 @@ namespace Xamarin.Bundler
 			try {
 				var launcher = new StringBuilder ();
 				launcher.Append (Path.Combine (Driver.MonoTouchDirectory, "bin", "simlauncher"));
-				if (App.IsUnified) {
-					if (Is32Build)
-						launcher.Append ("32");
-					else if (Is64Build)
-						launcher.Append ("64");
-				}
+				if (Is32Build)
+					launcher.Append ("32");
+				else if (Is64Build)
+					launcher.Append ("64");
 				launcher.Append ("-sgen");
 				File.Copy (launcher.ToString (), Executable);
+				File.SetLastWriteTime (Executable, DateTime.Now);
 			} catch (MonoTouchException) {
 				throw;
 			} catch (Exception ex) {
@@ -998,6 +964,11 @@ namespace Xamarin.Bundler
 				link_with.Add (native_library);
 		}
 
+		public void LinkWithAndShip (string dylib)
+		{
+			link_with_and_ship.Add (dylib);
+		}
+
 		public void StripManagedCode ()
 		{
 			var strip = false;
@@ -1009,7 +980,7 @@ namespace Xamarin.Bundler
 
 			if (strip) {
 				// note: this is much slower when Parallel.ForEach is used
-				Parallel.ForEach (Assemblies, new ParallelOptions () { MaxDegreeOfParallelism = Environment.ProcessorCount }, (assembly) => 
+				Parallel.ForEach (Assemblies, new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency }, (assembly) => 
 					{
 						var file = assembly.FullPath;
 						var output = Path.Combine (AppTargetDirectory, Path.GetFileName (assembly.FullPath));

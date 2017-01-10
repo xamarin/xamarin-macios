@@ -191,7 +191,7 @@ namespace XamCore.CoreGraphics {
 			if (offset + count > buffer.Length)
 				throw new ArgumentException ("offset");
 
-			var gch = GCHandle.Alloc (buffer, GCHandleType.Pinned);
+			var gch = GCHandle.Alloc (buffer, GCHandleType.Pinned); // This requires a pinned GCHandle, because unsafe code is scoped to the current block, and the address of the byte array will be used after this function returns.
 			var ptr = gch.AddrOfPinnedObject () + offset;
 			handle = CGDataProviderCreateWithData (GCHandle.ToIntPtr (gch), ptr, count, release_gchandle_callback);
 		}

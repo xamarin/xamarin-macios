@@ -18,53 +18,53 @@ using XamCore.ObjCRuntime;
 
 namespace Xamarin.Bundler {
 	public partial class Driver {
-		static void AddSharedOptions (Mono.Options.OptionSet options)
+		static void AddSharedOptions (Application app, Mono.Options.OptionSet options)
 		{
-			options.Add ("coop:", "If the GC should run in cooperative mode.", v => { App.EnableCoopGC = ParseBool (v, "coop"); }, hidden: true);
-			options.Add ("marshal-objectivec-exceptions:", v => {
+			options.Add ("coop:", "If the GC should run in cooperative mode.", v => { app.EnableCoopGC = ParseBool (v, "coop"); }, hidden: true);
+			options.Add ("marshal-objectivec-exceptions:", "Specify how Objective-C exceptions should be marshalled. Valid values: default, unwindmanagedcode, throwmanagedexception, abort and disable. The default depends on the target platform (on watchOS the default is 'throwmanagedexception', while on all other platforms it's 'disable').", v => {
 				switch (v) {
 				case "default":
-					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Default;
+					app.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Default;
 					break;
 				case "unwindmanaged":
 				case "unwindmanagedcode":
-					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.UnwindManagedCode;
+					app.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.UnwindManagedCode;
 					break;
 				case "throwmanaged":
 				case "throwmanagedexception":
-					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
+					app.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.ThrowManagedException;
 					break;
 				case "abort":
-					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Abort;
+					app.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Abort;
 					break;
 				case "disable":
-					App.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Disable;
+					app.MarshalObjectiveCExceptions = MarshalObjectiveCExceptionMode.Disable;
 					break;
 				default:
-					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--marshal-objective-exceptions", "Invalid value: " + v);
+					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--marshal-objective-exceptions", $"Invalid value: {v}. Valid values are: default, unwindmanagedcode, throwmanagedexception, abort and disable.");
 				}
 			});
-			options.Add ("marshal-managed-exceptions:", v => {
+			options.Add ("marshal-managed-exceptions:", "Specify how managed exceptions should be marshalled. Valid values: default, unwindnativecode, throwobjectivecexception, abort and disable. The default depends on the target platform (on watchOS the default is 'throwobjectivecexception', while on all other platform it's 'disable').", v => {
 				switch (v) {
 				case "default":
-					App.MarshalManagedExceptions = MarshalManagedExceptionMode.Default;
+					app.MarshalManagedExceptions = MarshalManagedExceptionMode.Default;
 					break;
 				case "unwindnative":
 				case "unwindnativecode":
-					App.MarshalManagedExceptions = MarshalManagedExceptionMode.UnwindNativeCode;
+					app.MarshalManagedExceptions = MarshalManagedExceptionMode.UnwindNativeCode;
 					break;
 				case "throwobjectivec":
 				case "throwobjectivecexception":
-					App.MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
+					app.MarshalManagedExceptions = MarshalManagedExceptionMode.ThrowObjectiveCException;
 					break;
 				case "abort":
-					App.MarshalManagedExceptions = MarshalManagedExceptionMode.Abort;
+					app.MarshalManagedExceptions = MarshalManagedExceptionMode.Abort;
 					break;
 				case "disable":
-					App.MarshalManagedExceptions = MarshalManagedExceptionMode.Disable;
+					app.MarshalManagedExceptions = MarshalManagedExceptionMode.Disable;
 					break;
 				default:
-					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--marshal-managed-exceptions", "Invalid value: " + v);
+					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--marshal-managed-exceptions", $"Invalid value: {v}. Valid values are: default, unwindnativecode, throwobjectivecexception, abort and disable.");
 				}
 			});
 		}
@@ -171,6 +171,8 @@ namespace Xamarin.Bundler {
 
 				stderr_completed.WaitOne (TimeSpan.FromSeconds (1));
 				stdout_completed.WaitOne (TimeSpan.FromSeconds (1));
+
+				GC.Collect (); // Workaround for: https://bugzilla.xamarin.com/show_bug.cgi?id=43462#c14
 
 				if (p.ExitCode != 0) {
 					// note: this repeat the failing command line. However we can't avoid this since we're often

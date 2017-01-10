@@ -494,7 +494,7 @@ namespace XamCore.CoreMidi {
 			}
 		}
 
-		static MidiError FindByUniqueId (int uniqueId, out MidiObject result)
+		static public MidiError FindByUniqueId (int uniqueId, out MidiObject result)
 		{
 			MidiObjectRef handle;
 			MidiObjectType type;

@@ -48,10 +48,15 @@ namespace Xamarin.Tests
 
 		public int Execute (string arguments, params string [] args)
 		{
+			return Execute (Configuration.MtouchPath, arguments, args);
+		}
+
+		public int Execute (string toolPath, string arguments, params string [] args)
+		{
 			output.Clear ();
 			output_lines = null;
 
-			var rv = ExecutionHelper.Execute (TestTarget.ToolPath, string.Format (arguments, args), EnvironmentVariables, output, output);
+			var rv = ExecutionHelper.Execute (toolPath, string.Format (arguments, args), EnvironmentVariables, output, output);
 
 			if (rv != 0) {
 				if (output.Length > 0)
@@ -143,6 +148,40 @@ namespace Xamarin.Tests
 			Assert.Fail (string.Format ("The error '{0}{1:0000}: {2}' was not found in the output:\n{3}", prefix, number, message, string.Join ("\n", details.ToArray ())));
 		}
 
+		public void AssertWarningPattern (int number, string messagePattern)
+		{
+			AssertWarningPattern ("MT", number, messagePattern);
+		}
+
+		public void AssertWarningPattern (string prefix, int number, string messagePattern)
+		{
+			if (!messages.Any ((msg) => msg.Prefix == prefix && msg.Number == number))
+				Assert.Fail (string.Format ("The warning '{0}{1:0000}' was not found in the output.", prefix, number));
+
+			if (messages.Any ((msg) => Regex.IsMatch (msg.Message, messagePattern)))
+				return;
+
+			var details = messages.Where ((msg) => msg.Prefix == prefix && msg.Number == number && !Regex.IsMatch (msg.Message, messagePattern)).Select ((msg) => string.Format ("\tThe message '{0}' did not match the pattern '{1}'.", msg.Message, messagePattern));
+			Assert.Fail (string.Format ("The warning '{0}{1:0000}: {2}' was not found in the output:\n{3}", prefix, number, messagePattern, string.Join ("\n", details.ToArray ())));
+		}
+
+		public void AssertWarning (int number, string message)
+		{
+			AssertWarning ("MT", number, message);
+		}
+
+		public void AssertWarning (string prefix, int number, string message)
+		{
+			if (!messages.Any ((msg) => msg.Prefix == prefix && msg.Number == number))
+				Assert.Fail (string.Format ("The warning '{0}{1:0000}' was not found in the output.", prefix, number));
+
+			if (messages.Any ((msg) => msg.Message == message))
+				return;
+
+			var details = messages.Where ((msg) => msg.Prefix == prefix && msg.Number == number && msg.Message != message).Select ((msg) => string.Format ("\tMessage #{2} did not match:\n\t\tactual:   '{0}'\n\t\texpected: '{1}'", msg.Message, message, messages.IndexOf (msg) + 1));
+			Assert.Fail (string.Format ("The warning '{0}{1:0000}: {2}' was not found in the output:\n{3}", prefix, number, message, string.Join ("\n", details.ToArray ())));
+		}
+
 		public bool HasOutput (string line)
 		{
 			return OutputLines.Contains (line);
@@ -174,9 +213,9 @@ namespace Xamarin.Tests
 			}
 		}
 
-		public static void Build (string project, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null)
+		public static void Build (string project, string configuration = "Debug", string platform = "iPhoneSimulator", string verbosity = null, TimeSpan? timeout = null)
 		{
-			ExecutionHelper.Execute (ToolPath, string.Format ("/p:Configuration={0} /p:Platform={1} {2} \"{3}\"", configuration, platform, verbosity == null ? string.Empty : "/verbosity:" + verbosity, project));
+			ExecutionHelper.Execute (ToolPath, string.Format ("/p:Configuration={0} /p:Platform={1} {2} \"{3}\"", configuration, platform, verbosity == null ? string.Empty : "/verbosity:" + verbosity, project), timeout: timeout);
 		}
 	}
 
@@ -287,14 +326,15 @@ namespace Xamarin.Tests
 		private static extern void kill (int pid, int sig);
 
 		public static string Execute (string fileName, string arguments, bool throwOnError = true, Dictionary<string,string> environmentVariables = null,
-			bool hide_output = false
+			bool hide_output = false, TimeSpan? timeout = null
 		)
 		{
 			StringBuilder output = new StringBuilder ();
-			int exitCode = Execute (fileName, arguments, environmentVariables, output, output);
+			int exitCode = Execute (fileName, arguments, environmentVariables, output, output, timeout);
 			if (!hide_output) {
 				Console.WriteLine ("{0} {1}", fileName, arguments);
 				Console.WriteLine (output);
+				Console.WriteLine ("Exit code: {0}", exitCode);
 			}
 			if (throwOnError && exitCode != 0)
 				throw new TestExecutionException (output.ToString ());

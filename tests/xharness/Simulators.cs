@@ -80,6 +80,127 @@ namespace xharness
 				File.Delete (tmpfile);
 			}
 		}
+
+		public async Task<SimDevice []> FindAsync (AppRunnerTarget target, Log log)
+		{
+			SimDevice [] simulators = null;
+
+			string [] simulator_devicetypes;
+			string simulator_runtime;
+			string [] companion_devicetypes = null;
+			string companion_runtime = null;
+
+			switch (target) {
+			case AppRunnerTarget.Simulator_iOS32:
+				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5" };
+				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
+				break;
+			case AppRunnerTarget.Simulator_iOS64:
+				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5s" };
+				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
+				break;
+			case AppRunnerTarget.Simulator_iOS:
+				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-5" };
+				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
+				break;
+			case AppRunnerTarget.Simulator_tvOS:
+				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.Apple-TV-1080p" };
+				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.tvOS-" + Xamarin.SdkVersions.TVOS.Replace ('.', '-');
+				break;
+			case AppRunnerTarget.Simulator_watchOS:
+				simulator_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-38mm", "com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-2-38mm" };
+				simulator_runtime = "com.apple.CoreSimulator.SimRuntime.watchOS-" + Xamarin.SdkVersions.WatchOS.Replace ('.', '-');
+				companion_devicetypes = new string [] { "com.apple.CoreSimulator.SimDeviceType.iPhone-6s" };
+				companion_runtime = "com.apple.CoreSimulator.SimRuntime.iOS-" + Xamarin.SdkVersions.iOS.Replace ('.', '-');
+				break;
+			default:
+				throw new Exception (string.Format ("Unknown simulator target: {0}", target));
+			}
+
+			var devices = AvailableDevices.Where ((SimDevice v) =>
+			{
+				if (v.SimRuntime != simulator_runtime)
+					return false;
+
+				if (!simulator_devicetypes.Contains (v.SimDeviceType))
+					return false;
+
+				if (target == AppRunnerTarget.Simulator_watchOS)
+					return AvailableDevicePairs.Any ((SimDevicePair pair) => pair.Companion == v.UDID || pair.Gizmo == v.UDID);
+
+				return true;
+			});
+
+			SimDevice candidate = null;
+
+			foreach (var device in devices) {
+				var data = device;
+				var secondaryData = (SimDevice) null;
+				var nodeCompanions = AvailableDevicePairs.Where ((SimDevicePair v) => v.Companion == device.UDID);
+				var nodeGizmos = AvailableDevicePairs.Where ((SimDevicePair v) => v.Gizmo == device.UDID);
+
+				if (nodeCompanions.Any ()) {
+					var gizmo_udid = nodeCompanions.First ().Gizmo;
+					var node = AvailableDevices.Where ((SimDevice v) => v.UDID == gizmo_udid);
+					secondaryData = node.First ();
+				} else if (nodeGizmos.Any ()) {
+					var companion_udid = nodeGizmos.First ().Companion;
+					var node = AvailableDevices.Where ((SimDevice v) => v.UDID == companion_udid);
+					secondaryData = node.First ();
+				}
+				if (secondaryData != null) {
+					simulators = new SimDevice [] { data, secondaryData };
+					break;
+				} else {
+					candidate = data;
+				}
+			}
+
+			if (simulators == null && candidate == null && target == AppRunnerTarget.Simulator_watchOS) {
+				// We might be only missing device pairs to match phone + watch.
+				var watchDevices = AvailableDevices.Where ((SimDevice v) => { return v.SimRuntime == simulator_runtime && simulator_devicetypes.Contains (v.SimDeviceType); });
+				var companionDevices = AvailableDevices.Where ((SimDevice v) => { return v.SimRuntime == companion_runtime && companion_devicetypes.Contains (v.SimDeviceType); });
+				if (!watchDevices.Any () || !companionDevices.Any ()) {
+					log.WriteLine ($"Could not find both watch devices for <runtime={simulator_runtime} and device type={string.Join (";", simulator_devicetypes)}> and companion device for <runtime={companion_runtime} and device type {string.Join (";", companion_devicetypes)}>");
+					return null;
+				}
+				var watchDevice = watchDevices.First ();
+				var companionDevice = companionDevices.First ();
+
+				log.WriteLine ($"Creating device pair for '{watchDevice.Name}' and '{companionDevice.Name}'");
+				var rv = await Harness.ExecuteXcodeCommandAsync ("simctl", $"pair {watchDevice.UDID} {companionDevice.UDID}", log, TimeSpan.FromMinutes (1));
+				if (!rv.Succeeded) {
+					log.WriteLine ($"Could not create device pair, so could not find simulator for runtime={simulator_runtime} and device type={string.Join ("; ", simulator_devicetypes)}.");
+					return null;
+				}
+				AvailableDevicePairs.Add (new SimDevicePair ()
+				{
+					Companion = companionDevice.UDID,
+					Gizmo = watchDevice.UDID,
+					UDID = $"<created for {companionDevice.UDID} and {watchDevice.UDID}",
+				});
+				simulators = new SimDevice [] { watchDevice, companionDevice };
+			}
+
+			if (simulators == null) {
+				if (candidate == null) {
+					log.WriteLine ($"Could not find simulator for runtime={simulator_runtime} and device type={string.Join (";", simulator_devicetypes)}.");
+					return null;
+				}
+				simulators = new SimDevice [] { candidate };
+			}
+
+			if (simulators == null) {
+				log.WriteLine ("Could not find simulator");
+				return null;
+			}
+
+			log.WriteLine ("Found simulator: {0} {1}", simulators [0].Name, simulators [0].UDID);
+			if (simulators.Length > 1)
+				log.WriteLine ("Found companion simulator: {0} {1}", simulators [1].Name, simulators [1].UDID);
+
+			return simulators;
+		}
 	}
 
 	public class SimRuntime
@@ -131,11 +252,25 @@ namespace xharness
 			await Harness.ExecuteXcodeCommandAsync ("simctl", "shutdown " + UDID, log, TimeSpan.FromMinutes (1));
 		}
 
-		public static Task KillEverythingAsync (Log log)
+		public static async Task KillEverythingAsync (Log log)
 		{
+			await ProcessHelper.ExecuteCommandAsync ("launchctl", "remove com.apple.CoreSimulator.CoreSimulatorService", log, TimeSpan.FromSeconds (10));
+
 			var to_kill = new string [] { "iPhone Simulator", "iOS Simulator", "Simulator", "Simulator (Watch)", "com.apple.CoreSimulator.CoreSimulatorService" };
 
-			return ProcessHelper.ExecuteCommandAsync ("killall", "-9 " + string.Join (" ", to_kill.Select ((v) => Harness.Quote (v)).ToArray ()), log, TimeSpan.FromSeconds (10));
+			await ProcessHelper.ExecuteCommandAsync ("killall", "-9 " + string.Join (" ", to_kill.Select ((v) => Harness.Quote (v)).ToArray ()), log, TimeSpan.FromSeconds (10));
+
+			foreach (var dir in new string [] {
+				Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), "Library", "Saved Application State", "com.apple.watchsimulator.savedState"),
+				Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), "Library", "Saved Application State", "com.apple.iphonesimulator.savedState"),
+			}) {
+				try {
+					if (Directory.Exists (dir))
+						Directory.Delete (dir, true);
+				} catch (Exception e) {
+					log.WriteLine ("Could not delete the directory '{0}': {1}", dir, e.Message);
+				}
+			}
 		}
 
 		public async Task AgreeToPromptsAsync (Log log, params string[] bundle_identifiers)
@@ -277,6 +412,8 @@ namespace xharness
 							DeviceClass = dev.SelectSingleNode ("DeviceClass")?.InnerText,
 							CompanionIdentifier = dev.SelectSingleNode ("CompanionIdentifier")?.InnerText,
 							Name = dev.SelectSingleNode ("Name")?.InnerText,
+							BuildVersion = dev.SelectSingleNode ("BuildVersion")?.InnerText,
+							ProductVersion = dev.SelectSingleNode ("ProductVersion")?.InnerText,
 						});
 					}
 				}
@@ -292,6 +429,8 @@ namespace xharness
 		public string DeviceClass;
 		public string CompanionIdentifier;
 		public string Name;
+		public string BuildVersion;
+		public string ProductVersion;
 	}
 }
 

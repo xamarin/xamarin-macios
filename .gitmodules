@@ -22,10 +22,6 @@
 	path = external/opentk
 	url = ../../mono/opentk.git
 	branch = master
-[submodule "external/ModernHttpClient"]
-	path = external/ModernHttpClient
-	url = ../../xamarin/ModernHttpClient.git
-	branch = master
 [submodule "external/Xamarin.MacDev"]
 	path = external/Xamarin.MacDev
 	url = ../../xamarin/Xamarin.MacDev
@@ -33,7 +29,3 @@
 [submodule "external/guiunit"]
 	path = external/guiunit
 	url = ../../mono/guiunit.git
-[submodule "external/watch-mono"]
-	path = external/watch-mono
-	url = ../../mono/mono.git
-	branch = master

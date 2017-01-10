@@ -61,6 +61,8 @@ namespace MonoTouch.Tuner {
 					MarkMethod (method);
 
 				// look for the special serialization constructor
+				if (!method.HasParameters)
+					continue;
 				var parameters = method.Parameters;
 				if (parameters.Count != 2)
 					continue;

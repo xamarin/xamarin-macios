@@ -55,7 +55,7 @@ namespace Xamarin.MacDev
 				.ToList ();
 		}
 
-		public static string GetVirtualProjectPath (string projectDir, ITaskItem item)
+		public static string GetVirtualProjectPath (string projectDir, ITaskItem item, bool isVSBuild)
 		{
 			var link = item.GetMetadata ("Link");
 
@@ -68,8 +68,14 @@ namespace Xamarin.MacDev
 			}
 
 			// HACK: This is for Visual Studio iOS projects
-			if (!Directory.Exists (projectDir))
-				return item.ItemSpec;
+			if (isVSBuild) {
+				if (item.GetMetadata("DefiningProjectFullPath") != item.GetMetadata("MSBuildProjectFullPath")) {
+					return item.GetMetadata("FullPath").Replace(item.GetMetadata ("DefiningProjectDirectory"), string.Empty);
+				}
+				else {
+					return item.ItemSpec;
+				}
+			}
 
 			var definingProjectFullPath = item.GetMetadata ("DefiningProjectFullPath");
 			var path = item.GetMetadata ("FullPath");
@@ -81,13 +87,13 @@ namespace Xamarin.MacDev
 				baseDir = projectDir;
 			}
 
-			baseDir = PathUtils.ResolveSymbolicLink (baseDir);
-			path = PathUtils.ResolveSymbolicLink (path);
+			baseDir = PathUtils.ResolveSymbolicLinks (baseDir);
+			path = PathUtils.ResolveSymbolicLinks (path);
 			
 			return PathUtils.AbsoluteToRelative (baseDir, path);
 		}
 
-		public static string GetLogicalName (string projectDir, IList<string> prefixes, ITaskItem item)
+		public static string GetLogicalName (string projectDir, IList<string> prefixes, ITaskItem item, bool isVSBuild)
 		{
 			var logicalName = item.GetMetadata ("LogicalName");
 
@@ -98,7 +104,7 @@ namespace Xamarin.MacDev
 				return logicalName;
 			}
 
-			var vpath = GetVirtualProjectPath (projectDir, item);
+			var vpath = GetVirtualProjectPath (projectDir, item, isVSBuild);
 			int matchlen = 0;
 
 			foreach (var prefix in prefixes) {

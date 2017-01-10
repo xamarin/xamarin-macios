@@ -383,9 +383,12 @@ namespace XamCore.StoreKit {
 		   Delegates=new string [] { "WeakDelegate" },
 		   Events   =new Type   [] { typeof (SKStoreProductViewControllerDelegate) })]
 	interface SKStoreProductViewController {
+#if !XAMCORE_4_0
+		// SKStoreProductViewController is an OS View Controller which can't be customized
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
 		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+#endif
 
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set;  }
@@ -468,6 +471,64 @@ namespace XamCore.StoreKit {
 		[Notification]
 		[Field ("SKCloudServiceCapabilitiesDidChangeNotification")]
 		NSString CloudServiceCapabilitiesDidChangeNotification { get; }
+	}
+
+	[iOS (10,1)]
+	[NoTV] // __TVOS_PROHIBITED
+	[BaseType (typeof(UIViewController))]
+	interface SKCloudServiceSetupViewController
+	{
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		ISKCloudServiceSetupViewControllerDelegate Delegate { get; set; }
+
+		[Async]
+		[Export ("loadWithOptions:completionHandler:")]
+		void Load (NSDictionary options, [NullAllowed] Action<bool, NSError> completionHandler);
+
+		[Async]
+		[Wrap ("Load (options == null ? null : options.Dictionary, completionHandler)")]
+		void Load (SKCloudServiceSetupOptions options, Action<bool, NSError> completionHandler);
+	}
+
+	interface ISKCloudServiceSetupViewControllerDelegate {}
+
+	[iOS (10,1)]
+	[NoTV] // __TVOS_PROHIBITED on the only member + SKCloudServiceSetupViewController is not in tvOS
+	[Protocol, Model]
+	[BaseType (typeof(NSObject))]
+	interface SKCloudServiceSetupViewControllerDelegate
+	{
+		[Export ("cloudServiceSetupViewControllerDidDismiss:")]
+		void DidDismiss (SKCloudServiceSetupViewController cloudServiceSetupViewController);
+	}
+
+	[NoTV, iOS (10,1)]
+	[StrongDictionary ("SKCloudServiceSetupOptionsKeys")]
+	interface SKCloudServiceSetupOptions
+	{
+		// Headers comment: Action for setup entry point (of type SKCloudServiceSetupAction).
+		SKCloudServiceSetupAction Action { get; set; }
+
+		// Headers comment: Identifier of the iTunes Store item the user is trying to access which requires cloud service setup (NSNumber).
+		nint ITunesItemIdentifier { get; set; }
+	}
+
+	[NoTV, iOS (10,1)]
+	[Internal, Static]
+	interface SKCloudServiceSetupOptionsKeys
+	{
+		[Field ("SKCloudServiceSetupOptionsActionKey")]
+		NSString ActionKey { get; }
+
+		[Field ("SKCloudServiceSetupOptionsITunesItemIdentifierKey")]
+		NSString ITunesItemIdentifierKey { get; }
+	}
+
+	[NoTV, iOS (10,1)]
+	enum SKCloudServiceSetupAction
+	{
+		[Field ("SKCloudServiceSetupActionSubscribe")]
+		Subscribe,
 	}
 #endif
 }

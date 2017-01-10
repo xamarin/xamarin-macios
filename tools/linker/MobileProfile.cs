@@ -46,11 +46,6 @@ namespace Xamarin.Linker {
 			"Mono.Security",
 			"OpenTK",
 			"OpenTK-1.0",
-			// New TLS Code
-			"Mono.Security.Providers.NewSystemSource",
-			"Mono.Security.Providers.OldTls",
-			"Mono.Security.Providers.NewTls",
-			"Mono.Security.Providers.DotNet",
 			// Facades assemblies (PCL)
 			"Microsoft.Win32.Primitives",
 			"Microsoft.Win32.Registry.AccessControl",
@@ -115,6 +110,9 @@ namespace Xamarin.Linker {
 			"System.Net.WebSockets.Client",
 			"System.Net.WebSockets",
 			"System.ObjectModel",
+			"System.Reflection.Emit.ILGeneration",
+			"System.Reflection.Emit.Lightweight",
+			"System.Reflection.Emit",
 			"System.Reflection.Extensions",
 			"System.Reflection.Primitives",
 			"System.Reflection.TypeExtensions",

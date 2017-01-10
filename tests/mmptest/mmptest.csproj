@@ -6,7 +6,7 @@
     <ProjectGuid>{6E5405EC-1F68-4CD8-AD4B-E4CCFBE47977}</ProjectGuid>
     <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
-    <RootNamespace>mmptest</RootNamespace>
+    <RootNamespace>Xamarin.MMP.Tests</RootNamespace>
     <AssemblyName>mmptest</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
@@ -80,6 +80,7 @@
       <Link>RuntimeException.cs</Link>
     </Compile>
     <Compile Include="src\ExtensionTests.cs" />
+    <Compile Include="src\RemotingConfigurationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -89,6 +90,11 @@
       <Project>{EACFD119-769E-4E6C-89B7-A6CE3757C431}</Project>
       <Name>GuiUnit_xammac_mobile</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\common\mac\remoting.config">
+      <Link>remoting.config</Link>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
   <Import Project="CustomBuildActions.targets" />

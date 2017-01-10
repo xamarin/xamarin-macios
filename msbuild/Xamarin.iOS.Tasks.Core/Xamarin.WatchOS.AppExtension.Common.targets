@@ -17,6 +17,9 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
 		<IsAppExtension>True</IsAppExtension>
+		<IsWatchExtension>True</IsWatchExtension>
+		<AppBundleExtension>.appex</AppBundleExtension>
+		<MtouchHttpClientHandler Condition="'$(MtouchHttpClientHandler)' == ''">NSUrlSessionHandler</MtouchHttpClientHandler>
 	</PropertyGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)..\iOS\Xamarin.iOS.Common.targets" />
@@ -34,7 +37,7 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 
 	<Target Name="_GenerateBundleName" DependsOnTargets="_ComputeTargetArchitectures;_DetectSigningIdentity">
 		<PropertyGroup>
-			<AppBundleDir Condition="'$(AppBundleDir)' == ''">$(DeviceSpecificOutputPath)$(_AppBundleName).appex</AppBundleDir>
+			<AppBundleDir Condition="'$(AppBundleDir)' == ''">$(DeviceSpecificOutputPath)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
 			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
 
 			<!-- needed for GetTargetPath/Build/Rebuild task outputs -->

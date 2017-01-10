@@ -249,7 +249,7 @@ output.
 
 These properties are used to drive the generation of C#-style Events in the
 generated classes. They are used to link a given class with its Objective-C
-delegate class. You will encounter many cases where a a class uses a delegate
+delegate class. You will encounter many cases where a class uses a delegate
 class to send notifications and events. For example a `BarcodeScanner` would have
 a companion `BardodeScannerDelegate` class. The `BarcodeScanner` class would
 typically have a "delegate" property that you would assign an instance of
@@ -708,7 +708,7 @@ specified selector is implemented in this class.
 [BaseType (typeof (NSObject))]
 [Model][Protocol]
 interface CameraDelegate {
-    [Export ("shouldDisplayPopup"), NoDefaultValoue]
+    [Export ("shouldDisplayPopup"), NoDefaultValue]
     bool ShouldUploadToServer ();
 }
 ```
@@ -960,6 +960,47 @@ This attribute is applied for example on heavy properties (for example
 as your thread did not return control to the main loop. Uf your thread was some
 sort of background downloader that is always alive and waiting for work, the
 images would never be released.
+
+
+<a name="ForcedTypeAttribute" class="injected"></a>
+
+
+## ForcedTypeAttribute
+
+The `ForcedTypeAttribute` is used to enforce the creation of a managed type even
+if the returned unmanaged object does not match the type described in the binding
+definition.
+
+This is useful when the type described in a header does not match the returned type
+of the native method, for example take the following Objective-C definition from `NSURLSession`:
+
+`- (NSURLSessionDownloadTask *)downloadTaskWithRequest:(NSURLRequest *)request`
+
+It clearly states that it will return an `NSURLSessionDownloadTask` instance, but yet it
+**returns** a `NSURLSessionTask`, which is a superclass and thus not convertible to 
+`NSURLSessionDownloadTask`. Since we are in a type-safe context an `InvalidCastException`
+will happen.
+
+In order to comply with the header description and avoid the `InvalidCastException`, the
+`ForcedTypeAttribute` is used.
+
+```
+[BaseType (typeof (NSObject), Name="NSURLSession")]
+interface NSUrlSession {
+
+	[Export ("downloadTaskWithRequest:")]
+	[return: ForcedType]
+	NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request);
+}
+```
+
+The `ForcedTypeAttribute` also accepts a boolean value named `Owns` that is `false`
+by default `[ForcedType (owns: true)]`. The owns parameter is used to follow
+the [Ownership Policy](https://developer.apple.com/library/content/documentation/CoreFoundation/Conceptual/CFMemoryMgmt/Concepts/Ownership.html)
+for **Core Foundation** objects.
+
+The `ForcedTypeAttribute` is only valid on `parameters`, `properties` and `return value`. 
+
 
  <a name="BindAttribute" class="injected"></a>
 
@@ -1336,6 +1377,7 @@ public class MyClass {
    [..]
    public Notifications {
       public static NSObject ObserveDidStart (EventHandler<NSNotificationEventArgs> handler)
+      public static NSObject ObserveDidStart (NSObject objectToObserve, EventHandler<NSNotificationEventArgs> handler)
    }
 }
 ```
@@ -1348,6 +1390,14 @@ by using code like this:
 ```
 var token = MyClass.Notifications.ObserverDidStart ((notification) => { 
     Console.WriteLine ("Observed the 'DidStart' event!");
+});
+```
+
+Or to set a specific object to observe. If you pass `null` to `objectToObserve` this method will behave just like its other peer.
+
+```
+var token = MyClass.Notifications.ObserverDidStart (objectToObserve, (notification) => { 
+    Console.WriteLine ("Observed the 'DidStart' event on objectToObserve!");
 });
 ```
 
@@ -2062,10 +2112,10 @@ attributes.
 
 ## LinkWithAttribute
 
-This is an assembly-level attribute which is being introduced with Xamarin.iOS
-5.2 and allows developers to specify the linking flags required to reuse a bound
-library without forcing the consumer of the library to manually configure the
-gcc_flags and extra mtouch arguments passed to a library.
+This is an assembly-level attribute which allows developers to specify the
+linking flags required to reuse a bound library without forcing the consumer
+of the library to manually configure the gcc_flags and extra mtouch arguments
+passed to a library.
 
 Syntax:
 
@@ -2081,6 +2131,7 @@ public enum LinkTarget {
 
 [AttributeUsage(AttributeTargets.Assembly, AllowMultiple=true)]
 public class LinkWithAttribute : Attribute {
+    public LinkWithAttribute ();
     public LinkWithAttribute (string libraryName);
     public LinkWithAttribute (string libraryName, LinkTarget target);
     public LinkWithAttribute (string libraryName, LinkTarget target, string linkerFlags);
@@ -2108,6 +2159,13 @@ into the resulting assembly, allowing users to ship a single DLL that contains
 both the unmanaged dependencies as well as the command line flags necessary to
 properly consume the library from Xamarin.iOS.
 
+It' s also possible to not provide a `libraryName`, in which case the
+`LinkWith` attribute can be used to only specify additional linker flags:
+
+ ``` csharp
+[assembly: LinkWith (LinkerFlags = "-lsqlite3")]
+ ```
+
  <a name="LinkWithAttribute_Constructors" class="injected"></a>
 
 
@@ -2122,6 +2180,9 @@ Note that the LinkTarget argument is inferred by Xamarin.iOS and does not need t
 Examples:
 
 ```
+// Specify additional linker:
+[assembly: LinkWith (LinkerFlags = "-sqlite3")]
+
 // Specify library name for the constructor:
 [assembly: LinkWith ("libDemo.a");
 
@@ -2170,8 +2231,9 @@ The name of the unmanaged library to bundle. This is a file with the
 extension ".a" and it can contain object code for multiple platforms (for
 example, ARM and x86 for the simulator).
 
-You use the `LinkTarget` parameter to inform the binding tool which platforms
-are supported by your library.
+Earlier versions of Xamarin.iOS checked the `LinkTarget` property to determine
+the platform your library supported, but this is now auto-detected, and the
+`LinkTarget` property is ignored.
 
  <a name="LinkWithAttribute.LinkerFlags" class="injected"></a>
 
@@ -2190,11 +2252,9 @@ the `LinkerFlags` string to `"-lxml2 -lz"`.
 
 ### LinkWithAttribute.LinkTarget
 
-`LinkTarget` specifies which target architecture(s) the native library
-supports.
-
-For example, if you are binding a universal library which supports ARMv7 and
-i386 (for the Simulator), you would set LinkTarget to `LinkTarget.ArmV7|LinkTarget.Simulator`.
+Earlier versions of Xamarin.iOS checked the `LinkTarget` property to determine
+the platform your library supported, but this is now auto-detected, and the
+`LinkTarget` property is ignored.
 
  <a name="LinkWithAttribute.NeedsGccExceptionHandling" class="injected"></a>
 

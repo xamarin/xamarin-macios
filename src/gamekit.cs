@@ -39,13 +39,13 @@ namespace XamCore.GameKit {
 	delegate void GKCategoryHandler     (string [] categories, string [] titles, NSError error);
 	delegate void GKPlayerStateUpdateHandler (string playerId, GKVoiceChatPlayerState state);
 	delegate void GKIdentityVerificationSignatureHandler (NSUrl publicKeyUrl, NSData signature, NSData salt, ulong timestamp, NSError error);
+	delegate void GKLeaderboardSetsHandler (GKLeaderboardSet [] leaderboardSets, NSError error);
 
 #if MONOMAC
 	delegate void GKImageLoadedHandler  (NSImage image, NSError error);
 	delegate void GKPlayerPhotoLoaded (NSImage photo, NSError error);
 	delegate void GKChallengeComposeHandler (NSViewController composeController, bool issuedChallenge, string [] sentPlayerIDs);
 #else
-	delegate void GKLeaderboardSetsHandler (GKLeaderboardSet [] leaderboardSets, NSError error);
 	delegate void GKImageLoadedHandler  (UIImage image, NSError error);
 	delegate void GKPlayerPhotoLoaded (UIImage photo, NSError error);
 	delegate void GKChallengeComposeHandler (UIViewController composeController, bool issuedChallenge, string [] sentPlayerIDs);
@@ -373,19 +373,17 @@ namespace XamCore.GameKit {
 		[Async]
 		void LoadLeaderboards ([NullAllowed] Action<GKLeaderboard[], NSError> completionHandler);
 
-#if !MONOMAC
-		[Since (7,0)]
+		[Since (7,0)][Mac (10,10)]
 		[NullAllowed]
 		[Export ("identifier", ArgumentSemantic.Copy)]
 		string Identifier { get; set; }
 
 		[NoTV]
 		[NoWatch]
-		[Since (7,0)]
+		[Since (7,0)][Mac (10,8)]
 		[Export ("loadImageWithCompletionHandler:")]
 		[Async]
 		void LoadImage ([NullAllowed] GKImageLoadedHandler completionHandler);
-#endif
 
 		[iOS (8,0), Mac (10,10)]
 		[Export ("initWithPlayers:")]
@@ -396,9 +394,8 @@ namespace XamCore.GameKit {
 		bool IsLoading { [Bind ("isLoading")] get; }
 	}
 
-#if !MONOMAC
 	[Watch (3,0)]
-	[Since (7,0)]
+	[Since (7,0)][Mac (10,10)]
 	[BaseType (typeof (NSObject))]
 	interface GKLeaderboardSet : NSCoding, NSSecureCoding {
 
@@ -421,13 +418,14 @@ namespace XamCore.GameKit {
 		[Async]
 		void LoadLeaderboards ([NullAllowed] GKLeaderboardsHandler completionHandler);
 
+#if !MONOMAC
 		[NoTV]
 		[NoWatch]
 		[Export ("loadImageWithCompletionHandler:")]
 		[Async]
 		void LoadImage ([NullAllowed] GKImageLoadedHandler completionHandler);
-	}
 #endif
+	}
 
 	[Watch (3,0)]
 	[iOS (10,0)][Mac (10,12)]
@@ -485,11 +483,9 @@ namespace XamCore.GameKit {
 		[Async]
 		void LoadPhoto (GKPhotoSize size, [NullAllowed] GKPlayerPhotoLoaded onCompleted);
 
-#if !MONOMAC
-		[Since (6,0)]
+		[Since (6,0)][Mac (10,8)]
 		[Export ("displayName")]
 		string DisplayName { get; }
-#endif
 
 		[NoWatch]
 		[Availability (Introduced = Platform.iOS_9_0 | Platform.Mac_10_11)]
@@ -517,17 +513,15 @@ namespace XamCore.GameKit {
 		[Export ("initWithLeaderboardIdentifier:player:")]
 		IntPtr Constructor (string identifier, GKPlayer player);
 
-#if !MONOMAC
 		[NoWatch]
-		[Since (7,0)]
+		[Since (7,0)][Mac (10,8)]
 		[Export ("initWithLeaderboardIdentifier:forPlayer:")]
 		IntPtr Constructor (string identifier, string playerID);
 
-		[Since (7,0)]
+		[Since (7,0)][Mac (10,8)]
 		[Internal][NullAllowed]
 		[Export ("initWithLeaderboardIdentifier:")]
 		IntPtr InitWithLeaderboardIdentifier (string identifier);
-#endif
 
 #if !XAMCORE_2_0
 		[NoWatch]
@@ -601,18 +595,18 @@ namespace XamCore.GameKit {
 		[Async]
 		void ReportScores (GKScore[] scores, [NullAllowed] Action<NSError> completionHandler);
 
-#if !MONOMAC
-		[Since (7,0)]
+		[Since (7,0)][Mac (10,10)]
 		[NullAllowed] // by default this property is null
 		[Export ("leaderboardIdentifier", ArgumentSemantic.Copy)]
 		string LeaderboardIdentifier { get; set; }
 
 		[NoWatch]
-		[Since (7,0)]
+		[Since (7,0)][Mac (10,10)]
 		[Export ("reportScores:withEligibleChallenges:withCompletionHandler:"), Static]
 		[Async]
 		void ReportScores (GKScore[] scores, [NullAllowed] GKChallenge[] challenges, [NullAllowed] Action<NSError> completionHandler);
 
+#if !MONOMAC
 		[NoTV][NoWatch]
 		[Availability (Deprecated = Platform.iOS_8_0, Message = "Pass GKPlayers to ChallengeComposeController (GKPlayer [] players, string message, ...) instead")]
 		[iOS (7,0)]
@@ -885,7 +879,6 @@ namespace XamCore.GameKit {
 		[Export ("voiceChatWithName:")]
 		GKVoiceChat VoiceChatWithName (string name);
 
-#if !MONOMAC
 		[NoTV]
 		[Availability (Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use ChooseBestHostingPlayer instead")]
 		[iOS (6,0), Mac (10,9)]
@@ -893,11 +886,10 @@ namespace XamCore.GameKit {
 		[Async]
 		void ChooseBestHostPlayer (Action<string> completionHandler);
 
-		[Since (6,0)]
+		[Since (6,0)][Mac (10,9)]
 		[Export ("rematchWithCompletionHandler:")]
 		[Async]
 		void Rematch ([NullAllowed] Action<GKMatch, NSError> completionHandler);
-#endif
 
 		[iOS (8,0), Mac (10,10)]
 		[Export ("players")]
@@ -1050,16 +1042,14 @@ namespace XamCore.GameKit {
 		[Export ("playersToInvite", ArgumentSemantic.Retain)]
 		string [] PlayersToInvite { get; set;  }
 
-#if !MONOMAC
-		[Since (6,0)]
+		[Since (6,0)][Mac (10,8)]
 		[NullAllowed] // by default this property is null
 		[Export ("inviteMessage", ArgumentSemantic.Copy)]
 		string InviteMessage { get; set; }
 
-		[Since (6,0)]
+		[Since (6,0)][Mac (10,8)]
 		[Export ("defaultNumberOfPlayers", ArgumentSemantic.Assign)]
 		nint DefaultNumberOfPlayers { get; set; }
-#endif
 
 		[NoTV]
 		[NoWatch]
@@ -1073,11 +1063,9 @@ namespace XamCore.GameKit {
 		[NullAllowed, Export ("recipientResponseHandler", ArgumentSemantic.Copy)]
 		Action<GKPlayer, GKInviteRecipientResponse> RecipientResponseHandler { get; set; }
 
-#if !MONOMAC
-		[Since (6,0)]
+		[Since (6,0)][Mac (10,9)]
 		[Export ("maxPlayersAllowedForMatchOfType:"), Static]
 		nint GetMaxPlayersAllowed (GKMatchType matchType);
-#endif
 
 		[iOS (8,0), Mac (10,10)]
 		[NullAllowed] // by default this property is null
@@ -1150,33 +1138,31 @@ namespace XamCore.GameKit {
 		[Async]
 		void QueryActivity ([NullAllowed] GKQueryHandler completionHandler);
 
-#if !MONOMAC
 		[NoWatch]
-		[Since (6,0)]
+		[Since (6,0)][Mac (10,9)]
 		[Export ("matchForInvite:completionHandler:")]
 		[Async]
 		void Match (GKInvite invite, [NullAllowed] Action<GKMatch, NSError> completionHandler);
 
 		[NoTV]
-		[Since (6,0)]
+		[Since (6,0)][Mac (10, 9)]
 		[Availability (Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10, Message = "Use CancelPendingInvite instead")]
 		[Export ("cancelInviteToPlayer:")]
 		void CancelInvite (string playerID);
 
-		[Since (6,0)]
+		[Since (6,0)][Mac (10,9)]
 		[Export ("finishMatchmakingForMatch:")]
 		void FinishMatchmaking (GKMatch match);
 
 		[NoTV]
-		[Since (6,0)]
+		[Since (6,0)][Mac (10,9)]
 		[Availability (Deprecated = Platform.iOS_8_0 | Platform.Mac_10_10)]
 		[Export ("startBrowsingForNearbyPlayersWithReachableHandler:")]
 		void StartBrowsingForNearbyPlayers ([NullAllowed] Action<string, bool> reachableHandler);
 
-		[Since (6,0)]
+		[Since (6,0)][Mac (10,9)]
 		[Export ("stopBrowsingForNearbyPlayers")]
 		void StopBrowsingForNearbyPlayers ();
-#endif
 
 		[iOS (8,0), Mac (10,10)]
 		[Export ("cancelPendingInviteToPlayer:")]
@@ -1228,12 +1214,12 @@ namespace XamCore.GameKit {
 		[Availability (Deprecated = Platform.iOS_5_0, Message = "Use SetHostedPlayerConnected instead")]
 		[Export ("setHostedPlayerReady:")]
 		void SetHostedPlayerReady (string playerID);
+#endif
 
 		[NoTV]
 		[Availability (Introduced = Platform.iOS_5_0 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10)]
 		[Export ("defaultInvitationMessage", ArgumentSemantic.Copy)]
 		string DefaultInvitationMessage { get; set;  }
-#endif
 
 		[Since (5,0)]
 		[Export ("addPlayersToMatch:")]
@@ -1628,12 +1614,10 @@ namespace XamCore.GameKit {
 		[Async]
 		void Show ([NullAllowed] string title, [NullAllowed] string message, [NullAllowed] NSAction onCompleted);
 
-#if !MONOMAC
-		[Since (6,0)]
+		[Since (6,0)][Mac (10,8)]
 		[Export ("showBannerWithTitle:message:duration:completionHandler:"), Static]
 		[Async]
 		void Show ([NullAllowed] string title, [NullAllowed] string message, double durationSeconds, [NullAllowed] Action completionHandler);
-#endif
 	}
 
 	[Since (5,0)]
@@ -1658,11 +1642,9 @@ namespace XamCore.GameKit {
 		[Export ("matchOutcome", ArgumentSemantic.Assign)]
 		GKTurnBasedMatchOutcome MatchOutcome { get; set;  }
 
-#if !MONOMAC
-		[Since (6,0)]
+		[Since (6,0)][Mac (10,8)]
 		[Export ("timeoutDate", ArgumentSemantic.Copy)]
 		NSDate TimeoutDate { get; }
-#endif
 	}
 
 	[NoTV]
@@ -1693,7 +1675,6 @@ namespace XamCore.GameKit {
 		[Export ("handleMatchEnded:")]
 		void HandleMatchEnded (GKTurnBasedMatch match);
 
-#if !MONOMAC
 #if XAMCORE_2_0
 		[Abstract]
 #endif
@@ -1701,7 +1682,6 @@ namespace XamCore.GameKit {
 		[Export ("handleTurnEventForMatch:didBecomeActive:")]
 		[Availability (Introduced = Platform.iOS_6_0 | Platform.Mac_10_8, Deprecated = Platform.iOS_6_0 | Platform.Mac_10_10)]
 		void HandleTurnEvent (GKTurnBasedMatch match, bool activated);
-#endif
 	}
 
 	[NoTV]
@@ -1814,99 +1794,97 @@ namespace XamCore.GameKit {
 		void EndMatchInTurn (NSData matchData, [NullAllowed] GKNotificationHandler onCompletion);
 #endif
 
-#if !MONOMAC
-		[Since (6,0)]
+		[Since (6,0)][Mac (10,8)]
 		[Static]
 		[Export ("loadMatchWithID:withCompletionHandler:")]
 		[Async]
 		void LoadMatch (string matchId, [NullAllowed] Action<GKTurnBasedMatch, NSError> completionHandler);
 
-		[Since (6,0)]
+		[Since (6,0)][Mac (10,8)]
 		[Export ("acceptInviteWithCompletionHandler:")]
 		[Async]
 		void AcceptInvite ([NullAllowed] Action<GKTurnBasedMatch, NSError> completionHandler);
 
-		[Since (6,0)]
+		[Since (6,0)][Mac (10,8)]
 		[Export ("declineInviteWithCompletionHandler:")]
 		[Async]
 		void DeclineInvite ([NullAllowed] Action<GKTurnBasedMatch, NSError> completionHandler);
 
-		[Since (6,0)]
+		[Since (6,0)][Mac (10,8)]
 		[Export ("matchDataMaximumSize")]
 		nint MatchDataMaximumSize { get; }
 
-		[Since (6,0)]
+		[Since (6,0)][Mac (10,9)]
 		[Export ("rematchWithCompletionHandler:")]
 		[Async]
 		void Rematch ([NullAllowed] Action<GKTurnBasedMatch, NSError> completionHandler);
 
-		[Since (6,0)]
+		[Since (6,0)][Mac (10,9)]
 		[Export ("endTurnWithNextParticipants:turnTimeout:matchData:completionHandler:")]
 		[Async]
 		void EndTurn (GKTurnBasedParticipant[] nextParticipants, double timeoutSeconds, NSData matchData, [NullAllowed] Action<NSError> completionHandler);
 
-		[Since (6,0)]
+		[Since (6,0)][Mac (10,9)]
 		[Export ("participantQuitInTurnWithOutcome:nextParticipants:turnTimeout:matchData:completionHandler:")]
 		[Async]
 		void ParticipantQuitInTurn (GKTurnBasedMatchOutcome matchOutcome, GKTurnBasedParticipant[] nextParticipants, double timeoutSeconds, NSData matchData, [NullAllowed] Action<NSError> completionHandler);
 
-		[Since (6,0)]
+		[Since (6,0)][Mac (10,8)]
 		[Export ("saveCurrentTurnWithMatchData:completionHandler:")]
 		[Async]
 		void SaveCurrentTurn (NSData matchData, [NullAllowed] Action<NSError> completionHandler);
 
-		[Since (6,0)]
+		[Since (6,0)][Mac (10,9)]
 		[Field ("GKTurnTimeoutDefault"), Static]
 		double DefaultTimeout { get; }
 
-		[Since (6,0)]
+		[Since (6,0)][Mac (10,9)]
 		[Field ("GKTurnTimeoutNone"), Static]
 		double NoTimeout { get; }
 
-		[Since (7,0)]
+		[Since (7,0)][Mac (10,10)]
 		[Export ("exchanges", ArgumentSemantic.Retain)]
 		GKTurnBasedExchange [] Exchanges { get; }
 
-		[Since (7,0)]
+		[Since (7,0)][Mac (10,10)]
 		[Export ("activeExchanges", ArgumentSemantic.Retain)]
 		GKTurnBasedExchange [] ActiveExchanges { get; }
 
-		[Since (7,0)]
+		[Since (7,0)][Mac (10,10)]
 		[Export ("completedExchanges", ArgumentSemantic.Retain)]
 		GKTurnBasedExchange [] CompletedExchanges { get; }
 
-		[Since (7,0)]
+		[Since (7,0)][Mac (10,10)]
 		[Export ("exchangeDataMaximumSize")]
 		nuint ExhangeDataMaximumSize { get; }
 
-		[Since (7,0)]
+		[Since (7,0)][Mac (10,10)]
 		[Export ("exchangeMaxInitiatedExchangesPerPlayer")]
 		nuint ExchangeMaxInitiatedExchangesPerPlayer { get; }
 
-		[Since (7,0)]
+		[Since (7,0)][Mac (10,10)]
 		[Export ("setLocalizableMessageWithKey:arguments:")]
 		void SetMessage (string localizableMessage, params NSObject [] arguments);
 
-		[Since (7,0)]
+		[Since (7,0)][Mac (10,10)]
 		[Export ("endMatchInTurnWithMatchData:scores:achievements:completionHandler:")]
 		[Async]
 		void EndMatchInTurn (NSData matchData, [NullAllowed] GKScore [] scores, [NullAllowed] GKAchievement [] achievements, [NullAllowed] Action<NSError> completionHandler);
 
-		[Since (7,0)]
+		[Since (7,0)][Mac (10,10)]
 		[Export ("saveMergedMatchData:withResolvedExchanges:completionHandler:")]
 		[Async]
 		void SaveMergedMatchData (NSData matchData, GKTurnBasedExchange [] exchanges, [NullAllowed] Action<NSError> completionHandler);
 
-		[Since (7,0)]
+		[Since (7,0)][Mac (10,10)]
 		[Export ("sendExchangeToParticipants:data:localizableMessageKey:arguments:timeout:completionHandler:")]
 		[Async]
 		void SendExchange (GKTurnBasedParticipant [] participants, NSData data, string localizableMessage, NSObject [] arguments, double timeout, [NullAllowed] Action<GKTurnBasedExchange, NSError> completionHandler);
 
-		[Since (7,0)]
+		[Since (7,0)][Mac (10,10)]
 		[Export ("sendReminderToParticipants:localizableMessageKey:arguments:completionHandler:")]
 		[Async]
 		void SendReminder (GKTurnBasedParticipant [] participants, string localizableMessage, NSObject [] arguments, [NullAllowed] Action<NSError> completionHandler);
-#endif
 	}
 
 	[NoWatch]

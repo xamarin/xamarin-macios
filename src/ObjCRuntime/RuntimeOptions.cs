@@ -46,31 +46,37 @@ namespace XamCore.ObjCRuntime {
 		const string AppleTlsProviderValue = "appletls";
 
 		string http_message_handler;
-		string tls_provider;
 
 #if MTOUCH || MMP
 		/*
 		 * This section is only used by the tools
 		 */
-		internal static RuntimeOptions Create (string http_message_handler, string tls_provider)
+		internal static RuntimeOptions Create (Application app, string http_message_handler, string tls_provider)
 		{
 			var options = new RuntimeOptions ();
-			options.http_message_handler = ParseHttpMessageHandler (http_message_handler);
-			options.tls_provider = ParseTlsProvider (tls_provider);
+			options.http_message_handler = ParseHttpMessageHandler (app, http_message_handler);
+			ParseTlsProvider (tls_provider);
 			return options;
 		}
 
-		static string ParseHttpMessageHandler (string value)
+		static string ParseHttpMessageHandler (Application app, string value)
 		{
 			switch (value) {
 			// default
 			case null:
 				return HttpClientHandlerValue;
-			case HttpClientHandlerValue:
 			case CFNetworkHandlerValue:
+			case HttpClientHandlerValue:
+				if (app.Platform == Utils.ApplePlatform.WatchOS) {
+					ErrorHelper.Warning (2015, "Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.", value);
+					return NSUrlSessionHandlerValue;
+				}
+				return value;
 			case NSUrlSessionHandlerValue:
 				return value;
 			default:
+				if (app.Platform == Utils.ApplePlatform.WatchOS) // This is value we don't know about at all, show as error instead of warning.
+					throw ErrorHelper.CreateError (2015, "Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.", value);
 				throw ErrorHelper.CreateError (2010, "Unknown HttpMessageHandler `{0}`. Valid values are HttpClientHandler (default), CFNetworkHandler or NSUrlSessionHandler", value);
 			}
 		}
@@ -81,16 +87,16 @@ namespace XamCore.ObjCRuntime {
 			// default
 			case null:
 				return DefaultTlsProviderValue;
-			case LegacyTlsProviderValue:
 			case DefaultTlsProviderValue:
 			case AppleTlsProviderValue:
 				return value;
+			case LegacyTlsProviderValue:
+				ErrorHelper.Warning (2016, "Invalid TlsProvider `{0}` option. The only valid value `{1}` will be used.", value, AppleTlsProviderValue);
+				return AppleTlsProviderValue;
 			default:
-				throw ErrorHelper.CreateError (2011, "Unknown TlsProvider `{0}`.  Valid values are default, legacy or appletls", value);
+				throw ErrorHelper.CreateError (2011, "Unknown TlsProvider `{0}`.  Valid values are default or appletls", value);
 			}
 		}
-
-
 
 		string GenerateMessageHandlerValue ()
 		{
@@ -124,10 +130,6 @@ namespace XamCore.ObjCRuntime {
 			content.AppendLine ("<key>HttpMessageHandler</key>");
 			content.Append ("<string>");
 			content.AppendLine (GenerateMessageHandlerValue ());
-			content.AppendLine ("<key>TlsProvider</key>");
-			content.Append ("<string>");
-			content.Append (tls_provider);
-			content.AppendLine ("</string>");
 			content.AppendLine ("</dict>");
 			content.AppendLine ("</plist>");
 
@@ -135,31 +137,18 @@ namespace XamCore.ObjCRuntime {
 			File.WriteAllText (file_name, content.ToString ());
 		}
 
-		// Called from CoreTlsProviderStep
-		internal static TypeDefinition GetTlsProvider (RuntimeOptions options, ModuleDefinition module)
-		{
-			var provider = options != null ? options.tls_provider : DefaultTlsProviderValue;
-			TypeDefinition type;
-			switch (provider) {
-			case DefaultTlsProviderValue:
-			case AppleTlsProviderValue:
-				type = module.GetType (Namespaces.Security + ".Tls.AppleTlsProvider");
-				break;
-			case LegacyTlsProviderValue:
-				type = module.GetType (Namespaces.Security + ".Tls.OldTlsProvider");
-				break;
-			default:
-				throw new InvalidOperationException (string.Format ("Unknown TlsProvider `{0}`.", provider));
-			}
-			if (type == null)
-				throw new InvalidOperationException (string.Format ("Cannot load TlsProvider `{0}`.", provider));
-			return type;
-		}
-
 		// Called from CoreHttpMessageHandler
-		internal static TypeDefinition GetHttpMessageHandler (RuntimeOptions options, ModuleDefinition httpModule, ModuleDefinition platformModule = null)
+		internal static TypeDefinition GetHttpMessageHandler (Application app, RuntimeOptions options, ModuleDefinition httpModule, ModuleDefinition platformModule = null)
 		{
-			var handler = options != null ? options.http_message_handler : HttpClientHandlerValue;
+			string handler;
+
+			if (options != null) {
+				handler = options.http_message_handler;
+			} else if (app.Platform == Utils.ApplePlatform.WatchOS) {
+				handler = NSUrlSessionHandlerValue;
+			} else {
+				handler = HttpClientHandlerValue;
+			}
 			TypeDefinition type;
 			switch (handler) {
 #if MONOMAC
@@ -174,10 +163,20 @@ namespace XamCore.ObjCRuntime {
 				break;
 #else
 			case HttpClientHandlerValue:
-				type = httpModule.GetType ("System.Net.Http", "HttpClientHandler");
+				if (app.Platform == Utils.ApplePlatform.WatchOS) {
+					ErrorHelper.Warning (2015, "Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.", handler);
+					type = httpModule.GetType ("System.Net.Http", "NSUrlSessionHandler");
+				} else {
+					type = httpModule.GetType ("System.Net.Http", "HttpClientHandler");
+				}
 				break;
 			case CFNetworkHandlerValue:
-				type = httpModule.GetType ("System.Net.Http", "CFNetworkHandler");
+				if (app.Platform == Utils.ApplePlatform.WatchOS) {
+					ErrorHelper.Warning (2015, "Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.", handler);
+					type = httpModule.GetType ("System.Net.Http", "NSUrlSessionHandler");
+				} else {
+					type = httpModule.GetType ("System.Net.Http", "CFNetworkHandler");
+				}
 				break;
 			case NSUrlSessionHandlerValue:
 				type = httpModule.GetType ("System.Net.Http", "NSUrlSessionHandler");
@@ -202,35 +201,10 @@ namespace XamCore.ObjCRuntime {
 			using (var plist = NSDictionary.FromFile (plist_path)) {
 				var options = new RuntimeOptions ();
 				options.http_message_handler = (NSString) plist ["HttpMessageHandler"];
-				options.tls_provider = (NSString) plist ["TlsProvider"];
 				return options;
 			}
 		}
 		
-#if !COREBUILD && (XAMARIN_APPLETLS || XAMARIN_NO_TLS)
-		internal static MonoTlsProvider GetTlsProvider ()
-		{
-#if XAMARIN_NO_TLS
-			return new OldTlsProvider ();
-#else
-			var options = Read ();
-			if (options == null)
-				return null;
-
-			switch (options.tls_provider) {
-			case null:
-			case DefaultTlsProviderValue:
-			case AppleTlsProviderValue:
-				return new AppleTlsProvider ();
-			case LegacyTlsProviderValue:
-				return new OldTlsProvider ();
-			default:
-				throw new InvalidOperationException (string.Format ("Invalid TLS Provider `{0}'.", options.tls_provider));
-			}
-#endif
-		}
-#endif
-
 #if SYSTEM_NET_HTTP || (MONOMAC && XAMCORE_2_0)
 #if MONOMAC
 		[Preserve]
@@ -239,7 +213,7 @@ namespace XamCore.ObjCRuntime {
 		{
 			var options = RuntimeOptions.Read ();
 			if (options == null) {
-#if WATCH
+#if MONOTOUCH_WATCH
 				return new NSUrlSessionHandler ();
 #else
 				return new HttpClientHandler ();
@@ -255,7 +229,7 @@ namespace XamCore.ObjCRuntime {
 				handler = Activator.CreateInstance (t) as HttpMessageHandler;
 			if (handler != null)
 				return handler;
-#if WATCH
+#if MONOTOUCH_WATCH
 			Console.WriteLine ("{0} is not a valid HttpMessageHandler, defaulting to NSUrlSessionHandler", handler_name);
 			return new NSUrlSessionHandler ();
 #else

@@ -27,16 +27,15 @@ namespace MonoTouch.Tuner {
 		public bool Device { get; set; }
 		public bool EnsureUIThread { get; set; }
 		public IList<string> ExtraDefinitions { get; set; }
-		public bool OldRegistrar { get; set; }
 		public bool DebugBuild { get; set; }
 		public int Arch { get; set; }
 		public bool IsDualBuild { get; set; }
-		public bool Unified { get; set; }
 		public bool DumpDependencies { get; set; }
 		internal PInvokeWrapperGenerator MarshalNativeExceptionsState { get; set; }
 		internal RuntimeOptions RuntimeOptions { get; set; }
 
 		public MonoTouchLinkContext LinkContext { get; set; }
+		public Application Application { get; set; }
 
 		public static I18nAssemblies ParseI18nAssemblies (string i18n)
 		{
@@ -114,18 +113,15 @@ namespace MonoTouch.Tuner {
 			sub.Add (new ApplyPreserveAttribute ());
 			sub.Add (new CoreRemoveSecurity ());
 			sub.Add (new OptimizeGeneratedCodeSubStep (options));
-			// OptimizeGeneratedCodeSubStep needs [GeneratedCode] so it must occurs before RemoveAttributes
+			sub.Add (new RemoveUserResourcesSubStep (options));
+			// OptimizeGeneratedCodeSubStep and RemoveNativeCodeSubStep needs [GeneratedCode] so it must occurs before RemoveAttributes
 			sub.Add (new RemoveAttributes ());
 			// http://bugzilla.xamarin.com/show_bug.cgi?id=1408
 			if (options.LinkAway)
 				sub.Add (new RemoveCode (options));
 			sub.Add (new MarkNSObjects ());
 			sub.Add (new PreserveSoapHttpClients ());
-			// there's only one registrar for unified, i.e. DynamicRegistrar
-			if (!options.Unified)
-				sub.Add (new RemoveExtraRegistrar (options.OldRegistrar));
 			sub.Add (new CoreHttpMessageHandler (options));
-			sub.Add (new CoreTlsProviderStep (options));
 			return sub;
 		}
 
@@ -166,11 +162,6 @@ namespace MonoTouch.Tuner {
 
 				pipeline.AppendStep (new PreserveCode (options));
 
-				// only remove bundled resources on device builds as MonoDevelop requires the resources later 
-				// (to be extracted). That differs from the device builds (where another unmodified copy is used)
-				if (options.Device)
-					pipeline.AppendStep (new RemoveMonoTouchResources ());
-
 				pipeline.AppendStep (new RemoveResources (options.I18nAssemblies)); // remove collation tables
 
 				pipeline.AppendStep (new MonoTouchMarkStep ());
@@ -182,6 +173,11 @@ namespace MonoTouch.Tuner {
 
 				pipeline.AppendStep (new RemoveSelectors ());
 				pipeline.AppendStep (new FixModuleFlags ());
+			} else {
+				SubStepDispatcher sub = new SubStepDispatcher () {
+					new RemoveUserResourcesSubStep (options)
+				};
+				pipeline.AppendStep (sub);
 			}
 
 			pipeline.AppendStep (new ListExportedSymbols (options.MarshalNativeExceptionsState));

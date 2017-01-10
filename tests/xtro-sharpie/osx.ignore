@@ -388,3 +388,44 @@
 
 # 32-bit only, and marked correctly in binding
 !unknown-type! NSMenuView bound
+
+# Only one type currently, which default returns. Currently unneeded unless they extend.
+!missing-selector! +NSDistributedNotificationCenter::notificationCenterForType: not bound
+
+# iOS Only, not available for macOS  - NS_CLASS_AVAILABLE(NA, XXX)
+!missing-protocol! MTLFence not bound
+!missing-protocol! MTLHeap not bound
+!missing-protocol-member! MTLBlitCommandEncoder::updateFence: not found
+!missing-protocol-member! MTLBlitCommandEncoder::waitForFence: not found
+!missing-protocol-member! MTLComputeCommandEncoder::updateFence: not found
+!missing-protocol-member! MTLComputeCommandEncoder::waitForFence: not found
+!missing-protocol-member! MTLDevice::heapBufferSizeAndAlignWithLength:options: not found
+!missing-protocol-member! MTLDevice::heapTextureSizeAndAlignWithDescriptor: not found
+!missing-protocol-member! MTLDevice::newFence not found
+!missing-protocol-member! MTLDevice::newHeapWithDescriptor: not found
+!missing-protocol-member! MTLResource::heap not found
+!missing-protocol-member! MTLResource::isAliasable not found
+!missing-protocol-member! MTLResource::makeAliasable not found
+!missing-type! MTLHeapDescriptor not bound
+!missing-selector! MTLHeapDescriptor::cpuCacheMode not bound
+!missing-selector! MTLHeapDescriptor::setCpuCacheMode: not bound
+!missing-selector! MTLHeapDescriptor::setSize: not bound
+!missing-selector! MTLHeapDescriptor::setStorageMode: not bound
+!missing-selector! MTLHeapDescriptor::size not bound
+!missing-selector! MTLHeapDescriptor::storageMode not bound
+!missing-field! CBCentralManagerOptionRestoreIdentifierKey not bound
+!missing-field! CBConnectPeripheralOptionNotifyOnConnectionKey not bound
+!missing-field! CBConnectPeripheralOptionNotifyOnNotificationKey not bound
+
+# iOS Only - NS_AVAILABLE_IOS
+!missing-protocol-member! MTLRenderCommandEncoder::updateFence:afterStages: not found
+!missing-protocol-member! MTLRenderCommandEncoder::waitForFence:beforeStages: not found
+!missing-protocol-member! MTLBuffer::newTextureWithDescriptor:offset:bytesPerRow: not found
+!missing-selector! MTLRenderPassDepthAttachmentDescriptor::depthResolveFilter not bound
+!missing-selector! MTLRenderPassDepthAttachmentDescriptor::setDepthResolveFilter: not bound
+!missing-selector! MTLSamplerDescriptor::lodAverage not bound
+!missing-selector! MTLSamplerDescriptor::setLodAverage: not bound
+
+# Deprecated in the same version of OS X that CBCentral becomes available.  The alternative (Identifier property) is bound and available.
+!missing-selector! CBCentral::UUID not bound
+!missing-selector! CBPeripheral::UUID not bound

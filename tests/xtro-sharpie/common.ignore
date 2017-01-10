@@ -124,3 +124,7 @@
 
 ## objc runtime
 !unknown-pinvoke! class_addProperty bound
+
+## CoreLocation
+# We have our own managed ctor
+!missing-pinvoke! CLLocationCoordinate2DMake is not bound

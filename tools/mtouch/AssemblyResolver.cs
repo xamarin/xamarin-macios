@@ -45,18 +45,23 @@ namespace MonoTouch.Tuner {
 		public bool EnableRepl { get; set; }
 
 		Dictionary<string, AssemblyDefinition> cache;
-		ReaderParameters parameters;
 
 		public MonoTouchResolver ()
 		{
-			cache = new Dictionary<string, AssemblyDefinition> (StringComparer.InvariantCultureIgnoreCase);
-			parameters = new ReaderParameters ();
+			cache = new Dictionary<string, AssemblyDefinition> (StringComparer.OrdinalIgnoreCase);
+		}
+
+		ReaderParameters CreateParameters (string path)
+		{
+			var parameters = new ReaderParameters ();
 			parameters.AssemblyResolver = this;
+			parameters.InMemory = new FileInfo (path).Length < 1024 * 1024 * 100; // 100 MB.
+			return parameters;
 		}
 
 		public IDictionary ToResolverCache ()
 		{
-			var resolver_cache = new Hashtable (StringComparer.InvariantCultureIgnoreCase);
+			var resolver_cache = new Hashtable (StringComparer.OrdinalIgnoreCase);
 			foreach (var pair in cache)
 				resolver_cache.Add (pair.Key, pair.Value);
 
@@ -88,7 +93,7 @@ namespace MonoTouch.Tuner {
 						fileName = archName;
 				}
 
-				assembly = ModuleDefinition.ReadModule (fileName, parameters).Assembly;
+				assembly = ModuleDefinition.ReadModule (fileName, CreateParameters (fileName)).Assembly;
 			}
 			catch (Exception e) {
 				throw new MonoTouchException (9, true, e, "Error while loading assemblies: {0}", fileName);
@@ -99,17 +104,17 @@ namespace MonoTouch.Tuner {
 
 		public AssemblyDefinition Resolve (string fullName)
 		{
-			return Resolve (AssemblyNameReference.Parse (fullName), parameters);
+			return Resolve (AssemblyNameReference.Parse (fullName), null);
 		}
 
 		public AssemblyDefinition Resolve (string fullName, ReaderParameters parameters)
 		{
-			return Resolve (AssemblyNameReference.Parse (fullName), parameters);
+			return Resolve (AssemblyNameReference.Parse (fullName), null);
 		}
 
 		public AssemblyDefinition Resolve (AssemblyNameReference reference)
 		{
-			return Resolve (reference, parameters);
+			return Resolve (reference, null);
 		}
 
 		public AssemblyDefinition Resolve (AssemblyNameReference name, ReaderParameters parameters)
@@ -150,19 +155,18 @@ namespace MonoTouch.Tuner {
 			if (assembly != null)
 				return assembly;
 
+			assembly = SearchDirectory (aname, RootDirectory, ".exe");
+			if (assembly != null)
+				return assembly;
+
 			return null;
 		}
 
-		AssemblyDefinition SearchDirectory (string name, string directory)
+		AssemblyDefinition SearchDirectory (string name, string directory, string extension = ".dll")
 		{
-			var file = DirectoryGetFile (directory, name + ".dll");
+			var file = DirectoryGetFile (directory, name + extension);
 			if (file.Length > 0)
 				return Load (file);
-
-			file = DirectoryGetFile (directory, name + ".exe");
-			if (file.Length > 0)
-				return Load (file);
-
 			return null;
 		}
 

@@ -11,6 +11,14 @@ using Xamarin.Utils;
 
 using XamCore.ObjCRuntime;
 
+#if MONOTOUCH
+using PlatformException = Xamarin.Bundler.MonoTouchException;
+using PlatformResolver = MonoTouch.Tuner.MonoTouchResolver;
+#else
+using PlatformException = Xamarin.Bundler.MonoMacException;
+using PlatformResolver = Xamarin.Bundler.MonoMacResolver;
+#endif
+
 namespace Xamarin.Bundler {
 
 	[Flags]
@@ -27,7 +35,8 @@ namespace Xamarin.Bundler {
 
 	public partial class Application
 	{
-		public string AppDirectory;
+		public Cache Cache = new Cache ();
+		public string AppDirectory = ".";
 		public bool DeadStrip = true;
 		public bool EnableDebug;
 		internal RuntimeOptions RuntimeOptions;
@@ -48,6 +57,12 @@ namespace Xamarin.Bundler {
 		public bool? EnableCoopGC;
 		public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptions;
 		public MarshalManagedExceptionMode MarshalManagedExceptions;
+		public bool IsDefaultMarshalManagedExceptionMode;
+		public string RootAssembly;
+		public string RegistrarOutputLibrary;
+
+		public Version DeploymentTarget;
+		public Version SdkVersion;
 
 		public bool RequiresPInvokeWrappers {
 			get {
@@ -79,7 +94,7 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static bool IsUptodate (string source, string target)
+		public static bool IsUptodate (string source, string target, bool check_contents = false)
 		{
 			if (Driver.Force)
 				return false;
@@ -96,10 +111,15 @@ namespace Xamarin.Bundler {
 			if (sfi.LastWriteTimeUtc <= tfi.LastWriteTimeUtc) {
 				Driver.Log (3, "Prerequisite '{0}' is older than the target '{1}'.", source, target);
 				return true;
-			} else {
-				Driver.Log (3, "Prerequisite '{0}' is newer than the target '{1}'.", source, target);
-				return false;
 			}
+
+			if (check_contents && Cache.CompareFiles (source, target)) {
+				Driver.Log (3, "Prerequisite '{0}' is newer than the target '{1}', but the contents are identical.", source, target);
+				return true;
+			}
+
+			Driver.Log (3, "Prerequisite '{0}' is newer than the target '{1}'.", source, target);
+			return false;
 		}
 
 		public static void RemoveResource (ModuleDefinition module, string name)
@@ -256,9 +276,9 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static void UpdateFile (string source, string target)
+		public static void UpdateFile (string source, string target, bool check_contents = false)
 		{
-			if (!Application.IsUptodate (source, target))
+			if (!Application.IsUptodate (source, target, check_contents))
 				CopyFile (source, target);
 			else
 				Driver.Log (3, "Target '{0}' is up-to-date", target);
@@ -389,7 +409,49 @@ namespace Xamarin.Bundler {
 				} else {
 					MarshalManagedExceptions = isSimulatorOrDesktopDebug ? MarshalManagedExceptionMode.UnwindNativeCode : MarshalManagedExceptionMode.Disable;
 				}
+				IsDefaultMarshalManagedExceptionMode = true;
 			}
+		}
+
+		public void RunRegistrar ()
+		{
+			// The static registrar.
+			if (Registrar != RegistrarMode.Static)
+				throw new PlatformException (67, "Invalid registrar: {0}", Registrar); // this is only called during our own build
+
+			var registrar_m = RegistrarOutputLibrary;
+
+			var resolvedAssemblies = new List<AssemblyDefinition> ();
+			var resolver = new PlatformResolver () {
+				FrameworkDirectory = Driver.GetPlatformFrameworkDirectory (this),
+				RootDirectory = Path.GetDirectoryName (RootAssembly),
+			};
+
+			if (Platform == ApplePlatform.iOS || Platform == ApplePlatform.MacOSX) {
+				if (Is32Build) {
+					resolver.ArchDirectory = Driver.GetArch32Directory (this);
+				} else {
+					resolver.ArchDirectory = Driver.GetArch64Directory (this);
+				}
+			}
+
+			var ps = new ReaderParameters ();
+			ps.AssemblyResolver = resolver;
+			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve ("mscorlib"));
+
+			var rootName = Path.GetFileNameWithoutExtension (RootAssembly);
+			if (rootName != Driver.GetProductAssembly (this))
+				throw new PlatformException (66, "Invalid build registrar assembly: {0}", RootAssembly);
+
+			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (rootName));
+			Driver.Log (3, "Loaded {0}", resolvedAssemblies [resolvedAssemblies.Count - 1].MainModule.FileName);
+
+#if MONOTOUCH
+			BuildTarget = BuildTarget.Simulator;
+#endif
+
+			var registrar = new XamCore.Registrar.StaticRegistrar (this);
+			registrar.GenerateSingleAssembly (resolvedAssemblies, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly));
 		}
 	}
 }

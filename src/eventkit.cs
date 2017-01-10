@@ -9,7 +9,7 @@
 // Copyright 2012-2015, Xamarin Inc.
 //
 
-#if !WATCH
+#if !WATCH && !MONOMAC
 using XamCore.AddressBook;
 #endif
 using XamCore.ObjCRuntime;

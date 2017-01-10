@@ -58,7 +58,7 @@ namespace Xamarin.Linker.Steps {
 			MethodDefinition method = type.Methods.First (x => x.Name == "GetHttpMessageHandler" && !x.HasParameters);
 
 			AssemblyDefinition systemNetHTTPAssembly = context.GetAssemblies ().First (x => x.Name.Name == "System.Net.Http");
-			TypeDefinition handler = RuntimeOptions.GetHttpMessageHandler (Options.RuntimeOptions, systemNetHTTPAssembly.MainModule, type.Module);
+			TypeDefinition handler = RuntimeOptions.GetHttpMessageHandler (Driver.App, Options.RuntimeOptions, systemNetHTTPAssembly.MainModule, type.Module);
 			MethodReference handler_ctor = handler.Methods.First (x => x.IsConstructor && !x.HasParameters && !x.IsStatic);
 
 			// HttpClientHandler is defined not in Xamarin.Mac.dll so we need to import
@@ -92,7 +92,7 @@ namespace Xamarin.Linker.Steps {
 			if (default_ctor == null || full_ctor == null)
 				throw new Exception ("Could not set the default HttpMessageHandler");
 
-			var handler = RuntimeOptions.GetHttpMessageHandler (Options.RuntimeOptions, type.Module);
+			var handler = RuntimeOptions.GetHttpMessageHandler (Options.Application, Options.RuntimeOptions, type.Module);
 
 			MethodDefinition handler_ctor = null;
 			foreach (var m in handler.Methods) {

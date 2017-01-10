@@ -52,6 +52,9 @@ namespace XamCore.ReplayKit {
 	[TV (10,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
+#if XAMCORE_4_0
+	[Sealed]
+#endif
 	interface RPScreenRecorder {
 
 		[Static]
@@ -259,5 +262,9 @@ namespace XamCore.ReplayKit {
 
 		[Export ("processSampleBuffer:withType:")]
 		void ProcessSampleBuffer (CMSampleBuffer sampleBuffer, RPSampleBufferType sampleBufferType);
+
+		[iOS (10,2)][TV (10,1)]
+		[Export ("finishBroadcastWithError:")]
+		void FinishBroadcast (NSError error);
 	}
 }

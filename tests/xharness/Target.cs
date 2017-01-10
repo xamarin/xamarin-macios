@@ -52,7 +52,7 @@ namespace xharness
 
 		public virtual bool ShouldSkipProjectGeneration { get { return false; } } // Only generate makefile to invoke hard coded csproj
 		public virtual bool ShouldSetTargetFrameworkIdentifier { get { return true; } }
-		public virtual string DefaultAssemblyReference { get { return "monotouch"; } }
+		public virtual string DefaultAssemblyReference { get { return "Xamarin.iOS"; } }
 		public virtual IEnumerable<string> ReferenceToRemove { get { return Enumerable.Empty<string> (); } }
 		public virtual Dictionary<string, string> NewPropertiesToAdd { get { return new Dictionary<string, string> (); } }
 
@@ -72,6 +72,11 @@ namespace xharness
 				inputProject.CloneConfiguration ("iPhone", "Release", "Release-bitcode");
 				inputProject.AddExtraMtouchArgs ("--bitcode:full", "iPhone", "Release-bitcode");
 				inputProject.SetMtouchUseLlvm (true, "iPhone", "Release-bitcode");
+			}
+
+			if (!IsMultiArchitecture && IsExe) {
+				inputProject.DeleteConfiguration ("iPhone", "Debug32");
+				inputProject.DeleteConfiguration ("iPhone", "Debug64");
 			}
 
 			inputProject.SetOutputPath ("bin\\$(Platform)\\$(Configuration)" + Suffix);
@@ -160,15 +165,15 @@ namespace xharness
 				outputType = inputProject.GetOutputType ();
 	
 				switch (inputProject.GetImport ()) {
-				case "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.MonoTouch.CSharp.targets":
-				case "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.MonoTouch.FSharp.targets":
+				case "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.CSharp.targets":
+				case "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.FSharp.targets":
 				case "$(MSBuildExtensionsPath)\\Xamarin\\Mac\\Xamarin.Mac.CSharp.targets":
 				case "$(MSBuildExtensionsPath":
 				case "$(MSBuildBinPath)\\Microsoft.CSharp.targets":
 					IsBindingProject = false;
 					break;
-				case "$(MSBuildExtensionsPath)\\Xamarin\\Xamarin.ObjcBinding.CSharp.targets":
-				case "$(MSBuildExtensionsPath)\\Xamarin\\Xamarin.ObjcBinding.FSharp.targets":
+				case "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.ObjCBinding.CSharp.targets":
+				case "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.ObjCBinding.FSharp.targets":
 				case "$(MSBuildExtensionsPath)\\Xamarin\\Mac\\Xamarin.Mac.ObjcBinding.CSharp":	
 					IsBindingProject = true;
 					break;

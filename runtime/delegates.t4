@@ -22,6 +22,10 @@
 			ExceptionHandling = false,
 		},
 
+		new XDelegate ("void", "void", "xamarin_rethrow_managed_exception",
+			"guint32", "uint", "original_exception_gchandle"
+		) { WrappedManagedFunction = "RethrowManagedException" },
+
 		new XDelegate ("int", "int", "xamarin_create_ns_exception",
 			"NSException *", "IntPtr", "exc"
 		) { WrappedManagedFunction = "CreateNSException" },
@@ -87,21 +91,6 @@
 			"MonoObject *", "IntPtr", "managed_obj"
 		) { WrappedManagedFunction = "UnregisterNSObject" },
 
-		new XDelegate ("MonoReflectionMethod *", "IntPtr", "xamarin_get_method_direct",
-			"const char *", "IntPtr", "typeptr",
-			"const char *", "IntPtr", "methodptr",
-			"int", "int", "paramCount",
-			"const char **", "IntPtr*", "paramptr"
-		) { WrappedManagedFunction = "GetMethodDirect" },
-
-		new XDelegate ("MonoReflectionMethod *", "IntPtr", "xamarin_get_generic_method_direct",
-			"MonoObject *", "IntPtr", "obj",
-			"const char *", "IntPtr", "typeptr",
-			"const char *", "IntPtr", "methodptr",
-			"int", "int", "paramCount",
-			"const char **", "IntPtr*", "paramptr"
-		) { WrappedManagedFunction = "GetGenericMethodDirect" },
-
 		new XDelegate ("MonoObject *", "IntPtr", "xamarin_try_get_or_construct_nsobject",
 			"id", "IntPtr", "obj"
 		) { WrappedManagedFunction = "TryGetOrConstructNSObjectWrapped" },
@@ -111,6 +100,15 @@
 			"bool", "bool", "owns",
 			"void *", "IntPtr", "type"
 		) { WrappedManagedFunction = "GetINativeObject_Dynamic" },
+
+		new XDelegate ("MonoReflectionMethod *", "IntPtr", "xamarin_get_method_from_token",
+			"unsigned int", "uint", "token_ref"
+		) { WrappedManagedFunction = "GetMethodFromToken" },
+
+		new XDelegate ("MonoReflectionMethod *", "IntPtr", "xamarin_get_generic_method_from_token",
+			"MonoObject *", "IntPtr", "obj",
+			"unsigned int", "uint", "token_ref"
+		) { WrappedManagedFunction = "GetGenericMethodFromToken" },
 
 		new XDelegate ("MonoObject *", "IntPtr", "xamarin_get_inative_object_static",
 			"id", "IntPtr", "obj",

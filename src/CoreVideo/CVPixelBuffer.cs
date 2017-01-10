@@ -200,7 +200,7 @@ namespace XamCore.CoreVideo {
 			if (data.Length < height * bytesPerRow)
 				throw new ArgumentOutOfRangeException (nameof (data), "The length of data is smaller than height * bytesPerRow");
 
-			gchandle = GCHandle.Alloc (data, GCHandleType.Pinned);
+			gchandle = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, because unsafe code is scoped to the current block, and the address of the byte array will be used after this function returns.
 
 			status = CVPixelBufferCreateWithBytes (IntPtr.Zero, width, height, pixelFormatType, gchandle.AddrOfPinnedObject (), bytesPerRow, releaseBytesCallback, GCHandle.ToIntPtr (gchandle), DictionaryContainerHelper.GetHandle (pixelBufferAttributes), out handle);
 
@@ -296,19 +296,20 @@ namespace XamCore.CoreVideo {
 			data = new PlaneData ();
 			data.dataHandles = new GCHandle [planeCount];
 			for (int i = 0; i < planeCount; i++) {
-				data.dataHandles[i] = GCHandle.Alloc (planes [i], GCHandleType.Pinned);
+				data.dataHandles[i] = GCHandle.Alloc (planes [i], GCHandleType.Pinned); // This can't use unsafe code because we need to get the pointer for an unbound number of objects.
 				addresses[i] = data.dataHandles[i].AddrOfPinnedObject ();
 			}
 			data_handle = GCHandle.Alloc (data);
 
+			IntPtr data_handle_ptr = GCHandle.ToIntPtr (data_handle);
 			status = CVPixelBufferCreateWithPlanarBytes (IntPtr.Zero, 
 			                                             width, height, pixelFormatType, IntPtr.Zero, 0, 
 			                                             planeCount, addresses, planeWidths, planeHeights, planeBytesPerRow, 
-			                                             releasePlanarBytesCallback, GCHandle.ToIntPtr (data_handle), 
+			                                             releasePlanarBytesCallback, data_handle_ptr,
 			                                             DictionaryContainerHelper.GetHandle (pixelBufferAttributes), out handle);
 
 			if (status != CVReturn.Success) {
-				data_handle.Free ();
+				ReleasePlanarBytesCallback (data_handle_ptr, IntPtr.Zero, 0, 0, IntPtr.Zero);
 				return null;
 			}
 

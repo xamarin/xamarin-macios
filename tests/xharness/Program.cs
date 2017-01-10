@@ -35,8 +35,14 @@ namespace xharness
 						harness.IOSTestProjects.Add (new TestProject (v));
 					}
 				},
+				{ "uninstall=", "Uninstalls a project.", (v) =>
+					{
+						harness.Action = HarnessAction.Uninstall;
+						harness.IOSTestProjects.Add (new TestProject (v));
+					}
+				},
 				{ "sdkroot=", "Where Xcode is", (v) => harness.SdkRoot = v },
-				{ "target=", "Where to run the project ([ios|watchos|tvos]-[device|simulator|simulator-32|simulator-64]).", (v) => harness.Target = v },
+				{ "target=", "Where to run the project ([ios|watchos|tvos]-[device|simulator|simulator-32|simulator-64]).", (v) => harness.Target = v.ParseAsAppRunnerTarget () },
 				{ "configuration=", "Which configuration to run (defaults to Debug).", (v) => harness.Configuration = v },
 				{ "logdirectory=", "Where to store logs.", (v) => harness.LogDirectory = v },
 				{ "logfile=", "Where to store the log.", (v) => harness.LogFile = v },
@@ -66,6 +72,10 @@ namespace xharness
 				throw new Exception (string.Format ("Unknown arguments: {0}", string.Join (", ", input.ToArray ())));
 			if (harness.Action == HarnessAction.None)
 				showHelp ();
+
+			// XS sets this, which breaks pretty much everything if it doesn't match what was passed to --sdkroot.
+			Environment.SetEnvironmentVariable ("XCODE_DEVELOPER_DIR_PATH", null);
+
 			return harness.Execute ();
 		}
 	}

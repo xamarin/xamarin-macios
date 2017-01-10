@@ -319,6 +319,9 @@ namespace XamCore.HomeKit {
 		[Export ("characteristicType", ArgumentSemantic.Copy)]
 		NSString _CharacteristicType { get; }
 
+		[Wrap ("HMCharacteristicTypeExtensions.GetValue (_CharacteristicType)")]
+		HMCharacteristicType CharacteristicType { get; }
+
 		[Export ("service", ArgumentSemantic.Weak)]
 		HMService Service { get; }
 
@@ -385,316 +388,9 @@ namespace XamCore.HomeKit {
 		[Field ("HMCharacteristicPropertyHidden")]
 		NSString Hidden { get; }
 
+		[Notification]
 		[Field ("HMCharacteristicPropertySupportsEventNotification")]
 		NSString SupportsEventNotification { get; }		
-	}
-
-	[TV (10,0)]
-	[iOS(8,0)]
-	[Static]
-	[Internal]
-	interface HMCharacteristicTypeInternal {
-		[Field ("HMCharacteristicTypePowerState")]
-		NSString PowerState { get; }
-
-		[Field ("HMCharacteristicTypeHue")]
-		NSString Hue { get; }
-
-		[Field ("HMCharacteristicTypeSaturation")]
-		NSString Saturation { get; }
-
-		[Field ("HMCharacteristicTypeBrightness")]
-		NSString Brightness { get; }
-
-		[Field ("HMCharacteristicTypeTemperatureUnits")]
-		NSString TemperatureUnits { get; }
-
-		[Field ("HMCharacteristicTypeCurrentTemperature")]
-		NSString CurrentTemperature { get; }
-
-		[Field ("HMCharacteristicTypeTargetTemperature")]
-		NSString TargetTemperature { get; }
-
-		[Field ("HMCharacteristicTypeCurrentHeatingCooling")]
-		NSString CurrentHeatingCooling { get; }
-
-		[Field ("HMCharacteristicTypeTargetHeatingCooling")]
-		NSString TargetHeatingCooling { get; }
-
-		[Field ("HMCharacteristicTypeCoolingThreshold")]
-		NSString CoolingThreshold { get; }
-
-		[Field ("HMCharacteristicTypeHeatingThreshold")]
-		NSString HeatingThreshold { get; }
-
-		[Field ("HMCharacteristicTypeCurrentRelativeHumidity")]
-		NSString CurrentRelativeHumidity { get; }
-
-		[Field ("HMCharacteristicTypeTargetRelativeHumidity")]
-		NSString TargetRelativeHumidity { get; }
-
-		[Field ("HMCharacteristicTypeCurrentDoorState")]
-		NSString CurrentDoorState { get; }
-
-		[Field ("HMCharacteristicTypeTargetDoorState")]
-		NSString TargetDoorState { get; }
-
-		[Field ("HMCharacteristicTypeObstructionDetected")]
-		NSString ObstructionDetected { get; }
-
-		[Field ("HMCharacteristicTypeName")]
-		NSString Name { get; }
-
-		[Field ("HMCharacteristicTypeManufacturer")]
-		NSString Manufacturer { get; }
-
-		[Field ("HMCharacteristicTypeModel")]
-		NSString Model { get; }
-
-		[Field ("HMCharacteristicTypeSerialNumber")]
-		NSString SerialNumber { get; }
-
-		[Field ("HMCharacteristicTypeIdentify")]
-		NSString Identify { get; }
-
-		[Field ("HMCharacteristicTypeRotationDirection")]
-		NSString RotationDirection { get; }
-
-		[Field ("HMCharacteristicTypeRotationSpeed")]
-		NSString RotationSpeed { get; }
-
-		[Field ("HMCharacteristicTypeOutletInUse")]
-		NSString OutletInUse { get; }
-
-		[Field ("HMCharacteristicTypeVersion")]
-		NSString Version { get; }
-
-		[Field ("HMCharacteristicTypeLogs")]
-		NSString Logs { get; }
-
-		[Field ("HMCharacteristicTypeAudioFeedback")]
-		NSString AudioFeedback { get; }
-
-		[Field ("HMCharacteristicTypeAdminOnlyAccess")]
-		NSString AdminOnlyAccess { get; }
-
-		[Field ("HMCharacteristicTypeMotionDetected")]
-		NSString MotionDetected { get; }
-
-		[Field ("HMCharacteristicTypeCurrentLockMechanismState")]
-		NSString CurrentLockMechanismState { get; }
-
-		[Field ("HMCharacteristicTypeTargetLockMechanismState")]
-		NSString TargetLockMechanismState { get; }
-
-		[Field ("HMCharacteristicTypeLockMechanismLastKnownAction")]
-		NSString LockMechanismLastKnownAction { get; }
-
-		[Field ("HMCharacteristicTypeLockManagementControlPoint")]
-		NSString LockManagementControlPoint { get; }
-
-		[Field ("HMCharacteristicTypeLockManagementAutoSecureTimeout")]
-		NSString LockManagementAutoSecureTimeout { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeAirParticulateDensity")]
-		NSString AirParticulateDensity { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeAirParticulateSize")]
-		NSString AirParticulateSize { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeBatteryLevel")]
-		NSString BatteryLevel { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeCarbonMonoxideDetected")]
-		NSString CarbonMonoxideDetected { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeContactState")]
-		NSString ContactState { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeCurrentHorizontalTilt")]
-		NSString CurrentHorizontalTilt { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeCurrentLightLevel")]
-		NSString CurrentLightLevel { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeCurrentPosition")]
-		NSString CurrentPosition { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeCurrentVerticalTilt")]
-		NSString CurrentVerticalTilt { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeFirmwareVersion")]
-		NSString FirmwareVersion { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeHardwareVersion")]
-		NSString HardwareVersion { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeHoldPosition")]
-		NSString HoldPosition { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeInputEvent")]
-		NSString InputEvent { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeLeakDetected")]
-		NSString LeakDetected { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeOccupancyDetected")]
-		NSString OccupancyDetected { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeOutputState")]
-		NSString OutputState { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypePositionState")]
-		NSString PositionState { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeSmokeDetected")]
-		NSString SmokeDetected { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeSoftwareVersion")]
-		NSString SoftwareVersion { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeStatusActive")]
-		NSString StatusActive { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeStatusFault")]
-		NSString StatusFault { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeStatusJammed")]
-		NSString StatusJammed { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeStatusLowBattery")]
-		NSString StatusLowBattery { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeStatusTampered")]
-		NSString StatusTampered { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeTargetHorizontalTilt")]
-		NSString TargetHorizontalTilt { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeTargetPosition")]
-		NSString TargetPosition { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeTargetVerticalTilt")]
-		NSString TargetVerticalTilt { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeSecuritySystemAlarmType")]
-		NSString SecuritySystemAlarmType { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeAirQuality")]
-		NSString AirQuality { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeCarbonDioxideDetected")]
-		NSString CarbonDioxideDetected { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeCarbonDioxideLevel")]
-		NSString CarbonDioxideLevel { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeCarbonDioxidePeakLevel")]
-		NSString CarbonDioxidePeakLevel { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeCarbonMonoxideLevel")]
-		NSString CarbonMonoxideLevel { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeCarbonMonoxidePeakLevel")]
-		NSString CarbonMonoxidePeakLevel { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeChargingState")]
-		NSString ChargingState { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeCurrentSecuritySystemState")]
-		NSString CurrentSecuritySystemState { get; }
-
-		[iOS (9,0)]
-		[Field ("HMCharacteristicTypeTargetSecuritySystemState")]
-		NSString TargetSecuritySystemState { get; }
-
-		[Watch (3,0), iOS (10,0)]
-		[Field ("HMCharacteristicTypeStreamingStatus")]
-		NSString StreamingStatus { get; }
-
-		[Watch (3,0), iOS (10,0)]
-		[Field ("HMCharacteristicTypeSetupStreamEndpoint")]
-		NSString SetupStreamEndpoint { get; }
-
-		[Watch (3,0), iOS (10,0)]
-		[Field ("HMCharacteristicTypeSupportedVideoStreamConfiguration")]
-		NSString SupportedVideoStreamConfiguration { get; }
-
-		[Watch (3,0), iOS (10,0)]
-		[Field ("HMCharacteristicTypeSupportedAudioStreamConfiguration")]
-		NSString SupportedAudioStreamConfiguration { get; }
-
-		[Watch (3,0), iOS (10,0)]
-		[Field ("HMCharacteristicTypeSupportedRTPConfiguration")]
-		NSString SupportedRtpConfiguration { get; }
-
-		[Watch (3,0), iOS (10,0)]
-		[Field ("HMCharacteristicTypeSelectedStreamConfiguration")]
-		NSString SelectedStreamConfiguration { get; }
-
-		[Watch (3,0), iOS (10,0)]
-		[Field ("HMCharacteristicTypeVolume")]
-		NSString Volume { get; }
-
-		[Watch (3,0), iOS (10,0)]
-		[Field ("HMCharacteristicTypeMute")]
-		NSString Mute { get; }
-
-		[Watch (3,0), iOS (10,0)]
-		[Field ("HMCharacteristicTypeNightVision")]
-		NSString NightVision { get; }
-
-		[Watch (3,0), iOS (10,0)]
-		[Field ("HMCharacteristicTypeOpticalZoom")]
-		NSString OpticalZoom { get; }
-
-		[Watch (3,0), iOS (10,0)]
-		[Field ("HMCharacteristicTypeDigitalZoom")]
-		NSString DigitalZoom { get; }
-
-		[Watch (3,0), iOS (10,0)]
-		[Field ("HMCharacteristicTypeImageRotation")]
-		NSString ImageRotation { get; }
-
-		[Watch (3,0), iOS (10,0)]
-		[Field ("HMCharacteristicTypeImageMirroring")]
-		NSString ImageMirroring { get; }
 	}
 
 	[TV (10,0)]
@@ -1127,131 +823,6 @@ namespace XamCore.HomeKit {
 
 	[TV (10,0)]
 	[iOS (8,0)]
-	[Static]
-	[Internal]
-	interface HMServiceTypeInternal {
-		[Field ("HMServiceTypeLightbulb")]
-		NSString LightBulb { get; }
-
-		[Field ("HMServiceTypeSwitch")]
-		NSString Switch { get; }
-
-		[Field ("HMServiceTypeThermostat")]
-		NSString Thermostat { get; }
-
-		[Field ("HMServiceTypeGarageDoorOpener")]
-		NSString GarageDoorOpener { get; }
-
-		[Field ("HMServiceTypeAccessoryInformation")]
-		NSString AccessoryInformation { get; }
-
-		[Field ("HMServiceTypeFan")]
-		NSString Fan { get; }
-
-		[Field ("HMServiceTypeOutlet")]
-		NSString Outlet { get; }
-
-		[Field ("HMServiceTypeLockMechanism")]
-		NSString LockMechanism { get; }
-
-		[Field ("HMServiceTypeLockManagement")]
-		NSString LockManagement { get; }
-
-		[iOS (9,0)]
-		[Field ("HMServiceTypeAirQualitySensor")]
-		NSString AirQualitySensor { get; }
-
-		[iOS (9,0)]
-		[Field ("HMServiceTypeCarbonMonoxideSensor")]
-		NSString CarbonMonoxideSensor { get; }
-
-		[iOS (9,0)]
-		[Field ("HMServiceTypeContactSensor")]
-		NSString ContactSensor { get; }
-
-		[iOS (9,0)]
-		[Field ("HMServiceTypeDoor")]
-		NSString Door { get; }
-
-		[Watch (3,0), iOS (10,0)]
-		[Field ("HMServiceTypeDoorbell")]
-		NSString Doorbell { get; }
-
-		[iOS (9,0)]
-		[Field ("HMServiceTypeHumiditySensor")]
-		NSString HumiditySensor { get; }
-
-		[iOS (9,0)]
-		[Field ("HMServiceTypeLeakSensor")]
-		NSString LeakSensor { get; }
-
-		[iOS (9,0)]
-		[Field ("HMServiceTypeLightSensor")]
-		NSString LightSensor { get; }
-
-		[iOS (9,0)]
-		[Field ("HMServiceTypeMotionSensor")]
-		NSString MotionSensor { get; }
-
-		[iOS (9,0)]
-		[Field ("HMServiceTypeOccupancySensor")]
-		NSString OccupancySensor { get; }
-
-		[iOS (9,0)]
-		[Field ("HMServiceTypeStatefulProgrammableSwitch")]
-		NSString StatefulProgrammableSwitch { get; }
-
-		[iOS (9,0)]
-		[Field ("HMServiceTypeStatelessProgrammableSwitch")]
-		NSString StatelessProgrammableSwitch { get; }
-
-		[iOS (9,0)]
-		[Field ("HMServiceTypeSmokeSensor")]
-		NSString SmokeSensor { get; }
-
-		[iOS (9,0)]
-		[Field ("HMServiceTypeTemperatureSensor")]
-		NSString TemperatureSensor { get; }
-
-		[iOS (9,0)]
-		[Field ("HMServiceTypeWindow")]
-		NSString Window { get; }
-
-		[iOS (9,0)]
-		[Field ("HMServiceTypeWindowCovering")]
-		NSString WindowCovering { get; }
-
-		[iOS (9,0)]
-		[Field ("HMServiceTypeBattery")]
-		NSString Battery { get; }
-
-		[iOS (9,0)]
-		[Field ("HMServiceTypeCarbonDioxideSensor")]
-		NSString CarbonDioxideSensor { get; }
-
-		[iOS (9,0)]
-		[Field ("HMServiceTypeSecuritySystem")]
-		NSString SecuritySystem { get; }
-
-		[Watch (3,0), iOS (10,0)]
-		[Field ("HMServiceTypeCameraRTPStreamManagement")]
-		NSString CameraRtpStreamManagement { get; }
-
-		[Watch (3,0), iOS (10,0)]
-		[Field ("HMServiceTypeCameraControl")]
-		NSString CameraControl { get; }
-
-		[Watch (3,0), iOS (10,0)]
-		[Field ("HMServiceTypeMicrophone")]
-		NSString Microphone { get; }
-
-		[Watch (3,0), iOS (10,0)]
-		[Field ("HMServiceTypeSpeaker")]
-		NSString Speaker { get; }
-	}
-
-	[TV (10,0)]
-	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	partial interface HMService { 
 
@@ -1261,6 +832,9 @@ namespace XamCore.HomeKit {
 		[Internal]
 		[Export ("serviceType", ArgumentSemantic.Copy)]
 		NSString _ServiceType { get; }
+
+		[Wrap ("HMServiceTypeExtensions.GetValue (_ServiceType)")]
+		HMServiceType ServiceType { get; }
 
 		[Export ("name")]
 		string Name { get; }
@@ -1528,71 +1102,11 @@ namespace XamCore.HomeKit {
 		[Export ("categoryType")]
 		NSString _CategoryType { get; }
 
+		[Wrap ("HMAccessoryCategoryTypeExtensions.GetValue (_CategoryType)")]
+		HMAccessoryCategoryType CategoryType { get; }
+
 		[Export ("localizedDescription")]
 		string LocalizedDescription { get; }
-	}
-
-	[TV (10,0)]
-	[iOS (9,0)]
-	[Static]
-	[Internal]
-	interface HMAccessoryCategoryTypesInternal {
-		[Field ("HMAccessoryCategoryTypeOther")]
-		NSString Other { get; }
-
-		[Field ("HMAccessoryCategoryTypeSecuritySystem")]
-		NSString SecuritySystem { get; }
-
-		[Field ("HMAccessoryCategoryTypeBridge")]
-		NSString Bridge { get; }
-
-		[Field ("HMAccessoryCategoryTypeDoor")]
-		NSString Door { get; }
-
-		[Field ("HMAccessoryCategoryTypeDoorLock")]
-		NSString DoorLock { get; }
-
-		[Field ("HMAccessoryCategoryTypeFan")]
-		NSString Fan { get; }
-
-		[Field ("HMAccessoryCategoryTypeGarageDoorOpener")]
-		NSString GarageDoorOpener { get; }
-
-		[iOS (10,0), Watch (3,0)]
-		[Field ("HMAccessoryCategoryTypeIPCamera")]
-		NSString IPCamera { get; }
-
-		[Field ("HMAccessoryCategoryTypeLightbulb")]
-		NSString Lightbulb { get; }
-
-		[Field ("HMAccessoryCategoryTypeOutlet")]
-		NSString Outlet { get; }
-
-		[Field ("HMAccessoryCategoryTypeProgrammableSwitch")]
-		NSString ProgrammableSwitch { get; }
-
-		[Field ("HMAccessoryCategoryTypeSensor")]
-		NSString Sensor { get; }
-
-		[Field ("HMAccessoryCategoryTypeSwitch")]
-		NSString Switch { get; }
-
-		[Field ("HMAccessoryCategoryTypeThermostat")]
-		NSString Thermostat { get; }
-
-		[iOS (10,0), Watch (3,0), TV (10,0)]
-		[Field ("HMAccessoryCategoryTypeVideoDoorbell")]
-		NSString VideoDoorbell { get; }
-
-		[Field ("HMAccessoryCategoryTypeWindow")]
-		NSString Window { get; }
-
-		[Field ("HMAccessoryCategoryTypeWindowCovering")]
-		NSString WindowCovering { get; }
-
-		[iOS (9,3), Watch (2,2)]
-		[Field ("HMAccessoryCategoryTypeRangeExtender")]
-		NSString RangeExtender { get; }
 	}
 
 	[TV (10,0)]
@@ -1838,6 +1352,10 @@ namespace XamCore.HomeKit {
 	{
 		[Export ("cameraSnapshotControl:didTakeSnapshot:error:")]
 		void DidTakeSnapshot (HMCameraSnapshotControl cameraSnapshotControl, [NullAllowed] HMCameraSnapshot snapshot, [NullAllowed] NSError error);
+
+		[iOS (10,1)][Watch (3,1)][TV (10,1)]
+		[Export ("cameraSnapshotControlDidUpdateMostRecentSnapshot:")]
+		void DidUpdateMostRecentSnapshot (HMCameraSnapshotControl cameraSnapshotControl);
 	}
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]

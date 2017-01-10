@@ -184,8 +184,41 @@ namespace Xamarin.iOS.Tasks
 
 			plist.SetIfNotPresent (ManifestKeys.MinimumOSVersion, minimumOSVersion.ToString ());
 
-			if (IsWatchExtension && Debug)
-				SetAppTransportSecurity (plist);
+			if (IsWatchExtension) {
+				// Note: Only watchOS1 Extensions target Xamarin.iOS
+				if (Framework == PlatformFramework.iOS) {
+					PObject value;
+
+					if (!plist.TryGetValue (ManifestKeys.UIRequiredDeviceCapabilities, out value)) {
+						var capabilities = new PArray ();
+						capabilities.Add (new PString ("watch-companion"));
+
+						plist.Add (ManifestKeys.UIRequiredDeviceCapabilities, capabilities);
+					} else if (value is PDictionary) {
+						var capabilities = (PDictionary) value;
+
+						if (!capabilities.ContainsKey ("watch-companion"))
+							capabilities.Add ("watch-companion", new PBoolean (true));
+					} else {
+						var capabilities = (PArray) value;
+						bool exists = false;
+
+						foreach (var capability in capabilities.OfType<PString> ()) {
+							if (capability.Value != "watch-companion")
+								continue;
+
+							exists = true;
+							break;
+						}
+
+						if (!exists)
+							capabilities.Add (new PString ("watch-companion"));
+					}
+				}
+
+				if (Debug)
+					SetAppTransportSecurity (plist);
+			}
 
 			// Remove any Xamarin Studio specific keys
 			plist.Remove (ManifestKeys.XSLaunchImageAssets);

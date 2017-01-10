@@ -1,5 +1,14 @@
 # Xamarin.iOS & Xamarin.Mac #
 
+|              | Status                                    |
+|--------------|-------------------------------------------|
+| master       | [![xamarin-macios-builds-master][1]][2]   |
+
+[1]: https://jenkins.mono-project.com/view/Xamarin.MaciOS/job/xamarin-macios-builds-master/badge/icon
+[2]: https://jenkins.mono-project.com/view/Xamarin.MaciOS/job/xamarin-macios-builds-master
+
+**Welcome!**
+
 This module is the main repository for both **Xamarin.iOS** and **Xamarin.Mac**.
 
 These frameworks allow us to create native iOS, tvOS, watchOS and Mac applications using the same UI controls we would in Objective-C and Xcode, except with the flexibility and elegance of a modern language (C#), the power of the .NET Base Class Library (BCL), and two first-class IDEs&mdash;Xamarin Studio and Visual Studio&mdash;at our fingertips.
@@ -20,6 +29,17 @@ You can download continuous builds of our main development branches from [our wi
       $ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
       $ brew update
       $ brew install libtool autoconf automake bison flex
+
+* CMake
+
+  You can use brew, or download manually from [cmake.org](https://cmake.org/download/).
+
+  CMake must be in PATH, so if you install it somewhere else, you'll have to
+  fix up your PATH accordingly (not necessary if installed using brew).
+
+  To install using brew:
+
+      $ brew install cmake
 
 * Xcode
 

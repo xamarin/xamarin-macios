@@ -496,11 +496,17 @@ namespace XamCore.Metal {
 		[Export ("maxThreadsPerThreadgroup")]
 		MTLSize MaxThreadsPerThreadgroup { get; }
 
+#if XAMCORE_4_0
+		[Abstract] // new required member, but that breaks our binary compat, so we can't do that in our existing code.
+#endif
 		[NoiOS]
 		[NoTV]
 		[Export ("lowPower")]
 		bool LowPower { [Bind ("isLowPower")] get; }
 
+#if XAMCORE_4_0
+		[Abstract] // new required member, but that breaks our binary compat, so we can't do that in our existing code.
+#endif
 		[NoiOS]
 		[NoTV]
 		[Export ("headless")]
@@ -513,6 +519,9 @@ namespace XamCore.Metal {
 		[Export ("recommendedMaxWorkingSetSize")]
 		ulong RecommendedMaxWorkingSetSize { get; }
 
+#if XAMCORE_4_0
+		[Abstract] // new required member, but that breaks our binary compat, so we can't do that in our existing code.
+#endif
 		[NoiOS]
 		[NoTV]
 		[Export ("depth24Stencil8PixelFormatSupported")]

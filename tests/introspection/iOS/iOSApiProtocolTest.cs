@@ -156,6 +156,7 @@ namespace Introspection {
 				case "PKShippingMethod":
 				case "PKPaymentRequest":
 				case "PKPaymentToken":
+				case "PKLabeledValue":
 				// iOS9
 				case "UIFont":
 				case "AVAssetTrackSegment":
@@ -176,6 +177,8 @@ namespace Introspection {
 				case "SFSafariViewControllerConfiguration":
 				case "VSAccountMetadata":
 				case "VSAccountMetadataRequest":
+				// iOS 10.2
+				case "VSAccountProviderResponse":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -251,6 +254,7 @@ namespace Introspection {
 				case "PKShippingMethod":
 				case "PKPaymentRequest":
 				case "PKPaymentToken":
+				case "PKLabeledValue":
 				// iOS9
 				case "UIFont":
 				case "AVAssetTrackSegment":
@@ -272,6 +276,8 @@ namespace Introspection {
 				case "SFSafariViewControllerConfiguration":
 				case "VSAccountMetadata":
 				case "VSAccountMetadataRequest":
+				// iOS 10.2
+				case "VSAccountProviderResponse":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -348,6 +354,8 @@ namespace Introspection {
 				case "SFSafariViewControllerConfiguration":
 				case "VSAccountMetadata":
 				case "VSAccountMetadataRequest":
+				// iOS 10.2
+				case "VSAccountProviderResponse":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTimelineEntry":

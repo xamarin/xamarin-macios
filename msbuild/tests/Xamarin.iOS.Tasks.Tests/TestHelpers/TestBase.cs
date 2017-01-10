@@ -29,35 +29,38 @@ namespace Xamarin.iOS.Tasks
 		public string [] ExpectedAppFiles = { };
 		public string [] UnexpectedAppFiles = { "monotouch.dll" };
 
-		public string[] CoreAppFiles {
-			get {
-				var xi = new string [] {
-					"Xamarin.iOS.dll",
-					"Xamarin.iOS.dll.mdb",
-					"mscorlib.dll",
-					"mscorlib.dll.mdb",
-				};
-				var xw = new string [] {
-					"Xamarin.WatchOS.dll",
-					"Xamarin.WatchOS.dll.mdb",
-					"mscorlib.dll",
-					"mscorlib.dll.mdb",
-				};
-				var xt = new string [] {
-					"Xamarin.TVOS.dll",
-					"Xamarin.TVOS.dll.mdb",
-					"mscorlib.dll",
-					"mscorlib.dll.mdb",
-				};
+		public string[] GetCoreAppFiles (string platform, string config, string managedExe, string nativeExe)
+		{
+			var coreFiles = new List<string> ();
 
-				if (TargetFrameworkIdentifier == "Xamarin.WatchOS") {
-					return xw;
-				} else if (TargetFrameworkIdentifier == "Xamarin.TVOS") {
-					return xt;
-				} else {
-					return xi;
-				}
+			if (TargetFrameworkIdentifier == "Xamarin.WatchOS") {
+				coreFiles.Add ("Xamarin.WatchOS.dll");
+				if (config == "Debug")
+					coreFiles.Add ("Xamarin.WatchOS.dll.mdb");
+			} else if (TargetFrameworkIdentifier == "Xamarin.TVOS") {
+				coreFiles.Add ("Xamarin.TVOS.dll");
+				if (config == "Debug")
+					coreFiles.Add ("Xamarin.TVOS.dll.mdb");
+			} else {
+				coreFiles.Add ("Xamarin.iOS.dll");
+				if (config == "Debug")
+					coreFiles.Add ("Xamarin.iOS.dll.mdb");
 			}
+
+			coreFiles.Add ("mscorlib.dll");
+			if (config == "Debug")
+				coreFiles.Add ("mscorlib.dll.mdb");
+
+			coreFiles.Add (managedExe);
+			if (config == "Debug")
+				coreFiles.Add (managedExe + ".mdb");
+
+			if (platform == "iPhone")
+				coreFiles.Add (Path.Combine ("..", nativeExe));
+			else
+				coreFiles.Add (nativeExe);
+
+			return coreFiles.ToArray ();
 		}
 
 		public Logger Logger {
@@ -241,6 +244,24 @@ namespace Xamarin.iOS.Tasks
 			var t = new T ();
 			t.BuildEngine = Engine;
 			return t;
+		}
+
+		/// <summary>
+		/// Executes the task and log its error messages.</summary>
+		/// <remarks>
+		/// This is the prefered way to run tasks as we want error messages to show up in the test results.</remarks>
+		/// <param name="task">An msbuild task.</param>
+		/// <param name="expectedErrorCount">Expected error count. 0 by default.</param>
+		public void ExecuteTask (Task task, int expectedErrorCount = 0)
+		{
+			task.Execute ();
+			if (expectedErrorCount != Engine.Logger.ErrorEvents.Count) {
+				string messages = string.Empty;
+				if (Engine.Logger.ErrorEvents.Count > 0) {
+					messages = "\n\t" + string.Join ("\n\t", Engine.Logger.ErrorEvents.Select ((v) => v.Message).ToArray ());
+				}
+				Assert.AreEqual (expectedErrorCount, Engine.Logger.ErrorEvents.Count, "#RunTask-ErrorCount" + messages);
+			}
 		}
 
 		protected string CreateTempFile (string path)

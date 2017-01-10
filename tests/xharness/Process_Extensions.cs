@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,26 +20,12 @@ namespace xharness
 
 	public static class ProcessHelper
 	{
-		public static Task<ProcessExecutionResult> ExecuteCommandAsync (string filename, string args, Log log, TimeSpan timeout, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
-		{
-			return ExecuteCommandAsync (filename, args, log.GetWriter (), timeout, environment_variables, cancellation_token);
-		}
-
-		public static async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename, string args, string outputPath, TimeSpan timeout, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
-		{
-			Directory.CreateDirectory (Path.GetDirectoryName (outputPath));
-			using (var fs = new FileStream (outputPath, FileMode.Append, FileAccess.Write, FileShare.Read)) {
-				using (var stream = new StreamWriter (fs))
-					return await ExecuteCommandAsync (filename, args, stream, timeout, environment_variables, cancellation_token);
-			}
-		}
-
-		public static async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename, string args, TextWriter output, TimeSpan timeout, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
+		public static async Task<ProcessExecutionResult> ExecuteCommandAsync (string filename, string args, Log log, TimeSpan timeout, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
 		{
 			using (var p = new Process ()) {
 				p.StartInfo.FileName = filename;
 				p.StartInfo.Arguments = args;
-				return await p.RunAsync (output, output, timeout, environment_variables, cancellation_token);
+				return await p.RunAsync (log, true, timeout, environment_variables, cancellation_token);
 			}
 		}
 
@@ -70,25 +58,16 @@ namespace xharness
 		public static async Task<ProcessExecutionResult> RunAsync (this Process process, Log log, CancellationToken? cancellation_token = null)
 		{
 			var stream = log.GetWriter ();
-			return await RunAsync (process, stream, stream, cancellation_token: cancellation_token);
+			return await RunAsync (process, log, stream, stream, cancellation_token: cancellation_token);
 		}
 
-		public static async Task<ProcessExecutionResult> RunAsync (this Process process, string outputFile, bool append, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
-		{
-			Directory.CreateDirectory (Path.GetDirectoryName (outputFile));
-			using (var fs = new FileStream (outputFile, append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.Read)) {
-				using (var stream = new StreamWriter (fs))
-					return await RunAsync (process, stream, stream, timeout, environment_variables, cancellation_token);
-			}
-		}
-
-		public static Task<ProcessExecutionResult> RunAsync (this Process process, Log log, bool append, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
+		public static Task<ProcessExecutionResult> RunAsync (this Process process, Log log, bool append = true, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
 		{
 			var writer = log.GetWriter ();
-			return RunAsync (process, writer, writer, timeout, environment_variables, cancellation_token);
+			return RunAsync (process, log, writer, writer, timeout, environment_variables, cancellation_token);
 		}
 
-		public static async Task<ProcessExecutionResult> RunAsync (this Process process, TextWriter StdoutStream, TextWriter StderrStream, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
+		public static async Task<ProcessExecutionResult> RunAsync (this Process process, Log log, TextWriter StdoutStream, TextWriter StderrStream, TimeSpan? timeout = null, Dictionary<string, string> environment_variables = null, CancellationToken? cancellation_token = null)
 		{
 			var stdout_completion = new TaskCompletionSource<bool> ();
 			var stderr_completion = new TaskCompletionSource<bool> ();
@@ -129,7 +108,7 @@ namespace xharness
 			};
 
 
-			StdoutStream.WriteLine ("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
+			log.WriteLine ("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments);
 			process.Start ();
 
 			process.BeginErrorReadLine ();
@@ -146,11 +125,10 @@ namespace xharness
 			{
 				if (timeout.HasValue) {
 					if (!process.WaitForExit ((int) timeout.Value.TotalMilliseconds)) {
-						ProcessHelper.kill (process.Id, 9);
-						process.WaitForExit ((int) TimeSpan.FromSeconds (5).TotalMilliseconds); // Wait 5s for the kill to work
+						process.KillTreeAsync (log, true).Wait ();
 						rv.TimedOut = true;
 						lock (StderrStream)
-							StderrStream.WriteLine ($"Execution timed out after {timeout.Value.TotalSeconds} seconds and the process was killed.");
+							log.WriteLine ($"Execution timed out after {timeout.Value.TotalSeconds} seconds and the process was killed.");
 					}
 				} else {
 					process.WaitForExit ();
@@ -164,6 +142,126 @@ namespace xharness
 
 			rv.ExitCode = process.ExitCode;
 			return rv;
+		}
+
+		public static Task KillTreeAsync (this Process @this, Log log, bool diagnostics = true)
+		{
+			return KillTreeAsync (@this.Id, log, diagnostics);
+		}
+
+		public static async Task KillTreeAsync (int pid, Log log, bool diagnostics = true)
+		{
+			var pids = new List<int> ();
+			GetChildrenPS (log, pids, pid);
+			log.WriteLine ($"Pids to kill: {string.Join (", ", pids.Select ((v) => v.ToString ()).ToArray ())}");
+			if (diagnostics) {
+				using (var ps = new Process ()) {
+					log.WriteLine ("Writing process list:");
+					ps.StartInfo.FileName = "ps";
+					ps.StartInfo.Arguments = "-A -o pid,ruser,ppid,pgid,%cpu=%CPU,%mem=%MEM,flags=FLAGS,lstart,rss,vsz,tty,state,time,command";
+					await ps.RunAsync (log, true, TimeSpan.FromSeconds (5));
+				}
+
+				foreach (var diagnose_pid in pids) {
+					var template = Path.GetTempFileName ();
+					try {
+						var commands = new StringBuilder ();
+						using (var dbg = new Process ()) {
+							commands.AppendLine ($"process attach --pid {diagnose_pid}");
+							commands.AppendLine ("thread list");
+							commands.AppendLine ("thread backtrace all");
+							commands.AppendLine ("detach");
+							commands.AppendLine ("quit");
+							dbg.StartInfo.FileName = "/usr/bin/lldb";
+							dbg.StartInfo.Arguments = $"--source {Harness.Quote (template)}";
+							File.WriteAllText (template, commands.ToString ());
+
+							log.WriteLine ($"Printing backtrace for pid={pid}");
+							await dbg.RunAsync (log, true, TimeSpan.FromSeconds (30));
+						}
+					} finally {
+						try {
+							File.Delete (template);
+						} catch {
+							// Don't care
+						}
+					}
+				}
+			}
+
+			using (var kill = new Process ()) {
+				kill.StartInfo.FileName = "kill";
+				// Send SIGABRT since that produces a crash report
+				// lldb may fail to attach to system processes, but crash reports will still be produced with potentially helpful stack traces.
+				kill.StartInfo.Arguments = "-6 " + string.Join (" ", pids.Select ((v) => v.ToString ()).ToArray ());
+				await kill.RunAsync (log, true, TimeSpan.FromSeconds (2.5));
+			}
+
+			using (var kill = new Process ()) {
+				kill.StartInfo.FileName = "kill";
+				// send kill -9 anyway as a last resort
+				kill.StartInfo.Arguments = "-9 " + string.Join (" ", pids.Select ((v) => v.ToString ()).ToArray ());
+				await kill.RunAsync (log, true, TimeSpan.FromSeconds (2.5));
+			}
+		}
+
+		static void GetChildrenPS (Log log, List<int> list, int pid)
+		{
+			string stdout;
+
+			using (Process ps = new Process ()) {
+				ps.StartInfo.FileName = "ps";
+				ps.StartInfo.Arguments = "-eo ppid,pid";
+				ps.StartInfo.UseShellExecute = false;
+				ps.StartInfo.RedirectStandardOutput = true;
+				ps.Start ();
+				stdout = ps.StandardOutput.ReadToEnd ();
+
+				if (!ps.WaitForExit (1000)) {
+					log.WriteLine ("ps didn't finish in a reasonable amount of time (1 second).");
+					return;
+				}
+
+				if (ps.ExitCode != 0)
+					return;
+
+				stdout = stdout.Trim ();
+
+				if (string.IsNullOrEmpty (stdout))
+					return;
+
+				var dict = new Dictionary<int, List<int>> ();
+				foreach (string line in stdout.Split (new char [] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)) {
+					var l = line.Trim ();
+					var space = l.IndexOf (' ');
+					if (space <= 0)
+						continue;
+				
+					var parent = l.Substring (0, space);
+					var process = l.Substring (space + 1);
+					int parent_id, process_id;
+
+					if (int.TryParse (parent, out parent_id) && int.TryParse (process, out process_id)) {
+						List<int> children;
+						if (!dict.TryGetValue (parent_id, out children))
+							dict [parent_id] = children = new List<int> ();
+						children.Add (process_id);
+					}
+				}
+
+				var queue = new Queue<int> ();
+				queue.Enqueue (pid);
+
+				do {
+					List<int> children;
+					var parent_id = queue.Dequeue ();
+					list.Add (parent_id);
+					if (dict.TryGetValue (parent_id, out children)) {
+						foreach (var child in children)
+							queue.Enqueue (child);
+					}
+				} while (queue.Count > 0);
+			}
 		}
 	}
 }

@@ -279,766 +279,6 @@ public static class StringExtensions
 	};
 }
 
-// Used to flag a type as needing to be turned into a protocol on output for Unified
-// For example:
-//   [Protocolize, Wrap ("WeakDelegate")]
-//   MyDelegate Delegate { get; set; }
-//
-// becomes:
-//   IMyDelegate Delegate { get; set; }
-//
-// on the Unified API.
-//
-// Valid on return values and parameters
-//
-// To protocolize newer versions, use [Protocolize (3)] for XAMCORE_3_0, [Protocolize (4)] for XAMCORE_4_0, etc
-//
-public class ProtocolizeAttribute : Attribute {
-	public ProtocolizeAttribute ()
-	{
-		Version = 2;
-	}
-
-	public ProtocolizeAttribute (int version)
-	{
-		Version = version;
-	}
-
-	public int Version { get; set; }
-}
-
-// Used to mark if a type is not a wrapper type.
-public class SyntheticAttribute : Attribute {
-	public SyntheticAttribute () { }
-}
-
-public class NeedsAuditAttribute : Attribute {
-	public NeedsAuditAttribute (string reason)
-	{
-		Reason = reason;
-	}
-
-	public string Reason { get; set; }
-}
-
-public class MarshalNativeExceptionsAttribute : Attribute {
-}
-
-public class RetainListAttribute : Attribute {
-	public RetainListAttribute (bool doadd, string name)
-	{
-		Add = doadd;
-		WrapName = name;
-	}
-
-	public string WrapName { get; set; }
-	public bool Add { get; set; }
-}
-
-public class RetainAttribute : Attribute {
-	public RetainAttribute ()
-	{
-	}
-
-	public RetainAttribute (string wrap)
-	{
-		WrapName = wrap;
-	}
-	public string WrapName { get; set; }
-}
-
-public class ReleaseAttribute : Attribute {
-}
-
-[AttributeUsage(AttributeTargets.All, AllowMultiple=true)]
-public class PostGetAttribute : Attribute {
-	public PostGetAttribute (string name)
-	{
-		MethodName = name;
-	}
-
-	public string MethodName { get; set; }
-
-	PropertyInfo GetProperty (Type type)
-	{
-		if (type == null)
-			return null;
-
-		var props = type.GetProperties ();
-		foreach (var pi in props) {
-			if (pi.Name != MethodName)
-				continue;
-			return pi;
-		}
-		return GetProperty (ReflectionExtensions.GetBaseType (type));
-	}
-
-	public bool IsDisableForNewRefCount (Type type)
-	{
-		PropertyInfo p = GetProperty (type);
-		var ea = p.GetCustomAttributes (typeof(ExportAttribute), false);
-		var sem = (ea [0] as ExportAttribute).ArgumentSemantic;
-		return (sem != ArgumentSemantic.Assign && sem != ArgumentSemantic.Weak); // also cover UnsafeUnretained
-	} 
-}
-
-public class BaseTypeAttribute : Attribute {
-	public BaseTypeAttribute (Type t)
-	{
-		BaseType = t;
-	}
-	public Type BaseType { get; set; }
-	public string Name { get; set; }
-	public Type [] Events { get; set; }
-	public string [] Delegates { get; set; }
-	public bool Singleton { get; set; }
-
-	// If set, the code will keep a reference in the EnsureXXX method for
-	// delegates and will clear the reference to the object in the method
-	// referenced by KeepUntilRef.   Currently uses an ArrayList, so this
-	// is not really designed as a workaround for systems that create
-	// too many objects, but two cases in particular that users keep
-	// trampling on: UIAlertView and UIActionSheet
-	public string KeepRefUntil { get; set; }
-}
-
-//
-// Used for methods that invoke other targets, not this.Handle
-//
-public class BindAttribute : Attribute {
-	public BindAttribute (string sel)
-	{
-		Selector = sel;
-	}
-	public string Selector { get; set; }
-
-	// By default [Bind] makes non-virtual methods
-	public bool Virtual { get; set; }
-}
-
-public class WrapAttribute : Attribute {
-	public WrapAttribute (string methodname)
-	{
-		MethodName = methodname;
-	}
-	public string MethodName { get; set; }
-}
-
-//
-// This attribute is a convenience shorthand for settings the
-// [EditorBrowsable (EditorBrowsableState.Advanced)] flags
-//
-public class AdvancedAttribute : Attribute {
-	public AdvancedAttribute () {}
-}
-
-// When applied instructs the generator to call Release on the returned objects
-// this happens when factory methods in Objetive-C return objects with refcount=1
-public class FactoryAttribute : Attribute {
-	public FactoryAttribute () {}
-}
-
-// When applied, it instructs the generator to not use NSStrings for marshalling.
-public class PlainStringAttribute : Attribute {
-	public PlainStringAttribute () {}
-}
-
-public class AutoreleaseAttribute : Attribute {
-	public AutoreleaseAttribute () {}
-}
-
-// When applied, the generator generates a check for the Handle being valid on the main object, to
-// ensure that the user did not Dispose() the object.
-//
-// This is typically used in scenarios where the user might be tempted to dispose
-// the object in a callback:
-//
-//     foo.FinishedDownloading += delegate { foo.Dispose (); }
-//
-// This would invalidate "foo" and force the code to return to a destroyed/freed
-// object
-public class CheckDisposedAttribute : Attribute {
-	public CheckDisposedAttribute () {}
-}
-
-//
-// When applied, instructs the generator to use this object as the
-// target, instead of the implicit Handle Can only be used in methods
-// that are [Bind] instead of [Export].
-// Not supported for Unified API; use [Category] support instead for
-// Objective-C categories (which will create extension methods).
-//
-public class TargetAttribute : Attribute {
-	public TargetAttribute () {}
-}
-
-public class ProxyAttribute : Attribute {
-	public ProxyAttribute () {}
-}
-
-// When applied to a member, generates the member as static
-public class StaticAttribute : Attribute {
-	public StaticAttribute () {}
-}
-
-// When applied to a type generate a partial class even if the type does not subclasss NSObject
-// useful for Core* types that declare Fields
-public class PartialAttribute : Attribute {
-	public PartialAttribute () {}
-}
-
-// flags the backing field for the property to with .NET's [ThreadStatic] property
-public class IsThreadStaticAttribute : Attribute {
-	public IsThreadStaticAttribute () {}
-}
-
-// When applied to a member, generates the member as static
-// and passes IntPtr.Zero or null if the parameter is null
-public class NullAllowedAttribute : Attribute {
-	public NullAllowedAttribute () {}
-}
-
-// When applied to a method or property, flags the resulting generated code as internal
-public class InternalAttribute : Attribute {
-	public InternalAttribute () {}
-}
-
-// This is a conditional "Internal" method, that flags methods as internal only when
-// compiling with Unified, otherwise, this is ignored.
-//
-// In addition, UnifiedInternal members automatically get an underscore after their name
-// so [UnifiedInternal] void Foo(); becomes "Foo_()"
-public class UnifiedInternalAttribute : Attribute {
-	public UnifiedInternalAttribute () {}
-}
-
-// When applied to a method or property, flags the resulting generated code as internal
-public sealed class ProtectedAttribute : Attribute {
-}
-
-// When this attribute is applied to the interface definition it will
-// flag the default constructor as private.  This means that you can
-// still instantiate object of this class internally from your
-// extension file, but it just wont be accessible to users of your
-// class.
-public class PrivateDefaultCtorAttribute : DefaultCtorVisibilityAttribute {
-	public PrivateDefaultCtorAttribute () : base (Visibility.Private) {}
-}
-
-public enum Visibility {
-	Public,
-	Protected,
-	Internal,
-	ProtectedInternal,
-	Private,
-	Disabled
-}
-
-// When this attribute is applied to the interface definition it will
-// flag the default ctor with the corresponding visibility (or disabled
-// altogether if Visibility.Disabled is used).
-public class DefaultCtorVisibilityAttribute : Attribute {
-	public DefaultCtorVisibilityAttribute (Visibility visibility)
-	{
-		this.Visibility = visibility;
-	}
-
-	public Visibility Visibility { get; set; }
-}
-
-// When this attribute is applied to the interface definition it will
-// prevent the generator from producing the default constructor.
-public class DisableDefaultCtorAttribute : DefaultCtorVisibilityAttribute {
-	public DisableDefaultCtorAttribute () : base (Visibility.Disabled) {}
-}
-
-//
-// If this attribute is applied to a property, we do not generate a
-// backing field.   See bugzilla #3359 and Assistly 7032 for some
-// background information
-//
-public class TransientAttribute : Attribute {
-	public TransientAttribute () {}
-}
-
-// Used for mandatory methods that must be implemented in a [Model].
-[AttributeUsage(AttributeTargets.Method|AttributeTargets.Property|AttributeTargets.Interface, AllowMultiple=true)]
-public class AbstractAttribute : Attribute {
-	public AbstractAttribute () {} 
-}
-
-// Used for mandatory methods that must be implemented in a [Model].
-public class OverrideAttribute : Attribute {
-	public OverrideAttribute () {} 
-}
-
-// Makes the result use the `new' attribtue
-public class NewAttribute : Attribute {
-	public NewAttribute () {} 
-}
-
-// Makes the result sealed
-public class SealedAttribute : Attribute {
-	public SealedAttribute () {} 
-}
-
-// Flags the object as being thread safe
-public class ThreadSafeAttribute : Attribute {
-	public ThreadSafeAttribute (bool safe = true)
-	{
-		Safe = safe;
-	}
-
-	public bool Safe { get; private set; }
-}
-
-// Marks a struct parameter/return value as requiring a certain alignment.
-public class AlignAttribute : Attribute {
-	public int Align { get; set; }
-	public AlignAttribute (int align)
-	{
-		Align = align;
-	}
-	public int Bits {
-		get {
-			int bits = 0;
-			int tmp = Align;
-			while (tmp > 1) {
-				bits++;
-				tmp /= 2;
-			}
-			return bits;
-		}
-	}
-}
-
-//
-// Indicates that this array should be turned into a params
-//
-[AttributeUsage(AttributeTargets.Parameter, AllowMultiple=false)]
-public class ParamsAttribute : Attribute {
-}
-
-//
-// These two attributes can be applied to parameters in a C# delegate
-// declaration to specify what kind of bridge needs to be provided on
-// callback.   Either a Block style setup, or a C-style setup
-//
-[AttributeUsage(AttributeTargets.Parameter, AllowMultiple=false)]
-public class BlockCallbackAttribute : Attribute { }
-
-[AttributeUsage(AttributeTargets.Parameter, AllowMultiple=false)]
-public class CCallbackAttribute : Attribute { }
-
-
-//
-// When applied, flags the [Flags] as a notification and generates the
-// code to strongly type the notification.
-//
-// This attribute can be applied multiple types, once of each kind of event
-// arguments that you would want to consume.
-//
-// The type has information about the strong type notification, while the
-// NotificationCenter if not null, indicates how to get the notification center.
-//
-// If you do not specify it, it will use NSNotificationCenter.DefaultCenter,
-// you would typically use this to specify the code needed to get to it.
-//
-[AttributeUsage(AttributeTargets.Property, AllowMultiple=true)]
-public class NotificationAttribute : Attribute {
-	public NotificationAttribute (Type t) { Type = t; }
-	public NotificationAttribute (Type t, string notificationCenter) { Type = t; NotificationCenter = notificationCenter; }
-	public NotificationAttribute (string notificationCenter) { NotificationCenter = notificationCenter; }
-	public NotificationAttribute () {}
-	
-	public Type Type { get; set; }
-	public string NotificationCenter { get; set; }
-}
-
-//
-// Applied to attributes in the notification EventArgs
-// to generate code that merely probes for the existance of
-// the key, instead of extracting a value out of the
-// userInfo dictionary
-//
-[AttributeUsage(AttributeTargets.Property, AllowMultiple=true)]
-public class ProbePresenceAttribute : Attribute {
-	public ProbePresenceAttribute () {}
-}
-
-public class EventArgsAttribute : Attribute {
-	public EventArgsAttribute (string s)
-	{
-		ArgName = s;
-	}
-	public EventArgsAttribute (string s, bool skip)
-	{
-		ArgName = s;
-		SkipGeneration = skip;
-	}
-	public EventArgsAttribute (string s, bool skip, bool fullname)
-	{
-		ArgName = s;
-		SkipGeneration = skip;
-		FullName = fullname;
-	}
-
-	public string ArgName { get; set; }
-	public bool SkipGeneration { get; set; }
-	public bool FullName { get; set; }
-}
-
-//
-// Used to specify the delegate type that will be created when
-// the generator creates the delegate properties on the host
-// class that holds events
-//
-// example:
-// interface SomeDelegate {
-//     [Export ("foo"), DelegateName ("GetBoolean"), DefaultValue (false)]
-//     bool Confirm (Some source);
-//
-public class DelegateNameAttribute : Attribute {
-	public DelegateNameAttribute (string s)
-	{
-		Name = s;
-	}
-
-	public string Name { get; set; }
-}
-
-//
-// Used to specify the delegate property name that will be created when
-// the generator creates the delegate property on the host
-// class that holds events.
-//
-// This is really useful when you have two overload methods that makes
-// sense to keep them named as is but you want to expose them in the host class
-// with a better given name.
-//
-// example:
-// interface SomeDelegate {
-//     [Export ("foo"), DelegateApiName ("Confirmation"), DelegateName ("Func<bool>"), DefaultValue (false)]
-//     bool Confirm (Some source);
-// }
-//
-// Generates propety in the host class:
-//	Func<bool> Confirmation { get; set; }
-//
-//
-public class DelegateApiNameAttribute : Attribute {
-	public DelegateApiNameAttribute (string apiName)
-	{
-		Name = apiName;
-	}
-
-	public string Name { get; set; }
-}
-
-public class EventNameAttribute : Attribute {
-	public EventNameAttribute (string s)
-	{
-		EvtName = s;
-	}
-	public string EvtName { get; set; }
-}
-
-public class DefaultValueAttribute : Attribute {
-	public DefaultValueAttribute (object o){
-		Default = o;
-	}
-	public object Default { get; set; }
-}
-
-public class DefaultValueFromArgumentAttribute : Attribute {
-	public DefaultValueFromArgumentAttribute (string s){
-		Argument = s;
-	}
-	public string Argument { get; set; }
-}
-
-public class NoDefaultValueAttribute : Attribute {
-}
-
-// Attribute used to mark those methods that will be ignored when
-// generating C# events, there are several situations in which using
-// this attribute makes sense:
-// 1. when there are overloaded methods. This means that we can mark
-//    the default overload to be used in the events.
-// 2. whe some of the methods should not be exposed as events.
-public class IgnoredInDelegateAttribute : Attribute {
-}
-
-// Apply to strings parameters that are merely retained or assigned,
-// not copied this is an exception as it is advised in the coding
-// standard for Objective-C to avoid this, but a few properties do use
-// this.  Use this attribtue for properties flagged with `retain' or
-// `assign', which look like this:
-//
-// @property (retain) NSString foo;
-// @property (assign) NSString assigned;
-//
-// This forced the generator to create an NSString before calling the
-// API instead of using the fast string marshalling code.
-public class DisableZeroCopyAttribute : Attribute {
-	public DisableZeroCopyAttribute () {}
-}
-
-// Apply this attribute to methods that need a custom binding method.
-//
-// This is usually required for methods that take SIMD types
-// (vector_floatX, vector_intX, etc).
-//
-// Workflow:
-// * Add the attribute to the method or property accessor in question:
-//   [MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-// * Rebuild the class libraries, and build the dontlink tests for device.
-// * You'll most likely get a list of unresolved externals, each mentioning
-//   a different objc_msgSend* signature (if not, you're done).
-// * Add the signature to runtime/bindings-generator.cs:GetFunctionData,
-//   and rebuild runtime/.
-//   * It is not necessary to add overloads for the super and stret 
-//     variations of objc_msgSend, those are created auomatically.
-// * Rebuild dontlink for device again, making sure the new signature is
-//   detected.
-// * Make sure to build all variants of dontlink (classic, 32bit, 64bit),
-//   since the set of signatures may differ.
-//
-// This is only for internal use (for now at least).
-//
-[AttributeUsage (AttributeTargets.Method)]
-public class MarshalDirectiveAttribute : Attribute {
-	public string NativePrefix { get; set; }
-	public string NativeSuffix { get; set; }
-	public string Library { get; set; }
-}
-
-//
-// By default, the generator will not do Zero Copying of strings, as most
-// third party libraries do not follow Apple's design guidelines of making
-// string properties and parameters copy parameters, instead many libraries
-// "retain" as a broken optimization [1].
-//
-// The consumer of the genertor can force this by passing
-// --use-zero-copy or setting the [assembly:ZeroCopyStrings] attribute.
-// When these are set, the generator assumes the library perform
-// copies over any NSStrings it keeps instead of retains/assigns and
-// that any property that happens to be a retain/assign has the
-// [DisableZeroCopyAttribute] attribute applied.
-//
-// [1] It is broken becase consumer code can pass an NSMutableString, the
-// library retains the value, but does not have a way of noticing changes
-// that might happen to the mutable string behind its back.
-//
-// In the ZeroCopy case it is a problem because we pass handles to stack-allocated
-// strings that stop existing after the invocation is over.
-//
-[AttributeUsage(AttributeTargets.Assembly|AttributeTargets.Method|AttributeTargets.Interface, AllowMultiple=true)]
-public class ZeroCopyStringsAttribute : Attribute {
-}
-
-[AttributeUsage(AttributeTargets.Method|AttributeTargets.Property, AllowMultiple=true)]
-public class SnippetAttribute : Attribute {
-	public SnippetAttribute (string s)
-	{
-		Code = s;
-	}
-	public string Code { get; set; }
-}
-
-//
-// PreSnippet code is inserted after the parameters have been validated/marshalled
-// 
-public class PreSnippetAttribute : SnippetAttribute {
-	public PreSnippetAttribute (string s) : base (s) {}
-}
-
-//
-// PrologueSnippet code is inserted before any code is generated
-// 
-public class PrologueSnippetAttribute : SnippetAttribute {
-	public PrologueSnippetAttribute (string s) : base (s) {}
-}
-
-//
-// PostSnippet code is inserted before returning, before paramters are disposed/released
-// 
-public class PostSnippetAttribute : SnippetAttribute {
-	public PostSnippetAttribute (string s) : base (s) {}
-}
-
-//
-// Code to run from a generated Dispose method
-//
-[AttributeUsage(AttributeTargets.Interface, AllowMultiple=true)]
-public class DisposeAttribute : SnippetAttribute {
-	public DisposeAttribute (string s) : base (s) {}
-}
-
-//
-// This attribute is used to flag properties that should be exposed on the strongly typed
-// nested Appearance class.   It is usually a superset of what Apple has labeled with
-// UI_APPEARANCE_SELECTOR because they do support more selectors than those flagged in
-// the UIApperance proxies, so we must label all the options.   This will be a list that
-// is organically grown as we find them
-//
-[AttributeUsage (AttributeTargets.Property|AttributeTargets.Method, AllowMultiple=false)]
-public class AppearanceAttribute : Attribute {
-	public AppearanceAttribute () {}
-}
-
-//
-// This is designed to be applied to setter methods in
-// a base class `Foo' when a `MutableFoo' exists.
-//
-// This allows the Foo.set_XXX to exists but throw an exception 
-// but derived classes would then override the property
-//
-[AttributeUsage (AttributeTargets.Method, AllowMultiple=false)]
-public class NotImplementedAttribute : Attribute {
-	public NotImplementedAttribute () {}
-	public NotImplementedAttribute (string message) {Message=message;}
-	public string Message { get; set; }
-}
-
-//
-// Apply this attribute to a class to add methods that in Objective-c
-// are added as categories
-//
-// Use the BaseType attribute to reference which class this is extending
-//
-// Like this:
-//   [Category]
-//   [BaseType (typeof (UIView))]
-//   interface UIViewExtensions {
-//     [Export ("method_in_the_objective_c_category")]
-//     void ThisWillBecome_a_c_sharp_extension_method_in_class_UIViewExtensions ();
-// }
-[AttributeUsage (AttributeTargets.Interface, AllowMultiple=false)]
-public class CategoryAttribute : Attribute {
-	public CategoryAttribute () {}
-}
-
-//
-// Apply this attribute when an `init*` selector is decorated with NS_DESIGNATED_INITIALIZER
-//
-// FIXME: Right now this does nothing - but with some tooling we'll be able 
-// to spot binding mistakes and implement correct subclassing of ObjC types
-// from the IDE
-//
-[AttributeUsage (AttributeTargets.Constructor | AttributeTargets.Method)]
-public class DesignatedInitializerAttribute : Attribute {
-	public DesignatedInitializerAttribute ()
-	{
-	}
-}
-
-//
-// Apply this attribute to a method that you want an async version of a callback method.
-//
-// Use the ResultType or ResultTypeName attribute to describe any composite value to be by the Task object.
-// Use MethodName to customize the name of the generated method
-//
-// Note that this only supports the case where the callback is the last parameter of the method.
-//
-// Like this:
-//[Export ("saveAccount:withCompletionHandler:")] [Async]
-//void SaveAccount (ACAccount account, ACAccountStoreSaveCompletionHandler completionHandler);
-// }
-[AttributeUsage (AttributeTargets.Method, AllowMultiple=false)]
-public class AsyncAttribute : Attribute {
-
-	//This will automagically generate the async method.
-	//This works with 4 kinds of callbacks: (), (NSError), (result), (result, NSError)
-	public AsyncAttribute () {}
-
-	//This works with 2 kinds of callbacks: (...) and (..., NSError).
-	//Parameters are passed in order to a constructor in resultType
-	public AsyncAttribute (Type resultType) {
-		ResultType = resultType;
-	}
-
-	//This works with 2 kinds of callbacks: (...) and (..., NSError).
-	//Parameters are passed in order to a result type that is automatically created if size > 1
-	//The generated method is named after the @methodName
-	public AsyncAttribute (string methodName) {
-		MethodName = methodName;
-	}
-
-	public Type ResultType { get; set; }
-	public string MethodName { get; set; }
-	public string ResultTypeName { get; set; }
-	public string PostNonResultSnippet { get; set; }
-}
-
-//
-// When this attribute is applied to an interface, it directs the generator to
-// create a strongly typed DictionaryContainer for the specified fields.
-//
-// The constructor argument is the name of the type that contains the keys to lookup
-//
-// If an export attribute is present, if the value contains a dot,
-// then the the value of the export is used to lookup the keyname.  If
-// there is no dot present, then this prefixes the value with the
-// typeWithKeys value.  If it is not, then the value is inferred as
-// being the result of typeWithKeys.\(propertyName\)Key
-//
-// For example:
-//
-//  [StrongDictionary ("foo")] interface X { [Export ("bar")] string Bar;
-//  This looks up in foo.bar
-//
-//  [StrongDictionary ("foo")] interface X { [Export ("bar.baz")] string Bar;
-//  This looks up in bar.baz
-//
-//  [StrongDictionary ("foo")] interface X { string Bar; }
-//  This looks up in foo.BarKey
-//
-// The parameterless ctor can be applied to individual property members of
-// a DictionaryContainer to instruct the generator that the property is another
-// DictionaryContainer and generate the necessary code to handle it.
-//
-// For Example
-//  [StrongDictionary ("FooOptionsKeys")]
-//  interface FooOptions {
-//
-//      [StrongDictionary]
-//	    BarOptions BarDictionary { get; set; }
-//  }
-//
-[AttributeUsage (AttributeTargets.Interface | AttributeTargets.Property, AllowMultiple=false)]
-public class StrongDictionaryAttribute : Attribute {
-	public StrongDictionaryAttribute ()
-	{
-	}
-	public StrongDictionaryAttribute (string typeWithKeys)
-	{
-		TypeWithKeys = typeWithKeys;
-		Suffix = "Key";
-	}
-	public string TypeWithKeys;
-	public string Suffix;
-}
-
-//
-// When this attribtue is applied to a property, currently it merely adds
-// a DebuggerBrowsable(Never) to the property, to prevent a family of crashes
-//
-[AttributeUsage (AttributeTargets.Property, AllowMultiple=false)]
-public class OptionalImplementationAttribute : Attribute {
-	public OptionalImplementationAttribute () {}
-}
-
-//
-// Use this attribute if some definitions are required at definition-compile
-// time but when you need the final binding assembly to include your own
-// custom implementation
-//
-[AttributeUsage (AttributeTargets.Method | AttributeTargets.Property, AllowMultiple=false)]
-public class ManualAttribute : Attribute {
-	public ManualAttribute () {}
-}
-
 //
 // Used to encapsulate flags about types in either the parameter or the return value
 // For now, it only supports the [PlainString] attribute on strings.
@@ -1207,12 +447,13 @@ public class MemberInformation
 	public readonly MemberInfo mi;
 	public readonly Type type;
 	public readonly Type category_extension_type;
-	public readonly bool is_abstract, is_protected, is_internal, is_unified_internal, is_override, is_new, is_sealed, is_static, is_thread_static, is_autorelease, is_wrapper;
+	public readonly bool is_abstract, is_protected, is_internal, is_unified_internal, is_override, is_new, is_sealed, is_static, is_thread_static, is_autorelease, is_wrapper, is_forced;
+	public readonly bool is_type_sealed;
 	public readonly Generator.ThreadCheck threadCheck;
 	public bool is_unsafe, is_virtual_method, is_export, is_category_extension, is_variadic, is_interface_impl, is_extension_method, is_appearance, is_model, is_ctor;
 	public bool is_return_release;
 	public bool protocolize;
-	public string selector, wrap_method;
+	public string selector, wrap_method, is_forced_owns;
 
 	public MethodInfo method { get { return (MethodInfo) mi; } }
 	public PropertyInfo property { get { return (PropertyInfo) mi; } }
@@ -1233,7 +474,9 @@ public class MemberInformation
 		is_thread_static = Generator.HasAttribute (mi, typeof (IsThreadStaticAttribute));
 		is_autorelease = Generator.HasAttribute (mi, typeof (AutoreleaseAttribute));
 		is_wrapper = !Generator.HasAttribute (mi.DeclaringType, typeof(SyntheticAttribute));
+		is_type_sealed = Generator.HasAttribute (mi.DeclaringType, typeof (SealedAttribute));
 		is_return_release = method != null && Generator.HasAttribute (method.ReturnTypeCustomAttributes, typeof (ReleaseAttribute));
+		is_forced = Generator.HasForcedAttribute (mi, out is_forced_owns);
 
 		var tsa = Generator.GetAttribute<ThreadSafeAttribute> (mi);
 		// if there's an attribute then it overrides the parent (e.g. type attribute) or namespace default
@@ -1249,7 +492,7 @@ public class MemberInformation
 		this.is_model = is_model;
 		this.mi = mi;
 		
-		if (is_interface_impl || is_extension_method) {
+		if (is_interface_impl || is_extension_method || is_type_sealed) {
 			is_abstract = false;
 			is_virtual_method = false;
 		}
@@ -1317,7 +560,7 @@ public class MemberInformation
 		if (category_extension_type != null)
 			is_category_extension = true;
 
-		if (is_static || is_category_extension || is_interface_impl || is_extension_method)
+		if (is_static || is_category_extension || is_interface_impl || is_extension_method || is_type_sealed)
 			is_virtual_method = false;
 	}
 
@@ -1331,7 +574,7 @@ public class MemberInformation
 		if (export != null)
 			selector = export.Selector;
 
-		if (wrap_method != null || is_interface_impl)
+		if (wrap_method != null || is_interface_impl || is_type_sealed)
 			is_virtual_method = false;
 		else
 			is_virtual_method = !is_static;
@@ -1534,31 +777,42 @@ public partial class Generator : IMemberGatherer {
 	//
 	Dictionary<string,MethodInfo> delegate_types = new Dictionary<string,MethodInfo> ();
 
-#if !XAMCORE_2_0
-	public bool Alpha;
-#endif
-	public bool OnlyDesktop;
-	public bool Compat;
-	public bool SkipSystemDrawing;
+	public bool Compat { get { return !UnifiedAPI; } }
 
-#if MONOMAC
-	public const PlatformName CurrentPlatform = PlatformName.MacOSX;
-	const string ApplicationClassName = "NSApplication";
-#elif WATCH
-	public const PlatformName CurrentPlatform = PlatformName.WatchOS;
-	const string ApplicationClassName = "UIApplication";
-#elif TVOS
-	public const PlatformName CurrentPlatform = PlatformName.TvOS;
-	const string ApplicationClassName = "UIApplication";
-#else
-	public const PlatformName CurrentPlatform = PlatformName.iOS;
-	const string ApplicationClassName = "UIApplication";
-#endif
+	public static PlatformName CurrentPlatform { get { return BindingTouch.CurrentPlatform; } }
+
+	public static string ApplicationClassName {
+		get {
+			switch (CurrentPlatform) {
+			case PlatformName.iOS:
+			case PlatformName.WatchOS:
+			case PlatformName.TvOS:
+				return "UIApplication";
+			case PlatformName.MacOSX:
+				return "NSApplication";
+			default:
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+			}
+		}
+	}
 
 	// Static version of the above (!Compat) field, set on each Go invocation, needed because some static
 	// helper methods need to access this.   This is the exact opposite of Compat.
-	static public bool UnifiedAPI;
-
+	public static bool UnifiedAPI { get { return BindingTouch.Unified; } }
+	public static int XamcoreVersion {
+		get {
+			switch (Generator.CurrentPlatform) {
+			case PlatformName.MacOSX:
+			case PlatformName.iOS:
+				return UnifiedAPI ? 2 : 1;
+			case PlatformName.TvOS:
+			case PlatformName.WatchOS:
+				return 3;
+			default:
+				return 4;
+			}
+		}
+	}
 	Type [] types, strong_dictionaries;
 	bool debug;
 	bool external;
@@ -1631,13 +885,36 @@ public partial class Generator : IMemberGatherer {
 #if !WATCH
 	public Type SampleBufferType = typeof (CMSampleBuffer);
 #endif
-#if MONOMAC
-	const string CoreImageMap = "Quartz";
-	const string CoreServicesMap = "CoreServices";
-#else
-	const string CoreImageMap = "CoreImage";
-	const string CoreServicesMap = "MobileCoreServices";
-#endif
+
+	static string CoreImageMap {
+		get {
+			switch (CurrentPlatform) {
+			case PlatformName.iOS:
+			case PlatformName.WatchOS:
+			case PlatformName.TvOS:
+				return "CoreImage";
+			case PlatformName.MacOSX:
+				return "Quartz";
+			default:
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+			}
+		}
+	}
+
+	static string CoreServicesMap {
+		get {
+			switch (CurrentPlatform) {
+			case PlatformName.iOS:
+			case PlatformName.WatchOS:
+			case PlatformName.TvOS:
+				return "MobileCoreServices";
+			case PlatformName.MacOSX:
+				return "CoreServices";
+			default:
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+			}
+		}
+	}
 
 	//
 	// We inject thread checks to MonoTouch.UIKit types, unless there is a [ThreadSafe] attribuet on the type.
@@ -1840,6 +1117,19 @@ public partial class Generator : IMemberGatherer {
 		return "I" + type.Name;
 	}
 
+	public static bool HasForcedAttribute (ICustomAttributeProvider cu, out string owns)
+	{
+		var att = GetAttribute<ForcedTypeAttribute> (cu) ?? GetAttribute<ForcedTypeAttribute> ((cu as MethodInfo)?.ReturnParameter);
+
+		if (att == null) {
+			owns = "false";
+			return false;
+		}
+
+		owns = att.Owns ? "true" : "false";
+		return true;
+	}
+
 	public string MakeTrampolineName (Type t)
 	{
 		var trampoline_name = t.Name.Replace ("`", "Arity");
@@ -1895,6 +1185,9 @@ public partial class Generator : IMemberGatherer {
 		pars.Append ("IntPtr block");
 		var parameters = mi.GetParameters ();
 		foreach (var pi in parameters){
+			string isForcedOwns;
+			var isForced = HasForcedAttribute (pi, out isForcedOwns);
+
 			pars.Append (", ");
 			if (pi != parameters [0])
 				invoke.Append (", ");
@@ -1903,6 +1196,8 @@ public partial class Generator : IMemberGatherer {
 				pars.AppendFormat ("IntPtr {0}", pi.Name.GetSafeParamName ());
 				if (IsProtocolInterface (pi.ParameterType)) {
 					invoke.AppendFormat (" Runtime.GetINativeObject<{1}> ({0}, false)", pi.Name.GetSafeParamName (), pi.ParameterType);
+				} else if (isForced) {
+					invoke.AppendFormat (" Runtime.GetINativeObject<{1}> ({0}, {2})", pi.Name.GetSafeParamName (), RenderType (pi.ParameterType), isForcedOwns);
 				} else {
 					invoke.AppendFormat (" Runtime.GetNSObject<{1}> ({0})", pi.Name.GetSafeParamName (), RenderType (pi.ParameterType));
 				}
@@ -1982,8 +1277,12 @@ public partial class Generator : IMemberGatherer {
 					invoke.AppendFormat ("NID{0}.Create ({1})", MakeTrampolineName (pi.ParameterType), pi.Name.GetSafeParamName ());
 					// The trampoline will eventually be generated in the final loop
 				} else {
-					if (!HasAttribute (pi, typeof (CCallbackAttribute))){
-						Console.WriteLine ("WARNING: the parameter {0} in {1} does not contain a [CCallback] or [BlockCallback] attribute, defaulting to CCallback", pi.Name.GetSafeParamName (), t.FullName);
+					if (!HasAttribute (pi, typeof (CCallbackAttribute))) {
+						if (t.FullName.StartsWith ("System.Action`", StringComparison.Ordinal) || t.FullName.StartsWith ("System.Func`", StringComparison.Ordinal)) {
+							ErrorHelper.Show (new BindingException (1116, "The parameter '{0}' in the delegate '{1}' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback]. Declare a custom delegate instead of using System.Action / System.Func and add the attribute on the corresponding parameter.", pi.Name.GetSafeParamName (), t.FullName));
+						} else {
+							ErrorHelper.Show (new BindingException (1115, "The parameter '{0}' in the delegate '{1}' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback].", pi.Name.GetSafeParamName (), t.FullName));
+						}
 					}
 					pars.AppendFormat ("IntPtr {0}", pi.Name.GetSafeParamName ());
 					invoke.AppendFormat ("({0}) Marshal.GetDelegateForFunctionPointer ({1}, typeof ({0}))", pi.ParameterType, pi.Name.GetSafeParamName ());
@@ -2051,14 +1350,7 @@ public partial class Generator : IMemberGatherer {
 					else
 						return String.Format ("(IntPtr)(&_s{0})", pi.Name);
 				} else {
-#if false
-					if (allow_null)
-						return String.Format ("ns{0} == null ? IntPtr.Zero : ns{0}.Handle", pi.Name);
-					else 
-						return "ns" + pi.Name + ".Handle";
-#else
 					return "ns" + pi.Name;
-#endif
 				}
 			}
 		}
@@ -2117,7 +1409,7 @@ public partial class Generator : IMemberGatherer {
 		if (HasAttribute (pi, typeof (NullAllowedAttribute)))
 			return false;
 
-		if (mi.IsSpecialName && mi.Name.StartsWith ("set_")){
+		if (mi.IsSpecialName && mi.Name.StartsWith ("set_", StringComparison.Ordinal)){
 			if (HasAttribute (mi, typeof (NullAllowedAttribute))){
 				return false;
 			}
@@ -2138,6 +1430,9 @@ public partial class Generator : IMemberGatherer {
 	
 	public static T GetAttribute<T> (ICustomAttributeProvider mi) where T: class
 	{
+		if (mi == null)
+			return null;
+
 		object [] a = mi.GetCustomAttributes (typeof (T), true);
 		if (a.Length > 0)
 			return (T) a [0];
@@ -2274,7 +1569,7 @@ public partial class Generator : IMemberGatherer {
 		var marshalDirective = GetAttribute<MarshalDirectiveAttribute> (mi);
 		if (marshalDirective != null && marshalDirective.Library != null) {
 			print (m, "\t\t[DllImport (\"{0}\", EntryPoint=\"{1}\")]", marshalDirective.Library, method_name);
-		} else if (method_name.StartsWith ("xamarin_")) {
+		} else if (method_name.StartsWith ("xamarin_", StringComparison.Ordinal)) {
 			print (m, "\t\t[DllImport (\"__Internal\", EntryPoint=\"{0}\")]", method_name);
 		} else {
 			print (m, "\t\t[DllImport (LIBOBJC_DYLIB, EntryPoint=\"{0}\")]", entry_point);
@@ -2283,101 +1578,6 @@ public partial class Generator : IMemberGatherer {
 		print (m, "\t\tpublic extern static {0} {1} ({3}IntPtr receiver, IntPtr selector{2});",
 		       need_stret ? "void" : ParameterGetMarshalType (new MarshalInfo (mi) { EnumMode = enum_mode }, true), method_name, b.ToString (),
 		       need_stret ? (aligned ? "IntPtr" : "out " + FormatTypeUsedIn (ns.CoreObjCRuntime, mi.ReturnType)) + " retval, " : "");
-	}
-
-	bool IsMagicType (Type t)
-	{
-		switch (t.Name) {
-		case "nint":
-		case "nuint":
-		case "nfloat":
-			return t.Assembly == typeof (NSObject).Assembly;
-		default:
-			return t.Assembly == typeof (object).Assembly;
-		}
-	}
-
-	bool ArmNeedStret (MethodInfo mi)
-	{
-		Type t = mi.ReturnType;
-
-		bool assembly = Compat ? t.Assembly == typeof (object).Assembly : IsMagicType (t);
-		if (!t.IsValueType || t.IsEnum || assembly)
-			return false;
-
-#if WATCH
-		// According to clang watchOS passes arguments bigger than 16 bytes by reference.
-		// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5248-L5250
-		// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5542-L5543
-		if (GetValueTypeSize (t, false) <= 16)
-			return false;
-#endif
-
-		return true;
-	}
-
-	bool X86NeedStret (MethodInfo mi)
-	{
-		Type t = mi.ReturnType;
-		
-		if (!t.IsValueType || t.IsEnum || t.Assembly == typeof (object).Assembly)
-			return false;
-
-		return GetValueTypeSize (t, false) > 8;
-	}
-
-	bool X86_64NeedStret (MethodInfo mi)
-	{
-		Type t = mi.ReturnType;
-
-		if (!t.IsValueType || t.IsEnum || t.Assembly == typeof (object).Assembly)
-			return false;
-
-		return GetValueTypeSize (t, true) > 16;
-	}
-
-	public static int GetValueTypeSize (Type type, bool is_64_bits)
-	{
-		switch (type.FullName) {
-		case "System.Char":
-		case "System.Boolean":
-		case "System.SByte":
-		case "System.Byte": return 1;
-		case "System.Int16":
-		case "System.UInt16": return 2;
-		case "System.Single":
-		case "System.Int32":
-		case "System.UInt32": return 4;
-		case "System.Double":
-		case "System.Int64": 
-		case "System.UInt64": return 8;
-		case "System.IntPtr":
-		case "System.nfloat":
-		case "System.nuint":
-		case "System.nint": return is_64_bits ? 8 : 4;
-		default:
-			int size = 0;
-			foreach (var field in type.GetFields (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)) {
-				int s = GetValueTypeSize (field.FieldType, is_64_bits);
-				if (s == -1)
-					return -1;
-				size += s;
-			}
-			return size;
-		}
-	}
-
-	bool NeedStret (MethodInfo mi)
-	{
-		if (Compat)
-			return ArmNeedStret (mi) || X86NeedStret (mi);
-
-		bool no_arm_stret = X86NeedStret (mi) || X86_64NeedStret (mi);
-
-		if (OnlyDesktop)
-			return no_arm_stret;
-
-		return no_arm_stret || ArmNeedStret (mi);
 	}
 
 	bool IsNativeEnum (Type type)
@@ -2420,12 +1620,12 @@ public partial class Generator : IMemberGatherer {
 
 		try {
 			if (Compat) {
-				bool arm_stret = ArmNeedStret (mi);
+				bool arm_stret = Stret.ArmNeedStret (mi);
 				bool is_aligned = HasAttribute (mi, typeof (AlignAttribute));
 				RegisterMethod (arm_stret, mi, MakeSig (mi, arm_stret, arm_stret && is_aligned), arm_stret && is_aligned);
 				RegisterMethod (arm_stret, mi, MakeSuperSig (mi, arm_stret, arm_stret && is_aligned), arm_stret && is_aligned);
 
-				bool x86_stret = X86NeedStret (mi);
+				bool x86_stret = Stret.X86NeedStret (mi);
 				if (x86_stret != arm_stret){
 					RegisterMethod (x86_stret, mi, MakeSig (mi, x86_stret, x86_stret && is_aligned), x86_stret && is_aligned);
 					RegisterMethod (x86_stret, mi, MakeSuperSig (mi, x86_stret, x86_stret && is_aligned), x86_stret && is_aligned);
@@ -2442,7 +1642,7 @@ public partial class Generator : IMemberGatherer {
 					RegisterMethod (false, mi, MakeSig (mi, false, enum_mode: mode), false, mode);
 					RegisterMethod (false, mi, MakeSuperSig (mi, false, enum_mode: mode), false, mode);
 
-					if (NeedStret (mi)) {
+					if (Stret.NeedStret (mi)) {
 						RegisterMethod (true, mi, MakeSig (mi, true, enum_mode: mode), false, mode);
 						RegisterMethod (true, mi, MakeSuperSig (mi, true, enum_mode: mode), false, mode);
 
@@ -2471,15 +1671,6 @@ public partial class Generator : IMemberGatherer {
 	public static ExportAttribute GetExportAttribute (MemberInfo mo, out string wrap)
 	{
 		wrap = null;
-#if debug
-		object [] jattrs = mo.GetCustomAttributes (true);
-		Console.WriteLine ("On: {0}", mo);
-		foreach (var x in jattrs){
-			Console.WriteLine ("    -> {0} ", x);
-			Console.WriteLine ("   On: {0} ", x.GetType ().Assembly);
-			Console.WriteLine ("   Ex: {0}", typeof (ExportAttribute).Assembly);
-		}
-#endif
 		object [] attrs = mo.GetCustomAttributes (typeof (ExportAttribute), true);
 		if (attrs.Length == 0){
 			attrs = mo.GetCustomAttributes (typeof (WrapAttribute), true);
@@ -2541,11 +1732,6 @@ public partial class Generator : IMemberGatherer {
 
 	bool SkipGenerationOfType (Type t)
 	{
-#if !XAMCORE_2_0
-		if (HasAttribute (t, typeof (AlphaAttribute)) && Alpha == false)
-			return true;
-#endif
-
 		if (t.IsUnavailable ())
 			return true;
 
@@ -2561,7 +1747,6 @@ public partial class Generator : IMemberGatherer {
 
 	public void Go ()
 	{
-		UnifiedAPI = !Compat;
 		marshal_types.AddRange (new MarshalType [] {
 			new MarshalType (typeof (NSObject), create: "Runtime.GetNSObject ("),
 			new MarshalType (typeof (Selector), create: "Selector.FromHandle ("),
@@ -2661,11 +1846,6 @@ public partial class Generator : IMemberGatherer {
 			var tselectors = new List<string> ();
 			
 			foreach (var pi in GetTypeContractProperties (t)){
-#if !XAMCORE_2_0
-				if (HasAttribute (pi, typeof (AlphaAttribute)) && Alpha == false)
-					continue;
-#endif
-
 				if (pi.IsUnavailable ())
 					continue;
 
@@ -2718,10 +1898,6 @@ public partial class Generator : IMemberGatherer {
 				if (mi.IsSpecialName)
 					continue;
 
-#if !XAMCORE_2_0
-				if (HasAttribute (mi, typeof (AlphaAttribute)) && Alpha == false)
-					continue;
-#endif
 				if (mi.IsUnavailable ())
 					continue;
 
@@ -2757,11 +1933,7 @@ public partial class Generator : IMemberGatherer {
 					} else if (attr is NoDefaultValueAttribute) {
 						seenNoDefaultValue = true;
 						continue;
-#if !XAMCORE_2_0
-					} else if (attr is AlphaAttribute) {
-						continue;
-#endif
-					} else if (attr is SealedAttribute || attr is EventArgsAttribute || attr is DelegateNameAttribute || attr is EventNameAttribute || attr is IgnoredInDelegateAttribute || attr is ObsoleteAttribute || attr is NewAttribute || attr is PostGetAttribute || attr is NullAllowedAttribute || attr is CheckDisposedAttribute || attr is SnippetAttribute || attr is AppearanceAttribute || attr is ThreadSafeAttribute || attr is AutoreleaseAttribute || attr is EditorBrowsableAttribute || attr is AdviceAttribute || attr is OverrideAttribute || attr is DelegateApiNameAttribute)
+					} else if (attr is SealedAttribute || attr is EventArgsAttribute || attr is DelegateNameAttribute || attr is EventNameAttribute || attr is IgnoredInDelegateAttribute || attr is ObsoleteAttribute || attr is NewAttribute || attr is PostGetAttribute || attr is NullAllowedAttribute || attr is CheckDisposedAttribute || attr is SnippetAttribute || attr is AppearanceAttribute || attr is ThreadSafeAttribute || attr is AutoreleaseAttribute || attr is EditorBrowsableAttribute || attr is AdviceAttribute || attr is OverrideAttribute || attr is DelegateApiNameAttribute || attr is ForcedTypeAttribute)
 						continue;
 					else if (attr is MarshalNativeExceptionsAttribute)
 						continue;
@@ -2804,10 +1976,6 @@ public partial class Generator : IMemberGatherer {
 			}
 
 			foreach (var pi in t.GatherProperties (BindingFlags.Instance | BindingFlags.Public)){
-#if !XAMCORE_2_0
-				if (HasAttribute (pi, typeof (AlphaAttribute)) && Alpha == false)
-					continue;
-#endif
 				if (pi.IsUnavailable ())
 					continue;
 
@@ -2859,9 +2027,9 @@ public partial class Generator : IMemberGatherer {
 
 	static Type GetCorrectGenericType (Type type)
 	{
-#if XAMCORE_2_0
-		return type;
-#else
+		if (UnifiedAPI)
+			return type;
+
 		if (type != null && type.IsGenericType) {
 			// for compat we expose NSSet/NSDictionary instead of NSSet<TKey>/NSDictionary<TKey,TValue>
 			var bt = type.GetGenericTypeDefinition ();
@@ -2887,7 +2055,6 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 		return type;
-#endif
 	}
 
 	void GenerateIndirectDelegateFile ()
@@ -3087,7 +2254,7 @@ public partial class Generator : IMemberGatherer {
 		print ("namespace {0} {{", ns.CoreObjCRuntime); indent++;
 		print ("[CompilerGenerated]");
 		print ("static partial class Libraries {"); indent++;
-		foreach (var library_info in libraries.OrderBy (v => v.Key)) {
+		foreach (var library_info in libraries.OrderBy (v => v.Key, StringComparer.Ordinal)) {
 			var library_name = library_info.Key;
 			var library_path = library_info.Value;
 			print ("static public class {0} {{", library_name.Replace (".", string.Empty)); indent++;
@@ -3233,7 +2400,7 @@ public partial class Generator : IMemberGatherer {
 						} else if (pi.PropertyType == typeof (string)){
 							getter = "GetStringValue ({0})";
 							setter = "SetStringValue ({0}, value)";
-						} else if (pi.PropertyType.Name.StartsWith ("NSDictionary")){
+						} else if (pi.PropertyType.Name.StartsWith ("NSDictionary", StringComparison.Ordinal)){
 							if (pi.PropertyType.IsGenericType) {
 								var genericParameters = pi.PropertyType.GetGenericArguments ();
 								// we want to keep {0} for later yet add the params for the template.
@@ -3460,7 +2627,7 @@ public partial class Generator : IMemberGatherer {
 	{
 		string prefix = new string ('\t', level);
 		Console.WriteLine ("{2} {0} - {1}", gt.Type.Name, gt.ImplementsAppearance ? "APPEARANCE" : "", prefix);
-		foreach (var c in (from s in gt.Children orderby s.Type.FullName select s))
+		foreach (var c in (from s in gt.Children .OrderBy ( s => s.Type.FullName, StringComparer.Ordinal) select s))
 			DumpChildren (level+1, c);
 	}
 	
@@ -3718,24 +2885,7 @@ public partial class Generator : IMemberGatherer {
 			return false;
 
 		var attrib = (ProtocolizeAttribute) attribs [0];
-		switch (attrib.Version) {
-		case 2:
-			return UnifiedAPI;
-		case 3:
-#if XAMCORE_3_0
-			return true;
-#else
-			return false;
-#endif
-		case 4:
-#if XAMCORE_4_0
-			return true;
-#else
-			return false;
-#endif
-		default:
-			throw new NotImplementedException (string.Format ("ProtocolizeAttribute with Version={0} not implemented", attrib.Version));
-		}
+		return Generator.XamcoreVersion >= attrib.Version;
 	}
 
 	public string MakeSignature (MemberInformation minfo, bool is_async, ParameterInfo[] parameters, string extra = "", bool alreadyPreserved = false)
@@ -3773,9 +2923,9 @@ public partial class Generator : IMemberGatherer {
 		}
 		// Unified internal methods automatically get a _ appended
 		if (minfo.is_extension_method && minfo.method.IsSpecialName) {
-			if (name.StartsWith ("get_"))
+			if (name.StartsWith ("get_", StringComparison.Ordinal))
 				name = "Get" + name.Substring (4);
-			else if (name.StartsWith ("set_"))
+			else if (name.StartsWith ("set_", StringComparison.Ordinal))
 				name = "Set" + name.Substring (4);
 		}
 		sb.Append (name);
@@ -3853,7 +3003,7 @@ public partial class Generator : IMemberGatherer {
 		print (w, "//\n// Auto-generated from generator.cs, do not edit\n//");
 		print (w, "// We keep references to objects, so warning 414 is expected\n");
 		print (w, "#pragma warning disable 414\n");
-		print (w, ns.ImplicitNamespaces.OrderByDescending (n => n.StartsWith ("System")).ThenBy (n => n.Length).Select (n => "using " + n + ";"));
+		print (w, ns.ImplicitNamespaces.OrderByDescending (n => n.StartsWith ("System", StringComparison.Ordinal)).ThenBy (n => n.Length).Select (n => "using " + n + ";"));
 		print (w, "");
 	}
 
@@ -3908,6 +3058,9 @@ public partial class Generator : IMemberGatherer {
 			} else if (minfo != null && minfo.protocolize) {
 				cast_a = " Runtime.GetINativeObject<" + FormatType (mi.DeclaringType, mi.ReturnType.Namespace, FindProtocolInterface (mi.ReturnType, mi)) + "> (";
 				cast_b = ", false)";
+			} else if (minfo != null && minfo.is_forced) {
+				cast_a = " Runtime.GetINativeObject<" + FormatType (declaringType, GetCorrectGenericType (mi.ReturnType)) + "> (";
+				cast_b = $", {minfo.is_forced_owns})";
 			} else {
 				cast_a = " Runtime.GetNSObject<" + FormatType (declaringType, GetCorrectGenericType (mi.ReturnType)) + "> (";
 				cast_b = ")";
@@ -4029,11 +3182,11 @@ public partial class Generator : IMemberGatherer {
 			return;
 		}
 
-		bool arm_stret = ArmNeedStret (mi);
-		bool x86_stret = X86NeedStret (mi);
+		bool arm_stret = Stret.ArmNeedStret (mi);
+		bool x86_stret = Stret.X86NeedStret (mi);
 		bool aligned = HasAttribute (mi, typeof(AlignAttribute));
 
-		if (OnlyDesktop){
+		if (CurrentPlatform == PlatformName.MacOSX) {
 			GenerateInvoke (x86_stret, supercall, mi, minfo, selector, args[0], assign_to_temp, category_type, aligned && x86_stret);
 			return;
 		}
@@ -4056,16 +3209,16 @@ public partial class Generator : IMemberGatherer {
 
 	void GenerateNewStyleInvoke (bool supercall, MethodInfo mi, MemberInformation minfo, string selector, string[] args, bool assign_to_temp, Type category_type)
 	{
-		bool arm_stret = ArmNeedStret (mi);
-		bool x86_stret = X86NeedStret (mi);
-		bool x64_stret = X86_64NeedStret (mi);
+		bool arm_stret = Stret.ArmNeedStret (mi);
+		bool x86_stret = Stret.X86NeedStret (mi);
+		bool x64_stret = Stret.X86_64NeedStret (mi);
 		bool dual_enum = HasNativeEnumInSignature (mi);
 		bool is_stret_multi = arm_stret || x86_stret || x64_stret;
 		bool need_multi_path = is_stret_multi || dual_enum;
 		bool aligned = HasAttribute (mi, typeof(AlignAttribute));
 		int index64 = dual_enum ? 1 : 0;
 
-		if (OnlyDesktop) {
+		if (CurrentPlatform == PlatformName.MacOSX) {
 			if (need_multi_path) {
 				print ("if (IntPtr.Size == 8) {");
 				indent++;
@@ -4167,14 +3320,7 @@ public partial class Generator : IMemberGatherer {
 	public string GenerateMarshalString (bool probe_null, bool must_copy)
 	{
 		if (must_copy){
-#if false
-			if (probe_null)
-				return "var ns{0} = {0} == null ? null : new NSString ({0});\n";
-			else
-				return "var ns{0} = new NSString ({0});\n";
-#else
 			return "var ns{0} = NSString.CreateNative ({1});\n";
-#endif
 		}
 		return
 			ns.CoreObjCRuntime + ".NSStringStruct _s{0}; Console.WriteLine (\"" + CurrentMethod + ": Marshalling: {{1}}\", {1}); \n" +
@@ -4187,14 +3333,7 @@ public partial class Generator : IMemberGatherer {
 	public string GenerateDisposeString (bool probe_null, bool must_copy)
 	{
 		if (must_copy){
-#if false
-			if (probe_null)
-				return "if (ns{0} != null)\n" + "\tns{0}.Dispose ();";
-			else
-				return "ns{0}.Dispose ();\n";
-#else
 			return "NSString.ReleaseNative (ns{0});\n";
-#endif
 		} else 
 			return "if (_s{0}.Flags != 0x010007d1) throw new Exception (\"String was retained, not copied\");";
 	}
@@ -4330,11 +3469,15 @@ public partial class Generator : IMemberGatherer {
 
 			// Handle ByRef
 			if (mai.Type.IsByRef && mai.Type.GetElementType ().IsValueType == false){
+				string isForcedOwns;
+				var isForced = HasForcedAttribute (pi, out isForcedOwns);
 				by_ref_init.AppendFormat ("IntPtr {0}Value = IntPtr.Zero;\n", pi.Name.GetSafeParamName ());
 
 				by_ref_processing.AppendLine();
 				if (mai.Type.GetElementType () == typeof (string)){
 					by_ref_processing.AppendFormat("{0} = {0}Value != IntPtr.Zero ? NSString.FromHandle ({0}Value) : null;", pi.Name.GetSafeParamName ());
+				} else if (isForced) {
+					by_ref_processing.AppendFormat("{0} = {0}Value != IntPtr.Zero ? Runtime.GetINativeObject<{1}> ({0}Value, {2}) : null;", pi.Name.GetSafeParamName (), RenderType (mai.Type.GetElementType ()), isForcedOwns);
 				} else {
 					by_ref_processing.AppendFormat("{0} = {0}Value != IntPtr.Zero ? Runtime.GetNSObject<{1}> ({0}Value) : null;", pi.Name.GetSafeParamName (), RenderType (mai.Type.GetElementType ()));
 				}
@@ -4374,20 +3517,25 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 		
-#if !MONOMAC
 	// undecorated code is assumed to be iOS 2.0
 	static AvailabilityBaseAttribute iOSIntroducedDefault = new IntroducedAttribute (PlatformName.iOS, 2, 0);
-#endif
 
 	string CurrentMethod;
 
 	void GenerateThreadCheck ()
 	{
-#if MONOMAC
-			print ("global::{0}.NSApplication.EnsureUIThread ();", ns.Get ("AppKit"));
-#else
-			print ("global::{0}.UIApplication.EnsureUIThread ();", ns.Get ("UIKit"));
-#endif
+		switch (CurrentPlatform) {
+			case PlatformName.iOS:
+			case PlatformName.WatchOS:
+			case PlatformName.TvOS:
+				print ("global::{0}.UIApplication.EnsureUIThread ();", ns.Get ("UIKit"));
+				break;
+			case PlatformName.MacOSX:
+				print ("global::{0}.NSApplication.EnsureUIThread ();", ns.Get ("AppKit"));
+				break;
+			default:
+				throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+		}
 	}
 
 	//
@@ -4486,7 +3634,7 @@ public partial class Generator : IMemberGatherer {
 
 		bool use_temp_return  =
 			minfo.is_return_release ||
-			(mi.Name != "Constructor" && (NeedStret (mi) || disposes.Length > 0 || postget != null) && mi.ReturnType != typeof (void)) ||
+			(mi.Name != "Constructor" && (Stret.NeedStret (mi) || disposes.Length > 0 || postget != null) && mi.ReturnType != typeof (void)) ||
 			(HasAttribute (mi, typeof (FactoryAttribute))) ||
 			((body_options & BodyOption.NeedsTempReturn) == BodyOption.NeedsTempReturn) ||
 			(mi.ReturnType.IsSubclassOf (typeof (Delegate))) ||
@@ -4593,29 +3741,30 @@ public partial class Generator : IMemberGatherer {
 		if ((postget != null) && (postget.Length > 0)) {
 			print ("#pragma warning disable 168");
 			for (int i = 0; i < postget.Length; i++) {
-				if (postget [i].IsDisableForNewRefCount (type))
+				if (IsDisableForNewRefCount (postget [i], type))
 					continue;
 
-#if !MONOMAC
-				// bug #7742: if this code, e.g. existing in iOS 2.0, 
-				// tries to call a property available since iOS 5.0, 
-				// then it will fail when executing in iOS 4.3
+
 				bool version_check = false;
-				var postget_avail = GetIntroduced (type, postget [i].MethodName);
-				if (postget_avail != null) {
-					var caller_avail = GetIntroduced (mi, propInfo) ?? iOSIntroducedDefault;
-					if (caller_avail.Version < postget_avail.Version) {
-						version_check = true;
-						print ("var postget{0} = {4}.UIDevice.CurrentDevice.CheckSystemVersion ({1},{2}) ? {3} : null;",
-							i,
-							postget_avail.Version.Major,
-							postget_avail.Version.Minor,
-							postget [i].MethodName,
-							ns.Get ("UIKit"));
+				if (CurrentPlatform != PlatformName.MacOSX) {
+					// bug #7742: if this code, e.g. existing in iOS 2.0, 
+					// tries to call a property available since iOS 5.0, 
+					// then it will fail when executing in iOS 4.3
+					var postget_avail = GetIntroduced (type, postget [i].MethodName);
+					if (postget_avail != null) {
+						var caller_avail = GetIntroduced (mi, propInfo) ?? iOSIntroducedDefault;
+						if (caller_avail.Version < postget_avail.Version) {
+							version_check = true;
+							print ("var postget{0} = {4}.UIDevice.CurrentDevice.CheckSystemVersion ({1},{2}) ? {3} : null;",
+								i,
+								postget_avail.Version.Major,
+								postget_avail.Version.Minor,
+								postget [i].MethodName,
+								ns.Get ("UIKit"));
+						}
 					}
 				}
 				if (!version_check)
-#endif
 					print ("var postget{0} = {1};", i, postget [i].MethodName);
 			}
 			print ("#pragma warning restore 168");
@@ -4657,6 +3806,29 @@ public partial class Generator : IMemberGatherer {
 			print ("}");
 		}
 		indent--;
+	}
+
+
+	static PropertyInfo GetProperty (PostGetAttribute @this, Type type)
+	{
+		if (type == null)
+			return null;
+
+		var props = type.GetProperties ();
+		foreach (var pi in props) {
+			if (pi.Name != @this.MethodName)
+				continue;
+			return pi;
+		}
+		return GetProperty (@this, ReflectionExtensions.GetBaseType (type));
+	}
+
+	static bool IsDisableForNewRefCount (PostGetAttribute @this, Type type)
+	{
+		PropertyInfo p = GetProperty (@this, type);
+		var ea = p.GetCustomAttributes (typeof(ExportAttribute), false);
+		var sem = (ea [0] as ExportAttribute).ArgumentSemantic;
+		return (sem != ArgumentSemantic.Assign && sem != ArgumentSemantic.Weak); // also cover UnsafeUnretained
 	}
 
 	public IEnumerable<MethodInfo> GetTypeContractMethods (Type source)
@@ -4775,23 +3947,23 @@ public partial class Generator : IMemberGatherer {
 		var mod = minfo.GetVisibility ();
 		minfo.protocolize = Protocolize (pi);
 
-#if XAMCORE_2_0 // We have some sub-optimal bindings in compat that trigger this exception, so we just don't fix those
-		// So we don't hide the get or set of a parent property with the same name, we need to see if we have a parent declaring the same property
-		PropertyInfo parentBaseType = GetParentTypeWithSameNamedProperty (ReflectionExtensions.GetBaseTypeAttribute(type), pi.Name);
+		if (UnifiedAPI) { // We have some sub-optimal bindings in compat that trigger this exception, so we just don't fix those
+			// So we don't hide the get or set of a parent property with the same name, we need to see if we have a parent declaring the same property
+			PropertyInfo parentBaseType = GetParentTypeWithSameNamedProperty (ReflectionExtensions.GetBaseTypeAttribute(type), pi.Name);
 
-		// If so, we're not static, and we can't both read and write, but they can
-		if (!minfo.is_static && !(pi.CanRead && pi.CanWrite) && (parentBaseType != null && parentBaseType.CanRead && parentBaseType.CanWrite)) {
-			// Make sure the selector matches, sanity check that we aren't hiding something of a different type
-			// We skip this for wrap'ed properties, as those get complicated to resolve the correct export
-			if (wrap == null &&
-				((pi.CanRead && (GetGetterExportAttribute (pi).Selector != GetGetterExportAttribute (parentBaseType).Selector)) ||
-				 pi.CanWrite && (GetSetterExportAttribute (pi).Selector != GetSetterExportAttribute (parentBaseType).Selector))) {
-				throw new BindingException (1035, true, "The property {0} on class {1} is hiding a property from a parent class {2} but the selectors do not match.", pi.Name, type, parentBaseType.DeclaringType);
+			// If so, we're not static, and we can't both read and write, but they can
+			if (!minfo.is_static && !(pi.CanRead && pi.CanWrite) && (parentBaseType != null && parentBaseType.CanRead && parentBaseType.CanWrite)) {
+				// Make sure the selector matches, sanity check that we aren't hiding something of a different type
+				// We skip this for wrap'ed properties, as those get complicated to resolve the correct export
+				if (wrap == null &&
+					((pi.CanRead && (GetGetterExportAttribute (pi).Selector != GetGetterExportAttribute (parentBaseType).Selector)) ||
+					 pi.CanWrite && (GetSetterExportAttribute (pi).Selector != GetSetterExportAttribute (parentBaseType).Selector))) {
+					throw new BindingException (1035, true, "The property {0} on class {1} is hiding a property from a parent class {2} but the selectors do not match.", pi.Name, type, parentBaseType.DeclaringType);
+				}
+				// Then let's not write out our copy, since we'll reduce visibility
+				return;
 			}
-			// Then let's not write out our copy, since we'll reduce visibility
-			return;
 		}
-#endif
 
 		if (UnifiedAPI && !BindThirdPartyLibrary) {
 			var elType = pi.PropertyType.IsArray ? pi.PropertyType.GetElementType () : pi.PropertyType;
@@ -4932,7 +4104,7 @@ public partial class Generator : IMemberGatherer {
 
 			if (!minfo.is_sealed || !minfo.is_wrapper) {
 				PrintDelegateProxy (pi.GetGetMethod ());
-				PrintExport (sel, export.ArgumentSemantic);
+				PrintExport (minfo, sel, export.ArgumentSemantic);
 			}
 
 			PrintPreserveAttribute (pi.GetGetMethod());
@@ -4984,7 +4156,7 @@ public partial class Generator : IMemberGatherer {
 			PrintPlatformAttributes (pi.GetSetMethod ());
 
 			if (not_implemented_attr == null && (!minfo.is_sealed || !minfo.is_wrapper))
-				PrintExport (sel, export.ArgumentSemantic);
+				PrintExport (minfo, sel, export.ArgumentSemantic);
 
 			PrintPreserveAttribute (pi.GetSetMethod());
 			if (minfo.is_abstract){
@@ -4997,7 +4169,7 @@ public partial class Generator : IMemberGatherer {
 				// If we're doing a setter for a weak property that is protocolized event back
 				// we need to put in a check to verify you aren't stomping the "internal underscore"
 				// generated delegate. We check CheckForEventAndDelegateMismatches global to disable the checks
-				if (pi.Name.StartsWith ("Weak")) {
+				if (pi.Name.StartsWith ("Weak", StringComparison.Ordinal)) {
 					string delName = pi.Name.Substring(4);
 					if (SafeIsProtocolizedEventBacked (delName, type))
 						print ("\t{0}.EnsureDelegateAssignIsNotOverwritingInternalDelegate ({1}, value, {2});", ApplicationClassName, string.IsNullOrEmpty (var_name) ? "null" : var_name, GetDelegateTypePropertyName (delName));
@@ -5287,14 +4459,21 @@ public partial class Generator : IMemberGatherer {
 			print ("[Export (\"{0}\"{1})]", minfo.selector, minfo.is_variadic ? ", IsVariadic = true" : string.Empty);
 	}
 
-	void PrintExport (ExportAttribute ea)
+	void PrintExport (MemberInformation minfo, ExportAttribute ea)
 	{
-		PrintExport (ea.Selector, ea.ArgumentSemantic);
+		PrintExport (minfo, ea.Selector, ea.ArgumentSemantic);
 	}
 
-	void PrintExport (string sel, ArgumentSemantic semantic)
+	void PrintExport (MemberInformation minfo, string sel, ArgumentSemantic semantic)
 	{
-		if (semantic != ArgumentSemantic.None)
+		bool output_semantics = semantic != ArgumentSemantic.None;
+		// it does not make sense on every properties, depending on the their types
+		if (output_semantics && (minfo.mi is PropertyInfo)) {
+			var t = minfo.property.PropertyType;
+			output_semantics = !t.IsPrimitive || t == typeof (IntPtr);
+		}
+		
+		if (output_semantics)
 			print ("[Export (\"{0}\", ArgumentSemantic.{1})]", sel, semantic);
 		else
 			print ("[Export (\"{0}\")]", sel);
@@ -5411,18 +4590,18 @@ public partial class Generator : IMemberGatherer {
 			group fullname by ns into g
 			select new {Namespace = g.Key, Fullname=g};
 		
-		foreach (var group in groupedTypes.OrderBy (v => v.Namespace)) {
+		foreach (var group in groupedTypes.OrderBy (v => v.Namespace, StringComparer.Ordinal)) {
 			if (group.Namespace != null) {
 				print ("namespace {0} {{", group.Namespace);
 				indent++;
 			}
 
-			foreach (var deltype in group.Fullname.OrderBy (v => v)) {
-				int p = deltype.LastIndexOf (".");
+			foreach (var deltype in group.Fullname.OrderBy (v => v, StringComparer.Ordinal)) {
+				int p = deltype.LastIndexOf (".", StringComparison.Ordinal);
 				var shortName = deltype.Substring (p+1);
 				var mi = delegateTypes [deltype];
 
-				if (shortName.StartsWith ("Func<"))
+				if (shortName.StartsWith ("Func<", StringComparison.Ordinal))
 					continue;
 
 				var del = mi.DeclaringType;
@@ -5543,7 +4722,7 @@ public partial class Generator : IMemberGatherer {
 	{
 		var allProtocolMethods = new List<MethodInfo> ();
 		var allProtocolProperties = new List<PropertyInfo> ();
-		var ifaces = (IEnumerable<Type>) type.GetInterfaces ().Concat (new Type [] { ReflectionExtensions.GetBaseType (type) }).OrderBy (v => v.FullName);
+		var ifaces = (IEnumerable<Type>) type.GetInterfaces ().Concat (new Type [] { ReflectionExtensions.GetBaseType (type) }).OrderBy (v => v.FullName, StringComparer.Ordinal);
 		
 		if (type.Namespace != null) {
 			print ("namespace {0} {{", type.Namespace);
@@ -5691,15 +4870,15 @@ public partial class Generator : IMemberGatherer {
 				PrintDelegateProxy (pi.GetGetMethod ());
 				if (!HasAttribute (pi.GetGetMethod (), typeof (NotImplementedAttribute))) {
 					if (ba != null)
-						PrintExport (ba.Selector, ea.ArgumentSemantic);
+						PrintExport (minfo, ba.Selector, ea.ArgumentSemantic);
 					else
-						PrintExport (ea);
+						PrintExport (minfo, ea);
 				}
 				print ("get;");
 			}
 			if (pi.CanWrite) {
 				if (!HasAttribute (pi.GetSetMethod (), typeof (NotImplementedAttribute)))
-					PrintExport (GetSetterExportAttribute (pi));
+					PrintExport (minfo, GetSetterExportAttribute (pi));
 				print ("set;");
 			}
 			indent--;
@@ -5753,12 +4932,6 @@ public partial class Generator : IMemberGatherer {
 		PrintPreserveAttribute (type);
 		print ("internal sealed class {0}Wrapper : BaseWrapper, I{0} {{", TypeName);
 		indent++;
-		// ctor (IntPtr)
-		print ("public {0}Wrapper (IntPtr handle)", TypeName);
-		print ("\t: base (handle, false)");
-		print ("{");
-		print ("}");
-		print ("");
 		// ctor (IntPtr, bool)
 		print ("[Preserve (Conditional = true)]");
 		print ("public {0}Wrapper (IntPtr handle, bool owns)", TypeName);
@@ -5903,6 +5076,7 @@ public partial class Generator : IMemberGatherer {
 			bool is_model = type.GetCustomAttributes (typeof (ModelAttribute), true).Length > 0;
 			bool is_protocol = HasAttribute (type, typeof (ProtocolAttribute));
 			bool is_abstract = HasAttribute (type, typeof (AbstractAttribute));
+			bool is_sealed = HasAttribute (type, typeof (SealedAttribute));
 			string class_visibility = type.IsInternal () ? "internal" : "public";
 
 			var default_ctor_visibility = GetAttribute<DefaultCtorVisibilityAttribute> (type);
@@ -5946,6 +5120,8 @@ public partial class Generator : IMemberGatherer {
 					print ("[Register(\"{0}\", {1})]", objc_type_name, HasAttribute (type, typeof (SyntheticAttribute)) || is_model ? "false" : "true");
 				if (is_abstract || need_abstract.ContainsKey (type))
 					class_mod = "abstract ";
+				else if (is_sealed)
+					class_mod = "sealed ";
 			} 
 			
 			if (is_model){
@@ -5992,7 +5168,7 @@ public partial class Generator : IMemberGatherer {
 					implements_list.Add (iface);
 			}
 
-			implements_list.Sort ();
+			implements_list.Sort (StringComparer.Ordinal);
 
 			if (is_protocol)
 				implements_list.Insert (0, "I" + type.Name);
@@ -6050,7 +5226,7 @@ public partial class Generator : IMemberGatherer {
 			indent++;
 			
 			if (!is_model && !is_partial) {
-				foreach (var ea in selectors [type].OrderBy (s => s)) {
+				foreach (var ea in selectors [type].OrderBy (s => s, StringComparer.Ordinal)) {
 					var selectorField = SelectorField (ea, true);
 					if (!InlineSelectors) {
 						selectorField = selectorField.Substring (0, selectorField.Length - 6 /* Handle */);
@@ -6141,13 +5317,8 @@ public partial class Generator : IMemberGatherer {
 						}
 						// old monotouch.dll (and MonoMac.dll, XamMac.dll) always included this .ctor even if the
 						// type did not conform to NSCopying. That made the .ctor throw a (native) exception and crash
-#if XAMCORE_2_0
-						var compat = false;
-#else
-						var compat = true;
-#endif
 						var nscoding = ConformToNSCoding (type);
-						if (compat || nscoding) {
+						if (Compat || nscoding) {
 							// for compatibility we continue to include the .ctor(NSCoder) in the compat assemblies
 							// but we make it throw an InvalidOperationException if the type does not implement NSCoding
 							// because it's easier to catch (and won't crash on devices)
@@ -6176,15 +5347,17 @@ public partial class Generator : IMemberGatherer {
 							sw.WriteLine ();
 						}
 					}
-					GeneratedCode (sw, 2);
-					sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
-					sw.WriteLine ("\t\t{0} {1} (NSObjectFlag t) : base (t)", UnifiedAPI ? "protected" : "public", TypeName);
-					sw.WriteLine ("\t\t{");
-					if (BindThirdPartyLibrary)
-						sw.WriteLine ("\t\t\t{0}", init_binding_type);
-					WriteMarkDirtyIfDerived (sw, type);
-					sw.WriteLine ("\t\t}");
-					sw.WriteLine ();
+					if (!is_sealed) {
+						GeneratedCode (sw, 2);
+						sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
+						sw.WriteLine ("\t\t{0} {1} (NSObjectFlag t) : base (t)", UnifiedAPI ? "protected" : "public", TypeName);
+						sw.WriteLine ("\t\t{");
+						if (BindThirdPartyLibrary)
+							sw.WriteLine ("\t\t\t{0}", init_binding_type);
+						WriteMarkDirtyIfDerived (sw, type);
+						sw.WriteLine ("\t\t}");
+						sw.WriteLine ();
+					}
 					GeneratedCode (sw, 2);
 					sw.WriteLine ("\t\t[EditorBrowsable (EditorBrowsableState.Advanced)]");
 					sw.WriteLine ("\t\t{0} {1} (IntPtr handle) : base (handle)", UnifiedAPI ? "protected internal" : "public", TypeName);
@@ -6199,22 +5372,9 @@ public partial class Generator : IMemberGatherer {
 			
 			var bound_methods = new List<string> (); // List of methods bound on the class itself (not via protocols)
 			var generated_methods = new List<MemberInformation> (); // All method that have been generated
-			foreach (var mi in GetTypeContractMethods (type).OrderByDescending (m => m.Name == "Constructor").ThenBy (m => m.Name)) {
+			foreach (var mi in GetTypeContractMethods (type).OrderByDescending (m => m.Name == "Constructor").ThenBy (m => m.Name, StringComparer.Ordinal)) {
 				if (mi.IsSpecialName || (mi.Name == "Constructor" && type != mi.DeclaringType))
 					continue;
-
-#if RETAIN_AUDITING
-				if (mi.Name.StartsWith ("Set"))
-					foreach (ParameterInfo pi in mi.GetParameters ())
-						if (IsWrappedType (pi.ParameterType) || pi.ParameterType.IsArray) {
-							Console.WriteLine ("AUDIT: {0}", mi);
-						}
-#endif
-
-#if !XAMCORE_2_0
-				if (HasAttribute (mi, typeof (AlphaAttribute)) && Alpha == false)
-					continue;
-#endif
 
 				if (mi.IsUnavailable ())
 					continue;
@@ -6273,12 +5433,7 @@ public partial class Generator : IMemberGatherer {
 			var bound_properties = new List<string> (); // List of properties bound on the class itself (not via protocols)
 			var generated_properties = new List<string> (); // All properties that have been generated
 
-			foreach (var pi in GetTypeContractProperties (type).OrderBy (p => p.Name)) {
-
-#if !XAMCORE_2_0
-				if (HasAttribute (pi, typeof (AlphaAttribute)) && Alpha == false)
-					continue;
-#endif
+			foreach (var pi in GetTypeContractProperties (type).OrderBy (p => p.Name, StringComparer.Ordinal)) {
 
 				if (pi.IsUnavailable ())
 					continue;
@@ -6329,7 +5484,7 @@ public partial class Generator : IMemberGatherer {
 			}
 			
 			if (field_exports.Count != 0){
-				foreach (var field_pi in field_exports.OrderBy (f => f.Name)) {
+				foreach (var field_pi in field_exports.OrderBy (f => f.Name, StringComparer.Ordinal)) {
 					var fieldAttr = (FieldAttribute) field_pi.GetCustomAttributes (typeof (FieldAttribute), true) [0];
 					string library_name; 
 					string library_path = null;
@@ -6361,7 +5516,7 @@ public partial class Generator : IMemberGatherer {
 					} else {
 						library_name = type.Namespace;
 						// note: not every binding namespace will start with ns.Prefix (e.g. MonoTouch.)
-						if (!String.IsNullOrEmpty (ns.Prefix) && library_name.StartsWith (ns.Prefix)) {
+						if (!String.IsNullOrEmpty (ns.Prefix) && library_name.StartsWith (ns.Prefix, StringComparison.Ordinal)) {
 							library_name = library_name.Substring (ns.Prefix.Length + 1);
 							library_name = library_name.Replace (".", string.Empty); // Remove dots from namespaces
 						}
@@ -6385,8 +5540,11 @@ public partial class Generator : IMemberGatherer {
 					if (Generator.HasAttribute (field_pi, typeof (AdvancedAttribute))){
 						print ("[EditorBrowsable (EditorBrowsableState.Advanced)]");
 					}
+					// Check if this is a notification and print Advice to use our Notification API
+					if (HasAttribute (field_pi, typeof (NotificationAttribute)))
+						print ($"[Advice (\"Use {type.Name}.Notifications.Observe{GetNotificationName (field_pi)} helper method instead.\")]");
 					
-					print ("{0} static unsafe {1} {2}{3} {{", field_pi.IsInternal () ? "internal" : "public", fieldTypeName,
+					print ("{0} static {1} {2}{3} {{", field_pi.IsInternal () ? "internal" : "public", fieldTypeName,
 					       field_pi.Name,
 					       is_unified_internal ? "_" : "");
 					indent++;
@@ -6506,7 +5664,7 @@ public partial class Generator : IMemberGatherer {
 				int delidx = 0;
 				foreach (var dtype in bta.Events) {
 					string delName = bta.Delegates [delidx++];
-					delName = delName.StartsWith ("Weak") ? delName.Substring(4) : delName;
+					delName = delName.StartsWith ("Weak", StringComparison.Ordinal) ? delName.Substring(4) : delName;
 
 					// Here's the problem:
 					//    If you have two or more types in an inheritence structure in the binding that expose events
@@ -6621,7 +5779,7 @@ public partial class Generator : IMemberGatherer {
 
 					string previous_miname = null;
 					int miname_count = 0;
-					foreach (var mi in dtype.GatherMethods ().OrderBy (m => m.Name)) {
+					foreach (var mi in dtype.GatherMethods ().OrderBy (m => m.Name, StringComparer.Ordinal)) {
 						if (ShouldSkipEventGeneration (mi))
 							continue;
 						
@@ -6767,7 +5925,7 @@ public partial class Generator : IMemberGatherer {
 						print ("return false;");
 						--indent;
 						print ("IntPtr selHandle = sel == null ? IntPtr.Zero : sel.Handle;");
-						foreach (var mi in noDefaultValue.OrderBy (m => m.Name)) {
+						foreach (var mi in noDefaultValue.OrderBy (m => m.Name, StringComparer.Ordinal)) {
 							if (InlineSelectors) {
 								var eattrs = mi.GetCustomAttributes (typeof (ExportAttribute), false);
 								var export = (ExportAttribute)eattrs[0];
@@ -6803,8 +5961,8 @@ public partial class Generator : IMemberGatherer {
 				int minameCount = 0;
 				repeatedDelegateApiNames.Clear ();
 				// Now add the instance vars and event handlers
-				foreach (var dtype in bta.Events.OrderBy (d => d.Name)) {
-					foreach (var mi in dtype.GatherMethods ().OrderBy (m => m.Name)) {
+				foreach (var dtype in bta.Events.OrderBy (d => d.Name, StringComparer.Ordinal)) {
+					foreach (var mi in dtype.GatherMethods ().OrderBy (m => m.Name, StringComparer.Ordinal)) {
 						if (ShouldSkipEventGeneration (mi))
 							continue;
 
@@ -6859,7 +6017,7 @@ public partial class Generator : IMemberGatherer {
 					if (instance_fields_to_clear_on_dispose.Count > 0) {
 						print ("if (Handle == IntPtr.Zero) {");
 						indent++;
-						foreach (var field in instance_fields_to_clear_on_dispose.OrderBy (f => f))
+						foreach (var field in instance_fields_to_clear_on_dispose.OrderBy (f => f, StringComparer.Ordinal))
 							print ("{0} = null;", field);
 						indent--;
 						print ("}");
@@ -6892,7 +6050,7 @@ public partial class Generator : IMemberGatherer {
 				if (appearance_selectors != null){
 					var currently_ignored_fields = new List<string> ();
 					
-					foreach (MemberInfo mi in appearance_selectors.OrderBy (m => m.Name)) {
+					foreach (MemberInfo mi in appearance_selectors.OrderBy (m => m.Name, StringComparer.Ordinal)) {
 						if (mi is MethodInfo)
 							GenerateMethod (type, mi as MethodInfo,
 									is_model: false,
@@ -6958,7 +6116,7 @@ public partial class Generator : IMemberGatherer {
 				print ("//");
 			
 				print ("public static partial class Notifications {\n");
-				foreach (var property in notifications.OrderBy (p => p.Name)) {
+				foreach (var property in notifications.OrderBy (p => p.Name, StringComparer.Ordinal)) {
 					string notification_name = GetNotificationName (property);
 					string notification_center = GetNotificationCenter (property);
 
@@ -6972,6 +6130,10 @@ public partial class Generator : IMemberGatherer {
 						print ("\t{");
 						print ("\t\treturn {0}.AddObserver ({1}, notification => handler (null, new {2} (notification)));", notification_center, property.Name, event_name);
 						print ("\t}");
+						print ("\tpublic static NSObject Observe{0} (NSObject objectToObserve, EventHandler<{1}> handler)", notification_name, event_name);
+						print ("\t{");
+						print ("\t\treturn {0}.AddObserver ({1}, notification => handler (null, new {2} (notification)), objectToObserve);", notification_center, property.Name, event_name);
+						print ("\t}");
 					}
 				}
 				print ("\n}");
@@ -6984,7 +6146,7 @@ public partial class Generator : IMemberGatherer {
 			// Copy delegates from the API files into the output if they were declared there
 			//
 			var rootAssembly = types [0].Assembly;
-			foreach (var deltype in trampolines.Keys.OrderBy (d => d.Name)) {
+			foreach (var deltype in trampolines.Keys.OrderBy (d => d.Name, StringComparer.Ordinal)) {
 				if (deltype.Assembly != rootAssembly)
 					continue;
 
@@ -6999,7 +6161,7 @@ public partial class Generator : IMemberGatherer {
 				print ("//");
 			}
 			// Now add the EventArgs classes
-			foreach (var eaclass in eventArgTypes.Keys.OrderBy (e => e)) {
+			foreach (var eaclass in eventArgTypes.Keys.OrderBy (e => e, StringComparer.Ordinal)) {
 				if (skipGeneration.ContainsKey (eaclass)){
 					continue;
 				}
@@ -7011,14 +6173,14 @@ public partial class Generator : IMemberGatherer {
 				print ("public {0} ({1})", eaclass, RenderParameterDecl (pars.Skip (1), true));
 				print ("{");
 				indent++;
-				foreach (var p in pars.Skip (minPars).OrderBy (p => p.Name)) {
+				foreach (var p in pars.Skip (minPars).OrderBy (p => p.Name, StringComparer.Ordinal)) {
 					print ("this.{0} = {1};", GetPublicParameterName (p), p.Name);
 				}
 				indent--;
 				print ("}");
 				
 				// Now print the properties
-				foreach (var p in pars.Skip (minPars).OrderBy (p => p.Name)) {
+				foreach (var p in pars.Skip (minPars).OrderBy (p => p.Name, StringComparer.Ordinal)) {
 					var bareType = p.ParameterType.IsByRef ? p.ParameterType.GetElementType () : p.ParameterType;
 
 					print ("public {0} {1} {{ get; set; }}", RenderType (bareType), GetPublicParameterName (p));
@@ -7033,7 +6195,7 @@ public partial class Generator : IMemberGatherer {
 				print ("//");
 			}
 
-			foreach (var async_type in async_result_types.OrderBy (t => t.Item1)) {
+			foreach (var async_type in async_result_types.OrderBy (t => t.Item1, StringComparer.Ordinal)) {
 				if (async_result_types_emitted.Contains (async_type.Item1))
 					continue;
 				async_result_types_emitted.Add (async_type.Item1);
@@ -7171,7 +6333,7 @@ public partial class Generator : IMemberGatherer {
 	bool ShouldSkipEventGeneration (MethodInfo mi)
 	{
 		// Skip property getter/setters
-		if (mi.IsSpecialName && (mi.Name.StartsWith ("get_") || mi.Name.StartsWith ("set_")))
+		if (mi.IsSpecialName && (mi.Name.StartsWith ("get_", StringComparison.Ordinal) || mi.Name.StartsWith ("set_", StringComparison.Ordinal)))
 			return true;
 
 		if (mi.IsUnavailable ())
@@ -7181,19 +6343,14 @@ public partial class Generator : IMemberGatherer {
 		var customAttrs = mi.GetCustomAttributes (true);
 		if (customAttrs.OfType<IgnoredInDelegateAttribute> ().Any ())
 			return true;
-#if !XAMCORE_2_0
-		if (customAttrs.OfType<AlphaAttribute> ().Any ())
-			return true;
-#endif
-
 		return false;
 	}
 
 	// Safely strips away any Weak from the beginning of either delegate and returns if they match
 	static bool CompareTwoDelegateNames (string lhsDel, string rhsDel)
 	{
-		lhsDel = lhsDel.StartsWith ("Weak") ? lhsDel.Substring (4): lhsDel;
-		rhsDel = rhsDel.StartsWith ("Weak") ? rhsDel.Substring (4): rhsDel;
+		lhsDel = lhsDel.StartsWith ("Weak", StringComparison.Ordinal) ? lhsDel.Substring (4): lhsDel;
+		rhsDel = rhsDel.StartsWith ("Weak", StringComparison.Ordinal) ? rhsDel.Substring (4): rhsDel;
 		return lhsDel == rhsDel;
 	}
 
@@ -7241,7 +6398,7 @@ public partial class Generator : IMemberGatherer {
 
 	static string Capitalize (string str)
 	{
-		if (str.StartsWith ("@"))
+		if (str.StartsWith ("@", StringComparison.Ordinal))
 			return char.ToUpper (str[1]) + str.Substring (2);
 	
 		return char.ToUpper (str[0]) + str.Substring (1);
@@ -7260,7 +6417,7 @@ public partial class Generator : IMemberGatherer {
 	{
 		// TODO: fetch the NotificationAttribute, see if there is an override there.
 		var name = pi.Name;
-		if (name.EndsWith ("Notification"))
+		if (name.EndsWith ("Notification", StringComparison.Ordinal))
 			return name.Substring (0, name.Length-"Notification".Length);
 		return name;
 	}
@@ -7371,7 +6528,7 @@ public partial class Generator : IMemberGatherer {
 			throw new BindingException (1004, true, "The delegate method {0}.{1} is missing the [EventArgs] attribute (has {2} parameters)", mi.DeclaringType.FullName, mi.Name, mi.GetParameters ().Length);
 
 		var ea = (EventArgsAttribute) a;
-		if (ea.ArgName.EndsWith ("EventArgs"))
+		if (ea.ArgName.EndsWith ("EventArgs", StringComparison.Ordinal))
 			throw new BindingException (1005, true, "EventArgs in {0}.{1} attribute should not include the text `EventArgs' at the end", mi.DeclaringType.FullName, mi.Name);
 		
 		if (ea.SkipGeneration){

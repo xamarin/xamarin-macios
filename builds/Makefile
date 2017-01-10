@@ -10,13 +10,35 @@ IPHONEOS_PREFIX=$(MONOTOUCH_PREFIX)/SDKs/MonoTouch.iphoneos.sdk/usr
 
 ifdef ENABLE_XAMARIN
 XAMARIN_AUTOGEN_FLAGS=--enable-extension-module=xamarin
-XAMARIN_CONFIGURE_FLAGS=--enable-extension-module=xamarin
+XAMARIN_IOS_CONFIGURE_FLAGS=--enable-extension-module=xamarin
+XAMARIN_MAC_CONFIGURE_FLAGS=--enable-extension-module=xamarin --enable-extension-module
 -include $(MACCORE_PATH)/builds/Makefile.include
 endif
 
 ifndef DISABLE_STRIP
 INSTALL_STRIP_FLAG=-s
 endif
+
+ifndef ENABLE_XI_BTLS
+XAMARIN_IOS_CONFIGURE_FLAGS += --disable-btls
+endif
+ifndef ENABLE_XM_BTLS
+XAMARIN_MAC_CONFIGURE_FLAGS += --disable-btls
+endif
+
+# ld: weak import of symbol '_fstatat' not supported because of option: -no_weak_imports for architecture x86_64
+# according to 'man fstatat' it appeared in OS X 10.10 (iOS 8)
+# so disable 'fstatat' by setting using ac_cv_func_fstatat=no
+# ld: weak import of symbol '_readlinkat' not supported because of option: -no_weak_imports for architecture x86_64
+# according to 'man readlinkat' it appeared in OS X 10.10 (iOS 8)
+# so disable 'readlinkat' by setting using ac_cv_func_readlinkat=no
+# these can be removed when our min ios/osx version (at runtime) is macOS 10.10+ or iOS 8+
+
+COMMON_ACVARS =  \
+	ac_cv_func_fstatat=no \
+	ac_cv_func_readlinkat=no \
+
+COMMON_LDFLAGS=-Wl,-no_weak_imports
 
 BITCODE_CFLAGS=-fexceptions
 BITCODE_LDFLAGS=-framework CoreFoundation -lobjc -lc++
@@ -92,7 +114,6 @@ MAC_ASSEMBLY_NAMES = \
 	System.Xml \
 	System \
 	System.Security \
-	$(TLS_PROVIDER_ASSEMBLY_NAMES) \
 	System.Runtime.InteropServices.RuntimeInformation \
 	System.Reflection.Context	\
 	System.Net.Http.WinHttpHandler \
@@ -160,6 +181,7 @@ $(2)_CPPFLAGS = \
 	-mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
 $(2)_CFLAGS = -O2 -arch $(1)
 $(2)_CXXFLAGS = -O2 -arch $(1)
+$(2)_LDFLAGS = $(COMMON_LDFLAGS)
 $(2)_CONFIGURE_FLAGS = \
 	--prefix=$$(BUILD_DESTDIR)/$(2) \
 	--host=$(1)-apple-darwin10 \
@@ -171,13 +193,17 @@ $(2)_CONFIGURE_FLAGS = \
 	--disable-iconv \
 	--disable-mcs-build \
 	--disable-boehm \
-	$(XAMARIN_CONFIGURE_FLAGS) \
+	$(XAMARIN_MAC_CONFIGURE_FLAGS) \
+
+$(2)_ACVARS = $(COMMON_ACVARS)
 
 $(2)_CONFIGURE_ENVIRONMENT = \
+	$$($(2)_ACVARS) \
 	PATH="$(MONO_PREFIX)/bin:$(PATH)" \
 	CPPFLAGS="$$($(2)_CPPFLAGS)" \
 	CFLAGS="$$($(2)_CFLAGS)" \
 	CXXFLAGS="$$($(2)_CXXFLAGS)" \
+	LDFLAGS="$$($(2)_LDFLAGS)" \
 	CC="$(MAC_CC)" \
 	CXX="$(MAC_CXX)" \
 	DEVELOPER_DIR="$(XCODE_DEVELOPER_ROOT)" \
@@ -327,8 +353,10 @@ endif
 $(MONO_PATH)/configure: $(MONO_PATH)/configure.ac $(BUILDS_MAKEFILE_DEP)
 	$(Q) ./wrap-autogen.sh $(MONO_PATH) mono $(XAMARIN_AUTOGEN_FLAGS)
 
+ifneq ($(WATCH_MONO_PATH),$(MONO_PATH))
 $(WATCH_MONO_PATH)/configure: $(WATCH_MONO_PATH)/configure.ac $(BUILDS_MAKEFILE_DEP)
 	$(Q) ./wrap-autogen.sh $(WATCH_MONO_PATH) mono
+endif
 
 configure-mono:
 	rm -f $(MONO_PATH)/configure
@@ -353,11 +381,10 @@ $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/smcs:
 #
 TOOLS64_CFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
 TOOLS64_CXXFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
-TOOLS64_LDFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
+TOOLS64_LDFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) $(COMMON_LDFLAGS)
 
 TOOLS64_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
 			--with-monotouch_tv=yes \
-			--with-monotouch_watch=no \
 			--prefix=$(BUILD_DESTDIR)/tools64 \
 			--enable-maintainer-mode \
 			--cache-file=../tools64.config.cache \
@@ -372,9 +399,18 @@ TOOLS64_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
 			--disable-nls \
 			--disable-iconv	\
 			--disable-boehm \
-			$(XAMARIN_CONFIGURE_FLAGS) \
+			$(XAMARIN_IOS_CONFIGURE_FLAGS) \
+
+ifeq ($(WATCH_MONO_PATH),$(MONO_PATH))
+TOOLS64_CONFIGURE_FLAGS += --with-monotouch_watch=yes
+else
+TOOLS64_CONFIGURE_FLAGS += --with-monotouch_watch=no
+endif
+
+TOOLS64_ACVARS = $(COMMON_ACVARS)
 
 TOOLS64_CONFIGURE_ENVIRONMENT = \
+	$(TOOLS64_ACVARS) \
 	CFLAGS="$(TOOLS64_CFLAGS)" \
 	CXXFLAGS="$(TOOLS64_CXXFLAGS)" \
 	LDFLAGS="$(TOOLS64_LDFLAGS)" \
@@ -447,7 +483,9 @@ endif
 
 WATCHBCL_CFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
 WATCHBCL_CXXFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
-WATCHBCL_LDFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
+WATCHBCL_LDFLAGS=-arch x86_64 -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) $(COMMON_LDFLAGS)
+WATCHBCL_ACVARS = $(COMMON_ACVARS)
+
 
 WATCHBCL_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
 			--prefix=$(BUILD_DESTDIR)/watchbcl \
@@ -467,9 +505,10 @@ WATCHBCL_CONFIGURE_FLAGS=	--build=x86_64-apple-darwin10 \
 			--disable-nls \
 			--disable-iconv	\
 			--disable-boehm \
-			--enable-extension-module
+			$(XAMARIN_IOS_CONFIGURE_FLAGS)
 
 WATCHBCL_CONFIGURE_ENVIRONMENT = \
+	$(WATCHBCL_ACVARS) \
 	CFLAGS="$(WATCHBCL_CFLAGS)" \
 	CXXFLAGS="$(WATCHBCL_CXXFLAGS)" \
 	LDFLAGS="$(WATCHBCL_LDFLAGS)" \
@@ -488,8 +527,10 @@ watchbcl: build-watchbcl install-tools-watch
 
 setup-watchbcl: .stamp-configure-watchbcl
 
+ifneq ($(WATCH_MONO_PATH),$(MONO_PATH))
 .stamp-configure-watchbcl: $(WATCH_MONO_PATH)/configure
 	$(Q) $(WATCHBCL_CONFIGURE_ENVIRONMENT) ./wrap-configure.sh watchbcl ../$(WATCH_MONO_PATH)/configure $(WATCHBCL_CONFIGURE_FLAGS)
+endif
 
 build-tools-bcl: build-watchbcl
 build-tools: build-watchbcl
@@ -497,9 +538,13 @@ build-tools: build-watchbcl
 build-watchbcl: .stamp-build-watchbcl
 	$(MAKE) $(WATCH_BCL_TARGETS)
 
+ifeq ($(WATCH_MONO_PATH),$(MONO_PATH))
+.stamp-build-watchbcl: .stamp-build-tools64
+else
 .stamp-build-watchbcl: .stamp-configure-watchbcl .stamp-build-tools64
 	$(MAKE) -C watchbcl all EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
 	$(MAKE) -C watchbcl install EXTERNAL_MCS=$(SYSTEM_MCS) EXTERNAL_RUNTIME=$(SYSTEM_MONO)
+endif
 	$(Q) touch $@
 
 clean-watchbcl:
@@ -520,7 +565,7 @@ IOS_ASSEMBLIES = I18N.CJK I18N.MidEast I18N.Other I18N.Rare I18N.West I18N Mono.
 	System.Numerics.Vectors System.Reflection.Context System.Reflection.DispatchProxy \
 	System.Runtime.InteropServices.RuntimeInformation System.Security System.Xml.XPath.XmlDocument \
 	System.Windows System.Xml.Serialization System.Net Mono.Dynamic.Interpreter \
-	Microsoft.CSharp Mono.CSharp $(TLS_PROVIDER_ASSEMBLY_NAMES)
+	Microsoft.CSharp Mono.CSharp
 
 IOS_REPL_ASSEMBLIES = mscorlib System System.Core System.Xml Mono.CSharp
 
@@ -528,7 +573,7 @@ IOS_FACADE_ASSEMBLIES = $(monotouch_PARALLEL_SUBDIRS) $(monotouch_SUBDIRS)
 
 # TVOS/WATCHOS BCL is built from a different mono branch and the assembly list might differ across time
 TVOS_ASSEMBLIES = $(IOS_ASSEMBLIES)
-WATCHOS_ASSEMBLIES = $(IOS_ASSEMBLIES)
+WATCHOS_ASSEMBLIES = $(filter-out Mono.Security Mono.Data.Tds,$(IOS_ASSEMBLIES))
 TVOS_FACADE_ASSEMBLIES = $(IOS_FACADE_ASSEMBLIES)
 WATCHOS_FACADE_ASSEMBLIES = $(IOS_FACADE_ASSEMBLIES)
 TVOS_REPL_ASSEMBLIES = $(IOS_REPL_ASSEMBLIES)
@@ -665,7 +710,11 @@ $(PREFIX)/lib/mono/Xamarin.TVOS/%.mdb: $(BUILD_DESTDIR)/tvos/bcl/%.mdb | $(PREFI
 $(PREFIX)/bin/btv-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
 	$(Q) install -s -m 0755 $< $@
 
+ifeq ($(WATCH_MONO_PATH),$(MONO_PATH))
+$(PREFIX)/bin/bwatch-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
+else
 $(PREFIX)/bin/bwatch-mono: $(BUILD_DESTDIR)/watchbcl/bin/mono | $(PREFIX)/bin
+endif
 	$(Q) install -s -m 0755 $< $@
 
 # copy to temporary directory before signing / mdb-rebasing,
@@ -801,18 +850,24 @@ verify-signature:
 # usage $(call SimulatorBuildTemplate (x86_64,simulator64))
 
 SIM_BIN=$(SIMULATOR_BIN_PATH)
+SIM_ACVARS = \
+	$(COMMON_ACVARS) \
+	ac_cv_func_clock_nanosleep=no \
+	mono_cv_uscore=yes \
 
 define SimulatorBuildTemplate
 
 $(eval SIM$(2)_CPPFLAGS=-arch $(1) -O2 -DMONOTOUCH -DHOST_IOS -Wl,-application_extension -mios-simulator-version-min=$(MIN_IOS_SDK_VERSION) -isysroot $(SIMULATOR_SDK))
 $(eval SIM$(2)_CFLAGS=$(SIM$(2)_CPPFLAGS) $(SIMULATOR_BUILD_CFLAGS))
 $(eval SIM$(2)_CXXFLAGS=$(SIM$(2)_CPPFLAGS))
+$(eval SIM$(2)_LDFLAGS=$(COMMON_LDFLAGS))
 $(eval SIM$(2)_CONFIGURE_FLAGS=	--host=$(1)-apple-darwin10 \
 			--cache-file=../$(2).config.cache \
 			--enable-maintainer-mode	\
 			--prefix=$(BUILD_DESTDIR)/$(2) \
 			--with-glib=embedded \
 			--without-ikvm-native \
+			--with-tls=pthread \
 			--enable-minimal=com,remoting,shared_perfcounters \
 			--disable-mcs-build \
 			--disable-nls \
@@ -820,14 +875,16 @@ $(eval SIM$(2)_CONFIGURE_FLAGS=	--host=$(1)-apple-darwin10 \
 			--disable-boehm \
 			--disable-executables \
 			--disable-visibility-hidden	\
-			$(XAMARIN_CONFIGURE_FLAGS) \
+			$(XAMARIN_IOS_CONFIGURE_FLAGS) \
 			)
 
 $(eval SIM$(2)_CONFIGURE_ENVIRONMENT= \
+	$(SIM_ACVARS) \
 	PATH="$(SIM_BIN):$(PATH)" \
 	CPPFLAGS="$(SIM$(2)_CPPFLAGS)" \
 	CFLAGS="$(SIM$(2)_CFLAGS)" \
 	CXXFLAGS="$(SIM$(2)_CXXFLAGS)" \
+	LDFLAGS="$(SIM$(2)_LDFLAGS)" \
 	CC="$(XCODE_CC)" \
 	CXX="$(XCODE_CXX)")
 
@@ -944,6 +1001,7 @@ WATCHSIMULATOR_FLAGS =                  \
 WATCHSIMULATOR_CPPFLAGS        = $(WATCHSIMULATOR_FLAGS)
 WATCHSIMULATOR_CFLAGS          = $(WATCHSIMULATOR_FLAGS)
 WATCHSIMULATOR_CXXFLAGS        = $(WATCHSIMULATOR_FLAGS)
+WATCHSIMULATOR_LDFLAGS         = $(COMMON_LDFLAGS)
 WATCHSIMULATOR_CONFIGURE_FLAGS =                \
 	--host=i386-apple-darwin10                  \
 	--disable-boehm                             \
@@ -954,18 +1012,21 @@ WATCHSIMULATOR_CONFIGURE_FLAGS =                \
 	--with-glib=embedded                        \
 	--with-cooperative-gc=yes                   \
 	--without-ikvm-native                       \
+	--with-tls=pthread                          \
 	--enable-minimal=com,remoting,shared_perfcounters \
 	--disable-mcs-build                         \
 	--disable-nls                               \
 	--disable-iconv                             \
 	--disable-visibility-hidden	                \
-	$(XAMARIN_CONFIGURE_FLAGS)         \
+	$(XAMARIN_IOS_CONFIGURE_FLAGS)         \
 
 # FIXME: remove --with-checked-build=yes when we've stabilized a bit.
 WATCHSIMULATOR_CONFIGURE_FLAGS += \
 	--enable-checked-build=gc                    \
 
 WATCHSIMULATOR_ACVARS =  \
+	mono_cv_uscore=yes \
+	ac_cv_func_clock_nanosleep=no \
 	ac_cv_func_system=no \
 	ac_cv_func_pthread_kill=no \
 	ac_cv_func_kill=no \
@@ -984,6 +1045,7 @@ WATCHSIMULATOR_ENVIRONMENT =                  \
 	CPPFLAGS="$(WATCHSIMULATOR_CPPFLAGS)"     \
 	CFLAGS="$(WATCHSIMULATOR_CFLAGS)"         \
 	CXXFLAGS="$(WATCHSIMULATOR_CXXFLAGS)"     \
+	LDFLAGS="$(WATCHSIMULATOR_LDFLAGS)"       \
 	DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)     \
 
 ifdef INCLUDE_WATCH
@@ -1081,6 +1143,7 @@ TVSIMULATOR_FLAGS =                     \
 TVSIMULATOR_CPPFLAGS        = $(TVSIMULATOR_FLAGS)
 TVSIMULATOR_CFLAGS          = $(TVSIMULATOR_FLAGS)
 TVSIMULATOR_CXXFLAGS        = $(TVSIMULATOR_FLAGS)
+TVSIMULATOR_LDFLAGS         = $(COMMON_LDFLAGS)
 TVSIMULATOR_CONFIGURE_FLAGS =                         \
 	--host=x86_64-apple-darwin10                      \
 	--disable-boehm                                   \
@@ -1095,10 +1158,13 @@ TVSIMULATOR_CONFIGURE_FLAGS =                         \
 	--disable-mcs-build                               \
 	--disable-nls                                     \
 	--disable-iconv                                   \
+	--with-tls=pthread                                \
 	--disable-visibility-hidden	                      \
-	$(XAMARIN_CONFIGURE_FLAGS)               \
+	$(XAMARIN_IOS_CONFIGURE_FLAGS)               \
 
 TVSIMULATOR_ACVARS =  \
+	mono_cv_uscore=yes \
+	ac_cv_func_clock_nanosleep=no \
 	ac_cv_func_system=no \
 	ac_cv_func_pthread_kill=no \
 	ac_cv_func_kill=no \
@@ -1117,6 +1183,7 @@ TVSIMULATOR_ENVIRONMENT =                  \
 	CPPFLAGS="$(TVSIMULATOR_CPPFLAGS)"     \
 	CFLAGS="$(TVSIMULATOR_CFLAGS)"         \
 	CXXFLAGS="$(TVSIMULATOR_CXXFLAGS)"     \
+	LDFLAGS="$(TVSIMULATOR_LDFLAGS)"       \
 	DEVELOPER_DIR=$(XCODE_DEVELOPER_ROOT)  \
 
 ifdef INCLUDE_TVOS
@@ -1216,7 +1283,7 @@ $(eval $(2)_BASE_CPPFLAGS=-DSMALL_CONFIG -DDISABLE_POLICY_EVIDENCE=1 -DDISABLE_P
 $(eval $(2)_CPPFLAGS=$($(2)_BASE_CPPFLAGS) -arch $(1))
 $(eval $(2)_CFLAGS=-O2 -gdwarf-2 $($(2)_BASE_CPPFLAGS) $(DEVICE_BUILD_CFLAGS) $(IOS_BITCODE_CFLAGS))
 $(eval $(2)_CXXFLAGS=$($(2)_CPPFLAGS) $(IOS_BITCODE_CXXFLAGS))
-$(eval $(2)_LDFLAGS=-arch $(1) $(IOS_BITCODE_LDFLAGS))
+$(eval $(2)_LDFLAGS=-arch $(1) $(IOS_BITCODE_LDFLAGS) $(COMMON_LDFLAGS))
 $(eval $(2)_CONFIGURE_FLAGS=--build=i386-apple-darwin10 \
 			$(4) \
 			--enable-maintainer-mode	\
@@ -1238,7 +1305,7 @@ $(eval $(2)_CONFIGURE_FLAGS=--build=i386-apple-darwin10 \
 			--disable-boehm \
 			--enable-dtrace=no \
 			$(IOS_BITCODE_CONFIGURE_FLAGS) \
-			$(XAMARIN_CONFIGURE_FLAGS) \
+			$(XAMARIN_IOS_CONFIGURE_FLAGS) \
 			)
 
 $(eval $(2)_ACVARS= mono_cv_uscore=yes \
@@ -1442,7 +1509,7 @@ WATCHOS_FLAGS =                  \
 WATCHOS_CPPFLAGS        = $(WATCHOS_FLAGS)
 WATCHOS_CFLAGS          = $(WATCHOS_FLAGS)
 WATCHOS_CXXFLAGS        = $(WATCHOS_FLAGS)
-WATCHOS_LDFLAGS         = -arch armv7k -Wl,-bitcode_bundle -framework CoreFoundation -lobjc $(BITCODE_LDFLAGS)
+WATCHOS_LDFLAGS         = -arch armv7k -Wl,-bitcode_bundle -framework CoreFoundation -lobjc $(BITCODE_LDFLAGS) $(COMMON_LDFLAGS)
 WATCHOS_CONFIGURE_FLAGS =                        \
 	--build=i386-apple-darwin10                  \
 	--host=armv7k-apple-darwin10                 \
@@ -1464,7 +1531,7 @@ WATCHOS_CONFIGURE_FLAGS =                        \
 	--disable-nls                                \
 	--disable-iconv                              \
 	--disable-visibility-hidden	                 \
-	$(XAMARIN_CONFIGURE_FLAGS)          \
+	$(XAMARIN_IOS_CONFIGURE_FLAGS)          \
 	$(BITCODE_CONFIGURE_FLAGS)
 
 WATCHOS_ACVARS =                    \
@@ -1608,7 +1675,7 @@ TVOS_FLAGS =                     \
 TVOS_CPPFLAGS        = $(TVOS_FLAGS)
 TVOS_CFLAGS          = $(TVOS_FLAGS) $(DEVICE_BUILD_CFLAGS)
 TVOS_CXXFLAGS        = $(TVOS_FLAGS)
-TVOS_LDFLAGS         = -arch arm64 -Wl,-bitcode_bundle -framework CoreFoundation -lobjc $(BITCODE_LDFLAGS)
+TVOS_LDFLAGS         = -arch arm64 -Wl,-bitcode_bundle -framework CoreFoundation -lobjc $(BITCODE_LDFLAGS) $(COMMON_LDFLAGS)
 TVOS_CONFIGURE_FLAGS =                           \
 	--build=x86_64-apple-darwin10                \
 	--host=aarch64-apple-darwin10                  \
@@ -1632,6 +1699,7 @@ TVOS_CONFIGURE_FLAGS =                           \
 	--disable-visibility-hidden	                 \
 	--enable-extension-module                    \
 	--enable-dtrace=no                           \
+	$(XAMARIN_IOS_CONFIGURE_FLAGS)               \
 	$(BITCODE_CONFIGURE_FLAGS)					 \
 
 # explicitly disable dtrace, since it requires inline assembly, which is disabled on AppleTV (and mono's configure.ac doesn't know that (yet at least))
@@ -1828,15 +1896,13 @@ install-llvm64: .stamp-build-llvm64 $(LLVM_TARGETS)
 llvm: setup-llvm build-llvm install-llvm
 llvm64: install-llvm64
 
-$(MONO_PATH)/tools/offsets-tool/.stamp-clone $(WATCH_MONO_PATH)/tools/offsets-tool/.stamp-clone:
-	@echo Cloning for offsets-tool in $(dir $@)
-	$(Q) $(MAKE) -C $(dir $@) .stamp-clone
-
-$(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(MONO_PATH)/tools/offsets-tool/.stamp-clone $(wildcard $(MONO_PATH)/tools/offsets-tool/*.cs)
+$(MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(wildcard $(MONO_PATH)/tools/offsets-tool/*.cs)
 	$(Q) $(MAKE) -C $(dir $@) MonoAotOffsetsDumper.exe
 
-$(WATCH_MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(WATCH_MONO_PATH)/tools/offsets-tool/.stamp-clone $(wildcard $(WATCH_MONO_PATH)/tools/offsets-tool/*.cs)
+ifneq ($(WATCH_MONO_PATH),$(MONO_PATH))
+$(WATCH_MONO_PATH)/tools/offsets-tool/MonoAotOffsetsDumper.exe: $(wildcard $(WATCH_MONO_PATH)/tools/offsets-tool/*.cs)
 	$(Q) $(MAKE) -C $(dir $@) MonoAotOffsetsDumper.exe
+endif
 
 target7/mono/arch/arm/arm_dpimacros.h: setup-target7
 	$(Q) $(MAKE) -C $(dir $@) $(notdir $@)
@@ -1850,8 +1916,8 @@ targetwatch/mono/arch/arm/arm_dpimacros.h: setup-targetwatch
 #  $(2): output directory
 #  $(3): build
 define GenerateCrossOffsets
-$(3)/$(1).h: .stamp-configure-$(3) target7/mono/arch/arm/arm_dpimacros.h targetwatch/mono/arch/arm/arm_dpimacros.h $(4)/tools/offsets-tool/.stamp-clone $(4)/tools/offsets-tool/MonoAotOffsetsDumper.exe
-	$(Q) MONO_PATH=$(4)/tools/offsets-tool/CppSharp \
+$(3)/$(1).h: .stamp-configure-$(3) target7/mono/arch/arm/arm_dpimacros.h targetwatch/mono/arch/arm/arm_dpimacros.h $(4)/tools/offsets-tool/MonoAotOffsetsDumper.exe
+	$(Q) MONO_PATH=$(4)/tools/offsets-tool/CppSharp/osx_32 \
 	$(SYSTEM_MONO) $(4)/tools/offsets-tool/MonoAotOffsetsDumper.exe --abi $(1) --out $(2) --mono $(abspath $(4)) --maccore $(abspath $(TOP))
 endef
 
@@ -1867,8 +1933,8 @@ CROSS_BASE_CONFIGURE_FLAGS= \
 			--disable-nls \
 			--disable-iconv \
 			--disable-libraries	\
-			--enable-extension-module \
-			--disable-boehm
+			--disable-boehm \
+			$(XAMARIN_IOS_CONFIGURE_FLAGS)
 
 #
 # 32 bit cross compiler
@@ -1877,20 +1943,20 @@ CROSS_BASE_CONFIGURE_FLAGS= \
 # mono's configure already adds an -arch i386 flag, and cache doesn't like duplicate -arch flags
 CROSS_CFLAGS=$(CROSS_BASE_CFLAGS) -mmacosx-version-min=$(MIN_OSX_SDK_VERSION)
 CROSS_CXXFLAGS=$(CROSS_BASE_CXXFLAGS) -mmacosx-version-min=$(MIN_OSX_SDK_VERSION) -stdlib=libc++
-CROSS_LDFLAGS=-stdlib=libc++
+CROSS_LDFLAGS=-stdlib=libc++ $(COMMON_LDFLAGS)
 
 CROSS_CONFIGURE_FLAGS=$(CROSS_BASE_CONFIGURE_FLAGS)	\
 	--prefix=$(BUILD_DESTDIR)/cross \
 	--build=i386-apple-darwin10 \
 	--cache-file=../cross.config.cache \
 	--target=arm-darwin \
-	--with-cross-offsets=arm-apple-darwin10.h
+	--with-cross-offsets=arm-apple-darwin10.h \
+	--with-llvm=../llvm/usr
 
 CROSS_CONFIGURE_ENVIRONMENT = \
-	PATH="../llvm/usr/bin:$(PATH)" \
 	CFLAGS="$(CROSS_CFLAGS)" \
 	CXXFLAGS="$(CROSS_CXXFLAGS)" \
-	LDFLAGS=$(CROSS_LDFLAGS) \
+	LDFLAGS="$(CROSS_LDFLAGS)" \
 	CC="$(MAC_CC)" \
 	CXX="$(MAC_CXX)" \
 
@@ -1939,16 +2005,16 @@ clean-cross:
 
 CROSS64_CFLAGS=$(CROSS_BASE_CFLAGS) -mmacosx-version-min=10.8
 CROSS64_CXXFLAGS=$(CROSS_BASE_CXXFLAGS) -mmacosx-version-min=10.8 -stdlib=libc++
-CROSS64_LDFLAGS=-stdlib=libc++
+CROSS64_LDFLAGS=-stdlib=libc++ $(COMMON_LDFLAGS)
 
 CROSS64_CONFIGURE_FLAGS=$(CROSS_BASE_CONFIGURE_FLAGS)	\
 	--prefix=$(BUILD_DESTDIR)/cross64 \
 	--cache-file=../cross64.config.cache \
 	--target=aarch64-darwin \
-	--with-cross-offsets=aarch64-apple-darwin10.h
+	--with-cross-offsets=aarch64-apple-darwin10.h \
+	--with-llvm=../llvm64/usr
 
 CROSS64_CONFIGURE_ENVIRONMENT = \
-	PATH="../llvm64/usr/bin:$(PATH)" \
 	CFLAGS="$(CROSS64_CFLAGS)" \
 	CXXFLAGS="$(CROSS64_CXXFLAGS)" \
 	LDFLAGS="$(CROSS64_LDFLAGS)" \
@@ -2011,13 +2077,13 @@ WATCH_CROSS_CONFIGURE_FLAGS=$(CROSS_BASE_CONFIGURE_FLAGS)	\
 	--cache-file=../cross-watch.config.cache \
 	--target=armv7k-unknown-darwin \
 	--with-cooperative-gc=yes \
-	--with-cross-offsets=armv7k-apple-darwin.h
+	--with-cross-offsets=armv7k-apple-darwin.h \
+	--with-llvm=../llvm/usr
 
 WATCH_CONFIGURE_ENVIRONMENT = \
-	PATH="../llvm/usr/bin:$(PATH)" \
 	CFLAGS="$(CROSS_CFLAGS)" \
 	CXXFLAGS="$(CROSS_CXXFLAGS)" \
-	LDFLAGS=$(CROSS_LDFLAGS) \
+	LDFLAGS="$(CROSS_LDFLAGS)" \
 	CC="$(MAC_CC)" \
 	CXX="$(MAC_CXX)" \
 
@@ -2069,18 +2135,18 @@ clean-cross-watch:
 
 TV_CROSS_CFLAGS=$(CROSS_BASE_CFLAGS) -mmacosx-version-min=10.8
 TV_CROSS_CXXFLAGS=$(CROSS_BASE_CXXFLAGS) -mmacosx-version-min=10.8 -stdlib=libc++
-TV_CROSS_LDFLAGS=-stdlib=libc++
+TV_CROSS_LDFLAGS=-stdlib=libc++ $(COMMON_LDFLAGS)
 
 TV_CROSS_CONFIGURE_FLAGS=$(CROSS_BASE_CONFIGURE_FLAGS)	\
 	--prefix=$(BUILD_DESTDIR)/crosstv \
 	--cache-file=../crosstv.config.cache \
 	--target=aarch64-unknown-darwin \
+	--with-llvm=../llvm64/usr
 
 TV_CROSS_CONFIGURE_ENVIRONMENT = \
-	$(Q) PATH="../llvm64/usr/bin:$(PATH)" \
-	CFLAGS="$(TV_CROSS_CFLAGS)" \
+	$(Q) CFLAGS="$(TV_CROSS_CFLAGS)" \
 	CXXFLAGS="$(TV_CROSS_CXXFLAGS)" \
-	LDFLAGS=$(TV_CROSS_LDFLAGS) \
+	LDFLAGS="$(TV_CROSS_LDFLAGS)" \
 	CC="$(MAC_CC)" \
 	CXX="$(MAC_CXX)" \
 

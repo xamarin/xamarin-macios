@@ -91,6 +91,16 @@
 !missing-selector! HMCameraStream::setAudioStreamSetting: not bound
 
 
+#PassKit
+
+## No availability macro is provided for PKLabeledValue on watchOS / radar: https://trello.com/c/MvaHEZlc
+## on iOS it's only used in PKAddPaymentPassRequestConfiguration which is not part of watchOS
+!missing-selector! PKLabeledValue::initWithLabel:value: not bound
+!missing-selector! PKLabeledValue::label not bound
+!missing-selector! PKLabeledValue::value not bound
+!missing-type! PKLabeledValue not bound
+
+
 # SceneKit
 
 ## CoreAnimation (CAAAnimation) is not in available watchOS 3
@@ -128,6 +138,12 @@
 
 ## Not bound intentionally, Factory method FromDisplayP3 is available and adding this as a ctor would make the api usage ugly since signature matches colorWithRed:green:blue:alpha:
 !missing-selector! UIColor::initWithDisplayP3Red:green:blue:alpha: not bound
+
+
+# WatchKit
+
+## Xcode 8.2 beta 1 iOS headers marked it as not available on watchOS, OTOH watchOS headers were not updated (fix in C9)
+!missing-selector! WKInterfaceController::handleActionWithIdentifier:forNotification: not bound
 
 
 # others
