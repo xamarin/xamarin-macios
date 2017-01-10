@@ -653,6 +653,7 @@ FOUNDATION_SOURCES = \
 	Foundation/NSFileManager.cs \
 	Foundation/NSFileManager.iOS.cs \
 	Foundation/NSFileManagerDelegate.cs \
+	Foundation/NSFormatter.cs \
 	Foundation/NSHost.cs \
 	Foundation/NSHttpCookie.cs \
 	Foundation/NSHttpCookieStorage.cs \
