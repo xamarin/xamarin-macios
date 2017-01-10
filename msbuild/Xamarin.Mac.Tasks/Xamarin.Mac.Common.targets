@@ -432,6 +432,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			Prefix="xammac"
 			NoOverwrite="@(_BundleResourceWithLogicalName)"
 			IntermediateOutputPath="$(IntermediateOutputPath)"
+			TargetFrameworkDirectory="$(TargetFrameworkDirectory)"
 			ReferencedLibraries="@(ResolvedFiles)">
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="FileWrites" />
