@@ -2065,7 +2065,7 @@ class C {
 			// if an extension references a framework (from a binding library, and the main app does not,
 			// the framework should still be copied to the main app's Framework directory.
 			using (var exttool = new MTouchTool ()) {
-				exttool.Profile = Profile.Unified;
+				exttool.Profile = Profile.iOS;
 				exttool.CreateTemporaryCacheDirectory ();
 				exttool.Verbosity = 5;
 
@@ -2086,7 +2086,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 				exttool.AssertExecute (MTouchAction.BuildSim, "build extension");
 
 				using (var apptool = new MTouchTool ()) {
-					apptool.Profile = Profile.Unified;
+					apptool.Profile = Profile.iOS;
 					apptool.CreateTemporaryCacheDirectory ();
 					apptool.Verbosity = exttool.Verbosity;
 					apptool.CreateTemporaryApp ();
