@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0cefdfbf-2581-4d8a-af34-a505ef2f3014}</ProjectGuid>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>iOSApp</AssemblyName>
+    <IntermediateOutputPath>obj\$(Platform)\ios</IntermediateOutputPath>
+    <OutputPath>bin\$(Platform)\ios</OutputPath>
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <MtouchLink>%MTOUCH_LINK%</MtouchLink>
+    <MtouchExtraArgs>%MTOUCH_EXTRAARGS%</MtouchExtraArgs>
+    <MtouchDebug>%MTOUCH_DEBUG%</MtouchDebug>
+    <MtouchProfiling>%MTOUCH_PROFILING%</MtouchProfiling>
+    <MtouchUseLlvm>%MTOUCH_USELLVM%</MtouchUseLlvm>
+    <MtouchEnableBitcode>%MTOUCH_ENABLEBITCODE%</MtouchEnableBitcode>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'iPhoneSimulator' ">
+    <MtouchArch>%SIMULATOR_ARCH%</MtouchArch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'iPhone' ">
+    <MtouchArch>%DEVICE_ARCH%</MtouchArch>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Xamarin.iOS" />
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="MonoTouch.NUnitLite" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist">
+      <LogicalName>Info.plist</LogicalName>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Main.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+  <ItemGroup>
+%PROJECT_REFERENCES%
+  </ItemGroup>
+</Project>

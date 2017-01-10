@@ -47,6 +47,7 @@
     <Compile Include="MTouchTool.cs" />
     <Compile Include="TimingTests.cs" />
     <Compile Include="MLaunchTool.cs" />
+    <Compile Include="Cache.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

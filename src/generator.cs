@@ -4932,12 +4932,6 @@ public partial class Generator : IMemberGatherer {
 		PrintPreserveAttribute (type);
 		print ("internal sealed class {0}Wrapper : BaseWrapper, I{0} {{", TypeName);
 		indent++;
-		// ctor (IntPtr)
-		print ("public {0}Wrapper (IntPtr handle)", TypeName);
-		print ("\t: base (handle, false)");
-		print ("{");
-		print ("}");
-		print ("");
 		// ctor (IntPtr, bool)
 		print ("[Preserve (Conditional = true)]");
 		print ("public {0}Wrapper (IntPtr handle, bool owns)", TypeName);

@@ -97,7 +97,7 @@ namespace Xamarin.Bundler {
 	//		Warning		MT0087	<unused>
 	//					MT0088	The GC must be in cooperative mode for watchOS apps. Please remove the --coop:false argument to mtouch.
 	//					MT0089	The option '{0}' cannot take the value '{1}' when cooperative mode is enabled for the GC.
-	//					MT0091	This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker. 
+	//					MT0091	This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker by changing the Linker behaviour to Link Framework SDKs Only.
 	//					MT0092	<used by Xamarin.Launcher> The option '{0}' is required.
 	//					MT0093	Could not find 'mlaunch'.
 	//		Warning		MT0094	<unused> Both profiling (--profiling) and incremental builds (--fastdev) are currently not supported when building for {0}, and incremental builds have been disabled (this will be fixed in a future release).

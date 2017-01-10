@@ -281,6 +281,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_PrepareResourceRules;
 			_CompileEntitlements;
 			_CompileAppManifest;
+			_GetNativeExecutableName;
+			_CompileToNative;
 			_CompileITunesMetadata;
 			_CollectITunesArtwork;
 			_CopyITunesArtwork;
@@ -290,8 +292,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_CopyAppExtensionsToBundle;
 			_CopyWatchOS1AppsToBundle;
 			_CopyWatchOS2AppsToBundle;
-			_GetNativeExecutableName;
-			_CompileToNative;
 			_GenerateDebugSymbols;
 			_ValidateAppBundle;
 		</CreateAppBundleDependsOn>
@@ -384,7 +384,12 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 					$(DeviceSpecificIntermediateOutputPath)TextureAtlas;
 					$(DeviceSpecificIntermediateOutputPath)mtouch-cache;
 					$(DeviceSpecificIntermediateOutputPath)" />
-		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)*.ipa" />
+
+		<ItemGroup>
+			<_IpaPackageFile Include="$(DeviceSpecificOutputPath)*.ipa" />
+		</ItemGroup>
+
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="@(_IpaPackageFile)" />
 	</Target>
 
 	<PropertyGroup>
@@ -1875,10 +1880,10 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<!-- Calculate IpaPackageDir and IpaPackageName based on IpaPackagePath, if defined. -->
 			<IpaPackageDir Condition="'$(IpaPackagePath)' != ''">$([System.Path]::GetDirectoryName('$(IpaPackagePath)'))</IpaPackageDir>
 			<IpaPackageName Condition="'$(IpaPackagePath)' != ''">$([System.Path]::GetFileName('$(IpaPackagePath)'))</IpaPackageName>
-			
+
 			<!-- Calculate an IPA package directory path if not already defined by the developer. -->
 			<!--<IpaPackageDir Condition="'$(IpaPackageDir)' == ''">$([System.Environment]::GetEnvironmentVariable('IPA_PACKAGE_DIR'))</IpaPackageDir>-->
-			<IpaPackageDir Condition="'$(IpaPackageDir)' == ''">$(DeviceSpecificOutputPath)$(_AppBundleName) $([System.DateTime]::Now.ToString('yyyy-MM-dd HH-mm-ss'))</IpaPackageDir>
+			<IpaPackageDir Condition="'$(IpaPackageDir)' == ''">$(DeviceSpecificOutputPath)$(_AppBundleName)</IpaPackageDir>
 
 			<!-- Calculate an IPA package name if not already defined by the developer. -->
 			<!--<IpaPackageName Condition="'$(IpaPackageName)' == ''">$([System.Environment]::GetEnvironmentVariable('IPA_PACKAGE_NAME'))</IpaPackageName>-->
@@ -1895,7 +1900,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<PropertyGroup>
 			<_PayloadDir>$(DeviceSpecificIntermediateOutputPath)ipa\Payload\</_PayloadDir>
 			<_IpaAppBundleDir>$(_PayloadDir)$(_AppBundleName).app\</_IpaAppBundleDir>
-	
+
 			<_IntermediateODRDir Condition="'$(_DistributionType)' == 'AppStore'">$(_PayloadDir)OnDemandResources\</_IntermediateODRDir>
 			<_IntermediateODRDir Condition="'$(_DistributionType)' == 'AdHoc' And '$(EmbedOnDemandResources)' == 'true'">$(_IpaAppBundleDir)OnDemandResources\</_IntermediateODRDir>
 			<_IntermediateODRDir Condition="'$(_DistributionType)' == 'AdHoc' And '$(EmbedOnDemandResources)' == 'false'">$(DeviceSpecificIntermediateOutputPath)OnDemandResourcesPackage\OnDemandResources\</_IntermediateODRDir>
@@ -2015,7 +2020,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Sources="@(_IpaPackageSource)"
 			OutputFile="$(IpaPackagePath)"
 			WorkingDirectory="$(DeviceSpecificIntermediateOutputPath)ipa"
-		/>
+			>
+			<Output TaskParameter="OutputFile" ItemName="FileWrites" />
+		</Zip>
 	</Target>
 
 	<Target Name="_CoreArchive" Condition="'$(ArchiveOnBuild)' == 'true'" DependsOnTargets="$(Codesign)">

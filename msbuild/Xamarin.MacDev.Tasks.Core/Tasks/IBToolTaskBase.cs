@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
@@ -128,18 +129,47 @@ namespace Xamarin.MacDev.Tasks
 
 		IEnumerable<ITaskItem> GetCompilationDirectoryOutput (ITaskItem expected)
 		{
+			var dir = Path.GetDirectoryName (expected.ItemSpec);
+
+			if (!Directory.Exists (dir))
+				yield break;
+
 			var name = Path.GetFileNameWithoutExtension (expected.ItemSpec);
 			var extension = Path.GetExtension (expected.ItemSpec);
-			var dir = Path.GetDirectoryName (expected.ItemSpec);
 			var nibDir = expected.GetMetadata ("LogicalName");
+			var targets = GetTargetDevices (plist).ToList ();
 
-			foreach (var target in GetTargetDevices (plist)) {
-				var fileName = name + "~" + target + extension;
-				var path = Path.Combine (dir, fileName);
-
-				if (!Directory.Exists (path) && !File.Exists (path))
+			foreach (var path in Directory.GetFileSystemEntries (dir)) {
+				// check that the FileNameWithoutExtension matches *exactly*
+				if (string.Compare (path, dir.Length + 1, name, 0, name.Length) != 0)
 					continue;
 
+				int startIndex = dir.Length + 1 + name.Length;
+
+				// match against files that have a "~" + $target (iphone, ipad, etc)
+				if (path.Length > startIndex && path[startIndex] == '~') {
+					bool matched = false;
+
+					startIndex++;
+
+					foreach (var target in targets) {
+						// Note: we match the target case-insensitively because of https://bugzilla.xamarin.com/show_bug.cgi?id=44811
+						if (string.Compare (path, startIndex, target, 0, target.Length, StringComparison.OrdinalIgnoreCase) == 0) {
+							startIndex += target.Length;
+							matched = true;
+							break;
+						}
+					}
+
+					if (!matched)
+						continue;
+				}
+
+				// at this point, all that should be left is the file/directory extension
+				if (path.Length != startIndex + extension.Length || string.Compare (path, startIndex, extension, 0, extension.Length) != 0)
+					continue;
+
+				var fileName = Path.GetFileName (path);
 				var logicalName = !string.IsNullOrEmpty (nibDir) ? Path.Combine (nibDir, fileName) : fileName;
 				var item = new TaskItem (path);
 				expected.CopyMetadataTo (item);
@@ -147,9 +177,6 @@ namespace Xamarin.MacDev.Tasks
 
 				yield return item;
 			}
-
-			if (Directory.Exists (expected.ItemSpec) || File.Exists (expected.ItemSpec))
-				yield return expected;
 
 			yield break;
 		}
