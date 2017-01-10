@@ -85,7 +85,6 @@ namespace Xamarin
 		public bool NoPlatformAssemblyReference;
 		static XmlDocument device_list_cache;
 
-		List<string> directories_to_delete;
 
 		public class DeviceInfo
 		{
@@ -546,11 +545,7 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 
 		public string CreateTemporaryDirectory ()
 		{
-			var tmpDir = MTouch.GetTempDirectory ();
-			if (directories_to_delete == null)
-				directories_to_delete = new List<string> ();
-			directories_to_delete.Add (tmpDir);
-			return tmpDir;
+			return Xamarin.Cache.CreateTemporaryDirectory ();
 		}
 
 		public void CreateTemporaryApp_LinkWith ()
@@ -577,10 +572,6 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 
 		void IDisposable.Dispose ()
 		{
-			if (directories_to_delete != null) {
-				foreach (var dir in directories_to_delete)
-					Directory.Delete (dir, true);
-			}
 		}
 	}
 }

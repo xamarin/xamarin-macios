@@ -20,6 +20,7 @@ namespace xharness
 		void CreateWatchOSAppProject ()
 		{
 			var csproj = new XmlDocument ();
+			var suffix = "-watchos-app";
 			csproj.LoadWithoutNetworkAccess (Path.Combine (Harness.WatchOSAppTemplate, "App.csproj"));
 			csproj.FindAndReplace ("%WATCHAPP_PATH%", Path.GetFullPath (Harness.WatchOSAppTemplate).Replace ('/', '\\') + "\\");
 			csproj.FindAndReplace ("%WATCHEXTENSION_CSPROJ%", Path.GetFileName (WatchOSExtensionProjectPath));
@@ -27,6 +28,7 @@ namespace xharness
 			csproj.SetProjectReferenceValue (Path.GetFileName (WatchOSExtensionProjectPath), "Name", Path.GetFileNameWithoutExtension (WatchOSExtensionProjectPath));
 			WatchOSAppGuid = "{" + Harness.NewStableGuid ().ToString ().ToUpper () + "}";
 			csproj.SetProjectGuid (WatchOSAppGuid);
+			csproj.FixInfoPListInclude (suffix);
 			Harness.Save (csproj, WatchOSAppProjectPath);
 
 			XmlDocument info_plist = new XmlDocument ();

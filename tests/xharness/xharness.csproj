@@ -9,7 +9,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>xharness</RootNamespace>
     <AssemblyName>xharness</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -28,6 +28,10 @@
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
     <OutputPath>bin\Release</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>--verbose --jenkins:server --autoconf --rootdir ..</StartArguments>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -70,6 +74,10 @@
     <Compile Include="Log.cs" />
     <Compile Include="GitHub.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="..\mtouch\Cache.cs">
+      <Link>Cache.cs</Link>
+    </Compile>
+    <Compile Include="TodayExtensionTarget.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\jenkins\nunit-summary.xslt">
