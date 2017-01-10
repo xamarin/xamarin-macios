@@ -91,8 +91,9 @@ namespace Xamarin.MacDev.Tasks
 
 		bool IsFrameworkAssembly (ITaskItem asm)
 		{
+			var asm_path = asm.GetMetadata ("FullPath");
 			foreach (var dir in TargetFrameworkDirectory) {
-				if (asm.ItemSpec.StartsWith (dir.ItemSpec, StringComparison.Ordinal))
+				if (asm_path.StartsWith (dir.GetMetadata ("FullPath"), StringComparison.OrdinalIgnoreCase))
 					return true;
 			}
 			return false;
