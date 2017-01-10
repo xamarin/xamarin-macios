@@ -45,12 +45,8 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void ProjectPoint ()
 		{
-#if MONOMAC
-			Assert.Ignore ("This doesn't seem to work properly in macOS 10.12");
-#else
-			if (UIDevice.CurrentDevice.CheckSystemVersion (9, 0))
-				Assert.Ignore ("This doesn't seem to work properly in the iOS 9");
-#endif
+			if (TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("This doesn't seem to work properly in the iOS 9+ or macOS 10.11+");
 
 			// SK3Node loads SCNRenderer dynamically, so make sure it's actually loaded.
 			GC.KeepAlive (Class.GetHandle (typeof(SCNRenderer)));

@@ -41,12 +41,9 @@ namespace MonoTouchFixtures.SceneKit {
 		[Test]
 		public void FromMetalBuffer ()
 		{
-#if MONOMAC
-			if (!TestRuntime.CheckMacSystemVersion (10, 11))
-				Assert.Inconclusive ("macOS 10.11+ required");
-#else
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (9,0))
-				Assert.Inconclusive ("iOS 9+ required");
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0 or macOS 10.11");
+#if !MONOMAC
 			if (Runtime.Arch != Arch.DEVICE)
 				Assert.Inconclusive ("Metal tests only works on device so far");
 #endif

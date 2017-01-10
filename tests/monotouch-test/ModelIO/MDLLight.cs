@@ -43,14 +43,14 @@ namespace MonoTouchFixtures.ModelIO {
 		[TestFixtureSetUp]
 		public void Setup ()
 		{
-#if MONOMAC
-			if (!TestRuntime.CheckMacSystemVersion (10, 11))
-				Assert.Ignore ("Requires macOS 10.11+");
-#else
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (9, 0))
-				Assert.Ignore ("Requires iOS9+");
-			
-			if (Runtime.Arch == Arch.SIMULATOR && IntPtr.Size == 4) {
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
+
+			if (
+#if !MONOMAC
+				Runtime.Arch == Arch.SIMULATOR && 
+#endif
+				IntPtr.Size == 4) {
 				// There's a bug in the i386 version of objc_msgSend where it doesn't preserve SIMD arguments
 				// when resizing the cache of method selectors for a type. So here we call all selectors we can
 				// find, so that the subsequent tests don't end up producing any cache resize (radar #21630410).
@@ -59,7 +59,6 @@ namespace MonoTouchFixtures.ModelIO {
 					obj.GetIrradiance (Vector3.Zero, CGColorSpace.CreateGenericRgb ());
 				}
 			}
-#endif
 		}
 
 		[Test]

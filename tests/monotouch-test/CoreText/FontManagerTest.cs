@@ -91,20 +91,16 @@ namespace MonoTouchFixtures.CoreText {
 		[ExpectedException (typeof (ArgumentNullException))]
 		public void GetFontsNullUrl ()
 		{
-#if !MONOMAC
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (7,0))
-				Assert.Ignore ("Requires iOS 7.0+");
-#endif
+			if (!TestRuntime.CheckXcodeVersion (5, 0))
+				Assert.Ignore ("Requires iOS 7.0+ or macOS 10.9+");
 			var fonts = CTFontManager.GetFonts (null);
 		}
 
 		[Test]
 		public void GetFontsPresent ()
 		{
-#if !MONOMAC
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (7,0))
-				Assert.Ignore ("Requires iOS 7.0+");
-#endif
+			if (!TestRuntime.CheckXcodeVersion (5, 0))
+				Assert.Ignore ("Requires iOS 7.0+ or macOS 10.9+");
 			var ttf = Path.GetFullPath ("Pacifico.ttf");
 			if (!File.Exists (ttf))
 				Assert.Ignore ("Could not find the font file {0}", ttf);
@@ -125,10 +121,8 @@ namespace MonoTouchFixtures.CoreText {
 		[Test]
 		public void GetFontsMissing ()
 		{
-#if !MONOMAC
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (7,0))
-				Assert.Ignore ("Requires iOS 7.0+");
-#endif
+			if (!TestRuntime.CheckXcodeVersion (5, 0))
+				Assert.Ignore ("Requires iOS 7.0+ or macOS 10.9+");
 			var ttf = Path.GetFullPath ("NonExistent.ttf");
 			if (!File.Exists (ttf))
 				Assert.Ignore ("Could not find the font file {0}", ttf);
