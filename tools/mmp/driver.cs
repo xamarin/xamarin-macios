@@ -811,8 +811,16 @@ namespace Xamarin.Bundler {
 			if (aot.IsAOT) {
 				if (!IsUnified)
 					throw new MonoMacException (98, true, "AOT compilation is only available on Unified");
+				MonoType monoType;
+				if (IsUnifiedMobile || IsUnifiedFullXamMacFramework)
+					monoType = Is64Bit ? MonoType.Bundled64 : MonoType.Bundled32; 
+				else if (IsUnifiedFullSystemFramework)
+					monoType = Is64Bit ? MonoType.System64 : MonoType.System32; 
+				else
+					throw ErrorHelper.CreateError (0099, "Internal error \"AOT with unexpected profile.\" Please file a bug report with a test case (http://bugzilla.xamarin.com).");
 
-				aot.Compile (mmp_dir);
+
+				aot.Compile (monoType, mmp_dir);
 				Watch ("AOT Compile", 1);
 			}
 

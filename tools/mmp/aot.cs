@@ -56,6 +56,14 @@ namespace Xamarin.Bundler {
 
 	public delegate int RunCommandDelegate (string path, string args, string[] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false);
 
+	public enum MonoType {
+		Invalid,
+		Bundled64,
+		Bundled32,
+		System64,
+		System32,
+	}
+
 	public class AOTCompiler
 	{
 		enum AotType {
@@ -78,7 +86,6 @@ namespace Xamarin.Bundler {
 		public RunCommandDelegate RunCommand { get; set; } = Driver.RunCommand; 
 		public ParallelOptions ParallelOptions { get; set; } = new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency };
 		public string XamarinMacPrefix { get; set; } = Driver.GetXamMacPrefix (); // GetXamMacPrefix assumes GetExecutingAssembly in ways that are not valid for tests, so we must stub out
-		public bool Is64Bit { get; set; } = Driver.Is64Bit; 
 
 		public string Quote (string f) => Driver.Quote (f);
 
@@ -171,21 +178,36 @@ namespace Xamarin.Bundler {
 			return aotFiles;
 		}
 
-		public void Compile (string path)
+		string GetMonoPath (MonoType monoType)
 		{
-			Compile (new FileSystemEnumerator (path));
+			switch (monoType) {
+			case MonoType.Bundled64:
+				return Path.Combine (XamarinMacPrefix, "bin/bmac-mobile-mono");
+			case MonoType.Bundled32:
+				return Path.Combine (XamarinMacPrefix, "bin/bmac-mobile-mono-32");
+			case MonoType.System64:
+				return "/Library/Frameworks/Mono.framework/Commands/mono64";
+			case MonoType.System32:
+				return "/Library/Frameworks/Mono.framework/Commands/mono32";
+			default:
+				throw ErrorHelper.CreateError (0099, "Internal error \"GetMonoPath with monoType: {0}\" Please file a bug report with a test case (http://bugzilla.xamarin.com).", monoType);
+			}
 		}
 
-		public void Compile (IFileEnumerator files)
+		public void Compile (MonoType monoType, string path)
+		{
+			Compile (monoType, new FileSystemEnumerator (path));
+		}
+
+		public void Compile (MonoType monoType, IFileEnumerator files)
 		{
 			if (!IsAOT)
 				throw ErrorHelper.CreateError (0099, "Internal error \"AOTBundle with aot: {0}\" Please file a bug report with a test case (http://bugzilla.xamarin.com).", aotType);
 
-			string monoExePath = Path.Combine (XamarinMacPrefix, "bin/bmac-mobile-mono" + (Is64Bit ? "" : "-32"));
 			var monoEnv = new string [] {"MONO_PATH", files.RootDir };
 
 			Parallel.ForEach (GetFilesToAOT (files), ParallelOptions, file => {
-				if (RunCommand (monoExePath, String.Format ("--aot=hybrid {0}", Quote (file)), monoEnv) != 0)
+				if (RunCommand (GetMonoPath (monoType), String.Format ("--aot=hybrid {0}", Quote (file)), monoEnv) != 0)
 					throw ErrorHelper.CreateError (3001, "Could not AOT the assembly '{0}'", file);
 			});
 		}

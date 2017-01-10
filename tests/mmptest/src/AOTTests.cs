@@ -38,7 +38,7 @@ namespace Xamarin.MMP.Tests
 		{
 			RunMMPTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
-					CSProjConfig = "<XamMacArch>i386</XamMacArch><MonoBundlingExtraArgs>--aot=sdk,-Xamarin.Mac.dll</MonoBundlingExtraArgs>"
+					CSProjConfig = "<XamMacArch>i386</XamMacArch><MonoBundlingExtraArgs>--aot=core,-Xamarin.Mac.dll</MonoBundlingExtraArgs>"
 				};
 				string buildResults = TI.TestUnifiedExecutable (test).BuildOutput;
 
