@@ -181,7 +181,7 @@ static volatile int http_connect_counter = 0;
 	int http_sockets[2];
 	volatile int http_send_counter;
 }
-	@property void (^completion_handler)(bool);
+	@property (copy) void (^completion_handler)(bool);
 	@property (copy) NSString* ip;
 	@property int id;
 	@property bool uniqueRequest;
