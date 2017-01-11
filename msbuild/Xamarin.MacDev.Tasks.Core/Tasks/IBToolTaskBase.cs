@@ -424,42 +424,42 @@ namespace Xamarin.MacDev.Tasks
 
 				Directory.CreateDirectory (ibtoolManifestDir);
 				Directory.CreateDirectory (ibtoolOutputDir);
-			}
 
-			if (!CompileInterfaceDefinitions (ibtoolManifestDir, ibtoolOutputDir, compiled, outputManifests, out changed))
-				return false;
+				if (!CompileInterfaceDefinitions (ibtoolManifestDir, ibtoolOutputDir, compiled, outputManifests, out changed))
+					return false;
 
-			if (CanLinkStoryboards) {
-				var storyboards = new List<ITaskItem> ();
-				var linked = new List<ITaskItem> ();
-				var unique = new HashSet<string> ();
+				if (CanLinkStoryboards) {
+					var storyboards = new List<ITaskItem> ();
+					var linked = new List<ITaskItem> ();
+					var unique = new HashSet<string> ();
 
-				for (int i = 0; i < compiled.Count; i++) {
-					// pretend that non-storyboardc items (e.g. *.nib) are already 'linked'
-					if (compiled[i].ItemSpec.EndsWith (".storyboardc", StringComparison.Ordinal)) {
-						var interfaceDefinition = compiled[i].GetMetadata ("InterfaceDefinition");
-						unique.Add (interfaceDefinition);
-						storyboards.Add (compiled[i]);
-						continue;
+					for (int i = 0; i < compiled.Count; i++) {
+						// pretend that non-storyboardc items (e.g. *.nib) are already 'linked'
+						if (compiled[i].ItemSpec.EndsWith (".storyboardc", StringComparison.Ordinal)) {
+							var interfaceDefinition = compiled[i].GetMetadata ("InterfaceDefinition");
+							unique.Add (interfaceDefinition);
+							storyboards.Add (compiled[i]);
+							continue;
+						}
+
+						// just pretend any *nib's have already been 'linked'...
+						compiled[i].RemoveMetadata ("InterfaceDefinition");
+						linked.Add (compiled[i]);
 					}
 
-					// just pretend any *nib's have already been 'linked'...
-					compiled[i].RemoveMetadata ("InterfaceDefinition");
-					linked.Add (compiled[i]);
+					// only link the storyboards if there are multiple unique storyboards
+					if (unique.Count > 1) {
+						var linkOutputDir = Path.Combine (IntermediateOutputPath, "ibtool-link");
+
+						if (!LinkStoryboards (ibtoolManifestDir, linkOutputDir, storyboards, linked, outputManifests, changed))
+							return false;
+
+						compiled = linked;
+					}
+				} else {
+					for (int i = 0; i < compiled.Count; i++)
+						compiled[i].RemoveMetadata ("InterfaceDefinition");
 				}
-
-				// only link the storyboards if there are multiple unique storyboards
-				if (unique.Count > 1) {
-					var linkOutputDir = Path.Combine (IntermediateOutputPath, "ibtool-link");
-
-					if (!LinkStoryboards (ibtoolManifestDir, linkOutputDir, storyboards, linked, outputManifests, changed))
-						return false;
-
-					compiled = linked;
-				}
-			} else {
-				for (int i = 0; i < compiled.Count; i++)
-					compiled[i].RemoveMetadata ("InterfaceDefinition");
 			}
 
 			var bundleResources = new List<ITaskItem> ();
