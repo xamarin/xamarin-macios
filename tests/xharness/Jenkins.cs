@@ -503,7 +503,6 @@ namespace xharness
 		{
 			var build = new XBuildTask ()
 			{
-				ExecutionResult = task.ExecutionResult,
 				Platform = platform,
 				Jenkins = task.Jenkins,
 				TestProject = new TestProject (AddSuffixToPath (task.ProjectFile, suffix)),
