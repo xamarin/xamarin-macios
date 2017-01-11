@@ -61,6 +61,7 @@ namespace Xamarin.Bundler {
 		public string RootAssembly;
 		public string RegistrarOutputLibrary;
 
+		public static int Concurrency => Driver.Concurrency;
 		public Version DeploymentTarget;
 		public Version SdkVersion;
 

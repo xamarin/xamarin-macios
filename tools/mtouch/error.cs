@@ -104,6 +104,7 @@ namespace Xamarin.Bundler {
 	//					MT0095 Aot files could not be copied to the destination directory.
 	//					MT0096 No reference to Xamarin.iOS.dll was found.
 	//					MT0097 <used by mmp>
+	//					MT0098 <used by mmp>
 	// MT1xxx	file copy / symlinks (project related)
 	//			MT10xx	installer.cs / mtouch.cs
 	//					MT1001	Could not find an application at the specified directory: {0}
@@ -221,6 +222,8 @@ namespace Xamarin.Bundler {
 	//					MT3006  Could not compute a complete dependency map for the project. This will result in slower build times because Xamarin.iOS can't properly detect what needs to be rebuilt (and what does not need to be rebuilt). Please review previous warnings for more details.
 	//		Warning		MT3007	Debug info files (*.mdb) will not be loaded when llvm is enabled.
 	//					MT3008	Bitcode support requires the use of the LLVM AOT backend (--llvm)
+	//					MM3009	** reserved Xamarin.Mac **
+	//					MM3010	** reserved Xamarin.Mac **
 	// MT4xxx	code generation
 	// 			MT40xx	main.m
 	//					MT4001	The main template could not be expanded to `{0}`.
@@ -297,6 +300,7 @@ namespace Xamarin.Bundler {
 	//					MT5102	Failed to assemble the file '{0}'. Please file a bug report at http://bugzilla.xamarin.com
 	//					MT5103	Failed to compile the file '{0}'. Please file a bug report at http://bugzilla.xamarin.com
 	//					MT5104  Could not find neither the '{0}' nor the '{1}' compiler. Please install Xcode 'Command-Line Tools' component
+	//					MT5105  ** reserved Xamarin.Mac **
 	//			MT52xx	linking
 	//					MT5201	Native linking failed. Please review the build log and the user flags provided to gcc: {0}
 	//					MT5202	Native linking failed. Please review the build log.

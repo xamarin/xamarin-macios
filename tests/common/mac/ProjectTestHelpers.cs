@@ -391,6 +391,7 @@ namespace TestCase
 }
 
 // A bit of a hack so we can reuse all of the RunCommand logic
+#if !MMP_TEST
 namespace Xamarin.Bundler {
 	public static partial class Driver
 	{
@@ -466,3 +467,4 @@ namespace Xamarin.Bundler {
 		}
 	}
 }
+#endif

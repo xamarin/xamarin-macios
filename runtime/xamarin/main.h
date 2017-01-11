@@ -47,6 +47,9 @@ extern bool xamarin_use_new_assemblies;
 extern bool xamarin_gc_pump;
 extern bool xamarin_debug_mode;
 extern bool xamarin_disable_lldb_attach;
+#if MONOMAC
+extern bool xamarin_mac_aot;
+#endif
 extern bool xamarin_init_mono_debug;
 extern int xamarin_log_level;
 extern const char *xamarin_executable_name;

@@ -125,13 +125,6 @@ namespace Xamarin.Bundler
 
 		static int verbose = GetDefaultVerbosity ();
 
-		static int Jobs;
-		public static int Concurrency {
-			get {
-				return Jobs == 0 ? Environment.ProcessorCount : Jobs;
-			}
-		}
-
 		//
 		// We need to put a hard dep on Mono.Cecil.Mdb.dll so that it get's mkbundled
 		//
@@ -1008,7 +1001,6 @@ namespace Xamarin.Bundler
 			var os = new OptionSet () {
 			{ "h|?|help", "Displays the help", v => SetAction (Action.Help) },
 			{ "version", "Output version information and exit.", v => SetAction (Action.Version) },
-			{ "j|jobs=", "The level of concurrency. Default is the number of processors.", v => Jobs = int.Parse (v) },
 			{ "f|force", "Forces the recompilation of code, regardless of timestamps", v=>force = true },
 			{ "cache=", "Specify the directory where object files will be cached", v => app.Cache.Location = v },
 			{ "aot=", "Arguments to the static compiler",
