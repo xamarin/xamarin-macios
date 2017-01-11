@@ -33,6 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="Mono.Security" />
   </ItemGroup>
   <ItemGroup>
     <!--%FILES%-->
