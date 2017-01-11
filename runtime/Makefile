@@ -122,11 +122,11 @@ $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib/%.a: .libs/$(1)/%.a | $(IOS_DESTDIR
 	$(Q) install -m 0644 $$< $$@
 endif
 
-$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib/%.dylib: .libs/$(1)/%.dylib | $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib
+$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib/%.dylib: .libs/$(1)/%-sim.dylib | $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib
 	$(Q) install -m 0644 $$< $$@
 
 ifdef INCLUDE_DEVICE
-$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib/%.dylib: .libs/$(1)/%.dylib | $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib
+$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib/%.dylib: .libs/$(1)/%-dev.dylib | $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib
 	$(Q) install -m 0644 $$< $$@
 endif
 
@@ -210,16 +210,36 @@ $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/tvextension-main.$$(arch).o): 
 	$(Q) rm -f $$@
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
 
-.libs/$(1)/libxamarin.dylib:  $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/libxamarin.$$(arch).dylib)
+.libs/$(1)/libxamarin-sim.dylib:  $$(foreach arch,$$($(2)_SIM_ARCHITECTURES),.libs/$(1)/libxamarin.$$(arch).dylib)
 	$(Q) rm -f $$@
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
-	$(Q) install_name_tool -id @executable_path/$$(notdir $$@) $$@
+	$(Q) install_name_tool -id @executable_path/libxamarin.dylib $$@
 	$(Q) install_name_tool -change @executable_path/ @executable_path/libmonosgen-2.0.dylib $$@
 
-.libs/$(1)/libxamarin-debug.dylib:  $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/libxamarin-debug.$$(arch).dylib)
+.libs/$(1)/libxamarin-debug-sim.dylib:  $$(foreach arch,$$($(2)_SIM_ARCHITECTURES),.libs/$(1)/libxamarin-debug.$$(arch).dylib)
 	$(Q) rm -f $$@
 	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
-	$(Q) install_name_tool -id @executable_path/$$(notdir $$@) $$@
+	$(Q) install_name_tool -id @executable_path/libxamarin-debug.dylib $$@
+	$(Q) install_name_tool -change @executable_path/ @executable_path/libmonosgen-2.0.dylib $$@
+
+.libs/$(1)/libxamarin-dev.dylib:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/libxamarin.$$(arch).dylib)
+	$(Q) rm -f $$@
+ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
+	$(Q) cp $$^ $$@
+else
+	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
+endif
+	$(Q) install_name_tool -id @executable_path/libxamarin.dylib $$@
+	$(Q) install_name_tool -change @executable_path/ @executable_path/libmonosgen-2.0.dylib $$@
+
+.libs/$(1)/libxamarin-debug-dev.dylib:  $$(foreach arch,$$($(2)_DEVICE_ARCHITECTURES),.libs/$(1)/libxamarin-debug.$$(arch).dylib)
+	$(Q) rm -f $$@
+ifeq (1,$$(words $$($(2)_DEVICE_ARCHITECTURES)))
+	$(Q) cp $$^ $$@
+else
+	$$(call Q_2,LIPO,  [$1]) $(DEVICE_BIN_PATH)/lipo $$^ -create -output $$@
+endif
+	$(Q) install_name_tool -id @executable_path/libxamarin-debug.dylib $$@
 	$(Q) install_name_tool -change @executable_path/ @executable_path/libmonosgen-2.0.dylib $$@
 
 .SECONDARY: $$(foreach arch,$$($(2)_ARCHITECTURES),.libs/$(1)/app-main.$$(arch).o)
