@@ -1843,14 +1843,24 @@ namespace Xamarin.Bundler {
 
 	public class AOTTask : ProcessTask {
 		public string AssemblyName;
+		public bool AddBitcodeMarkerSection;
+		public string AssemblyPath; // path to the .s file.
 
 		// executed with Parallel.ForEach
 		protected override void Build ()
 		{
 			var exit_code = base.Start ();
 
-			if (exit_code == 0)
+			if (exit_code == 0) {
+				if (AddBitcodeMarkerSection)
+					File.AppendAllText (AssemblyPath, @"
+.section __LLVM, __bitcode
+.byte 0
+.section __LLVM, __cmdline
+.byte 0
+");
 				return;
+			}
 
 			Console.Error.WriteLine ("AOT Compilation exited with code {0}, command:\n{1}{2}", exit_code, Command, Output.Length > 0 ? ("\n" + Output.ToString ()) : string.Empty);
 			if (Output.Length > 0) {
