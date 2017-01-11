@@ -32,10 +32,6 @@ using XamCore.ObjCRuntime;
 namespace XamCore.Foundation {
 
 	public partial class NSArray {
-		internal NSArray (bool empty)
-		{
-			Handle = IntPtr.Zero;
-		}
 
 		//
 		// Creates an array with the elements;   If the value passed is null, it
@@ -76,7 +72,7 @@ namespace XamCore.Foundation {
 		internal static NSArray From<T> (T[] items, long count = -1)
 		{
 			if ((items == null) || (count == 0))
-				return new NSArray (true);
+				return new NSArray ();
 
 			if (count == -1)
 				count = items.Length;
@@ -96,7 +92,7 @@ namespace XamCore.Foundation {
 		internal static NSArray FromNativeObjects (INativeObject[] items)
 		{
 			if (items == null)
-				return new NSArray (true);
+				return new NSArray ();
 
 			return FromNativeObjects (items, items.Length);
 		}
@@ -104,7 +100,7 @@ namespace XamCore.Foundation {
 		internal static NSArray FromNativeObjects (INativeObject [] items, nint count)
 		{
 			if (items == null)
-				return new NSArray (true);
+				return new NSArray ();
 
 			if (count > items.Length)
 				throw new ArgumentException ("count is larger than the number of items", "count");
@@ -123,7 +119,7 @@ namespace XamCore.Foundation {
 		internal static NSArray FromNSObjects (IList<NSObject> items)
 		{
 			if (items == null)
-				return new NSArray (true);
+				return new NSArray ();
 
 			int count = items.Count;
 			IntPtr buf = Marshal.AllocHGlobal (count * IntPtr.Size);
