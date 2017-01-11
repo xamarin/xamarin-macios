@@ -454,6 +454,7 @@ public class MemberInformation
 	public bool is_return_release;
 	public bool protocolize;
 	public string selector, wrap_method, is_forced_owns;
+	public bool is_bindAs => Generator.HasBindAsAttribute (mi);
 
 	public MethodInfo method { get { return (MethodInfo) mi; } }
 	public PropertyInfo property { get { return (PropertyInfo) mi; } }
@@ -1117,6 +1118,226 @@ public partial class Generator : IMemberGatherer {
 		return "I" + type.Name;
 	}
 
+	// TODO: Alex
+	public static BindAsAttribute GetBindAsAttribute (ICustomAttributeProvider cu) => GetAttribute<BindAsAttribute> (cu) ?? GetAttribute<BindAsAttribute> ((cu as MethodInfo)?.ReturnParameter);
+	public static bool HasBindAsAttribute (ICustomAttributeProvider cu) => (GetAttribute<BindAsAttribute> (cu) ?? GetAttribute<BindAsAttribute> ((cu as MethodInfo)?.ReturnParameter)) != null;
+	static bool IsSetter (MethodInfo mi) => mi.IsSpecialName && mi.Name.StartsWith ("set_", StringComparison.Ordinal);
+
+	string GetToBindAsWrapper (MemberInformation minfo = null, ParameterInfo pi = null)
+	{
+		BindAsAttribute attrib = null;
+		string className = null;
+		string temp = null;
+
+		if (pi == null) {
+			attrib = GetBindAsAttribute (minfo.mi);
+			var property = minfo.mi as PropertyInfo;
+			var method = minfo.mi as MethodInfo;
+			className = method?.ReturnType?.Name ?? property?.PropertyType?.Name;
+		} else {
+			attrib = GetBindAsAttribute (pi);
+			className = pi.ParameterType.Name;
+		}
+
+		var retType = Nullable.GetUnderlyingType (attrib.Type) ?? attrib.Type;
+		var isNullable = attrib.IsNullable;
+		var isValueType = retType.IsValueType;
+
+		if (isNullable || !isValueType)
+			temp = string.Format ("{0} == null ? null : ", pi != null ? pi.Name.GetSafeParamName () : "value");
+
+		if (className == "NSNumber")
+			temp = string.Format ("new NSNumber ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+
+		else if (className == "NSValue") {
+			switch (retType.Name) {
+			case "CATransform3D":
+				temp = string.Format ("NSValue.FromCATransform3D ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			break;
+			case "CGAffineTransform":
+				temp = string.Format ("NSValue.FromCGAffineTransform ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			break;
+			case "CGPoint":
+				temp = string.Format ("NSValue.FromCGPoint ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			break;
+			case "CGRect":
+				temp = string.Format ("NSValue.FromCGRect ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			break;
+			case "CGSize":
+				temp = string.Format ("NSValue.FromCGSize ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			break;
+			case "CGVector":
+				temp = string.Format ("NSValue.FromCGVector ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			break;
+			case "CMTimeMapping":
+				temp = string.Format ("NSValue.FromCMTimeMapping ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			break;
+			case "CMTimeRange":
+				temp = string.Format ("NSValue.FromCMTimeRange ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			break;
+			case "CMTime":
+				temp = string.Format ("NSValue.FromCMTime ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			break;
+			case "MKCoordinateSpan":
+				temp = string.Format ("NSValue.FromMKCoordinateSpan ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			break;
+			case "CLLocationCoordinate2D":
+				temp = string.Format ("NSValue.FromCLLocationCoordinate2D ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			break;
+			case "PointF":
+				temp = string.Format ("NSValue.FromPointF ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			break;
+			case "NSRange":
+				temp = string.Format ("NSValue.FromRange ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			break;
+			case "RectangleF":
+				temp = string.Format ("NSValue.FromRectangleF ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			break;
+			case "SCNMatrix4":
+				temp = string.Format ("NSValue.FromSCNMatrix4 ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			break;
+			case "SizeF":
+				temp = string.Format ("NSValue.FromSizeF ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			break;
+			case "UIEdgeInsets":
+				temp = string.Format ("NSValue.FromUIEdgeInsets ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			break;
+			case "UIOffset":
+				temp = string.Format ("NSValue.FromUIOffset ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			break;
+			case "SCNVector3":
+				temp = string.Format ("NSValue.FromVector ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			break;
+			case "SCNVector4":
+				temp = string.Format ("NSValue.FromVector ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			break;
+			default:
+				throw new BindingException (1049, true, "Could not box type {0} into {1} container used on {2} member decorated with [BindAsAtrribute].", retType.Name, "NSValue", minfo?.mi?.Name ?? pi?.Name);
+			}
+		} else if (isValueType) {
+			// Magic for enums/smart enums
+		} else
+			throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAsAttribute]", retType.Name);
+
+		return temp;
+	}
+
+	string GetFromBindAsWrapper (MemberInformation minfo)
+	{
+		var attrib = GetBindAsAttribute (minfo.mi);
+		var retType = Nullable.GetUnderlyingType (attrib.Type) ?? attrib.Type;
+		var isValueType = retType.IsValueType;
+		var append = string.Empty;
+		var property = minfo.mi as PropertyInfo;
+		var method = minfo.mi as MethodInfo;
+
+		if (method?.ReturnType?.Name == "NSNumber" || property?.PropertyType?.Name == "NSNumber") {
+			// I wish C# 7 was a thing today :)
+			if (retType == typeof (bool))
+				append = ".BoolValue";
+			else if (retType == typeof (byte))
+				append = ".ByteValue";
+			else if (retType == typeof (double))
+				append = ".DoubleValue";
+			else if (retType == typeof (float))
+				append = ".FloatValue";
+			else if (retType == typeof (short))
+				append = ".Int16Value";
+			else if (retType == typeof (int))
+				append = ".Int32Value";
+			else if (retType == typeof (long))
+				append = ".Int64Value";
+			else if (retType == typeof (sbyte))
+				append = ".SByteValue";
+			else if (retType == typeof (ushort))
+				append = ".UInt16Value";
+			else if (retType == typeof (uint))
+				append = ".UInt32Value";
+			else if (retType == typeof (ulong))
+				append = ".UInt64Value";
+			#if XAMCORE_2_0
+			            else if (retType == typeof (nfloat))
+                append = ".NFloatValue";
+            else if (retType == typeof (nint))
+                append = ".NIntValue";
+            else if (retType == typeof (nuint))
+                append = ".NUIntValue";
+    #endif
+			else
+				throw new BindingException (1049, true, "Could not unbox type {0} from {1} container used on {2} member decorated with [BindAsAttribute].", retType.Name, "NSNumber", minfo.mi.Name);
+
+		} else if (method?.ReturnType.Name == "NSValue" || property?.PropertyType.Name == "NSValue") {
+			switch (retType.Name) {
+			case "CATransform3D":
+				append = ".CATransform3DValue";
+			break;
+			case "CGAffineTransform":
+				append = ".CGAffineTransformValue";
+			break;
+			case "CGPoint":
+				append = ".CGPointValue";
+			break;
+			case "CGRect":
+				append = ".CGRectValue";
+			break;
+			case "CGSize":
+				append = ".CGSizeValue";
+			break;
+			case "CGVector":
+				append = ".CGVectorValue";
+			break;
+			case "CMTimeMapping":
+				append = ".CMTimeMappingValue";
+			break;
+			case "CMTimeRange":
+				append = ".CMTimeRangeValue";
+			break;
+			case "CMTime":
+				append = ".CMTimeValue";
+			break;
+			case "MKCoordinateSpan":
+				append = ".CoordinateSpanValue";
+			break;
+			case "CLLocationCoordinate2D":
+				append = ".CoordinateValue";
+			break;
+			case "PointF":
+				append = ".PointFValue";
+			break;
+			case "NSRange":
+				append = ".RangeValue";
+			break;
+			case "RectangleF":
+				append = ".RectangleFValue";
+			break;
+			case "SCNMatrix4":
+				append = ".SCNMatrix4Value";
+			break;
+			case "SizeF":
+				append = ".SizeFValue";
+			break;
+			case "UIEdgeInsets":
+				append = ".UIEdgeInsetsValue";
+			break;
+			case "UIOffset":
+				append = ".UIOffsetValue";
+			break;
+			case "SCNVector3":
+				append = ".Vector3Value";
+			break;
+			case "SCNVector4":
+				append = ".Vector4Value";
+			break;
+			default:
+				throw new BindingException (1049, true, "Could not unbox type {0} from {1} container used on {2} member decorated with [BindAsAttribute].", retType.Name, "NSValue", minfo.mi.Name);
+			}
+		} else if (isValueType) {
+			// Magic for enums/smart enums
+		} else
+			throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAsAttribute]", retType.Name);
+		return append;
+	}
+
 	public static bool HasForcedAttribute (ICustomAttributeProvider cu, out string owns)
 	{
 		var att = GetAttribute<ForcedTypeAttribute> (cu) ?? GetAttribute<ForcedTypeAttribute> ((cu as MethodInfo)?.ReturnParameter);
@@ -1316,11 +1537,16 @@ public partial class Generator : IMemberGatherer {
 	// Returns the actual way in which the type t must be marshalled
 	// for example "UIView foo" is generated as  "foo.Handle"
 	//
-	public string MarshalParameter (MethodInfo mi, ParameterInfo pi, bool null_allowed_override, EnumMode enum_mode)
+	public string MarshalParameter (MethodInfo mi, ParameterInfo pi, bool null_allowed_override, EnumMode enum_mode, PropertyInfo propInfo = null)
 	{
 		if (pi.ParameterType.IsByRef && pi.ParameterType.GetElementType ().IsValueType == false){
 			return "ref " + pi.Name + "Value";
 		}
+
+		if (HasBindAsAttribute (pi))
+			return string.Format ("nsb_{0} == null ? IntPtr.Zero : nsb_{0}.Handle", pi.Name);
+		if (propInfo != null && HasBindAsAttribute (propInfo))
+			return string.Format ("nsb_{0} == null ? IntPtr.Zero : nsb_{0}.Handle", propInfo.Name);
 
 		if (IsWrappedType (pi.ParameterType)){
 			if (null_allowed_override || HasAttribute (pi, typeof (NullAllowedAttribute)))
@@ -1401,7 +1627,7 @@ public partial class Generator : IMemberGatherer {
 		throw new BindingException (1002, true, "Unknown kind {0} in method '{1}.{2}'", pi, mi.DeclaringType.FullName, mi.Name.GetSafeParamName ());
 	}
 
-	public bool ParameterNeedsNullCheck (ParameterInfo pi, MethodInfo mi)
+	public bool ParameterNeedsNullCheck (ParameterInfo pi, MethodInfo mi, PropertyInfo propInfo = null)
 	{
 		if (pi.ParameterType.IsByRef)
 			return false;
@@ -1414,6 +1640,12 @@ public partial class Generator : IMemberGatherer {
 				return false;
 			}
 		}
+
+		if (HasBindAsAttribute (pi) || (propInfo != null && HasBindAsAttribute (propInfo))) {
+			var bindAsAtt = GetBindAsAttribute (pi) ?? GetBindAsAttribute (propInfo);
+			return bindAsAtt.IsNullable;
+		}
+
 		if (IsWrappedType (pi.ParameterType))
 			return true;
 
@@ -2917,8 +3149,13 @@ public partial class Generator : IMemberGatherer {
 				if (IsModel (minfo.method.ReturnType) && !hasReturnTypeProtocolize)
 					ErrorHelper.Show (new BindingException (1107, false, "The return type of the method {0}.{1} exposes a model ({2}). Please expose the corresponding protocol type instead ({3}.I{4}).", minfo.method.DeclaringType, minfo.method.Name, minfo.method.ReturnType, minfo.method.ReturnType.Namespace, minfo.method.ReturnType.Name));
 			}
-			
-			sb.Append (prefix + FormatType (mi.DeclaringType, GetCorrectGenericType (mi.ReturnType)));
+
+			if (minfo.is_bindAs) {
+				var bindAsAttrib = GetBindAsAttribute (minfo.mi);
+				sb.Append (prefix + FormatType (bindAsAttrib.Type.DeclaringType, GetCorrectGenericType (bindAsAttrib.Type)));
+			} else
+				sb.Append (prefix + FormatType (mi.DeclaringType, GetCorrectGenericType (mi.ReturnType)));
+
 			sb.Append (" ");
 		}
 		// Unified internal methods automatically get a _ appended
@@ -2991,8 +3228,13 @@ public partial class Generator : IMemberGatherer {
 				}
 				sb.Append ("I");
 			}
-			
-			sb.Append (FormatType (declaringType, parType));
+
+			if (HasBindAsAttribute (pi)) {
+				var bindAtt = GetBindAsAttribute (pi);
+				sb.Append (FormatType (bindAtt.Type.DeclaringType, bindAtt.Type));
+			} else
+				sb.Append (FormatType (declaringType, parType));
+
 			sb.Append (" ");
 			sb.Append (pi.Name.GetSafeParamName ());
 		}
@@ -3061,6 +3303,9 @@ public partial class Generator : IMemberGatherer {
 			} else if (minfo != null && minfo.is_forced) {
 				cast_a = " Runtime.GetINativeObject<" + FormatType (declaringType, GetCorrectGenericType (mi.ReturnType)) + "> (";
 				cast_b = $", {minfo.is_forced_owns})";
+			} else if (minfo != null && minfo.is_bindAs) {
+				cast_a = " Runtime.GetNSObject<" + FormatType (declaringType, GetCorrectGenericType (mi.ReturnType)) + "> (";
+				cast_b = ")" + GetFromBindAsWrapper (minfo);
 			} else {
 				cast_a = " Runtime.GetNSObject<" + FormatType (declaringType, GetCorrectGenericType (mi.ReturnType)) + "> (";
 				cast_b = ")";
@@ -3394,7 +3639,7 @@ public partial class Generator : IMemberGatherer {
 	// @convs: conversions to perform before the invocation
 	// @disposes: dispose operations to perform after the invocation
 	// @by_ref_processing
-	void GenerateTypeLowering (MethodInfo mi, bool null_allowed_override, EnumMode enum_mode, out StringBuilder args, out StringBuilder convs, out StringBuilder disposes, out StringBuilder by_ref_processing, out StringBuilder by_ref_init)
+	void GenerateTypeLowering (MethodInfo mi, bool null_allowed_override, EnumMode enum_mode, out StringBuilder args, out StringBuilder convs, out StringBuilder disposes, out StringBuilder by_ref_processing, out StringBuilder by_ref_init, PropertyInfo propInfo = null)
 	{
 		args = new StringBuilder ();
 		convs = new StringBuilder ();
@@ -3408,7 +3653,7 @@ public partial class Generator : IMemberGatherer {
 			if (!IsTarget (pi)){
 				// Construct invocation
 				args.Append (", ");
-				args.Append (MarshalParameter (mi, pi, null_allowed_override, enum_mode));
+				args.Append (MarshalParameter (mi, pi, null_allowed_override, enum_mode, propInfo));
 			}
 
 			// Construct conversions
@@ -3461,6 +3706,8 @@ public partial class Generator : IMemberGatherer {
 				disposes.AppendFormat (extra + "block_ptr_{0}->CleanupBlock ();\n", pi.Name);
 			} else if (pi.ParameterType.IsGenericParameter) {
 //				convs.AppendFormat ("{0}.Handle", pi.Name.GetSafeParamName ());
+			} else if (HasBindAsAttribute (pi)) {
+				convs.AppendFormat ("var nsb_{0} = {1}\n", pi.Name, GetToBindAsWrapper (null, pi));
 			} else {
 				if (mai.Type.IsClass && !mai.Type.IsByRef && 
 					(mai.Type != typeof (Selector) && mai.Type != typeof (Class) && mai.Type != typeof (string) && !typeof(INativeObject).IsAssignableFrom (mai.Type)))
@@ -3485,13 +3732,13 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	void GenerateArgumentChecks (MethodInfo mi, bool null_allowed_override)
+	void GenerateArgumentChecks (MethodInfo mi, bool null_allowed_override, PropertyInfo propInfo = null)
 	{
 		if (null_allowed_override)
 			return;
 
 		foreach (var pi in mi.GetParameters ()) {
-			var needs_null_check = ParameterNeedsNullCheck (pi, mi);
+			var needs_null_check = ParameterNeedsNullCheck (pi, mi, propInfo);
 			if (!needs_null_check)
 				continue;
 
@@ -3578,7 +3825,7 @@ public partial class Generator : IMemberGatherer {
 
 		Inject (mi, typeof (PrologueSnippetAttribute));
 
-		GenerateArgumentChecks (mi, null_allowed_override);
+		GenerateArgumentChecks (mi, null_allowed_override, propInfo);
 
 		// Collect all strings that can be fast-marshalled
 		List<string> stringParameters = CollectFastStringMarshalParameters (mi);
@@ -3590,7 +3837,7 @@ public partial class Generator : IMemberGatherer {
 		by_ref_processing2 = new StringBuilder[enum_modes.Length];
 		by_ref_init2 = new StringBuilder[enum_modes.Length];
 		for (int i = 0; i < enum_modes.Length; i++) {
-			GenerateTypeLowering (mi, null_allowed_override, enum_modes [i], out args2[i], out convs2[i], out disposes2[i], out by_ref_processing2[i], out by_ref_init2[i]);
+			GenerateTypeLowering (mi, null_allowed_override, enum_modes [i], out args2[i], out convs2[i], out disposes2[i], out by_ref_processing2[i], out by_ref_init2[i], propInfo);
 		}
 
 		// sanity check
@@ -3620,6 +3867,10 @@ public partial class Generator : IMemberGatherer {
 			       stringParameters.Select (name => "_p" + name + " = " + name).Aggregate ((first,second) => first + ", " + second));
  			indent++;
  		}
+
+		if (propInfo != null && IsSetter (mi) && HasBindAsAttribute (propInfo)) {
+			convs.AppendFormat ("var nsb_{0} = {1}\n", propInfo.Name, GetToBindAsWrapper (minfo, null));
+		}
 
 		if (convs.Length > 0)
 			print (sw, convs.ToString ());
@@ -3668,6 +3919,9 @@ public partial class Generator : IMemberGatherer {
 				print ("{0} ret;", FormatType (mi.DeclaringType, mi.ReturnType.Namespace, FindProtocolInterface (mi.ReturnType, mi)));
 			} else if (needsPtrZeroCheck) {
 				print ("IntPtr ret;");
+			} else if (minfo.is_bindAs) {
+				var bindAsAttrib = GetBindAsAttribute (minfo.mi);
+				print ("{0} ret;", FormatType (bindAsAttrib.Type.DeclaringType, GetCorrectGenericType (bindAsAttrib.Type)));
 			} else
 				print ("{0} ret;", FormatType (mi.DeclaringType, GetCorrectGenericType (mi.ReturnType))); //  = new {0} ();"
 		}
@@ -4078,6 +4332,9 @@ public partial class Generator : IMemberGatherer {
 		string propertyTypeName;
 		if (minfo.protocolize) {
 			propertyTypeName = FindProtocolInterface (pi.PropertyType, pi);
+		} else if (minfo.is_bindAs) {
+			var bindAsAttrib = GetBindAsAttribute (minfo.mi);
+			propertyTypeName = FormatType (bindAsAttrib.Type.DeclaringType, GetCorrectGenericType (bindAsAttrib.Type));
 		} else {
 			propertyTypeName = FormatType (pi.DeclaringType, GetCorrectGenericType (pi.PropertyType));
 		}

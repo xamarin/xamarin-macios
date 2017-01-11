@@ -68,6 +68,8 @@ using ProductException=BindingException;
 //		BI1045 Only a single [DefaultEnumValue] attribute can be used inside enum {type.Name}.
 //		BI1046 The [Field] constant {fa.SymbolName} cannot only be used once inside enum {type.Name}.
 //		BI1047 Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.
+//		BI1048 Unsupported type {0} decorated with [BindAsAttribute].
+//		BI1049 Could not unbox type {0} from {1} container used on {2} member decorated with [BindAsAttribute].
 //	BI11xx	warnings
 //		BI1101 Trying to use a string as a [Target]
 //		BI1102 Using the deprecated EventArgs for a delegate signature in {0}.{1}, please use DelegateName instead
