@@ -127,7 +127,11 @@ $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib/%.dylib: .libs/$(1)/%-sim.dy
 
 ifdef INCLUDE_DEVICE
 $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib/%.dylib: .libs/$(1)/%-dev.dylib | $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib
+ifeq (watchos,$(1))
+	$$(Q_STRIP) $(DEVICE_BIN_PATH)/bitcode_strip $$< -m -o $$@
+else
 	$(Q) install -m 0644 $$< $$@
+endif
 endif
 
 $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/include/%.h: %.h | $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/include/xamarin
