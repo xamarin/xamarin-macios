@@ -655,6 +655,19 @@ namespace Xamarin
 			return fn;
 		}
 
+		static string GetFrameworksBindingLibrary (Profile profile)
+		{
+			// Path.Combine (Configuration.SourceRoot, "tests/bindings-framework-test/bin/Any CPU/Debug-unified/bindings-framework-test.dll"),
+			var fn = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", "bin", "Any CPU", GetConfiguration (profile), "bindings-framework-test.dll");
+
+			if (!File.Exists (fn)) {
+				var csproj = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", "bindings-framework-test" + GetProjectSuffix (profile) + ".csproj");
+				XBuild.Build (csproj, platform: "AnyCPU");
+			}
+
+			return fn;
+		}
+
 		public static string GetBaseLibrary (Profile profile)
 		{
 			switch (profile) {
@@ -2062,7 +2075,7 @@ class C {
 				exttool.Extension = true;
 				exttool.References = new string []
 				{
-					Path.Combine (Configuration.SourceRoot, "tests/bindings-framework-test/bin/Any CPU/Debug-unified/bindings-framework-test.dll"),
+					GetFrameworksBindingLibrary (exttool.Profile),
 				};
 				exttool.CreateTemporararyServiceExtension (code: @"using UserNotifications;
 [Foundation.Register (""NotificationService"")]
