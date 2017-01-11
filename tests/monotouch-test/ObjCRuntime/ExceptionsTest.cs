@@ -7,11 +7,9 @@ using System.Threading;
 #if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#if !__WATCHOS__
 #if !MONOMAC
 using UIKit;
 using Bindings.Test;
-#endif
 #endif
 #else
 using MonoTouch;

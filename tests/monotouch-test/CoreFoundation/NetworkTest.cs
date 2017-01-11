@@ -20,7 +20,9 @@ using MonoTouch.Foundation;
 #endif
 using NUnit.Framework;
 // Mac tries to use CFNetwork Namespace instead of Class for calls without this:
+#if !__WATCHOS__
 using PlatformCFNetwork = CoreFoundation.CFNetwork;
+#endif
 
 namespace MonoTouchFixtures.CoreFoundation {
 	
