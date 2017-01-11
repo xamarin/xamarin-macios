@@ -91,53 +91,57 @@ $(2)_SOURCE_STEMS  = $(MONOTOUCH_SOURCE_STEMS)
 $(2)_X86_64_SOURCE_STEMS = $(MONOTOUCH_X86_64_SOURCE_STEMS)
 $(2)_I386_SOURCE_STEMS = $(MONOTOUCH_I386_SOURCE_STEMS)
 $(2)_LIBRARIES     = $(MONOTOUCH_LIBS)
-$(2)_ARCHITECTURES = $(3)
+ifdef INCLUDE_DEVICE
+$(2)_DEVICE_ARCHITECTURES = $(3)
+endif
+$(2)_SIM_ARCHITECTURES = $(4)
+$(2)_ARCHITECTURES = $$($(2)_DEVICE_ARCHITECTURES) $$($(2)_SIM_ARCHITECTURES)
 
 RUNTIME_$(2)_TARGETS_DIRS +=                                        \
-	$(IOS_DESTDIR)$$(XAMARIN_$(4)SIMULATOR_SDK)/usr/lib             \
-	$(IOS_DESTDIR)$$(XAMARIN_$(4)SIMULATOR_SDK)/usr/include/xamarin \
-	$(IOS_DESTDIR)$$(XAMARIN_$(5)OS_SDK)/usr/lib                    \
-	$(IOS_DESTDIR)$$(XAMARIN_$(5)OS_SDK)/usr/include/xamarin        \
+	$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib             \
+	$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/include/xamarin \
+	$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib                    \
+	$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/include/xamarin        \
 
 RUNTIME_$(2)_TARGETS +=                                                                                \
-	$$(foreach file,$$($(2)_LIBRARIES),$(IOS_DESTDIR)$$(XAMARIN_$(4)SIMULATOR_SDK)/usr/lib/$$(file))   \
-	$(foreach file,$(SHIPPED_HEADERS),$(IOS_DESTDIR)$$(XAMARIN_$(4)SIMULATOR_SDK)/usr/include/$(file)) \
+	$$(foreach file,$$($(2)_LIBRARIES),$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib/$$(file))   \
+	$(foreach file,$(SHIPPED_HEADERS),$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/include/$(file)) \
 
 ifdef INCLUDE_DEVICE
 RUNTIME_$(2)_TARGETS +=                                                                                \
-	$$(foreach file,$$($(2)_LIBRARIES),$(IOS_DESTDIR)$$(XAMARIN_$(5)OS_SDK)/usr/lib/$$(file))          \
-	$(foreach file,$(SHIPPED_HEADERS),$(IOS_DESTDIR)$$(XAMARIN_$(5)OS_SDK)/usr/include/$(file))        \
+	$$(foreach file,$$($(2)_LIBRARIES),$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib/$$(file))          \
+	$(foreach file,$(SHIPPED_HEADERS),$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/include/$(file))        \
 
 endif
 
-$(IOS_DESTDIR)$$(XAMARIN_$(4)SIMULATOR_SDK)/usr/lib/%.a: .libs/$(1)/%.a | $(IOS_DESTDIR)$$(XAMARIN_$(4)SIMULATOR_SDK)/usr/lib
+$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib/%.a: .libs/$(1)/%.a | $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib
 	$(Q) install -m 0644 $$< $$@
 
 ifdef INCLUDE_DEVICE
-$(IOS_DESTDIR)$$(XAMARIN_$(5)OS_SDK)/usr/lib/%.a: .libs/$(1)/%.a | $(IOS_DESTDIR)$$(XAMARIN_$(5)OS_SDK)/usr/lib
+$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib/%.a: .libs/$(1)/%.a | $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib
 	$(Q) install -m 0644 $$< $$@
 endif
 
-$(IOS_DESTDIR)$$(XAMARIN_$(4)SIMULATOR_SDK)/usr/lib/%.dylib: .libs/$(1)/%.dylib | $(IOS_DESTDIR)$$(XAMARIN_$(4)SIMULATOR_SDK)/usr/lib
+$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib/%.dylib: .libs/$(1)/%.dylib | $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/lib
 	$(Q) install -m 0644 $$< $$@
 
 ifdef INCLUDE_DEVICE
-$(IOS_DESTDIR)$$(XAMARIN_$(5)OS_SDK)/usr/lib/%.dylib: .libs/$(1)/%.dylib | $(IOS_DESTDIR)$$(XAMARIN_$(5)OS_SDK)/usr/lib
+$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib/%.dylib: .libs/$(1)/%.dylib | $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/lib
 	$(Q) install -m 0644 $$< $$@
 endif
 
-$(IOS_DESTDIR)$$(XAMARIN_$(4)SIMULATOR_SDK)/usr/include/%.h: %.h | $(IOS_DESTDIR)$$(XAMARIN_$(4)SIMULATOR_SDK)/usr/include/xamarin
+$(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/include/%.h: %.h | $(IOS_DESTDIR)$$(XAMARIN_$(5)SIMULATOR_SDK)/usr/include/xamarin
 	$(Q) install -m 0644 $$< $$@
 
 ifdef INCLUDE_DEVICE
-$(IOS_DESTDIR)$$(XAMARIN_$(5)OS_SDK)/usr/include/%.h: %.h | $(IOS_DESTDIR)$$(XAMARIN_$(5)OS_SDK)/usr/include/xamarin
+$(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/include/%.h: %.h | $(IOS_DESTDIR)$$(XAMARIN_$(6)OS_SDK)/usr/include/xamarin
 	$(Q) install -m 0644 $$< $$@
 endif
 
 $$(RUNTIME_$(2)_TARGETS_DIRS):
 	$(Q) mkdir -p $$@
 
-all-$(4): $$(RUNTIME_$(2)_TARGETS)
+all-$(5): $$(RUNTIME_$(2)_TARGETS)
 all-local:: $$(RUNTIME_$(2)_TARGETS)
 install-local:: $$(RUNTIME_$(2)_TARGETS)
 
@@ -145,31 +149,20 @@ endef
 
 # 1: platform name
 # 2: variable prefix
-# 3: architectures
-# 4: simulator variable name used in some places
-# 5: device variable name used in some places
+# 3: device architectures
+# 4: sim architectures
+# 5: simulator variable name used in some places
+# 6: device variable name used in some places
 ifdef INCLUDE_IOS
-ifdef INCLUDE_DEVICE
-$(eval $(call PlatformTemplate,ios,IOS,armv7 armv7s arm64 x86 x86_64,IOS,IPHONE))
-else
-$(eval $(call PlatformTemplate,ios,IOS,                   x86 x86_64,IOS,IPHONE))
-endif
+$(eval $(call PlatformTemplate,ios,IOS,armv7 armv7s arm64,x86 x86_64,IOS,IPHONE))
 endif
 
 ifdef INCLUDE_WATCH
-ifdef INCLUDE_DEVICE
-$(eval $(call PlatformTemplate,watchos,WATCHOS,armv7k x86,WATCH,WATCH))
-else
-$(eval $(call PlatformTemplate,watchos,WATCHOS,       x86,WATCH,WATCH))
-endif
+$(eval $(call PlatformTemplate,watchos,WATCHOS,armv7k,x86,WATCH,WATCH))
 endif
 
 ifdef INCLUDE_TVOS
-ifdef INCLUDE_DEVICE
-$(eval $(call PlatformTemplate,tvos,TVOS,arm64 x86_64,TV,TV))
-else
-$(eval $(call PlatformTemplate,tvos,TVOS,      x86_64,TV,TV))
-endif
+$(eval $(call PlatformTemplate,tvos,TVOS,arm64,x86_64,TV,TV))
 endif
 
 #
