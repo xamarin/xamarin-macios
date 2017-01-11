@@ -433,15 +433,9 @@ namespace Xamarin.iOS.Tasks
 		public void BundleResources ()
 		{
 			var actool = Path.Combine ("obj", "iPhoneSimulator", "Debug", "actool", "bundle");
+			var ibtool = Path.Combine ("obj", "iPhoneSimulator", "Debug", "ibtool");
 			var path = Path.Combine (MonoTouchProjectPath, "Info.plist");
 			var plist = PDictionary.FromFile (path);
-			string ibtool;
-
-			// Note: the files will only be in ibtool-link if there is more than 1 storyboard that *could* be linked
-			//if (AppleSdkSettings.XcodeVersion.Major >= 7)
-			//	ibtool = Path.Combine ("obj", "iPhoneSimulator", "Debug", "ibtool-link");
-			//else
-				ibtool = Path.Combine ("obj", "iPhoneSimulator", "Debug", "ibtool");
 
 			plist.SetMinimumOSVersion ("6.1");
 			plist.Save (path, true);
