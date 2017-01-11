@@ -264,20 +264,20 @@ namespace XamCore.Security {
 		extern static SecStatusCode SecKeychainAddGenericPassword (
 			IntPtr keychain,
 			int serviceNameLength,
-			IntPtr serviceName,
+			byte[] serviceName,
 			int accountNameLength,
-			IntPtr accountName,
+			byte[] accountName,
 			int passwordLength,
-			IntPtr passwordData,
+			byte[] passwordData,
 			IntPtr itemRef);
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode SecKeychainFindGenericPassword (
 			IntPtr keychainOrArray,
 			int serviceNameLength,
-			IntPtr serviceName,
+			byte[] serviceName,
 			int accountNameLength,
-			IntPtr accountName,
+			byte[] accountName,
 			out int passwordLength,
 			out IntPtr passwordData,
 			IntPtr itemRef);
@@ -286,31 +286,31 @@ namespace XamCore.Security {
 		extern static SecStatusCode SecKeychainAddInternetPassword (
 			IntPtr keychain,
 			int serverNameLength,
-			IntPtr serverName,
+			byte[] serverName,
 			int securityDomainLength,
-			IntPtr securityDomain,
+			byte[] securityDomain,
 			int accountNameLength,
-			IntPtr accountName,
+			byte[] accountName,
 			int pathLength,
-			IntPtr path,
+			byte[] path,
 			short port,
 			IntPtr protocol,
 			IntPtr authenticationType,
 			int passwordLength,
-			IntPtr passwordData,
+			byte[] passwordData,
 			IntPtr itemRef);
 
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode SecKeychainFindInternetPassword (
 			IntPtr keychain,
 			int serverNameLength,
-			IntPtr serverName,
+			byte[] serverName,
 			int securityDomainLength,
-			IntPtr securityDomain,
+			byte[] securityDomain,
 			int accountNameLength,
-			IntPtr accountName,
+			byte[] accountName,
 			int pathLength,
-			IntPtr path,
+			byte[] path,
 			short port,
 			IntPtr protocol,
 			IntPtr authenticationType,
@@ -331,86 +331,39 @@ namespace XamCore.Security {
 			SecAuthenticationType authenticationType = SecAuthenticationType.Default,
 			string securityDomain = null)
 		{
-			GCHandle serverHandle = new GCHandle ();
-			GCHandle securityDomainHandle = new GCHandle ();
-			GCHandle accountHandle = new GCHandle ();
-			GCHandle pathHandle = new GCHandle ();
-			GCHandle passwordHandle = new GCHandle ();
+			byte[] serverNameBytes = null;
+			byte[] securityDomainBytes = null;
+			byte[] accountNameBytes = null;
+			byte[] pathBytes = null;
 			
-			int serverNameLength = 0;
-			IntPtr serverNamePtr = IntPtr.Zero;
-			int securityDomainLength = 0;
-			IntPtr securityDomainPtr = IntPtr.Zero;
-			int accountNameLength = 0;
-			IntPtr accountNamePtr = IntPtr.Zero;
-			int pathLength = 0;
-			IntPtr pathPtr = IntPtr.Zero;
-			int passwordLength = 0;
-			IntPtr passwordPtr = IntPtr.Zero;
+			if (!String.IsNullOrEmpty (serverName))
+				serverNameBytes = System.Text.Encoding.UTF8.GetBytes (serverName);
 			
-			try {
-				
-				if (!String.IsNullOrEmpty (serverName)) {
-					var bytes = System.Text.Encoding.UTF8.GetBytes (serverName);
-					serverNameLength = bytes.Length;
-					serverHandle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
-					serverNamePtr = serverHandle.AddrOfPinnedObject ();
-				}
-				
-				if (!String.IsNullOrEmpty (securityDomain)) {
-					var bytes = System.Text.Encoding.UTF8.GetBytes (securityDomain);
-					securityDomainLength = bytes.Length;
-					securityDomainHandle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
-				}
-				
-				if (!String.IsNullOrEmpty (accountName)) {
-					var bytes = System.Text.Encoding.UTF8.GetBytes (accountName);
-					accountNameLength = bytes.Length;
-					accountHandle = GCHandle.Alloc (bytes, GCHandleType.Pinned);
-					accountNamePtr = accountHandle.AddrOfPinnedObject ();
-				}
-				
-				if (!String.IsNullOrEmpty(path)) {
-					var bytes = System.Text.Encoding.UTF8.GetBytes (path);
-					pathLength = bytes.Length;
-					pathHandle = GCHandle.Alloc (bytes, GCHandleType.Pinned);
-					pathPtr = pathHandle.AddrOfPinnedObject ();
-				}
-				
-				if (password != null && password.Length > 0) {
-					passwordLength = password.Length;
-					passwordHandle = GCHandle.Alloc (password, GCHandleType.Pinned);
-					passwordPtr = passwordHandle.AddrOfPinnedObject ();
-				}
-				
-				return SecKeychainAddInternetPassword (
-					IntPtr.Zero,
-					serverNameLength,
-					serverNamePtr,
-					securityDomainLength,
-					securityDomainPtr,
-					accountNameLength,
-					accountNamePtr,
-					pathLength,
-					pathPtr,
-					port,
-					SecProtocolKeys.FromSecProtocol (protocolType),
-					KeysAuthenticationType.FromSecAuthenticationType (authenticationType),
-					passwordLength,
-					passwordPtr,
-					IntPtr.Zero);
-			} finally {
-				if (serverHandle.IsAllocated)
-					serverHandle.Free ();
-				if (accountHandle.IsAllocated)
-					accountHandle.Free ();
-				if (passwordHandle.IsAllocated)
-					passwordHandle.Free ();
-				if (securityDomainHandle.IsAllocated)
-					securityDomainHandle.Free ();
-				if (pathHandle.IsAllocated)
-					pathHandle.Free ();
-			}
+			if (!String.IsNullOrEmpty (securityDomain))
+				securityDomainBytes = System.Text.Encoding.UTF8.GetBytes (securityDomain);
+			
+			if (!String.IsNullOrEmpty (accountName))
+				accountNameBytes = System.Text.Encoding.UTF8.GetBytes (accountName);
+			
+			if (!String.IsNullOrEmpty (path))
+				pathBytes = System.Text.Encoding.UTF8.GetBytes (path);
+			
+			return SecKeychainAddInternetPassword (
+				IntPtr.Zero,
+				serverNameBytes?.Length ?? 0,
+				serverNameBytes,
+				securityDomainBytes?.Length ?? 0,
+				securityDomainBytes,
+				accountNameBytes?.Length ?? 0,
+				accountNameBytes,
+				pathBytes?.Length ?? 0,
+				pathBytes,
+				port,
+				SecProtocolKeys.FromSecProtocol (protocolType),
+				KeysAuthenticationType.FromSecAuthenticationType (authenticationType),
+				password?.Length ?? 0,
+				password,
+				IntPtr.Zero);
 		}
 		
 		
@@ -426,61 +379,38 @@ namespace XamCore.Security {
 		{
 			password = null;
 			
-			GCHandle serverHandle = new GCHandle ();
-			GCHandle securityDomainHandle = new GCHandle ();
-			GCHandle accountHandle = new GCHandle ();
-			GCHandle pathHandle = new GCHandle ();
-			
-			int serverNameLength = 0;
-			IntPtr serverNamePtr = IntPtr.Zero;
-			int securityDomainLength = 0;
-			IntPtr securityDomainPtr = IntPtr.Zero;
-			int accountNameLength = 0;
-			IntPtr accountNamePtr = IntPtr.Zero;
-			int pathLength = 0;
-			IntPtr pathPtr = IntPtr.Zero;
+			byte[] serverBytes = null;
+			byte[] securityDomainBytes = null;
+			byte[] accountNameBytes = null;
+			byte[] pathBytes = null;
+
 			IntPtr passwordPtr = IntPtr.Zero;
 			
 			try {
-				if (!String.IsNullOrEmpty(serverName)) {
-					var bytes = System.Text.Encoding.UTF8.GetBytes (serverName);
-					serverNameLength = bytes.Length;
-					serverHandle = GCHandle.Alloc (bytes, GCHandleType.Pinned);
-					serverNamePtr = serverHandle.AddrOfPinnedObject ();
-				}
+				if (!String.IsNullOrEmpty (serverName))
+					serverBytes = System.Text.Encoding.UTF8.GetBytes (serverName);
 				
-				if (!String.IsNullOrEmpty(securityDomain)) {
-					var bytes = System.Text.Encoding.UTF8.GetBytes (securityDomain);
-					securityDomainLength = bytes.Length;
-					securityDomainHandle = GCHandle.Alloc (bytes, GCHandleType.Pinned);
-				}
+				if (!String.IsNullOrEmpty (securityDomain))
+					securityDomainBytes = System.Text.Encoding.UTF8.GetBytes (securityDomain);
 				
-				if (!String.IsNullOrEmpty(accountName)) {
-					var bytes = System.Text.Encoding.UTF8.GetBytes (accountName);
-					accountNameLength = bytes.Length;
-					accountHandle = GCHandle.Alloc (bytes, GCHandleType.Pinned);
-					accountNamePtr = accountHandle.AddrOfPinnedObject ();
-				}
+				if (!String.IsNullOrEmpty (accountName))
+					accountNameBytes = System.Text.Encoding.UTF8.GetBytes (accountName);
 				
-				if (!String.IsNullOrEmpty(path)) {
-					var bytes = System.Text.Encoding.UTF8.GetBytes (path);
-					pathLength = bytes.Length;
-					pathHandle = GCHandle.Alloc (bytes, GCHandleType.Pinned);
-					pathPtr = pathHandle.AddrOfPinnedObject ();
-				}
+				if (!String.IsNullOrEmpty(path))
+					pathBytes = System.Text.Encoding.UTF8.GetBytes (path);
 				
 				int passwordLength = 0;
 				
 				SecStatusCode code = SecKeychainFindInternetPassword(
 					IntPtr.Zero,
-					serverNameLength,
-					serverNamePtr,
-					securityDomainLength,
-					securityDomainPtr,
-					accountNameLength,
-					accountNamePtr,
-					pathLength,
-					pathPtr,
+					serverBytes?.Length ?? 0,
+					serverBytes,
+					securityDomainBytes?.Length ?? 0,
+					securityDomainBytes,
+					accountNameBytes?.Length ?? 0,
+					accountNameBytes,
+					pathBytes?.Length ?? 0,
+					pathBytes,
 					port,
 					SecProtocolKeys.FromSecProtocol(protocolType),
 					KeysAuthenticationType.FromSecAuthenticationType(authenticationType),
@@ -496,14 +426,6 @@ namespace XamCore.Security {
 				return code;
 				
 			} finally {
-				if (serverHandle.IsAllocated)
-					serverHandle.Free();
-				if (accountHandle.IsAllocated)
-					accountHandle.Free();
-				if (securityDomainHandle.IsAllocated)
-					securityDomainHandle.Free();
-				if (pathHandle.IsAllocated)
-					pathHandle.Free();
 				if (passwordPtr != IntPtr.Zero)
 					SecKeychainItemFreeContent(IntPtr.Zero, passwordPtr);
 			}
@@ -511,96 +433,52 @@ namespace XamCore.Security {
 
 		public static SecStatusCode AddGenericPassword (string serviceName, string accountName, byte[] password)
 		{
-			GCHandle serviceHandle = new GCHandle ();
-			GCHandle accountHandle = new GCHandle ();
-			GCHandle passwordHandle = new GCHandle ();
+			byte[] serviceNameBytes = null;
+			byte[] accountNameBytes = null;
 			
-			int serviceNameLength = 0;
-			IntPtr serviceNamePtr = IntPtr.Zero;
-			int accountNameLength = 0;
-			IntPtr accountNamePtr = IntPtr.Zero;
-			int passwordLength = 0;
-			IntPtr passwordPtr = IntPtr.Zero;
-			
-			try {
-				if (!String.IsNullOrEmpty(serviceName)) {
-					var bytes = System.Text.Encoding.UTF8.GetBytes (serviceName);
-					serviceNameLength = bytes.Length;
-					serviceHandle = GCHandle.Alloc (bytes, GCHandleType.Pinned);
-					serviceNamePtr = serviceHandle.AddrOfPinnedObject ();
-				}
-				
-				if (!String.IsNullOrEmpty(accountName)) {
-					var bytes = System.Text.Encoding.UTF8.GetBytes (accountName);
-					accountNameLength = bytes.Length;
-					accountHandle = GCHandle.Alloc (bytes, GCHandleType.Pinned);
-					accountNamePtr = accountHandle.AddrOfPinnedObject ();
-				}
+			if (!String.IsNullOrEmpty (serviceName))
+				serviceNameBytes = System.Text.Encoding.UTF8.GetBytes (serviceName);
 
-				if (password != null && password.Length > 0) {
-					passwordLength = password.Length;
-					passwordHandle = GCHandle.Alloc (password, GCHandleType.Pinned);
-					passwordPtr = passwordHandle.AddrOfPinnedObject ();
-				}
+			if (!String.IsNullOrEmpty (accountName))
+				accountNameBytes = System.Text.Encoding.UTF8.GetBytes (accountName);
 
-				return SecKeychainAddGenericPassword(
-					IntPtr.Zero,
-					serviceNameLength,
-					serviceNamePtr,
-					accountNameLength,
-					accountNamePtr,
-					passwordLength,
-					passwordPtr,
-					IntPtr.Zero
-					);
-
-			} finally {
-				if (serviceHandle.IsAllocated)
-					serviceHandle.Free();
-				if (accountHandle.IsAllocated)
-					accountHandle.Free();
-				if (passwordHandle.IsAllocated)
-					passwordHandle.Free();
-			}
+			return SecKeychainAddGenericPassword(
+				IntPtr.Zero,
+				serviceNameBytes?.Length ?? 0,
+				serviceNameBytes,
+				accountNameBytes?.Length ?? 0,
+				accountNameBytes,
+				password?.Length ?? 0,
+				password,
+				IntPtr.Zero
+				);
 		}
 
 		public static SecStatusCode FindGenericPassword(string serviceName, string accountName, out byte[] password)
 		{
 			password = null;
 
-			GCHandle serviceHandle = new GCHandle ();
-			GCHandle accountHandle = new GCHandle ();
+			byte[] serviceNameBytes = null;
+			byte[] accountNameBytes = null;
 			
-			int serviceNameLength = 0;
-			IntPtr serviceNamePtr = IntPtr.Zero;
-			int accountNameLength = 0;
-			IntPtr accountNamePtr = IntPtr.Zero;
 			IntPtr passwordPtr = IntPtr.Zero;
 			
 			try {
 				
-				if (!String.IsNullOrEmpty(serviceName)) {
-					var bytes = System.Text.Encoding.UTF8.GetBytes (serviceName);
-					serviceNameLength = bytes.Length;
-					serviceHandle = GCHandle.Alloc (bytes, GCHandleType.Pinned);
-					serviceNamePtr = serviceHandle.AddrOfPinnedObject();
-				}
+				if (!String.IsNullOrEmpty (serviceName))
+					serviceNameBytes = System.Text.Encoding.UTF8.GetBytes (serviceName);
 				
-				if (!String.IsNullOrEmpty(accountName)) {
-					var bytes = System.Text.Encoding.UTF8.GetBytes (accountName);
-					accountNameLength = bytes.Length;
-					accountHandle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
-					accountNamePtr = accountHandle.AddrOfPinnedObject();
-				}
+				if (!String.IsNullOrEmpty (accountName))
+					accountNameBytes = System.Text.Encoding.UTF8.GetBytes (accountName);
 				
 				int passwordLength = 0;
 				
 				var code = SecKeychainFindGenericPassword(
 					IntPtr.Zero,
-					serviceNameLength,
-					serviceNamePtr,
-					accountNameLength,
-					accountNamePtr,
+					serviceNameBytes?.Length ?? 0,
+					serviceNameBytes,
+					accountNameBytes?.Length ?? 0,
+					accountNameBytes,
 					out passwordLength,
 					out passwordPtr,
 					IntPtr.Zero
@@ -614,10 +492,6 @@ namespace XamCore.Security {
 				return code;
 				
 			} finally {
-				if (serviceHandle.IsAllocated)
-					serviceHandle.Free();
-				if (accountHandle.IsAllocated)
-					accountHandle.Free();
 				if (passwordPtr != IntPtr.Zero)
 					SecKeychainItemFreeContent(IntPtr.Zero, passwordPtr);
 			}

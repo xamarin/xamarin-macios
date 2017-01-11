@@ -130,7 +130,7 @@ $(IOS_BUILD_DIR)/$(1)/generated_sources: $(IOS_BUILD_DIR)/$(1)/generator.exe $$(
 		$$(IOS_APIS)
 endef
 $(eval $(call IOS_GENERATOR_template,compat,--ns=MonoTouch.ObjCRuntime -p,compat-ios))
-$(eval $(call IOS_GENERATOR_template,native,--ns=ObjCRuntime -new-style,native))
+$(eval $(call IOS_GENERATOR_template,native,--ns=ObjCRuntime,native))
 
 define IOS_TARGETS_template
 IOS_VARIANTS_TARGETS += $(IOS_BUILD_DIR)/$(1)/$(3)
@@ -149,8 +149,8 @@ $(IOS_BUILD_DIR)/$(1)/$(3).mdb: $(IOS_BUILD_DIR)/$(1)/$(3)
 endef
 
 $(eval $(call IOS_TARGETS_template,compat,--ns=MonoTouch.ObjCRuntime,monotouch.dll,compat,compat-ios))
-$(eval $(call IOS_TARGETS_template,native-32,--ns=ObjCRuntime -new-style,Xamarin.iOS.dll,native,native-32))
-$(eval $(call IOS_TARGETS_template,native-64,--ns=ObjCRuntime -new-style,Xamarin.iOS.dll,native,native-64))
+$(eval $(call IOS_TARGETS_template,native-32,--ns=ObjCRuntime,Xamarin.iOS.dll,native,native-32))
+$(eval $(call IOS_TARGETS_template,native-64,--ns=ObjCRuntime,Xamarin.iOS.dll,native,native-64))
 
 define IOS_LIBS_template
 IOS_VARIANTS_TARGETS += $(addprefix $(IOS_BUILD_DIR)/$(1)/,$(4) $(5))
@@ -186,7 +186,7 @@ $(IOS_BUILD_DIR)/$(1)/System.Drawing.dll: $$(IOS_SYSTEM_DRAWING_SOURCES) monotou
 endef
 
 $(eval $(call IOS_LIBS_template,compat,--ns=MonoTouch.ObjCRuntime,monotouch.dll,MonoTouch.Dialog-1.dll,MonoTouch.NUnitLite.dll))
-$(eval $(call IOS_LIBS_template,reference,--ns=ObjCRuntime -new-style,Xamarin.iOS.dll,MonoTouch.Dialog-1.dll,MonoTouch.NUnitLite.dll,-define:XAMCORE_2_0 -define:__UNIFIED__))
+$(eval $(call IOS_LIBS_template,reference,--ns=ObjCRuntime,Xamarin.iOS.dll,MonoTouch.Dialog-1.dll,MonoTouch.NUnitLite.dll,-define:XAMCORE_2_0 -define:__UNIFIED__))
 
 $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.dll
 	@mkdir -p $(dir $@)
@@ -462,6 +462,10 @@ $(MAC_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in
 	@mkdir -p $(MAC_BUILD_DIR)
 	$(call Q_PROF_GEN,mac) sed < $< > $@ 's|@PRODUCT_NAME@|$(MAC_PRODUCT)|g; s|@PACKAGE_HEAD_REV@|$(PACKAGE_HEAD_REV)|g; s|@PACKAGE_HEAD_BRANCH@|$(CURRENT_BRANCH)|g; s|@PACKAGE_VERSION_MAJOR@|$(MAC_PACKAGE_VERSION_MAJOR)|g; s|@PACKAGE_VERSION_MINOR@|$(MAC_PACKAGE_VERSION_MINOR)|g; s|@PACKAGE_VERSION_REV@|$(MAC_PACKAGE_VERSION_REV)|g; s|@PACKAGE_VERSION_BUILD@|$(MAC_PACKAGE_VERSION_BUILD)|g'
 
+# We can't pass the --target-framework values as parameters to the templates, because the commas interfere with Make's parameter parsing.
+xm_full_profile=--target-framework=Xamarin.Mac,Version=v4.5,Profile=Full
+xm_mobile_profile=--target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile
+
 define MAC_GENERATOR_template
 $(MAC_BUILD_DIR)/$(1)/pmcs: pmcs.in $(PMCS_EXE) Makefile | $(MAC_BUILD_DIR)/$(1)
 	$$(call Q_PROF_GEN,mac/$(1)) sed -e 's|@MCS@|$(SYSTEM_MCS) $(4)|g' -e 's|@PMCS@|$(abspath $(PMCS_EXE))|g' < $$< > $$@
@@ -496,30 +500,31 @@ $(MAC_BUILD_DIR)/$(1)/generated-sources: $(MAC_BUILD_DIR)/$(1)/_bmac.exe $(MAC_A
 		-d:NO_SYSTEM_DRAWING \
 		$(2) \
 		$(3) \
+		$(xm_$(1)_profile) \
 		$(MAC_APIS)
 endef
 
 $(eval $(call MAC_GENERATOR_template,compat,--ns=MonoMac.ObjCRuntime,-r:/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5/System.Drawing.dll,,$(SYSTEM_MONO),compat-mac))
-$(eval $(call MAC_GENERATOR_template,full,--ns=ObjCRuntime -unified-full-profile,-d:NO_SYSTEM_DRAWING,,$(SYSTEM_MONO),full,-d:NO_SYSTEM_DRAWING))
-$(eval $(call MAC_GENERATOR_template,mobile,--ns=ObjCRuntime -unified-mobile-profile,$(SHARED_SYSTEM_DRAWING_SOURCES),-nostdlib -r:mscorlib.dll -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac,$(TOP)/builds/install/mono-mac64,mobile))
+$(eval $(call MAC_GENERATOR_template,full,--ns=ObjCRuntime,-d:NO_SYSTEM_DRAWING,,$(SYSTEM_MONO),full,-d:NO_SYSTEM_DRAWING))
+$(eval $(call MAC_GENERATOR_template,mobile,--ns=ObjCRuntime,$(SHARED_SYSTEM_DRAWING_SOURCES),-nostdlib -r:mscorlib.dll -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac,$(TOP)/builds/install/mono-mac64,mobile))
 
 define MAC_TARGETS_template
-$(MAC_BUILD_DIR)/$(1)/$(3): $(MAC_BUILD_DIR)/$(4)/generated-sources $(MAC_SOURCES) $(MAC_CFNETWORK_SOURCES) $(MAC_CLASSIC_SOURCES) $(SN_KEY)
+$(MAC_BUILD_DIR)/$(1)/$(2): $(MAC_BUILD_DIR)/$(3)/generated-sources $(MAC_SOURCES) $(MAC_CFNETWORK_SOURCES) $(MAC_CLASSIC_SOURCES) $(SN_KEY)
 	@mkdir -p $(MAC_BUILD_DIR)/$(1)
-	$$(call Q_PROF_PMCS,mac/$(1)) PMCS_PROFILE=$(6) $(MAC_BUILD_DIR)/$(4)/pmcs \
+	$$(call Q_PROF_PMCS,mac/$(1)) PMCS_PROFILE=$(5) $(MAC_BUILD_DIR)/$(3)/pmcs \
 		-out:$$@ -target:library -debug -unsafe \
 		$$(MAC_COMMON_DEFINES),OBJECT_REF_TRACKING \
 		-keyfile:$(SN_KEY) \
 		-nowarn:3021,1635,612,618,0219,0414,$(MAC_WARNINGS_TO_FIX) \
-		$(5) \
+		$(4) \
 		@$$< $$(MAC_SOURCES)
 endef
 
-$(eval $(call MAC_TARGETS_template,compat,--ns=MonoMac.ObjCRuntime,XamMac.dll,compat,-r:System.Drawing -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5 $(MAC_CLASSIC_SOURCES),compat-mac))
-$(eval $(call MAC_TARGETS_template,mobile-32,--ns=ObjCRuntime -unified-mobile-profile,Xamarin.Mac.dll,mobile,-r:System.Net.Http -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac $(MAC_CFNETWORK_SOURCES) $(MAC_MODERNHTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,mobile-32))
-$(eval $(call MAC_TARGETS_template,mobile-64,--ns=ObjCRuntime -unified-mobile-profile,Xamarin.Mac.dll,mobile,-r:System.Net.Http -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac $(MAC_CFNETWORK_SOURCES) $(MAC_MODERNHTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,mobile-64))
-$(eval $(call MAC_TARGETS_template,full-32,--ns=ObjCRuntime -unified-full-profile,Xamarin.Mac.dll,full,-r:System.Net.Http -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5 $(MAC_CFNETWORK_SOURCES) $(MAC_MODERNHTTP_SOURCES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,full-32))
-$(eval $(call MAC_TARGETS_template,full-64,--ns=ObjCRuntime -unified-full-profile,Xamarin.Mac.dll,full,-r:System.Net.Http -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5 $(MAC_CFNETWORK_SOURCES) $(MAC_MODERNHTTP_SOURCES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,full-64))
+$(eval $(call MAC_TARGETS_template,compat,XamMac.dll,compat,-r:System.Drawing -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5 $(MAC_CLASSIC_SOURCES),compat-mac))
+$(eval $(call MAC_TARGETS_template,mobile-32,Xamarin.Mac.dll,mobile,-r:System.Net.Http -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac $(MAC_CFNETWORK_SOURCES) $(MAC_MODERNHTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,mobile-32))
+$(eval $(call MAC_TARGETS_template,mobile-64,Xamarin.Mac.dll,mobile,-r:System.Net.Http -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac $(MAC_CFNETWORK_SOURCES) $(MAC_MODERNHTTP_SOURCES) $(SHARED_SYSTEM_DRAWING_SOURCES) $(APPLETLS_DEFINES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,mobile-64))
+$(eval $(call MAC_TARGETS_template,full-32,Xamarin.Mac.dll,full,-r:System.Net.Http -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5 $(MAC_CFNETWORK_SOURCES) $(MAC_MODERNHTTP_SOURCES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,full-32))
+$(eval $(call MAC_TARGETS_template,full-64,Xamarin.Mac.dll,full,-r:System.Net.Http -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5 $(MAC_CFNETWORK_SOURCES) $(MAC_MODERNHTTP_SOURCES) -D:XAMARIN_MODERN -D:UNIFIED -D:__UNIFIED__,full-64))
 
 $(MAC_BUILD_DIR)/%-reference/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/%-64/Xamarin.Mac.dll
 	@mkdir -p $(@D)

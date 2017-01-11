@@ -65,4 +65,55 @@ namespace XamCore.Foundation {
 		[Field ("NSMetadataUbiquitousItemDownloadingStatusNotDownloaded")]
 		NotDownloaded,
 	}
+
+	[iOS (9,0)][Mac (10,11)]
+	public enum NSStringTransform {
+		[Field ("NSStringTransformLatinToKatakana")]
+		LatinToKatakana,
+
+		[Field ("NSStringTransformLatinToHiragana")]
+		LatinToHiragana,
+
+		[Field ("NSStringTransformLatinToHangul")]
+		LatinToHangul,
+
+		[Field ("NSStringTransformLatinToArabic")]
+		LatinToArabic,
+
+		[Field ("NSStringTransformLatinToHebrew")]
+		LatinToHebrew,
+
+		[Field ("NSStringTransformLatinToThai")]
+		LatinToThai,
+
+		[Field ("NSStringTransformLatinToCyrillic")]
+		LatinToCyrillic,
+
+		[Field ("NSStringTransformLatinToGreek")]
+		LatinToGreek,
+
+		[Field ("NSStringTransformToLatin")]
+		ToLatin,
+
+		[Field ("NSStringTransformMandarinToLatin")]
+		MandarinToLatin,
+
+		[Field ("NSStringTransformHiraganaToKatakana")]
+		HiraganaToKatakana,
+
+		[Field ("NSStringTransformFullwidthToHalfwidth")]
+		FullwidthToHalfwidth,
+
+		[Field ("NSStringTransformToXMLHex")]
+		ToXmlHex,
+
+		[Field ("NSStringTransformToUnicodeName")]
+		ToUnicodeName,
+
+		[Field ("NSStringTransformStripCombiningMarks")]
+		StripCombiningMarks,
+
+		[Field ("NSStringTransformStripDiacritics")]
+		StripDiacritics,
+	}
 }

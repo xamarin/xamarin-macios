@@ -7149,70 +7149,6 @@ namespace XamCore.Foundation
 		[return: NullAllowed]
 		NSString TransliterateString (NSString transform, bool reverse);
 
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformLatinToKatakana"), Internal]
-		NSString NSStringTransformLatinToKatakana { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformLatinToHiragana"), Internal]
-		NSString NSStringTransformLatinToHiragana { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformLatinToHangul"), Internal]
-		NSString NSStringTransformLatinToHangul { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformLatinToArabic"), Internal]
-		NSString NSStringTransformLatinToArabic { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformLatinToHebrew"), Internal]
-		NSString NSStringTransformLatinToHebrew { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformLatinToThai"), Internal]
-		NSString NSStringTransformLatinToThai { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformLatinToCyrillic"), Internal]
-		NSString NSStringTransformLatinToCyrillic { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformLatinToGreek"), Internal]
-		NSString NSStringTransformLatinToGreek { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformToLatin"), Internal]
-		NSString NSStringTransformToLatin { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformMandarinToLatin"), Internal]
-		NSString NSStringTransformMandarinToLatin { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformHiraganaToKatakana"), Internal]
-		NSString NSStringTransformHiraganaToKatakana { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformFullwidthToHalfwidth"), Internal]
-		NSString NSStringTransformFullwidthToHalfwidth { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformToXMLHex"), Internal]
-		NSString NSStringTransformToXMLHex { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformToUnicodeName"), Internal]
-		NSString NSStringTransformToUnicodeName { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformStripCombiningMarks"), Internal]
-		NSString NSStringTransformStripCombiningMarks { get; }
-		
-		[iOS(9,0), Mac(10,11)]
-		[Field ("NSStringTransformStripDiacritics"), Internal]
-		NSString NSStringTransformStripDiacritics { get; }
-
 		[Export ("hasPrefix:")]
 		bool HasPrefix (NSString prefix);
 
@@ -7262,8 +7198,13 @@ namespace XamCore.Foundation
 		nuint ReplaceOcurrences (NSString target, NSString replacement, NSStringCompareOptions options, NSRange range);
 
 		[iOS (9,0), Mac(10,11)]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("applyTransform:reverse:range:updatedRange:")]
 		bool ApplyTransform (NSString transform, bool reverse, NSRange range, out NSRange resultingRange);
+
+		[iOS (9,0)][Mac (10,11)]
+		[Wrap ("ApplyTransform (transform.GetConstant (), reverse, range, out resultingRange)")]
+		bool ApplyTransform (NSStringTransform transform, bool reverse, NSRange range, out NSRange resultingRange);
 
 		[Export ("replaceCharactersInRange:withString:")]
 		void ReplaceCharactersInRange (NSRange range, NSString aString);
@@ -7468,32 +7409,70 @@ namespace XamCore.Foundation
 		NSString ChangeNotificationIsPriorKey { get; }
 #if MONOMAC
 		// Cocoa Bindings added by Kenneth J. Pouncey 2010/11/17
-		[Export ("exposedBindings")]
-		NSString[] ExposedBindings ();
-
+		[Sealed]
 		[Export ("valueClassForBinding:")]
-		Class BindingValueClass (string binding);
+		Class GetBindingValueClass (NSString binding);
 
+#if !XAMCORE_4_0
+		[Obsolete ("Use Bind (NSString binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options) instead")]
 		[Export ("bind:toObject:withKeyPath:options:")]
 		void Bind (string binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options);
 
+		[Obsolete ("Use Unbind (NSString binding) instead")]
 		[Export ("unbind:")]
 		void Unbind (string binding);
 
+		[Obsolete ("Use GetBindingValueClass (NSString binding) instead")]
+		[Export ("valueClassForBinding:")]
+		Class BindingValueClass (string binding);
+
+		[Obsolete ("Use GetBindingInfo (NSString binding) instead")]
 		[Export ("infoForBinding:")]
 		NSDictionary BindingInfo (string binding);
 
+		[Obsolete ("Use GetBindingOptionDescriptions (NSString aBinding) instead")]
 		[Export ("optionDescriptionsForBinding:")]
 		NSObject[] BindingOptionDescriptions (string aBinding);
+
+		[Static]
+		[Wrap ("GetDefaultPlaceholder (marker, (NSString) binding)")]
+		NSObject GetDefaultPlaceholder (NSObject marker, string binding);
+
+		[Static]
+		[Obsolete ("Use SetDefaultPlaceholder (NSObject placeholder, NSObject marker, NSString binding) instead")]
+		[Wrap ("SetDefaultPlaceholder (placeholder, marker, (NSString) binding)")]
+		void SetDefaultPlaceholder (NSObject placeholder, NSObject marker, string binding);
+
+		[Export ("exposedBindings")]
+		NSString[] ExposedBindings ();
+#else
+		[Export ("exposedBindings")]
+		NSString[] ExposedBindings { get; }
+#endif
+		[Sealed]
+		[Export ("bind:toObject:withKeyPath:options:")]
+		void Bind (NSString binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options);
+
+		[Sealed]
+		[Export ("unbind:")]
+		void Unbind (NSString binding);
+
+		[Sealed]
+		[Export ("infoForBinding:")]
+		NSDictionary GetBindingInfo (NSString binding);
+
+		[Sealed]
+		[Export ("optionDescriptionsForBinding:")]
+		NSObject[] GetBindingOptionDescriptions (NSString aBinding);
 
 		// NSPlaceholders (informal) protocol
 		[Static]
 		[Export ("defaultPlaceholderForMarker:withBinding:")]
-		NSObject GetDefaultPlaceholder (NSObject marker, string binding);
+		NSObject GetDefaultPlaceholder (NSObject marker, NSString binding);
 
 		[Static]
 		[Export ("setDefaultPlaceholder:forMarker:withBinding:")]
-		void SetDefaultPlaceholder (NSObject placeholder, NSObject marker, string binding);
+		void SetDefaultPlaceholder (NSObject placeholder, NSObject marker, NSString binding);
 
 		[Export ("objectDidEndEditing:")]
 		void ObjectDidEndEditing (NSObject editor);
@@ -12886,9 +12865,14 @@ namespace XamCore.Foundation
 		[Export ("terminationReason")]
 		NSTaskTerminationReason TerminationReason { get; }
 
-		// Fields
+#if !XAMCORE_4_0
 		[Field ("NSTaskDidTerminateNotification")]
 		NSString NSTaskDidTerminateNotification { get; }
+#endif
+
+		[Field ("NSTaskDidTerminateNotification")]
+		[Notification]
+		NSString DidTerminateNotification { get; }
 	}
 
 	[MountainLion]

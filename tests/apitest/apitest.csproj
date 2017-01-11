@@ -123,6 +123,7 @@
     <Compile Include="src\NSScriptCommandDescriptionDictionaryTest.cs" />
     <Compile Include="src\ObjCRuntime\ClassTest.cs" />
     <Compile Include="src\ObjCRuntime\Messaging.cs" />
+    <Compile Include="src\ObjCRuntime\SimpleRegistrarTest.cs" />
     <Compile Include="src\SceneKit\SceneKit.cs" />
     <Compile Include="src\SceneKit\SCNGeometrySource.cs" />
     <Compile Include="src\SceneKit\SCNMaterial.cs" />

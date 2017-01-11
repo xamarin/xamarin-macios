@@ -11,6 +11,14 @@ using Xamarin.Utils;
 
 using XamCore.ObjCRuntime;
 
+#if MONOTOUCH
+using PlatformException = Xamarin.Bundler.MonoTouchException;
+using PlatformResolver = MonoTouch.Tuner.MonoTouchResolver;
+#else
+using PlatformException = Xamarin.Bundler.MonoMacException;
+using PlatformResolver = Xamarin.Bundler.MonoMacResolver;
+#endif
+
 namespace Xamarin.Bundler {
 
 	[Flags]
@@ -49,6 +57,8 @@ namespace Xamarin.Bundler {
 		public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptions;
 		public MarshalManagedExceptionMode MarshalManagedExceptions;
 		public bool IsDefaultMarshalManagedExceptionMode;
+		public string RootAssembly;
+		public string RegistrarOutputLibrary;
 
 		public bool RequiresPInvokeWrappers {
 			get {
@@ -397,6 +407,47 @@ namespace Xamarin.Bundler {
 				}
 				IsDefaultMarshalManagedExceptionMode = true;
 			}
+		}
+
+		public void RunRegistrar ()
+		{
+			// The static registrar.
+			if (Registrar != RegistrarMode.Static)
+				throw new PlatformException (67, "Invalid registrar: {0}", Registrar); // this is only called during our own build
+
+			var registrar_m = RegistrarOutputLibrary;
+
+			var resolvedAssemblies = new List<AssemblyDefinition> ();
+			var resolver = new PlatformResolver () {
+				FrameworkDirectory = Driver.PlatformFrameworkDirectory,
+				RootDirectory = Path.GetDirectoryName (RootAssembly),
+			};
+
+			if (Driver.App.Platform == ApplePlatform.iOS || Driver.App.Platform == ApplePlatform.MacOSX) {
+				if (Driver.App.Is32Build) {
+					resolver.ArchDirectory = Driver.Arch32Directory;
+				} else {
+					resolver.ArchDirectory = Driver.Arch64Directory;
+				}
+			}
+
+			var ps = new ReaderParameters ();
+			ps.AssemblyResolver = resolver;
+			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse ("mscorlib"), new ReaderParameters ()));
+
+			var rootName = Path.GetFileNameWithoutExtension (RootAssembly);
+			if (rootName != Driver.ProductAssembly)
+				throw new PlatformException (66, "Invalid build registrar assembly: {0}", RootAssembly);
+
+			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ()));
+			Driver.Log (3, "Loaded {0}", resolvedAssemblies [resolvedAssemblies.Count - 1].MainModule.FileName);
+
+#if MONOTOUCH
+			BuildTarget = BuildTarget.Simulator;
+#endif
+
+			var registrar = new XamCore.Registrar.StaticRegistrar (this);
+			registrar.GenerateSingleAssembly (resolvedAssemblies, Path.ChangeExtension (registrar_m, "h"), registrar_m, Path.GetFileNameWithoutExtension (RootAssembly));
 		}
 	}
 }

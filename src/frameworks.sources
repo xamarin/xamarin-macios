@@ -784,11 +784,10 @@ HEALTHKIT_SOURCES = \
 
 # HomeKit
 
-HOMEKIT_CORE_SOURCES = \
+HOMEKIT_API_SOURCES = \
 	HomeKit/HMEnums.cs \
 
 HOMEKIT_SOURCES = \
-	HomeKit/HMAccessoryCategory.cs \
 	HomeKit/HMActionSet.cs \
 	HomeKit/HMCharacteristic.cs \
 	HomeKit/HMCharacteristicMetadata.cs \
@@ -823,6 +822,7 @@ IMAGEKIT_CORE_SOURCES = \
 # Intents
 
 INTENTS_SOURCES = \
+	Intents/INCompat.cs \
 	Intents/INIntentResolutionResult.cs \
 	Intents/INPriceRange.cs \
 	Intents/INRideOption.cs \
@@ -831,6 +831,7 @@ INTENTS_SOURCES = \
 	Intents/INSetProfileInCarIntent.cs \
 	Intents/INSetSeatSettingsInCarIntent.cs \
 	Intents/INStartWorkoutIntent.cs \
+	Intents/INSaveProfileInCarIntent.cs \
 
 # JavaScriptCore
 
@@ -949,6 +950,7 @@ MODELIO_CORE_SOURCES = \
 
 MODELIO_SOURCES = \
 	ModelIO/MDLAsset.cs \
+	ModelIO/MDLNoiseTexture.cs \
 	ModelIO/MDLVertexDescriptor.cs \
 	ModelIO/MDLMesh.cs \
 
@@ -971,6 +973,7 @@ NETWORKEXTENSION_CORE_SOURCES = \
 	NetworkExtension/NEVpnConnectionStartOptions.cs \
 
 NETWORKEXTENSION_SOURCES = \
+	NetworkExtension/NECompat.cs \
 	NetworkExtension/NEFilterFlow.cs \
 	NetworkExtension/NEFilterProvider.cs \
 
@@ -1346,6 +1349,8 @@ USERNOTIFICATIONS_SOURCES = \
 
 VIDEOSUBSCRIBERACCOUNT_SOURCES = \
 	VideoSubscriberAccount/VSAccountManager.cs \
+	VideoSubscriberAccount/VSAccountMetadataRequest.cs \
+	VideoSubscriberAccount/VSAccountProviderAuthenticationScheme.cs \
 
 # VideoToolbox
 
@@ -1508,7 +1513,6 @@ MAC_FRAMEWORKS =            \
 	$(COMMON_FRAMEWORKS)    \
 	Accelerate              \
 	Accounts                \
-	AddressBook             \
 	AppKit                  \
 	AudioToolbox            \
 	AudioUnit               \
@@ -1543,6 +1547,7 @@ MAC_FRAMEWORKS =            \
 	MapKit                  \
 	MediaAccessibility      \
 	MediaLibrary 		\
+	MediaPlayer             \
 	MediaToolbox            \
 	Metal                   \
 	MetalKit                \

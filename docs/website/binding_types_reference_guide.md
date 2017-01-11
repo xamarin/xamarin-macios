@@ -249,7 +249,7 @@ output.
 
 These properties are used to drive the generation of C#-style Events in the
 generated classes. They are used to link a given class with its Objective-C
-delegate class. You will encounter many cases where a a class uses a delegate
+delegate class. You will encounter many cases where a class uses a delegate
 class to send notifications and events. For example a `BarcodeScanner` would have
 a companion `BardodeScannerDelegate` class. The `BarcodeScanner` class would
 typically have a "delegate" property that you would assign an instance of
@@ -1377,6 +1377,7 @@ public class MyClass {
    [..]
    public Notifications {
       public static NSObject ObserveDidStart (EventHandler<NSNotificationEventArgs> handler)
+      public static NSObject ObserveDidStart (NSObject objectToObserve, EventHandler<NSNotificationEventArgs> handler)
    }
 }
 ```
@@ -1389,6 +1390,14 @@ by using code like this:
 ```
 var token = MyClass.Notifications.ObserverDidStart ((notification) => { 
     Console.WriteLine ("Observed the 'DidStart' event!");
+});
+```
+
+Or to set a specific object to observe. If you pass `null` to `objectToObserve` this method will behave just like its other peer.
+
+```
+var token = MyClass.Notifications.ObserverDidStart (objectToObserve, (notification) => { 
+    Console.WriteLine ("Observed the 'DidStart' event on objectToObserve!");
 });
 ```
 

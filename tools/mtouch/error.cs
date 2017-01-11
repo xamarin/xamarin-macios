@@ -30,7 +30,7 @@ namespace Xamarin.Bundler {
 	//					MT0019	Only one --[log|install|kill|launch]dev or --[launch|debug]sim option can be used.
 	//					MT0020	The valid options for '{0}' are '{1}'.
 	//					MT0021	Cannot compile using gcc/g++ (--use-gcc) when using the static registrar (this is the default when compiling for device). Either remove the --use-gcc flag or use the dynamic registrar (--registrar:dynamic).
-	//					MT0022  The options '--unsupported--enable-generics-in-registrar' and '--registrar' are not compatible.
+	//					MT0022  <unused>
 	//					MT0023	Application name '{0}.exe' conflicts with another user assembly.
 	//					MT0024  Could not find required file '{0}'.
 	//					MT0025	No SDK version was provided. Please add --sdk=X.Y to specify which iOS SDK should be used to build your application.
@@ -324,7 +324,75 @@ namespace Xamarin.Bundler {
 	//					MT6001	Running version of Cecil doesn't support assembly stripping
 	//					MT6002	Could not strip assembly `{0}`.
 	//					MT6003  [UnauthorizedAccessException message]
-	// MT7xxx	reserved
+	// MT7xxx	msbuild reserved
+	//			MT700x	misc
+	//					MT7001	Could not resolve host IPs for WiFi debugger settings.
+	//					MT7002	This machine does not have any network adapters. This is required when debugging or profiling on device over WiFi.
+	//					MT7003	The App Extension '*' does not contain an Info.plist.
+	//					MT7004	The App Extension '*' does not specify a CFBundleIdentifier.
+	//					MT7005	The App Extension '*' does not specify a CFBundleExecutable.
+	//					MT7006	The App Extension '*' has an invalid CFBundleIdentifier (*), it does not begin with the main app bundle's CFBundleIdentifier (*).
+	//					MT7007	The App Extension '*' has a CFBundleIdentifier (*) that ends with the illegal suffix ".key".
+	//					MT7008	The App Extension '*' does not specify a CFBundleShortVersionString.
+	//					MT7009	The App Extension '*' has an invalid Info.plist: it does not contain an NSExtension dictionary.
+	//					MT7010	The App Extension '*' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionPointIdentifier value.
+	//					MT7011	The WatchKit Extension '*' has an invalid Info.plist: the NSExtension dictionary does not contain an NSExtensionAttributes dictionary.
+	//					MT7012	The WatchKit Extension '*' does not have exactly one watch app.
+	//					MT7013	The WatchKit Extension '*' has an invalid Info.plist: UIRequiredDeviceCapabilities must contain the 'watch-companion' capability.
+	//					MT7014	The Watch App '*' does not contain an Info.plist.
+	//					MT7015	The Watch App '*' does not specify a CFBundleIdentifier.
+	//					MT7016	The Watch App '*' has an invalid CFBundleIdentifier (*), it does not begin with the main app bundle's CFBundleIdentifier (*).
+	//					MT7017	The Watch App '*' does not have a valid UIDeviceFamily value. Expected 'Watch (4)' but found '* (*)'.
+	//					MT7018	The Watch App '*' does not specify a CFBundleExecutable
+	//					MT7019	The Watch App '*' has an invalid WKCompanionAppBundleIdentifier value ('*'), it does not match the main app bundle's CFBundleIdentifier ('*').
+	//					MT7020	The Watch App '*' has an invalid Info.plist: the WKWatchKitApp key must be present and have a value of 'true'.
+	//					MT7021	The Watch App '*' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.
+	//					MT7022	The Watch App '*' does not contain a Watch Extension.
+	//					MT7023	The Watch Extension '*' does not contain an Info.plist.
+	//					MT7024	The Watch Extension '*' does not specify a CFBundleIdentifier.
+	//					MT7025	The Watch Extension '*' does not specify a CFBundleExecutable.
+	//					MT7026	The Watch Extension '*' has an invalid CFBundleIdentifier (*), it does not begin with the main app bundle's CFBundleIdentifier (*).
+	//					MT7027	The Watch Extension '*' has a CFBundleIdentifier (*) that ends with the illegal suffix ".key".
+	//					MT7028	The Watch Extension '*' has an invalid Info.plist: it does not contain an NSExtension dictionary.
+	//					MT7029	The Watch Extension '*' has an invalid Info.plist: the NSExtensionPointIdentifier must be "com.apple.watchkit".
+	//					MT7030	The Watch Extension '*' has an invalid Info.plist: the NSExtension dictionary must contain NSExtensionAttributes.
+	//					MT7031	The Watch Extension '*' has an invalid Info.plist: the NSExtensionAttributes dictionary must contain a WKAppBundleIdentifier.
+	//					MT7032	The WatchKit Extension '*' has an invalid Info.plist: UIRequiredDeviceCapabilities should not contain the 'watch-companion' capability.
+	//					MT7033	The Watch App '*' does not contain an Info.plist.
+	//					MT7034	The Watch App '*' does not specify a CFBundleIdentifier.
+	//					MT7035	The Watch App '*' does not have a valid UIDeviceFamily value. Expected '*' but found '* (*)'.
+	//					MT7036	The Watch App '*' does not specify a CFBundleExecutable.
+	//					MT7037	The WatchKit Extension '{extensionName}' has an invalid WKAppBundleIdentifier value ('*'), it does not match the Watch App's CFBundleIdentifier ('*').
+	//					MT7038	The Watch App '*' has an invalid Info.plist: the WKCompanionAppBundleIdentifier must exist and must match the main app bundle's CFBundleIdentifier.
+	//					MT7039	The Watch App '*' has an invalid Info.plist: the LSRequiresIPhoneOS key must not be present.
+	//					MT7040	The app bundle {AppBundlePath} does not contain an Info.plist.
+	//					MT7041	Main Info.plist path does not specify a CFBundleIdentifier.
+	//					MT7042	Main Info.plist path does not specify a CFBundleExecutable.
+	//					MT7043	Main Info.plist path does not specify a CFBundleSupportedPlatforms.
+	//					MT7044	Main Info.plist path does not specify a UIDeviceFamily.
+	//					MT7045	Unrecognized Type: *.
+	//					MT7046	Add: Entry, *, Incorrectly Specified.
+	//					MT7047	Add: Entry, *, Contains Invalid Array Index.
+	//					MT7048	Add: * Entry Already Exists.
+	//					MT7049	Add: Can't Add Entry, *, to Parent.
+	//					MT7050	Delete: Can't Delete Entry, *, from Parent.
+	//					MT7051	Delete: Entry, *, Contains Invalid Array Index.
+	//					MT7052	Delete: Entry, *, Does Not Exist.
+	//					MT7053	Import: Entry, *, Incorrectly Specified.
+	//					MT7054	Import: Entry, *, Contains Invalid Array Index.
+	//					MT7055	Import: Error Reading File: *.
+	//					MT7056	Import: Can't Add Entry, *, to Parent.
+	//					MT7057	Merge: Can't Add array Entries to dict.
+	//					MT7058	Merge: Specified Entry Must Be a Container.
+	//					MT7059	Merge: Entry, *, Contains Invalid Array Index.
+	//					MT7060	Merge: Entry, *, Does Not Exist.
+	//					MT7061	Merge: Error Reading File: *.
+	//					MT7062	Set: Entry, *, Incorrectly Specified.
+	//					MT7063	Set: Entry, *, Contains Invalid Array Index.
+	//					MT7064	Set: Entry, *, Does Not Exist.
+	//					MT7065	Unknown PropertyList editor action: *.
+	//					MT7066	Error loading '*': *.
+	//					MT7067	Error saving '*': *.
 	// MT8xxx	runtime
 	//			MT800x	misc
 	//					MT8001	Version mismatch between the native Xamarin.iOS runtime and monotouch.dll. Please reinstall Xamarin.iOS.

@@ -76,10 +76,12 @@ namespace Xamarin
 		public List<string> AppExtensions = new List<string> ();
 		public List<string> Frameworks = new List<string> ();
 		public string HttpMessageHandler;
+		public bool? PackageMdb;
+		public bool? MSym;
 #pragma warning restore 649
 
 		// These are a bit smarter
-		public MTouch.Profile Profile = MTouch.Profile.Unified;
+		public MTouch.Profile Profile = MTouch.Profile.iOS;
 		public bool NoPlatformAssemblyReference;
 		static XmlDocument device_list_cache;
 
@@ -192,6 +194,12 @@ namespace Xamarin
 			if (FastDev.HasValue && FastDev.Value)
 				sb.Append (" --fastdev");
 
+			if (PackageMdb.HasValue)
+				sb.Append (" --package-mdb:").Append (PackageMdb.Value ? "true" : "false");
+
+			if (MSym.HasValue)
+				sb.Append (" --msym:").Append (MSym.Value ? "true" : "false");
+
 			if (Extension == true)
 				sb.Append (" --extension");
 
@@ -222,11 +230,11 @@ namespace Xamarin
 			} else if (!NoPlatformAssemblyReference) {
 				// make the implicit default the way tests have been running until now, and at the same time the very minimum to make apps build.
 				switch (Profile) {
-				case MTouch.Profile.Unified:
+				case MTouch.Profile.iOS:
 					sb.Append (" -r:").Append (MTouch.Quote (Configuration.XamarinIOSDll));
 					break;
-				case MTouch.Profile.TVOS:
-				case MTouch.Profile.WatchOS:
+				case MTouch.Profile.tvOS:
+				case MTouch.Profile.watchOS:
 					sb.Append (" --target-framework ").Append (MTouch.GetTargetFramework (Profile));
 					sb.Append (" -r:").Append (MTouch.Quote (MTouch.GetBaseLibrary (Profile)));
 					break;
@@ -239,12 +247,12 @@ namespace Xamarin
 				sb.Append (" --abi ").Append (Abi);
 			} else {
 				switch (Profile) {
-				case MTouch.Profile.Unified:
+				case MTouch.Profile.iOS:
 					break; // not required
-				case MTouch.Profile.TVOS:
+				case MTouch.Profile.tvOS:
 					sb.Append (isDevice ? " --abi arm64" : " --abi x86_64");
 					break;
-				case MTouch.Profile.WatchOS:
+				case MTouch.Profile.watchOS:
 					sb.Append (isDevice ? " --abi armv7k" : " --abi i386");
 					break;
 				default:
@@ -361,7 +369,7 @@ namespace Xamarin
 			string plist = null;
 
 			switch (profile) {
-			case MTouch.Profile.Unified:
+			case MTouch.Profile.iOS:
 				plist = string.Format (@"<?xml version=""1.0"" encoding=""UTF-8""?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
 <plist version=""1.0"">
@@ -390,7 +398,7 @@ namespace Xamarin
 </plist>
 ", appName, MTouch.GetSdkVersion (Profile));
 				break;
-			case MTouch.Profile.TVOS:
+			case MTouch.Profile.tvOS:
 				plist = string.Format (@"<?xml version=""1.0"" encoding=""UTF-8""?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
 <plist version=""1.0"">

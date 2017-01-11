@@ -299,14 +299,18 @@ namespace XamCore.SpriteKit {
 		[Export ("attributeValues", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
 
+#if !XAMCORE_4_0
+		// [Obsolete ("Please use the subtype's method")]
 		[iOS (9,0),Mac(10,11)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
 		SKAttributeValue GetValue (string key);
 
+		// [Obsolete ("Please use the subtype's method")]
 		[iOS (9,0),Mac(10,11)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
+#endif
 
 #if !WATCH
 		// Extensions from GameplayKit, inlined to avoid ugly static extension syntax
@@ -376,6 +380,17 @@ namespace XamCore.SpriteKit {
 		[NullAllowed] // by default this property is null
 		[Export ("shader", ArgumentSemantic.Retain)]
 		SKShader Shader { get; set; }
+
+#if XAMCORE_4_0
+		[iOS (9,0), Mac(10,11)]
+		[Export ("valueForAttributeNamed:")]
+		[return: NullAllowed]
+		SKAttributeValue GetValue (string key);
+
+		[iOS (9,0), Mac(10,11)]
+		[Export ("setValue:forAttributeNamed:")]
+		void SetValue (SKAttributeValue value, string key);
+#endif
 	}
 
 	delegate Vector3 SKFieldForceEvaluator (/* vector_float3 */ Vector4 position, /* vector_float3 */ Vector4 velocity, float /* float, not CGFloat */ mass, float /* float, not CGFloat */ charge, double time);
@@ -712,6 +727,17 @@ namespace XamCore.SpriteKit {
 		[TV (10,0)]
 		[Export ("scaleToSize:")]
 		void ScaleTo (CGSize size);
+
+#if XAMCORE_4_0
+		[iOS (9,0), Mac(10,11)]
+		[Export ("valueForAttributeNamed:")]
+		[return: NullAllowed]
+		SKAttributeValue GetValue (string key);
+
+		[iOS (9,0), Mac(10,11)]
+		[Export ("setValue:forAttributeNamed:")]
+		void SetValue (SKAttributeValue value, string key);
+#endif
 	}
 
 	[Watch (3,0)]
@@ -935,6 +961,17 @@ namespace XamCore.SpriteKit {
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		[Export ("particleRenderOrder", ArgumentSemantic.Assign)]
 		SKParticleRenderOrder ParticleRenderOrder { get; set; }
+
+#if XAMCORE_4_0
+		[iOS (9,0), Mac(10,11)]
+		[Export ("valueForAttributeNamed:")]
+		[return: NullAllowed]
+		SKAttributeValue GetValue (string key);
+
+		[iOS (9,0), Mac(10,11)]
+		[Export ("setValue:forAttributeNamed:")]
+		void SetValue (SKAttributeValue value, string key);
+#endif
 	}
 
 	[Watch (3,0)]
@@ -1053,6 +1090,17 @@ namespace XamCore.SpriteKit {
 		[iOS (8,0), Mac (10,10)]
 		[Export ("lineLength")]
 		nfloat LineLength { get; }
+
+#if XAMCORE_4_0
+		[iOS (9,0), Mac(10,11)]
+		[Export ("valueForAttributeNamed:")]
+		[return: NullAllowed]
+		SKAttributeValue GetValue (string key);
+
+		[iOS (9,0), Mac(10,11)]
+		[Export ("setValue:forAttributeNamed:")]
+		void SetValue (SKAttributeValue value, string key);
+#endif
 	}
 
 	[Watch (3,0)]
@@ -2747,7 +2795,7 @@ namespace XamCore.SpriteKit {
 		void Resolve ();
 	}
 
-	[iOS (9,0)][Mac (10,11)]
+	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface SKAttribute : NSCoding
@@ -2767,7 +2815,7 @@ namespace XamCore.SpriteKit {
 		SKAttributeType Type { get; }
 	}
 
-	[iOS (9,0)][Mac (10,11)]
+	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[BaseType (typeof(NSObject))]
 	interface SKAttributeValue : NSCoding
 	{
@@ -2813,7 +2861,7 @@ namespace XamCore.SpriteKit {
 	}
 
 	[Watch (3,0)]
-	[iOS (10,0)][Mac (10,12)]
+	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -2886,7 +2934,7 @@ namespace XamCore.SpriteKit {
 	}
 
 	[Watch (3,0)]
-	[iOS (10,0)][Mac (10,12)]
+	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[BaseType (typeof(SKNode))]
 	interface SKTileMapNode : NSCopying, NSCoding
@@ -2981,10 +3029,21 @@ namespace XamCore.SpriteKit {
 		[Export ("tileMapNodesWithTileSet:columns:rows:tileSize:fromNoiseMap:tileTypeNoiseMapThresholds:")]
 		SKTileMapNode[] FromTileSet (SKTileSet tileSet, nuint columns, nuint rows, CGSize tileSize, GKNoiseMap noiseMap, NSNumber[] thresholds);
 #endif
+
+#if XAMCORE_4_0
+		[iOS (9,0), Mac(10,11)]
+		[Export ("valueForAttributeNamed:")]
+		[return: NullAllowed]
+		SKAttributeValue GetValue (string key);
+
+		[iOS (9,0), Mac(10,11)]
+		[Export ("setValue:forAttributeNamed:")]
+		void SetValue (SKAttributeValue value, string key);
+#endif
 	}
 
 	[Watch (3,0)]
-	[iOS (10,0)][Mac (10,12)]
+	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
 	interface SKTileSet : NSCopying, NSCoding
@@ -3030,7 +3089,7 @@ namespace XamCore.SpriteKit {
 	}
 
 	[Watch (3,0)]
-	[iOS (10,0)][Mac (10,12)]
+	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
 	interface SKTileGroup : NSCopying, NSCoding
@@ -3061,7 +3120,7 @@ namespace XamCore.SpriteKit {
 	}
 
 	[Watch (3,0)]
-	[iOS (10,0)][Mac (10,12)]
+	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
 	interface SKTileGroupRule : NSCopying, NSCoding
@@ -3084,13 +3143,13 @@ namespace XamCore.SpriteKit {
 	}
 
 	[Watch (3,0)]
-	[iOS (10,0)][Mac (10,12)]
+	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[BaseType (typeof(NSObject))]
 	interface SKWarpGeometry : NSCopying, NSCoding {}
 
 	[Watch (3,0)]
-	[iOS (10,0)][Mac (10,12)]
+	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[Protocol]
 	interface SKWarpable
@@ -3105,7 +3164,7 @@ namespace XamCore.SpriteKit {
 	}
 
 	[Watch (3,0)]
-	[iOS (10,0)][Mac (10,12)]
+	[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 	[TV (10,0)]
 	[BaseType (typeof(SKWarpGeometry))]
 	[DisableDefaultCtor]

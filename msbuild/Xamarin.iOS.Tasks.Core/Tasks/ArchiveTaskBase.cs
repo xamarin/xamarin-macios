@@ -77,7 +77,8 @@ namespace Xamarin.iOS.Tasks
 				}
 			}
 
-			var dsymDir = appex.ItemSpec + ".dSYM";
+			// Note: App Extension dSYM dirs exist alongside the main app bundle now that they are generated from the main app's MSBuild targets
+			var dsymDir = Path.Combine (Path.GetDirectoryName (AppBundleDir.ItemSpec), Path.GetFileName (appex.ItemSpec) + ".dSYM");
 
 			if (Directory.Exists (dsymDir)) {
 				var destDir = Path.Combine (archiveDir, "dSYMs", Path.GetFileName (dsymDir));
@@ -205,7 +206,7 @@ namespace Xamarin.iOS.Tasks
 				if (WatchAppReferences != null) {
 					// Archive the dSYMs, mSYMs, etc for each of the referenced WatchOS2 Apps as well...
 					for (int i = 0; i < WatchAppReferences.Length; i++)
-						ArchiveWatchApp(WatchAppReferences[i], archiveDir);
+						ArchiveWatchApp (WatchAppReferences[i], archiveDir);
 				}
 
 				if (ITunesSourceFiles != null) {

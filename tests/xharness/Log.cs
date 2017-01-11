@@ -249,7 +249,7 @@ namespace xharness
 		public void StopCapture ()
 		{
 			if (entire_file) {
-				File.Copy (CapturePath, Path);
+				File.Copy (CapturePath, Path, true);
 				return;
 			}
 

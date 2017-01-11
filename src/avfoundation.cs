@@ -2623,6 +2623,9 @@ namespace XamCore.AVFoundation {
 		NSString WasDefragmentedNotification { get; }
 #endif
 
+		[iOS (10, 3), Mac (10,12,3), TV (10, 3)]
+		[Export ("overallDurationHint")]
+		CMTime OverallDurationHint { get; }
 	}
 
 #if MONOMAC
@@ -6227,12 +6230,15 @@ namespace XamCore.AVFoundation {
 		[Export ("tracks")]
 		AVFragmentedMovieTrack[] Tracks { get; }
 
+		[Notification]
 		[Field ("AVFragmentedMovieContainsMovieFragmentsDidChangeNotification")]
 		NSString ContainsMovieFragmentsDidChangeNotification { get; }
 
+		[Notification]
 		[Field ("AVFragmentedMovieDurationDidChangeNotification")]
 		NSString DurationDidChangeNotification { get; }
 
+		[Notification]
 		[Field ("AVFragmentedMovieWasDefragmentedNotification")]
 		NSString WasDefragmentedNotification { get; }
 	}
@@ -6414,11 +6420,19 @@ namespace XamCore.AVFoundation {
 	[DisableDefaultCtor]
 	interface AVFragmentedMovieTrack
 	{
+#if !XAMCORE_4_0
 		[Mac (10, 10)]
 		[Field ("AVFragmentedMovieTrackTimeRangeDidChangeNotification")]
 		NSString ATimeRangeDidChangeNotification { get; }
+#endif
 
 		[Mac (10, 10)]
+		[Field ("AVFragmentedMovieTrackTimeRangeDidChangeNotification")]
+		[Notification]
+		NSString TimeRangeDidChangeNotification { get; }
+
+		[Mac (10, 10)]
+		[Notification]
 		[Field ("AVFragmentedMovieTrackSegmentsDidChangeNotification")]
 		NSString SegmentsDidChangeNotification { get; }
 
@@ -8243,6 +8257,10 @@ namespace XamCore.AVFoundation {
 
 		[NullAllowed, Export ("previewPhotoFormat", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, NSObject> PreviewPhotoFormat { get; set; }
+
+		[iOS (10, 2)]
+		[Export ("autoDualCameraFusionEnabled")]
+		bool AutoDualCameraFusionEnabled { [Bind ("isAutoDualCameraFusionEnabled")] get; set; }
 	}
 	
 #if !MONOMAC
@@ -8290,6 +8308,10 @@ namespace XamCore.AVFoundation {
 
 		[Export ("stillImageStabilizationEnabled")]
 		bool IsStillImageStabilizationEnabled { [Bind ("isStillImageStabilizationEnabled")] get; }
+
+		[iOS (10, 2)]
+		[Export ("dualCameraFusionEnabled")]
+		bool DualCameraFusionEnabled { [Bind ("isDualCameraFusionEnabled")] get; }
 	}
 
 #if !MONOMAC
@@ -8396,6 +8418,11 @@ namespace XamCore.AVFoundation {
 		[Export ("setPreparedPhotoSettingsArray:completionHandler:")]
 		[Async]
 		void SetPreparedPhotoSettings (AVCapturePhotoSettings[] preparedPhotoSettingsArray, [NullAllowed] Action<bool, NSError> completionHandler);
+
+		[iOS (10, 2)]
+		[Export ("dualCameraFusionSupported")]
+		bool DualCameraFusionSupported { [Bind ("isDualCameraFusionSupported")] get; }
+
 	}
 #endif
 	
@@ -8531,8 +8558,14 @@ namespace XamCore.AVFoundation {
 		[Field ("AVCaptureDeviceTypeBuiltInTelephotoCamera")]
 		BuiltInTelephotoCamera,
 
+		[Introduced (PlatformName.iOS, 10, 0, message: "Use BuiltInDualCamera instead")]
+		[Deprecated (PlatformName.iOS, 10, 2, message: "Use BuiltInDualCamera instead")]
 		[Field ("AVCaptureDeviceTypeBuiltInDuoCamera")]
 		BuiltInDuoCamera,
+
+		[iOS (10, 2)]
+		[Field ("AVCaptureDeviceTypeBuiltInDualCamera")]
+		BuiltInDualCamera,
 	}
 
 	[NoWatch]
@@ -9945,11 +9978,11 @@ namespace XamCore.AVFoundation {
 		[Export ("delegateQueue"), NullAllowed]
 		DispatchQueue DelegateQueue { get;  }
 
-		[Internal, Static]
+		[Internal]
 		[Export ("initWithPixelBufferAttributes:")]
 		IntPtr _FromPixelBufferAttributes ([NullAllowed] NSDictionary pixelBufferAttributes);
 
-		[Internal, Static]
+		[Internal]
 		[Export ("initWithOutputSettings:")]
 		IntPtr _FromOutputSettings ([NullAllowed] NSDictionary outputSettings);
 

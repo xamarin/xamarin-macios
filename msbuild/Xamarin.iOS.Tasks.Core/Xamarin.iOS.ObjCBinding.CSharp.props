@@ -31,17 +31,6 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 		<TargetFrameworkIdentifier Condition="'$(TargetFrameworkIdentifier)' == ''">Xamarin.iOS</TargetFrameworkIdentifier>
 		<TargetFrameworkVersion Condition="'$(TargetFrameworkVersion)' == ''">v1.0</TargetFrameworkVersion>
 
-		<CscToolPath Condition="'$(CscToolPath)' == '' And Exists('$(MonoTouchSdkRoot)/bin/mtouch')">$(MonoTouchSdkRoot)/bin</CscToolPath>
-		<CscToolPath Condition="'$(CscToolPath)' == '' And Exists('$(MonoTouchSdkRoot)/usr/bin/mtouch')">$(MonoTouchSdkRoot)/usr/bin</CscToolPath>
-		<CscToolPath Condition="'$(CscToolPath)' == '' And Exists('/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mtouch')">/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin</CscToolPath>
-		<CscToolPath Condition="'$(CscToolPath)' == ''">/Developer/MonoTouch/usr/bin</CscToolPath>
-		<CscToolExe Condition="'$(CscToolExe)' == '' And '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">/Library/Frameworks/Mono.framework/Commands/mcs</CscToolExe>
-		<CscToolExe Condition="'$(CscToolExe)' == '' And '$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">/Library/Frameworks/Mono.framework/Commands/mcs</CscToolExe>
-		<CscToolExe Condition="'$(CscToolExe)' == ''">smcs</CscToolExe>
-		<!-- We default to *mcs compiler above, so, select the .mdb as the debug ext. This file gets correctly
-		     imported *before* Microsoft.CSharp.targets -->
-		<CscDebugFileExt Condition="'$(CscDebugFileExt)' == ''">.mdb</CscDebugFileExt>
-
 		<BaseLibDllPath Condition="'$(OS)' == 'Unix' And '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">$(MonoTouchSdkRoot)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll</BaseLibDllPath>
 		<BaseLibDllPath Condition="'$(OS)' != 'Unix' And '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">$(MSBuildExtensionsPath)\Xamarin\DontKnowWhereYet\Xamarin.iOS.dll</BaseLibDllPath>
 		<BTouchToolPath Condition="'$(OS)' == 'Unix' And '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS' And '$(BTouchToolPath)' == ''">$(MonoTouchSdkRoot)/bin/</BTouchToolPath>
