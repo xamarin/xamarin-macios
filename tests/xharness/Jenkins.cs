@@ -1194,18 +1194,25 @@ function oninitialload ()
 								foreach (var log in logs) {
 									log.Flush ();
 									writer.WriteLine ("<a href='{0}' type='text/plain'>{1}</a><br />", System.Web.HttpUtility.UrlPathEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description);
-									if (log.Description == "Test log") {
+									if (log.Description == "Test log" || log.Description == "Execution log") {
 										var summary = string.Empty;
+										var fails = new List<string> ();
 										try {
 											using (var reader = log.GetReader ()) {
 												while (!reader.EndOfStream) {
-													string line = reader.ReadLine ();
+													string line = reader.ReadLine ().Trim ();
 													if (line.StartsWith ("Tests run:", StringComparison.Ordinal)) {
 														summary = line;
-													} else if (line.Trim ().StartsWith ("[FAIL]", StringComparison.Ordinal)) {
-														writer.WriteLine ("<span style='padding-left: 20px;'>{0}</span><br />", line.Trim ());
+													} else if (line.StartsWith ("[FAIL]", StringComparison.Ordinal)) {
+														fails.Add (line);
 													}
 												}
+											}
+											if (fails.Count > 0) {
+												writer.WriteLine ("<div style='padding-left: 15px;'>");
+												foreach (var fail in fails)
+													writer.WriteLine ("{0} <br />", System.Web.HttpUtility.HtmlEncode (fail));
+												writer.WriteLine ("</div>");
 											}
 											if (!string.IsNullOrEmpty (summary))
 												writer.WriteLine ("<span style='padding-left: 15px;'>{0}</span><br />", summary);
@@ -1222,8 +1229,12 @@ function oninitialload ()
 														errors.Add (line);
 												}
 											}
-											foreach (var error in errors)
-												writer.WriteLine ("<span style='padding-left: 15\tpx;'>{0}</span> <br />", error);
+											if (errors.Count > 0) {
+												writer.WriteLine ("<div style='padding-left: 15px;'>");
+												foreach (var error in errors)
+													writer.WriteLine ("{0} <br />", System.Web.HttpUtility.HtmlEncode (error));
+												writer.WriteLine ("</div>");
+											}
 										} catch (Exception ex) {
 											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", System.Web.HttpUtility.HtmlEncode (ex.Message));
 										}
