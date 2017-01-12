@@ -1433,9 +1433,11 @@ function oninitialload ()
 				if ((ExecutionResult & ~TestExecutingResult.StateMask) == 0)
 					throw new Exception ("Result not set!");
 			} catch (Exception e) {
-				ExecutionResult = TestExecutingResult.Failed;
-				using (var log = Logs.CreateStream (LogDirectory, $"execution-failure-{Timestamp}.log", "Execution failure"))
-					log.WriteLine (e.ToString ());
+				using (var log = Logs.CreateStream (LogDirectory, $"execution-failure-{Timestamp}.log", "Execution failure")) {
+					ExecutionResult = TestExecutingResult.HarnessException;
+					FailureMessage = $"Harness exception for '{TestName}': {e}";
+					log.WriteLine (FailureMessage);
+				}
 			} finally {
 				duration.Stop ();
 			}
@@ -1589,20 +1591,15 @@ function oninitialload ()
 						log.WriteLine ("{0}={1}", key, xbuild.StartInfo.EnvironmentVariables [key]);
 					log.WriteLine ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
 					if (!Harness.DryRun) {
-						try {
-							var timeout = TimeSpan.FromMinutes (5);
-							var result = await xbuild.RunAsync (log, true, timeout);
-							if (result.TimedOut) {
-								ExecutionResult = TestExecutingResult.TimedOut;
-								log.WriteLine ("Build timed out after {0} seconds.", timeout.TotalSeconds);
-							} else if (result.Succeeded) {
-								ExecutionResult = TestExecutingResult.Succeeded;
-							} else {
-								ExecutionResult = TestExecutingResult.Failed;
-							}
-						} catch (Exception e) {
-							log.WriteLine ("Harness exception: {0}", e);
-							ExecutionResult = TestExecutingResult.HarnessException;
+						var timeout = TimeSpan.FromMinutes (5);
+						var result = await xbuild.RunAsync (log, true, timeout);
+						if (result.TimedOut) {
+							ExecutionResult = TestExecutingResult.TimedOut;
+							log.WriteLine ("Build timed out after {0} seconds.", timeout.TotalSeconds);
+						} else if (result.Succeeded) {
+							ExecutionResult = TestExecutingResult.Succeeded;
+						} else {
+							ExecutionResult = TestExecutingResult.Failed;
 						}
 					}
 					Jenkins.MainLog.WriteLine ("Built {0} ({1})", TestName, Mode);
@@ -1630,20 +1627,15 @@ function oninitialload ()
 						log.WriteLine ("{0}={1}", key, make.StartInfo.EnvironmentVariables [key]);
 					log.WriteLine ("{0} {1}", make.StartInfo.FileName, make.StartInfo.Arguments);
 					if (!Harness.DryRun) {
-						try {
-							var timeout = TimeSpan.FromMinutes (5);
-							var result = await make.RunAsync (log, true, timeout);
-							if (result.TimedOut) {
-								ExecutionResult = TestExecutingResult.TimedOut;
-								log.WriteLine ("Make timed out after {0} seconds.", timeout.TotalSeconds);
-							} else if (result.Succeeded) {
-								ExecutionResult = TestExecutingResult.Succeeded;
-							} else {
-								ExecutionResult = TestExecutingResult.Failed;
-							}
-						} catch (Exception e) {
-							log.WriteLine ("Harness exception: {0}", e);
-							ExecutionResult = TestExecutingResult.HarnessException;
+						var timeout = TimeSpan.FromMinutes (5);
+						var result = await make.RunAsync (log, true, timeout);
+						if (result.TimedOut) {
+							ExecutionResult = TestExecutingResult.TimedOut;
+							log.WriteLine ("Make timed out after {0} seconds.", timeout.TotalSeconds);
+						} else if (result.Succeeded) {
+							ExecutionResult = TestExecutingResult.Succeeded;
+						} else {
+							ExecutionResult = TestExecutingResult.Failed;
 						}
 					}
 					using (var reader = log.GetReader ())
@@ -1682,20 +1674,15 @@ function oninitialload ()
 						log.WriteLine ("{0}={1}", key, xbuild.StartInfo.EnvironmentVariables [key]);
 					log.WriteLine ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
 					if (!Harness.DryRun) {
-						try {
-							var timeout = TimeSpan.FromMinutes (15);
-							var result = await xbuild.RunAsync (log, true, timeout);
-							if (result.TimedOut) {
-								ExecutionResult = TestExecutingResult.TimedOut;
-								log.WriteLine ("Build timed out after {0} seconds.", timeout.TotalSeconds);
-							} else if (result.Succeeded) {
-								ExecutionResult = TestExecutingResult.Succeeded;
-							} else {
-								ExecutionResult = TestExecutingResult.Failed;
-							}
-						} catch (Exception e) {
-							log.WriteLine ("Harness exception: {0}", e);
-							ExecutionResult = TestExecutingResult.HarnessException;
+						var timeout = TimeSpan.FromMinutes (15);
+						var result = await xbuild.RunAsync (log, true, timeout);
+						if (result.TimedOut) {
+							ExecutionResult = TestExecutingResult.TimedOut;
+							log.WriteLine ("Build timed out after {0} seconds.", timeout.TotalSeconds);
+						} else if (result.Succeeded) {
+							ExecutionResult = TestExecutingResult.Succeeded;
+						} else {
+							ExecutionResult = TestExecutingResult.Failed;
 						}
 					}
 					Jenkins.MainLog.WriteLine ("Built {0} ({1})", TestName, Mode);
@@ -1761,19 +1748,14 @@ function oninitialload ()
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
-						try {
-							var result = await proc.RunAsync (log, true, Timeout);
-							if (result.TimedOut) {
-								log.WriteLine ("Execution timed out after {0} minutes.", Timeout.Minutes);
-								ExecutionResult = TestExecutingResult.TimedOut;
-							} else if (result.Succeeded) {
-								ExecutionResult = TestExecutingResult.Succeeded;
-							} else {
-								ExecutionResult = TestExecutingResult.Failed;
-							}
-						} catch (Exception e) {
-							log.WriteLine (e.ToString ());
-							ExecutionResult = TestExecutingResult.HarnessException;
+						var result = await proc.RunAsync (log, true, Timeout);
+						if (result.TimedOut) {
+							log.WriteLine ("Execution timed out after {0} minutes.", Timeout.Minutes);
+							ExecutionResult = TestExecutingResult.TimedOut;
+						} else if (result.Succeeded) {
+							ExecutionResult = TestExecutingResult.Succeeded;
+						} else {
+							ExecutionResult = TestExecutingResult.Failed;
 						}
 					}
 					Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);
@@ -1906,12 +1888,9 @@ function oninitialload ()
 							} else {
 								ExecutionResult = TestExecutingResult.Failed;
 							}
-						} catch (Exception e) {
-							log.WriteLine (e.ToString ());
-							ExecutionResult = TestExecutingResult.HarnessException;
+						} finally {
+							await snapshot.EndCaptureAsync (TimeSpan.FromSeconds (Succeeded ? 0 : 5));
 						}
-
-						await snapshot.EndCaptureAsync (TimeSpan.FromSeconds (Succeeded ? 0 : 5));
 					}
 					Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);
 				}
@@ -2200,9 +2179,6 @@ function oninitialload ()
 					} else {
 						ExecutionResult = runner.Result;
 					}
-				} catch (Exception ex) {
-					FailureMessage = $"Harness exception for '{TestName}': {ex.Message}";
-					ExecutionResult = TestExecutingResult.HarnessException;
 				} finally {
 					// Uninstall again, so that we don't leave junk behind and fill up the device.
 					runner.MainLog = uninstall_log;
@@ -2309,24 +2285,19 @@ function oninitialload ()
 		{
 			Jenkins.MainLog.WriteLine ("Running XI on '{0}' ({2}) for {1}", Device?.Name, ProjectFile, Device?.UDID);
 
-			try {
-				ExecutionResult = (ExecutionResult & ~TestExecutingResult.InProgressMask) | TestExecutingResult.Running;
-				if (BuildTask.NotStarted)
-					await BuildTask.RunAsync ();
-				if (!BuildTask.Succeeded) {
-					ExecutionResult = TestExecutingResult.BuildFailure;
-					return;
-				}
-				using (var resource = await NotifyBlockingWaitAsync (AcquireResourceAsync ())) {
-					if (runner == null)
-						await SelectSimulatorAsync ();
-					await runner.RunAsync ();
-				}
-				ExecutionResult = runner.Result;
-			} catch (Exception ex) {
-				MainLog.WriteLine ("Test {0} failed: {1}", Path.GetFileName (ProjectFile), ex);
-				ExecutionResult = TestExecutingResult.HarnessException;
+			ExecutionResult = (ExecutionResult & ~TestExecutingResult.InProgressMask) | TestExecutingResult.Running;
+			if (BuildTask.NotStarted)
+				await BuildTask.RunAsync ();
+			if (!BuildTask.Succeeded) {
+				ExecutionResult = TestExecutingResult.BuildFailure;
+				return;
 			}
+			using (var resource = await NotifyBlockingWaitAsync (AcquireResourceAsync ())) {
+				if (runner == null)
+					await SelectSimulatorAsync ();
+				await runner.RunAsync ();
+			}
+			ExecutionResult = runner.Result;
 		}
 
 		protected override string XIMode {
