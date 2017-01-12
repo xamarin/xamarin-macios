@@ -1152,75 +1152,53 @@ public partial class Generator : IMemberGatherer {
 		else if (className == "NSValue") {
 			switch (retType.Name) {
 			case "CATransform3D":
-				temp = string.Format ("NSValue.FromCATransform3D ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-			break;
 			case "CGAffineTransform":
-				temp = string.Format ("NSValue.FromCGAffineTransform ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-			break;
 			case "CGPoint":
-				temp = string.Format ("NSValue.FromCGPoint ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-			break;
 			case "CGRect":
-				temp = string.Format ("NSValue.FromCGRect ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-			break;
 			case "CGSize":
-				temp = string.Format ("NSValue.FromCGSize ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-			break;
 			case "CGVector":
-				temp = string.Format ("NSValue.FromCGVector ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-			break;
 			case "CMTimeMapping":
-				temp = string.Format ("NSValue.FromCMTimeMapping ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-			break;
 			case "CMTimeRange":
-				temp = string.Format ("NSValue.FromCMTimeRange ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-			break;
 			case "CMTime":
-				temp = string.Format ("NSValue.FromCMTime ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-			break;
 			case "MKCoordinateSpan":
-				temp = string.Format ("NSValue.FromMKCoordinateSpan ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-			break;
 			case "CLLocationCoordinate2D":
-				temp = string.Format ("NSValue.FromCLLocationCoordinate2D ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-			break;
 			case "PointF":
-				temp = string.Format ("NSValue.FromPointF ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-			break;
-			case "NSRange":
-				temp = string.Format ("NSValue.FromRange ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-			break;
 			case "RectangleF":
-				temp = string.Format ("NSValue.FromRectangleF ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-			break;
 			case "SCNMatrix4":
-				temp = string.Format ("NSValue.FromSCNMatrix4 ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-			break;
 			case "SizeF":
-				temp = string.Format ("NSValue.FromSizeF ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-			break;
 			case "UIEdgeInsets":
-				temp = string.Format ("NSValue.FromUIEdgeInsets ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-			break;
 			case "UIOffset":
-				temp = string.Format ("NSValue.FromUIOffset ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-			break;
+				temp = string.Format ("NSValue.From{0} ({{1}}{{0}});", retType.Name);
+				break;
 			case "SCNVector3":
-				temp = string.Format ("NSValue.FromVector ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-			break;
 			case "SCNVector4":
-				temp = string.Format ("NSValue.FromVector ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-			break;
+				temp = "NSValue.FromVector ({1}{0});";
+				break;
+			case "NSRange":
+				temp = "NSValue.FromRange ({1}{0});";
+				break;
 			default:
-				throw new BindingException (1049, true, "Could not box type {0} into {1} container used on {2} member decorated with [BindAsAtrribute].", retType.Name, "NSValue", minfo?.mi?.Name ?? pi?.Name);
+				throw new BindingException (1049, true, "Could not box type {0} into {1} container used on {2} member decorated with [BindAs].", retType.Name, "NSValue", minfo?.mi?.Name ?? pi?.Name);
 			}
+
+			temp = string.Format (temp, isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
 		} else if (isValueType) {
 			// Magic for enums/smart enums
 		} else
-			throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAsAttribute]", retType.Name);
+			throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
 
 		return temp;
 	}
+
+	static Dictionary<Type,string> NSNumberReturnMap = new Dictionary<Type, string> {
+		{ typeof (bool), ".BoolValue" }, { typeof (byte), ".ByteValue" }, { typeof (double), ".DoubleValue" },
+		{ typeof (float), ".FloatValue" }, { typeof (short), ".Int16Value" }, { typeof (int), ".Int32Value" },
+		{ typeof (long), ".Int64Value" }, { typeof (sbyte), ".SByteValue" }, { typeof (ushort), ".UInt16Value" },
+		{ typeof (uint), ".UInt32Value" }, { typeof (ulong), ".UInt64Value" },
+#if XAMCORE_2_0
+		{ typeof (nfloat), ".NFloatValue" }, { typeof (nint), ".NIntValue" }, { typeof (nuint), ".NUIntValue" },
+#endif
+	};
 
 	string GetFromBindAsWrapper (MemberInformation minfo)
 	{
@@ -1232,109 +1210,50 @@ public partial class Generator : IMemberGatherer {
 		var method = minfo.mi as MethodInfo;
 
 		if (method?.ReturnType?.Name == "NSNumber" || property?.PropertyType?.Name == "NSNumber") {
-			// I wish C# 7 was a thing today :)
-			if (retType == typeof (bool))
-				append = ".BoolValue";
-			else if (retType == typeof (byte))
-				append = ".ByteValue";
-			else if (retType == typeof (double))
-				append = ".DoubleValue";
-			else if (retType == typeof (float))
-				append = ".FloatValue";
-			else if (retType == typeof (short))
-				append = ".Int16Value";
-			else if (retType == typeof (int))
-				append = ".Int32Value";
-			else if (retType == typeof (long))
-				append = ".Int64Value";
-			else if (retType == typeof (sbyte))
-				append = ".SByteValue";
-			else if (retType == typeof (ushort))
-				append = ".UInt16Value";
-			else if (retType == typeof (uint))
-				append = ".UInt32Value";
-			else if (retType == typeof (ulong))
-				append = ".UInt64Value";
-#if XAMCORE_2_0
-			else if (retType == typeof (nfloat))
-				append = ".NFloatValue";
-			else if (retType == typeof (nint))
-				append = ".NIntValue";
-			else if (retType == typeof (nuint))
-				append = ".NUIntValue";
-#endif
-			else
-				throw new BindingException (1049, true, "Could not unbox type {0} from {1} container used on {2} member decorated with [BindAsAttribute].", retType.Name, "NSNumber", minfo.mi.Name);
+			if (!NSNumberReturnMap.TryGetValue (retType, out append))
+				throw new BindingException (1049, true, "Could not unbox type {0} from {1} container used on {2} member decorated with [BindAs].", retType.Name, "NSNumber", minfo.mi.Name);
 
 		} else if (method?.ReturnType.Name == "NSValue" || property?.PropertyType.Name == "NSValue") {
 			switch (retType.Name) {
 			case "CATransform3D":
-				append = ".CATransform3DValue";
-			break;
 			case "CGAffineTransform":
-				append = ".CGAffineTransformValue";
-			break;
 			case "CGPoint":
-				append = ".CGPointValue";
-			break;
 			case "CGRect":
-				append = ".CGRectValue";
-			break;
 			case "CGSize":
-				append = ".CGSizeValue";
-			break;
 			case "CGVector":
-				append = ".CGVectorValue";
-			break;
 			case "CMTimeMapping":
-				append = ".CMTimeMappingValue";
-			break;
 			case "CMTimeRange":
-				append = ".CMTimeRangeValue";
-			break;
 			case "CMTime":
-				append = ".CMTimeValue";
-			break;
+			case "PointF":
+			case "RectangleF":
+			case "SCNMatrix4":
+			case "SizeF":
+			case "UIEdgeInsets":
+			case "UIOffset":
+				append = string.Format (".{0}Value", retType.Name);
+				break;
 			case "MKCoordinateSpan":
 				append = ".CoordinateSpanValue";
-			break;
+				break;
 			case "CLLocationCoordinate2D":
 				append = ".CoordinateValue";
-			break;
-			case "PointF":
-				append = ".PointFValue";
-			break;
+				break;
 			case "NSRange":
 				append = ".RangeValue";
-			break;
-			case "RectangleF":
-				append = ".RectangleFValue";
-			break;
-			case "SCNMatrix4":
-				append = ".SCNMatrix4Value";
-			break;
-			case "SizeF":
-				append = ".SizeFValue";
-			break;
-			case "UIEdgeInsets":
-				append = ".UIEdgeInsetsValue";
-			break;
-			case "UIOffset":
-				append = ".UIOffsetValue";
-			break;
+				break;
 			case "SCNVector3":
 				append = ".Vector3Value";
-			break;
+				break;
 			case "SCNVector4":
 				append = ".Vector4Value";
-			break;
+				break;
 			default:
-				throw new BindingException (1049, true, "Could not unbox type {0} from {1} container used on {2} member decorated with [BindAsAttribute].", retType.Name, "NSValue", minfo.mi.Name);
+				throw new BindingException (1049, true, "Could not unbox type {0} from {1} container used on {2} member decorated with [BindAs].", retType.Name, "NSValue", minfo.mi.Name);
 			}
 		} else if (isValueType) {
 			// Magic for enums/smart enums
 		} else
-			throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAsAttribute]", retType.Name);
+			throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
 		return append;
 	}
 
@@ -1635,7 +1554,7 @@ public partial class Generator : IMemberGatherer {
 		if (HasAttribute (pi, typeof (NullAllowedAttribute)))
 			return false;
 
-		if (mi.IsSpecialName && mi.Name.StartsWith ("set_", StringComparison.Ordinal)){
+		if (IsSetter (mi)) {
 			if (HasAttribute (mi, typeof (NullAllowedAttribute))){
 				return false;
 			}

@@ -5,7 +5,7 @@ using MonoTouch.CoreMedia;
 
 namespace BindAsTests {
 
-    [BaseType (typeof (NSObject))]
+	[BaseType (typeof (NSObject))]
 	interface MyFooClass {
 
 		[return: BindAs (typeof (bool?))]
