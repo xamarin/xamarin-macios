@@ -503,7 +503,6 @@ namespace xharness
 		{
 			var build = new XBuildTask ()
 			{
-				ExecutionResult = task.ExecutionResult,
 				Platform = platform,
 				Jenkins = task.Jenkins,
 				TestProject = new TestProject (AddSuffixToPath (task.ProjectFile, suffix)),
@@ -1892,12 +1891,15 @@ function oninitialload ()
 
 							var result = await proc.RunAsync (log, true, timeout);
 							if (result.TimedOut) {
-								log.WriteLine ("Execution timed out after {0} seconds.", timeout.TotalSeconds);
+								FailureMessage = $"Execution timed out after {timeout.TotalSeconds} seconds.";
+								log.WriteLine (FailureMessage);
 								ExecutionResult = TestExecutingResult.TimedOut;
 							} else if (result.Succeeded) {
 								ExecutionResult = TestExecutingResult.Succeeded;
 							} else {
 								ExecutionResult = TestExecutingResult.Failed;
+								FailureMessage = result.ExitCode != 1 ? "Test run crashed." : "Test run failed.";
+								log.WriteLine (FailureMessage);
 							}
 						} finally {
 							await snapshot.EndCaptureAsync (TimeSpan.FromSeconds (Succeeded ? 0 : 5));
