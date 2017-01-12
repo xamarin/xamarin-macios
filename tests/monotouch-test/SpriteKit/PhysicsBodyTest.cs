@@ -13,7 +13,6 @@ using System;
 using System.Drawing;
 #if XAMCORE_2_0
 using Foundation;
-using UIKit;
 using SpriteKit;
 using ObjCRuntime;
 #else

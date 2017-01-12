@@ -13,7 +13,11 @@ using System.IO;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.CoreFoundation;
 using MonoTouch.Foundation;
@@ -42,12 +46,15 @@ namespace MonoTouchFixtures.CoreFoundation {
 		
 		static bool RunningOnSnowLeopard {
 			get {
+#if !MONOMAC
 				if (Runtime.Arch == Arch.DEVICE)
 					return false;
+#endif
 				return !File.Exists ("/usr/lib/system/libsystem_kernel.dylib");
 			}
 		}
-		
+
+#if !MONOMAC // UIKitThreadAccessException and NSStringDrawing.WeakDrawString don't exist on mac
 		[Test]
 		public void MainQueueDispatch ()
 		{
@@ -105,7 +112,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 			Assert.That (uiThread, Is.EqualTo (mainQthread), "mainq thread is equal to uithread");
 			Assert.That (queueThread, Is.Not.EqualTo (mainQthread), "queueThread is not the same as the UI thread");
 		}
-		
+#endif
+
 		[Test]
 		public void Current ()
 		{
@@ -195,6 +203,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			Assert.That (dt2.Nanoseconds, Is.GreaterThan (dt.Nanoseconds), "later");
 		}
 
+#if !MONOMAC // UIKitThreadAccessException and NSStringDrawing.WeakDrawString don't exist on mac
 		[Test]
 		public void EverAfter ()
 		{
@@ -251,5 +260,6 @@ namespace MonoTouchFixtures.CoreFoundation {
 			Assert.That (uiThread, Is.EqualTo (mainQthread), "mainq thread is equal to uithread");
 			Assert.That (queueThread, Is.Not.EqualTo (mainQthread), "queueThread is not the same as the UI thread");
 		}
+#endif
 	}
 }

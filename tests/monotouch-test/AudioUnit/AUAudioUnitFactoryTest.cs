@@ -29,7 +29,11 @@ namespace MonoTouchFixtures.AudioUnit {
 			const string expectedManufacturer = "Apple";
 			var desc = new AudioComponentDescription {
 				ComponentType = AudioComponentType.Output,
+#if MONOMAC
+				ComponentSubType = (int)AudioUnitSubType.VoiceProcessingIO,
+#else
 				ComponentSubType = 0x72696f63, // Remote_IO
+#endif
 				ComponentManufacturer = AudioComponentManufacturerType.Apple
 			};
 

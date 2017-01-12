@@ -53,3 +53,19 @@ namespace Xamarin.Mac.Tests
 		}
 	}
 }
+
+#if XAMCORE_2_0
+partial class TestRuntime {
+	public static bool RunAsync (DateTime timeout, Action action, Func<bool> check_completed)
+	{
+		NSTimer.CreateScheduledTimer (0.01, (v) => action ());
+		do {
+			if (timeout < DateTime.Now)
+				return false;
+			NSRunLoop.Main.RunUntil (NSDate.Now.AddSeconds (0.1));
+		} while (!check_completed ());
+
+		return true;
+	}
+}
+#endif

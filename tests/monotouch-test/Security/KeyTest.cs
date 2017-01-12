@@ -15,7 +15,11 @@ using System.Security.Cryptography.X509Certificates;
 #if XAMCORE_2_0
 using Foundation;
 using Security;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.Foundation;
 using MonoTouch.Security;
@@ -88,6 +92,9 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
+#if MONOMAC // https://bugzilla.xamarin.com/show_bug.cgi?id=51277
+		[Ignore ("512 bit encryption fails on mac")]
+#endif
 		public void RoundtripRSA512PKCS1 ()
 		{
 			NSError error;
@@ -159,11 +166,19 @@ namespace MonoTouchFixtures.Security {
 			SecKey public_key;
 			using (var record = new SecRecord (SecKind.Key)) {
 				record.KeyType = SecKeyType.RSA;
+#if MONOMAC
+				record.KeySizeInBits = 1024;
+#else
 				record.KeySizeInBits = 512; // it's not a performance test :)
+#endif
 
 				Assert.That (SecKey.GenerateKeyPair (record.ToDictionary (), out public_key, out private_key), Is.EqualTo (SecStatusCode.Success), "GenerateKeyPair");
 
+#if MONOMAC
+				byte [] plain = new byte [128]; // 128 * 8 == 1024 - but there's the padding to consider
+#else
 				byte [] plain = new byte [64]; // 64 * 8 == 512 - but there's the padding to consider
+#endif
 				byte [] cipher;
 				Assert.That (public_key.Encrypt (SecPadding.PKCS1, plain, out cipher), Is.EqualTo (SecStatusCode.Param), "Encrypt");
 
@@ -188,7 +203,11 @@ namespace MonoTouchFixtures.Security {
 				if (TestRuntime.CheckXcodeVersion (8,0)) {
 					Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Encrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), "public/IsAlgorithmSupported/Encrypt");
 					// I would have expect false
-					Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), "public/IsAlgorithmSupported/Decrypt");
+#if MONOMAC
+					Assert.False (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), "public/IsAlgorithmSupported/Decrypt");
+#else
+ 					Assert.True (public_key.IsAlgorithmSupported (SecKeyOperationType.Decrypt, SecKeyAlgorithm.RsaEncryptionOaepSha1), "public/IsAlgorithmSupported/Decrypt");
+#endif
 				}
 				Assert.That (public_key.Encrypt (SecPadding.OAEP, plain, out cipher), Is.EqualTo (SecStatusCode.Success), "Encrypt");
 				public_key.Dispose ();
@@ -205,6 +224,9 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
+#if MONOMAC // https://bugzilla.xamarin.com/show_bug.cgi?id=51277
+		[Ignore ("512 bit encryption fails on mac")]
+#endif
 		public void SignVerifyRSA512PKCS1SHA1 ()
 		{
 			SecKey private_key;
@@ -366,7 +388,11 @@ namespace MonoTouchFixtures.Security {
 		{
 			TestRuntime.AssertXcodeVersion (8, 0);
 			NSError error;
+#if MONOMAC
+			using (var key = SecKey.CreateRandomKey (SecKeyType.RSA, 1024, null, out error)) {
+#else
 			using (var key = SecKey.CreateRandomKey (SecKeyType.RSA, 512, null, out error)) {
+#endif
 				Assert.Null (error, "RSA/error");
 
 				using (var data = NSData.FromArray (new byte [] { 1, 2, 3 })) {

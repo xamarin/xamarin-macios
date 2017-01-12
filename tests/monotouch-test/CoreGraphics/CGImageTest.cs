@@ -13,7 +13,11 @@ using System.IO;
 
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 using CoreGraphics;
 #else
 using MonoTouch.CoreGraphics;
@@ -23,20 +27,23 @@ using MonoTouch.UIKit;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreGraphics {
-	
+
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class CGImageTest {
-		
+
 		[Test]
 		public void FromPNG ()
 		{
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png");
 			using (var dp = new CGDataProvider (file))
 			using (var img = CGImage.FromPNG (dp, null, false, CGColorRenderingIntent.Default))
+#if MONOMAC
+			using (var ui = new NSImage (img, new CGSize (10, 10))) {
+#else
 			using (var ui = new UIImage (img, 1.0f, UIImageOrientation.Up)) {
+#endif
 				Assert.IsNotNull (ui.CGImage, "CGImage");
-
 				if (TestRuntime.CheckXcodeVersion (7, 0))
 					Assert.That (img.UTType.ToString (), Is.EqualTo ("public.png"), "UTType");
 			}

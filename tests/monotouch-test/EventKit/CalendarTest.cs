@@ -13,7 +13,6 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
-using UIKit;
 using CoreGraphics;
 using ObjCRuntime;
 using EventKit;
@@ -37,7 +36,11 @@ namespace MonoTouchFixtures.EventKit {
 		public void FromEventStore ()
 		{
 			EKEventStore store = new EKEventStore ();
+#if MONOMAC
+			var c = EKCalendar.Create (EKEntityType.Event, store);
+#else
 			var c = EKCalendar.FromEventStore (store);
+#endif
 			// defaults
 #if __WATCHOS__
 			Assert.False (c.AllowsContentModifications, "AllowsContentModifications");
@@ -45,7 +48,11 @@ namespace MonoTouchFixtures.EventKit {
 			Assert.True (c.AllowsContentModifications, "AllowsContentModifications");
 #endif
 			Assert.NotNull (c.CalendarIdentifier, "CalendarIdentifier");
+#if MONOMAC
+			Assert.Null (c.Color, "Color");
+#else
 			Assert.Null (c.CGColor, "CGColor");
+#endif
 
 			if (TestRuntime.CheckXcodeVersion (4, 5)) {
 				// default value changed for iOS 6.0 beta 1
@@ -62,8 +69,13 @@ namespace MonoTouchFixtures.EventKit {
 
 			Assert.Null (c.Source, "Source");
 			Assert.False (c.Subscribed, "Subscribed");
+#if MONOMAC
+			Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.Busy | EKCalendarEventAvailability.Free), "SupportedEventAvailabilities");
+			Assert.That (c.Title, Is.EqualTo (string.Empty), "Title");
+#else
 			Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.None), "SupportedEventAvailabilities");
 			Assert.Null (c.Title, "Title");
+#endif
 			Assert.That (c.Type, Is.EqualTo (EKCalendarType.Local), "Type");
 		}
 
@@ -81,7 +93,11 @@ namespace MonoTouchFixtures.EventKit {
 			Assert.True (c.AllowsContentModifications, "AllowsContentModifications");
 #endif
 			Assert.NotNull (c.CalendarIdentifier, "CalendarIdentifier");
+#if MONOMAC
+			Assert.Null (c.Color, "Color");
+#else
 			Assert.Null (c.CGColor, "CGColor");
+#endif
 
 #if __WATCHOS__
 			Assert.True (c.Immutable, "Immutable");
@@ -90,8 +106,13 @@ namespace MonoTouchFixtures.EventKit {
 #endif
 			Assert.Null (c.Source, "Source");
 			Assert.False (c.Subscribed, "Subscribed");
+#if MONOMAC
+			Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.Busy | EKCalendarEventAvailability.Free), "SupportedEventAvailabilities");
+			Assert.That (c.Title, Is.EqualTo (string.Empty), "Title");
+#else
 			Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.None), "SupportedEventAvailabilities");
 			Assert.Null (c.Title, "Title");
+#endif
 			Assert.That (c.Type, Is.EqualTo (EKCalendarType.Local), "Type");
 			Assert.AreEqual (EKEntityMask.Reminder, c.AllowedEntityTypes, "AllowedEntityTypes");
 			Assert.IsNotNull (c.CalendarIdentifier, "CalendarIdentifier");
@@ -101,7 +122,11 @@ namespace MonoTouchFixtures.EventKit {
 		public void Title ()
 		{
 			EKEventStore store = new EKEventStore ();
+#if MONOMAC
+			var c = EKCalendar.Create (EKEntityType.Event, store);
+#else
 			var c = EKCalendar.FromEventStore (store);
+#endif
 			c.Title = "my title";
 			Assert.That (c.Title, Is.EqualTo ("my title"), "Title");
 		}
@@ -110,7 +135,11 @@ namespace MonoTouchFixtures.EventKit {
 		[ExpectedException (typeof (ArgumentNullException))]
 		public void FromEventStore_Null ()
 		{
+#if MONOMAC
+			EKCalendar.Create (EKEntityType.Event, null);
+#else
 			EKCalendar.FromEventStore (null);
+#endif
 		}
 	}
 }

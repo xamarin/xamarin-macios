@@ -14,7 +14,6 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using VideoToolbox;
-using UIKit;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.VideoToolbox;

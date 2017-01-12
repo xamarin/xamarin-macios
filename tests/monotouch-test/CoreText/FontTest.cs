@@ -14,7 +14,11 @@ using System;
 using CoreGraphics;
 using CoreText;
 using Foundation;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.CoreGraphics;
 using MonoTouch.CoreText;
@@ -95,6 +99,7 @@ namespace MonoTouchFixtures.CoreText {
 			}
 		}
 
+#if !MONOMAC // ToCTFont not available on mac
 		[Test]
 		public void GetGlyphsForCharacters_35048 ()
 		{
@@ -106,6 +111,7 @@ namespace MonoTouchFixtures.CoreText {
 				Assert.That (gid [1], Is.EqualTo (0), "1");
 			}
 		}
+#endif
 	}
 }
 

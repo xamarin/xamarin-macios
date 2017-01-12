@@ -15,7 +15,6 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using VideoToolbox;
-using UIKit;
 using CoreMedia;
 using AVFoundation;
 using CoreFoundation;
@@ -127,6 +126,9 @@ namespace MonoTouchFixtures.VideoToolbox {
 		// This test is (kind of) expected to be null due to as of iOS 8 all supported properties are not meant to be serialized
 		// see CompressionSessionGetSupportedPropertiesTest.
 		[Test]
+#if MONOMAC // https://bugzilla.xamarin.com/show_bug.cgi?id=51258
+		[Ignore ("Crashes with SIGSEGV when trying to dispose session after calling session.GetSerializableProperties ()")]
+#endif
 		public void CompressionSessionGetSerializablePropertiesTest ()
 		{
 			if (!TestRuntime.CheckSystemAndSDKVersion (8, 0))
