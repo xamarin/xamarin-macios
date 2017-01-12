@@ -10098,9 +10098,8 @@ namespace XamCore.UIKit {
 	
 	[BaseType (typeof(UIControl))]
 	interface UISegmentedControl {
-		// Not exposed as we need to wrap the NSArray
-		[Export ("initWithItems:")][Internal]
-		IntPtr InitWithItems (IntPtr v);
+		[Export ("initWithItems:")]
+		IntPtr Constructor (NSArray items);
 
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
