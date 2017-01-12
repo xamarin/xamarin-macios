@@ -192,7 +192,7 @@ namespace Introspection {
 
 		public Type CurrentType { get; private set; }
 
-		const BindingFlags Flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance;
+		const BindingFlags Flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance;
 
 		[Test]
 		public void NativeSignatures ()
@@ -834,7 +834,12 @@ namespace Introspection {
 			if (t.GetCustomAttribute<ModelAttribute> (false) == null)
 				return true;
 			n++;
-			return false;
+			switch (t.Name) {
+			case "CAAnimationDelegate":	// this was not a protocol before iOS 10 and was not bound as such
+				return true;
+			default:
+				return false;
+			}
 		}
 
 		void CheckManagedMemberSignatures (MethodBase m, Type t, ref int n)
