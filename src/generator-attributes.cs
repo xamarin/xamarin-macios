@@ -45,6 +45,24 @@ public class ForcedTypeAttribute : Attribute {
 	public bool Owns;
 }
 
+//
+// BindAsAttribute
+//
+// // TODO Alex: finish documenting this
+// The BindAsAttribute allows binding a container type (i.e. NSNumber) into a more accurate types
+// like bool?.
+//
+[AttributeUsage (AttributeTargets.ReturnValue | AttributeTargets.Property | AttributeTargets.Parameter, AllowMultiple = false)]
+public class BindAsAttribute : Attribute {
+	public BindAsAttribute (Type type)
+	{
+		Type = type;
+		IsNullable = Nullable.GetUnderlyingType (type) != null;
+	}
+	public Type Type;
+	internal readonly bool IsNullable;
+}
+
 // Used to flag a type as needing to be turned into a protocol on output for Unified
 // For example:
 //   [Protocolize, Wrap ("WeakDelegate")]
