@@ -373,12 +373,10 @@ namespace Xamarin.MacDev.Tasks
 				specs.Save (outputSpecs, true);
 			}
 
-			var output = new TaskItem (intermediateBundleDir);
-
 			Directory.CreateDirectory (intermediateBundleDir);
 
 			// Note: Compile() will set the PartialAppManifest property if it is used...
-			if ((Compile (catalogs.ToArray (), output, manifest)) != 0)
+			if ((Compile (catalogs.ToArray (), intermediateBundleDir, manifest)) != 0)
 				return false;
 
 			if (PartialAppManifest != null && !File.Exists (PartialAppManifest.GetMetadata ("FullPath")))
