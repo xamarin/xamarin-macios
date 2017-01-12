@@ -62,7 +62,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void TestBasicIBToolFunctionality ()
 		{
-			var tmp = Path.GetTempPath ();
+			var tmp = Path.Combine (Path.GetTempPath (), Path.GetTempFileName ());
 
 			Directory.CreateDirectory (tmp);
 
@@ -110,7 +110,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void TestAdvancedIBToolFunctionality ()
 		{
-			var tmp = Path.GetTempPath ();
+			var tmp = Path.Combine (Path.GetTempPath (), Path.GetTempFileName ());
 			IBTool ibtool;
 
 			Directory.CreateDirectory (tmp);
