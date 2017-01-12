@@ -855,7 +855,7 @@ namespace Introspection {
 				if (t == pt)
 					continue;
 				if (!CheckType (pt, ref n))
-					ReportError ($"`{t.Name}.{m.Name}` includes a paramater of type `{pt.Name}` which is a concrete type `[Model]` and not an interface `[Protocol]`");
+					ReportError ($"`{t.Name}.{m.Name}` includes a parameter of type `{pt.Name}` which is a concrete type `[Model]` and not an interface `[Protocol]`");
 			}
 			if (!m.IsConstructor) {
 				var rt = (m as MethodInfo).ReturnType;

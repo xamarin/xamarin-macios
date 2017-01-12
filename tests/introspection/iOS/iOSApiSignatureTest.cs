@@ -190,6 +190,26 @@ namespace Introspection {
 				if (t.Name == "UICollectionView")
 					return;
 				break;
+			case "get_SearchResultsSource":
+			case "set_SearchResultsSource":
+				// UITableViewSource is our own creation and we did not make an interface out of it
+				if (t.Name == "UISearchDisplayController")
+					return;
+				break;
+			case "get_ImagePickerControllerDelegate":
+			case "set_ImagePickerControllerDelegate":
+			case "get_NavigationControllerDelegate":
+			case "set_NavigationControllerDelegate":
+				// fixed in XAMCORE_4_0 - alternative are the Weak* delegates
+				if (t.Name == "UIImagePickerController")
+					return;
+				break;
+			case "get_Model":
+			case "set_Model":
+				// UIPickerViewModel is our own creation and we did not make an interface out of it
+				if (t.Name == "UIPickerView")
+					return;
+				break;
 			}
 #endif
 			base.CheckManagedMemberSignatures (m, t, ref n);
