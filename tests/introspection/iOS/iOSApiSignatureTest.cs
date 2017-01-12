@@ -176,5 +176,23 @@ namespace Introspection {
 			}
 			return base.Check (encodedType, type);
 		}
+
+		protected override void CheckManagedMemberSignatures (MethodBase m, Type t, ref int n)
+		{
+#if !XAMCORE_4_0 // let's review the tests exceptions if we break things
+			switch (m.Name) {
+			case "get_Source":
+			case "set_Source":
+				// UITableViewSource is our own creation and we did not make an interface out of it
+				if (t.Name == "UITableView")
+					return;
+				// UICollectionViewSource is our own creation and we did not make an interface out of it
+				if (t.Name == "UICollectionView")
+					return;
+				break;
+			}
+#endif
+			base.CheckManagedMemberSignatures (m, t, ref n);
+		}
 	}
 }

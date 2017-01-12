@@ -809,12 +809,9 @@ namespace Introspection {
 
 				CurrentType = t;
 
-				foreach (MethodInfo m in t.GetMethods (Flags)) {
+				foreach (MethodInfo m in t.GetMethods (Flags))
 					CheckManagedMemberSignatures (m, t, ref n);
-					var rt = m.ReturnType;
-					if (!CheckType (rt, ref n))
-						ReportError ($"`{t.Name}.{m.Name}` return type `{rt.Name}` is a concrete type `[Model]` and not an interface `[Protocol]`");
-				}
+
 				foreach (MethodBase m in t.GetConstructors (Flags))
 					CheckManagedMemberSignatures (m, t, ref n);
 			}
@@ -842,7 +839,7 @@ namespace Introspection {
 			}
 		}
 
-		void CheckManagedMemberSignatures (MethodBase m, Type t, ref int n)
+		protected virtual void CheckManagedMemberSignatures (MethodBase m, Type t, ref int n)
 		{
 			// if the method was obsoleted then it's not an issue, we assume the alternative is fine
 			if (m.GetCustomAttribute<ObsoleteAttribute> () != null)
@@ -859,6 +856,11 @@ namespace Introspection {
 					continue;
 				if (!CheckType (pt, ref n))
 					ReportError ($"`{t.Name}.{m.Name}` includes a paramater of type `{pt.Name}` which is a concrete type `[Model]` and not an interface `[Protocol]`");
+			}
+			if (!m.IsConstructor) {
+				var rt = (m as MethodInfo).ReturnType;
+				if (!CheckType (rt, ref n))
+					ReportError ($"`{t.Name}.{m.Name}` return type `{rt.Name}` is a concrete type `[Model]` and not an interface `[Protocol]`");
 			}
 		}
 	}
