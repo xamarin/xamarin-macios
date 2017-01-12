@@ -140,7 +140,7 @@ namespace XamCore.AppKit {
 		[Sealed] // Just to avoid the duplicate selector error
 		IntPtr Constructor (double duration, NSAnimationCurve animationCurve);
 
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 		[Obsolete ("Use the constructor instead")]
 		[Export ("initWithDuration:animationCurve:")]
 		IntPtr Constant (double duration, NSAnimationCurve animationCurve);
@@ -7611,7 +7611,7 @@ namespace XamCore.AppKit {
 		[Export ("menuDidClose:")]
 		void MenuDidClose (NSMenu menu);
 
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("menu:willHighlightItem:")]
@@ -8216,7 +8216,7 @@ namespace XamCore.AppKit {
 		nint RunModal (string [] types);
 	}
 
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 	// This class doesn't show up in any documentation
 	[BaseType (typeof (NSOpenPanel))]
 	[DisableDefaultCtor] // should not be created by (only returned to) user code
@@ -11154,7 +11154,7 @@ namespace XamCore.AppKit {
 	interface INSPasteboardWriting {}
 
 	[BaseType (typeof (NSObject))]
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 	// A class that implements only NSPasteboardReading does not make sense, it's
 	// used to add pasteboard support to existing classes.
 	[Model]
@@ -11169,7 +11169,7 @@ namespace XamCore.AppKit {
 		[Export ("readingOptionsForType:pasteboard:")]
 		NSPasteboardReadingOptions GetReadingOptionsForType (string type, NSPasteboard pasteboard);
 
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 		// This binding is just broken, it's an ObjC ctor (init*) bound as a normal method.
 		[Abstract]
 		[Export ("xamarinselector:removed:")]
@@ -12520,7 +12520,7 @@ namespace XamCore.AppKit {
 		
 	}
 
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 	// This class doesn't show up in any documentation.
 	[BaseType (typeof (NSSavePanel))]
 	[DisableDefaultCtor] // should not be created by (only returned to) user code
@@ -14505,102 +14505,102 @@ namespace XamCore.AppKit {
 
 	[Lion]
 	[Protocol]
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 	[Model]
 	[BaseType (typeof (NSObject))]
 #endif
 	partial interface NSTextFinderClient {
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("allowsMultipleSelection")]
 		bool AllowsMultipleSelection { get;  }
 
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("editable")]
 		bool Editable { [Bind ("isEditable")] get;  }
 
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("string", ArgumentSemantic.Copy)]
 		string String { get;  }
 
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("firstSelectedRange")]
 		NSRange FirstSelectedRange { get;  }
 
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("selectedRanges", ArgumentSemantic.Copy)]
 		NSArray SelectedRanges { get; set;  }
 
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("visibleCharacterRanges", ArgumentSemantic.Copy)]
 		NSArray VisibleCharacterRanges { get;  }
 
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("selectable")]
 		bool Selectable { [Bind ("isSelectable")] get;  }
 
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("stringAtIndex:effectiveRange:endsWithSearchBoundary:")]
 		string StringAtIndexeffectiveRangeendsWithSearchBoundary (nuint characterIndex, ref NSRange outRange, bool outFlag);
 
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("stringLength")]
 		nuint StringLength ();
 
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("scrollRangeToVisible:")]
 		void ScrollRangeToVisible (NSRange range);
 
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("shouldReplaceCharactersInRanges:withStrings:")]
 		bool ShouldReplaceCharactersInRangeswithStrings (NSArray ranges, NSArray strings);
 
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("replaceCharactersInRange:withString:")]
 		void ReplaceCharactersInRangewithString (NSRange range, string str);
 
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("didReplaceCharacters")]
 		void DidReplaceCharacters ();
 
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("contentViewAtIndex:effectiveCharacterRange:")]
 		NSView ContentViewAtIndexeffectiveCharacterRange (nuint index, ref NSRange outRange);
 
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("rectsForCharacterRange:")]
 		NSArray RectsForCharacterRange (NSRange range);
 
-#if !XAMCORE_3_0
+#if !XAMCORE_4_0
 		[Abstract]
 #endif
 		[Export ("drawCharactersInRange:forContentView:")]
@@ -16549,10 +16549,11 @@ namespace XamCore.AppKit {
 	// This is the mixed NSTableViewDataSource and NSTableViewDelegate
 	//
 	[Model]
+	[Synthetic]
 	[BaseType (typeof (NSObject))]
 	interface NSTableViewSource {
 		//
-		// These come form NSTableViewDataSource
+		// These come from NSTableViewDataSource
 		//
 		[Export ("tableView:willDisplayCell:forTableColumn:row:")]
 		void WillDisplayCell (NSTableView tableView, NSObject cell, NSTableColumn tableColumn, nint row);

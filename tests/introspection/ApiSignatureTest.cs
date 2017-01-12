@@ -795,7 +795,9 @@ namespace Introspection {
 			return false;
 		}
 
+#if XAMCORE_2_0
 		[Test]
+#endif
 		public void ManagedSignature ()
 		{
 			int n = 0;
@@ -818,7 +820,7 @@ namespace Introspection {
 			AssertIfErrors ("{0} errors found in {1} signatures validated{2}", Errors, n, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
 		}
 
-		bool CheckType (Type t, ref int n)
+		protected virtual bool CheckType (Type t, ref int n)
 		{
 			if (t.IsArray)
 				return CheckType (t.GetElementType (), ref n);
