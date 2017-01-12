@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
@@ -181,6 +182,14 @@ namespace xharness
 			get {
 				return true;
 			}
+		}
+
+		public override IEnumerable<RelatedProject> GetRelatedProjects ()
+		{
+			return new RelatedProject [] {
+				new RelatedProject { Guid = WatchOSExtensionGuid, ProjectPath = WatchOSExtensionProjectPath },
+				new RelatedProject { Guid = WatchOSAppGuid, ProjectPath = WatchOSAppProjectPath },
+			};
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
@@ -40,6 +41,7 @@ namespace xharness
 			csproj.FixCompileInclude ("Main.cs", Path.Combine (Harness.TodayContainerTemplate, "Main.cs").Replace ('/', '\\'));
 			csproj.FixInfoPListInclude (suffix);
 			TodayContainerGuid = "{" + Harness.NewStableGuid ().ToString ().ToUpper () + "}";
+			ProjectGuid = TodayContainerGuid;
 			csproj.SetProjectGuid (TodayContainerGuid);
 			Harness.Save (csproj, TodayContainerProjectPath);
 
@@ -56,7 +58,7 @@ namespace xharness
 		{
 			var csproj = inputProject;
 			var suffix = "-today-extension";
-			csproj.SetProjectTypeGuids ("{FEACFBD2-3405-455C-9665-78FE426C6842};" + LanguageGuid);
+			csproj.SetProjectTypeGuids ("{EE2C853D-36AF-4FDB-B1AD-8E90477E2198};" + LanguageGuid);
 			csproj.SetOutputPath ("bin\\$(Platform)\\$(Configuration)" + suffix);
 			csproj.SetIntermediateOutputPath ("obj\\$(Platform)\\$(Configuration)" + suffix);
 			csproj.SetImport (IsFSharp ? "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.AppExtension.FSharp.targets" : "$(MSBuildExtensionsPath)\\Xamarin\\iOS\\Xamarin.iOS.AppExtension.CSharp.targets");
@@ -79,6 +81,7 @@ namespace xharness
 			info_plist.SetCFBundleIdentifier (BundleIdentifier + ".todayextension");
 			info_plist.SetMinimumOSVersion ("8.0");
 			info_plist.AddPListStringValue ("CFBundlePackageType", "XPC!");
+			info_plist.SetCFBundleDisplayName (Name);
 			info_plist.AddPListKeyValuePair ("NSExtension", "dict", 
 @"
         <key>NSExtensionMainStoryboard</key>
@@ -87,12 +90,6 @@ namespace xharness
         <string>com.apple.widget-extension</string>
     ");
 			Harness.Save (info_plist, target_info_plist);
-		}
-
-		protected override string Imports {
-			get {
-				return IsFSharp ? "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.FSharp.targets" : "$(MSBuildExtensionsPath)\\Xamarin\\WatchOS\\Xamarin.WatchOS.CSharp.targets";
-			}
 		}
 
 		protected override void ExecuteInternal ()
@@ -108,11 +105,18 @@ namespace xharness
 				CreateTodayContainerProject ();
 				break;
 			case "Library":
-				base.ExecuteInternal ();
+				CreateLibraryProject ();
 				break;
 			default:
 				throw new Exception (string.Format ("Unknown OutputType: {0}", OutputType));
 			}
+		}
+
+		public override IEnumerable<RelatedProject> GetRelatedProjects ()
+		{
+			return new RelatedProject [] {
+				new RelatedProject { Guid = TodayExtensionGuid, ProjectPath = TodayExtensionProjectPath },
+			};
 		}
 	}
 }
