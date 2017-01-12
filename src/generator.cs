@@ -1255,14 +1255,14 @@ public partial class Generator : IMemberGatherer {
 				append = ".UInt32Value";
 			else if (retType == typeof (ulong))
 				append = ".UInt64Value";
-			#if XAMCORE_2_0
-			            else if (retType == typeof (nfloat))
-                append = ".NFloatValue";
-            else if (retType == typeof (nint))
-                append = ".NIntValue";
-            else if (retType == typeof (nuint))
-                append = ".NUIntValue";
-    #endif
+#if XAMCORE_2_0
+			else if (retType == typeof (nfloat))
+				append = ".NFloatValue";
+			else if (retType == typeof (nint))
+				append = ".NIntValue";
+			else if (retType == typeof (nuint))
+				append = ".NUIntValue";
+#endif
 			else
 				throw new BindingException (1049, true, "Could not unbox type {0} from {1} container used on {2} member decorated with [BindAsAttribute].", retType.Name, "NSNumber", minfo.mi.Name);
 
