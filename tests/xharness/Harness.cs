@@ -147,38 +147,35 @@ namespace xharness
 		public string MlaunchPath {
 			get {
 				if (mlaunch == null) {
-					var dir = Path.GetFullPath (RootDirectory);
-					while (dir.Length > 3) {
-						var filename = Path.GetFullPath (Path.Combine (dir, "maccore", "tools", "mlaunch", "mlaunch"));
-						if (File.Exists (filename))
-							return mlaunch = filename;
-						dir = Path.GetDirectoryName (dir);
+					// First check if we've built mlaunch locally.
+					var filename = Path.GetFullPath (Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch"));
+					if (File.Exists (filename)) {
+						Log ("Found mlaunch: {0}", filename);
+						return mlaunch = filename;
 					}
 
-					string path = string.Empty;
-
-					// check next to mtouch
-					path = Path.Combine (Path.GetDirectoryName (MtouchPath), "mlaunch");
-					if (File.Exists (path))
-						return mlaunch = path;
-
-					Log ("Could not find mlaunch locally, will try downloading it.");
+					// Then check if we can download mlaunch.
+					Log ("Could not find a locally built mlaunch, will try downloading it.");
 					try {
-						path = DownloadMlaunch ();
+						filename = DownloadMlaunch ();
 					} catch (Exception e) {
 						Log ("Could not download mlaunch: {0}", e);
 					}
-					if (!File.Exists (path)) {
-						Log ("Will try in Xamarin Studio.app.", path);
-						path = "/Applications/Xamarin Studio.app/Contents/Resources/lib/monodevelop/AddIns/MonoDevelop.IPhone/mlaunch.app/Contents/MacOS/mlaunch";
+					if (File.Exists (filename)) {
+						Log ("Found mlaunch: {0}", filename);
+						return mlaunch = filename;
 					}
 
-					if (!File.Exists (path))
-						throw new FileNotFoundException (string.Format ("Could not find mlaunch: {0}", path));
+					// Then check if the system version of Xamarin.iOS has mlaunch.
+					// This may be a version of mlaunch we're not compatible with, since we don't control which XI version the system has.
+					Log ("Could not download mlaunch, will try the system's Xamarin.iOS.");
+					filename = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch";
+					if (File.Exists (filename)) {
+						Log ("Found mlaunch: {0}", filename);
+						return mlaunch = filename;
+					}
 
-					Log ("Found mlaunch: {0}", path);
-
-					mlaunch = path;
+					throw new FileNotFoundException (string.Format ("Could not find mlaunch: {0}", filename));
 				}
 
 				return mlaunch;
