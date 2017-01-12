@@ -55,6 +55,7 @@ namespace Xamarin.Bundler {
 		public Mono.Linker.I18nAssemblies I18n;
 
 		public bool? EnableCoopGC;
+		public bool EnableSGenConc;
 		public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptions;
 		public MarshalManagedExceptionMode MarshalManagedExceptions;
 		public bool IsDefaultMarshalManagedExceptionMode;

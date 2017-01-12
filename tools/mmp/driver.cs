@@ -1080,6 +1080,11 @@ namespace Xamarin.Bundler {
 				if (App.EnableDebug)
 					sw.WriteLine ("\txamarin_debug_mode = TRUE;");
 
+				if (App.EnableSGenConc)
+					sw.WriteLine ("\tsetenv (\"MONO_GC_PARAMS\", \"major=marksweep-conc\", 1);");
+				else
+					sw.WriteLine ("\tsetenv (\"MONO_GC_PARAMS\", \"major=marksweep\", 1);");
+
 				if (aot.IsAOT)
 					sw.WriteLine ("\txamarin_mac_aot = TRUE;");
 
