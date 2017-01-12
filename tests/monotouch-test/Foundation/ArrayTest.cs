@@ -36,16 +36,14 @@ namespace MonoTouchFixtures.Foundation {
 	public class NSArrayTest {
 		
 		[Test]
-		public void FromStrings_NullItem ()
+		public void FromStrings_Null ()
 		{
-			try {
-				NSArray.FromStrings (new string [1]);
-			}
-			catch (Exception e) {
-				Assert.Fail ("Unexpected exception {0}", e);
-			}
+			Assert.Throws <ArgumentNullException> (() => NSArray.FromStrings (null), "null");
+
+			using (var a = NSArray.FromStrings (new string [1]))
+				Assert.That (a.Count, Is.EqualTo (1), "null item");
 		}
-		
+
 		int comparator_count;
 
 		// the new NSObject are often, but not always, in ascending order 
@@ -127,8 +125,8 @@ namespace MonoTouchFixtures.Foundation {
 			using (var a = NSArray.FromNSObjects (null)) {
 				// on the managed side we have an empty array
 				Assert.That (a.Count, Is.EqualTo ((nuint) 0), "Count");
-				// if we provide the handle to the ObjC it will be `nil`
-				Assert.That (a.Handle, Is.EqualTo (IntPtr.Zero), "Handle");
+				// and a valid native instance (or some other API might fail)
+				Assert.That (a.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 			}
 		}
 	}
