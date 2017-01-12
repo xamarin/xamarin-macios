@@ -90,6 +90,7 @@ namespace MonoTouchFixtures.UIKit {
 		public void CtorNSString ()
 		{
 			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((NSString) null), "null");
+			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((NSString[]) null), "null array");
 
 			using (var ns = new NSString ("NSString"))
 			using (UISegmentedControl sc = new UISegmentedControl (ns)) {
@@ -101,6 +102,7 @@ namespace MonoTouchFixtures.UIKit {
 		public void CtorString ()
 		{
 			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((string) null), "null");
+			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((string[]) null), "null array");
 
 			using (UISegmentedControl sc = new UISegmentedControl ("one", "two")) {
 				Assert.That (sc.NumberOfSegments, Is.EqualTo (2), "NumberOfSegments");
@@ -111,6 +113,7 @@ namespace MonoTouchFixtures.UIKit {
 		public void CtorUIImage ()
 		{
 			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((UIImage) null), "null");
+			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((UIImage[]) null), "null array");
 
 			using (var img = UIImage.FromFile ("basn3p08.png"))
 			using (UISegmentedControl sc = new UISegmentedControl (img)) {

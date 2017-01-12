@@ -71,8 +71,9 @@ namespace XamCore.UIKit {
 
 		static NSArray FromNSObjects (NSObject [] items)
 		{
-			// items will never be null / empty as the callers have `params`
-			if ((items.Length == 1) && (items [0] == null))
+			// if the caller used an array [] then items can be null
+			// if the caller used only null then we get an array with a null item
+			if ((items == null) || ((items.Length == 1) && (items [0] == null)))
 				throw new ArgumentNullException (nameof (items));
 
 			return NSArray.FromNSObjects (items);
@@ -84,8 +85,9 @@ namespace XamCore.UIKit {
 
 		static NSArray FromStrings (string [] strings)
 		{
-			// strings will never be null / empty as the caller has `params`
-			if ((strings.Length == 1) && (strings [0] == null))
+			// if the caller used an array [] then items can be null
+			// if the caller used only null then we get an array with a null item
+			if ((strings == null) || ((strings.Length == 1) && (strings[0] == null)))
 				throw new ArgumentNullException (nameof (strings));
 			
 			return NSArray.FromStrings (strings);
