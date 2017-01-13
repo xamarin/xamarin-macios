@@ -1742,9 +1742,10 @@ namespace Xamarin.Bundler {
 
 				// The linker later gets angry if you copy in a read only assembly
 				CopyFileAndRemoveReadOnly (asm, Path.Combine (mmp_dir, filename));
+				foreach (var assembly in BuildTarget.Assemblies)
+					assembly.CopySatellitesToDirectory (mmp_dir);
 				if (verbose > 0)
 					Console.WriteLine ("Added assembly {0}", asm);
-
 				if (App.EnableDebug && File.Exists (mdbfile))
 					File.Copy (mdbfile, Path.Combine (mmp_dir, Path.GetFileName (mdbfile)), true);
 				if (File.Exists (configfile))
@@ -1778,7 +1779,9 @@ namespace Xamarin.Bundler {
 			if (resolved_assemblies.Contains (fqname))
 				return;
 
-			BuildTarget.Assemblies.Add (new Assembly (BuildTarget, assembly));
+			var asm = new Assembly (BuildTarget, assembly);
+			asm.ComputeSatellites ();
+			BuildTarget.Assemblies.Add (asm);
 
 			resolved_assemblies.Add (fqname);
 
