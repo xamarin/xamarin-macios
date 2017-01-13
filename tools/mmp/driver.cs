@@ -1746,7 +1746,7 @@ namespace Xamarin.Bundler {
 					assembly.CopySatellitesToDirectory (mmp_dir);
 				if (verbose > 0)
 					Console.WriteLine ("Added assembly {0}", asm);
-				
+
 				if (App.EnableDebug && File.Exists (mdbfile))
 					File.Copy (mdbfile, Path.Combine (mmp_dir, Path.GetFileName (mdbfile)), true);
 				if (File.Exists (configfile))
