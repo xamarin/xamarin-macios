@@ -11,49 +11,37 @@
     <RootNamespace></RootNamespace>
     <AssemblyName>MonoTouch.NUnitLite</AssemblyName>
     <UseMSBuildEngine>True</UseMSBuildEngine>
-    <DefineConstants>XAMCORE_2_0</DefineConstants>
+    <DefineConstants>NUNITLITE;CLR_4_0;NET_4_5;XAMCORE_2_0;MONOTOUCH</DefineConstants>
     <OutputPath>build\ios\reference</OutputPath>
+    <IntermediateOutputPath>$(OutputPath)</IntermediateOutputPath>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\product.snk</AssemblyOriginatorKeyFile>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Debug32' Or '$(Configuration)' == 'Debug64' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>build\ios\reference</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentation>True</GenerateDocumentation>
-    <NoWarn>3021,3014,3003</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release32' Or '$(Configuration)' == 'Release64' Or '$(Configuration)' == 'Release-bitcode'  ">
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>build\ios\reference</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|AnyCPU' ">
-    <DebugType>none</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>build\ios\reference</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Xamarin.iOS" />
     <Reference Include="System" />
     <Reference Include="System.Xml" />
-    <Reference Include="MonoTouch.Dialog-1" />
-  </ItemGroup>
-  <PropertyGroup>
-    <CscToolExe>$(MSBuildProjectDirectory)\custom-make.sh</CscToolExe>
-  </PropertyGroup>
-  <ItemGroup>
+    <ProjectReference Include="MonoTouch.Dialog-1.csproj">
+      <Project>{48585BC2-D604-4CF2-A827-D887BEA51FD6}</Project>
+      <Name>MonoTouch.Dialog-1</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <!--%FILES%-->
