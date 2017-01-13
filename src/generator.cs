@@ -54,6 +54,8 @@ using XamCore.CoreGraphics;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 using XamCore.Security;
+using XamCore.SceneKit;
+using XamCore.CoreLocation;
 #if !WATCH
 using XamCore.CoreMedia;
 using XamCore.CoreVideo;
@@ -65,12 +67,19 @@ using XamCore.AudioUnit;
 using XamCore.AVFoundation;
 #endif
 
+#if !MONOMAC
+using XamCore.UIKit;
+using XamCore.MapKit;
+#endif
+
 #if MONOMAC
 using XamCore.OpenGL;
 using XamCore.MediaToolbox;
+using XamCore.CoreAnimation;
 #elif !WATCH
 #if !TVOS
 using XamCore.AddressBook;
+using XamCore.CoreAnimation;
 #endif
 using XamCore.MediaToolbox;
 #endif
@@ -1123,6 +1132,24 @@ public partial class Generator : IMemberGatherer {
 	public static bool HasBindAsAttribute (ICustomAttributeProvider cu) => (GetAttribute<BindAsAttribute> (cu) ?? GetAttribute<BindAsAttribute> ((cu as MethodInfo)?.ReturnParameter)) != null;
 	static bool IsSetter (MethodInfo mi) => mi.IsSpecialName && mi.Name.StartsWith ("set_", StringComparison.Ordinal);
 
+	static Dictionary<Type,string> NSValueCreateMap = new Dictionary<Type, string> {
+		{ typeof (CGAffineTransform), "CGAffineTransform" }, { typeof (NSRange), "Range" },
+		{ typeof (CGVector), "CGVector" }, { typeof (SCNMatrix4), "SCNMatrix4" },
+		{ typeof (CLLocationCoordinate2D), "CLLocationCoordinate2D" }, { typeof (SCNVector3), "Vector" },
+		{ typeof (SCNVector4), "Vector" },
+#if XAMCORE_2_0
+		{ typeof (CGPoint), "CGPoint" }, { typeof (CGRect), "CGRect" }, { typeof (CGSize), "CGSize" },
+#endif
+#if !MONOMAC
+		{ typeof (UIEdgeInsets), "UIEdgeInsets" }, { typeof (UIOffset), "UIOffset" },
+		{ typeof (MKCoordinateSpan), "MKCoordinateSpan" },
+#endif
+#if !WATCH && !TVOS
+		{ typeof (CMTimeRange), "CMTimeRange" }, { typeof (CMTime), "CMTime" },
+		{ typeof (CMTimeMapping), "CMTimeMapping" }, { typeof (CATransform3D), "CATransform3D" },
+#endif
+	};
+
 	string GetToBindAsWrapper (MemberInformation minfo = null, ParameterInfo pi = null)
 	{
 		BindAsAttribute attrib = null;
@@ -1150,38 +1177,15 @@ public partial class Generator : IMemberGatherer {
 			temp = string.Format ("new NSNumber ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
 
 		else if (className == "NSValue") {
-			switch (retType.Name) {
-			case "CATransform3D":
-			case "CGAffineTransform":
-			case "CGPoint":
-			case "CGRect":
-			case "CGSize":
-			case "CGVector":
-			case "CMTimeMapping":
-			case "CMTimeRange":
-			case "CMTime":
-			case "MKCoordinateSpan":
-			case "CLLocationCoordinate2D":
-			case "PointF":
-			case "RectangleF":
-			case "SCNMatrix4":
-			case "SizeF":
-			case "UIEdgeInsets":
-			case "UIOffset":
-				temp = string.Format ("NSValue.From{0} ({{1}}{{0}});", retType.Name);
-				break;
-			case "SCNVector3":
-			case "SCNVector4":
-				temp = "NSValue.FromVector ({1}{0});";
-				break;
-			case "NSRange":
-				temp = "NSValue.FromRange ({1}{0});";
-				break;
-			default:
-				throw new BindingException (1049, true, "Could not box type {0} into {1} container used on {2} member decorated with [BindAs].", retType.Name, "NSValue", minfo?.mi?.Name ?? pi?.Name);
+			var typeStr = string.Empty;
+			if (!NSValueCreateMap.TryGetValue (retType, out typeStr)) {
+				// HACK: These are problematic for X.M due to we do not ship System.Drawing for Full profile
+				if (retType.Name == "RectangleF" || retType.Name == "SizeF" || retType.Name == "PointF")
+					typeStr = retType.Name;
+				else
+					throw new BindingException (1049, true, "Could not box type {0} into {1} container used on {2} member decorated with [BindAs].", retType.Name, "NSValue", minfo?.mi?.Name ?? pi?.Name);
 			}
-
-			temp = string.Format (temp, isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			temp = string.Format ("NSValue.From{0} ({2}{1});", typeStr, isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
 		} else if (isValueType) {
 			// Magic for enums/smart enums
 		} else
@@ -1200,6 +1204,24 @@ public partial class Generator : IMemberGatherer {
 #endif
 	};
 
+	static Dictionary<Type,string> NSValueReturnMap = new Dictionary<Type, string> {
+		{ typeof (CGAffineTransform), ".CGAffineTransformValue" }, { typeof (NSRange), ".RangeValue" },
+		{ typeof (CGVector), ".CGVectorValue" }, { typeof (SCNMatrix4), ".SCNMatrix4Value" },
+		{ typeof (CLLocationCoordinate2D), ".CoordinateValue" }, { typeof (SCNVector3), ".Vector3Value" },
+		{ typeof (SCNVector4), ".VectordValue" },
+#if XAMCORE_2_0
+		{ typeof (CGPoint), ".CGPointValue" }, { typeof (CGRect), ".CGRectValue" }, { typeof (CGSize), ".CGSizeValue" },
+#endif
+#if !MONOMAC
+		{ typeof (UIEdgeInsets), ".UIEdgeInsetsValue" }, { typeof (UIOffset), ".UIOffsetValue" },
+		{ typeof (MKCoordinateSpan), ".CoordinateSpanValue" },
+#endif
+#if !WATCH && !TVOS
+		{ typeof (CMTimeRange), ".CMTimeRangeValue" }, { typeof (CMTime), ".CMTimeValue" },
+		{ typeof (CMTimeMapping), ".CMTimeMappingValue" }, { typeof (CATransform3D), ".CATransform3DValue" },
+#endif
+	};
+
 	string GetFromBindAsWrapper (MemberInformation minfo)
 	{
 		var attrib = GetBindAsAttribute (minfo.mi);
@@ -1208,47 +1230,19 @@ public partial class Generator : IMemberGatherer {
 		var append = string.Empty;
 		var property = minfo.mi as PropertyInfo;
 		var method = minfo.mi as MethodInfo;
+		var originalReturnType = method?.ReturnType ?? property?.PropertyType;
 
-		if (method?.ReturnType?.Name == "NSNumber" || property?.PropertyType?.Name == "NSNumber") {
+		if (originalReturnType?.Name == "NSNumber") {
 			if (!NSNumberReturnMap.TryGetValue (retType, out append))
 				throw new BindingException (1049, true, "Could not unbox type {0} from {1} container used on {2} member decorated with [BindAs].", retType.Name, "NSNumber", minfo.mi.Name);
 
-		} else if (method?.ReturnType.Name == "NSValue" || property?.PropertyType.Name == "NSValue") {
-			switch (retType.Name) {
-			case "CATransform3D":
-			case "CGAffineTransform":
-			case "CGPoint":
-			case "CGRect":
-			case "CGSize":
-			case "CGVector":
-			case "CMTimeMapping":
-			case "CMTimeRange":
-			case "CMTime":
-			case "PointF":
-			case "RectangleF":
-			case "SCNMatrix4":
-			case "SizeF":
-			case "UIEdgeInsets":
-			case "UIOffset":
-				append = string.Format (".{0}Value", retType.Name);
-				break;
-			case "MKCoordinateSpan":
-				append = ".CoordinateSpanValue";
-				break;
-			case "CLLocationCoordinate2D":
-				append = ".CoordinateValue";
-				break;
-			case "NSRange":
-				append = ".RangeValue";
-				break;
-			case "SCNVector3":
-				append = ".Vector3Value";
-				break;
-			case "SCNVector4":
-				append = ".Vector4Value";
-				break;
-			default:
-				throw new BindingException (1049, true, "Could not unbox type {0} from {1} container used on {2} member decorated with [BindAs].", retType.Name, "NSValue", minfo.mi.Name);
+		} else if (originalReturnType?.Name == "NSValue") {
+			if (!NSValueReturnMap.TryGetValue (retType, out append)) {
+				// HACK: These are problematic for X.M due to we do not ship System.Drawing for Full profile
+				if (retType.Name == "RectangleF" || retType.Name == "SizeF" || retType.Name == "PointF")
+					append = $".{retType.Name}Value";
+				else
+					throw new BindingException (1049, true, "Could not unbox type {0} from {1} container used on {2} member decorated with [BindAs].", retType.Name, "NSValue", minfo.mi.Name);
 			}
 		} else if (isValueType) {
 			// Magic for enums/smart enums
@@ -1560,10 +1554,9 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 
-		if (HasBindAsAttribute (pi) || (propInfo != null && HasBindAsAttribute (propInfo))) {
-			var bindAsAtt = GetBindAsAttribute (pi) ?? GetBindAsAttribute (propInfo);
+		var bindAsAtt = GetBindAsAttribute (pi) ?? GetBindAsAttribute (propInfo);
+		if (bindAsAtt != null)
 			return bindAsAtt.IsNullable;
-		}
 
 		if (IsWrappedType (pi.ParameterType))
 			return true;
@@ -3148,10 +3141,10 @@ public partial class Generator : IMemberGatherer {
 				sb.Append ("I");
 			}
 
-			if (HasBindAsAttribute (pi)) {
-				var bindAtt = GetBindAsAttribute (pi);
-				sb.Append (FormatType (bindAtt.Type.DeclaringType, bindAtt.Type));
-			} else
+			var bindAsAtt = GetBindAsAttribute (pi);
+			if (bindAsAtt != null)
+				sb.Append (FormatType (bindAsAtt.Type.DeclaringType, bindAsAtt.Type));
+			else
 				sb.Append (FormatType (declaringType, parType));
 
 			sb.Append (" ");
