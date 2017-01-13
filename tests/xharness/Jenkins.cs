@@ -1926,6 +1926,15 @@ function oninitialload ()
 			ProjectConfiguration = build_task.ProjectConfiguration;
 		}
 
+		public override IEnumerable<Log> AggregatedLogs {
+			get {
+				var rv = base.AggregatedLogs;
+				if (BuildTask != null)
+					rv = rv.Union (BuildTask.AggregatedLogs);
+				return rv;
+			}
+		}
+
 		public override TestExecutingResult ExecutionResult {
 			get {
 				// When building, the result is the build result.
@@ -2019,7 +2028,7 @@ function oninitialload ()
 
 		public override IEnumerable<Log> AggregatedLogs {
 			get {
-				var rv = base.AggregatedLogs.Union (BuildTask.Logs);
+				var rv = base.AggregatedLogs;
 				if (runner != null)
 					rv = rv.Union (runner.Logs);
 				if (additional_runner != null)
