@@ -1137,6 +1137,7 @@ SCENEKIT_SOURCES = \
 	SceneKit/SCNParticleSystem.cs \
 	SceneKit/SCNPhysicsShape.cs \
 	SceneKit/SCNPhysicsTest.cs \
+	SceneKit/SCNRenderer.cs \
 	SceneKit/SCNRenderingOptions.cs \
 	SceneKit/SCNScene.cs \
 	SceneKit/SCNSceneLoadingOptions.cs \
