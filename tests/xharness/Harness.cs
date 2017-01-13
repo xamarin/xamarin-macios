@@ -30,8 +30,21 @@ namespace xharness
 		string root_directory;
 		public string RootDirectory {
 			get {
-				if (root_directory == null)
-					root_directory = Environment.CurrentDirectory;
+				if (root_directory == null) {
+					var testAssemblyDirectory = Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location);
+					var dir = testAssemblyDirectory;
+					var path = Path.Combine (testAssemblyDirectory, ".git");
+					while (!Directory.Exists (path) && path.Length > 3) {
+						dir = Path.GetDirectoryName (dir);
+						path = Path.Combine (dir, ".git");
+					}
+					if (!Directory.Exists (path))
+						throw new Exception ("Could not find the xamarin-macios repo.");
+					path = Path.Combine (Path.GetDirectoryName (path), "tests");
+					if (!Directory.Exists (path))
+						throw new Exception ("Could not find the tests directory.");
+					root_directory = path;
+				}
 				return root_directory;
 			}
 			set {
