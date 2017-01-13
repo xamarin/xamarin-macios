@@ -1458,6 +1458,7 @@ function oninitialload ()
 		public virtual void Reset ()
 		{
 			test_log = null;
+			failure_message = null;
 			Logs.Clear ();
 			duration.Reset ();
 			execution_result = TestExecutingResult.NotStarted;
@@ -2061,6 +2062,13 @@ function oninitialload ()
 		}
 
 		protected abstract string XIMode { get; }
+
+		public override void Reset ()
+		{
+			base.Reset ();
+			runner = null;
+			additional_runner = null;
+		}
 	}
 
 	class RunDeviceTask : RunXITask<Device>
