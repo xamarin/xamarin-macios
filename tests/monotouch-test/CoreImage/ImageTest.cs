@@ -108,12 +108,8 @@ namespace MonoTouchFixtures.CoreImage {
 
 			using (var cgimage = new CIImage (NSBundle.MainBundle.GetUrlForResource ("xamarin1", "png")))
 			using (var cs = cgimage.ColorSpace) {
-				Assert.NotNull (cs, "ColorSpace should not be null");
-				if (TestRuntime.CheckXcodeVersion (8, 0)) {
-					Assert.That (cs.Name, Is.EqualTo ("kCGColorSpaceSRGB"));
-				} else {
-					Assert.IsNull (cs.Name);
-				}
+				Assert.NotNull (cs, "ColorSpace");
+				Assert.That (cs.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 			}
 		}
 	}
