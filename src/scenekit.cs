@@ -1674,13 +1674,14 @@ namespace XamCore.SceneKit {
 		[Static, Export ("rendererWithContext:options:")]
 		SCNRenderer FromContext (IntPtr context, [NullAllowed] NSDictionary options);
 
+#if false // bug #51514
 		[NoWatch]
 		[Static]
 		[Wrap ("FromContext (context.GetHandle (), options)")]
 		// GetHandle will return IntPtr.Zero is context is null
 		// GLContext == CGLContext on macOS and EAGLContext in iOS and tvOS (using on top of file)
 		SCNRenderer FromContext (GLContext context, [NullAllowed] NSDictionary options);
-
+#endif
 		[NoWatch, NoTV]
 		[Export ("render")]
 		[Availability (Deprecated = Platform.Mac_10_11 | Platform.iOS_9_0)]
