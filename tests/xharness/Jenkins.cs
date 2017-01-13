@@ -1171,8 +1171,14 @@ function oninitialload ()
 							writer.WriteLine ("</div>");
 							writer.WriteLine ($"<div id='logs_{log_id}' class='autorefreshable logs' data-onautorefresh='{log_id}' style='display: {defaultDisplay};'>");
 
-							if (!string.IsNullOrEmpty (test.FailureMessage))
-								writer.WriteLine ($"Failure: {System.Web.HttpUtility.HtmlEncode (test.FailureMessage).Replace ("\n", "<br />")} <br />");
+							if (!string.IsNullOrEmpty (test.FailureMessage)) {
+								var msg = System.Web.HttpUtility.HtmlEncode (test.FailureMessage).Replace ("\n", "<br />");
+								if (test.FailureMessage.Contains ('\n')) {
+									writer.WriteLine ($"Failure:<br /> <div style='margin-left: 20px;'>{msg}</div>");
+								} else {
+									writer.WriteLine ($"Failure: {msg} <br />");
+								}
+							}
 							var progressMessage = test.ProgressMessage;
 							if (!string.IsNullOrEmpty (progressMessage))
 								writer.WriteLine (progressMessage + "<br />");
