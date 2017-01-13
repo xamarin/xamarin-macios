@@ -28,6 +28,7 @@ Info-*.plist
 Makefile.inc
 *.stamp
 test.config
+test-system.config
 mac-test-package
 .nuget
 logs

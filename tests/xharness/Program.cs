@@ -14,6 +14,7 @@ namespace xharness
 			var os = new OptionSet () {
 				{ "h|?|help", "Displays the help", (v) => showHelp () },
 				{ "v|verbose", "Show verbose output", (v) => harness.Verbosity++ },
+				{ "use-system:", "Use the system version of Xamarin.iOS/Xamarin.Mac or the locally build version. Default: the locally build version.", (v) => harness.UseSystem = v == "1" || v == "true" || string.IsNullOrEmpty (v) },
 				// Configure
 				{ "mac", "Configure for Xamarin.Mac instead of iOS.", (v) => harness.Mac = true },
 				{ "configure", "Creates project files and makefiles.", (v) => harness.Action = HarnessAction.Configure },

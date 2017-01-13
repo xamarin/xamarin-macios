@@ -25,6 +25,7 @@ namespace xharness
 		public HarnessAction Action { get; set; }
 		public int Verbosity { get; set; }
 		public Log HarnessLog { get; set; }
+		public bool UseSystem { get; set; } // if the system XI/XM should be used, or the locally build XI/XM.
 
 		// This is the maccore/tests directory.
 		string root_directory;
@@ -313,7 +314,7 @@ namespace xharness
 
 		void ParseConfigFiles ()
 		{
-			ParseConfigFiles (FindConfigFiles ("test.config"));
+			ParseConfigFiles (FindConfigFiles (UseSystem ? "test-system.config" : "test.config"));
 			ParseConfigFiles (FindConfigFiles ("Make.config.local"));
 			ParseConfigFiles (FindConfigFiles ("Make.config"));
 		}
