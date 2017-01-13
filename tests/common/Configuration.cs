@@ -217,15 +217,27 @@ namespace Xamarin.Tests
 			}
 		}
 
+		public static string TargetDirectoryXI {
+			get {
+				return make_config ["IOS_DESTDIR"];
+			}
+		}
+
+		public static string TargetDirectoryXM {
+			get {
+				return make_config ["MAC_DESTDIR"];
+			}
+		}
+
 		public static string BinDirXI {
 			get {
-				return Path.Combine (RootPath, "_ios-build", "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin");
+				return Path.Combine (TargetDirectoryXI, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin");
 			}
 		}
 
 		public static string BinDirXM {
 			get {
-				return Path.Combine (RootPath, "_mac-build", "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current", "bin");
+				return Path.Combine (TargetDirectoryXM, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current", "bin");
 			}
 		}
 
