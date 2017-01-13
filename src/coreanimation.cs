@@ -686,6 +686,9 @@ namespace XamCore.CoreAnimation {
 		[Export ("layer"), New, Static]
 		CALayer Create ();
 
+#if XAMCORE_4_0
+		[Protected]
+#endif
 		[Export ("scrollMode", ArgumentSemantic.Copy)]
 		NSString ScrollMode { get; set;  }
 
@@ -694,18 +697,21 @@ namespace XamCore.CoreAnimation {
 
 		[Export ("scrollToRect:")]
 		void ScrollToRect (CGRect r);
+	}
+
+	enum CAScroll {
 
 		[Field ("kCAScrollNone")]
-		NSString ScrollNone { get; }
+		None,
 
 		[Field ("kCAScrollVertically")]
-		NSString ScrollVertically { get; }
+		Vertically,
 
 		[Field ("kCAScrollHorizontally")]
-		NSString ScrollHorizontally { get; }
+		Horizontally,
 
 		[Field ("kCAScrollBoth")]
-		NSString ScrollBoth { get; }
+		Both,
 	}
 	
 	[BaseType (typeof (CALayer))]
