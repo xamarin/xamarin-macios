@@ -529,14 +529,12 @@ namespace xharness
 				if (IsServerMode)
 					tasks.Add (RunTestServer ());
 
-				var populateWatch = Stopwatch.StartNew ();
 				Task.Run (async () =>
 				{
 					await SimDevice.KillEverythingAsync (MainLog);
 					await PopulateTasksAsync ();
 					populating = false;
 				}).Wait ();
-				Console.WriteLine ("Populated in {0} ms", populateWatch.ElapsedMilliseconds);
 				GenerateReport ();
 				if (!IsServerMode) {
 					foreach (var task in Tasks)
