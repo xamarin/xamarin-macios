@@ -171,7 +171,6 @@ namespace MonoTouch.Tuner {
 				if (!options.DebugBuild)
 					pipeline.AppendStep (GetPostLinkOptimizations (options));
 
-				pipeline.AppendStep (new RemoveSelectors ());
 				pipeline.AppendStep (new FixModuleFlags ());
 			} else {
 				SubStepDispatcher sub = new SubStepDispatcher () {
