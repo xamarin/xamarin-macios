@@ -25,6 +25,7 @@ public partial class TodayViewController : UIViewController, INCWidgetProviding
 			runner.LoadSync ();
 			BeginInvokeOnMainThread (() =>
 			{
+				runner.AutoStart = true; // There's no UI for today extensions (yet), so unless we autostart the tests, there's no way to run them when running from the IDE.
 				runner.AutoRun ();
 			});
 		});
