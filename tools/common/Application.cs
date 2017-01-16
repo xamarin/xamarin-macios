@@ -442,7 +442,7 @@ namespace Xamarin.Bundler {
 
 			var rootName = Path.GetFileNameWithoutExtension (RootAssembly);
 			if (rootName != Driver.GetProductAssembly (this))
-				throw new PlatformException (66, "Invalid build registrar assembly: {0}", RootAssembly);
+				throw ErrorHelper.CreateError (66, "Invalid build registrar assembly: {0}", RootAssembly);
 
 			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ()));
 			Driver.Log (3, "Loaded {0}", resolvedAssemblies [resolvedAssemblies.Count - 1].MainModule.FileName);
