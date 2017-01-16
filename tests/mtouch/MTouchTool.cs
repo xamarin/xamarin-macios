@@ -84,7 +84,7 @@ namespace Xamarin
 		public Profile Profile = Profile.iOS;
 		public bool NoPlatformAssemblyReference;
 		static XmlDocument device_list_cache;
-
+		public string [] CustomArguments; // Sometimes you want to pass invalid arguments to mtouch, in this case this array is used. No processing will be done, if quotes are required, they must be added to the arguments in the array.
 
 		public class DeviceInfo
 		{
@@ -309,6 +309,12 @@ namespace Xamarin
 
 			if (!string.IsNullOrEmpty (Device))
 				sb.Append (" --device:").Append (MTouch.Quote (Device));
+
+			if (CustomArguments != null) {
+				foreach (var arg in CustomArguments) {
+					sb.Append (" ").Append (arg);
+				}
+			}
 
 			return sb.ToString ();
 		}
