@@ -33,8 +33,8 @@ namespace LinkSdk {
 		[Test]
 		public void Corlib ()
 		{
-			Type t = Type.GetType ("System.Security.HostSecurityManager, mscorlib");
-			Assert.NotNull (t, "System.Security.HostSecurityManager");
+			Type t = Type.GetType ("System.Security.PermissionSet, mscorlib");
+			Assert.NotNull (t, "System.Security.PermissionSet");
 		}
 
 		[Test]

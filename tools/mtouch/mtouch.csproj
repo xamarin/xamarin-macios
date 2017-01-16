@@ -316,6 +316,9 @@
     <Compile Include="..\linker\RemoveUserResourcesSubStep.cs">
       <Link>Xamarin.Linker\RemoveUserResourcesSubStep.cs</Link>
     </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\InlinerSubStep.cs">
+      <Link>MonoTouch.Tuner\InlinerSubStep.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />

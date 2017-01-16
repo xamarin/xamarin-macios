@@ -114,7 +114,7 @@ namespace MonoTouch.Tuner {
 			sub.Add (new CoreRemoveSecurity ());
 			sub.Add (new OptimizeGeneratedCodeSubStep (options));
 			sub.Add (new RemoveUserResourcesSubStep (options));
-			// OptimizeGeneratedCodeSubStep and RemoveNativeCodeSubStep needs [GeneratedCode] so it must occurs before RemoveAttributes
+			// OptimizeGeneratedCodeSubStep and RemoveUserResourcesSubStep needs [GeneratedCode] so it must occurs before RemoveAttributes
 			sub.Add (new RemoveAttributes ());
 			// http://bugzilla.xamarin.com/show_bug.cgi?id=1408
 			if (options.LinkAway)
@@ -122,6 +122,7 @@ namespace MonoTouch.Tuner {
 			sub.Add (new MarkNSObjects ());
 			sub.Add (new PreserveSoapHttpClients ());
 			sub.Add (new CoreHttpMessageHandler (options));
+			sub.Add (new InlinerSubStep ());
 			return sub;
 		}
 
