@@ -212,6 +212,11 @@ namespace Xamarin.Bundler {
 	//		Warning		MT2016  Invalid TlsProvider `{0}` option. The only valid value `{1}` will be used.
 	//					MT202x	Binding Optimizer failed processing `...`.
 	//					MT203x	Removing User Resources failed processing `...`.
+	//					MT204x	Default HttpMessageHandler setter failed processing `...`.
+	//					MT205x	Code Remover failed processing `...`.
+	//					MT206x	Sealer failed processing `...`.
+	//					MT207x	Metadata Reducer failed processing `...`.
+	//					MT208x	MarkNSObjects failed processing `...`.
 	// MT3xxx	AOT
 	//			MT30xx	AOT (general) errors
 	//					MT3001	Could not AOT the assembly '{0}'
