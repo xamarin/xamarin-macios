@@ -25,13 +25,27 @@ namespace xharness
 		public HarnessAction Action { get; set; }
 		public int Verbosity { get; set; }
 		public Log HarnessLog { get; set; }
+		public bool UseSystem { get; set; } // if the system XI/XM should be used, or the locally build XI/XM.
 
 		// This is the maccore/tests directory.
 		string root_directory;
 		public string RootDirectory {
 			get {
-				if (root_directory == null)
-					root_directory = Environment.CurrentDirectory;
+				if (root_directory == null) {
+					var testAssemblyDirectory = Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location);
+					var dir = testAssemblyDirectory;
+					var path = Path.Combine (testAssemblyDirectory, ".git");
+					while (!Directory.Exists (path) && path.Length > 3) {
+						dir = Path.GetDirectoryName (dir);
+						path = Path.Combine (dir, ".git");
+					}
+					if (!Directory.Exists (path))
+						throw new Exception ("Could not find the xamarin-macios repo.");
+					path = Path.Combine (Path.GetDirectoryName (path), "tests");
+					if (!Directory.Exists (path))
+						throw new Exception ("Could not find the tests directory.");
+					root_directory = path;
+				}
 				return root_directory;
 			}
 			set {
@@ -300,7 +314,7 @@ namespace xharness
 
 		void ParseConfigFiles ()
 		{
-			ParseConfigFiles (FindConfigFiles ("test.config"));
+			ParseConfigFiles (FindConfigFiles (UseSystem ? "test-system.config" : "test.config"));
 			ParseConfigFiles (FindConfigFiles ("Make.config.local"));
 			ParseConfigFiles (FindConfigFiles ("Make.config"));
 		}
