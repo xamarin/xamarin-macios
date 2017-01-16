@@ -374,7 +374,7 @@ namespace xharness
 				include.Value = include.Value.Replace (".csproj", suffix + ".csproj");
 				include.Value = include.Value.Replace (".fsproj", suffix + ".fsproj");
 				var nameElement = n ["Name"];
-				nameElement.InnerText = System.IO.Path.GetFileNameWithoutExtension (include.Value);
+				nameElement.InnerText = System.IO.Path.GetFileNameWithoutExtension (include.Value.Replace ('\\', '/'));
 			}
 		}
 
