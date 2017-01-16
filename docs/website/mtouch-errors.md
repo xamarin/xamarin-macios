@@ -902,6 +902,27 @@ User resources are files included inside assemblies (as resources) that needs to
 * `__monotouch_content_*` and `__monotouch_pages_*` resources; and
 * Native libraries embedded inside a binding assembly;
 
+<h3><a name="MT2040"/>MT2040: Default HttpMessageHandler setter failed processing `...`.</h3>
+
+Something unexpected occured when trying to set the default `HttpMessageHandler` for the application. Please file a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+<h3><a name="MT2050"/>MT2050: Code Remover failed processing `...`.</h3>
+
+Something unexpected occured when trying to remove code from BCL shipping with the application. Please file a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+<h3><a name="MT2060"/>MT2060: Sealer failed processing `...`.</h3>
+
+Something unexpected occured when trying to seal types or methods (final) or when devirtualizing some methods. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+<h3><a name="MT2070"/>MT2070: Metadata Reducer failed processing `...`.</h3>
+
+Something unexpected occured when trying to reduce the metadata from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+<h3><a name="MT2080"/>MT2080: MarkNSObjects failed processing `...`.</h3>
+
+Something unexpected occured when trying to mark `NSObject` subclasses from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+
 # MT3xxx: AOT error messages
 
 <!--

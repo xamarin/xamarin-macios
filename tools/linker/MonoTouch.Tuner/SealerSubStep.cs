@@ -11,13 +11,15 @@ namespace Xamarin.Linker.Steps {
 	// at this stage we know everything that will be part of the .app and, due to JIT restrictions,
 	// we know the .app won't be extendable at runtime (downloading or generating extra code
 	// this opens up some possibilities to seal types, methods and devirtualize methods
-	public class SealerSubStep : BaseSubStep {
+	public class SealerSubStep : ExceptionalSubStep {
 
 #if DEBUG
 		int seal;
 		int final;
 		int devirtualize;
 #endif
+		protected override string Name { get; } = "Sealer";
+		protected override int ErrorCode { get; } = 2060;
 
 		public override SubStepTargets Targets {
 			get {
@@ -47,7 +49,7 @@ namespace Xamarin.Linker.Steps {
 			return false;
 		}
 
-		public override void ProcessType (TypeDefinition type)
+		protected override void Process (TypeDefinition type)
 		{
 			// interface members are virtual (and we cannot change this)
 			// we cannot seal interfaces either

@@ -1,4 +1,4 @@
-﻿// Copyright 2015 Xamarin Inc. All rights reserved.
+﻿// Copyright 2015-2017 Xamarin Inc. All rights reserved.
 
 using System;
 using System.Linq;
@@ -21,7 +21,7 @@ using XamCore.ObjCRuntime;
 
 namespace Xamarin.Linker.Steps {
 
-	public class CoreHttpMessageHandler : BaseSubStep {
+	public class CoreHttpMessageHandler : ExceptionalSubStep {
 		
 		public CoreHttpMessageHandler (LinkerOptions options)
 		{
@@ -33,6 +33,9 @@ namespace Xamarin.Linker.Steps {
 		public override SubStepTargets Targets {
 			get { return SubStepTargets.Type; }
 		}
+
+		protected override string Name { get; } = "Default HttpMessageHandler setter";
+		protected override int ErrorCode { get; } = 2040;
 
 		public override bool IsActiveFor (AssemblyDefinition assembly)
 		{
@@ -50,7 +53,7 @@ namespace Xamarin.Linker.Steps {
 		}
 
 #if MONOMAC
-		public override void ProcessType (TypeDefinition type)
+		protected override void Process (TypeDefinition type)
 		{
 			if (!type.Is ("ObjCRuntime", "RuntimeOptions"))
 				return;
@@ -72,7 +75,7 @@ namespace Xamarin.Linker.Steps {
 			method.Body = body;
 		}
 #else
-		public override void ProcessType (TypeDefinition type)
+		protected override void Process (TypeDefinition type)
 		{
 			if (!type.Is ("System.Net.Http", "HttpClient"))
 				return;
