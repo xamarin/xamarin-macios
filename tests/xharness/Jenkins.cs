@@ -891,6 +891,19 @@ function quit ()
 	xhttp.open(""GET"", ""quit"", true);
 	xhttp.send();
 }
+function toggleAjaxLogVisibility()
+{
+	if (ajax_log == null)
+		ajax_log = document.getElementById ('ajax-log');
+	var button = document.getElementById ('ajax-log-button');
+	if (ajax_log.style.display == 'none') {
+		ajax_log.style.display = 'block';
+		button.innerText = 'Hide log';
+	} else {
+		ajax_log.style.display = 'none';
+		button.innerText = 'Show log';
+	}
+}
 function keyhandler(event)
 {
 	switch (String.fromCharCode (event.keyCode)) {
@@ -995,8 +1008,8 @@ function oninitialload ()
 				writer.WriteLine ("<body onload='oninitialload ();'>");
 
 				if (IsServerMode) {
-					writer.WriteLine ("<div id='quit' style='position:absolute; top: 20px; right: 20px;'><a href='javascript:quit()'>Quit</a></div>");
-					writer.WriteLine ("<div id='ajax-log' style='position:absolute; top: 200px; right: 20px; max-width: 100px;'></div>");
+					writer.WriteLine ("<div id='quit' style='position:absolute; top: 20px; right: 20px;'><a href='javascript:quit()'>Quit</a></br><a id='ajax-log-button' href='javascript:toggleAjaxLogVisibility ();'>Show log</a></div>");
+					writer.WriteLine ("<div id='ajax-log' style='position:absolute; top: 200px; right: 20px; max-width: 100px; display: none;'></div>");
 				}
 
 				writer.WriteLine ("<h1>Test results</h1>");
