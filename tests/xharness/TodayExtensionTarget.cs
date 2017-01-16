@@ -67,6 +67,7 @@ namespace xharness
 			csproj.AddCompileInclude ("Main." + ext, Path.Combine (Harness.TodayExtensionTemplate, "Main." + ext));
 			csproj.AddInterfaceDefinition (Path.Combine (Harness.TodayExtensionTemplate, "TodayView.storyboard").Replace ('/', '\\'));
 			csproj.SetExtraLinkerDefs ("extra-linker-defs" + Suffix + ".xml");
+			csproj.FixProjectReferences ("-today");
 
 			Harness.Save (csproj, TodayExtensionProjectPath);
 
