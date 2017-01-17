@@ -68,6 +68,15 @@ test.config: Makefile $(TOP)/Make.config
 	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
 	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
 
+test-system.config:
+	@rm -f $@
+	@echo "MONOTOUCH_PREFIX=$(IOS_FRAMEWORK_DIR)/Versions/Current" >> $@
+	@echo "IOS_DESTDIR=/" >> $@
+	@echo "MAC_DESTDIR=/" >> $@
+	@echo "WATCH_MONO_PATH=$(abspath $(WATCH_MONO_PATH))" >> $@
+	@echo "JENKINS_RESULTS_DIRECTORY=$(abspath $(JENKINS_RESULTS_DIRECTORY))" >> $@
+	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
+
 clean-local::
 	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhoneSimulator /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests.sln
 	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhone /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests.sln
@@ -160,7 +169,7 @@ $(TOP)/tools/mtouch/SdkVersions.cs: $(TOP)/tools/mtouch/SdkVersions.cs.in
 	@$(MAKE) -C $(TOP)/src project-files
 	@touch $@
 
-xharness/xharness.exe: $(wildcard xharness/*.cs) xharness/xharness.csproj $(TOP)/tools/mtouch/SdkVersions.cs test.config .stamp-src-project-files
+xharness/xharness.exe: $(wildcard xharness/*.cs) xharness/xharness.csproj $(TOP)/tools/mtouch/SdkVersions.cs test.config test-system.config .stamp-src-project-files
 	$(Q_GEN) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY_QUIET) xharness/xharness.csproj
 
 killall:

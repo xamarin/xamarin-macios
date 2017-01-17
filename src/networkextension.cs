@@ -1170,6 +1170,8 @@ namespace XamCore.NetworkExtension {
 		void WriteClose ();
 	}
 
+	interface INWTcpConnectionAuthenticationDelegate {}
+
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject), Name = "NWTCPConnectionAuthenticationDelegate")]
@@ -1352,7 +1354,7 @@ namespace XamCore.NetworkExtension {
 		NEPacketTunnelFlow PacketFlow { get; }
 
 		[Export ("createTCPConnectionThroughTunnelToEndpoint:enableTLS:TLSParameters:delegate:")]
-		NWTcpConnection CreateTcpConnection (NWEndpoint remoteEndpoint, bool enableTls, [NullAllowed] NWTlsParameters tlsParameters, [NullAllowed] NWTcpConnectionAuthenticationDelegate @delegate);
+		NWTcpConnection CreateTcpConnection (NWEndpoint remoteEndpoint, bool enableTls, [NullAllowed] NWTlsParameters tlsParameters, [NullAllowed] INWTcpConnectionAuthenticationDelegate @delegate);
 
 		[Export ("createUDPSessionThroughTunnelToEndpoint:fromEndpoint:")]
 		NWUdpSession CreateUdpSession (NWEndpoint remoteEndpoint, [NullAllowed] NWHostEndpoint localEndpoint);

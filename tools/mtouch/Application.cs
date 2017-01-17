@@ -104,6 +104,7 @@ namespace Xamarin.Bundler {
 
 		public bool IsExtension;
 		public List<string> Extensions = new List<string> (); // A list of the extensions this app contains.
+		public List<Application> AppExtensions = new List<Application> ();
 
 		public bool FastDev;
 
@@ -590,6 +591,26 @@ namespace Xamarin.Bundler {
 
 		void Initialize ()
 		{
+			if (EnableDebug && IsLLVM)
+				ErrorHelper.Warning (3003, "Debugging is not supported when building with LLVM. Debugging has been disabled.");
+
+			if (!IsLLVM && (EnableAsmOnlyBitCode || EnableLLVMOnlyBitCode))
+				throw ErrorHelper.CreateError (3008, "Bitcode support requires the use of LLVM (--abi=arm64+llvm etc.)");
+
+			if (EnableDebug) {
+				if (!DebugTrack.HasValue) {
+					DebugTrack = IsSimulatorBuild;
+				}
+			} else {
+				if (DebugTrack.HasValue) {
+					ErrorHelper.Warning (32, "The option '--debugtrack' is ignored unless '--debug' is also specified.");
+				}
+				DebugTrack = false;
+			}
+
+			if (EnableAsmOnlyBitCode)
+				LLVMAsmWriter = true;
+
 			if (!File.Exists (RootAssembly))
 				throw new MonoTouchException (7, true, "The root assembly '{0}' does not exist", RootAssembly);
 			
@@ -1095,7 +1116,19 @@ namespace Xamarin.Bundler {
 			} else {
 				if (!IsWatchExtension) {
 					// In extensions we need to save a list of the frameworks we need so that the main app can get them.
-					var all_frameworks = Frameworks.Union (WeakFrameworks);
+					var all_frameworks = new HashSet<string> (Frameworks);
+					all_frameworks.UnionWith (WeakFrameworks);
+					foreach (var t in Targets) {
+						all_frameworks.UnionWith (t.Frameworks);
+						all_frameworks.UnionWith (t.WeakFrameworks);
+						foreach (var a in t.Assemblies) {
+							if (a.Frameworks != null)
+								all_frameworks.UnionWith (a.Frameworks);
+							if (a.WeakFrameworks != null)
+								all_frameworks.UnionWith (a.WeakFrameworks);
+						}
+					}
+					all_frameworks.RemoveWhere ((v) => !v.EndsWith (".framework", StringComparison.Ordinal));
 					if (all_frameworks.Count () > 0)
 						Driver.WriteIfDifferent (Path.Combine (Path.GetDirectoryName (AppDirectory), "frameworks.txt"), string.Join ("\n", all_frameworks.ToArray ()));
 				}
@@ -1843,14 +1876,24 @@ namespace Xamarin.Bundler {
 
 	public class AOTTask : ProcessTask {
 		public string AssemblyName;
+		public bool AddBitcodeMarkerSection;
+		public string AssemblyPath; // path to the .s file.
 
 		// executed with Parallel.ForEach
 		protected override void Build ()
 		{
 			var exit_code = base.Start ();
 
-			if (exit_code == 0)
+			if (exit_code == 0) {
+				if (AddBitcodeMarkerSection)
+					File.AppendAllText (AssemblyPath, @"
+.section __LLVM, __bitcode
+.byte 0
+.section __LLVM, __cmdline
+.byte 0
+");
 				return;
+			}
 
 			Console.Error.WriteLine ("AOT Compilation exited with code {0}, command:\n{1}{2}", exit_code, Command, Output.Length > 0 ? ("\n" + Output.ToString ()) : string.Empty);
 			if (Output.Length > 0) {

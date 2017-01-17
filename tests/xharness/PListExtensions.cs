@@ -25,6 +25,11 @@ namespace xharness
 			SetPListStringValue (plist, "MinimumOSVersion", value);
 		}
 
+		public static void SetCFBundleDisplayName (this XmlDocument plist, string value)
+		{
+			SetPListStringValue (plist, "CFBundleDisplayName", value);
+		}
+
 		public static string GetMinimumOSVersion (this XmlDocument plist)
 		{
 			return GetPListStringValue (plist, "MinimumOSVersion");
@@ -62,7 +67,12 @@ namespace xharness
 
 		public static void SetPListStringValue (this XmlDocument plist, string node, string value)
 		{
-			plist.SelectSingleNode ("//dict/key[text()='" + node + "']").NextSibling.InnerText = value;
+			var element = plist.SelectSingleNode ("//dict/key[text()='" + node + "']");
+			if (element == null) {
+				AddPListStringValue (plist, node, value);
+			} else {
+				element.NextSibling.InnerText = value;
+			}
 		}
 
 		public static void AddPListStringValue (this XmlDocument plist, string node, string value)

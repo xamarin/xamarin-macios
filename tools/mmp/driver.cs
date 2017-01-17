@@ -40,6 +40,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Xml;
+using System.Threading.Tasks;
 
 using Mono.Cecil;
 using Mono.Linker;
@@ -185,6 +186,8 @@ namespace Xamarin.Bundler {
 
 		static int watch_level;
 		static Stopwatch watch;
+
+		static AOTCompiler aot = new AOTCompiler ();
 
 		static string xm_framework_dir;
 		public static string MMPDirectory {
@@ -357,6 +360,11 @@ namespace Xamarin.Bundler {
 				{ "xamarin-framework-directory=", "The framework directory", v => { xm_framework_dir = v; }, true },
 				{ "xamarin-full-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullXamMacFramework = true; } },
 				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullSystemFramework = true; } },
+				{ "aot:", "Specify assemblies that should be compiled via experimental AOT.\n- none - No AOT (default)\n- all - Every assembly in MonoBundle not ignored\n- core - Just Xamarin.Mac.dll, System.dll, and mscorlib.dll\n sdk - Xamarin.Mac.dll and all BCL assemblies\nIndividual files can be included for AOT via +FileName.dll and excluded via -FileName.dll",
+					v => {
+						aot.Parse (v);
+					}
+				},
 			};
 
 			AddSharedOptions (App, os);
@@ -800,6 +808,22 @@ namespace Xamarin.Bundler {
 			if (App.LinkMode != LinkMode.All && App.RuntimeOptions != null)
 				App.RuntimeOptions.Write (App.AppDirectory);
 
+			if (aot.IsAOT) {
+				if (!IsUnified)
+					throw new MonoMacException (98, true, "AOT compilation is only available on Unified");
+				MonoType monoType;
+				if (IsUnifiedMobile || IsUnifiedFullXamMacFramework)
+					monoType = Is64Bit ? MonoType.Bundled64 : MonoType.Bundled32; 
+				else if (IsUnifiedFullSystemFramework)
+					monoType = Is64Bit ? MonoType.System64 : MonoType.System32; 
+				else
+					throw ErrorHelper.CreateError (0099, "Internal error \"AOT with unexpected profile.\" Please file a bug report with a test case (http://bugzilla.xamarin.com).");
+
+
+				aot.Compile (monoType, mmp_dir);
+				Watch ("AOT Compile", 1);
+			}
+
 			if (!string.IsNullOrEmpty (certificate_name)) {
 				CodeSign ();
 				Watch ("Code Sign", 1);
@@ -960,7 +984,19 @@ namespace Xamarin.Bundler {
 		[DllImport ("/usr/lib/system/libdyld.dylib")]
 		static extern int _NSGetExecutablePath (byte[] buffer, ref uint bufsize);
 
-		static string GetXamMacPrefix ()
+		public static string WalkUpDirHierarchyLookingForLocalBuild ()
+		{
+			var path = System.Reflection.Assembly.GetExecutingAssembly ().Location;
+			var localPath = Path.GetDirectoryName (path);
+			while (localPath.Length > 1) {
+				if (Directory.Exists (Path.Combine (localPath, "_mac-build")))
+					return Path.Combine (localPath, "_mac-build", "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
+				localPath = Path.GetDirectoryName (localPath);
+			}
+			return null;
+		}
+
+		internal static string GetXamMacPrefix ()
 		{
 			var envFrameworkPath = Environment.GetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH");
 			if (!String.IsNullOrEmpty (envFrameworkPath) && Directory.Exists (envFrameworkPath))
@@ -969,12 +1005,9 @@ namespace Xamarin.Bundler {
 			var path = System.Reflection.Assembly.GetExecutingAssembly ().Location;
 
 #if DEBUG
-			var localPath = Path.GetDirectoryName (path);
-			while (localPath.Length > 1) {
-				if (Directory.Exists (Path.Combine (localPath, "_mac-build")))
-					return Path.Combine (localPath, "_mac-build", "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
-				localPath = Path.GetDirectoryName (localPath);
-			}
+			var localPath = WalkUpDirHierarchyLookingForLocalBuild ();
+			if (localPath != null)
+				return localPath;
 #endif
 
 			path = GetRealPath (path);
@@ -1015,6 +1048,7 @@ namespace Xamarin.Bundler {
 		{
 			var sb = new StringBuilder ();
 			using (var sw = new StringWriter (sb)) {
+				sw.WriteLine ("#define MONOMAC 1");
 				sw.WriteLine ("#include <xamarin/xamarin.h>");
 				sw.WriteLine ("#import <AppKit/NSAlert.h>");
 				sw.WriteLine ("#import <Foundation/NSDate.h>"); // 10.7 wants this even if not needed on 10.9
@@ -1045,6 +1079,9 @@ namespace Xamarin.Bundler {
 
 				if (App.EnableDebug)
 					sw.WriteLine ("\txamarin_debug_mode = TRUE;");
+
+				if (aot.IsAOT)
+					sw.WriteLine ("\txamarin_mac_aot = TRUE;");
 
 				sw.WriteLine ("\treturn 0;");
 				sw.WriteLine ("}");

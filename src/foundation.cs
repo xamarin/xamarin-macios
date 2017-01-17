@@ -2131,7 +2131,7 @@ namespace XamCore.Foundation
 		bool IsPartialStringValid (string partialString, out string newString, out NSString error);
 
 		[Export ("isPartialStringValid:proposedSelectedRange:originalString:originalSelectedRange:errorDescription:")]
-		unsafe bool IsPartialStringValid (out string partialString, out NSRange proposedSelRange, string origString, NSRange origSelRange, out NSString error);
+		bool IsPartialStringValid (ref string partialString, out NSRange proposedSelRange, string origString, NSRange origSelRange, out string error);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -5768,6 +5768,8 @@ namespace XamCore.Foundation
 
 	delegate void NSUrlDownloadSessionResponse (NSUrl location, NSUrlResponse response, NSError error);
 
+	interface INSUrlSessionDelegate {}
+
 	//
 	// Some of the XxxTaskWith methods that take a completion were flagged as allowing a null in
 	// 083d9cba1eb997eac5c5ded77db32180c3eef566 with comment:
@@ -5797,9 +5799,14 @@ namespace XamCore.Foundation
 		[Static, Export ("sessionWithConfiguration:delegate:delegateQueue:")]
 		NSUrlSession FromWeakConfiguration (NSUrlSessionConfiguration configuration, [NullAllowed] NSObject weakDelegate, [NullAllowed] NSOperationQueue delegateQueue);
 	
+#if !XAMCORE_4_0
+		[Obsolete ("Use the overload with a `INSUrlSessionDelegate` parameter.")]
 		[Static, Wrap ("FromWeakConfiguration (configuration, sessionDelegate, delegateQueue);")]
 		NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration, NSUrlSessionDelegate sessionDelegate, NSOperationQueue delegateQueue);
-	
+#endif
+		[Static, Wrap ("FromWeakConfiguration (configuration, (NSObject) sessionDelegate, delegateQueue);")]
+		NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration, INSUrlSessionDelegate sessionDelegate, NSOperationQueue delegateQueue);
+
 		[Export ("delegateQueue", ArgumentSemantic.Retain)]
 		NSOperationQueue DelegateQueue { get; }
 	
@@ -10536,6 +10543,8 @@ namespace XamCore.Foundation
 #endif
 	delegate void NSFileCoordinatorWorkerRW (NSUrl newReadingUrl, NSUrl newWritingUrl);
 
+	interface INSFilePresenter {}
+
 	[Since (5,0)]
 	[BaseType (typeof (NSObject))]
 	interface NSFileCoordinator {
@@ -10553,7 +10562,13 @@ namespace XamCore.Foundation
 
 		[DesignatedInitializer]
 		[Export ("initWithFilePresenter:")]
+		IntPtr Constructor ([NullAllowed] INSFilePresenter filePresenterOrNil);
+
+#if !XAMCORE_4_0
+		[Obsolete ("Use .ctor(INSFilePresenter) instead")]
+		[Wrap ("this ((INSFilePresenter) filePresenterOrNil)")]
 		IntPtr Constructor ([NullAllowed] NSFilePresenter filePresenterOrNil);
+#endif
 
 		[Export ("coordinateReadingItemAtURL:options:error:byAccessor:")]
 #if XAMCORE_2_0

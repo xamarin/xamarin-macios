@@ -4,7 +4,6 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
-using UIKit;
 using CoreFoundation;
 #else
 using MonoTouch.CoreFoundation;
@@ -18,9 +17,10 @@ namespace MonoTouchFixtures.CoreFoundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class BundleTest {
-
 #if __WATCHOS__
 		const string ExpectedAppName = "monotouchtest.appex";
+#elif MONOMAC
+		const string ExpectedAppName = "xammac_tests.app";
 #else
 		const string ExpectedAppName = "monotouchtest.app";
 #endif
@@ -74,7 +74,9 @@ namespace MonoTouchFixtures.CoreFoundation {
 		{
 			var main = CFBundle.GetMain ();
 #if __WATCHOS__
-			var expectedBundleId = "com.xamarin.monotouch-test.watchkitapp.watchkitextension";
+			var expectedBundleId = "com.xamarin.monotouch-test-watch.watchkitapp.watchkitextension";
+#elif MONOMAC
+			var expectedBundleId = "com.xamarin.xammac_tests";
 #else
 			var expectedBundleId = "com.xamarin.monotouch-test";
 #endif
@@ -93,7 +95,11 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void TestExecutableUrl ()
 		{
 			var main = CFBundle.GetMain ();
+#if MONOMAC
+			Assert.That (main.ExecutableUrl.ToString (), Contains.Substring (ExpectedAppName + "/Contents/MacOS/xammac_tests"));
+#else
 			Assert.That(main.ExecutableUrl.ToString (), Contains.Substring (ExpectedAppName + "/monotouchtest"));
+#endif
 		}
 
 		[Test]

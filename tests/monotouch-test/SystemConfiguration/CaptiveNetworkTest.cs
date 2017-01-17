@@ -15,7 +15,9 @@ using System.IO;
 using Foundation;
 using ObjCRuntime;
 using SystemConfiguration;
+#if !MONOMAC
 using UIKit;
+#endif
 #else
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;
@@ -35,7 +37,8 @@ namespace MonoTouchFixtures.SystemConfiguration {
 				return !File.Exists ("/usr/lib/system/libsystem_kernel.dylib");
 			}
 		}
-		
+
+#if !MONOMAC // Fields are not on Mac
 		[Test]
 		public void Fields ()
 		{
@@ -48,6 +51,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 			Assert.That (CaptiveNetwork.NetworkInfoKeySSID.ToString (), Is.EqualTo ("SSID"), "kCNNetworkInfoKeySSID");
 			Assert.That (CaptiveNetwork.NetworkInfoKeySSIDData.ToString (), Is.EqualTo ("SSIDDATA"), "kCNNetworkInfoKeySSIDData");
 		}
+#endif
 
 #if !XAMCORE_2_0
 		[Test]
@@ -72,6 +76,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		}
 #endif
 
+#if !MONOMAC // TryCopyCurrentNetworkInfo and fields checked are not on Mac
 		[Test]
 		[ExpectedException (typeof (ArgumentNullException))]
 		public void TryCopyCurrentNetworkInfo_Null ()
@@ -108,7 +113,8 @@ namespace MonoTouchFixtures.SystemConfiguration {
 				Assert.Fail ("Unexpected dictionary result with {0} items", dict.Count);
 			}
 		}
-		
+#endif
+
 		[Test]
 		[ExpectedException (typeof (ArgumentNullException))]
 		public void MarkPortalOnline_Null ()
@@ -145,6 +151,9 @@ namespace MonoTouchFixtures.SystemConfiguration {
 		[Test]
 		public void SetSupportedSSIDs ()
 		{
+#if MONOMAC
+			bool supported = true;
+#else
 			if (Runtime.Arch == Arch.SIMULATOR) {
 				if (RunningOnSnowLeopard)
 					Assert.Inconclusive ("This test crash on the simulator with Snow Leopard");
@@ -152,6 +161,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 
 			// that API is deprecated in iOS9 - and it might be why it returns false (or not)
 			bool supported = !UIDevice.CurrentDevice.CheckSystemVersion (9,0);
+#endif
 			Assert.That (CaptiveNetwork.SetSupportedSSIDs (new string [2] { "one", "two" } ), Is.EqualTo (supported), "set");
 		}
 	}

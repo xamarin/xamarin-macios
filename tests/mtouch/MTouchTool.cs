@@ -84,7 +84,7 @@ namespace Xamarin
 		public Profile Profile = Profile.iOS;
 		public bool NoPlatformAssemblyReference;
 		static XmlDocument device_list_cache;
-
+		public string [] CustomArguments; // Sometimes you want to pass invalid arguments to mtouch, in this case this array is used. No processing will be done, if quotes are required, they must be added to the arguments in the array.
 
 		public class DeviceInfo
 		{
@@ -310,6 +310,12 @@ namespace Xamarin
 			if (!string.IsNullOrEmpty (Device))
 				sb.Append (" --device:").Append (MTouch.Quote (Device));
 
+			if (CustomArguments != null) {
+				foreach (var arg in CustomArguments) {
+					sb.Append (" ").Append (arg);
+				}
+			}
+
 			return sb.ToString ();
 		}
 
@@ -438,7 +444,7 @@ namespace Xamarin
 				File.WriteAllText (Path.Combine (app, "Info.plist"), CreatePlist (Profile, appName));
 		}
 
-		public void CreateTemporararyServiceExtension (string code = null)
+		public void CreateTemporararyServiceExtension (string code = null, string extraArg = null)
 		{
 			var testDir = CreateTemporaryDirectory ();
 			var app = Path.Combine (testDir, "testApp.appex");
@@ -454,7 +460,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 			}
 
 			AppPath = app;
-			Executable = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile);
+			Executable = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile, extraArg: extraArg);
 
 			File.WriteAllText (Path.Combine (app, "Info.plist"),
 @"<?xml version=""1.0"" encoding=""UTF-8""?>

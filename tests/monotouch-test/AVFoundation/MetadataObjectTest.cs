@@ -51,13 +51,16 @@ namespace MonoTouchFixtures.AVFoundation {
 				Assert.AreEqual (false, obj.HasRollAngle, "HasRollAngle");
 				Assert.AreEqual (false, obj.HasYawAngle, "HasYawAngle");
 #if XAMCORE_2_0
+#if !MONOMAC // No Type property for Mac
 				Assert.AreEqual (AVMetadataObjectType.Face, obj.Type, "Type");
+#endif
 				Assert.AreEqual (AVMetadataObject.TypeFace, obj.WeakType, "WeakType");
 #else
 				Assert.AreEqual (AVMetadataObject.TypeFace, obj.Type, "Type");
 #endif
 			}
 
+#if !MONOMAC // iOS only
 			using (var obj = new AVMetadataMachineReadableCodeObject ()) {
 				Assert.IsNotNull (obj.Corners, "Corners");
 				Assert.AreEqual (0, obj.Corners.Length, "Corners");
@@ -68,7 +71,8 @@ namespace MonoTouchFixtures.AVFoundation {
 #else
 				Assert.IsNull (obj.Type, "Type");
 #endif
-			}
+		}
+#endif
 		}
 	}
 }

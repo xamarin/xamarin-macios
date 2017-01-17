@@ -8,7 +8,9 @@ using System.Drawing;
 using System.Reflection;
 #if XAMCORE_2_0
 using Foundation;
+#if !MONOMAC
 using UIKit;
+#endif
 using MapKit;
 #else
 using MonoTouch.Foundation;
@@ -152,6 +154,7 @@ namespace MonoTouchFixtures.MapKit {
 			if (MapViewPoker.NewRefcountEnabled ())
 				Assert.Inconclusive ("backing fields are removed when newrefcount is enabled");
 
+#if !MONOMAC
 			if (UIDevice.CurrentDevice.CheckSystemVersion (7, 0)) {
 				// This test selects annotations on a map view, but according to apple's docs
 				// and a lot of googling this will not necessarily work until the map view is
@@ -159,7 +162,8 @@ namespace MonoTouchFixtures.MapKit {
 				// but ignoring this test. For now I've only seen it fail on iOS 7 DP4.
 				Assert.Inconclusive ("This test is not deterministic on iOS7 DP4.");
 			}
-
+#endif
+			
 			using (var a = new MKCircle ()) 	// MKAnnotation is abstract
 #if XAMCORE_2_0
 			using (var o1 = new MKPolygon ())	// it must export 'coordinate' or this will fail

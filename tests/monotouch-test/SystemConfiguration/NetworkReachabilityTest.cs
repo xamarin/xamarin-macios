@@ -12,7 +12,9 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
+#if !MONOMAC
 using UIKit;
+#endif
 using ObjCRuntime;
 using SystemConfiguration;
 #else
@@ -99,9 +101,11 @@ namespace MonoTouchFixtures.SystemConfiguration {
 
 				Assert.IsTrue (nr.TryGetFlags (out flags), "#1");
 				// using Loopback iOS 10 / tvOS 10 returns no flags (0) on devices
-				if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (8,0))
-					Assert.That ((int) flags, Is.EqualTo (0), "#1 Reachable");
+#if !MONOMAC
+				if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (8, 0))
+					Assert.That ((int)flags, Is.EqualTo (0), "#1 Reachable");
 				else
+#endif
 					Assert.That (flags, Is.EqualTo (NetworkReachabilityFlags.Reachable), "#1 Reachable");
 			}
 
@@ -118,7 +122,10 @@ namespace MonoTouchFixtures.SystemConfiguration {
 				NetworkReachabilityFlags flags;
 
 				Assert.IsTrue (nr.TryGetFlags (out flags), "#3");
-				// using Loopback iOS 10 / tvOS 10 returns no flags (0) on devices
+				// using Loopback iOS 10 / tvOS 10 / macOS 10.12 returns no flags (0) on devices
+#if MONOMAC
+				Assert.That ((int)flags, Is.EqualTo (0), "#3 Reachable");
+#else
 				if ((Runtime.Arch == Arch.DEVICE) && TestRuntime.CheckXcodeVersion (8, 0))
 					Assert.That ((int)flags, Is.EqualTo (0), "#3 Reachable");
 				else {
@@ -127,6 +134,7 @@ namespace MonoTouchFixtures.SystemConfiguration {
 						expected |= NetworkReachabilityFlags.IsLocalAddress;
 					Assert.That (flags, Is.EqualTo (expected), "#3 Reachable");
 				}
+#endif
 			}
 		}
 

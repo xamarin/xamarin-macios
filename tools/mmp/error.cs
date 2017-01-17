@@ -36,6 +36,8 @@ namespace Xamarin.Bundler {
 	//					MM0088	** Reserved mtouch **
 	//					MM0089	** Reserved mtouch **
 	//					MM0097	machine.config file '{0}' can not be found.
+	//					MM0098	AOT compilation is only available on Unified
+	//					MM0099	Internal error {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).
 	// MM1xxx	file copy / symlinks (project related)
 	//			MM14xx	Product assemblies
 	//					MM1401	The required '{0}' assembly is missing from the references
@@ -70,13 +72,27 @@ namespace Xamarin.Bundler {
 	//					MM2015	*** Reserved mtouch ***
 	//				Warning	MM2016  Invalid TlsProvider `{0}` option. The only valid value `{1}` will be used.
 	//					MM202x	Binding Optimizer failed processing `...`.
+	// MT3xxx	AOT
+	//			MT30xx	AOT (general) errors
+	//					MT3001	Could not AOT the assembly '{0}'
+	//					MM3002	** reserved mtouch **
+	//					MM3003	** reserved mtouch **
+	//					MM3004	** reserved mtouch **
+	//					MM3005	** reserved mtouch **
+	//					MM3006	** reserved mtouch **
+	//					MM3007	** reserved mtouch **
+	//					MM3008	** reserved mtouch **
+	//					MM3009	AOT of '{0}' was requested but was not found
+	//					MM3010	Exclusion of AOT of '{0}' was requested but was not found
 	// MM4xxx	code generation
 	// 			MM40xx	driver.m
 	//					MM4001	The main template could not be expansed to `{0}`.
 	// MM5xxx	GCC and toolchain
 	//			MM51xx	compilation
 	//					MM5101  Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component.
+	//					MM5102  ** reserved mtouch **
 	//					MM5103	Failed to compile. Error code - {0}. Please file a bug report at http://bugzilla.xamarin.com
+	//					MM5104  ** reserved mtouch **
 	//			MM52xx	linking
 	//					MM5202	Mono.framework MDK is missing. Please install the MDK for your Mono.framework version from http://mono-project.com/Downloads
 	//					MM5203  Can't find libxammac.a, likely because of a corrupted Xamarin.Mac installation. Please reinstall Xamarin.Mac.

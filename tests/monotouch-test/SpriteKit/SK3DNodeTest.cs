@@ -4,7 +4,9 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
+#if !MONOMAC
 using UIKit;
+#endif
 using SpriteKit;
 using ObjCRuntime;
 using SceneKit;
@@ -43,19 +45,21 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void ProjectPoint ()
 		{
-			if (UIDevice.CurrentDevice.CheckSystemVersion (9, 0))
-				Assert.Ignore ("This doesn't seem to work properly in the iOS 9");
-			
+			if (TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("This doesn't seem to work properly in the iOS 9+ or macOS 10.11+");
+
 			// SK3Node loads SCNRenderer dynamically, so make sure it's actually loaded.
 			GC.KeepAlive (Class.GetHandle (typeof(SCNRenderer)));
 
 			using (var node = new SK3DNode ()) {
+#if !MONOMAC
 				if (Runtime.Arch == Arch.SIMULATOR && IntPtr.Size == 4) {
 					// 32-bit simulator returns 0,0,0 the first time
 					// this is executed for some reason, so just
 					// ignore that.
 					node.ProjectPoint (new Vector3 (4, 5, 6));
 				}
+#endif
 				var v = node.ProjectPoint (new Vector3 (1, 2, 3));
 				Assert.AreEqual (1, v.X, "#x1");
 				Assert.AreEqual (2, v.Y, "#y1");
@@ -66,16 +70,22 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void UnprojectPoint ()
 		{
+#if MONOMAC
+			Assert.Ignore ("This doesn't seem to work properly in macOS 10.12");
+#else
 			if (UIDevice.CurrentDevice.CheckSystemVersion (9, 0))
 				Assert.Ignore ("This doesn't seem to work properly in the iOS 9");
-			
+#endif
+
 			using (var node = new SK3DNode ()) {
+#if !MONOMAC
 				if (Runtime.Arch == Arch.SIMULATOR && IntPtr.Size == 4) {
 					// 32-bit simulator returns 0,0,0 the first time
 					// this is executed for some reason, so just
 					// ignore that.
 					node.UnprojectPoint (new Vector3 (4, 5, 6));
 				}
+#endif
 				var v = node.UnprojectPoint (new Vector3 (1, 2, 3));
 				Assert.AreEqual (1, v.X, "#x1");
 				Assert.AreEqual (2, v.Y, "#y1");

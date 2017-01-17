@@ -13,6 +13,15 @@ namespace XamCore.NetworkExtension {
 		{
 		}
 	}
+
+	public partial class NEPacketTunnelProvider {
+
+		[Obsolete ("Use the overload accepting a INWTcpConnectionAuthenticationDelegate argument")]
+		public virtual NWTcpConnection CreateTcpConnection (NWEndpoint remoteEndpoint, bool enableTls, NWTlsParameters tlsParameters, NWTcpConnectionAuthenticationDelegate @delegate)
+		{
+			return CreateTcpConnection (remoteEndpoint, enableTls, tlsParameters, (INWTcpConnectionAuthenticationDelegate) @delegate);
+		}
+	}
 #endif
 }
 

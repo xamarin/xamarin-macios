@@ -314,11 +314,13 @@ COREANIMATION_CORE_SOURCES = \
 
 COREANIMATION_SOURCES = \
 	CoreAnimation/CABasicAnimation.cs \
+	CoreAnimation/CACompat.cs \
 	CoreAnimation/CADefs.cs \
 	CoreAnimation/CALayer.cs \
 	CoreAnimation/CAKeyFrameAnimation.cs \
 	CoreAnimation/CALayerDelegate.cs \
 	CoreAnimation/CAMediaTimingFunction.cs \
+	CoreAnimation/CAScrollLayer.cs \
 	CoreAnimation/CATextLayer.cs \
 
 # CoreBluetooth
@@ -653,6 +655,7 @@ FOUNDATION_SOURCES = \
 	Foundation/NSFileManager.cs \
 	Foundation/NSFileManager.iOS.cs \
 	Foundation/NSFileManagerDelegate.cs \
+	Foundation/NSFormatter.cs \
 	Foundation/NSHost.cs \
 	Foundation/NSHttpCookie.cs \
 	Foundation/NSHttpCookieStorage.cs \

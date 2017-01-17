@@ -184,6 +184,17 @@ namespace xharness
 				ExecuteInternal ();
 			}
 		}
+
+		public virtual IEnumerable<RelatedProject> GetRelatedProjects ()
+		{
+			return null;
+		}
+	}
+
+	public class RelatedProject
+	{
+		public string ProjectPath;
+		public string Guid;
 	}
 }
 

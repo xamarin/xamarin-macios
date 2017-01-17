@@ -29,7 +29,11 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void Add_Certificate ()
 		{
+#if MONOMAC
+			Stream certStream = typeof (KeyChainTest).Assembly.GetManifestResourceStream ("xammac_tests.Security.openssl_crt.der");
+#else
 			Stream certStream = typeof(KeyChainTest).Assembly.GetManifestResourceStream ("monotouchtest.Security.openssl_crt.der");
+#endif
 			NSData data = NSData.FromStream (certStream);
 
 			var rec = new SecRecord (SecKind.Certificate) {
@@ -41,6 +45,7 @@ namespace MonoTouchFixtures.Security {
 			Assert.IsTrue (rc == SecStatusCode.Success || rc == SecStatusCode.DuplicateItem, "Add_Certificate");
 		}
 
+#if !MONOMAC // No QueryAsConcreteType on Mac
 		[Test]
 		public void AddQueryRemove_Identity ()
 		{
@@ -71,6 +76,7 @@ namespace MonoTouchFixtures.Security {
 				Assert.Null (match, "match-3");
 			}
 		}
+#endif
 
 		[DllImport ("/System/Library/Frameworks/Security.framework/Security")]
 		internal extern static SecStatusCode SecItemAdd (IntPtr cfDictRef, IntPtr result);

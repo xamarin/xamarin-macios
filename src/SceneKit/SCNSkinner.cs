@@ -33,7 +33,7 @@ namespace XamCore.SceneKit {
 		static NSArray ToNSArray (SCNMatrix4 [] items)
 		{
 			if (items == null)
-				return new NSArray (true);
+				return new NSArray ();
 
 			var count = items.Length;
 			var buf = Marshal.AllocHGlobal ((IntPtr)(count * IntPtr.Size));

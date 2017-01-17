@@ -60,13 +60,27 @@ namespace xharness
 		public HarnessAction Action { get; set; }
 		public int Verbosity { get; set; }
 		public Log HarnessLog { get; set; }
+		public bool UseSystem { get; set; } // if the system XI/XM should be used, or the locally build XI/XM.
 
 		// This is the maccore/tests directory.
 		string root_directory;
 		public string RootDirectory {
 			get {
-				if (root_directory == null)
-					root_directory = Environment.CurrentDirectory;
+				if (root_directory == null) {
+					var testAssemblyDirectory = Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location);
+					var dir = testAssemblyDirectory;
+					var path = Path.Combine (testAssemblyDirectory, ".git");
+					while (!Directory.Exists (path) && path.Length > 3) {
+						dir = Path.GetDirectoryName (dir);
+						path = Path.Combine (dir, ".git");
+					}
+					if (!Directory.Exists (path))
+						throw new Exception ("Could not find the xamarin-macios repo.");
+					path = Path.Combine (Path.GetDirectoryName (path), "tests");
+					if (!Directory.Exists (path))
+						throw new Exception ("Could not find the tests directory.");
+					root_directory = path;
+				}
 				return root_directory;
 			}
 			set {
@@ -184,38 +198,35 @@ namespace xharness
 		public string MlaunchPath {
 			get {
 				if (mlaunch == null) {
-					var dir = Path.GetFullPath (RootDirectory);
-					while (dir.Length > 3) {
-						var filename = Path.GetFullPath (Path.Combine (dir, "maccore", "tools", "mlaunch", "mlaunch"));
-						if (File.Exists (filename))
-							return mlaunch = filename;
-						dir = Path.GetDirectoryName (dir);
+					// First check if we've built mlaunch locally.
+					var filename = Path.GetFullPath (Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch"));
+					if (File.Exists (filename)) {
+						Log ("Found mlaunch: {0}", filename);
+						return mlaunch = filename;
 					}
 
-					string path = string.Empty;
-
-					// check next to mtouch
-					path = Path.Combine (Path.GetDirectoryName (MtouchPath), "mlaunch");
-					if (File.Exists (path))
-						return mlaunch = path;
-
-					Log ("Could not find mlaunch locally, will try downloading it.");
+					// Then check if we can download mlaunch.
+					Log ("Could not find a locally built mlaunch, will try downloading it.");
 					try {
-						path = DownloadMlaunch ();
+						filename = DownloadMlaunch ();
 					} catch (Exception e) {
 						Log ("Could not download mlaunch: {0}", e);
 					}
-					if (!File.Exists (path)) {
-						Log ("Will try in Xamarin Studio.app.", path);
-						path = "/Applications/Xamarin Studio.app/Contents/Resources/lib/monodevelop/AddIns/MonoDevelop.IPhone/mlaunch.app/Contents/MacOS/mlaunch";
+					if (File.Exists (filename)) {
+						Log ("Found mlaunch: {0}", filename);
+						return mlaunch = filename;
 					}
 
-					if (!File.Exists (path))
-						throw new FileNotFoundException (string.Format ("Could not find mlaunch: {0}", path));
+					// Then check if the system version of Xamarin.iOS has mlaunch.
+					// This may be a version of mlaunch we're not compatible with, since we don't control which XI version the system has.
+					Log ("Could not download mlaunch, will try the system's Xamarin.iOS.");
+					filename = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch";
+					if (File.Exists (filename)) {
+						Log ("Found mlaunch: {0}", filename);
+						return mlaunch = filename;
+					}
 
-					Log ("Found mlaunch: {0}", path);
-
-					mlaunch = path;
+					throw new FileNotFoundException (string.Format ("Could not find mlaunch: {0}", filename));
 				}
 
 				return mlaunch;
@@ -323,7 +334,7 @@ namespace xharness
 
 		void ParseConfigFiles ()
 		{
-			ParseConfigFiles (FindConfigFiles ("test.config"));
+			ParseConfigFiles (FindConfigFiles (UseSystem ? "test-system.config" : "test.config"));
 			ParseConfigFiles (FindConfigFiles ("Make.config.local"));
 			ParseConfigFiles (FindConfigFiles ("Make.config"));
 		}

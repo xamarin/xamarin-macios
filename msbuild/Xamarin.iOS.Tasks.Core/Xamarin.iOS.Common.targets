@@ -303,15 +303,20 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<_CodesignAppBundleDependsOn>
 			_EmbedMobileProvision;
 			_CodesignNativeLibraries;
+			_CollectFrameworks;
 			_CodesignFrameworks;
+			_ReadAppExtensionCodesignProperties;
 			_CodesignAppExtensions;
+			_PrepareCodesignAppBundle;
 		</_CodesignAppBundleDependsOn>
 
 		<_CoreCodesignDependsOn>
 			_CodesignNativeLibraries;
 			_CollectFrameworks;
 			_CodesignFrameworks;
+			_ReadAppExtensionCodesignProperties;
 			_CodesignAppExtensions;
+			_PrepareCodesignAppBundle;
 			_CodesignAppBundle;
 			_CodesignVerify;
 		</_CoreCodesignDependsOn>
@@ -543,6 +548,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Prefix="monotouch"
 			NoOverwrite="@(_BundleResourceWithLogicalName)"
 			IntermediateOutputPath="$(DeviceSpecificIntermediateOutputPath)"
+			TargetFrameworkDirectory="$(TargetFrameworkDirectory)"
 			ReferencedLibraries="@(ReferencePath);@(ReferenceDependencyPaths)">
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
 		</UnpackLibraryResources>
@@ -1744,7 +1750,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Target Name="_CodesignAppBundle" Condition="'$(_RequireCodeSigning)' == 'true' And '$(IsAppExtension)' == 'false'" DependsOnTargets="$(_CodesignAppBundleDependsOn);_PrepareCodesignAppBundle"
+	<Target Name="_CodesignAppBundle" Condition="'$(_RequireCodeSigning)' == 'true' And '$(IsAppExtension)' == 'false'" DependsOnTargets="$(_CodesignAppBundleDependsOn)"
 		Inputs="$(_NativeExecutable);$(_AppBundlePath)Info.plist;$(_AppBundlePath)embedded.mobileprovision;$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent;@(_BundleResourceWithLogicalName);@(_NativeLibrary);@(_Frameworks)"
 		Outputs="$(DeviceSpecificIntermediateOutputPath)codesign\$(_AppBundleName)$(AppBundleExtension)">
 		<Codesign
@@ -1784,11 +1790,11 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_CodesignVerify" Condition="'$(_RequireCodeSigning)' == 'true' And '$(IsAppExtension)' == 'false'" DependsOnTargets="_CodesignAppBundle">
 		<CodesignVerify
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '@(_AppExtensionCodesignProperties)' != ''"
+			Condition="'$(IsMacEnabled)' == 'true' And '@(_ResolvedAppExtensionReferences)' != ''"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="$(_CodesignAllocate)"
-			Resource="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)"
+			Resource="$(_AppBundlePath)PlugIns\%(_ResolvedAppExtensionReferences.Filename)%(_ResolvedAppExtensionReferences.Extension)"
 		>
 		</CodesignVerify>
 

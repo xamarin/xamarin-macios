@@ -503,7 +503,6 @@ namespace xharness
 		{
 			var build = new XBuildTask ()
 			{
-				ExecutionResult = task.ExecutionResult,
 				Platform = platform,
 				Jenkins = task.Jenkins,
 				TestProject = new TestProject (AddSuffixToPath (task.ProjectFile, suffix)),
@@ -530,14 +529,12 @@ namespace xharness
 				if (IsServerMode)
 					tasks.Add (RunTestServer ());
 
-				var populateWatch = Stopwatch.StartNew ();
 				Task.Run (async () =>
 				{
 					await SimDevice.KillEverythingAsync (MainLog);
 					await PopulateTasksAsync ();
 					populating = false;
 				}).Wait ();
-				Console.WriteLine ("Populated in {0} ms", populateWatch.ElapsedMilliseconds);
 				GenerateReport ();
 				if (!IsServerMode) {
 					foreach (var task in Tasks)
@@ -894,6 +891,19 @@ function quit ()
 	xhttp.open(""GET"", ""quit"", true);
 	xhttp.send();
 }
+function toggleAjaxLogVisibility()
+{
+	if (ajax_log == null)
+		ajax_log = document.getElementById ('ajax-log');
+	var button = document.getElementById ('ajax-log-button');
+	if (ajax_log.style.display == 'none') {
+		ajax_log.style.display = 'block';
+		button.innerText = 'Hide log';
+	} else {
+		ajax_log.style.display = 'none';
+		button.innerText = 'Show log';
+	}
+}
 function keyhandler(event)
 {
 	switch (String.fromCharCode (event.keyCode)) {
@@ -998,8 +1008,8 @@ function oninitialload ()
 				writer.WriteLine ("<body onload='oninitialload ();'>");
 
 				if (IsServerMode) {
-					writer.WriteLine ("<div id='quit' style='position:absolute; top: 20px; right: 20px;'><a href='javascript:quit()'>Quit</a></div>");
-					writer.WriteLine ("<div id='ajax-log' style='position:absolute; top: 200px; right: 20px; max-width: 100px;'></div>");
+					writer.WriteLine ("<div id='quit' style='position:absolute; top: 20px; right: 20px;'><a href='javascript:quit()'>Quit</a></br><a id='ajax-log-button' href='javascript:toggleAjaxLogVisibility ();'>Show log</a></div>");
+					writer.WriteLine ("<div id='ajax-log' style='position:absolute; top: 200px; right: 20px; max-width: 100px; display: none;'></div>");
 				}
 
 				writer.WriteLine ("<h1>Test results</h1>");
@@ -1172,8 +1182,14 @@ function oninitialload ()
 							writer.WriteLine ("</div>");
 							writer.WriteLine ($"<div id='logs_{log_id}' class='autorefreshable logs' data-onautorefresh='{log_id}' style='display: {defaultDisplay};'>");
 
-							if (!string.IsNullOrEmpty (test.FailureMessage))
-								writer.WriteLine ($"Failure: {System.Web.HttpUtility.HtmlEncode (test.FailureMessage).Replace ("\n", "<br />")} <br />");
+							if (!string.IsNullOrEmpty (test.FailureMessage)) {
+								var msg = System.Web.HttpUtility.HtmlEncode (test.FailureMessage).Replace ("\n", "<br />");
+								if (test.FailureMessage.Contains ('\n')) {
+									writer.WriteLine ($"Failure:<br /> <div style='margin-left: 20px;'>{msg}</div>");
+								} else {
+									writer.WriteLine ($"Failure: {msg} <br />");
+								}
+							}
 							var progressMessage = test.ProgressMessage;
 							if (!string.IsNullOrEmpty (progressMessage))
 								writer.WriteLine (progressMessage + "<br />");
@@ -1194,18 +1210,25 @@ function oninitialload ()
 								foreach (var log in logs) {
 									log.Flush ();
 									writer.WriteLine ("<a href='{0}' type='text/plain'>{1}</a><br />", System.Web.HttpUtility.UrlPathEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description);
-									if (log.Description == "Test log") {
+									if (log.Description == "Test log" || log.Description == "Execution log") {
 										var summary = string.Empty;
+										var fails = new List<string> ();
 										try {
 											using (var reader = log.GetReader ()) {
 												while (!reader.EndOfStream) {
-													string line = reader.ReadLine ();
+													string line = reader.ReadLine ().Trim ();
 													if (line.StartsWith ("Tests run:", StringComparison.Ordinal)) {
 														summary = line;
-													} else if (line.Trim ().StartsWith ("[FAIL]", StringComparison.Ordinal)) {
-														writer.WriteLine ("<span style='padding-left: 20px;'>{0}</span><br />", line.Trim ());
+													} else if (line.StartsWith ("[FAIL]", StringComparison.Ordinal)) {
+														fails.Add (line);
 													}
 												}
+											}
+											if (fails.Count > 0) {
+												writer.WriteLine ("<div style='padding-left: 15px;'>");
+												foreach (var fail in fails)
+													writer.WriteLine ("{0} <br />", System.Web.HttpUtility.HtmlEncode (fail));
+												writer.WriteLine ("</div>");
 											}
 											if (!string.IsNullOrEmpty (summary))
 												writer.WriteLine ("<span style='padding-left: 15px;'>{0}</span><br />", summary);
@@ -1222,8 +1245,12 @@ function oninitialload ()
 														errors.Add (line);
 												}
 											}
-											foreach (var error in errors)
-												writer.WriteLine ("<span style='padding-left: 15\tpx;'>{0}</span> <br />", error);
+											if (errors.Count > 0) {
+												writer.WriteLine ("<div style='padding-left: 15px;'>");
+												foreach (var error in errors)
+													writer.WriteLine ("{0} <br />", System.Web.HttpUtility.HtmlEncode (error));
+												writer.WriteLine ("</div>");
+											}
 										} catch (Exception ex) {
 											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", System.Web.HttpUtility.HtmlEncode (ex.Message));
 										}
@@ -1433,9 +1460,11 @@ function oninitialload ()
 				if ((ExecutionResult & ~TestExecutingResult.StateMask) == 0)
 					throw new Exception ("Result not set!");
 			} catch (Exception e) {
-				ExecutionResult = TestExecutingResult.Failed;
-				using (var log = Logs.CreateStream (LogDirectory, $"execution-failure-{Timestamp}.log", "Execution failure"))
-					log.WriteLine (e.ToString ());
+				using (var log = Logs.CreateStream (LogDirectory, $"execution-failure-{Timestamp}.log", "Execution failure")) {
+					ExecutionResult = TestExecutingResult.HarnessException;
+					FailureMessage = $"Harness exception for '{TestName}': {e}";
+					log.WriteLine (FailureMessage);
+				}
 			} finally {
 				duration.Stop ();
 			}
@@ -1446,6 +1475,7 @@ function oninitialload ()
 		public virtual void Reset ()
 		{
 			test_log = null;
+			failure_message = null;
 			Logs.Clear ();
 			duration.Reset ();
 			execution_result = TestExecutingResult.NotStarted;
@@ -1589,20 +1619,15 @@ function oninitialload ()
 						log.WriteLine ("{0}={1}", key, xbuild.StartInfo.EnvironmentVariables [key]);
 					log.WriteLine ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
 					if (!Harness.DryRun) {
-						try {
-							var timeout = TimeSpan.FromMinutes (5);
-							var result = await xbuild.RunAsync (log, true, timeout);
-							if (result.TimedOut) {
-								ExecutionResult = TestExecutingResult.TimedOut;
-								log.WriteLine ("Build timed out after {0} seconds.", timeout.TotalSeconds);
-							} else if (result.Succeeded) {
-								ExecutionResult = TestExecutingResult.Succeeded;
-							} else {
-								ExecutionResult = TestExecutingResult.Failed;
-							}
-						} catch (Exception e) {
-							log.WriteLine ("Harness exception: {0}", e);
-							ExecutionResult = TestExecutingResult.HarnessException;
+						var timeout = TimeSpan.FromMinutes (5);
+						var result = await xbuild.RunAsync (log, true, timeout);
+						if (result.TimedOut) {
+							ExecutionResult = TestExecutingResult.TimedOut;
+							log.WriteLine ("Build timed out after {0} seconds.", timeout.TotalSeconds);
+						} else if (result.Succeeded) {
+							ExecutionResult = TestExecutingResult.Succeeded;
+						} else {
+							ExecutionResult = TestExecutingResult.Failed;
 						}
 					}
 					Jenkins.MainLog.WriteLine ("Built {0} ({1})", TestName, Mode);
@@ -1630,20 +1655,15 @@ function oninitialload ()
 						log.WriteLine ("{0}={1}", key, make.StartInfo.EnvironmentVariables [key]);
 					log.WriteLine ("{0} {1}", make.StartInfo.FileName, make.StartInfo.Arguments);
 					if (!Harness.DryRun) {
-						try {
-							var timeout = TimeSpan.FromMinutes (5);
-							var result = await make.RunAsync (log, true, timeout);
-							if (result.TimedOut) {
-								ExecutionResult = TestExecutingResult.TimedOut;
-								log.WriteLine ("Make timed out after {0} seconds.", timeout.TotalSeconds);
-							} else if (result.Succeeded) {
-								ExecutionResult = TestExecutingResult.Succeeded;
-							} else {
-								ExecutionResult = TestExecutingResult.Failed;
-							}
-						} catch (Exception e) {
-							log.WriteLine ("Harness exception: {0}", e);
-							ExecutionResult = TestExecutingResult.HarnessException;
+						var timeout = TimeSpan.FromMinutes (5);
+						var result = await make.RunAsync (log, true, timeout);
+						if (result.TimedOut) {
+							ExecutionResult = TestExecutingResult.TimedOut;
+							log.WriteLine ("Make timed out after {0} seconds.", timeout.TotalSeconds);
+						} else if (result.Succeeded) {
+							ExecutionResult = TestExecutingResult.Succeeded;
+						} else {
+							ExecutionResult = TestExecutingResult.Failed;
 						}
 					}
 					using (var reader = log.GetReader ())
@@ -1682,20 +1702,15 @@ function oninitialload ()
 						log.WriteLine ("{0}={1}", key, xbuild.StartInfo.EnvironmentVariables [key]);
 					log.WriteLine ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
 					if (!Harness.DryRun) {
-						try {
-							var timeout = TimeSpan.FromMinutes (15);
-							var result = await xbuild.RunAsync (log, true, timeout);
-							if (result.TimedOut) {
-								ExecutionResult = TestExecutingResult.TimedOut;
-								log.WriteLine ("Build timed out after {0} seconds.", timeout.TotalSeconds);
-							} else if (result.Succeeded) {
-								ExecutionResult = TestExecutingResult.Succeeded;
-							} else {
-								ExecutionResult = TestExecutingResult.Failed;
-							}
-						} catch (Exception e) {
-							log.WriteLine ("Harness exception: {0}", e);
-							ExecutionResult = TestExecutingResult.HarnessException;
+						var timeout = TimeSpan.FromMinutes (15);
+						var result = await xbuild.RunAsync (log, true, timeout);
+						if (result.TimedOut) {
+							ExecutionResult = TestExecutingResult.TimedOut;
+							log.WriteLine ("Build timed out after {0} seconds.", timeout.TotalSeconds);
+						} else if (result.Succeeded) {
+							ExecutionResult = TestExecutingResult.Succeeded;
+						} else {
+							ExecutionResult = TestExecutingResult.Failed;
 						}
 					}
 					Jenkins.MainLog.WriteLine ("Built {0} ({1})", TestName, Mode);
@@ -1761,19 +1776,14 @@ function oninitialload ()
 					Jenkins.MainLog.WriteLine ("Executing {0} ({1})", TestName, Mode);
 					if (!Harness.DryRun) {
 						ExecutionResult = TestExecutingResult.Running;
-						try {
-							var result = await proc.RunAsync (log, true, Timeout);
-							if (result.TimedOut) {
-								log.WriteLine ("Execution timed out after {0} minutes.", Timeout.Minutes);
-								ExecutionResult = TestExecutingResult.TimedOut;
-							} else if (result.Succeeded) {
-								ExecutionResult = TestExecutingResult.Succeeded;
-							} else {
-								ExecutionResult = TestExecutingResult.Failed;
-							}
-						} catch (Exception e) {
-							log.WriteLine (e.ToString ());
-							ExecutionResult = TestExecutingResult.HarnessException;
+						var result = await proc.RunAsync (log, true, Timeout);
+						if (result.TimedOut) {
+							log.WriteLine ("Execution timed out after {0} minutes.", Timeout.Minutes);
+							ExecutionResult = TestExecutingResult.TimedOut;
+						} else if (result.Succeeded) {
+							ExecutionResult = TestExecutingResult.Succeeded;
+						} else {
+							ExecutionResult = TestExecutingResult.Failed;
 						}
 					}
 					Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);
@@ -1899,19 +1909,19 @@ function oninitialload ()
 
 							var result = await proc.RunAsync (log, true, timeout);
 							if (result.TimedOut) {
-								log.WriteLine ("Execution timed out after {0} seconds.", timeout.TotalSeconds);
+								FailureMessage = $"Execution timed out after {timeout.TotalSeconds} seconds.";
+								log.WriteLine (FailureMessage);
 								ExecutionResult = TestExecutingResult.TimedOut;
 							} else if (result.Succeeded) {
 								ExecutionResult = TestExecutingResult.Succeeded;
 							} else {
 								ExecutionResult = TestExecutingResult.Failed;
+								FailureMessage = result.ExitCode != 1 ? "Test run crashed." : "Test run failed.";
+								log.WriteLine (FailureMessage);
 							}
-						} catch (Exception e) {
-							log.WriteLine (e.ToString ());
-							ExecutionResult = TestExecutingResult.HarnessException;
+						} finally {
+							await snapshot.EndCaptureAsync (TimeSpan.FromSeconds (Succeeded ? 0 : 5));
 						}
-
-						await snapshot.EndCaptureAsync (TimeSpan.FromSeconds (Succeeded ? 0 : 5));
 					}
 					Jenkins.MainLog.WriteLine ("Executed {0} ({1})", TestName, Mode);
 				}
@@ -1932,6 +1942,15 @@ function oninitialload ()
 			Platform = build_task.Platform;
 			ProjectPlatform = build_task.ProjectPlatform;
 			ProjectConfiguration = build_task.ProjectConfiguration;
+		}
+
+		public override IEnumerable<Log> AggregatedLogs {
+			get {
+				var rv = base.AggregatedLogs;
+				if (BuildTask != null)
+					rv = rv.Union (BuildTask.AggregatedLogs);
+				return rv;
+			}
 		}
 
 		public override TestExecutingResult ExecutionResult {
@@ -2027,7 +2046,7 @@ function oninitialload ()
 
 		public override IEnumerable<Log> AggregatedLogs {
 			get {
-				var rv = base.AggregatedLogs.Union (BuildTask.Logs);
+				var rv = base.AggregatedLogs;
 				if (runner != null)
 					rv = rv.Union (runner.Logs);
 				if (additional_runner != null)
@@ -2069,6 +2088,13 @@ function oninitialload ()
 		}
 
 		protected abstract string XIMode { get; }
+
+		public override void Reset ()
+		{
+			base.Reset ();
+			runner = null;
+			additional_runner = null;
+		}
 	}
 
 	class RunDeviceTask : RunXITask<Device>
@@ -2200,9 +2226,6 @@ function oninitialload ()
 					} else {
 						ExecutionResult = runner.Result;
 					}
-				} catch (Exception ex) {
-					FailureMessage = $"Harness exception for '{TestName}': {ex.Message}";
-					ExecutionResult = TestExecutingResult.HarnessException;
 				} finally {
 					// Uninstall again, so that we don't leave junk behind and fill up the device.
 					runner.MainLog = uninstall_log;
@@ -2309,24 +2332,19 @@ function oninitialload ()
 		{
 			Jenkins.MainLog.WriteLine ("Running XI on '{0}' ({2}) for {1}", Device?.Name, ProjectFile, Device?.UDID);
 
-			try {
-				ExecutionResult = (ExecutionResult & ~TestExecutingResult.InProgressMask) | TestExecutingResult.Running;
-				if (BuildTask.NotStarted)
-					await BuildTask.RunAsync ();
-				if (!BuildTask.Succeeded) {
-					ExecutionResult = TestExecutingResult.BuildFailure;
-					return;
-				}
-				using (var resource = await NotifyBlockingWaitAsync (AcquireResourceAsync ())) {
-					if (runner == null)
-						await SelectSimulatorAsync ();
-					await runner.RunAsync ();
-				}
-				ExecutionResult = runner.Result;
-			} catch (Exception ex) {
-				MainLog.WriteLine ("Test {0} failed: {1}", Path.GetFileName (ProjectFile), ex);
-				ExecutionResult = TestExecutingResult.HarnessException;
+			ExecutionResult = (ExecutionResult & ~TestExecutingResult.InProgressMask) | TestExecutingResult.Running;
+			if (BuildTask.NotStarted)
+				await BuildTask.RunAsync ();
+			if (!BuildTask.Succeeded) {
+				ExecutionResult = TestExecutingResult.BuildFailure;
+				return;
 			}
+			using (var resource = await NotifyBlockingWaitAsync (AcquireResourceAsync ())) {
+				if (runner == null)
+					await SelectSimulatorAsync ();
+				await runner.RunAsync ();
+			}
+			ExecutionResult = runner.Result;
 		}
 
 		protected override string XIMode {

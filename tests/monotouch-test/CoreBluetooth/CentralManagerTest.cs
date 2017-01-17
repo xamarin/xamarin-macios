@@ -13,9 +13,11 @@ using System;
 using System.Threading;
 #if XAMCORE_2_0
 using Foundation;
-using UIKit;
 using CoreBluetooth;
 using CoreFoundation;
+#if !MONOMAC
+using UIKit;
+#endif
 #else
 using MonoTouch.CoreBluetooth;
 using MonoTouch.Foundation;
@@ -124,7 +126,8 @@ namespace MonoTouchFixtures.CoreBluetooth {
 			}
 			if (mgr.State != CBCentralManagerState.PoweredOn)
 				Assert.Inconclusive ("Bluetooth is off and therefore the test cannot be ran. State == {0}.", mgr.State);
-			if (UIDevice.CurrentDevice.CheckSystemVersion (9, 0)) {
+
+			if (TestRuntime.CheckXcodeVersion (7, 0)) {
 				using (var uuid = new NSUuid ("B9401000-F5F8-466E-AFF9-25556B57FE6D"))
 					mgr.RetrievePeripheralsWithIdentifiers (uuid);
 			} else {

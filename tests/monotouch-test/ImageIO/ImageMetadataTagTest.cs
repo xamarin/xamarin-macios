@@ -11,7 +11,6 @@ using System;
 using System.Runtime.InteropServices;
 #if XAMCORE_2_0
 using Foundation;
-using UIKit;
 using ImageIO;
 using ObjCRuntime;
 #else

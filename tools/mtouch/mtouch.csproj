@@ -202,9 +202,6 @@
     <Compile Include="..\linker\ObjCExtensions.cs">
       <Link>Xamarin.Linker\ObjCExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\linker\RemoveSelectors.cs">
-      <Link>Xamarin.Linker\RemoveSelectors.cs</Link>
-    </Compile>
     <Compile Include="..\linker\ApplyPreserveAttribute.cs">
       <Link>Xamarin.Linker\ApplyPreserveAttribute.cs</Link>
     </Compile>

@@ -67,6 +67,16 @@ namespace Xamarin.Bundler {
 					throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--marshal-managed-exceptions", $"Invalid value: {v}. Valid values are: default, unwindnativecode, throwobjectivecexception, abort and disable.");
 				}
 			});
+			options.Add ("j|jobs=", "The level of concurrency. Default is the number of processors.", v => {
+				Jobs = int.Parse (v);
+			});
+		}
+
+		static int Jobs;
+		public static int Concurrency {
+			get {
+				return Jobs == 0 ? Environment.ProcessorCount : Jobs;
+			}
 		}
 
 #if MONOMAC

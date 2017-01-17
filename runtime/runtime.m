@@ -45,6 +45,7 @@ bool xamarin_gc_pump = false;
 #if MONOMAC
 // FIXME: implement release mode for monomac.
 bool xamarin_debug_mode = true;
+bool xamarin_mac_aot = false;
 #else
 bool xamarin_debug_mode = false;
 #endif

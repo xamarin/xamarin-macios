@@ -17,7 +17,11 @@ using System.Runtime.InteropServices;
 #if XAMCORE_2_0
 using Foundation;
 using VideoToolbox;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 using CoreMedia;
 using AVFoundation;
 using CoreFoundation;
@@ -63,7 +67,11 @@ namespace MonoTouchFixtures.VideoToolbox {
 			if (!TestRuntime.CheckSystemAndSDKVersion (9, 0))
 				Assert.Ignore ("Ignoring VideoToolbox.VTUtilitiesTests: Requires iOS9+");
 
+#if MONOMAC
+			var originalImage = new NSImage (NSBundle.MainBundle.PathForResource ("Xam", "png", "CoreImage"));
+#else
 			var originalImage = UIImage.FromBundle ("CoreImage/Xam.png");
+#endif
 			var originalCGImage = originalImage.CGImage;
 
 			var pxbuffer = new CVPixelBuffer (originalCGImage.Width, originalCGImage.Height, CVPixelFormatType.CV32ARGB,

@@ -7943,13 +7943,16 @@ namespace XamCore.AVFoundation {
 		[Export ("alwaysDiscardsLateVideoFrames")]
 		bool AlwaysDiscardsLateVideoFrames { get; set;  }
 
+#if !XAMARIN_4_0
+		[Obsolete ("Use overload accepting a IAVCaptureVideoDataOutputSampleBufferDelegate")]
 		[Export ("setSampleBufferDelegate:queue:")]
 		[PostGet ("SampleBufferDelegate")]
 		[PostGet ("SampleBufferCallbackQueue")]
 		void SetSampleBufferDelegate ([NullAllowed] AVCaptureVideoDataOutputSampleBufferDelegate sampleBufferDelegate, [NullAllowed] DispatchQueue sampleBufferCallbackQueue);
 
-		[Export ("setSampleBufferDelegate:queue:")]
 		[Sealed]
+#endif
+		[Export ("setSampleBufferDelegate:queue:")]
 		void SetSampleBufferDelegateQueue ([NullAllowed] IAVCaptureVideoDataOutputSampleBufferDelegate sampleBufferDelegate, [NullAllowed] DispatchQueue sampleBufferCallbackQueue);
 
 		// 5.0 APIs
@@ -7998,15 +8001,21 @@ namespace XamCore.AVFoundation {
 		[Export ("sampleBufferCallbackQueue")]
 		DispatchQueue SampleBufferCallbackQueue { get;  }
 
+#if XAMCORE_4_0
+		[Export ("setSampleBufferDelegate:queue:")]
+		void SetSampleBufferDelegate ([NullAllowed] IAVCaptureAudioDataOutputSampleBufferDelegate sampleBufferDelegate, [NullAllowed] DispatchQueue sampleBufferCallbackDispatchQueue);
+#else
 		[Export ("setSampleBufferDelegate:queue:")]
 		[Sealed]
 		void SetSampleBufferDelegateQueue ([NullAllowed] IAVCaptureAudioDataOutputSampleBufferDelegate sampleBufferDelegate, [NullAllowed] DispatchQueue sampleBufferCallbackDispatchQueue);
 
+		[Obsolete ("Use overload accepting a IAVCaptureVideoDataOutputSampleBufferDelegate")]
 		[Export ("setSampleBufferDelegate:queue:")]
 #if XAMCORE_2_0
 		void SetSampleBufferDelegateQueue ([NullAllowed] AVCaptureAudioDataOutputSampleBufferDelegate sampleBufferDelegate, [NullAllowed] DispatchQueue sampleBufferCallbackDispatchQueue);
 #else
 		void SetSampleBufferDelegatequeue ([NullAllowed] AVCaptureAudioDataOutputSampleBufferDelegate sampleBufferDelegate, [NullAllowed] DispatchQueue sampleBufferCallbackDispatchQueue);
+#endif
 #endif
 
 #if !MONOMAC
