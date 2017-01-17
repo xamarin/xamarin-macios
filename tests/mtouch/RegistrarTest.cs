@@ -1166,7 +1166,7 @@ class CTP4 : CTP3 {
 			if (target == Target.Dev)
 				MTouch.AssertDeviceAvailable ();
 
-			string path = MTouch.GetTempDirectory ();
+			string path = Cache.CreateTemporaryDirectory ();
 			try {
 				string cs = Path.Combine (path, "Test.cs");
 				string exe = Path.Combine (path, "Test.exe");
