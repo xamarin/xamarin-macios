@@ -819,11 +819,9 @@ namespace Xamarin.Bundler
 
 			// allow the native linker to remove unused symbols (if the caller was removed by the managed linker)
 			if (!bitcode) {
-				foreach (var entry in GetRequiredSymbols ()) {
-					// Note that we include *all* (__Internal) p/invoked symbols here
-					// We also include any fields from [Field] attributes.
-					compiler_flags.ReferenceSymbol (entry);
-				}
+				// Note that we include *all* (__Internal) p/invoked symbols here
+				// We also include any fields from [Field] attributes.
+				compiler_flags.ReferenceSymbols (GetRequiredSymbols ());
 			}
 
 			string mainlib;
