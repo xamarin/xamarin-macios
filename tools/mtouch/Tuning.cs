@@ -36,7 +36,8 @@ namespace MonoTouch.Tuner {
 		internal RuntimeOptions RuntimeOptions { get; set; }
 
 		public MonoTouchLinkContext LinkContext { get; set; }
-		public Application Application { get; set; }
+		public Target Target { get; set; }
+		public Application Application { get { return Target.App; } }
 
 		public static I18nAssemblies ParseI18nAssemblies (string i18n)
 		{
@@ -102,6 +103,7 @@ namespace MonoTouch.Tuner {
 			context.LinkSymbols = options.LinkSymbols;
 			context.OutputDirectory = options.OutputDirectory;
 			context.SetParameter ("debug-build", options.DebugBuild.ToString ());
+			context.StaticRegistrar = options.Target.StaticRegistrar;
 
 			options.LinkContext = context;
 

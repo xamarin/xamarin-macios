@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Linker;
 
+using XamCore.Registrar;
+
 namespace Xamarin.Tuner
 {
 	public class DerivedLinkContext : LinkContext
 	{
+		internal StaticRegistrar StaticRegistrar;
 		Dictionary<string, List<MemberReference>> required_symbols;
 		List<MethodDefinition> marshal_exception_pinvokes;
-
+		Dictionary<string, TypeDefinition> objectivec_classes;
 
 		public List<MemberReference> GetRequiredSymbolList (string symbol)
 		{
@@ -35,6 +38,14 @@ namespace Xamarin.Tuner
 			}
 		}
 
+		public Dictionary<string, TypeDefinition> ObjectiveCClasses {
+			get {
+				if (objectivec_classes == null)
+					objectivec_classes = new Dictionary<string, TypeDefinition> ();
+				return objectivec_classes;
+			}
+		}
+		
 		public DerivedLinkContext (Pipeline pipeline, AssemblyResolver resolver)
 			: base (pipeline, resolver)
 		{
