@@ -117,6 +117,7 @@ mmp_sources = \
 	$(TOP)/tools/common/Target.cs \
 	$(TOP)/tools/common/Application.cs \
 	$(TOP)/tools/common/Assembly.cs \
+	$(TOP)/tools/common/DerivedLinkContext.cs \
 	$(TOP)/src/Foundation/ConnectAttribute.cs \
 	$(TOP)/src/Foundation/ExportAttribute.cs \
 	$(TOP)/src/ObjCRuntime/ArgumentSemantic.cs \
