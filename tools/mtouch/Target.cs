@@ -167,8 +167,8 @@ namespace Xamarin.Bundler
 				Frameworks.Add ("CFNetwork"); // required by xamarin_start_wwan
 		}
 
-		Dictionary<string, MemberReference> entry_points;
-		public IDictionary<string, MemberReference> GetEntryPoints ()
+		Dictionary<string, List<MemberReference>> entry_points;
+		public IDictionary<string, List<MemberReference>> GetEntryPoints ()
 		{
 			if (entry_points == null)
 				GetRequiredSymbols ();
@@ -182,7 +182,7 @@ namespace Xamarin.Bundler
 
 			var cache_location = Path.Combine (Cache.Location, "entry-points.txt");
 			if (cached_link || !any_assembly_updated) {
-				entry_points = new Dictionary<string, MemberReference> ();
+				entry_points = new Dictionary<string, List<MemberReference>> ();
 				foreach (var ep in File.ReadAllLines (cache_location))
 					entry_points.Add (ep, null);
 			} else {
@@ -191,7 +191,7 @@ namespace Xamarin.Bundler
 					// This happens when using the simlauncher and the msbuild tasks asked for a list
 					// of symbols (--symbollist). In that case just produce an empty list, since the
 					// binary shouldn't end up stripped anyway.
-					entry_points = new Dictionary<string, MemberReference> ();
+					entry_points = new Dictionary<string, List<MemberReference>> ();
 					marshal_exception_pinvokes = new List<MethodDefinition> ();
 				} else {
 					entry_points = LinkContext.RequiredSymbols;
@@ -214,9 +214,24 @@ namespace Xamarin.Bundler
 			return entry_points.Keys;
 		}
 
-		public MemberReference GetMemberForSymbol (string symbol)
+		public IEnumerable<string> GetRequiredSymbols (Assembly assembly, bool includeObjectiveCClasses)
 		{
-			MemberReference rv = null;
+			if (entry_points == null)
+				GetRequiredSymbols ();
+
+			foreach (var ep in entry_points) {
+				if (ep.Value == null)
+					continue;
+				foreach (var mr in ep.Value) {
+					if (mr.Module.Assembly == assembly.AssemblyDefinition)
+						yield return ep.Key;
+				}
+			}
+		}
+
+		public List<MemberReference> GetMembersForSymbol (string symbol)
+		{
+			List<MemberReference> rv = null;
 			entry_points?.TryGetValue (symbol, out rv);
 			return rv;
 		}
