@@ -865,5 +865,59 @@ namespace Introspection {
 					ReportError ($"`{t.Name}.{m.Name}` return type `{rt.Name}` is a concrete type `[Model]` and not an interface `[Protocol]`");
 			}
 		}
+
+		[Test]
+		public void AsyncCandidates ()
+		{
+			int n = 0;
+			Errors = 0;
+			ErrorData.Clear ();
+
+			foreach (Type t in Assembly.GetTypes ()) {
+
+				if (!NSObjectType.IsAssignableFrom (t))
+					continue;
+
+				if (t.GetCustomAttribute<ProtocolAttribute> () != null)
+					continue;
+				if (t.GetCustomAttribute<ModelAttribute> () != null)
+					continue;
+
+				CurrentType = t;
+
+				var methods = t.GetMethods (Flags);
+				foreach (MethodInfo m in methods) {
+					if (m.DeclaringType != t)
+						continue;
+
+					// skip properties / events
+					if (m.IsSpecialName)
+						continue;
+
+					// some calls are "natively" async
+					if (m.Name.IndexOf ("Async", StringComparison.Ordinal) != -1)
+						continue;
+
+					// is it a candidate ?
+					var p = m.GetParameters ();
+					if (p.Length == 0)
+						continue;
+					var last = p [p.Length - 1];
+					if (last.Name != "completionHandler")
+						continue;
+					if (!last.ParameterType.IsSubclassOf (typeof (Delegate)))
+						continue;
+
+					// did we provide a async wrapper ?
+					string ma = m.Name + "Async";
+					if (methods.Where ((mi) => mi.Name == ma).FirstOrDefault () != null)
+						continue;
+
+					ErrorData.AppendLine (m.ToString ());
+					Errors++;
+				}
+			}
+			AssertIfErrors ("{0} errors found in {1} signatures validated{2}", Errors, n, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
+		}
 	}
 }
