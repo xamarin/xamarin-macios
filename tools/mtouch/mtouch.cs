@@ -811,7 +811,7 @@ namespace Xamarin.Bundler
 
 		public static string Quote (string f)
 		{
-			if (f.IndexOf (' ') == -1 && f.IndexOf ('\'') == -1 && f.IndexOf (',') == -1)
+			if (f.IndexOf (' ') == -1 && f.IndexOf ('\'') == -1 && f.IndexOf (',') == -1 && f.IndexOf ('$') == -1)
 				return f;
 
 			var s = new StringBuilder ();
