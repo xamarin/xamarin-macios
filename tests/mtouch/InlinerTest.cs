@@ -60,6 +60,11 @@ namespace Xamarin.Linker {
 			return !(b.HasExceptionHandlers || b.HasVariables || b.InitLocals);
 		}
 
+		/// <summary>
+		/// We look for candidates, without parameters, that only do `return true;`.
+		/// E.g. Such a static method can be inlined by replacing the `call` with a `ldc.i4.1` instruction
+		/// We must ensure that the list of methods we inline remains unchanged in the BCL we ship.
+		/// </summary>
 		protected void NoParameterReturnOnlyConstant (Code code, HashSet<string> list)
 		{
 			if (DisplayCandidates)
@@ -88,6 +93,11 @@ namespace Xamarin.Linker {
 			}
 		}
 
+		/// <summary>
+		/// We look for candidates, without parameters and return value, that does nothing (only `ret`).
+		/// E.g. Such a static method can be inlined by replacing the `call` with a nop` instruction.
+		/// We must ensure that the list of methods we inline remains unchanged in the BCL we ship.
+		/// </summary>
 		protected void NoParameterNoReturnNoCode (HashSet<string> list)
 		{
 			if (DisplayCandidates)
@@ -122,11 +132,6 @@ namespace Xamarin.Linker {
 			get { return Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "mono", "Xamarin.iOS", "mscorlib.dll"); }
 		}
 
-		/// <summary>
-		/// We look for candidates, without parameters, that only do `return true;`.
-		/// Such methods can be inlined by replacing the `call` with a `ldc.i4.1` instruction
-		/// We must ensure that the list of methods we inline remains unchanged in the BCL we ship.
-		/// </summary>
 		[Test]
 		public void True ()
 		{
@@ -138,11 +143,6 @@ namespace Xamarin.Linker {
 			Assert.That (h, Is.Empty, ListMethods (h));
 		}
 
-		/// <summary>
-		/// We look for candidates, without parameters and return value, that does nothing (only `ret`).
-		/// Such methods can be inlined by replacing the `call` with a nop` instruction.
-		/// We must ensure that the list of methods we inline remains unchanged in the BCL we ship.
-		/// </summary>
 		[Test]
 		public void Nop ()
 		{
