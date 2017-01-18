@@ -12,6 +12,7 @@ using Mono.Tuner;
 using Xamarin.Bundler;
 using Xamarin.Linker;
 using Xamarin.Linker.Steps;
+using Xamarin.Tuner;
 
 namespace MonoTouch.Tuner {
 
@@ -223,26 +224,7 @@ namespace MonoTouch.Tuner {
 		}
 	}
 
-	public class MonoTouchLinkContext : LinkContext {
-		Dictionary<string, MemberReference> required_symbols;
-		List<MethodDefinition> marshal_exception_pinvokes;
-
-		public Dictionary<string, MemberReference> RequiredSymbols {
-			get {
-				if (required_symbols == null)
-					required_symbols = new Dictionary<string, MemberReference> ();
-				return required_symbols;
-			}
-		}
-
-		public List<MethodDefinition> MarshalExceptionPInvokes {
-			get {
-				if (marshal_exception_pinvokes == null)
-					marshal_exception_pinvokes = new List<MethodDefinition> ();
-				return marshal_exception_pinvokes;
-			}
-		}
-
+	public class MonoTouchLinkContext : DerivedLinkContext {
 		public MonoTouchLinkContext (Pipeline pipeline, AssemblyResolver resolver)
 			: base (pipeline, resolver)
 		{

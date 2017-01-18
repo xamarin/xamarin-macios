@@ -124,6 +124,7 @@ MTOUCH_SOURCES = \
 	BitcodeConverter.cs	\
 	$(TOP)/tools/common/Application.cs \
 	$(TOP)/tools/common/Assembly.cs \
+	$(TOP)/tools/common/DerivedLinkContext.cs \
 	$(TOP)/tools/common/Target.cs \
 	$(TOP)/tools/common/CompilerFlags.cs \
 	$(TOP)/src/Foundation/ExportAttribute.cs \
