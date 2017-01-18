@@ -7,13 +7,22 @@ namespace Xamarin.Tuner
 {
 	public class DerivedLinkContext : LinkContext
 	{
-		Dictionary<string, MemberReference> required_symbols;
+		Dictionary<string, List<MemberReference>> required_symbols;
 		List<MethodDefinition> marshal_exception_pinvokes;
 
-		public Dictionary<string, MemberReference> RequiredSymbols {
+
+		public List<MemberReference> GetRequiredSymbolList (string symbol)
+		{
+			List<MemberReference> rv;
+			if (!RequiredSymbols.TryGetValue (symbol, out rv))
+				required_symbols [symbol] = rv = new List<MemberReference> ();
+			return rv;
+		}
+
+		public Dictionary<string, List<MemberReference>> RequiredSymbols {
 			get {
 				if (required_symbols == null)
-					required_symbols = new Dictionary<string, MemberReference> ();
+					required_symbols = new Dictionary<string, List<MemberReference>> ();
 				return required_symbols;
 			}
 		}
