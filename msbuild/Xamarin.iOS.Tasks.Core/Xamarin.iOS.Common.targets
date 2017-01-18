@@ -1626,7 +1626,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			CodesignAllocate="$(_CodesignAllocate)"
 			DisableTimestamp="$(_SdkIsSimulator)"
 			Keychain="$(CodesignKeychain)"
-			Resource="%(_NativeLibrary.Identity)"
+			Resources="@(_NativeLibrary)"
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			>
@@ -1654,7 +1654,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			CodesignAllocate="$(_CodesignAllocate)"
 			DisableTimestamp="$(_SdkIsSimulator)"
 			Keychain="$(CodesignKeychain)"
-			Resource="%(_Frameworks.Identity)"
+			Resources="@(_Frameworks)"
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			>
@@ -1692,7 +1692,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Keychain="%(_AppExtensionCodesignProperties.Keychain)"
 			Entitlements="%(_AppExtensionCodesignProperties.Entitlements)"
 			ResourceRules="%(_AppExtensionCodesignProperties.ResourceRules)"
-			Resource="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)"
+			Resources="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)"
 			SigningKey="%(_AppExtensionCodesignProperties.SigningKey)"
 			ExtraArgs="%(_AppExtensionCodesignProperties.ExtraArgs)"
 			>
@@ -1753,6 +1753,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_CodesignAppBundle" Condition="'$(_RequireCodeSigning)' == 'true' And '$(IsAppExtension)' == 'false'" DependsOnTargets="$(_CodesignAppBundleDependsOn)"
 		Inputs="$(_NativeExecutable);$(_AppBundlePath)Info.plist;$(_AppBundlePath)embedded.mobileprovision;$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent;@(_BundleResourceWithLogicalName);@(_NativeLibrary);@(_Frameworks)"
 		Outputs="$(DeviceSpecificIntermediateOutputPath)codesign\$(_AppBundleName)$(AppBundleExtension)">
+
 		<Codesign
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
@@ -1763,7 +1764,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Keychain="$(CodesignKeychain)"
 			Entitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
 			ResourceRules="$(_PreparedResourceRules)"
-			Resource="$(AppBundleDir)"
+			Resources="$(AppBundleDir)"
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			>
@@ -1959,7 +1960,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			DisableTimestamp="$(_SdkIsSimulator)"
 			Keychain="$(CodesignKeychain)"
 			Entitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
-			Resource="%(_AssetPack.Identity)"
+			Resources="@(_AssetPack)"
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			>
@@ -1987,7 +1988,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Keychain="$(CodesignKeychain)"
 			Entitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
 			ResourceRules="$(_PreparedResourceRules)"
-			Resource="$(_IpaAppBundleDir)"
+			Resources="$(_IpaAppBundleDir)"
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			/>

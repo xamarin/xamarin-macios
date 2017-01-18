@@ -21,7 +21,7 @@ namespace Xamarin.MacDev.Tasks
 		public string Keychain { get; set; }
 
 		[Required]
-		public string Resource { get; set; }
+		public ITaskItem[] Resources { get; set; }
 
 		public string ResourceRules { get; set; }
 
@@ -82,7 +82,8 @@ namespace Xamarin.MacDev.Tasks
 			if (!string.IsNullOrEmpty (ExtraArgs))
 				args.Add (ExtraArgs);
 
-			args.AddQuoted (Path.GetFullPath (Resource));
+			for (int i = 0; i < Resources.Length; i++)
+				args.AddQuoted (Path.GetFullPath (Resources[i].ItemSpec));
 
 			return args.ToString ();
 		}
@@ -100,11 +101,14 @@ namespace Xamarin.MacDev.Tasks
 			Log.LogTaskProperty ("DisableTimestamp", DisableTimestamp);
 			Log.LogTaskProperty ("Entitlements", Entitlements);
 			Log.LogTaskProperty ("Keychain", Keychain);
-			Log.LogTaskProperty ("Resource", Resource);
+			Log.LogTaskProperty ("Resources", Resources);
 			Log.LogTaskProperty ("ResourceRules", ResourceRules);
 			Log.LogTaskProperty ("SigningKey", SigningKey);
 			Log.LogTaskProperty ("ExtraArgs", ExtraArgs);
 			Log.LogTaskProperty ("IsAppExtension", IsAppExtension);
+
+			if (Resources.Length == 0)
+				return true;
 
 			EnvironmentVariables = new string[] {
 				"CODESIGN_ALLOCATE=" + CodesignAllocate
