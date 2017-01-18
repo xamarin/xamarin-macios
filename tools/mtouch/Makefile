@@ -54,6 +54,7 @@ LINKER_SOURCES = \
 	$(MONO_TUNER)/Mono.Tuner/RemoveResources.cs			\
 	$(MONO_TUNER)/Mono.Tuner/RemoveSecurity.cs			\
 	$(LINKER_DIR)/MonoTouch.Tuner/Extensions.cs			\
+	$(LINKER_DIR)/MonoTouch.Tuner/InlinerSubStep.cs		\
 	$(LINKER_DIR)/MonoTouch.Tuner/ListExportedSymbols.cs	\
 	$(LINKER_DIR)/MonoTouch.Tuner/MetadataReducerSubStep.cs	\
 	$(LINKER_DIR)/MonoTouch.Tuner/MonoTouchMarkStep.cs		\
