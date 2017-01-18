@@ -66,6 +66,12 @@ namespace MonoTouch.Tuner
 				foreach (var method in type.Methods)
 					ProcessMethod (method);
 			}
+
+			var registerAttribute = DerivedLinkContext.StaticRegistrar?.GetRegisterAttribute (type);
+			if (registerAttribute != null && registerAttribute.IsWrapper && !DerivedLinkContext.StaticRegistrar.HasProtocolAttribute (type)) {
+				var exportedName = DerivedLinkContext.StaticRegistrar.GetExportedTypeName (type, registerAttribute);
+				DerivedLinkContext.ObjectiveCClasses [exportedName] = type;
+			}
 		}
 
 		void ProcessMethod (MethodDefinition method)

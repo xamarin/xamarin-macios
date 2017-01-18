@@ -273,7 +273,7 @@ namespace XamCore.Registrar {
 			return SharedDynamic.GetOneAttribute<ExportAttribute> (GetBasePropertyInTypeHierarchy (property) ?? property);
 		}
 
-		protected override RegisterAttribute GetRegisterAttribute (Type type)
+		public override RegisterAttribute GetRegisterAttribute (Type type)
 		{
 			return SharedDynamic.GetOneAttribute<RegisterAttribute> (type);
 		}

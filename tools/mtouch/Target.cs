@@ -227,6 +227,13 @@ namespace Xamarin.Bundler
 						yield return ep.Key;
 				}
 			}
+
+			if (includeObjectiveCClasses) {
+				foreach (var kvp in LinkContext.ObjectiveCClasses) {
+					if (kvp.Value.Module.Assembly == assembly.AssemblyDefinition)
+						yield return $"OBJC_CLASS_$_{kvp.Key}";
+				}
+			}
 		}
 
 		public List<MemberReference> GetMembersForSymbol (string symbol)
@@ -424,6 +431,7 @@ namespace Xamarin.Bundler
 				DumpDependencies = App.LinkerDumpDependencies,
 				RuntimeOptions = App.RuntimeOptions,
 				MarshalNativeExceptionsState = MarshalNativeExceptionsState,
+				Target = this,
 			};
 
 			MonoTouch.Tuner.Linker.Process (LinkerOptions, out link_context, out assemblies);
