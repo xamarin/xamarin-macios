@@ -319,6 +319,10 @@
     <Compile Include="..\linker\MonoTouch.Tuner\InlinerSubStep.cs">
       <Link>MonoTouch.Tuner\InlinerSubStep.cs</Link>
     </Compile>
+    <Compile Include="..\common\BuildTasks.cs">
+      <Link>common\BuildTasks.cs</Link>
+    </Compile>
+    <Compile Include="BuildTasks.mtouch.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
