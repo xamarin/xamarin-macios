@@ -418,6 +418,17 @@ namespace Xamarin
 				Directory.Delete (testDir, true);
 			}
 		}
+
+		[Test]
+		public void MT0026 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.LLVMOptimizations = "-O2";
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (26, "Could not parse the command line argument '--llvm-opt=-O2': Both assembly and optimization must be specified (assembly=optimization)");
+			}
+		}
 			
 		[Test]
 		public void MT0051 ()

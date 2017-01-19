@@ -86,6 +86,7 @@ namespace Xamarin
 		static XmlDocument device_list_cache;
 
 		List<string> directories_to_delete;
+		public string LLVMOptimizations;
 
 		public class DeviceInfo
 		{
@@ -309,6 +310,9 @@ namespace Xamarin
 
 			if (!string.IsNullOrEmpty (Device))
 				sb.Append (" --device:").Append (MTouch.Quote (Device));
+
+			if (!string.IsNullOrEmpty (LLVMOptimizations))
+				sb.Append (" --llvm-opt=").Append (MTouch.Quote (LLVMOptimizations));
 
 			return sb.ToString ();
 		}
