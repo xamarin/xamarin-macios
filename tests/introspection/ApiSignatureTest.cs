@@ -866,6 +866,19 @@ namespace Introspection {
 			}
 		}
 
+		static bool IsDiscouraged (MemberInfo mi)
+		{
+			foreach (var ca in mi.GetCustomAttributes ()) {
+				switch (ca.GetType ().Name) {
+				case "ObsoleteAttribute":
+				case "ObsoletedAttribute":
+				case "DeprecatedAttribute":
+					return true;
+				}
+			}
+			return false;
+		}
+
 		[Test]
 		public void AsyncCandidates ()
 		{
@@ -883,6 +896,10 @@ namespace Introspection {
 				if (t.GetCustomAttribute<ModelAttribute> () != null)
 					continue;
 
+				// let's not encourage the use of some API
+				if (IsDiscouraged (t))
+					continue;
+
 				CurrentType = t;
 
 				var methods = t.GetMethods (Flags);
@@ -896,6 +913,10 @@ namespace Introspection {
 
 					// some calls are "natively" async
 					if (m.Name.IndexOf ("Async", StringComparison.Ordinal) != -1)
+						continue;
+
+					// let's not encourage the use of some API
+					if (IsDiscouraged (m))
 						continue;
 
 					// is it a candidate ?
