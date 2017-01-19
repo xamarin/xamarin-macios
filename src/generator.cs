@@ -4326,9 +4326,12 @@ public partial class Generator : IMemberGatherer {
 			extra += "out " + FormatType (minfo.MethodInfo.DeclaringType, minfo.MethodInfo.ReturnType) + " " + minfo.GetUniqueParamName ("result");
 		}
 
+		// async wrapper don't have to be abstract (it's counter productive)
+		var modifier = minfo.GetModifiers ().Replace ("abstract ", String.Empty);
+
 		print ("{0} {1}{2} {3}",
 		       minfo.GetVisibility (),
-		       minfo.GetModifiers (),
+		       modifier,
 		       GetReturnType (minfo),
 		       MakeSignature (minfo, true, minfo.async_initial_params, extra),
 		       minfo.is_abstract ? ";" : "");
@@ -4342,8 +4345,6 @@ public partial class Generator : IMemberGatherer {
 		PrintMethodAttributes (minfo);
 
 		PrintAsyncHeader (minfo, asyncKind);
-		if (minfo.is_abstract)
-			return;
 
 		print ("{");
 		indent++;

@@ -2222,6 +2222,7 @@ namespace XamCore.SceneKit {
 		[Abstract]
 #endif
 		[Mac (10,10)]
+		[Async]
 		[Export ("prepareObjects:withCompletionHandler:")]
 		void Prepare (NSObject [] objects, [NullAllowed] Action<bool> completionHandler);
 
