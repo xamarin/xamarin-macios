@@ -1287,8 +1287,9 @@ namespace Xamarin.Bundler {
 																"Native linking failed, undefined Objective-C class: {0}. The symbol '{1}' could not be found in any of the libraries or frameworks linked with your application.",
 							                                    symbol.Replace ("_OBJC_CLASS_$_", ""), symbol));
 						} else {
-							var member = target.GetMemberForSymbol (symbol.Substring (1));
-							if (member != null) {
+							var members = target.GetMembersForSymbol (symbol.Substring (1));
+							if (members != null && members.Count > 0) {
+								var member = members.First (); // Just report the first one.
 								// Neither P/Invokes nor fields have IL, so we can't find the source code location.
 								errors.Add (new MonoTouchException (5214, error,
 									"Native linking failed, undefined symbol: {0}. " +

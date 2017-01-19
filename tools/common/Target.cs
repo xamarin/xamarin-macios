@@ -43,7 +43,7 @@ namespace Xamarin.Bundler {
 		public HashSet<string> Frameworks = new HashSet<string> ();
 		public HashSet<string> WeakFrameworks = new HashSet<string> ();
 
-		public IStaticRegistrar StaticRegistrar { get; set; }
+		internal StaticRegistrar StaticRegistrar { get; set; }
 
 #if MONOMAC
 		public bool Is32Build { get { return !Driver.Is64Bit; } }

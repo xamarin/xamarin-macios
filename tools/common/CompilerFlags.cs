@@ -34,6 +34,15 @@ namespace Xamarin.Utils
 			UnresolvedSymbols.Add (symbol);
 		}
 
+		public void ReferenceSymbols (IEnumerable<string> symbols)
+		{
+			if (UnresolvedSymbols == null)
+				UnresolvedSymbols = new HashSet<string> ();
+
+			foreach (var symbol in symbols)
+				UnresolvedSymbols.Add (symbol);
+		}
+
 		public void AddDefine (string define)
 		{
 			if (Defines == null)
@@ -201,7 +210,7 @@ namespace Xamarin.Utils
 
 			if (UnresolvedSymbols != null) {
 				foreach (var symbol in UnresolvedSymbols)
-					args.Append (" -u _").Append (symbol);
+					args.Append (" -u ").Append (Driver.Quote ("_" + symbol));
 			}
 		}
 
