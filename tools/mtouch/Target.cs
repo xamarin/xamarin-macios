@@ -305,34 +305,8 @@ namespace Xamarin.Bundler
 			GetCustomAttributeReferences (assembly, assemblies, exceptions);
 			GetCustomAttributeReferences (main, assemblies, exceptions);
 			if (main.HasTypes) {
-				foreach (var t in main.Types) {
-					GetTypeReferences (t, assemblies, exceptions);
-				}
-			}
-		}
-
-		void GetTypeReferences (TypeDefinition type, HashSet<string> assemblies, List<Exception> exceptions)
-		{
-			GetCustomAttributeReferences (type, assemblies, exceptions);
-			if (type.HasEvents) {
-				foreach (var e in type.Events)
-					GetCustomAttributeReferences (e, assemblies, exceptions);
-			}
-			if (type.HasFields) {
-				foreach (var f in type.Fields)
-					GetCustomAttributeReferences (f, assemblies, exceptions);
-			}
-			if (type.HasMethods) {
-				foreach (var m in type.Methods)
-					GetCustomAttributeReferences (m, assemblies, exceptions);
-			}
-			if (type.HasProperties) {
-				foreach (var p in type.Properties)
-					GetCustomAttributeReferences (p, assemblies, exceptions);
-			}
-			if (type.HasNestedTypes) {
-				foreach (var nt in type.NestedTypes)
-					GetTypeReferences (nt, assemblies, exceptions);
+				foreach (var ca in main.GetCustomAttributes ())
+					GetCustomAttributeReferences (ca, assemblies, exceptions);
 			}
 		}
 
@@ -340,19 +314,23 @@ namespace Xamarin.Bundler
 		{
 			if (!cap.HasCustomAttributes)
 				return;
-			foreach (var ca in cap.CustomAttributes) {
-				if (ca.HasConstructorArguments) {
-					foreach (var arg in ca.ConstructorArguments)
-						GetCustomAttributeArgumentReference (arg, assemblies, exceptions);
-				}
-				if (ca.HasFields) {
-					foreach (var arg in ca.Fields)
-						GetCustomAttributeArgumentReference (arg.Argument, assemblies, exceptions);
-				}
-				if (ca.HasProperties) {
-					foreach (var arg in ca.Properties)
-						GetCustomAttributeArgumentReference (arg.Argument, assemblies, exceptions);
-				}
+			foreach (var ca in cap.CustomAttributes)
+				GetCustomAttributeReferences (ca, assemblies, exceptions);
+		}
+
+		void GetCustomAttributeReferences (CustomAttribute ca, HashSet<string> assemblies, List<Exception> exceptions)
+		{
+			if (ca.HasConstructorArguments) {
+				foreach (var arg in ca.ConstructorArguments)
+					GetCustomAttributeArgumentReference (arg, assemblies, exceptions);
+			}
+			if (ca.HasFields) {
+				foreach (var arg in ca.Fields)
+					GetCustomAttributeArgumentReference (arg.Argument, assemblies, exceptions);
+			}
+			if (ca.HasProperties) {
+				foreach (var arg in ca.Properties)
+					GetCustomAttributeArgumentReference (arg.Argument, assemblies, exceptions);
 			}
 		}
 
