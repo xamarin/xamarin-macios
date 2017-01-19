@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using MonoTouch.Foundation;
 using MonoTouch.CoreMedia;
+using MonoTouch.CoreAnimation;
 
 namespace BindAsTests {
 
@@ -70,5 +71,53 @@ namespace BindAsTests {
 		[BindAs (typeof (long))]
 		[Export ("longProperty")]
 		NSNumber LongProperty { get; set; }
+
+		[BindAs (typeof (CAScroll []))]
+		[Export ("scrollEnumArray")]
+		NSString [] ScrollEnumArray { get; set; }
+
+		[return: BindAs (typeof (CAScroll []))]
+		[Export ("getScrollArrayEnum:")]
+		NSString [] GetScrollArrayEnum ([BindAs (typeof (CAScroll []))] NSString [] arg1);
+
+		[return: BindAs (typeof (CAScroll? []))]
+		[Export ("getScrollArrayNullableEnum:")]
+		NSString [] GetScrollArrayEnumNullable ([BindAs (typeof (CAScroll? []))] NSString [] arg1);
+
+		[BindAs (typeof (CAScroll []))]
+		[Export ("scrollEnumArray2")]
+		NSNumber [] ScrollEnumArray2 { get; set; }
+
+		[return: BindAs (typeof (CAScroll []))]
+		[Export ("getScrollArrayEnum2:")]
+		NSNumber [] GetScrollArrayEnum2 ([BindAs (typeof (CAScroll []))] NSNumber [] arg1);
+
+		[return: BindAs (typeof (CAScroll? []))]
+		[Export ("getScrollArrayNullableEnum2:")]
+		NSNumber [] GetScrollArrayNullableEnum2 ([BindAs (typeof (CAScroll? []))] NSNumber [] arg1);
+
+		[BindAs (typeof (CMTime []))]
+		[Export ("timeEnumArray")]
+		NSValue [] TimeEnumArray { get; set; }
+
+		[return: BindAs (typeof (CMTime []))]
+		[Export ("getTimeEnumArray:")]
+		NSValue [] GetTimeEnumArray ([BindAs (typeof (CMTime []))] NSValue [] arg1);
+
+		[return: BindAs (typeof (CMTime? []))]
+		[Export ("getTimeEnumNullableArray:")]
+		NSValue [] GetTimeEnumNullableArray ([BindAs (typeof (CMTime? []))] NSValue [] arg1);
+
+		[BindAs (typeof (CAScroll))]
+		[Export ("scrollFooEnum")]
+		NSString ScrollFooEnum { get; set; }
+
+		[BindAs (typeof (CAScroll?))]
+		[Export ("scrollFooEnum2")]
+		NSString ScrollFooEnum2 { get; set; }
+
+		[return: BindAs (typeof (CAScroll))]
+		[Export ("getScrollEnum3:arg2:")]
+		NSString GetScrollEnum ([BindAs (typeof (CAScroll))] NSString arg1, [BindAs (typeof (CAScroll?))] NSString arg2);
 	}
 }

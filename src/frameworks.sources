@@ -613,6 +613,8 @@ FOUNDATION_CORE_SOURCES = \
 	Foundation/NSDecimal.cs \
 	Foundation/NSDimension.cs \
 	Foundation/NSError.cs \
+	Foundation/NSNumber.mac.cs \
+	Foundation/NSNumber2.cs \
 	Foundation/NSObject2.cs \
 	Foundation/NSRange.cs \
 	Foundation/NSString.cs \
@@ -682,8 +684,6 @@ FOUNDATION_SOURCES = \
 	Foundation/NSMutableUrlRequest.cs \
 	Foundation/NSNetService.cs \
 	Foundation/NSNotificationCenter.cs \
-	Foundation/NSNumber.mac.cs \
-	Foundation/NSNumber2.cs \
 	Foundation/NSOrderedSet.cs \
 	Foundation/NSOrderedSet_1.cs \
 	Foundation/NSOutputStream.cs \

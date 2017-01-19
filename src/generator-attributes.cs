@@ -57,10 +57,13 @@ public class BindAsAttribute : Attribute {
 	public BindAsAttribute (Type type)
 	{
 		Type = type;
-		IsNullable = Nullable.GetUnderlyingType (type) != null;
+		var nullable = type.IsArray ? Nullable.GetUnderlyingType (type.GetElementType ()) : Nullable.GetUnderlyingType (type);
+		IsNullable = nullable != null;
+		IsValueType = IsNullable ? nullable.IsValueType : type.IsValueType;
 	}
 	public Type Type;
 	internal readonly bool IsNullable;
+	internal readonly bool IsValueType;
 }
 
 // Used to flag a type as needing to be turned into a protocol on output for Unified

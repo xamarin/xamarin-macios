@@ -1131,6 +1131,8 @@ public partial class Generator : IMemberGatherer {
 	public static BindAsAttribute GetBindAsAttribute (ICustomAttributeProvider cu) => GetAttribute<BindAsAttribute> (cu) ?? GetAttribute<BindAsAttribute> ((cu as MethodInfo)?.ReturnParameter);
 	public static bool HasBindAsAttribute (ICustomAttributeProvider cu) => (GetAttribute<BindAsAttribute> (cu) ?? GetAttribute<BindAsAttribute> ((cu as MethodInfo)?.ReturnParameter)) != null;
 	static bool IsSetter (MethodInfo mi) => mi.IsSpecialName && mi.Name.StartsWith ("set_", StringComparison.Ordinal);
+	bool IsSmartEnum (Type type) => (type.IsValueType && type.GetFields ().Any (f => GetAttribute<FieldAttribute> (f) != null)) || Type.GetType (type.AssemblyQualifiedName.Replace (type.Name, $"{type.Name}Extensions")) != null;
+	static string GetBindAsExceptionString (string box, string retType, string containerType, string container, string memberName) => $"Could not {box} type {retType} from {containerType} {container} used on {memberName} member decorated with [BindAs].";
 
 	static Dictionary<Type,string> NSValueCreateMap = new Dictionary<Type, string> {
 		{ typeof (CGAffineTransform), "CGAffineTransform" }, { typeof (NSRange), "Range" },
@@ -1150,20 +1152,20 @@ public partial class Generator : IMemberGatherer {
 #endif
 	};
 
-	string GetToBindAsWrapper (MemberInformation minfo = null, ParameterInfo pi = null)
+	string GetToBindAsWrapper (MemberInformation minfo = null, ParameterInfo pi = null, PropertyInfo propInfo = null)
 	{
 		BindAsAttribute attrib = null;
-		string className = null;
+		Type originalType = null;
 		string temp = null;
 
 		if (pi == null) {
 			attrib = GetBindAsAttribute (minfo.mi);
 			var property = minfo.mi as PropertyInfo;
 			var method = minfo.mi as MethodInfo;
-			className = method?.ReturnType?.Name ?? property?.PropertyType?.Name;
+			originalType = method?.ReturnType ?? property?.PropertyType;
 		} else {
-			attrib = GetBindAsAttribute (pi);
-			className = pi.ParameterType.Name;
+			attrib = GetBindAsAttribute (pi) ?? GetBindAsAttribute (propInfo);
+			originalType = pi.ParameterType;
 		}
 
 		var retType = Nullable.GetUnderlyingType (attrib.Type) ?? attrib.Type;
@@ -1173,21 +1175,45 @@ public partial class Generator : IMemberGatherer {
 		if (isNullable || !isValueType)
 			temp = string.Format ("{0} == null ? null : ", pi != null ? pi.Name.GetSafeParamName () : "value");
 
-		if (className == "NSNumber")
+		if (originalType == typeof (NSNumber))
 			temp = string.Format ("new NSNumber ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
 
-		else if (className == "NSValue") {
+		else if (originalType == typeof (NSValue)) {
 			var typeStr = string.Empty;
 			if (!NSValueCreateMap.TryGetValue (retType, out typeStr)) {
 				// HACK: These are problematic for X.M due to we do not ship System.Drawing for Full profile
 				if (retType.Name == "RectangleF" || retType.Name == "SizeF" || retType.Name == "PointF")
 					typeStr = retType.Name;
 				else
-					throw new BindingException (1049, true, "Could not box type {0} into {1} container used on {2} member decorated with [BindAs].", retType.Name, "NSValue", minfo?.mi?.Name ?? pi?.Name);
+					throw new BindingException (1049, true, GetBindAsExceptionString ("box", retType.Name, originalType.Name, "container", minfo?.mi?.Name ?? pi?.Name));
 			}
 			temp = string.Format ("NSValue.From{0} ({2}{1});", typeStr, isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-		} else if (isValueType) {
-			// Magic for enums/smart enums
+		} else if (originalType == typeof (NSString) && IsSmartEnum (retType)) {
+			temp = string.Format ("{1}{0}.GetConstant ();", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+		} else if (originalType.IsArray) {
+			var arrType = originalType.GetElementType ();
+			var arrRetType = Nullable.GetUnderlyingType (retType.GetElementType ()) ?? retType.GetElementType ();
+			var valueConverter = string.Empty;
+
+			if (arrType == typeof (NSString))
+				valueConverter = "o{0}.GetConstant (), {1});";
+				//temp = string.Format ("NSArray.FromNSObjects (o => o{0}.GetConstant (), {1});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			else if (arrType == typeof (NSNumber))
+				valueConverter = string.Format ("new NSNumber ({0}o{{0}}), {{1}});", arrRetType.IsEnum ? "(int)" : string.Empty);
+				//temp = string.Format ("NSArray.FromNSObjects (o => new NSNumber ({2}o{0}), {1});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value", arrRetType.IsEnum ? "(int)" : string.Empty);
+			else if (arrType == typeof (NSValue)) {
+				var typeStr = string.Empty;
+				if (!NSValueCreateMap.TryGetValue (arrRetType, out typeStr)) {
+					if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
+						typeStr = retType.Name;
+					else
+						throw new BindingException (1049, true, GetBindAsExceptionString ("box", arrRetType.Name, originalType.Name, "array", minfo?.mi?.Name ?? pi?.Name));
+				}
+				valueConverter = string.Format ("NSValue.From{0} (o{{0}}), {{1}});", typeStr);
+				//temp = string.Format ("NSArray.FromNSObjects (o => NSValue.From{2} (o{0}), {1});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value", typeStr);
+			} else
+				throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
+			temp = string.Format ($"NSArray.FromNSObjects (o => {valueConverter}", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
 		} else
 			throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
 
@@ -1232,20 +1258,40 @@ public partial class Generator : IMemberGatherer {
 		var method = minfo.mi as MethodInfo;
 		var originalReturnType = method?.ReturnType ?? property?.PropertyType;
 
-		if (originalReturnType?.Name == "NSNumber") {
+		if (originalReturnType == typeof (NSNumber)) {
 			if (!NSNumberReturnMap.TryGetValue (retType, out append))
-				throw new BindingException (1049, true, "Could not unbox type {0} from {1} container used on {2} member decorated with [BindAs].", retType.Name, "NSNumber", minfo.mi.Name);
+				throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi.Name));
 
-		} else if (originalReturnType?.Name == "NSValue") {
+		} else if (originalReturnType == typeof (NSValue)) {
 			if (!NSValueReturnMap.TryGetValue (retType, out append)) {
 				// HACK: These are problematic for X.M due to we do not ship System.Drawing for Full profile
 				if (retType.Name == "RectangleF" || retType.Name == "SizeF" || retType.Name == "PointF")
 					append = $".{retType.Name}Value";
 				else
-					throw new BindingException (1049, true, "Could not unbox type {0} from {1} container used on {2} member decorated with [BindAs].", retType.Name, "NSValue", minfo.mi.Name);
+					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi.Name));
 			}
-		} else if (isValueType) {
-			// Magic for enums/smart enums
+		} else if (originalReturnType == typeof (NSString) && IsSmartEnum (retType)) {
+			append = $"{FormatType (retType.DeclaringType, retType)}Extensions.GetValue (";
+		} else if (originalReturnType.IsArray) {
+			var arrType = originalReturnType.GetElementType ();
+			var arrRetType = Nullable.GetUnderlyingType (retType.GetElementType ()) ?? retType.GetElementType ();
+			var valueFetcher = string.Empty;
+			if (arrType == typeof (NSString))
+				append = $"ptr => {{\n\tusing (var str = Runtime.GetNSObject<NSString> (ptr)) {{\n\t\treturn {FormatType (arrRetType.DeclaringType, arrRetType)}Extensions.GetValue (str);\n\t}}\n}}";
+			else if (arrType == typeof (NSNumber)) {
+				if (NSNumberReturnMap.TryGetValue (arrRetType, out valueFetcher) || arrRetType.IsEnum)
+					append = string.Format ("ptr => {{\n\tusing (var num = Runtime.GetNSObject<NSNumber> (ptr)) {{\n\t\treturn ({1}) num{0};\n\t}}\n}}", arrRetType.IsEnum ? ".Int32Value" : valueFetcher, FormatType (arrRetType.DeclaringType, arrRetType));
+				else
+					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, arrType.Name, "array", minfo.mi.Name));
+			} else if (arrType == typeof (NSValue)) {
+				if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
+					valueFetcher = $".{arrRetType.Name}Value";
+				else if (!NSValueReturnMap.TryGetValue (arrRetType, out valueFetcher))
+					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, arrType.Name, "array", minfo.mi.Name));
+
+				append = string.Format ("ptr => {{\n\tusing (var val = Runtime.GetNSObject<NSValue> (ptr)) {{\n\t\treturn val{0};\n\t}}\n}}", valueFetcher);
+			} else
+				throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
 		} else
 			throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
 		return append;
@@ -1556,7 +1602,7 @@ public partial class Generator : IMemberGatherer {
 
 		var bindAsAtt = GetBindAsAttribute (pi) ?? GetBindAsAttribute (propInfo);
 		if (bindAsAtt != null)
-			return bindAsAtt.IsNullable;
+			return bindAsAtt.IsNullable || !bindAsAtt.IsValueType;
 
 		if (IsWrappedType (pi.ParameterType))
 			return true;
@@ -3216,8 +3262,13 @@ public partial class Generator : IMemberGatherer {
 				cast_a = " Runtime.GetINativeObject<" + FormatType (declaringType, GetCorrectGenericType (mi.ReturnType)) + "> (";
 				cast_b = $", {minfo.is_forced_owns})";
 			} else if (minfo != null && minfo.is_bindAs) {
-				cast_a = " Runtime.GetNSObject<" + FormatType (declaringType, GetCorrectGenericType (mi.ReturnType)) + "> (";
-				cast_b = ")" + GetFromBindAsWrapper (minfo);
+				if (mi.ReturnType == typeof (NSString)) {
+					cast_a = $" {GetFromBindAsWrapper (minfo)}Runtime.GetNSObject<{FormatType (declaringType, GetCorrectGenericType (mi.ReturnType))}> (";
+					cast_b = "))";
+				} else {
+					cast_a = " Runtime.GetNSObject<" + FormatType (declaringType, GetCorrectGenericType (mi.ReturnType)) + "> (";
+					cast_b = ")" + GetFromBindAsWrapper (minfo);
+				}
 			} else {
 				cast_a = " Runtime.GetNSObject<" + FormatType (declaringType, GetCorrectGenericType (mi.ReturnType)) + "> (";
 				cast_b = ")";
@@ -3233,7 +3284,11 @@ public partial class Generator : IMemberGatherer {
 			cast_b = "";
 		} else if (mai.Type.IsArray){
 			Type etype = mai.Type.GetElementType ();
-			if (etype == typeof (string)){
+			if (minfo != null && minfo.is_bindAs) {
+				var bindAsT = GetBindAsAttribute (minfo.mi).Type.GetElementType ();
+				cast_a = $"NSArray.ArrayFromHandleFunc <{FormatType (bindAsT.DeclaringType, bindAsT)}> (";
+				cast_b = $", {GetFromBindAsWrapper (minfo)})";
+			} else if (etype == typeof (string)) {
 				cast_a = "NSArray.StringArrayFromHandle (";
 				cast_b = ")";
 			} else if (minfo != null && minfo.protocolize) {
@@ -3576,7 +3631,12 @@ public partial class Generator : IMemberGatherer {
 				disposes.AppendFormat (GenerateDisposeString (probe_null, !mai.ZeroCopyStringMarshal), pi.Name);
 			} else if (mai.Type.IsArray){
 				Type etype = mai.Type.GetElementType ();
-				if (etype == typeof (string)){
+				if (HasBindAsAttribute (pi)) {//Alex
+					convs.AppendFormat ("var nsb_{0} = {1}\n", pi.Name, GetToBindAsWrapper (null, pi));
+					disposes.AppendFormat ("\nnsb_{0}?.Dispose ();", pi.Name);
+				} else if (HasBindAsAttribute (propInfo)) {
+					disposes.AppendFormat ("\nnsb_{0}?.Dispose ();", propInfo.Name);
+				} else if (etype == typeof (string)) {
 					if (null_allowed_override || HasAttribute (pi, typeof (NullAllowedAttribute))){
 						convs.AppendFormat ("var nsa_{0} = {1} == null ? null : NSArray.FromStrings ({1});\n", pi.Name, pi.Name.GetSafeParamName ());
 						disposes.AppendFormat ("if (nsa_{0} != null)\n\tnsa_{0}.Dispose ();\n", pi.Name);
@@ -3781,7 +3841,7 @@ public partial class Generator : IMemberGatherer {
  		}
 
 		if (propInfo != null && IsSetter (mi) && HasBindAsAttribute (propInfo)) {
-			convs.AppendFormat ("var nsb_{0} = {1}\n", propInfo.Name, GetToBindAsWrapper (minfo, null));
+			convs.AppendFormat ("var nsb_{0} = {1}\n", propInfo.Name, GetToBindAsWrapper (minfo));
 		}
 
 		if (convs.Length > 0)
