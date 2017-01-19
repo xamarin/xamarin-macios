@@ -131,6 +131,7 @@ namespace Xamarin.Bundler {
 		public string AotArguments = "static,asmonly,direct-icalls,";
 		public string AotOtherArguments = string.Empty;
 		public bool? LLVMAsmWriter;
+		public Dictionary<string, string> LLVMOptimizations = new Dictionary<string, string> ();
 
 		public Dictionary<string, string> EnvironmentVariables = new Dictionary<string, string> ();
 
@@ -157,6 +158,16 @@ namespace Xamarin.Bundler {
 
 		List<Abi> abis;
 		HashSet<Abi> all_architectures; // all Abis used in the app, including extensions.
+
+		public string GetLLVMOptimizations (Assembly assembly)
+		{
+			string opt;
+			if (LLVMOptimizations.TryGetValue (assembly.FileName, out opt))
+				return opt;
+			if (LLVMOptimizations.TryGetValue ("all", out opt))
+				return opt;
+			return null;
+		}
 
 		public void SetDlsymOption (string asm, bool dlsym)
 		{

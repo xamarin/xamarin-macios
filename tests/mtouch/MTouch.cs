@@ -415,6 +415,17 @@ namespace Xamarin
 				mtouch.AssertError (25, $"No SDK version was provided. Please add --sdk=X.Y to specify which {GetPlatformSimpleName (profile)} SDK should be used to build your application.");
 			}
 		}
+
+		[Test]
+		public void MT0026 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.LLVMOptimizations = "-O2";
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (26, "Could not parse the command line argument '--llvm-opt=-O2': Both assembly and optimization must be specified (assembly=optimization)");
+			}
+		}
 			
 		[Test]
 		public void MT0051 ()
