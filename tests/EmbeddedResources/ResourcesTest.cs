@@ -30,7 +30,7 @@ namespace EmbeddedResources {
 		[Test]
 		public void Embedded ()
 		{
-			var manager = new ResourceManager ("EmbeddedResources.Welcome", typeof(ResourcesTest).Assembly);
+			var manager = new ResourceManager ("xammac_tests.EmbeddedResources.Welcome", typeof(ResourcesTest).Assembly);
 			
 			Assert.AreEqual ("Welcome", manager.GetString ("String1", new CultureInfo ("en")), "en");
 			Assert.AreEqual ("G'day", manager.GetString ("String1", new CultureInfo ("en-AU")), "en-AU");
