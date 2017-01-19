@@ -94,6 +94,7 @@ namespace XamCore.Foundation
 	delegate void EnumerateDatesCallback (NSDate date, bool exactMatch, ref bool stop);
 	delegate void EnumerateIndexSetCallback (nuint idx, ref bool stop);
 #if MONOMAC
+	delegate void CloudKitRegistrationPreparationAction ([BlockCallback]CloudKitRegistrationPreparationHandler handler);
 	delegate void CloudKitRegistrationPreparationHandler (CKShare share, CKContainer container, NSError error);
 #endif
 
@@ -8752,7 +8753,7 @@ namespace XamCore.Foundation
 
 		[Mac (10,12)][Async]
 		[Export ("registerCloudKitShareWithPreparationHandler:")]
-		void RegisterCloudKitShare ([BlockCallback] Action<CloudKitRegistrationPreparationHandler> preparationHandler);
+		void RegisterCloudKitShare (CloudKitRegistrationPreparationAction preparationHandler);
 
 		[Mac (10,12)]
 		[Export ("registerCloudKitShare:container:")]
