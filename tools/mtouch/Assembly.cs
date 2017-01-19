@@ -333,6 +333,9 @@ namespace Xamarin.Bundler {
 				if (Target.GetEntryPoints ().ContainsKey ("UIApplicationMain"))
 					compiler_flags.AddFramework ("UIKit");
 				compiler_flags.LinkWithPInvokes (abi);
+
+				if (HasLinkWithAttributes && !App.EnableBitCode)
+					compiler_flags.ReferenceSymbols (Target.GetRequiredSymbols (this, true));
 			}
 
 			link_task = new LinkTask ()

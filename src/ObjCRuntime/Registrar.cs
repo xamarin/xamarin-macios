@@ -786,7 +786,7 @@ namespace XamCore.Registrar {
 		protected abstract ExportAttribute GetExportAttribute (TProperty property); // Return null if no attribute is found. Must check the base property (i.e. if property is overriding a property in a base class, must check the overridden property for the attribute).
 		protected abstract ExportAttribute GetExportAttribute (TMethod method); // Return null if no attribute is found. Must check the base method (i.e. if method is overriding a method in a base class, must check the overridden method for the attribute).
 		protected abstract Dictionary<TMethod, List<TMethod>> PrepareMethodMapping (TType type);
-		protected abstract RegisterAttribute GetRegisterAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
+		public abstract RegisterAttribute GetRegisterAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
 		protected abstract CategoryAttribute GetCategoryAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
 		protected abstract ConnectAttribute GetConnectAttribute (TProperty property); // Return null if no attribute is found. Do not consider inherited properties.
 		protected abstract ProtocolAttribute GetProtocolAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
@@ -1043,7 +1043,7 @@ namespace XamCore.Registrar {
 		
 		// overridable so that descendant classes can provide a faster implementation
 		// do not check base types.
-		protected virtual bool HasProtocolAttribute (TType type)
+		public virtual bool HasProtocolAttribute (TType type)
 		{
 			object dummy;
 			return TryGetAttribute (type, Foundation, StringConstants.ProtocolAttribute, out dummy);
@@ -2058,7 +2058,7 @@ namespace XamCore.Registrar {
 			return name;
 		}
 
-		protected string GetExportedTypeName (TType type, RegisterAttribute register_attribute)
+		public string GetExportedTypeName (TType type, RegisterAttribute register_attribute)
 		{
 			string name = null;
 			if (register_attribute != null) {

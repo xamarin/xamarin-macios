@@ -262,6 +262,9 @@
     <Compile Include="..\common\Target.cs">
       <Link>external\Target.cs</Link>
     </Compile>
+    <Compile Include="..\common\DerivedLinkContext.cs">
+      <Link>external\DerivedLinkContext.cs</Link>
+    </Compile>
     <Compile Include="..\common\Frameworks.cs">
       <Link>external\Frameworks.cs</Link>
     </Compile>

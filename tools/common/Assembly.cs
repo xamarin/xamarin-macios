@@ -45,8 +45,9 @@ namespace Xamarin.Bundler {
 		public HashSet<string> Frameworks = new HashSet<string> ();
 		public HashSet<string> WeakFrameworks = new HashSet<string> ();
 		public List<string> LinkerFlags = new List<string> (); // list of extra linker flags
-		public List<string> LinkWith = new List<string> (); // list of paths to native libraries to link with.
+		public List<string> LinkWith = new List<string> (); // list of paths to native libraries to link with, from LinkWith attributes
 		public HashSet<ModuleReference> UnresolvedModuleReferences;
+		public bool HasLinkWithAttributes { get; private set; }
 
 		bool? symbols_loaded;
 
@@ -123,6 +124,7 @@ namespace Xamarin.Bundler {
 					continue;
 				
 				// Let the linker remove it the attribute from the assembly
+				HasLinkWithAttributes = true;
 				
 				LinkWithAttribute linkWith = GetLinkWithAttribute (attr);
 				string libraryName = linkWith.LibraryName;

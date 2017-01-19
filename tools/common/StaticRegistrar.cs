@@ -1090,7 +1090,7 @@ namespace XamCore.Registrar {
 			return res;
 		}
 
-		protected override RegisterAttribute GetRegisterAttribute (TypeReference type)
+		public override RegisterAttribute GetRegisterAttribute (TypeReference type)
 		{
 			CustomAttribute attrib;
 			RegisterAttribute rv = null;
