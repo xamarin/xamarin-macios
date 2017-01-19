@@ -13,7 +13,6 @@ using Xamarin.Utils;
 namespace Xamarin.Bundler {
 	public partial class Assembly
 	{
-		public List<string> Satellites;
 		List<string> dylibs;
 		public string Dylib;
 

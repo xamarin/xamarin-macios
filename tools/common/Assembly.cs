@@ -18,6 +18,7 @@ using PlatformException = Xamarin.Bundler.MonoMacException;
 namespace Xamarin.Bundler {
 	public partial class Assembly
 	{
+		public List<string> Satellites;
 		public Application App { get { return Target.App; } }
 
 		string full_path;
@@ -391,6 +392,29 @@ namespace Xamarin.Bundler {
 		public override string ToString ()
 		{
 			return FileName;
+		}
+
+		// This returns the path to all related files:
+		// * The assembly itself
+		// * Any debug files (mdb/pdb)
+		// * Any config files
+		// * Any satellite assemblies
+		public IEnumerable<string> GetRelatedFiles ()
+		{
+			yield return FullPath;
+			var mdb = FullPath + ".mdb";
+			if (File.Exists (mdb))
+				yield return mdb;
+			var pdb = Path.ChangeExtension (FullPath, ".pdb");
+			if (File.Exists (pdb))
+				yield return pdb;
+			var config = FullPath + ".config";
+			if (File.Exists (config))
+				yield return config;
+			if (Satellites != null) {
+				foreach (var satellite in Satellites)
+					yield return satellite;
+			}
 		}
 	}
 }

@@ -118,6 +118,22 @@ namespace Xamarin
 		}
 
 		[Test]
+		public void RebuildTest_DontLink ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.NoFastSim = true;
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.CreateTemporaryApp ();
+				mtouch.Verbosity = 4;
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build 1");
+				mtouch.AssertOutputPattern ("Linking .*/testApp.exe into .*/PreBuild using mode 'None'");
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build 2");
+				mtouch.AssertOutputPattern ("Cached assemblies reloaded.");
+			}
+		}
+
+		[Test]
 		// Simulator
 		[TestCase (Target.Sim, Config.Release, PackageMdb.Default, MSym.Default,  false, false, "")]
 		[TestCase (Target.Sim, Config.Debug,   PackageMdb.Default, MSym.Default,  true,  false, "")]

@@ -751,6 +751,14 @@ namespace Xamarin.Bundler
 			return true;
 		}
 
+		public static void Touch (IEnumerable<string> filenames, DateTime? timestamp = null)
+		{
+			if (timestamp == null)
+				timestamp = DateTime.Now;
+			foreach (var filename in filenames)
+				new FileInfo (filename).LastWriteTime = timestamp.Value;
+		}
+
 		public static string Quote (string f)
 		{
 			if (f.IndexOf (' ') == -1 && f.IndexOf ('\'') == -1 && f.IndexOf (',') == -1 && f.IndexOf ('$') == -1)
