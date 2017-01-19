@@ -1127,12 +1127,21 @@ public partial class Generator : IMemberGatherer {
 		return "I" + type.Name;
 	}
 
-	// TODO: Alex
 	public static BindAsAttribute GetBindAsAttribute (ICustomAttributeProvider cu) => GetAttribute<BindAsAttribute> (cu) ?? GetAttribute<BindAsAttribute> ((cu as MethodInfo)?.ReturnParameter);
 	public static bool HasBindAsAttribute (ICustomAttributeProvider cu) => (GetAttribute<BindAsAttribute> (cu) ?? GetAttribute<BindAsAttribute> ((cu as MethodInfo)?.ReturnParameter)) != null;
 	static bool IsSetter (MethodInfo mi) => mi.IsSpecialName && mi.Name.StartsWith ("set_", StringComparison.Ordinal);
-	bool IsSmartEnum (Type type) => (type.IsValueType && type.GetFields ().Any (f => GetAttribute<FieldAttribute> (f) != null)) || Type.GetType (type.AssemblyQualifiedName.Replace (type.Name, $"{type.Name}Extensions")) != null;
 	static string GetBindAsExceptionString (string box, string retType, string containerType, string container, string memberName) => $"Could not {box} type {retType} from {containerType} {container} used on {memberName} member decorated with [BindAs].";
+
+	bool IsSmartEnum (Type type)
+	{
+		if (!type.IsEnum)
+			return false;
+		// First check if the smart enum candidate still holds the FieldAtttribute data
+		if (type.GetFields ().Any (f => GetAttribute<FieldAttribute> (f) != null))
+			return true;
+		// If the above fails it's possible that it comes from another dll (like X.I.dll) so we look for the [Enum]Extensions class existence
+		return Type.GetType (type.AssemblyQualifiedName.Replace (type.Name, $"{type.Name}Extensions")) != null;
+	}
 
 	static Dictionary<Type,string> NSValueCreateMap = new Dictionary<Type, string> {
 		{ typeof (CGAffineTransform), "CGAffineTransform" }, { typeof (NSRange), "Range" },
@@ -1152,7 +1161,7 @@ public partial class Generator : IMemberGatherer {
 #endif
 	};
 
-	string GetToBindAsWrapper (MemberInformation minfo = null, ParameterInfo pi = null, PropertyInfo propInfo = null)
+	string GetToBindAsWrapper (MemberInformation minfo = null, ParameterInfo pi = null)
 	{
 		BindAsAttribute attrib = null;
 		Type originalType = null;
@@ -1164,7 +1173,7 @@ public partial class Generator : IMemberGatherer {
 			var method = minfo.mi as MethodInfo;
 			originalType = method?.ReturnType ?? property?.PropertyType;
 		} else {
-			attrib = GetBindAsAttribute (pi) ?? GetBindAsAttribute (propInfo);
+			attrib = GetBindAsAttribute (pi);
 			originalType = pi.ParameterType;
 		}
 
@@ -1194,14 +1203,15 @@ public partial class Generator : IMemberGatherer {
 			var arrType = originalType.GetElementType ();
 			var arrRetType = Nullable.GetUnderlyingType (retType.GetElementType ()) ?? retType.GetElementType ();
 			var valueConverter = string.Empty;
+			var denullify = isNullable ? ".Value" : string.Empty;
+			var parameterName = pi != null ? pi.Name.GetSafeParamName () : "value";
 
 			if (arrType == typeof (NSString))
-				valueConverter = "o{0}.GetConstant (), {1});";
-				//temp = string.Format ("NSArray.FromNSObjects (o => o{0}.GetConstant (), {1});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-			else if (arrType == typeof (NSNumber))
-				valueConverter = string.Format ("new NSNumber ({0}o{{0}}), {{1}});", arrRetType.IsEnum ? "(int)" : string.Empty);
-				//temp = string.Format ("NSArray.FromNSObjects (o => new NSNumber ({2}o{0}), {1});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value", arrRetType.IsEnum ? "(int)" : string.Empty);
-			else if (arrType == typeof (NSValue)) {
+				valueConverter = $"o{denullify}.GetConstant (), {parameterName});";
+			else if (arrType == typeof (NSNumber)) {
+				var cast = arrRetType.IsEnum ? "(int)" : string.Empty;
+				valueConverter = $"new NSNumber ({cast}o{denullify}), {parameterName});";
+			} else if (arrType == typeof (NSValue)) {
 				var typeStr = string.Empty;
 				if (!NSValueCreateMap.TryGetValue (arrRetType, out typeStr)) {
 					if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
@@ -1209,11 +1219,10 @@ public partial class Generator : IMemberGatherer {
 					else
 						throw new BindingException (1049, true, GetBindAsExceptionString ("box", arrRetType.Name, originalType.Name, "array", minfo?.mi?.Name ?? pi?.Name));
 				}
-				valueConverter = string.Format ("NSValue.From{0} (o{{0}}), {{1}});", typeStr);
-				//temp = string.Format ("NSArray.FromNSObjects (o => NSValue.From{2} (o{0}), {1});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value", typeStr);
+				valueConverter = $"NSValue.From{typeStr} (o{denullify}), {parameterName});";
 			} else
 				throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
-			temp = string.Format ($"NSArray.FromNSObjects (o => {valueConverter}", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			temp = $"NSArray.FromNSObjects (o => {valueConverter}";
 		} else
 			throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
 
@@ -3631,7 +3640,7 @@ public partial class Generator : IMemberGatherer {
 				disposes.AppendFormat (GenerateDisposeString (probe_null, !mai.ZeroCopyStringMarshal), pi.Name);
 			} else if (mai.Type.IsArray){
 				Type etype = mai.Type.GetElementType ();
-				if (HasBindAsAttribute (pi)) {//Alex
+				if (HasBindAsAttribute (pi)) {
 					convs.AppendFormat ("var nsb_{0} = {1}\n", pi.Name, GetToBindAsWrapper (null, pi));
 					disposes.AppendFormat ("\nnsb_{0}?.Dispose ();", pi.Name);
 				} else if (HasBindAsAttribute (propInfo)) {
