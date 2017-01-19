@@ -164,7 +164,7 @@ namespace Xamarin.MacDev.Tasks
 			if (Resources.Length == 0)
 				return true;
 
-			Parallel.ForEach (Resources, new ParallelOptions { MaxDegreeOfParallelism = 4 }, (item) => {
+			Parallel.ForEach (Resources, new ParallelOptions { MaxDegreeOfParallelism = Math.Max (Environment.ProcessorCount / 2, 1) }, (item) => {
 				Codesign (item);
 			});
 
