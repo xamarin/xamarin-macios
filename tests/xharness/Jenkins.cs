@@ -417,7 +417,7 @@ namespace xharness
 				var exec = new MacExecuteTask (build)
 				{
 					Ignored = ignored || !IncludeClassicMac,
-					NoBitnessInAppPath = project.IsBclTest
+					BCLTest = project.IsBclTest
 				};
 				Tasks.Add (exec);
 
@@ -1861,7 +1861,7 @@ function oninitialload ()
 	class MacExecuteTask : MacTask
 	{
 		public string Path;
-		public bool NoBitnessInAppPath;
+		public bool BCLTest;
 
 		public MacExecuteTask (BuildToolTask build_task)
 			: base (build_task)
@@ -1895,7 +1895,10 @@ function oninitialload ()
 				suffix = "-unifiedXM45-32";
 				break;
 			}
-			Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), "bin", NoBitnessInAppPath ? "" : BuildTask.ProjectPlatform, BuildTask.ProjectConfiguration + suffix, name + ".app", "Contents", "MacOS", name);
+			if (BCLTest)
+				Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), "bin", BuildTask.ProjectConfiguration + suffix, name + "Tests.app", "Contents", "MacOS", name);
+			else
+				Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), "bin", BuildTask.ProjectPlatform, BuildTask.ProjectConfiguration + suffix, name + ".app", "Contents", "MacOS", name);
 
 			using (var resource = await NotifyBlockingWaitAsync (Jenkins.DesktopResource.AcquireConcurrentAsync ())) {
 				using (var proc = new Process ()) {
