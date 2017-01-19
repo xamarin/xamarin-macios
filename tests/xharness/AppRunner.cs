@@ -365,7 +365,7 @@ namespace xharness
 					var path = listener_log.FullPath;
 					path = path.Replace (".log", ".xml");
 					testsResults.Save (path);
-
+					Logs.Add (new LogFile ("Test xml", path));
 					// we want to keep the old TestResult page,
 					GenerateHumanReadableLogs (listener_log.FullPath, header, testsResults);
 					
