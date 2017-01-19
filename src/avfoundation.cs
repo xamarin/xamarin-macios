@@ -1267,15 +1267,19 @@ namespace XamCore.AVFoundation {
 		[Export ("playing")]
 		bool Playing { [Bind ("isPlaying")] get; }
 
+		[Async]
 		[Export ("scheduleBuffer:completionHandler:")]
 		void ScheduleBuffer (AVAudioPcmBuffer buffer, [NullAllowed] Action completionHandler);
 
+		[Async]
 		[Export ("scheduleBuffer:atTime:options:completionHandler:")]
 		void ScheduleBuffer (AVAudioPcmBuffer buffer, [NullAllowed] AVAudioTime when, AVAudioPlayerNodeBufferOptions options, [NullAllowed] Action completionHandler);
 
+		[Async]
 		[Export ("scheduleFile:atTime:completionHandler:")]
 		void ScheduleFile (AVAudioFile file, [NullAllowed] AVAudioTime when, [NullAllowed] Action completionHandler);
 
+		[Async]
 		[Export ("scheduleSegment:startingFrame:frameCount:atTime:completionHandler:")]
 		void ScheduleSegment (AVAudioFile file, long startFrame, uint /* AVAudioFrameCount = uint32_t */ numberFrames, [NullAllowed] AVAudioTime when, [NullAllowed] Action completionHandler);
 

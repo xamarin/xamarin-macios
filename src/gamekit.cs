@@ -773,6 +773,7 @@ namespace XamCore.GameKit {
 		void UnregisterAllListeners ();
 
 		[iOS (7,0), Mac (10,10)]
+		[Async (ResultTypeName = "GKIdentityVerificationSignatureResult")]
 		[Export ("generateIdentityVerificationSignatureWithCompletionHandler:")]
 		void GenerateIdentityVerificationSignature ([NullAllowed] GKIdentityVerificationSignatureHandler completionHandler);
 

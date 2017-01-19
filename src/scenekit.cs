@@ -2222,6 +2222,7 @@ namespace XamCore.SceneKit {
 		[Abstract]
 #endif
 		[Mac (10,10)]
+		[Async]
 		[Export ("prepareObjects:withCompletionHandler:")]
 		void Prepare (NSObject [] objects, [NullAllowed] Action<bool> completionHandler);
 
@@ -2230,6 +2231,7 @@ namespace XamCore.SceneKit {
 		[Abstract] // this protocol existed before iOS 9 (or OSX 10.11) and we cannot add abstract members to it (breaking changes)
 	#endif
 		[iOS (9,0)][Mac (10,11, onlyOn64 : true)] // SKTransition -> SpriteKit -> only on 64 bits
+		[Async]
 		[Export ("presentScene:withTransition:incomingPointOfView:completionHandler:")]
 		void PresentScene (SCNScene scene, SKTransition transition, [NullAllowed] SCNNode pointOfView, [NullAllowed] Action completionHandler);
 #endif
