@@ -122,6 +122,8 @@ namespace Xamarin.Bundler {
 		public bool? UseMonoFramework;
 		public bool? PackageMonoFramework;
 
+		public Dictionary<string, string> LLVMOptimizations = new Dictionary<string, string> ();
+
 		//
 		// Linker config
 		//
@@ -153,6 +155,16 @@ namespace Xamarin.Bundler {
 
 		List<Abi> abis;
 		HashSet<Abi> all_architectures; // all Abis used in the app, including extensions.
+
+		public string GetLLVMOptimizations (Assembly assembly)
+		{
+			string opt;
+			if (LLVMOptimizations.TryGetValue (assembly.FileName, out opt))
+				return opt;
+			if (LLVMOptimizations.TryGetValue ("all", out opt))
+				return opt;
+			return null;
+		}
 
 		public void SetDlsymOption (string asm, bool dlsym)
 		{
@@ -2039,10 +2051,6 @@ namespace Xamarin.Bundler {
 			GetCompilerFlags (flags, ifile, Language);
 			
 			flags.AddOtherFlag ($"-m{Driver.TargetMinSdkName}-version-min={App.DeploymentTarget.ToString ()}");
-
-			if (App.EnableLLVMOnlyBitCode)
-				// The AOT compiler doesn't optimize the bitcode so clang will do it
-				flags.AddOtherFlag ("-O2 -fexceptions");
 		}
 		
 		void GetSharedCompilerFlags (CompilerFlags flags, string install_name)

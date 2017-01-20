@@ -1364,6 +1364,16 @@ namespace Xamarin.Bundler
 				}
 			},
 			{ "llvm-asm", "Make the LLVM compiler emit assembly files instead of object files. [Deprecated]", v => { llvm_asmwriter = true; }, true},
+			{ "llvm-opt=", "Specify how to optimize the LLVM output (only applicable when using LLVM to compile to bitcode), per assembly: 'assembly'='optimizations', where 'assembly is the filename (including extension) of the assembly (the special value 'all' can be passed to set the same optimization for all assemblies), and 'optimizations' are optimization arguments. Valid optimization flags are Clang optimization flags.", v =>
+				{
+						var equals = v.IndexOf ('=');
+						if (equals == -1)
+							throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--llvm-opt=" + v, "Both assembly and optimization must be specified (assembly=optimization)");
+						var asm = v.Substring (0, equals);
+						var opt = v.Substring (equals + 1); // An empty string is valid here, meaning 'no optimizations'
+						app.LLVMOptimizations [asm] = opt;
+				}
+			},
 			{ "http-message-handler=", "Specify the default HTTP message handler for HttpClient", v => { http_message_handler = v; }},
 			{ "output-format=", "Specify the output format for some commands. Possible values: Default, XML", v =>
 				{
