@@ -879,7 +879,9 @@ namespace Introspection {
 			return false;
 		}
 
+#if !MONOMAC
 		[Test]
+#endif
 		public void AsyncCandidates ()
 		{
 			int n = 0;
@@ -927,8 +929,15 @@ namespace Introspection {
 					if (p.Length == 0)
 						continue;
 					var last = p [p.Length - 1];
-					if (last.Name != "completionHandler")
+					// trying to limit false positives and the need for large ignore lists to maintain
+					// unlike other introspection tests a failure does not mean a broken API
+					switch (last.Name) {
+					case "completionHandler":
+					case "completion":
+						break;
+					default:
 						continue;
+					}
 					if (!last.ParameterType.IsSubclassOf (typeof (Delegate)))
 						continue;
 
