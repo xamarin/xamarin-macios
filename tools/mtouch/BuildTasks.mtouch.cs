@@ -349,10 +349,6 @@ namespace Xamarin.Bundler
 			GetCompilerFlags (App, flags, ifile, Language);
 
 			flags.AddOtherFlag ($"-m{Driver.GetTargetMinSdkName (App)}-version-min={App.DeploymentTarget.ToString ()}");
-
-			if (App.EnableLLVMOnlyBitCode)
-				// The AOT compiler doesn't optimize the bitcode so clang will do it
-				flags.AddOtherFlag ("-O2 -fexceptions");
 		}
 
 		void GetSharedCompilerFlags (CompilerFlags flags, string install_name)
