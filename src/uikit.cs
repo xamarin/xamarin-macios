@@ -14699,6 +14699,7 @@ namespace XamCore.UIKit {
 		UIPrinter FromUrl (NSUrl url);
 	
 		[Export ("contactPrinter:")]
+		[Async]
 		void ContactPrinter (UIPrinterContactPrinterHandler completionHandler);
 	}
 
@@ -15644,6 +15645,7 @@ namespace XamCore.UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Export ("addOptionWithTitle:image:order:handler:")]
+		[Async]
 		void AddOption (string title, [NullAllowed] UIImage image, UIDocumentMenuOrder order, Action completionHandler);
 	}
 

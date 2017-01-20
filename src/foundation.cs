@@ -11064,9 +11064,11 @@ namespace XamCore.Foundation
 #endif
 
 		[Export ("savePresentedItemChangesWithCompletionHandler:")]
+		[Async]
 		void SavePresentedItemChanges (Action<NSError> completionHandler);
 
 		[Export ("accommodatePresentedItemDeletionWithCompletionHandler:")]
+		[Async]
 		void AccommodatePresentedItemDeletion (Action<NSError> completionHandler);
 
 		[Export ("presentedItemDidMoveToURL:")]
@@ -11085,6 +11087,7 @@ namespace XamCore.Foundation
 		void PresentedItemResolveConflictVersion (NSFileVersion version);
 
 		[Export ("accommodatePresentedSubitemDeletionAtURL:completionHandler:")]
+		[Async]
 		void AccommodatePresentedSubitemDeletion (NSUrl url, Action<NSError> completionHandler);
 
 		[Export ("presentedSubitemDidAppearAtURL:")]
