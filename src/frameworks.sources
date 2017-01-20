@@ -973,6 +973,7 @@ NETWORKEXTENSION_API_SOURCES = \
 
 NETWORKEXTENSION_CORE_SOURCES = \
 	NetworkExtension/NEHotspotHelperOptions.cs \
+	NetworkExtension/NEPacketTunnelFlow.cs \
 	NetworkExtension/NEVpnConnectionStartOptions.cs \
 
 NETWORKEXTENSION_SOURCES = \

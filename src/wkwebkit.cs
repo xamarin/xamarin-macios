@@ -281,12 +281,15 @@ namespace XamCore.WebKit
 		NSSet<NSString> AllWebsiteDataTypes { get; }
 	
 		[Export ("fetchDataRecordsOfTypes:completionHandler:")]
+		[Async]
 		void FetchDataRecordsOfTypes (NSSet<NSString> dataTypes, Action<NSArray> completionHandler);
 	
 		[Export ("removeDataOfTypes:forDataRecords:completionHandler:")]
+		[Async]
 		void RemoveDataOfTypes (NSSet<NSString> dataTypes, WKWebsiteDataRecord[] dataRecords, Action completionHandler);
 	
 		[Export ("removeDataOfTypes:modifiedSince:completionHandler:")]
+		[Async]
 		void RemoveDataOfTypes (NSSet<NSString> websiteDataTypes, NSDate date, Action completionHandler);
 	}
 	
