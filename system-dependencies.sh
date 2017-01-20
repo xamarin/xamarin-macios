@@ -380,7 +380,7 @@ function check_mono () {
 	MIN_MONO_VERSION=`grep MIN_MONO_VERSION= Make.config | sed 's/.*=//'`
 	MAX_MONO_VERSION=`grep MAX_MONO_VERSION= Make.config | sed 's/.*=//'`
 
-	ACTUAL_MONO_VERSION=`$PKG_CONFIG_PATH --modversion mono`.`cat /Library/Frameworks/Mono.framework/Home/updateinfo | cut -d' ' -f2 | rev | cut -c-3 | rev | awk '{print(int($0))}'`
+	ACTUAL_MONO_VERSION=`$PKG_CONFIG_PATH --modversion mono`.`cat /Library/Frameworks/Mono.framework/Home/updateinfo | cut -d' ' -f2 | cut -c6- | awk '{print(int($0))}'`
 	if ! is_at_least_version $ACTUAL_MONO_VERSION $MIN_MONO_VERSION; then
 		if ! test -z $PROVISION_MONO; then
 			install_mono
@@ -394,7 +394,7 @@ function check_mono () {
 	elif is_at_least_version $ACTUAL_MONO_VERSION $MAX_MONO_VERSION; then
 		if ! test -z $PROVISION_MONO; then
 			install_mono
-			ACTUAL_MONO_VERSION=`$PKG_CONFIG_PATH --modversion mono`.`cat /Library/Frameworks/Mono.framework/Home/updateinfo | cut -d' ' -f2 | rev | cut -c-3 | rev | awk '{print(int($0))}'`
+			ACTUAL_MONO_VERSION=`$PKG_CONFIG_PATH --modversion mono`.`cat /Library/Frameworks/Mono.framework/Home/updateinfo | cut -d' ' -f2 | cut -c6- | awk '{print(int($0))}'`
 		else
 			fail "Your mono version is too new, max version is $MAX_MONO_VERSION, found $ACTUAL_MONO_VERSION."
 			fail "You may edit Make.config and change MAX_MONO_VERSION to your actual version to continue the"
