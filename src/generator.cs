@@ -1131,6 +1131,7 @@ public partial class Generator : IMemberGatherer {
 	public static bool HasBindAsAttribute (ICustomAttributeProvider cu) => (GetAttribute<BindAsAttribute> (cu) ?? GetAttribute<BindAsAttribute> ((cu as MethodInfo)?.ReturnParameter)) != null;
 	static bool IsSetter (MethodInfo mi) => mi.IsSpecialName && mi.Name.StartsWith ("set_", StringComparison.Ordinal);
 	static string GetBindAsExceptionString (string box, string retType, string containerType, string container, string memberName) => $"Could not {box} type {retType} from {containerType} {container} used on {memberName} member decorated with [BindAs].";
+	bool IsMemberInsideProtocol (Type type) => IsProtocol (type) || IsModel (type);
 
 	bool IsSmartEnum (Type type)
 	{
@@ -1166,6 +1167,10 @@ public partial class Generator : IMemberGatherer {
 		BindAsAttribute attrib = null;
 		Type originalType = null;
 		string temp = null;
+		var declaringType = minfo?.mi?.DeclaringType ?? pi?.Member?.DeclaringType;
+
+		if (IsMemberInsideProtocol (declaringType))
+			throw new BindingException (1050, true, "[BindAs] cannot be used inside Protocol or Model types. Type: {0}", declaringType.Name);
 
 		if (pi == null) {
 			attrib = GetBindAsAttribute (minfo.mi);
@@ -1259,6 +1264,10 @@ public partial class Generator : IMemberGatherer {
 
 	string GetFromBindAsWrapper (MemberInformation minfo)
 	{
+		var declaringType = minfo.mi.DeclaringType;
+		if (IsMemberInsideProtocol (declaringType))
+			throw new BindingException (1050, true, "[BindAs] cannot be used inside Protocol or Model types. Type: {0}", declaringType.Name);
+
 		var attrib = GetBindAsAttribute (minfo.mi);
 		var retType = Nullable.GetUnderlyingType (attrib.Type) ?? attrib.Type;
 		var isValueType = retType.IsValueType;
@@ -3118,6 +3127,9 @@ public partial class Generator : IMemberGatherer {
 			}
 
 			if (minfo.is_bindAs) {
+				if (IsMemberInsideProtocol (minfo.mi.DeclaringType))
+					throw new BindingException (1050, true, "[BindAs] cannot be used inside Protocol or Model types. Type: {0}", minfo.mi.DeclaringType.Name);
+
 				var bindAsAttrib = GetBindAsAttribute (minfo.mi);
 				sb.Append (prefix + FormatType (bindAsAttrib.Type.DeclaringType, GetCorrectGenericType (bindAsAttrib.Type)));
 			} else
