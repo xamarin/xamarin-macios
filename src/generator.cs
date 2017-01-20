@@ -4287,7 +4287,7 @@ public partial class Generator : IMemberGatherer {
 		throw new BindingException (1023, true, "Async method {0} with more than one result parameter in the callback by neither ResultTypeName or ResultType", minfo.mi);
 	}
 
-	string GetInvokeParamList (ParameterInfo [] parameters, bool prefix = true)
+	string GetInvokeParamList (ParameterInfo [] parameters, bool suffix = true)
 	{
 		StringBuilder sb = new StringBuilder ();
 		bool comma = false;
@@ -4296,9 +4296,9 @@ public partial class Generator : IMemberGatherer {
 				sb.Append (", ");
 			}
 			comma = true;
-			if (prefix)
-				sb.Append ('_');
 			sb.Append (pi.Name.GetSafeParamName ());
+			if (suffix)
+				sb.Append ('_');
 		}
 		return sb.ToString ();
 	}
@@ -4375,8 +4375,8 @@ public partial class Generator : IMemberGatherer {
 		int nesting_level = 1;
 		if (minfo.has_nserror && !tuple) {
 			var var_name = minfo.async_completion_params.Last ().Name.GetSafeParamName ();;
-			print ("if (_{0} != null)", var_name);
-			print ("\ttcs.SetException (new NSErrorException(_{0}));", var_name);
+			print ("if ({0}_ != null)", var_name);
+			print ("\ttcs.SetException (new NSErrorException({0}_));", var_name);
 			print ("else");
 			++nesting_level; ++indent;
 		}
@@ -4386,9 +4386,9 @@ public partial class Generator : IMemberGatherer {
 		else if (tuple) {
 			var cond_name = minfo.async_completion_params [0].Name;
 			var var_name = minfo.async_completion_params.Last ().Name;
-			print ("tcs.SetResult (new Tuple<bool,NSError> (_{0}, _{1}));", cond_name, var_name);
+			print ("tcs.SetResult (new Tuple<bool,NSError> ({0}_, {1}_));", cond_name, var_name);
 		} else if (minfo.is_single_arg_async)
-			print ("tcs.SetResult (_{0});", minfo.async_completion_params [0].Name);
+			print ("tcs.SetResult ({0}_);", minfo.async_completion_params [0].Name);
 		else
 			print ("tcs.SetResult (new {0} ({1}));",
 				GetAsyncTaskType (minfo),
