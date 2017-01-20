@@ -617,11 +617,13 @@ namespace XamCore.GameKit {
 #if MONOMAC
 		[Mac (10,10)]
 		[Export ("challengeComposeControllerWithMessage:players:completionHandler:")]
+		[Async (ResultTypeName = "GKChallengeComposeResult")]
 		NSViewController ChallengeComposeController ([NullAllowed] string message, [NullAllowed] GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler completionHandler);
 #else
 		[NoWatch]
 		[iOS (8,0)]
 		[Export ("challengeComposeControllerWithMessage:players:completionHandler:")]
+		[Async (ResultTypeName = "GKChallengeComposeResult")]
 		UIViewController ChallengeComposeController ([NullAllowed] string message, [NullAllowed] GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler completionHandler);
 #endif
 	}
@@ -898,6 +900,7 @@ namespace XamCore.GameKit {
 
 		[iOS (8,0), Mac (10,10)]
 		[Export ("chooseBestHostingPlayerWithCompletionHandler:")]
+		[Async]
 		void ChooseBestHostingPlayer (Action<GKPlayer> completionHandler);
 
 		[iOS (8,0), Mac(10,10)]
@@ -1404,11 +1407,13 @@ namespace XamCore.GameKit {
 #if MONOMAC
 		[Mac (10,10)]
 		[Export ("challengeComposeControllerWithMessage:players:completionHandler:")]
+		[Async (ResultTypeName = "GKChallengeComposeResult")]
 		NSViewController ChallengeComposeController ([NullAllowed] string message, GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler completionHandler);
 #else
 		[NoWatch]
 		[iOS (8,0)]
 		[Export ("challengeComposeControllerWithMessage:players:completionHandler:")]
+		[Async (ResultTypeName = "GKChallengeComposeResult")]
 		UIViewController ChallengeComposeController ([NullAllowed] string message, GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler completionHandler);
 #endif
 	

@@ -2075,6 +2075,7 @@ namespace XamCore.AVFoundation {
 		[iOS (9,0), Mac (10,11)]
 		[Static]
 		[Export ("instantiateWithComponentDescription:options:completionHandler:")]
+		[Async]
 		void FromComponentDescription (AudioComponentDescription audioComponentDescription, AudioComponentInstantiationOptions options, Action<AVAudioUnit, NSError> completionHandler);
 
 		[iOS (9,0), Mac (10,11, onlyOn64 : true)]

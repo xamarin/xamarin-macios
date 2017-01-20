@@ -911,6 +911,9 @@ namespace Introspection {
 					if (m.IsSpecialName)
 						continue;
 
+					if (IgnoreAsync (m))
+						continue;
+
 					// some calls are "natively" async
 					if (m.Name.IndexOf ("Async", StringComparison.Ordinal) != -1)
 						continue;
@@ -939,6 +942,16 @@ namespace Introspection {
 				}
 			}
 			AssertIfErrors ("{0} errors found in {1} signatures validated{2}", Errors, n, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
+		}
+
+		protected virtual bool IgnoreAsync (MethodInfo m)
+		{
+			switch (m.Name) {
+			// we bind PerformChangesAndWait which does the same
+			case "PerformChanges":
+				return m.DeclaringType.Name == "PHPhotoLibrary";
+			}
+			return false;
 		}
 	}
 }
