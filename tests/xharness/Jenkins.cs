@@ -850,6 +850,8 @@ function addlog (msg)
 {
 	if (ajax_log == null)
 		ajax_log = document.getElementById ('ajax-log');
+	if (ajax_log == null)
+		return;
 	var newText = msg + ""\n"" + ajax_log.innerText;
 	if (newText.length > 1024)
 		newText = newText.substring (0, 1024);
@@ -972,7 +974,6 @@ function autorefresh()
 	xhttp.open(""GET"", window.location.href, true);
 	xhttp.send();
 }
-setInterval(autorefresh, 1000);
 
 function autoshowdetailsmessage (id)
 {
@@ -1003,8 +1004,10 @@ function oninitialload ()
 		if (evt != '')
 			autoshowdetailsmessage (evt);
 	}
-}
-</script>");
+}");
+				if (IsServerMode)
+					writer.WriteLine ("setInterval (autorefresh, 1000);");
+				writer.WriteLine ("</script>");
 				writer.WriteLine ("<body onload='oninitialload ();'>");
 
 				if (IsServerMode) {
