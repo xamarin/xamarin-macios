@@ -1209,7 +1209,17 @@ function oninitialload ()
 							if (logs.Count () > 0) {
 								foreach (var log in logs) {
 									log.Flush ();
-									writer.WriteLine ("<a href='{0}' type='text/plain'>{1}</a><br />", System.Web.HttpUtility.UrlPathEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description);
+									string log_type = System.Web.MimeMapping.GetMimeMapping (log.FullPath);
+									string log_target;
+									switch (log_type) {
+									case "text/xml":
+										log_target = "_top";
+										break;
+									default:
+										log_target = "_self";
+										break;
+									}
+									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", System.Web.HttpUtility.UrlPathEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
 									if (log.Description == "Test log" || log.Description == "Execution log") {
 										var summary = string.Empty;
 										var fails = new List<string> ();
