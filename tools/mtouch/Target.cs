@@ -545,8 +545,21 @@ namespace Xamarin.Bundler
 			assemblies = linked_assemblies;
 
 			// Make the assemblies point to the right path.
-			foreach (var a in Assemblies)
+			foreach (var a in Assemblies) {
 				a.FullPath = Path.Combine (PreBuildDirectory, a.FileName);
+				// The linker can copy files (and not update timestamps), and then we run into this sequence:
+				// * We run the linker, nothing changes, so the linker copies 
+				//   all files to the PreBuild directory, with timestamps intact.
+				// * This means that for instance SDK assemblies will have the original
+				//   timestamp from their installed location, and the exe will have the 
+				//   timestamp of when it was built.
+				// * mtouch is executed again for some reason, and none of the input assemblies changed.
+				//   We'll still re-execute the linker, because at least one of the input assemblies
+				//   (the .exe) has a newer timestamp than some of the assemblies in the PreBuild directory.
+				// So here we manually touch all the assemblies we have, to make sure their timestamps
+				// change (this is us saying 'we know these files are up-to-date at this point in time').
+				Driver.Touch (a.GetRelatedFiles ());
+			}
 
 			File.WriteAllText (cache_path, string.Join ("\n", linked_assemblies));
 		}
