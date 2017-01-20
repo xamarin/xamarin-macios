@@ -1254,7 +1254,10 @@ function oninitialload ()
 											using (var reader = log.GetReader ()) {
 												while (!reader.EndOfStream) {
 													string line = reader.ReadLine ()?.Trim ();
-													if (line.Contains (": error"))
+													// Sometimes we put error messages in pull request descriptions
+													// Then Jenkins create environment variables containing the pull request descriptions (and other pull request data)
+													// So exclude any lines matching 'ghprbPull', to avoid reporting those environment variables as build errors.
+													if (line.Contains (": error") && !line.Contains ("ghprbPull"))
 														errors.Add (line);
 												}
 											}
