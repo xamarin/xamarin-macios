@@ -2169,7 +2169,6 @@ public partial class NotificationService : UNNotificationServiceExtension
 		{
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = Profile.iOS;
-				mtouch.Verbosity = 23;
 				var tmp = mtouch.CreateTemporaryDirectory ();
 				mtouch.CreateTemporaryCacheDirectory ();
 
@@ -2190,7 +2189,8 @@ public partial class NotificationService : UNNotificationServiceExtension
 				var exeStamp = File.GetLastWriteTimeUtc (exePath);
 				var mdbStamp = File.GetLastWriteTimeUtc (mdbPath);
 
-				// Recompile the exe, adding only whitespace. This will only change the debuf files
+				System.Threading.Thread.Sleep (1000); // HFS does not have sub-second timestamp resolution, so make sure the timestamps actually change...
+				// Recompile the exe, adding only whitespace. This will only change the debug files
 				MTouch.CompileTestAppExecutable (tmp, "\n\n" + code + "\n\n", "/debug:full");
 
 				// Rebuild the app
