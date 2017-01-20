@@ -58,7 +58,11 @@ namespace XamCore.AppKit {
 		{
 			var list = new List<NSOpenGLPixelFormatAttribute> ();
 			for (int i = 0; i < args.Length; i++){
-				var v = (NSOpenGLPixelFormatAttribute) args [i];
+				NSOpenGLPixelFormatAttribute v;
+				if (args[i] is NSOpenGLPixelFormatAttribute)
+					v = (NSOpenGLPixelFormatAttribute) args [i];
+				else
+					v = ((NSOpenGLPixelFormatAttribute) (int)args [i]);
 				switch (v){
 				case NSOpenGLPixelFormatAttribute.AllRenderers:
 				case NSOpenGLPixelFormatAttribute.DoubleBuffer:
