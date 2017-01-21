@@ -48,9 +48,37 @@ public class ForcedTypeAttribute : Attribute {
 //
 // BindAsAttribute
 //
-// // TODO Alex: finish documenting this
-// The BindAsAttribute allows binding a container type (i.e. NSNumber) into a more accurate types
-// like bool?.
+// The BindAsAttribute allows binding NSNumber|NSValue|NSString(enums) into more accurate C# types.
+// It can be used in methods, parameters and properties. The only restriction is that your member mustn't
+// be inside a [Protocol] or [Model] interface.
+//
+// For example:
+//
+//	[return: BindAs (typeof (bool?))]
+//	[Export ("shouldDrawAt:")]
+//	NSNumber ShouldDraw ([BindAs (typeof (CGRect))] NSValue rect);
+//
+// Would output:
+//
+//	[Export ("shouldDrawAt:")]
+//	bool? ShouldDraw (CGRect rect) { ... }
+//
+// Internally we will do the bool? <-> NSNumber and CGRect <-> NSValue conversions.
+//
+// BindAs also supports arrays of NSNumber|NSValue|NSString(enums)
+//
+// For example:
+//
+//	[BindAs (typeof (CAScroll []))]
+//	[Export ("supportedScrollModes")]
+//	NSString [] SupportedScrollModes { get; set; }
+//
+// Would output:
+//
+//	[Export ("supportedScrollModes")]
+//	CAScroll [] SupportedScrollModes { get; set; }
+//
+// CAScroll is a NSString backed enum, we will fetch the right NSString value and handle the type conversion.
 //
 [AttributeUsage (AttributeTargets.ReturnValue | AttributeTargets.Property | AttributeTargets.Parameter, AllowMultiple = false)]
 public class BindAsAttribute : Attribute {

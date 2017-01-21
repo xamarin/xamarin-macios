@@ -2083,6 +2083,52 @@ Example:
 You can then call the extension method `GetDomain` to get the domain constant of
 any error.
 
+
+## BindAsAttribute
+
+The `BindAsAttribute` allows binding `NSNumber` `NSValue` and `NSString`(enums) into more accurate C# types this allows an easy way to create better .NET API.
+
+It can be used in methods, parameters and properties. The only restriction is that your member **mustn't** be inside a `[Protocol]` or `[Model]` interface.
+
+For example:
+
+```
+[return: BindAs (typeof (bool?))]
+[Export ("shouldDrawAt:")]
+NSNumber ShouldDraw ([BindAs (typeof (CGRect))] NSValue rect);
+```
+
+Would output:
+
+```
+[Export ("shouldDrawAt:")]
+bool? ShouldDraw (CGRect rect) { ... }
+```
+
+Internally we will do the `bool?` <-> `NSNumber` and `CGRect` <-> `NSValue` conversions.
+
+`BindAsAttribute` also supports arrays of `NSNumber` `NSValue` and `NSString`(enums).
+
+For example:
+
+```
+[BindAs (typeof (CAScroll []))]
+[Export ("supportedScrollModes")]
+NSString [] SupportedScrollModes { get; set; }
+```
+
+Would output:
+
+```
+[Export ("supportedScrollModes")]
+CAScroll [] SupportedScrollModes { get; set; }
+```
+
+`CAScroll` is a `NSString` backed enum, we will fetch the right `NSString` value and handle the type conversion.
+
+Please see [NSNumber](https://developer.xamarin.com/api/type/MonoTouch.Foundation.NSNumber/#Public_Properties) and [NSValue] (https://developer.xamarin.com/api/type/MonoTouch.Foundation.NSValue/#Public_Properties) documentation to see supported conversion types.
+
+
 ## FieldAttribute
 
 This is the same `[Field]` attribute used for constants inside type. It can also

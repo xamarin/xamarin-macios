@@ -840,6 +840,51 @@ An alternative is to mark the original, `NSString`-based, definition as
 the wrap'ed version will still work and call the overriden method.
 
 
+## Binding NSValue NSNumber and NSString to a better type
+
+The [[BindAs]](/guides/ios/advanced_topics/binding_objective-c/binding_types_reference_guide#BindAsAttribute) attribute allows binding `NSNumber` `NSValue` and `NSString`(enums) into more accurate C# types this allows an easy way to create better .NET API.
+
+It can be used in methods, parameters and properties. The only restriction is that your member **mustn't** be inside a `[Protocol]` or `[Model]` interface.
+
+For example:
+
+```
+[return: BindAs (typeof (bool?))]
+[Export ("shouldDrawAt:")]
+NSNumber ShouldDraw ([BindAs (typeof (CGRect))] NSValue rect);
+```
+
+Would output:
+
+```
+[Export ("shouldDrawAt:")]
+bool? ShouldDraw (CGRect rect) { ... }
+```
+
+Internally we will do the `bool?` <-> `NSNumber` and `CGRect` <-> `NSValue` conversions.
+
+[[BindAs]](/guides/ios/advanced_topics/binding_objective-c/binding_types_reference_guide#BindAsAttribute) also supports arrays of `NSNumber` `NSValue` and `NSString`(enums).
+
+For example:
+
+```
+[BindAs (typeof (CAScroll []))]
+[Export ("supportedScrollModes")]
+NSString [] SupportedScrollModes { get; set; }
+```
+
+Would output:
+
+```
+[Export ("supportedScrollModes")]
+CAScroll [] SupportedScrollModes { get; set; }
+```
+
+`CAScroll` is a `NSString` backed enum, we will fetch the right `NSString` value and handle the type conversion.
+
+Please see [NSNumber](https://developer.xamarin.com/api/type/MonoTouch.Foundation.NSNumber/#Public_Properties) and [NSValue] (https://developer.xamarin.com/api/type/MonoTouch.Foundation.NSValue/#Public_Properties) documentation to see supported conversion types.
+
+
 ## Binding Notifications
 
 Notifications are messages that are posted to the
