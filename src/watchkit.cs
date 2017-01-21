@@ -145,10 +145,12 @@ namespace XamCore.WatchKit {
 
 		[ThreadSafe (false)]
 		[Export ("presentTextInputControllerWithSuggestions:allowedInputMode:completion:")]
+		[Async]
 		void PresentTextInputController ([NullAllowed] string [] suggestions, WKTextInputMode inputMode, Action<NSArray> completion);
 
 		[iOS (9,0)]
 		[Export ("presentTextInputControllerWithSuggestionsForLanguage:allowedInputMode:completion:")]
+		[Async]
 		void PresentTextInputController ([NullAllowed] Func<NSString, NSArray> suggestionsHandler, WKTextInputMode inputMode, Action<NSArray> completion);
 
 		[NoWatch]
@@ -170,6 +172,7 @@ namespace XamCore.WatchKit {
 
 		[Watch (2,0)]
 		[Export ("presentAudioRecorderControllerWithOutputURL:preset:options:completion:")]
+		[Async]
 		void PresentAudioRecorderController (NSUrl outputUrl, WKAudioRecorderPreset preset, [NullAllowed] NSDictionary options, Action<bool, NSError> completion);
 
 		[Watch (2,0)]
@@ -183,6 +186,7 @@ namespace XamCore.WatchKit {
 		void PresentAlertController ([NullAllowed] string title, [NullAllowed] string message, WKAlertControllerStyle preferredStyle, WKAlertAction[] actions);
 
 		[Export ("presentAddPassesControllerWithPasses:completion:")]
+		[Async]
 		void PresentAddPassesController (PKPass[] passes, Action completion);
 
 		[Export ("dismissAddPassesController")]
@@ -205,6 +209,7 @@ namespace XamCore.WatchKit {
 #endif
 		[NoiOS]
 		[Export ("presentMediaPlayerControllerWithURL:options:completion:")]
+		[Async (ResultType = typeof (WKPresentMediaPlayerResult))]
 		void PresentMediaPlayerController (NSUrl url, [NullAllowed] NSDictionary options, Action<bool, double, NSError> completion);
 
 		[Watch (3,0)][NoiOS]

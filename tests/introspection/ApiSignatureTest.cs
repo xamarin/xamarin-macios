@@ -959,6 +959,9 @@ namespace Introspection {
 			// we bind PerformChangesAndWait which does the same
 			case "PerformChanges":
 				return m.DeclaringType.Name == "PHPhotoLibrary";
+			// it sets the callback, it will never call it
+			case "SetCompletionBlock":
+				return m.DeclaringType.Name == "SCNTransaction";
 			}
 			return false;
 		}

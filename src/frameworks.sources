@@ -1384,9 +1384,11 @@ WATCHCONNECTIVITY_CORE_SOURCES = \
 WATCHKIT_API_SOURCES = \
     WatchKit/WKDefs.cs \
 
+WATCHKIT_CORE_SOURCES = \
+	WatchKit/WKInterfaceController.cs \
+
 WATCHKIT_SOURCES = \
 	WatchKit/WKAccessibility.cs \
-	WatchKit/WKInterfaceController.cs \
 	WatchKit/WKInterfaceDevice.cs \
 
 # WebKit (Mac version)

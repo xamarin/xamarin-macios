@@ -73,6 +73,7 @@ namespace XamCore.PassKit {
 
 		[Since (7,0)]
 		[Export ("addPasses:withCompletionHandler:")]
+		[Async]
 		void AddPasses (PKPass[] passes, [NullAllowed] Action<PKPassLibraryAddPassesStatus> completion);
 
 		[Field ("PKPassLibraryDidChangeNotification")]
