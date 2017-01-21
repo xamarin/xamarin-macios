@@ -1185,13 +1185,17 @@ public partial class Generator : IMemberGatherer {
 		var retType = Nullable.GetUnderlyingType (attrib.Type) ?? attrib.Type;
 		var isNullable = attrib.IsNullable;
 		var isValueType = retType.IsValueType;
+		var isEnum = retType.IsEnum;
+		var parameterName = pi != null ? pi.Name.GetSafeParamName () : "value";
+		var denullify = isNullable ? ".Value" : string.Empty;
 
 		if (isNullable || !isValueType)
-			temp = string.Format ("{0} == null ? null : ", pi != null ? pi.Name.GetSafeParamName () : "value");
+			temp = string.Format ("{0} == null ? null : ", parameterName);
 
-		if (originalType == typeof (NSNumber))
-			temp = string.Format ("new NSNumber ({1}{0});", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
-
+		if (originalType == typeof (NSNumber)) {
+			var enumCast = isEnum ? $"(int)" : string.Empty;
+			temp = string.Format ("new NSNumber ({2}{1}{0});", denullify, parameterName, enumCast);
+		}
 		else if (originalType == typeof (NSValue)) {
 			var typeStr = string.Empty;
 			if (!NSValueCreateMap.TryGetValue (retType, out typeStr)) {
@@ -1201,15 +1205,13 @@ public partial class Generator : IMemberGatherer {
 				else
 					throw new BindingException (1049, true, GetBindAsExceptionString ("box", retType.Name, originalType.Name, "container", minfo?.mi?.Name ?? pi?.Name));
 			}
-			temp = string.Format ("NSValue.From{0} ({2}{1});", typeStr, isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			temp = string.Format ("NSValue.From{0} ({2}{1});", typeStr, denullify, parameterName);
 		} else if (originalType == typeof (NSString) && IsSmartEnum (retType)) {
-			temp = string.Format ("{1}{0}.GetConstant ();", isNullable ? ".Value" : string.Empty, pi != null ? pi.Name.GetSafeParamName () : "value");
+			temp = string.Format ("{1}{0}.GetConstant ();", denullify, parameterName);
 		} else if (originalType.IsArray) {
 			var arrType = originalType.GetElementType ();
 			var arrRetType = Nullable.GetUnderlyingType (retType.GetElementType ()) ?? retType.GetElementType ();
 			var valueConverter = string.Empty;
-			var denullify = isNullable ? ".Value" : string.Empty;
-			var parameterName = pi != null ? pi.Name.GetSafeParamName () : "value";
 
 			if (arrType == typeof (NSString))
 				valueConverter = $"o{denullify}.GetConstant (), {parameterName});";
@@ -1277,9 +1279,15 @@ public partial class Generator : IMemberGatherer {
 		var originalReturnType = method?.ReturnType ?? property?.PropertyType;
 
 		if (originalReturnType == typeof (NSNumber)) {
-			if (!NSNumberReturnMap.TryGetValue (retType, out append))
-				throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi.Name));
-
+			if (!NSNumberReturnMap.TryGetValue (retType, out append)) {
+				if (retType.IsEnum) {
+					var enumType = Enum.GetUnderlyingType (retType);
+					if (!NSNumberReturnMap.TryGetValue (enumType, out append))
+						throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi.Name));
+				}
+				else
+					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi.Name));
+			}
 		} else if (originalReturnType == typeof (NSValue)) {
 			if (!NSValueReturnMap.TryGetValue (retType, out append)) {
 				// HACK: These are problematic for X.M due to we do not ship System.Drawing for Full profile
@@ -3287,7 +3295,10 @@ public partial class Generator : IMemberGatherer {
 					cast_a = $" {GetFromBindAsWrapper (minfo)}Runtime.GetNSObject<{FormatType (declaringType, GetCorrectGenericType (mi.ReturnType))}> (";
 					cast_b = "))";
 				} else {
-					cast_a = " Runtime.GetNSObject<" + FormatType (declaringType, GetCorrectGenericType (mi.ReturnType)) + "> (";
+					var bindAs = GetBindAsAttribute (minfo.mi);
+					var bindAsType = Nullable.GetUnderlyingType (bindAs.Type) ?? bindAs.Type;
+					var enumCast = (bindAsType.IsEnum && !minfo.type.IsArray) ? $"({FormatType (bindAsType.DeclaringType, GetCorrectGenericType (bindAsType))})" : string.Empty;
+					cast_a = $" {enumCast}Runtime.GetNSObject<{FormatType (declaringType, GetCorrectGenericType (mi.ReturnType))}> (";
 					cast_b = ")" + GetFromBindAsWrapper (minfo);
 				}
 			} else {

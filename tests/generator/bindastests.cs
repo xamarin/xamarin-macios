@@ -119,5 +119,17 @@ namespace BindAsTests {
 		[return: BindAs (typeof (CAScroll))]
 		[Export ("getScrollEnum3:arg2:")]
 		NSString GetScrollEnum ([BindAs (typeof (CAScroll))] NSString arg1, [BindAs (typeof (CAScroll?))] NSString arg2);
+
+		[BindAs (typeof (CAScroll))]
+		[Export ("scrollEnum")]
+		NSNumber ScrollEnum2 { get; set; }
+
+		[return: BindAs (typeof (CAScroll))]
+		[Export ("getScrollEnum:")]
+		NSNumber GetScrollEnum2 ([BindAs (typeof (CAScroll))] NSNumber arg1);
+
+		[return: BindAs (typeof (CAScroll?))]
+		[Export ("getScrollEnumNullable:")]
+		NSNumber GetScrollEnumNullable2 ([BindAs (typeof (CAScroll?))] NSNumber arg1);
 	}
 }
