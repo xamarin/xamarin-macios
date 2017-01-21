@@ -54,71 +54,94 @@ namespace XamCore.AppKit {
 			}
 		}
 
-		static NSOpenGLPixelFormatAttribute [] ConvertToAttributes (object [] args)
+		public NSOpenGLPixelFormat (uint [] attribs) : base (NSObjectFlag.Empty)
 		{
-			var list = new List<NSOpenGLPixelFormatAttribute> ();
-			for (int i = 0; i < args.Length; i++){
-				NSOpenGLPixelFormatAttribute v;
-				if (args[i] is NSOpenGLPixelFormatAttribute)
-					v = (NSOpenGLPixelFormatAttribute) args [i];
-				else
-					v = ((NSOpenGLPixelFormatAttribute) (int)args [i]);
-				switch (v){
-				case NSOpenGLPixelFormatAttribute.AllRenderers:
-				case NSOpenGLPixelFormatAttribute.DoubleBuffer:
-				case NSOpenGLPixelFormatAttribute.Stereo:
-				case NSOpenGLPixelFormatAttribute.MinimumPolicy:
-				case NSOpenGLPixelFormatAttribute.MaximumPolicy:
-				case NSOpenGLPixelFormatAttribute.OffScreen:
-				case NSOpenGLPixelFormatAttribute.FullScreen:
-				case NSOpenGLPixelFormatAttribute.SingleRenderer:
-				case NSOpenGLPixelFormatAttribute.NoRecovery:
-				case NSOpenGLPixelFormatAttribute.Accelerated:
-				case NSOpenGLPixelFormatAttribute.ClosestPolicy:
-				case NSOpenGLPixelFormatAttribute.Robust:
-				case NSOpenGLPixelFormatAttribute.BackingStore:
-				case NSOpenGLPixelFormatAttribute.Window:
-				case NSOpenGLPixelFormatAttribute.MultiScreen:
-				case NSOpenGLPixelFormatAttribute.Compliant:
-				case NSOpenGLPixelFormatAttribute.PixelBuffer:
+			if (attribs == null)
+				throw new ArgumentNullException ("attribs");
+
+			unsafe
+			{
+				uint [] copy = new uint [attribs.Length + 1];
+				Array.Copy (attribs, 0, copy, 0, attribs.Length);
+
+				fixed (uint* pArray = copy) {
+					if (IsDirectBinding) {
+						Handle = XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, selInitWithAttributes, new IntPtr ((void*)pArray));
+					} else {
+						Handle = XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, selInitWithAttributes, new IntPtr ((void*)pArray));
+					}
+				}
+
+			}
+		}
+
+		static uint [] ConvertToAttributes (object [] args)
+		{
+			var list = new List<uint> ();
+			for (int i = 0; i < args.Length - 1; i++){
+				if (args [i] is NSOpenGLPixelFormatAttribute) {
+					NSOpenGLPixelFormatAttribute v = (NSOpenGLPixelFormatAttribute)args [i];
+					switch (v) {
+					case NSOpenGLPixelFormatAttribute.AllRenderers:
+					case NSOpenGLPixelFormatAttribute.DoubleBuffer:
+					case NSOpenGLPixelFormatAttribute.Stereo:
+					case NSOpenGLPixelFormatAttribute.MinimumPolicy:
+					case NSOpenGLPixelFormatAttribute.MaximumPolicy:
+					case NSOpenGLPixelFormatAttribute.OffScreen:
+					case NSOpenGLPixelFormatAttribute.FullScreen:
+					case NSOpenGLPixelFormatAttribute.SingleRenderer:
+					case NSOpenGLPixelFormatAttribute.NoRecovery:
+					case NSOpenGLPixelFormatAttribute.Accelerated:
+					case NSOpenGLPixelFormatAttribute.ClosestPolicy:
+					case NSOpenGLPixelFormatAttribute.Robust:
+					case NSOpenGLPixelFormatAttribute.BackingStore:
+					case NSOpenGLPixelFormatAttribute.Window:
+					case NSOpenGLPixelFormatAttribute.MultiScreen:
+					case NSOpenGLPixelFormatAttribute.Compliant:
+					case NSOpenGLPixelFormatAttribute.PixelBuffer:
 
 					// Not listed in the docs, but header file implies it
-				case NSOpenGLPixelFormatAttribute.RemotePixelBuffer:
-				case NSOpenGLPixelFormatAttribute.AuxDepthStencil:
-				case NSOpenGLPixelFormatAttribute.ColorFloat:
-				case NSOpenGLPixelFormatAttribute.Multisample:
-				case NSOpenGLPixelFormatAttribute.Supersample:
-				case NSOpenGLPixelFormatAttribute.SampleAlpha:
-				case NSOpenGLPixelFormatAttribute.AllowOfflineRenderers:
-				case NSOpenGLPixelFormatAttribute.AcceleratedCompute:
-				case NSOpenGLPixelFormatAttribute.MPSafe:
-					list.Add (v);
-					break;
-					
-				case NSOpenGLPixelFormatAttribute.AuxBuffers:
-				case NSOpenGLPixelFormatAttribute.ColorSize:
-				case NSOpenGLPixelFormatAttribute.AlphaSize:
-				case NSOpenGLPixelFormatAttribute.DepthSize:
-				case NSOpenGLPixelFormatAttribute.StencilSize:
-				case NSOpenGLPixelFormatAttribute.AccumSize:
-				case NSOpenGLPixelFormatAttribute.RendererID:
-				case NSOpenGLPixelFormatAttribute.ScreenMask:
+					case NSOpenGLPixelFormatAttribute.RemotePixelBuffer:
+					case NSOpenGLPixelFormatAttribute.AuxDepthStencil:
+					case NSOpenGLPixelFormatAttribute.ColorFloat:
+					case NSOpenGLPixelFormatAttribute.Multisample:
+					case NSOpenGLPixelFormatAttribute.Supersample:
+					case NSOpenGLPixelFormatAttribute.SampleAlpha:
+					case NSOpenGLPixelFormatAttribute.AllowOfflineRenderers:
+					case NSOpenGLPixelFormatAttribute.AcceleratedCompute:
+					case NSOpenGLPixelFormatAttribute.MPSafe:
+						list.Add ((uint) v);
+						break;
+
+					case NSOpenGLPixelFormatAttribute.AuxBuffers:
+					case NSOpenGLPixelFormatAttribute.ColorSize:
+					case NSOpenGLPixelFormatAttribute.AlphaSize:
+					case NSOpenGLPixelFormatAttribute.DepthSize:
+					case NSOpenGLPixelFormatAttribute.StencilSize:
+					case NSOpenGLPixelFormatAttribute.AccumSize:
+					case NSOpenGLPixelFormatAttribute.RendererID:
+					case NSOpenGLPixelFormatAttribute.ScreenMask:
 
 					// not listed in the docs, but header file implies it
-				case NSOpenGLPixelFormatAttribute.SampleBuffers:
-				case NSOpenGLPixelFormatAttribute.Samples:
-				case NSOpenGLPixelFormatAttribute.VirtualScreenCount:
-					list.Add (v);
-					i++;
-					if (i >= args.Length)
-						throw new ArgumentException ("Attribute " + v + " needs a value");
-					if (args[i] is NSOpenGLPixelFormatAttribute)
-						list.Add ((NSOpenGLPixelFormatAttribute) args [i]);
-					else
-						list.Add ((NSOpenGLPixelFormatAttribute) (int)args [i]);
-					break;
-				}
+					case NSOpenGLPixelFormatAttribute.SampleBuffers:
+					case NSOpenGLPixelFormatAttribute.Samples:
+					case NSOpenGLPixelFormatAttribute.VirtualScreenCount:
+					case NSOpenGLPixelFormatAttribute.OpenGLProfile:
+						list.Add ((uint)v);
+						i++;
+						if (i >= args.Length)
+							throw new ArgumentException ("Attribute " + v + " needs a value");
+						list.Add ((uint) (int)args [i]);
+						if (i == args.Length - 1)
+							throw new ArgumentException ("The attributes array must end with a 0");
+						break;
+					}
+				} else
+					throw new ArgumentException ($"The specified attribute is not of type NSOpenGLPixelFormatAttribute: {args [i]}");
 			}
+
+			if ((int)args [args.Length - 1] != 0)
+				throw new ArgumentException ("The attributes array must end with a 0");
 			return list.ToArray ();
 		}
 		
