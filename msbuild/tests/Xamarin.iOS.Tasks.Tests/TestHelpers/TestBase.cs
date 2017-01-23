@@ -188,9 +188,9 @@ namespace Xamarin.iOS.Tasks
 
 			// Reset all the write times as we deliberately set some in the future for our tests
 			foreach (var file in Directory.GetFiles (MonoTouchProjectPath, "*.*", SearchOption.AllDirectories))
-				File.SetLastWriteTime (file, DateTime.Now);
+				File.SetLastWriteTimeUtc (file, DateTime.UtcNow);
 			foreach (var file in Directory.GetFiles (LibraryProjectPath, "*.*", SearchOption.AllDirectories))
-				File.SetLastWriteTime (file, DateTime.Now);
+				File.SetLastWriteTimeUtc (file, DateTime.UtcNow);
 		}
 
 		protected void SafeDelete (string path)
@@ -309,7 +309,7 @@ namespace Xamarin.iOS.Tasks
 		{
 			if (!File.Exists (file))
 				Assert.Fail ("Expected file '{0}' did not exist", file);
-			File.SetLastWriteTime (file, DateTime.Now.AddDays (1));
+			File.SetLastWriteTimeUtc (file, DateTime.UtcNow.AddDays (1));
 			System.Threading.Thread.Sleep (1000);
 		}
 

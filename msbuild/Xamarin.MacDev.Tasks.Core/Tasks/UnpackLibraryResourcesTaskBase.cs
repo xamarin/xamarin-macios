@@ -124,7 +124,7 @@ namespace Xamarin.MacDev.Tasks
 				var path = Path.Combine (intermediatePath, rpath);
 				var file = new FileInfo (path);
 
-				if (file.Exists && file.LastWriteTime >= asmWriteTime) {
+				if (file.Exists && file.LastWriteTimeUtc >= asmWriteTime) {
 					Log.LogMessage ("    Up to date: {0}", rpath);
 				} else {
 					Log.LogMessage ("    Unpacking: {0}", rpath);

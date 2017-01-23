@@ -52,7 +52,7 @@ namespace Xamarin.iOS.Tasks
 			File.Copy (csproj, bak, true);
 			try {
 				File.Copy (llvm, csproj, true);
-				File.SetLastWriteTime (csproj, DateTime.Now);
+				File.SetLastWriteTimeUtc (csproj, DateTime.UtcNow);
 
 				BuildProject ("MyReleaseBuild", Platform, "Release", clean: false);
 			} finally {
