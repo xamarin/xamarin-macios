@@ -1896,7 +1896,7 @@ function oninitialload ()
 				break;
 			}
 			if (BCLTest)
-				Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), "bin", BuildTask.ProjectConfiguration + suffix, name + "Tests.app", "Contents", "MacOS", name);
+				Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), "bin", BuildTask.ProjectConfiguration + suffix, name + "Tests.app", "Contents", "MacOS", name + "Tests");
 			else
 				Path = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (ProjectFile), "bin", BuildTask.ProjectPlatform, BuildTask.ProjectConfiguration + suffix, name + ".app", "Contents", "MacOS", name);
 
