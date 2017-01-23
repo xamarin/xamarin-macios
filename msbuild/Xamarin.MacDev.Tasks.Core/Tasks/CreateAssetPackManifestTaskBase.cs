@@ -45,10 +45,10 @@ namespace Xamarin.MacDev.Tasks
 			var manifestPath = Path.Combine (AppBundleDir.ItemSpec, "AssetPackManifestTemplate.plist");
 			var onDemandResourcesPath = Path.Combine (AppBundleDir.ItemSpec, "OnDemandResources.plist");
 			var onDemandResourcesDir = Path.Combine (OutputPath, "OnDemandResources");
-			var onDemandResourcesStamp = File.GetLastWriteTime (onDemandResourcesPath);
+			var onDemandResourcesStamp = File.GetLastWriteTimeUtc (onDemandResourcesPath);
 			var initialInstallTags = new HashSet<string> (AssetPackUtils.ParseTags (InitialInstallTags));
 			var prefetchOrder = AssetPackUtils.ParseTags (PrefetchOrder);
-			var manifestStamp = File.GetLastWriteTime (manifestPath);
+			var manifestStamp = File.GetLastWriteTimeUtc (manifestPath);
 			var onDemandResources = new PDictionary ();
 			var requestTags = new PDictionary ();
 			bool updateOnDemandResources = false;
@@ -78,7 +78,7 @@ namespace Xamarin.MacDev.Tasks
 				if (!File.Exists (path))
 					continue;
 
-				var mtime = File.GetLastWriteTime (path);
+				var mtime = File.GetLastWriteTimeUtc (path);
 
 				updateOnDemandResources = updateOnDemandResources || mtime > onDemandResourcesStamp;
 				updateManifest = updateManifest || mtime > manifestStamp;

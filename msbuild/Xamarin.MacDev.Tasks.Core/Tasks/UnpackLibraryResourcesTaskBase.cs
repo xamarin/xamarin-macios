@@ -106,7 +106,7 @@ namespace Xamarin.MacDev.Tasks
 			if (!File.Exists (assembly))
 				yield break;
 
-			var asmWriteTime = File.GetLastWriteTime (assembly);
+			var asmWriteTime = File.GetLastWriteTimeUtc (assembly);
 
 			foreach (var embedded in GetAssemblyManifestResources (assembly)) {
 				string rpath;
@@ -124,7 +124,7 @@ namespace Xamarin.MacDev.Tasks
 				var path = Path.Combine (intermediatePath, rpath);
 				var file = new FileInfo (path);
 
-				if (file.Exists && file.LastWriteTime >= asmWriteTime) {
+				if (file.Exists && file.LastWriteTimeUtc >= asmWriteTime) {
 					Log.LogMessage ("    Up to date: {0}", rpath);
 				} else {
 					Log.LogMessage ("    Unpacking: {0}", rpath);
