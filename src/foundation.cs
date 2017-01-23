@@ -8753,8 +8753,11 @@ namespace XamCore.Foundation
 
 		[Mac (10,12)][Async]
 		[Export ("registerCloudKitShareWithPreparationHandler:")]
+#if XAMCORE_4_0
 		void RegisterCloudKitShare (CloudKitRegistrationPreparationAction preparationHandler);
-
+#else
+		void RegisterCloudKitShare ([BlockCallback] Action<CloudKitRegistrationPreparationHandler preparationHandler);
+#endif
 		[Mac (10,12)]
 		[Export ("registerCloudKitShare:container:")]
 		void RegisterCloudKitShare (CKShare share, CKContainer container);
