@@ -167,7 +167,7 @@ namespace Xamarin.MacDev.Tasks
 
 		static bool InterfaceDefinitionChanged (ITaskItem interfaceDefinition, ITaskItem log)
 		{
-			return !LogExists (log.ItemSpec) || File.GetLastWriteTime (log.ItemSpec) < File.GetLastWriteTime (interfaceDefinition.ItemSpec);
+			return !LogExists (log.ItemSpec) || File.GetLastWriteTimeUtc (log.ItemSpec) < File.GetLastWriteTimeUtc (interfaceDefinition.ItemSpec);
 		}
 
 		bool CompileInterfaceDefinitions (string baseManifestDir, string baseOutputDir, List<ITaskItem> compiled, IList<ITaskItem> manifests, out bool changed)

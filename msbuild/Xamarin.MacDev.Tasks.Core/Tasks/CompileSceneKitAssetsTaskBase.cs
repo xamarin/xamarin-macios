@@ -174,7 +174,7 @@ namespace Xamarin.MacDev.Tasks
 				var bundleName = BundleResource.GetLogicalName (ProjectDir, prefixes, asset, !string.IsNullOrEmpty(SessionId));
 				var output = new TaskItem (Path.Combine (intermediate, bundleName));
 
-				if (!modified.Contains (scnassets) && (!File.Exists (output.ItemSpec) || File.GetLastWriteTime (asset.ItemSpec) > File.GetLastWriteTime (output.ItemSpec))) {
+				if (!modified.Contains (scnassets) && (!File.Exists (output.ItemSpec) || File.GetLastWriteTimeUtc (asset.ItemSpec) > File.GetLastWriteTimeUtc (output.ItemSpec))) {
 					var item = new TaskItem (scnassets);
 
 					metadata = asset.GetMetadata ("DefiningProjectFullPath");

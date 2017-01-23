@@ -106,7 +106,7 @@ namespace Xamarin.MacDev.Tasks
 			if (!File.Exists (assembly))
 				yield break;
 
-			var asmWriteTime = File.GetLastWriteTime (assembly);
+			var asmWriteTime = File.GetLastWriteTimeUtc (assembly);
 
 			foreach (var embedded in GetAssemblyManifestResources (assembly)) {
 				string rpath;

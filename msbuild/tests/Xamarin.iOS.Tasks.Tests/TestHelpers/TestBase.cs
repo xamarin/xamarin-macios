@@ -280,7 +280,7 @@ namespace Xamarin.iOS.Tasks
 			if (!File.Exists (file))
 				Assert.Fail ("Expected file '{0}' did not exist", file);
 
-			return File.GetLastWriteTime (file);
+			return File.GetLastWriteTimeUtc (file);
 		}
 
 		protected void RemoveItemsByName (Project project, string itemName)
