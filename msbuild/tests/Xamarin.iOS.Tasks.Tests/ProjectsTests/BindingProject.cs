@@ -24,7 +24,7 @@ namespace Xamarin.iOS.Tasks
 			AppBundlePath = mtouchPaths.AppBundlePath;
 			var dllPath = Path.Combine(mtouchPaths.ProjectBinPath, "bindings-test.dll");
 
-			Engine.GlobalProperties.SetProperty ("Platform", Platform);
+			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
 
 			RunTarget (proj, "Build", 0);
 			Assert.IsTrue (File.Exists (dllPath), "{1} binding dll does not exist: {0} ", dllPath, Platform);
@@ -43,7 +43,7 @@ namespace Xamarin.iOS.Tasks
 			AppBundlePath = mtouchPaths.AppBundlePath;
 			var dllPath = Path.Combine(mtouchPaths.ProjectBinPath, "bindings-test.dll");
 
-			Engine.GlobalProperties.SetProperty ("Platform", Platform);
+			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
 
 			RunTarget (proj, "Build", 0);
 			Assert.IsTrue (File.Exists (dllPath), "{1} binding dll does not exist: {0} ", dllPath, Platform);

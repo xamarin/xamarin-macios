@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
 
 namespace Xamarin.iOS.Tasks {
@@ -16,12 +17,12 @@ namespace Xamarin.iOS.Tasks {
 		{
 			var mtouchPaths = SetupProjectPaths ("MyTabbedApplication", "../", true, Platform);
 
-			Engine.GlobalProperties.SetProperty ("Platform", Platform);
+			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
 
 			var proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
-			var nr = proj.AddNewItem ("NativeReference", Path.Combine (".", "..", "..", "..", "tests", "test-libraries", ".libs", "ios", "XTest.framework"));
-			nr.SetMetadata ("IsCxx", "False");
-			nr.SetMetadata ("Kind", "Framework");
+			var nr = proj.AddItem ("NativeReference", Path.Combine (".", "..", "..", "..", "tests", "test-libraries", ".libs", "ios", "XTest.framework")).First ();
+			nr.SetMetadataValue ("IsCxx", "False");
+			nr.SetMetadataValue ("Kind", "Framework");
 
 			AppBundlePath = mtouchPaths.AppBundlePath;
 
@@ -40,14 +41,14 @@ namespace Xamarin.iOS.Tasks {
 
 			var mtouchPaths = SetupProjectPaths ("MyiOSAppWithBinding", "../", true, Platform);
 
-			Engine.GlobalProperties.SetProperty ("Platform", Platform);
+			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
 
 			var proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
 
-			proj.GlobalProperties.SetProperty ("MtouchFastDev", "true");
-			proj.GlobalProperties.SetProperty ("MtouchExtraArgs", "-vvvv");
-			proj.GlobalProperties.SetProperty ("MtouchArch", "ARM64"); // only use ARM64 to speed up the build.
-			proj.GlobalProperties.SetProperty ("MtouchLink", "Full"); // also to speed up the build.
+			proj.SetGlobalProperty ("MtouchFastDev", "true");
+			proj.SetGlobalProperty ("MtouchExtraArgs", "-vvvv");
+			proj.SetGlobalProperty ("MtouchArch", "ARM64"); // only use ARM64 to speed up the build.
+			proj.SetGlobalProperty ("MtouchLink", "Full"); // also to speed up the build.
 
 			AppBundlePath = mtouchPaths.AppBundlePath;
 

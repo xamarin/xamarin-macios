@@ -318,7 +318,7 @@ all-local:: $(MSBUILD_PRODUCTS) test-xml
 
 .build-stamp: $(ALL_SOURCES)
 	$(Q) $(SYSTEM_MONO) /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore
-	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY)
+	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) /v:diag /fl
 	$(Q) touch $@
 
 # make all the target assemblies build when any of the sources have changed
