@@ -246,6 +246,11 @@ namespace Xamarin.Bundler
 
 			throw new MonoTouchException (3001, true, "Could not AOT the assembly '{0}'", AssemblyName);
 		}
+
+		public override string ToString ()
+		{
+			return Path.GetFileName (AssemblyName);
+		}
 	}
 
 	public class NativeLinkTask : BuildTask
@@ -304,6 +309,11 @@ namespace Xamarin.Bundler
 			if (Target.WeakFrameworks.Count > 0)
 				Target.AdjustDylibs ();
 			Driver.Watch ("Native Link", 1);
+		}
+
+		public override string ToString ()
+		{
+			return Path.GetFileName (OutputFile);
 		}
 	}
 
@@ -499,6 +509,13 @@ namespace Xamarin.Bundler
 
 			return rv;
 		}
+
+		public override string ToString ()
+		{
+			if (compiler_flags == null || compiler_flags.SourceFiles == null)
+				return Path.GetFileName (OutputFile);
+			return string.Join (", ", compiler_flags.SourceFiles.Select ((arg) => Path.GetFileName (arg)).ToArray ());
+		}
 	}
 
 	public class BitCodeifyTask : BuildTask
@@ -524,6 +541,11 @@ namespace Xamarin.Bundler
 		protected override void Execute ()
 		{
 			new BitcodeConverter (Input, OutputFile, Platform, Abi, DeploymentTarget).Convert ();
+		}
+
+		public override string ToString ()
+		{
+			return Path.GetFileName (Input);
 		}
 	}
 }

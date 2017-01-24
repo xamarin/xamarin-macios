@@ -73,6 +73,76 @@ namespace Xamarin.Bundler
 			if (exceptions.Count > 0)
 				throw new AggregateException (exceptions);
 		}
+
+		public void Dot (string file)
+		{
+			var nodes = new HashSet<string> ();
+			var queue = new Queue<BuildTask> (this);
+			var input_nodes = new HashSet<string> ();
+			var action_nodes = new HashSet<string> ();
+			var output_nodes = new HashSet<string> ();
+			var all_nodes = new HashSet<string> ();
+			var circular_ref_nodes = new HashSet<string> ();
+
+			var render_file = new Func<string, string> ((v) =>
+			{
+				if (Path.GetDirectoryName (v).EndsWith (".framework", StringComparison.Ordinal))
+					return Path.GetFileName (Path.GetDirectoryName (v));
+				return Path.GetFileName (v);
+			});
+
+			var processed = new HashSet<BuildTask> ();
+			while (queue.Count > 0) {
+				var task = queue.Dequeue ();
+				var action_node = $"\"{task.GetType ().Name}{task.ID}\"";
+
+				if (processed.Contains (task)) {
+					Console.WriteLine ($"Already processed: {action_node}");
+					continue;
+				}
+
+				processed.Add (task);
+				foreach (var d in task.Dependencies)
+					queue.Enqueue (d);
+
+				nodes.Add ($"{action_node} [label=\"{task.GetType ().Name.Replace ("Task", "")}\", shape=box]");
+				all_nodes.Add ($"X{task.ID}");
+				action_nodes.Add (action_node);
+
+				var inputs = task.Inputs.ToArray ();
+				for (int i = 0; i < inputs.Length; i++) {
+					var node = $"\"{render_file (inputs [i])}\"";
+					all_nodes.Add (node);
+					input_nodes.Add (node);
+					nodes.Add ($"{node} -> {action_node}");
+				}
+
+				var outputs = task.Outputs.ToArray ();
+				for (int i = 0; i < outputs.Length; i++) {
+					var node = $"\"{render_file (outputs [i])}\"";
+					all_nodes.Add (node);
+					output_nodes.Add (node);
+					nodes.Add ($"{action_node} -> {node}");
+				}
+			}
+
+			using (var writer = new StreamWriter (file)) {
+				writer.WriteLine ("digraph build {");
+				writer.WriteLine ("\trankdir=LR;");
+				foreach (var node in nodes)
+					writer.WriteLine ("\t{0};", node);
+
+				// make all the final nodes a different color
+				foreach (var end_node in output_nodes.Except (input_nodes))
+					writer.WriteLine ($"\t{end_node} [fillcolor = \"lightblue\"; style = \"filled\"; ];");
+
+				foreach (var node in circular_ref_nodes)
+					writer.WriteLine ($"\t{node} [fillcolor = \"red\"; style = \"filled\"; ];");
+
+				writer.WriteLine ("}");
+			}
+			Driver.Log ("Created dot file: {0}", file);
+		}
 	}
 
 	public abstract class BuildTask
