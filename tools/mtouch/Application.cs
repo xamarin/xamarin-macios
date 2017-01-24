@@ -261,7 +261,7 @@ namespace Xamarin.Bundler {
 
 					if (asm_build_targets.TryGetValue (asm_name, out build_target)) {
 						asm_build_targets.Remove (asm_name);
-					} else if (sdk != null && Profile.IsSdkAssembly (asm_name)) {
+					} else if (sdk != null && (Profile.IsSdkAssembly (asm_name) || Profile.IsProductAssembly (asm_name))) {
 						build_target = sdk;
 					} else {
 						build_target = all;
