@@ -492,7 +492,7 @@ namespace Xamarin.Bundler
 			resolver.AddSearchDirectory (Resolver.FrameworkDirectory);
 
 			LinkerOptions = new LinkerOptions {
-				MainAssembly = Resolver.Load (App.RootAssembly),
+				MainAssemblies = new [] { Resolver.Load (App.RootAssembly) },
 				OutputDirectory = output_dir,
 				LinkMode = App.LinkMode,
 				Resolver = resolver,

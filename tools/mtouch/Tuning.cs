@@ -17,7 +17,7 @@ using Xamarin.Tuner;
 namespace MonoTouch.Tuner {
 
 	public class LinkerOptions {
-		public AssemblyDefinition MainAssembly { get; set; }
+		public IEnumerable<AssemblyDefinition> MainAssemblies { get; set; }
 		public string OutputDirectory { get; set; }
 		public LinkMode LinkMode { get; set; }
 		public AssemblyResolver Resolver { get; set; }
@@ -65,7 +65,8 @@ namespace MonoTouch.Tuner {
 		{
 			var pipeline = CreatePipeline (options);
 
-			pipeline.PrependStep (new MobileResolveMainAssemblyStep (options.MainAssembly));
+			foreach (var ad in options.MainAssemblies)
+				pipeline.PrependStep (new MobileResolveMainAssemblyStep (ad));
 
 			context = CreateLinkContext (options, pipeline);
 			context.Resolver.AddSearchDirectory (options.OutputDirectory);
