@@ -520,7 +520,6 @@ namespace Xamarin.Bundler
 			info.RedirectStandardError = true;
 
 			info.EnvironmentVariables ["MONO_PATH"] = mono_path;
-			info.EnvironmentVariables ["MONO_GC_PARAMS"] = app.MonoGCParams;
 			if (mono_debug != null)
 				info.EnvironmentVariables ["MONO_DEBUG"] = mono_debug;
 
