@@ -73,14 +73,11 @@ namespace Xamarin.Bundler
 
 				GC.Collect (); // Workaround for: https://bugzilla.xamarin.com/show_bug.cgi?id=43462#c14
 
-				if (p.ExitCode != 0)
-					return p.ExitCode;
-
 				if (Driver.Verbosity >= 2 && Output.Length > 0)
 					Console.Error.WriteLine (Output.ToString ());
-			}
 
-			return 0;
+				return p.ExitCode;
+			}
 		}
 	}
 
