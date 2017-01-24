@@ -375,9 +375,43 @@ This error message is reported when an internal consistency check in Xamarin.iOS
 
 This indicates a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
 
+<h3><a name="MT0100"/>Invalid assembly build target: '*'. Please file a bug report with a test case (http://bugzilla.xamarin.com).</h3>
+
+This error message is reported when an internal consistency check in Xamarin.iOS fails.
+
+This is always a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
+
 <h3><a name="MT0101"/>The assembly '*' is specified multiple times in --assembly-build-target arguments.</h3>
 
 The assembly mentioned in the error message is specified multiple times in --assembly-build-target arguments. Please make sure each assembly is only mentioned once.
+
+<h3><a name="MT0102"/>The assemblies '*' and '*' have the same target name ('*'), but different targets ('*' and '*').</h3>
+
+The assemblies mentioned in the error message have conflicting build targets.
+
+For example:
+
+    --assembly-build-target:Assembly1.dll=framework=MyBinary --assembly-build-target:Assembly2.dll=dynamiclibrary=MyBinary
+
+This example is trying to create both a dynamic library and a framework with the same make (`MyBinary`).
+
+<h3><a name="MT0103"/>The static object '*' contains more than one assembly ('*'), but each static object must correspond with exactly one assembly.</h3>
+
+The assemblies mentioned in the error message are all compiled to a single static object. This is not allowed, every assembly must be compiled to a different static object.
+
+For example:
+
+    --assembly-build-target:Assembly1.dll=staticobject=MyBinary --assembly-build-target:Assembly2.dll=staticobject=MyBinary
+
+This example tries to build a static object (`MyBinary`) comprised of two assemblies (`Assembly1.dll` and `Assembly2.dll`), which is not allowed.
+
+<h3><a name="MT0105"/>MT0105: No assembly build target was specified for '*'.</h3>
+
+When specifying the assembly build target using --assembly-build-target, every assembly in the app must have a build target assigned.
+
+This error is reported when the assembly mentioned in the error message does not have an assembly build target assigned.
+
+See the documentation about --assembly-build-target for further information.
 
 <h3><a name="MT0106"/>MT0106: The assembly build target name '*' is invalid: the character '*' is not allowed.</h3>
 
@@ -388,6 +422,8 @@ For example these values will trigger this error:
     --assembly-build-target:Assembly1.dll=staticobject=my/path.o
 
 because `my/path.o` is not a valid filename due to the directory separator character.
+
+<h3><a name="MT0108"/>MT0108: The assembly build target '*' did not match any assemblies.</h3>
 
 <h3><a name="MT0110"/>MT0110: Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.</h3>
 

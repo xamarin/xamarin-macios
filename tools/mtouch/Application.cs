@@ -208,6 +208,86 @@ namespace Xamarin.Bundler {
 			assembly_build_targets [assembly_name] = new Tuple<AssemblyBuildTarget, string> (build_target, name);
 		}
 
+		void SelectAssemblyBuildTargets ()
+		{
+			Tuple<AssemblyBuildTarget, string> all = null;
+			Tuple<AssemblyBuildTarget, string> sdk = null;
+			List<Exception> exceptions = null;
+
+			if (IsSimulatorBuild)
+				return;
+
+			// By default each assemblies is compiled to a static object.
+			if (assembly_build_targets.Count == 0)
+				assembly_build_targets.Add ("@all", new Tuple<AssemblyBuildTarget, string> (AssemblyBuildTarget.StaticObject, ""));
+
+			assembly_build_targets.TryGetValue ("@all", out all);
+			assembly_build_targets.TryGetValue ("@sdk", out sdk);
+
+			foreach (var target in Targets) {
+				var asm_build_targets = new Dictionary<string, Tuple<AssemblyBuildTarget, string>> (assembly_build_targets);
+
+				foreach (var assembly in target.Assemblies) {
+					Tuple<AssemblyBuildTarget, string> build_target;
+					var asm_name = assembly.Identity;
+
+					if (asm_build_targets.TryGetValue (asm_name, out build_target)) {
+						asm_build_targets.Remove (asm_name);
+					} else if (sdk != null && Profile.IsSdkAssembly (asm_name)) {
+						build_target = sdk;
+					} else {
+						build_target = all;
+					}
+
+					if (build_target == null) {
+						if (exceptions == null)
+							exceptions = new List<Exception> ();
+						exceptions.Add (ErrorHelper.CreateError (105, "No assembly build target was specified for '{0}'.", assembly.Identity));
+						continue;
+					}
+
+					assembly.BuildTarget = build_target.Item1;
+					// The default build target name is the assembly's filename, including the extension,
+					// so that for instance for System.dll, we'd end up with a System.dll.framework
+					// (this way it doesn't clash with the system's System.framework).
+					assembly.BuildTargetName = string.IsNullOrEmpty (build_target.Item2) ? Path.GetFileName (assembly.FileName) : build_target.Item2;
+				}
+
+				foreach (var abt in asm_build_targets) {
+					if (abt.Key == "@all" || abt.Key == "@sdk")
+						continue;
+
+					if (exceptions == null)
+						exceptions = new List<Exception> ();
+					exceptions.Add (ErrorHelper.CreateError (108, "The assembly build target '{0}' did not match any assemblies.", abt.Key));
+				}
+
+				if (exceptions != null)
+					continue;
+
+				var grouped = target.Assemblies.GroupBy ((a) => a.BuildTargetName);
+				foreach (var @group in grouped) {
+					var assemblies = @group.AsEnumerable ().ToArray ();
+
+					// Check that all assemblies in a group have the same build target
+					for (int i = 1; i < assemblies.Length; i++) {
+						if (assemblies [0].BuildTarget != assemblies [i].BuildTarget)
+							throw ErrorHelper.CreateError (102, "The assemblies '{0}' and '{1}' have the same target name ('{2}'), but different targets ('{3}' and '{4}').",
+														   assemblies [0].Identity, assemblies [1].Identity, assemblies [0].BuildTargetName, assemblies [0].BuildTarget, assemblies [1].BuildTarget);
+					}
+
+					// Check that static objects must consist of only one assembly
+					if (assemblies.Length != 1 && assemblies [0].BuildTarget == AssemblyBuildTarget.StaticObject)
+						throw ErrorHelper.CreateError (103, "The static object '{0}' contains more than one assembly ('{1}'), but each static object must correspond with exactly one assembly.",
+													   assemblies [0].BuildTargetName, string.Join ("', '", assemblies.Select ((a) => a.Identity).ToArray ()));
+				}
+			}
+
+
+			if (exceptions != null)
+				throw new AggregateException (exceptions);
+		}
+
 		public string GetLLVMOptimizations (Assembly assembly)
 		{
 			string opt;
@@ -966,6 +1046,8 @@ namespace Xamarin.Bundler {
 					Driver.CopyAssembly (f1, f2);
 				}
 			}
+
+			SelectAssemblyBuildTargets (); // This must be done after the linker has run, since the linker may bring in more assemblies than only those referenced explicitly.
 
 			foreach (var target in Targets) {
 				if (target.CanWeSymlinkTheApplication ())

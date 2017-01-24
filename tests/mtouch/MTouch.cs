@@ -607,6 +607,8 @@ namespace Xamarin
 			}
 		}
 
+		/* MT0100 is a consistency check, and should never be seen (and as such can never be tested either, since there's no known test cases that would produce it) */
+
 		[Test]
 		public void MT0101 ()
 		{
@@ -617,6 +619,51 @@ namespace Xamarin
 				mtouch.AssemblyBuildTargets.Add ("mscorlib=framework");
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
 				mtouch.AssertError (101, "The assembly 'mscorlib' is specified multiple times in --assembly-build-target arguments.");
+			}
+		}
+
+		[Test]
+		public void MT0102 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.DontLink; // the MT0102 check happens after linking, but before AOT-compiling, so not linking makes the test faster.
+				mtouch.AssemblyBuildTargets.Add ("mscorlib=framework=MyBinary");
+				mtouch.AssemblyBuildTargets.Add ("System=dynamiclibrary=MyBinary");
+				mtouch.AssemblyBuildTargets.Add ("@all=dynamiclibrary");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (102, "The assemblies 'mscorlib' and 'System' have the same target name ('MyBinary'), but different targets ('Framework' and 'DynamicLibrary').");
+			}
+		}
+
+		[Test]
+		public void MT0103 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.DontLink; // the MT0103 check happens after linking, but before AOT-compiling, so not linking makes the test faster.
+				mtouch.AssemblyBuildTargets.Add ("mscorlib=staticobject=MyBinary");
+				mtouch.AssemblyBuildTargets.Add ("System=staticobject=MyBinary");
+				mtouch.AssemblyBuildTargets.Add ("@all=staticobject");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (103, "The static object 'MyBinary' contains more than one assembly ('mscorlib', 'System'), but each static object must correspond with exactly one assembly.");
+			}
+		}
+
+		[Test]
+		public void MT0105 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.DontLink; // the MT0105 check happens after linking, but before AOT-compiling, so not linking makes the test faster.
+				mtouch.AssemblyBuildTargets.Add ("mscorlib=framework");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (105, "No assembly build target was specified for 'testApp'.");
+				mtouch.AssertError (105, "No assembly build target was specified for 'System'.");
+				mtouch.AssertError (105, "No assembly build target was specified for 'System.Xml'.");
+				mtouch.AssertError (105, "No assembly build target was specified for 'System.Core'.");
+				mtouch.AssertError (105, "No assembly build target was specified for 'Mono.Dynamic.Interpreter'.");
+				mtouch.AssertError (105, "No assembly build target was specified for 'Xamarin.iOS'.");
 			}
 		}
 
@@ -638,6 +685,20 @@ namespace Xamarin
 			}
 		}
 
+		[Test]
+		public void MT0108 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.DontLink; // the MT0108 check happens after linking, but before AOT-compiling, so not linking makes the test faster.
+				mtouch.AssemblyBuildTargets.Add ("@all=staticobject");
+				mtouch.AssemblyBuildTargets.Add ("dummy=framework");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (108, "The assembly build target 'dummy' did not match any assemblies.");
+			}
+		}
+
+		[Test]
 		public void ExtensionBuild ()
 		{
 			using (var mtouch = new MTouchTool ()) {

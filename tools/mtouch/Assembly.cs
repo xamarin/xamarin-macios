@@ -22,6 +22,8 @@ namespace Xamarin.Bundler {
 	{
 		List<string> dylibs;
 		public string Dylib;
+		public AssemblyBuildTarget BuildTarget;
+		public string BuildTargetName;
 
 		public List<string> AotDataFiles = new List<string> ();
 
