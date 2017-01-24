@@ -689,6 +689,7 @@ $(PREFIX)/lib/mono/2.1/%.dll: $(BUILD_DESTDIR)/ios/bcl/%.dll | $(PREFIX)/lib/mon
 
 $(PREFIX)/lib/mono/2.1/%.mdb: $(BUILD_DESTDIR)/ios/bcl/%.mdb | $(PREFIX)/lib/mono/2.1 $(PREFIX)/lib/mono/2.1/repl
 	$(Q) install -m 0644 $< $@
+	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
 $(PREFIX)/bin/btouch-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
 	$(Q) install -s -m 0755 $< $@
