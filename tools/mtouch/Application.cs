@@ -1594,40 +1594,5 @@ namespace Xamarin.Bundler {
 
 			RuntimeOptions.Write (AppDirectory);
 		}
-
-		public void ProcessFrameworksForArguments (StringBuilder args, IEnumerable<string> frameworks, IEnumerable<string> weak_frameworks, IList<string> inputs)
-		{
-			bool any_user_framework = false;
-
-			if (frameworks != null) {
-				foreach (var fw in frameworks)
-					ProcessFrameworkForArguments (args, fw, false, inputs, ref any_user_framework);
-			}
-
-			if (weak_frameworks != null) {
-				foreach (var fw in weak_frameworks)
-					ProcessFrameworkForArguments (args, fw, true, inputs, ref any_user_framework);
-			}
-			
-			if (any_user_framework) {
-				args.Append (" -Xlinker -rpath -Xlinker @executable_path/Frameworks");
-				if (IsExtension)
-					args.Append (" -Xlinker -rpath -Xlinker @executable_path/../../Frameworks");
-			}
-
-		}
-
-		public static void ProcessFrameworkForArguments (StringBuilder args, string fw, bool is_weak, IList<string> inputs, ref bool any_user_framework)
-		{
-			var name = Path.GetFileNameWithoutExtension (fw);
-			if (fw.EndsWith (".framework", StringComparison.Ordinal)) {
-				// user framework, we need to pass -F to the linker so that the linker finds the user framework.
-				any_user_framework = true;
-				if (inputs != null)
-					inputs.Add (Path.Combine (fw, name));
-				args.Append (" -F ").Append (Driver.Quote (Path.GetDirectoryName (fw)));
-			}
-			args.Append (is_weak ? " -weak_framework " : " -framework ").Append (Driver.Quote (name));
-		}
 	}
 }
