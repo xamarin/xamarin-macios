@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -40,6 +41,18 @@ namespace Xamarin.Bundler {
 			}
 		}
 		public string FileName { get { return Path.GetFileName (FullPath); } }
+		public string Identity { get { return GetIdentity (FullPath); } }
+
+		public static string GetIdentity (AssemblyDefinition ad)
+		{
+			return Path.GetFileNameWithoutExtension (ad.MainModule.FileName);
+		}
+
+		public static string GetIdentity (string path)
+		{
+			return Path.GetFileNameWithoutExtension (path);
+		}
+
 		public bool EnableCxx;
 		public bool NeedsGccExceptionHandling;
 		public bool ForceLoad;
@@ -463,5 +476,76 @@ namespace Xamarin.Bundler {
 				CopyAssembly (a, target_s);
 			}
 		}
+	}
+
+	public class AssemblyCollection : IEnumerable<Assembly>
+	{
+		Dictionary<string, Assembly> HashedAssemblies = new Dictionary<string, Assembly> (StringComparer.OrdinalIgnoreCase);
+
+		public void Add (Assembly assembly)
+		{
+			Assembly other;
+			if (HashedAssemblies.TryGetValue (assembly.Identity, out other))
+				throw ErrorHelper.CreateError (2018, "The assembly '{0}' is referenced from two different locations: '{1}' and '{2}'.", assembly.Identity, other.FullPath, assembly.FullPath);
+			HashedAssemblies.Add (assembly.Identity, assembly);
+		}
+
+		public void AddRange (AssemblyCollection assemblies)
+		{
+			if (Count == 0) {
+				HashedAssemblies = new Dictionary<string, Assembly> (assemblies.HashedAssemblies);
+			} else {
+				foreach (var a in assemblies)
+					Add (a);
+			}
+		}
+
+		public int Count {
+			get {
+				return HashedAssemblies.Count;
+			}
+		}
+
+		public IDictionary<string, Assembly> Hashed {
+			get { return HashedAssemblies; }
+		}
+
+		public bool TryGetValue (string identity, out Assembly assembly)
+		{
+			return HashedAssemblies.TryGetValue (identity, out assembly);
+		}
+
+		public bool ContainsKey (string identity)
+		{
+			return HashedAssemblies.ContainsKey (identity);
+		}
+
+		public void Remove (string identity)
+		{
+			HashedAssemblies.Remove (identity);
+		}
+
+		public void Remove (Assembly assembly)
+		{
+			Remove (assembly.Identity);
+		}
+
+		public Assembly this [string key] {
+			get { return HashedAssemblies [key]; }
+			set { HashedAssemblies [key] = value; }
+		}
+
+#region Interface implementations
+		IEnumerator IEnumerable.GetEnumerator ()
+		{
+			return GetEnumerator ();
+		}
+
+		public IEnumerator<Assembly> GetEnumerator ()
+		{
+			return HashedAssemblies.Values.GetEnumerator ();
+		}
+
+#endregion
 	}
 }

@@ -2075,6 +2075,83 @@ public partial class NotificationService : UNNotificationServiceExtension
 		}
 
 		[Test]
+		public void MT2018_a ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				// Create a library, copy it to a different directory, and then
+				// pass both as -r:.. to mtouch. Due to assembly resolution being cached,
+				// this will *not* show the MT2018 error (in fact I don't know if it's possible
+				// to run into MT2018 at all).
+				var tmpA = mtouch.CreateTemporaryDirectory ();
+				var dllA = CompileTestAppCode ("library", tmpA, "public class X {}", appName: "testLib");
+
+				var tmpB = mtouch.CreateTemporaryDirectory ();
+				var dllB = Path.Combine (tmpB, Path.GetFileName (dllA));
+				File.Copy (dllA, dllB);
+
+				mtouch.CreateTemporaryApp (code: "public class C { static void Main () { System.Console.WriteLine (typeof (X)); System.Console.WriteLine (typeof (UIKit.UIWindow)); } }", extraArg: "-r:" + Quote (dllA));
+				mtouch.References = new string [] { dllA, dllB };
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+			}
+		}
+
+		[Test]
+		public void MT2018_b ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				// Create a library named as an SDK assembly, and then
+				// pass both as -r:.. to mtouch, this library being the first one.
+				// Due to assembly resolution being cached,
+				// this will *not* show the MT2018 error (in fact I don't know if it's possible
+				// to run into MT2018 at all).
+				var tmpA = mtouch.CreateTemporaryDirectory ();
+				var dllA = CompileTestAppCode ("library", tmpA, "public class X {}", appName: "System.Net.Http");
+
+				var dllB = Path.Combine (Configuration.SdkRootXI, "lib", "mono", "Xamarin.iOS", Path.GetFileName (dllA));
+
+				mtouch.CreateTemporaryApp (code: "public class C { static void Main () { System.Console.WriteLine (typeof (X)); System.Console.WriteLine (typeof (UIKit.UIWindow)); } }", extraArg: "-r:" + Quote (dllA));
+				mtouch.References = new string [] { dllA, dllB };
+
+				// Without the linker we'll just copy the references, and not actually run into problems if we copy one that doesn't work
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+
+				// With the linker, we'll find out that we've loaded the right one.
+				mtouch.Linker = MTouchLinker.LinkSdk;
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+			}
+		}
+
+		[Test]
+		public void MT2018_c ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				// Create a library named as an SDK assembly, and then
+				// pass both as -r:.. to mtouch, the SDK library being the first one.
+				// Due to assembly resolution being cached,
+				// this will *not* show the MT2018 error (in fact I don't know if it's possible
+				// to run into MT2018 at all).
+				var tmpA = mtouch.CreateTemporaryDirectory ();
+				var dllA = CompileTestAppCode ("library", tmpA, "public class X {}", appName: "System.Net.Http");
+
+				var dllB = Path.Combine (Configuration.SdkRootXI, "lib", "mono", "Xamarin.iOS", Path.GetFileName (dllA));
+
+				mtouch.CreateTemporaryApp (code: "public class C { static void Main () { System.Console.WriteLine (typeof (X)); System.Console.WriteLine (typeof (UIKit.UIWindow)); } }", extraArg: "-r:" + Quote (dllA));
+				mtouch.References = new string [] { dllB, dllA };
+
+				// Without the linker we'll just copy the references, and not actually run into problems if we copy one that doesn't work
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+
+				// With the linker, we'll find out that the loaded reference doesn't work.
+				mtouch.Linker = MTouchLinker.LinkSdk;
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (2002, "Failed to resolve \"X\" reference from \"System.Net.Http, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\"");
+			}
+		}
+
+		[Test]
 		public void AutoLinkWithSqlite ()
 		{
 			using (var mtouch = new MTouchTool ()) {

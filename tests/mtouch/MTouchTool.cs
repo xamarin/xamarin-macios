@@ -453,7 +453,7 @@ namespace Xamarin
 			return plist;
 		}
 
-		public void CreateTemporaryApp (bool hasPlist = false, string appName = "testApp", string code = null)
+		public void CreateTemporaryApp (bool hasPlist = false, string appName = "testApp", string code = null, string extraArg = "")
 		{
 			string testDir;
 			if (RootAssembly == null) {
@@ -465,7 +465,7 @@ namespace Xamarin
 			var app = AppPath ?? Path.Combine (testDir, appName + ".app");
 			Directory.CreateDirectory (app);
 			AppPath = app;
-			RootAssembly = MTouch.CompileTestAppExecutable (testDir, code, "", Profile, appName);
+			RootAssembly = MTouch.CompileTestAppExecutable (testDir, code, extraArg, Profile, appName);
 
 			if (hasPlist)
 				File.WriteAllText (Path.Combine (app, "Info.plist"), CreatePlist (Profile, appName));

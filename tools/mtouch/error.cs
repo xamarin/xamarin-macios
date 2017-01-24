@@ -214,6 +214,7 @@ namespace Xamarin.Bundler {
 	//		Warning		MT2015	Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.
 	//		Warning		MT2016  Invalid TlsProvider `{0}` option. The only valid value `{1}` will be used.
 	//					MT2017  Could not process XML description: {0}
+	//					MT2018	The assembly '{0}' is referenced from two different locations: '{1}' and '{2}'.
 	//					MT202x	Binding Optimizer failed processing `...`.
 	//					MT203x	Removing User Resources failed processing `...`.
 	//					MT204x	Default HttpMessageHandler setter failed processing `...`.

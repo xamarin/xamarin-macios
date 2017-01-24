@@ -473,10 +473,9 @@ namespace Xamarin.Bundler
 
 					if (Application.IsUptodate (input, output)) {
 						cached_link = true;
-						for (int i = Assemblies.Count - 1; i >= 0; i--) {
-							var a = Assemblies [i];
+						foreach (var a in Assemblies.ToList ()) {
 							if (!cached_output.Contains (a.FullPath)) {
-								Assemblies.RemoveAt (i);
+								Assemblies.Remove (a);
 								continue;
 							}
 							// Load the cached assembly
@@ -516,12 +515,11 @@ namespace Xamarin.Bundler
 			removed.ExceptWith (linked_assemblies);
 
 			foreach (var assembly in removed) {
-				for (int i = Assemblies.Count - 1; i >= 0; i--) {
-					var ad = Assemblies [i];
+				foreach (var ad in Assemblies.ToList ()) {
 					if (assembly != ad.FullPath)
 						continue;
 
-					Assemblies.RemoveAt (i);
+					Assemblies.Remove (ad);
 				}
 			}
 
