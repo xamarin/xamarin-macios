@@ -84,7 +84,27 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	class MainTask : CompileTask
+	class GenerateMainTask : BuildTask
+	{
+		public Target Target;
+		public Abi Abi;
+		public string MainM;
+		public IList<string> RegistrationMethods;
+
+		public IEnumerable<string> Inputs {
+			get {
+				foreach (var asm in Target.Assemblies)
+					yield return asm.FullPath;
+			}
+		}
+
+		protected override void Build ()
+		{
+			Driver.GenerateMain (Target.App, Target.Assemblies, Target.App.AssemblyName, Abi, MainM, RegistrationMethods);
+		}
+	}
+
+	class CompileMainTask : CompileTask
 	{
 		public static void Create (List<BuildTask> tasks, Target target, Abi abi, IEnumerable<Assembly> assemblies, string assemblyName, IList<string> registration_methods)
 		{
@@ -95,14 +115,21 @@ namespace Xamarin.Bundler
 
 			var files = assemblies.Select (v => v.FullPath);
 
+			GenerateMainTask generate_task = null;
 			if (!Application.IsUptodate (files, new string [] { ifile })) {
-				Driver.GenerateMain (target.App, assemblies, assemblyName, abi, ifile, registration_methods);
+				generate_task = new GenerateMainTask
+				{
+					Target = target,
+					Abi = abi,
+					MainM = ifile,
+					RegistrationMethods = registration_methods,
+				};
 			} else {
 				Driver.Log (3, "Target '{0}' is up-to-date.", ifile);
 			}
 
 			if (!Application.IsUptodate (ifile, ofile)) {
-				var main = new MainTask ()
+				var main = new CompileMainTask ()
 				{
 					Target = target,
 					Abi = abi,
@@ -113,7 +140,12 @@ namespace Xamarin.Bundler
 					Language = "objective-c++",
 				};
 				main.CompilerFlags.AddDefine ("MONOTOUCH");
-				tasks.Add (main);
+				if (generate_task == null) {
+					tasks.Add (main);
+				} else {
+					generate_task.NextTasks = new [] { main };
+					tasks.Add (generate_task);
+				}
 			} else {
 				Driver.Log (3, "Target '{0}' is up-to-date.", ofile);
 			}

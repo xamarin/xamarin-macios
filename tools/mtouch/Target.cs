@@ -667,7 +667,7 @@ namespace Xamarin.Bundler
 					Driver.Log (3, "Target '{0}' is up-to-date.", registrar_m);
 				}
 
-				RegistrarTask.Create (compile_tasks, Abis, this, registrar_m);
+				CompileRegistrarTask.Create (compile_tasks, Abis, this, registrar_m);
 			}
 
 			if (App.Registrar == RegistrarMode.Dynamic && App.IsSimulatorBuild && App.LinkMode == LinkMode.None) {
@@ -699,7 +699,7 @@ namespace Xamarin.Bundler
 
 			// The main method.
 			foreach (var abi in Abis)
-				MainTask.Create (compile_tasks, this, abi, Assemblies, App.AssemblyName, registration_methods);
+				CompileMainTask.Create (compile_tasks, this, abi, Assemblies, App.AssemblyName, registration_methods);
 
 			// Start compiling.
 			compile_tasks.ExecuteInParallel ();
