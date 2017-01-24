@@ -414,7 +414,7 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	public class BitCodeify : BuildTask
+	public class BitCodeifyTask : BuildTask
 	{
 		public string Input { get; set; }
 		public string OutputFile { get; set; }

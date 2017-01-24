@@ -294,7 +294,7 @@ namespace Xamarin.Bundler {
 				link_language = "";
 				// linker_flags.Add (" -fembed-bitcode");
 
-				bitcode_task = new BitCodeify () {
+				bitcode_task = new BitCodeifyTask () {
 					Input = infile_path,
 					OutputFile = link_task_input,
 					Platform = App.Platform,
