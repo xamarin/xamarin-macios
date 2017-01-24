@@ -478,10 +478,10 @@ namespace Xamarin.Bundler
 			return new Assembly (this, assembly);
 		}
 
-		public void LinkAssemblies (string main, out List<AssemblyDefinition> assemblies, string output_dir, out MonoTouchLinkContext link_context)
+		public void LinkAssemblies (out List<AssemblyDefinition> assemblies, string output_dir)
 		{
 			if (Driver.Verbosity > 0)
-				Console.WriteLine ("Linking {0} into {1} using mode '{2}'", main, output_dir, App.LinkMode);
+				Console.WriteLine ("Linking {0} into {1} using mode '{2}'", App.RootAssembly, output_dir, App.LinkMode);
 
 			var cache = Resolver.ToResolverCache ();
 			var resolver = cache != null
@@ -492,7 +492,7 @@ namespace Xamarin.Bundler
 			resolver.AddSearchDirectory (Resolver.FrameworkDirectory);
 
 			LinkerOptions = new LinkerOptions {
-				MainAssembly = Resolver.Load (main),
+				MainAssembly = Resolver.Load (App.RootAssembly),
 				OutputDirectory = output_dir,
 				LinkMode = App.LinkMode,
 				Resolver = resolver,
@@ -514,7 +514,7 @@ namespace Xamarin.Bundler
 				Target = this,
 			};
 
-			MonoTouch.Tuner.Linker.Process (LinkerOptions, out link_context, out assemblies);
+			MonoTouch.Tuner.Linker.Process (LinkerOptions, out LinkContext, out assemblies);
 
 			Driver.Watch ("Link Assemblies", 1);
 		}
@@ -605,7 +605,7 @@ namespace Xamarin.Bundler
 
 			List<AssemblyDefinition> linked_assemblies_definitions;
 
-			LinkAssemblies (App.RootAssembly, out linked_assemblies_definitions, PreBuildDirectory, out LinkContext);
+			LinkAssemblies (out linked_assemblies_definitions, PreBuildDirectory);
 
 			// Update (add/remove) the assemblies, since the linker may have both added and removed assemblies.
 			Assemblies.Update (this, linked_assemblies_definitions);
