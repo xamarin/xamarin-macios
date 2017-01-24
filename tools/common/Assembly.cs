@@ -545,12 +545,14 @@ namespace Xamarin.Bundler {
 					// new assembly
 					var asm = new Assembly (target, assembly);
 					Add (asm);
-					Driver.Log (1, "The linker added the assembly '{0}'.", asm.Identity);
+					Driver.Log (1, "The linker added the assembly '{0}' to '{1}'.", asm.Identity, target.App.Name);
+				} else {
+					this [identity].AssemblyDefinition = assembly;
 				}
 			}
 
 			foreach (var removed in current) {
-				Driver.Log (1, "The linker linked away the assembly '{0}'.", this [removed].Identity);
+				Driver.Log (1, "The linker linked away the assembly '{0}' from '{1}'.", this [removed].Identity, target.App.Name);
 				Remove (removed);
 			}
 		}

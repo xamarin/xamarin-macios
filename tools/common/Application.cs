@@ -60,11 +60,17 @@ namespace Xamarin.Bundler {
 		public MarshalManagedExceptionMode MarshalManagedExceptions;
 		public bool IsDefaultMarshalManagedExceptionMode;
 		public string RootAssembly;
+		public List<Application> SharedCodeApps = new List<Application> (); // List of appexes we're sharing code with.
 		public string RegistrarOutputLibrary;
 
 		public static int Concurrency => Driver.Concurrency;
 		public Version DeploymentTarget;
 		public Version SdkVersion;
+
+		// This is just a name for this app to show in log/error messages, etc.
+		public string Name {
+			get { return Path.GetFileNameWithoutExtension (AppDirectory); }
+		}
 
 		public bool RequiresPInvokeWrappers {
 			get {
