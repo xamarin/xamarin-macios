@@ -72,14 +72,22 @@ namespace Xamarin.Bundler {
 		}
 
 		// returns false if the assembly was not copied (because it was already up-to-date).
-		public bool CopyAssembly (string source, string target, bool copy_mdb = true)
+		public bool CopyAssembly (string source, string target, bool copy_mdb = true, bool strip = false)
 		{
 			var copied = false;
 
 			try {
-				if (!Application.IsUptodate (source, target) && !Cache.CompareAssemblies (source, target)) {
+				if (!Application.IsUptodate (source, target) && (strip || !Cache.CompareAssemblies (source, target))) {
 					copied = true;
-					Application.CopyFile (source, target);
+					if (strip) {
+						Driver.FileDelete (target);
+						Directory.CreateDirectory (Path.GetDirectoryName (target));
+						MonoTouch.Tuner.Stripper.Process (source, target);
+					} else {
+						Application.CopyFile (source, target);
+					}
+				} else {
+					Driver.Log (3, "Target '{0}' is up-to-date.", target);
 				}
 
 				// Update the mdb even if the assembly didn't change.
@@ -132,8 +140,12 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		// returns false if the assembly was not copied (because it was already up-to-date).
-		public bool CopyToDirectory (string directory, bool reload = true, bool check_case = false, bool only_copy = false, bool copy_mdb = true)
+		// this will copy (and optionally strip) the assembly and all the related files:
+		// * debug file (.mdb)
+		// * config file (.config)
+		// * satellite assemblies (<language id>/.dll)
+		// * aot data
+		public void CopyToDirectory (string directory, bool reload = true, bool check_case = false, bool only_copy = false, bool copy_mdb = true, bool strip = false)
 		{
 			var target = Path.Combine (directory, FileName);
 
@@ -144,11 +156,9 @@ namespace Xamarin.Bundler {
 				target = Path.Combine (directory, assemblyName + Path.GetExtension (FileName));
 			}
 
-			var copied = false;
-
 			// our Copy code deletes the target (so copy'ing over itself is a bad idea)
 			if (directory != Path.GetDirectoryName (FullPath))
-				copied = CopyAssembly (FullPath, target, copy_mdb: copy_mdb);
+				CopyAssembly (FullPath, target, copy_mdb: copy_mdb, strip: strip);
 
 			CopySatellitesToDirectory (directory);
 
@@ -159,8 +169,6 @@ namespace Xamarin.Bundler {
 					FullPath = target;
 				}
 			}
-
-			return copied;
 		}
 
 		IEnumerable<BuildTask> CreateCompileTasks (string s, string asm_infile, string llvm_infile, Abi abi)

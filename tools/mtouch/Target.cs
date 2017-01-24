@@ -944,42 +944,5 @@ namespace Xamarin.Bundler
 		{
 			link_with_and_ship.Add (dylib);
 		}
-
-		public void StripManagedCode ()
-		{
-			var strip = false;
-
-			strip = App.ManagedStrip && App.IsDeviceBuild && !App.EnableDebug && !App.PackageMdb;
-
-			if (!Directory.Exists (AppTargetDirectory))
-				Directory.CreateDirectory (AppTargetDirectory);
-
-			if (strip) {
-				// note: this is much slower when Parallel.ForEach is used
-				Parallel.ForEach (Assemblies, new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency }, (assembly) => 
-					{
-						var file = assembly.FullPath;
-						var output = Path.Combine (AppTargetDirectory, Path.GetFileName (assembly.FullPath));
-						if (Application.IsUptodate (file, output)) {
-							Driver.Log (3, "Target '{0}' is up-to-date", output);
-						} else {
-							Driver.Log (1, "Stripping assembly {0}", file);
-							Driver.FileDelete (output);
-							Stripper.Process (file, output);
-						}
-						// The stripper will only copy the main assembly.
-						// We need to copy .config files and satellite assemblies too
-						if (App.PackageMdb)
-							assembly.CopyMdbToDirectory (AppTargetDirectory);
-						assembly.CopyConfigToDirectory (AppTargetDirectory);
-						assembly.CopySatellitesToDirectory (AppTargetDirectory);
-					});
-
-				Driver.Watch ("Strip Assemblies", 1);
-			} else if (!Symlinked) {
-				foreach (var assembly in Assemblies)
-					assembly.CopyToDirectory (AppTargetDirectory, reload: false, copy_mdb: App.PackageMdb);
-			}
-		}
 	}
 }
