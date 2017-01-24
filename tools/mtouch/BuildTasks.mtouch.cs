@@ -173,7 +173,7 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	class RegistrarTask : CompileTask
+	class CompileRegistrarTask : CompileTask
 	{
 		public static void Create (List<BuildTask> tasks, IEnumerable<Abi> abis, Target target, string ifile)
 		{
@@ -188,7 +188,7 @@ namespace Xamarin.Bundler
 			var ofile = Path.Combine (app.Cache.Location, Path.GetFileNameWithoutExtension (ifile) + "." + arch + ".o");
 
 			if (!Application.IsUptodate (ifile, ofile)) {
-				tasks.Add (new RegistrarTask ()
+				tasks.Add (new CompileRegistrarTask ()
 				{
 					Target = target,
 					Abi = abi,
