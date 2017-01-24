@@ -376,7 +376,7 @@ namespace Xamarin.Bundler
 			return new Assembly (this, assembly);
 		}
 
-		public void LinkAssemblies (string main, ref List<string> assemblies, string output_dir, out MonoTouchLinkContext link_context)
+		public void LinkAssemblies (string main, out List<AssemblyDefinition> assemblies, string output_dir, out MonoTouchLinkContext link_context)
 		{
 			if (Driver.Verbosity > 0)
 				Console.WriteLine ("Linking {0} into {1} using mode '{2}'", main, output_dir, App.LinkMode);
@@ -505,9 +505,11 @@ namespace Xamarin.Bundler
 			var assemblies = new List<string> ();
 			foreach (var a in Assemblies)
 				assemblies.Add (a.FullPath);
-			var linked_assemblies = new List<string> (assemblies);
+			List<AssemblyDefinition> linked_assemblies_definitions;
 
-			LinkAssemblies (App.RootAssembly, ref linked_assemblies, PreBuildDirectory, out LinkContext);
+			LinkAssemblies (App.RootAssembly, out linked_assemblies_definitions, PreBuildDirectory, out LinkContext);
+
+			List<string> linked_assemblies = linked_assemblies_definitions.Select ((v) => v.MainModule.FileName).ToList ();
 
 			// Remove assemblies that were linked away
 			var removed = new HashSet<string> (assemblies);
