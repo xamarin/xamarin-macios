@@ -282,12 +282,9 @@ namespace Xamarin.Bundler {
 					all_architectures = new HashSet<Abi> ();
 					foreach (var abi in abis)
 						all_architectures.Add (abi & Abi.ArchMask);
-					foreach (var ext in Extensions) {
-						var executable = GetStringFromInfoPList (ext, "CFBundleExecutable");
-						if (string.IsNullOrEmpty (executable))
-							throw ErrorHelper.CreateError (63, "Cannot find the executable in the extension {0} (no CFBundleExecutable entry in its Info.plist)", ext);
-						foreach (var abi in Xamarin.MachO.GetArchitectures (Path.Combine (ext, executable)))
-							all_architectures.Add (abi);
+					foreach (var ext in AppExtensions) {
+						foreach (var abi in ext.Abis)
+							all_architectures.Add (abi & Abi.ArchMask);
 					}
 				}
 				return all_architectures;
