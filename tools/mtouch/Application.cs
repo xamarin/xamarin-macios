@@ -224,6 +224,10 @@ namespace Xamarin.Bundler {
 				break;
 			case "framework":
 				build_target = AssemblyBuildTarget.Framework;
+
+				if (name.EndsWith (".framework", StringComparison.Ordinal))
+					name = name.Substring (0, name.Length - ".framework".Length);
+
 				break;
 			default:
 				throw ErrorHelper.CreateError (10, "Could not parse the command line arguments: --assembly-build-target={0}", value);
