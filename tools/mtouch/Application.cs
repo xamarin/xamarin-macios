@@ -161,6 +161,21 @@ namespace Xamarin.Bundler {
 
 		Dictionary<string, Tuple<AssemblyBuildTarget, string>> assembly_build_targets = new Dictionary<string, Tuple<AssemblyBuildTarget, string>> ();
 
+		public AssemblyBuildTarget LibMonoLinkMode = AssemblyBuildTarget.StaticObject;
+		public AssemblyBuildTarget LibXamarinLinkMode = AssemblyBuildTarget.StaticObject;
+
+		public bool HasDynamicLibraries {
+			get {
+				return assembly_build_targets.Any ((abt) => abt.Value.Item1 == AssemblyBuildTarget.DynamicLibrary);
+			}
+		}
+
+		public bool HasFrameworks {
+			get {
+				return assembly_build_targets.Any ((abt) => abt.Value.Item1 == AssemblyBuildTarget.Framework);
+			}
+		}
+
 		public void AddAssemblyBuildTarget (string value)
 		{
 			var eq_index = value.IndexOf ('=');
@@ -873,7 +888,7 @@ namespace Xamarin.Bundler {
 				throw new MonoTouchException (74, true, "Xamarin.iOS {0} does not support a deployment target of {1} for {3} (the maximum is {2}). Please select an older deployment target in your project's Info.plist or upgrade to a newer version of Xamarin.iOS.", Constants.Version, DeploymentTarget, Xamarin.SdkVersions.GetVersion (Platform), PlatformName);
 			}
 
-			if (Platform == ApplePlatform.iOS && FastDev && DeploymentTarget.Major < 8) {
+			if (Platform == ApplePlatform.iOS && (HasDynamicLibraries || HasFrameworks) && DeploymentTarget.Major < 8) {
 				ErrorHelper.Warning (78, "Incremental builds are enabled with a deployment target < 8.0 (currently {0}). This is not supported (the resulting application will not launch on iOS 9), so the deployment target will be set to 8.0.", DeploymentTarget);
 				DeploymentTarget = new Version (8, 0);
 			}
@@ -954,6 +969,18 @@ namespace Xamarin.Bundler {
 
 			if (LinkMode == LinkMode.None && SdkVersion < SdkVersions.GetVersion (Platform))
 				throw ErrorHelper.CreateError (91, "This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker by changing the Linker behaviour to Link Framework SDKs Only.", PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode);
+
+			if (HasFrameworks || UseMonoFramework.Value) {
+				LibMonoLinkMode = AssemblyBuildTarget.Framework;
+			} else if (HasDynamicLibraries) {
+				LibMonoLinkMode = AssemblyBuildTarget.DynamicLibrary;
+			}
+
+			if (HasFrameworks) {
+				LibXamarinLinkMode = AssemblyBuildTarget.Framework;
+			} else if (HasDynamicLibraries) {
+				LibXamarinLinkMode = AssemblyBuildTarget.DynamicLibrary;
+			}
 
 			Namespaces.Initialize ();
 
@@ -1183,7 +1210,7 @@ namespace Xamarin.Bundler {
 		{
 			if (FastDev) {
 				var libdir = Path.Combine (Driver.GetProductSdkDirectory (this), "usr", "lib");
-				var libmono_name = LibMono;
+				var libmono_name = GetLibMono (LibMonoLinkMode);
 				if (!UseMonoFramework.Value) {
 					var libmono_target = Path.Combine (AppDirectory, libmono_name);
 					var libmono_source = Path.Combine (libdir, libmono_name);
@@ -1196,8 +1223,8 @@ namespace Xamarin.Bundler {
 					Application.UpdateFile (libprofiler_source, libprofiler_target);
 
 				// Copy libXamarin.dylib to the app
-				var libxamarin_target = Path.Combine (AppDirectory, LibXamarin);
-				Application.UpdateFile (Path.Combine (Driver.GetMonoTouchLibDirectory (this), LibXamarin), libxamarin_target);
+				var libxamarin_target = Path.Combine (AppDirectory, GetLibXamarin (LibXamarinLinkMode));
+				Application.UpdateFile (Path.Combine (Driver.GetMonoTouchLibDirectory (this), GetLibXamarin (LibXamarinLinkMode)), libxamarin_target);
 
 				if (UseMonoFramework.Value) {
 					if (EnableProfiling)
@@ -1333,23 +1360,31 @@ namespace Xamarin.Bundler {
 			Driver.CalculateCompilerPath (this);
 		}
 
-		public string LibMono {
-			get {
-				if (FastDev) {
-					return "libmonosgen-2.0.dylib";
-				} else {
-					return "libmonosgen-2.0.a";
-				}
+		public string GetLibMono (AssemblyBuildTarget build_target)
+		{
+			switch (build_target) {
+			case AssemblyBuildTarget.StaticObject:
+				return Path.Combine (Driver.GetMonoTouchLibDirectory (this), "libmonosgen-2.0.a");
+			case AssemblyBuildTarget.DynamicLibrary:
+				return Path.Combine (Driver.GetMonoTouchLibDirectory (this), "libmonosgen-2.0.dylib");
+			case AssemblyBuildTarget.Framework:
+				return Path.Combine (Driver.GetProductSdkDirectory (this), "Frameworks", "Mono.framework");
+			default:
+				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", build_target);
 			}
 		}
 
-		public string LibXamarin {
-			get {
-				if (FastDev) {
-					return EnableDebug ? "libxamarin-debug.dylib" : "libxamarin.dylib";
-				} else {
-					return EnableDebug ? "libxamarin-debug.a" : "libxamarin.a";
-				}
+		public string GetLibXamarin (AssemblyBuildTarget build_target)
+		{
+			switch (build_target) {
+			case AssemblyBuildTarget.StaticObject:
+				return Path.Combine (Driver.GetMonoTouchLibDirectory (this), EnableDebug ? "libxamarin-debug.a" : "libxamarin.a");
+			case AssemblyBuildTarget.DynamicLibrary:
+				return Path.Combine (Driver.GetMonoTouchLibDirectory (this), EnableDebug ? "libxamarin-debug.dylib" : "libxamarin.dylib");
+			case AssemblyBuildTarget.Framework:
+				return Path.Combine (Driver.GetProductSdkDirectory (this), "Frameworks", EnableDebug ? "Xamarin-debug.framework" : "Xamarin.framework");
+			default:
+				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", build_target);
 			}
 		}
 

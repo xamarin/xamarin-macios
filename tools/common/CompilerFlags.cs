@@ -92,17 +92,34 @@ namespace Xamarin.Utils
 
 		public void LinkWithMono ()
 		{
-			// link with the exact path to libmono
-			if (Application.UseMonoFramework.Value) {
-				AddFramework (Path.Combine (Driver.GetProductFrameworksDirectory (Application), "Mono.framework"));
-			} else {
-				AddLinkWith (Path.Combine (Driver.GetMonoTouchLibDirectory (Application), Application.LibMono));
+			var mode = Target.App.LibMonoLinkMode;
+			switch (mode) {
+			case AssemblyBuildTarget.DynamicLibrary:
+			case AssemblyBuildTarget.StaticObject:
+				AddLinkWith (Application.GetLibMono (mode));
+				break;
+			case AssemblyBuildTarget.Framework:
+				AddFramework (Application.GetLibMono (mode));
+				break;
+			default:
+				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", mode);
 			}
 		}
 
 		public void LinkWithXamarin ()
 		{
-			AddLinkWith (Path.Combine (Driver.GetMonoTouchLibDirectory (Application), Application.LibXamarin));
+			var mode = Target.App.LibXamarinLinkMode;
+			switch (mode) {
+			case AssemblyBuildTarget.DynamicLibrary:
+			case AssemblyBuildTarget.StaticObject:
+				AddLinkWith (Application.GetLibXamarin (mode));
+				break;
+			case AssemblyBuildTarget.Framework:
+				AddFramework (Application.GetLibXamarin (mode));
+				break;
+			default:
+				throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", mode);
+			}
 			AddFramework ("Foundation");
 			AddOtherFlag ("-lz");
 		}
