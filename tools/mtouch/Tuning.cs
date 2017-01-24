@@ -61,7 +61,7 @@ namespace MonoTouch.Tuner {
 
 	class Linker {
 
-		public static void Process (LinkerOptions options, out MonoTouchLinkContext context, out List<string> assemblies)
+		public static void Process (LinkerOptions options, out MonoTouchLinkContext context, out List<AssemblyDefinition> assemblies)
 		{
 			var pipeline = CreatePipeline (options);
 
@@ -192,22 +192,17 @@ namespace MonoTouch.Tuner {
 			return pipeline;
 		}
 
-		static List<string> ListAssemblies (MonoTouchLinkContext context)
+		static List<AssemblyDefinition> ListAssemblies (MonoTouchLinkContext context)
 		{
-			var list = new List<string> ();
+			var list = new List<AssemblyDefinition> ();
 			foreach (var assembly in context.GetAssemblies ()) {
 				if (context.Annotations.GetAction (assembly) == AssemblyAction.Delete)
 					continue;
 
-				list.Add (GetFullyQualifiedName (assembly));
+				list.Add (assembly);
 			}
 
 			return list;
-		}
-
-		static string GetFullyQualifiedName (AssemblyDefinition assembly)
-		{
-			return assembly.MainModule.FileName;
 		}
 
 		static ResolveFromXmlStep GetResolveStep (string filename)
