@@ -2042,7 +2042,7 @@ class Test {
 				var lines = otool_output.Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 				for (int i = 0; i < lines.Length; i++) {
 					if (lines [i].Contains ("LC_ID_DYLIB")) {
-						Assert.That (lines [i + 2], Does.Contain ("name @executable_path/libpinvokes.dylib "), "LC_ID_DYLIB");
+						Assert.That (lines [i + 2], Does.Contain ("name @rpath/libpinvokes.dylib "), "LC_ID_DYLIB");
 						break;
 					}
 				}
