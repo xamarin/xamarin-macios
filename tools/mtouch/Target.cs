@@ -647,6 +647,15 @@ namespace Xamarin.Bundler
 
 		public void Compile ()
 		{
+			// Compute the dependency map, and show warnings if there are any problems.
+			List<Exception> exceptions = new List<Exception> ();
+			foreach (var a in Assemblies)
+				a.ComputeDependencyMap (exceptions);
+			if (exceptions.Count > 0) {
+				ErrorHelper.Show (exceptions);
+				ErrorHelper.Warning (3006, "Could not compute a complete dependency map for the project. This will result in slower build times because Xamarin.iOS can't properly detect what needs to be rebuilt (and what does not need to be rebuilt). Please review previous warnings for more details.");
+			}
+
 			// Compile the managed assemblies into object files or shared libraries
 			if (App.IsDeviceBuild) {
 				foreach (var a in Assemblies)

@@ -27,19 +27,33 @@ namespace Xamarin.Bundler {
 
 		public List<string> AotDataFiles = new List<string> ();
 
-		HashSet<string> dependencies;
+		HashSet<string> dependency_map;
+		bool has_dependency_map;
+
+		public bool HasDependencyMap {
+			get {
+				return has_dependency_map;
+			}
+		}
 
 		public IEnumerable<string> Dylibs {
 			get { return dylibs; }
 		}
 
+		public HashSet<string> DependencyMap {
+			get {
+				return dependency_map;
+			}
+		}
+
 		// Recursively list all the assemblies the specified assembly depends on.
 		HashSet<string> ComputeDependencies (List<Exception> warnings)
 		{
-			if (dependencies != null)
-				return dependencies;
+			if (dependency_map != null)
+				return dependency_map;
 
-			dependencies = new HashSet<string> ();
+			dependency_map = new HashSet<string> ();
+			has_dependency_map = true;
 
 			foreach (var ar in AssemblyDefinition.MainModule.AssemblyReferences) {
 				var found = false;
@@ -54,21 +68,28 @@ namespace Xamarin.Bundler {
 
 					if (a.AssemblyDefinition.Name.Name == ar.Name) {
 						// gotcha
-						if (!dependencies.Contains (a.FullPath)) {
-							dependencies.Add (a.FullPath);
-							dependencies.UnionWith (a.ComputeDependencies (warnings));
+						if (!dependency_map.Contains (a.FullPath)) {
+							dependency_map.Add (a.FullPath);
+							dependency_map.UnionWith (a.ComputeDependencies (warnings));
 						}
 						found = true;
 						break;
 					}
 				}
 
-				if (!found)
+				if (!found) {
 					warnings.Add (new MonoTouchException (3005, false, "The dependency '{0}' of the assembly '{1}' was not found. Please review the project's references.",
 					                                      ar.FullName, AssemblyDefinition.FullName));
+					has_dependency_map = false;
+				}
 			}
 
-			return dependencies;
+			return dependency_map;
+		}
+
+		public void ComputeDependencyMap (List<Exception> exceptions)
+		{
+			ComputeDependencies (exceptions);
 		}
 
 		// returns false if the assembly was not copied (because it was already up-to-date).
@@ -201,19 +222,13 @@ namespace Xamarin.Bundler {
 
 			if (!File.Exists (s))
 				throw new MonoTouchException (3004, true, "Could not AOT the assembly '{0}' because it doesn't exist.", s);
-
-			HashSet<string> dependencies = null;
+			
 			List<string> deps = null;
 			List<string> outputs = new List<string> ();
 			var warnings = new List<Exception> ();
 
-			dependencies = ComputeDependencies (warnings);
-
-			if (warnings.Count > 0) {
-				ErrorHelper.Show (warnings);
-				ErrorHelper.Warning (3006, "Could not compute a complete dependency map for the project. This will result in slower build times because Xamarin.iOS can't properly detect what needs to be rebuilt (and what does not need to be rebuilt). Please review previous warnings for more details.");
-			} else {
-				deps = new List<string> (dependencies.ToArray ());
+			if (has_dependency_map) {
+				deps = new List<string> (dependency_map.ToArray ());
 				deps.Add (s);
 				deps.Add (Driver.GetAotCompiler (App, Target.Is64Build));
 			}
