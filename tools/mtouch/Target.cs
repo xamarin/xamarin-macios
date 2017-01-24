@@ -760,7 +760,7 @@ namespace Xamarin.Bundler
 				linker_flags.AddOtherFlag ($"-m{Driver.GetTargetMinSdkName (App)}-version-min={App.DeploymentTarget}");
 				linker_flags.AddOtherFlag ($"-isysroot {Driver.Quote (Driver.GetFrameworkDirectory (App))}");
 			} else {
-				CompileTask.GetSimulatorCompilerFlags (linker_flags, null, App);
+				CompileTask.GetSimulatorCompilerFlags (linker_flags, false, App);
 			}
 			linker_flags.LinkWithMono ();
 			linker_flags.LinkWithXamarin ();
