@@ -2138,11 +2138,6 @@ namespace XamCore.Registrar {
 			return sb.ToString ();
 		}
 
-		string CleanName (string name)
-		{
-			return name.Replace ('.', '_').Replace ('/', '_');
-		}
-
 		void WriteFullName (StringBuilder sb, TypeReference type)
 		{
 			if (type.DeclaringType != null) {

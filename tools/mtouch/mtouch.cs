@@ -893,14 +893,6 @@ namespace Xamarin.Bundler
 			return true;
 		}
 
-		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static IntPtr /* CFPropertyListRef */ CFPropertyListCreateWithData (
-			IntPtr /* CFAllocatorRef */ allocator,
-			IntPtr /* CFDataRef */ data,
-			int /* CFOptionFlags */ options,
-			IntPtr /* CFPropertyListFormat */ format,
-			IntPtr /* CFErrorRef */ error);
-
 		internal static PDictionary FromPList (string name)
 		{
 			if (!File.Exists (name))
