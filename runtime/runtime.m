@@ -76,6 +76,7 @@ bool xamarin_is_gc_coop = false;
 #endif
 enum MarshalObjectiveCExceptionMode xamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionModeDefault;
 enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode = MarshalManagedExceptionModeDefault;
+bool xamarin_is_extension = false;
 
 /* Callbacks */
 
@@ -2189,6 +2190,7 @@ xamarin_vprintf (const char *format, va_list args)
  * Assemblies can be found in several locations:
  * 1. If the assembly is compiled to a framework, in the framework's MonoBundle directory.
  *    For extensions the framework may be in the containing app's Frameworks directory.
+ *    If an extension is sharing code with the main app, then the assemblies whose build target isn't 'framework' will be located in the container app's root directory.
  *    A framework may contain multiple assemblies, so it's not possible to deduce the framework name from the assembly name.
  * 2. If the assembly is not a framework, in the app's root directory.
  *
@@ -2311,6 +2313,15 @@ xamarin_locate_assembly_resource (const char *assembly_name, const char *culture
 	if (xamarin_locate_assembly_resource_for_root (root, culture, resource, path, pathlen)) {
 		LOG_RESOURCELOOKUP (PRODUCT ": Located resource '%s' from framework '%s': %s\n", resource, aname, path);
 		return true;
+	}
+
+	// Then in the container app's root directory (for extensions)
+	if (xamarin_is_extension) {
+		snprintf (root, sizeof (root), "../..");
+		if (xamarin_locate_assembly_resource_for_root (root, culture, resource, path, pathlen)) {
+			LOG_RESOURCELOOKUP (PRODUCT ": Located resource '%s' from container app bundle '%s': %s\n", resource, aname, path);
+			return true;
+		}
 	}
 
 	return false;

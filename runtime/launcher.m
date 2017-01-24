@@ -368,6 +368,8 @@ app_initialize (xamarin_initialize_data *data, bool is_extension)
 	// The launch code here is publicly documented in xamarin/launch.h
 	// The numbers in the comments refer to numbers in xamarin/launch.h.
 
+	xamarin_is_extension = is_extension;
+
 #ifndef SYSTEM_LAUNCHER
 	if (xammac_setup ()) {
 		data->exit_code = -1;

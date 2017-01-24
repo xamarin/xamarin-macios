@@ -234,6 +234,8 @@ xamarin_main (int argc, char *argv[], bool is_extension)
 	patch_sigaction ();
 #endif
 
+	xamarin_is_extension = is_extension;
+
 	memset (managed_argv, 0, sizeof (char*) * (argc + 2));
 	managed_argv [0] = "monotouch";
 

@@ -57,6 +57,7 @@ extern const char *xamarin_arch_name;
 extern bool xamarin_is_gc_coop;
 extern enum MarshalObjectiveCExceptionMode xamarin_marshal_objectivec_exception_mode;
 extern enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode;
+extern bool xamarin_is_extension;
 
 #ifdef MONOTOUCH
 extern NSString* xamarin_crashlytics_api_key;
