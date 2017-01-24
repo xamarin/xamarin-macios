@@ -2251,6 +2251,28 @@ public partial class NotificationService : UNNotificationServiceExtension
 		}
 
 		[Test]
+		public void MT2017 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				// Create a library, copy it to a different directory, and then
+				// pass both as -r:.. to mtouch. Due to assembly resolution being cached,
+				// this will *not* show the MT2017 error (in fact I don't know if it's possible
+				// to run into MT2017 at all).
+				var tmpA = mtouch.CreateTemporaryDirectory ();
+				var dllA = CompileTestAppCode ("library", tmpA, "public class X {}", appName: "testLib");
+
+				var tmpB = mtouch.CreateTemporaryDirectory ();
+				var dllB = Path.Combine (tmpB, Path.GetFileName (dllA));
+				File.Copy (dllA, dllB);
+
+				mtouch.CreateTemporaryApp (code: "public class C { static void Main () { System.Console.WriteLine (typeof (X)); System.Console.WriteLine (typeof (UIKit.UIWindow)); } }", extraArg: "-r:" + Quote (dllA));
+				mtouch.References = new string [] { dllA, dllB };
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+			}
+		}
+
+		[Test]
 		public void AutoLinkWithSqlite ()
 		{
 			using (var mtouch = new MTouchTool ()) {

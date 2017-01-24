@@ -34,7 +34,7 @@ using PlatformLinkContext = MonoMac.Tuner.MonoMacLinkContext;
 namespace Xamarin.Bundler {
 	public partial class Target {
 		public Application App;
-		public List<Assembly> Assemblies = new List<Assembly> ();
+		public AssemblyCollection Assemblies = new AssemblyCollection ();
 
 		public PlatformLinkContext LinkContext;
 		public LinkerOptions LinkerOptions;
