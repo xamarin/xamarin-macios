@@ -177,7 +177,7 @@ namespace Xamarin.Bundler {
 			var asm_dir = App.Cache.Location;
 			var asm = Path.Combine (asm_dir, Path.GetFileName (s)) + "." + arch + ".s";
 			var llvm_asm = Path.Combine (asm_dir, Path.GetFileName (s)) + "." + arch + "-llvm.s";
-			var data = Path.Combine (asm_dir, Path.GetFileNameWithoutExtension (s)) + "." + arch + ".aotdata";
+			var data = Path.Combine (asm_dir, Path.GetFileNameWithoutExtension (s)) + ".aotdata" + "." + arch;
 			string llvm_ofile, llvm_aot_ofile = "";
 			var is_llvm = (abi & Abi.LLVM) == Abi.LLVM;
 			bool assemble_llvm = is_llvm && Driver.GetLLVMAsmWriter (App);

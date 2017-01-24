@@ -39,9 +39,9 @@ xamarin_load_aot_data (MonoAssembly *assembly, int size, gpointer user_data, voi
 	const char *pattern;
 	
 	if (xamarin_use_new_assemblies) {
-		pattern = "%s/" ARCH_SUBDIR "/%s.%s.aotdata";
+		pattern = "%s/" ARCH_SUBDIR "/%s.aotdata.%s";
 	} else {
-		pattern = "%s/%s.%s.aotdata";
+		pattern = "%s/%s.aotdata.%s";
 	}
 	path = xamarin_strdup_printf (pattern, [[[NSBundle mainBundle] bundlePath] UTF8String], name, xamarin_arch_name);
 	

@@ -94,7 +94,7 @@ namespace Xamarin
 
 				mtouch.AssertExecute (MTouchAction.BuildDev, "third build");
 
-				var skipFiles = new string [] { "testApp", "testApp.exe", "testApp.armv7.aotdata", "testApp.arm64.aotdata" };
+				var skipFiles = new string [] { "testApp", "testApp.exe", "testApp.aotdata.armv7", "testApp.aotdata.arm64" };
 				checkNotModified (name + "-rebuilt", skipFiles);
 			}
 		}
