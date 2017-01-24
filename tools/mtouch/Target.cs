@@ -723,23 +723,23 @@ namespace Xamarin.Bundler
 			if (App.EnableLLVMOnlyBitCode)
 				App.DeadStrip = false;
 
-			var compiler_flags = new CompilerFlags () { Target = this };
+			var linker_flags = new CompilerFlags () { Target = this };
 
 			// Get global frameworks
-			compiler_flags.AddFrameworks (App.Frameworks, App.WeakFrameworks);
-			compiler_flags.AddFrameworks (Frameworks, WeakFrameworks);
+			linker_flags.AddFrameworks (App.Frameworks, App.WeakFrameworks);
+			linker_flags.AddFrameworks (Frameworks, WeakFrameworks);
 
 			// Collect all LinkWith flags and frameworks from all assemblies.
 			foreach (var a in Assemblies) {
-				compiler_flags.AddFrameworks (a.Frameworks, a.WeakFrameworks);
+				linker_flags.AddFrameworks (a.Frameworks, a.WeakFrameworks);
 				if (!App.FastDev || App.IsSimulatorBuild)
-					compiler_flags.AddLinkWith (a.LinkWith, a.ForceLoad);
-				compiler_flags.AddOtherFlags (a.LinkerFlags);
+					linker_flags.AddLinkWith (a.LinkWith, a.ForceLoad);
+				linker_flags.AddOtherFlags (a.LinkerFlags);
 			}
 
 			var bitcode = App.EnableBitCode;
 			if (bitcode)
-				compiler_flags.AddOtherFlag (App.EnableMarkerOnlyBitCode ? "-fembed-bitcode-marker" : "-fembed-bitcode");
+				linker_flags.AddOtherFlag (App.EnableMarkerOnlyBitCode ? "-fembed-bitcode-marker" : "-fembed-bitcode");
 			
 			if (App.EnablePie.HasValue && App.EnablePie.Value && (App.DeploymentTarget < new Version (4, 2)))
 				ErrorHelper.Error (28, "Cannot enable PIE (-pie) when targeting iOS 4.1 or earlier. Please disable PIE (-pie:false) or set the deployment target to at least iOS 4.2");
@@ -749,27 +749,27 @@ namespace Xamarin.Bundler
 
 			if (App.Platform == ApplePlatform.iOS) {
 				if (App.EnablePie.Value && (App.DeploymentTarget >= new Version (4, 2))) {
-					compiler_flags.AddOtherFlag ("-Wl,-pie");
+					linker_flags.AddOtherFlag ("-Wl,-pie");
 				} else {
-					compiler_flags.AddOtherFlag ("-Wl,-no_pie");
+					linker_flags.AddOtherFlag ("-Wl,-no_pie");
 				}
 			}
 
-			CompileTask.GetArchFlags (compiler_flags, Abis);
+			CompileTask.GetArchFlags (linker_flags, Abis);
 			if (App.IsDeviceBuild) {
-				compiler_flags.AddOtherFlag ($"-m{Driver.GetTargetMinSdkName (App)}-version-min={App.DeploymentTarget}");
-				compiler_flags.AddOtherFlag ($"-isysroot {Driver.Quote (Driver.GetFrameworkDirectory (App))}");
+				linker_flags.AddOtherFlag ($"-m{Driver.GetTargetMinSdkName (App)}-version-min={App.DeploymentTarget}");
+				linker_flags.AddOtherFlag ($"-isysroot {Driver.Quote (Driver.GetFrameworkDirectory (App))}");
 			} else {
-				CompileTask.GetSimulatorCompilerFlags (compiler_flags, null, App);
+				CompileTask.GetSimulatorCompilerFlags (linker_flags, null, App);
 			}
-			compiler_flags.LinkWithMono ();
-			compiler_flags.LinkWithXamarin ();
+			linker_flags.LinkWithMono ();
+			linker_flags.LinkWithXamarin ();
 
-			compiler_flags.AddLinkWith (link_with);
-			compiler_flags.AddOtherFlag ($"-o {Driver.Quote (Executable)}");
+			linker_flags.AddLinkWith (link_with);
+			linker_flags.AddOtherFlag ($"-o {Driver.Quote (Executable)}");
 
-			compiler_flags.AddOtherFlag ("-lz");
-			compiler_flags.AddOtherFlag ("-liconv");
+			linker_flags.AddOtherFlag ("-lz");
+			linker_flags.AddOtherFlag ("-liconv");
 
 			bool need_libcpp = false;
 			if (App.EnableBitCode)
@@ -778,19 +778,19 @@ namespace Xamarin.Bundler
 			need_libcpp = true;
 #endif
 			if (need_libcpp)
-				compiler_flags.AddOtherFlag ("-lc++");
+				linker_flags.AddOtherFlag ("-lc++");
 
 			// allow the native linker to remove unused symbols (if the caller was removed by the managed linker)
 			if (!bitcode) {
 				// Note that we include *all* (__Internal) p/invoked symbols here
 				// We also include any fields from [Field] attributes.
-				compiler_flags.ReferenceSymbols (GetRequiredSymbols ());
+				linker_flags.ReferenceSymbols (GetRequiredSymbols ());
 			}
 
 			string mainlib;
 			if (App.IsWatchExtension) {
 				mainlib = "libwatchextension.a";
-				compiler_flags.AddOtherFlag (" -e _xamarin_watchextension_main");
+				linker_flags.AddOtherFlag (" -e _xamarin_watchextension_main");
 			} else if (App.IsTVExtension) {
 				mainlib = "libtvextension.a";
 			} else if (App.IsExtension) {
@@ -800,39 +800,39 @@ namespace Xamarin.Bundler
 			}
 			var libdir = Path.Combine (Driver.GetProductSdkDirectory (App), "usr", "lib");
 			var libmain = Path.Combine (libdir, mainlib);
-			compiler_flags.AddLinkWith (libmain, true);
+			linker_flags.AddLinkWith (libmain, true);
 
 			if (App.EnableProfiling) {
 				string libprofiler;
 				if (App.FastDev) {
 					libprofiler = Path.Combine (libdir, "libmono-profiler-log.dylib");
-					compiler_flags.AddLinkWith (libprofiler);
+					linker_flags.AddLinkWith (libprofiler);
 				} else {
 					libprofiler = Path.Combine (libdir, "libmono-profiler-log.a");
-					compiler_flags.AddLinkWith (libprofiler);
+					linker_flags.AddLinkWith (libprofiler);
 					if (!App.EnableBitCode)
-						compiler_flags.ReferenceSymbol ("mono_profiler_startup_log");
+						linker_flags.ReferenceSymbol ("mono_profiler_startup_log");
 				}
 			}
 
 			if (!string.IsNullOrEmpty (App.UserGccFlags))
-				compiler_flags.AddOtherFlag (App.UserGccFlags);
+				linker_flags.AddOtherFlag (App.UserGccFlags);
 
 			if (App.DeadStrip)
-				compiler_flags.AddOtherFlag ("-dead_strip");
+				linker_flags.AddOtherFlag ("-dead_strip");
 
 			if (App.IsExtension) {
 				if (App.Platform == ApplePlatform.iOS && Driver.XcodeVersion.Major < 7) {
-					compiler_flags.AddOtherFlag ("-lpkstart");
-					compiler_flags.AddOtherFlag ($"-F {Driver.Quote (Path.Combine (Driver.GetFrameworkDirectory (App), "System/Library/PrivateFrameworks"))} -framework PlugInKit");
+					linker_flags.AddOtherFlag ("-lpkstart");
+					linker_flags.AddOtherFlag ($"-F {Driver.Quote (Path.Combine (Driver.GetFrameworkDirectory (App), "System/Library/PrivateFrameworks"))} -framework PlugInKit");
 				}
-				compiler_flags.AddOtherFlag ("-fapplication-extension");
+				linker_flags.AddOtherFlag ("-fapplication-extension");
 			}
 
-			compiler_flags.Inputs = new List<string> ();
-			var flags = compiler_flags.ToString (); // This will populate Inputs.
+			linker_flags.Inputs = new List<string> ();
+			var flags = linker_flags.ToString (); // This will populate Inputs.
 
-			if (!Application.IsUptodate (compiler_flags.Inputs, new string [] { Executable } )) {
+			if (!Application.IsUptodate (linker_flags.Inputs, new string [] { Executable } )) {
 				// always show the native linker warnings since many of them turn out to be very important
 				// and very hard to diagnose otherwise when hidden from the build output. Ref: bug #2430
 				var linker_errors = new List<Exception> ();
