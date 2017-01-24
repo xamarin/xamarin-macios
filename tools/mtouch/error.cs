@@ -106,6 +106,8 @@ namespace Xamarin.Bundler {
 	//					MT0097 <used by mmp>
 	//					MT0098 <used by mmp>
 	//					MT0099	Internal error {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).
+	//					MT0101	The assembly '*' is specified multiple times in --assembly-build-target arguments.
+	//					MT0106	The assembly build target name '{0}' is invalid: the character '{1}' is not allowed.
 	//		Warning		MT0110  Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.
 	//		Warning		MT0111	Bitcode has been enabled because this version of Xamarin.iOS does not support building watchOS projects using LLVM without enabling bitcode.
 	// MT1xxx	file copy / symlinks (project related)

@@ -1266,6 +1266,13 @@ namespace Xamarin.Bundler
 			},
 			{ "tls-provider=", "Specify the default TLS provider", v => { tls_provider = v; }},
 			{ "xamarin-framework-directory=", "The framework directory", v => { mtouch_dir = v; }, true },
+			{ "assembly-build-target=", "Specifies how to compile assemblies to native code. Possible values: 'staticobject' (default), 'dynamiclibrary' and 'framework'. " +
+					"Each option also takes an assembly and a potential name (defaults to the name of the assembly). Example: --assembly-build-target=mscorlib.dll=framework[=name]." +
+					"There also two special names: '@all' and '@sdk': --assembly-build-target=@all|@sdk=framework[=name].", v =>
+					{
+						app.AddAssemblyBuildTarget (v);
+					}
+			},
 		};
 
 			AddSharedOptions (app, os);

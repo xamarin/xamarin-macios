@@ -87,6 +87,7 @@ namespace Xamarin
 		// These are a bit smarter
 		public Profile Profile = Profile.iOS;
 		public bool NoPlatformAssemblyReference;
+		public List<string> AssemblyBuildTargets = new List<string> ();
 		static XmlDocument device_list_cache;
 		public string LLVMOptimizations;
 		public string [] CustomArguments; // Sometimes you want to pass invalid arguments to mtouch, in this case this array is used. No processing will be done, if quotes are required, they must be added to the arguments in the array.
@@ -338,6 +339,9 @@ namespace Xamarin
 				}
 			}
 
+			foreach (var abt in AssemblyBuildTargets)
+				sb.Append (" --assembly-build-target ").Append (MTouch.Quote (abt));
+			
 			return sb.ToString ();
 		}
 

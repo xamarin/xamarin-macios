@@ -375,6 +375,20 @@ This error message is reported when an internal consistency check in Xamarin.iOS
 
 This indicates a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
 
+<h3><a name="MT0101"/>The assembly '*' is specified multiple times in --assembly-build-target arguments.</h3>
+
+The assembly mentioned in the error message is specified multiple times in --assembly-build-target arguments. Please make sure each assembly is only mentioned once.
+
+<h3><a name="MT0106"/>MT0106: The assembly build target name '*' is invalid: the character '*' is not allowed.</h3>
+
+The assembly build target name must be a valid filename.
+
+For example these values will trigger this error:
+
+    --assembly-build-target:Assembly1.dll=staticobject=my/path.o
+
+because `my/path.o` is not a valid filename due to the directory separator character.
+
 <h3><a name="MT0110"/>MT0110: Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.</h3>
 
 Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode (tvOS and watchOS projects).

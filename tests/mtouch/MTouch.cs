@@ -608,6 +608,36 @@ namespace Xamarin
 		}
 
 		[Test]
+		public void MT0101 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.DontLink; // the MT0101 check happens after linking, but before AOT-compiling, so not linking makes the test faster.
+				mtouch.AssemblyBuildTargets.Add ("mscorlib=framework");
+				mtouch.AssemblyBuildTargets.Add ("mscorlib=framework");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (101, "The assembly 'mscorlib' is specified multiple times in --assembly-build-target arguments.");
+			}
+		}
+
+		[Test]
+		public void MT0106 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.Linker = MTouchLinker.DontLink; // the MT0106 check happens after linking, but before AOT-compiling, so not linking makes the test faster.
+
+				mtouch.AssemblyBuildTargets.Add ("@all=staticobject=a/b");;
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (106, "The assembly build target name 'a/b' is invalid: the character '/' is not allowed.");
+
+				mtouch.AssemblyBuildTargets.Clear ();
+				mtouch.AssemblyBuildTargets.Add ("@all=staticobject=d\\e");
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (106, "The assembly build target name 'd\\e' is invalid: the character '\\' is not allowed.");
+			}
+		}
+
 		public void ExtensionBuild ()
 		{
 			using (var mtouch = new MTouchTool ()) {
@@ -2435,7 +2465,7 @@ public class TestApp {
 
 		public static string Quote (string f)
 		{
-			if (f.IndexOf (' ') == -1 && f.IndexOf ('\'') == -1 && f.IndexOf (',') == -1)
+			if (f.IndexOf (' ') == -1 && f.IndexOf ('\'') == -1 && f.IndexOf (',') == -1 && f.IndexOf ('\\') == -1)
 				return f;
 
 			var s = new StringBuilder ();

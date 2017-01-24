@@ -11,6 +11,13 @@ using Mono.Cecil;
 using Xamarin.Utils;
 
 namespace Xamarin.Bundler {
+	public enum AssemblyBuildTarget
+	{
+		StaticObject,
+		DynamicLibrary,
+		Framework,
+	}
+
 	public partial class Assembly
 	{
 		List<string> dylibs;

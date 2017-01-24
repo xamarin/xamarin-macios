@@ -159,6 +159,55 @@ namespace Xamarin.Bundler {
 		List<Abi> abis;
 		HashSet<Abi> all_architectures; // all Abis used in the app, including extensions.
 
+		Dictionary<string, Tuple<AssemblyBuildTarget, string>> assembly_build_targets = new Dictionary<string, Tuple<AssemblyBuildTarget, string>> ();
+
+		public void AddAssemblyBuildTarget (string value)
+		{
+			var eq_index = value.IndexOf ('=');
+			if (eq_index == -1)
+				throw ErrorHelper.CreateError (10, "Could not parse the command line arguments: --assembly-build-target={0}", value);
+
+			var assembly_name = value.Substring (0, eq_index);
+			string target, name;
+
+			var eq_index2 = value.IndexOf ('=', eq_index + 1);
+			if (eq_index2 == -1) {
+				target = value.Substring (eq_index + 1);
+				if (assembly_name == "@all" || assembly_name == "@sdk") {
+					name = string.Empty;
+				} else {
+					name = assembly_name;
+				}
+			} else {
+				target = value.Substring (eq_index + 1, eq_index2 - eq_index - 1);
+				name = value.Substring (eq_index2 + 1);
+			}
+
+			int invalid_idx;
+			if ((invalid_idx = name.IndexOfAny (new char [] { '/', '\\' })) != -1)
+				throw ErrorHelper.CreateError (106, "The assembly build target name '{0}' is invalid: the character '{1}' is not allowed.", name, name [invalid_idx]);
+
+			if (assembly_build_targets.ContainsKey (assembly_name))
+				throw ErrorHelper.CreateError (101, "The assembly '{0}' is specified multiple times in --assembly-build-target arguments.", assembly_name);
+
+			AssemblyBuildTarget build_target;
+			switch (target) {
+			case "staticobject":
+				build_target = AssemblyBuildTarget.StaticObject;
+				break;
+			case "dynamiclibrary":
+				build_target = AssemblyBuildTarget.DynamicLibrary;
+				break;
+			case "framework":
+				build_target = AssemblyBuildTarget.Framework;
+				break;
+			default:
+				throw ErrorHelper.CreateError (10, "Could not parse the command line arguments: --assembly-build-target={0}", value);
+			}
+
+			assembly_build_targets [assembly_name] = new Tuple<AssemblyBuildTarget, string> (build_target, name);
+		}
+
 		public string GetLLVMOptimizations (Assembly assembly)
 		{
 			string opt;
