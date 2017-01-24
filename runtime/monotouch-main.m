@@ -79,7 +79,7 @@ xamarin_free_aot_data (MonoAssembly *assembly, int size, gpointer user_data, voi
 /*
 This hook avoids the gazillion of filesystem probes we do as part of assembly loading.
 */
-MonoAssembly*
+static MonoAssembly*
 assembly_preload_hook (MonoAssemblyName *aname, char **assemblies_path, void* user_data)
 {
 	// COOP: This is a callback called by the AOT runtime, I belive we don't have to change the GC mode here.
