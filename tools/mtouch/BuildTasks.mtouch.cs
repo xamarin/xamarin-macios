@@ -84,7 +84,7 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	internal class MainTask : CompileTask
+	class MainTask : CompileTask
 	{
 		public static void Create (List<BuildTask> tasks, Target target, Abi abi, IEnumerable<Assembly> assemblies, string assemblyName, IList<string> registration_methods)
 		{
@@ -128,7 +128,7 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	internal class PinvokesTask : CompileTask
+	class PinvokesTask : CompileTask
 	{
 		public static void Create (List<BuildTask> tasks, IEnumerable<Abi> abis, Target target, string ifile)
 		{
@@ -173,7 +173,7 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	internal class RegistrarTask : CompileTask
+	class RegistrarTask : CompileTask
 	{
 		public static void Create (List<BuildTask> tasks, IEnumerable<Abi> abis, Target target, string ifile)
 		{
