@@ -536,7 +536,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			IntermediateOutputPath="$(IntermediateOutputPath)mmp-cache"
 			AppManifest="$(_AppManifest)"
 			SdkVersion="$(MacOSXSdkVersion)"
-			IsAppExtension="$(IsAppExtension)">
+			IsAppExtension="$(IsAppExtension)"
+			EnableSGenConc="$(EnableSGenConc)">
 			<Output TaskParameter="NativeLibraries" ItemName="_NativeLibrary" />
 		</Mmp>
 	</Target>

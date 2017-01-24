@@ -428,6 +428,17 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
+		public void Unified_SgenConcurrent_Test ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) {
+					CSProjConfig = "<MonoBundlingExtraArgs>--sgen-conc</MonoBundlingExtraArgs>"
+				};
+				TI.TestUnifiedExecutable (test);
+			});
+		}
+
+		[Test]
 		public void Unified_ShouldGenerateMachineConfigInBundle_WithEmptyOption ()
 		{
 			RunMMPTest (tmpDir => {
