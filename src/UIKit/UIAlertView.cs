@@ -27,11 +27,18 @@ namespace XamCore.UIKit {
 				AddButton (otherButtons [i]);
 		}
 
+		public UIAlertView (string title, string message, string cancelButtonTitle, params string [] otherButtons)
+			: this (title, message, (IUIAlertViewDelegate) null, cancelButtonTitle, otherButtons)
+		{
+		}
+
+#if !XAMCORE_4_0
 		[Obsolete ("Use overload with a IUIAlertViewDelegate parameter")]
 		public UIAlertView (string title, string message, UIAlertViewDelegate del, string cancelButtonTitle, params string [] otherButtons)
 			: this (title, message, (IUIAlertViewDelegate) del, cancelButtonTitle, otherButtons)
 		{
 		}
+#endif
 	}
 }
 
