@@ -317,7 +317,7 @@ namespace Xamarin.Bundler {
 				Driver.Log (3, "Target {0} needs to be rebuilt.", ofile);
 			}
 
-			var compiler_flags = new CompilerFlags () { Target = Target };
+			var compiler_flags = new CompilerFlags (Target);
 
 			BuildTask bitcode_task = null;
 			BuildTask link_task = null;

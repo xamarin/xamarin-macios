@@ -351,7 +351,7 @@ namespace Xamarin.Bundler
 
 		CompilerFlags compiler_flags;
 		public CompilerFlags CompilerFlags {
-			get { return compiler_flags ?? (compiler_flags = new CompilerFlags () { Target = Target }); }
+			get { return compiler_flags ?? (compiler_flags = new CompilerFlags (Target)); }
 			set { compiler_flags = value; }
 		}
 

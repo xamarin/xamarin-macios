@@ -27,6 +27,13 @@ namespace Xamarin.Utils
 		// tracking).
 		public List<string> Inputs;
 
+		public CompilerFlags (Target target)
+		{
+			if (target == null)
+				throw new ArgumentNullException (nameof (target));
+			this.Target = target;
+		}
+
 		public HashSet<string> AllLibraries {
 			get {
 				var rv = new HashSet<string> ();
