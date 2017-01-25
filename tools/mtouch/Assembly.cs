@@ -209,19 +209,19 @@ namespace Xamarin.Bundler {
 			return compile_tasks.Count > 0 ? compile_tasks : null;
 		}
 
-		IEnumerable<BuildTask> CreateManagedToAssemblyTasks (string s, Abi abi, string build_dir)
+		IEnumerable<BuildTask> CreateManagedToAssemblyTasks (string assembly_path, Abi abi, string build_dir)
 		{
 			var arch = abi.AsArchString ();
 			var asm_dir = Path.Combine (App.Cache.Location, arch);
-			var asm = Path.Combine (asm_dir, Path.GetFileName (s)) + ".s";
-			var llvm_asm = Path.Combine (asm_dir, Path.GetFileName (s)) + "-llvm.s";
-			var data = Path.Combine (asm_dir, Path.GetFileNameWithoutExtension (s)) + ".aotdata" + "." + arch;
+			var asm = Path.Combine (asm_dir, Path.GetFileName (assembly_path)) + ".s";
+			var llvm_asm = Path.Combine (asm_dir, Path.GetFileName (assembly_path)) + "-llvm.s";
+			var data = Path.Combine (asm_dir, Path.GetFileNameWithoutExtension (assembly_path)) + ".aotdata" + "." + arch;
 			string llvm_ofile, llvm_aot_ofile = "";
 			var is_llvm = (abi & Abi.LLVM) == Abi.LLVM;
 			bool assemble_llvm = is_llvm && Driver.GetLLVMAsmWriter (App);
 
-			if (!File.Exists (s))
-				throw new MonoTouchException (3004, true, "Could not AOT the assembly '{0}' because it doesn't exist.", s);
+			if (!File.Exists (assembly_path))
+				throw new MonoTouchException (3004, true, "Could not AOT the assembly '{0}' because it doesn't exist.", assembly_path);
 			
 			List<string> deps = null;
 			List<string> outputs = new List<string> ();
@@ -229,7 +229,7 @@ namespace Xamarin.Bundler {
 
 			if (has_dependency_map) {
 				deps = new List<string> (dependency_map.ToArray ());
-				deps.Add (s);
+				deps.Add (assembly_path);
 				deps.Add (Driver.GetAotCompiler (App, Target.Is64Build));
 			}
 
@@ -237,11 +237,11 @@ namespace Xamarin.Bundler {
 				//
 				// In llvm-only mode, the AOT compiler emits a .bc file and no .s file for JITted code
 				//
-				llvm_ofile = Path.Combine (asm_dir, Path.GetFileName (s)) + ".bc";
+				llvm_ofile = Path.Combine (asm_dir, Path.GetFileName (assembly_path)) + ".bc";
 				outputs.Add (llvm_ofile);
 				llvm_aot_ofile = llvm_ofile;
 			} else {
-				llvm_ofile = Path.Combine (asm_dir, Path.GetFileName (s)) + ".-llvm.o";
+				llvm_ofile = Path.Combine (asm_dir, Path.GetFileName (assembly_path)) + ".-llvm.o";
 				outputs.Add (asm);
 
 				if (is_llvm) {
@@ -258,9 +258,9 @@ namespace Xamarin.Bundler {
 			if (deps != null && Application.IsUptodate (deps, outputs)) {
 				Driver.Log (3, "Target {0} is up-to-date.", asm);
 				if (App.EnableLLVMOnlyBitCode)
-					return CreateCompileTasks (s, null, llvm_ofile, abi);
+					return CreateCompileTasks (assembly_path, null, llvm_ofile, abi);
 				else
-					return CreateCompileTasks (s, asm, assemble_llvm ? llvm_asm : null, abi);
+					return CreateCompileTasks (assembly_path, asm, assemble_llvm ? llvm_asm : null, abi);
 			} else {
 				Application.TryDelete (asm); // otherwise the next task might not detect that it will have to rebuild.
 				Application.TryDelete (llvm_asm);
@@ -269,25 +269,25 @@ namespace Xamarin.Bundler {
 			}
 
 			var aotCompiler = Driver.GetAotCompiler (App, Target.Is64Build);
-			var aotArgs = Driver.GetAotArguments (App, s, abi, build_dir, asm, llvm_aot_ofile, data);
+			var aotArgs = Driver.GetAotArguments (App, assembly_path, abi, build_dir, asm, llvm_aot_ofile, data);
 			Driver.Log (3, "Aot compiler: {0} {1}", aotCompiler, aotArgs);
 
 			AotDataFiles.Add (data);
 
 			IEnumerable<BuildTask> nextTasks;
 			if (App.EnableLLVMOnlyBitCode)
-				nextTasks = CreateCompileTasks (s, null, llvm_ofile, abi);
+				nextTasks = CreateCompileTasks (assembly_path, null, llvm_ofile, abi);
 			else
-				nextTasks = CreateCompileTasks (s, asm, assemble_llvm ? llvm_asm : null, abi);
+				nextTasks = CreateCompileTasks (assembly_path, asm, assemble_llvm ? llvm_asm : null, abi);
 
 			return new BuildTask [] { new AOTTask ()
 				{
 					Assembly = this,
-					AssemblyName = s,
+					AssemblyName = assembly_path,
 					AddBitcodeMarkerSection = App.FastDev && App.EnableMarkerOnlyBitCode,
 					AotOutputs = outputs,
 					AssemblyPath = asm,
-					ProcessStartInfo = Driver.CreateStartInfo (App, aotCompiler, aotArgs, Path.GetDirectoryName (s)),
+					ProcessStartInfo = Driver.CreateStartInfo (App, aotCompiler, aotArgs, Path.GetDirectoryName (assembly_path)),
 					NextTasks = nextTasks
 				}
 			};
