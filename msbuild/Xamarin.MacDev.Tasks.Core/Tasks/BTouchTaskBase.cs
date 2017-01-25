@@ -52,6 +52,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		public string OutputAssembly { get; set; }
 
+		public bool ProcessEnums { get; set; }
+
 		public ITaskItem[] References { get; set; }
 
 		public ITaskItem[] Resources { get; set; }
@@ -96,6 +98,9 @@ namespace Xamarin.MacDev.Tasks {
 				cmd.AppendSwitchIfNotNull ("/lib:", dir);
 				cmd.AppendSwitchIfNotNull ("/r:", Path.Combine (dir, "mscorlib.dll"));
 			}
+
+			if (ProcessEnums)
+				cmd.AppendSwitch ("/process-enums");
 
 			if (EmitDebugInformation)
 				cmd.AppendSwitch ("/debug");
@@ -180,13 +185,13 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
-			this.ToolExe = this.BTouchToolExe;
-			this.ToolPath = this.BTouchToolPath;
+			ToolExe = BTouchToolExe;
+			ToolPath = BTouchToolPath;
 
-			if (!string.IsNullOrEmpty (this.SessionId) &&
-			    	!string.IsNullOrEmpty (this.GeneratedSourcesDir) &&
-			    	!Directory.Exists (this.GeneratedSourcesDir)) {
-				Directory.CreateDirectory (this.GeneratedSourcesDir);
+			if (!string.IsNullOrEmpty (SessionId) &&
+			    !string.IsNullOrEmpty (GeneratedSourcesDir) &&
+			    !Directory.Exists (GeneratedSourcesDir)) {
+				Directory.CreateDirectory (GeneratedSourcesDir);
 			}
 
 			Log.LogTaskName ("BTouch");
@@ -206,6 +211,7 @@ namespace Xamarin.MacDev.Tasks {
 			Log.LogTaskProperty ("NativeLibraries", NativeLibraries);
 			Log.LogTaskProperty ("NoStdLib", NoStdLib);
 			Log.LogTaskProperty ("OutputAssembly", OutputAssembly);
+			Log.LogTaskProperty ("ProcessEnums", ProcessEnums);
 			Log.LogTaskProperty ("References", References);
 			Log.LogTaskProperty ("Resources", Resources);
 			Log.LogTaskProperty ("Sources", Sources);
