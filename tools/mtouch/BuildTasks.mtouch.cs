@@ -490,6 +490,8 @@ namespace Xamarin.Bundler
 			if (!string.IsNullOrEmpty (Language))
 				CompilerFlags.AddOtherFlag ($"-x {Language}");
 
+			Directory.CreateDirectory (Path.GetDirectoryName (OutputFile));
+
 			var rv = Driver.RunCommand (App.CompilerPath, CompilerFlags.ToString (), null, null);
 
 			return rv;
