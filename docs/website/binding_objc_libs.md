@@ -842,9 +842,9 @@ the wrap'ed version will still work and call the overriden method.
 
 ## Binding NSValue NSNumber and NSString to a better type
 
-The [[BindAs]](/guides/ios/advanced_topics/binding_objective-c/binding_types_reference_guide#BindAsAttribute) attribute allows binding `NSNumber` `NSValue` and `NSString`(enums) into more accurate C# types this allows an easy way to create better .NET API.
+The [[BindAs]](/guides/ios/advanced_topics/binding_objective-c/binding_types_reference_guide#BindAsAttribute) attribute allows binding `NSNumber`, `NSValue` and `NSString`(enums) into more accurate C# types. The attribute can be used to create better, more accurate, .NET API over the native API.
 
-It can be used in methods, parameters and properties. The only restriction is that your member **mustn't** be inside a `[Protocol]` or `[Model]` interface.
+You can decorate methods (on return value), parameters and properties with [[BindAs]](/guides/ios/advanced_topics/binding_objective-c/binding_types_reference_guide#BindAsAttribute). The only restriction is that your member **must not** be inside a `[Protocol]` or `[Model]` interface.
 
 For example:
 
@@ -882,7 +882,7 @@ CAScroll [] SupportedScrollModes { get; set; }
 
 `CAScroll` is a `NSString` backed enum, we will fetch the right `NSString` value and handle the type conversion.
 
-Please see [NSNumber](https://developer.xamarin.com/api/type/MonoTouch.Foundation.NSNumber/#Public_Properties) and [NSValue] (https://developer.xamarin.com/api/type/MonoTouch.Foundation.NSValue/#Public_Properties) documentation to see supported conversion types.
+Please see [[BindAs] documentation](/guides/ios/advanced_topics/binding_objective-c/binding_types_reference_guide#BindAsAttribute) to see supported conversion types.
 
 
 ## Binding Notifications

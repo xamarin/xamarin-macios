@@ -48,8 +48,8 @@ public class ForcedTypeAttribute : Attribute {
 //
 // BindAsAttribute
 //
-// The BindAsAttribute allows binding NSNumber|NSValue|NSString(enums) into more accurate C# types.
-// It can be used in methods, parameters and properties. The only restriction is that your member mustn't
+// The BindAsAttribute allows binding NSNumber, NSValue and NSString(enums) into more accurate C# types.
+// It can be used in methods, parameters and properties. The only restriction is that your member must not
 // be inside a [Protocol] or [Model] interface.
 //
 // For example:
