@@ -77,8 +77,9 @@ namespace XamCore.AppKit {
 
 		static uint [] ConvertToAttributes (object [] args)
 		{
+			
 			var list = new List<uint> ();
-			for (int i = 0; i < args.Length - 1; i++){
+			for (int i = 0; i < args.Length; i++){
 				if (args [i] is NSOpenGLPixelFormatAttribute) {
 					NSOpenGLPixelFormatAttribute v = (NSOpenGLPixelFormatAttribute)args [i];
 					switch (v) {
@@ -121,27 +122,28 @@ namespace XamCore.AppKit {
 					case NSOpenGLPixelFormatAttribute.AccumSize:
 					case NSOpenGLPixelFormatAttribute.RendererID:
 					case NSOpenGLPixelFormatAttribute.ScreenMask:
+					case NSOpenGLPixelFormatAttribute.OpenGLProfile:
 
 					// not listed in the docs, but header file implies it
 					case NSOpenGLPixelFormatAttribute.SampleBuffers:
 					case NSOpenGLPixelFormatAttribute.Samples:
 					case NSOpenGLPixelFormatAttribute.VirtualScreenCount:
-					case NSOpenGLPixelFormatAttribute.OpenGLProfile:
-						list.Add ((uint)v);
+						list.Add ((uint) (int) v);
 						i++;
 						if (i >= args.Length)
 							throw new ArgumentException ("Attribute " + v + " needs a value");
-						list.Add ((uint) (int)args [i]);
-						if (i == args.Length - 1)
-							throw new ArgumentException ("The attributes array must end with a 0");
+						list.Add ((uint) (int) args [i]);
 						break;
 					}
-				} else
+				} else if (args [i] is int && (int) args [i] == 0 && i == args.Length - 1) 
+					list.Add (0);
+				else
 					throw new ArgumentException ($"The specified attribute is not of type NSOpenGLPixelFormatAttribute: {args [i]}");
 			}
 
-			if ((int)args [args.Length - 1] != 0)
-				throw new ArgumentException ("The attributes array must end with a 0");
+			if (args.Length == 0 || !(args[args.Length - 1] is int) || ((int)args [args.Length - 1]) != 0)
+				list.Add (0);
+			
 			return list.ToArray ();
 		}
 		
