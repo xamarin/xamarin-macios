@@ -945,47 +945,20 @@ namespace Xamarin.Bundler
 			var flags = linker_flags.ToString (); // This will populate Inputs.
 
 			if (!Application.IsUptodate (linker_flags.Inputs, new string [] { Executable } )) {
-				// always show the native linker warnings since many of them turn out to be very important
-				// and very hard to diagnose otherwise when hidden from the build output. Ref: bug #2430
-				var linker_errors = new List<Exception> ();
-				var output = new StringBuilder ();
-				var code = Driver.RunCommand (App.CompilerPath, flags, null, output);
-
-				Application.ProcessNativeLinkerOutput (this, output.ToString (), linker_flags.AllLibraries, linker_errors, code != 0);
-
-				if (code != 0) {
-					// if the build failed - it could be because of missing frameworks / libraries we identified earlier
-					foreach (var assembly in Assemblies) {
-						if (assembly.UnresolvedModuleReferences == null)
-							continue;
-						
-						foreach (var mr in assembly.UnresolvedModuleReferences) {
-							// TODO: add more diagnose information on the warnings
-							var name = Path.GetFileNameWithoutExtension (mr.Name);
-							linker_errors.Add (new MonoTouchException (5215, false, "References to '{0}' might require additional -framework=XXX or -lXXX instructions to the native linker", name));
-						}
-					}
-					// mtouch does not validate extra parameters given to GCC when linking (--gcc_flags)
-					if (!String.IsNullOrEmpty (App.UserGccFlags))
-						linker_errors.Add (new MonoTouchException (5201, true, "Native linking failed. Please review the build log and the user flags provided to gcc: {0}", App.UserGccFlags));
-					linker_errors.Add (new MonoTouchException (5202, true, "Native linking failed. Please review the build log.", App.UserGccFlags));
-				}
-				ErrorHelper.Show (linker_errors);
+				var linker_task = new NativeLinkTask
+				{
+					Target = this,
+					OutputFile = Executable,
+					CompilerFlags = linker_flags,
+				};
+				linker_task.Link ();
 			} else {
 				cached_executable = true;
 				Driver.Log (3, "Target '{0}' is up-to-date.", Executable);
 			}
-			// the native linker can prefer private (and existing) over public (but non-existing) framework when weak_framework are used
-			// on an iOS target version where the framework does not exists, e.g. targeting iOS6 for JavaScriptCore added in iOS7 results in
-			// /System/Library/PrivateFrameworks/JavaScriptCore.framework/JavaScriptCore instead of
-			// /System/Library/Frameworks/JavaScriptCore.framework/JavaScriptCore
-			// more details in https://bugzilla.xamarin.com/show_bug.cgi?id=31036
-			if (WeakFrameworks.Count > 0)
-				AdjustDylibs ();
-			Driver.Watch ("Native Link", 1);
 		}
 
-		void AdjustDylibs ()
+		public void AdjustDylibs ()
 		{
 			var sb = new StringBuilder ();
 			foreach (var dependency in Xamarin.MachO.GetNativeDependencies (Executable)) {
