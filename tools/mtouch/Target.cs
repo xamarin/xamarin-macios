@@ -951,7 +951,7 @@ namespace Xamarin.Bundler
 				var output = new StringBuilder ();
 				var code = Driver.RunCommand (App.CompilerPath, flags, null, output);
 
-				Application.ProcessNativeLinkerOutput (this, output.ToString (), link_with, linker_errors, code != 0);
+				Application.ProcessNativeLinkerOutput (this, output.ToString (), linker_flags.AllLibraries, linker_errors, code != 0);
 
 				if (code != 0) {
 					// if the build failed - it could be because of missing frameworks / libraries we identified earlier

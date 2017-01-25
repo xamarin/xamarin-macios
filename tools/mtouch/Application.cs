@@ -1391,7 +1391,7 @@ namespace Xamarin.Bundler {
 		// this will filter/remove warnings that are not helpful (e.g. complaining about non-matching armv6-6 then armv7-6 on fat binaries)
 		// and turn the remaining of the warnings into MT5203 that MonoDevelop will be able to report as real warnings (not just logs)
 		// it will also look for symbol-not-found errors and try to provide useful error messages.
-		public static void ProcessNativeLinkerOutput (Target target, string output, IList<string> inputs, List<Exception> errors, bool error)
+		public static void ProcessNativeLinkerOutput (Target target, string output, IEnumerable<string> inputs, List<Exception> errors, bool error)
 		{
 			List<string> lines = new List<string> (output.Split (new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
 

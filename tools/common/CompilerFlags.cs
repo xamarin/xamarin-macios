@@ -26,6 +26,17 @@ namespace Xamarin.Utils
 		// tracking).
 		public List<string> Inputs;
 
+		public HashSet<string> AllLibraries {
+			get {
+				var rv = new HashSet<string> ();
+				if (LinkWithLibraries != null)
+					rv.UnionWith (LinkWithLibraries);
+				if (ForceLoadLibraries != null)
+					rv.UnionWith (ForceLoadLibraries);
+				return rv;
+			}
+		}
+
 		public void ReferenceSymbol (string symbol)
 		{
 			if (UnresolvedSymbols == null)
