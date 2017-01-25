@@ -665,10 +665,16 @@ namespace Xamarin.Bundler
 			// The static registrar.
 			List<string> registration_methods = null;
 			if (App.Registrar == RegistrarMode.Static) {
+				RunRegistrarTask run_registrar = null;
 				var registrar_m = Path.Combine (ArchDirectory, "registrar.m");
 				var registrar_h = Path.Combine (ArchDirectory, "registrar.h");
 				if (!Application.IsUptodate (Assemblies.Select (v => v.FullPath), new string[] { registrar_m, registrar_h })) {
-					StaticRegistrar.Generate (Assemblies.Select ((a) => a.AssemblyDefinition), registrar_h, registrar_m);
+					run_registrar = new RunRegistrarTask
+					{
+						Target = this,
+						RegistrarM = registrar_m,
+						RegistrarH = registrar_h,
+					};
 					registration_methods = new List<string> ();
 					registration_methods.Add ("xamarin_create_classes");
 					Driver.Watch ("Registrar", 1);
@@ -676,7 +682,14 @@ namespace Xamarin.Bundler
 					Driver.Log (3, "Target '{0}' is up-to-date.", registrar_m);
 				}
 
-				CompileRegistrarTask.Create (compile_tasks, Abis, this, registrar_m);
+				var compile_registrar_tasks = new List<BuildTask> ();
+				CompileRegistrarTask.Create (compile_registrar_tasks, Abis, this, registrar_m);
+				if (run_registrar != null) {
+					run_registrar.NextTasks = compile_registrar_tasks;
+					compile_tasks.Add (run_registrar);
+				} else {
+					compile_tasks.AddRange (compile_registrar_tasks);
+				}
 			}
 
 			if (App.Registrar == RegistrarMode.Dynamic && App.IsSimulatorBuild && App.LinkMode == LinkMode.None) {

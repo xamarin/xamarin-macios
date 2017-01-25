@@ -202,6 +202,18 @@ namespace Xamarin.Bundler
 		}
 	}
 
+	class RunRegistrarTask : BuildTask
+	{
+		public Target Target;
+		public string RegistrarM;
+		public string RegistrarH;
+
+		protected override void Build ()
+		{
+			Target.StaticRegistrar.Generate (Target.Assemblies.Select ((a) => a.AssemblyDefinition), RegistrarH, RegistrarM);
+		}
+	}
+
 	class CompileRegistrarTask : CompileTask
 	{
 		public static void Create (List<BuildTask> tasks, IEnumerable<Abi> abis, Target target, string ifile)
