@@ -282,8 +282,10 @@ namespace Xamarin.Bundler {
 
 			return new BuildTask [] { new AOTTask ()
 				{
+					Assembly = this,
 					AssemblyName = s,
 					AddBitcodeMarkerSection = App.FastDev && App.EnableMarkerOnlyBitCode,
+					AotOutputs = outputs,
 					AssemblyPath = asm,
 					ProcessStartInfo = Driver.CreateStartInfo (App, aotCompiler, aotArgs, Path.GetDirectoryName (s)),
 					NextTasks = nextTasks

@@ -88,10 +88,16 @@ namespace Xamarin.Bundler
 		public string MainM;
 		public IList<string> RegistrationMethods;
 
-		public IEnumerable<string> Inputs {
+		public override IEnumerable<string> Inputs {
 			get {
 				foreach (var asm in Target.Assemblies)
 					yield return asm.FullPath;
+			}
+		}
+
+		public override IEnumerable<string> Outputs {
+			get {
+				yield return MainM;
 			}
 		}
 
@@ -123,6 +129,20 @@ namespace Xamarin.Bundler
 		public string RegistrarM;
 		public string RegistrarH;
 
+		public override IEnumerable<string> Inputs {
+			get {
+				foreach (var asm in Target.Assemblies)
+					yield return asm.FullPath;
+			}
+		}
+
+		public override IEnumerable<string> Outputs {
+			get {
+				yield return RegistrarH;
+				yield return RegistrarM;
+			}
+		}
+
 		protected override void Execute ()
 		{
 			Target.StaticRegistrar.Generate (Target.Assemblies.Select ((a) => a.AssemblyDefinition), RegistrarH, RegistrarM);
@@ -131,6 +151,16 @@ namespace Xamarin.Bundler
 
 	class CompileRegistrarTask : CompileTask
 	{
+		public string RegistrarM;
+		public string RegistrarH;
+
+		public override IEnumerable<string> Inputs {
+			get {
+				yield return RegistrarH;
+				yield return RegistrarM;
+			}
+		}
+
 		protected override void CompilationFailed (int exitCode)
 		{
 			throw ErrorHelper.CreateError (4109, "Failed to compile the generated registrar code. Please file a bug report at http://bugzilla.xamarin.com");
@@ -139,9 +169,44 @@ namespace Xamarin.Bundler
 
 	public class AOTTask : ProcessTask
 	{
+		public Assembly Assembly;
 		public string AssemblyName;
 		public bool AddBitcodeMarkerSection;
 		public string AssemblyPath; // path to the .s file.
+		List<string> inputs;
+		public IEnumerable<string> AotOutputs;
+
+		public override IEnumerable<string> Outputs {
+			get {
+				return AotOutputs;
+			}
+		}
+
+		public override IEnumerable<string> Inputs {
+			get {
+				yield return Assembly.FullPath;
+			}
+		}
+
+		public override IEnumerable<string> FileDependencies {
+			get {
+				if (inputs == null) {
+					inputs = new List<string> ();
+					if (Assembly.HasDependencyMap)
+						inputs.AddRange (Assembly.DependencyMap);
+					inputs.Add (AssemblyName);
+					inputs.Add (Driver.GetAotCompiler (Assembly.App, Assembly.Target.Is64Build));
+				}
+				return inputs;
+			}
+		}
+
+		public override bool IsUptodate {
+			get {
+				// We can only check dependencies if we know the assemblies this assembly depend on (otherwise always rebuild).
+				return Assembly.HasDependencyMap && base.IsUptodate;
+			}
+		}
 
 		// executed with Parallel.ForEach
 		protected override void Execute ()
@@ -180,6 +245,19 @@ namespace Xamarin.Bundler
 		public Target Target;
 		public string OutputFile;
 		public CompilerFlags CompilerFlags;
+
+		public override IEnumerable<string> Inputs {
+			get {
+				CompilerFlags.PopulateInputs ();
+				return CompilerFlags.Inputs;
+			}
+		}
+
+		public override IEnumerable<string> Outputs {
+			get {
+				yield return OutputFile;
+			}
+		}
 
 		protected override void Execute ()
 		{
@@ -244,6 +322,19 @@ namespace Xamarin.Bundler
 		public string AssemblyName;
 		public string InstallName;
 		public string Language;
+
+		public override IEnumerable<string> Inputs {
+			get {
+				CompilerFlags.PopulateInputs ();
+				return CompilerFlags.Inputs;
+			}
+		}
+
+		public override IEnumerable<string> Outputs {
+			get {
+				yield return OutputFile;
+			}
+		}
 
 		public bool IsAssembler {
 			get {
@@ -413,6 +504,18 @@ namespace Xamarin.Bundler
 		public ApplePlatform Platform { get; set; }
 		public Abi Abi { get; set; }
 		public Version DeploymentTarget { get; set; }
+
+		public override IEnumerable<string> Inputs {
+			get {
+				yield return Input;
+			}
+		}
+
+		public override IEnumerable<string> Outputs {
+			get {
+				yield return OutputFile;
+			}
+		}
 
 		protected override void Execute ()
 		{

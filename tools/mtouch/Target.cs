@@ -724,6 +724,8 @@ namespace Xamarin.Bundler
 							Abi = abi,
 							InputFile = registrar_m,
 							OutputFile = ofile,
+							RegistrarM = registrar_m,
+							RegistrarH = registrar_h,
 							SharedLibrary = false,
 							Language = "objective-c++",
 						};

@@ -40,6 +40,9 @@ namespace Xamarin.Bundler
 		public IEnumerable<BuildTask> NextTasks;
 
 		protected abstract void Execute ();
+		
+		// A list of input files (not a list of all the dependencies that would make this task rebuild).
+		public abstract IEnumerable<string> Inputs { get; }
 
 		public IEnumerable<BuildTask> Run ()
 		{
@@ -47,9 +50,21 @@ namespace Xamarin.Bundler
 			return NextTasks;
 		}
 
-		public virtual bool IsUptodate ()
-		{
-			return false;
+		public virtual bool IsUptodate {
+			get {
+				return Application.IsUptodate (FileDependencies, Outputs);
+			}
 		}
+
+		// A list of all the files that causes the task to rebuild.
+		// This should at least include all the 'Inputs', and potentially other files as well.
+		public virtual IEnumerable<string> FileDependencies {
+			get {
+				return Inputs;
+			}
+		}
+
+		// A list of files that this task outputs.
+		public abstract IEnumerable<string> Outputs { get; }
 	}
 }

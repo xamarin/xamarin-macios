@@ -299,5 +299,12 @@ namespace Xamarin.Utils
 			WriteArguments (args);
 			return args.ToString ();
 		}
+
+		public void PopulateInputs ()
+		{
+			var args = new StringBuilder ();
+			Inputs = new List<string> ();
+			WriteArguments (args);
+		}
 	}
 }
