@@ -112,42 +112,6 @@ namespace Xamarin.Bundler
 
 	class PinvokesTask : CompileTask
 	{
-		public static void Create (List<BuildTask> tasks, IEnumerable<Abi> abis, Target target, string ifile)
-		{
-			foreach (var abi in abis)
-				Create (tasks, abi, target, ifile);
-		}
-
-		public static void Create (List<BuildTask> tasks, Abi abi, Target target, string ifile)
-		{
-			var arch = abi.AsArchString ();
-			var ext = target.App.FastDev ? ".dylib" : ".o";
-			var ofile = Path.Combine (target.App.Cache.Location, arch, "lib" + Path.GetFileNameWithoutExtension (ifile) + ext);
-
-			if (!Application.IsUptodate (ifile, ofile)) {
-				var task = new PinvokesTask ()
-				{
-					Target = target,
-					Abi = abi,
-					InputFile = ifile,
-					OutputFile = ofile,
-					SharedLibrary = target.App.FastDev,
-					Language = "objective-c++",
-				};
-				if (target.App.FastDev) {
-					task.InstallName = "lib" + Path.GetFileNameWithoutExtension (ifile) + ext;
-					task.CompilerFlags.AddFramework ("Foundation");
-					task.CompilerFlags.LinkWithXamarin ();
-				}
-				tasks.Add (task);
-			} else {
-				Driver.Log (3, "Target '{0}' is up-to-date.", ofile);
-			}
-
-			target.LinkWith (ofile);
-			target.LinkWithAndShip (ofile);
-		}
-
 		protected override void Execute ()
 		{
 			if (Compile () != 0)

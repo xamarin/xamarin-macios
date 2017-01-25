@@ -596,25 +596,7 @@ namespace Xamarin.Bundler
 
 			ManagedLink ();
 
-			if (App.RequiresPInvokeWrappers) {
-				// Write P/Invokes
-				var state = MarshalNativeExceptionsState;
-				if (state.Started) {
-					// The generator is 'started' by the linker, which means it may not
-					// be started if the linker was not executed due to re-using cached results.
-					state.End ();
-				}
-				
-				PinvokesTask.Create (compile_tasks, Abis, this, state.SourcePath);
-
-				if (App.FastDev) {
-					// In this case assemblies must link with the resulting dylib,
-					// so we can't compile the pinvoke dylib in parallel with later
-					// stuff.
-					compile_tasks.ExecuteInParallel ();
-				}
-			}
-
+			CompilePInvokeWrappers ();
 			// Now the assemblies are in PreBuildDirectory.
 
 			foreach (var a in Assemblies) {
@@ -629,6 +611,54 @@ namespace Xamarin.Bundler
 			// Make sure there are no duplicates between frameworks and weak frameworks.
 			// Keep the weak ones.
 			Frameworks.ExceptWith (WeakFrameworks);
+		}
+
+		public void CompilePInvokeWrappers ()
+		{
+			if (!App.RequiresPInvokeWrappers)
+				return;
+
+			// Write P/Invokes
+			var state = MarshalNativeExceptionsState;
+			if (state.Started) {
+				// The generator is 'started' by the linker, which means it may not
+				// be started if the linker was not executed due to re-using cached results.
+				state.End ();
+			}
+
+			var ifile = state.SourcePath;
+			foreach (var abi in Abis) {
+				var arch = abi.AsArchString ();
+				var ext = App.FastDev ? ".dylib" : ".o";
+				var ofile = Path.Combine (App.Cache.Location, arch, "lib" + Path.GetFileNameWithoutExtension (ifile) + ext);
+
+				if (!Application.IsUptodate (ifile, ofile)) {
+					var task = new PinvokesTask
+					{
+						Target = this,
+						Abi = abi,
+						InputFile = ifile,
+						OutputFile = ofile,
+						SharedLibrary = App.FastDev,
+						Language = "objective-c++",
+					};
+					if (App.FastDev) {
+						task.InstallName = "lib" + Path.GetFileNameWithoutExtension (ifile) + ext;
+						task.CompilerFlags.AddFramework ("Foundation");
+						task.CompilerFlags.LinkWithXamarin ();
+					}
+					compile_tasks.Add (task);
+				}
+				LinkWith (ofile);
+				LinkWithAndShip (ofile);
+			}
+
+			if (App.FastDev) {
+				// In this case assemblies must link with the resulting dylib,
+				// so we can't compile the pinvoke dylib in parallel with later
+				// stuff.
+				compile_tasks.ExecuteInParallel ();
+			}
 		}
 
 		public void SelectStaticRegistrar ()
