@@ -926,20 +926,16 @@ namespace Xamarin.Bundler
 				linker_flags.AddOtherFlag ("-fapplication-extension");
 			}
 
-			linker_flags.Inputs = new List<string> ();
-			var flags = linker_flags.ToString (); // This will populate Inputs.
-
-			if (!Application.IsUptodate (linker_flags.Inputs, new string [] { Executable } )) {
-				var linker_task = new NativeLinkTask
-				{
-					Target = this,
-					OutputFile = Executable,
-					CompilerFlags = linker_flags,
-				};
+			var linker_task = new NativeLinkTask
+			{
+				Target = this,
+				OutputFile = Executable,
+				CompilerFlags = linker_flags,
+			};
+			if (!linker_task.CheckIsUptodate ()) {
 				linker_task.Link ();
 			} else {
 				cached_executable = true;
-				Driver.Log (3, "Target '{0}' is up-to-date.", Executable);
 			}
 		}
 
