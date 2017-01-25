@@ -718,7 +718,7 @@ namespace Xamarin.Bundler
 					var ofile = Path.Combine (App.Cache.Location, arch, Path.GetFileNameWithoutExtension (registrar_m) + ".o");
 
 					if (!Application.IsUptodate (registrar_m, ofile)) {
-						compile_registrar_tasks.Add (new CompileRegistrarTask ()
+						var registrar_task = new CompileRegistrarTask ()
 						{
 							Target = this,
 							Abi = abi,
@@ -726,7 +726,11 @@ namespace Xamarin.Bundler
 							OutputFile = ofile,
 							SharedLibrary = false,
 							Language = "objective-c++",
-						});
+						};
+						// This is because iOS has a forward declaration of NSPortMessage, but no actual declaration.
+						// They still use NSPortMessage in other API though, so it can't just be removed from our bindings.
+						registrar_task.CompilerFlags.AddOtherFlag ("-Wno-receiver-forward-class");
+						compile_registrar_tasks.Add (registrar_task);
 					} else {
 						Driver.Log (3, "Target '{0}' is up-to-date.", ofile);
 					}

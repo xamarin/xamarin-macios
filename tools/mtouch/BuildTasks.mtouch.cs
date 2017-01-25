@@ -103,19 +103,17 @@ namespace Xamarin.Bundler
 
 	class CompileMainTask : CompileTask
 	{
-		protected override void Execute ()
+		protected override void CompilationFailed (int exitCode)
 		{
-			if (Compile () != 0)
-				throw new MonoTouchException (5103, true, "Failed to compile the file '{0}'. Please file a bug report at http://bugzilla.xamarin.com", InputFile);
+			throw ErrorHelper.CreateError (5103, "Failed to compile the file '{0}'. Please file a bug report at http://bugzilla.xamarin.com", InputFile);
 		}
 	}
 
 	class PinvokesTask : CompileTask
 	{
-		protected override void Execute ()
+		protected override void CompilationFailed (int exitCode)
 		{
-			if (Compile () != 0)
-				throw new MonoTouchException (4002, true, "Failed to compile the generated code for P/Invoke methods. Please file a bug report at http://bugzilla.xamarin.com");
+			throw ErrorHelper.CreateError (4002, "Failed to compile the generated code for P/Invoke methods. Please file a bug report at http://bugzilla.xamarin.com");
 		}
 	}
 
@@ -133,16 +131,9 @@ namespace Xamarin.Bundler
 
 	class CompileRegistrarTask : CompileTask
 	{
-		protected override void Execute ()
+		protected override void CompilationFailed (int exitCode)
 		{
-			if (Driver.IsUsingClang (App)) {
-				// This is because iOS has a forward declaration of NSPortMessage, but no actual declaration.
-				// They still use NSPortMessage in other API though, so it can't just be removed from our bindings.
-				CompilerFlags.AddOtherFlag ("-Wno-receiver-forward-class");
-			}
-
-			if (Compile () != 0)
-				throw new MonoTouchException (4109, true, "Failed to compile the generated registrar code. Please file a bug report at http://bugzilla.xamarin.com");
+			throw ErrorHelper.CreateError (4109, "Failed to compile the generated registrar code. Please file a bug report at http://bugzilla.xamarin.com");
 		}
 	}
 
@@ -237,6 +228,10 @@ namespace Xamarin.Bundler
 
 	public class LinkTask : CompileTask
 	{
+		protected override void CompilationFailed (int exitCode)
+		{
+			throw ErrorHelper.CreateError (5216, "Native linking failed for '{0}'. Please file a bug report at http://bugzilla.xamarin.com", OutputFile);
+		}
 	}
 
 	public class CompileTask : BuildTask
@@ -362,8 +357,14 @@ namespace Xamarin.Bundler
 
 		protected override void Execute ()
 		{
-			if (Compile () != 0)
-				throw new MonoTouchException (3001, true, "Could not AOT the assembly '{0}'", AssemblyName);
+			int exitCode = Compile ();
+			if (exitCode != 0)
+				CompilationFailed (exitCode);
+		}
+
+		protected virtual void CompilationFailed (int exitCode)
+		{
+			throw ErrorHelper.CreateError (3001, "Could not AOT the assembly '{0}'", AssemblyName);
 		}
 
 		public int Compile ()

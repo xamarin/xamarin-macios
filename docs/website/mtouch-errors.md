@@ -1491,6 +1491,12 @@ There are a few possible solutions:
 
 This is a warning, indicating that a P/Invoke was detected to reference the library in question, but the app is not linking with it.
 
+<h3><a name="MT5216"/>MT5216: Native linking failed for *. Please file a bug report at http://bugzilla.xamarin.com</h3>
+
+This error is reported when linking the output from the AOT compiler.
+
+This error most likely indicates a bug in Xamarin.iOS. Please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
 ### MT53xx: Other tools
 
 <!--

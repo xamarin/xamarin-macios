@@ -331,6 +331,7 @@ namespace Xamarin.Bundler {
 	//					MT5213	Duplicate symbol in: {0} (Location related to previous error)
 	//					MT5214	Native linking failed, undefined symbol: {0}. This symbol was referenced by the managed member {1}.{2}. Please verify that all the necessary frameworks have been referenced and native libraries linked.
 	//		Warning		MT5215	References to '{0}' might require additional -framework=XXX or -lXXX instructions to the native linker
+	//					MT5216	Native linking failed for {0}. Please file a bug report at http://bugzilla.xamarin.com
 	//			MT53xx	other tools
 	//					MT5301	Missing 'strip' tool. Please install Xcode 'Command-Line Tools' component
 	//					MT5302	Missing 'dsymutil' tool. Please install Xcode 'Command-Line Tools' component
