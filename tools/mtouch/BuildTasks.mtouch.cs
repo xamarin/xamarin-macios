@@ -95,7 +95,7 @@ namespace Xamarin.Bundler
 			}
 		}
 
-		protected override void Build ()
+		protected override void Execute ()
 		{
 			Driver.GenerateMain (Target.App, Target.Assemblies, Target.App.AssemblyName, Abi, MainM, RegistrationMethods);
 		}
@@ -103,7 +103,7 @@ namespace Xamarin.Bundler
 
 	class CompileMainTask : CompileTask
 	{
-		protected override void Build ()
+		protected override void Execute ()
 		{
 			if (Compile () != 0)
 				throw new MonoTouchException (5103, true, "Failed to compile the file '{0}'. Please file a bug report at http://bugzilla.xamarin.com", InputFile);
@@ -148,7 +148,7 @@ namespace Xamarin.Bundler
 			target.LinkWithAndShip (ofile);
 		}
 
-		protected override void Build ()
+		protected override void Execute ()
 		{
 			if (Compile () != 0)
 				throw new MonoTouchException (4002, true, "Failed to compile the generated code for P/Invoke methods. Please file a bug report at http://bugzilla.xamarin.com");
@@ -161,7 +161,7 @@ namespace Xamarin.Bundler
 		public string RegistrarM;
 		public string RegistrarH;
 
-		protected override void Build ()
+		protected override void Execute ()
 		{
 			Target.StaticRegistrar.Generate (Target.Assemblies.Select ((a) => a.AssemblyDefinition), RegistrarH, RegistrarM);
 		}
@@ -198,7 +198,7 @@ namespace Xamarin.Bundler
 			target.LinkWith (ofile);
 		}
 
-		protected override void Build ()
+		protected override void Execute ()
 		{
 			if (Driver.IsUsingClang (App)) {
 				// This is because iOS has a forward declaration of NSPortMessage, but no actual declaration.
@@ -218,7 +218,7 @@ namespace Xamarin.Bundler
 		public string AssemblyPath; // path to the .s file.
 
 		// executed with Parallel.ForEach
-		protected override void Build ()
+		protected override void Execute ()
 		{
 			var exit_code = base.Start ();
 
@@ -374,7 +374,7 @@ namespace Xamarin.Bundler
 			flags.AddOtherFlag (App.EnableMarkerOnlyBitCode ? "-fembed-bitcode-marker" : "-fembed-bitcode");
 		}
 
-		protected override void Build ()
+		protected override void Execute ()
 		{
 			if (Compile () != 0)
 				throw new MonoTouchException (3001, true, "Could not AOT the assembly '{0}'", AssemblyName);
@@ -422,7 +422,7 @@ namespace Xamarin.Bundler
 		public Abi Abi { get; set; }
 		public Version DeploymentTarget { get; set; }
 
-		protected override void Build ()
+		protected override void Execute ()
 		{
 			new BitcodeConverter (Input, OutputFile, Platform, Abi, DeploymentTarget).Convert ();
 		}

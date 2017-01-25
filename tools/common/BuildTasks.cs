@@ -7,7 +7,7 @@ namespace Xamarin.Bundler
 	{
 		static void Execute (List<BuildTask> added, BuildTask v)
 		{
-			var next = v.Execute ();
+			var next = v.Run ();
 			if (next != null) {
 				lock (added)
 					added.AddRange (next);
@@ -39,11 +39,11 @@ namespace Xamarin.Bundler
 	{
 		public IEnumerable<BuildTask> NextTasks;
 
-		protected abstract void Build ();
+		protected abstract void Execute ();
 
-		public IEnumerable<BuildTask> Execute ()
+		public IEnumerable<BuildTask> Run ()
 		{
-			Build ();
+			Execute ();
 			return NextTasks;
 		}
 
