@@ -105,7 +105,7 @@ namespace Xamarin.Bundler
 	{
 		protected override void CompilationFailed (int exitCode)
 		{
-			throw ErrorHelper.CreateError (5103, "Failed to compile the file '{0}'. Please file a bug report at http://bugzilla.xamarin.com", InputFile);
+			throw ErrorHelper.CreateError (5103, "Failed to compile the file(s) '{0}'. Please file a bug report at http://bugzilla.xamarin.com", string.Join ("', '", CompilerFlags.SourceFiles.ToArray ()));
 		}
 	}
 
@@ -239,7 +239,6 @@ namespace Xamarin.Bundler
 		public Target Target;
 		public Application App { get { return Target.App; } }
 		public bool SharedLibrary;
-		public string InputFile;
 		public string OutputFile;
 		public Abi Abi;
 		public string AssemblyName;
@@ -249,6 +248,14 @@ namespace Xamarin.Bundler
 		public bool IsAssembler {
 			get {
 				return Language == "assembler";
+			}
+		}
+
+		public string InputFile {
+			set {
+				// This is an accumulative setter-only property,
+				// to make it possible add dependencies using object initializers.
+				CompilerFlags.AddSourceFile (value);
 			}
 		}
 
@@ -392,8 +399,6 @@ namespace Xamarin.Bundler
 
 			if (!string.IsNullOrEmpty (Language))
 				CompilerFlags.AddOtherFlag ($"-x {Language}");
-
-			CompilerFlags.AddOtherFlag (Driver.Quote (InputFile));
 
 			var rv = Driver.RunCommand (App.CompilerPath, CompilerFlags.ToString (), null, null);
 

@@ -19,6 +19,7 @@ namespace Xamarin.Utils
 		public HashSet<string> OtherFlags; // X
 		public HashSet<string> Defines; // -DX
 		public HashSet<string> UnresolvedSymbols; // -u X
+		public HashSet<string> SourceFiles; // X, added to Inputs
 
 		// Here we store a list of all the file-system based inputs
 		// to the compiler. This is used when determining if the
@@ -82,6 +83,13 @@ namespace Xamarin.Utils
 
 			foreach (var lib in libraries)
 				AddLinkWith (lib, force_load);
+		}
+
+		public void AddSourceFile (string file)
+		{
+			if (SourceFiles == null)
+				SourceFiles = new HashSet<string> ();
+			SourceFiles.Add (file);
 		}
 
 		public void AddOtherFlag (string flag)
@@ -239,6 +247,13 @@ namespace Xamarin.Utils
 			if (UnresolvedSymbols != null) {
 				foreach (var symbol in UnresolvedSymbols)
 					args.Append (" -u ").Append (Driver.Quote ("_" + symbol));
+			}
+
+			if (SourceFiles != null) {
+				foreach (var src in SourceFiles) {
+					args.Append (' ').Append (Driver.Quote (src));
+					AddInput (src);
+				}
 			}
 		}
 
