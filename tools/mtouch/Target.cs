@@ -720,8 +720,49 @@ namespace Xamarin.Bundler
 			}
 
 			// The main method.
-			foreach (var abi in Abis)
-				CompileMainTask.Create (compile_tasks, this, abi, Assemblies, App.AssemblyName, registration_methods);
+			foreach (var abi in Abis) {
+				var arch = abi.AsArchString ();
+
+				GenerateMainTask generate_main_task = null;
+				var main_m = Path.Combine (App.Cache.Location, arch, "main.m");
+				var files = Assemblies.Select (v => v.FullPath);
+				if (!Application.IsUptodate (files, new string [] { main_m })) {
+					generate_main_task = new GenerateMainTask
+					{
+						Target = this,
+						Abi = abi,
+						MainM = main_m,
+						RegistrationMethods = registration_methods,
+					};
+				} else {
+					Driver.Log (3, "Target '{0}' is up-to-date.", main_m);
+				}
+
+				var main_o = Path.Combine (App.Cache.Location, arch, "main.o");
+				if (!Application.IsUptodate (main_m, main_o)) {
+					var main_task = new CompileMainTask ()
+					{
+						Target = this,
+						Abi = abi,
+						AssemblyName = App.AssemblyName,
+						InputFile = main_m,
+						OutputFile = main_o,
+						SharedLibrary = false,
+						Language = "objective-c++",
+					};
+					main_task.CompilerFlags.AddDefine ("MONOTOUCH");
+					if (generate_main_task == null) {
+						compile_tasks.Add (main_task);
+					} else {
+						generate_main_task.NextTasks = new [] { main_task };
+						compile_tasks.Add (generate_main_task);
+					}
+				} else {
+					Driver.Log (3, "Target '{0}' is up-to-date.", main_o);
+				}
+
+				LinkWith (main_o);
+			}
 
 			// Start compiling.
 			compile_tasks.ExecuteInParallel ();

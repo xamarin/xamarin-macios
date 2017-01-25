@@ -103,53 +103,6 @@ namespace Xamarin.Bundler
 
 	class CompileMainTask : CompileTask
 	{
-		public static void Create (List<BuildTask> tasks, Target target, Abi abi, IEnumerable<Assembly> assemblies, string assemblyName, IList<string> registration_methods)
-		{
-			var app = target.App;
-			var arch = abi.AsArchString ();
-			var ofile = Path.Combine (app.Cache.Location, arch, "main.o");
-			var ifile = Path.Combine (app.Cache.Location, arch, "main.m");
-
-			var files = assemblies.Select (v => v.FullPath);
-
-			GenerateMainTask generate_task = null;
-			if (!Application.IsUptodate (files, new string [] { ifile })) {
-				generate_task = new GenerateMainTask
-				{
-					Target = target,
-					Abi = abi,
-					MainM = ifile,
-					RegistrationMethods = registration_methods,
-				};
-			} else {
-				Driver.Log (3, "Target '{0}' is up-to-date.", ifile);
-			}
-
-			if (!Application.IsUptodate (ifile, ofile)) {
-				var main = new CompileMainTask ()
-				{
-					Target = target,
-					Abi = abi,
-					AssemblyName = assemblyName,
-					InputFile = ifile,
-					OutputFile = ofile,
-					SharedLibrary = false,
-					Language = "objective-c++",
-				};
-				main.CompilerFlags.AddDefine ("MONOTOUCH");
-				if (generate_task == null) {
-					tasks.Add (main);
-				} else {
-					generate_task.NextTasks = new [] { main };
-					tasks.Add (generate_task);
-				}
-			} else {
-				Driver.Log (3, "Target '{0}' is up-to-date.", ofile);
-			}
-
-			target.LinkWith (ofile);
-		}
-
 		protected override void Build ()
 		{
 			if (Compile () != 0)
