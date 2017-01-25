@@ -109,6 +109,7 @@
     <Compile Include="ProjectsTests\ReleaseBuild.cs" />
     <Compile Include="TaskTests\PropertyListEditorTaskTests.cs" />
     <Compile Include="TaskTests\IBToolTaskTests.cs" />
+    <Compile Include="ProjectsTests\LinkedAssets.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
