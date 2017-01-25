@@ -251,13 +251,13 @@ $$(BUILD_DESTDIR)/mac/$(2)/bcl/%.dll: $$(MONO_PATH)/mcs/class/lib/$(2)/%.dll | $
 $$(BUILD_DESTDIR)/mac/$(2)/bcl/%.mdb: $$(MONO_PATH)/mcs/class/lib/$(2)/%.mdb .stamp-build-tools64 | $$(BUILD_DESTDIR)/mac/$(2)/bcl
 	@# mdb-rebase the mdb
 	$$(Q) cp $$< $$@
-	$$(Q_MDB) $$(MDB_REBASE) -q -i $$(abspath $$(MONO_PATH))/ -o $$(MAC_TARGETDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/src/mono/ $$@
 
 $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/%.dll: $$(BUILD_DESTDIR)/mac/$(2)/bcl/%.dll | $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/Facades
 	$$(Q) install -m 0755 $$< $$@
 
 $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/%.mdb: $$(BUILD_DESTDIR)/mac/$(2)/bcl/%.mdb | $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/Facades
 	$$(Q) install -m 0644 $$< $$@
+	$$(Q_MDB) $$(MDB_REBASE) -q -i $$(abspath $$(MONO_PATH))/ -o $$(MAC_TARGETDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/src/mono/ $$@
 endef
 
 $(eval $(call MacInstallBclTemplate,Xamarin.Mac,xammac))
