@@ -150,14 +150,6 @@ namespace Xamarin.Utils
 			AddOtherFlag ("-lz");
 		}
 
-		public void LinkWithPInvokes (Abi abi)
-		{
-			if (!Application.FastDev || !Application.RequiresPInvokeWrappers)
-				return;
-
-			AddOtherFlag (Driver.Quote (Path.Combine (Application.Cache.Location, abi.AsArchString (), "libpinvokes.dylib")));
-		}
-
 		public void AddFramework (string framework)
 		{
 			if (Frameworks == null)

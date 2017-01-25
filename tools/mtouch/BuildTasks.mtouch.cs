@@ -305,11 +305,6 @@ namespace Xamarin.Bundler
 				Target.AdjustDylibs ();
 			Driver.Watch ("Native Link", 1);
 		}
-
-		public void Link ()
-		{
-			Execute ();
-		}
 	}
 
 	public class LinkTask : CompileTask
