@@ -712,7 +712,10 @@ namespace Xamarin.Bundler {
 
 			Driver.Watch ("Building build tasks", 1);
 			build_tasks.Execute ();
+		}
 
+		void BuildEnd ()
+		{
 			// TODO: make more of the below actions parallelizable
 
 			BuildBundle ();

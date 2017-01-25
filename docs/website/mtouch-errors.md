@@ -425,6 +425,12 @@ because `my/path.o` is not a valid filename due to the directory separator chara
 
 <h3><a name="MT0108"/>MT0108: The assembly build target '*' did not match any assemblies.</h3>
 
+<h3><a name="MT0109"/>MT0109: The assembly '{0}' was loaded from a different path than the provided path (provided path: {1}, actual path: {2}).</h3>
+
+This is a warning indicating that an assembly referenced by the application was loaded from a different location than requested.
+
+This might mean that the app is referencing multiple assemblies with the same name, but from different locations, which might lead to unexpected results (only the first assembly will be used).
+
 <h3><a name="MT0110"/>MT0110: Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.</h3>
 
 Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode (tvOS and watchOS projects).
@@ -975,6 +981,10 @@ This means there is an error on the [custom XML linker configuration file](https
 <h3><a name="MT2018"/>MT2018: The assembly '*' is referenced from two different locations: '*' and '*'.</h3>
 
 The assembly mentioned in the error message is loaded from multiple locations. Make sure to always use the same version of an assembly.
+
+<h3><a name="MT2019"/>MT2019: Can not load the root assembly '*'</h3>
+
+The root assembly could not be loaded. Please verify that the path in the error message refers to an existing file, and that it's a valid .NET assembly.
 
 <h3><a name="MT202x"/>MT202x: Binding Optimizer failed processing `...`.</h3>
 

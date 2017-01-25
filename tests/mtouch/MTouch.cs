@@ -400,6 +400,48 @@ namespace Xamarin
 		}
 
 		[Test]
+		public void MT0023 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				// Create a library with the same name as the exe
+				var tmp = mtouch.CreateTemporaryDirectory ();
+				var dllA = CompileTestAppCode ("library", tmp, "public class X {}");
+
+				mtouch.CreateTemporaryApp (code: "public class C { static void Main () { System.Console.WriteLine (typeof (X)); System.Console.WriteLine (typeof (UIKit.UIWindow)); } }", extraArg: "-r:" + Quote (dllA));
+				mtouch.References = new string [] { dllA };
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertErrorPattern (23, "The root assembly .*/testApp.exe conflicts with another assembly (.*/testApp.dll).");
+			}
+		}
+
+		[Test]
+		public void MT0023_Extension ()
+		{
+			using (var extension = new MTouchTool ()) {
+				// Create a library with the same name as the root assembly
+				var tmp = extension.CreateTemporaryDirectory ();
+				var dll = CompileTestAppCode ("library", tmp, "public class X {}");
+
+				extension.Linker = MTouchLinker.DontLink; // fastest.
+				extension.Extension = true;
+				extension.CreateTemporararyServiceExtension (extraArg: $"-r:{Quote (dll)}", extraCode: "class Z { static void Y () { System.Console.WriteLine (typeof (X)); } }");
+				extension.CreateTemporaryCacheDirectory ();
+				extension.References = new [] { dll };
+				extension.AssertExecute (MTouchAction.BuildSim, "extension build");
+
+				using (var app = new MTouchTool ()) {
+					app.Linker = MTouchLinker.DontLink; // fastest.
+					app.AppExtensions.Add (extension.AppPath);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.AssertExecuteFailure (MTouchAction.BuildSim, "app build");
+					app.AssertError (23, $"The root assembly {extension.RootAssembly} conflicts with another assembly ({dll}).");
+				}
+			}
+		}
+
+		[Test]
 		[TestCase (Profile.iOS)]
 		[TestCase (Profile.watchOS)]
 		[TestCase (Profile.tvOS)]
@@ -698,6 +740,8 @@ namespace Xamarin
 				mtouch.AssertError (108, "The assembly build target 'dummy' did not match any assemblies.");
 			}
 		}
+
+		/* MT0109 is tested in other tests (MT2018) */
 
 		[Test]
 		public void ExtensionBuild ()
@@ -2186,6 +2230,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 				mtouch.References = new string [] { dllA, dllB };
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarningPattern (109, "The assembly 'testLib.dll' was loaded from a different path than the provided path .provided path: .*/testLib.dll, actual path: .*/testLib.dll..");
 			}
 		}
 
@@ -2209,10 +2254,12 @@ public partial class NotificationService : UNNotificationServiceExtension
 				// Without the linker we'll just copy the references, and not actually run into problems if we copy one that doesn't work
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarningPattern (109, "The assembly 'System.Net.Http.dll' was loaded from a different path than the provided path .provided path: .*/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/System.Net.Http.dll, actual path: .*CreateTemporaryDirectory.*/System.Net.Http.dll..");
 
 				// With the linker, we'll find out that we've loaded the right one.
 				mtouch.Linker = MTouchLinker.LinkSdk;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarningPattern (109, "The assembly 'System.Net.Http.dll' was loaded from a different path than the provided path .provided path: .*/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/System.Net.Http.dll, actual path: .*CreateTemporaryDirectory.*/System.Net.Http.dll..");
 			}
 		}
 
@@ -2236,6 +2283,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 				// Without the linker we'll just copy the references, and not actually run into problems if we copy one that doesn't work
 				mtouch.Linker = MTouchLinker.DontLink;
 				mtouch.AssertExecute (MTouchAction.BuildSim, "build");
+				mtouch.AssertWarningPattern (109, "The assembly 'System.Net.Http.dll' was loaded from a different path than the provided path .provided path: .*CreateTemporaryDirectory.*/System.Net.Http.dll, actual path: .*/Library/Frameworks/Xamarin.iOS.framework/Versions/.*/lib/mono/Xamarin.iOS/System.Net.Http.dll..");
 
 				// With the linker, we'll find out that the loaded reference doesn't work.
 				mtouch.Linker = MTouchLinker.LinkSdk;

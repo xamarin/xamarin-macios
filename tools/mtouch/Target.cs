@@ -199,16 +199,31 @@ namespace Xamarin.Bundler
 			if (corlib == null)
 				throw new MonoTouchException (2006, true, "Can not load mscorlib.dll from: '{0}'. Please reinstall Xamarin.iOS.", corlib_path);
 
+			var root = ManifestResolver.Load (App.RootAssembly);
+			if (root == null) {
+				// We check elsewhere that the path exists, so I'm not sure how we can get into this.
+				throw ErrorHelper.CreateError (2019, "Can not load the root assembly '{0}'.", App.RootAssembly);
+			}
+
 			foreach (var reference in App.References) {
 				var ad = ManifestResolver.Load (reference);
 				if (ad == null)
 					throw new MonoTouchException (2002, true, "Can not resolve reference: {0}", reference);
+
+				if (ad.MainModule.FileName == root.MainModule.FileName) {
+					// If we asked the manifest resolver for assembly X and got back the root assembly, it means the requested assembly has the same identity as the root assembly, which is not allowed.
+					throw ErrorHelper.CreateError (23, "The root assembly {0} conflicts with another assembly ({1}).", root.MainModule.FileName, reference);
+				}
+				
 				if (ad.MainModule.Runtime > TargetRuntime.Net_4_0)
 					ErrorHelper.Show (new MonoTouchException (11, false, "{0} was built against a more recent runtime ({1}) than Xamarin.iOS supports.", Path.GetFileName (reference), ad.MainModule.Runtime));
 
 				// Figure out if we're referencing Xamarin.iOS or monotouch.dll
 				if (Path.GetFileNameWithoutExtension (ad.MainModule.FileName) == Driver.GetProductAssembly (App))
 					ProductAssembly = ad;
+
+				if (ad != ProductAssembly && GetRealPath (ad.MainModule.FileName) != GetRealPath (reference) && !ad.MainModule.FileName.EndsWith (".resources.dll", StringComparison.Ordinal))
+					ErrorHelper.Show (ErrorHelper.CreateWarning (109, "The assembly '{0}' was loaded from a different path than the provided path (provided path: {1}, actual path: {2}).", Path.GetFileName (reference), reference, ad.MainModule.FileName));
 			}
 
 			ComputeListOfAssemblies ();
@@ -217,18 +232,6 @@ namespace Xamarin.Bundler
 				AddI18nAssemblies ();
 
 			linker_flags = new CompilerFlags (this);
-
-			// an extension is a .dll and it would match itself
-			if (App.IsExtension)
-				return;
-
-			var root_wo_ext = Path.GetFileNameWithoutExtension (App.RootAssembly);
-			foreach (var assembly in Assemblies) {
-				if (!assembly.FullPath.EndsWith (".exe", StringComparison.OrdinalIgnoreCase)) {
-					if (root_wo_ext == Path.GetFileNameWithoutExtension (assembly.FullPath))
-						throw new MonoTouchException (23, true, "Application name '{0}.exe' conflicts with another user assembly.", root_wo_ext);
-				}
-			}
 		}
 
 		// This is to load the symbols for all assemblies, so that we can give better error messages
