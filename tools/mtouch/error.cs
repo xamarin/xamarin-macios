@@ -319,6 +319,7 @@ namespace Xamarin.Bundler {
 	//					MT5103	Failed to compile the file '{0}'. Please file a bug report at http://bugzilla.xamarin.com
 	//					MT5104  Could not find neither the '{0}' nor the '{1}' compiler. Please install Xcode 'Command-Line Tools' component
 	//					MT5105  ** reserved Xamarin.Mac **
+	//					MT5106	Could not compile the file(s) '{0}'. Please file a bug report at http://bugzilla.xamarin.com
 	//			MT52xx	linking
 	//					MT5201	Native linking failed. Please review the build log and the user flags provided to gcc: {0}
 	//					MT5202	Native linking failed. Please review the build log.

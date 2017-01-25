@@ -371,7 +371,7 @@ namespace Xamarin.Bundler
 
 		protected virtual void CompilationFailed (int exitCode)
 		{
-			throw ErrorHelper.CreateError (3001, "Could not AOT the assembly '{0}'", AssemblyName);
+			throw ErrorHelper.CreateError (5106, "Could not compile the file(s) '{0}'. Please file a bug report at http://bugzilla.xamarin.com", string.Join ("', '", CompilerFlags.SourceFiles.ToArray ()));
 		}
 
 		public int Compile ()

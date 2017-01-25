@@ -1342,6 +1342,11 @@ This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzil
 
 <h3><a name="MT5104"/>MT5104 Could not find neither the '*' nor the '*' compiler. Please install Xcode 'Command-Line Tools' component</h3>
 
+
+<h3><a name="MT5106"/>MT5106: Could not compile the file(s) '*'. Please file a bug report at http://bugzilla.xamarin.com</h3>
+
+This usually indicates a bug in Xamarin.iOS; please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
+
 ### MT52xx: Linking
 
 <!--
