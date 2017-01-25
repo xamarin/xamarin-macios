@@ -228,6 +228,17 @@ namespace Xamarin
 		}
 
 		[Test]
+		public void MT0003 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp (appName: "mscorlib");
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
+				mtouch.AssertError (3, "Application name 'mscorlib.exe' conflicts with an SDK or product assembly (.dll) name.");
+			}
+		}
+
+		[Test]
 		public void MT0008 ()
 		{
 			using (var mtouch = new MTouchTool ()) {
