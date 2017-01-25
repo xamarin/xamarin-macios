@@ -165,6 +165,7 @@ namespace Xamarin.Bundler {
 
 		public AssemblyBuildTarget LibMonoLinkMode = AssemblyBuildTarget.StaticObject;
 		public AssemblyBuildTarget LibXamarinLinkMode = AssemblyBuildTarget.StaticObject;
+		public AssemblyBuildTarget LibPInvokesLinkMode => LibXamarinLinkMode;
 
 		public bool OnlyStaticLibraries {
 			get {

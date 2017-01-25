@@ -728,10 +728,28 @@ namespace Xamarin.Bundler
 			}
 
 			var ifile = state.SourcePath;
-			foreach (var abi in Abis) {
+			var mode = App.LibPInvokesLinkMode;
+			foreach (var abi in GetArchitectures (mode)) {
 				var arch = abi.AsArchString ();
-				var ext = App.FastDev ? ".dylib" : ".o";
-				var ofile = Path.Combine (App.Cache.Location, arch, "lib" + Path.GetFileNameWithoutExtension (ifile) + ext);
+				string ofile;
+
+				switch (mode) {
+				case AssemblyBuildTarget.StaticObject:
+					ofile = Path.Combine (App.Cache.Location, arch, "libpinvokes.a");
+					break;
+				case AssemblyBuildTarget.DynamicLibrary:
+					ofile = Path.Combine (App.Cache.Location, arch, "libpinvokes.dylib");
+					break;
+				case AssemblyBuildTarget.Framework:
+					ofile = Path.Combine (App.Cache.Location, arch, "Xamarin.PInvokes.framework", "Xamarin.PInvokes");
+
+					var plist_path = Path.Combine (Path.GetDirectoryName (ofile), "Info.plist");
+					var fw_name = Path.GetFileNameWithoutExtension (ofile);
+					App.CreateFrameworkInfoPList (plist_path, fw_name, App.BundleId + ".frameworks." + fw_name, fw_name);
+					break;
+				default:
+					throw ErrorHelper.CreateError (100, "Invalid assembly build target: '{0}'. Please file a bug report with a test case (http://bugzilla.xamarin.com).", mode);
+				}
 
 				var pinvoke_task = new PinvokesTask
 				{
@@ -739,11 +757,18 @@ namespace Xamarin.Bundler
 					Abi = abi,
 					InputFile = ifile,
 					OutputFile = ofile,
-					SharedLibrary = App.FastDev,
+					SharedLibrary = mode != AssemblyBuildTarget.StaticObject,
 					Language = "objective-c++",
 				};
-				if (App.FastDev) {
-					pinvoke_task.InstallName = "@rpath/lib" + Path.GetFileNameWithoutExtension (ifile) + ext;
+				if (pinvoke_task.SharedLibrary) {
+					if (mode == AssemblyBuildTarget.Framework) {
+						var name = Path.GetFileNameWithoutExtension (ifile);
+						pinvoke_task.InstallName = $"@rpath/{name}.framework/{name}";
+						AddToBundle (pinvoke_task.OutputFile, $"Frameworks/{name}.framework/{name}", dylib_to_framework_conversion: true);
+					} else {
+						pinvoke_task.InstallName = $"@rpath/{Path.GetFileName (ofile)}";
+						AddToBundle (pinvoke_task.OutputFile);
+					}
 					pinvoke_task.CompilerFlags.AddFramework ("Foundation");
 					pinvoke_task.CompilerFlags.LinkWithXamarin ();
 				}
