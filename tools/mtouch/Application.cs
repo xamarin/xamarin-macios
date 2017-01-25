@@ -1045,12 +1045,6 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		void ManagedLink ()
-		{
-			foreach (var target in Targets)
-				target.ManagedLink ();
-		}
-
 		void ProcessAssemblies ()
 		{
 			// This can be parallelized once we determine the linker doesn't use any static state.
