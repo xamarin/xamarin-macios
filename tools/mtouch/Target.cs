@@ -643,7 +643,7 @@ namespace Xamarin.Bundler
 						Language = "objective-c++",
 					};
 					if (App.FastDev) {
-						task.InstallName = "lib" + Path.GetFileNameWithoutExtension (ifile) + ext;
+						task.InstallName = "@rpath/lib" + Path.GetFileNameWithoutExtension (ifile) + ext;
 						task.CompilerFlags.AddFramework ("Foundation");
 						task.CompilerFlags.LinkWithXamarin ();
 					}

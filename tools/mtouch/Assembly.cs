@@ -304,7 +304,7 @@ namespace Xamarin.Bundler {
 				if (dylibs == null)
 					dylibs = new List<string> ();
 				dylibs.Add (ofile);
-				install_name = "lib" + Path.GetFileName (assembly_name) + ".dylib";
+				install_name = "@rpath/lib" + Path.GetFileName (assembly_name) + ".dylib";
 			} else {
 				Target.LinkWith (ofile);
 			}

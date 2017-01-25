@@ -439,7 +439,7 @@ namespace Xamarin.Bundler
 			if (!App.EnableMarkerOnlyBitCode)
 				flags.AddOtherFlag ("-read_only_relocs suppress");
 			flags.LinkWithMono ();
-			flags.AddOtherFlag ("-install_name " + Driver.Quote ($"@rpath/{install_name}"));
+			flags.AddOtherFlag ("-install_name " + Driver.Quote (install_name));
 			flags.AddOtherFlag ("-fapplication-extension"); // fixes this: warning MT5203: Native linking warning: warning: linking against dylib not safe for use in application extensions: [..]/actionextension.dll.arm64.dylib
 		}
 
