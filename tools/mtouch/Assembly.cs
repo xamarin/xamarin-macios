@@ -212,9 +212,9 @@ namespace Xamarin.Bundler {
 		IEnumerable<BuildTask> CreateManagedToAssemblyTasks (string s, Abi abi, string build_dir)
 		{
 			var arch = abi.AsArchString ();
-			var asm_dir = App.Cache.Location;
-			var asm = Path.Combine (asm_dir, Path.GetFileName (s)) + "." + arch + ".s";
-			var llvm_asm = Path.Combine (asm_dir, Path.GetFileName (s)) + "." + arch + "-llvm.s";
+			var asm_dir = Path.Combine (App.Cache.Location, arch);
+			var asm = Path.Combine (asm_dir, Path.GetFileName (s)) + ".s";
+			var llvm_asm = Path.Combine (asm_dir, Path.GetFileName (s)) + "-llvm.s";
 			var data = Path.Combine (asm_dir, Path.GetFileNameWithoutExtension (s)) + ".aotdata" + "." + arch;
 			string llvm_ofile, llvm_aot_ofile = "";
 			var is_llvm = (abi & Abi.LLVM) == Abi.LLVM;
@@ -237,11 +237,11 @@ namespace Xamarin.Bundler {
 				//
 				// In llvm-only mode, the AOT compiler emits a .bc file and no .s file for JITted code
 				//
-				llvm_ofile = Path.Combine (asm_dir, Path.GetFileName (s)) + "." + arch + ".bc";
+				llvm_ofile = Path.Combine (asm_dir, Path.GetFileName (s)) + ".bc";
 				outputs.Add (llvm_ofile);
 				llvm_aot_ofile = llvm_ofile;
 			} else {
-				llvm_ofile = Path.Combine (asm_dir, Path.GetFileName (s)) + "." + arch + "-llvm.o";
+				llvm_ofile = Path.Combine (asm_dir, Path.GetFileName (s)) + ".-llvm.o";
 				outputs.Add (asm);
 
 				if (is_llvm) {
