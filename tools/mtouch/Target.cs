@@ -780,7 +780,6 @@ namespace Xamarin.Bundler
 				{
 					Target = this,
 					Abi = abi,
-					AssemblyName = App.AssemblyName,
 					InputFile = main_m,
 					OutputFile = main_o,
 					SharedLibrary = false,

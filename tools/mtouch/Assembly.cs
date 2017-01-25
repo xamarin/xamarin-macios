@@ -369,7 +369,6 @@ namespace Xamarin.Bundler {
 			link_task = new LinkTask ()
 			{
 				Target = Target,
-				AssemblyName = assembly_name,
 				Abi = abi,
 				InputFile = link_task_input,
 				OutputFile = ofile,

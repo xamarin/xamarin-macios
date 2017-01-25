@@ -319,7 +319,6 @@ namespace Xamarin.Bundler
 		public bool SharedLibrary;
 		public string OutputFile;
 		public Abi Abi;
-		public string AssemblyName;
 		public string InstallName;
 		public string Language;
 
