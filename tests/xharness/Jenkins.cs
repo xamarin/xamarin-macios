@@ -1702,7 +1702,7 @@ function oninitialload ()
 		{
 			using (var resource = await NotifyBlockingWaitAsync ((SupportsParallelBuilds ? Jenkins.DesktopResource.AcquireConcurrentAsync () : Jenkins.DesktopResource.AcquireExclusiveAsync ()))) {
 				using (var xbuild = new Process ()) {
-					xbuild.StartInfo.FileName = "xbuild";
+					xbuild.StartInfo.FileName = "msbuild";
 					var args = new StringBuilder ();
 					args.Append ("/verbosity:diagnostic ");
 					if (SpecifyPlatform)

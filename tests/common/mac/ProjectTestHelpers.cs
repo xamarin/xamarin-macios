@@ -125,7 +125,7 @@ namespace Xamarin.MMP.Tests
 			};
 
 			if (isUnified)
-				return RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/xbuild", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo);
+				return RunAndAssert (XBuild.ToolPath, buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo);
 			else
 				return RunAndAssert ("/Applications/Xamarin Studio.app/Contents/MacOS/mdtool", buildArgs, "Compile", shouldFail, getBuildProjectErrorInfo);
 		}
