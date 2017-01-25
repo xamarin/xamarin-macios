@@ -632,23 +632,22 @@ namespace Xamarin.Bundler
 				var ext = App.FastDev ? ".dylib" : ".o";
 				var ofile = Path.Combine (App.Cache.Location, arch, "lib" + Path.GetFileNameWithoutExtension (ifile) + ext);
 
-				if (!Application.IsUptodate (ifile, ofile)) {
-					var task = new PinvokesTask
-					{
-						Target = this,
-						Abi = abi,
-						InputFile = ifile,
-						OutputFile = ofile,
-						SharedLibrary = App.FastDev,
-						Language = "objective-c++",
-					};
-					if (App.FastDev) {
-						task.InstallName = "@rpath/lib" + Path.GetFileNameWithoutExtension (ifile) + ext;
-						task.CompilerFlags.AddFramework ("Foundation");
-						task.CompilerFlags.LinkWithXamarin ();
-					}
-					compile_tasks.Add (task);
+				var pinvoke_task = new PinvokesTask
+				{
+					Target = this,
+					Abi = abi,
+					InputFile = ifile,
+					OutputFile = ofile,
+					SharedLibrary = App.FastDev,
+					Language = "objective-c++",
+				};
+				if (App.FastDev) {
+					pinvoke_task.InstallName = "@rpath/lib" + Path.GetFileNameWithoutExtension (ifile) + ext;
+					pinvoke_task.CompilerFlags.AddFramework ("Foundation");
+					pinvoke_task.CompilerFlags.LinkWithXamarin ();
 				}
+				if (!pinvoke_task.CheckIsUptodate ())
+					compile_tasks.Add (pinvoke_task);
 				LinkWith (ofile);
 				LinkWithAndShip (ofile);
 			}
@@ -692,65 +691,55 @@ namespace Xamarin.Bundler
 					a.CreateCompilationTasks (compile_tasks, BuildDirectory, Abis);
 			}
 
+			List<string> registration_methods = new List<string> ();
+
 			// The static registrar.
-			List<string> registration_methods = null;
 			if (App.Registrar == RegistrarMode.Static) {
-				RunRegistrarTask run_registrar = null;
 				var registrar_m = Path.Combine (ArchDirectory, "registrar.m");
 				var registrar_h = Path.Combine (ArchDirectory, "registrar.h");
-				if (!Application.IsUptodate (Assemblies.Select (v => v.FullPath), new string[] { registrar_m, registrar_h })) {
-					run_registrar = new RunRegistrarTask
-					{
-						Target = this,
-						RegistrarM = registrar_m,
-						RegistrarH = registrar_h,
-					};
-					registration_methods = new List<string> ();
-					registration_methods.Add ("xamarin_create_classes");
-					Driver.Watch ("Registrar", 1);
-				} else {
-					Driver.Log (3, "Target '{0}' is up-to-date.", registrar_m);
-				}
+
+				var run_registrar_task = new RunRegistrarTask
+				{
+					Target = this,
+					RegistrarM = registrar_m,
+					RegistrarH = registrar_h,
+				};
 
 				var compile_registrar_tasks = new List<BuildTask> ();
 				foreach (var abi in Abis) {
 					var arch = abi.AsArchString ();
 					var ofile = Path.Combine (App.Cache.Location, arch, Path.GetFileNameWithoutExtension (registrar_m) + ".o");
 
-					if (!Application.IsUptodate (registrar_m, ofile)) {
-						var registrar_task = new CompileRegistrarTask ()
-						{
-							Target = this,
-							Abi = abi,
-							InputFile = registrar_m,
-							OutputFile = ofile,
-							RegistrarM = registrar_m,
-							RegistrarH = registrar_h,
-							SharedLibrary = false,
-							Language = "objective-c++",
-						};
-						// This is because iOS has a forward declaration of NSPortMessage, but no actual declaration.
-						// They still use NSPortMessage in other API though, so it can't just be removed from our bindings.
-						registrar_task.CompilerFlags.AddOtherFlag ("-Wno-receiver-forward-class");
+					var registrar_task = new CompileRegistrarTask
+					{
+						Target = this,
+						Abi = abi,
+						InputFile = registrar_m,
+						OutputFile = ofile,
+						RegistrarM = registrar_m,
+						RegistrarH = registrar_h,
+						SharedLibrary = false,
+						Language = "objective-c++",
+					};
+					// This is because iOS has a forward declaration of NSPortMessage, but no actual declaration.
+					// They still use NSPortMessage in other API though, so it can't just be removed from our bindings.
+					registrar_task.CompilerFlags.AddOtherFlag ("-Wno-receiver-forward-class");
+					if (!registrar_task.CheckIsUptodate ())
 						compile_registrar_tasks.Add (registrar_task);
-					} else {
-						Driver.Log (3, "Target '{0}' is up-to-date.", ofile);
-					}
 
 					LinkWith (ofile);
 				}
-				if (run_registrar != null) {
-					run_registrar.NextTasks = compile_registrar_tasks;
-					compile_tasks.Add (run_registrar);
+				if (!run_registrar_task.CheckIsUptodate ()) {
+					run_registrar_task.NextTasks = compile_registrar_tasks;
+					compile_tasks.Add (run_registrar_task);
 				} else {
 					compile_tasks.AddRange (compile_registrar_tasks);
 				}
+
+				registration_methods.Add ("xamarin_create_classes");
 			}
 
 			if (App.Registrar == RegistrarMode.Dynamic && App.IsSimulatorBuild && App.LinkMode == LinkMode.None) {
-				if (registration_methods == null)
-					registration_methods = new List<string> ();
-
 				string method;
 				string library;
 				switch (App.Platform) {
@@ -778,42 +767,33 @@ namespace Xamarin.Bundler
 			foreach (var abi in Abis) {
 				var arch = abi.AsArchString ();
 
-				GenerateMainTask generate_main_task = null;
 				var main_m = Path.Combine (App.Cache.Location, arch, "main.m");
-				var files = Assemblies.Select (v => v.FullPath);
-				if (!Application.IsUptodate (files, new string [] { main_m })) {
-					generate_main_task = new GenerateMainTask
-					{
-						Target = this,
-						Abi = abi,
-						MainM = main_m,
-						RegistrationMethods = registration_methods,
-					};
-				} else {
-					Driver.Log (3, "Target '{0}' is up-to-date.", main_m);
-				}
-
+				var generate_main_task = new GenerateMainTask
+				{
+					Target = this,
+					Abi = abi,
+					MainM = main_m,
+					RegistrationMethods = registration_methods,
+				};
 				var main_o = Path.Combine (App.Cache.Location, arch, "main.o");
-				if (!Application.IsUptodate (main_m, main_o)) {
-					var main_task = new CompileMainTask ()
-					{
-						Target = this,
-						Abi = abi,
-						AssemblyName = App.AssemblyName,
-						InputFile = main_m,
-						OutputFile = main_o,
-						SharedLibrary = false,
-						Language = "objective-c++",
-					};
-					main_task.CompilerFlags.AddDefine ("MONOTOUCH");
-					if (generate_main_task == null) {
+				var main_task = new CompileMainTask
+				{
+					Target = this,
+					Abi = abi,
+					AssemblyName = App.AssemblyName,
+					InputFile = main_m,
+					OutputFile = main_o,
+					SharedLibrary = false,
+					Language = "objective-c++",
+				};
+				main_task.CompilerFlags.AddDefine ("MONOTOUCH");
+				if (generate_main_task.CheckIsUptodate ()) {
+					if (!main_task.CheckIsUptodate ())
 						compile_tasks.Add (main_task);
-					} else {
-						generate_main_task.NextTasks = new [] { main_task };
-						compile_tasks.Add (generate_main_task);
-					}
 				} else {
-					Driver.Log (3, "Target '{0}' is up-to-date.", main_o);
+					if (!main_task.CheckIsUptodate ())
+						generate_main_task.NextTasks = new [] { main_task };
+					compile_tasks.Add (generate_main_task);
 				}
 
 				LinkWith (main_o);

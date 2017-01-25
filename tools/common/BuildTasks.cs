@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Xamarin.Bundler
@@ -66,5 +67,18 @@ namespace Xamarin.Bundler
 
 		// A list of files that this task outputs.
 		public abstract IEnumerable<string> Outputs { get; }
+
+		public bool CheckIsUptodate ()
+		{
+			if (!IsUptodate)
+				return false;
+			var outputs = Outputs;
+			if (outputs.Count () > 1) {
+				Driver.Log (3, "Targets '{0}' are up-to-date.", string.Join ("', '", outputs));
+			} else {
+				Driver.Log (3, "Target '{0}' is up-to-date.", outputs.First ());
+			}
+			return true;
+		}
 	}
 }
