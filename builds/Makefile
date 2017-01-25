@@ -251,13 +251,13 @@ $$(BUILD_DESTDIR)/mac/$(2)/bcl/%.dll: $$(MONO_PATH)/mcs/class/lib/$(2)/%.dll | $
 $$(BUILD_DESTDIR)/mac/$(2)/bcl/%.mdb: $$(MONO_PATH)/mcs/class/lib/$(2)/%.mdb .stamp-build-tools64 | $$(BUILD_DESTDIR)/mac/$(2)/bcl
 	@# mdb-rebase the mdb
 	$$(Q) cp $$< $$@
-	$$(Q_MDB) $$(MDB_REBASE) -q -i $$(abspath $$(MONO_PATH))/ -o $$(MAC_TARGETDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/src/mono/ $$@
 
 $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/%.dll: $$(BUILD_DESTDIR)/mac/$(2)/bcl/%.dll | $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/Facades
 	$$(Q) install -m 0755 $$< $$@
 
 $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/%.mdb: $$(BUILD_DESTDIR)/mac/$(2)/bcl/%.mdb | $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/Facades
 	$$(Q) install -m 0644 $$< $$@
+	$$(Q_MDB) $$(MDB_REBASE) -q -i $$(abspath $$(MONO_PATH))/ -o $$(MAC_TARGETDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/src/mono/ $$@
 endef
 
 $(eval $(call MacInstallBclTemplate,Xamarin.Mac,xammac))
@@ -283,7 +283,7 @@ endef
 define lipo_template_dynamic
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/$1: mac32/$(2)/.libs/$(1) mac64/$(2)/.libs/$(1) | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib
 	$(QT_LIPO) lipo -create $$+ -output $$@
-	$(Q) install_name_tool -id @executable_path/$1 $$@
+	$(Q) install_name_tool -id @rpath/$1 $$@
 
 MAC_TARGETS += $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/$1
 endef
@@ -671,6 +671,7 @@ TVOS_BCL_TARGETS += \
 
 $(PREFIX)/lib/mono/Xamarin.iOS/%.mdb: $(BUILD_DESTDIR)/ios/bcl/%.mdb | $(PREFIX)/lib/mono/Xamarin.iOS $(PREFIX)/lib/mono/Xamarin.iOS/repl
 	$(Q) install -m 0644 $< $@
+	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
 $(PREFIX)/lib/mono/Xamarin.iOS/Facades/%.dll: $(BUILD_DESTDIR)/ios/bcl/Facades/%.dll | $(PREFIX)/lib/mono/Xamarin.iOS/Facades
 	$(Q) install -m 0755 $< $@
@@ -689,6 +690,7 @@ $(PREFIX)/lib/mono/2.1/%.dll: $(BUILD_DESTDIR)/ios/bcl/%.dll | $(PREFIX)/lib/mon
 
 $(PREFIX)/lib/mono/2.1/%.mdb: $(BUILD_DESTDIR)/ios/bcl/%.mdb | $(PREFIX)/lib/mono/2.1 $(PREFIX)/lib/mono/2.1/repl
 	$(Q) install -m 0644 $< $@
+	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
 $(PREFIX)/bin/btouch-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
 	$(Q) install -s -m 0755 $< $@
@@ -701,6 +703,7 @@ $(PREFIX)/lib/mono/Xamarin.WatchOS/%.dll: $(BUILD_DESTDIR)/watchos/bcl/%.dll | $
 
 $(PREFIX)/lib/mono/Xamarin.WatchOS/%.mdb: $(BUILD_DESTDIR)/watchos/bcl/%.mdb | $(PREFIX)/lib/mono/Xamarin.WatchOS $(PREFIX)/lib/mono/Xamarin.WatchOS/repl
 	$(Q) install -m 0644 $< $@
+	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
 $(PREFIX)/lib/mono/Xamarin.TVOS/Facades/%.dll: $(BUILD_DESTDIR)/tvos/bcl/Facades/%.dll | $(PREFIX)/lib/mono/Xamarin.TVOS/Facades
 	$(Q) install -m 0755 $< $@
@@ -710,6 +713,7 @@ $(PREFIX)/lib/mono/Xamarin.TVOS/%.dll: $(BUILD_DESTDIR)/tvos/bcl/%.dll | $(PREFI
 
 $(PREFIX)/lib/mono/Xamarin.TVOS/%.mdb: $(BUILD_DESTDIR)/tvos/bcl/%.mdb | $(PREFIX)/lib/mono/Xamarin.TVOS $(PREFIX)/lib/mono/Xamarin.TVOS/repl
 	$(Q) install -m 0644 $< $@
+	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
 $(PREFIX)/bin/btv-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
 	$(Q) install -s -m 0755 $< $@
@@ -741,12 +745,10 @@ $(BUILD_DESTDIR)/ios/bcl/repl/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch_runtim
 $(BUILD_DESTDIR)/ios/bcl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch/%.mdb .stamp-build-tools64 | $(BUILD_DESTDIR)/ios/bcl
 	@# mdb-rebase the mdb
 	$(Q) cp $< $@
-	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
 $(BUILD_DESTDIR)/ios/bcl/repl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_runtime/%.mdb .stamp-build-tools64 | $(BUILD_DESTDIR)/ios/bcl/repl
 	@# mdb-rebase the mdb
 	$(Q) cp $< $@
-	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
 $(BUILD_DESTDIR)/watchos/bcl/Facades/%.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/Facades/%.dll | $(BUILD_DESTDIR)/watchos/bcl/Facades
 	@# sign the Facade assembly
@@ -766,12 +768,10 @@ $(BUILD_DESTDIR)/watchos/bcl/repl/%.dll: $(WATCH_MONO_PATH)/mcs/class/lib/monoto
 $(BUILD_DESTDIR)/watchos/bcl/%.mdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/%.mdb .stamp-build-watchbcl .stamp-build-tools64 | $(BUILD_DESTDIR)/watchos/bcl
 	@# mdb-rebase the mdb
 	$(Q) cp $< $@
-	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
 $(BUILD_DESTDIR)/watchos/bcl/repl/%.mdb: $(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch_runtime/%.mdb .stamp-build-watchbcl .stamp-build-tools64 | $(BUILD_DESTDIR)/watchos/bcl/repl
 	@# mdb-rebase the mdb
 	$(Q) cp $< $@
-	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
 $(BUILD_DESTDIR)/tvos/bcl/Facades/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch_tv/Facades/%.dll | $(BUILD_DESTDIR)/tvos/bcl/Facades
 	@# sign the Facade assembly
@@ -791,12 +791,10 @@ $(BUILD_DESTDIR)/tvos/bcl/repl/%.dll: $(MONO_PATH)/mcs/class/lib/monotouch_tv_ru
 $(BUILD_DESTDIR)/tvos/bcl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv/%.mdb .stamp-build-tools64 | $(BUILD_DESTDIR)/tvos/bcl
 	@# mdb-rebase the mdb
 	$(Q) cp $< $@
-	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
 $(BUILD_DESTDIR)/tvos/bcl/repl/%.mdb: $(MONO_PATH)/mcs/class/lib/monotouch_tv_runtime/%.mdb .stamp-build-tools64 | $(BUILD_DESTDIR)/tvos/bcl/repl
 	@# mdb-rebase the repl mdb
 	$(Q) cp $< $@
-	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 
 $(IOS_BCL_TARGETS_DIRS) $(WATCH_BCL_TARGETS_DIRS) $(TVOS_BCL_TARGETS_DIRS):
 	$(Q) mkdir -p $@
@@ -926,7 +924,7 @@ $(eval SIM_TARGET_SHAREDLIBLOGPROFILER:=$(SIM_TARGET_SHAREDLIBLOGPROFILER) $(BUI
 
 $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib: $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.0.dylib | $(BUILD_DESTDIR)/$(2)/tmp-lib
 	$(Q) cp $$< $$@
-	$(Q) install_name_tool -id @executable_path/libmono-profiler-log.dylib -change $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.1.dylib @executable_path/libmonosgen-2.0.dylib $$@
+	$(Q) install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(BUILD_DESTDIR)/$(2)/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $$@
 
 $(BUILD_DESTDIR)/$(2)/tmp-lib:
 	$$(Q) mkdir -p $$@
@@ -962,7 +960,7 @@ $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmonosgen-2.0.a: $(SIM_TARGET_LIBM
 
 $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmonosgen-2.0.dylib: $(SIM_TARGET_SHAREDMONOSGEN) | $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib
 	$(Q) lipo $(SIM_TARGET_SHAREDMONOSGEN) -create -output $@
-	$(Q) install_name_tool -id @executable_path/libmonosgen-2.0.dylib $@
+	$(Q) install_name_tool -id @rpath/libmonosgen-2.0.dylib $@
 
 $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib/libmono-profiler-log.a: $(SIM_TARGET_LIBLOGPROFILER) | $(IOS_DESTDIR)$(IPHONESIMULATOR_PREFIX)/lib
 	$(Q) lipo $(SIM_TARGET_LIBLOGPROFILER) -create -output $@
@@ -1102,14 +1100,14 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.a: $(WATCHSI
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.dylib: $(WATCHSIMULATOR_SHAREDMONOSGEN) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
 	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHSIMULATOR_SHAREDMONOSGEN) -create -output $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @executable_path/libmonosgen-2.0.dylib $@
+	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmonosgen-2.0.dylib $@
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-profiler-log.a: $(WATCHSIMULATOR_LIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
 	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHSIMULATOR_LIBLOGPROFILER) -create -output $@
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib/libmono-profiler-log.dylib: $(WATCHSIMULATOR_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHSIMULATOR_SDK)/usr/lib
 	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHSIMULATOR_SHAREDLIBLOGPROFILER) -create -output $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @executable_path/libmono-profiler-log.dylib -change $(BUILD_DESTDIR)/watchsimulator/lib/libmonosgen-2.0.1.dylib @executable_path/libmonosgen-2.0.dylib $@
+	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(BUILD_DESTDIR)/watchsimulator/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 
 $(WATCHSIMULATOR_DIRECTORIES):
 	$(Q) mkdir -p $@
@@ -1241,14 +1239,14 @@ $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.a: $(TVSIMULATO
 
 $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmonosgen-2.0.dylib: $(TVSIMULATOR_SHAREDMONOSGEN) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
 	$(Q) $(TVOS_BIN_PATH)/lipo $(TVSIMULATOR_SHAREDMONOSGEN) -create -output $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @executable_path/libmonosgen-2.0.dylib $@
+	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmonosgen-2.0.dylib $@
 
 $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-profiler-log.a: $(TVSIMULATOR_LIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
 	$(Q) $(TVOS_BIN_PATH)/lipo $(TVSIMULATOR_LIBLOGPROFILER) -create -output $@
 
 $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib/libmono-profiler-log.dylib: $(TVSIMULATOR_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/usr/lib
 	$(Q) $(TVOS_BIN_PATH)/lipo $(TVSIMULATOR_SHAREDLIBLOGPROFILER) -create -output $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @executable_path/libmono-profiler-log.dylib -change $(BUILD_DESTDIR)/tvsimulator/lib/libmonosgen-2.0.1.dylib @executable_path/libmonosgen-2.0.dylib $@
+	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(BUILD_DESTDIR)/tvsimulator/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 
 $(TVSIMULATOR_DIRECTORIES):
 	$(Q) mkdir -p $@
@@ -1396,14 +1394,14 @@ $(BUILD_DESTDIR)/$(2)/tmp-lib/libmonosgen-2.0.dylib: $(BUILD_DESTDIR)/$(2)/lib/l
 	$$(Q) rm -Rf $$@.tmpdir
 	$$(Q) mkdir -p $$@.tmpdir
 	$$(Q) cd $$@.tmpdir && ar -x $$<
-	$$(Q) $$(IOS_CC) -arch $(1) -dynamiclib -o $$@ $$@.tmpdir/*.o -liconv -O2 -Wl,-application_extension -miphoneos-version-min=7.0 -isysroot $(PLATFORM_SDK) -install_name @executable_path/libmonosgen-2.0.dylib -compatibility_version 2 -current_version 2.0 -framework CoreFoundation -lobjc $(IOS_BITCODE_LDFLAGS) -Wl,-single_module
+	$$(Q) $$(IOS_CC) -arch $(1) -dynamiclib -o $$@ $$@.tmpdir/*.o -liconv -O2 -Wl,-application_extension -miphoneos-version-min=7.0 -isysroot $(PLATFORM_SDK) -install_name @rpath/libmonosgen-2.0.dylib -compatibility_version 2 -current_version 2.0 -framework CoreFoundation -lobjc $(IOS_BITCODE_LDFLAGS) -Wl,-single_module
 	$$(Q) rm -Rf $$@.tmpdir
 
 $(BUILD_DESTDIR)/$(2)/tmp-lib/libmono-profiler-log.0.dylib: $(BUILD_DESTDIR)/$(2)/lib/libmono-profiler-log.a $(BUILD_DESTDIR)/$(2)/tmp-lib/libmonosgen-2.0.dylib | $(BUILD_DESTDIR)/$(2)/tmp-lib
 	$$(Q) rm -Rf $$@.tmpdir
 	$$(Q) mkdir -p $$@.tmpdir
 	$$(Q) cd $$@.tmpdir && ar -x $$<
-	$$(Q) $$(IOS_CC) -arch $(1) -dynamiclib -o $$@ $$@.tmpdir/*.o -liconv -O2 -Wl,-application_extension -miphoneos-version-min=7.0 -isysroot $(PLATFORM_SDK) -install_name @executable_path/libmono-profiler-log.dylib -compatibility_version 2 -current_version 2.0 -framework CoreFoundation -lobjc -Wl,-single_module -L$(BUILD_DESTDIR)/$(2)/tmp-lib -lmonosgen-2.0 -lz
+	$$(Q) $$(IOS_CC) -arch $(1) -dynamiclib -o $$@ $$@.tmpdir/*.o -liconv -O2 -Wl,-application_extension -miphoneos-version-min=7.0 -isysroot $(PLATFORM_SDK) -install_name @rpath/libmono-profiler-log.dylib -compatibility_version 2 -current_version 2.0 -framework CoreFoundation -lobjc -Wl,-single_module -L$(BUILD_DESTDIR)/$(2)/tmp-lib -lmonosgen-2.0 -lz
 	$$(Q) rm -Rf $$@.tmpdir
 
 endef
@@ -1463,7 +1461,7 @@ $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmonosgen-2.0.a: $(TARGET_LIBMONOSGEN) | 
 
 $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmonosgen-2.0.dylib: $(TARGET_SHAREDMONOSGEN) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
 	$(Q) lipo $(TARGET_SHAREDMONOSGEN) -create -output $@
-	$(Q) install_name_tool -id @executable_path/libmonosgen-2.0.dylib $@
+	$(Q) install_name_tool -id @rpath/libmonosgen-2.0.dylib $@
 
 $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib/libmono-profiler-log.a: $(TARGET_LIBLOGPROFILER) | $(IOS_DESTDIR)$(IPHONEOS_PREFIX)/lib
 	$(Q) lipo $(TARGET_LIBLOGPROFILER) -create -output $@
@@ -1627,21 +1625,21 @@ $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmonosgen-2.0.a: $(WATCHOS_TARGET
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmonosgen-2.0.dylib: $(WATCHOS_TARGET_SHAREDMONOSGEN) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
 	$(Q_STRIP) $(WATCHOS_BIN_PATH)/bitcode_strip $(WATCHOS_TARGET_SHAREDMONOSGEN) -m -o $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @executable_path/libmonosgen-2.0.dylib $@
+	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmonosgen-2.0.dylib $@
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.a: $(WATCHOS_TARGET_LIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
 	$(Q) $(WATCHOS_BIN_PATH)/lipo $(WATCHOS_TARGET_LIBLOGPROFILER) -create -output $@
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/usr/lib
 	$(Q) $(WATCHOS_BIN_PATH)/bitcode_strip $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER) -m -o $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @executable_path/libmono-profiler-log.dylib -change $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.1.dylib @executable_path/libmonosgen-2.0.dylib $@
+	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 
 $(WATCHOS_DIRECTORIES):
 	$(Q) mkdir -p $@
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Mono: $(WATCHOS_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework
 	$(Q) cp $< $@
-	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/Mono.framework/Mono -change $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.1.dylib @executable_path/libmonosgen-2.0.dylib $@
+	$(Q) $(WATCHOS_BIN_PATH)/install_name_tool -id @rpath/Mono.framework/Mono -change $(BUILD_DESTDIR)/targetwatch/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 
 $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework/Info.plist: Mono.framework-watchos.Info.plist | $(IOS_DESTDIR)$(XAMARIN_WATCHOS_SDK)/Frameworks/Mono.framework
 	$(Q) cp $< $@
@@ -1797,14 +1795,14 @@ $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmonosgen-2.0.a: $(TVOS_TARGET_LIBMO
 
 $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmonosgen-2.0.dylib: $(TVOS_TARGET_SHAREDMONOSGEN) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
 	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_SHAREDMONOSGEN) -create -output $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @executable_path/libmonosgen-2.0.dylib $@
+	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmonosgen-2.0.dylib $@
 
 $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.a: $(TVOS_TARGET_LIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
 	$(Q) $(TVOS_BIN_PATH)/lipo $(TVOS_TARGET_LIBLOGPROFILER) -create -output $@
 
 $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib/libmono-profiler-log.dylib: $(TVOS_TARGET_SHAREDLIBLOGPROFILER) | $(IOS_DESTDIR)$(XAMARIN_TVOS_SDK)/usr/lib
 	$(Q) lipo $(TVOS_TARGET_SHAREDLIBLOGPROFILER) -create -output $@
-	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @executable_path/libmono-profiler-log.dylib -change $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.1.dylib @executable_path/libmonosgen-2.0.dylib $@
+	$(Q) $(TVOS_BIN_PATH)/install_name_tool -id @rpath/libmono-profiler-log.dylib -change $(BUILD_DESTDIR)/targettv/lib/libmonosgen-2.0.1.dylib @rpath/libmonosgen-2.0.dylib $@
 
 $(TVOS_DIRECTORIES):
 	$(Q) mkdir -p $@

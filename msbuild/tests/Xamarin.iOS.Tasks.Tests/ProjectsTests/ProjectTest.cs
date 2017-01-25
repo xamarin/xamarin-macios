@@ -65,7 +65,7 @@ namespace Xamarin.iOS.Tasks
 			var coreFiles = GetCoreAppFiles (platform, config, appName + ".exe", appName);
 			if (IsTVOS) {
 				TestFilesExists (platform == "iPhone" ? Path.Combine (AppBundlePath, ".monotouch-64") : AppBundlePath, coreFiles);
-			} else if (platform == "iPhone") {
+			} else {
 				bool exists = false;
 
 				var baseDir = Path.Combine (AppBundlePath, ".monotouch-32");
@@ -80,9 +80,8 @@ namespace Xamarin.iOS.Tasks
 					exists = true;
 				}
 
-				Assert.IsTrue (exists, "No .monotouch-32 or .monotouch-64 directories found");
-			} else {
-				TestFilesExists (AppBundlePath, coreFiles);
+				if (!exists)
+					TestFilesExists (AppBundlePath, coreFiles);
 			}
 
 			if (platform == "iPhone") {
@@ -90,7 +89,7 @@ namespace Xamarin.iOS.Tasks
 				var nativeExecutable = Path.Combine (AppBundlePath, appName);
 
 				Assert.IsTrue (File.Exists (dSYMInfoPlist), "dSYM Info.plist file does not exist");
-				Assert.IsTrue (File.GetLastWriteTime (dSYMInfoPlist) >= File.GetLastWriteTime (nativeExecutable), "dSYM Info.plist should be newer than the native executable");
+				Assert.IsTrue (File.GetLastWriteTimeUtc (dSYMInfoPlist) >= File.GetLastWriteTimeUtc (nativeExecutable), "dSYM Info.plist should be newer than the native executable");
 			}
 
 			return csproj;

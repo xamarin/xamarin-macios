@@ -13,7 +13,6 @@ using Xamarin.Utils;
 namespace Xamarin.Bundler {
 	public partial class Assembly
 	{
-		public List<string> Satellites;
 		List<string> dylibs;
 		public string Dylib;
 
@@ -333,6 +332,20 @@ namespace Xamarin.Bundler {
 				if (Target.GetEntryPoints ().ContainsKey ("UIApplicationMain"))
 					compiler_flags.AddFramework ("UIKit");
 				compiler_flags.LinkWithPInvokes (abi);
+
+				if (HasLinkWithAttributes && !App.EnableBitCode)
+					compiler_flags.ReferenceSymbols (Target.GetRequiredSymbols (this, true));
+			}
+
+			if (App.EnableLLVMOnlyBitCode) {
+				// The AOT compiler doesn't optimize the bitcode so clang will do it
+				compiler_flags.AddOtherFlag ("-fexceptions");
+				var optimizations = App.GetLLVMOptimizations (this);
+				if (optimizations == null) {
+					compiler_flags.AddOtherFlag ("-O2");
+				} else if (optimizations.Length > 0) {
+					compiler_flags.AddOtherFlag (optimizations);
+				}
 			}
 
 			link_task = new LinkTask ()

@@ -12,6 +12,7 @@ using Mono.Tuner;
 using Xamarin.Bundler;
 using Xamarin.Linker;
 using Xamarin.Linker.Steps;
+using Xamarin.Tuner;
 
 namespace MonoTouch.Tuner {
 
@@ -35,7 +36,8 @@ namespace MonoTouch.Tuner {
 		internal RuntimeOptions RuntimeOptions { get; set; }
 
 		public MonoTouchLinkContext LinkContext { get; set; }
-		public Application Application { get; set; }
+		public Target Target { get; set; }
+		public Application Application { get { return Target.App; } }
 
 		public static I18nAssemblies ParseI18nAssemblies (string i18n)
 		{
@@ -101,6 +103,7 @@ namespace MonoTouch.Tuner {
 			context.LinkSymbols = options.LinkSymbols;
 			context.OutputDirectory = options.OutputDirectory;
 			context.SetParameter ("debug-build", options.DebugBuild.ToString ());
+			context.StaticRegistrar = options.Target.StaticRegistrar;
 
 			options.LinkContext = context;
 
@@ -114,7 +117,7 @@ namespace MonoTouch.Tuner {
 			sub.Add (new CoreRemoveSecurity ());
 			sub.Add (new OptimizeGeneratedCodeSubStep (options));
 			sub.Add (new RemoveUserResourcesSubStep (options));
-			// OptimizeGeneratedCodeSubStep and RemoveNativeCodeSubStep needs [GeneratedCode] so it must occurs before RemoveAttributes
+			// OptimizeGeneratedCodeSubStep and RemoveUserResourcesSubStep needs [GeneratedCode] so it must occurs before RemoveAttributes
 			sub.Add (new RemoveAttributes ());
 			// http://bugzilla.xamarin.com/show_bug.cgi?id=1408
 			if (options.LinkAway)
@@ -122,6 +125,7 @@ namespace MonoTouch.Tuner {
 			sub.Add (new MarkNSObjects ());
 			sub.Add (new PreserveSoapHttpClients ());
 			sub.Add (new CoreHttpMessageHandler (options));
+			sub.Add (new InlinerSubStep ());
 			return sub;
 		}
 
@@ -222,26 +226,7 @@ namespace MonoTouch.Tuner {
 		}
 	}
 
-	public class MonoTouchLinkContext : LinkContext {
-		Dictionary<string, MemberReference> required_symbols;
-		List<MethodDefinition> marshal_exception_pinvokes;
-
-		public Dictionary<string, MemberReference> RequiredSymbols {
-			get {
-				if (required_symbols == null)
-					required_symbols = new Dictionary<string, MemberReference> ();
-				return required_symbols;
-			}
-		}
-
-		public List<MethodDefinition> MarshalExceptionPInvokes {
-			get {
-				if (marshal_exception_pinvokes == null)
-					marshal_exception_pinvokes = new List<MethodDefinition> ();
-				return marshal_exception_pinvokes;
-			}
-		}
-
+	public class MonoTouchLinkContext : DerivedLinkContext {
 		public MonoTouchLinkContext (Pipeline pipeline, AssemblyResolver resolver)
 			: base (pipeline, resolver)
 		{

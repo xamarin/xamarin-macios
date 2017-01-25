@@ -107,6 +107,9 @@ namespace Xamarin.iOS.Tasks
 		public ITaskItem[] LinkDescriptions { get; set; }
 
 		[Required]
+		public bool EnableSGenConc { get; set; }
+
+		[Required]
 		public bool LinkerDumpDependencies { get; set; }
 
 		[Required]
@@ -400,6 +403,9 @@ namespace Xamarin.iOS.Tasks
 			if (LinkerDumpDependencies)
 				args.Add ("--linkerdumpdependencies");
 
+			if (EnableSGenConc)
+				args.Add ("--sgen-conc");
+
 			switch (LinkMode.ToLowerInvariant ()) {
 			case "sdkonly": args.Add ("--linksdkonly"); break;
 			case "none":    args.Add ("--nolink"); break;
@@ -638,6 +644,7 @@ namespace Xamarin.iOS.Tasks
 			Log.LogTaskProperty ("CompiledEntitlements", CompiledEntitlements);
 			Log.LogTaskProperty ("Debug", Debug);
 			Log.LogTaskProperty ("EnableGenericValueTypeSharing", EnableGenericValueTypeSharing);
+			Log.LogTaskProperty ("EnableSGenConc", EnableSGenConc);
 			Log.LogTaskProperty ("Entitlements", Entitlements);
 			Log.LogTaskProperty ("ExecutableName", ExecutableName);
 			Log.LogTaskProperty ("ExtraArgs", ExtraArgs);

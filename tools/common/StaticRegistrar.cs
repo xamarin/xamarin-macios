@@ -1090,7 +1090,7 @@ namespace XamCore.Registrar {
 			return res;
 		}
 
-		protected override RegisterAttribute GetRegisterAttribute (TypeReference type)
+		public override RegisterAttribute GetRegisterAttribute (TypeReference type)
 		{
 			CustomAttribute attrib;
 			RegisterAttribute rv = null;
@@ -2136,11 +2136,6 @@ namespace XamCore.Registrar {
 				sb.Append (", ...");
 
 			return sb.ToString ();
-		}
-
-		string CleanName (string name)
-		{
-			return name.Replace ('.', '_').Replace ('/', '_');
 		}
 
 		void WriteFullName (StringBuilder sb, TypeReference type)

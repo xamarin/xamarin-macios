@@ -854,6 +854,8 @@ function addlog (msg)
 {
 	if (ajax_log == null)
 		ajax_log = document.getElementById ('ajax-log');
+	if (ajax_log == null)
+		return;
 	var newText = msg + ""\n"" + ajax_log.innerText;
 	if (newText.length > 1024)
 		newText = newText.substring (0, 1024);
@@ -976,7 +978,6 @@ function autorefresh()
 	xhttp.open(""GET"", window.location.href, true);
 	xhttp.send();
 }
-setInterval(autorefresh, 1000);
 
 function autoshowdetailsmessage (id)
 {
@@ -1007,8 +1008,10 @@ function oninitialload ()
 		if (evt != '')
 			autoshowdetailsmessage (evt);
 	}
-}
-</script>");
+}");
+				if (IsServerMode)
+					writer.WriteLine ("setInterval (autorefresh, 1000);");
+				writer.WriteLine ("</script>");
 				writer.WriteLine ("<body onload='oninitialload ();'>");
 
 				if (IsServerMode) {
@@ -1213,7 +1216,17 @@ function oninitialload ()
 							if (logs.Count () > 0) {
 								foreach (var log in logs) {
 									log.Flush ();
-									writer.WriteLine ("<a href='{0}' type='text/plain'>{1}</a><br />", System.Web.HttpUtility.UrlPathEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description);
+									string log_type = System.Web.MimeMapping.GetMimeMapping (log.FullPath);
+									string log_target;
+									switch (log_type) {
+									case "text/xml":
+										log_target = "_top";
+										break;
+									default:
+										log_target = "_self";
+										break;
+									}
+									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", System.Web.HttpUtility.UrlPathEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
 									if (log.Description == "Test log" || log.Description == "Execution log") {
 										var summary = string.Empty;
 										var fails = new List<string> ();
@@ -1245,7 +1258,10 @@ function oninitialload ()
 											using (var reader = log.GetReader ()) {
 												while (!reader.EndOfStream) {
 													string line = reader.ReadLine ()?.Trim ();
-													if (line.Contains (": error"))
+													// Sometimes we put error messages in pull request descriptions
+													// Then Jenkins create environment variables containing the pull request descriptions (and other pull request data)
+													// So exclude any lines matching 'ghprbPull', to avoid reporting those environment variables as build errors.
+													if (line.Contains (": error") && !line.Contains ("ghprbPull"))
 														errors.Add (line);
 												}
 											}

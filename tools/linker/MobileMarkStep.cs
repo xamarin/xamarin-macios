@@ -9,12 +9,6 @@ using Mono.Linker;
 using Mono.Linker.Steps;
 using Mono.Tuner;
 
-#if MONOMAC
-using DerivedLinkContext = MonoMac.Tuner.MonoMacLinkContext;
-#else
-using DerivedLinkContext = MonoTouch.Tuner.MonoTouchLinkContext;
-#endif
-
 namespace Xamarin.Linker.Steps {
 
 	// XML definition files have their limits, i.e. they are good to keep stuff around unconditionnally

@@ -18,6 +18,7 @@ using PlatformException = Xamarin.Bundler.MonoMacException;
 namespace Xamarin.Bundler {
 	public partial class Assembly
 	{
+		public List<string> Satellites;
 		public Application App { get { return Target.App; } }
 
 		string full_path;
@@ -45,8 +46,9 @@ namespace Xamarin.Bundler {
 		public HashSet<string> Frameworks = new HashSet<string> ();
 		public HashSet<string> WeakFrameworks = new HashSet<string> ();
 		public List<string> LinkerFlags = new List<string> (); // list of extra linker flags
-		public List<string> LinkWith = new List<string> (); // list of paths to native libraries to link with.
+		public List<string> LinkWith = new List<string> (); // list of paths to native libraries to link with, from LinkWith attributes
 		public HashSet<ModuleReference> UnresolvedModuleReferences;
+		public bool HasLinkWithAttributes { get; private set; }
 
 		bool? symbols_loaded;
 
@@ -123,6 +125,7 @@ namespace Xamarin.Bundler {
 					continue;
 				
 				// Let the linker remove it the attribute from the assembly
+				HasLinkWithAttributes = true;
 				
 				LinkWithAttribute linkWith = GetLinkWithAttribute (attr);
 				string libraryName = linkWith.LibraryName;
@@ -389,6 +392,29 @@ namespace Xamarin.Bundler {
 		public override string ToString ()
 		{
 			return FileName;
+		}
+
+		// This returns the path to all related files:
+		// * The assembly itself
+		// * Any debug files (mdb/pdb)
+		// * Any config files
+		// * Any satellite assemblies
+		public IEnumerable<string> GetRelatedFiles ()
+		{
+			yield return FullPath;
+			var mdb = FullPath + ".mdb";
+			if (File.Exists (mdb))
+				yield return mdb;
+			var pdb = Path.ChangeExtension (FullPath, ".pdb");
+			if (File.Exists (pdb))
+				yield return pdb;
+			var config = FullPath + ".config";
+			if (File.Exists (config))
+				yield return config;
+			if (Satellites != null) {
+				foreach (var satellite in Satellites)
+					yield return satellite;
+			}
 		}
 	}
 }

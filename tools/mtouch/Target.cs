@@ -167,8 +167,8 @@ namespace Xamarin.Bundler
 				Frameworks.Add ("CFNetwork"); // required by xamarin_start_wwan
 		}
 
-		Dictionary<string, MemberReference> entry_points;
-		public IDictionary<string, MemberReference> GetEntryPoints ()
+		Dictionary<string, List<MemberReference>> entry_points;
+		public IDictionary<string, List<MemberReference>> GetEntryPoints ()
 		{
 			if (entry_points == null)
 				GetRequiredSymbols ();
@@ -182,7 +182,7 @@ namespace Xamarin.Bundler
 
 			var cache_location = Path.Combine (App.Cache.Location, "entry-points.txt");
 			if (cached_link || !any_assembly_updated) {
-				entry_points = new Dictionary<string, MemberReference> ();
+				entry_points = new Dictionary<string, List<MemberReference>> ();
 				foreach (var ep in File.ReadAllLines (cache_location))
 					entry_points.Add (ep, null);
 			} else {
@@ -191,7 +191,7 @@ namespace Xamarin.Bundler
 					// This happens when using the simlauncher and the msbuild tasks asked for a list
 					// of symbols (--symbollist). In that case just produce an empty list, since the
 					// binary shouldn't end up stripped anyway.
-					entry_points = new Dictionary<string, MemberReference> ();
+					entry_points = new Dictionary<string, List<MemberReference>> ();
 					marshal_exception_pinvokes = new List<MethodDefinition> ();
 				} else {
 					entry_points = LinkContext.RequiredSymbols;
@@ -214,9 +214,31 @@ namespace Xamarin.Bundler
 			return entry_points.Keys;
 		}
 
-		public MemberReference GetMemberForSymbol (string symbol)
+		public IEnumerable<string> GetRequiredSymbols (Assembly assembly, bool includeObjectiveCClasses)
 		{
-			MemberReference rv = null;
+			if (entry_points == null)
+				GetRequiredSymbols ();
+
+			foreach (var ep in entry_points) {
+				if (ep.Value == null)
+					continue;
+				foreach (var mr in ep.Value) {
+					if (mr.Module.Assembly == assembly.AssemblyDefinition)
+						yield return ep.Key;
+				}
+			}
+
+			if (includeObjectiveCClasses) {
+				foreach (var kvp in LinkContext.ObjectiveCClasses) {
+					if (kvp.Value.Module.Assembly == assembly.AssemblyDefinition)
+						yield return $"OBJC_CLASS_$_{kvp.Key}";
+				}
+			}
+		}
+
+		public List<MemberReference> GetMembersForSymbol (string symbol)
+		{
+			List<MemberReference> rv = null;
 			entry_points?.TryGetValue (symbol, out rv);
 			return rv;
 		}
@@ -283,34 +305,8 @@ namespace Xamarin.Bundler
 			GetCustomAttributeReferences (assembly, assemblies, exceptions);
 			GetCustomAttributeReferences (main, assemblies, exceptions);
 			if (main.HasTypes) {
-				foreach (var t in main.Types) {
-					GetTypeReferences (t, assemblies, exceptions);
-				}
-			}
-		}
-
-		void GetTypeReferences (TypeDefinition type, HashSet<string> assemblies, List<Exception> exceptions)
-		{
-			GetCustomAttributeReferences (type, assemblies, exceptions);
-			if (type.HasEvents) {
-				foreach (var e in type.Events)
-					GetCustomAttributeReferences (e, assemblies, exceptions);
-			}
-			if (type.HasFields) {
-				foreach (var f in type.Fields)
-					GetCustomAttributeReferences (f, assemblies, exceptions);
-			}
-			if (type.HasMethods) {
-				foreach (var m in type.Methods)
-					GetCustomAttributeReferences (m, assemblies, exceptions);
-			}
-			if (type.HasProperties) {
-				foreach (var p in type.Properties)
-					GetCustomAttributeReferences (p, assemblies, exceptions);
-			}
-			if (type.HasNestedTypes) {
-				foreach (var nt in type.NestedTypes)
-					GetTypeReferences (nt, assemblies, exceptions);
+				foreach (var ca in main.GetCustomAttributes ())
+					GetCustomAttributeReferences (ca, assemblies, exceptions);
 			}
 		}
 
@@ -318,19 +314,23 @@ namespace Xamarin.Bundler
 		{
 			if (!cap.HasCustomAttributes)
 				return;
-			foreach (var ca in cap.CustomAttributes) {
-				if (ca.HasConstructorArguments) {
-					foreach (var arg in ca.ConstructorArguments)
-						GetCustomAttributeArgumentReference (arg, assemblies, exceptions);
-				}
-				if (ca.HasFields) {
-					foreach (var arg in ca.Fields)
-						GetCustomAttributeArgumentReference (arg.Argument, assemblies, exceptions);
-				}
-				if (ca.HasProperties) {
-					foreach (var arg in ca.Properties)
-						GetCustomAttributeArgumentReference (arg.Argument, assemblies, exceptions);
-				}
+			foreach (var ca in cap.CustomAttributes)
+				GetCustomAttributeReferences (ca, assemblies, exceptions);
+		}
+
+		void GetCustomAttributeReferences (CustomAttribute ca, HashSet<string> assemblies, List<Exception> exceptions)
+		{
+			if (ca.HasConstructorArguments) {
+				foreach (var arg in ca.ConstructorArguments)
+					GetCustomAttributeArgumentReference (arg, assemblies, exceptions);
+			}
+			if (ca.HasFields) {
+				foreach (var arg in ca.Fields)
+					GetCustomAttributeArgumentReference (arg.Argument, assemblies, exceptions);
+			}
+			if (ca.HasProperties) {
+				foreach (var arg in ca.Properties)
+					GetCustomAttributeArgumentReference (arg.Argument, assemblies, exceptions);
 			}
 		}
 
@@ -409,7 +409,7 @@ namespace Xamarin.Bundler
 				DumpDependencies = App.LinkerDumpDependencies,
 				RuntimeOptions = App.RuntimeOptions,
 				MarshalNativeExceptionsState = MarshalNativeExceptionsState,
-				Application = App,
+				Target = this,
 			};
 
 			MonoTouch.Tuner.Linker.Process (LinkerOptions, out link_context, out assemblies);
@@ -545,8 +545,21 @@ namespace Xamarin.Bundler
 			assemblies = linked_assemblies;
 
 			// Make the assemblies point to the right path.
-			foreach (var a in Assemblies)
+			foreach (var a in Assemblies) {
 				a.FullPath = Path.Combine (PreBuildDirectory, a.FileName);
+				// The linker can copy files (and not update timestamps), and then we run into this sequence:
+				// * We run the linker, nothing changes, so the linker copies 
+				//   all files to the PreBuild directory, with timestamps intact.
+				// * This means that for instance SDK assemblies will have the original
+				//   timestamp from their installed location, and the exe will have the 
+				//   timestamp of when it was built.
+				// * mtouch is executed again for some reason, and none of the input assemblies changed.
+				//   We'll still re-execute the linker, because at least one of the input assemblies
+				//   (the .exe) has a newer timestamp than some of the assemblies in the PreBuild directory.
+				// So here we manually touch all the assemblies we have, to make sure their timestamps
+				// change (this is us saying 'we know these files are up-to-date at this point in time').
+				Driver.Touch (a.GetRelatedFiles ());
+			}
 
 			File.WriteAllText (cache_path, string.Join ("\n", linked_assemblies));
 		}
@@ -804,11 +817,9 @@ namespace Xamarin.Bundler
 
 			// allow the native linker to remove unused symbols (if the caller was removed by the managed linker)
 			if (!bitcode) {
-				foreach (var entry in GetRequiredSymbols ()) {
-					// Note that we include *all* (__Internal) p/invoked symbols here
-					// We also include any fields from [Field] attributes.
-					compiler_flags.ReferenceSymbol (entry);
-				}
+				// Note that we include *all* (__Internal) p/invoked symbols here
+				// We also include any fields from [Field] attributes.
+				compiler_flags.ReferenceSymbols (GetRequiredSymbols ());
 			}
 
 			string mainlib;

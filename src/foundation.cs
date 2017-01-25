@@ -7174,7 +7174,7 @@ namespace XamCore.Foundation
 		[iOS (10,0), Watch (3,0), NoTV, NoMac]
 		[Static]
 		[Export ("localizedUserNotificationStringForKey:arguments:")]
-		string GetLocalizedUserNotificationString (string key, [NullAllowed] NSObject [] arguments);
+		string GetLocalizedUserNotificationString (string key, [Params] [NullAllowed] NSObject [] arguments);
 	}
 
 	[StrongDictionary ("NSString")]

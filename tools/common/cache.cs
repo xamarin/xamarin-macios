@@ -196,11 +196,6 @@ public class Cache {
 		return sb.ToString ();
 	}
 
-	void Invalidate ()
-	{
-		Clean ();
-	}
-
 	bool IsCacheValid ()
 	{
 		var name = "arguments";

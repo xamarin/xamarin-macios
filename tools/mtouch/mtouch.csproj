@@ -262,6 +262,9 @@
     <Compile Include="..\common\Target.cs">
       <Link>external\Target.cs</Link>
     </Compile>
+    <Compile Include="..\common\DerivedLinkContext.cs">
+      <Link>external\DerivedLinkContext.cs</Link>
+    </Compile>
     <Compile Include="..\common\Frameworks.cs">
       <Link>external\Frameworks.cs</Link>
     </Compile>
@@ -316,6 +319,13 @@
     <Compile Include="..\linker\RemoveUserResourcesSubStep.cs">
       <Link>Xamarin.Linker\RemoveUserResourcesSubStep.cs</Link>
     </Compile>
+    <Compile Include="..\linker\MonoTouch.Tuner\InlinerSubStep.cs">
+      <Link>MonoTouch.Tuner\InlinerSubStep.cs</Link>
+    </Compile>
+    <Compile Include="..\common\BuildTasks.cs">
+      <Link>common\BuildTasks.cs</Link>
+    </Compile>
+    <Compile Include="BuildTasks.mtouch.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Core" />

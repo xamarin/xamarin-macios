@@ -520,7 +520,6 @@ namespace Xamarin.Bundler
 			info.RedirectStandardError = true;
 
 			info.EnvironmentVariables ["MONO_PATH"] = mono_path;
-			info.EnvironmentVariables ["MONO_GC_PARAMS"] = app.MonoGCParams;
 			if (mono_debug != null)
 				info.EnvironmentVariables ["MONO_DEBUG"] = mono_debug;
 
@@ -649,7 +648,7 @@ namespace Xamarin.Bundler
 					if (app.IsExtension) {
 						// the name of the executable must be the bundle id (reverse dns notation)
 						// but we do not want to impose that (ugly) restriction to the managed .exe / project name / ...
-						sw.WriteLine ("\targv [0] = \"{0}\";", Path.GetFileNameWithoutExtension (app.RootAssembly));
+						sw.WriteLine ("\targv [0] = (char *) \"{0}\";", Path.GetFileNameWithoutExtension (app.RootAssembly));
 						sw.WriteLine ("\tint rv = xamarin_main (argc, argv, true);");
 					} else {
 						sw.WriteLine ("\tint rv = xamarin_main (argc, argv, false);");
@@ -751,9 +750,17 @@ namespace Xamarin.Bundler
 			return true;
 		}
 
+		public static void Touch (IEnumerable<string> filenames, DateTime? timestamp = null)
+		{
+			if (timestamp == null)
+				timestamp = DateTime.Now;
+			foreach (var filename in filenames)
+				new FileInfo (filename).LastWriteTime = timestamp.Value;
+		}
+
 		public static string Quote (string f)
 		{
-			if (f.IndexOf (' ') == -1 && f.IndexOf ('\'') == -1 && f.IndexOf (',') == -1)
+			if (f.IndexOf (' ') == -1 && f.IndexOf ('\'') == -1 && f.IndexOf (',') == -1 && f.IndexOf ('$') == -1)
 				return f;
 
 			var s = new StringBuilder ();
@@ -885,14 +892,6 @@ namespace Xamarin.Bundler
 
 			return true;
 		}
-
-		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static IntPtr /* CFPropertyListRef */ CFPropertyListCreateWithData (
-			IntPtr /* CFAllocatorRef */ allocator,
-			IntPtr /* CFDataRef */ data,
-			int /* CFOptionFlags */ options,
-			IntPtr /* CFPropertyListFormat */ format,
-			IntPtr /* CFErrorRef */ error);
 
 		internal static PDictionary FromPList (string name)
 		{
@@ -1250,6 +1249,16 @@ namespace Xamarin.Bundler
 				}
 			},
 			{ "llvm-asm", "Make the LLVM compiler emit assembly files instead of object files. [Deprecated]", v => { app.LLVMAsmWriter = true; }, true},
+			{ "llvm-opt=", "Specify how to optimize the LLVM output (only applicable when using LLVM to compile to bitcode), per assembly: 'assembly'='optimizations', where 'assembly is the filename (including extension) of the assembly (the special value 'all' can be passed to set the same optimization for all assemblies), and 'optimizations' are optimization arguments. Valid optimization flags are Clang optimization flags.", v =>
+				{
+						var equals = v.IndexOf ('=');
+						if (equals == -1)
+							throw ErrorHelper.CreateError (26, "Could not parse the command line argument '{0}': {1}", "--llvm-opt=" + v, "Both assembly and optimization must be specified (assembly=optimization)");
+						var asm = v.Substring (0, equals);
+						var opt = v.Substring (equals + 1); // An empty string is valid here, meaning 'no optimizations'
+						app.LLVMOptimizations [asm] = opt;
+				}
+			},
 			{ "http-message-handler=", "Specify the default HTTP message handler for HttpClient", v => { http_message_handler = v; }},
 			{ "output-format=", "Specify the output format for some commands. Possible values: Default, XML", v =>
 				{

@@ -1002,6 +1002,120 @@ for **Core Foundation** objects.
 The `ForcedTypeAttribute` is only valid on `parameters`, `properties` and `return value`. 
 
 
+<a name="BindAsAttribute" class="injected"></a>
+
+
+## BindAsAttribute
+
+The `BindAsAttribute` allows binding `NSNumber`, `NSValue` and `NSString`(enums) into more accurate C# types. The attribute can be used to create better, more accurate, .NET API over the native API.
+
+You can decorate methods (on return value), parameters and properties with `BindAs`. The only restriction is that your member **must not** be inside a `[Protocol]` or `[Model]` interface.
+
+For example:
+
+```
+[return: BindAs (typeof (bool?))]
+[Export ("shouldDrawAt:")]
+NSNumber ShouldDraw ([BindAs (typeof (CGRect))] NSValue rect);
+```
+
+Would output:
+
+```
+[Export ("shouldDrawAt:")]
+bool? ShouldDraw (CGRect rect) { ... }
+```
+
+Internally we will do the `bool?` <-> `NSNumber` and `CGRect` <-> `NSValue` conversions.
+
+The current supported encapsulation types are:
+
+* `NSValue`
+* `NSNumber`
+* `NSString`
+
+### NSValue
+
+The following C# data types are supported to be encapsulated from/into `NSValue`:
+
+* CGAffineTransform
+* NSRange
+* CGVector
+* SCNMatrix4
+* CLLocationCoordinate2D
+* SCNVector3
+* SCNVector4
+* CGPoint / PointF
+* CGRect / RectangleF
+* CGSize / SizeF
+* UIEdgeInsets
+* UIOffset
+* MKCoordinateSpan
+* CMTimeRange
+* CMTime
+* CMTimeMapping
+* CATransform3D
+
+### NSNumber
+
+The following C# data types are supported to be encapsulated from/into `NSNumber`:
+
+* bool
+* byte
+* double
+* float
+* short
+* int
+* long
+* sbyte
+* ushort
+* uint
+* ulong
+* nfloat
+* nint
+* nuint
+* Enums
+
+### NSString
+
+`[BindAs]` works in conjuntion with [enums backed by a NSString constant](#enum-attributes) so you can create better .NET API, for example:
+
+```
+[BindAs (typeof (CAScroll))]
+[Export ("supportedScrollMode")]
+NSString SupportedScrollMode { get; set; }
+```
+
+Would output:
+
+```
+[Export ("supportedScrollMode")]
+CAScroll SupportedScrollMode { get; set; }
+```
+
+We will handle the `enum` <-> `NSString` conversion only if the provided enum type to `[BindAs]` is [backed by a NSString constant](#enum-attributes).
+
+### Arrays
+
+`[BindAs]` also supports arrays of any of the supported types, you can have the following API definition as an example:
+
+```
+[return: BindAs (typeof (CAScroll []))]
+[Export ("getScrollModesAt:")]
+NSString [] GetScrollModes ([BindAs (typeof (CGRect []))] NSValue [] rects);
+```
+
+Would output:
+
+```
+[Export ("getScrollModesAt:")]
+CAScroll? [] GetScrollModes (CGRect [] rects) { ... }
+```
+
+The `rects` parameter will be encapsulated into a `NSArray` that contains an `NSValue` for each `CGRect` and in return you will get an array of `CAScroll?` which has been created using the values of the returned `NSArray` containing `NSStrings`.
+
+
+
  <a name="BindAttribute" class="injected"></a>
 
 
@@ -2082,6 +2196,7 @@ Example:
 
 You can then call the extension method `GetDomain` to get the domain constant of
 any error.
+
 
 ## FieldAttribute
 

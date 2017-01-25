@@ -118,6 +118,22 @@ namespace Xamarin
 		}
 
 		[Test]
+		public void RebuildTest_DontLink ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.NoFastSim = true;
+				mtouch.Linker = MTouchLinker.DontLink;
+				mtouch.CreateTemporaryApp ();
+				mtouch.Verbosity = 4;
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build 1");
+				mtouch.AssertOutputPattern ("Linking .*/testApp.exe into .*/PreBuild using mode 'None'");
+				mtouch.AssertExecute (MTouchAction.BuildSim, "build 2");
+				mtouch.AssertOutputPattern ("Cached assemblies reloaded.");
+			}
+		}
+
+		[Test]
 		// Simulator
 		[TestCase (Target.Sim, Config.Release, PackageMdb.Default, MSym.Default,  false, false, "")]
 		[TestCase (Target.Sim, Config.Debug,   PackageMdb.Default, MSym.Default,  true,  false, "")]
@@ -413,6 +429,17 @@ namespace Xamarin
 
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build dev");
 				mtouch.AssertError (25, $"No SDK version was provided. Please add --sdk=X.Y to specify which {GetPlatformSimpleName (profile)} SDK should be used to build your application.");
+			}
+		}
+
+		[Test]
+		public void MT0026 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryApp ();
+				mtouch.LLVMOptimizations = "-O2";
+				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
+				mtouch.AssertError (26, "Could not parse the command line argument '--llvm-opt=-O2': Both assembly and optimization must be specified (assembly=optimization)");
 			}
 		}
 			
@@ -2015,7 +2042,7 @@ class Test {
 				var lines = otool_output.Split (new char [] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 				for (int i = 0; i < lines.Length; i++) {
 					if (lines [i].Contains ("LC_ID_DYLIB")) {
-						Assert.That (lines [i + 2], Does.Contain ("name @executable_path/libpinvokes.dylib "), "LC_ID_DYLIB");
+						Assert.That (lines [i + 2], Does.Contain ("name @rpath/libpinvokes.dylib "), "LC_ID_DYLIB");
 						break;
 					}
 				}
@@ -2153,7 +2180,6 @@ public partial class NotificationService : UNNotificationServiceExtension
 		{
 			using (var mtouch = new MTouchTool ()) {
 				mtouch.Profile = Profile.iOS;
-				mtouch.Verbosity = 23;
 				var tmp = mtouch.CreateTemporaryDirectory ();
 				mtouch.CreateTemporaryCacheDirectory ();
 
@@ -2174,7 +2200,8 @@ public partial class NotificationService : UNNotificationServiceExtension
 				var exeStamp = File.GetLastWriteTimeUtc (exePath);
 				var mdbStamp = File.GetLastWriteTimeUtc (mdbPath);
 
-				// Recompile the exe, adding only whitespace. This will only change the debuf files
+				System.Threading.Thread.Sleep (1000); // HFS does not have sub-second timestamp resolution, so make sure the timestamps actually change...
+				// Recompile the exe, adding only whitespace. This will only change the debug files
 				MTouch.CompileTestAppExecutable (tmp, "\n\n" + code + "\n\n", "/debug:full");
 
 				// Rebuild the app

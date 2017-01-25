@@ -228,7 +228,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			Condition="'@(_NativeLibrary)' != '' And '$(IsMacEnabled)' == 'true'"
 			CodesignAllocate="$(_CodesignAllocate)"
 			Keychain="$(CodesignKeychain)"
-			Resource="%(_NativeLibrary.Identity)"
+			Resources="@(_NativeLibrary)"
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			IsAppExtension="$(IsAppExtension)"
@@ -275,7 +275,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			CodesignAllocate="$(_CodesignAllocate)"
 			Keychain="$(CodesignKeychain)"
 			Entitlements="$(IntermediateOutputPath)Entitlements.xcent"
-			Resource="$(AppBundleDir)"
+			Resources="$(AppBundleDir)"
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			IsAppExtension="$(IsAppExtension)"
@@ -536,7 +536,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			IntermediateOutputPath="$(IntermediateOutputPath)mmp-cache"
 			AppManifest="$(_AppManifest)"
 			SdkVersion="$(MacOSXSdkVersion)"
-			IsAppExtension="$(IsAppExtension)">
+			IsAppExtension="$(IsAppExtension)"
+			EnableSGenConc="$(EnableSGenConc)">
 			<Output TaskParameter="NativeLibraries" ItemName="_NativeLibrary" />
 		</Mmp>
 	</Target>

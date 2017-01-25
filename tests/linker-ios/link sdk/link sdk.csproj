@@ -171,6 +171,7 @@
     <Compile Include="LocaleTest.cs" />
     <Compile Include="ReflectionTest.cs" />
     <Compile Include="HttpClientHandlerTest.cs" />
+    <Compile Include="CanaryTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\BundledResources\BundledResources.csproj">

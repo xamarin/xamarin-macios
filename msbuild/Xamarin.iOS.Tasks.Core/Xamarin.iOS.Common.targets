@@ -747,6 +747,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			UseFloat32="$(MtouchFloat32)"
 			UseThumb="$(MtouchUseThumb)"
 			EnableBitcode="$(MtouchEnableBitcode)"
+			EnableSGenConc="$(MtouchEnableSGenConc)"
 			AppExtensionReferences="@(_ResolvedAppExtensionReferences)"
 			ArchiveSymbols="$(MonoSymbolArchive)"
 			Verbosity="$(MtouchVerbosity)"
@@ -1618,15 +1619,21 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<!-- Note: Always codesign *.dylibs even for Simulator builds. We use $(_CanOutputAppBundle) because dylibs can exist in app extensions as well. -->
 	<Target Name="_CodesignNativeLibraries" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != '' And '@(_NativeLibrary)' != ''" DependsOnTargets="_DetectSigningIdentity;_CompileToNative"
 		Inputs="%(_NativeLibrary.Identity)" Outputs="$(DeviceSpecificIntermediateOutputPath)codesign\%(_NativeLibrary.Filename)%(_NativeLibrary.Extension)">
+
+		<PropertyGroup>
+			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
+		</PropertyGroup>
+
 		<Codesign
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="$(_CodesignAllocate)"
-			DisableTimestamp="$(_SdkIsSimulator)"
+			DisableTimestamp="$(_CodesignDisableTimestamp)"
 			Keychain="$(CodesignKeychain)"
-			Resource="%(_NativeLibrary.Identity)"
+			Resources="@(_NativeLibrary)"
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			>
@@ -1646,15 +1653,21 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_CodesignFrameworks" Condition="'$(_CanOutputAppBundle)' == 'true' And '$(_CodeSigningKey)' != '' And '@(_Frameworks)' != ''" DependsOnTargets="_DetectSigningIdentity;_CollectFrameworks"
 		Inputs="%(_Frameworks.Identity)" Outputs="$(DeviceSpecificIntermediateOutputPath)codesign\%(_Frameworks.Filename)%(_Frameworks.Extension)">
+
+		<PropertyGroup>
+			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
+		</PropertyGroup>
+
 		<Codesign
 			Condition="'$(IsMacEnabled)' == 'true'"
 			SessionId="$(BuildSessionId)"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="$(_CodesignAllocate)"
-			DisableTimestamp="$(_SdkIsSimulator)"
+			DisableTimestamp="$(_CodesignDisableTimestamp)"
 			Keychain="$(CodesignKeychain)"
-			Resource="%(_Frameworks.Identity)"
+			Resources="@(_Frameworks)"
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			>
@@ -1692,7 +1705,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Keychain="%(_AppExtensionCodesignProperties.Keychain)"
 			Entitlements="%(_AppExtensionCodesignProperties.Entitlements)"
 			ResourceRules="%(_AppExtensionCodesignProperties.ResourceRules)"
-			Resource="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)"
+			Resources="$(_AppBundlePath)PlugIns\%(_AppExtensionCodesignProperties.Identity)"
 			SigningKey="%(_AppExtensionCodesignProperties.SigningKey)"
 			ExtraArgs="%(_AppExtensionCodesignProperties.ExtraArgs)"
 			>
@@ -1726,12 +1739,15 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 			<_ResourceRulesFullPath></_ResourceRulesFullPath>
 			<_ResourceRulesFullPath Condition="'$(_PreparedResourceRules)' != ''">$([System.IO.Path]::GetFullPath('$(_PreparedResourceRules)'))</_ResourceRulesFullPath>
+
+			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
 		</PropertyGroup>
 
 		<ItemGroup>
 			<_AppExtensionCodesignProperties Include="$(_AppBundleFileName)">
 				<CodesignAllocate>$(_CodesignAllocate)</CodesignAllocate>
-				<DisableTimestamp>$(_SdkIsSimulator)</DisableTimestamp>
+				<DisableTimestamp>$(_CodesignDisableTimestamp)</DisableTimestamp>
 				<Entitlements>$(_EntitlementsFullPath)</Entitlements>
 				<ResourceRules>$(_ResourceRulesFullPath)</ResourceRules>
 				<Keychain>$(CodesignKeychain)</Keychain>
@@ -1753,17 +1769,23 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 	<Target Name="_CodesignAppBundle" Condition="'$(_RequireCodeSigning)' == 'true' And '$(IsAppExtension)' == 'false'" DependsOnTargets="$(_CodesignAppBundleDependsOn)"
 		Inputs="$(_NativeExecutable);$(_AppBundlePath)Info.plist;$(_AppBundlePath)embedded.mobileprovision;$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent;@(_BundleResourceWithLogicalName);@(_NativeLibrary);@(_Frameworks)"
 		Outputs="$(DeviceSpecificIntermediateOutputPath)codesign\$(_AppBundleName)$(AppBundleExtension)">
+
+		<PropertyGroup>
+			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
+		</PropertyGroup>
+
 		<Codesign
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="$(_CodesignAllocate)"
-			DisableTimestamp="$(_SdkIsSimulator)"
+			DisableTimestamp="$(_CodesignDisableTimestamp)"
 			Keychain="$(CodesignKeychain)"
 			Entitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
 			ResourceRules="$(_PreparedResourceRules)"
-			Resource="$(AppBundleDir)"
+			Resources="$(AppBundleDir)"
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			>
@@ -1889,7 +1911,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 			<!-- Calculate an IPA package directory path if not already defined by the developer. -->
 			<!--<IpaPackageDir Condition="'$(IpaPackageDir)' == ''">$([System.Environment]::GetEnvironmentVariable('IPA_PACKAGE_DIR'))</IpaPackageDir>-->
-			<IpaPackageDir Condition="'$(IpaPackageDir)' == ''">$(DeviceSpecificOutputPath)$(_AppBundleName)</IpaPackageDir>
+			<IpaPackageDir Condition="'$(IpaPackageDir)' == ''">$(DeviceSpecificOutputPath)</IpaPackageDir>
 
 			<!-- Calculate an IPA package name if not already defined by the developer. -->
 			<!--<IpaPackageName Condition="'$(IpaPackageName)' == ''">$([System.Environment]::GetEnvironmentVariable('IPA_PACKAGE_NAME'))</IpaPackageName>-->
@@ -1912,9 +1934,12 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<_IntermediateODRDir Condition="'$(_DistributionType)' == 'AdHoc' And '$(EmbedOnDemandResources)' == 'false'">$(DeviceSpecificIntermediateOutputPath)OnDemandResourcesPackage\OnDemandResources\</_IntermediateODRDir>
 
 			<OnDemandResourcesUrl Condition="'$(_DistributionType)' == 'AdHoc' And '$(EmbedOnDemandResources)' == 'true'">OnDemandResources</OnDemandResourcesUrl>
-			
+
 			<IsStreamable>false</IsStreamable>
 			<IsStreamable Condition="$(EmbedOnDemandResources) == 'false'">true</IsStreamable>
+
+			<_CodesignDisableTimestamp>False</_CodesignDisableTimestamp>
+			<_CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(MtouchDebug)' == 'true'">True</_CodesignDisableTimestamp>
 		</PropertyGroup>
 		
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_IntermediateODRDir)" />
@@ -1956,10 +1981,10 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="$(_CodesignAllocate)"
-			DisableTimestamp="$(_SdkIsSimulator)"
+			DisableTimestamp="$(_CodesignDisableTimestamp)"
 			Keychain="$(CodesignKeychain)"
 			Entitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
-			Resource="%(_AssetPack.Identity)"
+			Resources="@(_AssetPack)"
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			>
@@ -1983,11 +2008,11 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			ToolExe="$(CodesignExe)"
 			ToolPath="$(CodesignPath)"
 			CodesignAllocate="$(_CodesignAllocate)"
-			DisableTimestamp="$(_SdkIsSimulator)"
+			DisableTimestamp="$(_CodesignDisableTimestamp)"
 			Keychain="$(CodesignKeychain)"
 			Entitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
 			ResourceRules="$(_PreparedResourceRules)"
-			Resource="$(_IpaAppBundleDir)"
+			Resources="$(_IpaAppBundleDir)"
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			/>

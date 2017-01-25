@@ -11,6 +11,7 @@ using MonoTouch.Tuner;
 using Xamarin.Bundler;
 using Xamarin.Linker;
 using Xamarin.Linker.Steps;
+using Xamarin.Tuner;
 using Xamarin.Utils;
 
 using Mono.Cecil;
@@ -54,11 +55,9 @@ namespace MonoMac.Tuner {
 		}
 	}
 
-	public class MonoMacLinkContext : LinkContext {
+	public class MonoMacLinkContext : DerivedLinkContext {
 
 		Dictionary<string, List<MethodDefinition>> pinvokes = new Dictionary<string, List<MethodDefinition>> ();
-		public Dictionary<string, MemberReference> RequiredSymbols = new Dictionary<string, MemberReference> ();
-		List<MethodDefinition> marshal_exception_pinvokes;
 
 		public MonoMacLinkContext (Pipeline pipeline, AssemblyResolver resolver) : base (pipeline, resolver)
 		{
@@ -66,14 +65,6 @@ namespace MonoMac.Tuner {
 
 		public IDictionary<string, List<MethodDefinition>> PInvokeModules {
 			get { return pinvokes; }
-		}
-
-		public List<MethodDefinition> MarshalExceptionPInvokes {
-			get {
-				if (marshal_exception_pinvokes == null)
-					marshal_exception_pinvokes = new List<MethodDefinition> ();
-				return marshal_exception_pinvokes;
-			}
 		}
 	}
 

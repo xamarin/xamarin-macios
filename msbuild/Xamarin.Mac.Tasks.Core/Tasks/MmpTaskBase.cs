@@ -58,6 +58,9 @@ namespace Xamarin.Mac.Tasks
 
 		public bool IsAppExtension { get; set; }
 
+		[Required]
+		public bool EnableSGenConc { get; set; }
+
 		public bool UseXamMacFullFramework { get; set; }
 
 		public string ApplicationName { get; set; }
@@ -150,6 +153,9 @@ namespace Xamarin.Mac.Tasks
 			if (Profiling)
 				args.Add ("/profiling");
 
+			if (EnableSGenConc)
+				args.Add ("/sgen-conc");
+
 			switch ((LinkMode ?? string.Empty).ToLower ()) {
 			case "full":
 				break;
@@ -240,6 +246,7 @@ namespace Xamarin.Mac.Tasks
 			Log.LogTaskProperty ("Architecture", Architecture);
 			Log.LogTaskProperty ("ArchiveSymbols", ArchiveSymbols);
 			Log.LogTaskProperty ("Debug", Debug);
+			Log.LogTaskProperty ("EnableSGenConc", EnableSGenConc);
 			Log.LogTaskProperty ("ExplicitReferences", ExplicitReferences);
 			Log.LogTaskProperty ("ExtraArguments", ExtraArguments);
 			Log.LogTaskProperty ("FrameworkRoot", FrameworkRoot);
