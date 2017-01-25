@@ -596,7 +596,6 @@ namespace Xamarin.Bundler
 
 			ManagedLink ();
 
-			CompilePInvokeWrappers ();
 			// Now the assemblies are in PreBuildDirectory.
 
 			foreach (var a in Assemblies) {
