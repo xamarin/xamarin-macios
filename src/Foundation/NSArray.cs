@@ -59,6 +59,21 @@ namespace XamCore.Foundation {
 			return FromNativeObjects (items, count);
 		}
 
+		public static NSArray FromNSObjects<T> (Func<T, NSObject> nsobjectificator, params T [] items)
+		{
+			if (nsobjectificator == null)
+				throw new ArgumentNullException (nameof (nsobjectificator));
+			if (items == null)
+				throw new ArgumentNullException (nameof (items));
+
+			var arr = new NSObject [items.Length];
+			for (int i = 0; i < items.Length; i++) {
+				arr [i] = nsobjectificator (items [i]);
+			}
+
+			return FromNativeObjects (arr);
+		}
+
 		public static NSArray FromObjects (params object [] items)
 		{
 			return From<object> (items);

@@ -54,6 +54,8 @@ using XamCore.CoreGraphics;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 using XamCore.Security;
+using XamCore.SceneKit;
+using XamCore.CoreLocation;
 #if !WATCH
 using XamCore.CoreMedia;
 using XamCore.CoreVideo;
@@ -65,12 +67,19 @@ using XamCore.AudioUnit;
 using XamCore.AVFoundation;
 #endif
 
+#if !MONOMAC
+using XamCore.UIKit;
+using XamCore.MapKit;
+#endif
+
 #if MONOMAC
 using XamCore.OpenGL;
 using XamCore.MediaToolbox;
+using XamCore.CoreAnimation;
 #elif !WATCH
 #if !TVOS
 using XamCore.AddressBook;
+using XamCore.CoreAnimation;
 #endif
 using XamCore.MediaToolbox;
 #endif
@@ -454,6 +463,7 @@ public class MemberInformation
 	public bool is_return_release;
 	public bool protocolize;
 	public string selector, wrap_method, is_forced_owns;
+	public bool is_bindAs => Generator.HasBindAsAttribute (mi);
 
 	public MethodInfo method { get { return (MethodInfo) mi; } }
 	public PropertyInfo property { get { return (PropertyInfo) mi; } }
@@ -1117,6 +1127,202 @@ public partial class Generator : IMemberGatherer {
 		return "I" + type.Name;
 	}
 
+	public static BindAsAttribute GetBindAsAttribute (ICustomAttributeProvider cu) => GetAttribute<BindAsAttribute> (cu) ?? GetAttribute<BindAsAttribute> ((cu as MethodInfo)?.ReturnParameter);
+	public static bool HasBindAsAttribute (ICustomAttributeProvider cu) => (GetAttribute<BindAsAttribute> (cu) ?? GetAttribute<BindAsAttribute> ((cu as MethodInfo)?.ReturnParameter)) != null;
+	static bool IsSetter (MethodInfo mi) => mi.IsSpecialName && mi.Name.StartsWith ("set_", StringComparison.Ordinal);
+	static string GetBindAsExceptionString (string box, string retType, string containerType, string container, string memberName) => $"Could not {box} type {retType} from {containerType} {container} used on {memberName} member decorated with [BindAs].";
+	bool IsMemberInsideProtocol (Type type) => IsProtocol (type) || IsModel (type);
+
+	bool IsSmartEnum (Type type)
+	{
+		if (!type.IsEnum)
+			return false;
+		// First check if the smart enum candidate still holds the FieldAtttribute data
+		if (type.GetFields ().Any (f => GetAttribute<FieldAttribute> (f) != null))
+			return true;
+		// If the above fails it's possible that it comes from another dll (like X.I.dll) so we look for the [Enum]Extensions class existence
+		return Type.GetType (type.AssemblyQualifiedName.Replace (type.Name, $"{type.Name}Extensions")) != null;
+	}
+
+	static Dictionary<Type,string> NSValueCreateMap = new Dictionary<Type, string> {
+		{ typeof (CGAffineTransform), "CGAffineTransform" }, { typeof (NSRange), "Range" },
+		{ typeof (CGVector), "CGVector" }, { typeof (SCNMatrix4), "SCNMatrix4" },
+		{ typeof (CLLocationCoordinate2D), "CLLocationCoordinate2D" }, { typeof (SCNVector3), "Vector" },
+		{ typeof (SCNVector4), "Vector" },
+#if XAMCORE_2_0
+		{ typeof (CGPoint), "CGPoint" }, { typeof (CGRect), "CGRect" }, { typeof (CGSize), "CGSize" },
+#endif
+#if !MONOMAC
+		{ typeof (UIEdgeInsets), "UIEdgeInsets" }, { typeof (UIOffset), "UIOffset" },
+		{ typeof (MKCoordinateSpan), "MKCoordinateSpan" },
+#endif
+#if !WATCH && !TVOS
+		{ typeof (CMTimeRange), "CMTimeRange" }, { typeof (CMTime), "CMTime" },
+		{ typeof (CMTimeMapping), "CMTimeMapping" }, { typeof (CATransform3D), "CATransform3D" },
+#endif
+	};
+
+	string GetToBindAsWrapper (MemberInformation minfo = null, ParameterInfo pi = null)
+	{
+		BindAsAttribute attrib = null;
+		Type originalType = null;
+		string temp = null;
+		var declaringType = minfo?.mi?.DeclaringType ?? pi?.Member?.DeclaringType;
+
+		if (IsMemberInsideProtocol (declaringType))
+			throw new BindingException (1050, true, "[BindAs] cannot be used inside Protocol or Model types. Type: {0}", declaringType.Name);
+
+		if (pi == null) {
+			attrib = GetBindAsAttribute (minfo.mi);
+			var property = minfo.mi as PropertyInfo;
+			var method = minfo.mi as MethodInfo;
+			originalType = method?.ReturnType ?? property?.PropertyType;
+		} else {
+			attrib = GetBindAsAttribute (pi);
+			originalType = pi.ParameterType;
+		}
+
+		var retType = Nullable.GetUnderlyingType (attrib.Type) ?? attrib.Type;
+		var isNullable = attrib.IsNullable;
+		var isValueType = retType.IsValueType;
+		var isEnum = retType.IsEnum;
+		var parameterName = pi != null ? pi.Name.GetSafeParamName () : "value";
+		var denullify = isNullable ? ".Value" : string.Empty;
+
+		if (isNullable || !isValueType)
+			temp = string.Format ("{0} == null ? null : ", parameterName);
+
+		if (originalType == typeof (NSNumber)) {
+			var enumCast = isEnum ? $"(int)" : string.Empty;
+			temp = string.Format ("new NSNumber ({2}{1}{0});", denullify, parameterName, enumCast);
+		}
+		else if (originalType == typeof (NSValue)) {
+			var typeStr = string.Empty;
+			if (!NSValueCreateMap.TryGetValue (retType, out typeStr)) {
+				// HACK: These are problematic for X.M due to we do not ship System.Drawing for Full profile
+				if (retType.Name == "RectangleF" || retType.Name == "SizeF" || retType.Name == "PointF")
+					typeStr = retType.Name;
+				else
+					throw new BindingException (1049, true, GetBindAsExceptionString ("box", retType.Name, originalType.Name, "container", minfo?.mi?.Name ?? pi?.Name));
+			}
+			temp = string.Format ("NSValue.From{0} ({2}{1});", typeStr, denullify, parameterName);
+		} else if (originalType == typeof (NSString) && IsSmartEnum (retType)) {
+			temp = string.Format ("{1}{0}.GetConstant ();", denullify, parameterName);
+		} else if (originalType.IsArray) {
+			var arrType = originalType.GetElementType ();
+			var arrRetType = Nullable.GetUnderlyingType (retType.GetElementType ()) ?? retType.GetElementType ();
+			var valueConverter = string.Empty;
+
+			if (arrType == typeof (NSString))
+				valueConverter = $"o{denullify}.GetConstant (), {parameterName});";
+			else if (arrType == typeof (NSNumber)) {
+				var cast = arrRetType.IsEnum ? "(int)" : string.Empty;
+				valueConverter = $"new NSNumber ({cast}o{denullify}), {parameterName});";
+			} else if (arrType == typeof (NSValue)) {
+				var typeStr = string.Empty;
+				if (!NSValueCreateMap.TryGetValue (arrRetType, out typeStr)) {
+					if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
+						typeStr = retType.Name;
+					else
+						throw new BindingException (1049, true, GetBindAsExceptionString ("box", arrRetType.Name, originalType.Name, "array", minfo?.mi?.Name ?? pi?.Name));
+				}
+				valueConverter = $"NSValue.From{typeStr} (o{denullify}), {parameterName});";
+			} else
+				throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
+			temp = $"NSArray.FromNSObjects (o => {valueConverter}";
+		} else
+			throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
+
+		return temp;
+	}
+
+	static Dictionary<Type,string> NSNumberReturnMap = new Dictionary<Type, string> {
+		{ typeof (bool), ".BoolValue" }, { typeof (byte), ".ByteValue" }, { typeof (double), ".DoubleValue" },
+		{ typeof (float), ".FloatValue" }, { typeof (short), ".Int16Value" }, { typeof (int), ".Int32Value" },
+		{ typeof (long), ".Int64Value" }, { typeof (sbyte), ".SByteValue" }, { typeof (ushort), ".UInt16Value" },
+		{ typeof (uint), ".UInt32Value" }, { typeof (ulong), ".UInt64Value" },
+#if XAMCORE_2_0
+		{ typeof (nfloat), ".NFloatValue" }, { typeof (nint), ".NIntValue" }, { typeof (nuint), ".NUIntValue" },
+#endif
+	};
+
+	static Dictionary<Type,string> NSValueReturnMap = new Dictionary<Type, string> {
+		{ typeof (CGAffineTransform), ".CGAffineTransformValue" }, { typeof (NSRange), ".RangeValue" },
+		{ typeof (CGVector), ".CGVectorValue" }, { typeof (SCNMatrix4), ".SCNMatrix4Value" },
+		{ typeof (CLLocationCoordinate2D), ".CoordinateValue" }, { typeof (SCNVector3), ".Vector3Value" },
+		{ typeof (SCNVector4), ".VectordValue" },
+#if XAMCORE_2_0
+		{ typeof (CGPoint), ".CGPointValue" }, { typeof (CGRect), ".CGRectValue" }, { typeof (CGSize), ".CGSizeValue" },
+#endif
+#if !MONOMAC
+		{ typeof (UIEdgeInsets), ".UIEdgeInsetsValue" }, { typeof (UIOffset), ".UIOffsetValue" },
+		{ typeof (MKCoordinateSpan), ".CoordinateSpanValue" },
+#endif
+#if !WATCH && !TVOS
+		{ typeof (CMTimeRange), ".CMTimeRangeValue" }, { typeof (CMTime), ".CMTimeValue" },
+		{ typeof (CMTimeMapping), ".CMTimeMappingValue" }, { typeof (CATransform3D), ".CATransform3DValue" },
+#endif
+	};
+
+	string GetFromBindAsWrapper (MemberInformation minfo)
+	{
+		var declaringType = minfo.mi.DeclaringType;
+		if (IsMemberInsideProtocol (declaringType))
+			throw new BindingException (1050, true, "[BindAs] cannot be used inside Protocol or Model types. Type: {0}", declaringType.Name);
+
+		var attrib = GetBindAsAttribute (minfo.mi);
+		var retType = Nullable.GetUnderlyingType (attrib.Type) ?? attrib.Type;
+		var isValueType = retType.IsValueType;
+		var append = string.Empty;
+		var property = minfo.mi as PropertyInfo;
+		var method = minfo.mi as MethodInfo;
+		var originalReturnType = method?.ReturnType ?? property?.PropertyType;
+
+		if (originalReturnType == typeof (NSNumber)) {
+			if (!NSNumberReturnMap.TryGetValue (retType, out append)) {
+				if (retType.IsEnum) {
+					var enumType = Enum.GetUnderlyingType (retType);
+					if (!NSNumberReturnMap.TryGetValue (enumType, out append))
+						throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi.Name));
+				}
+				else
+					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi.Name));
+			}
+		} else if (originalReturnType == typeof (NSValue)) {
+			if (!NSValueReturnMap.TryGetValue (retType, out append)) {
+				// HACK: These are problematic for X.M due to we do not ship System.Drawing for Full profile
+				if (retType.Name == "RectangleF" || retType.Name == "SizeF" || retType.Name == "PointF")
+					append = $".{retType.Name}Value";
+				else
+					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi.Name));
+			}
+		} else if (originalReturnType == typeof (NSString) && IsSmartEnum (retType)) {
+			append = $"{FormatType (retType.DeclaringType, retType)}Extensions.GetValue (";
+		} else if (originalReturnType.IsArray) {
+			var arrType = originalReturnType.GetElementType ();
+			var arrRetType = Nullable.GetUnderlyingType (retType.GetElementType ()) ?? retType.GetElementType ();
+			var valueFetcher = string.Empty;
+			if (arrType == typeof (NSString))
+				append = $"ptr => {{\n\tusing (var str = Runtime.GetNSObject<NSString> (ptr)) {{\n\t\treturn {FormatType (arrRetType.DeclaringType, arrRetType)}Extensions.GetValue (str);\n\t}}\n}}";
+			else if (arrType == typeof (NSNumber)) {
+				if (NSNumberReturnMap.TryGetValue (arrRetType, out valueFetcher) || arrRetType.IsEnum)
+					append = string.Format ("ptr => {{\n\tusing (var num = Runtime.GetNSObject<NSNumber> (ptr)) {{\n\t\treturn ({1}) num{0};\n\t}}\n}}", arrRetType.IsEnum ? ".Int32Value" : valueFetcher, FormatType (arrRetType.DeclaringType, arrRetType));
+				else
+					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, arrType.Name, "array", minfo.mi.Name));
+			} else if (arrType == typeof (NSValue)) {
+				if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
+					valueFetcher = $".{arrRetType.Name}Value";
+				else if (!NSValueReturnMap.TryGetValue (arrRetType, out valueFetcher))
+					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, arrType.Name, "array", minfo.mi.Name));
+
+				append = string.Format ("ptr => {{\n\tusing (var val = Runtime.GetNSObject<NSValue> (ptr)) {{\n\t\treturn val{0};\n\t}}\n}}", valueFetcher);
+			} else
+				throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
+		} else
+			throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
+		return append;
+	}
+
 	public static bool HasForcedAttribute (ICustomAttributeProvider cu, out string owns)
 	{
 		var att = GetAttribute<ForcedTypeAttribute> (cu) ?? GetAttribute<ForcedTypeAttribute> ((cu as MethodInfo)?.ReturnParameter);
@@ -1316,11 +1522,16 @@ public partial class Generator : IMemberGatherer {
 	// Returns the actual way in which the type t must be marshalled
 	// for example "UIView foo" is generated as  "foo.Handle"
 	//
-	public string MarshalParameter (MethodInfo mi, ParameterInfo pi, bool null_allowed_override, EnumMode enum_mode)
+	public string MarshalParameter (MethodInfo mi, ParameterInfo pi, bool null_allowed_override, EnumMode enum_mode, PropertyInfo propInfo = null)
 	{
 		if (pi.ParameterType.IsByRef && pi.ParameterType.GetElementType ().IsValueType == false){
 			return "ref " + pi.Name + "Value";
 		}
+
+		if (HasBindAsAttribute (pi))
+			return string.Format ("nsb_{0} == null ? IntPtr.Zero : nsb_{0}.Handle", pi.Name);
+		if (propInfo != null && HasBindAsAttribute (propInfo))
+			return string.Format ("nsb_{0} == null ? IntPtr.Zero : nsb_{0}.Handle", propInfo.Name);
 
 		if (IsWrappedType (pi.ParameterType)){
 			if (null_allowed_override || HasAttribute (pi, typeof (NullAllowedAttribute)))
@@ -1401,7 +1612,7 @@ public partial class Generator : IMemberGatherer {
 		throw new BindingException (1002, true, "Unknown kind {0} in method '{1}.{2}'", pi, mi.DeclaringType.FullName, mi.Name.GetSafeParamName ());
 	}
 
-	public bool ParameterNeedsNullCheck (ParameterInfo pi, MethodInfo mi)
+	public bool ParameterNeedsNullCheck (ParameterInfo pi, MethodInfo mi, PropertyInfo propInfo = null)
 	{
 		if (pi.ParameterType.IsByRef)
 			return false;
@@ -1409,11 +1620,16 @@ public partial class Generator : IMemberGatherer {
 		if (HasAttribute (pi, typeof (NullAllowedAttribute)))
 			return false;
 
-		if (mi.IsSpecialName && mi.Name.StartsWith ("set_", StringComparison.Ordinal)){
+		if (IsSetter (mi)) {
 			if (HasAttribute (mi, typeof (NullAllowedAttribute))){
 				return false;
 			}
 		}
+
+		var bindAsAtt = GetBindAsAttribute (pi) ?? GetBindAsAttribute (propInfo);
+		if (bindAsAtt != null)
+			return bindAsAtt.IsNullable || !bindAsAtt.IsValueType;
+
 		if (IsWrappedType (pi.ParameterType))
 			return true;
 
@@ -2917,8 +3133,16 @@ public partial class Generator : IMemberGatherer {
 				if (IsModel (minfo.method.ReturnType) && !hasReturnTypeProtocolize)
 					ErrorHelper.Show (new BindingException (1107, false, "The return type of the method {0}.{1} exposes a model ({2}). Please expose the corresponding protocol type instead ({3}.I{4}).", minfo.method.DeclaringType, minfo.method.Name, minfo.method.ReturnType, minfo.method.ReturnType.Namespace, minfo.method.ReturnType.Name));
 			}
-			
-			sb.Append (prefix + FormatType (mi.DeclaringType, GetCorrectGenericType (mi.ReturnType)));
+
+			if (minfo.is_bindAs) {
+				if (IsMemberInsideProtocol (minfo.mi.DeclaringType))
+					throw new BindingException (1050, true, "[BindAs] cannot be used inside Protocol or Model types. Type: {0}", minfo.mi.DeclaringType.Name);
+
+				var bindAsAttrib = GetBindAsAttribute (minfo.mi);
+				sb.Append (prefix + FormatType (bindAsAttrib.Type.DeclaringType, GetCorrectGenericType (bindAsAttrib.Type)));
+			} else
+				sb.Append (prefix + FormatType (mi.DeclaringType, GetCorrectGenericType (mi.ReturnType)));
+
 			sb.Append (" ");
 		}
 		// Unified internal methods automatically get a _ appended
@@ -2991,8 +3215,13 @@ public partial class Generator : IMemberGatherer {
 				}
 				sb.Append ("I");
 			}
-			
-			sb.Append (FormatType (declaringType, parType));
+
+			var bindAsAtt = GetBindAsAttribute (pi);
+			if (bindAsAtt != null)
+				sb.Append (FormatType (bindAsAtt.Type.DeclaringType, bindAsAtt.Type));
+			else
+				sb.Append (FormatType (declaringType, parType));
+
 			sb.Append (" ");
 			sb.Append (pi.Name.GetSafeParamName ());
 		}
@@ -3061,6 +3290,17 @@ public partial class Generator : IMemberGatherer {
 			} else if (minfo != null && minfo.is_forced) {
 				cast_a = " Runtime.GetINativeObject<" + FormatType (declaringType, GetCorrectGenericType (mi.ReturnType)) + "> (";
 				cast_b = $", {minfo.is_forced_owns})";
+			} else if (minfo != null && minfo.is_bindAs) {
+				if (mi.ReturnType == typeof (NSString)) {
+					cast_a = $" {GetFromBindAsWrapper (minfo)}Runtime.GetNSObject<{FormatType (declaringType, GetCorrectGenericType (mi.ReturnType))}> (";
+					cast_b = "))";
+				} else {
+					var bindAs = GetBindAsAttribute (minfo.mi);
+					var bindAsType = Nullable.GetUnderlyingType (bindAs.Type) ?? bindAs.Type;
+					var enumCast = (bindAsType.IsEnum && !minfo.type.IsArray) ? $"({FormatType (bindAsType.DeclaringType, GetCorrectGenericType (bindAsType))})" : string.Empty;
+					cast_a = $" {enumCast}Runtime.GetNSObject<{FormatType (declaringType, GetCorrectGenericType (mi.ReturnType))}> (";
+					cast_b = ")" + GetFromBindAsWrapper (minfo);
+				}
 			} else {
 				cast_a = " Runtime.GetNSObject<" + FormatType (declaringType, GetCorrectGenericType (mi.ReturnType)) + "> (";
 				cast_b = ")";
@@ -3076,7 +3316,11 @@ public partial class Generator : IMemberGatherer {
 			cast_b = "";
 		} else if (mai.Type.IsArray){
 			Type etype = mai.Type.GetElementType ();
-			if (etype == typeof (string)){
+			if (minfo != null && minfo.is_bindAs) {
+				var bindAsT = GetBindAsAttribute (minfo.mi).Type.GetElementType ();
+				cast_a = $"NSArray.ArrayFromHandleFunc <{FormatType (bindAsT.DeclaringType, bindAsT)}> (";
+				cast_b = $", {GetFromBindAsWrapper (minfo)})";
+			} else if (etype == typeof (string)) {
 				cast_a = "NSArray.StringArrayFromHandle (";
 				cast_b = ")";
 			} else if (minfo != null && minfo.protocolize) {
@@ -3394,7 +3638,7 @@ public partial class Generator : IMemberGatherer {
 	// @convs: conversions to perform before the invocation
 	// @disposes: dispose operations to perform after the invocation
 	// @by_ref_processing
-	void GenerateTypeLowering (MethodInfo mi, bool null_allowed_override, EnumMode enum_mode, out StringBuilder args, out StringBuilder convs, out StringBuilder disposes, out StringBuilder by_ref_processing, out StringBuilder by_ref_init)
+	void GenerateTypeLowering (MethodInfo mi, bool null_allowed_override, EnumMode enum_mode, out StringBuilder args, out StringBuilder convs, out StringBuilder disposes, out StringBuilder by_ref_processing, out StringBuilder by_ref_init, PropertyInfo propInfo = null)
 	{
 		args = new StringBuilder ();
 		convs = new StringBuilder ();
@@ -3408,7 +3652,7 @@ public partial class Generator : IMemberGatherer {
 			if (!IsTarget (pi)){
 				// Construct invocation
 				args.Append (", ");
-				args.Append (MarshalParameter (mi, pi, null_allowed_override, enum_mode));
+				args.Append (MarshalParameter (mi, pi, null_allowed_override, enum_mode, propInfo));
 			}
 
 			// Construct conversions
@@ -3419,7 +3663,12 @@ public partial class Generator : IMemberGatherer {
 				disposes.AppendFormat (GenerateDisposeString (probe_null, !mai.ZeroCopyStringMarshal), pi.Name);
 			} else if (mai.Type.IsArray){
 				Type etype = mai.Type.GetElementType ();
-				if (etype == typeof (string)){
+				if (HasBindAsAttribute (pi)) {
+					convs.AppendFormat ("var nsb_{0} = {1}\n", pi.Name, GetToBindAsWrapper (null, pi));
+					disposes.AppendFormat ("\nnsb_{0}?.Dispose ();", pi.Name);
+				} else if (HasBindAsAttribute (propInfo)) {
+					disposes.AppendFormat ("\nnsb_{0}?.Dispose ();", propInfo.Name);
+				} else if (etype == typeof (string)) {
 					if (null_allowed_override || HasAttribute (pi, typeof (NullAllowedAttribute))){
 						convs.AppendFormat ("var nsa_{0} = {1} == null ? null : NSArray.FromStrings ({1});\n", pi.Name, pi.Name.GetSafeParamName ());
 						disposes.AppendFormat ("if (nsa_{0} != null)\n\tnsa_{0}.Dispose ();\n", pi.Name);
@@ -3461,6 +3710,8 @@ public partial class Generator : IMemberGatherer {
 				disposes.AppendFormat (extra + "block_ptr_{0}->CleanupBlock ();\n", pi.Name);
 			} else if (pi.ParameterType.IsGenericParameter) {
 //				convs.AppendFormat ("{0}.Handle", pi.Name.GetSafeParamName ());
+			} else if (HasBindAsAttribute (pi)) {
+				convs.AppendFormat ("var nsb_{0} = {1}\n", pi.Name, GetToBindAsWrapper (null, pi));
 			} else {
 				if (mai.Type.IsClass && !mai.Type.IsByRef && 
 					(mai.Type != typeof (Selector) && mai.Type != typeof (Class) && mai.Type != typeof (string) && !typeof(INativeObject).IsAssignableFrom (mai.Type)))
@@ -3485,13 +3736,13 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	void GenerateArgumentChecks (MethodInfo mi, bool null_allowed_override)
+	void GenerateArgumentChecks (MethodInfo mi, bool null_allowed_override, PropertyInfo propInfo = null)
 	{
 		if (null_allowed_override)
 			return;
 
 		foreach (var pi in mi.GetParameters ()) {
-			var needs_null_check = ParameterNeedsNullCheck (pi, mi);
+			var needs_null_check = ParameterNeedsNullCheck (pi, mi, propInfo);
 			if (!needs_null_check)
 				continue;
 
@@ -3578,7 +3829,7 @@ public partial class Generator : IMemberGatherer {
 
 		Inject (mi, typeof (PrologueSnippetAttribute));
 
-		GenerateArgumentChecks (mi, null_allowed_override);
+		GenerateArgumentChecks (mi, null_allowed_override, propInfo);
 
 		// Collect all strings that can be fast-marshalled
 		List<string> stringParameters = CollectFastStringMarshalParameters (mi);
@@ -3590,7 +3841,7 @@ public partial class Generator : IMemberGatherer {
 		by_ref_processing2 = new StringBuilder[enum_modes.Length];
 		by_ref_init2 = new StringBuilder[enum_modes.Length];
 		for (int i = 0; i < enum_modes.Length; i++) {
-			GenerateTypeLowering (mi, null_allowed_override, enum_modes [i], out args2[i], out convs2[i], out disposes2[i], out by_ref_processing2[i], out by_ref_init2[i]);
+			GenerateTypeLowering (mi, null_allowed_override, enum_modes [i], out args2[i], out convs2[i], out disposes2[i], out by_ref_processing2[i], out by_ref_init2[i], propInfo);
 		}
 
 		// sanity check
@@ -3620,6 +3871,10 @@ public partial class Generator : IMemberGatherer {
 			       stringParameters.Select (name => "_p" + name + " = " + name).Aggregate ((first,second) => first + ", " + second));
  			indent++;
  		}
+
+		if (propInfo != null && IsSetter (mi) && HasBindAsAttribute (propInfo)) {
+			convs.AppendFormat ("var nsb_{0} = {1}\n", propInfo.Name, GetToBindAsWrapper (minfo));
+		}
 
 		if (convs.Length > 0)
 			print (sw, convs.ToString ());
@@ -3668,6 +3923,9 @@ public partial class Generator : IMemberGatherer {
 				print ("{0} ret;", FormatType (mi.DeclaringType, mi.ReturnType.Namespace, FindProtocolInterface (mi.ReturnType, mi)));
 			} else if (needsPtrZeroCheck) {
 				print ("IntPtr ret;");
+			} else if (minfo.is_bindAs) {
+				var bindAsAttrib = GetBindAsAttribute (minfo.mi);
+				print ("{0} ret;", FormatType (bindAsAttrib.Type.DeclaringType, GetCorrectGenericType (bindAsAttrib.Type)));
 			} else
 				print ("{0} ret;", FormatType (mi.DeclaringType, GetCorrectGenericType (mi.ReturnType))); //  = new {0} ();"
 		}
@@ -4078,6 +4336,9 @@ public partial class Generator : IMemberGatherer {
 		string propertyTypeName;
 		if (minfo.protocolize) {
 			propertyTypeName = FindProtocolInterface (pi.PropertyType, pi);
+		} else if (minfo.is_bindAs) {
+			var bindAsAttrib = GetBindAsAttribute (minfo.mi);
+			propertyTypeName = FormatType (bindAsAttrib.Type.DeclaringType, GetCorrectGenericType (bindAsAttrib.Type));
 		} else {
 			propertyTypeName = FormatType (pi.DeclaringType, GetCorrectGenericType (pi.PropertyType));
 		}
