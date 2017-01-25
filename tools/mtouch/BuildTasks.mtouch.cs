@@ -133,35 +133,6 @@ namespace Xamarin.Bundler
 
 	class CompileRegistrarTask : CompileTask
 	{
-		public static void Create (List<BuildTask> tasks, IEnumerable<Abi> abis, Target target, string ifile)
-		{
-			foreach (var abi in abis)
-				Create (tasks, abi, target, ifile);
-		}
-
-		public static void Create (List<BuildTask> tasks, Abi abi, Target target, string ifile)
-		{
-			var app = target.App;
-			var arch = abi.AsArchString ();
-			var ofile = Path.Combine (app.Cache.Location, arch, Path.GetFileNameWithoutExtension (ifile) + ".o");
-
-			if (!Application.IsUptodate (ifile, ofile)) {
-				tasks.Add (new CompileRegistrarTask ()
-				{
-					Target = target,
-					Abi = abi,
-					InputFile = ifile,
-					OutputFile = ofile,
-					SharedLibrary = false,
-					Language = "objective-c++",
-				});
-			} else {
-				Driver.Log (3, "Target '{0}' is up-to-date.", ofile);
-			}
-
-			target.LinkWith (ofile);
-		}
-
 		protected override void Execute ()
 		{
 			if (Driver.IsUsingClang (App)) {

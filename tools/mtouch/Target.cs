@@ -713,7 +713,26 @@ namespace Xamarin.Bundler
 				}
 
 				var compile_registrar_tasks = new List<BuildTask> ();
-				CompileRegistrarTask.Create (compile_registrar_tasks, Abis, this, registrar_m);
+				foreach (var abi in Abis) {
+					var arch = abi.AsArchString ();
+					var ofile = Path.Combine (App.Cache.Location, arch, Path.GetFileNameWithoutExtension (registrar_m) + ".o");
+
+					if (!Application.IsUptodate (registrar_m, ofile)) {
+						compile_registrar_tasks.Add (new CompileRegistrarTask ()
+						{
+							Target = this,
+							Abi = abi,
+							InputFile = registrar_m,
+							OutputFile = ofile,
+							SharedLibrary = false,
+							Language = "objective-c++",
+						});
+					} else {
+						Driver.Log (3, "Target '{0}' is up-to-date.", ofile);
+					}
+
+					LinkWith (ofile);
+				}
 				if (run_registrar != null) {
 					run_registrar.NextTasks = compile_registrar_tasks;
 					compile_tasks.Add (run_registrar);
