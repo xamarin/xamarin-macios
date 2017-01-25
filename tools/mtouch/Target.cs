@@ -951,6 +951,102 @@ namespace Xamarin.Bundler
 						info.LinkTask = link_task;
 				}
 			}
+
+			// Code in one assembly (either in a P/Invoke or a third-party library) can depend on a third-party library in another assembly.
+			// This means that we must always build assemblies only when all their dependent assemblies have been built, so that 
+			// we can link (natively) with the frameworks/dylibs for those dependent assemblies.
+			// Fortunately we can cheat a bit, since this can (currently at least) only happen for assemblies that
+			// have third-party libraries. This means that we only enforce this order for any assemblies that depend
+			// on other assemblies that have third-party libraries.
+			// Example:
+			// * We can build System.dll and mscorlib.dll in parallel, even if System.dll depends on mscorlib.dll,
+			//   because we know that mscorlib.dll does not have any third-party libraries.
+			if (Assemblies.All ((arg) => arg.HasDependencyMap)) {
+				var dict = Assemblies.ToDictionary ((arg) => Path.GetFileNameWithoutExtension (arg.FileName));
+				foreach (var asm in Assemblies) {
+					if (!asm.HasDependencyMap)
+						continue;
+
+					if (asm.BuildTarget == AssemblyBuildTarget.StaticObject)
+						continue;
+
+					if (Profile.IsSdkAssembly (asm.AssemblyDefinition) || Profile.IsProductAssembly (asm.AssemblyDefinition)) {
+						//Console.WriteLine ("SDK assembly, so skipping assembly dependency checks: {0}", Path.GetFileNameWithoutExtension (asm.FileName));
+						continue;
+					}
+
+					HashSet<Assembly> dependent_assemblies = new HashSet<Assembly> ();
+					foreach (var dep in asm.DependencyMap) {
+						Assembly dependentAssembly;
+						if (!dict.TryGetValue (Path.GetFileNameWithoutExtension (dep), out dependentAssembly)) {
+							//Console.WriteLine ("Could not find dependency '{0}' of '{1}'", dep, asm.Identity);
+							continue;
+						}
+						if (asm == dependentAssembly)
+							continue; // huh?
+						
+						// Nothing can depend on anything in our SDK, nor does our SDK depend on anything else in our SDK
+						// So we can remove any SDK dependency
+						if (Profile.IsSdkAssembly (dependentAssembly.AssemblyDefinition) || Profile.IsProductAssembly (dependentAssembly.AssemblyDefinition)) {
+							//Console.WriteLine ("SDK assembly, so not a dependency of anything: {0}", Path.GetFileNameWithoutExtension (dependentAssembly.FileName));
+							continue;
+						}
+
+						if (!dependentAssembly.HasLinkWithAttributes) {
+							//Console.WriteLine ("Assembly {0} does not have LinkWith attributes, so there's nothing we can depend on.", dependentAssembly.Identity);
+							continue;
+						}
+
+						if (dependentAssembly.BuildTargetName == asm.BuildTargetName) {
+							//Console.WriteLine ("{0} is a dependency of {1}, but both are being built into the same target, so no dependency added.", Path.GetFileNameWithoutExtension (dep), Path.GetFileNameWithoutExtension (asm.FileName));
+							continue;
+						}
+
+						//Console.WriteLine ("Added {0} as a dependency of {1}", Path.GetFileNameWithoutExtension (dep), Path.GetFileNameWithoutExtension (asm.FileName));
+						dependent_assemblies.Add (dependentAssembly);
+					}
+
+					// Circular dependencies shouldn't happen, but still make sure, since it's technically possible
+					// for users to do it.
+					foreach (var abi in GetArchitectures (asm.BuildTarget)) {
+						var target_task = asm.AotInfos [abi].LinkTask;
+						var dependent_tasks = dependent_assemblies.Select ((v) => v.AotInfos [abi].LinkTask);
+
+						var stack = new Stack<BuildTask> ();
+						foreach (var dep in dependent_tasks) {
+							stack.Clear ();
+							stack.Push (target_task);
+							if (target_task == dep || IsCircularTask (target_task, stack, dep)) {
+								Driver.Log ("Found circular task.");
+								Driver.Log ("Task {0} (with output {1}) depends on:", target_task.GetType ().Name, target_task.Outputs.First ());
+								stack = new Stack<BuildTask> (stack.Reverse ());
+								while (stack.Count > 0) {
+									var node = stack.Pop ();
+									Driver.Log ("   -> {0} (Output: {1})", node.GetType ().Name, node.Outputs.First ());
+								}
+							} else {
+								target_task.AddDependency (dep);
+								target_task.CompilerFlags.AddLinkWith (dep.OutputFile);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		bool IsCircularTask (BuildTask root, Stack<BuildTask> stack, BuildTask task)
+		{
+			stack.Push (task);
+
+			foreach (var d in task?.Dependencies) {
+				if (stack.Contains (d))
+					return true;
+				if (IsCircularTask (root, stack, d))
+					return true;
+			}
+			stack.Pop ();
+
+			return false;
 		}
 
 		public void Compile ()
