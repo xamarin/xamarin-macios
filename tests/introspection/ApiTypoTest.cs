@@ -85,6 +85,7 @@ namespace Introspection
 			"Autoredirect",
 			"Aliasable",
 			"Backface",
+			"Bancaire",
 			"Bary",
 			"Batc",
 			"Bim",
@@ -297,6 +298,7 @@ namespace Introspection
 			"Pvrtc", // MTLBlitOption - PowerVR Texture Compression
 			"Quaterniond",
 			"Qura",
+			"Quic",
 			"Reacquirer",
 			"Reinvitation",
 			"Reinvite",
