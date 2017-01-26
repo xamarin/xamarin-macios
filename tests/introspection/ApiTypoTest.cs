@@ -73,6 +73,7 @@ namespace Introspection
 			"Amr",
 			"Anglet",
 			"Arraycollation",
+			"Argb",
 			"Asin",
 			"Atan",
 			"Ats",	// App Transport Security
