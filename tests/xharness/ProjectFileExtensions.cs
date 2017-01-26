@@ -381,7 +381,13 @@ namespace xharness
 		public static void FixTestLibrariesReferences (this XmlDocument csproj, string platform)
 		{
 			var nodes = csproj.SelectNodes ("//*[local-name() = 'ObjcBindingNativeLibrary' or local-name() = 'ObjcBindingNativeFramework']");
-			var test_libraries = new string [] { "libtest.a", "XTest.framework", "XStaticArTest.framework", "XStaticObjectTest.framework" };
+			var test_libraries = new string [] {
+				"libtest.a",
+				"libtest2.a",
+				"XTest.framework",
+				"XStaticArTest.framework",
+				"XStaticObjectTest.framework"
+			};
 			foreach (XmlNode node in nodes) {
 				var includeAttribute = node.Attributes ["Include"];
 				if (includeAttribute != null) {
