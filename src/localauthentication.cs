@@ -56,19 +56,19 @@ namespace XamCore.LocalAuthentication {
 		[NullAllowed, Export ("localizedCancelTitle")]
 		string LocalizedCancelTitle { get; set; }
 
+		[iOS (9,0)][Mac (10,12,4, onlyOn64 : true)]
+		[Field ("LATouchIDAuthenticationMaximumAllowableReuseDuration")]
+		double /* NSTimeInterval */ TouchIdAuthenticationMaximumAllowableReuseDuration { get; }
+
+		[iOS (9,0)][Mac (10,12,4, onlyOn64 : true)]
+		[Export ("touchIDAuthenticationAllowableReuseDuration")]
+		double /* NSTimeInterval */ TouchIdAuthenticationAllowableReuseDuration { get; set; }
+
 #if !MONOMAC
 		[Availability (Introduced = Platform.iOS_8_3, Deprecated = Platform.iOS_9_0)]
 		[NullAllowed]
 		[Export ("maxBiometryFailures")]
 		NSNumber MaxBiometryFailures { get; set; }
-
-		[iOS (9,0)]
-		[Field ("LATouchIDAuthenticationMaximumAllowableReuseDuration")]
-		double /* NSTimeInterval */ TouchIdAuthenticationMaximumAllowableReuseDuration { get; }
-
-		[iOS (9,0)]
-		[Export ("touchIDAuthenticationAllowableReuseDuration")]
-		double /* NSTimeInterval */ TouchIdAuthenticationAllowableReuseDuration { get; set; }
 #endif
 	}
 }
