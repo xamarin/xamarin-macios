@@ -169,6 +169,8 @@ namespace Xamarin.Bundler {
 		public AssemblyBuildTarget LibPInvokesLinkMode => LibXamarinLinkMode;
 		public AssemblyBuildTarget LibProfilerLinkMode => OnlyStaticLibraries ? AssemblyBuildTarget.StaticObject : AssemblyBuildTarget.DynamicLibrary;
 
+		Dictionary<string, BundleFileInfo> bundle_files = new Dictionary<string, BundleFileInfo> ();
+
 		public bool OnlyStaticLibraries {
 			get {
 				return assembly_build_targets.All ((abt) => abt.Value.Item1 == AssemblyBuildTarget.StaticObject);
@@ -705,6 +707,7 @@ namespace Xamarin.Bundler {
 			DetectCodeSharing ();
 			allapps.ForEach ((v) => v.BuildManaged ());
 			allapps.ForEach ((v) => v.BuildNative ());
+			BuildBundle ();
 			allapps.ForEach ((v) => v.BuildEnd ());
 		}
 
@@ -753,7 +756,6 @@ namespace Xamarin.Bundler {
 		{
 			// TODO: make more of the below actions parallelizable
 
-			BuildBundle ();
 			BuildDsymDirectory ();
 			BuildMSymDirectory ();
 			StripNativeCode ();
@@ -1363,9 +1365,12 @@ namespace Xamarin.Bundler {
 
 		void BuildBundle ()
 		{
-			Driver.Watch ("Building app bundle", 1);
+			Driver.Watch ($"Building app bundle for {Name}", 1);
 
-			var bundle_files = new Dictionary<string, BundleFileInfo> ();
+			// First we must build every appex's bundle, otherwise we won't be able
+			// to copy any frameworks the appex is using to the container app.
+			foreach (var appex in AppExtensions)
+				appex.BuildBundle ();
 
 			// Make sure we bundle Mono.framework if we need to.
 			if (PackageMonoFramework == true) {
@@ -1403,51 +1408,37 @@ namespace Xamarin.Bundler {
 				info.Sources.Add (fw);
 			}
 
-			// Copy frameworks to the app bundle.
-			if (IsExtension && !IsWatchExtension) {
-				// In extensions we need to save a list of the frameworks we need so that the main app can bundle them.
-				var sb = new StringBuilder ();
-				foreach (var key in bundle_files.Keys.ToArray ()) {
-					if (!Path.GetFileName (key).EndsWith (".framework", StringComparison.Ordinal))
-						continue;
-					var value = bundle_files [key];
-					foreach (var src in value.Sources)
-						sb.AppendLine ($"{key}:{src}");
-					bundle_files.Remove (key);
-				}
-				if (sb.Length > 0)
-					Driver.WriteIfDifferent (Path.Combine (Path.GetDirectoryName (AppDirectory), "frameworks.txt"), sb.ToString ());
-			} else {
-				// Load any frameworks extensions saved just above
-				foreach (var appex in Extensions) {
-					var f_path = Path.Combine (appex, "..", "frameworks.txt");
-					if (!File.Exists (f_path))
+			// We also need to add any frameworks from extensions
+			foreach (var appex in AppExtensions) {
+				foreach (var bf in appex.bundle_files.ToList ()) {
+					if (!Path.GetFileName (bf.Key).EndsWith (".framework", StringComparison.Ordinal) && !bf.Value.DylibToFramework)
 						continue;
 
-					foreach (var fw in File.ReadAllLines (f_path)) {
-						Driver.Log (3, "Copying {0} to the app's Frameworks directory because it's used by the extension {1}", fw, Path.GetFileName (appex));
-						var colon = fw.IndexOf (':');
-						if (colon == -1)
-							throw ErrorHelper.CreateError (99, "Internal error {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).", $"Invalid contents in stored frameworks: {fw}");
-						var key = fw.Substring (0, colon);
-						var name = fw.Substring (colon + 1);
-						BundleFileInfo info;
-						if (!bundle_files.TryGetValue (key, out info))
-							bundle_files [key] = info = new BundleFileInfo ();
-						info.Sources.Add (name);
-						if (name.EndsWith (".dylib", StringComparison.Ordinal))
-							info.DylibToFramework = true;
-					}
+					Driver.Log (3, "Copying {0} to the app's Frameworks directory because it's used by the extension {1}", bf.Key, Path.GetFileName (appex.Name));
+
+					var appex_info = bf.Value;
+					BundleFileInfo info;
+					if (!bundle_files.TryGetValue (bf.Key, out info))
+						bundle_files [bf.Key] = info = new BundleFileInfo ();
+					info.Sources.UnionWith (appex_info.Sources);
+					if (appex_info.DylibToFramework)
+						info.DylibToFramework = true;
 				}
 			}
 
+			// Finally copy all the files & directories
 			foreach (var kvp in bundle_files) {
 				var name = kvp.Key;
 				var info = kvp.Value;
 				var targetPath = Path.Combine (AppDirectory, name);
 				var files = info.Sources;
+				var isFramework = Directory.Exists (files.First ());
 
-				if (Directory.Exists (files.First ())) {
+				if (IsExtension && !IsWatchExtension && (isFramework || info.DylibToFramework))
+					continue; // Don't copy frameworks to app extensions (except watch extensions), they go into the container app.
+
+				if (isFramework) {
+					// This is a framework
 					if (files.Count != 1)
 						throw ErrorHelper.CreateError (99, "Internal error: 'can't lipo directories'. Please file a bug report with a test case (http://bugzilla.xamarin.com).");
 					if (info.DylibToFramework)
