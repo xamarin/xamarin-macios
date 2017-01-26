@@ -268,7 +268,7 @@ namespace Xamarin.Bundler {
 	//					MT4131  The registrar cannot export static properties in generic classes ('{0}.{1}').
 	//					MT4132	The registrar found an invalid generic return type '{0}' in the property '{1}'. The return type must have an 'NSObject' constraint.
 	//					MT4133  Cannot construct an instance of the type '{0}' from Objective-C because the type is generic. [Runtime exception]
-	//					MT4134	Your application is using the '{0}' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS {2}, while you're building with the iOS {1} SDK.) This configuration is only supported with the legacy registrar (pass --registrar:legacy as an additional mtouch argument in your project's iOS Build option to select). Alternatively select a newer SDK in your app's iOS Build options.
+	//					MT4134	Your application is using the '{0}' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS {2}, while you're building with the iOS {1} SDK.) Please select a newer SDK in your app's iOS Build options.
 	//					MT4135	The member '{0}.{1}' has an Export attribute that doesn't specify a selector. A selector is required.
 	//					MT4136	The registrar cannot marshal the parameter type '{0}' of the parameter '{1}' in the method '{2}.{3}'
 	//					MT4137	<unused>
