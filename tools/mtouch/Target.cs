@@ -376,7 +376,7 @@ namespace Xamarin.Bundler
 			return new Assembly (this, assembly);
 		}
 
-		public void LinkAssemblies (string main, ref List<string> assemblies, string output_dir, out MonoTouchLinkContext link_context)
+		public void LinkAssemblies (string main, out List<AssemblyDefinition> assemblies, string output_dir, out MonoTouchLinkContext link_context)
 		{
 			if (Driver.Verbosity > 0)
 				Console.WriteLine ("Linking {0} into {1} using mode '{2}'", main, output_dir, App.LinkMode);
@@ -473,10 +473,9 @@ namespace Xamarin.Bundler
 
 					if (Application.IsUptodate (input, output)) {
 						cached_link = true;
-						for (int i = Assemblies.Count - 1; i >= 0; i--) {
-							var a = Assemblies [i];
+						foreach (var a in Assemblies.ToList ()) {
 							if (!cached_output.Contains (a.FullPath)) {
-								Assemblies.RemoveAt (i);
+								Assemblies.Remove (a);
 								continue;
 							}
 							// Load the cached assembly
@@ -502,47 +501,12 @@ namespace Xamarin.Bundler
 			foreach (var a in Assemblies)
 				a.LoadAssembly (a.FullPath);
 
-			var assemblies = new List<string> ();
-			foreach (var a in Assemblies)
-				assemblies.Add (a.FullPath);
-			var linked_assemblies = new List<string> (assemblies);
+			List<AssemblyDefinition> linked_assemblies_definitions;
 
-			LinkAssemblies (App.RootAssembly, ref linked_assemblies, PreBuildDirectory, out LinkContext);
+			LinkAssemblies (App.RootAssembly, out linked_assemblies_definitions, PreBuildDirectory, out LinkContext);
 
-			// Remove assemblies that were linked away
-			var removed = new HashSet<string> (assemblies);
-			removed.ExceptWith (linked_assemblies);
-
-			foreach (var assembly in removed) {
-				for (int i = Assemblies.Count - 1; i >= 0; i--) {
-					var ad = Assemblies [i];
-					if (assembly != ad.FullPath)
-						continue;
-
-					Assemblies.RemoveAt (i);
-				}
-			}
-
-			// anything added by the linker will have it's original path
-			var added = new HashSet<string> ();
-			foreach (var assembly in linked_assemblies)
-				added.Add (Path.GetFileName (assembly));
-			var original = new HashSet<string> ();
-			foreach (var assembly in assemblies)
-				original.Add (Path.GetFileName (assembly));
-			added.ExceptWith (original);
-
-			foreach (var assembly in added) {
-				// the linker already copied the assemblies (linked or not) into the output directory
-				// and we must NOT overwrite the linker work with an original (unlinked) assembly
-				string path = Path.Combine (PreBuildDirectory, assembly);
-				var ad = ManifestResolver.Load (path);
-				var a = new Assembly (this, ad);
-				a.CopyToDirectory (PreBuildDirectory);
-				Assemblies.Add (a);
-			}
-
-			assemblies = linked_assemblies;
+			// Update (add/remove) the assemblies, since the linker may have both added and removed assemblies.
+			Assemblies.Update (this, linked_assemblies_definitions);
 
 			// Make the assemblies point to the right path.
 			foreach (var a in Assemblies) {
@@ -561,6 +525,7 @@ namespace Xamarin.Bundler
 				Driver.Touch (a.GetRelatedFiles ());
 			}
 
+			List<string> linked_assemblies = linked_assemblies_definitions.Select ((v) => v.MainModule.FileName).ToList ();
 			File.WriteAllText (cache_path, string.Join ("\n", linked_assemblies));
 		}
 			
