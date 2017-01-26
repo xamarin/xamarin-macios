@@ -86,6 +86,7 @@
     <Reference Include="System.Core" />
     <Reference Include="monotouch" />
     <Reference Include="MonoTouch.NUnitLite" />
+    <Reference Include="OpenTK-1.0" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -576,6 +577,7 @@
     <Compile Include="Metal\HeapDescriptorTest.cs" />
     <Compile Include="PassKit\LabeledValueTest.cs" />
     <Compile Include="AVFoundation\PlayerItemVideoOutputTest.cs" />
+    <Compile Include="OpenGLES\EAGLContext.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
@@ -639,6 +641,7 @@
     <Folder Include="Messages\" />
     <Folder Include="CloudKit\" />
     <Folder Include="Intents\" />
+    <Folder Include="OpenGLES\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />

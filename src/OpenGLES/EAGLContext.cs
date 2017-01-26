@@ -6,6 +6,11 @@ namespace XamCore.OpenGLES
 {
 	public partial class EAGLContext
 	{
+		public enum PresentationMode {
+			AtTime = 0,
+			AfterMinimumDuration = 1,
+		}
+
 		[DllImport (Constants.OpenGLESLibrary)]
 		public extern static void EAGLGetVersion (out nuint major, out nuint minor);
 
@@ -15,6 +20,29 @@ namespace XamCore.OpenGLES
 		{
 		}
 #endif
+
+		[iOS (10,0)]
+		[TV (10,0)]
+		public bool PresentRenderBuffer (nuint target, double presentationTime)
+		{
+			return _PresentRenderbufferAtTime (target, presentationTime);
+		}
+
+		[iOS (10,3)]
+		[TV (10,2)]
+		public bool PresentRenderBuffer (nuint target, double presentationTime, PresentationMode mode)
+		{
+			switch (mode) {
+			case PresentationMode.AtTime:
+				return _PresentRenderbufferAtTime (target, presentationTime);
+				break;
+			case PresentationMode.AfterMinimumDuration:
+				return _PresentRenderbufferAfterMinimumDuration (target, presentationTime);
+				break;
+			default:
+				throw new ArgumentException ("The 'PresentationMode mode' argument needs a value.");
+			}
+		}
 	}
 }
 
