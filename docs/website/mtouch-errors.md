@@ -1121,7 +1121,7 @@ This error indicates a bug in Xamarin.iOS. Please file a bug report at [http://b
 
 <h3><a name="MT4133"/>MT4133  Cannot construct an instance of the type '*' from Objective-C because the type is generic. [Runtime exception]</h3>
 
-<h3><a name="MT4134"/>MT4134  Your application is using the '*' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS *, while you're building with the iOS * SDK.) This configuration is only supported with the legacy registrar (pass --registrar:legacy as an additional mtouch argument in your project's iOS Build option to select). Alternatively select a newer SDK in your app's iOS Build options.</h3>
+<h3><a name="MT4134"/>MT4134  Your application is using the '*' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS *, while you're building with the iOS * SDK.) Please select a newer SDK in your app's iOS Build options.</h3>
 
 <h3><a name="MT4135"/>MT4135  The member '*.*' has an Export attribute that doesn't specify a selector. A selector is required.</h3>
 

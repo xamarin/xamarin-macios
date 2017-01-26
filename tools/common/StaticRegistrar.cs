@@ -1686,8 +1686,7 @@ namespace XamCore.Registrar {
 							"Alternatively select a newer SDK in your app's Mac Build options.",
 #else
 							"Your application is using the '{0}' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS {2}, while you're building with the iOS {1} SDK.) " +
-							"This configuration is only supported with the legacy registrar (pass --registrar:legacy as an additional mtouch argument in your project's iOS Build option to select). " +
-							"Alternatively select a newer SDK in your app's iOS Build options.",
+							"Please select a newer SDK in your app's iOS Build options.",
 #endif
 							framework.Name, App.SdkVersion, framework.Version));
 						reported_frameworks.Add (framework.Name);

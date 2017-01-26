@@ -87,6 +87,8 @@ namespace Xamarin.Bundler {
 	// MM4xxx	code generation
 	// 			MM40xx	driver.m
 	//					MM4001	The main template could not be expansed to `{0}`.
+	//			MT41xx	registrar
+	//					MM4134 	Your application is using the '{0}' framework, which isn't included in the MacOS SDK you're using to build your app (this framework was introduced in OSX {2}, while you're building with the MacOS {1} SDK.) This configuration is not supported with the static registrar (pass --registrar:dynamic as an additional mmp argument in your project's Mac Build option to select). Alternatively select a newer SDK in your app's Mac Build options.
 	// MM5xxx	GCC and toolchain
 	//			MM51xx	compilation
 	//					MM5101  Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component.
