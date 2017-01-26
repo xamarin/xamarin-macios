@@ -1304,15 +1304,13 @@ This happens when the native linker cannot find an Objective-C class that is ref
     <li>
       A third-party binding bound an Objective-C protocol, but did not annotate it with the <code>[Protocol]</code> attribute in its api definition. Solutions:
       <ul>
-        <li>If you're the author of the third-party binding, or have access to its source, add the missing <code>[Protocol]</code> attribute:
+        <li>Add the missing <code>[Protocol]</code> attribute:
     <pre><code class=" syntax brush-C#">[BaseType (typeof (NSObject))]
 [Protocol] // Add this
 public interface MyProtocol
 {
 }</code></pre>
     </li>
-      <li>If you can't modify the third-party binding, build your project with the legacy static registrar by adding <code>--registrar:oldstatic</code> to the additional mtouch arguments in the project's iOS Build options page.
-      </li>
     </ul>
     </li>
   </ul>
