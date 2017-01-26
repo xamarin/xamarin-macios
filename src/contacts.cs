@@ -952,9 +952,19 @@ namespace XamCore.Contacts {
 		[Export ("street")]
 		string Street { get; set; }
 
+		[iOS (10,3), Mac (10,12,4, onlyOn64: true)]
+		[New]
+		[Export ("subLocality")]
+		string SubLocality { get; set; }
+
 		[New]
 		[Export ("city")]
 		string City { get; set; }
+
+		[iOS (10,3), Mac (10,12,4, onlyOn64: true)]
+		[New]
+		[Export ("subAdministrativeArea")]
+		string SubAdministrativeArea { get; set; }
 
 		[New]
 		[Export ("state")]
@@ -1025,8 +1035,16 @@ namespace XamCore.Contacts {
 		[Export ("street")]
 		string Street { get; }
 
+		[iOS (10,3)] [Mac (10,12,4, onlyOn64: true)]
+		[Export ("subLocality")]
+		string SubLocality { get; }
+
 		[Export ("city")]
 		string City { get; }
+
+		[iOS (10,3)] [Mac (10,12,4, onlyOn64: true)]
+		[Export ("subAdministrativeArea")]
+		string SubAdministrativeArea { get; }
 
 		[Export ("state")]
 		string State { get; }
@@ -1053,8 +1071,16 @@ namespace XamCore.Contacts {
 		[Field ("CNPostalAddressStreetKey")]
 		NSString Street { get; }
 
+		[iOS (10,3)] [Mac (10,12,4, onlyOn64: true)]
+		[Field ("CNPostalAddressSubLocalityKey")]
+		NSString SubLocality { get; }
+
 		[Field ("CNPostalAddressCityKey")]
 		NSString City { get; }
+
+		[iOS (10,3)] [Mac (10,12,4, onlyOn64: true)]
+		[Field ("CNPostalAddressSubAdministrativeAreaKey")]
+		NSString SubAdministrativeArea { get; }
 
 		[Field ("CNPostalAddressStateKey")]
 		NSString State { get; }
