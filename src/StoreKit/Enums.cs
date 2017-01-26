@@ -28,6 +28,8 @@ namespace XamCore.StoreKit {
 		// iOS 9.3
 		CloudServicePermissionDenied,
 		CloudServiceNetworkConnectionFailed,
+		// iOS 10.3
+		Revoked,
 	}
 
 	// typedef NSInteger SKDownloadState;

@@ -464,6 +464,11 @@ namespace XamCore.StoreKit {
 		[Export ("requestCapabilitiesWithCompletionHandler:")]
 		void RequestCapabilities (Action<SKCloudServiceCapability, NSError> completionHandler);
 
+		[iOS (10,3), NoTV]
+		[Async]
+		[Export ("requestPersonalizationTokenForClientToken:withCompletionHandler:")]
+		void RequestPersonalizationToken (string clientToken, Action<NSString, NSError> completionHandler);
+
 		[Notification]
 		[Field ("SKStorefrontIdentifierDidChangeNotification")]
 		NSString StorefrontIdentifierDidChangeNotification { get; }
@@ -511,6 +516,12 @@ namespace XamCore.StoreKit {
 
 		// Headers comment: Identifier of the iTunes Store item the user is trying to access which requires cloud service setup (NSNumber).
 		nint ITunesItemIdentifier { get; set; }
+
+		[iOS (10,3)]
+		string AffiliateToken { get; set; }
+
+		[iOS (10,3)]
+		string CampaignToken { get; set; }
 	}
 
 	[NoTV, iOS (10,1)]
@@ -522,6 +533,14 @@ namespace XamCore.StoreKit {
 
 		[Field ("SKCloudServiceSetupOptionsITunesItemIdentifierKey")]
 		NSString ITunesItemIdentifierKey { get; }
+
+		[iOS (10,3)]
+		[Field ("SKCloudServiceSetupOptionsAffiliateTokenKey")]
+		NSString AffiliateTokenKey { get; }
+
+		[iOS (10,3)]
+		[Field ("SKCloudServiceSetupOptionsCampaignTokenKey")]
+		NSString CampaignTokenKey { get; }
 	}
 
 	[NoTV, iOS (10,1)]
@@ -529,6 +548,17 @@ namespace XamCore.StoreKit {
 	{
 		[Field ("SKCloudServiceSetupActionSubscribe")]
 		Subscribe,
+	}
+
+	[iOS (10,3)]
+	[NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor] // Not specified but very likely
+	interface SKStoreReviewController {
+
+		[Static]
+		[Export ("requestReview")]
+		void RequestReview ();
 	}
 #endif
 }
