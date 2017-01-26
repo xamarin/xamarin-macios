@@ -702,7 +702,6 @@ namespace Xamarin.Bundler {
 
 			WriteNotice ();
 			BuildFatSharedLibraries ();
-			CopyAotData ();
 			BuildFinalExecutable ();
 			BuildDsymDirectory ();
 			BuildMSymDirectory ();
@@ -1174,20 +1173,6 @@ namespace Xamarin.Bundler {
 					Driver.RunLipo (cmd.ToString ());
 				} else {
 					Driver.Log (3, "Target '{0}' is up-to-date.", dylib);
-				}
-			}
-		}
-
-		void CopyAotData ()
-		{
-			if (!IsDeviceBuild)
-				return;
-
-			foreach (var target in Targets) {
-				foreach (var a in target.Assemblies) {
-					foreach (var data in a.AotInfos.SelectMany ((v) => v.Value.AotDataFiles)) {
-						Application.UpdateFile (data, Path.Combine (target.AppTargetDirectory, Path.GetFileName (data)));
-					}
 				}
 			}
 		}

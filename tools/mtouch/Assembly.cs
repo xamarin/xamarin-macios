@@ -201,6 +201,8 @@ namespace Xamarin.Bundler {
 				}
 			}
 
+			foreach (var aotdata in AotInfos.Values.SelectMany ((info) => info.AotDataFiles))
+				Application.UpdateFile (aotdata, Path.Combine (directory, Path.GetFileName (aotdata)));
 		}
 
 		/*
