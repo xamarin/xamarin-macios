@@ -25,6 +25,8 @@ namespace XamCore.iAd {
 		ApplicationInactive,
 		AdUnloaded,
 		AssetLoadFailure,
+		AdResponseValidateFailure,
+		AdAssetLoadPending,
 	}
 
 	// NSInteger -> ADBannerView.h
