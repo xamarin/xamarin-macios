@@ -170,7 +170,7 @@ namespace Xamarin.Bundler
 			set { force = value; }
 		}
 
-		static string GetPlatform (Application app)
+		public static string GetPlatform (Application app)
 		{
 			switch (app.Platform) {
 			case ApplePlatform.iOS:

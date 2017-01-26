@@ -30,8 +30,6 @@ namespace Xamarin.Bundler {
 
 	public partial class Assembly
 	{
-		List<string> dylibs;
-		public string Dylib;
 		public AssemblyBuildTarget BuildTarget;
 		public string BuildTargetName;
 
@@ -44,10 +42,6 @@ namespace Xamarin.Bundler {
 			get {
 				return has_dependency_map;
 			}
-		}
-
-		public IEnumerable<string> Dylibs {
-			get { return dylibs; }
 		}
 
 		public HashSet<string> DependencyMap {

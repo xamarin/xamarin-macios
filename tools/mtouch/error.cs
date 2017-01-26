@@ -112,6 +112,7 @@ namespace Xamarin.Bundler {
 	//					MT0103	The static object '*' contains more than one assembly ('*'), but each static object must correspond with exactly one assembly.
 	//					MT0105	No assembly build target was specified for '{0}'.
 	//					MT0106	The assembly build target name '{0}' is invalid: the character '{1}' is not allowed.
+	//					MT0107	The assemblies '{0}' have different custom LLVM optimizations ({1}), which is not allowed when they are all compiled to a single binary.
 	//					MT0108	The assembly build target '{0}' did not match any assemblies.
 	//		Warning		MT0110  Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.
 	//		Warning		MT0111	Bitcode has been enabled because this version of Xamarin.iOS does not support building watchOS projects using LLVM without enabling bitcode.
