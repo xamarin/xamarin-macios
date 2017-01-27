@@ -184,15 +184,40 @@ namespace Linker.Shared {
 
 			}
 			// the optimization is turned off in case of fat apps (32/64 bits)
-			bool b32 = Directory.Exists (Path.Combine (NSBundle.MainBundle.BundlePath, ".monotouch-32"));
-			bool b64 = Directory.Exists (Path.Combine (NSBundle.MainBundle.BundlePath, ".monotouch-64"));
-			// classic does not use the subdirectories, neither do we for single arch simulator
-			bool classic_or_sim = !b32 && !b64;
-			bool single_arch = !(b32 && b64);
-			if (classic_or_sim || single_arch)
+			if (IsMainExecutableFat ())
 				Assert.IsFalse (contains11 && contains22, "neither instructions removed");
 			// even if disabled this condition remains
 			Assert.IsFalse (!contains11 && !contains22, "both instructions removed");
+		}
+
+		/* definitions from: /usr/include/mach-o/fat.h */
+		const uint FAT_MAGIC = 0xcafebabe;
+		const uint FAT_CIGAM = 0xbebafeca; /* NXSwapLong(FAT_MAGIC) */
+
+		static bool IsMainExecutableFat ()
+		{
+			var path = NSGetExecutablePath ();
+			using (var reader = new BinaryReader (File.OpenRead (path), System.Text.Encoding.UTF8, false)) {
+				var header = reader.ReadUInt32 ();
+				return header == FAT_MAGIC || header == FAT_CIGAM;
+			}
+		}
+
+		[DllImport ("/usr/lib/system/libdyld.dylib")]
+		static extern int _NSGetExecutablePath (IntPtr buf, ref int bufsize);
+		static string NSGetExecutablePath ()
+		{
+			IntPtr buf;
+			int bufsize = 0;
+			_NSGetExecutablePath (IntPtr.Zero, ref bufsize);
+			buf = Marshal.AllocHGlobal (bufsize);
+			try {
+				if (_NSGetExecutablePath (buf, ref bufsize) != 0)
+					throw new Exception ("Could not get executable path");
+				return Marshal.PtrToStringAuto (buf);
+			} finally {
+				Marshal.FreeHGlobal (buf);
+			}
 		}
 
 		[Test]
