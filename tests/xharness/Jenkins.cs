@@ -488,7 +488,7 @@ namespace xharness
 				TestName = "MMP Regression Tests",
 				Target = "all -j" + Environment.ProcessorCount,
 				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mmptest", "regression"),
-				Ignored = !IncludeMmpTest,
+				Ignored = !IncludeMmpTest || !IncludeMac,
 			};
 			run_mmp.Environment.Add ("BUILD_REVISION", "jenkins"); // This will print "@MonkeyWrench: AddFile: <log path>" lines, which we can use to get the log filenames.
 			Tasks.Add (run_mmp);
@@ -500,7 +500,7 @@ namespace xharness
 				TestName = "Mac Binding Projects",
 				Target = "all",
 				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mac-binding-project"),
-				Ignored = !IncludeMacBindingProject
+				Ignored = !IncludeMacBindingProject || !IncludeMac,
 			};
 			Tasks.Add (runMacBindingProject);
 			
