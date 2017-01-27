@@ -68,6 +68,10 @@ namespace Introspection {
 			// [NSWindow initWithContentRect:styleMask:backing:defer]
 			case "MonoMac.AppKit.NSWindow":
 			case "AppKit.NSWindow":
+			// *** -[NSKeyedArchiver dealloc]: warning: NSKeyedArchiver deallocated without having had -finishEncoding called on it.
+			case "MonoMac.Foundation.NSKeyedArchiver":
+			case "Foundation.NSKeyedArchiver":
+
 				return true;
 #if !XAMCORE_2_0
 			case "MonoMac.AppKit.NSToolbar":   // mono[10518:626783] *** -[__NSDictionaryM removeObjectForKey:]: key cannot be nil
