@@ -411,6 +411,14 @@ namespace XamCore.HomeKit {
 		[Field ("HMCharacteristicTypeImageMirroring")]
 		ImageMirroring,
 
+		[iOS (10,3), Watch (3,2), TV (10,2)]
+		[Field ("HMCharacteristicTypeLabelNamespace")]
+		LabelNamespace,
+
+		[iOS (10,3), Watch (3,2), TV (10,2)]
+		[Field ("HMCharacteristicTypeLabelIndex")]
+		LabelIndex,
+
 		[NoWatch]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeActive")]
@@ -725,6 +733,10 @@ namespace XamCore.HomeKit {
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMServiceTypeSlats")]
 		Slats,
+
+		[iOS (10,3), Watch (3,2), TV (10,2)]
+		[Field ("HMServiceTypeLabel")]
+		Label,
 	}
 
 	// conveniance enum (ObjC uses NSString)
@@ -1204,5 +1216,20 @@ namespace XamCore.HomeKit {
 	public enum HMCharacteristicValueActivationState : nint {
 		Inactive = 0,
 		Active,
+	}
+
+	[Watch (3,2), TV (10,2), iOS (10,3)]
+	[Native]
+	public enum HMCharacteristicValueInputEvent : nint {
+		SinglePress = 0,
+		DoublePress,
+		LongPress,
+	}
+
+	[Watch (3,2), TV (10,2), iOS (10,3)]
+	[Native]
+	public enum HMCharacteristicValueLabelNamespace : nint {
+		Dot = 0,
+		Numeral,
 	}
 }
