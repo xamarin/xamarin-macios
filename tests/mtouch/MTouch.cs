@@ -432,7 +432,7 @@ namespace Xamarin
 
 				using (var app = new MTouchTool ()) {
 					app.Linker = MTouchLinker.DontLink; // fastest.
-					app.AppExtensions.Add (extension.AppPath);
+					app.AppExtensions.Add (extension);
 					app.CreateTemporaryApp ();
 					app.CreateTemporaryCacheDirectory ();
 					app.AssertExecuteFailure (MTouchAction.BuildSim, "app build");
@@ -2054,7 +2054,7 @@ class C {
 					apptool.Verbosity = exttool.Verbosity;
 					apptool.Linker = MTouchLinker.DontLink; // faster
 					apptool.CreateTemporaryApp ();
-					apptool.AppExtensions.Add (exttool.AppPath);
+					apptool.AppExtensions.Add (exttool);
 					apptool.AssertExecute (MTouchAction.BuildSim, "build app");
 
 					Assert.IsFalse (Directory.Exists (Path.Combine (apptool.AppPath, "Frameworks", "XTest.framework")), "framework inexistence");
@@ -2083,7 +2083,7 @@ class C {
 					apptool.CreateTemporaryCacheDirectory ();
 					apptool.Verbosity = exttool.Verbosity;
 					apptool.CreateTemporaryApp ();
-					apptool.AppExtensions.Add (exttool.AppPath);
+					apptool.AppExtensions.Add (exttool);
 					apptool.Linker = MTouchLinker.DontLink; // faster
 					apptool.AssertExecute (MTouchAction.BuildSim, "build app");
 
@@ -2124,7 +2124,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 					apptool.CreateTemporaryCacheDirectory ();
 					apptool.Verbosity = exttool.Verbosity;
 					apptool.CreateTemporaryApp ();
-					apptool.AppExtensions.Add (exttool.AppPath);
+					apptool.AppExtensions.Add (exttool);
 					apptool.AssertExecute (MTouchAction.BuildSim, "build app");
 
 					Assert.IsTrue (Directory.Exists (Path.Combine (apptool.AppPath, "Frameworks", "XTest.framework")), "framework exists");

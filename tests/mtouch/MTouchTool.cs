@@ -74,7 +74,7 @@ namespace Xamarin
 		public MTouchRegistrar Registrar;
 		public I18N I18N;
 		public bool? Extension;
-		public List<string> AppExtensions = new List<string> ();
+		public List<MTouchTool> AppExtensions = new List<MTouchTool> ();
 		public List<string> Frameworks = new List<string> ();
 		public string HttpMessageHandler;
 		public bool? PackageMdb;
@@ -212,7 +212,7 @@ namespace Xamarin
 				sb.Append (" --extension");
 
 			foreach (var appext in AppExtensions)
-				sb.Append (" --app-extension ").Append (MTouch.Quote (appext));
+				sb.Append (" --app-extension ").Append (MTouch.Quote (appext.AppPath));
 
 			foreach (var framework in Frameworks)
 				sb.Append (" --framework ").Append (MTouch.Quote (framework));
