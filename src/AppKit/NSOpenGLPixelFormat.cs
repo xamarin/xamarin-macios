@@ -66,9 +66,9 @@ namespace XamCore.AppKit {
 
 				fixed (uint* pArray = copy) {
 					if (IsDirectBinding) {
-						Handle = XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, selInitWithAttributes, new IntPtr ((void*)pArray));
+						InitializeHandle (XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, selInitWithAttributes, new IntPtr ((void*)pArray)));
 					} else {
-						Handle = XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, selInitWithAttributes, new IntPtr ((void*)pArray));
+						InitializeHandle (XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, selInitWithAttributes, new IntPtr ((void*)pArray)));
 					}
 				}
 
