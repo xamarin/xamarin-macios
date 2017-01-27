@@ -121,11 +121,36 @@ namespace xharness
 			return Path.Combine (Path.GetDirectoryName (path), Path.GetFileNameWithoutExtension (path) + suffix + Path.GetExtension (path));
 		}
 
+		void SelectTests ()
+		{
+			if (!Harness.INCLUDE_IOS) {
+				MainLog.WriteLine ("The iOS build is diabled, so any iOS tests will be disabled as well.");
+				IncludeiOS = false;
+			}
+
+			if (!Harness.INCLUDE_WATCH) {
+				MainLog.WriteLine ("The watchOS build is disabled, so any watchOS tests will be disabled as well.");
+				IncludewatchOS = false;
+			}
+
+			if (!Harness.INCLUDE_TVOS) {
+				MainLog.WriteLine ("The tvOS build is disabled, so any tvOS tests will be disabled as well.");
+				IncludetvOS = false;
+			}
+
+			if (!Harness.INCLUDE_MAC) {
+				MainLog.WriteLine ("The macOS build is disabled, so any macOS tests will be disabled as well.");
+				IncludeMac = false;
+			}
+		}
+
 		async Task PopulateTasksAsync ()
 		{
 			// Missing:
 			// api-diff
 			// msbuild tests
+
+			SelectTests ();
 
 			if (IncludeiOS || IncludetvOS || IncludewatchOS) {
 				var runSimulatorTasks = new List<RunSimulatorTask> ();
