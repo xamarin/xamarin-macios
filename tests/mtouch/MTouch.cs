@@ -186,7 +186,8 @@ namespace Xamarin
 
 				var appDir = mtouch.AppPath;
 				var msymDir = appDir + ".mSYM";
-				if (is_sim) {
+				var is_dual_asm = !is_sim && extra_mtouch_args.Contains ("--abi") && extra_mtouch_args.Contains (",");
+				if (!is_dual_asm) {
 					Assert.AreEqual (has_mdb, File.Exists (Path.Combine (appDir, "mscorlib.dll.mdb")), "#mdb");
 				} else {
 					Assert.AreEqual (has_mdb, File.Exists (Path.Combine (appDir, ".monotouch-32", "mscorlib.dll.mdb")), "#mdb");
@@ -1822,8 +1823,9 @@ class Test {
 				mtouch.CreateTemporaryCacheDirectory ();
 				mtouch.Abi = "armv7,arm64";
 				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
-				var ufe = Mono.Unix.UnixFileSystemInfo.GetFileSystemEntry (Path.Combine (mtouch.AppPath, ".monotouch-32", "testApp.exe"));
-				Assert.IsTrue (ufe.IsSymbolicLink, "testApp.exe IsSymbolicLink");
+				FileAssert.Exists (Path.Combine (mtouch.AppPath, "testApp.exe"));
+				// Don't check for mscorlib.dll, there might be two versions of it (since Xamarin.iOS.dll depends on it), or there might not.
+				FileAssert.Exists (Path.Combine (mtouch.AppPath, ".monotouch-32", "Xamarin.iOS.dll"));
 			}
 		}
 
