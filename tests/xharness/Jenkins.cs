@@ -183,6 +183,70 @@ namespace xharness
 			foreach (var task in rv)
 				task.Variation = "Debug";
 
+			var assembly_build_targets = new []
+			{
+				/* we don't add --assembly-build-target=@all=staticobject because that's the default in all our test projects */
+				new { Variation = "AssemblyBuildTarget: dylib (debug)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = false },
+				new { Variation = "AssemblyBuildTarget: SDK framework (debug)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = false },
+
+				new { Variation = "AssemblyBuildTarget: dylib (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@all=dynamiclibrary", Debug = true, Profiling = true },
+				new { Variation = "AssemblyBuildTarget: SDK framework (debug, profiling)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = true, Profiling = true },
+
+				new { Variation = "Release", MTouchExtraArgs = "", Debug = false, Profiling = false }, 
+				new { Variation = "AssemblyBuildTarget: SDK framework (release)", MTouchExtraArgs = "--assembly-build-target=@sdk=framework=Xamarin.Sdk --assembly-build-target=@all=staticobject", Debug = false, Profiling = false },
+
+			};
+
+			// Don't build in the original project directory
+			// We can build multiple projects in parallel, and if some of those
+			// projects have the same project dependencies, then we may end up
+			// building the same (dependent) project simultaneously (and they can
+			// stomp on eachother). This is done asynchronously to speed to the initial test load.
+			// FIXME: we should really do this for simulator builds as well.
+			foreach (var device_test in rv.ToArray ()) {
+				var clone = device_test.TestProject.Clone ();
+				device_test.BuildTask.InitialTask = clone.CreateCopyAsync (device_test);
+				device_test.BuildTask.TestProject = clone;
+				device_test.TestProject = clone;
+			}
+
+			foreach (var task in rv.ToArray ()) {
+				foreach (var test_data in assembly_build_targets) {
+					var variation = test_data.Variation;
+					var mtouch_extra_args = test_data.MTouchExtraArgs;
+					var configuration = test_data.Debug ? task.ProjectConfiguration : task.ProjectConfiguration.Replace ("Debug", "Release");
+					var debug = test_data.Debug;
+					var profiling = test_data.Profiling;
+
+					var clone = task.TestProject.Clone ();
+					var clone_task = Task.Run (async () =>
+					{
+						await task.BuildTask.InitialTask; // this is the project cloning above
+						await clone.CreateCopyAsync (task);
+						if (!string.IsNullOrEmpty (mtouch_extra_args))
+							clone.Xml.AddExtraMtouchArgs (mtouch_extra_args, task.ProjectPlatform, configuration);
+						clone.Xml.SetNode ("MTouchProfiling", profiling ? "True" : "False", task.ProjectPlatform, configuration);
+						if (!debug)
+							clone.Xml.SetMtouchUseLlvm (true, task.ProjectPlatform, configuration);
+						clone.Xml.Save (clone.Path);
+					});
+
+					var build = new XBuildTask
+					{
+						Jenkins = this,
+						TestProject = clone,
+						ProjectConfiguration = configuration,
+						ProjectPlatform = task.ProjectPlatform,
+						Platform = task.Platform,
+						InitialTask = clone_task,
+					};
+					rv.Add (new RunDeviceTask (build, task.Candidates) { Variation = variation, Ignored = task.Ignored });
+				}
+			}
+
+			foreach (var task in rv)
+				task.Variation = "Debug";
+
 			// Don't build in the original project directory
 			// We can build multiple projects in parallel, and if some of those
 			// projects have the same project dependencies, then we may end up
