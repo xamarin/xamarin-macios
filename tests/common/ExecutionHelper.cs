@@ -182,6 +182,15 @@ namespace Xamarin.Tests
 			Assert.Fail (string.Format ("The warning '{0}{1:0000}: {2}' was not found in the output:\n{3}", prefix, number, message, string.Join ("\n", details.ToArray ())));
 		}
 
+		public void AssertNoWarnings ()
+		{
+			var warnings = messages.Where ((v) => v.IsWarning);
+			if (!warnings.Any ())
+				return;
+
+			Assert.Fail ("No warnings expected, but got:\n{0}\t", string.Join ("\n\t", warnings.Select ((v) => v.Message).ToArray ()));
+		}
+
 		public bool HasOutput (string line)
 		{
 			return OutputLines.Contains (line);
