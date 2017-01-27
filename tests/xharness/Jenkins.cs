@@ -481,18 +481,17 @@ namespace xharness
 			};
 			Tasks.Add (runBTouch);
 
-			if (IncludeMmpTest) {
-				var run = new MakeTask
-				{
-					Jenkins = this,
-					Platform = TestPlatform.Mac,
-					TestName = "MMP Regression Tests",
-					Target = "all -j" + Environment.ProcessorCount,
-					WorkingDirectory = Path.Combine (Harness.RootDirectory, "mmptest", "regression"),
-				};
-				run.Environment.Add ("BUILD_REVISION", "jenkins"); // This will print "@MonkeyWrench: AddFile: <log path>" lines, which we can use to get the log filenames.
-				Tasks.Add (run);
-			}
+			var run_mmp = new MakeTask
+			{
+				Jenkins = this,
+				Platform = TestPlatform.Mac,
+				TestName = "MMP Regression Tests",
+				Target = "all -j" + Environment.ProcessorCount,
+				WorkingDirectory = Path.Combine (Harness.RootDirectory, "mmptest", "regression"),
+				Ignored = !IncludeMmpTest,
+			};
+			run_mmp.Environment.Add ("BUILD_REVISION", "jenkins"); // This will print "@MonkeyWrench: AddFile: <log path>" lines, which we can use to get the log filenames.
+			Tasks.Add (run_mmp);
 
 			var runMacBindingProject = new MakeTask
 			{
