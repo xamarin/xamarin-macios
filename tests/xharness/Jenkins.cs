@@ -460,18 +460,6 @@ namespace xharness
 			};
 			Tasks.Add (runBTouch);
 
-			if (IncludeMacBindingProject) {
-				var run = new MakeTask
-				{
-					Jenkins = this,
-					Platform = TestPlatform.Mac,
-					TestName = "Mac Binding Projects",
-					Target = "all",
-					WorkingDirectory = Path.Combine (Harness.RootDirectory, "mac-binding-project"),
-				};
-				Tasks.Add (run);
-			}
-
 			if (IncludeMmpTest) {
 				var run = new MakeTask
 				{
