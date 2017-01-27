@@ -23,24 +23,22 @@ namespace XamCore.OpenGLES
 
 		[iOS (10,0)]
 		[TV (10,0)]
-		public bool PresentRenderBuffer (nuint target, double presentationTime)
+		public virtual bool PresentRenderBuffer (nuint target, double presentationTime)
 		{
 			return _PresentRenderbufferAtTime (target, presentationTime);
 		}
 
 		[iOS (10,3)]
 		[TV (10,2)]
-		public bool PresentRenderBuffer (nuint target, double presentationTime, PresentationMode mode)
+		public virtual bool PresentRenderBuffer (nuint target, double presentationTime, PresentationMode mode)
 		{
 			switch (mode) {
 			case PresentationMode.AtTime:
 				return _PresentRenderbufferAtTime (target, presentationTime);
-				break;
 			case PresentationMode.AfterMinimumDuration:
 				return _PresentRenderbufferAfterMinimumDuration (target, presentationTime);
-				break;
 			default:
-				throw new ArgumentException ("The 'PresentationMode mode' argument needs a value.");
+				throw new ArgumentOutOfRangeException ($"Unknown presentation mode: {mode}", nameof (mode));
 			}
 		}
 	}
