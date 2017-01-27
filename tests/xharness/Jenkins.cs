@@ -208,17 +208,38 @@ namespace xharness
 		{
 			int pull_request;
 
-			if (!int.TryParse (Environment.GetEnvironmentVariable ("ghprbPullId"), out pull_request)) {
+			if (!int.TryParse (Environment.GetEnvironmentVariable ("ghprbPullId"), out pull_request))
 				MainLog.WriteLine ("The environment variable 'ghprbPullId' was not found, so no pull requests will be checked for test selection.");
-				return;
-			}
 
 			// First check if can auto-select any tests based on which files were modified.
 			// This will only enable additional tests, never disable tests.
-			SelectTestsByModifiedFiles (pull_request);
+			if (pull_request > 0)
+				SelectTestsByModifiedFiles (pull_request);
+			
 			// Then we check for labels. Labels are manually set, so those override
 			// whatever we did automatically.
-			SelectTestsByLabel (pull_request);
+			if (pull_request > 0)
+				SelectTestsByLabel (pull_request);
+
+			if (!Harness.INCLUDE_IOS) {
+				MainLog.WriteLine ("The iOS build is diabled, so any iOS tests will be disabled as well.");
+				IncludeiOS = false;
+			}
+
+			if (!Harness.INCLUDE_WATCH) {
+				MainLog.WriteLine ("The watchOS build is disabled, so any watchOS tests will be disabled as well.");
+				IncludewatchOS = false;
+			}
+
+			if (!Harness.INCLUDE_TVOS) {
+				MainLog.WriteLine ("The tvOS build is disabled, so any tvOS tests will be disabled as well.");
+				IncludetvOS = false;
+			}
+
+			if (!Harness.INCLUDE_MAC) {
+				MainLog.WriteLine ("The macOS build is disabled, so any macOS tests will be disabled as well.");
+				IncludeMac = false;
+			}
 		}
 
 		void SelectTestsByModifiedFiles (int pull_request)

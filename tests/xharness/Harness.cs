@@ -68,7 +68,10 @@ namespace xharness
 		public string MONO_PATH { get; set; } // Use same name as in Makefiles, so that a grep finds it.
 		public string WATCH_MONO_PATH { get; set; } // Use same name as in Makefiles, so that a grep finds it.
 		public string TVOS_MONO_PATH { get; set; } // Use same name as in Makefiles, so that a grep finds it.
+		public bool INCLUDE_IOS { get; set; }
+		public bool INCLUDE_TVOS { get; set; }
 		public bool INCLUDE_WATCH { get; set; }
+		public bool INCLUDE_MAC { get; set; }
 		public string JENKINS_RESULTS_DIRECTORY { get; set; } // Use same name as in Makefiles, so that a grep finds it.
 		public string MAC_DESTDIR { get; set; }
 		public string IOS_DESTDIR { get; set; }
@@ -235,8 +238,11 @@ namespace xharness
 			MONO_PATH = Path.GetFullPath (Path.Combine (src_root, "external", "mono"));
 			WATCH_MONO_PATH = make_config ["WATCH_MONO_PATH"];
 			TVOS_MONO_PATH = MONO_PATH;
-			INCLUDE_WATCH = make_config.ContainsKey ("INCLUDE_WATCH") && !string.IsNullOrEmpty (make_config ["INCLUDE_WATCH"]);
+			INCLUDE_IOS = make_config.ContainsKey ("INCLUDE_IOS") && !string.IsNullOrEmpty (make_config ["INCLUDE_IOS"]);
+			INCLUDE_TVOS = make_config.ContainsKey ("INCLUDE_TVOS") && !string.IsNullOrEmpty (make_config ["INCLUDE_TVOS"]);
 			JENKINS_RESULTS_DIRECTORY = make_config ["JENKINS_RESULTS_DIRECTORY"];
+			INCLUDE_WATCH = make_config.ContainsKey ("INCLUDE_WATCH") && !string.IsNullOrEmpty (make_config ["INCLUDE_WATCH"]);
+			INCLUDE_MAC = make_config.ContainsKey ("INCLUDE_MAC") && !string.IsNullOrEmpty (make_config ["INCLUDE_MAC"]);
 			MAC_DESTDIR = make_config ["MAC_DESTDIR"];
 			IOS_DESTDIR = make_config ["IOS_DESTDIR"];
 		}
