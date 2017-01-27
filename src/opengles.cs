@@ -63,10 +63,13 @@ namespace XamCore.OpenGLES {
 		[Export ("presentRenderbuffer:")]
 		bool PresentRenderBuffer (nuint target);
 
-		[iOS (10,0)]
-		[TV (10,0)]
+		[Internal]
 		[Export ("presentRenderbuffer:atTime:")]
-		bool PresentRenderBuffer (nuint target, double presentationTime);
+		bool _PresentRenderbufferAtTime (nuint target, double presentationTime);
+
+		[Internal]
+		[Export ("presentRenderbuffer:afterMinimumDuration:")]
+		bool _PresentRenderbufferAfterMinimumDuration (nuint target, double duration);
 
 		[Since (7,1)]
 		[Export ("multiThreaded")]
