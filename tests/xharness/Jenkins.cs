@@ -1104,8 +1104,10 @@ function oninitialload ()
 					var resources = device_resources.Values.Concat (new Resource [] { DesktopResource });
 					if (resources.Any ()) {
 						writer.WriteLine ($"<h3>Devices:</h3>");
-						foreach (var dr in resources.OrderBy ((v) => v.Description, StringComparer.OrdinalIgnoreCase))
-							writer.WriteLine ($"{dr.Description} - {dr.Users} user{dr.Users != 1 ? "s" : string.Empty} - {dr.QueuedUsers} in queue<br />");
+						foreach (var dr in resources.OrderBy ((v) => v.Description, StringComparer.OrdinalIgnoreCase)) {
+							var plural = dr.Users != 1 ? "s" : string.Empty;
+							writer.WriteLine ($"{dr.Description} - {dr.Users} user{plural} - {dr.QueuedUsers} in queue<br />");
+						}
 					}
 				}
 				writer.WriteLine ("</div>");
