@@ -12,7 +12,7 @@
     <NoWarn>67,168,169,219,414,612,618,649,672</NoWarn>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseXamMacFullFramework>true</UseXamMacFullFramework>
-    <DefineConstants>XAMCORE_2_0</DefineConstants>
+    <DefineConstants>XAMCORE_2_0;ADD_BCL_EXCLUSIONS</DefineConstants>
   </PropertyGroup>
  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

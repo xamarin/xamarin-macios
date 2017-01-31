@@ -158,7 +158,7 @@ namespace xharness
 
 						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Exec), "");
 						if (target.IsBCLProject)
-							writer.WriteLine ("\t$(Q) XM_BCL_TEST=1 {2}/bin/Debug{1}/{0}Tests.app/Contents/MacOS/{0}Tests", make_escaped_name, target.Suffix, CreateRelativePath (Path.GetDirectoryName (target.ProjectPath), Path.GetDirectoryName (makefile)));
+							writer.WriteLine ("\t$(Q) {2}/bin/Debug{1}/{0}Tests.app/Contents/MacOS/{0}Tests", make_escaped_name, target.Suffix, CreateRelativePath (Path.GetDirectoryName (target.ProjectPath), Path.GetDirectoryName (makefile)));
 						else
 							writer.WriteLine ("\t$(Q) {2}/bin/x86/Debug{1}/{0}.app/Contents/MacOS/{0}", make_escaped_name, target.Suffix, CreateRelativePath (Path.GetDirectoryName (target.ProjectPath), Path.GetDirectoryName (makefile)));
 						writer.WriteLine ();

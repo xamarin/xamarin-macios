@@ -36,9 +36,12 @@ namespace Xamarin.Mac.Tests
 			if (testName != null)
 				args.Add ($"-test={testName}");
 
-			if (System.Environment.GetEnvironmentVariable ("XM_BCL_TEST") != null)
-				args.Add ("-exclude=MacNotWorking,MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingInterpreter");
+#if ADD_BCL_EXCLUSIONS
+			args.Add ("-exclude=MacNotWorking,MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingInterpreter");
+#endif
+
 			TestRunner.Main (args.ToArray ());
+
 #if NO_GUI_TESTING
 			// HACK - TestRunner.Main assumes you have a message pump spinning, but when I hack it out via NO_GUI_TESTING it returns right away
 			// We will exit via Environment.Exit in NSRunLoopIntegration
