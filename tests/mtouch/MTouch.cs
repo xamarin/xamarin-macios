@@ -160,6 +160,7 @@ namespace Xamarin
 				extension.AssemblyBuildTargets.AddRange (assembly_build_targets);
 				extension.DSym = false; // faster test
 				extension.MSym = false; // faster test
+				extension.NoStrip = true; // faster test
 				extension.AssertExecute (MTouchAction.BuildDev, "extension build");
 
 				using (var mtouch = new MTouchTool ()) {
@@ -171,6 +172,7 @@ namespace Xamarin
 					mtouch.AssemblyBuildTargets.AddRange (assembly_build_targets);
 					mtouch.DSym = false; // faster test
 					mtouch.MSym = false; // faster test
+					mtouch.NoStrip = true; // faster test
 
 					var timestamp = DateTime.MinValue;
 
