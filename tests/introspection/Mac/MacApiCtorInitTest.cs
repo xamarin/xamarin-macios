@@ -177,6 +177,8 @@ namespace Introspection {
 			switch (obj.GetType ().FullName) {
 			// Crashes on 10.12
 			case "Contacts.CNContainer":
+			case "AppKit.NSTouch":
+			case "MonoMac.AppKit.NSTouch":
 			// native crash calling MonoMac.Foundation.NSObject.get_Description ()
 			case "WebKit.WKNavigationAction":
 			case "WebKit.WKFrameInfo": //  EXC_BAD_ACCESS (code=1, address=0x0)
