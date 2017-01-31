@@ -53,9 +53,13 @@ namespace Introspection {
 			case "SceneKit":
 			case "MonoMac.SceneKit":
 				return !Mac.CheckSystemVersion (10, 8) || IntPtr.Size != 8;
-			default:
-				return false;
+			case "MediaPlayer":
+			case "MonoMac.MediaPlayer":
+				if (!Mac.CheckSystemVersion (10, 12) || IntPtr.Size != 8)
+					return true;
+				break;
 			}
+			return false;
 		}
 
 		protected override bool Skip (PropertyInfo p)

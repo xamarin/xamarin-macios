@@ -2248,7 +2248,7 @@ namespace XamCore.CoreImage {
 	}
 
 	[iOS (9,0)]
-	[Mac (10,12)]
+	[Mac (10,12, onlyOn64 : true)]
 	[BaseType (typeof (CIFeature))]
 	interface CITextFeature {
 		[Export ("bounds")]
