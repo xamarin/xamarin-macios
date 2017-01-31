@@ -873,6 +873,11 @@ namespace Xamarin.Bundler {
 				return;
 			}
 
+			if (DeploymentTarget.Major < 8) {
+				Driver.Log (2, $"Native code sharing has been disabled, because the container app's deployment target is earlier than iOS 8.0 (its {DeploymentTarget})");
+				return;
+			}
+
 			// No I18N assemblies can be included
 			if (I18n != Mono.Linker.I18nAssemblies.None) {
 				Driver.Log (2, "Native code sharing has been disabled, because the container app includes I18N assemblies ({0}).", I18n);
