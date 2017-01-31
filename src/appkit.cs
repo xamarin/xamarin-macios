@@ -13341,7 +13341,7 @@ namespace XamCore.AppKit {
 		NSSliderAccessory MaximumValueAccessory { get; set; }
 
 		[Export ("valueAccessoryWidth")]
-		double ValueAccessoryWidth { get; set; }
+		nfloat ValueAccessoryWidth { get; set; }
 
 		[NullAllowed, Export ("target", ArgumentSemantic.Weak)]
 		NSObject Target { get; set; }
