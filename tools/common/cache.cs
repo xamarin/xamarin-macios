@@ -210,9 +210,9 @@ public class Cache {
 		}
 
 		// Check if mtouch/mmp has been modified.
-		var mtouch = Path.Combine (Driver.DriverBinDirectory, NAME);
-		if (!Application.IsUptodate (mtouch, pcache)) {
-			Driver.Log (3, "A full rebuild will be performed because mtouch has been modified.");
+		var executable = System.Reflection.Assembly.GetExecutingAssembly ().Location;
+		if (!Application.IsUptodate (executable, pcache)) {
+			Driver.Log (3, "A full rebuild will be performed because " + NAME + " has been modified.");
 			return false;
 		}
 
