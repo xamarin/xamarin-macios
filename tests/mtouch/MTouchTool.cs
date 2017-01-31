@@ -477,8 +477,14 @@ namespace Xamarin
 
 		public void CreateTemporararyServiceExtension (string code = null, string extraCode = null, string extraArg = null, string appName = "testServiceExtension")
 		{
-			var testDir = CreateTemporaryDirectory ();
-			var app = Path.Combine (testDir, $"{appName}.appex");
+			string testDir;
+			if (RootAssembly == null) {
+				testDir = CreateTemporaryDirectory ();
+			} else {
+				// We're rebuilding an existing executable, so just reuse that
+				testDir = Path.GetDirectoryName (RootAssembly);
+			}
+			var app = AppPath ?? Path.Combine (testDir, $"{appName}.appex");
 			Directory.CreateDirectory (app);
 
 			if (code == null) {
