@@ -119,6 +119,7 @@ namespace Xamarin.Bundler {
 
 		public bool NoFastSim;
 		public bool NoDevCodeShare;
+		public bool IsCodeShared { get; private set; }
 
 		// The list of assemblies that we do generate debugging info for.
 		public bool DebugAll;
@@ -164,8 +165,28 @@ namespace Xamarin.Bundler {
 
 		Dictionary<string, Tuple<AssemblyBuildTarget, string>> assembly_build_targets = new Dictionary<string, Tuple<AssemblyBuildTarget, string>> ();
 
-		public AssemblyBuildTarget LibMonoLinkMode = AssemblyBuildTarget.StaticObject;
-		public AssemblyBuildTarget LibXamarinLinkMode = AssemblyBuildTarget.StaticObject;
+		public AssemblyBuildTarget LibMonoLinkMode {
+			get {
+				if (HasFrameworks || UseMonoFramework.Value) {
+					return AssemblyBuildTarget.Framework;
+				} else if (HasDynamicLibraries) {
+					return AssemblyBuildTarget.DynamicLibrary;
+				} else {
+					return AssemblyBuildTarget.StaticObject;
+				}
+			}
+		}
+		public AssemblyBuildTarget LibXamarinLinkMode {
+			get {
+				if (HasFrameworks) {
+					return AssemblyBuildTarget.Framework;
+				} else if (HasDynamicLibraries) {
+					return AssemblyBuildTarget.DynamicLibrary;
+				} else {
+					return AssemblyBuildTarget.StaticObject;
+				}
+			}
+		}
 		public AssemblyBuildTarget LibPInvokesLinkMode => LibXamarinLinkMode;
 		public AssemblyBuildTarget LibProfilerLinkMode => OnlyStaticLibraries ? AssemblyBuildTarget.StaticObject : AssemblyBuildTarget.DynamicLibrary;
 
@@ -262,10 +283,15 @@ namespace Xamarin.Bundler {
 
 			if (IsSimulatorBuild)
 				return;
-
-			// By default each assemblies is compiled to a static object.
-			if (assembly_build_targets.Count == 0)
+			
+			if (assembly_build_targets.Count == 0) {
 				assembly_build_targets.Add ("@all", new Tuple<AssemblyBuildTarget, string> (AssemblyBuildTarget.StaticObject, ""));
+				if (IsCodeShared) {
+					// If we're sharing code, then we can default to creating a Xamarin.Sdk.framework for SDK assemblies,
+					// and static objects for the rest of the assemblies.
+					assembly_build_targets.Add ("@sdk", new Tuple<AssemblyBuildTarget, string> (AssemblyBuildTarget.Framework, "Xamarin.Sdk"));
+				}
+			}
 
 			assembly_build_targets.TryGetValue ("@all", out all);
 			assembly_build_targets.TryGetValue ("@sdk", out sdk);
@@ -974,6 +1000,8 @@ namespace Xamarin.Bundler {
 					continue;
 
 				candidates.Add (appex);
+				appex.IsCodeShared = true;
+				IsCodeShared = true;
 
 				Driver.Log (2, "The main app and the extension '{0}' will share code.", appex.Name);
 			}
@@ -1211,18 +1239,6 @@ namespace Xamarin.Bundler {
 
 			if (LinkMode == LinkMode.None && SdkVersion < SdkVersions.GetVersion (Platform))
 				throw ErrorHelper.CreateError (91, "This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker by changing the Linker behaviour to Link Framework SDKs Only.", PlatformName, SdkVersions.GetVersion (Platform), SdkVersions.Xcode);
-
-			if (HasFrameworks || UseMonoFramework.Value) {
-				LibMonoLinkMode = AssemblyBuildTarget.Framework;
-			} else if (HasDynamicLibraries) {
-				LibMonoLinkMode = AssemblyBuildTarget.DynamicLibrary;
-			}
-
-			if (HasFrameworks) {
-				LibXamarinLinkMode = AssemblyBuildTarget.Framework;
-			} else if (HasDynamicLibraries) {
-				LibXamarinLinkMode = AssemblyBuildTarget.DynamicLibrary;
-			}
 
 			Namespaces.Initialize ();
 
