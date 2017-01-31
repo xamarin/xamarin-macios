@@ -101,6 +101,11 @@ namespace Introspection {
 				if (!Mac.CheckSystemVersion (10, 8) || IntPtr.Size != 8)
 					return true;
 				break;
+			case "MediaPlayer":
+			case "MonoMac.MediaPlayer":
+				if (!Mac.CheckSystemVersion (10, 12) || IntPtr.Size != 8)
+					return true;
+				break;
 			// not installed by default
 			case "MonoMac.Growl":
 			case "Growl":
