@@ -98,6 +98,7 @@ define IOS_GENERATOR_template
 $(IOS_BUILD_DIR)/$(1)/core.dll: $$(IOS_PMCS) $$(IOS_CORE_SOURCES) frameworks.sources
 	@mkdir -p $(IOS_BUILD_DIR)/$(1)
 	$$(call Q_PROF_PMCS,ios/$(1)) PMCS_PROFILE=$(3) $$(IOS_PMCS) -out:$$@ -target:library -debug -unsafe \
+		-r:$(IOS_LIBDIR)/Mono.Security.dll \
 		-nowarn:219,618,114,414,1635,3021,$$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		-define:COREBUILD $$(IOS_DEFINES) \
 		$$(IOS_CORE_SOURCES)
@@ -139,6 +140,7 @@ IOS_VARIANTS_TARGETS += $(IOS_BUILD_DIR)/$(1)/$(3)
 $(IOS_BUILD_DIR)/$(1)/$(3): $$(IOS_SOURCES) $(IOS_BUILD_DIR)/$(4)/generated_sources $(PRODUCT_KEY_PATH)
 	@mkdir -p $(IOS_BUILD_DIR)/$(1)
 	$$(call Q_PROF_PMCS,ios/$(1)) PMCS_PROFILE=$(5) $$(IOS_PMCS) -out:$$@ -target:library -debug -unsafe -optimize \
+		-r:$(IOS_LIBDIR)/Mono.Security.dll \
 		-keyfile:$(PRODUCT_KEY_PATH) $$(IOS_DEFINES) \
 		-nowarn:219,618,114,414,1635,3021,$$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		$$(IOS_SOURCES) @$(IOS_BUILD_DIR)/$(4)/generated_sources
@@ -514,6 +516,7 @@ $(MAC_BUILD_DIR)/$(1)/$(2): $(MAC_BUILD_DIR)/$(3)/generated-sources $(MAC_SOURCE
 	$$(call Q_PROF_PMCS,mac/$(1)) PMCS_PROFILE=$(5) $(MAC_BUILD_DIR)/$(3)/pmcs \
 		-out:$$@ -target:library -debug -unsafe \
 		$$(MAC_COMMON_DEFINES),OBJECT_REF_TRACKING \
+		-r:Mono.Security.dll \
 		-keyfile:$(SN_KEY) \
 		-nowarn:3021,1635,612,618,0219,0414,$(MAC_WARNINGS_TO_FIX) \
 		$(4) \
@@ -983,6 +986,7 @@ $(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_BUILD_DIR)/tvos/generator.exe $
 $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.dll: $(TVOS_SOURCES) $(TVOS_BUILD_DIR)/tvos/generated_sources $(PRODUCT_KEY_PATH) | $(TVOS_BUILD_DIR)/tvos-64
 	$(call Q_PROF_PMCS,tvos) PMCS_PROFILE=tvos-64 $(TVOS_PMCS) -out:$@ -target:library -debug -unsafe -optimize \
 		-keyfile:$(PRODUCT_KEY_PATH) $(TVOS_DEFINES) \
+		-r:$(TVOS_LIBDIR)/Mono.Security.dll \
 		-nowarn:219,618,114,414,1635,3021,$(IOS_WARNINGS_THAT_YOU_SHOULD_FIX) \
 		$(TVOS_SOURCES) @$(TVOS_BUILD_DIR)/tvos/generated_sources
 
