@@ -495,7 +495,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 			AppPath = app;
 			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile, extraArg: extraArg, appName: appName);
 
-			File.WriteAllText (Path.Combine (app, "Info.plist"),
+			var info_plist = 
 @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
 <plist version=""1.0"">
@@ -527,7 +527,10 @@ public partial class NotificationService : UNNotificationServiceExtension
 	</dict>
 </dict>
 </plist>
-");
+";
+			var plist_path = Path.Combine (app, "Info.plist");
+			if (!File.Exists (plist_path) || File.ReadAllText (plist_path) != info_plist)
+				File.WriteAllText (plist_path, info_plist);
 		}
 
 		public void CreateTemporaryWatchKitExtension (string code = null)
