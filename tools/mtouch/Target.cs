@@ -319,6 +319,16 @@ namespace Xamarin.Bundler
 					entry_points = new Dictionary<string, List<MemberReference>> ();
 				} else {
 					entry_points = LinkContext.RequiredSymbols;
+					if (App.IsCodeShared) {
+						// Remove symbols from assemblies from extensions that were linked together with the main app.
+						var filtered_entry_points = new Dictionary<string, List<MemberReference>> ();
+						foreach (var ep in entry_points) {
+							var filtered = ep.Value.Where ((v) => Assemblies.ContainsKey (Assembly.GetIdentity (v.Module.FileName))).ToList ();
+							if (filtered.Count > 0)
+								filtered_entry_points.Add (ep.Key, filtered);
+						}
+						entry_points = filtered_entry_points;
+					}
 				}
 				
 				// keep the debugging helper in debugging binaries only
