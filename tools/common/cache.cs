@@ -18,6 +18,12 @@ public class Cache {
 
 	string cache_dir;
 	bool temporary_cache;
+	string[] arguments;
+
+	public Cache (string[] arguments)
+	{
+		this.arguments = arguments;
+	}
 
 	public bool IsCacheTemporary {
 		get { return temporary_cache; }
@@ -166,10 +172,10 @@ public class Cache {
 		} while (true);
 	}
 	
-	static string GetArgumentsForCacheData ()
+	string GetArgumentsForCacheData ()
 	{
 		var sb = new StringBuilder ();
-		var args = new List<string> (Environment.GetCommandLineArgs ());
+		var args = new List<string> (arguments);
 
 		sb.Append ("# Version: ").Append (Constants.Version).Append ('.').Append (Constants.Revision).AppendLine ();
 		if (args.Count > 0)

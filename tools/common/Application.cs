@@ -35,7 +35,7 @@ namespace Xamarin.Bundler {
 
 	public partial class Application
 	{
-		public Cache Cache = new Cache ();
+		public Cache Cache;
 		public string AppDirectory = ".";
 		public bool DeadStrip = true;
 		public bool EnableDebug;
@@ -66,6 +66,11 @@ namespace Xamarin.Bundler {
 		public static int Concurrency => Driver.Concurrency;
 		public Version DeploymentTarget;
 		public Version SdkVersion;
+
+		public Application (string[] arguments)
+		{
+			Cache = new Cache (arguments);
+		}
 
 		// This is just a name for this app to show in log/error messages, etc.
 		public string Name {

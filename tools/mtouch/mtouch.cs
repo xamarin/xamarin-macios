@@ -998,7 +998,7 @@ namespace Xamarin.Bundler
 		static Application ParseArguments (string [] args, out Action a)
 		{
 			var action = Action.None;
-			var app = new Application ();
+			var app = new Application (args);
 			var assemblies = new List<string> ();
 
 			if (extra_args != null) {
