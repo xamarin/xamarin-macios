@@ -68,6 +68,8 @@ namespace Xamarin.Mac.Tests
 				case "SpriteKitLibrary":
 				case "PhotosLibrary":
 				case "IntentsLibrary":
+				// support removed in Sierra
+				case "MediaPlayerLibrary":
 					return LoadStatus.Acceptable;
 				}
 			}
