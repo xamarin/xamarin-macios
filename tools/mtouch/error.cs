@@ -104,6 +104,7 @@ namespace Xamarin.Bundler {
 	//					MT0095 Aot files could not be copied to the destination directory.
 	//					MT0096 No reference to Xamarin.iOS.dll was found.
 	//					MT0097 <used by mmp>
+	//		Warning		MT0110  Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.
 	// MT1xxx	file copy / symlinks (project related)
 	//			MT10xx	installer.cs / mtouch.cs
 	//					MT1001	Could not find an application at the specified directory: {0}

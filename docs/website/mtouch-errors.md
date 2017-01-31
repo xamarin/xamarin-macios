@@ -358,6 +358,15 @@ A last-straw solution would be to use a different version of Xamarin.iOS, one th
 <h3><a name="MT0093"/>MT0093: Aot symbolication files could not be copied to the destination directory. Symbolication will not work with the application.</h3>
 
 <h3><a name="MT0096"/>MT0096: No reference to Xamarin.iOS.dll was found.</h3>
+
+<h3><a name="MT0110"/>MT0110: Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.</h3>
+
+Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode (tvOS and watchOS projects).
+
+No action is required on your part, this message is purely informational.
+
+For further information see bug #[51710](https://bugzilla.xamarin.com/show_bug.cgi?id=51710).
+
 <!--
  MT1xxx file copy / symlinks (project related)
   MT10xx installer.cs / mtouch.cs
