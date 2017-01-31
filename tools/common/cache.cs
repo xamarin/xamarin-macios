@@ -197,7 +197,7 @@ public class Cache {
 		return sb.ToString ();
 	}
 
-	bool IsCacheValid ()
+	public bool IsCacheValid ()
 	{
 		var name = "arguments";
 		var pcache = Path.Combine (Location, name);

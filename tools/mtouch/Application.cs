@@ -703,6 +703,7 @@ namespace Xamarin.Bundler {
 			allapps.Add (this); // We need to build the main app first, so that any extensions sharing code can reference frameworks built in the main app.
 			allapps.AddRange (AppExtensions);
 
+			VerifyCache ();
 			allapps.ForEach ((v) => v.BuildInitialize ());
 			DetectCodeSharing ();
 			allapps.ForEach ((v) => v.BuildManaged ());
@@ -711,17 +712,39 @@ namespace Xamarin.Bundler {
 			allapps.ForEach ((v) => v.BuildEnd ());
 		}
 
-		void BuildInitialize ()
+		void VerifyCache ()
 		{
+			var valid = true;
+
+			// First make sure that all the caches (both for the container app and any app extensions) are valid.
+			// Due to code sharing it's safest to rebuild everything if any cache ends up out-of-date.
 			if (Driver.Force) {
-				Driver.Log (3, "A full rebuild has been forced by the command line argument -f.");
-				Cache.Clean ();
+				Driver.Log (3, $"A full rebuild has been forced by the command line argument -f.");
+				valid = false;
+			} else if (!Cache.IsCacheValid ()) {
+				Driver.Log (3, $"A full rebuild has been forced because the cache for {Name} is not valid.");
+				valid = false;
 			} else {
-				// this will destroy the cache if invalid, which makes setting Driver.Force to true mostly unneeded
-				// in fact setting it means some actions (like extract native resource) gets duplicate for fat builds
-				Cache.VerifyCache ();
+				foreach (var appex in AppExtensions) {
+					if (appex.Cache.IsCacheValid ())
+						continue;
+
+					Driver.Log (3, $"A full rebuild has been forced because the cache for {appex.Name} is not valid.");
+					valid = false;
+					break;
+				}
 			}
 
+			if (valid)
+				return;
+
+			// Something's not valid anymore, so clean everything.
+			Cache.Clean ();
+			AppExtensions.ForEach ((v) => v.Cache.Clean ());
+		}
+
+		void BuildInitialize ()
+		{
 			Initialize ();
 			ValidateAbi ();
 			SelectRegistrar ();
