@@ -106,6 +106,7 @@ namespace Xamarin.Bundler {
 	//					MT0097 <used by mmp>
 	//					MT0098 <used by mmp>
 	//					MT0099	Internal error {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).
+	//		Warning		MT0110  Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.
 	// MT1xxx	file copy / symlinks (project related)
 	//			MT10xx	installer.cs / mtouch.cs
 	//					MT1001	Could not find an application at the specified directory: {0}
