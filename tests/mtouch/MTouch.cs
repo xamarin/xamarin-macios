@@ -141,6 +141,107 @@ namespace Xamarin
 		}
 
 		[Test]
+		[TestCase ("single", "", false, new string [] { } )]
+		[TestCase ("dual", "armv7,arm64", false, new string [] { })]
+		[TestCase ("llvm", "armv7+llvm", false, new string [] { })]
+		[TestCase ("debug", "", true, new string [] { })]
+		[TestCase ("single-framework", "", false, new string [] { "@sdk=framework=Xamarin.Sdk", "@all=staticobject" })]
+		public void RebuildTest_WithExtensions (string name, string abi, bool debug, string[] assembly_build_targets)
+		{
+			var codeA = "[Foundation.Preserve] public class TestApp1 { static void X () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
+			var codeB = "[Foundation.Preserve] public class TestApp2 { static void X () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
+
+			using (var extension = new MTouchTool ()) {
+				extension.Extension = true;
+				extension.CreateTemporararyServiceExtension (extraCode: codeA);
+				extension.CreateTemporaryCacheDirectory ();
+				extension.Abi = abi;
+				extension.Debug = debug;
+				extension.AssemblyBuildTargets.AddRange (assembly_build_targets);
+				extension.DSym = false; // faster test
+				extension.MSym = false; // faster test
+				extension.AssertExecute (MTouchAction.BuildDev, "extension build");
+
+				using (var mtouch = new MTouchTool ()) {
+					mtouch.AppExtensions.Add (extension);
+					mtouch.CreateTemporaryApp (extraCode: codeA);
+					mtouch.CreateTemporaryCacheDirectory ();
+					mtouch.Abi = abi;
+					mtouch.Debug = debug;
+					mtouch.AssemblyBuildTargets.AddRange (assembly_build_targets);
+					mtouch.DSym = false; // faster test
+					mtouch.MSym = false; // faster test
+
+					var timestamp = DateTime.MinValue;
+
+					Action<string, IEnumerable<string>> assertNotModified = (filename, skip) =>
+					{
+						var failed = new List<string> ();
+						var files = Directory.EnumerateFiles (mtouch.AppPath, "*", SearchOption.AllDirectories);
+						files = files.Concat (Directory.EnumerateFiles (extension.AppPath, "*", SearchOption.AllDirectories));
+						foreach (var file in files) {
+							if (skip != null && skip.Contains (Path.GetFileName (file)))
+								continue;
+							var info = new FileInfo (file);
+							if (info.LastWriteTime > timestamp) {
+								failed.Add (string.Format ("{0} is modified, timestamp: {1}", file, info.LastWriteTime));
+								Console.WriteLine ("FAIL: {0} modified: {1}", file, info.LastWriteTime);
+							} else {
+								Console.WriteLine ("{0} not modified", file);
+							}
+						}
+						Assert.IsEmpty (failed, filename);
+					};
+
+					mtouch.AssertExecute (MTouchAction.BuildDev, "first build");
+					Console.WriteLine ($"{DateTime.Now} **** FIRST BUILD DONE ****");
+
+					timestamp = DateTime.Now;
+					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
+
+					mtouch.AssertExecute (MTouchAction.BuildDev, "second build");
+					Console.WriteLine ($"{DateTime.Now} **** SECOND BUILD DONE ****");
+
+					assertNotModified (name, null);
+
+					// Touch the extension's executable, nothing should change
+					new FileInfo (extension.RootAssembly).LastWriteTimeUtc = DateTime.UtcNow;
+					mtouch.AssertExecute (MTouchAction.BuildDev, "touch extension executable");
+					Console.WriteLine ($"{DateTime.Now} **** TOUCH EXTENSION EXECUTABLE DONE ****");
+					assertNotModified (name, null);
+
+					// Touch the main app's executable, nothing should change
+					new FileInfo (mtouch.RootAssembly).LastWriteTimeUtc = DateTime.UtcNow;
+					mtouch.AssertExecute (MTouchAction.BuildDev, "touch main app executable");
+					Console.WriteLine ($"{DateTime.Now} **** TOUCH MAIN APP EXECUTABLE DONE ****");
+					assertNotModified (name, null);
+
+					// Test that a rebuild (where something changed, in this case the .exe)
+					// actually work. We compile with custom code to make sure it's different
+					// from the previous exe we built.
+					//
+					// The code change is minimal: only changes the class name (default: 'TestApp1' changed to 'TestApp2') to minimize the related
+					// changes (there should be no changes in Xamarin.iOS.dll nor mscorlib.dll, even after linking)
+
+					// Rebuild the extension's .exe
+					extension.CreateTemporararyServiceExtension (extraCode: codeB);
+					mtouch.AssertExecute (MTouchAction.BuildDev, "change extension executable");
+					Console.WriteLine ($"{DateTime.Now} **** CHANGE EXTENSION EXECUTABLE DONE ****");
+					assertNotModified (name, new [] { "testServiceExtension", "testServiceExtension.aotdata.armv7", "testServiceExtension.aotdata.arm64", "testServiceExtension.dll" } );
+
+					timestamp = DateTime.Now;
+					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
+
+					// Rebuild the main app's .exe
+					mtouch.CreateTemporaryApp (extraCode: codeB);
+					mtouch.AssertExecute (MTouchAction.BuildDev, "change app executable");
+					Console.WriteLine ($"{DateTime.Now} **** CHANGE APP EXECUTABLE DONE ****");
+					assertNotModified (name, new [] { "testApp", "testApp.aotdata.armv7", "testApp.aotdata.arm64", "testApp.exe" });
+				}
+			}
+		}
+
+		[Test]
 		// Simulator
 		[TestCase (Target.Sim, Config.Release, PackageMdb.Default, MSym.Default,  false, false, "")]
 		[TestCase (Target.Sim, Config.Debug,   PackageMdb.Default, MSym.Default,  true,  false, "")]
@@ -2326,17 +2427,19 @@ public class TestApp {
 			return CompileTestAppExecutable (targetDirectory, code, extraArg, profile: Profile.iOS);
 		}
 
-		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp")
+		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null)
 		{
 			if (code == null)
 				code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
+			if (extraCode != null)
+				code += extraCode;
 
 			return CompileTestAppCode ("exe", targetDirectory, code, extraArg, profile, appName);
 		}
 
-		public static string CompileTestAppLibrary (string targetDirectory, string code, string extraArg = null, Profile profile = Profile.iOS)
+		public static string CompileTestAppLibrary (string targetDirectory, string code, string extraArg = null, Profile profile = Profile.iOS, string appName = "testApp")
 		{
-			return CompileTestAppCode ("library", targetDirectory, code, extraArg, profile);
+			return CompileTestAppCode ("library", targetDirectory, code, extraArg, profile, appName);
 		}
 
 		public static string CompileTestAppCode (string target, string targetDirectory, string code, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp")
