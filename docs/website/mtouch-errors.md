@@ -369,6 +369,14 @@ A last-straw solution would be to use a different version of Xamarin.iOS, one th
 
 This indicates a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
 
+<h3><a name="MT0110"/>MT0110: Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.</h3>
+
+Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode (tvOS and watchOS projects).
+
+No action is required on your part, this message is purely informational.
+
+For further information see bug #[51710](https://bugzilla.xamarin.com/show_bug.cgi?id=51710).
+
 # MT1xxx: Project related error messages
 
 ### MT10xx: Installer / mtouch
