@@ -312,16 +312,13 @@ namespace Xamarin.Bundler
 				foreach (var ep in File.ReadAllLines (cache_location))
 					entry_points.Add (ep, null);
 			} else {
-				List<MethodDefinition> marshal_exception_pinvokes;
 				if (LinkContext == null) {
 					// This happens when using the simlauncher and the msbuild tasks asked for a list
 					// of symbols (--symbollist). In that case just produce an empty list, since the
 					// binary shouldn't end up stripped anyway.
 					entry_points = new Dictionary<string, List<MemberReference>> ();
-					marshal_exception_pinvokes = new List<MethodDefinition> ();
 				} else {
 					entry_points = LinkContext.RequiredSymbols;
-					marshal_exception_pinvokes = LinkContext.MarshalExceptionPInvokes;
 				}
 				
 				// keep the debugging helper in debugging binaries only
