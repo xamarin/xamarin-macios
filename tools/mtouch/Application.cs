@@ -1147,7 +1147,7 @@ namespace Xamarin.Bundler {
 			if (!UseMonoFramework.HasValue && DeploymentTarget >= new Version (8, 0)) {
 				if (IsExtension) {
 					UseMonoFramework = true;
-					Driver.Log (2, "Automatically linking with Mono.framework because this is an extension");
+					Driver.Log (2, $"The extension {Name} will automatically link with Mono.framework.");
 				} else if (Extensions.Count > 0) {
 					UseMonoFramework = true;
 					Driver.Log (2, "Automatically linking with Mono.framework because this is an app with extensions");
