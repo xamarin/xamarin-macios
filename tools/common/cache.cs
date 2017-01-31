@@ -68,11 +68,6 @@ public class Cache {
 		Directory.Delete (Location, true);
 		Directory.CreateDirectory (Location);
 	}
-	
-	public bool Exists (string file)
-	{
-		return File.Exists (Path.Combine (Location, file));
-	}
 
 	public static bool CompareFiles (string a, string b, bool ignore_cache = false)
 	{
