@@ -421,11 +421,11 @@ namespace Xamarin
 			using (var extension = new MTouchTool ()) {
 				// Create a library with the same name as the root assembly
 				var tmp = extension.CreateTemporaryDirectory ();
-				var dll = CompileTestAppCode ("library", tmp, "public class X {}");
+				var dll = CompileTestAppCode ("library", tmp, "public class X {}", appName: "testApp");
 
 				extension.Linker = MTouchLinker.DontLink; // fastest.
 				extension.Extension = true;
-				extension.CreateTemporararyServiceExtension (extraArg: $"-r:{Quote (dll)}", extraCode: "class Z { static void Y () { System.Console.WriteLine (typeof (X)); } }");
+				extension.CreateTemporararyServiceExtension (extraArg: $"-r:{Quote (dll)}", extraCode: "class Z { static void Y () { System.Console.WriteLine (typeof (X)); } }", appName: "testApp");
 				extension.CreateTemporaryCacheDirectory ();
 				extension.References = new [] { dll };
 				extension.AssertExecute (MTouchAction.BuildSim, "extension build");
