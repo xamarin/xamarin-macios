@@ -275,6 +275,16 @@ namespace Xamarin.Bundler {
 			assembly_build_targets [assembly_name] = new Tuple<AssemblyBuildTarget, string> (build_target, name);
 		}
 
+		public bool ContainsGroupedSdkAssemblyBuildTargets {
+			get {
+				// The logic here must match the default logic in 'SelectAssemblyBuildTargets' (because we will execute this method before 'SelectAssemblyBuildTargets' is executed)
+				Tuple<AssemblyBuildTarget, string> value;
+				if (!assembly_build_targets.TryGetValue ("@sdk", out value))
+					return IsCodeShared;
+				return !string.IsNullOrEmpty (value.Item2);
+			}
+		}
+
 		void SelectAssemblyBuildTargets ()
 		{
 			Tuple<AssemblyBuildTarget, string> all = null;
@@ -285,6 +295,7 @@ namespace Xamarin.Bundler {
 				return;
 			
 			if (assembly_build_targets.Count == 0) {
+				// The logic here must match the logic in 'ContainsGroupedSdkAssemblyBuildTarget' (because we will execute 'ContainsGroupedSdkAssemblyBuildTargets' before this is executed)
 				assembly_build_targets.Add ("@all", new Tuple<AssemblyBuildTarget, string> (AssemblyBuildTarget.StaticObject, ""));
 				if (IsCodeShared) {
 					// If we're sharing code, then we can default to creating a Xamarin.Sdk.framework for SDK assemblies,

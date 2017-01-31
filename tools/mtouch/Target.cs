@@ -706,6 +706,19 @@ namespace Xamarin.Bundler
 					foreach (var asm in t.Assemblies)
 						t.Resolver.Add (asm.AssemblyDefinition);
 				}
+
+				// If any of the appex'es build to a grouped SDK framework, then we must ensure that all SDK assemblies
+				// in that appex are also in the container app.
+				foreach (var st in sharingTargets) {
+					if (!st.App.ContainsGroupedSdkAssemblyBuildTargets)
+						continue;
+					foreach (var asm in st.Assemblies.Where ((v) => Profile.IsSdkAssembly (v.AssemblyDefinition) || Profile.IsProductAssembly (v.AssemblyDefinition))) {
+						if (!Assemblies.ContainsKey (asm.Identity)) {
+							Driver.Log (2, $"The SDK assembly {asm.Identity} will be included in the app because it's referenced by the extension {st.App.Name}");
+							Assemblies.Add (asm);
+						}
+					}
+				}
 			}
 
 			// Write the input files to the cache
