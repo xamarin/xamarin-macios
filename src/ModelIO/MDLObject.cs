@@ -2,13 +2,7 @@
 using System;
 using XamCore.ObjCRuntime;
 namespace XamCore.ModelIO {
-	public partial class MDLAsset {
-		public MDLObject this [nuint index] {
-			get {
-				return GetObject (index);
-			}
-		}
-
+	public partial class MDLObject {
 		[iOS (10,3), TV (10,2), Mac (10,12,4)]
 		public IMDLComponent this [Protocol key] {
 			get {
