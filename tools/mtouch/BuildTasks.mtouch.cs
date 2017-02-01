@@ -205,6 +205,12 @@ namespace Xamarin.Bundler
 						inputs.AddRange (Assembly.DependencyMap);
 					inputs.Add (AssemblyName);
 					inputs.Add (Driver.GetAotCompiler (Assembly.App, Assembly.Target.Is64Build));
+					var mdb = Assembly.FullPath + ".mdb";
+					if (File.Exists (mdb))
+						inputs.Add (mdb);
+					var config = Assembly.FullPath + ".config";
+					if (File.Exists (config))
+						inputs.Add (config);
 				}
 				return inputs;
 			}
