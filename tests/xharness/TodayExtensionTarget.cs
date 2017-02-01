@@ -50,7 +50,7 @@ namespace xharness
 			info_plist.LoadWithoutNetworkAccess (Path.Combine (Harness.TodayContainerTemplate, "Info.plist"));
 			info_plist.SetCFBundleIdentifier (BundleIdentifier);
 			info_plist.SetCFBundleName (Name);
-			info_plist.SetMinimumOSVersion ("6.0");
+			info_plist.SetMinimumOSVersion ("8.0");
 			Harness.Save (info_plist, target_info_plist);
 		}
 
