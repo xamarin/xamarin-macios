@@ -1549,6 +1549,7 @@ public class TestApp {
 
 				mtouch.RootAssembly = exe;
 				mtouch.References = new [] { bindingLib };
+				mtouch.Timeout = TimeSpan.FromMinutes (5);
 
 				// each variation is tested twice so that we don't break when everything is found in the cache the second time around.
 
@@ -1665,6 +1666,7 @@ public class TestApp {
 				mtouch.Linker = linker;
 				mtouch.CreateTemporaryApp ();
 				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.Timeout = TimeSpan.FromMinutes (5);
 
 				mtouch.AssertExecute (MTouchAction.BuildDev, "first build");
 				File.Delete (mtouch.NativeExecutablePath); // This will force the final native link to succeed, while everything before has been cached.
@@ -1950,6 +1952,7 @@ class Test {
 				mtouch.AppPath = app;
 				mtouch.RootAssembly = exe;
 				mtouch.References = new [] { DLL };
+				mtouch.Timeout = TimeSpan.FromMinutes (5);
 
 				foreach (var test in tests) {
 					mtouch.Abi = test.Abi;
