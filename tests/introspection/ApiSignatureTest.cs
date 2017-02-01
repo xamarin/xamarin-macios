@@ -871,6 +871,7 @@ namespace Introspection {
 			foreach (var ca in mi.GetCustomAttributes ()) {
 				switch (ca.GetType ().Name) {
 				case "ObsoleteAttribute":
+				case "AdviceAttribute":
 				case "ObsoletedAttribute":
 				case "DeprecatedAttribute":
 					return true;

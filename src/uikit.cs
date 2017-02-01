@@ -2360,6 +2360,7 @@ namespace XamCore.UIKit {
 	
 		[Static]
 		[Export ("runningPropertyAnimatorWithDuration:delay:options:animations:completion:")]
+		[Async]
 		UIViewPropertyAnimator CreateRunningPropertyAnimator (double duration, double delay, UIViewAnimationOptions options, [NullAllowed] Action animations, [NullAllowed] Action<UIViewAnimatingPosition> completion);
 	}
 	
@@ -2510,10 +2511,12 @@ namespace XamCore.UIKit {
 
 		[iOS (10,0), TV (10,0)]
 		[Export ("openURL:options:completionHandler:")]
+		[Async]
 		void OpenUrl (NSUrl url, NSDictionary options, [NullAllowed] Action<bool> completion);
 
 		[iOS (10,0), TV (10,0)]
 		[Wrap ("OpenUrl (url, options?.Dictionary, completion)")]
+		[Async]
 		void OpenUrl (NSUrl url, UIApplicationOpenUrlOptions options, [NullAllowed] Action<bool> completion);
 
 		[Export ("canOpenURL:")]
@@ -15835,6 +15838,7 @@ namespace XamCore.UIKit {
 	[BaseType (typeof (NSObject))]
 	interface UIFocusAnimationCoordinator {
 		[Export ("addCoordinatedAnimations:completion:")]
+		[Async]
 		void AddCoordinatedAnimations ([NullAllowed] Action animations, [NullAllowed] Action completion);
 	}
 

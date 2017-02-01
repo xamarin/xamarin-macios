@@ -221,6 +221,8 @@ namespace Introspection {
 			// Called by the OS, i.e. meant to be overridden (not called) by user code.
 			case "DidReceiveNotification":
 				return m.DeclaringType.Name == "WKUserNotificationInterfaceController";
+			case "AddCompletion":
+				return true;
 			}
 			return base.IgnoreAsync (m);
 		}
