@@ -796,6 +796,11 @@ namespace Xamarin.Bundler
 				new FileInfo (filename).LastWriteTime = timestamp.Value;
 		}
 
+		public static void Touch (params string [] filenames)
+		{
+			Touch ((IEnumerable<string>) filenames);
+		}
+
 		public static string Quote (string f)
 		{
 			if (f.IndexOf (' ') == -1 && f.IndexOf ('\'') == -1 && f.IndexOf (',') == -1 && f.IndexOf ('$') == -1)

@@ -753,8 +753,11 @@ namespace Xamarin.Bundler
 					//   (the .exe) has a newer timestamp than some of the assemblies in the PreBuild directory.
 					// So here we manually touch all the assemblies we have, to make sure their timestamps
 					// change (this is us saying 'we know these files are up-to-date at this point in time').
-					if (!cached_link)
-						Driver.Touch (a.GetRelatedFiles ());
+					if (!cached_link) {
+						Driver.Touch (a.FullPath);
+						if (File.Exists (a.FullPath + ".mdb"))
+							Driver.Touch (a.FullPath + ".mdb");
+					}
 
 					// Now copy to the build directory
 					var target = Path.Combine (BuildDirectory, a.FileName);
