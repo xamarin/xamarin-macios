@@ -96,11 +96,13 @@ namespace XamCore.PassKit {
 
 		[NoWatch]
 		[iOS (8,0)]
+		[Async]
 		[Export ("activatePaymentPass:withActivationData:completion:")]
 		void ActivatePaymentPass (PKPaymentPass paymentPass, NSData activationData, [NullAllowed] Action<bool, NSError> completion);
 
 		[NoWatch]
 		[iOS (8,0)]
+		[Async]
 		[Export ("activatePaymentPass:withActivationCode:completion:")]
 		void ActivatePaymentPass (PKPaymentPass paymentPass, string activationCode, [NullAllowed] Action<bool, NSError> completion);
 

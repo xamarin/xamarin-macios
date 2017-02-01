@@ -891,6 +891,10 @@ namespace Introspection {
 
 			foreach (Type t in Assembly.GetTypes ()) {
 
+				// e.g. delegates used for events
+				if (t.IsNested)
+					continue;
+
 				if (!NSObjectType.IsAssignableFrom (t))
 					continue;
 
@@ -947,7 +951,9 @@ namespace Introspection {
 					if (methods.Where ((mi) => mi.Name == ma).FirstOrDefault () != null)
 						continue;
 
-					ErrorData.AppendLine (m.ToString ());
+					var name = m.ToString ();
+					var i = name.IndexOf (' ');
+					ErrorData.AppendLine (name.Insert (i + 1, m.DeclaringType.Name + "::"));
 					Errors++;
 				}
 			}

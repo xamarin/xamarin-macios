@@ -14724,12 +14724,15 @@ namespace XamCore.UIKit {
 		[Static, Export ("printerPickerControllerWithInitiallySelectedPrinter:")]
 		UIPrinterPickerController FromPrinter ([NullAllowed] UIPrinter printer);
 	
+		[Async (ResultTypeName = "UIPrinterPickerCompletionResult")]
 		[Export ("presentAnimated:completionHandler:")]
 		bool Present (bool animated, UIPrinterPickerCompletionHandler completion);
 	
+		[Async (ResultTypeName = "UIPrinterPickerCompletionResult")]
 		[Export ("presentFromRect:inView:animated:completionHandler:")]
 		bool PresentFromRect (CGRect rect, UIView view, bool animated, UIPrinterPickerCompletionHandler completion);
 	
+		[Async (ResultTypeName = "UIPrinterPickerCompletionResult")]
 		[Export ("presentFromBarButtonItem:animated:completionHandler:")]
 		bool PresentFromBarButtonItem (UIBarButtonItem item, bool animated, UIPrinterPickerCompletionHandler completion);
 	
@@ -14961,6 +14964,7 @@ namespace XamCore.UIKit {
 		bool ShowsPaperSelectionForLoadedPapers { get; set; }
 
 		[iOS (8,0)]
+		[Async (ResultTypeName = "UIPrintInteractionResult")]
 		[Export ("printToPrinter:completionHandler:")]
 		bool PrintToPrinter (UIPrinter printer, UIPrintInteractionCompletionHandler completion);
 	}
