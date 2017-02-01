@@ -116,10 +116,7 @@ namespace xharness
 					}
 
 					// build project target
-					if (target.IsBCLProject) {
-						throw new NotImplementedException ();
-					}
-					else if (target is MacClassicTarget) {
+					if (target is MacClassicTarget) {
 						allTargetNames.Add (MakeMacClassicTargetName (target, MacTargetNameType.Build));
 						allTargetCleanNames.Add (MakeMacClassicTargetName (target, MacTargetNameType.Clean));
 
@@ -160,7 +157,10 @@ namespace xharness
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Exec), "");
-						writer.WriteLine ("\t$(Q) {2}/bin/x86/Debug{1}/{0}.app/Contents/MacOS/{0}", make_escaped_name, target.Suffix, CreateRelativePath (Path.GetDirectoryName (target.ProjectPath), Path.GetDirectoryName (makefile)));
+						if (target.IsBCLProject)
+							writer.WriteLine ("\t$(Q) {2}/bin/Debug{1}/{0}Tests.app/Contents/MacOS/{0}Tests", make_escaped_name, target.Suffix, CreateRelativePath (Path.GetDirectoryName (target.ProjectPath), Path.GetDirectoryName (makefile)));
+						else
+							writer.WriteLine ("\t$(Q) {2}/bin/x86/Debug{1}/{0}.app/Contents/MacOS/{0}", make_escaped_name, target.Suffix, CreateRelativePath (Path.GetDirectoryName (target.ProjectPath), Path.GetDirectoryName (makefile)));
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Run), "");
