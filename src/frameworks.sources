@@ -719,6 +719,7 @@ FOUNDATION_SOURCES = \
 	Foundation/NSUuid.cs \
 	Foundation/ObjCException.cs \
 	Foundation/ToString.cs \
+	Foundation/NSItemProvider.cs \
 
 # GameController
 
