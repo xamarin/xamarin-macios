@@ -357,6 +357,8 @@ This is because the app must be built with an SDK that contains all the native A
 
 The recommended way to fix this error is to upgrade Xcode to get the required SDK.
 
+If you have multiple versions of Xcode installed, or want to use an Xcode in a non-default location, make sure to set the correct Xcode location in your IDE's preferences.
+
 A potential alternative solution is to enable the managed linker (although this may not work if your project uses API that was introduced in the required SDK).
 
 A last-straw solution would be to use a different version of Xamarin.iOS, one that supports the SDK your project requires.
