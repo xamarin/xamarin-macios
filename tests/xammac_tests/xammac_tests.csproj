@@ -55,9 +55,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="GuiUnit">
-      <HintPath>..\..\external\guiunit\bin\net_4_5\GuiUnit.exe</HintPath>
-    </Reference>
     <Reference Include="Xamarin.Mac">
       <HintPath>..\..\_mac-build\Library\Frameworks\Xamarin.Mac.framework\Versions\git\lib\reference\mobile\Xamarin.Mac.dll</HintPath>
     </Reference>
@@ -1046,6 +1043,9 @@
     <Compile Include="..\monotouch-test\NativeTypesTest.cs">
       <Link>NativeTypesTest.cs</Link>
     </Compile>
+    <Compile Include="..\EmbeddedResources\ResourcesTest.cs">
+      <Link>EmbeddedResources\ResourcesTest.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -1097,6 +1097,27 @@
     <EmbeddedResource Include="..\monotouch-test\Security\openssl_crt.der">
       <Link>Security\openssl_crt.der</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\EmbeddedResources\Welcome.resx">
+      <Link>EmbeddedResources\Welcome.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\EmbeddedResources\Welcome.de.resx">
+      <Link>EmbeddedResources\Welcome.de.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\EmbeddedResources\Welcome.en-AU.resx">
+      <Link>EmbeddedResources\Welcome.en-AU.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\EmbeddedResources\Welcome.es.resx">
+      <Link>EmbeddedResources\Welcome.es.resx</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="EmbeddedResources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">
+      <Project>{EACFD119-769E-4E6C-89B7-A6CE3757C431}</Project>
+      <Name>GuiUnit_xammac_mobile</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>
