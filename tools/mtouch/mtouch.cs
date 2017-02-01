@@ -811,6 +811,15 @@ namespace Xamarin.Bundler
 			string sdebug = source + ".mdb";
 			if (File.Exists (sdebug))
 				Symlink (sdebug, tdebug);
+
+			string tpdb = Path.ChangeExtension (target, "pdb");
+			if (File.Exists (tpdb))
+				File.Delete (tpdb);
+
+			string spdb = Path.ChangeExtension (source, "pdb");
+			if (File.Exists (spdb))
+				Symlink (spdb, tpdb);
+
 			return true;
 		}
 
