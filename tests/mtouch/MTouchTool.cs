@@ -461,6 +461,16 @@ namespace Xamarin
 			return plist;
 		}
 
+		public string CreateTemporarySatelliteAssembly (string culture = "en-AU")
+		{
+			var asm_dir = Path.Combine (Path.GetDirectoryName (RootAssembly), culture);
+			Directory.CreateDirectory (asm_dir);
+
+			var asm_name = Path.GetFileNameWithoutExtension (RootAssembly) + ".resources.dll";
+			// Cheat a bit, by compiling a normal assembly with code instead of creating a resource assembly
+			return MTouch.CompileTestAppLibrary (asm_dir, "class X {}", appName: Path.GetFileNameWithoutExtension (asm_name));
+		}
+
 		public void CreateTemporaryApp (bool hasPlist = false, string appName = "testApp", string code = null, string extraArg = "", string extraCode = null)
 		{
 			string testDir;

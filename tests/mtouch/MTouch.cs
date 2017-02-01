@@ -195,6 +195,25 @@ namespace Xamarin
 						Assert.IsEmpty (failed, filename);
 					};
 
+					Action<string, IEnumerable<string>> assertModified = (testname, modified) =>
+					{
+						var failed = new List<string> ();
+						var files = Directory.EnumerateFiles (mtouch.AppPath, "*", SearchOption.AllDirectories);
+						files = files.Concat (Directory.EnumerateFiles (extension.AppPath, "*", SearchOption.AllDirectories));
+						foreach (var file in files) {
+							if (!modified.Contains (Path.GetFileName (file)))
+								continue;
+							var info = new FileInfo (file);
+							if (info.LastWriteTime < timestamp) {
+								failed.Add (string.Format ("{0} is not modified, timestamp: {1}", file, info.LastWriteTime));
+								Console.WriteLine ("FAIL: {0} not modified: {1}", file, info.LastWriteTime);
+							} else {
+								Console.WriteLine ("{0} modified as expected", file);
+							}
+						}
+						Assert.IsEmpty (failed, testname);
+					};
+
 					mtouch.AssertExecute (MTouchAction.BuildDev, "first build");
 					Console.WriteLine ($"{DateTime.Now} **** FIRST BUILD DONE ****");
 
@@ -239,6 +258,52 @@ namespace Xamarin
 					mtouch.AssertExecute (MTouchAction.BuildDev, "change app executable");
 					Console.WriteLine ($"{DateTime.Now} **** CHANGE APP EXECUTABLE DONE ****");
 					assertNotModified (name, new [] { "testApp", "testApp.aotdata.armv7", "testApp.aotdata.arm64", "testApp.exe" });
+
+					timestamp = DateTime.Now;
+					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
+
+					// Add a config file to the extension. This file should be added to the app, and the AOT-compiler re-executed for the root assembly.
+					File.WriteAllText (extension.RootAssembly + ".config", "<configuration></configuration>");
+					mtouch.AssertExecute (MTouchAction.BuildDev, "add config to extension dll");
+					Console.WriteLine ($"{DateTime.Now} **** ADD CONFIG TO EXTENSION DONE ****");
+					assertNotModified (name, new [] { "testServiceExtension.dll.config", "testServiceExtension", "testServiceExtension.aotdata.armv7", "testServiceExtension.aotdata.arm64" });
+					CollectionAssert.Contains (Directory.EnumerateFiles (extension.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), "testServiceExtension.dll.config", "extension config added");
+
+					timestamp = DateTime.Now;
+					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
+
+					// Add a config file to the container. This file should be added to the app, and the AOT-compiler re-executed for the root assembly.
+					File.WriteAllText (mtouch.RootAssembly + ".config", "<configuration></configuration>");
+					mtouch.AssertExecute (MTouchAction.BuildDev, "add config to container exe");
+					Console.WriteLine ($"{DateTime.Now} **** ADD CONFIG TO CONTAINER DONE ****");
+					assertNotModified (name, new [] { "testApp.exe.config", "testApp", "testApp.aotdata.armv7", "testApp.aotdata.arm64" });
+					CollectionAssert.Contains (Directory.EnumerateFiles (mtouch.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), "testApp.exe.config", "container config added");
+
+					timestamp = DateTime.Now;
+					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
+
+					{
+						// Add a satellite to the extension.
+						var satellite = extension.CreateTemporarySatelliteAssembly ();
+						mtouch.AssertExecute (MTouchAction.BuildDev, "add satellite to extension");
+						Console.WriteLine ($"{DateTime.Now} **** ADD SATELLITE TO EXTENSION DONE ****");
+						assertNotModified (name, new string [] { Path.GetFileName (satellite) });
+						assertModified (name, new string [] { Path.GetFileName (satellite) });
+						CollectionAssert.Contains (Directory.EnumerateFiles (extension.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), Path.GetFileName (satellite), "extension satellite added");
+					}
+
+					timestamp = DateTime.Now;
+					System.Threading.Thread.Sleep (1000); // make sure all new timestamps are at least a second older. HFS+ has a 1s timestamp resolution :(
+
+					{
+						// Add a satellite to the container.
+						var satellite = mtouch.CreateTemporarySatelliteAssembly ();
+						mtouch.AssertExecute (MTouchAction.BuildDev, "add satellite to container");
+						Console.WriteLine ($"{DateTime.Now} **** ADD SATELLITE TO CONTAINER DONE ****");
+						assertNotModified (name, new string [] { Path.GetFileName (satellite) });
+						assertModified (name, new string [] { Path.GetFileName (satellite) });
+						CollectionAssert.Contains (Directory.EnumerateFiles (mtouch.AppPath, "*", SearchOption.AllDirectories).Select ((v) => Path.GetFileName (v)), Path.GetFileName (satellite), "container satellite added");
+					}
 				}
 			}
 		}
