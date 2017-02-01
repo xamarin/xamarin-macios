@@ -94,23 +94,22 @@ namespace XamCore.ModelIO {
 		[Export ("components", ArgumentSemantic.Copy)]
 		IMDLComponent[] Components { get; }
 
-		[iOS (10,3), TV (10,2), Mac (10,12,4)]
+		[Internal]
 		[Export ("setComponent:forProtocol:")]
 		void SetComponent (IMDLComponent component, Protocol protocol);
 
 		[iOS (10,3), TV (10,2), Mac (10,12,4)]
+		[Wrap ("SetComponent (component, new Protocol (type))")]
+		void SetComponent (IMDLComponent component, Type type);
+
+		[Internal]
 		[Export ("componentConformingToProtocol:")]
 		[return: NullAllowed]
-		IMDLComponent IsComponentConforming (Protocol protocol);
+		IMDLComponent GetComponent (Protocol protocol);
 
-		[Internal]
-		[Export ("objectForKeyedSubscript:")]
-		[return: NullAllowed]
-		IMDLComponent ObjectForKeyedSubscript (Protocol key);
-
-		[Internal]
-		[Export ("setObject:forKeyedSubscript:")]
-		void SetObject ([NullAllowed] IMDLComponent obj, Protocol key);
+		[iOS (10,3), TV (10,2), Mac (10,12,4)]
+		[Wrap ("GetComponent (new Protocol (type))")]
+		IMDLComponent GetComponent (Type type);
 
 		[iOS (10,0)]
 		[Mac (10,12)]
@@ -1012,21 +1011,26 @@ namespace XamCore.ModelIO {
 		[Export ("components", ArgumentSemantic.Copy)]
 		IMDLComponent[] Components { get; }
 
+#if XAMCORE_4_0
+		[Internal]
+#endif
+		[Obsolete ("Use SetComponent (Type protocol)")]
 		[Export ("setComponent:forProtocol:")]
 		void SetComponent (IMDLComponent component, Protocol protocol);
 
+		[Wrap ("SetComponent (component, new Protocol (type))")]
+		void SetComponent (IMDLComponent component, Type type);
+
+#if XAMCORE_4_0
+		[Internal]
+#endif
+		[Obsolete ("Use GetComponent (Type protocol)")]
 		[Export ("componentConformingToProtocol:")]
 		[return: NullAllowed]
 		IMDLComponent IsComponentConforming (Protocol protocol);
 
-		[Internal]
-		[Export ("objectForKeyedSubscript:")]
-		[return: NullAllowed]
-		IMDLComponent ObjectForKeyedSubscript (Protocol key);
-
-		[Internal]
-		[Export ("setObject:forKeyedSubscript:")]
-		void SetObject ([NullAllowed] IMDLComponent obj, Protocol key);
+		[Wrap ("IsComponentConforming (new Protocol (type))")]
+		IMDLComponent GetComponent (Type type);
 
 		[NullAllowed, Export ("parent", ArgumentSemantic.Weak)]
 		MDLObject Parent { get; set; }
@@ -1104,12 +1108,10 @@ namespace XamCore.ModelIO {
 		void RemoveObject (MDLObject @object);
 
 		[iOS (10,3), TV (10,2), Mac (10,12,4)]
-		[Abstract]
 		[Export ("objectAtIndexedSubscript:")]
-		MDLObject GetObjectAtIndexedSubscript (nuint index);
+		MDLObject GetObject (nuint index);
 
 		[iOS (10,3), TV (10,2), Mac (10,12,4)]
-		[Abstract]
 		[Export ("count")]
 		nuint Count { get; }
 

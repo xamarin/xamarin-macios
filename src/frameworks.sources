@@ -947,7 +947,6 @@ MODELIO_CORE_SOURCES = \
 
 MODELIO_SOURCES = \
 	ModelIO/MDLAsset.cs \
-	ModelIO/MDLObject.cs \
 	ModelIO/MDLNoiseTexture.cs \
 	ModelIO/MDLVertexDescriptor.cs \
 	ModelIO/MDLMesh.cs \

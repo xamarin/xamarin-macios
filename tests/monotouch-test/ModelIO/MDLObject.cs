@@ -63,19 +63,6 @@ namespace MonoTouchFixtures.ModelIO {
 				var bb = obj.GetBoundingBox (0);
 			}
 		}
-
-		[Test]
-		public void IndexerTest ()
-		{
-			using (var obj = new MDLObject ()) {
-				var key = new Protocol ("MDLComponent");
-				var container = new MDLObjectContainer ();
-				// Use the indexer's setter
-				obj [key] = container;
-				// Assert with the indexer's getter
-				Assert.AreEqual (container, obj [key], "#1");
-			}
-		}
 	}
 }
 
