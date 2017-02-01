@@ -431,7 +431,15 @@ $ launchctl list|grep UIKitApplication|awk '{print $3}'|xargs launchctl remove
 
 <h3><a name="MT1009"/>MT1009 Could not copy the assembly '*' to '*': *</h3>
 
+This is a known issue in certain versions of Xamarin.iOS.
 
+If this occurs to you, try the following workaround:
+
+    sudo chmod 0644 /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/*/*.mdb
+
+However, since this issue has been resolved in the latest version of
+Xamarin.iOS, please file a new bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS)
+with your full version information and build log output.
 
 <h3><a name="MT1010"/>MT1010 Could not load the assembly '*': *</h3>
 
