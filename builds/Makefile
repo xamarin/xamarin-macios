@@ -258,6 +258,7 @@ $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/%.dll: $$(BUILD_DESTD
 $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/%.mdb: $$(BUILD_DESTDIR)/mac/$(2)/bcl/%.mdb | $$(MAC_DESTDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/$(1)/Facades
 	$$(Q) install -m 0644 $$< $$@
 	$$(Q_MDB) $$(MDB_REBASE) -q -i $$(abspath $$(MONO_PATH))/ -o $$(MAC_TARGETDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/src/mono/ $$@
+	$$(Q) chmod 0644 $$@
 endef
 
 $(eval $(call MacInstallBclTemplate,Xamarin.Mac,xammac))
@@ -672,6 +673,7 @@ TVOS_BCL_TARGETS += \
 $(PREFIX)/lib/mono/Xamarin.iOS/%.mdb: $(BUILD_DESTDIR)/ios/bcl/%.mdb | $(PREFIX)/lib/mono/Xamarin.iOS $(PREFIX)/lib/mono/Xamarin.iOS/repl
 	$(Q) install -m 0644 $< $@
 	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
+	$(Q) chmod 0644 $@
 
 $(PREFIX)/lib/mono/Xamarin.iOS/Facades/%.dll: $(BUILD_DESTDIR)/ios/bcl/Facades/%.dll | $(PREFIX)/lib/mono/Xamarin.iOS/Facades
 	$(Q) install -m 0755 $< $@
@@ -691,6 +693,7 @@ $(PREFIX)/lib/mono/2.1/%.dll: $(BUILD_DESTDIR)/ios/bcl/%.dll | $(PREFIX)/lib/mon
 $(PREFIX)/lib/mono/2.1/%.mdb: $(BUILD_DESTDIR)/ios/bcl/%.mdb | $(PREFIX)/lib/mono/2.1 $(PREFIX)/lib/mono/2.1/repl
 	$(Q) install -m 0644 $< $@
 	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
+	$(Q) chmod 0644 $@
 
 $(PREFIX)/bin/btouch-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
 	$(Q) install -s -m 0755 $< $@
@@ -704,6 +707,7 @@ $(PREFIX)/lib/mono/Xamarin.WatchOS/%.dll: $(BUILD_DESTDIR)/watchos/bcl/%.dll | $
 $(PREFIX)/lib/mono/Xamarin.WatchOS/%.mdb: $(BUILD_DESTDIR)/watchos/bcl/%.mdb | $(PREFIX)/lib/mono/Xamarin.WatchOS $(PREFIX)/lib/mono/Xamarin.WatchOS/repl
 	$(Q) install -m 0644 $< $@
 	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
+	$(Q) chmod 0644 $@
 
 $(PREFIX)/lib/mono/Xamarin.TVOS/Facades/%.dll: $(BUILD_DESTDIR)/tvos/bcl/Facades/%.dll | $(PREFIX)/lib/mono/Xamarin.TVOS/Facades
 	$(Q) install -m 0755 $< $@
@@ -714,6 +718,7 @@ $(PREFIX)/lib/mono/Xamarin.TVOS/%.dll: $(BUILD_DESTDIR)/tvos/bcl/%.dll | $(PREFI
 $(PREFIX)/lib/mono/Xamarin.TVOS/%.mdb: $(BUILD_DESTDIR)/tvos/bcl/%.mdb | $(PREFIX)/lib/mono/Xamarin.TVOS $(PREFIX)/lib/mono/Xamarin.TVOS/repl
 	$(Q) install -m 0644 $< $@
 	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
+	$(Q) chmod 0644 $@
 
 $(PREFIX)/bin/btv-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
 	$(Q) install -s -m 0755 $< $@
