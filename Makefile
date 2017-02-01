@@ -135,7 +135,18 @@ $(TARGETS): | check-system
 all-local:: $(TARGETS)
 install-local:: $(TARGETS)
 
+check-permissions:
+ifdef INCLUDE_MAC
+	@UNREADABLE=`find $(MAC_DESTDIR) ! -perm -0644`; if ! test -z "$$UNREADABLE"; then echo "There are files with invalid permissions (all installed files at least be readable by everybody, and writable by owner: 0644): "; find $(MAC_DESTDIR) ! -perm -0644 | xargs ls -la; exit 1; fi
+	@echo Validated file permissions for Xamarin.Mac.
+endif
+ifdef INCLUDE_IOS
+	@UNREADABLE=`find $(IOS_DESTDIR) ! -perm -0644`; if ! test -z "$$UNREADABLE"; then echo "There are files with invalid permissions (all installed files at least be readable by everybody, and writable by owner: 0644): "; find $(IOS_DESTDIR) ! -perm -0644 | xargs ls -la; exit 1; fi
+	@echo Validated file permissions for Xamarin.iOS.
+endif
+
 install-hook::
+	@$(MAKE) check-permissions
 ifdef INCLUDE_IOS
 ifneq ($(findstring $(IOS_DESTDIR)$(MONOTOUCH_PREFIX),$(shell ls -l /Library/Frameworks/Xamarin.iOS.framework/Versions/Current 2>&1)),)
 	@echo
