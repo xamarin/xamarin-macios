@@ -630,6 +630,12 @@ namespace Xamarin.Bundler
 								inputs.Add (input + ".mdb");
 								outputs.Add (output + ".mdb");
 							}
+							if (File.Exists (input + ".config")) {
+								// If a config file changes, then the AOT-compiled output can be different,
+								// so make sure to take config files into account as well.
+								inputs.Add (input + ".config");
+								outputs.Add (output + ".config");
+							}
 						}
 
 						if (!cache_valid)
