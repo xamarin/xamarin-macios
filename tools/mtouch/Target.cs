@@ -673,6 +673,13 @@ namespace Xamarin.Bundler
 				LinkAssemblies (out output_assemblies, PreBuildDirectory, sharingTargets);
 			}
 
+			// Verify that we don't get multiple identical assemblies from the linker.
+			foreach (var group in output_assemblies.GroupBy ((v) => v.Name.Name)) {
+				if (group.Count () != 1)
+					throw ErrorHelper.CreateError (99, "Internal error {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).", 
+					                               $"The linker output contains more than one assemblies named '{group.Key}':\n\t{string.Join ("\n\t", group.Select ((v) => v.MainModule.FileName).ToArray ())}");
+			}
+
 			// Update (add/remove) list of assemblies in each app, since the linker may have both added and removed assemblies.
 			// The logic for updating assemblies when doing code-sharing is not equivalent to when we're not code sharing
 			// (in particular code sharing is not supported when there are xml linker definitions), so we need
@@ -696,7 +703,9 @@ namespace Xamarin.Bundler
 						var next = queue.Dequeue ();
 						collectedNames.Add (next);
 
-						var ad = output_assemblies.Single ((AssemblyDefinition v) => v.Name.Name == next);
+						var ad = output_assemblies.SingleOrDefault ((AssemblyDefinition v) => v.Name.Name == next);
+						if (ad == null)
+							throw ErrorHelper.CreateError (99, "Internal error {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).", $"The assembly {next} was referenced by another assembly, but at the same time linked out by the linker.");
 						if (ad.MainModule.HasAssemblyReferences) {
 							foreach (var ar in ad.MainModule.AssemblyReferences) {
 								if (!collectedNames.Contains (ar.Name) && !queue.Contains (ar.Name))
