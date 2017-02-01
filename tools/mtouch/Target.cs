@@ -648,11 +648,7 @@ namespace Xamarin.Bundler
 						}
 					}
 
-					if (cache_valid) {
-						// FIXME: this doesn't update related files (.config, satellite assemblies) if they were modified.
-						//allTargets.ForEach ((v) => v.linked = true);
-						this.cached_link = cache_valid;
-					}
+					cached_link = cache_valid;
 				}
 			}
 
@@ -773,7 +769,6 @@ namespace Xamarin.Bundler
 					if (!a.CopyAssembly (a.FullPath, target))
 						Driver.Log (3, "Target '{0}' is up-to-date.", target);
 					a.FullPath = target;
-
 				}
 			}
 
