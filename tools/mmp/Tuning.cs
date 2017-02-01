@@ -101,6 +101,8 @@ namespace MonoMac.Tuner {
 				TypeReference tr = (re.Member as TypeReference);
 				IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
 				throw new MonoMacException (2002, true, re, "Failed to resolve \"{0}\" reference from \"{1}\"", re.Member, scope);
+			} catch (XmlResolutionException ex) {
+				throw new MonoMacException (2017, true, ex, "Could not process XML description: {0}", ex?.InnerException?.Message ?? ex.Message);
 			} catch (Exception e) {
 				throw new MonoMacException (2001, true, e, "Could not link assemblies. Reason: {0}", e.Message);
 			}
