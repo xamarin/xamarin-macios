@@ -660,8 +660,8 @@ namespace Xamarin.Bundler
 			if (cached_link) {
 				Driver.Log (2, $"Reloading cached assemblies.");
 				output_assemblies = new List<AssemblyDefinition> ();
-				foreach (var file in cached_output.Values.SelectMany ((v) => v).Distinct ())
-					output_assemblies.Add (Resolver.Load (Path.Combine (PreBuildDirectory, Path.GetFileName (file))));
+				foreach (var file in cached_output.Values.SelectMany ((v) => v).Select ((v) => Path.GetFileName (v)).Distinct ())
+					output_assemblies.Add (Resolver.Load (Path.Combine (PreBuildDirectory, file)));
 				Driver.Watch ("Cached assemblies reloaded", 1);
 				Driver.Log ("Cached assemblies reloaded.");
 			} else {
