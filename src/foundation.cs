@@ -8750,7 +8750,7 @@ namespace XamCore.Foundation
 		[Mac (10,12)] // [Async] handled by NSItemProvider.cs for backwords compat reasons
 		[Export ("registerCloudKitShareWithPreparationHandler:")]
 		void RegisterCloudKitShare (CloudKitRegistrationPreparationAction preparationHandler);
-		
+
 		[Mac (10,12)]
 		[Export ("registerCloudKitShare:container:")]
 		void RegisterCloudKitShare (CKShare share, CKContainer container);
