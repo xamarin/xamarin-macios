@@ -678,7 +678,7 @@
               <method name="Foreach(System.Type, out Mono.CodeGeneration.CodeExpression&amp;, Mono.CodeGeneration.CodeExpression)" attrib="134" returntype="System.Void">
                 <parameters>
                   <parameter name="type" position="0" attrib="0" type="System.Type" />
-                  <parameter name="item" position="1" attrib="2" type="Mono.CodeGeneration.CodeExpression" direction="out" />
+                  <parameter name="item" position="1" attrib="2" type="Mono.CodeGeneration.CodeExpression&amp;" direction="out" />
                   <parameter name="array" position="2" attrib="0" type="Mono.CodeGeneration.CodeExpression" />
                 </parameters>
               </method>
@@ -10426,27 +10426,27 @@
                 <parameters>
                   <parameter name="message" position="0" attrib="0" type="System.ServiceModel.Channels.Message" />
                   <parameter name="fault" position="1" attrib="0" type="System.ServiceModel.Channels.MessageFault" />
-                  <parameter name="exception" position="2" attrib="2" type="System.Exception" direction="out" />
+                  <parameter name="exception" position="2" attrib="2" type="System.Exception&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="OnTryCreateFaultMessage(System.Exception, out System.ServiceModel.Channels.Message&amp;)" attrib="1476" abstract="true" virtual="true" returntype="System.Boolean">
                 <attributes />
                 <parameters>
                   <parameter name="exception" position="0" attrib="0" type="System.Exception" />
-                  <parameter name="message" position="1" attrib="2" type="System.ServiceModel.Channels.Message" direction="out" />
+                  <parameter name="message" position="1" attrib="2" type="System.ServiceModel.Channels.Message&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="TryCreateException(System.ServiceModel.Channels.Message, System.ServiceModel.Channels.MessageFault, out System.Exception&amp;)" attrib="134" returntype="System.Boolean">
                 <parameters>
                   <parameter name="message" position="0" attrib="0" type="System.ServiceModel.Channels.Message" />
                   <parameter name="fault" position="1" attrib="0" type="System.ServiceModel.Channels.MessageFault" />
-                  <parameter name="exception" position="2" attrib="2" type="System.Exception" direction="out" />
+                  <parameter name="exception" position="2" attrib="2" type="System.Exception&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="TryCreateFaultMessage(System.Exception, out System.ServiceModel.Channels.Message&amp;)" attrib="134" returntype="System.Boolean">
                 <parameters>
                   <parameter name="exception" position="0" attrib="0" type="System.Exception" />
-                  <parameter name="message" position="1" attrib="2" type="System.ServiceModel.Channels.Message" direction="out" />
+                  <parameter name="message" position="1" attrib="2" type="System.ServiceModel.Channels.Message&amp;" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -11239,7 +11239,7 @@
               <method name="EndTryReceive(System.IAsyncResult, out System.ServiceModel.Channels.Message&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
-                  <parameter name="message" position="1" attrib="2" type="System.ServiceModel.Channels.Message" direction="out" />
+                  <parameter name="message" position="1" attrib="2" type="System.ServiceModel.Channels.Message&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="EndWaitForMessage(System.IAsyncResult)" attrib="1478" abstract="true" virtual="true" returntype="System.Boolean">
@@ -11258,7 +11258,7 @@
               <method name="TryReceive(System.TimeSpan, out System.ServiceModel.Channels.Message&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="timeout" position="0" attrib="0" type="System.TimeSpan" />
-                  <parameter name="message" position="1" attrib="2" type="System.ServiceModel.Channels.Message" direction="out" />
+                  <parameter name="message" position="1" attrib="2" type="System.ServiceModel.Channels.Message&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="WaitForMessage(System.TimeSpan)" attrib="1478" abstract="true" virtual="true" returntype="System.Boolean">
@@ -12871,7 +12871,7 @@
               <method name="TryGetValue(System.String, out System.Object&amp;)" attrib="486" virtual="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="name" position="0" attrib="0" type="System.String" />
-                  <parameter name="value" position="1" attrib="2" type="System.Object" direction="out" />
+                  <parameter name="value" position="1" attrib="2" type="System.Object&amp;" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -16078,13 +16078,13 @@
             <methods>
               <method name="AfterReceiveReply(System.ServiceModel.Channels.Message&amp;, System.Object)" attrib="1478" abstract="true" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="reply" position="0" attrib="0" type="System.ServiceModel.Channels.Message" direction="ref" />
+                  <parameter name="reply" position="0" attrib="0" type="System.ServiceModel.Channels.Message&amp;" direction="ref" />
                   <parameter name="correlationState" position="1" attrib="0" type="System.Object" />
                 </parameters>
               </method>
               <method name="BeforeSendRequest(System.ServiceModel.Channels.Message&amp;, System.ServiceModel.IClientChannel)" attrib="1478" abstract="true" virtual="true" returntype="System.Object">
                 <parameters>
-                  <parameter name="request" position="0" attrib="0" type="System.ServiceModel.Channels.Message" direction="ref" />
+                  <parameter name="request" position="0" attrib="0" type="System.ServiceModel.Channels.Message&amp;" direction="ref" />
                   <parameter name="channel" position="1" attrib="0" type="System.ServiceModel.IClientChannel" />
                 </parameters>
               </method>
@@ -16466,14 +16466,14 @@
               <method name="TryGetParts(System.String, out System.ServiceModel.Security.MessagePartSpecification&amp;)" attrib="134" returntype="System.Boolean">
                 <parameters>
                   <parameter name="action" position="0" attrib="0" type="System.String" />
-                  <parameter name="parts" position="1" attrib="2" type="System.ServiceModel.Security.MessagePartSpecification" direction="out" />
+                  <parameter name="parts" position="1" attrib="2" type="System.ServiceModel.Security.MessagePartSpecification&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="TryGetParts(System.String, System.Boolean, out System.ServiceModel.Security.MessagePartSpecification&amp;)" attrib="134" returntype="System.Boolean">
                 <parameters>
                   <parameter name="action" position="0" attrib="0" type="System.String" />
                   <parameter name="excludeChannelScope" position="1" attrib="0" type="System.Boolean" />
-                  <parameter name="parts" position="2" attrib="2" type="System.ServiceModel.Security.MessagePartSpecification" direction="out" />
+                  <parameter name="parts" position="2" attrib="2" type="System.ServiceModel.Security.MessagePartSpecification&amp;" direction="out" />
                 </parameters>
               </method>
             </methods>

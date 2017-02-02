@@ -345,7 +345,7 @@
               <method name="TryGetValue(System.String, out System.Json.JsonValue&amp;)" attrib="486" virtual="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="key" position="0" attrib="0" type="System.String" />
-                  <parameter name="value" position="1" attrib="2" type="System.Json.JsonValue" direction="out" />
+                  <parameter name="value" position="1" attrib="2" type="System.Json.JsonValue&amp;" direction="out" />
                 </parameters>
               </method>
             </methods>
