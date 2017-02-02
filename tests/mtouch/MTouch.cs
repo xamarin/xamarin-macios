@@ -1083,6 +1083,29 @@ namespace Xamarin
 		}
 
 		[Test]
+		[TestCase (Profile.Unified)]
+		[TestCase (Profile.TVOS)]
+		[TestCase (Profile.WatchOS)]
+		public void FastDev_WithSpace (Profile profile)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = profile;
+				mtouch.AppPath = Path.Combine (mtouch.CreateTemporaryDirectory (), "with spaces");
+				Directory.CreateDirectory (mtouch.AppPath);
+				if (profile == Profile.WatchOS) {
+					mtouch.Extension = true;
+					mtouch.CreateTemporaryWatchKitExtension ();
+				} else {
+					mtouch.CreateTemporaryApp ();
+				}
+				mtouch.FastDev = true;
+				mtouch.Cache = Path.Combine (mtouch.CreateTemporaryDirectory (), "with spaces");
+				mtouch.Linker = MTouchLinker.LinkAll; // faster build
+				mtouch.Debug = true; // faster build
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+			}
+		}
+
 		[TestCase (Target.Dev, "armv7")]
 		[TestCase (Target.Dev, "armv7s")]
 		[TestCase (Target.Dev, "armv7,armv7s")]
@@ -2209,7 +2232,7 @@ public class TestApp {
 			string output;
 			StringBuilder args = new StringBuilder ();
 			string fileName = GetCompiler (profile, args);
-			args.AppendFormat ($" /noconfig /t:{target} /nologo /out:{Quote (assembly)} /r:{Quote (root_library)} {cs} {extraArg}");
+			args.AppendFormat ($" /noconfig /t:{target} /nologo /out:{Quote (assembly)} /r:{Quote (root_library)} {Quote (cs)} {extraArg}");
 			if (ExecutionHelper.Execute (fileName, args.ToString (), out output) != 0) {
 				Console.WriteLine ("{0} {1}", fileName, args);
 				Console.WriteLine (output);

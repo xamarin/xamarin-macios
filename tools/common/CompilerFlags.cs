@@ -112,7 +112,7 @@ namespace Xamarin.Utils
 			if (!Driver.App.FastDev || !Driver.App.RequiresPInvokeWrappers)
 				return;
 
-			AddOtherFlag (Path.Combine (Cache.Location, "libpinvokes." + abi.AsArchString () + ".dylib"));
+			AddOtherFlag (Driver.Quote (Path.Combine (Cache.Location, "libpinvokes." + abi.AsArchString () + ".dylib")));
 		}
 
 		public void AddFramework (string framework)
