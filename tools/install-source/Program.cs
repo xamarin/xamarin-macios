@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using Mono.CompilerServices.SymbolWriter;
 using Mono.Options;
 using Mono.Unix;
+
+using InstallSources;
 
 public class ListSourceFiles {
 	static bool ParseBool (string value)
@@ -25,16 +28,28 @@ public class ListSourceFiles {
 			return bool.Parse (value);
 		}
 	}
-	public static void Main (string[] arguments)
+
+	public static string FixPathEnding(string path)
+	{
+		if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+			return path + Path.DirectorySeparatorChar;
+		return path;
+	}
+
+	public static int Main (string[] arguments)
 	{
 		bool link = false;
 		string monopath = null;
+		string opentkpath = null;
+		string xamarinpath = null;
 		string installDir = null;
 		bool verbose = false;
 
 		var os = new OptionSet () {
 			{ "link:", "If source files should be linked instead of copied. Makes the install process faster, and if you edit files when stopped in a debugger, you'll edit the right file (and not a copy).", v => link = ParseBool (v) },
 			{ "mono-path=", "The path of the mono checkout.", v => monopath = v },
+			{ "opentk-path=", "The path of the opentk checkout.", v => opentkpath = v},
+			{ "xamarin-path=", "The path of the xamarin source.", v => xamarinpath = v },
 			{ "install-dir=", "The directory to install into. The files will be put into a src subdirectory of this directory.", v => installDir = v },
 			{ "v|erbose", "Enable verbose output", v => verbose = true },
 		};
@@ -43,24 +58,22 @@ public class ListSourceFiles {
 
 		var srcs = new HashSet<string> (StringComparer.OrdinalIgnoreCase);
 
-		if (!monopath.EndsWith (Path.DirectorySeparatorChar.ToString (), StringComparison.Ordinal))
-			monopath += Path.DirectorySeparatorChar;
+		monopath = FixPathEnding (monopath);
+		xamarinpath = FixPathEnding (xamarinpath);
+		opentkpath = FixPathEnding (opentkpath);
+
+		var manglerFactory = new PathManglerFactory {
+			InstallDir = installDir,
+			MonoSourcePath = monopath,
+			XamarinSourcePath = xamarinpath,
+			FrameworkPath = (installDir.Contains ("Xamarin.iOS.framework")) ? "Xamarin.iOS.framework" : "Xamarin.Mac.framework",
+			OpenTKSourcePath = opentkpath,
+		};
 
 		foreach (string mdb_file in mdb_files) {
+			Console.WriteLine("Mdb file is {0}", mdb_file);
 			if (!File.Exists (mdb_file)) {
 				Console.WriteLine ("File does not exist: {0}", mdb_file);
-				continue;
-			}
-
-			if (mdb_file.EndsWith ("monotouch.dll.mdb", StringComparison.Ordinal)) {
-				// don't include monotouch.dll source
-				continue;
-			} else if (mdb_file.EndsWith ("Xamarin.iOS.dll.mdb", StringComparison.Ordinal)) {
-				// same for Xamarin.iOS.dll
-				continue;
-			} else if (mdb_file.EndsWith ("XamMac.dll.mdb", StringComparison.Ordinal)) {
-				continue;
-			} else if (mdb_file.EndsWith ("Xamarin.Mac.dll.mdb", StringComparison.Ordinal)) {
 				continue;
 			}
 
@@ -73,39 +86,67 @@ public class ListSourceFiles {
 				continue;
 			}
 
-			foreach (var source_file in symfile.Sources) {
-				var src = source_file.FileName;
-
-				if (!src.StartsWith (monopath, StringComparison.Ordinal)) {
-					if (verbose)
-						Console.WriteLine ("{0}: not a mono source file", src);
-					continue;
-				}
-
-				srcs.Add (src);
-			}
+			srcs.UnionWith (from src in symfile.Sources select src.FileName);
 		}
 
+		var alreadyLinked = new List<string> ();
 		foreach (var src in srcs) {
-			var relativePath = src.Substring (monopath.Length);
-			var target = Path.Combine (installDir, "src", "mono", relativePath);
+			var mangler = manglerFactory.GetMangler (src);
+			var fixedSource = mangler.GetSourcePath (src);
+
+			if (String.IsNullOrEmpty (fixedSource)) { 
+				Console.WriteLine ($"Skip path {src}");
+				continue;
+			}
+			var target = mangler.GetTargetPath (fixedSource);
+
 			var targetDir = Path.GetDirectoryName (target);
 
 			if (!Directory.Exists (targetDir)) {
-				Directory.CreateDirectory (targetDir);
+				try {
+					Directory.CreateDirectory(targetDir);
+				} catch (PathTooLongException e) {
+					Console.WriteLine("Could not create directory {0} because the path is too long: {1}", targetDir, e);
+					return 1;
+				}
 			} else if (File.Exists (target)) {
-				File.Delete (target);
-			}
+				try {
+					File.Delete(target);
+				} catch (PathTooLongException e) {
+					Console.WriteLine("Could not delete file {0} because the path is too long: {1}", target, e);
+					return 1;
+				}
+			} // else 
 
 			if (link) {
 				if (verbose)
-					Console.WriteLine ("ln -s {0} {1}", src, target);
-				new UnixFileInfo (src).CreateSymbolicLink (target);
+					Console.WriteLine ("ln -s {0} {1}", fixedSource, target);
+				try {
+					if (!alreadyLinked.Contains (fixedSource)) {
+						new UnixFileInfo (fixedSource).CreateSymbolicLink (target);
+						alreadyLinked.Add(fixedSource);
+					} else {
+						Console.WriteLine ("Src {0} was already linked.", src);
+					}
+				} catch (PathTooLongException e) {
+					Console.WriteLine("Could not link {0} to {1} because the path is too long: {2}", fixedSource, target, e);
+					return 1;
+				} catch (UnixIOException e) {
+					Console.WriteLine("Could not link {0} to {1}: {2}", src, target, e);
+					return 1;
+				} // try/catch
 			} else {
 				if (verbose)
-					Console.WriteLine ("cp {0} {1}", src, target);
-				File.Copy (src, target);
-			}
-		}
+					Console.WriteLine ("cp {0} {1}", fixedSource, target);
+				try {
+					File.Copy (fixedSource, target);
+				} catch (PathTooLongException e) {
+					Console.WriteLine ("The file {0} could not be copied to {1} because the file path is too long: {2}", fixedSource, target, e);
+					return 1;
+				}
+			} // else 
+		} // foreach
+
+		return 0;
 	}
 }

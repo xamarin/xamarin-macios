@@ -31,5 +31,11 @@
       <Link>Options.cs</Link>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="InstallSourcesLib\InstallSourcesLib.csproj">
+      <Project>{3EDCDBC4-C66B-4DF4-8FD0-CE5163ECDBBE}</Project>
+      <Name>InstallSourcesLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
