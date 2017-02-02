@@ -300,13 +300,15 @@ namespace XamCore.SpriteKit {
 		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
 
 #if !XAMCORE_4_0
-		// [Obsolete ("Please use the subtype's method")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[iOS (9,0),Mac(10,11)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
 		SKAttributeValue GetValue (string key);
 
-		// [Obsolete ("Please use the subtype's method")]
+		[Deprecated (PlatformName.iOS, 10,0, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[iOS (9,0),Mac(10,11)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
