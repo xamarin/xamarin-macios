@@ -210,6 +210,9 @@ namespace xharness
 				device_test.TestProject = clone;
 			}
 
+			foreach (var task in rv)
+				task.Variation = "Debug";
+
 			foreach (var task in rv.ToArray ()) {
 				foreach (var test_data in assembly_build_targets) {
 					var variation = test_data.Variation;
@@ -242,22 +245,6 @@ namespace xharness
 					};
 					rv.Add (new RunDeviceTask (build, task.Candidates) { Variation = variation, Ignored = task.Ignored });
 				}
-			}
-
-			foreach (var task in rv)
-				task.Variation = "Debug";
-
-			// Don't build in the original project directory
-			// We can build multiple projects in parallel, and if some of those
-			// projects have the same project dependencies, then we may end up
-			// building the same (dependent) project simultaneously (and they can
-			// stomp on eachother). This is done asynchronously to speed to the initial test load.
-			// FIXME: we should really do this for simulator builds as well.
-			foreach (var device_test in rv.ToArray ()) {
-				var clone = device_test.TestProject.Clone ();
-				device_test.BuildTask.InitialTask = clone.CreateCopyAsync (device_test);
-				device_test.BuildTask.TestProject = clone;
-				device_test.TestProject = clone;
 			}
 
 			return rv;
