@@ -354,8 +354,8 @@
                   <parameter name="type" position="0" attrib="0" type="System.Type" />
                   <parameter name="declaredType" position="1" attrib="0" type="System.Type" />
                   <parameter name="knownTypeResolver" position="2" attrib="0" type="System.Runtime.Serialization.DataContractResolver" />
-                  <parameter name="typeName" position="3" attrib="2" type="System.Xml.XmlDictionaryString" direction="out" />
-                  <parameter name="typeNamespace" position="4" attrib="2" type="System.Xml.XmlDictionaryString" direction="out" />
+                  <parameter name="typeName" position="3" attrib="2" type="System.Xml.XmlDictionaryString&amp;" direction="out" />
+                  <parameter name="typeNamespace" position="4" attrib="2" type="System.Xml.XmlDictionaryString&amp;" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -1326,7 +1326,7 @@
                 <parameters>
                   <parameter name="type" position="0" attrib="0" type="System.Type" />
                   <parameter name="pathToMember" position="1" attrib="0" type="System.Reflection.MemberInfo[]" />
-                  <parameter name="namespaces" position="2" attrib="2" type="System.Xml.XmlNamespaceManager" direction="out" />
+                  <parameter name="namespaces" position="2" attrib="2" type="System.Xml.XmlNamespaceManager&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="CreateFromDataContractSerializer(System.Type, System.Reflection.MemberInfo[], System.Text.StringBuilder, out System.Xml.XmlNamespaceManager&amp;)" attrib="150" static="true" returntype="System.String">
@@ -1334,7 +1334,7 @@
                   <parameter name="type" position="0" attrib="0" type="System.Type" />
                   <parameter name="pathToMember" position="1" attrib="0" type="System.Reflection.MemberInfo[]" />
                   <parameter name="rootElementXpath" position="2" attrib="0" type="System.Text.StringBuilder" />
-                  <parameter name="namespaces" position="3" attrib="2" type="System.Xml.XmlNamespaceManager" direction="out" />
+                  <parameter name="namespaces" position="3" attrib="2" type="System.Xml.XmlNamespaceManager&amp;" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -2073,19 +2073,19 @@
               <method name="TryLookup(System.Int32, out System.Xml.XmlDictionaryString&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="key" position="0" attrib="0" type="System.Int32" />
-                  <parameter name="result" position="1" attrib="2" type="System.Xml.XmlDictionaryString" direction="out" />
+                  <parameter name="result" position="1" attrib="2" type="System.Xml.XmlDictionaryString&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="TryLookup(System.String, out System.Xml.XmlDictionaryString&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.String" />
-                  <parameter name="result" position="1" attrib="2" type="System.Xml.XmlDictionaryString" direction="out" />
+                  <parameter name="result" position="1" attrib="2" type="System.Xml.XmlDictionaryString&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="TryLookup(System.Xml.XmlDictionaryString, out System.Xml.XmlDictionaryString&amp;)" attrib="1478" abstract="true" virtual="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.Xml.XmlDictionaryString" />
-                  <parameter name="result" position="1" attrib="2" type="System.Xml.XmlDictionaryString" direction="out" />
+                  <parameter name="result" position="1" attrib="2" type="System.Xml.XmlDictionaryString&amp;" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -2286,7 +2286,7 @@
               </method>
               <method name="TryGetGuid(out System.Guid&amp;)" attrib="134" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="guid" position="0" attrib="2" type="System.Guid" direction="out" />
+                  <parameter name="guid" position="0" attrib="2" type="System.Guid&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="TryGetGuid(System.Byte[], System.Int32)" attrib="134" returntype="System.Boolean">
@@ -2334,19 +2334,19 @@
               <method name="TryLookup(System.Int32, out System.Xml.XmlDictionaryString&amp;)" attrib="486" virtual="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="key" position="0" attrib="0" type="System.Int32" />
-                  <parameter name="result" position="1" attrib="2" type="System.Xml.XmlDictionaryString" direction="out" />
+                  <parameter name="result" position="1" attrib="2" type="System.Xml.XmlDictionaryString&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="TryLookup(System.String, out System.Xml.XmlDictionaryString&amp;)" attrib="486" virtual="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.String" />
-                  <parameter name="result" position="1" attrib="2" type="System.Xml.XmlDictionaryString" direction="out" />
+                  <parameter name="result" position="1" attrib="2" type="System.Xml.XmlDictionaryString&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="TryLookup(System.Xml.XmlDictionaryString, out System.Xml.XmlDictionaryString&amp;)" attrib="486" virtual="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.Xml.XmlDictionaryString" />
-                  <parameter name="result" position="1" attrib="2" type="System.Xml.XmlDictionaryString" direction="out" />
+                  <parameter name="result" position="1" attrib="2" type="System.Xml.XmlDictionaryString&amp;" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -2364,7 +2364,7 @@
               <method name="TryAdd(System.Xml.XmlDictionaryString, out System.Int32&amp;)" attrib="454" virtual="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.Xml.XmlDictionaryString" />
-                  <parameter name="key" position="1" attrib="2" type="System.Int32" direction="out" />
+                  <parameter name="key" position="1" attrib="2" type="System.Int32&amp;" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -2401,19 +2401,19 @@
               <method name="TryLookup(System.Int32, out System.Xml.XmlDictionaryString&amp;)" attrib="454" virtual="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="key" position="0" attrib="0" type="System.Int32" />
-                  <parameter name="result" position="1" attrib="2" type="System.Xml.XmlDictionaryString" direction="out" />
+                  <parameter name="result" position="1" attrib="2" type="System.Xml.XmlDictionaryString&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="TryLookup(System.String, out System.Xml.XmlDictionaryString&amp;)" attrib="454" virtual="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.String" />
-                  <parameter name="result" position="1" attrib="2" type="System.Xml.XmlDictionaryString" direction="out" />
+                  <parameter name="result" position="1" attrib="2" type="System.Xml.XmlDictionaryString&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="TryLookup(System.Xml.XmlDictionaryString, out System.Xml.XmlDictionaryString&amp;)" attrib="454" virtual="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="value" position="0" attrib="0" type="System.Xml.XmlDictionaryString" />
-                  <parameter name="result" position="1" attrib="2" type="System.Xml.XmlDictionaryString" direction="out" />
+                  <parameter name="result" position="1" attrib="2" type="System.Xml.XmlDictionaryString&amp;" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -2644,8 +2644,8 @@
               </method>
               <method name="GetNonAtomizedNames(out System.String&amp;, out System.String&amp;)" attrib="454" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="localName" position="0" attrib="2" type="System.String" direction="out" />
-                  <parameter name="namespaceUri" position="1" attrib="2" type="System.String" direction="out" />
+                  <parameter name="localName" position="0" attrib="2" type="System.String&amp;" direction="out" />
+                  <parameter name="namespaceUri" position="1" attrib="2" type="System.String&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="IndexOfLocalName(System.String[], System.String)" attrib="454" virtual="true" returntype="System.Int32">
@@ -2682,7 +2682,7 @@
               </method>
               <method name="IsStartArray(out System.Type&amp;)" attrib="454" virtual="true" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="type" position="0" attrib="2" type="System.Type" direction="out" />
+                  <parameter name="type" position="0" attrib="2" type="System.Type&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="IsStartElement(System.Xml.XmlDictionaryString, System.Xml.XmlDictionaryString)" attrib="454" virtual="true" returntype="System.Boolean">
@@ -2943,8 +2943,8 @@
               </method>
               <method name="ReadContentAsQualifiedName(out System.String&amp;, out System.String&amp;)" attrib="454" virtual="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="localName" position="0" attrib="2" type="System.String" direction="out" />
-                  <parameter name="namespaceUri" position="1" attrib="2" type="System.String" direction="out" />
+                  <parameter name="localName" position="0" attrib="2" type="System.String&amp;" direction="out" />
+                  <parameter name="namespaceUri" position="1" attrib="2" type="System.String&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="ReadContentAsString()" attrib="198" virtual="true" is-override="true" returntype="System.String">
@@ -2958,13 +2958,13 @@
               <method name="ReadContentAsString(System.String[], out System.Int32&amp;)" attrib="454" virtual="true" returntype="System.String">
                 <parameters>
                   <parameter name="strings" position="0" attrib="0" type="System.String[]" />
-                  <parameter name="index" position="1" attrib="2" type="System.Int32" direction="out" />
+                  <parameter name="index" position="1" attrib="2" type="System.Int32&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="ReadContentAsString(System.Xml.XmlDictionaryString[], out System.Int32&amp;)" attrib="454" virtual="true" returntype="System.String">
                 <parameters>
                   <parameter name="strings" position="0" attrib="0" type="System.Xml.XmlDictionaryString[]" />
-                  <parameter name="index" position="1" attrib="2" type="System.Int32" direction="out" />
+                  <parameter name="index" position="1" attrib="2" type="System.Int32&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="ReadContentAsTimeSpan()" attrib="454" virtual="true" returntype="System.TimeSpan">
@@ -3170,27 +3170,27 @@
               </method>
               <method name="TryGetArrayLength(out System.Int32&amp;)" attrib="454" virtual="true" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="count" position="0" attrib="2" type="System.Int32" direction="out" />
+                  <parameter name="count" position="0" attrib="2" type="System.Int32&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="TryGetBase64ContentLength(out System.Int32&amp;)" attrib="454" virtual="true" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="length" position="0" attrib="2" type="System.Int32" direction="out" />
+                  <parameter name="length" position="0" attrib="2" type="System.Int32&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="TryGetLocalNameAsDictionaryString(out System.Xml.XmlDictionaryString&amp;)" attrib="454" virtual="true" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="localName" position="0" attrib="2" type="System.Xml.XmlDictionaryString" direction="out" />
+                  <parameter name="localName" position="0" attrib="2" type="System.Xml.XmlDictionaryString&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="TryGetNamespaceUriAsDictionaryString(out System.Xml.XmlDictionaryString&amp;)" attrib="454" virtual="true" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="namespaceUri" position="0" attrib="2" type="System.Xml.XmlDictionaryString" direction="out" />
+                  <parameter name="namespaceUri" position="0" attrib="2" type="System.Xml.XmlDictionaryString&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="TryGetValueAsDictionaryString(out System.Xml.XmlDictionaryString&amp;)" attrib="454" virtual="true" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="value" position="0" attrib="2" type="System.Xml.XmlDictionaryString" direction="out" />
+                  <parameter name="value" position="0" attrib="2" type="System.Xml.XmlDictionaryString&amp;" direction="out" />
                 </parameters>
               </method>
             </methods>

@@ -15898,8 +15898,8 @@
               </method>
               <method name="CheckReaderCount(System.Int32&amp;, System.Int32&amp;)" attrib="132" returntype="System.Void">
                 <parameters>
-                  <parameter name="whileIterations" position="0" attrib="0" type="System.Int32" direction="ref" />
-                  <parameter name="readerCount" position="1" attrib="0" type="System.Int32" direction="ref" />
+                  <parameter name="whileIterations" position="0" attrib="0" type="System.Int32&amp;" direction="ref" />
+                  <parameter name="readerCount" position="1" attrib="0" type="System.Int32&amp;" direction="ref" />
                 </parameters>
               </method>
               <method name="CollapseWhitespace(System.String)" attrib="132" returntype="System.String">
@@ -16039,7 +16039,7 @@
               </method>
               <method name="ReadReference(out System.String&amp;)" attrib="132" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="fixupReference" position="0" attrib="2" type="System.String" direction="out" />
+                  <parameter name="fixupReference" position="0" attrib="2" type="System.String&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="ReadReferencedElement()" attrib="132" returntype="System.Object">
@@ -16056,14 +16056,14 @@
               </method>
               <method name="ReadReferencingElement(out System.String&amp;)" attrib="132" returntype="System.Object">
                 <parameters>
-                  <parameter name="fixupReference" position="0" attrib="2" type="System.String" direction="out" />
+                  <parameter name="fixupReference" position="0" attrib="2" type="System.String&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="ReadReferencingElement(System.String, System.String, out System.String&amp;)" attrib="132" returntype="System.Object">
                 <parameters>
                   <parameter name="name" position="0" attrib="0" type="System.String" />
                   <parameter name="ns" position="1" attrib="0" type="System.String" />
-                  <parameter name="fixupReference" position="2" attrib="2" type="System.String" direction="out" />
+                  <parameter name="fixupReference" position="2" attrib="2" type="System.String&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="ReadReferencingElement(System.String, System.String, System.Boolean, out System.String&amp;)" attrib="132" returntype="System.Object">
@@ -16071,7 +16071,7 @@
                   <parameter name="name" position="0" attrib="0" type="System.String" />
                   <parameter name="ns" position="1" attrib="0" type="System.String" />
                   <parameter name="elementCanBeType" position="2" attrib="0" type="System.Boolean" />
-                  <parameter name="fixupReference" position="3" attrib="2" type="System.String" direction="out" />
+                  <parameter name="fixupReference" position="3" attrib="2" type="System.String&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="ReadSerializable(System.Xml.Serialization.IXmlSerializable)" attrib="132" returntype="System.Xml.Serialization.IXmlSerializable">

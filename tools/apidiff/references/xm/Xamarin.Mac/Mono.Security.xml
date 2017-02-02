@@ -888,17 +888,17 @@
               <method name="Decode(System.Byte[], System.Int32&amp;, System.Int32)" attrib="132" returntype="System.Void">
                 <parameters>
                   <parameter name="asn1" position="0" attrib="0" type="System.Byte[]" />
-                  <parameter name="anPos" position="1" attrib="0" type="System.Int32" direction="ref" />
+                  <parameter name="anPos" position="1" attrib="0" type="System.Int32&amp;" direction="ref" />
                   <parameter name="anLength" position="2" attrib="0" type="System.Int32" />
                 </parameters>
               </method>
               <method name="DecodeTLV(System.Byte[], System.Int32&amp;, out System.Byte&amp;, out System.Int32&amp;, out System.Byte[]&amp;)" attrib="132" returntype="System.Void">
                 <parameters>
                   <parameter name="asn1" position="0" attrib="0" type="System.Byte[]" />
-                  <parameter name="pos" position="1" attrib="0" type="System.Int32" direction="ref" />
-                  <parameter name="tag" position="2" attrib="2" type="System.Byte" direction="out" />
-                  <parameter name="length" position="3" attrib="2" type="System.Int32" direction="out" />
-                  <parameter name="content" position="4" attrib="2" type="System.Byte[]" direction="out" />
+                  <parameter name="pos" position="1" attrib="0" type="System.Int32&amp;" direction="ref" />
+                  <parameter name="tag" position="2" attrib="2" type="System.Byte&amp;" direction="out" />
+                  <parameter name="length" position="3" attrib="2" type="System.Int32&amp;" direction="out" />
+                  <parameter name="content" position="4" attrib="2" type="System.Byte[]&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="Element(System.Int32, System.Byte)" attrib="134" returntype="Mono.Security.ASN1">

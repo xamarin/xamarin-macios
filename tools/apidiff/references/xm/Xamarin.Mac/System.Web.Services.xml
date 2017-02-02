@@ -5222,13 +5222,13 @@
               </method>
               <method name="Download(System.String&amp;)" attrib="134" returntype="System.IO.Stream">
                 <parameters>
-                  <parameter name="url" position="0" attrib="0" type="System.String" direction="ref" />
+                  <parameter name="url" position="0" attrib="0" type="System.String&amp;" direction="ref" />
                 </parameters>
               </method>
               <method name="Download(System.String&amp;, System.String&amp;)" attrib="134" returntype="System.IO.Stream">
                 <parameters>
-                  <parameter name="url" position="0" attrib="0" type="System.String" direction="ref" />
-                  <parameter name="contentType" position="1" attrib="0" type="System.String" direction="ref" />
+                  <parameter name="url" position="0" attrib="0" type="System.String&amp;" direction="ref" />
+                  <parameter name="contentType" position="1" attrib="0" type="System.String&amp;" direction="ref" />
                 </parameters>
               </method>
               <method name="LoadExternals()" attrib="134" returntype="System.Void">
@@ -8672,8 +8672,8 @@
                 <parameters>
                   <parameter name="headerName" position="0" attrib="0" type="System.String" />
                   <parameter name="headerValue" position="1" attrib="0" type="System.String" />
-                  <parameter name="encodedHeaderName" position="2" attrib="2" type="System.String" direction="out" />
-                  <parameter name="encodedHeaderValue" position="3" attrib="2" type="System.String" direction="out" />
+                  <parameter name="encodedHeaderName" position="2" attrib="2" type="System.String&amp;" direction="out" />
+                  <parameter name="encodedHeaderValue" position="3" attrib="2" type="System.String&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="HtmlAttributeEncode(System.String, System.IO.TextWriter)" attrib="453" virtual="true" returntype="System.Void">

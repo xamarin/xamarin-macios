@@ -137,7 +137,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="destination" position="0" attrib="0" type="System.IO.Compression.ZipArchive" direction="this" />
+                  <parameter name="destination" position="0" attrib="0" type="System.IO.Compression.ZipArchive" />
                   <parameter name="sourceFileName" position="1" attrib="0" type="System.String" />
                   <parameter name="entryName" position="2" attrib="0" type="System.String" />
                 </parameters>
@@ -147,7 +147,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="destination" position="0" attrib="0" type="System.IO.Compression.ZipArchive" direction="this" />
+                  <parameter name="destination" position="0" attrib="0" type="System.IO.Compression.ZipArchive" />
                   <parameter name="sourceFileName" position="1" attrib="0" type="System.String" />
                   <parameter name="entryName" position="2" attrib="0" type="System.String" />
                   <parameter name="compressionLevel" position="3" attrib="0" type="System.IO.Compression.CompressionLevel" />
@@ -158,7 +158,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.IO.Compression.ZipArchive" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.IO.Compression.ZipArchive" />
                   <parameter name="destinationDirectoryName" position="1" attrib="0" type="System.String" />
                 </parameters>
               </method>
@@ -167,7 +167,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.IO.Compression.ZipArchiveEntry" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.IO.Compression.ZipArchiveEntry" />
                   <parameter name="destinationFileName" position="1" attrib="0" type="System.String" />
                 </parameters>
               </method>
@@ -176,7 +176,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.IO.Compression.ZipArchiveEntry" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.IO.Compression.ZipArchiveEntry" />
                   <parameter name="destinationFileName" position="1" attrib="0" type="System.String" />
                   <parameter name="overwrite" position="2" attrib="0" type="System.Boolean" />
                 </parameters>

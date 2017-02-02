@@ -1624,7 +1624,7 @@
               <method name="TryGetValue(System.String, out System.Object&amp;)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="keyword" position="0" attrib="0" type="System.String" />
-                  <parameter name="value" position="1" attrib="2" type="System.Object" direction="out" />
+                  <parameter name="value" position="1" attrib="2" type="System.Object&amp;" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -2200,7 +2200,7 @@
                 <parameters>
                   <parameter name="args" position="0" attrib="0" type="System.Object[]" />
                   <parameter name="stepNumber" position="1" attrib="0" type="System.Int32" />
-                  <parameter name="contextData" position="2" attrib="0" type="System.Object" direction="ref" />
+                  <parameter name="contextData" position="2" attrib="0" type="System.Object&amp;" direction="ref" />
                 </parameters>
               </method>
             </methods>

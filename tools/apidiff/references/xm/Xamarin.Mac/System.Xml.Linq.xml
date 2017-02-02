@@ -104,7 +104,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" />
                 </parameters>
                 <generic-parameters>
                   <generic-parameter name="T" attributes="0">
@@ -119,7 +119,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" />
                   <parameter name="name" position="1" attrib="0" type="System.Xml.Linq.XName" />
                 </parameters>
                 <generic-parameters>
@@ -135,7 +135,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XElement]" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XElement]" />
                 </parameters>
               </method>
               <method name="AncestorsAndSelf(System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XElement], System.Xml.Linq.XName)" attrib="150" static="true" returntype="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XElement]">
@@ -143,7 +143,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XElement]" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XElement]" />
                   <parameter name="name" position="1" attrib="0" type="System.Xml.Linq.XName" />
                 </parameters>
               </method>
@@ -152,7 +152,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XElement]" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XElement]" />
                 </parameters>
               </method>
               <method name="Attributes(System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XElement], System.Xml.Linq.XName)" attrib="150" static="true" returntype="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XAttribute]">
@@ -160,7 +160,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XElement]" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XElement]" />
                   <parameter name="name" position="1" attrib="0" type="System.Xml.Linq.XName" />
                 </parameters>
               </method>
@@ -169,7 +169,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" />
                 </parameters>
                 <generic-parameters>
                   <generic-parameter name="T" attributes="0">
@@ -184,7 +184,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XElement]" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XElement]" />
                 </parameters>
               </method>
               <method name="Descendants(System.Collections.Generic.IEnumerable`1[T])" attrib="150" static="true" returntype="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XElement]">
@@ -192,7 +192,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" />
                 </parameters>
                 <generic-parameters>
                   <generic-parameter name="T" attributes="0">
@@ -207,7 +207,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" />
                   <parameter name="name" position="1" attrib="0" type="System.Xml.Linq.XName" />
                 </parameters>
                 <generic-parameters>
@@ -223,7 +223,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XElement]" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XElement]" />
                 </parameters>
               </method>
               <method name="DescendantsAndSelf(System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XElement], System.Xml.Linq.XName)" attrib="150" static="true" returntype="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XElement]">
@@ -231,7 +231,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XElement]" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XElement]" />
                   <parameter name="name" position="1" attrib="0" type="System.Xml.Linq.XName" />
                 </parameters>
               </method>
@@ -240,7 +240,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" />
                 </parameters>
                 <generic-parameters>
                   <generic-parameter name="T" attributes="0">
@@ -255,7 +255,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" />
                   <parameter name="name" position="1" attrib="0" type="System.Xml.Linq.XName" />
                 </parameters>
                 <generic-parameters>
@@ -271,7 +271,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" />
                 </parameters>
                 <generic-parameters>
                   <generic-parameter name="T" attributes="0">
@@ -287,7 +287,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" />
                 </parameters>
                 <generic-parameters>
                   <generic-parameter name="T" attributes="0">
@@ -302,7 +302,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XAttribute]" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.Xml.Linq.XAttribute]" />
                 </parameters>
               </method>
               <method name="Remove(System.Collections.Generic.IEnumerable`1[T])" attrib="150" static="true" returntype="System.Void">
@@ -310,7 +310,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1[T]" />
                 </parameters>
                 <generic-parameters>
                   <generic-parameter name="T" attributes="0">
@@ -2595,7 +2595,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Xml.Linq.XAttribute" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Xml.Linq.XAttribute" />
                 </parameters>
               </method>
               <method name="GetSchemaInfo(System.Xml.Linq.XElement)" attrib="150" static="true" returntype="System.Xml.Schema.IXmlSchemaInfo">
@@ -2603,7 +2603,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Xml.Linq.XElement" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Xml.Linq.XElement" />
                 </parameters>
               </method>
               <method name="Validate(System.Xml.Linq.XDocument, System.Xml.Schema.XmlSchemaSet, System.Xml.Schema.ValidationEventHandler)" attrib="150" static="true" returntype="System.Void">
@@ -2611,7 +2611,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Xml.Linq.XDocument" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Xml.Linq.XDocument" />
                   <parameter name="schemas" position="1" attrib="0" type="System.Xml.Schema.XmlSchemaSet" />
                   <parameter name="validationEventHandler" position="2" attrib="0" type="System.Xml.Schema.ValidationEventHandler" />
                 </parameters>
@@ -2621,7 +2621,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Xml.Linq.XAttribute" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Xml.Linq.XAttribute" />
                   <parameter name="partialValidationType" position="1" attrib="0" type="System.Xml.Schema.XmlSchemaObject" />
                   <parameter name="schemas" position="2" attrib="0" type="System.Xml.Schema.XmlSchemaSet" />
                   <parameter name="validationEventHandler" position="3" attrib="0" type="System.Xml.Schema.ValidationEventHandler" />
@@ -2632,7 +2632,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Xml.Linq.XDocument" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Xml.Linq.XDocument" />
                   <parameter name="schemas" position="1" attrib="0" type="System.Xml.Schema.XmlSchemaSet" />
                   <parameter name="validationEventHandler" position="2" attrib="0" type="System.Xml.Schema.ValidationEventHandler" />
                   <parameter name="addSchemaInfo" position="3" attrib="0" type="System.Boolean" />
@@ -2643,7 +2643,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Xml.Linq.XElement" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Xml.Linq.XElement" />
                   <parameter name="partialValidationType" position="1" attrib="0" type="System.Xml.Schema.XmlSchemaObject" />
                   <parameter name="schemas" position="2" attrib="0" type="System.Xml.Schema.XmlSchemaSet" />
                   <parameter name="validationEventHandler" position="3" attrib="0" type="System.Xml.Schema.ValidationEventHandler" />
@@ -2654,7 +2654,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Xml.Linq.XAttribute" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Xml.Linq.XAttribute" />
                   <parameter name="partialValidationType" position="1" attrib="0" type="System.Xml.Schema.XmlSchemaObject" />
                   <parameter name="schemas" position="2" attrib="0" type="System.Xml.Schema.XmlSchemaSet" />
                   <parameter name="validationEventHandler" position="3" attrib="0" type="System.Xml.Schema.ValidationEventHandler" />
@@ -2666,7 +2666,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="source" position="0" attrib="0" type="System.Xml.Linq.XElement" direction="this" />
+                  <parameter name="source" position="0" attrib="0" type="System.Xml.Linq.XElement" />
                   <parameter name="partialValidationType" position="1" attrib="0" type="System.Xml.Schema.XmlSchemaObject" />
                   <parameter name="schemas" position="2" attrib="0" type="System.Xml.Schema.XmlSchemaSet" />
                   <parameter name="validationEventHandler" position="3" attrib="0" type="System.Xml.Schema.ValidationEventHandler" />
@@ -2689,7 +2689,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="node" position="0" attrib="0" type="System.Xml.Linq.XNode" direction="this" />
+                  <parameter name="node" position="0" attrib="0" type="System.Xml.Linq.XNode" />
                 </parameters>
               </method>
               <method name="CreateNavigator(System.Xml.Linq.XNode, System.Xml.XmlNameTable)" attrib="150" static="true" returntype="System.Xml.XPath.XPathNavigator">
@@ -2697,7 +2697,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="node" position="0" attrib="0" type="System.Xml.Linq.XNode" direction="this" />
+                  <parameter name="node" position="0" attrib="0" type="System.Xml.Linq.XNode" />
                   <parameter name="nameTable" position="1" attrib="0" type="System.Xml.XmlNameTable" />
                 </parameters>
               </method>
@@ -2706,7 +2706,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="node" position="0" attrib="0" type="System.Xml.Linq.XNode" direction="this" />
+                  <parameter name="node" position="0" attrib="0" type="System.Xml.Linq.XNode" />
                   <parameter name="expression" position="1" attrib="0" type="System.String" />
                 </parameters>
               </method>
@@ -2715,7 +2715,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="node" position="0" attrib="0" type="System.Xml.Linq.XNode" direction="this" />
+                  <parameter name="node" position="0" attrib="0" type="System.Xml.Linq.XNode" />
                   <parameter name="expression" position="1" attrib="0" type="System.String" />
                   <parameter name="resolver" position="2" attrib="0" type="System.Xml.IXmlNamespaceResolver" />
                 </parameters>
@@ -2725,7 +2725,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="node" position="0" attrib="0" type="System.Xml.Linq.XNode" direction="this" />
+                  <parameter name="node" position="0" attrib="0" type="System.Xml.Linq.XNode" />
                   <parameter name="expression" position="1" attrib="0" type="System.String" />
                 </parameters>
               </method>
@@ -2734,7 +2734,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="node" position="0" attrib="0" type="System.Xml.Linq.XNode" direction="this" />
+                  <parameter name="node" position="0" attrib="0" type="System.Xml.Linq.XNode" />
                   <parameter name="expression" position="1" attrib="0" type="System.String" />
                   <parameter name="resolver" position="2" attrib="0" type="System.Xml.IXmlNamespaceResolver" />
                 </parameters>
@@ -2744,7 +2744,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="node" position="0" attrib="0" type="System.Xml.Linq.XNode" direction="this" />
+                  <parameter name="node" position="0" attrib="0" type="System.Xml.Linq.XNode" />
                   <parameter name="expression" position="1" attrib="0" type="System.String" />
                 </parameters>
               </method>
@@ -2753,7 +2753,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="node" position="0" attrib="0" type="System.Xml.Linq.XNode" direction="this" />
+                  <parameter name="node" position="0" attrib="0" type="System.Xml.Linq.XNode" />
                   <parameter name="expression" position="1" attrib="0" type="System.String" />
                   <parameter name="resolver" position="2" attrib="0" type="System.Xml.IXmlNamespaceResolver" />
                 </parameters>

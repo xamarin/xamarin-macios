@@ -771,7 +771,7 @@
               <method name="TryGetEntity(System.Uri, out TEntity&amp;)" attrib="134" returntype="System.Boolean">
                 <parameters>
                   <parameter name="identity" position="0" attrib="0" type="System.Uri" />
-                  <parameter name="entity" position="1" attrib="2" type="TEntity" direction="out" />
+                  <parameter name="entity" position="1" attrib="2" type="TEntity&amp;" direction="out" />
                 </parameters>
                 <generic-parameters>
                   <generic-parameter name="TEntity" attributes="4" />
@@ -780,7 +780,7 @@
               <method name="TryGetUri(System.Object, out System.Uri&amp;)" attrib="134" returntype="System.Boolean">
                 <parameters>
                   <parameter name="entity" position="0" attrib="0" type="System.Object" />
-                  <parameter name="identity" position="1" attrib="2" type="System.Uri" direction="out" />
+                  <parameter name="identity" position="1" attrib="2" type="System.Uri&amp;" direction="out" />
                 </parameters>
               </method>
               <method name="UpdateObject(System.Object)" attrib="134" returntype="System.Void">
