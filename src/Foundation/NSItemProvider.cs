@@ -8,14 +8,14 @@ namespace XamCore.Foundation
 	public partial class NSItemProvider
 	{
 #if !XAMCORE_4_0
-		public unsafe virtual void RegisterCloudKitShare (Action<CloudKitRegistrationPreparationHandler> preparationHandler)
+		public virtual void RegisterCloudKitShare (Action<CloudKitRegistrationPreparationHandler> preparationHandler)
 		{
 			CloudKitRegistrationPreparationAction action = handler => preparationHandler (handler);
 			RegisterCloudKitShare (action);
 		}
 #endif
 		
-		public unsafe virtual Task<CloudKitRegistrationPreparationHandler> RegisterCloudKitShareAsync ()
+		public virtual Task<CloudKitRegistrationPreparationHandler> RegisterCloudKitShareAsync ()
 		{
 			var tcs = new TaskCompletionSource<CloudKitRegistrationPreparationHandler> ();
 			CloudKitRegistrationPreparationAction action = (handler) => {
