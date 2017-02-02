@@ -8747,7 +8747,7 @@ namespace XamCore.Foundation
 		[Export ("preferredPresentationSize")]
 		CGSize PreferredPresentationSize { get; }
 
-		[Mac (10,12)] // [Async] handled by NSItemProvider.cs for backwords compat reasons
+		[Mac (10,12)] // [Async] handled by NSItemProvider.cs for backwards compat reasons
 		[Export ("registerCloudKitShareWithPreparationHandler:")]
 		void RegisterCloudKitShare (CloudKitRegistrationPreparationAction preparationHandler);
 
