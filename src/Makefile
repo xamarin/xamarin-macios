@@ -405,12 +405,16 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.iOS.dll: $(IOS_BUILD_DIR)/n
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.iOS.dll.mdb: $(IOS_BUILD_DIR)/native-32/Xamarin.iOS.dll.mdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits
 	$(Q) install -m 0644 $< $@
+	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(TOP)/src)/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/ $@
+	$(Q) chmod 0644 $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.iOS.dll: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits
 	$(Q) install -m 0755 $< $@
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.iOS.dll.mdb: $(IOS_BUILD_DIR)/native-64/Xamarin.iOS.dll.mdb | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits
 	$(Q) install -m 0644 $< $@
+	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(TOP)/src)/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/ $@
+	$(Q) chmod 0644 $@
 
 $(IOS_TARGETS_DIRS):
 	$(Q) mkdir -p $@
@@ -686,6 +690,8 @@ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMac.dll: $(MAC_BUILD_DIR)
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/mobile-reference/Xamarin.Mac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/mobile
 	$(Q) install -m 0755 $< $@
 	$(Q) install -m 0644 $<.mdb $@.mdb
+	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(TOP)/src)/ -o $(MAC_TARGETDIR)$$(MAC_FRAMEWORK_CURRENT_DIR)/src/mono/ $@.mdb
+	$(Q) chmod 0644 $@.mdb
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile/Xamarin.Mac.dll: $(MAC_BUILD_DIR)/mobile-64/Xamarin.Mac.dll | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile
 	$(Q) install -m 0755 $< $@
