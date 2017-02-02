@@ -8,6 +8,7 @@ namespace XamCore.Foundation
 	public partial class NSItemProvider
 	{
 #if !XAMCORE_4_0
+		[Obsolete ("Use RegisterCloudKitShare (CloudKitRegistrationPreparationAction) instead")]
 		public virtual void RegisterCloudKitShare (Action<CloudKitRegistrationPreparationHandler> preparationHandler)
 		{
 			CloudKitRegistrationPreparationAction action = handler => preparationHandler (handler);
