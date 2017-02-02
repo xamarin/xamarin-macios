@@ -725,6 +725,11 @@ namespace xharness
 							}
 							server.Stop ();
 							break;
+						case "/favicon.ico":
+							var favicon = File.ReadAllBytes (Path.Combine (Harness.RootDirectory, "xharness", "favicon.ico"));
+							response.OutputStream.Write (favicon, 0, favicon.Length);
+							response.OutputStream.Close ();
+							break;
 						default:
 							var path = Path.Combine (LogDirectory, request.Url.LocalPath.Substring (1));
 							if (File.Exists (path)) {
