@@ -637,6 +637,11 @@ namespace Xamarin.Bundler {
 
 		void Initialize ()
 		{
+			if (IsLLVM && Platform == ApplePlatform.WatchOS && BitCodeMode != BitCodeMode.LLVMOnly) {
+				ErrorHelper.Warning (111, "Bitcode has been enabled because this version of Xamarin.iOS does not support building watchOS projects using LLVM without enabling bitcode.");
+				BitCodeMode = BitCodeMode.LLVMOnly;
+			}
+
 			if (!File.Exists (RootAssembly))
 				throw new MonoTouchException (7, true, "The root assembly '{0}' does not exist", RootAssembly);
 			
