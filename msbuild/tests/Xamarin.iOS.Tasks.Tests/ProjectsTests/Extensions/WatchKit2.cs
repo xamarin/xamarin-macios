@@ -2,8 +2,6 @@
 using System.IO;
 
 using NUnit.Framework;
-using Xamarin.MacDev;
-using System.Diagnostics;
 
 namespace Xamarin.iOS.Tasks {
 	[TestFixture ("iPhone")] // Not working yet (native linker error)
