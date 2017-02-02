@@ -30,6 +30,7 @@ namespace MonoTouchFixtures.MediaPlayer
 		bool v8_0 = TestRuntime.CheckSystemAndSDKVersion (8, 0);
 		bool v9_0 = TestRuntime.CheckSystemAndSDKVersion (9, 0);
 		bool v10_0 = TestRuntime.CheckSystemAndSDKVersion (10, 0);
+		bool v10_3 = TestRuntime.CheckSystemAndSDKVersion (10, 3);
 
 		[SetUp]
 		public void SetUp ()
@@ -59,6 +60,7 @@ namespace MonoTouchFixtures.MediaPlayer
 					PlaybackProgress = 0.5f,
 					MediaType = MPNowPlayingInfoMediaType.Audio,
 					IsLiveStream = false,
+					AssetUrl = new NSUrl ("https://developer.xamarin.com"),
 
 					//MPMediaItem
 					AlbumTitle = "AlbumTitle",
@@ -118,6 +120,9 @@ namespace MonoTouchFixtures.MediaPlayer
 				Assert.IsInstanceOfType (typeof (ulong), np.PersistentID, "#25");
 				Assert.IsInstanceOfType (typeof (double), np.PlaybackDuration, "#26");
 				Assert.IsInstanceOfType (typeof (string), (object)np.Title, "#27");
+
+				if (v10_3)
+					Assert.IsInstanceOfType (typeof (NSUrl), np.AssetUrl, "#28");
 			}
 		}
 	}
