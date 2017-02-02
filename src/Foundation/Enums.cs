@@ -1,5 +1,4 @@
 using XamCore.ObjCRuntime;
-using XamCore.CloudKit;
 
 namespace XamCore.Foundation {
 
