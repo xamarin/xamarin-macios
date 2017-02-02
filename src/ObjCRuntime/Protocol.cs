@@ -26,14 +26,19 @@ namespace XamCore.ObjCRuntime {
 
 		public Protocol (Type type)
 		{
-			this.handle = Class.GetHandle (type);
+			var exception = new ArgumentException (string.Format ("'{0}' is an unknown protocol", type.FullName));
+			if (!type.IsInterface)
+				throw exception;
 
-			IntPtr namePtr = protocol_getName (this.handle);
-			string name = Marshal.PtrToStringAuto (namePtr);
-			IntPtr ptr = objc_getProtocol (name);
+			var protocols = type.GetCustomAttributes (typeof (ProtocolAttribute), false);
+			if (protocols.Length == 0)
+				throw exception;
 
-			if (this.handle == IntPtr.Zero || ptr == IntPtr.Zero)
-				throw new ArgumentException (String.Format ("'{0}' is an unknown protocol", type.Name));
+			var protocol = (ProtocolAttribute)protocols [0];
+			var protocolName = protocol.Name;
+			handle = objc_getProtocol (protocolName);
+			if (handle == IntPtr.Zero)
+				throw exception;
 		}
 
 		public Protocol (IntPtr handle)
