@@ -431,10 +431,15 @@ namespace Xamarin
 
 		public void CreateTemporaryApp (MTouch.Profile profile = MTouch.Profile.Unified, bool hasPlist = false, string appName = "testApp", string code = null)
 		{
-			var testDir = CreateTemporaryDirectory ();
-			var app = Path.Combine (testDir, appName + ".app");
+			string testDir;
+			if (Executable == null) {
+				testDir = CreateTemporaryDirectory ();
+			} else {
+				// We're rebuilding an existing executable, so just reuse that
+				testDir = Path.GetDirectoryName (Executable);
+			}
+			var app = AppPath ?? Path.Combine (testDir, appName + ".app");
 			Directory.CreateDirectory (app);
-
 			AppPath = app;
 			Executable = MTouch.CompileTestAppExecutable (testDir, code, "", Profile, appName);
 
@@ -497,8 +502,14 @@ public partial class NotificationService : UNNotificationServiceExtension
 
 		public void CreateTemporaryWatchKitExtension (string code = null)
 		{
-			var testDir = CreateTemporaryDirectory ();
-			var app = Path.Combine (testDir, "testApp.appex");
+			string testDir;
+			if (Executable == null) {
+				testDir = CreateTemporaryDirectory ();
+			} else {
+				// We're rebuilding an existing executable, so just reuse that directory
+				testDir = Path.GetDirectoryName (Executable);
+			}
+			var app = AppPath ?? Path.Combine (testDir, "testApp.appex");
 			Directory.CreateDirectory (app);
 
 			if (code == null) {
