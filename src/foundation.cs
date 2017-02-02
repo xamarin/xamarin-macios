@@ -93,6 +93,10 @@ namespace XamCore.Foundation
 	delegate void NSItemProviderLoadHandler ([BlockCallback] NSItemProviderCompletionHandler completionHandler, Class expectedValueClass, NSDictionary options);
 	delegate void EnumerateDatesCallback (NSDate date, bool exactMatch, ref bool stop);
 	delegate void EnumerateIndexSetCallback (nuint idx, ref bool stop);
+#if MONOMAC
+	delegate void CloudKitRegistrationPreparationAction ([BlockCallback] CloudKitRegistrationPreparationHandler handler);
+	delegate void CloudKitRegistrationPreparationHandler (CKShare share, CKContainer container, NSError error);
+#endif
 
 	interface NSArray<TValue> : NSArray {}
 
@@ -8700,10 +8704,6 @@ namespace XamCore.Foundation
 		NSMethodSignature MethodSignature { get; }
 	}
 
-#if MONOMAC
-	delegate void CloudKitRegistrationPreparationAction ([BlockCallback] CloudKitRegistrationPreparationHandler handler);
-	delegate void CloudKitRegistrationPreparationHandler (CKShare share, CKContainer container, NSError error);
-#endif
 
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
