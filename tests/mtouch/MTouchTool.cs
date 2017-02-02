@@ -513,6 +513,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 				code += extraCode;
 
 			AppPath = app;
+			Extension = true;
 			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile, extraArg: extraArg, appName: appName);
 
 			var info_plist = 
@@ -574,6 +575,7 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 			}
 
 			AppPath = app;
+			Extension = true;
 			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile);
 
 			File.WriteAllText (Path.Combine (app, "Info.plist"), @"<?xml version=""1.0"" encoding=""UTF-8""?>
