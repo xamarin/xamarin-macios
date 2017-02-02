@@ -468,7 +468,8 @@ namespace xharness
 				TestExecutable = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners.2.6.4", "tools", "nunit-console.exe"),
 				WorkingDirectory = Path.Combine (Harness.RootDirectory, "..", "packages", "NUnit.Runners.2.6.4", "tools", "lib"),
 				Platform = TestPlatform.iOS,
-				TestName = "MSBuild tests - iOS",
+				TestName = "MSBuild tests",
+				Mode = "iOS",
 				Timeout = TimeSpan.FromMinutes (30),
 				Ignored = !IncludeiOSMSBuild,
 			};
@@ -502,8 +503,9 @@ namespace xharness
 				var exec = new MacExecuteTask (build)
 				{
 					Ignored = ignored || !IncludeClassicMac,
-					BCLTest = project.IsBclTest
-				};
+					BCLTest = project.IsBclTest,
+					TestName = project.Name,
+			};
 				Tasks.Add (exec);
 
 				if (project.GenerateVariations) {
@@ -591,6 +593,7 @@ namespace xharness
 			return new MacExecuteTask (build)
 			{
 				Ignored = ignore,
+				TestName = build.TestName,
 			};
 		}
 
@@ -1844,10 +1847,10 @@ function oninitialload ()
 
 		public override string Mode {
 			get {
-				return "NUnit";
+				return base.Mode ?? "NUnit";
 			}
 			set {
-				throw new NotSupportedException ();
+				base.Mode = value;
 			}
 		}
 
@@ -1932,17 +1935,17 @@ function oninitialload ()
 			get {
 				switch (Platform) {
 				case TestPlatform.Mac:
-					return TestName;
+					return "Mac";
 				case TestPlatform.Mac_Classic:
-					return "Classic";
+					return "Mac Classic";
 				case TestPlatform.Mac_Unified:
-					return "Unified";
+					return "Mac Unified";
 				case TestPlatform.Mac_Unified32:
-					return "Unified 32-bit";
+					return "Mac Unified 32-bit";
 				case TestPlatform.Mac_UnifiedXM45:
-					return "Unified XM45";
+					return "Mac Unified XM45";
 				case TestPlatform.Mac_UnifiedXM45_32:
-					return "Unified XM45 32-bit";
+					return "Mac Unified XM45 32-bit";
 				default:
 					throw new NotImplementedException ();
 				}
