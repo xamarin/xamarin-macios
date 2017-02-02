@@ -1546,12 +1546,12 @@ function oninitialload ()
 			
 			ExecutionResult = (ExecutionResult & ~TestExecutingResult.StateMask) | TestExecutingResult.InProgress;
 
-			if (InitialTask != null)
-				await InitialTask;
-
-			duration.Start ();
-
 			try {
+				if (InitialTask != null)
+					await InitialTask;
+
+				duration.Start ();
+
 				execute_task = ExecuteAsync ();
 				await execute_task;
 
