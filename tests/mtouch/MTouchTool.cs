@@ -489,7 +489,7 @@ namespace Xamarin
 				File.WriteAllText (Path.Combine (app, "Info.plist"), CreatePlist (Profile, appName));
 		}
 
-		public void CreateTemporararyServiceExtension (string code = null, string extraCode = null, string extraArg = null, string appName = "testServiceExtension")
+		public void CreateTemporaryServiceExtension (string code = null, string extraCode = null, string extraArg = null, string appName = "testServiceExtension")
 		{
 			string testDir;
 			if (RootAssembly == null) {
