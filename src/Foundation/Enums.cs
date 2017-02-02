@@ -3,11 +3,6 @@ using XamCore.CloudKit;
 
 namespace XamCore.Foundation {
 
-#if MONOMAC
-	delegate void CloudKitRegistrationPreparationAction ([BlockCallback] CloudKitRegistrationPreparationHandler handler);
-	delegate void CloudKitRegistrationPreparationHandler (CKShare share, CKContainer container, NSError error);
-#endif
-
 	// Utility enum, ObjC uses NSString
 	[NoMac]
 	[iOS (7,0)]

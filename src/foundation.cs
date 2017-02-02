@@ -8700,6 +8700,11 @@ namespace XamCore.Foundation
 		NSMethodSignature MethodSignature { get; }
 	}
 
+#if MONOMAC
+	delegate void CloudKitRegistrationPreparationAction ([BlockCallback] CloudKitRegistrationPreparationHandler handler);
+	delegate void CloudKitRegistrationPreparationHandler (CKShare share, CKContainer container, NSError error);
+#endif
+
 	[iOS (8,0)][Mac (10,10, onlyOn64 : true)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
 	partial interface NSItemProvider : NSCopying {
