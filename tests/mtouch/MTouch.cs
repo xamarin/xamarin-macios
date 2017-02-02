@@ -812,11 +812,17 @@ namespace Xamarin
 				mtouch.CreateTemporaryApp_LinkWith ();
 				Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev), "build");
 
-				var symbols = ExecutionHelper.Execute ("nm", Quote (mtouch.NativeExecutablePath), hide_output: true).Split ('\n');
-				Assert.That (symbols, Has.None.EndsWith (" T _theUltimateAnswer"), "Binding symbol not in executable");
+				bool workaround_for_bug51710 = profile != Profile.iOS; // see fe17d5db9f7c
+				if (workaround_for_bug51710) {
+					var symbols = ExecutionHelper.Execute ("nm", Quote (mtouch.NativeExecutablePath), hide_output: true).Split ('\n');
+					Assert.That (symbols, Has.Some.EndsWith (" T _theUltimateAnswer"), "Binding symbol not in executable");
+				} else {
+					var symbols = ExecutionHelper.Execute ("nm", Quote (mtouch.NativeExecutablePath), hide_output: true).Split ('\n');
+					Assert.That (symbols, Has.None.EndsWith (" T _theUltimateAnswer"), "Binding symbol not in executable");
 
-				symbols = ExecutionHelper.Execute ("nm", Quote (Path.Combine (mtouch.AppPath, "libbindings-test.dll.dylib")), hide_output: true).Split ('\n');
-				Assert.That (symbols, Has.Some.EndsWith (" T _theUltimateAnswer"), "Binding symbol in binding library");
+					symbols = ExecutionHelper.Execute ("nm", Quote (Path.Combine (mtouch.AppPath, "libbindings-test.dll.dylib")), hide_output: true).Split ('\n');
+					Assert.That (symbols, Has.Some.EndsWith (" T _theUltimateAnswer"), "Binding symbol in binding library");
+				}
 			}
 		}
 
