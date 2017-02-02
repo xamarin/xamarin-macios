@@ -1469,6 +1469,33 @@ namespace Xamarin
 		}
 
 		[Test]
+		public void MonoFrameworkArchitectures ()
+		{
+			using (var extension = new MTouchTool ()) {
+				extension.CreateTemporaryServiceExtension ();
+				extension.CreateTemporaryCacheDirectory ();
+				extension.Abi = "armv7,arm64";
+				extension.Linker = MTouchLinker.LinkAll; // faster test
+				extension.NoStrip = true; // faster test
+				extension.AssertExecute (MTouchAction.BuildDev, "build extension");
+				using (var app = new MTouchTool ()) {
+					app.AppExtensions.Add (extension);
+					app.CreateTemporaryApp ();
+					app.CreateTemporaryCacheDirectory ();
+					app.Abi = "arm64";
+					app.Linker = MTouchLinker.LinkAll; // faster test
+					app.NoStrip = true; // faster test
+					app.AssertExecute (MTouchAction.BuildDev, "build app");
+
+					var mono_framework = Path.Combine (app.AppPath, "Frameworks", "Mono.framework", "Mono");
+					Assert.That (mono_framework, Does.Exist, "mono framework existence");
+					// Verify that mtouch removed armv7s from the framework.
+					Assert.That (GetArchitectures (mono_framework), Is.EquivalentTo (new [] { "armv7", "arm64" }), "mono framework architectures");
+				}
+			}
+		}
+
+		[Test]
 		public void GarbageCollectors ()
 		{
 			using (var mtouch = new MTouchTool ()) {
