@@ -22,6 +22,12 @@ Copyright (C) 2015-2016 Xamarin. All rights reserved.
 		<TargetFrameworkIdentifier Condition="'$(TargetFrameworkIdentifier)' == ''">Xamarin.TVOS</TargetFrameworkIdentifier>
 		<TargetFrameworkVersion Condition="'$(TargetFrameworkVersion)' == ''">v1.0</TargetFrameworkVersion>
 		<DefineConstants>__UNIFIED__;__MOBILE__;__TVOS__;$(DefineConstants)</DefineConstants>
+
+		<!-- This should be done in the F# target files, but _DebugFileExt is not an upstream
+		     msbuild feature yet, so F# doesn't have this. Once, upstream F# adds it, we can
+		     remove this -->
+		<_DebugFileExt Condition="'$(FscDebugFileExt)' != ''">$(FscDebugFileExt)</_DebugFileExt>
+		<_DebugFileExt Condition="'$(_DebugFileExt)' == ''">.mdb</_DebugFileExt>
 	</PropertyGroup>
 
 	<!-- xbuild searches multiple MSBuildExtensionsPath32, but only in the Import element so we can't determine this with a variable -->
