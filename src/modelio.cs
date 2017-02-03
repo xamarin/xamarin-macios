@@ -94,7 +94,7 @@ namespace XamCore.ModelIO {
 		[Export ("components", ArgumentSemantic.Copy)]
 		IMDLComponent[] Components { get; }
 
-		[Internal]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("setComponent:forProtocol:")]
 		void SetComponent (IMDLComponent component, Protocol protocol);
 
@@ -102,7 +102,7 @@ namespace XamCore.ModelIO {
 		[Wrap ("SetComponent (component, new Protocol (type))")]
 		void SetComponent (IMDLComponent component, Type type);
 
-		[Internal]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("componentConformingToProtocol:")]
 		[return: NullAllowed]
 		IMDLComponent GetComponent (Protocol protocol);
@@ -1011,10 +1011,6 @@ namespace XamCore.ModelIO {
 		[Export ("components", ArgumentSemantic.Copy)]
 		IMDLComponent[] Components { get; }
 
-#if XAMCORE_4_0
-		[Internal]
-#endif
-		[Obsolete ("Use SetComponent (Type protocol)")]
 		[Export ("setComponent:forProtocol:")]
 		void SetComponent (IMDLComponent component, Protocol protocol);
 
@@ -1024,12 +1020,16 @@ namespace XamCore.ModelIO {
 #if XAMCORE_4_0
 		[Internal]
 #endif
-		[Obsolete ("Use GetComponent (Type protocol)")]
+		[Obsolete ("Use GetComponent (Type type)")]
 		[Export ("componentConformingToProtocol:")]
 		[return: NullAllowed]
 		IMDLComponent IsComponentConforming (Protocol protocol);
 
-		[Wrap ("IsComponentConforming (new Protocol (type))")]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Wrap ("IsComponentConforming (protocol)")]
+		IMDLComponent GetComponent (Protocol protocol);
+
+		[Wrap ("GetComponent (new Protocol (type))")]
 		IMDLComponent GetComponent (Type type);
 
 		[NullAllowed, Export ("parent", ArgumentSemantic.Weak)]
