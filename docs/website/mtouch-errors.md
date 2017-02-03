@@ -914,6 +914,10 @@ The `legacy` provider, which was a fully managed SSLv3 / TLSv1 only provider, is
 
 To fix this warning, open the project file in a text editor, and remove all `MtouchTlsProvider`` nodes from the XML.
 
+<h3><a name="MT2017"/>MT2017: Could not process XML description.</h3>
+
+This means there is an error on the [custom XML linker configuration file](https://developer.xamarin.com/guides/cross-platform/advanced/custom_linking/) you provided, please review your file.
+
 <h3><a name="MT202x"/>MT202x: Binding Optimizer failed processing `...`.</h3>
 
 Something unexpected occured when trying to optimize generated binding code. The element causing the issue is named in the error message. In order to fix this issue the assembly named (or containing the type or method named) will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).

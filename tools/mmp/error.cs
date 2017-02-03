@@ -71,6 +71,7 @@ namespace Xamarin.Bundler {
 	//				Warning	MM2014	Xamarin.Mac Extensions do not support linking. Request for linking will be ignored.
 	//					MM2015	*** Reserved mtouch ***
 	//				Warning	MM2016  Invalid TlsProvider `{0}` option. The only valid value `{1}` will be used.
+	//					MM2017  Could not process XML description: {0}
 	//					MM202x	Binding Optimizer failed processing `...`.
 	// MT3xxx	AOT
 	//			MT30xx	AOT (general) errors
