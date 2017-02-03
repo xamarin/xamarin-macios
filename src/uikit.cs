@@ -2956,6 +2956,23 @@ namespace XamCore.UIKit {
 		[NullAllowed, Export ("shortcutItems", ArgumentSemantic.Copy)]
 		UIApplicationShortcutItem[] ShortcutItems { get; set; }
 
+		//
+		// 10.0
+		//
+		// from @interface UIApplication (UIAlternateApplicationIcons)
+
+		[iOS (10,3)][TV (10,2)]
+		[Export ("supportsAlternateIcons")]
+		bool SupportsAlternateIcons { get; }
+
+		[iOS (10,3)][TV (10,2)]
+		[Async]
+		[Export ("setAlternateIconName:completionHandler:")]
+		void SetAlternateIconName ([NullAllowed] string alternateIconName, [NullAllowed] Action<NSError> completionHandler);
+
+		[iOS (10,3)][TV (10,2)]
+		[Export ("alternateIconName"), NullAllowed]
+		string AlternateIconName { get; }
 	}
 
 	[NoTV]
@@ -3919,6 +3936,16 @@ namespace XamCore.UIKit {
 		[iOS (9,0)]
 		[Export ("collectionView:moveItemAtIndexPath:toIndexPath:")]
 		void MoveItem (UICollectionView collectionView, NSIndexPath sourceIndexPath, NSIndexPath destinationIndexPath);
+
+		[iOS (10,3), TV (10,2)]
+		[return: NullAllowed]
+		[Export ("indexTitlesForCollectionView:")]
+		string [] GetIndexTitles (UICollectionView collectionView);
+
+		[iOS (10,3), TV (10,2)]
+		[return: NullAllowed]
+		[Export ("collectionView:indexPathForIndexTitle:atIndex:")]
+		NSIndexPath GetIndexPath (UICollectionView collectionView, string title, nint atIndex);
 	}
 
 	[Since (6,0)]
@@ -9397,6 +9424,10 @@ namespace XamCore.UIKit {
 		[Export ("displayLinkWithTarget:selector:")]
 		CoreAnimation.CADisplayLink CreateDisplayLink (NSObject target, Selector sel);
 
+		[iOS (10,3), TV (10,2)]
+		[Export ("maximumFramesPerSecond")]
+		nint MaximumFramesPerSecond { get; }
+
 		[NoTV]
 		[Since (5,0)]
 		[Export ("brightness")]
@@ -9510,6 +9541,10 @@ namespace XamCore.UIKit {
 
 		[Export ("decelerationRate")]
 		nfloat DecelerationRate { get; set; }
+
+		[iOS (10,3), TV (10,2), NoWatch]
+		[Export ("indexDisplayMode")]
+		UIScrollViewIndexDisplayMode IndexDisplayMode { get; set; }
 
 		[NoTV]
 		[Export ("pagingEnabled")]
@@ -11143,10 +11178,11 @@ namespace XamCore.UIKit {
 		[Export ("tableView:canMoveRowAtIndexPath:")]
 		bool CanMoveRow (UITableView tableView, NSIndexPath indexPath);
 
-		[NoTV]
+		[TV (10,2)]
 		[Export ("sectionIndexTitlesForTableView:")]
 		string [] SectionIndexTitles (UITableView tableView);
 
+		[TV (10,2)] // <- Header removed __TVOS_PROHIBITED;
 		[Export ("tableView:sectionForSectionIndexTitle:atIndex:")]
 		nint SectionFor (UITableView tableView, string title, nint atIndex);
 
