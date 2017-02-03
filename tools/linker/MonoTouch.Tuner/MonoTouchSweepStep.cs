@@ -16,19 +16,6 @@ namespace MonoTouch.Tuner {
 
 			if (assembly.HasCustomAttributes)
 				SweepAttributes (assembly.CustomAttributes);
-
-			// type forwarders are all resolved (and saved back even if non-linked)
-			// and since there's no code loading/generation we can eliminate them
-			foreach (var module in assembly.Modules) {
-				if (!module.HasExportedTypes)
-					continue;
-				var exported = module.ExportedTypes;
-				for (int i = 0; i < exported.Count; i++) {
-					var et = exported [i];
-					if (et.IsForwarder)
-						exported.RemoveAt (i--);
-				}
-			}
 		}
 
 		void SweepAttributes (IList<CustomAttribute> attributes)
