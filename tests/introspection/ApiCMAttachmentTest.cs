@@ -24,6 +24,7 @@ using MediaToolbox;
 using SystemConfiguration;
 using ObjCRuntime;
 using Security;
+using VideoToolbox;
 using UIKit;
 #else
 using MonoTouch.AudioToolbox;
@@ -38,18 +39,9 @@ using MonoTouch.ImageIO;
 using MonoTouch.SystemConfiguration;
 using MonoTouch.ObjCRuntime;
 using MonoTouch.Security;
+using MonoTouch.VideoToolbox;
 using MonoTouch.UIKit;
 #endif
-
-#if !__TVOS__
-
-#if XAMCORE_2_0
-using VideoToolbox;
-#else
-using MonoTouch.VideoToolbox;
-#endif
-
-#endif 
 
 namespace Introspection {
 
@@ -383,7 +375,6 @@ namespace Introspection {
 				return new UIFontFeature (CTFontFeatureNumberSpacing.Selector.ProportionalNumbers);
 			case "NetworkReachability":
 				return new NetworkReachability (IPAddress.Loopback, null);
-#if !__TVOS__
 			case "VTCompressionSession":
 			case "VTSession":
 				return VTCompressionSession.Create (1024, 768, CMVideoCodecType.H264, (sourceFrame, status, flags, buffer) => { }, null, (CVPixelBufferAttributes) null);
@@ -391,7 +382,6 @@ namespace Introspection {
 				return VTFrameSilo.Create ();
 			case "VTMultiPassStorage":
 				return VTMultiPassStorage.Create ();
-#endif
 			case "CFString":
 				return new CFString ("test");
 			case "DispatchQueue":
