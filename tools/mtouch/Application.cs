@@ -604,6 +604,11 @@ namespace Xamarin.Bundler {
 			if (!IsLLVM && (EnableAsmOnlyBitCode || EnableLLVMOnlyBitCode))
 				throw ErrorHelper.CreateError (3008, "Bitcode support requires the use of LLVM (--abi=arm64+llvm etc.)");
 
+			if (IsLLVM && Platform == ApplePlatform.WatchOS && BitCodeMode != BitCodeMode.LLVMOnly) {
+				ErrorHelper.Warning (111, "Bitcode has been enabled because this version of Xamarin.iOS does not support building watchOS projects using LLVM without enabling bitcode.");
+				BitCodeMode = BitCodeMode.LLVMOnly;
+			}
+
 			if (EnableDebug) {
 				if (!DebugTrack.HasValue) {
 					DebugTrack = IsSimulatorBuild;
