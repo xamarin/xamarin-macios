@@ -729,115 +729,114 @@ public class NamespaceManager
 			Get ("CoreGraphics")
 		};
 
-		UINamespaces = new HashSet<string> {
+		UINamespaces = new HashSet<string> ();
 #if HAVE_APPKIT
-			Get ("AppKit"),
+		UINamespaces.Add (Get ("AppKit"));
 #endif
 #if HAVE_UIKIT
-			Get ("UIKit"),
+		UINamespaces.Add (Get ("UIKit"));
 #endif
 #if HAVE_TWITTER
-			Get ("Twitter"),
+		UINamespaces.Add (Get ("Twitter"));
 #endif
 #if HAVE_GAMEKIT && !MONOMAC && !WATCH
-			Get ("GameKit"),
+		UINamespaces.Add (Get ("GameKit"));
 #endif
 #if HAVE_NEWSSTANDKIT
-			Get ("NewsstandKit"),
+		UINamespaces.Add (Get ("NewsstandKit"));
 #endif
 #if HAVE_IAD
-			Get ("iAd"),
+		UINamespaces.Add (Get ("iAd"));
 #endif
 #if HAVE_QUICKLOOK
-			Get ("QuickLook"),
+		UINamespaces.Add (Get ("QuickLook"));
 #endif
 #if HAVE_EVENTKITUI
-			Get ("EventKitUI"),
+		UINamespaces.Add (Get ("EventKitUI"));
 #endif
 #if HAVE_ADDRESSBOOKUI
-			Get ("AddressBookUI"),
+		UINamespaces.Add (Get ("AddressBookUI"));
 #endif
 #if HAVE_MAPKIT
-			Get ("MapKit"),
+		UINamespaces.Add (Get ("MapKit"));
 #endif
 #if HAVE_MESSAGEUI
-			Get ("MessageUI"),
+		UINamespaces.Add (Get ("MessageUI"));
 #endif
 #if HAVE_PHOTOSUI
-			Get ("PhotosUI"),
+		UINamespaces.Add (Get ("PhotosUI"));
 #endif
 #if HAVE_HEALTHKITUI
-			Get ("HealthKitUI"),
+		UINamespaces.Add (Get ("HealthKitUI"));
 #endif
-		};
 
-		ImplicitNamespaces = new HashSet<string> {
-			"System",
-			"System.Runtime.CompilerServices",
-			"System.Runtime.InteropServices",
-			"System.Diagnostics",
-			"System.ComponentModel",
-			"System.Threading.Tasks",
-			Get ("CoreFoundation"),
-			Get ("Foundation"),
-			Get ("ObjCRuntime"),
-			Get ("CoreGraphics"),
-			Get ("SceneKit"),
+		ImplicitNamespaces = new HashSet<string> ();
+		ImplicitNamespaces.Add ("System");
+		ImplicitNamespaces.Add ("System.Runtime.CompilerServices");
+		ImplicitNamespaces.Add ("System.Runtime.InteropServices");
+		ImplicitNamespaces.Add ("System.Diagnostics");
+		ImplicitNamespaces.Add ("System.ComponentModel");
+		ImplicitNamespaces.Add ("System.Threading.Tasks");
+		ImplicitNamespaces.Add (Get ("CoreFoundation"));
+		ImplicitNamespaces.Add (Get ("Foundation"));
+		ImplicitNamespaces.Add (Get ("ObjCRuntime"));
+		ImplicitNamespaces.Add (Get ("CoreGraphics"));
+		ImplicitNamespaces.Add (Get ("SceneKit"));
 #if HAVE_AUDIOUNIT
-			Get ("AudioUnit"),
+		ImplicitNamespaces.Add (Get ("AudioUnit"));
 #endif
 #if HAVE_COREANIMATION
-			Get ("CoreAnimation"),
+		ImplicitNamespaces.Add (Get ("CoreAnimation"));
 #endif
 #if HAVE_CORELOCATION
-			Get ("CoreLocation"),
+		ImplicitNamespaces.Add (Get ("CoreLocation"));
 #endif
 #if HAVE_COREVIDEO
-			Get ("CoreVideo"),
+		ImplicitNamespaces.Add (Get ("CoreVideo"));
 #endif
 #if HAVE_COREMEDIA
-			Get ("CoreMedia"),
+		ImplicitNamespaces.Add (Get ("CoreMedia"));
 #endif
 #if HAVE_SECURITY
-			Get ("Security"),
+		ImplicitNamespaces.Add (Get ("Security"));
 #endif
 #if HAVE_AVFOUNDATION && !WATCH
-			Get ("AVFoundation"),
+		ImplicitNamespaces.Add (Get ("AVFoundation"));
 #endif
 #if HAVE_OPENGL
-			Get ("OpenGL"),
+		ImplicitNamespaces.Add (Get ("OpenGL"));
 #endif
 #if HAVE_QTKIT
-			Get ("QTKit"),
+		ImplicitNamespaces.Add (Get ("QTKit"));
 #endif
 #if HAVE_APPKIT
-			Get ("AppKit"),
+		ImplicitNamespaces.Add (Get ("AppKit"));
 #endif
 #if HAVE_CLOUDKIT
-			Get ("CloudKit"),
+		ImplicitNamespaces.Add (Get ("CloudKit"));
 #endif
 #if HAVE_COREMOTION
-			Get ("CoreMotion"),
+		ImplicitNamespaces.Add (Get ("CoreMotion"));
 #endif
 #if HAVE_MAPKIT
-			Get ("MapKit"),
+		ImplicitNamespaces.Add (Get ("MapKit"));
 #endif
 #if HAVE_UIKIT
-			Get ("UIKit"),
+		ImplicitNamespaces.Add (Get ("UIKit"));
 #endif
 #if HAVE_NEWSSTANDKIT
-			Get ("NewsstandKit"),
+		ImplicitNamespaces.Add (Get ("NewsstandKit"));
 #endif
 #if HAVE_GLKIT
-			Get ("GLKit"),
+		ImplicitNamespaces.Add (Get ("GLKit"));
 #endif
 #if HAVE_QUICKLOOK
-			Get ("QuickLook"),
+		ImplicitNamespaces.Add (Get ("QuickLook"));
 #endif
 #if HAVE_ADDRESSBOOK
-			Get ("AddressBook")
+		ImplicitNamespaces.Add (Get ("AddressBook"));
 #endif
-		};
+
 #if HAVE_MODELIO
 		ImplicitNamespaces.Add (Get ("ModelIO"));
 #endif
@@ -2089,74 +2088,72 @@ public partial class Generator : IMemberGatherer {
 
 	public void Go ()
 	{
-		marshal_types.AddRange (new MarshalType [] {
-			new MarshalType (typeof (NSObject), create: "Runtime.GetNSObject ("),
-			new MarshalType (typeof (Selector), create: "Selector.FromHandle ("),
-			new MarshalType (typeof (BlockLiteral), "BlockLiteral", "{0}", "THIS_IS_BROKEN"),
+		marshal_types.Add (new MarshalType (typeof (NSObject), create: "Runtime.GetNSObject ("));
+		marshal_types.Add (new MarshalType (typeof (Selector), create: "Selector.FromHandle ("));
+		marshal_types.Add (new MarshalType (typeof (BlockLiteral), "BlockLiteral", "{0}", "THIS_IS_BROKEN"));
 #if HAVE_AUDIOTOOLBOX_MUSICSEQUENCE
-			new MarshalType (typeof (MusicSequence), create: "global::XamCore.AudioToolbox.MusicSequence.Lookup ("),
+		marshal_types.Add (new MarshalType (typeof (MusicSequence), create: "global::XamCore.AudioToolbox.MusicSequence.Lookup ("));
 #endif
-			typeof (CGColor),
-			typeof (CGPath),
-			typeof (CGGradient),
-			typeof (CGContext),
-			typeof (CGImage),
-			typeof (Class),
-			typeof (CFRunLoop),
-			typeof (CGColorSpace),
-			typeof (DispatchQueue),
-			typeof (Protocol),
+		marshal_types.Add (typeof (CGColor));
+		marshal_types.Add (typeof (CGPath));
+		marshal_types.Add (typeof (CGGradient));
+		marshal_types.Add (typeof (CGContext));
+		marshal_types.Add (typeof (CGImage));
+		marshal_types.Add (typeof (Class));
+		marshal_types.Add (typeof (CFRunLoop));
+		marshal_types.Add (typeof (CGColorSpace));
+		marshal_types.Add (typeof (DispatchQueue));
+		marshal_types.Add (typeof (Protocol));
 #if HAVE_COREMIDI
-			typeof (MidiEndpoint),
+		marshal_types.Add (typeof (MidiEndpoint));
 #endif
 #if HAVE_COREMEDIA
-			typeof (CMTimebase),
-			typeof (CMClock),
+		marshal_types.Add (typeof (CMTimebase));
+		marshal_types.Add (typeof (CMClock));
 #endif
-			typeof (NSZone),
+		marshal_types.Add (typeof (NSZone));
 #if HAVE_OPENGL
-			typeof (CGLContext),
-			typeof (CGLPixelFormat),
-			typeof (CVImageBuffer),
+		marshal_types.Add (typeof (CGLContext));
+		marshal_types.Add (typeof (CGLPixelFormat));
+		marshal_types.Add (typeof (CVImageBuffer));
 #endif
 #if HAVE_MEDIATOOLBOX
-			new MarshalType (typeof (MTAudioProcessingTap), create: (NamespaceManager.Get ("MediaToolbox") + ".MTAudioProcessingTap.FromHandle(")),
+		marshal_types.Add (new MarshalType (typeof (MTAudioProcessingTap), create: (NamespaceManager.Get ("MediaToolbox") + ".MTAudioProcessingTap.FromHandle(")));
 #endif
 #if HAVE_ADDRESSBOOK
-			typeof (ABAddressBook),
-			new MarshalType (typeof (ABPerson), create: "(ABPerson) ABRecord.FromHandle("),
-			new MarshalType (typeof (ABRecord), create: "ABRecord.FromHandle("),
+		marshal_types.Add (typeof (ABAddressBook));
+		marshal_types.Add (new MarshalType (typeof (ABPerson), create: "(ABPerson) ABRecord.FromHandle("));
+		marshal_types.Add (new MarshalType (typeof (ABRecord), create: "ABRecord.FromHandle("));
 #endif
 #if HAVE_COREVIDEO
-			typeof (CVPixelBuffer),
+		marshal_types.Add (typeof (CVPixelBuffer));
 #endif
-			typeof (CGLayer),
+		marshal_types.Add (typeof (CGLayer));
 #if HAVE_COREMEDIA
-			typeof (CMSampleBuffer),
+		marshal_types.Add (typeof (CMSampleBuffer));
 #endif
 #if HAVE_COREVIDEO
-			typeof (CVImageBuffer),
-			typeof (CVPixelBufferPool),
+		marshal_types.Add (typeof (CVImageBuffer));
+		marshal_types.Add (typeof (CVPixelBufferPool));
 #endif
 #if HAVE_AUDIOUNIT
-			typeof (AudioComponent),
+		marshal_types.Add (typeof (AudioComponent));
 #endif
 #if HAVE_COREMEDIA
-			new MarshalType (typeof (CMFormatDescription), create: "CMFormatDescription.Create ("),
-			typeof (CMAudioFormatDescription),
-			typeof (CMVideoFormatDescription),
+		marshal_types.Add (new MarshalType (typeof (CMFormatDescription), create: "CMFormatDescription.Create ("));
+		marshal_types.Add (typeof (CMAudioFormatDescription));
+		marshal_types.Add (typeof (CMVideoFormatDescription));
 #endif
 #if HAVE_AUDIOUNIT
-			typeof (XamCore.AudioUnit.AudioUnit),
+		marshal_types.Add (typeof (XamCore.AudioUnit.AudioUnit));
 #endif
-			typeof (SecIdentity),
-			typeof (SecTrust),
-			typeof (SecAccessControl),
+		marshal_types.Add (typeof (SecIdentity));
+		marshal_types.Add (typeof (SecTrust));
+		marshal_types.Add (typeof (SecAccessControl));
 #if HAVE_AUDIOUNIT
-			typeof (AudioBuffers),
-			typeof (AURenderEventEnumerator),
+		marshal_types.Add (typeof (AudioBuffers));
+		marshal_types.Add (typeof (AURenderEventEnumerator));
 #endif
-		});
 
 		init_binding_type = String.Format ("IsDirectBinding = GetType ().Assembly == global::{0}.this_assembly;", ns.Messaging);
 
