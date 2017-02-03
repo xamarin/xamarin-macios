@@ -367,6 +367,14 @@ No action is required on your part, this message is purely informational.
 
 For further information see bug #[51710](https://bugzilla.xamarin.com/show_bug.cgi?id=51710).
 
+<h3><a name="MT0111"/>MT0111: Bitcode has been enabled because this version of Xamarin.iOS does not support building watchOS projects using LLVM without enabling bitcode.</h3>
+
+Bitcode has been enabled automatically because this version of Xamarin.iOS does not support building watchOS projects using LLVM without enabling bitcode.
+
+No action is required on your part, this message is purely informational.
+
+For further information see bug #[51634](https://bugzilla.xamarin.com/show_bug.cgi?id=51634).
+
 <!--
  MT1xxx file copy / symlinks (project related)
   MT10xx installer.cs / mtouch.cs
