@@ -7,18 +7,19 @@ export MSBuildExtensionsPath=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/Ex
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 export XAMMAC_FRAMEWORK_PATH=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 
-obj/SimpleClass.o:
-	$(Q) mkdir -p bin obj
-	$(Q) clang -c ../common/mac/SimpleClass.m -o obj/SimpleClass.o -std=gnu99 -mmacosx-version-min=10.9
+bin:
+	$(Q) mkdir -p bin
 
-bin/SimpleClassDylib.dylib: obj/SimpleClass.o
-	$(Q) xcrun libtool -dynamic obj/SimpleClass.o -o bin/SimpleClassDylib.dylib -framework Cocoa -lSystem -macosx_version_min 10.9
+bin/SimpleClassDylib.dylib:  bin
+	$(Q) xcrun clang -shared ../common/mac/SimpleClass.m -o bin/SimpleClassDylib.dylib -std=gnu99 -mmacosx-version-min=10.9 -framework Cocoa -lSystem
 
 bin/SimpleClass\ Dylib.dylib: bin/SimpleClassDylib.dylib
 	$(Q) cp bin/SimpleClassDylib.dylib bin/SimpleClass\ Dylib.dylib
 
-bin/SimpleClassStatic.a: obj/SimpleClass.o
-	$(Q) xcrun libtool -static obj/SimpleClass.o -o bin/SimpleClassStatic.a
+bin/SimpleClassStatic.a: bin
+	$(Q) clang -c ../common/mac/SimpleClass.m -o bin/SimpleClass.o -std=gnu99 -mmacosx-version-min=10.9
+	$(Q) xcrun ar -rcs bin/SimpleClassStatic.a bin/SimpleClass.o
+	$(Q) rm bin/SimpleClass.o
 
 bin/Mobile-dynamic/MobileBinding.dll: bin/SimpleClassDylib.dylib
 	$(Q) $(SYSTEM_XBUILD) $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_dynamic.csproj
