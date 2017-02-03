@@ -573,7 +573,7 @@ namespace Xamarin.MMP.Tests
 				string testPath = Path.Combine (TI.FindSourceDirectory (), @"ConsoleXMApp.csproj");
 				TI.BuildProject (testPath, isUnified: true);
 				string exePath = Path.Combine (TI.FindSourceDirectory (), @"bin/Debug/ConsoleXMApp.exe");
-				var output = TI.RunAndAssert ("/usr/local/bin/mono64", new StringBuilder (exePath), "RunSideBySizeXamMac");
+				var output = TI.RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono64", new StringBuilder (exePath), "RunSideBySizeXamMac");
 				Assert.IsTrue (output.Split (Environment.NewLine.ToCharArray ()).Any (x => x.Contains ("True")), "Unified_SideBySideXamMac_ConsoleTest run"); 
 			});
 		}
