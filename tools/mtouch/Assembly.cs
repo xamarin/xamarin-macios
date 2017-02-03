@@ -259,7 +259,7 @@ namespace Xamarin.Bundler {
 			{
 				Assembly = this,
 				AssemblyName = assembly_path,
-				AddBitcodeMarkerSection = App.FastDev && App.EnableMarkerOnlyBitCode,
+				AddBitcodeMarkerSection = BuildTarget != AssemblyBuildTarget.StaticObject && App.EnableMarkerOnlyBitCode,
 				AssemblyPath = asm,
 				ProcessStartInfo = Driver.CreateStartInfo (App, aotCompiler, aotArgs, Path.GetDirectoryName (assembly_path)),
 				AotInfo = aotInfo,

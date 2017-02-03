@@ -103,8 +103,6 @@ namespace Xamarin.Bundler {
 		public List<string> Extensions = new List<string> (); // A list of the extensions this app contains.
 		public List<Application> AppExtensions = new List<Application> ();
 
-		public bool FastDev;
-
 		public bool? EnablePie;
 		public bool NativeStrip = true;
 		public string SymbolList;
@@ -222,6 +220,11 @@ namespace Xamarin.Bundler {
 			get {
 				return assembly_build_targets.Any ((abt) => abt.Value.Item1 == AssemblyBuildTarget.Framework);
 			}
+		}
+
+		public void ClearAssemblyBuildTargets ()
+		{
+			assembly_build_targets.Clear ();
 		}
 
 		public void AddAssemblyBuildTarget (string value)

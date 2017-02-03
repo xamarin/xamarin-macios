@@ -276,7 +276,7 @@ namespace Xamarin.Utils
 					args.Append (" -Xlinker -rpath -Xlinker @executable_path/../../Frameworks");
 			}
 
-			if (Application.FastDev)
+			if (Application.HasAnyDynamicLibraries)
 				args.Append (" -Xlinker -rpath -Xlinker @executable_path");
 		}
 
