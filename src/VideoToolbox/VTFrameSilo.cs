@@ -76,7 +76,7 @@ namespace XamCore.VideoToolbox {
 			var status = VTFrameSiloCreate (
 				IntPtr.Zero,
 				fileUrl == null ? IntPtr.Zero : fileUrl.Handle, 
-				timeRange ?? CMTimeRange.Invalid, 
+				timeRange ?? CMTimeRange.InvalidRange, 
 				IntPtr.Zero, 
 				out ret);
 
@@ -154,7 +154,7 @@ namespace XamCore.VideoToolbox {
 		public VTStatus ForEach (Func<CMSampleBuffer, VTStatus> callback, CMTimeRange? range = null)
 		{
 			callbackHandle = GCHandle.Alloc (callback);
-			var foreachResult = VTFrameSiloCallFunctionForEachSampleBuffer (handle, range ?? CMTimeRange.Invalid, GCHandle.ToIntPtr (callbackHandle), static_EachSampleBufferCallback);
+			var foreachResult = VTFrameSiloCallFunctionForEachSampleBuffer (handle, range ?? CMTimeRange.InvalidRange, GCHandle.ToIntPtr (callbackHandle), static_EachSampleBufferCallback);
 			callbackHandle.Free ();
 			return foreachResult;
 		}
