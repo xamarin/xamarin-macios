@@ -656,6 +656,100 @@ namespace xharness
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Html;
 							GenerateReportImpl (response.OutputStream);
 							break;
+						case "/select":
+						case "/deselect":
+							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+							using (var writer = new StreamWriter (response.OutputStream)) {
+								var allTasks = Tasks.SelectMany ((v) =>
+								{
+									var rv = new List<TestTask> ();
+									var runsim = v as AggregatedRunSimulatorTask;
+									if (runsim != null)
+										rv.AddRange (runsim.Tasks);
+									rv.Add (v);
+									return rv;
+								});
+								foreach (var task in allTasks) {
+									bool? is_match = null;
+									switch (request.Url.Query) {
+									case "?all":
+										is_match = true;
+										break;
+									case "?all-device":
+										is_match = task is RunDeviceTask;
+										break;
+									case "?all-simulator":
+										is_match = task is RunSimulatorTask;
+										break;
+									case "?all-ios":
+										switch (task.Platform) {
+										case TestPlatform.iOS:
+										case TestPlatform.iOS_TodayExtension64:
+										case TestPlatform.iOS_Unified:
+										case TestPlatform.iOS_Unified32:
+										case TestPlatform.iOS_Unified64:
+											is_match = true;
+											break;
+										default:
+											if (task.Platform.ToString ().StartsWith ("iOS", StringComparison.Ordinal))
+												throw new NotImplementedException ();
+											break;
+										}
+										break;
+									case "?all-tvos":
+										switch (task.Platform) {
+										case TestPlatform.tvOS:
+											is_match = true;
+											break;
+										default:
+											if (task.Platform.ToString ().StartsWith ("tvOS", StringComparison.Ordinal))
+												throw new NotImplementedException ();
+											break;
+										}
+										break;
+									case "?all-watchos":
+										switch (task.Platform) {
+										case TestPlatform.watchOS:
+											is_match = true;
+											break;
+										default:
+											if (task.Platform.ToString ().StartsWith ("watchOS", StringComparison.Ordinal))
+												throw new NotImplementedException ();
+											break;
+										}
+										break;
+									case "?all-mac":
+										switch (task.Platform) {
+										case TestPlatform.Mac:
+										case TestPlatform.Mac_Classic:
+										case TestPlatform.Mac_Unified:
+										case TestPlatform.Mac_Unified32:
+										case TestPlatform.Mac_UnifiedXM45:
+										case TestPlatform.Mac_UnifiedXM45_32:
+											is_match = true;
+											break;
+										default:
+											if (task.Platform.ToString ().StartsWith ("Mac", StringComparison.Ordinal))
+												throw new NotImplementedException ();
+											break;
+										}
+										break;
+									default:
+										writer.WriteLine ("unknown query: {0}", request.Url.Query);
+										break;
+									}
+									if (request.Url.LocalPath == "/select") {
+										if (is_match.HasValue && is_match.Value)
+											task.Ignored = false;
+									} else if (request.Url.LocalPath == "/deselect") {
+										if (is_match.HasValue && is_match.Value)
+											task.Ignored = true;
+									}
+								}
+
+								writer.WriteLine ("OK");
+							}
+							break;
 						case "/runalltests":
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
 							using (var writer = new StreamWriter (response.OutputStream)) {
@@ -673,6 +767,32 @@ namespace xharness
 								}
 
 								writer.WriteLine ("OK");
+							}
+							break;
+						case "/runselected":
+							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+							using (var writer = new StreamWriter (response.OutputStream)) {
+								var allTasks = Tasks.SelectMany ((v) =>
+								{
+									var rv = new List<TestTask> ();
+									var runsim = v as AggregatedRunSimulatorTask;
+									if (runsim != null)
+										rv.AddRange (runsim.Tasks);
+									rv.Add (v);
+									return rv;
+								});
+								// We want to randomize the order the tests are added, so that we don't build first the test for one device, 
+								// then for another, since that would not take advantage of running tests on several devices in parallel.
+								var rnd = new Random ((int) DateTime.Now.Ticks);
+								foreach (var task in allTasks.Where ((v) => !v.Ignored).OrderBy (v => rnd.Next ())) {
+									if (task.InProgress || task.Waiting) {
+										writer.WriteLine ($"Test '{task.TestName}' is already executing.");
+									} else {
+										task.Reset ();
+										task.RunAsync ();
+										writer.WriteLine ($"Started '{task.TestName}'.");
+									}
+								}
 							}
 							break;
 						case "/runtest":
@@ -912,6 +1032,62 @@ namespace xharness
 .expander { display: table-cell; height: 100%; padding-right: 6px; text-align: center; vertical-align: middle; min-width: 10px; }
 .runall { font-size: 75%; margin-left: 3px; }
 .logs { padding-bottom: 10px; padding-top: 10px; padding-left: 30px; }
+
+#nav {
+	display: inline-block;
+	width: 200px;
+}
+
+#nav > * {
+	display: inline;
+	width: 200px;
+}
+
+#nav ul {
+	background: #fff;
+	list-style: none;
+	position: absolute;
+	left: -9999px;
+	padding: 10px;
+	z-index: 2;
+	width: 200px;
+}
+
+#nav li {
+	margin-right: 10px;
+	position: relative;
+}
+#nav a {
+	display: block;
+	padding: 5px;
+	background: #666;
+	text-decoration: none;
+}
+#nav a:hover {
+	text-decoration: underline;
+}
+#nav ul li {
+	padding-top: 0;
+	padding-bottom: 0;
+	padding-left: 0;
+}
+#nav ul a {
+	white-space: nowrap;
+}
+#nav li:hover ul { 
+	left: 0;
+}
+#nav li:hover a {
+	background: #666;
+	text-decoration: underline;
+}
+#nav li:hover ul a { 
+	text-decoration:none;
+}
+#nav li:hover ul li a:hover {
+	text-decoration: underline;
+}
+
 </style>
 </head>");
 				writer.WriteLine ("<title>Test results</title>");
@@ -1114,6 +1290,37 @@ function oninitialload ()
 					writer.Write ("<small>");
 					writer.Write (" <a href='javascript:runalltests()'>Run all tests</a>");
 					writer.WriteLine ("</small>");
+					writer.WriteLine (@"</h2></span>
+<ul id='nav'>
+	<li id=""adminmenu"">Select
+		<ul>
+			<li class=""adminitem""><a href='javascript:sendrequest (""select?all"");'>All tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-device"");'>All device tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-simulator"");'>All simulator tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-ios"");'>All iOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-tvos"");'>All tvOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-watchos"");'>All watchOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""select?all-mac"");'>All Mac tests</a></li>
+		</ul>
+	</li>
+	<li id=""adminmenu"">Deselect
+		<ul>
+			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all"");'>All tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-device"");'>All device tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-simulator"");'>All simulator tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-ios"");'>All iOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-tvos"");'>All tvOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-watchos"");'>All watchOS tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""deselect?all-mac"");'>All Mac tests</a></li>
+		</ul>
+	</li>
+	<li id=""adminmenu"">Run
+		<ul>
+			<li class=""adminitem""><a href='javascript:runalltests ();'>All tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""runselected"");'>All selected tests</a></li>
+		</ul>
+	</li>
+</ul>");
 				}
 				writer.WriteLine ("</h2></span>");
 
