@@ -88,7 +88,7 @@ namespace XamCore.VideoToolbox {
 			var status = VTMultiPassStorageCreate (
 				IntPtr.Zero,
 				fileUrl == null ? IntPtr.Zero : fileUrl.Handle, 
-				timeRange ?? CMTimeRange.Invalid, 
+				timeRange ?? CMTimeRange.InvalidRange, 
 				options == null ? IntPtr.Zero : options.Handle, 
 				out ret);
 

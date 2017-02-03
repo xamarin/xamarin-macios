@@ -1739,6 +1739,7 @@ TVOS_FRAMEWORKS =           \
 	UIKit                   \
 	UserNotifications       \
 	VideoSubscriberAccount  \
+	VideoToolbox            \
 
 #
 # Compute the SOURCES variables.
