@@ -94,6 +94,7 @@ namespace XamCore.ModelIO {
 		[Export ("components", ArgumentSemantic.Copy)]
 		IMDLComponent[] Components { get; }
 
+		[iOS (10,3), TV (10,2), Mac (10,12,4)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("setComponent:forProtocol:")]
 		void SetComponent (IMDLComponent component, Protocol protocol);
@@ -102,6 +103,7 @@ namespace XamCore.ModelIO {
 		[Wrap ("SetComponent (component, new Protocol (type))")]
 		void SetComponent (IMDLComponent component, Type type);
 
+		[iOS (10,3), TV (10,2), Mac (10,12,4)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("componentConformingToProtocol:")]
 		[return: NullAllowed]

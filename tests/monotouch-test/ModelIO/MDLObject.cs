@@ -63,6 +63,16 @@ namespace MonoTouchFixtures.ModelIO {
 				var bb = obj.GetBoundingBox (0);
 			}
 		}
+
+		[Test]
+		public void ProtocolTest ()
+		{
+			using (var obj = new MDLObject ()) {
+				var p = new Protocol (typeof (IMDLComponent));
+				obj.SetComponent (new MDLTransform (), p);
+				Assert.NotNull (obj.IsComponentConforming (p));
+			}
+		}
 	}
 }
 
