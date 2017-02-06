@@ -999,7 +999,9 @@ namespace Xamarin.Bundler {
 
 				// Check if there aren't referenced assemblies from different sources
 				foreach (var target in Targets) {
-					var appexTarget = appex.Targets.Single ((v) => v.Is32Build == target.Is32Build);
+					var appexTarget = appex.Targets.SingleOrDefault ((v) => v.Is32Build == target.Is32Build);
+					if (appexTarget == null)
+						continue; // container is fat, appex isn't. This is not a problem.
 					foreach (var kvp in appexTarget.Assemblies.Hashed) {
 						Assembly asm;
 						if (!target.Assemblies.TryGetValue (kvp.Key, out asm))
