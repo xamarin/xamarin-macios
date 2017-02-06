@@ -647,6 +647,7 @@ namespace xharness
 				"AssemblyOriginatorKeyFile",
 				"CodesignEntitlements",
 				"TestLibrariesDirectory",
+				"HintPath",
 			};
 			var attributes_with_paths = new string [] []
 			{
