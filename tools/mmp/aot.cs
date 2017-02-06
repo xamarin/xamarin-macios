@@ -73,11 +73,19 @@ namespace Xamarin.Bundler {
 		Explicit
 	}
 
+	public enum AOTKind {
+		Default,
+		Standard,
+		Hybrid
+	}
+
 	public class AOTOptions
 	{
 		public bool IsAOT => CompilationType != AOTCompilationType.Default && CompilationType != AOTCompilationType.None;
+		public bool IsHybridAOT => IsAOT && Kind == AOTKind.Hybrid;
 
 		public AOTCompilationType CompilationType { get; private set; } = AOTCompilationType.Default;
+		public AOTKind Kind { get; private set; } = AOTKind.Standard;
 
 		public List <string> IncludedAssemblies { get; private set; } = new List <string> ();
 		public List <string> ExcludedAssemblies { get; private set; } = new List <string> ();
@@ -86,19 +94,60 @@ namespace Xamarin.Bundler {
 		{
 			// Syntax - all,core,sdk,none or "" if explicit then optional list of +/-'ed assemblies
 			// Sections seperated by ,
-			foreach (var option in options.Split (',')) {
+			string [] optionParts = options.Split (',');
+			for (int i = 0 ; i < optionParts.Length ; ++i) {
+				string option = optionParts [i];
+
+				AOTKind kind = AOTKind.Default;
+				// Technically '|' is valid in a file name, so |hybrid.dll would be as well.
+				// So check the left hand side for a valid option and pass if not
+				if (option.Contains ("|")) {
+					string [] optionTypeParts = option.Split ('|');
+					if (optionTypeParts.Length != 2)
+						throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
+					switch (optionTypeParts [0]) {
+					case "none":
+					case "core":
+					case "sdk":
+					case "all": {
+						option = optionTypeParts [0];
+						switch (optionTypeParts [1]) {
+						case "hybrid":
+							kind = AOTKind.Hybrid;
+							break;
+						case "standard":
+							kind = AOTKind.Standard;
+							break;
+						default:
+							throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
+						}
+						break;
+					}
+					default:
+						break;
+					}
+				}
+
 				switch (option) {
 				case "none":
 					CompilationType = AOTCompilationType.None;
+					if (kind != AOTKind.Default)
+						Kind = kind;
 					continue;
 				case "all":
 					CompilationType = AOTCompilationType.All;
+					if (kind != AOTKind.Default)
+						Kind = kind;
 					continue;
 				case "sdk":
 					CompilationType = AOTCompilationType.SDK;
+					if (kind != AOTKind.Default)
+						Kind = kind;
 					continue;
 				case "core":
 					CompilationType = AOTCompilationType.Core;
+					if (kind != AOTKind.Default)
+						Kind = kind;
 					continue;
 				}
 
@@ -114,17 +163,16 @@ namespace Xamarin.Bundler {
 					ExcludedAssemblies.Add (option.Substring (1));
 					continue;
 				}
-				throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "none, all, core, sdk, and an explicit list of assemblies.");
+				throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
 			}
 			if (CompilationType == AOTCompilationType.Default)
-				throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "none, all, core, sdk, and an explicit list of assemblies.");
+				throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "{none, all, core, sdk}{|hybrid}, then an optional explicit list of assemblies.");
 
 		}
 	}
 
 	public class AOTCompiler
 	{
-
 		// Allows tests to stub out actual compilation and parallelism
 		public RunCommandDelegate RunCommand { get; set; } = Driver.RunCommand; 
 		public ParallelOptions ParallelOptions { get; set; } = new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency };
@@ -154,7 +202,7 @@ namespace Xamarin.Bundler {
 			var monoEnv = new string [] {"MONO_PATH", files.RootDir };
 
 			Parallel.ForEach (GetFilesToAOT (files), ParallelOptions, file => {
-				if (RunCommand (MonoPath, String.Format ("--aot=hybrid {0}", Quote (file)), monoEnv) != 0)
+				if (RunCommand (MonoPath, String.Format ("--aot{0} {1}", options.IsHybridAOT ? "=hybrid" : "", Quote (file)), monoEnv) != 0)
 					throw ErrorHelper.CreateError (3001, "Could not AOT the assembly '{0}'", file);
 			});
 		}

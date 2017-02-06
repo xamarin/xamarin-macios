@@ -1085,8 +1085,8 @@ namespace Xamarin.Bundler {
 				else
 					sw.WriteLine ("\tsetenv (\"MONO_GC_PARAMS\", \"major=marksweep\", 1);");
 
-				if (aotOptions.IsAOT)
-					sw.WriteLine ("\txamarin_mac_aot = TRUE;");
+				if (aotOptions != null && aotOptions.IsHybridAOT)
+					sw.WriteLine ("\txamarin_mac_hybrid_aot = TRUE;");
 
 				sw.WriteLine ("\treturn 0;");
 				sw.WriteLine ("}");

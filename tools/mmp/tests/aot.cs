@@ -75,22 +75,26 @@ namespace Xamarin.MMP.Tests.Unit
 			}
 		}
 
-		List<string> GetFiledAOTed (AOTCompilerType compilerType = AOTCompilerType.Bundled64)
+		List<string> GetFiledAOTed (AOTCompilerType compilerType = AOTCompilerType.Bundled64, AOTKind kind = AOTKind.Standard)
 		{
 			List<string> filesAOTed = new List<string> (); 
 
 			foreach (var command in commandsRun) {
 				Assert.IsTrue (command.Item1.EndsWith (GetExpectedMonoCommand (compilerType)), "Unexpected command: " + command.Item1);
-				Assert.AreEqual (command.Item2.Split (' ')[0], "--aot=hybrid", "First arg should be --aot=hybrid");
+				if (kind == AOTKind.Hybrid)
+					Assert.AreEqual (command.Item2.Split (' ')[0], "--aot=hybrid", "First arg should be --aot=hybrid");
+				else
+					Assert.AreEqual (command.Item2.Split (' ')[0], "--aot", "First arg should be --aot");
+
 				string fileName = command.Item2.Substring (command.Item2.IndexOf(' ') + 1).Replace ("\"", "");
 				filesAOTed.Add (fileName);
 			}
 			return filesAOTed;
 		}
 
-		void AssertFilesAOTed (IEnumerable <string> expectedFiles, AOTCompilerType compilerType = AOTCompilerType.Bundled64)
+		void AssertFilesAOTed (IEnumerable <string> expectedFiles, AOTCompilerType compilerType = AOTCompilerType.Bundled64, AOTKind kind = AOTKind.Standard)
 		{
-			List<string> filesAOTed = GetFiledAOTed (compilerType);
+			List<string> filesAOTed = GetFiledAOTed (compilerType, kind);
 
 			Func<string> getErrorDetails = () => $"\n {String.Join (" ", filesAOTed)} \nvs\n {String.Join (" ", expectedFiles)}";
 
@@ -165,7 +169,6 @@ namespace Xamarin.MMP.Tests.Unit
 
 			AssertFilesAOTed (SDKFileList);
 		}
-
 
 		[Test]
 		public void ExplicitAssembly_JustAOTExplicitFile ()
@@ -254,7 +257,7 @@ namespace Xamarin.MMP.Tests.Unit
 			RunCommandDelegate runThatErrors = (path, args, env, output, suppressPrintOnErrors) => 42;
 			var options = new AOTOptions ("all");
 
-			AssertThrowErrorWithCode (() => Compile (options, new TestFileEnumerator (FullAppFileList), AOTCompilerType.Bundled64, runThatErrors), 3001);
+			AssertThrowErrorWithCode (() => Compile (options, new TestFileEnumerator (FullAppFileList), onRunDelegate : runThatErrors), 3001);
 		}
 
 		[Test]
@@ -270,6 +273,43 @@ namespace Xamarin.MMP.Tests.Unit
 
 				AssertFilesAOTed (SDKFileList, compilerType);
 			}
+		}
+
+		[Test]
+		public void PipeFileName_ShouldNotHybridCompiler ()
+		{
+			foreach (var testCase in new string [] { "+|hybrid.dll", "core,+|hybrid.dll,-Xamarin.Mac.dll" }){
+				ClearCommandsRun ();
+				var options = new AOTOptions (testCase);
+				Assert.IsTrue (options.IsAOT, "Should be IsAOT");
+				Assert.IsFalse (options.IsHybridAOT, "Should not be IsHybridAOT");
+
+				Compile (options, new TestFileEnumerator (new string [] { "|hybrid.dll", "Xamarin.Mac.dll" }));
+				AssertFilesAOTed (new string [] {"|hybrid.dll"});
+			}
+		}
+
+		[Test]
+		public void InvalidHybridOptions_ShouldThrow ()
+		{
+			AssertThrowErrorWithCode (() => new AOTOptions ("|"), 20);
+			AssertThrowErrorWithCode (() => new AOTOptions ("|hybrid"), 20);
+			AssertThrowErrorWithCode (() => new AOTOptions ("core|"), 20);
+			AssertThrowErrorWithCode (() => new AOTOptions ("foo|hybrid"), 20);
+			AssertThrowErrorWithCode (() => new AOTOptions ("core|foo"), 20);
+			AssertThrowErrorWithCode (() => new AOTOptions ("|hybrid,+Foo.dll"), 20);
+		}
+
+		[Test]
+		public void HybridOption_ShouldInvokeHybridCompiler ()
+		{
+			var options = new AOTOptions ("sdk|hybrid");
+			Assert.IsTrue (options.IsAOT, "Should be IsAOT");
+			Assert.IsTrue (options.IsHybridAOT, "Should be IsHybridAOT");
+
+			Compile (options, new TestFileEnumerator (FullAppFileList));
+
+			AssertFilesAOTed (SDKFileList, kind : AOTKind.Hybrid);
 		}
 	}
 }
