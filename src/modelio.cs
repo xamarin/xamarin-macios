@@ -90,6 +90,29 @@ namespace XamCore.ModelIO {
 		[Export ("canExportFileExtension:")]
 		bool CanExportFileExtension (string extension);
 
+		[iOS (10,3), TV (10,2), Mac (10,12,4)]
+		[Export ("components", ArgumentSemantic.Copy)]
+		IMDLComponent[] Components { get; }
+
+		[iOS (10,3), TV (10,2), Mac (10,12,4)]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("setComponent:forProtocol:")]
+		void SetComponent (IMDLComponent component, Protocol protocol);
+
+		[iOS (10,3), TV (10,2), Mac (10,12,4)]
+		[Wrap ("SetComponent (component, new Protocol (type))")]
+		void SetComponent (IMDLComponent component, Type type);
+
+		[iOS (10,3), TV (10,2), Mac (10,12,4)]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Export ("componentConformingToProtocol:")]
+		[return: NullAllowed]
+		IMDLComponent GetComponent (Protocol protocol);
+
+		[iOS (10,3), TV (10,2), Mac (10,12,4)]
+		[Wrap ("GetComponent (new Protocol (type))")]
+		IMDLComponent GetComponent (Type type);
+
 		[iOS (10,0)]
 		[Mac (10,12)]
 		[TV (10,0)]
@@ -986,12 +1009,30 @@ namespace XamCore.ModelIO {
 	[BaseType (typeof(NSObject))]
 	interface MDLObject : MDLNamed
 	{
+		[iOS (10,3), TV (10,2), Mac (10,12,4)]
+		[Export ("components", ArgumentSemantic.Copy)]
+		IMDLComponent[] Components { get; }
+
 		[Export ("setComponent:forProtocol:")]
 		void SetComponent (IMDLComponent component, Protocol protocol);
 
+		[Wrap ("SetComponent (component, new Protocol (type))")]
+		void SetComponent (IMDLComponent component, Type type);
+
+#if XAMCORE_4_0
+		[Internal]
+#endif
+		[Obsolete ("Use GetComponent (Type type)")]
 		[Export ("componentConformingToProtocol:")]
 		[return: NullAllowed]
 		IMDLComponent IsComponentConforming (Protocol protocol);
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Wrap ("IsComponentConforming (protocol)")]
+		IMDLComponent GetComponent (Protocol protocol);
+
+		[Wrap ("GetComponent (new Protocol (type))")]
+		IMDLComponent GetComponent (Type type);
 
 		[NullAllowed, Export ("parent", ArgumentSemantic.Weak)]
 		MDLObject Parent { get; set; }
@@ -1067,6 +1108,14 @@ namespace XamCore.ModelIO {
 		[Abstract]
 		[Export ("removeObject:")]
 		void RemoveObject (MDLObject @object);
+
+		[iOS (10,3), TV (10,2), Mac (10,12,4)]
+		[Export ("objectAtIndexedSubscript:")]
+		MDLObject GetObject (nuint index);
+
+		[iOS (10,3), TV (10,2), Mac (10,12,4)]
+		[Export ("count")]
+		nuint Count { get; }
 
 		[Abstract]
 		[Export ("objects", ArgumentSemantic.Retain)]
@@ -1536,6 +1585,11 @@ namespace XamCore.ModelIO {
 		[Export ("setRotation:forTime:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		void SetRotation (Vector3 rotation, double time);
+
+		[iOS (10,3), TV (10,2), Mac (10,12,4)]
+		[Export ("setMatrix:forTime:")]
+		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+		void SetMatrix (Matrix4 matrix, double time);
 
 		[Export ("shear", ArgumentSemantic.Assign)]
 		Vector3 Shear {
