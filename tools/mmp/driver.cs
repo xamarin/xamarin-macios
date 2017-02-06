@@ -187,7 +187,7 @@ namespace Xamarin.Bundler {
 		static int watch_level;
 		static Stopwatch watch;
 
-		static AOTCompiler aot = new AOTCompiler ();
+		static AOTOptions aotOptions = null;
 
 		static string xm_framework_dir;
 		public static string MMPDirectory {
@@ -362,7 +362,7 @@ namespace Xamarin.Bundler {
 				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullSystemFramework = true; } },
 				{ "aot:", "Specify assemblies that should be compiled via experimental AOT.\n- none - No AOT (default)\n- all - Every assembly in MonoBundle not ignored\n- core - Just Xamarin.Mac.dll, System.dll, and mscorlib.dll\n sdk - Xamarin.Mac.dll and all BCL assemblies\nIndividual files can be included for AOT via +FileName.dll and excluded via -FileName.dll",
 					v => {
-						aot.Parse (v);
+						aotOptions = new AOTOptions (v);
 					}
 				},
 			};
@@ -808,19 +808,19 @@ namespace Xamarin.Bundler {
 			if (App.LinkMode != LinkMode.All && App.RuntimeOptions != null)
 				App.RuntimeOptions.Write (App.AppDirectory);
 
-			if (aot.IsAOT) {
+			if (aotOptions != null && aotOptions.IsAOT) {
 				if (!IsUnified)
 					throw new MonoMacException (98, true, "AOT compilation is only available on Unified");
-				MonoType monoType;
+				AOTCompilerType compilerType;
 				if (IsUnifiedMobile || IsUnifiedFullXamMacFramework)
-					monoType = Is64Bit ? MonoType.Bundled64 : MonoType.Bundled32; 
+					compilerType = Is64Bit ? AOTCompilerType.Bundled64 : AOTCompilerType.Bundled32; 
 				else if (IsUnifiedFullSystemFramework)
-					monoType = Is64Bit ? MonoType.System64 : MonoType.System32; 
+					compilerType = Is64Bit ? AOTCompilerType.System64 : AOTCompilerType.System32; 
 				else
 					throw ErrorHelper.CreateError (0099, "Internal error \"AOT with unexpected profile.\" Please file a bug report with a test case (http://bugzilla.xamarin.com).");
 
-
-				aot.Compile (monoType, mmp_dir);
+				AOTCompiler compiler = new AOTCompiler (aotOptions, compilerType);
+				compiler.Compile (mmp_dir);
 				Watch ("AOT Compile", 1);
 			}
 
@@ -1085,7 +1085,7 @@ namespace Xamarin.Bundler {
 				else
 					sw.WriteLine ("\tsetenv (\"MONO_GC_PARAMS\", \"major=marksweep\", 1);");
 
-				if (aot.IsAOT)
+				if (aotOptions.IsAOT)
 					sw.WriteLine ("\txamarin_mac_aot = TRUE;");
 
 				sw.WriteLine ("\treturn 0;");

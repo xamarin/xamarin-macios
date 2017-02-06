@@ -56,7 +56,7 @@ namespace Xamarin.Bundler {
 
 	public delegate int RunCommandDelegate (string path, string args, string[] env = null, StringBuilder output = null, bool suppressPrintOnErrors = false);
 
-	public enum MonoType {
+	public enum AOTCompilerType {
 		Invalid,
 		Bundled64,
 		Bundled32,
@@ -64,23 +64,66 @@ namespace Xamarin.Bundler {
 		System32,
 	}
 
+	public enum AOTCompilationType {
+		Default,
+		None,
+		All,
+		Core,
+		SDK,
+		Explicit
+	}
+
+	public class AOTOptions
+	{
+		public bool IsAOT => CompilationType != AOTCompilationType.Default && CompilationType != AOTCompilationType.None;
+
+		public AOTCompilationType CompilationType { get; private set; } = AOTCompilationType.Default;
+
+		public List <string> IncludedAssemblies { get; private set; } = new List <string> ();
+		public List <string> ExcludedAssemblies { get; private set; } = new List <string> ();
+
+		public AOTOptions (string options)
+		{
+			// Syntax - all,core,sdk,none or "" if explicit then optional list of +/-'ed assemblies
+			// Sections seperated by ,
+			foreach (var option in options.Split (',')) {
+				switch (option) {
+				case "none":
+					CompilationType = AOTCompilationType.None;
+					continue;
+				case "all":
+					CompilationType = AOTCompilationType.All;
+					continue;
+				case "sdk":
+					CompilationType = AOTCompilationType.SDK;
+					continue;
+				case "core":
+					CompilationType = AOTCompilationType.Core;
+					continue;
+				}
+
+				if (option.StartsWith ("+", StringComparison.Ordinal)) {
+					if (CompilationType == AOTCompilationType.Default)
+						CompilationType = AOTCompilationType.Explicit;
+					IncludedAssemblies.Add (option.Substring (1));
+					continue;
+				}
+				if (option.StartsWith ("-", StringComparison.Ordinal)) {
+					if (CompilationType == AOTCompilationType.Default)
+						CompilationType = AOTCompilationType.Explicit;
+					ExcludedAssemblies.Add (option.Substring (1));
+					continue;
+				}
+				throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "none, all, core, sdk, and an explicit list of assemblies.");
+			}
+			if (CompilationType == AOTCompilationType.Default)
+				throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "none, all, core, sdk, and an explicit list of assemblies.");
+
+		}
+	}
+
 	public class AOTCompiler
 	{
-		enum AotType {
-			Default,
-			None,
-			All,
-			Core,
-			SDK,
-			Explicit
-		}
-
-		AotType aotType = AotType.Default;
-		public bool IsAOT => aotType != AotType.Default && aotType != AotType.None; 
-
-		// Set to Key -> True when we've seen a given include/exclude during compile to catch errors
-		Dictionary <string, bool> includedAssemblies = new Dictionary <string, bool> ();
-		Dictionary <string, bool> excludedAssemblies = new Dictionary <string, bool> ();
 
 		// Allows tests to stub out actual compilation and parallelism
 		public RunCommandDelegate RunCommand { get; set; } = Driver.RunCommand; 
@@ -89,47 +132,46 @@ namespace Xamarin.Bundler {
 
 		public string Quote (string f) => Driver.Quote (f);
 
-		public void Parse (string options)
-		{
-			// Syntax - all,core,sdk,none or "" if explicit then optional list of +/-'ed assemblies
-			// Sections seperated by ,
-			foreach (var option in options.Split (',')) {
-				switch (option) {
-				case "none":
-					aotType = AotType.None;
-					continue;
-				case "all":
-					aotType = AotType.All;
-					continue;
-				case "sdk":
-					aotType = AotType.SDK;
-					continue;
-				case "core":
-					aotType = AotType.Core;
-					continue;
-				}
+		AOTOptions options;
+		AOTCompilerType compilerType;
 
-				if (option.StartsWith ("+", StringComparison.Ordinal)) {
-					if (aotType == AotType.Default)
-						aotType = AotType.Explicit;
-					includedAssemblies.Add (option.Substring (1), false);
-					continue;
-				}
-				if (option.StartsWith ("-", StringComparison.Ordinal)) {
-					if (aotType == AotType.Default)
-						aotType = AotType.Explicit;
-					excludedAssemblies.Add (option.Substring (1), false);
-					continue;
-				}
-				throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "none, all, core, sdk, and an explicit list of assemblies.");
-			}
-			if (aotType == AotType.Default)
-				throw new MonoMacException (20, true, "The valid options for '{0}' are '{1}'.", "--aot", "none, all, core, sdk, and an explicit list of assemblies.");
+		public AOTCompiler (AOTOptions options, AOTCompilerType compilerType)
+		{
+			this.options = options;
+			this.compilerType = compilerType;
+		}
+
+		public void Compile (string path)
+		{
+			Compile (new FileSystemEnumerator (path));
+		}
+
+		public void Compile (IFileEnumerator files)
+		{
+			if (!options.IsAOT)
+				throw ErrorHelper.CreateError (0099, "Internal error \"AOTBundle with aot: {0}\" Please file a bug report with a test case (http://bugzilla.xamarin.com).", options.CompilationType);
+
+			var monoEnv = new string [] {"MONO_PATH", files.RootDir };
+
+			Parallel.ForEach (GetFilesToAOT (files), ParallelOptions, file => {
+				if (RunCommand (MonoPath, String.Format ("--aot=hybrid {0}", Quote (file)), monoEnv) != 0)
+					throw ErrorHelper.CreateError (3001, "Could not AOT the assembly '{0}'", file);
+			});
 		}
 
 		List<string> GetFilesToAOT (IFileEnumerator files)
 		{
+			// Make a dictionary of included/excluded files to track if we've missed some at the end
+			Dictionary <string, bool> includedAssemblies = new Dictionary <string, bool> ();
+			foreach (var item in options.IncludedAssemblies)
+				includedAssemblies [item] = false;
+
+			Dictionary <string, bool> excludedAssemblies = new Dictionary <string, bool> ();
+			foreach (var item in options.ExcludedAssemblies)
+				excludedAssemblies [item] = false;
+
 			var aotFiles = new List<string> ();
+
 			foreach (var file in files.Files) {
 				string fileName = Path.GetFileName (file);
 				string extension = Path.GetExtension (file);
@@ -137,33 +179,33 @@ namespace Xamarin.Bundler {
 					continue;
 
 				if (excludedAssemblies.ContainsKey (fileName)) {
-					excludedAssemblies[fileName] = true;
+					excludedAssemblies [fileName] = true;
 					continue;
 				}
 
 				if (includedAssemblies.ContainsKey (fileName)) {
-					includedAssemblies[fileName] = true;
+					includedAssemblies [fileName] = true;
 					aotFiles.Add (file);
 					continue;
 				}
 
-				switch (aotType) {
-				case AotType.All:
+				switch (options.CompilationType) {
+				case AOTCompilationType.All:
 					aotFiles.Add (file);
 					break;
-				case AotType.SDK:
+				case AOTCompilationType.SDK:
 					string fileNameNoExtension = Path.GetFileNameWithoutExtension (fileName);
 					if (Profile.IsSdkAssembly (fileNameNoExtension) || fileName == "Xamarin.Mac.dll")
 						aotFiles.Add (file);
 					break;
-				case AotType.Core:
+				case AOTCompilationType.Core:
 					if (fileName == "Xamarin.Mac.dll" || fileName == "System.dll" || fileName == "mscorlib.dll")
 						aotFiles.Add (file);
 					break;
-				case AotType.Explicit:
+				case AOTCompilationType.Explicit:
 					break; // In explicit, only included includedAssemblies included
 				default:
-					throw ErrorHelper.CreateError (0099, "Internal error \"GetFilesToAOT with aot: {0}\" Please file a bug report with a test case (http://bugzilla.xamarin.com).", aotType);
+					throw ErrorHelper.CreateError (0099, "Internal error \"GetFilesToAOT with aot: {0}\" Please file a bug report with a test case (http://bugzilla.xamarin.com).", options.CompilationType);
 				}
 			}
 
@@ -178,38 +220,22 @@ namespace Xamarin.Bundler {
 			return aotFiles;
 		}
 
-		string GetMonoPath (MonoType monoType)
+		string MonoPath
 		{
-			switch (monoType) {
-			case MonoType.Bundled64:
-				return Path.Combine (XamarinMacPrefix, "bin/bmac-mobile-mono");
-			case MonoType.Bundled32:
-				return Path.Combine (XamarinMacPrefix, "bin/bmac-mobile-mono-32");
-			case MonoType.System64:
-				return "/Library/Frameworks/Mono.framework/Commands/mono64";
-			case MonoType.System32:
-				return "/Library/Frameworks/Mono.framework/Commands/mono32";
-			default:
-				throw ErrorHelper.CreateError (0099, "Internal error \"GetMonoPath with monoType: {0}\" Please file a bug report with a test case (http://bugzilla.xamarin.com).", monoType);
+			get {
+				switch (compilerType) {
+				case AOTCompilerType.Bundled64:
+					return Path.Combine (XamarinMacPrefix, "bin/bmac-mobile-mono");
+				case AOTCompilerType.Bundled32:
+					return Path.Combine (XamarinMacPrefix, "bin/bmac-mobile-mono-32");
+				case AOTCompilerType.System64:
+					return "/Library/Frameworks/Mono.framework/Commands/mono64";
+				case AOTCompilerType.System32:
+					return "/Library/Frameworks/Mono.framework/Commands/mono32";
+				default:
+					throw ErrorHelper.CreateError (0099, "Internal error \"MonoPath with compilerType: {0}\" Please file a bug report with a test case (http://bugzilla.xamarin.com).", compilerType);
+				}
 			}
-		}
-
-		public void Compile (MonoType monoType, string path)
-		{
-			Compile (monoType, new FileSystemEnumerator (path));
-		}
-
-		public void Compile (MonoType monoType, IFileEnumerator files)
-		{
-			if (!IsAOT)
-				throw ErrorHelper.CreateError (0099, "Internal error \"AOTBundle with aot: {0}\" Please file a bug report with a test case (http://bugzilla.xamarin.com).", aotType);
-
-			var monoEnv = new string [] {"MONO_PATH", files.RootDir };
-
-			Parallel.ForEach (GetFilesToAOT (files), ParallelOptions, file => {
-				if (RunCommand (GetMonoPath (monoType), String.Format ("--aot=hybrid {0}", Quote (file)), monoEnv) != 0)
-					throw ErrorHelper.CreateError (3001, "Could not AOT the assembly '{0}'", file);
-			});
 		}
 	}
 }
