@@ -2046,7 +2046,6 @@ namespace XamCore.MediaPlayer {
 		[Export ("setEndTime:forItemWithStoreID:")]
 		void SetEndTime (double endTime, string storeID);
 	}
-#endif
 
 	[NoTV]
 	[NoMac]
@@ -2086,4 +2085,5 @@ namespace XamCore.MediaPlayer {
 		[Export ("performQueueTransaction:completionHandler:")]
 		void Perform (Action<MPMusicPlayerControllerMutableQueue> queueTransaction, Action<MPMusicPlayerControllerQueue, NSError> completionHandler);
 	}
+#endif
 }

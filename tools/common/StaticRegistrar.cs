@@ -1688,7 +1688,7 @@ namespace XamCore.Registrar {
 							"Your application is using the '{0}' framework, which isn't included in the {3} SDK you're using to build your app (this framework was introduced in {3} {2}, while you're building with the {3} {1} SDK.) " +
 							"Please select a newer SDK in your app's {3} Build options.",
 #endif
-							framework.Name, Driver.SDKVersion, framework.Version, App.PlatformName));
+							framework.Name, App.SdkVersion, framework.Version, App.PlatformName));
 						reported_frameworks.Add (framework.Name);
 					}
 					return;
