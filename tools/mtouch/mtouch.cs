@@ -1658,7 +1658,7 @@ namespace Xamarin.Bundler
 
 			foreach (ModuleDefinition md in ad.Modules)
 				foreach (TypeDefinition td in md.Types)
-					if (td.IsNSObject ())
+					if (td.IsNSObject (s.Target.LinkContext))
 						return true;
 
 			return false;

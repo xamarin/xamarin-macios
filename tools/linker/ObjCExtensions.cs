@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Tuner;
 
+using Xamarin.Tuner;
+
 namespace Xamarin.Linker {
 
 	static class Namespaces {
@@ -168,18 +170,16 @@ namespace Xamarin.Linker {
 			}
 		}
 
-		internal static HashSet<TypeDefinition> cached_isnsobject;
-
-		public static bool IsNSObject (this TypeReference type)
+		public static bool IsNSObject (this TypeReference type, DerivedLinkContext link_context)
 		{
-			return type.Resolve ().IsNSObject ();
+			return type.Resolve ().IsNSObject (link_context);
 		}
 
 		// warning: *Is* means does 'type' inherits from MonoTouch.Foundation.NSObject ?
-		public static bool IsNSObject (this TypeDefinition type)
+		public static bool IsNSObject (this TypeDefinition type, DerivedLinkContext link_context)
 		{
-			if (cached_isnsobject != null)
-				return cached_isnsobject.Contains (type);
+			if (link_context.CachedIsNSObject != null)
+				return link_context.CachedIsNSObject.Contains (type);
 
 			return type.Inherits (Namespaces.Foundation, "NSObject");
 		}

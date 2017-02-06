@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Tuner;
 
+using Xamarin.Tuner;
+
 namespace Xamarin.Linker {
 
 	public static class MobileExtensions {
@@ -35,12 +37,10 @@ namespace Xamarin.Linker {
 			return null;
 		}
 
-		internal static HashSet<MethodDefinition> generated_code;
-
-		public static bool IsGeneratedCode (this MethodDefinition self)
+		public static bool IsGeneratedCode (this MethodDefinition self, DerivedLinkContext link_context)
 		{
-			if (generated_code != null)
-				return generated_code.Contains (self);
+			if (link_context.GeneratedCode != null)
+				return link_context.GeneratedCode.Contains (self);
 
 			// check the property too
 			if (self.IsGetter || self.IsSetter) {

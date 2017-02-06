@@ -64,7 +64,7 @@ namespace Xamarin.Linker {
 			// if 'type' inherits from NSObject inside an assembly that has [GeneratedCode]
 			// or for static types used for optional members (using extensions methods), they can be optimized too
 			IsExtensionType = type.IsSealed && type.IsAbstract && type.Name.EndsWith ("_Extensions", StringComparison.Ordinal);
-			ProcessMethods = HasGeneratedCode || (!type.IsNSObject () && !IsExtensionType);
+			ProcessMethods = HasGeneratedCode || (!type.IsNSObject (LinkContext) && !IsExtensionType);
 		}
 
 		// [GeneratedCode] is not enough - e.g. it's used for anonymous delegates even if the 

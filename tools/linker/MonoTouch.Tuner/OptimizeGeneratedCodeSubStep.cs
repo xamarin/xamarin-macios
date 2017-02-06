@@ -62,7 +62,7 @@ namespace MonoTouch.Tuner {
 			if (!HasGeneratedCode)
 				return;
 
-			isdirectbinding_check_required = type.IsDirectBindingCheckRequired ();
+			isdirectbinding_check_required = type.IsDirectBindingCheckRequired (LinkContext);
 			base.Process (type);
 		}
 
@@ -70,7 +70,7 @@ namespace MonoTouch.Tuner {
 		{
 			// special processing on generated methods from NSObject-inherited types
 			// it would be too risky to apply on user-generated code
-			if (!method.HasBody || !method.IsGeneratedCode () || (!IsExtensionType && !IsExport (method)))
+			if (!method.HasBody || !method.IsGeneratedCode (LinkContext) || (!IsExtensionType && !IsExport (method)))
 				return;
 			
 			var instructions = method.Body.Instructions;
