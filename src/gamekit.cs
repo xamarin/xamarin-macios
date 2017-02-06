@@ -1675,7 +1675,7 @@ namespace XamCore.GameKit {
 		[Export ("handleMatchEnded:")]
 		void HandleMatchEnded (GKTurnBasedMatch match);
 
-#if XAMCORE_2_0
+#if (XAMCORE_2_0 && !MONOMAC) || XAMCORE_4_0
 		[Abstract]
 #endif
 		[Since (6,0)]

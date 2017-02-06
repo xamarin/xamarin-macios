@@ -1833,17 +1833,6 @@ namespace XamCore.SceneKit {
 		[Wrap ("WriteToUrl (url, options == null ? null : options.Dictionary, handler, exportProgressHandler)")]
 		bool WriteToUrl (NSUrl url, SCNSceneLoadingOptions options, ISCNSceneExportDelegate handler, SCNSceneExportProgressHandler exportProgressHandler);
 
-#if MONOMAC && !XAMCORE_4_0 // Add this overloads for binary compat only on macOS
-		[Obsolete ("Use the ISCNSceneExportDelegate overload instead")]
-		[Mac (10, 9)]
-		[Wrap ("WriteToUrl (url: url, options: options == null ? null : options.Dictionary, aDelegate: handler, exportProgressHandler: exportProgressHandler)")]
-		bool WriteToUrl (NSUrl url, SCNSceneLoadingOptions options, SCNSceneExportDelegate handler, SCNSceneExportProgressHandler exportProgressHandler);
-
-		[Obsolete ("Use the ISCNSceneExportDelegate overload instead")]
-		[Mac (10, 9)]
-		[Wrap ("WriteToUrl (url: url, options: options, aDelegate: handler, exportProgressHandler: exportProgressHandler)")]
-		bool WriteToUrl (NSUrl url, NSDictionary options, SCNSceneExportDelegate handler, SCNSceneExportProgressHandler exportProgressHandler);
-#endif
 		#region SCNParticleSystemSupport (SCNNode) category
 
 		[Mac (10,10)]
@@ -2586,7 +2575,9 @@ namespace XamCore.SceneKit {
 #else
 		new EAGLContext Context { get; set; }
 #endif
+#endif
 
+#if !WATCH
 		[iOS (9,0)][Mac (10,11)]
 		[Wrap ("this (frame, options != null ? options.Dictionary : null)")]
 		IntPtr Constructor (CGRect frame, [NullAllowed] SCNRenderingOptions options);
