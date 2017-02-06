@@ -8,7 +8,7 @@ namespace xharness
 {
 	public abstract class SimpleListener : IDisposable
 	{
-		FileStream output_stream;
+		StreamWriter output_writer;
 
 		protected ManualResetEvent stopped = new ManualResetEvent (false);
 		protected ManualResetEvent connected = new ManualResetEvent (false);
@@ -23,9 +23,9 @@ namespace xharness
 		protected abstract void Start ();
 		protected abstract void Stop ();
 
-		public FileStream OutputStream {
+		public StreamWriter OutputWriter {
 			get {
-				return output_stream;
+				return output_writer;
 			}
 		}
 
@@ -34,19 +34,13 @@ namespace xharness
 			Log.WriteLine ("Connection from {0} saving logs to {1}", remote, TestLog.FullPath);
 			connected.Set ();
 
-			if (output_stream != null) {
-				output_stream.Flush ();
-				output_stream.Dispose ();
-			}
+			if (output_writer == null) {
+				output_writer = TestLog.GetWriter ();
 
-			var fs = TestLog.FileStream;
-			// a few extra bits of data only available from this side
-			string header = String.Format ("[Local Date/Time:\t{1}]{0}[Remote Address:\t{2}]{0}",
-				Environment.NewLine, DateTime.Now, remote);
-			byte [] array = Encoding.UTF8.GetBytes (header);
-			fs.Write (array, 0, array.Length);
-			fs.Flush ();
-			output_stream = fs;
+				// a few extra bits of data only available from this side
+				output_writer.WriteLine ($"[Local Date/Time:\t{DateTime.Now}]");
+				output_writer.WriteLine ($"[Remote Address:\t{remote}]");
+			}
 		}
 
 
@@ -83,8 +77,8 @@ namespace xharness
 #region IDisposable Support
 		protected virtual void Dispose (bool disposing)
 		{
-			if (output_stream != null)
-				output_stream.Dispose ();
+			if (output_writer != null)
+				output_writer.Dispose ();
 		}
 
 		public void Dispose ()

@@ -14,6 +14,7 @@ namespace xharness
 			var os = new OptionSet () {
 				{ "h|?|help", "Displays the help", (v) => showHelp () },
 				{ "v|verbose", "Show verbose output", (v) => harness.Verbosity++ },
+				{ "use-system:", "Use the system version of Xamarin.iOS/Xamarin.Mac or the locally build version. Default: the locally build version.", (v) => harness.UseSystem = v == "1" || v == "true" || string.IsNullOrEmpty (v) },
 				// Configure
 				{ "mac", "Configure for Xamarin.Mac instead of iOS.", (v) => harness.Mac = true },
 				{ "configure", "Creates project files and makefiles.", (v) => harness.Action = HarnessAction.Configure },
@@ -32,6 +33,12 @@ namespace xharness
 				{ "install=", "Installs a project.", (v) =>
 					{
 						harness.Action = HarnessAction.Install;
+						harness.IOSTestProjects.Add (new TestProject (v));
+					}
+				},
+				{ "uninstall=", "Uninstalls a project.", (v) =>
+					{
+						harness.Action = HarnessAction.Uninstall;
 						harness.IOSTestProjects.Add (new TestProject (v));
 					}
 				},
@@ -66,6 +73,10 @@ namespace xharness
 				throw new Exception (string.Format ("Unknown arguments: {0}", string.Join (", ", input.ToArray ())));
 			if (harness.Action == HarnessAction.None)
 				showHelp ();
+
+			// XS sets this, which breaks pretty much everything if it doesn't match what was passed to --sdkroot.
+			Environment.SetEnvironmentVariable ("XCODE_DEVELOPER_DIR_PATH", null);
+
 			return harness.Execute ();
 		}
 	}

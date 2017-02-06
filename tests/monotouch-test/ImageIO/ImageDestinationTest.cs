@@ -11,7 +11,11 @@ using System;
 using System.IO;
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 using CoreGraphics;
 using ImageIO;
 #else
@@ -108,7 +112,11 @@ namespace MonoTouchFixtures.ImageIO {
 		{
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png");
 			using (NSMutableData destData = new NSMutableData ())
+#if MONOMAC
+			using (var uiimg = new NSImage (NSBundle.MainBundle.PathForResource ("basn3p08", "png")))
+#else
 			using (var uiimg = UIImage.FromFile (file))
+#endif
 			using (var img = uiimg.CGImage)
 #if XAMCORE_2_0 // FromData => Create
 			using (var id = CGImageDestination.Create (destData, GoodUti, 1)) {
@@ -126,7 +134,11 @@ namespace MonoTouchFixtures.ImageIO {
 
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png");
 			using (NSMutableData destData = new NSMutableData ())
+#if MONOMAC
+			using (var uiimg = new NSImage (NSBundle.MainBundle.PathForResource ("basn3p08", "png")))
+#else
 			using (var uiimg = UIImage.FromFile (file))
+#endif
 			using (var img = uiimg.CGImage)
 #if XAMCORE_2_0 // FromData => Create
 			using (var id = CGImageDestination.Create (destData, GoodUti, 1))
@@ -143,7 +155,11 @@ namespace MonoTouchFixtures.ImageIO {
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
 
+#if MONOMAC
+			using (NSData data = NSData.FromFile (NSBundle.MainBundle.PathForResource ("xamarin2", "png")))
+#else
 			using (NSData data = NSData.FromFile ("xamarin2.png"))
+#endif
 			using (var source = CGImageSource.FromData (data))
 			using (NSMutableData destData = new NSMutableData ())
 #if XAMCORE_2_0 // FromData => Create

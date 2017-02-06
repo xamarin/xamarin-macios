@@ -116,10 +116,7 @@ namespace xharness
 					}
 
 					// build project target
-					if (target.IsBCLProject) {
-						throw new NotImplementedException ();
-					}
-					else if (target is MacClassicTarget) {
+					if (target is MacClassicTarget) {
 						allTargetNames.Add (MakeMacClassicTargetName (target, MacTargetNameType.Build));
 						allTargetCleanNames.Add (MakeMacClassicTargetName (target, MacTargetNameType.Clean));
 
@@ -160,7 +157,10 @@ namespace xharness
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Exec), "");
-						writer.WriteLine ("\t$(Q) {2}/bin/x86/Debug{1}/{0}.app/Contents/MacOS/{0}", make_escaped_name, target.Suffix, CreateRelativePath (Path.GetDirectoryName (target.ProjectPath), Path.GetDirectoryName (makefile)));
+						if (target.IsBCLProject)
+							writer.WriteLine ("\t$(Q) {2}/bin/Debug{1}/{0}Tests.app/Contents/MacOS/{0}Tests", make_escaped_name, target.Suffix, CreateRelativePath (Path.GetDirectoryName (target.ProjectPath), Path.GetDirectoryName (makefile)));
+						else
+							writer.WriteLine ("\t$(Q) {2}/bin/x86/Debug{1}/{0}.app/Contents/MacOS/{0}", make_escaped_name, target.Suffix, CreateRelativePath (Path.GetDirectoryName (target.ProjectPath), Path.GetDirectoryName (makefile)));
 						writer.WriteLine ();
 
 						writer.WriteTarget (MakeMacUnifiedTargetName (target, MacTargetNameType.Run), "");
@@ -241,7 +241,25 @@ namespace xharness
 			writer.WriteLine ("\t$(Q) if test -e \".$@-failure.stamp\"; then cat \".$@-failure.stamp\"; rm \".$@-failure.stamp\"; exit 1; fi");
 		}
 
-		public static void CreateMakefile (Harness harness, IEnumerable<UnifiedTarget> unified_targets, IEnumerable<TVOSTarget> tvos_targets, IEnumerable<WatchOSTarget> watchos_targets)
+		static string GetMakeSuffix (this Target target, bool escape = true)
+		{
+			var rv = "-" + target.Platform;
+			if (escape)
+				rv = rv.Replace (" ", "\\ ");
+			return rv;
+		}
+
+		static string GetMakeName (this Target target, bool escape = true)
+		{
+			var rv = target.Name;
+			if (escape)
+				rv = rv.Replace (" ", "\\ ");
+			if (target is TodayExtensionTarget)
+				rv = rv + "-today";
+			return rv;
+		}
+
+		public static void CreateMakefile (Harness harness, IEnumerable<UnifiedTarget> unified_targets, IEnumerable<TVOSTarget> tvos_targets, IEnumerable<WatchOSTarget> watchos_targets, IEnumerable<TodayExtensionTarget> today_targets)
 		{
 			var makefile = Path.Combine (harness.RootDirectory, "Makefile.inc");
 			using (var writer = new StreamWriter (makefile, false, new UTF8Encoding (false))) {
@@ -254,14 +272,18 @@ namespace xharness
 				allTargets.AddRange (unified_targets);
 				allTargets.AddRange (tvos_targets);
 				allTargets.AddRange (watchos_targets);
+				allTargets.AddRange (today_targets);
 
 				// build/[install/]run targets for specific test projects.
 				foreach (var target in allTargets) {
 					if (!target.IsExe)
 						continue;
-					
-					var make_escaped_suffix = "-" + target.Platform.Replace (" ", "\\ ");
-					var make_escaped_name = target.Name.Replace (" ", "\\ ");
+
+					var make_escaped_suffix = target.GetMakeSuffix ();
+					var make_escaped_name = target.GetMakeName ();
+
+					if (target is TodayExtensionTarget)
+						make_escaped_name += "-today";
 
 					writer.WriteLine ();
 					if (target.ProjectPath != target.TemplateProjectPath) {
@@ -547,8 +569,8 @@ namespace xharness
 					if (!target.IsExe)
 						continue;
 
-					writer.WriteLine ("\t$(Q) $(MAKE) \"run{0}-sim-{1}\" || echo \"run{0}-sim-{1} failed\" >> \".$@-failure.stamp\"", target.Suffix, target.Name);
-					writer.WriteLine ("\t$(Q) $(MAKE) \"run{0}-dev-{1}\" || echo \"run{0}-dev-{1} failed\" >> \".$@-failure.stamp\"", target.Suffix, target.Name);
+					writer.WriteLine ("\t$(Q) $(MAKE) \"run{0}-sim-{1}\" || echo \"run{0}-sim-{1} failed\" >> \".$@-failure.stamp\"", target.GetMakeSuffix (false), target.GetMakeName (false));
+					writer.WriteLine ("\t$(Q) $(MAKE) \"run{0}-dev-{1}\" || echo \"run{0}-dev-{1} failed\" >> \".$@-failure.stamp\"", target.GetMakeSuffix (false), target.GetMakeName (false));
 				}
 				writer.WriteLine ("\t$(Q) if test -e \".$@-failure.stamp\"; then cat \".$@-failure.stamp\"; rm \".$@-failure.stamp\"; exit 1; fi");
 
@@ -559,7 +581,7 @@ namespace xharness
 					if (!target.IsExe)
 						continue;
 
-					writer.WriteLine ("\t$(Q) $(MAKE) \"run{0}-sim-{1}\" || echo \"run{0}-sim-{1} failed\" >> \".$@-failure.stamp\"", target.Suffix, target.Name);
+					writer.WriteLine ("\t$(Q) $(MAKE) \"run{0}-sim-{1}\" || echo \"run{0}-sim-{1} failed\" >> \".$@-failure.stamp\"", target.GetMakeSuffix (false), target.GetMakeName (false));
 				}
 				writer.WriteLine ("\t$(Q) if test -e \".$@-failure.stamp\"; then cat \".$@-failure.stamp\"; rm \".$@-failure.stamp\"; exit 1; fi");
 
@@ -570,7 +592,7 @@ namespace xharness
 					if (!target.IsExe)
 						continue;
 
-					writer.WriteLine ("\t$(Q) $(MAKE) \"run{0}-dev-{1}\" || echo \"run{0}-dev-{1} failed\" >> \".$@-failure.stamp\"", target.Suffix, target.Name);
+					writer.WriteLine ("\t$(Q) $(MAKE) \"run{0}-dev-{1}\" || echo \"run{0}-dev-{1} failed\" >> \".$@-failure.stamp\"", target.GetMakeSuffix (false), target.GetMakeName (false));
 				}
 				writer.WriteLine ("\t$(Q) if test -e \".$@-failure.stamp\"; then cat \".$@-failure.stamp\"; rm \".$@-failure.stamp\"; exit 1; fi");
 
@@ -587,7 +609,7 @@ namespace xharness
 					if (!target.IsExe)
 						continue;
 					
-					writer.WriteLine ("\t$(Q) $(MAKE) \"build-sim-{0}\" \"build-dev-{0}\" || echo \"build-{0} failed\" >> \".$@-failure.stamp\"", target.Name);
+					writer.WriteLine ("\t$(Q) $(MAKE) \"build-sim-{0}\" \"build-dev-{0}\" || echo \"build-{0} failed\" >> \".$@-failure.stamp\"", target.GetMakeName (false));
 				}
 				writer.WriteLine ("\t$(Q) if test -e \".$@-failure.stamp\"; then cat \".$@-failure.stamp\"; rm \".$@-failure.stamp\"; exit 1; fi");
 
@@ -596,7 +618,7 @@ namespace xharness
 				foreach (var target in unified_targets) {
 					if (!target.IsExe)
 						continue;
-					var make_escaped_name = target.Name.Replace (" ", "\\ ");
+					var make_escaped_name = target.GetMakeName ();
 
 					writer.WriteTarget ("build-sim-{0}", "build-ios-sim-{0} build-tvos-sim-{0} build-watchos-sim-{0}", make_escaped_name);
 					writer.WriteLine ("\t$(Q) echo Simulator builds succeeded"); // This is important, otherwise we'll end up executing the catch-all build-% target
@@ -611,36 +633,36 @@ namespace xharness
 					writer.WriteLine ();
 
 					writer.WriteTarget ("run-sim-{0}", "build-sim-{0}", make_escaped_name);
-					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-ios-sim32-{0}\"      || echo \"exec-ios-sim32-{0} failed\"      >> \".$@-failure.stamp\"", target.Name);
-					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-ios-sim64-{0}\"      || echo \"exec-ios-sim64-{0} failed\"      >> \".$@-failure.stamp\"", target.Name);
-					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-tvos-sim-{0}\"       || echo \"exec-tvos-sim-{0} failed\"       >> \".$@-failure.stamp\"", target.Name);
-					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-watchos-sim-{0}\"    || echo \"exec-watchos-sim-{0} failed\"    >> \".$@-failure.stamp\"", target.Name);
+					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-ios-sim32-{0}\"      || echo \"exec-ios-sim32-{0} failed\"      >> \".$@-failure.stamp\"", target.GetMakeName (false));
+					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-ios-sim64-{0}\"      || echo \"exec-ios-sim64-{0} failed\"      >> \".$@-failure.stamp\"", target.GetMakeName (false));
+					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-tvos-sim-{0}\"       || echo \"exec-tvos-sim-{0} failed\"       >> \".$@-failure.stamp\"", target.GetMakeName (false));
+					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-watchos-sim-{0}\"    || echo \"exec-watchos-sim-{0} failed\"    >> \".$@-failure.stamp\"", target.GetMakeName (false));
 					writer.WriteLine ("\t$(Q) if test -e \".$@-failure.stamp\"; then cat \".$@-failure.stamp\"; rm \".$@-failure.stamp\"; exit 1; fi");
 					writer.WriteLine ();
 
 					writer.WriteTarget ("run-dev-{0}", "build-dev-{0}", make_escaped_name);
-					writer.WriteLine ("\t$(Q) $(MAKE) \"install-ios-dev-{0}\"        || echo \"install-ios-dev-{0} failed\"        >> \".$@-failure.stamp\"", target.Name);
-					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-ios-dev-{0}\"           || echo \"exec-ios-dev-{0} failed\"           >> \".$@-failure.stamp\"", target.Name);
-					writer.WriteLine ("\t$(Q) $(MAKE) \"install-tvos-dev-{0}\"       || echo \"install-tvos-dev-{0} failed\"       >> \".$@-failure.stamp\"", target.Name);
-					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-tvos-dev-{0}\"          || echo \"exec-tvos-dev-{0} failed\"          >> \".$@-failure.stamp\"", target.Name);
-					writer.WriteLine ("\t$(Q) $(MAKE) \"install-watchos-dev-{0}\"    || echo \"install-watchos-dev-{0} failed\"    >> \".$@-failure.stamp\"", target.Name);
-					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-watchos-dev-{0}\"       || echo \"exec-watchos-dev-{0} failed\"       >> \".$@-failure.stamp\"", target.Name);
+					writer.WriteLine ("\t$(Q) $(MAKE) \"install-ios-dev-{0}\"        || echo \"install-ios-dev-{0} failed\"        >> \".$@-failure.stamp\"", target.GetMakeName (false));
+					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-ios-dev-{0}\"           || echo \"exec-ios-dev-{0} failed\"           >> \".$@-failure.stamp\"", target.GetMakeName (false));
+					writer.WriteLine ("\t$(Q) $(MAKE) \"install-tvos-dev-{0}\"       || echo \"install-tvos-dev-{0} failed\"       >> \".$@-failure.stamp\"", target.GetMakeName (false));
+					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-tvos-dev-{0}\"          || echo \"exec-tvos-dev-{0} failed\"          >> \".$@-failure.stamp\"", target.GetMakeName (false));
+					writer.WriteLine ("\t$(Q) $(MAKE) \"install-watchos-dev-{0}\"    || echo \"install-watchos-dev-{0} failed\"    >> \".$@-failure.stamp\"", target.GetMakeName (false));
+					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-watchos-dev-{0}\"       || echo \"exec-watchos-dev-{0} failed\"       >> \".$@-failure.stamp\"", target.GetMakeName (false));
 					writer.WriteLine ("\t$(Q) if test -e \".$@-failure.stamp\"; then cat \".$@-failure.stamp\"; rm \".$@-failure.stamp\"; exit 1; fi");
 					writer.WriteLine ();
 
 					writer.WriteTarget ("run-{0}", "build-{0}", make_escaped_name);
 					// sim
-					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-ios-sim32-{0}\"      || echo \"exec-ios-sim32-{0} failed\"      >> \".$@-failure.stamp\"", target.Name);
-					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-ios-sim64-{0}\"      || echo \"exec-ios-sim64-{0} failed\"      >> \".$@-failure.stamp\"", target.Name);
-					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-tvos-sim-{0}\"       || echo \"exec-tvos-sim-{0} failed\"       >> \".$@-failure.stamp\"", target.Name);
-					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-watchos-sim-{0}\"    || echo \"exec-watchos-sim-{0} failed\"    >> \".$@-failure.stamp\"", target.Name);
+					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-ios-sim32-{0}\"      || echo \"exec-ios-sim32-{0} failed\"      >> \".$@-failure.stamp\"", target.GetMakeName (false));
+					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-ios-sim64-{0}\"      || echo \"exec-ios-sim64-{0} failed\"      >> \".$@-failure.stamp\"", target.GetMakeName (false));
+					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-tvos-sim-{0}\"       || echo \"exec-tvos-sim-{0} failed\"       >> \".$@-failure.stamp\"", target.GetMakeName (false));
+					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-watchos-sim-{0}\"    || echo \"exec-watchos-sim-{0} failed\"    >> \".$@-failure.stamp\"", target.GetMakeName (false));
 					// dev
-					writer.WriteLine ("\t$(Q) $(MAKE) \"install-ios-dev-{0}\"        || echo \"install-ios-dev-{0} failed\"        >> \".$@-failure.stamp\"", target.Name);
-					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-ios-dev-{0}\"           || echo \"exec-ios-dev-{0} failed\"           >> \".$@-failure.stamp\"", target.Name);
-					writer.WriteLine ("\t$(Q) $(MAKE) \"install-tvos-dev-{0}\"       || echo \"install-tvos-dev-{0} failed\"       >> \".$@-failure.stamp\"", target.Name);
-					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-tvos-dev-{0}\"          || echo \"exec-tvos-dev-{0} failed\"          >> \".$@-failure.stamp\"", target.Name);
-					writer.WriteLine ("\t$(Q) $(MAKE) \"install-watchos-dev-{0}\"    || echo \"install-watchos-dev-{0} failed\"    >> \".$@-failure.stamp\"", target.Name);
-					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-watchos-dev-{0}\"       || echo \"exec-watchos-dev-{0} failed\"       >> \".$@-failure.stamp\"", target.Name);
+					writer.WriteLine ("\t$(Q) $(MAKE) \"install-ios-dev-{0}\"        || echo \"install-ios-dev-{0} failed\"        >> \".$@-failure.stamp\"", target.GetMakeName (false));
+					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-ios-dev-{0}\"           || echo \"exec-ios-dev-{0} failed\"           >> \".$@-failure.stamp\"", target.GetMakeName (false));
+					writer.WriteLine ("\t$(Q) $(MAKE) \"install-tvos-dev-{0}\"       || echo \"install-tvos-dev-{0} failed\"       >> \".$@-failure.stamp\"", target.GetMakeName (false));
+					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-tvos-dev-{0}\"          || echo \"exec-tvos-dev-{0} failed\"          >> \".$@-failure.stamp\"", target.GetMakeName (false));
+					writer.WriteLine ("\t$(Q) $(MAKE) \"install-watchos-dev-{0}\"    || echo \"install-watchos-dev-{0} failed\"    >> \".$@-failure.stamp\"", target.GetMakeName (false));
+					writer.WriteLine ("\t$(Q) $(MAKE) \"exec-watchos-dev-{0}\"       || echo \"exec-watchos-dev-{0} failed\"       >> \".$@-failure.stamp\"", target.GetMakeName (false));
 					writer.WriteLine ("\t$(Q) if test -e \".$@-failure.stamp\"; then cat \".$@-failure.stamp\"; rm \".$@-failure.stamp\"; exit 1; fi");
 					writer.WriteLine ();
 
@@ -652,19 +674,19 @@ namespace xharness
 					writer.WriteLine ("\t$(Q) rm -f \".$@-failure.stamp\" \".$@-ios-sim-build-failure.stamp\" \".$@-tvos-sim-build-failure.stamp\" \".$@-watchos-sim-build-failure.stamp\"");
 					writer.WriteLine ("\t$(Q) echo \"@MonkeyWrench: SetSummary:\"");
 					// first build (serialized)
-					writer.WriteLine ("\t$(Q) $(MAKE) \"build-ios-sim-{0}\"        || echo \"@MonkeyWrench: AddSummary: <b>ios failed to build</b> <br/>\"     >> \".$@-ios-sim-build-failure.stamp\"", target.Name);
-					writer.WriteLine ("\t$(Q) $(MAKE) \"build-tvos-sim-{0}\"       || echo \"@MonkeyWrench: AddSummary: <b>tvos failed to build</b> <br/>\"    >> \".$@-tvos-sim-build-failure.stamp\"", target.Name);
+					writer.WriteLine ("\t$(Q) $(MAKE) \"build-ios-sim-{0}\"        || echo \"@MonkeyWrench: AddSummary: <b>ios failed to build</b> <br/>\"     >> \".$@-ios-sim-build-failure.stamp\"", target.GetMakeName (false));
+					writer.WriteLine ("\t$(Q) $(MAKE) \"build-tvos-sim-{0}\"       || echo \"@MonkeyWrench: AddSummary: <b>tvos failed to build</b> <br/>\"    >> \".$@-tvos-sim-build-failure.stamp\"", target.GetMakeName (false));
 					if (harness.INCLUDE_WATCH)
-						writer.WriteLine ("\t$(Q) $(MAKE) \"build-watchos-sim-{0}\"    || echo \"@MonkeyWrench: AddSummary: <b>watchos failed to build</b> <br/>\" >> \".$@-watchos-sim-build-failure.stamp\"", target.Name);
+						writer.WriteLine ("\t$(Q) $(MAKE) \"build-watchos-sim-{0}\"    || echo \"@MonkeyWrench: AddSummary: <b>watchos failed to build</b> <br/>\" >> \".$@-watchos-sim-build-failure.stamp\"", target.GetMakeName (false));
 					// then run
-					writer.WriteLine ("\t$(Q) (test -e \".$@-ios-sim-build-failure.stamp\" && cat \".$@-ios-sim-build-failure.stamp\" >> \".$@-failure.stamp\") || $(MAKE) \"exec-ios-sim32-{0}\"      || echo \"exec-ios-sim32-{0} failed\"      >> \".$@-failure.stamp\"", target.Name);
-					writer.WriteLine ("\t$(Q)  test -e \".$@-ios-sim-build-failure.stamp\"                                                                             || $(MAKE) \"exec-ios-sim64-{0}\"      || echo \"exec-ios-sim64-{0} failed\"      >> \".$@-failure.stamp\"", target.Name);
-					writer.WriteLine ("\t$(Q) (test -e \".$@-tvos-sim-build-failure.stamp\"       && cat \".$@-tvos-sim-build-failure.stamp\"       >> \".$@-failure.stamp\") || $(MAKE) \"exec-tvos-sim-{0}\"       || echo \"exec-tvos-sim-{0} failed\"       >> \".$@-failure.stamp\"", target.Name);
+					writer.WriteLine ("\t$(Q) (test -e \".$@-ios-sim-build-failure.stamp\" && cat \".$@-ios-sim-build-failure.stamp\" >> \".$@-failure.stamp\") || $(MAKE) \"exec-ios-sim32-{0}\"      || echo \"exec-ios-sim32-{0} failed\"      >> \".$@-failure.stamp\"", target.GetMakeName (false));
+					writer.WriteLine ("\t$(Q)  test -e \".$@-ios-sim-build-failure.stamp\"                                                                             || $(MAKE) \"exec-ios-sim64-{0}\"      || echo \"exec-ios-sim64-{0} failed\"      >> \".$@-failure.stamp\"", target.GetMakeName (false));
+					writer.WriteLine ("\t$(Q) (test -e \".$@-tvos-sim-build-failure.stamp\"       && cat \".$@-tvos-sim-build-failure.stamp\"       >> \".$@-failure.stamp\") || $(MAKE) \"exec-tvos-sim-{0}\"       || echo \"exec-tvos-sim-{0} failed\"       >> \".$@-failure.stamp\"", target.GetMakeName (false));
 					if (harness.INCLUDE_WATCH) {
 						if (harness.DisableWatchOSOnWrench) {
-							writer.WriteLine ("\t$(Q) (test -e \".$@-watchos-sim-build-failure.stamp\"    && cat \".$@-watchos-sim-build-failure.stamp\"                            ) || $(MAKE) \"exec-watchos-sim-{0}\"    || echo \"exec-watchos-sim-{0} failed\"                            ", target.Name);
+							writer.WriteLine ("\t$(Q) (test -e \".$@-watchos-sim-build-failure.stamp\"    && cat \".$@-watchos-sim-build-failure.stamp\"                            ) || $(MAKE) \"exec-watchos-sim-{0}\"    || echo \"exec-watchos-sim-{0} failed\"                            ", target.GetMakeName (false));
 						} else {
-							writer.WriteLine ("\t$(Q) (test -e \".$@-watchos-sim-build-failure.stamp\"    && cat \".$@-watchos-sim-build-failure.stamp\"    >> \".$@-failure.stamp\") || $(MAKE) \"exec-watchos-sim-{0}\"    || echo \"exec-watchos-sim-{0} failed\"    >> \".$@-failure.stamp\"", target.Name);
+							writer.WriteLine ("\t$(Q) (test -e \".$@-watchos-sim-build-failure.stamp\"    && cat \".$@-watchos-sim-build-failure.stamp\"    >> \".$@-failure.stamp\") || $(MAKE) \"exec-watchos-sim-{0}\"    || echo \"exec-watchos-sim-{0} failed\"    >> \".$@-failure.stamp\"", target.GetMakeName (false));
 						}
 					}
 					writer.WriteLine ("\t$(Q) if test -e \".$@-failure.stamp\"; then cat \".$@-failure.stamp\"; rm \".$@-failure.stamp\"; exit 1; fi");

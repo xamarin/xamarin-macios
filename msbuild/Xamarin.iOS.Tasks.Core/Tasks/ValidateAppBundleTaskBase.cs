@@ -112,6 +112,7 @@ namespace Xamarin.iOS.Tasks
 			case "com.apple.intents-ui-service": // iOS
 			case "com.apple.usernotifications.content-extension": // iOS
 			case "com.apple.usernotifications.service": // iOS
+			case "com.apple.networkextension.packet-tunnel": // iOS+OSX
 				break;
 			case "com.apple.watchkit": // iOS8.2
 				var attributes = extension.Get<PDictionary> ("NSExtensionAttributes");

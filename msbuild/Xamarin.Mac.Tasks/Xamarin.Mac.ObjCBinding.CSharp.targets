@@ -72,6 +72,7 @@ Copyright (C) 2014 Xamarin Inc. All rights reserved.
 			Namespace="$(Namespace)"
 			NoStdLib="$(NoStdLib)"
 			OutputAssembly="$(OutputAssembly)"
+			ProcessEnums="$(ProcessEnums)"
 			References="@(ReferencePath);@(BTouchReferencePath)"
 			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
 			FrameworkRoot="$(XamarinMacFrameworkRoot)"

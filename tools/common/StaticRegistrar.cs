@@ -516,7 +516,6 @@ namespace XamCore.Registrar {
 	}
 
 	class StaticRegistrar : Registrar, IStaticRegistrar {
-		public Application App { get; private set; }
 		public Target Target { get; private set; }
 		public bool IsSingleAssembly { get { return !string.IsNullOrEmpty (single_assembly); } }
 
@@ -664,12 +663,12 @@ namespace XamCore.Registrar {
 
 		protected override Exception CreateException (int code, Exception innerException, MethodDefinition method, string message, params object[] args)
 		{
-			return ErrorHelper.CreateError (code, innerException, method, message, args);
+			return ErrorHelper.CreateError (App, code, innerException, method, message, args);
 		}
 
 		protected override Exception CreateException (int code, Exception innerException, TypeReference type, string message, params object [] args)
 		{
-			return ErrorHelper.CreateError (code, innerException, type, message, args);
+			return ErrorHelper.CreateError (App, code, innerException, type, message, args);
 		}
 
 		protected override bool ContainsPlatformReference (AssemblyDefinition assembly)
@@ -1091,7 +1090,7 @@ namespace XamCore.Registrar {
 			return res;
 		}
 
-		protected override RegisterAttribute GetRegisterAttribute (TypeReference type)
+		public override RegisterAttribute GetRegisterAttribute (TypeReference type)
 		{
 			CustomAttribute attrib;
 			RegisterAttribute rv = null;
@@ -1209,7 +1208,7 @@ namespace XamCore.Registrar {
 
 		protected override string PlatformName {
 			get {
-				return Driver.App.PlatformName;
+				return App.PlatformName;
 			}
 		}
 
@@ -1288,7 +1287,7 @@ namespace XamCore.Registrar {
 		{
 			PlatformName currentPlatform;
 #if MTOUCH
-			switch (Driver.App.Platform) {
+			switch (App.Platform) {
 			case Xamarin.Utils.ApplePlatform.iOS:
 				currentPlatform = global::XamCore.ObjCRuntime.PlatformName.iOS;
 				break;
@@ -1299,7 +1298,7 @@ namespace XamCore.Registrar {
 				currentPlatform = global::XamCore.ObjCRuntime.PlatformName.WatchOS;
 				break;
 			default:
-				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", Driver.App.Platform);
+				throw ErrorHelper.CreateError (71, "Unknown platform: {0}. This usually indicates a bug in Xamarin.iOS; please file a bug report at http://bugzilla.xamarin.com with a test case.", App.Platform);
 			}
 #else
 			currentPlatform = global::XamCore.ObjCRuntime.PlatformName.MacOSX;
@@ -1443,7 +1442,7 @@ namespace XamCore.Registrar {
 
 		protected override Version GetSDKVersion ()
 		{
-			return Driver.SDKVersion;
+			return App.SdkVersion;
 		}
 
 		protected override Dictionary<MethodDefinition, List<MethodDefinition>> PrepareMethodMapping (TypeReference type)
@@ -1645,7 +1644,7 @@ namespace XamCore.Registrar {
 		uint full_token_reference_count;
 		List<string> registered_assemblies = new List<string> ();
 
-		static bool IsPlatformType (TypeReference type)
+		bool IsPlatformType (TypeReference type)
 		{
 			if (type.IsNested)
 				return false;
@@ -1655,7 +1654,7 @@ namespace XamCore.Registrar {
 				return false;
 				
 			if (IsDualBuild) {
-				return Driver.Frameworks.ContainsKey (type.Namespace);
+				return Driver.GetFrameworks (App).ContainsKey (type.Namespace);
 			} else {
 				return type.Namespace.StartsWith (CompatNamespace + ".", StringComparison.Ordinal);
 			}
@@ -1675,8 +1674,8 @@ namespace XamCore.Registrar {
 			var ns = type.Namespace;
 
 			Framework framework;
-			if (Driver.Frameworks.TryGetValue (ns, out framework)) {
-				if (framework.Version > Driver.SDKVersion) {
+			if (Driver.GetFrameworks (App).TryGetValue (ns, out framework)) {
+				if (framework.Version > App.SdkVersion) {
 					if (reported_frameworks == null)
 						reported_frameworks = new HashSet<string> ();
 					if (!reported_frameworks.Contains (framework.Name)) {
@@ -1687,10 +1686,9 @@ namespace XamCore.Registrar {
 							"Alternatively select a newer SDK in your app's Mac Build options.",
 #else
 							"Your application is using the '{0}' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS {2}, while you're building with the iOS {1} SDK.) " +
-							"This configuration is only supported with the legacy registrar (pass --registrar:legacy as an additional mtouch argument in your project's iOS Build option to select). " +
-							"Alternatively select a newer SDK in your app's iOS Build options.",
+							"Please select a newer SDK in your app's iOS Build options.",
 #endif
-							framework.Name, Driver.SDKVersion, framework.Version));
+							framework.Name, App.SdkVersion, framework.Version));
 						reported_frameworks.Add (framework.Name);
 					}
 					return;
@@ -1736,7 +1734,7 @@ namespace XamCore.Registrar {
 			case "CoreAnimation":
 				header.WriteLine ("#import <QuartzCore/QuartzCore.h>");
 #if MTOUCH
-				if (Driver.SDKVersion.Major > 7)
+				if (App.SdkVersion.Major > 7)
 					header.WriteLine ("#import <QuartzCore/CAEmitterBehavior.h>");
 #endif
 				return;
@@ -1751,7 +1749,7 @@ namespace XamCore.Registrar {
 				header.WriteLine ("#import <CoreTelephony/CTCallCenter.h>");
 				header.WriteLine ("#import <CoreTelephony/CTCarrier.h>");
 				header.WriteLine ("#import <CoreTelephony/CTTelephonyNetworkInfo.h>");
-				if (Driver.SDKVersion.Major >= 7) {
+				if (App.SdkVersion.Major >= 7) {
 					header.WriteLine ("#import <CoreTelephony/CTSubscriber.h>");
 					header.WriteLine ("#import <CoreTelephony/CTSubscriberInfo.h>");
 				}
@@ -1759,7 +1757,7 @@ namespace XamCore.Registrar {
 #endif
 #if MTOUCH
 			case "Accounts":
-				var compiler = Path.GetFileName (Driver.CompilerPath);
+				var compiler = Path.GetFileName (App.CompilerPath);
 				if (compiler == "gcc" || compiler == "g++") {
 					exceptions.Add (new MonoTouchException (4121, true, "Cannot use GCC/G++ to compile the generated code from the static registrar when using the Accounts framework (the header files provided by Apple used during the compilation require Clang). Either use Clang (--compiler:clang) or the dynamic registrar (--registrar:dynamic)."));
 					return;
@@ -1786,7 +1784,7 @@ namespace XamCore.Registrar {
 				goto default;
 			case "GameKit":
 #if !MONOMAC
-				if (IsSimulator && Driver.App.Platform == Xamarin.Utils.ApplePlatform.WatchOS)
+				if (IsSimulator && App.Platform == Xamarin.Utils.ApplePlatform.WatchOS)
 					return; // No headers provided for watchOS/simulator.
 #endif
 				goto default;
@@ -1801,7 +1799,7 @@ namespace XamCore.Registrar {
 				return;
 			case "QTKit":
 #if MONOMAC
-				if (Driver.SDKVersion >= MacOSTenTwelveVersion)
+				if (App.SdkVersion >= MacOSTenTwelveVersion)
 					return; // 10.12 removed the header files for QTKit
 #endif
 				goto default;
@@ -1830,7 +1828,7 @@ namespace XamCore.Registrar {
 			return n;
 		}
 		
-		static void ProcessStructure (StringBuilder name, AutoIndentStringBuilder body, TypeDefinition structure, ref int size, string descriptiveMethodName, TypeDefinition root_structure, MemberReference inMember)
+		void ProcessStructure (StringBuilder name, AutoIndentStringBuilder body, TypeDefinition structure, ref int size, string descriptiveMethodName, TypeDefinition root_structure, MemberReference inMember)
 		{
 			switch (structure.FullName) {
 			case "System.Char":
@@ -1889,14 +1887,14 @@ namespace XamCore.Registrar {
 						continue;
 					var fieldType = field.FieldType.Resolve ();
 					if (fieldType == null) 
-						throw ErrorHelper.CreateError (4111, inMember, "The registrar cannot build a signature for type `{0}' in method `{1}`.", structure.FullName, descriptiveMethodName);
+						throw ErrorHelper.CreateError (App, 4111, inMember, "The registrar cannot build a signature for type `{0}' in method `{1}`.", structure.FullName, descriptiveMethodName);
 					if (!fieldType.IsValueType)
-						throw ErrorHelper.CreateError (4161, inMember, "The registrar found an unsupported structure '{0}': All fields in a structure must also be structures (field '{1}' with type '{2}' is not a structure).", root_structure.FullName, field.Name, fieldType.FullName);
+						throw ErrorHelper.CreateError (App, 4161, inMember, "The registrar found an unsupported structure '{0}': All fields in a structure must also be structures (field '{1}' with type '{2}' is not a structure).", root_structure.FullName, field.Name, fieldType.FullName);
 					found = true;
 					ProcessStructure (name, body, fieldType, ref size, descriptiveMethodName, root_structure, inMember);
 				}
 				if (!found)
-					throw ErrorHelper.CreateError (4111, inMember, "The registrar cannot build a signature for type `{0}' in method `{1}`.", structure.FullName, descriptiveMethodName);
+					throw ErrorHelper.CreateError (App, 4111, inMember, "The registrar cannot build a signature for type `{0}' in method `{1}`.", structure.FullName, descriptiveMethodName);
 				break;
 			}
 		}
@@ -2139,11 +2137,6 @@ namespace XamCore.Registrar {
 			return sb.ToString ();
 		}
 
-		string CleanName (string name)
-		{
-			return name.Replace ('.', '_').Replace ('/', '_');
-		}
-
 		void WriteFullName (StringBuilder sb, TypeReference type)
 		{
 			if (type.DeclaringType != null) {
@@ -2274,7 +2267,7 @@ namespace XamCore.Registrar {
 						continue;
 				}
 
-				if (IsQTKitType (@class) && Driver.SDKVersion >= MacOSTenTwelveVersion)
+				if (IsQTKitType (@class) && App.SdkVersion >= MacOSTenTwelveVersion)
 					continue; // QTKit header was removed in 10.12 SDK
 
 				// These are 64-bit frameworks that extend NSExtensionContext / NSUserActivity, which you can't do
@@ -2989,7 +2982,7 @@ namespace XamCore.Registrar {
 						
 						setup_call_stack.AppendLine ("if (p{0}) {{", i);
 						setup_call_stack.AppendLine ("NSArray *arr = (NSArray *) p{0};", i);
-						if (Driver.EnableDebug)
+						if (App.EnableDebug)
 							setup_call_stack.AppendLine ("xamarin_check_objc_type (p{0}, [NSArray class], _cmd, self, {0}, managed_method);", i);
 						setup_call_stack.AppendLine ("MonoClass *e_class;");
 						setup_call_stack.AppendLine ("MonoArray *marr;");
@@ -3040,13 +3033,13 @@ namespace XamCore.Registrar {
 								setup_call_stack.AppendLine ("mobj{0} = xamarin_get_managed_object_for_ptr_fast (nobj, &exception_gchandle);", i);
 								setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
 							}
-							if (Driver.EnableDebug) {
+							if (App.EnableDebug) {
 								setup_call_stack.AppendLine ("xamarin_verify_parameter (mobj{0}, _cmd, self, nobj, {0}, e_class, managed_method);", i);
 							}
 							setup_call_stack.AppendLine ("}");
 							setup_call_stack.AppendLine ("mono_array_set (marr, MonoObject *, j, mobj{0});", i);
 						} else {
-							throw ErrorHelper.CreateError (4111, method.Method, "The registrar cannot build a signature for type `{0}' in method `{1}`.", type.FullName, descriptiveMethodName);
+							throw ErrorHelper.CreateError (App, 4111, method.Method, "The registrar cannot build a signature for type `{0}' in method `{1}`.", type.FullName, descriptiveMethodName);
 						}
 						setup_call_stack.AppendLine ("}");
 						setup_call_stack.AppendLine ("arg_ptrs [{0}] = marr;", i);
@@ -3064,7 +3057,7 @@ namespace XamCore.Registrar {
 								setup_call_stack.AppendLine ("paramtype{0} = xamarin_get_parameter_type (managed_method, {0});", i);
 								setup_call_stack.AppendLine ("mobj{0} = xamarin_get_nsobject_with_type_for_ptr (nsobj{0}, false, paramtype{0}, &exception_gchandle);", i);
 								setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
-								if (Driver.EnableDebug) {
+								if (App.EnableDebug) {
 									setup_call_stack.AppendLine ("xamarin_verify_parameter (mobj{0}, _cmd, self, nsobj{0}, {0}, mono_class_from_mono_type (paramtype{0}), managed_method);", i);
 								}
 								setup_call_stack.AppendLine ("}");
@@ -3090,7 +3083,7 @@ namespace XamCore.Registrar {
 							setup_call_stack.AppendLine ("paramtype{0} = xamarin_get_parameter_type (managed_method, {0});", i);
 							setup_call_stack.AppendLine ("mobj{0} = xamarin_get_nsobject_with_type_for_ptr_created (nsobj{0}, false, paramtype{0}, &created{0}, &exception_gchandle);", i);
 							setup_call_stack.AppendLine ("if (exception_gchandle != 0) goto exception_handling;");
-							if (Driver.EnableDebug) {
+							if (App.EnableDebug) {
 								setup_call_stack.AppendLine ("xamarin_verify_parameter (mobj{0}, _cmd, self, nsobj{0}, {0}, mono_class_from_mono_type (paramtype{0}), managed_method);", i);
 							}
 							setup_call_stack.AppendLine ("}");
@@ -3257,7 +3250,7 @@ namespace XamCore.Registrar {
 						setup_return.AppendLine ("goto exception_handling;");
 						setup_return.AppendLine ("}");
 					} else {
-						throw ErrorHelper.CreateError (4111, method.Method, "The registrar cannot build a signature for type `{0}' in method `{1}`.", returntype.FullName, descriptiveMethodName);
+						throw ErrorHelper.CreateError (App, 4111, method.Method, "The registrar cannot build a signature for type `{0}' in method `{1}`.", returntype.FullName, descriptiveMethodName);
 					}
 					
 					setup_return.AppendLine ("}");
@@ -3727,7 +3720,7 @@ namespace XamCore.Registrar {
 							hdr.WriteLine ("#pragma clang diagnostic ignored \"-Wtypedef-redefinition\""); // temporary hack until we can stop including glib.h
 							hdr.WriteLine ("#pragma clang diagnostic ignored \"-Wobjc-designated-initializers\"");
 
-							if (Driver.EnableDebug)
+							if (App.EnableDebug)
 								hdr.WriteLine ("#define DEBUG 1");
 
 							hdr.WriteLine ("#include <stdarg.h>");

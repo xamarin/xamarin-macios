@@ -11,7 +11,12 @@ using System;
 using System.Runtime.InteropServices;
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+using UIColor = AppKit.NSColor;
+#else
 using UIKit;
+#endif
 using CoreGraphics;
 using ObjCRuntime;
 #else

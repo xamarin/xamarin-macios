@@ -73,6 +73,8 @@
 			<string>9.0</string>
 			<key>com.apple.spotlight.index</key>
 			<string>9.0</string>
+			<key>com.apple.networkextension.packet-tunnel</key>
+			<string>9.0</string>
 			<key>com.apple.callkit.call-directory</key>
 			<string>10.0</string>
 			<key>com.apple.intents-service</key>

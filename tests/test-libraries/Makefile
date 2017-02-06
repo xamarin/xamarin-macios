@@ -63,15 +63,15 @@ EXTRA_DEPENDENCIES = libtest.h $(GENERATED_FILES)
 	$(Q) rm -f $$@
 	$$(call Q_2,AR     [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cru $$@ $$^
 
-.libs/$(1)/libtest.a: $$(foreach arch,$(3),.libs/$(1)/libtest.$$(arch).o)
+.libs/$(1)/libtest.a: $$(foreach arch,$(3),.libs/$(1)/libtest.$$(arch).a)
 	$(Q) rm -f $$@
 	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
 
-.libs/$(1)/libtest-object.a: $$(foreach arch,$(3),.libs/$(1)/libtest-object.$$(arch).o)
+.libs/$(1)/libtest-object.a: $$(foreach arch,$(3),.libs/$(1)/libtest-object.$$(arch).a)
 	$(Q) rm -f $$@
 	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
 
-.libs/$(1)/libtest-ar.a: $$(foreach arch,$(3),.libs/$(1)/libtest-ar.$$(arch).o)
+.libs/$(1)/libtest-ar.a: $$(foreach arch,$(3),.libs/$(1)/libtest-ar.$$(arch).a)
 	$(Q) rm -f $$@
 	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
 
@@ -118,10 +118,10 @@ endef
 # 9: device min version
 $(eval $(call Template,ios,IOS,armv7 armv7s arm64 x86 x86_64,i386 x86_64,armv7 armv7s arm64,iPhoneSimulator,iPhoneOS,-mios-simulator-version-min=8.0,-miphoneos-version-min=8.0))
 ifdef INCLUDE_TVOS
-$(eval $(call Template,tvos,TVOS,arm64 x86_64,x86_64,arm64,AppleTVSimulator,AppleTVOS,-mtvos-simulator-version-min=9.0,-mtvos-version-min=9.0))
+$(eval $(call Template,tvos,TVOS,arm64 x86_64,x86_64,arm64,AppleTVSimulator,AppleTVOS,-mtvos-simulator-version-min=9.0,-mtvos-version-min=9.0 -fembed-bitcode))
 endif
 ifdef INCLUDE_WATCH
-$(eval $(call Template,watchos,WATCHOS,armv7k x86,i386,armv7k,WatchSimulator,WatchOS,-mwatchos-simulator-version-min=2.0,-mwatchos-version-min=2.0))
+$(eval $(call Template,watchos,WATCHOS,armv7k x86,i386,armv7k,WatchSimulator,WatchOS,-mwatchos-simulator-version-min=2.0,-mwatchos-version-min=2.0 -fembed-bitcode))
 endif
 
 define LibTemplate

@@ -4,7 +4,9 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using SpriteKit;
+#if !MONOMAC
 using UIKit;
+#endif
 using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
@@ -26,6 +28,7 @@ namespace MonoTouchFixtures.SpriteKit
 		{
 			TestRuntime.AssertXcodeVersion (8, 0);
 
+#if !MONOMAC
 			if (Runtime.Arch == Arch.SIMULATOR && IntPtr.Size == 4) {
 				// There's a bug in the i386 version of objc_msgSend where it doesn't preserve SIMD arguments
 				// when resizing the cache of method selectors for a type. So here we call all selectors we can
@@ -60,6 +63,7 @@ namespace MonoTouchFixtures.SpriteKit
 				using (var obj = new SKUniform ("name", Matrix4.Identity)) {
 				}
 			}
+#endif
 		}
 
 		[Test]

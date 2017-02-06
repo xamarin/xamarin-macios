@@ -53,6 +53,7 @@ LINKER_SOURCES = \
 	$(MONO_TUNER)/Mono.Tuner/RemoveResources.cs			\
 	$(MONO_TUNER)/Mono.Tuner/RemoveSecurity.cs			\
 	$(LINKER_DIR)/MonoTouch.Tuner/Extensions.cs			\
+	$(LINKER_DIR)/MonoTouch.Tuner/InlinerSubStep.cs		\
 	$(LINKER_DIR)/MonoTouch.Tuner/ListExportedSymbols.cs	\
 	$(LINKER_DIR)/MonoTouch.Tuner/MetadataReducerSubStep.cs	\
 	$(LINKER_DIR)/MonoTouch.Tuner/MonoTouchMarkStep.cs		\
@@ -110,6 +111,7 @@ MTOUCH_SOURCES = \
 	mtouch.cs		\
 	$(TOP)/tools/common/PInvokeWrapperGenerator.cs	\
 	$(TOP)/tools/common/TargetFramework.cs	\
+	$(TOP)/tools/common/BuildTasks.cs	\
 	$(TOP)/tools/common/StaticRegistrar.cs	\
 	$(TOP)/src/ObjCRuntime/Registrar.core.cs	\
 	$(TOP)/src/ObjCRuntime/Registrar.cs	\
@@ -120,8 +122,10 @@ MTOUCH_SOURCES = \
 	Target.cs		\
 	SdkVersions.cs \
 	BitcodeConverter.cs	\
+	BuildTasks.mtouch.cs \
 	$(TOP)/tools/common/Application.cs \
 	$(TOP)/tools/common/Assembly.cs \
+	$(TOP)/tools/common/DerivedLinkContext.cs \
 	$(TOP)/tools/common/Target.cs \
 	$(TOP)/tools/common/CompilerFlags.cs \
 	$(TOP)/src/Foundation/ExportAttribute.cs \
@@ -428,6 +432,12 @@ ifdef INCLUDE_IOS
 install-local:: $(TARGETS)
 all-local:: $(TARGETS)
 endif
+
+mtouch: \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/mtouch                                          \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/mtouch.exe                               \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.dll                           \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mtouch/Mono.Cecil.Mdb.dll
 
 clean-local::
 	rm -Rf bin obj

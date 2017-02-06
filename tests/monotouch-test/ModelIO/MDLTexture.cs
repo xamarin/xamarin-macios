@@ -12,7 +12,6 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
-using UIKit;
 #if !__TVOS__
 using MultipeerConnectivity;
 #endif
@@ -41,7 +40,11 @@ namespace MonoTouchFixtures.ModelIO {
 		{
 			TestRuntime.AssertXcodeVersion (7, 0);
 
-			if (Runtime.Arch == Arch.SIMULATOR && IntPtr.Size == 4) {
+			if (
+#if !MONOMAC
+				Runtime.Arch == Arch.SIMULATOR && 
+#endif
+				IntPtr.Size == 4) {
 				// There's a bug in the i386 version of objc_msgSend where it doesn't preserve SIMD arguments
 				// when resizing the cache of method selectors for a type. So here we call all selectors we can
 				// find, so that the subsequent tests don't end up producing any cache resize (radar #21630410).

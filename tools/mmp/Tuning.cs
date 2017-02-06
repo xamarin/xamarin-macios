@@ -11,6 +11,7 @@ using MonoTouch.Tuner;
 using Xamarin.Bundler;
 using Xamarin.Linker;
 using Xamarin.Linker.Steps;
+using Xamarin.Tuner;
 using Xamarin.Utils;
 
 using Mono.Cecil;
@@ -54,11 +55,9 @@ namespace MonoMac.Tuner {
 		}
 	}
 
-	public class MonoMacLinkContext : LinkContext {
+	public class MonoMacLinkContext : DerivedLinkContext {
 
 		Dictionary<string, List<MethodDefinition>> pinvokes = new Dictionary<string, List<MethodDefinition>> ();
-		public Dictionary<string, MemberReference> RequiredSymbols = new Dictionary<string, MemberReference> ();
-		List<MethodDefinition> marshal_exception_pinvokes;
 
 		public MonoMacLinkContext (Pipeline pipeline, AssemblyResolver resolver) : base (pipeline, resolver)
 		{
@@ -66,14 +65,6 @@ namespace MonoMac.Tuner {
 
 		public IDictionary<string, List<MethodDefinition>> PInvokeModules {
 			get { return pinvokes; }
-		}
-
-		public List<MethodDefinition> MarshalExceptionPInvokes {
-			get {
-				if (marshal_exception_pinvokes == null)
-					marshal_exception_pinvokes = new List<MethodDefinition> ();
-				return marshal_exception_pinvokes;
-			}
 		}
 	}
 
@@ -110,6 +101,8 @@ namespace MonoMac.Tuner {
 				TypeReference tr = (re.Member as TypeReference);
 				IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
 				throw new MonoMacException (2002, true, re, "Failed to resolve \"{0}\" reference from \"{1}\"", re.Member, scope);
+			} catch (XmlResolutionException ex) {
+				throw new MonoMacException (2017, true, ex, "Could not process XML description: {0}", ex?.InnerException?.Message ?? ex.Message);
 			} catch (Exception e) {
 				throw new MonoMacException (2001, true, e, "Could not link assemblies. Reason: {0}", e.Message);
 			}

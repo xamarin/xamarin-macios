@@ -192,10 +192,10 @@ namespace Introspection {
 
 		public Type CurrentType { get; private set; }
 
-		const BindingFlags Flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance;
+		const BindingFlags Flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance;
 
 		[Test]
-		public void Signatures ()
+		public void NativeSignatures ()
 		{
 			int n = 0;
 			Errors = 0;
@@ -793,6 +793,77 @@ namespace Introspection {
 				return type.FullName == "System.IntPtr";
 			}
 			return false;
+		}
+
+#if XAMCORE_2_0
+		[Test]
+#endif
+		public void ManagedSignature ()
+		{
+			int n = 0;
+			Errors = 0;
+			ErrorData.Clear ();
+
+			foreach (Type t in Assembly.GetTypes ()) {
+
+				if (!NSObjectType.IsAssignableFrom (t))
+					continue;
+
+				CurrentType = t;
+
+				foreach (MethodInfo m in t.GetMethods (Flags))
+					CheckManagedMemberSignatures (m, t, ref n);
+
+				foreach (MethodBase m in t.GetConstructors (Flags))
+					CheckManagedMemberSignatures (m, t, ref n);
+			}
+			AssertIfErrors ("{0} errors found in {1} signatures validated{2}", Errors, n, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
+		}
+
+		protected virtual bool CheckType (Type t, ref int n)
+		{
+			if (t.IsArray)
+				return CheckType (t.GetElementType (), ref n);
+			// e.g. NSDictionary<NSString,NSObject> needs 3 check
+			if (t.IsGenericType) {
+				foreach (var ga in t.GetGenericArguments ())
+					return CheckType (ga, ref n);
+			}
+			// look for [Model] types
+			if (t.GetCustomAttribute<ModelAttribute> (false) == null)
+				return true;
+			n++;
+			switch (t.Name) {
+			case "CAAnimationDelegate":	// this was not a protocol before iOS 10 and was not bound as such
+				return true;
+			default:
+				return false;
+			}
+		}
+
+		protected virtual void CheckManagedMemberSignatures (MethodBase m, Type t, ref int n)
+		{
+			// if the method was obsoleted then it's not an issue, we assume the alternative is fine
+			if (m.GetCustomAttribute<ObsoleteAttribute> () != null)
+				return;
+			if (m.DeclaringType != t)
+				return;
+
+			CurrentMethod = m;
+
+			foreach (var p in m.GetParameters ()) {
+				var pt = p.ParameterType;
+				// skip methods added inside the [Model] type - those are fine
+				if (t == pt)
+					continue;
+				if (!CheckType (pt, ref n))
+					ReportError ($"`{t.Name}.{m.Name}` includes a parameter of type `{pt.Name}` which is a concrete type `[Model]` and not an interface `[Protocol]`");
+			}
+			if (!m.IsConstructor) {
+				var rt = (m as MethodInfo).ReturnType;
+				if (!CheckType (rt, ref n))
+					ReportError ($"`{t.Name}.{m.Name}` return type `{rt.Name}` is a concrete type `[Model]` and not an interface `[Protocol]`");
+			}
 		}
 	}
 }

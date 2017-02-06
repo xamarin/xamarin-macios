@@ -314,11 +314,13 @@ COREANIMATION_CORE_SOURCES = \
 
 COREANIMATION_SOURCES = \
 	CoreAnimation/CABasicAnimation.cs \
+	CoreAnimation/CACompat.cs \
 	CoreAnimation/CADefs.cs \
 	CoreAnimation/CALayer.cs \
 	CoreAnimation/CAKeyFrameAnimation.cs \
 	CoreAnimation/CALayerDelegate.cs \
 	CoreAnimation/CAMediaTimingFunction.cs \
+	CoreAnimation/CAScrollLayer.cs \
 	CoreAnimation/CATextLayer.cs \
 
 # CoreBluetooth
@@ -611,6 +613,8 @@ FOUNDATION_CORE_SOURCES = \
 	Foundation/NSDecimal.cs \
 	Foundation/NSDimension.cs \
 	Foundation/NSError.cs \
+	Foundation/NSNumber.mac.cs \
+	Foundation/NSNumber2.cs \
 	Foundation/NSObject2.cs \
 	Foundation/NSRange.cs \
 	Foundation/NSString.cs \
@@ -653,6 +657,7 @@ FOUNDATION_SOURCES = \
 	Foundation/NSFileManager.cs \
 	Foundation/NSFileManager.iOS.cs \
 	Foundation/NSFileManagerDelegate.cs \
+	Foundation/NSFormatter.cs \
 	Foundation/NSHost.cs \
 	Foundation/NSHttpCookie.cs \
 	Foundation/NSHttpCookieStorage.cs \
@@ -679,8 +684,6 @@ FOUNDATION_SOURCES = \
 	Foundation/NSMutableUrlRequest.cs \
 	Foundation/NSNetService.cs \
 	Foundation/NSNotificationCenter.cs \
-	Foundation/NSNumber.mac.cs \
-	Foundation/NSNumber2.cs \
 	Foundation/NSOrderedSet.cs \
 	Foundation/NSOrderedSet_1.cs \
 	Foundation/NSOutputStream.cs \
@@ -716,6 +719,7 @@ FOUNDATION_SOURCES = \
 	Foundation/NSUuid.cs \
 	Foundation/ObjCException.cs \
 	Foundation/ToString.cs \
+	Foundation/NSItemProvider.cs \
 
 # GameController
 
@@ -1520,7 +1524,7 @@ MAC_FRAMEWORKS =            \
 	CFNetwork               \
 	CloudKit                \
 	Contacts                \
-	ContactsUI.Mac		\
+	ContactsUI              \
 	CoreAnimation           \
 	CoreAudioKit            \
 	CoreBluetooth           \

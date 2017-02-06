@@ -54,7 +54,9 @@
     <Reference Include="Mono.Security" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application.cs" />
     <Compile Include="driver.cs" />
+    <Compile Include="aot.cs" />
     <Compile Include="resolver.cs" />
     <Compile Include="Tuning.cs" />
     <Compile Include="Assembly.cs" />
@@ -289,6 +291,9 @@
     </Compile>
     <Compile Include="..\common\Target.cs">
       <Link>external\Target.cs</Link>
+    </Compile>
+    <Compile Include="..\common\DerivedLinkContext.cs">
+      <Link>external\DerivedLinkContext.cs</Link>
     </Compile>
     <Compile Include="..\..\src\ObjCRuntime\Registrar.core.cs">
       <Link>external\Registrar.core.cs</Link>

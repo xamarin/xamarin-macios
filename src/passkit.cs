@@ -516,8 +516,14 @@ namespace XamCore.PassKit {
 	
 		[DesignatedInitializer]
 		[Export ("initWithRequestConfiguration:delegate:")]
-		IntPtr Constructor (PKAddPaymentPassRequestConfiguration configuration, [NullAllowed] PKAddPaymentPassViewControllerDelegate viewControllerDelegate);
-	
+		IntPtr Constructor (PKAddPaymentPassRequestConfiguration configuration, [NullAllowed] IPKAddPaymentPassViewControllerDelegate viewControllerDelegate);
+
+#if !XAMCORE_4_0
+		[Obsolete ("Use the overload accepting a IPKAddPaymentPassViewControllerDelegate")]
+		[Wrap ("this (configuration, (IPKAddPaymentPassViewControllerDelegate) viewControllerDelegate)")]
+		IntPtr Constructor (PKAddPaymentPassRequestConfiguration configuration, PKAddPaymentPassViewControllerDelegate viewControllerDelegate);
+#endif
+
 		[Wrap ("WeakDelegate")]
 		[NullAllowed, Protocolize]
 		PKAddPaymentPassViewControllerDelegate Delegate { get; set; }
@@ -525,6 +531,8 @@ namespace XamCore.PassKit {
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
 	}
+
+	interface IPKAddPaymentPassViewControllerDelegate {}
 	
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]

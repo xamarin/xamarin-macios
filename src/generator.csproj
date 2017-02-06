@@ -51,5 +51,6 @@
     <Compile Include="..\external\mono\mcs\class\Mono.Options\Mono.Options\Options.cs">
       <Link>Options.cs</Link>
     </Compile>
+    <Compile Include="generator-attributes.cs" />
   </ItemGroup>
 </Project>

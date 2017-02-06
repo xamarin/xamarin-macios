@@ -32,7 +32,7 @@ namespace XamCore.Metal {
 					try {
 						var h = MTLCreateSystemDefaultDevice ();
 						if (h != IntPtr.Zero)
-							system_default = new MTLDeviceWrapper (h);
+							system_default = new MTLDeviceWrapper (h, false);
 					}
 					catch (EntryPointNotFoundException) {
 					}

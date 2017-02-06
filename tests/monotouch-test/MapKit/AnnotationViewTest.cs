@@ -8,7 +8,14 @@ using System.Reflection;
 #if XAMCORE_2_0
 using Foundation;
 using MapKit;
+#if MONOMAC
+using PlatformImage = AppKit.NSImage;
+using PlatformView = AppKit.NSView;
+#else
 using UIKit;
+using PlatformImage = UIKit.UIImage;
+using PlatformView = UIKit.UIView;
+#endif
 #else
 using MonoTouch.Foundation;
 using MonoTouch.MapKit;
@@ -127,19 +134,19 @@ namespace MonoTouchFixtures.MapKit {
 				Assert.IsNull (def.Annotation, "Annotation N");
 
 				def.Image = null;
-				def.Image = new UIImage ();
+				def.Image = new PlatformImage ();
 				Assert.IsNotNull (def.Image, "Image NN");
 				def.Image = null;
 				Assert.IsNull (def.Image, "Image N");
 
 				def.LeftCalloutAccessoryView = null;
-				def.LeftCalloutAccessoryView = new UIView ();
+				def.LeftCalloutAccessoryView = new PlatformView ();
 				Assert.IsNotNull (def.LeftCalloutAccessoryView, "LeftCalloutAccessoryView NN");
 				def.LeftCalloutAccessoryView = null;
 				Assert.IsNull (def.LeftCalloutAccessoryView, "LeftCalloutAccessoryView N");
 
 				def.RightCalloutAccessoryView = null;
-				def.RightCalloutAccessoryView = new UIView ();
+				def.RightCalloutAccessoryView = new PlatformView ();
 				Assert.IsNotNull (def.RightCalloutAccessoryView, "RightCalloutAccessoryView NN");
 				def.RightCalloutAccessoryView = null;
 				Assert.IsNull (def.RightCalloutAccessoryView, "RightCalloutAccessoryView N");

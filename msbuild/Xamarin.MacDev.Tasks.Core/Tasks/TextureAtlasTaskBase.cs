@@ -72,7 +72,7 @@ namespace Xamarin.MacDev.Tasks
 			var items = atlases[input.ItemSpec];
 
 			foreach (var item in items) {
-				if (File.GetLastWriteTime (item.ItemSpec) > File.GetLastWriteTime (plist))
+				if (File.GetLastWriteTimeUtc (item.ItemSpec) > File.GetLastWriteTimeUtc (plist))
 					return true;
 			}
 

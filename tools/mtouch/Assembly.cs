@@ -13,7 +13,6 @@ using Xamarin.Utils;
 namespace Xamarin.Bundler {
 	public partial class Assembly
 	{
-		public List<string> Satellites;
 		List<string> dylibs;
 		public string Dylib;
 
@@ -134,22 +133,6 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public void CopySatellitesToDirectory (string directory)
-		{
-			if (Satellites == null)
-				return;
-
-			foreach (var a in Satellites) {
-				string target_dir = Path.Combine (directory, Path.GetFileName (Path.GetDirectoryName (a)));
-				string target_s = Path.Combine (target_dir, Path.GetFileName (a));
-
-				if (!Directory.Exists (target_dir))
-					Directory.CreateDirectory (target_dir);
-
-				CopyAssembly (a, target_s);
-			}
-		}
-
 		// returns false if the assembly was not copied (because it was already up-to-date).
 		public bool CopyToDirectory (string directory, bool reload = true, bool check_case = false, bool only_copy = false, bool copy_mdb = true)
 		{
@@ -201,13 +184,13 @@ namespace Xamarin.Bundler {
 		IEnumerable<BuildTask> CreateManagedToAssemblyTasks (string s, Abi abi, string build_dir)
 		{
 			var arch = abi.AsArchString ();
-			var asm_dir = Cache.Location;
+			var asm_dir = App.Cache.Location;
 			var asm = Path.Combine (asm_dir, Path.GetFileName (s)) + "." + arch + ".s";
 			var llvm_asm = Path.Combine (asm_dir, Path.GetFileName (s)) + "." + arch + "-llvm.s";
 			var data = Path.Combine (asm_dir, Path.GetFileNameWithoutExtension (s)) + "." + arch + ".aotdata";
 			string llvm_ofile, llvm_aot_ofile = "";
 			var is_llvm = (abi & Abi.LLVM) == Abi.LLVM;
-			bool assemble_llvm = is_llvm && Driver.LLVMAsmWriter;
+			bool assemble_llvm = is_llvm && Driver.GetLLVMAsmWriter (App);
 
 			if (!File.Exists (s))
 				throw new MonoTouchException (3004, true, "Could not AOT the assembly '{0}' because it doesn't exist.", s);
@@ -225,7 +208,7 @@ namespace Xamarin.Bundler {
 			} else {
 				deps = new List<string> (dependencies.ToArray ());
 				deps.Add (s);
-				deps.Add (Driver.GetAotCompiler (Target.Is64Build));
+				deps.Add (Driver.GetAotCompiler (App, Target.Is64Build));
 			}
 
 			if (App.EnableLLVMOnlyBitCode) {
@@ -263,8 +246,8 @@ namespace Xamarin.Bundler {
 				Driver.Log (3, "Target {0} needs to be rebuilt.", asm);
 			}
 
-			var aotCompiler = Driver.GetAotCompiler (Target.Is64Build);
-			var aotArgs = Driver.GetAotArguments (s, abi, build_dir, asm, llvm_aot_ofile, data);
+			var aotCompiler = Driver.GetAotCompiler (App, Target.Is64Build);
+			var aotArgs = Driver.GetAotArguments (App, s, abi, build_dir, asm, llvm_aot_ofile, data);
 			Driver.Log (3, "Aot compiler: {0} {1}", aotCompiler, aotArgs);
 
 			AotDataFiles.Add (data);
@@ -278,7 +261,9 @@ namespace Xamarin.Bundler {
 			return new BuildTask [] { new AOTTask ()
 				{
 					AssemblyName = s,
-					ProcessStartInfo = Driver.CreateStartInfo (aotCompiler, aotArgs, Path.GetDirectoryName (s)),
+					AddBitcodeMarkerSection = App.FastDev && App.EnableMarkerOnlyBitCode,
+					AssemblyPath = asm,
+					ProcessStartInfo = Driver.CreateStartInfo (App, aotCompiler, aotArgs, Path.GetDirectoryName (s)),
 					NextTasks = nextTasks
 				}
 			};
@@ -300,7 +285,7 @@ namespace Xamarin.Bundler {
 				Target.LinkWith (ofile);
 			}
 
-			if (Application.IsUptodate (new string [] { infile_path, Driver.CompilerPath }, new string [] { ofile })) {
+			if (Application.IsUptodate (new string [] { infile_path, App.CompilerPath }, new string [] { ofile })) {
 				Driver.Log (3, "Target {0} is up-to-date.", ofile);
 				return null;
 			} else {
@@ -341,6 +326,20 @@ namespace Xamarin.Bundler {
 				if (Target.GetEntryPoints ().ContainsKey ("UIApplicationMain"))
 					compiler_flags.AddFramework ("UIKit");
 				compiler_flags.LinkWithPInvokes (abi);
+
+				if (HasLinkWithAttributes && !App.EnableBitCode)
+					compiler_flags.ReferenceSymbols (Target.GetRequiredSymbols (this, true));
+			}
+
+			if (App.EnableLLVMOnlyBitCode) {
+				// The AOT compiler doesn't optimize the bitcode so clang will do it
+				compiler_flags.AddOtherFlag ("-fexceptions");
+				var optimizations = App.GetLLVMOptimizations (this);
+				if (optimizations == null) {
+					compiler_flags.AddOtherFlag ("-O2");
+				} else if (optimizations.Length > 0) {
+					compiler_flags.AddOtherFlag (optimizations);
+				}
 			}
 
 			link_task = new LinkTask ()
@@ -384,7 +383,7 @@ namespace Xamarin.Bundler {
 			string target = Path.Combine (Target.TargetDirectory, Path.GetFileName (FullPath));
 			string source = FullPath;
 
-			if (!Driver.SymlinkAssembly (source, target, Path.GetDirectoryName (target))) {
+			if (!Driver.SymlinkAssembly (App, source, target, Path.GetDirectoryName (target))) {
 				symlink_failed = true;
 				CopyAssembly (source, target);
 			}
@@ -394,7 +393,7 @@ namespace Xamarin.Bundler {
 					string s_target_dir = Path.Combine (Target.TargetDirectory, Path.GetFileName (Path.GetDirectoryName (a)));
 					string s_target = Path.Combine (s_target_dir, Path.GetFileName (a));
 
-					if (!Driver.SymlinkAssembly (a, s_target, s_target_dir)) {
+					if (!Driver.SymlinkAssembly (App, a, s_target, s_target_dir)) {
 						CopyAssembly (a, s_target);
 					}
 				}
@@ -430,37 +429,6 @@ namespace Xamarin.Bundler {
 			} catch (Exception e) {
 				// cecil might not be able to load the assembly, e.g. bug #758
 				throw new MonoTouchException (1010, true, e, "Could not load the assembly '{0}': {1}", FullPath, e.Message);
-			}
-		}
-
-		public void ComputeSatellites ()
-		{
-			var path = Path.GetDirectoryName (FullPath);
-			var satellite_name = Path.GetFileNameWithoutExtension (FullPath) + ".resources.dll";
-
-			foreach (var subdir in Directory.GetDirectories (path)) {
-				var culture_name = Path.GetFileName (subdir);
-				CultureInfo ci;
-
-				if (culture_name.IndexOf ('.') >= 0)
-					continue; // cultures can't have dots. This way we don't check every *.app directory
-
-				try {
-					ci = CultureInfo.GetCultureInfo (culture_name);
-				} catch {
-					// nope, not a resource language
-					continue;
-				}
-
-				if (ci == null)
-					continue;
-
-				var satellite = Path.Combine (subdir, satellite_name);
-				if (File.Exists (satellite)) {
-					if (Satellites == null)
-						Satellites = new List<string> ();
-					Satellites.Add (satellite);
-				}
 			}
 		}
 	}

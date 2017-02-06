@@ -63,13 +63,13 @@ namespace XamCore.ObjCRuntime {
 		}
 
 #if (MTOUCH || MMP) && !MMP_TEST && !WIN32
-		public static void SetLocation (ProductException ex, Mono.Cecil.MethodDefinition method)
+		public static void SetLocation (Application app, ProductException ex, Mono.Cecil.MethodDefinition method)
 		{
 			if (!method.HasBody)
 				return;
 
 #if MTOUCH
-			Driver.App.LoadSymbols ();
+			app.LoadSymbols ();
 #endif
 
 			if (method.Body.Instructions.Count == 0)
@@ -84,7 +84,7 @@ namespace XamCore.ObjCRuntime {
 			ex.LineNumber = seq.StartLine;
 		}
 
-		public static ProductException CreateError (int code, Mono.Cecil.MemberReference member, string message, params object[] args)
+		public static ProductException CreateError (Application app, int code, Mono.Cecil.MemberReference member, string message, params object[] args)
 		{
 			Mono.Cecil.MethodReference method = member as Mono.Cecil.MethodReference;
 			if (method == null) {
@@ -95,26 +95,26 @@ namespace XamCore.ObjCRuntime {
 						method = property.SetMethod;
 				}
 			}
-			return CreateError (code, method == null ? null : method.Resolve (), message, args);
+			return CreateError (app, code, method == null ? null : method.Resolve (), message, args);
 		}
 
-		public static ProductException CreateError (int code, Mono.Cecil.MethodDefinition location, string message, params object[] args)
+		public static ProductException CreateError (Application app, int code, Mono.Cecil.MethodDefinition location, string message, params object[] args)
 		{
 			var e = new ProductException (code, true, message, args);
 			if (location != null)
-				SetLocation (e, location);
+				SetLocation (app, e, location);
 			return e;
 		}
 
-		public static ProductException CreateError (int code, Exception innerException, Mono.Cecil.MethodDefinition location, string message, params object[] args)
+		public static ProductException CreateError (Application app, int code, Exception innerException, Mono.Cecil.MethodDefinition location, string message, params object[] args)
 		{
 			var e = new ProductException (code, true, innerException, message, args);
 			if (location != null)
-				SetLocation (e, location);
+				SetLocation (app, e, location);
 			return e;
 		}
 
-		public static ProductException CreateError (int code, Exception innerException, Mono.Cecil.TypeReference location, string message, params object[] args)
+		public static ProductException CreateError (Application app, int code, Exception innerException, Mono.Cecil.TypeReference location, string message, params object[] args)
 		{
 			var e = new ProductException (code, true, innerException, message, args);
 			if (location != null) {
@@ -124,7 +124,7 @@ namespace XamCore.ObjCRuntime {
 					foreach (var method in td.Methods) {
 						if (!method.IsConstructor)
 							continue;
-						SetLocation (e, method);
+						SetLocation (app, e, method);
 						if (e.FileName != null)
 							break;
 					}

@@ -11,13 +11,6 @@ namespace Xamarin.Tests
 		public const string XI_ProductName = "MonoTouch";
 		public const string XM_ProductName = "Xamarin.Mac";
 
-		static Dictionary<string,string> XS = new Dictionary<string, string> () {
-			{ "MONO_GAC_PREFIX", "/Applications/Xamarin Studio.app/Contents/MacOS" },
-			{ "PATH", "/Applications/Xamarin Studio.app/Contents/MacOS" },
-			{ "DYLD_FALLBACK_LIBRARY_PATH", "/Library/Frameworks/Mono.framework/Versions/Current/lib:/lib:/usr/lib:/Applications/Xamarin Studio.app/Contents/MacOS" },
-			{ "PKG_CONFIG_PATH", "/Applications/Xamarin Studio.app/Contents/MacOS" }
-		};
-
 		const string XS_PATH = "/Applications/Xamarin Studio.app/Contents/Resources";
 
 		static string mt_root;
@@ -196,12 +189,6 @@ namespace Xamarin.Tests
 			}
 		}
 
-		public static Dictionary<string,string> MonoDevelopLike {
-			get {
-				return XS;
-			}
-		}
-
 		public static string XamarinIOSDll {
 			get {
 				return Path.Combine (mt_root, "lib", "mono", "Xamarin.iOS", "Xamarin.iOS.dll");
@@ -230,15 +217,27 @@ namespace Xamarin.Tests
 			}
 		}
 
+		public static string TargetDirectoryXI {
+			get {
+				return make_config ["IOS_DESTDIR"];
+			}
+		}
+
+		public static string TargetDirectoryXM {
+			get {
+				return make_config ["MAC_DESTDIR"];
+			}
+		}
+
 		public static string BinDirXI {
 			get {
-				return Path.Combine (RootPath, "_ios-build", "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin");
+				return Path.Combine (TargetDirectoryXI, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin");
 			}
 		}
 
 		public static string BinDirXM {
 			get {
-				return Path.Combine (RootPath, "_mac-build", "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current", "bin");
+				return Path.Combine (TargetDirectoryXM, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current", "bin");
 			}
 		}
 

@@ -7,28 +7,6 @@ using System.Reflection;
 using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
-// If the enum is used to represent error code then this attribute can be used to
-// generate an extension type that will return the associated error domain based
-// on the field name (given as a parameter)
-[AttributeUsage (AttributeTargets.Enum)]
-public class ErrorDomainAttribute : Attribute {
-
-	public ErrorDomainAttribute (string domain)
-	{
-		ErrorDomain = domain;
-	}
-
-	public string ErrorDomain { get; set; }
-}
-
-[AttributeUsage (AttributeTargets.Field)]
-public class DefaultEnumValueAttribute : Attribute {
-
-	public DefaultEnumValueAttribute ()
-	{
-	}
-}
-
 public partial class Generator {
 
 	static string GetCSharpTypeName (Type type)

@@ -7,7 +7,7 @@ using Xamarin.Linker;
 
 namespace MonoTouch.Tuner {
 
-	public class RemoveCode : BaseSubStep {
+	public class RemoveCode : ExceptionalSubStep {
 
 		MethodDefinition get_nse_def;
 		MethodReference get_nse;
@@ -18,6 +18,9 @@ namespace MonoTouch.Tuner {
 			Device = options.Device;
 			Debug = options.DebugBuild;
 		}
+
+		protected override string Name { get; } = "Code Remover";
+		protected override int ErrorCode { get; } = 2050;
 
 		public bool Device { get; set; }
 
@@ -44,7 +47,7 @@ namespace MonoTouch.Tuner {
 			}
 		}
 
-		public override void ProcessAssembly (AssemblyDefinition assembly)
+		protected override void Process (AssemblyDefinition assembly)
 		{
 			if (get_nse_def == null) {
 				var corlib = context.GetAssembly ("mscorlib");
@@ -62,7 +65,7 @@ namespace MonoTouch.Tuner {
 			get_nse = assembly.MainModule.ImportReference (get_nse_def);
 		}
 
-		public override void ProcessType (TypeDefinition type)
+		protected override void Process (TypeDefinition type)
 		{
 			// no code to remove in interfaces, skip processing
 			if (type.IsInterface)

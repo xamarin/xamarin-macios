@@ -13,7 +13,7 @@ namespace Xamarin.Bundler {
 	//					MT0002	Could not parse the environment variable '{0}'.
 	//					MT0003	Application name '{0}.exe' conflicts with an SDK or product assembly (.dll) name.
 	//					MT0004	<unused>
-	//					MT0005	The output directory '{0}' does not exist
+	//					MT0005	<unused>
 	//					MT0006	There is no devel platform at '{0}', use --platform=PLAT to specify the SDK
 	//					MT0007	The root assembly '{0}' does not exist
 	//					MT0008	You should provide one root assembly only, found {0} assemblies: '{1}'
@@ -97,13 +97,17 @@ namespace Xamarin.Bundler {
 	//		Warning		MT0087	<unused>
 	//					MT0088	The GC must be in cooperative mode for watchOS apps. Please remove the --coop:false argument to mtouch.
 	//					MT0089	The option '{0}' cannot take the value '{1}' when cooperative mode is enabled for the GC.
-	//					MT0091	This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker. 
+	//					MT0091	This version of Xamarin.iOS requires the {0} {1} SDK (shipped with Xcode {2}) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker by changing the Linker behaviour to Link Framework SDKs Only.
 	//					MT0092	<used by Xamarin.Launcher> The option '{0}' is required.
 	//					MT0093	Could not find 'mlaunch'.
 	//		Warning		MT0094	<unused> Both profiling (--profiling) and incremental builds (--fastdev) are currently not supported when building for {0}, and incremental builds have been disabled (this will be fixed in a future release).
 	//					MT0095 Aot files could not be copied to the destination directory.
 	//					MT0096 No reference to Xamarin.iOS.dll was found.
 	//					MT0097 <used by mmp>
+	//					MT0098 <used by mmp>
+	//					MT0099	Internal error {0}. Please file a bug report with a test case (http://bugzilla.xamarin.com).
+	//		Warning		MT0110  Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.
+	//		Warning		MT0111	Bitcode has been enabled because this version of Xamarin.iOS does not support building watchOS projects using LLVM without enabling bitcode.
 	// MT1xxx	file copy / symlinks (project related)
 	//			MT10xx	installer.cs / mtouch.cs
 	//					MT1001	Could not find an application at the specified directory: {0}
@@ -138,6 +142,7 @@ namespace Xamarin.Bundler {
 	//					MT1030	Launching applications on device using a bundle identifier is deprecated. Please pass the full path to the bundle to launch.
 	//					MT1031	Could not launch the app '{0}' on the device '{1}' because the device is locked. Please unlock the device and try again.
 	//		Warning			MT1032	This application executable might be too large ({0} MB) to execute on device. If bitcode was enabled you might want to disable it for development, it is only required to submit applications to Apple.
+	//					MT1033	Could not uninstall the application '{0}' from the device '{1}': {2}
 	//			MT11xx	DebugService.cs
 	//					MT1101	Could not start app: {0}
 	//					MT1102	Could not attach to the app (to kill it): {0}
@@ -208,8 +213,15 @@ namespace Xamarin.Bundler {
 	//					MT2014	** reserved Xamarin.Mac **
 	//		Warning		MT2015	Invalid HttpMessageHandler `{0}` for watchOS. The only valid value is NSUrlSessionHandler.
 	//		Warning		MT2016  Invalid TlsProvider `{0}` option. The only valid value `{1}` will be used.
+	//					MT2017  Could not process XML description: {0}
 	//					MT202x	Binding Optimizer failed processing `...`.
 	//					MT203x	Removing User Resources failed processing `...`.
+	//					MT204x	Default HttpMessageHandler setter failed processing `...`.
+	//					MT205x	Code Remover failed processing `...`.
+	//					MT206x	Sealer failed processing `...`.
+	//					MT207x	Metadata Reducer failed processing `...`.
+	//					MT208x	MarkNSObjects failed processing `...`.
+	//					MT209x	Inliner failed processing `...`.
 	// MT3xxx	AOT
 	//			MT30xx	AOT (general) errors
 	//					MT3001	Could not AOT the assembly '{0}'
@@ -220,6 +232,8 @@ namespace Xamarin.Bundler {
 	//					MT3006  Could not compute a complete dependency map for the project. This will result in slower build times because Xamarin.iOS can't properly detect what needs to be rebuilt (and what does not need to be rebuilt). Please review previous warnings for more details.
 	//		Warning		MT3007	Debug info files (*.mdb) will not be loaded when llvm is enabled.
 	//					MT3008	Bitcode support requires the use of the LLVM AOT backend (--llvm)
+	//					MM3009	** reserved Xamarin.Mac **
+	//					MM3010	** reserved Xamarin.Mac **
 	// MT4xxx	code generation
 	// 			MT40xx	main.m
 	//					MT4001	The main template could not be expanded to `{0}`.
@@ -257,7 +271,7 @@ namespace Xamarin.Bundler {
 	//					MT4131  The registrar cannot export static properties in generic classes ('{0}.{1}').
 	//					MT4132	The registrar found an invalid generic return type '{0}' in the property '{1}'. The return type must have an 'NSObject' constraint.
 	//					MT4133  Cannot construct an instance of the type '{0}' from Objective-C because the type is generic. [Runtime exception]
-	//					MT4134	Your application is using the '{0}' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS {2}, while you're building with the iOS {1} SDK.) This configuration is only supported with the legacy registrar (pass --registrar:legacy as an additional mtouch argument in your project's iOS Build option to select). Alternatively select a newer SDK in your app's iOS Build options.
+	//					MT4134	Your application is using the '{0}' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS {2}, while you're building with the iOS {1} SDK.) Please select a newer SDK in your app's iOS Build options.
 	//					MT4135	The member '{0}.{1}' has an Export attribute that doesn't specify a selector. A selector is required.
 	//					MT4136	The registrar cannot marshal the parameter type '{0}' of the parameter '{1}' in the method '{2}.{3}'
 	//					MT4137	<unused>
@@ -296,6 +310,7 @@ namespace Xamarin.Bundler {
 	//					MT5102	Failed to assemble the file '{0}'. Please file a bug report at http://bugzilla.xamarin.com
 	//					MT5103	Failed to compile the file '{0}'. Please file a bug report at http://bugzilla.xamarin.com
 	//					MT5104  Could not find neither the '{0}' nor the '{1}' compiler. Please install Xcode 'Command-Line Tools' component
+	//					MT5105  ** reserved Xamarin.Mac **
 	//			MT52xx	linking
 	//					MT5201	Native linking failed. Please review the build log and the user flags provided to gcc: {0}
 	//					MT5202	Native linking failed. Please review the build log.

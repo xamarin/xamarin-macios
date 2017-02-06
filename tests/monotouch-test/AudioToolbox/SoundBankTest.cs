@@ -12,7 +12,6 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
-using UIKit;
 using AudioToolbox;
 using CoreFoundation;
 using ObjCRuntime;
@@ -56,6 +55,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 			}
 		}
 
+#if !MONOMAC // No sim on mac
 		[Test]
 		public void GetName_DLS_SimOnly ()
 		{
@@ -68,6 +68,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 				Assert.That (SoundBank.GetName (url), Is.EqualTo ("QuickTime Music Synthesizer  "), "Name");
 			}
 		}
+#endif
 
 		[Test]
 		public void GetInstrumentInfo ()
@@ -82,6 +83,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 			}
 		}
 
+#if !MONOMAC // No sim on mac
 		[Test]
 		public void GetInstrumentInfo_DLS_SimOnly ()
 		{
@@ -109,6 +111,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 				Assert.That ((last [InstrumentInfo.ProgramKey] as NSNumber).Int32Value, Is.EqualTo (56), "last.Program");
 			}
 		}
+#endif
 	}
 }
 

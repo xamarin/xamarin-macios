@@ -38,6 +38,65 @@
 //   * Add support for wrapping "ref" and "out" NSObjects (WrappedTypes)
 //     Typically this is necessary for things like NSError.
 //
+
+#define HAVE_AVFOUNDATION
+#define HAVE_GAMEKIT
+#define HAVE_CORELOCATION
+#define HAVE_SCENEKIT
+
+#if IOS || TVOS || MONOMAC
+#define HAVE_AUDIOUNIT
+#define HAVE_COREANIMATION
+#define HAVE_COREMEDIA
+#define HAVE_COREVIDEO
+#define HAVE_MEDIATOOLBOX
+#define HAVE_SECURITY
+#define HAVE_AUDIOTOOLBOX
+#if IOS || TVOS
+#define HAVE_AUDIOTOOLBOX_MUSICSEQUENCE
+#endif
+#endif
+
+#if IOS || MONOMAC
+#define HAVE_COREMIDI
+#endif
+
+#if MONOMAC
+#define HAVE_APPKIT
+#define HAVE_CLOUDKIT
+#define HAVE_OPENGL
+#define HAVE_QTKIT
+#endif
+
+#if IOS || TVOS || WATCH
+#define HAVE_UIKIT
+#endif
+
+#if IOS || TVOS
+#define HAVE_PHOTOSUI
+#define HAVE_GLKIT
+#endif
+
+#if IOS
+#define HAVE_ADDRESSBOOK
+#define HAVE_ADDRESSBOOKUI
+#define HAVE_COREMOTION
+#define HAVE_EVENTKITUI
+#define HAVE_HEALTHKITUI
+#define HAVE_IAD
+#define HAVE_MAPKIT
+#define HAVE_MESSAGEUI
+#define HAVE_NEWSSTANDKIT
+#define HAVE_QUICKLOOK
+#define HAVE_TWITTER
+#endif
+
+#if IOS || TVOS || (XAMCORE_2_0 && MONOMAC)
+// ModelIO and Metal are 64-bit only, and not on watch
+#define HAVE_MODELIO
+#define HAVE_METAL
+#endif
+
 using System;
 using System.Linq;
 using System.Collections;
@@ -54,25 +113,47 @@ using XamCore.CoreGraphics;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 using XamCore.Security;
-#if !WATCH
+#if HAVE_SCENEKIT
+using XamCore.SceneKit;
+#endif
+#if HAVE_CORELOCATION
+using XamCore.CoreLocation;
+#endif
+#if HAVE_COREMEDIA
 using XamCore.CoreMedia;
+#endif
+#if HAVE_COREVIDEO
 using XamCore.CoreVideo;
-#if !TVOS
+#endif
+#if HAVE_COREMIDI
 using XamCore.CoreMidi;
 #endif
+#if HAVE_AUDIOTOOLBOX
 using XamCore.AudioToolbox;
+#endif
+#if HAVE_AUDIOUNIT
 using XamCore.AudioUnit;
+#endif
+#if HAVE_AVFOUNDATION
 using XamCore.AVFoundation;
 #endif
-
-#if MONOMAC
-using XamCore.OpenGL;
-using XamCore.MediaToolbox;
-#elif !WATCH
-#if !TVOS
-using XamCore.AddressBook;
+#if HAVE_UIKIT
+using XamCore.UIKit;
 #endif
+#if HAVE_MAPKIT
+using XamCore.MapKit;
+#endif
+#if HAVE_OPENGL
+using XamCore.OpenGL;
+#endif
+#if HAVE_COREANIMATION
+using XamCore.CoreAnimation;
+#endif
+#if HAVE_MEDIATOOLBOX
 using XamCore.MediaToolbox;
+#endif
+#if HAVE_ADDRESSBOOK
+using XamCore.AddressBook;
 #endif
 
 using DictionaryContainerType = XamCore.Foundation.DictionaryContainer;
@@ -280,807 +361,6 @@ public static class StringExtensions
 }
 
 //
-// ForcedTypeAttribute
-//
-// The ForcedTypeAttribute is used to enforce the creation of a managed type even
-// if the returned unmanaged object does not match the type described in the binding definition.
-//
-// This is useful when the type described in a header does not match the returned type
-// of the native method for example take the following Objective-C definition from NSURLSession:
-//
-//	- (NSURLSessionDownloadTask *)downloadTaskWithRequest:(NSURLRequest *)request
-//
-// It clearly states that it will return an NSURLSessionDownloadTask instance, but yet
-// it returns a NSURLSessionTask, which is a superclass and thus not convertible to 
-// NSURLSessionDownloadTask. Since we are in a type-safe context an InvalidCastException will happen.
-//
-// In order to comply with the header description and avoid the InvalidCastException, 
-// the ForcedTypeAttribute is used.
-//
-//	[BaseType (typeof (NSObject), Name="NSURLSession")]
-//	interface NSUrlSession {
-//		[Export ("downloadTaskWithRequest:")]
-//		[return: ForcedType]
-//		NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request);
-//	}
-//
-// The `ForcedTypeAttribute` also accepts a boolean value named `Owns` that is `false`
-// by default `[ForcedType (owns: true)]`. The owns parameter could be used to follow
-// the Ownership Policy[1] for Core Foundation objects.
-//
-// [1]: https://developer.apple.com/library/content/documentation/CoreFoundation/Conceptual/CFMemoryMgmt/Concepts/Ownership.html
-//
-
-[AttributeUsage (AttributeTargets.ReturnValue | AttributeTargets.Parameter | AttributeTargets.Property, AllowMultiple = false)]
-public class ForcedTypeAttribute : Attribute {
-	public ForcedTypeAttribute (bool owns = false)
-	{
-		Owns = owns;
-	}
-	public bool Owns;
-}
-
-// Used to flag a type as needing to be turned into a protocol on output for Unified
-// For example:
-//   [Protocolize, Wrap ("WeakDelegate")]
-//   MyDelegate Delegate { get; set; }
-//
-// becomes:
-//   IMyDelegate Delegate { get; set; }
-//
-// on the Unified API.
-//
-// Valid on return values and parameters
-//
-// To protocolize newer versions, use [Protocolize (3)] for XAMCORE_3_0, [Protocolize (4)] for XAMCORE_4_0, etc
-//
-public class ProtocolizeAttribute : Attribute {
-	public ProtocolizeAttribute ()
-	{
-		Version = 2;
-	}
-
-	public ProtocolizeAttribute (int version)
-	{
-		Version = version;
-	}
-
-	public int Version { get; set; }
-}
-
-// Used to mark if a type is not a wrapper type.
-public class SyntheticAttribute : Attribute {
-	public SyntheticAttribute () { }
-}
-
-public class NeedsAuditAttribute : Attribute {
-	public NeedsAuditAttribute (string reason)
-	{
-		Reason = reason;
-	}
-
-	public string Reason { get; set; }
-}
-
-public class MarshalNativeExceptionsAttribute : Attribute {
-}
-
-public class RetainListAttribute : Attribute {
-	public RetainListAttribute (bool doadd, string name)
-	{
-		Add = doadd;
-		WrapName = name;
-	}
-
-	public string WrapName { get; set; }
-	public bool Add { get; set; }
-}
-
-public class RetainAttribute : Attribute {
-	public RetainAttribute ()
-	{
-	}
-
-	public RetainAttribute (string wrap)
-	{
-		WrapName = wrap;
-	}
-	public string WrapName { get; set; }
-}
-
-public class ReleaseAttribute : Attribute {
-}
-
-[AttributeUsage(AttributeTargets.All, AllowMultiple=true)]
-public class PostGetAttribute : Attribute {
-	public PostGetAttribute (string name)
-	{
-		MethodName = name;
-	}
-
-	public string MethodName { get; set; }
-
-	PropertyInfo GetProperty (Type type)
-	{
-		if (type == null)
-			return null;
-
-		var props = type.GetProperties ();
-		foreach (var pi in props) {
-			if (pi.Name != MethodName)
-				continue;
-			return pi;
-		}
-		return GetProperty (ReflectionExtensions.GetBaseType (type));
-	}
-
-	public bool IsDisableForNewRefCount (Type type)
-	{
-		PropertyInfo p = GetProperty (type);
-		var ea = p.GetCustomAttributes (typeof(ExportAttribute), false);
-		var sem = (ea [0] as ExportAttribute).ArgumentSemantic;
-		return (sem != ArgumentSemantic.Assign && sem != ArgumentSemantic.Weak); // also cover UnsafeUnretained
-	} 
-}
-
-public class BaseTypeAttribute : Attribute {
-	public BaseTypeAttribute (Type t)
-	{
-		BaseType = t;
-	}
-	public Type BaseType { get; set; }
-	public string Name { get; set; }
-	public Type [] Events { get; set; }
-	public string [] Delegates { get; set; }
-	public bool Singleton { get; set; }
-
-	// If set, the code will keep a reference in the EnsureXXX method for
-	// delegates and will clear the reference to the object in the method
-	// referenced by KeepUntilRef.   Currently uses an ArrayList, so this
-	// is not really designed as a workaround for systems that create
-	// too many objects, but two cases in particular that users keep
-	// trampling on: UIAlertView and UIActionSheet
-	public string KeepRefUntil { get; set; }
-}
-
-//
-// Used for methods that invoke other targets, not this.Handle
-//
-public class BindAttribute : Attribute {
-	public BindAttribute (string sel)
-	{
-		Selector = sel;
-	}
-	public string Selector { get; set; }
-
-	// By default [Bind] makes non-virtual methods
-	public bool Virtual { get; set; }
-}
-
-public class WrapAttribute : Attribute {
-	public WrapAttribute (string methodname)
-	{
-		MethodName = methodname;
-	}
-	public string MethodName { get; set; }
-}
-
-//
-// This attribute is a convenience shorthand for settings the
-// [EditorBrowsable (EditorBrowsableState.Advanced)] flags
-//
-public class AdvancedAttribute : Attribute {
-	public AdvancedAttribute () {}
-}
-
-// When applied instructs the generator to call Release on the returned objects
-// this happens when factory methods in Objetive-C return objects with refcount=1
-public class FactoryAttribute : Attribute {
-	public FactoryAttribute () {}
-}
-
-// When applied, it instructs the generator to not use NSStrings for marshalling.
-public class PlainStringAttribute : Attribute {
-	public PlainStringAttribute () {}
-}
-
-public class AutoreleaseAttribute : Attribute {
-	public AutoreleaseAttribute () {}
-}
-
-// When applied, the generator generates a check for the Handle being valid on the main object, to
-// ensure that the user did not Dispose() the object.
-//
-// This is typically used in scenarios where the user might be tempted to dispose
-// the object in a callback:
-//
-//     foo.FinishedDownloading += delegate { foo.Dispose (); }
-//
-// This would invalidate "foo" and force the code to return to a destroyed/freed
-// object
-public class CheckDisposedAttribute : Attribute {
-	public CheckDisposedAttribute () {}
-}
-
-//
-// When applied, instructs the generator to use this object as the
-// target, instead of the implicit Handle Can only be used in methods
-// that are [Bind] instead of [Export].
-// Not supported for Unified API; use [Category] support instead for
-// Objective-C categories (which will create extension methods).
-//
-public class TargetAttribute : Attribute {
-	public TargetAttribute () {}
-}
-
-public class ProxyAttribute : Attribute {
-	public ProxyAttribute () {}
-}
-
-// When applied to a member, generates the member as static
-public class StaticAttribute : Attribute {
-	public StaticAttribute () {}
-}
-
-// When applied to a type generate a partial class even if the type does not subclasss NSObject
-// useful for Core* types that declare Fields
-public class PartialAttribute : Attribute {
-	public PartialAttribute () {}
-}
-
-// flags the backing field for the property to with .NET's [ThreadStatic] property
-public class IsThreadStaticAttribute : Attribute {
-	public IsThreadStaticAttribute () {}
-}
-
-// When applied to a member, generates the member as static
-// and passes IntPtr.Zero or null if the parameter is null
-public class NullAllowedAttribute : Attribute {
-	public NullAllowedAttribute () {}
-}
-
-// When applied to a method or property, flags the resulting generated code as internal
-public class InternalAttribute : Attribute {
-	public InternalAttribute () {}
-}
-
-// This is a conditional "Internal" method, that flags methods as internal only when
-// compiling with Unified, otherwise, this is ignored.
-//
-// In addition, UnifiedInternal members automatically get an underscore after their name
-// so [UnifiedInternal] void Foo(); becomes "Foo_()"
-public class UnifiedInternalAttribute : Attribute {
-	public UnifiedInternalAttribute () {}
-}
-
-// When applied to a method or property, flags the resulting generated code as internal
-public sealed class ProtectedAttribute : Attribute {
-}
-
-// When this attribute is applied to the interface definition it will
-// flag the default constructor as private.  This means that you can
-// still instantiate object of this class internally from your
-// extension file, but it just wont be accessible to users of your
-// class.
-public class PrivateDefaultCtorAttribute : DefaultCtorVisibilityAttribute {
-	public PrivateDefaultCtorAttribute () : base (Visibility.Private) {}
-}
-
-public enum Visibility {
-	Public,
-	Protected,
-	Internal,
-	ProtectedInternal,
-	Private,
-	Disabled
-}
-
-// When this attribute is applied to the interface definition it will
-// flag the default ctor with the corresponding visibility (or disabled
-// altogether if Visibility.Disabled is used).
-public class DefaultCtorVisibilityAttribute : Attribute {
-	public DefaultCtorVisibilityAttribute (Visibility visibility)
-	{
-		this.Visibility = visibility;
-	}
-
-	public Visibility Visibility { get; set; }
-}
-
-// When this attribute is applied to the interface definition it will
-// prevent the generator from producing the default constructor.
-public class DisableDefaultCtorAttribute : DefaultCtorVisibilityAttribute {
-	public DisableDefaultCtorAttribute () : base (Visibility.Disabled) {}
-}
-
-//
-// If this attribute is applied to a property, we do not generate a
-// backing field.   See bugzilla #3359 and Assistly 7032 for some
-// background information
-//
-public class TransientAttribute : Attribute {
-	public TransientAttribute () {}
-}
-
-// Used for mandatory methods that must be implemented in a [Model].
-[AttributeUsage(AttributeTargets.Method|AttributeTargets.Property|AttributeTargets.Interface, AllowMultiple=true)]
-public class AbstractAttribute : Attribute {
-	public AbstractAttribute () {} 
-}
-
-// Used for mandatory methods that must be implemented in a [Model].
-public class OverrideAttribute : Attribute {
-	public OverrideAttribute () {} 
-}
-
-// Makes the result use the `new' attribtue
-public class NewAttribute : Attribute {
-	public NewAttribute () {} 
-}
-
-// Makes the result sealed
-public class SealedAttribute : Attribute {
-	public SealedAttribute () {} 
-}
-
-// Flags the object as being thread safe
-public class ThreadSafeAttribute : Attribute {
-	public ThreadSafeAttribute (bool safe = true)
-	{
-		Safe = safe;
-	}
-
-	public bool Safe { get; private set; }
-}
-
-// Marks a struct parameter/return value as requiring a certain alignment.
-public class AlignAttribute : Attribute {
-	public int Align { get; set; }
-	public AlignAttribute (int align)
-	{
-		Align = align;
-	}
-	public int Bits {
-		get {
-			int bits = 0;
-			int tmp = Align;
-			while (tmp > 1) {
-				bits++;
-				tmp /= 2;
-			}
-			return bits;
-		}
-	}
-}
-
-//
-// Indicates that this array should be turned into a params
-//
-[AttributeUsage(AttributeTargets.Parameter, AllowMultiple=false)]
-public class ParamsAttribute : Attribute {
-}
-
-//
-// These two attributes can be applied to parameters in a C# delegate
-// declaration to specify what kind of bridge needs to be provided on
-// callback.   Either a Block style setup, or a C-style setup
-//
-[AttributeUsage(AttributeTargets.Parameter, AllowMultiple=false)]
-public class BlockCallbackAttribute : Attribute { }
-
-[AttributeUsage(AttributeTargets.Parameter, AllowMultiple=false)]
-public class CCallbackAttribute : Attribute { }
-
-
-//
-// When applied, flags the [Flags] as a notification and generates the
-// code to strongly type the notification.
-//
-// This attribute can be applied multiple types, once of each kind of event
-// arguments that you would want to consume.
-//
-// The type has information about the strong type notification, while the
-// NotificationCenter if not null, indicates how to get the notification center.
-//
-// If you do not specify it, it will use NSNotificationCenter.DefaultCenter,
-// you would typically use this to specify the code needed to get to it.
-//
-[AttributeUsage(AttributeTargets.Property, AllowMultiple=true)]
-public class NotificationAttribute : Attribute {
-	public NotificationAttribute (Type t) { Type = t; }
-	public NotificationAttribute (Type t, string notificationCenter) { Type = t; NotificationCenter = notificationCenter; }
-	public NotificationAttribute (string notificationCenter) { NotificationCenter = notificationCenter; }
-	public NotificationAttribute () {}
-	
-	public Type Type { get; set; }
-	public string NotificationCenter { get; set; }
-}
-
-//
-// Applied to attributes in the notification EventArgs
-// to generate code that merely probes for the existance of
-// the key, instead of extracting a value out of the
-// userInfo dictionary
-//
-[AttributeUsage(AttributeTargets.Property, AllowMultiple=true)]
-public class ProbePresenceAttribute : Attribute {
-	public ProbePresenceAttribute () {}
-}
-
-public class EventArgsAttribute : Attribute {
-	public EventArgsAttribute (string s)
-	{
-		ArgName = s;
-	}
-	public EventArgsAttribute (string s, bool skip)
-	{
-		ArgName = s;
-		SkipGeneration = skip;
-	}
-	public EventArgsAttribute (string s, bool skip, bool fullname)
-	{
-		ArgName = s;
-		SkipGeneration = skip;
-		FullName = fullname;
-	}
-
-	public string ArgName { get; set; }
-	public bool SkipGeneration { get; set; }
-	public bool FullName { get; set; }
-}
-
-//
-// Used to specify the delegate type that will be created when
-// the generator creates the delegate properties on the host
-// class that holds events
-//
-// example:
-// interface SomeDelegate {
-//     [Export ("foo"), DelegateName ("GetBoolean"), DefaultValue (false)]
-//     bool Confirm (Some source);
-//
-public class DelegateNameAttribute : Attribute {
-	public DelegateNameAttribute (string s)
-	{
-		Name = s;
-	}
-
-	public string Name { get; set; }
-}
-
-//
-// Used to specify the delegate property name that will be created when
-// the generator creates the delegate property on the host
-// class that holds events.
-//
-// This is really useful when you have two overload methods that makes
-// sense to keep them named as is but you want to expose them in the host class
-// with a better given name.
-//
-// example:
-// interface SomeDelegate {
-//     [Export ("foo"), DelegateApiName ("Confirmation"), DelegateName ("Func<bool>"), DefaultValue (false)]
-//     bool Confirm (Some source);
-// }
-//
-// Generates propety in the host class:
-//	Func<bool> Confirmation { get; set; }
-//
-//
-public class DelegateApiNameAttribute : Attribute {
-	public DelegateApiNameAttribute (string apiName)
-	{
-		Name = apiName;
-	}
-
-	public string Name { get; set; }
-}
-
-public class EventNameAttribute : Attribute {
-	public EventNameAttribute (string s)
-	{
-		EvtName = s;
-	}
-	public string EvtName { get; set; }
-}
-
-public class DefaultValueAttribute : Attribute {
-	public DefaultValueAttribute (object o){
-		Default = o;
-	}
-	public object Default { get; set; }
-}
-
-public class DefaultValueFromArgumentAttribute : Attribute {
-	public DefaultValueFromArgumentAttribute (string s){
-		Argument = s;
-	}
-	public string Argument { get; set; }
-}
-
-public class NoDefaultValueAttribute : Attribute {
-}
-
-// Attribute used to mark those methods that will be ignored when
-// generating C# events, there are several situations in which using
-// this attribute makes sense:
-// 1. when there are overloaded methods. This means that we can mark
-//    the default overload to be used in the events.
-// 2. whe some of the methods should not be exposed as events.
-public class IgnoredInDelegateAttribute : Attribute {
-}
-
-// Apply to strings parameters that are merely retained or assigned,
-// not copied this is an exception as it is advised in the coding
-// standard for Objective-C to avoid this, but a few properties do use
-// this.  Use this attribtue for properties flagged with `retain' or
-// `assign', which look like this:
-//
-// @property (retain) NSString foo;
-// @property (assign) NSString assigned;
-//
-// This forced the generator to create an NSString before calling the
-// API instead of using the fast string marshalling code.
-public class DisableZeroCopyAttribute : Attribute {
-	public DisableZeroCopyAttribute () {}
-}
-
-// Apply this attribute to methods that need a custom binding method.
-//
-// This is usually required for methods that take SIMD types
-// (vector_floatX, vector_intX, etc).
-//
-// Workflow:
-// * Add the attribute to the method or property accessor in question:
-//   [MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-// * Rebuild the class libraries, and build the dontlink tests for device.
-// * You'll most likely get a list of unresolved externals, each mentioning
-//   a different objc_msgSend* signature (if not, you're done).
-// * Add the signature to runtime/bindings-generator.cs:GetFunctionData,
-//   and rebuild runtime/.
-//   * It is not necessary to add overloads for the super and stret 
-//     variations of objc_msgSend, those are created auomatically.
-// * Rebuild dontlink for device again, making sure the new signature is
-//   detected.
-// * Make sure to build all variants of dontlink (classic, 32bit, 64bit),
-//   since the set of signatures may differ.
-//
-// This is only for internal use (for now at least).
-//
-[AttributeUsage (AttributeTargets.Method)]
-public class MarshalDirectiveAttribute : Attribute {
-	public string NativePrefix { get; set; }
-	public string NativeSuffix { get; set; }
-	public string Library { get; set; }
-}
-
-//
-// By default, the generator will not do Zero Copying of strings, as most
-// third party libraries do not follow Apple's design guidelines of making
-// string properties and parameters copy parameters, instead many libraries
-// "retain" as a broken optimization [1].
-//
-// The consumer of the genertor can force this by passing
-// --use-zero-copy or setting the [assembly:ZeroCopyStrings] attribute.
-// When these are set, the generator assumes the library perform
-// copies over any NSStrings it keeps instead of retains/assigns and
-// that any property that happens to be a retain/assign has the
-// [DisableZeroCopyAttribute] attribute applied.
-//
-// [1] It is broken becase consumer code can pass an NSMutableString, the
-// library retains the value, but does not have a way of noticing changes
-// that might happen to the mutable string behind its back.
-//
-// In the ZeroCopy case it is a problem because we pass handles to stack-allocated
-// strings that stop existing after the invocation is over.
-//
-[AttributeUsage(AttributeTargets.Assembly|AttributeTargets.Method|AttributeTargets.Interface, AllowMultiple=true)]
-public class ZeroCopyStringsAttribute : Attribute {
-}
-
-[AttributeUsage(AttributeTargets.Method|AttributeTargets.Property, AllowMultiple=true)]
-public class SnippetAttribute : Attribute {
-	public SnippetAttribute (string s)
-	{
-		Code = s;
-	}
-	public string Code { get; set; }
-}
-
-//
-// PreSnippet code is inserted after the parameters have been validated/marshalled
-// 
-public class PreSnippetAttribute : SnippetAttribute {
-	public PreSnippetAttribute (string s) : base (s) {}
-}
-
-//
-// PrologueSnippet code is inserted before any code is generated
-// 
-public class PrologueSnippetAttribute : SnippetAttribute {
-	public PrologueSnippetAttribute (string s) : base (s) {}
-}
-
-//
-// PostSnippet code is inserted before returning, before paramters are disposed/released
-// 
-public class PostSnippetAttribute : SnippetAttribute {
-	public PostSnippetAttribute (string s) : base (s) {}
-}
-
-//
-// Code to run from a generated Dispose method
-//
-[AttributeUsage(AttributeTargets.Interface, AllowMultiple=true)]
-public class DisposeAttribute : SnippetAttribute {
-	public DisposeAttribute (string s) : base (s) {}
-}
-
-//
-// This attribute is used to flag properties that should be exposed on the strongly typed
-// nested Appearance class.   It is usually a superset of what Apple has labeled with
-// UI_APPEARANCE_SELECTOR because they do support more selectors than those flagged in
-// the UIApperance proxies, so we must label all the options.   This will be a list that
-// is organically grown as we find them
-//
-[AttributeUsage (AttributeTargets.Property|AttributeTargets.Method, AllowMultiple=false)]
-public class AppearanceAttribute : Attribute {
-	public AppearanceAttribute () {}
-}
-
-//
-// This is designed to be applied to setter methods in
-// a base class `Foo' when a `MutableFoo' exists.
-//
-// This allows the Foo.set_XXX to exists but throw an exception 
-// but derived classes would then override the property
-//
-[AttributeUsage (AttributeTargets.Method, AllowMultiple=false)]
-public class NotImplementedAttribute : Attribute {
-	public NotImplementedAttribute () {}
-	public NotImplementedAttribute (string message) {Message=message;}
-	public string Message { get; set; }
-}
-
-//
-// Apply this attribute to a class to add methods that in Objective-c
-// are added as categories
-//
-// Use the BaseType attribute to reference which class this is extending
-//
-// Like this:
-//   [Category]
-//   [BaseType (typeof (UIView))]
-//   interface UIViewExtensions {
-//     [Export ("method_in_the_objective_c_category")]
-//     void ThisWillBecome_a_c_sharp_extension_method_in_class_UIViewExtensions ();
-// }
-[AttributeUsage (AttributeTargets.Interface, AllowMultiple=false)]
-public class CategoryAttribute : Attribute {
-	public CategoryAttribute () {}
-}
-
-//
-// Apply this attribute when an `init*` selector is decorated with NS_DESIGNATED_INITIALIZER
-//
-// FIXME: Right now this does nothing - but with some tooling we'll be able 
-// to spot binding mistakes and implement correct subclassing of ObjC types
-// from the IDE
-//
-[AttributeUsage (AttributeTargets.Constructor | AttributeTargets.Method)]
-public class DesignatedInitializerAttribute : Attribute {
-	public DesignatedInitializerAttribute ()
-	{
-	}
-}
-
-//
-// Apply this attribute to a method that you want an async version of a callback method.
-//
-// Use the ResultType or ResultTypeName attribute to describe any composite value to be by the Task object.
-// Use MethodName to customize the name of the generated method
-//
-// Note that this only supports the case where the callback is the last parameter of the method.
-//
-// Like this:
-//[Export ("saveAccount:withCompletionHandler:")] [Async]
-//void SaveAccount (ACAccount account, ACAccountStoreSaveCompletionHandler completionHandler);
-// }
-[AttributeUsage (AttributeTargets.Method, AllowMultiple=false)]
-public class AsyncAttribute : Attribute {
-
-	//This will automagically generate the async method.
-	//This works with 4 kinds of callbacks: (), (NSError), (result), (result, NSError)
-	public AsyncAttribute () {}
-
-	//This works with 2 kinds of callbacks: (...) and (..., NSError).
-	//Parameters are passed in order to a constructor in resultType
-	public AsyncAttribute (Type resultType) {
-		ResultType = resultType;
-	}
-
-	//This works with 2 kinds of callbacks: (...) and (..., NSError).
-	//Parameters are passed in order to a result type that is automatically created if size > 1
-	//The generated method is named after the @methodName
-	public AsyncAttribute (string methodName) {
-		MethodName = methodName;
-	}
-
-	public Type ResultType { get; set; }
-	public string MethodName { get; set; }
-	public string ResultTypeName { get; set; }
-	public string PostNonResultSnippet { get; set; }
-}
-
-//
-// When this attribute is applied to an interface, it directs the generator to
-// create a strongly typed DictionaryContainer for the specified fields.
-//
-// The constructor argument is the name of the type that contains the keys to lookup
-//
-// If an export attribute is present, if the value contains a dot,
-// then the the value of the export is used to lookup the keyname.  If
-// there is no dot present, then this prefixes the value with the
-// typeWithKeys value.  If it is not, then the value is inferred as
-// being the result of typeWithKeys.\(propertyName\)Key
-//
-// For example:
-//
-//  [StrongDictionary ("foo")] interface X { [Export ("bar")] string Bar;
-//  This looks up in foo.bar
-//
-//  [StrongDictionary ("foo")] interface X { [Export ("bar.baz")] string Bar;
-//  This looks up in bar.baz
-//
-//  [StrongDictionary ("foo")] interface X { string Bar; }
-//  This looks up in foo.BarKey
-//
-// The parameterless ctor can be applied to individual property members of
-// a DictionaryContainer to instruct the generator that the property is another
-// DictionaryContainer and generate the necessary code to handle it.
-//
-// For Example
-//  [StrongDictionary ("FooOptionsKeys")]
-//  interface FooOptions {
-//
-//      [StrongDictionary]
-//	    BarOptions BarDictionary { get; set; }
-//  }
-//
-[AttributeUsage (AttributeTargets.Interface | AttributeTargets.Property, AllowMultiple=false)]
-public class StrongDictionaryAttribute : Attribute {
-	public StrongDictionaryAttribute ()
-	{
-	}
-	public StrongDictionaryAttribute (string typeWithKeys)
-	{
-		TypeWithKeys = typeWithKeys;
-		Suffix = "Key";
-	}
-	public string TypeWithKeys;
-	public string Suffix;
-}
-
-//
-// When this attribtue is applied to a property, currently it merely adds
-// a DebuggerBrowsable(Never) to the property, to prevent a family of crashes
-//
-[AttributeUsage (AttributeTargets.Property, AllowMultiple=false)]
-public class OptionalImplementationAttribute : Attribute {
-	public OptionalImplementationAttribute () {}
-}
-
-//
-// Use this attribute if some definitions are required at definition-compile
-// time but when you need the final binding assembly to include your own
-// custom implementation
-//
-[AttributeUsage (AttributeTargets.Method | AttributeTargets.Property, AllowMultiple=false)]
-public class ManualAttribute : Attribute {
-	public ManualAttribute () {}
-}
-
-//
 // Used to encapsulate flags about types in either the parameter or the return value
 // For now, it only supports the [PlainString] attribute on strings.
 //
@@ -1255,6 +535,7 @@ public class MemberInformation
 	public bool is_return_release;
 	public bool protocolize;
 	public string selector, wrap_method, is_forced_owns;
+	public bool is_bindAs => Generator.HasBindAsAttribute (mi);
 
 	public MethodInfo method { get { return (MethodInfo) mi; } }
 	public PropertyInfo property { get { return (PropertyInfo) mi; } }
@@ -1448,77 +729,118 @@ public class NamespaceManager
 			Get ("CoreGraphics")
 		};
 
-		UINamespaces = new HashSet<string> {
-#if MONOMAC
-			Get ("AppKit")
-#else
-			Get ("UIKit"),
-#if !WATCH
-			Get ("Twitter"),
-			Get ("GameKit"),
-			Get ("NewsstandKit"),
-			Get ("iAd"),
-			Get ("QuickLook"),
-			Get ("EventKitUI"),
-			Get ("AddressBookUI"),
-#if !TVOS
-			Get ("MapKit"),
+		UINamespaces = new HashSet<string> ();
+#if HAVE_APPKIT
+		UINamespaces.Add (Get ("AppKit"));
 #endif
-			Get ("MessageUI"),
-			Get ("PhotosUI"),
-			Get ("HealthKitUI"),
+#if HAVE_UIKIT
+		UINamespaces.Add (Get ("UIKit"));
 #endif
+#if HAVE_TWITTER
+		UINamespaces.Add (Get ("Twitter"));
 #endif
-		};
+#if HAVE_GAMEKIT && !MONOMAC && !WATCH
+		UINamespaces.Add (Get ("GameKit"));
+#endif
+#if HAVE_NEWSSTANDKIT
+		UINamespaces.Add (Get ("NewsstandKit"));
+#endif
+#if HAVE_IAD
+		UINamespaces.Add (Get ("iAd"));
+#endif
+#if HAVE_QUICKLOOK
+		UINamespaces.Add (Get ("QuickLook"));
+#endif
+#if HAVE_EVENTKITUI
+		UINamespaces.Add (Get ("EventKitUI"));
+#endif
+#if HAVE_ADDRESSBOOKUI
+		UINamespaces.Add (Get ("AddressBookUI"));
+#endif
+#if HAVE_MAPKIT
+		UINamespaces.Add (Get ("MapKit"));
+#endif
+#if HAVE_MESSAGEUI
+		UINamespaces.Add (Get ("MessageUI"));
+#endif
+#if HAVE_PHOTOSUI
+		UINamespaces.Add (Get ("PhotosUI"));
+#endif
+#if HAVE_HEALTHKITUI
+		UINamespaces.Add (Get ("HealthKitUI"));
+#endif
 
-		ImplicitNamespaces = new HashSet<string> {
-			"System",
-			"System.Runtime.CompilerServices",
-			"System.Runtime.InteropServices",
-			"System.Diagnostics",
-			"System.ComponentModel",
-			"System.Threading.Tasks",
-			Get ("CoreFoundation"),
-			Get ("Foundation"),
-			Get ("ObjCRuntime"),
-			Get ("CoreGraphics"),
-			Get ("SceneKit"),
-#if !WATCH
-			Get ("AudioUnit"),
-			Get ("CoreAnimation"),
+		ImplicitNamespaces = new HashSet<string> ();
+		ImplicitNamespaces.Add ("System");
+		ImplicitNamespaces.Add ("System.Runtime.CompilerServices");
+		ImplicitNamespaces.Add ("System.Runtime.InteropServices");
+		ImplicitNamespaces.Add ("System.Diagnostics");
+		ImplicitNamespaces.Add ("System.ComponentModel");
+		ImplicitNamespaces.Add ("System.Threading.Tasks");
+		ImplicitNamespaces.Add (Get ("CoreFoundation"));
+		ImplicitNamespaces.Add (Get ("Foundation"));
+		ImplicitNamespaces.Add (Get ("ObjCRuntime"));
+		ImplicitNamespaces.Add (Get ("CoreGraphics"));
+		ImplicitNamespaces.Add (Get ("SceneKit"));
+#if HAVE_AUDIOUNIT
+		ImplicitNamespaces.Add (Get ("AudioUnit"));
 #endif
-			Get ("CoreLocation"),
-#if !WATCH
-			Get ("CoreVideo"),
-			Get ("CoreMedia"),
-			Get ("Security"),
-			Get ("AVFoundation"),
+#if HAVE_COREANIMATION
+		ImplicitNamespaces.Add (Get ("CoreAnimation"));
 #endif
-#if MONOMAC
-			Get ("OpenGL"),
-			Get ("QTKit"),
-			Get ("AppKit"),
-			Get ("CloudKit"),
-#else
-#if !WATCH && !TVOS
-			Get ("CoreMotion"),
-			Get ("MapKit"),
+#if HAVE_CORELOCATION
+		ImplicitNamespaces.Add (Get ("CoreLocation"));
 #endif
-			Get ("UIKit"),
-#if !WATCH
-#if !TVOS
-			Get ("NewsstandKit"),
+#if HAVE_COREVIDEO
+		ImplicitNamespaces.Add (Get ("CoreVideo"));
 #endif
-			Get ("GLKit"),
-#if !TVOS
-			Get ("QuickLook"),
-			Get ("AddressBook")
+#if HAVE_COREMEDIA
+		ImplicitNamespaces.Add (Get ("CoreMedia"));
 #endif
+#if HAVE_SECURITY
+		ImplicitNamespaces.Add (Get ("Security"));
 #endif
+#if HAVE_AVFOUNDATION && !WATCH
+		ImplicitNamespaces.Add (Get ("AVFoundation"));
 #endif
-		};
-#if !(WATCH || (MONOMAC && !XAMCORE_2_0)) // ModelIO and Metal are 64-bit only, and not on watch
+#if HAVE_OPENGL
+		ImplicitNamespaces.Add (Get ("OpenGL"));
+#endif
+#if HAVE_QTKIT
+		ImplicitNamespaces.Add (Get ("QTKit"));
+#endif
+#if HAVE_APPKIT
+		ImplicitNamespaces.Add (Get ("AppKit"));
+#endif
+#if HAVE_CLOUDKIT
+		ImplicitNamespaces.Add (Get ("CloudKit"));
+#endif
+#if HAVE_COREMOTION
+		ImplicitNamespaces.Add (Get ("CoreMotion"));
+#endif
+#if HAVE_MAPKIT
+		ImplicitNamespaces.Add (Get ("MapKit"));
+#endif
+#if HAVE_UIKIT
+		ImplicitNamespaces.Add (Get ("UIKit"));
+#endif
+#if HAVE_NEWSSTANDKIT
+		ImplicitNamespaces.Add (Get ("NewsstandKit"));
+#endif
+#if HAVE_GLKIT
+		ImplicitNamespaces.Add (Get ("GLKit"));
+#endif
+#if HAVE_QUICKLOOK
+		ImplicitNamespaces.Add (Get ("QuickLook"));
+#endif
+#if HAVE_ADDRESSBOOK
+		ImplicitNamespaces.Add (Get ("AddressBook"));
+#endif
+
+#if HAVE_MODELIO
 		ImplicitNamespaces.Add (Get ("ModelIO"));
+#endif
+#if HAVE_METAL
 		ImplicitNamespaces.Add (Get ("Metal"));
 #endif
 
@@ -1600,7 +922,20 @@ public partial class Generator : IMemberGatherer {
 	// Static version of the above (!Compat) field, set on each Go invocation, needed because some static
 	// helper methods need to access this.   This is the exact opposite of Compat.
 	public static bool UnifiedAPI { get { return BindingTouch.Unified; } }
-
+	public static int XamcoreVersion {
+		get {
+			switch (Generator.CurrentPlatform) {
+			case PlatformName.MacOSX:
+			case PlatformName.iOS:
+				return UnifiedAPI ? 2 : 1;
+			case PlatformName.TvOS:
+			case PlatformName.WatchOS:
+				return 3;
+			default:
+				return 4;
+			}
+		}
+	}
 	Type [] types, strong_dictionaries;
 	bool debug;
 	bool external;
@@ -1670,7 +1005,7 @@ public partial class Generator : IMemberGatherer {
 	string basedir;
 	HashSet<string> generated_files = new HashSet<string> ();
 	public Type CoreNSObject = typeof (NSObject);
-#if !WATCH
+#if HAVE_COREMEDIA
 	public Type SampleBufferType = typeof (CMSampleBuffer);
 #endif
 
@@ -1905,6 +1240,212 @@ public partial class Generator : IMemberGatherer {
 		return "I" + type.Name;
 	}
 
+	public static BindAsAttribute GetBindAsAttribute (ICustomAttributeProvider cu) => GetAttribute<BindAsAttribute> (cu) ?? GetAttribute<BindAsAttribute> ((cu as MethodInfo)?.ReturnParameter);
+	public static bool HasBindAsAttribute (ICustomAttributeProvider cu) => (GetAttribute<BindAsAttribute> (cu) ?? GetAttribute<BindAsAttribute> ((cu as MethodInfo)?.ReturnParameter)) != null;
+	static bool IsSetter (MethodInfo mi) => mi.IsSpecialName && mi.Name.StartsWith ("set_", StringComparison.Ordinal);
+	static string GetBindAsExceptionString (string box, string retType, string containerType, string container, string memberName) => $"Could not {box} type {retType} from {containerType} {container} used on {memberName} member decorated with [BindAs].";
+	bool IsMemberInsideProtocol (Type type) => IsProtocol (type) || IsModel (type);
+
+	bool IsSmartEnum (Type type)
+	{
+		if (!type.IsEnum)
+			return false;
+		// First check if the smart enum candidate still holds the FieldAtttribute data
+		if (type.GetFields ().Any (f => GetAttribute<FieldAttribute> (f) != null))
+			return true;
+		// If the above fails it's possible that it comes from another dll (like X.I.dll) so we look for the [Enum]Extensions class existence
+		return Type.GetType (type.AssemblyQualifiedName.Replace (type.Name, $"{type.Name}Extensions")) != null;
+	}
+
+	static Dictionary<Type,string> NSValueCreateMap = new Dictionary<Type, string> {
+		{ typeof (CGAffineTransform), "CGAffineTransform" }, { typeof (NSRange), "Range" },
+		{ typeof (CGVector), "CGVector" }, { typeof (SCNMatrix4), "SCNMatrix4" },
+		{ typeof (CLLocationCoordinate2D), "CLLocationCoordinate2D" }, { typeof (SCNVector3), "Vector" },
+		{ typeof (SCNVector4), "Vector" },
+#if XAMCORE_2_0
+		{ typeof (CGPoint), "CGPoint" }, { typeof (CGRect), "CGRect" }, { typeof (CGSize), "CGSize" },
+#endif
+#if HAVE_UIKIT
+		{ typeof (UIEdgeInsets), "UIEdgeInsets" }, { typeof (UIOffset), "UIOffset" },
+#endif
+#if HAVE_MAPKIT
+		{ typeof (MKCoordinateSpan), "MKCoordinateSpan" },
+#endif
+#if HAVE_COREMEDIA
+		{ typeof (CMTimeRange), "CMTimeRange" }, { typeof (CMTime), "CMTime" },
+		{ typeof (CMTimeMapping), "CMTimeMapping" },
+#endif
+#if HAVE_COREANIMATION
+		{ typeof (CATransform3D), "CATransform3D" },
+#endif
+	};
+
+	string GetToBindAsWrapper (MemberInformation minfo = null, ParameterInfo pi = null)
+	{
+		BindAsAttribute attrib = null;
+		Type originalType = null;
+		string temp = null;
+		var declaringType = minfo?.mi?.DeclaringType ?? pi?.Member?.DeclaringType;
+
+		if (IsMemberInsideProtocol (declaringType))
+			throw new BindingException (1050, true, "[BindAs] cannot be used inside Protocol or Model types. Type: {0}", declaringType.Name);
+
+		if (pi == null) {
+			attrib = GetBindAsAttribute (minfo.mi);
+			var property = minfo.mi as PropertyInfo;
+			var method = minfo.mi as MethodInfo;
+			originalType = method?.ReturnType ?? property?.PropertyType;
+		} else {
+			attrib = GetBindAsAttribute (pi);
+			originalType = pi.ParameterType;
+		}
+
+		var retType = Nullable.GetUnderlyingType (attrib.Type) ?? attrib.Type;
+		var isNullable = attrib.IsNullable;
+		var isValueType = retType.IsValueType;
+		var isEnum = retType.IsEnum;
+		var parameterName = pi != null ? pi.Name.GetSafeParamName () : "value";
+		var denullify = isNullable ? ".Value" : string.Empty;
+
+		if (isNullable || !isValueType)
+			temp = string.Format ("{0} == null ? null : ", parameterName);
+
+		if (originalType == typeof (NSNumber)) {
+			var enumCast = isEnum ? $"(int)" : string.Empty;
+			temp = string.Format ("new NSNumber ({2}{1}{0});", denullify, parameterName, enumCast);
+		}
+		else if (originalType == typeof (NSValue)) {
+			var typeStr = string.Empty;
+			if (!NSValueCreateMap.TryGetValue (retType, out typeStr)) {
+				// HACK: These are problematic for X.M due to we do not ship System.Drawing for Full profile
+				if (retType.Name == "RectangleF" || retType.Name == "SizeF" || retType.Name == "PointF")
+					typeStr = retType.Name;
+				else
+					throw new BindingException (1049, true, GetBindAsExceptionString ("box", retType.Name, originalType.Name, "container", minfo?.mi?.Name ?? pi?.Name));
+			}
+			temp = string.Format ("NSValue.From{0} ({2}{1});", typeStr, denullify, parameterName);
+		} else if (originalType == typeof (NSString) && IsSmartEnum (retType)) {
+			temp = string.Format ("{1}{0}.GetConstant ();", denullify, parameterName);
+		} else if (originalType.IsArray) {
+			var arrType = originalType.GetElementType ();
+			var arrRetType = Nullable.GetUnderlyingType (retType.GetElementType ()) ?? retType.GetElementType ();
+			var valueConverter = string.Empty;
+
+			if (arrType == typeof (NSString))
+				valueConverter = $"o{denullify}.GetConstant (), {parameterName});";
+			else if (arrType == typeof (NSNumber)) {
+				var cast = arrRetType.IsEnum ? "(int)" : string.Empty;
+				valueConverter = $"new NSNumber ({cast}o{denullify}), {parameterName});";
+			} else if (arrType == typeof (NSValue)) {
+				var typeStr = string.Empty;
+				if (!NSValueCreateMap.TryGetValue (arrRetType, out typeStr)) {
+					if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
+						typeStr = retType.Name;
+					else
+						throw new BindingException (1049, true, GetBindAsExceptionString ("box", arrRetType.Name, originalType.Name, "array", minfo?.mi?.Name ?? pi?.Name));
+				}
+				valueConverter = $"NSValue.From{typeStr} (o{denullify}), {parameterName});";
+			} else
+				throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
+			temp = $"NSArray.FromNSObjects (o => {valueConverter}";
+		} else
+			throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
+
+		return temp;
+	}
+
+	static Dictionary<Type,string> NSNumberReturnMap = new Dictionary<Type, string> {
+		{ typeof (bool), ".BoolValue" }, { typeof (byte), ".ByteValue" }, { typeof (double), ".DoubleValue" },
+		{ typeof (float), ".FloatValue" }, { typeof (short), ".Int16Value" }, { typeof (int), ".Int32Value" },
+		{ typeof (long), ".Int64Value" }, { typeof (sbyte), ".SByteValue" }, { typeof (ushort), ".UInt16Value" },
+		{ typeof (uint), ".UInt32Value" }, { typeof (ulong), ".UInt64Value" },
+#if XAMCORE_2_0
+		{ typeof (nfloat), ".NFloatValue" }, { typeof (nint), ".NIntValue" }, { typeof (nuint), ".NUIntValue" },
+#endif
+	};
+
+	static Dictionary<Type,string> NSValueReturnMap = new Dictionary<Type, string> {
+		{ typeof (CGAffineTransform), ".CGAffineTransformValue" }, { typeof (NSRange), ".RangeValue" },
+		{ typeof (CGVector), ".CGVectorValue" }, { typeof (SCNMatrix4), ".SCNMatrix4Value" },
+		{ typeof (CLLocationCoordinate2D), ".CoordinateValue" }, { typeof (SCNVector3), ".Vector3Value" },
+		{ typeof (SCNVector4), ".VectordValue" },
+#if XAMCORE_2_0
+		{ typeof (CGPoint), ".CGPointValue" }, { typeof (CGRect), ".CGRectValue" }, { typeof (CGSize), ".CGSizeValue" },
+#endif
+#if HAVE_UIKIT
+		{ typeof (UIEdgeInsets), ".UIEdgeInsetsValue" }, { typeof (UIOffset), ".UIOffsetValue" },
+#endif
+#if HAVE_MAPKIT
+		{ typeof (MKCoordinateSpan), ".CoordinateSpanValue" },
+#endif
+#if HAVE_COREMEDIA
+		{ typeof (CMTimeRange), ".CMTimeRangeValue" }, { typeof (CMTime), ".CMTimeValue" },
+		{ typeof (CMTimeMapping), ".CMTimeMappingValue" },
+#endif
+#if HAVE_COREANIMATION
+		{ typeof (CATransform3D), ".CATransform3DValue" },
+#endif
+	};
+
+	string GetFromBindAsWrapper (MemberInformation minfo)
+	{
+		var declaringType = minfo.mi.DeclaringType;
+		if (IsMemberInsideProtocol (declaringType))
+			throw new BindingException (1050, true, "[BindAs] cannot be used inside Protocol or Model types. Type: {0}", declaringType.Name);
+
+		var attrib = GetBindAsAttribute (minfo.mi);
+		var retType = Nullable.GetUnderlyingType (attrib.Type) ?? attrib.Type;
+		var isValueType = retType.IsValueType;
+		var append = string.Empty;
+		var property = minfo.mi as PropertyInfo;
+		var method = minfo.mi as MethodInfo;
+		var originalReturnType = method?.ReturnType ?? property?.PropertyType;
+
+		if (originalReturnType == typeof (NSNumber)) {
+			if (!NSNumberReturnMap.TryGetValue (retType, out append)) {
+				if (retType.IsEnum) {
+					var enumType = Enum.GetUnderlyingType (retType);
+					if (!NSNumberReturnMap.TryGetValue (enumType, out append))
+						throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi.Name));
+				}
+				else
+					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi.Name));
+			}
+		} else if (originalReturnType == typeof (NSValue)) {
+			if (!NSValueReturnMap.TryGetValue (retType, out append)) {
+				// HACK: These are problematic for X.M due to we do not ship System.Drawing for Full profile
+				if (retType.Name == "RectangleF" || retType.Name == "SizeF" || retType.Name == "PointF")
+					append = $".{retType.Name}Value";
+				else
+					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi.Name));
+			}
+		} else if (originalReturnType == typeof (NSString) && IsSmartEnum (retType)) {
+			append = $"{FormatType (retType.DeclaringType, retType)}Extensions.GetValue (";
+		} else if (originalReturnType.IsArray) {
+			var arrType = originalReturnType.GetElementType ();
+			var arrRetType = Nullable.GetUnderlyingType (retType.GetElementType ()) ?? retType.GetElementType ();
+			var valueFetcher = string.Empty;
+			if (arrType == typeof (NSString))
+				append = $"ptr => {{\n\tusing (var str = Runtime.GetNSObject<NSString> (ptr)) {{\n\t\treturn {FormatType (arrRetType.DeclaringType, arrRetType)}Extensions.GetValue (str);\n\t}}\n}}";
+			else if (arrType == typeof (NSNumber)) {
+				if (NSNumberReturnMap.TryGetValue (arrRetType, out valueFetcher) || arrRetType.IsEnum)
+					append = string.Format ("ptr => {{\n\tusing (var num = Runtime.GetNSObject<NSNumber> (ptr)) {{\n\t\treturn ({1}) num{0};\n\t}}\n}}", arrRetType.IsEnum ? ".Int32Value" : valueFetcher, FormatType (arrRetType.DeclaringType, arrRetType));
+				else
+					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, arrType.Name, "array", minfo.mi.Name));
+			} else if (arrType == typeof (NSValue)) {
+				if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
+					valueFetcher = $".{arrRetType.Name}Value";
+				else if (!NSValueReturnMap.TryGetValue (arrRetType, out valueFetcher))
+					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, arrType.Name, "array", minfo.mi.Name));
+
+				append = string.Format ("ptr => {{\n\tusing (var val = Runtime.GetNSObject<NSValue> (ptr)) {{\n\t\treturn val{0};\n\t}}\n}}", valueFetcher);
+			} else
+				throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
+		} else
+			throw new BindingException (1048, true, "Unsupported type {0} decorated with [BindAs]", retType.Name);
+		return append;
+	}
+
 	public static bool HasForcedAttribute (ICustomAttributeProvider cu, out string owns)
 	{
 		var att = GetAttribute<ForcedTypeAttribute> (cu) ?? GetAttribute<ForcedTypeAttribute> ((cu as MethodInfo)?.ReturnParameter);
@@ -1992,13 +1533,15 @@ public partial class Generator : IMemberGatherer {
 				continue;
 			}
 
-#if !WATCH
+#if HAVE_COREMEDIA
 			// special case (false) so it needs to be before the _real_ INativeObject check
 			if (pi.ParameterType == SampleBufferType){
 				pars.AppendFormat ("IntPtr {0}", pi.Name.GetSafeParamName ());
 				invoke.AppendFormat ("{0} == IntPtr.Zero ? null : new CMSampleBuffer ({0}, false)", pi.Name.GetSafeParamName ());
 				continue;
 			}
+#endif
+#if HAVE_AUDIOTOOLBOX
 			if (pi.ParameterType == typeof (AudioBuffers)){
 				pars.AppendFormat ("IntPtr {0}", pi.Name.GetSafeParamName ());
 				invoke.AppendFormat ("new global::{0}AudioToolbox.AudioBuffers ({1})", Generator.UnifiedAPI ? "" : "MonoTouch.", pi.Name.GetSafeParamName ());
@@ -2104,11 +1647,16 @@ public partial class Generator : IMemberGatherer {
 	// Returns the actual way in which the type t must be marshalled
 	// for example "UIView foo" is generated as  "foo.Handle"
 	//
-	public string MarshalParameter (MethodInfo mi, ParameterInfo pi, bool null_allowed_override, EnumMode enum_mode)
+	public string MarshalParameter (MethodInfo mi, ParameterInfo pi, bool null_allowed_override, EnumMode enum_mode, PropertyInfo propInfo = null)
 	{
 		if (pi.ParameterType.IsByRef && pi.ParameterType.GetElementType ().IsValueType == false){
 			return "ref " + pi.Name + "Value";
 		}
+
+		if (HasBindAsAttribute (pi))
+			return string.Format ("nsb_{0} == null ? IntPtr.Zero : nsb_{0}.Handle", pi.Name);
+		if (propInfo != null && HasBindAsAttribute (propInfo))
+			return string.Format ("nsb_{0} == null ? IntPtr.Zero : nsb_{0}.Handle", propInfo.Name);
 
 		if (IsWrappedType (pi.ParameterType)){
 			if (null_allowed_override || HasAttribute (pi, typeof (NullAllowedAttribute)))
@@ -2189,7 +1737,7 @@ public partial class Generator : IMemberGatherer {
 		throw new BindingException (1002, true, "Unknown kind {0} in method '{1}.{2}'", pi, mi.DeclaringType.FullName, mi.Name.GetSafeParamName ());
 	}
 
-	public bool ParameterNeedsNullCheck (ParameterInfo pi, MethodInfo mi)
+	public bool ParameterNeedsNullCheck (ParameterInfo pi, MethodInfo mi, PropertyInfo propInfo = null)
 	{
 		if (pi.ParameterType.IsByRef)
 			return false;
@@ -2197,11 +1745,16 @@ public partial class Generator : IMemberGatherer {
 		if (HasAttribute (pi, typeof (NullAllowedAttribute)))
 			return false;
 
-		if (mi.IsSpecialName && mi.Name.StartsWith ("set_", StringComparison.Ordinal)){
+		if (IsSetter (mi)) {
 			if (HasAttribute (mi, typeof (NullAllowedAttribute))){
 				return false;
 			}
 		}
+
+		var bindAsAtt = GetBindAsAttribute (pi) ?? GetBindAsAttribute (propInfo);
+		if (bindAsAtt != null)
+			return bindAsAtt.IsNullable || !bindAsAtt.IsValueType;
+
 		if (IsWrappedType (pi.ParameterType))
 			return true;
 
@@ -2430,7 +1983,7 @@ public partial class Generator : IMemberGatherer {
 					RegisterMethod (false, mi, MakeSig (mi, false, enum_mode: mode), false, mode);
 					RegisterMethod (false, mi, MakeSuperSig (mi, false, enum_mode: mode), false, mode);
 
-					if (Stret.NeedStret (mi)) {
+					if (CheckNeedStret (mi)) {
 						RegisterMethod (true, mi, MakeSig (mi, true, enum_mode: mode), false, mode);
 						RegisterMethod (true, mi, MakeSuperSig (mi, true, enum_mode: mode), false, mode);
 
@@ -2535,66 +2088,72 @@ public partial class Generator : IMemberGatherer {
 
 	public void Go ()
 	{
-		marshal_types.AddRange (new MarshalType [] {
-			new MarshalType (typeof (NSObject), create: "Runtime.GetNSObject ("),
-			new MarshalType (typeof (Selector), create: "Selector.FromHandle ("),
-			new MarshalType (typeof (BlockLiteral), "BlockLiteral", "{0}", "THIS_IS_BROKEN"),
-#if !MONOMAC && !WATCH
-			new MarshalType (typeof (MusicSequence), create: "global::XamCore.AudioToolbox.MusicSequence.Lookup ("),
+		marshal_types.Add (new MarshalType (typeof (NSObject), create: "Runtime.GetNSObject ("));
+		marshal_types.Add (new MarshalType (typeof (Selector), create: "Selector.FromHandle ("));
+		marshal_types.Add (new MarshalType (typeof (BlockLiteral), "BlockLiteral", "{0}", "THIS_IS_BROKEN"));
+#if HAVE_AUDIOTOOLBOX_MUSICSEQUENCE
+		marshal_types.Add (new MarshalType (typeof (MusicSequence), create: "global::XamCore.AudioToolbox.MusicSequence.Lookup ("));
 #endif
-			typeof (CGColor),
-			typeof (CGPath),
-			typeof (CGGradient),
-			typeof (CGContext),
-			typeof (CGImage),
-			typeof (Class),
-			typeof (CFRunLoop),
-			typeof (CGColorSpace),
-			typeof (DispatchQueue),
-#if !WATCH
-			typeof (Protocol),
-#if !TVOS
-			typeof (MidiEndpoint),
+		marshal_types.Add (typeof (CGColor));
+		marshal_types.Add (typeof (CGPath));
+		marshal_types.Add (typeof (CGGradient));
+		marshal_types.Add (typeof (CGContext));
+		marshal_types.Add (typeof (CGImage));
+		marshal_types.Add (typeof (Class));
+		marshal_types.Add (typeof (CFRunLoop));
+		marshal_types.Add (typeof (CGColorSpace));
+		marshal_types.Add (typeof (DispatchQueue));
+		marshal_types.Add (typeof (Protocol));
+#if HAVE_COREMIDI
+		marshal_types.Add (typeof (MidiEndpoint));
 #endif
-			typeof (CMTimebase),
-			typeof (CMClock),
+#if HAVE_COREMEDIA
+		marshal_types.Add (typeof (CMTimebase));
+		marshal_types.Add (typeof (CMClock));
 #endif
-			typeof (NSZone),
-#if MONOMAC
-			typeof (CGLContext),
-			typeof (CGLPixelFormat),
-			typeof (CVImageBuffer),
-			new MarshalType (typeof (MTAudioProcessingTap), create: ((UnifiedAPI ? "MediaToolbox" : "MonoMac.MediaToolbox") + ".MTAudioProcessingTap.FromHandle(")),
-#elif !WATCH
-#if !TVOS
-			typeof (ABAddressBook),
-			new MarshalType (typeof (ABPerson), create: "(ABPerson) ABRecord.FromHandle("),
-			new MarshalType (typeof (ABRecord), create: "ABRecord.FromHandle("),
+		marshal_types.Add (typeof (NSZone));
+#if HAVE_OPENGL
+		marshal_types.Add (typeof (CGLContext));
+		marshal_types.Add (typeof (CGLPixelFormat));
+		marshal_types.Add (typeof (CVImageBuffer));
 #endif
-			new MarshalType (typeof (MTAudioProcessingTap), create: ((UnifiedAPI ? "MediaToolbox" : "MonoTouch.MediaToolbox") + ".MTAudioProcessingTap.FromHandle(")),
+#if HAVE_MEDIATOOLBOX
+		marshal_types.Add (new MarshalType (typeof (MTAudioProcessingTap), create: (NamespaceManager.Get ("MediaToolbox") + ".MTAudioProcessingTap.FromHandle(")));
 #endif
-#if !WATCH
-			typeof (CVPixelBuffer),
+#if HAVE_ADDRESSBOOK
+		marshal_types.Add (typeof (ABAddressBook));
+		marshal_types.Add (new MarshalType (typeof (ABPerson), create: "(ABPerson) ABRecord.FromHandle("));
+		marshal_types.Add (new MarshalType (typeof (ABRecord), create: "ABRecord.FromHandle("));
 #endif
-			typeof (CGLayer),
-#if !WATCH
-			typeof (CMSampleBuffer),
-			typeof (CVImageBuffer),
-			typeof (CVPixelBufferPool),
-			typeof (AudioComponent),
-			new MarshalType (typeof (CMFormatDescription), create: "CMFormatDescription.Create ("),
-			typeof (CMAudioFormatDescription),
-			typeof (CMVideoFormatDescription),
-			typeof (XamCore.AudioUnit.AudioUnit),
+#if HAVE_COREVIDEO
+		marshal_types.Add (typeof (CVPixelBuffer));
 #endif
-			typeof (SecIdentity),
-			typeof (SecTrust),
-			typeof (SecAccessControl),
-#if !WATCH
-			typeof (AudioBuffers),
-			typeof (AURenderEventEnumerator),
+		marshal_types.Add (typeof (CGLayer));
+#if HAVE_COREMEDIA
+		marshal_types.Add (typeof (CMSampleBuffer));
 #endif
-		});
+#if HAVE_COREVIDEO
+		marshal_types.Add (typeof (CVImageBuffer));
+		marshal_types.Add (typeof (CVPixelBufferPool));
+#endif
+#if HAVE_AUDIOUNIT
+		marshal_types.Add (typeof (AudioComponent));
+#endif
+#if HAVE_COREMEDIA
+		marshal_types.Add (new MarshalType (typeof (CMFormatDescription), create: "CMFormatDescription.Create ("));
+		marshal_types.Add (typeof (CMAudioFormatDescription));
+		marshal_types.Add (typeof (CMVideoFormatDescription));
+#endif
+#if HAVE_AUDIOUNIT
+		marshal_types.Add (typeof (XamCore.AudioUnit.AudioUnit));
+#endif
+		marshal_types.Add (typeof (SecIdentity));
+		marshal_types.Add (typeof (SecTrust));
+		marshal_types.Add (typeof (SecAccessControl));
+#if HAVE_AUDIOUNIT
+		marshal_types.Add (typeof (AudioBuffers));
+		marshal_types.Add (typeof (AURenderEventEnumerator));
+#endif
 
 		init_binding_type = String.Format ("IsDirectBinding = GetType ().Assembly == global::{0}.this_assembly;", ns.Messaging);
 
@@ -3151,11 +2710,11 @@ public partial class Generator : IMemberGatherer {
 							getter = "{1} GetCGPointValue ({0})";
 							setter = "SetCGPointValue ({0}, {1}value)";
 #endif // XAMCORE_2_0
-#if !WATCH
+#if HAVE_COREMEDIA
 						} else if (fetchType == typeof (CMTime)){
 							getter = "{1} GetCMTimeValue ({0})";
 							setter = "SetCMTimeValue ({0}, {1}value)";
-#endif // !WATCH
+#endif // HAVE_COREMEDIA
 						} else {
 							throw new BindingException (1031, true,
 										    "Limitation: can not automatically create strongly typed dictionary for " +
@@ -3673,24 +3232,7 @@ public partial class Generator : IMemberGatherer {
 			return false;
 
 		var attrib = (ProtocolizeAttribute) attribs [0];
-		switch (attrib.Version) {
-		case 2:
-			return UnifiedAPI;
-		case 3:
-#if XAMCORE_3_0
-			return true;
-#else
-			return false;
-#endif
-		case 4:
-#if XAMCORE_4_0
-			return true;
-#else
-			return false;
-#endif
-		default:
-			throw new NotImplementedException (string.Format ("ProtocolizeAttribute with Version={0} not implemented", attrib.Version));
-		}
+		return Generator.XamcoreVersion >= attrib.Version;
 	}
 
 	public string MakeSignature (MemberInformation minfo, bool is_async, ParameterInfo[] parameters, string extra = "", bool alreadyPreserved = false)
@@ -3722,8 +3264,16 @@ public partial class Generator : IMemberGatherer {
 				if (IsModel (minfo.method.ReturnType) && !hasReturnTypeProtocolize)
 					ErrorHelper.Show (new BindingException (1107, false, "The return type of the method {0}.{1} exposes a model ({2}). Please expose the corresponding protocol type instead ({3}.I{4}).", minfo.method.DeclaringType, minfo.method.Name, minfo.method.ReturnType, minfo.method.ReturnType.Namespace, minfo.method.ReturnType.Name));
 			}
-			
-			sb.Append (prefix + FormatType (mi.DeclaringType, GetCorrectGenericType (mi.ReturnType)));
+
+			if (minfo.is_bindAs) {
+				if (IsMemberInsideProtocol (minfo.mi.DeclaringType))
+					throw new BindingException (1050, true, "[BindAs] cannot be used inside Protocol or Model types. Type: {0}", minfo.mi.DeclaringType.Name);
+
+				var bindAsAttrib = GetBindAsAttribute (minfo.mi);
+				sb.Append (prefix + FormatType (bindAsAttrib.Type.DeclaringType, GetCorrectGenericType (bindAsAttrib.Type)));
+			} else
+				sb.Append (prefix + FormatType (mi.DeclaringType, GetCorrectGenericType (mi.ReturnType)));
+
 			sb.Append (" ");
 		}
 		// Unified internal methods automatically get a _ appended
@@ -3796,8 +3346,13 @@ public partial class Generator : IMemberGatherer {
 				}
 				sb.Append ("I");
 			}
-			
-			sb.Append (FormatType (declaringType, parType));
+
+			var bindAsAtt = GetBindAsAttribute (pi);
+			if (bindAsAtt != null)
+				sb.Append (FormatType (bindAsAtt.Type.DeclaringType, bindAsAtt.Type));
+			else
+				sb.Append (FormatType (declaringType, parType));
+
 			sb.Append (" ");
 			sb.Append (pi.Name.GetSafeParamName ());
 		}
@@ -3866,6 +3421,17 @@ public partial class Generator : IMemberGatherer {
 			} else if (minfo != null && minfo.is_forced) {
 				cast_a = " Runtime.GetINativeObject<" + FormatType (declaringType, GetCorrectGenericType (mi.ReturnType)) + "> (";
 				cast_b = $", {minfo.is_forced_owns})";
+			} else if (minfo != null && minfo.is_bindAs) {
+				if (mi.ReturnType == typeof (NSString)) {
+					cast_a = $" {GetFromBindAsWrapper (minfo)}Runtime.GetNSObject<{FormatType (declaringType, GetCorrectGenericType (mi.ReturnType))}> (";
+					cast_b = "))";
+				} else {
+					var bindAs = GetBindAsAttribute (minfo.mi);
+					var bindAsType = Nullable.GetUnderlyingType (bindAs.Type) ?? bindAs.Type;
+					var enumCast = (bindAsType.IsEnum && !minfo.type.IsArray) ? $"({FormatType (bindAsType.DeclaringType, GetCorrectGenericType (bindAsType))})" : string.Empty;
+					cast_a = $" {enumCast}Runtime.GetNSObject<{FormatType (declaringType, GetCorrectGenericType (mi.ReturnType))}> (";
+					cast_b = ")" + GetFromBindAsWrapper (minfo);
+				}
 			} else {
 				cast_a = " Runtime.GetNSObject<" + FormatType (declaringType, GetCorrectGenericType (mi.ReturnType)) + "> (";
 				cast_b = ")";
@@ -3881,7 +3447,11 @@ public partial class Generator : IMemberGatherer {
 			cast_b = "";
 		} else if (mai.Type.IsArray){
 			Type etype = mai.Type.GetElementType ();
-			if (etype == typeof (string)){
+			if (minfo != null && minfo.is_bindAs) {
+				var bindAsT = GetBindAsAttribute (minfo.mi).Type.GetElementType ();
+				cast_a = $"NSArray.ArrayFromHandleFunc <{FormatType (bindAsT.DeclaringType, bindAsT)}> (";
+				cast_b = $", {GetFromBindAsWrapper (minfo)})";
+			} else if (etype == typeof (string)) {
 				cast_a = "NSArray.StringArrayFromHandle (";
 				cast_b = ")";
 			} else if (minfo != null && minfo.protocolize) {
@@ -4199,7 +3769,7 @@ public partial class Generator : IMemberGatherer {
 	// @convs: conversions to perform before the invocation
 	// @disposes: dispose operations to perform after the invocation
 	// @by_ref_processing
-	void GenerateTypeLowering (MethodInfo mi, bool null_allowed_override, EnumMode enum_mode, out StringBuilder args, out StringBuilder convs, out StringBuilder disposes, out StringBuilder by_ref_processing, out StringBuilder by_ref_init)
+	void GenerateTypeLowering (MethodInfo mi, bool null_allowed_override, EnumMode enum_mode, out StringBuilder args, out StringBuilder convs, out StringBuilder disposes, out StringBuilder by_ref_processing, out StringBuilder by_ref_init, PropertyInfo propInfo = null)
 	{
 		args = new StringBuilder ();
 		convs = new StringBuilder ();
@@ -4213,7 +3783,7 @@ public partial class Generator : IMemberGatherer {
 			if (!IsTarget (pi)){
 				// Construct invocation
 				args.Append (", ");
-				args.Append (MarshalParameter (mi, pi, null_allowed_override, enum_mode));
+				args.Append (MarshalParameter (mi, pi, null_allowed_override, enum_mode, propInfo));
 			}
 
 			// Construct conversions
@@ -4224,7 +3794,12 @@ public partial class Generator : IMemberGatherer {
 				disposes.AppendFormat (GenerateDisposeString (probe_null, !mai.ZeroCopyStringMarshal), pi.Name);
 			} else if (mai.Type.IsArray){
 				Type etype = mai.Type.GetElementType ();
-				if (etype == typeof (string)){
+				if (HasBindAsAttribute (pi)) {
+					convs.AppendFormat ("var nsb_{0} = {1}\n", pi.Name, GetToBindAsWrapper (null, pi));
+					disposes.AppendFormat ("\nnsb_{0}?.Dispose ();", pi.Name);
+				} else if (HasBindAsAttribute (propInfo)) {
+					disposes.AppendFormat ("\nnsb_{0}?.Dispose ();", propInfo.Name);
+				} else if (etype == typeof (string)) {
 					if (null_allowed_override || HasAttribute (pi, typeof (NullAllowedAttribute))){
 						convs.AppendFormat ("var nsa_{0} = {1} == null ? null : NSArray.FromStrings ({1});\n", pi.Name, pi.Name.GetSafeParamName ());
 						disposes.AppendFormat ("if (nsa_{0} != null)\n\tnsa_{0}.Dispose ();\n", pi.Name);
@@ -4266,6 +3841,8 @@ public partial class Generator : IMemberGatherer {
 				disposes.AppendFormat (extra + "block_ptr_{0}->CleanupBlock ();\n", pi.Name);
 			} else if (pi.ParameterType.IsGenericParameter) {
 //				convs.AppendFormat ("{0}.Handle", pi.Name.GetSafeParamName ());
+			} else if (HasBindAsAttribute (pi)) {
+				convs.AppendFormat ("var nsb_{0} = {1}\n", pi.Name, GetToBindAsWrapper (null, pi));
 			} else {
 				if (mai.Type.IsClass && !mai.Type.IsByRef && 
 					(mai.Type != typeof (Selector) && mai.Type != typeof (Class) && mai.Type != typeof (string) && !typeof(INativeObject).IsAssignableFrom (mai.Type)))
@@ -4290,13 +3867,13 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	void GenerateArgumentChecks (MethodInfo mi, bool null_allowed_override)
+	void GenerateArgumentChecks (MethodInfo mi, bool null_allowed_override, PropertyInfo propInfo = null)
 	{
 		if (null_allowed_override)
 			return;
 
 		foreach (var pi in mi.GetParameters ()) {
-			var needs_null_check = ParameterNeedsNullCheck (pi, mi);
+			var needs_null_check = ParameterNeedsNullCheck (pi, mi, propInfo);
 			if (!needs_null_check)
 				continue;
 
@@ -4343,6 +3920,18 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
+	// Stret.NeedStret is shared between generator and X.I dll so in order to wrap the exception
+	// into a BindingException we need to set the try/catch here so we can provide a better message. Bugzilla ref 51212.
+	bool CheckNeedStret (MethodInfo mi)
+	{
+		try {
+			return Stret.NeedStret (mi);
+		}
+		catch (TypeLoadException ex) {
+			throw new BindingException (0001, true, $"The .NET runtime could not load the {mi.ReturnType.Name} type. Message: {ex.Message}");
+		}
+	}
+
 	//
 	// The NullAllowed can be applied on a property, to avoid the ugly syntax, we allow it on the property
 	// So we need to pass this as `null_allowed_override',   This should only be used by setters.
@@ -4371,7 +3960,7 @@ public partial class Generator : IMemberGatherer {
 
 		Inject (mi, typeof (PrologueSnippetAttribute));
 
-		GenerateArgumentChecks (mi, null_allowed_override);
+		GenerateArgumentChecks (mi, null_allowed_override, propInfo);
 
 		// Collect all strings that can be fast-marshalled
 		List<string> stringParameters = CollectFastStringMarshalParameters (mi);
@@ -4383,7 +3972,7 @@ public partial class Generator : IMemberGatherer {
 		by_ref_processing2 = new StringBuilder[enum_modes.Length];
 		by_ref_init2 = new StringBuilder[enum_modes.Length];
 		for (int i = 0; i < enum_modes.Length; i++) {
-			GenerateTypeLowering (mi, null_allowed_override, enum_modes [i], out args2[i], out convs2[i], out disposes2[i], out by_ref_processing2[i], out by_ref_init2[i]);
+			GenerateTypeLowering (mi, null_allowed_override, enum_modes [i], out args2[i], out convs2[i], out disposes2[i], out by_ref_processing2[i], out by_ref_init2[i], propInfo);
 		}
 
 		// sanity check
@@ -4414,6 +4003,10 @@ public partial class Generator : IMemberGatherer {
  			indent++;
  		}
 
+		if (propInfo != null && IsSetter (mi) && HasBindAsAttribute (propInfo)) {
+			convs.AppendFormat ("var nsb_{0} = {1}\n", propInfo.Name, GetToBindAsWrapper (minfo));
+		}
+
 		if (convs.Length > 0)
 			print (sw, convs.ToString ());
 
@@ -4439,7 +4032,7 @@ public partial class Generator : IMemberGatherer {
 
 		bool use_temp_return  =
 			minfo.is_return_release ||
-			(mi.Name != "Constructor" && (Stret.NeedStret (mi) || disposes.Length > 0 || postget != null) && mi.ReturnType != typeof (void)) ||
+			(mi.Name != "Constructor" && (CheckNeedStret (mi) || disposes.Length > 0 || postget != null) && mi.ReturnType != typeof (void)) ||
 			(HasAttribute (mi, typeof (FactoryAttribute))) ||
 			((body_options & BodyOption.NeedsTempReturn) == BodyOption.NeedsTempReturn) ||
 			(mi.ReturnType.IsSubclassOf (typeof (Delegate))) ||
@@ -4461,6 +4054,9 @@ public partial class Generator : IMemberGatherer {
 				print ("{0} ret;", FormatType (mi.DeclaringType, mi.ReturnType.Namespace, FindProtocolInterface (mi.ReturnType, mi)));
 			} else if (needsPtrZeroCheck) {
 				print ("IntPtr ret;");
+			} else if (minfo.is_bindAs) {
+				var bindAsAttrib = GetBindAsAttribute (minfo.mi);
+				print ("{0} ret;", FormatType (bindAsAttrib.Type.DeclaringType, GetCorrectGenericType (bindAsAttrib.Type)));
 			} else
 				print ("{0} ret;", FormatType (mi.DeclaringType, GetCorrectGenericType (mi.ReturnType))); //  = new {0} ();"
 		}
@@ -4546,7 +4142,7 @@ public partial class Generator : IMemberGatherer {
 		if ((postget != null) && (postget.Length > 0)) {
 			print ("#pragma warning disable 168");
 			for (int i = 0; i < postget.Length; i++) {
-				if (postget [i].IsDisableForNewRefCount (type))
+				if (IsDisableForNewRefCount (postget [i], type))
 					continue;
 
 
@@ -4611,6 +4207,29 @@ public partial class Generator : IMemberGatherer {
 			print ("}");
 		}
 		indent--;
+	}
+
+
+	static PropertyInfo GetProperty (PostGetAttribute @this, Type type)
+	{
+		if (type == null)
+			return null;
+
+		var props = type.GetProperties ();
+		foreach (var pi in props) {
+			if (pi.Name != @this.MethodName)
+				continue;
+			return pi;
+		}
+		return GetProperty (@this, ReflectionExtensions.GetBaseType (type));
+	}
+
+	static bool IsDisableForNewRefCount (PostGetAttribute @this, Type type)
+	{
+		PropertyInfo p = GetProperty (@this, type);
+		var ea = p.GetCustomAttributes (typeof(ExportAttribute), false);
+		var sem = (ea [0] as ExportAttribute).ArgumentSemantic;
+		return (sem != ArgumentSemantic.Assign && sem != ArgumentSemantic.Weak); // also cover UnsafeUnretained
 	}
 
 	public IEnumerable<MethodInfo> GetTypeContractMethods (Type source)
@@ -4848,6 +4467,9 @@ public partial class Generator : IMemberGatherer {
 		string propertyTypeName;
 		if (minfo.protocolize) {
 			propertyTypeName = FindProtocolInterface (pi.PropertyType, pi);
+		} else if (minfo.is_bindAs) {
+			var bindAsAttrib = GetBindAsAttribute (minfo.mi);
+			propertyTypeName = FormatType (bindAsAttrib.Type.DeclaringType, GetCorrectGenericType (bindAsAttrib.Type));
 		} else {
 			propertyTypeName = FormatType (pi.DeclaringType, GetCorrectGenericType (pi.PropertyType));
 		}
@@ -5057,15 +4679,18 @@ public partial class Generator : IMemberGatherer {
 		throw new BindingException (1023, true, "Async method {0} with more than one result parameter in the callback by neither ResultTypeName or ResultType", minfo.mi);
 	}
 
-	string GetInvokeParamList (ParameterInfo[] parameters)
+	string GetInvokeParamList (ParameterInfo [] parameters, bool suffix = true)
 	{
 		StringBuilder sb = new StringBuilder ();
 		bool comma = false;
 		foreach (var pi in parameters) {
-			if (comma)
+			if (comma) {
 				sb.Append (", ");
+			}
 			comma = true;
 			sb.Append (pi.Name.GetSafeParamName ());
+			if (suffix)
+				sb.Append ('_');
 		}
 		return sb.ToString ();
 	}
@@ -5096,9 +4721,12 @@ public partial class Generator : IMemberGatherer {
 			extra += "out " + FormatType (minfo.MethodInfo.DeclaringType, minfo.MethodInfo.ReturnType) + " " + minfo.GetUniqueParamName ("result");
 		}
 
+		// async wrapper don't have to be abstract (it's counter productive)
+		var modifier = minfo.GetModifiers ().Replace ("abstract ", String.Empty);
+
 		print ("{0} {1}{2} {3}",
 		       minfo.GetVisibility (),
-		       minfo.GetModifiers (),
+		       modifier,
 		       GetReturnType (minfo),
 		       MakeSignature (minfo, true, minfo.async_initial_params, extra),
 		       minfo.is_abstract ? ";" : "");
@@ -5112,8 +4740,6 @@ public partial class Generator : IMemberGatherer {
 		PrintMethodAttributes (minfo);
 
 		PrintAsyncHeader (minfo, asyncKind);
-		if (minfo.is_abstract)
-			return;
 
 		print ("{");
 		indent++;
@@ -5129,7 +4755,7 @@ public partial class Generator : IMemberGatherer {
 		print ("var tcs = new TaskCompletionSource<{0}> ();", ttype);
 		print ("{6}{5}{4}{0}({1}{2}({3}) => {{",
 		       mi.Name,
-		       GetInvokeParamList (minfo.async_initial_params),
+		       GetInvokeParamList (minfo.async_initial_params, false),
 		       minfo.async_initial_params.Length > 0 ? ", " : "",
 		       GetInvokeParamList (minfo.async_completion_params),
 		       minfo.is_extension_method ? "This." : string.Empty,
@@ -5141,8 +4767,8 @@ public partial class Generator : IMemberGatherer {
 		int nesting_level = 1;
 		if (minfo.has_nserror && !tuple) {
 			var var_name = minfo.async_completion_params.Last ().Name.GetSafeParamName ();;
-			print ("if ({0} != null)", var_name);
-			print ("\ttcs.SetException (new NSErrorException({0}));", var_name);
+			print ("if ({0}_ != null)", var_name);
+			print ("\ttcs.SetException (new NSErrorException({0}_));", var_name);
 			print ("else");
 			++nesting_level; ++indent;
 		}
@@ -5152,9 +4778,9 @@ public partial class Generator : IMemberGatherer {
 		else if (tuple) {
 			var cond_name = minfo.async_completion_params [0].Name;
 			var var_name = minfo.async_completion_params.Last ().Name;
-			print ("tcs.SetResult (new Tuple<bool,NSError> ({0}, {1}));", cond_name, var_name);
+			print ("tcs.SetResult (new Tuple<bool,NSError> ({0}_, {1}_));", cond_name, var_name);
 		} else if (minfo.is_single_arg_async)
-			print ("tcs.SetResult ({0});", minfo.async_completion_params [0].Name);
+			print ("tcs.SetResult ({0}_);", minfo.async_completion_params [0].Name);
 		else
 			print ("tcs.SetResult (new {0} ({1}));",
 				GetAsyncTaskType (minfo),
@@ -5714,12 +5340,6 @@ public partial class Generator : IMemberGatherer {
 		PrintPreserveAttribute (type);
 		print ("internal sealed class {0}Wrapper : BaseWrapper, I{0} {{", TypeName);
 		indent++;
-		// ctor (IntPtr)
-		print ("public {0}Wrapper (IntPtr handle)", TypeName);
-		print ("\t: base (handle, false)");
-		print ("{");
-		print ("}");
-		print ("");
 		// ctor (IntPtr, bool)
 		print ("[Preserve (Conditional = true)]");
 		print ("public {0}Wrapper (IntPtr handle, bool owns)", TypeName);
@@ -6365,7 +5985,7 @@ public partial class Generator : IMemberGatherer {
 						print ("return Dlfcn.GetSizeF (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
 					} else if (field_pi.PropertyType == typeof (long)){
 						print ("return Dlfcn.GetInt64 (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
-#if !WATCH
+#if HAVE_COREMEDIA && HAVE_AVFOUNDATION
 					} else
 						//
 						// Handle various blittable value types here

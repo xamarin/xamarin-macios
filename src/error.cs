@@ -17,6 +17,7 @@ using ProductException=BindingException;
 // Error allocation
 //
 // BI0xxx	the generator itself, e.g. parameters, environment
+//		BI0001	The .NET runtime could not load the {mi.ReturnType.Name} type. Message: {ex.Message}
 //		BI0068	Invalid value for target framework: {0}. [same error number/message as mtouch/mmp]
 //		BI0070	Invalid target framework: {0}. Valid target frameworks are: {1}. [same error number/message as mtouch/mmp]
 //		BI0086  A target framework (--target-framework) must be specified when building for Xamarin.Mac. [same error number/message as mtouch/mmp]
@@ -67,6 +68,9 @@ using ProductException=BindingException;
 //		BI1045 Only a single [DefaultEnumValue] attribute can be used inside enum {type.Name}.
 //		BI1046 The [Field] constant {fa.SymbolName} cannot only be used once inside enum {type.Name}.
 //		BI1047 Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.
+//		BI1048 Unsupported type {0} decorated with [BindAs].
+//		BI1049 Could not unbox type {0} from {1} container used on {2} member decorated with [BindAs].
+//		BI1050 [BindAs] cannot be used inside Protocol or Model types. Type: {0}
 //	BI11xx	warnings
 //		BI1101 Trying to use a string as a [Target]
 //		BI1102 Using the deprecated EventArgs for a delegate signature in {0}.{1}, please use DelegateName instead

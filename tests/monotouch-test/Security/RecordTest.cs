@@ -4,7 +4,11 @@ using System;
 #if XAMCORE_2_0
 using Foundation;
 using Security;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.Foundation;
 using MonoTouch.Security;
@@ -82,6 +86,9 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
+#if MONOMAC
+		[Ignore ("Returns SecAccessible.Invalid")]
+#endif
 		public void Accessible_17579 ()
 		{
 			Accessible (SecAccessible.AfterFirstUnlock);
@@ -277,6 +284,9 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
+#if MONOMAC
+		[Ignore ("SecStatusCode code = SecKeyChain.Add (rec); returns SecStatusCode.Param")]
+#endif
 		public void IdentityRecordTest ()
 		{
 			using (var identity = IdentityTest.GetIdentity ())
@@ -293,6 +303,7 @@ namespace MonoTouchFixtures.Security {
 			}
 		}
 
+#if !MONOMAC // Works different on Mac
 		[Test]
 		public void SecRecordRecordTest ()
 		{
@@ -331,5 +342,6 @@ namespace MonoTouchFixtures.Security {
 				}
 			}
 		}
+#endif
 	}
 }

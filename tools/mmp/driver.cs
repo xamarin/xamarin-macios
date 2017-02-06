@@ -40,6 +40,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Xml;
+using System.Threading.Tasks;
 
 using Mono.Cecil;
 using Mono.Linker;
@@ -150,44 +151,43 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static Version SDKVersion { get; private set; }
-
-		public static Version MinOSVersion { get { return minos; } }
-
-		public static string ProductAssembly => "Xamarin.Mac";
-		public static string PlatformFrameworkDirectory	{
-			get {
-				if (IsUnifiedMobile)
-					return Path.Combine (MMPDirectory, "lib", "mono", "Xamarin.Mac");
-				else if (IsUnifiedFullXamMacFramework)
-					return Path.Combine (MMPDirectory, "lib", "mono", "4.5");
-				throw new InvalidOperationException ("PlatformFrameworkDirectory when not Mobile or Full?");
-			}
+		public static string GetProductAssembly (Application app)
+		{
+			return "Xamarin.Mac";
 		}
 
-		public static string Arch32Directory {
-			get {
-				if (IsUnifiedMobile)
-					return Path.Combine (MMPDirectory, "lib", "i386", "mobile");
-				else if (IsUnifiedFullXamMacFramework)
-					return Path.Combine (MMPDirectory, "lib", "i386", "full");
-				throw new InvalidOperationException ("Arch32Directory when not Mobile or Full?");
-			}
+		public static string GetPlatformFrameworkDirectory (Application app)
+		{
+			if (IsUnifiedMobile)
+				return Path.Combine (MMPDirectory, "lib", "mono", "Xamarin.Mac");
+			else if (IsUnifiedFullXamMacFramework)
+				return Path.Combine (MMPDirectory, "lib", "mono", "4.5");
+			throw new InvalidOperationException ("PlatformFrameworkDirectory when not Mobile or Full?");
+		}
+
+		public static string GetArch32Directory (Application app)
+		{
+			if (IsUnifiedMobile)
+				return Path.Combine (MMPDirectory, "lib", "i386", "mobile");
+			else if (IsUnifiedFullXamMacFramework)
+				return Path.Combine (MMPDirectory, "lib", "i386", "full");
+			throw new InvalidOperationException ("Arch32Directory when not Mobile or Full?");
 		}
 		
-		public static string Arch64Directory {
-			get {
-				if (IsUnifiedMobile)
-					return Path.Combine (MMPDirectory, "lib", "x86_64", "mobile");
-				else if (IsUnifiedFullXamMacFramework)
-					return Path.Combine (MMPDirectory, "lib", "x86_64", "full");
-				throw new InvalidOperationException ("Arch64Directory when not Mobile or Full?");
-			}
+		public static string GetArch64Directory (Application app)
+		{
+			if (IsUnifiedMobile)
+				return Path.Combine (MMPDirectory, "lib", "x86_64", "mobile");
+			else if (IsUnifiedFullXamMacFramework)
+				return Path.Combine (MMPDirectory, "lib", "x86_64", "full");
+			throw new InvalidOperationException ("Arch64Directory when not Mobile or Full?");
 		}
 					
 
 		static int watch_level;
 		static Stopwatch watch;
+
+		static AOTCompiler aot = new AOTCompiler ();
 
 		static string xm_framework_dir;
 		public static string MMPDirectory {
@@ -238,7 +238,7 @@ namespace Xamarin.Bundler {
 				{ "h|?|help", "Displays the help", v => action = Action.Help },
 				{ "version", "Output version information and exit.", v => action = Action.Version },
 				{ "f|force", "Forces the recompilation of code, regardless of timestamps", v=> Force = true },
-				{ "cache=", "Specify the directory where temporary build files will be cached", v => Cache.Location = v },
+				{ "cache=", "Specify the directory where temporary build files will be cached", v => App.Cache.Location = v },
 				{ "a|assembly=", "Add an assembly to be processed", v => references.Add (v) },
 				{ "r|resource=", "Add a resource to be included", v => resources.Add (v) },
 				{ "o|output=", "Specify the output path", v => output_dir = v },
@@ -318,7 +318,7 @@ namespace Xamarin.Bundler {
 				{ "sdk=", "Specifies the SDK version to compile against (version, for example \"10.9\")",
 					v => {
 						try {
-							SDKVersion = Version.Parse (v);
+							App.SdkVersion = Version.Parse (v);
 						} catch (Exception ex) {
 							ErrorHelper.Error (26, ex, "Could not parse the command line argument '{0}': {1}", "-sdk", ex.Message);
 						}
@@ -360,9 +360,14 @@ namespace Xamarin.Bundler {
 				{ "xamarin-framework-directory=", "The framework directory", v => { xm_framework_dir = v; }, true },
 				{ "xamarin-full-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullXamMacFramework = true; } },
 				{ "xamarin-system-framework", "Used with --target-framework=4.5 to select XM 4.5 Target Framework", v => { IsUnifiedFullSystemFramework = true; } },
+				{ "aot:", "Specify assemblies that should be compiled via experimental AOT.\n- none - No AOT (default)\n- all - Every assembly in MonoBundle not ignored\n- core - Just Xamarin.Mac.dll, System.dll, and mscorlib.dll\n sdk - Xamarin.Mac.dll and all BCL assemblies\nIndividual files can be included for AOT via +FileName.dll and excluded via -FileName.dll",
+					v => {
+						aot.Parse (v);
+					}
+				},
 			};
 
-			AddSharedOptions (os);
+			AddSharedOptions (App, os);
 
 			IList<string> unprocessed;
 			try {
@@ -375,7 +380,7 @@ namespace Xamarin.Bundler {
 				throw new MonoMacException (10, true, "Could not parse the command line arguments: {0}", e.Message);
 			}
 
-			App.RuntimeOptions = RuntimeOptions.Create (http_message_provider, tls_provider);
+			App.RuntimeOptions = RuntimeOptions.Create (App, http_message_provider, tls_provider);
 
 			ErrorHelper.Verbosity = verbose;
 
@@ -491,19 +496,19 @@ namespace Xamarin.Bundler {
 			try {
 				Pack (unprocessed);
 			} finally {
-				if (Cache.IsCacheTemporary) {
+				if (App.Cache.IsCacheTemporary) {
 					// If we used a temporary directory we created ourselves for the cache
 					// (in which case it's more a temporary location where we store the 
 					// temporary build products than a cache), it will not be used again,
 					// so just delete it.
 					try {
-						Directory.Delete (Cache.Location, true);
+						Directory.Delete (App.Cache.Location, true);
 					} catch {
 						// Don't care.
 					}
 				} else {
 					// Write the cache data as the last step, so there is no half-done/incomplete (but yet detected as valid) cache.
-					Cache.ValidateCache ();
+					App.Cache.ValidateCache ();
 				}
 			}
 
@@ -591,9 +596,9 @@ namespace Xamarin.Bundler {
 		// Validates that sdk_version is set to a reasonable value before compile
 		static void ValidateSDKVersion ()
 		{
-			if (SDKVersion != null) {
+			if (App.SdkVersion != null) {
 				// We can't do mutation while parsing command line args as XcodeVersion isn't set yet
-				SDKVersion = MutateSDKVersionToPointRelease (SDKVersion);
+				App.SdkVersion = MutateSDKVersionToPointRelease (App.SdkVersion);
 				return;
 			}
 
@@ -613,11 +618,14 @@ namespace Xamarin.Bundler {
 			if (sdks.Count > 0) {
 				sdks.Sort ();
 				// select the highest.
-				SDKVersion = MutateSDKVersionToPointRelease (sdks [sdks.Count - 1]);
+				App.SdkVersion = MutateSDKVersionToPointRelease (sdks [sdks.Count - 1]);
 			}
 		}
 
-		public static Frameworks Frameworks { get { return Frameworks.MacFrameworks; } }
+		public static Frameworks GetFrameworks (Application app)
+		{
+			return Frameworks.MacFrameworks;
+		}
 
 		static void CheckForUnknownCommandLineArguments (IList<Exception> exceptions, IList<string> arguments)
 		{
@@ -800,6 +808,22 @@ namespace Xamarin.Bundler {
 			if (App.LinkMode != LinkMode.All && App.RuntimeOptions != null)
 				App.RuntimeOptions.Write (App.AppDirectory);
 
+			if (aot.IsAOT) {
+				if (!IsUnified)
+					throw new MonoMacException (98, true, "AOT compilation is only available on Unified");
+				MonoType monoType;
+				if (IsUnifiedMobile || IsUnifiedFullXamMacFramework)
+					monoType = Is64Bit ? MonoType.Bundled64 : MonoType.Bundled32; 
+				else if (IsUnifiedFullSystemFramework)
+					monoType = Is64Bit ? MonoType.System64 : MonoType.System32; 
+				else
+					throw ErrorHelper.CreateError (0099, "Internal error \"AOT with unexpected profile.\" Please file a bug report with a test case (http://bugzilla.xamarin.com).");
+
+
+				aot.Compile (monoType, mmp_dir);
+				Watch ("AOT Compile", 1);
+			}
+
 			if (!string.IsNullOrEmpty (certificate_name)) {
 				CodeSign ();
 				Watch ("Code Sign", 1);
@@ -960,7 +984,19 @@ namespace Xamarin.Bundler {
 		[DllImport ("/usr/lib/system/libdyld.dylib")]
 		static extern int _NSGetExecutablePath (byte[] buffer, ref uint bufsize);
 
-		static string GetXamMacPrefix ()
+		public static string WalkUpDirHierarchyLookingForLocalBuild ()
+		{
+			var path = System.Reflection.Assembly.GetExecutingAssembly ().Location;
+			var localPath = Path.GetDirectoryName (path);
+			while (localPath.Length > 1) {
+				if (Directory.Exists (Path.Combine (localPath, "_mac-build")))
+					return Path.Combine (localPath, "_mac-build", "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
+				localPath = Path.GetDirectoryName (localPath);
+			}
+			return null;
+		}
+
+		internal static string GetXamMacPrefix ()
 		{
 			var envFrameworkPath = Environment.GetEnvironmentVariable ("XAMMAC_FRAMEWORK_PATH");
 			if (!String.IsNullOrEmpty (envFrameworkPath) && Directory.Exists (envFrameworkPath))
@@ -969,12 +1005,9 @@ namespace Xamarin.Bundler {
 			var path = System.Reflection.Assembly.GetExecutingAssembly ().Location;
 
 #if DEBUG
-			var localPath = Path.GetDirectoryName (path);
-			while (localPath.Length > 1) {
-				if (Directory.Exists (Path.Combine (localPath, "_mac-build")))
-					return Path.Combine (localPath, "_mac-build", "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current");
-				localPath = Path.GetDirectoryName (localPath);
-			}
+			var localPath = WalkUpDirHierarchyLookingForLocalBuild ();
+			if (localPath != null)
+				return localPath;
 #endif
 
 			path = GetRealPath (path);
@@ -1015,6 +1048,7 @@ namespace Xamarin.Bundler {
 		{
 			var sb = new StringBuilder ();
 			using (var sw = new StringWriter (sb)) {
+				sw.WriteLine ("#define MONOMAC 1");
 				sw.WriteLine ("#include <xamarin/xamarin.h>");
 				sw.WriteLine ("#import <AppKit/NSAlert.h>");
 				sw.WriteLine ("#import <Foundation/NSDate.h>"); // 10.7 wants this even if not needed on 10.9
@@ -1045,6 +1079,14 @@ namespace Xamarin.Bundler {
 
 				if (App.EnableDebug)
 					sw.WriteLine ("\txamarin_debug_mode = TRUE;");
+
+				if (App.EnableSGenConc)
+					sw.WriteLine ("\tsetenv (\"MONO_GC_PARAMS\", \"major=marksweep-conc\", 1);");
+				else
+					sw.WriteLine ("\tsetenv (\"MONO_GC_PARAMS\", \"major=marksweep\", 1);");
+
+				if (aot.IsAOT)
+					sw.WriteLine ("\txamarin_mac_aot = TRUE;");
 
 				sw.WriteLine ("\treturn 0;");
 				sw.WriteLine ("}");
@@ -1089,13 +1131,13 @@ namespace Xamarin.Bundler {
 			string registrarPath = null;
 
 			if (registrar == RegistrarMode.Static) {
-				registrarPath = Path.Combine (Cache.Location, "registrar.m");
-				var registrarH = Path.Combine (Cache.Location, "registrar.h");
+				registrarPath = Path.Combine (App.Cache.Location, "registrar.m");
+				var registrarH = Path.Combine (App.Cache.Location, "registrar.h");
 				BuildTarget.StaticRegistrar.LinkContext = BuildTarget.LinkContext;
 				BuildTarget.StaticRegistrar.Generate (BuildTarget.Resolver.ResolverCache.Values, registrarH, registrarPath);
 
-				var platform_assembly = BuildTarget.Resolver.ResolverCache.First ((v) => v.Value.Name.Name == XamCore.Registrar.Registrar.PlatformAssembly).Value;
-				Frameworks.Gather (platform_assembly, BuildTarget.Frameworks, BuildTarget.WeakFrameworks);
+				var platform_assembly = BuildTarget.Resolver.ResolverCache.First ((v) => v.Value.Name.Name == BuildTarget.StaticRegistrar.PlatformAssembly).Value;
+				Frameworks.Gather (App, platform_assembly, BuildTarget.Frameworks, BuildTarget.WeakFrameworks);
 			}
 
 			try {
@@ -1192,7 +1234,7 @@ namespace Xamarin.Bundler {
 					args.Append ("-framework ").Append (f).Append (' ');
 				foreach (var f in BuildTarget.WeakFrameworks)
 					args.Append ("-weak_framework ").Append (f).Append (' ');
-				Driver.WriteIfDifferent (Path.Combine (Cache.Location, "exported-symbols-list"), string.Join ("\n", internalSymbols.Select ((symbol) => "_" + symbol).ToArray ()));
+				Driver.WriteIfDifferent (Path.Combine (App.Cache.Location, "exported-symbols-list"), string.Join ("\n", internalSymbols.Select ((symbol) => "_" + symbol).ToArray ()));
 				foreach (var symbol in internalSymbols)
 					args.Append ("-u _").Append (symbol).Append (' ');
 
@@ -1231,7 +1273,7 @@ namespace Xamarin.Bundler {
 					args.Append (link_flags + " ");
 				if (!string.IsNullOrEmpty (DeveloperDirectory))
 				{
-					var sysRootSDKVersion = new Version (SDKVersion.Major, SDKVersion.Minor); // Sys Root SDKs do not have X.Y.Z, just X.Y 
+					var sysRootSDKVersion = new Version (App.SdkVersion.Major, App.SdkVersion.Minor); // Sys Root SDKs do not have X.Y.Z, just X.Y 
 					args.Append ("-isysroot ").Append (Quote (Path.Combine (DeveloperDirectory, "Platforms", "MacOSX.platform", "Developer", "SDKs", "MacOSX" + sysRootSDKVersion + ".sdk"))).Append (' ');
 				}
 
@@ -1241,7 +1283,7 @@ namespace Xamarin.Bundler {
 					args.Append (Quote (state.SourcePath)).Append (' ');
 				}
 
-				var main = Path.Combine (Cache.Location, "main.m");
+				var main = Path.Combine (App.Cache.Location, "main.m");
 				File.WriteAllText (main, mainSource);
 				args.Append (Quote (main));
 
@@ -1334,8 +1376,9 @@ namespace Xamarin.Bundler {
 				EnsureUIThread = thread_check.HasValue ? thread_check.Value : App.EnableDebug,
 				MarshalNativeExceptionsState = !App.RequiresPInvokeWrappers ? null : new PInvokeWrapperGenerator ()
 				{
-					SourcePath = Path.Combine (Cache.Location, "pinvokes.m"),
-					HeaderPath = Path.Combine (Cache.Location, "pinvokes.h"),
+					App = App,
+					SourcePath = Path.Combine (App.Cache.Location, "pinvokes.m"),
+					HeaderPath = Path.Combine (App.Cache.Location, "pinvokes.h"),
 					Registrar = (StaticRegistrar) BuildTarget.StaticRegistrar,
 				},
 				SkipExportedSymbolsInSdkAssemblies = !embed_mono,
@@ -1699,6 +1742,7 @@ namespace Xamarin.Bundler {
 
 				// The linker later gets angry if you copy in a read only assembly
 				CopyFileAndRemoveReadOnly (asm, Path.Combine (mmp_dir, filename));
+
 				if (verbose > 0)
 					Console.WriteLine ("Added assembly {0}", asm);
 
@@ -1707,6 +1751,9 @@ namespace Xamarin.Bundler {
 				if (File.Exists (configfile))
 					File.Copy (configfile, Path.Combine (mmp_dir, Path.GetFileName (configfile)), true);
 			}
+
+			foreach (var assembly in BuildTarget.Assemblies)
+				assembly.CopySatellitesToDirectory (mmp_dir);
 		}
 
 		static void CopyResources () {
@@ -1735,7 +1782,9 @@ namespace Xamarin.Bundler {
 			if (resolved_assemblies.Contains (fqname))
 				return;
 
-			BuildTarget.Assemblies.Add (new Assembly (BuildTarget, assembly));
+			var asm = new Assembly (BuildTarget, assembly);
+			asm.ComputeSatellites ();
+			BuildTarget.Assemblies.Add (asm);
 
 			resolved_assemblies.Add (fqname);
 

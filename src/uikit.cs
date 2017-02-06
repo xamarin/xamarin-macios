@@ -2065,6 +2065,8 @@ namespace XamCore.UIKit {
 		UIAlertAction PreferredAction { get; set; }
 	}
 
+	interface IUIAlertViewDelegate {}
+
 	[NoTV]
 	[BaseType (typeof (UIView), KeepRefUntil="Dismissed", Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UIAlertViewDelegate)})]
 	[Availability (Deprecated = Platform.iOS_9_0, Message = "Use UIAlertController with a UIAlertControllerStyle.Alert type instead")]
@@ -2083,7 +2085,7 @@ namespace XamCore.UIKit {
 		// arguments (id, SEL), which means we only need 7 more. And 'mustAlsoBeNull' is that 7th argument.
 		// So on ARM64 the 8th argument ('mustBeNull') is ignored, and iOS sees the 9th argument ('mustAlsoBeNull') as the 8th argument.
 		[Availability (Deprecated=Platform.iOS_8_0, Message="Use UIAlertController instead")]
-		IntPtr Constructor ([NullAllowed] string title, [NullAllowed] string message, [NullAllowed] UIAlertViewDelegate viewDelegate, [NullAllowed] string cancelButtonTitle, IntPtr otherButtonTitles, IntPtr mustBeNull, IntPtr mustAlsoBeNull);
+		IntPtr Constructor ([NullAllowed] string title, [NullAllowed] string message, [NullAllowed] IUIAlertViewDelegate viewDelegate, [NullAllowed] string cancelButtonTitle, IntPtr otherButtonTitles, IntPtr mustBeNull, IntPtr mustAlsoBeNull);
 
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
@@ -8781,7 +8783,12 @@ namespace XamCore.UIKit {
 
 		[NullAllowed] // by default this property is null
 		[Export ("dataSource", ArgumentSemantic.Assign)]
+#if XAMCORE_4_0
+		IUIPickerViewDataSource DataSource { get; set; }
+#else
+		// should have been WeakDataSource
 		NSObject DataSource { get; set; }
+#endif
 
 		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -10098,9 +10105,8 @@ namespace XamCore.UIKit {
 	
 	[BaseType (typeof(UIControl))]
 	interface UISegmentedControl {
-		// Not exposed as we need to wrap the NSArray
-		[Export ("initWithItems:")][Internal]
-		IntPtr InitWithItems (IntPtr v);
+		[Export ("initWithItems:")]
+		IntPtr Constructor (NSArray items);
 
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
@@ -15931,7 +15937,7 @@ namespace XamCore.UIKit {
 		IUIPreviewInteractionDelegate Delegate { get; set; }
 
 		[Export ("locationInCoordinateSpace:")]
-		CGPoint GetLocationInCoordinateSpace ([NullAllowed] UICoordinateSpace coordinateSpace);
+		CGPoint GetLocationInCoordinateSpace ([NullAllowed] IUICoordinateSpace coordinateSpace);
 
 		[Export ("cancelInteraction")]
 		void CancelInteraction ();

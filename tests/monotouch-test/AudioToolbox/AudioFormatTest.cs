@@ -13,7 +13,6 @@ using System;
 using System.IO;
 #if XAMCORE_2_0
 using Foundation;
-using MediaPlayer;
 using AudioToolbox;
 using CoreFoundation;
 #else

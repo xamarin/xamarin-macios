@@ -13,6 +13,9 @@ using System.Linq;
 using System.IO;
 
 using NUnit.Framework;
+#if MONOMAC
+using Foundation;
+#endif
 
 namespace MonoTests.System.Net.Http
 {

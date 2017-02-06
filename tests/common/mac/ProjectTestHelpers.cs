@@ -88,7 +88,7 @@ namespace Xamarin.MMP.Tests
 		{
 			StringBuilder output = new StringBuilder ();
 			Environment.SetEnvironmentVariable ("MONO_PATH", null);
-			int compileResult = Xamarin.Bundler.Driver.RunCommand (exe, args != null ? args.ToString() : string.Empty, MonoDevelopLike, output, suppressPrintOnErrors: shouldFail);
+			int compileResult = Xamarin.Bundler.Driver.RunCommand (exe, args != null ? args.ToString() : string.Empty, null, output, suppressPrintOnErrors: shouldFail);
 			Func<string> getInfo = () => getAdditionalFailInfo != null ? getAdditionalFailInfo() : "";
 			if (!shouldFail)
 				Assert.AreEqual (0, compileResult, stepName + " failed:\n\n'" + output + "' " + exe + " " + args + getInfo ());
@@ -308,25 +308,6 @@ namespace Xamarin.MMP.Tests
 			return target;
 		}
 
-		// Configuration.MonoDevelopLike is a Dictionary<string, string> but RunCommand wants string [], convert!
-		static string [] MonoDevelopLike {
-			get {
-				List<string> keys = Xamarin.Tests.Configuration.MonoDevelopLike.Keys.ToList ();
-				int numberOfKeys = keys.Count ();
-				var retValue = new string [numberOfKeys  * 2 + 2];
-				for (int i = 0 ; i < numberOfKeys ; i++) {
-					retValue[i * 2] = keys[i];
-					if (keys[i] == "PATH") // For some reason MonoDevelopLike is blapping PATH so we can't find xcrun
-						retValue[1 + (i * 2)] = Xamarin.Tests.Configuration.MonoDevelopLike[keys[i]] + ":/usr/bin";
-					else
-						retValue[1 + (i * 2)] = Xamarin.Tests.Configuration.MonoDevelopLike[keys[i]];
-				}
-				retValue [numberOfKeys * 2] = "MD_APPLE_SDK_ROOT";
-				retValue [numberOfKeys * 2 + 1] = System.Environment.GetEnvironmentVariable ("MD_APPLE_SDK_ROOT");
-				return retValue;
-			}
-		}
-
 		static void WriteMainFile (string decl, string content, bool isUnified, bool fsharp, string location)
 		{
 			const string FSharpMainTemplate = @"
@@ -410,6 +391,7 @@ namespace TestCase
 }
 
 // A bit of a hack so we can reuse all of the RunCommand logic
+#if !MMP_TEST
 namespace Xamarin.Bundler {
 	public static partial class Driver
 	{
@@ -485,3 +467,4 @@ namespace Xamarin.Bundler {
 		}
 	}
 }
+#endif

@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\x86\Debug</OutputPath>
-    <DefineConstants>__UNIFIED__;DEBUG;XAMCORE_2_0;MONOMAC;MMP_TEST</DefineConstants>
+    <DefineConstants>__UNIFIED__;DEBUG;XAMCORE_2_0;MONOMAC</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
