@@ -11969,7 +11969,7 @@ namespace XamCore.AppKit {
 		bool IsFlipped { get; }
 
 		//Detected properties
-		[Export ("scrollView")]
+		[Export ("scrollView", ArgumentSemantic.Weak)]
 		NSScrollView ScrollView { get; set; }
 
 		[Export ("orientation")]
@@ -11990,7 +11990,7 @@ namespace XamCore.AppKit {
 		[Export ("originOffset")]
 		nfloat OriginOffset { get; set; }
 
-		[Export ("clientView")]
+		[Export ("clientView", ArgumentSemantic.Weak)]
 		NSView ClientView { get; set; }
 
 		[Export ("markers", ArgumentSemantic.Copy), NullAllowed]

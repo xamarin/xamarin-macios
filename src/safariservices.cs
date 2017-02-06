@@ -18,6 +18,8 @@ using XamCore.AppKit;
 #endif
 
 namespace XamCore.SafariServices {
+	delegate void SFExtensionValidationHandler (bool shouldHide, NSString text);
+
 	[Mac (10,12, onlyOn64: true)][iOS (10,0)]
 	[BaseType (typeof(NSObject))]
 	interface SFContentBlockerState
@@ -128,6 +130,11 @@ namespace XamCore.SafariServices {
 		[Static]
 		[Export ("showPreferencesForExtensionWithIdentifier:completionHandler:")]
 		void ShowPreferencesForExtension (string identifier, [NullAllowed] Action<NSError> completionHandler);
+
+		[Mac (10, 12, 4)]
+		[Static][Async]
+		[Export ("dispatchMessageWithName:toExtensionWithIdentifier:userInfo:completionHandler:")]
+		void DispatchMessage (string messageName, string identifier, [NullAllowed] NSDictionary<NSString, NSObject> userInfo, [NullAllowed] Action<NSError> completionHandler);
 	}
 
 	[Mac (10,12, onlyOn64 : true)]
@@ -171,6 +178,14 @@ namespace XamCore.SafariServices {
 
 		[Export ("popoverViewController")]
 		SFSafariExtensionViewController PopoverViewController { get; }
+
+		[Mac (10, 12, 4)]
+		[Async (ResultTypeName="SFExtensionValidationResult")][Export ("validateContextMenuItemWithCommand:inPage:userInfo:validationHandler:")]
+		void ValidateContextMenuItem (string command, SFSafariPage page, [NullAllowed] NSDictionary<NSString, NSObject> userInfo, SFExtensionValidationHandler validationHandler);
+
+		[Mac (10, 12, 4)]
+		[Export ("messageReceivedFromContainingAppWithName:userInfo:")]
+		void MessageReceivedFromContainingApp (string messageName, [NullAllowed] NSDictionary<NSString, NSObject> userInfo);
 	}
 
 	[Mac (10,12, onlyOn64: true)]
@@ -215,6 +230,18 @@ namespace XamCore.SafariServices {
 	{
 		[Export ("setEnabled:withBadgeText:")]
 		void SetEnabled (bool enabled, [NullAllowed] string badgeText);
+
+		[Mac (10, 12, 4)]
+		[Export ("setEnabled:")]
+		void SetEnabled (bool enabled);
+
+		[Mac (10, 12, 4)]
+		[Export ("setBadgeText:")]
+		void SetBadgeText ([NullAllowed] string badgeText);
+
+		[Mac (10, 12, 4)]
+		[Export ("setImage:")]
+		void SetImage ([NullAllowed] NSImage image);
 	}
 
 	[Mac (10,12, onlyOn64: true)]
