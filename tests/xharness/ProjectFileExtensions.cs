@@ -669,6 +669,10 @@ namespace xharness
 				new string [] { "ObjcBindingNativeLibrary", "Include" },
 				new string [] { "ObjcBindingNativeFramework", "Include" },
 			};
+			var nodes_with_variables = new string []
+			{
+				"MtouchExtraArgs",
+			};
 			Func<string, string> convert = (input) =>
 			{
 				if (input [0] == '/')
@@ -684,6 +688,12 @@ namespace xharness
 				var nodes = csproj.SelectElementNodes (key);
 				foreach (var node in nodes)
 					node.InnerText = convert (node.InnerText);
+			}
+			foreach (var key in nodes_with_variables) {
+				var nodes = csproj.SelectElementNodes (key);
+				foreach (var node in nodes) {
+					node.InnerText = node.InnerText.Replace ("${ProjectDir}", Harness.Quote (System.IO.Path.GetDirectoryName (project_path)));
+				}
 			}
 			foreach (var kvp in attributes_with_paths) {
 				var element = kvp [0];
