@@ -20,6 +20,7 @@ namespace Xamarin.iOS.Tasks
 			BuildProject ("MyReleaseBuild", Platform, "Release");
 		}
 
+		[Ignore] // requires msbuild instead of xbuild
 		[Test]
 		public void RebuildTest ()
 		{

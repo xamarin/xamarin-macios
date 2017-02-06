@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 
 using NUnit.Framework;
 using Xamarin.MacDev;

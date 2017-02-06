@@ -1,10 +1,10 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace Xamarin.iOS.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
-	public class ActionTests : ExtensionTestBase {
+	public class ActionTests : ExtensionTestBase
+	{
 		public ActionTests (string platform) : base (platform)      
 		{
 		}
@@ -12,7 +12,7 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void BasicTest ()
 		{
-			this.BuildExtension ("MyTabbedApplication", "MyActionExtension", Platform, "Debug");
+			BuildExtension ("MyTabbedApplication", "MyActionExtension", Platform, "Debug");
 		}
 	}
 }
