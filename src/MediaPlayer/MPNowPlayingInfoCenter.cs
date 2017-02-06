@@ -50,6 +50,8 @@ namespace XamCore.MediaPlayer {
 		public MPNowPlayingInfoMediaType? MediaType { get; set; }
 		[iOS (10,0)]
 		public bool? IsLiveStream { get; set; }
+		[iOS (10,3)]
+		public NSUrl AssetUrl { get; set; }
 
 		public string AlbumTitle;
 		public string Artist;
@@ -93,6 +95,8 @@ namespace XamCore.MediaPlayer {
 				Add (dict, MPNowPlayingInfoCenter.PropertyMediaType, new NSNumber ((int)MediaType.Value));
 			if (IsLiveStream.HasValue)
 				Add (dict, MPNowPlayingInfoCenter.PropertyIsLiveStream, new NSNumber (IsLiveStream.Value));
+			if (AssetUrl != null)
+				Add (dict, MPNowPlayingInfoCenter.PropertyAssetUrl, AssetUrl);
 
 			if (AlbumTrackCount.HasValue)
 				dict.Add (MPMediaItem.AlbumTrackCountProperty, new NSNumber (AlbumTrackCount.Value));
@@ -167,6 +171,8 @@ namespace XamCore.MediaPlayer {
 				MediaType = (MPNowPlayingInfoMediaType) (result as NSNumber).UInt32Value;
 			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyIsLiveStream, out result))
 				IsLiveStream = (bool) (result as NSNumber).BoolValue;
+			if (TryGetValue (source, MPNowPlayingInfoCenter.PropertyAssetUrl, out result))
+				AssetUrl = result as NSUrl;
 
 			if (source.TryGetValue (MPMediaItem.AlbumTrackCountProperty, out result))
 				AlbumTrackCount = (int) (result as NSNumber).UInt32Value;
