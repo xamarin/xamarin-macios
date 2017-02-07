@@ -487,6 +487,7 @@ public static class TypeManager {
 		SecTrust = typeof (SecTrust);
 	#if HAVE_UIKIT
 		UIOffset = typeof (UIOffset);
+		UIEdgeInsets = typeof (UIEdgeInsets);
 	#endif
 
 	#if __UNIFIED__
