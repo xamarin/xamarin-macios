@@ -41,7 +41,7 @@ namespace xharness
 		{
 		}
 
-		void Process (string test_sources, IEnumerable<string> test_files, string condition, StringBuilder [] sb, int split_count)
+		protected void Process (string test_sources, IEnumerable<string> test_files, string condition, StringBuilder [] sb, int split_count)
 		{
 			test_files = test_files.Where ((v) => !string.IsNullOrEmpty (v));
 
@@ -115,7 +115,7 @@ namespace xharness
 			}
 		}
 
-		public void Convert ()
+		public virtual void Convert ()
 		{
 			var testName = TestName == "mscorlib" ? "corlib" : TestName;
 			var main_test_sources = Path.Combine (MonoPath, "mcs", "class", testName, testName + "_test.dll.sources");
@@ -162,6 +162,27 @@ namespace xharness
 			}
 
 			return false;
+		}
+	}
+
+	public class MacBCLTarget : BCLTarget
+	{
+		public override void Convert () 
+		{
+			var testName = TestName == "mscorlib" ? "corlib" : TestName;
+			var main_test_sources = Path.Combine (MonoPath, "mcs", "class", testName, testName + "_test.dll.sources");
+			var main_test_files = File.ReadAllLines (main_test_sources);
+
+			var template_path = Path.Combine (Harness.RootDirectory, "bcl-test", TestName, TestName + "-mac.csproj.template");
+			var csproj_input = File.ReadAllText (template_path);
+
+			var project_path = Path.Combine (Harness.RootDirectory, "bcl-test", TestName, TestName + "-mac.csproj");
+			var csproj_output = project_path;
+
+			var sb = new StringBuilder[2] { new StringBuilder (), new StringBuilder () };
+			Process (main_test_sources, main_test_files, "", sb, 1);
+
+			Harness.Save (csproj_input.Replace ("#FILES#", sb[0].ToString ()), csproj_output);
 		}
 	}
 }

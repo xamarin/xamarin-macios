@@ -37,15 +37,18 @@ using Mono.Tuner;
 
 namespace Xamarin.Linker.Steps {
 
-	public class MarkNSObjects : BaseSubStep {
+	public class MarkNSObjects : ExceptionalSubStep {
 
 		static string ProductAssembly;
+
+		protected override string Name { get; } = "MarkNSObjects";
+		protected override int ErrorCode { get; } = 2080;
 
 		public override SubStepTargets Targets {
 			get { return SubStepTargets.Type; }
 		}
 
-		public override void ProcessType (TypeDefinition type)
+		protected override void Process (TypeDefinition type)
 		{
 			if (ProductAssembly == null)
 				ProductAssembly = (Profile.Current as BaseProfile).ProductAssembly;

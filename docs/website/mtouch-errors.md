@@ -46,6 +46,8 @@ Starting with Xamarin.iOS 7.2.1 this requirement has been lifted, the new refcou
 
 Please create the directory.
 
+This error is not generated anymore, mtouch will automatically create the directory if it doesn't exist.
+
 <h3><a name="MT0006"/>MT0006: There is no devel platform at *, use --platform=PLAT to specify the SDK.</h3>
 
 Xamarin.iOS cannot find the SDK directory at the location mentioned in the error message. Please verify that the path is correct.
@@ -347,13 +349,15 @@ The new refcount feature is now mandatory for all projects, and it's thus not po
 This usually indicates a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
 
 <h3><a name="MT0087"/>MT0087: Incremental builds (--fastdev) is not supported with the Boehm GC. Incremental builds will be disabled.</h3>
-<h3><a name="MT0091"/>MT0091: This version of Xamarin.iOS requires the * SDK (shipped with Xcode *) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker.</h3>
+<h3><a name="MT0091"/>MT0091: This version of Xamarin.iOS requires the * SDK (shipped with Xcode *) when the managed linker is disabled. Either upgrade Xcode, or enable the managed linker by changing the Linker behaviour to Link Framework SDKs Only.</h3>
 
 This version of Xamarin.iOS requires the SDK specified in the error message if the managed linker is disabled.
 
 This is because the app must be built with an SDK that contains all the native API the app uses, and if the managed linker is disabled, the app will use all the API shipped with this version Xamarin.iOS.
 
 The recommended way to fix this error is to upgrade Xcode to get the required SDK.
+
+If you have multiple versions of Xcode installed, or want to use an Xcode in a non-default location, make sure to set the correct Xcode location in your IDE's preferences.
 
 A potential alternative solution is to enable the managed linker (although this may not work if your project uses API that was introduced in the required SDK).
 
@@ -362,6 +366,26 @@ A last-straw solution would be to use a different version of Xamarin.iOS, one th
 <h3><a name="MT0093"/>MT0093: Aot symbolication files could not be copied to the destination directory. Symbolication will not work with the application.</h3>
 
 <h3><a name="MT0096"/>MT0096: No reference to Xamarin.iOS.dll was found.</h3>
+
+<h3><a name="MT0099"/>Internal error *. Please file a bug report with a test case (http://bugzilla.xamarin.com).</h3>
+
+This indicates a bug in Xamarin.iOS; please file a bug report at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS) with a test case.
+
+<h3><a name="MT0110"/>MT0110: Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.</h3>
+
+Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode (tvOS and watchOS projects).
+
+No action is required on your part, this message is purely informational.
+
+For further information see bug #[51710](https://bugzilla.xamarin.com/show_bug.cgi?id=51710).
+
+<h3><a name="MT0111"/>MT0111: Bitcode has been enabled because this version of Xamarin.iOS does not support building watchOS projects using LLVM without enabling bitcode.</h3>
+
+Bitcode has been enabled automatically because this version of Xamarin.iOS does not support building watchOS projects using LLVM without enabling bitcode.
+
+No action is required on your part, this message is purely informational.
+
+For further information see bug #[51634](https://bugzilla.xamarin.com/show_bug.cgi?id=51634).
 
 # MT1xxx: Project related error messages
 
@@ -417,7 +441,15 @@ $ launchctl list|grep UIKitApplication|awk '{print $3}'|xargs launchctl remove
 
 <h3><a name="MT1009"/>MT1009 Could not copy the assembly '*' to '*': *</h3>
 
+This is a known issue in certain versions of Xamarin.iOS.
 
+If this occurs to you, try the following workaround:
+
+    sudo chmod 0644 /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/*/*.mdb
+
+However, since this issue has been resolved in the latest version of
+Xamarin.iOS, please file a new bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS)
+with your full version information and build log output.
 
 <h3><a name="MT1010"/>MT1010 Could not load the assembly '*': *</h3>
 
@@ -545,6 +577,10 @@ It's recommended to pass the path to the app to launch on device instead of just
 <h3><a name="MT1031"/>MT1031: Could not launch the app '*' on the device '*' because the device is locked. Please unlock the device and try again.</h3>
 
 Please unlock the device and try again.
+
+<h3><a name="MT1032"/>MT1032: This application executable might be too large (* MB) to execute on device. If bitcode was enabled you might want to disable it for development, it is only required to submit applications to Apple.</h3>
+
+<h3><a name="MT1033"/>MT1033: Could not uninstall the application '*' from the device '*': *</h3>
 
 ### MT11xx: Debug Service
 
@@ -878,6 +914,10 @@ The `legacy` provider, which was a fully managed SSLv3 / TLSv1 only provider, is
 
 To fix this warning, open the project file in a text editor, and remove all `MtouchTlsProvider`` nodes from the XML.
 
+<h3><a name="MT2017"/>MT2017: Could not process XML description.</h3>
+
+This means there is an error on the [custom XML linker configuration file](https://developer.xamarin.com/guides/cross-platform/advanced/custom_linking/) you provided, please review your file.
+
 <h3><a name="MT202x"/>MT202x: Binding Optimizer failed processing `...`.</h3>
 
 Something unexpected occured when trying to optimize generated binding code. The element causing the issue is named in the error message. In order to fix this issue the assembly named (or containing the type or method named) will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
@@ -895,6 +935,27 @@ User resources are files included inside assemblies (as resources) that needs to
 
 * `__monotouch_content_*` and `__monotouch_pages_*` resources; and
 * Native libraries embedded inside a binding assembly;
+
+<h3><a name="MT2040"/>MT2040: Default HttpMessageHandler setter failed processing `...`.</h3>
+
+Something unexpected occured when trying to set the default `HttpMessageHandler` for the application. Please file a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+<h3><a name="MT2050"/>MT2050: Code Remover failed processing `...`.</h3>
+
+Something unexpected occured when trying to remove code from BCL shipping with the application. Please file a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+<h3><a name="MT2060"/>MT2060: Sealer failed processing `...`.</h3>
+
+Something unexpected occured when trying to seal types or methods (final) or when devirtualizing some methods. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+<h3><a name="MT2070"/>MT2070: Metadata Reducer failed processing `...`.</h3>
+
+Something unexpected occured when trying to reduce the metadata from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
+<h3><a name="MT2080"/>MT2080: MarkNSObjects failed processing `...`.</h3>
+
+Something unexpected occured when trying to mark `NSObject` subclasses from the application. The assembly causing the issue is named in the error message. In order to fix this issue the assembly will need to be provided in a [bug report](http://bugzilla.xamarin.com) along with a complete build log with verbosity enabled (i.e. `-v -v -v -v` in the **Additional mtouch arguments**).
+
 
 # MT3xxx: AOT error messages
 
@@ -1090,7 +1151,7 @@ This error indicates a bug in Xamarin.iOS. Please file a bug report at [http://b
 
 <h3><a name="MT4133"/>MT4133  Cannot construct an instance of the type '*' from Objective-C because the type is generic. [Runtime exception]</h3>
 
-<h3><a name="MT4134"/>MT4134  Your application is using the '*' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS *, while you're building with the iOS * SDK.) This configuration is only supported with the legacy registrar (pass --registrar:legacy as an additional mtouch argument in your project's iOS Build option to select). Alternatively select a newer SDK in your app's iOS Build options.</h3>
+<h3><a name="MT4134"/>MT4134  Your application is using the '*' framework, which isn't included in the iOS SDK you're using to build your app (this framework was introduced in iOS *, while you're building with the iOS * SDK.) Please select a newer SDK in your app's iOS Build options.</h3>
 
 <h3><a name="MT4135"/>MT4135  The member '*.*' has an Export attribute that doesn't specify a selector. A selector is required.</h3>
 
@@ -1273,15 +1334,13 @@ This happens when the native linker cannot find an Objective-C class that is ref
     <li>
       A third-party binding bound an Objective-C protocol, but did not annotate it with the <code>[Protocol]</code> attribute in its api definition. Solutions:
       <ul>
-        <li>If you're the author of the third-party binding, or have access to its source, add the missing <code>[Protocol]</code> attribute:
+        <li>Add the missing <code>[Protocol]</code> attribute:
     <pre><code class=" syntax brush-C#">[BaseType (typeof (NSObject))]
 [Protocol] // Add this
 public interface MyProtocol
 {
 }</code></pre>
     </li>
-      <li>If you can't modify the third-party binding, build your project with the legacy static registrar by adding <code>--registrar:oldstatic</code> to the additional mtouch arguments in the project's iOS Build options page.
-      </li>
     </ul>
     </li>
   </ul>

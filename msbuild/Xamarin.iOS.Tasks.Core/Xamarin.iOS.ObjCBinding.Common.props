@@ -35,7 +35,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<AllowedReferenceRelatedFileExtensions>
 			$(AllowedReferenceRelatedFileExtensions);
 			.dll.mdb;
-			.exe.mdb
+			.exe.mdb;
+			.pdb
 		</AllowedReferenceRelatedFileExtensions>
 	</PropertyGroup>
 
@@ -46,6 +47,8 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' == '' And '$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">$(IntermediateOutputPath)watchos</GeneratedSourcesDir>
 		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' == ''">$(IntermediateOutputPath)ios</GeneratedSourcesDir>
 		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' != '' and !HasTrailingSlash ('$(GeneratedSourcesDir)')">$(GeneratedSourcesDir)\</GeneratedSourcesDir>
+
+		<ProcessEnums Condition="'$(ProcessEnums)' == ''">False</ProcessEnums>
 	</PropertyGroup>
 
 	<!-- Make our Build Actions show up in MonoDevelop -->

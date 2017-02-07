@@ -47,9 +47,17 @@
     <Compile Include="MTouchTool.cs" />
     <Compile Include="TimingTests.cs" />
     <Compile Include="MLaunchTool.cs" />
+    <Compile Include="Cache.cs" />
+    <Compile Include="InlinerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\external\mono\external\cecil\Mono.Cecil.csproj">
+      <Project>{D68133BD-1E63-496E-9EDE-4FBDBF77B486}</Project>
+      <Name>Mono.Cecil</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

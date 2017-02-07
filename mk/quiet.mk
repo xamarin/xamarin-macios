@@ -24,6 +24,7 @@ QT_AR=   $(if $(V),,@echo "AR      $$(@F)";)
 Q_LIPO= $(if $(V),,@echo "LIPO     $(@F)";)
 QT_LIPO= $(if $(V),,@echo "LIPO    $$(@F)";)
 Q_MDB=  $(if $(V),,@echo "MDB      $(@F)";)
+Q_NUNIT= $(if $(V),,@echo "NUNIT     $(@F)";)
 
 Q_SN=   $(if $(V),,@echo "SN       $(@F)";)
 Q_XBUILD=$(if $(V),,@echo "XBUILD  $(@F)";)

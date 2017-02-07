@@ -18,7 +18,6 @@ using CoreServices;
 #endif
 #if XAMCORE_2_0
 using Foundation;
-using UIKit;
 #else
 using MonoTouch.CoreServices;
 using MonoTouch.Foundation;

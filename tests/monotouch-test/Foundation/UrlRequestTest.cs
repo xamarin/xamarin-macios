@@ -39,6 +39,7 @@ namespace MonoTouchFixtures.Foundation {
 				// that a bit like lying, we still consider it an NSMutableDictionary but it't not mutable
 				Assert.That (mur.Headers, Is.TypeOf (typeof (NSMutableDictionary)), "NSMutableDictionary");
 
+#if !MONOMAC // No Simulator for mac
 				// that would crash on devices
 				// NSInternalInconsistencyException -[__NSCFDictionary setObject:forKey:]: mutating method sent to immutable object
 				if (Runtime.Arch == Arch.SIMULATOR) {
@@ -61,6 +62,7 @@ namespace MonoTouchFixtures.Foundation {
 
 					Assert.AreNotSame (md, mur.Headers, "!same");
 				}
+#endif
 
 				// https://www.bignerdranch.com/blog/about-mutability/
 				Assert.That (mur.Headers.Class.Name, Is.EqualTo ("__NSCFDictionary"), "__NSCFDictionary");

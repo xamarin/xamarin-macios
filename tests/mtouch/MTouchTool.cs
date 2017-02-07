@@ -63,6 +63,7 @@ namespace Xamarin
 		public string TargetVer;
 		public string [] References;
 		public string Executable;
+		public string RootAssembly;
 		public string TargetFramework;
 		public string Abi;
 		public string AppPath;
@@ -78,14 +79,17 @@ namespace Xamarin
 		public string HttpMessageHandler;
 		public bool? PackageMdb;
 		public bool? MSym;
+		public bool? DSym;
+		public string Mono;
+		public string GccFlags;
 #pragma warning restore 649
 
 		// These are a bit smarter
-		public MTouch.Profile Profile = MTouch.Profile.iOS;
+		public Profile Profile = Profile.iOS;
 		public bool NoPlatformAssemblyReference;
 		static XmlDocument device_list_cache;
-
-		List<string> directories_to_delete;
+		public string LLVMOptimizations;
+		public string [] CustomArguments; // Sometimes you want to pass invalid arguments to mtouch, in this case this array is used. No processing will be done, if quotes are required, they must be added to the arguments in the array.
 
 		public class DeviceInfo
 		{
@@ -200,6 +204,9 @@ namespace Xamarin
 			if (MSym.HasValue)
 				sb.Append (" --msym:").Append (MSym.Value ? "true" : "false");
 
+			if (DSym.HasValue)
+				sb.Append (" --dsym:").Append (DSym.Value ? "true" : "false");
+
 			if (Extension == true)
 				sb.Append (" --extension");
 
@@ -208,6 +215,12 @@ namespace Xamarin
 
 			foreach (var framework in Frameworks)
 				sb.Append (" --framework ").Append (MTouch.Quote (framework));
+
+			if (!string.IsNullOrEmpty (Mono))
+				sb.Append (" --mono:").Append (MTouch.Quote (Mono));
+
+			if (!string.IsNullOrEmpty (GccFlags))
+				sb.Append (" --gcc_flags ").Append (MTouch.Quote (GccFlags));
 
 			if (!string.IsNullOrEmpty (HttpMessageHandler))
 				sb.Append (" --http-message-handler=").Append (MTouch.Quote (HttpMessageHandler));
@@ -221,7 +234,10 @@ namespace Xamarin
 			}
 
 			if (!string.IsNullOrEmpty (Executable))
-				sb.Append (" ").Append (MTouch.Quote (Executable));
+				sb.Append (" --executable ").Append (MTouch.Quote (Executable));
+
+			if (!string.IsNullOrEmpty (RootAssembly))
+				sb.Append (" ").Append (MTouch.Quote (RootAssembly));
 
 			if (TargetFramework == None) {
 				// do nothing
@@ -230,11 +246,11 @@ namespace Xamarin
 			} else if (!NoPlatformAssemblyReference) {
 				// make the implicit default the way tests have been running until now, and at the same time the very minimum to make apps build.
 				switch (Profile) {
-				case MTouch.Profile.iOS:
+				case Profile.iOS:
 					sb.Append (" -r:").Append (MTouch.Quote (Configuration.XamarinIOSDll));
 					break;
-				case MTouch.Profile.tvOS:
-				case MTouch.Profile.watchOS:
+				case Profile.tvOS:
+				case Profile.watchOS:
 					sb.Append (" --target-framework ").Append (MTouch.GetTargetFramework (Profile));
 					sb.Append (" -r:").Append (MTouch.Quote (MTouch.GetBaseLibrary (Profile)));
 					break;
@@ -243,16 +259,18 @@ namespace Xamarin
 				}
 			}
 
-			if (!string.IsNullOrEmpty (Abi)) {
+			if (Abi == None) {
+				// add nothing
+			} else if (!string.IsNullOrEmpty (Abi)) {
 				sb.Append (" --abi ").Append (Abi);
 			} else {
 				switch (Profile) {
-				case MTouch.Profile.iOS:
+				case Profile.iOS:
 					break; // not required
-				case MTouch.Profile.tvOS:
+				case Profile.tvOS:
 					sb.Append (isDevice ? " --abi arm64" : " --abi x86_64");
 					break;
-				case MTouch.Profile.watchOS:
+				case Profile.watchOS:
 					sb.Append (isDevice ? " --abi armv7k" : " --abi i386");
 					break;
 				default:
@@ -311,6 +329,15 @@ namespace Xamarin
 			if (!string.IsNullOrEmpty (Device))
 				sb.Append (" --device:").Append (MTouch.Quote (Device));
 
+			if (!string.IsNullOrEmpty (LLVMOptimizations))
+				sb.Append (" --llvm-opt=").Append (MTouch.Quote (LLVMOptimizations));
+
+			if (CustomArguments != null) {
+				foreach (var arg in CustomArguments) {
+					sb.Append (" ").Append (arg);
+				}
+			}
+
 			return sb.ToString ();
 		}
 
@@ -360,16 +387,16 @@ namespace Xamarin
 
 		public string NativeExecutablePath {
 			get {
-				return Path.Combine (AppPath, Path.GetFileNameWithoutExtension (Executable));
+				return Path.Combine (AppPath, Path.GetFileNameWithoutExtension (RootAssembly));
 			}
 		}
 
-		string CreatePlist (MTouch.Profile profile, string appName)
+		string CreatePlist (Profile profile, string appName)
 		{
 			string plist = null;
 
 			switch (profile) {
-			case MTouch.Profile.iOS:
+			case Profile.iOS:
 				plist = string.Format (@"<?xml version=""1.0"" encoding=""UTF-8""?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
 <plist version=""1.0"">
@@ -398,7 +425,7 @@ namespace Xamarin
 </plist>
 ", appName, MTouch.GetSdkVersion (Profile));
 				break;
-			case MTouch.Profile.tvOS:
+			case Profile.tvOS:
 				plist = string.Format (@"<?xml version=""1.0"" encoding=""UTF-8""?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
 <plist version=""1.0"">
@@ -428,18 +455,23 @@ namespace Xamarin
 
 		public void CreateTemporaryApp (bool hasPlist = false, string appName = "testApp", string code = null)
 		{
-			var testDir = CreateTemporaryDirectory ();
-			var app = Path.Combine (testDir, appName + ".app");
+			string testDir;
+			if (RootAssembly == null) {
+				testDir = CreateTemporaryDirectory ();
+			} else {
+				// We're rebuilding an existing executable, so just reuse that
+				testDir = Path.GetDirectoryName (RootAssembly);
+			}
+			var app = AppPath ?? Path.Combine (testDir, appName + ".app");
 			Directory.CreateDirectory (app);
-
 			AppPath = app;
-			Executable = MTouch.CompileTestAppExecutable (testDir, code, "", Profile, appName);
+			RootAssembly = MTouch.CompileTestAppExecutable (testDir, code, "", Profile, appName);
 
 			if (hasPlist)
 				File.WriteAllText (Path.Combine (app, "Info.plist"), CreatePlist (Profile, appName));
 		}
 
-		public void CreateTemporararyServiceExtension (string code = null)
+		public void CreateTemporararyServiceExtension (string code = null, string extraArg = null)
 		{
 			var testDir = CreateTemporaryDirectory ();
 			var app = Path.Combine (testDir, "testApp.appex");
@@ -455,7 +487,7 @@ public partial class NotificationService : UNNotificationServiceExtension
 			}
 
 			AppPath = app;
-			Executable = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile);
+			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile, extraArg: extraArg);
 
 			File.WriteAllText (Path.Combine (app, "Info.plist"),
 @"<?xml version=""1.0"" encoding=""UTF-8""?>
@@ -494,8 +526,14 @@ public partial class NotificationService : UNNotificationServiceExtension
 
 		public void CreateTemporaryWatchKitExtension (string code = null)
 		{
-			var testDir = CreateTemporaryDirectory ();
-			var app = Path.Combine (testDir, "testApp.appex");
+			string testDir;
+			if (RootAssembly == null) {
+				testDir = CreateTemporaryDirectory ();
+			} else {
+				// We're rebuilding an existing executable, so just reuse that directory
+				testDir = Path.GetDirectoryName (RootAssembly);
+			}
+			var app = AppPath ?? Path.Combine (testDir, "testApp.appex");
 			Directory.CreateDirectory (app);
 
 			if (code == null) {
@@ -507,7 +545,7 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 			}
 
 			AppPath = app;
-			Executable = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile);
+			RootAssembly = MTouch.CompileTestAppLibrary (testDir, code: code, profile: Profile);
 
 			File.WriteAllText (Path.Combine (app, "Info.plist"), @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
@@ -546,17 +584,13 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 
 		public string CreateTemporaryDirectory ()
 		{
-			var tmpDir = MTouch.GetTempDirectory ();
-			if (directories_to_delete == null)
-				directories_to_delete = new List<string> ();
-			directories_to_delete.Add (tmpDir);
-			return tmpDir;
+			return Xamarin.Cache.CreateTemporaryDirectory ();
 		}
 
 		public void CreateTemporaryApp_LinkWith ()
 		{
 			AppPath = CreateTemporaryAppDirectory ();
-			Executable = MTouch.CompileTestAppExecutableLinkWith (Path.GetDirectoryName (AppPath), profile: Profile);
+			RootAssembly = MTouch.CompileTestAppExecutableLinkWith (Path.GetDirectoryName (AppPath), profile: Profile);
 		}
 
 		public string CreateTemporaryAppDirectory ()
@@ -573,14 +607,11 @@ public partial class NotificationController : WKUserNotificationInterfaceControl
 		public void CreateTemporaryCacheDirectory ()
 		{
 			Cache = Path.Combine (CreateTemporaryDirectory (), "mtouch-test-cache");
+			Directory.CreateDirectory (Cache);
 		}
 
 		void IDisposable.Dispose ()
 		{
-			if (directories_to_delete != null) {
-				foreach (var dir in directories_to_delete)
-					Directory.Delete (dir, true);
-			}
 		}
 	}
 }

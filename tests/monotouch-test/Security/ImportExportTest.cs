@@ -67,6 +67,15 @@ namespace MonoTouchFixtures.Security {
 					NSArray a = (x.Value as NSArray);
 					Assert.That (a.Count, Is.EqualTo ((nuint) 1), "Count");
 					break;
+#if MONOMAC
+				case "label":
+					Assert.That (x.Value.ToString (), Is.EqualTo ("FARSCAPE"), "Label");
+					break;
+				case "keyid":
+					Assert.That (x.Value, Is.TypeOf (typeof (NSMutableData)), "Keyid");
+					Assert.That ((x.Value as NSData).Length, Is.EqualTo (20), "keyid");
+					break;
+#endif
 				default:
 					Assert.Fail ("Unexpected {0}", x.Key);
 					break;
@@ -80,7 +89,11 @@ namespace MonoTouchFixtures.Security {
 			using (NSMutableDictionary options = new NSMutableDictionary ()) {
 				options [SecImportExport.Passphrase] = new NSString ("b5");
 				NSDictionary[] array;
+#if MONOMAC
+				Assert.That (SecImportExport.ImportPkcs12 (farscape_pfx, options, out array), Is.EqualTo (SecStatusCode.Pkcs12VerifyFailure), "AuthFailed");
+#else
 				Assert.That (SecImportExport.ImportPkcs12 (farscape_pfx, options, out array), Is.EqualTo (SecStatusCode.AuthFailed), "AuthFailed");
+#endif
 			}
 		}
 	}

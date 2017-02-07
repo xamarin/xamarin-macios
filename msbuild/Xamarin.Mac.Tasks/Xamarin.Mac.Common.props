@@ -29,7 +29,8 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		<AllowedReferenceRelatedFileExtensions>
 			$(AllowedReferenceRelatedFileExtensions);
 			.dll.mdb;
-			.exe.mdb
+			.exe.mdb;
+			.pdb
 		</AllowedReferenceRelatedFileExtensions>
 	</PropertyGroup>
 
@@ -54,6 +55,7 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		<MonoMacResourcePrefix Condition="'$(MonoMacResourcePrefix)' == ''">Resources</MonoMacResourcePrefix>
 		<XamMacResourcePrefix Condition="'$(XamMacResourcePrefix)' == ''">$(MonoMacResourcePrefix)</XamMacResourcePrefix>
 		<IsAppExtension Condition="'$(IsAppExtension)' == ''">False</IsAppExtension>
+		<EnableSGenConc Condition="'$(EnableSGenConc)' == ''">false</EnableSGenConc>
 	</PropertyGroup>
 
 	<PropertyGroup>

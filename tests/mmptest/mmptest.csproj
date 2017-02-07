@@ -56,9 +56,19 @@
       <HintPath>..\..\external\guiunit\bin\xammac_mobile\GuiUnit.exe</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
+    <Reference Include="mmp">
+      <HintPath>..\..\_mac-build\Library\Frameworks\Xamarin.Mac.framework\Versions\git\lib\mmp\mmp.exe</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>..\..\_mac-build\Library\Frameworks\Xamarin.Mac.framework\Versions\git\lib\mmp\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\_mac-build\Library\Frameworks\Xamarin.Mac.framework\Versions\git\lib\mmp\Mono.Cecil.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="unit\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\ClassicTests.cs" />
@@ -81,6 +91,10 @@
     </Compile>
     <Compile Include="src\ExtensionTests.cs" />
     <Compile Include="src\RemotingConfigurationTests.cs" />
+    <Compile Include="src\AOTTests.cs" />
+    <Compile Include="..\..\tools\mmp\tests\aot.cs">
+      <Link>unit\aot.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

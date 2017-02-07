@@ -92,21 +92,21 @@ assembly_preload_hook (MonoAssemblyName *aname, char **assemblies_path, void* us
 	bool dual_check = false;
 
 	// add extensions if required.
-	strncpy (filename, name, 1024);
+	strlcpy (filename, name, sizeof (filename));
 	if (!has_extension) {	
 		// Figure out if we need to append 'dll' or 'exe'
 		if (xamarin_executable_name != NULL) {
 			// xamarin_executable_name already has the ".exe", so only compare the rest of the filename.
 			if (culture == NULL && !strncmp (xamarin_executable_name, filename, strlen (xamarin_executable_name) - 4)) {
-				strcat (filename, ".exe");
+				strlcat (filename, ".exe", sizeof (filename));
 			} else {
-				strcat (filename, ".dll");
+				strlcat (filename, ".dll", sizeof (filename));
 			}
 		} else {
 			// we need to check both :|
 			dual_check = true;
 			// start with .dll
-			strcat (filename, ".dll");
+			strlcat (filename, ".dll", sizeof (filename));
 		}
 	}
 
@@ -133,7 +133,7 @@ do_second_check:
 	if (dual_check) {
 		dual_check = false;
 		filename [strlen (filename) - 4] = 0;
-		strcat (filename, ".exe");
+		strlcat (filename, ".exe", sizeof (filename));
 		goto do_second_check;
 	}
 

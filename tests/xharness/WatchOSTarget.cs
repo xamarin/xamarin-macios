@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
@@ -20,6 +21,7 @@ namespace xharness
 		void CreateWatchOSAppProject ()
 		{
 			var csproj = new XmlDocument ();
+			var suffix = "-watchos-app";
 			csproj.LoadWithoutNetworkAccess (Path.Combine (Harness.WatchOSAppTemplate, "App.csproj"));
 			csproj.FindAndReplace ("%WATCHAPP_PATH%", Path.GetFullPath (Harness.WatchOSAppTemplate).Replace ('/', '\\') + "\\");
 			csproj.FindAndReplace ("%WATCHEXTENSION_CSPROJ%", Path.GetFileName (WatchOSExtensionProjectPath));
@@ -27,6 +29,7 @@ namespace xharness
 			csproj.SetProjectReferenceValue (Path.GetFileName (WatchOSExtensionProjectPath), "Name", Path.GetFileNameWithoutExtension (WatchOSExtensionProjectPath));
 			WatchOSAppGuid = "{" + Harness.NewStableGuid ().ToString ().ToUpper () + "}";
 			csproj.SetProjectGuid (WatchOSAppGuid);
+			csproj.FixInfoPListInclude (suffix);
 			Harness.Save (csproj, WatchOSAppProjectPath);
 
 			XmlDocument info_plist = new XmlDocument ();
@@ -87,7 +90,9 @@ namespace xharness
 			XmlDocument info_plist = new XmlDocument ();
 			var target_info_plist = Path.Combine (TargetDirectory, "Info-watchos-extension.plist");
 			info_plist.LoadWithoutNetworkAccess (Path.Combine (TargetDirectory, "Info.plist"));
-			BundleIdentifier = info_plist.GetCFBundleIdentifier ();
+			BundleIdentifier = info_plist.GetCFBundleIdentifier () + "-watch";
+			if (BundleIdentifier.Length >= 58)
+				BundleIdentifier = BundleIdentifier.Substring (0, 57); // If the main app's bundle id is 58 characters (or sometimes more), then the watch extension crashes at launch. radar #29847128.
 			info_plist.SetCFBundleIdentifier (BundleIdentifier + ".watchkitapp.watchkitextension");
 			info_plist.SetMinimumOSVersion ("2.0");
 			info_plist.SetUIDeviceFamily (4);
@@ -179,6 +184,14 @@ namespace xharness
 			get {
 				return true;
 			}
+		}
+
+		public override IEnumerable<RelatedProject> GetRelatedProjects ()
+		{
+			return new RelatedProject [] {
+				new RelatedProject { Guid = WatchOSExtensionGuid, ProjectPath = WatchOSExtensionProjectPath },
+				new RelatedProject { Guid = WatchOSAppGuid, ProjectPath = WatchOSAppProjectPath },
+			};
 		}
 	}
 }

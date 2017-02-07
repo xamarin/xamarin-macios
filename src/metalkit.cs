@@ -291,10 +291,12 @@ namespace XamCore.MetalKit {
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		[Export ("newTextureWithMDLTexture:options:completionHandler:")]
+		[Async]
 		void FromTexture (MDLTexture texture, [NullAllowed] NSDictionary options, MTKTextureLoaderCallback completionHandler);
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]
 		[Wrap ("FromTexture (texture, options == null ? null : options.Dictionary, completionHandler)")]
+		[Async]
 		void FromTexture (MDLTexture texture, [NullAllowed] MTKTextureLoaderOptions options, MTKTextureLoaderCallback completionHandler);
 
 		[iOS (10,0)][Mac (10,12, onlyOn64 : true)]

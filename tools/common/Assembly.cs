@@ -18,6 +18,7 @@ using PlatformException = Xamarin.Bundler.MonoMacException;
 namespace Xamarin.Bundler {
 	public partial class Assembly
 	{
+		public List<string> Satellites;
 		public Application App { get { return Target.App; } }
 
 		string full_path;
@@ -42,11 +43,12 @@ namespace Xamarin.Bundler {
 		public bool EnableCxx;
 		public bool NeedsGccExceptionHandling;
 		public bool ForceLoad;
-		public HashSet<string> Frameworks;
-		public HashSet<string> WeakFrameworks;
-		public List<string> LinkerFlags; // list of extra linker flags
-		public List<string> LinkWith; // list of paths to native libraries to link with.
+		public HashSet<string> Frameworks = new HashSet<string> ();
+		public HashSet<string> WeakFrameworks = new HashSet<string> ();
+		public List<string> LinkerFlags = new List<string> (); // list of extra linker flags
+		public List<string> LinkWith = new List<string> (); // list of paths to native libraries to link with, from LinkWith attributes
 		public HashSet<ModuleReference> UnresolvedModuleReferences;
+		public bool HasLinkWithAttributes { get; private set; }
 
 		bool? symbols_loaded;
 
@@ -123,6 +125,7 @@ namespace Xamarin.Bundler {
 					continue;
 				
 				// Let the linker remove it the attribute from the assembly
+				HasLinkWithAttributes = true;
 				
 				LinkWithAttribute linkWith = GetLinkWithAttribute (attr);
 				string libraryName = linkWith.LibraryName;
@@ -173,7 +176,7 @@ namespace Xamarin.Bundler {
 #endif
 
 				if (!string.IsNullOrEmpty (libraryName)) {
-					path = Path.Combine (Cache.Location, libraryName);
+					path = Path.Combine (App.Cache.Location, libraryName);
 					if (path.EndsWith (".framework", StringComparison.Ordinal)) {
 #if MONOTOUCH
 						if (App.Platform == Xamarin.Utils.ApplePlatform.iOS && App.DeploymentTarget.Major < 8) {
@@ -203,8 +206,6 @@ namespace Xamarin.Bundler {
 								throw ErrorHelper.CreateError (1303, "Could not decompress the native framework '{0}' from '{1}'. Please review the build log for more information from the native 'unzip' command.", libraryName, zipPath);
 						}
 
-						if (Frameworks == null)
-							Frameworks = new HashSet<string> ();
 						Frameworks.Add (path);
 					} else {
 						if (!Application.IsUptodate (FullPath, path)) {
@@ -221,8 +222,6 @@ namespace Xamarin.Bundler {
 							"(if the assembly was built using a binding project, the native library must be included in the project, and its Build Action must be 'ObjcBindingNativeLibrary').",
 								libraryName, path);
 
-						if (LinkWith == null)
-							LinkWith = new List<string> ();
 						LinkWith.Add (path);
 					}
 				}
@@ -334,37 +333,25 @@ namespace Xamarin.Bundler {
 					case "libsystem_kernel":
 						break;
 					case "sqlite3":
-						if (LinkerFlags == null)
-							LinkerFlags = new List<string> ();
 						LinkerFlags.Add ("-lsqlite3");
 						Driver.Log (3, "Linking with {0} because it's referenced by a module reference in {1}", file, FileName);
 						break;
 					case "libsqlite3":
 						// remove lib prefix
-						if (LinkerFlags == null)
-							LinkerFlags = new List<string> ();
 						LinkerFlags.Add ("-l" + file.Substring (3));
 						Driver.Log (3, "Linking with {0} because it's referenced by a module reference in {1}", file, FileName);
 					break;
 					case "libGLES":
 					case "libGLESv2":
 						// special case for OpenGLES.framework
-						if (Frameworks == null)
-							Frameworks = new HashSet<string> ();
-						if (!Frameworks.Contains ("OpenGLES")) {
-							Frameworks.Add ("OpenGLES");
+						if (Frameworks.Add ("OpenGLES"))
 							Driver.Log (3, "Linking with the framework OpenGLES because {0} is referenced by a module reference in {1}", file, FileName);
-						}
 						break;
 					case "vImage":
 					case "vecLib":
 						// sub-frameworks
-						if (Frameworks == null)
-							Frameworks = new HashSet<string> ();
-						if (!Frameworks.Contains ("Accelerate")) {
-							Frameworks.Add ("Accelerate");
+						if (Frameworks.Add ("Accelerate"))
 							Driver.Log (3, "Linking with the framework Accelerate because {0} is referenced by a module reference in {1}", file, FileName);
-						}
 						break;
 					case "CoreAudioKit":
 					case "Metal":
@@ -374,31 +361,22 @@ namespace Xamarin.Bundler {
 #if MTOUCH
 						if (!App.IsSimulatorBuild) {
 #endif
-							if (Frameworks == null)
-								Frameworks = new HashSet<string> ();
-							if (!Frameworks.Contains (file)) {
-								Frameworks.Add (file);
+							if (Frameworks.Add (file))
 								Driver.Log (3, "Linking with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
-							}
 #if MTOUCH
 						}
 #endif
 						break;
 					case "openal32":
-						if (Frameworks == null)
-							Frameworks = new HashSet<string> ();
-						Frameworks.Add ("OpenAL");
+						if (Frameworks.Add ("OpenAL"))
+							Driver.Log (3, "Linking with the framework OpenAL because {0} is referenced by a module reference in {1}", file, FileName);
 						break;
 					default:
 						// detect frameworks
 						int f = name.IndexOf (".framework/", StringComparison.Ordinal);
 						if (f > 0) {
-							if (Frameworks == null)
-								Frameworks = new HashSet<string> ();
-							if (!Frameworks.Contains (file)) {
-								Frameworks.Add (file);
+							if (Frameworks.Add (file))
 								Driver.Log (3, "Linking with the framework {0} because it's referenced by a module reference in {1}", file, FileName);
-							}
 						} else {
 							if (UnresolvedModuleReferences == null)
 								UnresolvedModuleReferences = new HashSet<ModuleReference> ();
@@ -414,6 +392,76 @@ namespace Xamarin.Bundler {
 		public override string ToString ()
 		{
 			return FileName;
+		}
+
+		// This returns the path to all related files:
+		// * The assembly itself
+		// * Any debug files (mdb/pdb)
+		// * Any config files
+		// * Any satellite assemblies
+		public IEnumerable<string> GetRelatedFiles ()
+		{
+			yield return FullPath;
+			var mdb = FullPath + ".mdb";
+			if (File.Exists (mdb))
+				yield return mdb;
+			var pdb = Path.ChangeExtension (FullPath, ".pdb");
+			if (File.Exists (pdb))
+				yield return pdb;
+			var config = FullPath + ".config";
+			if (File.Exists (config))
+				yield return config;
+			if (Satellites != null) {
+				foreach (var satellite in Satellites)
+					yield return satellite;
+			}
+		}
+
+		public void ComputeSatellites ()
+		{
+			var path = Path.GetDirectoryName (FullPath);
+			var satellite_name = Path.GetFileNameWithoutExtension (FullPath) + ".resources.dll";
+
+			foreach (var subdir in Directory.GetDirectories (path)) {
+				var culture_name = Path.GetFileName (subdir);
+				CultureInfo ci;
+
+				if (culture_name.IndexOf ('.') >= 0)
+					continue; // cultures can't have dots. This way we don't check every *.app directory
+
+				try {
+					ci = CultureInfo.GetCultureInfo (culture_name);
+				} catch {
+					// nope, not a resource language
+					continue;
+				}
+
+				if (ci == null)
+					continue;
+
+				var satellite = Path.Combine (subdir, satellite_name);
+				if (File.Exists (satellite)) {
+					if (Satellites == null)
+						Satellites = new List<string> ();
+					Satellites.Add (satellite);
+				}
+			}
+		}
+
+		public void CopySatellitesToDirectory (string directory)
+		{
+			if (Satellites == null)
+				return;
+
+			foreach (var a in Satellites) {
+				string target_dir = Path.Combine (directory, Path.GetFileName (Path.GetDirectoryName (a)));
+				string target_s = Path.Combine (target_dir, Path.GetFileName (a));
+
+				if (!Directory.Exists (target_dir))
+					Directory.CreateDirectory (target_dir);
+
+				CopyAssembly (a, target_s);
+			}
 		}
 	}
 }

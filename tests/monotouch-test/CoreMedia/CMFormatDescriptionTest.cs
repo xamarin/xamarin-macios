@@ -15,7 +15,11 @@ using System.Collections.Generic;
 using Foundation;
 using CoreMedia;
 using AVFoundation;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.Foundation;
 using MonoTouch.CoreMedia;
@@ -45,7 +49,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		}
 
 
-#if !__TVOS__
+#if !__TVOS__ && !MONOMAC // GetAuthorizationStatus is not available on mac
 		[Test]
 		public void Video ()
 		{
@@ -116,9 +120,9 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void H264ParameterSetsTest ()
 		{
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (7, 0))
-				Assert.Inconclusive ("CMVideoFormatDescription.FromH264ParameterSets is iOS7+");
-
+			if (!TestRuntime.CheckXcodeVersion (5, 0, 1))
+				Assert.Inconclusive ("CMVideoFormatDescription.FromH264ParameterSets is iOS7+ and macOS 10.9+");
+			
 			var arr0 = new byte[] { 0x67, 0x64, 0x00, 0x29, 0xAC, 0x56, 0x80, 0x78, 0x02, 0x27, 0xE5, 0x9A, 0x80, 0x80, 0x80, 0x81 };
 			var arr1 = new byte[] { 0x28, 0xEE, 0x04, 0xF2, 0xC0 };
 

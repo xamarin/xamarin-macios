@@ -12,8 +12,6 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
-using UIKit;
-using MediaPlayer;
 using AudioToolbox;
 #else
 using MonoTouch.Foundation;
@@ -29,6 +27,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 	[Preserve (AllMembers = true)]
 	public class AudioQueueTest
 	{
+#if !MONOMAC // HardwareCodecPolicy and SetChannelAssignments are iOS only
 		[Test]
 		public void Properties ()
 		{
@@ -51,7 +50,8 @@ namespace MonoTouchFixtures.AudioToolbox {
 					new AudioQueueChannelAssignment ("22", 1)
 				));
 		}
-
+#endif
+		
 		[Test][Ignore ("Fails on some machines with undefined error code 5")]
 		public void ProcessingTap ()
 		{

@@ -13,7 +13,11 @@ using System.Drawing;
 using AVFoundation;
 using Foundation;
 using ObjCRuntime;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.AVFoundation;
 using MonoTouch.Foundation;

@@ -13,10 +13,12 @@ using System;
 #if XAMCORE_2_0
 using CoreGraphics;
 using Foundation;
-using UIKit;
 using ModelIO;
 using ObjCRuntime;
 using SceneKit;
+#if !MONOMAC
+using UIKit;
+#endif
 #else
 using MonoTouch.CoreGraphics;
 using MonoTouch.Foundation;
@@ -37,10 +39,14 @@ namespace MonoTouchFixtures.ModelIO {
 		[TestFixtureSetUp]
 		public void Setup ()
 		{
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (9, 0))
-				Assert.Ignore ("Requires iOS9+");
+			if (!TestRuntime.CheckXcodeVersion (7, 0))
+				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
 
-			if (Runtime.Arch == Arch.SIMULATOR && IntPtr.Size == 4) {
+			if (
+#if !MONOMAC
+				Runtime.Arch == Arch.SIMULATOR && 
+#endif
+				IntPtr.Size == 4) {
 				// There's a bug in the i386 version of objc_msgSend where it doesn't preserve SIMD arguments
 				// when resizing the cache of method selectors for a type. So here we call all selectors we can
 				// find, so that the subsequent tests don't end up producing any cache resize (radar #21630410).

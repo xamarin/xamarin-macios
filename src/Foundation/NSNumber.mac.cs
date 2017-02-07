@@ -14,6 +14,7 @@ namespace XamCore.Foundation
 {
 	public partial class NSNumber
 	{
+#if !COREBUILD
 		public static NSNumber FromObject (object value)
 		{
 			if (value is float) {
@@ -50,6 +51,7 @@ namespace XamCore.Foundation
 
 			return null;
 		}
+#endif
 	}
 }
 

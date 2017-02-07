@@ -12,7 +12,9 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
+#if !MONOMAC
 using UIKit;
+#endif
 using MultipeerConnectivity;
 using ObjCRuntime;
 using Security;
@@ -53,7 +55,11 @@ namespace MonoTouchFixtures.MultipeerConnectivity {
 			using (var s = new MCSession (peer)) {
 				Assert.AreSame (s.MyPeerID, peer, "MyPeerID");
 				Assert.Null (s.SecurityIdentity, "SecurityIdentity");
+#if MONOMAC
+				var pref = MCEncryptionPreference.Required;
+#else
 				var pref = UIDevice.CurrentDevice.CheckSystemVersion (9,0) ? MCEncryptionPreference.Required : MCEncryptionPreference.Optional;
+#endif
 				Assert.That (s.EncryptionPreference, Is.EqualTo (pref), "EncryptionPreference");
 				Assert.That (s.ConnectedPeers, Is.Empty, "ConnectedPeers");
 			}

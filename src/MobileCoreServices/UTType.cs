@@ -156,7 +156,7 @@ namespace XamCore.MobileCoreServices {
 #endif
 		public string GetDescription (string uti)
 		{
-			if (uti != null)
+			if (uti == null)
 				throw new ArgumentNullException ("uti");
 
 			var a = NSString.CreateNative (uti);

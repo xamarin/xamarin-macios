@@ -29,7 +29,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<AllowedReferenceRelatedFileExtensions>
 			$(AllowedReferenceRelatedFileExtensions);
 			.dll.mdb;
-			.exe.mdb
+			.exe.mdb;
+			.pdb
 		</AllowedReferenceRelatedFileExtensions>
 	</PropertyGroup>
 
@@ -38,6 +39,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' == ''">$(IntermediateOutputPath)mac</GeneratedSourcesDir>
 		<GeneratedSourcesDir Condition="'$(GeneratedSourcesDir)' != '' and !HasTrailingSlash ('$(GeneratedSourcesDir)')">$(GeneratedSourcesDir)\</GeneratedSourcesDir>
+
+		<ProcessEnums Condition="'$(ProcessEnums)' == ''">False</ProcessEnums>
 	</PropertyGroup>
 
 	<!-- Make our Build Actions show up in MonoDevelop -->

@@ -12,7 +12,9 @@
 using System;
 #if XAMCORE_2_0
 using Foundation;
+#if !MONOMAC
 using UIKit;
+#endif
 using GameController;
 #else
 using MonoTouch.Foundation;
@@ -30,8 +32,8 @@ namespace MonoTouchFixtures.GameController {
 		[Test]
 		public void Nullability ()
 		{
-			if (!UIDevice.CurrentDevice.CheckSystemVersion (7, 0))
-				Assert.Inconclusive ("GameController is iOS7+");
+			if (!TestRuntime.CheckXcodeVersion (5, 0, 1))
+				Assert.Inconclusive ("GameController is iOS7+ or macOS 10.9+");
 			
 			GCExtendedGamepadSnapShotDataV100 data;
 			Assert.False (GCExtendedGamepadSnapshot.TryGetSnapShotData (null, out data), "TryGetSnapshotData");

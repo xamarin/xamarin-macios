@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleName</key>
-	<string>Don't Link</string>
+	<string>TestApp</string>
 	<key>CFBundleIdentifier</key>
 	<string>%APP_CFBUNDLEIDENTIFER%</string>
 	<key>CFBundleDevelopmentRegion</key>
@@ -20,7 +20,7 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>WKCompanionAppBundleIdentifier</key>
-	<string>com.xamarin.dontlink</string>
+	<string>%CONTAINER_CFBUNDLEIDENTIFIER%</string>
 	<key>WKWatchKitApp</key>
 	<true/>
 	<key>XSAppIconAssets</key>

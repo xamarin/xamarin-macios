@@ -12,6 +12,7 @@ namespace Xamarin.MacDev.Tasks
 
 		public string SessionId { get; set; }
 
+		[Output]
 		[Required]
 		public ITaskItem OutputFile { get; set; }
 

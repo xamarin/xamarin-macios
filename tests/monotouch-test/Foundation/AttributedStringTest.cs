@@ -2,7 +2,12 @@ using System;
 using NUnit.Framework;
 #if XAMCORE_2_0
 using Foundation;
+#if MONOMAC
+using AppKit;
+using UIColor = AppKit.NSColor;
+#else
 using UIKit;
+#endif
 using CoreGraphics;
 using ObjCRuntime;
 #if !__WATCHOS__

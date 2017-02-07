@@ -12,7 +12,11 @@ using System;
 using Foundation;
 using Security;
 using ObjCRuntime;
+#if MONOMAC
+using AppKit;
+#else
 using UIKit;
+#endif
 #else
 using MonoTouch.Foundation;
 using MonoTouch.ObjCRuntime;

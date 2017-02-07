@@ -35,7 +35,8 @@ namespace Xamarin.Bundler {
 
 	public partial class Application
 	{
-		public string AppDirectory;
+		public Cache Cache = new Cache ();
+		public string AppDirectory = ".";
 		public bool DeadStrip = true;
 		public bool EnableDebug;
 		internal RuntimeOptions RuntimeOptions;
@@ -54,11 +55,16 @@ namespace Xamarin.Bundler {
 		public Mono.Linker.I18nAssemblies I18n;
 
 		public bool? EnableCoopGC;
+		public bool EnableSGenConc;
 		public MarshalObjectiveCExceptionMode MarshalObjectiveCExceptions;
 		public MarshalManagedExceptionMode MarshalManagedExceptions;
 		public bool IsDefaultMarshalManagedExceptionMode;
 		public string RootAssembly;
 		public string RegistrarOutputLibrary;
+
+		public static int Concurrency => Driver.Concurrency;
+		public Version DeploymentTarget;
+		public Version SdkVersion;
 
 		public bool RequiresPInvokeWrappers {
 			get {
@@ -419,15 +425,15 @@ namespace Xamarin.Bundler {
 
 			var resolvedAssemblies = new List<AssemblyDefinition> ();
 			var resolver = new PlatformResolver () {
-				FrameworkDirectory = Driver.PlatformFrameworkDirectory,
+				FrameworkDirectory = Driver.GetPlatformFrameworkDirectory (this),
 				RootDirectory = Path.GetDirectoryName (RootAssembly),
 			};
 
-			if (Driver.App.Platform == ApplePlatform.iOS || Driver.App.Platform == ApplePlatform.MacOSX) {
-				if (Driver.App.Is32Build) {
-					resolver.ArchDirectory = Driver.Arch32Directory;
+			if (Platform == ApplePlatform.iOS || Platform == ApplePlatform.MacOSX) {
+				if (Is32Build) {
+					resolver.ArchDirectory = Driver.GetArch32Directory (this);
 				} else {
-					resolver.ArchDirectory = Driver.Arch64Directory;
+					resolver.ArchDirectory = Driver.GetArch64Directory (this);
 				}
 			}
 
@@ -436,8 +442,8 @@ namespace Xamarin.Bundler {
 			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse ("mscorlib"), new ReaderParameters ()));
 
 			var rootName = Path.GetFileNameWithoutExtension (RootAssembly);
-			if (rootName != Driver.ProductAssembly)
-				throw new PlatformException (66, "Invalid build registrar assembly: {0}", RootAssembly);
+			if (rootName != Driver.GetProductAssembly (this))
+				throw ErrorHelper.CreateError (66, "Invalid build registrar assembly: {0}", RootAssembly);
 
 			resolvedAssemblies.Add (ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ()));
 			Driver.Log (3, "Loaded {0}", resolvedAssemblies [resolvedAssemblies.Count - 1].MainModule.FileName);
