@@ -10,6 +10,11 @@ namespace MonoTouch.Tuner {
 	
 	public class MonoTouchSweepStep : MobileSweepStep {
 
+		public MonoTouchSweepStep (LinkerOptions options)
+			: base (options.LinkSymbols)
+		{
+		}
+
 		protected override void SweepAssembly (AssemblyDefinition assembly)
 		{
 			base.SweepAssembly (assembly);
