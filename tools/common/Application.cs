@@ -118,15 +118,18 @@ namespace Xamarin.Bundler {
 
 		public static void SaveAssembly (AssemblyDefinition assembly, string destination)
 		{
-			bool symbols = assembly.MainModule.HasSymbols;
-			// re-write symbols, if available, so the new tokens will match
-			assembly.Write (destination, new WriterParameters () { WriteSymbols = symbols });
-
+			var main = assembly.MainModule;
+			bool symbols = main.HasSymbols;
 			if (symbols) {
-				// re-load symbols (cecil will dispose MdbReader and will crash later if we need to save again)
 				var provider = new MdbReaderProvider ();
-				assembly.MainModule.ReadSymbols (provider.GetSymbolReader (assembly.MainModule, destination));
-			} else {
+				main.ReadSymbols (provider.GetSymbolReader (main, main.FileName));
+			}
+
+			var wp = new WriterParameters () { WriteSymbols = symbols };
+			// re-write symbols, if available, so the new tokens will match
+			assembly.Write (destination, wp);
+
+			if (!symbols) {
 				// if we're not saving the symbols then we must not leave stale/old files to be used by other tools
 				string dest_mdb = destination + ".mdb";
 				if (File.Exists (dest_mdb))
