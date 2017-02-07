@@ -73,9 +73,15 @@ namespace Xamarin.Bundler {
 					Application.CopyFile (source, target);
 				}
 
-				// Update the mdb even if the assembly didn't change.
-				if (copy_mdb && File.Exists (source + ".mdb"))
-					Application.UpdateFile (source + ".mdb", target + ".mdb", true);
+				// Update the debug symbols file even if the assembly didn't change.
+				if (copy_mdb) {
+					if (File.Exists (source + ".mdb"))
+						Application.UpdateFile (source + ".mdb", target + ".mdb", true);
+
+					var spdb = Path.ChangeExtension (source, "pdb");
+					if (File.Exists (spdb))
+						Application.UpdateFile (spdb, Path.ChangeExtension (target, "pdb"), true);
+				}
 
 				CopyConfigToDirectory (Path.GetDirectoryName (target));
 			} catch (Exception e) {
@@ -92,6 +98,10 @@ namespace Xamarin.Bundler {
 				string mdb_target = Path.Combine (directory, FileName + ".mdb");
 				Application.UpdateFile (mdb_src, mdb_target);
 			}
+
+			var spdb = Path.ChangeExtension (FullPath, "pdb");
+			if (File.Exists (spdb))
+				Application.UpdateFile (spdb, Path.Combine (directory, Path.ChangeExtension (FileName, "pdb")), true);
 		}
 		
 		public void CopyMSymToDirectory (string directory)
