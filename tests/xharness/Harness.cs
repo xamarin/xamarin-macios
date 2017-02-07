@@ -279,7 +279,7 @@ namespace xharness
 			
 			MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), skipXMVariations : true));
 
-			var hard_coded_test_suites = new string[] { "mmptest", "msbuild-mac" };
+			var hard_coded_test_suites = new string[] { "mmptest", "msbuild-mac", "xammac_tests" };
 			foreach (var p in hard_coded_test_suites)
 				MacTestProjects.Add (new MacTestProject (Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj")), generateVariations: false));
 
