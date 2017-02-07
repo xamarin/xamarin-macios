@@ -380,6 +380,12 @@ namespace Xamarin.Bundler {
 				throw new MonoMacException (10, true, "Could not parse the command line arguments: {0}", e.Message);
 			}
 
+			if (aotOptions == null) {
+				string forceAotVariable = Environment.GetEnvironmentVariable ("XM_FORCE_AOT");
+				if (forceAotVariable != null)
+					aotOptions = new AOTOptions (forceAotVariable);
+			}
+
 			App.RuntimeOptions = RuntimeOptions.Create (App, http_message_provider, tls_provider);
 
 			ErrorHelper.Verbosity = verbose;
