@@ -464,7 +464,7 @@ namespace XamCore.StoreKit {
 		[Export ("requestCapabilitiesWithCompletionHandler:")]
 		void RequestCapabilities (Action<SKCloudServiceCapability, NSError> completionHandler);
 
-		[iOS (10,3), NoTV]
+		[iOS (10,3), TV (10,2)]
 		[Async]
 		[Export ("requestPersonalizationTokenForClientToken:withCompletionHandler:")]
 		void RequestPersonalizationToken (string clientToken, Action<NSString, NSError> completionHandler);
