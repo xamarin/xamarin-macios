@@ -171,7 +171,7 @@ namespace MonoTouch.Tuner {
 				pipeline.AppendStep (new RemoveResources (options.I18nAssemblies)); // remove collation tables
 
 				pipeline.AppendStep (new MonoTouchMarkStep ());
-				pipeline.AppendStep (new MonoTouchSweepStep ());
+				pipeline.AppendStep (new MonoTouchSweepStep (options));
 				pipeline.AppendStep (new CleanStep ());
 
 				if (!options.DebugBuild)
