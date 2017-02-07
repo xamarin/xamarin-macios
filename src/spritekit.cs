@@ -1224,44 +1224,60 @@ namespace XamCore.SpriteKit {
 		uint CategoryBitMask { get; set; } /* uint32_t */
 	}
 
-	[NoWatch]
+	[Watch (3,2)]
 	[Mac (10,9, onlyOn64 : true)]
 	[Since (7,0)]
 	[BaseType (typeof (SKNode))]
 	partial interface SKVideoNode {
 
-		[NoWatch]
+		[NoWatch] // documented as available but AVPlayer it not part of watchOS
 		[Static, Export ("videoNodeWithAVPlayer:")]
 		SKVideoNode FromPlayer (AVPlayer player);
 
+		[NoWatch] // documented as available but already marked deprecated
 		[Static, Export ("videoNodeWithVideoFileNamed:"), Internal]
 		SKVideoNode VideoNodeWithVideoFileNamed (string videoFile);
 
 		[Static, Export ("videoNodeWithFileNamed:"), Internal]
 		SKVideoNode VideoNodeWithFileNamed (string videoFile);
 
+		[NoWatch] // documented as available but already marked deprecated
 		[Static, Export ("videoNodeWithVideoURL:"), Internal]
 		SKVideoNode VideoNodeWithVideoURL (NSUrl videoURL);
 
 		[Static, Export ("videoNodeWithURL:"), Internal]
 		SKVideoNode VideoNodeWithURL (NSUrl videoURL);
 
-		[NoWatch]
+		[NoWatch] // documented as available but AVPlayer it not part of watchOS
 		[DesignatedInitializer]
 		[Export ("initWithAVPlayer:")]
 		IntPtr Constructor (AVPlayer player);
 
+#if WATCH
+		// avoid workaround of init* selectors with same signature
+
+		[DesignatedInitializer]
+		[Export ("initWithFileNamed:")]
+		IntPtr Constructor (string videoFile);
+
+		[DesignatedInitializer]
+		[Export ("initWithURL:")]
+		IntPtr Constructor (NSUrl url);
+#else
+		[NoWatch]
 		[Export ("initWithVideoFileNamed:"), Internal]
 		IntPtr InitWithVideoFileNamed (string videoFile);
 
 		[Export ("initWithFileNamed:"), Internal]
 		IntPtr InitWithFileNamed (string videoFile);
 
+		[NoWatch]
 		[Export ("initWithVideoURL:"), Internal]
 		IntPtr InitWithVideoURL (NSUrl url);
 
 		[Export ("initWithURL:"), Internal]
 		IntPtr InitWithURL (NSUrl url);
+#endif
 
 		[Export ("play")]
 		void Play ();
