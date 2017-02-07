@@ -699,7 +699,7 @@ namespace XamCore.PassKit {
 		NSString QuicPay { get; }
 
 		[iOS (10,3), Watch (3,2)]
-		[Field ("PKPaymentNetworkiD")]
+		[Field ("PKPaymentNetworkID")]
 		NSString ID { get; }
 	}
 
