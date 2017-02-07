@@ -448,6 +448,13 @@ namespace Xamarin.Bundler
 							input.Add (a.FullPath + ".mdb");
 							output.Add (Path.Combine (PreBuildDirectory, a.FileName) + ".mdb");
 						}
+
+
+						var spdb = Path.ChangeExtension (a.FullPath, "pdb");
+						if (File.Exists (spdb)) {
+							input.Add (spdb);
+							output.Add (Path.Combine (PreBuildDirectory, Path.ChangeExtension (a.FileName, "pdb")));
+						}
 						
 						if (a.Satellites != null) {
 							foreach (var s in a.Satellites) {
