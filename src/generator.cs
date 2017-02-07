@@ -1034,13 +1034,11 @@ public partial class Generator : IMemberGatherer {
 			return "void";
 
 		if (t.IsEnum) {
-#if XAMCORE_2_0
 			var enumType = t;
-#endif
+
 			t = Enum.GetUnderlyingType (t);
 
-#if XAMCORE_2_0
-			if (HasAttribute (enumType, TypeManager.NativeAttribute)) {
+			if (UnifiedAPI && HasAttribute (enumType, TypeManager.NativeAttribute)) {
 				if (t != TypeManager.System_Int64 && t != TypeManager.System_UInt64)
 					throw new BindingException (1026, true,
 						"`{0}`: Enums attributed with [{1}] must have an underlying type of `long` or `ulong`",
@@ -1058,7 +1056,6 @@ public partial class Generator : IMemberGatherer {
 					throw new BindingException (1029, "Internal error: invalid enum mode for type '{0}'", t.FullName);
 				}
 			}
-#endif
 		}
 
 		if (t == TypeManager.System_Int32)
@@ -2692,17 +2689,15 @@ public partial class Generator : IMemberGatherer {
 						} else if (fetchType == TypeManager.System_nuint){
 							getter = "{1} GetNUIntValue ({0})";
 							setter = "SetNumberValue ({0}, {1}value)";
-#if XAMCORE_2_0
-						} else if (fetchType == TypeManager.CoreGraphics_CGRect){
+						} else if (UnifiedAPI && fetchType == TypeManager.CoreGraphics_CGRect){
 							getter = "{1} GetCGRectValue ({0})";
 							setter = "SetCGRectValue ({0}, {1}value)";
-						} else if (fetchType == TypeManager.CoreGraphics_CGSize){
+						} else if (UnifiedAPI && fetchType == TypeManager.CoreGraphics_CGSize){
 							getter = "{1} GetCGSizeValue ({0})";
 							setter = "SetCGSizeValue ({0}, {1}value)";
-						} else if (fetchType == TypeManager.CoreGraphics_CGPoint){
+						} else if (UnifiedAPI && fetchType == TypeManager.CoreGraphics_CGPoint){
 							getter = "{1} GetCGPointValue ({0})";
 							setter = "SetCGPointValue ({0}, {1}value)";
-#endif // XAMCORE_2_0
 #if HAVE_COREMEDIA
 						} else if (fetchType == TypeManager.CMTime){
 							getter = "{1} GetCMTimeValue ({0})";
@@ -5988,16 +5983,14 @@ public partial class Generator : IMemberGatherer {
 						print ("return *(({3} *) Dlfcn.dlsym (Libraries.{2}.Handle, \"{1}\"));", field_pi.Name, fieldAttr.SymbolName, library_name,
 						       FormatType (type, field_pi.PropertyType.Namespace, field_pi.PropertyType.Name));
 #endif
-#if XAMCORE_2_0
-					} else if (field_pi.PropertyType == TypeManager.System_nint) {
+					} else if (UnifiedAPI && field_pi.PropertyType == TypeManager.System_nint) {
 						print ("return Dlfcn.GetNInt (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
-					} else if (field_pi.PropertyType == TypeManager.System_nuint) {
+					} else if (UnifiedAPI && field_pi.PropertyType == TypeManager.System_nuint) {
 						print ("return Dlfcn.GetNUInt (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
-					} else if (field_pi.PropertyType == TypeManager.System_nfloat) {
+					} else if (UnifiedAPI && field_pi.PropertyType == TypeManager.System_nfloat) {
 						print ("return Dlfcn.GetNFloat (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
-					} else if (field_pi.PropertyType == TypeManager.CoreGraphics_CGSize){
+					} else if (UnifiedAPI && field_pi.PropertyType == TypeManager.CoreGraphics_CGSize){
 						print ("return Dlfcn.GetCGSize (Libraries.{2}.Handle, \"{1}\");", field_pi.Name, fieldAttr.SymbolName, library_name);
-#endif
 					} else {
 						if (field_pi.PropertyType == TypeManager.System_String)
 							throw new BindingException (1013, true, "Unsupported type for Fields (string), you probably meant NSString");
@@ -6029,16 +6022,14 @@ public partial class Generator : IMemberGatherer {
 							print ("Dlfcn.SetString (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
 						} else if (field_pi.PropertyType.Name == "NSArray"){
 							print ("Dlfcn.SetArray (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
-#if XAMCORE_2_0
-						} else if (field_pi.PropertyType == TypeManager.System_nint) {
+						} else if (UnifiedAPI && field_pi.PropertyType == TypeManager.System_nint) {
 							print ("Dlfcn.SetNInt (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
-						} else if (field_pi.PropertyType == TypeManager.System_nuint) {
+						} else if (UnifiedAPI && field_pi.PropertyType == TypeManager.System_nuint) {
 							print ("Dlfcn.SetNUInt (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
-						} else if (field_pi.PropertyType == TypeManager.System_nfloat) {
+						} else if (UnifiedAPI && field_pi.PropertyType == TypeManager.System_nfloat) {
 							print ("Dlfcn.SetNFloat (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
-						} else if (field_pi.PropertyType == TypeManager.CoreGraphics_CGSize) {
+						} else if (UnifiedAPI && field_pi.PropertyType == TypeManager.CoreGraphics_CGSize) {
 							print ("Dlfcn.SetCGSize (Libraries.{2}.Handle, \"{1}\", value);", field_pi.Name, fieldAttr.SymbolName, library_name);
-#endif
 						} else
 							throw new BindingException (1021, true, "Unsupported type for read/write Fields: {0} for {1}.{2}", fieldTypeName, field_pi.DeclaringType.FullName, field_pi.Name);
 						indent--;
