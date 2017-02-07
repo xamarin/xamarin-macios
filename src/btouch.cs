@@ -357,7 +357,7 @@ class BindingTouch {
 			}
 			GC.KeepAlive (baselib); // Fixes a compiler warning (unused variable).
 				
-			foreach (object attr in api.GetCustomAttributes (typeof (LinkWithAttribute), true)) {
+			foreach (object attr in api.GetCustomAttributes (TypeManager.LinkWithAttribute, true)) {
 				LinkWithAttribute linkWith = (LinkWithAttribute) attr;
 				
 				if (!linkwith.Contains (linkWith.LibraryName)) {
@@ -380,12 +380,12 @@ class BindingTouch {
 			var  strong_dictionaries = new List<Type> ();
 			foreach (var t in api.GetTypes ()){
 				if ((process_enums && t.IsEnum) ||
-				    t.GetCustomAttributes (typeof (BaseTypeAttribute), true).Length > 0 ||
-				    t.GetCustomAttributes (typeof (ProtocolAttribute), true).Length > 0 ||
-				    t.GetCustomAttributes (typeof (StaticAttribute), true).Length > 0 ||
-				    t.GetCustomAttributes (typeof (PartialAttribute), true).Length > 0)
+				    t.GetCustomAttributes (TypeManager.BaseTypeAttribute, true).Length > 0 ||
+				    t.GetCustomAttributes (TypeManager.ProtocolAttribute, true).Length > 0 ||
+				    t.GetCustomAttributes (TypeManager.StaticAttribute, true).Length > 0 ||
+				    t.GetCustomAttributes (TypeManager.PartialAttribute, true).Length > 0)
 					types.Add (t);
-				if (t.GetCustomAttributes (typeof (StrongDictionaryAttribute), true).Length > 0)
+				if (t.GetCustomAttributes (TypeManager.StrongDictionaryAttribute, true).Length > 0)
 					strong_dictionaries.Add (t);
 			}
 
