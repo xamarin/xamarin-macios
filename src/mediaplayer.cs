@@ -21,7 +21,7 @@ using XamCore.UIKit;
 using System;
 
 namespace XamCore.MediaPlayer {
-
+#if XAMCORE_2_0 || !MONOMAC
 	[NoMac]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
@@ -2023,4 +2023,5 @@ namespace XamCore.MediaPlayer {
 		[Export ("setEndTime:forItemWithStoreID:")]
 		void SetEndTime (double endTime, string storeID);
 	}
+#endif
 }
