@@ -172,6 +172,9 @@
     <Compile Include="ReflectionTest.cs" />
     <Compile Include="HttpClientHandlerTest.cs" />
     <Compile Include="CanaryTest.cs" />
+    <Compile Include="..\..\common\TestRuntime.cs">
+        <Link>TestRuntime.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\BundledResources\BundledResources.csproj">
