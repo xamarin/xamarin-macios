@@ -29,7 +29,6 @@ namespace LinkSdk {
 		{
 			// Not critical (on failure) but not optimal - the linker should be able to remove those types entirely
 			AssertAbsentType ("System.Security.SecurityManager, mscorlib");
-			AssertAbsentType ("System.Runtime.Versioning.BinaryCompatibility, mscorlib");
 		}
 	}
 }
