@@ -9,11 +9,11 @@
 
 using System;
 using XamCore.Foundation;
+using XamCore.ObjCRuntime;
 
 namespace XamCore.MediaPlayer {
-
+#if XAMCORE_2_0
 	public partial class MPSkipIntervalCommand {
-
 		public double[] PreferredIntervals {
 			get {
 				NSArray a = _PreferredIntervals;
@@ -36,4 +36,5 @@ namespace XamCore.MediaPlayer {
 			}
 		}
 	}
+#endif
 }

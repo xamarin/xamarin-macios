@@ -21,7 +21,7 @@ using XamCore.UIKit;
 using System;
 
 namespace XamCore.MediaPlayer {
-
+#if XAMCORE_2_0 || !MONOMAC
 	[NoMac]
 	[NoTV]
 	[BaseType (typeof (NSObject))]
@@ -251,7 +251,7 @@ namespace XamCore.MediaPlayer {
 		NSString DateAddedProperty { get; }
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MPMediaItemArtwork {
@@ -1303,7 +1303,7 @@ namespace XamCore.MediaPlayer {
 		string Title { get; }
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[Since (5,0)]
 	[BaseType (typeof (NSObject))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -init is not supported, use +defaultCenter
@@ -1391,7 +1391,7 @@ namespace XamCore.MediaPlayer {
 		NSString PropertyIsLiveStream { get; }
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[Since (7,1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash if used
@@ -1566,7 +1566,7 @@ namespace XamCore.MediaPlayer {
 		bool EndpointAvailable { get; }
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[Since (7,1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRemoteCommands cannot be initialized externally.
@@ -1588,7 +1588,7 @@ namespace XamCore.MediaPlayer {
 		void RemoveTarget ([NullAllowed] NSObject target, Selector action);
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[Since (7,1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangePlaybackRateCommands cannot be initialized externally.
@@ -1598,7 +1598,7 @@ namespace XamCore.MediaPlayer {
 		NSNumber[] SupportedPlaybackRates { get; set; }
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[iOS (8,0)]
 	[BaseType (typeof(MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeShuffleModeCommand cannot be initialized externally.
@@ -1608,7 +1608,7 @@ namespace XamCore.MediaPlayer {
 		MPShuffleType CurrentShuffleType { get; set; }
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[iOS (8,0)]
 	[BaseType (typeof(MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeRepeatModeCommand cannot be initialized externally.
@@ -1618,7 +1618,7 @@ namespace XamCore.MediaPlayer {
 		MPRepeatType CurrentRepeatType { get; set; }
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[Since (7,1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPFeedbackCommands cannot be initialized externally.
@@ -1636,7 +1636,7 @@ namespace XamCore.MediaPlayer {
 		string LocalizedShortTitle { get; set; }
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[Since (7,1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRatingCommands cannot be initialized externally.
@@ -1649,7 +1649,7 @@ namespace XamCore.MediaPlayer {
 		float MinimumRating { get; set; } /* float, not CGFloat */
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[Since (7,1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPSkipIntervalCommands cannot be initialized externally.
@@ -1662,12 +1662,12 @@ namespace XamCore.MediaPlayer {
 		NSArray _PreferredIntervals { get; set; }
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[Since (7,1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MPRemoteCommandCenter {
-
+		[Mac (10,12,2, onlyOn64: true)]
 		[Static]
 		[Export ("sharedCommandCenter")]
 		MPRemoteCommandCenter Shared { get; }
@@ -1738,7 +1738,7 @@ namespace XamCore.MediaPlayer {
 		MPChangePlaybackPositionCommand ChangePlaybackPositionCommand { get; }
 	}
 	
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[Since (7,1)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRemoteCommandEvents cannot be initialized externally.
@@ -1751,7 +1751,7 @@ namespace XamCore.MediaPlayer {
 		double /* NSTimeInterval */ Timestamp { get; }
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[Since (7,1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangePlaybackRateCommandEvents cannot be initialized externally.
@@ -1761,7 +1761,7 @@ namespace XamCore.MediaPlayer {
 		float PlaybackRate { get; } // float, not CGFloat
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[Since (7,1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPRatingCommandEvents cannot be initialized externally.
@@ -1771,7 +1771,7 @@ namespace XamCore.MediaPlayer {
 		float Rating { get; } // float, not CGFloat
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[Since (7,1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // Name: NSGenericException Reason: MPSeekCommandEvents cannot be initialized externally.
@@ -1781,7 +1781,7 @@ namespace XamCore.MediaPlayer {
 		MPSeekCommandEventType Type { get; }
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[Since (7,1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPSkipIntervalCommandEvents cannot be initialized externally.
@@ -1791,7 +1791,7 @@ namespace XamCore.MediaPlayer {
 		double /* NSTimeInterval */ Interval { get; }
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[Since (7,1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor]
@@ -1801,7 +1801,7 @@ namespace XamCore.MediaPlayer {
 		bool Negative { [Bind ("isNegative")] get; }
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[iOS (9,0)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeLanguageOptionCommandEvents cannot be initialized externally.
@@ -1815,7 +1815,7 @@ namespace XamCore.MediaPlayer {
 		MPChangeLanguageOptionSetting Setting { get; }
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[iOS (8,0)]
 	[BaseType (typeof(MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeShuffleModeCommandEvent cannot be initialized externally.
@@ -1830,7 +1830,7 @@ namespace XamCore.MediaPlayer {
 		bool PreservesShuffleMode { get; }
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[iOS (8,0)]
 	[BaseType (typeof(MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // NSGenericException Reason: MPChangeRepeatModeCommandEvent cannot be initialized externally.
@@ -1845,7 +1845,7 @@ namespace XamCore.MediaPlayer {
 		bool PreservesRepeatMode { get; }
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // pre-emptive
@@ -1878,7 +1878,7 @@ namespace XamCore.MediaPlayer {
 		bool IsAutomaticAudibleLanguageOption { get; }
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // pre-emptive
@@ -1896,7 +1896,7 @@ namespace XamCore.MediaPlayer {
 		bool AllowEmptySelection { get; }
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[iOS (9,0)]
 	[Static]
 	// not [Internal] since they are exposed as an NSString[] property in MPNowPlayingInfoLanguageOption
@@ -1932,14 +1932,14 @@ namespace XamCore.MediaPlayer {
 		NSString VoiceOverTranslation { get; }
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[iOS (9,1)]
 	[BaseType (typeof (MPRemoteCommand))]
 	[DisableDefaultCtor] // Objective-C exception thrown.  Name: NSGenericException Reason: MPChangePlaybackPositionCommands cannot be initialized externally.
 	interface MPChangePlaybackPositionCommand {
 	}
 
-	[Mac (10,12,2)]
+	[Mac (10,12,2, onlyOn64: true)]
 	[iOS (9,1)]
 	[BaseType (typeof (MPRemoteCommandEvent))]
 	[DisableDefaultCtor] // Objective-C exception thrown.  Name: NSGenericException Reason: MPChangePlaybackPositionCommandEvents cannot be initialized externally.
@@ -2023,4 +2023,5 @@ namespace XamCore.MediaPlayer {
 		[Export ("setEndTime:forItemWithStoreID:")]
 		void SetEndTime (double endTime, string storeID);
 	}
+#endif
 }
