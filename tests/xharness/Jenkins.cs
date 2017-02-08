@@ -2569,6 +2569,8 @@ function oninitialload ()
 						};
 						additional_runner = todayRunner;
 						await todayRunner.RunAsync ();
+						foreach (var log in todayRunner.Logs.Where ((v) => !v.Description.StartsWith ("Extension ")))
+						         log.Description = "Extension " + log.Description[0].ToString ().ToLower () + log.Description.Substring (1);
 						ExecutionResult = todayRunner.Result;
 
 						if (!string.IsNullOrEmpty (todayRunner.FailureMessage))
