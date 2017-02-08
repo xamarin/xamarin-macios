@@ -786,6 +786,20 @@ namespace xharness
 								}
 							}
 							break;
+						case "/runfailed":
+							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
+							using (var writer = new StreamWriter (response.OutputStream)) {
+								foreach (var task in allTasks.Where ((v) => v.Failed)) {
+									if (task.InProgress || task.Waiting) {
+										writer.WriteLine ($"Test '{task.TestName}' is already executing.");
+									} else {
+										task.Reset ();
+										task.RunAsync ();
+										writer.WriteLine ($"Started '{task.TestName}'.");
+									}
+								}
+							}
+							break;
 						case "/runtest":
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
 							using (var writer = new StreamWriter (response.OutputStream)) {
@@ -1035,13 +1049,15 @@ namespace xharness
 }
 
 #nav ul {
-	background: #fff;
+	background: #ffffff;
 	list-style: none;
 	position: absolute;
 	left: -9999px;
 	padding: 10px;
 	z-index: 2;
 	width: 200px;
+	border-style: ridge;
+	border-width: thin;
 }
 
 #nav li {
@@ -1051,7 +1067,6 @@ namespace xharness
 #nav a {
 	display: block;
 	padding: 5px;
-	background: #666;
 	text-decoration: none;
 }
 #nav a:hover {
@@ -1069,7 +1084,6 @@ namespace xharness
 	left: 0;
 }
 #nav li:hover a {
-	background: #666;
 	text-decoration: underline;
 }
 #nav li:hover ul a { 
@@ -1271,7 +1285,13 @@ function oninitialload ()
 				if (allTasks.Count == 0) {
 					writer.Write ($"<h2 style='color: {headerColor}'>Loading tests...");
 				} else if (unfinishedTests.Any ()) {
-					writer.Write ($"<h2 style='color: {headerColor}'>Test run in progress ({failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed, {unfinishedTests.Count ()} tests left)");
+					writer.Write ($"<h2>Test run in progress (");
+					var list = new List<string> ();
+					var grouped = allTasks.GroupBy ((v) => v.ExecutionResult).OrderBy ((v) => (int) v.Key);
+					foreach (var @group in grouped)
+						list.Add ($"<span style='color: {GetTestColor (@group)}'>{@group.Key.ToString ()}: {@group.Count ()}</span>");
+					writer.Write (string.Join (", ", list));
+					writer.Write (")");
 				} else if (failedTests.Any ()) {
 					writer.Write ($"<h2 style='color: {headerColor}'>{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed.");
 				} else {
@@ -1309,6 +1329,7 @@ function oninitialload ()
 		<ul>
 			<li class=""adminitem""><a href='javascript:runalltests ();'>All tests</a></li>
 			<li class=""adminitem""><a href='javascript:sendrequest (""runselected"");'>All selected tests</a></li>
+			<li class=""adminitem""><a href='javascript:sendrequest (""runfailed"");'>All failed tests</a></li>
 		</ul>
 	</li>
 </ul>");
