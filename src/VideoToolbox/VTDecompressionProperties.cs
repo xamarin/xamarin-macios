@@ -17,14 +17,14 @@ using XamCore.CoreVideo;
 
 namespace XamCore.VideoToolbox {
 	public partial class VTDecompressionProperties {
-		[Mac (10,8), iOS (8,0)]
+		[Mac (10,8), iOS (8,0), TV (10,2)]
 		public CVPixelBufferPool PixelBufferPool {
 			get {
 				return GetNativeValue<CVPixelBufferPool> (VTDecompressionPropertyKey.PixelBufferPool);
 			}
 		}
 
-		[Mac (10,8), iOS (8,0)]
+		[Mac (10,8), iOS (8,0), TV (10,2)]
 		public VTFieldMode FieldMode { 
 			get {
 				var key = GetNSStringValue (VTDecompressionPropertyKey.FieldMode);
@@ -67,7 +67,7 @@ namespace XamCore.VideoToolbox {
 			}
 		}
 
-		[Mac (10,8), iOS (8,0)]
+		[Mac (10,8), iOS (8,0), TV (10,2)]
 		public VTDeinterlaceMode DeinterlaceMode { 
 			get {
 				var key = GetNSStringValue (VTDecompressionPropertyKey.DeinterlaceMode);
@@ -95,7 +95,7 @@ namespace XamCore.VideoToolbox {
 			}
 		}
 
-		[Mac (10,8), iOS (8,0)]
+		[Mac (10,8), iOS (8,0), TV (10,2)]
 		public VTOnlyTheseFrames OnlyTheseFrames { 
 			get {
 				var key = GetNSStringValue (VTDecompressionPropertyKey.OnlyTheseFrames);
