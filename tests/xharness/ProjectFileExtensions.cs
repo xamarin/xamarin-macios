@@ -228,7 +228,7 @@ namespace xharness
 			}
 		}
 
-		public static void AddCompileInclude (this XmlDocument csproj, string link, string include)
+		public static void AddCompileInclude (this XmlDocument csproj, string link, string include, bool prepend = false)
 		{
 			var compile_node = csproj.SelectSingleNode ("//*[local-name() = 'Compile']");
 			var item_group = compile_node.ParentNode;
@@ -240,7 +240,10 @@ namespace xharness
 			var linkElement = csproj.CreateElement ("Link", MSBuild_Namespace);
 			linkElement.InnerText = link;
 			node.AppendChild (linkElement);
-			item_group.AppendChild (node);
+			if (prepend)
+				item_group.PrependChild (node);
+			else 
+				item_group.AppendChild (node);
 		}
 
 		public static void FixCompileInclude (this XmlDocument csproj, string include, string newInclude)
