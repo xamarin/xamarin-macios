@@ -18,7 +18,7 @@ using XamCore.CoreVideo;
 namespace XamCore.VideoToolbox {
 
 	public partial class VTPropertyOptions {
-		[Mac (10,8), iOS (8,0)]
+		[Mac (10,8), iOS (8,0), TV (10,2)]
 		public VTPropertyType Type { 
 			get {
 				var key = GetNSStringValue (VTPropertyKeys.Type);
@@ -51,7 +51,7 @@ namespace XamCore.VideoToolbox {
 			}
 		}
 
-		[Mac (10,8), iOS (8,0)]
+		[Mac (10,8), iOS (8,0), TV (10,2)]
 		public VTReadWriteStatus ReadWriteStatus { 
 			get {
 				var key = GetNSStringValue (VTPropertyKeys.ReadWriteStatus);

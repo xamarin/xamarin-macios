@@ -17,7 +17,7 @@ using XamCore.CoreVideo;
 
 namespace XamCore.VideoToolbox {
 	public partial class VTCompressionProperties {
-		[Mac (10,8), iOS (8,0)]
+		[Mac (10,8), iOS (8,0), TV (10,2)]
 		public VTProfileLevel ProfileLevel {
 			get {
 				var key = GetNSStringValue (VTCompressionPropertyKey.ProfileLevel);
@@ -275,7 +275,7 @@ namespace XamCore.VideoToolbox {
 			}
 		}
 
-		[Mac (10,9), iOS (8,0)]
+		[Mac (10,9), iOS (8,0), TV (10, 2)]
 		public VTH264EntropyMode H264EntropyMode { 
 			get {
 				var key = GetNSStringValue (VTCompressionPropertyKey.H264EntropyMode);
@@ -303,7 +303,7 @@ namespace XamCore.VideoToolbox {
 			}
 		}
 
-		[Mac (10,8), iOS (8,0)]
+		[Mac (10,8), iOS (8,0), TV (10,2)]
 		public List<VTDataRateLimit> DataRateLimits { 
 			get { 
 				using (var arr = GetNativeValue <NSArray> (VTCompressionPropertyKey.DataRateLimits)) {
@@ -340,7 +340,7 @@ namespace XamCore.VideoToolbox {
 			}
 		}
 
-		[Mac (10,8), iOS (8,0)]
+		[Mac (10,8), iOS (8,0), TV (10,2)]
 		public VTFieldDetail FieldDetail { 
 			get {
 				var key = GetNSStringValue (VTCompressionPropertyKey.FieldDetail);
@@ -378,7 +378,7 @@ namespace XamCore.VideoToolbox {
 			}
 		}
 #if XAMCORE_2_0
-		[Mac (10,8), iOS (8,0)]
+		[Mac (10,8), iOS (8,0), TV (10,2)]
 		public VTColorPrimaries ColorPrimaries { 
 			get {
 				var key = GetNSStringValue (VTCompressionPropertyKey.ColorPrimaries);
@@ -417,7 +417,7 @@ namespace XamCore.VideoToolbox {
 		}
 #endif
 
-		[Mac (10,8), iOS (8,0)]
+		[Mac (10,8), iOS (8,0), TV (10,2)]
 		public VTTransferFunction TransferFunction { 
 			get {
 				var key = GetNSStringValue (VTCompressionPropertyKey.TransferFunction);
@@ -450,7 +450,7 @@ namespace XamCore.VideoToolbox {
 			}
 		}
 
-		[Mac (10,8), iOS (8,0)]
+		[Mac (10,8), iOS (8,0), TV (10,2)]
 		public VTYCbCrMatrix YCbCrMatrix { 
 			get {
 				var key = GetNSStringValue (VTCompressionPropertyKey.YCbCrMatrix);
@@ -483,7 +483,7 @@ namespace XamCore.VideoToolbox {
 			}
 		}
 
-		[Mac (10,8), iOS (8,0)]
+		[Mac (10,8), iOS (8,0), TV (10,2)]
 		public VTMultiPassStorage MultiPassStorage {
 			get	{
 				return GetNativeValue<VTMultiPassStorage> (VTCompressionPropertyKey.MultiPassStorage);
