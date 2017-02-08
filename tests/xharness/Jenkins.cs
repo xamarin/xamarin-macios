@@ -1375,8 +1375,7 @@ function oninitialload ()
 					if (resources.Any ()) {
 						writer.WriteLine ($"<h3>Devices:</h3>");
 						foreach (var dr in resources.OrderBy ((v) => v.Description, StringComparer.OrdinalIgnoreCase)) {
-							var plural = dr.Users != 1 ? "s" : string.Empty;
-							writer.WriteLine ($"{dr.Description} - {dr.Users} user{plural} - {dr.QueuedUsers} in queue<br />");
+							writer.WriteLine ($"{dr.Description} - {dr.Users}/{dr.MaxConcurrentUsers} users - {dr.QueuedUsers} in queue<br />");
 						}
 					}
 				}
@@ -2788,6 +2787,14 @@ function oninitialload ()
 
 		public int Users => users;
 		public int QueuedUsers => queue.Count + exclusive_queue.Count;
+		public int MaxConcurrentUsers {
+			get {
+				return max_concurrent_users;
+			}
+			set {
+				max_concurrent_users = value;
+			}
+		}
 
 		public Resource (string name, int max_concurrent_users = 1, string description = null)
 		{
