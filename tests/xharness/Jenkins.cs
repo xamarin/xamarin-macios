@@ -1501,7 +1501,7 @@ function oninitialload ()
 										log_target = "_self";
 										break;
 									}
-									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", System.Web.HttpUtility.UrlPathEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
+									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
 									if (log.Description == "Test log" || log.Description == "Execution log") {
 										var summary = string.Empty;
 										var fails = new List<string> ();
@@ -1565,6 +1565,11 @@ function oninitialload ()
 				writer.WriteLine ("</body>");
 				writer.WriteLine ("</html>");
 			}
+		}
+
+		static string LinkEncode (string path)
+		{
+			return System.Web.HttpUtility.UrlEncode (path).Replace ("%2f", "/").Replace ("+", "%20");
 		}
 
 		string RenderTextStates (IEnumerable<TestTask> tests)
