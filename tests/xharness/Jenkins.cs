@@ -1893,7 +1893,13 @@ function oninitialload ()
 			get { return Platform.ToString (); }
 			set { throw new NotSupportedException (); }
 		}
-}
+
+		public virtual Task CleanAsync ()
+		{
+			Console.WriteLine ("Clean is not implemented for {0}", GetType ().Name);
+			return Task.CompletedTask;
+		}
+	}
 
 	class MdtoolTask : BuildToolTask
 	{
@@ -2011,6 +2017,40 @@ function oninitialload ()
 					}
 					Jenkins.MainLog.WriteLine ("Built {0} ({1})", TestName, Mode);
 				}
+			}
+		}
+
+		public async override Task CleanAsync ()
+		{
+			// Don't require the desktop resource here, this shouldn't be that resource sensitive
+			using (var xbuild = new Process ()) {
+				xbuild.StartInfo.FileName = "xbuild";
+				var args = new StringBuilder ();
+				args.Append ("/verbosity:diagnostic ");
+				if (SpecifyPlatform)
+					args.Append ($"/p:Platform={ProjectPlatform} ");
+				if (SpecifyConfiguration)
+					args.Append ($"/p:Configuration={ProjectConfiguration} ");
+				args.Append (Harness.Quote (ProjectFile)).Append (" ");
+				args.Append ("/t:Clean ");
+				xbuild.StartInfo.Arguments = args.ToString ();
+				Jenkins.MainLog.WriteLine ("Cleaning {0} ({1})", TestName, Mode);
+				SetEnvironmentVariables (xbuild);
+				var log = Logs.CreateStream (LogDirectory, $"clean-{Platform}-{Timestamp}.txt", "Clean log");
+				foreach (string key in xbuild.StartInfo.EnvironmentVariables.Keys)
+					log.WriteLine ("{0}={1}", key, xbuild.StartInfo.EnvironmentVariables [key]);
+				log.WriteLine ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
+				var timeout = TimeSpan.FromMinutes (1);
+				var result = await xbuild.RunAsync (log, true, timeout);
+				if (result.TimedOut) {
+					ExecutionResult = TestExecutingResult.TimedOut;
+					log.WriteLine ("Clean timed out after {0} seconds.", timeout.TotalSeconds);
+				} else if (result.Succeeded) {
+					ExecutionResult = TestExecutingResult.Succeeded;
+				} else {
+					ExecutionResult = TestExecutingResult.Failed;
+				}
+				Jenkins.MainLog.WriteLine ("Cleaned {0} ({1})", TestName, Mode);
 			}
 		}
 	}
@@ -2532,6 +2572,8 @@ function oninitialload ()
 					} else {
 						ExecutionResult = runner.Result;
 					}
+
+					await BuildTask.CleanAsync ();
 				} finally {
 					// Uninstall again, so that we don't leave junk behind and fill up the device.
 					runner.MainLog = uninstall_log;
