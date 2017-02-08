@@ -34,7 +34,9 @@ namespace MonoTouchFixtures.Contacts {
 			TestRuntime.AssertXcodeVersion (7, 0);
 		}
 
+#if !MONOMAC // Unlike XI, XM does not have infrastructure yet to disable prompts
 		[Test]
+#endif
 		public void GetUnifiedContacts ()
 		{
 			string identifier = null;
