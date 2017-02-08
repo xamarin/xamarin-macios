@@ -2503,6 +2503,9 @@ function oninitialload ()
 					runner.MainLog = Logs.CreateStream (LogDirectory, $"run-{Device.UDID}-{Timestamp}.log", "Run log");
 					await runner.RunAsync ();
 
+					if (!string.IsNullOrEmpty (runner.FailureMessage))
+						FailureMessage = runner.FailureMessage;
+
 					if (runner.Result == TestExecutingResult.Succeeded && Platform == TestPlatform.iOS_TodayExtension64) {
 						// For the today extension, the main app is just a single test.
 						// This is because running the today extension will not wake up the device,
@@ -2523,6 +2526,9 @@ function oninitialload ()
 						additional_runner = todayRunner;
 						await todayRunner.RunAsync ();
 						ExecutionResult = todayRunner.Result;
+
+						if (!string.IsNullOrEmpty (todayRunner.FailureMessage))
+							FailureMessage = todayRunner.FailureMessage;
 					} else {
 						ExecutionResult = runner.Result;
 					}
