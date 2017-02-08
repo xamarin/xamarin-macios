@@ -671,6 +671,8 @@ namespace xharness
 							using (var writer = new StreamWriter (response.OutputStream)) {
 								foreach (var task in allTasks) {
 									bool? is_match = null;
+									if (!(task.Ignored || task.NotStarted))
+										continue;
 									switch (request.Url.Query) {
 									case "?all":
 										is_match = true;
