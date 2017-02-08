@@ -651,6 +651,15 @@ namespace xharness
 					var response = context.Response;
 					var arguments = System.Web.HttpUtility.ParseQueryString (request.Url.Query);
 					try {
+						var allTasks = Tasks.SelectMany ((v) =>
+						{
+							var rv = new List<TestTask> ();
+							var runsim = v as AggregatedRunSimulatorTask;
+							if (runsim != null)
+								rv.AddRange (runsim.Tasks);
+							rv.Add (v);
+							return rv;
+						});
 						switch (request.Url.LocalPath) {
 						case "/":
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Html;
@@ -660,15 +669,6 @@ namespace xharness
 						case "/deselect":
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
 							using (var writer = new StreamWriter (response.OutputStream)) {
-								var allTasks = Tasks.SelectMany ((v) =>
-								{
-									var rv = new List<TestTask> ();
-									var runsim = v as AggregatedRunSimulatorTask;
-									if (runsim != null)
-										rv.AddRange (runsim.Tasks);
-									rv.Add (v);
-									return rv;
-								});
 								foreach (var task in allTasks) {
 									bool? is_match = null;
 									switch (request.Url.Query) {
@@ -772,15 +772,6 @@ namespace xharness
 						case "/runselected":
 							response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
 							using (var writer = new StreamWriter (response.OutputStream)) {
-								var allTasks = Tasks.SelectMany ((v) =>
-								{
-									var rv = new List<TestTask> ();
-									var runsim = v as AggregatedRunSimulatorTask;
-									if (runsim != null)
-										rv.AddRange (runsim.Tasks);
-									rv.Add (v);
-									return rv;
-								});
 								// We want to randomize the order the tests are added, so that we don't build first the test for one device, 
 								// then for another, since that would not take advantage of running tests on several devices in parallel.
 								var rnd = new Random ((int) DateTime.Now.Ticks);
