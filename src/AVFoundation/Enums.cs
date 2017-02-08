@@ -576,7 +576,10 @@ namespace XamCore.AVFoundation {
 		Off, Standard, Cinematic, Auto = -1
 	}
 
-	[NoTV, NoMac, NoWatch, iOS (8,0)]
+#if XAMCORE_4_0
+	[NoMac]
+#endif
+	[NoTV, NoWatch, iOS (8,0)]
 	[Native]
 	public enum AVCaptureAutoFocusSystem : nint {
 		None,

@@ -22992,7 +22992,9 @@ namespace XamCore.AppKit {
 		bool IsAccessibilitySelectorAllowed (Selector selector);
 
 		[Mac (10, 12)]
+#if XAMCORE_4_0
 		[Abstract]
+#endif
 		[Export ("accessibilityRequired")]
 		bool AccessibilityRequired { [Bind ("isAccessibilityRequired")] get; set; }
 
