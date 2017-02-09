@@ -65,8 +65,11 @@ namespace Xamarin.iOS.Tasks
 				coreFiles = GetCoreAppFiles (platform, config, extensionName + ".dll", Path.GetFileNameWithoutExtension (extensionPath));
 			} else {
 				basedirs.Add (AppBundlePath);
-				if (platform == "iPhone")
+				if (platform == "iPhone") {
 					basedirs.Add (Path.Combine (AppBundlePath, ".monotouch-32"));
+					basedirs.Add (Path.Combine (AppBundlePath, "Frameworks", "Xamarin.Sdk.framework", "MonoBundle"));
+					basedirs.Add (Path.Combine (AppBundlePath, "Frameworks", "Xamarin.Sdk.framework", "MonoBundle", ".monotouch-32"));
+				}
 				coreFiles = GetCoreAppFiles (platform, config, hostAppName + ".exe", hostAppName);
 			}
 			TestFilesExists (basedirs.ToArray (), coreFiles);
