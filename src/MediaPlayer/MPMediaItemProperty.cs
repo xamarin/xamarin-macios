@@ -6,7 +6,7 @@
 // Copyright 2011-2015 Xamarin, Inc.
 //
 
-#if !XAMCORE_2_0
+#if !XAMCORE_2_0 && !MONOMAC
 
 using System;
 using System.Runtime.InteropServices;

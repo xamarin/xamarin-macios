@@ -13,7 +13,7 @@ using XamCore.Foundation;
 using XamCore.ObjCRuntime;
 
 namespace XamCore.MediaPlayer {
-
+#if XAMCORE_2_0 || !MONOMAC
 	// NSInteger -> MPMoviePlayerController.h
 	[Native]
 	[NoMac]
@@ -338,5 +338,5 @@ namespace XamCore.MediaPlayer {
 		Stopped,
 		Interrupted,
 	}
-
+#endif
 }
