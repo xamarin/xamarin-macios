@@ -1522,7 +1522,9 @@ function oninitialload ()
 										try {
 											using (var reader = log.GetReader ()) {
 												while (!reader.EndOfStream) {
-													string line = reader.ReadLine ().Trim ();
+													string line = reader.ReadLine ()?.Trim ();
+													if (line == null)
+														continue;
 													if (line.StartsWith ("Tests run:", StringComparison.Ordinal)) {
 														summary = line;
 													} else if (line.StartsWith ("[FAIL]", StringComparison.Ordinal)) {
@@ -1547,6 +1549,8 @@ function oninitialload ()
 											using (var reader = log.GetReader ()) {
 												while (!reader.EndOfStream) {
 													string line = reader.ReadLine ()?.Trim ();
+													if (line == null)
+														continue;
 													// Sometimes we put error messages in pull request descriptions
 													// Then Jenkins create environment variables containing the pull request descriptions (and other pull request data)
 													// So exclude any lines matching 'ghprbPull', to avoid reporting those environment variables as build errors.
