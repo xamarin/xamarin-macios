@@ -621,7 +621,7 @@ namespace XamCore.AudioUnit
 				throw new ArgumentNullException ("sourceAudioUnit");
 
 			var auc = new AudioUnitConnection {
-				SourceAudioUnit = sourceAudioUnit.handle,
+				SourceAudioUnit = sourceAudioUnit == null ? IntPtr.Zero : sourceAudioUnit.handle,
 				SourceOutputNumber = sourceOutputNumber,
 				DestInputNumber = destInputNumber
 			};
