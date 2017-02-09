@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyTVApp", "MyTVApp.csproj", "{7BF755AC-EADC-4353-A0CC-4F3AB61681FF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyTVServicesExtension", "..\MyTVServicesExtension\MyTVServicesExtension.csproj", "{0F124570-8B79-4593-B618-A90E51F339DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|iPhoneSimulator = Debug|iPhoneSimulator
@@ -19,6 +21,14 @@ Global
 		{7BF755AC-EADC-4353-A0CC-4F3AB61681FF}.Release|iPhone.Build.0 = Release|iPhone
 		{7BF755AC-EADC-4353-A0CC-4F3AB61681FF}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
 		{7BF755AC-EADC-4353-A0CC-4F3AB61681FF}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{0F124570-8B79-4593-B618-A90E51F339DF}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{0F124570-8B79-4593-B618-A90E51F339DF}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{0F124570-8B79-4593-B618-A90E51F339DF}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{0F124570-8B79-4593-B618-A90E51F339DF}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{0F124570-8B79-4593-B618-A90E51F339DF}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{0F124570-8B79-4593-B618-A90E51F339DF}.Debug|iPhone.Build.0 = Debug|iPhone
+		{0F124570-8B79-4593-B618-A90E51F339DF}.Release|iPhone.ActiveCfg = Release|iPhone
+		{0F124570-8B79-4593-B618-A90E51F339DF}.Release|iPhone.Build.0 = Release|iPhone
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = MyTVApp.csproj
