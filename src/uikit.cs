@@ -11487,11 +11487,11 @@ namespace XamCore.UIKit {
 		[Export ("tableView:canMoveRowAtIndexPath:")]
 		bool CanMoveRow (UITableView tableView, NSIndexPath indexPath);
 
-		[NoTV]
+		[TV (10,2)]
 		[Export ("sectionIndexTitlesForTableView:")]
 		string [] SectionIndexTitles (UITableView tableView);
 
-		[NoTV]
+		[TV (10,2)]
 		[Export ("tableView:sectionForSectionIndexTitle:atIndex:")]
 		nint SectionFor (UITableView tableView, string title, nint atIndex);
 
