@@ -4,6 +4,7 @@ using TVServices;
 
 namespace MyTVServicesExtension
 {
+	[Register ("ServiceProvider")]
 	public class ServiceProvider : NSObject, ITVTopShelfProvider
 	{
 		protected ServiceProvider (IntPtr handle) : base (handle)
@@ -13,12 +14,16 @@ namespace MyTVServicesExtension
 
 		public TVContentItem [] TopShelfItems {
 			[Export ("topShelfItems")]
-			get;
+			get {
+				return new TVContentItem [] { new TVContentItem (new TVContentIdentifier ("identifier", null)) { Title = "title" } };
+			}
 		}
 
 		public TVTopShelfContentStyle TopShelfStyle {
 			[Export ("topShelfStyle")]
-			get;
+			get {
+				return TVTopShelfContentStyle.Inset;
+			}
 		}
 	}
 }
