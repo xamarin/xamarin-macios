@@ -177,6 +177,7 @@ namespace Introspection
 			"Geocoder",
 			"Gigapascals",
 			"Gpp",
+			"Gpu",	// acronym for Graphics Processing Unit
 			"Grbg", // acronym for Green-Red-Blue-Green
 			"Hdmi",
 			"Hdr",
