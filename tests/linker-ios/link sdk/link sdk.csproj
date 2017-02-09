@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhoneSimulator\$(Configuration)-unified</OutputPath>
-    <DefineConstants>__MOBILE__;__IOS__;DEBUG;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
     <MtouchExtraArgs>-v -v -xml=${ProjectDir}/extra-linker-defs.xml</MtouchExtraArgs>
     <MtouchArch>i386, x86_64</MtouchArch>
-    <DefineConstants>__MOBILE__;__IOS__;DO_NOT_REMOVE;;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DO_NOT_REMOVE;;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>True</DebugSymbols>
