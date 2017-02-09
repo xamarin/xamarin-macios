@@ -1859,7 +1859,7 @@ namespace XamCore.Intents {
 		[Export ("imageWithImageData:")]
 		INImage FromData (NSData imageData);
 
-		[Static]
+		[return: NullAllowed][Static]
 		[Export ("imageWithURL:")]
 		INImage FromUrl (NSUrl url);
 
