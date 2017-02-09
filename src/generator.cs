@@ -3096,15 +3096,19 @@ public partial class Generator : IMemberGatherer {
 
 				print ("namespace {0} {{", dictType.Namespace);
 				indent++;
+				PrintPlatformAttributes (dictType);
 				print ("public partial class {0} : DictionaryContainer {{", typeName);
 				indent++;
 				sw.WriteLine ("#if !COREBUILD");
 				print ("[Preserve (Conditional = true)]");
 				print ("public {0} () : base (new NSMutableDictionary ()) {{}}\n", typeName);
 				print ("[Preserve (Conditional = true)]");
-				print ("public {0} (NSDictionary dictionary) : base (dictionary) {{}}", typeName);
+				print ("public {0} (NSDictionary dictionary) : base (dictionary) {{}}\n", typeName);
 
 				foreach (var pi in dictType.GatherProperties ()){
+					if (pi.IsUnavailable ())
+						continue;
+					
 					string keyname;
 					object [] attrs = pi.GetCustomAttributes (typeof (ExportAttribute), true);
 					if (attrs.Length == 0)
@@ -3115,6 +3119,7 @@ public partial class Generator : IMemberGatherer {
 							keyname = keyContainerType + "." + keyname;
 					}
 
+					PrintPlatformAttributes (pi);
 					string modifier = pi.IsInternal () ? "internal" : "public";
 					
 					print (modifier + " {0}{1} {2} {{",
