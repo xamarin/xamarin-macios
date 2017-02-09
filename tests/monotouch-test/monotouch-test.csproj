@@ -748,7 +748,9 @@
     <BundleResource Include="xamvideotest.mp4" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Security\openssl_crt.der" />
+    <EmbeddedResource Include="Security\openssl_crt.der">
+        <LogicalName>monotouchtest.Security.openssl_crt.der</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="Assets.xcassets\AppIcons.appiconset\Contents.json" />

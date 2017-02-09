@@ -45,10 +45,18 @@
     <Compile Include="ResourcesTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Welcome.resx" />
-    <EmbeddedResource Include="Welcome.en-AU.resx" />
-    <EmbeddedResource Include="Welcome.es.resx" />
-    <EmbeddedResource Include="Welcome.de.resx" />
+    <EmbeddedResource Include="Welcome.resx">
+      <LogicalName>EmbeddedResources.Welcome.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Welcome.en-AU.resx">
+      <LogicalName>EmbeddedResources.Welcome.en-AU.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Welcome.es.resx">
+      <LogicalName>EmbeddedResources.Welcome.es.resources</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Welcome.de.resx">
+      <LogicalName>EmbeddedResources.Welcome.de.resources</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
