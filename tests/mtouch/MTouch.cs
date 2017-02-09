@@ -1049,6 +1049,7 @@ namespace Xamarin
 				tool.CreateTemporaryApp ();
 				tool.Linker = MTouchLinker.DontLink;
 				tool.Debug = true;
+				System.Threading.Thread.Sleep (1000); // HFS does not have sub-second timestamp resolution, so make sure the timestamps actually are different...
 				tool.AssertExecute (MTouchAction.BuildSim);
 				tool.AssertOutputPattern ("was built using fast-path for simulator"); // This is just to ensure we're actually testing fastsim. If this fails, modify the mtouch options to make this test use fastsim again.
 				Assert.That (File.GetLastWriteTimeUtc (tool.RootAssembly), Is.LessThan (File.GetLastWriteTimeUtc (tool.NativeExecutablePath)), "simlauncher timestamp");
