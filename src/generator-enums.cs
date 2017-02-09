@@ -35,7 +35,7 @@ public partial class Generator {
 
 	void CopyObsolete (ICustomAttributeProvider provider)
 	{
-		foreach (ObsoleteAttribute oa in provider.GetCustomAttributes (typeof (ObsoleteAttribute), false))
+		foreach (ObsoleteAttribute oa in AttributeManager.GetCustomAttributes (provider, typeof (ObsoleteAttribute), false))
 			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
 	}
 
@@ -44,10 +44,10 @@ public partial class Generator {
 	//	- call/emit PrintPlatformAttributes on the type
 	void GenerateEnum (Type type)
 	{
-		if (HasAttribute (type, typeof (FlagsAttribute)))
+		if (AttributeManager.HasAttribute (type, typeof (FlagsAttribute)))
 			print ("[Flags]");
 
-		var native = GetAttribute<NativeAttribute> (type);
+		var native = AttributeManager.GetCustomAttribute<NativeAttribute> (type);
 		if (native != null) {
 			if (String.IsNullOrEmpty (native.NativeName))
 				print ("[Native]");
@@ -70,7 +70,7 @@ public partial class Generator {
 			PrintPlatformAttributes (f);
 			CopyObsolete (f);
 			print ("{0} = {1},", f.Name, f.GetRawConstantValue ());
-			var fa = GetAttribute<FieldAttribute> (f);
+			var fa = AttributeManager.GetCustomAttribute<FieldAttribute> (f);
 			if (fa == null)
 				continue;
 			if (f.IsUnavailable ())
@@ -83,7 +83,7 @@ public partial class Generator {
 				fields.Add (f, fa);
 				unique_constants.Add (fa.SymbolName);
 			}
-			if (GetAttribute<DefaultEnumValueAttribute> (f) != null) {
+			if (AttributeManager.GetCustomAttribute<DefaultEnumValueAttribute> (f) != null) {
 				if (default_symbol != null)
 					throw new BindingException (1045, true, $"Only a single [DefaultEnumValue] attribute can be used inside enum {type.Name}.");
 				default_symbol = new Tuple<FieldInfo, FieldAttribute> (f, fa);
@@ -94,7 +94,7 @@ public partial class Generator {
 		unique_constants.Clear ();
 
 		var library_name = type.Namespace;
-		var error = GetAttribute<ErrorDomainAttribute> (type);
+		var error = AttributeManager.GetCustomAttribute<ErrorDomainAttribute> (type);
 		if ((fields.Count > 0) || (error != null)) {
 			print ("");
 			// the *Extensions has the same version requirement as the enum itself

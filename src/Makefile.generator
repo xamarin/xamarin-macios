@@ -4,6 +4,7 @@ GENERATOR_SOURCES =                                             \
 	$(TOP)/src/error.cs                                \
 	$(TOP)/src/generator.cs                            \
 	$(TOP)/src/generator-attributes.cs                 \
+	$(TOP)/src/generator-attribute-manager.cs          \
 	$(TOP)/src/generator-enums.cs                      \
 	$(TOP)/src/generator-filters.cs                    \
 	$(TOP)/src/generator-typemanager.cs                \

@@ -22,9 +22,9 @@ public partial class Generator {
 
 	public void GenerateFilter (Type type)
 	{
-		var is_abstract = HasAttribute (type, typeof (AbstractAttribute));
-		var filter = GetAttribute<CoreImageFilterAttribute> (type);
-		var base_type = GetAttribute<BaseTypeAttribute> (type);
+		var is_abstract = AttributeManager.HasAttribute (type, typeof (AbstractAttribute));
+		var filter = AttributeManager.GetCustomAttribute<CoreImageFilterAttribute> (type);
+		var base_type = AttributeManager.GetCustomAttribute<BaseTypeAttribute> (type);
 		var type_name = type.Name;
 		var native_name = base_type.Name ?? type_name;
 		var base_name = base_type.BaseType.Name;
@@ -120,7 +120,7 @@ public partial class Generator {
 			print ("public {0} {1} {{", ptype, p.Name);
 			indent++;
 
-			var name = GetAttribute<CoreImageFilterPropertyAttribute> (p)?.Name;
+			var name = AttributeManager.GetCustomAttribute<CoreImageFilterPropertyAttribute> (p)?.Name;
 			if (p.GetGetMethod () != null)
 				GenerateFilterGetter (ptype, name);
 			if (p.GetSetMethod () != null)
