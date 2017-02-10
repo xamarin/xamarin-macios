@@ -30,7 +30,7 @@ namespace MonoMac.Tuner {
 		{
 			// special processing on generated methods from NSObject-inherited types
 			// it would be too risky to apply on user-generated code
-			if (!method.HasBody || !method.IsGeneratedCode () || (!IsExtensionType && !IsExport (method)))
+			if (!method.HasBody || !method.IsGeneratedCode (LinkContext) || (!IsExtensionType && !IsExport (method)))
 				return;
 			
 			var instructions = method.Body.Instructions;

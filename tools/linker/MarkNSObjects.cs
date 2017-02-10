@@ -53,7 +53,7 @@ namespace Xamarin.Linker.Steps {
 			if (ProductAssembly == null)
 				ProductAssembly = (Profile.Current as BaseProfile).ProductAssembly;
 
-			bool nsobject = type.IsNSObject ();
+			bool nsobject = type.IsNSObject (LinkContext);
 			if (!nsobject && !type.IsNativeObject ())
 				return;
 
