@@ -1406,7 +1406,7 @@ namespace XamCore.MediaPlayer {
 		[Field ("MPNowPlayingInfoPropertyIsLiveStream")]
 		NSString PropertyIsLiveStream { get; }
 
-		[iOS (10,3)]
+		[iOS (10,3)][Mac (10, 12, 3)]
 		[Field ("MPNowPlayingInfoPropertyAssetURL")]
 		NSString PropertyAssetUrl { get; }
 	}

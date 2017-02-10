@@ -113,6 +113,15 @@ namespace XamCore.ModelIO {
 		[Wrap ("GetComponent (new Protocol (type))")]
 		IMDLComponent GetComponent (Type type);
 
+		[iOS (10,3), TV (10,2), Mac (10,12,4)]
+		[Export ("objectForKeyedSubscript:")]
+		[return: NullAllowed]
+		IMDLComponent GetObject (Protocol key);
+
+		[iOS (10,3), TV (10,2), Mac (10,12,4)]
+		[Export ("setObject:forKeyedSubscript:")]
+		void SetObject ([NullAllowed] IMDLComponent obj, Protocol key);
+
 		[iOS (10,0)]
 		[Mac (10,12)]
 		[TV (10,0)]
@@ -1088,6 +1097,15 @@ namespace XamCore.ModelIO {
 		[Static]
 		[Export ("objectWithSCNNode:bufferAllocator:")]
 		MDLObject FromNode (SCNNode node, [NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
+
+		[iOS (10,3), TV (10,2), Mac (10,12,4)]
+		[Export ("objectForKeyedSubscript:")]
+		[return: NullAllowed]
+		IMDLComponent GetObject (Protocol key);
+
+		[iOS (10,3), TV (10,2), Mac (10,12,4)]
+		[Export ("setObject:forKeyedSubscript:")]
+		void SetObject ([NullAllowed] IMDLComponent obj, Protocol key);
 	}
 
 	[iOS (9,0), Mac (10,11, onlyOn64 : true)]
