@@ -411,14 +411,6 @@ namespace XamCore.HomeKit {
 		[Field ("HMCharacteristicTypeImageMirroring")]
 		ImageMirroring,
 
-		[iOS (10,3), Watch (3,2), TV (10,2)]
-		[Field ("HMCharacteristicTypeLabelNamespace")]
-		LabelNamespace,
-
-		[iOS (10,3), Watch (3,2), TV (10,2)]
-		[Field ("HMCharacteristicTypeLabelIndex")]
-		LabelIndex,
-
 		[NoWatch]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeActive")]
@@ -557,6 +549,14 @@ namespace XamCore.HomeKit {
 		[iOS (9,0), Watch (2,0), TV (10,0)]
 		[Field ("HMCharacteristicTypeSecuritySystemAlarmType")]
 		SecuritySystemAlarmType,
+
+		[iOS (10,3), Watch (3,2), TV (10,2)]
+		[Field ("HMCharacteristicTypeLabelNamespace")]
+		LabelNamespace,
+
+		[iOS (10,3), Watch (3,2), TV (10,2)]
+		[Field ("HMCharacteristicTypeLabelIndex")]
+		LabelIndex,
 	}
 
 	// conveniance enum (ObjC uses NSString)
