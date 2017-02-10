@@ -1191,6 +1191,11 @@ public partial class Generator : IMemberGatherer {
 	static string GetBindAsExceptionString (string box, string retType, string containerType, string container, string memberName) => $"Could not {box} type {retType} from {containerType} {container} used on {memberName} member decorated with [BindAs].";
 	bool IsMemberInsideProtocol (Type type) => IsProtocol (type) || IsModel (type);
 
+	// Unfortunately because how we bootstrap our types on COREBUILD we get types duplicated in core and temp assemblies
+	// causing an equality mismatch (which is technicaly correct). Since this happens only when building X.I assembly
+	// we use strings for type checking instead since we know those types will end up merged in the final resulting assembly.
+	bool AreSameType (Type t1, Type t2) => BindThirdPartyLibrary ? t1 == t2 : t1.FullName == t2.FullName;
+
 	bool IsSmartEnum (Type type)
 	{
 		if (!type.IsEnum)
@@ -1269,11 +1274,11 @@ public partial class Generator : IMemberGatherer {
 		if (isNullable || !isValueType)
 			temp = string.Format ("{0} == null ? null : ", parameterName);
 
-		if (originalType == TypeManager.NSNumber) {
+		if (AreSameType (originalType, TypeManager.NSNumber)) {
 			var enumCast = isEnum ? $"(int)" : string.Empty;
 			temp = string.Format ("new NSNumber ({2}{1}{0});", denullify, parameterName, enumCast);
 		}
-		else if (originalType == TypeManager.NSValue) {
+		else if (AreSameType (originalType, TypeManager.NSValue)) {
 			var typeStr = string.Empty;
 			if (!NSValueCreateMap.TryGetValue (retType, out typeStr)) {
 				// HACK: These are problematic for X.M due to we do not ship System.Drawing for Full profile
@@ -1283,19 +1288,19 @@ public partial class Generator : IMemberGatherer {
 					throw new BindingException (1049, true, GetBindAsExceptionString ("box", retType.Name, originalType.Name, "container", minfo?.mi?.Name ?? pi?.Name));
 			}
 			temp = string.Format ("NSValue.From{0} ({2}{1});", typeStr, denullify, parameterName);
-		} else if (originalType == TypeManager.NSString && IsSmartEnum (retType)) {
+		} else if (AreSameType (originalType, TypeManager.NSString) && IsSmartEnum (retType)) {
 			temp = string.Format ("{1}{0}.GetConstant ();", denullify, parameterName);
 		} else if (originalType.IsArray) {
 			var arrType = originalType.GetElementType ();
 			var arrRetType = Nullable.GetUnderlyingType (retType.GetElementType ()) ?? retType.GetElementType ();
 			var valueConverter = string.Empty;
 
-			if (arrType == TypeManager.NSString)
+			if (AreSameType (arrType, TypeManager.NSString))
 				valueConverter = $"o{denullify}.GetConstant (), {parameterName});";
-			else if (arrType == TypeManager.NSNumber) {
+			else if (AreSameType (arrType, TypeManager.NSNumber)) {
 				var cast = arrRetType.IsEnum ? "(int)" : string.Empty;
 				valueConverter = $"new NSNumber ({cast}o{denullify}), {parameterName});";
-			} else if (arrType == TypeManager.NSValue) {
+			} else if (AreSameType (arrType, TypeManager.NSValue)) {
 				var typeStr = string.Empty;
 				if (!NSValueCreateMap.TryGetValue (arrRetType, out typeStr)) {
 					if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
@@ -1392,7 +1397,7 @@ public partial class Generator : IMemberGatherer {
 		var method = minfo.mi as MethodInfo;
 		var originalReturnType = method?.ReturnType ?? property?.PropertyType;
 
-		if (originalReturnType == TypeManager.NSNumber) {
+		if (AreSameType (originalReturnType, TypeManager.NSNumber)) {
 			if (!NSNumberReturnMap.TryGetValue (retType, out append)) {
 				if (retType.IsEnum) {
 					var enumType = Enum.GetUnderlyingType (retType);
@@ -1402,7 +1407,7 @@ public partial class Generator : IMemberGatherer {
 				else
 					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi.Name));
 			}
-		} else if (originalReturnType == TypeManager.NSValue) {
+		} else if (AreSameType (originalReturnType, TypeManager.NSValue)) {
 			if (!NSValueReturnMap.TryGetValue (retType, out append)) {
 				// HACK: These are problematic for X.M due to we do not ship System.Drawing for Full profile
 				if (retType.Name == "RectangleF" || retType.Name == "SizeF" || retType.Name == "PointF")
@@ -1410,20 +1415,20 @@ public partial class Generator : IMemberGatherer {
 				else
 					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi.Name));
 			}
-		} else if (originalReturnType == TypeManager.NSString && IsSmartEnum (retType)) {
+		} else if (AreSameType (originalReturnType, TypeManager.NSString) && IsSmartEnum (retType)) {
 			append = $"{FormatType (retType.DeclaringType, retType)}Extensions.GetValue (";
 		} else if (originalReturnType.IsArray) {
 			var arrType = originalReturnType.GetElementType ();
 			var arrRetType = Nullable.GetUnderlyingType (retType.GetElementType ()) ?? retType.GetElementType ();
 			var valueFetcher = string.Empty;
-			if (arrType == TypeManager.NSString)
+			if (AreSameType (arrType, TypeManager.NSString))
 				append = $"ptr => {{\n\tusing (var str = Runtime.GetNSObject<NSString> (ptr)) {{\n\t\treturn {FormatType (arrRetType.DeclaringType, arrRetType)}Extensions.GetValue (str);\n\t}}\n}}";
-			else if (arrType == TypeManager.NSNumber) {
+			else if (AreSameType (arrType, TypeManager.NSNumber)) {
 				if (NSNumberReturnMap.TryGetValue (arrRetType, out valueFetcher) || arrRetType.IsEnum)
 					append = string.Format ("ptr => {{\n\tusing (var num = Runtime.GetNSObject<NSNumber> (ptr)) {{\n\t\treturn ({1}) num{0};\n\t}}\n}}", arrRetType.IsEnum ? ".Int32Value" : valueFetcher, FormatType (arrRetType.DeclaringType, arrRetType));
 				else
 					throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, arrType.Name, "array", minfo.mi.Name));
-			} else if (arrType == TypeManager.NSValue) {
+			} else if (AreSameType (arrType, TypeManager.NSValue)) {
 				if (arrRetType.Name == "RectangleF" || arrRetType.Name == "SizeF" || arrRetType.Name == "PointF")
 					valueFetcher = $".{arrRetType.Name}Value";
 				else if (!NSValueReturnMap.TryGetValue (arrRetType, out valueFetcher))
