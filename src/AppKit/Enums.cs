@@ -2700,7 +2700,7 @@ namespace XamCore.AppKit {
 	}
 
 
-	[Mac (10,12,1)]
+	[Mac (10,12,2)]
 	[Native]
 	public enum NSTouchType : nint
 	{
@@ -2708,7 +2708,7 @@ namespace XamCore.AppKit {
 		Indirect
 	}
 
-	[Mac (10,12,1)]
+	[Mac (10,12,2)]
 	[Native]
 	[Flags]
 	public enum NSTouchTypeMask : nuint
@@ -2717,7 +2717,7 @@ namespace XamCore.AppKit {
 		Indirect = (1 << (int)NSTouchType.Indirect)
 	}
 
-	[Mac (10,12,1)]
+	[Mac (10,12,2)]
 	[Native]
 	public enum NSScrubberMode : nint
 	{
@@ -2725,7 +2725,7 @@ namespace XamCore.AppKit {
 		Free
 	}
 
-	[Mac (10,12,1)]
+	[Mac (10,12,2)]
 	[Native]
 	public enum NSScrubberAlignment : nint
 	{
