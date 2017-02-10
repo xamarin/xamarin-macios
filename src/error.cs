@@ -72,6 +72,7 @@ using ProductException=BindingException;
 //		BI1049 Could not unbox type {0} from {1} container used on {2} member decorated with [BindAs].
 //		BI1050 [BindAs] cannot be used inside Protocol or Model types. Type: {0}
 //		BI1051 Internal error: Don't know how to get attributes for {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.
+//		BI1052 Internal error: Could not find the type {0} in the assembly {1}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.
 //	BI11xx	warnings
 //		BI1101 Trying to use a string as a [Target]
 //		BI1102 Using the deprecated EventArgs for a delegate signature in {0}.{1}, please use DelegateName instead

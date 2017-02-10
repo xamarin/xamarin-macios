@@ -60,6 +60,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 using XamCore.CoreFoundation;
@@ -286,8 +287,33 @@ public static class TypeManager {
 	public static Type CoreGraphics_CGRect;
 	public static Type CoreGraphics_CGSize;
 
-	static TypeManager ()
+	static Assembly api_assembly;
+	static Assembly platform_assembly;
+
+	static Type Lookup (Assembly assembly, string @namespace, string @typename)
 	{
+		string fullname;
+		string nsManagerPrefix = BindingTouch.NamespacePlatformPrefix;
+		if (!string.IsNullOrEmpty (nsManagerPrefix))
+			nsManagerPrefix += ".";
+
+		if (string.IsNullOrEmpty (@namespace)) {
+			fullname = nsManagerPrefix + @typename;
+		} else {
+			fullname = nsManagerPrefix + @namespace + "." + @typename;
+		}
+
+		var rv = assembly.GetType (fullname);
+		if (rv == null)
+			throw new BindingException (1052, true, "Internal error: Could not find the type {0} in the assembly {1}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", fullname, assembly);
+		return rv;
+	}
+
+	public static void Initialize (Assembly api)
+	{
+		api_assembly = api;
+		platform_assembly = typeof (NSObject).Assembly;
+
 		/* corlib */
 		System_Attribute = typeof (System.Attribute);
 		System_Boolean = typeof (bool);
@@ -474,7 +500,7 @@ public static class TypeManager {
 	#if HAVE_AUDIOTOOLBOX_MUSICSEQUENCE
 		MusicSequence = typeof (MusicSequence);
 	#endif
-		NSNumber = typeof (NSNumber);
+		NSNumber = Lookup (BindingTouch.BindingThirdParty ? platform_assembly : api_assembly, "Foundation", "NSNumber");
 		NSRange = typeof (NSRange);
 		NSString = typeof (NSString);
 		NSValue = typeof (NSValue);
