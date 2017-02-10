@@ -503,7 +503,7 @@ public static class TypeManager {
 		NSNumber = Lookup (BindingTouch.BindingThirdParty ? platform_assembly : api_assembly, "Foundation", "NSNumber");
 		NSRange = typeof (NSRange);
 		NSString = typeof (NSString);
-		NSValue = typeof (NSValue);
+		NSValue = Lookup (BindingTouch.BindingThirdParty ? platform_assembly : api_assembly, "Foundation", "NSValue");
 		NSZone = typeof (NSZone);
 		SCNMatrix4 = typeof (SCNMatrix4);
 		SCNVector3 = typeof (SCNVector3);
