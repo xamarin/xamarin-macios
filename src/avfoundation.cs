@@ -7956,6 +7956,9 @@ namespace XamCore.AVFoundation {
 		void SetSampleBufferDelegateQueue ([NullAllowed] IAVCaptureVideoDataOutputSampleBufferDelegate sampleBufferDelegate, [NullAllowed] DispatchQueue sampleBufferCallbackQueue);
 
 		// 5.0 APIs
+#if XAMCORE_4_0
+		[BindAs (typeof (XamCore.CoreVideo.CVPixelFormatType []))]
+#endif
 		[Export ("availableVideoCVPixelFormatTypes")]
 		NSNumber [] AvailableVideoCVPixelFormatTypes { get;  }
 
@@ -8381,6 +8384,9 @@ namespace XamCore.AVFoundation {
 		[Export ("isStillImageStabilizationScene")]
 		bool IsStillImageStabilizationScene { get; }
 
+#if XAMCORE_4_0
+		[BindAs (typeof (AVCaptureFlashMode []))]
+#endif		
 		[Export ("supportedFlashModes")]
 		NSNumber[] SupportedFlashModes { get; }
 
