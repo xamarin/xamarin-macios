@@ -820,9 +820,12 @@ IMAGEKIT_CORE_SOURCES = \
 
 INTENTS_SOURCES = \
 	Intents/INCompat.cs \
+	Intents/INGetCarLockStatusIntentResponse.cs \
+	Intents/INGetCarPowerLevelStatusIntentResponse.cs \
 	Intents/INIntentResolutionResult.cs \
 	Intents/INPriceRange.cs \
 	Intents/INRideOption.cs \
+	Intents/INSetCarLockStatusIntent.cs \
 	Intents/INSetClimateSettingsInCarIntent.cs \
 	Intents/INSetDefrosterSettingsInCarIntent.cs \
 	Intents/INSetProfileInCarIntent.cs \
@@ -1665,6 +1668,7 @@ WATCHOS_FRAMEWORKS =        \
 	HealthKit               \
 	HomeKit                 \
 	ImageIO                 \
+	Intents                 \
 	MapKit                  \
 	MobileCoreServices      \
 	PassKit                 \

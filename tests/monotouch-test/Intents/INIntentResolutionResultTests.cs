@@ -8,7 +8,7 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !__WATCHOS__ && XAMCORE_2_0
+#if !__TVOS__ && XAMCORE_2_0
 
 using System;
 using NUnit.Framework;
@@ -25,7 +25,11 @@ namespace MonoTouchFixtures.Intents {
 		[SetUp]
 		public void Setup ()
 		{
+#if !__WATCHOS__
 			TestRuntime.AssertXcodeVersion (8, 0);
+#else
+			TestRuntime.AssertXcodeVersion (8, 3);
+#endif
 		}
 
 		[Test]
@@ -324,6 +328,7 @@ namespace MonoTouchFixtures.Intents {
 			}
 		}
 
+#if !__WATCHOS__
 		[Test]
 		public void INRestaurantGuestResolutionResultPropertyTest ()
 		{
@@ -355,6 +360,7 @@ namespace MonoTouchFixtures.Intents {
 				Assert.IsInstanceOfType (typeof (INRestaurantResolutionResult), unsupported, "Unsupported");
 			}
 		}
+#endif
 
 		[Test]
 		public void INSpeakableStringResolutionResultPropertyTest ()
