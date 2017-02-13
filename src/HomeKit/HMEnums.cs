@@ -411,137 +411,137 @@ namespace XamCore.HomeKit {
 		[Field ("HMCharacteristicTypeImageMirroring")]
 		ImageMirroring,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeActive")]
 		Active,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeCurrentAirPurifierState")]
 		CurrentAirPurifierState,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeTargetAirPurifierState")]
 		TargetAirPurifierState,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeCurrentFanState")]
 		CurrentFanState,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeCurrentHeaterCoolerState")]
 		CurrentHeaterCoolerState,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeCurrentHumidifierDehumidifierState")]
 		CurrentHumidifierDehumidifierState,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeCurrentSlatState")]
 		CurrentSlatState,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeWaterLevel")]
 		WaterLevel,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeFilterChangeIndication")]
 		FilterChangeIndication,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeFilterLifeLevel")]
 		FilterLifeLevel,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeFilterResetChangeIndication")]
 		FilterResetChangeIndication,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeLockPhysicalControls")]
 		LockPhysicalControls,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeSwingMode")]
 		SwingMode,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeTargetHeaterCoolerState")]
 		TargetHeaterCoolerState,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeTargetHumidifierDehumidifierState")]
 		TargetHumidifierDehumidifierState,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeTargetFanState")]
 		TargetFanState,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeSlatType")]
 		SlatType,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeCurrentTilt")]
 		CurrentTilt,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeTargetTilt")]
 		TargetTilt,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeOzoneDensity")]
 		OzoneDensity,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeNitrogenDioxideDensity")]
 		NitrogenDioxideDensity,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeSulphurDioxideDensity")]
 		SulphurDioxideDensity,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypePM2_5Density")]
 		PM2_5Density,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypePM10Density")]
 		PM10Density,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeVolatileOrganicCompoundDensity")]
 		VolatileOrganicCompoundDensity,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeDehumidifierThreshold")]
 		DehumidifierThreshold,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeHumidifierThreshold")]
 		HumidifierThreshold,
@@ -704,32 +704,32 @@ namespace XamCore.HomeKit {
 		[Field ("HMServiceTypeDoorbell")]
 		Doorbell,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMServiceTypeAirPurifier")]
 		AirPurifier,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMServiceTypeVentilationFan")]
 		VentilationFan,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMServiceTypeFilterMaintenance")]
 		FilterMaintenance,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMServiceTypeHeaterCooler")]
 		HeaterCooler,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMServiceTypeHumidifierDehumidifier")]
 		HumidifierDehumidifier,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMServiceTypeSlats")]
 		Slats,
@@ -1030,27 +1030,27 @@ namespace XamCore.HomeKit {
 		[Field ("HMAccessoryCategoryTypeVideoDoorbell")]
 		VideoDoorbell,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMAccessoryCategoryTypeAirPurifier")]
 		AirPurifier,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMAccessoryCategoryTypeAirHeater")]
 		AirHeater,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMAccessoryCategoryTypeAirConditioner")]
 		AirConditioner,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMAccessoryCategoryTypeAirHumidifier")]
 		AirHumidifier,
 
-		[NoWatch]
+		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMAccessoryCategoryTypeAirDehumidifier")]
 		AirDehumidifier,
@@ -1097,7 +1097,7 @@ namespace XamCore.HomeKit {
 		BidirectionalAudioAllowed = 3
 	}
 
-	[NoWatch]
+	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
 	public enum HMCharacteristicValueLockPhysicalControlsState : nint {
@@ -1105,7 +1105,7 @@ namespace XamCore.HomeKit {
 		Locked,
 	}
 
-	[NoWatch]
+	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
 	public enum HMCharacteristicValueCurrentAirPurifierState : nint {
@@ -1114,7 +1114,7 @@ namespace XamCore.HomeKit {
 		Active,
 	}
 
-	[NoWatch]
+	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
 	public enum HMCharacteristicValueTargetAirPurifierState : nint {
@@ -1122,7 +1122,7 @@ namespace XamCore.HomeKit {
 		Automatic,
 	}
 
-	[NoWatch]
+	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
 	public enum HMCharacteristicValueCurrentSlatState : nint {
@@ -1131,7 +1131,7 @@ namespace XamCore.HomeKit {
 		Oscillating,
 	}
 
-	[NoWatch]
+	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
 	public enum HMCharacteristicValueSlatType : nint {
@@ -1139,7 +1139,7 @@ namespace XamCore.HomeKit {
 		Vertical,
 	}
 
-	[NoWatch]
+	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
 	public enum HMCharacteristicValueFilterChange : nint {
@@ -1147,7 +1147,7 @@ namespace XamCore.HomeKit {
 		Needed,
 	}
 
-	[NoWatch]
+	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
 	public enum HMCharacteristicValueCurrentFanState : nint {
@@ -1156,7 +1156,7 @@ namespace XamCore.HomeKit {
 		Active,
 	}
 
-	[NoWatch]
+	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
 	public enum HMCharacteristicValueTargetFanState : nint {
@@ -1164,7 +1164,7 @@ namespace XamCore.HomeKit {
 		Automatic,
 	}
 
-	[NoWatch]
+	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
 	public enum HMCharacteristicValueCurrentHeaterCoolerState : nint {
@@ -1174,7 +1174,7 @@ namespace XamCore.HomeKit {
 		Cooling,
 	}
 
-	[NoWatch]
+	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
 	public enum HMCharacteristicValueTargetHeaterCoolerState : nint {
@@ -1183,7 +1183,7 @@ namespace XamCore.HomeKit {
 		Cool,
 	}
 
-	[NoWatch]
+	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
 	public enum HMCharacteristicValueCurrentHumidifierDehumidifierState : nint {
@@ -1193,7 +1193,7 @@ namespace XamCore.HomeKit {
 		Dehumidifying,
 	}
 
-	[NoWatch]
+	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
 	public enum HMCharacteristicValueTargetHumidifierDehumidifierState : nint {
@@ -1202,7 +1202,7 @@ namespace XamCore.HomeKit {
 		Dehumidify,
 	}
 
-	[NoWatch]
+	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
 	public enum HMCharacteristicValueSwingMode : nint {
@@ -1210,7 +1210,7 @@ namespace XamCore.HomeKit {
 		Enabled,
 	}
 
-	[NoWatch]
+	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
 	public enum HMCharacteristicValueActivationState : nint {
