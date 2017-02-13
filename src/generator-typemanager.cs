@@ -1,62 +1,4 @@
 
-#define HAVE_AVFOUNDATION
-#define HAVE_GAMEKIT
-#define HAVE_CORELOCATION
-#define HAVE_SCENEKIT
-
-#if IOS || TVOS || MONOMAC
-#define HAVE_AUDIOUNIT
-#define HAVE_COREANIMATION
-#define HAVE_COREMEDIA
-#define HAVE_COREVIDEO
-#define HAVE_MEDIATOOLBOX
-#define HAVE_SECURITY
-#define HAVE_AUDIOTOOLBOX
-#if IOS || TVOS
-#define HAVE_AUDIOTOOLBOX_MUSICSEQUENCE
-#endif
-#endif
-
-#if IOS || MONOMAC
-#define HAVE_COREMIDI
-#endif
-
-#if MONOMAC
-#define HAVE_APPKIT
-#define HAVE_CLOUDKIT
-#define HAVE_OPENGL
-#define HAVE_QTKIT
-#endif
-
-#if IOS || TVOS || WATCH
-#define HAVE_UIKIT
-#endif
-
-#if IOS || TVOS
-#define HAVE_PHOTOSUI
-#define HAVE_GLKIT
-#endif
-
-#if IOS
-#define HAVE_ADDRESSBOOK
-#define HAVE_ADDRESSBOOKUI
-#define HAVE_COREMOTION
-#define HAVE_EVENTKITUI
-#define HAVE_HEALTHKITUI
-#define HAVE_IAD
-#define HAVE_MAPKIT
-#define HAVE_MESSAGEUI
-#define HAVE_NEWSSTANDKIT
-#define HAVE_QUICKLOOK
-#define HAVE_TWITTER
-#endif
-
-#if IOS || TVOS || (XAMCORE_2_0 && MONOMAC)
-// ModelIO and Metal are 64-bit only, and not on watch
-#define HAVE_MODELIO
-#define HAVE_METAL
-#endif
-
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -68,48 +10,6 @@ using XamCore.CoreGraphics;
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
 using XamCore.Security;
-#if HAVE_SCENEKIT
-using XamCore.SceneKit;
-#endif
-#if HAVE_CORELOCATION
-using XamCore.CoreLocation;
-#endif
-#if HAVE_COREMEDIA
-using XamCore.CoreMedia;
-#endif
-#if HAVE_COREVIDEO
-using XamCore.CoreVideo;
-#endif
-#if HAVE_COREMIDI
-using XamCore.CoreMidi;
-#endif
-#if HAVE_AUDIOTOOLBOX
-using XamCore.AudioToolbox;
-#endif
-#if HAVE_AUDIOUNIT
-using XamCore.AudioUnit;
-#endif
-#if HAVE_AVFOUNDATION
-using XamCore.AVFoundation;
-#endif
-#if HAVE_UIKIT
-using XamCore.UIKit;
-#endif
-#if HAVE_MAPKIT
-using XamCore.MapKit;
-#endif
-#if HAVE_OPENGL
-using XamCore.OpenGL;
-#endif
-#if HAVE_COREANIMATION
-using XamCore.CoreAnimation;
-#endif
-#if HAVE_MEDIATOOLBOX
-using XamCore.MediaToolbox;
-#endif
-#if HAVE_ADDRESSBOOK
-using XamCore.AddressBook;
-#endif
 
 using DictionaryContainerType = XamCore.Foundation.DictionaryContainer;
 
@@ -288,9 +188,11 @@ public static class TypeManager {
 	public static Type CoreGraphics_CGSize;
 
 	static Assembly api_assembly;
+	// static Assembly corlib_assembly;
 	static Assembly platform_assembly;
+	// static Assembly binding_assembly;
 
-	static Type Lookup (Assembly assembly, string @namespace, string @typename)
+	static Type Lookup (Assembly assembly, string @namespace, string @typename, bool inexistentOK = false)
 	{
 		string fullname;
 		string nsManagerPrefix = BindingTouch.NamespacePlatformPrefix;
@@ -304,7 +206,7 @@ public static class TypeManager {
 		}
 
 		var rv = assembly.GetType (fullname);
-		if (rv == null)
+		if (rv == null && !inexistentOK)
 			throw new BindingException (1052, true, "Internal error: Could not find the type {0} in the assembly {1}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", fullname, assembly);
 		return rv;
 	}
@@ -312,7 +214,9 @@ public static class TypeManager {
 	public static void Initialize (Assembly api)
 	{
 		api_assembly = api;
+		// corlib_assembly = typeof (object).Assembly;
 		platform_assembly = typeof (NSObject).Assembly;
+		// binding_assembly = typeof (ProtocolizeAttribute).Assembly;
 
 		/* corlib */
 		System_Attribute = typeof (System.Attribute);
@@ -334,11 +238,11 @@ public static class TypeManager {
 		System_UInt64 = typeof (ulong);
 		System_Void = typeof (void);
 
-	#if __UNIFIED__
-		System_nint = typeof (System.nint);
-		System_nuint = typeof (System.nuint);
-		System_nfloat = typeof (System.nfloat);
-	#endif
+		if (Generator.UnifiedAPI) {
+			System_nint = Lookup (platform_assembly, "System", "nint");
+			System_nuint = Lookup (platform_assembly, "System", "nuint");
+			System_nfloat = Lookup (platform_assembly, "System", "nfloat");
+		}
 
 		/* fundamental */
 		NSObject = typeof (NSObject);
@@ -350,11 +254,11 @@ public static class TypeManager {
 		Protocol = typeof (Protocol);
 		Selector = typeof (Selector);
 
-	#if __UNIFIED__
-		Constants = typeof (XamCore.ObjCRuntime.Constants);
-	#else
-		Constants = typeof (XamCore.Constants);
-	#endif
+		if (Generator.UnifiedAPI) {
+			Constants = Lookup (platform_assembly, "ObjCRuntime", "Constants");
+		} else {
+			Constants = Lookup (platform_assembly, "", "Constants");
+		}
 
 		/* attributes */
 		AbstractAttribute = typeof (AbstractAttribute);
@@ -437,23 +341,24 @@ public static class TypeManager {
 
 		DictionaryContainerType = typeof (DictionaryContainerType);
 
-	#if HAVE_ADDRESSBOOK
-		ABAddressBook = typeof (ABAddressBook);
-		ABPerson = typeof (ABPerson);
-		ABRecord = typeof (ABRecord);
-	#endif
-	#if HAVE_AUDIOTOOLBOX
-		AudioBuffers = typeof (AudioBuffers);
-	#endif
-	#if HAVE_AUDIOUNIT
-		AudioComponent = typeof (AudioComponent);
-		AudioUnit = typeof (XamCore.AudioUnit.AudioUnit);
-		AURenderEventEnumerator = typeof (AURenderEventEnumerator);
-	#endif
-		AVCaptureWhiteBalanceGains = typeof (AVCaptureWhiteBalanceGains);
-	#if HAVE_COREANIMATION
-		CATransform3D = typeof (CATransform3D);
-	#endif
+		if (Frameworks.HaveAddressBook) {
+			ABAddressBook = Lookup (platform_assembly, "AddressBook", "ABAddressBook");
+			ABPerson = Lookup (platform_assembly, "AddressBook", "ABPerson");
+			ABRecord = Lookup (platform_assembly, "AddressBook", "ABRecord");
+		}
+		if (Frameworks.HaveAudioToolbox) {
+			AudioBuffers = Lookup (platform_assembly, "AudioToolbox", "AudioBuffers");
+			MusicSequence = Lookup (platform_assembly, "AudioToolbox", "MusicSequence", true /* may not be found */);
+		}
+		if (Frameworks.HaveAudioUnit) {
+			AudioComponent = Lookup (platform_assembly, "AudioUnit", "AudioComponent");
+			AudioUnit = Lookup (platform_assembly, "AudioUnit", "AudioUnit");
+			AURenderEventEnumerator = Lookup (platform_assembly, "AudioUnit", "AURenderEventEnumerator");
+		}
+		AVCaptureWhiteBalanceGains = typeof (XamCore.AVFoundation.AVCaptureWhiteBalanceGains);
+		if (Frameworks.HaveCoreAnimation)
+			CATransform3D = Lookup (platform_assembly, "CoreAnimation", "CATransform3D");
+
 		CFRunLoop = typeof (CFRunLoop);
 		CGAffineTransform = typeof (CGAffineTransform);
 		CGColor = typeof (CGColor);
@@ -462,64 +367,57 @@ public static class TypeManager {
 		CGGradient = typeof (CGGradient);
 		CGImage = typeof (CGImage);
 		CGLayer = typeof (CGLayer);
-	#if HAVE_OPENGL
-		CGLContext = typeof (CGLContext);
-		CGLPixelFormat = typeof (CGLPixelFormat);
-	#endif
+		if (Frameworks.HaveOpenGL) {
+			CGLContext = Lookup (platform_assembly, "OpenGL", "CGLContext");
+			CGLPixelFormat = Lookup (platform_assembly, "OpenGL", "CGLPixelFormat");
+		}
 		CGPath = typeof (CGPath);
 		CGVector = typeof (CGVector);
-	#if HAVE_CORELOCATION
-		CLLocationCoordinate2D = typeof (CLLocationCoordinate2D);
-	#endif
-	#if HAVE_COREMEDIA
-		CMAudioFormatDescription = typeof (CMAudioFormatDescription);
-		CMClock = typeof (CMClock);
-		CMFormatDescription = typeof (CMFormatDescription);
-		CMSampleBuffer = typeof (CMSampleBuffer);
-		CMTime = typeof (CMTime);
-		CMTimebase = typeof (CMTimebase);
-		CMTimeMapping = typeof (CMTimeMapping);
-		CMTimeRange = typeof (CMTimeRange);
-		CMVideoFormatDescription = typeof (CMVideoFormatDescription);
-	#endif
-	#if HAVE_COREVIDEO
-		CVImageBuffer = typeof (CVImageBuffer);
-		CVPixelBuffer = typeof (CVPixelBuffer);
-		CVPixelBufferPool = typeof (CVPixelBufferPool);
-	#endif
+		if (Frameworks.HaveCoreLocation)
+			CLLocationCoordinate2D = Lookup (platform_assembly, "CoreLocation", "CLLocationCoordinate2D");
+		if (Frameworks.HaveCoreMedia) {
+			CMAudioFormatDescription = Lookup (platform_assembly, "CoreMedia", "CMAudioFormatDescription");
+			CMClock = Lookup (platform_assembly, "CoreMedia", "CMClock");
+			CMFormatDescription = Lookup (platform_assembly, "CoreMedia", "CMFormatDescription");
+			CMSampleBuffer = Lookup (platform_assembly, "CoreMedia", "CMSampleBuffer");
+			CMTime = Lookup (platform_assembly, "CoreMedia", "CMTime");
+			CMTimebase = Lookup (platform_assembly, "CoreMedia", "CMTimebase");
+			CMTimeMapping = Lookup (platform_assembly, "CoreMedia", "CMVideoFormatDescription");
+			CMTimeRange = Lookup (platform_assembly, "CoreMedia", "CMTimeRange");
+			CMVideoFormatDescription = Lookup (platform_assembly, "CoreMedia", "CMVideoFormatDescription");
+		}
+		if (Frameworks.HaveCoreVideo) {
+			CVImageBuffer = Lookup (platform_assembly, "CoreVideo", "CVImageBuffer");
+			CVPixelBuffer = Lookup (platform_assembly, "CoreVideo", "CVPixelBuffer");
+			CVPixelBufferPool = Lookup (platform_assembly, "CoreVideo", "CVPixelBufferPool");
+		}
 		DispatchQueue = typeof (DispatchQueue);
-	#if HAVE_COREMIDI
-		MidiEndpoint = typeof (MidiEndpoint);
-	#endif
-	#if HAVE_MAPKIT
-		MKCoordinateSpan = typeof (MKCoordinateSpan);
-	#endif
-	#if HAVE_MEDIATOOLBOX
-		MTAudioProcessingTap = typeof (MTAudioProcessingTap);
-	#endif
-	#if HAVE_AUDIOTOOLBOX_MUSICSEQUENCE
-		MusicSequence = typeof (MusicSequence);
-	#endif
+		if (Frameworks.HaveCoreMidi)
+			MidiEndpoint = Lookup (platform_assembly, "CoreMidi", "MidiEndpoint");
+		if (Frameworks.HaveMapKit)
+			MKCoordinateSpan = Lookup (platform_assembly, "MapKit", "MKCoordinateSpan", true /* isn't in XM/Classic */);
+		if (Frameworks.HaveMediaToolbox)
+			MTAudioProcessingTap = Lookup (platform_assembly, "MediaToolbox", "MTAudioProcessingTap");
 		NSNumber = Lookup (BindingTouch.BindingThirdParty ? platform_assembly : api_assembly, "Foundation", "NSNumber");
 		NSRange = typeof (NSRange);
 		NSString = typeof (NSString);
 		NSValue = Lookup (BindingTouch.BindingThirdParty ? platform_assembly : api_assembly, "Foundation", "NSValue");
 		NSZone = typeof (NSZone);
-		SCNMatrix4 = typeof (SCNMatrix4);
-		SCNVector3 = typeof (SCNVector3);
-		SCNVector4 = typeof (SCNVector4);
+		SCNVector3 = typeof (XamCore.SceneKit.SCNVector3);
+		SCNVector4 = typeof (XamCore.SceneKit.SCNVector4);
+		SCNMatrix4 = typeof (XamCore.SceneKit.SCNMatrix4);
 		SecAccessControl = typeof (SecAccessControl);
 		SecIdentity = typeof (SecIdentity);
 		SecTrust = typeof (SecTrust);
-	#if HAVE_UIKIT
-		UIOffset = typeof (UIOffset);
-		UIEdgeInsets = typeof (UIEdgeInsets);
-	#endif
+		if (Frameworks.HaveUIKit) {
+			UIOffset = Lookup (platform_assembly, "UIKit", "UIOffset");
+			UIEdgeInsets = Lookup (platform_assembly, "UIKit", "UIEdgeInsets");
+		}
 
-	#if __UNIFIED__
-		CoreGraphics_CGRect = typeof (CGRect);
-		CoreGraphics_CGPoint = typeof (CGPoint);
-		CoreGraphics_CGSize = typeof (CGSize);
-	#endif
+		if (Generator.UnifiedAPI) {
+			CoreGraphics_CGRect = Lookup (platform_assembly, "CoreGraphics", "CGRect");
+			CoreGraphics_CGPoint = Lookup (platform_assembly, "CoreGraphics", "CGPoint");
+			CoreGraphics_CGSize = Lookup (platform_assembly, "CoreGraphics", "CGSize");
+		}
 	}
 }
