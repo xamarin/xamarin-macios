@@ -411,163 +411,136 @@ namespace XamCore.HomeKit {
 		[Field ("HMCharacteristicTypeImageMirroring")]
 		ImageMirroring,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeActive")]
 		Active,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeCurrentAirPurifierState")]
 		CurrentAirPurifierState,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeTargetAirPurifierState")]
 		TargetAirPurifierState,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeCurrentFanState")]
 		CurrentFanState,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeCurrentHeaterCoolerState")]
 		CurrentHeaterCoolerState,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeCurrentHumidifierDehumidifierState")]
 		CurrentHumidifierDehumidifierState,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeCurrentSlatState")]
 		CurrentSlatState,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeWaterLevel")]
 		WaterLevel,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeFilterChangeIndication")]
 		FilterChangeIndication,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeFilterLifeLevel")]
 		FilterLifeLevel,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeFilterResetChangeIndication")]
 		FilterResetChangeIndication,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeLockPhysicalControls")]
 		LockPhysicalControls,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeSwingMode")]
 		SwingMode,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeTargetHeaterCoolerState")]
 		TargetHeaterCoolerState,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeTargetHumidifierDehumidifierState")]
 		TargetHumidifierDehumidifierState,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeTargetFanState")]
 		TargetFanState,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeSlatType")]
 		SlatType,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeCurrentTilt")]
 		CurrentTilt,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeTargetTilt")]
 		TargetTilt,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeOzoneDensity")]
 		OzoneDensity,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeNitrogenDioxideDensity")]
 		NitrogenDioxideDensity,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeSulphurDioxideDensity")]
 		SulphurDioxideDensity,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypePM2_5Density")]
 		PM2_5Density,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypePM10Density")]
 		PM10Density,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeVolatileOrganicCompoundDensity")]
 		VolatileOrganicCompoundDensity,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeDehumidifierThreshold")]
 		DehumidifierThreshold,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMCharacteristicTypeHumidifierThreshold")]
@@ -731,37 +704,31 @@ namespace XamCore.HomeKit {
 		[Field ("HMServiceTypeDoorbell")]
 		Doorbell,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMServiceTypeAirPurifier")]
 		AirPurifier,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMServiceTypeVentilationFan")]
 		VentilationFan,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMServiceTypeFilterMaintenance")]
 		FilterMaintenance,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMServiceTypeHeaterCooler")]
 		HeaterCooler,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMServiceTypeHumidifierDehumidifier")]
 		HumidifierDehumidifier,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMServiceTypeSlats")]
@@ -1063,31 +1030,26 @@ namespace XamCore.HomeKit {
 		[Field ("HMAccessoryCategoryTypeVideoDoorbell")]
 		VideoDoorbell,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMAccessoryCategoryTypeAirPurifier")]
 		AirPurifier,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMAccessoryCategoryTypeAirHeater")]
 		AirHeater,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMAccessoryCategoryTypeAirConditioner")]
 		AirConditioner,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMAccessoryCategoryTypeAirHumidifier")]
 		AirHumidifier,
 
-		// Added in wachOS 3.2 but supposed to be available in 3.1.1
 		[Watch (3,1,1)]
 		[iOS (10,2), TV (10,1)]
 		[Field ("HMAccessoryCategoryTypeAirDehumidifier")]
@@ -1135,7 +1097,6 @@ namespace XamCore.HomeKit {
 		BidirectionalAudioAllowed = 3
 	}
 
-	// Added in wachOS 3.2 but supposed to be available in 3.1.1
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
@@ -1144,7 +1105,6 @@ namespace XamCore.HomeKit {
 		Locked,
 	}
 
-	// Added in wachOS 3.2 but supposed to be available in 3.1.1
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
@@ -1154,7 +1114,6 @@ namespace XamCore.HomeKit {
 		Active,
 	}
 
-	// Added in wachOS 3.2 but supposed to be available in 3.1.1
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
@@ -1163,7 +1122,6 @@ namespace XamCore.HomeKit {
 		Automatic,
 	}
 
-	// Added in wachOS 3.2 but supposed to be available in 3.1.1
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
@@ -1173,7 +1131,6 @@ namespace XamCore.HomeKit {
 		Oscillating,
 	}
 
-	// Added in wachOS 3.2 but supposed to be available in 3.1.1
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
@@ -1182,7 +1139,6 @@ namespace XamCore.HomeKit {
 		Vertical,
 	}
 
-	// Added in wachOS 3.2 but supposed to be available in 3.1.1
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
@@ -1191,7 +1147,6 @@ namespace XamCore.HomeKit {
 		Needed,
 	}
 
-	// Added in wachOS 3.2 but supposed to be available in 3.1.1
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
@@ -1201,7 +1156,6 @@ namespace XamCore.HomeKit {
 		Active,
 	}
 
-	// Added in wachOS 3.2 but supposed to be available in 3.1.1
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
@@ -1210,7 +1164,6 @@ namespace XamCore.HomeKit {
 		Automatic,
 	}
 
-	// Added in wachOS 3.2 but supposed to be available in 3.1.1
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
@@ -1221,7 +1174,6 @@ namespace XamCore.HomeKit {
 		Cooling,
 	}
 
-	// Added in wachOS 3.2 but supposed to be available in 3.1.1
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
@@ -1231,7 +1183,6 @@ namespace XamCore.HomeKit {
 		Cool,
 	}
 
-	// Added in wachOS 3.2 but supposed to be available in 3.1.1
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
@@ -1242,7 +1193,6 @@ namespace XamCore.HomeKit {
 		Dehumidifying,
 	}
 
-	// Added in wachOS 3.2 but supposed to be available in 3.1.1
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
@@ -1252,7 +1202,6 @@ namespace XamCore.HomeKit {
 		Dehumidify,
 	}
 
-	// Added in wachOS 3.2 but supposed to be available in 3.1.1
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
@@ -1261,7 +1210,6 @@ namespace XamCore.HomeKit {
 		Enabled,
 	}
 
-	// Added in wachOS 3.2 but supposed to be available in 3.1.1
 	[Watch (3,1,1)]
 	[TV (10,1), iOS (10,2)]
 	[Native]
