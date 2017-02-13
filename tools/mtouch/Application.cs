@@ -908,6 +908,11 @@ namespace Xamarin.Bundler {
 					continue;
 				}
 
+				if (BitCodeMode != appex.BitCodeMode) {
+					Driver.Log (2, "The extension '{0}' does not have the same bitcode options as the main app (extension: {1}, main app: {2}), and can therefore not share native code with the main app.", appex.Name, appex.BitCodeMode, BitCodeMode);
+					continue;
+				}
+
 				bool applicable = true;
 				// The --assembly-build-target arguments must be identical.
 				// We can probably lift this requirement (at least partially) at some point,
