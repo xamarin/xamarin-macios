@@ -65,10 +65,12 @@ namespace Introspection
 			"Acos",
 			"Actionname",
 			"Activitiy",
+			"Addin",
 			"Addr",
 			"Adjustmentfor",
 			"Aifc",
 			"Aiff",
+			"Alg", // short for Algorithm
 			"Amete",
 			"Amr",
 			"Anglet",
@@ -276,6 +278,7 @@ namespace Introspection
 			"Orthographyrange",
 			"ove",
 			"Paeth", // PNG filter
+			"Parms", // short for Parameters
 			"Perlin",
 			"Pausable",
 			"Pcl",
@@ -292,6 +295,7 @@ namespace Introspection
 			"Pointillize",
 			"Polyline",
 			"Popularimeter",
+			"Preds", // short for Predicates
 			"Prerolls",
 			"Preseti",
 			"Propogate",
