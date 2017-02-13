@@ -2042,37 +2042,43 @@ function oninitialload ()
 			}
 		}
 
-		public async override Task CleanAsync ()
+		async Task CleanProjectAsync (Log log, string project_file, string project_platform, string project_configuration)
 		{
 			// Don't require the desktop resource here, this shouldn't be that resource sensitive
 			using (var xbuild = new Process ()) {
 				xbuild.StartInfo.FileName = "xbuild";
 				var args = new StringBuilder ();
 				args.Append ("/verbosity:diagnostic ");
-				if (SpecifyPlatform)
-					args.Append ($"/p:Platform={ProjectPlatform} ");
-				if (SpecifyConfiguration)
-					args.Append ($"/p:Configuration={ProjectConfiguration} ");
-				args.Append (Harness.Quote (ProjectFile)).Append (" ");
+				if (project_platform != null)
+					args.Append ($"/p:Platform={project_platform} ");
+				if (project_configuration != null)
+					args.Append ($"/p:Configuration={project_configuration} ");
+				args.Append (Harness.Quote (project_file)).Append (" ");
 				args.Append ("/t:Clean ");
 				xbuild.StartInfo.Arguments = args.ToString ();
-				Jenkins.MainLog.WriteLine ("Cleaning {0} ({1})", TestName, Mode);
+				Jenkins.MainLog.WriteLine ("Cleaning {0} ({1}) - {2}", TestName, Mode, project_file);
 				SetEnvironmentVariables (xbuild);
-				var log = Logs.CreateStream (LogDirectory, $"clean-{Platform}-{Timestamp}.txt", "Clean log");
 				foreach (string key in xbuild.StartInfo.EnvironmentVariables.Keys)
 					log.WriteLine ("{0}={1}", key, xbuild.StartInfo.EnvironmentVariables [key]);
 				log.WriteLine ("{0} {1}", xbuild.StartInfo.FileName, xbuild.StartInfo.Arguments);
 				var timeout = TimeSpan.FromMinutes (1);
-				var result = await xbuild.RunAsync (log, true, timeout);
-				if (result.TimedOut) {
-					ExecutionResult = TestExecutingResult.TimedOut;
-					log.WriteLine ("Clean timed out after {0} seconds.", timeout.TotalSeconds);
-				} else if (result.Succeeded) {
-					ExecutionResult = TestExecutingResult.Succeeded;
-				} else {
-					ExecutionResult = TestExecutingResult.Failed;
-				}
+				await xbuild.RunAsync (log, true, timeout);
+				log.WriteLine ("Clean timed out after {0} seconds.", timeout.TotalSeconds);
 				Jenkins.MainLog.WriteLine ("Cleaned {0} ({1})", TestName, Mode);
+			}
+		}
+
+		public async override Task CleanAsync ()
+		{
+			var log = Logs.CreateStream (LogDirectory, $"clean-{Platform}-{Timestamp}.txt", "Clean log");
+			await CleanProjectAsync (log, ProjectFile, SpecifyPlatform ? ProjectPlatform : null, SpecifyConfiguration ? ProjectConfiguration : null);
+
+			// Iterate over all the project references as well.
+			var doc = new System.Xml.XmlDocument ();
+			doc.LoadWithoutNetworkAccess (ProjectFile);
+			foreach (var pr in doc.GetProjectReferences ()) {
+				var path = pr.Replace ('\\', '/');
+				await CleanProjectAsync (log, path, SpecifyPlatform ? ProjectPlatform : null, SpecifyConfiguration ? ProjectConfiguration : null);
 			}
 		}
 	}
