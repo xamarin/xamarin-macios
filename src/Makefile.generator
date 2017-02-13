@@ -10,7 +10,7 @@ GENERATOR_SOURCES =                                             \
 	$(TOP)/src/generator-typemanager.cs                \
 	$(TOP)/src/ObjCRuntime/Stret.cs                    \
 	$(TOP)/tools/common/TargetFramework.cs             \
-	build/generator-frameworks.cs                      \
+	build/generator-frameworks.g.cs                    \
 	$(MONO_PATH)/mcs/class/Mono.Options/Mono.Options/Options.cs \
 
 GENERATOR_DEFINES = -d:GENERATOR -d:NET_4_0
@@ -19,7 +19,7 @@ GENERATOR_DEFINES = -d:GENERATOR -d:NET_4_0
 # Common
 #
 
-build/generator-frameworks.cs: frameworks.sources Makefile.generator generate-frameworks.csharp
+build/generator-frameworks.g.cs: frameworks.sources Makefile.generator generate-frameworks.csharp
 	@./generate-frameworks.csharp '$(IOS_FRAMEWORKS)' '$(MAC_FRAMEWORKS)' '$(WATCHOS_FRAMEWORKS)' '$(TVOS_FRAMEWORKS)' > $@
 
 #
