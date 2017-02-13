@@ -69,6 +69,7 @@
     <MtouchUseRefCounting>true</MtouchUseRefCounting>
     <MtouchFloat32>true</MtouchFloat32>
     <MtouchUseLlvm>true</MtouchUseLlvm>
+    <MtouchEnableBitcode>true</MtouchEnableBitcode>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
