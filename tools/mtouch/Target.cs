@@ -1395,7 +1395,7 @@ namespace Xamarin.Bundler
 				case AssemblyBuildTarget.DynamicLibrary:
 					libprofiler = Path.Combine (libdir, "libmono-profiler-log.dylib");
 					linker_flags.AddLinkWith (libprofiler);
-					if (!App.IsExtension)
+					if (!App.IsExtension || App.IsWatchExtension)
 						AddToBundle (libprofiler);
 					break;
 				case AssemblyBuildTarget.StaticObject:
