@@ -1517,19 +1517,28 @@ function oninitialload ()
 									}
 									writer.WriteLine ("<a href='{0}' type='{2}' target='{3}'>{1}</a><br />", LinkEncode (log.FullPath.Substring (LogDirectory.Length + 1)), log.Description, log_type, log_target);
 									if (log.Description == "Test log" || log.Description == "Execution log") {
-										var summary = string.Empty;
-										var fails = new List<string> ();
+										string summary;
+										List<string> fails;
 										try {
 											using (var reader = log.GetReader ()) {
-												while (!reader.EndOfStream) {
-													string line = reader.ReadLine ()?.Trim ();
-													if (line == null)
-														continue;
-													if (line.StartsWith ("Tests run:", StringComparison.Ordinal)) {
-														summary = line;
-													} else if (line.StartsWith ("[FAIL]", StringComparison.Ordinal)) {
-														fails.Add (line);
+												Tuple<long, object> data;
+												if (!log_data.TryGetValue (log, out data) || data.Item1 != reader.BaseStream.Length) {
+													summary = string.Empty;
+													fails = new List<string> ();
+													while (!reader.EndOfStream) {
+														string line = reader.ReadLine ()?.Trim ();
+														if (line == null)
+															continue;
+														if (line.StartsWith ("Tests run:", StringComparison.Ordinal)) {
+															summary = line;
+														} else if (line.StartsWith ("[FAIL]", StringComparison.Ordinal)) {
+															fails.Add (line);
+														}
 													}
+												} else {
+													var data_tuple = (Tuple<string, List<string>>) data.Item2;
+													summary = data_tuple.Item1;
+													fails = data_tuple.Item2;
 												}
 											}
 											if (fails.Count > 0) {
@@ -1544,18 +1553,25 @@ function oninitialload ()
 											writer.WriteLine ("<span style='padding-left: 15px;'>Could not parse log file: {0}</span><br />", System.Web.HttpUtility.HtmlEncode (ex.Message));
 										}
 									} else if (log.Description == "Build log") {
-										var errors = new HashSet<string> ();
+										HashSet<string> errors;
 										try {
 											using (var reader = log.GetReader ()) {
-												while (!reader.EndOfStream) {
-													string line = reader.ReadLine ()?.Trim ();
-													if (line == null)
-														continue;
-													// Sometimes we put error messages in pull request descriptions
-													// Then Jenkins create environment variables containing the pull request descriptions (and other pull request data)
-													// So exclude any lines matching 'ghprbPull', to avoid reporting those environment variables as build errors.
-													if (line.Contains (": error") && !line.Contains ("ghprbPull"))
-														errors.Add (line);
+												Tuple<long, object> data;
+												if (!log_data.TryGetValue (log, out data) || data.Item1 != reader.BaseStream.Length) {
+													errors = new HashSet<string> ();
+													while (!reader.EndOfStream) {
+														string line = reader.ReadLine ()?.Trim ();
+														if (line == null)
+															continue;
+														// Sometimes we put error messages in pull request descriptions
+														// Then Jenkins create environment variables containing the pull request descriptions (and other pull request data)
+														// So exclude any lines matching 'ghprbPull', to avoid reporting those environment variables as build errors.
+														if (line.Contains (": error") && !line.Contains ("ghprbPull"))
+															errors.Add (line);
+													}
+													log_data [log] = new Tuple<long, object> (reader.BaseStream.Length, errors);
+												} else {
+													errors = (HashSet<string>) data.Item2;
 												}
 											}
 											if (errors.Count > 0) {
@@ -1584,6 +1600,7 @@ function oninitialload ()
 				writer.WriteLine ("</html>");
 			}
 		}
+		Dictionary<Log, Tuple<long, object>> log_data = new Dictionary<Log, Tuple<long, object>> ();
 
 		static string LinkEncode (string path)
 		{
