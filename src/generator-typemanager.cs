@@ -188,9 +188,7 @@ public static class TypeManager {
 	public static Type CoreGraphics_CGSize;
 
 	static Assembly api_assembly;
-	// static Assembly corlib_assembly;
 	static Assembly platform_assembly;
-	// static Assembly binding_assembly;
 
 	static Type Lookup (Assembly assembly, string @namespace, string @typename, bool inexistentOK = false)
 	{
@@ -214,9 +212,7 @@ public static class TypeManager {
 	public static void Initialize (Assembly api)
 	{
 		api_assembly = api;
-		// corlib_assembly = typeof (object).Assembly;
 		platform_assembly = typeof (NSObject).Assembly;
-		// binding_assembly = typeof (ProtocolizeAttribute).Assembly;
 
 		/* corlib */
 		System_Attribute = typeof (System.Attribute);
