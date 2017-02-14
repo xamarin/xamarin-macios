@@ -11,9 +11,25 @@ Xamarin.iOS can AOT-compile assemblies into:
 The last case is interesting, because user frameworks can be used to share
 code between extensions and the main app.
 
-Xamarin.iOS leverages this to build one framework for all the assemblies in
-the SDK, and this framework is shared between extensions and the main app.
-This significantly reduces total code size of the app.
+Xamarin.iOS will automatically try to enable code sharing for all SDK
+assemblies whenever it makes sense (for apps that have extensions), but if for
+some reason Xamarin.iOS determines that code sharing can't be enabled (there
+are many build options that makes code sharing impossible if they differ
+between projects), a warning explaining why will be shown. Code sharing can be
+forcefully disabled by passing `--nodevcodeshare` as an additional mtouch
+argument (this option can also be used to silence any warnings if extensions
+require build options that are incompatible with code sharing and would thus
+produce warnings).
+
+If Xamarin.iOS determines that code sharing can occur, then it builds one
+framework for all the assemblies in the SDK, and this framework is shared
+between extensions and the main app. This significantly reduces total code
+size of the app (and the build time, since every assembly is only AOT-compiled
+once).
+
+Additionally, when code sharing is enabled, Xamarin.iOS will also AOT-compile
+every assembly (not only SDK assemblies) only once, which greatly speeds up
+compilation time.
 
 It's also possible to manually specify the assembly build target, by passing
 --assembly-build-target to mtouch:
@@ -87,5 +103,9 @@ Restrictions / limitations
         --assembly-build-target=@all=framework
 
     is a bad idea, especially if your app has many assemblies.
+
+* Code sharing between extensions and the main app requires that the main app
+  targets iOS 8.0 or later (this is because user frameworks was introduced in
+  iOS 8, and will not work in earlier versions of iOS).
 
 [1]: https://developer.apple.com/videos/play/wwdc2016/406/
