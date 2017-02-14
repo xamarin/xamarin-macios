@@ -41,13 +41,18 @@ namespace Xamarin.Bundler {
 namespace XamCore.ObjCRuntime {
 #endif
 	static class ErrorHelper {
-
+		public enum WarningLevel
+		{
+			Error = -1,
+			Warning = 0,
+			Disable = 1,
+		}
 #if MONOTOUCH
 		const string Prefix = "MT";
 #else
 		const string Prefix = "MM";
 #endif
-
+		static Dictionary<int, WarningLevel> warning_levels;
 		public static int Verbosity { get; set; }
 
 #if MTOUCH
@@ -56,6 +61,34 @@ namespace XamCore.ObjCRuntime {
 		public static Action<int> ExitCallback;
 #pragma warning restore 649
 #endif
+
+		public static WarningLevel GetWarningLevel (int code)
+		{
+			WarningLevel level;
+
+			if (warning_levels == null)
+				return WarningLevel.Warning;
+
+			// code -1: all codes
+			if (warning_levels.TryGetValue (-1, out level))
+				return level;
+
+			if (warning_levels.TryGetValue (code, out level))
+				return level;
+			
+			return WarningLevel.Warning;;
+		}
+
+		public static void SetWarningLevel (WarningLevel level, int? code = null /* if null, apply to all warnings */)
+		{
+			if (warning_levels == null)
+				warning_levels = new Dictionary<int, WarningLevel> ();
+			if (code.HasValue) {
+				warning_levels [code.Value] = level;
+			} else {
+				warning_levels [-1] = level; // code -1: all codes.
+			}
+		}
 
 		public static ProductException CreateError (int code, string message, params object[] args)
 		{
@@ -221,6 +254,10 @@ namespace XamCore.ObjCRuntime {
 
 			if (mte != null) {
 				error = mte.Error;
+
+				if (!error && GetWarningLevel (mte.Code) == WarningLevel.Disable)
+					return false; // This is an ignored warning.
+				
 				Console.Error.WriteLine (mte.ToString ());
 
 				// Errors with code >= 9000 are activation/licensing errors.
