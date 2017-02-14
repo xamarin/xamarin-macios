@@ -8,6 +8,7 @@ namespace XamCore.LocalAuthentication {
 	[Availability (Platform.Mac_10_10)]
 	[Native]
 	public enum LAPolicy : nint {
+		[Mac (10,12,2)]
 		DeviceOwnerAuthenticationWithBiometrics = 1,
 		DeviceOwnerAuthentication = 2
 	}
