@@ -117,6 +117,21 @@ namespace Xamarin.Bundler {
 	//		Warning		MT0109	The assembly '{0}' was loaded from a different path than the provided path (provided path: {1}, actual path: {2}).
 	//		Warning		MT0110  Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.
 	//		Warning		MT0111	Bitcode has been enabled because this version of Xamarin.iOS does not support building watchOS projects using LLVM without enabling bitcode.
+	//		Warning		MT0112	Native code sharing has been disabled because the container app's deployment target is earlier than iOS 8.0 (its {0})).
+	//		Warning		MT0113	Native code sharing has been disabled because the container app includes I18N assemblies ({0}).
+	//		Warning		MT0114	Native code sharing has been disabled for the extension '{0}' because the bitcode options differ between the container app ({1}) and the extension ({2}).
+	//		Warning		MT0115	Native code sharing has been disabled for the extension '{0}' because the --assembly-build-target options are different between the container app ({1}) and the extension ({2}).
+	//		Warning		MT0116	Native code sharing has been disabled for the extension '{0}' because the I18N assemblies are different between the container app ({1}) and the extension ({2}).
+	//		Warning		MT0117	Native code sharing has been disabled for the extension '{0}' because the arguments to the AOT compiler are different between the container app ({1}) and the extension ({2}).
+	//		Warning		MT0118	Native code sharing has been disabled for the extension '{0}' because the other arguments to the AOT compiler are different between the container app ({1}) and the extension ({2}).
+	//		Warning		MT0119	Native code sharing has been disabled for the extension '{0}' because LLVM is not enabled or disabled in both the container app ({1}) and the extension ({2}).
+	//		Warning		MT0120	Native code sharing has been disabled for the extension '{0}' because the managed linker settings are different between the container app ({1}) and the extension ({2}).
+	//		Warning		MT0121	Native code sharing has been disabled for the extension '{0}' because the skipped assemblies for the managed linker are different between the container app ({1}) and the extension ({2}).
+	//		Warning		MT0122	Native code sharing has been disabled because the container app has custom xml definitions for the managed linker ({0}).
+	//		Warning		MT0123	Native code sharing has been disabled for the extension '{0}' because the extension has custom xml definitions for the managed linker ({1}).
+	//		Warning		MT0124	Native code sharing has been disabled for the extension '{0}' because the container app does not build for the ABI {1} (while the extension is building for this ABI).
+	//		Warning		MT0125	Native code sharing has been disabled for the extension '{0}' because the container app is building for the ABI {1}, which is not compatible with the extension's ABI ({2}).
+	//		Warning		MT0126	Native code sharing has been disabled for the extension '{0}' because the container app is referencing the assembly '{1}' from '{2}', while the extension references it from '{3}'.
 	// MT1xxx	file copy / symlinks (project related)
 	//			MT10xx	installer.cs / mtouch.cs
 	//					MT1001	Could not find an application at the specified directory: {0}

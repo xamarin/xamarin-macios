@@ -32,6 +32,14 @@ namespace Xamarin
 		Static,
 	}
 
+	public enum MTouchBitcode
+	{
+		Unspecified,
+		ASMOnly,
+		Full, // LLVMOnly
+		Marker,
+	}
+
 	[Flags]
 	enum I18N
 	{
@@ -83,7 +91,6 @@ namespace Xamarin
 		public bool? NoStrip;
 		public string Mono;
 		public string GccFlags;
-#pragma warning restore 649
 
 		// These are a bit smarter
 		public Profile Profile = Profile.iOS;
@@ -92,6 +99,15 @@ namespace Xamarin
 		static XmlDocument device_list_cache;
 		public string LLVMOptimizations;
 		public string [] CustomArguments; // Sometimes you want to pass invalid arguments to mtouch, in this case this array is used. No processing will be done, if quotes are required, they must be added to the arguments in the array.
+		public int [] NoWarn; // null array: no passed to mtouch. empty array: pass --nowarn (which means disable all warnings).
+		public int [] WarnAsError; // null array: no passed to mtouch. empty array: pass --warnaserror (which means makes all warnings errors).
+		public MTouchBitcode Bitcode;
+		public string AotArguments;
+		public string AotOtherArguments;
+		public string [] LinkSkip;
+		public string [] XmlDefinitions;
+
+#pragma warning restore 649
 
 		public class DeviceInfo
 		{
@@ -343,9 +359,50 @@ namespace Xamarin
 				}
 			}
 
+			if (NoWarn != null) {
+				if (NoWarn.Length > 0) {
+					sb.Append (" --nowarn:");
+					foreach (var code in NoWarn)
+						sb.Append (code).Append (',');
+					sb.Length--;
+				} else {
+					sb.Append (" --nowarn");
+				}
+			}
+
+			if (WarnAsError != null) {
+				if (WarnAsError.Length > 0) {
+					sb.Append (" --warnaserror:");
+					foreach (var code in WarnAsError)
+						sb.Append (code).Append (',');
+					sb.Length--;
+				} else {
+					sb.Append (" --warnaserror");
+				}
+			}
+
+			if (Bitcode != MTouchBitcode.Unspecified)
+				sb.Append (" --bitcode:").Append (Bitcode.ToString ().ToLower ());
+
 			foreach (var abt in AssemblyBuildTargets)
 				sb.Append (" --assembly-build-target ").Append (MTouch.Quote (abt));
-			
+
+			if (!string.IsNullOrEmpty (AotArguments))
+				sb.Append (" --aot:").Append (MTouch.Quote (AotArguments));
+
+			if (!string.IsNullOrEmpty (AotOtherArguments))
+				sb.Append (" --aot-options:").Append (MTouch.Quote (AotOtherArguments));
+
+			if (LinkSkip?.Length > 0) {
+				foreach (var ls in LinkSkip)
+					sb.Append (" --linkskip:").Append (MTouch.Quote (ls));
+			}
+
+			if (XmlDefinitions?.Length > 0) {
+				foreach (var xd in XmlDefinitions)
+					sb.Append (" --xml:").Append (MTouch.Quote (xd));
+			}
+
 			return sb.ToString ();
 		}
 

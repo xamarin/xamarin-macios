@@ -447,6 +447,74 @@ No action is required on your part, this message is purely informational.
 
 For further information see bug #[51634](https://bugzilla.xamarin.com/show_bug.cgi?id=51634).
 
+<h3><a name="MT0112"/>MT0112: Native code sharing has been disabled because the container app's deployment target is earlier than iOS 8.0 (it's *)).</h3>
+
+Native code sharing requires iOS 8.0 because native code sharing is implemented using user frameworks, which was introduced with iOS 8.0.
+
+<h3><a name="MT0113"/>MT0113: Native code sharing has been disabled because the container app includes I18N assemblies (*).</h3>
+
+Native code sharing is currently not supported if the container app includes I18N assemblies.
+
+<h3><a name="MT0114"/>MT0114: Native code sharing has been disabled for the extension '*' because the bitcode options differ between the container app (*) and the extension (*).</h3>
+
+Native code sharing requires that the bitcode options match between the projects that share code.
+
+<h3><a name="MT0115"/>MT0115: Native code sharing has been disabled for the extension '*' because the --assembly-build-target options are different between the container app (*) and the extension (*).</h3>
+
+Native code sharing requires that the --assembly-build-target options are identical between the projects that share code.
+
+This condition can occur if incremental builds are not either enabled or disabled in all the projects.
+
+<h3><a name="MT0116"/>MT0116: Native code sharing has been disabled for the extension '*' because the I18N assemblies are different between the container app (*) and the extension (*).</h3>
+
+Native code sharing is currently not supported for extensions that include I18N assemblies.
+
+<h3><a name="MT0117"/>MT0117: Native code sharing has been disabled for the extension '*' because the arguments to the AOT compiler are different between the container app (*) and the extension (*).</h3>
+
+Native code sharing requires that the arguments to the AOT compiler do not differ between projects that share code.
+
+<h3><a name="MT0118"/>MT0118: Native code sharing has been disabled for the extension '*' because the other arguments to the AOT compiler are different between the container app (*) and the extension (*).</h3>
+
+Native code sharing requires that the arguments to the AOT compiler do not differ between projects that share code.
+
+This condition occurs if the 'Perform all 32-bit float operations as 64-bit float' differs between projects.
+
+<h3><a name="MT0119"/>MT0119: Native code sharing has been disabled for the extension '*' because LLVM is not enabled or disabled in both the container app (*) and the extension (*).</h3>
+
+Native code sharing requires that LLVM is either enabled or disabled for all projects that share code.
+
+<h3><a name="MT0120"/>MT0120: Native code sharing has been disabled for the extension '*' because the managed linker settings are different between the container app (*) and the extension (*).</h3>
+
+Native code sharing requires that the managed linker settings are identical for all projects that share code.
+
+<h3><a name="MT0121"/>MT0121: Native code sharing has been disabled for the extension '*' because the skipped assemblies for the managed linker are different between the container app (*) and the extension (*).</h3>
+
+Native code sharing requires that the managed linker settings are identical for all projects that share code.
+
+<h3><a name="MT0122"/>MT0122: Native code sharing has been disabled because the container app has custom xml definitions for the managed linker (*).</h3>
+
+Native code sharing requires is not supported for projects that use custom xml definitions for the managed linker.
+
+<h3><a name="MT0123"/>MT0123: Native code sharing has been disabled for the extension '*' because the extension has custom xml definitions for the managed linker (*).</h3>
+
+Native code sharing requires is not supported for projects that use custom xml definitions for the managed linker.
+
+<h3><a name="MT0124"/>MT0124: Native code sharing has been disabled for the extension '*' because the container app does not build for the ABI * (while the extension is building for this ABI).</h3>
+
+Native code sharing requires that the container app builds for all the architectures any app extension builds for.
+
+For instance: this condition occurs when an extension builds for ARM64+ARMv7, but the container app only builds for ARM64.
+
+<h3><a name="MT0125"/>MT0125: Native code sharing has been disabled for the extension '*' because the container app is building for the ABI *, which is not compatible with the extension's ABI (*).</h3>
+
+Native code sharing requires that all the projects build for the exact same API.
+
+For instance: this condition occurs when an extension builds for ARMv7+llvm+thumb2, but the container app only builds for ARMv7+llvm.
+
+<h3><a name="MT0126"/>MT0126: Native code sharing has been disabled for the extension '{0}' because the container app is referencing the assembly '{1}' from '{2}', while the extension references it from '{3}'.</h3>
+
+Native code sharing requires that all the projects that share code use the same versions for all assemblies.
+
 # MT1xxx: Project related error messages
 
 ### MT10xx: Installer / mtouch
