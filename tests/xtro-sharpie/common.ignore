@@ -141,6 +141,16 @@
 ## we only export the overload that expose an NSError
 !missing-selector! MDLAsset::exportAssetToURL: not bound
 
+## those are just doing the same as the setComponent:forProtocol: and componentConformingToProtocol:
+## objectForKeyedSubscript:'s description is: "Allows shorthand [key] syntax for componentConformingToProtocol:"
+!missing-selector! MDLAsset::objectForKeyedSubscript: not bound
+!missing-selector! MDLAsset::setObject:forKeyedSubscript: not bound
+!missing-selector! MDLObject::objectForKeyedSubscript: not bound
+!missing-selector! MDLObject::setObject:forKeyedSubscript: not bound
+
+## New @required (abstract) methods in existing types (breaking changes)
+!incorrect-protocol-member! MDLObjectContainerComponent::count is REQUIRED and should be abstract
+!incorrect-protocol-member! MDLObjectContainerComponent::objectAtIndexedSubscript: is REQUIRED and should be abstract
 
 # SpriteKit
 
