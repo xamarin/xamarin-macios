@@ -1046,9 +1046,6 @@ namespace Xamarin.Bundler {
 				if (!applicable)
 					continue;
 
-				if (!applicable)
-					continue;
-
 				candidates.Add (appex);
 				appex.IsCodeShared = true;
 				IsCodeShared = true;
