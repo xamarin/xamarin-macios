@@ -295,11 +295,13 @@ namespace XamCore.SpriteKit {
 		[Export ("obstaclesFromSpriteTextures:accuracy:")]
 		GKPolygonObstacle[] ObstaclesFromSpriteTextures (SKNode[] sprites, float accuracy);
 
+#if !XAMCORE_4_0
+		[Deprecated (PlatformName.iOS, 10,0, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
+		[Deprecated (PlatformName.MacOSX, 10,12, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[iOS (9,0),Mac(10,11)]
 		[Export ("attributeValues", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
 
-#if !XAMCORE_4_0
 		[Deprecated (PlatformName.iOS, 10,0, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[iOS (9,0),Mac(10,11)]
@@ -382,6 +384,10 @@ namespace XamCore.SpriteKit {
 		[NullAllowed] // by default this property is null
 		[Export ("shader", ArgumentSemantic.Retain)]
 		SKShader Shader { get; set; }
+
+		[iOS (9,0), Mac (10,11)]
+		[Export ("attributeValues", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
 
 #if XAMCORE_4_0
 		[iOS (9,0), Mac(10,11)]
@@ -730,6 +736,10 @@ namespace XamCore.SpriteKit {
 		[Export ("scaleToSize:")]
 		void ScaleTo (CGSize size);
 
+		[iOS (9,0), Mac (10,11)]
+		[Export ("attributeValues", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
+
 #if XAMCORE_4_0
 		[iOS (9,0), Mac(10,11)]
 		[Export ("valueForAttributeNamed:")]
@@ -964,6 +974,10 @@ namespace XamCore.SpriteKit {
 		[Export ("particleRenderOrder", ArgumentSemantic.Assign)]
 		SKParticleRenderOrder ParticleRenderOrder { get; set; }
 
+		[iOS (9,0), Mac (10,11)]
+		[Export ("attributeValues", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
+
 #if XAMCORE_4_0
 		[iOS (9,0), Mac(10,11)]
 		[Export ("valueForAttributeNamed:")]
@@ -1092,6 +1106,10 @@ namespace XamCore.SpriteKit {
 		[iOS (8,0), Mac (10,10)]
 		[Export ("lineLength")]
 		nfloat LineLength { get; }
+
+		[iOS (9,0), Mac (10,11)]
+		[Export ("attributeValues", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
 
 #if XAMCORE_4_0
 		[iOS (9,0), Mac(10,11)]
@@ -3047,6 +3065,10 @@ namespace XamCore.SpriteKit {
 		[Export ("tileMapNodesWithTileSet:columns:rows:tileSize:fromNoiseMap:tileTypeNoiseMapThresholds:")]
 		SKTileMapNode[] FromTileSet (SKTileSet tileSet, nuint columns, nuint rows, CGSize tileSize, GKNoiseMap noiseMap, NSNumber[] thresholds);
 #endif
+
+		[iOS (9,0), Mac (10,11)]
+		[Export ("attributeValues", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
 
 #if XAMCORE_4_0
 		[iOS (9,0), Mac(10,11)]
