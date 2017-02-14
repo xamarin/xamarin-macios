@@ -441,6 +441,102 @@ namespace MonoTouchFixtures.Intents {
 				Assert.IsInstanceOfType (typeof (INWorkoutLocationTypeResolutionResult), unsupported, "Unsupported");
 			}
 		}
+
+		[Test]
+		public void INBillPayeeResolutionResultPropertyTest ()
+		{
+			using (var needsValue = INBillPayeeResolutionResult.NeedsValue)
+			using (var notRequired = INBillPayeeResolutionResult.NotRequired)
+			using (var unsupported = INBillPayeeResolutionResult.Unsupported) {
+				Assert.NotNull (needsValue, "NeedsValue Null");
+				Assert.NotNull (notRequired, "NotRequired Null");
+				Assert.NotNull (unsupported, "Unsupported Null");
+
+				Assert.IsInstanceOfType (typeof (INBillPayeeResolutionResult), needsValue, "NeedsValue");
+				Assert.IsInstanceOfType (typeof (INBillPayeeResolutionResult), notRequired, "NotRequired");
+				Assert.IsInstanceOfType (typeof (INBillPayeeResolutionResult), unsupported, "Unsupported");
+			}
+		}
+
+		[Test]
+		public void INBillTypeResolutionResultPropertyTest ()
+		{
+			using (var needsValue = INBillTypeResolutionResult.NeedsValue)
+			using (var notRequired = INBillTypeResolutionResult.NotRequired)
+			using (var unsupported = INBillTypeResolutionResult.Unsupported) {
+				Assert.NotNull (needsValue, "NeedsValue Null");
+				Assert.NotNull (notRequired, "NotRequired Null");
+				Assert.NotNull (unsupported, "Unsupported Null");
+
+				Assert.IsInstanceOfType (typeof (INBillTypeResolutionResult), needsValue, "NeedsValue");
+				Assert.IsInstanceOfType (typeof (INBillTypeResolutionResult), notRequired, "NotRequired");
+				Assert.IsInstanceOfType (typeof (INBillTypeResolutionResult), unsupported, "Unsupported");
+			}
+		}
+
+		[Test]
+		public void INCarSignalOptionsResolutionResultPropertyTest ()
+		{
+			using (var needsValue = INCarSignalOptionsResolutionResult.NeedsValue)
+			using (var notRequired = INCarSignalOptionsResolutionResult.NotRequired)
+			using (var unsupported = INCarSignalOptionsResolutionResult.Unsupported) {
+				Assert.NotNull (needsValue, "NeedsValue Null");
+				Assert.NotNull (notRequired, "NotRequired Null");
+				Assert.NotNull (unsupported, "Unsupported Null");
+
+				Assert.IsInstanceOfType (typeof (INCarSignalOptionsResolutionResult), needsValue, "NeedsValue");
+				Assert.IsInstanceOfType (typeof (INCarSignalOptionsResolutionResult), notRequired, "NotRequired");
+				Assert.IsInstanceOfType (typeof (INCarSignalOptionsResolutionResult), unsupported, "Unsupported");
+			}
+		}
+
+		[Test]
+		public void INPaymentAmountResolutionResultPropertyTest ()
+		{
+			using (var needsValue = INPaymentAmountResolutionResult.NeedsValue)
+			using (var notRequired = INPaymentAmountResolutionResult.NotRequired)
+			using (var unsupported = INPaymentAmountResolutionResult.Unsupported) {
+				Assert.NotNull (needsValue, "NeedsValue Null");
+				Assert.NotNull (notRequired, "NotRequired Null");
+				Assert.NotNull (unsupported, "Unsupported Null");
+
+				Assert.IsInstanceOfType (typeof (INPaymentAmountResolutionResult), needsValue, "NeedsValue");
+				Assert.IsInstanceOfType (typeof (INPaymentAmountResolutionResult), notRequired, "NotRequired");
+				Assert.IsInstanceOfType (typeof (INPaymentAmountResolutionResult), unsupported, "Unsupported");
+			}
+		}
+
+		[Test]
+		public void INPaymentStatusResolutionResultPropertyTest ()
+		{
+			using (var needsValue = INPaymentStatusResolutionResult.NeedsValue)
+			using (var notRequired = INPaymentStatusResolutionResult.NotRequired)
+			using (var unsupported = INPaymentStatusResolutionResult.Unsupported) {
+				Assert.NotNull (needsValue, "NeedsValue Null");
+				Assert.NotNull (notRequired, "NotRequired Null");
+				Assert.NotNull (unsupported, "Unsupported Null");
+
+				Assert.IsInstanceOfType (typeof (INPaymentStatusResolutionResult), needsValue, "NeedsValue");
+				Assert.IsInstanceOfType (typeof (INPaymentStatusResolutionResult), notRequired, "NotRequired");
+				Assert.IsInstanceOfType (typeof (INPaymentStatusResolutionResult), unsupported, "Unsupported");
+			}
+		}
+
+		[Test]
+		public void INPaymentAccountResolutionResultPropertyTest ()
+		{
+			using (var needsValue = INPaymentAccountResolutionResult.NeedsValue)
+			using (var notRequired = INPaymentAccountResolutionResult.NotRequired)
+			using (var unsupported = INPaymentAccountResolutionResult.Unsupported) {
+				Assert.NotNull (needsValue, "NeedsValue Null");
+				Assert.NotNull (notRequired, "NotRequired Null");
+				Assert.NotNull (unsupported, "Unsupported Null");
+
+				Assert.IsInstanceOfType (typeof (INPaymentAccountResolutionResult), needsValue, "NeedsValue");
+				Assert.IsInstanceOfType (typeof (INPaymentAccountResolutionResult), notRequired, "NotRequired");
+				Assert.IsInstanceOfType (typeof (INPaymentAccountResolutionResult), unsupported, "Unsupported");
+			}
+		}
 	}
 }
 #endif
