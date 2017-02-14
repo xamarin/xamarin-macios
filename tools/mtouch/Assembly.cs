@@ -1,4 +1,4 @@
-﻿// Copyright 2013 Xamarin Inc. All rights reserved.
+// Copyright 2013 Xamarin Inc. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -92,26 +92,6 @@ namespace Xamarin.Bundler {
 			if (File.Exists (mdb_src)) {
 				string mdb_target = Path.Combine (directory, FileName + ".mdb");
 				Application.UpdateFile (mdb_src, mdb_target);
-			}
-		}
-		
-		public void CopyMSymToDirectory (string directory)
-		{
-			string msym_src = FullPath + ".aotid.msym";
-			var dirInfo = new DirectoryInfo (msym_src);
-			if (!dirInfo.Exists) // got no aot data
-				return;
-			var subdirs = dirInfo.GetDirectories();
-			foreach (var subdir in subdirs) {
-				var destPath = Path.Combine (directory, subdir.Name.ToUpperInvariant ());
-				var destInfo = new DirectoryInfo (destPath);
-				if (!destInfo.Exists)
-					Directory.CreateDirectory (destPath);
-				var files = subdir.GetFiles ();
-				foreach (FileInfo file in files) {
-					string temppath = Path.Combine (destPath, file.Name);
-					file.CopyTo(temppath, true);
-				}
 			}
 		}
 

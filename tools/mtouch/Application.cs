@@ -1076,6 +1076,40 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public static void CopyMSymData (string src, string dest)
+		{
+			if (string.IsNullOrEmpty (src) || string.IsNullOrEmpty (dest))
+				return;
+			if (!Directory.Exists (src)) // got no aot data
+				return;
+
+			var p = new Process ();
+			p.StartInfo.UseShellExecute = false;
+			p.StartInfo.RedirectStandardError = true;
+			p.StartInfo.FileName = "mono-symbolicate";
+			p.StartInfo.Arguments = $"store-symbols \"{src}\" \"{dest}\"";
+
+			try {
+				if (p.Start ()) {
+					var error = p.StandardError.ReadToEnd();
+					p.WaitForExit ();
+					if (p.ExitCode == 0)
+						return;
+					else {
+						ErrorHelper.Warning (95, $"Aot files could not be copied to the destination directory {dest}: {error}"); 
+						return;
+					}
+				}
+
+				ErrorHelper.Warning (95, $"Aot files could not be copied to the destination directory {dest}: Could not start process."); 
+				return;
+			}
+			catch (Exception e) {
+				ErrorHelper.Warning (95, e, $"Aot files could not be copied to the destination directory {dest}: Could not start process."); 
+				return;
+			}
+		}
+
 		void BuildFinalExecutable ()
 		{
 			if (FastDev) {
@@ -1399,14 +1433,33 @@ namespace Xamarin.Bundler {
 			Driver.WriteIfDifferent (manifestPath, root.ToString ());
 		}
 
-		void CopyAssemblyData (Assembly asm, string targetDir)
+		void CopyAotData (string src, string dest)
 		{
-			var mvid = asm.AssemblyDefinition.MainModule.Mvid.ToString ().ToUpperInvariant ();
-			var assemblyDir = Path.Combine (targetDir, mvid);
-			if (!Directory.Exists (assemblyDir))
-				Directory.CreateDirectory (assemblyDir);
-			asm.CopyToDirectory (assemblyDir, reload: false, only_copy: true);
-			asm.CopyMSymToDirectory (targetDir);
+			if (string.IsNullOrEmpty (src) || string.IsNullOrEmpty (dest)) {
+				ErrorHelper.Warning (95, $"Aot files could not be copied to the destination directory {dest}"); 
+				return;
+			}
+				
+			var dir = new DirectoryInfo (src);
+			if (!dir.Exists) {
+				ErrorHelper.Warning (95, $"Aot files could not be copied to the destination directory {dest}"); 
+				return;
+			}
+
+			var dirs = dir.GetDirectories ();
+			if (!Directory.Exists (dest))
+				Directory.CreateDirectory (dest);
+				
+			var files = dir.GetFiles ();
+			foreach (var file in files) {
+				var tmp = Path.Combine (dest, file.Name);
+				file.CopyTo (tmp, true);
+			}
+
+			foreach (var subdir in dirs) {
+				var tmp = Path.Combine (dest, subdir.Name);
+				CopyAotData (subdir.FullName, tmp);
+			}
 		}
 
 		public void BuildMSymDirectory ()
@@ -1414,14 +1467,26 @@ namespace Xamarin.Bundler {
 			if (!EnableMSym)
 				return;
 
-			var target_directory = string.Format ("{0}.msym", AppDirectory);
+			var target_directory = string.Format ("{0}.mSYM", AppDirectory);
+			if (!Directory.Exists (target_directory))
+				Directory.CreateDirectory (target_directory);
+
 			foreach (var target in Targets) {
-				if (!Directory.Exists (target_directory))
-					Directory.CreateDirectory (target_directory);
 				GenerateMSymManifest (target, target_directory);
+				var msymdir = Path.Combine (target.BuildDirectory, "Msym");
+				// copy aot data must be done BEFORE we do copy the msym one
+				CopyAotData (msymdir, target_directory);
+				
+				// copy all assemblies under mvid and with the dll and mdb
+				var tmpdir =  Path.Combine (msymdir, "Msym", "tmp");
+				if (!Directory.Exists (tmpdir))
+					Directory.CreateDirectory (tmpdir);
+					
 				foreach (var asm in target.Assemblies) {
-					CopyAssemblyData (asm, target_directory);
+					asm.CopyToDirectory (tmpdir, reload: false, only_copy: true);
 				}
+				// mono-symbolicate knows best
+				CopyMSymData (target_directory, tmpdir);
 			}
 		}
 
