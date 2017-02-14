@@ -452,7 +452,7 @@ namespace Xamarin.Bundler {
 			base (String.Format (message, args), innerException)
 		{
 			Code = code;
-			Error = error;
+			Error = error || ErrorHelper.GetWarningLevel (code) == ErrorHelper.WarningLevel.Error;
 		}
 	
 		public string FileName { get; set; }
