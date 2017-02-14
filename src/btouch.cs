@@ -42,74 +42,26 @@ class BindingTouch {
 	static Type CoreObject = typeof (XamCore.Foundation.NSObject);
 
 	static TargetFramework? target_framework;
-#if MONOMAC
-	public static PlatformName CurrentPlatform = PlatformName.MacOSX;
-#if XAMCORE_2_0
-	public static bool Unified = true;
-	public static bool skipSystemDrawing /* full: yes, mobile: no */;
-#else
-	public static bool Unified = false;
-	public static bool skipSystemDrawing = false;
-#endif
-#elif WATCH
-	public static PlatformName CurrentPlatform = PlatformName.WatchOS;
-	public static bool Unified = true;
-	public static bool skipSystemDrawing = false;
-#elif TVOS
-	public static PlatformName CurrentPlatform = PlatformName.TvOS;
-	public static bool Unified = true;
-	public static bool skipSystemDrawing = false;
-#elif IOS
-	public static PlatformName CurrentPlatform = PlatformName.iOS;
-	public static bool skipSystemDrawing = false;
-#if XAMCORE_2_0
-	public static bool Unified = true;
-#else
-	public static bool Unified = false;
-#endif
-#else
-	#error Invalid platform.
-#endif
+	public static PlatformName CurrentPlatform;
+	public static bool Unified;
+	public static bool skipSystemDrawing;
 
-#if MONOMAC
-	static string baselibdll = "MonoMac.dll";
-	static string tool_name = "bmac";
-	static string compiler = "/Library/Frameworks/Mono.framework/Commands/mcs";
-	static string net_sdk = "4";
-#elif WATCH
-	static string baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll");
-	static string tool_name = "bwatch";
-	static string compiler = "/Library/Frameworks/Mono.framework/Commands/mcs";
-	static string net_sdk = null;
-#elif TVOS
-	static string baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll");
-	static string tool_name = "btv";
-	static string compiler = "/Library/Frameworks/Mono.framework/Commands/mcs";
-	static string net_sdk = null;
-#elif IOS
-#if XAMCORE_2_0
-	static string baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
-#else
-	static string baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/2.1/monotouch.dll");
-#endif
-	static string tool_name = "btouch";
-	static string compiler = Path.Combine (GetSDKRoot (), "bin/smcs");
-	static string net_sdk = null;
-#else
-#error Unknown platform
-#endif
+	static string baselibdll;
+	static string compiler;
+	static string net_sdk;
+
 	static char shellQuoteChar;
 
 	public static bool BindingThirdParty = true;
 
 	public static string ToolName {
-		get { return tool_name; }
+		get { return Path.GetFileNameWithoutExtension (System.Reflection.Assembly.GetEntryAssembly ().Location); }
 	}
 
 	static void ShowHelp (OptionSet os)
 	{
-		Console.WriteLine ("{0} - Mono Objective-C API binder", tool_name);
-		Console.WriteLine ("Usage is:\n {0} [options] apifile1.cs [--api=apifile2.cs [--api=apifile3.cs]] [-s=core1.cs [-s=core2.cs]] [core1.cs [core2.cs]] [-x=extra1.cs [-x=extra2.cs]]", tool_name);
+		Console.WriteLine ("{0} - Mono Objective-C API binder", ToolName);
+		Console.WriteLine ("Usage is:\n {0} [options] apifile1.cs [--api=apifile2.cs [--api=apifile3.cs]] [-s=core1.cs [-s=core2.cs]] [core1.cs [core2.cs]] [-x=extra1.cs [-x=extra2.cs]]", ToolName);
 		
 		os.WriteOptionDescriptions (Console.Out);
 	}
@@ -141,6 +93,11 @@ class BindingTouch {
 			if (string.IsNullOrEmpty (sdkRoot))
 				sdkRoot = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current";
 			return sdkRoot;
+		case PlatformName.MacOSX:
+			var macSdkRoot = Environment.GetEnvironmentVariable ("XamarinMacFrameworkRoot");
+			if (string.IsNullOrEmpty (macSdkRoot))
+				macSdkRoot = "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current";
+			return macSdkRoot;
 		default:
 			throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
 		}
@@ -254,14 +211,14 @@ class BindingTouch {
 			},
 			{ "unified-full-profile", "Launches compiler pointing to XM Full Profile", l => { /* no-op*/ }, true },
 			{ "unified-mobile-profile", "Launches compiler pointing to XM Mobile Profile", l => { /* no-op*/ }, true },
-			{ "target-framework=", "Specify target framework to use. Only applicable to Xamarin.Mac, and the currently supported values are: 'Xamarin.Mac,Version=v2.0,Profile=Mobile', 'Xamarin.Mac,Version=v4.5,Profile=Full' and 'Xamarin.Mac,Version=v4.5,Profile=System')", v => SetTargetFramework (v) },
+			{ "target-framework=", "Specify target framework to use. Always required, and the currently supported values are: 'MonoTouch,v1.0', 'Xamarin.iOS,v1.0', 'Xamarin.TvOS,v1.0', 'Xamarin.WatchOS,v1.0', 'XamMac,v1.0' 'Xamarin.Mac,Version=v2.0,Profile=Mobile', 'Xamarin.Mac,Version=v4.5,Profile=Full' and 'Xamarin.Mac,Version=v4.5,Profile=System')", v => SetTargetFramework (v) },
 		};
 
 		try {
 			sources = os.Parse (args);
 		} catch (Exception e){
-			Console.Error.WriteLine ("{0}: {1}", tool_name, e.Message);
-			Console.Error.WriteLine ("see {0} --help for more information", tool_name);
+			Console.Error.WriteLine ("{0}: {1}", ToolName, e.Message);
+			Console.Error.WriteLine ("see {0} --help for more information", ToolName);
 			return 1;
 		}
 
@@ -269,6 +226,57 @@ class BindingTouch {
 			ShowHelp (os);
 			return 0;
 		}
+
+		if (!target_framework.HasValue)
+			throw ErrorHelper.CreateError (86, "A target framework (--target-framework) must be specified.");
+
+		switch (target_framework.Value.Identifier) {
+		case "MonoTouch":
+			CurrentPlatform = PlatformName.iOS;
+			Unified = false;
+			if (string.IsNullOrEmpty (baselibdll))
+				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/2.1/monotouch.dll");
+			Path.Combine (GetSDKRoot (), "bin/smcs");
+			break;
+		case "Xamarin.iOS":
+			CurrentPlatform = PlatformName.iOS;
+			Unified = true;
+			if (string.IsNullOrEmpty (baselibdll))
+				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
+			break;
+		case "Xamarin.TvOS":
+			CurrentPlatform = PlatformName.TvOS;
+			Unified = true;
+			if (string.IsNullOrEmpty (baselibdll))
+				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll");
+			break;
+		case "Xamarin.WatchOS":
+			CurrentPlatform = PlatformName.WatchOS;
+			Unified = true;
+			if (string.IsNullOrEmpty (baselibdll))
+				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll");
+			break;
+		case "XamMac":
+			CurrentPlatform = PlatformName.MacOSX;
+			Unified = false;
+			if (string.IsNullOrEmpty (baselibdll))
+				baselibdll = "MonoMac.dll";
+			net_sdk = "4";
+			break;
+		case "Xamarin.Mac":
+			CurrentPlatform = PlatformName.MacOSX;
+			Unified = true;
+			skipSystemDrawing = target_framework == TargetFramework.Xamarin_Mac_4_5_Full;
+			if (string.IsNullOrEmpty (baselibdll))
+				baselibdll = "MonoMac.dll"; // this doesn't look right.
+			net_sdk = "4";
+			break;
+		default:
+			throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework);
+		}
+
+		if (string.IsNullOrEmpty (compiler))
+			compiler = "/Library/Frameworks/Mono.framework/Commands/mcs";
 
 		if (sources.Count > 0) {
 			api_sources.Insert (0, Quote (sources [0]));
@@ -345,7 +353,7 @@ class BindingTouch {
 			var p = Process.Start (si);
 			p.WaitForExit ();
 			if (p.ExitCode != 0){
-				Console.WriteLine ("{0}: API binding contains errors.", tool_name);
+				Console.WriteLine ("{0}: API binding contains errors.", ToolName);
 				return 1;
 			}
 
@@ -404,12 +412,6 @@ class BindingTouch {
 					types.Add (t);
 				if (AttributeManager.HasAttribute (t, TypeManager.StrongDictionaryAttribute, true))
 					strong_dictionaries.Add (t);
-			}
-
-			if (CurrentPlatform == PlatformName.MacOSX && Unified) {
-				if (!target_framework.HasValue)
-					throw ErrorHelper.CreateError (86, "A target framework (--target-framework) must be specified when building for Xamarin.Mac.");
-				skipSystemDrawing = target_framework == TargetFramework.Xamarin_Mac_4_5_Full;
 			}
 
 			var nsManager = new NamespaceManager (
@@ -478,7 +480,7 @@ class BindingTouch {
 			p = Process.Start (si);
 			p.WaitForExit ();
 			if (p.ExitCode != 0){
-				Console.WriteLine ("{0}: API binding contains errors.", tool_name);
+				Console.WriteLine ("{0}: API binding contains errors.", ToolName);
 				return 1;
 			}
 		} finally {
