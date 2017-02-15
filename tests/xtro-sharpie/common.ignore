@@ -152,6 +152,13 @@
 !incorrect-protocol-member! MDLObjectContainerComponent::count is REQUIRED and should be abstract
 !incorrect-protocol-member! MDLObjectContainerComponent::objectAtIndexedSubscript: is REQUIRED and should be abstract
 
+
+# Security
+
+## part of mscorlib.dll -> mcs/class/corlib/CommonCrypto/CommonCrypto.cs to implement RNGCryptoServiceProvider
+!missing-pinvoke! SecRandomCopyBytes is not bound
+
+
 # SpriteKit
 
 ## both introduced and deprecated in Xcode8
