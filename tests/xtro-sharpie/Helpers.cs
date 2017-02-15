@@ -55,6 +55,7 @@ namespace Extrospection {
 			{ "NWTCPConnectionState", "NWTcpConnectionState" },
 			{ "NWUDPSessionState", "NWUdpSessionState" },
 			{ "RPRecordingErrorCode", "RPRecordingError" },
+			{ "SecTrustResultType", "SecTrustResult" },
 			{ "SKErrorCode", "SKError" },
 			{ "SSReadingListErrorCode", "SSReadingListError" },
 			{ "SCNRenderingAPI", "SCNRenderingApi" },
