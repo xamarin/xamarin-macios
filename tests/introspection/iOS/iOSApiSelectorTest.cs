@@ -94,6 +94,44 @@ namespace Introspection {
 			//  to a MTLHeapDescriptorInternal and don't respond - so we'll add unit tests for them
 			case "MTLHeapDescriptor":
 				return Runtime.Arch == Arch.DEVICE;
+#if __WATCHOS__
+				// The following watchOS 3.2 Beta 2 types Fails, but they can be created we verified using an ObjC app, we will revisit before stable
+			case "INPersonResolutionResult":
+			case "INPlacemarkResolutionResult":
+			case "INPreferences":
+			case "INRadioTypeResolutionResult":
+			case "INRelativeReferenceResolutionResult":
+			case "INRelativeSettingResolutionResult":
+			case "INRideCompletionStatus":
+			case "INSpeakableStringResolutionResult":
+			case "INStringResolutionResult":
+			case "INTemperatureResolutionResult":
+			case "INWorkoutGoalUnitTypeResolutionResult":
+			case "INWorkoutLocationTypeResolutionResult":
+			case "INBillPayeeResolutionResult":
+			case "INBillTypeResolutionResult":
+			case "INBooleanResolutionResult":
+			case "INCallRecordTypeResolutionResult":
+			case "INCarAirCirculationModeResolutionResult":
+			case "INCarAudioSourceResolutionResult":
+			case "INCarDefrosterResolutionResult":
+			case "INCarSeatResolutionResult":
+			case "INCarSignalOptionsResolutionResult":
+			case "INCurrencyAmountResolutionResult":
+			case "INDateComponentsRangeResolutionResult":
+			case "INDateComponentsResolutionResult":
+			case "INDoubleResolutionResult":
+			case "INImage":
+			case "INIntegerResolutionResult":
+			case "INInteraction":
+			case "INMessageAttributeOptionsResolutionResult":
+			case "INPaymentAmountResolutionResult":
+			case "INMessageAttributeResolutionResult":
+			case "INPaymentMethod":
+			case "INPaymentStatusResolutionResult":
+			case "INPaymentAccountResolutionResult":
+				return true;
+#endif
 
 			default:
 				return base.Skip (type);

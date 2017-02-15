@@ -2649,7 +2649,6 @@ namespace XamCore.Intents {
 		[Introduced (PlatformName.iOS, 10, 2)]
 		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
 		[Export ("initWithValue:type:label:"), Protected]
-		[DesignatedInitializer]
 		IntPtr Constructor (string value, INPersonHandleType type, [NullAllowed] NSString stringLabel);
 
 		[Export ("initWithValue:type:")]
@@ -2736,13 +2735,16 @@ namespace XamCore.Intents {
 	[Introduced (PlatformName.iOS, 10, 0)]
 	[Introduced (PlatformName.WatchOS, 3, 2)]
 	[Unavailable (PlatformName.MacOSX)]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface INPreferences {
 
+		[NoWatch] // It seems this is not available on watchOS radar:30529232 https://trello.com/c/h8xBlKTt
 		[Static]
 		[Export ("siriAuthorizationStatus")]
 		INSiriAuthorizationStatus SiriAuthorizationStatus { get; }
 
+		[NoWatch] // It seems this is not available on watchOS radar:30529232 https://trello.com/c/h8xBlKTt
 		[Static]
 		[Async]
 		[Export ("requestSiriAuthorization:")]

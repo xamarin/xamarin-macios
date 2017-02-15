@@ -108,6 +108,9 @@
 !incorrect-protocol-member! INPayBillIntentHandling::handlePayBill:completion: is REQUIRED and should be abstract
 !incorrect-protocol-member! INSearchForBillsIntentHandling::handleSearchForBills:completion: is REQUIRED and should be abstract
 
+## Waiting on a radar https://trello.com/c/h8xBlKTt
+!missing-selector! +INPreferences::requestSiriAuthorization: not bound
+
 #PassKit
 
 ## No availability macro is provided for PKLabeledValue on watchOS / radar: https://trello.com/c/MvaHEZlc
