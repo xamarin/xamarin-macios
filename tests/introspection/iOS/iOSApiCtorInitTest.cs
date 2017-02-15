@@ -180,6 +180,22 @@ namespace Introspection {
 			// iOS 10 - this works only on devices, so we skip the simulator
 			case "MTLHeapDescriptor":
 				return Runtime.Arch == Arch.SIMULATOR;
+#if __WATCHOS__
+			// The following watchOS 3.2 Beta 2 types Fails, but they can be created we verified using an ObjC app, we will revisit before stable
+			case "INRequestPaymentIntent":
+			case "INRequestRideIntent":
+			case "INResumeWorkoutIntent":
+			case "INRideVehicle":
+			case "INSearchCallHistoryIntent":
+			case "INSearchForMessagesIntent":
+			case "INSearchForPhotosIntent":
+			case "INSendMessageIntent":
+			case "INSendPaymentIntent":
+			case "INStartAudioCallIntent":
+			case "INStartPhotoPlaybackIntent":
+			case "INStartWorkoutIntent":
+				return true;
+#endif
 			default:
 				return base.Skip (type);
 			}
