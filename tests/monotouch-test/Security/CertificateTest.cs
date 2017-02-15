@@ -514,6 +514,14 @@ namespace MonoTouchFixtures.Security {
 			Assert.That (CFGetRetainCount (cert.Handle), Is.EqualTo (expectedRetainCount), "RetainCount");
 			Assert.That (cert.SubjectSummary, Is.EqualTo ("mail.google.com"), "SubjectSummary");
 			Assert.That ((nuint) (uint) mail_google_com.Length, Is.EqualTo (cert.DerData.Length), "DerData");
+			if (TestRuntime.CheckXcodeVersion (8, 3)) {
+				Assert.That (cert.GetCommonName (), Is.EqualTo ("mail.google.com"), "GetCommonName");
+				Assert.That (cert.GetSerialNumber ().Description, Is.EqualTo ("<2b9f7ee5 ca25a625 14204782 753a9bb9>"), "GetSerialNumber");
+				Assert.Null (cert.GetEmailAddresses (), "GetEmailAddresses");
+				Assert.NotNull (cert.GetNormalizedIssuerSequence (), "GetNormalizedIssuerSequence");
+				Assert.NotNull (cert.GetNormalizedSubjectSequence (), "GetNormalizedSubjectSequence");
+				Assert.NotNull (cert.GetPublicKey (), "GetPublicKey");
+			}
 		}
 
 		[Test]

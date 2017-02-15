@@ -127,6 +127,18 @@ partial class TestRuntime
 #else
 				throw new NotImplementedException ();
 #endif
+			case 3:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (3, 2);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (10, 2);
+#elif __IOS__
+				return CheckiOSSystemVersion (10, 3);
+#elif MONOMAC
+				return CheckMacSystemVersion (10, 12, 4);
+#else
+				throw new NotImplementedException ();
+#endif
 			default:
 				throw new NotImplementedException ();
 			}
