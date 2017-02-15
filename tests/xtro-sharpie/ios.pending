@@ -267,10 +267,6 @@
 !incorrect-protocol-member! INPayBillIntentHandling::handlePayBill:completion: is REQUIRED and should be abstract
 !incorrect-protocol-member! INSearchForBillsIntentHandling::handleSearchForBills:completion: is REQUIRED and should be abstract
 
-## Deprecated in betas so not exposing them in final API
-!missing-selector! INRequestRideIntent::initWithPickupLocation:dropOffLocation:rideOptionName:partySize:paymentMethod:pickupTime: not bound
-!missing-selector! INRequestRideIntent::pickupTime not bound
-
 
 # UIKit
 

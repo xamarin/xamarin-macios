@@ -99,8 +99,6 @@
 !missing-selector! INRideDriver::initWithPersonHandle:nameComponents:displayName:image:rating:phoneNumber: not bound
 !missing-selector! INRideOption::identifier not bound
 !missing-selector! INRideOption::setIdentifier: not bound
-!missing-selector! INRequestRideIntent::initWithPickupLocation:dropOffLocation:rideOptionName:partySize:paymentMethod:pickupTime: not bound
-!missing-selector! INRequestRideIntent::pickupTime not bound
 
 ## False positive the class INBookRestaurantReservationIntentResponse is not available on watchOS
 !missing-enum! INBookRestaurantReservationIntentCode not bound
