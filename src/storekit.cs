@@ -63,12 +63,13 @@ namespace XamCore.StoreKit {
 		[Static]
 		void DeleteContentForProduct (string productId);
 #else
-		[Export ("transaction")]
-		SKPaymentTransaction Transaction { get;  }
-
 		[Field ("SKDownloadTimeRemainingUnknown")]
 		double TimeRemainingUnknown { get; }
 #endif
+
+		[Mac (10,11)]
+		[Export ("transaction")]
+		SKPaymentTransaction Transaction { get;  }
 	}
 
 	[BaseType (typeof (NSObject))]
