@@ -210,11 +210,14 @@ public class BindAttribute : Attribute {
 }
 
 public class WrapAttribute : Attribute {
-	public WrapAttribute (string methodname)
+	public WrapAttribute (string methodname, bool isVirtual = false)
 	{
 		MethodName = methodname;
+		IsVirtual = isVirtual;
 	}
+
 	public string MethodName { get; set; }
+	public bool IsVirtual { get; set; }
 }
 
 //
