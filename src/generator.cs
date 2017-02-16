@@ -510,7 +510,9 @@ public class MemberInformation
 					if (attr.Length != 1)
 						throw new BindingException (1012, true, "No Export or Bind attribute defined on {0}.{1}", type, mi.Name);
 
-					wrap_method = ((WrapAttribute) attr [0]).MethodName;
+					var wrapAtt = (WrapAttribute) attr [0];
+					wrap_method = wrapAtt.MethodName;
+					is_virtual_method = wrapAtt.IsVirtual;
 				} else {
 					BindAttribute ba = (BindAttribute) attr [0];
 					this.selector = ba.Selector;
@@ -546,7 +548,11 @@ public class MemberInformation
 		if (export != null)
 			selector = export.Selector;
 
-		if (wrap_method != null || is_interface_impl || is_type_sealed)
+		if (wrap_method != null) {
+			var wrapAtt = AttributeManager.GetCustomAttribute <WrapAttribute> (pi, true);
+			is_virtual_method = wrapAtt?.IsVirtual ?? false;
+		}
+		else if (is_interface_impl || is_type_sealed)
 			is_virtual_method = false;
 		else
 			is_virtual_method = !is_static;
