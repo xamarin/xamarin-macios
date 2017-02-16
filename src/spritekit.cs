@@ -125,6 +125,11 @@ namespace XamCore.SpriteKit {
 		[Static, Export ("node")]
 		SKNode Create ();
 
+		[Static]
+		[Export ("nodeWithFileNamed:")]
+		[return: NullAllowed]
+		SKNode Create (string filename);
+
 		[Export ("frame")]
 		CGRect Frame { get; }
 
@@ -252,6 +257,9 @@ namespace XamCore.SpriteKit {
 
 		[Export ("intersectsNode:")]
 		bool IntersectsNode (SKNode node);
+
+		[Export ("isEqualToNode:")]
+		bool IsEqual (SKNode node);
 
 		[Export ("inParentHierarchy:")]
 		bool InParentHierarchy (SKNode node);
@@ -1105,7 +1113,6 @@ namespace XamCore.SpriteKit {
 		[Export ("attributeValues", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
 
-#if XAMCORE_4_0
 		[iOS (9,0), Mac(10,11)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
@@ -1114,7 +1121,6 @@ namespace XamCore.SpriteKit {
 		[iOS (9,0), Mac(10,11)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
-#endif
 	}
 
 	[Watch (3,0)]
@@ -1902,10 +1908,6 @@ namespace XamCore.SpriteKit {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] set;
 		}
 
-#if false
-	// Do we really need these static factory methods, instead of the nice construcotrs we have in C#?
-	// Only reason Apple exposed these is because [[foo alloc] init] is annoying
-	//
 		[Static, Export ("uniformWithName:")]
 		SKUniform Create (string name);
 
@@ -1950,7 +1952,6 @@ namespace XamCore.SpriteKit {
 		[Export ("uniformWithName:matrixFloat4x4:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, Matrix4 value);
-#endif
 	}
 
 	delegate void SKActionDurationHandler (SKNode node, nfloat elapsedTime);
@@ -3064,7 +3065,6 @@ namespace XamCore.SpriteKit {
 		[Export ("attributeValues", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
 
-#if XAMCORE_4_0
 		[iOS (9,0), Mac(10,11)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
@@ -3073,7 +3073,6 @@ namespace XamCore.SpriteKit {
 		[iOS (9,0), Mac(10,11)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
-#endif
 	}
 
 	[Watch (3,0)]
