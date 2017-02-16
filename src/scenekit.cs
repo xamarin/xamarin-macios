@@ -2609,10 +2609,6 @@ namespace XamCore.SceneKit {
 		[iOS (8,0)][Mac (10,10)]
 		[Export ("antialiasingMode")]
 		SCNAntialiasingMode AntialiasingMode { get; set; }
-
-		// HitTest comes from SCNSceneRenderer - and that Wrap'per is not copied (but needed for backward compatibility)
-		[Wrap ("HitTest (thePoint, options == null ? null : options.Dictionary)")]
-		new SCNHitTestResult [] HitTest (CGPoint thePoint, SCNHitTestOptions options);
 	}
 
 	[Mac (10,9), iOS (8,0)]

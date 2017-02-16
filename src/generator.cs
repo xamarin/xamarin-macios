@@ -5687,7 +5687,7 @@ public partial class Generator : IMemberGatherer {
 				}
 			}
 			
-			var bound_methods = new List<string> (); // List of methods bound on the class itself (not via protocols)
+			var bound_methods = new HashSet<MemberInformation> (); // List of methods bound on the class itself (not via protocols)
 			var generated_methods = new List<MemberInformation> (); // All method that have been generated
 			foreach (var mi in GetTypeContractMethods (type).OrderByDescending (m => m.Name == "Constructor").ThenBy (m => m.Name, StringComparer.Ordinal)) {
 				if (mi.IsSpecialName || (mi.Name == "Constructor" && type != mi.DeclaringType))
@@ -5703,11 +5703,11 @@ public partial class Generator : IMemberGatherer {
 
 				if (type == mi.DeclaringType || type.IsSubclassOf (mi.DeclaringType)) {
 					// not an injected protocol method.
-					bound_methods.Add (minfo.selector);
+					bound_methods.Add (minfo);
 				} else {
 					// don't inject a protocol method if the class already
 					// implements the same method.
-					if (bound_methods.Contains (minfo.selector))
+					if (bound_methods.Contains (minfo))
 						continue;
 
 					var protocolsThatHaveThisMethod = GetTypeContractMethods (type).Where (x => { var sel = GetSelector (x); return sel != null && sel == minfo.selector; } );
