@@ -71,7 +71,7 @@ namespace XamCore.ModelIO {
 
 		[iOS (10,0)]
 		[TV (10,0)]
-		[NoMac]
+		[Mac (10,12)]
 		[Export ("initWithBufferAllocator:")]
 		IntPtr Constructor ([NullAllowed] IMDLMeshBufferAllocator bufferAllocator);
 
