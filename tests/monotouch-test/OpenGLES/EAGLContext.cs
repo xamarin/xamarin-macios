@@ -31,11 +31,15 @@ namespace MonoTouchFixtures.OpenGLES
 		[Test]
 		public void PresentRenderBufferTest ()
 		{
+			TestRuntime.AssertXcodeVersion (8, 0);
+
 			var obj = new EAGLContext (EAGLRenderingAPI.OpenGLES2);
 
 			Asserts.AreEqual (true, obj.PresentRenderBuffer ((int)RenderbufferTarget.Renderbuffer, 0), "PresentRenderBuffer");
-			Asserts.AreEqual (true, obj.PresentRenderBuffer ((int)RenderbufferTarget.Renderbuffer, 0, EAGLContext.PresentationMode.AtTime), "PresentRenderBufferAtTime");
-			Asserts.AreEqual (true, obj.PresentRenderBuffer ((int)RenderbufferTarget.Renderbuffer, 0, EAGLContext.PresentationMode.AfterMinimumDuration), "PresentRenderBufferAfterMinimumDuration");
+			if (TestRuntime.CheckXcodeVersion (8, 3)) {
+				Asserts.AreEqual (true, obj.PresentRenderBuffer ((int)RenderbufferTarget.Renderbuffer, 0, EAGLContext.PresentationMode.AtTime), "PresentRenderBufferAtTime");
+				Asserts.AreEqual (true, obj.PresentRenderBuffer ((int)RenderbufferTarget.Renderbuffer, 0, EAGLContext.PresentationMode.AfterMinimumDuration), "PresentRenderBufferAfterMinimumDuration");
+			}
 		}
 	}
 }
