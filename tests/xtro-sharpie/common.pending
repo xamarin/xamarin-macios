@@ -57,34 +57,13 @@
 
 # SpriteKit
 
-## https://bugzilla.xamarin.com/show_bug.cgi?id=34946
-!missing-selector! +SKNode::nodeWithFileNamed: not bound
-!missing-selector! SKNode::isEqualToNode: not bound
-!missing-selector! +SKUniform::uniformWithName: not bound
-!missing-selector! +SKUniform::uniformWithName:texture: not bound
-!missing-selector! +SKUniform::uniformWithName:float: not bound
+## Deprecated in iOS 10
 !missing-selector! +SKUniform::uniformWithName:floatVector2: not bound
 !missing-selector! +SKUniform::uniformWithName:floatVector3: not bound
 !missing-selector! +SKUniform::uniformWithName:floatVector4: not bound
 !missing-selector! +SKUniform::uniformWithName:floatMatrix2: not bound
 !missing-selector! +SKUniform::uniformWithName:floatMatrix3: not bound
 !missing-selector! +SKUniform::uniformWithName:floatMatrix4: not bound
-!missing-selector! +SKActions::falloffTo:duration: not bound
-!missing-selector! +SKVideoNode::videoNodeWithFileNamed: not bound
-!missing-selector! +SKVideoNode::videoNodeWithURL: not bound
-
-## https://bugzilla.xamarin.com/show_bug.cgi?id=37727
-!missing-selector! SKVideoNode::initWithFileNamed: not bound
-!missing-selector! SKVideoNode::initWithURL: not bound
-
-## Do we really need these static factory methods, instead of the nice construcotrs we have in C#?
-## Only reason Apple exposed these is because [[foo alloc] init] is annoying
-!missing-selector! +SKUniform::uniformWithName:matrixFloat2x2: not bound
-!missing-selector! +SKUniform::uniformWithName:matrixFloat3x3: not bound
-!missing-selector! +SKUniform::uniformWithName:matrixFloat4x4: not bound
-!missing-selector! +SKUniform::uniformWithName:vectorFloat2: not bound
-!missing-selector! +SKUniform::uniformWithName:vectorFloat3: not bound
-!missing-selector! +SKUniform::uniformWithName:vectorFloat4: not bound
 
 
 # UIKit
