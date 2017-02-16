@@ -1733,40 +1733,16 @@ namespace XamCore.ModelIO {
 	interface MDLVertexAttributeData
 	{
 		[Export ("map", ArgumentSemantic.Retain), NullAllowed]
-		MDLMeshBufferMap Map {
-			get;
-#if !XAMCORE_4_0
-			[NotImplemented]
-			set;
-#endif
-		}
+		MDLMeshBufferMap Map { get; set; }
 
 		[Export ("dataStart", ArgumentSemantic.Assign)]
-		IntPtr DataStart {
-			get;
-#if !XAMCORE_4_0
-			[NotImplemented]
-			set;
-#endif
-		}
+		IntPtr DataStart { get; set; }
 
 		[Export ("stride", ArgumentSemantic.Assign)]
-		nuint Stride {
-			get;
-#if !XAMCORE_4_0
-			[NotImplemented]
-			set;
-#endif
-		}
+		nuint Stride { get; set; }
 
 		[Export ("format", ArgumentSemantic.Assign)]
-		MDLVertexFormat Format {
-			get;
-#if !XAMCORE_4_0
-			[NotImplemented]
-			set;
-#endif
-		}
+		MDLVertexFormat Format { get; set; }
 	}
 
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
