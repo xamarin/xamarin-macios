@@ -705,7 +705,7 @@ namespace Xamarin.Bundler {
 					throw new MonoMacException (23, true, "Application name '{0}.exe' conflicts with another user assembly.", root_wo_ext);
 
 				string monoFrameworkDirectory = TargetFramework.MonoFrameworkDirectory;
-				if (IsUnifiedFullSystemFramework || IsClassic)
+				if (IsUnifiedFullXamMacFramework || IsUnifiedFullSystemFramework || IsClassic)
 					monoFrameworkDirectory = "4.5";
 
 				fx_dir = Path.Combine (MonoDirectory, "lib", "mono", monoFrameworkDirectory);
