@@ -10869,7 +10869,7 @@ namespace XamCore.AVFoundation {
 	}
 #endif
 
-	[TV (10,2), Mac (10,12,4), iOS (10,3)]
+	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface AVContentKeySessionDelegate
@@ -10894,30 +10894,27 @@ namespace XamCore.AVFoundation {
 		void DidChange (AVContentKeySession session);
 	}
 
+	[NoWatch]
 	partial interface IAVContentKeySessionDelegate {}
 
-	[TV (10,2), Mac (10,12,4), iOS (10,3)]
+	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface AVContentKeySession {
 		[Static]
 		[Export ("contentKeySessionWithKeySystem:storageDirectoryAtURL:")]
-		AVContentKeySession Create (string keySystem, [NullAllowed] NSUrl storageURL);
+		AVContentKeySession Create (string keySystem, [NullAllowed] NSUrl storageUrl);
 
 		[Export ("setDelegate:queue:")]
 		void SetDelegate ([NullAllowed] IAVContentKeySessionDelegate newDelegate, [NullAllowed] DispatchQueue delegateQueue);
 
-		[Wrap ("WeakDelegate")]
-		[NullAllowed]
-		IAVContentKeySessionDelegate Delegate { get; }
-
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
-		NSObject WeakDelegate { get; }
+		IAVContentKeySessionDelegate Delegate { get; }
 
 		[NullAllowed, Export ("delegateQueue")]
 		DispatchQueue DelegateQueue { get; }
 
 		[NullAllowed, Export ("storageURL")]
-		NSUrl StorageURL { get; }
+		NSUrl StorageUrl { get; }
 
 		[Export ("keySystem")]
 		string KeySystem { get; }
@@ -10935,7 +10932,7 @@ namespace XamCore.AVFoundation {
 		void RenewExpiringResponseData (AVContentKeyRequest contentKeyRequest);
 	}
 
-	[TV (10,2), Mac (10,12,4), iOS (10,3)]
+	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface AVContentKeyRequest {
 		[TV (10, 2), Mac (10, 12, 4), iOS (10, 3)]
@@ -10970,7 +10967,7 @@ namespace XamCore.AVFoundation {
 		void RespondRequest ();
 	}
 
-	[TV (10,2), Mac (10,12,4), iOS (10,3)]
+	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
 	[BaseType (typeof (AVContentKeyRequest))]
 	interface AVPersistableContentKeyRequest {
 		[Export ("persistableContentKeyFromKeyVendorResponse:options:error:")]
@@ -10980,7 +10977,7 @@ namespace XamCore.AVFoundation {
 		bool RenewsExpiringResponseData { get; }
 	}
 
-	[TV (10,2), Mac (10,12,4), iOS (10,3)]
+	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface AVContentKeyResponse {
 		[Static]
@@ -10988,8 +10985,8 @@ namespace XamCore.AVFoundation {
 		AVContentKeyResponse Create (NSData keyResponseData);
 	}
 
-	[TV (10,2), Mac (10,12,4), iOS (10,3)]
-	[Protocol, BaseType (typeof (NSObject))]
+	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
+	[Protocol]
 	interface AVContentKeyRecipient {
 		[Abstract]
 		[Export ("mayRequireContentKeysForMediaDataProcessing")]
