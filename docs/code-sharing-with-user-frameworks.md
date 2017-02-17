@@ -25,11 +25,11 @@ If Xamarin.iOS determines that code sharing can occur, then it builds one
 framework for all the assemblies in the SDK, and this framework is shared
 between extensions and the main app. This significantly reduces total code
 size of the app (and the build time, since every assembly is only AOT-compiled
-once).
+once per architecture).
 
 Additionally, when code sharing is enabled, Xamarin.iOS will also AOT-compile
-every assembly (not only SDK assemblies) only once, which greatly speeds up
-compilation time.
+every assembly (not only SDK assemblies) only once (per architecture), which
+greatly speeds up compilation time.
 
 It's also possible to manually specify the assembly build target, by passing
 --assembly-build-target to mtouch:
