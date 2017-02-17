@@ -230,40 +230,40 @@ class BindingTouch {
 		if (!target_framework.HasValue)
 			throw ErrorHelper.CreateError (86, "A target framework (--target-framework) must be specified.");
 
-		switch (target_framework.Value.Identifier) {
-		case "MonoTouch":
+		switch (target_framework.Value.Identifier.ToLowerInvariant ()) {
+		case "monotouch":
 			CurrentPlatform = PlatformName.iOS;
 			Unified = false;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/2.1/monotouch.dll");
 			Path.Combine (GetSDKRoot (), "bin/smcs");
 			break;
-		case "Xamarin.iOS":
+		case "xamarin.ios":
 			CurrentPlatform = PlatformName.iOS;
 			Unified = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
 			break;
-		case "Xamarin.TvOS":
+		case "xamarin.tvos":
 			CurrentPlatform = PlatformName.TvOS;
 			Unified = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll");
 			break;
-		case "Xamarin.WatchOS":
+		case "xamarin.watchos":
 			CurrentPlatform = PlatformName.WatchOS;
 			Unified = true;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = Path.Combine (GetSDKRoot (), "lib/mono/Xamarin.WatchOS/Xamarin.WatchOS.dll");
 			break;
-		case "XamMac":
+		case "xammac":
 			CurrentPlatform = PlatformName.MacOSX;
 			Unified = false;
 			if (string.IsNullOrEmpty (baselibdll))
 				baselibdll = "MonoMac.dll";
 			net_sdk = "4";
 			break;
-		case "Xamarin.Mac":
+		case "xamarin.mac":
 			CurrentPlatform = PlatformName.MacOSX;
 			Unified = true;
 			skipSystemDrawing = target_framework == TargetFramework.Xamarin_Mac_4_5_Full;
