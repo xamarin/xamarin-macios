@@ -113,6 +113,11 @@ $(IOS_BUILD_DIR)/$(1)/generator.exe: $$(GENERATOR_SOURCES) $(IOS_BUILD_DIR)/$(1)
 # generated_sources
 # Unfortunatelly, generator uses reflection to load api which means we need to build another
 # mono (tools64) to be able to load 2.1 mscorlib (mscorlib internal version must match runtime version)
+
+# We can't pass the --target-framework values as parameters to the templates, because the commas interfere with Make's parameter parsing.
+xi_compat_profile=--target-framework=MonoTouch,v1.0
+xi_native_profile=--target-framework=Xamarin.iOS,v1.0
+
 $(IOS_BUILD_DIR)/$(1)/generated_sources: $(IOS_BUILD_DIR)/$(1)/generator.exe $$(IOS_APIS)
 	$$(call Q_PROF_GEN,ios/$(1)) PMCS_PROFILE=$(3) $$(IOS_BMONO) --debug $(IOS_BUILD_DIR)/$(1)/generator.exe \
 		$$(IOS_GENERATOR_FLAGS) \
@@ -127,6 +132,7 @@ $(IOS_BUILD_DIR)/$(1)/generated_sources: $(IOS_BUILD_DIR)/$(1)/generator.exe $$(
 		-ns=MonoTouch.ObjCRuntime \
 		-native-exception-marshalling \
 		$(2) \
+		$$(xi_$(1)_profile) \
 		$$(IOS_APIS)
 endef
 $(eval $(call IOS_GENERATOR_template,compat,--ns=MonoTouch.ObjCRuntime -p,compat-ios))
@@ -459,6 +465,7 @@ $(MAC_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in
 # We can't pass the --target-framework values as parameters to the templates, because the commas interfere with Make's parameter parsing.
 xm_full_profile=--target-framework=Xamarin.Mac,Version=v4.5,Profile=Full
 xm_mobile_profile=--target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile
+xm_compat_profile=--target-framework=XamMac,v1.0
 
 define MAC_GENERATOR_template
 $(MAC_BUILD_DIR)/$(1)/pmcs: pmcs.in $(PMCS_EXE) Makefile | $(MAC_BUILD_DIR)/$(1)
@@ -752,6 +759,7 @@ $(WATCH_BUILD_DIR)/watch/generated_sources: $(WATCH_BUILD_DIR)/watch/generator.e
 		-d:WATCH                                                 \
 		--ns:ObjCRuntime                                         \
 		$(WATCHOS_APIS)                                            \
+		--target-framework=Xamarin.WatchOS,v1.0                     \
 
 $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.dll: $(WATCHOS_SOURCES) $(WATCH_BUILD_DIR)/watch/generated_sources $(PRODUCT_KEY_PATH) | $(WATCH_BUILD_DIR)/watch-32
 	$(call Q_PROF_PMCS,watch) PMCS_PROFILE=watch-32 $(WATCH_PMCS) -out:$@ -target:library -debug -unsafe -optimize \
@@ -950,6 +958,7 @@ $(TVOS_BUILD_DIR)/tvos/generated_sources: $(TVOS_BUILD_DIR)/tvos/generator.exe $
 		-d:TVOS                                                  \
 		--ns:ObjCRuntime                                         \
 		$(TVOS_APIS)                                            \
+		--target-framework=Xamarin.TVOS,v1.0                     \
 
 $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.dll: $(TVOS_SOURCES) $(TVOS_BUILD_DIR)/tvos/generated_sources $(PRODUCT_KEY_PATH) | $(TVOS_BUILD_DIR)/tvos-64
 	$(call Q_PROF_PMCS,tvos) PMCS_PROFILE=tvos-64 $(TVOS_PMCS) -out:$@ -target:library -debug -unsafe -optimize \

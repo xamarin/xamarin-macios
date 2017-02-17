@@ -49,7 +49,7 @@ mobile|xamarin.mac|xammac)
 *)
 	if [[ -z "$new_style" ]]; then
 		bmac=bmac-compat.exe
-		refs="-r:/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5/System.Drawing.dll -baselib:$ROOT_DIR/lib/mono/XamMac.dll"
+		refs="-r:/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5/System.Drawing.dll -baselib:$ROOT_DIR/lib/mono/XamMac.dll --target-framework=XamMac,v1.0"
 		export MONO_PATH=$ROOT_DIR/lib/mono
 	else
 		if [[ "$full_profile" -eq 1 ]]; then

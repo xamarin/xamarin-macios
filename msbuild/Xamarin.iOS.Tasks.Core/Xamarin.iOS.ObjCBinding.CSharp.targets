@@ -76,6 +76,7 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 			OutputAssembly="$(OutputAssembly)"
 			ProcessEnums="$(ProcessEnums)"
 			References="@(ReferencePath);@(BTouchReferencePath)"
+			TargetFrameworkIdentifier="$(TargetFrameworkIdentifier)"
 			BTouchToolPath="$(BTouchToolPath)"
 			BTouchToolExe="$(BTouchToolExe)">
 		</BTouch>

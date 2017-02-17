@@ -1,2 +1,2 @@
 #!/bin/sh
-MONO_PATH=@MONOTOUCH_PREFIX@/lib/mono/Xamarin.iOS @MONOTOUCH_PREFIX@/bin/btouch-mono --debug @MONOTOUCH_PREFIX@/lib/btouch/btouch-native.exe "$@"
+MONO_PATH=@MONOTOUCH_PREFIX@/lib/mono/Xamarin.iOS @MONOTOUCH_PREFIX@/bin/btouch-mono --debug @MONOTOUCH_PREFIX@/lib/btouch/btouch-native.exe  --target-framework=Xamarin.iOS,v1.0 "$@"
