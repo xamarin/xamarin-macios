@@ -1277,10 +1277,10 @@ function oninitialload ()
 				var headerColor = "black";
 				if (failedTests.Any ()) {
 					headerColor = "red";
-				} else if (passedTests.Count () != allTasks.Count) {
-					headerColor = "gray";
-				} else {
+				} else if (passedTests.Any ()) {
 					headerColor = "green";
+				} else {
+					headerColor = "gray";
 				}
 
 				writer.Write ($"<span id='x{id_counter++}' class='autorefreshable'>");
@@ -1296,13 +1296,12 @@ function oninitialload ()
 					writer.Write (")");
 				} else if (failedTests.Any ()) {
 					writer.Write ($"<h2 style='color: {headerColor}'>{failedTests.Count ()} tests failed, {passedTests.Count ()} tests passed.");
+				} else if (passedTests.Any ()) {
+					writer.Write ($"<h2 style='color: {headerColor}'>All {passedTests.Count ()} tests passed");
 				} else {
-					writer.Write ($"<h2 style='color: {headerColor}'>All tests passed");
+					writer.Write ($"<h2 style='color: {headerColor}'>No tests selected.");
 				}
 				if (IsServerMode && allTasks.Count > 0) {
-					writer.Write ("<small>");
-					writer.Write (" <a href='javascript:runalltests()'>Run all tests</a>");
-					writer.WriteLine ("</small>");
 					writer.WriteLine (@"</h2></span>
 <ul id='nav'>
 	<li id=""adminmenu"">Select
@@ -1497,6 +1496,14 @@ function oninitialload ()
 								}
 								if (test.Duration.Ticks > 0)
 									writer.WriteLine ($"Run duration: {test.Duration} <br />");
+								var runDeviceTest = runTest as RunDeviceTask;
+								if (runDeviceTest?.Device != null) {
+									if (runDeviceTest.CompanionDevice != null) {
+										writer.WriteLine ($"Device: {runDeviceTest.Device.Name} ({runDeviceTest.CompanionDevice.Name}) <br />");
+									} else {
+										writer.WriteLine ($"Device: {runDeviceTest.Device.Name} <br />");
+									}
+								}
 							} else {
 								if (test.Duration.Ticks > 0)
 									writer.WriteLine ($"Duration: {test.Duration} <br />");
@@ -2611,7 +2618,7 @@ function oninitialload ()
 							};
 							additional_runner = todayRunner;
 							await todayRunner.RunAsync ();
-							foreach (var log in todayRunner.Logs.Where ((v) => !v.Description.StartsWith ("Extension ")))
+							foreach (var log in todayRunner.Logs.Where ((v) => !v.Description.StartsWith ("Extension ", StringComparison.Ordinal)))
 								log.Description = "Extension " + log.Description [0].ToString ().ToLower () + log.Description.Substring (1);
 							ExecutionResult = todayRunner.Result;
 
