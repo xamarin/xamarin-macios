@@ -1208,8 +1208,8 @@ namespace Xamarin.Bundler
 				var run_registrar_task = new RunRegistrarTask
 				{
 					Target = this,
-					RegistrarM = registrar_m,
-					RegistrarH = registrar_h,
+					RegistrarCodePath = registrar_m,
+					RegistrarHeaderPath = registrar_h,
 				};
 
 				foreach (var abi in GetArchitectures (AssemblyBuildTarget.StaticObject)) {
@@ -1222,8 +1222,8 @@ namespace Xamarin.Bundler
 						Abi = abi,
 						InputFile = registrar_m,
 						OutputFile = ofile,
-						RegistrarM = registrar_m,
-						RegistrarH = registrar_h,
+						RegistrarCodePath = registrar_m,
+						RegistrarHeaderPath = registrar_h,
 						SharedLibrary = false,
 						Language = "objective-c++",
 					};

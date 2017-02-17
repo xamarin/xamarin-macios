@@ -132,8 +132,8 @@ namespace Xamarin.Bundler
 	class RunRegistrarTask : BuildTask
 	{
 		public Target Target;
-		public string RegistrarM;
-		public string RegistrarH;
+		public string RegistrarCodePath;
+		public string RegistrarHeaderPath;
 
 		public override IEnumerable<string> Inputs {
 			get {
@@ -144,26 +144,26 @@ namespace Xamarin.Bundler
 
 		public override IEnumerable<string> Outputs {
 			get {
-				yield return RegistrarH;
-				yield return RegistrarM;
+				yield return RegistrarHeaderPath;
+				yield return RegistrarCodePath;
 			}
 		}
 
 		protected override void Execute ()
 		{
-			Target.StaticRegistrar.Generate (Target.Assemblies.Select ((a) => a.AssemblyDefinition), RegistrarH, RegistrarM);
+			Target.StaticRegistrar.Generate (Target.Assemblies.Select ((a) => a.AssemblyDefinition), RegistrarHeaderPath, RegistrarCodePath);
 		}
 	}
 
 	class CompileRegistrarTask : CompileTask
 	{
-		public string RegistrarM;
-		public string RegistrarH;
+		public string RegistrarCodePath;
+		public string RegistrarHeaderPath;
 
 		public override IEnumerable<string> Inputs {
 			get {
-				yield return RegistrarH;
-				yield return RegistrarM;
+				yield return RegistrarHeaderPath;
+				yield return RegistrarCodePath;
 			}
 		}
 
