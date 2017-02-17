@@ -100,6 +100,8 @@ class BindingTouch {
 #endif
 	static char shellQuoteChar;
 
+	public static bool BindingThirdParty = true;
+
 	public static string ToolName {
 		get { return tool_name; }
 	}
@@ -155,6 +157,20 @@ class BindingTouch {
 			throw ErrorHelper.CreateError (70, "Invalid target framework: {0}. Valid target frameworks are: {1}.", target_framework.Value, string.Join (" ", TargetFramework.ValidFrameworks.Select ((v) => v.ToString ()).ToArray ()));
 	}
 
+	public static string NamespacePlatformPrefix {
+		get {
+			switch (CurrentPlatform) {
+			case PlatformName.MacOSX:
+				return Unified ? null : "MonoMac";
+			case PlatformName.iOS:
+				return Unified ? null : "MonoTouch";
+			default:
+				return null;
+			}
+
+		}
+	}
+
 	static int Main2 (string [] args)
 	{
 		bool show_help = false;
@@ -179,7 +195,6 @@ class BindingTouch {
 		var core_sources = new List<string> ();
 		var extra_sources = new List<string> ();
 		var defines = new List<string> ();
-		bool binding_third_party = true;
 		string generate_file_list = null;
 		bool process_enums = false;
 
@@ -200,7 +215,7 @@ class BindingTouch {
 			{ "sourceonly=", "Only generates the source", v => generate_file_list = v },
 			{ "ns=", "Sets the namespace for storing helper classes", v => ns = v },
 			{ "unsafe", "Sets the unsafe flag for the build", v=> unsafef = true },
-			{ "core", "Use this to build product assemblies", v => binding_third_party = false },
+			{ "core", "Use this to build product assemblies", v => BindingThirdParty = false },
 			{ "r=", "Adds a reference", v => references.Add (v) },
 			{ "lib=", "Adds the directory to the search path for the compiler", v => libs.Add (Quote (v)) },
 			{ "compiler=", "Sets the compiler to use", v => compiler = v },
@@ -357,6 +372,8 @@ class BindingTouch {
 			}
 			GC.KeepAlive (baselib); // Fixes a compiler warning (unused variable).
 				
+			TypeManager.Initialize (api);
+
 			foreach (object attr in AttributeManager.GetCustomAttributes (api, TypeManager.LinkWithAttribute, true)) {
 				LinkWithAttribute linkWith = (LinkWithAttribute) attr;
 				
@@ -389,19 +406,6 @@ class BindingTouch {
 					strong_dictionaries.Add (t);
 			}
 
-			string nsManagerPrefix;
-			switch (CurrentPlatform) {
-			case PlatformName.MacOSX:
-				nsManagerPrefix = Unified ? null : "MonoMac";
-				break;
-			case PlatformName.iOS:
-				nsManagerPrefix = Unified ? null : "MonoTouch";
-				break;
-			default:
-				nsManagerPrefix = null;
-				break;
-			}
-
 			if (CurrentPlatform == PlatformName.MacOSX && Unified) {
 				if (!target_framework.HasValue)
 					throw ErrorHelper.CreateError (86, "A target framework (--target-framework) must be specified when building for Xamarin.Mac.");
@@ -409,20 +413,20 @@ class BindingTouch {
 			}
 
 			var nsManager = new NamespaceManager (
-				nsManagerPrefix,
+				NamespacePlatformPrefix,
 				ns == null ? firstApiDefinitionName : ns,
 				skipSystemDrawing
 			);
 
 			var g = new Generator (nsManager, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()){
-				BindThirdPartyLibrary = binding_third_party,
+				BindThirdPartyLibrary = BindingThirdParty,
 				CoreNSObject = CoreObject,
 				BaseDir = basedir != null ? basedir : tmpdir,
 				ZeroCopyStrings = zero_copy,
 				InlineSelectors = inline_selectors,
 			};
 
-			if (!Unified && !binding_third_party) {
+			if (!Unified && !BindingThirdParty) {
 				foreach (var mi in baselib.GetType (nsManager.CoreObjCRuntime + ".Messaging").GetMethods ()){
 					if (mi.Name.IndexOf ("_objc_msgSend") != -1)
 						g.RegisterMethodName (mi.Name);

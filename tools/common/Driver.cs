@@ -21,6 +21,32 @@ namespace Xamarin.Bundler {
 	public partial class Driver {
 		static void AddSharedOptions (Application app, Mono.Options.OptionSet options)
 		{
+			options.Add ("warnaserror:", "An optional comma-separated list of warning codes that should be reported as errors (if no warnings are specified all warnings are reported as errors).", v =>
+			{
+				try {
+					if (!string.IsNullOrEmpty (v)) {
+						foreach (var code in v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+							ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Error, int.Parse (code));
+					} else {
+						ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Error);
+					}
+				} catch (Exception ex) {
+					ErrorHelper.Error (26, ex, "Could not parse the command line argument '{0}': {1}", "--warnaserror", ex.Message);
+				}
+			});
+			options.Add ("nowarn:", "An optional comma-separated list of warning codes to ignore (if no warnings are specified all warnings are ignored).", v =>
+			{
+				try {
+					if (!string.IsNullOrEmpty (v)) {
+						foreach (var code in v.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+							ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Disable, int.Parse (code));
+					} else {
+						ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Disable);
+					}
+				} catch (Exception ex) {
+					ErrorHelper.Error (26, ex, "Could not parse the command line argument '{0}': {1}", "--nowarn", ex.Message);
+				}
+			});
 			options.Add ("coop:", "If the GC should run in cooperative mode.", v => { app.EnableCoopGC = ParseBool (v, "coop"); }, hidden: true);
 			options.Add ("sgen-conc", "Enable the concurrent garbage collector.", v => { app.EnableSGenConc = true; });
 			options.Add ("marshal-objectivec-exceptions:", "Specify how Objective-C exceptions should be marshalled. Valid values: default, unwindmanagedcode, throwmanagedexception, abort and disable. The default depends on the target platform (on watchOS the default is 'throwmanagedexception', while on all other platforms it's 'disable').", v => {
