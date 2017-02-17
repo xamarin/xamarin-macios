@@ -2565,59 +2565,61 @@ function oninitialload ()
 					if (!uninstall_result.Succeeded) {
 						FailureMessage = $"Uninstall failed, exit code: {uninstall_result.ExitCode}.";
 						ExecutionResult = TestExecutingResult.Failed;
-						return;
 					}
 
-					// Install the app
-					lock (lock_obj)
-						this.install_log = install_log;
-					try {
-						runner.MainLog = install_log;
-						var install_result = await runner.InstallAsync ();
-						if (!install_result.Succeeded) {
-							FailureMessage = $"Install failed, exit code: {install_result.ExitCode}.";
-							ExecutionResult = TestExecutingResult.Failed;
-							return;
-						}
-					} finally {
+					if (!Failed) {
+						// Install the app
 						lock (lock_obj)
-							this.install_log = null;
+							this.install_log = install_log;
+						try {
+							runner.MainLog = install_log;
+							var install_result = await runner.InstallAsync ();
+							if (!install_result.Succeeded) {
+								FailureMessage = $"Install failed, exit code: {install_result.ExitCode}.";
+								ExecutionResult = TestExecutingResult.Failed;
+							}
+						} finally {
+							lock (lock_obj)
+								this.install_log = null;
+						}
 					}
 
-					// Run the app
-					runner.MainLog = Logs.CreateStream (LogDirectory, $"run-{Device.UDID}-{Timestamp}.log", "Run log");
-					await runner.RunAsync ();
+					if (!Failed) {
+						// Run the app
+						runner.MainLog = Logs.CreateStream (LogDirectory, $"run-{Device.UDID}-{Timestamp}.log", "Run log");
+						await runner.RunAsync ();
 
-					if (!string.IsNullOrEmpty (runner.FailureMessage))
-						FailureMessage = runner.FailureMessage;
+						if (!string.IsNullOrEmpty (runner.FailureMessage))
+							FailureMessage = runner.FailureMessage;
 
-					if (runner.Result == TestExecutingResult.Succeeded && Platform == TestPlatform.iOS_TodayExtension64) {
-						// For the today extension, the main app is just a single test.
-						// This is because running the today extension will not wake up the device,
-						// nor will it close & reopen the today app (but launching the main app
-						// will do both of these things, preparing the device for launching the today extension).
+						if (runner.Result == TestExecutingResult.Succeeded && Platform == TestPlatform.iOS_TodayExtension64) {
+							// For the today extension, the main app is just a single test.
+							// This is because running the today extension will not wake up the device,
+							// nor will it close & reopen the today app (but launching the main app
+							// will do both of these things, preparing the device for launching the today extension).
 
-						AppRunner todayRunner = new AppRunner
-						{
-							Harness = Harness,
-							ProjectFile = TestProject.GetTodayExtension ().Path,
-							Target = AppRunnerTarget,
-							LogDirectory = LogDirectory,
-							MainLog = Logs.CreateStream (LogDirectory, $"extension-run-{Device.UDID}-{Timestamp}.log", "Extension run log"),
-							DeviceName = Device.Name,
-							CompanionDeviceName = CompanionDevice?.Name,
-							Configuration = ProjectConfiguration,
-						};
-						additional_runner = todayRunner;
-						await todayRunner.RunAsync ();
-						foreach (var log in todayRunner.Logs.Where ((v) => !v.Description.StartsWith ("Extension ")))
-						         log.Description = "Extension " + log.Description[0].ToString ().ToLower () + log.Description.Substring (1);
-						ExecutionResult = todayRunner.Result;
+							AppRunner todayRunner = new AppRunner
+							{
+								Harness = Harness,
+								ProjectFile = TestProject.GetTodayExtension ().Path,
+								Target = AppRunnerTarget,
+								LogDirectory = LogDirectory,
+								MainLog = Logs.CreateStream (LogDirectory, $"extension-run-{Device.UDID}-{Timestamp}.log", "Extension run log"),
+								DeviceName = Device.Name,
+								CompanionDeviceName = CompanionDevice?.Name,
+								Configuration = ProjectConfiguration,
+							};
+							additional_runner = todayRunner;
+							await todayRunner.RunAsync ();
+							foreach (var log in todayRunner.Logs.Where ((v) => !v.Description.StartsWith ("Extension ")))
+								log.Description = "Extension " + log.Description [0].ToString ().ToLower () + log.Description.Substring (1);
+							ExecutionResult = todayRunner.Result;
 
-						if (!string.IsNullOrEmpty (todayRunner.FailureMessage))
-							FailureMessage = todayRunner.FailureMessage;
-					} else {
-						ExecutionResult = runner.Result;
+							if (!string.IsNullOrEmpty (todayRunner.FailureMessage))
+								FailureMessage = todayRunner.FailureMessage;
+						} else {
+							ExecutionResult = runner.Result;
+						}
 					}
 				} finally {
 					// Uninstall again, so that we don't leave junk behind and fill up the device.
