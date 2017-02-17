@@ -492,12 +492,8 @@ namespace Xamarin.Bundler {
 
 		public void AddRange (AssemblyCollection assemblies)
 		{
-			if (Count == 0) {
-				HashedAssemblies = new Dictionary<string, Assembly> (assemblies.HashedAssemblies);
-			} else {
-				foreach (var a in assemblies)
-					Add (a);
-			}
+			foreach (var a in assemblies)
+				Add (a);
 		}
 
 		public int Count {
