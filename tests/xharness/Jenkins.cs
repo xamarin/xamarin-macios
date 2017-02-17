@@ -2619,14 +2619,15 @@ function oninitialload ()
 					} else {
 						ExecutionResult = runner.Result;
 					}
-
-					await BuildTask.CleanAsync ();
 				} finally {
 					// Uninstall again, so that we don't leave junk behind and fill up the device.
 					runner.MainLog = uninstall_log;
 					var uninstall_result = await runner.UninstallAsync ();
 					if (!uninstall_result.Succeeded)
 						MainLog.WriteLine ($"Post-run uninstall failed, exit code: {uninstall_result.ExitCode} (this won't affect the test result)");
+
+					// Also clean up after us locally.
+					await BuildTask.CleanAsync ();
 				}
 			}
 		}
