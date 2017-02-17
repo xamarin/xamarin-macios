@@ -55,8 +55,15 @@ namespace XamCore.GameController {
 	[DisableDefaultCtor] // return nil handle -> only exposed as getter
 	partial interface GCControllerButtonInput {
 
-		[Export ("setValueChangedHandler:", ArgumentSemantic.Copy)]
+#if !XAMCORE_4_0
+		[Obsolete ("Use the ValueChangedHandler property")]
+		[Wrap ("ValueChangedHandler = handler;", IsVirtual = true)]
 		void SetValueChangedHandler (GCControllerButtonValueChanged handler);
+#endif
+
+		[NullAllowed]
+		[Export ("valueChangedHandler", ArgumentSemantic.Copy)]
+		GCControllerButtonValueChanged ValueChangedHandler { get; set; }
 
 		[Export ("value")]
 		float Value { get; } /* float, not CGFloat */
@@ -64,9 +71,17 @@ namespace XamCore.GameController {
 		[Export ("pressed")]
 		bool IsPressed { [Bind ("isPressed")] get; }
 
+#if !XAMCORE_4_0
 		[iOS (8,0), Mac (10,10)]
-		[Export ("setPressedChangedHandler:", ArgumentSemantic.Copy)]
+		[Obsolete ("Use the PressedChangedHandler property")]
+		[Wrap ("PressedChangedHandler = handler;", IsVirtual = true)]
 		void SetPressedChangedHandler (GCControllerButtonValueChanged handler);
+#endif
+
+		[iOS (8,0), Mac (10,10)]
+		[NullAllowed]
+		[Export ("pressedChangedHandler", ArgumentSemantic.Copy)]
+		GCControllerButtonValueChanged PressedChangedHandler { get; set; }
 	}
 
 	delegate void GCControllerDirectionPadValueChangedHandler (GCControllerDirectionPad dpad, float /* float, not CGFloat */ xValue, float /* float, not CGFloat */ yValue);
@@ -293,8 +308,15 @@ namespace XamCore.GameController {
 		[Export ("controller", ArgumentSemantic.Assign)]
 		GCController Controller { get; }
 
-		[Export ("setValueChangedHandler:", ArgumentSemantic.Copy)]
+#if !XAMCORE_4_0
+		[Obsolete ("Use the ValueChangedHandler property")]
+		[Wrap ("ValueChangedHandler = handler;", IsVirtual = true)]
 		void SetValueChangedHandler (Action<GCMotion> handler);
+#endif
+
+		[NullAllowed]
+		[Export ("valueChangedHandler", ArgumentSemantic.Copy)]
+		Action<GCMotion> ValueChangedHandler { get; set; }
 
 		[Export ("gravity", ArgumentSemantic.Assign)]
 		Vector3d Gravity { get; }
