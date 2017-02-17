@@ -562,8 +562,7 @@ namespace XamCore.AVFoundation {
 		Linear = 3
 	}
 
-	[NoWatch]
-	[NoTV]
+	[TV (10,2), NoWatch]
 	[Native]
 	public enum AVQueuedSampleBufferRenderingStatus : nint {
 		Unknown, Rendering, Failed
@@ -749,4 +748,17 @@ namespace XamCore.AVFoundation {
 		Default = 0,
 		SkipItem
 	}
+
+	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
+	[Native]
+	public enum AVContentKeyRequestStatus : nint
+	{
+		Requesting,
+		Received,
+		Renewed,
+		Retried,
+		Cancelled,
+		Failed
+	}
+
 }

@@ -2573,7 +2573,7 @@ namespace XamCore.AVFoundation {
 		NSString WasDefragmentedNotification { get; }
 #endif
 
-		[iOS (10, 3), Mac (10,12,3), TV (10, 3)]
+		[iOS (10, 2), Mac (10,12,2), TV (10, 3)]
 		[Export ("overallDurationHint")]
 		CMTime OverallDurationHint { get; }
 	}
@@ -10868,4 +10868,131 @@ namespace XamCore.AVFoundation {
 		IntPtr Constructor (CMTime contentTimeForTransition, string title, [NullAllowed] UIImage previewImage);
 	}
 #endif
+
+	[TV (10,2), Mac (10,12,4), iOS (10,3)]
+	[Protocol, Model]
+	[BaseType (typeof (NSObject))]
+	interface AVContentKeySessionDelegate
+	{
+		[Abstract]
+		[Export ("contentKeySession:didProvideContentKeyRequest:")]
+		void DidProvideContentKeyRequest (AVContentKeySession session, AVContentKeyRequest keyRequest);
+
+		[Export ("contentKeySession:didProvideRenewingContentKeyRequest:")]
+		void DidProvideRenewingContentKeyRequest (AVContentKeySession session, AVContentKeyRequest keyRequest);
+
+		[Export ("contentKeySession:didProvidePersistableContentKeyRequest:")]
+		void DidProvidePersistableContentKeyRequest (AVContentKeySession session, AVPersistableContentKeyRequest keyRequest);
+
+		[Export ("contentKeySession:contentKeyRequest:didFailWithError:")]
+		void DidFail (AVContentKeySession session, AVContentKeyRequest keyRequest, NSError err);
+
+		[Export ("contentKeySession:shouldRetryContentKeyRequest:reason:")]
+		bool ShouldRetryContentKeyRequest (AVContentKeySession session, AVContentKeyRequest keyRequest, string retryReason);
+
+		[Export ("contentKeySessionContentProtectionSessionIdentifierDidChange:")]
+		void DidChange (AVContentKeySession session);
+	}
+
+	partial interface IAVContentKeySessionDelegate {}
+
+	[TV (10,2), Mac (10,12,4), iOS (10,3)]
+	[BaseType (typeof (NSObject))]
+	interface AVContentKeySession {
+		[Static]
+		[Export ("contentKeySessionWithKeySystem:storageDirectoryAtURL:")]
+		AVContentKeySession Create (string keySystem, [NullAllowed] NSUrl storageURL);
+
+		[Export ("setDelegate:queue:")]
+		void SetDelegate ([NullAllowed] IAVContentKeySessionDelegate newDelegate, [NullAllowed] DispatchQueue delegateQueue);
+
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		IAVContentKeySessionDelegate Delegate { get; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; }
+
+		[NullAllowed, Export ("delegateQueue")]
+		DispatchQueue DelegateQueue { get; }
+
+		[NullAllowed, Export ("storageURL")]
+		NSUrl StorageURL { get; }
+
+		[Export ("keySystem")]
+		string KeySystem { get; }
+
+		[Export ("expire")]
+		void Expire ();
+
+		[NullAllowed, Export ("contentProtectionSessionIdentifier")]
+		NSData ContentProtectionSessionIdentifier { get; }
+
+		[Export ("processContentKeyRequestWithIdentifier:initializationData:options:")]
+		void ProcessContentKeyRequest ([NullAllowed] NSObject identifier, [NullAllowed] NSData initializationData, [NullAllowed] NSDictionary<NSString, NSObject> options);
+
+		[Export ("renewExpiringResponseDataForContentKeyRequest:")]
+		void RenewExpiringResponseData (AVContentKeyRequest contentKeyRequest);
+	}
+
+	[TV (10,2), Mac (10,12,4), iOS (10,3)]
+	[BaseType (typeof (NSObject))]
+	interface AVContentKeyRequest {
+		[TV (10, 2), Mac (10, 12, 4), iOS (10, 3)]
+		[Field ("AVContentKeyRequestProtocolVersionsKey")]
+		NSString ProtocolVersions { get; }
+
+		[Export ("status")]
+		AVContentKeyRequestStatus Status { get; }
+
+		[NullAllowed, Export ("error")]
+		NSError Error { get; }
+
+		[NullAllowed, Export ("identifier")]
+		NSObject Identifier { get; }
+
+		[NullAllowed, Export ("initializationData")]
+		NSData InitializationData { get; }
+
+		[Export ("canProvidePersistableContentKey")]
+		bool CanProvidePersistableContentKey { get; }
+
+		[Export ("makeStreamingContentKeyRequestDataForApp:contentIdentifier:options:completionHandler:")]
+		void MakeStreamingContentKeyRequestData (NSData appIdentifier, [NullAllowed] NSData contentIdentifier, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<NSData, NSError> handler);
+
+		[Export ("processContentKeyResponse:")]
+		void ProcessResponse (AVContentKeyResponse keyResponse);
+
+		[Export ("processContentKeyResponseError:")]
+		void ProcessError (NSError error);
+
+		[Export ("respondByRequestingPersistableContentKeyRequest")]
+		void RespondRequest ();
+	}
+
+	[TV (10,2), Mac (10,12,4), iOS (10,3)]
+	[BaseType (typeof (AVContentKeyRequest))]
+	interface AVPersistableContentKeyRequest {
+		[Export ("persistableContentKeyFromKeyVendorResponse:options:error:")]
+		NSData GetPersistableContentKey (NSData keyVendorResponse, [NullAllowed] NSDictionary<NSString, NSObject> options, out NSError outError);
+
+		[Export ("renewsExpiringResponseData")]
+		bool RenewsExpiringResponseData { get; }
+	}
+
+	[TV (10,2), Mac (10,12,4), iOS (10,3)]
+	[BaseType (typeof (NSObject))]
+	interface AVContentKeyResponse {
+		[Static]
+		[Export ("contentKeyResponseWithFairPlayStreamingKeyResponseData:")]
+		AVContentKeyResponse Create (NSData keyResponseData);
+	}
+
+	[TV (10,2), Mac (10,12,4), iOS (10,3)]
+	[Protocol, BaseType (typeof (NSObject))]
+	interface AVContentKeyRecipient {
+		[Abstract]
+		[Export ("mayRequireContentKeysForMediaDataProcessing")]
+		bool MayRequireContentKeysForMediaDataProcessing { get; }
+	}
 }
