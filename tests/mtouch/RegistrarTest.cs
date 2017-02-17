@@ -308,9 +308,19 @@ class C : NSObject {
 class C : NSObject {
 }
 ";
-			VerifyWithXode (R.Static, code, true, "warning MT4146: The Name parameter of the Registrar attribute on the class 'C' contains an invalid character: ' ' (0x20)");
+			VerifyWithXode (R.Static, code, true, "warning MT4146: The Name parameter of the Registrar attribute on the class 'C' (' C') contains an invalid character: ' ' (0x20).");
 		}
 
+		[Test]
+		public void MT4146_b ()
+		{
+			var code = @"
+[Register (""A C"")]
+class C : NSObject {
+}
+";
+			VerifyWithXode (R.Static, code, false, "error MT4146: The Name parameter of the Registrar attribute on the class 'C' ('A C') contains an invalid character: ' ' (0x20).");
+		}
 		[Test]
 		public void MT4148 ()
 		{

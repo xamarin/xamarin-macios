@@ -1210,7 +1210,12 @@ In this case Xamarin.iOS will override `retain`, `release` and `dealloc` on the 
 This indicates a bug in Xamarin.iOS. Please file a bug at [http://bugzilla.xamarin.com](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS).
 
 <h3><a name="MT4145"/>MT4145: Invalid enum '*': enums with the [Native] attribute must have a underlying enum type of either 'long' or 'ulong'.</h3>
-<!--- Not sure what happened to MT4146 -->
+<h3><a name="MT4146"/>MT4146: The Name parameter of the Registrar attribute on the class '*' ('*') contains an invalid character: '*' (*).</h3>
+
+The name of an Objectice-C class can't contain whitespace, which means that the `Register` attribute on the corresponding managed class can't have a `Name` parameter can't contain whitespace either.
+
+Please verify that the `Register` attribute on the managed class mentioned in the error message does not contain any whitespace.
+
 <h3><a name="MT4147"/>MT4147: Detected a protocol inheriting from the JSExport protocol while using the dynamic registrar. It is not possible to export protocols to JavaScriptCore dynamically; the static registrar must be used (add '--registrar:static to the additional mtouch arguments in the project's iOS Build options to select the static registrar).</h3>
 <h3><a name="MT4148"/>MT4148: The registrar found a generic protocol: '*'. Exporting generic protocols is not supported.</h3>
 <h3><a name="MT4149"/>MT4149: Cannot register the method '*.*' because the type of the first parameter ('*') does not match the category type ('*').</h3>
