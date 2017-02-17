@@ -283,6 +283,7 @@ namespace Xamarin.Bundler {
 	//					MT4143	The ObjectiveC class '{0}' could not be registered, it does not seem to derive from any known ObjectiveC class (including NSObject).
 	//					MT4144	Cannot register the method '{0}.{1}' since it does not have an associated trampoline. Please file a bug report at http://bugzilla.xamarin.com
 	//					MT4145	Invalid enum '{0}': enums with the [Native] attribute must have a underlying enum type of either 'long' or 'ulong'.
+	//					MT4146	The Name parameter of the Registrar attribute on the class '{0}' ('{3}') contains an invalid character: '{1}' (0x{2}).
 	//					MT4147	Detected a protocol inheriting from the JSExport protocol while using the dynamic registrar. It is not possible to export protocols to JavaScriptCore dynamically; the static registrar must be used (add '--registrar:static to the additional mtouch arguments in the project's iOS Build options to select the static registrar).
 	//					MT4148	The registrar found a generic protocol: '{0}'. Exporting generic protocols is not supported.
 	//					MT4149	Cannot register the method '{0}.{1}' because the type of the first parameter ('{2}') does not match the category type ('{3}').
