@@ -1170,33 +1170,28 @@ class CTP4 : CTP3 {
 		// Creates an app with the specified source as the executable.
 		// Compiles it using smcs, will throw a McsException if it fails.
 		// Then runs mtouch to try to create an app (for device), will throw MTouchException if it fails.
-		// This method should not leave anything behind on disk.
 		static int CreateTestApp (Profile profile, string source, string extra_args = "", string xcode = null, string sdk_version = null, Target target = Target.Dev, StringBuilder output = null)
 		{
 			if (target == Target.Dev)
 				MTouch.AssertDeviceAvailable ();
 
 			string path = Cache.CreateTemporaryDirectory ();
-			try {
-				string cs = Path.Combine (path, "Test.cs");
-				string exe = Path.Combine (path, "Test.exe");
-				File.WriteAllText (cs, source);
-				Compile (cs, profile);
-				string app = Path.Combine (path, "Test.app");
-				string cache = Path.Combine (path, "cache");
-				Directory.CreateDirectory (cache);
-				Directory.CreateDirectory (app);
+			string cs = Path.Combine (path, "Test.cs");
+			string exe = Path.Combine (path, "Test.exe");
+			File.WriteAllText (cs, source);
+			Compile (cs, profile);
+			string app = Path.Combine (path, "Test.app");
+			string cache = Path.Combine (path, "cache");
+			Directory.CreateDirectory (cache);
+			Directory.CreateDirectory (app);
 
-				if (xcode == null)
-					xcode = Configuration.xcode_root;
+			if (xcode == null)
+				xcode = Configuration.xcode_root;
 
-				if (sdk_version == null)
-					sdk_version = MTouch.GetSdkVersion (profile);
+			if (sdk_version == null)
+				sdk_version = MTouch.GetSdkVersion (profile);
 
-				return ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("{0} {10} {1} --sdk {2} -targetver {2} --abi={9} {3} --sdkroot {4} --cache {5} --nolink {7} --debug -r:{6} --target-framework:{8}", exe, app, sdk_version, extra_args, xcode, cache, MTouch.GetBaseLibrary (profile), string.Empty, MTouch.GetTargetFramework (profile), MTouch.GetArchitecture (profile, target), target == Target.Sim ? "-sim" : "-dev"), null, output, output);
-			} finally {
-				Directory.Delete (path, true);
-			}
+			return ExecutionHelper.Execute (TestTarget.ToolPath, string.Format ("{0} {10} {1} --sdk {2} -targetver {2} --abi={9} {3} --sdkroot {4} --cache {5} --nolink {7} --debug -r:{6} --target-framework:{8}", exe, app, sdk_version, extra_args, xcode, cache, MTouch.GetBaseLibrary (profile), string.Empty, MTouch.GetTargetFramework (profile), MTouch.GetArchitecture (profile, target), target == Target.Sim ? "-sim" : "-dev"), null, output, output);
 		}
 
 		// Compile the filename with mcs
