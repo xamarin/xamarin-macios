@@ -253,13 +253,13 @@ namespace Xamarin.Tests
 
 		public static string BinDirXI {
 			get {
-				return Path.Combine (TargetDirectoryXI, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin");
+				return Path.Combine (SdkRootXI, "bin");
 			}
 		}
 
 		public static string BinDirXM {
 			get {
-				return Path.Combine (TargetDirectoryXM, "Library", "Frameworks", "Xamarin.Mac.framework", "Versions", "Current", "bin");
+				return Path.Combine (SdkRootXM, "bin");
 			}
 		}
 
