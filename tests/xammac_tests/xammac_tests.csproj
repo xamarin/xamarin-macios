@@ -1046,6 +1046,10 @@
     <Compile Include="..\EmbeddedResources\ResourcesTest.cs">
       <Link>EmbeddedResources\ResourcesTest.cs</Link>
     </Compile>
+    <Compile Include="System.ServiceModel\Net45.cs" />
+    <Compile Include="..\common\mac\ProjectTestHelpers.cs">
+      <Link>ProjectTestHelpers.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -1112,6 +1116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="EmbeddedResources\" />
+    <Folder Include="System.ServiceModel\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\guiunit\src\framework\GuiUnit_xammac_mobile.csproj">

@@ -284,6 +284,24 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
+		public void BuildUnified45_ShouldAllowReferenceToOpenTK ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { References = " <Reference Include=\"OpenTK\" />", TestCode = "var matrix = new OpenTK.Matrix2 ();", XM45 = true };
+				TI.TestUnifiedExecutable (test);
+			});
+		}
+
+		[Test]
+		public void BuildUnified45_ShouldAllowImmutableCollection ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { References = " <Reference Include=\"System.Collections.Immutable\" />", TestCode = "var v = System.Collections.Immutable.ImmutableList.Create (new int[] { 1, 2, 3 });", XM45 = true };
+				TI.TestUnifiedExecutable (test);
+			});
+		}
+
+		[Test]
 		public void Dontlink_AllowsUnresolvableReferences ()
 		{
 			var sb = new StringBuilder ();
@@ -605,6 +623,16 @@ namespace Xamarin.MMP.Tests
 			});
 		}
 
-
+		//https://testrail.xamarin.com/index.php?/cases/view/234141&group_by=cases:section_id&group_order=asc&group_id=51097
+		[Test]
+		public void Unified45Build_CompileToNativeOutput ()
+		{
+			RunMMPTest (tmpDir => {
+				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { XM45 = true };
+				var output = TI.TestUnifiedExecutable (test);
+				Assert.That (output.BuildOutput, Contains.Substring ("TargetFrameworkIdentifier: .NETFramework"));
+				Assert.That (output.BuildOutput, Contains.Substring ("TargetFrameworkVersion: v4.5"));
+			});
+		}
 	}
 }
