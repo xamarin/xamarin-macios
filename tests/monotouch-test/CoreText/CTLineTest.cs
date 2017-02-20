@@ -24,7 +24,6 @@ using CoreText;
 #else
 using MonoTouch.CoreGraphics;
 using MonoTouch.CoreText;
-using MonoTouch.ObjCRuntime;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 #endif
@@ -62,11 +61,6 @@ namespace MonoTouchFixtures.CoreText
 
 			var attributedString = new NSAttributedString ("Hello world.\nWoohooo!\nThere", sa);
 
-			// there's a bug in iOS 10.3 (beta1 and 2 at least) where a crash happens, only on i386, if execution continue
-			// this works fine with earlier simulator (on Xcode 8.3) or on devices (with 10.3) with 32bits builds
-			if (TestRuntime.CheckSDKVersion (8, 3) && (Runtime.Arch == Arch.SIMULATOR) && (IntPtr.Size == 4))
-				return;
-			
 			var line = new CTLine (attributedString);
 			bool executed = false;
 #if XAMCORE_2_0
