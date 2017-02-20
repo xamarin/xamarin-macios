@@ -72,7 +72,7 @@ xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *ret
 				bool is_string = e_klass == mono_get_string_class ();
 				MonoArray *m_arr = (MonoArray *) retval;
 				int length = mono_array_length (m_arr);
-				id *buf = (id *) malloc (sizeof (void *) * length);
+				id *buf = (id *) malloc (sizeof (id) * length);
 				NSArray *arr;
 				int i;
 				id v;
