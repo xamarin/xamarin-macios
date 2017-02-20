@@ -1172,7 +1172,7 @@ namespace XamCore.AVFoundation {
 		IntPtr Constructor (NSData data, [NullAllowed] string fileTypeHint, out NSError outError);
 #endif
 
-		[NoWatch, iOS (10, 0), TV (10,0), Mac (10,12)]
+		[Watch (3,0), iOS (10, 0), TV (10,0), Mac (10,12)]
 		[Export ("format")]
 		AVAudioFormat Format { get; }
 	}
@@ -1187,7 +1187,7 @@ namespace XamCore.AVFoundation {
 	
 		[Export ("audioPlayerDecodeErrorDidOccur:error:")]
 		void DecoderError (AVAudioPlayer player, [NullAllowed] NSError error);
-	
+
 #if !MONOMAC
 		[Availability (Deprecated = Platform.iOS_8_0)]
 		[Export ("audioPlayerBeginInterruption:")]
@@ -3488,6 +3488,11 @@ namespace XamCore.AVFoundation {
 	// 'init' returns NIL
 	[DisableDefaultCtor]
 	interface AVUrlAsset {
+
+		[TV (10, 2), Mac (10, 12, 4), iOS (10, 2)]
+		[Export ("mayRequireContentKeysForMediaDataProcessing")]
+		bool MayRequireContentKeysForMediaDataProcessing { get; }
+
 		[Export ("URL", ArgumentSemantic.Copy)]
 		NSUrl Url { get;  }
 
@@ -7569,6 +7574,8 @@ namespace XamCore.AVFoundation {
 	[Since (4,0)]
 	[BaseType (typeof (CALayer))]
 	interface AVCaptureVideoPreviewLayer {
+		
+
 		[NullAllowed] // by default this property is null
 		[Export ("session", ArgumentSemantic.Retain)]
 		AVCaptureSession Session { get; set;  }
@@ -7612,8 +7619,20 @@ namespace XamCore.AVFoundation {
 		[Static, Export ("layerWithSession:")]
 		AVCaptureVideoPreviewLayer FromSession (AVCaptureSession session);
 
+		[Static]
 		[Export ("initWithSession:")]
+		IntPtr InitWithConnection (AVCaptureSession session);
+
+		[iOS (8,0), Mac (10,2)]
+		[Static]
+		[Export ("initWithSessionWithNoConnection:")]
+		IntPtr InitWithNoConnection (AVCaptureSession session);
+
+		[Wrap ("this (InitWithConnection (session))")]
 		IntPtr Constructor (AVCaptureSession session);
+
+		[Wrap ("this (withConnection? InitWithConnection (session) : InitWithNoConnection (session))")]
+		IntPtr Constructor (AVCaptureSession session, bool withConnection);
 
 		[Since (6,0)]
 		[Export ("connection")]
@@ -9791,6 +9810,10 @@ namespace XamCore.AVFoundation {
 		[Export ("indicatedBitrate")]
 		double IndicatedBitrate { get; }
 
+		[iOS (10, 0), TV (10,0), NoWatch, Mac (10, 12)]
+		[Export ("indicatedAverageBitrate")]
+		double IndicatedAverageBitrate { get; }
+
 		[iOS (10, 0), TV (10,0), Mac (10,12)]
 		[Export ("averageVideoBitrate")]
 		double AverageVideoBitrate { get; }
@@ -10869,6 +10892,9 @@ namespace XamCore.AVFoundation {
 	}
 #endif
 
+	[NoWatch]
+	partial interface IAVContentKeySessionDelegate {}
+
 	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
@@ -10887,6 +10913,10 @@ namespace XamCore.AVFoundation {
 		[Export ("contentKeySession:contentKeyRequest:didFailWithError:")]
 		void DidFail (AVContentKeySession session, AVContentKeyRequest keyRequest, NSError err);
 
+		[Wrap ("ShouldRetryContentKeyRequest (session, keyRequest, retryReason.GetConstant ()")]
+		bool ShouldRetryContentKeyRequest (AVContentKeySession session, AVContentKeyRequest keyRequest, AVContentKeyRequestRetryReason retryReason);
+
+		[Internal]
 		[Export ("contentKeySession:shouldRetryContentKeyRequest:reason:")]
 		bool ShouldRetryContentKeyRequest (AVContentKeySession session, AVContentKeyRequest keyRequest, string retryReason);
 
@@ -10895,11 +10925,25 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	partial interface IAVContentKeySessionDelegate {}
+	partial interface IAVContentKeyRecipient {}
+
+	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
+	[Protocol]
+	interface AVContentKeyRecipient {
+		[Abstract]
+		[Export ("mayRequireContentKeysForMediaDataProcessing")]
+		bool MayRequireContentKeysForMediaDataProcessing { get; }
+	}
 
 	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface AVContentKeySession {
+
+		// used with Create (string keySystem, [NullAllowed] NSUrl storageUrl);
+		[TV (10, 2), Mac (10, 12, 4), iOS (10, 3)]
+		[Field ("AVContentKeySystemFairPlayStreaming")]
+		NSString FairPlayStreaming { get; }
+
 		[Static]
 		[Export ("contentKeySessionWithKeySystem:storageDirectoryAtURL:")]
 		AVContentKeySession Create (string keySystem, [NullAllowed] NSUrl storageUrl);
@@ -10930,12 +10974,35 @@ namespace XamCore.AVFoundation {
 
 		[Export ("renewExpiringResponseDataForContentKeyRequest:")]
 		void RenewExpiringResponseData (AVContentKeyRequest contentKeyRequest);
+
+		#region AVContentKeySession_AVContentKeyRecipients
+
+		[Export ("addContentKeyRecipient:")]
+		void Add (IAVContentKeyRecipient recipient);
+
+		[Export ("removeContentKeyRecipient:")]
+		void Remove (IAVContentKeyRecipient recipient);
+
+		[Export ("contentKeyRecipients")]
+		IAVContentKeyRecipient[] ContentKeyRecipients { get; }
+
+		#endregion
+	}
+
+	enum AVContentKeyRequestRetryReason {
+		[Field ("AVContentKeyRequestRetryReasonTimedOut")]
+		TimedOut,
+		[Field ("AVContentKeyRequestRetryReasonReceivedResponseWithExpiredLease")]
+		ReceivedResponseWithExpiredLease,
+		[Field ("AVContentKeyRequestRetryReasonReceivedObsoleteContentKey")]
+		ReceivedObsoleteContentKey,
 	}
 
 	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface AVContentKeyRequest {
-		[TV (10, 2), Mac (10, 12, 4), iOS (10, 3)]
+
+		
 		[Field ("AVContentKeyRequestProtocolVersionsKey")]
 		NSString ProtocolVersions { get; }
 
@@ -10966,6 +11033,13 @@ namespace XamCore.AVFoundation {
 
 		[Export ("respondByRequestingPersistableContentKeyRequest")]
 		void RespondByRequestingPersistableContentKeyRequest ();
+
+		#region AVContentKeyRequest_AVContentKeyRequestRenewal
+
+		[Export ("renewsExpiringResponseData")]
+		bool RenewsExpiringResponseData { get; }
+
+		#endregion
 	}
 
 	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
@@ -10974,8 +11048,6 @@ namespace XamCore.AVFoundation {
 		[Export ("persistableContentKeyFromKeyVendorResponse:options:error:")]
 		NSData GetPersistableContentKey (NSData keyVendorResponse, [NullAllowed] NSDictionary<NSString, NSObject> options, out NSError outError);
 
-		[Export ("renewsExpiringResponseData")]
-		bool RenewsExpiringResponseData { get; }
 	}
 
 	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
@@ -10986,11 +11058,4 @@ namespace XamCore.AVFoundation {
 		AVContentKeyResponse Create (NSData fairPlayStreamingKeyResponseData);
 	}
 
-	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
-	[Protocol]
-	interface AVContentKeyRecipient {
-		[Abstract]
-		[Export ("mayRequireContentKeysForMediaDataProcessing")]
-		bool MayRequireContentKeysForMediaDataProcessing { get; }
-	}
 }
