@@ -158,8 +158,8 @@ namespace XamCore.AVFoundation {
 
 #if !MONOMAC || !XAMCORE_4_0
 	[Flags]
-	[NoTV, NoWatch]
-	[iOS (4,0)]
+	[NoTV]
+	[iOS (4,0), Watch (3,0)]
 	[Native]
 	[Availability (Deprecated = Platform.iOS_6_0)]
 	// NSUInteger - AVAudioSession.h

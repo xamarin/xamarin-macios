@@ -1065,7 +1065,7 @@ namespace XamCore.AVFoundation {
 		IntPtr Int32ChannelData { get; }
 	}
 
-	[NoWatch]
+	[Watch (3,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface AVAudioPlayer {
@@ -1177,7 +1177,7 @@ namespace XamCore.AVFoundation {
 		AVAudioFormat Format { get; }
 	}
 	
-	[NoWatch]
+	[Watch (3,0)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -2573,7 +2573,7 @@ namespace XamCore.AVFoundation {
 		NSString WasDefragmentedNotification { get; }
 #endif
 
-		[iOS (10, 2), Mac (10,12,2), TV (10, 3)]
+		[iOS (10, 2), Mac (10,12,2), TV (10, 2)]
 		[Export ("overallDurationHint")]
 		CMTime OverallDurationHint { get; }
 	}
@@ -10142,8 +10142,7 @@ namespace XamCore.AVFoundation {
 	}
 
 	[NoWatch]
-	[NoTV]
-	[iOS (8,0)][Mac (10,10)]
+	[TV (10,2), iOS (8,0), Mac (10,10)]
 	[BaseType (typeof (CALayer))]
 	interface AVSampleBufferDisplayLayer {
 
@@ -10178,14 +10177,15 @@ namespace XamCore.AVFoundation {
 		[Export ("stopRequestingMediaData")]
 		void StopRequestingMediaData ();
 		
-		[NoTV, iOS (8, 0)]
+		[iOS (8, 0), Mac (10,10)]
 		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotification")]
 		[Notification]
 		NSString FailedToDecodeNotification { get; }
 
-		[NoTV, iOS (8, 0)]
+		[iOS (8, 0), Mac (10,0)]
 		[Field ("AVSampleBufferDisplayLayerFailedToDecodeNotificationErrorKey")]
 		NSString FailedToDecodeNotificationErrorKey { get; }
+
 	}
 
 	[NoWatch]
@@ -10959,13 +10959,13 @@ namespace XamCore.AVFoundation {
 		void MakeStreamingContentKeyRequestData (NSData appIdentifier, [NullAllowed] NSData contentIdentifier, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<NSData, NSError> handler);
 
 		[Export ("processContentKeyResponse:")]
-		void ProcessResponse (AVContentKeyResponse keyResponse);
+		void Process (AVContentKeyResponse keyResponse);
 
 		[Export ("processContentKeyResponseError:")]
-		void ProcessError (NSError error);
+		void Process (NSError error);
 
 		[Export ("respondByRequestingPersistableContentKeyRequest")]
-		void RespondRequest ();
+		void RespondByRequestingPersistableContentKeyRequest ();
 	}
 
 	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
@@ -10983,7 +10983,7 @@ namespace XamCore.AVFoundation {
 	interface AVContentKeyResponse {
 		[Static]
 		[Export ("contentKeyResponseWithFairPlayStreamingKeyResponseData:")]
-		AVContentKeyResponse Create (NSData keyResponseData);
+		AVContentKeyResponse Create (NSData fairPlayStreamingKeyResponseData);
 	}
 
 	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
