@@ -186,6 +186,8 @@ static volatile int http_connect_counter = 0;
 	@property int id;
 	@property bool uniqueRequest;
 
+	-(void) dealloc;
+
 	-(int) fileDescriptor;
 	-(int) localDescriptor;
 	-(void) reportCompletion: (bool) success;
@@ -235,6 +237,13 @@ xamarin_http_send (void *c)
 }
 
 @implementation XamarinHttpConnection
+-(void) dealloc
+{
+	self.ip = NULL;
+	self.completion_handler = NULL;
+	[super dealloc];
+}
+
 -(void) reportCompletion: (bool) success
 {
 	LOG_HTTP ("%i reportCompletion (%i) completion_handler: %p", self.id, success, self.completion_handler);
