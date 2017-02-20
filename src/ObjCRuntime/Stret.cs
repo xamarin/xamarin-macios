@@ -30,8 +30,13 @@ namespace XamCore.ObjCRuntime
 		static bool IsHomogeneousAggregateBaseType_Armv7k (Type t)
 		{
 			// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5500-L5514
+#if GENERATOR
+			if (t == TypeManager.System_Float || t == TypeManager.System_Double || t == TypeManager.System_nfloat)
+				return true;
+#else
 			if (t == typeof (float) || t == typeof (double) || t == typeof (nfloat))
 				return true;
+#endif
 
 			return false;
 		}
@@ -68,12 +73,24 @@ namespace XamCore.ObjCRuntime
 			case "nfloat":
 				if (t.Namespace != "System")
 					return false;
+#if GENERATOR
+				return t.Assembly == TypeManager.PlatformAssembly;
+#else
 				return t.Assembly == typeof (NSObject).Assembly;
+#endif
 			default:
+#if GENERATOR
+				return t.Assembly == TypeManager.CorlibAssembly;
+#else
 				return t.Assembly == typeof (object).Assembly;
+#endif
 			}
 #else
+#if GENERATOR
+			return t.Assembly == TypeManager.CorlibAssembly;
+#else
 			return t.Assembly == typeof (object).Assembly;
+#endif
 #endif
 		}
 
@@ -168,7 +185,11 @@ namespace XamCore.ObjCRuntime
 			if (type.IsExplicitLayout) {
 				// Find the maximum of "field size + field offset" for each field.
 				foreach (var field in type.GetFields (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)) {
+#if GENERATOR
+					var fieldOffset = (FieldOffsetAttribute) AttributeManager.GetCustomAttribute (field, TypeManager.FieldOffsetAttribute);
+#else
 					var fieldOffset = (FieldOffsetAttribute) Attribute.GetCustomAttribute (field, typeof (FieldOffsetAttribute));
+#endif
 					var elementSize = 0;
 					GetValueTypeSize (type, field.FieldType, fieldTypes, is_64_bits, ref elementSize, ref maxElementSize);
 					size = Math.Max (size, elementSize + fieldOffset.Value);
@@ -236,7 +257,11 @@ namespace XamCore.ObjCRuntime
 
 			// composite struct
 			foreach (var field in type.GetFields (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)) {
+#if GENERATOR
+				var marshalAs = (MarshalAsAttribute) AttributeManager.GetCustomAttribute (field, TypeManager.MarshalAsAttribute);
+#else
 				var marshalAs = (MarshalAsAttribute) Attribute.GetCustomAttribute (field, typeof (MarshalAsAttribute));
+#endif
 				if (marshalAs == null) {
 					GetValueTypeSize (original_type, field.FieldType, field_types, is_64_bits, ref size, ref max_element_size);
 					continue;

@@ -22,7 +22,7 @@ public partial class Generator {
 
 	public void GenerateFilter (Type type)
 	{
-		var is_abstract = AttributeManager.HasAttribute (type, typeof (AbstractAttribute));
+		var is_abstract = AttributeManager.HasAttribute (type, TypeManager.AbstractAttribute);
 		var filter = AttributeManager.GetCustomAttribute<CoreImageFilterAttribute> (type);
 		var base_type = AttributeManager.GetCustomAttribute<BaseTypeAttribute> (type);
 		var type_name = type.Name;
