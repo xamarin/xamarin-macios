@@ -184,7 +184,7 @@ namespace Linker.Shared {
 
 			}
 			// the optimization is turned off in case of fat apps (32/64 bits)
-			if (IsMainExecutableFat ())
+			if (IsMainExecutableDual ())
 				Assert.IsFalse (contains11 && contains22, "neither instructions removed");
 			// even if disabled this condition remains
 			Assert.IsFalse (!contains11 && !contains22, "both instructions removed");
@@ -194,12 +194,73 @@ namespace Linker.Shared {
 		const uint FAT_MAGIC = 0xcafebabe;
 		const uint FAT_CIGAM = 0xbebafeca; /* NXSwapLong(FAT_MAGIC) */
 
-		static bool IsMainExecutableFat ()
+		static int ConvertBigEndian (int number)
+		{
+			return (((number >> 24) & 0xFF)
+				| ((number >> 08) & 0xFF00)
+				| ((number << 08) & 0xFF0000)
+				| ((number << 24)));
+		}
+
+		static uint ConvertBigEndian (uint number)
+		{
+			return (((number >> 24) & 0xFF)
+				| ((number >> 08) & 0xFF00)
+				| ((number << 08) & 0xFF0000)
+				| ((number << 24)));
+		}
+
+		static uint ReadUInt32 (BinaryReader reader, bool is_big_endian)
+		{
+			var rv = reader.ReadUInt32 ();
+			if (is_big_endian)
+				rv = ConvertBigEndian (rv);
+			return rv;
+		}
+
+		static int ReadInt32 (BinaryReader reader, bool is_big_endian)
+		{
+			var rv = reader.ReadInt32 ();
+			if (is_big_endian)
+				rv = ConvertBigEndian (rv);
+			return rv;
+		}
+
+		// Checks if the main executable has both a 32-bit architecture and a 64-bit architecture.
+		static bool IsMainExecutableDual ()
 		{
 			var path = NSGetExecutablePath ();
 			using (var reader = new BinaryReader (File.OpenRead (path), System.Text.Encoding.UTF8, false)) {
 				var header = reader.ReadUInt32 ();
-				return header == FAT_MAGIC || header == FAT_CIGAM;
+				bool is_big_endian;
+				switch (header) {
+				case FAT_MAGIC:
+					is_big_endian = false;
+					break;
+				case FAT_CIGAM:
+					is_big_endian = true;
+					break;
+				default:
+					return false;
+				}
+				var nfat_arch = ReadUInt32 (reader, is_big_endian);
+				var is32bit = false;
+				var is64bit = false;
+				for (uint i = 0; i < nfat_arch; i++) {
+					var cputype = ReadInt32 (reader, is_big_endian);
+					/*var cpusubtype = */ReadInt32 (reader, is_big_endian);
+					/*var offset = */ReadUInt32 (reader, is_big_endian);
+					/*var size = */ReadUInt32 (reader, is_big_endian);
+					/*var align = */ReadUInt32 (reader, is_big_endian);
+
+					const int CPU_ARCH_ABI64 = 0x01000000;
+					if ((cputype & CPU_ARCH_ABI64) == CPU_ARCH_ABI64) {
+						is64bit = true;
+					} else {
+						is32bit = true;
+					}
+				}
+				return is32bit && is64bit;
 			}
 		}
 
