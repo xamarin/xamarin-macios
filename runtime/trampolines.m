@@ -90,8 +90,10 @@ xamarin_marshal_return_value (MonoType *mtype, const char *type, MonoObject *ret
 						v = sv;
 					} else {
 						v = xamarin_get_handle (value, exception_gchandle);
-						if (*exception_gchandle != 0)
+						if (*exception_gchandle != 0) {
+							free (buf);
 							 return NULL;
+						}
 					}
 					buf[i] = v;
 				}
