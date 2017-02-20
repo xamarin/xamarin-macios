@@ -70,9 +70,9 @@ static bool config_timedout = false;
 static DebuggingMode debugging_mode = DebuggingModeWifi;
 static const char *connection_mode = "default"; // this is set from the cmd line, can be either 'usb', 'wifi', 'http' or 'none'
 
-int monotouch_connect_usb ();
-int monotouch_connect_wifi (NSMutableArray *hosts);
-int xamarin_connect_http (NSMutableArray *hosts);
+void monotouch_connect_usb ();
+void monotouch_connect_wifi (NSMutableArray *hosts);
+void xamarin_connect_http (NSMutableArray *hosts);
 int monotouch_debug_listen (int debug_port, int output_port);
 int monotouch_debug_connect (NSMutableArray *hosts, int debug_port, int output_port);
 void monotouch_configure_debugging ();
@@ -642,8 +642,6 @@ void monotouch_configure_debugging ()
 	}
 
 	if (debug_enabled) {
-		int rv;
-
 		// connection_mode is set from the command line, and will override any other setting
 		if (connection_mode != NULL) {
 			if (!strcmp (connection_mode, "usb")) {
@@ -660,11 +658,11 @@ void monotouch_configure_debugging ()
 		} else {
 			LOG (PRODUCT ": IDE Port: %i Transport: %s\n", monodevelop_port, debugging_mode == DebuggingModeHttp ? "HTTP" : (debugging_mode == DebuggingModeUsb ? "USB" : "WiFi"));
 			if (debugging_mode == DebuggingModeUsb) {
-				rv = monotouch_connect_usb ();
+				monotouch_connect_usb ();
 			} else if (debugging_mode == DebuggingModeWifi) {
-				rv = monotouch_connect_wifi (hosts);
+				monotouch_connect_wifi (hosts);
 			} else if (debugging_mode == DebuggingModeHttp) {
-				rv = xamarin_connect_http (hosts);
+				xamarin_connect_http (hosts);
 			}
 		}
 	}
@@ -763,7 +761,7 @@ static NSString *connected_ip = NULL;
 static pthread_cond_t connected_event = PTHREAD_COND_INITIALIZER;
 static pthread_mutex_t connected_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-int
+void
 xamarin_connect_http (NSMutableArray *ips)
 {
 	// COOP: this is at startup and doesn't access managed memory, so we should be in safe mode here.
@@ -774,7 +772,7 @@ xamarin_connect_http (NSMutableArray *ips)
 
 	if (ip_count == 0) {
 		NSLog (@PRODUCT ": No IPs to connect to.");
-		return 2;
+		return;
 	}
 	
 	NSLog (@PRODUCT ": Connecting to %i IPs.", ip_count);
@@ -823,10 +821,11 @@ xamarin_connect_http (NSMutableArray *ips)
 		LOG_HTTP ("Connection received fd: %i", connected_connection.fileDescriptor);
 	} while (monotouch_process_connection (connected_connection.fileDescriptor));
 
-	return 0;
+	return;
 }
 
-int monotouch_connect_wifi (NSMutableArray *ips)
+void
+monotouch_connect_wifi (NSMutableArray *ips)
 {
 	// COOP: this is at startup and doesn't access managed memory, so we should be in safe mode here.
 	MONO_ASSERT_GC_STARTING;
@@ -845,7 +844,7 @@ int monotouch_connect_wifi (NSMutableArray *ips)
 	
 	if (ip_count == 0) {
 		PRINT (PRODUCT ": No IPs to connect to.");
-		return 2;
+		return;
 	}
 	
 	sockets = (int *) malloc (sizeof (int) * ip_count);
@@ -936,7 +935,7 @@ int monotouch_connect_wifi (NSMutableArray *ips)
 			if ((rv = select (max_fd + 1, &rset, &wset, &xset, &tv)) == 0) {
 				// timeout hit, no connections available.
 				free (sockets);
-				return 1;
+				return;
 			}
 			
 			if (rv < 0) {
@@ -946,7 +945,7 @@ int monotouch_connect_wifi (NSMutableArray *ips)
 				// irrecoverable error
 				PRINT (PRODUCT ": Error while waiting for connections: %s", strerror (errno));
 				free (sockets);
-				return 1;
+				return;
 			}
 			
 			for (i = 0; i < ip_count; i++) {
@@ -991,7 +990,7 @@ int monotouch_connect_wifi (NSMutableArray *ips)
 	
 		if (connected == -1) {
 			free (sockets);
-			return 1;
+			return;
 		}
 	
 		// close the remaining sockets
@@ -1008,10 +1007,11 @@ int monotouch_connect_wifi (NSMutableArray *ips)
 
 	free (sockets);
 
-	return 0;
+	return;
 }
 
-int monotouch_connect_usb ()
+void
+monotouch_connect_usb ()
 {
 	// COOP: this is at startup and doesn't access managed memory, so we should be in safe mode here.
 	MONO_ASSERT_GC_STARTING;
@@ -1032,7 +1032,7 @@ int monotouch_connect_usb ()
 	listen_socket = socket (PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (listen_socket == -1) {
 		PRINT (PRODUCT ": Could not create socket for the IDE to connect to: %s", strerror (errno));
-		return 1;
+		return;
 	}
 	
 	flags = 1;
@@ -1049,7 +1049,6 @@ int monotouch_connect_usb ()
 	rv = bind (listen_socket, (struct sockaddr *) &listen_addr, sizeof (listen_addr));
 	if (rv == -1) {
 		PRINT (PRODUCT ": Could not bind to address: %s", strerror (errno));
-		rv = 2;
 		goto cleanup;
 	}
 
@@ -1061,7 +1060,6 @@ int monotouch_connect_usb ()
 	rv = listen (listen_socket, 1);
 	if (rv == -1) {
 		PRINT (PRODUCT ": Could not listen for the IDE: %s", strerror (errno));
-		rv = 2;
 		goto cleanup;
 	}
 
@@ -1097,14 +1095,12 @@ int monotouch_connect_usb ()
 			if ((rv = select (listen_socket + 1, &rset, NULL, NULL, &tv)) == 0) {
 				// timeout hit, no connections available.
 				LOG (PRODUCT ": Listened for connections from the IDE for 2 seconds, nobody connected.\n");
-				rv = 3;
 				goto cleanup;
 			}
 		} while (rv == -1 && errno == EINTR);
 
 		if (rv == -1) {
 			PRINT (PRODUCT ": Failed while waiting for the IDE to connect: %s", strerror (errno));
-			rv = 2;
 			goto cleanup;
 		}
 
@@ -1112,7 +1108,6 @@ int monotouch_connect_usb ()
 		fd = accept (listen_socket, (struct sockaddr *) &listen_addr, &len);
 		if (fd == -1) {
 			PRINT (PRODUCT ": Failed to accept connection from the IDE: %s", strerror (errno));
-			rv = 3;
 			goto cleanup;
 		}
 
@@ -1129,7 +1124,7 @@ int monotouch_connect_usb ()
 
 cleanup:
 	close (listen_socket);
-	return rv;
+	return;
 }
 
 void
