@@ -101,3 +101,26 @@ classify: classify-ios classify-osx classify-watchos classify-tvos
 	@sort common.ignore common.pending ios.skip.tmp osx.skip.tmp > common.skip.tmp
 	@comm -23 common.unclassified.tmp common.skip.tmp > common.unclassified
 	@rm *.tmp *.results
+
+
+ios-$(IOS_SDK_VERSION).g.cs: $(XIOS_PCH)
+
+gen-ios: ios-$(IOS_SDK_VERSION).g.cs
+	sharpie query -bind $(XIOS_PCH) > ios-$(IOS_SDK_VERSION).g.cs
+
+tvos-$(TVOS_SDK_VERSION).g.cs: $(XTVOS_PCH)
+
+gen-tvos: tvos-$(TVOS_SDK_VERSION).g.cs
+	sharpie query -bind $(XTVOS_PCH) > tvos-$(TVOS_SDK_VERSION).g.cs
+
+watchos-$(WATCH_SDK_VERSION).g.cs: $(XWATCHOS_PCH)
+
+gen-watchos: watchos-$(WATCH_SDK_VERSION).g.cs
+	sharpie query -bind $(XWATCHOS_PCH) > watchos-$(WATCH_SDK_VERSION).g.cs
+
+macos-$(OSX_SDK_VERSION).g.cs: $(XMAC_PCH)
+
+gen-macos: macos-$(OSX_SDK_VERSION).g.cs
+	sharpie query -bind $(XMAC_PCH) > macos-$(OSX_SDK_VERSION).g.cs
+
+gen-all: gen-ios gen-tvos gen-watchos gen-macos
