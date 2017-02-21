@@ -1488,15 +1488,9 @@
               <property name="DisableCaching" attrib="0" ptype="System.Boolean">
                 <methods>
                   <method name="get_DisableCaching()" attrib="2182" returntype="System.Boolean">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters />
                   </method>
                   <method name="set_DisableCaching(System.Boolean)" attrib="2182" returntype="System.Void">
-                    <attributes>
-                      <attribute name="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-                    </attributes>
                     <parameters>
                       <parameter name="value" position="0" attrib="0" type="System.Boolean" />
                     </parameters>
@@ -1505,6 +1499,11 @@
               </property>
             </properties>
             <methods>
+              <method name="Dispose(System.Boolean)" attrib="196" virtual="true" is-override="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
               <method name="SendAsync(System.Net.Http.HttpRequestMessage, System.Threading.CancellationToken)" attrib="197" virtual="true" is-override="true" returntype="System.Threading.Tasks.Task`1[System.Net.Http.HttpResponseMessage]">
                 <attributes>
                   <attribute name="System.Diagnostics.DebuggerStepThroughAttribute" />
