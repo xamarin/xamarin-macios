@@ -10913,10 +10913,6 @@ namespace XamCore.AVFoundation {
 		[Export ("contentKeySession:contentKeyRequest:didFailWithError:")]
 		void DidFail (AVContentKeySession session, AVContentKeyRequest keyRequest, NSError err);
 
-		[Wrap ("ShouldRetryContentKeyRequest (session, keyRequest, retryReason.GetConstant ()")]
-		bool ShouldRetryContentKeyRequest (AVContentKeySession session, AVContentKeyRequest keyRequest, AVContentKeyRequestRetryReason retryReason);
-
-		[Internal]
 		[Export ("contentKeySession:shouldRetryContentKeyRequest:reason:")]
 		bool ShouldRetryContentKeyRequest (AVContentKeySession session, AVContentKeyRequest keyRequest, string retryReason);
 
