@@ -13066,6 +13066,9 @@
             <interfaces>
               <interface name="NUnit.Framework.Api.ITestListener" />
             </interfaces>
+            <fields>
+              <field name="Failure" attrib="6" fieldtype="System.Boolean" />
+            </fields>
             <constructors>
               <constructor name=".ctor()" attrib="6278">
                 <parameters />
