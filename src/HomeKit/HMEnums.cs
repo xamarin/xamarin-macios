@@ -908,8 +908,8 @@ namespace XamCore.HomeKit {
 	[Watch (3,0), TV (10,0), iOS (10,0)]
 	[Native]
 	public enum HMCharacteristicValueContactState : nint {
-		None = 0,
-		Detected
+		Detected = 0,
+		None,
 	}
 
 	[Watch (3,0), TV (10,0), iOS (10,0)]
