@@ -9,6 +9,17 @@
 // Copyright 2016 Xamarin Inc. 
 //
 
+// There's some unreachable code in this file, which is somewhat on purpose to
+// avoid too much #if spaghetti code - instead of using several #if
+// conditions, the code declares boolean constant in some #if conditions (but
+// only some, others have those same booleans as static fields), which means
+// that the C# compiler will detect unreachable code when those #if conditions
+// declare constants instead of static fields. The advantage of using
+// constants is that the C# compiler will automatically remove unreachable
+// code (so the warning could also be fixed by always declaring static fields,
+// but at the cost of more IL).
+#pragma warning disable 162 // Unreachable code detected.
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -20,7 +31,14 @@ namespace XamCore.ObjCRuntime
 {
 	class Stret
 	{
-#if __WATCHOS__
+#if GENERATOR
+		static bool isUnified = BindingTouch.Unified;
+#elif __UNIFIED__
+		const bool isUnified = true;
+#else
+		const bool isUnified = false;
+#endif
+
 		static bool IsHomogeneousAggregateSmallEnough_Armv7k (Type t, int members)
 		{
 			// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5516-L5519
@@ -62,15 +80,16 @@ namespace XamCore.ObjCRuntime
 
 			return true;
 		}
-#endif
 
 		static bool IsMagicTypeOrCorlibType (Type t)
 		{
-#if __UNIFIED__
 			switch (t.Name) {
 			case "nint":
 			case "nuint":
 			case "nfloat":
+				if (!isUnified)
+					return false;
+
 				if (t.Namespace != "System")
 					return false;
 #if GENERATOR
@@ -85,20 +104,21 @@ namespace XamCore.ObjCRuntime
 				return t.Assembly == typeof (object).Assembly;
 #endif
 			}
-#else
-#if GENERATOR
-			return t.Assembly == TypeManager.CorlibAssembly;
-#else
-			return t.Assembly == typeof (object).Assembly;
-#endif
-#endif
 		}
 
 		public static bool ArmNeedStret (MethodInfo mi)
 		{
-#if MONOMAC || __TVOS__
-			return false;
+			bool has32bitArm;
+#if GENERATOR
+			has32bitArm = BindingTouch.CurrentPlatform != PlatformName.TvOS && BindingTouch.CurrentPlatform != PlatformName.MacOSX;
+#elif MONOMAC || __TVOS__
+			has32bitArm = false;
 #else
+			has32bitArm = true;
+#endif
+			if (!has32bitArm)
+				return false;
+
 			Type t = mi.ReturnType;
 
 			if (!t.IsValueType || t.IsEnum || IsMagicTypeOrCorlibType (t))
@@ -107,40 +127,56 @@ namespace XamCore.ObjCRuntime
 			var fieldTypes = new List<Type> ();
 			var size = GetValueTypeSize (t, fieldTypes, false);
 
-#if __WATCHOS__
-			// According to clang watchOS passes arguments bigger than 16 bytes by reference.
-			// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5248-L5250
-			// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5542-L5543
-			if (size <= 16)
-				return false;
-
-			// Except homogeneous aggregates, which are not stret either.
-			if (IsHomogeneousAggregate_Armv7k (fieldTypes))
-				return false;
-
-#elif __IOS__
-			if (size <= 4 && fieldTypes.Count == 1) {
-				switch (fieldTypes [0].FullName) {
-				case "System.Char":
-				case "System.Byte":
-				case "System.SByte":
-				case "System.UInt16":
-				case "System.Int16":
-				case "System.UInt32":
-				case "System.Int32":
-				case "System.IntPtr":
-				case "System.nuint":
-				case "System.uint":
-					return false;
-				// floating-point types are stret
-				}
-			}
+			bool isWatchOS;
+#if GENERATOR
+			isWatchOS = BindingTouch.CurrentPlatform == PlatformName.WatchOS;
+#elif __WATCHOS__
+			isWatchOS = true;
 #else
-	#error Unknown architecture
+			isWatchOS = false;
 #endif
 
+			if (isWatchOS) {
+				// According to clang watchOS passes arguments bigger than 16 bytes by reference.
+				// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5248-L5250
+				// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5542-L5543
+				if (size <= 16)
+					return false;
+
+				// Except homogeneous aggregates, which are not stret either.
+				if (IsHomogeneousAggregate_Armv7k (fieldTypes))
+					return false;
+			}
+
+			bool isiOS;
+#if GENERATOR
+			isiOS = BindingTouch.CurrentPlatform == PlatformName.iOS;
+#elif __IOS__
+			isiOS = true;
+#else
+			isiOS = false;
+#endif
+
+			if (isiOS) {
+				if (size <= 4 && fieldTypes.Count == 1) {
+					switch (fieldTypes [0].FullName) {
+					case "System.Char":
+					case "System.Byte":
+					case "System.SByte":
+					case "System.UInt16":
+					case "System.Int16":
+					case "System.UInt32":
+					case "System.Int32":
+					case "System.IntPtr":
+					case "System.nuint":
+					case "System.uint":
+						return false;
+					// floating-point types are stret
+					}
+				}
+			}
+
 			return true;
-#endif // MONOMAC
 		}
 
 		public static bool X86NeedStret (MethodInfo mi)
@@ -164,7 +200,9 @@ namespace XamCore.ObjCRuntime
 
 		public static bool X86_64NeedStret (MethodInfo mi)
 		{
-#if __UNIFIED__
+			if (!isUnified)
+				return false;
+
 			Type t = mi.ReturnType;
 
 			if (!t.IsValueType || t.IsEnum || IsMagicTypeOrCorlibType (t))
@@ -172,9 +210,6 @@ namespace XamCore.ObjCRuntime
 
 			var fieldTypes = new List<Type> ();
 			return GetValueTypeSize (t, fieldTypes, true) > 16;
-#else
-			return false;
-#endif
 		}
 
 		static int GetValueTypeSize (Type type, List<Type> fieldTypes, bool is_64_bits)
@@ -306,15 +341,11 @@ namespace XamCore.ObjCRuntime
 			if (X86NeedStret (mi))
 				return true;
 
-#if __UNIFIED__
 			if (X86_64NeedStret (mi))
 				return true;
-#endif
 
-#if !MONOMAC
 			if (ArmNeedStret (mi))
 				return true;
-#endif
 
 			return false;
 		}
