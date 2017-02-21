@@ -171,10 +171,9 @@ namespace XamCore.ImageIO {
 		NSString ExifSubsecTime { get; }
 		[Field ("kCGImagePropertyExifSubsecTimeOrginal")]
 		NSString ExifSubsecTimeOrginal { get; }
-		// typo fixed in the iOS9 beta 1 headers but we can't load that "fixed" name from the library
-		// it looks like someone fixed only half of the problem... radar #22311329
-		//[Field ("kCGImagePropertyExifSubsecTimeOriginal")]
-		//NSString ExifSubsecTimeOriginal { get; }
+		[iOS (10,0)][Mac (10,11)]
+		[Field ("kCGImagePropertyExifSubsecTimeOriginal")]
+		NSString ExifSubsecTimeOriginal { get; }
 		[Field ("kCGImagePropertyExifSubsecTimeDigitized")]
 		NSString ExifSubsecTimeDigitized { get; }
 		[Field ("kCGImagePropertyExifFlashPixVersion")]
