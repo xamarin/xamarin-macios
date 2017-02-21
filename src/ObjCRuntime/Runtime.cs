@@ -17,6 +17,10 @@ using System.Runtime.InteropServices;
 using XamCore.Foundation;
 using XamCore.Registrar;
 
+#if MONOMAC
+using XamCore.AppKit;
+#endif
+
 #if !COREBUILD && (XAMARIN_APPLETLS || XAMARIN_NO_TLS)
 #if !MMP && !MTOUCH && !MTOUCH_TEST
 using Mono.Security.Interface;
