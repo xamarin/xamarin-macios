@@ -118,6 +118,7 @@ APPKIT_SOURCES = \
 	AppKit/NSPopUpButton.cs \
 	AppKit/NSPopUpButtonCell.cs \
 	AppKit/NSPredicateEditorRowTemplate.cs \
+	AppKit/NSPrintInfo.cs \
 	AppKit/NSPrintPanel.cs \
 	AppKit/NSResponder.cs \
 	AppKit/NSScreen.cs \
