@@ -32,13 +32,17 @@ E.g. rules might be too noisy and require refinement, either in code or in exter
 
 ### Ideas
 
-Anything we do not check but for which data is available.
+Anything we do not check but for which data is available, e.g.
+
+* NullAllowed;
+* Enum member values;
+* Generic updates to existing API (need to find a way to avoid braking changes first)
 
 
 ## Notes
 
 * To develop you need a checkout of ObjectiveSharpie
 
-* clang is only built for 64bits so you need a 64bits mono to execute the tool. That might change to reuse Sharpie own runtime once it's installed on every bots;
+* `clang` is only built for 64bits so you need a 64bits mono to execute the tool. The latest mono versions (required to build `xamarin-macios` supply a `mono64` binary);
 
-* To be able to use XS to build/debug you need to set your runtime to a mono that was compiled with 64bits support. The currenylu shipping Mono version (4.0) does not ship with a 64bits runtime for OSX;
+* You can use the `gen-[platform]` or `gen-all` target of the `Makefile` to generate C# code for all the API from the headers. You can then copy/paste from the (large) files to create the missing bindings;
