@@ -35,7 +35,7 @@ public partial class Generator {
 
 	void CopyObsolete (ICustomAttributeProvider provider)
 	{
-		foreach (ObsoleteAttribute oa in AttributeManager.GetCustomAttributes (provider, typeof (ObsoleteAttribute), false))
+		foreach (ObsoleteAttribute oa in AttributeManager.GetCustomAttributes (provider, TypeManager.ObsoleteAttribute, false))
 			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
 	}
 
@@ -44,7 +44,7 @@ public partial class Generator {
 	//	- call/emit PrintPlatformAttributes on the type
 	void GenerateEnum (Type type)
 	{
-		if (AttributeManager.HasAttribute (type, typeof (FlagsAttribute)))
+		if (AttributeManager.HasAttribute (type, TypeManager.FlagsAttribute))
 			print ("[Flags]");
 
 		var native = AttributeManager.GetCustomAttribute<NativeAttribute> (type);
