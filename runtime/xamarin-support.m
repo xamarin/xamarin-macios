@@ -46,7 +46,7 @@ xamarin_timezone_get_data (const char *name, int *size)
 	NSTimeZone *tz = nil;
 	if (name) {
 		NSString *n = [[NSString alloc] initWithUTF8String: name];
-		tz = [[NSTimeZone alloc] initWithName:n];
+		tz = [[[NSTimeZone alloc] initWithName:n] autorelease];
 		[n release];
 	} else {
 		tz = [NSTimeZone localTimeZone];
@@ -55,7 +55,6 @@ xamarin_timezone_get_data (const char *name, int *size)
 	*size = [data length];
 	void* result = malloc (*size);
 	memcpy (result, data.bytes, *size);
-	[tz release];
 	return result;
 }
 

@@ -990,6 +990,12 @@ print_all_exceptions (MonoObject *exc)
 	return str;
 }
 
+NSString *
+xamarin_print_all_exceptions (MonoObject *exc)
+{
+	return print_all_exceptions (exc);
+}
+
 void
 xamarin_ftnptr_exception_handler (guint32 gchandle)
 {

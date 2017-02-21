@@ -61,7 +61,7 @@ WATCH_TARGETS +=                                                        \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bwatch                        \
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bwatch: Makefile.generator
-	$(Q_GEN) printf '#!/bin/sh\nMONO_PATH=$(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/repl:$(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/bin/bwatch-mono --debug $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/bwatch/bwatch.exe "$$@"' > $@
+	$(Q_GEN) printf '#!/bin/sh\nMONO_PATH=$(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS/repl:$(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.WatchOS $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/bin/bwatch-mono --debug $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/bwatch/bwatch.exe --target-framework=Xamarin.WatchOS,v1.0 "$$@"' > $@
 	$(Q) chmod +x $@
 
 $(WATCH_BUILD_DIR)/bwatch.exe: $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.dll $(GENERATOR_SOURCES) Makefile.generator
@@ -83,7 +83,7 @@ TVOS_TARGETS +=                                                  \
 	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btv                    \
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btv: Makefile.generator
-	$(Q_GEN) printf '#!/bin/sh\nMONO_PATH=$(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/repl:$(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/bin/btv-mono --debug $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/btv/btv.exe "$$@"' > $@
+	$(Q_GEN) printf '#!/bin/sh\nMONO_PATH=$(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS/repl:$(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/mono/Xamarin.TVOS $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/bin/btv-mono --debug $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/lib/btv/btv.exe --target-framework=Xamarin.TVOS,v1.0 "$$@"' > $@
 	$(Q) chmod +x $@
 
 $(TVOS_BUILD_DIR)/btv.exe: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.dll $(GENERATOR_SOURCES) Makefile.generator

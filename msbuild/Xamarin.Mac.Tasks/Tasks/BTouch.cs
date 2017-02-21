@@ -12,8 +12,6 @@ namespace Xamarin.Mac.Tasks
 {
 	public class BTouch : BTouchTaskBase
 	{
-		public string TargetFrameworkIdentifier { get; set; }
-
 		public string FrameworkRoot { get; set; }
 
 		protected override string GenerateCommandLineCommands ()

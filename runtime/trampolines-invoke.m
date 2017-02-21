@@ -10,6 +10,7 @@
 #include "trampolines-internal.h"
 #include "slinked-list.h"
 #include "delegates.h"
+#include "product.h"
 
 //#define TRACE
 #ifdef TRACE
@@ -524,17 +525,6 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 			goto exception_handling;
 	}
 
-	if (dispose_list) {
-		SList *list = dispose_list;
-		while (list) {
-			xamarin_dispose ((MonoObject *) list->data, &exception_gchandle);
-			if (exception_gchandle != 0)
-				goto exception_handling;
-			list = list->next;
-		}
-		s_list_free (dispose_list);
-	}
-
 	ret_type = [sig methodReturnType];
 	ret_type = xamarin_skip_encoding_flags (ret_type);
 	if (is_ctor) {
@@ -545,6 +535,27 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 
 exception_handling:
 	;
+
+	if (dispose_list) {
+		SList *list = dispose_list;
+		while (list) {
+			guint32 dispose_exception_gchandle = 0;
+			xamarin_dispose ((MonoObject *) list->data, &dispose_exception_gchandle);
+			if (dispose_exception_gchandle != 0) {
+				if (exception_gchandle == 0) {
+					// If we get an exception while disposing, and we don't already have an exception, then we need to throw the dispose exception (later, when done disposing)
+					exception_gchandle = dispose_exception_gchandle;
+				} else {
+					// If we already have an exception, don't overwrite it with an exception from disposing something.
+					// However we don't want to silently ignore it, so print it.
+					NSLog (@PRODUCT ": An exception occurred while disposing the object %p:", list->data);
+					NSLog (@"%@", xamarin_print_all_exceptions (mono_gchandle_get_target (dispose_exception_gchandle)));
+				}
+			}
+			list = list->next;
+		}
+		s_list_free (dispose_list);
+	}
 
 	MONO_THREAD_DETACH; // COOP: This will switch to GC_SAFE
 

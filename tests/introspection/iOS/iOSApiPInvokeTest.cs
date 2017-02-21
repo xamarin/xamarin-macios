@@ -8,6 +8,8 @@
 //
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 #if XAMCORE_2_0
 using Foundation;
@@ -80,6 +82,29 @@ namespace Introspection {
 			//    as the simulator miss some libraries and symbols
 			//    but the rest of the BCL is fine to test
 			return (a == typeof (NSObject).Assembly && (Runtime.Arch == Arch.SIMULATOR));
+		}
+
+		[Test]
+		public void MonoNativeFunctionWrapper ()
+		{
+			var nativeDelegates = from type in Assembly.GetTypes () where !Skip (type)
+				let attr = type.GetCustomAttribute<MonoNativeFunctionWrapperAttribute> () where attr != null
+				select type;
+
+			var failed_api = new List<string> ();
+			Errors = 0;
+			int c = 0, n = 0;
+			foreach (var t in nativeDelegates) {
+				if (LogProgress)
+					Console.WriteLine ("{0}. {1}", c++, t);
+
+				foreach (var mi in t.GetMethods ()) {
+					if (mi.DeclaringType == t)
+						CheckSignature (mi);
+				}
+				n++;
+			}
+			Assert.AreEqual (0, Errors, "{0} errors found in {1} native delegate validated: {2}", Errors, n, string.Join (", ", failed_api));
 		}
 
 		[Test]
