@@ -39,8 +39,6 @@ using XamCore.Foundation;
 using Xamarin.Utils;
 
 class BindingTouch {
-	static Type CoreObject = typeof (XamCore.Foundation.NSObject);
-
 	static TargetFramework? target_framework;
 	public static PlatformName CurrentPlatform;
 	public static bool Unified;
@@ -422,7 +420,6 @@ class BindingTouch {
 
 			var g = new Generator (nsManager, public_mode, external, debug, types.ToArray (), strong_dictionaries.ToArray ()){
 				BindThirdPartyLibrary = BindingThirdParty,
-				CoreNSObject = CoreObject,
 				BaseDir = basedir != null ? basedir : tmpdir,
 				ZeroCopyStrings = zero_copy,
 				InlineSelectors = inline_selectors,
