@@ -17,30 +17,35 @@ public class Frameworks : Dictionary <string, Framework>
 {
 	public void Add (string @namespace, int major_version)
 	{
-		Add (@namespace, @namespace, major_version, 0, 0);
+		Add (@namespace, @namespace, new Version (major_version, 0));
 	}
 
 	public void Add (string @namespace, string framework, int major_version)
 	{
-		Add (@namespace, framework, major_version, 0, 0);
+		Add (@namespace, framework, new Version (major_version, 0));
 	}
 
 	public void Add (string @namespace, int major_version, int minor_version)
 	{
-		Add (@namespace, @namespace, major_version, minor_version, 0);
+		Add (@namespace, @namespace, new Version (major_version, minor_version));
 	}
 
 	public void Add (string @namespace, string framework, int major_version, int minor_version)
 	{
-		Add(@namespace, framework, major_version, minor_version, 0);
+		Add (@namespace, framework, new Version (major_version, minor_version));
 	}
 
 	public void Add (string @namespace, string framework, int major_version, int minor_version, int build_version)
 	{
+		Add (@namespace, framework, new Version (major_version, minor_version, build_version));
+	}
+
+	public void Add (string @namespace, string framework, Version version)
+	{
 		var fr = new Framework () {
 			Namespace = Driver.IsUnified ? @namespace : XamCore.Registrar.Registrar.CompatNamespace + "." + @namespace,
 			Name = framework,
-			Version = new Version (major_version, minor_version, build_version)
+			Version = version
 		};
 		base.Add (fr.Namespace, fr);
 	}
@@ -274,6 +279,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "SceneKit", "SceneKit", 3 },
 					{ "SpriteKit", "SpriteKit", 3 },
 					{ "UserNotifications", "UserNotifications", 3 },
+					{ "Intents", "Intents", 3,2 },
 				};
 			}
 			return watch_frameworks;
@@ -337,6 +343,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "ReplayKit", "ReplayKit", 10 },
 					{ "UserNotifications", "UserNotifications", 10 },
 					{ "VideoSubscriberAccount", "VideoSubscriberAccount", 10 },
+					{ "VideoToolbox", "VideoToolbox", 10,2 },
 				};
 			}
 			return tvos_frameworks;
