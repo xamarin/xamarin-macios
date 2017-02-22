@@ -4488,7 +4488,7 @@ public partial class Generator : IMemberGatherer {
 				// If we're doing a setter for a weak property that is protocolized event back
 				// we need to put in a check to verify you aren't stomping the "internal underscore"
 				// generated delegate. We check CheckForEventAndDelegateMismatches global to disable the checks
-				if (pi.Name.StartsWith ("Weak", StringComparison.Ordinal)) {
+				if (!BindThirdPartyLibrary && pi.Name.StartsWith ("Weak", StringComparison.Ordinal)) {
 					string delName = pi.Name.Substring(4);
 					if (SafeIsProtocolizedEventBacked (delName, type))
 						print ("\t{0}.EnsureDelegateAssignIsNotOverwritingInternalDelegate ({1}, value, {2});", ApplicationClassName, string.IsNullOrEmpty (var_name) ? "null" : var_name, GetDelegateTypePropertyName (delName));
@@ -6040,8 +6040,10 @@ public partial class Generator : IMemberGatherer {
 						// If our delegate not null and it isn't the same type as our property
 						//   - We're in one of two cases: The user += an Event and then assigned their own delegate or the inverse
 						//   - One of them isn't being called anymore no matter what. Throw an exception.
-						print ("if ({0} != null)", delName);
-						print ("\t{0}.EnsureEventAndDelegateAreNotMismatched ({1}, {2});", ApplicationClassName, delName, delegateTypePropertyName);
+						if (!BindThirdPartyLibrary) {
+							print ("if ({0} != null)", delName);
+							print ("\t{0}.EnsureEventAndDelegateAreNotMismatched ({1}, {2});", ApplicationClassName, delName, delegateTypePropertyName);
+						}
 
 						print ("_{0} del = {1} as _{0};", dtype.Name, delName);
 
