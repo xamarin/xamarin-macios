@@ -50,6 +50,30 @@ build/common/bgen.exe: $(GENERATOR_SOURCES) $(IKVM_REFLECTION_SOURCES) $(GENERAT
 	@mkdir -p build/common
 	$(Q_GEN) $(SYSTEM_MCS) -debug -out:$@ $(IKVM_REFLECTION_FLAGS) $(GENERATOR_DEFINES) $(IKVM_REFLECTION_SOURCES) $(GENERATOR_ATTRIBUTE_SOURCES) $(GENERATOR_SOURCES) -d:IKVM
 
+# The command-line arguments in the csproj are currently kept up-to-date manually
+generator-ikvm.csproj: generator-ikvm.csproj.in Makefile.generator
+	@sed \
+		-e 's^<!--%IKVM_FILES%-->^$(foreach file,$(subst /,\\,$(IKVM_REFLECTION_SOURCES)),<Compile Include="$(file)"><Link>ikvm\\$(notdir $(subst \\,/,$(file)))</Link></Compile>)^' \
+		-e 's^<!--%FILES%-->^$(foreach file,$(subst /,\\,$(GENERATOR_SOURCES) $(GENERATOR_ATTRIBUTE_SOURCES)),<Compile Include="$(file)"/>)^' \
+		-e 's^%WORKING_DIR%^$(CURDIR)^' \
+		-e 's^%IOS_CLASSIC_ARGS%^$(IOS_GENERATOR_FLAGS) -core -sourceonly=$(IOS_BUILD_DIR)/compat/generated_sources -compiler=$(IOS_PMCS) -nostdlib -noconfig -no-mono-path -tmpdir=$(IOS_BUILD_DIR)/compat -baselib=$(IOS_BUILD_DIR)/compat/core.dll -r=$(MONO_PATH)/mcs/class/lib/monotouch/System.dll -ns=MonoTouch.ObjCRuntime -native-exception-marshalling --ns=MonoTouch.ObjCRuntime -p $(xi_compat_profile) $(IOS_APIS)^' \
+		-e 's^%IOS_CLASSIC_PMCS_PROFILE%^compat-ios^' \
+		-e 's^%IOS_UNIFIED_ARGS%^$(IOS_GENERATOR_FLAGS) -core -sourceonly=$(IOS_BUILD_DIR)/native/generated_sources -compiler=$(IOS_PMCS) -nostdlib -noconfig -no-mono-path -tmpdir=$(IOS_BUILD_DIR)/native -baselib=$(IOS_BUILD_DIR)/native/core.dll -r=$(MONO_PATH)/mcs/class/lib/monotouch/System.dll -ns=MonoTouch.ObjCRuntime -native-exception-marshalling --ns=ObjCRuntime $(xi_native_profile) $(IOS_APIS)^' \
+		-e 's^%IOS_UNIFIED_PMCS_PROFILE%^native^' \
+		-e 's^%TVOS_ARGS%^-inline-selectors -process-enums -core -sourceonly=$(TVOS_BUILD_DIR)/tvos/generated_sources -compiler=$(TVOS_PMCS) -nostdlib -noconfig -no-mono-path -tmpdir=$(TVOS_BUILD_DIR)/tvos -baselib=$(TVOS_BUILD_DIR)/tvos/core.dll -r=$(MONO_PATH)/mcs/class/lib/monotouch_tv/System.dll -ns=MonoTouch.ObjCRuntime -native-exception-marshalling -d:TVOS --ns:ObjCRuntime $(TVOS_APIS) --target-framework=Xamarin.TVOS,v1.0^' \
+		-e 's^%TVOS_PMCS_PROFILE%^tvos^' \
+		-e 's^%WATCHOS_ARGS%^-inline-selectors -process-enums -core -sourceonly=$(WATCH_BUILD_DIR)/watch/generated_sources -compiler=$(WATCH_PMCS) -nostdlib -noconfig -no-mono-path -tmpdir=$(WATCH_BUILD_DIR)/watch -baselib=$(WATCH_BUILD_DIR)/watch/core.dll -r=$(WATCH_MONO_PATH)/mcs/class/lib/monotouch_watch/System.dll -ns=MonoTouch.ObjCRuntime -native-exception-marshalling -d:WATCH --ns:ObjCRuntime $(WATCHOS_APIS) --target-framework=Xamarin.WatchOS,v1.0^' \
+		-e 's^%WATCHOS_PMCS_PROFILE%^watch^' \
+		-e 's^%MAC_CLASSIC_ARGS%^-d:MONOMAC -d:XAMARIN_MAC -compiler:$(MAC_BUILD_DIR)/compat/pmcs -process-enums -native-exception-marshalling -core -sourceonly:$(MAC_BUILD_DIR)/compat/generated-sources -tmpdir:$(MAC_BUILD_DIR)/compat -baselib:$(MAC_BUILD_DIR)/compat/core.dll -d:NO_SYSTEM_DRAWING --ns=MonoMac.ObjCRuntime -r:/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5/System.Drawing.dll $(xm_compat_profile) $(MAC_APIS)^' \
+		-e 's^%MAC_CLASSIC_PMCS_PROFILE%^compat-mac^' \
+		-e 's^%MAC_FULL_ARGS%^-d:MONOMAC -d:XAMARIN_MAC -compiler:$(MAC_BUILD_DIR)/full/pmcs -process-enums -native-exception-marshalling -core -sourceonly:$(MAC_BUILD_DIR)/full/generated-sources -tmpdir:$(MAC_BUILD_DIR)/full -baselib:$(MAC_BUILD_DIR)/full/core.dll -d:NO_SYSTEM_DRAWING --ns=ObjCRuntime -d:NO_SYSTEM_DRAWING $(xm_full_profile) $(MAC_APIS)^' \
+		-e 's^%MAC_FULL_PMCS_PROFILE%^full^' \
+		-e 's^%MAC_MOBILE_ARGS%^-d:MONOMAC -d:XAMARIN_MAC -compiler:$(MAC_BUILD_DIR)/mobile/pmcs -process-enums -native-exception-marshalling -core -sourceonly:$(MAC_BUILD_DIR)/mobile/generated-sources -tmpdir:$(MAC_BUILD_DIR)/mobile -baselib:$(MAC_BUILD_DIR)/mobile/core.dll -d:NO_SYSTEM_DRAWING --ns=ObjCRuntime $(SHARED_SYSTEM_DRAWING_SOURCES) $(xm_mobile_profile) $(MAC_APIS)^' \
+		-e 's^%MAC_MOBILE_PMCS_PROFILE%^mobile^' \
+		-e 's^%MD_MTOUCH_SDK_ROOT%^$(MD_MTOUCH_SDK_ROOT)^' \
+		-e 's^%XamarinMacFrameworkRoot%^$(XamarinMacFrameworkRoot)^' \
+		$< | xmllint --format - > $@
+
 #
 # Common
 #
