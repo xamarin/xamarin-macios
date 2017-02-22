@@ -93,6 +93,12 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "AVContentKeyRequest":
+				switch (selectorName) {
+				case "renewsExpiringResponseData":
+					return true;
+				}
+				break;
 			// AVAudioChannelLayout and AVAudioFormat started conforming to NSSecureCoding in OSX 10.11 and iOS 9
 			case "AVAudioChannelLayout":
 			case "AVAudioFormat":
@@ -153,6 +159,13 @@ namespace Introspection {
 #endif
 			// This ctors needs to be manually bound
 			switch (type.Name) {
+			case "AVCaptureVideoPreviewLayer":
+				switch (selectorName) {
+				case "initWithSession:":
+				case "initWithSessionWithNoConnection:":
+					return true;
+				}
+				break;
 			case "GKPath":
 				switch (selectorName) {
 				case "initWithPoints:count:radius:cyclical:":

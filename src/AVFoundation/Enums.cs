@@ -158,7 +158,7 @@ namespace XamCore.AVFoundation {
 
 #if !MONOMAC || !XAMCORE_4_0
 	[Flags]
-	[NoTV, NoWatch]
+	[NoTV]
 	[iOS (4,0)]
 	[Native]
 	[Availability (Deprecated = Platform.iOS_6_0)]
@@ -562,8 +562,7 @@ namespace XamCore.AVFoundation {
 		Linear = 3
 	}
 
-	[NoWatch]
-	[NoTV]
+	[TV (10,2), NoWatch]
 	[Native]
 	public enum AVQueuedSampleBufferRenderingStatus : nint {
 		Unknown, Rendering, Failed
@@ -810,5 +809,32 @@ namespace XamCore.AVFoundation {
 		AppleM4A = 8, // AVAssetExportPresetAppleM4A
 		[Field ("AVAssetExportPresetPassthrough")]
 		Passthrough = 9, // AVAssetExportPresetPassthrough
+	}
+
+	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
+	[Native]
+	public enum AVContentKeyRequestStatus : nint {
+		Requesting,
+		Received,
+		Renewed,
+		Retried,
+		Cancelled,
+		Failed
+	}
+
+	[TV (10, 2), Mac (10, 12, 4), iOS (10, 3)]
+	public enum AVContentKeyRequestRetryReason {
+		[Field ("AVContentKeyRequestRetryReasonTimedOut")]
+		TimedOut,
+		[Field ("AVContentKeyRequestRetryReasonReceivedResponseWithExpiredLease")]
+		ReceivedResponseWithExpiredLease,
+		[Field ("AVContentKeyRequestRetryReasonReceivedObsoleteContentKey")]
+		ReceivedObsoleteContentKey,
+	}
+
+	[TV (10, 2), Mac (10, 12, 4), iOS (10, 3)]
+	public enum AVContentKeySystem {
+		[Field ("AVContentKeySystemFairPlayStreaming")]
+		FairPlayStreaming,
 	}
 }
