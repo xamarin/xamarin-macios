@@ -33,6 +33,7 @@ namespace XamCore.AppKit {
 	public partial class NSApplication : NSResponder {
 		public static bool CheckForIllegalCrossThreadCalls = true;
 		public static bool CheckForEventAndDelegateMismatches = true;
+		public static bool IgnoreMissingAssembliesDuringRegistration = false;
 
 		private static Thread mainThread;
 

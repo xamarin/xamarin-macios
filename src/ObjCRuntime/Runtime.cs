@@ -17,6 +17,10 @@ using System.Runtime.InteropServices;
 using XamCore.Foundation;
 using XamCore.Registrar;
 
+#if MONOMAC
+using XamCore.AppKit;
+#endif
+
 #if !COREBUILD && (XAMARIN_APPLETLS || XAMARIN_NO_TLS)
 #if !MMP && !MTOUCH && !MTOUCH_TEST
 using Mono.Security.Interface;
@@ -408,14 +412,13 @@ namespace XamCore.ObjCRuntime {
 					if (!assemblies.Contains (a))
 						CollectReferencedAssemblies (assemblies, a);
 				}
-#if MONOMAC
-				catch {
+				catch (FileNotFoundException fefe) {
 					// that's more important for XI because device builds don't go thru this step
 					// and we can end up with simulator-only failures - bug #29211
-					throw;
-#else
-				catch (FileNotFoundException fefe) {
 					NSLog ("Could not find `{0}` referenced by assembly `{1}`.", fefe.FileName, assembly.FullName);
+#if MONOMAC
+					if (!NSApplication.IgnoreMissingAssembliesDuringRegistration)
+						throw;
 #endif
 				}
 			}
