@@ -1,4 +1,4 @@
-using MonoTouch.Foundation;
+using Foundation;
 
 namespace NS {
 	[BaseType (typeof (NSObject))]

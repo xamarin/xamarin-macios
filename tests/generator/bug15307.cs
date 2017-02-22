@@ -1,9 +1,9 @@
 // https://bugzilla.xamarin.com/show_bug.cgi?id=15307#c3
 
 using System;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using ObjCRuntime;
+using Foundation;
+using UIKit;
 
 namespace BindingTests {
 
