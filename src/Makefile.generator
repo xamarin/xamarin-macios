@@ -16,10 +16,46 @@ GENERATOR_SOURCES =                                             \
 GENERATOR_DEFINES = -d:BGENERATOR -d:NET_4_0
 
 #
+# IKVM
+#
+
+IKVM_REFLECTION_SOURCES = \
+	$(MONO_PATH)/external/ikvm/reflect/Impl/ITypeOwner.cs \
+	$(MONO_PATH)/external/ikvm/reflect/Impl/SymbolSupport.cs \
+	$(MONO_PATH)/mcs/class/Mono.Security/Mono.Security.Cryptography/CryptoConvert.cs \
+	$(wildcard $(MONO_PATH)/external/ikvm/reflect/*.cs) \
+	$(wildcard $(MONO_PATH)/external/ikvm/reflect/Emit/*.cs) \
+	$(wildcard $(MONO_PATH)/external/ikvm/reflect/Metadata/*.cs) \
+	$(wildcard $(MONO_PATH)/external/ikvm/reflect/Reader/*.cs) \
+	$(wildcard $(MONO_PATH)/external/ikvm/reflect/Writer/*.cs) \
+
+GENERATOR_ATTRIBUTE_SOURCES = \
+	$(TOP)/src/Foundation/AdviceAttribute.cs \
+	$(TOP)/src/Foundation/ExportAttribute.cs \
+	$(TOP)/src/Foundation/FieldAttribute.cs \
+	$(TOP)/src/Foundation/ModelAttribute.cs \
+	$(TOP)/src/Foundation/PreserveAttribute.cs \
+	$(TOP)/src/Foundation/ProtocolAttribute.cs \
+	$(TOP)/src/Foundation/RegisterAttribute.cs \
+	$(TOP)/src/ObjCRuntime/AlphaAttribute.cs \
+	$(TOP)/src/ObjCRuntime/ArgumentSemantic.cs \
+	$(TOP)/src/ObjCRuntime/LinkWithAttribute.cs \
+	$(TOP)/src/ObjCRuntime/NativeAttribute.cs \
+	$(TOP)/src/ObjCRuntime/PlatformAvailability2.cs \
+	$(TOP)/src/ObjCRuntime/Registrar.core.cs \
+
+IKVM_REFLECTION_FLAGS = -d:NO_AUTHENTICODE,STATIC,NO_SYMBOL_WRITER
+
+build/common/bgen.exe: $(GENERATOR_SOURCES) $(IKVM_REFLECTION_SOURCES) $(GENERATOR_ATTRIBUTE_SOURCES) Makefile.generator
+	@mkdir -p build/common
+	$(Q_GEN) $(SYSTEM_MCS) -debug -out:$@ $(IKVM_REFLECTION_FLAGS) $(GENERATOR_DEFINES) $(IKVM_REFLECTION_SOURCES) $(GENERATOR_ATTRIBUTE_SOURCES) $(GENERATOR_SOURCES) -d:IKVM
+
+#
 # Common
 #
 
 build/generator-frameworks.g.cs: frameworks.sources Makefile.generator generate-frameworks.csharp
+	@mkdir -p $(dir $@)
 	@./generate-frameworks.csharp '$(IOS_FRAMEWORKS)' '$(MAC_FRAMEWORKS)' '$(WATCHOS_FRAMEWORKS)' '$(TVOS_FRAMEWORKS)' > $@
 
 #
