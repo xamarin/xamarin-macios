@@ -10922,6 +10922,7 @@ namespace XamCore.AVFoundation {
 	}
 
 	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface AVContentKeySession {
 		[Static]
@@ -10979,10 +10980,9 @@ namespace XamCore.AVFoundation {
 	}
 
 	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface AVContentKeyRequest {
-
-		
 		[Field ("AVContentKeyRequestProtocolVersionsKey")]
 		NSString ProtocolVersions { get; }
 
@@ -11023,6 +11023,7 @@ namespace XamCore.AVFoundation {
 	}
 
 	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
+	[DisableDefaultCtor]
 	[BaseType (typeof (AVContentKeyRequest))]
 	interface AVPersistableContentKeyRequest {
 		[Export ("persistableContentKeyFromKeyVendorResponse:options:error:")]
@@ -11031,6 +11032,7 @@ namespace XamCore.AVFoundation {
 	}
 
 	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
+	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	interface AVContentKeyResponse {
 		[Static]
