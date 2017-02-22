@@ -1859,7 +1859,8 @@ namespace XamCore.Intents {
 		[Export ("imageWithImageData:")]
 		INImage FromData (NSData imageData);
 
-		[return: NullAllowed][Static]
+		[Static]
+		[MarshalNativeExceptions]
 		[Export ("imageWithURL:")]
 		INImage FromUrl (NSUrl url);
 
@@ -2317,6 +2318,13 @@ namespace XamCore.Intents {
 
 		[Export ("initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:aliases:suggestionType:")]
 		IntPtr Constructor (INPersonHandle personHandle, [NullAllowed] NSPersonNameComponents nameComponents, [NullAllowed] string displayName, [NullAllowed] INImage image, [NullAllowed] string contactIdentifier, [NullAllowed] string customIdentifier, [NullAllowed] INPersonHandle [] aliases, INPersonSuggestionType suggestionType);
+
+		// Inlined from INInteraction (INPerson) Category
+
+		[Introduced (PlatformName.iOS, 10, 3)]
+		[Introduced (PlatformName.MacOSX, 10, 12, 4, PlatformArchitecture.Arch64)]
+		[Export ("siriMatches", ArgumentSemantic.Copy), NullAllowed]
+		INPerson [] SiriMatches { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2347,6 +2355,7 @@ namespace XamCore.Intents {
 		[DesignatedInitializer]
 		IntPtr Constructor (string value, INPersonHandleType type, INPersonHandleLabel label);
 
+		[DesignatedInitializer]
 		[Introduced (PlatformName.iOS, 10, 2)]
 		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
 		[Export ("initWithValue:type:label:"), Protected]
@@ -2354,7 +2363,6 @@ namespace XamCore.Intents {
 		IntPtr Constructor (string value, INPersonHandleType type, [NullAllowed] NSString stringLabel);
 
 		[Export ("initWithValue:type:")]
-		[DesignatedInitializer]
 		IntPtr Constructor (string value, INPersonHandleType type);
 	}
 
@@ -4582,6 +4590,732 @@ namespace XamCore.Intents {
 
 		[NullAllowed, Export ("interaction")]
 		INInteraction GetInteraction ();
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (INIntent))]
+	interface INActivateCarSignalIntent {
+
+		[DesignatedInitializer]
+		[Export ("initWithCarName:signals:")]
+		IntPtr Constructor ([NullAllowed] INSpeakableString carName, INCarSignalOptions signals);
+
+		[Export ("carName", ArgumentSemantic.Copy), NullAllowed]
+		INSpeakableString CarName { get; }
+
+		[Export ("signals", ArgumentSemantic.Assign)]
+		INCarSignalOptions Signals { get; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[Protocol]
+	interface INActivateCarSignalIntentHandling {
+
+		[Abstract]
+		[Export ("handleActivateCarSignal:completion:")]
+		void HandleActivateCarSignal (INActivateCarSignalIntent intent, Action<INActivateCarSignalIntentResponse> completion);
+
+		[Export ("confirmActivateCarSignal:completion:")]
+		void ConfirmActivateCarSignal (INActivateCarSignalIntent intent, Action<INActivateCarSignalIntentResponse> completion);
+
+		[Export ("resolveCarNameForActivateCarSignal:withCompletion:")]
+		void ResolveCarName (INActivateCarSignalIntent intent, Action<INSpeakableStringResolutionResult> completion);
+
+		[Export ("resolveSignalsForActivateCarSignal:withCompletion:")]
+		void ResolveSignals (INActivateCarSignalIntent intent, Action<INCarSignalOptionsResolutionResult> completion);
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSObject))]
+	interface INBillDetails : NSCopying, NSSecureCoding {
+
+		[DesignatedInitializer]
+		[Export ("initWithBillType:paymentStatus:billPayee:amountDue:minimumDue:lateFee:dueDate:paymentDate:")]
+		IntPtr Constructor (INBillType billType, INPaymentStatus paymentStatus, [NullAllowed] INBillPayee billPayee, [NullAllowed] INCurrencyAmount amountDue, [NullAllowed] INCurrencyAmount minimumDue, [NullAllowed] INCurrencyAmount lateFee, [NullAllowed] NSDateComponents dueDate, [NullAllowed] NSDateComponents paymentDate);
+
+		[Export ("billType", ArgumentSemantic.Assign)]
+		INBillType BillType { get; set; }
+
+		[Export ("paymentStatus", ArgumentSemantic.Assign)]
+		INPaymentStatus PaymentStatus { get; set; }
+
+		[Export ("billPayee", ArgumentSemantic.Copy), NullAllowed]
+		INBillPayee BillPayee { get; set; }
+
+		[Export ("amountDue", ArgumentSemantic.Copy), NullAllowed]
+		INCurrencyAmount AmountDue { get; set; }
+
+		[Export ("minimumDue", ArgumentSemantic.Copy), NullAllowed]
+		INCurrencyAmount MinimumDue { get; set; }
+
+		[Export ("lateFee", ArgumentSemantic.Copy), NullAllowed]
+		INCurrencyAmount LateFee { get; set; }
+
+		[Export ("dueDate", ArgumentSemantic.Copy), NullAllowed]
+		NSDateComponents DueDate { get; set; }
+
+		[Export ("paymentDate", ArgumentSemantic.Copy), NullAllowed]
+		NSDateComponents PaymentDate { get; set; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSObject))]
+	interface INBillPayee : NSCopying, NSSecureCoding {
+
+		[DesignatedInitializer]
+		[Export ("initWithNickname:number:organizationName:")]
+		IntPtr Constructor (INSpeakableString nickname, [NullAllowed] string accountNumber, [NullAllowed] INSpeakableString organizationName);
+
+		[Export ("nickname", ArgumentSemantic.Copy), NullAllowed]
+		INSpeakableString Nickname { get; }
+
+		[Export ("accountNumber"), NullAllowed]
+		string AccountNumber { get; }
+
+		[Export ("organizationName", ArgumentSemantic.Copy), NullAllowed]
+		INSpeakableString OrganizationName { get; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	[DisableDefaultCtor]
+	interface INBillPayeeResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedBillPayee:")]
+		INBillPayeeResolutionResult GetSuccess (INBillPayee resolvedBillPayee);
+
+		[Static]
+		[Export ("disambiguationWithBillPayeesToDisambiguate:")]
+		INBillPayeeResolutionResult GetDisambiguation (INBillPayee [] billPayeesToDisambiguate);
+
+		[Static]
+		[Export ("confirmationRequiredWithBillPayeeToConfirm:")]
+		INBillPayeeResolutionResult GetConfirmationRequired ([NullAllowed] INBillPayee billPayeeToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INBillPayeeResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INBillPayeeResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INBillPayeeResolutionResult Unsupported { get; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	[DisableDefaultCtor]
+	interface INBillTypeResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedValue:")]
+		INBillTypeResolutionResult GetSuccess (INBillType resolvedValue);
+
+		[Static]
+		[Export ("confirmationRequiredWithValueToConfirm:")]
+		INBillTypeResolutionResult GetConfirmationRequired (INBillType valueToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INBillTypeResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INBillTypeResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INBillTypeResolutionResult Unsupported { get; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	[DisableDefaultCtor]
+	interface INCarSignalOptionsResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedValue:")]
+		INCarSignalOptionsResolutionResult GetSuccess (INCarSignalOptions resolvedValue);
+
+		[Static]
+		[Export ("confirmationRequiredWithValueToConfirm:")]
+		INCarSignalOptionsResolutionResult GetConfirmationRequired (INCarSignalOptions valueToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INCarSignalOptionsResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INCarSignalOptionsResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INCarSignalOptionsResolutionResult Unsupported { get; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (INIntent))]
+	interface INGetCarLockStatusIntent {
+
+		[DesignatedInitializer]
+		[Export ("initWithCarName:")]
+		IntPtr Constructor ([NullAllowed] INSpeakableString carName);
+
+		[Export ("carName", ArgumentSemantic.Copy), NullAllowed]
+		INSpeakableString CarName { get; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[Protocol]
+	interface INGetCarLockStatusIntentHandling {
+
+		[Abstract]
+		[Export ("handleGetCarLockStatus:completion:")]
+		void HandleGetCarLockStatus (INGetCarLockStatusIntent intent, Action<INGetCarLockStatusIntentResponse> completion);
+
+		[Export ("confirmGetCarLockStatus:completion:")]
+		void ConfirmGetCarLockStatus (INGetCarLockStatusIntent intent, Action<INGetCarLockStatusIntentResponse> completion);
+
+		[Export ("resolveCarNameForGetCarLockStatus:withCompletion:")]
+		void ResolveCarName (INGetCarLockStatusIntent intent, Action<INSpeakableStringResolutionResult> completion);
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (INIntentResponse))]
+	interface INGetCarLockStatusIntentResponse {
+
+		[DesignatedInitializer]
+		[Export ("initWithCode:userActivity:")]
+		IntPtr Constructor (INGetCarLockStatusIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INGetCarLockStatusIntentResponseCode Code { get; }
+
+#if false // I wish BindAs was a thing right now
+		[BindAs (typeof (bool?))]
+#endif
+		[Internal]
+		[NullAllowed, Export ("locked", ArgumentSemantic.Copy)]
+		NSNumber _Locked { get; set; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (INIntent))]
+	interface INGetCarPowerLevelStatusIntent {
+
+		[DesignatedInitializer]
+		[Export ("initWithCarName:")]
+		IntPtr Constructor ([NullAllowed] INSpeakableString carName);
+
+		[Export ("carName", ArgumentSemantic.Copy), NullAllowed]
+		INSpeakableString CarName { get; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[Protocol]
+	interface INGetCarPowerLevelStatusIntentHandling {
+
+		[Abstract]
+		[Export ("handleGetCarPowerLevelStatus:completion:")]
+		void HandleGetCarPowerLevelStatus (INGetCarPowerLevelStatusIntent intent, Action<INGetCarPowerLevelStatusIntentResponse> completion);
+
+		[Export ("confirmGetCarPowerLevelStatus:completion:")]
+		void ConfirmGetCarPowerLevelStatus (INGetCarPowerLevelStatusIntent intent, Action<INGetCarPowerLevelStatusIntentResponse> completion);
+
+		[Export ("resolveCarNameForGetCarPowerLevelStatus:withCompletion:")]
+		void ResolveCarName (INGetCarPowerLevelStatusIntent intent, Action<INSpeakableStringResolutionResult> completion);
+	}
+
+	// Just to please the generator that at this point does not know the hierarchy
+	interface NSUnitLength : NSUnit { }
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (INIntentResponse))]
+	interface INGetCarPowerLevelStatusIntentResponse {
+
+		[DesignatedInitializer]
+		[Export ("initWithCode:userActivity:")]
+		IntPtr Constructor (INGetCarPowerLevelStatusIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INGetCarPowerLevelStatusIntentResponseCode Code { get; }
+
+#if false // I wish BindAs was a thing right now
+		[BindAs (typeof (float?))]
+#endif
+		[Internal]
+		[NullAllowed, Export ("fuelPercentRemaining", ArgumentSemantic.Copy)]
+		NSNumber _FuelPercentRemaining { get; set; }
+
+#if false // I wish BindAs was a thing right now
+		[BindAs (typeof (float?))]
+#endif
+		[Internal]
+		[NullAllowed, Export ("chargePercentRemaining", ArgumentSemantic.Copy)]
+		NSNumber _ChargePercentRemaining { get; set; }
+
+		[NullAllowed, Export ("distanceRemaining", ArgumentSemantic.Copy)]
+		NSMeasurement<NSUnitLength> DistanceRemaining { get; set; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (INIntent))]
+	interface INPayBillIntent {
+
+		[DesignatedInitializer]
+		[Export ("initWithBillPayee:fromAccount:transactionAmount:transactionScheduledDate:transactionNote:billType:dueDate:")]
+		IntPtr Constructor ([NullAllowed] INBillPayee billPayee, [NullAllowed] INPaymentAccount fromAccount, [NullAllowed] INPaymentAmount transactionAmount, [NullAllowed] INDateComponentsRange transactionScheduledDate, [NullAllowed] string transactionNote, INBillType billType, [NullAllowed] INDateComponentsRange dueDate);
+
+		[Export ("billPayee", ArgumentSemantic.Copy), NullAllowed]
+		INBillPayee BillPayee { get; }
+
+		[Export ("fromAccount", ArgumentSemantic.Copy), NullAllowed]
+		INPaymentAccount FromAccount { get; }
+
+		[Export ("transactionAmount", ArgumentSemantic.Copy), NullAllowed]
+		INPaymentAmount TransactionAmount { get; }
+
+		[Export ("transactionScheduledDate", ArgumentSemantic.Copy), NullAllowed]
+		INDateComponentsRange TransactionScheduledDate { get; }
+
+		[Export ("transactionNote"), NullAllowed]
+		string TransactionNote { get; }
+
+		[Export ("billType", ArgumentSemantic.Assign)]
+		INBillType BillType { get; }
+
+		[Export ("dueDate", ArgumentSemantic.Copy), NullAllowed]
+		INDateComponentsRange DueDate { get; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[Protocol]
+	interface INPayBillIntentHandling {
+
+#if XAMCORE_4_0 // Apple added this Protocol to INPaymentsDomainHandling which is a braking change
+		[Abstract]
+#endif
+		[Export ("handlePayBill:completion:")]
+		void HandlePayBill (INPayBillIntent intent, Action<INPayBillIntentResponse> completion);
+
+		[Export ("confirmPayBill:completion:")]
+		void ConfirmPayBill (INPayBillIntent intent, Action<INPayBillIntentResponse> completion);
+
+		[Export ("resolveBillPayeeForPayBill:withCompletion:")]
+		void ResolveBillPayee (INPayBillIntent intent, Action<INBillPayeeResolutionResult> completion);
+
+		[Export ("resolveFromAccountForPayBill:withCompletion:")]
+		void ResolveFromAccount (INPayBillIntent intent, Action<INPaymentAccountResolutionResult> completion);
+
+		[Export ("resolveTransactionAmountForPayBill:withCompletion:")]
+		void ResolveTransactionAmount (INPayBillIntent intent, Action<INPaymentAmountResolutionResult> completion);
+
+		[Export ("resolveTransactionScheduledDateForPayBill:withCompletion:")]
+		void ResolveTransactionScheduledDate (INPayBillIntent intent, Action<INDateComponentsRangeResolutionResult> completion);
+
+		[Export ("resolveTransactionNoteForPayBill:withCompletion:")]
+		void ResolveTransactionNote (INPayBillIntent intent, Action<INStringResolutionResult> completion);
+
+		[Export ("resolveBillTypeForPayBill:withCompletion:")]
+		void ResolveBillType (INPayBillIntent intent, Action<INBillTypeResolutionResult> completion);
+
+		[Export ("resolveDueDateForPayBill:withCompletion:")]
+		void ResolveDueDate (INPayBillIntent intent, Action<INDateComponentsRangeResolutionResult> completion);
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (INIntentResponse))]
+	interface INPayBillIntentResponse {
+
+		[DesignatedInitializer]
+		[Export ("initWithCode:userActivity:")]
+		IntPtr Constructor (INPayBillIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INPayBillIntentResponseCode Code { get; }
+
+		[NullAllowed, Export ("fromAccount", ArgumentSemantic.Copy)]
+		INPaymentAccount FromAccount { get; set; }
+
+		[NullAllowed, Export ("billDetails", ArgumentSemantic.Copy)]
+		INBillDetails BillDetails { get; set; }
+
+		[NullAllowed, Export ("transactionAmount", ArgumentSemantic.Copy)]
+		INPaymentAmount TransactionAmount { get; set; }
+
+		[NullAllowed, Export ("transactionScheduledDate", ArgumentSemantic.Copy)]
+		INDateComponentsRange TransactionScheduledDate { get; set; }
+
+		[NullAllowed, Export ("transactionNote", ArgumentSemantic.Copy)]
+		string TransactionNote { get; set; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSObject))]
+	interface INPaymentAccount : NSCopying, NSSecureCoding {
+
+		[DesignatedInitializer]
+		[Export ("initWithNickname:number:accountType:organizationName:")]
+		IntPtr Constructor (INSpeakableString nickname, [NullAllowed] string accountNumber, INAccountType accountType, [NullAllowed] INSpeakableString organizationName);
+
+		[Export ("nickname", ArgumentSemantic.Copy), NullAllowed]
+		INSpeakableString Nickname { get; }
+
+		[Export ("accountNumber"), NullAllowed]
+		string AccountNumber { get; }
+
+		[Export ("accountType", ArgumentSemantic.Assign)]
+		INAccountType AccountType { get; }
+
+		[Export ("organizationName", ArgumentSemantic.Copy), NullAllowed]
+		INSpeakableString OrganizationName { get; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	[DisableDefaultCtor]
+	interface INPaymentAccountResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedPaymentAccount:")]
+		INPaymentAccountResolutionResult GetSuccess (INPaymentAccount resolvedPaymentAccount);
+
+		[Static]
+		[Export ("disambiguationWithPaymentAccountsToDisambiguate:")]
+		INPaymentAccountResolutionResult GetDisambiguation (INPaymentAccount [] paymentAccountsToDisambiguate);
+
+		[Static]
+		[Export ("confirmationRequiredWithPaymentAccountToConfirm:")]
+		INPaymentAccountResolutionResult GetConfirmationRequired ([NullAllowed] INPaymentAccount paymentAccountToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INPaymentAccountResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INPaymentAccountResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INPaymentAccountResolutionResult Unsupported { get; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (NSObject))]
+	interface INPaymentAmount : NSCopying, NSSecureCoding {
+
+		[DesignatedInitializer]
+		[Export ("initWithAmountType:amount:")]
+		IntPtr Constructor (INAmountType amountType, INCurrencyAmount amount);
+
+		[Export ("amount", ArgumentSemantic.Copy), NullAllowed]
+		INCurrencyAmount Amount { get; }
+
+		[Export ("amountType", ArgumentSemantic.Assign)]
+		INAmountType AmountType { get; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	[DisableDefaultCtor]
+	interface INPaymentAmountResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedPaymentAmount:")]
+		INPaymentAmountResolutionResult GetSuccess (INPaymentAmount resolvedPaymentAmount);
+
+		[Static]
+		[Export ("disambiguationWithPaymentAmountsToDisambiguate:")]
+		INPaymentAmountResolutionResult GetDisambiguation (INPaymentAmount [] paymentAmountsToDisambiguate);
+
+		[Static]
+		[Export ("confirmationRequiredWithPaymentAmountToConfirm:")]
+		INPaymentAmountResolutionResult GetConfirmationRequired ([NullAllowed] INPaymentAmount paymentAmountToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INPaymentAmountResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INPaymentAmountResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INPaymentAmountResolutionResult Unsupported { get; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[BaseType (typeof (INIntentResolutionResult))]
+	[DisableDefaultCtor]
+	interface INPaymentStatusResolutionResult {
+
+		[Static]
+		[Export ("successWithResolvedValue:")]
+		INPaymentStatusResolutionResult GetSuccess (INPaymentStatus resolvedValue);
+
+		[Static]
+		[Export ("confirmationRequiredWithValueToConfirm:")]
+		INPaymentStatusResolutionResult GetConfirmationRequired (INPaymentStatus valueToConfirm);
+
+		// Fixes bug 43205. We need to return the inherited type not the base type
+		// because users won't be able to downcast easily
+
+		[New]
+		[Static]
+		[Export ("needsValue")]
+		INPaymentStatusResolutionResult NeedsValue { get; }
+
+		[New]
+		[Static]
+		[Export ("notRequired")]
+		INPaymentStatusResolutionResult NotRequired { get; }
+
+		[New]
+		[Static]
+		[Export ("unsupported")]
+		INPaymentStatusResolutionResult Unsupported { get; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (INIntent))]
+	interface INSearchForBillsIntent {
+
+		[DesignatedInitializer]
+		[Export ("initWithBillPayee:paymentDateRange:billType:status:dueDateRange:")]
+		IntPtr Constructor ([NullAllowed] INBillPayee billPayee, [NullAllowed] INDateComponentsRange paymentDateRange, INBillType billType, INPaymentStatus status, [NullAllowed] INDateComponentsRange dueDateRange);
+
+		[Export ("billPayee", ArgumentSemantic.Copy), NullAllowed]
+		INBillPayee BillPayee { get; }
+
+		[Export ("paymentDateRange", ArgumentSemantic.Copy), NullAllowed]
+		INDateComponentsRange PaymentDateRange { get; }
+
+		[Export ("billType", ArgumentSemantic.Assign)]
+		INBillType BillType { get; }
+
+		[Export ("status", ArgumentSemantic.Assign)]
+		INPaymentStatus Status { get; }
+
+		[Export ("dueDateRange", ArgumentSemantic.Copy), NullAllowed]
+		INDateComponentsRange DueDateRange { get; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[Protocol]
+	interface INSearchForBillsIntentHandling {
+
+#if XAMCORE_4_0 // Apple added this Protocol to INPaymentsDomainHandling which is a braking change
+		[Abstract]
+#endif
+		[Export ("handleSearchForBills:completion:")]
+		void HandleSearch (INSearchForBillsIntent intent, Action<INSearchForBillsIntentResponse> completion);
+
+		[Export ("confirmSearchForBills:completion:")]
+		void ConfirmSearch (INSearchForBillsIntent intent, Action<INSearchForBillsIntentResponse> completion);
+
+		[Export ("resolveBillPayeeForSearchForBills:withCompletion:")]
+		void ResolveBillPayee (INSearchForBillsIntent intent, Action<INBillPayeeResolutionResult> completion);
+
+		[Export ("resolvePaymentDateRangeForSearchForBills:withCompletion:")]
+		void ResolvePaymentDateRange (INSearchForBillsIntent intent, Action<INDateComponentsRangeResolutionResult> completion);
+
+		[Export ("resolveBillTypeForSearchForBills:withCompletion:")]
+		void ResolveBillType (INSearchForBillsIntent intent, Action<INBillTypeResolutionResult> completion);
+
+		[Export ("resolveStatusForSearchForBills:withCompletion:")]
+		void ResolveStatus (INSearchForBillsIntent intent, Action<INPaymentStatusResolutionResult> completion);
+
+		[Export ("resolveDueDateRangeForSearchForBills:withCompletion:")]
+		void ResolveDueDateRange (INSearchForBillsIntent intent, Action<INDateComponentsRangeResolutionResult> completion);
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (INIntentResponse))]
+	interface INSearchForBillsIntentResponse {
+
+		[DesignatedInitializer]
+		[Export ("initWithCode:userActivity:")]
+		IntPtr Constructor (INSearchForBillsIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INSearchForBillsIntentResponseCode Code { get; }
+
+		[NullAllowed, Export ("bills", ArgumentSemantic.Copy)]
+		INBillDetails [] Bills { get; set; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (INIntent))]
+	interface INSetCarLockStatusIntent {
+
+		[Protected]
+		[DesignatedInitializer]
+		[Export ("initWithLocked:carName:")]
+		IntPtr Constructor ([NullAllowed] NSNumber locked, [NullAllowed] INSpeakableString carName);
+
+#if false // I wish BindAs was a thing right now
+		[BindAs (typeof (bool?))]
+#endif
+		[Internal]
+		[Export ("locked", ArgumentSemantic.Copy), NullAllowed]
+		NSNumber _Locked { get; }
+
+		[Export ("carName", ArgumentSemantic.Copy), NullAllowed]
+		INSpeakableString CarName { get; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[Protocol]
+	interface INSetCarLockStatusIntentHandling {
+
+		[Abstract]
+		[Export ("handleSetCarLockStatus:completion:")]
+		void HandleSetCarLockStatus (INSetCarLockStatusIntent intent, Action<INSetCarLockStatusIntentResponse> completion);
+
+		[Export ("confirmSetCarLockStatus:completion:")]
+		void ConfirmSetCarLockStatus (INSetCarLockStatusIntent intent, Action<INSetCarLockStatusIntentResponse> completion);
+
+		[Export ("resolveLockedForSetCarLockStatus:withCompletion:")]
+		void ResolveLocked (INSetCarLockStatusIntent intent, Action<INBooleanResolutionResult> completion);
+
+		[Export ("resolveCarNameForSetCarLockStatus:withCompletion:")]
+		void ResolveCarName (INSetCarLockStatusIntent intent, Action<INSpeakableStringResolutionResult> completion);
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (INIntentResponse))]
+	interface INSetCarLockStatusIntentResponse {
+
+		[DesignatedInitializer]
+		[Export ("initWithCode:userActivity:")]
+		IntPtr Constructor (INSetCarLockStatusIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INSetCarLockStatusIntentResponseCode Code { get; }
+	}
+
+	[Introduced (PlatformName.iOS, 10, 3)]
+	[Introduced (PlatformName.WatchOS, 3, 2)]
+	[Unavailable (PlatformName.MacOSX)]
+	[DisableDefaultCtor]
+	[BaseType (typeof (INIntentResponse))]
+	interface INActivateCarSignalIntentResponse {
+
+		[DesignatedInitializer]
+		[Export ("initWithCode:userActivity:")]
+		IntPtr Constructor (INActivateCarSignalIntentResponseCode code, [NullAllowed] NSUserActivity userActivity);
+
+		[Export ("code")]
+		INActivateCarSignalIntentResponseCode Code { get; }
+
+		[Export ("signals")]
+		INCarSignalOptions Signals { get; set; }
 	}
 }
 #endif // XAMCORE_2_0
