@@ -10,6 +10,7 @@ using XamCore.AudioToolbox;
 namespace XamCore.AVFoundation {
 	public partial class AVCaptureVideoPreviewLayer {
 
+		[iOS (8,0), Mac (10,2)]
 		public enum InitMode {
 			WithConnection,
 			WithNoConnection,

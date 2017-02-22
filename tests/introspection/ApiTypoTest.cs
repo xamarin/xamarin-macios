@@ -279,6 +279,7 @@ namespace Introspection
 			"Paeth", // PNG filter
 			"Parms", // short for Parameters
 			"Perlin",
+			"Persistable",
 			"Pausable",
 			"Pcl",
 			"Pcm",

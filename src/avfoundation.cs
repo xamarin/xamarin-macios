@@ -29,6 +29,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System.ComponentModel;
+
 #if !WATCH
 using XamCore.AudioUnit;
 using XamCore.AVKit;
@@ -10926,13 +10928,13 @@ namespace XamCore.AVFoundation {
 	[BaseType (typeof (NSObject))]
 	interface AVContentKeySession {
 		[Static]
-		[Internal]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("contentKeySessionWithKeySystem:storageDirectoryAtURL:")]
 		AVContentKeySession Create (NSString keySystem, [NullAllowed] NSUrl storageUrl);
 
 		[Static]
 		[Wrap ("Create (keySystem.GetConstant (), storageUrl)")]
-		AVContentKeySession Create (AVKeySystem keySystem, [NullAllowed] NSUrl storageUrl);
+		AVContentKeySession Create (AVContentKeySystem keySystem, [NullAllowed] NSUrl storageUrl);
 
 		[Export ("setDelegate:queue:")]
 		void SetDelegate ([NullAllowed] IAVContentKeySessionDelegate newDelegate, [NullAllowed] DispatchQueue delegateQueue);
@@ -10944,14 +10946,14 @@ namespace XamCore.AVFoundation {
 		DispatchQueue DelegateQueue { get; }
 
 		[NullAllowed, Export ("storageURL")]
-		AVKeySystem StorageUrl { get; }
+		NSUrl StorageUrl { get; }
 
 		[Protected]
 		[Export ("keySystem")]
-		NSString NSKeySystem { get; }
+		NSString KeySystemConstant { get; }
 
-		[Wrap ("AVKeySystemExtensions.GetValue (this.NSKeySystem)")]
-		AVKeySystem KeySystem { get; }
+		[Wrap ("AVContentKeySystemExtensions.GetValue (this.KeySystemConstant)")]
+		AVContentKeySystem KeySystem { get; }
 
 		[Export ("expire")]
 		void Expire ();

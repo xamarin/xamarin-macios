@@ -760,6 +760,7 @@ namespace XamCore.AVFoundation {
 		Failed
 	}
 
+	[TV (10, 2), Mac (10, 12, 4), iOS (10, 3)]
 	public enum AVContentKeyRequestRetryReason {
 		[Field ("AVContentKeyRequestRetryReasonTimedOut")]
 		TimedOut,
@@ -769,8 +770,8 @@ namespace XamCore.AVFoundation {
 		ReceivedObsoleteContentKey,
 	}
 
-	public enum AVKeySystem {
-		[TV (10, 2), Mac (10, 12, 4), iOS (10, 3)]
+	[TV (10, 2), Mac (10, 12, 4), iOS (10, 3)]
+	public enum AVContentKeySystem {
 		[Field ("AVContentKeySystemFairPlayStreaming")]
 		FairPlayStreaming,
 	}
