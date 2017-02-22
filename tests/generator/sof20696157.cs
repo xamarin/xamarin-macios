@@ -179,7 +179,7 @@ namespace Test {
 	[Protocol] interface C86 : IMTLSamplerState {}
 	[Protocol] interface C87 : IINSearchCallHistoryIntentHandling {}
 	[Protocol] interface C88 : IAVPictureInPictureControllerDelegate {}
-	[Protocol] interface C89 : INSTextLayoutOrientationProvider {}
+	// [Protocol] interface C89 : INSTextLayoutOrientationProvider {}
 	[Protocol] interface C90 : IGKStrategist {}
 	[Protocol] interface C91 : INSDiscardableContent {}
 	[Protocol] interface C92 : IAVPlayerViewControllerDelegate {}
@@ -358,7 +358,7 @@ namespace Test {
 	[Protocol] interface C265 : INSFetchedResultsControllerDelegate {}
 	[Protocol] interface C266 : IUIViewControllerInteractiveTransitioning {}
 	[Protocol] interface C267 : INSFetchedResultsSectionInfo {}
-	[Protocol] interface C268 : IUIViewControllerPreviewing {}
+	// [Protocol] interface C268 : IUIViewControllerPreviewing {}
 	[Protocol] interface C269 : IHMHomeManagerDelegate {}
 	[Protocol] interface C270 : IUIViewControllerPreviewingDelegate {}
 	[Protocol] interface C271 : IUIViewControllerRestoration {}
@@ -541,7 +541,7 @@ namespace Test {
 	[Protocol] [BaseType (typeof (NSObject))] interface M86 : IMTLSamplerState {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M87 : IINSearchCallHistoryIntentHandling {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M88 : IAVPictureInPictureControllerDelegate {}
-	[Protocol] [BaseType (typeof (NSObject))] interface M89 : INSTextLayoutOrientationProvider {}
+	// [Protocol] [BaseType (typeof (NSObject))] interface M89 : INSTextLayoutOrientationProvider {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M90 : IGKStrategist {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M91 : INSDiscardableContent {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M92 : IAVPlayerViewControllerDelegate {}
@@ -720,7 +720,7 @@ namespace Test {
 	[Protocol] [BaseType (typeof (NSObject))] interface M265 : INSFetchedResultsControllerDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M266 : IUIViewControllerInteractiveTransitioning {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M267 : INSFetchedResultsSectionInfo {}
-	[Protocol] [BaseType (typeof (NSObject))] interface M268 : IUIViewControllerPreviewing {}
+	// [Protocol] [BaseType (typeof (NSObject))] interface M268 : IUIViewControllerPreviewing {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M269 : IHMHomeManagerDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M270 : IUIViewControllerPreviewingDelegate {}
 	[Protocol] [BaseType (typeof (NSObject))] interface M271 : IUIViewControllerRestoration {}
