@@ -159,7 +159,7 @@ namespace XamCore.AVFoundation {
 #if !MONOMAC || !XAMCORE_4_0
 	[Flags]
 	[NoTV]
-	[iOS (4,0), Watch (3,0)]
+	[iOS (4,0)]
 	[Native]
 	[Availability (Deprecated = Platform.iOS_6_0)]
 	// NSUInteger - AVAudioSession.h
@@ -751,8 +751,7 @@ namespace XamCore.AVFoundation {
 
 	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
 	[Native]
-	public enum AVContentKeyRequestStatus : nint
-	{
+	public enum AVContentKeyRequestStatus : nint {
 		Requesting,
 		Received,
 		Renewed,
@@ -761,4 +760,18 @@ namespace XamCore.AVFoundation {
 		Failed
 	}
 
+	public enum AVContentKeyRequestRetryReason {
+		[Field ("AVContentKeyRequestRetryReasonTimedOut")]
+		TimedOut,
+		[Field ("AVContentKeyRequestRetryReasonReceivedResponseWithExpiredLease")]
+		ReceivedResponseWithExpiredLease,
+		[Field ("AVContentKeyRequestRetryReasonReceivedObsoleteContentKey")]
+		ReceivedObsoleteContentKey,
+	}
+
+	public enum AVKeySystem {
+		[TV (10, 2), Mac (10, 12, 4), iOS (10, 3)]
+		[Field ("AVContentKeySystemFairPlayStreaming")]
+		FairPlayStreaming,
+	}
 }

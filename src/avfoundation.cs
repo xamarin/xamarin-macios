@@ -1172,7 +1172,7 @@ namespace XamCore.AVFoundation {
 		IntPtr Constructor (NSData data, [NullAllowed] string fileTypeHint, out NSError outError);
 #endif
 
-		[Watch (3,0), iOS (10, 0), TV (10,0), Mac (10,12)]
+		[iOS (10, 0), TV (10,0), Mac (10,12)]
 		[Export ("format")]
 		AVAudioFormat Format { get; }
 	}
@@ -3489,7 +3489,7 @@ namespace XamCore.AVFoundation {
 	[DisableDefaultCtor]
 	interface AVUrlAsset {
 
-		[TV (10, 2), Mac (10, 12, 4), iOS (10, 2)]
+		[TV (10, 2), Mac (10, 12, 4), iOS (10, 3)]
 		[Export ("mayRequireContentKeysForMediaDataProcessing")]
 		bool MayRequireContentKeysForMediaDataProcessing { get; }
 
@@ -7574,8 +7574,6 @@ namespace XamCore.AVFoundation {
 	[Since (4,0)]
 	[BaseType (typeof (CALayer))]
 	interface AVCaptureVideoPreviewLayer {
-		
-
 		[NullAllowed] // by default this property is null
 		[Export ("session", ArgumentSemantic.Retain)]
 		AVCaptureSession Session { get; set;  }
@@ -7619,20 +7617,14 @@ namespace XamCore.AVFoundation {
 		[Static, Export ("layerWithSession:")]
 		AVCaptureVideoPreviewLayer FromSession (AVCaptureSession session);
 
-		[Static]
 		[Export ("initWithSession:")]
+		[Internal]
 		IntPtr InitWithConnection (AVCaptureSession session);
 
 		[iOS (8,0), Mac (10,2)]
-		[Static]
+		[Internal]
 		[Export ("initWithSessionWithNoConnection:")]
 		IntPtr InitWithNoConnection (AVCaptureSession session);
-
-		[Wrap ("this (InitWithConnection (session))")]
-		IntPtr Constructor (AVCaptureSession session);
-
-		[Wrap ("this (withConnection? InitWithConnection (session) : InitWithNoConnection (session))")]
-		IntPtr Constructor (AVCaptureSession session, bool withConnection);
 
 		[Since (6,0)]
 		[Export ("connection")]
@@ -10892,7 +10884,6 @@ namespace XamCore.AVFoundation {
 	}
 #endif
 
-	[NoWatch]
 	partial interface IAVContentKeySessionDelegate {}
 
 	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
@@ -10920,7 +10911,6 @@ namespace XamCore.AVFoundation {
 		void DidChange (AVContentKeySession session);
 	}
 
-	[NoWatch]
 	partial interface IAVContentKeyRecipient {}
 
 	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
@@ -10934,15 +10924,14 @@ namespace XamCore.AVFoundation {
 	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface AVContentKeySession {
-
-		// used with Create (string keySystem, [NullAllowed] NSUrl storageUrl);
-		[TV (10, 2), Mac (10, 12, 4), iOS (10, 3)]
-		[Field ("AVContentKeySystemFairPlayStreaming")]
-		NSString FairPlayStreaming { get; }
+		[Static]
+		[Internal]
+		[Export ("contentKeySessionWithKeySystem:storageDirectoryAtURL:")]
+		AVContentKeySession Create (NSString keySystem, [NullAllowed] NSUrl storageUrl);
 
 		[Static]
-		[Export ("contentKeySessionWithKeySystem:storageDirectoryAtURL:")]
-		AVContentKeySession Create (string keySystem, [NullAllowed] NSUrl storageUrl);
+		[Wrap ("Create (keySystem.GetConstant (), storageUrl)")]
+		AVContentKeySession Create (AVKeySystem keySystem, [NullAllowed] NSUrl storageUrl);
 
 		[Export ("setDelegate:queue:")]
 		void SetDelegate ([NullAllowed] IAVContentKeySessionDelegate newDelegate, [NullAllowed] DispatchQueue delegateQueue);
@@ -10954,10 +10943,14 @@ namespace XamCore.AVFoundation {
 		DispatchQueue DelegateQueue { get; }
 
 		[NullAllowed, Export ("storageURL")]
-		NSUrl StorageUrl { get; }
+		AVKeySystem StorageUrl { get; }
 
+		[Protected]
 		[Export ("keySystem")]
-		string KeySystem { get; }
+		NSString NSKeySystem { get; }
+
+		[Wrap ("AVKeySystemExtensions.GetValue (this.NSKeySystem)")]
+		AVKeySystem KeySystem { get; }
 
 		[Export ("expire")]
 		void Expire ();
@@ -10983,15 +10976,6 @@ namespace XamCore.AVFoundation {
 		IAVContentKeyRecipient[] ContentKeyRecipients { get; }
 
 		#endregion
-	}
-
-	enum AVContentKeyRequestRetryReason {
-		[Field ("AVContentKeyRequestRetryReasonTimedOut")]
-		TimedOut,
-		[Field ("AVContentKeyRequestRetryReasonReceivedResponseWithExpiredLease")]
-		ReceivedResponseWithExpiredLease,
-		[Field ("AVContentKeyRequestRetryReasonReceivedObsoleteContentKey")]
-		ReceivedObsoleteContentKey,
 	}
 
 	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
