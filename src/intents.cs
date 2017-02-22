@@ -2134,7 +2134,8 @@ namespace XamCore.Intents {
 		[Export ("imageWithImageData:")]
 		INImage FromData (NSData imageData);
 
-		[return: NullAllowed][Static]
+		[Static]
+		[MarshalNativeExceptions]
 		[Export ("imageWithURL:")]
 		INImage FromUrl (NSUrl url);
 
@@ -2614,8 +2615,8 @@ namespace XamCore.Intents {
 
 		[Introduced (PlatformName.iOS, 10, 3)]
 		[Introduced (PlatformName.MacOSX, 10, 12, 4, PlatformArchitecture.Arch64)]
-		[Export ("alternativeSiriMatches", ArgumentSemantic.Copy), NullAllowed]
-		INPerson [] AlternativeSiriMatches { get; }
+		[Export ("siriMatches", ArgumentSemantic.Copy), NullAllowed]
+		INPerson [] SiriMatches { get; }
 	}
 
 	[Introduced (PlatformName.iOS, 10, 0)]
@@ -2646,13 +2647,13 @@ namespace XamCore.Intents {
 		[Wrap ("this (value, type, label.GetConstant ())")]
 		IntPtr Constructor (string value, INPersonHandleType type, INPersonHandleLabel label);
 
+		[DesignatedInitializer]
 		[Introduced (PlatformName.iOS, 10, 2)]
 		[Introduced (PlatformName.MacOSX, 10, 12, 2, PlatformArchitecture.Arch64)]
 		[Export ("initWithValue:type:label:"), Protected]
 		IntPtr Constructor (string value, INPersonHandleType type, [NullAllowed] NSString stringLabel);
 
 		[Export ("initWithValue:type:")]
-		[DesignatedInitializer]
 		IntPtr Constructor (string value, INPersonHandleType type);
 	}
 
@@ -5092,16 +5093,16 @@ namespace XamCore.Intents {
 	interface INBillPayeeResolutionResult {
 
 		[Static]
-		[Export ("successWithResolvedValue:")]
-		INBillPayeeResolutionResult GetSuccess (INBillPayee resolvedValue);
+		[Export ("successWithResolvedBillPayee:")]
+		INBillPayeeResolutionResult GetSuccess (INBillPayee resolvedBillPayee);
 
 		[Static]
 		[Export ("disambiguationWithBillPayeesToDisambiguate:")]
-		INBillPayeeResolutionResult GetDisambiguation (INBillPayee [] valuesToDisambiguate);
+		INBillPayeeResolutionResult GetDisambiguation (INBillPayee [] billPayeesToDisambiguate);
 
 		[Static]
 		[Export ("confirmationRequiredWithBillPayeeToConfirm:")]
-		INBillPayeeResolutionResult GetConfirmationRequired ([NullAllowed] INBillPayee valueToConfirm);
+		INBillPayeeResolutionResult GetConfirmationRequired ([NullAllowed] INBillPayee billPayeeToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -5443,16 +5444,16 @@ namespace XamCore.Intents {
 	interface INPaymentAccountResolutionResult {
 
 		[Static]
-		[Export ("successWithResolvedValue:")]
-		INPaymentAccountResolutionResult GetSuccess (INPaymentAccount resolvedValue);
+		[Export ("successWithResolvedPaymentAccount:")]
+		INPaymentAccountResolutionResult GetSuccess (INPaymentAccount resolvedPaymentAccount);
 
 		[Static]
 		[Export ("disambiguationWithPaymentAccountsToDisambiguate:")]
-		INPaymentAccountResolutionResult GetDisambiguation (INPaymentAccount [] valuesToDisambiguate);
+		INPaymentAccountResolutionResult GetDisambiguation (INPaymentAccount [] paymentAccountsToDisambiguate);
 
 		[Static]
 		[Export ("confirmationRequiredWithPaymentAccountToConfirm:")]
-		INPaymentAccountResolutionResult GetConfirmationRequired ([NullAllowed] INPaymentAccount valueToConfirm);
+		INPaymentAccountResolutionResult GetConfirmationRequired ([NullAllowed] INPaymentAccount paymentAccountToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
@@ -5499,16 +5500,16 @@ namespace XamCore.Intents {
 	interface INPaymentAmountResolutionResult {
 
 		[Static]
-		[Export ("successWithResolvedValue:")]
-		INPaymentAmountResolutionResult GetSuccess (INPaymentAmount resolvedValue);
+		[Export ("successWithResolvedPaymentAmount:")]
+		INPaymentAmountResolutionResult GetSuccess (INPaymentAmount resolvedPaymentAmount);
 
 		[Static]
 		[Export ("disambiguationWithPaymentAmountsToDisambiguate:")]
-		INPaymentAmountResolutionResult GetDisambiguation (INPaymentAmount [] valuesToDisambiguate);
+		INPaymentAmountResolutionResult GetDisambiguation (INPaymentAmount [] paymentAmountsToDisambiguate);
 
 		[Static]
 		[Export ("confirmationRequiredWithPaymentAmountToConfirm:")]
-		INPaymentAmountResolutionResult GetConfirmationRequired ([NullAllowed] INPaymentAmount valueToConfirm);
+		INPaymentAmountResolutionResult GetConfirmationRequired ([NullAllowed] INPaymentAmount paymentAmountToConfirm);
 
 		// Fixes bug 43205. We need to return the inherited type not the base type
 		// because users won't be able to downcast easily
