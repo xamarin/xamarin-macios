@@ -1,7 +1,7 @@
 using System;
-using MonoTouch.Foundation;
-using MonoTouch.CoreFoundation;
-using MonoTouch.UIKit;
+using Foundation;
+using CoreFoundation;
+using UIKit;
 
 namespace Forced {
 	delegate void SomethingDelegate ([ForcedType] UIButton button);

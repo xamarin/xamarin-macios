@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
+using ObjCRuntime;
+using Foundation;
+using UIKit;
 
 namespace Foo.BindingBugs
 {

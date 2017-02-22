@@ -1,7 +1,7 @@
 using System;
 
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
+using Foundation;
+using ObjCRuntime;
 
 namespace bug43579 {
 

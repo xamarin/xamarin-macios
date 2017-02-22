@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 #if MONOMAC
 using MonoMac.Foundation;
 #else
-using MonoTouch.Foundation;
+using Foundation;
 #endif
 #else
 using Foundation;

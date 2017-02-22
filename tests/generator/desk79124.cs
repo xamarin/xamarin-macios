@@ -1,9 +1,9 @@
 using System.Drawing;
 using System;
 
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-using MonoTouch.ObjCRuntime;
+using Foundation;
+using UIKit;
+using ObjCRuntime;
 
 namespace Desk79124 {
 	[BaseType (typeof (UIView))]
