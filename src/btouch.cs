@@ -140,7 +140,7 @@ class BindingTouch {
 		bool external = false;
 		bool public_mode = true;
 		bool nostdlib = false;
-		bool inline_selectors = Unified && CurrentPlatform != PlatformName.MacOSX;
+		bool? inline_selectors = null;
 		List<string> sources;
 		var resources = new List<string> ();
 		var linkwith = new List<string> ();
@@ -422,7 +422,7 @@ class BindingTouch {
 				BindThirdPartyLibrary = BindingThirdParty,
 				BaseDir = basedir != null ? basedir : tmpdir,
 				ZeroCopyStrings = zero_copy,
-				InlineSelectors = inline_selectors,
+				InlineSelectors = inline_selectors ?? (Unified && CurrentPlatform != PlatformName.MacOSX),
 			};
 
 			if (!Unified && !BindingThirdParty) {
