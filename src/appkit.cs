@@ -13669,7 +13669,11 @@ namespace XamCore.AppKit {
 		bool IsAutomaticTextCompletionEnabled { get; }
 
 		[Mac (10,12,1)]
+#if XAMCORE_4_0
 		[Async (ResultTypeName="NSSpellCheckerCandidates")]
+#else
+		[Async (ResultTypeName="NSSpellCheckerCanidates")]
+#endif
 		[Export ("requestCandidatesForSelectedRange:inString:types:options:inSpellDocumentWithTag:completionHandler:")]
 		nint RequestCandidates (NSRange selectedRange, string stringToCheck, ulong checkingTypes, [NullAllowed] NSDictionary<NSString, NSObject> options, nint tag, [NullAllowed] Action<nint, NSTextCheckingResult []> completionHandler);
 
@@ -18725,7 +18729,9 @@ namespace XamCore.AppKit {
 		NSToolbarItem[] Subitems { get; set; }
 	}
 
+#if XAMCORE_4_0
 	[DisableDefaultCtor]
+#endif
 	[BaseType (typeof (NSObject))]
 	interface NSTouch : NSCopying {
 		[Export ("identity", ArgumentSemantic.Retain)]
