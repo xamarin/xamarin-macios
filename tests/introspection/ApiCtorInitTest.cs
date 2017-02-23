@@ -41,8 +41,6 @@ namespace Introspection {
 
 		string instance_type_name;
 
-		Selector finishEncoding = new Selector ("finishEncoding");
-
 		/// <summary>
 		/// Gets or sets a value indicating whether this test fixture will log untested types.
 		/// </summary>
@@ -149,8 +147,7 @@ namespace Introspection {
 		{
 			//***** ApiCtorInitTest.DefaultCtorAllowed
 			//2017-01-23 15:52:09.762 introspection[4084:16658258] *** -[NSKeyedArchiver dealloc]: warning: NSKeyedArchiver deallocated without having had -finishEncoding called on it.
-			if (obj.RespondsToSelector (finishEncoding))
-				obj.PerformSelector (finishEncoding);
+			(obj as NSKeyedArchiver)?.FinishEncoding ();
 
 			obj.Dispose ();
 		}
