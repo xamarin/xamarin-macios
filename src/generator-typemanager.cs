@@ -1,17 +1,7 @@
 
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
-
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.Security;
-
-using DictionaryContainerType = XamCore.Foundation.DictionaryContainer;
 
 public static class TypeManager {
 	public static Type System_Attribute;

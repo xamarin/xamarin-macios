@@ -1,8 +1,6 @@
 using System;
 using System.Reflection;
 
-using XamCore.Foundation;
-using XamCore.ObjCRuntime;
 
 //
 // ForcedTypeAttribute
