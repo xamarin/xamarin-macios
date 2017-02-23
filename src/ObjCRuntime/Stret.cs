@@ -221,7 +221,7 @@ namespace XamCore.ObjCRuntime
 				// Find the maximum of "field size + field offset" for each field.
 				foreach (var field in type.GetFields (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)) {
 #if BGENERATOR
-					var fieldOffset = (FieldOffsetAttribute) AttributeManager.GetCustomAttribute (field, TypeManager.FieldOffsetAttribute);
+					var fieldOffset = AttributeManager.GetCustomAttribute<FieldOffsetAttribute> (field);
 #else
 					var fieldOffset = (FieldOffsetAttribute) Attribute.GetCustomAttribute (field, typeof (FieldOffsetAttribute));
 #endif
@@ -293,7 +293,7 @@ namespace XamCore.ObjCRuntime
 			// composite struct
 			foreach (var field in type.GetFields (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)) {
 #if BGENERATOR
-				var marshalAs = (MarshalAsAttribute) AttributeManager.GetCustomAttribute (field, TypeManager.MarshalAsAttribute);
+				var marshalAs = AttributeManager.GetCustomAttribute<MarshalAsAttribute> (field);
 #else
 				var marshalAs = (MarshalAsAttribute) Attribute.GetCustomAttribute (field, typeof (MarshalAsAttribute));
 #endif

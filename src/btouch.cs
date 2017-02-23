@@ -385,9 +385,7 @@ class BindingTouch {
 				
 			TypeManager.Initialize (api);
 
-			foreach (object attr in AttributeManager.GetCustomAttributes (api, TypeManager.LinkWithAttribute)) {
-				LinkWithAttribute linkWith = (LinkWithAttribute) attr;
-				
+			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (api)) {
 				if (!linkwith.Contains (linkWith.LibraryName)) {
 					Console.Error.WriteLine ("Missing native library {0}, please use `--link-with' to specify the path to this library.", linkWith.LibraryName);
 					return 1;
@@ -408,12 +406,12 @@ class BindingTouch {
 			var  strong_dictionaries = new List<Type> ();
 			foreach (var t in api.GetTypes ()){
 				if ((process_enums && t.IsEnum) ||
-				    AttributeManager.HasAttribute (t, TypeManager.BaseTypeAttribute) ||
-				    AttributeManager.HasAttribute (t, TypeManager.ProtocolAttribute) ||
-				    AttributeManager.HasAttribute (t, TypeManager.StaticAttribute) ||
-				    AttributeManager.HasAttribute (t, TypeManager.PartialAttribute))
+				    AttributeManager.HasAttribute<BaseTypeAttribute> (t) ||
+				    AttributeManager.HasAttribute<ProtocolAttribute> (t) ||
+				    AttributeManager.HasAttribute<StaticAttribute> (t) ||
+				    AttributeManager.HasAttribute<PartialAttribute> (t))
 					types.Add (t);
-				if (AttributeManager.HasAttribute (t, TypeManager.StrongDictionaryAttribute))
+				if (AttributeManager.HasAttribute<StrongDictionaryAttribute> (t))
 					strong_dictionaries.Add (t);
 			}
 
