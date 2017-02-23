@@ -183,6 +183,8 @@ namespace Introspection {
 				// On 10.7 and 10.8:
 				// [FAIL] Signature failure in MonoMac.Foundation.NSUrlCredential initWithTrust: Parameter 'trust' (#1) is encoded as '^{OpaqueSecTrustRef=}' and bound as 'MonoMac.Security.SecTrust'
 				return type.Name == "SecTrust" || type.FullName == "System.IntPtr";
+			case "^{OpaqueSecAccessControlRef=}":
+				return type.Name == "SecAccessControl";
 			}
 			return base.Check (encodedType, type);
 		}
