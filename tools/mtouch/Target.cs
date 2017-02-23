@@ -60,6 +60,28 @@ namespace Xamarin.Bundler
 		public bool Is32Build { get { return Application.IsArchEnabled (Abis, Abi.Arch32Mask); } } // If we're targetting a 32 bit arch for this target.
 		public bool Is64Build { get { return Application.IsArchEnabled (Abis, Abi.Arch64Mask); } } // If we're targetting a 64 bit arch for this target.
 
+		List<string> link_with_and_ship = new List<string> ();
+		public IEnumerable<string> LibrariesToShip { get { return link_with_and_ship; } }
+
+		PInvokeWrapperGenerator pinvoke_state;
+		PInvokeWrapperGenerator MarshalNativeExceptionsState {
+			get {
+				if (!App.RequiresPInvokeWrappers)
+					return null;
+
+				if (pinvoke_state == null) {
+					pinvoke_state = new PInvokeWrapperGenerator ()
+					{
+						SourcePath = Path.Combine (ArchDirectory, "pinvokes.m"),
+						HeaderPath = Path.Combine (ArchDirectory, "pinvokes.h"),
+						Registrar = (StaticRegistrar) StaticRegistrar,
+					};
+				}
+
+				return pinvoke_state;
+			}
+		}
+
 		public string Executable {
 			get {
 				return Path.Combine (TargetDirectory, App.ExecutableName);
@@ -85,7 +107,7 @@ namespace Xamarin.Bundler
 					ErrorHelper.Show (new MonoTouchException (11, false, "{0} was built against a more recent runtime ({1}) than Xamarin.iOS supports.", Path.GetFileName (reference), ad.MainModule.Runtime));
 
 				// Figure out if we're referencing Xamarin.iOS or monotouch.dll
-				if (Path.GetFileNameWithoutExtension (ad.MainModule.FullyQualifiedName) == Driver.ProductAssembly)
+				if (Path.GetFileNameWithoutExtension (ad.MainModule.FileName) == Driver.ProductAssembly)
 					ProductAssembly = ad;
 			}
 
@@ -145,8 +167,8 @@ namespace Xamarin.Bundler
 				Frameworks.Add ("CFNetwork"); // required by xamarin_start_wwan
 		}
 
-		Dictionary<string, MemberReference> entry_points;
-		public IDictionary<string, MemberReference> GetEntryPoints ()
+		Dictionary<string, List<MemberReference>> entry_points;
+		public IDictionary<string, List<MemberReference>> GetEntryPoints ()
 		{
 			if (entry_points == null)
 				GetRequiredSymbols ();
@@ -160,7 +182,7 @@ namespace Xamarin.Bundler
 
 			var cache_location = Path.Combine (Cache.Location, "entry-points.txt");
 			if (cached_link || !any_assembly_updated) {
-				entry_points = new Dictionary<string, MemberReference> ();
+				entry_points = new Dictionary<string, List<MemberReference>> ();
 				foreach (var ep in File.ReadAllLines (cache_location))
 					entry_points.Add (ep, null);
 			} else {
@@ -169,7 +191,7 @@ namespace Xamarin.Bundler
 					// This happens when using the simlauncher and the msbuild tasks asked for a list
 					// of symbols (--symbollist). In that case just produce an empty list, since the
 					// binary shouldn't end up stripped anyway.
-					entry_points = new Dictionary<string, MemberReference> ();
+					entry_points = new Dictionary<string, List<MemberReference>> ();
 					marshal_exception_pinvokes = new List<MethodDefinition> ();
 				} else {
 					entry_points = LinkContext.RequiredSymbols;
@@ -192,9 +214,31 @@ namespace Xamarin.Bundler
 			return entry_points.Keys;
 		}
 
-		public MemberReference GetMemberForSymbol (string symbol)
+		public IEnumerable<string> GetRequiredSymbols (Assembly assembly, bool includeObjectiveCClasses)
 		{
-			MemberReference rv = null;
+			if (entry_points == null)
+				GetRequiredSymbols ();
+
+			foreach (var ep in entry_points) {
+				if (ep.Value == null)
+					continue;
+				foreach (var mr in ep.Value) {
+					if (mr.Module.Assembly == assembly.AssemblyDefinition)
+						yield return ep.Key;
+				}
+			}
+
+			if (includeObjectiveCClasses) {
+				foreach (var kvp in LinkContext.ObjectiveCClasses) {
+					if (kvp.Value.Module.Assembly == assembly.AssemblyDefinition)
+						yield return $"OBJC_CLASS_$_{kvp.Key}";
+				}
+			}
+		}
+
+		public List<MemberReference> GetMembersForSymbol (string symbol)
+		{
+			List<MemberReference> rv = null;
 			entry_points?.TryGetValue (symbol, out rv);
 			return rv;
 		}
@@ -213,7 +257,7 @@ namespace Xamarin.Bundler
 			} catch (MonoTouchException mte) {
 				exceptions.Add (mte);
 			} catch (Exception e) {
-				exceptions.Add (new MonoTouchException (9, true, "Error while loading assemblies: {0}", e.Message));
+				exceptions.Add (new MonoTouchException (9, true, e, "Error while loading assemblies: {0}", e.Message));
 			}
 
 			if (App.LinkMode == LinkMode.None)
@@ -228,7 +272,7 @@ namespace Xamarin.Bundler
 			if (assembly == null)
 				return;
 
-			var fqname = assembly.MainModule.FullyQualifiedName;
+			var fqname = assembly.MainModule.FileName;
 			if (assemblies.Contains (fqname))
 				return;
 
@@ -381,19 +425,13 @@ namespace Xamarin.Bundler
 				// by default we keep the code to ensure we're executing on the UI thread (for UI code) for debug builds
 				// but this can be overridden to either (a) remove it from debug builds or (b) keep it in release builds
 				EnsureUIThread = App.ThreadCheck.HasValue ? App.ThreadCheck.Value : App.EnableDebug,
-				OldRegistrar = (App.Registrar == RegistrarMode.LegacyDynamic || App.Registrar == RegistrarMode.LegacyStatic),
 				DebugBuild = App.EnableDebug,
 				Arch = Is64Build ? 8 : 4,
 				IsDualBuild = App.IsDualBuild,
-				Unified = App.IsUnified,
 				DumpDependencies = App.LinkerDumpDependencies,
 				RuntimeOptions = App.RuntimeOptions,
-				MarshalNativeExceptionsState = !App.RequiresPInvokeWrappers ? null : new PInvokeWrapperGenerator ()
-				{
-					SourcePath = Path.Combine (ArchDirectory, "pinvokes.m"),
-					HeaderPath = Path.Combine (ArchDirectory, "pinvokes.h"),
-					Registrar = (StaticRegistrar) StaticRegistrar,
-				},
+				MarshalNativeExceptionsState = MarshalNativeExceptionsState,
+				Target = this,
 			};
 
 			MonoTouch.Tuner.Linker.Process (LinkerOptions, out link_context, out assemblies);
@@ -472,6 +510,7 @@ namespace Xamarin.Bundler
 						}
 
 						Driver.Watch ("Cached assemblies reloaded", 1);
+						Driver.Log ("Cached assemblies reloaded.");
 
 						return;
 					}
@@ -616,9 +655,21 @@ namespace Xamarin.Bundler
 
 			if (App.RequiresPInvokeWrappers) {
 				// Write P/Invokes
-				var state = LinkerOptions.MarshalNativeExceptionsState;
-				state.End ();
-				RegistrarTask.Create (compile_tasks, Abis, this, state.SourcePath);
+				var state = MarshalNativeExceptionsState;
+				if (state.Started) {
+					// The generator is 'started' by the linker, which means it may not
+					// be started if the linker was not executed due to re-using cached results.
+					state.End ();
+				}
+				
+				PinvokesTask.Create (compile_tasks, Abis, this, state.SourcePath);
+
+				if (App.FastDev) {
+					// In this case assemblies must link with the resulting dylib,
+					// so we can't compile the pinvoke dylib in parallel with later
+					// stuff.
+					compile_tasks.ExecuteInParallel ();
+				}
 			}
 
 			// Now the assemblies are in PreBuildDirectory.
@@ -657,11 +708,6 @@ namespace Xamarin.Bundler
 		public void SelectStaticRegistrar ()
 		{
 			switch (App.Registrar) {
-			case RegistrarMode.LegacyStatic:
-			case RegistrarMode.Legacy:
-			case RegistrarMode.LegacyDynamic:
-				StaticRegistrar = new OldStaticRegistrar ();
-				break;
 			case RegistrarMode.Static:
 			case RegistrarMode.Dynamic:
 			case RegistrarMode.Default:
@@ -683,7 +729,7 @@ namespace Xamarin.Bundler
 
 			// The static registrar.
 			List<string> registration_methods = null;
-			if (App.Registrar == RegistrarMode.Static || App.Registrar == RegistrarMode.LegacyStatic) {
+			if (App.Registrar == RegistrarMode.Static) {
 				var registrar_m = Path.Combine (ArchDirectory, "registrar.m");
 				var registrar_h = Path.Combine (ArchDirectory, "registrar.h");
 				if (!Application.IsUptodate (Assemblies.Select (v => v.FullPath), new string[] { registrar_m, registrar_h })) {
@@ -698,7 +744,7 @@ namespace Xamarin.Bundler
 				RegistrarTask.Create (compile_tasks, Abis, this, registrar_m);
 			}
 
-			if (App.Registrar == RegistrarMode.Dynamic && App.IsSimulatorBuild && App.LinkMode == LinkMode.None && App.IsUnified) {
+			if (App.Registrar == RegistrarMode.Dynamic && App.IsSimulatorBuild && App.LinkMode == LinkMode.None) {
 				if (registration_methods == null)
 					registration_methods = new List<string> ();
 
@@ -781,7 +827,8 @@ namespace Xamarin.Bundler
 			// Collect all LinkWith flags and frameworks from all assemblies.
 			foreach (var a in Assemblies) {
 				compiler_flags.AddFrameworks (a.Frameworks, a.WeakFrameworks);
-				compiler_flags.AddLinkWith (a.LinkWith, a.ForceLoad);
+				if (!App.FastDev || App.IsSimulatorBuild)
+					compiler_flags.AddLinkWith (a.LinkWith, a.ForceLoad);
 				compiler_flags.AddOtherFlags (a.LinkerFlags);
 			}
 
@@ -830,11 +877,9 @@ namespace Xamarin.Bundler
 
 			// allow the native linker to remove unused symbols (if the caller was removed by the managed linker)
 			if (!bitcode) {
-				foreach (var entry in GetRequiredSymbols ()) {
-					// Note that we include *all* (__Internal) p/invoked symbols here
-					// We also include any fields from [Field] attributes.
-					compiler_flags.ReferenceSymbol (entry);
-				}
+				// Note that we include *all* (__Internal) p/invoked symbols here
+				// We also include any fields from [Field] attributes.
+				compiler_flags.ReferenceSymbols (GetRequiredSymbols ());
 			}
 
 			string mainlib;
@@ -964,12 +1009,10 @@ namespace Xamarin.Bundler
 			try {
 				var launcher = new StringBuilder ();
 				launcher.Append (Path.Combine (Driver.MonoTouchDirectory, "bin", "simlauncher"));
-				if (App.IsUnified) {
-					if (Is32Build)
-						launcher.Append ("32");
-					else if (Is64Build)
-						launcher.Append ("64");
-				}
+				if (Is32Build)
+					launcher.Append ("32");
+				else if (Is64Build)
+					launcher.Append ("64");
 				launcher.Append ("-sgen");
 				File.Copy (launcher.ToString (), Executable);
 			} catch (MonoTouchException) {
@@ -991,6 +1034,11 @@ namespace Xamarin.Bundler
 				link_with.Add (native_library);
 		}
 
+		public void LinkWithAndShip (string dylib)
+		{
+			link_with_and_ship.Add (dylib);
+		}
+
 		public void StripManagedCode ()
 		{
 			var strip = false;
@@ -1002,7 +1050,7 @@ namespace Xamarin.Bundler
 
 			if (strip) {
 				// note: this is much slower when Parallel.ForEach is used
-				Parallel.ForEach (Assemblies, new ParallelOptions () { MaxDegreeOfParallelism = Environment.ProcessorCount }, (assembly) => 
+				Parallel.ForEach (Assemblies, new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency }, (assembly) => 
 					{
 						var file = assembly.FullPath;
 						var output = Path.Combine (AppTargetDirectory, Path.GetFileName (assembly.FullPath));

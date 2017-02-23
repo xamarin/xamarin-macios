@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -31,6 +32,15 @@ namespace Xamarin.Utils
 				UnresolvedSymbols = new HashSet<string> ();
 
 			UnresolvedSymbols.Add (symbol);
+		}
+
+		public void ReferenceSymbols (IEnumerable<string> symbols)
+		{
+			if (UnresolvedSymbols == null)
+				UnresolvedSymbols = new HashSet<string> ();
+
+			foreach (var symbol in symbols)
+				UnresolvedSymbols.Add (symbol);
 		}
 
 		public void AddDefine (string define)
@@ -97,6 +107,14 @@ namespace Xamarin.Utils
 			AddOtherFlag ("-lz");
 		}
 
+		public void LinkWithPInvokes (Abi abi)
+		{
+			if (!Driver.App.FastDev || !Driver.App.RequiresPInvokeWrappers)
+				return;
+
+			AddOtherFlag (Driver.Quote (Path.Combine (Cache.Location, "libpinvokes." + abi.AsArchString () + ".dylib")));
+		}
+
 		public void AddFramework (string framework)
 		{
 			if (Frameworks == null)
@@ -128,7 +146,7 @@ namespace Xamarin.Utils
 					WeakFrameworks = new HashSet<string> ();
 				
 				foreach (var fwk in Frameworks) {
-					if (!fwk.EndsWith (".framework")) {
+					if (!fwk.EndsWith (".framework", StringComparison.Ordinal)) {
 						var add_to = WeakFrameworks;
 						var framework = Driver.Frameworks.Find (fwk);
 						if (framework != null) {
@@ -192,7 +210,7 @@ namespace Xamarin.Utils
 
 			if (UnresolvedSymbols != null) {
 				foreach (var symbol in UnresolvedSymbols)
-					args.Append (" -u _").Append (symbol);
+					args.Append (" -u ").Append (Driver.Quote ("_" + symbol));
 			}
 		}
 
@@ -220,7 +238,7 @@ namespace Xamarin.Utils
 		void ProcessFrameworkForArguments (StringBuilder args, string fw, bool is_weak, ref bool any_user_framework)
 		{
 			var name = Path.GetFileNameWithoutExtension (fw);
-			if (fw.EndsWith (".framework")) {
+			if (fw.EndsWith (".framework", StringComparison.Ordinal)) {
 				// user framework, we need to pass -F to the linker so that the linker finds the user framework.
 				any_user_framework = true;
 				AddInput (Path.Combine (fw, name));

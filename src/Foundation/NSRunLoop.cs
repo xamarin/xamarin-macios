@@ -23,24 +23,9 @@ using System;
 using System.Runtime.InteropServices;
 
 namespace XamCore.Foundation {
-	// This is a C# utility enum without a corresponding native enum, it can stay as 'int'.
-	public enum NSRunLoopMode {
-		Default,
-		Common,
-#if MONOMAC
-		ConnectionReply = 2,
-		ModalPanel,
-		EventTracking,
-#elif !WATCH
-		// iOS-specific Enums start in 100 to avoid conflicting with future extensions to MonoMac
-		UITracking = 100,
-#endif
-
-		// If it is not part of these enumerations
-		Other = 1000
-	}
 	
 	public partial class NSRunLoop {
+#if !XAMCORE_2_0
 		static NSString GetRealMode (string mode)
 		{
 			if (mode == NSDefaultRunLoopMode)
@@ -55,56 +40,18 @@ namespace XamCore.Foundation {
 				return new NSString (mode);
 		}
 
-		internal static NSString FromEnum (NSRunLoopMode mode)
-		{
-			switch (mode){
-			case NSRunLoopMode.Common:
-				return NSRunLoopCommonModes;
-#if MONOMAC
-			case NSRunLoopMode.ConnectionReply:
-				return NSRunLoopConnectionReplyMode;
-			case NSRunLoopMode.ModalPanel:
-				return NSRunLoopModalPanelMode;
-			case NSRunLoopMode.EventTracking:
-				return NSRunLoopEventTracking;
-#elif !WATCH
-			case NSRunLoopMode.UITracking:
-				return UITrackingRunLoopMode;
-#endif
-	
-			default:
-			case NSRunLoopMode.Default:
-				return NSDefaultRunLoopMode;
-			}
-		}
-		
-#if !XAMCORE_2_0
 		[Advice ("Use AddTimer (NSTimer, NSRunLoopMode)")]
 		public void AddTimer (NSTimer timer, string forMode)
 		{
 			AddTimer (timer, GetRealMode (forMode));
 		}
-#endif
 
-		public void AddTimer (NSTimer timer, NSRunLoopMode forMode)
-		{
-			AddTimer (timer, FromEnum (forMode));
-		}
-
-#if !XAMCORE_2_0
 		[Advice ("Use LimitDateForMode (NSRunLoopMode) instead")]
 		public NSDate LimitDateForMode (string mode)
 		{
 			return LimitDateForMode (GetRealMode (mode));
 		}
-#endif
 
-		public NSDate LimitDateForMode (NSRunLoopMode mode)
-		{
-			return LimitDateForMode (FromEnum (mode));
-		}
-		
-#if !XAMCORE_2_0
 		[Advice ("Use AcceptInputForMode (NSRunLoopMode, NSDate)")]
 		public void AcceptInputForMode (string mode, NSDate limitDate)
 		{
@@ -112,11 +59,6 @@ namespace XamCore.Foundation {
 		}
 #endif
 		
-		public void AcceptInputForMode (NSRunLoopMode mode, NSDate limitDate)
-		{
-			AcceptInputForMode (FromEnum (mode), limitDate);
-		}
-
 		public void Stop ()
 		{
 			GetCFRunLoop ().Stop ();
@@ -126,33 +68,20 @@ namespace XamCore.Foundation {
 		{
 			GetCFRunLoop ().WakeUp ();
 		}
+	}
 
-		public bool RunUntil (NSRunLoopMode mode, NSDate limitDate)
+	static public partial class NSRunLoopModeExtensions {
+
+		// this is a less common pattern so it's not automatically generated
+		public static NSString[] GetConstants (this NSRunLoopMode[] self)
 		{
-			return RunUntil (FromEnum (mode), limitDate);
-		}
-
-		public NSRunLoopMode CurrentRunLoopMode {
-			get {
-				var mode = CurrentMode;
-
-				if (mode == NSDefaultRunLoopMode)
-					return NSRunLoopMode.Default;
-				if (mode == NSRunLoopCommonModes)
-					return NSRunLoopMode.Common;
-#if MONOMAC
-				if (mode == NSRunLoopConnectionReplyMode)
-					return NSRunLoopMode.ConnectionReply;
-				if (mode == NSRunLoopModalPanelMode)
-					return NSRunLoopMode.ModalPanel;
-				if (mode == NSRunLoopEventTracking)
-					return NSRunLoopMode.EventTracking;
-#elif !WATCH
-				if (mode == UITrackingRunLoopMode)
-					return NSRunLoopMode.UITracking;
-#endif
-				return NSRunLoopMode.Other;
-			}
+			if (self == null)
+				throw new ArgumentNullException (nameof (self));
+			
+			var array = new NSString [self.Length];
+			for (int n = 0; n < self.Length; n++)
+				array [n] = self [n].GetConstant ();
+			return array;
 		}
 	}
 }

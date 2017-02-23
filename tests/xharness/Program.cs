@@ -48,6 +48,12 @@ namespace xharness
 					}
 				},
 				{ "dry-run", "Only print what would be done.", (v) => harness.DryRun = true },
+				{ "setenv:", "Set the specified environment variable when running apps.", (v) =>
+					{
+						var split = v.Split ('=');
+						harness.EnvironmentVariables [split [0]] = split [1];
+					}
+				},
 			};
 
 			showHelp = () => {

@@ -1917,12 +1917,18 @@ namespace XamCore.Foundation
 		
 		[Export ("readInBackgroundAndNotifyForModes:")]
 		void ReadInBackground (NSString [] notifyRunLoopModes);
-		
+
+		[Wrap ("ReadInBackground (notifyRunLoopModes.GetConstants ())")]
+		void ReadInBackground (NSRunLoopMode [] notifyRunLoopModes);
+
 		[Export ("readInBackgroundAndNotify")]
 		void ReadInBackground ();
 
 		[Export ("readToEndOfFileInBackgroundAndNotifyForModes:")]
 		void ReadToEndOfFileInBackground (NSString [] notifyRunLoopModes);
+
+		[Wrap ("ReadToEndOfFileInBackground (notifyRunLoopModes.GetConstants ())")]
+		void ReadToEndOfFileInBackground (NSRunLoopMode [] notifyRunLoopModes);
 
 		[Export ("readToEndOfFileInBackgroundAndNotify")]
 		void ReadToEndOfFileInBackground ();
@@ -1930,11 +1936,17 @@ namespace XamCore.Foundation
 		[Export ("acceptConnectionInBackgroundAndNotifyForModes:")]
 		void AcceptConnectionInBackground (NSString [] notifyRunLoopModes);
 
+		[Wrap ("AcceptConnectionInBackground (notifyRunLoopModes.GetConstants ())")]
+		void AcceptConnectionInBackground (NSRunLoopMode [] notifyRunLoopModes);
+
 		[Export ("acceptConnectionInBackgroundAndNotify")]
 		void AcceptConnectionInBackground ();
 
 		[Export ("waitForDataInBackgroundAndNotifyForModes:")]
 		void WaitForDataInBackground (NSString [] notifyRunLoopModes);
+
+		[Wrap ("WaitForDataInBackground (notifyRunLoopModes.GetConstants ())")]
+		void WaitForDataInBackground (NSRunLoopMode [] notifyRunLoopModes);
 
 		[Export ("waitForDataInBackgroundAndNotify")]
 		void WaitForDataInBackground ();
@@ -2489,6 +2501,7 @@ namespace XamCore.Foundation
 		[Field ("NSMetadataUbiquitousItemHasUnresolvedConflictsKey")]
 		NSString UbiquitousItemHasUnresolvedConflictsKey { get; }
 
+		[Availability (Deprecated = Platform.iOS_7_0 | Platform.Mac_10_9, Message="Use UbiquitousItemDownloadingStatusKey")]
 		[Field ("NSMetadataUbiquitousItemIsDownloadedKey")]
 		NSString UbiquitousItemIsDownloadedKey { get; }
 
@@ -2586,31 +2599,29 @@ namespace XamCore.Foundation
 
 	[Since (5,0)]
 	[BaseType (typeof (NSObject))]
+#if XAMCORE_4_0
+	[DisableDefaultCtor] // points to nothing so access properties crash the apps
+#endif
 	interface NSMetadataItem {
+
+		[NoiOS][NoTV][NoWatch]
+		[Mac (10,9)]
+		[DesignatedInitializer]
+		[Export ("initWithURL:")]
+		IntPtr Constructor (NSUrl url);
+
 		[Export ("valueForAttribute:")]
 		NSObject ValueForAttribute (string key);
 
+		[Sealed]
+		[Internal]
+		[Export ("valueForAttribute:")]
+		IntPtr GetHandle (NSString key);
 		[Export ("valuesForAttributes:")]
 		NSDictionary ValuesForAttributes (NSArray keys);
 
 		[Export ("attributes")]
 		NSObject [] Attributes { get; }
-
-		[Mac(10,9),iOS(7,0)]
-		[Internal]
-		[Field ("NSMetadataUbiquitousItemDownloadingStatusCurrent")]
-		NSString _StatusCurrent { get; }
-
-		[Mac(10,9),iOS(7,0)]
-		[Internal]
-		[Field ("NSMetadataUbiquitousItemDownloadingStatusDownloaded")]
-		NSString _StatusDownloaded { get; }
-
-		[Mac(10,9),iOS(7,0)]
-		[Internal]
-		[Field ("NSMetadataUbiquitousItemDownloadingStatusNotDownloaded")]
-		NSString _NotDownloaded { get; }
-		
 	}
 
 	[Since (5,0)]
@@ -3800,17 +3811,29 @@ namespace XamCore.Foundation
 		[Export ("currentMode")]
 		NSString CurrentMode { get; }
 
+		[Wrap ("NSRunLoopModeExtensions.GetValue (CurrentMode)")]
+		NSRunLoopMode CurrentRunLoopMode { get; }
+
 		[Export ("getCFRunLoop")]
 		CFRunLoop GetCFRunLoop ();
 
 		[Export ("addTimer:forMode:")]
 		void AddTimer (NSTimer timer, NSString forMode);
 
+		[Wrap ("AddTimer (timer, forMode.GetConstant ())")]
+		void AddTimer (NSTimer timer, NSRunLoopMode forMode);
+
 		[Export ("limitDateForMode:")]
 		NSDate LimitDateForMode (NSString mode);
 
+		[Wrap ("LimitDateForMode (mode.GetConstant ())")]
+		NSDate LimitDateForMode (NSRunLoopMode mode);
+
 		[Export ("acceptInputForMode:beforeDate:")]
 		void AcceptInputForMode (NSString mode, NSDate limitDate);
+
+		[Wrap ("AcceptInputForMode (mode.GetConstant (), limitDate)")]
+		void AcceptInputForMode (NSRunLoopMode mode, NSDate limitDate);
 
 		[Export ("run")]
 		void Run ();
@@ -3821,6 +3844,9 @@ namespace XamCore.Foundation
 		[Export ("runMode:beforeDate:")]
 		bool RunUntil (NSString runLoopMode, NSDate limitdate);
 
+		[Wrap ("RunUntil (runLoopMode.GetConstant (), limitDate)")]
+		bool RunUntil (NSRunLoopMode runLoopMode, NSDate limitDate);
+
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 		[Export ("performBlock:")]
 		void Perform (Action block);
@@ -3829,6 +3855,11 @@ namespace XamCore.Foundation
 		[Export ("performInModes:block:")]
 		void Perform (NSString[] modes, Action block);
 
+		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
+		[Wrap ("Perform (modes.GetConstants (), block)")]
+		void Perform (NSRunLoopMode[] modes, Action block);
+
+#if !XAMCORE_4_0
 		[Field ("NSDefaultRunLoopMode")]
 		NSString NSDefaultRunLoopMode { get; }
 
@@ -3850,6 +3881,7 @@ namespace XamCore.Foundation
 		[NoMac][NoWatch]
 		[Field ("UITrackingRunLoopMode", "UIKit")]
 		NSString UITrackingRunLoopMode { get; }
+#endif
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -5467,9 +5499,15 @@ namespace XamCore.Foundation
 	
 		[Export ("scheduleInRunLoop:forMode:")]
 		void Schedule (NSRunLoop aRunLoop, NSString forMode);
+
+		[Wrap ("Schedule (aRunLoop, forMode.GetConstant ())")]
+		void Schedule (NSRunLoop aRunLoop, NSRunLoopMode forMode);
 	
 		[Export ("unscheduleFromRunLoop:forMode:")]
 		void Unschedule (NSRunLoop aRunLoop, NSString forMode);
+
+		[Wrap ("Unschedule (aRunLoop, forMode.GetConstant ())")]
+		void Unschedule (NSRunLoop aRunLoop, NSRunLoopMode forMode);
 
 #if !MONOMAC
 		[Since (5,0)]
@@ -5816,54 +5854,69 @@ namespace XamCore.Foundation
 #endif
 
 		[Export ("dataTaskWithRequest:")]
+		[return: ForcedType]
 		NSUrlSessionDataTask CreateDataTask (NSUrlRequest request);
 	
 		[Export ("dataTaskWithURL:")]
+		[return: ForcedType]
 		NSUrlSessionDataTask CreateDataTask (NSUrl url);
 	
 		[Export ("uploadTaskWithRequest:fromFile:")]
+		[return: ForcedType]
 		NSUrlSessionUploadTask CreateUploadTask (NSUrlRequest request, NSUrl fileURL);
 	
 		[Export ("uploadTaskWithRequest:fromData:")]
+		[return: ForcedType]
 		NSUrlSessionUploadTask CreateUploadTask (NSUrlRequest request, NSData bodyData);
 	
 		[Export ("uploadTaskWithStreamedRequest:")]
+		[return: ForcedType]
 		NSUrlSessionUploadTask CreateUploadTask (NSUrlRequest request);
 	
 		[Export ("downloadTaskWithRequest:")]
+		[return: ForcedType]
 		NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request);
 	
 		[Export ("downloadTaskWithURL:")]
+		[return: ForcedType]
 		NSUrlSessionDownloadTask CreateDownloadTask (NSUrl url);
 	
 		[Export ("downloadTaskWithResumeData:")]
+		[return: ForcedType]
 		NSUrlSessionDownloadTask CreateDownloadTask (NSData resumeData);
 
 		[Export ("dataTaskWithRequest:completionHandler:")]
+		[return: ForcedType]
 		[Async (ResultTypeName="NSUrlSessionDataTaskRequest", PostNonResultSnippet = "result.Resume ();")]
 		NSUrlSessionDataTask CreateDataTask (NSUrlRequest request, [NullAllowed] NSUrlSessionResponse completionHandler);
 	
 		[Export ("dataTaskWithURL:completionHandler:")]
+		[return: ForcedType]
 		[Async(ResultTypeName="NSUrlSessionDataTaskRequest", PostNonResultSnippet = "result.Resume ();")]
 		NSUrlSessionDataTask CreateDataTask (NSUrl url, [NullAllowed] NSUrlSessionResponse completionHandler);
 	
 		[Export ("uploadTaskWithRequest:fromFile:completionHandler:")]
+		[return: ForcedType]
 		[Async(ResultTypeName="NSUrlSessionDataTaskRequest", PostNonResultSnippet = "result.Resume ();")]
 		NSUrlSessionUploadTask CreateUploadTask (NSUrlRequest request, NSUrl fileURL, NSUrlSessionResponse completionHandler);
 	
 		[Export ("uploadTaskWithRequest:fromData:completionHandler:")]
+		[return: ForcedType]
 		[Async(ResultTypeName="NSUrlSessionDataTaskRequest", PostNonResultSnippet = "result.Resume ();")]
 		NSUrlSessionUploadTask CreateUploadTask (NSUrlRequest request, NSData bodyData, NSUrlSessionResponse completionHandler);
 	
 		[Export ("downloadTaskWithRequest:completionHandler:")]
+		[return: ForcedType]
 		[Async(ResultTypeName="NSUrlSessionDownloadTaskRequest", PostNonResultSnippet = "result.Resume ();")]
 		NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request, [NullAllowed] NSUrlDownloadSessionResponse completionHandler);
 	
 		[Export ("downloadTaskWithURL:completionHandler:")]
+		[return: ForcedType]
 		[Async(ResultTypeName="NSUrlSessionDownloadTaskRequest", PostNonResultSnippet = "result.Resume ();")]
 		NSUrlSessionDownloadTask CreateDownloadTask (NSUrl url, [NullAllowed] NSUrlDownloadSessionResponse completionHandler);
 
 		[Export ("downloadTaskWithResumeData:completionHandler:")]
+		[return: ForcedType]
 		[Async(ResultTypeName="NSUrlSessionDownloadTaskRequest", PostNonResultSnippet = "result.Resume ();")]
 		NSUrlSessionDownloadTask CreateDownloadTaskFromResumeData (NSData resumeData, [NullAllowed] NSUrlDownloadSessionResponse completionHandler);
 
@@ -6257,8 +6310,17 @@ namespace XamCore.Foundation
 		[Export ("levelsOfUndo")]
 		nint LevelsOfUndo { get; set; }
 		
+#if XAMCORE_4_0
+		[Internal]
+		[Export ("runLoopModes")]
+		NSString [] _RunLoopModes { get; set; } 
+
+		[Wrap ("RunLoopModes.GetConstants ()")]
+		NSRunLoop [] RunLoopModes { get; set; } 
+#else
 		[Export ("runLoopModes")]
 		string [] RunLoopModes { get; set; } 
+#endif
 		
 		[Export ("undo")]
 		void Undo ();
@@ -6715,18 +6777,39 @@ namespace XamCore.Foundation
 		[Protocolize]
 		NSStreamDelegate Delegate { get; set; }
 
-		[Export ("propertyForKey:"), Internal]
-		NSObject PropertyForKey (NSString key);
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Protected]
+		[Export ("propertyForKey:")]
+		NSObject GetProperty (NSString key);
 	
-		[Export ("setProperty:forKey:"), Internal]
-		bool SetPropertyForKey ([NullAllowed] NSObject property, NSString key);
+#if XAMCORE_4_0
+		[Abstract]
+#endif
+		[Protected]
+		[Export ("setProperty:forKey:")]
+		bool SetProperty ([NullAllowed] NSObject property, NSString key);
 	
+#if XAMCORE_4_0
+		[Export ("scheduleInRunLoop:forMode:")]
+		void Schedule (NSRunLoop aRunLoop, NSString mode);
+
+		[Export ("removeFromRunLoop:forMode:")]
+		void Unschedule (NSRunLoop aRunLoop, NSString mode);
+#else
 		[Export ("scheduleInRunLoop:forMode:")]
 		void Schedule (NSRunLoop aRunLoop, string mode);
 	
 		[Export ("removeFromRunLoop:forMode:")]
 		void Unschedule (NSRunLoop aRunLoop, string mode);
-	
+#endif
+		[Wrap ("Schedule (aRunLoop, mode.GetConstant ())")]
+		void Schedule (NSRunLoop aRunLoop, NSRunLoopMode mode);
+
+		[Wrap ("Unschedule (aRunLoop, mode.GetConstant ())")]
+		void Unschedule (NSRunLoop aRunLoop, NSRunLoopMode mode);
+
 		[Export ("streamStatus")]
 		NSStreamStatus Status { get; }
 	
@@ -7269,6 +7352,16 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("inputStreamWithURL:")]
 		NSInputStream FromUrl (NSUrl url);
+
+#if XAMCORE_4_0
+		[Export ("propertyForKey:"), Override]
+		NSObject GetProperty (NSString key);
+
+		[Export ("setProperty:forKey:"), Override]
+		bool SetProperty ([NullAllowed] NSObject property, NSString key);
+
+#endif
+
 	}
 
 	//
@@ -8003,6 +8096,15 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("outputStreamToFileAtPath:append:")]
 		NSOutputStream CreateFile (string path, bool shouldAppend);
+
+#if XAMCORE_4_0
+		[Export ("propertyForKey:"), Override]
+		NSObject GetProperty (NSString key);
+
+		[Export ("setProperty:forKey:"), Override]
+		bool SetProperty ([NullAllowed] NSObject property, NSString key);
+
+#endif
 	}
 
 	[BaseType (typeof (NSObject), Name="NSHTTPCookie")]
@@ -8663,7 +8765,7 @@ namespace XamCore.Foundation
 
 		[Mac (10,12)][Async]
 		[Export ("registerCloudKitShareWithPreparationHandler:")]
-		void RegisterCloudKitShare (Action<CloudKitRegistrationPreparationHandler> preparationHandler);
+		void RegisterCloudKitShare ([BlockCallback] Action<CloudKitRegistrationPreparationHandler> preparationHandler);
 
 		[Mac (10,12)]
 		[Export ("registerCloudKitShare:container:")]
@@ -8804,12 +8906,26 @@ namespace XamCore.Foundation
 		[Protocolize]
 		NSNetServiceDelegate Delegate { get; set; }
 
+#if XAMCORE_4_0
+		[Export ("scheduleInRunLoop:forMode:")]
+		void Schedule (NSRunLoop aRunLoop, NSString forMode);
+
+		// For consistency with other APIs (NSUrlConnection) we call this Unschedule
+		[Export ("removeFromRunLoop:forMode:")]
+		void Unschedule (NSRunLoop aRunLoop, NSString forMode);
+#else
 		[Export ("scheduleInRunLoop:forMode:")]
 		void Schedule (NSRunLoop aRunLoop, string forMode);
 
 		// For consistency with other APIs (NSUrlConnection) we call this Unschedule
 		[Export ("removeFromRunLoop:forMode:")]
 		void Unschedule (NSRunLoop aRunLoop, string forMode);
+#endif
+		[Wrap ("Schedule (aRunLoop, forMode.GetConstant ())")]
+		void Schedule (NSRunLoop aRunLoop, NSRunLoopMode forMode);
+
+		[Wrap ("Unschedule (aRunLoop, forMode.GetConstant ())")]
+		void Unschedule (NSRunLoop aRunLoop, NSRunLoopMode forMode);
 
 		[Export ("domain", ArgumentSemantic.Copy)]
 		string Domain { get; }
@@ -8919,12 +9035,27 @@ namespace XamCore.Foundation
 		[Protocolize]
 		NSNetServiceBrowserDelegate Delegate { get; set; }
 
+#if XAMCORE_4_0
+		[Export ("scheduleInRunLoop:forMode:")]
+		void Schedule (NSRunLoop aRunLoop, NSString forMode);
+
+		// For consistency with other APIs (NSUrlConnection) we call this Unschedule
+		[Export ("removeFromRunLoop:forMode:")]
+		void Unschedule (NSRunLoop aRunLoop, NSString forMode);
+#else
 		[Export ("scheduleInRunLoop:forMode:")]
 		void Schedule (NSRunLoop aRunLoop, string forMode);
 
 		// For consistency with other APIs (NSUrlConnection) we call this Unschedule
 		[Export ("removeFromRunLoop:forMode:")]
 		void Unschedule (NSRunLoop aRunLoop, string forMode);
+#endif
+
+		[Wrap ("Schedule (aRunLoop, forMode.GetConstant ())")]
+		void Schedule (NSRunLoop aRunLoop, NSRunLoopMode forMode);
+
+		[Wrap ("Unschedule (aRunLoop, forMode.GetConstant ())")]
+		void Unschedule (NSRunLoop aRunLoop, NSRunLoopMode forMode);
 
 		[Export ("searchForBrowsableDomains")]
 		void SearchForBrowsableDomains ();
@@ -9106,7 +9237,14 @@ namespace XamCore.Foundation
 		void EnqueueNotification (NSNotification notification, NSPostingStyle postingStyle);
 
 		[Export ("enqueueNotification:postingStyle:coalesceMask:forModes:")]
+#if !XAMCORE_4_0
 		void EnqueueNotification (NSNotification notification, NSPostingStyle postingStyle, NSNotificationCoalescing coalesceMask, string [] modes);
+#else
+		void EnqueueNotification (NSNotification notification, NSPostingStyle postingStyle, NSNotificationCoalescing coalesceMask, NSString [] modes);
+
+		[Wrap ("EnqueueNotification (notification, postingStyle, coalesceMask, modes.GetConstants ())")]
+		void EnqueueNotification (NSNotification notification, NSPostingStyle postingStyle, NSNotificationCoalescing coalesceMask, NSRunLoopMode [] modes);
+#endif
 
 		[Export ("dequeueNotificationsMatching:coalesceMask:")]
 		void DequeueNotificationsMatchingcoalesceMask (NSNotification notification, NSNotificationCoalescing coalesceMask);
@@ -9995,8 +10133,14 @@ namespace XamCore.Foundation
 		[Export ("scheduleInRunLoop:forMode:")]
 		void ScheduleInRunLoop (NSRunLoop runLoop, NSString runLoopMode);
 
+		[Wrap ("ScheduleInRunLoop (runLoop, runLoopMode.GetConstant ())")]
+		void ScheduleInRunLoop (NSRunLoop runLoop, NSRunLoopMode runLoopMode);
+
 		[Export ("removeFromRunLoop:forMode:")]
 		void RemoveFromRunLoop (NSRunLoop runLoop, NSString runLoopMode);
+
+		[Wrap ("RemoveFromRunLoop (runLoop, runLoopMode.GetConstant ())")]
+		void RemoveFromRunLoop (NSRunLoop runLoop, NSRunLoopMode runLoopMode);
 
 		// Disable warning for NSMutableArray
 #pragma warning disable 618
@@ -10066,9 +10210,13 @@ namespace XamCore.Foundation
 		[Override]
 		void RemoveFromRunLoop (NSRunLoop runLoop, NSString mode);
 
+		// note: wrap'ed version using NSRunLoopMode will call the override
+
 		[Export ("scheduleInRunLoop:forMode:")]
 		[Override]
 		void ScheduleInRunLoop (NSRunLoop runLoop, NSString mode);
+
+		// note: wrap'ed version using NSRunLoopMode will call the override
 
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		[Override]

@@ -34,7 +34,9 @@ bool xamarin_detect_unified_build = true;
 // no automatic detection for XI, mtouch should do the right thing in the generated main.
 bool xamarin_detect_unified_build = false;
 #endif
+#if MONOMAC
 bool xamarin_use_new_assemblies = false;
+#endif
 #if MONOTOUCH && DEBUG && (defined (__i386__) || defined (__x86_64__))
 bool xamarin_gc_pump = true;
 #else
@@ -46,19 +48,11 @@ bool xamarin_debug_mode = true;
 #else
 bool xamarin_debug_mode = false;
 #endif
-// true if either OldDynamic or OldStatic (since the static registrar still needs
-// a dynamic registrar available too).
-bool xamarin_use_old_dynamic_registrar = false;
-bool xamarin_use_il_registrar = false;
+bool xamarin_disable_lldb_attach = false;
 #if DEBUG
 bool xamarin_init_mono_debug = true;
 #else
 bool xamarin_init_mono_debug = false;
-#endif
-#if DEBUG && (defined (__i386__) || defined (__x86_64__))
-bool xamarin_compact_seq_points = false;
-#else
-bool xamarin_compact_seq_points = true;
 #endif
 int xamarin_log_level = 0;
 const char *xamarin_executable_name = NULL;
@@ -136,9 +130,9 @@ struct Trampolines {
 
 enum InitializationFlags : int {
 	/* unused									= 0x01,*/
-	InitializationFlagsUseOldDynamicRegistrar	= 0x02,
+	/* unused									= 0x02,*/
 	InitializationFlagsDynamicRegistrar			= 0x04,
-	InitializationFlagsILRegistrar				= 0x08,
+	/* unused									= 0x08,*/
 	InitializationFlagsIsSimulator				= 0x10,
 };
 
@@ -1074,6 +1068,7 @@ pump_gc (void *context)
 }
 #endif /* DEBUG */
 
+#if MONOMAC
 static void
 detect_product_assembly ()
 {
@@ -1100,6 +1095,7 @@ detect_product_assembly ()
 		xamarin_use_new_assemblies = false;
 	}
 }
+#endif
 
 static void
 log_callback (const char *log_domain, const char *log_level, const char *message, mono_bool fatal, void *user_data)
@@ -1150,7 +1146,9 @@ xamarin_initialize ()
 	mono_trace_set_print_handler (print_callback);
 	mono_trace_set_printerr_handler (print_callback);
 
+#if MONOMAC
 	detect_product_assembly ();
+#endif
 
 	MonoGCFinalizerCallbacks gc_callbacks;
 	gc_callbacks.version = MONO_GC_FINALIZER_EXTENSION_VERSION;
@@ -1188,10 +1186,6 @@ xamarin_initialize ()
 
 	memset (&options, 0, sizeof (options));
 	options.size = sizeof (options);
-	if (xamarin_use_new_assemblies && xamarin_use_old_dynamic_registrar)
-		options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsUseOldDynamicRegistrar);
-	if (xamarin_use_il_registrar)
-		options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsILRegistrar);
 #if MONOTOUCH && (defined(__i386__) || defined (__x86_64__))
 	options.flags = (enum InitializationFlags) (options.flags | InitializationFlagsIsSimulator);
 #endif
@@ -1216,13 +1210,10 @@ xamarin_initialize ()
 	install_nsautoreleasepool_hooks ();
 
 #if defined (DEBUG)
-// Disable this for watchOS for now, since we still have known bugs with the COOP GC causing crashes.
-#if !TARGET_OS_WATCH
 	if (xamarin_gc_pump) {
 		pthread_t gc_thread;
 		pthread_create (&gc_thread, NULL, pump_gc, NULL);
 	}
-#endif // !TARGET_OS_WATCH
 #endif
 
 	gc_enable_new_refcount ();
@@ -1941,6 +1932,7 @@ xamarin_get_use_sgen ()
 	return true;
 }
 
+#if MONOMAC
 void
 xamarin_set_is_unified (bool value)
 {
@@ -1951,6 +1943,7 @@ xamarin_set_is_unified (bool value)
 	xamarin_use_new_assemblies = value;
 	xamarin_detect_unified_build = false;
 }
+#endif
 
 bool
 xamarin_get_is_unified ()
@@ -2075,7 +2068,32 @@ xamarin_process_managed_exception (MonoObject *exception)
 	case MarshalManagedExceptionModeUnwindNativeCode:
 		if (xamarin_is_gc_coop)
 			xamarin_assertion_message ("Cannot unwind native frames for managed exceptions when the GC is in cooperative mode.");
+
+		//
+		// We want to maintain the original stack trace of the exception, but unfortunately
+		// calling mono_raise_exception directly with the original exception will overwrite
+		// the original stack trace.
+		//
+		// The good news is that the managed ExceptionDispatchInfo class is able to capture
+		// a stack trace for an exception and show it later.
+		//
+		// The xamarin_rethrow_managed_exception method will use ExceptionDispatchInfo
+		// to throw an exception that contains the original stack trace.
+		//
+
+		handle = mono_gchandle_new (exception, false);
+		xamarin_rethrow_managed_exception (handle, &exception_gchandle);
+		mono_gchandle_free (handle);
+
+		if (exception_gchandle == 0) {
+			PRINT (PRODUCT ": Did not get a rethrow exception, will throw the original exception. The original stack trace will be lost.");
+		} else {
+			exception = mono_gchandle_get_target (exception_gchandle);
+			mono_gchandle_free (exception_gchandle);
+		}
+
 		mono_raise_exception ((MonoException *) exception);
+
 		break;
 	case MarshalManagedExceptionModeThrowObjectiveCException: {
 		int handle = mono_gchandle_new (exception, false);
@@ -2181,7 +2199,7 @@ xamarin_vprintf (const char *format, va_list args)
 	const char *msg = [message UTF8String];
 	int len = strlen (msg);
 	fwrite (msg, 1, len, stdout);
-	if (len == 0 || msg [len - 1] != '\n')
+	if (len == 0 || msg [len - 1] != '\n')
 		fwrite ("\n", 1, 1, stdout);
 	fflush (stdout);
 #else
@@ -2347,6 +2365,31 @@ bool
 xamarin_get_is_debug ()
 {
 	return xamarin_debug_mode;
+}
+
+bool
+xamarin_is_managed_exception_marshaling_disabled ()
+{
+#if DEBUG
+	if (xamarin_is_gc_coop)
+		return false;
+
+	switch (xamarin_marshal_managed_exception_mode) {
+	case MarshalManagedExceptionModeDefault:
+		// If all of the following are true:
+		// * In debug mode
+		// * Using the default exception marshaling mode
+		// * The debugger is attached
+		// Then disable managed exception marshaling.
+		return mono_is_debugger_attached ();
+	case MarshalManagedExceptionModeDisable:
+		return true;
+	default:
+		return false;
+	}
+#else
+	return false;
+#endif
 }
 
 /*

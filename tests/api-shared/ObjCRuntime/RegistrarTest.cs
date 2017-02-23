@@ -40,7 +40,7 @@ namespace XamarinTests.ObjCRuntime {
 				ptr = Messaging.IntPtr_objc_msgSend (ptr, Selector.GetHandle ("init"));
 				var ex = Assert.Throws<Exception> (() => Messaging.bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("conformsToProtocol:"), IntPtr.Zero));
 				var msg = string.Format ("Failed to marshal the Objective-C object 0x{0} (type: IntPtrCtorTestClass). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance (because the type 'XamarinTests.ObjCRuntime.RegistrarSharedTest+IntPtrCtorTestClass' does not have a constructor that takes one IntPtr argument).", ptr.ToString ("x"));
-				if (CurrentRegistrar == Registrars.Static || CurrentRegistrar == Registrars.OldStatic) {
+				if (CurrentRegistrar == Registrars.Static) {
 					msg += "\nAdditional information:\n\tSelector: conformsToProtocol:\n\tMethod: ";
 #if !XAMCORE_2_0
 #if __IOS__

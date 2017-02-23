@@ -39,7 +39,7 @@ namespace Xamarin.iOS.Tasks
 			if (!attributes.TryGetValue ("WKAppBundleIdentifier", out expectedBundleIdentifier))
 				return false;
 
-			var pwd = PathUtils.ResolveSymbolicLink (Environment.CurrentDirectory);
+			var pwd = PathUtils.ResolveSymbolicLinks (Environment.CurrentDirectory);
 
 			// Scan the *.app subdirectories to find the WatchApp bundle...
 			foreach (var bundle in Directory.GetDirectories (appex.ItemSpec, "*.app")) {
@@ -54,7 +54,7 @@ namespace Xamarin.iOS.Tasks
 				if (bundleIdentifier.Value != expectedBundleIdentifier.Value)
 					continue;
 
-				watchAppBundleDir = PathUtils.AbsoluteToRelative (pwd, PathUtils.ResolveSymbolicLink (bundle));
+				watchAppBundleDir = PathUtils.AbsoluteToRelative (pwd, PathUtils.ResolveSymbolicLinks (bundle));
 
 				return true;
 			}
@@ -227,10 +227,12 @@ namespace Xamarin.iOS.Tasks
 				var props = new PDictionary ();
 				props.Add ("ApplicationPath", new PString (string.Format ("Applications/{0}", Path.GetFileName (AppBundleDir.ItemSpec))));
 				props.Add ("CFBundleIdentifier", new PString (plist.GetCFBundleIdentifier ()));
-				if (plist.GetCFBundleShortVersionString () != null)
-					props.Add ("CFBundleShortVersionString", new PString (plist.GetCFBundleShortVersionString ()));
-				else if (plist.GetCFBundleVersion () != null)
-					props.Add ("CFBundleShortVersionString", new PString (plist.GetCFBundleVersion ()));
+
+				var version = plist.GetCFBundleShortVersionString ();
+				var build = plist.GetCFBundleVersion ();
+
+				props.Add ("CFBundleShortVersionString", new PString (version ?? (build ?? "1.0")));
+				props.Add ("CFBundleVersion", new PString (build ?? "1.0"));
 
 				var iconFiles = plist.GetCFBundleIconFiles ();
 				var iconDict = plist.GetCFBundleIcons ();

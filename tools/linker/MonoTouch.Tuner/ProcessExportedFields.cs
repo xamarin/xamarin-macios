@@ -7,12 +7,6 @@ using Mono.Linker.Steps;
 using Mono.Tuner;
 using Xamarin.Linker;
 
-#if MONOMAC
-using DerivedLinkContext = MonoMac.Tuner.MonoMacLinkContext;
-#else
-using DerivedLinkContext = MonoTouch.Tuner.MonoTouchLinkContext;
-#endif
-
 namespace MonoTouch.Tuner {
 	
 	//

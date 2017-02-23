@@ -150,10 +150,10 @@ namespace Xamarin.iOS.Tasks
 			TargetDeviceOSVersion = value.Value;
 
 			// Note: we replace ',' with '.' because the ',' breaks the Mono AOT compiler which tries to treat arguments with ','s in them as options.
-			var dirName = "build-" + TargetDeviceModel.ToLowerInvariant ().Replace (",", ".") + "-" + TargetDeviceOSVersion;
+			var dirName = TargetDeviceModel.ToLowerInvariant ().Replace (",", ".") + "-" + TargetDeviceOSVersion;
 
-			DeviceSpecificIntermediateOutputPath = Path.Combine (IntermediateOutputPath, dirName) + "/";
-			DeviceSpecificOutputPath = Path.Combine (OutputPath, dirName) + "/";
+			DeviceSpecificIntermediateOutputPath = Path.Combine (IntermediateOutputPath, "device-builds", dirName) + "/";
+			DeviceSpecificOutputPath = Path.Combine (OutputPath, "device-builds", dirName) + "/";
 
 			return !Log.HasLoggedErrors;
 		}

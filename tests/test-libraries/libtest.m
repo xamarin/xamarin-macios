@@ -80,12 +80,12 @@ static UltimateMachine *shared;
 
 	-(struct Sd) Sd
 	{
-		return _PSd1;
+		return _PSd;
 	}
 
 	-(struct Sf) Sf
 	{
-		return _PSf1;
+		return _PSf;
 	}
 
 	-(void) V:(int)i1 i:(int)i2 i:(int)i3 i:(int)i4 i:(int)i5 i:(int)i6 i:(int)i7
@@ -115,12 +115,12 @@ static UltimateMachine *shared;
 
 	-(void) V:(int)i1 i:(int)i2 Siid:(struct Siid)s1 i:(int)i3 i:(int)i4 d:(double)d1 d:(double)d2 d:(double)d3 i:(int)i5 i:(int)i6 i:(int)i7
 	{
-		_Pi1 = i1; _Pi2 = i2; _PSiid1 = s1; _Pi3 = i3; _Pi4 = i4; _Pd1 = d1; _Pd2 = d2; _Pd3 = d2; _Pi5 = i5; _Pi6 = i6; _Pi7 = i7;
+		_Pi1 = i1; _Pi2 = i2; _PSiid = s1; _Pi3 = i3; _Pi4 = i4; _Pd1 = d1; _Pd2 = d2; _Pd3 = d2; _Pi5 = i5; _Pi6 = i6; _Pi7 = i7;
 	}
 
 	-(void) V:(int)i1 i:(int)i2 f:(float)f1 Siid:(struct Siid)s1 i:(int)i3 i:(int)i4 d:(double)d1 d:(double)d2 d:(double)d3 i:(int)i5 i:(int)i6 i:(int)i7
 	{
-		_Pi1 = i1; _Pi2 = i2; _Pf1 = f1; _PSiid1 = s1; _Pi3 = i3; _Pi4 = i4; _Pd1 = d1; _Pd2 = d2; _Pd3 = d3; _Pi5 = i5; _Pi6 = i6; _Pi7 = i7;
+		_Pi1 = i1; _Pi2 = i2; _Pf1 = f1; _PSiid = s1; _Pi3 = i3; _Pi4 = i4; _Pd1 = d1; _Pd2 = d2; _Pd3 = d3; _Pi5 = i5; _Pi6 = i6; _Pi7 = i7;
 	}
 
 	-(void) V:(char)c1 c:(char)c2 c:(char)c3 c:(char)c4 c:(char)c5 i:(int)i1 d:(double)d1
@@ -253,3 +253,5 @@ static UltimateMachine *shared;
 	// Do nothing
 }
 @end
+
+#include "libtest.decompile.m"

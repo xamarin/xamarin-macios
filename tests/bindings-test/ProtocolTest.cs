@@ -22,9 +22,6 @@ namespace Xamarin.BindingTests
 		[Test]
 		public void OnlyProtocol ()
 		{
-			if ((XamarinTests.ObjCRuntime.Registrar.CurrentRegistrar & XamarinTests.ObjCRuntime.Registrars.AllNew) == 0)
-				Assert.Ignore ("This test requires the new registrars.");
-			
 			// a binding with only [Protocol]
 			var bindingAssembly = GetType ().Assembly;
 
@@ -47,9 +44,6 @@ namespace Xamarin.BindingTests
 		[Test]
 		public void ProtocolWithBaseType ()
 		{
-			if ((XamarinTests.ObjCRuntime.Registrar.CurrentRegistrar & XamarinTests.ObjCRuntime.Registrars.AllNew) == 0)
-				Assert.Ignore ("This test requires the new registrars.");
-			
 			// a binding with [Protocol] and [BaseType]
 			var bindingAssembly = GetType ().Assembly;
 
@@ -78,9 +72,6 @@ namespace Xamarin.BindingTests
 		[Test]
 		public void ProtocolWithBaseTypeAndModel ()
 		{
-			if ((XamarinTests.ObjCRuntime.Registrar.CurrentRegistrar & XamarinTests.ObjCRuntime.Registrars.AllNew) == 0)
-				Assert.Ignore ("This test requires the new registrars.");
-			
 			// a binding with [Protocol] and [BaseType]
 			var bindingAssembly = GetType ().Assembly;
 
@@ -132,9 +123,6 @@ namespace Xamarin.BindingTests
 		[Test]
 		public void ProtocolMembers ()
 		{
-			if ((XamarinTests.ObjCRuntime.Registrar.CurrentRegistrar & XamarinTests.ObjCRuntime.Registrars.AllNew) == 0)
-				Assert.Ignore ("This test requires the new registrars.");
-			
 			IntPtr protocol = objc_getProtocol ("MemberAttributes");
 			Assert.AreNotEqual (IntPtr.Zero, protocol, "a");
 

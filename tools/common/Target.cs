@@ -43,7 +43,7 @@ namespace Xamarin.Bundler {
 		public HashSet<string> Frameworks = new HashSet<string> ();
 		public HashSet<string> WeakFrameworks = new HashSet<string> ();
 
-		public IStaticRegistrar StaticRegistrar { get; set; }
+		internal StaticRegistrar StaticRegistrar { get; set; }
 
 #if MONOMAC
 		public bool Is32Build { get { return !Driver.Is64Bit; } }
@@ -60,6 +60,13 @@ namespace Xamarin.Bundler {
 			foreach (var a in Assemblies) {
 				try {
 					a.ExtractNativeLinkInfo ();
+
+#if MTOUCH
+					if (App.FastDev && a.HasLinkWithAttributes && App.EnableBitCode) {
+						ErrorHelper.Warning (110, "Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include third-party binding libraries and that compiles to bitcode.");
+						App.FastDev = false;
+					}
+#endif
 				} catch (Exception e) {
 					exceptions.Add (e);
 				}

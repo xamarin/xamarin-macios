@@ -10,12 +10,19 @@
             <objects>
                 <controller id="AgC-eL-Hgc" customClass="InterfaceController">
                     <items>
-                        <label alignment="center" text="Loading tests..." id="11" width="1" textAlignment="center"/>
-                        <label alignment="center" id="12" textAlignment="center" width="134" height="0"/>
-                        <label alignment="center" id="13" width="1" textAlignment="center"/>
-                        <label alignment="center" id="14" textAlignment="center" width="1"/>
-                        <label alignment="center" id="15" textAlignment="center" width="1"/>
-                        <button width="1" alignment="left" title="Run tests" id="10" enabled="NO" hidden="YES">
+                        <label alignment="center" text="Loading tests..." id="11" width="1" textAlignment="center">
+                            <fontDescription key="font" style="UICTFontTextStyleCaption1"/>
+                        </label>
+                        <label alignment="center" id="12" textAlignment="center" width="134" height="0">
+                            <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                        </label>
+                        <label alignment="center" id="13" width="1" textAlignment="center">
+                            <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                        </label>
+                        <label alignment="center" id="14" textAlignment="center" width="1">
+                            <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
+                        </label>
+                        <button width="1" alignment="center" title="Run tests" id="10" enabled="NO" hidden="YES" verticalAlignment="bottom">
                             <connections>
                                 <action selector="runTests:" destination="AgC-eL-Hgc" id="Wls-1L-AuI"/>
                             </connections>
@@ -25,8 +32,7 @@
                         <outlet property="lblStatus" destination="11" id="name-outlet-11"/>
                         <outlet property="lblSuccess" destination="12" id="name-outlet-12"/>
                         <outlet property="lblFailed" destination="13" id="name-outlet-13"/>
-                        <outlet property="lblIgnored" destination="14" id="name-outlet-14"/>
-                        <outlet property="lblInconclusive" destination="15" id="name-outlet-15"/>
+                        <outlet property="lblIgnInc" destination="14" id="name-outlet-14"/>
                         <outlet property="cmdRun" destination="10" id="name-outlet-10"/>
                     </connections>
                 </controller>

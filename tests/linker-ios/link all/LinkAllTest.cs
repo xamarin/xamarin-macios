@@ -278,6 +278,9 @@ namespace LinkAll {
 		}
 
 		[Test]
+#if __WATCHOS__
+		[ExpectedException (typeof (PlatformNotSupportedException))]
+#endif
 		public void SystemDataSqlClient ()
 		{
 			// notes:
@@ -515,12 +518,13 @@ namespace LinkAll {
 			Assert.NotNull (nix);
 		}
 
+#if !__WATCHOS__
 		[Test]
 		public void TlsProvider_Legacy ()
 		{
 			var provider = Mono.Security.Interface.MonoTlsProviderFactory.GetProvider ();
 			Assert.NotNull (provider, "provider");
-			Assert.That (provider.ID, Is.EqualTo (new Guid ("97d31751-d0b3-4707-99f7-a6456b972a19")), "correct provider");
+			Assert.That (provider.ID, Is.EqualTo (new Guid ("809e77d5-56cc-4da8-b9f0-45e65ba9cceb")), "correct provider");
 		}
 
 		[Test]
@@ -530,6 +534,7 @@ namespace LinkAll {
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Security.Tls.OldTlsProvider");
 			Assert.NotNull (Type.GetType (fqn), "Should be included");
 		}
+#endif // !__WATCHOS__
 
 		[Test]
 		public void AppleTls_OptOut ()

@@ -544,4 +544,77 @@ namespace XamCore.CoreWlan {
 	interface CWMutableNetworkProfile : NSCoding, NSSecureCoding, NSCopying, NSMutableCopying  
 	{
 	}
+
+	[Mac (10,10)] 
+	[BaseType (typeof (NSObject))]
+	interface CWWiFiClient
+	{
+		[Export ("delegate", ArgumentSemantic.Weak)]
+		[NullAllowed]
+		ICWEventDelegate Delegate { get; set; }
+		
+		[Export ("interface")]
+		CWInterface MainInterface { get; }
+
+		[Export ("interfaceWithName:")]
+		CWInterface FromName ([NullAllowed] string name);
+
+		[Export ("interfaces")]
+		CWInterface[] Interfaces { get; }
+
+		[Export ("interfaceNames")]
+		[Static]
+		string[] InterfaceNames { get; }
+
+		[Export ("sharedWiFiClient")]
+		[Static]
+		CWWiFiClient SharedWiFiClient { get; }
+
+		[Export ("startMonitoringEventWithType:error:")]
+		bool StartMonitoringEvent (CWEventType type, out NSError error);
+
+		[Export ("stopMonitoringAllEventsAndReturnError:")]
+		bool StopMonitoringAllEvents (out NSError error);
+
+		[Export ("stopMonitoringEventWithType:error:")]
+		bool StopMonitoringEvent (CWEventType type, out NSError error);
+	}
+	
+	interface ICWEventDelegate { }
+	
+	[BaseType (typeof (NSObject))]
+	[Model]
+	[Protocol]
+	interface CWEventDelegate
+	{
+		[Export ("clientConnectionInterrupted")]
+		void ClientConnectionInterrupted ();
+		
+		[Export ("clientConnectionInvalidated")]
+		void ClientConnectionInvalidated ();
+		
+		[Export ("powerStateDidChangeForWiFiInterfaceWithName:")]
+		void PowerStateDidChangeForWiFi (string interfaceName);
+		
+		[Export ("ssidDidChangeForWiFiInterfaceWithName:")]
+		void SsidDidChangeForWiFi (string interfaceName);
+		
+		[Export ("bssidDidChangeForWiFiInterfaceWithName:")]
+		void BssidDidChangeForWiFi (string interfaceName);
+		
+		[Export ("countryCodeDidChangeForWiFiInterfaceWithName:")]
+		void CountryCodeDidChangeForWiFi (string interfaceName);
+		
+		[Export ("linkDidChangeForWiFiInterfaceWithName:")]
+		void LinkDidChangeForWiFi (string interfaceName);
+		
+		[Export ("linkQualityDidChangeForWiFiInterfaceWithName:rssi:transmitRate:")]
+		void LinkQualityDidChangeForWiFi (string interfaceName, int rssi, double transmitRate);
+		
+		[Export ("modeDidChangeForWiFiInterfaceWithName:")]
+		void ModeDidChangeForWiFi (string interfaceName);
+		
+		[Export ("scanCacheUpdatedForWiFiInterfaceWithName:")]
+		void ScanCacheUpdatedForWiFi (string interfaceName);
+	}
 }

@@ -150,10 +150,16 @@ namespace XamCore.CoreAnimation {
 	
 		[Export ("addToRunLoop:forMode:")]
 		void AddToRunLoop (NSRunLoop runloop, [NullAllowed] NSString mode);
+
+		[Wrap ("AddToRunLoop (runloop, mode.GetConstant ())")]
+		void AddToRunLoop (NSRunLoop runloop, NSRunLoopMode mode);
 	
 		[Export ("removeFromRunLoop:forMode:")]
 		void RemoveFromRunLoop (NSRunLoop runloop, [NullAllowed] NSString mode);
-	
+
+		[Wrap ("RemoveFromRunLoop (runloop, mode.GetConstant ())")]
+		void RemoveFromRunLoop (NSRunLoop runloop, NSRunLoopMode mode);
+
 		[Export ("invalidate")]
 		void Invalidate ();
 	
@@ -949,8 +955,13 @@ namespace XamCore.CoreAnimation {
 		[Field ("kCAAnimationLinear")]
 		NSString AnimationLinear { get; }
 				
+#if !XAMCORE_4_0
 		[Field ("kCAAnimationDiscrete")]
+		[Obsolete ("The name has been fixed, use AnimationDiscrete instead")]
 		NSString AnimationDescrete { get; }
+#endif
+		[Field ("kCAAnimationDiscrete")]
+		NSString AnimationDiscrete { get; }
 		
 		[Field ("kCAAnimationPaced")]
 		NSString AnimationPaced { get; }

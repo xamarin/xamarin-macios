@@ -35,6 +35,7 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 	<!-- Add our own pre-build steps -->
 	<PropertyGroup>
 		<BuildDependsOn>
+			BuildOnlySettings;
 			_CreateGeneratedSourcesDir;
 			_CreateEmbeddedResources;
 			$(BuildDependsOn)

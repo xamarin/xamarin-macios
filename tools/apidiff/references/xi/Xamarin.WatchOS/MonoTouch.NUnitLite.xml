@@ -1797,7 +1797,7 @@
               </method>
               <method name="That(T&amp;, NUnit.Framework.Constraints.IResolveConstraint)" attrib="150" static="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="actual" position="0" attrib="0" type="T&amp;" direction="ref" />
+                  <parameter name="actual" position="0" attrib="0" type="T" direction="ref" />
                   <parameter name="expression" position="1" attrib="0" type="NUnit.Framework.Constraints.IResolveConstraint" />
                 </parameters>
                 <generic-parameters>
@@ -1834,7 +1834,7 @@
               </method>
               <method name="That(T&amp;, NUnit.Framework.Constraints.IResolveConstraint, System.String)" attrib="150" static="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="actual" position="0" attrib="0" type="T&amp;" direction="ref" />
+                  <parameter name="actual" position="0" attrib="0" type="T" direction="ref" />
                   <parameter name="expression" position="1" attrib="0" type="NUnit.Framework.Constraints.IResolveConstraint" />
                   <parameter name="message" position="2" attrib="0" type="System.String" />
                 </parameters>
@@ -1871,7 +1871,7 @@
               </method>
               <method name="That(T&amp;, NUnit.Framework.Constraints.IResolveConstraint, System.String, System.Object[])" attrib="150" static="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="actual" position="0" attrib="0" type="T&amp;" direction="ref" />
+                  <parameter name="actual" position="0" attrib="0" type="T" direction="ref" />
                   <parameter name="expression" position="1" attrib="0" type="NUnit.Framework.Constraints.IResolveConstraint" />
                   <parameter name="message" position="2" attrib="0" type="System.String" />
                   <parameter name="args" position="3" attrib="0" type="System.Object[]">
@@ -2060,7 +2060,7 @@
               </method>
               <method name="Expect(T&amp;, NUnit.Framework.Constraints.IResolveConstraint)" attrib="134" returntype="System.Void">
                 <parameters>
-                  <parameter name="actual" position="0" attrib="0" type="T&amp;" direction="ref" />
+                  <parameter name="actual" position="0" attrib="0" type="T" direction="ref" />
                   <parameter name="expression" position="1" attrib="0" type="NUnit.Framework.Constraints.IResolveConstraint" />
                 </parameters>
                 <generic-parameters>
@@ -2099,7 +2099,7 @@
               </method>
               <method name="Expect(T&amp;, NUnit.Framework.Constraints.IResolveConstraint, System.String)" attrib="134" returntype="System.Void">
                 <parameters>
-                  <parameter name="actual" position="0" attrib="0" type="T&amp;" direction="ref" />
+                  <parameter name="actual" position="0" attrib="0" type="T" direction="ref" />
                   <parameter name="expression" position="1" attrib="0" type="NUnit.Framework.Constraints.IResolveConstraint" />
                   <parameter name="message" position="2" attrib="0" type="System.String" />
                 </parameters>
@@ -2134,7 +2134,7 @@
               </method>
               <method name="Expect(T&amp;, NUnit.Framework.Constraints.IResolveConstraint, System.String, System.Object[])" attrib="134" returntype="System.Void">
                 <parameters>
-                  <parameter name="actual" position="0" attrib="0" type="T&amp;" direction="ref" />
+                  <parameter name="actual" position="0" attrib="0" type="T" direction="ref" />
                   <parameter name="expression" position="1" attrib="0" type="NUnit.Framework.Constraints.IResolveConstraint" />
                   <parameter name="message" position="2" attrib="0" type="System.String" />
                   <parameter name="args" position="3" attrib="0" type="System.Object[]">
@@ -2229,7 +2229,7 @@
               </method>
               <method name="That(T&amp;, NUnit.Framework.Constraints.IResolveConstraint)" attrib="150" static="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="actual" position="0" attrib="0" type="T&amp;" direction="ref" />
+                  <parameter name="actual" position="0" attrib="0" type="T" direction="ref" />
                   <parameter name="expression" position="1" attrib="0" type="NUnit.Framework.Constraints.IResolveConstraint" />
                 </parameters>
                 <generic-parameters>
@@ -2266,7 +2266,7 @@
               </method>
               <method name="That(T&amp;, NUnit.Framework.Constraints.IResolveConstraint, System.String)" attrib="150" static="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="actual" position="0" attrib="0" type="T&amp;" direction="ref" />
+                  <parameter name="actual" position="0" attrib="0" type="T" direction="ref" />
                   <parameter name="expression" position="1" attrib="0" type="NUnit.Framework.Constraints.IResolveConstraint" />
                   <parameter name="message" position="2" attrib="0" type="System.String" />
                 </parameters>
@@ -2303,7 +2303,7 @@
               </method>
               <method name="That(T&amp;, NUnit.Framework.Constraints.IResolveConstraint, System.String, System.Object[])" attrib="150" static="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="actual" position="0" attrib="0" type="T&amp;" direction="ref" />
+                  <parameter name="actual" position="0" attrib="0" type="T" direction="ref" />
                   <parameter name="expression" position="1" attrib="0" type="NUnit.Framework.Constraints.IResolveConstraint" />
                   <parameter name="message" position="2" attrib="0" type="System.String" />
                   <parameter name="args" position="3" attrib="0" type="System.Object[]">
@@ -6555,7 +6555,7 @@
               </method>
               <method name="Matches(T&amp;)" attrib="454" virtual="true" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="actual" position="0" attrib="0" type="T&amp;" direction="ref" />
+                  <parameter name="actual" position="0" attrib="0" type="T" direction="ref" />
                 </parameters>
                 <generic-parameters>
                   <generic-parameter name="T" attributes="0" />
@@ -7642,7 +7642,7 @@
               </method>
               <method name="Matches(T&amp;)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
                 <parameters>
-                  <parameter name="actual" position="0" attrib="0" type="T&amp;" direction="ref" />
+                  <parameter name="actual" position="0" attrib="0" type="T" direction="ref" />
                 </parameters>
                 <generic-parameters>
                   <generic-parameter name="T" attributes="0" />
@@ -8372,8 +8372,8 @@
             <methods>
               <method name="ClipExpectedAndActual(System.String&amp;, System.String&amp;, System.Int32, System.Int32)" attrib="150" static="true" returntype="System.Void">
                 <parameters>
-                  <parameter name="expected" position="0" attrib="0" type="System.String&amp;" direction="ref" />
-                  <parameter name="actual" position="1" attrib="0" type="System.String&amp;" direction="ref" />
+                  <parameter name="expected" position="0" attrib="0" type="System.String" direction="ref" />
+                  <parameter name="actual" position="1" attrib="0" type="System.String" direction="ref" />
                   <parameter name="maxDisplayLength" position="2" attrib="0" type="System.Int32" />
                   <parameter name="mismatch" position="3" attrib="0" type="System.Int32" />
                 </parameters>
@@ -8501,7 +8501,7 @@
                 <parameters>
                   <parameter name="expected" position="0" attrib="0" type="System.Object" />
                   <parameter name="actual" position="1" attrib="0" type="System.Object" />
-                  <parameter name="tolerance" position="2" attrib="0" type="NUnit.Framework.Constraints.Tolerance&amp;" direction="ref" />
+                  <parameter name="tolerance" position="2" attrib="0" type="NUnit.Framework.Constraints.Tolerance" direction="ref" />
                 </parameters>
               </method>
             </methods>
@@ -8647,7 +8647,7 @@
                 <parameters>
                   <parameter name="expected" position="0" attrib="0" type="System.Object" />
                   <parameter name="actual" position="1" attrib="0" type="System.Object" />
-                  <parameter name="tolerance" position="2" attrib="0" type="NUnit.Framework.Constraints.Tolerance&amp;" direction="ref" />
+                  <parameter name="tolerance" position="2" attrib="0" type="NUnit.Framework.Constraints.Tolerance" direction="ref" />
                 </parameters>
               </method>
               <method name="Compare(System.Object, System.Object)" attrib="150" static="true" returntype="System.Int32">
@@ -12009,7 +12009,7 @@
                 <parameters>
                   <parameter name="type" position="0" attrib="0" type="System.Type" />
                   <parameter name="arglist" position="1" attrib="0" type="System.Object[]" />
-                  <parameter name="typeArgsOut" position="2" attrib="0" type="System.Type[]&amp;" direction="ref" />
+                  <parameter name="typeArgsOut" position="2" attrib="0" type="System.Type[]" direction="ref" />
                 </parameters>
               </method>
               <method name="ConvertArgumentList(System.Object[], System.Reflection.ParameterInfo[])" attrib="150" static="true" returntype="System.Void">

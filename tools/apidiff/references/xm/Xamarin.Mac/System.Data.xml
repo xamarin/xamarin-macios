@@ -11262,7 +11262,7 @@
               <method name="TryGetValue(System.String, out System.Object&amp;)" attrib="454" virtual="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="keyword" position="0" attrib="0" type="System.String" />
-                  <parameter name="value" position="1" attrib="2" type="System.Object&amp;" direction="out" />
+                  <parameter name="value" position="1" attrib="2" type="System.Object" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -11556,8 +11556,8 @@
               <method name="GetBatchedRecordsAffected(System.Int32, out System.Int32&amp;, out System.Exception&amp;)" attrib="452" virtual="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="commandIdentifier" position="0" attrib="0" type="System.Int32" />
-                  <parameter name="recordsAffected" position="1" attrib="2" type="System.Int32&amp;" direction="out" />
-                  <parameter name="error" position="2" attrib="2" type="System.Exception&amp;" direction="out" />
+                  <parameter name="recordsAffected" position="1" attrib="2" type="System.Int32" direction="out" />
+                  <parameter name="error" position="2" attrib="2" type="System.Exception" direction="out" />
                 </parameters>
               </method>
               <method name="GetFillParameters()" attrib="198" virtual="true" is-override="true" returntype="System.Data.IDataParameter[]">
@@ -15939,7 +15939,7 @@
               <method name="TryGetValue(System.String, out System.Object&amp;)" attrib="198" virtual="true" is-override="true" returntype="System.Boolean">
                 <parameters>
                   <parameter name="keyword" position="0" attrib="0" type="System.String" />
-                  <parameter name="value" position="1" attrib="2" type="System.Object&amp;" direction="out" />
+                  <parameter name="value" position="1" attrib="2" type="System.Object" direction="out" />
                 </parameters>
               </method>
             </methods>

@@ -29,7 +29,7 @@ namespace Xamarin.iOS.Tasks
 
 		public override bool Execute ()
 		{
-			var pwd = PathUtils.ResolveSymbolicLink (Environment.CurrentDirectory);
+			var pwd = PathUtils.ResolveSymbolicLinks (Environment.CurrentDirectory);
 
 			Log.LogTaskName ("FindWatchOS1AppExtensionBundle");
 			Log.LogTaskProperty ("AppExtensionReferences", AppExtensionReferences);
@@ -68,7 +68,7 @@ namespace Xamarin.iOS.Tasks
 					if (bundleIdentifier.Value != expectedBundleIdentifier.Value)
 						continue;
 					
-					WatchOS1AppExtensionBundle = PathUtils.AbsoluteToRelative (pwd, PathUtils.ResolveSymbolicLink (bundle));
+					WatchOS1AppExtensionBundle = PathUtils.AbsoluteToRelative (pwd, PathUtils.ResolveSymbolicLinks (bundle));
 
 					return true;
 				}

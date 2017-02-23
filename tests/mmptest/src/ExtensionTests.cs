@@ -21,7 +21,7 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir =>
 			{
 				string testPath = Path.Combine (TI.FindSourceDirectory (), @"Today/TodayExtensionTest.csproj");
-				TI.BuildProject (testPath, true, false);
+				TI.BuildProject (testPath, isUnified: true);
 			});
 		}
 
@@ -34,7 +34,7 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir =>
 			{
 				string testPath = Path.Combine (TI.FindSourceDirectory (), @"Finder/FinderExtensionTest.csproj");
-				TI.BuildProject (testPath, true, false);
+				TI.BuildProject (testPath, isUnified: true);
 			});
 		}
 
@@ -47,7 +47,7 @@ namespace Xamarin.MMP.Tests
 			RunMMPTest (tmpDir =>
 			{
 				string testPath = Path.Combine (TI.FindSourceDirectory (), @"Share/ShareExtensionTest.csproj");
-				TI.BuildProject (testPath, true, false);
+				TI.BuildProject (testPath, isUnified: true);
 			});
 		}
 	}

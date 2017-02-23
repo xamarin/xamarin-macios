@@ -49,21 +49,25 @@ namespace XamCore.ModelIO {
 			InitializeHandle (InitMesh (mesh, submeshIndex, subdivisionLevels, allocator), "initMeshBySubdividingMesh:submeshIndex:subdivisionLevels:allocator:");
 		}
 
+		[iOS (10,0)][TV (10,0)][Mac (10,12)]
 		public static MDLMesh CreateSphere (Vector3 dimensions, Vector2i segments, MDLGeometryType geometryType, bool inwardNormals, IMDLMeshBufferAllocator allocator)
 		{
 			return new MDLMesh (dimensions, segments, inwardNormals, geometryType, allocator, null, null, null);
 		}
 
+		[iOS (10,0)][TV (10,0)][Mac (10,12)]
 		public static MDLMesh CreateHemisphere (Vector3 dimensions, Vector2i segments, MDLGeometryType geometryType, bool inwardNormals, bool cap, IMDLMeshBufferAllocator allocator)
 		{
 			return new MDLMesh (dimensions, segments, inwardNormals, geometryType, allocator, null, cap, false);
 		}
 
+		[iOS (10,0)][TV (10,0)][Mac (10,12)]
 		public static MDLMesh CreateCapsule (Vector3 dimensions, Vector2i segments, MDLGeometryType geometryType, bool inwardNormals, int hemisphereSegments, IMDLMeshBufferAllocator allocator)
 		{
 			return new MDLMesh (dimensions, segments, inwardNormals, geometryType, allocator, hemisphereSegments, null, null);
 		}
 
+		[iOS (10,0)][TV (10,0)][Mac (10,12)]
 		public static MDLMesh CreateCone (Vector3 dimensions, Vector2i segments, MDLGeometryType geometryType, bool inwardNormals, bool cap, IMDLMeshBufferAllocator allocator)
 		{
 			return new MDLMesh (dimensions, segments, inwardNormals, geometryType, allocator, null, cap, true);

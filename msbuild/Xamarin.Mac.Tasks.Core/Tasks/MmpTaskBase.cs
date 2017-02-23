@@ -88,7 +88,8 @@ namespace Xamarin.Mac.Tasks
 		protected override bool ValidateParameters ()
 		{
 			XamMacArch arch;
-			return Enum.TryParse<XamMacArch> (Architecture, true, out arch);
+
+			return Enum.TryParse (Architecture, true, out arch);
 		}
 
 		protected override string GenerateCommandLineCommands ()
@@ -112,23 +113,18 @@ namespace Xamarin.Mac.Tasks
 			else if (TargetFrameworkVersion.StartsWith ("v", StringComparison.Ordinal))
 				args.Add ("/profile:" + TargetFrameworkVersion.Substring (1));
 
-			if (TargetFrameworkIdentifier == "Xamarin.Mac" || UseXamMacFullFramework) {
-				XamMacArch arch;
-				if (!Enum.TryParse<XamMacArch> (Architecture, true, out arch))
-					arch = XamMacArch.Default;
+			XamMacArch arch;
+			if (!Enum.TryParse (Architecture, true, out arch))
+				arch = XamMacArch.Default;
 
-				if (arch == XamMacArch.Default)
-					arch = XamMacArch.x86_64;
+			if (arch == XamMacArch.Default)
+				arch = XamMacArch.x86_64;
 
-				if (arch.HasFlag (XamMacArch.i386))
-					args.Add ("/arch:i386");
-
-				if (arch.HasFlag (XamMacArch.x86_64))
-					args.Add ("/arch:x86_64");
-			}
-			else {
+			if (arch.HasFlag (XamMacArch.i386))
 				args.Add ("/arch:i386");
-			}
+
+			if (arch.HasFlag (XamMacArch.x86_64))
+				args.Add ("/arch:x86_64");
 
 			if (!string.IsNullOrEmpty (ArchiveSymbols) && bool.TryParse (ArchiveSymbols.Trim (), out msym))
 				args.Add ("--msym:" + (msym ? "yes" : "no"));
@@ -160,7 +156,7 @@ namespace Xamarin.Mac.Tasks
 			if (Profiling)
 				args.Add ("/profiling");
 
-			switch ((LinkMode ?? String.Empty).ToLower ()) {
+			switch ((LinkMode ?? string.Empty).ToLower ()) {
 			case "full":
 				break;
 			case "sdkonly":

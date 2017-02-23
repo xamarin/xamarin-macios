@@ -19,7 +19,6 @@
     <DefineConstants>DEBUG;MONOMAC</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
     <EnableCodeSigning>false</EnableCodeSigning>
     <CodeSigningKey>Mac Developer</CodeSigningKey>
     <CreatePackage>false</CreatePackage>
@@ -34,7 +33,6 @@
     <DefineConstants>MONOMAC</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
     <EnableCodeSigning>true</EnableCodeSigning>
     <CodeSigningKey>Developer ID Application</CodeSigningKey>
     <CreatePackage>true</CreatePackage>

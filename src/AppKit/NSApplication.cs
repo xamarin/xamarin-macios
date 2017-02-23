@@ -68,6 +68,10 @@ namespace XamCore.AppKit {
 			// that don't call Main.
 			NSApplication.mainThread = Thread.CurrentThread;
 
+			// Launcher sets this to work around https://bugzilla.xamarin.com/show_bug.cgi?id=45279
+			// But can affect child xbuild processes, so unset
+			Environment.SetEnvironmentVariable ("MONO_CFG_DIR", "");
+
 			// TODO:
 			//   Install hook to register dynamically loaded assemblies
 		}

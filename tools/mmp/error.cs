@@ -35,6 +35,7 @@ namespace Xamarin.Bundler {
 	//			Warning		MT0080  Disabling NewRefCount, --new-refcount:false, is deprecated.
 	//					MM0088	** Reserved mtouch **
 	//					MM0089	** Reserved mtouch **
+	//					MM0097	machine.config file '{0}' can not be found.
 	// MM1xxx	file copy / symlinks (project related)
 	//			MM14xx	Product assemblies
 	//					MM1401	The required '{0}' assembly is missing from the references
@@ -66,6 +67,7 @@ namespace Xamarin.Bundler {
 	//					MM2012   Only first {0} of {1} "Referenced by" warnings shown. ** This message related to 2009 **
 	//				Warning	MM2013	Failed to resolve the reference to "{0}", referenced in "{1}". The app will not include the referenced assembly, and may fail at runtime.
 	//				Warning	MT2014	Xamarin.Mac Extensions do not support linking. Request for linking will be ignored.
+	//					MM202x	Binding Optimizer failed processing `...`.
 	// MM4xxx	code generation
 	// 			MM40xx	driver.m
 	//					MM4001	The main template could not be expansed to `{0}`.

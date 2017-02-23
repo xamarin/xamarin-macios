@@ -77,21 +77,24 @@ namespace MonoTouchFixtures.ModelIO {
 				Asserts.AreEqual (Vector3.One, obj.Scale, "Scale");
 				Asserts.AreEqual (Vector3.Zero, obj.Rotation, "Rotation");
 				Asserts.AreEqual (id, obj.Matrix, "Matrix");
-				Asserts.AreEqual (false, obj.ResetsTransform, "ResetsTransform");
+				if (TestRuntime.CheckXcodeVersion (8,0))
+					Asserts.AreEqual (false, obj.ResetsTransform, "ResetsTransform");
 
 				obj.Translation = V3;
 				Asserts.AreEqual (V3, obj.Translation, "Translation 2");
 			}
 
-			using (var obj = new MDLTransform (id, true)) {
-				Asserts.AreEqual (Vector3.Zero, obj.Translation, "Translation");
-				Asserts.AreEqual (Vector3.One, obj.Scale, "Scale");
-				Asserts.AreEqual (Vector3.Zero, obj.Rotation, "Rotation");
-				Asserts.AreEqual (id, obj.Matrix, "Matrix");
-				Asserts.AreEqual (true, obj.ResetsTransform, "ResetsTransform");
+			if (TestRuntime.CheckXcodeVersion (8, 0)) {
+				using (var obj = new MDLTransform (id, true)) {
+					Asserts.AreEqual (Vector3.Zero, obj.Translation, "Translation");
+					Asserts.AreEqual (Vector3.One, obj.Scale, "Scale");
+					Asserts.AreEqual (Vector3.Zero, obj.Rotation, "Rotation");
+					Asserts.AreEqual (id, obj.Matrix, "Matrix");
+					Asserts.AreEqual (true, obj.ResetsTransform, "ResetsTransform");
 
-				obj.Translation = V3;
-				Asserts.AreEqual (V3, obj.Translation, "Translation 2");
+					obj.Translation = V3;
+					Asserts.AreEqual (V3, obj.Translation, "Translation 2");
+				}
 			}
 
 			using (var obj = new MDLTransform (id)) {

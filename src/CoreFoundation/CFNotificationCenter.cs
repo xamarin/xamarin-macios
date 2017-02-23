@@ -122,7 +122,7 @@ namespace XamCore.CoreFoundation {
 		}
 
 		Dictionary<string,List<CFNotificationObserverToken>> listeners = new Dictionary<string,List<CFNotificationObserverToken>> ();
-			
+		const string NullNotificationName = "NullNotificationName";
 		public CFNotificationObserverToken AddObserver (string name, INativeObject objectToObserve, Action<string,NSDictionary> notificationHandler,
 								CFNotificationSuspensionBehavior suspensionBehavior = CFNotificationSuspensionBehavior.DeliverImmediately)
 		{
@@ -132,6 +132,7 @@ namespace XamCore.CoreFoundation {
 			}
 
 			var strHandle = name == null ? IntPtr.Zero : NSString.CreateNative (name);
+			name = name ?? NullNotificationName;
 			var token = new CFNotificationObserverToken () {
 				stringName = name,
 				centerHandle = handle,
@@ -139,7 +140,7 @@ namespace XamCore.CoreFoundation {
 				observedObject = objectToObserve == null ? IntPtr.Zero : objectToObserve.Handle,
 				listener = notificationHandler
 			};
-			
+
 			//
 			// To allow callbacks to add observers, we duplicate the list of listeners on AddObserver
 			// We do the duplication on AddObserver, instead of making a copy on the notification
@@ -167,16 +168,24 @@ namespace XamCore.CoreFoundation {
 		void notification (string name, NSDictionary userInfo)
 		{
 			List<CFNotificationObserverToken> listenersForName;
-
+			List<CFNotificationObserverToken> nullNotificationListeners;
+			bool hasName;
+			bool hasNullNotifications;
 			lock (listeners){
-				if (!listeners.TryGetValue (name, out listenersForName))
-					return;
+				hasName = listeners.TryGetValue (name, out listenersForName);
+				hasNullNotifications = listeners.TryGetValue (NullNotificationName, out nullNotificationListeners);
 			}
 
 			// We can iterate over this list, even if the callbacks add or remove observers, because we make copies
 			// on add/remove
-			foreach (var observer in listenersForName)
-				observer.listener (name, userInfo);
+			if (hasName) {
+				foreach (var observer in listenersForName)
+					observer.listener (name, userInfo);
+			}
+			if (hasNullNotifications) {
+				foreach (var observer in nullNotificationListeners)
+					observer.listener (name, userInfo);
+			}
 		}
 
 		delegate void CFNotificationCallback (CFNotificationCenterRef center, IntPtr observer, IntPtr name, IntPtr obj, IntPtr userInfo);
@@ -202,6 +211,10 @@ namespace XamCore.CoreFoundation {
 
 		public void PostNotification(string notification, INativeObject objectToObserve, NSDictionary userInfo = null, bool deliverImmediately = false, bool postOnAllSessions = false) 
 		{
+			// The name of the notification to post.This value must not be NULL.
+			if (notification == null)
+				throw new ArgumentNullException (nameof (notification));
+
 			var strHandle = NSString.CreateNative (notification);
 			CFNotificationCenterPostNotificationWithOptions (
 				center: handle,
@@ -216,7 +229,7 @@ namespace XamCore.CoreFoundation {
 		{
 			if (token == null)
 				throw new ArgumentNullException ("token");
-			if (token.nameHandle == IntPtr.Zero)
+			if (token.nameHandle == IntPtr.Zero && token.stringName != NullNotificationName)
 				throw new ObjectDisposedException ("token");
 			if (token.centerHandle != handle)
 				throw new ArgumentException ("token", "This token belongs to a different notification center");

@@ -243,6 +243,24 @@ namespace Xamarin.iOS.Tasks
 			return t;
 		}
 
+		/// <summary>
+		/// Executes the task and log its error messages.</summary>
+		/// <remarks>
+		/// This is the prefered way to run tasks as we want error messages to show up in the test results.</remarks>
+		/// <param name="task">An msbuild task.</param>
+		/// <param name="expectedErrorCount">Expected error count. 0 by default.</param>
+		public void ExecuteTask (Task task, int expectedErrorCount = 0)
+		{
+			task.Execute ();
+			if (expectedErrorCount != Engine.Logger.ErrorEvents.Count) {
+				string messages = string.Empty;
+				if (Engine.Logger.ErrorEvents.Count > 0) {
+					messages = "\n\t" + string.Join ("\n\t", Engine.Logger.ErrorEvents.Select ((v) => v.Message).ToArray ());
+				}
+				Assert.AreEqual (expectedErrorCount, Engine.Logger.ErrorEvents.Count, "#RunTask-ErrorCount" + messages);
+			}
+		}
+
 		protected string CreateTempFile (string path)
 		{
 			path = Path.Combine (TempDir, path);

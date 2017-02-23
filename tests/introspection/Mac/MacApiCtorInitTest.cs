@@ -38,6 +38,10 @@ namespace Introspection {
 		protected override bool Skip (Type type)
 		{
 			switch (type.FullName) {
+			// Random failures on build machine
+			case "QuickLookUI.QLPreviewPanel":
+			case "MonoMac.QuickLookUI.QLPreviewPanel":
+				return true;
 			// These should be DisableDefaultCtor but can't due to backward compat
 			case "MonoMac.EventKit.EKParticipant":
 			case "EventKit.EKParticipant":

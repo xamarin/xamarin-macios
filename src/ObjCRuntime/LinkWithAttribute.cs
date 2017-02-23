@@ -40,6 +40,13 @@ namespace XamCore.ObjCRuntime {
 		x86_64 = Simulator64
 	}
 	
+	public enum DlsymOption
+	{
+		Default,
+		Required,
+		Disabled,
+	}
+
 	[AttributeUsage(AttributeTargets.Assembly, AllowMultiple=true)]
 #if XAMCORE_2_0
 	sealed
@@ -61,6 +68,10 @@ namespace XamCore.ObjCRuntime {
 		public LinkWithAttribute (string libraryName)
 		{
 			LibraryName = libraryName;
+		}
+
+		public LinkWithAttribute ()
+		{
 		}
 		
 		public bool ForceLoad {
@@ -96,6 +107,10 @@ namespace XamCore.ObjCRuntime {
 		}
 
 		public bool SmartLink {
+			get; set;
+		}
+
+		public DlsymOption Dlsym {
 			get; set;
 		}
 	}

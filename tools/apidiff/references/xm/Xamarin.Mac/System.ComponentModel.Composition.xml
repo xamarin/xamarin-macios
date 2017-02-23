@@ -159,7 +159,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="batch" position="0" attrib="0" type="System.ComponentModel.Composition.Hosting.CompositionBatch" />
+                  <parameter name="batch" position="0" attrib="0" type="System.ComponentModel.Composition.Hosting.CompositionBatch" direction="this" />
                   <parameter name="exportedValue" position="1" attrib="0" type="T" />
                 </parameters>
                 <generic-parameters>
@@ -171,7 +171,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="batch" position="0" attrib="0" type="System.ComponentModel.Composition.Hosting.CompositionBatch" />
+                  <parameter name="batch" position="0" attrib="0" type="System.ComponentModel.Composition.Hosting.CompositionBatch" direction="this" />
                   <parameter name="contractName" position="1" attrib="0" type="System.String" />
                   <parameter name="exportedValue" position="2" attrib="0" type="T" />
                 </parameters>
@@ -184,7 +184,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="batch" position="0" attrib="0" type="System.ComponentModel.Composition.Hosting.CompositionBatch" />
+                  <parameter name="batch" position="0" attrib="0" type="System.ComponentModel.Composition.Hosting.CompositionBatch" direction="this" />
                   <parameter name="attributedPart" position="1" attrib="0" type="System.Object" />
                 </parameters>
               </method>
@@ -193,7 +193,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="container" position="0" attrib="0" type="System.ComponentModel.Composition.Hosting.CompositionContainer" />
+                  <parameter name="container" position="0" attrib="0" type="System.ComponentModel.Composition.Hosting.CompositionContainer" direction="this" />
                   <parameter name="exportedValue" position="1" attrib="0" type="T" />
                 </parameters>
                 <generic-parameters>
@@ -205,7 +205,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="container" position="0" attrib="0" type="System.ComponentModel.Composition.Hosting.CompositionContainer" />
+                  <parameter name="container" position="0" attrib="0" type="System.ComponentModel.Composition.Hosting.CompositionContainer" direction="this" />
                   <parameter name="contractName" position="1" attrib="0" type="System.String" />
                   <parameter name="exportedValue" position="2" attrib="0" type="T" />
                 </parameters>
@@ -218,7 +218,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="container" position="0" attrib="0" type="System.ComponentModel.Composition.Hosting.CompositionContainer" />
+                  <parameter name="container" position="0" attrib="0" type="System.ComponentModel.Composition.Hosting.CompositionContainer" direction="this" />
                   <parameter name="attributedParts" position="1" attrib="0" type="System.Object[]">
                     <attributes>
                       <attribute name="System.ParamArrayAttribute" />
@@ -261,7 +261,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" />
+                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" direction="this" />
                 </parameters>
                 <generic-parameters>
                   <generic-parameter name="T" attributes="0" />
@@ -272,7 +272,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" />
+                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" direction="this" />
                   <parameter name="contractType" position="1" attrib="0" type="System.Type" />
                 </parameters>
               </method>
@@ -304,7 +304,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" />
+                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" direction="this" />
                 </parameters>
                 <generic-parameters>
                   <generic-parameter name="T" attributes="0" />
@@ -315,7 +315,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" />
+                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" direction="this" />
                   <parameter name="importCardinality" position="1" attrib="0" type="System.ComponentModel.Composition.Primitives.ImportCardinality" />
                 </parameters>
                 <generic-parameters>
@@ -327,7 +327,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" />
+                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" direction="this" />
                   <parameter name="contractType" position="1" attrib="0" type="System.Type" />
                 </parameters>
               </method>
@@ -336,7 +336,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" />
+                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" direction="this" />
                   <parameter name="contractType" position="1" attrib="0" type="System.Type" />
                   <parameter name="importCardinality" position="2" attrib="0" type="System.ComponentModel.Composition.Primitives.ImportCardinality" />
                 </parameters>
@@ -346,7 +346,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="compositionService" position="0" attrib="0" type="System.ComponentModel.Composition.ICompositionService" />
+                  <parameter name="compositionService" position="0" attrib="0" type="System.ComponentModel.Composition.ICompositionService" direction="this" />
                   <parameter name="attributedPart" position="1" attrib="0" type="System.Object" />
                 </parameters>
               </method>
@@ -355,7 +355,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="compositionService" position="0" attrib="0" type="System.ComponentModel.Composition.ICompositionService" />
+                  <parameter name="compositionService" position="0" attrib="0" type="System.ComponentModel.Composition.ICompositionService" direction="this" />
                   <parameter name="attributedPart" position="1" attrib="0" type="System.Object" />
                   <parameter name="reflectionContext" position="2" attrib="0" type="System.Reflection.ReflectionContext" />
                 </parameters>
@@ -1552,7 +1552,7 @@
               <method name="TryGetValue(System.Object, out T&amp;)" attrib="134" returntype="System.Boolean">
                 <parameters>
                   <parameter name="key" position="0" attrib="0" type="System.Object" />
-                  <parameter name="value" position="1" attrib="2" type="T&amp;" direction="out" />
+                  <parameter name="value" position="1" attrib="2" type="T" direction="out" />
                 </parameters>
                 <generic-parameters>
                   <generic-parameter name="T" attributes="0" />
@@ -1562,7 +1562,7 @@
                 <parameters>
                   <parameter name="key" position="0" attrib="0" type="System.Object" />
                   <parameter name="localAtomicCompositionOnly" position="1" attrib="0" type="System.Boolean" />
-                  <parameter name="value" position="2" attrib="2" type="T&amp;" direction="out" />
+                  <parameter name="value" position="2" attrib="2" type="T" direction="out" />
                 </parameters>
                 <generic-parameters>
                   <generic-parameter name="T" attributes="0" />
@@ -1641,7 +1641,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="composablePartCatalog" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartCatalog" />
+                  <parameter name="composablePartCatalog" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartCatalog" direction="this" />
                 </parameters>
               </method>
             </methods>
@@ -2329,7 +2329,7 @@
                 <parameters>
                   <parameter name="definition" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ImportDefinition" />
                   <parameter name="atomicComposition" position="1" attrib="0" type="System.ComponentModel.Composition.Hosting.AtomicComposition" />
-                  <parameter name="exports" position="2" attrib="2" type="System.Collections.Generic.IEnumerable`1[System.ComponentModel.Composition.Primitives.Export]&amp;" direction="out" />
+                  <parameter name="exports" position="2" attrib="2" type="System.Collections.Generic.IEnumerable`1[System.ComponentModel.Composition.Primitives.Export]" direction="out" />
                 </parameters>
               </method>
             </methods>
@@ -2521,7 +2521,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" />
+                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" direction="this" />
                   <parameter name="key" position="1" attrib="0" type="System.String" />
                   <parameter name="value" position="2" attrib="0" type="T" />
                 </parameters>
@@ -2534,7 +2534,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" />
+                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" direction="this" />
                   <parameter name="key" position="1" attrib="0" type="System.String" />
                 </parameters>
               </method>
@@ -2543,7 +2543,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" />
+                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" direction="this" />
                   <parameter name="contractName" position="1" attrib="0" type="System.String" />
                 </parameters>
               </method>
@@ -2552,7 +2552,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="catalog" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartCatalog" />
+                  <parameter name="catalog" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartCatalog" direction="this" />
                   <parameter name="filter" position="1" attrib="0" type="System.Func`2[System.ComponentModel.Composition.Primitives.ComposablePartDefinition,System.Boolean]" />
                 </parameters>
               </method>
@@ -2561,7 +2561,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" />
+                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" direction="this" />
                   <parameter name="contractName" position="1" attrib="0" type="System.String" />
                 </parameters>
               </method>
@@ -2570,7 +2570,7 @@
                   <attribute name="System.Runtime.CompilerServices.ExtensionAttribute" />
                 </attributes>
                 <parameters>
-                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" />
+                  <parameter name="part" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" direction="this" />
                   <parameter name="contractName" position="1" attrib="0" type="System.String" />
                   <parameter name="importCardinality" position="2" attrib="0" type="System.ComponentModel.Composition.Primitives.ImportCardinality" />
                 </parameters>
@@ -3333,7 +3333,7 @@
                 <parameters>
                   <parameter name="partDefinition" position="0" attrib="0" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" />
                   <parameter name="genericParameters" position="1" attrib="0" type="System.Collections.Generic.IEnumerable`1[System.Type]" />
-                  <parameter name="specialization" position="2" attrib="2" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition&amp;" direction="out" />
+                  <parameter name="specialization" position="2" attrib="2" type="System.ComponentModel.Composition.Primitives.ComposablePartDefinition" direction="out" />
                 </parameters>
               </method>
             </methods>

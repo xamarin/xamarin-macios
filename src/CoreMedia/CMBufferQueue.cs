@@ -113,7 +113,7 @@ namespace XamCore.CoreMedia {
 
 		internal CMBufferQueue (int count)
 		{
-			queueObjects = new Dictionary<IntPtr,INativeObject> (count);
+			queueObjects = new Dictionary<IntPtr,INativeObject> (count, Runtime.IntPtrEqualityComparer);
 			gch = GCHandle.Alloc (this);
 		}
 
