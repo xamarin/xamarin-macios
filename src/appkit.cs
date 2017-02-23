@@ -18729,9 +18729,7 @@ namespace XamCore.AppKit {
 		NSToolbarItem[] Subitems { get; set; }
 	}
 
-#if XAMCORE_4_0
 	[DisableDefaultCtor]
-#endif
 	[BaseType (typeof (NSObject))]
 	interface NSTouch : NSCopying {
 		[Export ("identity", ArgumentSemantic.Retain)]
