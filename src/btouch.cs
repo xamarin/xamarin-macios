@@ -37,7 +37,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using Mono.Options;
+#if !MONOMAC && !IKVM
 using System.Runtime.InteropServices;
+#endif
 
 using XamCore.ObjCRuntime;
 using XamCore.Foundation;
@@ -76,7 +78,7 @@ class BindingTouch {
 	
 	static int Main (string [] args)
 	{
-#if !MONOMAC
+#if !MONOMAC && !IKVM
 
 		// for monotouch.dll we're using a the iOS specific mscorlib.dll, which re-routes CWL to NSLog
                // but that's not what we want for tooling, like the binding generator, so we provide our own
@@ -671,7 +673,7 @@ class BindingTouch {
 	}
 }
 
-#if !MONOMAC
+#if !MONOMAC && !IKVM
 internal class UnexceptionalStreamWriter : StreamWriter
 {
 	public UnexceptionalStreamWriter (Stream stream)
