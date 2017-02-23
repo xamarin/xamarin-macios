@@ -225,6 +225,11 @@ public static class TypeManager {
 		return rv;
 	}
 
+	public static Type GetUnderlyingNullableType (Type type)
+	{
+		return Nullable.GetUnderlyingType (type);
+	}
+
 	public static bool IsOutParameter (ParameterInfo pi)
 	{
 		return AttributeManager.HasAttribute (pi, OutAttribute);

@@ -1218,7 +1218,7 @@ public partial class Generator : IMemberGatherer {
 			originalType = pi.ParameterType;
 		}
 
-		var retType = Nullable.GetUnderlyingType (attrib.Type) ?? attrib.Type;
+		var retType = TypeManager.GetUnderlyingNullableType (attrib.Type) ?? attrib.Type;
 		var isNullable = attrib.IsNullable;
 		var isValueType = retType.IsValueType;
 		var isEnum = retType.IsEnum;
@@ -1246,7 +1246,7 @@ public partial class Generator : IMemberGatherer {
 			temp = string.Format ("{1}{0}.GetConstant ();", denullify, parameterName);
 		} else if (originalType.IsArray) {
 			var arrType = originalType.GetElementType ();
-			var arrRetType = Nullable.GetUnderlyingType (retType.GetElementType ()) ?? retType.GetElementType ();
+			var arrRetType = TypeManager.GetUnderlyingNullableType (retType.GetElementType ()) ?? retType.GetElementType ();
 			var valueConverter = string.Empty;
 
 			if (arrType == TypeManager.NSString)
@@ -1347,7 +1347,7 @@ public partial class Generator : IMemberGatherer {
 			throw new BindingException (1050, true, "[BindAs] cannot be used inside Protocol or Model types. Type: {0}", declaringType.Name);
 
 		var attrib = GetBindAsAttribute (minfo.mi);
-		var retType = Nullable.GetUnderlyingType (attrib.Type) ?? attrib.Type;
+		var retType = TypeManager.GetUnderlyingNullableType (attrib.Type) ?? attrib.Type;
 		var isValueType = retType.IsValueType;
 		var append = string.Empty;
 		var property = minfo.mi as PropertyInfo;
@@ -1376,7 +1376,7 @@ public partial class Generator : IMemberGatherer {
 			append = $"{FormatType (retType.DeclaringType, retType)}Extensions.GetValue (";
 		} else if (originalReturnType.IsArray) {
 			var arrType = originalReturnType.GetElementType ();
-			var arrRetType = Nullable.GetUnderlyingType (retType.GetElementType ()) ?? retType.GetElementType ();
+			var arrRetType = TypeManager.GetUnderlyingNullableType (retType.GetElementType ()) ?? retType.GetElementType ();
 			var valueFetcher = string.Empty;
 			if (arrType == TypeManager.NSString)
 				append = $"ptr => {{\n\tusing (var str = Runtime.GetNSObject<NSString> (ptr)) {{\n\t\treturn {FormatType (arrRetType.DeclaringType, arrRetType)}Extensions.GetValue (str);\n\t}}\n}}";
@@ -3342,7 +3342,7 @@ public partial class Generator : IMemberGatherer {
 					cast_b = "))";
 				} else {
 					var bindAs = GetBindAsAttribute (minfo.mi);
-					var bindAsType = Nullable.GetUnderlyingType (bindAs.Type) ?? bindAs.Type;
+					var bindAsType = TypeManager.GetUnderlyingNullableType (bindAs.Type) ?? bindAs.Type;
 					var enumCast = (bindAsType.IsEnum && !minfo.type.IsArray) ? $"({FormatType (bindAsType.DeclaringType, GetCorrectGenericType (bindAsType))})" : string.Empty;
 					cast_a = $" {enumCast}Runtime.GetNSObject<{FormatType (declaringType, GetCorrectGenericType (mi.ReturnType))}> (";
 					cast_b = ")" + GetFromBindAsWrapper (minfo);
