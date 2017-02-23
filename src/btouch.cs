@@ -386,9 +386,21 @@ class BindingTouch {
 				Console.Error.WriteLine ("Error loading base library {0}", baselibdll);
 				return 1;
 			}
+
+#if IKVM
+			Assembly corlib_assembly = universe.LoadFile (LocateAssembly ("mscorlib"));
+			Assembly platform_assembly = baselib;
+			Assembly system_assembly = universe.LoadFile (LocateAssembly ("System"));
+			Assembly binding_assembly = universe.LoadFile (GetAttributeLibraryPath ());
+#else
 			GC.KeepAlive (baselib); // Fixes a compiler warning (unused variable).
-				
-			TypeManager.Initialize (api);
+
+			Assembly corlib_assembly = typeof (object).Assembly;
+			Assembly platform_assembly = typeof (XamCore.Foundation.NSObject).Assembly;
+			Assembly system_assembly = typeof (System.ComponentModel.BrowsableAttribute).Assembly;
+			Assembly binding_assembly = typeof (ProtocolizeAttribute).Assembly;
+#endif
+			TypeManager.Initialize (api, corlib_assembly, platform_assembly, system_assembly, binding_assembly);
 
 			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (api)) {
 				if (!linkwith.Contains (linkWith.LibraryName)) {
