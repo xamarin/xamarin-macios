@@ -1834,7 +1834,7 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		string entry_point;
-		if (method_name.IndexOf ("objc_msgSendSuper") != -1){
+		if (method_name.IndexOf ("objc_msgSendSuper", StringComparison.Ordinal) != -1) {
 			entry_point = need_stret ? "objc_msgSendSuper_stret" : "objc_msgSendSuper";
 		} else
 			entry_point = need_stret ? "objc_msgSend_stret" : "objc_msgSend";
@@ -2572,7 +2572,7 @@ public partial class Generator : IMemberGatherer {
 						keyname = keyContainerType + "." + pi.Name + suffix;
 					else {
 						keyname = (attrs [0] as ExportAttribute).Selector;
-						if (keyname.IndexOf (".") == -1)
+						if (keyname.IndexOf ('.') == -1)
 							keyname = keyContainerType + "." + keyname;
 					}
 
@@ -2768,7 +2768,7 @@ public partial class Generator : IMemberGatherer {
 					kn = "str.Handle";
 					indent++;
 				} else {
-					var lib = propNamespace.Substring (propNamespace.IndexOf (".") + 1);
+					var lib = propNamespace.Substring (propNamespace.IndexOf ('.') + 1);
 					print ("[Field (\"{0}\", \"{1}\")]", export.Selector, lib);
 					print ("static IntPtr {0};", kn);
 					print ("");
@@ -3051,7 +3051,7 @@ public partial class Generator : IMemberGatherer {
 		var objcClassName = FormatType (null, bta.BaseType);
 
 		if (objcClassName.Contains ("global::"))
-			objcClassName = objcClassName.Substring (objcClassName.LastIndexOf (".") + 1);
+			objcClassName = objcClassName.Substring (objcClassName.LastIndexOf ('.') + 1);
 
 		return objcClassName;
 	}
@@ -4908,7 +4908,7 @@ public partial class Generator : IMemberGatherer {
 		// Group the delegates by namespace
 		var groupedTypes = from fullname in delegateTypes.Keys
 			where fullname != "System.Action"
-			let p = fullname.LastIndexOf (".")
+			let p = fullname.LastIndexOf ('.')
 			let ns = p == -1 ? String.Empty : fullname.Substring (0, p)
 			group fullname by ns into g
 			select new {Namespace = g.Key, Fullname=g};
@@ -4920,7 +4920,7 @@ public partial class Generator : IMemberGatherer {
 			}
 
 			foreach (var deltype in group.Fullname.OrderBy (v => v, StringComparer.Ordinal)) {
-				int p = deltype.LastIndexOf (".", StringComparison.Ordinal);
+				int p = deltype.LastIndexOf ('.');
 				var shortName = deltype.Substring (p+1);
 				var mi = delegateTypes [deltype];
 

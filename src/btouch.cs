@@ -427,7 +427,7 @@ class BindingTouch {
 
 			if (!Unified && !BindingThirdParty) {
 				foreach (var mi in baselib.GetType (nsManager.CoreObjCRuntime + ".Messaging").GetMethods ()){
-					if (mi.Name.IndexOf ("_objc_msgSend") != -1)
+					if (mi.Name.IndexOf ("_objc_msgSend", StringComparison.Ordinal) != -1)
 						g.RegisterMethodName (mi.Name);
 				}
 			}
