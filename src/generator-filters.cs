@@ -51,8 +51,17 @@ public partial class Generator {
 		}
 
 		// IntPtr constructor - always present
+		var intptrctor_visibility = filter.IntPtrCtorVisibility;
+		if (intptrctor_visibility == MethodAttributes.PrivateScope) {
+			// since it was not generated code we never fixed the .ctor(IntPtr) visibility for unified
+			if (Generator.XamcoreVersion >= 3) {
+				intptrctor_visibility = MethodAttributes.FamORAssem;
+			} else {
+				intptrctor_visibility = MethodAttributes.Public;
+			}
+		}
 		print ("[CompilerGenerated]");
-		print ("{0}{1} (IntPtr handle) : base (handle)", GetVisibility (filter.IntPtrCtorVisibility), type_name);
+		print ("{0}{1} (IntPtr handle) : base (handle)", GetVisibility (intptrctor_visibility), type_name);
 		PrintEmptyBody ();
 
 		// NSObjectFlag constructor - always present (needed to implement NSCoder for subclasses)

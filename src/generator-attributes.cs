@@ -83,13 +83,17 @@ public class BindAsAttribute : Attribute {
 	public BindAsAttribute (Type type)
 	{
 		Type = type;
+#if BGENERATOR
 		var nullable = type.IsArray ? TypeManager.GetUnderlyingNullableType (type.GetElementType ()) : TypeManager.GetUnderlyingNullableType (type);
 		IsNullable = nullable != null;
 		IsValueType = IsNullable ? nullable.IsValueType : type.IsValueType;
+#endif
 	}
 	public Type Type;
+#if BGENERATOR
 	internal readonly bool IsNullable;
 	internal readonly bool IsValueType;
+#endif
 }
 
 // Used to flag a type as needing to be turned into a protocol on output for Unified
@@ -841,12 +845,8 @@ public class CoreImageFilterAttribute : Attribute {
 		// default is public - will be skipped for abstract types
 		DefaultCtorVisibility = MethodAttributes.Public;
 
-		// since it was not generated code we never fixed the .ctor(IntPtr) visibility for unified
-		if (Generator.XamcoreVersion >= 3) {
-			IntPtrCtorVisibility = MethodAttributes.FamORAssem;
-		} else {
-			IntPtrCtorVisibility = MethodAttributes.Public;
-		}
+		IntPtrCtorVisibility = MethodAttributes.PrivateScope;
+
 		// not needed by default, automaticly `protected` if the type is abstract
 		StringCtorVisibility = MethodAttributes.PrivateScope;
 	}
