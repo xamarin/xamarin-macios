@@ -1155,7 +1155,7 @@ public partial class Generator : IMemberGatherer {
 		if (type.GetFields ().Any (f => AttributeManager.GetCustomAttribute<FieldAttribute> (f) != null))
 			return true;
 		// If the above fails it's possible that it comes from another dll (like X.I.dll) so we look for the [Enum]Extensions class existence
-		return Type.GetType (type.AssemblyQualifiedName.Replace (type.Name, $"{type.Name}Extensions")) != null;
+		return type.Assembly.GetType (type.FullName + "Extensions") != null;
 	}
 
 	static Dictionary<Type,string> nsvalue_create_map;
