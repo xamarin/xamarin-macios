@@ -447,7 +447,7 @@ public class MemberInformation
 		is_autorelease = Generator.HasAttribute (mi, TypeManager.AutoreleaseAttribute);
 		is_wrapper = !Generator.HasAttribute (mi.DeclaringType, TypeManager.SyntheticAttribute);
 		is_type_sealed = Generator.HasAttribute (mi.DeclaringType, TypeManager.SealedAttribute);
-		is_return_release = method != null && Generator.HasAttribute (method.ReturnTypeCustomAttributes, TypeManager.ReleaseAttribute);
+		is_return_release = method != null && Generator.HasAttribute (AttributeManager.GetReturnTypeCustomAttributes (method), TypeManager.ReleaseAttribute);
 		is_forced = Generator.HasForcedAttribute (mi, out is_forced_owns);
 
 		var tsa = AttributeManager.GetCustomAttribute<ThreadSafeAttribute> (mi);
@@ -3163,7 +3163,7 @@ public partial class Generator : IMemberGatherer {
 		if (!minfo.is_ctor && !is_async){
 			var prefix = "";
 			if (UnifiedAPI && !BindThirdPartyLibrary){
-				var hasReturnTypeProtocolize = Protocolize (minfo.method.ReturnTypeCustomAttributes);
+				var hasReturnTypeProtocolize = Protocolize (AttributeManager.GetReturnTypeCustomAttributes (minfo.method));
 				if (hasReturnTypeProtocolize) {
 					if (!IsProtocol (minfo.method.ReturnType)) {
 						ErrorHelper.Show (new BindingException (1108, false, "The [Protocolize] attribute is applied to the return type of the method {0}.{1}, but the return type ({2}) isn't a model and can thus not be protocolized. Please remove the [Protocolize] attribute.", minfo.method.DeclaringType, minfo.method, minfo.method.ReturnType.FullName));
@@ -3951,7 +3951,7 @@ public partial class Generator : IMemberGatherer {
 			(HasAttribute (mi, TypeManager.FactoryAttribute)) ||
 			((body_options & BodyOption.NeedsTempReturn) == BodyOption.NeedsTempReturn) ||
 			(mi.ReturnType.IsSubclassOf (TypeManager.System_Delegate)) ||
-			(HasAttribute (mi.ReturnTypeCustomAttributes, TypeManager.ProxyAttribute)) ||
+			(HasAttribute (AttributeManager.GetReturnTypeCustomAttributes (mi), TypeManager.ProxyAttribute)) ||
 			(!Compat && IsNativeEnum (mi.ReturnType)) ||
 			(mi.Name != "Constructor" && by_ref_processing.Length > 0 && mi.ReturnType != TypeManager.System_Void) ||
 			needsPtrZeroCheck;
@@ -4091,7 +4091,7 @@ public partial class Generator : IMemberGatherer {
 		if (by_ref_processing.Length > 0)
 			print (sw, by_ref_processing.ToString ());
 		if (use_temp_return) {
-			if (HasAttribute (mi.ReturnTypeCustomAttributes, TypeManager.ProxyAttribute))
+			if (HasAttribute (AttributeManager.GetReturnTypeCustomAttributes (mi), TypeManager.ProxyAttribute))
 				print ("ret.SetAsProxy ();");
 
 			if (mi.ReturnType.IsSubclassOf (TypeManager.System_Delegate)) {
