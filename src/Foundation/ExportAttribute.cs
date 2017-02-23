@@ -30,7 +30,12 @@
 //
 using System;
 using System.Globalization;
+#if IKVM
+using IKVM.Reflection;
+using Type = IKVM.Reflection.Type;
+#else
 using System.Reflection;
+#endif
 using XamCore.ObjCRuntime;
 using XamCore.Registrar;
 

@@ -1,6 +1,11 @@
 
 using System;
+#if IKVM
+using IKVM.Reflection;
+using Type = IKVM.Reflection.Type;
+#else
 using System.Reflection;
+#endif
 using System.Runtime.InteropServices;
 
 public static class TypeManager {
