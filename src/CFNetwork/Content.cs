@@ -71,10 +71,10 @@ namespace XamCore.CFNetwork {
 			if (key.Equals ("Content-Type")) {
 				SetContentType (value);
 				return true;
-			} else if (key.EndsWith ("Content-Length")) {
+			} else if (key.EndsWith ("Content-Length", StringComparison.Ordinal)) {
 				SetContentLength (value);
 				return true;
-			} else if (key.EndsWith ("Content-Language")) {
+			} else if (key.EndsWith ("Content-Language", StringComparison.Ordinal)) {
 				Headers.ContentLanguage.Add (value);
 				return true;
 			} else if (key.Equals ("Content-Location")) {
@@ -96,7 +96,7 @@ namespace XamCore.CFNetwork {
 
 		void SetContentType (string value)
 		{
-			int pos = value.IndexOf (";");
+			int pos = value.IndexOf (';');
 
 			string type;
 			if (pos < 0)
@@ -109,7 +109,7 @@ namespace XamCore.CFNetwork {
 				return;
 
 			value = value.Substring (pos+1).Trim ();
-			if (value.StartsWith ("charset=")) {
+			if (value.StartsWith ("charset=", StringComparison.Ordinal)) {
 				var charset = value.Substring (8);
 				Headers.ContentEncoding.Add (charset);
 			}
