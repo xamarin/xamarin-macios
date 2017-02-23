@@ -1934,7 +1934,7 @@ namespace XamCore.AVFoundation {
 
 		[iOS (10, 3), NoMac, NoTV, NoWatch]
 		[Export ("AVAudioSessionInterruptionWasSuspendedKey")]
-		bool WasSuspendedKey { get; }
+		bool WasSuspended { get; }
 	}
 
 	interface AVAudioSessionRouteChangeEventArgs {
