@@ -153,17 +153,42 @@ public static class TypeManager {
 
 	public static Type GetUnderlyingNullableType (Type type)
 	{
+#if IKVM
+		if (!type.IsConstructedGenericType)
+			return null;
+
+		var gt = type.GetGenericTypeDefinition ();
+		if (gt.Assembly != CorlibAssembly)
+			return null;
+
+		if (gt.Namespace != "System")
+			return null;
+
+		if (gt.Name != "Nullable`1")
+			return null;
+
+		return type.GenericTypeArguments [0];
+#else
 		return Nullable.GetUnderlyingType (type);
+#endif
 	}
 
 	public static bool IsOutParameter (ParameterInfo pi)
 	{
+#if IKVM
+		return pi.IsOut;
+#else
 		return AttributeManager.HasAttribute<OutAttribute> (pi);
+#endif
 	}
 
 	public static Type GetUnderlyingEnumType (Type type)
 	{
+#if IKVM
+		return type.GetEnumUnderlyingType ();
+#else
 		return Enum.GetUnderlyingType (type);
+#endif
 	}
 
 	public static void Initialize (Assembly api, Assembly corlib, Assembly platform, Assembly system, Assembly binding)

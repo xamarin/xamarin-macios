@@ -56,6 +56,11 @@ class BindingTouch {
 	static char shellQuoteChar;
 
 	public static bool BindingThirdParty = true;
+	static List<string> libs = new List<string> ();
+
+#if IKVM
+	public static Universe universe;
+#endif
 
 	public static string ToolName {
 		get { return Path.GetFileNameWithoutExtension (System.Reflection.Assembly.GetEntryAssembly ().Location); }
@@ -85,6 +90,92 @@ class BindingTouch {
 			return 1;
 		}
 	}
+
+#if IKVM
+	static string GetAttributeLibraryPath ()
+	{
+		switch (CurrentPlatform) {
+		case PlatformName.iOS:
+			if (Unified) {
+				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.iOS.BindingAttributes.dll");
+			} else {
+				return Path.Combine (GetSDKRoot (), "lib", "bgen", "monotouch.BindingAttributes.dll");
+			}
+		case PlatformName.WatchOS:
+			return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.WatchOS.BindingAttributes.dll");
+		case PlatformName.TvOS:
+			return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.TVOS.BindingAttributes.dll");
+		case PlatformName.MacOSX:
+			if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
+				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.Mac-full.BindingAttributes.dll");
+			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
+				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.Mac-full.BindingAttributes.dll");
+			} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+				return Path.Combine (GetSDKRoot (), "lib", "bgen", "Xamarin.Mac-mobile.BindingAttributes.dll");
+			} else if (target_framework == TargetFramework.XamMac_1_0) {
+				return Path.Combine (GetSDKRoot (), "lib", "bgen", "XamMAc.BindingAttributes.dll");
+			} else {
+				throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework);
+			}
+		default:
+			throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+		}
+	}
+
+	static IEnumerable<string> GetLibraryDirectories ()
+	{
+		switch (CurrentPlatform) {
+		case PlatformName.iOS:
+			yield return Path.Combine (GetSDKRoot (), "lib", "mono", Unified ? "Xamarin.iOS" : "2.1");
+			break;
+		case PlatformName.WatchOS:
+			yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.WatchOS");
+			break;
+		case PlatformName.TvOS:
+			yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.TVOS");
+			break;
+		case PlatformName.MacOSX:
+			if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full) {
+				yield return Path.Combine (GetSDKRoot (), "lib", "reference", "full");
+				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "4.5");
+			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
+				yield return "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5";
+				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "4.5");
+			} else if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+				yield return Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.Mac");
+			} else if (target_framework == TargetFramework.XamMac_1_0) {
+				yield return Path.Combine (GetSDKRoot (), "lib", "mono");
+				yield return "/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5";
+			} else {
+				throw ErrorHelper.CreateError (1043, "Internal error: unknown target framework '{0}'.", target_framework);
+			}
+			break;
+		default:
+			throw new BindingException (1047, "Unsupported platform: {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.", CurrentPlatform);
+		}
+		foreach (var lib in libs)
+			yield return lib;
+	}
+
+	static string LocateAssembly (string name)
+	{
+		foreach (var asm in universe.GetAssemblies ()) {
+			if (asm.GetName ().Name == name)
+				return asm.Location;
+		}
+
+		foreach (var lib in GetLibraryDirectories ()) {
+			var path = Path.Combine (lib, name);
+			if (File.Exists (path))
+				return path;
+			path += ".dll";
+			if (File.Exists (path))
+				return path;
+		}
+
+		throw new FileNotFoundException (name);
+	}
+#endif
 
 	static string GetSDKRoot ()
 	{
@@ -150,7 +241,6 @@ class BindingTouch {
 		var resources = new List<string> ();
 		var linkwith = new List<string> ();
 		var references = new List<string> ();
-		var libs = new List<string> ();
 		var api_sources = new List<string> ();
 		var core_sources = new List<string> ();
 		var extra_sources = new List<string> ();
@@ -335,7 +425,11 @@ class BindingTouch {
 			}
 			cargs.Append ("-debug -unsafe -target:library -nowarn:436").Append (' ');
 			cargs.Append ("-out:").Append (Quote (tmpass)).Append (' ');
+#if IKVM
+			cargs.Append ("-r:").Append (Quote (GetAttributeLibraryPath ())).Append (' ');
+#else
 			cargs.Append ("-r:").Append (Environment.GetCommandLineArgs ()[0]).Append (' ');
+#endif
 			cargs.Append (refs).Append (' ');
 			if (unsafef)
 				cargs.Append ("-unsafe ");
@@ -370,9 +464,17 @@ class BindingTouch {
 				return 1;
 			}
 
+#if IKVM
+			universe = new Universe (UniverseOptions.EnableFunctionPointers | UniverseOptions.ResolveMissingMembers | UniverseOptions.MetadataOnly);
+#endif
+
 			Assembly api;
 			try {
+#if IKVM
+				api = universe.LoadFile (tmpass);
+#else
 				api = Assembly.LoadFrom (tmpass);
+#endif
 			} catch (Exception e) {
 				if (verbose)
 					Console.WriteLine (e);
@@ -383,7 +485,11 @@ class BindingTouch {
 
 			Assembly baselib;
 			try {
+#if IKVM
+				baselib = universe.LoadFile (baselibdll);
+#else
 				baselib = Assembly.LoadFrom (baselibdll);
+#endif
 			} catch (Exception e){
 				if (verbose)
 					Console.WriteLine (e);
@@ -417,7 +523,11 @@ class BindingTouch {
 			foreach (var r in references) {
 				if (File.Exists (r)) {
 					try {
+#if IKVM
+						universe.LoadFile (r);
+#else
 						Assembly.LoadFrom (r);
+#endif
 					} catch (Exception ex) {
 						ErrorHelper.Show (new BindingException (1104, false, "Could not load the referenced library '{0}': {1}.", r, ex.Message));
 					}

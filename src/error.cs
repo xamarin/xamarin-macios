@@ -74,6 +74,12 @@ using ProductException=BindingException;
 //		BI1051 Internal error: Don't know how to get attributes for {0}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.
 //		BI1052 Internal error: Could not find the type {0} in the assembly {1}. Please file a bug report (http://bugzilla.xamarin.com) with a test case.
 //		BI1053 Internal error: unknown target framework '{0}'.
+//		BI1054 Internal error: can't convert type '{0}' (unknown assembly). Please file a bug report (https://bugzilla.xamarin.com) with a test case.
+//		BI1055 Internal error: failed to convert type '{0}'. Please file a bug report (https://bugzilla.xamarin.com) with a test case.
+//		BI1056 Internal error: failed to instantiate mock attribute '{0}' (could not convert type constructor argument #{1}). Please file a bug report (https://bugzilla.xamarin.com) with a test case.
+//		BI1057 Internal error: failed to instantiate mock attribute '{0}' (could not convert constructor type #{1} ({2})). Please file a bug report (https://bugzilla.xamarin.com) with a test case.
+//		BI1058 Internal error: could not find a constructor for the mock attribute '{0}'. Please file a bug report (https://bugzilla.xamarin.com) with a test case.
+//		BI1059 Found {0} {1} attributes on the member {1}. At most one was expected.
 //	BI11xx	warnings
 //		BI1101 Trying to use a string as a [Target]
 //		BI1102 Using the deprecated EventArgs for a delegate signature in {0}.{1}, please use DelegateName instead
