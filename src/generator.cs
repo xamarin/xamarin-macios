@@ -107,7 +107,7 @@ public static class ReflectionExtensions {
 		string nwrap;
 
 		if (parent_type != TypeManager.NSObject) {
-			if (Attribute.IsDefined (parent_type, TypeManager.ModelAttribute, false)) {
+			if (AttributeManager.HasAttribute (parent_type, TypeManager.ModelAttribute, false)) {
 				foreach (PropertyInfo pinfo in parent_type.GetProperties (flags)) {
 					bool toadd = true;
 					var modelea = Generator.GetExportAttribute (pinfo, out nwrap);
@@ -166,7 +166,7 @@ public static class ReflectionExtensions {
 		Type parent_type = GetBaseType (type);
 
 		if (parent_type != TypeManager.NSObject) {
-			if (Attribute.IsDefined (parent_type, TypeManager.ModelAttribute, false))
+			if (AttributeManager.HasAttribute (parent_type, TypeManager.ModelAttribute, false))
 				foreach (MethodInfo minfo in parent_type.GetMethods ())
 					if (AttributeManager.HasAttribute (minfo, TypeManager.ExportAttribute, false))
 						methods.Add (minfo);
