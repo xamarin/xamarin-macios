@@ -1932,7 +1932,7 @@ namespace XamCore.AVFoundation {
 		[Export ("AVAudioSessionInterruptionOptionKey")]
 		AVAudioSessionInterruptionOptions Option { get; }
 
-		[iOS (10, 3), NoMac, NoTV, NoWatch]
+		[iOS (10, 3), NoMac, TV (10, 2), Watch (3,2)]
 		[Export ("AVAudioSessionInterruptionWasSuspendedKey")]
 		bool WasSuspended { get; }
 	}
