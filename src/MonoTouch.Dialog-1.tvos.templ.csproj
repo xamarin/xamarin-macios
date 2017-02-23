@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{48585BC2-D604-4CF2-A827-D887BEA51FD6}</ProjectGuid>
+    <ProjectGuid>{114214A5-A95C-456A-85BA-1B3F23B7AA0C}</ProjectGuid>
     <ProjectTypeGuids>{06FA79CB-D6CD-4721-BB4B-1BD202089C55};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <RootNamespace></RootNamespace>
@@ -13,46 +13,33 @@
     <UseMSBuildEngine>True</UseMSBuildEngine>
     <DefineConstants>XAMCORE_2_0;XAMCORE_3_0</DefineConstants>
     <OutputPath>build\tvos\reference</OutputPath>
+    <IntermediateOutputPath>$(OutputPath)</IntermediateOutputPath>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\product.snk</AssemblyOriginatorKeyFile>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Debug32' Or '$(Configuration)' == 'Debug64' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>build\tvos\reference</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentation>True</GenerateDocumentation>
-    <NoWarn>3021,3014,3003</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release32' Or '$(Configuration)' == 'Release64' Or '$(Configuration)' == 'Release-bitcode'  ">
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>build\tvos\reference</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-bitcode|AnyCPU' ">
-    <DebugType>none</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>build\tvos\reference</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Xamarin.TVOS" />
     <Reference Include="System" />
     <Reference Include="System.Xml" />
-  </ItemGroup>
-  <PropertyGroup>
-    <CscToolExe>$(MSBuildProjectDirectory)\custom-make.sh</CscToolExe>
-  </PropertyGroup>
-  <ItemGroup>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Json" />
   </ItemGroup>
   <ItemGroup>
     <!--%FILES%-->

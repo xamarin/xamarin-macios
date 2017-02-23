@@ -762,6 +762,46 @@ namespace XamCore.Security {
 #endif
 		}
 
+		public SecRecord (SecCertificate certificate) : this (SecKind.Certificate)
+		{
+			SetCertificate (certificate);
+		}
+
+		public SecRecord (SecIdentity identity) : this (SecKind.Identity)
+		{
+			SetIdentity (identity);
+		}
+
+		public SecRecord (SecKey key) : this (SecKind.Key)
+		{
+			SetKey (key);
+		}
+
+		public SecCertificate GetCertificate ()
+		{
+			CheckClass (SecClass.Certificate);
+			return GetValueRef <SecCertificate> ();
+		}
+
+		public SecIdentity GetIdentity ()
+		{
+			CheckClass (SecClass.Identity);
+			return GetValueRef<SecIdentity> ();
+		}
+
+		public SecKey GetKey ()
+		{
+			CheckClass (SecClass.Key);
+			return GetValueRef<SecKey> ();
+		}
+
+		void CheckClass (IntPtr secClass)
+		{
+			var kind = queryDict.LowlevelObjectForKey (SecClass.SecClassKey);
+			if (kind != secClass)
+				throw new InvalidOperationException ("SecRecord of incompatible SecClass");
+		}
+
 		public SecRecord Clone ()
 		{
 			return new SecRecord (NSMutableDictionary.FromDictionary (queryDict));
@@ -805,29 +845,29 @@ namespace XamCore.Security {
 
 		NSObject FetchObject (IntPtr key)
 		{
-			return Runtime.GetNSObject<NSObject> (Fetch (key));
+			return Runtime.GetNSObject (Fetch (key));
 		}
 
 		string FetchString (IntPtr key)
 		{
-			return NSString.FromHandle (Fetch (key));
+			return (NSString) FetchObject (key);
 		}
 
 		int FetchInt (IntPtr key)
 		{
-			var obj = Runtime.GetNSObject<NSNumber> (Fetch (key));
+			var obj = (NSNumber) FetchObject (key);
 			return obj == null ? -1 : obj.Int32Value;
 		}
 
 		bool FetchBool (IntPtr key, bool defaultValue)
 		{
-			var obj = Runtime.GetNSObject<NSNumber> (Fetch (key));
+			var obj = (NSNumber) FetchObject (key);
 			return obj == null ? defaultValue : obj.Int32Value != 0;
 		}
 
 		T Fetch<T> (IntPtr key) where T : NSObject
 		{
-			return Runtime.GetNSObject<T> (Fetch (key));
+			return (T) FetchObject (key);
 		}
 		
 
@@ -1050,6 +1090,20 @@ namespace XamCore.Security {
 				SetValue ((NSObject) value.GetConstant (), SecItem.UseAuthenticationUI);
 			}
 		}
+
+#if XAMCORE_2_0 && !WATCH && !TVOS
+		[iOS (9, 0), Mac (10, 11)]
+		public XamCore.LocalAuthentication.LAContext AuthenticationContext {
+			get {
+				return Fetch<XamCore.LocalAuthentication.LAContext> (SecItem.UseAuthenticationContext);
+			}
+			set {
+				if (value == null)
+					throw new ArgumentNullException (nameof (value));
+				SetValue (value.Handle, SecItem.UseAuthenticationContext);
+			}
+		}
+#endif
 
 		// Must store the _secAccessControl here, since we have no way of inspecting its values if
 		// it is ever returned from a dictionary, so return what we cached.
@@ -1521,6 +1575,11 @@ namespace XamCore.Security {
 		{
 			SetValue (value == null ? IntPtr.Zero : value.Handle, SecItem.ValueRef);
 		}
+
+		public void SetCertificate (SecCertificate cert) => SetValueRef (cert);
+		public void SetIdentity (SecIdentity identity) => SetValueRef (identity);
+		public void SetKey (SecKey key) => SetValueRef (key);
+
 	}
 	
 	internal partial class SecItem {

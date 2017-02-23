@@ -8,7 +8,7 @@
 			<method name="ParseValue" />
 		</type>
     </assembly>
-	<assembly fullname="MonoTouch"> <!--- actually a typo, it's monotouch, but we're now case insensitive -->
-		<type fullname="MonoTouch.CoreBluetooth.CBUUID" preserve="field" />
+	<assembly fullname="Xamarin.iOS">
+		<type fullname="CoreBluetooth.CBUUID" preserve="field" />
     </assembly>
 </linker>

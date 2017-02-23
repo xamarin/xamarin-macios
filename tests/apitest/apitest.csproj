@@ -148,6 +148,10 @@
     <Compile Include="..\common\mac\MacTestMain.cs">
       <Link>shared\MacTestMain.cs</Link>
     </Compile>
+    <Compile Include="src\Foundation\NSMetadataItem.cs" />
+    <Compile Include="..\common\TestRuntime.cs">
+      <Link>shared\TestRuntime.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

@@ -38,13 +38,9 @@ Copyright (C) 2013-2016 Xamarin Inc. All rights reserved.
 		<CscToolExe Condition="'$(CscToolExe)' == '' And '$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">/Library/Frameworks/Mono.framework/Commands/mcs</CscToolExe>
 		<CscToolExe Condition="'$(CscToolExe)' == '' And '$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">/Library/Frameworks/Mono.framework/Commands/mcs</CscToolExe>
 		<CscToolExe Condition="'$(CscToolExe)' == ''">smcs</CscToolExe>
-
-		<BaseLibDllPath Condition="'$(OS)' == 'Unix' And '$(TargetFrameworkIdentifier)' == 'MonoTouch'">$(MonoTouchSdkRoot)/lib/mono/2.1/monotouch.dll</BaseLibDllPath>
-		<BaseLibDllPath Condition="'$(OS)' != 'Unix' And '$(TargetFrameworkIdentifier)' == 'MonoTouch'">$(MSBuildExtensionsPath)\Xamarin\iOS\monotouch.dll</BaseLibDllPath>
-		<BTouchToolPath Condition="'$(OS)' == 'Unix' And '$(TargetFrameworkIdentifier)' == 'MonoTouch' And '$(BTouchToolPath)' == ''">$(MonoTouchSdkRoot)/bin/</BTouchToolPath>
-		<BTouchToolPath Condition="'$(OS)' != 'Unix' And '$(TargetFrameworkIdentifier)' == 'MonoTouch' And '$(BTouchToolPath)' == ''">$(MSBuildExtensionsPath)\Xamarin\iOS\</BTouchToolPath>
-		<BTouchToolExe  Condition="'$(OS)' == 'Unix' And '$(TargetFrameworkIdentifier)' == 'MonoTouch' And '$(BTouchToolExe)' == ''">btouch</BTouchToolExe>
-		<BTouchToolExe  Condition="'$(OS)' != 'Unix' And '$(TargetFrameworkIdentifier)' == 'MonoTouch' And '$(BTouchToolExe)' == ''">btouch.exe</BTouchToolExe>
+		<!-- We default to *mcs compiler above, so, select the .mdb as the debug ext. This file gets correctly
+		     imported *before* Microsoft.CSharp.targets -->
+		<CscDebugFileExt Condition="'$(CscDebugFileExt)' == ''">.mdb</CscDebugFileExt>
 
 		<BaseLibDllPath Condition="'$(OS)' == 'Unix' And '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">$(MonoTouchSdkRoot)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll</BaseLibDllPath>
 		<BaseLibDllPath Condition="'$(OS)' != 'Unix' And '$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">$(MSBuildExtensionsPath)\Xamarin\DontKnowWhereYet\Xamarin.iOS.dll</BaseLibDllPath>

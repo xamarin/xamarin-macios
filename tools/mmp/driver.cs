@@ -56,7 +56,6 @@ namespace Xamarin.Bundler {
 		Default,
 		Dynamic,
 		Static,
-		IL,
 	}
 
 	public static partial class Driver {
@@ -81,11 +80,12 @@ namespace Xamarin.Bundler {
 		static bool? thread_check = null;
 		static string link_flags = null;
 		static LinkerOptions linker_options;
+		static bool disable_lldb_attach = false;
+		static string machine_config_path = null;
 
 		static bool arch_set = false;
 		static string arch = "i386";
 		static Version minos = new Version (10, 7);
-		static Version sdk_version;
 		static string contents_dir;
 		static string frameworks_dir;
 		static string macos_dir;
@@ -143,7 +143,7 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static Version SDKVersion { get { return sdk_version; } }
+		public static Version SDKVersion { get; private set; }
 
 		public static Version MinOSVersion { get { return minos; } }
 
@@ -244,7 +244,7 @@ namespace Xamarin.Bundler {
 							registrar = RegistrarMode.Dynamic;
 							break;
 						case "il":
-							registrar = RegistrarMode.IL;
+							registrar = RegistrarMode.Dynamic;
 							break;
 						case "default":
 							registrar = RegistrarMode.Default;
@@ -257,7 +257,7 @@ namespace Xamarin.Bundler {
 				{ "sdk=", "Specifies the SDK version to compile against (version, for example \"10.9\")",
 					v => {
 						try {
-							sdk_version = Version.Parse (v);
+							SDKVersion = Version.Parse (v);
 						} catch (Exception ex) {
 							ErrorHelper.Error (26, ex, "Could not parse the command line argument '{0}': {1}", "-sdk", ex.Message);
 						}
@@ -287,6 +287,8 @@ namespace Xamarin.Bundler {
 				{ "http-message-handler=", "Specify the default HTTP Message Handler", v => { http_message_provider = v; }},
 				{ "extension", "Specifies an app extension", v => is_extension = true },
 				{ "allow-unsafe-gac-resolution", "Allow MSBuild to resolve from the System GAC", v => {} , true }, // Used in Xamarin.Mac.XM45.targets and must be ignored here. Hidden since it is a total hack. If you can use it, you don't need support
+				{ "disable-lldb-attach=", "Disable automatic lldb attach on crash", v => disable_lldb_attach = ParseBool (v, "disable-lldb-attach")},
+				{ "machine-config=", "Custom machine.config file to copy into MonoBundle/mono/4.5/machine.config. Pass \"\" to copy in a valid \"empty\" config file.", v => machine_config_path = v },
 			};
 
 			AddSharedOptions (os);
@@ -329,12 +331,12 @@ namespace Xamarin.Bundler {
 				IsUnifiedMobile = true;
 			} else {
 				foreach (var asm in references) {
-					if (asm.EndsWith ("reference/full/Xamarin.Mac.dll")) {
+					if (asm.EndsWith ("reference/full/Xamarin.Mac.dll", StringComparison.Ordinal)) {
 						IsUnifiedFullSystemFramework = true;
 						force45From40UnifiedSystemFull = targetFramework == TargetFramework.Net_4_0;
 						break;
 					}
-					if (asm.EndsWith ("mono/4.5/Xamarin.Mac.dll")) {
+					if (asm.EndsWith ("mono/4.5/Xamarin.Mac.dll", StringComparison.Ordinal)) {
 						IsUnifiedFullXamMacFramework = true;
 						break;
 					}
@@ -401,6 +403,8 @@ namespace Xamarin.Bundler {
 			if (verbose > 0)
 				Console.WriteLine ("Selected target framework: {0}; API: {1}", targetFramework, IsClassic ? "Classic" : "Unified");
 
+			ValidateSDKVersion ();
+
 			try {
 				Pack (unprocessed);
 			} finally {
@@ -456,10 +460,58 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		static void SetSDKVersion ()
+		static void ValidateXcode ()
 		{
-			if (sdk_version != null)
+			var plist_path = Path.Combine (Path.GetDirectoryName (DeveloperDirectory), "version.plist");
+			if (xcode_version == null) {
+				if (File.Exists (plist_path)) {
+					bool nextElement = false;
+					XmlReaderSettings settings = new XmlReaderSettings ();
+					settings.DtdProcessing = DtdProcessing.Ignore;
+					using (XmlReader reader = XmlReader.Create (plist_path, settings)) {
+						while (reader.Read()) {
+							// We want the element after CFBundleShortVersionString
+							if (reader.NodeType == XmlNodeType.Element) {
+								if (reader.Name == "key") {
+									if (reader.ReadElementContentAsString() == "CFBundleShortVersionString")
+										nextElement = true;
+								}
+								if (nextElement && reader.Name == "string") {
+									nextElement = false;
+									xcode_version = new Version (reader.ReadElementContentAsString());
+								}
+							}
+						}
+					}
+				} else {
+					throw ErrorHelper.CreateError (58, "The Xcode.app '{0}' is invalid (the file '{1}' does not exist).", Path.GetDirectoryName (Path.GetDirectoryName (DeveloperDirectory)), plist_path);
+				}
+			}
+		}
+
+		// SDK versions are only passed in as X.Y but some frameworks/APIs require X.Y.Z
+		// Mutate them if we have a new enough Xcode
+		static Version MutateSDKVersionToPointRelease (Version rv)
+		{
+			if (rv.Major == 10 && (rv.Revision == 0 || rv.Revision == -1)) {
+				if (rv.Minor == 12 && XcodeVersion >= new Version (8, 2))
+					return new Version (rv.Major, rv.Minor, 2);
+				if (rv.Minor == 12 && XcodeVersion >= new Version (8, 1))
+					return new Version (rv.Major, rv.Minor, 1);
+				if (rv.Minor == 11 && XcodeVersion >= new Version (7, 3))
+					return new Version (rv.Major, rv.Minor, 4);
+			}
+			return rv;
+		}
+
+		// Validates that sdk_version is set to a reasonable value before compile
+		static void ValidateSDKVersion ()
+		{
+			if (SDKVersion != null) {
+				// We can't do mutation while parsing command line args as XcodeVersion isn't set yet
+				SDKVersion = MutateSDKVersionToPointRelease (SDKVersion);
 				return;
+			}
 
 			if (string.IsNullOrEmpty (DeveloperDirectory))
 				return;
@@ -468,7 +520,7 @@ namespace Xamarin.Bundler {
 			var sdkdir = Path.Combine (DeveloperDirectory, "Platforms", "MacOSX.platform", "Developer", "SDKs");
 			foreach (var sdkpath in Directory.GetDirectories (sdkdir)) {
 				var sdk = Path.GetFileName (sdkpath);
-				if (sdk.StartsWith ("MacOSX") && sdk.EndsWith (".sdk")) {
+				if (sdk.StartsWith ("MacOSX", StringComparison.Ordinal) && sdk.EndsWith (".sdk", StringComparison.Ordinal)) {
 					Version sdkVersion;
 					if (Version.TryParse (sdk.Substring (6, sdk.Length - 10), out sdkVersion))
 						sdks.Add (sdkVersion);
@@ -477,7 +529,7 @@ namespace Xamarin.Bundler {
 			if (sdks.Count > 0) {
 				sdks.Sort ();
 				// select the highest.
-				sdk_version = sdks [sdks.Count - 1];
+				SDKVersion = MutateSDKVersionToPointRelease (sdks [sdks.Count - 1]);
 			}
 		}
 
@@ -486,7 +538,7 @@ namespace Xamarin.Bundler {
 		static void CheckForUnknownCommandLineArguments (IList<Exception> exceptions, IList<string> arguments)
 		{
 			for (int i = arguments.Count - 1; i >= 0; i--) {
-				if (arguments [i].StartsWith ("-")) {
+				if (arguments [i].StartsWith ("-", StringComparison.Ordinal)) {
 					exceptions.Add (ErrorHelper.CreateError (18, "Unknown command line argument: '{0}'", arguments [i]));
 					arguments.RemoveAt (i);
 				}
@@ -609,10 +661,16 @@ namespace Xamarin.Bundler {
 				var linked_native_libs = Link ();
 				foreach (var kvp in linked_native_libs) {
 					List<MethodDefinition> methods;
-					if (native_libs.TryGetValue (kvp.Key, out methods))
+					if (native_libs.TryGetValue (kvp.Key, out methods)) {
+						if (methods == null) {
+							methods = new List<MethodDefinition> (); 
+							native_libs [kvp.Key] = methods;
+						}
 						methods.AddRange (kvp.Value);
-					else
+					}
+					else {
 						native_libs.Add (kvp.Key, kvp.Value);
+					}
 				}
 				internalSymbols.UnionWith (BuildTarget.LinkContext.RequiredSymbols.Keys);
 				Watch (string.Format ("Linking (mode: '{0}')", App.LinkMode), 1);
@@ -812,9 +870,9 @@ namespace Xamarin.Bundler {
 
 		static string GetRealPath (string path)
 		{
-			if (path.StartsWith ("@executable_path/"))
+			if (path.StartsWith ("@executable_path/", StringComparison.Ordinal))
 				path = Path.Combine (mmp_dir, path.Substring (17));
-			if (path.StartsWith ("@rpath/"))
+			if (path.StartsWith ("@rpath/", StringComparison.Ordinal))
 				path = Path.Combine (mmp_dir, path.Substring (7));
 
 			const int PATHMAX = 1024 + 1;
@@ -905,12 +963,17 @@ namespace Xamarin.Bundler {
 					sw.WriteLine ("extern NSString* xamarin_custom_bundle_name;");
 					sw.WriteLine ("\txamarin_custom_bundle_name = @\"" + custom_bundle_name + "\";");
 				}
-				sw.WriteLine ("\txamarin_use_il_registrar = {0};", registrar == RegistrarMode.IL ? "true" : "false");
-				sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", App.MarshalManagedExceptions);
+				if (!App.IsDefaultMarshalManagedExceptionMode)
+					sw.WriteLine ("\txamarin_marshal_managed_exception_mode = MarshalManagedExceptionMode{0};", App.MarshalManagedExceptions);
 				sw.WriteLine ("\txamarin_marshal_objectivec_exception_mode = MarshalObjectiveCExceptionMode{0};", App.MarshalObjectiveCExceptions);
+				if (disable_lldb_attach)
+					sw.WriteLine ("\txamarin_disable_lldb_attach = true;");
 				sw.WriteLine ();
 				if (Driver.registrar == RegistrarMode.Static)
 					sw.WriteLine ("\txamarin_create_classes ();");
+
+				if (App.EnableDebug)
+					sw.WriteLine ("\txamarin_debug_mode = TRUE;");
 
 				sw.WriteLine ("\treturn 0;");
 				sw.WriteLine ("}");
@@ -930,7 +993,7 @@ namespace Xamarin.Bundler {
 				args.Append ("-F ").Append (Quote (path)).Append (' ');
 			args.Append (weak ? "-weak_framework " : "-framework ").Append (Quote (name)).Append (' ');
 
-			if (!framework.EndsWith (".framework"))
+			if (!framework.EndsWith (".framework", StringComparison.Ordinal))
 				return;
 
 			// TODO - There is a chunk of code in mtouch that calls Xamarin.MachO.IsDynamicFramework and doesn't cpoy if framework of static libs
@@ -954,7 +1017,6 @@ namespace Xamarin.Bundler {
 			string mainSource = GenerateMain ();
 			string registrarPath = null;
 
-			SetSDKVersion ();
 			if (registrar == RegistrarMode.Static) {
 				registrarPath = Path.Combine (Cache.Location, "registrar.m");
 				var registrarH = Path.Combine (Cache.Location, "registrar.h");
@@ -1018,7 +1080,7 @@ namespace Xamarin.Bundler {
 						foreach (var linkWith in assembly.LinkWith) {
 							if (verbose > 1)
 								Console.WriteLine ("Found LinkWith on {0} for {1}", assembly.FileName, linkWith);
-							if (linkWith.EndsWith (".dylib")) {
+							if (linkWith.EndsWith (".dylib", StringComparison.Ordinal)) {
 								// Link against the version copied into MonoBudle, since we install_name_tool'd it already
 								string libName = Path.GetFileName (linkWith);
 								string finalLibPath = Path.Combine (mmp_dir, libName);
@@ -1091,7 +1153,10 @@ namespace Xamarin.Bundler {
 				if (link_flags != null)
 					args.Append (link_flags + " ");
 				if (!string.IsNullOrEmpty (DeveloperDirectory))
-					args.Append ("-isysroot ").Append (Quote (Path.Combine (DeveloperDirectory, "Platforms", "MacOSX.platform", "Developer", "SDKs", "MacOSX" + sdk_version + ".sdk"))).Append (' ');
+				{
+					var sysRootSDKVersion = new Version (SDKVersion.Major, SDKVersion.Minor); // Sys Root SDKs do not have X.Y.Z, just X.Y 
+					args.Append ("-isysroot ").Append (Quote (Path.Combine (DeveloperDirectory, "Platforms", "MacOSX.platform", "Developer", "SDKs", "MacOSX" + sysRootSDKVersion + ".sdk"))).Append (' ');
+				}
 
 				if (App.RequiresPInvokeWrappers) {
 					var state = linker_options.MarshalNativeExceptionsState;
@@ -1196,6 +1261,7 @@ namespace Xamarin.Bundler {
 					HeaderPath = Path.Combine (Cache.Location, "pinvokes.h"),
 					Registrar = (StaticRegistrar) BuildTarget.StaticRegistrar,
 				},
+				SkipExportedSymbolsInSdkAssemblies = !embed_mono,
 			};
 
 			linker_options = options;
@@ -1251,7 +1317,7 @@ namespace Xamarin.Bundler {
 		{
 			// Process LinkWith first so we don't have unnecessary warnings
 			foreach (var assembly in BuildTarget.Assemblies.Where (a => a.LinkWith != null)) {
-				foreach (var linkWith in assembly.LinkWith.Where (l => l.EndsWith (".dylib"))) {
+				foreach (var linkWith in assembly.LinkWith.Where (l => l.EndsWith (".dylib", StringComparison.Ordinal))) {
 					string libName = Path.GetFileName (linkWith);
 					string finalLibPath = Path.Combine (mmp_dir, libName);
 					Application.UpdateFile (linkWith, finalLibPath);
@@ -1414,7 +1480,7 @@ namespace Xamarin.Bundler {
 				CopyFileAndRemoveReadOnly (real_src, dest);
 			}
 
-			bool isStaticLib = real_src.EndsWith (".a");
+			bool isStaticLib = real_src.EndsWith (".a", StringComparison.Ordinal);
 			if (native_references.Contains (real_src)) {
 				if (!isStaticLib) {
 					int ret = XcodeRun ("install_name_tool -id", string.Format ("{0} {1}", Quote("@executable_path/../" + BundleName + "/" + name), Quote(dest)));
@@ -1492,6 +1558,21 @@ namespace Xamarin.Bundler {
 				}
 
 				CopyResourceFile ("config", "config");
+			}
+
+			if (machine_config_path != null) {
+				string machineConfigDestDir = Path.Combine (mmp_dir, "mono/4.5/");
+				string machineConfigDestFile = Path.Combine (machineConfigDestDir, "machine.config");
+
+				CreateDirectoryIfNeeded (machineConfigDestDir);
+				if (machine_config_path == String.Empty) {
+					File.WriteAllLines (machineConfigDestFile, new string [] { "<?xml version=\"1.0\" encoding=\"utf-8\"?>", "<configuration>", "</configuration>" });
+				}
+				else {
+					if (!File.Exists (machine_config_path))
+						throw new MonoMacException (97, true, "machine.config file '{0}' can not be found.", machine_config_path);
+					File.Copy (machine_config_path, machineConfigDestFile);
+				}
 			}
 		}
 
@@ -1572,7 +1653,7 @@ namespace Xamarin.Bundler {
 			if (assembly == null)
 				return;
 
-			var fqname = GetRealPath (assembly.MainModule.FullyQualifiedName);
+			var fqname = GetRealPath (assembly.MainModule.FileName);
 
 			if (resolved_assemblies.Contains (fqname))
 				return;

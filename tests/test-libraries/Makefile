@@ -5,6 +5,30 @@ include $(TOP)/Make.config
 # in system headers show up.
 export CCACHE_CPP2=1
 
+GENERATED_FILES = \
+	libtest.structs.h \
+	libtest.decompile.m \
+	libtest.properties.h \
+	../bindings-test/ApiDefinition.generated.cs \
+	../bindings-test/StructsAndEnums.generated.cs \
+	../monotouch-test/ObjCRuntime/RegistrarTest.generated.cs \
+	../monotouch-test/ObjCRuntime/TrampolineTest.generated.cs \
+
+GENERATED_FILES_PATTERN = \
+	libtest.structs%h \
+	libtest.decompile%m \
+	libtest.properties%h \
+	../bindings-test/ApiDefinition.generated%cs \
+	../bindings-test/StructsAndEnums.generated%cs \
+	../monotouch-test/ObjCRuntime/RegistrarTest.generated%cs \
+	../monotouch-test/ObjCRuntime/TrampolineTest.generated%cs \
+
+testgenerator.exe: testgenerator.cs Makefile
+	$(Q) mcs -out:$@ $<
+
+$(GENERATED_FILES_PATTERN): testgenerator.exe
+	$(Q) mono --debug $<
+
 libtest-object.m libtest-ar.m:
 	$(Q) ln -fhs libtest.m $@
 
@@ -24,12 +48,13 @@ $(2)_TARGETS = \
 	$$(foreach arch,$(3),.libs/$(1)/libtest-ar.$$(arch).a) \
 	.libs/$(1)/XTest.framework \
 
-all-local:: $$($(2)_TARGETS)
+all-local:: $$($(2)_TARGETS) $(GENERATED_FILES)
 
 clean-$(1):
 	rm -Rf .libs/$(1)
 
 CLEAN_TARGETS += clean-$(1)
+EXTRA_DEPENDENCIES = libtest.h $(GENERATED_FILES)
 
 .libs/$(1)/libtest-object.%.o: export EXTRA_DEFINES=-DPREFIX=1
 .libs/$(1)/libtest-ar.%.o: export EXTRA_DEFINES=-DPREFIX=2
@@ -38,15 +63,15 @@ CLEAN_TARGETS += clean-$(1)
 	$(Q) rm -f $$@
 	$$(call Q_2,AR     [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cru $$@ $$^
 
-.libs/$(1)/libtest.a: $$(foreach arch,$(3),.libs/$(1)/libtest.$$(arch).o)
+.libs/$(1)/libtest.a: $$(foreach arch,$(3),.libs/$(1)/libtest.$$(arch).a)
 	$(Q) rm -f $$@
 	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
 
-.libs/$(1)/libtest-object.a: $$(foreach arch,$(3),.libs/$(1)/libtest-object.$$(arch).o)
+.libs/$(1)/libtest-object.a: $$(foreach arch,$(3),.libs/$(1)/libtest-object.$$(arch).a)
 	$(Q) rm -f $$@
 	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
 
-.libs/$(1)/libtest-ar.a: $$(foreach arch,$(3),.libs/$(1)/libtest-ar.$$(arch).o)
+.libs/$(1)/libtest-ar.a: $$(foreach arch,$(3),.libs/$(1)/libtest-ar.$$(arch).a)
 	$(Q) rm -f $$@
 	$$(call Q_2,LIPO   [$(1)]) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo $$^ -create -output $$@
 

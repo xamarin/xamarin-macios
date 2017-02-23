@@ -8,22 +8,25 @@ using Mono.Tuner;
 
 using Xamarin.Bundler;
 using Xamarin.Linker;
-
-#if MONOMAC
-using DerivedLinkContext = MonoMac.Tuner.MonoMacLinkContext;
-#else
-using DerivedLinkContext = MonoTouch.Tuner.MonoTouchLinkContext;
-#endif
+using Xamarin.Tuner;
 
 namespace MonoTouch.Tuner
 {
 	public class ListExportedSymbols : BaseStep
 	{
 		PInvokeWrapperGenerator state;
+		bool skip_sdk_assemblies;
 
-		internal ListExportedSymbols (PInvokeWrapperGenerator state)
+		public DerivedLinkContext DerivedLinkContext {
+			get {
+				return (DerivedLinkContext) Context;
+			}
+		}
+
+		internal ListExportedSymbols (PInvokeWrapperGenerator state, bool skip_sdk_assemblies = false)
 		{
 			this.state = state;
+			this.skip_sdk_assemblies = skip_sdk_assemblies;
 		}
 
 		protected override void ProcessAssembly (AssemblyDefinition assembly)
@@ -31,6 +34,9 @@ namespace MonoTouch.Tuner
 			base.ProcessAssembly (assembly);
 
 			if (Context.Annotations.GetAction (assembly) == AssemblyAction.Delete)
+				return;
+
+			if (skip_sdk_assemblies && Profile.IsSdkAssembly (assembly))
 				return;
 
 			if (!assembly.MainModule.HasTypes)
@@ -60,6 +66,12 @@ namespace MonoTouch.Tuner
 				foreach (var method in type.Methods)
 					ProcessMethod (method);
 			}
+
+			var registerAttribute = DerivedLinkContext.StaticRegistrar?.GetRegisterAttribute (type);
+			if (registerAttribute != null && registerAttribute.IsWrapper && !DerivedLinkContext.StaticRegistrar.HasProtocolAttribute (type)) {
+				var exportedName = DerivedLinkContext.StaticRegistrar.GetExportedTypeName (type, registerAttribute);
+				DerivedLinkContext.ObjectiveCClasses [exportedName] = type;
+			}
 		}
 
 		void ProcessMethod (MethodDefinition method)
@@ -67,7 +79,7 @@ namespace MonoTouch.Tuner
 			if (method.IsPInvokeImpl && method.HasPInvokeInfo) {
 				var pinfo = method.PInvokeInfo;
 				if (pinfo.Module.Name == "__Internal")
-					((DerivedLinkContext) Context).RequiredSymbols [pinfo.EntryPoint] = method;
+					DerivedLinkContext.GetRequiredSymbolList (pinfo.EntryPoint).Add (method);
 
 				if (state != null) {
 					switch (pinfo.EntryPoint) {
@@ -89,7 +101,7 @@ namespace MonoTouch.Tuner
 				object symbol;
 				// The Field attribute may have been linked away, but we've stored it in an annotation.
 				if (property != null && Context.Annotations.GetCustomAnnotations ("ExportedFields").TryGetValue (property, out symbol)) {
-					((DerivedLinkContext) Context).RequiredSymbols[(string) symbol] = property;
+					DerivedLinkContext.GetRequiredSymbolList ((string) symbol).Add (property);
 				}
 			}
 		}

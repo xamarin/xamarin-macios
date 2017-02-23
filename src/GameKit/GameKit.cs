@@ -52,6 +52,7 @@ namespace XamCore.GameKit {
 		OutOfMemory = 32015,
 		InvalidParameter = 32016
 	}
+#endif
 
 	// untyped enum -> GKPublicConstants.h
 	[Availability (Introduced = Platform.iOS_3_0 | Platform.Mac_10_8, Deprecated = Platform.iOS_7_0 | Platform.Mac_10_10)]
@@ -77,7 +78,6 @@ namespace XamCore.GameKit {
 		Disconnected,
 		Connecting,  
 	}
-#endif
 
 	// NSInteger -> GKLeaderboard.h
 	[iOS (4,0)]

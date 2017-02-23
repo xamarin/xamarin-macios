@@ -45,21 +45,21 @@
               <method name="BeginInvoke(System.Object, System.Boolean&amp;, System.AsyncCallback, System.Object)" attrib="454" virtual="true" returntype="System.IAsyncResult">
                 <parameters>
                   <parameter name="rawValue" position="0" attrib="0" type="System.Object" />
-                  <parameter name="updated" position="1" attrib="0" type="System.Boolean&amp;" direction="ref" />
+                  <parameter name="updated" position="1" attrib="0" type="System.Boolean" direction="ref" />
                   <parameter name="callback" position="2" attrib="0" type="System.AsyncCallback" />
                   <parameter name="object" position="3" attrib="0" type="System.Object" />
                 </parameters>
               </method>
               <method name="EndInvoke(System.Boolean&amp;, System.IAsyncResult)" attrib="454" virtual="true" returntype="System.Object">
                 <parameters>
-                  <parameter name="updated" position="0" attrib="0" type="System.Boolean&amp;" direction="ref" />
+                  <parameter name="updated" position="0" attrib="0" type="System.Boolean" direction="ref" />
                   <parameter name="result" position="1" attrib="0" type="System.IAsyncResult" />
                 </parameters>
               </method>
               <method name="Invoke(System.Object, System.Boolean&amp;)" attrib="454" virtual="true" returntype="System.Object">
                 <parameters>
                   <parameter name="rawValue" position="0" attrib="0" type="System.Object" />
-                  <parameter name="updated" position="1" attrib="0" type="System.Boolean&amp;" direction="ref" />
+                  <parameter name="updated" position="1" attrib="0" type="System.Boolean" direction="ref" />
                 </parameters>
               </method>
             </methods>

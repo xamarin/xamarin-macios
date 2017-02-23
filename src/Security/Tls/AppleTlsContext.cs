@@ -41,8 +41,6 @@ namespace XamCore.Security.Tls
 		SslReadFunc readFunc;
 		SslWriteFunc writeFunc;
 
-		readonly ICertificateValidator2 certificateValidator;
-
 		SecIdentity serverIdentity;
 		SecIdentity clientIdentity;
 
@@ -72,8 +70,6 @@ namespace XamCore.Security.Tls
 			connectionId = GCHandle.ToIntPtr (handle);
 			readFunc = NativeReadCallback;
 			writeFunc = NativeWriteCallback;
-
-			certificateValidator = CertificateValidationHelper.GetDefaultValidator (Settings, Provider);
 
 			if (IsServer) {
 				if (serverCertificate == null)
@@ -175,7 +171,7 @@ namespace XamCore.Security.Tls
 
 			if (IsServer) {
 				SecCertificate[] intermediateCerts;
-				serverIdentity = MobileCertificateHelper.GetIdentity (LocalServerCertificate, out intermediateCerts);
+				serverIdentity = AppleCertificateHelper.GetIdentity (LocalServerCertificate, out intermediateCerts);
 				if (serverIdentity == null)
 					throw new SSA.AuthenticationException ("Unable to get server certificate from keychain.");
 
@@ -214,10 +210,10 @@ namespace XamCore.Security.Tls
 					RequirePeerTrust ();
 					if (remoteCertificate == null)
 						throw new TlsException (AlertDescription.InternalError, "Cannot request client certificate before receiving one from the server.");
-					localClientCertificate = MobileCertificateHelper.SelectClientCertificate (TargetHost, certificateValidator, ClientCertificates, remoteCertificate);
+					localClientCertificate = SelectClientCertificate (remoteCertificate, null);
 					if (localClientCertificate == null)
 						continue;
-					clientIdentity = MobileCertificateHelper.GetIdentity (localClientCertificate);
+					clientIdentity = AppleCertificateHelper.GetIdentity (localClientCertificate);
 					if (clientIdentity == null)
 						throw new TlsException (AlertDescription.CertificateUnknown);
 					SetCertificate (clientIdentity, new SecCertificate [0]);
@@ -276,7 +272,7 @@ namespace XamCore.Security.Tls
 
 			bool ok;
 			try {
-				ok = MobileCertificateHelper.Validate (TargetHost, IsServer, certificateValidator, certificates);
+				ok = ValidateCertificate (certificates);
 			} catch (Exception ex) {
 				Debug ("Certificate validation failed: {0}", ex);
 				throw new TlsException (AlertDescription.CertificateUnknown, "Certificate validation threw exception.");
@@ -339,7 +335,8 @@ namespace XamCore.Security.Tls
 
 			connectionInfo = new MonoTlsConnectionInfo {
 				CipherSuiteCode = (CipherSuiteCode)cipher,
-				ProtocolVersion = GetProtocol (protocol)
+				ProtocolVersion = GetProtocol (protocol),
+				PeerDomainName = PeerDomainName
 			};
 		}
 
@@ -608,7 +605,11 @@ namespace XamCore.Security.Tls
 				var bytes = new byte [length];
 				result = SSLGetPeerDomainName (Handle, bytes, ref length);
 				CheckStatusAndThrow (result);
-				return result == SslStatus.Success ? Encoding.UTF8.GetString (bytes) : String.Empty;
+				if (result != SslStatus.Success)
+					return string.Empty;
+				if (length > 0 && bytes [length-1] == 0)
+					length--;
+				return Encoding.UTF8.GetString (bytes, 0, (int)length);
 			}
 			set {
 				SslStatus result;

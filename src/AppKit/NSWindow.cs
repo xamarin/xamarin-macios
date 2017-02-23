@@ -28,6 +28,9 @@ using XamCore.ObjCRuntime;
 namespace XamCore.AppKit {
 
 	public partial class NSWindow {
+
+		public static bool DisableReleasedWhenClosedInConstructor;
+
 		static IntPtr selInitWithWindowRef = Selector.GetHandle ("initWithWindowRef:");
 
 		// Do not actually export because NSObjectFlag is not exportable.
@@ -41,6 +44,8 @@ namespace XamCore.AppKit {
 			} else {
 				Handle = XamCore.ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper (this.SuperHandle, selInitWithWindowRef);
 			}
+			if (!DisableReleasedWhenClosedInConstructor)
+				ReleasedWhenClosed = false;
 		}
 
 		static public NSWindow FromWindowRef (IntPtr windowRef)

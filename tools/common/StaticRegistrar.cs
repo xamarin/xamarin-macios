@@ -74,11 +74,11 @@ namespace XamCore.Registrar {
 
 		void Output (string a)
 		{
-			if (a.StartsWith ("}"))
+			if (a.StartsWith ("}", StringComparison.Ordinal))
 				Unindent ();
 			OutputIndentation ();
 			sb.Append (a);
-			if (a.EndsWith ("{"))
+			if (a.EndsWith ("{", StringComparison.Ordinal))
 				Indent ();
 		}
 
@@ -314,7 +314,7 @@ namespace XamCore.Registrar {
 				return;
 
 			foreach (var iface in type.Interfaces) {
-				var itd = iface.Resolve ();
+				var itd = iface.InterfaceType.Resolve ();
 				CollectInterfaces (ref ifaces, itd);
 
 				if (!HasAttribute (itd, Registrar.Foundation, Registrar.StringConstants.ProtocolAttribute))
@@ -493,8 +493,8 @@ namespace XamCore.Registrar {
 			var type = tr.Resolve ();
 			while (type != null) {
 				if (type.HasInterfaces) {
-					foreach (TypeReference iface in type.Interfaces)
-						if (iface.Is (Registrar.ObjCRuntime, Registrar.StringConstants.INativeObject))
+					foreach (var iface in type.Interfaces)
+						if (iface.InterfaceType.Is (Registrar.ObjCRuntime, Registrar.StringConstants.INativeObject))
 							return true;
 				}
 
@@ -650,7 +650,7 @@ namespace XamCore.Registrar {
 #if MMP
 				return Xamarin.Bundler.Driver.IsUnified;
 #else
-				return Driver.App.IsUnified;
+				return true;
 #endif
 			}
 		}
@@ -827,8 +827,12 @@ namespace XamCore.Registrar {
 			return method.ReturnType;
 		}
 
+		TypeReference system_void;
 		protected override TypeReference GetSystemVoidType ()
 		{
+			if (system_void != null)
+				return system_void;
+			
 			// find corlib
 			AssemblyDefinition corlib = null;
 			AssemblyDefinition first = null;
@@ -843,14 +847,14 @@ namespace XamCore.Registrar {
 			}
 
 			if (corlib == null) {
-				corlib = first.MainModule.AssemblyResolver.Resolve ("mscorlib");
+				corlib = first.MainModule.AssemblyResolver.Resolve (AssemblyNameReference.Parse ("mscorlib"));
 			}
 			foreach (var type in corlib.MainModule.Types) {
 				if (type.Namespace == "System" && type.Name == "Void")
-					return type;
+					return system_void = type;
 			}
 
-			throw new Exception ("Couldn't find System.Void");
+			throw ErrorHelper.CreateError (4165, "The registrar couldn't find the type 'System.Void' in any of the referenced assemblies.");
 		}
 
 		protected override bool IsVirtual (MethodDefinition method)
@@ -930,7 +934,7 @@ namespace XamCore.Registrar {
 				return null;
 			var rv = new TypeReference [td.Interfaces.Count];
 			for (int i = 0; i < td.Interfaces.Count; i++)
-				rv [i] = td.Interfaces [i].Resolve ();
+				rv [i] = td.Interfaces [i].InterfaceType.Resolve ();
 			return rv;
 		}
 
@@ -1080,7 +1084,7 @@ namespace XamCore.Registrar {
 			return res;
 		}
 
-		protected override RegisterAttribute GetRegisterAttribute (TypeReference type)
+		public override RegisterAttribute GetRegisterAttribute (TypeReference type)
 		{
 			CustomAttribute attrib;
 			RegisterAttribute rv = null;
@@ -1432,18 +1436,7 @@ namespace XamCore.Registrar {
 
 		protected override Version GetSDKVersion ()
 		{
-			var rv = Driver.SDKVersion;
-
-#if MMP
-			// Xcode 7.3 ships with a MacOSX SDK for 10.11.4, but that
-			// third number is not given to us by apps (nor can we look
-			// it up somewhere), so hardcode it.
-			if (rv.Major == 10 && rv.Minor == 11 && (rv.Revision == 0 || rv.Revision == -1)) {
-				if (Driver.XcodeVersion >= new Version (7, 3))
-					rv = new Version (rv.Major, rv.Minor, 4);
-			}
-#endif
-			return rv;
+			return Driver.SDKVersion;
 		}
 
 		protected override Dictionary<MethodDefinition, List<MethodDefinition>> PrepareMethodMapping (TypeReference type)
@@ -1653,7 +1646,7 @@ namespace XamCore.Registrar {
 			if (IsDualBuild) {
 				return Driver.Frameworks.ContainsKey (type.Namespace);
 			} else {
-				return type.Namespace.StartsWith (CompatNamespace + ".");
+				return type.Namespace.StartsWith (CompatNamespace + ".", StringComparison.Ordinal);
 			}
 		}
 
@@ -1944,7 +1937,41 @@ namespace XamCore.Registrar {
 
 			if (arrtype != null)
 				return "NSArray *";
-			
+
+			var git = type as GenericInstanceType;
+			if (git != null && IsNSObject (type)) {
+				var sb = new StringBuilder ();
+				var elementType = git.GetElementType ();
+
+				sb.Append (ToObjCParameterType (elementType, descriptiveMethodName, exceptions, inMethod));
+
+				if (sb [sb.Length - 1] != '*') {
+					// I'm not sure if this is possible to hit (I couldn't come up with a test case), but better safe than sorry.
+					AddException (ref exceptions, CreateException (4166, inMethod.Resolve () as MethodDefinition, "Cannot register the method '{0}' because the signature contains a type ({1}) that isn't a reference type.", descriptiveMethodName, GetTypeFullName (elementType)));
+					return "id";
+				}
+
+				sb.Length--; // remove the trailing * of the element type
+
+				sb.Append ('<');
+				for (int i = 0; i < git.GenericArguments.Count; i++) {
+					if (i > 0)
+						sb.Append (", ");
+					var argumentType = git.GenericArguments [i];
+					if (!IsNSObject (argumentType)) {
+						// I believe the generic constraints we have should make this error impossible to hit, but better safe than sorry.
+						AddException (ref exceptions, CreateException (4167, inMethod.Resolve () as MethodDefinition, "Cannot register the method '{0}' because the signature contains a generic type ({1}) with a generic argument type that isn't an NSObject subclass ({2}).", descriptiveMethodName, GetTypeFullName (type), GetTypeFullName (argumentType)));
+						return "id";
+					}
+					sb.Append (ToObjCParameterType (argumentType, descriptiveMethodName, exceptions, inMethod));
+				}
+				sb.Append ('>');
+
+				sb.Append ('*'); // put back the * from the element type
+
+				return sb.ToString ();
+			}
+
 			switch (td.FullName) {
 #if MMP
 			case "System.Drawing.RectangleF": return "NSRect";
@@ -2222,9 +2249,8 @@ namespace XamCore.Registrar {
 				if (!string.IsNullOrEmpty (single_assembly) && single_assembly != @class.Type.Module.Assembly.Name.Name)
 					continue;
 
-				var isPlatformType = IsPlatformType (@class.Type);
 #if !MONOMAC
-
+				var isPlatformType = IsPlatformType (@class.Type);
 				if (isPlatformType && IsSimulatorOrDesktop && IsMetalType (@class))
 					continue; // Metal isn't supported in the simulator.
 #else
@@ -2236,7 +2262,7 @@ namespace XamCore.Registrar {
 						continue;
 				}
 
-				if (IsQTKitType (@class) && GetSDKVersion () >= new Version (10,12))
+				if (IsQTKitType (@class) && Driver.SDKVersion >= new Version (10,12))
 					continue; // QTKit header was removed in 10.12 SDK
 
 				// These are 64-bit frameworks that extend NSExtensionContext / NSUserActivity, which you can't do
@@ -3147,7 +3173,12 @@ namespace XamCore.Registrar {
 			var marshal_exception = "NULL";
 			if (App.MarshalManagedExceptions != MarshalManagedExceptionMode.Disable) {
 				body_setup.AppendLine ("MonoObject *exception = NULL;");
-				marshal_exception = "&exception";
+				if (App.EnableDebug && App.IsDefaultMarshalManagedExceptionMode) {
+					body_setup.AppendLine ("MonoObject **exception_ptr = xamarin_is_managed_exception_marshaling_disabled () ? NULL : &exception;");
+					marshal_exception = "exception_ptr";
+				} else {
+					marshal_exception = "&exception";
+				}
 			}
 
 			if (!isVoid) {
@@ -3680,8 +3711,11 @@ namespace XamCore.Registrar {
 							methods = mthds;
 
 							mthds.WriteLine ($"#include \"{Path.GetFileName (header_path)}\"");
+							mthds.StringBuilder.AppendLine ("extern \"C\" {");
 
 							Specialize (sb);
+
+							mthds.StringBuilder.AppendLine ("} /* extern \"C\" */");
 
 							header = null;	
 							declarations = null;

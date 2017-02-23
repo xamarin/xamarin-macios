@@ -63,7 +63,7 @@ namespace Xamarin.Linker.Steps {
 
 			// HttpClientHandler is defined not in Xamarin.Mac.dll so we need to import
 			if (handler.Name.Contains ("HttpClientHandler"))
-				handler_ctor = type.Module.Import (handler_ctor);
+				handler_ctor = type.Module.ImportReference (handler_ctor);
 
 			var body = new MethodBody (method);
 			var il = body.GetILProcessor ();

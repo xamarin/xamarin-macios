@@ -1023,6 +1023,7 @@ namespace LinkSdk {
 			Assert.NotNull (Trace.Listeners, "C6 had a SecurityPermission call");
 		}
 
+#if !__WATCHOS__
 		[Test]
 		public void TlsProvider_Apple ()
 		{
@@ -1030,6 +1031,7 @@ namespace LinkSdk {
 			Assert.NotNull (provider, "provider");
 			Assert.That (provider.ID, Is.EqualTo (new Guid ("981af8af-a3a3-419a-9f01-a518e3a17c1c")), "correct provider");
 		}
+#endif // !__WATCHOS__
 
 		[Test]
 		public void OldTlsProvider_LinkedOut ()
@@ -1039,6 +1041,7 @@ namespace LinkSdk {
 			Assert.Null (Type.GetType (fqn), "Should not be included");
 		}
 
+#if !__WATCHOS__
 		[Test]
 		public void AppleTls_Default ()
 		{
@@ -1046,5 +1049,6 @@ namespace LinkSdk {
 			var fqn = typeof (NSObject).AssemblyQualifiedName.Replace ("Foundation.NSObject", "Security.Tls.AppleTlsProvider");
 			Assert.NotNull (Type.GetType (fqn), "Should be included");
 		}
+#endif // !__WATCHOS__
 	}
 }

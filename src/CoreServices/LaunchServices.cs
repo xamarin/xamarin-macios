@@ -18,9 +18,6 @@
 // NOTE: only bound APIs not deprecated in 10.11
 //
 // NOTE: KEEP IN SYNC WITH TESTS!
-//
-// FIXME: missing APIs:
-//   - LSOpenFromURLSpec (requires LSLaunchURLSpec)
 
 #if MONOMAC
 
@@ -193,21 +190,6 @@ namespace XamCore.CoreServices
 			launchedUrl = Runtime.GetNSObject<NSUrl> (new IntPtr (launchedUrlHandle));
 			return result;
 		}
-
-		// FIXME: bind
-		//
-		// struct LSLaunchURLSpec {
-		//   CFURLRef appURL;
-		//   CFArrayRef itemURLs;
-		//   const AEDesc *passThruParams;
-		//   LSLaunchFlags launchFlags;
-		//   void *asyncRefCon;
-		// };
-		//
-		// typedef struct LSLaunchURLSpec LSLaunchURLSpec;
-		//
-		// OSStatus LSOpenFromURLSpec (const LSLaunchURLSpec * _Nonnull inLaunchSpec,
-		//                             CFURLRef _Nullable * _Nullable outLaunchedURL);
 
 		#endregion
 

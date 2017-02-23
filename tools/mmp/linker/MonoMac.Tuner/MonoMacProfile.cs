@@ -98,11 +98,7 @@ namespace MonoMac.Tuner {
 			"System.Xml.Linq",
 			"WebMatrix.Data",
 			"WindowsBase",
-			"Microsoft.VisualBasic",
-			// New TLS Code
-			"Mono.Security.Providers.NewSystemSource",
-			"Mono.Security.Providers.OldTls",
-			"Mono.Security.Providers.DotNet"
+			"Microsoft.VisualBasic"
 		};
 
 		protected override bool IsSdk (string assemblyName)

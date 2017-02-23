@@ -268,7 +268,9 @@ namespace Xamarin.Bundler {
 			return new BuildTask [] { new AOTTask ()
 				{
 					AssemblyName = s,
-					ProcessStartInfo = Driver.CreateStartInfo (aotCompiler, aotArgs, Path.GetDirectoryName (s), App.EnableMSym ? "gen-compact-seq-points" : null),
+					AddBitcodeMarkerSection = App.FastDev && App.EnableMarkerOnlyBitCode,
+					AssemblyPath = asm,
+					ProcessStartInfo = Driver.CreateStartInfo (aotCompiler, aotArgs, Path.GetDirectoryName (s)),
 					NextTasks = nextTasks
 				}
 			};
@@ -318,7 +320,7 @@ namespace Xamarin.Bundler {
 				};
 			} else {
 				link_task_input = infile_path;
-				if (infile_path.EndsWith (".s"))
+				if (infile_path.EndsWith (".s", StringComparison.Ordinal))
 					link_language = "assembler";
 			}
 
@@ -330,6 +332,21 @@ namespace Xamarin.Bundler {
 				compiler_flags.AddOtherFlags (LinkerFlags);
 				if (Target.GetEntryPoints ().ContainsKey ("UIApplicationMain"))
 					compiler_flags.AddFramework ("UIKit");
+				compiler_flags.LinkWithPInvokes (abi);
+
+				if (HasLinkWithAttributes && !App.EnableBitCode)
+					compiler_flags.ReferenceSymbols (Target.GetRequiredSymbols (this, true));
+			}
+
+			if (App.EnableLLVMOnlyBitCode) {
+				// The AOT compiler doesn't optimize the bitcode so clang will do it
+				compiler_flags.AddOtherFlag ("-fexceptions");
+				var optimizations = App.GetLLVMOptimizations (this);
+				if (optimizations == null) {
+					compiler_flags.AddOtherFlag ("-O2");
+				} else if (optimizations.Length > 0) {
+					compiler_flags.AddOtherFlag (optimizations);
+				}
 			}
 
 			link_task = new LinkTask ()
@@ -397,7 +414,7 @@ namespace Xamarin.Bundler {
 			var assembly = Path.Combine (build_dir, FileName);
 
 			if (App.FastDev)
-				Dylib = Path.Combine (App.AppDirectory, Driver.Quote ("lib" + Path.GetFileName (FullPath) + ".dylib"));
+				Dylib = Path.Combine (App.AppDirectory, "lib" + Path.GetFileName (FullPath) + ".dylib");
 
 			foreach (var abi in abis) {
 				var task = CreateManagedToAssemblyTasks (assembly, abi, build_dir);
@@ -410,7 +427,7 @@ namespace Xamarin.Bundler {
 		{
 			try {
 				AssemblyDefinition = Target.Resolver.Load (filename);
-				FullPath = AssemblyDefinition.MainModule.FullyQualifiedName;
+				FullPath = AssemblyDefinition.MainModule.FileName;
 				if (symbols_loaded.HasValue && symbols_loaded.Value) {
 					symbols_loaded = null;
 					LoadSymbols ();

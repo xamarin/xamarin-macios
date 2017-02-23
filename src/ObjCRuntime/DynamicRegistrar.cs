@@ -67,7 +67,7 @@ namespace XamCore.Registrar {
 		}
 	}
 
-	class DynamicRegistrar : Registrar, IDynamicRegistrar {
+	class DynamicRegistrar : Registrar {
 		Dictionary<IntPtr, ObjCType> type_map;
 		Dictionary <IntPtr, LazyMapEntry> lazy_map;
 		Dictionary <Type, Dictionary <IntPtr, MethodDescription>> method_map;
@@ -119,7 +119,7 @@ namespace XamCore.Registrar {
 				RegisterType (type);
 
 				if (!method_map.TryGetValue (type, out methods)) {
-					methods = new Dictionary <IntPtr, MethodDescription> ();
+					methods = new Dictionary <IntPtr, MethodDescription> (Runtime.IntPtrEqualityComparer);
 					method_map [type] = methods;
 				}
 
@@ -273,7 +273,7 @@ namespace XamCore.Registrar {
 			return SharedDynamic.GetOneAttribute<ExportAttribute> (GetBasePropertyInTypeHierarchy (property) ?? property);
 		}
 
-		protected override RegisterAttribute GetRegisterAttribute (Type type)
+		public override RegisterAttribute GetRegisterAttribute (Type type)
 		{
 			return SharedDynamic.GetOneAttribute<RegisterAttribute> (type);
 		}
@@ -804,7 +804,7 @@ namespace XamCore.Registrar {
 			if (type.IsFakeProtocol)
 				return;
 
-			var methods = new Dictionary <IntPtr, MethodDescription> ();
+			var methods = new Dictionary <IntPtr, MethodDescription> (Runtime.IntPtrEqualityComparer);
 
 			var super = type.SuperType;
 

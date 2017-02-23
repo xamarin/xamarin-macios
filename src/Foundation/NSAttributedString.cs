@@ -25,9 +25,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-
-#if !WATCH // This file needs some work before it can get included in WatchOS
-
 using System;
 using XamCore.CoreText;
 using XamCore.ObjCRuntime;
@@ -98,7 +95,9 @@ namespace XamCore.Foundation {
 						  NSLigatureType ligature,
 						  float kerning,
 						  NSUnderlineStyle underlineStyle,
+#if !WATCH
 						  NSShadow shadow,
+#endif
 						  float strokeWidth,
 						  NSUnderlineStyle strikethroughStyle)
 		{
@@ -127,9 +126,11 @@ namespace XamCore.Foundation {
 			if (underlineStyle != NSUnderlineStyle.None){
 				attr.UnderlineStyle = underlineStyle;
 			}
+#if !WATCH
 			if (shadow != null){
 				attr.Shadow = shadow;
 			}
+#endif
 			if (strokeWidth != 0){
 				attr.StrokeWidth = strokeWidth;
 			}
@@ -149,10 +150,16 @@ namespace XamCore.Foundation {
 					   NSLigatureType ligatures = NSLigatureType.Default,
 					   float kerning = 0,
 					   NSUnderlineStyle underlineStyle = NSUnderlineStyle.None,
+#if !WATCH
 					   NSShadow shadow = null,
+#endif
 					   float strokeWidth = 0,
 					   NSUnderlineStyle strikethroughStyle = NSUnderlineStyle.None)
-		: this (str, ToDictionary (font, foregroundColor, backgroundColor, strokeColor, paragraphStyle, ligatures, kerning, underlineStyle, shadow, strokeWidth, strikethroughStyle))
+		: this (str, ToDictionary (font, foregroundColor, backgroundColor, strokeColor, paragraphStyle, ligatures, kerning, underlineStyle,
+#if !WATCH
+			shadow,
+#endif
+			strokeWidth, strikethroughStyle))
 		{
 		}
 
@@ -170,5 +177,3 @@ namespace XamCore.Foundation {
 #endif						      
 	}
 }
-
-#endif // !WATCH

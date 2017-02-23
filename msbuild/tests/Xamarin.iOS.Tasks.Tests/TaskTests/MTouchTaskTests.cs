@@ -192,7 +192,6 @@ namespace Xamarin.iOS.Tasks
 			}
 		}
 
-		[TestCase("MonoTouch", "2.1")]
 		[TestCase("Xamarin.iOS", "Xamarin.iOS")]
 		public void ReferenceFrameworkFileResolution_WhenFacadeFileExists(string targetFramework, string frameworkDir)
 		{
@@ -218,7 +217,6 @@ namespace Xamarin.iOS.Tasks
 			}
 		}
 
-		[TestCase("MonoTouch", "2.1")]
 		[TestCase("Xamarin.iOS", "Xamarin.iOS")]
 		public void ReferenceFrameworkFileResolution_WhenFrameworkFileExists(string targetFramework, string frameworkDir)
 		{
@@ -244,7 +242,6 @@ namespace Xamarin.iOS.Tasks
 			}
 		}
 
-		[TestCase("MonoTouch", "2.1")]
 		[TestCase("Xamarin.iOS", "Xamarin.iOS")]
 		public void ReferenceFrameworkFileResolution_WhenResolutionFails(string targetFramework, string frameworkDir)
 		{

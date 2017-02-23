@@ -144,7 +144,9 @@ APPKIT_SOURCES = \
 	AppKit/NSCollectionView.cs \
 	AppKit/NSTextTableBlock.cs \
 	AppKit/NSMutableFontCollection.cs \
-	AppKit/NSCollectionViewLayout.cs
+	AppKit/NSCollectionViewLayout.cs \
+	AppKit/NSColorPickerTouchBarItem.cs \
+	AppKit/NSSliderTouchBarItem.cs
 
 # AssetsLibrary
 
@@ -314,7 +316,6 @@ COREANIMATION_CORE_SOURCES = \
 COREANIMATION_SOURCES = \
 	CoreAnimation/CABasicAnimation.cs \
 	CoreAnimation/CADefs.cs \
-	CoreAnimation/CADisplayLink.cs \
 	CoreAnimation/CALayer.cs \
 	CoreAnimation/CAKeyFrameAnimation.cs \
 	CoreAnimation/CALayerDelegate.cs \
@@ -592,6 +593,9 @@ FINDERSYNC_CORE_SOURCES = \
 
 # Foundation
 
+FOUNDATION_API_SOURCES = \
+	Foundation/Enums.cs \
+
 FOUNDATION_CORE_SOURCES = \
 	Foundation/AdviceAttribute.cs \
 	Foundation/ConnectAttribute.cs \
@@ -616,7 +620,6 @@ FOUNDATION_CORE_SOURCES = \
 	Foundation/PreserveAttribute.cs \
 	Foundation/ProtocolAttribute.cs \
 	Foundation/RegisterAttribute.cs \
-	Foundation/Enums.cs \
 	Foundation/NSObject.iOS.cs \
 	Foundation/NSAttributedString.iOS.cs \
 	Foundation/EnumDesktop.cs \
@@ -1138,6 +1141,7 @@ SCENEKIT_SOURCES = \
 	SceneKit/SCNParticleSystem.cs \
 	SceneKit/SCNPhysicsShape.cs \
 	SceneKit/SCNPhysicsTest.cs \
+	SceneKit/SCNRenderer.cs \
 	SceneKit/SCNRenderingOptions.cs \
 	SceneKit/SCNScene.cs \
 	SceneKit/SCNSceneLoadingOptions.cs \
@@ -1416,7 +1420,7 @@ APPLETLS_SOURCES = \
 	Security/Tls/AppleTlsContext.cs \
 	Security/Tls/AppleTlsProvider.cs \
 	Security/Tls/AppleTlsStream.cs \
-	Security/Tls/MobileCertificateHelper.cs \
+	Security/Tls/AppleCertificateHelper.cs \
 	Security/Tls/OldTlsProvider.cs \
 
 #
@@ -1469,7 +1473,6 @@ SHARED_SOURCES = \
 	ObjCRuntime/MethodDescription.cs \
 	ObjCRuntime/NSStringMarshal.cs \
 	ObjCRuntime/ObjectWrapper.cs \
-	ObjCRuntime/OldDynamicRegistrar.cs \
 	ObjCRuntime/PlatformAvailability.cs \
 	ObjCRuntime/Registrar.cs \
 	ObjCRuntime/ReleaseAttribute.cs \
@@ -1482,6 +1485,7 @@ SHARED_SOURCES = \
 	ObjCRuntime/Selector.iOS.cs \
 	ObjCRuntime/Selector.mac.cs \
 	ObjCRuntime/SelectorMarshaler.cs \
+	ObjCRuntime/Stret.cs \
 	ObjCRuntime/ThreadSafeAttribute.cs \
 	ObjCRuntime/TransientAttribute.cs \
 	ObjCRuntime/TypeConverter.cs \

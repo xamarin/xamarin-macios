@@ -1,5 +1,10 @@
 #import "SimpleClass.h"
 
+int GetFour ()
+{
+	return 4;
+}
+
 @implementation SimpleClass
 
 - (int)doIt {

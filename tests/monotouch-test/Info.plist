@@ -6,13 +6,36 @@
 	<string>MonoTouchTest</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.xamarin.monotouch-test</string>
+	<key>CFBundleName</key>
+	<string>MonoTouchTest</string>
 	<key>MinimumOSVersion</key>
 	<string>6.0</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Testing tastes</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Smile!</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Testing friends</string>
+	<key>NSHomeKitUsageDescription</key>
+	<string>Testing roofs</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Testing mike</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Testing lens</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>
 		<integer>2</integer>
 	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIRequiresFullScreen</key>
+	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -27,30 +50,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcons.appiconset</string>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
-	<key>UIRequiresFullScreen</key>
-	<true/>
-	<key>CFBundleName</key>
-	<string>MonoTouchTest</string>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>Testing tastes</string>
-	<key>NSHomeKitUsageDescription</key>
-	<string>Testing roofs</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Testing lens</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Testing mike</string>
-	<key>NSContactsUsageDescription</key>
-	<string>Testing friends</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Smile!</string>
 </dict>
 </plist>

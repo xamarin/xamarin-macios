@@ -101,9 +101,8 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 		it->state->double_ret = *(double *) mono_object_unbox (value);
 		break;
 	case _C_STRUCT_B:
-		if (it->state->type == Tramp_DoubleStret || it->state->type == Tramp_StaticDoubleStret) {
-			void *unboxed = mono_object_unbox (value);
-			memcpy ((void *) it->stret, unboxed, size);
+		if ((it->state->type & Tramp_Stret) == Tramp_Stret) {
+			memcpy ((void *) it->stret, mono_object_unbox (value), size);
 			break;
 		}
 	
@@ -127,9 +126,6 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 			it->state->edx = v[1];
 		} else if (size == 4) {
 			it->state->eax = *(uint32_t *) mono_object_unbox (value);
-		} else if (size > 8) {
-			// Passed in memory. it->stret points to caller-allocated memory.
-			memcpy ((void *) it->stret, mono_object_unbox (value), size);
 		} else {
 			*exception_gchandle = create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal struct return type %s (size: %i)\n", type, (int) size));
 		}

@@ -473,7 +473,12 @@ namespace XamCore.CoreImage {
 		[iOS(9,0)]
 		[Static]
 		[Export ("registerFilterName:constructor:classAttributes:")]
+#if XAMCORE_4_0
+		void RegisterFilterName (string name, ICIFilterConstructor constructorObject, NSDictionary<NSString, NSObject> classAttributes);
+#else
+		[Advice ("The constructorObject argument must implement ICIFilterConstructor")]
 		void RegisterFilterName (string name, NSObject constructorObject, NSDictionary<NSString, NSObject> classAttributes);
+#endif
 #endif
 
 #if MONOMAC
@@ -1583,10 +1588,9 @@ namespace XamCore.CoreImage {
 		[NullAllowed, Export ("url")]
 		NSUrl Url { get; }
 
-		// WARNING: "CF_RETURNS_NOT_RETAINED", so not surfacing for now, until we research
-		//[iOS (9,0)]
-		//[NullAllowed, Export ("colorSpace")]
-		//CGColorSpace ColorSpace { get; }
+		[iOS (9,0)]
+		[NullAllowed, Export ("colorSpace")]
+		CGColorSpace ColorSpace { get; }
 
 		[iOS (9,0)]
 		[Static, Internal]

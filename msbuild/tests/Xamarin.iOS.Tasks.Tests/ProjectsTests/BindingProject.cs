@@ -17,7 +17,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void BuildTest ()
 		{
-			var mtouchPaths = SetupProjectPaths ("bindings-test", "bindings-test-unified", "../../../tests/", false, Platform, "Any CPU/Debug-unified");
+			var mtouchPaths = SetupProjectPaths ("bindings-test", "bindings-test", "../../../tests/", false, Platform, "Any CPU/Debug-unified");
 
 			var proj = SetupProject (Engine, mtouchPaths ["project_csprojpath"]);
 
@@ -37,7 +37,7 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void FrameworkTest ()
 		{
-			var mtouchPaths = SetupProjectPaths ("bindings-test", "bindings-test-unified", "../../../tests/", false, Platform, "Any CPU/Debug-unified");
+			var mtouchPaths = SetupProjectPaths ("bindings-test", "bindings-test", "../../../tests/", false, Platform, "Any CPU/Debug-unified");
 
 			var proj = SetupProject (Engine, mtouchPaths ["project_csprojpath"]);
 			AppBundlePath = mtouchPaths.AppBundlePath;

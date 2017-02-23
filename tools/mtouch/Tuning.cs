@@ -12,6 +12,7 @@ using Mono.Tuner;
 using Xamarin.Bundler;
 using Xamarin.Linker;
 using Xamarin.Linker.Steps;
+using Xamarin.Tuner;
 
 namespace MonoTouch.Tuner {
 
@@ -27,16 +28,15 @@ namespace MonoTouch.Tuner {
 		public bool Device { get; set; }
 		public bool EnsureUIThread { get; set; }
 		public IList<string> ExtraDefinitions { get; set; }
-		public bool OldRegistrar { get; set; }
 		public bool DebugBuild { get; set; }
 		public int Arch { get; set; }
 		public bool IsDualBuild { get; set; }
-		public bool Unified { get; set; }
 		public bool DumpDependencies { get; set; }
 		internal PInvokeWrapperGenerator MarshalNativeExceptionsState { get; set; }
 		internal RuntimeOptions RuntimeOptions { get; set; }
 
 		public MonoTouchLinkContext LinkContext { get; set; }
+		public Target Target { get; set; }
 
 		public static I18nAssemblies ParseI18nAssemblies (string i18n)
 		{
@@ -102,6 +102,7 @@ namespace MonoTouch.Tuner {
 			context.LinkSymbols = options.LinkSymbols;
 			context.OutputDirectory = options.OutputDirectory;
 			context.SetParameter ("debug-build", options.DebugBuild.ToString ());
+			context.StaticRegistrar = options.Target.StaticRegistrar;
 
 			options.LinkContext = context;
 
@@ -121,11 +122,9 @@ namespace MonoTouch.Tuner {
 				sub.Add (new RemoveCode (options));
 			sub.Add (new MarkNSObjects ());
 			sub.Add (new PreserveSoapHttpClients ());
-			// there's only one registrar for unified, i.e. DynamicRegistrar
-			if (!options.Unified)
-				sub.Add (new RemoveExtraRegistrar (options.OldRegistrar));
 			sub.Add (new CoreHttpMessageHandler (options));
-			sub.Add (new CoreTlsProviderStep (options));
+			if (Driver.App.Platform != Xamarin.Utils.ApplePlatform.WatchOS)
+				sub.Add (new CoreTlsProviderStep (options));
 			return sub;
 		}
 
@@ -206,7 +205,7 @@ namespace MonoTouch.Tuner {
 
 		static string GetFullyQualifiedName (AssemblyDefinition assembly)
 		{
-			return assembly.MainModule.FullyQualifiedName;
+			return assembly.MainModule.FileName;
 		}
 
 		static ResolveFromXmlStep GetResolveStep (string filename)
@@ -227,26 +226,7 @@ namespace MonoTouch.Tuner {
 		}
 	}
 
-	public class MonoTouchLinkContext : LinkContext {
-		Dictionary<string, MemberReference> required_symbols;
-		List<MethodDefinition> marshal_exception_pinvokes;
-
-		public Dictionary<string, MemberReference> RequiredSymbols {
-			get {
-				if (required_symbols == null)
-					required_symbols = new Dictionary<string, MemberReference> ();
-				return required_symbols;
-			}
-		}
-
-		public List<MethodDefinition> MarshalExceptionPInvokes {
-			get {
-				if (marshal_exception_pinvokes == null)
-					marshal_exception_pinvokes = new List<MethodDefinition> ();
-				return marshal_exception_pinvokes;
-			}
-		}
-
+	public class MonoTouchLinkContext : DerivedLinkContext {
 		public MonoTouchLinkContext (Pipeline pipeline, AssemblyResolver resolver)
 			: base (pipeline, resolver)
 		{

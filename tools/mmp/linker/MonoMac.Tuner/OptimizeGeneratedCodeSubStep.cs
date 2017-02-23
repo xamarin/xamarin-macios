@@ -1,4 +1,4 @@
-// Copyright 2012-2013 Xamarin Inc. All rights reserved.
+// Copyright 2012-2013,2016 Xamarin Inc. All rights reserved.
 
 using System;
 using Mono.Cecil;
@@ -26,8 +26,13 @@ namespace MonoMac.Tuner {
 			return base.IsActiveFor (assembly);
 		}
 		
-		public override void ProcessMethod (MethodDefinition method)
+		protected override void Process (MethodDefinition method)
 		{
+			// special processing on generated methods from NSObject-inherited types
+			// it would be too risky to apply on user-generated code
+			if (!method.HasBody || !method.IsGeneratedCode () || (!IsExtensionType && !IsExport (method)))
+				return;
+			
 			var instructions = method.Body.Instructions;
 			for (int i = 0; i < instructions.Count; i++) {
 				switch (instructions [i].OpCode.Code) {

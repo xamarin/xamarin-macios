@@ -49,13 +49,17 @@ using XamCore.Metal;
 #if MONOMAC
 using XamCore.AppKit;
 using OpenTK;
+
+using GLContext = global::XamCore.OpenGL.CGLContext;
 #else
 
 #if WATCH
+using GLContext = global::XamCore.Foundation.NSObject; // won't be used -> [NoWatch] but must compile
 using NSView = global::XamCore.Foundation.NSObject; // won't be used -> [NoWatch] but must compile
 #else
 using XamCore.OpenGLES;
 
+using GLContext = global::XamCore.OpenGLES.EAGLContext;
 using NSView = global::XamCore.UIKit.UIView;
 #endif
 
@@ -1600,7 +1604,7 @@ namespace XamCore.SceneKit {
 	[BaseType (typeof (NSObject))]
 	[Model, Protocol]
 	interface SCNProgramDelegate {
-#if !XAMCORE_2_0
+#if MONOMAC || !XAMCORE_2_0
 	#if XAMCORE_3_0
 		[Availability (Unavailable = Platform.iOS_Version)]
 	#endif
@@ -1619,7 +1623,7 @@ namespace XamCore.SceneKit {
 		[Export ("program:handleError:")]
 		void HandleError (SCNProgram program, NSError error);
 
-#if !XAMCORE_2_0
+#if MONOMAC || !XAMCORE_2_0
 	#if XAMCORE_3_0
 		[Availability (Unavailable = Platform.iOS_Version)]
 		[NoTV, NoWatch]
@@ -1670,6 +1674,14 @@ namespace XamCore.SceneKit {
 		[Static, Export ("rendererWithContext:options:")]
 		SCNRenderer FromContext (IntPtr context, [NullAllowed] NSDictionary options);
 
+#if false // bug #51514
+		[NoWatch]
+		[Static]
+		[Wrap ("FromContext (context.GetHandle (), options)")]
+		// GetHandle will return IntPtr.Zero is context is null
+		// GLContext == CGLContext on macOS and EAGLContext in iOS and tvOS (using on top of file)
+		SCNRenderer FromContext (GLContext context, [NullAllowed] NSDictionary options);
+#endif
 		[NoWatch, NoTV]
 		[Export ("render")]
 		[Availability (Deprecated = Platform.Mac_10_11 | Platform.iOS_9_0)]
@@ -1821,17 +1833,6 @@ namespace XamCore.SceneKit {
 		[Wrap ("WriteToUrl (url, options == null ? null : options.Dictionary, handler, exportProgressHandler)")]
 		bool WriteToUrl (NSUrl url, SCNSceneLoadingOptions options, ISCNSceneExportDelegate handler, SCNSceneExportProgressHandler exportProgressHandler);
 
-#if MONOMAC && !XAMCORE_4_0 // Add this overloads for binary compat only on macOS
-		[Obsolete ("Use the ISCNSceneExportDelegate overload instead")]
-		[Mac (10, 9)]
-		[Wrap ("WriteToUrl (url: url, options: options == null ? null : options.Dictionary, aDelegate: handler, exportProgressHandler: exportProgressHandler)")]
-		bool WriteToUrl (NSUrl url, SCNSceneLoadingOptions options, SCNSceneExportDelegate handler, SCNSceneExportProgressHandler exportProgressHandler);
-
-		[Obsolete ("Use the ISCNSceneExportDelegate overload instead")]
-		[Mac (10, 9)]
-		[Wrap ("WriteToUrl (url: url, options: options, aDelegate: handler, exportProgressHandler: exportProgressHandler)")]
-		bool WriteToUrl (NSUrl url, NSDictionary options, SCNSceneExportDelegate handler, SCNSceneExportProgressHandler exportProgressHandler);
-#endif
 		#region SCNParticleSystemSupport (SCNNode) category
 
 		[Mac (10,10)]
@@ -2571,7 +2572,9 @@ namespace XamCore.SceneKit {
 #else
 		new EAGLContext Context { get; set; }
 #endif
+#endif
 
+#if !WATCH
 		[iOS (9,0)][Mac (10,11)]
 		[Wrap ("this (frame, options != null ? options.Dictionary : null)")]
 		IntPtr Constructor (CGRect frame, [NullAllowed] SCNRenderingOptions options);
@@ -2596,10 +2599,9 @@ namespace XamCore.SceneKit {
 		[Export ("snapshot")]
 		NSImage Snapshot ();
 
-#if !MONOMAC
+		[Mac (10,12)]
 		[Export ("preferredFramesPerSecond")]
 		nint PreferredFramesPerSecond { get; set; }
-#endif
 
 		[iOS (8,0)][Mac (10,10)]
 		[Export ("antialiasingMode")]

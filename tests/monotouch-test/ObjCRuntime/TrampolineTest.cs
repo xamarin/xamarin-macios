@@ -43,10 +43,19 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	public class TrampolineTest {
 		public static readonly nfloat pi = 3.14159f;
 
-		public bool IsSim64 { get { return IntPtr.Size == 8 && Runtime.Arch == Arch.SIMULATOR; } }
-		public bool IsSim32 { get { return IntPtr.Size == 4 && Runtime.Arch == Arch.SIMULATOR; } }
-		public bool IsArm64 { get { return IntPtr.Size == 8 && Runtime.Arch == Arch.DEVICE; } }
-		public bool IsArm32 { get { return IntPtr.Size == 4 && Runtime.Arch == Arch.DEVICE; } }
+		public static bool IsSim64 { get { return IntPtr.Size == 8 && Runtime.Arch == Arch.SIMULATOR; } }
+		public static bool IsSim32 { get { return IntPtr.Size == 4 && Runtime.Arch == Arch.SIMULATOR; } }
+		public static bool IsArm64 { get { return IntPtr.Size == 8 && Runtime.Arch == Arch.DEVICE; } }
+		public static bool IsArm32 {
+			get {
+#if __WATCHOS__
+				return false;
+#else
+				return IntPtr.Size == 4 && Runtime.Arch == Arch.DEVICE;
+#endif
+			}
+		}
+
 		public static bool IsArmv7k {
 			get {
 #if __WATCHOS__
@@ -75,229 +84,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.AreEqual (1, tr.Start.TimeScale);
 		}
 #endif // !__WATCHOS__
-
-		[Test]
-		public void StretIIIITrampolineTest ()
-		{
-			StretTrampolines obj = new StretTrampolines ();
-			IntPtr class_ptr = Class.GetHandle ("StretTrampolines");
-			IIIIStruct rv = new IIIIStruct ();
-			double rvd;
-			float rvf;
-
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = IIIIStruct_objc_msgSend (obj.Handle, new Selector ("Test_IIIIStruct").Handle);
-			} else {
-				IIIIStruct_objc_msgSend_stret (out rv, obj.Handle, new Selector ("Test_IIIIStruct").Handle);
-			}			 
-			Assert.That ("[1;2;3;4]" == rv.ToString ());
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = IIIIStruct_objc_msgSend (class_ptr, new Selector ("Test_StaticIIIIStruct").Handle);
-			} else {
-				IIIIStruct_objc_msgSend_stret (out rv, class_ptr, new Selector ("Test_StaticIIIIStruct").Handle);
-			}
-			Assert.That ("[10;20;30;40]" == rv.ToString ());
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = IIIIStruct_objc_msgSend (obj.Handle, new Selector ("Test_IIIIStructProperty").Handle);
-			} else {
-				IIIIStruct_objc_msgSend_stret (out rv, obj.Handle, new Selector ("Test_IIIIStructProperty").Handle);
-			}
-			Assert.That ("[100;200;300;400]" == rv.ToString ());
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = IIIIStruct_objc_msgSend (class_ptr, new Selector ("Test_StaticIIIIStructProperty").Handle);
-			} else {
-				IIIIStruct_objc_msgSend_stret (out rv, class_ptr, new Selector ("Test_StaticIIIIStructProperty").Handle);
-			}
-			Assert.That ("[1000;2000;3000;4000]" == rv.ToString ());
-			
-			rvd = rvf = 0;
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = IIIIStruct_objc_msgSend_out_float (class_ptr, new Selector ("Test_StaticIIIIStruct_out_Float:").Handle, out rvf);
-			} else {
-				IIIIStruct_objc_msgSend_stret_out_float (out rv, class_ptr, new Selector ("Test_StaticIIIIStruct_out_Float:").Handle, out rvf);
-			}
-			//Console.WriteLine ("Got: {0} and {1} and {2}", rv.ToString (), rvf, rvd);
-			Assert.That ("[10;20;300;4000]" == rv.ToString ());
-			Assert.That (rvf == 3.15f);
-			
-			rvd = rvf = 0;
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = IIIIStruct_objc_msgSend_out_double (obj.Handle, new Selector ("Test_IIIIStruct_out_Double:").Handle, out rvd);
-			} else {
-				IIIIStruct_objc_msgSend_stret_out_double (out rv, obj.Handle, new Selector ("Test_IIIIStruct_out_Double:").Handle, out rvd);
-			}
-			//Console.WriteLine ("Got: {0} and {1} and {2}", rv.ToString (), rvf, rvd);
-			Assert.That ("[1;20;300;4000]" == rv.ToString ());
-			Assert.That (rvd == 3.14);
-			
-		}
-
-		[Test]
-		public void StretFFFFTrampolineTest ()
-		{
-			StretTrampolines obj = new StretTrampolines ();
-			IntPtr class_ptr = Class.GetHandle ("StretTrampolines");
-			var rv = new FFFFStruct ();
-			double rvd;
-			float rvf;
-
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = FFFFStruct_objc_msgSend (obj.Handle, new Selector ("Test_FFFFStruct").Handle);
-			} else {
-				FFFFStruct_objc_msgSend_stret (out rv, obj.Handle, new Selector ("Test_FFFFStruct").Handle);
-			}			 
-			Assert.That ("[1;2;3;4]" == rv.ToString ());
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = FFFFStruct_objc_msgSend (class_ptr, new Selector ("Test_StaticFFFFStruct").Handle);
-			} else {
-				FFFFStruct_objc_msgSend_stret (out rv, class_ptr, new Selector ("Test_StaticFFFFStruct").Handle);
-			}
-			Assert.That ("[10;20;30;40]" == rv.ToString ());
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = FFFFStruct_objc_msgSend (obj.Handle, new Selector ("Test_FFFFStructProperty").Handle);
-			} else {
-				FFFFStruct_objc_msgSend_stret (out rv, obj.Handle, new Selector ("Test_FFFFStructProperty").Handle);
-			}
-			Assert.That ("[100;200;300;400]" == rv.ToString ());
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = FFFFStruct_objc_msgSend (class_ptr, new Selector ("Test_StaticFFFFStructProperty").Handle);
-			} else {
-				FFFFStruct_objc_msgSend_stret (out rv, class_ptr, new Selector ("Test_StaticFFFFStructProperty").Handle);
-			}
-			Assert.That ("[1000;2000;3000;4000]" == rv.ToString ());
-
-			rvd = rvf = 0;
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = FFFFStruct_objc_msgSend_out_float (class_ptr, new Selector ("Test_StaticFFFFStruct_out_Float:").Handle, out rvf);
-			} else {
-				FFFFStruct_objc_msgSend_stret_out_float (out rv, class_ptr, new Selector ("Test_StaticFFFFStruct_out_Float:").Handle, out rvf);
-			}
-			//Console.WriteLine ("Got: {0} and {1} and {2}", rv.ToString (), rvf, rvd);
-			Assert.That ("[10;20;300;4000]" == rv.ToString ());
-			Assert.That (rvf == 3.15f);
-
-			rvd = rvf = 0;
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = FFFFStruct_objc_msgSend_out_double (obj.Handle, new Selector ("Test_FFFFStruct_out_Double:").Handle, out rvd);
-			} else {
-				FFFFStruct_objc_msgSend_stret_out_double (out rv, obj.Handle, new Selector ("Test_FFFFStruct_out_Double:").Handle, out rvd);
-			}
-			//Console.WriteLine ("Got: {0} and {1} and {2}", rv.ToString (), rvf, rvd);
-			Assert.That ("[1;20;300;4000]" == rv.ToString ());
-			Assert.That (rvd == 3.14);
-		}
-
-		[Test]
-		public void StretFIFITrampolineTest ()
-		{
-			StretTrampolines obj = new StretTrampolines ();
-			IntPtr class_ptr = Class.GetHandle ("StretTrampolines");
-			var rv = new FIFIStruct ();
-			double rvd;
-			float rvf;
-
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = FIFIStruct_objc_msgSend (obj.Handle, new Selector ("Test_FIFIStruct").Handle);
-			} else {
-				FIFIStruct_objc_msgSend_stret (out rv, obj.Handle, new Selector ("Test_FIFIStruct").Handle);
-			}			 
-			Assert.That ("[1;2;3;4]" == rv.ToString ());
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = FIFIStruct_objc_msgSend (class_ptr, new Selector ("Test_StaticFIFIStruct").Handle);
-			} else {
-				FIFIStruct_objc_msgSend_stret (out rv, class_ptr, new Selector ("Test_StaticFIFIStruct").Handle);
-			}
-			Assert.That ("[10;20;30;40]" == rv.ToString ());
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = FIFIStruct_objc_msgSend (obj.Handle, new Selector ("Test_FIFIStructProperty").Handle);
-			} else {
-				FIFIStruct_objc_msgSend_stret (out rv, obj.Handle, new Selector ("Test_FIFIStructProperty").Handle);
-			}
-			Assert.That ("[100;200;300;400]" == rv.ToString ());
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = FIFIStruct_objc_msgSend (class_ptr, new Selector ("Test_StaticFIFIStructProperty").Handle);
-			} else {
-				FIFIStruct_objc_msgSend_stret (out rv, class_ptr, new Selector ("Test_StaticFIFIStructProperty").Handle);
-			}
-			Assert.That ("[1000;2000;3000;4000]" == rv.ToString ());
-
-			rvd = rvf = 0;
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = FIFIStruct_objc_msgSend_out_float (class_ptr, new Selector ("Test_StaticFIFIStruct_out_Float:").Handle, out rvf);
-			} else {
-				FIFIStruct_objc_msgSend_stret_out_float (out rv, class_ptr, new Selector ("Test_StaticFIFIStruct_out_Float:").Handle, out rvf);
-			}
-			//Console.WriteLine ("Got: {0} and {1} and {2}", rv.ToString (), rvf, rvd);
-			Assert.That ("[10;20;300;4000]" == rv.ToString ());
-			Assert.That (rvf == 3.15f);
-
-			rvd = rvf = 0;
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = FIFIStruct_objc_msgSend_out_double (obj.Handle, new Selector ("Test_FIFIStruct_out_Double:").Handle, out rvd);
-			} else {
-				FIFIStruct_objc_msgSend_stret_out_double (out rv, obj.Handle, new Selector ("Test_FIFIStruct_out_Double:").Handle, out rvd);
-			}
-			//Console.WriteLine ("Got: {0} and {1} and {2}", rv.ToString (), rvf, rvd);
-			Assert.That ("[1;20;300;4000]" == rv.ToString ());
-			Assert.That (rvd == 3.14);
-		}
-
-		[Test]
-		public void StretIFIFTrampolineTest ()
-		{
-			StretTrampolines obj = new StretTrampolines ();
-			IntPtr class_ptr = Class.GetHandle ("StretTrampolines");
-			var rv = new IFIFStruct ();
-			double rvd;
-			float rvf;
-
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = IFIFStruct_objc_msgSend (obj.Handle, new Selector ("Test_IFIFStruct").Handle);
-			} else {
-				IFIFStruct_objc_msgSend_stret (out rv, obj.Handle, new Selector ("Test_IFIFStruct").Handle);
-			}			 
-			Assert.That ("[1;2;3;4]" == rv.ToString ());
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = IFIFStruct_objc_msgSend (class_ptr, new Selector ("Test_StaticIFIFStruct").Handle);
-			} else {
-				IFIFStruct_objc_msgSend_stret (out rv, class_ptr, new Selector ("Test_StaticIFIFStruct").Handle);
-			}
-			Assert.That ("[10;20;30;40]" == rv.ToString ());
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = IFIFStruct_objc_msgSend (obj.Handle, new Selector ("Test_IFIFStructProperty").Handle);
-			} else {
-				IFIFStruct_objc_msgSend_stret (out rv, obj.Handle, new Selector ("Test_IFIFStructProperty").Handle);
-			}
-			Assert.That ("[100;200;300;400]" == rv.ToString ());
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = IFIFStruct_objc_msgSend (class_ptr, new Selector ("Test_StaticIFIFStructProperty").Handle);
-			} else {
-				IFIFStruct_objc_msgSend_stret (out rv, class_ptr, new Selector ("Test_StaticIFIFStructProperty").Handle);
-			}
-			Assert.That ("[1000;2000;3000;4000]" == rv.ToString ());
-
-			rvd = rvf = 0;
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = IFIFStruct_objc_msgSend_out_float (class_ptr, new Selector ("Test_StaticIFIFStruct_out_Float:").Handle, out rvf);
-			} else {
-				IFIFStruct_objc_msgSend_stret_out_float (out rv, class_ptr, new Selector ("Test_StaticIFIFStruct_out_Float:").Handle, out rvf);
-			}
-			//Console.WriteLine ("Got: {0} and {1} and {2}", rv.ToString (), rvf, rvd);
-			Assert.That ("[10;20;300;4000]" == rv.ToString ());
-			Assert.That (rvf == 3.15f);
-
-			rvd = rvf = 0;
-			if (IsSim64 || IsArm64 || IsArmv7k) {
-				rv = IFIFStruct_objc_msgSend_out_double (obj.Handle, new Selector ("Test_IFIFStruct_out_Double:").Handle, out rvd);
-			} else {
-				IFIFStruct_objc_msgSend_stret_out_double (out rv, obj.Handle, new Selector ("Test_IFIFStruct_out_Double:").Handle, out rvd);
-			}
-			//Console.WriteLine ("Got: {0} and {1} and {2}", rv.ToString (), rvf, rvd);
-			Assert.That ("[1;20;300;4000]" == rv.ToString ());
-			Assert.That (rvd == 3.14);
-		}
-
-
 
 		[Test]
 		public void DoubleReturnTest ()
@@ -355,82 +141,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
 		extern static void Matrix4_objc_msgSend_stret (out OpenTK.Matrix4 retval, IntPtr receiver, IntPtr selector);
 #endif // !__WATCHOS__
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		extern static void IIIIStruct_objc_msgSend_stret (out IIIIStruct retval, IntPtr receiver, IntPtr selector);
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		extern static IIIIStruct IIIIStruct_objc_msgSend (IntPtr receiver, IntPtr selector);
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		extern static void IIIIStruct_objc_msgSend_stret_out_double (out IIIIStruct retval, IntPtr receiver, IntPtr selector, out double arg1);
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		extern static IIIIStruct IIIIStruct_objc_msgSend_out_double (IntPtr receiver, IntPtr selector, out double arg1);
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		extern static void IIIIStruct_objc_msgSend_stret_out_float (out IIIIStruct retval, IntPtr receiver, IntPtr selector, out float arg1);
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		extern static IIIIStruct IIIIStruct_objc_msgSend_out_float (IntPtr receiver, IntPtr selector, out float arg1);
-
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		extern static void FFFFStruct_objc_msgSend_stret (out FFFFStruct retval, IntPtr receiver, IntPtr selector);
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		extern static FFFFStruct FFFFStruct_objc_msgSend (IntPtr receiver, IntPtr selector);
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		extern static void FFFFStruct_objc_msgSend_stret_out_double (out FFFFStruct retval, IntPtr receiver, IntPtr selector, out double arg1);
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		extern static FFFFStruct FFFFStruct_objc_msgSend_out_double (IntPtr receiver, IntPtr selector, out double arg1);
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		extern static void FFFFStruct_objc_msgSend_stret_out_float (out FFFFStruct retval, IntPtr receiver, IntPtr selector, out float arg1);
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		extern static FFFFStruct FFFFStruct_objc_msgSend_out_float (IntPtr receiver, IntPtr selector, out float arg1);
-
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		extern static void IFIFStruct_objc_msgSend_stret (out IFIFStruct retval, IntPtr receiver, IntPtr selector);
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		extern static IFIFStruct IFIFStruct_objc_msgSend (IntPtr receiver, IntPtr selector);
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		extern static void IFIFStruct_objc_msgSend_stret_out_double (out IFIFStruct retval, IntPtr receiver, IntPtr selector, out double arg1);
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		extern static IFIFStruct IFIFStruct_objc_msgSend_out_double (IntPtr receiver, IntPtr selector, out double arg1);
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		extern static void IFIFStruct_objc_msgSend_stret_out_float (out IFIFStruct retval, IntPtr receiver, IntPtr selector, out float arg1);
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		extern static IFIFStruct IFIFStruct_objc_msgSend_out_float (IntPtr receiver, IntPtr selector, out float arg1);
-
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		extern static void FIFIStruct_objc_msgSend_stret (out FIFIStruct retval, IntPtr receiver, IntPtr selector);
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		extern static FIFIStruct FIFIStruct_objc_msgSend (IntPtr receiver, IntPtr selector);
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		extern static void FIFIStruct_objc_msgSend_stret_out_double (out FIFIStruct retval, IntPtr receiver, IntPtr selector, out double arg1);
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		extern static FIFIStruct FIFIStruct_objc_msgSend_out_double (IntPtr receiver, IntPtr selector, out double arg1);
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
-		extern static void FIFIStruct_objc_msgSend_stret_out_float (out FIFIStruct retval, IntPtr receiver, IntPtr selector, out float arg1);
-
-		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		extern static FIFIStruct FIFIStruct_objc_msgSend_out_float (IntPtr receiver, IntPtr selector, out float arg1);
-
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
 		extern static void double_objc_msgSend_stret_out_double (out double retval, IntPtr receiver, IntPtr selector, out double arg1);
@@ -634,14 +344,14 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			PointF point;
 			SizeF size;
 			
-			if (IsArm32 && !IsArmv7k) {
+			if (IsArm32) {
 				Messaging.PointF_objc_msgSend_stret (out point, obj.Handle, new Selector ("testPointF").Handle);
 			} else {
 				point = Messaging.PointF_objc_msgSend (obj.Handle, new Selector ("testPointF").Handle);
 			}
 			Assert.That (point == new PointF (pi*2, pi*20), "#testPointF");
 			
-			if (IsArm32 && !IsArmv7k) {
+			if (IsArm32) {
 				Messaging.SizeF_objc_msgSend_stret (out size, obj.Handle, new Selector ("testSizeF").Handle);
 			} else {
 				size = Messaging.SizeF_objc_msgSend (obj.Handle, new Selector ("testSizeF").Handle);
@@ -804,88 +514,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			return true;
 		}
 	}
-	
-	[Preserve (AllMembers = true)]
-	public struct IIIIStruct
-	{
-		public int A, B, C, D;
-		
-		public IIIIStruct (int a, int b, int c, int d)
-		{
-			A = a;
-			B = b;
-			C = c;
-			D = d;
-		}
-		
-		public override string ToString ()
-		{
-			return string.Format ("[{0};{1};{2};{3}]", A, B, C, D);
-		}
-	}
-
-	[Preserve (AllMembers = true)]
-	public struct FFFFStruct
-	{
-		public float A, B, C, D;
-
-		public FFFFStruct (float a, float b, float c, float d)
-		{
-			A = a;
-			B = b;
-			C = c;
-			D = d;
-		}
-
-		public override string ToString ()
-		{
-			return string.Format ("[{0};{1};{2};{3}]", A, B, C, D);
-		}
-	}
-
-	[Preserve (AllMembers = true)]
-	public struct FIFIStruct
-	{
-		public float A;
-		public int B;
-		public float C;
-		public int D;
-
-		public FIFIStruct (float a, int b, float c, int d)
-		{
-			A = a;
-			B = b;
-			C = c;
-			D = d;
-		}
-
-		public override string ToString ()
-		{
-			return string.Format ("[{0};{1};{2};{3}]", A, B, C, D);
-		}
-	}
-
-	[Preserve (AllMembers = true)]
-	public struct IFIFStruct
-	{
-		public int A;
-		public float B;
-		public int C;
-		public float D;
-
-		public IFIFStruct (int a, float b, int c, float d)
-		{
-			A = a;
-			B = b;
-			C = c;
-			D = d;
-		}
-
-		public override string ToString ()
-		{
-			return string.Format ("[{0};{1};{2};{3}]", A, B, C, D);
-		}
-	}
 
 	[Preserve (AllMembers = true)]
 	[Register ("LongTrampolines")]
@@ -913,158 +541,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	[Preserve (AllMembers = true)]
 	public class StretTrampolines : NSObject
 	{
-		/* IIII */
-
-		[Export ("Test_IIIIStruct")]
-		IIIIStruct Test_IIIIStruct ()
-		{
-			return new IIIIStruct (1, 2, 3, 4);
-		}
-		
-		[Export ("Test_StaticIIIIStruct")]
-		static IIIIStruct Test_StaticIIIIStruct ()
-		{
-			return new IIIIStruct (10, 20, 30, 40);
-		}
-		
-		IIIIStruct Test_IIIIStructProperty {
-			[Export ("Test_IIIIStructProperty")]
-			get { return new IIIIStruct (100, 200, 300, 400); }
-		}
-				
-		static IIIIStruct Test_StaticIIIIStructProperty {
-			[Export ("Test_StaticIIIIStructProperty")]
-			get { return new IIIIStruct (1000, 2000, 3000, 4000); }
-		}
-		
-		[Export ("Test_IIIIStruct_out_Double:")]
-		IIIIStruct Test_IIIIStruct_out_Double (out double foo)
-		{
-			foo = 3.14;
-			return new IIIIStruct (1, 20, 300, 4000);
-		}
-		
-		[Export ("Test_StaticIIIIStruct_out_Float:")]
-		static IIIIStruct Test_StaticIIIIStruct_out_Float (out float foo)
-		{
-			foo = 3.15f;
-			return new IIIIStruct (10, 20, 300, 4000);
-		}
-
-		/* FFFF */
-
-		[Export ("Test_FFFFStruct")]
-		FFFFStruct Test_FFFFStruct ()
-		{
-			return new FFFFStruct (1, 2, 3, 4);
-		}
-
-		[Export ("Test_StaticFFFFStruct")]
-		static FFFFStruct Test_StaticFFFFStructStruct ()
-		{
-			return new FFFFStruct (10, 20, 30, 40);
-		}
-
-		FFFFStruct Test_FFFFStructtStructProperty {
-			[Export ("Test_FFFFStructProperty")]
-			get { return new FFFFStruct (100, 200, 300, 400); }
-		}
-
-		static FFFFStruct Test_StaticFFFFStructProperty {
-			[Export ("Test_StaticFFFFStructProperty")]
-			get { return new FFFFStruct (1000, 2000, 3000, 4000); }
-		}
-
-		[Export ("Test_FFFFStruct_out_Double:")]
-		FFFFStruct Test_FFFFStruct_out_Double (out double foo)
-		{
-			foo = 3.14;
-			return new FFFFStruct (1, 20, 300, 4000);
-		}
-
-		[Export ("Test_StaticFFFFStruct_out_Float:")]
-		static FFFFStruct Test_StaticFFFFStruct_out_Float (out float foo)
-		{
-			foo = 3.15f;
-			return new FFFFStruct (10, 20, 300, 4000);
-		}
-
-		/* FIFI */
-
-		[Export ("Test_FIFIStruct")]
-		FIFIStruct Test_FIFIStruct ()
-		{
-			return new FIFIStruct (1, 2, 3, 4);
-		}
-
-		[Export ("Test_StaticFIFIStruct")]
-		static FIFIStruct Test_StaticFIFIStructStruct ()
-		{
-			return new FIFIStruct (10, 20, 30, 40);
-		}
-
-		FIFIStruct Test_FIFIStructtStructProperty {
-			[Export ("Test_FIFIStructProperty")]
-			get { return new FIFIStruct (100, 200, 300, 400); }
-		}
-
-		static FIFIStruct Test_StaticFIFIStructProperty {
-			[Export ("Test_StaticFIFIStructProperty")]
-			get { return new FIFIStruct (1000, 2000, 3000, 4000); }
-		}
-
-		[Export ("Test_FIFIStruct_out_Double:")]
-		FIFIStruct Test_FIFIStruct_out_Double (out double foo)
-		{
-			foo = 3.14;
-			return new FIFIStruct (1, 20, 300, 4000);
-		}
-
-		[Export ("Test_StaticFIFIStruct_out_Float:")]
-		static FIFIStruct Test_StaticFIFIStruct_out_Float (out float foo)
-		{
-			foo = 3.15f;
-			return new FIFIStruct (10, 20, 300, 4000);
-		}
-
-		/* IFIF */
-
-		[Export ("Test_IFIFStruct")]
-		IFIFStruct Test_IFIFStruct ()
-		{
-			return new IFIFStruct (1, 2, 3, 4);
-		}
-
-		[Export ("Test_StaticIFIFStruct")]
-		static IFIFStruct Test_StaticIFIFStructStruct ()
-		{
-			return new IFIFStruct (10, 20, 30, 40);
-		}
-
-		IFIFStruct Test_IFIFStructtStructProperty {
-			[Export ("Test_IFIFStructProperty")]
-			get { return new IFIFStruct (100, 200, 300, 400); }
-		}
-
-		static IFIFStruct Test_StaticIFIFStructProperty {
-			[Export ("Test_StaticIFIFStructProperty")]
-			get { return new IFIFStruct (1000, 2000, 3000, 4000); }
-		}
-
-		[Export ("Test_IFIFStruct_out_Double:")]
-		IFIFStruct Test_IFIFStruct_out_Double (out double foo)
-		{
-			foo = 3.14;
-			return new IFIFStruct (1, 20, 300, 4000);
-		}
-
-		[Export ("Test_StaticIFIFStruct_out_Float:")]
-		static IFIFStruct Test_StaticIFIFStruct_out_Float (out float foo)
-		{
-			foo = 3.15f;
-			return new IFIFStruct (10, 20, 300, 4000);
-		}
-
 #if !__WATCHOS__
 		[Export ("myTimeRange")]
 		CMTimeRange TimeRange {

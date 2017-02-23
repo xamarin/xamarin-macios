@@ -25,4 +25,5 @@ mac-test-package
 .nuget
 logs
 *.mSYM
+*.generated.cs
 

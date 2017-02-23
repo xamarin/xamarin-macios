@@ -51,6 +51,7 @@ using CatAttrib=MonoTouch.ObjCRuntime.CategoryAttribute;
 
 namespace MonoTouchFixtures {
 	[CatAttrib (typeof (NSString))]
+	[Preserve (AllMembers = true)]
 	public static class MyStringCategory
 	{
 		[Export ("toUpper")]
@@ -139,6 +140,7 @@ namespace MonoTouchFixtures {
 
 #if !__WATCHOS__
 	[CatAttrib (typeof (UINavigationController))]
+	[Preserve (AllMembers = true)]
 	static class Rotation_IOS6 {
 		public static Action ShouldAutoRotateCallback;
 		[Export ("shouldAutorotate")]

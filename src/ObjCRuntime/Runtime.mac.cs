@@ -137,11 +137,6 @@ namespace XamCore.ObjCRuntime {
 			ResourcesPath = Path.Combine (basePath, "Resources");
 			FrameworksPath = Path.Combine (basePath, "Frameworks");
 		}
-
-		static void CreateRegistrar (InitializationOptions options)
-		{
-			Registrar = new DynamicRegistrar ();
-		}
 #endif // !COREBUILD
 	}
 }

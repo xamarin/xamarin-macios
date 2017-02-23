@@ -662,16 +662,25 @@ namespace XamCore.CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		unsafe extern static /* CGPathRef */ IntPtr CGPathCreateWithRoundedRect (CGRect rect, /* CGFloat */ nfloat cornerWidth, /* CGFloat */ nfloat cornerHeight, CGAffineTransform *transform);
 
-		[Mac(10,9)][iOS (7,0)]
-		static public unsafe CGPath FromRoundedRect (CGRect rectangle, nfloat cornerWidth, nfloat cornerHeight)
+		static unsafe CGPath _FromRoundedRect (CGRect rectangle, nfloat cornerWidth, nfloat cornerHeight, CGAffineTransform *transform)
 		{
-			return MakeMutable (CGPathCreateWithRoundedRect (rectangle, cornerWidth, cornerHeight, null));
+			if ((cornerWidth < 0) || (2 * cornerWidth > rectangle.Width))
+				throw new ArgumentException ("cornerWidth");
+			if ((cornerHeight < 0) || (2 * cornerHeight > rectangle.Height))
+				throw new ArgumentException ("cornerHeight");
+			return MakeMutable (CGPathCreateWithRoundedRect (rectangle, cornerWidth, cornerHeight, transform));
+		}
+
+		[Mac(10,9)][iOS (7,0)]
+		static unsafe public CGPath FromRoundedRect (CGRect rectangle, nfloat cornerWidth, nfloat cornerHeight)
+		{
+			return _FromRoundedRect (rectangle, cornerWidth, cornerHeight, null);
 		}
 
 		[Mac(10,9)][iOS (7,0)]
 		static public unsafe CGPath FromRoundedRect (CGRect rectangle, nfloat cornerWidth, nfloat cornerHeight, CGAffineTransform transform)
 		{
-			return MakeMutable (CGPathCreateWithRoundedRect (rectangle, cornerWidth, cornerHeight, &transform));
+			return _FromRoundedRect (rectangle, cornerWidth, cornerHeight, &transform);
 		}
 
 		[DllImport (Constants.CoreGraphicsLibrary)]

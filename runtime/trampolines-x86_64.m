@@ -370,6 +370,11 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 		 * 
 		 */
 		
+		if ((it->state->type & Tramp_Stret) == Tramp_Stret) {
+			memcpy ((void *) it->state->rdi, mono_object_unbox (value), size);
+			break;
+		}
+
 		if (size > 8 && size <= 16) {
 			uint64_t *i_ptr = &it->state->rax;
 			uint64_t *f_ptr = (uint64_t *) &it->state->xmm0;
@@ -455,16 +460,16 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 
 			};
 		} else if (size == 8) {
-			if (!strcmp (type, "[ff]") || !strcmp (type, "[d]")) {
+			type = skip_type_name (type);
+			if (!strncmp (type, "ff}", 3) || !strncmp (type, "d}", 2)) {
 				// the only two fully fp combinations are: ff and d
-				it->state->xmm0 = *(float *) mono_object_unbox (value);
+				memcpy (&it->state->xmm0, mono_object_unbox (value), 8);
 			} else {
 				// all other combinations would contain at least one INTEGER-class type.
 				it->state->rax = *(uint64_t *) mono_object_unbox (value);
 			}
-		} else if (size > 16) {
-			// Passed in memory. %rdi points to caller-allocated memory.
-			memcpy ((void *) it->state->rdi, mono_object_unbox (value), size);
+		} else if (size < 8) {
+			memcpy (&it->state->rax, mono_object_unbox (value), size);
 		} else {
 			*exception_gchandle = create_mt_exception (xamarin_strdup_printf ("Xamarin.iOS: Cannot marshal struct return type %s (size: %i)\n", type, (int) size));
 			return;

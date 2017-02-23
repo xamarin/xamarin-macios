@@ -19,6 +19,11 @@
 		<FSharpTargets Condition="'$(FSharpTargets)' == '' And Exists('$(MSBuildFrameworkToolsPath32)\Microsoft.FSharp.Targets')">$(MSBuildFrameworkToolsPath32)\Microsoft.FSharp.Targets</FSharpTargets>
 		<FSharpTargets Condition="'$(FSharpTargets)' == ''">$(MSBuildBinPath)\Microsoft.FSharp.Targets</FSharpTargets>
 
+		<!-- This should be done in the F# target files, but _DebugFileExt is not an upstream
+		     msbuild feature yet, so F# doesn't have this. Once, upstream F# adds it, we can
+		     remove this -->
+		<_DebugFileExt Condition="'$(FscDebugFileExt)' != ''">$(FscDebugFileExt)</_DebugFileExt>
+		<_DebugFileExt Condition="'$(_DebugFileExt)' == ''">.mdb</_DebugFileExt>
 	</PropertyGroup>
 
 	<Import Project="$(FSharpTargets)" />

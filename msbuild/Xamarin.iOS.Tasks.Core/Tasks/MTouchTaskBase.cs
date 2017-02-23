@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text;
 using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
@@ -182,24 +183,6 @@ namespace Xamarin.iOS.Tasks
 
 		#endregion
 
-		bool IsClassic {
-			get { return !IsUnified; }
-		}
-
-		bool IsUnified {
-			get {
-				switch (Framework) {
-				case PlatformFramework.iOS:
-					return TargetFrameworkIdentifier == "Xamarin.iOS";
-				case PlatformFramework.WatchOS:
-				case PlatformFramework.TVOS:
-					return true;
-				default:
-					throw new InvalidOperationException (string.Format ("Invalid framework: {0}", Framework));
-				}
-			}
-		}
-
 		public PlatformFramework Framework {
 			get { return PlatformFrameworkHelper.GetFramework (TargetFrameworkIdentifier); }
 		}
@@ -337,6 +320,43 @@ namespace Xamarin.iOS.Tasks
 			}
 		}
 
+		static string Unquote (string text, int startIndex)
+		{
+			if (startIndex >= text.Length)
+				return string.Empty;
+
+			if (text[startIndex] != '"')
+				return text.Substring (startIndex);
+
+			var builder = new StringBuilder ();
+			var escaped = false;
+			var quoted = true;
+
+			for (int i = startIndex; i < text.Length && quoted; i++) {
+				switch (text[i]) {
+				case '\\':
+					if (escaped)
+						builder.Append ('\\');
+					escaped = !escaped;
+					break;
+				case '"':
+					if (escaped) {
+						builder.Append ('"');
+						escaped = false;
+					} else {
+						quoted = false;
+					}
+					break;
+				default:
+					builder.Append (text[i]);
+					escaped = false;
+					break;
+				}
+			}
+
+			return builder.ToString ();
+		}
+
 		protected override string GenerateCommandLineCommands ()
 		{
 			var args = new ProcessArgumentBuilder ();
@@ -351,21 +371,11 @@ namespace Xamarin.iOS.Tasks
 				return null;
 			}
 
-			if (IsClassic && minimumOSVersion < IPhoneSdkVersion.V3_1 && architectures.HasFlag (TargetArchitecture.ARMv7)) {
-				Log.LogWarning (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Deployment Target changed from iOS {0} to iOS 3.1 (minimum requirement for ARMv7)", minimumOSVersion);
-				minimumOSVersion = IPhoneSdkVersion.V3_1;
-			}
-
 			if (!string.IsNullOrEmpty (IntermediateOutputPath)) {
 				Directory.CreateDirectory (IntermediateOutputPath);
 
 				args.Add ("--cache");
 				args.AddQuoted (Path.GetFullPath (IntermediateOutputPath));
-			}
-
-			if (IsClassic || IPhoneSdks.MonoTouch.Version < new IPhoneSdkVersion (8, 5, 0)) {
-				args.Add ("--nomanifest");
-				args.Add ("--nosign");
 			}
 
 			args.Add (SdkIsSimulator ? "--sim" : "--dev");
@@ -527,19 +537,37 @@ namespace Xamarin.iOS.Tasks
 				};
 
 				for (int i = 0; i < extraArgs.Length; i++) {
-					if (extraArgs[i] == "-gcc_flags" || extraArgs[i] == "--gcc_flags") {
+					var argument = extraArgs[i];
+					int startIndex = 0;
+
+					while (argument.Length > startIndex && argument[startIndex] == '-')
+						startIndex++;
+
+					int endIndex = startIndex;
+					while (endIndex < argument.Length && argument[endIndex] != '=')
+						endIndex++;
+
+					int length = endIndex - startIndex;
+
+					if (length == 9 && string.CompareOrdinal (argument, startIndex, "gcc_flags", 0, 9) == 0) {
 						// user-defined -gcc_flags argument
-						if (i + 1 < extraArgs.Length && !string.IsNullOrEmpty (extraArgs[i + 1])) {
-							var gccArgs = ProcessArgumentBuilder.Parse (extraArgs[i + 1]);
+						string flags = null;
+
+						if (endIndex < extraArgs[i].Length) {
+							flags = Unquote (argument, endIndex + 1);
+						} else if (i + 1 < extraArgs.Length) {
+							flags = extraArgs[++i];
+						}
+
+						if (!string.IsNullOrEmpty (flags)) {
+							var gccArgs = ProcessArgumentBuilder.Parse (flags);
 
 							for (int j = 0; j < gccArgs.Length; j++)
 								gcc.Arguments.Add (StringParserService.Parse (gccArgs[j], customTags));
 						}
-
-						i++;
 					} else {
 						// other user-defined mtouch arguments
-						args.AddQuoted (StringParserService.Parse (extraArgs[i], customTags));
+						args.AddQuoted (StringParserService.Parse (argument, customTags));
 					}
 				}
 			}
@@ -662,17 +690,13 @@ namespace Xamarin.iOS.Tasks
 			} else {
 				switch (Framework) {
 				case PlatformFramework.iOS:
-					if (IsUnified) {
-						IPhoneSdkVersion sdkVersion;
-						if (!IPhoneSdkVersion.TryParse (SdkVersion, out sdkVersion)) {
-							Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Could not parse SdkVersion '{0}'", SdkVersion);
-							return false;
-						}
-
-						minimumOSVersion = sdkVersion;
-					} else {
-						minimumOSVersion = IPhoneSdkVersion.V5_1_1;
+					IPhoneSdkVersion sdkVersion;
+					if (!IPhoneSdkVersion.TryParse (SdkVersion, out sdkVersion)) {
+						Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Could not parse SdkVersion '{0}'", SdkVersion);
+						return false;
 					}
+
+					minimumOSVersion = sdkVersion;
 					break;
 				case PlatformFramework.WatchOS:
 				case PlatformFramework.TVOS:
@@ -711,7 +735,7 @@ namespace Xamarin.iOS.Tasks
 			if (File.Exists (fullName))
 				return fullName;
 
-			var frameworkDir = TargetFrameworkIdentifier == "MonoTouch" ? "2.1" : TargetFrameworkIdentifier;
+			var frameworkDir = TargetFrameworkIdentifier;
 			var fileName = Path.GetFileName (fullName);
 
 			return ResolveFrameworkFileOrFacade (frameworkDir, fileName) ?? fullName;
