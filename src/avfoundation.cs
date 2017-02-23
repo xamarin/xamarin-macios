@@ -1931,6 +1931,10 @@ namespace XamCore.AVFoundation {
 
 		[Export ("AVAudioSessionInterruptionOptionKey")]
 		AVAudioSessionInterruptionOptions Option { get; }
+
+		[iOS (10, 3), NoMac, NoTV, NoWatch]
+		[Export ("AVAudioSessionInterruptionWasSuspendedKey")]
+		bool WasSuspendedKey { get; }
 	}
 
 	interface AVAudioSessionRouteChangeEventArgs {
@@ -11031,7 +11035,7 @@ namespace XamCore.AVFoundation {
 		// binded because they are static and from a category.
 		[Static]
 		[Export ("pendingExpiredSessionReportsWithAppIdentifier:storageDirectoryAtURL:")]
-		NSDictionary[] PendingExpiredSessionReports (NSData appIdentifier, NSUrl storageUrl);
+		NSDictionary[] GetPendingExpiredSessionReports (NSData appIdentifier, NSUrl storageUrl);
 
 		[Static]
 		[Export ("removePendingExpiredSessionReports:withAppIdentifier:storageDirectoryAtURL:")]
