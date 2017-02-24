@@ -8,8 +8,6 @@ namespace ServiceModel_Test
 {
 	public partial class AppDelegate : NSApplicationDelegate
 	{
-		MainWindowController mainWindowController;
-
 		public AppDelegate ()
 		{
 		}
@@ -25,8 +23,6 @@ namespace ServiceModel_Test
 				writer.WriteLine ("Test Passed: " + x.ToString ());
 			}
 
-			mainWindowController = new MainWindowController ();
-			mainWindowController.Window.MakeKeyAndOrderFront (this);
 			Environment.Exit (0);
 		}
 	}

@@ -9,8 +9,6 @@ namespace Protobuf_Test
 {
 	public partial class AppDelegate : NSApplicationDelegate
 	{
-		MainWindowController mainWindowController;
-
 		public AppDelegate ()
 		{
 		}
@@ -18,8 +16,6 @@ namespace Protobuf_Test
 		public override void DidFinishLaunching (NSNotification notification)
 		{
 			ProtoTest.DoTest ();
-			mainWindowController = new MainWindowController ();
-			mainWindowController.Window.MakeKeyAndOrderFront (this);
 		}
 	}
 

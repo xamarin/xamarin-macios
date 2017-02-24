@@ -50,30 +50,19 @@
     <Reference Include="Xamarin.Mac" />
     <Reference Include="System.Xml" />
     <Reference Include="protobuf-net">
-      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
+      <HintPath>..\..\..\..\..\packages\protobuf-net.2.1.0\lib\net45\protobuf-net.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainWindow.cs" />
-    <Compile Include="MainWindow.designer.cs">
-      <DependentUpon>MainWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MainWindowController.cs" />
-    <Compile Include="MainWindowController.designer.cs">
-      <DependentUpon>MainWindowController.cs</DependentUpon>
-    </Compile>
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="AppDelegate.designer.cs">
       <DependentUpon>AppDelegate.cs</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <InterfaceDefinition Include="MainWindow.xib" />
-    <InterfaceDefinition Include="MainMenu.xib" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />

@@ -293,15 +293,6 @@ namespace Xamarin.MMP.Tests
 		}
 
 		[Test]
-		public void BuildUnified45_ShouldAllowImmutableCollection ()
-		{
-			RunMMPTest (tmpDir => {
-				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { References = " <Reference Include=\"System.Collections.Immutable\" />", TestCode = "var v = System.Collections.Immutable.ImmutableList.Create (new int[] { 1, 2, 3 });", XM45 = true };
-				TI.TestUnifiedExecutable (test);
-			});
-		}
-
-		[Test]
 		public void Dontlink_AllowsUnresolvableReferences ()
 		{
 			var sb = new StringBuilder ();
