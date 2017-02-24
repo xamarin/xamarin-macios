@@ -2089,6 +2089,51 @@ public class TestApp {
 			}
 		}
 
+		[Test]
+		public void BindingLibrary_NoIncrementalBuilds ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Linker = MTouchLinker.LinkAll; // faster
+				mtouch.FastDev = true;
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryAppDirectory ();
+
+				var tmpdir = mtouch.CreateTemporaryDirectory ();
+				var nativeCode = @"
+void DummyMethod () {}
+";
+				// var nativeLib = CompileNativeLibrary (testDir, nativeCode);
+				var extraCode = @"
+public class BindingApp {
+	[System.Runtime.InteropServices.DllImport (""__Internal"")]
+	public static extern void DummyMethod ();
+}
+";
+				var linkWith = @"
+using System;
+using ObjCRuntime;
+
+[assembly: LinkWith (""testCode.o"", LinkTarget.ArmV7, SmartLink = true, SupportsIncrementalBuilds = false)]
+";
+				var bindingLib = CreateBindingLibrary (tmpdir, nativeCode, null, linkWith, extraCode);
+				var exe = CompileTestAppExecutable (tmpdir, @"
+public class TestApp { 
+	static void Main () {
+		System.Console.WriteLine (typeof (UIKit.UIWindow).ToString ());
+		BindingApp.DummyMethod ();
+	}
+}
+",
+					"-r:" + bindingLib);
+
+				mtouch.RootAssembly = exe;
+				mtouch.References = new [] { bindingLib };
+
+				mtouch.AssertExecute (MTouchAction.BuildDev, "build");
+				CollectionAssert.IsEmpty (Directory.GetFiles (mtouch.AppPath, "*.dylib", SearchOption.AllDirectories), "no dylibs");
+			}
+		}
+
 #region Helper functions
 		static string CompileUnifiedTestAppExecutable (string targetDirectory, string code = null, string extraArg = "")
 		{
