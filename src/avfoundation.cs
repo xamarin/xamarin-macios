@@ -1942,6 +1942,10 @@ namespace XamCore.AVFoundation {
 
 		[Export ("AVAudioSessionInterruptionOptionKey")]
 		AVAudioSessionInterruptionOptions Option { get; }
+
+		[iOS (10, 3), NoMac, TV (10, 2), Watch (3,2)]
+		[Export ("AVAudioSessionInterruptionWasSuspendedKey")]
+		bool WasSuspended { get; }
 	}
 
 	interface AVAudioSessionRouteChangeEventArgs {
@@ -11344,8 +11348,25 @@ namespace XamCore.AVFoundation {
 		[Export ("renewExpiringResponseDataForContentKeyRequest:")]
 		void RenewExpiringResponseData (AVContentKeyRequest contentKeyRequest);
 
-		#region AVContentKeySession_AVContentKeyRecipients
+		#region AVContentKeySession_AVContentKeySessionPendingExpiredSessionReports
 
+		// binded because they are static and from a category.
+		[Static]
+		[Export ("pendingExpiredSessionReportsWithAppIdentifier:storageDirectoryAtURL:")]
+		NSDictionary[] GetPendingExpiredSessionReports (NSData appIdentifier, NSUrl storageUrl);
+
+		[Static]
+		[Export ("removePendingExpiredSessionReports:withAppIdentifier:storageDirectoryAtURL:")]
+		void RemovePendingExpiredSessionReports (NSDictionary[] expiredSessionReports, NSData appIdentifier, NSUrl storageUrl);
+
+		#endregion
+	}
+
+	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
+	[Category]
+	[BaseType (typeof(AVContentKeySession))]
+	interface AVContentKeySession_AVContentKeyRecipients
+	{
 		[Export ("addContentKeyRecipient:")]
 		void Add (IAVContentKeyRecipient recipient);
 
@@ -11353,9 +11374,7 @@ namespace XamCore.AVFoundation {
 		void Remove (IAVContentKeyRecipient recipient);
 
 		[Export ("contentKeyRecipients")]
-		IAVContentKeyRecipient[] ContentKeyRecipients { get; }
-
-		#endregion
+		IAVContentKeyRecipient[] GetContentKeyRecipients ();
 	}
 
 	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
@@ -11392,13 +11411,15 @@ namespace XamCore.AVFoundation {
 
 		[Export ("respondByRequestingPersistableContentKeyRequest")]
 		void RespondByRequestingPersistableContentKeyRequest ();
+	}
 
-		#region AVContentKeyRequest_AVContentKeyRequestRenewal
-
+	[Category]
+	[Mac (10, 12, 4), iOS (10,3), TV (10, 2), NoWatch]
+	[BaseType (typeof(AVContentKeyRequest))]
+	interface AVContentKeyRequest_AVContentKeyRequestRenewal
+	{
 		[Export ("renewsExpiringResponseData")]
-		bool RenewsExpiringResponseData { get; }
-
-		#endregion
+		bool GetRenewsExpiringResponseData ();
 	}
 
 	[TV (10,2), Mac (10,12,4), iOS (10,3), NoWatch]
