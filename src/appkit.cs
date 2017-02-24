@@ -11808,12 +11808,21 @@ namespace XamCore.AppKit {
 		[Export ("printSettings")]
 		NSMutableDictionary PrintSettings { get; }
 
+#if XAMCORE_4_0
+		[Internal]
+#endif
 		[Export ("PMPrintSession")]
 		IntPtr GetPMPrintSession ();
 
+#if XAMCORE_4_0
+		[Internal]
+#endif
 		[Export ("PMPageFormat")]
 		IntPtr GetPMPageFormat ();
 
+#if XAMCORE_4_0
+		[Internal]
+#endif
 		[Export ("PMPrintSettings")]
 		IntPtr GetPMPrintSettings ();
 
