@@ -54,10 +54,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<UsingTask TaskName="Microsoft.Build.Tasks.RemoveDir" AssemblyFile="Xamarin.MacDev.Tasks.dll"/>
 	<UsingTask TaskName="Microsoft.Build.Tasks.Touch" AssemblyFile="Xamarin.MacDev.Tasks.dll"/>
 
-	<PropertyGroup>
-		<IsXBuild Condition="'$(MSBuildRuntimeVersion)' == ''">true</IsXBuild>
-	</PropertyGroup>
-
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.props"
 			Condition="'$(_XamarinCommonPropsHasBeenImported)' != 'true'" />
 
@@ -726,6 +722,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_ResolveAppExtensionReferences" DependsOnTargets="_SplitAppExtensionReferencesByExistent">
 		<PropertyGroup>
+			<IsXBuild Condition="'$(MSBuildRuntimeVersion)' == ''">true</IsXBuild>
+
 			<!-- When building a .sln with xbuild or building from IDE, the referenced projects are already built.  -->
 			<_BuildReferencedExtensionProjects Condition="'$(IsXBuild)' == 'true' and '$(BuildingSolutionFile)' != 'true' and '$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
 
