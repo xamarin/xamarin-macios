@@ -93,12 +93,6 @@ namespace Introspection {
 					return true;
 				}
 				break;
-			case "AVContentKeyRequest":
-				switch (selectorName) {
-				case "renewsExpiringResponseData":
-					return true;
-				}
-				break;
 			// AVAudioChannelLayout and AVAudioFormat started conforming to NSSecureCoding in OSX 10.11 and iOS 9
 			case "AVAudioChannelLayout":
 			case "AVAudioFormat":
