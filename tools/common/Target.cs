@@ -71,6 +71,13 @@ namespace Xamarin.Bundler {
 					exceptions.Add (e);
 				}
 			}
+
+#if MTOUCH
+			if (App.FastDev && Assemblies.Count ((v) => v.HasLinkWithAttributes) > 1) {
+				ErrorHelper.Warning (127, "Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.");
+				App.FastDev = false;
+			}
+#endif
 		}
 
 		[DllImport (Constants.libSystemLibrary, SetLastError = true, EntryPoint = "strerror")]
