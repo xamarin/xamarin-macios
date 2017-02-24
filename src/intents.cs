@@ -2322,7 +2322,7 @@ namespace XamCore.Intents {
 		// Inlined from INInteraction (INPerson) Category
 
 		[Introduced (PlatformName.iOS, 10, 3)]
-		[Introduced (PlatformName.MacOSX, 10, 12, 4, PlatformArchitecture.Arch64)]
+		[Unavailable (PlatformName.MacOSX)]
 		[Export ("siriMatches", ArgumentSemantic.Copy), NullAllowed]
 		INPerson [] SiriMatches { get; }
 	}
