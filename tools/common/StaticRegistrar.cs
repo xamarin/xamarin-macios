@@ -663,12 +663,20 @@ namespace XamCore.Registrar {
 
 		protected override Exception CreateException (int code, Exception innerException, MethodDefinition method, string message, params object[] args)
 		{
-			return ErrorHelper.CreateError (App, code, innerException, method, message, args);
+			try {
+				return ErrorHelper.CreateError (App, code, innerException, method, message, args);
+			} catch (Exception e) {
+				return ErrorHelper.CreateError (0099, "Internal error \"Error creating static registrar error for: {0} - {1}\" Please file a bug report with a test case (http://bugzilla.xamarin.com).", code, e);
+			}
 		}
 
 		protected override Exception CreateException (int code, Exception innerException, TypeReference type, string message, params object [] args)
 		{
-			return ErrorHelper.CreateError (App, code, innerException, type, message, args);
+			try {
+				return ErrorHelper.CreateError (App, code, innerException, type, message, args);
+			} catch (Exception e) {
+				return ErrorHelper.CreateError (0099, "Internal error \"Error creating static registrar error for: {0} - {1}\" Please file a bug report with a test case (http://bugzilla.xamarin.com).", code, e);
+			}
 		}
 
 		protected override bool ContainsPlatformReference (AssemblyDefinition assembly)
@@ -3704,8 +3712,10 @@ namespace XamCore.Registrar {
 		{
 			this.input_assemblies = assemblies;
 
-			foreach (var assembly in assemblies)
+			foreach (var assembly in assemblies) {
+				Driver.Log (3, "Generating static registrar for {0}", assembly.Name);
 				RegisterAssembly (assembly);
+			}
 
 			Generate (header_path, source_path);
 		}
