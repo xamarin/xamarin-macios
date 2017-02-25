@@ -45,8 +45,13 @@ namespace XamCore.Foundation  {
 	}
 
 #if MONOMAC || !XAMCORE_3_0
+
+#if !XAMCORE_4_0
 	[Native]
 	public enum NSBundleExecutableArchitecture : nint {
+#else
+	public enum NSBundleExecutableArchitecture {
+#endif
 		I386   = 0x00000007,
 		PPC    = 0x00000012,
 		X86_64 = 0x01000007,
@@ -851,6 +856,7 @@ namespace XamCore.Foundation  {
 		None, Default, All 
 	}
 
+#if !XAMCORE_4_0
 	[Flags]
 	[Native]
 	public enum NSDateComponentsWrappingBehavior : nuint_compat_int {
@@ -859,6 +865,7 @@ namespace XamCore.Foundation  {
 
 		// Did not add the new enums here, we moved them elsewhere, and provided overloads.
 	}
+#endif
 
 	[Flags]
 	[Native]
