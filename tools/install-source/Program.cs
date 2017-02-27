@@ -70,6 +70,7 @@ public class ListSourceFiles {
 			OpenTKSourcePath = opentkpath,
 		};
 
+		Console.WriteLine ($"Install dir is {installDir}");
 		foreach (string mdb_file in mdb_files) {
 			Console.WriteLine("Mdb file is {0}", mdb_file);
 			if (!File.Exists (mdb_file)) {
@@ -98,12 +99,15 @@ public class ListSourceFiles {
 				Console.WriteLine ($"Skip path {src}");
 				continue;
 			}
+
 			var target = mangler.GetTargetPath (fixedSource);
 
 			var targetDir = Path.GetDirectoryName (target);
 
 			if (!Directory.Exists (targetDir)) {
 				try {
+					if (verbose)
+						Console.WriteLine ($"Creating dir {targetDir}");
 					Directory.CreateDirectory(targetDir);
 				} catch (PathTooLongException e) {
 					Console.WriteLine("Could not create directory {0} because the path is too long: {1}", targetDir, e);
@@ -136,8 +140,10 @@ public class ListSourceFiles {
 					return 1;
 				} // try/catch
 			} else {
-				if (verbose)
+				if (verbose) {
+					Console.WriteLine ($"Xamarin path is {xamarinpath}");
 					Console.WriteLine ("cp {0} {1}", fixedSource, target);
+				}
 				try {
 					File.Copy (fixedSource, target);
 				} catch (PathTooLongException e) {

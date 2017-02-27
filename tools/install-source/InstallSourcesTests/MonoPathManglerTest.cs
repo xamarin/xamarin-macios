@@ -23,22 +23,18 @@ namespace InstallSourcesTests
 			};
 		}
 
-		[Test]
-		public void TestGetSourcePath (
-			[Values ("/Users/test/xamarin-macios/external/mono/mcs/class/Mono.Data.Tds/Mono.Data.Tds.Protocol/TdsAsyncState.cs",
-			         "/Users/test/xamarin-macios/external/mono/mcs/class/Mono.Security/Mono.Security.X509/X509StoreManager.cs",
-			         "/Users/test/xamarin-macios/external/mono/mcs/class/dlr/Runtime/Microsoft.Scripting.Core/Actions/UpdateDelegates.Generated.cs")]
-			string path)
+		[TestCase ("/Users/test/xamarin-macios/external/mono/mcs/class/Mono.Data.Tds/Mono.Data.Tds.Protocol/TdsAsyncState.cs")]
+		[TestCase ("/Users/test/xamarin-macios/external/mono/mcs/class/Mono.Security/Mono.Security.X509/X509StoreManager.cs")]
+		[TestCase ("/Users/test/xamarin-macios/external/mono/mcs/class/dlr/Runtime/Microsoft.Scripting.Core/Actions/UpdateDelegates.Generated.cs")]
+		public void TestGetSourcePath (string path)
 		{
 			Assert.AreEqual (path, mangler.GetSourcePath (path), "Failed getting path for '{0}'", path);
 		}
 
-		[Test]
-		public void TestGetTargetPath(
-			[Values ("/Users/test/xamarin-macios/external/mono/mcs/class/Mono.Data.Tds/Mono.Data.Tds.Protocol/TdsAsyncState.cs",
-					 "/Users/test/xamarin-macios/external/mono/mcs/class/Mono.Security/Mono.Security.X509/X509StoreManager.cs",
-					 "/Users/test/xamarin-macios/external/mono/mcs/class/dlr/Runtime/Microsoft.Scripting.Core/Actions/UpdateDelegates.Generated.cs")]
-			string path)
+		[TestCase ("/Users/test/xamarin-macios/external/mono/mcs/class/Mono.Data.Tds/Mono.Data.Tds.Protocol/TdsAsyncState.cs")]
+		[TestCase ("/Users/test/xamarin-macios/external/mono/mcs/class/Mono.Security/Mono.Security.X509/X509StoreManager.cs")]
+		[TestCase ("/Users/test/xamarin-macios/external/mono/mcs/class/dlr/Runtime/Microsoft.Scripting.Core/Actions/UpdateDelegates.Generated.cs")]
+		public void TestGetTargetPath (string path)
 		{
 			var targetPath = mangler.GetTargetPath (path);
 			Assert.IsFalse (targetPath.StartsWith (monoPath, StringComparison.InvariantCulture), "Path starts with the mono path.");

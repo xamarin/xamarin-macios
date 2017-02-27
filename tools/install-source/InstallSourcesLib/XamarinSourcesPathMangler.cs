@@ -78,7 +78,8 @@ namespace InstallSources
 		/// <param name="path">Path.</param>
 		string GetSourcePathForGeneratedPath (string path)
 		{
-			string nativeBuildPath = "/build/ios/native/";
+			var nativeBuildPath = (InstallDir.Contains ("Xamarin.iOS.framework")) ? "/build/ios/native/" : "/build/mac/full/";
+			Console.WriteLine ($"Native build path is {nativeBuildPath}");
 			var pos = path.IndexOf (nativeBuildPath, StringComparison.InvariantCulture);
 			var src = path.Remove (0, pos + 1); // 3 for src and 1  for /
 			src = Path.Combine (XamarinSourcePath, src);
@@ -117,7 +118,10 @@ namespace InstallSources
 			var pos = path.IndexOf (removalPath, StringComparison.InvariantCulture);
 			var src = path.Remove (0, pos + FrameworkPath.Length + 2);
 			pos = src.IndexOf (srcFolder, StringComparison.InvariantCulture);
-			src = src.Remove (0, src.IndexOf(srcFolder, StringComparison.InvariantCulture) + srcFolder.Length);
+			if (pos >= 0)
+				src = src.Remove (0, src.IndexOf (srcFolder, StringComparison.InvariantCulture) + srcFolder.Length);
+			else // we are dealing with a correct path (this does happen on the mac side)
+				src = src.Remove (0, src.IndexOf ("/src/", StringComparison.InvariantCulture) + "/src/".Length);
 			src = Path.Combine (XamarinSourcePath, src);
 			return src;
 		}
@@ -137,9 +141,10 @@ namespace InstallSources
 
 		string GetTargetPathForGeneratedPath (string path)
 		{
-			var pos = path.IndexOf ("native", StringComparison.InvariantCulture);
+			var subpath = (InstallDir.Contains ("Xamarin.iOS.framework")) ? "native" : "full";
+			var pos = path.IndexOf (subpath, StringComparison.InvariantCulture);
 			if (pos >= 0) {
-				var relativePath = path.Remove (0, pos + "native/".Length);
+				var relativePath = path.Remove (0, pos + subpath.Length + 1);
 				return Path.Combine (InstallDir, "src", FrameworkPath.Remove (FrameworkPath.IndexOf (".framework", StringComparison.InvariantCulture)), relativePath);
 			}
 			return null;
