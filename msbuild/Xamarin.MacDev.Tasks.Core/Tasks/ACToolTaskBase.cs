@@ -352,16 +352,17 @@ namespace Xamarin.MacDev.Tasks
 					}
 
 					if (clone) {
-						var dest = Path.Combine (intermediateCloneDir, vpath);
 						var src = ImageAssets[i].GetMetadata ("FullPath");
-						var dir = Path.GetDirectoryName (dest);
-
-						Directory.CreateDirectory (dir);
 
 						if (!File.Exists (src)) {
 							Log.LogError (null, null, null, src, 0, 0, 0, 0, "File not found: {0}", src);
 							return false;
 						}
+
+						var dest = Path.Combine (intermediateCloneDir, vpath);
+						var dir = Path.GetDirectoryName (dest);
+
+						Directory.CreateDirectory (dir);
 
 						File.Copy (src, dest, true);
 
