@@ -24,7 +24,5 @@
 	<string>Timothy Risi</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>NSMainStoryboardFile</key>
-	<string>Main</string>
 </dict>
 </plist>

@@ -1,0 +1,65 @@
+﻿using System;
+using System.IO;
+using NUnit.Framework;
+using Xamarin.MMP.Tests;
+
+namespace MonoTouchFixtures.Net45 {
+	[TestFixture]
+	public class Unified45 {
+
+
+		[Test]
+		public void ProtobufShouldSerializeAndDeserialize ()
+		{
+			var testFolder = "../../../../../../../common/mac/TestProjects/Protobuf_Test/Protobuf_Test";
+			var testResults = testFolder + "/TestResult.txt";
+			if (File.Exists (testResults))
+				File.Delete (testResults);
+
+			TI.BuildProject (testFolder + "/Protobuf_Test.csproj", true);
+
+			TI.RunAndAssert (testFolder + "/bin/Debug/Protobuf_Test.app/Contents/MacOS/Protobuf_Test", null, "Run");
+			Assert.True (File.Exists (testResults));
+
+			using (TextReader reader = File.OpenText (testResults)) {
+				var output = reader.ReadLine ();
+
+				Assert.AreEqual ("Test Passed", output);
+			}
+
+			File.Delete (testResults);
+		}
+
+		[Test]
+		public void Net45ShouldUseImmutableCollection ()
+		{
+			var testFolder = "../../../../../../../common/mac/TestProjects/ImmutableCollection_Test/ImmutableCollection_Test";
+
+			TI.BuildProject (testFolder + "/ImmutableCollection_Test.csproj", true);
+
+			TI.RunAndAssert (testFolder + "/bin/Debug/ImmutableCollection_Test.app/Contents/MacOS/ImmutableCollection_Test", null, "Run");
+		}
+
+		[Test]
+		public void BasicPCLTest ()
+		{
+			var testFolder = "../../../../../../../common/mac/TestProjects/BasicPCLTest/BasicPCLTest";
+			var testResults = testFolder + "/TestResult.txt";
+			if (File.Exists (testResults))
+				File.Delete (testResults);
+
+			TI.BuildProject (testFolder + "/BasicPCLTest.csproj", true);
+
+			TI.RunAndAssert (testFolder + "/bin/Debug/BasicPCLTest.app/Contents/MacOS/BasicPCLTest", null, "Run");
+			Assert.True (File.Exists (testResults));
+
+			using (TextReader reader = File.OpenText (testResults)) {
+				var output = reader.ReadToEnd ();
+
+				Assert.AreEqual ("{\n  \"MyArray\": [\n    \"Manual text\",\n    \"2000-05-23T00:00:00\"\n  ]\n}\n", output);
+			}
+
+			File.Delete (testResults);
+		}
+	}
+}

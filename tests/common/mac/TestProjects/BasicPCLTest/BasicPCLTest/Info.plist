@@ -26,8 +26,6 @@
 	<string>10.8</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>MM</string>
-	<key>NSMainNibFile</key>
-	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>

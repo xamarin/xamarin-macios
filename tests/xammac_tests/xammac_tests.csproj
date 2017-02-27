@@ -1050,6 +1050,7 @@
     <Compile Include="..\common\mac\ProjectTestHelpers.cs">
       <Link>ProjectTestHelpers.cs</Link>
     </Compile>
+    <Compile Include="Unified45.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
