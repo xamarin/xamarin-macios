@@ -230,6 +230,11 @@ public static class TypeManager {
 		return AttributeManager.HasAttribute (pi, OutAttribute);
 	}
 
+	public static Type GetUnderlyingEnumType (Type type)
+	{
+		return Enum.GetUnderlyingType (type);
+	}
+
 	public static void Initialize (Assembly api)
 	{
 		api_assembly = api;
