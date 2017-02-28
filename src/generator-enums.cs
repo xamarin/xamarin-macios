@@ -60,7 +60,7 @@ public partial class Generator {
 		var fields = new Dictionary<FieldInfo, FieldAttribute> ();
 		Tuple<FieldInfo, FieldAttribute> null_field = null;
 		Tuple<FieldInfo, FieldAttribute> default_symbol = null;
-		var underlying_type = GetCSharpTypeName (Enum.GetUnderlyingType (type));
+		var underlying_type = GetCSharpTypeName (TypeManager.GetUnderlyingEnumType (type));
 		print ("public enum {0} : {1} {{", type.Name, underlying_type);
 		indent++;
 		foreach (var f in type.GetFields ()) {

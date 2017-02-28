@@ -973,7 +973,7 @@ public partial class Generator : IMemberGatherer {
 		if (t.IsEnum) {
 			var enumType = t;
 
-			t = Enum.GetUnderlyingType (t);
+			t = TypeManager.GetUnderlyingEnumType (t);
 
 			if (UnifiedAPI && HasAttribute (enumType, TypeManager.NativeAttribute)) {
 				if (t != TypeManager.System_Int64 && t != TypeManager.System_UInt64)
@@ -1357,7 +1357,7 @@ public partial class Generator : IMemberGatherer {
 		if (originalReturnType == TypeManager.NSNumber) {
 			if (!NSNumberReturnMap.TryGetValue (retType, out append)) {
 				if (retType.IsEnum) {
-					var enumType = Enum.GetUnderlyingType (retType);
+					var enumType = TypeManager.GetUnderlyingEnumType (retType);
 					if (!NSNumberReturnMap.TryGetValue (enumType, out append))
 						throw new BindingException (1049, true, GetBindAsExceptionString ("unbox", retType.Name, originalReturnType.Name, "container", minfo.mi.Name));
 				}
@@ -1529,7 +1529,7 @@ public partial class Generator : IMemberGatherer {
 					continue;
 				}
 			} else if (!Compat && IsNativeEnum (pi.ParameterType)) {
-				Type underlyingEnumType = Enum.GetUnderlyingType (pi.ParameterType);
+				Type underlyingEnumType = TypeManager.GetUnderlyingEnumType (pi.ParameterType);
 				pars.AppendFormat ("{0} {1}", GetNativeEnumType (pi.ParameterType), pi.Name.GetSafeParamName ());
 				invoke.AppendFormat ("({1}) ({2}) {0}", pi.Name.GetSafeParamName (), FormatType (null, pi.ParameterType), FormatType (null, underlyingEnumType));
 				continue;
@@ -1628,7 +1628,7 @@ public partial class Generator : IMemberGatherer {
 			return "(" + PrimitiveType (pi.ParameterType, enum_mode: enum_mode) + ")" + pi.Name.GetSafeParamName ();
 
 		if (enum_mode == EnumMode.NativeBits && IsNativeEnum (pi.ParameterType) && !Compat)
-			return "(" + GetNativeEnumType (pi.ParameterType) + ") (" + PrimitiveType (Enum.GetUnderlyingType (pi.ParameterType)) + ") " + pi.Name.GetSafeParamName ();
+			return "(" + GetNativeEnumType (pi.ParameterType) + ") (" + PrimitiveType (TypeManager.GetUnderlyingEnumType (pi.ParameterType)) + ") " + pi.Name.GetSafeParamName ();
 		
 		if (IsNativeType (pi.ParameterType))
 			return pi.Name.GetSafeParamName ();
@@ -1861,7 +1861,7 @@ public partial class Generator : IMemberGatherer {
 	// nint or nuint
 	string GetNativeEnumType (Type type)
 	{
-		var underlyingEnumType = Enum.GetUnderlyingType (type);
+		var underlyingEnumType = TypeManager.GetUnderlyingEnumType (type);
 		if (TypeManager.System_Int64 == underlyingEnumType) {
 			return "nint";
 		} else if (TypeManager.System_UInt64 == underlyingEnumType) {
@@ -2589,7 +2589,7 @@ public partial class Generator : IMemberGatherer {
 					string castToEnum = "";
 
 					if (pi.PropertyType.IsEnum){
-						fetchType = Enum.GetUnderlyingType (pi.PropertyType);
+						fetchType = TypeManager.GetUnderlyingEnumType (pi.PropertyType);
 						castToUnderlying = "(" + fetchType + "?)";
 						castToEnum = "(" + FormatType (dictType, pi.PropertyType) + "?)";
 					}
@@ -2841,7 +2841,7 @@ public partial class Generator : IMemberGatherer {
 					else if (propertyType == TypeManager.System_String_Array){
 						print ("return NSArray.StringArrayFromHandle (value);");
 					} else {
-						Type underlying = propertyType.IsEnum ? Enum.GetUnderlyingType (propertyType) : propertyType;
+						Type underlying = propertyType.IsEnum ? TypeManager.GetUnderlyingEnumType (propertyType) : propertyType;
 						string cast = propertyType.IsEnum ? "(" + propertyType.FullName + ") " : "";
 					
 						if (underlying == TypeManager.System_Int32)
@@ -3303,7 +3303,7 @@ public partial class Generator : IMemberGatherer {
 		if (IsNativeEnum (mi.ReturnType) && enum_mode == EnumMode.Bit32) {
 			// Check if we got UInt32.MaxValue, which should probably be UInt64.MaxValue (if the enum
 			// in question actually has that value at least).
-			var type = Enum.GetUnderlyingType (mi.ReturnType) == TypeManager.System_UInt64 ? "ulong" : "long";
+			var type = TypeManager.GetUnderlyingEnumType (mi.ReturnType) == TypeManager.System_UInt64 ? "ulong" : "long";
 			var itype = type == "ulong" ? "uint" : "int";
 			var value = Enum.ToObject (mi.ReturnType, type == "ulong" ? (object) ulong.MaxValue : (object) long.MaxValue);
 			if (Array.IndexOf (Enum.GetValues (mi.ReturnType), value) >= 0) {
