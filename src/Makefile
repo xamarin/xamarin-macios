@@ -105,7 +105,6 @@ $(IOS_BUILD_DIR)/$(1)/core.dll: $$(IOS_PMCS) $$(IOS_CORE_SOURCES) frameworks.sou
 # generator.exe
 $(IOS_BUILD_DIR)/$(1)/generator.exe: $$(GENERATOR_SOURCES) $(IOS_BUILD_DIR)/$(1)/core.dll
 	$$(call Q_PROF_PMCS,ios/$(1)) PMCS_PROFILE=$(3) $$(IOS_PMCS) -out:$$@ -debug -unsafe \
-		$$(IOS_DEFINES) \
 		-r:$(IOS_BUILD_DIR)/$(1)/core.dll \
 		$$(GENERATOR_DEFINES)             \
 		$$(GENERATOR_SOURCES)
@@ -408,7 +407,6 @@ MAC_WARNINGS_TO_FIX := $(MAC_WARNINGS_TO_FIX),4014
 
 MAC_COMMON_DEFINES = -define:NET_2_0,XAMARIN_MAC,MONOMAC
 MAC_BOOTSTRAP_DEFINES = $(MAC_COMMON_DEFINES),COREBUILD
-MAC_GENERATOR_DEFINES = $(MAC_COMMON_DEFINES) $(GENERATOR_DEFINES)
 
 SN_KEY = $(PRODUCT_KEY_PATH)
 
@@ -482,9 +480,8 @@ $(MAC_BUILD_DIR)/$(1)/core.dll: $(MAC_BUILD_DIR)/$(1)/pmcs $(MAC_CORE_SOURCES) f
 $(MAC_BUILD_DIR)/$(1)/_bmac.exe: $(MAC_BUILD_DIR)/$(1)/core.dll $(MAC_APIS) $(GENERATOR_SOURCES)
 	$$(call Q_PROF_PMCS,mac/$(1)) PMCS_PROFILE=$(6) $(MAC_BUILD_DIR)/$(1)/pmcs \
 		-out:$$@ -debug -unsafe \
-		$(MAC_GENERATOR_DEFINES) \
+		$(GENERATOR_DEFINES) \
 		-r:$$(@D)/core.dll \
-		$(7) \
 		$(GENERATOR_SOURCES)
 
 $(MAC_BUILD_DIR)/$(1)/generated-sources: $(MAC_BUILD_DIR)/$(1)/_bmac.exe $(MAC_APIS)
@@ -506,7 +503,7 @@ $(MAC_BUILD_DIR)/$(1)/generated-sources: $(MAC_BUILD_DIR)/$(1)/_bmac.exe $(MAC_A
 endef
 
 $(eval $(call MAC_GENERATOR_template,compat,--ns=MonoMac.ObjCRuntime,-r:/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5/System.Drawing.dll,,$(SYSTEM_MONO),compat-mac))
-$(eval $(call MAC_GENERATOR_template,full,--ns=ObjCRuntime,-d:NO_SYSTEM_DRAWING,,$(SYSTEM_MONO),full,-d:NO_SYSTEM_DRAWING))
+$(eval $(call MAC_GENERATOR_template,full,--ns=ObjCRuntime,-d:NO_SYSTEM_DRAWING,,$(SYSTEM_MONO),full))
 $(eval $(call MAC_GENERATOR_template,mobile,--ns=ObjCRuntime,$(SHARED_SYSTEM_DRAWING_SOURCES),-nostdlib -r:mscorlib.dll -lib:$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac,$(TOP)/builds/install/mono-mac64,mobile))
 
 define MAC_TARGETS_template
@@ -737,7 +734,6 @@ $(WATCH_BUILD_DIR)/watch/core.dll: $(WATCH_PMCS) $(WATCHOS_CORE_SOURCES) framewo
 $(WATCH_BUILD_DIR)/watch/generator.exe: $(GENERATOR_SOURCES) $(WATCH_BUILD_DIR)/watch/core.dll
 	$(call Q_PROF_PMCS,watch) PMCS_PROFILE=watch $(WATCH_PMCS) -out:$@ -debug -unsafe \
 		-r:$(WATCH_BUILD_DIR)/watch/core.dll \
-		$(WATCH_DEFINES)                      \
 		$(GENERATOR_SOURCES)                  \
 		$(GENERATOR_DEFINES)                  \
 
@@ -936,7 +932,6 @@ $(TVOS_BUILD_DIR)/tvos/core.dll: $(TVOS_BUILD_DIR)/pmcs $(TVOS_CORE_SOURCES) fra
 $(TVOS_BUILD_DIR)/tvos/generator.exe: $(GENERATOR_SOURCES) $(TVOS_BUILD_DIR)/tvos/core.dll
 	$(call Q_PROF_PMCS,tvos) PMCS_PROFILE=tvos $(TVOS_BUILD_DIR)/pmcs --keep -out:$@ -debug -unsafe \
 		-r:$(TVOS_BUILD_DIR)/tvos/core.dll \
-		$(TVOS_DEFINES)                      \
 		$(GENERATOR_SOURCES)                  \
 		$(GENERATOR_DEFINES)                  \
 

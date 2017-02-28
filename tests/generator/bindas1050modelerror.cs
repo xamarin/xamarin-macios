@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
-using MonoTouch.Foundation;
-using MonoTouch.CoreAnimation;
+using Foundation;
+using CoreAnimation;
 
 namespace BindAs1050ModelErrorTests {
 

@@ -71,6 +71,13 @@ namespace Xamarin.Bundler {
 					exceptions.Add (e);
 				}
 			}
+
+#if MTOUCH
+			if (!App.OnlyStaticLibraries && Assemblies.Count ((v) => v.HasLinkWithAttributes) > 1) {
+				ErrorHelper.Warning (127, "Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.");
+				App.ClearAssemblyBuildTargets (); // the default is to compile to static libraries, so just revert to the default.
+			}
+#endif
 		}
 
 		[DllImport (Constants.libSystemLibrary, SetLastError = true, EntryPoint = "strerror")]

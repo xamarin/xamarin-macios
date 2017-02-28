@@ -132,6 +132,7 @@ namespace Xamarin.Bundler {
 	//		Warning		MT0124	Native code sharing has been disabled for the extension '{0}' because the container app does not build for the ABI {1} (while the extension is building for this ABI).
 	//		Warning		MT0125	Native code sharing has been disabled for the extension '{0}' because the container app is building for the ABI {1}, which is not compatible with the extension's ABI ({2}).
 	//		Warning		MT0126	Native code sharing has been disabled for the extension '{0}' because the container app is referencing the assembly '{1}' from '{2}', while the extension references it from '{3}'.
+	//		Warning		MT0127	Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.
 	// MT1xxx	file copy / symlinks (project related)
 	//			MT10xx	installer.cs / mtouch.cs
 	//					MT1001	Could not find an application at the specified directory: {0}

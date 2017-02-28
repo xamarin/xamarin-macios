@@ -1,5 +1,5 @@
 using System;
-using MonoTouch.Foundation;
+using Foundation;
 
 namespace BindingTests {
 	[Obsolete ("Type level obsolete must also be copied")]

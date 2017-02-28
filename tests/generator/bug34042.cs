@@ -1,6 +1,6 @@
 using System;
  
-using MonoTouch.UIKit;
+using UIKit;
 
 namespace Bug34042.Foo
 {

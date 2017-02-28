@@ -40,10 +40,10 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/%: %.in | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX
 	$(Q) chmod +x $@
 
 $(IOS_BUILD_DIR)/btouch.exe: $(IOS_BUILD_DIR)/compat/monotouch.dll $(GENERATOR_SOURCES) Makefile.generator
-	$(call Q_PROF_PMCS,ios/compat) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/compat-ios" -compiler:$(IOS_CSC) -global-replace:"^XamCore=MonoTouch" -debug $(GENERATOR_DEFINES) -define:IOS,__IOS__             -out:$@ $(GENERATOR_SOURCES) -r:$<
+	$(call Q_PROF_PMCS,ios/compat) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/compat-ios" -compiler:$(IOS_CSC) -global-replace:"^XamCore=MonoTouch" -debug $(GENERATOR_DEFINES) -out:$@ $(GENERATOR_SOURCES) -r:$<
 
 $(IOS_BUILD_DIR)/btouch-native.exe: $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll $(GENERATOR_SOURCES) Makefile.generator
-	$(call Q_PROF_PMCS,ios/native) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/native"     -compiler:$(IOS_CSC) -global-replace:"^XamCore.="         -debug $(GENERATOR_DEFINES) -define:IOS,__IOS__,XAMCORE_2_0,__UNIFIED__ -out:$@ $(GENERATOR_SOURCES) -r:$<
+	$(call Q_PROF_PMCS,ios/native) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/native"     -compiler:$(IOS_CSC) -global-replace:"^XamCore.="         -debug $(GENERATOR_DEFINES) -out:$@ $(GENERATOR_SOURCES) -r:$<
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/btouch/%.exe: $(IOS_BUILD_DIR)/%.exe | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/btouch
 	$(Q) install -m 0755 $< $@
@@ -65,7 +65,7 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/bwatch: Makefile.generator
 	$(Q) chmod +x $@
 
 $(WATCH_BUILD_DIR)/bwatch.exe: $(WATCH_BUILD_DIR)/watch-32/Xamarin.WatchOS.dll $(GENERATOR_SOURCES) Makefile.generator
-	$(call Q_PROF_PMCS,watch) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/watch" -compiler:$(SYSTEM_MCS) -nostdlib -r:mscorlib -lib:$(WATCH_LIBDIR)/repl -global-replace:"^XamCore.=" -debug $(GENERATOR_DEFINES) -define:XAMCORE_2_0,XAMCORE_3_0,__UNIFIED__ -d:WATCH -d:__WATCHOS__ -out:$@ $(GENERATOR_SOURCES) -r:$<
+	$(call Q_PROF_PMCS,watch) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/watch" -compiler:$(SYSTEM_MCS) -nostdlib -r:mscorlib -lib:$(WATCH_LIBDIR)/repl -global-replace:"^XamCore.=" -debug $(GENERATOR_DEFINES) -out:$@ $(GENERATOR_SOURCES) -r:$<
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bwatch/%.exe: $(WATCH_BUILD_DIR)/%.exe | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/bwatch
 	$(Q) install -m 0755 $< $@
@@ -87,7 +87,7 @@ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/bin/btv: Makefile.generator
 	$(Q) chmod +x $@
 
 $(TVOS_BUILD_DIR)/btv.exe: $(TVOS_BUILD_DIR)/tvos-64/Xamarin.TVOS.dll $(GENERATOR_SOURCES) Makefile.generator
-	$(call Q_PROF_PMCS,tvos) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/tvos" -compiler:$(SYSTEM_MCS) -nostdlib -r:mscorlib.dll -lib:$(TVOS_LIBDIR)/repl -global-replace:"^XamCore.=" -debug $(GENERATOR_DEFINES) -define:XAMCORE_2_0,XAMCORE_3_0,__UNIFIED__ -d:TVOS -d:__TVOS__ -out:$@ $(GENERATOR_SOURCES) -r:$<
+	$(call Q_PROF_PMCS,tvos) $(SYSTEM_MONO) --debug $(PMCS_EXE) -profile:"$(TOP)/src/pmcs-profiles/tvos" -compiler:$(SYSTEM_MCS) -nostdlib -r:mscorlib.dll -lib:$(TVOS_LIBDIR)/repl -global-replace:"^XamCore.=" -debug $(GENERATOR_DEFINES) -out:$@ $(GENERATOR_SOURCES) -r:$<
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/btv/%.exe: $(TVOS_BUILD_DIR)/%.exe | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/btv
 	$(Q) install -m 0755 $< $@
@@ -107,10 +107,10 @@ MAC_TARGETS += \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/bmac/bmac-compat.exe     \
 
 $(MAC_BUILD_DIR)/bmac-%.exe: $(MAC_BUILD_DIR)/%-32/Xamarin.Mac.dll $(GENERATOR_SOURCES) $(SN_KEY) Makefile.generator
-	$(call Q_PROF_PMCS,mac/full)   PMCS_PROFILE=$*         $(MAC_BUILD_DIR)/$*/pmcs     -out:$@ -debug $(GENERATOR_DEFINES) -unsafe $(MAC_GENERATOR_DEFINES) -keyfile:$(SN_KEY) -r:$< $(GENERATOR_SOURCES)
+	$(call Q_PROF_PMCS,mac/full)   PMCS_PROFILE=$*         $(MAC_BUILD_DIR)/$*/pmcs     -out:$@ -debug $(GENERATOR_DEFINES) -unsafe -keyfile:$(SN_KEY) -r:$< $(GENERATOR_SOURCES)
 
 $(MAC_BUILD_DIR)/bmac-compat.exe: $(MAC_BUILD_DIR)/compat/XamMac.dll $(GENERATOR_SOURCES) $(SN_KEY) Makefile.generator
-	$(call Q_PROF_PMCS,mac/compat) PMCS_PROFILE=compat-mac $(MAC_BUILD_DIR)/compat/pmcs -out:$@ -debug $(GENERATOR_DEFINES) -unsafe $(MAC_GENERATOR_DEFINES) -keyfile:$(SN_KEY) -r:$< $(GENERATOR_SOURCES) -r:System.Drawing
+	$(call Q_PROF_PMCS,mac/compat) PMCS_PROFILE=compat-mac $(MAC_BUILD_DIR)/compat/pmcs -out:$@ -debug $(GENERATOR_DEFINES) -unsafe -keyfile:$(SN_KEY) -r:$< $(GENERATOR_SOURCES) -r:System.Drawing
 
 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin/bmac: bmac | $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/bin
 	$(Q) install -m 0755 $< $@

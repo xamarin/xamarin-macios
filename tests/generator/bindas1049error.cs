@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
-using MonoTouch.Foundation;
-using MonoTouch.CoreMedia;
+using Foundation;
+using CoreMedia;
 
 namespace BindAs1049ErrorTests {
 

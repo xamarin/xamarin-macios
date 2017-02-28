@@ -1,9 +1,9 @@
 using System;
  
-using MonoTouch.UIKit;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.CoreGraphics;
+using UIKit;
+using Foundation;
+using ObjCRuntime;
+using CoreGraphics;
  
 namespace Bug29493
 {

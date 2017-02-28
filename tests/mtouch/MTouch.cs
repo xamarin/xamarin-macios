@@ -86,10 +86,10 @@ namespace Xamarin
 				// actually work. We compile with custom code to make sure it's different
 				// from the previous exe we built.
 				var subDir = Cache.CreateTemporaryDirectory ();
-				var exe2 = CompileUnifiedTestAppExecutable (subDir,
+				var exe2 = CompileTestAppExecutable (subDir,
 					/* the code here only changes the class name (default: 'TestApp1' changed to 'TestApp2') to minimize the related
 					 * changes (there should be no changes in Xamarin.iOS.dll nor mscorlib.dll, even after linking) */
-					code: codeB);
+					code: codeB, profile: mtouch.Profile);
 				File.Copy (exe2, mtouch.RootAssembly, true);
 
 				mtouch.AssertExecute (MTouchAction.BuildDev, "third build");
@@ -2814,11 +2814,6 @@ public class TestApp {
 		}
 
 #region Helper functions
-		static string CompileUnifiedTestAppExecutable (string targetDirectory, string code = null, string extraArg = "")
-		{
-			return CompileTestAppExecutable (targetDirectory, code, extraArg, profile: Profile.iOS);
-		}
-
 		public static string CompileTestAppExecutable (string targetDirectory, string code = null, string extraArg = "", Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null)
 		{
 			if (code == null)

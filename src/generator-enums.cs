@@ -104,7 +104,7 @@ public partial class Generator {
 			indent++;
 
 			// note: not every binding namespace will start with ns.Prefix (e.g. MonoTouch.)
-			if (!String.IsNullOrEmpty (ns.Prefix) && library_name.StartsWith (ns.Prefix))
+			if (!String.IsNullOrEmpty (ns.Prefix) && library_name.StartsWith (ns.Prefix, StringComparison.Ordinal))
 				library_name = library_name.Substring (ns.Prefix.Length + 1);
 
 			// there might not be any other fields in the framework
