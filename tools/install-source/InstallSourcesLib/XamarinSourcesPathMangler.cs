@@ -79,7 +79,6 @@ namespace InstallSources
 		string GetSourcePathForGeneratedPath (string path)
 		{
 			var nativeBuildPath = (InstallDir.Contains ("Xamarin.iOS.framework")) ? "/build/ios/native/" : "/build/mac/full/";
-			Console.WriteLine ($"Native build path is {nativeBuildPath}");
 			var pos = path.IndexOf (nativeBuildPath, StringComparison.InvariantCulture);
 			var src = path.Remove (0, pos + 1); // 3 for src and 1  for /
 			src = Path.Combine (XamarinSourcePath, src);
