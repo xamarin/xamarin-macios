@@ -274,7 +274,7 @@ public class MarshalInfo {
 		ZeroCopyStringMarshal = (Type == TypeManager.System_String) && PlainString == false && !Generator.HasAttribute (pi, (TypeManager.DisableZeroCopyAttribute)) && Generator.SharedGenerator.type_wants_zero_copy;
 		if (ZeroCopyStringMarshal && Generator.HasAttribute (mi, TypeManager.DisableZeroCopyAttribute))
 			ZeroCopyStringMarshal = false;
-		IsOut = Generator.HasAttribute (pi, TypeManager.OutAttribute);		
+		IsOut = TypeManager.IsOutParameter (pi);
 	}
 
 	// Used to return values
@@ -1674,7 +1674,7 @@ public partial class Generator : IMemberGatherer {
 		// Handle (out ValeuType foo)
 		//
 		if (pi.ParameterType.IsByRef && pi.ParameterType.GetElementType ().IsValueType){
-			return (HasAttribute (pi, TypeManager.OutAttribute) ? "out " : "ref ") + pi.Name.GetSafeParamName ();
+			return (TypeManager.IsOutParameter (pi) ? "out " : "ref ") + pi.Name.GetSafeParamName ();
 		}
 
 		if (pi.ParameterType.IsSubclassOf (TypeManager.System_Delegate)){
@@ -3247,7 +3247,7 @@ public partial class Generator : IMemberGatherer {
 				sb.Append ("[Transient] ");
 			
 			if (parType.IsByRef){
-				string reftype = HasAttribute (pi, TypeManager.OutAttribute) ? "out " : "ref ";
+				string reftype = TypeManager.IsOutParameter (pi) ? "out " : "ref ";
 				sb.Append (reftype);
 				parType = parType.GetElementType ();
 			}
