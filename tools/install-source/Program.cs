@@ -70,9 +70,7 @@ public class ListSourceFiles {
 			OpenTKSourcePath = opentkpath,
 		};
 
-		Console.WriteLine ($"Install dir is {installDir}");
 		foreach (string mdb_file in mdb_files) {
-			Console.WriteLine("Mdb file is {0}", mdb_file);
 			if (!File.Exists (mdb_file)) {
 				Console.WriteLine ("File does not exist: {0}", mdb_file);
 				continue;
