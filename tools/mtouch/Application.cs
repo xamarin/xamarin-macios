@@ -908,14 +908,14 @@ namespace Xamarin.Bundler {
 			if (DeploymentTarget.Major < 8) {
 				// This is a limitation it's technically possible to fix (we can build all extensions into frameworks, and the main app to static objects).
 				// It would make our code a bit more complicated though, and would only be valuable for apps that target iOS 6 or iOS 7 and has more than one extension.
-				ErrorHelper.Warning (112, "Native code sharing has been disabled because the container app's deployment target is earlier than iOS 8.0 (it's {0}).", DeploymentTarget);
+				ErrorHelper.Warning (112, "Native code sharing has been disabled because {0}", $"the container app's deployment target is earlier than iOS 8.0 (it's {DeploymentTarget}).");
 				return;
 			}
 
 			// No I18N assemblies can be included
 			if (I18n != Mono.Linker.I18nAssemblies.None) {
 				// This is a limitation it's technically possible to fix.
-				ErrorHelper.Warning (113, "Native code sharing has been disabled because the container app includes I18N assemblies ({0}).", I18n);
+				ErrorHelper.Warning (112, "Native code sharing has been disabled because the container app includes I18N assemblies ({0}).", I18n);
 				return;
 			}
 
@@ -933,7 +933,7 @@ namespace Xamarin.Bundler {
 				}
 
 				if (BitCodeMode != appex.BitCodeMode) {
-					ErrorHelper.Warning (114, "Native code sharing has been disabled for the extension '{0}' because the bitcode options differ between the container app ({1}) and the extension ({2}).", appex.Name, appex.BitCodeMode, BitCodeMode);
+					ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the bitcode options differ between the container app ({appex.BitCodeMode}) and the extension ({BitCodeMode}).");
 					continue;
 				}
 
@@ -942,21 +942,21 @@ namespace Xamarin.Bundler {
 				// We can probably lift this requirement (at least partially) at some point,
 				// but for now it makes our code simpler.
 				if (assembly_build_targets.Count != appex.assembly_build_targets.Count) {
-					ErrorHelper.Warning (115, "Native code sharing has been disabled for the extension '{0}' because the --assembly-build-target options are different between the container app ({1}) and the extension ({2}).", appex.Name, FormatAssemblyBuildTargets (), appex.FormatAssemblyBuildTargets ());
+					ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the --assembly-build-target options are different between the container app ({FormatAssemblyBuildTargets ()}) and the extension ({appex.FormatAssemblyBuildTargets ()}).");
 					continue;
 				}
 
 				foreach (var key in assembly_build_targets.Keys) {
 					Tuple<AssemblyBuildTarget, string> appex_value;
 					if (!appex.assembly_build_targets.TryGetValue (key, out appex_value)) {
-						ErrorHelper.Warning (115, "Native code sharing has been disabled for the extension '{0}' because the --assembly-build-target options are different between the container app ({1}) and the extension ({2}).", appex.Name, FormatAssemblyBuildTargets (), appex.FormatAssemblyBuildTargets ());
+						ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the --assembly-build-target options are different between the container app ({FormatAssemblyBuildTargets ()}) and the extension ({appex.FormatAssemblyBuildTargets ()}).");
 						applicable = false;
 						break;
 					}
 
 					var value = assembly_build_targets [key];
 					if (value.Item1 != appex_value.Item1 || value.Item2 != appex_value.Item2) {
-						ErrorHelper.Warning (115, "Native code sharing has been disabled for the extension '{0}' because the --assembly-build-target options are different between the container app ({1}) and the extension ({2}).", appex.Name, FormatAssemblyBuildTargets (), appex.FormatAssemblyBuildTargets ());
+						ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the --assembly-build-target options are different between the container app ({FormatAssemblyBuildTargets ()}) and the extension ({appex.FormatAssemblyBuildTargets ()}).");
 						applicable = false;
 						break;
 					}
@@ -967,45 +967,45 @@ namespace Xamarin.Bundler {
 				
 				// No I18N assemblies can be included
 				if (appex.I18n != Mono.Linker.I18nAssemblies.None) {
-					ErrorHelper.Warning (116, "Native code sharing has been disabled for the extension '{0}' because the I18N assemblies are different between the container app ({1}) and the extension ({2}).", appex.Name, I18n, appex.I18n);
+					ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the I18N assemblies are different between the container app ({I18n}) and the extension ({appex.I18n}).");
 					continue;
 				}
 
 				// All arguments to the AOT compiler must be identical
 				if (AotArguments != appex.AotArguments) {
-					ErrorHelper.Warning (117, "Native code sharing has been disabled for the extension '{0}' because the arguments to the AOT compiler are different between the container app ({1}) and the extension ({2}).", appex.Name, AotArguments, appex.AotArguments);
+					ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the arguments to the AOT compiler are different between the container app ({AotArguments}) and the extension ({appex.AotArguments}).");
 					continue;
 				}
 
 				if (AotOtherArguments != appex.AotOtherArguments) {
-					ErrorHelper.Warning (118, "Native code sharing has been disabled for the extension '{0}' because the other arguments to the AOT compiler are different between the container app ({1}) and the extension ({2}).", appex.Name, AotOtherArguments, appex.AotOtherArguments);
+					ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the other arguments to the AOT compiler are different between the container app ({AotOtherArguments}) and the extension ({appex.AotOtherArguments}).");
 					continue;
 				}
 
 				if (IsLLVM != appex.IsLLVM) {
-					ErrorHelper.Warning (119, "Native code sharing has been disabled for the extension '{0}' because LLVM is not enabled or disabled in both the container app ({1}) and the extension ({2}).", appex.Name, IsLLVM, appex.IsLLVM);
+					ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"LLVM is not enabled or disabled in both the container app ({IsLLVM}) and the extension ({appex.IsLLVM}).");
 					continue;
 				}
 
 				if (LinkMode != appex.LinkMode) {
-					ErrorHelper.Warning (120, "Native code sharing has been disabled for the extension '{0}' because the managed linker settings are different between the container app ({1}) and the extension ({2}).", appex.Name, LinkMode, appex.LinkMode);
+					ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the managed linker settings are different between the container app ({LinkMode}) and the extension ({appex.LinkMode}).");
 					continue;
 				}
 
 				if (LinkMode != LinkMode.None) {
 					var linkskipped_same = !LinkSkipped.Except (appex.LinkSkipped).Any () && !appex.LinkSkipped.Except (LinkSkipped).Any ();
 					if (!linkskipped_same) {
-						ErrorHelper.Warning (121, "Native code sharing has been disabled for the extension '{0}' because the skipped assemblies for the managed linker are different between the container app ({1}) and the extension ({2}).", appex.Name, string.Join (", ", LinkSkipped), string.Join (", ", appex.LinkSkipped));
+						ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the skipped assemblies for the managed linker are different between the container app ({string.Join (", ", LinkSkipped)}) and the extension ({string.Join (", ", appex.LinkSkipped)}).");
 						continue;
 					}
 
 					if (Definitions.Count > 0) {
-						ErrorHelper.Warning (122, "Native code sharing has been disabled because the container app has custom xml definitions for the managed linker ({0}).", string.Join (", ", Definitions));
+						ErrorHelper.Warning (112, "Native code sharing has been disabled because {0}", $"the container app has custom xml definitions for the managed linker ({string.Join (", ", Definitions)}).");
 						continue;
 					}
 
 					if (appex.Definitions.Count > 0) {
-						ErrorHelper.Warning (123, "Native code sharing has been disabled for the extension '{0}' because the extension has custom xml definitions for the managed linker ({1}).", appex.Name, string.Join (", ", appex.Definitions));
+						ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the extension has custom xml definitions for the managed linker ({string.Join (", ", appex.Definitions)}).");
 						continue;
 					}
 				}
@@ -1015,12 +1015,12 @@ namespace Xamarin.Bundler {
 					var matching = abis.FirstOrDefault ((v) => (v & Abi.ArchMask) == (abi & Abi.ArchMask));
 					if (matching == Abi.None) {
 						// Example: extension has arm64+armv7, while the main app has only arm64.
-						ErrorHelper.Warning (124, "Native code sharing has been disabled for the extension '{0}' because the container app does not build for the ABI {1} (while the extension is building for this ABI).", appex.Name, abi);
+						ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the container app does not build for the ABI {abi} (while the extension is building for this ABI).");
 						applicable = false;
 						break;
 					} else if (matching != abi) {
 						// Example: extension has arm64+llvm, while the main app has only arm64.
-						ErrorHelper.Warning (125, "Native code sharing has been disabled for the extension '{0}' because the container app is building for the ABI {1}, which is not compatible with the extension's ABI ({2}).", appex.Name, matching, abi);
+						ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the container app is building for the ABI {matching}, which is not compatible with the extension's ABI ({abi}).");
 						applicable = false;
 						break;
 					}
@@ -1037,7 +1037,7 @@ namespace Xamarin.Bundler {
 							continue; // appex references an assembly the main app doesn't. This is fine.
 						if (asm.FullPath != kvp.Value.FullPath) {
 							applicable = false; // app references an assembly with the same name as the main app, but from a different location. This is not fine.
-							ErrorHelper.Warning (126, "Native code sharing has been disabled for the extension '{0}' because the container app is referencing the assembly '{1}' from '{2}', while the extension references it from '{3}'.", appex.Name, asm.Identity, asm.FullPath, kvp.Value.FullPath);
+							ErrorHelper.Warning (113, "Native code sharing has been disabled for the extension '{0}' because {1}", appex.Name, $"the container app is referencing the assembly '{asm.Identity}' from '{asm.FullPath}', while the extension references it from '{kvp.Value.FullPath}'.");
 							break;
 						}
 					}

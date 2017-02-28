@@ -909,7 +909,7 @@ namespace Xamarin
 		/* MT0109 is tested in other tests (MT2018) */
 
 		[Test]
-		public void MT0112 ()
+		public void MT0112_deploymenttarget ()
 		{
 			using (var extension = new MTouchTool ()) {
 				extension.CreateTemporaryServiceExtension ();
@@ -928,7 +928,7 @@ namespace Xamarin
 		}
 
 		[Test]
-		public void MT0113 ()
+		public void MT0112_i18n ()
 		{
 			using (var extension = new MTouchTool ()) {
 				extension.CreateTemporaryServiceExtension ();
@@ -939,15 +939,15 @@ namespace Xamarin
 					app.CreateTemporaryApp ();
 					app.CreateTemporaryCacheDirectory ();
 					app.I18N = I18N.CJK;
-					app.WarnAsError = new int [] { 113 };
+					app.WarnAsError = new int [] { 112 };
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (113, "Native code sharing has been disabled because the container app includes I18N assemblies (CJK).");
+					app.AssertError (112, "Native code sharing has been disabled because the container app includes I18N assemblies (CJK).");
 				}
 			}
 		}
 
 		[Test]
-		public void MT0114 ()
+		public void MT0113_bitcode ()
 		{
 			using (var extension = new MTouchTool ()) {
 				extension.CreateTemporaryServiceExtension ();
@@ -959,9 +959,9 @@ namespace Xamarin
 					app.CreateTemporaryCacheDirectory ();
 					app.Abi = "arm64+llvm";
 					app.Bitcode = MTouchBitcode.Full;
-					app.WarnAsError = new int [] { 114 };
+					app.WarnAsError = new int [] { 113 };
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (114, "Native code sharing has been disabled for the extension 'testServiceExtension' because the bitcode options differ between the container app (None) and the extension (LLVMOnly).");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the bitcode options differ between the container app (None) and the extension (LLVMOnly).");
 				}
 			}
 		}
@@ -971,7 +971,7 @@ namespace Xamarin
 		[TestCase ("framework ext", null, new string [] { "@sdk=framework=Xamarin.Sdk" })]
 		[TestCase ("fastdev app", new string [] { "@all=dynamiclibrary" }, null)]
 		[TestCase ("fastdev ext", null, new string [] { "@all=dynamiclibrary" })]
-		public void MT0115 (string name, string[] extension_abt, string[] app_abt)
+		public void MT0113_assemblybuildtarget (string name, string[] extension_abt, string[] app_abt)
 		{
 			using (var extension = new MTouchTool ()) {
 				extension.CreateTemporaryServiceExtension ();
@@ -983,17 +983,17 @@ namespace Xamarin
 					app.AppExtensions.Add (extension);
 					app.CreateTemporaryApp ();
 					app.CreateTemporaryCacheDirectory ();
-					app.WarnAsError = new int [] { 115 };
+					app.WarnAsError = new int [] { 113 };
 					if (app_abt != null)
 						app.AssemblyBuildTargets.AddRange (app_abt);
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (115, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the --assembly-build-target options are different between the container app ({(app_abt == null ? string.Empty : string.Join (", ", app_abt.Select ((v) => "--assembly-build-target:" + v)))}) and the extension ({(extension_abt == null ? string.Empty : string.Join (", ", extension_abt?.Select ((v) => "--assembly-build-target:" + v)))}).");
+					app.AssertError (113, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the --assembly-build-target options are different between the container app ({(app_abt == null ? string.Empty : string.Join (", ", app_abt.Select ((v) => "--assembly-build-target:" + v)))}) and the extension ({(extension_abt == null ? string.Empty : string.Join (", ", extension_abt?.Select ((v) => "--assembly-build-target:" + v)))}).");
 				}
 			}
 		}
 
 		[Test]
-		public void MT0116 ()
+		public void MT0113_i18n ()
 		{
 			using (var extension = new MTouchTool ()) {
 				extension.CreateTemporaryServiceExtension ();
@@ -1004,15 +1004,15 @@ namespace Xamarin
 					app.AppExtensions.Add (extension);
 					app.CreateTemporaryApp ();
 					app.CreateTemporaryCacheDirectory ();
-					app.WarnAsError = new int [] { 116 };
+					app.WarnAsError = new int [] { 113 };
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (116, "Native code sharing has been disabled for the extension 'testServiceExtension' because the I18N assemblies are different between the container app (None) and the extension (CJK).");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the I18N assemblies are different between the container app (None) and the extension (CJK).");
 				}
 			}
 		}
 
 		[Test]
-		public void MT0117 ()
+		public void MT0113_aot ()
 		{
 			using (var extension = new MTouchTool ()) {
 				extension.CreateTemporaryServiceExtension ();
@@ -1022,16 +1022,16 @@ namespace Xamarin
 					app.AppExtensions.Add (extension);
 					app.CreateTemporaryApp ();
 					app.CreateTemporaryCacheDirectory ();
-					app.WarnAsError = new int [] { 117 };
+					app.WarnAsError = new int [] { 113 };
 					app.AotArguments = "dwarfdebug"; // doesn't matter exactly what, just that it's different from the extension.
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (117, "Native code sharing has been disabled for the extension 'testServiceExtension' because the arguments to the AOT compiler are different between the container app (dwarfdebug,static,asmonly,direct-icalls,) and the extension (static,asmonly,direct-icalls,).");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the arguments to the AOT compiler are different between the container app (dwarfdebug,static,asmonly,direct-icalls,) and the extension (static,asmonly,direct-icalls,).");
 				}
 			}
 		}
 
 		[Test]
-		public void MT0118 ()
+		public void MT0113_aotother ()
 		{
 			using (var extension = new MTouchTool ()) {
 				extension.CreateTemporaryServiceExtension ();
@@ -1041,16 +1041,16 @@ namespace Xamarin
 					app.AppExtensions.Add (extension);
 					app.CreateTemporaryApp ();
 					app.CreateTemporaryCacheDirectory ();
-					app.WarnAsError = new int [] { 118 };
+					app.WarnAsError = new int [] { 113 };
 					app.AotOtherArguments = "--aot-options=-O=float32"; // doesn't matter exactly what, just that it's different from the extension.
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (118, "Native code sharing has been disabled for the extension 'testServiceExtension' because the other arguments to the AOT compiler are different between the container app (--aot-options=-O=float32 ) and the extension ().");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the other arguments to the AOT compiler are different between the container app (--aot-options=-O=float32 ) and the extension ().");
 				}
 			}
 		}
 
 		[Test]
-		public void MT0119 ()
+		public void MT0113_llvm ()
 		{
 			using (var extension = new MTouchTool ()) {
 				extension.CreateTemporaryServiceExtension ();
@@ -1061,16 +1061,16 @@ namespace Xamarin
 					app.AppExtensions.Add (extension);
 					app.CreateTemporaryApp ();
 					app.CreateTemporaryCacheDirectory ();
-					app.WarnAsError = new int [] { 119 };
+					app.WarnAsError = new int [] { 113 };
 					app.Abi = "arm64+llvm";
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (119, "Native code sharing has been disabled for the extension 'testServiceExtension' because LLVM is not enabled or disabled in both the container app (True) and the extension (False).");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because LLVM is not enabled or disabled in both the container app (True) and the extension (False).");
 				}
 			}
 		}
 
 		[Test]
-		public void MT0120 ()
+		public void MT0113_linker ()
 		{
 			using (var extension = new MTouchTool ()) {
 				extension.CreateTemporaryServiceExtension ();
@@ -1083,15 +1083,15 @@ namespace Xamarin
 					app.CreateTemporaryApp ();
 					app.CreateTemporaryCacheDirectory ();
 					app.Linker = MTouchLinker.DontLink;
-					app.WarnAsError = new int [] { 120 };
+					app.WarnAsError = new int [] { 113 };
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (120, "Native code sharing has been disabled for the extension 'testServiceExtension' because the managed linker settings are different between the container app (None) and the extension (All).");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the managed linker settings are different between the container app (None) and the extension (All).");
 				}
 			}
 		}
 
 		[Test]
-		public void MT0121 ()
+		public void MT0113_skipped ()
 		{
 			using (var extension = new MTouchTool ()) {
 				extension.CreateTemporaryServiceExtension ();
@@ -1101,16 +1101,16 @@ namespace Xamarin
 					app.AppExtensions.Add (extension);
 					app.CreateTemporaryApp ();
 					app.CreateTemporaryCacheDirectory ();
-					app.WarnAsError = new int [] { 121 };
+					app.WarnAsError = new int [] { 113 };
 					app.LinkSkip = new string [] { "mscorlib.dll" };
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (121, "Native code sharing has been disabled for the extension 'testServiceExtension' because the skipped assemblies for the managed linker are different between the container app (mscorlib.dll) and the extension ().");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the skipped assemblies for the managed linker are different between the container app (mscorlib.dll) and the extension ().");
 				}
 			}
 		}
 
 		[Test]
-		public void MT0122 ()
+		public void MT0112_xml ()
 		{
 			using (var extension = new MTouchTool ()) {
 				extension.CreateTemporaryServiceExtension ();
@@ -1120,16 +1120,16 @@ namespace Xamarin
 					app.AppExtensions.Add (extension);
 					app.CreateTemporaryApp ();
 					app.CreateTemporaryCacheDirectory ();
-					app.WarnAsError = new int [] { 122 };
+					app.WarnAsError = new int [] { 112 };
 					app.XmlDefinitions = new string [] { "foo.xml" };
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (122, "Native code sharing has been disabled because the container app has custom xml definitions for the managed linker (foo.xml).");
+					app.AssertError (112, "Native code sharing has been disabled because the container app has custom xml definitions for the managed linker (foo.xml).");
 				}
 			}
 		}
 
 		[Test]
-		public void MT0123 ()
+		public void MT0113_xml ()
 		{
 			using (var extension = new MTouchTool ()) {
 				extension.CreateTemporaryServiceExtension ();
@@ -1140,9 +1140,9 @@ namespace Xamarin
 					app.AppExtensions.Add (extension);
 					app.CreateTemporaryApp ();
 					app.CreateTemporaryCacheDirectory ();
-					app.WarnAsError = new int [] { 123 };
+					app.WarnAsError = new int [] { 113 };
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (123, "Native code sharing has been disabled for the extension 'testServiceExtension' because the extension has custom xml definitions for the managed linker (foo.xml).");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the extension has custom xml definitions for the managed linker (foo.xml).");
 				}
 			}
 		}
@@ -1150,7 +1150,7 @@ namespace Xamarin
 		[Test]
 		[TestCase ("arm64", "armv7", "ARMv7")]
 		[TestCase ("armv7", "armv7,arm64", "ARM64")]
-		public void MT0124 (string app_abi, string extension_abi, string error_abi)
+		public void MT0113_abi (string app_abi, string extension_abi, string error_abi)
 		{
 			using (var extension = new MTouchTool ()) {
 				extension.CreateTemporaryServiceExtension ();
@@ -1161,17 +1161,17 @@ namespace Xamarin
 					app.AppExtensions.Add (extension);
 					app.CreateTemporaryApp ();
 					app.CreateTemporaryCacheDirectory ();
-					app.WarnAsError = new int [] { 124 };
+					app.WarnAsError = new int [] { 113 };
 					app.Abi = app_abi;
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (124, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the container app does not build for the ABI {error_abi} (while the extension is building for this ABI).");
+					app.AssertError (113, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the container app does not build for the ABI {error_abi} (while the extension is building for this ABI).");
 				}
 			}
 		}
 
 		[Test]
 		[TestCase ("armv7+llvm+thumb2", "armv7+llvm", "ARMv7, Thumb, LLVM", "ARMv7, LLVM")]
-		public void MT0125 (string app_abi, string extension_abi, string container_error_abi, string extension_error_abi)
+		public void MT0113_incompatible_abi (string app_abi, string extension_abi, string container_error_abi, string extension_error_abi)
 		{
 			using (var extension = new MTouchTool ()) {
 				extension.CreateTemporaryServiceExtension ();
@@ -1182,16 +1182,16 @@ namespace Xamarin
 					app.AppExtensions.Add (extension);
 					app.CreateTemporaryApp ();
 					app.CreateTemporaryCacheDirectory ();
-					app.WarnAsError = new int [] { 125 };
+					app.WarnAsError = new int [] { 113 };
 					app.Abi = app_abi;
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (125, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the container app is building for the ABI {container_error_abi}, which is not compatible with the extension's ABI ({extension_error_abi}).");
+					app.AssertError (113, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the container app is building for the ABI {container_error_abi}, which is not compatible with the extension's ABI ({extension_error_abi}).");
 				}
 			}
 		}
 
 		[Test]
-		public void MT0126 ()
+		public void MT0113_refmismatch ()
 		{
 			using (var extension = new MTouchTool ()) {
 				var ext_tmpdir = extension.CreateTemporaryDirectory ();
@@ -1210,9 +1210,9 @@ namespace Xamarin
 					app.CreateTemporaryApp (extraCode: "class Y : X {}", extraArg: $"-r:{Quote (app_dll)}");
 					app.CreateTemporaryCacheDirectory ();
 					app.References = new string [] { app_dll };
-					app.WarnAsError = new int [] { 126 };
+					app.WarnAsError = new int [] { 113 };
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (126, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the container app is referencing the assembly 'testLibrary' from '{app_dll}', while the extension references it from '{ext_dll}'.");
+					app.AssertError (113, $"Native code sharing has been disabled for the extension 'testServiceExtension' because the container app is referencing the assembly 'testLibrary' from '{app_dll}', while the extension references it from '{ext_dll}'.");
 				}
 			}
 		}
