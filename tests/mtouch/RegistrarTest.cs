@@ -697,6 +697,21 @@ public struct FooF { public NSObject Obj; }
 		}
 
 		[Test]
+		public void MT4167 ()
+		{
+			var code = @"
+class X : ReplayKit.RPBroadcastControllerDelegate
+{
+	public override void DidUpdateServiceInfo (ReplayKit.RPBroadcastController broadcastController, NSDictionary<NSString, INSCoding> serviceInfo)
+	{
+		throw new NotImplementedException ();
+	}
+}
+";
+			Verify (R.Static, code, true);
+		}
+
+		[Test]
 		public void MultiplePropertiesInHierarchy ()
 		{
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=18337
