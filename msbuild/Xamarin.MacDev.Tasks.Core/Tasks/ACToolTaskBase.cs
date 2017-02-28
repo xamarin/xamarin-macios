@@ -305,7 +305,7 @@ namespace Xamarin.MacDev.Tasks
 					catalog = Path.GetDirectoryName (catalog);
 
 				if (string.IsNullOrEmpty (catalog)) {
-					Log.LogWarning (null, null, null, items[i].ItemSpec, 0, 0, 0, 0, "Asset not part of an asset catalog: {0}", items[i].ItemSpec);
+					Log.LogWarning (null, null, null, ImageAssets[i].ItemSpec, 0, 0, 0, 0, "Asset not part of an asset catalog: {0}", ImageAssets[i].ItemSpec);
 					continue;
 				}
 
@@ -430,7 +430,7 @@ namespace Xamarin.MacDev.Tasks
 
 						Directory.CreateDirectory (assetDir);
 
-						for (int j = 0; j < tags.Count; j++)
+						for (int j = 0; j < tagList.Count; j++)
 							ptags.Add (new PString (tagList[j]));
 
 						assetpack.Add ("bundle-id", new PString (string.Format ("{0}.asset-pack-{1}", bundleIdentifier, hash)));
