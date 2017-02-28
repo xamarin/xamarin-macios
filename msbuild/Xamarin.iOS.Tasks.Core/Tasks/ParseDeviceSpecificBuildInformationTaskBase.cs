@@ -119,7 +119,7 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			if ((architectures & deviceArchitectures) == 0) {
-				Log.LogError ("The target {0} device architecture {1} is not supported by the build configuration: {2}", targetOperatingSystem, architectures, deviceArchitectures);
+				Log.LogError ("None of the target {0} device architectures ({1}) are supported by the build configuration architectures ({2})", targetOperatingSystem, deviceArchitectures, architectures);
 				return false;
 			}
 
