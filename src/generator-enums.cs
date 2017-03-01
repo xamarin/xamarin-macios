@@ -164,7 +164,7 @@ public partial class Generator {
 			var default_symbol_name = default_symbol?.Item2.SymbolName;
 			// more than one enum member can share the same numeric value - ref: #46285
 			foreach (var kvp in fields) {
-				print ("case {0}: // {1}.{2}", Convert.ToInt64 (kvp.Key.GetValue (null)), type.Name, kvp.Key.Name);
+				print ("case {0}: // {1}.{2}", Convert.ToInt64 (kvp.Key.GetRawConstantValue ()), type.Name, kvp.Key.Name);
 				var sn = kvp.Value.SymbolName;
 				if (sn == default_symbol_name)
 					print ("default:");
