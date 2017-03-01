@@ -107,8 +107,8 @@ namespace Xamarin.iOS.Tasks
 				return false;
 			}
 
-			if (os.Value != targetOperatingSystem) {
-				// user is building the solution for another Apple device, do not build this project for a specific device
+			if (os.Value != targetOperatingSystem || (architectures & deviceArchitectures) == 0) {
+				// the TargetiOSDevice property conflicts with the build configuration (*.user file?), do not build this project for a specific device
 				DeviceSpecificIntermediateOutputPath = IntermediateOutputPath;
 				DeviceSpecificOutputPath = OutputPath;
 				TargetArchitectures = Architectures;
@@ -116,11 +116,6 @@ namespace Xamarin.iOS.Tasks
 				TargetDeviceModel = string.Empty;
 
 				return !Log.HasLoggedErrors;
-			}
-
-			if ((architectures & deviceArchitectures) == 0) {
-				Log.LogError ("The target {0} device architecture {1} is not supported by the build configuration: {2}", targetOperatingSystem, architectures, deviceArchitectures);
-				return false;
 			}
 
 			for (int bit = 0; bit < 32; bit++) {
