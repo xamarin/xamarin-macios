@@ -35,6 +35,7 @@ using XamCore.Foundation;
 namespace XamCore.CoreGraphics {
 
 	// uint32_t -> CGGradient.h
+	[Flags]
 	public enum CGGradientDrawingOptions : uint_compat_int {
 		None = 0,
 		DrawsBeforeStartLocation = (1 << 0),
