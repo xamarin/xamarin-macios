@@ -78,11 +78,24 @@ namespace InstallSources
 		/// <param name="path">Path.</param>
 		string GetSourcePathForGeneratedPath (string path)
 		{
-			var nativeBuildPath = (InstallDir.Contains ("Xamarin.iOS.framework")) ? "/build/ios/native/" : "/build/mac/full/";
-			var pos = path.IndexOf (nativeBuildPath, StringComparison.InvariantCulture);
-			var src = path.Remove (0, pos + 1); // 3 for src and 1  for /
-			src = Path.Combine (XamarinSourcePath, src);
-			return src;
+			Console.WriteLine ($"GetSourcePathForGeneratedPath {path}");
+			var frameworkPrefix = FrameworkPath.Remove (FrameworkPath.IndexOf (".framework", StringComparison.InvariantCulture));
+			var installPath = Path.Combine (InstallDir, "src", frameworkPrefix);
+			Console.WriteLine ($"Install path is {installPath}");
+			// we might be looking at a mdb that was already gone thorugh mdb rebase, if that is the case, do find the path for the final target 
+			if (path.StartsWith (Path.Combine (InstallDir, "src", frameworkPrefix), StringComparison.InvariantCulture)) {
+				Console.WriteLine ("Is target path");
+				var src = path.Substring (installPath.Length + 1);
+				Console.WriteLine ($"Substring is {src}");
+				src = Path.Combine (XamarinSourcePath, (InstallDir.Contains ("Xamarin.iOS.framework")) ? "/build/ios/native/" : "/build/mac/full/", src);
+				return src;
+			} else {
+				var nativeBuildPath = (InstallDir.Contains ("Xamarin.iOS.framework")) ? "/build/ios/native/" : "/build/mac/full/";
+				var pos = path.IndexOf (nativeBuildPath, StringComparison.InvariantCulture);
+				var src = path.Remove (0, pos + 1); // 3 for src and 1  for /
+				src = Path.Combine (XamarinSourcePath, src);
+				return src;
+			}
 		}
 
 		/// <summary>
@@ -125,10 +138,18 @@ namespace InstallSources
 			return src;
 		}
 
+		string GetSourcePathForRuntimeSource (string path)
+		{
+			Console.WriteLine ($"GetSourcePathForRuntimeSource => path si {path}");
+			return path;
+		}
+
 		public string GetSourcePath(string path)
 		{
-			if (IsRunrime (path))
-				return null; // TODO: Do we add this guys?
+			if (IsRunrime (path)) {
+				Console.WriteLine ($"Getting source path for runtime path {path}");
+				return GetSourcePathForRuntimeSource (path);
+			}
 			// decide what type of path we are dealing with and return the correct source.
 			if (IsGeneratedPath (path)) {
 				return GetSourcePathForGeneratedPath (path);
@@ -169,10 +190,16 @@ namespace InstallSources
 			return null;
 		}
 
+		string GetTargetPathForRuntimeSource (string path)
+		{
+			Console.WriteLine ($"GetTargetPathForRuntimeSource => path is {path}");
+			return path;
+		}
+
 		public string GetTargetPath (string path)
 		{
 			if (IsRunrime (path))
-				return null; // TODO: Do we add this guys?
+				return GetTargetPathForRuntimeSource (path);
 			if (IsGeneratedPath (path))
 				return GetTargetPathForGeneratedPath (path);
 			if (IsManualSource (path))

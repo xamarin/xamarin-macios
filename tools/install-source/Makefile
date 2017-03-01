@@ -17,29 +17,48 @@ MAC_ASSEMBLIES = \
 	$(wildcard $(MONO_PATH)/mcs/class/lib/xammac/*.mdb) \
 	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.dll.mdb
 
+IOS_MDB_FILES = \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.iOS.dll.mdb \
+	$(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.iOS.dll.mdb
+
+MAC_MDB_FILES = \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/mobile/Xamarin.Mac.dll.mdb \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/mobile/Xamarin.Mac.dll.mdb \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/reference/full/Xamarin.Mac.dll.mdb \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/x86_64/full/Xamarin.Mac.dll.mdb \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/i386/full/Xamarin.Mac.dll.mdb \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/XamMac.CFNetwork.dll.mdb \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac/Xamarin.Mac.dll.mdb \
+	$(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.dll.mdb
+
 install-source-ios: install-source.exe
 	@echo "Installing source files for Xamarin.iOS"
-	$(Q) $(SYSTEM_MONO) install-source.exe $(IOS_ASSEMBLIES) --link:$(USE_SOURCE_LINKS) --mono-path=$(abspath $(MONO_PATH)) --opentk-path=$(abspath $(OPENTK_PATH)/Source) --xamarin-path=$(abspath $(SRC_PATH)) --install-dir=$(abspath $(IOS_DESTDIR))/$(abspath $(MONOTOUCH_PREFIX))
+	$(Q) $(SYSTEM_MONO) install-source.exe $(IOS_ASSEMBLIES) --link:$(USE_SOURCE_LINKS) --mono-path=$(abspath $(MONO_PATH)) --opentk-path=$(abspath $(OPENTK_PATH)/Source) --xamarin-path=$(abspath $(SRC_PATH)) --install-dir=$(abspath $(IOS_DESTDIR))$(abspath $(MONOTOUCH_PREFIX))
 	@echo "Rebasing the Xamarin.iOS mdb files."
-	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(TOP)/src)/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.iOS.dll.mdb
-	$(Q_MDB) $(MDB_REBASE) -q -i $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/build/ios/native/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.iOS.dll.mdb
-	$(Q) chmod 0644 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/64bits/Xamarin.iOS.dll.mdb
-	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(TOP)/src)/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.iOS.dll.mdb
-	$(Q_MDB) $(MDB_REBASE) -q -i $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/build/ios/native/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/ $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.iOS.dll.mdb
-	$(Q) chmod 0644 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/32bits/Xamarin.iOS.dll.mdb
+	@for mdb_file in $(IOS_MDB_FILES); do \
+		$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(TOP)/src)/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/ $$mdb_file ; \
+		$(Q_MDB) $(MDB_REBASE) -q -i $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/build/ios/native/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/ $$mdb_file ; \
+		$(Q) chmod 0644 $$mdb_file ; \
+	done
 
 install-source-mac: install-source.exe
 	@echo "Installing source files for Xamarin.Mac"
-	$(Q) $(SYSTEM_MONO) install-source.exe $(MAC_ASSEMBLIES) --link:$(USE_SOURCE_LINKS) --mono-path=$(abspath $(MONO_PATH)) --opentk-path=$(abspath $(OPENTK_PATH)/Source) --xamarin-path=$(abspath $(SRC_PATH)) --install-dir=$(abspath $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR))
+	$(Q) $(SYSTEM_MONO) install-source.exe $(MAC_ASSEMBLIES) --link:$(USE_SOURCE_LINKS) --mono-path=$(abspath $(MONO_PATH)) --opentk-path=$(abspath $(OPENTK_PATH)/Source) --xamarin-path=$(abspath $(SRC_PATH)) --install-dir=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR))
 	@echo "Rebasing the Xamarin.Mac mdb files."
-	@echo "Path is $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/src/mono/build/mac/full/"
-	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(TOP)/src)/ -o $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/src/Xamarin.Mac/ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.dll.mdb
-	$(Q_MDB) $(MDB_REBASE) -q -i $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/src/Xamarin.Mac/build/mac/full/ -o $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/src/Xamarin.Mac/ $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.dll.mdb
-	$(Q) chmod 0644 $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.dll.mdb
+	@for mdb_file in $(MAC_MDB_FILES); do \
+		$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(TOP)/src)/ -o $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/src/Xamarin.Mac/ $$mdb_file ; \
+		$(Q_MDB) $(MDB_REBASE) -q -i $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/src/Xamarin.Mac/build/mac/full/ -o $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/src/Xamarin.Mac/ $$mdb_file ; \
+		$(Q) chmod 0644 $$mdb_file ; \
+	done
 
 
 IOS_SOURCES = \
+	IPathMangler.cs \
+	MonoPathMangler.cs \
+	OpenTKSourceMangler.cs \
+	PathManglerFactory.cs \
 	Program.cs \
+	XamarinSourcesPathMangler.cs \
 	$(MONO_PATH)/mcs/class/Mono.Options/Mono.Options/Options.cs
 
 install-source.exe: $(IOS_SOURCES) Makefile install-source.csproj

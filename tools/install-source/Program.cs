@@ -97,7 +97,7 @@ public class ListSourceFiles {
 				Console.WriteLine ($"Skip path {src}");
 				continue;
 			}
-
+			Console.WriteLine ($"Fixes source is {fixedSource}");
 			var target = mangler.GetTargetPath (fixedSource);
 
 			var targetDir = Path.GetDirectoryName (target);

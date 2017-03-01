@@ -30,12 +30,11 @@
     <Compile Include="..\..\external\mono\mcs\class\Mono.Options\Mono.Options\Options.cs">
       <Link>Options.cs</Link>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="InstallSourcesLib\InstallSourcesLib.csproj">
-      <Project>{3EDCDBC4-C66B-4DF4-8FD0-CE5163ECDBBE}</Project>
-      <Name>InstallSourcesLib</Name>
-    </ProjectReference>
+    <Compile Include="IPathMangler.cs" />
+    <Compile Include="MonoPathMangler.cs" />
+    <Compile Include="OpenTKSourceMangler.cs" />
+    <Compile Include="PathManglerFactory.cs" />
+    <Compile Include="XamarinSourcesPathMangler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
