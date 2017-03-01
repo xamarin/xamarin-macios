@@ -171,6 +171,9 @@ namespace Xamarin.Bundler {
 					EnableCxx = true;
 
 #if MONOTOUCH
+				if (!linkWith.SupportsIncrementalBuilds)
+					App.FastDev = false;
+
 				if (linkWith.Dlsym != DlsymOption.Default)
 					App.SetDlsymOption (FullPath, linkWith.Dlsym == DlsymOption.Required);
 #endif
@@ -252,6 +255,9 @@ namespace Xamarin.Bundler {
 			Driver.Log (3, "    LinkTarget: {0}", linkWith.LinkTarget);
 			Driver.Log (3, "    NeedsGccExceptionHandling: {0}", linkWith.NeedsGccExceptionHandling);
 			Driver.Log (3, "    SmartLink: {0}", linkWith.SmartLink);
+#if MONOTOUCH
+			Driver.Log (3, "    SupportsIncrementalBuilds: {0}", linkWith.SupportsIncrementalBuilds);
+#endif
 			Driver.Log (3, "    WeakFrameworks: {0}", linkWith.WeakFrameworks);
 		}
 
@@ -305,6 +311,11 @@ namespace Xamarin.Bundler {
 				case "Dlsym":
 					linkWith.Dlsym = (DlsymOption) property.Argument.Value;
 					break;
+#if MONOTOUCH
+				case "SupportsIncrementalBuilds":
+					linkWith.SupportsIncrementalBuilds = (bool) property.Argument.Value;
+					break;
+#endif
 				default: 
 					break;
 				}

@@ -113,5 +113,11 @@ namespace XamCore.ObjCRuntime {
 		public DlsymOption Dlsym {
 			get; set;
 		}
+
+#if !MONOMAC
+		public bool SupportsIncrementalBuilds {
+			get; set;
+		} = true;
+#endif
 	}
 }
