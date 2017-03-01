@@ -100,6 +100,8 @@
 		<dict>
 			<key>com.apple.watchkit</key>
 			<string>2.0</string>
+			<key>com.apple.intents-service</key>
+			<string>3.2</string>
 		</dict>
 	</dict>
 </dict>
