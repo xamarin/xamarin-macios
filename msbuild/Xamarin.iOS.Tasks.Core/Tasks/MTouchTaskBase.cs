@@ -177,9 +177,6 @@ namespace Xamarin.iOS.Tasks
 		[Required]
 		[Output]
 		public ITaskItem NativeExecutable { get; set; }
-		
-		[Output]
-		public ITaskItem[] NativeLibraries { get; set; }
 
 		#endregion
 
@@ -707,23 +704,7 @@ namespace Xamarin.iOS.Tasks
 
 			Directory.CreateDirectory (AppBundleDir);
 
-			var mtouchExecution = base.Execute ();
-
-			try {
-				var nativeLibrariesPath = Directory.EnumerateFiles (AppBundleDir, "*.dylib", SearchOption.AllDirectories);
-				var nativeLibraryItems = new List<ITaskItem> ();
-
-				foreach (var nativeLibrary in nativeLibrariesPath) {
-					nativeLibraryItems.Add (new TaskItem (nativeLibrary));
-				}
-
-				NativeLibraries = nativeLibraryItems.ToArray ();
-			} catch (Exception ex) {
-				Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, "Could not get native libraries: {0}", ex.Message);
-				return false;
-			}
-
-			return mtouchExecution;
+			return base.Execute ();
 		}
 
 		string ResolveFrameworkFile (string fullName)
