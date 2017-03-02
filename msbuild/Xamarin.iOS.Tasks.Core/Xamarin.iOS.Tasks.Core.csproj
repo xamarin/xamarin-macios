@@ -92,6 +92,7 @@
     <Compile Include="Tasks\WriteAssetPackManifestTaskBase.cs" />
     <Compile Include="Tasks\FindWatchOS2AppBundleTaskBase.cs" />
     <Compile Include="Tasks\DetectDebugNetworkConfigurationTaskBase.cs" />
+    <Compile Include="Tasks\CodesignNativeLibrariesTaskBase.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
