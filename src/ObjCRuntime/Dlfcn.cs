@@ -283,6 +283,17 @@ namespace XamCore.ObjCRuntime {
 		}
 #endif
 
+		public static CGRect GetCGRect (IntPtr handle, string symbol)
+		{
+			var indirect = dlsym (handle, symbol);
+			if (indirect == IntPtr.Zero)
+				return CGRect.Empty;
+			unsafe {
+				nfloat *ptr = (nfloat *) indirect;
+				return new CGRect (ptr [0], ptr [1], ptr [2], ptr [3]);
+			}
+		}
+
 		public static CGSize GetCGSize (IntPtr handle, string symbol)
 		{
 			var indirect = dlsym (handle, symbol);
