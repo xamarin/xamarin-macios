@@ -71,6 +71,7 @@
     <Compile Include="Tasks\WriteAssetPackManifest.cs" />
     <Compile Include="Tasks\FindWatchOS2AppBundle.cs" />
     <Compile Include="Tasks\DetectDebugNetworkConfiguration.cs" />
+    <Compile Include="Tasks\CodesignNativeLibraries.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Xamarin.iOS.Tasks.Core\Xamarin.iOS.Tasks.Core.csproj">
