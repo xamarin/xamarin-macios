@@ -45,7 +45,7 @@ namespace Xamarin.Utils
 		public static readonly TargetFramework Xamarin_Mac_4_5_System = Parse ("Xamarin.Mac,Version=v4.5,Profile=System");
 #if MTOUCH
 		public static readonly TargetFramework [] ValidFrameworks = new TargetFramework[] { Xamarin_iOS_1_0, Xamarin_WatchOS_1_0, Xamarin_TVOS_1_0 };
-#elif GENERATOR
+#elif BGENERATOR
 		public static readonly TargetFramework [] ValidFrameworks = new TargetFramework[]
 		{
 			MonoTouch_1_0, Xamarin_iOS_1_0, Xamarin_TVOS_1_0, Xamarin_WatchOS_1_0,

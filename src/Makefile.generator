@@ -13,7 +13,7 @@ GENERATOR_SOURCES =                                             \
 	build/generator-frameworks.g.cs                    \
 	$(MONO_PATH)/mcs/class/Mono.Options/Mono.Options/Options.cs \
 
-GENERATOR_DEFINES = -d:GENERATOR -d:NET_4_0
+GENERATOR_DEFINES = -d:BGENERATOR -d:NET_4_0
 
 #
 # Common
