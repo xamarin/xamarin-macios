@@ -70,7 +70,7 @@ namespace Xamarin.Mac.Tests
 
 			public void Shutdown ()
 			{
-				Environment.Exit (TestRunner.ExitCode);
+				NSApplication.SharedApplication.Terminate (this);
 			}
 		}
 #else
