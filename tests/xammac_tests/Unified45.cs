@@ -6,8 +6,6 @@ using Xamarin.MMP.Tests;
 namespace MonoTouchFixtures.Net45 {
 	[TestFixture]
 	public class Unified45 {
-
-
 		[Test]
 		public void ProtobufShouldSerializeAndDeserialize ()
 		{
