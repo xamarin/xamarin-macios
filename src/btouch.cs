@@ -385,7 +385,7 @@ class BindingTouch {
 				
 			TypeManager.Initialize (api);
 
-			foreach (object attr in AttributeManager.GetCustomAttributes (api, TypeManager.LinkWithAttribute, true)) {
+			foreach (object attr in AttributeManager.GetCustomAttributes (api, TypeManager.LinkWithAttribute)) {
 				LinkWithAttribute linkWith = (LinkWithAttribute) attr;
 				
 				if (!linkwith.Contains (linkWith.LibraryName)) {
@@ -408,12 +408,12 @@ class BindingTouch {
 			var  strong_dictionaries = new List<Type> ();
 			foreach (var t in api.GetTypes ()){
 				if ((process_enums && t.IsEnum) ||
-				    AttributeManager.HasAttribute (t, TypeManager.BaseTypeAttribute, true) ||
-				    AttributeManager.HasAttribute (t, TypeManager.ProtocolAttribute, true) ||
-				    AttributeManager.HasAttribute (t, TypeManager.StaticAttribute, true) ||
-				    AttributeManager.HasAttribute (t, TypeManager.PartialAttribute, true))
+				    AttributeManager.HasAttribute (t, TypeManager.BaseTypeAttribute) ||
+				    AttributeManager.HasAttribute (t, TypeManager.ProtocolAttribute) ||
+				    AttributeManager.HasAttribute (t, TypeManager.StaticAttribute) ||
+				    AttributeManager.HasAttribute (t, TypeManager.PartialAttribute))
 					types.Add (t);
-				if (AttributeManager.HasAttribute (t, TypeManager.StrongDictionaryAttribute, true))
+				if (AttributeManager.HasAttribute (t, TypeManager.StrongDictionaryAttribute))
 					strong_dictionaries.Add (t);
 			}
 
