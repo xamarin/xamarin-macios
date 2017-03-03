@@ -1528,20 +1528,20 @@ public partial class Generator : IMemberGatherer {
 						marshal = "[System.Runtime.InteropServices.MarshalAs (System.Runtime.InteropServices.UnmanagedType.I1)] ";
 					string fnt;
 					string invoke_name;
-					string arg_byref = pi.IsOut ? "out" : "ref";
+					string arg_byref = pi.IsOut ? "out " : "ref ";
 					var nullable = TypeManager.GetUnderlyingNullableType (nt);
 					if (nullable != null) {
 						fnt = "IntPtr";
-						invoke_name = "p1";
+						invoke_name = $"__xamarin_nullified__{pi.Position}";
 						arg_byref = String.Empty;
 						convert.AppendLine ($"{nullable.Name}? {invoke_name} = null;");
 						convert.AppendLine ("if (value != IntPtr.Zero)");
-						convert.AppendLine ($"\t{invoke_name} = * (float *) value;");
+						convert.Append ($"\t{invoke_name} = * ({nullable.Name} *) value;");
 					} else {
 						fnt = FormatType (null, nt);
 						invoke_name = pi.Name.GetSafeParamName ();
 					}
-					pars.AppendFormat ("{3}{0} {1} {2}", arg_byref, fnt, pi.Name.GetSafeParamName (), marshal);
+					pars.AppendFormat ("{3}{0}{1} {2}", arg_byref, fnt, pi.Name.GetSafeParamName (), marshal);
 					invoke.AppendFormat ("{0} {1}", pi.IsOut ? "out" : "ref", invoke_name);
 					continue;
 				}
@@ -2429,7 +2429,7 @@ public partial class Generator : IMemberGatherer {
 					indent--;
 				}
 			} else {
-				if (ti.Convert != null)
+				if (ti.Convert.Length > 0)
 					print (ti.Convert);
 				print ("{0} retval = del ({1});", ti.DelegateReturnType, ti.Invoke);
 				print (ti.ReturnFormat, "retval");
