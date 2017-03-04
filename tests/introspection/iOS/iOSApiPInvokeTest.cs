@@ -110,23 +110,32 @@ namespace Introspection {
 		[Test]
 		public void MonoPInvokeCallback ()
 		{
-			var pinvokeCallbacks = from type in Assembly.GetTypes () where !Skip (type)
-				from mi in type.GetMethods (BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)
-				let attr = mi.GetCustomAttribute<MonoPInvokeCallbackAttribute> ()
-				where attr != null && !Skip (mi)
-				select mi;
-
 			var failed_api = new List<string> ();
 			Errors = 0;
 			int c = 0, n = 0;
-			foreach (var mi in pinvokeCallbacks) {
-				if (LogProgress)
-					Console.WriteLine ("{0}. {1}", c++, mi);
+			foreach (var type in Assembly.GetTypes ()) {
+				if (Skip (type))
+					continue;
+				foreach (var mi in type.GetMethods (BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)) {
+					if (mi.DeclaringType != type)
+						continue;
+					if (Skip (mi))
+						continue;
+					var attr = mi.GetCustomAttribute<MonoPInvokeCallbackAttribute> ();
+					if (attr == null)
+						continue;
+					
+					if (LogProgress)
+						Console.WriteLine ("{0}. {1}", c++, mi);
 
-				var attr = mi.GetCustomAttribute<MonoPInvokeCallbackAttribute> ();
-				foreach (var m in attr.DelegateType.GetMethods ())
-					CheckSignature (m);
-				n++;
+					var at = attr.DelegateType;
+					foreach (var m in at.GetMethods ()) {
+						if (m.DeclaringType != at)
+							continue;
+						CheckSignature (m);
+					}
+					n++;
+				}
 			}
 			Assert.AreEqual (0, Errors, "{0} errors found in {1} native delegate validated: {2}", Errors, n, string.Join (", ", failed_api));
 		}
