@@ -97,12 +97,25 @@ namespace Introspection
 
 		protected virtual bool CheckReturnParameter (MethodInfo mi, ParameterInfo pi)
 		{
-			return CheckForEnumParameter (mi, pi);
+			return CheckParameter (mi, pi);
 		}
 
 		protected virtual bool CheckParameter (MethodInfo mi, ParameterInfo pi)
 		{
-			return CheckForEnumParameter (mi, pi);
+			bool result = true;
+			// `ref` is fine but it can hide the droids we're looking for
+			var pt = pi.ParameterType;
+			if (pt.IsByRef)
+				pt = pt.GetElementType ();
+			// we don't want generics in p/invokes except for delegates like Func<> and Action<> which we know how to deal with
+			// ref: https://bugzilla.xamarin.com/show_bug.cgi?id=42699
+			if (pt.IsGenericType && !pt.IsSubclassOf (typeof (Delegate))) {
+				AddErrorLine ("[FAIL] {0}.{1} has a generic parameter in its signature: {2} {3}",
+					mi.DeclaringType.FullName, mi.Name, pt, pi.Name);
+				result = false;
+			}
+			result &= CheckForEnumParameter (mi, pi);
+			return result;
 		}
 
 		protected virtual bool CheckForEnumParameter (MethodInfo mi, ParameterInfo pi)
