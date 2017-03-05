@@ -107,19 +107,6 @@ namespace Introspection {
 			Assert.AreEqual (0, Errors, "{0} errors found in {1} native delegate validated: {2}", Errors, n, string.Join (", ", failed_api));
 		}
 
-		protected override bool Skip (MethodInfo methodInfo)
-		{
-			// ignore until https://bugzilla.xamarin.com/show_bug.cgi?id=53058 is fixed
-			if (methodInfo.DeclaringType.DeclaringType?.Name == "Trampolines") {
-				switch (methodInfo.ReturnType.Name) {
-				case "MPRemoteCommandHandlerStatus":
-				case "NSComparisonResult":
-					return true;
-				}
-			}
-			return base.Skip (methodInfo);
-		}
-
 		[Test]
 		public void MonoPInvokeCallback ()
 		{

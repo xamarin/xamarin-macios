@@ -1468,6 +1468,9 @@ public partial class Generator : IMemberGatherer {
 		} else if (mi.ReturnType == TypeManager.System_String) {
 			returntype = "IntPtr";
 			returnformat = "return NSString.CreateNative ({0}, true);";
+		} else if (IsNativeEnum (mi.ReturnType)) {
+			returntype = "IntPtr";
+			returnformat = "return (IntPtr) {0};";
 		} else {
 			returntype = FormatType (mi.DeclaringType, mi.ReturnType);
 		}
@@ -1601,6 +1604,8 @@ public partial class Generator : IMemberGatherer {
 			throw new BindingException (1001, true, "Do not know how to make a trampoline for {0}", pi);
 		}
 
+		var rt = mi.ReturnType;
+		var rts = IsNativeEnum (rt) ? "var" : rt.ToString ();
 		var trampoline_name = MakeTrampolineName (t);
 		var ti = new TrampolineInfo (userDelegate: FormatType (null, t),
 					     delegateName: "D" + trampoline_name,
@@ -1609,7 +1614,7 @@ public partial class Generator : IMemberGatherer {
 		                             convert: convert.ToString (),
 					     invoke: invoke.ToString (),
 					     returnType: returntype,
-					     delegateReturnType: mi.ReturnType.ToString (),
+		                             delegateReturnType: rts,
 					     returnFormat: returnformat,
 					     clear: clear.ToString (),
 					     type: t);
