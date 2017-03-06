@@ -281,6 +281,11 @@ class BindingTouch {
 		if (string.IsNullOrEmpty (compiler))
 			compiler = "/Library/Frameworks/Mono.framework/Commands/mcs";
 
+		if (target_framework == TargetFramework.XamMac_1_0 && !references.Any ((v) => Path.GetFileNameWithoutExtension (v) == "System.Drawing")) {
+			// If we're targeting XM/Classic ensure we have a reference to System.Drawing.dll.
+			references.Add ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5/System.Drawing.dll");
+		}
+
 		if (sources.Count > 0) {
 			api_sources.Insert (0, Quote (sources [0]));
 			for (int i = 1; i < sources.Count; i++)
