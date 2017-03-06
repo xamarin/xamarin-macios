@@ -2,6 +2,9 @@ TOP=../..
 
 include $(TOP)/Make.config
 
+export MD_MTOUCH_SDK_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
+export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
+
 #
 # * Use [IOS|MAC]_TESTS for simple tests that just verify the code can compile / generate.
 #   To add such a test, just add the file, and add the name of the file (without extension) to [IOS|MAC]_TESTS.
@@ -12,12 +15,20 @@ include $(TOP)/Make.config
 #
 
 IOS_CURRENT_DIR=$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current
+ifdef IKVM
+IOS_GENERATOR = $(IOS_CURRENT_DIR)/bin/bgen /unsafe --target-framework=Xamarin.iOS,v1.0
+else
 IOS_GENERATOR = $(IOS_CURRENT_DIR)/bin/btouch-native /baselib:$(IOS_CURRENT_DIR)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll /unsafe
+endif
 IOS_TESTS = bug15283 bug15307 bug15799 bug16036 sof20696157 bug23041 bug27430 bug27428 bug34042 btouch-with-hyphen-in-name property-redefination-ios arrayfromhandlebug bug36457 bug39614 bug40282 bug17232 bug24078-ignore-methods-events strong-dict-support-templated-dicts bug43579 bindastests
 IOS_CUSTOM_TESTS = forum54078 desk63279 desk79124 multiple-api-definitions1 multiple-api-definitions2 bug29493 classNameCollision bi1036 bug37527 bug27986 bug35176 bi1046 bindas1048error bindas1049error bindas1050modelerror bindas1050protocolerror virtualwrap
 
 MAC_CURRENT_DIR=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
+ifdef IKVM
+MAC_GENERATOR = $(MAC_CURRENT_DIR)/bin/bgen
+else
 MAC_GENERATOR = $(MAC_CURRENT_DIR)/bin/bmac
+endif
 MAC_TESTS = bmac_smoke bmac-with-hyphen-in-name property-redefination-mac NSApplicationPublicEnsureMethods protocol-duplicate-abstract
 MAC_CUSTOM_TESTS = bug31788 protocol-duplicate-abstract-error protocol-duplicate-method-diff-length protocol-duplicate-method-diff-out protocol-duplicate-method-diff-type protocol-duplicate-method-diff-return
 
@@ -32,18 +43,30 @@ endif
 all-local:: $(ALL_TESTS)
 
 $(MAC_TESTS):
+ifdef IKVM
+	$(if $(V),,@echo "$@";) $(MAC_GENERATOR) -d=MONOMAC --target-framework=XamMac,v1.0                                            $@.cs
+	$(if $(V),,@echo "$@";) $(MAC_GENERATOR) -d=MONOMAC --target-framework=Xamarin.Mac,Version=v4.5,Profile=Full   -d=XAMCORE_2_0 $@.cs
+	$(if $(V),,@echo "$@";) $(MAC_GENERATOR) -d=MONOMAC --target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile -d=XAMCORE_2_0 $@.cs
+else
 	$(if $(V),,@echo "$@";) $(MAC_GENERATOR) -d=MONOMAC $@.cs
 	$(if $(V),,@echo "$@";) $(MAC_GENERATOR) -d=MONOMAC -d=XAMCORE_2_0 --unified-full-profile $@.cs
 	$(if $(V),,@echo "$@";) $(MAC_GENERATOR) -d=MONOMAC -d=XAMCORE_2_0 --unified-mobile-profile $@.cs
+endif
 
 $(IOS_TESTS):
 	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) $@.cs
 
 define ProtocolTestTemplate
 $(1):
+ifdef IKVM
+	$(if $(V),,@echo "$$@";) $(MAC_GENERATOR) -d=MONOMAC --target-framework=XamMac,v1.0                                            $(1).cs 2>&1 | grep BI$(2) > /dev/null
+	$(if $(V),,@echo "$$@";) $(MAC_GENERATOR) -d=MONOMAC --target-framework=Xamarin.Mac,Version=v4.5,Profile=Full   -d=XAMCORE_2_0 $(1).cs 2>&1 | grep BI$(2) > /dev/null
+	$(if $(V),,@echo "$$@";) $(MAC_GENERATOR) -d=MONOMAC --target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile -d=XAMCORE_2_0 $(1).cs 2>&1 | grep BI$(2) > /dev/null
+else
 	$(if $(V),,@echo "$$@";) $(MAC_GENERATOR) -d=MONOMAC $(1).cs 2>&1 | grep BI$(2) > /dev/null
 	$(if $(V),,@echo "$$@";) $(MAC_GENERATOR) -d=MONOMAC -d=XAMCORE_2_0 --unified-full-profile $(1).cs 2>&1 | grep BI$(2) > /dev/null
 	$(if $(V),,@echo "$$@";) $(MAC_GENERATOR) -d=MONOMAC -d=XAMCORE_2_0 --unified-mobile-profile $(1).cs 2>&1 | grep BI$(2) > /dev/null
+endif
 endef
 
 $(eval $(call ProtocolTestTemplate,protocol-duplicate-abstract-error,1037))
@@ -70,7 +93,11 @@ classNameCollision:
 bug31788:
 	@rm -Rf $@.tmpdir
 	@mkdir -p $@.tmpdir
+ifdef IKVM
+	$(if $(V),,@echo "$@";) $(MAC_GENERATOR) --target-framework=XamMac,v1.0 --sourceonly:$@.source -tmpdir=$@.tmpdir $@.cs
+else
 	$(if $(V),,@echo "$@";) $(MAC_GENERATOR) --sourceonly:$@.source -tmpdir=$@.tmpdir $@.cs
+endif
 	@grep -q xamarin_IntPtr_objc_msgSend bug31788.tmpdir/Test/MarshalOnProperty.g.cs
 	@grep -q xamarin_IntPtr_objc_msgSend bug31788.tmpdir/Test/MarshalInProperty.g.cs
 
