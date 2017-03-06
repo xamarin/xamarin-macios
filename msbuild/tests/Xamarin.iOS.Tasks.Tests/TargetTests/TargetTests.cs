@@ -67,10 +67,10 @@ namespace Xamarin.iOS.Tasks
 					"Info.plist",
 					Path.Combine ("Settings.bundle", "Root.plist"),
 					"MyLibrary.dll",
-					"MyLibrary.dll.mdb",
+					"MyLibrary.pdb",
 					"MySingleView",
 					"MySingleView.exe",
-					"MySingleView.exe.mdb",
+					"MySingleView.pdb",
 					"System.Core.dll",
 					"System.Core.pdb",
 					"System.Xml.dll",
@@ -369,7 +369,7 @@ namespace Xamarin.iOS.Tasks
 			var entries = Directory.GetFileSystemEntries (LibraryProjectBinPath);
 			Assert.AreEqual (2, entries.Length, "#1");
 			Assert.IsTrue (File.Exists (library), "#2");
-			Assert.IsTrue (File.Exists (library + ".mdb"), "#3");
+			Assert.IsTrue (File.Exists (Path.ChangeExtension (library, ".pdb")), "#3");
 			
 			var assemblyDef = AssemblyDefinition.ReadAssembly (library);
 			var actualResources = assemblyDef.MainModule.Resources.Select (n => n.Name).ToList ();
