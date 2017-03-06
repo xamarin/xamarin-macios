@@ -640,3 +640,12 @@
 
 ## Fixed in XAMCORE_4_0
 !incorrect-protocol-member! GKGameModelPlayer::playerId is REQUIRED and should be abstract
+
+# ModelIO
+
+# fixed in XAMCORE_4_0 - API break
+!incorrect-protocol-member! MDLObjectContainerComponent::count is REQUIRED and should be abstract
+!incorrect-protocol-member! MDLObjectContainerComponent::objectAtIndexedSubscript: is REQUIRED and should be abstract
+!incorrect-protocol-member! MDLTransformComponent::keyTimes is REQUIRED and should be abstract
+!incorrect-protocol-member! MDLTransformComponent::resetsTransform is REQUIRED and should be abstract
+!incorrect-protocol-member! MDLTransformComponent::setResetsTransform: is REQUIRED and should be abstract
