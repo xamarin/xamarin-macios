@@ -53,7 +53,7 @@ namespace Xamarin.iOS.Tasks
 
 			coreFiles.Add (managedExe);
 			if (config == "Debug")
-				coreFiles.Add (managedExe + ".mdb");
+				coreFiles.Add (Path.ChangeExtension (managedExe, ".pdb"));
 
 			if (platform == "iPhone")
 				coreFiles.Add (Path.Combine ("..", nativeExe));
