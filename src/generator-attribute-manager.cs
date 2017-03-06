@@ -11,6 +11,8 @@ using System.Reflection;
 public static class AttributeManager
 {
 #if IKVM
+	// This method gets the System.Type for a IKVM.Reflection.Type to a System.Type.
+	// It knows about our mock attribute logic, so it will return the corresponding non-mocked System.Type for a mocked IKVM.Reflection.Type.
 	static System.Type ConvertType (Type type)
 	{
 		System.Type rv;
@@ -19,8 +21,10 @@ public static class AttributeManager
 		} else if (type.Assembly == TypeManager.SystemAssembly) {
 			rv = typeof (System.ComponentModel.EditorBrowsableAttribute).Assembly.GetType (type.FullName);
 		} else if (type.Assembly == TypeManager.BindingAssembly) {
+			// Types (attributes) in the binding assembly are mocked in the generator itself.
 			rv = typeof (TypeManager).Assembly.GetType (type.FullName);
 		} else if (type.Assembly == TypeManager.PlatformAssembly) {
+			// Types (attributes) in the platform assemblies are mocked in the generator itself.
 			var prefix = BindingTouch.NamespacePlatformPrefix;
 			var n = type.FullName;
 			if (!string.IsNullOrEmpty (prefix) && type.Namespace.StartsWith (prefix, System.StringComparison.Ordinal)) {
@@ -37,6 +41,8 @@ public static class AttributeManager
 		return rv;
 	}
 
+	// This method gets the IKVM.Reflection.Type for a System.Type.
+	// It knows about our mock attribute logic, so it will return the mocked IKVM.Reflection.Type for a mocked System.Type.
 	static Type ConvertType (System.Type type)
 	{
 		Type rv;
@@ -45,6 +51,8 @@ public static class AttributeManager
 		} else if (type.Assembly == typeof (System.ComponentModel.EditorBrowsableAttribute).Assembly) {
 			rv = TypeManager.SystemAssembly.GetType (type.FullName);
 		} else if (type.Assembly == typeof (TypeManager).Assembly) {
+			// Types (attributes) in the generator are mocked types from
+			// either the binding assembly or the platform assembly.
 			rv = TypeManager.BindingAssembly.GetType (type.FullName);
 			if (rv == null) {
 				string fullname;

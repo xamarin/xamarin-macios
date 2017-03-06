@@ -7,6 +7,11 @@ using Type = IKVM.Reflection.Type;
 using System.Reflection;
 #endif
 
+//
+// All the attributes in this file are compiled into two binaries:
+// * Xamarin.*.Attributes.dll: this assembly references the platform assemblies (mscorlib, etc), and is used when compiling the API definition.
+// * bgen-ikvm.exe: when compiled into the generator itself, the attributes are used as mock objects to load the corresponding attributes from Xamarin.*.Attributes.dll.
+//
 
 //
 // ForcedTypeAttribute
