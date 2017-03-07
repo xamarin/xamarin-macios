@@ -49,6 +49,11 @@ namespace Xamarin.Mac.Tasks
 			get; set;
 		}
 
+		[Output]
+		public bool IsXcode8 {
+			get; set;
+		}
+
 		#endregion Outputs
 
 		public override bool Execute ()
@@ -59,6 +64,8 @@ namespace Xamarin.Mac.Tasks
 			EnsureAppleSdkRoot ();
 			EnsureXamarinSdkRoot ();
 			EnsureSdkPath ();
+
+			IsXcode8 = AppleSdkSettings.XcodeVersion.Major >= 8;
 
 			return !Log.HasLoggedErrors;
 		}

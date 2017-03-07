@@ -352,13 +352,21 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	<Target Name="_ForgeMetal" Condition="'$(_CanOutputAppBundle)' == 'true' And '@(_SmeltedMetal)' != ''" DependsOnTargets="_SmeltMetal"
 		Inputs="@(_SmeltedMetal)" Outputs="$(IntermediateOutputPath)metal\default.metal-ar">
 		<ArTool
-			Condition="'$(IsMacEnabled)' == 'true'"
+			Condition="'$(IsMacEnabled)' == 'true' and '$(_IsXcode8)' == 'false'"
 			SessionId="$(BuildSessionId)"
 			Items="@(_SmeltedMetal)"
 			Archive="$(IntermediateOutputPath)metal\default.metal-ar">
 		</ArTool>
 
-		<CreateItem Include="$(IntermediateOutputPath)metal\default.metal-ar">
+		<!-- If !Xcode8 -->
+		<CreateItem Include="$(IntermediateOutputPath)metal\default.metal-ar"
+					Condition="'$(_IsXcode8)' == 'false'">
+			<Output TaskParameter="Include" ItemName="_ForgedMetal" />
+		</CreateItem>
+
+		<!-- Else -->
+		<CreateItem Include="@(_SmeltedMetal)"
+					Condition="'$(_IsXcode8)' == 'true'">
 			<Output TaskParameter="Include" ItemName="_ForgedMetal" />
 		</CreateItem>
 	</Target>
@@ -447,6 +455,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			<Output TaskParameter="SdkBinPath" PropertyName="_SdkBinPath" />
 			<Output TaskParameter="SdkDevPath" PropertyName="_SdkDevPath" />
 			<Output TaskParameter="SdkUsrPath" PropertyName="_SdkUsrPath" />
+			<Output TaskParameter="IsXcode8" PropertyName="_IsXcode8" />
 		</DetectSdkLocations>
 	</Target>
 
