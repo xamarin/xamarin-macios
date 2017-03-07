@@ -644,7 +644,6 @@ IOS_BCL_TARGETS +=                                                              
 	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(IOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.iOS/$(file).dll.mdb) \
 	$(PREFIX)/lib/mono/Xamarin.iOS/mscorlib.dll                                                                     \
 	$(PREFIX)/lib/mono/2.1/mscorlib.dll                                                                             \
-	$(PREFIX)/bin/btouch-mono                                                                                       \
 	$(foreach file,$(IOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/Facades/$(file).dll)                                 \
 	$(foreach file,$(IOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/Facades/$(file).dll)                         \
 	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/2.1/repl/$(file).dll)                                      \
@@ -652,23 +651,33 @@ IOS_BCL_TARGETS +=                                                              
 	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/repl/$(file).dll)                              \
 	$(foreach file,$(IOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.iOS/repl/$(file).dll.mdb)                          \
 
+ifndef IKVM
+IOS_BCL_TARGETS += $(PREFIX)/bin/btouch-mono
+endif
+
 WATCH_BCL_TARGETS += \
 	$(foreach file,$(WATCHOS_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/$(file).dll)                                        \
 	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(WATCHOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.WatchOS/$(file).dll.mdb) \
 	$(PREFIX)/lib/mono/Xamarin.WatchOS/mscorlib.dll                                                                             \
-	$(PREFIX)/bin/bwatch-mono                                                                                                   \
 	$(foreach file,$(WATCHOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/Facades/$(file).dll)                         \
 	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/repl/$(file).dll)                              \
 	$(foreach file,$(WATCHOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.WatchOS/repl/$(file).dll.mdb)                          \
+
+ifndef IKVM
+WATCH_BCL_TARGETS += $(PREFIX)/bin/bwatch-mono
+endif
 
 TVOS_BCL_TARGETS += \
 	$(foreach file,$(TVOS_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/$(file).dll)                                        \
 	$(foreach file,$(filter-out $(NO_MDB_ASSEMBLIES),$(TVOS_ASSEMBLIES)),$(PREFIX)/lib/mono/Xamarin.TVOS/$(file).dll.mdb) \
 	$(PREFIX)/lib/mono/Xamarin.TVOS/mscorlib.dll                                                                          \
-	$(PREFIX)/bin/btv-mono                                                                                                \
 	$(foreach file,$(TVOS_FACADE_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/Facades/$(file).dll)                         \
 	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).dll)                              \
 	$(foreach file,$(TVOS_REPL_ASSEMBLIES),$(PREFIX)/lib/mono/Xamarin.TVOS/repl/$(file).dll.mdb)                          \
+
+ifndef IKVM
+TVOS_BCL_TARGETS += $(PREFIX)/bin/btv-mono
+endif
 
 $(PREFIX)/lib/mono/Xamarin.iOS/%.mdb: $(BUILD_DESTDIR)/ios/bcl/%.mdb | $(PREFIX)/lib/mono/Xamarin.iOS $(PREFIX)/lib/mono/Xamarin.iOS/repl
 	$(Q) install -m 0644 $< $@
@@ -695,8 +704,10 @@ $(PREFIX)/lib/mono/2.1/%.mdb: $(BUILD_DESTDIR)/ios/bcl/%.mdb | $(PREFIX)/lib/mon
 	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 	$(Q) chmod 0644 $@
 
+ifndef IKVM
 $(PREFIX)/bin/btouch-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
 	$(Q) install -s -m 0755 $< $@
+endif
 
 $(PREFIX)/lib/mono/Xamarin.WatchOS/Facades/%.dll: $(BUILD_DESTDIR)/watchos/bcl/Facades/%.dll | $(PREFIX)/lib/mono/Xamarin.WatchOS/Facades
 	$(Q) install -m 0755 $< $@
@@ -720,6 +731,7 @@ $(PREFIX)/lib/mono/Xamarin.TVOS/%.mdb: $(BUILD_DESTDIR)/tvos/bcl/%.mdb | $(PREFI
 	$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(MONO_PATH))/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/mono/ $@
 	$(Q) chmod 0644 $@
 
+ifndef IKVM
 $(PREFIX)/bin/btv-mono: $(BUILD_DESTDIR)/tools64/bin/mono | $(PREFIX)/bin
 	$(Q) install -s -m 0755 $< $@
 
@@ -729,6 +741,7 @@ else
 $(PREFIX)/bin/bwatch-mono: $(BUILD_DESTDIR)/watchbcl/bin/mono | $(PREFIX)/bin
 endif
 	$(Q) install -s -m 0755 $< $@
+endif
 
 # copy to temporary directory before signing / mdb-rebasing,
 # otherwise we end up re-signing if installing into a different directory.
