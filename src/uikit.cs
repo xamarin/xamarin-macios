@@ -279,6 +279,7 @@ namespace XamCore.UIKit {
 	[NoWatch]
 	[NoTV]
 	[iOS (8,0)]
+	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
 	partial interface NSFileProviderExtension {
 	    [Static, Export ("writePlaceholderAtURL:withMetadata:error:")]
