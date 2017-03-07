@@ -33,6 +33,7 @@ namespace xharness
 		public bool IncludeiOSMSBuild = true;
 		public bool IncludeMtouch;
 		public bool IncludeBtouch;
+		public bool IncludeSampleTests;
 		public bool IncludeMacBindingProject;
 		public bool IncludeSimulator = true;
 		public bool IncludeDevice;
@@ -666,6 +667,7 @@ namespace xharness
 			SetEnabled (labels, "ios-device", ref IncludeDevice);
 			SetEnabled (labels, "xtro", ref IncludeXtro);
 			SetEnabled (labels, "mac-32", ref IncludeMac32);
+			SetEnabled (labels, "sample", ref IncludeSampleTests);
 			SetEnabled (labels, "all", ref IncludeAll);
 
 			// enabled by default
@@ -962,6 +964,24 @@ namespace xharness
 				Timeout = TimeSpan.FromMinutes (45),
 			};
 			Tasks.Add (runDocsTests);
+
+			var buildSampleTests = new XBuildTask {
+				Jenkins = this,
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "sampletester", "sampletester.sln"))),
+				SpecifyPlatform = false,
+				Platform = TestPlatform.All,
+				ProjectConfiguration = "Debug",
+			};
+			var runSampleTests = new NUnitExecuteTask (buildSampleTests) {
+				TestLibrary = Path.Combine (Harness.RootDirectory, "sampletester", "bin", "Debug", "sampletester.dll"),
+				TestProject = new TestProject (Path.GetFullPath (Path.Combine (Harness.RootDirectory, "sampletester", "sampletester.csproj"))),
+				Platform = TestPlatform.All,
+				TestName = "Sample tests",
+				Timeout = TimeSpan.FromDays (1), // These can take quite a while to execute.
+				InProcess = true,
+				Ignored = !IncludeSampleTests,
+			};
+			Tasks.Add (runSampleTests);
 
 			Tasks.AddRange (CreateRunDeviceTasks ());
 
