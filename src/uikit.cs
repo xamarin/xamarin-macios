@@ -14921,6 +14921,7 @@ namespace XamCore.UIKit {
 		void Dismiss (bool animated);
 
 		[Export ("presentAnimated:completionHandler:")]
+		[Async (ResultTypeName = "UIPrintInteractionResult")]
 		// documentation (and header) mistake that Apple corrected (IIRC I filled that issue)
 #if XAMCORE_2_0
 		bool
@@ -14930,6 +14931,7 @@ namespace XamCore.UIKit {
 		Present (bool animated, UIPrintInteractionCompletionHandler completion);
 
 		[Export ("presentFromBarButtonItem:animated:completionHandler:")]
+		[Async (ResultTypeName = "UIPrintInteractionResult")]
 		// documentation (and header) mistake that Apple corrected (IIRC I filled that issue)
 #if XAMCORE_2_0
 		bool
@@ -14939,6 +14941,7 @@ namespace XamCore.UIKit {
 		PresentFromBarButtonItem (UIBarButtonItem item, bool animated, UIPrintInteractionCompletionHandler completion);
 
 		[Export ("presentFromRect:inView:animated:completionHandler:")]
+		[Async (ResultTypeName = "UIPrintInteractionResult")]
 		// documentation (and header) mistake that Apple corrected (IIRC I filled that issue)
 #if XAMCORE_2_0
 		bool

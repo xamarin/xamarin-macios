@@ -921,6 +921,9 @@ namespace Introspection {
 					if (IgnoreAsync (m))
 						continue;
 
+					if (m.ReturnType.Name != "Void")
+						continue;
+
 					// some calls are "natively" async
 					if (m.Name.IndexOf ("Async", StringComparison.Ordinal) != -1)
 						continue;
