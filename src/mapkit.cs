@@ -1246,11 +1246,9 @@ namespace XamCore.MapKit {
 #endif
 	interface MKLocalSearchRequest : NSCopying {
 
-#if !XAMCORE_2_0 && !MONOMAC
-		[TV (9,2)][NoWatch][iOS (9,3)]
+		[TV (9,2)][NoWatch][iOS (9,3)][Mac (10,11,4, onlyOn64 : true)]
 		[Export ("initWithCompletion:")]
 		IntPtr Constructor (MKLocalSearchCompletion completion);
-#endif
 
 		[Export ("naturalLanguageQuery", ArgumentSemantic.Copy)]
 		[NullAllowed]
