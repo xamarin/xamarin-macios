@@ -84,6 +84,8 @@ namespace Foundation {
 			inflightRequests = new Dictionary<NSUrlSessionTask, InflightData> ();
 		}
 
+		public long MaxInputInMemory { get; set; } = long.MaxValue;
+
 		void RemoveInflightData (NSUrlSessionTask task, bool cancel = true)
 		{
 			InflightData inflight;
@@ -151,10 +153,14 @@ namespace Foundation {
 					return acc;
 				})
 			};
-
-			if (stream != Stream.Null)
-				nsrequest.BodyStream = new WrappedNSInputStream (stream);
-
+			if (stream != Stream.Null) {
+				// HttpContent.TryComputeLength is `protected internal` :-( but it's indirectly called by headers
+				var length = request.Content.Headers.ContentLength;
+				if (length.HasValue && (length <= MaxInputInMemory))
+					nsrequest.Body = NSData.FromStream (stream);
+				else
+					nsrequest.BodyStream = new WrappedNSInputStream (stream);
+			}
 			return nsrequest;
 		}
 
