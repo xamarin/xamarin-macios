@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using NUnit.Framework;
 
@@ -49,6 +50,21 @@ namespace Xamarin.iOS.Tasks
 				Assert.IsFalse (Directory.Exists (AppBundlePath), "App bundle exists after cleanup: {0} ", AppBundlePath);
 				Assert.IsFalse (Directory.Exists (AppBundlePath + ".dSYM"), "App bundle .dSYM exists after cleanup: {0} ", AppBundlePath + ".dSYM");
 				Assert.IsFalse (Directory.Exists (AppBundlePath + ".mSYM"), "App bundle .mSYM exists after cleanup: {0} ", AppBundlePath + ".mSYM");
+
+				var baseDir = Path.GetDirectoryName (csproj);
+				var objDir = Path.Combine (baseDir, "obj", platform, config);
+				var binDir = Path.Combine (baseDir, "bin", platform, config);
+
+				if (Directory.Exists (objDir)) {
+					var path = Directory.EnumerateFiles (objDir, "*.*", SearchOption.AllDirectories).FirstOrDefault ();
+					Assert.IsNull (path, "File not cleaned: {0}", path);
+				}
+
+				if (Directory.Exists (binDir)) {
+					// Note: the .dSYM/Contents string match is a work-around for xbuild which is broken (wrongly interprets %(Directory))
+					var path = Directory.EnumerateFiles (binDir, "*.*", SearchOption.AllDirectories).FirstOrDefault (x => x.IndexOf (".dSYM/Contents/", StringComparison.Ordinal) == -1);
+					Assert.IsNull (path, "File not cleaned: {0}", path);
+				}
 			}
 
 			proj = SetupProject (Engine, mtouchPaths.ProjectCSProjPath);
