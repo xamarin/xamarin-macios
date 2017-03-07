@@ -183,19 +183,23 @@ namespace Xamarin.MacDev.Tasks {
 			if (GeneratedSourcesFileList != null)
 				cmd.AppendSwitchIfNotNull ("/sourceonly:", Path.GetFullPath (GeneratedSourcesFileList));
 
+			cmd.AppendSwitch (GetTargetFrameworkArgument ());
+
+			return cmd.ToString ();
+		}
+
+		protected virtual string GetTargetFrameworkArgument ()
+		{
 			switch (TargetFrameworkIdentifier) {
 				case "MonoTouch":
 				case "Xamarin.iOS":
 				case "Xamarin.TVOS":
 				case "Xamarin.WatchOS":
-					cmd.AppendSwitch ($"/target-framework={TargetFrameworkIdentifier},v1.0");
-					break;
+					return $"/target-framework={TargetFrameworkIdentifier},v1.0";
 				default:
 					Log.LogError ($"Unknown target framework identifier: {TargetFrameworkIdentifier}.");
-					break;
+					return string.Empty;
 			}
-
-			return cmd.ToString ();
 		}
 
 		public override bool Execute ()
