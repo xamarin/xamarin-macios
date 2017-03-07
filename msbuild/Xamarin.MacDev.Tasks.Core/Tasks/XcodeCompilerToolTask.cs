@@ -177,16 +177,21 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			if (exitCode != 0) {
+				// Note: ibtool or actool exited with an error. Dump everything we can to help the user
+				// diagnose the issue and then delete the manifest log file so that rebuilding tries
+				// again (in case of ibtool's infamous spurious errors).
 				if (errors.Length > 0)
 					Log.LogError (null, null, null, items[0].ItemSpec, 0, 0, 0, 0, "{0}", errors);
 
+				Log.LogError ("{0} exited with code {1}", ToolName, exitCode);
+
+				// Note: If the log file exists and is parseable, log those warnings/errors as well...
 				if (File.Exists (manifest.ItemSpec)) {
 					try {
 						var plist = PDictionary.FromFile (manifest.ItemSpec);
 
 						LogWarningsAndErrors (plist, items[0]);
 					} catch (FormatException) {
-						Log.LogError ("{0} exited with code {1}", ToolName, exitCode);
 					}
 
 					File.Delete (manifest.ItemSpec);
