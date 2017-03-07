@@ -223,6 +223,12 @@ namespace Introspection {
 				return m.DeclaringType.Name == "WKUserNotificationInterfaceController";
 			case "AddCompletion":
 				return true;
+			// comes from NSFilePresenter protocol, where we cannot put [Async] today
+			// proposal: https://trello.com/c/dSOh6PXE/680-rfc-async-on-protocol-proposal
+			case "AccommodatePresentedItemDeletion":
+			case "AccommodatePresentedSubitemDeletion":
+			case "SavePresentedItemChanges":
+				return m.DeclaringType.Name == "UIDocument";
 			}
 			return base.IgnoreAsync (m);
 		}
