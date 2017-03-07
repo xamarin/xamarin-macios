@@ -2360,7 +2360,6 @@ namespace XamCore.UIKit {
 	
 		[Static]
 		[Export ("runningPropertyAnimatorWithDuration:delay:options:animations:completion:")]
-		[Async]
 		UIViewPropertyAnimator CreateRunningPropertyAnimator (double duration, double delay, UIViewAnimationOptions options, [NullAllowed] Action animations, [NullAllowed] Action<UIViewAnimatingPosition> completion);
 	}
 	
@@ -2511,7 +2510,6 @@ namespace XamCore.UIKit {
 
 		[iOS (10,0), TV (10,0)]
 		[Export ("openURL:options:completionHandler:")]
-		[Async]
 		void OpenUrl (NSUrl url, NSDictionary options, [NullAllowed] Action<bool> completion);
 
 		[iOS (10,0), TV (10,0)]
@@ -14724,15 +14722,12 @@ namespace XamCore.UIKit {
 		[Static, Export ("printerPickerControllerWithInitiallySelectedPrinter:")]
 		UIPrinterPickerController FromPrinter ([NullAllowed] UIPrinter printer);
 	
-		[Async (ResultTypeName = "UIPrinterPickerCompletionResult")]
 		[Export ("presentAnimated:completionHandler:")]
 		bool Present (bool animated, UIPrinterPickerCompletionHandler completion);
 	
-		[Async (ResultTypeName = "UIPrinterPickerCompletionResult")]
 		[Export ("presentFromRect:inView:animated:completionHandler:")]
 		bool PresentFromRect (CGRect rect, UIView view, bool animated, UIPrinterPickerCompletionHandler completion);
 	
-		[Async (ResultTypeName = "UIPrinterPickerCompletionResult")]
 		[Export ("presentFromBarButtonItem:animated:completionHandler:")]
 		bool PresentFromBarButtonItem (UIBarButtonItem item, bool animated, UIPrinterPickerCompletionHandler completion);
 	
