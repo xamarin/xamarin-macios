@@ -340,7 +340,6 @@ namespace XamCore.Photos
 		PHAssetResourceManager DefaultManager { get; }
 
 		[Export ("requestDataForAssetResource:options:dataReceivedHandler:completionHandler:")]
-		[Async]
 		int RequestData (PHAssetResource forResource, [NullAllowed] PHAssetResourceRequestOptions options, Action<NSData> handler, Action<NSError> completionHandler);
 
 		[Export ("writeDataForAssetResource:toFile:options:completionHandler:")]
