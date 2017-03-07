@@ -590,6 +590,10 @@ check_mono
 check_xamarin_studio
 check_cmake
 
+if [[ "x$(basename $(pwd))" != xxamarin-macios ]]; then
+	fail "xamarin-macios must be checked out in a directory named 'xamarin-macios'."
+fi
+
 if test -z $FAIL; then
 	echo "System check succeeded"
 else
