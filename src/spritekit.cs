@@ -217,6 +217,7 @@ namespace XamCore.SpriteKit {
 		[Export ("runAction:")]
 		void RunAction (SKAction action);
 
+		[Async]
 		[Export ("runAction:completion:")]
 		void RunAction (SKAction action, Action completionHandler);
 

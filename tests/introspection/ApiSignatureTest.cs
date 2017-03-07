@@ -865,5 +865,115 @@ namespace Introspection {
 					ReportError ($"`{t.Name}.{m.Name}` return type `{rt.Name}` is a concrete type `[Model]` and not an interface `[Protocol]`");
 			}
 		}
+
+		static bool IsDiscouraged (MemberInfo mi)
+		{
+			foreach (var ca in mi.GetCustomAttributes ()) {
+				switch (ca.GetType ().Name) {
+				case "ObsoleteAttribute":
+				case "AdviceAttribute":
+				case "ObsoletedAttribute":
+				case "DeprecatedAttribute":
+					return true;
+				}
+			}
+			return false;
+		}
+
+#if !MONOMAC
+		[Test]
+#endif
+		public void AsyncCandidates ()
+		{
+			int n = 0;
+			Errors = 0;
+			ErrorData.Clear ();
+
+			foreach (Type t in Assembly.GetTypes ()) {
+
+				// e.g. delegates used for events
+				if (t.IsNested)
+					continue;
+
+				if (!NSObjectType.IsAssignableFrom (t))
+					continue;
+
+				if (t.GetCustomAttribute<ProtocolAttribute> () != null)
+					continue;
+				if (t.GetCustomAttribute<ModelAttribute> () != null)
+					continue;
+
+				// let's not encourage the use of some API
+				if (IsDiscouraged (t))
+					continue;
+
+				CurrentType = t;
+
+				var methods = t.GetMethods (Flags);
+				foreach (MethodInfo m in methods) {
+					if (m.DeclaringType != t)
+						continue;
+
+					// skip properties / events
+					if (m.IsSpecialName)
+						continue;
+
+					if (IgnoreAsync (m))
+						continue;
+
+					if (m.ReturnType.Name != "Void")
+						continue;
+
+					// some calls are "natively" async
+					if (m.Name.IndexOf ("Async", StringComparison.Ordinal) != -1)
+						continue;
+
+					// let's not encourage the use of some API
+					if (IsDiscouraged (m))
+						continue;
+
+					// is it a candidate ?
+					var p = m.GetParameters ();
+					if (p.Length == 0)
+						continue;
+					var last = p [p.Length - 1];
+					// trying to limit false positives and the need for large ignore lists to maintain
+					// unlike other introspection tests a failure does not mean a broken API
+					switch (last.Name) {
+					case "completionHandler":
+					case "completion":
+						break;
+					default:
+						continue;
+					}
+					if (!last.ParameterType.IsSubclassOf (typeof (Delegate)))
+						continue;
+
+					// did we provide a async wrapper ?
+					string ma = m.Name + "Async";
+					if (methods.Where ((mi) => mi.Name == ma).FirstOrDefault () != null)
+						continue;
+
+					var name = m.ToString ();
+					var i = name.IndexOf (' ');
+					ErrorData.AppendLine (name.Insert (i + 1, m.DeclaringType.Name + "::"));
+					Errors++;
+				}
+			}
+			AssertIfErrors ("{0} errors found in {1} signatures validated{2}", Errors, n, Errors == 0 ? string.Empty : ":\n" + ErrorData.ToString () + "\n");
+		}
+
+		protected virtual bool IgnoreAsync (MethodInfo m)
+		{
+			switch (m.Name) {
+			// we bind PerformChangesAndWait which does the same
+			case "PerformChanges":
+				return m.DeclaringType.Name == "PHPhotoLibrary";
+			// it sets the callback, it will never call it
+			case "SetCompletionBlock":
+				return m.DeclaringType.Name == "SCNTransaction";
+			}
+			return false;
+		}
 	}
 }

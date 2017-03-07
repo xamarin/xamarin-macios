@@ -1300,6 +1300,7 @@ namespace XamCore.MapKit {
 		IntPtr Constructor (MKDirectionsRequest request);
 
 		[Export ("calculateDirectionsWithCompletionHandler:")]
+		[Async]
 		void CalculateDirections (MKDirectionsHandler completionHandler);
 
 		[Export ("cancel")]
@@ -1309,6 +1310,7 @@ namespace XamCore.MapKit {
 		bool Calculating { [Bind ("isCalculating")] get; }
 
 		[Export ("calculateETAWithCompletionHandler:")]
+		[Async]
 		void CalculateETA (MKETAHandler completionHandler);
 	}
 
@@ -1531,9 +1533,11 @@ namespace XamCore.MapKit {
 		IntPtr Constructor (MKMapSnapshotOptions options);
 
 		[Export ("startWithCompletionHandler:")]
+		[Async]
 		void Start (MKMapSnapshotCompletionHandler completionHandler);
 
 		[Export ("startWithQueue:completionHandler:")]
+		[Async]
 		void Start (DispatchQueue queue, MKMapSnapshotCompletionHandler completionHandler);
 
 		[Export ("cancel")]
