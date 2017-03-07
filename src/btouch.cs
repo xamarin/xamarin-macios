@@ -258,15 +258,20 @@ class BindingTouch {
 			CurrentPlatform = PlatformName.MacOSX;
 			Unified = false;
 			if (string.IsNullOrEmpty (baselibdll))
-				baselibdll = "MonoMac.dll";
+				baselibdll = Path.Combine (GetSDKRoot (), "lib", "mono", "XamMac.dll");
 			net_sdk = "4";
 			break;
 		case "xamarin.mac":
 			CurrentPlatform = PlatformName.MacOSX;
 			Unified = true;
 			skipSystemDrawing = target_framework == TargetFramework.Xamarin_Mac_4_5_Full;
-			if (string.IsNullOrEmpty (baselibdll))
-				baselibdll = "MonoMac.dll"; // this doesn't look right.
+			if (string.IsNullOrEmpty (baselibdll)) {
+				if (target_framework == TargetFramework.Xamarin_Mac_2_0_Mobile) {
+					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "mobile", "Xamarin.Mac.dll");
+				} else {
+					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "full", "Xamarin.Mac.dll");
+				}
+			}
 			net_sdk = "4";
 			break;
 		default:
@@ -275,6 +280,11 @@ class BindingTouch {
 
 		if (string.IsNullOrEmpty (compiler))
 			compiler = "/Library/Frameworks/Mono.framework/Commands/mcs";
+
+		if (target_framework == TargetFramework.XamMac_1_0 && !references.Any ((v) => Path.GetFileNameWithoutExtension (v) == "System.Drawing")) {
+			// If we're targeting XM/Classic ensure we have a reference to System.Drawing.dll.
+			references.Add ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5/System.Drawing.dll");
+		}
 
 		if (sources.Count > 0) {
 			api_sources.Insert (0, Quote (sources [0]));
@@ -380,9 +390,7 @@ class BindingTouch {
 				
 			TypeManager.Initialize (api);
 
-			foreach (object attr in AttributeManager.GetCustomAttributes (api, TypeManager.LinkWithAttribute, true)) {
-				LinkWithAttribute linkWith = (LinkWithAttribute) attr;
-				
+			foreach (var linkWith in AttributeManager.GetCustomAttributes<LinkWithAttribute> (api)) {
 				if (!linkwith.Contains (linkWith.LibraryName)) {
 					Console.Error.WriteLine ("Missing native library {0}, please use `--link-with' to specify the path to this library.", linkWith.LibraryName);
 					return 1;
@@ -403,12 +411,12 @@ class BindingTouch {
 			var  strong_dictionaries = new List<Type> ();
 			foreach (var t in api.GetTypes ()){
 				if ((process_enums && t.IsEnum) ||
-				    AttributeManager.HasAttribute (t, TypeManager.BaseTypeAttribute, true) ||
-				    AttributeManager.HasAttribute (t, TypeManager.ProtocolAttribute, true) ||
-				    AttributeManager.HasAttribute (t, TypeManager.StaticAttribute, true) ||
-				    AttributeManager.HasAttribute (t, TypeManager.PartialAttribute, true))
+				    AttributeManager.HasAttribute<BaseTypeAttribute> (t) ||
+				    AttributeManager.HasAttribute<ProtocolAttribute> (t) ||
+				    AttributeManager.HasAttribute<StaticAttribute> (t) ||
+				    AttributeManager.HasAttribute<PartialAttribute> (t))
 					types.Add (t);
-				if (AttributeManager.HasAttribute (t, TypeManager.StrongDictionaryAttribute, true))
+				if (AttributeManager.HasAttribute<StrongDictionaryAttribute> (t))
 					strong_dictionaries.Add (t);
 			}
 

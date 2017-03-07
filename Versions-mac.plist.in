@@ -30,5 +30,9 @@
 			<string>10.11</string>
 		</dict>
 	</dict>
+	<key>Features</key>
+	<array>
+		<string>feature-list</string>
+	</array>
 </dict>
 </plist>

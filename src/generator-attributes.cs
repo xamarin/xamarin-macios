@@ -85,7 +85,7 @@ public class BindAsAttribute : Attribute {
 	public BindAsAttribute (Type type)
 	{
 		Type = type;
-		var nullable = type.IsArray ? Nullable.GetUnderlyingType (type.GetElementType ()) : Nullable.GetUnderlyingType (type);
+		var nullable = type.IsArray ? TypeManager.GetUnderlyingNullableType (type.GetElementType ()) : TypeManager.GetUnderlyingNullableType (type);
 		IsNullable = nullable != null;
 		IsValueType = IsNullable ? nullable.IsValueType : type.IsValueType;
 	}

@@ -1219,6 +1219,57 @@ namespace Xamarin
 
 
 		[Test]
+		public void MT0127 ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.CreateTemporaryCacheDirectory ();
+				mtouch.CreateTemporaryAppDirectory ();
+
+				var tmpdir = mtouch.CreateTemporaryDirectory ();
+				var nativeCodeA = @"
+int getNumber () { return 123; }
+";
+				var nativeCodeB = @"
+int getNumber ();
+int getSameNumber () { return getNumber (); }
+";
+
+				var extraCodeA = @"
+public class BindingAppA {
+	[System.Runtime.InteropServices.DllImport (""__Internal"")]
+	public static extern int getNumber ();
+}
+";
+				var extraCodeB = @"
+public class BindingAppB {
+	[System.Runtime.InteropServices.DllImport (""__Internal"")]
+	public static extern int getSameNumber ();
+	public static int getNumber () { return BindingAppA.getNumber (); }
+}
+";
+
+				var bindingLibA = CreateBindingLibrary (tmpdir, nativeCodeA, null, null, extraCodeA, name: "bindingA");
+				var bindingLibB = CreateBindingLibrary (tmpdir, nativeCodeB, null, null, extraCodeB, name: "bindingB", references: new string [] { bindingLibA });
+				var exe = CompileTestAppExecutable (tmpdir, @"
+public class TestApp { 
+	static void Main () {
+		System.Console.WriteLine (typeof (UIKit.UIWindow).ToString ());
+		System.Console.WriteLine (BindingAppB.getSameNumber ());
+		System.Console.WriteLine (BindingAppB.getNumber ());
+	}
+}
+", $"-r:{Quote (bindingLibA)} -r:{Quote (bindingLibB)}");
+
+				mtouch.RootAssembly = exe;
+				mtouch.References = new [] { bindingLibA, bindingLibB };
+
+				mtouch.FastDev = true;
+				mtouch.AssertExecute (MTouchAction.BuildDev, "first build");
+				mtouch.AssertWarning (127, "Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.");
+			}
+		}
+
+		[Test]
 		public void ExtensionBuild ()
 		{
 			using (var mtouch = new MTouchTool ()) {
@@ -2851,11 +2902,11 @@ public class TestApp {
 			return assembly;
 		}
 
-		static string CreateBindingLibrary (string targetDirectory, string nativeCode, string bindingCode, string linkWith = null, string extraCode = "")
+		static string CreateBindingLibrary (string targetDirectory, string nativeCode, string bindingCode, string linkWith = null, string extraCode = "", string name = "binding", string[] references = null)
 		{
-			var o = CompileNativeLibrary (targetDirectory, nativeCode);
-			var cs = Path.Combine (targetDirectory, "bindingCode.cs");
-			var dll = Path.Combine (targetDirectory, "bindingLibrary.dll");
+			var o = CompileNativeLibrary (targetDirectory, nativeCode, name: name);
+			var cs = Path.Combine (targetDirectory, $"{name}Code.cs");
+			var dll = Path.Combine (targetDirectory, $"{name}Library.dll");
 
 			if (linkWith == null) {
 				linkWith = @"
@@ -2871,26 +2922,24 @@ using ObjCRuntime;
 
 			extraCode = linkWith + "\n" + extraCode;
 
-			var x = Path.Combine (targetDirectory, "extraBindingCode.cs");
+			var x = Path.Combine (targetDirectory, $"extra{name}Code.cs");
 			File.WriteAllText (x, extraCode);
 
-			ExecutionHelper.Execute (Configuration.BtouchPath, 
-				string.Format ("{0} --out:{1} --link-with={2},{3} -x:{4}", cs, dll, o, Path.GetFileName (o), x));
+			ExecutionHelper.Execute (Configuration.BtouchPath,
+			                         string.Format ("{0} --out:{1} --link-with={2},{3} -x:{4} {5}", cs, dll, o, Path.GetFileName (o), x, references == null ? string.Empty : string.Join (", ", references.Select ((v) => "-r:" + v))));
 
 			return dll;
 		}
 
-		static string CompileNativeLibrary (string targetDirectory, string code)
+		static string CompileNativeLibrary (string targetDirectory, string code, string name = "testCode")
 		{
-			var m = Path.Combine (targetDirectory, "testCode.m");
-
+			var m = Path.Combine (targetDirectory, $"{name}.m");
+			var o = Path.ChangeExtension (m, ".o");
 			File.WriteAllText (m, code);
 
 			string output;
 			string fileName = Path.Combine (Configuration.xcode_root, "Toolchains/XcodeDefault.xctoolchain/usr/bin/clang");
-			string args = string.Format ("-gdwarf-2 -arch armv7 -std=c99 -isysroot {0}/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS{2}.sdk -miphoneos-version-min=3.1 " +
-				"-c -DDEBUG  -o {1}/testCode.o -x objective-c {1}/testCode.m",
-				Configuration.xcode_root, targetDirectory, Configuration.sdk_version);
+			string args = $"-gdwarf-2 -arch armv7 -std=c99 -isysroot {Configuration.xcode_root}/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS{Configuration.sdk_version}.sdk -miphoneos-version-min=6.0 -c -DDEBUG  -o {o} -x objective-c {m}";
 
 			if (ExecutionHelper.Execute (fileName, args, out output) != 0) {
 				Console.WriteLine ("{0} {1}", fileName, args);
@@ -2898,7 +2947,7 @@ using ObjCRuntime;
 				throw new Exception (output);
 			}
 
-			return Path.Combine (targetDirectory, "testCode.o");
+			return o;
 		}
 
 		void CompileCSharpCode (Profile profile, string code, string outputPath, params string[] additional_arguments)

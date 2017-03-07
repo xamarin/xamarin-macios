@@ -447,7 +447,6 @@ No action is required on your part, this message is purely informational.
 
 For further information see bug #[51634](https://bugzilla.xamarin.com/show_bug.cgi?id=51634).
 
-
 <h3><a name="MT0112"/>MT0112: Native code sharing has been disabled because *</h3>
 
 There are multiple reasons code sharing can be disabled:
@@ -522,6 +521,14 @@ For instance: this condition occurs when an extension builds for ARMv7+llvm+thum
 * because the container app is referencing the assembly '*' from '*', while the extension references it from '*'.
 
 Native code sharing requires that all the projects that share code use the same versions for all assemblies.
+
+<h3><a name="MT0127"/>MT0127: Incremental builds have been disabled because this version of Xamarin.iOS does not support incremental builds in projects that include more than one third-party binding libraries.</h3>
+
+Incremental builds have been disabled automatically because this version of Xamarin.iOS does not always build projects with multiple third-party binding libraries correctly.
+
+No action is required, this message is purely informational.
+
+For further information see bug #[52727](https://bugzilla.xamarin.com/show_bug.cgi?id=52727).
 
 # MT1xxx: Project related error messages
 

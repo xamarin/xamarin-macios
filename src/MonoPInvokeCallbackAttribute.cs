@@ -30,7 +30,12 @@ namespace XamCore {
 
 	[AttributeUsage (AttributeTargets.Method)]
 	public sealed class MonoPInvokeCallbackAttribute : Attribute {
-			public MonoPInvokeCallbackAttribute (Type t) {}
+		public MonoPInvokeCallbackAttribute (Type t)
+		{
+			DelegateType = t;
+		}
+
+		public Type DelegateType { get; set; }
 	}
 }
 

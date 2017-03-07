@@ -257,7 +257,20 @@ namespace XamCore.CoreGraphics
 	[Serializable]
 	public struct CGRect : IEquatable<CGRect>
 	{
+		[Field ("CGRectZero", "CoreGraphics")] // unused but helps xtro
 		public static readonly CGRect Empty;
+
+#if !COREBUILD
+		[Field ("CGRectNull", "CoreGraphics")] // unused but helps xtro
+		public static CGRect Null {
+			get { return Dlfcn.GetCGRect (Libraries.CoreGraphics.Handle, "CGRectNull"); }
+		}
+
+		[Field ("CGRectInfinite", "CoreGraphics")] // unused but helps xtro
+		public static CGRect Infinite {
+			get { return Dlfcn.GetCGRect (Libraries.CoreGraphics.Handle, "CGRectInfinite"); }
+		}
+#endif
 
 		public static bool operator == (CGRect left, CGRect right)
 		{
