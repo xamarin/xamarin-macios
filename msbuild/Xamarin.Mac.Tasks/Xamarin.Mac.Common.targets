@@ -85,39 +85,8 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		<_AppBundleName>$(AssemblyName)</_AppBundleName>
 	</PropertyGroup>
 
-	<PropertyGroup>
-		<ImplicitlyExpandDesignTimeFacades>true</ImplicitlyExpandDesignTimeFacades>
-
-		<ResolveReferencesDependsOn>
-			_SeparateAppExtensionReferences;
-			$(ResolveReferencesDependsOn);
-			ImplicitlyExpandDesignTimeFacades
-		</ResolveReferencesDependsOn>
-
-		<ImplicitlyExpandDesignTimeFacadesDependsOn>
-			$(ImplicitlyExpandDesignTimeFacadesDependsOn);
-			GetReferenceAssemblyPaths
-		</ImplicitlyExpandDesignTimeFacadesDependsOn>
-	</PropertyGroup>
-
-	<Target Name="ImplicitlyExpandDesignTimeFacades" Condition="'$(ImplicitlyExpandDesignTimeFacades)' == 'true'" DependsOnTargets="$(ImplicitlyExpandDesignTimeFacadesDependsOn)">
-		<PropertyGroup>
-			<_HasReferenceToSystemRuntime Condition="'%(ReferenceDependencyPaths.Filename)' == 'System.Runtime'">true</_HasReferenceToSystemRuntime>
-		</PropertyGroup>
-
-		<ItemGroup Condition="'$(_HasReferenceToSystemRuntime)' == 'true'">
-			<_DesignTimeFacadeAssemblies Include="%(DesignTimeFacadeDirectories.Identity)*.dll"/>
-			<ReferencePath Remove="@(_DesignTimeFacadeAssemblies)"/>
-			<ReferencePath Include="%(_DesignTimeFacadeAssemblies.Identity)">
-				<WinMDFile>false</WinMDFile>
-				<CopyLocal>false</CopyLocal>
-				<ResolvedFrom>ImplicitlyExpandDesignTimeFacades</ResolvedFrom>
-			</ReferencePath>
-			<ReferenceDependencyPath Include="@(ReferencePath)" Condition="'%(ReferencePath.ResolvedFrom)' == 'ImplicitlyExpandDesignTimeFacades'" />
-		</ItemGroup>
-
-		<Message Importance="Low" Text="Including @(ReferencePath)" Condition="'%(ReferencePath.ResolvedFrom)' == 'ImplicitlyExpandDesignTimeFacades'" />
-	</Target>
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.ImplicitFacade.xbuild.targets"
+		Condition="'$(IsXBuild)' == 'true' "/>
 
 	<PropertyGroup>
 		<BuildDependsOn>
@@ -681,8 +650,11 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		/>
 	</Target>
 
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.XM45.targets"
-		Condition="'$(UseXamMacFullFramework)' == 'true'"/>
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.XM45.xbuild.targets"
+		Condition="'$(UseXamMacFullFramework)' == 'true' And '$(IsXBuild)' == 'true' "/>
+
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.msbuild.targets"
+		Condition="'$(IsXBuild)' == 'false' "/>
 
 	<Target Name="_SeparateAppExtensionReferences" BeforeTargets="AssignProjectConfiguration" Condition="'$(IsAppExtension)' != 'true'">
 		<CreateItem Include="@(ProjectReference)" PreserveExistingMetadata="true" Condition="'%(Identity)' != '' And '%(ProjectReference.IsAppExtension)' == 'true'">
@@ -731,8 +703,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_ResolveAppExtensionReferences" DependsOnTargets="_SplitAppExtensionReferencesByExistent">
 		<PropertyGroup>
-			<IsXBuild Condition="'$(MSBuildRuntimeVersion)' == ''">true</IsXBuild>
-
 			<!-- When building a .sln with xbuild or building from IDE, the referenced projects are already built.  -->
 			<_BuildReferencedExtensionProjects Condition="'$(IsXBuild)' == 'true' and '$(BuildingSolutionFile)' != 'true' and '$(BuildingInsideVisualStudio)' != 'true'">true</_BuildReferencedExtensionProjects>
 
