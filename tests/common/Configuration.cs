@@ -273,7 +273,10 @@ namespace Xamarin.Tests
 
 		public static string MlaunchPath {
 			get {
-				return Path.Combine (XSIphoneDir, "mlaunch.app", "Contents", "MacOS", "mlaunch");
+				var env = Environment.GetEnvironmentVariable ("MLAUNCH_PATH");
+				if (!string.IsNullOrEmpty (env))
+					return env;
+				return Path.Combine (BinDirXI, "mlaunch");
 			}
 		}
 	}
