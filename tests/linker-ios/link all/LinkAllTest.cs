@@ -443,9 +443,12 @@ namespace LinkAll {
 
 		string GetField (object o, string s)
 		{
-			var f = o.GetType ().GetField (s, BindingFlags.Instance | BindingFlags.NonPublic);
-			if (f == null)
+			var type = o.GetType ();
+			var f1 = type.GetField (s, BindingFlags.Instance | BindingFlags.NonPublic);
+			var f2 = type.GetField (s + "i__Field", BindingFlags.Instance | BindingFlags.NonPublic);
+			if (f1 == null && f2 == null)
 				return s;
+
 			//Console.WriteLine (f.GetValue (o));
 			return null;
 		}
