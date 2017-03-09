@@ -13,7 +13,6 @@ file does not exist, but the project is built anyway (command-line or IDE build)
 Copyright (C) 2015 Xamarin Inc. All rights reserved.
 ***********************************************************************************************
 -->
-<!-- Rename file -->
 
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<!-- MSBuild specific hacks - Teach msbuild where to find our BCL and facades -->

@@ -15,7 +15,7 @@ Copyright (C) 2015 Xamarin Inc. All rights reserved.
 -->
 
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<!-- Unfortuntly Microsoft.NETFramework.CurrentVersion.targets defines this and is not included in Mobile/Modern builds so we'll add it here -->
+	<!-- Microsoft.NETFramework.CurrentVersion.targets defines this and that target file is not pulled in to Mobile/Modern builds -->
 	<PropertyGroup>
 		<ResolveReferencesDependsOn>
 			$(ResolveReferencesDependsOn);
