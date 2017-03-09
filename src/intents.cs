@@ -323,7 +323,8 @@ namespace XamCore.Intents {
 		Pending,
 		Completed,
 		Canceled,
-		Failed
+		Failed,
+		Unpaid
 	}
 
 	[Native]
@@ -2740,12 +2741,12 @@ namespace XamCore.Intents {
 	[BaseType (typeof (NSObject))]
 	interface INPreferences {
 
-		[NoWatch] // It seems this is not available on watchOS radar:30529232 https://trello.com/c/h8xBlKTt
+		[NoWatch]
 		[Static]
 		[Export ("siriAuthorizationStatus")]
 		INSiriAuthorizationStatus SiriAuthorizationStatus { get; }
 
-		[NoWatch] // It seems this is not available on watchOS radar:30529232 https://trello.com/c/h8xBlKTt
+		[NoWatch]
 		[Static]
 		[Async]
 		[Export ("requestSiriAuthorization:")]
