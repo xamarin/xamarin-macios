@@ -303,7 +303,8 @@ namespace XamCore.Intents {
 		Pending,
 		Completed,
 		Canceled,
-		Failed
+		Failed,
+		Unpaid
 	}
 
 	[Native]
@@ -2445,10 +2446,12 @@ namespace XamCore.Intents {
 	[BaseType (typeof (NSObject))]
 	interface INPreferences {
 
+		[NoWatch]
 		[Static]
 		[Export ("siriAuthorizationStatus")]
 		INSiriAuthorizationStatus SiriAuthorizationStatus { get; }
 
+		[NoWatch]
 		[Static]
 		[Async]
 		[Export ("requestSiriAuthorization:")]
