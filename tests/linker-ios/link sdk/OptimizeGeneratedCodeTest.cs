@@ -189,8 +189,13 @@ namespace Linker.Shared {
 			// classic does not use the subdirectories, neither do we for single arch simulator
 			bool classic_or_sim = !b32 && !b64;
 			bool single_arch = !(b32 && b64);
-			if (classic_or_sim || single_arch)
+			if (classic_or_sim || single_arch) {
+#if DEBUG
+				Assert.Inconclusive ("debug IL code");
+#else
 				Assert.IsFalse (contains11 && contains22, "neither instructions removed");
+#endif
+			}
 			// even if disabled this condition remains
 			Assert.IsFalse (!contains11 && !contains22, "both instructions removed");
 		}
