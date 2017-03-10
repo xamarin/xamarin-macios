@@ -42,7 +42,7 @@ namespace Xamarin.MacDev
 
 		public static string AbsoluteToRelative (string baseDirectory, string absolute)
 		{
-			if (!Path.IsPathRooted (absolute) || string.IsNullOrEmpty (baseDirectory))
+			if (string.IsNullOrEmpty (baseDirectory))
 				return absolute;
 
 			// canonicalize the paths
