@@ -33,7 +33,7 @@ namespace Xamarin.MacDev
 			try {
 				buffer = Marshal.AllocHGlobal (PATHMAX);
 				var result = realpath (path, buffer);
-				return result == IntPtr.Zero ? "" : Marshal.PtrToStringAuto (buffer);
+				return result == IntPtr.Zero ? path : Marshal.PtrToStringAuto (buffer);
 			} finally {
 				if (buffer != IntPtr.Zero)
 					Marshal.FreeHGlobal (buffer);
