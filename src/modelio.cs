@@ -1778,6 +1778,10 @@ namespace XamCore.ModelIO {
 
 		[Export ("format", ArgumentSemantic.Assign)]
 		MDLVertexFormat Format { get; set; }
+
+		[iOS (10,3), TV (10,2), Mac (10,12,4, onlyOn64: true)]
+		[Export ("bufferSize", ArgumentSemantic.Assign)]
+		nuint BufferSize { get; set; }
 	}
 
 	[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
