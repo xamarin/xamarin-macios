@@ -6399,7 +6399,6 @@ namespace XamCore.UIKit {
 	    string UserInput { get; }
 	}
 
-	[NoTV]
 	[BaseType (typeof (NSObject))]
 	interface UILocalizedIndexedCollation {
 		[Export ("sectionTitles")]
