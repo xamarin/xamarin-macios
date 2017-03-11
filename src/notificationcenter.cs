@@ -60,7 +60,7 @@ namespace XamCore.NotificationCenter {
 #if !MONOMAC
 	[iOS (8,0)]
 	[BaseType (typeof (UIVibrancyEffect))]
-	[Category]
+	[Category (allowStaticMembers: true)] // Classic isn't internal so we need this
 	interface UIVibrancyEffect_NotificationCenter {
 #if XAMCORE_2_0
 		[Internal]

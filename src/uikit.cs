@@ -131,7 +131,8 @@ namespace XamCore.UIKit {
 
 #if !XAMCORE_3_0
 	[NoWatch]
-	[Category, BaseType (typeof (NSAttributedString))]
+	[Category (allowStaticMembers: true)] // Classic isn't internal so we need this
+	[BaseType (typeof (NSAttributedString))]
 	interface NSAttributedStringAttachmentConveniences {
 #if XAMCORE_2_0
 		[Internal]
