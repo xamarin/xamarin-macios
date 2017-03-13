@@ -21,12 +21,12 @@ namespace Xamarin.iOS.Tasks
 			Platform = platform;
 		}
 
-		public void BuildExtension (string hostAppName, string extensionName, string platform, string config, int expectedErrorCount = 0)
+		public void BuildExtension (string hostAppName, string extensionName, string platform, string config, int expectedErrorCount = 0, System.Action<ProjectPaths> additionalAsserts = null)
 		{
-			BuildExtension (hostAppName, extensionName, platform, platform, config, expectedErrorCount);
+			BuildExtension (hostAppName, extensionName, platform, platform, config, expectedErrorCount, additionalAsserts);
 		}
 
-		public void BuildExtension (string hostAppName, string extensionName, string bundlePath, string platform, string config, int expectedErrorCount = 0)
+		public void BuildExtension (string hostAppName, string extensionName, string bundlePath, string platform, string config, int expectedErrorCount = 0, System.Action<ProjectPaths> additionalAsserts = null)
 		{
 			var mtouchPaths = SetupProjectPaths (hostAppName, "../", true, bundlePath, config);
 
@@ -66,6 +66,9 @@ namespace Xamarin.iOS.Tasks
 			} else {
 				TestFilesExists (platform == "iPhone" ? Path.Combine (AppBundlePath, ".monotouch-32") : AppBundlePath, coreFiles);
 			}
+
+			if (additionalAsserts != null)
+				additionalAsserts (mtouchPaths);
 		}
 
 		public void SetupPaths (string appName, string platform) 

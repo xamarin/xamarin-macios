@@ -309,6 +309,18 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public bool HasFrameworksDirectory {
+			get {
+				if (!IsExtension)
+					return true;
+
+				if (IsWatchExtension && Platform == ApplePlatform.WatchOS)
+					return true;
+				
+				return false;
+			}
+		}
+
 		public string ExtensionIdentifier {
 			get {
 				if (!IsExtension)
@@ -1076,7 +1088,7 @@ namespace Xamarin.Bundler {
 			}
 
 			// Copy frameworks to the app bundle.
-			if (!IsExtension || IsWatchExtension) {
+			if (HasFrameworksDirectory) {
 				var all_frameworks = new HashSet<string> ();
 				all_frameworks.UnionWith (Frameworks);
 				all_frameworks.UnionWith (WeakFrameworks);
@@ -1126,24 +1138,22 @@ namespace Xamarin.Bundler {
 					}
 				}
 			} else {
-				if (!IsWatchExtension) {
-					// In extensions we need to save a list of the frameworks we need so that the main app can get them.
-					var all_frameworks = new HashSet<string> (Frameworks);
-					all_frameworks.UnionWith (WeakFrameworks);
-					foreach (var t in Targets) {
-						all_frameworks.UnionWith (t.Frameworks);
-						all_frameworks.UnionWith (t.WeakFrameworks);
-						foreach (var a in t.Assemblies) {
-							if (a.Frameworks != null)
-								all_frameworks.UnionWith (a.Frameworks);
-							if (a.WeakFrameworks != null)
-								all_frameworks.UnionWith (a.WeakFrameworks);
-						}
+				// In extensions we need to save a list of the frameworks we need so that the main app can get them.
+				var all_frameworks = new HashSet<string> (Frameworks);
+				all_frameworks.UnionWith (WeakFrameworks);
+				foreach (var t in Targets) {
+					all_frameworks.UnionWith (t.Frameworks);
+					all_frameworks.UnionWith (t.WeakFrameworks);
+					foreach (var a in t.Assemblies) {
+						if (a.Frameworks != null)
+							all_frameworks.UnionWith (a.Frameworks);
+						if (a.WeakFrameworks != null)
+							all_frameworks.UnionWith (a.WeakFrameworks);
 					}
-					all_frameworks.RemoveWhere ((v) => !v.EndsWith (".framework", StringComparison.Ordinal));
-					if (all_frameworks.Count () > 0)
-						Driver.WriteIfDifferent (Path.Combine (Path.GetDirectoryName (AppDirectory), "frameworks.txt"), string.Join ("\n", all_frameworks.ToArray ()));
 				}
+				all_frameworks.RemoveWhere ((v) => !v.EndsWith (".framework", StringComparison.Ordinal));
+				if (all_frameworks.Count () > 0)
+					Driver.WriteIfDifferent (Path.Combine (Path.GetDirectoryName (AppDirectory), "frameworks.txt"), string.Join ("\n", all_frameworks.ToArray ()));
 			}
 
 			if (IsSimulatorBuild || !IsDualBuild) {
