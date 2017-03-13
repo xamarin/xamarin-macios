@@ -10,7 +10,7 @@ This file imports the version- and platform-specific targets for the project imp
 this file. This file also defines targets to produce an error if the specified targets
 file does not exist, but the project is built anyway (command-line or IDE build).
 
-Copyright (C) 2015 Xamarin Inc. All rights reserved.
+Copyright (c) 2017 Microsoft Corp. (www.microsoft.com)
 ***********************************************************************************************
 -->
 

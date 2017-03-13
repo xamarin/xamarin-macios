@@ -654,7 +654,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 		Condition="'$(UseXamMacFullFramework)' == 'true' And '$(IsXBuild)' == 'true' "/>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.msbuild.targets"
-		Condition="'$(IsXBuild)' == 'false' "/>
+		Condition="'$(IsXBuild)' != 'true' "/>
 
 	<Target Name="_SeparateAppExtensionReferences" BeforeTargets="AssignProjectConfiguration" Condition="'$(IsAppExtension)' != 'true'">
 		<CreateItem Include="@(ProjectReference)" PreserveExistingMetadata="true" Condition="'%(Identity)' != '' And '%(ProjectReference.IsAppExtension)' == 'true'">
