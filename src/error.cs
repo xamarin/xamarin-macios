@@ -92,6 +92,7 @@ using ProductException=BindingException;
 //		BI1114 Binding error: test unable to find property: {0} on {1}.
 //		BI1115 The parameter '{0}' in the delegate '{1}' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback].
 //		BI1116 The parameter '{0}' in the delegate '{1}' does not have a [CCallback] or [BlockCallback] attribute. Defaulting to [CCallback]. Declare a custom delegate instead of using System.Action / System.Func and add the attribute on the corresponding parameter.
+//		BI1117 The {0} member is decorated with [Static] and its container class {1} is decorated with [Category] this leads to hard to use code. Please inline {0} into {2} class.
 // BI2xxx	reserved
 // BI3xxx	reserved
 // BI4xxx	reserved

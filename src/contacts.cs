@@ -516,7 +516,7 @@ namespace XamCore.Contacts {
 	}
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
-	[Category]
+	[Category (allowStaticMembers: true)]
 	[BaseType (typeof (CNContainer))]
 	interface CNContainer_PredicatesExtension {
 
@@ -581,7 +581,7 @@ namespace XamCore.Contacts {
 	}
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
-	[Category]
+	[Category (allowStaticMembers: true)]
 	[BaseType (typeof (CNGroup))]
 	interface CNGroup_PredicatesExtension {
 
