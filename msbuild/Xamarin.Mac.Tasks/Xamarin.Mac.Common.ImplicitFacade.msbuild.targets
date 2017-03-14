@@ -1,0 +1,65 @@
+﻿<!--
+***********************************************************************************************
+Xamarin.Mac.Common.ImplicitFacade.msbuild.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+  created a backup copy.  Incorrect changes to this file will make it
+  impossible to load or build your projects from the command-line or the IDE.
+
+This file imports the version- and platform-specific targets for the project importing
+this file. This file also defines targets to produce an error if the specified targets
+file does not exist, but the project is built anyway (command-line or IDE build).
+
+Copyright (c) 2017 Microsoft Corp. (www.microsoft.com)
+***********************************************************************************************
+-->
+
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<!-- All of this logic copied directly from Microsoft.NETFramework.CurrentVersion.targets -->
+	<!-- XM Mobile/Modern builds do not import it since their TVI is not NETFramework -->
+	<!-- However it is needed to successfully consume netstandard nuget packages -->
+	
+	<PropertyGroup>
+		<ResolveReferencesDependsOn>
+			$(ResolveReferencesDependsOn);
+			ImplicitlyExpandDesignTimeFacades
+		</ResolveReferencesDependsOn>
+
+		<ImplicitlyExpandDesignTimeFacadesDependsOn>
+			$(ImplicitlyExpandDesignTimeFacadesDependsOn);
+			GetReferenceAssemblyPaths
+		</ImplicitlyExpandDesignTimeFacadesDependsOn>
+	</PropertyGroup>
+
+	<!-- Implicitly references all portable design-time facades if the user is referencing a System.Runtime-based portable library -->
+	<Target Name="ImplicitlyExpandDesignTimeFacades" DependsOnTargets="$(ImplicitlyExpandDesignTimeFacadesDependsOn)">
+		<PropertyGroup>
+			<!-- Does one of our dependencies reference a System.Runtime-based portable library? -->
+			<_HasReferenceToSystemRuntime Condition="'$(DependsOnSystemRuntime)' == 'true' or '%(_ResolvedProjectReferencePaths.TargetPlatformIdentifier)' == 'Portable'">true</_HasReferenceToSystemRuntime>
+		</PropertyGroup>
+
+		<ItemGroup Condition="'$(_HasReferenceToSystemRuntime)' == 'true'">
+			<_DesignTimeFacadeAssemblies Include="%(DesignTimeFacadeDirectories.Identity)*.dll"/>
+
+			<_DesignTimeFacadeAssemblies_Names Include="@(_DesignTimeFacadeAssemblies->'%(FileName)')">
+				<OriginalIdentity>%(_DesignTimeFacadeAssemblies.Identity)</OriginalIdentity>
+			</_DesignTimeFacadeAssemblies_Names>
+
+			<_ReferencePath_Names Include="@(ReferencePath->'%(FileName)')">
+				<OriginalIdentity>%(ReferencePath.Identity)</OriginalIdentity>
+			</_ReferencePath_Names>
+
+			<_DesignTimeFacadeAssemblies_Names Remove="@(_ReferencePath_Names)"/>
+
+			<ReferencePath Include="@(_DesignTimeFacadeAssemblies_Names->'%(OriginalIdentity)')">
+				<WinMDFile>false</WinMDFile>
+				<CopyLocal>false</CopyLocal>
+				<ResolvedFrom>ImplicitlyExpandDesignTimeFacades</ResolvedFrom>
+			</ReferencePath>
+			<_ResolveAssemblyReferenceResolvedFiles Include="@(ReferencePath)" Condition="'%(ReferencePath.ResolvedFrom)' == 'ImplicitlyExpandDesignTimeFacades'" />
+		</ItemGroup>
+
+		<Message Importance="Low" Text="Including @(ReferencePath)" Condition="'%(ReferencePath.ResolvedFrom)' == 'ImplicitlyExpandDesignTimeFacades'" />
+	</Target>
+</Project>

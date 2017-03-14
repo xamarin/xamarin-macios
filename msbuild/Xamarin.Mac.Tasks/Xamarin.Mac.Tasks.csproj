@@ -69,7 +69,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Xamarin.Mac.XM45.targets">
+    <None Include="Xamarin.Mac.Common.ImplicitFacade.msbuild.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Xamarin.Mac.Common.ImplicitFacade.xbuild.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Xamarin.Mac.XM45.xbuild.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Xamarin.Mac.msbuild.targets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Xamarin.Mac.Common.targets">
