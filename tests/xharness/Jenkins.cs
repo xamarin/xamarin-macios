@@ -273,8 +273,7 @@ namespace xharness
 			
 			// Then we check for labels. Labels are manually set, so those override
 			// whatever we did automatically.
-			if (pull_request > 0)
-				SelectTestsByLabel (pull_request);
+			SelectTestsByLabel (pull_request);
 
 			if (!Harness.INCLUDE_IOS) {
 				MainLog.WriteLine ("The iOS build is diabled, so any iOS tests will be disabled as well.");
@@ -363,7 +362,10 @@ namespace xharness
 
 		void SelectTestsByLabel (int pull_request)
 		{
-			var labels = GitHub.GetLabels (Harness, pull_request);
+			var labels = new HashSet<string> ();
+			labels.UnionWith (Harness.Labels);
+			if (pull_request > 0)
+				labels.UnionWith (GitHub.GetLabels (Harness, pull_request));
 
 			MainLog.WriteLine ("Found {1} label(s) in the pull request #{2}: {0}", string.Join (", ", labels.ToArray ()), labels.Count (), pull_request);
 
@@ -384,7 +386,7 @@ namespace xharness
 			SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
 		}
 
-		void SetEnabled (IEnumerable<string> labels, string testname, ref bool value)
+		void SetEnabled (HashSet<string> labels, string testname, ref bool value)
 		{
 			if (labels.Contains ("skip-" + testname + "-tests")) {
 				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-{0}-tests' is set.", testname);

@@ -62,6 +62,7 @@ namespace xharness
 		public int Verbosity { get; set; }
 		public Log HarnessLog { get; set; }
 		public bool UseSystem { get; set; } // if the system XI/XM should be used, or the locally build XI/XM.
+		public HashSet<string> Labels { get; } = new HashSet<string> ();
 
 		// This is the maccore/tests directory.
 		string root_directory;
