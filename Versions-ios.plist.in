@@ -103,7 +103,10 @@
 	</dict>
 	<key>Features</key>
 	<array>
-		<string>feature-list</string>
+		<string>mlaunch-launchdevbundleid</string>
+		<string>mlaunch-observe-extension</string>
+		<string>mlaunch-launch-simulator</string>
+		<string>mlaunch-install-progress</string>
 	</array>
 </dict>
 </plist>
