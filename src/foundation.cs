@@ -7184,7 +7184,7 @@ namespace XamCore.Foundation
 		void GetParagraphPositions (out nuint paragraphStartPosition, out nuint paragraphEndPosition, out nuint contentsEndPosition, NSRange range);
 
 		[Export ("paragraphRangeForRange:")]
-		NSRange ParagraphRangeForRange (NSRange range);
+		NSRange GetParagraphRange (NSRange range);
 	}
 
 	[StrongDictionary ("NSString")]
