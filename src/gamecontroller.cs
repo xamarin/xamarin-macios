@@ -280,6 +280,7 @@ namespace XamCore.GameController {
 		GCController [] Controllers { get; }
 
 		[Static, Export ("startWirelessControllerDiscoveryWithCompletionHandler:")]
+		[Async]
 		void StartWirelessControllerDiscovery ([NullAllowed] Action completionHandler);
 
 		[Static, Export ("stopWirelessControllerDiscovery")]

@@ -976,6 +976,7 @@ NETWORKEXTENSION_API_SOURCES = \
 
 NETWORKEXTENSION_CORE_SOURCES = \
 	NetworkExtension/NEHotspotHelperOptions.cs \
+	NetworkExtension/NEPacketTunnelFlow.cs \
 	NetworkExtension/NEVpnConnectionStartOptions.cs \
 
 NETWORKEXTENSION_SOURCES = \
@@ -1245,7 +1246,8 @@ SYSTEMCONFIGURATION_SOURCES = \
 
 # TVMLKit
 
-TVMLKIT_CORE_SOURCES =
+TVMLKIT_CORE_SOURCES = \
+	TVMLKit/TVViewElement.cs \
 
 # TVServices
 
@@ -1386,9 +1388,11 @@ WATCHCONNECTIVITY_CORE_SOURCES = \
 WATCHKIT_API_SOURCES = \
     WatchKit/WKDefs.cs \
 
+WATCHKIT_CORE_SOURCES = \
+	WatchKit/WKInterfaceController.cs \
+
 WATCHKIT_SOURCES = \
 	WatchKit/WKAccessibility.cs \
-	WatchKit/WKInterfaceController.cs \
 	WatchKit/WKInterfaceDevice.cs \
 
 # WebKit (Mac version)

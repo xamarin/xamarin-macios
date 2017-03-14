@@ -205,6 +205,7 @@ namespace xharness
 					var filename = Path.GetFullPath (Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch"));
 					if (File.Exists (filename)) {
 						Log ("Found mlaunch: {0}", filename);
+						Environment.SetEnvironmentVariable ("MLAUNCH_PATH", filename);
 						return mlaunch = filename;
 					}
 
@@ -217,6 +218,7 @@ namespace xharness
 					}
 					if (File.Exists (filename)) {
 						Log ("Found mlaunch: {0}", filename);
+						Environment.SetEnvironmentVariable ("MLAUNCH_PATH", filename);
 						return mlaunch = filename;
 					}
 
@@ -226,6 +228,7 @@ namespace xharness
 					filename = "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch";
 					if (File.Exists (filename)) {
 						Log ("Found mlaunch: {0}", filename);
+						Environment.SetEnvironmentVariable ("MLAUNCH_PATH", filename);
 						return mlaunch = filename;
 					}
 

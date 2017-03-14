@@ -279,6 +279,7 @@ namespace XamCore.UIKit {
 	[NoWatch]
 	[NoTV]
 	[iOS (8,0)]
+	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
 	partial interface NSFileProviderExtension {
 	    [Static, Export ("writePlaceholderAtURL:withMetadata:error:")]
@@ -2514,6 +2515,7 @@ namespace XamCore.UIKit {
 
 		[iOS (10,0), TV (10,0)]
 		[Wrap ("OpenUrl (url, options?.Dictionary, completion)")]
+		[Async]
 		void OpenUrl (NSUrl url, UIApplicationOpenUrlOptions options, [NullAllowed] Action<bool> completion);
 
 		[Export ("canOpenURL:")]
@@ -14699,6 +14701,7 @@ namespace XamCore.UIKit {
 		UIPrinter FromUrl (NSUrl url);
 	
 		[Export ("contactPrinter:")]
+		[Async]
 		void ContactPrinter (UIPrinterContactPrinterHandler completionHandler);
 	}
 
@@ -15644,6 +15647,7 @@ namespace XamCore.UIKit {
 		NSObject WeakDelegate { get; set; }
 
 		[Export ("addOptionWithTitle:image:order:handler:")]
+		[Async]
 		void AddOption (string title, [NullAllowed] UIImage image, UIDocumentMenuOrder order, Action completionHandler);
 	}
 
@@ -15833,6 +15837,7 @@ namespace XamCore.UIKit {
 	[BaseType (typeof (NSObject))]
 	interface UIFocusAnimationCoordinator {
 		[Export ("addCoordinatedAnimations:completion:")]
+		[Async]
 		void AddCoordinatedAnimations ([NullAllowed] Action animations, [NullAllowed] Action completion);
 	}
 

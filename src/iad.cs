@@ -263,6 +263,7 @@ namespace XamCore.iAd {
 
 		[iOS (9,0)]
 		[Export ("requestAttributionDetailsWithBlock:")]
+		[Async]
 		void RequestAttributionDetails (Action<NSDictionary, NSError> completionHandler);
 
 #if !XAMCORE_4_0

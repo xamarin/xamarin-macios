@@ -10,6 +10,7 @@ using XamCore.UIKit;
 
 namespace XamCore.WatchKit {
 
+#if !COREBUILD
 	public partial class WKInterfaceController {
 
 		public void PushController (string name, string context)
@@ -91,6 +92,21 @@ namespace XamCore.WatchKit {
 			AddMenuItem (itemIcon, title, sel);
 			Runtime.ConnectMethod (mi, sel);
 		}
+	}
+#endif
+
+	public class WKPresentMediaPlayerResult {
+#if !COREBUILD
+		public WKPresentMediaPlayerResult (bool didPlayToEnd, double /* NSTimeInterval */ endTime)
+		{
+			DidPlayToEnd = didPlayToEnd;
+			EndTime = endTime;
+		}
+
+		public bool DidPlayToEnd { get; set; }
+
+		public double EndTime { get; set; }
+#endif
 	}
 }
 

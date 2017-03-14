@@ -40,14 +40,28 @@ namespace Xamarin.Mac.Tasks
 			var sb = new StringBuilder ();
 			if (isMobile) {
 				sb.Append (Path.Combine (FrameworkRoot, "lib", "bmac", "bmac-mobile.exe"));
-				sb.Append (" --target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile ");
 			} else {
 				sb.Append (Path.Combine (FrameworkRoot, "lib", "bmac", "bmac-full.exe"));
-				sb.Append (" --target-framework=Xamarin.Mac,Version=v4.5,Profile=Full ");
 			}
-			sb.Append ("-nostdlib ");
+			sb.Append (" -nostdlib ");
 			sb.Append (base.GenerateCommandLineCommands ());
 			return sb.ToString ();
 		}
+
+		protected override string GetTargetFrameworkArgument ()
+		{
+			switch (TargetFrameworkIdentifier) {
+				case null:
+				case "":
+				case "Xamarin.Mac":
+					return "/target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile";
+				case ".NETFramework":
+					return "/target-framework=Xamarin.Mac,Version=v4.5,Profile=Full";
+				default:
+					Log.LogError ($"Unknown target framework identifier: {TargetFrameworkIdentifier}.");
+					return string.Empty;
+			}
+		}
+
 	}
 }
