@@ -7179,6 +7179,12 @@ namespace XamCore.Foundation
 		[Static]
 		[Export ("localizedUserNotificationStringForKey:arguments:")]
 		string GetLocalizedUserNotificationString (string key, [Params] [NullAllowed] NSObject [] arguments);
+
+		[Export ("getParagraphStart:end:contentsEnd:forRange:")]
+		void GetParagraphPositions (out nuint paragraphStartPosition, out nuint paragraphEndPosition, out nuint contentsEndPosition, NSRange range);
+
+		[Export ("paragraphRangeForRange:")]
+		NSRange GetParagraphRange (NSRange range);
 	}
 
 	[StrongDictionary ("NSString")]
