@@ -27,6 +27,7 @@ namespace Xamarin.MMP.Tests
 			TI.CleanUnifiedProject (projectPath);
 			RestoreRoslynNuget ("Modern");
 			TI.BuildProject (projectPath, true, useMSBuild: true);
+			TI.RunAndAssert (Path.Combine (RoslynTestProjectRoot, "Modern/bin/Debug/RoslynTestApp.app/Contents/MacOS/RoslynTestApp"), new StringBuilder (), "Run");
 		}
 
 		// [Test] - https://bugzilla.xamarin.com/show_bug.cgi?id=53164
@@ -37,6 +38,7 @@ namespace Xamarin.MMP.Tests
 			TI.CleanUnifiedProject (projectPath);
 			RestoreRoslynNuget ("Full");
 			TI.BuildProject (projectPath, true, useMSBuild: true);
+			TI.RunAndAssert (Path.Combine (RoslynTestProjectRoot, "Full/bin/Debug/RoslynTestApp.app/Contents/MacOS/RoslynTestApp"), new StringBuilder (), "Run");
 		}
 	}
 }
