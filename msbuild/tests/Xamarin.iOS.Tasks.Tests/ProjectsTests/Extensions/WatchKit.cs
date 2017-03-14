@@ -17,7 +17,11 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void BasicTest () 
 		{
-			this.BuildExtension ("MyWatchApp", "MyWatchKitExtension", Platform, "Debug");
+			this.BuildExtension ("MyWatchApp", "MyWatchKitExtension", Platform, "Debug", additionalAsserts: (ProjectPaths mtouchPaths) =>
+			{
+				Assert.IsTrue (Directory.Exists (Path.Combine (mtouchPaths.AppBundlePath, "PlugIns", "MyWatchKitExtension.appex")), "appex");
+				Assert.IsFalse (Directory.Exists (Path.Combine (mtouchPaths.AppBundlePath, "PlugIns", "MyWatchKitExtension.appex", "Frameworks")), "frameworks");
+			});
 		}
 
 		[Test]
