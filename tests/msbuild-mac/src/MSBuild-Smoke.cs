@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace Xamarin.MMP.Tests
 {
 	[TestFixture]
-	public class MMPTests
+	public partial class MMPTests
 	{
 		void RunMSBuildTest (Action <string> test)
 		{
