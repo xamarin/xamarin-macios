@@ -105,5 +105,30 @@ namespace apitest
 				}
 			}
 		}
+
+		[Test]
+		public void KEventExceptions ()
+		{
+			using (var sleep = Process.Start ("/bin/sleep", "0")) {
+				using (var kqueue = new KernelQueue ()) {
+					var events = CreateEvents (sleep);
+					var empty = new KernelEvent [0];
+
+					Assert.Throws<ArgumentNullException> (() => kqueue.KEvent (null, events, null), "a1");
+					Assert.Throws<ArgumentNullException> (() => kqueue.KEvent (events, null, null), "a2");
+					Assert.Throws<ArgumentNullException> (() => kqueue.KEvent (null, null, null), "a3");
+					Assert.Throws<ArgumentOutOfRangeException> (() => kqueue.KEvent (events, empty, null), "a4");
+					Assert.Throws<ArgumentOutOfRangeException> (() => kqueue.KEvent (empty, events, null), "a5");
+
+					Assert.Throws<ArgumentNullException> (() => kqueue.KEvent (null, 1, events, 1, null), "b1");
+					Assert.Throws<ArgumentNullException> (() => kqueue.KEvent (events, 1, null, 1, null), "b2");
+					Assert.Throws<ArgumentNullException> (() => kqueue.KEvent (null, 1, null, 1, null), "b3");
+					Assert.Throws<ArgumentOutOfRangeException> (() => kqueue.KEvent (events, 1, empty, 1, null), "b4");
+					Assert.Throws<ArgumentOutOfRangeException> (() => kqueue.KEvent (empty, 1, events, 1, null), "b5");
+					Assert.Throws<ArgumentOutOfRangeException> (() => kqueue.KEvent (events, 1, events, 2, null), "b6");
+					Assert.Throws<ArgumentOutOfRangeException> (() => kqueue.KEvent (events, 2, events, 1, null), "b7");
+				}
+			}
+		}
 	}
 }

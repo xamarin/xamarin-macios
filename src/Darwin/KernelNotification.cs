@@ -192,6 +192,12 @@ namespace XamCore.Darwin {
 			if (eventList == null)
 				throw new ArgumentNullException (nameof (eventList));
 
+			if (changeList.Length < 1)
+				throw new ArgumentOutOfRangeException ("eventList must contain at least one element", nameof (eventList));
+
+			if (eventList.Length < 1)
+				throw new ArgumentOutOfRangeException ("changeList must contain at least one element", nameof (changeList));
+
 			return KEvent (changeList, changeList.Length, eventList, eventList.Length, ToTimespec (timeout));
 		}
 
@@ -203,11 +209,17 @@ namespace XamCore.Darwin {
 			if (eventList == null)
 				throw new ArgumentNullException (nameof (eventList));
 
+			if (changeList.Length < 1)
+				throw new ArgumentOutOfRangeException ("eventList must contain at least one element", nameof (eventList));
+
+			if (eventList.Length < 1)
+				throw new ArgumentOutOfRangeException ("changeList must contain at least one element", nameof (changeList));
+
 			if (changeList.Length < nChanges)
 				throw new ArgumentOutOfRangeException ("nChanges is larger than the number of elements in changeList", nameof (nChanges));
 
 			if (eventList.Length < nEvents)
-				throw new ArgumentOutOfRangeException ("nChanges is larger than the number of elements in changeList", nameof (nEvents));
+				throw new ArgumentOutOfRangeException ("nEvents is larger than the number of elements in eventList", nameof (nEvents));
 
 			unsafe {
 				fixed (KernelEvent *cp = &changeList [0])
