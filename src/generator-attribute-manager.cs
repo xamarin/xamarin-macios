@@ -157,7 +157,7 @@ public static class AttributeManager
 	static T [] FilterAttributes<T> (IList<CustomAttributeData> attributes) where T : System.Attribute
 	{
 		if (attributes == null || attributes.Count == 0)
-			return new T [0]; // FIXME: ugh, we end up allocating a lot of empty arrays
+			return Array.Empty<T> ();
 
 		var type = ConvertType (typeof (T));
 		List<T> list = null;
@@ -174,7 +174,7 @@ public static class AttributeManager
 		if (list != null)
 			return list.ToArray ();
 
-		return new T [0]; // FIXME: ugh, we end up allocating a lot of empty arrays
+		return Array.Empty<T> ();
 	}
 
 	public static T [] GetCustomAttributes<T> (ICustomAttributeProvider provider) where T : System.Attribute
