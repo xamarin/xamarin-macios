@@ -107,6 +107,7 @@
 		<string>mlaunch-observe-extension</string>
 		<string>mlaunch-launch-simulator</string>
 		<string>mlaunch-install-progress</string>
+		<string>sgen-concurrent-gc</string>
 	</array>
 </dict>
 </plist>
