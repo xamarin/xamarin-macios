@@ -1103,7 +1103,6 @@ public partial class Generator : IMemberGatherer {
 		throw new BindingException (1017, true, "Do not know how to make a signature for {0}", mai.Type);
 	}
 
-	static HashSet<Type> missing_base_type_warning_shown = new HashSet<Type> ();
 	static bool IsProtocolInterface (Type type, bool checkPrefix = true)
 	{
 		// for subclassing the type (from the binding files) is not yet prefixed by an `I`
@@ -5461,12 +5460,9 @@ public partial class Generator : IMemberGatherer {
 			if (is_protocol) {
 				if (is_static_class)
 					throw new BindingException (1025, true, "[Static] and [Protocol] are mutually exclusive ({0})", type.FullName);
-				if (is_model && base_type == TypeManager.System_Object){
-					if (!missing_base_type_warning_shown.Contains (type)){
-						missing_base_type_warning_shown.Add (type);
-						Console.WriteLine ("Warning, protocol {0} does not have a BaseType, wont generate the class, only the interface and extensions class", type.FullName);
-					}
-				}
+				if (is_model && base_type == TypeManager.System_Object)
+					throw new BindingException (1060, true, "The {0} protocol is decorated with [Model], but not [BaseType]. Please verify that [Model] is relevant for this protocol; if so, add [BaseType] as well, otherwise remove [Model].", type.FullName);
+
 				var protocol = AttributeManager.GetCustomAttribute<ProtocolAttribute> (type);
 				GenerateProtocolTypes (type, class_visibility, TypeName, protocol.Name ?? objc_type_name, protocol);
 			}
