@@ -32,7 +32,7 @@
 	</dict>
 	<key>Features</key>
 	<array>
-		<string>feature-list</string>
+		<string>sgen-concurrent-gc</string>
 	</array>
 </dict>
 </plist>
