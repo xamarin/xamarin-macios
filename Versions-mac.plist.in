@@ -33,6 +33,9 @@
 	<key>Features</key>
 	<array>
 		<string>sgen-concurrent-gc</string>
+		<string>activation</string>
+		<string>modern-http-client</string>
+		<string>mono-symbol-archive</string>
 	</array>
 </dict>
 </plist>
