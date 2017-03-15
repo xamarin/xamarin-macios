@@ -32,9 +32,9 @@
 	</dict>
 	<key>Features</key>
 	<array>
-		<string>sgen-concurrent-gc</string>
-		<string>modern-http-client</string>
+		<string>http-client-handlers</string>
 		<string>mono-symbol-archive</string>
+		<string>sgen-concurrent-gc</string>
 	</array>
 </dict>
 </plist>
