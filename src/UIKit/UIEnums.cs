@@ -1969,6 +1969,7 @@ namespace XamCore.UIKit {
 	[iOS (10,0), TV (10,0), NoWatch]
 	[Native]
 	public enum UITextFieldDidEndEditingReason : nint {
+		Unknown = -1, // helper value (not in headers)
 		Committed,
 		[NoiOS]
 		Cancelled
