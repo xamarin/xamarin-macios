@@ -878,6 +878,10 @@ namespace Xamarin.Bundler
 			if (app.EnvironmentVariables.Count > 0)
 				return false;
 
+			// If we are asked to run with concurrent sgen we also need to pass environment variables
+			if (app.EnableSGenConc)
+				return false;
+
 			if (app.Registrar == RegistrarMode.Static)
 				return false;
 
