@@ -1532,7 +1532,7 @@ namespace Xamarin.Bundler {
 				var files = info.Sources;
 				var isFramework = Directory.Exists (files.First ());
 
-				if (IsExtension && !IsWatchExtension && (isFramework || info.DylibToFramework))
+				if (!HasFrameworksDirectory && (isFramework || info.DylibToFramework))
 					continue; // Don't copy frameworks to app extensions (except watch extensions), they go into the container app.
 
 				if (isFramework) {
