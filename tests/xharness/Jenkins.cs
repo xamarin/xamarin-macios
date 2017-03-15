@@ -34,6 +34,7 @@ namespace xharness
 		public Logs Logs = new Logs ();
 		public Log MainLog;
 		public Log SimulatorLoadLog;
+		public Log DeviceLoadLog;
 
 		public string LogDirectory {
 			get {
@@ -112,10 +113,12 @@ namespace xharness
 			var rv = new List<RunDeviceTask> ();
 
 			Devices.Harness = Harness;
+			if (DeviceLoadLog == null)
+				DeviceLoadLog = Logs.CreateStream (LogDirectory, "device-list.log", "Device Listing");
 			try {
-				await Devices.LoadAsync (MainLog, removed_locked: true);
+				await Devices.LoadAsync (DeviceLoadLog, removed_locked: true);
 			} catch (Exception e) {
-				MainLog.WriteLine ("Failed to load devices: {0}", e);
+				DeviceLoadLog.WriteLine ("Failed to load devices: {0}", e);
 				return rv;
 			}
 
@@ -2701,7 +2704,7 @@ function oninitialload ()
 					// Set the device we acquired.
 					Device = Candidates.First ((d) => d.UDID == device_resource.Resource.Name);
 					if (Platform == TestPlatform.watchOS)
-						CompanionDevice = Jenkins.Devices.FindCompanionDevice (Jenkins.MainLog, Device);
+						CompanionDevice = Jenkins.Devices.FindCompanionDevice (Jenkins.DeviceLoadLog, Device);
 					Jenkins.MainLog.WriteLine ("Acquired device '{0}' for '{1}'", Device.Name, ProjectFile);
 
 					runner = new AppRunner
