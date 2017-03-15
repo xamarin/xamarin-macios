@@ -521,14 +521,17 @@ namespace XamCore.Contacts {
 	[BaseType (typeof (CNContainer))]
 	interface CNContainer_PredicatesExtension {
 
+		[Obsolete ("Use CNContainer.CreatePredicateForContainers instead")]
 		[Static]
 		[Export ("predicateForContainersWithIdentifiers:")]
 		NSPredicate GetPredicateForContainers (string [] identifiers);
 
+		[Obsolete ("Use CNContainer.CreatePredicateForContainerOfContact instead")]
 		[Static]
 		[Export ("predicateForContainerOfContactWithIdentifier:")]
 		NSPredicate GetPredicateForContainerOfContact (string contactIdentifier);
 
+		[Obsolete ("Use CNContainer.CreatePredicateForContainerOfGroup instead")]
 		[Static]
 		[Export ("predicateForContainerOfGroupWithIdentifier:")]
 		NSPredicate GetPredicateForContainerOfGroup (string groupIdentifier);
@@ -548,6 +551,7 @@ namespace XamCore.Contacts {
 		[Export ("type", ArgumentSemantic.Assign)]
 		CNContainerType ContainerType { get; }
 
+#region comes from CNContainer (Predicates) Category
 		[Static]
 #if XAMCORE_4_0
 		[Export ("predicateForContainersWithIdentifiers:")]
@@ -572,6 +576,7 @@ namespace XamCore.Contacts {
 		[Wrap ("(null as CNContainer).GetPredicateForContainerOfGroup (groupIdentifier)")]
 #endif
 		NSPredicate CreatePredicateForContainerOfGroup (string groupIdentifier);
+#endregion
 	}
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
@@ -613,15 +618,18 @@ namespace XamCore.Contacts {
 	[BaseType (typeof (CNGroup))]
 	interface CNGroup_PredicatesExtension {
 
+		[Obsolete ("Use CNGroup.CreatePredicateForGroups instead")]
 		[Static]
 		[Export ("predicateForGroupsWithIdentifiers:")]
 		NSPredicate GetPredicateForGroups (string [] identifiers);
 
+		[Obsolete ("Use CNGroup.CreatePredicateForSubgroupsInGroup instead")]
 		[NoiOS][NoWatch]
 		[Static]
 		[Export ("predicateForSubgroupsInGroupWithIdentifier:")]
 		NSPredicate GetPredicateForSubgroupsInGroup (string parentGroupIdentifier);
 
+		[Obsolete ("Use CNGroup.CreatePredicateForGroupsInContainer instead")]
 		[Static]
 		[Export ("predicateForGroupsInContainerWithIdentifier:")]
 		NSPredicate GetPredicateForGroupsInContainer (string containerIdentifier);
@@ -638,6 +646,7 @@ namespace XamCore.Contacts {
 		[Export ("name")]
 		string Name { get; }
 
+#region comes from CNGroup (Predicates) Category
 		[Static]
 #if XAMCORE_4_0
 		[Export ("predicateForGroupsWithIdentifiers:")]
@@ -662,6 +671,7 @@ namespace XamCore.Contacts {
 		[Wrap ("(null as CNGroup).GetPredicateForGroupsInContainer (containerIdentifier)")]
 #endif
 		NSPredicate CreatePredicateForGroupsInContainer (string containerIdentifier);
+#endregion
 	}
 
 	[iOS (9,0), Mac (10,11, onlyOn64: true)]
