@@ -560,7 +560,6 @@ namespace XamCore.Contacts {
 #endif
 		NSPredicate CreatePredicateForContainers (string [] identifiers);
 
-		[NoiOS][NoWatch]
 		[Static]
 #if XAMCORE_4_0
 		[Export ("predicateForContainerOfContactWithIdentifier:")]
