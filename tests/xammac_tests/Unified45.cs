@@ -2,6 +2,8 @@
 using System.IO;
 using NUnit.Framework;
 using Xamarin.MMP.Tests;
+using Xamarin.Bundler;
+using System.Text;
 
 namespace MonoTouchFixtures.Net45 {
 	[TestFixture]
@@ -13,6 +15,12 @@ namespace MonoTouchFixtures.Net45 {
 			var testResults = testFolder + "/TestResult.txt";
 			if (File.Exists (testResults))
 				File.Delete (testResults);
+
+			StringBuilder restoreOutput = new StringBuilder ();
+			int code = Driver.RunCommand ("mono", String.Format ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore {0}/Protobuf_Test.csproj", testFolder), output: restoreOutput);
+
+			if (code != 0)
+				Assert.Fail ("ProtobufShouldSerializeAndDeserialize failed to restore nuget packages");
 
 			TI.BuildProject (testFolder + "/Protobuf_Test.csproj", true);
 
@@ -32,6 +40,13 @@ namespace MonoTouchFixtures.Net45 {
 		public void Net45ShouldUseImmutableCollection ()
 		{
 			var testFolder = "../../../../../../../common/mac/TestProjects/ImmutableCollection_Test/ImmutableCollection_Test";
+
+			StringBuilder restoreOutput = new StringBuilder ();
+
+			int code = Driver.RunCommand ("mono", String.Format ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore {0}/ImmutableCollection_Test.csproj", testFolder), output: restoreOutput);
+
+			if (code != 0)
+				Assert.Fail ("Net45ShouldUseImmutableCollection failed to restore nuget packages");
 
 			TI.BuildProject (testFolder + "/ImmutableCollection_Test.csproj", true);
 

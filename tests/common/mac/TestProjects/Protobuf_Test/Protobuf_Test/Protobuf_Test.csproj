@@ -50,7 +50,7 @@
     <Reference Include="Xamarin.Mac" />
     <Reference Include="System.Xml" />
     <Reference Include="protobuf-net">
-      <HintPath>..\..\..\..\..\packages\protobuf-net.2.1.0\lib\net45\protobuf-net.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\packages\protobuf-net.2.1.0\lib\net45\protobuf-net.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
