@@ -55,7 +55,7 @@ namespace XamCore.ObjCRuntime {
 		static Dictionary<int, WarningLevel> warning_levels;
 		public static int Verbosity { get; set; }
 
-#if MTOUCH
+#if MTOUCH || MMP
 #pragma warning disable 649
 		public static Func<Exception, bool> IsExpectedException;
 		public static Action<int> ExitCallback;
@@ -270,7 +270,7 @@ namespace XamCore.ObjCRuntime {
 
 				if (Verbosity > 2 && !string.IsNullOrEmpty (e.StackTrace))
 					Console.Error.WriteLine (e.StackTrace);
-#if MTOUCH
+#if MTOUCH || MMP
 			} else if (IsExpectedException == null || !IsExpectedException (e)) {
 				Console.Error.WriteLine ("error " + Prefix + "0000: Unexpected error - Please file a bug report at http://bugzilla.xamarin.com");
 				Console.Error.WriteLine (e.ToString ());
