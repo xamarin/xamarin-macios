@@ -35,20 +35,22 @@ install-source-ios: install-source.exe
 	@echo "Installing source files for Xamarin.iOS"
 	$(Q) $(SYSTEM_MONO) install-source.exe $(IOS_ASSEMBLIES) --link:$(USE_SOURCE_LINKS) --mono-path=$(abspath $(MONO_PATH)) --opentk-path=$(abspath $(OPENTK_PATH)/Source) --xamarin-path=$(abspath $(SRC_PATH)) --install-dir=$(abspath $(IOS_DESTDIR))$(abspath $(MONOTOUCH_PREFIX))
 	@echo "Rebasing the Xamarin.iOS mdb files."
-	@for mdb_file in $(IOS_MDB_FILES); do \
-		$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(TOP)/src)/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/ $$mdb_file ; \
-		$(Q_MDB) $(MDB_REBASE) -q -i $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/build/ios/native/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/ $$mdb_file ; \
-		$(Q) chmod 0644 $$mdb_file ; \
+	for mdb_file in $(IOS_MDB_FILES); do \
+		$(MDB_REBASE) -q -i $(abspath $(TOP)/src)/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/ $$mdb_file ; \
+		$(MDB_REBASE) -q -i $(abspath $(TOP)/runtime)/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/runtime $$mdb_file ; \
+		$(MDB_REBASE) -q -i $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/build/ios/native/ -o $(IOS_TARGETDIR)$(MONOTOUCH_PREFIX)/src/Xamarin.iOS/ $$mdb_file ; \
+		chmod 0644 $$mdb_file ; \
 	done
 
 install-source-mac: install-source.exe
 	@echo "Installing source files for Xamarin.Mac"
 	$(Q) $(SYSTEM_MONO) install-source.exe $(MAC_ASSEMBLIES) --link:$(USE_SOURCE_LINKS) --mono-path=$(abspath $(MONO_PATH)) --opentk-path=$(abspath $(OPENTK_PATH)/Source) --xamarin-path=$(abspath $(SRC_PATH)) --install-dir=$(abspath $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR))
 	@echo "Rebasing the Xamarin.Mac mdb files."
-	@for mdb_file in $(MAC_MDB_FILES); do \
-		$(Q_MDB) $(MDB_REBASE) -q -i $(abspath $(TOP)/src)/ -o $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/src/Xamarin.Mac/ $$mdb_file ; \
-		$(Q_MDB) $(MDB_REBASE) -q -i $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/src/Xamarin.Mac/build/mac/full/ -o $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/src/Xamarin.Mac/ $$mdb_file ; \
-		$(Q) chmod 0644 $$mdb_file ; \
+	for mdb_file in $(MAC_MDB_FILES); do \
+		$(MDB_REBASE) -q -i $(abspath $(TOP)/src)/ -o $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/src/Xamarin.Mac/ $$mdb_file ; \
+		$(MDB_REBASE) -q -i $(abspath $(TOP)/runtime)/ -o $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/src/Xamarin.Mac/runtime $$mdb_file ; \
+		$(MDB_REBASE) -q -i $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/src/Xamarin.Mac/build/mac/full/ -o $(MAC_TARGETDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/src/Xamarin.Mac/ $$mdb_file ; \
+		chmod 0644 $$mdb_file ; \
 	done
 
 
