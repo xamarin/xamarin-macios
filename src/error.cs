@@ -32,7 +32,7 @@ public class BindingException : Exception {
 		base (String.Format (message, args), innerException)
 	{
 		Code = code;
-		Error = error;
+		Error = error || ErrorHelper.GetWarningLevel (code) == ErrorHelper.WarningLevel.Error;
 	}
 
 	public int Code { get; private set; }
@@ -48,8 +48,15 @@ public class BindingException : Exception {
 }
 
 public static class ErrorHelper {
+
+	public enum WarningLevel {
+		Error = -1,
+		Warning = 0,
+		Disable = 1,
+	}
 	
 	static public int Verbosity { get; set; }
+	static Dictionary<int, WarningLevel> warning_levels;
 	
 	public static ProductException CreateError (int code, string message, params object[] args)
 	{
@@ -93,6 +100,10 @@ public static class ErrorHelper {
 
 		if (mte != null) {
 			error = mte.Error;
+
+			if (!error && GetWarningLevel (mte.Code) == WarningLevel.Disable)
+				return false;
+
 			Console.Out.WriteLine (mte.ToString ());
 			
 			if (Verbosity > 1) {
@@ -116,5 +127,33 @@ public static class ErrorHelper {
 			Console.Out.WriteLine (Environment.StackTrace);
 		}
 		return error;
+	}
+
+	public static WarningLevel GetWarningLevel (int code)
+	{
+		WarningLevel level;
+
+		if (warning_levels == null)
+			return WarningLevel.Warning;
+
+		// code -1: all codes
+		if (warning_levels.TryGetValue (-1, out level))
+			return level;
+
+		if (warning_levels.TryGetValue (code, out level))
+			return level;
+
+		return WarningLevel.Warning;
+	}
+
+	public static void SetWarningLevel (WarningLevel level, int? code = null /* if null, apply to all warnings */)
+	{
+		if (warning_levels == null)
+			warning_levels = new Dictionary<int, WarningLevel> ();
+
+		if (code.HasValue)
+			warning_levels [code.Value] = level;
+		else
+			warning_levels [-1] = level; // code -1: all codes.
 	}
 }
