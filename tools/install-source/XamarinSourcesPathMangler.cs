@@ -78,15 +78,11 @@ namespace InstallSources
 		/// <param name="path">Path.</param>
 		string GetSourcePathForGeneratedPath (string path)
 		{
-			Console.WriteLine ($"GetSourcePathForGeneratedPath {path}");
 			var frameworkPrefix = FrameworkPath.Remove (FrameworkPath.IndexOf (".framework", StringComparison.InvariantCulture));
 			var installPath = Path.Combine (InstallDir, "src", frameworkPrefix);
-			Console.WriteLine ($"Install path is {installPath}");
 			// we might be looking at a mdb that was already gone thorugh mdb rebase, if that is the case, do find the path for the final target 
 			if (path.StartsWith (Path.Combine (InstallDir, "src", frameworkPrefix), StringComparison.InvariantCulture)) {
-				Console.WriteLine ("Is target path");
 				var src = path.Substring (installPath.Length + 1);
-				Console.WriteLine ($"Substring is {src}");
 				src = Path.Combine (XamarinSourcePath, (InstallDir.Contains ("Xamarin.iOS.framework")) ? "/build/ios/native/" : "/build/mac/full/", src);
 				return src;
 			} else {
@@ -138,16 +134,11 @@ namespace InstallSources
 			return src;
 		}
 
-		string GetSourcePathForRuntimeSource (string path)
-		{
-			Console.WriteLine ($"GetSourcePathForRuntimeSource => path si {path}");
-			return path;
-		}
+		string GetSourcePathForRuntimeSource (string path) => path;
 
 		public string GetSourcePath(string path)
 		{
 			if (IsRunrime (path)) {
-				Console.WriteLine ($"Getting source path for runtime path {path}");
 				return GetSourcePathForRuntimeSource (path);
 			}
 			// decide what type of path we are dealing with and return the correct source.
@@ -192,8 +183,13 @@ namespace InstallSources
 
 		string GetTargetPathForRuntimeSource (string path)
 		{
-			Console.WriteLine ($"GetTargetPathForRuntimeSource => path is {path}");
-			return path;
+			var pos = path.IndexOf (RuntimeSubpath, StringComparison.InvariantCulture);
+			if (pos >= 0) {
+				var relativePath = path.Remove (0, pos + 1); // +1 is used to remove the leading / from RuntimeSubpath
+				var result = Path.Combine (InstallDir, "src", FrameworkPath.Remove (FrameworkPath.IndexOf (".framework", StringComparison.InvariantCulture)), relativePath);
+				return result;
+			}
+			return null;
 		}
 
 		public string GetTargetPath (string path)

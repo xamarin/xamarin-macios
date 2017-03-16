@@ -97,9 +97,7 @@ public class ListSourceFiles {
 				Console.WriteLine ($"Skip path {src}");
 				continue;
 			}
-			Console.WriteLine ($"Fixes source is {fixedSource}");
 			var target = mangler.GetTargetPath (fixedSource);
-
 			var targetDir = Path.GetDirectoryName (target);
 
 			if (!Directory.Exists (targetDir)) {
@@ -139,7 +137,6 @@ public class ListSourceFiles {
 				} // try/catch
 			} else {
 				if (verbose) {
-					Console.WriteLine ($"Xamarin path is {xamarinpath}");
 					Console.WriteLine ("cp {0} {1}", fixedSource, target);
 				}
 				try {

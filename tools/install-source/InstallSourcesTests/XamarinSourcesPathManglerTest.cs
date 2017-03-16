@@ -58,6 +58,13 @@ namespace InstallSourcesTests
 			Assert.AreEqual (result, expectedPath);
 		}
 
+		[TestCase ("/Users/test/xamarin-macios/runtime/Delegates.generated.cs", "/Users/test/xamarin-macios/runtime/Delegates.generated.cs")]
+		public void TestGetSourceRuntimeCode (string path, string expectedPath)
+		{
+			var result = mangler.GetSourcePath (path);
+			Assert.AreEqual (result, expectedPath);
+		}
+
 		[TestCase ("/Users/test/xamarin-macios/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/src/Xamarin.iOS/AVFoundation/AVCaptureDeviceInput.cs",
 			"/Users/test/xamarin-macios/src/AVFoundation/AVCaptureDeviceInput.cs")]
 		[TestCase ("/Users/test/xamarin-macios/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/src/Xamarin.iOS/CoreImage/CIImage.cs",
@@ -111,5 +118,14 @@ namespace InstallSourcesTests
 			Assert.IsTrue (target.StartsWith (mangler.InstallDir, StringComparison.InvariantCulture), "Does not contain the install dir.");
 			Assert.AreEqual (expectedTarget, target, "Target is not the expected one.");
 		}
+
+		[TestCase ("/Users/test/xamarin-macios/src/Xamarin.iOS/runtime/Delegates.generated.cs",
+			"/Users/test/xamarin-macios/src/Xamarin.iOS/runtime/Delegates.generated.cs")]
+		public void TestGetSourcePathRuntime (string path, string expectedPath)
+		{
+			var result = mangler.GetSourcePath (path);
+			Assert.AreEqual (result, expectedPath);
+		}
+
 	}
 }
