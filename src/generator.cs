@@ -425,7 +425,7 @@ public class MemberInformation
 	public readonly Type type;
 	public readonly Type category_extension_type;
 	public readonly bool is_abstract, is_protected, is_internal, is_unified_internal, is_override, is_new, is_sealed, is_static, is_thread_static, is_autorelease, is_wrapper, is_forced;
-	public readonly bool is_type_sealed;
+	public readonly bool is_type_sealed, ignore_category_static_warnings;
 	public readonly Generator.ThreadCheck threadCheck;
 	public bool is_unsafe, is_virtual_method, is_export, is_category_extension, is_variadic, is_interface_impl, is_extension_method, is_appearance, is_model, is_ctor;
 	public bool is_return_release;
@@ -537,8 +537,10 @@ public class MemberInformation
 		}
 
 		this.category_extension_type = category_extension_type;
-		if (category_extension_type != null)
+		if (category_extension_type != null) {
 			is_category_extension = true;
+			ignore_category_static_warnings = is_internal || type.IsInternal () || AttributeManager.GetCustomAttribute<CategoryAttribute> (type).AllowStaticMembers;
+		}
 
 		if (is_static || is_category_extension || is_interface_impl || is_extension_method || is_type_sealed)
 			is_virtual_method = false;
@@ -3917,6 +3919,13 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		CurrentMethod = String.Format ("{0}.{1}", type.Name, mi.Name);
+
+		// Warn about [Static] used in a member of [Category]
+		var hasStaticAtt = AttributeManager.HasAttribute<StaticAttribute> (mi);
+		if (category_type != null && hasStaticAtt && !minfo.ignore_category_static_warnings) {
+			var baseTypeAtt = AttributeManager.GetCustomAttribute<BaseTypeAttribute> (minfo.type);
+			ErrorHelper.Show (new BindingException (1117, "The {0} member is decorated with [Static] and its container class {1} is decorated with [Category] this leads to hard to use code. Please inline {0} into {2} class.", mi.Name, type.FullName, baseTypeAtt?.BaseType.FullName));
+		}
 
 		indent++;
 		// if the namespace/type needs it and if the member is NOT marked as safe (don't check)

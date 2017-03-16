@@ -725,7 +725,15 @@ public class NotImplementedAttribute : Attribute {
 // }
 [AttributeUsage (AttributeTargets.Interface, AllowMultiple=false)]
 public class CategoryAttribute : Attribute {
-	public CategoryAttribute () {}
+	public bool AllowStaticMembers;
+	public CategoryAttribute () { }
+#if XAMCORE_4_0
+	[Obsolete ("Inline the static members in this category in the category's class (and remove this obsolete once fixed)"]
+#endif
+	public CategoryAttribute (bool allowStaticMembers)
+	{
+		AllowStaticMembers = allowStaticMembers;
+	}
 }
 
 //

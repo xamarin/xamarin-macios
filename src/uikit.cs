@@ -131,7 +131,8 @@ namespace XamCore.UIKit {
 
 #if !XAMCORE_3_0
 	[NoWatch]
-	[Category, BaseType (typeof (NSAttributedString))]
+	[Category (allowStaticMembers: true)] // Classic isn't internal so we need this
+	[BaseType (typeof (NSAttributedString))]
 	interface NSAttributedStringAttachmentConveniences {
 #if XAMCORE_2_0
 		[Internal]
@@ -11677,7 +11678,8 @@ namespace XamCore.UIKit {
 		UITableViewRowAction Create (UITableViewRowActionStyle style, [NullAllowed] string title, Action<UITableViewRowAction, NSIndexPath> handler);
 	}
 	
-	[BaseType (typeof (UIControl), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UITextFieldDelegate)})]
+	[BaseType (typeof (UIControl), Delegates=new string [] { "WeakDelegate" })]
+	// , Events=new Type [] {typeof(UITextFieldDelegate)})] custom logic needed, see https://bugzilla.xamarin.com/show_bug.cgi?id=53174
 	interface UITextField : UITextInput, UIContentSizeCategoryAdjusting {
 		[Export ("initWithFrame:")]
 		IntPtr Constructor (CGRect frame);
