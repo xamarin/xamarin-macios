@@ -367,6 +367,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 
 	<Target Name="_CleanAppBundle" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_GenerateBundleName">
 		<RemoveDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_AppBundlePath)" />
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)mtouch.stamp" />
 	</Target>
 
 	<Target Name="_CleanUploaded" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="_ComputeTargetArchitectures">
@@ -728,13 +729,21 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_CompileEntitlements;
 			_CompileAppManifest;
 			_ResolveAppExtensionReferences;
-			_GetNativeExecutableName
+			_GetNativeExecutableName;
+			_GetCompileToNativeInputs
 		</_CompileToNativeDependsOn>
 	</PropertyGroup>
 
+	<Target Name="_GetCompileToNativeInputs">
+		<ItemGroup>
+			<_CompileToNativeInput Include="$(TargetDir)$(TargetFileName)" />
+			<_CompileToNativeInput Condition="'@(_ResolvedAppExtensionReferences)' != ''" Include="%(_ResolvedAppExtensionReferences.Identity)\..\mtouch.stamp" />
+		</ItemGroup>
+	</Target>
+
 	<Target Name="_CompileToNative" DependsOnTargets="$(_CompileToNativeDependsOn)"
-		Inputs="$(TargetDir)$(TargetFileName)"
-		Outputs="$(_NativeExecutable)">
+		Inputs="@(_CompileToNativeInput)"
+		Outputs="$(_NativeExecutable);$(DeviceSpecificOutputPath)mtouch.stamp">
 
 		<ItemGroup>
 			<MTouchReferencePath Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
@@ -786,6 +795,15 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			>
 			<Output TaskParameter="CompiledArchitectures" PropertyName="_CompiledArchitectures" />
 		</MTouch>
+
+		<Touch
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			AlwaysCreate="true"
+			Files="$(DeviceSpecificOutputPath)mtouch.stamp"
+			>
+			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
+		</Touch>
 	</Target>
 
 	<Target Name="_ParseExtraMtouchArgs">
