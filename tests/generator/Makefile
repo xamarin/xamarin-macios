@@ -14,7 +14,7 @@ include $(TOP)/Make.config
 IOS_CURRENT_DIR=$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current
 IOS_GENERATOR = $(IOS_CURRENT_DIR)/bin/btouch-native /baselib:$(IOS_CURRENT_DIR)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll /unsafe
 IOS_TESTS = bug15283 bug15307 bug15799 bug16036 sof20696157 bug23041 bug27430 bug27428 bug34042 btouch-with-hyphen-in-name property-redefination-ios arrayfromhandlebug bug36457 bug39614 bug40282 bug17232 bug24078-ignore-methods-events strong-dict-support-templated-dicts bug43579 bindastests
-IOS_CUSTOM_TESTS = forum54078 desk63279 desk79124 multiple-api-definitions1 multiple-api-definitions2 bug29493 classNameCollision bi1036 bug37527 bug27986 bug35176 bi1046 bindas1048error bindas1049error bindas1050modelerror bindas1050protocolerror virtualwrap bug42855 bug52570 bug52570classinternal bug52570methodinternal bug52570allowstaticmembers
+IOS_CUSTOM_TESTS = forum54078 desk63279 desk79124 multiple-api-definitions1 multiple-api-definitions2 bug29493 classNameCollision bi1036 bug37527 bug27986 bug35176 bi1046 bindas1048error bindas1049error bindas1050modelerror bindas1050protocolerror virtualwrap bug42855 bug52570 bug52570classinternal bug52570methodinternal bug52570allowstaticmembers bug42742
 
 MAC_CURRENT_DIR=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 MAC_GENERATOR = $(MAC_CURRENT_DIR)/bin/bmac
@@ -179,6 +179,17 @@ virtualwrap:
 	fi
 	@if [ `grep -r "public virtual" virtualwrap.tmpdir/WrapTest | wc -l` -ne 4 ]; then \
 		echo "Error: Expected 4 virtual keywords in generated code."; exit 1; \
+	fi
+
+bug42742:
+	@rm -Rf $@.tmpdir
+	@mkdir -p $@.tmpdir
+	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) --sourceonly:$@.source -tmpdir=$@.tmpdir $@.cs
+	@if ! grep -r Advice bug42742.tmpdir/bug42742 > /dev/null; then \
+		echo "error: Could not find Advice attribute in generated code."; exit 1; \
+	fi
+	@if [ `grep -r Advice bug42742.tmpdir/bug42742 | wc -l` -ne 25 ]; then \
+		echo "Error: Expected 25 Advice attributes in generated code. If you modified code that generates PreserveAttributes please update the preserve count."; exit 1; \
 	fi
 
 clean-local::
