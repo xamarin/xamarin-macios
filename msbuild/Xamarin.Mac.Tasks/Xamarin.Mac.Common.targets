@@ -511,7 +511,10 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			AppManifest="$(_AppManifest)"
 			SdkVersion="$(MacOSXSdkVersion)"
 			IsAppExtension="$(IsAppExtension)"
-			EnableSGenConc="$(EnableSGenConc)">
+			EnableSGenConc="$(EnableSGenConc)"
+			AotScope="$(AotScope)"
+			HybridAotOption="$(HybridAotOption)"
+			ExplicitAotAssemblies="$(ExplicitAotAssemblies)">
 			<Output TaskParameter="NativeLibraries" ItemName="_NativeLibrary" />
 		</Mmp>
 	</Target>
