@@ -30,6 +30,7 @@ namespace xharness
 		public bool IncludeMacBindingProject;
 		public bool IncludeSimulator = true;
 		public bool IncludeDevice;
+		public bool IncludeSystemPermissionTests = true; // tests that require access to system resources (system contacts, photo library, etc) in order to work
 
 		public Logs Logs = new Logs ();
 		public Log MainLog;
@@ -108,6 +109,17 @@ namespace xharness
 			return runtasks;
 		}
 
+		bool IsIncluded (TestProject project)
+		{
+			if (!project.IsExecutableProject)
+				return false;
+
+			if (!IncludeBcl && project.IsBclTest)
+				return false;
+
+			return true;
+		}
+
 		async Task<IEnumerable<TestTask>> CreateRunDeviceTasks ()
 		{
 			var rv = new List<RunDeviceTask> ();
@@ -123,11 +135,8 @@ namespace xharness
 			}
 
 			foreach (var project in Harness.IOSTestProjects) {
-				if (!project.IsExecutableProject)
-					continue;
-
 				bool ignored = !IncludeDevice;
-				if (!IncludeBcl && project.IsBclTest)
+				if (!IsIncluded (project))
 					ignored = true;
 				
 				var build64 = new XBuildTask
@@ -389,6 +398,7 @@ namespace xharness
 			SetEnabled (labels, "mac-classic", ref IncludeClassicMac);
 			SetEnabled (labels, "ios-msbuild", ref IncludeiOSMSBuild);
 			SetEnabled (labels, "ios-simulator", ref IncludeSimulator);
+			SetEnabled (labels, "system-permission", ref IncludeSystemPermissionTests);
 		}
 
 		void SetEnabled (HashSet<string> labels, string testname, ref bool value)
@@ -419,14 +429,11 @@ namespace xharness
 			var runSimulatorTasks = new List<RunSimulatorTask> ();
 
 			foreach (var project in Harness.IOSTestProjects) {
-				if (!project.IsExecutableProject)
-					continue;
-
 				bool ignored = false;
 				if (!IncludeSimulator)
 					ignored = true;
 
-				if (!IncludeBcl && project.IsBclTest)
+				if (!IsIncluded (project))
 					ignored = true;
 
 				var ps = new List<Tuple<TestProject, TestPlatform, bool>> ();
@@ -475,14 +482,11 @@ namespace xharness
 			Tasks.Add (nunitExecutioniOSMSBuild);
 			
 			foreach (var project in Harness.MacTestProjects) {
-				if (!project.IsExecutableProject)
-					continue;
-
 				bool ignored = !IncludeMac;
 				if (!IncludeMmpTest && project.Path.Contains ("mmptest"))
 					ignored = true;
 
-				if (!IncludeBcl && project.IsBclTest)
+				if (!IsIncluded (project))
 					ignored = true;
 
 				var configurations = project.Configurations;
@@ -2721,6 +2725,7 @@ function oninitialload ()
 						DeviceName = Device.Name,
 						CompanionDeviceName = CompanionDevice?.Name,
 						Configuration = ProjectConfiguration,
+						IncludeSystemPermissionTests = Jenkins.IncludeSystemPermissionTests,
 					};
 
 					// Sometimes devices can't upgrade (depending on what has changed), so make sure to uninstall any existing apps first.
@@ -2770,6 +2775,7 @@ function oninitialload ()
 								DeviceName = Device.Name,
 								CompanionDeviceName = CompanionDevice?.Name,
 								Configuration = ProjectConfiguration,
+								IncludeSystemPermissionTests = Jenkins.IncludeSystemPermissionTests,
 							};
 							additional_runner = todayRunner;
 							await todayRunner.RunAsync ();
@@ -2856,6 +2862,7 @@ function oninitialload ()
 				Target = AppRunnerTarget,
 				LogDirectory = LogDirectory,
 				MainLog = Logs.CreateStream (LogDirectory, $"run-{Device.UDID}-{Timestamp}.log", "Run log"),
+				IncludeSystemPermissionTests = Jenkins.IncludeSystemPermissionTests,
 			};
 			runner.Simulators = Simulators;
 			runner.Initialize ();
