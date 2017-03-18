@@ -188,8 +188,8 @@ bug42742:
 	@if ! grep -r Advice bug42742.tmpdir/bug42742 > /dev/null; then \
 		echo "error: Could not find Advice attribute in generated code."; exit 1; \
 	fi
-	@if [ `grep -r Advice bug42742.tmpdir/bug42742 | wc -l` -ne 25 ]; then \
-		echo "Error: Expected 25 Advice attributes in generated code. If you modified code that generates PreserveAttributes please update the preserve count."; exit 1; \
+	@if [ `grep -r Advice bug42742.tmpdir/bug42742 | wc -l` -ne 24 ]; then \
+		echo "Error: Expected 24 Advice attributes in generated code. If you modified code that generates PreserveAttributes please update the preserve count."; exit 1; \
 	fi
 
 clean-local::
