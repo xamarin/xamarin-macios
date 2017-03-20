@@ -225,15 +225,15 @@ namespace Foundation {
 				try {
 					// ensure that we did not cancel the request, if we did, do cancel the task
 					if (inflight.CancellationToken.IsCancellationRequested) {
-                            dataTask.Cancel();
-                    }
+						dataTask.Cancel ();
+					}
 
 					var urlResponse = (NSHttpUrlResponse)response;
 					var status = (int)urlResponse.StatusCode;
 
 					var content = new NSUrlSessionDataTaskStreamContent (inflight.Stream, () => {
 						if (!inflight.Completed) {
-							dataTask.Cancel();
+							dataTask.Cancel ();
 						}
 
 						inflight.Disposed = true;
