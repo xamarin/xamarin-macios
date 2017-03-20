@@ -9,6 +9,7 @@ _mac-build
 *.exe
 *.dll
 *.mdb
+*.pdb
 bin
 obj
 packages
