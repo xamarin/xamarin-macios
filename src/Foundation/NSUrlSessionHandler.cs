@@ -223,15 +223,24 @@ namespace Foundation {
 				var inflight = GetInflightData (dataTask);
 
 				try {
+					// ensure that we did not cancel the request, if we did, do cancel the task
+					if (inflight.CancellationToken.IsCancellationRequested) {
+                            dataTask.Cancel();
+                    }
+
 					var urlResponse = (NSHttpUrlResponse)response;
 					var status = (int)urlResponse.StatusCode;
 
 					var content = new NSUrlSessionDataTaskStreamContent (inflight.Stream, () => {
+						if (!inflight.Completed) {
+							dataTask.Cancel();
+						}
+
 						inflight.Disposed = true;
 						inflight.Stream.TrySetException (new ObjectDisposedException ("The content stream was disposed."));
 
 						sessionHandler.RemoveInflightData (dataTask);
-					});
+					}, inflight.CancellationToken);
 
 					// NB: The double cast is because of a Xamarin compiler bug
 					var httpResponse = new HttpResponseMessage ((HttpStatusCode)status) {
@@ -278,7 +287,7 @@ namespace Foundation {
 			{
 				var inflight = GetInflightData (task);
 
-				// this can happen if the HTTP request times out and it is removed as part of the cancelation process
+				// this can happen if the HTTP request times out and it is removed as part of the cancellation process
 				if (inflight != null) {
 					// set the stream as finished
 					inflight.Stream.TrySetReceivedAllData ();
@@ -396,7 +405,7 @@ namespace Foundation {
 		{
 			Action disposed;
 
-			public NSUrlSessionDataTaskStreamContent (NSUrlSessionDataTaskStream source, Action onDisposed) : base (source)
+			public NSUrlSessionDataTaskStreamContent (NSUrlSessionDataTaskStream source, Action onDisposed, CancellationToken token) : base (source, token)
 			{
 				disposed = onDisposed;
 			}
