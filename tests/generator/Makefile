@@ -14,7 +14,7 @@ include $(TOP)/Make.config
 IOS_CURRENT_DIR=$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current
 IOS_GENERATOR = $(IOS_CURRENT_DIR)/bin/btouch-native /baselib:$(IOS_CURRENT_DIR)/lib/mono/Xamarin.iOS/Xamarin.iOS.dll /unsafe
 IOS_TESTS = bug15283 bug15307 bug15799 bug16036 sof20696157 bug23041 bug27430 bug27428 bug34042 btouch-with-hyphen-in-name property-redefination-ios arrayfromhandlebug bug36457 bug39614 bug40282 bug17232 bug24078-ignore-methods-events strong-dict-support-templated-dicts bug43579 bindastests
-IOS_CUSTOM_TESTS = forum54078 desk63279 desk79124 multiple-api-definitions1 multiple-api-definitions2 bug29493 classNameCollision bi1036 bug37527 bug27986 bug35176 bi1046 bindas1048error bindas1049error bindas1050modelerror bindas1050protocolerror virtualwrap bug42855 bug52570 bug52570classinternal bug52570methodinternal bug52570allowstaticmembers warnaserror nowarn bug42742
+IOS_CUSTOM_TESTS = forum54078 desk63279 desk79124 multiple-api-definitions1 multiple-api-definitions2 bug29493 classNameCollision bi1036 bug37527 bug27986 bug35176 bi1046 bindas1048error bindas1049error bindas1050modelerror bindas1050protocolerror virtualwrap bug42855 bug52570 bug52570classinternal bug52570methodinternal bug52570allowstaticmembers bug42742 warnaserror nowarn
 
 MAC_CURRENT_DIR=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 MAC_GENERATOR = $(MAC_CURRENT_DIR)/bin/bmac
@@ -181,6 +181,17 @@ virtualwrap:
 		echo "Error: Expected 4 virtual keywords in generated code."; exit 1; \
 	fi
 
+bug42742:
+	@rm -Rf $@.tmpdir
+	@mkdir -p $@.tmpdir
+	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) --sourceonly:$@.source -tmpdir=$@.tmpdir $@.cs
+	@if ! grep -r Advice bug42742.tmpdir/bug42742 > /dev/null; then \
+		echo "error: Could not find Advice attribute in generated code."; exit 1; \
+	fi
+	@if [ `grep -r Advice bug42742.tmpdir/bug42742 | wc -l` -ne 24 ]; then \
+		echo "Error: Expected 24 Advice attributes in generated code. If you modified code that generates PreserveAttributes please update the preserve count."; exit 1; \
+	fi
+
 warnaserror:
 	$(if $(V),,@echo "iOS $@ Enabled";) $(IOS_GENERATOR) -d=XAMCORE_2_0 -warnaserror $@.cs | grep "error BI1117" > /dev/null 2>&1
 	$(if $(V),,@echo "iOS $@ Disabled";) !($(IOS_GENERATOR) -d=XAMCORE_2_0 $@.cs | grep "error BI1117" > /dev/null 2>&1)
@@ -202,20 +213,8 @@ nowarn:
 	$(if $(V),,@echo "macOS $@ Enabled";) !($(MAC_GENERATOR) -nowarn $@.cs | grep "warning BI1117" > /dev/null 2>&1)
 	$(if $(V),,@echo "macOS $@ Disabled";) $(MAC_GENERATOR) $@.cs | grep "warning BI1117" > /dev/null 2>&1
 	$(if $(V),,@echo "macOS $@ Disabled Warning Found";) $(MAC_GENERATOR) $@.cs | grep "warning BI1117" > /dev/null 2>&1
-	@if [ `grep -r Advice bug42742.tmpdir/bug42742 | wc -l` -ne 24 ]; then \
 	$(if $(V),,@echo "macOS $@ Only 1116";) $(MAC_GENERATOR) -nowarn:1116 $@.cs | grep "warning BI1117" > /dev/null 2>&1
 	$(if $(V),,@echo "macOS $@ Only 1117";) !($(MAC_GENERATOR) -nowarn:1117 $@.cs | grep "warning BI1117" > /dev/null 2>&1)
-
-bug42742:
-	@rm -Rf $@.tmpdir
-	@mkdir -p $@.tmpdir
-	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) --sourceonly:$@.source -tmpdir=$@.tmpdir $@.cs
-	@if ! grep -r Advice bug42742.tmpdir/bug42742 > /dev/null; then \
-		echo "error: Could not find Advice attribute in generated code."; exit 1; \
-	fi
-	@if [ `grep -r Advice bug42742.tmpdir/bug42742 | wc -l` -ne 24 ]; then \
-		echo "Error: Expected 24 Advice attributes in generated code. If you modified code that generates PreserveAttributes please update the preserve count."; exit 1; \
-	fi
 
 clean-local::
 	rm -f *.dll *.source

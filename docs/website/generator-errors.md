@@ -22,6 +22,8 @@ The easiest way to get exact version information is to use the **Xamarin Studio*
 
 <h3><a name='BI0001'/>BI0001: The .NET runtime could not load the {mi.ReturnType.Name} type. Message: {ex.Message}</h3>
 
+<h3><a name='BI0026'/>BI0026: Could not parse the command line argument '{argument}': {message}</h3>
+
 <h3><a name='BI0068'/>BI0068: Invalid value for target framework: *.</h3>
 
 An invalid target framework was passed using the --target-framework argument. Please specify a valid target framework.

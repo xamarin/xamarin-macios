@@ -219,7 +219,7 @@ class BindingTouch {
 							ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Error);
 						}
 					} catch (Exception ex) {
-						throw new Exception ($"Could not parse the command line argument '--warnaserror': {ex.Message}");
+						throw ErrorHelper.CreateError (26, $"Could not parse the command line argument '--warnaserror': {ex.Message}");
 					}
 				}
 			},
@@ -232,7 +232,7 @@ class BindingTouch {
 							ErrorHelper.SetWarningLevel (ErrorHelper.WarningLevel.Disable);
 						}
 					} catch (Exception ex) {
-						throw new Exception ($"Could not parse the command line argument '--nowarn': {ex.Message}");
+						throw ErrorHelper.CreateError (26, $"Could not parse the command line argument '--nowarn': {ex.Message}");
 					}
 				}
 			},
