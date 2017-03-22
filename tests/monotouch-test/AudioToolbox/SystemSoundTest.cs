@@ -15,11 +15,13 @@ using System.IO;
 using Foundation;
 using AudioToolbox;
 using CoreFoundation;
+using ObjCRuntime;
 #else
 using MonoTouch.Foundation;
 using MonoTouch.MediaPlayer;
 using MonoTouch.AudioToolbox;
 using MonoTouch.CoreFoundation;
+using MonoTouch.ObjCRuntime;
 #endif
 using NUnit.Framework;
 using System.Threading;
@@ -38,6 +40,9 @@ namespace MonoTouchFixtures.AudioToolbox {
 			var path = NSBundle.MainBundle.PathForResource ("1", "caf", "AudioToolbox");
 #else
 			var path = Path.GetFullPath (Path.Combine ("AudioToolbox", "1.caf"));
+
+			if (Runtime.Arch == Arch.SIMULATOR)
+				Assert.Ignore ("PlaySystemSound doesn't work in the simulator");
 #endif
 
 			using (var ss = SystemSound.FromFile (NSUrl.FromFilename (path))) {
