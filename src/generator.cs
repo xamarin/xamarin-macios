@@ -5486,7 +5486,7 @@ public partial class Generator : IMemberGatherer {
 				if (is_static_class)
 					throw new BindingException (1025, true, "[Static] and [Protocol] are mutually exclusive ({0})", type.FullName);
 				if (is_model && base_type == TypeManager.System_Object)
-					throw new BindingException (1060, true, "The {0} protocol is decorated with [Model], but not [BaseType]. Please verify that [Model] is relevant for this protocol; if so, add [BaseType] as well, otherwise remove [Model].", type.FullName);
+					ErrorHelper.Show (new BindingException (1060, "The {0} protocol is decorated with [Model], but not [BaseType]. Please verify that [Model] is relevant for this protocol; if so, add [BaseType] as well, otherwise remove [Model].", type.FullName));
 
 				var protocol = AttributeManager.GetCustomAttribute<ProtocolAttribute> (type);
 				GenerateProtocolTypes (type, class_visibility, TypeName, protocol.Name ?? objc_type_name, protocol);
