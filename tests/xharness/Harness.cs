@@ -735,7 +735,7 @@ namespace xharness
 				return report;
 			}
 
-			var symbolicated = new LogFile ("Symbolicated crash report", report.Path + ".symbolicated");
+			var symbolicated = new LogFile ("Symbolicated crash report", Path.ChangeExtension (report.Path, ".symbolicated.log"));
 			var environment = new Dictionary<string, string> { { "DEVELOPER_DIR", Path.Combine (XcodeRoot, "Contents", "Developer") } };
 			var rv = await ProcessHelper.ExecuteCommandAsync (symbolicatecrash, StringUtils.Quote (report.Path), symbolicated, TimeSpan.FromMinutes (1), environment);
 			if (rv.Succeeded) {;
