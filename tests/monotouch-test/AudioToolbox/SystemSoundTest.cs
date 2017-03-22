@@ -30,6 +30,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 	[Preserve (AllMembers = true)]
 	public class SystemSoundTest
 	{
+#if !MONOMAC // Currently no AppDelegate in xammac_test
 		[Test]
 		public void FromFile ()
 		{
@@ -40,12 +41,18 @@ namespace MonoTouchFixtures.AudioToolbox {
 #endif
 
 			using (var ss = SystemSound.FromFile (NSUrl.FromFilename (path))) {
+				var completed = false;
+				const int timeout = 10;
+
 				Assert.AreEqual (AudioServicesError.None, ss.AddSystemSoundCompletion (delegate {
+					completed = true;
 					}));
 
 				ss.PlaySystemSound ();
+				Assert.IsTrue (MonoTouchFixtures.AppDelegate.RunAsync (DateTime.Now.AddSeconds (timeout), async () => { }, () => completed), "PlaySystemSound");
 			}
 		}
+#endif
 
 		[Test]
 		public void Properties ()
