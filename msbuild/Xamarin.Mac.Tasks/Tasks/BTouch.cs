@@ -38,10 +38,15 @@ namespace Xamarin.Mac.Tasks
 			};
 
 			var sb = new StringBuilder ();
-			if (isMobile) {
-				sb.Append (Path.Combine (FrameworkRoot, "lib", "bmac", "bmac-mobile.exe"));
+			var bgen = Path.Combine (FrameworkRoot, "lib", "bgen", "bgen.exe");
+			if (File.Exists (bgen)) {
+				sb.Append (bgen);
 			} else {
-				sb.Append (Path.Combine (FrameworkRoot, "lib", "bmac", "bmac-full.exe"));
+				if (isMobile) {
+					sb.Append (Path.Combine (FrameworkRoot, "lib", "bmac", "bmac-mobile.exe"));
+				} else {
+					sb.Append (Path.Combine (FrameworkRoot, "lib", "bmac", "bmac-full.exe"));
+				}
 			}
 			sb.Append (" -nostdlib ");
 			sb.Append (base.GenerateCommandLineCommands ());

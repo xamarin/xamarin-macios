@@ -45,7 +45,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+#if IKVM
+using IKVM.Reflection;
+using Type = IKVM.Reflection.Type;
+#else
 using System.Reflection;
+#endif
 using System.Text;
 using System.ComponentModel;
 
@@ -3336,8 +3341,13 @@ public partial class Generator : IMemberGatherer {
 			// in question actually has that value at least).
 			var type = TypeManager.GetUnderlyingEnumType (mi.ReturnType) == TypeManager.System_UInt64 ? "ulong" : "long";
 			var itype = type == "ulong" ? "uint" : "int";
+#if IKVM
+			var value = type == "ulong" ? (object) ulong.MaxValue : (object) long.MaxValue;
+			if (mi.ReturnType.IsEnumDefined (value)) {
+#else
 			var value = Enum.ToObject (mi.ReturnType, type == "ulong" ? (object) ulong.MaxValue : (object) long.MaxValue);
 			if (Array.IndexOf (Enum.GetValues (mi.ReturnType), value) >= 0) {
+#endif
 				postproc.AppendFormat ("if (({0}) ret == ({0}) {2}.MaxValue) ret = ({1}) {0}.MaxValue;", type, FormatType (mi.DeclaringType, mi.ReturnType), itype);
 				if (type == "long")
 					postproc.AppendFormat ("else if (({0}) ret == ({0}) {2}.MinValue) ret = ({1}) {0}.MinValue;", type, FormatType (mi.DeclaringType, mi.ReturnType), itype);
@@ -6957,8 +6967,21 @@ public partial class Generator : IMemberGatherer {
 		if (def is bool)
 			return (bool) def ? "true" : "false";
 
+#if IKVM
+		if (mi.ReturnType.IsEnum) {
+			if (def is string)
+				return def;
+			var name = mi.ReturnType.GetEnumName (def);
+			if (string.IsNullOrEmpty (name)) {
+				return "(" + mi.ReturnType.FullName + ") " + def;
+			} else {
+				return mi.ReturnType.FullName + "." + name;
+			}
+		}
+#else
 		if (def is Enum)
 			return def.GetType ().FullName + "." + def;
+#endif
 
 		return def;
 	}

@@ -143,6 +143,28 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 
 <h3><a name='BI1053'/>BI1053: Internal error: unknown target framework '*'.</h3>
 
+<h3><a name='BI1054'/>BI1054: Internal error: can't convert type '*' (unknown assembly). Please file a bug report (https://bugzilla.xamarin.com) with a test case.</h3>
+
+This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug report](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS&component=Tools) with a test case.
+
+<h3><a name='BI1055'/>BI1055: Internal error: failed to convert type '*'. Please file a bug report (https://bugzilla.xamarin.com) with a test case.</h3>
+
+This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug report](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS&component=Tools) with a test case.
+
+<h3><a name='BI1056'/>BI1056: Internal error: failed to instantiate mock attribute '*' (could not convert type constructor argument #*). Please file a bug report (https://bugzilla.xamarin.com) with a test case.</h3>
+
+This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug report](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS&component=Tools) with a test case.
+
+<h3><a name='BI1057'/>BI1057: Internal error: failed to instantiate mock attribute '*' (could not convert constructor type #* (*)). Please file a bug report (https://bugzilla.xamarin.com) with a test case.</h3>
+
+This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug report](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS&component=Tools) with a test case.
+
+<h3><a name='BI1058'/>BI1058: Internal error: could not find a constructor for the mock attribute '*'. Please file a bug report (https://bugzilla.xamarin.com) with a test case.</h3>
+
+This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug report](https://bugzilla.xamarin.com/enter_bug.cgi?product=iOS&component=Tools) with a test case.
+
+<h3><a name='BI1059'/>BI1059: Found * * attributes on the member *. At most one was expected.</h3>
+
 <h3><a name='BI1060'/>BI1060: The * protocol is decorated with [Model], but not [BaseType]. Please verify that [Model] is relevant for this protocol; if so, add [BaseType] as well, otherwise remove [Model].</h3>
 
 # BI11xx: warnings

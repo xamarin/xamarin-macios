@@ -1,17 +1,12 @@
 
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
+#if IKVM
+using IKVM.Reflection;
+using Type = IKVM.Reflection.Type;
+#else
 using System.Reflection;
+#endif
 using System.Runtime.InteropServices;
-
-using XamCore.CoreFoundation;
-using XamCore.CoreGraphics;
-using XamCore.ObjCRuntime;
-using XamCore.Foundation;
-using XamCore.Security;
-
-using DictionaryContainerType = XamCore.Foundation.DictionaryContainer;
 
 public static class TypeManager {
 	public static Type System_Attribute;
@@ -113,6 +108,8 @@ public static class TypeManager {
 	static Assembly api_assembly;
 	static Assembly corlib_assembly;
 	static Assembly platform_assembly;
+	static Assembly system_assembly;
+	static Assembly binding_assembly;
 
 	public static Assembly CorlibAssembly {
 		get { return corlib_assembly; }
@@ -121,6 +118,14 @@ public static class TypeManager {
 	public static Assembly PlatformAssembly {
 		get { return platform_assembly; }
 		set { platform_assembly = value; }
+	}
+
+	public static Assembly SystemAssembly {
+		get { return system_assembly; }
+	}
+
+	public static Assembly BindingAssembly {
+		get { return binding_assembly; }
 	}
 
 	static Type Lookup (Assembly assembly, string @namespace, string @typename, bool inexistentOK = false)
@@ -148,24 +153,51 @@ public static class TypeManager {
 
 	public static Type GetUnderlyingNullableType (Type type)
 	{
+#if IKVM
+		if (!type.IsConstructedGenericType)
+			return null;
+
+		var gt = type.GetGenericTypeDefinition ();
+		if (gt.Assembly != CorlibAssembly)
+			return null;
+
+		if (gt.Namespace != "System")
+			return null;
+
+		if (gt.Name != "Nullable`1")
+			return null;
+
+		return type.GenericTypeArguments [0];
+#else
 		return Nullable.GetUnderlyingType (type);
+#endif
 	}
 
 	public static bool IsOutParameter (ParameterInfo pi)
 	{
+#if IKVM
+		return pi.IsOut;
+#else
 		return AttributeManager.HasAttribute<OutAttribute> (pi);
+#endif
 	}
 
 	public static Type GetUnderlyingEnumType (Type type)
 	{
+#if IKVM
+		return type.GetEnumUnderlyingType ();
+#else
 		return Enum.GetUnderlyingType (type);
+#endif
 	}
 
-	public static void Initialize (Assembly api)
+	public static void Initialize (Assembly api, Assembly corlib, Assembly platform, Assembly system, Assembly binding)
 	{
 		api_assembly = api;
-		corlib_assembly = typeof (object).Assembly;
-		platform_assembly = typeof (NSObject).Assembly;
+		corlib_assembly = corlib;
+		platform_assembly = platform;
+		system_assembly = system;
+		binding_assembly = binding;
 
 		/* corlib */
 		System_Attribute = Lookup (corlib_assembly, "System", "Attribute");
