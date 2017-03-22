@@ -3704,8 +3704,10 @@ namespace XamCore.Registrar {
 		{
 			this.input_assemblies = assemblies;
 
-			foreach (var assembly in assemblies)
+			foreach (var assembly in assemblies) {
+				Driver.Log (3, "Generating static registrar for {0}", assembly.Name);
 				RegisterAssembly (assembly);
+			}
 
 			Generate (header_path, source_path);
 		}

@@ -3193,8 +3193,8 @@ public partial class Generator : IMemberGatherer {
 		StringBuilder sb = new StringBuilder ();
 		string name = minfo.is_ctor ? GetGeneratedTypeName (mi.DeclaringType) : is_async ? GetAsyncName (mi) : mi.Name;
 
-		if (!alreadyPreserved) // Some codepaths already write preservation info
-			PrintPreserveAttribute (minfo.mi);
+		// Some codepaths already write preservation info
+		PrintAttributes (minfo.mi, preserve:!alreadyPreserved, advice:true);
 
 		if (!minfo.is_ctor && !is_async){
 			var prefix = "";
@@ -4351,7 +4351,7 @@ public partial class Generator : IMemberGatherer {
 		if (wrap != null){
 			print_generated_code ();
 			PrintPropertyAttributes (pi);
-			PrintPreserveAttribute (pi);
+			PrintAttributes (pi, preserve:true, advice:true);
 			print ("{0} {1}{2} {3}{4} {{",
 			       mod,
 			       minfo.GetModifiers (),
@@ -4360,9 +4360,8 @@ public partial class Generator : IMemberGatherer {
 			       use_underscore ? "_" : "");
 			indent++;
 			if (pi.CanRead) {
-				PrintPlatformAttributes (pi);
-				PrintPlatformAttributes (pi.GetGetMethod ());
-				PrintPreserveAttribute (pi.GetGetMethod ());
+				PrintAttributes (pi, platform:true);
+				PrintAttributes (pi.GetGetMethod (), platform:true, preserve:true, advice:true);
 				print ("get {");
 				indent++;
 
@@ -4381,9 +4380,8 @@ public partial class Generator : IMemberGatherer {
 				print ("}");
 			}
 			if (pi.CanWrite) {
-				PrintPlatformAttributes (pi);
-				PrintPlatformAttributes (pi.GetSetMethod ());
-				PrintPreserveAttribute (pi.GetSetMethod ());
+				PrintAttributes (pi, platform:true);
+				PrintAttributes (pi.GetSetMethod (), platform:true, preserve:true, advice:true);
 				print ("set {");
 				indent++;
 
@@ -4436,7 +4434,7 @@ public partial class Generator : IMemberGatherer {
 		// we must look if the type has an [Availability] attribute
 		PrintPlatformAttributesIfInlined (minfo);
 
-		PrintPreserveAttribute (pi);
+		PrintAttributes (pi, preserve:true, advice:true);
 
 		string propertyTypeName;
 		if (minfo.protocolize) {
@@ -4477,15 +4475,14 @@ public partial class Generator : IMemberGatherer {
 			var ba = GetBindAttribute (getter);
 			string sel = ba != null ? ba.Selector : export.Selector;
 
-			PrintPlatformAttributes (pi);
-			PrintPlatformAttributes (pi.GetGetMethod ());
+			PrintAttributes (pi, platform:true);
 
 			if (!minfo.is_sealed || !minfo.is_wrapper) {
 				PrintDelegateProxy (pi.GetGetMethod ());
 				PrintExport (minfo, sel, export.ArgumentSemantic);
 			}
 
-			PrintPreserveAttribute (pi.GetGetMethod());
+			PrintAttributes (pi.GetGetMethod(), platform:true, preserve:true, advice:true);
 			if (minfo.is_abstract){
 				print ("get; ");
 			} else {
@@ -4530,13 +4527,12 @@ public partial class Generator : IMemberGatherer {
 				sel = ba.Selector;
 			}
 
-			PrintPlatformAttributes (pi);
-			PrintPlatformAttributes (pi.GetSetMethod ());
+			PrintAttributes (pi, platform:true);
 
 			if (not_implemented_attr == null && (!minfo.is_sealed || !minfo.is_wrapper))
 				PrintExport (minfo, sel, export.ArgumentSemantic);
 
-			PrintPreserveAttribute (pi.GetSetMethod());
+			PrintAttributes (pi.GetSetMethod (), platform:true, preserve:true, advice:true);
 			if (minfo.is_abstract){
 				print ("set; ");
 			} else {
@@ -5121,8 +5117,7 @@ public partial class Generator : IMemberGatherer {
 		var requiredInstanceProperties = allProtocolProperties.Where ((v) => IsRequired (v) && !AttributeManager.HasAttribute<StaticAttribute> (v)).ToList ();
 		var optionalInstanceProperties = allProtocolProperties.Where ((v) => !IsRequired (v) && !AttributeManager.HasAttribute<StaticAttribute> (v));
 
-		PrintPlatformAttributes (type);
-		PrintPreserveAttribute (type);
+		PrintAttributes (type, platform:true, preserve:true, advice:true);
 		print ("[Protocol (Name = \"{1}\", WrapperType = typeof ({0}Wrapper){2})]", TypeName, protocol_name, protocolAttribute.IsInformal ? ", IsInformal = true" : string.Empty);
 
 		var sb = new StringBuilder ();
@@ -5280,7 +5275,7 @@ public partial class Generator : IMemberGatherer {
 		}
 		if (include_extensions) {
 			// extension methods
-			PrintPreserveAttribute (type);
+			PrintAttributes (type, preserve:true, advice:true);
 			print ("{1} static partial class {0}_Extensions {{", TypeName, class_visibility);
 			indent++;
 			foreach (var mi in optionalInstanceMethods)
@@ -5291,12 +5286,12 @@ public partial class Generator : IMemberGatherer {
 				var attrib = GetExportAttribute (pi);
 				var getter = pi.GetGetMethod ();
 				if (getter != null) {
-					PrintPreserveAttribute (pi);
+					PrintAttributes (pi, preserve:true, advice:true);
 					GenerateMethod (type, getter, false, null, false, false, true, attrib.ToGetter(pi).Selector);
 				}
 				var setter = pi.GetSetMethod ();
 				if (setter != null) {
-					PrintPreserveAttribute (pi);
+					PrintAttributes (pi, preserve:true, advice:true);
 					GenerateMethod (type, setter, false, null, false, false, true, attrib.ToSetter(pi).Selector);
 				}
 			}
@@ -5405,6 +5400,27 @@ public partial class Generator : IMemberGatherer {
 			print ("[Preserve]");
 	}
 
+	// Function to check if PrintAdviceAttribute is present and
+	// generate/print the same attribute as in bindings
+	public void PrintAdviceAttribute (ICustomAttributeProvider mi)
+	{
+		var p = AttributeManager.GetCustomAttribute<AdviceAttribute> (mi);
+		if (p == null)
+			return;
+
+		print ($"[Advice (@\"{p.Message.Replace ("\"", "\"\"")}\")]");
+	}
+
+	public void PrintAttributes (MemberInfo mi, bool platform = false, bool preserve = false, bool advice = false)
+	{
+		if (platform)
+			PrintPlatformAttributes (mi);
+		if (preserve)
+			PrintPreserveAttribute (mi);
+		if (advice)
+			PrintAdviceAttribute (mi);
+	}
+
 	public static string GetSelector (MemberInfo mi)
 	{
 		object [] attr = AttributeManager.GetCustomAttributes<ExportAttribute> (mi);
@@ -5508,8 +5524,7 @@ public partial class Generator : IMemberGatherer {
 				print ("[Model]");
 			}
 
-			PrintPlatformAttributes (type);
-			PrintPreserveAttribute (type);
+			PrintAttributes (type, platform:true, preserve:true, advice:true);
 
 			if (type.IsEnum) {
 				GenerateEnum (type);
@@ -5912,7 +5927,7 @@ public partial class Generator : IMemberGatherer {
 						print ("static {0} _{1};", fieldTypeName, field_pi.Name);
 					}
 
-					PrintPreserveAttribute (field_pi);
+					PrintAttributes (field_pi, preserve:true, advice:true);
 					print ("[Field (\"{0}\",  \"{1}\")]", fieldAttr.SymbolName, library_path ?? library_name);
 					PrintPlatformAttributes (field_pi);
 					if (AttributeManager.HasAttribute<AdvancedAttribute> (field_pi)) {
@@ -5927,8 +5942,8 @@ public partial class Generator : IMemberGatherer {
 					       is_unified_internal ? "_" : "");
 					indent++;
 
-					PrintPlatformAttributes (field_pi);
-					PrintPreserveAttribute (field_pi.GetGetMethod ());
+					PrintAttributes (field_pi, platform:true);
+					PrintAttributes (field_pi.GetGetMethod (), preserve:true, advice:true);
 					print ("get {");
 					indent++;
 					if (field_pi.PropertyType == TypeManager.NSString){
@@ -5982,8 +5997,8 @@ public partial class Generator : IMemberGatherer {
 					print ("}");
 
 					if (field_pi.CanWrite) {
-						PrintPlatformAttributes (field_pi);
-						PrintPreserveAttribute (field_pi.GetSetMethod ());
+						PrintAttributes (field_pi, platform:true);
+						PrintAttributes (field_pi.GetSetMethod (), preserve:true, advice:true);
 						print ("set {");
 						indent++;
 						if (field_pi.PropertyType == TypeManager.System_Int32) {

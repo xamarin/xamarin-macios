@@ -117,7 +117,7 @@ namespace XamCore.OpenGL {
 
 			set {
 
-				CGLErrorCode retValue = CGLSetCurrentContext (value.Handle);
+				CGLErrorCode retValue = CGLSetCurrentContext (value?.Handle ?? IntPtr.Zero);
 				if (retValue != CGLErrorCode.NoError)
 					throw new Exception ("Error setting the Current Context");
 			}
