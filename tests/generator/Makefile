@@ -26,8 +26,14 @@ IOS_CUSTOM_TESTS = forum54078 desk63279 desk79124 multiple-api-definitions1 mult
 MAC_CURRENT_DIR=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 ifdef IKVM
 MAC_GENERATOR = $(MAC_CURRENT_DIR)/bin/bgen
+MAC_CLASSIC_GENERATOR = $(MAC_CURRENT_DIR)/bin/bgen --target-framework=XamMac,v1.0
+MAC_FULL_GENERATOR    = $(MAC_CURRENT_DIR)/bin/bgen --target-framework=Xamarin.Mac,Version=v4.5,Profile=Full
+MAC_MOBILE_GENERATOR  = $(MAC_CURRENT_DIR)/bin/bgen --target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile
 else
 MAC_GENERATOR = $(MAC_CURRENT_DIR)/bin/bmac
+MAC_CLASSIC_GENERATOR = $(MAC_GENERATOR)
+MAC_FULL_GENERATOR    = $(MAC_GENERATOR) --unified-full-profile
+MAC_MOBILE_GENERATOR  = $(MAC_GENERATOR) --unified-mobile-profile
 endif
 MAC_TESTS = bmac_smoke bmac-with-hyphen-in-name property-redefination-mac NSApplicationPublicEnsureMethods protocol-duplicate-abstract
 MAC_CUSTOM_TESTS = bug31788 protocol-duplicate-abstract-error protocol-duplicate-method-diff-length protocol-duplicate-method-diff-out protocol-duplicate-method-diff-type protocol-duplicate-method-diff-return
@@ -43,30 +49,18 @@ endif
 all-local:: $(ALL_TESTS)
 
 $(MAC_TESTS):
-ifdef IKVM
-	$(if $(V),,@echo "$@";) $(MAC_GENERATOR) -d=MONOMAC --target-framework=XamMac,v1.0                                            $@.cs
-	$(if $(V),,@echo "$@";) $(MAC_GENERATOR) -d=MONOMAC --target-framework=Xamarin.Mac,Version=v4.5,Profile=Full   -d=XAMCORE_2_0 $@.cs
-	$(if $(V),,@echo "$@";) $(MAC_GENERATOR) -d=MONOMAC --target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile -d=XAMCORE_2_0 $@.cs
-else
-	$(if $(V),,@echo "$@";) $(MAC_GENERATOR) -d=MONOMAC $@.cs
-	$(if $(V),,@echo "$@";) $(MAC_GENERATOR) -d=MONOMAC -d=XAMCORE_2_0 --unified-full-profile $@.cs
-	$(if $(V),,@echo "$@";) $(MAC_GENERATOR) -d=MONOMAC -d=XAMCORE_2_0 --unified-mobile-profile $@.cs
-endif
+	$(if $(V),,@echo "$@";) $(MAC_CLASSIC_GENERATOR) -d=MONOMAC $@.cs
+	$(if $(V),,@echo "$@";) $(MAC_FULL_GENERATOR)    -d=MONOMAC -d=XAMCORE_2_0 $@.cs
+	$(if $(V),,@echo "$@";) $(MAC_MOBILE_GENERATOR)  -d=MONOMAC -d=XAMCORE_2_0 $@.cs
 
 $(IOS_TESTS):
 	$(if $(V),,@echo "$@";) $(IOS_GENERATOR) $@.cs
 
 define ProtocolTestTemplate
 $(1):
-ifdef IKVM
-	$(if $(V),,@echo "$$@";) $(MAC_GENERATOR) -d=MONOMAC --target-framework=XamMac,v1.0                                            $(1).cs 2>&1 | grep BI$(2) > /dev/null
-	$(if $(V),,@echo "$$@";) $(MAC_GENERATOR) -d=MONOMAC --target-framework=Xamarin.Mac,Version=v4.5,Profile=Full   -d=XAMCORE_2_0 $(1).cs 2>&1 | grep BI$(2) > /dev/null
-	$(if $(V),,@echo "$$@";) $(MAC_GENERATOR) -d=MONOMAC --target-framework=Xamarin.Mac,Version=v2.0,Profile=Mobile -d=XAMCORE_2_0 $(1).cs 2>&1 | grep BI$(2) > /dev/null
-else
-	$(if $(V),,@echo "$$@";) $(MAC_GENERATOR) -d=MONOMAC $(1).cs 2>&1 | grep BI$(2) > /dev/null
-	$(if $(V),,@echo "$$@";) $(MAC_GENERATOR) -d=MONOMAC -d=XAMCORE_2_0 --unified-full-profile $(1).cs 2>&1 | grep BI$(2) > /dev/null
-	$(if $(V),,@echo "$$@";) $(MAC_GENERATOR) -d=MONOMAC -d=XAMCORE_2_0 --unified-mobile-profile $(1).cs 2>&1 | grep BI$(2) > /dev/null
-endif
+	$(if $(V),,@echo "$$@";) $(MAC_CLASSIC_GENERATOR) -d=MONOMAC $(1).cs 2>&1 | grep BI$(2) > /dev/null
+	$(if $(V),,@echo "$$@";) $(MAC_FULL_GENERATOR)    -d=MONOMAC -d=XAMCORE_2_0 $(1).cs 2>&1 | grep BI$(2) > /dev/null
+	$(if $(V),,@echo "$$@";) $(MAC_MOBILE_GENERATOR)  -d=MONOMAC -d=XAMCORE_2_0 $(1).cs 2>&1 | grep BI$(2) > /dev/null
 endef
 
 $(eval $(call ProtocolTestTemplate,protocol-duplicate-abstract-error,1037))
@@ -104,11 +98,7 @@ classNameCollision:
 bug31788:
 	@rm -Rf $@.tmpdir
 	@mkdir -p $@.tmpdir
-ifdef IKVM
-	$(if $(V),,@echo "$@";) $(MAC_GENERATOR) --target-framework=XamMac,v1.0 --sourceonly:$@.source -tmpdir=$@.tmpdir $@.cs
-else
-	$(if $(V),,@echo "$@";) $(MAC_GENERATOR) --sourceonly:$@.source -tmpdir=$@.tmpdir $@.cs
-endif
+	$(if $(V),,@echo "$@";) $(MAC_CLASSIC_GENERATOR) --sourceonly:$@.source -tmpdir=$@.tmpdir $@.cs
 	@grep -q xamarin_IntPtr_objc_msgSend bug31788.tmpdir/Test/MarshalOnProperty.g.cs
 	@grep -q xamarin_IntPtr_objc_msgSend bug31788.tmpdir/Test/MarshalInProperty.g.cs
 
@@ -225,11 +215,11 @@ warnaserror:
 	$(if $(V),,@echo "iOS $@ Disabled Warning Found";) $(IOS_GENERATOR) -d=XAMCORE_2_0 $@.cs | grep "warning BI1117" > /dev/null 2>&1
 	$(if $(V),,@echo "iOS $@ Only 1116";) $(IOS_GENERATOR) -d=XAMCORE_2_0 -warnaserror:1116 $@.cs | grep "warning BI1117" > /dev/null 2>&1
 	$(if $(V),,@echo "iOS $@ Only 1117";) $(IOS_GENERATOR) -d=XAMCORE_2_0 -warnaserror:1117 $@.cs | grep "error BI1117" > /dev/null 2>&1
-	$(if $(V),,@echo "macOS $@ Enabled";) $(MAC_GENERATOR) -warnaserror $@.cs | grep "error BI1117" > /dev/null 2>&1
-	$(if $(V),,@echo "macOS $@ Disabled";) !($(MAC_GENERATOR) $@.cs | grep "error BI1117" > /dev/null 2>&1)
-	$(if $(V),,@echo "macOS $@ Disabled Warning Found";) $(MAC_GENERATOR) $@.cs | grep "warning BI1117" > /dev/null 2>&1
-	$(if $(V),,@echo "macOS $@ Only 1116";) $(MAC_GENERATOR) -warnaserror:1116 $@.cs | grep "warning BI1117" > /dev/null 2>&1
-	$(if $(V),,@echo "macOS $@ Only 1117";) $(MAC_GENERATOR) -warnaserror:1117 $@.cs | grep "error BI1117" > /dev/null 2>&1
+	$(if $(V),,@echo "macOS $@ Enabled";) $(MAC_CLASSIC_GENERATOR) -warnaserror $@.cs | grep "error BI1117" > /dev/null 2>&1
+	$(if $(V),,@echo "macOS $@ Disabled";) !($(MAC_CLASSIC_GENERATOR) $@.cs | grep "error BI1117" > /dev/null 2>&1)
+	$(if $(V),,@echo "macOS $@ Disabled Warning Found";) $(MAC_CLASSIC_GENERATOR) $@.cs | grep "warning BI1117" > /dev/null 2>&1
+	$(if $(V),,@echo "macOS $@ Only 1116";) $(MAC_CLASSIC_GENERATOR) -warnaserror:1116 $@.cs | grep "warning BI1117" > /dev/null 2>&1
+	$(if $(V),,@echo "macOS $@ Only 1117";) $(MAC_CLASSIC_GENERATOR) -warnaserror:1117 $@.cs | grep "error BI1117" > /dev/null 2>&1
 
 nowarn:
 	$(if $(V),,@echo "iOS $@ Enabled";) !($(IOS_GENERATOR) -d=XAMCORE_2_0 -nowarn $@.cs | grep "warning BI1117" > /dev/null 2>&1)
@@ -237,11 +227,11 @@ nowarn:
 	$(if $(V),,@echo "iOS $@ Disabled Warning Found";) $(IOS_GENERATOR) -d=XAMCORE_2_0 $@.cs | grep "warning BI1117" > /dev/null 2>&1
 	$(if $(V),,@echo "iOS $@ Only 1116";) $(IOS_GENERATOR) -d=XAMCORE_2_0 -nowarn:1116 $@.cs | grep "warning BI1117" > /dev/null 2>&1
 	$(if $(V),,@echo "iOS $@ Only 1117";) !($(IOS_GENERATOR) -d=XAMCORE_2_0 -nowarn:1117 $@.cs | grep "warning BI1117" > /dev/null 2>&1)
-	$(if $(V),,@echo "macOS $@ Enabled";) !($(MAC_GENERATOR) -nowarn $@.cs | grep "warning BI1117" > /dev/null 2>&1)
-	$(if $(V),,@echo "macOS $@ Disabled";) $(MAC_GENERATOR) $@.cs | grep "warning BI1117" > /dev/null 2>&1
-	$(if $(V),,@echo "macOS $@ Disabled Warning Found";) $(MAC_GENERATOR) $@.cs | grep "warning BI1117" > /dev/null 2>&1
-	$(if $(V),,@echo "macOS $@ Only 1116";) $(MAC_GENERATOR) -nowarn:1116 $@.cs | grep "warning BI1117" > /dev/null 2>&1
-	$(if $(V),,@echo "macOS $@ Only 1117";) !($(MAC_GENERATOR) -nowarn:1117 $@.cs | grep "warning BI1117" > /dev/null 2>&1)
+	$(if $(V),,@echo "macOS $@ Enabled";) !($(MAC_CLASSIC_GENERATOR) -nowarn $@.cs | grep "warning BI1117" > /dev/null 2>&1)
+	$(if $(V),,@echo "macOS $@ Disabled";) $(MAC_CLASSIC_GENERATOR) $@.cs | grep "warning BI1117" > /dev/null 2>&1
+	$(if $(V),,@echo "macOS $@ Disabled Warning Found";) $(MAC_CLASSIC_GENERATOR) $@.cs | grep "warning BI1117" > /dev/null 2>&1
+	$(if $(V),,@echo "macOS $@ Only 1116";) $(MAC_CLASSIC_GENERATOR) -nowarn:1116 $@.cs | grep "warning BI1117" > /dev/null 2>&1
+	$(if $(V),,@echo "macOS $@ Only 1117";) !($(MAC_CLASSIC_GENERATOR) -nowarn:1117 $@.cs | grep "warning BI1117" > /dev/null 2>&1)
 
 clean-local::
 	rm -f *.dll *.source
