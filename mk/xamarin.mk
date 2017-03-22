@@ -1,9 +1,9 @@
 ifdef ENABLE_XAMARIN
-NEEDED_MACCORE_VERSION := 0ec12e7e2ecb1987fbeb6a2381eeeac34f1bc91b
-NEEDED_MACCORE_BRANCH := generator-ikvm
+NEEDED_MACCORE_VERSION := 479cb9e380932f45322fbe904e7918988e49c373
+NEEDED_MACCORE_BRANCH := master
 
 MACCORE_DIRECTORY := maccore
-MACCORE_MODULE    := git@github.com:rolfbjarne/maccore.git
+MACCORE_MODULE    := git@github.com:xamarin/maccore.git
 MACCORE_VERSION   := $(shell cd $(MACCORE_PATH) 2> /dev/null && git rev-parse HEAD 2> /dev/null)
 MACCORE_BRANCH    := $(shell cd $(MACCORE_PATH) 2> /dev/null && git symbolic-ref --short HEAD 2> /dev/null)
 MACCORE_REMOTE    := origin
